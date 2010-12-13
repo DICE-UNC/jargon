@@ -7,6 +7,7 @@ import java.util.logging.Logger;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.CollectionAO;
+import org.irods.jargon.core.pub.CollectionAndDataObjectListAndSearchAO;
 import org.irods.jargon.core.pub.DataObjectAO;
 import org.irods.jargon.core.pub.DataTransferOperations;
 import org.irods.jargon.core.pub.IRODSFileSystem;
@@ -65,7 +66,7 @@ public class IRODSFileService {
         }
 
         try {
-            CollectionAO collectionAO = irodsFileSystem.getIRODSAccessObjectFactory().getCollectionAO(irodsAccount);
+            CollectionAndDataObjectListAndSearchAO collectionAO = irodsFileSystem.getIRODSAccessObjectFactory().getCollectionAndDataObjectListAndSearchAO(irodsAccount);
             return collectionAO.listCollectionsUnderPath(parentCollectionAbsolutePath, 0);
         } catch (JargonException ex) {
             Logger.getLogger(IRODSFileService.class.getName()).log(Level.SEVERE, null, ex);
@@ -108,7 +109,7 @@ public class IRODSFileService {
         }
 
         try {
-            CollectionAO collectionAO = irodsFileSystem.getIRODSAccessObjectFactory().getCollectionAO(irodsAccount);
+            CollectionAndDataObjectListAndSearchAO collectionAO = irodsFileSystem.getIRODSAccessObjectFactory().getCollectionAndDataObjectListAndSearchAO(irodsAccount);
             return collectionAO.listDataObjectsAndCollectionsUnderPath(parentCollectionAbsolutePath);
         } catch (JargonException ex) {
             Logger.getLogger(IRODSFileService.class.getName()).log(Level.SEVERE, null, ex);
