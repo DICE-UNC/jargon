@@ -8,6 +8,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.CollectionAO;
+import org.irods.jargon.core.pub.CollectionAndDataObjectListAndSearchAO;
 import org.irods.jargon.core.pub.IRODSFileSystem;
 import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry;
 import org.irods.jargon.idrop.exceptions.IdropException;
@@ -71,7 +72,7 @@ public class IRODSNode extends DefaultMutableTreeNode {
         CollectionAndDataObjectListingEntry parentObject = (CollectionAndDataObjectListingEntry) this.getUserObject();
         try {
 
-            CollectionAO collectionAO = irodsFileSystem.getIRODSAccessObjectFactory().getCollectionAO(irodsAccount);
+            CollectionAndDataObjectListAndSearchAO collectionAO = irodsFileSystem.getIRODSAccessObjectFactory().getCollectionAndDataObjectListAndSearchAO(irodsAccount);
             List<CollectionAndDataObjectListingEntry> childCache = collectionAO.listDataObjectsAndCollectionsUnderPath(parentObject.getPathOrName());
 
             for (CollectionAndDataObjectListingEntry childEntry : childCache) {
