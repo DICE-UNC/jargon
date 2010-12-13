@@ -42,7 +42,7 @@
     </dependency>
     <dependency>
       <groupId>org.irods.jargon</groupId>
-      <artifactId>transfer-engine</artifactId>
+      <artifactId>jargon-transfer-engine</artifactId>
     </dependency>
     <dependency>
       <groupId>org.swinglabs</groupId>

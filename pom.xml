@@ -118,7 +118,7 @@
       </dependency>
       <dependency>
 	<groupId>org.irods.jargon</groupId>
-	<artifactId>transfer-engine</artifactId>
+	<artifactId>jargon-transfer-engine</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
       </dependency>
       <dependency>
