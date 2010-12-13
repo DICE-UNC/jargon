@@ -35,6 +35,9 @@ import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import javax.swing.TransferHandler;
+import javax.swing.UIManager;
+import javax.swing.UIManager.LookAndFeelInfo;
+import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
@@ -60,7 +63,6 @@ import org.irods.jargon.idrop.desktop.systraygui.viscomponents.LocalFileNode;
 import org.irods.jargon.idrop.desktop.systraygui.viscomponents.LocalFileSystemModel;
 import org.irods.jargon.idrop.desktop.systraygui.viscomponents.LocalFileTree;
 import org.irods.jargon.idrop.desktop.systraygui.viscomponents.IRODSTree;
-import org.irods.jargon.idrop.desktop.systraygui.viscomponents.IRODSTreeTransferHandler;
 import org.irods.jargon.idrop.desktop.systraygui.viscomponents.InfoPanelTransferHandler;
 import org.irods.jargon.idrop.desktop.systraygui.viscomponents.IrodsTreeListenerForBuildingInfoPanel;
 import org.irods.jargon.idrop.desktop.systraygui.viscomponents.TagCloudListModel;
@@ -152,6 +154,24 @@ public class iDrop extends javax.swing.JFrame implements ActionListener, ItemLis
             Logger.getLogger(iDrop.class.getName()).log(Level.SEVERE, null, ex);
             throw new IdropRuntimeException("unable to load iDrop configuration", ex);
         }
+
+        try {
+            for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (UnsupportedLookAndFeelException e) {
+            // handle exception
+        } catch (ClassNotFoundException e) {
+            // handle exception
+        } catch (InstantiationException e) {
+            // handle exception
+        } catch (IllegalAccessException e) {
+            // handle exception
+        }
+
 
         initComponents();
         this.pnlLocalTreeArea.setVisible(false);
@@ -1898,7 +1918,7 @@ public class iDrop extends javax.swing.JFrame implements ActionListener, ItemLis
         if (evt.getKeyCode() != java.awt.event.KeyEvent.VK_ENTER) {
             return;
         }
-       
+
     }//GEN-LAST:event_txtTagsKeyPressed
 
     /**
@@ -1960,7 +1980,7 @@ public class iDrop extends javax.swing.JFrame implements ActionListener, ItemLis
     }//GEN-LAST:event_btnViewMetadataActionPerformed
 
     private void btnUpdateInfoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateInfoActionPerformed
-         // if I have cached an item, see if it is a file or collection
+        // if I have cached an item, see if it is a file or collection
 
         if (this.lastCachedInfoItem == null) {
             log.warn("unknown data item, tags will not be processed");
@@ -2167,7 +2187,7 @@ public class iDrop extends javax.swing.JFrame implements ActionListener, ItemLis
                         } else {
                             lastEntry = thisEntry;
                         }
-                        
+
                         DefaultFileRepresentationPanel fileRepresentationPanel =
                                 new DefaultFileRepresentationPanel(collectionAndDataObjectListingEntry, idropGui, colorHelper.getNextColor());
 
