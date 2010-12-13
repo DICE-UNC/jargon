@@ -1,0 +1,16 @@
+todo's
+
+*update of policy form to make a wizard, including required metadata
+*update/delete/view of policies
+
+
+
+
+
+
+
+
+
+
+
+*switch up avu so that attribute -> units per Reagan

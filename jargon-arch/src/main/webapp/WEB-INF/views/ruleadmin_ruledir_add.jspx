@@ -1,0 +1,44 @@
+<div class="colleft" xmlns:spring="http://www.springframework.org/tags"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:form="http://www.springframework.org/tags/form"><spring:url
+	value="/static/js/arch/appladmin.js" var="appladmin_url" /> <script
+	src="${appladmin_url}" type="text/javascript"><!-- //required for FF3 and Opera --></script>
+
+<h3><spring:message code="ruleadmin_ruledir_add.h3" /></h3>
+
+<spring:url value='/ruleadmin/ruledir/add' var="form_url" />
+<div class="roundedcontainer fieldset">
+
+<form:form commandName="ruleRepositoryForm" name="ruleRepositoryForm" id="ruleRepositoryForm" action="${form_url}"
+	method="POST">
+
+<div id="fieldWrapper"><label for="ruleRepositoryName"><spring:message code="ruleadmin_ruledir_name" /></label><br />
+<form:input cssClass="input_field_12em" path="ruleRepositoryName" id="ruleRepositoryName" /><br />
+<form:errors cssClass="errors" path="ruleRepositoryName" /><br/>
+
+<label for="ruleRepositoryPath"><spring:message code="ruleadmin_ruledir_location" /></label><br />
+<form:input cssClass="input_field_12em" path="ruleRepositoryPath"
+	id="ruleRepositoryPath" /><br />
+<form:errors cssClass="errors" path="ruleRepositoryPath" /><br/>
+	
+<label for="comment"><spring:message code="text.description" /></label><br />
+<form:textarea cssClass="input_field_12em" path="comment" id="comment" rows="4"
+	cols="40"/><br />
+<form:errors cssClass="errors" path="comment" /><br/>
+
+<div>
+<button type="reset"><spring:message code="button.reset" /></button>
+<button type="submit" id="submitButton"><spring:message code="button.update" /></button>
+</div>
+</div>
+</form:form>
+</div>
+
+<script type="text/javascript">
+
+
+$(document).ready(function() {
+		$("#accordion").accordion("activate", $("#rule"));
+});
+
+</script></div>

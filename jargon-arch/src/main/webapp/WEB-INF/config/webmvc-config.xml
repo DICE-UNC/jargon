@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd
+		http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:p="http://www.springframework.org/schema/p">
+
+	<!--
+		The controllers are autodetected POJOs labeled with the @Controller
+		annotation.
+	-->
+	<context:component-scan base-package="org.irods.jargon.arch.mvc.controllers"
+		use-default-filters="false">
+		<context:include-filter expression="org.springframework.stereotype.Controller"
+			type="annotation" />
+	</context:component-scan>
+
+	<bean id="homeController" class="org.irods.jargon.arch.mvc.controllers.HomeController">
+		<property name="irodsAccessObjectFactory" ref="irodsAccessObjectFactory" />
+		<property name="archServiceFactory" ref="archServiceFactory" />
+	</bean>
+
+	<bean id="adminPolicyWizardController"
+		class="org.irods.jargon.arch.mvc.controllers.AdminPolicyWizardController">
+		<property name="irodsAccessObjectFactory" ref="irodsAccessObjectFactory" />
+		<property name="archServiceFactory" ref="archServiceFactory" />
+	</bean>
+
+	<bean id="policyDrivenServiceManagementController"
+		class="org.irods.jargon.arch.mvc.controllers.PolicyDrivenServiceManagementController">
+		<property name="irodsAccessObjectFactory" ref="irodsAccessObjectFactory" />
+		<property name="archServiceFactory" ref="archServiceFactory" />
+	</bean>
+
+	<bean id="ruleDirAdminController"
+		class="org.irods.jargon.arch.mvc.controllers.RuleDirAdminController">
+		<property name="irodsAccessObjectFactory" ref="irodsAccessObjectFactory" />
+		<property name="archServiceFactory" ref="archServiceFactory" />
+	</bean>
+
+	<bean id="ruleMappingController"
+		class="org.irods.jargon.arch.mvc.controllers.RuleMappingController">
+		<property name="irodsAccessObjectFactory" ref="irodsAccessObjectFactory" />
+		<property name="archServiceFactory" ref="archServiceFactory" />
+	</bean>
+
+	<bean id="policyManagerController"
+		class="org.irods.jargon.arch.mvc.controllers.PolicyManagerController">
+		<property name="irodsAccessObjectFactory" ref="irodsAccessObjectFactory" />
+		<property name="archServiceFactory" ref="archServiceFactory" />
+	</bean>
+
+	<bean id="seriesController" class="org.irods.jargon.arch.mvc.controllers.SeriesController">
+		<property name="irodsAccessObjectFactory" ref="irodsAccessObjectFactory" />
+		<property name="archServiceFactory" ref="archServiceFactory" />
+	</bean>
+
+	<!--
+		Maps request paths to @Controller classes; e.g. a path of /owner looks
+		for a controller named OwnerController
+	-->
+	<bean
+		class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping">
+		<property name="interceptors">
+			<list>
+				<bean class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor"
+					p:paramName="lang" />
+				<bean class="org.springframework.web.servlet.theme.ThemeChangeInterceptor"
+					p:paramName="theme" />
+			</list>
+		</property>
+		<property name="defaultHandler">
+			<!--
+				If no @Controller match, map path to a view to render; e.g. the
+				"/index" path would map to the view named "index"
+			-->
+			<bean class="org.springframework.web.servlet.mvc.UrlFilenameViewController" />
+		</property>
+	</bean>
+
+	<!--
+		Resolves logical view names returned by Controllers to Tiles; a view
+		name to resolve is treated as the name of a tiles definition
+	-->
+	<bean class="org.springframework.js.ajax.AjaxUrlBasedViewResolver"
+		id="tilesViewResolver">
+		<property name="viewClass"
+			value="org.springframework.web.servlet.view.tiles2.TilesView" />
+	</bean>
+
+	<!-- Configures the Tiles layout system -->
+	<bean class="org.springframework.web.servlet.view.tiles2.TilesConfigurer"
+		id="tilesConfigurer">
+		<property name="definitions">
+			<list>
+				<value>/WEB-INF/layouts/layouts.xml</value>
+				<!-- Scan views directory for Tiles configurations -->
+				<value>/WEB-INF/views/**/views.xml</value>
+			</list>
+		</property>
+	</bean>
+
+	<!--
+		resolves localized messages.properties files in the application to
+		allow for internationalization
+	-->
+	<bean
+		class="org.springframework.context.support.ReloadableResourceBundleMessageSource"
+		id="messageSource" p:basename="WEB-INF/i18n/messages"
+		p:fallbackToSystemLocale="false" />
+
+	<!-- store preferred language configuration in a cookie -->
+	<bean class="org.springframework.web.servlet.i18n.CookieLocaleResolver"
+		id="localeResolver" />
+
+	<!--
+		resolves localized <theme_name>.properties files in the classpath to
+		allow for theme support
+	-->
+	<bean
+		class="org.springframework.ui.context.support.ResourceBundleThemeSource"
+		id="themeSource" />
+
+	<!-- store preferred theme configuration in a cookie -->
+	<bean class="org.springframework.web.servlet.theme.CookieThemeResolver"
+		id="themeResolver" p:defaultThemeName="left" />
+
+	<!--
+		This bean resolves specific types of exceptions to corresponding
+		logical - view names for error views. The default behaviour of
+		DispatcherServlet - is to propagate all exceptions to the servlet
+		container: this will happen - here with all other types of exceptions.
+	-->
+	<bean
+		class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
+		<property name="exceptionMappings">
+			<props>
+				<prop key=".DataAccessException">dataAccessFailure</prop>
+				<prop key=".NoSuchRequestHandlingMethodException">resourceNotFound</prop>
+				<prop key=".TypeMismatchException">resourceNotFound</prop>
+				<prop key=".lang.Exception">uncaughtException</prop>
+				<prop key=".ArchException">archException</prop>
+			</props>
+		</property>
+		<property name="statusCodes">
+			<props>
+				<prop key="archException">500</prop>
+				<prop key="dataAccessFailure">500</prop>
+				<prop key="resourceNotFound">500</prop>
+				<prop key="uncaughtException">500</prop>
+			</props>
+		</property>
+	</bean>
+
+	<!-- allows for integration of file upload functionality -->
+	<bean
+		class="org.springframework.web.multipart.commons.CommonsMultipartResolver"
+		id="multipartResolver">
+		<property name="maxUploadSize" value="5000000" />
+	</bean>
+	<!-- <import resource="webflow-config.xml" /> -->
+</beans>

@@ -1,0 +1,54 @@
+<div class="colleft" xmlns:spring="http://www.springframework.org/tags"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+<spring:url
+	value="/static/js/arch/ruleadmin_ruledir.js" var="ruleadmin_url" />
+	
+<script src="${ruleadmin_url}" type="text/javascript"><!-- //required for FF3 and Opera --></script>
+
+<h3><spring:message code="ruleadmin_rulemapping_add.h3" /></h3>
+
+<div>
+<div class="fieldset roundedContainer">
+
+	<h4>Select a rule mapping repository:</h4>
+	<span id="listComboArea" style="float:left; margin-left:100px; margin-bottom:10px;">
+	<!--  empty -->
+	</span>
+	<button
+	id="refreshRuleMappingDirs" style="float:left; margin-left:50px;"><spring:message
+	code="button.refresh" /></button>
+	<br/>
+	
+	<div id="ruleMappingDirDetailsDiv">
+	<!--  div to hold details of the selected rule mapping repository -->
+	</div>
+</div>
+
+</div>
+
+<script type="text/javascript">
+
+$(document).ready(function() {
+	
+		$("#accordion").accordion("activate", $("#rule"));
+
+		$("#refreshRuleMappingDirs").click(function() {
+			setMappingDir();
+		});
+
+		loadRuleMappingDirs();
+		
+	});
+
+function setMappingDir() {
+	// function needed to get mapping dir info
+	//sendValueAndPlugHtmlInDiv(context + "/rulemapping/ajax_rule_mapping_dirs", "#listComboArea", context, selectComboPostLoadFunction);
+}
+
+function selectComboPostLoadFunction() {
+	$("#selectBox").change(function() {
+		loadRuleMappingTable(this);
+	});
+}
+
+</script></div>

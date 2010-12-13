@@ -1,0 +1,104 @@
+/**
+ * 
+ */
+package org.irods.jargon.core.pub.io;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
+
+import org.irods.jargon.core.connection.ConnectionConstants;
+import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.exception.JargonRuntimeException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+/**
+ * iRODS-specific implementation of the <code>java.io.Reader</code>.
+ * 
+ * @author Mike Conway - DICE (www.irods.org)
+ * 
+ */
+public class IRODSFileReader extends Reader {
+
+	private final transient IRODSFileInputStream irodsFileInputStream;
+	@SuppressWarnings("unused")
+	private final transient IRODSFileFactory irodsFileFactory;
+	public static Logger log = LoggerFactory.getLogger(IRODSFileReader.class);
+
+	/**
+	 * iRODS-specific implementation of the <code>java.io.FileReader</code>.
+	 * Notably this class will do character conversions to the given encoding
+	 * from the binary stream data.
+	 * 
+	 * @param irodsFile
+	 *            {@link org.irods.jargon.pub.io.IRODSFile} that will be the
+	 *            source of the stream
+	 * @param irodsFileFactory
+	 *            {@link org.irods.jargon.pub.io.IRODSFileFactory} that can be
+	 *            used to create various Jargon implementations of
+	 *            <code>java.io.*</code> classes.
+	 * @throws IOException
+	 */
+	public IRODSFileReader(final IRODSFile irodsFile,
+			final IRODSFileFactory irodsFileFactory) throws IOException {
+		super();
+
+		if (irodsFile == null) {
+			throw new JargonRuntimeException("irodsFile Is null");
+		}
+
+		if (irodsFileFactory == null) {
+			throw new JargonRuntimeException("irodsFileFactory is null");
+		}
+
+		try {
+			this.irodsFileInputStream = irodsFileFactory
+					.instanceIRODSFileInputStream(irodsFile);
+		} catch (JargonException e) {
+			throw new IOException("unable to open IRODSFileInputStream for:"
+					+ irodsFile.getAbsolutePath());
+		}
+
+		this.irodsFileFactory = irodsFileFactory;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.io.Reader#close()
+	 */
+	@Override
+	public void close() throws IOException {
+		log.info("closing irodsFileReader");
+		irodsFileInputStream.close();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.io.Reader#read(char[], int, int)
+	 */
+	@Override
+	public int read(final char[] cbuf, final int off, final int len)
+			throws IOException {
+
+		byte[] b = new byte[cbuf.length];
+		int lenFromIrods = irodsFileInputStream.read(b, 0, len);
+		log.debug("reader acutally read {} bytes from iRODS", lenFromIrods);
+
+		if (lenFromIrods == -1) {
+			return -1;
+		}
+
+		ByteArrayInputStream bais = new ByteArrayInputStream(b, 0, lenFromIrods);
+
+		final InputStreamReader isr = new InputStreamReader(bais,
+				ConnectionConstants.JARGON_CONNECTION_ENCODING);
+
+		int dataRead = isr.read(cbuf, off, len);
+		log.debug("after decoding returning length {}", dataRead);
+		return dataRead;
+	}
+}

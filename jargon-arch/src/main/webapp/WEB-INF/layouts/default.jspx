@@ -1,0 +1,87 @@
+<html xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:tiles="http://tiles.apache.org/tags-tiles"
+	xmlns:form="http://www.springframework.org/tags/form"
+	xmlns:spring="http://www.springframework.org/tags"
+	xmlns:roo="urn:jsptagdir:/WEB-INF/tags">
+
+<jsp:output omit-xml-declaration="yes" />
+<jsp:directive.page contentType="text/html;charset=UTF-8" />
+<head>
+
+<c:set var="header.Pragma" value="no-cache" />
+<c:set var="header.Cache-Control" value="no-store" />
+<c:set var="header.Expires" value="-1" />
+
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<spring:theme code="styleSheet" var="roo_css" />
+<spring:url value="/${roo_css}" var="roo_css_url" />
+<spring:url value="/static/styles/lingo.css" var="lingo_css_url" />
+<spring:url value="/static/styles/demo_table.css" var="table_css_url" />
+
+<spring:url value="/static/js/lingo_common.js" var="lingo_common_url" />
+<spring:url value="/resources/spring/Spring.js" var="spring_url" />
+<spring:url value="/static/js/jquery-1.4.1.js" var="jquery_url" />
+<spring:url value="/static/js/ui/jquery-ui.js" var="jquery_ui_url" />
+<spring:url value="/static/js/jquery.dataTables.js"
+	var="jquery_datatables_url" />
+<spring:url value="/static/js/themes/le-frog/jquery-ui.css"
+	var="jquery_theme_url" />
+
+
+<spring:url value="/static/js/jquery.form.wizard-2.0.1.js"
+	var="jquery_wizard_url" />
+<spring:url value="/static/js/jquery.form.js" var="jquery_form_url" />
+<spring:url value="/static/js/jquery.history.js"
+	var="jquery_history_url" />
+<spring:url value="/static/js/jquery.validate.js"
+	var="jquery_validate_url" />
+
+<script src="${spring_url}" type="text/javascript"><!-- //required for FF3 and Opera --></script>
+<script src="${jquery_url}" type="text/javascript"><!-- //required for FF3 and Opera --></script>
+<script src="${jquery_ui_url}" type="text/javascript"><!-- //required for FF3 and Opera --></script>
+<script src="${jquery_datatables_url}" type="text/javascript"><!-- //required for FF3 and Opera --></script>
+<script src="${lingo_common_url}" type="text/javascript"><!-- //required for FF3 and Opera --></script>
+
+<script src="${jquery_wizard_url}" type="text/javascript"><!-- //required for FF3 and Opera --></script>
+<script src="${jquery_form_url}" type="text/javascript"><!-- //required for FF3 and Opera --></script>
+<script src="${jquery_history_url}" type="text/javascript"><!-- //required for FF3 and Opera --></script>
+<script src="${jquery_validate_url}" type="text/javascript"><!-- //required for FF3 and Opera --></script>
+
+<link rel="stylesheet" type="text/css" media="screen"
+	href="${roo_css_url}" />
+<link rel="stylesheet" type="text/css" media="screen"
+	href="${lingo_css_url}" />
+<link rel="stylesheet" type="text/css" media="screen"
+	href="${jquery_theme_url}" />
+<link rel="stylesheet" type="text/css" media="screen"
+	href="${table_css_url}" />
+
+<title><spring:message code="welcome.h3" /></title>
+</head>
+
+<body>
+<div id="wrap">
+<div id="menu"><tiles:insertAttribute name="menu" ignore="true" />
+</div>
+<div id="main"><c:if test="${not empty requestScope.actionError}">
+	<font color="red"> <c:out value="${requestScope.actionError}" />.
+	</font>
+</c:if> <c:if test="${not empty requestScope.flash}">
+	<font color="green"> <c:out value="${requestScope.flash}" /></font>
+</c:if>
+
+<div id="javascript_message_area" class="errors"><!-- required for FF3 and Opera --></div>
+<tiles:insertAttribute name="body" />
+<div class="footer"><spring:url var="home" value="/" /> <span><a
+	href="${home}"><spring:message code="button.home" /></a></span> <c:if
+	test="${sessionScope.SPRING_SECURITY_CONTEXT != null}">
+	<c:out value="&#160;|&#160;" />
+	<span> <spring:url var="logout"
+		value="/j_spring_security_logout" /> <a href="${logout}"><spring:message
+		code="security.logout" /></a> </span>
+</c:if> <roo:language /></div>
+</div>
+</div>
+</body>
+</html>

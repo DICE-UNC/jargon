@@ -1,0 +1,113 @@
+package org.irods.jargon.usertagging;
+
+import java.util.List;
+
+import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.query.MetaDataAndDomainData.MetadataDomain;
+import org.irods.jargon.usertagging.domain.IRODSTagValue;
+/**
+ * Service interface for processing IRODS free tags. This method provides services on top
+ * of Jargon to maintain user-defined tags on iRODS domain objects.
+ * 
+ * Note that tags are by user.  Various signatures within this service either default to the logged-in user, or utilize the user passed in as part of the 
+ * method parameters.  Please note carefully the comments for each method to ensure that this is appropriately controlled.  This service does not
+ * attempt to do any edits of which user is updating which tag.
+ * 
+ * The <code>FreeTaggingService</code> is appropriate for end-user interfaces, and does ensure that tag query/maintenance operations are done as the logged-in user.
+ * Generally, the caller of this lower level service is responsible for allowing or preventing updates on behalf of other users.
+ * 
+ * @author Mike Conway - DICE (www.irods.org)
+ * 
+ */
+public interface IRODSTaggingService {
+
+	/**
+	 * Add a tag to a data object in iRODS for the user.  
+	 * @param dataObjectAbsolutePath <code>String</code> with the absolute path to the iRODS data object that should be tagged.
+	 * @param irodsTagValue {@link orgirods.jargon.usertagging.domain.IRODSTagValue} with the tag information to be added, including user name.
+	 * @throws JargonException
+	 */
+	public void addTagToDataObject(final String dataObjectAbsolutePath, final IRODSTagValue irodsTagValue)
+			throws JargonException;
+
+	/**
+	 * Remove the given tag from the data object.
+	  * @param dataObjectAbsolutePath <code>String</code> with the absolute path to the iRODS data object that has the tag to be removed.
+	 * @param irodsTagValue {@link orgirods.jargon.usertagging.domain.IRODSTagValue} with the tag information to be removed, including user name.
+	 * @throws JargonException
+	 */
+	public void deleteTagFromDataObject(final String dataObjectAbsolutePath, final IRODSTagValue irodsTagValue)
+			throws JargonException;
+
+	/**
+	 * For a given data object, retrieve the tag values for the logged in user.
+	 * @param dataObjectAbsolutePath <code>String</code> with the path to the data object for which the tags will be retrieved.
+	 * @return <code>List</code> of  {@link orgirods.jargon.usertagging.domain.IRODSTagValue} with the tag information for the data object
+	 * @throws JargonException
+	 */
+	public List<IRODSTagValue> getTagsOnDataObject(String dataObjectAbsolutePath)
+			throws JargonException;
+
+	/**
+	 * Add a tag to a collection in iRODS for the user.  The user with the account in the tag value is used.
+	 * @param dataObjectAbsolutePath <code>String</code> with the absolute path to the iRODS collection that should be tagged.
+	 * @param irodsTagValue {@link orgirods.jargon.usertagging.domain.IRODSTagValue} with the tag information to be added.
+	 * @throws JargonException
+	 */
+	public void addTagToCollection(String collectionAbsolutePath,
+			IRODSTagValue irodsTagValue) throws JargonException;
+
+	/**
+	 * Retrieve the user tags associated with a given iRODS collection. This method will default to tags set by the user reflected
+	 * in the <code>IRODSAccount</code> object associated with the user.
+	 * @param irodsAbsolutePath <code>String</code> with the absolute path to the given iRODS Collection.
+	 * @return <code>List</code> of  {@link orgirods.jargon.usertagging.domain.IRODSTagValue} with the tag information for the collection.
+	 * @throws JargonException
+	 */
+	public List<IRODSTagValue> getTagsOnCollection(String irodsAbsolutePath)
+			throws JargonException;
+
+	/**
+	 * Delete a user tag from a given iRODS Collection.
+	 * @param irodsAbsolutePath <code>String</code> with iRODS absolute path.
+	 * @param irodsTagValue {@link orgirods.jargon.usertagging.domain.IRODSTagValue} with the tag information to be deleted, including the user name.
+	 * @throws JargonException
+	 */
+	public void deleteTagFromCollection(String irodsAbsolutePath,
+			IRODSTagValue irodsTagValue) throws JargonException;
+
+	/**
+	 * List tags for the object identified by the given unique name (e.g. absolute path for a collection or data object), using the given <code>MetadataDomain</code>
+	 * value to determine the type of object that was tagged.  This method uses the logged-in user.
+	 * @param metadataDomain <code>MetaDataAndDomainData.MetadataDomain</code> enum value that describes the iRODS domain being tagged.
+	 * @param domainUniqueName <code>String</code> with the unique name for the domain object, such as absolute path for a collection or data object.
+	 * @return <code>List</code> of  {@link orgirods.jargon.usertagging.domain.IRODSTagValue} with the tag information for the iRODS domain object.
+	 * @throws JargonException if error in iRODS or the domain type is not supported.
+	 */
+	public List<IRODSTagValue> getTagsBasedOnMetadataDomain(
+			MetadataDomain metadataDomain, String domainUniqueName)
+			throws JargonException;
+
+	/**
+	 * Add a tag to the given domain object within iRODS, using the user supplied in the <code>IRODSTagValue</code>
+	  * @param irodsTagValue {@link orgirods.jargon.usertagging.domain.IRODSTagValue} with the tag information to be added, including the user.
+	 * @param metadataDomain <code>MetaDataAndDomainData.MetadataDomain</code> enum value that describes the iRODS domain being tagged.
+	 * @param domainUniqueName <code>String</code> with the unique name for the domain object, such as absolute path for a collection or data object.
+	 * @throws JargonException if any iRODS error, or if the tag domain is not supported.
+	 */
+	public void addTagToGivenDomain(IRODSTagValue irodsTagValue,
+			MetadataDomain metadataDomain, String domainUniqueName)
+			throws JargonException;
+
+	/**
+	 * Remove the tag from the given domain, using the user supplied in the  <code>IRODSTagValue</code>
+	 * @param irodsTagValue {@link orgirods.jargon.usertagging.domain.IRODSTagValue} with the tag information to be removed, including the user.
+	 * @param metadataDomain <code>MetaDataAndDomainData.MetadataDomain</code> enum value that describes the iRODS domain being tagged.
+	 * @param domainUniqueName <code>String</code> with the unique name for the domain object, such as absolute path for a collection or data object.
+	 * @throws JargonException if any iRODS error, or if the tag domain is not supported.
+	 */
+	public void removeTagFromGivenDomain(IRODSTagValue irodsTagValue,
+			MetadataDomain metadataDomain, String domainUniqueName)
+			throws JargonException;
+
+}

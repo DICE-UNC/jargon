@@ -1,0 +1,68 @@
+<div class="colleft" xmlns:spring="http://www.springframework.org/tags"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:form="http://www.springframework.org/tags/form"><spring:url
+	value="/static/js/arch/series_admin.js" var="series_admin_url" /> <script
+	src="${series_admin_url}" type="text/javascript"><!-- //required for FF3 and Opera --></script>
+
+<h3><spring:message code="seriesadmin.series.add" /></h3>
+
+<spring:url value='/seriesadmin/seriesdir/add' var="form_url" />
+<div class="roundedcontainer fieldset" id="verticalForm"><form:form
+	commandName="seriesForm" name="seriesForm" id="seriesForm"
+	action="${form_url}" method="POST">
+
+	<div id="fieldWrapper"><label for="name"><spring:message
+		code="seriesadmin.series.add" /></label><br />
+	<form:input cssClass="input_field_12em" path="name" id="name" /><br />
+	<form:errors cssClass="errors" path="name" /><br />
+
+	<label for="containingServiceName"><spring:message
+		code="policyadmin.select.policy.repo" /></label><br />
+	<form:select cssClass="input_field_12em" path="containingServiceName"
+		id="containingServiceName">
+		<form:options items="${policyDrivenServiceList}"
+			itemValue="policyDrivenServiceName"
+			itemLabel="policyDrivenServiceName" />
+	</form:select><br />
+	<form:errors cssClass="errors" path="containingServiceName" /><br />
+
+
+	<label for="collectionAbsolutePath"><spring:message
+		code="seriesadmin.series.collection" /></label><br />
+	<form:input cssClass="input_field_12em" path="collectionAbsolutePath"
+		id="collectionAbsolutePath" /><br />
+	<form:errors cssClass="errors" path="collectionAbsolutePath" /><br />
+
+	<label for="description"><spring:message
+		code="text.description" /></label><br />
+	<form:textarea cssClass="input_field_12em" path="description"
+		id="description" rows="4" cols="40" /><br />
+	<form:errors cssClass="errors" path="description" /><br />
+
+	<label for="boundPolicyName"><spring:message
+		code="policyadmin.policy.name" /></label><br />
+	<form:select multiple="false" id="boundPolicyName"
+		path="boundPolicyName">
+	</form:select>
+
+	<div>
+	<button type="reset"><spring:message code="button.reset" /></button>
+	<button type="submit" id="submitButton"><spring:message
+		code="button.update" /></button>
+	</div>
+	</div>
+</form:form></div>
+
+<script type="text/javascript">
+
+$(document).ready(function() {
+	
+		$("#accordion").accordion("activate", $("#series"));
+
+		$("#containingServiceName").change(function() { containingServiceNameClick(this); });
+
+		containingServiceNameClick($("#containingServiceName").val());
+	
+});
+
+</script></div>

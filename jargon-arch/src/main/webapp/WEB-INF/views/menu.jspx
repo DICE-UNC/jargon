@@ -1,0 +1,128 @@
+<div id="main_menu" xmlns:spring="http://www.springframework.org/tags"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:sec="http://www.springframework.org/security/tags"
+	xmlns:form="http://www.springframework.org/tags/form"><script
+	type="text/javascript">
+
+	
+	$(document).ready(function(){
+	$("#accordion").accordion();
+	});
+</script>
+
+<div style="width: 250px;">
+<div id="accordion">
+<h3>Main</h3>
+<div>
+<ul>
+	<spring:url value="/home" var="home_url" />
+	<li><a href="${home_url}">Home</a></li>
+	<spring:url value="/myexceptions" var="myexceptions_url" />
+	<li><a href="${myexceptions_url}">My Exceptions</a></li>
+	<spring:url value="/mystagearea" var="mystagearea_url" />
+	<li><a href="${myrecentactivity_url}">My Recent Activity</a></li>
+	<spring:url value="/mystagearea" var="mystagearea_url" />
+	<li><a href="${mystagearea_url}">My Staging Area</a></li>
+	<li>My Preferences</li>
+	<li>Help</li>
+	<li>Contact DICE</li>
+</ul>
+</div>
+
+<sec:authorize access="hasRole('archive_appl_admin')">
+	<h3 id="polservadmin">Policy-Driven Service Administration</h3>
+	<div>
+	<ul>
+		<spring:url value="/appladmin/view" var="app_manage_url" />
+		<spring:url value="/appladmin/add" var="app_add_url" />
+		<li><a href="${app_manage_url}">View/Update</a></li>
+		<li><a href="${app_add_url}">Add</a></li>
+	</ul>
+	</div>
+</sec:authorize> <sec:authorize
+	access="hasAnyRole('archive_admin', 'archive_appl_admin')">
+	<h3 id="policyadmin">Policy Administration</h3>
+	<div>
+	<ul>
+		<spring:url value="/policyadmin/policydir/view" var="policyview_url" />
+		<li><a href="${policyview_url}">View/Update Policy
+		Repositories</a></li>
+		<spring:url value="/policyadmin/policydir/add" var="policyadd_url" />
+		<li><a href="${policyadd_url}">Add a Policy Repository</a></li>
+		<spring:url value="/policyadmin/policy/add"
+			var="policy_detail_add_url" />
+		<li><a href="${policy_detail_add_url}">Add a Policy</a></li>
+		<spring:url value="/policyadmin/policy/view_policy_list"
+			var="policy_detail_view_url" />
+		<li><a href="${policy_detail_view_url}">View/Update Policies
+		in Repository</a></li>
+	</ul>
+	</div>
+</sec:authorize> <sec:authorize
+	access="hasAnyRole('series_admin', 'archive_appl_admin')">
+	<h3 id="staging">Staging Area Administration</h3>
+	<div>
+	<ul>
+		<spring:url value="/stageadmin/stagingarea/view"
+			var="stageadmin_stagingarea_view_url" />
+		<li><a href="$stageadmin_stagingarea_view_url}">Manage
+		Staging Area</a></li>
+
+	</ul>
+	</div>
+</sec:authorize> <sec:authorize
+	access="hasAnyRole('archive_admin', 'archive_appl_admin', 'rule_admin')">
+	<h3 id="rule">Rule Developer</h3>
+	<div>
+	<ul>
+		<spring:url value="/rulemapping/add"
+			var="ruleadmin_rulemapping_add_url" />
+		<li><a href="${ruleadmin_rulemapping_add_url}">Add Mapping</a></li>
+		<spring:url value="/rulemapping/view" var="ruleadmin_rulemapping_url" />
+		<li><a href="${ruleadmin_rulemapping_url}">View/Update
+		Mapping</a></li>
+		<spring:url value="/ruleadmin/ruledir/add"
+			var="ruleadmin_rulemapping_url" />
+		<li><a href="${ruleadmin_rulemapping_url}">Add Mapping
+		Collection</a></li>
+		<spring:url value="/ruleadmin/ruledir/view"
+			var="ruleadmin_rulemapping_url" />
+		<li><a href="${ruleadmin_rulemapping_url}">View/Update
+		Mapping Collection</a></li>
+	</ul>
+	</div>
+</sec:authorize> <sec:authorize
+	access="hasAnyRole('series_admin', 'archive_appl_admin')">
+	<h3 id="series">Series Administration</h3>
+	<div>
+	<ul>
+		<spring:url value="/seriesadmin/seriesdir/add"
+			var="seriesadmin_seriesdir_add_url" />
+		<li><a href="${seriesadmin_seriesdir_add_url}">Add
+		Series</a></li>
+		<spring:url value="/seriesadmin/seriesdir/view"
+			var="seriesadmin_seriesdir_view_url" />
+		<li><a href="${seriesadmin_seriesdir_view_url}">View/Update
+		Series</a></li>
+		<li>Series Exceptions</li>
+		<li>Series Policy Admin</li>
+	</ul>
+	</div>
+</sec:authorize> <sec:authorize access="hasAnyRole('series_admin', 'archivist')">
+	<h3 id="ingest">Ingest</h3>
+	<div>
+	<ul>
+		<li>Ingest</li>
+		<li>My Recent Ingests</li>
+	</ul>
+	</div>
+</sec:authorize> <sec:authorize access="hasRole('archive_appl_admin')">
+	<h3 id="config">Arch Confi</h3>
+	<div>
+	<ul>
+		<li>Repository Preferences</li>
+	</ul>
+	</div>
+</sec:authorize></div>
+</div>
+</div>

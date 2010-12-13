@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 2.0//EN" "http://tiles.apache.org/dtds/tiles-config_2_0.dtd">
+<tiles-definitions>
+	
+	<definition extends="default" name="index">
+		<put-attribute name="body" value="/WEB-INF/views/index.jspx"/>
+	</definition>
+	
+	<definition extends="public" name="dataAccessFailure">
+		<put-attribute name="body" value="/WEB-INF/views/dataAccessFailure.jspx"/>
+	</definition>
+	
+	<definition extends="public" name="resourceNotFound">
+		<put-attribute name="body" value="/WEB-INF/views/resourceNotFound.jspx"/>
+	</definition>
+	 
+	<definition extends="public" name="uncaughtException">
+		<put-attribute name="body" value="/WEB-INF/views/uncaughtException.jspx"/>
+	</definition>
+	
+	<definition extends="public" name="lingoException">
+		<put-attribute name="body" value="/WEB-INF/views/lingoException.jspx"/>
+	</definition>
+	
+	<definition extends="default" name="home">
+		<put-attribute name="menu" value="/WEB-INF/views/menu.jspx" />
+		<put-attribute name="body" value="/WEB-INF/views/home.jspx" />
+	</definition>
+	
+	<definition extends="default" name="ingest">
+		<put-attribute name="menu" value="/WEB-INF/views/menu.jspx" />
+		<put-attribute name="body" value="/WEB-INF/views/ingest.jspx" />
+	</definition>
+	
+	<definition extends="default" name="query">
+		<put-attribute name="menu" value="/WEB-INF/views/menu.jspx" />
+		<put-attribute name="body" value="/WEB-INF/views/query.jspx" />
+	</definition>
+	
+	<definition extends="default" name="users">
+		<put-attribute name="menu" value="/WEB-INF/views/menu.jspx" />
+		<put-attribute name="body" value="/WEB-INF/views/users.jspx" />
+	</definition>
+	
+	<definition extends="public" name="login">
+        <put-attribute name="body" value="/WEB-INF/views/login.jspx"/>
+    </definition>
+    
+    <definition extends="fragment" name="ajax_users_table">
+        <put-attribute name="fragment" value="/WEB-INF/views/ajax_users_table.jspx"/>
+    </definition>
+    
+     <definition extends="fragment" name="ajax_users_table_details">
+        <put-attribute name="fragment" value="/WEB-INF/views/ajax_users_table_details.jspx"/>
+    </definition>
+    
+     <definition extends="fragment" name="ajax_query_result">
+        <put-attribute name="fragment" value="/WEB-INF/views/ajax_query_results.jspx"/>
+    </definition>
+    
+     <definition extends="fragment" name="ajax_user_add">
+        <put-attribute name="fragment" value="/WEB-INF/views/ajax_user_add.jspx"/>
+    </definition>
+    
+    <definition extends="default" name="user_groups">
+		<put-attribute name="menu" value="/WEB-INF/views/menu.jspx" />
+		<put-attribute name="body" value="/WEB-INF/views/user_groups.jspx" />
+	</definition>
+	
+	<definition extends="default" name="data_browser">
+		<put-attribute name="menu" value="/WEB-INF/views/menu.jspx" />
+		<put-attribute name="body" value="/WEB-INF/views/data_browser.jspx" />
+	</definition>
+	
+	 <definition extends="fragment" name="ajax_data_browser_tree_node">
+        <put-attribute name="fragment" value="/WEB-INF/views/ajax_data_browser_tree_node.jspx"/>
+    </definition>
+	
+    
+    
+</tiles-definitions>

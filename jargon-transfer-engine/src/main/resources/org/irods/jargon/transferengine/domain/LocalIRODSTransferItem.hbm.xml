@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="org.irods.jargon.transferengine.domain">
+	<class name="LocalIRODSTransferItem" table="LOCAL_IRODS_TRANSFER_ITEM">
+		<id name="id" column="ID">
+			<generator class="native" />
+		</id>
+
+		<property name="sourceFileAbsolutePath" type="string">
+			<column name="SOURCE_FILE_ABSOLUTE_PATH" length="32672" />
+		</property>
+		
+		<property name="targetFileAbsolutePath" type="string">
+			<column name="TARGET_FILE_ABSOLUTE_PATH" length="32672" />
+		</property>
+
+		<property name="file" type="boolean" column="IS_FILE" />
+		<property name="lengthInBytes" type="long" column="LENGTH_IN_BYTES" />
+		<property name="error" type="boolean" column="IS_ERROR" />
+		<property name="errorMessage" type="text" column="ERROR_MESSAGE" />
+		
+		<property name="errorStackTrace" type="string">
+			<column name="ERROR_STACK_TRACE" length="32672" />
+		</property>
+		
+		
+		<property name="transferredAt" type="timestamp" column="TRANSFERRED_AT" />
+
+		<many-to-one name="localIRODSTransfer" class="LocalIRODSTransfer"
+			column="LOCAL_IRODS_TRANSFER_ID" not-null="true" />
+
+	</class>
+</hibernate-mapping>

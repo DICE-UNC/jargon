@@ -1,0 +1,154 @@
+
+
+<div xmlns:spring="http://www.springframework.org/tags"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:form="http://www.springframework.org/tags/form">
+
+<jsp:output omit-xml-declaration="yes" />
+
+
+<div class="detailsUpdateFormHeaderBar">
+<center>
+<h3><spring:message code="user_admin.user_details.h3" /></h3>
+</center>
+
+<div class="fg-toolbar ui-widget-header ui-corner-all ui-helper-clearfix">
+	
+	<div class="fg-buttonset fg-buttonset-multi">
+	<button class="fg-button ui-state-default ui-corner-left" id="detail_user_metadata"> <spring:message
+		code="button.metadata"/></button>
+		<button class="fg-button ui-state-default" id="detail_user_group_membership"> <spring:message
+		code="user_admin.user_group_memebership"/></button>
+		<button class="fg-button ui-state-default" id="detail_user_federated_membership"> <spring:message
+		code="user_admin.user_federated_memebership"/></button>
+		<button class="fg-button ui-state-default ui-corner-right" id="detail_user_audit"> <spring:message
+		code="button.audit"/></button>
+	</div>
+	
+	<div class="fg-buttonset fg-buttonset-single ui-helper-clearfix">
+		<button class="ui-corner-left fg-button ui-state-default ui-priority-primary" id="update_detail_user" ><spring:message
+		code="button.update"/></button>
+		<button class="fg-button ui-state-default ui-priority-primary ui-corner-right" id="delete_detail_user"><spring:message
+		code="button.delete" /></button>
+	</div>
+</div>
+</div>
+
+<br />
+<div id="detailMessages">
+<c:if test="${not empty requestScope.action_error}">
+	<font color="red"> <c:out value="${requestScope.action_error}" />.
+	</font>
+</c:if> <c:if test="${not empty requestScope.flash}">
+	<font color="green"> <c:out value="${requestScope.flash}" /></font>
+</c:if>
+
+<div id="details_javascript_message_area" class="errors"><!-- required for FF3 and Opera --></div>
+</div>
+
+<div  id="columnarForm">
+<spring:url value="/users/update_user"
+	var="user_update_url" />
+<form:form commandName="user" method="POST" action="${user_update_url}"
+	id="user_details_update_form" >
+	<fieldset class="roundedContainer">
+	
+	<p>
+	<label for="detailUserId">
+	<spring:message code="irods.user_id" /></label><br />
+
+	<form:input cssClass="input_field_12em" path="id" readonly="true"></form:input><br />
+	</p>
+
+	<p>
+	<label for="detailUserName"> <spring:message
+		code="irods.user_name" /></label><br />
+	<form:input cssClass="input_field_12em" path="name" readonly="true"></form:input><br />
+	</p>
+
+	<p>
+	<label for="detailUserType"> <spring:message
+		code="irods.user_type" /></label> <form:select path="userType.textValue"
+		items="${userTypes}" /> <br />
+	</p>
+
+	<p>
+	<label for="detailUserZone"> <spring:message
+		code="irods.user_zone" /></label><br />
+
+	<form:input cssClass="input_field_12em" path="zone"></form:input><br />
+	</p>
+	
+	<p>
+
+	<label for="detailUserDN"> <spring:message code="irods.user_DN" /></label><br />
+
+	<form:input cssClass="input_field_12em" path="userDN"></form:input><br />
+	</p>
+
+	<p>
+	<label for="detailUserModified"> <spring:message
+		code="irods.last_modified" /></label><br />
+
+	<form:input cssClass="input_field_12em" path="modifyTime"
+		readonly="true"></form:input><br />
+
+	</p>
+	<p>
+	<label for="detailCreatedAt"> <spring:message
+		code="irods.created_at" /></label><br />
+
+	<form:input cssClass="input_field_12em" path="createTime"
+		readonly="true"></form:input><br />
+	</p>
+
+	</fieldset>
+
+	<fieldset class="roundedContainer">
+	
+	<p>
+	<label
+		for="detailUserComment"> <spring:message code="irods.comment" /></label><br />
+
+	<form:textarea path="comment" rows="4" cols="40" /><br />
+	</p>
+
+	<p>
+	<label for="detailUserInfo"> <spring:message code="irods.info" /></label><br />
+
+	<form:textarea path="info" rows="4" cols="40" /><br />
+	</p>
+
+	</fieldset>
+
+</form:form>
+</div>
+<script type="text/javascript">
+    $(function(){
+        //all hover and click logic for buttons
+        $(".fg-button:not(.ui-state-disabled)")
+        .hover(
+            function(){ 
+                $(this).addClass("ui-state-hover"); 
+            },
+            function(){ 
+                $(this).removeClass("ui-state-hover"); 
+            }
+        )
+        .mousedown(function(){
+                $(this).parents('.fg-buttonset-single:first').find(".fg-button.ui-state-active").removeClass("ui-state-active");
+                if( $(this).is('.ui-state-active.fg-button-toggleable, .fg-buttonset-multi .ui-state-active') ){ $(this).removeClass("ui-state-active"); }
+                else { $(this).addClass("ui-state-active"); }    
+        })
+        .mouseup(function(){
+            if(! $(this).is('.fg-button-toggleable, .fg-buttonset-single .fg-button,  .fg-buttonset-multi .fg-button') ){
+                $(this).removeClass("ui-state-active");
+            }
+        });
+    });
+    
+</script>
+
+
+</div>

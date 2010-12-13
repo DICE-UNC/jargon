@@ -1,0 +1,29 @@
+iDrop Desktop Client
+
+********  Note that this is software in development, and is not yet intended for general use *************
+
+Post 0.6.0 development towards Milestone 0.7
+
+
+#34 fix local file tree refresh behavior to recompute expanded paths
+#38 (drag/drop remote file to local file does nothing, should copy)
+ #24 (hover highlighting when dragging/dropping)
+ #48 (Remove replication by property)
+ #10 (enter/return does not 'submit' the credentials on log in panel)
+ #12 (Improvements to tree behavior on various iRODS operations)
+#55 (fix irods tree refresh when reparenting)
+#37 ('Processed' listed in Display submenu from tray icon)
+#67 (sizing middle panel viz rhs tree)
+#57 (when a node in irods has not been cached a new dir does not show up in tree)
+#66 (exception caused when dragging remote tree file to remote tree directory)
+#68 (still a repaint prob with new dir no subdirs reflecting in center panel)
+#61 (dropping local file on remote file, should copy to parent directory)
+#51 (parent folder name in center panel too long)
+#64 (error activity window)
+#65 (warning activity window)
+#33 (file in collection count double-count repliacted files)
+
+Added startup check to pause or continue any transfers that are enqueued
+Several tickets covered for moving transfer database and rolling log file into user directory
+
+look at 16x16 icons

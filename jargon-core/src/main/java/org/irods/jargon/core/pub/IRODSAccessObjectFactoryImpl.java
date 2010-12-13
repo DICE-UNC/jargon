@@ -1,0 +1,294 @@
+package org.irods.jargon.core.pub;
+
+import org.irods.jargon.core.connection.IRODSAccount;
+import org.irods.jargon.core.connection.IRODSSession;
+import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.pub.io.IRODSFileFactory;
+import org.irods.jargon.core.pub.io.IRODSFileFactoryImpl;
+import org.irods.jargon.core.pub.io.IRODSFileSystemAO;
+import org.irods.jargon.core.pub.io.IRODSFileSystemAOImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+/**
+ * Factory to produce IRODS access objects. This is the key object which can be
+ * used to create components that can interact directly with iRODS to query
+ * metadata attributes, update the catalog, and move data.
+ * <p/>
+ * Access objects are styled after traditional DAO's, in that they deal with a
+ * particular domain or service, and have methods to query for data about things
+ * in iRODS, and methods to update things in iRODS. The access objects use
+ * 'POJO' domain objects for input and output parameters, giving some nice,
+ * simple abstractions of the iRODS metadata catalog.
+ * <p/>
+ * Access objects are connected to iRODS at the time they are created. The
+ * connection is determined by the
+ * {@link org.irods.jargon.core.connection.IRODSAccount} that is specified when
+ * the access object is created. The connection is managed using a
+ * <code>ThreadLocal</code>, such that any access objects created in the same
+ * thread by this factory will automatically create a connection, or will share
+ * an already created connection. This also means that, at the end of any set of
+ * operations, the connection must be closed. Typically, and
+ * {@link IRODSFileSystem} is instantiated, and that
+ * <code>IRODSFileSystem</code> is used to get a reference to this access object
+ * factory. Once operations are done, the <code>IRODSFileSystem</code> can be
+ * used to close connections in that thread. This factory has hooks to also
+ * close those connections, and this can be used in cases where this factory is
+ * injected itself into another service.
+ * 
+ * @author Mike Conway, DICE (www.irods.org)
+ * 
+ */
+public final class IRODSAccessObjectFactoryImpl implements
+		IRODSAccessObjectFactory {
+
+	private static final Logger LOG = LoggerFactory
+			.getLogger(IRODSAccessObjectFactoryImpl.class);
+
+	private transient final IRODSSession irodsSession;
+
+	private IRODSAccessObjectFactoryImpl(final IRODSSession irodsSession) {
+		this.irodsSession = irodsSession;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.pub.IRODSAccessObjectFactory#closeSession()
+	 */
+	@Override
+	public void closeSession() throws JargonException {
+
+		if (irodsSession == null) {
+			throw new JargonException("null session");
+		}
+
+		irodsSession.closeSession();
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.IRODSAccessObjectFactory#closeSession(org.irods
+	 * .jargon.core.connection.IRODSAccount)
+	 */
+	@Override
+	public void closeSession(final IRODSAccount irodsAccount)
+			throws JargonException {
+		if (irodsSession == null) {
+			throw new JargonException("null session");
+		}
+
+		if (irodsAccount == null) {
+			throw new IllegalArgumentException("null irodsAccount");
+		}
+
+		irodsSession.closeSession(irodsAccount);
+
+	}
+
+	/**
+	 * Creates an instance of this access object factory.
+	 * 
+	 * @param irodsSession
+	 *            {@link org.irods.jargon.core.connection.IRODSSession} that is
+	 *            capable of creating connections to iRODS on demand.
+	 * @return
+	 * @throws JargonException
+	 */
+	public static IRODSAccessObjectFactory instance(
+			final IRODSSession irodsSession) throws JargonException {
+		if (irodsSession == null) {
+			LOG.error("null irods session");
+			throw new IllegalArgumentException("IRODSSession cannot be null");
+		}
+		LOG.debug("creating access object factory");
+		return new IRODSAccessObjectFactoryImpl(irodsSession);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.IRODSAccessObjectFactory#getUserAO(org.irods
+	 * .jargon.core.connection.IRODSAccount)
+	 */
+	@Override
+	public UserAO getUserAO(final IRODSAccount irodsAccount)
+			throws JargonException {
+		return new UserAOImpl(irodsSession, irodsAccount);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.IRODSAccessObjectFactory#getUserGroupAO(org
+	 * .irods.jargon.core.connection.IRODSAccount)
+	 */
+	@Override
+	public UserGroupAO getUserGroupAO(final IRODSAccount irodsAccount)
+			throws JargonException {
+		return new UserGroupAOImpl(irodsSession, irodsAccount);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.IRODSAccessObjectFactory#getEnvironmentalInfoAO
+	 * (org.irods.jargon.core.connection.IRODSAccount)
+	 */
+	@Override
+	public EnvironmentalInfoAO getEnvironmentalInfoAO(
+			final IRODSAccount irodsAccount) throws JargonException {
+		return new EnvironmentalInfoAOImpl(irodsSession, irodsAccount);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.IRODSAccessObjectFactory#getIRODSGenQueryExecutor
+	 * (org.irods.jargon.core.connection.IRODSAccount)
+	 */
+	@Override
+	public IRODSGenQueryExecutor getIRODSGenQueryExecutor(
+			final IRODSAccount irodsAccount) throws JargonException {
+		return new IRODSGenQueryExecutorImpl(irodsSession, irodsAccount);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.IRODSAccessObjectFactory#getZoneAO(org.irods
+	 * .jargon.core.connection.IRODSAccount)
+	 */
+	@Override
+	public ZoneAO getZoneAO(final IRODSAccount irodsAccount)
+			throws JargonException {
+		return new ZoneAOImpl(irodsSession, irodsAccount);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.pub.IRODSAccessObjectFactory#getResourceAO(org
+	 * .irods.jargon.core.connection.IRODSAccount)
+	 */
+	@Override
+	public ResourceAO getResourceAO(final IRODSAccount irodsAccount)
+			throws JargonException {
+		return new ResourceAOImpl(irodsSession, irodsAccount);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.IRODSAccessObjectFactory#getIRODSFileSystemAO
+	 * (org.irods.jargon.core.connection.IRODSAccount)
+	 */
+	@Override
+	public IRODSFileSystemAO getIRODSFileSystemAO(
+			final IRODSAccount irodsAccount) throws JargonException {
+		return new IRODSFileSystemAOImpl(irodsSession, irodsAccount);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.IRODSAccessObjectFactory#getIRODSFileFactory
+	 * (org.irods.jargon.core.connection.IRODSAccount)
+	 */
+	@Override
+	public IRODSFileFactory getIRODSFileFactory(final IRODSAccount irodsAccount)
+			throws JargonException {
+		return new IRODSFileFactoryImpl(irodsSession, irodsAccount);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.IRODSAccessObjectFactory#getCollectionAO(org
+	 * .irods.jargon.core.connection.IRODSAccount)
+	 */
+	@Override
+	public CollectionAO getCollectionAO(final IRODSAccount irodsAccount)
+			throws JargonException {
+		return new CollectionAOImpl(irodsSession, irodsAccount);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.IRODSAccessObjectFactory#getDataObjectAO(org
+	 * .irods.jargon.core.connection.IRODSAccount)
+	 */
+	@Override
+	public DataObjectAO getDataObjectAO(final IRODSAccount irodsAccount)
+			throws JargonException {
+		return new DataObjectAOImpl(irodsSession, irodsAccount);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.IRODSAccessObjectFactory#getRuleProcessingAO
+	 * (org.irods.jargon.core.connection.IRODSAccount)
+	 */
+	@Override
+	public RuleProcessingAO getRuleProcessingAO(final IRODSAccount irodsAccount)
+			throws JargonException {
+		return new RuleProcessingAOImpl(irodsSession, irodsAccount);
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.IRODSAccessObjectFactory#getDataTransferOperations
+	 * (org.irods.jargon.core.connection.IRODSAccount)
+	 */
+	@Override
+	public DataTransferOperations getDataTransferOperations(
+			final IRODSAccount irodsAccount) throws JargonException {
+		return new DataTransferOperationsImpl(irodsSession, irodsAccount);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.pub.IRODSAccessObjectFactory#
+	 * getRemoteExecutionOfCommandsAO
+	 * (org.irods.jargon.core.connection.IRODSAccount)
+	 */
+	@Override
+	public RemoteExecutionOfCommandsAO getRemoteExecutionOfCommandsAO(
+			final IRODSAccount irodsAccount) throws JargonException {
+		return new RemoteExecutionOfCommandsAOImpl(irodsSession, irodsAccount);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.pub.IRODSAccessObjectFactory#
+	 * getCollectionAndDataObjectListAndSearchAO
+	 * (org.irods.jargon.core.connection.IRODSAccount)
+	 */
+	@Override
+	public CollectionAndDataObjectListAndSearchAO getCollectionAndDataObjectListAndSearchAO(
+			final IRODSAccount irodsAccount) throws JargonException {
+		return new CollectionAndDataObjectListAndSearchAOImpl(irodsSession,
+				irodsAccount);
+	}
+
+}

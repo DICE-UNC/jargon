@@ -1,0 +1,122 @@
+
+        //localFileModel.reload();
+
+        //log.debug("local tree model reloaded, expand previously selected nodes");
+
+//        // I have remembered the expanded paths, expand them again
+//        TreePath currentPath;
+//        if (currentPaths != null) {
+//            while (currentPaths.hasMoreElements()) {
+//                currentPath = (TreePath) currentPaths.nextElement();
+//
+//                // make sure to load children of each node
+//
+//                LocalFileNode childNode;
+//                for (Object localFileNodeObject : currentPath.getPath()) {
+//                    childNode = (LocalFileNode) localFileNodeObject;
+//                    childNode.forceReloadOfChildrenOfThisNode();
+//                    childNode.lazyLoadOfChildrenOfThisNode();
+//                    localFileModel.reload(childNode);
+//                }
+//
+//                log.debug("expanding tree path:{}", currentPath);
+//            }
+//
+//            //localFileModel.reload();
+//
+//            while (currentPaths.hasMoreElements()) {
+//                currentPath = (TreePath) currentPaths.nextElement();
+//
+//                log.debug("expanding tree path:{}", currentPath);
+//                fileTree.expandPath(currentPath);
+//            }
+//        }
+
+
+
+
+
+
+
+
+
+
+
+public static TreePath buildTreePathForIrodsAbsolutePath(final JTree tree, final String irodsAbsolutePath) throws IdropException {
+
+        IRODSFileSystemModel irodsFileSystemModel = (IRODSFileSystemModel) tree.getModel();
+        // the root of the model, which may not be a path underneath the root of the irods resource
+        IRODSNode rootNode = (IRODSNode) irodsFileSystemModel.getRoot();
+        TreePath calculatedTreePath = new TreePath(new IRODSNode(rootNode.getData(), irodsFileSystemModel));
+        CollectionAndDataObjectListingEntry rootEntry = (CollectionAndDataObjectListingEntry) rootNode.getData();
+        String[] irodsPathComponents = irodsAbsolutePath.split("/");
+
+        /* get an array that has the path components that descend from the root of the iRODS file system to
+         * the subdirectory which the tree model considers the root of the tree
+         */
+        String[] irodsRootNodePathComponents = rootNode.getData().getPathOrName().split("/");
+
+        /* determine the relative calculatedTreePath of the given iRODS file underneath the root.  There are cases where
+         * the root is not '/'.
+         */
+
+        StringBuilder searchRoot = new StringBuilder();
+        IRODSNode currentNode = (IRODSNode) irodsFileSystemModel.getRoot();
+
+        if (irodsRootNodePathComponents.length == 1) {
+            // root is "/" in iRODS so the root path is complete
+        } else {
+
+            // for every node in the root path, build up the tree path to the top of the tree
+            for (String rootPathComponent : irodsPathComponents) {
+
+
+                searchRoot.append('/');
+
+
+                searchRoot.append(rootPathComponent);
+
+                currentNode =
+                        findChild(currentNode, searchRoot.toString());
+                if (currentNode == null) {
+                    throw new IdropException("did not find node for path:" + searchRoot.toString());
+                }
+                calculatedTreePath.pathByAddingChild(currentNode);
+
+            }
+        }
+
+        /* calculatedTreePath now holds the path from the root of iRODS to the root of the tree, now accumulate any
+         * TreePath entries that represent the path below the root of the tree contained in the
+         * absolute path.  The relative path starts at the path component in the position after
+         * the length of the root path.
+         */
+
+
+        int relativePathStartsAfter = irodsRootNodePathComponents.length - 1;
+
+
+
+        for (int i = ( relativePathStartsAfter + 1 ); i < irodsPathComponents.length; i++) {
+            // next element from userObjects is the child of the current node, note that for the first node (typically '/') a delimiting slash is not needed
+            if (searchRoot.length() > 1) {
+                searchRoot.append('/');
+            }
+
+            searchRoot.append(irodsPathComponents[i]);
+            if (i > 0) {
+                currentNode =
+                        findChild(currentNode, searchRoot.toString());
+            }
+
+            if (currentNode == null) {
+                throw new IdropException("cannot find node for path:" + searchRoot.toString());
+            } else {
+                calculatedTreePath = calculatedTreePath.pathByAddingChild(currentNode);
+            }
+        }
+
+
+
+        return calculatedTreePath;
+    }

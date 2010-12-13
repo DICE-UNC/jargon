@@ -1,0 +1,17 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+  <head>
+    <title></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  </head>
+  <body>
+      <h1>Launch LL Desktop Client</h1>
+      <script src="http://www.java.com/js/deployJava.js"></script>
+    <script>
+        // using JavaScript to get location of JNLP file relative to HTML page
+        var dir = location.href.substring(0, location.href.lastIndexOf('/')+1);
+        var url = dir + "llDropGui.jnlp";
+        deployJava.createWebStartLaunchButton(url, '1.6.0');
+    </script>
+  </body>
+</html>

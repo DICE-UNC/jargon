@@ -1,0 +1,307 @@
+package org.irods.jargon.core.pub;
+
+import java.util.List;
+
+import org.irods.jargon.core.exception.DataNotFoundException;
+import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.pub.domain.AvuData;
+import org.irods.jargon.core.pub.domain.Collection;
+import org.irods.jargon.core.pub.io.IRODSFile;
+import org.irods.jargon.core.query.AVUQueryElement;
+import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry;
+import org.irods.jargon.core.query.JargonQueryException;
+import org.irods.jargon.core.query.MetaDataAndDomainData;
+
+/**
+ * This is an access object that can be used to manipulate iRODS Collections.
+ * This object treats the IRODSFile that represents a directory as a Collection
+ * object, not as a <code>java.io.File</code> object. For familiar
+ * <code>java.io.*</code> operations, see
+ * {@link org.irods.jargon.core.pub.io.IRODSFile}.
+ * 
+ * This interface has a default implementation within Jargon. The access object
+ * should be obtained using a factory, either by creating from
+ * {@link org.irods.jargon.core.pub.IRODSFileSystem}, or from an
+ * {@link org.irods.jargon.core.pub.IRODSAccessObjectFactory} implementation.
+ * This class is handy for retrieving and manipulating system and user metadata
+ * associated with collection objects (files), as well as performing common
+ * query operations. This class also supports various iRODS file operations that
+ * are not included in the standard <code>java.io.*</code> libraries.
+ * 
+ * For general data movement operations, also see
+ * {@link org.irods.jargon.core.pub.DataTransferOperations}.
+ * 
+ * @author Mike Conway - DICE (www.irods.org)
+ * 
+ */
+public interface CollectionAO {
+
+	/**
+	 * For a given absolute path, get an <code>IRODSFileImpl</code> that is a
+	 * collection.
+	 * 
+	 * @param collectionPath
+	 *            <code>String</code> with absolute path to the collection
+	 * @return {@link org.irods.jargon.core.pub.io.IRODSFileImpl}
+	 * @throws JargonException
+	 */
+	IRODSFile instanceIRODSFileForCollectionPath(String collectionPath)
+			throws JargonException;
+
+	/**
+	 * Given a set of metadata query parameters, return a list of IRODS
+	 * Collections that match the metadata query
+	 * 
+	 * @param avuQueryElements
+	 *            <code>List</code> of
+	 *            {@link org.irods.jargon.core.query.AVUQueryElements} with the
+	 *            query specification
+	 * @return <code>List</code> of org.irods.jargon.core.pub.domain.Collection}
+	 *         with domain objects that satisfy the query.
+	 * @throws JargonQueryException
+	 * @throws JargonException
+	 */
+	List<Collection> findDomainByMetadataQuery(
+			List<AVUQueryElement> avuQueryElements)
+			throws JargonQueryException, JargonException;
+
+	/**
+	 * Get a summary list of collections and data objects and AVU metadata based
+	 * on a metadata query
+	 * 
+	 * @param avuQuery
+	 *            <code>List</code> of
+	 *            {@link org.irods.jargon.core.query.AVUQueryElements} with the
+	 *            query specification
+	 * @return <code>List</code> of
+	 *         {@link org.irods.jargon.core.query.MetaDataAndDomainData}
+	 * @throws JargonQueryException
+	 * @throws JargonException
+	 */
+	List<MetaDataAndDomainData> findMetadataValuesByMetadataQuery(
+			List<AVUQueryElement> avuQuery) throws JargonQueryException,
+			JargonException;
+
+	/**
+	 * Add AVU metadata for this collection
+	 * 
+	 * @param absolutePath
+	 *            <code>String</code> with the absolute path to the target
+	 *            collection
+	 * @param avuData
+	 *            {@link org.irods.jargon.core.pub.domain.AvuData}
+	 * @throws JargonException
+	 */
+	void addAVUMetadata(final String absolutePath, final AvuData avuData)
+			throws JargonException;
+
+	/**
+	 * Remove AVU metadata from this collection
+	 * 
+	 * @param absolutePath
+	 *            <code>String</code> with the absolute path to the target
+	 *            collection
+	 * @param avuData
+	 *            {@link org.irods.jargon.core.pub.domain.AvuData}
+	 * @throws JargonException
+	 */
+	void deleteAVUMetadata(final String absolutePath, final AvuData avuData)
+			throws JargonException;
+
+	/**
+	 * List the AVU metadata for a particular collection, as well as information
+	 * identifying the Collection associated with that metadata, based on a
+	 * metadata query.
+	 * 
+	 * @param avuQuery
+	 *            <code>List</code> of
+	 *            {@link org.irods.jargon.core.query.AVUQueryElement} that
+	 *            defines the metadata query
+	 * @param <code>String with the absolute path of the collection of interest.  If this path
+	 * is left blank, then the query will not add absolute path to the 'where' clause.
+	 * @return <code>List</code> of
+	 *         {@link org.irods.jargon.core.query.MetaDataAndDomainData}
+	 * @throws JargonQueryException
+	 * @throws JargonException
+	 */
+	List<MetaDataAndDomainData> findMetadataValuesByMetadataQueryForCollection(
+			final List<AVUQueryElement> avuQuery,
+			final String collectionAbsolutePath) throws JargonQueryException,
+			JargonException;
+
+	/**
+	 * Get a list of the metadata values for the given collection absolute path.
+	 * This method allows paging of results through a partial start index.
+	 * 
+	 * @param collectionAbsolutePath
+	 *            <code>String</code> with the absolute path of a collection in
+	 *            iRODS
+	 * @param partialStartIndex
+	 *            <code>int</code> with an offset into the results for display
+	 *            paging. Set to 0 if no paging offset is desired.
+	 * @return <code>List</code> of
+	 *         {@link org.irods.jargon.core.query.MetaDataAndDomainData} with
+	 *         AVU values and other values that identify the collection the AVU
+	 *         applies to.
+	 * @throws JargonException
+	 * @throws JargonQueryException
+	 */
+	List<MetaDataAndDomainData> findMetadataValuesForCollection(
+			final String collectionAbsolutePath, final int partialStartIndex)
+			throws JargonException, JargonQueryException;
+
+	/**
+	 * Overwrite AVU metadata for this collection
+	 * 
+	 * @param absolutePath
+	 *            <code>String</code> with the absolute path to the target
+	 *            collection
+	 * @param avuData
+	 *            {@link org.irods.jargon.core.pub.domain.AvuData}
+	 * @throws JargonException
+	 */
+	void overwriteAVUMetadata(final String absolutePath, final AvuData avuData)
+			throws DataNotFoundException, JargonException;
+
+	/**
+	 * Given a set of metadata query parameters, return a list of IRODS
+	 * Collections that match the metadata query. This query method allows a
+	 * partial start as an offset into the result set to get paging behaviors.
+	 * 
+	 * @param avuQueryElements
+	 *            <code>List</code> of
+	 *            {@link org.irods.jargon.core.query.AVUQueryElements} with the
+	 *            query specification
+	 * @param partialStartIndex
+	 *            <code>int</code> that has the partial start offset into the
+	 *            result set
+	 * @return
+	 * @throws JargonQueryException
+	 * @throws JargonException
+	 */
+	List<Collection> findDomainByMetadataQuery(
+			final List<AVUQueryElement> avuQueryElements,
+			final int partialStartIndex) throws JargonQueryException,
+			JargonException;
+
+	/**
+	 * Find all <code>Collection</code> objects under the given parent.
+	 * 
+	 * @param absolutePathOfParent
+	 *            <code>String</code> with the absolute path of the parent
+	 *            directory under which the search should happen. Note a space
+	 *            will be interpereted as the root directory by default.
+	 * @return a <code>List</code> of
+	 *         {@link org.irods.jargon.core.pub.domain.Resource};
+	 * @throws JargonException
+	 */
+
+	List<Collection> findAll(String absolutePathOfParent)
+			throws JargonException;
+
+	/**
+	 * Find all <code>Collection</code> objects under the given parent. Note
+	 * that this method allows a partial start to be specified such that paging
+	 * can be done over large collections.
+	 * 
+	 * @param absolutePathOfParent
+	 *            <code>String</code> with the absolute path of the parent
+	 *            directory under which the search should happen. Note a space
+	 *            will be interpereted as the root directory by default.
+	 * @param partialStartIndex
+	 *            <code>int</code> with the offset into the result set from
+	 *            which results should be returned, for a paging behavior.
+	 * @return a <code>List</code> of
+	 *         {@link org.irods.jargon.core.pub.domain.Resource};
+	 * @throws JargonException
+	 */
+	List<Collection> findAll(String absolutePathOfParent, int partialStartIndex)
+			throws JargonException;
+
+	
+
+	/**
+	 * List the AVU metadata for a particular collection, as well as information
+	 * about the collection itself, based on a metadata query.
+	 * 
+	 * @param avuQuery
+	 *            <code>List</code> of
+	 *            {@link org.irods.jargon.core.query.AVUQueryElement} that
+	 *            defines the metadata query
+	 * @param <code>String</code> with additional conditions to further limit
+	 *        the query, set to blank if unused.
+	 * @return <code>List</code> of
+	 *         {@link org.irods.jargon.core.query.MetaDataAndDomainData}
+	 * @throws JargonQueryException
+	 * @throws JargonException
+	 */
+	List<MetaDataAndDomainData> findMetadataValuesByMetadataQueryWithAdditionalWhere(
+			final List<AVUQueryElement> avuQuery, final String additionalWhere)
+			throws JargonQueryException, JargonException;
+
+	/**
+	 * Retrieve a list of <code>Collection</code> domain objects that match the
+	 * given query.
+	 * 
+	 * @param whereClause
+	 *            <code>String</code> with where clause in iquest format,
+	 *            without the WHERE prefix
+	 * @param partialStartIndex
+	 *            <code>int</code> with the starting point to return results. 0
+	 *            indicates no offset.
+	 * @return <code>List<Collection></code> with the query results.
+	 * @throws JargonException
+	 */
+	List<Collection> findWhere(final String whereClause,
+			final int partialStartIndex) throws JargonException;
+
+	/**
+	 * For the given absolute path, return the given collection. Note that this
+	 * method will return null if the collection is not found.
+	 * 
+	 * @param irodsCollectionAbsolutePath
+	 *            <code>String</code> with the absolute path to the collection
+	 * @return {@link org.irods.jargon.core.pub.domain.Collection} or null if no
+	 *         collection found.
+	 * @throws JargonException
+	 */
+	Collection findByAbsolutePath(final String irodsCollectionAbsolutePath)
+			throws JargonException;
+
+	/**
+	 * List the AVU metadata for a particular collection, as well as information
+	 * about the collection itself, based on a metadata query.
+	 * 
+	 * @param avuQuery
+	 *            <code>List</code> of
+	 *            {@link org.irods.jargon.core.query.AVUQueryElement} that
+	 *            defines the metadata query
+	 * @param <code>String with the absolute path of the collection of interest.  If this path
+	 * is left blank, then the query will not add absolute path to the 'where' clause.
+	 * @return <code>List</code> of
+	 *         {@link org.irods.jargon.core.query.MetaDataAndDomainData}
+	 * @throws JargonQueryException
+	 * @throws JargonException
+	 */
+	List<MetaDataAndDomainData> findMetadataValuesByMetadataQueryForCollection(
+			final List<AVUQueryElement> avuQuery,
+			final String collectionAbsolutePath, final int partialStartIndex)
+			throws JargonQueryException, JargonException;
+
+	/**
+	 * For a given iRODS collection, give a count of the total number of data
+	 * objects underneath that collection. This will include files in child
+	 * directories.
+	 * 
+	 * @param irodsCollectionAbsolutePath
+	 *            <code>String</code> with the absolute path to the iRODS
+	 *            collection to count
+	 * @return <code>int</code> with the total count of files, recursively
+	 *         counted.
+	 * @throws JargonException
+	 */
+	int countAllFilesUnderneathTheGivenCollection(
+			final String irodsCollectionAbsolutePath) throws JargonException;
+
+	
+}

@@ -1,0 +1,117 @@
+Jargon-core Release Notes
+================================================================================================
+
+Project: Jargon-core - next-gen IRODS Java API prototype
+Date: 10/06/2010
+Release Version: 0.0.2
+
+This is an alpha-level release.  Jargon core is in use in several early-access projects.
+
+
+================================================================================================
+Requirements
+
+-Jargon depends on Java 1.6+
+-Jargon is built using Apache Maven2, see POM for dependencies
+
+libraries
+---------
+
+
+================================================================================================
+Features and Changes
+--------------------
+
+*Fixes to transfer engine, cleanup and refactoring of TransferOperationsHelper
+*In DataObjectAOImpl, removed specification of resource with get as a default, may add back another method with a signature to specify that resource
+is specified...this was causing some bugs in iren testing, it may be more of a problem with iren!
+*Fix count of files in a collection (CollectionAOImpl)
+*Fix parallel file transfers, still one bug in parallel get with large files.
+*Fix available in IRODSFileInputStream to return iRODS file length (0 does not cut it, and breaks the 'skip()' processing, so it
+returns to the available() implementation of the original Jargon).
+*Added query paging for IRODSFile.list() methods to accumulate all files/subdirs when listing
+*Fix seek to use OpenedDataObjInp, removed prior impl
+*Fix of connection disconnect behavior to return the connection to the IRODSProtocolManager
+*Addition of a SessionClosingFileInputStream in the io libraries.
+*Added code for remote execution of scripts.  This will be updated for new api that allows streaming once tested.
+*parallel transfer threads now cache any exceptions. These are reviewed by the parallel transfer runner and passed back up to the
+caller
+*added socket timeout processing, currently defaults to 10 seconds
+*fix path bug in IRODSFile that was putting windows path separators in irods file names on Windows for certain operations.
+*fix single quotes in file names
+*Added IRODSPasswordUtilities with an implementation of iRODS password obfuscation routines.
+*Work in progress, not yet completed, on modify user password from user and admin perspectives.  Need to finish implementing the admin-side obfuscation per
+fixme's in UserAOImplTest
+*Added cache of iRODS challenge during sign-on for later use in obfuscation routines, see IRODSCommands
+
+********* TODO ***************
+
+
+$2 = {
+  cmd = "hello\000PI_REQ\000\000\000\000Mapping\n# FNM pr?", '\0' <repeats 11 times>, "z\002\000\000 from an external function name (logical)\n# to  an internal function name. \n# Each mapping consists of two parts separated by  |.\n# The three parts are: "..., 
+  cmdArgv = '\0' <repeats 99999 times>, 
+  execAddr = '\0' <repeats 255 times>, 
+  hintPath = '\0' <repeats 1087 times>, 
+  addPathToArgv = 0, 
+  condInput = {
+    len = 5286176, 
+    keyWord = 0x10050a2d0, 
+    value = 0x0
+  }
+}
+(gdb) print *execCmdInp.condInput
+Structure has no component named operator*.
+(gdb) print *execCmdInp->condInput
+Structure has no component named operator*.
+(gdb) print execCmdInp->condInput->keyWord
+$3 = (char **) 0x10050a2d0
+(gdb) print *execCmdInp->condInput->keyWord
+$4 = 0x10050a320 ""
+(gdb) print execCmdInp->*condInput          
+No symbol "condInput" in current context.
+(gdb) print *execCmdInpt->condInput.keyWord
+No symbol "execCmdInpt" in current context.
+(gdb) print *execCmdInp->*condInput        
+No symbol "condInput" in current context.
+(gdb) print *execCmdInp->condInput 
+Structure has no component named operator*.
+(gdb) print execCmdInp->condInput
+$5 = {
+  len = 5286176, 
+  keyWord = 0x10050a2d0, 
+  value = 0x0
+}
+(gdb) print execCmdInp->condInput.keyWord
+$6 = (char **) 0x10050a2d0
+(gdb) print **execCmdInp->condInput.keyWord
+$7 = 0 '\0'
+KK(gdb) (gdb) 
+
+
+*null value in unspecified AVU elements?  check unit tests, am I putting the String 'null' in there?
+*fix seek to use new api
+*AVU modify method
+*method to count subdirs, add group by to query processing
+*more work on query paging, extensible metadata
+*resource in file, put/get, phymove - check and test
+*rule processing - parsing of query data?
+*irodsFile URI
+* 'in query'
+* embedded ' in file names
+*ordering of AVU per bug 114
+*consider query method that will discard subsequent results by sending a continuation of -1 (avoid too many open collections error), rethink use of requery - maxrows -1 close-out
+as well as requery capability
+*query stuff as below, handle numerics when no '' in value and mark as numeric operation
+When querying dataObjects (-d) additional conditions (AttName Op AttVal)
+may be given separated by 'and', for example:
+ qu -d a = b and c '<' 10
+Or a single 'or' can be given for the same AttName, for example
+ qu -d r '<' 5 or '>' 7
+ 
+You can also query in numeric mode (instead of as strings) by adding 'n'
+in front of the test condition, for example:
+ qu -d r 'n<' 123
+which causes it to cast the AVU column to numeric (decimal) in the SQL.
+In numeric mode, if any of the named AVU values are non-numeric, a SQL
+error will occur but this avoids problems when comparing numeric strings
+of different lengths.

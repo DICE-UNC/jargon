@@ -1,0 +1,54 @@
+<div xmlns:spring="http://www.springframework.org/tags"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:form="http://www.springframework.org/tags/form"><spring:url
+	value="/static/js/lingo/user_groups_admin.js"
+	var="lingo_user_groups_url" /> <script src="${lingo_user_groups_url}"
+	type="text/javascript"><!-- //required for FF3 and Opera --></script>
+
+<div id="user_group_search_form" class="roundedContainer">
+<h3><spring:message code="user_group_admin.search_header" /></h3>
+<br />
+
+<!-- //user group search form area -->
+
+<div><label for="user_group_search_type"><spring:message
+	code="user_group_admin.search_type" /></label> <select
+	class="input_field_12em" name="user_group_search_type"
+	id="user_group_search_type">
+	<option value="byUserGroupName">by user group name</option>
+	<option value="byUserInGroup">by user in group group</option>
+	<option value="byUserGroup Metadata">by user group metadata</option>
+	<option value="byQuery">by query</option>
+</select> <br />
+</div>
+
+
+<div id="search_form_by_user_group_name" style="display: none">
+<fieldset><label for="userGroupName"> <spring:message
+	code="user_admin.search_user_group_name" /></label><br />
+<input class="input_field_12em" name="userGroupName" id="userGroupName" /><br />
+<button id="search_user_groups_by_user_group_name"><spring:message
+	code="button.find" /></button>
+</fieldset>
+</div>
+
+
+<div id="search_form_by_users_in_group" style="display: none">
+<fieldset><label for="userName"> <spring:message
+	code="user_group_admin.search_user_group_by_user_name" /></label><br />
+<input class="input_field_12em" name="userName" id="userName" /><br />
+<button id="search_user_groups_by_user_name"><spring:message
+	code="button.find" /></button>
+</fieldset>
+</div>
+
+
+
+</div>
+
+<!-- // end of user group search form area -->
+<div id="detail_activity_div"><!-- spacer for empty div --></div>
+
+<div id="user_groups_table_div" class="roundedContainer"></div>
+
+</div>

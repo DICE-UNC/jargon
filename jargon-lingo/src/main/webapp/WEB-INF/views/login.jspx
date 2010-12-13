@@ -1,0 +1,64 @@
+<div xmlns:spring="http://www.springframework.org/tags"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	
+<div id="_title" style="width: 100%"><spring:message
+	code="security.login.title" var="title" /></div>
+
+<div id="messages">
+<c:if test="${not empty requestScope.login_error}">
+	<font color="red"> <spring:message
+		code="security.login.unsuccessful" /> <c:out
+		value="${SPRING_SECURITY_LAST_EXCEPTION.message}" />. </font>
+</c:if> <c:if test="${empty requestScope.login_error}">
+	<p><spring:message code="security.login.message" /></p>
+</c:if>
+</div>
+<br/>
+
+<div id="loginform_div" class="roundedContainer verticalForm">
+
+<spring:url value='j_spring_security_check' var="form_url" />
+<form name="f" action="${form_url}" method="POST" id="marginForm">
+<div class="fieldset">
+<label for="host"><spring:message code="irods.host" /></label>
+<input id="host" type='text' name='host' 
+	value="${requestScope.host}" />
+<br />
+
+<label for="port"><spring:message code="irods.port" /></label>
+<input id="port" type='text' name='port' 
+	value="${requestScope.port}" />
+<br />
+
+<label for="zone"><spring:message code="irods.zone" /></label>
+<input id="zone" type='text' name='zone'
+	value="${requestScope.zone}" />
+<br />
+
+<label for="resource"><spring:message
+	code="irods.resource" /></label> <input id="resource" type='text'
+	name='resource'  value="${requestScope.resource}" />
+<br />
+
+<label for="user"><spring:message
+	code="irods.account" /></label> <input id="user" type='text' name='user'
+	 value="${requestScope.user}" />
+<br />
+<label for="password"><spring:message
+	code="security.login.form.password" /></label> <input id="password"
+	type='password' name='password'  value="${requestScope.password}" />
+<br />
+</div>
+<div>
+<spring:message code="button.submit"
+	var="submit_label" />
+<button name="proceed" type="submit"><c:out
+	value="${submit_label}" /></button>
+<spring:message code="button.reset" var="reset_label" />
+<button name="reset" type="reset"><c:out
+	value="${reset_label}" /></button>
+	</div>
+</form> 
+</div>
+
+</div>

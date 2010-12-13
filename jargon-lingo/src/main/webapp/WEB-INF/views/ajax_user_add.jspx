@@ -1,0 +1,58 @@
+<div xmlns:spring="http://www.springframework.org/tags"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:form="http://www.springframework.org/tags/form">
+
+
+<div id="div_for_user_add_form"><spring:url value='/users/add'
+	var="form_url" /> <form:form action="${form_url}" method="POST" commandName="userAddForm"
+	id="verticalForm">
+	<fieldset><label for="name"> <spring:message
+		code="user_admin.add.user_name" /></label> <form:input path="name" /> <br />
+
+	<label for="password"> <spring:message
+		code="user_admin.add.user_password" /></label> <form:password path="password" />
+	<br />
+
+	<label for="verifyPassword"> <spring:message
+		code="user_admin.add.user_password_confirm" /></label> <form:password
+		path="confirmPassword" /> <br />
+
+
+	<label for="userType"> <spring:message
+		code="user_admin.add.user_type" /></label> <br />
+	<form:input path="userType" /> <br />
+
+	<label for="userGroup"> <spring:message
+		code="user_admin.add.user_group" /></label> <br />
+	<form:input path="userGroup" /> <br />
+
+	<label for="userZone"> <spring:message
+		code="user_admin.add.user_zone" /></label> <br />
+	<form:input path="userZone" /> <br />
+
+	<label for="userDN"> <spring:message
+		code="user_admin.add.user_dn" /></label> <br />
+	<input name="userDN" /> <br />
+
+	</fieldset>
+	<fieldset><label for="userInfo"> <spring:message
+		code="user_admin.add.user_info" /></label> <br />
+
+	<form:textarea path="info" rows="4" cols="40" /> <label
+		for="userComment"> <spring:message
+		code="user_admin.add.user_comment" /></label> <br />
+
+	<form:textarea path="comment" rows="4" cols="40" /></fieldset>
+
+</form:form>
+
+<spring:message code="button.update"
+	var="submit_label" />
+<button name="proceed" type="submit" id="submit_user_add"><c:out
+	value="${submit_label}" /></button>
+<spring:message code="button.cancel" var="cancel_label" />
+<button name="cancel" type="submit"><c:out
+	value="${cancel_label}" /></button>
+	</div>
+
+</div>

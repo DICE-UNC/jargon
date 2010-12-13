@@ -1,0 +1,30 @@
+<div xmlns:spring="http://www.springframework.org/tags"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:form="http://www.springframework.org/tags/form"><spring:url
+	value="/static/js/lingo/data_browser.js" var="lingo_js_url" /> <script
+	src="${lingo_js_url}" type="text/javascript"><!-- //required for FF3 and Opera --></script>
+
+<spring:url value="/static/js/jquery.jstree.js" var="jtree_url" /> <script
+	src="${jtree_url}" type="text/javascript"><!-- //required for FF3 and Opera --></script>
+
+
+<div id="detail_activity_div"><!-- spacer for empty div --></div>
+
+<div id="left_area" class="col2">
+<div class="roundedContainer scroll">
+
+<div id="data_tree_div">
+
+<ul>
+	<li id="/"><a href="#">/</a></li>
+</ul>
+</div>
+</div>
+</div>
+
+<div id="right_area" class="col1">
+<div class="roundedContainer">
+<div id="data_tree_table_div"><!--  empty at first --></div>
+</div>
+</div>
+</div>

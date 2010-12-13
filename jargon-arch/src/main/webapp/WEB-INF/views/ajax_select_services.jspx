@@ -1,0 +1,10 @@
+
+<div xmlns:spring="http://www.springframework.org/tags"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:form="http://www.springframework.org/tags/form">
+	<form:select
+	multiple="false" id="selectBox" path="serviceListing">
+	<c:forEach items="${serviceListing}" var="service">
+		<form:option value="${service.policyDrivenServiceName}" />
+	</c:forEach>
+</form:select></div>

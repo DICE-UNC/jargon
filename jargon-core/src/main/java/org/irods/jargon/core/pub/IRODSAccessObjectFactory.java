@@ -1,0 +1,239 @@
+package org.irods.jargon.core.pub;
+
+import org.irods.jargon.core.connection.IRODSAccount;
+import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.pub.io.IRODSFileFactory;
+import org.irods.jargon.core.pub.io.IRODSFileSystemAO;
+/**
+ * Factory to produce IRODS access objects.  This is the key object which can be used to create components that can interact
+ * directly with iRODS to query metadata attributes, update the catalog, and move data.
+ * <p/>
+ * Access objects are styled after traditional DAO's, in that they deal with a particular domain or service, and have methods to query 
+ * for data about things in iRODS, and methods to update things in iRODS.  The access objects use 'POJO' domain objects for
+ * input and output parameters, giving some nice, simple abstractions of the iRODS metadata catalog.
+ * <p/>
+ * Access objects are connected to iRODS at the time they are created.  The connection is determined by the {@link org.irods.jargon.core.connection.IRODSAccount}
+ * that is specified when the access object is created.   The connection is managed using a <code>ThreadLocal</code>, such that any access objects created in the same
+ * thread by this factory will automatically create a connection, or will share an already created connection.  This also means that, at the end of any set of operations, the connection
+ * must be closed.  Typically, and {@link IRODSFileSystem} is instantiated, and that <code>IRODSFileSystem</code> is used to get a reference to this access object factory.
+ * Once operations are done, the <code>IRODSFileSystem</code> can be used to close connections in that thread.  This factory has hooks to also close those connections,
+ * and this can be used in cases where this factory is injected itself into another service.
+ * 
+ * <p/>
+ * 
+ * For example, if using the 'shortcut' <code>IRODSFileSystem</code. object, you
+ * may see a pattern of use like this:
+ * 
+ * <pre>
+ *  IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
+ *  
+ * UserAO adminUserAO = irodsFileSystem.getIRODSAccessObjectFactory().getUserAO(irodsAccount);
+ * adminUserAO.doSomething();
+ * ZoneAO zoneAO = irodsFileSystem.getIRODSAccessObjectFactory().getZoneAO(irodsAccount);
+ * zoneAO.doSomething()
+ * 
+ * irodsFileSystem.close();
+ * </pre>
+ * 
+ * 
+ * 
+ * @author Mike Conway - DICE (www.irods.org)
+ * 
+ */
+public interface IRODSAccessObjectFactory {
+
+	/**
+	 * Create an instance of a <code>UserAO</code> access object to interact
+	 * with iRODS Users.
+	 * 
+	 * @param irodsAccount
+	 *            <code>IRODSAccount</code> that describes the irods instance to
+	 *            access.
+	 * @return {@link org.irods.jargon.core.pub.UserAO}
+	 * @throws JargonException
+	 */
+	UserAO getUserAO(final IRODSAccount irodsAccount) throws JargonException;
+
+	/**
+	 * Create an instance of a <code>EnvironmentalInfoAO</code> access object to
+	 * retrieve global information from iRODS.
+	 * 
+	 * @param irodsAccount
+	 *            <code>IRODSAccount</code> that describes the irods instance to
+	 *            access.
+	 * @return {@link org.irods.jargon.core.pub.EnvironmentalInfoAO}
+	 * @throws JargonException
+	 */
+	EnvironmentalInfoAO getEnvironmentalInfoAO(final IRODSAccount irodsAccount)
+			throws JargonException;
+
+	/**
+	 * Create an instance of a <code>IRODSGenQueryExecutor</code> access object
+	 * to interact with iRODS GenQuery.
+	 * 
+	 * @param irodsAccount
+	 *            <code>IRODSAccount</code> that describes the irods instance to
+	 *            access.
+	 * @return {@link org.irods.jargon.core.pub.IRODSGenQueryExecutor}
+	 * @throws JargonException
+	 */
+	IRODSGenQueryExecutor getIRODSGenQueryExecutor(
+			final IRODSAccount irodsAccount) throws JargonException;
+
+	/**
+	 * Create an instance of a <code>ZoneAO</code> access object to interact
+	 * with iRODS Zones.
+	 * 
+	 * @param irodsAccount
+	 *            <code>IRODSAccount</code> that describes the irods instance to
+	 *            access.
+	 * @return {@link org.irods.jargon.core.pub.ZoneAO}
+	 * @throws JargonException
+	 */
+	ZoneAO getZoneAO(final IRODSAccount irodsAccount) throws JargonException;
+
+	/**
+	 * Create an instance of a <code>ResourceAO</code> access object to interact
+	 * with iRODS Resources.
+	 * 
+	 * @param irodsAccount
+	 *            <code>IRODSAccount</code> that describes the irods instance to
+	 *            access.
+	 * @return {@link org.irods.jargon.core.pub.ResourceAO}
+	 * @throws JargonException
+	 */
+	ResourceAO getResourceAO(IRODSAccount irodsAccount) throws JargonException;
+
+	/**
+	 * Create an instance of a <code>IRODSFileSystemAO</code> access object to
+	 * interact with iRODS Files. Note that this acess object, while usable as
+	 * an API, should rarely need direct use. Rather, the facilities of
+	 * {@link org.irods.jargon.core.pub.io.IRODSFile} should be utilized.
+	 * 
+	 * @param irodsAccount
+	 *            <code>IRODSAccount</code> that describes the irods instance to
+	 *            access.
+	 * @return {@link org.irods.jargon.core.pub.io.IRODSFileSystemAO}
+	 * @throws JargonException
+	 */
+	IRODSFileSystemAO getIRODSFileSystemAO(IRODSAccount irodsAccount)
+			throws JargonException;
+
+	/**
+	 * Returns an <code>IRODSFileFactory</code> that can be used to create
+	 * various types of iRODS files and streams.
+	 * 
+	 * @param irodsAccount
+	 *            <code>IRODSAccount</code> that describes the irods instance to
+	 *            access.
+	 * @return {@link org.irods.jargon.core.pub.io.IRODSFileFactory}
+	 * @throws JargonException
+	 */
+	IRODSFileFactory getIRODSFileFactory(IRODSAccount irodsAccount)
+			throws JargonException;
+
+	/**
+	 * Create an instance of a <code>UserGroupAO</code> access object to
+	 * interact with iRODS UserGroups.
+	 * 
+	 * @param irodsAccount
+	 *            <code>IRODSAccount</code> that describes the irods instance to
+	 *            access.
+	 * @return {@link org.irods.jargon.core.pub.UserGroupAO}
+	 * @throws JargonException
+	 */
+	UserGroupAO getUserGroupAO(final IRODSAccount irodsAccount)
+			throws JargonException;
+
+	/**
+	 * Close all connections associated with the current thread.
+	 * @throws JargonException
+	 */
+	void closeSession() throws JargonException;
+
+	/**
+	 * Returns a <code>CollectionAO</code> implementation that works on IRODS
+	 * Collection objects
+	 * 
+	 * @param irodsAccount
+	 *            <code>IRODSAccount</code> that describes the irods instance to
+	 *            access.
+	 * @return {@link org.irods.jargon.core.pub.CollectionAO}
+	 * @throws JargonException
+	 */
+	CollectionAO getCollectionAO(IRODSAccount irodsAccount)
+			throws JargonException;
+
+	/**
+	 * Returns a <code>DataObjectAO</code> implementation that works on IRODS
+	 * data objects (files)
+	 * 
+	 * @param irodsAccount
+	 *            <code>IRODSAccount</code> that describes the irods instance to
+	 *            access.
+	 * @return {@link org.irods.jargon.core.pub.DataObjectAO}
+	 * @throws JargonException
+	 */
+	DataObjectAO getDataObjectAO(IRODSAccount irodsAccount)
+			throws JargonException;
+	
+	/**
+	 * Returns a <code>CollectionAndDataObjectListAndSearchAO</code> that contains methods useful for
+	 * interface search boxes, as well as pagable tree views of the iRODS hierarchy.  This is distinct from the typical
+	 * find and list methods in the access objects for DataObject and Collection.
+	 * 
+	 * @param irodsAccount
+	 *            <code>IRODSAccount</code> that describes the irods instance to
+	 *            access.
+	 * @return {@link org.irods.jargon.core.pub.CollectionAO}
+	 * @throws JargonException
+	 */
+	CollectionAndDataObjectListAndSearchAO getCollectionAndDataObjectListAndSearchAO(IRODSAccount irodsAccount)
+			throws JargonException;
+
+	/**
+	 * Returns a <code>RuleProcessingAO</code> implementation that interacts
+	 * with iRODS rule processing
+	 * 
+	 * @param irodsAccount
+	 *            <code>IRODSAccount</code> that describes the irods instance to
+	 *            access.
+	 * @return {@link org.irods.jargon.core.pub.RuleProcessingAO}
+	 * @throws JargonException
+	 */
+	RuleProcessingAO getRuleProcessingAO(IRODSAccount irodsAccount)
+			throws JargonException;
+
+	/**
+	 * Returns a <code>DataTransferOperations</code> object that provides a
+	 * centralized set of methods for moving data around the iRODS system.
+	 * 
+	 * @param irodsAccount
+	 *            <code>IRODSAccount</code> that describes the irods instance to
+	 *            access.
+	 * @return {@link org.irods.jargon.core.pub.DataTransferOperations}
+	 * @throws JargonException
+	 */
+	DataTransferOperations getDataTransferOperations(
+			final IRODSAccount irodsAccount) throws JargonException;
+
+	/**
+	 * Returns a <code>RemoteExecutionOfCommandsAO</code> that can execute
+	 * commands (scripts) remotely on an iRODS server.
+	 * 
+	 * @param irodsAccount
+	 *            <code>IRODSAccount</code> that describes the irods instance to
+	 *            access.
+	 * @return {@link org.irods.jargon.core.pub.RemoteExecutionOfCommandsAO}
+	 * @throws JargonException
+	 */
+	RemoteExecutionOfCommandsAO getRemoteExecutionOfCommandsAO(
+			IRODSAccount irodsAccount) throws JargonException;
+
+	/**
+	 * Close the underlying connection for the given IRODSAccount.
+	 * @param irodsAccount
+	 * @throws JargonException
+	 */
+	void closeSession(IRODSAccount irodsAccount) throws JargonException;
+}

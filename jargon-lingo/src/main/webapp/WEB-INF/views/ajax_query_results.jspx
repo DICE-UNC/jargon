@@ -1,0 +1,29 @@
+
+<div xmlns:spring="http://www.springframework.org/tags"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+<div style="overflow: auto; height: 600px; width: 100%">
+<table cellspacing="0" cellpadding="0" border="0"
+	id="query_result_table" class="display" style="width: 100%;">
+	<thead>
+		<tr>
+			<c:forEach items="${query_result.translatedIRODSQuery.selectFields}"
+				var="selectColumn">
+
+				<th><c:out value="${selectColumn.selectFieldColumnName}" /></th>
+			</c:forEach>
+		</tr>
+	</thead>
+	<tbody>
+		<c:forEach items="${query_result.results}" var="resultRow">
+			<tr>
+				<c:forEach items="${resultRow.columnsAsList}" var="resultColumn">
+					<td><c:out value="${resultColumn}" /></td>
+				</c:forEach>
+			</tr>
+		</c:forEach>
+	</tbody>
+	<tfoot>
+	</tfoot>
+</table>
+</div>
+</div>
