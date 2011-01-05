@@ -240,7 +240,7 @@ final class IRODSLocalTransferEngine implements TransferStatusCallbackListener {
 			throw new JargonException(e);
 		} finally {
 			//session.close();
-			//log.info("session closed");
+			//LOG.info("session closed");
 		}
 
 	}
@@ -527,7 +527,7 @@ final class IRODSLocalTransferEngine implements TransferStatusCallbackListener {
 			throw new JargonException(e);
 		} finally {
 			//session.close();
-			//log.info("session closed");
+			//LOG.info("session closed");
 		}
 	}
 
