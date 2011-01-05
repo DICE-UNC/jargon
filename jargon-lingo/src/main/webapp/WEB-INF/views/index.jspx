@@ -1,8 +1,0 @@
-<div xmlns:spring="http://www.springframework.org/tags">	
-    <div style="width: 100%" id="_title">
-    	<spring:message var="title" code="welcome.titlepane" />
-		<h3><spring:message code="welcome.h3" /></h3>
-		<p><spring:message code="welcome.text" /></p>
-		
-	</div>
-</div>
