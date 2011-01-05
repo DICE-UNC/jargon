@@ -11,28 +11,6 @@
   <version>0.0.1-SNAPSHOT</version>
   <name>Jargon transfer engine</name>
   <description>Services to manage data transfers, providing data movement libraries and tools to manage and monitor data movements</description>
-  <build>
-    <plugins>
-      <plugin>
-	<groupId>org.codehaus.mojo</groupId>
-	<artifactId>dbunit-maven-plugin</artifactId>
-	<version>1.0-beta-3</version>
-	<dependencies>
-	  <dependency>
-	    <groupId>org.apache.derby</groupId>
-	    <artifactId>derby</artifactId>
-	    <version>10.6.1.0</version>
-	  </dependency>
-	</dependencies>
-	<configuration>
-	  <driver>org.apache.derby.jdbc.EmbeddedDriver</driver>
-	  <url>jdbc:derby:target/transferDatabase</url>
-	  <username>transfer</username>
-	  <password>transfer</password>
-	</configuration>
-      </plugin>
-    </plugins>
-  </build>
   <dependencies>
     <dependency>
       <groupId>org.dbunit</groupId>
@@ -83,4 +61,26 @@
       <artifactId>antlr</artifactId>
     </dependency>
   </dependencies>
+  <build>
+    <plugins>
+      <plugin>
+	<groupId>org.codehaus.mojo</groupId>
+	<artifactId>dbunit-maven-plugin</artifactId>
+	<version>1.0-beta-3</version>
+	<dependencies>
+	  <dependency>
+	    <groupId>org.apache.derby</groupId>
+	    <artifactId>derby</artifactId>
+	    <version>10.6.1.0</version>
+	  </dependency>
+	</dependencies>
+	<configuration>
+	  <driver>org.apache.derby.jdbc.EmbeddedDriver</driver>
+	  <url>jdbc:derby:target/transferDatabase</url>
+	  <username>transfer</username>
+	  <password>transfer</password>
+	</configuration>
+      </plugin>
+    </plugins>
+  </build>
 </project>
