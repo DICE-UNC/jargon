@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSSession;
+import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.packinstr.GenQueryInp;
 import org.irods.jargon.core.packinstr.GenQueryOut;
@@ -129,14 +130,15 @@ public final class IRODSGenQueryExecutorImpl extends IRODSGenericAO implements
 					translatedIRODSQuery, partialStartIndex);
 		}
 
-		Tag response = getIRODSProtocol().irodsFunction(GenQueryInp.PI_TAG,
+		Tag response = null;
+		
+		try {
+		response = getIRODSProtocol().irodsFunction(GenQueryInp.PI_TAG,
 				genQueryInp.getParsedTags(), GenQueryInp.API_NBR);
-
-		if (response == null) {
-			log.info("null response from IRODS call indicates no rows found, original query was:"
-					+ translatedIRODSQuery);
-			List<IRODSQueryResultRow> result = translateResponseIntoResultSet(
-					response, translatedIRODSQuery, 0);
+		} catch (DataNotFoundException dnf) {
+			log.info("response from IRODS call indicates no rows found, original query was:{}"
+					,translatedIRODSQuery);
+			List<IRODSQueryResultRow> result = new ArrayList<IRODSQueryResultRow>();
 			IRODSQueryResultSet resultSet = IRODSQueryResultSet.instance(
 					translatedIRODSQuery, result, 0);
 			return resultSet;

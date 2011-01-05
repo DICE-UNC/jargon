@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 /**
  * This connection manager simply returns a stand-alone connection to IRODS.
  * based on the information in the IRODSAccount.
- * 
+ * <p/>
  * This particular implementation has no shared data between connections that
  * are created, and as such does not need to be thread-safe. A pooled connection
  * manager will need to process getting and returning connections from multiple
@@ -37,12 +37,12 @@ public final class IRODSSimpleProtocolManager implements IRODSProtocolManager {
 	 * but also a 'connected' connection, meaning that the startup and handshake
 	 * activities have been accomplished, leaving the IRODSProtocol in a ready
 	 * state.
-	 * 
+	 * <p/>
 	 * This method also is the 'hook' that would allow alternative login
 	 * methods, such as GSI, to be fully resolved, and all necessary
 	 * transformations to the irodsAccount information will be accomplished when
 	 * this method returns.
-	 * 
+	 * <p/>
 	 * @see org.irods.jargon.core.connection.IRODSProtocolManager#getIRODSProtocol
 	 *      (org.irods.jargon.core.domain.IRODSAccount)
 	 */
@@ -60,7 +60,7 @@ public final class IRODSSimpleProtocolManager implements IRODSProtocolManager {
 	 * of a connection manager will do a callback to the {@link IRODSConnection
 	 * IRODSConnection} and the connection will be closed. Other implementations
 	 * may return the connection to a pool.
-	 * 
+	 * <p/>
 	 * @see org.irods.jargon.core.connection.IRODSConnectionManager#returnIRODSConnection
 	 *      (org.irods.jargon.core.connection.IRODSConnection)
 	 */

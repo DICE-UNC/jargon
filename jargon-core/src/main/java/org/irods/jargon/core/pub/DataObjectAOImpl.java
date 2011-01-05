@@ -53,7 +53,7 @@ import edu.sdsc.grid.io.irods.Tag;
 
 /**
  * Access Object provides 'DAO' operations on IRODS Data Objects (files).
- * 
+ * <p/>
  * Note that traditional file io per the java.io.* interfaces is handled through
  * the objects in the <code>org.irods.jargon.core.pub.io</code> package. This
  * class represents operations that are outside of the contracts one would
@@ -307,12 +307,7 @@ public final class DataObjectAOImpl extends IRODSGenericAO implements
 		try {
 			Tag responseToInitialCallForPut = getIRODSProtocol().irodsFunction(
 					dataObjInp);
-
-			if (responseToInitialCallForPut == null) {
-				log.warn("send of put returned null, currently is ignored and null is returned from put operation");
-				return;
-			}
-
+			
 			int numberOfThreads = responseToInitialCallForPut
 					.getTag(numThreads).getIntValue();
 
@@ -365,7 +360,10 @@ public final class DataObjectAOImpl extends IRODSGenericAO implements
 					return;
 				}
 			}
-
+			
+		} catch (DataNotFoundException dnf) {
+			log.warn("send of put returned no data found from irods, currently is ignored and null is returned from put operation");
+			return;
 		} catch (JargonException je) {
 			if (je.getMessage().indexOf("-312000") > -1) {
 				log.error("attempted put of file that exists in irods without overwrite");

@@ -23,14 +23,14 @@ import org.slf4j.LoggerFactory;
  * default manager will create a new connection for each requested connection.
  * For other behaviors, such as pooling or cacheing of connections, use other
  * implementations of <code>IRODSProtocolManager</code> directly.
- * 
+ * <p/>
  * Typical usage would be to create an instance of this object, then use the
  * <code>IRODSFileSystem</code> class to obtain a reference of an
  * <code>IRODSAccessObjectFactoryImpl</code> and a <code>IRODSFileFactory</code>
  * . These two factory objects allow creation of various iRODS file
  * implementations that map to the <code>java.io.*</code> packages, and to
  * create various Access Objects.
- * 
+ * <p/>
  * An Access Object represents the various domains within iRODS (such as User,
  * Resource, Collection) and allows accessing, updating, managing metadata, and
  * other operations specific to each of these objects. Access Objects will
@@ -40,18 +40,26 @@ import org.slf4j.LoggerFactory;
  * <code>IRODSAccount</code> indicates the iRODS server to which that Access or
  * file object is connected. In other words, one IRODSFileSystem object will
  * manage connections to multiple iRODS servers.
- * 
+ * <p/>
  * After a connection is no longer needed, it must be closed by using the proper
  * close method contained in the <code>IRODSFileSystem</code> object. Please
  * consult the method documentation of this class for various close options.
+ * <p/>
+ * It is important to note that the <code>IRODSFileSystem</code> is not created multiple times in typical usage. The proper technique is to
+ * create the <code>IRODSFileSystem</code>, and place it in a shared context (such as in the ApplicationContext of a servlet application, use a shared
+ * reference, or wrap this object in a singleton for lookup.  The JUnit tests can be somewhat misleading in terms of proper usage.  The object is safe to share between
+ * multiple threads.  The underlying connections are tied to a <code>ThreadLocal</code>, such that they are not shared between threads. This <code>IRODSFileSystem</code> object
+ * does hold shared instances of objects that manage connections, and these objects are intended to manage the creation of connections across the entire application.  The shared objects are designed to
+ * manage these connections across multiple threads.  
+ * <p/>
  * 
  * @author Mike Conway - DICE (www.irods.org)
  * 
  */
 public final class IRODSFileSystem {
 
-	private transient final IRODSProtocolManager irodsProtocolManager;
-	private transient final IRODSSession irodsSession;
+	private final IRODSProtocolManager irodsProtocolManager;
+	private final IRODSSession irodsSession;
 	private transient IRODSAccessObjectFactory irodsAccessObjectFactory = null;
 
 	private static final Logger log = LoggerFactory
@@ -194,6 +202,10 @@ public final class IRODSFileSystem {
 	 */
 	public IRODSSession getIrodsSession() {
 		return irodsSession;
+	}
+
+	public IRODSProtocolManager getIrodsProtocolManager() {
+		return irodsProtocolManager;
 	}
 
 }

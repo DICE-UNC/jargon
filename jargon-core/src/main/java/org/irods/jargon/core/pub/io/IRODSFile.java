@@ -13,11 +13,12 @@ import org.irods.jargon.core.exception.JargonException;
  * class <code>IRODSFileImpl</code> extends the <code>java.io.File</code> class.
  * This interface is available to allow easier testing and potentially other
  * implementations.
- * 
+ * <p/>
  * The <code>IRODSFile</code>, and the <code>IRODSFileImpl</code> implementation
  * class are meant to strictly follow the <code>java.io.File</code> interface,
- * with a minimum of iRODS-specific methods. The
- * <code>org.irods.jargon.core.pub.io.</code> classes provide familiar file
+ * with a minimum of iRODS-specific methods. 
+ * <p/>
+ * The <code>org.irods.jargon.core.pub.io.</code> classes provide familiar file
  * operations. In older versions of Jargon, various iRODS operations were mixed
  * in with the <code>java.io.*</code> implementation classes, and these have
  * been refactored to a set of access objects found in the
@@ -47,11 +48,11 @@ public interface IRODSFile {
 	public static final int WRITE_PERMISSIONS = 1120;
 	public static final String IRODS_ROOT = "/";
 
-	public abstract boolean canRead();
+	boolean canRead();
 
-	public abstract boolean canWrite();
+	boolean canWrite();
 
-	public abstract boolean createNewFile() throws IOException;
+	boolean createNewFile() throws IOException;
 
 	/**
 	 * Delete the given iRODS file. Note that, by default, the data is moved to
@@ -60,61 +61,61 @@ public interface IRODSFile {
 	 * 
 	 * @return <code>boolean<code> with the success of the delete operation.
 	 */
-	public abstract boolean delete();
+	boolean delete();
 
-	public abstract void deleteOnExit();
-
-	@Override
-	public abstract boolean equals(Object obj);
-
-	public abstract boolean exists();
-
-	public abstract File getAbsoluteFile();
-
-	public abstract String getAbsolutePath();
-
-	public abstract File getCanonicalFile() throws IOException;
-
-	public abstract String getCanonicalPath() throws IOException;
-
-	public abstract long getFreeSpace();
-
-	public abstract File getParentFile();
-
-	public abstract long getTotalSpace();
-
-	public abstract long getUsableSpace();
+	void deleteOnExit();
 
 	@Override
-	public abstract int hashCode();
+	boolean equals(Object obj);
 
-	public abstract boolean isAbsolute();
+	boolean exists();
 
-	public abstract boolean isDirectory();
+	File getAbsoluteFile();
 
-	public abstract boolean isFile();
+	String getAbsolutePath();
 
-	public abstract String getPath();
+	File getCanonicalFile() throws IOException;
 
-	public abstract boolean isHidden();
+	String getCanonicalPath() throws IOException;
 
-	public abstract long lastModified();
+	long getFreeSpace();
 
-	public abstract long length();
+	File getParentFile();
 
-	public abstract String[] list();
+	long getTotalSpace();
 
-	public abstract String[] list(FilenameFilter filter);
+	long getUsableSpace();
 
-	public abstract File[] listFiles();
+	@Override
+	int hashCode();
 
-	public abstract File[] listFiles(FileFilter filter);
+	boolean isAbsolute();
 
-	public abstract File[] listFiles(FilenameFilter filter);
+	boolean isDirectory();
 
-	public abstract boolean mkdir();
+	boolean isFile();
 
-	public abstract boolean mkdirs();
+	String getPath();
+
+	boolean isHidden();
+
+	long lastModified();
+
+	long length();
+
+	String[] list();
+
+	String[] list(FilenameFilter filter);
+
+	File[] listFiles();
+
+	File[] listFiles(FileFilter filter);
+
+	File[] listFiles(FilenameFilter filter);
+
+	boolean mkdir();
+
+	boolean mkdirs();
 
 	/**
 	 * Marks the file or directory named by this abstract pathname so that only
@@ -123,7 +124,7 @@ public interface IRODSFile {
 	 * marked to allow write access. Whether or not a read-only file or
 	 * directory may be deleted depends upon the underlying system.
 	 */
-	public abstract boolean setExecutable(boolean executable, boolean ownerOnly);
+	boolean setExecutable(boolean executable, boolean ownerOnly);
 
 	/**
 	 * Marks the file or directory named by this abstract pathname so that only
@@ -132,50 +133,50 @@ public interface IRODSFile {
 	 * marked to allow write access. Whether or not a read-only file or
 	 * directory may be deleted depends upon the underlying system.
 	 */
-	public abstract boolean setExecutable(boolean executable);
+	boolean setExecutable(boolean executable);
 
 	/**
 	 * This method is not implemented for IRODS, and will throw an
 	 * <code>UnsupportedOperationException</code> if called.
 	 */
-	public abstract boolean setLastModified(long time);
+	boolean setLastModified(long time);
 
 	/**
 	 * This method is not implemented for IRODS, and will throw an
 	 * <code>UnsupportedOperationException</code> if called.
 	 */
-	public abstract boolean setReadable(boolean readable, boolean ownerOnly);
+	boolean setReadable(boolean readable, boolean ownerOnly);
 
 	/**
 	 * This method is not implemented for IRODS, and will throw an
 	 * <code>UnsupportedOperationException</code> if called.
 	 */
-	public abstract boolean setReadable(boolean readable);
+	boolean setReadable(boolean readable);
 
 	/**
 	 * This method is not implemented for IRODS, and will throw an
 	 * <code>UnsupportedOperationException</code> if called.
 	 */
-	public abstract boolean setReadOnly();
+	boolean setReadOnly();
 
-	public abstract boolean setWritable(boolean writable, boolean ownerOnly);
+	boolean setWritable(boolean writable, boolean ownerOnly);
 
-	public abstract boolean setWritable(boolean writable);
+	boolean setWritable(boolean writable);
 
 	@Override
-	public abstract String toString();
+	String toString();
 
-	public abstract URI toURI();
+	URI toURI();
 
-	public abstract String getResource() throws JargonException;
+	String getResource() throws JargonException;
 
-	public abstract void setResource(String resource);
+	void setResource(String resource);
 
-	public String getName();
+	String getName();
 
-	public String getParent();
+	String getParent();
 
-	public int getFileDescriptor();
+	int getFileDescriptor();
 
 	/**
 	 * Open the iRODS file (obtaining a file descriptor from iRODS). This method
@@ -184,7 +185,7 @@ public interface IRODSFile {
 	 * @return <code>int</code> with the irods file descriptor.
 	 * @throws JargonException
 	 */
-	public int open() throws JargonException;
+	int open() throws JargonException;
 
 	/**
 	 * Open the iROD file (obtaining a fiel desriptor from iRODS). This method
@@ -193,11 +194,11 @@ public interface IRODSFile {
 	 * @return <code>int</code> with the irods file descriptor.
 	 * @throws JargonException
 	 */
-	public int openReadOnly() throws JargonException;
+	int openReadOnly() throws JargonException;
 
-	public void close() throws JargonException;
+	void close() throws JargonException;
 
-	public int compareTo(IRODSFile irodsFile2);
+	int compareTo(IRODSFile irodsFile2);
 
 	boolean renameTo(IRODSFile dest);
 
@@ -210,6 +211,6 @@ public interface IRODSFile {
 	 * 
 	 * @return <code>boolean</code> with success of operation.
 	 */
-	public boolean deleteWithForceOption();
+	boolean deleteWithForceOption();
 
 }

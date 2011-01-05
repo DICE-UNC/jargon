@@ -10,8 +10,8 @@ import org.irods.jargon.core.pub.domain.IRODSDomainObject;
  * object includes info to distinguish between data object and collection, to
  * identify it in iRODS by path, and also information that can be used for
  * paging.
- * 
- * This object is meant to be used for iRODS file tree browsing, and as such it
+ * <p/>
+ * This object is meant to be used for use cases such as iRODS file tree browsing, and as such it
  * is meant to be returned in collections. The behavior of these objects in the
  * collection is such that objects for collections and objects for data objects
  * separately hold counts and indicators that this particular collection or
@@ -157,6 +157,23 @@ public class CollectionAndDataObjectListingEntry extends IRODSDomainObject {
 		}
 
 		return thisPath;
+	}
+	
+	/**
+	 * Handy method that will compute the appropriate absolute path, whether a data object or a collection.
+	 * @return
+	 */
+	public String getFormattedAbsolutePath() {
+		StringBuilder sb = new StringBuilder();
+		if (objectType == ObjectType.COLLECTION) {
+			sb.append(pathOrName);
+		} else {
+			sb.append(parentPath);
+			sb.append('/');
+			sb.append(pathOrName);
+		}
+		
+		return sb.toString();
 	}
 
 }

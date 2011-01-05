@@ -8,7 +8,6 @@ import org.irods.jargon.core.pub.domain.AvuData;
 import org.irods.jargon.core.pub.domain.Collection;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.query.AVUQueryElement;
-import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry;
 import org.irods.jargon.core.query.JargonQueryException;
 import org.irods.jargon.core.query.MetaDataAndDomainData;
 
@@ -18,7 +17,7 @@ import org.irods.jargon.core.query.MetaDataAndDomainData;
  * object, not as a <code>java.io.File</code> object. For familiar
  * <code>java.io.*</code> operations, see
  * {@link org.irods.jargon.core.pub.io.IRODSFile}.
- * 
+ * <p/>
  * This interface has a default implementation within Jargon. The access object
  * should be obtained using a factory, either by creating from
  * {@link org.irods.jargon.core.pub.IRODSFileSystem}, or from an
@@ -27,7 +26,7 @@ import org.irods.jargon.core.query.MetaDataAndDomainData;
  * associated with collection objects (files), as well as performing common
  * query operations. This class also supports various iRODS file operations that
  * are not included in the standard <code>java.io.*</code> libraries.
- * 
+ * <p/>
  * For general data movement operations, also see
  * {@link org.irods.jargon.core.pub.DataTransferOperations}.
  * 
@@ -218,8 +217,6 @@ public interface CollectionAO {
 	List<Collection> findAll(String absolutePathOfParent, int partialStartIndex)
 			throws JargonException;
 
-	
-
 	/**
 	 * List the AVU metadata for a particular collection, as well as information
 	 * about the collection itself, based on a metadata query.
@@ -303,5 +300,4 @@ public interface CollectionAO {
 	int countAllFilesUnderneathTheGivenCollection(
 			final String irodsCollectionAbsolutePath) throws JargonException;
 
-	
 }

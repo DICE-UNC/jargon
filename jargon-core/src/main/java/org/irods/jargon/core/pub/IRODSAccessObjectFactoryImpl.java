@@ -10,6 +10,8 @@ import org.irods.jargon.core.pub.io.IRODSFileSystemAOImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+// FIXME: switch to allow IRODSSession to be injected, add a check with a meaningful warning message to the various instance creating methods if IRODSSession is missing
+
 /**
  * Factory to produce IRODS access objects. This is the key object which can be
  * used to create components that can interact directly with iRODS to query
@@ -45,10 +47,24 @@ public final class IRODSAccessObjectFactoryImpl implements
 	private static final Logger LOG = LoggerFactory
 			.getLogger(IRODSAccessObjectFactoryImpl.class);
 
-	private transient final IRODSSession irodsSession;
+	private IRODSSession irodsSession;
 
-	private IRODSAccessObjectFactoryImpl(final IRODSSession irodsSession) {
+	/**
+	 * Construct an instance with the given <code>IRODSSession<code>
+	 * 
+	 * @param irodsSession
+	 */
+	public IRODSAccessObjectFactoryImpl(final IRODSSession irodsSession) {
 		this.irodsSession = irodsSession;
+	}
+
+	/**
+	 * Default constructor which does not initialize the
+	 * <code>IRODSSession</code>. It is up to the developer to inject the
+	 * <code>IRODSsession</code> or an exception will result.
+	 */
+	public IRODSAccessObjectFactoryImpl() {
+		super();
 	}
 
 	/*
@@ -118,6 +134,7 @@ public final class IRODSAccessObjectFactoryImpl implements
 	@Override
 	public UserAO getUserAO(final IRODSAccount irodsAccount)
 			throws JargonException {
+		checkIrodsSessionSet();
 		return new UserAOImpl(irodsSession, irodsAccount);
 	}
 
@@ -131,6 +148,7 @@ public final class IRODSAccessObjectFactoryImpl implements
 	@Override
 	public UserGroupAO getUserGroupAO(final IRODSAccount irodsAccount)
 			throws JargonException {
+		checkIrodsSessionSet();
 		return new UserGroupAOImpl(irodsSession, irodsAccount);
 	}
 
@@ -144,6 +162,7 @@ public final class IRODSAccessObjectFactoryImpl implements
 	@Override
 	public EnvironmentalInfoAO getEnvironmentalInfoAO(
 			final IRODSAccount irodsAccount) throws JargonException {
+		checkIrodsSessionSet();
 		return new EnvironmentalInfoAOImpl(irodsSession, irodsAccount);
 	}
 
@@ -157,6 +176,7 @@ public final class IRODSAccessObjectFactoryImpl implements
 	@Override
 	public IRODSGenQueryExecutor getIRODSGenQueryExecutor(
 			final IRODSAccount irodsAccount) throws JargonException {
+		checkIrodsSessionSet();
 		return new IRODSGenQueryExecutorImpl(irodsSession, irodsAccount);
 	}
 
@@ -170,6 +190,7 @@ public final class IRODSAccessObjectFactoryImpl implements
 	@Override
 	public ZoneAO getZoneAO(final IRODSAccount irodsAccount)
 			throws JargonException {
+		checkIrodsSessionSet();
 		return new ZoneAOImpl(irodsSession, irodsAccount);
 	}
 
@@ -182,6 +203,7 @@ public final class IRODSAccessObjectFactoryImpl implements
 	@Override
 	public ResourceAO getResourceAO(final IRODSAccount irodsAccount)
 			throws JargonException {
+		checkIrodsSessionSet();
 		return new ResourceAOImpl(irodsSession, irodsAccount);
 	}
 
@@ -195,6 +217,7 @@ public final class IRODSAccessObjectFactoryImpl implements
 	@Override
 	public IRODSFileSystemAO getIRODSFileSystemAO(
 			final IRODSAccount irodsAccount) throws JargonException {
+		checkIrodsSessionSet();
 		return new IRODSFileSystemAOImpl(irodsSession, irodsAccount);
 	}
 
@@ -208,6 +231,7 @@ public final class IRODSAccessObjectFactoryImpl implements
 	@Override
 	public IRODSFileFactory getIRODSFileFactory(final IRODSAccount irodsAccount)
 			throws JargonException {
+		checkIrodsSessionSet();
 		return new IRODSFileFactoryImpl(irodsSession, irodsAccount);
 	}
 
@@ -221,6 +245,7 @@ public final class IRODSAccessObjectFactoryImpl implements
 	@Override
 	public CollectionAO getCollectionAO(final IRODSAccount irodsAccount)
 			throws JargonException {
+		checkIrodsSessionSet();
 		return new CollectionAOImpl(irodsSession, irodsAccount);
 	}
 
@@ -234,6 +259,7 @@ public final class IRODSAccessObjectFactoryImpl implements
 	@Override
 	public DataObjectAO getDataObjectAO(final IRODSAccount irodsAccount)
 			throws JargonException {
+		checkIrodsSessionSet();
 		return new DataObjectAOImpl(irodsSession, irodsAccount);
 	}
 
@@ -247,6 +273,7 @@ public final class IRODSAccessObjectFactoryImpl implements
 	@Override
 	public RuleProcessingAO getRuleProcessingAO(final IRODSAccount irodsAccount)
 			throws JargonException {
+		checkIrodsSessionSet();
 		return new RuleProcessingAOImpl(irodsSession, irodsAccount);
 
 	}
@@ -261,7 +288,19 @@ public final class IRODSAccessObjectFactoryImpl implements
 	@Override
 	public DataTransferOperations getDataTransferOperations(
 			final IRODSAccount irodsAccount) throws JargonException {
+		checkIrodsSessionSet();
 		return new DataTransferOperationsImpl(irodsSession, irodsAccount);
+	}
+	
+	
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.core.pub.IRODSAccessObjectFactory#getBulkFileOperationsAO(org.irods.jargon.core.connection.IRODSAccount)
+	 */
+	@Override
+	public BulkFileOperationsAO getBulkFileOperationsAO(
+			final IRODSAccount irodsAccount) throws JargonException {
+		checkIrodsSessionSet();
+		return new BulkFileOperationsAOImpl(irodsSession, irodsAccount);
 	}
 
 	/*
@@ -274,6 +313,7 @@ public final class IRODSAccessObjectFactoryImpl implements
 	@Override
 	public RemoteExecutionOfCommandsAO getRemoteExecutionOfCommandsAO(
 			final IRODSAccount irodsAccount) throws JargonException {
+		checkIrodsSessionSet();
 		return new RemoteExecutionOfCommandsAOImpl(irodsSession, irodsAccount);
 	}
 
@@ -287,8 +327,32 @@ public final class IRODSAccessObjectFactoryImpl implements
 	@Override
 	public CollectionAndDataObjectListAndSearchAO getCollectionAndDataObjectListAndSearchAO(
 			final IRODSAccount irodsAccount) throws JargonException {
+		checkIrodsSessionSet();
 		return new CollectionAndDataObjectListAndSearchAOImpl(irodsSession,
 				irodsAccount);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.core.pub.IRODSAccessObjectFactory#getIrodsSession()
+	 */
+	@Override
+	public IRODSSession getIrodsSession() {
+		return irodsSession;
+	}
+
+	
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.core.pub.IRODSAccessObjectFactory#setIrodsSession(org.irods.jargon.core.connection.IRODSSession)
+	 */
+	@Override
+	public void setIrodsSession(final IRODSSession irodsSession) {
+		this.irodsSession = irodsSession;
+	}
+
+	private void checkIrodsSessionSet() throws JargonException {
+		if (irodsSession == null) {
+			throw new JargonException(
+					"no irodsSession was set, this is likely due to wiring the IRODSAccessObjectFactory without setting the irodsSession property");
+		}
+	}
 }

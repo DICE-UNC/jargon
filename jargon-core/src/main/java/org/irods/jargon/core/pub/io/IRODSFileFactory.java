@@ -5,24 +5,102 @@ import java.net.URI;
 
 import org.irods.jargon.core.exception.JargonException;
 
+/**
+ * Defines the interface to a factory that can produce connected versions of
+ * various <code>java.io.*</code> objects specific to iRODS.
+ * 
+ * @author Mike Conway - DICE (www.irods.org)
+ * 
+ */
 public interface IRODSFileFactory {
+
+	/**
+	 * Create an instance of an <code>IRODSFile</code> by absolute path.
+	 * 
+	 * @param path
+	 *            <code>String</code> with the absolute path to the iRODS file
+	 *            or collection
+	 * @return {@link IRODSFile}
+	 * @throws JargonException
+	 */
 	IRODSFile instanceIRODSFile(String path) throws JargonException;
 
+	/**
+	 * Creates an instance of an iRODS file by using the standard irods URL
+	 * format
+	 * 
+	 * @parm URI <code>URI</code> in iRODS specific format.
+	 * @return {@link IRODSFile}
+	 * @throws JargonException
+	 */
 	IRODSFile instanceIRODSFile(URI uri) throws JargonException;
 
+	/**
+	 * Creates an instance of an iRODS file by defining a parent and child path
+	 * 
+	 * @param parent
+	 *            <code>String</code> with the absolute path to the parent
+	 * @param child
+	 *            <code>String</code> with the relative path below the parent
+	 * @return {@link IRODSFile}
+	 * @throws JargonException
+	 */
 	IRODSFile instanceIRODSFile(final String parent, final String child)
 			throws JargonException;
 
+	/**
+	 * Creates an iRODS output stream such that data can be written to the given
+	 * iRODS file.
+	 * 
+	 * @param irodsFile
+	 *            {@link IRODSFile} that will be written to via the given
+	 *            stream.
+	 * @return {@link IRODSFileOutputStream} implementation of a
+	 *         <code>java.io.OutputStream</code>
+	 * @throws JargonException
+	 */
 	IRODSFileOutputStream instanceIRODSFileOutputStream(IRODSFile irodsFile)
 			throws JargonException;
 
+	/**
+	 * Creates an iRODS output stream such that data can be written to the given
+	 * iRODS file.
+	 * 
+	 * @param name
+	 *            <code>String</code> with and absolute path to the file that
+	 *            will be written to via the given stream.
+	 * @return {@link IRODSFileOutputStream} implementation of a
+	 *         <code>java.io.OutputStream</code>
+	 * @throws JargonException
+	 */
 	IRODSFileOutputStream instanceIRODSFileOutputStream(String name)
 			throws JargonException;
 
-	public IRODSFileInputStream instanceIRODSFileInputStream(IRODSFile irodsFile)
+	/**
+	 * Creates an iRODS version of an input stream such that data can be read
+	 * from the source iRODS file.
+	 * 
+	 * @param irodsFile
+	 *            {@link IRODSFile} that will be the source of the stream
+	 * @return {@link IRODSFileInputStream} that allows reading of the contents
+	 *         of the iRODS file
+	 * @throws JargonException
+	 */
+	IRODSFileInputStream instanceIRODSFileInputStream(IRODSFile irodsFile)
 			throws JargonException;
 
-	public IRODSFileInputStream instanceIRODSFileInputStream(String name)
+	/**
+	 * Creates an iRODS input stream such that data can be read to the given
+	 * iRODS file.
+	 * 
+	 * @param name
+	 *            <code>String</code> with and absolute path to the file that
+	 *            will be read to via the given stream.
+	 * @return {@link IRODSFileInputStream} implementation of a
+	 *         <code>java.io.InputStream</code>
+	 * @throws JargonException
+	 */
+	IRODSFileInputStream instanceIRODSFileInputStream(String name)
 			throws JargonException;
 
 	/**
@@ -36,8 +114,8 @@ public interface IRODSFileFactory {
 	 * @return
 	 * @throws JargonException
 	 */
-	public IRODSRandomAccessFile instanceIRODSRandomAccessFile(
-			IRODSFile irodsFile) throws JargonException;
+	IRODSRandomAccessFile instanceIRODSRandomAccessFile(IRODSFile irodsFile)
+			throws JargonException;
 
 	/**
 	 * Create an IRODSRandomAccessFile given the absolutePath. Note that this
@@ -49,11 +127,21 @@ public interface IRODSFileFactory {
 	 * @return
 	 * @throws JargonException
 	 */
-	public IRODSRandomAccessFile instanceIRODSRandomAccessFile(String name)
+	IRODSRandomAccessFile instanceIRODSRandomAccessFile(String name)
 			throws JargonException;
 
-	public IRODSFileWriter instanceIRODSFileWriter(String name)
-			throws JargonException;
+	/**
+	 * Create a writer that will write to the iRODS file with the given absolute
+	 * path
+	 * 
+	 * @param name
+	 *            <code>String</code> with the absolute path to the iRODS file
+	 *            that will be witten to.
+	 * @return {@link IRODSFileWriter} that is an iRODS specific implmementation
+	 *         of a <code>FileWriter</code>
+	 * @throws JargonException
+	 */
+	IRODSFileWriter instanceIRODSFileWriter(String name) throws JargonException;
 
 	/**
 	 * Return an instance of an
@@ -65,9 +153,23 @@ public interface IRODSFileFactory {
 	 * @return
 	 * @throws JargonException
 	 */
-	public IRODSFileReader instanceIRODSFileReader(String irodsFileAbsolutePath)
+	IRODSFileReader instanceIRODSFileReader(String irodsFileAbsolutePath)
 			throws JargonException;
 
+	/**
+	 * Returns an iRODS file given a <code>File</code> as a parent, and a string
+	 * which is the relative path underneath the parent file.
+	 * 
+	 * @param parent
+	 *            <code>File</code> that describes the parent of the iRODS file.
+	 *            Note that the parent will actually be an instance of
+	 *            <code>IRODSFile</code>
+	 * @param child
+	 *            <code>String</code> with the relative file path underneat the
+	 *            given parent file.
+	 * @return {@link IRODSFile}
+	 * @throws JargonException
+	 */
 	IRODSFile instanceIRODSFile(File parent, String child)
 			throws JargonException;
 

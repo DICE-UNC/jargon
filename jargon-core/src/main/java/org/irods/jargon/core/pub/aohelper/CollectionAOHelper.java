@@ -58,8 +58,6 @@ public class CollectionAOHelper extends AOHelper {
 		query.append(COMMA);
 		query.append(RodsGenQueryEnum.COL_COLL_MODIFY_TIME.getName());
 		query.append(COMMA);
-		query.append(RodsGenQueryEnum.COL_COLL_TYPE.getName());
-		query.append(COMMA);
 		query.append(RodsGenQueryEnum.COL_COLL_INFO1.getName());
 		query.append(COMMA);
 		query.append(RodsGenQueryEnum.COL_COLL_INFO2.getName());
@@ -110,9 +108,8 @@ public class CollectionAOHelper extends AOHelper {
 				.getDateFromIRODSValue(row.getColumn(8)));
 		collection.setModifiedAt(IRODSDataConversionUtil
 				.getDateFromIRODSValue(row.getColumn(9)));
-		collection.setCollectionType(row.getColumn(10));
-		collection.setInfo1(row.getColumn(11));
-		collection.setInfo2(row.getColumn(12));
+		collection.setInfo1(row.getColumn(10));
+		collection.setInfo2(row.getColumn(11));
 
 		collection.setCount(row.getRecordCount());
 		collection.setLastResult(row.isLastResult());
@@ -227,7 +224,6 @@ public class CollectionAOHelper extends AOHelper {
 	/**
 	 * for a result set row from a query for data objects in a collection,
 	 * create a <code>CollectionAndDataObjectListingEntry</code>
-	 * FIXME: add parent! removed from parms
 	 * @param row
 	 *            <code>IRODSQueryResultRow</code> with raw data.
 	 * @return {@link org.irods.jargon.core.query.CollectionAndDataObjectListingEntry}
@@ -274,6 +270,30 @@ public class CollectionAOHelper extends AOHelper {
 		query.append(COMMA);
 		query.append(RodsGenQueryEnum.COL_COLL_ID.getName());
 		return query.toString();
+	}
+
+	/**
+	 * Shortcut to build selects used in creating  <code>CollectionAndDataObjectListingEntry</code> items
+	 * for data objects.  Does not include the 'SELECT', just the field names.
+	 * @return
+	 */
+	public static Object buildSelectsNeededForDataObjectsInCollectionsAndDataObjectsListingEntry() {
+		StringBuilder query = new StringBuilder();
+		
+		query.append(RodsGenQueryEnum.COL_COLL_NAME.getName());
+		query.append(COMMA);
+		query.append(RodsGenQueryEnum.COL_DATA_NAME.getName());
+		query.append(COMMA);
+		query.append(RodsGenQueryEnum.COL_D_CREATE_TIME.getName());
+		query.append(COMMA);
+		query.append(RodsGenQueryEnum.COL_D_MODIFY_TIME.getName());
+		query.append(COMMA);
+		query.append(RodsGenQueryEnum.COL_D_DATA_ID.getName());
+		query.append(COMMA);
+		query.append(RodsGenQueryEnum.COL_DATA_SIZE.getName());
+
+		return query.toString();
+
 	}
 
 }

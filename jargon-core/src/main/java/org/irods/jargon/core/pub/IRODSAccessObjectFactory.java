@@ -1,6 +1,7 @@
 package org.irods.jargon.core.pub;
 
 import org.irods.jargon.core.connection.IRODSAccount;
+import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.io.IRODSFileFactory;
 import org.irods.jargon.core.pub.io.IRODSFileSystemAO;
@@ -15,13 +16,15 @@ import org.irods.jargon.core.pub.io.IRODSFileSystemAO;
  * Access objects are connected to iRODS at the time they are created.  The connection is determined by the {@link org.irods.jargon.core.connection.IRODSAccount}
  * that is specified when the access object is created.   The connection is managed using a <code>ThreadLocal</code>, such that any access objects created in the same
  * thread by this factory will automatically create a connection, or will share an already created connection.  This also means that, at the end of any set of operations, the connection
- * must be closed.  Typically, and {@link IRODSFileSystem} is instantiated, and that <code>IRODSFileSystem</code> is used to get a reference to this access object factory.
+ * must be closed.  Typically, an {@link IRODSFileSystem} is instantiated, and that <code>IRODSFileSystem</code> is used to get a reference to this access object factory.
  * Once operations are done, the <code>IRODSFileSystem</code> can be used to close connections in that thread.  This factory has hooks to also close those connections,
  * and this can be used in cases where this factory is injected itself into another service.
- * 
+ * <p/>
+ * Be aware that there should only be one reference to an <code>IRODSFileSystem</code>.  This object should not be created for every operation, rather, it should be created and placed in a shared context, passed as
+ * a reference, or wrapped in a singleton.  Looking at the JUnit code for usage can be somewhat misleading in this respect.
  * <p/>
  * 
- * For example, if using the 'shortcut' <code>IRODSFileSystem</code. object, you
+ * For example, if using the 'shortcut' <code>IRODSFileSystem</code>. object, you
  * may see a pattern of use like this:
  * 
  * <pre>
@@ -236,4 +239,28 @@ public interface IRODSAccessObjectFactory {
 	 * @throws JargonException
 	 */
 	void closeSession(IRODSAccount irodsAccount) throws JargonException;
+
+	/**
+	 * For easy wiring via dependency injection, an acces object factory may be
+	 * created and injected with the <code>IRODSAccessObjectFactory</code>
+	 * 
+	 * @param irodsSession
+	 *            {@link IRODSSession} that will manage the connection to iRODS.
+	 */
+	void setIrodsSession(final IRODSSession irodsSession);
+
+	/**
+	 * @return
+	 */
+	IRODSSession getIrodsSession();
+
+	/**
+	 * Returns a <code>BulkFileOperationsAO</code> that can handle the creation and extraction of compressed file archives (tars) in iRODS.
+	 * @param irodsAccount
+	 * @return
+	 * @throws JargonException
+	 */
+	BulkFileOperationsAO getBulkFileOperationsAO(IRODSAccount irodsAccount)
+			throws JargonException;
+
 }

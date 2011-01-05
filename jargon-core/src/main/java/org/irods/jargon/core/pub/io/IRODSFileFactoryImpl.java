@@ -16,7 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Factory to create IRODS File objects, will handle initialization of irods
+ * Factory to create IRODS File objects, will handle initialization of iRODS
  * connections and other non-file aspects
  * 
  * @author Mike Conway - DICE (www.irods.org)

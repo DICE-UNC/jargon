@@ -25,7 +25,7 @@ import org.slf4j.LoggerFactory;
  * <code>IRODSFileImpl</code> is a variant of an
  * {@link org.irogs.jargon.core.pub.IRODSAccessObject IRODSAccessObject}, and
  * internally holds a connection to IRODS.
- * 
+ * <p/>
  * This object is not thread-safe, and cannot be shared between threads. This
  * File object has a connection associated with the thread which created it.
  * There are methods in {@link org.irods.jargon.core.pub.io.IRODSFileFactory

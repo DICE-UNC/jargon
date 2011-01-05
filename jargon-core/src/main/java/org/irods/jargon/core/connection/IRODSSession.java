@@ -26,7 +26,7 @@ import org.slf4j.LoggerFactory;
 public final class IRODSSession {
 
 	public static final ThreadLocal<Map<String, IRODSCommands>> sessionMap = new ThreadLocal<Map<String, IRODSCommands>>();
-	private transient IRODSProtocolManager irodsProtocolManager;
+	private IRODSProtocolManager irodsProtocolManager;
 	private Logger log = LoggerFactory.getLogger(IRODSSession.class);
 
 	/**
@@ -55,11 +55,11 @@ public final class IRODSSession {
 		sessionMap.set(null);
 	}
 
-	private IRODSSession() {
+	public IRODSSession() {
 		log.info("IRODS Session creation");
 	}
 
-	private IRODSSession(final IRODSProtocolManager irodsConnectionManager)
+	public IRODSSession(final IRODSProtocolManager irodsConnectionManager)
 			throws JargonException {
 
 		if (irodsConnectionManager == null) {
@@ -68,6 +68,14 @@ public final class IRODSSession {
 
 		this.irodsProtocolManager = irodsConnectionManager;
 	}
+
+	/**
+	 * Instance method, still supported (for now) but switching to straight setter methods and a default constructor
+	 * to make it easer to wire with dependency injection.  Look to see this depracated.
+	 * @param irodsConnectionManager
+	 * @return
+	 * @throws JargonException
+	 */
 
 	public static IRODSSession instance(
 			final IRODSProtocolManager irodsConnectionManager)
@@ -213,6 +221,14 @@ public final class IRODSSession {
 	 */
 	public Map<String, IRODSCommands> getIRODSCommandsMap() {
 		return sessionMap.get();
+	}
+
+	protected IRODSProtocolManager getIrodsProtocolManager() {
+		return irodsProtocolManager;
+	}
+
+	protected void setIrodsProtocolManager(IRODSProtocolManager irodsProtocolManager) {
+		this.irodsProtocolManager = irodsProtocolManager;
 	}
 
 }

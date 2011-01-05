@@ -117,6 +117,7 @@ public class Collection extends IRODSDomainObject {
 		this.comments = comments;
 	}
 
+	//FIXME: not used right now, queries do not work well with this data type check into iRODS
 	public String getCollectionType() {
 		return collectionType;
 	}

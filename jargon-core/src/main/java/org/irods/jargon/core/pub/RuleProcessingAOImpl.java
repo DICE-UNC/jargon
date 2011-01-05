@@ -311,7 +311,7 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements
 					otherFilePath);
 			LOG.error("other file type was invalid: {}", otherFileType);
 			throw new JargonException(
-					"Rule requests tranfer from unknown protocol");
+					"Rule requests transfer from unknown protocol");
 		}
 
 		LOG.debug("getting reference to local file");

@@ -24,11 +24,8 @@ import org.irods.jargon.core.pub.domain.Collection;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.pub.io.IRODSFileFactory;
 import org.irods.jargon.core.pub.io.IRODSFileFactoryImpl;
-import org.irods.jargon.core.pub.io.IRODSFileSystemAOHelper;
 import org.irods.jargon.core.query.AVUQueryElement;
-import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry;
 import org.irods.jargon.core.query.IRODSQuery;
-import org.irods.jargon.core.query.IRODSQueryResultRow;
 import org.irods.jargon.core.query.IRODSQueryResultSet;
 import org.irods.jargon.core.query.JargonQueryException;
 import org.irods.jargon.core.query.MetaDataAndDomainData;
@@ -60,9 +57,9 @@ public final class CollectionAOImpl extends IRODSGenericAO implements
 			getIRODSSession(), getIRODSAccount());
 	private IRODSGenQueryExecutor irodsGenQueryExecutor = new IRODSGenQueryExecutorImpl(
 			getIRODSSession(), getIRODSAccount());
-	public static final Logger LOG = LoggerFactory.getLogger(CollectionAOImpl.class);
+	public static final Logger LOG = LoggerFactory
+			.getLogger(CollectionAOImpl.class);
 	public static final int DEFAULT_REC_COUNT = 5000;
-	private static final Object SELECT = "SELECT ";
 
 	/**
 	 * Default constructor
@@ -170,7 +167,6 @@ public final class CollectionAOImpl extends IRODSGenericAO implements
 
 		return CollectionAOHelper.buildListFromResultSet(resultSet);
 	}
-
 
 	/*
 	 * (non-Javadoc)
@@ -736,7 +732,7 @@ public final class CollectionAOImpl extends IRODSGenericAO implements
 	 * (non-Javadoc)
 	 * 
 	 * @seeorg.irods.jargon.core.pub.CollectionAO#
-	 * countAllFilesUnderneathTheGivenCollection(java.lang.String) 
+	 * countAllFilesUnderneathTheGivenCollection(java.lang.String)
 	 */
 	@Override
 	public int countAllFilesUnderneathTheGivenCollection(

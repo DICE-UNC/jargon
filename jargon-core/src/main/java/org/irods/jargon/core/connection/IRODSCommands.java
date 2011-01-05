@@ -16,6 +16,7 @@ import java.nio.channels.ClosedChannelException;
 import java.security.GeneralSecurityException;
 import java.security.MessageDigest;
 
+import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.exception.JargonFileOrCollAlreadyExistsException;
 import org.irods.jargon.core.packinstr.AbstractIRODSPackingInstruction;
@@ -511,9 +512,9 @@ public class IRODSCommands implements IRODSManagedConnection {
 		}
 		
 		// TODO: create an iRODS error scanner class to throw correct exception.  Good place to refactor.
-
-		if (info == ErrorEnum.CAT_NO_ROWS_FOUND.getInt()
-				|| info == ErrorEnum.CAT_SUCCESS_BUT_WITH_NO_INFO.getInt()) {
+		if (info == ErrorEnum.CAT_NO_ROWS_FOUND.getInt()) {
+			throw new DataNotFoundException("no data found");
+		} else if (info == ErrorEnum.CAT_SUCCESS_BUT_WITH_NO_INFO.getInt()) {
 			handleSuccessButNoRowsFound(errorLength, info);
 		} else if (info == ErrorEnum.CAT_NAME_EXISTS_AS_COLLECTION.getInt() || info == ErrorEnum.CAT_NAME_EXISTS_AS_DATAOBJ.getInt()) {
 			handleOverwriteOfCollectionOrDataObject(errorLength, info);

@@ -93,7 +93,7 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 			resultSet = irodsGenQueryExecutorImpl.executeIRODSQuery(irodsQuery,
 					DEFAULT_REC_COUNT);
 		} catch (JargonQueryException e) {
-			log.error("query exception for user query:" + queryString, e);
+			log.error("query exception for user query:{}", queryString, e);
 			throw new JargonException(ERROR_IN_RESOURCE_QUERY);
 		}
 
@@ -144,7 +144,7 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 
 		String queryString = sb.toString();
 		if (log.isInfoEnabled()) {
-			log.info("query:" + queryString);
+			log.info("query:{}", queryString);
 		}
 
 		IRODSQuery irodsQuery = IRODSQuery.instance(queryString,
@@ -198,7 +198,7 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 
 		String queryString = userQuery.toString();
 		if (log.isInfoEnabled()) {
-			log.info("user query:" + queryString);
+			log.info("user query:{}", queryString);
 		}
 
 		IRODSQuery irodsQuery = IRODSQuery.instance(queryString,
@@ -209,7 +209,7 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 			resultSet = irodsGenQueryExecutorImpl.executeIRODSQuery(irodsQuery,
 					0);
 		} catch (JargonQueryException e) {
-			log.error("query exception for:" + queryString, e);
+			log.error("query exception for:{}", queryString, e);
 			throw new JargonException(ERROR_IN_RESOURCE_QUERY);
 		}
 
@@ -264,7 +264,7 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 
 		String queryString = query.toString();
 		if (log.isInfoEnabled()) {
-			log.info("resource query:" + toString());
+			log.info("resource query:{}", toString());
 		}
 
 		IRODSQuery irodsQuery = IRODSQuery.instance(queryString, 500);
@@ -274,7 +274,7 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 			resultSet = irodsGenQueryExecutorImpl.executeIRODSQuery(irodsQuery,
 					0);
 		} catch (JargonQueryException e) {
-			log.error("query exception for:" + queryString, e);
+			log.error("query exception for:{}", queryString, e);
 			throw new JargonException("error in query");
 		}
 
@@ -328,7 +328,7 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 			resultSet = irodsGenQueryExecutorImpl.executeIRODSQuery(irodsQuery,
 					0);
 		} catch (JargonQueryException e) {
-			log.error("query exception for:" + queryString, e);
+			log.error("query exception for:{}", queryString, e);
 			throw new JargonException("error in query");
 		}
 

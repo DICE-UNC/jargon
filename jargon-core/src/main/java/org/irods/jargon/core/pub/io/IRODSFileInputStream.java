@@ -361,7 +361,7 @@ public class IRODSFileInputStream extends InputStream {
 	 * without blocking. Due to the nature of how files are transferred (a byte
 	 * array is returned from a socket call for each read operation), Jargon can
 	 * never read without blocking. Because of these reasons this method always
-	 * returns the lenght of the file as iRODS knows it.
+	 * returns the length of the file as iRODS knows it.
 	 * 
 	 * @return the number of bytes that can be read from this file input stream
 	 *         without blocking.
@@ -379,7 +379,7 @@ public class IRODSFileInputStream extends InputStream {
 	 * without blocking. Due to the nature of how files are transferred (a byte
 	 * array is returned from a socket call for each read operation), Jargon can
 	 * never read without blocking. Because of these reasons this method always
-	 * returns 0 bytes;
+	 * returns the length of the file as iRODS knows it.
 	 * 
 	 * @return the number of bytes that can be read from this file input stream
 	 *         without blocking.
