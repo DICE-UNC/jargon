@@ -77,14 +77,17 @@ public final class UserTagCloudServiceImpl extends AbstractIRODSTaggingService
 		super(irodsAccessObjectFactory, irodsAccount);
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.usertagging.UserTagCloudService#getTagCloud()
+	 */
 	@Override
 	public UserTagCloudView getTagCloud() throws JargonException {
 		UserTagCloudView userTagCloudView = UserTagCloudView.instance(
-				irodsAccount.getUserName(), buildTagCloudEntryListForDataObjects(),
-				buildTagCloudEntryListForCollections());
+				irodsAccount.getUserName(), buildTagCloudEntryListForDataObjects(""),
+				buildTagCloudEntryListForCollections(""));
 		return userTagCloudView;
 	}
-
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -97,7 +100,7 @@ public final class UserTagCloudServiceImpl extends AbstractIRODSTaggingService
 		
         log.info("getTagCloudForDataObjects");
 		UserTagCloudView userTagCloudView = UserTagCloudView.instance(
-				irodsAccount.getUserName(), buildTagCloudEntryListForDataObjects(),
+				irodsAccount.getUserName(), buildTagCloudEntryListForDataObjects(""),
 				new ArrayList<TagCloudEntry>());
 		return userTagCloudView;
 
@@ -114,7 +117,7 @@ public final class UserTagCloudServiceImpl extends AbstractIRODSTaggingService
 	public UserTagCloudView getTagCloudForCollections() throws JargonException {
 
 		log.info("getTagCloudForCollections");
-		List<TagCloudEntry> collectionTagCloudEntries = buildTagCloudEntryListForCollections();
+		List<TagCloudEntry> collectionTagCloudEntries = buildTagCloudEntryListForCollections("");
 		UserTagCloudView userTagCloudView = UserTagCloudView.instance(
 				irodsAccount.getUserName(), new ArrayList<TagCloudEntry>(),
 				collectionTagCloudEntries);
@@ -128,10 +131,15 @@ public final class UserTagCloudServiceImpl extends AbstractIRODSTaggingService
 	 * @return
 	 * @throws JargonException
 	 */
-	private List<TagCloudEntry> buildTagCloudEntryListForCollections()
+	private List<TagCloudEntry> buildTagCloudEntryListForCollections(final String searchTagName)
 			throws JargonException {
 		log.info("buildTagCloudEntryListForCollections, user={}", irodsAccount
 				.getUserName());
+		
+		if (searchTagName == null) {
+			throw new IllegalArgumentException("null searchTagName");
+		}
+		
 		// create a GenQuery to get the cloud info
 		StringBuilder sb = new StringBuilder();
 		sb.append("SELECT COUNT(");
@@ -149,6 +157,16 @@ public final class UserTagCloudServiceImpl extends AbstractIRODSTaggingService
 		sb.append(EQUAL_QUOTE);
 		sb.append(irodsAccount.getUserName());
 		sb.append(QUOTE);
+		
+		if (!searchTagName.isEmpty()) {
+			sb.append(' ');
+			sb.append(AND);
+			sb.append(RodsGenQueryEnum.COL_META_COLL_ATTR_NAME.getName());
+			sb.append(" LIKE '%");
+			sb.append(searchTagName);
+			sb.append("%'");
+		}
+		
 		String cloudQuery = sb.toString();
 		log.debug("cloud tag query:{}", cloudQuery);
 
@@ -190,10 +208,16 @@ public final class UserTagCloudServiceImpl extends AbstractIRODSTaggingService
 	 * @return
 	 * @throws JargonException
 	 */
-	private List<TagCloudEntry> buildTagCloudEntryListForDataObjects()
+	private List<TagCloudEntry> buildTagCloudEntryListForDataObjects(final String searchTagName)
 			throws JargonException {
+		
+		if (searchTagName == null) {
+			throw new IllegalArgumentException("null searchTagName");
+		}
+		
 		log.info("buildTagCloudEntryListForDataObjects, user={}", irodsAccount
 				.getUserName());
+		
 		// create a GenQuery to get the cloud info
 		StringBuilder sb = new StringBuilder();
 		sb.append("SELECT COUNT(");
@@ -215,6 +239,16 @@ public final class UserTagCloudServiceImpl extends AbstractIRODSTaggingService
 		sb.append(EQUAL_QUOTE);
 		sb.append(irodsAccount.getUserName());
 		sb.append(QUOTE);
+		
+		if (!searchTagName.isEmpty()) {
+			sb.append(' ');
+			sb.append(AND);
+			sb.append(RodsGenQueryEnum.COL_META_DATA_ATTR_NAME.getName());
+			sb.append(" LIKE '%");
+			sb.append(searchTagName);
+			sb.append("%'");
+		}
+		
 		String cloudQuery = sb.toString();
 		log.debug("cloud tag query:{}", cloudQuery);
 
@@ -248,6 +282,22 @@ public final class UserTagCloudServiceImpl extends AbstractIRODSTaggingService
 		
 		return tagCloudEntries;
 
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.usertagging.UserTagCloudService#searchForTagsForDataObjectsAndCollectionsUsingSearchTermForTheLoggedInUser(java.lang.String)
+	 */
+	@Override
+	public UserTagCloudView searchForTagsForDataObjectsAndCollectionsUsingSearchTermForTheLoggedInUser(final String tagSearchTerm) throws JargonException {
+		log.info("searchForTagsForDataObjectsAndCollectionsUsingSearchTermForTheLoggedInUser, user={}", irodsAccount
+				.getUserName());
+		log.info("tag search term:{}", tagSearchTerm);
+		
+		UserTagCloudView userTagCloudView = UserTagCloudView.instance(
+				irodsAccount.getUserName(), buildTagCloudEntryListForDataObjects(tagSearchTerm),
+				buildTagCloudEntryListForCollections(tagSearchTerm));
+		return userTagCloudView;
+	
 	}
 
 }

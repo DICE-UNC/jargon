@@ -1,6 +1,9 @@
 package org.irods.jargon.usertagging;
 
+import java.util.List;
+
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.usertagging.domain.TagCloudEntry;
 import org.irods.jargon.usertagging.domain.UserTagCloudView;
 
 
@@ -36,4 +39,13 @@ public interface UserTagCloudService {
 	 */
 	public UserTagCloudView getTagCloud() throws JargonException;
 
+	/**
+	 * Get a tag cloud for the logged-in user for collections and data objects in iRODS matching the given search term.  The search will be a select 'LIKE %searchTerm%'.
+	 * @param tagSearchTerm <code>String</code> that will be searched for.  Note that the method will wrap the term in the '%' wildcards, and these should not
+	 * be supplied.
+	 * @return {@link org.irods.jargon.usertagging.domain.UserTagCloudView} with the tag cloud for the files and collections matching the supplied term.
+	 * @throws JargonException
+	 */
+	UserTagCloudView searchForTagsForDataObjectsAndCollectionsUsingSearchTermForTheLoggedInUser(
+			String tagSearchTerm) throws JargonException;
 }

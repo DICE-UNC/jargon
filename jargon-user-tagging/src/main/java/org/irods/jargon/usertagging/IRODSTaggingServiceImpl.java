@@ -331,6 +331,7 @@ public final class IRODSTaggingServiceImpl extends AbstractIRODSTaggingService i
 		}
 		
 	}
+		
 	
 	/* (non-Javadoc)
 	 * @see org.irods.jargon.usertagging.IRODSTaggingService#addTagToGivenDomain(org.irods.jargon.usertagging.domain.IRODSTagValue, org.irods.jargon.core.query.MetaDataAndDomainData.MetadataDomain, java.lang.String)
