@@ -1,5 +1,6 @@
 package org.irods.jargon.core.pub;
 
+import java.io.File;
 import java.util.List;
 import java.util.Properties;
 
@@ -9,6 +10,7 @@ import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
+import org.irods.jargon.testutils.filemanip.FileGenerator;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -345,6 +347,12 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 						irodsFile.getAbsolutePath() + "/" + commonTerm);
 		irodsFile.mkdir();
 
+		irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(
+						irodsFile.getAbsolutePath() + "/" + "joeBOB"
+								+ commonTerm);
+		irodsFile.mkdir();
+
 		CollectionAndDataObjectListAndSearchAO actual = irodsFileSystem
 				.getIRODSAccessObjectFactory()
 				.getCollectionAndDataObjectListAndSearchAO(irodsAccount);
@@ -352,7 +360,7 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 				.searchCollectionsBasedOnName(commonTerm);
 
 		Assert.assertNotNull(entries);
-		Assert.assertEquals("did not find the two subdirs I added", 2,
+		Assert.assertEquals("did not find the two subdirs I added", 3,
 				entries.size());
 		irodsFileSystem.close();
 	}
@@ -381,6 +389,119 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 				.getIRODSAccessObjectFactory()
 				.getCollectionAndDataObjectListAndSearchAO(irodsAccount);
 		actual.searchCollectionsBasedOnName("");
+	}
+
+	@Test
+	public void testSearchDataObjects() throws Exception {
+
+		String subdirPrefix = "testSearchDataObjects";
+		String searchTerm = "testSearchDataObjectsIBetYouWontReplicateThisNameAnywhere";
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + "/"
+								+ subdirPrefix);
+		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetIrodsCollection);
+		irodsFile.mkdir();
+
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String localFileName = FileGenerator
+				.generateFileOfFixedLengthGivenName(absPath, searchTerm
+						+ "testv1.txt", 1);
+
+		irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetIrodsCollection);
+		irodsFile.mkdir();
+
+		File localFile = new File(localFileName);
+		DataObjectAO dataObjectAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
+
+		dataObjectAO.putLocalDataObjectToIRODS(localFile, irodsFile, true);
+
+		// second file, slightly different prefix on name
+		localFileName = FileGenerator.generateFileOfFixedLengthGivenName(
+				absPath, "someSortOfPrefix" + searchTerm + "testv1.txt", 1);
+		localFile = new File(localFileName);
+		dataObjectAO.putLocalDataObjectToIRODS(localFile, irodsFile, true);
+
+		CollectionAndDataObjectListAndSearchAO actual = irodsFileSystem
+				.getIRODSAccessObjectFactory()
+				.getCollectionAndDataObjectListAndSearchAO(irodsAccount);
+		irodsFileSystem.close();
+		List<CollectionAndDataObjectListingEntry> entries = actual
+				.searchDataObjectsBasedOnName(searchTerm, 0);
+		Assert.assertNotNull(entries);
+		Assert.assertEquals(2, entries.size());
+
+		irodsFileSystem.close();
+	}
+
+	@Test
+	public void testSearchCollectionsAndDataObjects() throws Exception {
+
+		String subdirPrefix = "testSearchCollectionsAndDataObjects";
+		String searchTerm = "testSearchCollectionsAndDataObjectsAndThisIsAPrettyUniqueSearchNameToo";
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + "/"
+								+ subdirPrefix);
+		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetIrodsCollection);
+		irodsFile.mkdir();
+
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String localFileName = FileGenerator
+				.generateFileOfFixedLengthGivenName(absPath, searchTerm
+						+ "testv1.txt", 1);
+
+		irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetIrodsCollection);
+		irodsFile.mkdir();
+
+		File localFile = new File(localFileName);
+		DataObjectAO dataObjectAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
+
+		dataObjectAO.putLocalDataObjectToIRODS(localFile, irodsFile, true);
+
+		// second file, slightly different prefix on name
+		localFileName = FileGenerator.generateFileOfFixedLengthGivenName(
+				absPath, "someSortOfPrefix" + searchTerm + "testv1.txt", 1);
+		localFile = new File(localFileName);
+		dataObjectAO.putLocalDataObjectToIRODS(localFile, irodsFile, true);
+
+		// make a subdir with the search term
+		irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetIrodsCollection + "/" + searchTerm);
+		irodsFile.mkdir();
+
+		irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(
+						irodsFile.getAbsolutePath() + "/" + searchTerm
+								+ "somethingElseToo");
+		irodsFile.mkdir();
+
+		CollectionAndDataObjectListAndSearchAO actual = irodsFileSystem
+				.getIRODSAccessObjectFactory()
+				.getCollectionAndDataObjectListAndSearchAO(irodsAccount);
+		List<CollectionAndDataObjectListingEntry> entries = actual.searchCollectionsAndDataObjectsBasedOnName(searchTerm);
+		Assert.assertNotNull(entries);
+		Assert.assertEquals(4, entries.size());
+
+		irodsFileSystem.close();
 	}
 
 }

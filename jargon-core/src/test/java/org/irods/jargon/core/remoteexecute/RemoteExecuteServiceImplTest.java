@@ -9,9 +9,11 @@ import junit.framework.Assert;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSCommands;
+import org.irods.jargon.core.connection.IRODSServerProperties;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.CollectionAO;
 import org.irods.jargon.core.pub.CollectionAOImpl;
+import org.irods.jargon.core.pub.EnvironmentalInfoAO;
 import org.irods.jargon.core.pub.IRODSFileSystem;
 import org.irods.jargon.testutils.IRODSTestSetupUtilities;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
@@ -33,7 +35,6 @@ public class RemoteExecuteServiceImplTest {
 	private static ScratchFileUtils scratchFileUtils = null;
 	public static final String IRODS_TEST_SUBDIR_PATH = "RemoteExecuteServiceImplTest";
 	private static IRODSTestSetupUtilities irodsTestSetupUtilities = null;
-
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -105,10 +106,54 @@ public class RemoteExecuteServiceImplTest {
 				"Hello world  from irods".trim(), result.trim());
 
 	}
-	
-	//FIXME: currently ignored..potential iRODS bug
+
+	@Test
+	public final void testExecuteHelloABunchOfTimes() throws Exception {
+
+		String cmd = "hello";
+		String args = "";
+		String host = "";
+		String absPath = "";
+
+		int nbrTimes = 50;
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
+		CollectionAO collectionAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getCollectionAO(irodsAccount);
+		CollectionAOImpl collectionAOImpl = (CollectionAOImpl) collectionAO;
+		IRODSCommands irodsCommands = collectionAOImpl.getIRODSProtocol();
+		RemoteExecutionService remoteExecuteService = RemoteExecuteServiceImpl
+				.instance(irodsCommands, cmd, args, host, absPath);
+
+		InputStream inputStream;
+
+		for (int i = 0; i < nbrTimes; i++) {
+			inputStream = remoteExecuteService.execute();
+
+			BufferedReader br = new BufferedReader(new InputStreamReader(
+					inputStream));
+			StringBuilder sb = new StringBuilder();
+			String line = null;
+
+			while ((line = br.readLine()) != null) {
+				sb.append(line + "\n");
+			}
+
+			br.close();
+			String result = sb.toString();
+			Assert.assertEquals("did not successfully execute hello command",
+					"Hello world  from irods".trim(), result.trim());
+		}
+		irodsFileSystem.close();
+
+	}
+
+	// FIXME: currently ignored..potential iRODS bug
 	@Ignore
-	public final void testExecuteHelloWithStreamingOnSmallResultWillNotCauseStreaming() throws Exception {
+	public final void testExecuteHelloWithStreamingOnSmallResultWillNotCauseStreaming()
+			throws Exception {
 
 		String cmd = "hello";
 		String args = "";
@@ -118,6 +163,11 @@ public class RemoteExecuteServiceImplTest {
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
 		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
+		
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(irodsAccount);
+		IRODSServerProperties props = environmentalInfoAO.getIRODSServerPropertiesFromIRODSServer();
+		
+		
 		CollectionAO collectionAO = irodsFileSystem
 				.getIRODSAccessObjectFactory().getCollectionAO(irodsAccount);
 		CollectionAOImpl collectionAOImpl = (CollectionAOImpl) collectionAO;
@@ -144,7 +194,7 @@ public class RemoteExecuteServiceImplTest {
 				"Hello world  from irods".trim(), result.trim());
 
 	}
-	
+
 	@Test
 	public final void testExecuteHelloWithPath() throws Exception {
 
@@ -154,7 +204,7 @@ public class RemoteExecuteServiceImplTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		
+
 		String testFileName = "testExecuteHelloWithPath.txt";
 		String absPath = scratchFileUtils
 				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
@@ -180,7 +230,7 @@ public class RemoteExecuteServiceImplTest {
 
 		IcommandInvoker invoker = new IcommandInvoker(invocationContext);
 		invoker.invokeCommandAndGetResultAsString(iputCommand);
-		
+
 		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
 		CollectionAO collectionAO = irodsFileSystem
 				.getIRODSAccessObjectFactory().getCollectionAO(irodsAccount);
@@ -208,13 +258,13 @@ public class RemoteExecuteServiceImplTest {
 				"Hello world  from irods".trim(), result.trim());
 
 	}
-	
+
 	@Test
 	public final void testExecuteHelloWithHost() throws Exception {
 
 		String cmd = "hello";
 		String args = "";
-		String host = testingProperties.getProperty(TestingPropertiesHelper.IRODS_HOST_KEY);
+		String host = "localhost";
 		String absPath = "";
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
@@ -246,8 +296,8 @@ public class RemoteExecuteServiceImplTest {
 				"Hello world  from irods".trim(), result.trim());
 
 	}
-	
-	@Test(expected=JargonException.class)
+
+	@Test(expected = JargonException.class)
 	public final void testExecuteHelloWithBadHost() throws Exception {
 
 		String cmd = "hello";
@@ -265,11 +315,11 @@ public class RemoteExecuteServiceImplTest {
 		RemoteExecutionService remoteExecuteService = RemoteExecuteServiceImpl
 				.instance(irodsCommands, cmd, args, host, absPath);
 
-	 remoteExecuteService.execute();
+		remoteExecuteService.execute();
 
 	}
-	
-	@Test(expected=JargonException.class)
+
+	@Test(expected = JargonException.class)
 	public final void testExecuteHelloWithBadPath() throws Exception {
 
 		String cmd = "hello";
@@ -301,11 +351,10 @@ public class RemoteExecuteServiceImplTest {
 		String result = sb.toString();
 		irodsFileSystem.close();
 
-		Assert.assertEquals("I should not have returned anything as the path was bad",
-				"", result.trim());
+		Assert.assertEquals(
+				"I should not have returned anything as the path was bad", "",
+				result.trim());
 
 	}
-	
-	
 
 }

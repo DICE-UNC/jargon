@@ -2,10 +2,9 @@ package org.irods.jargon.core.packinstr;
 
 import java.util.Properties;
 
-import junit.framework.TestCase;
+import junit.framework.Assert;
 
 import org.irods.jargon.core.connection.IRODSServerProperties;
-import org.irods.jargon.core.protovalues.ServerTypeEnum;
 import org.irods.jargon.core.query.IRODSQuery;
 import org.irods.jargon.core.query.IRODSQueryTranslator;
 import org.irods.jargon.core.query.RodsGenQueryEnum;
@@ -50,7 +49,7 @@ public class GenQueryInp_PITest {
 				.getTranslatedQuery(irodsQuery);
 
 		GenQueryInp genQueryInp = GenQueryInp.instance(translatedIRODSQuery, 0);
-		TestCase.assertNotNull(genQueryInp.getParsedTags());
+		Assert.assertNotNull(genQueryInp.getParsedTags());
 	}
 
 	@Test
@@ -72,10 +71,10 @@ public class GenQueryInp_PITest {
 				.getTranslatedQuery(irodsQuery);
 		GenQueryInp genQueryInp = GenQueryInp.instance(translatedIRODSQuery, 0);
 		String tagData = genQueryInp.getParsedTags();
-		TestCase.assertTrue("did not find select field",
+		Assert.assertTrue("did not find select field",
 				tagData.indexOf(String.valueOf(RodsGenQueryEnum.COL_D_COLL_ID
 						.getNumericValue())) > -1);
-		TestCase.assertTrue("did not find select field", tagData.indexOf(String
+		Assert.assertTrue("did not find select field", tagData.indexOf(String
 				.valueOf(RodsGenQueryEnum.COL_COLL_ACCESS_COLL_ID
 						.getNumericValue())) > -1);
 

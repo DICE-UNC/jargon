@@ -13,6 +13,7 @@ import org.irods.jargon.core.packinstr.GenQueryInp_PITest;
 import org.irods.jargon.core.packinstr.GeneralAdminInpTest;
 import org.irods.jargon.core.packinstr.ModAvuMetadataInpTest;
 import org.irods.jargon.core.packinstr.OpenedDataObjInpTest;
+import org.irods.jargon.core.packinstr.StructFileExtAndRegInpTest;
 import org.irods.jargon.core.packinstr.UserAdminInpTest;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
@@ -23,7 +24,7 @@ import org.junit.runners.Suite;
 		DataObjCloseInpTest.class, DataObjCopyInpTest.class,
 		DataObjWriteInpTest.class, GeneralAdminInpTest.class, ExecCmdTest.class,
 		DataObjReadTest.class, OpenedDataObjInpTest.class, ModAvuMetadataInpTest.class, ExecMyRuleInp_PITest.class,
-		UserAdminInpTest.class})
+		UserAdminInpTest.class, StructFileExtAndRegInpTest.class})
 public class PackingInstructionTests {
 
 }
