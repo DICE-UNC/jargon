@@ -53,6 +53,21 @@
       </snapshots>
     </repository>
     <repository>
+      <id>jboss</id>
+      <name>jboss.repository</name>
+      <url>http://repository.jboss.com/maven2/</url>
+      <releases>
+	<enabled>true</enabled>
+	<updatePolicy>always</updatePolicy>
+	<checksumPolicy>warn</checksumPolicy>
+      </releases>
+      <snapshots>
+	<enabled>false</enabled>
+	<updatePolicy>never</updatePolicy>
+	<checksumPolicy>fail</checksumPolicy>
+      </snapshots>
+    </repository>
+    <repository>
       <id>renci.repository</id>
       <name>renci.repository</name>
       <url>https://ci-dev.renci.org/nexus/content/repositories/release</url>
