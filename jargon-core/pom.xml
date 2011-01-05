@@ -3,14 +3,13 @@
   <parent>
     <groupId>org.irods</groupId>
     <artifactId>jargon</artifactId>
-    <version>0.0.2-SNAPSHOT</version>
+    <version>2.4.1-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.irods</groupId>
   <artifactId>jargon-core</artifactId>
   <packaging>jar</packaging>
-  <version>0.0.3-SNAPSHOT</version>
-  <name>jargon-core</name>
+  <name>Jargon Core</name>
   <description>Core PAI for the iRODS Data grid</description>
   <url>http://www.irods.org</url>
   <dependencies>

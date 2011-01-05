@@ -5,10 +5,10 @@
   <groupId>org.irods</groupId>
   <artifactId>jargon</artifactId>
   <packaging>pom</packaging>
-  <version>0.0.2-SNAPSHOT</version>
-  <name>jargon</name>
+  <version>2.4.1-SNAPSHOT</version>
+  <name>Jargon</name>
   <description>iRODS :: Jargon</description>
-  <url>http://www.irods.org</url>
+  <url>https://code.renci.org/gf/project/jargon</url>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
@@ -55,7 +55,7 @@
     <repository>
       <id>renci.repository</id>
       <name>renci.repository</name>
-      <url>https://ci-dev.renci.org/nexus/content/repositories/renci-release</url>
+      <url>https://ci-dev.renci.org/nexus/content/repositories/release</url>
       <releases>
 	<enabled>true</enabled>
 	<updatePolicy>always</updatePolicy>
@@ -72,12 +72,17 @@
     <repository>
       <id>renci.repository</id>
       <name>renci.repository</name>
-      <url>scpexe://ci-dev.renci.org/var/www/html/maven</url>
+      <url>https://ci-dev.renci.org/nexus/content/repositories/release</url>
     </repository>
+    <snapshotRepository>
+      <id>renci.snapshots</id>
+      <name>renci.snapshots</name>
+      <url>https://ci-dev.renci.org/nexus/content/repositories/snapshots</url>
+    </snapshotRepository>
     <site>
       <id>renci.site</id>
       <name>renci.site</name>
-      <url>scpexe://ci-dev.renci.org/var/www/html/maven/sites</url>
+      <url>file:///${user.dir}/sites/jargon</url>
     </site>
   </distributionManagement>
   <reporting>
@@ -129,7 +134,7 @@
       <dependency>
     	<groupId>org.irods</groupId>
     	<artifactId>jargon-core</artifactId>
-    	<version>0.0.3-SNAPSHOT</version>
+    	<version>${pom.version}</version>
       </dependency>
       <dependency>
     	<groupId>junit</groupId>
@@ -169,7 +174,7 @@
       <dependency>
     	<groupId>org.irods.jargon</groupId>
     	<artifactId>jargon-test</artifactId>
-    	<version>0.0.1-SNAPSHOT</version>
+    	<version>${pom.version}</version>
       </dependency>
       <dependency>
     	<groupId>javax.transaction</groupId>
