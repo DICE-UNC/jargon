@@ -1,8 +1,0 @@
-<span xmlns:spring="http://www.springframework.org/tags"
-	xmlns:c="http://java.sun.com/jsp/jstl/core"
-	xmlns:form="http://www.springframework.org/tags/form">
-	
-	<c:forEach items="${policyList}" var="policy">
-		<option value="${policy.policyDrivenServiceName}"><c:out value="${policy.policyDrivenServiceName}"/></option>
-	</c:forEach>
-</span>
