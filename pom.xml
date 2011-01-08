@@ -169,7 +169,7 @@
       <dependency>
     	<groupId>log4j</groupId>
     	<artifactId>log4j</artifactId>
-    	<version>1.2.14</version>
+    	<version>1.2.16</version>
       </dependency>
       <dependency>
     	<groupId>org.apache.commons</groupId>
@@ -299,9 +299,6 @@
 	  </dependency>
 	</dependencies>
 	<configuration>
-	  <!--
-	      <tagBase>scm:javasvn:svn://intranet.lib.unc.edu/cdr/cdr-metadata/tags</tagBase>
-	  -->
 	  <providerImplementations>
 	    <svn>javasvn</svn>
 	  </providerImplementations>

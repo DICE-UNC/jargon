@@ -7,11 +7,14 @@ import static edu.sdsc.grid.io.irods.IRODSConstants.BinBytesBuf_PI;
 import static edu.sdsc.grid.io.irods.IRODSConstants.buf;
 import static edu.sdsc.grid.io.irods.IRODSConstants.buflen;
 
+import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.io.SequenceInputStream;
 
 import org.irods.jargon.core.connection.IRODSCommands;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.packinstr.ExecCmd;
+import org.irods.jargon.core.pub.io.RemoteExecutionBinaryResultInputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,7 +26,7 @@ import edu.sdsc.grid.io.irods.Tag;
  * the iexecmd. This is a lower-level service, and is not meant for use as a
  * public API. Please consult the appropriate access object for public
  * interfaces for command execution.
- * 
+ * <p/>
  * This object is immutable.
  * 
  * @author Mike Conway - DICE (www.irods.org)
@@ -214,10 +217,8 @@ public class RemoteExecuteServiceImpl implements RemoteExecutionService {
 	public InputStream executeAndStream() throws JargonException {
 		log.info("executing a remote command with streaming:{}", toString());
 
-		// FIXME: this checks for 2.4.1, but the real capabiiity will be post
-		// 2.4.1, fix this at next release
-		if (this.getIrodsCommands().getIRODSServerProperties().getRelVersion()
-				.compareTo("rods2.4.1") < 0) {
+		if (!getIrodsCommands().getIRODSServerProperties()
+				.isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods2.4.1")) {
 			log.error(
 					"cannot stream remote commands, unsupported on this iRODS version:{}",
 					getIrodsCommands().getIRODSServerProperties());
@@ -246,8 +247,6 @@ public class RemoteExecuteServiceImpl implements RemoteExecutionService {
 			throw new JargonException("null response from remote execution");
 		}
 
-		InputStream resultStream = null;
-
 		// message
 		int length = message.getTag(BinBytesBuf_PI, 0).getTag(buflen)
 				.getIntValue();
@@ -263,6 +262,13 @@ public class RemoteExecuteServiceImpl implements RemoteExecutionService {
 					.getStringValue());
 		}
 
+		return buildAppropriateResultStream(message, buffer);
+
+	}
+
+	private InputStream buildAppropriateResultStream(Tag message,
+			StringBuilder buffer) {
+		InputStream resultStream;
 		/*
 		 * see if the status decriptor holds a non zero, positive int If it
 		 * does, then I am streaming additional binary data using the int as a
@@ -273,12 +279,15 @@ public class RemoteExecuteServiceImpl implements RemoteExecutionService {
 		log.debug("status from remoteexec response:{}", status);
 		if (status > 0) {
 			log.info("additional data will be streamed, opening up will create concatenated stream");
+			ByteArrayInputStream bis = new java.io.ByteArrayInputStream(
+					Base64.fromString(buffer.toString()));
+			RemoteExecutionBinaryResultInputStream reStream = new RemoteExecutionBinaryResultInputStream(this.getIrodsCommands(), status);
+			resultStream = new SequenceInputStream(bis, reStream);
 		} else {
 			log.info("no additional data to stream, will return simple stream from result buffer");
 			resultStream = new java.io.ByteArrayInputStream(
 					Base64.fromString(buffer.toString()));
 		}
-
 		return resultStream;
 	}
 
