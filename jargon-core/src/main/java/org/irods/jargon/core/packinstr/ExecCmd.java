@@ -4,8 +4,6 @@
 package org.irods.jargon.core.packinstr;
 
 import org.irods.jargon.core.exception.JargonException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import edu.sdsc.grid.io.irods.Tag;
 
@@ -35,8 +33,6 @@ public final class ExecCmd extends AbstractIRODSPackingInstruction {
 	private final String executionHost;
 	private final String absolutePathOfIrodsFileThatWillBeUsedToFindHostToExecuteOn;
 	private final boolean useStreaming;
-
-	private static final Logger log = LoggerFactory.getLogger(ExecCmd.class);
 
 	@Override
 	public String toString() {

@@ -3,6 +3,7 @@ package org.irods.jargon.core.pub;
 import java.util.Properties;
 
 import junit.framework.Assert;
+
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSProtocolManager;
 import org.irods.jargon.core.connection.IRODSSession;
@@ -32,7 +33,8 @@ public class RuleProcessingAOImplTest {
 		testingProperties = testingPropertiesLoader.getTestProperties();
 		scratchFileUtils = new org.irods.jargon.testutils.filemanip.ScratchFileUtils(
 				testingProperties);
-		scratchFileUtils.clearAndReinitializeScratchDirectory(IRODS_TEST_SUBDIR_PATH);
+		scratchFileUtils
+				.clearAndReinitializeScratchDirectory(IRODS_TEST_SUBDIR_PATH);
 		irodsTestSetupUtilities = new org.irods.jargon.testutils.IRODSTestSetupUtilities();
 		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
 		irodsTestSetupUtilities
@@ -56,8 +58,8 @@ public class RuleProcessingAOImplTest {
 		IRODSRuleExecResult result = ruleProcessingAO.executeRule(ruleString);
 		irodsSession.closeSession();
 
-		String execOut = (String) result.getOutputParameterResults().get(
-				RuleProcessingAOImpl.RULE_EXEC_OUT).getResultObject();
+		String execOut = (String) result.getOutputParameterResults()
+				.get(RuleProcessingAOImpl.RULE_EXEC_OUT).getResultObject();
 		Assert.assertEquals("irodsRule did not have original string",
 				ruleString, result.getIrodsRule().getRuleAsOriginalText());
 		Assert.assertNotNull("did not get exec out", execOut.length() > 0);
@@ -119,8 +121,8 @@ public class RuleProcessingAOImplTest {
 		irodsSession.closeSession();
 
 		Assert.assertNotNull("did not get a response", result);
-		Assert.assertEquals("did not get results for each output parameter",
-				5, result.getOutputParameterResults().size());
+		Assert.assertEquals("did not get results for each output parameter", 5,
+				result.getOutputParameterResults().size());
 
 		String conditionValue = (String) result.getOutputParameterResults()
 				.get("*Condition").getResultObject();
@@ -170,8 +172,8 @@ public class RuleProcessingAOImplTest {
 		irodsSession.closeSession();
 
 		Assert.assertNotNull("did not get a response", result);
-		Assert.assertEquals("did not get results for client side operation",
-				1, result.getOutputParameterResults().size());
+		Assert.assertEquals("did not get results for client side operation", 1,
+				result.getOutputParameterResults().size());
 
 	}
 
@@ -181,7 +183,7 @@ public class RuleProcessingAOImplTest {
 		// create a local file to put
 		// put a collection out to do a checksum on
 		String testFileName = "testClientAction.txt";
-		String absPath = scratchFileUtils
+		scratchFileUtils
 				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
 		String putFileName = "/a/bogus/dir/" + testFileName;
 
@@ -247,7 +249,7 @@ public class RuleProcessingAOImplTest {
 				.instance(irodsConnectionManager);
 		IRODSAccessObjectFactory accessObjectFactory = IRODSAccessObjectFactoryImpl
 				.instance(irodsSession);
-	
+
 		StringBuilder builder = new StringBuilder();
 		builder.append("testClientAction||msiDataObjGet(");
 		builder.append(testingPropertiesHelper
@@ -270,8 +272,8 @@ public class RuleProcessingAOImplTest {
 
 		assertionHelper.assertLocalFileExistsInScratch(IRODS_TEST_SUBDIR_PATH
 				+ '/' + testFileGetName);
-		assertionHelper.assertLocalScratchFileLengthEquals(IRODS_TEST_SUBDIR_PATH
-				+ '/' + testFileGetName, 100);
+		assertionHelper.assertLocalScratchFileLengthEquals(
+				IRODS_TEST_SUBDIR_PATH + '/' + testFileGetName, 100);
 
 	}
 

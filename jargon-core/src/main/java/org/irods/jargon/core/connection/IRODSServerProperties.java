@@ -72,6 +72,30 @@ public final class IRODSServerProperties {
 		return rodsZone;
 	}
 
+	/**
+	 * Handy method compares the iRODS release version of the target server, and
+	 * will indicate that the iRODS version being connected to is at or above
+	 * the given version.
+	 * 
+	 * @param releaseVersion
+	 *            <code>String</code> in standard iRODS version format that will
+	 *            be checked against the currently-connected server.
+	 * @return <code>boolean</code> that will be <code>true</code> if the iRODS
+	 *         server is at or above the <code>releaseVersion</code>
+	 */
+	public boolean isTheIrodsServerAtLeastAtTheGivenReleaseVersion(
+			final String releaseVersion) {
+		if (releaseVersion == null || releaseVersion.length() == 0) {
+			throw new IllegalArgumentException("null or empty releaseVersion");
+		}
+
+		// The result is a negative integer if this String object
+		// lexicographically precedes the argument string.
+		int compValue = getRelVersion().compareToIgnoreCase(releaseVersion);
+		return compValue > -1;
+
+	}
+
 	@Override
 	public String toString() {
 		char ret = '\n';

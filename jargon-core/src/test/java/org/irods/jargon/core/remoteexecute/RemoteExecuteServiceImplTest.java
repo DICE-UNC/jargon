@@ -24,7 +24,6 @@ import org.irods.jargon.testutils.icommandinvoke.IrodsInvocationContext;
 import org.irods.jargon.testutils.icommandinvoke.icommands.IputCommand;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -150,8 +149,7 @@ public class RemoteExecuteServiceImplTest {
 
 	}
 
-	// FIXME: currently ignored..potential iRODS bug
-	@Ignore
+	@Test
 	public final void testExecuteHelloWithStreamingOnSmallResultWillNotCauseStreaming()
 			throws Exception {
 
@@ -166,6 +164,12 @@ public class RemoteExecuteServiceImplTest {
 		
 		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(irodsAccount);
 		IRODSServerProperties props = environmentalInfoAO.getIRODSServerPropertiesFromIRODSServer();
+		
+		
+		// test is only valid for post 2.4.1 FIXME: bump this up to the next released version
+		if (!props.isTheIrodsServerAtLeastAtTheGivenReleaseVersion("2.4.1")) {
+			return;
+		}
 		
 		
 		CollectionAO collectionAO = irodsFileSystem

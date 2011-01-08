@@ -20,7 +20,6 @@ import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.pub.io.IRODSFileFactory;
 import org.irods.jargon.core.query.AVUQueryElement;
 import org.irods.jargon.core.query.AVUQueryOperatorEnum;
-import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry;
 import org.irods.jargon.core.query.MetaDataAndDomainData;
 import org.irods.jargon.core.query.RodsGenQueryEnum;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
@@ -28,10 +27,10 @@ import org.irods.jargon.testutils.filemanip.FileGenerator;
 import org.irods.jargon.testutils.icommandinvoke.IcommandInvoker;
 import org.irods.jargon.testutils.icommandinvoke.IrodsInvocationContext;
 import org.irods.jargon.testutils.icommandinvoke.icommands.ImetaAddCommand;
+import org.irods.jargon.testutils.icommandinvoke.icommands.ImetaCommand.MetaObjectType;
 import org.irods.jargon.testutils.icommandinvoke.icommands.ImetaListCommand;
 import org.irods.jargon.testutils.icommandinvoke.icommands.ImetaRemoveCommand;
 import org.irods.jargon.testutils.icommandinvoke.icommands.ImkdirCommand;
-import org.irods.jargon.testutils.icommandinvoke.icommands.ImetaCommand.MetaObjectType;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -654,8 +653,6 @@ public class CollectionAOImplTest {
 				metaValues.indexOf(expectedNewAttribValue) > -1);
 	}
 
-	
-
 	@Test
 	public final void findMetadataValuesByMetadataQueryWithAdditionalWhereCollectionLike()
 			throws Exception {
@@ -1022,7 +1019,5 @@ public class CollectionAOImplTest {
 				.getCollectionName());
 
 	}
-
-	
 
 }

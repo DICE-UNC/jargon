@@ -451,6 +451,10 @@ public class IRODSCommands implements IRODSManagedConnection {
 		}
 
 		// Reports iRODS errors, throw exception if appropriate
+		
+		// FIXME: insert iRODS error manager
+		
+		
 		if (info < 0) {
 			processMessageInfoLessThanZero(messageLength, errorLength, info);
 			log.debug("returning null, no results");

@@ -2,13 +2,12 @@ package org.irods.jargon.core.pub;
 
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.transfer.TransferStatus;
-import org.irods.jargon.core.transfer.TransferStatusCallbackListener;
 import org.irods.jargon.core.transfer.TransferStatus.TransferState;
+import org.irods.jargon.core.transfer.TransferStatusCallbackListener;
 
 public class TestingStatusCallbackListener implements
 		TransferStatusCallbackListener {
-	
-	
+
 	private int successCallbackCount = 0;
 	private int errorCallbackCount = 0;
 	private String lastSourcePath = "";
@@ -16,16 +15,15 @@ public class TestingStatusCallbackListener implements
 	private String lastResource = "";
 
 	@Override
-	public void statusCallback(TransferStatus transferStatus)
+	public void statusCallback(final TransferStatus transferStatus)
 			throws JargonException {
-		
+
 		if (transferStatus.getTransferState() == TransferState.FAILURE) {
 			errorCallbackCount++;
 		} else {
 			successCallbackCount++;
 		}
-		
-		
+
 		lastSourcePath = transferStatus.getSourceFileAbsolutePath();
 		lastTargetPath = transferStatus.getTargetFileAbsolutePath();
 		lastResource = transferStatus.getTargetResource();
@@ -36,7 +34,7 @@ public class TestingStatusCallbackListener implements
 		return successCallbackCount;
 	}
 
-	public void setSuccessCallbackCount(int successCallbackCount) {
+	public void setSuccessCallbackCount(final int successCallbackCount) {
 		this.successCallbackCount = successCallbackCount;
 	}
 
@@ -44,7 +42,7 @@ public class TestingStatusCallbackListener implements
 		return errorCallbackCount;
 	}
 
-	public void setErrorCallbackCount(int errorCallbackCount) {
+	public void setErrorCallbackCount(final int errorCallbackCount) {
 		this.errorCallbackCount = errorCallbackCount;
 	}
 

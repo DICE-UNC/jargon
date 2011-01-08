@@ -1,11 +1,9 @@
 package org.irods.jargon.core.pub;
 
-import static org.junit.Assert.*;
-
 import java.util.List;
 import java.util.Properties;
 
-import junit.framework.TestCase;
+import junit.framework.Assert;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSProtocolManager;
@@ -48,7 +46,7 @@ public class UserGroupAOImplTest {
 				.instance(irodsSession);
 		UserGroupAO userGroupAO = accessObjectFactory
 				.getUserGroupAO(irodsAccount);
-		TestCase.assertNotNull("userGroupAO is null", userGroupAO);
+		Assert.assertNotNull("userGroupAO is null", userGroupAO);
 		irodsSession.closeSession();
 	}
 
@@ -68,9 +66,10 @@ public class UserGroupAOImplTest {
 		UserGroup actualUserGroup = userGroupAO.find(expectedUserGroup
 				.getUserGroupId());
 		irodsSession.closeSession();
-		TestCase.assertNotNull("no user group returned", actualUserGroup);
-		TestCase.assertEquals("unexpected user group", expectedUserGroup
-				.getUserGroupName(), actualUserGroup.getUserGroupName());
+		Assert.assertNotNull("no user group returned", actualUserGroup);
+		Assert.assertEquals("unexpected user group",
+				expectedUserGroup.getUserGroupName(),
+				actualUserGroup.getUserGroupName());
 	}
 
 	@Test
@@ -87,9 +86,9 @@ public class UserGroupAOImplTest {
 				.getUserGroupAO(irodsAccount);
 		UserGroup userGroup = userGroupAO.findByName("rodsadmin");
 		irodsSession.closeSession();
-		TestCase.assertNotNull("no user group returned", userGroup);
-		TestCase.assertEquals("unexpected user group", "rodsadmin", userGroup
-				.getUserGroupName());
+		Assert.assertNotNull("no user group returned", userGroup);
+		Assert.assertEquals("unexpected user group", "rodsadmin",
+				userGroup.getUserGroupName());
 
 	}
 
@@ -114,9 +113,9 @@ public class UserGroupAOImplTest {
 
 		List<UserGroup> userGroup = userGroupAO.findWhere(query.toString());
 		irodsSession.closeSession();
-		TestCase.assertNotNull("no user group returned", userGroup);
-		TestCase.assertTrue("no user group returned for query", userGroup
-				.size() == 1);
+		Assert.assertNotNull("no user group returned", userGroup);
+		Assert.assertTrue("no user group returned for query",
+				userGroup.size() == 1);
 	}
 
 	@Test
@@ -136,9 +135,9 @@ public class UserGroupAOImplTest {
 				.findUserGroupsForUser(testingProperties
 						.getProperty(TestingPropertiesHelper.IRODS_USER_KEY));
 		irodsSession.closeSession();
-		TestCase.assertNotNull("no user group returned", userGroup);
-		TestCase.assertTrue("no user group returned for query", userGroup
-				.size() > 0);
+		Assert.assertNotNull("no user group returned", userGroup);
+		Assert.assertTrue("no user group returned for query",
+				userGroup.size() > 0);
 
 	}
 

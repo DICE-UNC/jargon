@@ -497,7 +497,8 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 		CollectionAndDataObjectListAndSearchAO actual = irodsFileSystem
 				.getIRODSAccessObjectFactory()
 				.getCollectionAndDataObjectListAndSearchAO(irodsAccount);
-		List<CollectionAndDataObjectListingEntry> entries = actual.searchCollectionsAndDataObjectsBasedOnName(searchTerm);
+		List<CollectionAndDataObjectListingEntry> entries = actual
+				.searchCollectionsAndDataObjectsBasedOnName(searchTerm);
 		Assert.assertNotNull(entries);
 		Assert.assertEquals(4, entries.size());
 

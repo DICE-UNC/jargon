@@ -39,6 +39,7 @@ public class RemoteExecuteServiceImpl implements RemoteExecutionService {
 
 	private static final Logger log = LoggerFactory
 			.getLogger(RemoteExecuteServiceImpl.class);
+	private static final String STATUS = "status";
 
 	@Override
 	public String toString() {
@@ -243,28 +244,42 @@ public class RemoteExecuteServiceImpl implements RemoteExecutionService {
 
 		if (message == null) {
 			throw new JargonException("null response from remote execution");
-		} else {
-			// message
-			int length = message.getTag(BinBytesBuf_PI, 0).getTag(buflen)
-					.getIntValue();
-			if (length > 0) {
-				buffer.append(message.getTag(BinBytesBuf_PI, 0).getTag(buf)
-						.getStringValue());
-			}
-
-			// error
-			length = message.getTag(BinBytesBuf_PI, 1).getTag(buflen)
-					.getIntValue();
-			if (length > 0) {
-				buffer.append(message.getTag(BinBytesBuf_PI, 1).getTag(buf)
-						.getStringValue());
-			}
-
 		}
 
-		return new java.io.ByteArrayInputStream(Base64.fromString(buffer
-				.toString()));
+		InputStream resultStream = null;
 
+		// message
+		int length = message.getTag(BinBytesBuf_PI, 0).getTag(buflen)
+				.getIntValue();
+		if (length > 0) {
+			buffer.append(message.getTag(BinBytesBuf_PI, 0).getTag(buf)
+					.getStringValue());
+		}
+
+		// error
+		length = message.getTag(BinBytesBuf_PI, 1).getTag(buflen).getIntValue();
+		if (length > 0) {
+			buffer.append(message.getTag(BinBytesBuf_PI, 1).getTag(buf)
+					.getStringValue());
+		}
+
+		/*
+		 * see if the status decriptor holds a non zero, positive int If it
+		 * does, then I am streaming additional binary data using the int as a
+		 * file descriptor.
+		 */
+
+		int status = message.getTag(STATUS).getIntValue();
+		log.debug("status from remoteexec response:{}", status);
+		if (status > 0) {
+			log.info("additional data will be streamed, opening up will create concatenated stream");
+		} else {
+			log.info("no additional data to stream, will return simple stream from result buffer");
+			resultStream = new java.io.ByteArrayInputStream(
+					Base64.fromString(buffer.toString()));
+		}
+
+		return resultStream;
 	}
 
 	public IRODSCommands getIrodsCommands() {

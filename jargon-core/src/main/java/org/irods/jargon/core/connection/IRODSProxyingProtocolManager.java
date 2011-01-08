@@ -16,6 +16,7 @@ import org.irods.jargon.core.exception.JargonException;
  */
 public class IRODSProxyingProtocolManager implements IRODSProtocolManager {
 
+	@SuppressWarnings("unused")
 	private final List<ConnectionProxyDefinition> connectionProxyDefinitions;
 
 	public static IRODSProxyingProtocolManager instance(

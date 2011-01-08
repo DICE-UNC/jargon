@@ -10,8 +10,6 @@ import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.query.SelectField;
 import org.irods.jargon.core.query.TranslatedIRODSQuery;
 import org.irods.jargon.core.query.TranslatedQueryCondition;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import edu.sdsc.grid.io.irods.Tag;
 
@@ -47,8 +45,6 @@ public class GenQueryInp extends AbstractIRODSPackingInstruction implements
 	public static final String INX_IVAL_PAIR_PI = "InxIvalPair_PI";
 
 	public static final int API_NBR = 702;
-
-	private static Logger log = LoggerFactory.getLogger(GenQueryInp.class);
 
 	/**
 	 * Return an instance of a query command that defaults to no partial start.

@@ -175,5 +175,35 @@ public class CollectionAndDataObjectListingEntry extends IRODSDomainObject {
 		
 		return sb.toString();
 	}
+	
+	/**
+	 * Tree nodes typically want a short name for the subdirectory or data name to display.  Obtain a descriptive name for the 
+	 * collection (the last path component with no /'s), or the data object
+	 * name (with no /'s).  This method will eat any errors and make a best effort to return something meaningful.
+	 * @return <code>String</code> with a value suitable for a node name in a tree.
+	 */
+	public String getNodeLabelDisplayValue() {
+		String nodeVal;
+		if (objectType == ObjectType.COLLECTION) {
+			try {
+				nodeVal = getLastPathComponentForCollectionName();
+			} catch (JargonException e) {
+				nodeVal = toString();
+			}
+		} else {
+			nodeVal = pathOrName;
+		}
+		return nodeVal;
+		
+	}
+	
+	
+	public boolean isCollection() {
+		return(objectType == ObjectType.COLLECTION);
+	}
+	
+	public boolean isDataObject() {
+		return(objectType == ObjectType.DATA_OBJECT);
+	}
 
 }

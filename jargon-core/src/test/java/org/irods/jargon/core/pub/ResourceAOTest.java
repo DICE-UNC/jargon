@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
-import junit.framework.TestCase;
+import junit.framework.Assert;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSProtocolManager;
@@ -24,9 +24,9 @@ import org.irods.jargon.testutils.filemanip.FileGenerator;
 import org.irods.jargon.testutils.icommandinvoke.IcommandInvoker;
 import org.irods.jargon.testutils.icommandinvoke.IrodsInvocationContext;
 import org.irods.jargon.testutils.icommandinvoke.icommands.ImetaAddCommand;
+import org.irods.jargon.testutils.icommandinvoke.icommands.ImetaCommand.MetaObjectType;
 import org.irods.jargon.testutils.icommandinvoke.icommands.ImetaRemoveCommand;
 import org.irods.jargon.testutils.icommandinvoke.icommands.IputCommand;
-import org.irods.jargon.testutils.icommandinvoke.icommands.ImetaCommand.MetaObjectType;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -68,7 +68,7 @@ public class ResourceAOTest {
 				.listResourcesInZone(testingProperties
 						.getProperty(TestingPropertiesHelper.IRODS_ZONE_KEY));
 		irodsSession.closeSession();
-		TestCase.assertTrue("no resources returned", resources.size() > 0);
+		Assert.assertTrue("no resources returned", resources.size() > 0);
 	}
 
 	@Test
@@ -115,7 +115,7 @@ public class ResourceAOTest {
 		ResourceAO resourceAO = accessObjectFactory.getResourceAO(irodsAccount);
 		Resource resource = resourceAO.getFirstResourceForIRODSFile(irodsFile);
 		irodsSession.closeSession();
-		TestCase.assertNotNull("no resource returned", resource);
+		Assert.assertNotNull("no resource returned", resource);
 	}
 
 	@Test(expected = JargonException.class)
@@ -156,7 +156,7 @@ public class ResourceAOTest {
 		ResourceAO resourceAO = accessObjectFactory.getResourceAO(irodsAccount);
 		List<Resource> resources = resourceAO.findAll();
 		irodsSession.closeSession();
-		TestCase.assertTrue("no resources returned", resources.size() > 0);
+		Assert.assertTrue("no resources returned", resources.size() > 0);
 	}
 
 	@Test
@@ -174,7 +174,7 @@ public class ResourceAOTest {
 		ResourceAO resourceAO = accessObjectFactory.getResourceAO(irodsAccount);
 		Resource resource = resourceAO.findByName(testResource);
 		irodsSession.closeSession();
-		TestCase.assertEquals(
+		Assert.assertEquals(
 				"resource not returned that matches given resource name",
 				testResource, resource.getName());
 	}
@@ -195,9 +195,9 @@ public class ResourceAOTest {
 		Resource resource = resourceAO.findByName(testResource);
 		Resource resourceById = resourceAO.findById(resource.getId());
 		irodsSession.closeSession();
-		TestCase.assertEquals("did not find correct resource by id", resource
-				.getName(), resourceById.getName());
-		TestCase.assertEquals(
+		Assert.assertEquals("did not find correct resource by id",
+				resource.getName(), resourceById.getName());
+		Assert.assertEquals(
 				"resource not returned that matches given resource name",
 				testResource, resource.getName());
 	}
@@ -223,10 +223,10 @@ public class ResourceAOTest {
 
 		List<Resource> resources = resourceAO.findWhere(sb.toString());
 		irodsSession.closeSession();
-		TestCase.assertTrue(
+		Assert.assertTrue(
 				"should have gotten the one resource that matches my query",
 				resources.size() == 1);
-		TestCase.assertEquals(
+		Assert.assertEquals(
 				"resource not returned that matches given resource name",
 				testResource, resources.get(0).getName());
 	}
@@ -247,11 +247,12 @@ public class ResourceAOTest {
 		imetaRemoveCommand.setAttribName(expectedAttribName);
 		imetaRemoveCommand.setAttribValue(expectedAttribValue);
 		imetaRemoveCommand.setAttribUnits(expectedAttribUnits);
-		//imetaRemoveCommand.setAttribValue(expectedAttribValue);
+		// imetaRemoveCommand.setAttribValue(expectedAttribValue);
 		imetaRemoveCommand.setMetaObjectType(MetaObjectType.RESOURCE_META);
 		imetaRemoveCommand.setObjectPath(testResource);
 		@SuppressWarnings("unused")
-		String removeResult = invoker.invokeCommandAndGetResultAsString(imetaRemoveCommand);
+		String removeResult = invoker
+				.invokeCommandAndGetResultAsString(imetaRemoveCommand);
 
 		ImetaAddCommand imetaAddCommand = new ImetaAddCommand();
 		imetaAddCommand.setMetaObjectType(MetaObjectType.RESOURCE_META);
@@ -259,7 +260,7 @@ public class ResourceAOTest {
 		imetaAddCommand.setAttribValue(expectedAttribValue);
 		imetaAddCommand.setAttribUnits(expectedAttribUnits);
 		imetaAddCommand.setObjectPath(testResource);
-		String addResult = invoker.invokeCommandAndGetResultAsString(imetaAddCommand);
+		invoker.invokeCommandAndGetResultAsString(imetaAddCommand);
 
 		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager
 				.instance();
@@ -276,13 +277,14 @@ public class ResourceAOTest {
 		queryElements.add(AVUQueryElement.instanceForValueQuery(
 				AVUQueryElement.AVUQueryPart.ATTRIBUTE,
 				AVUQueryOperatorEnum.EQUAL, expectedAttribName));
-		
-		List<MetaDataAndDomainData> result = resourceAO.findMetadataValuesByMetadataQuery(queryElements);
+
+		List<MetaDataAndDomainData> result = resourceAO
+				.findMetadataValuesByMetadataQuery(queryElements);
 		irodsSession.closeSession();
-		TestCase.assertFalse("no query result returned", result.isEmpty());
+		Assert.assertFalse("no query result returned", result.isEmpty());
 
 	}
-	
+
 	@Test
 	public final void testListResourceMetadata() throws Exception {
 		String testResource = testingProperties
@@ -299,10 +301,10 @@ public class ResourceAOTest {
 		imetaRemoveCommand.setAttribName(expectedAttribName);
 		imetaRemoveCommand.setAttribValue(expectedAttribValue);
 		imetaRemoveCommand.setAttribUnits(expectedAttribUnits);
-		//imetaRemoveCommand.setAttribValue(expectedAttribValue);
+		// imetaRemoveCommand.setAttribValue(expectedAttribValue);
 		imetaRemoveCommand.setMetaObjectType(MetaObjectType.RESOURCE_META);
 		imetaRemoveCommand.setObjectPath(testResource);
-		String removeResult = invoker.invokeCommandAndGetResultAsString(imetaRemoveCommand);
+		invoker.invokeCommandAndGetResultAsString(imetaRemoveCommand);
 
 		ImetaAddCommand imetaAddCommand = new ImetaAddCommand();
 		imetaAddCommand.setMetaObjectType(MetaObjectType.RESOURCE_META);
@@ -310,7 +312,7 @@ public class ResourceAOTest {
 		imetaAddCommand.setAttribValue(expectedAttribValue);
 		imetaAddCommand.setAttribUnits(expectedAttribUnits);
 		imetaAddCommand.setObjectPath(testResource);
-		String addResult = invoker.invokeCommandAndGetResultAsString(imetaAddCommand);
+		invoker.invokeCommandAndGetResultAsString(imetaAddCommand);
 
 		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager
 				.instance();
@@ -323,22 +325,24 @@ public class ResourceAOTest {
 		ResourceAO resourceAO = accessObjectFactory.getResourceAO(irodsAccount);
 
 		List<AvuData> avuData = resourceAO.listResourceMetadata(testResource);
-		
-		
+
 		irodsSession.closeSession();
-		TestCase.assertFalse("no query result returned", avuData.isEmpty());
+		Assert.assertFalse("no query result returned", avuData.isEmpty());
 		AvuData avuDataItem = null;
-		
+
 		for (AvuData foundItem : avuData) {
 			if (foundItem.getAttribute().equals(expectedAttribName)) {
 				avuDataItem = foundItem;
 				break;
 			}
 		}
-		
-		TestCase.assertNotNull("did not find the testing attrib in the resource", avuDataItem);		
-		TestCase.assertEquals("did not get expected attrib", expectedAttribName, avuDataItem.getAttribute());
-		TestCase.assertEquals("did not get expected value", expectedAttribValue, avuDataItem.getValue());
+
+		Assert.assertNotNull("did not find the testing attrib in the resource",
+				avuDataItem);
+		Assert.assertEquals("did not get expected attrib", expectedAttribName,
+				avuDataItem.getAttribute());
+		Assert.assertEquals("did not get expected value", expectedAttribValue,
+				avuDataItem.getValue());
 
 	}
 

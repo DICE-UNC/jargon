@@ -2,6 +2,7 @@ package org.irods.jargon.core.unittest;
 
 import org.irods.jargon.core.connection.ConnectionProxyDefinitionTest;
 import org.irods.jargon.core.connection.EnvironmentalInfoAccessorTest;
+import org.irods.jargon.core.connection.IRODSServerPropertiesTest;
 import org.irods.jargon.core.connection.IRODSSessionTest;
 import org.irods.jargon.core.connection.IRODSSimpleConnectionTest;
 import org.irods.jargon.core.connection.IRODSSimpleProtocolManagerTest;
@@ -13,7 +14,7 @@ import org.junit.runners.Suite;
 		EnvironmentalInfoAccessorTest.class,
 		IRODSSimpleProtocolManagerTest.class,
 		ConnectionProxyDefinitionTest.class,
-		IRODSSessionTest.class
+		IRODSSessionTest.class, IRODSServerPropertiesTest.class
 		})
 public class ConnectionTests {
 

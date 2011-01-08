@@ -57,6 +57,7 @@ public class IRODSFileInputStream extends InputStream {
 			throw new JargonRuntimeException("fileIOOperations is null");
 		}
 
+		// FIXME: consider removing to optimize (reduce queries) useful???
 		if (!irodsFile2.exists()) {
 			final String msg = "file does not exist:"
 					+ irodsFile2.getAbsolutePath();
@@ -150,20 +151,19 @@ public class IRODSFileInputStream extends InputStream {
 
 			int temp = fileIOOperations.fileRead(irodsFile.getFileDescriptor(),
 					buffer, 0, 1);
-			if (buffer != null) {
-				if (temp < 0) {
-					return -1;
-				}
-				filePointer += temp; // 0 or 1
-				return (buffer[0] & 0xFF);
+
+			if (temp < 0) {
+				return -1;
 			}
+			filePointer += temp; // 0 or 1
+			return (buffer[0] & 0xFF);
+
 		} catch (JargonException e) {
 			log.error(
 					"JargonException in read is converted to IOException for method contract",
 					e);
 			throw new IOException(e);
 		}
-		return -1;
 	}
 
 	/**

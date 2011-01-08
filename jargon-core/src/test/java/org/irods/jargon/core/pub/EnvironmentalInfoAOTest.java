@@ -3,20 +3,15 @@
  */
 package org.irods.jargon.core.pub;
 
-import java.util.List;
 import java.util.Properties;
 
-import junit.framework.TestCase;
+import junit.framework.Assert;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSProtocolManager;
 import org.irods.jargon.core.connection.IRODSServerProperties;
 import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.connection.IRODSSimpleProtocolManager;
-import org.irods.jargon.core.protovalues.UserTypeEnum;
-import org.irods.jargon.core.pub.EnvironmentalInfoAO;
-import org.irods.jargon.core.pub.IRODSAccessObjectFactoryImpl;
-import org.irods.jargon.core.pub.domain.User;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -30,13 +25,11 @@ public class EnvironmentalInfoAOTest {
 
 	private static Properties testingProperties = new Properties();
 	private static TestingPropertiesHelper testingPropertiesHelper = new TestingPropertiesHelper();
-	private static org.irods.jargon.testutils.AssertionHelper assertionHelper = null;
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		TestingPropertiesHelper testingPropertiesLoader = new TestingPropertiesHelper();
 		testingProperties = testingPropertiesLoader.getTestProperties();
-		assertionHelper = new org.irods.jargon.testutils.AssertionHelper();
 	}
 
 	/**
@@ -60,7 +53,7 @@ public class EnvironmentalInfoAOTest {
 				.getEnvironmentalInfoAO(irodsAccount);
 		IRODSServerProperties irodsServerProperties = environmentalInfoAO
 				.getIRODSServerPropertiesFromIRODSServer();
-		TestCase.assertNotNull(irodsServerProperties);
+		Assert.assertNotNull(irodsServerProperties);
 		irodsSession.closeSession();
 	}
 

@@ -4,8 +4,6 @@
 package org.irods.jargon.core.packinstr;
 
 import org.irods.jargon.core.exception.JargonException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import edu.sdsc.grid.io.irods.Tag;
 
@@ -22,8 +20,6 @@ public class DataObjCloseInp extends AbstractIRODSPackingInstruction {
 	public static final String L1_DESC_INX = "l1descInx";
 	public static final String BYTES_WRITTEN = "bytesWritten";
 	public static final int FILE_CLOSE_API_NBR = 605;
-
-	private static Logger log = LoggerFactory.getLogger(DataObjCloseInp.class);
 
 	private final int fileDescriptor;
 	private final long bytesWritten;

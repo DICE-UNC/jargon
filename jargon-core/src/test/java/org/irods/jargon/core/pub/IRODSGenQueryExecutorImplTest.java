@@ -5,7 +5,7 @@ package org.irods.jargon.core.pub;
 
 import java.util.Properties;
 
-import junit.framework.TestCase;
+import junit.framework.Assert;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSProtocolManager;
@@ -14,7 +14,6 @@ import org.irods.jargon.core.connection.IRODSSimpleProtocolManager;
 import org.irods.jargon.core.query.IRODSQuery;
 import org.irods.jargon.core.query.IRODSQueryResultSet;
 import org.irods.jargon.core.query.RodsGenQueryEnum;
-import org.irods.jargon.testutils.AssertionHelper;
 import org.irods.jargon.testutils.IRODSTestSetupUtilities;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.irods.jargon.testutils.filemanip.FileGenerator;
@@ -102,7 +101,7 @@ public class IRODSGenQueryExecutorImplTest {
 				.instance(irodsSession);
 		IRODSGenQueryExecutor irodsGenQueryExecutor = accessObjectFactory
 				.getIRODSGenQueryExecutor(irodsAccount);
-		TestCase.assertNotNull(irodsGenQueryExecutor);
+		Assert.assertNotNull(irodsGenQueryExecutor);
 		irodsSession.closeSession();
 	}
 
@@ -137,7 +136,7 @@ public class IRODSGenQueryExecutorImplTest {
 				.executeIRODSQuery(irodsQuery, 0);
 		irodsSession.closeSession();
 
-		TestCase.assertNotNull(resultSet);
+		Assert.assertNotNull(resultSet);
 	}
 
 	@Test
@@ -174,7 +173,7 @@ public class IRODSGenQueryExecutorImplTest {
 		}
 		irodsSession.closeSession();
 
-		TestCase.assertNotNull(resultSet);
+		Assert.assertNotNull(resultSet);
 	}
 
 	@Test
@@ -208,33 +207,28 @@ public class IRODSGenQueryExecutorImplTest {
 
 		irodsSession.closeSession();
 
-		TestCase.assertNotNull("null result set", resultSet);
-		TestCase.assertFalse("empty result set", resultSet.getResults()
-				.isEmpty());
+		Assert.assertNotNull("null result set", resultSet);
+		Assert.assertFalse("empty result set", resultSet.getResults().isEmpty());
 		String returnedResourceName = resultSet.getFirstResult().getColumn(0);
-		TestCase.assertEquals("did not get expected result", testingProperties
+		Assert.assertEquals("did not get expected result", testingProperties
 				.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
 				returnedResourceName);
 
 	}
 
-	
 	@Test
 	public final void testGetMoreResults() throws Exception {
-		
+
 		String targetIrodsCollection = testingPropertiesHelper
-		.buildIRODSCollectionAbsolutePathFromTestProperties(
-				testingProperties, IRODS_TEST_SUBDIR_PATH + "/" + collDir);
-		
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + "/"
+								+ collDir);
+
 		String queryString = "select "
-				+ RodsGenQueryEnum.COL_COLL_NAME.getName() 
-				+ " ,"
-				+ RodsGenQueryEnum.COL_DATA_NAME.getName() 
-				+ " where "
-				+ RodsGenQueryEnum.COL_COLL_NAME.getName()
-				+ " = '"
-				+ targetIrodsCollection 
-				+ "'";
+				+ RodsGenQueryEnum.COL_COLL_NAME.getName() + " ,"
+				+ RodsGenQueryEnum.COL_DATA_NAME.getName() + " where "
+				+ RodsGenQueryEnum.COL_COLL_NAME.getName() + " = '"
+				+ targetIrodsCollection + "'";
 
 		IRODSQuery irodsQuery = IRODSQuery.instance(queryString, 1000);
 
@@ -254,18 +248,18 @@ public class IRODSGenQueryExecutorImplTest {
 		IRODSQueryResultSet resultSet = irodsGenQueryExecutor
 				.executeIRODSQuery(irodsQuery, 0);
 
-		TestCase.assertTrue("did not get expected continuation", resultSet
-				.isHasMoreRecords());
+		Assert.assertTrue("did not get expected continuation",
+				resultSet.isHasMoreRecords());
 
 		// now requery and get a new result set
 
 		resultSet = irodsGenQueryExecutor.getMoreResults(resultSet);
 
 		irodsSession.closeSession();
-		TestCase.assertNotNull("result set was null", resultSet);
-		TestCase.assertTrue("did not get expected continuation", resultSet
-				.isHasMoreRecords());
-		TestCase.assertTrue("no results, some expected", resultSet.getResults()
+		Assert.assertNotNull("result set was null", resultSet);
+		Assert.assertTrue("did not get expected continuation",
+				resultSet.isHasMoreRecords());
+		Assert.assertTrue("no results, some expected", resultSet.getResults()
 				.size() > 0);
 	}
 

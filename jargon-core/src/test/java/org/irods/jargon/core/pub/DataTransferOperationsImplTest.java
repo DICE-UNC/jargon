@@ -96,12 +96,10 @@ public class DataTransferOperationsImplTest {
 		ilsCommand.setIlsBasePath(targetIrodsCollection + '/' + testFileName);
 		String ilsResult = invoker
 				.invokeCommandAndGetResultAsString(ilsCommand);
-		Assert
-				.assertTrue(
-						"file is not in new resource",
-						ilsResult
-								.indexOf(testingProperties
-										.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_RESOURCE_KEY)) != -1);
+		Assert.assertTrue(
+				"file is not in new resource",
+				ilsResult.indexOf(testingProperties
+						.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_RESOURCE_KEY)) != -1);
 	}
 
 	@Test
@@ -142,8 +140,8 @@ public class DataTransferOperationsImplTest {
 		DataTransferOperations dataTransferOperations = irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataTransferOperations(
 						irodsAccount);
-		dataTransferOperations.move(irodsFile.getAbsolutePath(), irodsDestFile
-				.getAbsolutePath());
+		dataTransferOperations.move(irodsFile.getAbsolutePath(),
+				irodsDestFile.getAbsolutePath());
 
 		Assert.assertFalse(irodsFile.exists());
 		Assert.assertTrue(irodsDestFile.exists());
@@ -151,7 +149,7 @@ public class DataTransferOperationsImplTest {
 		irodsFileSystem.close();
 
 	}
-	
+
 	@Test(expected = JargonFileOrCollAlreadyExistsException.class)
 	public void testMoveFileTriggerOverwrite() throws Exception {
 		String testFileName = "testMoveFileTriggerOverwrite.txt";
@@ -190,16 +188,15 @@ public class DataTransferOperationsImplTest {
 		DataTransferOperations dataTransferOperations = irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataTransferOperations(
 						irodsAccount);
-		dataTransferOperations.move(irodsFile.getAbsolutePath(), irodsDestFile
-				.getAbsolutePath());
+		dataTransferOperations.move(irodsFile.getAbsolutePath(),
+				irodsDestFile.getAbsolutePath());
 
 		// move again, causing an overwrite
 		invoker.invokeCommandAndGetResultAsString(iputCommand);
-		dataTransferOperations.move(irodsFile.getAbsolutePath(), irodsDestFile
-				.getAbsolutePath());
+		dataTransferOperations.move(irodsFile.getAbsolutePath(),
+				irodsDestFile.getAbsolutePath());
 
 	}
-	
 
 	@Test
 	public void testMoveFileSpecifyCollectionAsTarget() throws Exception {
@@ -231,25 +228,32 @@ public class DataTransferOperationsImplTest {
 		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
 		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
 				.instanceIRODSFile(targetIrodsCollection + '/' + testFileName);
-		
+
 		// make the target irods collection
-		IRODSFile targetCollectionFile = irodsFileSystem.getIRODSFileFactory(irodsAccount).instanceIRODSFile(targetIrodsCollection + '/' + targetCollection);
+		IRODSFile targetCollectionFile = irodsFileSystem.getIRODSFileFactory(
+				irodsAccount).instanceIRODSFile(
+				targetIrodsCollection + '/' + targetCollection);
 		targetCollectionFile.mkdir();
 
 		DataTransferOperations dataTransferOperations = irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataTransferOperations(
 						irodsAccount);
-		dataTransferOperations.move(irodsFile.getAbsolutePath(), targetCollectionFile
-				.getAbsolutePath());
-		
-		IRODSFile actualFile =  irodsFileSystem.getIRODSFileFactory(irodsAccount).instanceIRODSFile(targetCollectionFile.getAbsolutePath() + '/' + testFileName);
+		dataTransferOperations.move(irodsFile.getAbsolutePath(),
+				targetCollectionFile.getAbsolutePath());
 
-		TestCase.assertTrue("did not find the newly moved file", actualFile.exists());
-		TestCase.assertFalse("did not move source file, still exists", irodsFile.exists());
+		IRODSFile actualFile = irodsFileSystem
+				.getIRODSFileFactory(irodsAccount).instanceIRODSFile(
+						targetCollectionFile.getAbsolutePath() + '/'
+								+ testFileName);
+
+		TestCase.assertTrue("did not find the newly moved file",
+				actualFile.exists());
+		TestCase.assertFalse("did not move source file, still exists",
+				irodsFile.exists());
 		irodsFileSystem.close();
 
 	}
-	
+
 	@Test
 	public void testMoveFileToSelf() throws Exception {
 		String testFileName = "testMoveFileToSelf.txt";
@@ -278,22 +282,24 @@ public class DataTransferOperationsImplTest {
 		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
 		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
 				.instanceIRODSFile(targetIrodsCollection + '/' + testFileName);
-		
+
 		DataTransferOperations dataTransferOperations = irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataTransferOperations(
 						irodsAccount);
-		dataTransferOperations.move(irodsFile.getAbsolutePath(), irodsFile
-				.getAbsolutePath());
-		
-		IRODSFile actualFile =  irodsFileSystem.getIRODSFileFactory(irodsAccount).instanceIRODSFile(irodsFile.getAbsolutePath());
+		dataTransferOperations.move(irodsFile.getAbsolutePath(),
+				irodsFile.getAbsolutePath());
 
-		TestCase.assertTrue("source file should still be in place", actualFile.exists());
-		
+		IRODSFile actualFile = irodsFileSystem
+				.getIRODSFileFactory(irodsAccount).instanceIRODSFile(
+						irodsFile.getAbsolutePath());
+
+		TestCase.assertTrue("source file should still be in place",
+				actualFile.exists());
+
 		irodsFileSystem.close();
 
 	}
 
-	
 	@Test(expected = JargonException.class)
 	public void testMoveFileSourceFileNotExists() throws Exception {
 		String testFileName = "/testMove.txt";
@@ -317,8 +323,8 @@ public class DataTransferOperationsImplTest {
 		DataTransferOperations dataTransferOperations = irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataTransferOperations(
 						irodsAccount);
-		dataTransferOperations.move(irodsFile.getAbsolutePath(), irodsDestFile
-				.getAbsolutePath());
+		dataTransferOperations.move(irodsFile.getAbsolutePath(),
+				irodsDestFile.getAbsolutePath());
 
 		Assert.assertFalse(irodsFile.exists());
 		Assert.assertTrue(irodsDestFile.exists());
@@ -363,8 +369,8 @@ public class DataTransferOperationsImplTest {
 		DataTransferOperations dataTransferOperations = irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataTransferOperations(
 						irodsAccount);
-		dataTransferOperations.move(irodsFile.getAbsolutePath(), irodsDestFile
-				.getAbsolutePath());
+		dataTransferOperations.move(irodsFile.getAbsolutePath(),
+				irodsDestFile.getAbsolutePath());
 
 		Assert.assertFalse(irodsFile.exists());
 		Assert.assertTrue(irodsDestFile.exists());
@@ -404,8 +410,8 @@ public class DataTransferOperationsImplTest {
 
 		dataTransferOperationsAO.putOperation(localFile, destFile, null, null);
 		irodsFileSystem.close();
-		assertionHelper.assertIrodsFileMatchesLocalFileChecksum(destFile
-				.getAbsolutePath(), localFile.getAbsolutePath());
+		assertionHelper.assertIrodsFileMatchesLocalFileChecksum(
+				destFile.getAbsolutePath(), localFile.getAbsolutePath());
 	}
 
 	@Test
@@ -431,7 +437,7 @@ public class DataTransferOperationsImplTest {
 				.buildIRODSAccountFromTestProperties(testingProperties);
 
 		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
-		IRODSFileFactory irodsFileFactory = irodsFileSystem 
+		IRODSFileFactory irodsFileFactory = irodsFileSystem
 				.getIRODSFileFactory(irodsAccount);
 		IRODSFile destFile = irodsFileFactory
 				.instanceIRODSFile(targetIrodsFile);
@@ -451,19 +457,25 @@ public class DataTransferOperationsImplTest {
 				testCallbackListener, null);
 
 		irodsFileSystem.close();
-		assertionHelper.assertIrodsFileMatchesLocalFileChecksum(getIRODSFile
-				.getAbsolutePath(), getLocalFile.getAbsolutePath());
+		assertionHelper.assertIrodsFileMatchesLocalFileChecksum(
+				getIRODSFile.getAbsolutePath(), getLocalFile.getAbsolutePath());
 		TestCase.assertEquals("did not expect any errors", 0,
 				testCallbackListener.getErrorCallbackCount());
-		TestCase.assertEquals("should have 1 callack", 1, testCallbackListener
-				.getSuccessCallbackCount());
-		TestCase.assertEquals("did not get the full irods file name in callback", targetIrodsFile, testCallbackListener.getLastSourcePath());
-		TestCase.assertEquals("did not get the full local file name in callback", getLocalFile.getAbsolutePath(), testCallbackListener.getLastTargetPath());
+		TestCase.assertEquals("should have 1 callack", 1,
+				testCallbackListener.getSuccessCallbackCount());
+		TestCase.assertEquals(
+				"did not get the full irods file name in callback",
+				targetIrodsFile, testCallbackListener.getLastSourcePath());
+		TestCase.assertEquals(
+				"did not get the full local file name in callback",
+				getLocalFile.getAbsolutePath(),
+				testCallbackListener.getLastTargetPath());
 
 	}
-	
+
 	@Test
-	public void testGetOneFileWithCallbackAndControlBlockCheckOneFileToBeTransferred() throws Exception {
+	public void testGetOneFileWithCallbackAndControlBlockCheckOneFileToBeTransferred()
+			throws Exception {
 		// generate a local scratch file
 		String testFileName = "testGetOneFileWithCallbackAndControlBlockCheckOneFileToBeTransferred.txt";
 		String testRetrievedFileName = "testGetOneFileWithCallbackAndControlBlockCheckOneFileToBeTransferredRetrieved.txt";
@@ -485,7 +497,7 @@ public class DataTransferOperationsImplTest {
 				.buildIRODSAccountFromTestProperties(testingProperties);
 
 		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
-		IRODSFileFactory irodsFileFactory = irodsFileSystem 
+		IRODSFileFactory irodsFileFactory = irodsFileSystem
 				.getIRODSFileFactory(irodsAccount);
 		IRODSFile destFile = irodsFileFactory
 				.instanceIRODSFile(targetIrodsFile);
@@ -499,19 +511,26 @@ public class DataTransferOperationsImplTest {
 				.instanceIRODSFile(targetIrodsFile);
 		File getLocalFile = new File(absPath + "/" + testRetrievedFileName);
 		TestingStatusCallbackListener testCallbackListener = new TestingStatusCallbackListener();
-		TransferControlBlock transferControlBlock = DefaultTransferControlBlock.instance();
+		TransferControlBlock transferControlBlock = DefaultTransferControlBlock
+				.instance();
 
 		// now get the file
 		dataTransferOperationsAO.getOperation(getIRODSFile, getLocalFile,
 				testCallbackListener, transferControlBlock);
 
 		irodsFileSystem.close();
-		
-		TestCase.assertEquals("Should have counted 1 file to transfer", 1, transferControlBlock.getTotalFilesToTransfer());
-		TestCase.assertEquals("should have 1 file transferred as reflected in transferControlBlock", 1, transferControlBlock.getTotalFilesTransferredSoFar());
-		TestCase.assertTrue("No errors should have been accumulated in the transferControlBlock", transferControlBlock.getErrorCount() == 0);
-			
+
+		TestCase.assertEquals("Should have counted 1 file to transfer", 1,
+				transferControlBlock.getTotalFilesToTransfer());
+		TestCase.assertEquals(
+				"should have 1 file transferred as reflected in transferControlBlock",
+				1, transferControlBlock.getTotalFilesTransferredSoFar());
+		TestCase.assertTrue(
+				"No errors should have been accumulated in the transferControlBlock",
+				transferControlBlock.getErrorCount() == 0);
+
 	}
+
 	@Test
 	public void testGetOneFileWithNoCallbackAndControlBlock() throws Exception {
 		// generate a local scratch file
@@ -535,7 +554,7 @@ public class DataTransferOperationsImplTest {
 				.buildIRODSAccountFromTestProperties(testingProperties);
 
 		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
-		IRODSFileFactory irodsFileFactory = irodsFileSystem 
+		IRODSFileFactory irodsFileFactory = irodsFileSystem
 				.getIRODSFileFactory(irodsAccount);
 		IRODSFile destFile = irodsFileFactory
 				.instanceIRODSFile(targetIrodsFile);
@@ -549,15 +568,18 @@ public class DataTransferOperationsImplTest {
 				.instanceIRODSFile(targetIrodsFile);
 		File getLocalFile = new File(absPath + "/" + testRetrievedFileName);
 		TestingStatusCallbackListener testCallbackListener = new TestingStatusCallbackListener();
-		TransferControlBlock transferControlBlock = DefaultTransferControlBlock.instance();
+		TransferControlBlock transferControlBlock = DefaultTransferControlBlock
+				.instance();
 
 		// now get the file
 		dataTransferOperationsAO.getOperation(getIRODSFile, getLocalFile,
 				testCallbackListener, transferControlBlock);
 
 		irodsFileSystem.close();
-		
-		TestCase.assertEquals("Should not have counted transfers even if no status callback", 1, transferControlBlock.getTotalFilesToTransfer());
+
+		TestCase.assertEquals(
+				"Should not have counted transfers even if no status callback",
+				1, transferControlBlock.getTotalFilesToTransfer());
 	}
 
 	@Test
@@ -591,8 +613,8 @@ public class DataTransferOperationsImplTest {
 
 		dataTransferOperationsAO.putOperation(localFile, destFile, null, null);
 		irodsFileSystem.close();
-		assertionHelper.assertIrodsFileMatchesLocalFileChecksum(destFile
-				.getAbsolutePath(), localFile.getAbsolutePath());
+		assertionHelper.assertIrodsFileMatchesLocalFileChecksum(
+				destFile.getAbsolutePath(), localFile.getAbsolutePath());
 	}
 
 	@Test
@@ -827,7 +849,7 @@ public class DataTransferOperationsImplTest {
 				localFile, resultOfPutFile);
 	}
 
-	@Test 
+	@Test
 	public void testPutThenGetMultipleCollectionsMultipleFilesWithCallbacks()
 			throws Exception {
 
@@ -892,11 +914,11 @@ public class DataTransferOperationsImplTest {
 				localFile, resultOfPutFile);
 
 		Assert.assertTrue(listener.getGetCallbackCtr() > 0);
-		Assert.assertEquals(listener.getGetCallbackCtr(), listener
-				.getPutCallbackCtr());
+		Assert.assertEquals(listener.getGetCallbackCtr(),
+				listener.getPutCallbackCtr());
 	}
-	
-	@Test 
+
+	@Test
 	public void testPutMultipleCollectionsMultipleFilesWithCallbacksAndControlBlock()
 			throws Exception {
 
@@ -930,15 +952,20 @@ public class DataTransferOperationsImplTest {
 				.getIRODSAccessObjectFactory().getDataTransferOperations(
 						irodsAccount);
 		File localFile = new File(localCollectionAbsolutePath);
-		TransferControlBlock transferControlBlock = DefaultTransferControlBlock.instance();
-		
+		TransferControlBlock transferControlBlock = DefaultTransferControlBlock
+				.instance();
+
 		dataTransferOperationsAO.putOperation(localFile, destFile, listener,
 				transferControlBlock);
 
 		irodsFileSystem.close();
-		
-		TestCase.assertTrue("did not do a pre-count of files", transferControlBlock.getTotalFilesToTransfer() > 0);
-		TestCase.assertEquals("did not transfer the amount of files I pre-counted", transferControlBlock.getTotalFilesToTransfer(), transferControlBlock.getTotalFilesTransferredSoFar());
+
+		TestCase.assertTrue("did not do a pre-count of files",
+				transferControlBlock.getTotalFilesToTransfer() > 0);
+		TestCase.assertEquals(
+				"did not transfer the amount of files I pre-counted",
+				transferControlBlock.getTotalFilesToTransfer(),
+				transferControlBlock.getTotalFilesTransferredSoFar());
 	}
 
 	@Test
@@ -1041,8 +1068,8 @@ public class DataTransferOperationsImplTest {
 
 		Assert.assertEquals("should have 3 files in coll before pause", 3,
 				destFile.list().length);
-		Assert.assertTrue("should have a status callback of pause", listener
-				.isPauseEncountered());
+		Assert.assertTrue("should have a status callback of pause",
+				listener.isPauseEncountered());
 	}
 
 	@Test
@@ -1083,8 +1110,8 @@ public class DataTransferOperationsImplTest {
 
 		// now replicate
 		dataTransferOperationsAO.replicate(targetIrodsFile, targetResource,
-				transferStatusCallbackListener, DefaultTransferControlBlock
-						.instance());
+				transferStatusCallbackListener,
+				DefaultTransferControlBlock.instance());
 		irodsFileSystem.close();
 
 		IrodsInvocationContext invocationContext = testingPropertiesHelper
@@ -1097,18 +1124,14 @@ public class DataTransferOperationsImplTest {
 
 		String ilsResult = invoker
 				.invokeCommandAndGetResultAsString(ilsCommand);
-		Assert
-				.assertTrue(
-						"file is not in new resource",
-						ilsResult
-								.indexOf(testingProperties
-										.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_RESOURCE_KEY)) != -1);
-		Assert
-				.assertTrue(
-						"file is not in original resource",
-						ilsResult
-								.indexOf(testingProperties
-										.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY)) != -1);
+		Assert.assertTrue(
+				"file is not in new resource",
+				ilsResult.indexOf(testingProperties
+						.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_RESOURCE_KEY)) != -1);
+		Assert.assertTrue(
+				"file is not in original resource",
+				ilsResult.indexOf(testingProperties
+						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY)) != -1);
 
 		Assert.assertEquals("did not get expected success callback", 1,
 				transferStatusCallbackListener.getReplicateCallbackCtr());
@@ -1158,8 +1181,8 @@ public class DataTransferOperationsImplTest {
 		// now replicate
 		dataTransferOperationsAO.replicate(irodsCollectionRootAbsolutePath
 				+ "/" + rootCollection, targetResource,
-				transferStatusCallbackListener, DefaultTransferControlBlock
-						.instance());
+				transferStatusCallbackListener,
+				DefaultTransferControlBlock.instance());
 		irodsFileSystem.close();
 
 		Assert.assertTrue("did not get expected success callback",
@@ -1167,7 +1190,7 @@ public class DataTransferOperationsImplTest {
 		Assert.assertTrue("did not get expected exception callback",
 				transferStatusCallbackListener.getExceptionCallbackCtr() == 0);
 	}
-	
+
 	@Test
 	public void testReplicateMultipleCollectionsMultipleFilesWithControlBlock()
 			throws Exception {
@@ -1186,7 +1209,7 @@ public class DataTransferOperationsImplTest {
 
 		FileGenerator
 				.generateManyFilesAndCollectionsInParentCollectionByAbsolutePath(
-						localCollectionAbsolutePath ,rootCollection , 1, 2, 2,
+						localCollectionAbsolutePath, rootCollection, 1, 2, 2,
 						"testFile", ".txt", 4, 2, 20, 200);
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
@@ -1207,20 +1230,26 @@ public class DataTransferOperationsImplTest {
 
 		dataTransferOperationsAO.putOperation(localFile, irodsFile, null, null);
 
-		//TransferStatusCallbackListenerTestingImplementation transferStatusCallbackListener = new TransferStatusCallbackListenerTestingImplementation();
-		TransferControlBlock transferControlBlock = DefaultTransferControlBlock.instance();
-		
+		// TransferStatusCallbackListenerTestingImplementation
+		// transferStatusCallbackListener = new
+		// TransferStatusCallbackListenerTestingImplementation();
+		TransferControlBlock transferControlBlock = DefaultTransferControlBlock
+				.instance();
+
 		// now replicate
 		dataTransferOperationsAO.replicate(irodsCollectionRootAbsolutePath
-				+ "/" + rootCollection, targetResource,
-				null, transferControlBlock);
+				+ "/" + rootCollection, targetResource, null,
+				transferControlBlock);
 		irodsFileSystem.close();
-		
-		TestCase.assertTrue("did not pre-count files to replicate", transferControlBlock.getTotalFilesToTransfer() > 0);
-		TestCase.assertEquals("did not count files as replicated to match pre-count total", transferControlBlock.getTotalFilesToTransfer(), transferControlBlock.getTotalFilesTransferredSoFar());
+
+		TestCase.assertTrue("did not pre-count files to replicate",
+				transferControlBlock.getTotalFilesToTransfer() > 0);
+		TestCase.assertEquals(
+				"did not count files as replicated to match pre-count total",
+				transferControlBlock.getTotalFilesToTransfer(),
+				transferControlBlock.getTotalFilesTransferredSoFar());
 
 	}
-
 
 	@Test
 	public void testReplicateWithCancel() throws Exception {
@@ -1271,8 +1300,8 @@ public class DataTransferOperationsImplTest {
 				transferControlBlock);
 		irodsFileSystem.close();
 
-		Assert.assertTrue("did not get expected success callback", listener
-				.getReplicateCallbackCtr() == 3);
+		Assert.assertTrue("did not get expected success callback",
+				listener.getReplicateCallbackCtr() == 3);
 		Assert.assertTrue("should have a status callback of cancelled",
 				listener.isCancelEncountered());
 
@@ -1327,10 +1356,10 @@ public class DataTransferOperationsImplTest {
 				transferControlBlock);
 		irodsFileSystem.close();
 
-		Assert.assertTrue("did not get expected success callback", listener
-				.getReplicateCallbackCtr() == 3);
-		Assert.assertTrue("should have a status callback of paused", listener
-				.isPauseEncountered());
+		Assert.assertTrue("did not get expected success callback",
+				listener.getReplicateCallbackCtr() == 3);
+		Assert.assertTrue("should have a status callback of paused",
+				listener.isPauseEncountered());
 
 	}
 
@@ -1383,9 +1412,10 @@ public class DataTransferOperationsImplTest {
 				localFile, (File) destFile);
 		irodsFileSystem.close();
 	}
-	
+
 	@Test
-	public void testPutCollectionWithTwoFilesControlBlockNoCallback() throws Exception {
+	public void testPutCollectionWithTwoFilesControlBlockNoCallback()
+			throws Exception {
 
 		String rootCollection = "testPutCollectionWithTwoFilesControlBlockNoCallback";
 		String localCollectionAbsolutePath = scratchFileUtils
@@ -1399,8 +1429,8 @@ public class DataTransferOperationsImplTest {
 		FileGenerator
 				.generateManyFilesAndCollectionsInParentCollectionByAbsolutePath(
 						localCollectionAbsolutePath,
-						"testPutCollectionWithTwoFilesControlBlockNoCallback", 1, 1, 1, "testFile",
-						".txt", 2, 2, 1, 2);
+						"testPutCollectionWithTwoFilesControlBlockNoCallback",
+						1, 1, 1, "testFile", ".txt", 2, 2, 1, 2);
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
@@ -1414,10 +1444,12 @@ public class DataTransferOperationsImplTest {
 				.getIRODSAccessObjectFactory().getDataTransferOperations(
 						irodsAccount);
 		File localFile = new File(localCollectionAbsolutePath);
-		
-		TransferControlBlock transferControlBlock = DefaultTransferControlBlock.instance();
 
-		dataTransferOperationsAO.putOperation(localFile, destFile, null, transferControlBlock);
+		TransferControlBlock transferControlBlock = DefaultTransferControlBlock
+				.instance();
+
+		dataTransferOperationsAO.putOperation(localFile, destFile, null,
+				transferControlBlock);
 		destFile.close();
 
 		irodsFileSystem.close();
@@ -1428,13 +1460,17 @@ public class DataTransferOperationsImplTest {
 				.instanceIRODSFile(irodsCollectionRootAbsolutePath + "/"
 						+ rootCollection);
 
-		TestCase.assertEquals("did not compute a total files expected of 2",2, transferControlBlock.getTotalFilesToTransfer());
-		TestCase.assertEquals("did not count transfers equal to total counted", transferControlBlock.getTotalFilesToTransfer(), transferControlBlock.getTotalFilesTransferredSoFar());
+		TestCase.assertEquals("did not compute a total files expected of 2", 2,
+				transferControlBlock.getTotalFilesToTransfer());
+		TestCase.assertEquals("did not count transfers equal to total counted",
+				transferControlBlock.getTotalFilesToTransfer(),
+				transferControlBlock.getTotalFilesTransferredSoFar());
 
 	}
-	
+
 	@Test
-	public void testPutCollectionWithTwoFilesNoControlBlockCallback() throws Exception {
+	public void testPutCollectionWithTwoFilesNoControlBlockCallback()
+			throws Exception {
 
 		String rootCollection = "testPutCollectionWithTwoFilesNoControlBlockCallback";
 		String localCollectionAbsolutePath = scratchFileUtils
@@ -1448,8 +1484,8 @@ public class DataTransferOperationsImplTest {
 		FileGenerator
 				.generateManyFilesAndCollectionsInParentCollectionByAbsolutePath(
 						localCollectionAbsolutePath,
-						"testPutCollectionWithTwoFilesNoControlBlockCallback", 1, 1, 1, "testFile",
-						".txt", 2, 2, 1, 2);
+						"testPutCollectionWithTwoFilesNoControlBlockCallback",
+						1, 1, 1, "testFile", ".txt", 2, 2, 1, 2);
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
@@ -1463,11 +1499,12 @@ public class DataTransferOperationsImplTest {
 				.getIRODSAccessObjectFactory().getDataTransferOperations(
 						irodsAccount);
 		File localFile = new File(localCollectionAbsolutePath);
-		
+
 		TransferStatusCallbackListenerTestingImplementation listener = new TransferStatusCallbackListenerTestingImplementation(
 				null, 3, 0);
 
-		dataTransferOperationsAO.putOperation(localFile, destFile, listener, null);
+		dataTransferOperationsAO.putOperation(localFile, destFile, listener,
+				null);
 		destFile.close();
 
 		irodsFileSystem.close();
@@ -1480,9 +1517,8 @@ public class DataTransferOperationsImplTest {
 
 		// test passes if gracefully handles no control block specified
 		TestCase.assertTrue(true);
-		
-	}
 
+	}
 
 	@Test
 	public void testGetWithCancel() throws Exception {
@@ -1538,20 +1574,20 @@ public class DataTransferOperationsImplTest {
 		String returnLocalCollectionCompareAbsolutePath = scratchFileUtils
 				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH
 						+ '/' + returnedLocalCollection + '/' + rootCollection);
-		
+
 		File returnCompareLocalFile = new File(
 				returnLocalCollectionCompareAbsolutePath);
 
-		
 		// I've put a mess of stuff, now get it
 		Assert.assertEquals("should have 3 files in coll before cancelled", 3,
 				returnCompareLocalFile.list().length);
 		Assert.assertTrue("should have a status callback of cancelled",
 				listener.isCancelEncountered());
 	}
-	
+
 	@Test
-	public void testGetWithCallbacksMultipleLevelsOfCollections() throws Exception {
+	public void testGetWithCallbacksMultipleLevelsOfCollections()
+			throws Exception {
 
 		String rootCollection = "testGetWithCallbacksMultipleLevelsOfCollections";
 		String returnedLocalCollection = "testGetWithCallbacksMultipleLevelsOfCollectionsReturned";
@@ -1569,9 +1605,12 @@ public class DataTransferOperationsImplTest {
 		String irodsCollectionRootAbsolutePath = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH);
-		
-		FileGenerator.generateManyFilesAndCollectionsInParentCollectionByAbsolutePath(localCollectionAbsolutePath, rootCollection, 3, 4, 2, "prefix", ".suffix", 7, 3, 10, 300);
-		
+
+		FileGenerator
+				.generateManyFilesAndCollectionsInParentCollectionByAbsolutePath(
+						localCollectionAbsolutePath, rootCollection, 3, 4, 2,
+						"prefix", ".suffix", 7, 3, 10, 300);
+
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
 
@@ -1602,17 +1641,18 @@ public class DataTransferOperationsImplTest {
 		String returnLocalCollectionCompareAbsolutePath = scratchFileUtils
 				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH
 						+ '/' + returnedLocalCollection + '/' + rootCollection);
-		
+
 		File returnCompareLocalFile = new File(
 				returnLocalCollectionCompareAbsolutePath);
 
 		assertionHelper.assertTwoFilesAreEqualByRecursiveTreeComparison(
 				localFile, returnCompareLocalFile);
-		
+
 	}
-	
+
 	@Test
-	public void testGetWithCallbacksMultipleLevelsOfCollectionsVerifyCountsInControlBlock() throws Exception {
+	public void testGetWithCallbacksMultipleLevelsOfCollectionsVerifyCountsInControlBlock()
+			throws Exception {
 
 		String rootCollection = "testGetWithCallbacksMultipleLevelsOfCollectionsVerifyCountsInControlBlock";
 		String returnedLocalCollection = "testGetWithCallbacksMultipleLevelsOfCollectionsVerifyCountsInControlBlockReturned";
@@ -1630,9 +1670,12 @@ public class DataTransferOperationsImplTest {
 		String irodsCollectionRootAbsolutePath = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH);
-		
-		FileGenerator.generateManyFilesAndCollectionsInParentCollectionByAbsolutePath(localCollectionAbsolutePath, rootCollection, 2, 3, 2, "prefix", ".suffix", 7, 2, 1000, 30000);
-		
+
+		FileGenerator
+				.generateManyFilesAndCollectionsInParentCollectionByAbsolutePath(
+						localCollectionAbsolutePath, rootCollection, 2, 3, 2,
+						"prefix", ".suffix", 7, 2, 1000, 30000);
+
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
 
@@ -1660,12 +1703,16 @@ public class DataTransferOperationsImplTest {
 		dataTransferOperationsAO.getOperation(getIrodsFile, returnLocalFile,
 				listener, transferControlBlock);
 
-		TestCase.assertEquals("did not get count matching expected files in the transferControlBlock", transferControlBlock.getTotalFilesToTransfer(), transferControlBlock.getTotalFilesTransferredSoFar());
-		
+		TestCase.assertEquals(
+				"did not get count matching expected files in the transferControlBlock",
+				transferControlBlock.getTotalFilesToTransfer(),
+				transferControlBlock.getTotalFilesTransferredSoFar());
+
 	}
-	
+
 	@Test
-	public void testMoveCollectionWithTwoFilesUnderneathAParent() throws Exception {
+	public void testMoveCollectionWithTwoFilesUnderneathAParent()
+			throws Exception {
 
 		String rootCollection = "testMoveCollectionWithTwoFilesUnderneathAParent";
 		String targetCollection = "targetCollectionForTestMoveCollectionWithTwoFilesUnderneathAParent";
@@ -1676,18 +1723,18 @@ public class DataTransferOperationsImplTest {
 
 		String irodsCollectionRootAbsolutePath = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH); 
-		
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
 		String irodsCollectionTargetAbsolutePath = testingPropertiesHelper
-		.buildIRODSCollectionAbsolutePathFromTestProperties(
-				testingProperties, IRODS_TEST_SUBDIR_PATH + "/" + targetCollection); 
-		
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + "/"
+								+ targetCollection);
 
 		FileGenerator
 				.generateManyFilesAndCollectionsInParentCollectionByAbsolutePath(
 						localCollectionAbsolutePath,
-						"testMoveCollectionWithTwoFilesUnderneathAParent", 1, 1, 1, "testFile",
-						".txt", 2, 2, 1, 2);
+						"testMoveCollectionWithTwoFilesUnderneathAParent", 1,
+						1, 1, "testFile", ".txt", 2, 2, 1, 2);
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
@@ -1703,30 +1750,36 @@ public class DataTransferOperationsImplTest {
 		File localFile = new File(localCollectionAbsolutePath);
 
 		dataTransferOperationsAO.putOperation(localFile, destFile, null, null);
-		
+
 		// make the target
-		
-		IRODSFile targetParent = irodsFileFactory.instanceIRODSFile(irodsCollectionTargetAbsolutePath);
+
+		IRODSFile targetParent = irodsFileFactory
+				.instanceIRODSFile(irodsCollectionTargetAbsolutePath);
 		targetParent.mkdirs();
-		
-		dataTransferOperationsAO.moveTheSourceCollectionUnderneathTheTargetCollectionUsingSourceParentCollectionName(
-				irodsCollectionRootAbsolutePath + "/" + rootCollection, targetParent.getAbsolutePath());
-		
+
+		dataTransferOperationsAO
+				.moveTheSourceCollectionUnderneathTheTargetCollectionUsingSourceParentCollectionName(
+						irodsCollectionRootAbsolutePath + "/" + rootCollection,
+						targetParent.getAbsolutePath());
+
 		irodsFileSystem = IRODSFileSystem.instance();
 		irodsFileFactory = irodsFileSystem.getIRODSFileFactory(irodsAccount);
 		destFile = irodsFileFactory
 				.instanceIRODSFile(irodsCollectionTargetAbsolutePath + "/"
 						+ rootCollection);
 
-		TestCase.assertTrue("did not find expected targetcollection", destFile.isDirectory());
+		TestCase.assertTrue("did not find expected targetcollection",
+				destFile.isDirectory());
 		irodsFileSystem.close();
 	}
-	
-	// see note in release notes...potential bug?
-	@Ignore 
-	public void testMoveCollectionWithTwoFilesUnderneathSameParent() throws Exception {
 
-		// this test case passes if no error, tests code to avoid irods error -837000
+	// see note in release notes...potential bug?
+	@Ignore
+	public void testMoveCollectionWithTwoFilesUnderneathSameParent()
+			throws Exception {
+
+		// this test case passes if no error, tests code to avoid irods error
+		// -837000
 		String rootCollection = "testMoveCollectionWithTwoFilesUnderneathAParent";
 		String targetCollection = "testMoveCollectionWithTwoFilesUnderneathAParentNewTarget";
 
@@ -1736,17 +1789,18 @@ public class DataTransferOperationsImplTest {
 
 		String irodsCollectionRootAbsolutePath = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH); 
-		
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
 		String irodsCollectionTargetAbsolutePath = testingPropertiesHelper
-		.buildIRODSCollectionAbsolutePathFromTestProperties(
-				testingProperties, IRODS_TEST_SUBDIR_PATH + "/" + rootCollection + "/" + targetCollection); 
-		
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + "/"
+								+ rootCollection + "/" + targetCollection);
+
 		FileGenerator
 				.generateManyFilesAndCollectionsInParentCollectionByAbsolutePath(
 						localCollectionAbsolutePath,
-						"testMoveCollectionWithTwoFilesUnderneathAParent", 1, 1, 1, "testFile",
-						".txt", 2, 2, 1, 2);
+						"testMoveCollectionWithTwoFilesUnderneathAParent", 1,
+						1, 1, "testFile", ".txt", 2, 2, 1, 2);
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
@@ -1762,17 +1816,18 @@ public class DataTransferOperationsImplTest {
 		File localFile = new File(localCollectionAbsolutePath);
 
 		dataTransferOperationsAO.putOperation(localFile, destFile, null, null);
-		
+
 		// make the target
-		
-		IRODSFile targetParent = irodsFileFactory.instanceIRODSFile(irodsCollectionTargetAbsolutePath);
+
+		IRODSFile targetParent = irodsFileFactory
+				.instanceIRODSFile(irodsCollectionTargetAbsolutePath);
 		targetParent.mkdirs();
-		
-		dataTransferOperationsAO.moveTheSourceCollectionUnderneathTheTargetCollectionUsingSourceParentCollectionName(
-				irodsCollectionRootAbsolutePath + "/" + rootCollection, targetParent.getAbsolutePath());
-		
-		IRODSFile sourceExpectedFile = irodsFileFactory.instanceIRODSFile(irodsCollectionRootAbsolutePath + "/" + rootCollection);
-		IRODSFile actualFile = irodsFileFactory.instanceIRODSFile(targetParent.getAbsolutePath() + "/" + rootCollection);
+
+		dataTransferOperationsAO
+				.moveTheSourceCollectionUnderneathTheTargetCollectionUsingSourceParentCollectionName(
+						irodsCollectionRootAbsolutePath + "/" + rootCollection,
+						targetParent.getAbsolutePath());
+
 		irodsFileSystem = IRODSFileSystem.instance();
 		irodsFileFactory = irodsFileSystem.getIRODSFileFactory(irodsAccount);
 		destFile = irodsFileFactory
@@ -1782,12 +1837,14 @@ public class DataTransferOperationsImplTest {
 		irodsFileSystem.close();
 		TestCase.assertTrue(true);
 	}
-	
-	
-	@Ignore // FIXME: possible irods bug when source and new parent under same tree
-	public void testMoveCollectionWithTwoFilesUnderneathWithSameName() throws Exception {
 
-		// this test case passes if no error, tests code to avoid irods error -837000
+	@Ignore
+	// FIXME: possible irods bug when source and new parent under same tree
+	public void testMoveCollectionWithTwoFilesUnderneathWithSameName()
+			throws Exception {
+
+		// this test case passes if no error, tests code to avoid irods error
+		// -837000
 		String rootCollection = "testMoveCollectionWithTwoFilesUnderneathAParent";
 		String targetCollection = "testMoveCollectionWithTwoFilesUnderneathAParent";
 
@@ -1797,18 +1854,18 @@ public class DataTransferOperationsImplTest {
 
 		String irodsCollectionRootAbsolutePath = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH); 
-		
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
 		String irodsCollectionTargetAbsolutePath = testingPropertiesHelper
-		.buildIRODSCollectionAbsolutePathFromTestProperties(
-				testingProperties, IRODS_TEST_SUBDIR_PATH + "/" + targetCollection); 
-		
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + "/"
+								+ targetCollection);
 
 		FileGenerator
 				.generateManyFilesAndCollectionsInParentCollectionByAbsolutePath(
 						localCollectionAbsolutePath,
-						"testMoveCollectionWithTwoFilesUnderneathAParent", 1, 1, 1, "testFile",
-						".txt", 2, 2, 1, 2);
+						"testMoveCollectionWithTwoFilesUnderneathAParent", 1,
+						1, 1, "testFile", ".txt", 2, 2, 1, 2);
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
@@ -1824,17 +1881,18 @@ public class DataTransferOperationsImplTest {
 		File localFile = new File(localCollectionAbsolutePath);
 
 		dataTransferOperationsAO.putOperation(localFile, destFile, null, null);
-		
+
 		// make the target
-		
-		IRODSFile targetParent = irodsFileFactory.instanceIRODSFile(irodsCollectionTargetAbsolutePath);
+
+		IRODSFile targetParent = irodsFileFactory
+				.instanceIRODSFile(irodsCollectionTargetAbsolutePath);
 		targetParent.mkdirs();
-		
-		dataTransferOperationsAO.moveTheSourceCollectionUnderneathTheTargetCollectionUsingSourceParentCollectionName(
-				irodsCollectionRootAbsolutePath + "/" + rootCollection, targetParent.getAbsolutePath());
-		
-		IRODSFile sourceExpectedFile = irodsFileFactory.instanceIRODSFile(irodsCollectionRootAbsolutePath + "/" + rootCollection);
-		IRODSFile actualFile = irodsFileFactory.instanceIRODSFile(targetParent.getAbsolutePath() + "/" + rootCollection);
+
+		dataTransferOperationsAO
+				.moveTheSourceCollectionUnderneathTheTargetCollectionUsingSourceParentCollectionName(
+						irodsCollectionRootAbsolutePath + "/" + rootCollection,
+						targetParent.getAbsolutePath());
+
 		irodsFileSystem = IRODSFileSystem.instance();
 		irodsFileFactory = irodsFileSystem.getIRODSFileFactory(irodsAccount);
 		destFile = irodsFileFactory
@@ -1844,12 +1902,14 @@ public class DataTransferOperationsImplTest {
 		irodsFileSystem.close();
 		TestCase.assertTrue(true);
 	}
-	
+
 	// see note in release notes...potential bug?
 	@Ignore
-	public void testMoveCollectionWithTwoFilesUnderneathNewParentDifferentTree() throws Exception {
+	public void testMoveCollectionWithTwoFilesUnderneathNewParentDifferentTree()
+			throws Exception {
 
-		// this test case passes if no error, tests code to avoid irods error -837000
+		// this test case passes if no error, tests code to avoid irods error
+		// -837000
 		String rootCollection = "testMoveCollectionWithTwoFilesUnderneathAParent";
 		String targetCollection = "testMoveCollectionWithTwoFilesUnderneathAParentNewTarget";
 
@@ -1859,17 +1919,18 @@ public class DataTransferOperationsImplTest {
 
 		String irodsCollectionRootAbsolutePath = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH); 
-		
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
 		String irodsCollectionTargetAbsolutePath = testingPropertiesHelper
-		.buildIRODSCollectionAbsolutePathFromTestProperties(
-				testingProperties, IRODS_TEST_SUBDIR_PATH + "/" + targetCollection); 
-		
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + "/"
+								+ targetCollection);
+
 		FileGenerator
 				.generateManyFilesAndCollectionsInParentCollectionByAbsolutePath(
 						localCollectionAbsolutePath,
-						"testMoveCollectionWithTwoFilesUnderneathNewParentDifferentTree", 1, 1, 1, "testFile",
-						".txt", 2, 2, 1, 2);
+						"testMoveCollectionWithTwoFilesUnderneathNewParentDifferentTree",
+						1, 1, 1, "testFile", ".txt", 2, 2, 1, 2);
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
@@ -1885,17 +1946,20 @@ public class DataTransferOperationsImplTest {
 		File localFile = new File(localCollectionAbsolutePath);
 
 		dataTransferOperationsAO.putOperation(localFile, destFile, null, null);
-		
+
 		// make the target
-		
-		IRODSFile targetParent = irodsFileFactory.instanceIRODSFile(irodsCollectionTargetAbsolutePath);
+
+		IRODSFile targetParent = irodsFileFactory
+				.instanceIRODSFile(irodsCollectionTargetAbsolutePath);
 		targetParent.mkdirs();
-		
-		dataTransferOperationsAO.moveTheSourceCollectionUnderneathTheTargetCollectionUsingSourceParentCollectionName(
-				irodsCollectionRootAbsolutePath, irodsCollectionTargetAbsolutePath);
-		
-		IRODSFile sourceExpectedFile = irodsFileFactory.instanceIRODSFile(irodsCollectionRootAbsolutePath);
-		IRODSFile actualFile = irodsFileFactory.instanceIRODSFile(targetParent.getAbsolutePath() + "/" + rootCollection);
+
+		dataTransferOperationsAO
+				.moveTheSourceCollectionUnderneathTheTargetCollectionUsingSourceParentCollectionName(
+						irodsCollectionRootAbsolutePath,
+						irodsCollectionTargetAbsolutePath);
+
+		IRODSFile actualFile = irodsFileFactory.instanceIRODSFile(targetParent
+				.getAbsolutePath() + "/" + rootCollection);
 		irodsFileSystem = IRODSFileSystem.instance();
 
 		irodsFileSystem.close();
@@ -1903,7 +1967,8 @@ public class DataTransferOperationsImplTest {
 	}
 
 	@Test
-	public void testMoveFileSpecifyCollectionAsTargetSourceFileHasNoExtension() throws Exception {
+	public void testMoveFileSpecifyCollectionAsTargetSourceFileHasNoExtension()
+			throws Exception {
 		String testFileName = "testMoveFileSpecifyCollectionAsTargetSourceFileHasNoExtension";
 		String targetCollection = "testMoveFileSpecifyCollectionAsTargetSourceFileHasNoExtension-TargetCollection";
 		String absPath = scratchFileUtils
@@ -1932,23 +1997,30 @@ public class DataTransferOperationsImplTest {
 		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
 		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
 				.instanceIRODSFile(targetIrodsCollection + '/' + testFileName);
-		
+
 		// make the target irods collection
-		IRODSFile targetCollectionFile = irodsFileSystem.getIRODSFileFactory(irodsAccount).instanceIRODSFile(targetIrodsCollection + '/' + targetCollection);
+		IRODSFile targetCollectionFile = irodsFileSystem.getIRODSFileFactory(
+				irodsAccount).instanceIRODSFile(
+				targetIrodsCollection + '/' + targetCollection);
 		targetCollectionFile.mkdir();
 
 		DataTransferOperations dataTransferOperations = irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataTransferOperations(
 						irodsAccount);
-		dataTransferOperations.move(irodsFile.getAbsolutePath(), targetCollectionFile
-				.getAbsolutePath());
-		
-		IRODSFile actualFile =  irodsFileSystem.getIRODSFileFactory(irodsAccount).instanceIRODSFile(targetCollectionFile.getAbsolutePath() + '/' + testFileName);
+		dataTransferOperations.move(irodsFile.getAbsolutePath(),
+				targetCollectionFile.getAbsolutePath());
 
-		TestCase.assertTrue("did not find the newly moved file", actualFile.exists());
-		TestCase.assertFalse("did not move source file, still exists", irodsFile.exists());
+		IRODSFile actualFile = irodsFileSystem
+				.getIRODSFileFactory(irodsAccount).instanceIRODSFile(
+						targetCollectionFile.getAbsolutePath() + '/'
+								+ testFileName);
+
+		TestCase.assertTrue("did not find the newly moved file",
+				actualFile.exists());
+		TestCase.assertFalse("did not move source file, still exists",
+				irodsFile.exists());
 		irodsFileSystem.close();
 
 	}
-	
+
 }

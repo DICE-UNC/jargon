@@ -1,19 +1,14 @@
 package org.irods.jargon.core.pub;
 
-import static org.junit.Assert.*;
-
 import java.util.List;
 import java.util.Properties;
 
-import junit.framework.TestCase;
+import junit.framework.Assert;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSProtocolManager;
 import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.connection.IRODSSimpleProtocolManager;
-import org.irods.jargon.core.pub.IRODSAccessObjectFactoryImpl;
-import org.irods.jargon.core.pub.ZoneAO;
-import org.irods.jargon.core.pub.domain.User;
 import org.irods.jargon.core.pub.domain.Zone;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.junit.AfterClass;
@@ -48,7 +43,7 @@ public class ZoneAOTest {
 		ZoneAO zoneAO = accessObjectFactory.getZoneAO(irodsAccount);
 		List<Zone> zones = zoneAO.listZones();
 		irodsSession.closeSession();
-		TestCase.assertTrue("no zones returned", zones.size() > 0);
+		Assert.assertTrue("no zones returned", zones.size() > 0);
 	}
 
 	@Test
@@ -66,7 +61,7 @@ public class ZoneAOTest {
 				.getProperty(TestingPropertiesHelper.IRODS_ZONE_KEY));
 
 		irodsSession.closeSession();
-		TestCase.assertNotNull("no zones returned", zone);
+		Assert.assertNotNull("no zones returned", zone);
 	}
 
 }

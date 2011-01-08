@@ -117,6 +117,7 @@ public final class IRODSConnection implements IRODSManagedConnection {
 
 	}
 
+	@SuppressWarnings("unused")
 	private void connect(final IRODSAccount irodsAccount)
 			throws JargonException {
 		log.info("connecting socket...");

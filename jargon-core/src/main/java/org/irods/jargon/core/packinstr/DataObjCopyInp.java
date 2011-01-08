@@ -7,8 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.irods.jargon.core.exception.JargonException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import edu.sdsc.grid.io.irods.Tag;
 
@@ -23,8 +21,6 @@ public class DataObjCopyInp extends AbstractIRODSPackingInstruction {
 	public static final String PI_TAG = "DataObjCopyInp_PI";
 	public static final int RENAME_API_NBR = 601;
 	public static final int RENAME_FILE_API_NBR = 627;
-
-	private static Logger log = LoggerFactory.getLogger(DataObjCopyInp.class);
 
 	private final String fromFileAbsolutePath;
 	private final String toFileAbsolutePath;

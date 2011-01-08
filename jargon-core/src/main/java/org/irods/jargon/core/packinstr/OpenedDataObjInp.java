@@ -7,8 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.irods.jargon.core.exception.JargonException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import edu.sdsc.grid.io.irods.Tag;
 
@@ -32,8 +30,6 @@ public class OpenedDataObjInp extends AbstractIRODSPackingInstruction {
 
 	public static final int SEEK_API_NBR = 674;
 	public static final int DEFAULT_OPERATION_TYPE = 0;
-	private static final Logger log = LoggerFactory
-			.getLogger(OpenedDataObjInp.class);
 
 	private final long offset;
 	private final int operationType = DEFAULT_OPERATION_TYPE;

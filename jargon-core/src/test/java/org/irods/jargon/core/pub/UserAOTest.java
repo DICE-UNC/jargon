@@ -6,7 +6,7 @@ package org.irods.jargon.core.pub;
 import java.util.List;
 import java.util.Properties;
 
-import junit.framework.TestCase;
+import junit.framework.Assert;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSProtocolManager;
@@ -23,9 +23,9 @@ import org.irods.jargon.testutils.icommandinvoke.IcommandException;
 import org.irods.jargon.testutils.icommandinvoke.IcommandInvoker;
 import org.irods.jargon.testutils.icommandinvoke.IrodsInvocationContext;
 import org.irods.jargon.testutils.icommandinvoke.icommands.ImetaAddCommand;
+import org.irods.jargon.testutils.icommandinvoke.icommands.ImetaCommand.MetaObjectType;
 import org.irods.jargon.testutils.icommandinvoke.icommands.ImetaRemoveCommand;
 import org.irods.jargon.testutils.icommandinvoke.icommands.RemoveUserCommand;
-import org.irods.jargon.testutils.icommandinvoke.icommands.ImetaCommand.MetaObjectType;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
@@ -64,7 +64,7 @@ public class UserAOTest {
 		IRODSAccessObjectFactory accessObjectFactory = IRODSAccessObjectFactoryImpl
 				.instance(irodsSession);
 		UserAO userAO = accessObjectFactory.getUserAO(irodsAccount);
-		TestCase.assertNotNull("userAO is null", userAO);
+		Assert.assertNotNull("userAO is null", userAO);
 		irodsSession.closeSession();
 	}
 
@@ -81,7 +81,7 @@ public class UserAOTest {
 		UserAO userAO = accessObjectFactory.getUserAO(irodsAccount);
 		List<User> users = userAO.findAll();
 		irodsSession.closeSession();
-		TestCase.assertTrue("no users returned", users.size() > 0);
+		Assert.assertTrue("no users returned", users.size() > 0);
 
 	}
 
@@ -102,7 +102,7 @@ public class UserAOTest {
 		sb.append(" LIKE 't%'");
 		List<User> users = userAO.findWhere(sb.toString());
 		irodsSession.closeSession();
-		TestCase.assertTrue("no users returned", users.size() > 0);
+		Assert.assertTrue("no users returned", users.size() > 0);
 
 	}
 
@@ -120,7 +120,7 @@ public class UserAOTest {
 
 		List<User> users = userAO.findWhere("");
 		irodsSession.closeSession();
-		TestCase.assertTrue("no users returned", users.size() > 0);
+		Assert.assertTrue("no users returned", users.size() > 0);
 
 	}
 
@@ -154,9 +154,9 @@ public class UserAOTest {
 				.instance(irodsSession);
 		UserAO userAO = accessObjectFactory.getUserAO(irodsAccount);
 		User user = userAO.findByName(testUserName);
-		TestCase.assertEquals(testUserName, user.getName());
+		Assert.assertEquals(testUserName, user.getName());
 		User idUser = userAO.findById(user.getId());
-		TestCase.assertEquals(user.getName(), idUser.getName());
+		Assert.assertEquals(user.getName(), idUser.getName());
 		irodsSession.closeSession();
 	}
 
@@ -174,7 +174,7 @@ public class UserAOTest {
 				.instance(irodsSession);
 		UserAO userAO = accessObjectFactory.getUserAO(irodsAccount);
 		User user = userAO.findByName(testUserName);
-		TestCase.assertEquals(testUserName, user.getName());
+		Assert.assertEquals(testUserName, user.getName());
 		irodsSession.closeSession();
 
 	}
@@ -187,18 +187,13 @@ public class UserAOTest {
 				.buildIRODSAccountFromTestProperties(testingProperties);
 
 		String testUser = "addUserTestUser";
-		String testComment = "testComment";
-		String testInfo = "testInfo";
-
-		// setup, delete user if it exists
-
 		try {
 			RemoveUserCommand command = new RemoveUserCommand();
 			command.setUserName(testUser);
 			IrodsInvocationContext invocationContext = testingPropertiesHelper
 					.buildIRODSInvocationContextFromTestProperties(testingProperties);
 			IcommandInvoker invoker = new IcommandInvoker(invocationContext);
-			String result = invoker.invokeCommandAndGetResultAsString(command);
+			invoker.invokeCommandAndGetResultAsString(command);
 		} catch (IcommandException ice) {
 			// ignore exception, user may not exist
 		}
@@ -216,7 +211,7 @@ public class UserAOTest {
 		User actualUser = userAO.findByName(addedUser.getName());
 		irodsSession.closeSession();
 
-		TestCase.assertNotNull("no user returned", actualUser);
+		Assert.assertNotNull("no user returned", actualUser);
 	}
 
 	@Test
@@ -236,7 +231,7 @@ public class UserAOTest {
 			IrodsInvocationContext invocationContext = testingPropertiesHelper
 					.buildIRODSInvocationContextFromTestProperties(testingProperties);
 			IcommandInvoker invoker = new IcommandInvoker(invocationContext);
-			String result = invoker.invokeCommandAndGetResultAsString(command);
+			invoker.invokeCommandAndGetResultAsString(command);
 		} catch (IcommandException ice) {
 			// ignore exception, user may not exist
 		}
@@ -258,8 +253,8 @@ public class UserAOTest {
 		User updatedUser = userAO.findByName(addedUser.getName());
 		irodsSession.closeSession();
 
-		TestCase.assertEquals("should have updated comment", updateUser
-				.getComment(), updatedUser.getComment());
+		Assert.assertEquals("should have updated comment",
+				updateUser.getComment(), updatedUser.getComment());
 
 	}
 
@@ -280,7 +275,7 @@ public class UserAOTest {
 			IrodsInvocationContext invocationContext = testingPropertiesHelper
 					.buildIRODSInvocationContextFromTestProperties(testingProperties);
 			IcommandInvoker invoker = new IcommandInvoker(invocationContext);
-			String result = invoker.invokeCommandAndGetResultAsString(command);
+			invoker.invokeCommandAndGetResultAsString(command);
 		} catch (IcommandException ice) {
 			// ignore exception, user may not exist
 		}
@@ -302,7 +297,7 @@ public class UserAOTest {
 		User updatedUser = userAO.findByName(addedUser.getName());
 		irodsSession.closeSession();
 
-		TestCase.assertEquals("should have updated info", updateUser.getInfo(),
+		Assert.assertEquals("should have updated info", updateUser.getInfo(),
 				updatedUser.getInfo());
 
 	}
@@ -324,7 +319,7 @@ public class UserAOTest {
 			IrodsInvocationContext invocationContext = testingPropertiesHelper
 					.buildIRODSInvocationContextFromTestProperties(testingProperties);
 			IcommandInvoker invoker = new IcommandInvoker(invocationContext);
-			String result = invoker.invokeCommandAndGetResultAsString(command);
+			invoker.invokeCommandAndGetResultAsString(command);
 		} catch (IcommandException ice) {
 			// ignore exception, user may not exist
 		}
@@ -347,7 +342,7 @@ public class UserAOTest {
 		User updatedUser = userAO.findByName(addedUser.getName());
 		irodsSession.closeSession();
 
-		TestCase.assertEquals("should have updated zone", updateUser.getZone(),
+		Assert.assertEquals("should have updated zone", updateUser.getZone(),
 				updatedUser.getZone());
 
 	}
@@ -369,7 +364,7 @@ public class UserAOTest {
 			IrodsInvocationContext invocationContext = testingPropertiesHelper
 					.buildIRODSInvocationContextFromTestProperties(testingProperties);
 			IcommandInvoker invoker = new IcommandInvoker(invocationContext);
-			String result = invoker.invokeCommandAndGetResultAsString(command);
+			invoker.invokeCommandAndGetResultAsString(command);
 		} catch (IcommandException ice) {
 			// ignore exception, user may not exist
 		}
@@ -394,12 +389,12 @@ public class UserAOTest {
 		User updatedUser = userAO.findByName(addedUser.getName());
 		irodsSession.closeSession();
 
-		TestCase.assertEquals("should have updated zone", updateUser.getZone(),
+		Assert.assertEquals("should have updated zone", updateUser.getZone(),
 				updatedUser.getZone());
-		TestCase.assertEquals("should have updated info", updateUser.getInfo(),
+		Assert.assertEquals("should have updated info", updateUser.getInfo(),
 				updatedUser.getInfo());
-		TestCase.assertEquals("should have updated comment", updateUser
-				.getComment(), updatedUser.getComment());
+		Assert.assertEquals("should have updated comment",
+				updateUser.getComment(), updatedUser.getComment());
 
 	}
 
@@ -421,7 +416,7 @@ public class UserAOTest {
 			IrodsInvocationContext invocationContext = testingPropertiesHelper
 					.buildIRODSInvocationContextFromTestProperties(testingProperties);
 			IcommandInvoker invoker = new IcommandInvoker(invocationContext);
-			String result = invoker.invokeCommandAndGetResultAsString(command);
+			invoker.invokeCommandAndGetResultAsString(command);
 		} catch (IcommandException ice) {
 			// ignore exception, user may not exist
 		}
@@ -458,14 +453,14 @@ public class UserAOTest {
 		User updatedUser = userAO.findByName(addedUser.getName());
 		irodsSession.closeSession();
 
-		TestCase.assertTrue("should have caught exception before updates",
+		Assert.assertTrue("should have caught exception before updates",
 				threwException);
-		TestCase.assertEquals("should not have updated zone", addedUser
-				.getZone(), updatedUser.getZone());
-		TestCase.assertEquals("should not have updated info", addedUser
-				.getInfo(), updatedUser.getInfo());
-		TestCase.assertEquals("should not have updated comment", addedUser
-				.getComment(), updatedUser.getComment());
+		Assert.assertEquals("should not have updated zone",
+				addedUser.getZone(), updatedUser.getZone());
+		Assert.assertEquals("should not have updated info",
+				addedUser.getInfo(), updatedUser.getInfo());
+		Assert.assertEquals("should not have updated comment",
+				addedUser.getComment(), updatedUser.getComment());
 
 	}
 
@@ -486,7 +481,7 @@ public class UserAOTest {
 			IrodsInvocationContext invocationContext = testingPropertiesHelper
 					.buildIRODSInvocationContextFromTestProperties(testingProperties);
 			IcommandInvoker invoker = new IcommandInvoker(invocationContext);
-			String result = invoker.invokeCommandAndGetResultAsString(command);
+			invoker.invokeCommandAndGetResultAsString(command);
 		} catch (IcommandException ice) {
 			// ignore exception, user may not exist
 		}
@@ -512,10 +507,9 @@ public class UserAOTest {
 		}
 
 		irodsSession.closeSession();
-		TestCase
-				.assertFalse(
-						"i should not have found the user, it was supposed to be deleted",
-						found);
+		Assert.assertFalse(
+				"i should not have found the user, it was supposed to be deleted",
+				found);
 
 	}
 
@@ -612,65 +606,78 @@ public class UserAOTest {
 
 		invoker.invokeCommandAndGetResultAsString(imr);
 
-		TestCase.assertNotNull("null avu data returned", avuList);
-		TestCase.assertFalse("no avus returned", avuList.isEmpty());
+		Assert.assertNotNull("null avu data returned", avuList);
+		Assert.assertFalse("no avus returned", avuList.isEmpty());
 	}
 
-	// FIXME: see clientLogin.c and iadmin.c(line 807) for details yet to be implemented
+	// FIXME: see clientLogin.c and iadmin.c(line 807) for details yet to be
+	// implemented
 
 	@Ignore
 	public void testChangeUserPassword() throws Exception {
 		String testUser = "testChangeUserPassword";
-		String password1 ="password1";
+		String password1 = "password1";
 		String password2 = "PaZz!word123";
 		String password3 = "p@ssw000000000000000000000000000000000rd3";
 		String password4 = "$paZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZw**&rd";
-	
-		
+
 		// add the user as a rodsadmin
-		
+
 		User user = new User();
 		user.setComment("comment");
 		user.setInfo("info");
 		user.setName(testUser);
 		user.setUserType(UserTypeEnum.RODS_USER);
-		
+
 		IRODSAccount irodsAccount = testingPropertiesHelper
-		.buildIRODSAccountFromTestProperties(testingProperties);
+				.buildIRODSAccountFromTestProperties(testingProperties);
 		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
-		UserAO adminUserAO = irodsFileSystem.getIRODSAccessObjectFactory().getUserAO(irodsAccount);
-		
+		UserAO adminUserAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getUserAO(irodsAccount);
+
 		// pre-clean, remove testing user if there
-		//adminUserAO.deleteUser(testUser);
-		
+		// adminUserAO.deleteUser(testUser);
+
 		// now add user
-		//adminUserAO.addUser(user);
-		
+		// adminUserAO.addUser(user);
+
 		// set the first password
-		//adminUserAO.changeAUserPasswordByAnAdmin(testUser, password1);
-		
-		// get an account as the given user, change password, re-LOG in several iterations
-		
-		IRODSAccount userAccount = testingPropertiesHelper.buildIRODSAccountForIRODSUserFromTestPropertiesForGivenUser(testingProperties, testUser, password1);
-		UserAO myUserAO = irodsFileSystem.getIRODSAccessObjectFactory().getUserAO(userAccount);
+		// adminUserAO.changeAUserPasswordByAnAdmin(testUser, password1);
+
+		// get an account as the given user, change password, re-LOG in several
+		// iterations
+
+		IRODSAccount userAccount = testingPropertiesHelper
+				.buildIRODSAccountForIRODSUserFromTestPropertiesForGivenUser(
+						testingProperties, testUser, password1);
+		UserAO myUserAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getUserAO(userAccount);
 		myUserAO.changeAUserPasswordByThatUser(testUser, password1, password2);
-		
-		userAccount = testingPropertiesHelper.buildIRODSAccountForIRODSUserFromTestPropertiesForGivenUser(testingProperties, testUser, password2);
-		myUserAO = irodsFileSystem.getIRODSAccessObjectFactory().getUserAO(userAccount);
+
+		userAccount = testingPropertiesHelper
+				.buildIRODSAccountForIRODSUserFromTestPropertiesForGivenUser(
+						testingProperties, testUser, password2);
+		myUserAO = irodsFileSystem.getIRODSAccessObjectFactory().getUserAO(
+				userAccount);
 		myUserAO.changeAUserPasswordByThatUser(testUser, password2, password3);
-			
-		userAccount = testingPropertiesHelper.buildIRODSAccountForIRODSUserFromTestPropertiesForGivenUser(testingProperties, testUser, password3);
-		myUserAO = irodsFileSystem.getIRODSAccessObjectFactory().getUserAO(userAccount);
+
+		userAccount = testingPropertiesHelper
+				.buildIRODSAccountForIRODSUserFromTestPropertiesForGivenUser(
+						testingProperties, testUser, password3);
+		myUserAO = irodsFileSystem.getIRODSAccessObjectFactory().getUserAO(
+				userAccount);
 		myUserAO.changeAUserPasswordByThatUser(testUser, password3, password4);
 
-		userAccount = testingPropertiesHelper.buildIRODSAccountForIRODSUserFromTestPropertiesForGivenUser(testingProperties, testUser, password4);
-		myUserAO = irodsFileSystem.getIRODSAccessObjectFactory().getUserAO(userAccount);
-		
+		userAccount = testingPropertiesHelper
+				.buildIRODSAccountForIRODSUserFromTestPropertiesForGivenUser(
+						testingProperties, testUser, password4);
+		myUserAO = irodsFileSystem.getIRODSAccessObjectFactory().getUserAO(
+				userAccount);
+
 		// now clean up as an admin
-		
+
 		adminUserAO.deleteUser(testUser);
 		irodsFileSystem.closeAndEatExceptions();
 	}
-	
-	
+
 }

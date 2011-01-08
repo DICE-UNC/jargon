@@ -47,7 +47,6 @@ public final class ExecMyRuleInp extends AbstractIRODSPackingInstruction {
 	public static final String MY_STR = "myStr";
 
 	private transient final IRODSRule irodsRule;
-	private transient final boolean remoteExecution;
 	private transient final String host;
 	private transient final int port;
 	private transient final String zone;
@@ -105,7 +104,6 @@ public final class ExecMyRuleInp extends AbstractIRODSPackingInstruction {
 		// and zone must be
 
 		if (host == null || host.isEmpty()) {
-			remoteExecution = false;
 			this.host = "";
 			this.port = 0;
 			this.zone = "";
@@ -118,7 +116,6 @@ public final class ExecMyRuleInp extends AbstractIRODSPackingInstruction {
 				throw new JargonException(
 						"null or missing zone when remotely executing the rule");
 			}
-			remoteExecution = false;
 			this.host = host;
 			this.port = port;
 			this.zone = zone;

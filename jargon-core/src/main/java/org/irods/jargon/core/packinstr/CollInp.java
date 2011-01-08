@@ -7,8 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.irods.jargon.core.exception.JargonException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import edu.sdsc.grid.io.irods.Tag;
 
@@ -36,8 +34,6 @@ public class CollInp extends AbstractIRODSPackingInstruction {
 	public enum ApiOperation {
 		CREATE_NEW
 	}
-
-	private static Logger log = LoggerFactory.getLogger(CollInp.class);
 
 	private final String collectionName;
 	private final boolean recursiveOperation;

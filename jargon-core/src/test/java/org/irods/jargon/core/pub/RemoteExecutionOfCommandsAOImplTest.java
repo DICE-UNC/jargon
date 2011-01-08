@@ -97,8 +97,7 @@ public class RemoteExecutionOfCommandsAOImplTest {
 			throws Exception {
 		String cmd = "hello";
 		String args = "";
-		String host = testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_HOST_KEY);
+		String host = "localhost";
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);

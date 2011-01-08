@@ -20,7 +20,6 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-
 public class ParallelTransferOperationsTest {
 	private static Properties testingProperties = new Properties();
 	private static TestingPropertiesHelper testingPropertiesHelper = new TestingPropertiesHelper();
@@ -114,10 +113,10 @@ public class ParallelTransferOperationsTest {
 
 		irodsFileSystem.close();
 		assertionHelper.assertLocalScratchFileLengthEquals(
-				IRODS_TEST_SUBDIR_PATH + "/" + testRetrievedFileName, testFileLength);
+				IRODS_TEST_SUBDIR_PATH + "/" + testRetrievedFileName,
+				testFileLength);
 	}
-	
-	
+
 	/**
 	 * Was not working locally on original install of IRODS, may be an error due
 	 * to running on VirtualBox (ports). This test is running when local to the
@@ -145,19 +144,20 @@ public class ParallelTransferOperationsTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		
-		 IrodsInvocationContext invocationContext = testingPropertiesHelper.buildIRODSInvocationContextFromTestProperties(testingProperties);
-	        IputCommand iputCommand = new IputCommand();
 
-	        String targetIrodsCollection = testingPropertiesHelper.buildIRODSCollectionAbsolutePathFromTestProperties(testingProperties,
-	                IRODS_TEST_SUBDIR_PATH);
+		IrodsInvocationContext invocationContext = testingPropertiesHelper
+				.buildIRODSInvocationContextFromTestProperties(testingProperties);
+		IputCommand iputCommand = new IputCommand();
 
-	        iputCommand.setLocalFileName(localFileName);
-	        iputCommand.setIrodsFileName(targetIrodsCollection);
-	        iputCommand.setForceOverride(true);
-	        IcommandInvoker invoker = new IcommandInvoker(invocationContext);
-	        invoker.invokeCommandAndGetResultAsString(iputCommand);
-	        
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		iputCommand.setLocalFileName(localFileName);
+		iputCommand.setIrodsFileName(targetIrodsCollection);
+		iputCommand.setForceOverride(true);
+		IcommandInvoker invoker = new IcommandInvoker(invocationContext);
+		invoker.invokeCommandAndGetResultAsString(iputCommand);
 
 		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
 		IRODSFileFactory irodsFileFactory = irodsFileSystem
@@ -169,7 +169,7 @@ public class ParallelTransferOperationsTest {
 						irodsAccount);
 
 		System.out.println("closing irodsfilesystem for put");
-		
+
 		File retrievedLocalFile = new File(absPath + "/"
 				+ testRetrievedFileName);
 		dataTransferOperationsAO.getOperation(destFile, retrievedLocalFile,
@@ -177,6 +177,7 @@ public class ParallelTransferOperationsTest {
 
 		irodsFileSystem.close();
 		assertionHelper.assertLocalScratchFileLengthEquals(
-				IRODS_TEST_SUBDIR_PATH + "/" + testRetrievedFileName, testFileLength);
+				IRODS_TEST_SUBDIR_PATH + "/" + testRetrievedFileName,
+				testFileLength);
 	}
 }

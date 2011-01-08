@@ -694,8 +694,6 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 
 		try {
 			resultSet = irodsGenQueryExecutor.executeIRODSQuery(irodsQuery, 0);
-			int idxLastSlash = 0;
-
 			for (IRODSQueryResultRow row : resultSet.getResults()) {
 				processListDirsResultRowForCollection(subdirs, row);
 			}
@@ -772,7 +770,6 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 		IRODSQuery irodsQuery = IRODSQuery.instance(query.toString(), 5000);
 
 		IRODSQueryResultSet resultSet;
-		String thisFileDir = "";
 
 		try {
 			resultSet = irodsGenQueryExecutor.executeIRODSQuery(irodsQuery, 0);
@@ -898,11 +895,6 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 
 		}
 
-		// IRODSFile filterFile;
-		// String thisFileName;
-		String thisFileDir;
-		// get all the files
-
 		IRODSGenQueryExecutor irodsGenQueryExecutor = new IRODSGenQueryExecutorImpl(
 				this.getIRODSSession(), this.getIRODSAccount());
 		StringBuilder query = new StringBuilder(
@@ -995,13 +987,8 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 	private void processFileRowWhenListFilesWithFileFilter(
 			final FileFilter fileFilter, final List<String> subdirs,
 			final IRODSQueryResultRow row) throws JargonException {
-		IRODSFile filterFile;
-		String thisFileName;
-		String thisFileDir;
 		// this is a file, does it pass the file name filter?
-		thisFileName = row.getColumn(1);
-		thisFileDir = row.getColumn(0);
-		filterFile = new IRODSFileImpl(thisFileDir, thisFileName, this);
+		String thisFileDir = row.getColumn(0);
 		if (fileFilter.accept(new File(thisFileDir))) {
 			subdirs.add(row.getColumn(1));
 		}

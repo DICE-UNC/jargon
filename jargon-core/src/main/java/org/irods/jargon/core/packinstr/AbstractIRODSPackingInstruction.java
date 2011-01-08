@@ -28,6 +28,7 @@ public abstract class AbstractIRODSPackingInstruction implements IRodsPI {
 	public static final String L1_DESC_INX = "l1descInx";
 
 	public static final String INX_VAL_PAIR_PI = "InxValPair_PI";
+	public static final String HEADER_PI = "MsgHeader_PI";
 	public static final String IS_LEN = "islen";
 	public static final String INX = "inx";
 	private int apiNumber = 0;
