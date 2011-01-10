@@ -152,6 +152,10 @@ public class RemoteExecuteServiceImplTest {
 	@Test
 	public final void testExecuteHelloWithStreamingOnSmallResultWillNotCauseStreaming()
 			throws Exception {
+		
+		if (!testingPropertiesHelper.isTestRemoteExecStream(testingProperties)) {
+			return;
+		}
 
 		String cmd = "hello";
 		String args = "";
@@ -201,6 +205,10 @@ public class RemoteExecuteServiceImplTest {
 
 	@Test
 	public final void testExecuteHelloWithPath() throws Exception {
+		
+		if (!testingPropertiesHelper.isTestRemoteExecStream(testingProperties)) {
+			return;
+		}
 
 		String cmd = "hello";
 		String args = "";
@@ -265,6 +273,10 @@ public class RemoteExecuteServiceImplTest {
 
 	@Test
 	public final void testExecuteHelloWithHost() throws Exception {
+		
+		if (!testingPropertiesHelper.isTestRemoteExecStream(testingProperties)) {
+			return;
+		}
 
 		String cmd = "hello";
 		String args = "";
@@ -358,6 +370,178 @@ public class RemoteExecuteServiceImplTest {
 		Assert.assertEquals(
 				"I should not have returned anything as the path was bad", "",
 				result.trim());
+
+	}
+	
+	@Test
+	public final void testExecuteExecStreamTestScriptWithStreamingOnSmallResultWillNotCauseStreaming()
+			throws Exception {
+		
+		if (!testingPropertiesHelper.isTestRemoteExecStream(testingProperties)) {
+			return;
+		}
+		
+		int testLen = 300;
+
+		String cmd = "test_execstream.py";
+		String args = String.valueOf(testLen);
+		String host = "";
+		String absPath = "";
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
+		
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(irodsAccount);
+		IRODSServerProperties props = environmentalInfoAO.getIRODSServerPropertiesFromIRODSServer();
+		
+		
+		// test is only valid for post 2.4.1 FIXME: bump this up to the next released version
+		if (!props.isTheIrodsServerAtLeastAtTheGivenReleaseVersion("2.4.1")) {
+			return;
+		}
+		
+		
+		CollectionAO collectionAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getCollectionAO(irodsAccount);
+		CollectionAOImpl collectionAOImpl = (CollectionAOImpl) collectionAO;
+		IRODSCommands irodsCommands = collectionAOImpl.getIRODSProtocol();
+		RemoteExecutionService remoteExecuteService = RemoteExecuteServiceImpl
+				.instance(irodsCommands, cmd, args, host, absPath);
+
+		InputStream inputStream = remoteExecuteService.executeAndStream();
+
+		BufferedReader br = new BufferedReader(new InputStreamReader(
+				inputStream));
+		StringBuilder sb = new StringBuilder();
+		String line = null;
+
+		while ((line = br.readLine()) != null) {
+			sb.append(line + "\n");
+		}
+
+		br.close();
+		String result = sb.toString();
+		irodsFileSystem.close();
+
+		Assert.assertEquals("did not get expected data length",
+				testLen, result.length());
+
+	}
+	
+	
+	
+	@Test
+	public final void testExecuteExecStreamTestScriptWithStreamingOnLargeResultWillCauseStreaming()
+			throws Exception {
+		
+		if (!testingPropertiesHelper.isTestRemoteExecStream(testingProperties)) {
+			return;
+		}
+		
+		// threshold is 64M
+		int testLen = 71680 * 1024;
+
+		String cmd = "test_execstream.py";
+		String args = String.valueOf(testLen);
+		String host = "";
+		String absPath = "";
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
+		
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(irodsAccount);
+		IRODSServerProperties props = environmentalInfoAO.getIRODSServerPropertiesFromIRODSServer();
+		
+		
+		// test is only valid for post 2.4.1 FIXME: bump this up to the next released version
+		if (!props.isTheIrodsServerAtLeastAtTheGivenReleaseVersion("2.4.1")) {
+			return;
+		}
+		
+		
+		CollectionAO collectionAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getCollectionAO(irodsAccount);
+		CollectionAOImpl collectionAOImpl = (CollectionAOImpl) collectionAO;
+		IRODSCommands irodsCommands = collectionAOImpl.getIRODSProtocol();
+		RemoteExecutionService remoteExecuteService = RemoteExecuteServiceImpl
+				.instance(irodsCommands, cmd, args, host, absPath);
+
+		InputStream inputStream = remoteExecuteService.executeAndStream();
+
+		BufferedReader br = new BufferedReader(new InputStreamReader(
+				inputStream));
+		StringBuilder sb = new StringBuilder();
+		String line = null;
+
+		while ((line = br.readLine()) != null) {
+			sb.append(line + "\n");
+		}
+
+		br.close();
+		String result = sb.toString();
+		irodsFileSystem.close();
+
+		Assert.assertEquals("did not get expected data length",
+				testLen, result.length());
+
+	}
+	
+	@Test
+	public final void testExecuteExecStreamTestScriptWithStreamingOnLargeResultButWillCauseStreaming()
+			throws Exception {
+		
+		if (!testingPropertiesHelper.isTestRemoteExecStream(testingProperties)) {
+			return;
+		}
+		
+		// threshold is 64M
+		int testLen = 2500 * 1024;
+
+		String cmd = "test_execstream.py";
+		String args = String.valueOf(testLen);
+		String host = "";
+		String absPath = "";
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
+		
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(irodsAccount);
+		IRODSServerProperties props = environmentalInfoAO.getIRODSServerPropertiesFromIRODSServer();
+		
+		
+		// test is only valid for post 2.4.1 FIXME: bump this up to the next released version
+		if (!props.isTheIrodsServerAtLeastAtTheGivenReleaseVersion("2.4.1")) {
+			return;
+		}
+		
+		
+		CollectionAO collectionAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getCollectionAO(irodsAccount);
+		CollectionAOImpl collectionAOImpl = (CollectionAOImpl) collectionAO;
+		IRODSCommands irodsCommands = collectionAOImpl.getIRODSProtocol();
+		RemoteExecutionService remoteExecuteService = RemoteExecuteServiceImpl
+				.instance(irodsCommands, cmd, args, host, absPath);
+
+		InputStream inputStream = remoteExecuteService.executeAndStream();
+
+		BufferedReader br = new BufferedReader(new InputStreamReader(
+				inputStream));
+		StringBuilder sb = new StringBuilder();
+		String line = null;
+
+		while ((line = br.readLine()) != null) {
+			sb.append(line + "\n");
+		}
+
+		br.close();
+		String result = sb.toString();
+		irodsFileSystem.close();
+
+		Assert.assertEquals("did not get expected data length",
+				testLen, result.length());
 
 	}
 

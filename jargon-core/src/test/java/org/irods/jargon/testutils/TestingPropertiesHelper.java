@@ -522,4 +522,19 @@ public class TestingPropertiesHelper {
 		pathBuilder.append(collectionPathBelowScratch);
 		return pathBuilder.toString();
 	}
+	
+	
+	/**
+	 * Check if optional remote stream execution is to be tested
+	 * @param testingProperties
+	 * @return
+	 */
+	public boolean isTestRemoteExecStream(final Properties testingProperties) {
+		String val = (String) testingProperties.get("test.option.exercise.remoteexecstream");
+		if (val == null) {
+			return false;
+		} else {
+			return Boolean.parseBoolean(val);
+		}
+	}
 }

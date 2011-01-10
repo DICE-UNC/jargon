@@ -1,19 +1,10 @@
 package org.irods.jargon.core.connection;
 
-import static org.junit.Assert.*;
-
-import java.util.Map;
 import java.util.Properties;
 
-import junit.framework.TestCase;
+import junit.framework.Assert;
 
-import org.irods.jargon.core.exception.JargonException;
-import org.irods.jargon.core.pub.IRODSAccessObjectFactoryImpl;
-import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
-import org.irods.jargon.core.pub.ResourceAO;
-import org.irods.jargon.core.pub.domain.Resource;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
-import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -33,12 +24,25 @@ public class IRODSSessionTest {
 	public final void testCloseSessionTwice() throws Exception {
 		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager
 				.instance();
-		IRODSAccount irodsAccount = testingPropertiesHelper
+		testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
 		IRODSSession irodsSession = IRODSSession
 				.instance(irodsConnectionManager);
 		irodsSession.closeSession();
 		irodsSession.closeSession();
+
+	}
+
+	@Test
+	public void testGetDefaultJargonProperties() throws Exception {
+		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager
+				.instance();
+		testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSSession irodsSession = IRODSSession
+				.instance(irodsConnectionManager);
+		JargonProperites jargonProperties = IRODSSession.getJargonProperties();
+		Assert.assertNotNull("null jargon properties", jargonProperties);
 
 	}
 

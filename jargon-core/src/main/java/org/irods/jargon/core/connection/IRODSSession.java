@@ -27,8 +27,37 @@ public final class IRODSSession {
 
 	public static final ThreadLocal<Map<String, IRODSCommands>> sessionMap = new ThreadLocal<Map<String, IRODSCommands>>();
 	private IRODSProtocolManager irodsProtocolManager;
-	private Logger log = LoggerFactory.getLogger(IRODSSession.class);
+	private static final Logger log = LoggerFactory.getLogger(IRODSSession.class);
+	public static JargonProperites jargonProperties;
+	
+	static {
+		try {
+			jargonProperties = new DefaultPropertiesJargonConfig();
+		} catch (Exception e) {
+			log.warn("unable to load default jargon properties");
+		}
+	}
 
+	
+	/**
+	 * Get the <code>JargonProperties</code> that contains metadata to tune the behavior of Jargon.  This will either be the default, loaded from the <code>jargon.properties</code> file,
+	 * or a custom source that can be injected into the <code>IRODSSession</code> object.
+	 * @return {@link JargonProperties} with configuration metadata.
+	 */
+	public static JargonProperites getJargonProperties() {
+		return jargonProperties;
+	}
+
+	/**
+	 * Override default properties that are created at load-time from the jargon.properties file with a custom implementation.
+	 * @param jargonProperties {@link JargonProperties} implementation to provide customization to Jargon behavior
+	 */
+	public static void setJargonProperties(JargonProperites jargonProperties) {
+		IRODSSession.jargonProperties = jargonProperties;
+	}
+
+	
+	
 	/**
 	 * Close all sessions to iRODS that exist for this Thread.
 	 * 
