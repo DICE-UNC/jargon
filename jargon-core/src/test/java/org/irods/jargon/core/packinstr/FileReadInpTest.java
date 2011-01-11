@@ -39,9 +39,9 @@ public class FileReadInpTest {
 	public final void testGetParsedTagsForReadStream() throws Exception {
 		StringBuilder sb = new StringBuilder();
 
-		sb.append("<FileReadInp_PI><fileInx>2</fileInx>\n");
+		sb.append("<fileReadInp_PI><fileInx>2</fileInx>\n");
 		sb.append("<len>100</len>\n");
-		sb.append("</FileReadInp_PI>\n");
+		sb.append("</fileReadInp_PI>\n");
 		String expected = sb.toString();
 
 		int fd = 2;

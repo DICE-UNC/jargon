@@ -27,8 +27,8 @@ public class ExecCmdStreamCloseTest {
 
 		StringBuilder sb = new StringBuilder();
 
-		sb.append("<ExecCmd_PI><fileInx>1</fileInx>\n");
-		sb.append("</ExecCmd_PI>\n");
+		sb.append("<fileCloseInp_PI><fileInx>1</fileInx>\n");
+		sb.append("</fileCloseInp_PI>\n");
 
 		String expectedXML = sb.toString();
 
