@@ -1,7 +1,6 @@
 package org.irods.jargon.core.packinstr;
 
-import static org.junit.Assert.*;
-import junit.framework.TestCase;
+import junit.framework.Assert;
 
 import org.irods.jargon.core.exception.JargonException;
 import org.junit.AfterClass;
@@ -28,14 +27,14 @@ public class DataObjReadTest {
 		sb.append("<len>1</len>\n");
 		sb.append("</dataObjReadInp_PI>\n");
 
-		TestCase.assertEquals("invalid packing instruction", sb.toString(),
+		Assert.assertEquals("invalid packing instruction", sb.toString(),
 				actualTags);
 	}
 
 	@Test
 	public final void testInstance() throws Exception {
 		DataObjRead dataObjRead = DataObjRead.instance(3, 100);
-		TestCase.assertNotNull("null object returned from initializer",
+		Assert.assertNotNull("null object returned from initializer",
 				dataObjRead);
 
 	}

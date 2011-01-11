@@ -1,6 +1,6 @@
 package org.irods.jargon.core.rule;
 
-import junit.framework.TestCase;
+import junit.framework.Assert;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -23,7 +23,7 @@ public class IRODSRuleTranslatorTest {
 		IRODSRuleTranslator irodsRuleTranslator = new IRODSRuleTranslator();
 		IRODSRule translatedRule = irodsRuleTranslator
 				.translatePlainTextRuleIntoIRODSRule(ruleString);
-		TestCase.assertNotNull("null translated rule returned", translatedRule);
+		Assert.assertNotNull("null translated rule returned", translatedRule);
 	}
 
 	@Test
@@ -33,10 +33,10 @@ public class IRODSRuleTranslatorTest {
 		IRODSRuleTranslator irodsRuleTranslator = new IRODSRuleTranslator();
 		IRODSRule translatedRule = irodsRuleTranslator
 				.translatePlainTextRuleIntoIRODSRule(ruleString);
-		TestCase.assertEquals(
+		Assert.assertEquals(
 				"no output parms found, expected one for ruleExecOut", 1,
 				translatedRule.getIrodsRuleOutputParameters().size());
-		TestCase.assertEquals("no ruleExecOut parm discovered", "ruleExecOut",
+		Assert.assertEquals("no ruleExecOut parm discovered", "ruleExecOut",
 				translatedRule.getIrodsRuleOutputParameters().get(0)
 						.getUniqueName());
 	}
@@ -54,19 +54,18 @@ public class IRODSRuleTranslatorTest {
 		IRODSRuleTranslator irodsRuleTranslator = new IRODSRuleTranslator();
 		IRODSRule translatedRule = irodsRuleTranslator
 				.translatePlainTextRuleIntoIRODSRule(ruleString);
-		TestCase
-				.assertEquals(
-						"translated parameters are not the same as the output parameter line",
-						5, translatedRule.getIrodsRuleOutputParameters().size());
-		TestCase.assertEquals("*Action", translatedRule
+		Assert.assertEquals(
+				"translated parameters are not the same as the output parameter line",
+				5, translatedRule.getIrodsRuleOutputParameters().size());
+		Assert.assertEquals("*Action", translatedRule
 				.getIrodsRuleOutputParameters().get(0).getUniqueName());
-		TestCase.assertEquals("*Condition", translatedRule
+		Assert.assertEquals("*Condition", translatedRule
 				.getIrodsRuleOutputParameters().get(1).getUniqueName());
-		TestCase.assertEquals("*Operation", translatedRule
+		Assert.assertEquals("*Operation", translatedRule
 				.getIrodsRuleOutputParameters().get(2).getUniqueName());
-		TestCase.assertEquals("*C", translatedRule
-				.getIrodsRuleOutputParameters().get(3).getUniqueName());
-		TestCase.assertEquals("ruleExecOut", translatedRule
+		Assert.assertEquals("*C", translatedRule.getIrodsRuleOutputParameters()
+				.get(3).getUniqueName());
+		Assert.assertEquals("ruleExecOut", translatedRule
 				.getIrodsRuleOutputParameters().get(4).getUniqueName());
 	}
 
@@ -97,10 +96,9 @@ public class IRODSRuleTranslatorTest {
 		IRODSRuleTranslator irodsRuleTranslator = new IRODSRuleTranslator();
 		IRODSRule translatedRule = irodsRuleTranslator
 				.translatePlainTextRuleIntoIRODSRule(ruleString);
-		TestCase
-				.assertEquals(
-						"input parm set to string 'null' should result in one dummy input parms",
-						1, translatedRule.getIrodsRuleInputParameters().size());
+		Assert.assertEquals(
+				"input parm set to string 'null' should result in one dummy input parms",
+				1, translatedRule.getIrodsRuleInputParameters().size());
 	}
 
 	@Test(expected = JargonRuleException.class)

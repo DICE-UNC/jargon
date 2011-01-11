@@ -6,7 +6,6 @@ package org.irods.jargon.testutils.icommandinvoke.icommands;
 import java.util.Properties;
 
 import junit.framework.Assert;
-import junit.framework.TestCase;
 
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.irods.jargon.testutils.icommandinvoke.IcommandInvoker;
@@ -66,8 +65,8 @@ public class IlsCommandTest {
 		IlsCommand ilsCommand = new IlsCommand();
 		IcommandInvoker invoker = new IcommandInvoker(invocationContext);
 		String result = invoker.invokeCommandAndGetResultAsString(ilsCommand);
-		Assert.assertTrue("did not get a response from the ils command", result
-				.length() > 0);
+		Assert.assertTrue("did not get a response from the ils command",
+				result.length() > 0);
 
 	}
 
@@ -107,8 +106,8 @@ public class IlsCommandTest {
 		IcommandInvoker invoker = new IcommandInvoker(invocationContext);
 		String ilsResult = invoker
 				.invokeCommandAndGetResultAsString(ilsCommand);
-		TestCase.assertTrue("did not find home dir in ils result", ilsResult
-				.indexOf("/home") > -1);
+		Assert.assertTrue("did not find home dir in ils result",
+				ilsResult.indexOf("/home") > -1);
 
 	}
 

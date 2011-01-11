@@ -251,12 +251,12 @@ public class IRODSPasswordUtilities {
 	 * @return <code>String</code> with a hex representation.
 	 */
 	public static String getHexString(final byte[] b) {
-		String result = "";
+		StringBuilder result = new StringBuilder();
 		for (byte element : b) {
-			result += Integer.toString((element & 0xff) + 0x100, 16).substring(
-					1);
+			result.append(Integer.toString((element & 0xff) + 0x100, 16)
+					.substring(1));
 		}
-		return result;
+		return result.toString();
 	}
 
 	/**

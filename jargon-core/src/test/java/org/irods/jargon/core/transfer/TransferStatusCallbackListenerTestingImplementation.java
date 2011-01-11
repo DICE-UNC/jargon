@@ -18,31 +18,33 @@ public class TransferStatusCallbackListenerTestingImplementation implements
 	private int getCallbackCtr = 0;
 	private int exceptionCallbackCtr = 0;
 	private int replicateCallbackCtr = 0;
-	
+
 	private int pauseAfter = 0;
 	private int cancelAfter = 0;
 	private TransferControlBlock transferControlBlock = null;
-	
+
 	private boolean cancelEncountered = false;
 	private boolean pauseEncountered = false;
 
 	public TransferStatusCallbackListenerTestingImplementation() {
 
 	}
-	
-	public TransferStatusCallbackListenerTestingImplementation(final TransferControlBlock transferControlBlock, final int pauseAfter, final int cancelAfter) {
+
+	public TransferStatusCallbackListenerTestingImplementation(
+			final TransferControlBlock transferControlBlock,
+			final int pauseAfter, final int cancelAfter) {
 		this.transferControlBlock = transferControlBlock;
 		this.pauseAfter = pauseAfter;
 		this.cancelAfter = cancelAfter;
 	}
 
 	@Override
-	public synchronized void statusCallback(TransferStatus transferStatus)
+	public synchronized void statusCallback(final TransferStatus transferStatus)
 			throws JargonException {
 
 		if (transferStatus.getTransferType() == TransferType.GET) {
 			getCallbackCtr++;
-		} else if (transferStatus.getTransferType() == TransferType.PUT){
+		} else if (transferStatus.getTransferType() == TransferType.PUT) {
 			putCallbackCtr++;
 		} else if (transferStatus.getTransferType() == TransferType.REPLICATE) {
 			replicateCallbackCtr++;
@@ -51,29 +53,30 @@ public class TransferStatusCallbackListenerTestingImplementation implements
 		if (transferStatus.getTransferState() == TransferState.FAILURE) {
 			exceptionCallbackCtr++;
 		}
-		
+
 		if (transferStatus.getTransferState() == TransferState.CANCELLED) {
 			cancelEncountered = true;
 		}
-		
+
 		if (transferStatus.getTransferState() == TransferState.PAUSED) {
 			pauseEncountered = true;
 		}
-		
-		int totalCallback = getCallbackCtr + putCallbackCtr + exceptionCallbackCtr + replicateCallbackCtr;
-		
+
+		int totalCallback = getCallbackCtr + putCallbackCtr
+				+ exceptionCallbackCtr + replicateCallbackCtr;
+
 		if (pauseAfter > 0 && totalCallback == pauseAfter) {
 			if (transferControlBlock != null) {
 				transferControlBlock.setPaused(true);
 			}
 		}
-		
+
 		if (cancelAfter > 0 && totalCallback == cancelAfter) {
 			if (transferControlBlock != null) {
 				transferControlBlock.setCancelled(true);
 			}
 		}
-		
+
 	}
 
 	public synchronized final int getPutCallbackCtr() {
@@ -88,31 +91,32 @@ public class TransferStatusCallbackListenerTestingImplementation implements
 		return getCallbackCtr;
 	}
 
-	public int getReplicateCallbackCtr() {
+	public synchronized int getReplicateCallbackCtr() {
 		return replicateCallbackCtr;
 	}
 
-	public void setReplicateCallbackCtr(int replicateCallbackCtr) {
+	public synchronized void setReplicateCallbackCtr(
+			final int replicateCallbackCtr) {
 		this.replicateCallbackCtr = replicateCallbackCtr;
 	}
 
-	public int getPauseAfter() {
+	public synchronized int getPauseAfter() {
 		return pauseAfter;
 	}
 
-	public int getCancelAfter() {
+	public synchronized int getCancelAfter() {
 		return cancelAfter;
 	}
 
-	public TransferControlBlock getTransferControlBlock() {
+	public synchronized TransferControlBlock getTransferControlBlock() {
 		return transferControlBlock;
 	}
 
-	public boolean isCancelEncountered() {
+	public synchronized boolean isCancelEncountered() {
 		return cancelEncountered;
 	}
 
-	public boolean isPauseEncountered() {
+	public synchronized boolean isPauseEncountered() {
 		return pauseEncountered;
 	}
 

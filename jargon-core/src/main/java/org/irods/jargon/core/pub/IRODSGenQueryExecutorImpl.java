@@ -131,13 +131,14 @@ public final class IRODSGenQueryExecutorImpl extends IRODSGenericAO implements
 		}
 
 		Tag response = null;
-		
+
 		try {
-		response = getIRODSProtocol().irodsFunction(GenQueryInp.PI_TAG,
-				genQueryInp.getParsedTags(), GenQueryInp.API_NBR);
+			response = getIRODSProtocol().irodsFunction(GenQueryInp.PI_TAG,
+					genQueryInp.getParsedTags(), GenQueryInp.API_NBR);
 		} catch (DataNotFoundException dnf) {
-			log.info("response from IRODS call indicates no rows found, original query was:{}"
-					,translatedIRODSQuery);
+			log.info(
+					"response from IRODS call indicates no rows found, original query was:{}",
+					translatedIRODSQuery);
 			List<IRODSQueryResultRow> result = new ArrayList<IRODSQueryResultRow>();
 			IRODSQueryResultSet resultSet = IRODSQueryResultSet.instance(
 					translatedIRODSQuery, result, 0);
@@ -187,7 +188,7 @@ public final class IRODSGenQueryExecutorImpl extends IRODSGenericAO implements
 			final int continuation) throws JargonException {
 
 		List<IRODSQueryResultRow> resultSet = new ArrayList<IRODSQueryResultRow>();
-		List<String> row = new ArrayList<String>();
+		List<String> row;
 		int recordCount = 1;
 		boolean lastRecord = (continuation == 0);
 		log.debug("do I have more? {}", lastRecord);

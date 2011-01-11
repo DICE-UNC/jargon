@@ -1,6 +1,6 @@
 package org.irods.jargon.core.packinstr;
 
-import junit.framework.TestCase;
+import junit.framework.Assert;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -20,7 +20,8 @@ public class UserAdminInpTest {
 	public final void testGetTagValueForUserPasswordChange() throws Exception {
 		String userName = "testuser";
 		String obfuscatedPassword = "obfuscatedPassword";
-		UserAdminInp userAdminInp = UserAdminInp.instanceForChangeUserPassword(userName, obfuscatedPassword);
+		UserAdminInp userAdminInp = UserAdminInp.instanceForChangeUserPassword(
+				userName, obfuscatedPassword);
 		String tagValue = userAdminInp.getParsedTags();
 		StringBuilder sb = new StringBuilder();
 		sb.append("<userAdminInp_PI><arg0>userpw</arg0>\n");
@@ -34,28 +35,19 @@ public class UserAdminInpTest {
 		sb.append("<arg8></arg8>\n");
 		sb.append("<arg9></arg9>\n");
 		sb.append("</userAdminInp_PI>\n");
-	
-		TestCase.assertEquals("invalid tags generated", sb.toString(), tagValue);
+
+		Assert.assertEquals("invalid tags generated", sb.toString(), tagValue);
 	}
 
 	@Test
 	public final void testInstanceForChangeUserPassword() throws Exception {
 		String userName = "testuser";
 		String obfuscatedPassword = "obfuscatedPassword";
-		UserAdminInp userAdminInp = UserAdminInp.instanceForChangeUserPassword(userName, obfuscatedPassword);
-		TestCase.assertNotNull("null userAdminInp", userAdminInp);
-		TestCase.assertEquals("incorrect API number", 714, userAdminInp.getApiNumber());
+		UserAdminInp userAdminInp = UserAdminInp.instanceForChangeUserPassword(
+				userName, obfuscatedPassword);
+		Assert.assertNotNull("null userAdminInp", userAdminInp);
+		Assert.assertEquals("incorrect API number", 714,
+				userAdminInp.getApiNumber());
 	}
 
-
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 }

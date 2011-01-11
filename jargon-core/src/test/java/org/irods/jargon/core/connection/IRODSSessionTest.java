@@ -41,8 +41,28 @@ public class IRODSSessionTest {
 				.buildIRODSAccountFromTestProperties(testingProperties);
 		IRODSSession irodsSession = IRODSSession
 				.instance(irodsConnectionManager);
-		JargonProperites jargonProperties = IRODSSession.getJargonProperties();
+		irodsSession.closeSession();
+		JargonProperties jargonProperties = IRODSSession.getJargonProperties();
 		Assert.assertNotNull("null jargon properties", jargonProperties);
+
+	}
+
+	@Test
+	public void testOverrideDefaultJargonProperties() throws Exception {
+		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager
+				.instance();
+		testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSSession irodsSession = IRODSSession
+				.instance(irodsConnectionManager);
+		irodsSession.closeSession();
+
+		SettableJargonProperties overrideJargonProperties = new SettableJargonProperties();
+		overrideJargonProperties.setMaxParallelThreads(8000);
+		IRODSSession.setJargonProperties(overrideJargonProperties);
+		JargonProperties jargonProperties = IRODSSession.getJargonProperties();
+		Assert.assertEquals("did not get the preset number of threads", 8000,
+				jargonProperties.getMaxParallelThreads());
 
 	}
 

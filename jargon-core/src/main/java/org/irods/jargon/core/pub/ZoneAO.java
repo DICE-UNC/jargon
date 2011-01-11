@@ -9,7 +9,8 @@ import org.irods.jargon.core.pub.domain.Zone;
 public interface ZoneAO extends IRODSAccessObject {
 
 	/**
-	 * List all zones 
+	 * List all zones
+	 * 
 	 * @return
 	 * @throws JargonException
 	 */
@@ -17,9 +18,12 @@ public interface ZoneAO extends IRODSAccessObject {
 
 	/**
 	 * Given a zone name, get the detailed information
-	 * @param zoneName <code>String</code> with the unique name of the iRODS zone
-	 * @return {@link Zone} domain object.  Note that a <code>DataNotFoundException</code> will result if
-	 * the zone is not in iRODS.
+	 * 
+	 * @param zoneName
+	 *            <code>String</code> with the unique name of the iRODS zone
+	 * @return {@link Zone} domain object. Note that a
+	 *         <code>DataNotFoundException</code> will result if the zone is not
+	 *         in iRODS.
 	 * @throws JargonException
 	 * @throws DataNotFoundException
 	 */

@@ -22,7 +22,7 @@ public class RemoveUserCommand extends ImetaCommand {
 		return userName;
 	}
 
-	public void setUserName(String userName) {
+	public void setUserName(final String userName) {
 		this.userName = userName;
 	}
 
@@ -33,6 +33,7 @@ public class RemoveUserCommand extends ImetaCommand {
 	 * edu.sdsc.jargon.testutils.icommandinvoke.icommands.Icommand#buildCommand
 	 * ()
 	 */
+	@Override
 	public List<String> buildCommand() throws IcommandException {
 
 		if (userName == null || userName.length() == 0) {

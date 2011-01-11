@@ -2,7 +2,7 @@ package org.irods.jargon.core.connection;
 
 import java.util.Properties;
 
-import junit.framework.TestCase;
+import junit.framework.Assert;
 
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.junit.AfterClass;
@@ -32,7 +32,7 @@ public class IRODSSimpleConnectionTest {
 		IRODSManagedConnection connection = connectionManager
 				.getIRODSProtocol(irodsAccount);
 		connection.disconnect();
-		TestCase.assertFalse(connection.isConnected());
+		Assert.assertFalse(connection.isConnected());
 	}
 
 }

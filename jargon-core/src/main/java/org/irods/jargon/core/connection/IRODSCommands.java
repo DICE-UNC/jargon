@@ -451,10 +451,9 @@ public class IRODSCommands implements IRODSManagedConnection {
 		}
 
 		// Reports iRODS errors, throw exception if appropriate
-		
+
 		// FIXME: insert iRODS error manager
-		
-		
+
 		if (info < 0) {
 			processMessageInfoLessThanZero(messageLength, errorLength, info);
 			log.debug("returning null, no results");
@@ -514,25 +513,26 @@ public class IRODSCommands implements IRODSManagedConnection {
 				throw new JargonException(e);
 			}
 		}
-		
-		// TODO: create an iRODS error scanner class to throw correct exception.  Good place to refactor.
+
+		// TODO: create an iRODS error scanner class to throw correct exception.
+		// Good place to refactor.
 		if (info == ErrorEnum.CAT_NO_ROWS_FOUND.getInt()) {
 			throw new DataNotFoundException("no data found");
 		} else if (info == ErrorEnum.CAT_SUCCESS_BUT_WITH_NO_INFO.getInt()) {
 			handleSuccessButNoRowsFound(errorLength, info);
-		} else if (info == ErrorEnum.CAT_NAME_EXISTS_AS_COLLECTION.getInt() || info == ErrorEnum.CAT_NAME_EXISTS_AS_DATAOBJ.getInt()) {
+		} else if (info == ErrorEnum.CAT_NAME_EXISTS_AS_COLLECTION.getInt()
+				|| info == ErrorEnum.CAT_NAME_EXISTS_AS_DATAOBJ.getInt()) {
 			handleOverwriteOfCollectionOrDataObject(errorLength, info);
 		} else {
 			String msg = "error occurred in irods with a return value of "
 					+ info;
 			log.error(msg);
-			throw new JargonException("IRODS Exception:" + info,
-					info);
+			throw new JargonException("IRODS Exception:" + info, info);
 		}
 	}
 
-	private void handleOverwriteOfCollectionOrDataObject(int errorLength,
-			int info) throws JargonException {
+	private void handleOverwriteOfCollectionOrDataObject(final int errorLength,
+			final int info) throws JargonException {
 		log.debug("was no rows found or success with no info");
 		readAndLogErrorMessage(errorLength, info);
 		throw new JargonFileOrCollAlreadyExistsException(
@@ -544,7 +544,7 @@ public class IRODSCommands implements IRODSManagedConnection {
 	 * @param info
 	 * @throws JargonException
 	 */
-	private void readAndLogErrorMessage(int errorLength, int info)
+	private void readAndLogErrorMessage(final int errorLength, final int info)
 			throws JargonException {
 		if (errorLength != 0) {
 			byte[] errorMessage = new byte[errorLength];
@@ -568,14 +568,12 @@ public class IRODSCommands implements IRODSManagedConnection {
 				} catch (UnsupportedEncodingException e) {
 					log.error("Unsupported encoding for:"
 							+ ConnectionConstants.JARGON_CONNECTION_ENCODING);
-					throw new JargonException(
-							"Unsupported encoding for:"
-									+ ConnectionConstants.JARGON_CONNECTION_ENCODING);
+					throw new JargonException("Unsupported encoding for:"
+							+ ConnectionConstants.JARGON_CONNECTION_ENCODING);
 				}
 				log.error("IRODS error occured "
-						+ errorTag
-								.getTag(RErrMsg.PI_TAG)
-								.getTag(AbstractIRODSPackingInstruction.MESSAGE_TAG)
+						+ errorTag.getTag(RErrMsg.PI_TAG).getTag(
+								AbstractIRODSPackingInstruction.MESSAGE_TAG)
 						+ " : " + info);
 			}
 		}
@@ -614,14 +612,12 @@ public class IRODSCommands implements IRODSManagedConnection {
 				} catch (UnsupportedEncodingException e) {
 					log.error("Unsupported encoding for:"
 							+ ConnectionConstants.JARGON_CONNECTION_ENCODING);
-					throw new JargonException(
-							"Unsupported encoding for:"
-									+ ConnectionConstants.JARGON_CONNECTION_ENCODING);
+					throw new JargonException("Unsupported encoding for:"
+							+ ConnectionConstants.JARGON_CONNECTION_ENCODING);
 				}
 				log.error("IRODS error occured "
-						+ errorTag
-								.getTag(RErrMsg.PI_TAG)
-								.getTag(AbstractIRODSPackingInstruction.MESSAGE_TAG)
+						+ errorTag.getTag(RErrMsg.PI_TAG).getTag(
+								AbstractIRODSPackingInstruction.MESSAGE_TAG)
 						+ " : " + info);
 			}
 		}
@@ -699,7 +695,7 @@ public class IRODSCommands implements IRODSManagedConnection {
 
 			// to recover from some protocol errors, (slowly and if lucky)
 			// read until a new message header is found.
-			boolean cont = true; 
+			boolean cont = true;
 			int protoChar;
 			byte[] temp = new byte[13];
 			String newHeader = "MsgHeader_PI>";
@@ -924,7 +920,7 @@ public class IRODSCommands implements IRODSManagedConnection {
 				irodsAccount.getUserName(), response);
 
 		// should be a header with no body if successful
-		message = irodsFunction(RequestTypes.RODS_API_REQ.getRequestType(),
+		irodsFunction(RequestTypes.RODS_API_REQ.getRequestType(),
 				authResponse_PI.getParsedTags(),
 				XmlProtApis.AUTH_RESPONSE_AN.getApiNumber());
 	}
@@ -981,7 +977,8 @@ public class IRODSCommands implements IRODSManagedConnection {
 
 		getIRODSAccount();
 		if (IRODSAccount.isDefaultObfuscate()) {
-			// FIXME: get rid of this utf stuff and just put the code in here, remove refs to other old Jargon cruft
+			// FIXME: get rid of this utf stuff and just put the code in here,
+			// remove refs to other old Jargon cruft
 			try {
 				/*
         \u002a\u002f\u0070\u0061\u0073\u0073\u0077\u006f\u0072\u0064 \u003d \u006e\u0065\u0077 \u004c\u0075\u0063\u0069\u0064\u0028

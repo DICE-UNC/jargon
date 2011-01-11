@@ -22,7 +22,7 @@ public class ImetaListCommand extends ImetaCommand {
 		return attribName;
 	}
 
-	public void setAttribName(String attribName) {
+	public void setAttribName(final String attribName) {
 		this.attribName = attribName;
 	}
 
@@ -33,6 +33,7 @@ public class ImetaListCommand extends ImetaCommand {
 	 * edu.sdsc.jargon.testutils.icommandinvoke.icommands.Icommand#buildCommand
 	 * ()
 	 */
+	@Override
 	public List<String> buildCommand() throws IcommandException {
 		if (this.getObjectPath() == null || this.getObjectPath().length() == 0) {
 			throw new IllegalArgumentException("must supply an object path");

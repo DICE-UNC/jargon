@@ -435,23 +435,13 @@ public final class IRODSFileImpl extends File implements IRODSFile {
 	 */
 	@Override
 	public boolean equals(final Object obj) {
-		try {
-			if (obj == null) {
-				return false;
-			}
 
-			if (obj instanceof IRODSFileImpl) {
-				IRODSFile temp = (IRODSFile) obj;
-				return getAbsolutePath().equals(temp.getAbsolutePath());
-			}
-		} catch (ClassCastException e) {
-			String msg = "class cast exception, object is not an irods file"
-					+ e.getMessage();
-			log.error(msg, e);
-			throw new JargonRuntimeException(e);
-
+		if (obj instanceof File) {
+			File temp = (File) obj;
+			return temp.getAbsolutePath().equals(this.getAbsolutePath());
+		} else {
+			return false;
 		}
-		return false;
 	}
 
 	/*

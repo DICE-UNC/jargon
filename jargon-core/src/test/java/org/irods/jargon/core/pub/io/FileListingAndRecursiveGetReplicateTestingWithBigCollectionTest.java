@@ -4,7 +4,6 @@ import java.io.File;
 import java.util.Properties;
 
 import junit.framework.Assert;
-import junit.framework.TestCase;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.pub.IRODSFileSystem;
@@ -124,7 +123,7 @@ public class FileListingAndRecursiveGetReplicateTestingWithBigCollectionTest {
 				names.length);
 
 	}
-	
+
 	@Test
 	public void testFileListFiles() throws Exception {
 
@@ -146,7 +145,7 @@ public class FileListingAndRecursiveGetReplicateTestingWithBigCollectionTest {
 				files.length);
 
 	}
-	
+
 	@Test
 	public void testFileListWithFilter() throws Exception {
 
@@ -161,14 +160,15 @@ public class FileListingAndRecursiveGetReplicateTestingWithBigCollectionTest {
 				.getIRODSFileFactory(irodsAccount);
 		IRODSFile collectionRoot = irodsFileFactory
 				.instanceIRODSFile(targetIrodsCollection);
-		String[] names = collectionRoot.list(new IRODSAcceptAllFileNameFilter());
+		String[] names = collectionRoot
+				.list(new IRODSAcceptAllFileNameFilter());
 		irodsFileSystem.close();
 		Assert.assertNotNull("no names returned", names);
 		Assert.assertEquals("did not get all files", NUMBER_OF_TEST_FILES * 2,
 				names.length);
 
 	}
-	
+
 	@Test
 	public void testFileListFilesWithFilter() throws Exception {
 
@@ -190,7 +190,7 @@ public class FileListingAndRecursiveGetReplicateTestingWithBigCollectionTest {
 				files.length);
 
 	}
-	
+
 	@Test
 	public void testFileListFilesWithFileNameFilter() throws Exception {
 
@@ -205,14 +205,13 @@ public class FileListingAndRecursiveGetReplicateTestingWithBigCollectionTest {
 				.getIRODSFileFactory(irodsAccount);
 		IRODSFile collectionRoot = irodsFileFactory
 				.instanceIRODSFile(targetIrodsCollection);
-		File[] files = collectionRoot.listFiles(new IRODSAcceptAllFileNameFilter());
+		File[] files = collectionRoot
+				.listFiles(new IRODSAcceptAllFileNameFilter());
 		irodsFileSystem.close();
 		Assert.assertNotNull("no files returned", files);
 		Assert.assertEquals("did not get all files", NUMBER_OF_TEST_FILES * 2,
 				files.length);
 
 	}
-	
-	
 
 }

@@ -47,10 +47,12 @@ public interface DataTransferOperations extends IRODSAccessObject {
 	 * @param targetResource
 	 *            <code>String</code> with the target resource name iRODS.
 	 * @throws JargonException
-	 * @throws JargonFileOrCollAlreadyExistsException if a move is made to a file or collection that already exists
+	 * @throws JargonFileOrCollAlreadyExistsException
+	 *             if a move is made to a file or collection that already exists
 	 */
 	void physicalMove(final String absolutePathToSourceFile,
-			final String targetResource) throws JargonFileOrCollAlreadyExistsException, JargonException;
+			final String targetResource)
+			throws JargonFileOrCollAlreadyExistsException, JargonException;
 
 	/**
 	 * Move a file or collection between two locations in iRODS. This method
@@ -78,10 +80,12 @@ public interface DataTransferOperations extends IRODSAccessObject {
 	 *            <code>String</code> with the absolute path to the target of
 	 *            the move.
 	 * @throws JargonException
-	 * @throws JargonFileOrCollAlreadyExistsException if a move is made to a file or collection that already exists
+	 * @throws JargonFileOrCollAlreadyExistsException
+	 *             if a move is made to a file or collection that already exists
 	 */
 	void move(final String absolutePathToSourceFile,
-			final String absolutePathToTargetFile) throws JargonFileOrCollAlreadyExistsException, JargonException;
+			final String absolutePathToTargetFile)
+			throws JargonFileOrCollAlreadyExistsException, JargonException;
 
 	/**
 	 * Put a file or a collection (recursively) to iRODS. This method allows

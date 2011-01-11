@@ -3,9 +3,11 @@
  */
 package org.irods.jargon.testutils.icommandinvoke.icommands;
 
+import static org.irods.jargon.testutils.TestingPropertiesHelper.IRODS_SECONDARY_RESOURCE_KEY;
+
 import java.util.Properties;
 
-import junit.framework.TestCase;
+import junit.framework.Assert;
 
 import org.irods.jargon.testutils.IRODSTestSetupUtilities;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
@@ -19,7 +21,6 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import static org.irods.jargon.testutils.TestingPropertiesHelper.*;
 
 /**
  * @author Mike Conway, DICE (www.irods.org)
@@ -165,8 +166,8 @@ public class IputCommandTest {
 		ilsCommand.setIlsBasePath(actualCollectionPath);
 
 		String res = invoker.invokeCommandAndGetResultAsString(ilsCommand);
-		TestCase.assertTrue("did not find file I just put", res
-				.indexOf(testFileName) > -1);
+		Assert.assertTrue("did not find file I just put",
+				res.indexOf(testFileName) > -1);
 	}
 
 	/**

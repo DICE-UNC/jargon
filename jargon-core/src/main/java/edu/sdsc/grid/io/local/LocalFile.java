@@ -487,7 +487,7 @@ public class LocalFile extends GeneralFile {
 	 */
 	@Override
 	public boolean equals(final Object obj) {
-		return wrapper.equals(obj);
+		return wrapper == obj;
 	}
 
 	/**

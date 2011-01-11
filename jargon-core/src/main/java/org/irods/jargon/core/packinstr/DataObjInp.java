@@ -309,7 +309,9 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 	}
 
 	/**
-	 * Create the proper packing instruction for a put operation.
+	 * Create the proper packing instruction for the initial call that starts a put operation.  The
+	 * iRODS response will indicate the mode for the actual transmission (include the data in the byte stream, use parallel transfer, etc).
+	 * Jargon will interpret the guidance given by iRODS to effect the actual data transmission.
 	 * 
 	 * @param destinationAbsolutePath
 	 *            <code>String</code> with the absolute path to the file
@@ -326,7 +328,7 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 			final String destinationAbsolutePath, final long length,
 			final String destinationResource, final boolean overwrite)
 			throws JargonException {
-		
+
 		if (destinationAbsolutePath == null
 				|| destinationAbsolutePath.isEmpty()) {
 			throw new JargonException("null or empty destinationAbsolutePath");
@@ -356,8 +358,9 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 	}
 
 	/**
-	 * Create the proper packing instruction for a put operatoin FIXME: correct
-	 * impl
+	 * Create the proper packing instruction for a put operation.  This method is used for a response after calling
+	 * <code>instanceForInitialCallToPut()</code>, and is used when the data is to be included in the binary response (e.g. no parallel
+	 * file transfer or other strategy required).
 	 * 
 	 * @param destinationAbsolutePath
 	 *            <code>String</code> with the absolute path to the file

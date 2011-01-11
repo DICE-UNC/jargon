@@ -10,7 +10,7 @@ import org.junit.Test;
 
 // FIXME: migrate to jargon-test when test framework code moved out of jargon-core
 public class FileGeneratorTest {
-	
+
 	private static Properties testingProperties = new Properties();
 	private static TestingPropertiesHelper testingPropertiesHelper = new TestingPropertiesHelper();
 	private static ScratchFileUtils scratchFileUtils = null;
@@ -31,17 +31,21 @@ public class FileGeneratorTest {
 				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
 		assertionHelper = new AssertionHelper();
 	}
-	
-	@Test
-	public void testGenerateManyFilesAndCollectionsInParentCollectionByAbsolutePath() throws Exception {
-		
-		String collName = "testGenerateManyFilesAndCollectionsInParentCollectionByAbsolutePath";
-		String targetLocalFile = scratchFileUtils.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH + "/" + collName);
-	
 
-		FileGenerator.generateManyFilesAndCollectionsInParentCollectionByAbsolutePath(targetLocalFile, "coll", 2, 4, 2, "testFile", ".txt", 20000, 9000, 1, 2);
-		
+	@Test
+	public void testGenerateManyFilesAndCollectionsInParentCollectionByAbsolutePath()
+			throws Exception {
+
+		String collName = "testGenerateManyFilesAndCollectionsInParentCollectionByAbsolutePath";
+		String targetLocalFile = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH
+						+ "/" + collName);
+
+		FileGenerator
+				.generateManyFilesAndCollectionsInParentCollectionByAbsolutePath(
+						targetLocalFile, "coll", 2, 4, 2, "testFile", ".txt",
+						20000, 9000, 1, 2);
+
 	}
-	
 
 }

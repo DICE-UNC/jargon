@@ -3,8 +3,7 @@
  */
 package org.irods.jargon.core.packinstr;
 
-import static org.junit.Assert.*;
-import junit.framework.TestCase;
+import junit.framework.Assert;
 
 import org.irods.jargon.core.exception.JargonException;
 import org.junit.AfterClass;
@@ -40,19 +39,17 @@ public class DataObjCopyInpTest {
 	public final void testInstanceFromFileToFile() throws Exception {
 		DataObjCopyInp copy = DataObjCopyInp.instance("fromFile", "toFile",
 				DataObjInp.RENAME_DIRECTORY_OPERATION_TYPE);
-		TestCase.assertNotNull(copy);
+		Assert.assertNotNull(copy);
 	}
 
 	@Test(expected = JargonException.class)
 	public final void testInstanceNullFrom() throws Exception {
-		@SuppressWarnings("unused")
-		DataObjCopyInp copy = DataObjCopyInp.instance(null, "to", 11);
+		DataObjCopyInp.instance(null, "to", 11);
 	}
 
 	@Test(expected = JargonException.class)
 	public final void testInstanceNullTo() throws Exception {
-		@SuppressWarnings("unused")
-		DataObjCopyInp copy = DataObjCopyInp.instance("from", null, 12);
+		DataObjCopyInp.instance("from", null, 12);
 	}
 
 	/**
@@ -62,7 +59,7 @@ public class DataObjCopyInpTest {
 	@Test
 	public final void testGetParsedTags() throws Exception {
 		DataObjCopyInp copy = DataObjCopyInp.instance("fromFile", "toFile", 11);
-		TestCase.assertTrue("got a blank xml protocol", copy.getParsedTags()
+		Assert.assertTrue("got a blank xml protocol", copy.getParsedTags()
 				.length() > 0);
 	}
 
@@ -72,8 +69,7 @@ public class DataObjCopyInpTest {
 				DataObjInp.RENAME_DIRECTORY_OPERATION_TYPE);
 
 		StringBuilder b = new StringBuilder();
-		b
-				.append("<DataObjCopyInp_PI><DataObjInp_PI><objPath>fromFile</objPath>\n");
+		b.append("<DataObjCopyInp_PI><DataObjInp_PI><objPath>fromFile</objPath>\n");
 		b.append("<createMode>0</createMode>\n");
 		b.append("<openFlags>0</openFlags>\n");
 		b.append("<offset>0</offset>\n");
@@ -95,19 +91,19 @@ public class DataObjCopyInpTest {
 		b.append("</DataObjInp_PI>\n");
 		b.append("</DataObjCopyInp_PI>\n");
 		String expected = b.toString();
-		TestCase.assertEquals("unexpected xml protocol values", expected, copy
-				.getParsedTags());
+		Assert.assertEquals("unexpected xml protocol values", expected,
+				copy.getParsedTags());
 
 	}
-	
+
 	@Test
 	public final void testGetParsedTagsForRenameFile() throws Exception {
 		String testFileName = "/sourceFile/testRenameOriginal.txt";
 		String testNewFileName = "/destFile/testRenameNew.txt";
-		
-		
-		DataObjCopyInp dataObjCopyInp = DataObjCopyInp.instanceForRenameFile(testFileName, testNewFileName);
-			
+
+		DataObjCopyInp dataObjCopyInp = DataObjCopyInp.instanceForRenameFile(
+				testFileName, testNewFileName);
+
 		StringBuilder sb = new StringBuilder();
 		sb.append("<DataObjCopyInp_PI><DataObjInp_PI><objPath>/sourceFile/testRenameOriginal.txt</objPath>\n");
 		sb.append("<createMode>0</createMode>\n");
@@ -130,22 +126,23 @@ public class DataObjCopyInpTest {
 		sb.append("</KeyValPair_PI>\n");
 		sb.append("</DataObjInp_PI>\n");
 		sb.append("</DataObjCopyInp_PI>\n");
-		
-		
-		TestCase.assertEquals("did not get expected packing instruction",
+
+		Assert.assertEquals("did not get expected packing instruction",
 				sb.toString(), dataObjCopyInp.getParsedTags());
-		TestCase.assertEquals("did not get expected API number", DataObjCopyInp.RENAME_FILE_API_NBR, dataObjCopyInp.getApiNumber());
+		Assert.assertEquals("did not get expected API number",
+				DataObjCopyInp.RENAME_FILE_API_NBR,
+				dataObjCopyInp.getApiNumber());
 
 	}
-	
+
 	@Test
 	public final void testGetParsedTagsForRenameCollection() throws Exception {
 		String testFileName = "/source/sourceColl";
 		String testNewFileName = "/dest/destColl";
-		
-		
-		DataObjCopyInp dataObjCopyInp = DataObjCopyInp.instanceForRenameCollection(testFileName, testNewFileName);
-			
+
+		DataObjCopyInp dataObjCopyInp = DataObjCopyInp
+				.instanceForRenameCollection(testFileName, testNewFileName);
+
 		StringBuilder sb = new StringBuilder();
 		sb.append("<DataObjCopyInp_PI><DataObjInp_PI><objPath>/source/sourceColl</objPath>\n");
 		sb.append("<createMode>0</createMode>\n");
@@ -168,10 +165,12 @@ public class DataObjCopyInpTest {
 		sb.append("</KeyValPair_PI>\n");
 		sb.append("</DataObjInp_PI>\n");
 		sb.append("</DataObjCopyInp_PI>\n");
-		
-		TestCase.assertEquals("did not get expected packing instruction",
+
+		Assert.assertEquals("did not get expected packing instruction",
 				sb.toString(), dataObjCopyInp.getParsedTags());
-		TestCase.assertEquals("did not get expected API number", DataObjCopyInp.RENAME_FILE_API_NBR, dataObjCopyInp.getApiNumber());
+		Assert.assertEquals("did not get expected API number",
+				DataObjCopyInp.RENAME_FILE_API_NBR,
+				dataObjCopyInp.getApiNumber());
 
 	}
 

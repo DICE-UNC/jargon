@@ -41,7 +41,6 @@
 //
 package edu.sdsc.grid.io;
 
-
 /**
  * An object to hold the user information used when connecting to a file system.
  * This class does not actually connect to a filesystem. It only hold user

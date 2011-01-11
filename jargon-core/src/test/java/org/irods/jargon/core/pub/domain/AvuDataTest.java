@@ -1,7 +1,6 @@
 package org.irods.jargon.core.pub.domain;
 
-import static org.junit.Assert.*;
-import junit.framework.TestCase;
+import junit.framework.Assert;
 
 import org.irods.jargon.core.exception.JargonException;
 import org.junit.AfterClass;
@@ -20,7 +19,7 @@ public class AvuDataTest {
 
 	@Test
 	public final void testInstance() throws Exception {
-		TestCase.assertNotNull(AvuData.instance("x", "y", "z"));
+		Assert.assertNotNull(AvuData.instance("x", "y", "z"));
 	}
 
 	@Test(expected = JargonException.class)

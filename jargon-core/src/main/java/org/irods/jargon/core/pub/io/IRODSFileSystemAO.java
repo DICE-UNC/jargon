@@ -236,7 +236,6 @@ public interface IRODSFileSystemAO extends IRODSAccessObject {
 	int openFile(IRODSFile irodsFile, DataObjInp.OpenFlags openFlags)
 			throws JargonException;
 
-
 	/**
 	 * Transfer a file between iRODS resources
 	 * 

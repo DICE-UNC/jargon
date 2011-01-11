@@ -5,7 +5,6 @@ import junit.framework.TestCase;
 import org.irods.jargon.core.exception.JargonException;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 public class DataObjInpTest {
@@ -17,36 +16,39 @@ public class DataObjInpTest {
 	@AfterClass
 	public static void tearDownAfterClass() throws Exception {
 	}
-	
+
 	@Test
-	public final void testInstanceForReplicateToResourceGroup() throws Exception {
-		DataObjInp dataObjInp = DataObjInp.instanceForReplicateToResourceGroup("file", "rg");
+	public final void testInstanceForReplicateToResourceGroup()
+			throws Exception {
+		DataObjInp dataObjInp = DataObjInp.instanceForReplicateToResourceGroup(
+				"file", "rg");
 		TestCase.assertNotNull("got a null dataObjInp", dataObjInp);
-		
-	}
-	
-	@Test(expected=JargonException.class)
-	public final void testInstanceForReplicateToResourceGroupNullFile() throws Exception {
-		DataObjInp.instanceForReplicateToResourceGroup(null, "rg");		
-	}
-	
-	@Test(expected=JargonException.class)
-	public final void testInstanceForReplicateToResourceGroupBlankResourceGroup() throws Exception {
-		DataObjInp.instanceForReplicateToResourceGroup("file", "");		
-	}
-	
-	@Test(expected=JargonException.class)
-	public final void testInstanceForReplicateToResourceGroupBlankFile() throws Exception {
-		DataObjInp.instanceForReplicateToResourceGroup("", "rg");		
-	}
-	
-	@Test(expected=JargonException.class)
-	public final void testInstanceForReplicateToResourceGroupNullResourceGroup() throws Exception {
-		DataObjInp.instanceForReplicateToResourceGroup("file", null);		
+
 	}
 
+	@Test(expected = JargonException.class)
+	public final void testInstanceForReplicateToResourceGroupNullFile()
+			throws Exception {
+		DataObjInp.instanceForReplicateToResourceGroup(null, "rg");
+	}
 
+	@Test(expected = JargonException.class)
+	public final void testInstanceForReplicateToResourceGroupBlankResourceGroup()
+			throws Exception {
+		DataObjInp.instanceForReplicateToResourceGroup("file", "");
+	}
 
+	@Test(expected = JargonException.class)
+	public final void testInstanceForReplicateToResourceGroupBlankFile()
+			throws Exception {
+		DataObjInp.instanceForReplicateToResourceGroup("", "rg");
+	}
+
+	@Test(expected = JargonException.class)
+	public final void testInstanceForReplicateToResourceGroupNullResourceGroup()
+			throws Exception {
+		DataObjInp.instanceForReplicateToResourceGroup("file", null);
+	}
 
 	@Test
 	public final void testInstanceForOpen() throws Exception {
@@ -54,52 +56,60 @@ public class DataObjInpTest {
 				DataObjInp.OpenFlags.READ_WRITE);
 		TestCase.assertNotNull("data obj inp returned was null", dataObjInp);
 	}
-	
+
 	@Test
 	public final void testInstanceForPut() throws Exception {
-		DataObjInp dataObjInp = DataObjInp.instanceForInitialCallToPut("/abspath", 100, "aresource", true); 
+		DataObjInp dataObjInp = DataObjInp.instanceForNormalPutStrategy(
+				"/abspath", 100, "aresource", true);
 		TestCase.assertNotNull("data obj inp returned was null", dataObjInp);
-		TestCase.assertEquals("wrong API number assigned", DataObjInp.PUT_FILE_API_NBR, dataObjInp.getApiNumber());
-	}
-	
-	@Test
-	public final void testInstanceForGet() throws Exception {
-		DataObjInp dataObjInp = DataObjInp.instanceForGet("/abspath"); 
-		TestCase.assertNotNull("data obj inp returned was null", dataObjInp);
-		TestCase.assertEquals("wrong API number assigned", DataObjInp.GET_FILE_API_NBR, dataObjInp.getApiNumber());
-	}
-	
-	@Test
-	public final void testInstanceForChecksum() throws Exception {
-		DataObjInp dataObjInp = DataObjInp.instanceForDataObjectChecksum("/abspath"); 
-		TestCase.assertNotNull("data obj inp returned was null", dataObjInp);
-		TestCase.assertEquals("wrong API number assigned", DataObjInp.CHECKSUM_API_NBR, dataObjInp.getApiNumber());
+		TestCase.assertEquals("wrong API number assigned",
+				DataObjInp.PUT_FILE_API_NBR, dataObjInp.getApiNumber());
 	}
 
-	@Test(expected=JargonException.class)
+	@Test
+	public final void testInstanceForGet() throws Exception {
+		DataObjInp dataObjInp = DataObjInp.instanceForGet("/abspath");
+		TestCase.assertNotNull("data obj inp returned was null", dataObjInp);
+		TestCase.assertEquals("wrong API number assigned",
+				DataObjInp.GET_FILE_API_NBR, dataObjInp.getApiNumber());
+	}
+
+	@Test
+	public final void testInstanceForChecksum() throws Exception {
+		DataObjInp dataObjInp = DataObjInp
+				.instanceForDataObjectChecksum("/abspath");
+		TestCase.assertNotNull("data obj inp returned was null", dataObjInp);
+		TestCase.assertEquals("wrong API number assigned",
+				DataObjInp.CHECKSUM_API_NBR, dataObjInp.getApiNumber());
+	}
+
+	@Test(expected = JargonException.class)
 	public final void testInstanceForChecksumBlank() throws Exception {
-		DataObjInp.instanceForDataObjectChecksum(""); 
+		DataObjInp.instanceForDataObjectChecksum("");
 	}
-	
-	@Test(expected=JargonException.class)
+
+	@Test(expected = JargonException.class)
 	public final void testInstanceForDeleteNoForceBlank() throws Exception {
-		DataObjInp.instanceForDeleteWithNoForce(""); 
+		DataObjInp.instanceForDeleteWithNoForce("");
 	}
-	
-	@Test(expected=JargonException.class)
+
+	@Test(expected = JargonException.class)
 	public final void testInstanceForDeleteNoForceNull() throws Exception {
-		DataObjInp.instanceForDeleteWithNoForce(null); 
+		DataObjInp.instanceForDeleteWithNoForce(null);
 	}
-	
-	@Test(expected=JargonException.class)
+
+	@Test(expected = JargonException.class)
 	public final void testInstanceForChecksumNull() throws Exception {
-		DataObjInp.instanceForDataObjectChecksum(null); 
+		DataObjInp.instanceForDataObjectChecksum(null);
 	}
-	
+
 	@Test
 	public final void testGetParsedTagsForInitialCallToPut() throws Exception {
-		DataObjInp dataObjInp = DataObjInp.instanceForInitialCallToPut("/test1/home/test1/test-scratch/IrodsCommandsPutTest/testPutOverwriteFileNotInIRODS.txt", 716800000, "test1-resc", false);
-		
+		DataObjInp dataObjInp = DataObjInp
+				.instanceForInitialCallToPut(
+						"/test1/home/test1/test-scratch/IrodsCommandsPutTest/testPutOverwriteFileNotInIRODS.txt",
+						716800000, "test1-resc", false);
+
 		StringBuilder sb = new StringBuilder();
 		sb.append("<DataObjInp_PI><objPath>/test1/home/test1/test-scratch/IrodsCommandsPutTest/testPutOverwriteFileNotInIRODS.txt</objPath>\n");
 		sb.append("<createMode>448</createMode>\n");
@@ -118,11 +128,15 @@ public class DataObjInpTest {
 		TestCase.assertEquals("did not get expected packing instruction",
 				sb.toString(), dataObjInp.getParsedTags());
 	}
-	
+
 	@Test
-	public final void testGetParsedTagsForCallToPutNormalMode() throws Exception {
-		DataObjInp dataObjInp = DataObjInp.instanceForNormalPutStrategy("/test1/home/test1/test-scratch/IrodsCommandsPutTest/testPutOverwriteFileNotInIRODS.txt", 1, "test1-resc", true);
-		
+	public final void testGetParsedTagsForCallToPutNormalMode()
+			throws Exception {
+		DataObjInp dataObjInp = DataObjInp
+				.instanceForNormalPutStrategy(
+						"/test1/home/test1/test-scratch/IrodsCommandsPutTest/testPutOverwriteFileNotInIRODS.txt",
+						1, "test1-resc", true);
+
 		StringBuilder sb = new StringBuilder();
 		sb.append("<DataObjInp_PI><objPath>/test1/home/test1/test-scratch/IrodsCommandsPutTest/testPutOverwriteFileNotInIRODS.txt</objPath>\n");
 		sb.append("<createMode>448</createMode>\n");
@@ -145,12 +159,12 @@ public class DataObjInpTest {
 		TestCase.assertEquals("did not get expected packing instruction",
 				sb.toString(), dataObjInp.getParsedTags());
 	}
-		
-	
+
 	@Test
 	public final void testGetParsedTagsForGet() throws Exception {
-		DataObjInp dataObjInp = DataObjInp.instanceForGet("/test1/home/test1/test-scratch/IrodsCommandsGetTest/testGet.txt");
-		
+		DataObjInp dataObjInp = DataObjInp
+				.instanceForGet("/test1/home/test1/test-scratch/IrodsCommandsGetTest/testGet.txt");
+
 		StringBuilder sb = new StringBuilder();
 		sb.append("<DataObjInp_PI><objPath>/test1/home/test1/test-scratch/IrodsCommandsGetTest/testGet.txt</objPath>\n");
 		sb.append("<createMode>0</createMode>\n");
@@ -162,17 +176,19 @@ public class DataObjInpTest {
 		sb.append("<KeyValPair_PI><ssLen>0</ssLen>\n");
 		sb.append("</KeyValPair_PI>\n");
 		sb.append("</DataObjInp_PI>\n");
-		
+
 		TestCase.assertEquals("did not get expected packing instruction",
 				sb.toString(), dataObjInp.getParsedTags());
-		TestCase.assertEquals("did not get expected API number", DataObjInp.GET_FILE_API_NBR, dataObjInp.getApiNumber());
+		TestCase.assertEquals("did not get expected API number",
+				DataObjInp.GET_FILE_API_NBR, dataObjInp.getApiNumber());
 
 	}
-	
+
 	@Test
 	public final void testGetParsedTagsForDeleteNoForce() throws Exception {
-		DataObjInp dataObjInp = DataObjInp.instanceForDeleteWithNoForce("/test1/home/test1/test-scratch/IrodsCommandsDeleteTest/testDeleteOneFileNoForce.txt");
-		
+		DataObjInp dataObjInp = DataObjInp
+				.instanceForDeleteWithNoForce("/test1/home/test1/test-scratch/IrodsCommandsDeleteTest/testDeleteOneFileNoForce.txt");
+
 		StringBuilder sb = new StringBuilder();
 		sb.append("<DataObjInp_PI><objPath>/test1/home/test1/test-scratch/IrodsCommandsDeleteTest/testDeleteOneFileNoForce.txt</objPath>\n");
 		sb.append("<createMode>0</createMode>\n");
@@ -184,17 +200,19 @@ public class DataObjInpTest {
 		sb.append("<KeyValPair_PI><ssLen>0</ssLen>\n");
 		sb.append("</KeyValPair_PI>\n");
 		sb.append("</DataObjInp_PI>\n");
-		
+
 		TestCase.assertEquals("did not get expected packing instruction",
 				sb.toString(), dataObjInp.getParsedTags());
-		TestCase.assertEquals("did not get expected API number", DataObjInp.DELETE_FILE_API_NBR, dataObjInp.getApiNumber());
+		TestCase.assertEquals("did not get expected API number",
+				DataObjInp.DELETE_FILE_API_NBR, dataObjInp.getApiNumber());
 
 	}
-	
+
 	@Test
 	public final void testGetParsedTagsForChecksum() throws Exception {
-		DataObjInp dataObjInp = DataObjInp.instanceForDataObjectChecksum("/test1/home/test1/test-scratch/IRODSCommandsMiscTest/testChecksum.txt");
-		
+		DataObjInp dataObjInp = DataObjInp
+				.instanceForDataObjectChecksum("/test1/home/test1/test-scratch/IRODSCommandsMiscTest/testChecksum.txt");
+
 		StringBuilder sb = new StringBuilder();
 		sb.append("<DataObjInp_PI><objPath>/test1/home/test1/test-scratch/IRODSCommandsMiscTest/testChecksum.txt</objPath>\n");
 		sb.append("<createMode>0</createMode>\n");
@@ -206,16 +224,20 @@ public class DataObjInpTest {
 		sb.append("<KeyValPair_PI><ssLen>0</ssLen>\n");
 		sb.append("</KeyValPair_PI>\n");
 		sb.append("</DataObjInp_PI>\n");
-		
+
 		TestCase.assertEquals("did not get expected packing instruction",
 				sb.toString(), dataObjInp.getParsedTags());
-		TestCase.assertEquals("did not get expected API number", DataObjInp.CHECKSUM_API_NBR, dataObjInp.getApiNumber());
+		TestCase.assertEquals("did not get expected API number",
+				DataObjInp.CHECKSUM_API_NBR, dataObjInp.getApiNumber());
 	}
-	
+
 	@Test
 	public final void testGetParsedTagsForGetWithResource() throws Exception {
-		DataObjInp dataObjInp = DataObjInp.instanceForGetSpecifyingResource("/test1/home/test1/test-scratch/IrodsCommandsGetTest/testGetSpecifyingResource.txt", "test1-resc");
-		
+		DataObjInp dataObjInp = DataObjInp
+				.instanceForGetSpecifyingResource(
+						"/test1/home/test1/test-scratch/IrodsCommandsGetTest/testGetSpecifyingResource.txt",
+						"test1-resc");
+
 		StringBuilder sb = new StringBuilder();
 		sb.append("<DataObjInp_PI><objPath>/test1/home/test1/test-scratch/IrodsCommandsGetTest/testGetSpecifyingResource.txt</objPath>\n");
 		sb.append("<createMode>0</createMode>\n");
@@ -229,17 +251,21 @@ public class DataObjInpTest {
 		sb.append("<svalue>test1-resc</svalue>\n");
 		sb.append("</KeyValPair_PI>\n");
 		sb.append("</DataObjInp_PI>\n");
-		
+
 		TestCase.assertEquals("did not get expected packing instruction",
 				sb.toString(), dataObjInp.getParsedTags());
-		TestCase.assertEquals("did not get expected API number", DataObjInp.GET_FILE_API_NBR, dataObjInp.getApiNumber());
+		TestCase.assertEquals("did not get expected API number",
+				DataObjInp.GET_FILE_API_NBR, dataObjInp.getApiNumber());
 
 	}
-	
+
 	@Test
 	public final void testGetParsedTagsForReplicate() throws Exception {
-		DataObjInp dataObjInp = DataObjInp.instanceForReplicate("/test1/home/test1/test-scratch/IrodsFileCommandsTest/testReplicate1.txt", "test1-resc2");
-		
+		DataObjInp dataObjInp = DataObjInp
+				.instanceForReplicate(
+						"/test1/home/test1/test-scratch/IrodsFileCommandsTest/testReplicate1.txt",
+						"test1-resc2");
+
 		StringBuilder sb = new StringBuilder();
 		sb.append("<DataObjInp_PI><objPath>/test1/home/test1/test-scratch/IrodsFileCommandsTest/testReplicate1.txt</objPath>\n");
 		sb.append("<createMode>0</createMode>\n");
@@ -253,17 +279,22 @@ public class DataObjInpTest {
 		sb.append("<svalue>test1-resc2</svalue>\n");
 		sb.append("</KeyValPair_PI>\n");
 		sb.append("</DataObjInp_PI>\n");
-		
+
 		TestCase.assertEquals("did not get expected packing instruction",
 				sb.toString(), dataObjInp.getParsedTags());
-		TestCase.assertEquals("did not get expected API number", DataObjInp.REPLICATE_API_NBR, dataObjInp.getApiNumber());
+		TestCase.assertEquals("did not get expected API number",
+				DataObjInp.REPLICATE_API_NBR, dataObjInp.getApiNumber());
 
 	}
-	
+
 	@Test
-	public final void testGetParsedTagsForReplicateToResourceGroup() throws Exception {
-		DataObjInp dataObjInp = DataObjInp.instanceForReplicateToResourceGroup("/test1/home/test1/test-scratch/IrodsFileCommandsTest/testReplicate1.txt", "test1-resc2");
-		
+	public final void testGetParsedTagsForReplicateToResourceGroup()
+			throws Exception {
+		DataObjInp dataObjInp = DataObjInp
+				.instanceForReplicateToResourceGroup(
+						"/test1/home/test1/test-scratch/IrodsFileCommandsTest/testReplicate1.txt",
+						"test1-resc2");
+
 		StringBuilder sb = new StringBuilder();
 		sb.append("<DataObjInp_PI><objPath>/test1/home/test1/test-scratch/IrodsFileCommandsTest/testReplicate1.txt</objPath>\n");
 		sb.append("<createMode>0</createMode>\n");
@@ -279,31 +310,32 @@ public class DataObjInpTest {
 		sb.append("<svalue>test1-resc2</svalue>\n");
 		sb.append("</KeyValPair_PI>\n");
 		sb.append("</DataObjInp_PI>\n");
-		
+
 		TestCase.assertEquals("did not get expected packing instruction",
 				sb.toString(), dataObjInp.getParsedTags());
-		TestCase.assertEquals("did not get expected API number", DataObjInp.REPLICATE_API_NBR, dataObjInp.getApiNumber());
+		TestCase.assertEquals("did not get expected API number",
+				DataObjInp.REPLICATE_API_NBR, dataObjInp.getApiNumber());
 
 	}
-	
-	@Test(expected=JargonException.class)
+
+	@Test(expected = JargonException.class)
 	public final void instanceForReplicateBlankFile() throws Exception {
 		DataObjInp.instanceForReplicate("", "test1-resc2");
 	}
-	
-	@Test(expected=JargonException.class)
+
+	@Test(expected = JargonException.class)
 	public final void instanceForReplicateNullFile() throws Exception {
 		DataObjInp.instanceForReplicate(null, "test1-resc2");
 	}
-	
-	@Test(expected=JargonException.class)
+
+	@Test(expected = JargonException.class)
 	public final void instanceForReplicateBlankResc() throws Exception {
 		DataObjInp.instanceForReplicate("/a/file/path", "");
 	}
-	
-	@Test(expected=JargonException.class)
+
+	@Test(expected = JargonException.class)
 	public final void instanceForReplicateNullResc() throws Exception {
 		DataObjInp.instanceForReplicate("/a/file/path", null);
 	}
-	
+
 }

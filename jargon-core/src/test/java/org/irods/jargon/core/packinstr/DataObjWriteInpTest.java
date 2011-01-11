@@ -3,8 +3,7 @@
  */
 package org.irods.jargon.core.packinstr;
 
-import static org.junit.Assert.*;
-import junit.framework.TestCase;
+import junit.framework.Assert;
 
 import org.irods.jargon.core.exception.JargonException;
 import org.junit.AfterClass;
@@ -39,7 +38,7 @@ public class DataObjWriteInpTest {
 	@Test
 	public final void testInstance() throws Exception {
 		DataObjWriteInp dataObjWriteInp = DataObjWriteInp.instance(1, 100L);
-		TestCase.assertNotNull(dataObjWriteInp);
+		Assert.assertNotNull(dataObjWriteInp);
 	}
 
 	/**
@@ -49,8 +48,7 @@ public class DataObjWriteInpTest {
 	 */
 	@Test(expected = JargonException.class)
 	public final void testInstanceBadFileDescriptor() throws Exception {
-		@SuppressWarnings("unused")
-		DataObjWriteInp dataObjWriteInp = DataObjWriteInp.instance(-1, 100L);
+		DataObjWriteInp.instance(-1, 100L);
 	}
 
 	/**
@@ -60,8 +58,7 @@ public class DataObjWriteInpTest {
 	 */
 	@Test(expected = JargonException.class)
 	public final void testInstanceBadLength() throws Exception {
-		@SuppressWarnings("unused")
-		DataObjWriteInp dataObjWriteInp = DataObjWriteInp.instance(1, -100L);
+		DataObjWriteInp.instance(1, -100L);
 	}
 
 	/**
@@ -76,7 +73,7 @@ public class DataObjWriteInpTest {
 		sb.append("<dataObjWriteInp_PI><dataObjInx>1</dataObjInx>\n");
 		sb.append("<len>100</len>\n");
 		sb.append("</dataObjWriteInp_PI>\n");
-		TestCase.assertEquals("invalid xml generated", sb.toString(), tagVal);
+		Assert.assertEquals("invalid xml generated", sb.toString(), tagVal);
 	}
 
 }

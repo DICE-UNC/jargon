@@ -2,7 +2,7 @@ package org.irods.jargon.core.protovalues;
 
 import java.util.List;
 
-import junit.framework.TestCase;
+import junit.framework.Assert;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -21,7 +21,7 @@ public class UserTypeEnumTest {
 	@Test
 	public final void testGetUserTypeList() throws Exception {
 		List<String> userTypes = UserTypeEnum.getUserTypeList();
-		TestCase.assertTrue("no user types returned", userTypes.size() > 0);
+		Assert.assertTrue("no user types returned", userTypes.size() > 0);
 	}
 
 }

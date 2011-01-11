@@ -5,27 +5,42 @@ import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.io.IRODSFileFactory;
 import org.irods.jargon.core.pub.io.IRODSFileSystemAO;
+
 /**
- * Factory to produce IRODS access objects.  This is the key object which can be used to create components that can interact
- * directly with iRODS to query metadata attributes, update the catalog, and move data.
+ * Factory to produce IRODS access objects. This is the key object which can be
+ * used to create components that can interact directly with iRODS to query
+ * metadata attributes, update the catalog, and move data.
  * <p/>
- * Access objects are styled after traditional DAO's, in that they deal with a particular domain or service, and have methods to query 
- * for data about things in iRODS, and methods to update things in iRODS.  The access objects use 'POJO' domain objects for
- * input and output parameters, giving some nice, simple abstractions of the iRODS metadata catalog.
+ * Access objects are styled after traditional DAO's, in that they deal with a
+ * particular domain or service, and have methods to query for data about things
+ * in iRODS, and methods to update things in iRODS. The access objects use
+ * 'POJO' domain objects for input and output parameters, giving some nice,
+ * simple abstractions of the iRODS metadata catalog.
  * <p/>
- * Access objects are connected to iRODS at the time they are created.  The connection is determined by the {@link org.irods.jargon.core.connection.IRODSAccount}
- * that is specified when the access object is created.   The connection is managed using a <code>ThreadLocal</code>, such that any access objects created in the same
- * thread by this factory will automatically create a connection, or will share an already created connection.  This also means that, at the end of any set of operations, the connection
- * must be closed.  Typically, an {@link IRODSFileSystem} is instantiated, and that <code>IRODSFileSystem</code> is used to get a reference to this access object factory.
- * Once operations are done, the <code>IRODSFileSystem</code> can be used to close connections in that thread.  This factory has hooks to also close those connections,
- * and this can be used in cases where this factory is injected itself into another service.
+ * Access objects are connected to iRODS at the time they are created. The
+ * connection is determined by the
+ * {@link org.irods.jargon.core.connection.IRODSAccount} that is specified when
+ * the access object is created. The connection is managed using a
+ * <code>ThreadLocal</code>, such that any access objects created in the same
+ * thread by this factory will automatically create a connection, or will share
+ * an already created connection. This also means that, at the end of any set of
+ * operations, the connection must be closed. Typically, an
+ * {@link IRODSFileSystem} is instantiated, and that
+ * <code>IRODSFileSystem</code> is used to get a reference to this access object
+ * factory. Once operations are done, the <code>IRODSFileSystem</code> can be
+ * used to close connections in that thread. This factory has hooks to also
+ * close those connections, and this can be used in cases where this factory is
+ * injected itself into another service.
  * <p/>
- * Be aware that there should only be one reference to an <code>IRODSFileSystem</code>.  This object should not be created for every operation, rather, it should be created and placed in a shared context, passed as
- * a reference, or wrapped in a singleton.  Looking at the JUnit code for usage can be somewhat misleading in this respect.
+ * Be aware that there should only be one reference to an
+ * <code>IRODSFileSystem</code>. This object should not be created for every
+ * operation, rather, it should be created and placed in a shared context,
+ * passed as a reference, or wrapped in a singleton. Looking at the JUnit code
+ * for usage can be somewhat misleading in this respect.
  * <p/>
  * 
- * For example, if using the 'shortcut' <code>IRODSFileSystem</code>. object, you
- * may see a pattern of use like this:
+ * For example, if using the 'shortcut' <code>IRODSFileSystem</code>. object,
+ * you may see a pattern of use like this:
  * 
  * <pre>
  *  IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
@@ -150,6 +165,7 @@ public interface IRODSAccessObjectFactory {
 
 	/**
 	 * Close all connections associated with the current thread.
+	 * 
 	 * @throws JargonException
 	 */
 	void closeSession() throws JargonException;
@@ -179,11 +195,12 @@ public interface IRODSAccessObjectFactory {
 	 */
 	DataObjectAO getDataObjectAO(IRODSAccount irodsAccount)
 			throws JargonException;
-	
+
 	/**
-	 * Returns a <code>CollectionAndDataObjectListAndSearchAO</code> that contains methods useful for
-	 * interface search boxes, as well as pagable tree views of the iRODS hierarchy.  This is distinct from the typical
-	 * find and list methods in the access objects for DataObject and Collection.
+	 * Returns a <code>CollectionAndDataObjectListAndSearchAO</code> that
+	 * contains methods useful for interface search boxes, as well as pagable
+	 * tree views of the iRODS hierarchy. This is distinct from the typical find
+	 * and list methods in the access objects for DataObject and Collection.
 	 * 
 	 * @param irodsAccount
 	 *            <code>IRODSAccount</code> that describes the irods instance to
@@ -191,8 +208,8 @@ public interface IRODSAccessObjectFactory {
 	 * @return {@link org.irods.jargon.core.pub.CollectionAO}
 	 * @throws JargonException
 	 */
-	CollectionAndDataObjectListAndSearchAO getCollectionAndDataObjectListAndSearchAO(IRODSAccount irodsAccount)
-			throws JargonException;
+	CollectionAndDataObjectListAndSearchAO getCollectionAndDataObjectListAndSearchAO(
+			IRODSAccount irodsAccount) throws JargonException;
 
 	/**
 	 * Returns a <code>RuleProcessingAO</code> implementation that interacts
@@ -235,6 +252,7 @@ public interface IRODSAccessObjectFactory {
 
 	/**
 	 * Close the underlying connection for the given IRODSAccount.
+	 * 
 	 * @param irodsAccount
 	 * @throws JargonException
 	 */
@@ -255,7 +273,9 @@ public interface IRODSAccessObjectFactory {
 	IRODSSession getIrodsSession();
 
 	/**
-	 * Returns a <code>BulkFileOperationsAO</code> that can handle the creation and extraction of compressed file archives (tars) in iRODS.
+	 * Returns a <code>BulkFileOperationsAO</code> that can handle the creation
+	 * and extraction of compressed file archives (tars) in iRODS.
+	 * 
 	 * @param irodsAccount
 	 * @return
 	 * @throws JargonException

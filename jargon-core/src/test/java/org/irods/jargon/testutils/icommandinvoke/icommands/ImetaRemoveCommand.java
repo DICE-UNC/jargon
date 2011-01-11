@@ -24,7 +24,7 @@ public class ImetaRemoveCommand extends ImetaCommand {
 		return attribValue;
 	}
 
-	public void setAttribValue(String attribValue) {
+	public void setAttribValue(final String attribValue) {
 		this.attribValue = attribValue;
 	}
 
@@ -32,7 +32,7 @@ public class ImetaRemoveCommand extends ImetaCommand {
 		return attribUnits;
 	}
 
-	public void setAttribUnits(String attribUnits) {
+	public void setAttribUnits(final String attribUnits) {
 		this.attribUnits = attribUnits;
 	}
 
@@ -40,7 +40,7 @@ public class ImetaRemoveCommand extends ImetaCommand {
 		return attribName;
 	}
 
-	public void setAttribName(String attribName) {
+	public void setAttribName(final String attribName) {
 		this.attribName = attribName;
 	}
 
@@ -51,6 +51,7 @@ public class ImetaRemoveCommand extends ImetaCommand {
 	 * edu.sdsc.jargon.testutils.icommandinvoke.icommands.Icommand#buildCommand
 	 * ()
 	 */
+	@Override
 	public List<String> buildCommand() throws IcommandException {
 		if (this.getObjectPath() == null || this.getObjectPath().length() == 0) {
 			throw new IllegalArgumentException("must supply an object path");

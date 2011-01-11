@@ -31,6 +31,7 @@ public class IputCommand implements Icommand {
 	 * @see org.irods.jargon.icommandinvoke.icommands.Icommand#buildCommand()
 	 */
 
+	@Override
 	public List<String> buildCommand() throws IcommandException {
 		if (localFileName.length() <= 0) {
 			throw new IcommandException(
@@ -72,7 +73,7 @@ public class IputCommand implements Icommand {
 	 * @param localFileName
 	 *            the localFileName to set
 	 */
-	public void setLocalFileName(String localFileName) {
+	public void setLocalFileName(final String localFileName) {
 		this.localFileName = localFileName;
 	}
 
@@ -87,7 +88,7 @@ public class IputCommand implements Icommand {
 	 * @param irodsCollection
 	 *            the irodsCollection to set
 	 */
-	public void setIrodsFileName(String irodsFileName) {
+	public void setIrodsFileName(final String irodsFileName) {
 		this.irodsFileName = irodsFileName;
 	}
 
@@ -108,7 +109,7 @@ public class IputCommand implements Icommand {
 	 * @param forceOverride
 	 *            the forceOverride to set
 	 */
-	public void setForceOverride(boolean forceOverride) {
+	public void setForceOverride(final boolean forceOverride) {
 		this.forceOverride = forceOverride;
 	}
 
@@ -116,11 +117,11 @@ public class IputCommand implements Icommand {
 		return irodsResource;
 	}
 
-	public void setIrodsResource(String irodsResource) {
+	public void setIrodsResource(final String irodsResource) {
 		this.irodsResource = irodsResource;
 	}
 
-	public void setRecursive(boolean recursive) {
+	public void setRecursive(final boolean recursive) {
 		this.recursive = recursive;
 	}
 

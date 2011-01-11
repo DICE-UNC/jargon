@@ -291,10 +291,13 @@ public final class IRODSAccessObjectFactoryImpl implements
 		checkIrodsSessionSet();
 		return new DataTransferOperationsImpl(irodsSession, irodsAccount);
 	}
-	
-	
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.pub.IRODSAccessObjectFactory#getBulkFileOperationsAO(org.irods.jargon.core.connection.IRODSAccount)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.IRODSAccessObjectFactory#getBulkFileOperationsAO
+	 * (org.irods.jargon.core.connection.IRODSAccount)
 	 */
 	@Override
 	public BulkFileOperationsAO getBulkFileOperationsAO(
@@ -332,7 +335,9 @@ public final class IRODSAccessObjectFactoryImpl implements
 				irodsAccount);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.irods.jargon.core.pub.IRODSAccessObjectFactory#getIrodsSession()
 	 */
 	@Override
@@ -340,9 +345,12 @@ public final class IRODSAccessObjectFactoryImpl implements
 		return irodsSession;
 	}
 
-	
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.pub.IRODSAccessObjectFactory#setIrodsSession(org.irods.jargon.core.connection.IRODSSession)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.IRODSAccessObjectFactory#setIrodsSession(org
+	 * .irods.jargon.core.connection.IRODSSession)
 	 */
 	@Override
 	public void setIrodsSession(final IRODSSession irodsSession) {

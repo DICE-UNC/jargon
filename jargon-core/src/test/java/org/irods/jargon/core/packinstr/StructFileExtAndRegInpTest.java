@@ -1,7 +1,6 @@
 package org.irods.jargon.core.packinstr;
 
 import junit.framework.Assert;
-import junit.framework.TestCase;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -133,7 +132,7 @@ public class StructFileExtAndRegInpTest {
 		StructFileExtAndRegInp structFileExtAndRegInp = StructFileExtAndRegInp
 				.instanceForCreateBundle(tarFileName, tarFileCollection, "");
 		StringBuilder sb = new StringBuilder();
-		
+
 		sb.append("<StructFileExtAndRegInp_PI><objPath>/test/tarFileName.tar</objPath>\n");
 		sb.append("<collection>/test/tarFileCollection</collection>\n");
 		sb.append("<oprType>0</oprType>\n");
@@ -144,19 +143,20 @@ public class StructFileExtAndRegInpTest {
 		sb.append("</KeyValPair_PI>\n");
 		sb.append("</StructFileExtAndRegInp_PI>\n");
 
-		TestCase.assertEquals("did not get expected packing instruction",
+		Assert.assertEquals("did not get expected packing instruction",
 				sb.toString(), structFileExtAndRegInp.getParsedTags());
 	}
-	
+
 	@Test
 	public final void testMessageForCreateWithResource() throws Exception {
 		String tarFileName = "/test/tarFileName.tar";
 		String tarFileCollection = "/test/tarFileCollection";
 		String resource = "resource";
 		StructFileExtAndRegInp structFileExtAndRegInp = StructFileExtAndRegInp
-				.instanceForCreateBundle(tarFileName, tarFileCollection, resource);
+				.instanceForCreateBundle(tarFileName, tarFileCollection,
+						resource);
 		StringBuilder sb = new StringBuilder();
-		
+
 		sb.append("<StructFileExtAndRegInp_PI><objPath>/test/tarFileName.tar</objPath>\n");
 		sb.append("<collection>/test/tarFileCollection</collection>\n");
 		sb.append("<oprType>0</oprType>\n");
@@ -171,7 +171,7 @@ public class StructFileExtAndRegInpTest {
 		sb.append("</KeyValPair_PI>\n");
 		sb.append("</StructFileExtAndRegInp_PI>\n");
 
-		TestCase.assertEquals("did not get expected packing instruction",
+		Assert.assertEquals("did not get expected packing instruction",
 				sb.toString(), structFileExtAndRegInp.getParsedTags());
 	}
 

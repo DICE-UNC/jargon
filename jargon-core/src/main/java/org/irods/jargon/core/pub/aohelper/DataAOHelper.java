@@ -35,8 +35,9 @@ public final class DataAOHelper extends AOHelper {
 	 * Create a set of selects for a data object, used in general query. Note
 	 * that the 'SELECT' token is appended as the first token in the query.
 	 * 
-	 * FIXME: alternative queries for 1 result per object versus 1 result per replica?  Otherwise, perhaps the replica info could
-	 * be in a list within the data object?
+	 * FIXME: alternative queries for 1 result per object versus 1 result per
+	 * replica? Otherwise, perhaps the replica info could be in a list within
+	 * the data object?
 	 * 
 	 * @return <code>String</code> with select statements for the domain object.
 	 */

@@ -41,8 +41,8 @@ public class IcommandInvokerTest {
 		IlsCommand ilsCommand = new IlsCommand();
 		IcommandInvoker invoker = new IcommandInvoker(invocationContext);
 		String result = invoker.invokeViaExecutor(ilsCommand);
-		Assert.assertTrue("did not get a response from the ils command", result
-				.length() > 0);
+		Assert.assertTrue("did not get a response from the ils command",
+				result.length() > 0);
 	}
 
 }

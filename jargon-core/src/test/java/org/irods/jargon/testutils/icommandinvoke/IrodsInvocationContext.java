@@ -27,7 +27,7 @@ public class IrodsInvocationContext {
 		return irodsResource;
 	}
 
-	public void setIrodsResource(String irodsResource) {
+	public void setIrodsResource(final String irodsResource) {
 		this.irodsResource = irodsResource;
 	}
 
@@ -35,7 +35,7 @@ public class IrodsInvocationContext {
 		return irodsScratchDir;
 	}
 
-	public void setIrodsScratchDir(String irodsScratchDir) {
+	public void setIrodsScratchDir(final String irodsScratchDir) {
 		this.irodsScratchDir = irodsScratchDir;
 	}
 
@@ -50,7 +50,7 @@ public class IrodsInvocationContext {
 	 * @param irodsHost
 	 *            the irodsHost to set
 	 */
-	public void setIrodsHost(String irodsHost) {
+	public void setIrodsHost(final String irodsHost) {
 		this.irodsHost = irodsHost;
 	}
 
@@ -65,7 +65,7 @@ public class IrodsInvocationContext {
 	 * @param irodsPort
 	 *            the irodsPort to set
 	 */
-	public void setIrodsPort(int irodsPort) {
+	public void setIrodsPort(final int irodsPort) {
 		this.irodsPort = irodsPort;
 	}
 
@@ -80,7 +80,7 @@ public class IrodsInvocationContext {
 	 * @param irodsZone
 	 *            the irodsZone to set
 	 */
-	public void setIrodsZone(String irodsZone) {
+	public void setIrodsZone(final String irodsZone) {
 		this.irodsZone = irodsZone;
 	}
 
@@ -95,7 +95,7 @@ public class IrodsInvocationContext {
 	 * @param localWorkingDirectory
 	 *            the localWorkingDirectory to set
 	 */
-	public void setLocalWorkingDirectory(String localWorkingDirectory) {
+	public void setLocalWorkingDirectory(final String localWorkingDirectory) {
 		this.localWorkingDirectory = localWorkingDirectory;
 	}
 
@@ -110,7 +110,7 @@ public class IrodsInvocationContext {
 	 * @param irodsUser
 	 *            the irodsUser to set
 	 */
-	public void setIrodsUser(String irodsUser) {
+	public void setIrodsUser(final String irodsUser) {
 		this.irodsUser = irodsUser;
 	}
 
@@ -125,7 +125,7 @@ public class IrodsInvocationContext {
 	 * @param irodsPassword
 	 *            the irodsPassword to set
 	 */
-	public void setIrodsPassword(String irodsPassword) {
+	public void setIrodsPassword(final String irodsPassword) {
 		this.irodsPassword = irodsPassword;
 	}
 

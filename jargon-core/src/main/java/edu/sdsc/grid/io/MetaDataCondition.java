@@ -502,7 +502,6 @@ public final class MetaDataCondition {
 		}
 
 		this.field = field;
-		this.values = new Object[values.length];
 		this.values = values;
 		type = MetaDataField.STRING;
 		style = ENUM;

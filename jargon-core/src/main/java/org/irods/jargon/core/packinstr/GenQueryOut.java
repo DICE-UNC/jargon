@@ -1,6 +1,5 @@
 package org.irods.jargon.core.packinstr;
 
-
 public class GenQueryOut {
 
 	public static final int MAX_SQL_ATTR = 50;

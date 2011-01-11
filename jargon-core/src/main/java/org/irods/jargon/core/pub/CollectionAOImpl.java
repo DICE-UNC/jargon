@@ -319,7 +319,7 @@ public final class CollectionAOImpl extends IRODSGenericAO implements
 		query.append(WHERE);
 		boolean previousElement = false;
 		@SuppressWarnings("unused")
-		StringBuilder queryCondition = null;
+		StringBuilder queryCondition;
 
 		for (AVUQueryElement queryElement : avuQuery) {
 
@@ -493,7 +493,7 @@ public final class CollectionAOImpl extends IRODSGenericAO implements
 		query.append(WHERE);
 		boolean previousElement = false;
 		@SuppressWarnings("unused")
-		StringBuilder queryCondition = null;
+		StringBuilder queryCondition;
 
 		for (AVUQueryElement queryElement : avuQuery) {
 

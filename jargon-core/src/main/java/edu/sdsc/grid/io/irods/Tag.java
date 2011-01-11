@@ -248,7 +248,7 @@ public class Tag implements Cloneable {
 			Tag newTag = (Tag) obj;
 			if (newTag.getName().equals(tagName)) {
 				if (newTag.getValue().equals(value)) {
-					if (newTag.getTags().equals(tags)) {
+					if (newTag.getTags() == tags) {
 						return true;
 					}
 				}

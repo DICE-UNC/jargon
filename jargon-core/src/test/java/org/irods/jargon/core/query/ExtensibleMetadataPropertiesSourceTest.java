@@ -1,6 +1,6 @@
 package org.irods.jargon.core.query;
 
-import junit.framework.TestCase;
+import junit.framework.Assert;
 
 import org.irods.jargon.core.exception.JargonException;
 import org.junit.AfterClass;
@@ -20,10 +20,9 @@ public class ExtensibleMetadataPropertiesSourceTest {
 	@Test
 	public void testCreateInstance() throws Exception {
 		ExtensibleMetaDataSource source = new ExtensibleMetadataPropertiesSource();
-		TestCase
-				.assertNotNull(
-						"null extensible metadata source, some creation problem occurred",
-						source);
+		Assert.assertNotNull(
+				"null extensible metadata source, some creation problem occurred",
+				source);
 	}
 
 	@Test
@@ -31,20 +30,18 @@ public class ExtensibleMetadataPropertiesSourceTest {
 		ExtensibleMetaDataSource source = new ExtensibleMetadataPropertiesSource();
 		ExtensibleMetaDataMapping mapping = source
 				.generateExtensibleMetaDataMapping();
-		TestCase.assertNotNull(mapping);
+		Assert.assertNotNull(mapping);
 	}
 
 	@Test(expected = JargonException.class)
 	public void testCreateInstanceFromNullProperties() throws Exception {
-		ExtensibleMetaDataSource source = new ExtensibleMetadataPropertiesSource(
-				null);
+		new ExtensibleMetadataPropertiesSource(null);
 
 	}
 
 	@Test(expected = JargonException.class)
 	public void testCreateInstanceFromBlankProperties() throws Exception {
-		ExtensibleMetaDataSource source = new ExtensibleMetadataPropertiesSource(
-				"");
+		new ExtensibleMetadataPropertiesSource("");
 
 	}
 
@@ -52,8 +49,7 @@ public class ExtensibleMetadataPropertiesSourceTest {
 	public void testCreateInstanceFromMissingTestProperties() throws Exception {
 		ExtensibleMetaDataSource source = new ExtensibleMetadataPropertiesSource(
 				"i_dont_exist.properties");
-		ExtensibleMetaDataMapping mapping = source
-				.generateExtensibleMetaDataMapping();
+		source.generateExtensibleMetaDataMapping();
 	}
 
 	@Test
@@ -64,7 +60,7 @@ public class ExtensibleMetadataPropertiesSourceTest {
 		ExtensibleMetaDataMapping mapping = source
 				.generateExtensibleMetaDataMapping();
 		String colName1 = mapping.getColumnNameFromIndex("10001");
-		TestCase.assertEquals("COL_TEST_ID", colName1);
+		Assert.assertEquals("COL_TEST_ID", colName1);
 	}
 
 }

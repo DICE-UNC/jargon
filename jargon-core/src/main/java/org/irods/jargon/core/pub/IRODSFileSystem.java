@@ -45,12 +45,18 @@ import org.slf4j.LoggerFactory;
  * close method contained in the <code>IRODSFileSystem</code> object. Please
  * consult the method documentation of this class for various close options.
  * <p/>
- * It is important to note that the <code>IRODSFileSystem</code> is not created multiple times in typical usage. The proper technique is to
- * create the <code>IRODSFileSystem</code>, and place it in a shared context (such as in the ApplicationContext of a servlet application, use a shared
- * reference, or wrap this object in a singleton for lookup.  The JUnit tests can be somewhat misleading in terms of proper usage.  The object is safe to share between
- * multiple threads.  The underlying connections are tied to a <code>ThreadLocal</code>, such that they are not shared between threads. This <code>IRODSFileSystem</code> object
- * does hold shared instances of objects that manage connections, and these objects are intended to manage the creation of connections across the entire application.  The shared objects are designed to
- * manage these connections across multiple threads.  
+ * It is important to note that the <code>IRODSFileSystem</code> is not created
+ * multiple times in typical usage. The proper technique is to create the
+ * <code>IRODSFileSystem</code>, and place it in a shared context (such as in
+ * the ApplicationContext of a servlet application, use a shared reference, or
+ * wrap this object in a singleton for lookup. The JUnit tests can be somewhat
+ * misleading in terms of proper usage. The object is safe to share between
+ * multiple threads. The underlying connections are tied to a
+ * <code>ThreadLocal</code>, such that they are not shared between threads. This
+ * <code>IRODSFileSystem</code> object does hold shared instances of objects
+ * that manage connections, and these objects are intended to manage the
+ * creation of connections across the entire application. The shared objects are
+ * designed to manage these connections across multiple threads.
  * <p/>
  * 
  * @author Mike Conway - DICE (www.irods.org)

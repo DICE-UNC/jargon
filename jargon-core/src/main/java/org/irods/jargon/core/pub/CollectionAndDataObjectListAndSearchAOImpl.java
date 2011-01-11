@@ -393,17 +393,20 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		return files;
 
 	}
-	
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.pub.CollectionAndDataObjectListAndSearchAO#searchDataObjectsBasedOnName(java.lang.String)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.pub.CollectionAndDataObjectListAndSearchAO#
+	 * searchDataObjectsBasedOnName(java.lang.String)
 	 */
 	@Override
 	public List<CollectionAndDataObjectListingEntry> searchDataObjectsBasedOnName(
-			final String searchTerm)
-			throws JargonException {
+			final String searchTerm) throws JargonException {
 		return searchDataObjectsBasedOnName(searchTerm, 0);
-	
+
 	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -460,28 +463,30 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		return entries;
 
 	}
-	
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.pub.CollectionAndDataObjectListAndSearchAO#searchCollectionsAndDataObjectsBasedOnName(java.lang.String)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.pub.CollectionAndDataObjectListAndSearchAO#
+	 * searchCollectionsAndDataObjectsBasedOnName(java.lang.String)
 	 */
 	@Override
 	public List<CollectionAndDataObjectListingEntry> searchCollectionsAndDataObjectsBasedOnName(
-			final String searchTerm)
-			throws JargonException {
-		
-		LOG.info("searchCollectionsAndDataObjectsBasedOnName for search term:{}, starting with collections", searchTerm);
+			final String searchTerm) throws JargonException {
+
+		LOG.info(
+				"searchCollectionsAndDataObjectsBasedOnName for search term:{}, starting with collections",
+				searchTerm);
 		List<CollectionAndDataObjectListingEntry> entries = searchCollectionsBasedOnName(searchTerm);
 		LOG.info("adding data objects to search results");
 		List<CollectionAndDataObjectListingEntry> dataObjectEntries = searchDataObjectsBasedOnName(searchTerm);
-		
+
 		for (CollectionAndDataObjectListingEntry entry : dataObjectEntries) {
 			entries.add(entry);
 		}
-		
+
 		return entries;
-		
+
 	}
 
-	
-	
 }

@@ -3,13 +3,10 @@
  */
 package org.irods.jargon.testutils.icommandinvoke.icommands;
 
-import static org.irods.jargon.testutils.TestingPropertiesHelper.*;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import org.irods.jargon.testutils.icommandinvoke.IcommandException;
-import static org.irods.jargon.testutils.TestingPropertiesHelper.*;
 
 /**
  * Build an irepl command using the given properties for invocation by an
@@ -27,7 +24,7 @@ public class IreplCommand implements Icommand {
 		return objectToReplicate;
 	}
 
-	public void setObjectToReplicate(String objectToReplicate) {
+	public void setObjectToReplicate(final String objectToReplicate) {
 		this.objectToReplicate = objectToReplicate;
 	}
 
@@ -35,7 +32,7 @@ public class IreplCommand implements Icommand {
 		return destResource;
 	}
 
-	public void setDestResource(String destResource) {
+	public void setDestResource(final String destResource) {
 		this.destResource = destResource;
 	}
 
@@ -46,6 +43,7 @@ public class IreplCommand implements Icommand {
 	 * 
 	 * @see org.irods.jargon.icommandinvoke.icommands.Icommand#buildCommand()
 	 */
+	@Override
 	public List<String> buildCommand() throws IcommandException {
 		if (objectToReplicate == null || objectToReplicate.length() <= 0) {
 			throw new IcommandException(

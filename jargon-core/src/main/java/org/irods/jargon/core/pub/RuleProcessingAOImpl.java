@@ -12,6 +12,7 @@ import static org.irods.jargon.core.packinstr.ExecMyRuleInp.STR_PI;
 import static org.irods.jargon.core.packinstr.ExecMyRuleInp.TYPE;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -186,17 +187,14 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements
 		LOG.debug("value: {}", value);
 		LOG.debug("tag: {}", msParam.getStringValue());
 
-		final IRODSRuleExecResultOutputParameter.OutputParamType paramType;
-
 		// FIXME: mcc, check out the intent here
 		if (type.equals(EXEC_CMD_OUT_PI)) {
-			paramType = IRODSRuleExecResultOutputParameter.OutputParamType.RULE_EXEC_OUT;
 		}
 
 		return IRODSRuleExecResultOutputParameter.instance(label,
 				IRODSRuleExecResultOutputParameter.OutputParamType.STRING,
 				value);
-		
+
 	}
 
 	/**

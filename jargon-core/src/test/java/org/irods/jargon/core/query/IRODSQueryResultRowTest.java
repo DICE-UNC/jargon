@@ -1,15 +1,17 @@
 package org.irods.jargon.core.query;
 
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import junit.framework.TestCase;
+import junit.framework.Assert;
 
 import org.irods.jargon.core.exception.JargonException;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import static org.mockito.Mockito.*;
 
 public class IRODSQueryResultRowTest {
 
@@ -50,7 +52,7 @@ public class IRODSQueryResultRowTest {
 
 		IRODSQueryResultRow resultRow = IRODSQueryResultRow.instance(
 				resultColumns, query);
-		TestCase.assertNotNull("no result row created", resultRow);
+		Assert.assertNotNull("no result row created", resultRow);
 
 	}
 
@@ -73,9 +75,7 @@ public class IRODSQueryResultRowTest {
 
 		TranslatedIRODSQuery query = mock(TranslatedIRODSQuery.class);
 		when(query.getSelectFields()).thenReturn(selectFields);
-		@SuppressWarnings("unused")
-		IRODSQueryResultRow resultRow = IRODSQueryResultRow.instance(null,
-				query);
+		IRODSQueryResultRow.instance(null, query);
 
 	}
 
@@ -86,9 +86,7 @@ public class IRODSQueryResultRowTest {
 		resultColumns.add(RodsGenQueryEnum.COL_AUDIT_ACTION_ID.getName());
 		resultColumns.add(RodsGenQueryEnum.COL_AUDIT_COMMENT.getName());
 		resultColumns.add(RodsGenQueryEnum.COL_AUDIT_CREATE_TIME.getName());
-		@SuppressWarnings("unused")
-		IRODSQueryResultRow resultRow = IRODSQueryResultRow.instance(
-				resultColumns, null);
+		IRODSQueryResultRow.instance(resultColumns, null);
 
 	}
 
@@ -120,7 +118,7 @@ public class IRODSQueryResultRowTest {
 		IRODSQueryResultRow resultRow = IRODSQueryResultRow.instance(
 				resultColumns, query);
 		String actualColumn = resultRow.getColumn(0);
-		TestCase.assertEquals("did not get expected column",
+		Assert.assertEquals("did not get expected column",
 				RodsGenQueryEnum.COL_AUDIT_ACTION_ID.getName(), actualColumn);
 
 	}
@@ -185,7 +183,7 @@ public class IRODSQueryResultRowTest {
 				resultColumns, query);
 		String actualColumn = resultRow
 				.getColumn(RodsGenQueryEnum.COL_AUDIT_ACTION_ID.getName());
-		TestCase.assertEquals("did not get expected column",
+		Assert.assertEquals("did not get expected column",
 				RodsGenQueryEnum.COL_AUDIT_ACTION_ID.getName(), actualColumn);
 
 	}

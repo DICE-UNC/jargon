@@ -1,6 +1,6 @@
 package org.irods.jargon.core.packinstr;
 
-import junit.framework.TestCase;
+import junit.framework.Assert;
 
 import org.irods.jargon.core.rule.IRODSRule;
 import org.irods.jargon.core.rule.IRODSRuleTranslator;
@@ -17,10 +17,13 @@ public class ExecMyRuleInp_PITest {
 	public void testInstance() throws Exception {
 		String ruleString = "List Available MS||msiListEnabledMS(*KVPairs)##writeKeyValPairs(stdout,*KVPairs, \": \")|nop\nnull\n ruleExecOut";
 		IRODSRuleTranslator irodsRuleTranslator = new IRODSRuleTranslator();
-		IRODSRule irodsRule = irodsRuleTranslator.translatePlainTextRuleIntoIRODSRule(ruleString);
+		IRODSRule irodsRule = irodsRuleTranslator
+				.translatePlainTextRuleIntoIRODSRule(ruleString);
 		ExecMyRuleInp rulePI = ExecMyRuleInp.instance(irodsRule);
-		TestCase.assertNotNull("basic check fails, null returned from PI initializer", rulePI);
-		TestCase.assertEquals("api number not set", ExecMyRuleInp.RULE_API_NBR, rulePI.getApiNumber());
+		Assert.assertNotNull(
+				"basic check fails, null returned from PI initializer", rulePI);
+		Assert.assertEquals("api number not set", ExecMyRuleInp.RULE_API_NBR,
+				rulePI.getApiNumber());
 
 	}
 
@@ -28,10 +31,11 @@ public class ExecMyRuleInp_PITest {
 	public void testGetParsedTags() throws Exception {
 		String ruleString = "List Available MS||msiListEnabledMS(*KVPairs)##writeKeyValPairs(stdout,*KVPairs, \": \")|nop\nnull\n ruleExecOut";
 		IRODSRuleTranslator irodsRuleTranslator = new IRODSRuleTranslator();
-		IRODSRule irodsRule = irodsRuleTranslator.translatePlainTextRuleIntoIRODSRule(ruleString);
+		IRODSRule irodsRule = irodsRuleTranslator
+				.translatePlainTextRuleIntoIRODSRule(ruleString);
 		ExecMyRuleInp rulePI = ExecMyRuleInp.instance(irodsRule);
 		String outputXML = rulePI.getParsedTags();
-		
+
 		StringBuilder sb = new StringBuilder();
 		sb.append("<ExecMyRuleInp_PI><myRule>List Available MS||msiListEnabledMS(*KVPairs)##writeKeyValPairs(stdout,*KVPairs, &quot;: &quot;)|nop</myRule>\n");
 		sb.append("<RHostAddr_PI><hostAddr></hostAddr>\n");
@@ -52,21 +56,22 @@ public class ExecMyRuleInp_PITest {
 		sb.append("</MsParamArray_PI>\n");
 		sb.append("</ExecMyRuleInp_PI>\n");
 		String expectedXML = sb.toString();
-		
+
 		// get rid of unique variable name which messes up the equals
 		int i = outputXML.indexOf("<label>") + 7;
 		int j = outputXML.indexOf("</label>");
-		
+
 		StringBuilder newActual = new StringBuilder();
 		newActual.append(outputXML.substring(0, i));
 		newActual.append(outputXML.substring(j));
 		String newActualString = newActual.toString();
-		TestCase.assertEquals("did not get expected XML from PI", expectedXML, newActualString);
+		Assert.assertEquals("did not get expected XML from PI", expectedXML,
+				newActualString);
 	}
-	
+
 	@Test
 	public void testGetParsedTagsWithInput() throws Exception {
-		
+
 		String testFileName = "/this/is/only/a/test";
 		StringBuilder ruleBuilder = new StringBuilder();
 		ruleBuilder
@@ -77,10 +82,11 @@ public class ExecMyRuleInp_PITest {
 		ruleBuilder.append("*Action%*Condition%*Operation%*C%ruleExecOut");
 		String ruleString = ruleBuilder.toString();
 		IRODSRuleTranslator irodsRuleTranslator = new IRODSRuleTranslator();
-		IRODSRule irodsRule = irodsRuleTranslator.translatePlainTextRuleIntoIRODSRule(ruleString);
+		IRODSRule irodsRule = irodsRuleTranslator
+				.translatePlainTextRuleIntoIRODSRule(ruleString);
 		ExecMyRuleInp rulePI = ExecMyRuleInp.instance(irodsRule);
 		String outputXML = rulePI.getParsedTags();
-		
+
 		StringBuilder sb = new StringBuilder();
 		sb.append("<ExecMyRuleInp_PI><myRule>myTestRule||acGetIcatResults(*Action,*Condition,*B)##forEachExec(*B,msiGetValByKey(*B,RESC_LOC,*R)##remoteExec(*R,null,msiDataObjChksum(*B,*Operation,*C),nop)##msiGetValByKey(*B,DATA_NAME,*D)##msiGetValByKey(*B,COLL_NAME,*E)##writeLine(stdout,CheckSum of *E/*D at *R is *C),nop)|nop##nop</myRule>\n");
 		sb.append("<RHostAddr_PI><hostAddr></hostAddr>\n");
@@ -112,26 +118,26 @@ public class ExecMyRuleInp_PITest {
 		sb.append("</ExecMyRuleInp_PI>\n");
 
 		String expectedXML = sb.toString();
-		TestCase.assertEquals("did not get expected XML from PI", expectedXML, outputXML);
+		Assert.assertEquals("did not get expected XML from PI", expectedXML,
+				outputXML);
 	}
-	
+
 	@Test
 	public void testGetParsedTagsWithConditionalInInput() throws Exception {
-		
-		String testFileName = "/this/is/only/a/test";
+
 		StringBuilder builder = new StringBuilder();
-		builder
-				.append("testExecReturnArray||msiMakeGenQuery(\"RESC_NAME, RESC_LOC\",*Condition,*GenQInp)##msiExecGenQuery(*GenQInp, *GenQOut)|nop\n");
+		builder.append("testExecReturnArray||msiMakeGenQuery(\"RESC_NAME, RESC_LOC\",*Condition,*GenQInp)##msiExecGenQuery(*GenQInp, *GenQOut)|nop\n");
 		builder.append("*Condition=RESC_NAME > 'a'\n");
 		builder.append("*GenQOut");
 		String ruleString = builder.toString();
 		IRODSRuleTranslator irodsRuleTranslator = new IRODSRuleTranslator();
-		IRODSRule irodsRule = irodsRuleTranslator.translatePlainTextRuleIntoIRODSRule(ruleString);
+		IRODSRule irodsRule = irodsRuleTranslator
+				.translatePlainTextRuleIntoIRODSRule(ruleString);
 		ExecMyRuleInp rulePI = ExecMyRuleInp.instance(irodsRule);
 		String outputXML = rulePI.getParsedTags();
-		
+
 		StringBuilder sb = new StringBuilder();
-		
+
 		sb.append("<ExecMyRuleInp_PI><myRule>testExecReturnArray||msiMakeGenQuery(&quot;RESC_NAME, RESC_LOC&quot;,*Condition,*GenQInp)##msiExecGenQuery(*GenQInp, *GenQOut)|nop</myRule>\n");
 		sb.append("<RHostAddr_PI><hostAddr></hostAddr>\n");
 		sb.append("<rodsZone></rodsZone>\n");
@@ -150,59 +156,16 @@ public class ExecMyRuleInp_PITest {
 		sb.append("</MsParam_PI>\n");
 		sb.append("</MsParamArray_PI>\n");
 		sb.append("</ExecMyRuleInp_PI>\n");
-		
-		String expectedXML = sb.toString();
-		TestCase.assertEquals("did not get expected XML from PI", expectedXML, outputXML);
-	}
-			
-			
-			
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
 
-			//331  [main] INFO  edu.sdsc.grid.io.irods.IRODSConnection  createHeader 574- functionID: 625
-	
-	
-	
-	
-	
-	
-	//284  [main] INFO  edu.sdsc.grid.io.irods.IRODSConnection  createHeader 574- functionID: 625
+		String expectedXML = sb.toString();
+		Assert.assertEquals("did not get expected XML from PI", expectedXML,
+				outputXML);
+	}
+
+	// 331 [main] INFO edu.sdsc.grid.io.irods.IRODSConnection createHeader 574-
+	// functionID: 625
+
+	// 284 [main] INFO edu.sdsc.grid.io.irods.IRODSConnection createHeader 574-
+	// functionID: 625
 
 }

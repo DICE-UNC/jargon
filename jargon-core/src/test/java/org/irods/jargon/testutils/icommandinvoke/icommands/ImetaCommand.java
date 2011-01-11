@@ -24,7 +24,7 @@ public abstract class ImetaCommand implements Icommand {
 		return objectPath;
 	}
 
-	public void setObjectPath(String objectPath) {
+	public void setObjectPath(final String objectPath) {
 		this.objectPath = objectPath;
 	}
 
@@ -32,7 +32,7 @@ public abstract class ImetaCommand implements Icommand {
 		return metaObjectType;
 	}
 
-	public void setMetaObjectType(MetaObjectType metaObjectType) {
+	public void setMetaObjectType(final MetaObjectType metaObjectType) {
 		this.metaObjectType = metaObjectType;
 	}
 
@@ -44,8 +44,8 @@ public abstract class ImetaCommand implements Icommand {
 	 *         (e.g. -d, -C)
 	 * @throws IcommandException
 	 */
-	public String translateMetaObjectTypeToString(MetaObjectType metaObjectType)
-			throws IcommandException {
+	public String translateMetaObjectTypeToString(
+			final MetaObjectType metaObjectType) throws IcommandException {
 		String stringMeta;
 		switch (metaObjectType) {
 		case COLLECTION_META:

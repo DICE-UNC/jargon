@@ -62,7 +62,8 @@ public class JargonException extends Exception {
 		this.underlyingIRODSExceptionCode = underlyingIRODSExceptionCode;
 	}
 
-	public JargonException(String message, int underlyingIRODSExceptionCode) {
+	public JargonException(final String message,
+			final int underlyingIRODSExceptionCode) {
 		super(message);
 		this.underlyingIRODSExceptionCode = underlyingIRODSExceptionCode;
 	}

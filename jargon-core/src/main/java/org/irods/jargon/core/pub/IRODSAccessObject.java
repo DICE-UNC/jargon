@@ -7,7 +7,7 @@ import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSCommands;
 import org.irods.jargon.core.connection.IRODSServerProperties;
 import org.irods.jargon.core.connection.IRODSSession;
-import org.irods.jargon.core.connection.JargonProperites;
+import org.irods.jargon.core.connection.JargonProperties;
 import org.irods.jargon.core.exception.JargonException;
 
 /**
@@ -16,7 +16,7 @@ import org.irods.jargon.core.exception.JargonException;
  * 
  * @author Mike Conway - DICE (www.irods.org)
  */
-public interface IRODSAccessObject  {
+public interface IRODSAccessObject {
 
 	IRODSCommands getIRODSProtocol() throws JargonException;
 
@@ -39,19 +39,24 @@ public interface IRODSAccessObject  {
 	IRODSServerProperties getIRODSServerProperties() throws JargonException;
 
 	/**
-	 * Convenience method gets configuration information that tunes Jargon behavior
+	 * Convenience method gets configuration information that tunes Jargon
+	 * behavior
+	 * 
 	 * @return {@link JargonProperties}
 	 */
-	JargonProperites getJargonProperties();
+	JargonProperties getJargonProperties();
 
 	/**
 	 * Get the <code>IRODSAccount</code> that describes the connection.
+	 * 
 	 * @return {@link IRODSAccount}
 	 */
 	IRODSAccount getIrodsAccount();
 
 	/**
-	 * Get the <code>IRODSSession</code> that provides connections to the iRODS server.
+	 * Get the <code>IRODSSession</code> that provides connections to the iRODS
+	 * server.
+	 * 
 	 * @return {@link IRODSSession}
 	 */
 	IRODSSession getIrodsSession();

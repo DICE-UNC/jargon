@@ -1,7 +1,6 @@
 package org.irods.jargon.core.packinstr;
 
 import junit.framework.Assert;
-import junit.framework.TestCase;
 
 import org.irods.jargon.core.exception.JargonException;
 import org.junit.Test;
@@ -68,11 +67,36 @@ public class ExecCmdTest {
 		String actualXML = execCmd.getParsedTags();
 
 		StringBuilder sb = new StringBuilder();
+		sb.append("<ExecCmd241_PI><cmd>hello</cmd>\n");
+		sb.append("<cmdArgv></cmdArgv>\n");
+		sb.append("<execAddr></execAddr>\n");
+		sb.append("<hintPath></hintPath>\n");
+		sb.append("<addPathToArgv>0</addPathToArgv>\n");
+		sb.append("<KeyValPair_PI><ssLen>0</ssLen>\n");
+		sb.append("</KeyValPair_PI>\n");
+		sb.append("</ExecCmd241_PI>\n");
+
+		String expectedXML = sb.toString();
+
+		Assert.assertEquals("did not get expected XML from PI", expectedXML,
+				actualXML);
+	}
+	
+	@Test
+	public void testGetParsedTagsNewerAPI() throws Exception {
+		String cmd = "hello";
+		String args = "";
+
+		ExecCmd execCmd = ExecCmd.instanceWithCommandUsingAlignedAPI(cmd, args);   
+		String actualXML = execCmd.getParsedTags();
+
+		StringBuilder sb = new StringBuilder();
 		sb.append("<ExecCmd_PI><cmd>hello</cmd>\n");
 		sb.append("<cmdArgv></cmdArgv>\n");
 		sb.append("<execAddr></execAddr>\n");
 		sb.append("<hintPath></hintPath>\n");
 		sb.append("<addPathToArgv>0</addPathToArgv>\n");
+		sb.append("<dummy>0</dummy>\n");
 		sb.append("<KeyValPair_PI><ssLen>0</ssLen>\n");
 		sb.append("</KeyValPair_PI>\n");
 		sb.append("</ExecCmd_PI>\n");
@@ -82,6 +106,7 @@ public class ExecCmdTest {
 		Assert.assertEquals("did not get expected XML from PI", expectedXML,
 				actualXML);
 	}
+
 
 	@Test
 	public void testGetParsedTagsWithStreaming() throws Exception {
@@ -109,8 +134,10 @@ public class ExecCmdTest {
 
 		Assert.assertEquals("did not get expected XML from PI", expectedXML,
 				actualXML);
-		
-		TestCase.assertEquals("did not set streaming api nbr", ExecCmd.EXEC_AND_STREAM_RESPONSE_API_NBR, execCmd.getApiNumber());
+
+		Assert.assertEquals("did not set streaming api nbr",
+				ExecCmd.EXEC_AND_STREAM_RESPONSE_API_NBR,
+				execCmd.getApiNumber());
 
 	}
 

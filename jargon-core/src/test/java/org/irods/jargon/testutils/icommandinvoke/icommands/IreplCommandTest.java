@@ -3,9 +3,12 @@
  */
 package org.irods.jargon.testutils.icommandinvoke.icommands;
 
+import static org.irods.jargon.testutils.TestingPropertiesHelper.IRODS_RESOURCE_KEY;
+import static org.irods.jargon.testutils.TestingPropertiesHelper.IRODS_SECONDARY_RESOURCE_KEY;
+
 import java.util.Properties;
 
-import junit.framework.TestCase;
+import junit.framework.Assert;
 
 import org.irods.jargon.testutils.IRODSTestSetupUtilities;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
@@ -18,7 +21,6 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import static org.irods.jargon.testutils.TestingPropertiesHelper.*;
 
 /**
  * @author Mike Conway, DICE (www.irods.org)
@@ -106,10 +108,10 @@ public class IreplCommandTest {
 		ilsCommand.setLongFormat(true);
 		String ilsResult = invoker
 				.invokeCommandAndGetResultAsString(ilsCommand);
-		TestCase.assertTrue("did not find first resource",
+		Assert.assertTrue("did not find first resource",
 				ilsResult.indexOf(testingProperties
 						.getProperty(IRODS_RESOURCE_KEY)) > -1);
-		TestCase.assertTrue("did not find replicated resource", ilsResult
+		Assert.assertTrue("did not find replicated resource", ilsResult
 				.indexOf(testingProperties
 						.getProperty(IRODS_SECONDARY_RESOURCE_KEY)) > -1);
 

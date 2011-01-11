@@ -2,7 +2,7 @@ package org.irods.jargon.core.rule;
 
 import java.util.ArrayList;
 
-import junit.framework.TestCase;
+import junit.framework.Assert;
 
 import org.irods.jargon.core.exception.JargonException;
 import org.junit.AfterClass;
@@ -24,7 +24,7 @@ public class IRODSRuleTest {
 		IRODSRule irodsRule = IRODSRule.instance("x",
 				new ArrayList<IRODSRuleParameter>(),
 				new ArrayList<IRODSRuleParameter>(), "yyy");
-		TestCase.assertNotNull("no return from initializer", irodsRule);
+		Assert.assertNotNull("no return from initializer", irodsRule);
 	}
 
 	@Test(expected = JargonException.class)

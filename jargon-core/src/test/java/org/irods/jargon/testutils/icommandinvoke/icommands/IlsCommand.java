@@ -19,7 +19,7 @@ public class IlsCommand implements Icommand {
 		return longFormat;
 	}
 
-	public void setLongFormat(boolean longFormat) {
+	public void setLongFormat(final boolean longFormat) {
 		this.longFormat = longFormat;
 	}
 
@@ -27,7 +27,7 @@ public class IlsCommand implements Icommand {
 		return ilsBasePath;
 	}
 
-	public void setIlsBasePath(String ilsBasePath) {
+	public void setIlsBasePath(final String ilsBasePath) {
 		this.ilsBasePath = ilsBasePath;
 	}
 
@@ -36,6 +36,7 @@ public class IlsCommand implements Icommand {
 	 * 
 	 * @see org.irods.jargon.icommandinvoke.icommands.Icommand#buildCommand()
 	 */
+	@Override
 	public List<String> buildCommand() {
 		List<String> commandProps = new ArrayList<String>();
 		commandProps.add("ils");

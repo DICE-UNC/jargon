@@ -1,14 +1,11 @@
 package org.irods.jargon.core.connection;
 
-import static org.junit.Assert.*;
-
 import java.util.Properties;
 
-import junit.framework.TestCase;
+import junit.framework.Assert;
 
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
-import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -29,8 +26,7 @@ public class ConnectionProxyDefinitionTest {
 				.buildIRODSAccountFromTestProperties(testingProperties);
 		ConnectionProxyDefinition def = ConnectionProxyDefinition.instance(
 				"role", irodsAccount);
-		TestCase.assertNotNull("null connection proxy from instance method",
-				def);
+		Assert.assertNotNull("null connection proxy from instance method", def);
 	}
 
 	@Test(expected = JargonException.class)
@@ -43,15 +39,13 @@ public class ConnectionProxyDefinitionTest {
 	public final void testConnectionProxyDefinitionNullRole() throws Exception {
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		ConnectionProxyDefinition def = ConnectionProxyDefinition.instance(
-				null, irodsAccount);
+		ConnectionProxyDefinition.instance(null, irodsAccount);
 	}
 
 	@Test(expected = JargonException.class)
 	public final void testConnectionProxyDefinitionBlankRole() throws Exception {
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		ConnectionProxyDefinition def = ConnectionProxyDefinition.instance("",
-				irodsAccount);
+		ConnectionProxyDefinition.instance("", irodsAccount);
 	}
 }

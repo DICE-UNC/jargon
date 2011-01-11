@@ -7,18 +7,16 @@ import java.io.ByteArrayOutputStream;
 import java.util.Properties;
 
 import junit.framework.Assert;
-import junit.framework.TestCase;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSProtocolManager;
 import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.connection.IRODSSimpleProtocolManager;
-import org.irods.jargon.core.pub.IRODSAccessObjectFactoryImpl;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
+import org.irods.jargon.core.pub.IRODSAccessObjectFactoryImpl;
 import org.irods.jargon.testutils.AssertionHelper;
 import org.irods.jargon.testutils.IRODSTestSetupUtilities;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
-import org.irods.jargon.testutils.filemanip.FileGenerator;
 import org.irods.jargon.testutils.filemanip.ScratchFileUtils;
 import org.irods.jargon.testutils.icommandinvoke.IcommandInvoker;
 import org.irods.jargon.testutils.icommandinvoke.IrodsInvocationContext;
@@ -121,11 +119,10 @@ public class SessionClosingIRODSFIleInputStreamTest {
 			actualFileContents.write(readBytes);
 			bytesRead++;
 		}
-		
+
 		fis.close();
 
-		Assert
-				.assertEquals("whole file not read back", fileLength, bytesRead);
+		Assert.assertEquals("whole file not read back", fileLength, bytesRead);
 	}
 
 }

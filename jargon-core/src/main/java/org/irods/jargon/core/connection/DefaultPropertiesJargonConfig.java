@@ -16,7 +16,7 @@ import org.irods.jargon.core.exception.JargonException;
  * @author Mike Conway - DICE (www.irods.org)
  * 
  */
-public class DefaultPropertiesJargonConfig implements JargonProperites {
+public class DefaultPropertiesJargonConfig implements JargonProperties {
 
 	private final Properties jargonProperties;
 
@@ -46,8 +46,11 @@ public class DefaultPropertiesJargonConfig implements JargonProperites {
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.connection.JargonProperites#isUseParallelTransfer()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.connection.JargonProperites#isUseParallelTransfer()
 	 */
 	@Override
 	public boolean isUseParallelTransfer() throws JargonException {
@@ -55,8 +58,11 @@ public class DefaultPropertiesJargonConfig implements JargonProperites {
 		return Boolean.valueOf(propVal);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.connection.JargonProperites#getMaxParallelThreads()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.connection.JargonProperites#getMaxParallelThreads()
 	 */
 	@Override
 	public int getMaxParallelThreads() throws JargonException {

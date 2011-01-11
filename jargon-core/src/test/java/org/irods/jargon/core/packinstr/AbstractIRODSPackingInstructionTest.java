@@ -6,7 +6,7 @@ package org.irods.jargon.core.packinstr;
 import java.util.ArrayList;
 import java.util.List;
 
-import junit.framework.TestCase;
+import junit.framework.Assert;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -51,8 +51,8 @@ public class AbstractIRODSPackingInstructionTest {
 		kvps.add(KeyValuePair.instance("testkey", "testvalue"));
 		Tag tag = dataObjInp.createKeyValueTag(kvps);
 		String expectedValue = "<KeyValPair_PI><ssLen>1</ssLen>\n<keyWord>testkey</keyWord>\n<svalue>testvalue</svalue>\n</KeyValPair_PI>\n";
-		TestCase.assertEquals("unexpected tag generated for kvp",
-				expectedValue, tag.parseTag());
+		Assert.assertEquals("unexpected tag generated for kvp", expectedValue,
+				tag.parseTag());
 	}
 
 	/**
@@ -72,8 +72,8 @@ public class AbstractIRODSPackingInstructionTest {
 		kvps.add(KeyValuePair.instance("testkey2", "testvalue2"));
 		Tag tag = dataObjInp.createKeyValueTag(kvps);
 		String expectedValue = "<KeyValPair_PI><ssLen>2</ssLen>\n<keyWord>testkey</keyWord>\n<keyWord>testkey2</keyWord>\n<svalue>testvalue</svalue>\n<svalue>testvalue2</svalue>\n</KeyValPair_PI>\n";
-		TestCase.assertEquals("unexpected tag generated for kvp",
-				expectedValue, tag.parseTag());
+		Assert.assertEquals("unexpected tag generated for kvp", expectedValue,
+				tag.parseTag());
 	}
 
 	/**
@@ -91,7 +91,7 @@ public class AbstractIRODSPackingInstructionTest {
 		List<KeyValuePair> kvps = new ArrayList<KeyValuePair>();
 		Tag tag = dataObjInp.createKeyValueTag(kvps);
 		String expectedValue = "<KeyValPair_PI><ssLen>0</ssLen>\n</KeyValPair_PI>\n";
-		TestCase.assertEquals("unexpected tag generated for kvp",
-				expectedValue, tag.parseTag());
+		Assert.assertEquals("unexpected tag generated for kvp", expectedValue,
+				tag.parseTag());
 	}
 }

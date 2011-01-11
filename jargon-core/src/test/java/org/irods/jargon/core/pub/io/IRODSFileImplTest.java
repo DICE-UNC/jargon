@@ -9,6 +9,7 @@ import java.io.File;
 import java.net.URI;
 import java.util.Properties;
 
+import junit.framework.Assert;
 import junit.framework.TestCase;
 
 import org.irods.jargon.core.connection.IRODSAccount;
@@ -16,8 +17,8 @@ import org.irods.jargon.core.connection.IRODSProtocolManager;
 import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.connection.IRODSSimpleProtocolManager;
 import org.irods.jargon.core.pub.DataTransferOperations;
-import org.irods.jargon.core.pub.IRODSAccessObjectFactoryImpl;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
+import org.irods.jargon.core.pub.IRODSAccessObjectFactoryImpl;
 import org.irods.jargon.core.pub.IRODSFileSystem;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.irods.jargon.testutils.filemanip.FileGenerator;
@@ -112,7 +113,7 @@ public class IRODSFileImplTest {
 		IRODSFile irodsFile = irodsFileFactory
 				.instanceIRODSFile(targetIrodsCollection + '/' + testFileName);
 
-		TestCase.assertTrue(irodsFile.canRead());
+		Assert.assertTrue(irodsFile.canRead());
 		irodsSession.closeSession();
 	}
 
@@ -164,7 +165,7 @@ public class IRODSFileImplTest {
 		IRODSFile irodsFile = irodsFileFactory
 				.instanceIRODSFile(targetIrodsCollection + '/' + testFileName);
 
-		TestCase.assertTrue(irodsFile.canWrite());
+		Assert.assertTrue(irodsFile.canWrite());
 		irodsSession.closeSession();
 
 	}
@@ -217,11 +218,10 @@ public class IRODSFileImplTest {
 		IRODSFile irodsFile = irodsFileFactory
 				.instanceIRODSFile(targetIrodsCollection + '/' + testFileName);
 
-		TestCase.assertTrue(irodsFile.exists());
+		Assert.assertTrue(irodsFile.exists());
 		irodsSession.closeSession();
 	}
-	
-	
+
 	@Test
 	public final void testExistsQuotesInFileName() throws Exception {
 		String testFileName = "testExistsQuote'infilename.txt";
@@ -233,22 +233,25 @@ public class IRODSFileImplTest {
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH);
-		
-			
+
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
 		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
-		
-		File sourceFile = new File(absPath  + testFileName);
-		IRODSFile targetIRODSColl = irodsFileSystem.getIRODSFileFactory(irodsAccount).instanceIRODSFile(targetIrodsCollection);
-		
-		DataTransferOperations dataTransferOperations = irodsFileSystem.getIRODSAccessObjectFactory().getDataTransferOperations(irodsAccount);
-		dataTransferOperations.putOperation(sourceFile, targetIRODSColl, null, null);
-		
+
+		File sourceFile = new File(absPath + testFileName);
+		IRODSFile targetIRODSColl = irodsFileSystem.getIRODSFileFactory(
+				irodsAccount).instanceIRODSFile(targetIrodsCollection);
+
+		DataTransferOperations dataTransferOperations = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataTransferOperations(
+						irodsAccount);
+		dataTransferOperations.putOperation(sourceFile, targetIRODSColl, null,
+				null);
+
 		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
 				.instanceIRODSFile(targetIrodsCollection + '/' + testFileName);
 
-		TestCase.assertTrue(irodsFile.exists());
+		Assert.assertTrue(irodsFile.exists());
 		irodsFileSystem.closeAndEatExceptions();
 	}
 
@@ -278,7 +281,7 @@ public class IRODSFileImplTest {
 				.instanceIRODSFile(targetIrodsCollection);
 		boolean isDir = irodsFile.isDirectory();
 		irodsSession.closeSession();
-		TestCase.assertTrue("this should be a collection", isDir);
+		Assert.assertTrue("this should be a collection", isDir);
 	}
 
 	/**
@@ -307,7 +310,7 @@ public class IRODSFileImplTest {
 				.instanceIRODSFile(targetIrodsCollection);
 		boolean isFile = irodsFile.isFile();
 		irodsSession.closeSession();
-		TestCase.assertFalse("this should be a File, not a dir", isFile);
+		Assert.assertFalse("this should be a File, not a dir", isFile);
 	}
 
 	/**
@@ -358,7 +361,7 @@ public class IRODSFileImplTest {
 		IRODSFile irodsFile = irodsFileFactory
 				.instanceIRODSFile(targetIrodsCollection + '/' + testFileName);
 
-		TestCase.assertTrue("this should be a file", irodsFile.isFile());
+		Assert.assertTrue("this should be a file", irodsFile.isFile());
 	}
 
 	@Test
@@ -410,7 +413,7 @@ public class IRODSFileImplTest {
 					.instanceIRODSFile(targetIrodsCollection + '/'
 							+ testFileName);
 
-			TestCase.assertTrue("this should be a file", irodsFile.isFile());
+			Assert.assertTrue("this should be a file", irodsFile.isFile());
 		}
 	}
 
@@ -464,7 +467,7 @@ public class IRODSFileImplTest {
 
 		long modDate = irodsFile.lastModified();
 		irodsSession.closeSession();
-		TestCase.assertTrue("mod date should be gt 0", modDate > 0);
+		Assert.assertTrue("mod date should be gt 0", modDate > 0);
 
 	}
 
@@ -517,7 +520,7 @@ public class IRODSFileImplTest {
 
 		long size = irodsFile.length();
 		irodsSession.closeSession();
-		TestCase.assertEquals("size does not match", expectedSize, size);
+		Assert.assertEquals("size does not match", expectedSize, size);
 
 	}
 
@@ -659,7 +662,7 @@ public class IRODSFileImplTest {
 		assertionHelper.assertIrodsFileOrCollectionDoesNotExist(irodsFile
 				.getAbsolutePath());
 	}
-	
+
 	@Test
 	public final void testDeleteFileWithForce() throws Exception {
 		// TODO: add assertions to check no trash
@@ -750,7 +753,7 @@ public class IRODSFileImplTest {
 		assertionHelper.assertIrodsFileOrCollectionDoesNotExist(irodsFile
 				.getAbsolutePath());
 	}
-	
+
 	@Test
 	public final void testDeleteFileWhenCollectionWithForce() throws Exception {
 		// TODO: add assertion to check file not in trash
@@ -1021,6 +1024,7 @@ public class IRODSFileImplTest {
 				.instance(irodsSession);
 		IRODSFileSystemAO fileSystemAO = accessObjectFactory
 				.getIRODSFileSystemAO(irodsAccount);
+		TestCase.assertNotNull("null fileSystem from factory", fileSystemAO);
 
 	}
 
@@ -1123,8 +1127,8 @@ public class IRODSFileImplTest {
 
 		irodsSession.closeSession();
 
-		TestCase.assertFalse("files should not be equal", irodsFile
-				.equals(irodsFile2));
+		TestCase.assertFalse("files should not be equal",
+				irodsFile.equals(irodsFile2));
 	}
 
 	/**
@@ -1177,8 +1181,8 @@ public class IRODSFileImplTest {
 		IRODSFile newIRODSFile = (IRODSFile) irodsFile.getAbsoluteFile();
 
 		TestCase.assertNotNull("my new file does not exist", newIRODSFile);
-		TestCase.assertEquals("absolute paths must match", irodsFile
-				.getAbsolutePath(), newIRODSFile.getAbsolutePath());
+		TestCase.assertEquals("absolute paths must match",
+				irodsFile.getAbsolutePath(), newIRODSFile.getAbsolutePath());
 
 	}
 
@@ -1368,8 +1372,8 @@ public class IRODSFileImplTest {
 
 		File irodsParentFile = irodsFile.getParentFile();
 		irodsSession.closeSession();
-		TestCase.assertEquals("files", irodsFile.getParent(), irodsParentFile
-				.getAbsolutePath());
+		TestCase.assertEquals("files", irodsFile.getParent(),
+				irodsParentFile.getAbsolutePath());
 	}
 
 	/**
@@ -1489,9 +1493,9 @@ public class IRODSFileImplTest {
 		irodsSession.closeSession();
 		TestCase.assertNotNull(irodsFiles);
 		TestCase.assertTrue("no results", irodsFiles.length > 0);
-		for (int i = 0; i < irodsFiles.length; i++) {
+		for (File irodsFile2 : irodsFiles) {
 			TestCase.assertTrue("this is not an instance of IRODSFileImpl",
-					irodsFiles[i] instanceof IRODSFile);
+					irodsFile2 instanceof IRODSFile);
 		}
 	}
 
@@ -1524,9 +1528,9 @@ public class IRODSFileImplTest {
 		irodsSession.closeSession();
 		TestCase.assertNotNull(irodsFiles);
 		TestCase.assertTrue("no results", irodsFiles.length > 0);
-		for (int i = 0; i < irodsFiles.length; i++) {
+		for (File irodsFile2 : irodsFiles) {
 			TestCase.assertTrue("this is not an instance of IRODSFileImpl",
-					irodsFiles[i] instanceof IRODSFile);
+					irodsFile2 instanceof IRODSFile);
 		}
 	}
 
@@ -1653,12 +1657,10 @@ public class IRODSFileImplTest {
 		ilsCommand.setIlsBasePath(targetIrodsCollection + '/' + testFileName);
 		String ilsResult = invoker
 				.invokeCommandAndGetResultAsString(ilsCommand);
-		TestCase
-				.assertTrue(
-						"file is not in new resource",
-						ilsResult
-								.indexOf(testingProperties
-										.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_RESOURCE_KEY)) != -1);
+		TestCase.assertTrue(
+				"file is not in new resource",
+				ilsResult.indexOf(testingProperties
+						.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_RESOURCE_KEY)) != -1);
 	}
 
 	/**

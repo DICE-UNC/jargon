@@ -1,6 +1,6 @@
 package org.irods.jargon.core.packinstr;
 
-import junit.framework.TestCase;
+import junit.framework.Assert;
 
 import org.irods.jargon.core.exception.JargonException;
 import org.junit.AfterClass;
@@ -20,13 +20,12 @@ public class CollInpTest {
 	@Test
 	public final void testInstance() throws Exception {
 		CollInp collInp = CollInp.instance("testcollname", true);
-		TestCase.assertNotNull("null coll inp object", collInp);
+		Assert.assertNotNull("null coll inp object", collInp);
 	}
 
 	@Test(expected = JargonException.class)
 	public final void testInstanceNullPaty() throws Exception {
-		@SuppressWarnings("unused")
-		CollInp collInp = CollInp.instance(null, true);
+		CollInp.instance(null, true);
 	}
 
 	@Test
@@ -42,10 +41,10 @@ public class CollInpTest {
 		sb.append("</CollInpNew_PI>\n");
 		String expected = sb.toString();
 		CollInp collInp = CollInp.instance("testcollname", true);
-		TestCase.assertEquals("did not get expected xml", expected, collInp
-				.getParsedTags());
+		Assert.assertEquals("did not get expected xml", expected,
+				collInp.getParsedTags());
 	}
-	
+
 	@Test
 	public final void testGetParsedTagsDeleteForce() throws Exception {
 		StringBuilder sb = new StringBuilder();
@@ -59,13 +58,14 @@ public class CollInpTest {
 		sb.append("<svalue></svalue>\n");
 		sb.append("</KeyValPair_PI>\n");
 		sb.append("</CollInpNew_PI>\n");
-				
+
 		String expected = sb.toString();
-		CollInp collInp = CollInp.instanceForRecursiveDeleteCollectionWithForce("/test1/home/test1/test-scratch/testForcedDeleteDir");
-		TestCase.assertEquals("did not get expected xml", expected, collInp
-				.getParsedTags());
+		CollInp collInp = CollInp
+				.instanceForRecursiveDeleteCollectionWithForce("/test1/home/test1/test-scratch/testForcedDeleteDir");
+		Assert.assertEquals("did not get expected xml", expected,
+				collInp.getParsedTags());
 	}
-	
+
 	@Test
 	public final void testGetParsedTagsDeleteNoForce() throws Exception {
 		StringBuilder sb = new StringBuilder();
@@ -77,18 +77,19 @@ public class CollInpTest {
 		sb.append("<svalue></svalue>\n");
 		sb.append("</KeyValPair_PI>\n");
 		sb.append("</CollInpNew_PI>\n");
-				
+
 		String expected = sb.toString();
-		CollInp collInp = CollInp.instanceForRecursiveDeleteCollectionNoForce("/test1/home/test1/test-scratch/testForcedDeleteDir");
-		TestCase.assertEquals("did not get expected xml", expected, collInp
-				.getParsedTags());
+		CollInp collInp = CollInp
+				.instanceForRecursiveDeleteCollectionNoForce("/test1/home/test1/test-scratch/testForcedDeleteDir");
+		Assert.assertEquals("did not get expected xml", expected,
+				collInp.getParsedTags());
 	}
 
 	@Test
 	public final void testGetCollectionName() throws JargonException {
 		CollInp collInp = CollInp.instance("testcollname", true);
-		TestCase.assertEquals("coll name not set", "testcollname", collInp
-				.getCollectionName());
+		Assert.assertEquals("coll name not set", "testcollname",
+				collInp.getCollectionName());
 	}
 
 }

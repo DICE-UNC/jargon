@@ -82,11 +82,12 @@ public final class StructFileExtAndRegInp extends
 				tarFileAbsolutePath, tarCollectionAbsolutePath,
 				ForceOptions.NO_FORCE, resourceNameToStoreTo, false);
 	}
-	
+
 	/**
 	 * Create a packing instruction to cause the specified tar file that exists
-	 * in iRODS to be extracted to the given collection in iRODS.  This version of the packing instruction
-	 * will use the bulk facility in iRODS to register the files, resulting in reduced overhead.
+	 * in iRODS to be extracted to the given collection in iRODS. This version
+	 * of the packing instruction will use the bulk facility in iRODS to
+	 * register the files, resulting in reduced overhead.
 	 * 
 	 * @param tarFileAbsolutePath
 	 *            <code>String</code> that is the absolute path to a tar file in
@@ -126,7 +127,7 @@ public final class StructFileExtAndRegInp extends
 	 *            given tar, note that this option specifies a force flag, so
 	 *            any subfiles in the target collection will not cause the
 	 *            operation to fail.
-	  * @param resourceNameToStoreTo
+	 * @param resourceNameToStoreTo
 	 *            <code>String</code> with an optional resource name to store
 	 *            the extracted files to. Leave blank if not specified, not
 	 *            null.
@@ -140,12 +141,12 @@ public final class StructFileExtAndRegInp extends
 				tarFileAbsolutePath, tarCollectionAbsolutePath,
 				ForceOptions.FORCE, resourceNameToStoreTo, false);
 	}
-	
+
 	/**
 	 * Create a packing instruction to cause the specified tar file that exists
 	 * in iRODS to be extracted to the given collection in iRODS. A force option
-	 * is specified. This version of the packing instruction
-	 * will use the bulk facility in iRODS to register the files, resulting in reduced overhead.
+	 * is specified. This version of the packing instruction will use the bulk
+	 * facility in iRODS to register the files, resulting in reduced overhead.
 	 * 
 	 * @param tarFileAbsolutePath
 	 *            <code>String</code> that is the absolute path to a tar file in
@@ -156,7 +157,7 @@ public final class StructFileExtAndRegInp extends
 	 *            given tar, note that this option specifies a force flag, so
 	 *            any subfiles in the target collection will not cause the
 	 *            operation to fail.
-	  * @param resourceNameToStoreTo
+	 * @param resourceNameToStoreTo
 	 *            <code>String</code> with an optional resource name to store
 	 *            the extracted files to. Leave blank if not specified, not
 	 *            null.
@@ -196,11 +197,11 @@ public final class StructFileExtAndRegInp extends
 				irodsSourceCollectionForTarAbsolutePath, ForceOptions.NO_FORCE,
 				resourceNameThatIsSourceForTarFile, false);
 	}
-	
+
 	/**
 	 * Packing instruction to create a tar file using the given iRODS collection
-	 * as the source.  This version of the packing instruction uses the force option which will overwrite the bun
-	 * file if already existing.
+	 * as the source. This version of the packing instruction uses the force
+	 * option which will overwrite the bun file if already existing.
 	 * 
 	 * @param tarFileToCreateAbsolutePath
 	 *            <code>String</code> with the absolute path to the tar file
@@ -257,34 +258,30 @@ public final class StructFileExtAndRegInp extends
 
 	}
 
+	@Override
 	public Tag getTagValue() throws JargonException {
 
 		Tag message = new Tag(PI_TAG, new Tag[] {
 				new Tag(OBJ_PATH, tarFileAbsolutePath),
 				new Tag(COLLECTION, tarCollectionAbsolutePath),
-				new Tag(OPR_TYPE, 0), new Tag(flags, 0)
-			});
+				new Tag(OPR_TYPE, 0), new Tag(flags, 0) });
 
 		List<KeyValuePair> kvps = new ArrayList<KeyValuePair>();
 
 		kvps.add(KeyValuePair.instance(DATA_TYPE, TAR_DATA_TYPE_KW_VALUE));
 
-		
 		// formatted resource keyword
 		if (resourceName.length() > 0) {
-			LOG.debug(
-					"resourceName is specified, add resource keywords");
-			kvps.add(KeyValuePair.instance(DEST_RESOURCE_NAME_KW,
-					resourceName));
-			kvps.add(KeyValuePair.instance(RESOURCE_NAME_KW,
-					resourceName));
+			LOG.debug("resourceName is specified, add resource keywords");
+			kvps.add(KeyValuePair.instance(DEST_RESOURCE_NAME_KW, resourceName));
+			kvps.add(KeyValuePair.instance(RESOURCE_NAME_KW, resourceName));
 		}
 
 		if (forceOption == ForceOptions.FORCE) {
 			LOG.debug("adding force flag");
 			kvps.add(KeyValuePair.instance(FORCE_FLAG_KW, ""));
 		}
-		
+
 		if (isExtractAsBulkOperation()) {
 			LOG.debug("adding bulk operation flag");
 			kvps.add(KeyValuePair.instance(BULK_OPERATION_KW, ""));

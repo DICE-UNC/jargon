@@ -5,7 +5,7 @@ package org.irods.jargon.testutils.icommandinvoke.icommands;
 
 import java.util.Properties;
 
-import junit.framework.TestCase;
+import junit.framework.Assert;
 
 import org.irods.jargon.testutils.IRODSTestSetupUtilities;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
@@ -125,8 +125,8 @@ public class ImkdirCommandTest {
 						testingProperties, testingDirName));
 		String ilsResult = invoker
 				.invokeCommandAndGetResultAsString(ilsCommand);
-		TestCase.assertTrue("test directory is not there", ilsResult
-				.indexOf(testingDirName) > -1);
+		Assert.assertTrue("test directory is not there",
+				ilsResult.indexOf(testingDirName) > -1);
 	}
 
 }

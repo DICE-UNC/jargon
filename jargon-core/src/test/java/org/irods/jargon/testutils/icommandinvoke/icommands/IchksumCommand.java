@@ -20,7 +20,7 @@ public class IchksumCommand implements Icommand {
 		return irodsFileName;
 	}
 
-	public void setIrodsFileName(String irodsFileName) {
+	public void setIrodsFileName(final String irodsFileName) {
 		this.irodsFileName = irodsFileName;
 	}
 
@@ -29,6 +29,7 @@ public class IchksumCommand implements Icommand {
 	 * 
 	 * @see org.irods.jargon.icommandinvoke.icommands.Icommand#buildCommand()
 	 */
+	@Override
 	public List<String> buildCommand() throws IcommandException {
 		if (irodsFileName.length() <= 0) {
 			throw new IcommandException("no irods file name provided");

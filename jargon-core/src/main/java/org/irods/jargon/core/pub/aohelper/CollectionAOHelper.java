@@ -134,7 +134,8 @@ public class CollectionAOHelper extends AOHelper {
 	 *            <codeStringBuilder</code> with the given AVU query in iquest
 	 *            query form.
 	 */
-	public static StringBuilder buildConditionPart(final AVUQueryElement queryElement) {
+	public static StringBuilder buildConditionPart(
+			final AVUQueryElement queryElement) {
 		StringBuilder queryCondition = new StringBuilder();
 		if (queryElement.getAvuQueryPart() == AVUQueryElement.AVUQueryPart.ATTRIBUTE) {
 			queryCondition.append(RodsGenQueryEnum.COL_META_COLL_ATTR_NAME
@@ -224,6 +225,7 @@ public class CollectionAOHelper extends AOHelper {
 	/**
 	 * for a result set row from a query for data objects in a collection,
 	 * create a <code>CollectionAndDataObjectListingEntry</code>
+	 * 
 	 * @param row
 	 *            <code>IRODSQueryResultRow</code> with raw data.
 	 * @return {@link org.irods.jargon.core.query.CollectionAndDataObjectListingEntry}
@@ -252,10 +254,12 @@ public class CollectionAOHelper extends AOHelper {
 		}
 		return entry;
 	}
-	
+
 	/**
-	 * Shortcut to build selects used in creating <code>CollectionAndDataObjectListingEntry</code> items
-	 * for collections.  Does not include the 'SELECT', just the field names.
+	 * Shortcut to build selects used in creating
+	 * <code>CollectionAndDataObjectListingEntry</code> items for collections.
+	 * Does not include the 'SELECT', just the field names.
+	 * 
 	 * @return
 	 */
 	public static String buildSelectsNeededForCollectionsInCollectionsAndDataObjectsListingEntry() {
@@ -273,13 +277,15 @@ public class CollectionAOHelper extends AOHelper {
 	}
 
 	/**
-	 * Shortcut to build selects used in creating  <code>CollectionAndDataObjectListingEntry</code> items
-	 * for data objects.  Does not include the 'SELECT', just the field names.
+	 * Shortcut to build selects used in creating
+	 * <code>CollectionAndDataObjectListingEntry</code> items for data objects.
+	 * Does not include the 'SELECT', just the field names.
+	 * 
 	 * @return
 	 */
 	public static Object buildSelectsNeededForDataObjectsInCollectionsAndDataObjectsListingEntry() {
 		StringBuilder query = new StringBuilder();
-		
+
 		query.append(RodsGenQueryEnum.COL_COLL_NAME.getName());
 		query.append(COMMA);
 		query.append(RodsGenQueryEnum.COL_DATA_NAME.getName());

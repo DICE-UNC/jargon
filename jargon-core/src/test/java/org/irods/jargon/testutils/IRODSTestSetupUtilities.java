@@ -112,7 +112,7 @@ public class IRODSTestSetupUtilities {
 	 *            do not supply leading '/'
 	 * @throws TestingUtilsException
 	 */
-	public void initializeDirectoryForTest(String testingDirectory)
+	public void initializeDirectoryForTest(final String testingDirectory)
 			throws TestingUtilsException {
 		StringBuilder scratchDir = new StringBuilder();
 		scratchDir.append(testingPropertiesHelper

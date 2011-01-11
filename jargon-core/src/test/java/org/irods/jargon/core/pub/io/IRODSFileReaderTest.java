@@ -3,15 +3,15 @@ package org.irods.jargon.core.pub.io;
 import java.io.StringReader;
 import java.util.Properties;
 
-import junit.framework.TestCase;
+import junit.framework.Assert;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSProtocolManager;
 import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.connection.IRODSSimpleProtocolManager;
 import org.irods.jargon.core.exception.JargonException;
-import org.irods.jargon.core.pub.IRODSAccessObjectFactoryImpl;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
+import org.irods.jargon.core.pub.IRODSAccessObjectFactoryImpl;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.irods.jargon.testutils.icommandinvoke.IcommandInvoker;
 import org.irods.jargon.testutils.icommandinvoke.IrodsInvocationContext;
@@ -113,7 +113,7 @@ public class IRODSFileReaderTest {
 
 		reader.close();
 		irodsSession.closeSession();
-		TestCase.assertNotNull("reader was not returned from factory", reader);
+		Assert.assertNotNull("reader was not returned from factory", reader);
 
 	}
 
@@ -141,50 +141,50 @@ public class IRODSFileReaderTest {
 		IRODSFileWriter irodsFileWriter = irodsFileFactory
 				.instanceIRODSFileWriter(targetIrodsFile);
 
-		String testString =
-				"jfaeiiiiiiiiiiiiiiiiiiiiii838ejfiafjaskfjaisdfjaseij;ida8ehgasjfai'sjf;iadvajkdfgjasdl;jfasfjfaeiiiiiiiiiiiitsetseflyiiiiiiiiii838ejfiafjaskfjaisdfjaseijjfaeiiiiiiiiiiispooniiiiiiiiiii838ejfiafjaskfjaisdfjaseijjfaeiiiiisomewhereinthestringiiiiiiiiiconeiiiiiiii838ejfiafjaskfjaisdfjaseijjfaeiiiiiiiiiblarkiiiiiiiiiiiii838ejfiafjaskfjaisdfjaseijjfaeiiiiiiiiiiiiidangleiiiiiiiii838ejfiafjaskfjaisdfjaseijjfaeiiiiiiiiiiiiiiiiiiiiii838ejfiafjaskfjaisdfjaseijjfaeiiiiiiiiiiiiiiiiiiiiii838ejfiafjaskfjaisdfjaseijjfaeiiiiiiiiiiiiiiiiiiiiii838ejfiafjaskfjaisdfjaseijjfaeiiiiiiiiiiiiiiiiiiiiii838ejfiafjaskfjaisdfjaseijjfaeiiiiiiiiiiiiiiiiiiiiii838ejfiafjaskfjaisdfjaseijjfaeiiiiiiiiiiiiiiiiiiiiii838ejfiafjaskthisisthemiddleofthestringfjaisdfjaseijjfaeiiiiiiiiiiiiiiiiiiiiii838ejfiafjaskfjaisdfjaseijjfaeiiiiiiiiiiiiiiiiiiiiii838ejfiafjaskfjaisdfjaseijjfaeiiiiiiiiiiiiiiiiiiiiii838ejfiafjaskfjaisdfjaseijjfaeiiiiiiiiiiiiiiiiiiiiii838ejfiafjaskfjaisdfjaseijjfaeiiiiiiiiiiiiiiiiiiiiii838ejfiafjaskfjaisdfjaseijjfaeiiiiiiiiiiiiiiiiiiiiii838ejfiafjaskfjaisdfjaseijjfaeiiiiiiiiiiiiiiiiiiiiii838ejfiafjaskfjaisdfjaseijthisistheendofthestrring";
+		String testString = "jfaeiiiiiiiiiiiiiiiiiiiiii838ejfiafjaskfjaisdfjaseij;ida8ehgasjfai'sjf;iadvajkdfgjasdl;jfasfjfaeiiiiiiiiiiiitsetseflyiiiiiiiiii838ejfiafjaskfjaisdfjaseijjfaeiiiiiiiiiiispooniiiiiiiiiii838ejfiafjaskfjaisdfjaseijjfaeiiiiisomewhereinthestringiiiiiiiiiconeiiiiiiii838ejfiafjaskfjaisdfjaseijjfaeiiiiiiiiiblarkiiiiiiiiiiiii838ejfiafjaskfjaisdfjaseijjfaeiiiiiiiiiiiiidangleiiiiiiiii838ejfiafjaskfjaisdfjaseijjfaeiiiiiiiiiiiiiiiiiiiiii838ejfiafjaskfjaisdfjaseijjfaeiiiiiiiiiiiiiiiiiiiiii838ejfiafjaskfjaisdfjaseijjfaeiiiiiiiiiiiiiiiiiiiiii838ejfiafjaskfjaisdfjaseijjfaeiiiiiiiiiiiiiiiiiiiiii838ejfiafjaskfjaisdfjaseijjfaeiiiiiiiiiiiiiiiiiiiiii838ejfiafjaskfjaisdfjaseijjfaeiiiiiiiiiiiiiiiiiiiiii838ejfiafjaskthisisthemiddleofthestringfjaisdfjaseijjfaeiiiiiiiiiiiiiiiiiiiiii838ejfiafjaskfjaisdfjaseijjfaeiiiiiiiiiiiiiiiiiiiiii838ejfiafjaskfjaisdfjaseijjfaeiiiiiiiiiiiiiiiiiiiiii838ejfiafjaskfjaisdfjaseijjfaeiiiiiiiiiiiiiiiiiiiiii838ejfiafjaskfjaisdfjaseijjfaeiiiiiiiiiiiiiiiiiiiiii838ejfiafjaskfjaisdfjaseijjfaeiiiiiiiiiiiiiiiiiiiiii838ejfiafjaskfjaisdfjaseijjfaeiiiiiiiiiiiiiiiiiiiiii838ejfiafjaskfjaisdfjaseijthisistheendofthestrring";
 		StringReader stringReader = new StringReader(testString);
 		int testStringLength = testString.length();
-		
-		
-		
+
 		int buffLen = 512;
 		char[] cbuff = new char[buffLen];
 		int read = 0;
-		
+
 		int totalReadIn = 0;
-		
+
 		while ((read = stringReader.read(cbuff)) != -1) {
 			totalReadIn += read;
 			irodsFileWriter.write(cbuff, 0, read);
 		}
 
-		TestCase.assertEquals("did not read and write same length as string",testString.length(), totalReadIn);
-		
+		Assert.assertEquals("did not read and write same length as string",
+				testString.length(), totalReadIn);
+
 		irodsFileWriter.close();
 
 		IRODSFileReader reader = irodsFileFactory
 				.instanceIRODSFileReader(targetIrodsFile);
-		TestCase.assertNotNull("reader was not returned from factory", reader);
+		Assert.assertNotNull("reader was not returned from factory", reader);
 
 		char[] readBuff = new char[buffLen];
 		int readCtr = 0;
 		int totalRead = 0;
-		
+
 		StringBuilder outputStringBuilder = new StringBuilder();
-		
+
 		while ((readCtr = reader.read(readBuff)) > -1) {
 			totalRead += readCtr;
 			outputStringBuilder.append(readBuff, 0, readCtr);
 		}
-		
+
 		String actualReadBack = outputStringBuilder.toString();
 
 		reader.close();
 		irodsSession.closeSession();
-		TestCase
-		.assertEquals("did not read correct length", totalReadIn, testStringLength);
-		TestCase.assertEquals("string read back does not match string originally written", testString, actualReadBack);
+		Assert.assertEquals("did not read correct length", totalReadIn,
+				testStringLength);
+		Assert.assertEquals(
+				"string read back does not match string originally written",
+				testString, actualReadBack);
 	}
 
 }

@@ -1,10 +1,8 @@
 package org.irods.jargon.core.connection;
 
-import static org.junit.Assert.*;
-
 import java.util.Properties;
 
-import junit.framework.TestCase;
+import junit.framework.Assert;
 
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.junit.AfterClass;
@@ -38,7 +36,7 @@ public class EnvironmentalInfoAccessorTest {
 				.instance(irodsConnectionManager);
 		EnvironmentalInfoAccessor target = new EnvironmentalInfoAccessor(
 				irodsSession.currentConnection(irodsAccount));
-		TestCase.assertNotNull(target);
+		Assert.assertNotNull(target);
 
 	}
 
@@ -54,7 +52,7 @@ public class EnvironmentalInfoAccessorTest {
 				irodsSession.currentConnection(irodsAccount));
 		IRODSServerProperties irodsServerProperties = target
 				.getIRODSServerProperties();
-		TestCase.assertEquals(testingProperties
+		Assert.assertEquals(testingProperties
 				.getProperty(TestingPropertiesHelper.IRODS_ZONE_KEY),
 				irodsServerProperties.getRodsZone());
 	}

@@ -11,13 +11,13 @@ import org.irods.jargon.core.pub.domain.IRODSDomainObject;
  * identify it in iRODS by path, and also information that can be used for
  * paging.
  * <p/>
- * This object is meant to be used for use cases such as iRODS file tree browsing, and as such it
- * is meant to be returned in collections. The behavior of these objects in the
- * collection is such that objects for collections and objects for data objects
- * separately hold counts and indicators that this particular collection or
- * object is the last result. In this way, a caller gets a result that can say
- * that all the collections have been returned, but the data objects may have
- * more results to page.
+ * This object is meant to be used for use cases such as iRODS file tree
+ * browsing, and as such it is meant to be returned in collections. The behavior
+ * of these objects in the collection is such that objects for collections and
+ * objects for data objects separately hold counts and indicators that this
+ * particular collection or object is the last result. In this way, a caller
+ * gets a result that can say that all the collections have been returned, but
+ * the data objects may have more results to page.
  * 
  * @author Mike Conway - DICE (www.irods.org)
  * 
@@ -158,9 +158,11 @@ public class CollectionAndDataObjectListingEntry extends IRODSDomainObject {
 
 		return thisPath;
 	}
-	
+
 	/**
-	 * Handy method that will compute the appropriate absolute path, whether a data object or a collection.
+	 * Handy method that will compute the appropriate absolute path, whether a
+	 * data object or a collection.
+	 * 
 	 * @return
 	 */
 	public String getFormattedAbsolutePath() {
@@ -172,15 +174,19 @@ public class CollectionAndDataObjectListingEntry extends IRODSDomainObject {
 			sb.append('/');
 			sb.append(pathOrName);
 		}
-		
+
 		return sb.toString();
 	}
-	
+
 	/**
-	 * Tree nodes typically want a short name for the subdirectory or data name to display.  Obtain a descriptive name for the 
-	 * collection (the last path component with no /'s), or the data object
-	 * name (with no /'s).  This method will eat any errors and make a best effort to return something meaningful.
-	 * @return <code>String</code> with a value suitable for a node name in a tree.
+	 * Tree nodes typically want a short name for the subdirectory or data name
+	 * to display. Obtain a descriptive name for the collection (the last path
+	 * component with no /'s), or the data object name (with no /'s). This
+	 * method will eat any errors and make a best effort to return something
+	 * meaningful.
+	 * 
+	 * @return <code>String</code> with a value suitable for a node name in a
+	 *         tree.
 	 */
 	public String getNodeLabelDisplayValue() {
 		String nodeVal;
@@ -194,16 +200,15 @@ public class CollectionAndDataObjectListingEntry extends IRODSDomainObject {
 			nodeVal = pathOrName;
 		}
 		return nodeVal;
-		
+
 	}
-	
-	
+
 	public boolean isCollection() {
-		return(objectType == ObjectType.COLLECTION);
+		return (objectType == ObjectType.COLLECTION);
 	}
-	
+
 	public boolean isDataObject() {
-		return(objectType == ObjectType.DATA_OBJECT);
+		return (objectType == ObjectType.DATA_OBJECT);
 	}
 
 }

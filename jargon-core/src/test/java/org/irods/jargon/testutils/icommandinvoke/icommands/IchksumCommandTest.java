@@ -1,9 +1,11 @@
 package org.irods.jargon.testutils.icommandinvoke.icommands;
 
+import static org.irods.jargon.testutils.TestingPropertiesHelper.GENERATED_FILE_DIRECTORY_KEY;
+
 import java.util.Arrays;
 import java.util.Properties;
 
-import junit.framework.TestCase;
+import junit.framework.Assert;
 
 import org.irods.jargon.testutils.IRODSTestSetupUtilities;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
@@ -16,7 +18,6 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
-import static org.irods.jargon.testutils.TestingPropertiesHelper.*;
 
 /**
  * Test chksum via icommand interface
@@ -61,9 +62,10 @@ public class IchksumCommandTest {
 
 		// generate a file and put into irods
 		String fullPathToTestFile = FileGenerator
-				.generateFileOfFixedLengthGivenName(testingProperties
-						.getProperty(GENERATED_FILE_DIRECTORY_KEY)
-						+ IRODS_TEST_SUBDIR_PATH + "/", testFileName, 7);
+				.generateFileOfFixedLengthGivenName(
+						testingProperties
+								.getProperty(GENERATED_FILE_DIRECTORY_KEY)
+								+ IRODS_TEST_SUBDIR_PATH + "/", testFileName, 7);
 
 		// get the actual checksum
 		byte[] expectedChecksum = scratchFileUtils
@@ -94,7 +96,7 @@ public class IchksumCommandTest {
 		String chksumResult = invoker
 				.invokeCommandAndGetResultAsString(chksumCommand);
 		String expectedChecksumString = Arrays.toString(expectedChecksum);
-		TestCase.assertTrue("did not compute checksum, expected:"
+		Assert.assertTrue("did not compute checksum, expected:"
 				+ expectedChecksumString + " actual:" + chksumResult,
 				chksumResult.indexOf(expectedChecksumString) > -1);
 	}

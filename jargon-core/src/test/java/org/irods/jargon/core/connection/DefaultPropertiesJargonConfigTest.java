@@ -10,7 +10,7 @@ import org.junit.Test;
  */
 public class DefaultPropertiesJargonConfigTest {
 
-	private static JargonProperites props;
+	private static JargonProperties props;
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {

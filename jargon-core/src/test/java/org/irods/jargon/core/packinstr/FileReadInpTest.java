@@ -1,6 +1,6 @@
 package org.irods.jargon.core.packinstr;
 
-import junit.framework.TestCase;
+import junit.framework.Assert;
 
 import org.junit.Test;
 
@@ -10,8 +10,8 @@ public class FileReadInpTest {
 		int fd = 2;
 		long length = 100L;
 		FileReadInp fileReadInp = FileReadInp.instanceForReadStream(fd, length);
-		TestCase.assertNotNull("null fileReadInp", fileReadInp);
-		TestCase.assertEquals("wrong API num", FileReadInp.FILE_READ_API_NBR,
+		Assert.assertNotNull("null fileReadInp", fileReadInp);
+		Assert.assertEquals("wrong API num", FileReadInp.FILE_READ_API_NBR,
 				fileReadInp.getApiNumber());
 	}
 
@@ -48,13 +48,8 @@ public class FileReadInpTest {
 		long length = 100L;
 		FileReadInp fileReadInp = FileReadInp.instanceForReadStream(fd, length);
 
-		TestCase.assertEquals("did not get expected xml", expected,
+		Assert.assertEquals("did not get expected xml", expected,
 				fileReadInp.getParsedTags());
 	}
 
 }
-
-
-
-
-

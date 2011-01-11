@@ -7,7 +7,7 @@ import junit.framework.Assert;
 import junit.framework.TestCase;
 
 import org.irods.jargon.core.connection.IRODSAccount;
-import org.irods.jargon.core.connection.JargonProperites;
+import org.irods.jargon.core.connection.JargonProperties;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.exception.JargonFileOrCollAlreadyExistsException;
 import org.irods.jargon.core.pub.io.IRODSFile;
@@ -1455,12 +1455,6 @@ public class DataTransferOperationsImplTest {
 
 		irodsFileSystem.close();
 
-		irodsFileSystem = IRODSFileSystem.instance();
-		irodsFileFactory = irodsFileSystem.getIRODSFileFactory(irodsAccount);
-		destFile = irodsFileFactory
-				.instanceIRODSFile(irodsCollectionRootAbsolutePath + "/"
-						+ rootCollection);
-
 		TestCase.assertEquals("did not compute a total files expected of 2", 2,
 				transferControlBlock.getTotalFilesToTransfer());
 		TestCase.assertEquals("did not count transfers equal to total counted",
@@ -1509,12 +1503,6 @@ public class DataTransferOperationsImplTest {
 		destFile.close();
 
 		irodsFileSystem.close();
-
-		irodsFileSystem = IRODSFileSystem.instance();
-		irodsFileFactory = irodsFileSystem.getIRODSFileFactory(irodsAccount);
-		destFile = irodsFileFactory
-				.instanceIRODSFile(irodsCollectionRootAbsolutePath + "/"
-						+ rootCollection);
 
 		// test passes if gracefully handles no control block specified
 		TestCase.assertTrue(true);
@@ -1829,12 +1817,6 @@ public class DataTransferOperationsImplTest {
 						irodsCollectionRootAbsolutePath + "/" + rootCollection,
 						targetParent.getAbsolutePath());
 
-		irodsFileSystem = IRODSFileSystem.instance();
-		irodsFileFactory = irodsFileSystem.getIRODSFileFactory(irodsAccount);
-		destFile = irodsFileFactory
-				.instanceIRODSFile(irodsCollectionTargetAbsolutePath + "/"
-						+ rootCollection);
-
 		irodsFileSystem.close();
 		TestCase.assertTrue(true);
 	}
@@ -1896,9 +1878,6 @@ public class DataTransferOperationsImplTest {
 
 		irodsFileSystem = IRODSFileSystem.instance();
 		irodsFileFactory = irodsFileSystem.getIRODSFileFactory(irodsAccount);
-		destFile = irodsFileFactory
-				.instanceIRODSFile(irodsCollectionTargetAbsolutePath + "/"
-						+ rootCollection);
 
 		irodsFileSystem.close();
 		TestCase.assertTrue(true);
@@ -2023,22 +2002,22 @@ public class DataTransferOperationsImplTest {
 		irodsFileSystem.close();
 
 	}
-	
+
 	@Test
 	public void testGetJargonProperties() throws Exception {
 
-		
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
 
 		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
-		
+
 		DataTransferOperations dataTransferOperationsAO = irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataTransferOperations(
 						irodsAccount);
-		JargonProperites jargonProperties = dataTransferOperationsAO.getJargonProperties();
+		JargonProperties jargonProperties = dataTransferOperationsAO
+				.getJargonProperties();
 		irodsFileSystem.closeAndEatExceptions();
-		TestCase.assertNotNull("null jargonProperties", jargonProperties); 
+		TestCase.assertNotNull("null jargonProperties", jargonProperties);
 	}
 
 }

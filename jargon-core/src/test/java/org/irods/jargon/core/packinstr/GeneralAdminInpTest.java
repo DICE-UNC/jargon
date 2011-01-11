@@ -2,12 +2,12 @@ package org.irods.jargon.core.packinstr;
 
 import junit.framework.TestCase;
 
+import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.protovalues.UserTypeEnum;
+import org.irods.jargon.core.pub.domain.User;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.irods.jargon.core.exception.JargonException;
-import org.irods.jargon.core.protovalues.UserTypeEnum;
-import org.irods.jargon.core.pub.domain.*;
 
 public class GeneralAdminInpTest {
 
@@ -145,8 +145,7 @@ public class GeneralAdminInpTest {
 		sb.append("<arg1>user</arg1>\n");
 		sb.append("<arg2>test</arg2>\n");
 		sb.append("<arg3>comment</arg3>\n");
-		sb
-				.append("<arg4>this is a comment, and this is a very good comment\n it even has line breaks</arg4>\n");
+		sb.append("<arg4>this is a comment, and this is a very good comment\n it even has line breaks</arg4>\n");
 		sb.append("<arg5></arg5>\n");
 		sb.append("<arg6></arg6>\n");
 		sb.append("<arg7></arg7>\n");
@@ -198,8 +197,7 @@ public class GeneralAdminInpTest {
 		sb.append("<arg1>user</arg1>\n");
 		sb.append("<arg2>test</arg2>\n");
 		sb.append("<arg3>info</arg3>\n");
-		sb
-				.append("<arg4>this is info, and this is a very good info\n it even has line breaks</arg4>\n");
+		sb.append("<arg4>this is info, and this is a very good info\n it even has line breaks</arg4>\n");
 		sb.append("<arg5></arg5>\n");
 		sb.append("<arg6></arg6>\n");
 		sb.append("<arg7></arg7>\n");
@@ -277,12 +275,12 @@ public class GeneralAdminInpTest {
 	public void testAddUserBlankUserData() throws Exception {
 		User user = new User();
 
-		GeneralAdminInp pi = GeneralAdminInp.instanceForAddUser(user);
+		GeneralAdminInp.instanceForAddUser(user);
 	}
 
 	@Test(expected = JargonException.class)
 	public void testAddUserNullUser() throws Exception {
-		GeneralAdminInp pi = GeneralAdminInp.instanceForAddUser(null);
+		GeneralAdminInp.instanceForAddUser(null);
 	}
 
 	@Test(expected = JargonException.class)
@@ -293,7 +291,7 @@ public class GeneralAdminInpTest {
 		GeneralAdminInp.instanceForAddUser(user);
 
 	}
-	
+
 	@Test
 	public void testModifyUserPassword() throws Exception {
 		String userName = "test";
@@ -308,8 +306,7 @@ public class GeneralAdminInpTest {
 		sb.append("<arg1>user</arg1>\n");
 		sb.append("<arg2>test</arg2>\n");
 		sb.append("<arg3>password</arg3>\n");
-		sb
-				.append("<arg4>testpassword</arg4>\n");
+		sb.append("<arg4>testpassword</arg4>\n");
 		sb.append("<arg5></arg5>\n");
 		sb.append("<arg6></arg6>\n");
 		sb.append("<arg7></arg7>\n");
@@ -320,45 +317,41 @@ public class GeneralAdminInpTest {
 		TestCase.assertEquals("unexpected XML protocol result", sb.toString(),
 				tagOut);
 	}
-	
+
 	@Test(expected = JargonException.class)
 	public void testModifyUserPasswordBlankUser() throws Exception {
 		String userName = "";
 		String password = "testpassword";
 
-		GeneralAdminInp.instanceForModifyUserPassword(
-				userName, password);
-		
+		GeneralAdminInp.instanceForModifyUserPassword(userName, password);
+
 	}
-	
+
 	@Test(expected = JargonException.class)
 	public void testModifyUserPasswordNullUser() throws Exception {
 		String userName = null;
 		String password = "testpassword";
 
-		GeneralAdminInp.instanceForModifyUserPassword(
-				userName, password);
-		
+		GeneralAdminInp.instanceForModifyUserPassword(userName, password);
+
 	}
-	
+
 	@Test(expected = JargonException.class)
 	public void testModifyUserPasswordBlankPassword() throws Exception {
 		String userName = "user";
 		String password = "";
 
-		GeneralAdminInp.instanceForModifyUserPassword(
-				userName, password);
-		
+		GeneralAdminInp.instanceForModifyUserPassword(userName, password);
+
 	}
-	
+
 	@Test(expected = JargonException.class)
 	public void testModifyUserPasswordNullPassword() throws Exception {
 		String userName = "user";
 		String password = null;
 
-		GeneralAdminInp.instanceForModifyUserPassword(
-				userName, password);
-		
+		GeneralAdminInp.instanceForModifyUserPassword(userName, password);
+
 	}
 
 }

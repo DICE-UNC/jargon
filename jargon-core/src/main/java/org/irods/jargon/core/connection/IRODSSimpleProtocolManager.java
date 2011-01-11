@@ -43,6 +43,7 @@ public final class IRODSSimpleProtocolManager implements IRODSProtocolManager {
 	 * transformations to the irodsAccount information will be accomplished when
 	 * this method returns.
 	 * <p/>
+	 * 
 	 * @see org.irods.jargon.core.connection.IRODSProtocolManager#getIRODSProtocol
 	 *      (org.irods.jargon.core.domain.IRODSAccount)
 	 */
@@ -61,6 +62,7 @@ public final class IRODSSimpleProtocolManager implements IRODSProtocolManager {
 	 * IRODSConnection} and the connection will be closed. Other implementations
 	 * may return the connection to a pool.
 	 * <p/>
+	 * 
 	 * @see org.irods.jargon.core.connection.IRODSConnectionManager#returnIRODSConnection
 	 *      (org.irods.jargon.core.connection.IRODSConnection)
 	 */

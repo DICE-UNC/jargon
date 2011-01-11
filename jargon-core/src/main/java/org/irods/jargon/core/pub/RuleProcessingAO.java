@@ -17,8 +17,7 @@ public interface RuleProcessingAO extends IRODSAccessObject {
 	 * @throws JargonException
 	 *             other error in irods or jargon
 	 */
-	IRODSRuleExecResult executeRule(
-			final String irodsRuleAsString) throws JargonRuleException,
-			JargonException;
+	IRODSRuleExecResult executeRule(final String irodsRuleAsString)
+			throws JargonRuleException, JargonException;
 
 }

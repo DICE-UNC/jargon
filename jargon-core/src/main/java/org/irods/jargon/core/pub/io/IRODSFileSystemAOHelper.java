@@ -38,7 +38,8 @@ public class IRODSFileSystemAOHelper extends AOHelper {
 		query = new StringBuilder();
 		query.append("SELECT ");
 
-		query.append(CollectionAOHelper.buildSelectsNeededForCollectionsInCollectionsAndDataObjectsListingEntry());
+		query.append(CollectionAOHelper
+				.buildSelectsNeededForCollectionsInCollectionsAndDataObjectsListingEntry());
 
 		query.append(" WHERE ");
 		query.append(RodsGenQueryEnum.COL_COLL_PARENT_NAME.getName());
@@ -52,8 +53,6 @@ public class IRODSFileSystemAOHelper extends AOHelper {
 		}
 		return query.toString();
 	}
-
-	
 
 	/**
 	 * Build a query for all files under a path, adding extra information. Note

@@ -7,18 +7,16 @@ import static edu.sdsc.grid.io.irods.IRODSConstants.BinBytesBuf_PI;
 import static edu.sdsc.grid.io.irods.IRODSConstants.buf;
 import static edu.sdsc.grid.io.irods.IRODSConstants.buflen;
 
-import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.SequenceInputStream;
 
+import org.apache.commons.codec.binary.Base64;
 import org.irods.jargon.core.connection.IRODSCommands;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.packinstr.ExecCmd;
 import org.irods.jargon.core.pub.io.RemoteExecutionBinaryResultInputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import org.apache.commons.codec.binary.*;
 
 import edu.sdsc.grid.io.irods.Tag;
 
@@ -267,8 +265,8 @@ public class RemoteExecuteServiceImpl implements RemoteExecutionService {
 
 	}
 
-	private InputStream buildAppropriateResultStream(Tag message,
-			StringBuilder buffer) {
+	private InputStream buildAppropriateResultStream(final Tag message,
+			final StringBuilder buffer) {
 		InputStream resultStream;
 		/*
 		 * see if the status decriptor holds a non zero, positive int If it
@@ -280,19 +278,19 @@ public class RemoteExecuteServiceImpl implements RemoteExecutionService {
 		log.debug("status from remoteexec response:{}", status);
 		if (status > 0) {
 			log.info("additional data will be streamed, opening up will create concatenated stream");
-			//ByteArrayInputStream bis = new java.io.ByteArrayInputStream(
-			//		Base64.fromString(buffer.toString()));
-			
-			InputStream piData =  new java.io.ByteArrayInputStream(Base64.decodeBase64(buffer
-					.toString()));
-			
-			
-			RemoteExecutionBinaryResultInputStream reStream = new RemoteExecutionBinaryResultInputStream(this.getIrodsCommands(), status);
+			// ByteArrayInputStream bis = new java.io.ByteArrayInputStream(
+			// Base64.fromString(buffer.toString()));
+
+			InputStream piData = new java.io.ByteArrayInputStream(
+					Base64.decodeBase64(buffer.toString()));
+
+			RemoteExecutionBinaryResultInputStream reStream = new RemoteExecutionBinaryResultInputStream(
+					this.getIrodsCommands(), status);
 			resultStream = new SequenceInputStream(piData, reStream);
 		} else {
 			log.info("no additional data to stream, will return simple stream from result buffer");
-			resultStream = new java.io.ByteArrayInputStream(Base64.decodeBase64(buffer
-					.toString()));
+			resultStream = new java.io.ByteArrayInputStream(
+					Base64.decodeBase64(buffer.toString()));
 		}
 		return resultStream;
 	}

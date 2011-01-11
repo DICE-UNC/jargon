@@ -50,6 +50,8 @@ public class AVUQueryElement {
 			throw new JargonQueryException("null or empty value");
 		}
 
+		// TODO: implement additional avu query values below
+
 		if (valueEndOfRange != null) {
 			throw new JargonQueryException("currently unsupported");
 		}
@@ -62,8 +64,7 @@ public class AVUQueryElement {
 		this.operator = operator;
 		this.value = value.trim();
 		this.valueEndOfRange = valueEndOfRange;
-		// this.valueEndOfRange = valueEndOfRange.trim();
-		this.valuesTable = valuesTable;
+		this.valuesTable = null;
 	}
 
 	public AVUQueryPart getAvuQueryPart() {
@@ -102,8 +103,10 @@ public class AVUQueryElement {
 				&& operator.equals(otherObj.operator) && value
 				.equals(otherObj.value));
 
-		// TODO expand as other options implemented
-
 	}
 
+	@Override
+	public int hashCode() {
+		return avuQueryPart.hashCode() + operator.hashCode() + value.hashCode();
+	}
 }

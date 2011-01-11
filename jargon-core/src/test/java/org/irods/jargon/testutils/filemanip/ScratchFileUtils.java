@@ -1,5 +1,7 @@
 package org.irods.jargon.testutils.filemanip;
 
+import static org.irods.jargon.testutils.TestingPropertiesHelper.GENERATED_FILE_DIRECTORY_KEY;
+
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -12,10 +14,7 @@ import java.util.Properties;
 import java.util.zip.CRC32;
 import java.util.zip.CheckedInputStream;
 
-import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.irods.jargon.testutils.TestingUtilsException;
-
-import static org.irods.jargon.testutils.TestingPropertiesHelper.*;
 
 /**
  * @author Mike Conway, DICE (www.irods.org)
@@ -25,9 +24,8 @@ import static org.irods.jargon.testutils.TestingPropertiesHelper.*;
 
 public class ScratchFileUtils {
 	private Properties testingProperties = new Properties();
-	private TestingPropertiesHelper testingPropertiesHelper = new TestingPropertiesHelper();
 
-	public ScratchFileUtils(Properties testingProperties)
+	public ScratchFileUtils(final Properties testingProperties)
 			throws TestingUtilsException {
 		this.testingProperties = testingProperties;
 		checkTrailingSlash(testingProperties
@@ -40,10 +38,10 @@ public class ScratchFileUtils {
 	 * relative path of the file/directory underneath the scratch area (no
 	 * leading / delim is necessary
 	 */
-	public void createScratchDirIfNotExists(String pathUnderScratch) {
-		File scratchDir = new File(testingProperties
-				.getProperty(GENERATED_FILE_DIRECTORY_KEY)
-				+ pathUnderScratch);
+	public void createScratchDirIfNotExists(final String pathUnderScratch) {
+		File scratchDir = new File(
+				testingProperties.getProperty(GENERATED_FILE_DIRECTORY_KEY)
+						+ pathUnderScratch);
 		scratchDir.mkdirs();
 	}
 
@@ -61,10 +59,11 @@ public class ScratchFileUtils {
 	 *            '/') under the configured scratch directory pointing to the
 	 *            directory to initialize
 	 */
-	public void clearAndReinitializeScratchDirectory(String pathUnderScratch) {
-		File scratchDir = new File(testingProperties
-				.getProperty(GENERATED_FILE_DIRECTORY_KEY)
-				+ pathUnderScratch);
+	public void clearAndReinitializeScratchDirectory(
+			final String pathUnderScratch) {
+		File scratchDir = new File(
+				testingProperties.getProperty(GENERATED_FILE_DIRECTORY_KEY)
+						+ pathUnderScratch);
 		// if exists, delete it
 		if (scratchDir.exists()) {
 			removeFiles(scratchDir);
@@ -74,11 +73,11 @@ public class ScratchFileUtils {
 		scratchDir.mkdirs();
 	}
 
-	private void removeFiles(File file) {
+	private void removeFiles(final File file) {
 		if (file.isDirectory()) {
 			File[] files = file.listFiles();
-			for (int i = 0; i < files.length; i++) {
-				removeFiles(files[i]);
+			for (File file2 : files) {
+				removeFiles(file2);
 			}
 		}
 
@@ -95,15 +94,15 @@ public class ScratchFileUtils {
 	 *            is necessary
 	 * @return
 	 */
-	public boolean checkIfFileExistsInScratch(String pathUnderScratch) {
-		File targetFile = new File(testingProperties
-				.getProperty(GENERATED_FILE_DIRECTORY_KEY)
-				+ pathUnderScratch);
+	public boolean checkIfFileExistsInScratch(final String pathUnderScratch) {
+		File targetFile = new File(
+				testingProperties.getProperty(GENERATED_FILE_DIRECTORY_KEY)
+						+ pathUnderScratch);
 
 		return targetFile.exists();
 	}
 
-	public void createDirectoryUnderScratch(String relativePath) {
+	public void createDirectoryUnderScratch(final String relativePath) {
 
 		createScratchDirIfNotExists(relativePath);
 
@@ -118,7 +117,7 @@ public class ScratchFileUtils {
 	 * @return <code>String</code> absolute path to the file name, up to the
 	 *         last subdirectory, with a trailing '/'
 	 */
-	public String createAndReturnAbsoluteScratchPath(String path) {
+	public String createAndReturnAbsoluteScratchPath(final String path) {
 
 		// this creates intermediate directories
 		createScratchDirIfNotExists(path);
@@ -138,7 +137,7 @@ public class ScratchFileUtils {
 	 * @return <code>long</code> with the file's checksum value
 	 * @throws TestingUtilsException
 	 */
-	public byte[] computeFileCheckSum(String pathUnderScratch)
+	public byte[] computeFileCheckSum(final String pathUnderScratch)
 			throws TestingUtilsException {
 
 		StringBuilder pathBuilder = new StringBuilder();
@@ -167,7 +166,6 @@ public class ScratchFileUtils {
 			message.append(pathBuilder);
 			throw new TestingUtilsException(message.toString(), fnfe);
 		} catch (NoSuchAlgorithmException nsae) {
-			StringBuilder message = new StringBuilder();
 			throw new TestingUtilsException(
 					"could not MD5 algorithim for checksum", nsae);
 		} catch (IOException ioe) {
@@ -195,7 +193,7 @@ public class ScratchFileUtils {
 	 * @throws TestingUtilsException
 	 */
 	public long computeFileCheckSumViaAbsolutePath(
-			String absolutePathToLocalFile) throws TestingUtilsException {
+			final String absolutePathToLocalFile) throws TestingUtilsException {
 
 		FileInputStream file;
 		try {
@@ -215,13 +213,20 @@ public class ScratchFileUtils {
 			throw new TestingUtilsException(
 					"error computing checksum for file:"
 							+ absolutePathToLocalFile, e);
+		} finally {
+			try {
+				in.close();
+			} catch (IOException e) {
+				// ignore
+			}
 		}
 
 		return check.getChecksum().getValue();
 
 	}
 
-	private void checkTrailingSlash(String path) throws TestingUtilsException {
+	private void checkTrailingSlash(final String path)
+			throws TestingUtilsException {
 		String trimmedPath = path.trim();
 		String lastChar = trimmedPath.substring(trimmedPath.length() - 1);
 		if (!lastChar.equals("/")) {

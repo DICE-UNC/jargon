@@ -61,7 +61,7 @@ public class IRODSRuleParameter {
 	}
 
 	IRODSRuleParameter(final int value) {
-		this(null, new Integer(value), INT_PI);
+		this(null, Integer.valueOf(value), INT_PI);
 	}
 
 	IRODSRuleParameter(final String value) {
@@ -116,7 +116,7 @@ public class IRODSRuleParameter {
 	}
 
 	void setIntValue(final int value) {
-		this.value = new Integer(value);
+		this.value = Integer.valueOf(value);
 		type = INT_PI;
 	}
 
@@ -154,13 +154,13 @@ public class IRODSRuleParameter {
 		if (value.getClass().isArray() && type.equals(EXEC_CMD_OUT_PI)) {
 
 			StringBuilder stringValue = new StringBuilder();
-			String msg = new String();
 			int alength = Array.getLength(value);
+			String msg;
 			for (int ij = 0; ij < alength; ij++) {
 				if (Array.get(value, ij) != null) {
 					msg = Array.get(value, ij).toString();
 					if (msg != null) {
-						msg = new String(Base64.fromString(msg));
+						msg = String.valueOf(Base64.fromString(msg));
 						if (msg != null) {
 							stringValue.append(msg);
 						}

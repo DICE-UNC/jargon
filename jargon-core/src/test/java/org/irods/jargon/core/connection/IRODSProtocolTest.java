@@ -2,7 +2,7 @@ package org.irods.jargon.core.connection;
 
 import java.util.Properties;
 
-import junit.framework.TestCase;
+import junit.framework.Assert;
 
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.junit.AfterClass;
@@ -32,11 +32,11 @@ public class IRODSProtocolTest {
 				.buildIRODSAccountFromTestProperties(testingProperties);
 		IRODSCommands irodsProtocol = IRODSCommands.instance(irodsAccount,
 				irodsConnectionManager);
-		TestCase.assertTrue("i should have been connected", irodsProtocol
-				.isConnected());
+		Assert.assertTrue("i should have been connected",
+				irodsProtocol.isConnected());
 		irodsProtocol.disconnect();
 	}
-	
+
 	@Test
 	public void testChallengeIsCachedForStandardPassword() throws Exception {
 		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager
@@ -45,7 +45,8 @@ public class IRODSProtocolTest {
 				.buildIRODSAccountFromTestProperties(testingProperties);
 		IRODSCommands irodsProtocol = IRODSCommands.instance(irodsAccount,
 				irodsConnectionManager);
-		TestCase.assertTrue("i should have been connected", irodsProtocol.getCachedChallengeValue().length() > 0);
+		Assert.assertTrue("i should have been connected", irodsProtocol
+				.getCachedChallengeValue().length() > 0);
 		irodsProtocol.disconnect();
 	}
 
@@ -58,8 +59,8 @@ public class IRODSProtocolTest {
 		IRODSCommands irodsProtocol = IRODSCommands.instance(irodsAccount,
 				irodsConnectionManager);
 		irodsProtocol.disconnect();
-		TestCase.assertFalse("i should have disconnected", irodsProtocol
-				.isConnected());
+		Assert.assertFalse("i should have disconnected",
+				irodsProtocol.isConnected());
 	}
 
 	@Test
@@ -71,8 +72,8 @@ public class IRODSProtocolTest {
 		IRODSCommands irodsProtocolEngine = IRODSCommands.instance(
 				irodsAccount, irodsConnectionManager);
 		irodsProtocolEngine.disconnectWithIOException();
-		TestCase.assertFalse("i should have disconnected", irodsProtocolEngine
-				.isConnected());
+		Assert.assertFalse("i should have disconnected",
+				irodsProtocolEngine.isConnected());
 	}
 
 	@Test
@@ -85,7 +86,7 @@ public class IRODSProtocolTest {
 				irodsAccount, irodsConnectionManager);
 		IRODSAccount actualIRODSAccount = irodsProtocolEngine.getIRODSAccount();
 		irodsProtocolEngine.disconnect();
-		TestCase.assertEquals(
+		Assert.assertEquals(
 				"i should have gotten back the correct IRODSAccount",
 				irodsAccount.getUserName(), actualIRODSAccount.getUserName());
 	}
@@ -101,7 +102,7 @@ public class IRODSProtocolTest {
 		IRODSServerProperties irodsServerProperties = irodsProtocolEngine
 				.getIRODSServerProperties();
 		irodsProtocolEngine.disconnect();
-		TestCase.assertNotNull(irodsServerProperties);
+		Assert.assertNotNull(irodsServerProperties);
 	}
 
 	@Test
@@ -113,7 +114,7 @@ public class IRODSProtocolTest {
 		IRODSCommands irodsProtocol = IRODSCommands.instance(irodsAccount,
 				irodsConnectionManager);
 		irodsProtocol.disconnect();
-		TestCase.assertNotNull(irodsProtocol.getConnectionUri());
+		Assert.assertNotNull(irodsProtocol.getConnectionUri());
 	}
 
 }

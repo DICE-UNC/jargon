@@ -8,8 +8,9 @@ import org.irods.jargon.core.exception.JargonException;
 import edu.sdsc.grid.io.irods.Tag;
 
 /**
- * Immutable object gives translation of an ExecCmd operation into XML in order to close a stream opened by ExecCmd.  For simplicity, this
- * variant of the packing instruction is factored into its own class.
+ * Immutable object gives translation of an ExecCmd operation into XML in order
+ * to close a stream opened by ExecCmd. For simplicity, this variant of the
+ * packing instruction is factored into its own class.
  * 
  * @author Mike Conway - DICE (www.irods.org)
  * 
@@ -17,23 +18,26 @@ import edu.sdsc.grid.io.irods.Tag;
 
 public final class ExecCmdStreamClose extends AbstractIRODSPackingInstruction {
 
-	public static final String PI_TAG = "ExecCmd_PI";
+	public static final String PI_TAG = "fileCloseInp_PI";
 	public static final String FILE_INX = "fileInx";
 
 	public static final int STREAM_CLOSE_API_NBR = 693;
-	
+
 	private final int fileDescriptor;
-	
+
 	/**
 	 * Create an instance of the packing instruction to close the given stream.
-	 * @param fileDescriptor <code>int</code> with the file descriptor representing the stream to close
+	 * 
+	 * @param fileDescriptor
+	 *            <code>int</code> with the file descriptor representing the
+	 *            stream to close
 	 * @return <code>ExecCmdStreamClose</code> instance.
 	 * @throws JargonException
 	 */
-	public static ExecCmdStreamClose instance(final int fileDescriptor) throws JargonException {
+	public static ExecCmdStreamClose instance(final int fileDescriptor)
+			throws JargonException {
 		return new ExecCmdStreamClose(STREAM_CLOSE_API_NBR, fileDescriptor);
 	}
-
 
 	@Override
 	public String toString() {
@@ -44,23 +48,25 @@ public final class ExecCmdStreamClose extends AbstractIRODSPackingInstruction {
 		return sb.toString();
 	}
 
-	
 	/**
-	 * Constructor for a remote execution service close stream packing instruction call.
+	 * Constructor for a remote execution service close stream packing
+	 * instruction call.
 	 * 
-	 * @param apiNumber <code>int</code> with the api number to use with this call.
-	 * @param fileDescriptor <code>int</code> with the file descriptor representing the stream to close
+	 * @param apiNumber
+	 *            <code>int</code> with the api number to use with this call.
+	 * @param fileDescriptor
+	 *            <code>int</code> with the file descriptor representing the
+	 *            stream to close
 	 * @throws JargonException
 	 */
-	private ExecCmdStreamClose(
-			final int apiNumber,
-			final int fileDescriptor
-			) throws JargonException {
+	private ExecCmdStreamClose(final int apiNumber, final int fileDescriptor)
+			throws JargonException {
 
 		super();
-		
+
 		if (fileDescriptor < 1) {
-			throw new IllegalArgumentException("file descriptor is 0 or negative");
+			throw new IllegalArgumentException(
+					"file descriptor is 0 or negative");
 		}
 
 		this.fileDescriptor = fileDescriptor;
@@ -78,12 +84,9 @@ public final class ExecCmdStreamClose extends AbstractIRODSPackingInstruction {
 	@Override
 	public Tag getTagValue() throws JargonException {
 
-		Tag message = new Tag(
-				PI_TAG,
-				new Tag[] {
-						new Tag(FILE_INX, fileDescriptor)
-						 });
-		
+		Tag message = new Tag(PI_TAG, new Tag[] { new Tag(FILE_INX,
+				fileDescriptor) });
+
 		return message;
 	}
 

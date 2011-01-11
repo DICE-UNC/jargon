@@ -19,8 +19,8 @@ import edu.sdsc.grid.io.irods.Tag;
  */
 public class FileReadInp extends AbstractIRODSPackingInstruction {
 
-	public static final String PI_TAG = "FileReadInp_PI";
-	public static final int FILE_READ_API_NBR = 681;
+	public static final String PI_TAG = "fileReadInp_PI";
+	public static final int FILE_READ_API_NBR = 691;
 	public static final String FILE_INX = "fileInx";
 	public static final String LEN = "len";
 

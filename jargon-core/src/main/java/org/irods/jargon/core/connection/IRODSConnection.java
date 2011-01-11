@@ -130,7 +130,8 @@ public final class IRODSConnection implements IRODSManagedConnection {
 		try {
 			connection = new Socket(irodsAccount.getHost(),
 					irodsAccount.getPort());
-			// TODO: make a jargon.properties file to move out some of this config, as well as def rec counts, etc
+			// TODO: make a jargon.properties file to move out some of this
+			// config, as well as def rec counts, etc
 			if (CONNECTION_TIMEOUT_DEFAULT != -1) {
 				log.warn("setting a connection timeout of:{}",
 						CONNECTION_TIMEOUT_DEFAULT);

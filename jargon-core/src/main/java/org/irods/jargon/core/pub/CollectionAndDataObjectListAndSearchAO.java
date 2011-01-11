@@ -6,15 +6,18 @@ import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry;
 
 /**
- * This interface describes an access object that assists in the searching and listing of collections and data objects, suitable for
- * developing tree depictions of an iRODS file system, and searching that file system on file and collection names.
+ * This interface describes an access object that assists in the searching and
+ * listing of collections and data objects, suitable for developing tree
+ * depictions of an iRODS file system, and searching that file system on file
+ * and collection names.
  * <p/>
- * This access object is being designed to support basic interface functionality for both Swing and web GUI tree models, and
- * basic search boxes for file or collection names.  More advanced searching based on metadata or other criteria are available elsewhere in 
- * the API.
+ * This access object is being designed to support basic interface functionality
+ * for both Swing and web GUI tree models, and basic search boxes for file or
+ * collection names. More advanced searching based on metadata or other criteria
+ * are available elsewhere in the API.
  * 
  * @author Mike Conway - DICE (www.irods.org)
- *
+ * 
  */
 public interface CollectionAndDataObjectListAndSearchAO {
 
@@ -219,12 +222,15 @@ public interface CollectionAndDataObjectListAndSearchAO {
 			String searchTerm) throws JargonException;
 
 	/**
-	 * Provides a search capability to search for any collections and data objects that have a
-	 * match on the given search term. The typical case would be a search box on
-	 * a form to find all data objects that have the given string in the name.  This method creates the union of a 
-	 * search on both data objects and collections.  Note that for data objects and collections, there might separately be
-	 * further paging available.  In typical usage, this method can be called.  The result collections can be inspected
-	 * using the methods defined in {@link org.irods.jargon.core.pub.domain.IRODSDomainObject} to see if more 
+	 * Provides a search capability to search for any collections and data
+	 * objects that have a match on the given search term. The typical case
+	 * would be a search box on a form to find all data objects that have the
+	 * given string in the name. This method creates the union of a search on
+	 * both data objects and collections. Note that for data objects and
+	 * collections, there might separately be further paging available. In
+	 * typical usage, this method can be called. The result collections can be
+	 * inspected using the methods defined in
+	 * {@link org.irods.jargon.core.pub.domain.IRODSDomainObject} to see if more
 	 * results are available.
 	 * <p/>
 	 * Note that this will do a genquery like:

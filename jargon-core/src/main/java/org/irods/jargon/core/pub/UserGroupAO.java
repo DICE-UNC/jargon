@@ -17,8 +17,7 @@ public interface UserGroupAO extends IRODSAccessObject {
 	 * @return <code>UserGroup</code> domain object
 	 * @throws JargonException
 	 */
-	UserGroup find(final String userGroupId)
-			throws JargonException;
+	UserGroup find(final String userGroupId) throws JargonException;
 
 	/**
 	 * Given a user name, return the <code>UserGroup</code>, or return null if
@@ -29,8 +28,7 @@ public interface UserGroupAO extends IRODSAccessObject {
 	 * @return <code>UserGroup</code> domain object
 	 * @throws JargonException
 	 */
-	UserGroup findByName(final String userGroupName)
-			throws JargonException;
+	UserGroup findByName(final String userGroupName) throws JargonException;
 
 	/**
 	 * Provides a convenient way to query for <code>UserGroup</code>s using the
@@ -47,8 +45,8 @@ public interface UserGroupAO extends IRODSAccessObject {
 	 * @throws JargonQueryException
 	 *             indicates some syntax exception in the provided where clause
 	 */
-	List<UserGroup> findWhere(String whereClause)
-			throws JargonException, JargonQueryException;
+	List<UserGroup> findWhere(String whereClause) throws JargonException,
+			JargonQueryException;
 
 	/**
 	 * Given a user name, return the user groups that the given user belongs to,

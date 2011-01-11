@@ -7,7 +7,7 @@ import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSCommands;
 import org.irods.jargon.core.connection.IRODSServerProperties;
 import org.irods.jargon.core.connection.IRODSSession;
-import org.irods.jargon.core.connection.JargonProperites;
+import org.irods.jargon.core.connection.JargonProperties;
 import org.irods.jargon.core.exception.JargonException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -101,22 +101,19 @@ public abstract class IRODSGenericAO implements IRODSAccessObject {
 		return getIrodsSession().currentConnection(getIrodsAccount());
 	}
 
-	
 	@Override
 	public IRODSSession getIrodsSession() {
 		return irodsSession;
 	}
 
-	
 	@Override
 	public IRODSAccount getIrodsAccount() {
 		return irodsAccount;
 	}
-	
-	
+
 	@Override
-	public JargonProperites getJargonProperties() {
-		return irodsSession.getJargonProperties();
+	public JargonProperties getJargonProperties() {
+		return IRODSSession.getJargonProperties();
 	}
 
 }

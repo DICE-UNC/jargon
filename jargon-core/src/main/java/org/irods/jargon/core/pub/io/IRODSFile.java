@@ -16,7 +16,7 @@ import org.irods.jargon.core.exception.JargonException;
  * <p/>
  * The <code>IRODSFile</code>, and the <code>IRODSFileImpl</code> implementation
  * class are meant to strictly follow the <code>java.io.File</code> interface,
- * with a minimum of iRODS-specific methods. 
+ * with a minimum of iRODS-specific methods.
  * <p/>
  * The <code>org.irods.jargon.core.pub.io.</code> classes provide familiar file
  * operations. In older versions of Jargon, various iRODS operations were mixed

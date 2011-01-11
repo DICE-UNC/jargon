@@ -152,7 +152,7 @@ public class RemoteExecuteServiceImplTest {
 	@Test
 	public final void testExecuteHelloWithStreamingOnSmallResultWillNotCauseStreaming()
 			throws Exception {
-		
+
 		if (!testingPropertiesHelper.isTestRemoteExecStream(testingProperties)) {
 			return;
 		}
@@ -165,17 +165,20 @@ public class RemoteExecuteServiceImplTest {
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
 		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
-		
-		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(irodsAccount);
-		IRODSServerProperties props = environmentalInfoAO.getIRODSServerPropertiesFromIRODSServer();
-		
-		
-		// test is only valid for post 2.4.1 FIXME: bump this up to the next released version
+
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
+						irodsAccount);
+		IRODSServerProperties props = environmentalInfoAO
+				.getIRODSServerPropertiesFromIRODSServer();
+
+		// test is only valid for post 2.4.1 FIXME: bump this up to the next
+		// released version
 		if (!props.isTheIrodsServerAtLeastAtTheGivenReleaseVersion("2.4.1")) {
+			irodsFileSystem.closeAndEatExceptions();
 			return;
 		}
-		
-		
+
 		CollectionAO collectionAO = irodsFileSystem
 				.getIRODSAccessObjectFactory().getCollectionAO(irodsAccount);
 		CollectionAOImpl collectionAOImpl = (CollectionAOImpl) collectionAO;
@@ -205,7 +208,7 @@ public class RemoteExecuteServiceImplTest {
 
 	@Test
 	public final void testExecuteHelloWithPath() throws Exception {
-		
+
 		if (!testingPropertiesHelper.isTestRemoteExecStream(testingProperties)) {
 			return;
 		}
@@ -270,10 +273,93 @@ public class RemoteExecuteServiceImplTest {
 				"Hello world  from irods".trim(), result.trim());
 
 	}
+	
+	@Test
+	public final void testExecuteHelloWithPathUsingPost241API() throws Exception {
+
+		if (!testingPropertiesHelper.isTestRemoteExecStream(testingProperties)) {
+			return;
+		}
+		
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
+						irodsAccount);
+		IRODSServerProperties props = environmentalInfoAO
+				.getIRODSServerPropertiesFromIRODSServer();
+
+		// test is only valid for post 2.4.1 FIXME: bump this up to the next
+		// released version
+		if (!props.isTheIrodsServerAtLeastAtTheGivenReleaseVersion("2.4.1")) {
+			irodsFileSystem.closeAndEatExceptions();
+			return;
+		}
+
+		String cmd = "hello";
+		String args = "";
+		String host = "";
+
+		String testFileName = "testExecuteHelloWithPathUsingPost241API.txt";
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String localFileName = FileGenerator
+				.generateFileOfFixedLengthGivenName(absPath, testFileName, 300);
+
+		String targetIrodsFile = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
+								+ testFileName);
+
+		IrodsInvocationContext invocationContext = testingPropertiesHelper
+				.buildIRODSInvocationContextFromTestProperties(testingProperties);
+		IputCommand iputCommand = new IputCommand();
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		iputCommand.setLocalFileName(localFileName);
+		iputCommand.setIrodsFileName(targetIrodsCollection);
+		iputCommand.setForceOverride(true);
+
+		IcommandInvoker invoker = new IcommandInvoker(invocationContext);
+		invoker.invokeCommandAndGetResultAsString(iputCommand);
+
+		
+		CollectionAO collectionAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getCollectionAO(irodsAccount);
+		CollectionAOImpl collectionAOImpl = (CollectionAOImpl) collectionAO;
+		IRODSCommands irodsCommands = collectionAOImpl.getIRODSProtocol();
+		RemoteExecutionService remoteExecuteService = RemoteExecuteServiceImpl
+				.instance(irodsCommands, cmd, args, host, targetIrodsFile);
+
+		InputStream inputStream = remoteExecuteService.executeAndStream();
+
+		BufferedReader br = new BufferedReader(new InputStreamReader(
+				inputStream));
+		StringBuilder sb = new StringBuilder();
+		String line = null;
+
+		while ((line = br.readLine()) != null) {
+			sb.append(line + "\n");
+		}
+
+		br.close();
+		String result = sb.toString();
+		irodsFileSystem.close();
+
+		Assert.assertEquals("did not successfully execute hello command",
+				"Hello world  from irods".trim(), result.trim());
+
+	}
 
 	@Test
 	public final void testExecuteHelloWithHost() throws Exception {
-		
+
 		if (!testingPropertiesHelper.isTestRemoteExecStream(testingProperties)) {
 			return;
 		}
@@ -372,15 +458,15 @@ public class RemoteExecuteServiceImplTest {
 				result.trim());
 
 	}
-	
+
 	@Test
 	public final void testExecuteExecStreamTestScriptWithStreamingOnSmallResultWillNotCauseStreaming()
 			throws Exception {
-		
+
 		if (!testingPropertiesHelper.isTestRemoteExecStream(testingProperties)) {
 			return;
 		}
-		
+
 		int testLen = 300;
 
 		String cmd = "test_execstream.py";
@@ -391,17 +477,19 @@ public class RemoteExecuteServiceImplTest {
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
 		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
-		
-		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(irodsAccount);
-		IRODSServerProperties props = environmentalInfoAO.getIRODSServerPropertiesFromIRODSServer();
-		
-		
-		// test is only valid for post 2.4.1 FIXME: bump this up to the next released version
+
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
+						irodsAccount);
+		IRODSServerProperties props = environmentalInfoAO
+				.getIRODSServerPropertiesFromIRODSServer();
+
+		// test is only valid for post 2.4.1 FIXME: bump this up to the next
+		// released version
 		if (!props.isTheIrodsServerAtLeastAtTheGivenReleaseVersion("2.4.1")) {
 			return;
 		}
-		
-		
+
 		CollectionAO collectionAO = irodsFileSystem
 				.getIRODSAccessObjectFactory().getCollectionAO(irodsAccount);
 		CollectionAOImpl collectionAOImpl = (CollectionAOImpl) collectionAO;
@@ -424,23 +512,21 @@ public class RemoteExecuteServiceImplTest {
 		String result = sb.toString();
 		irodsFileSystem.close();
 
-		Assert.assertEquals("did not get expected data length",
-				testLen, result.length());
+		Assert.assertEquals("did not get expected data length", testLen,
+				result.length());
 
 	}
-	
-	
-	
+
 	@Test
 	public final void testExecuteExecStreamTestScriptWithStreamingOnLargeResultWillCauseStreaming()
 			throws Exception {
-		
+
 		if (!testingPropertiesHelper.isTestRemoteExecStream(testingProperties)) {
 			return;
 		}
-		
-		// threshold is 64M
-		int testLen = 71680 * 1024;
+
+		// threshold is 1M, this is 2M
+		int testLen = 2097152;
 
 		String cmd = "test_execstream.py";
 		String args = String.valueOf(testLen);
@@ -450,17 +536,20 @@ public class RemoteExecuteServiceImplTest {
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
 		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
-		
-		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(irodsAccount);
-		IRODSServerProperties props = environmentalInfoAO.getIRODSServerPropertiesFromIRODSServer();
-		
-		
-		// test is only valid for post 2.4.1 FIXME: bump this up to the next released version
+
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
+						irodsAccount);
+		IRODSServerProperties props = environmentalInfoAO
+				.getIRODSServerPropertiesFromIRODSServer();
+
+		// test is only valid for post 2.4.1 FIXME: bump this up to the next
+		// released version
 		if (!props.isTheIrodsServerAtLeastAtTheGivenReleaseVersion("2.4.1")) {
+			irodsFileSystem.closeAndEatExceptions();
 			return;
 		}
-		
-		
+
 		CollectionAO collectionAO = irodsFileSystem
 				.getIRODSAccessObjectFactory().getCollectionAO(irodsAccount);
 		CollectionAOImpl collectionAOImpl = (CollectionAOImpl) collectionAO;
@@ -483,21 +572,21 @@ public class RemoteExecuteServiceImplTest {
 		String result = sb.toString();
 		irodsFileSystem.close();
 
-		Assert.assertEquals("did not get expected data length",
-				testLen, result.length());
+		Assert.assertEquals("did not get expected data length", testLen,
+				result.length());
 
 	}
-	
+
 	@Test
 	public final void testExecuteExecStreamTestScriptWithStreamingOnLargeResultButWillNotCauseStreaming()
 			throws Exception {
-		
+
 		if (!testingPropertiesHelper.isTestRemoteExecStream(testingProperties)) {
 			return;
 		}
-		
+
 		// threshold is 64M
-		int testLen = 8388608;
+		int testLen = 997152;
 
 		String cmd = "test_execstream.py";
 		String args = String.valueOf(testLen);
@@ -507,17 +596,19 @@ public class RemoteExecuteServiceImplTest {
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
 		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
-		
-		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(irodsAccount);
-		IRODSServerProperties props = environmentalInfoAO.getIRODSServerPropertiesFromIRODSServer();
-		
-		
-		// test is only valid for post 2.4.1 FIXME: bump this up to the next released version
+
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
+						irodsAccount);
+		IRODSServerProperties props = environmentalInfoAO
+				.getIRODSServerPropertiesFromIRODSServer();
+
+		// test is only valid for post 2.4.1 FIXME: bump this up to the next
+		// released version
 		if (!props.isTheIrodsServerAtLeastAtTheGivenReleaseVersion("2.4.1")) {
 			return;
 		}
-		
-		
+
 		CollectionAO collectionAO = irodsFileSystem
 				.getIRODSAccessObjectFactory().getCollectionAO(irodsAccount);
 		CollectionAOImpl collectionAOImpl = (CollectionAOImpl) collectionAO;
@@ -540,8 +631,8 @@ public class RemoteExecuteServiceImplTest {
 		String result = sb.toString();
 		irodsFileSystem.close();
 
-		Assert.assertEquals("did not get expected data length",
-				testLen, result.length());
+		Assert.assertEquals("did not get expected data length", testLen,
+				result.length());
 
 	}
 

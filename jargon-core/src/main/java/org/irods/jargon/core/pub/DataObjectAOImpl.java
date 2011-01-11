@@ -30,6 +30,7 @@ import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.packinstr.DataObjInp;
 import org.irods.jargon.core.packinstr.ModAvuMetadataInp;
+import org.irods.jargon.core.packinstr.TransferOptions;
 import org.irods.jargon.core.pub.aohelper.DataAOHelper;
 import org.irods.jargon.core.pub.domain.AvuData;
 import org.irods.jargon.core.pub.domain.DataObject;
@@ -58,9 +59,12 @@ import edu.sdsc.grid.io.irods.Tag;
  * the objects in the <code>org.irods.jargon.core.pub.io</code> package. This
  * class represents operations that are outside of the contracts one would
  * expect from an <code>java.io.File</code> object or the various streams.
+ * <p/>
+ * Note that the operations are tuned using parameters set in the <code>JargonProperties</code> object kept in
+ * <code>IRODSession</code>.  Unless specifically indicated in the method signatures or comments, the defaults
+ * control such aspects as whether paralllel file transfers are done.
  * 
  * @author Mike Conway - DICE (www.irods.org)
- *  FIXME: add findWhereDistinct() methods?  need to add for collections too?
  */
 public final class DataObjectAOImpl extends IRODSGenericAO implements
 		DataObjectAO {
@@ -243,7 +247,7 @@ public final class DataObjectAOImpl extends IRODSGenericAO implements
 			throws JargonException {
 
 		putLocalDataObjectToIRODS(localFile, irodsFileDestination, overwrite,
-				false);
+				false, null);
 
 	}
 
@@ -260,13 +264,22 @@ public final class DataObjectAOImpl extends IRODSGenericAO implements
 			final boolean overwrite) throws JargonException {
 
 		putLocalDataObjectToIRODS(localFile, irodsFileDestination, overwrite,
-				true);
+				true, null);
 
 	}
 
+	/**
+	 * Internal common method to execute puts.
+	 * @param localFile <code>File</code> with the local data.
+	 * @param irodsFileDestination <code>IRODSFile</code> that describe the target of the put.
+	 * @param overwrite <code>boolean</code> that adds a force option to overwrite any file already on iRODS.
+	 * @param ignoreChecks <code>boolean</code> that bypasses any checks of the iRODS data before attempting the put.
+	 * @param transferOptions {@link TransferOptions} that optionally give directions on details of the transfer.  Will be <code>null</code> if not set.
+	 * @throws JargonException
+	 */
 	protected void putLocalDataObjectToIRODS(final File localFile,
 			final IRODSFile irodsFileDestination, final boolean overwrite,
-			final boolean ignoreChecks) throws JargonException {
+			final boolean ignoreChecks, final TransferOptions transferOptions) throws JargonException {
 
 		if (localFile == null) {
 			throw new JargonException("null local file");
@@ -299,6 +312,11 @@ public final class DataObjectAOImpl extends IRODSGenericAO implements
 
 		IRODSFile targetFile = checkTargetFileForPutOperation(localFile,
 				irodsFileDestination, ignoreChecks);
+		
+		
+		
+		
+		
 
 		DataObjInp dataObjInp = DataObjInp.instanceForInitialCallToPut(
 				targetFile.getAbsolutePath(), localFile.length(),
@@ -307,7 +325,7 @@ public final class DataObjectAOImpl extends IRODSGenericAO implements
 		try {
 			Tag responseToInitialCallForPut = getIRODSProtocol().irodsFunction(
 					dataObjInp);
-			
+
 			int numberOfThreads = responseToInitialCallForPut
 					.getTag(numThreads).getIntValue();
 
@@ -360,7 +378,7 @@ public final class DataObjectAOImpl extends IRODSGenericAO implements
 					return;
 				}
 			}
-			
+
 		} catch (DataNotFoundException dnf) {
 			log.warn("send of put returned no data found from irods, currently is ignored and null is returned from put operation");
 			return;
@@ -698,12 +716,9 @@ public final class DataObjectAOImpl extends IRODSGenericAO implements
 		query.append(RodsGenQueryEnum.COL_META_DATA_ATTR_UNITS.getName());
 		query.append(WHERE);
 		boolean previousElement = false;
-		@SuppressWarnings("unused")
-		StringBuilder queryCondition = null;
 
 		for (AVUQueryElement queryElement : avuQuery) {
 
-			queryCondition = new StringBuilder();
 			if (previousElement) {
 				query.append(AND);
 			}
@@ -933,7 +948,7 @@ public final class DataObjectAOImpl extends IRODSGenericAO implements
 		query.append(WHERE);
 		boolean previousElement = false;
 		@SuppressWarnings("unused")
-		StringBuilder queryCondition = null;
+		StringBuilder queryCondition;
 
 		for (AVUQueryElement queryElement : avuQuery) {
 

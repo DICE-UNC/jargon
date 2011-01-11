@@ -18,7 +18,7 @@ public class InitializeCdCommand implements Icommand {
 		return targetCollection;
 	}
 
-	public void setTargetCollection(String targetCollection) {
+	public void setTargetCollection(final String targetCollection) {
 		this.targetCollection = targetCollection;
 	}
 
@@ -28,6 +28,7 @@ public class InitializeCdCommand implements Icommand {
 	 * @see org.irods.jargon.icommandinvoke.icommands.Icommand#buildCommand()
 	 */
 
+	@Override
 	public List<String> buildCommand() {
 		List<String> commandProps = new ArrayList<String>();
 		commandProps.add("icd");

@@ -8,14 +8,12 @@ import java.io.FileInputStream;
 import java.util.Arrays;
 import java.util.Properties;
 
-import junit.framework.TestCase;
+import junit.framework.Assert;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSProtocolManager;
 import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.connection.IRODSSimpleProtocolManager;
-import org.irods.jargon.core.pub.IRODSAccessObjectFactoryImpl;
-import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.irods.jargon.testutils.filemanip.FileGenerator;
 import org.irods.jargon.testutils.icommandinvoke.IcommandInvoker;
@@ -50,18 +48,6 @@ public class IRODSRandomAccessFileTest {
 		irodsTestSetupUtilities
 				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
 		assertionHelper = new org.irods.jargon.testutils.AssertionHelper();
-	}
-
-	@Test
-	public final void testIRODSRandomAccessFile() throws Exception {
-		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager
-				.instance();
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSSession irodsSession = IRODSSession
-				.instance(irodsConnectionManager);
-		IRODSAccessObjectFactory accessObjectFactory = IRODSAccessObjectFactoryImpl
-				.instance(irodsSession);
 	}
 
 	@Test
@@ -116,8 +102,7 @@ public class IRODSRandomAccessFileTest {
 				.buildIRODSAccountFromTestProperties(testingProperties);
 		IRODSSession irodsSession = IRODSSession
 				.instance(irodsConnectionManager);
-		IRODSAccessObjectFactory accessObjectFactory = IRODSAccessObjectFactoryImpl
-				.instance(irodsSession);
+
 		IRODSFileFactory irodsFileFactory = new IRODSFileFactoryImpl(
 				irodsSession, irodsAccount);
 
@@ -129,7 +114,7 @@ public class IRODSRandomAccessFileTest {
 		char expectedReadData = (char) inputBytes[0];
 
 		irodsSession.closeSession();
-		TestCase.assertEquals(
+		Assert.assertEquals(
 				"byte I read does not match the first byte I wrote",
 				expectedReadData, readData);
 
@@ -185,8 +170,7 @@ public class IRODSRandomAccessFileTest {
 				.buildIRODSAccountFromTestProperties(testingProperties);
 		IRODSSession irodsSession = IRODSSession
 				.instance(irodsConnectionManager);
-		IRODSAccessObjectFactory accessObjectFactory = IRODSAccessObjectFactoryImpl
-				.instance(irodsSession);
+
 		IRODSFileFactory irodsFileFactory = new IRODSFileFactoryImpl(
 				irodsSession, irodsAccount);
 
@@ -200,12 +184,12 @@ public class IRODSRandomAccessFileTest {
 		byte[] expectedBytes = new byte[20];
 		System.arraycopy(inputBytes, 200, expectedBytes, 0, 20);
 		irodsSession.closeSession();
-		TestCase.assertTrue(
+		Assert.assertTrue(
 				"did not seek and read the same data that I originally wrote",
 				Arrays.equals(expectedBytes, bytesToRead));
 
 	}
-	
+
 	/**
 	 * Bug 45 - SYS_UNMATCHED_API_NUM (-12000) when attempting to get a file
 	 * 
@@ -215,14 +199,8 @@ public class IRODSRandomAccessFileTest {
 	public void testUnmatchedAPIWhenReadingRAFile() throws Exception {
 
 		String testFileName = "testfileForApi.txt";
-		int fileLength = 2;
-
 		String absPath = scratchFileUtils
 				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
-		String inputFileName = FileGenerator
-				.generateFileOfFixedLengthGivenName(absPath, testFileName,
-						fileLength);
-
 		// put scratch file into irods in the right place
 		IrodsInvocationContext invocationContext = testingPropertiesHelper
 				.buildIRODSInvocationContextFromTestProperties(testingProperties);
@@ -244,22 +222,19 @@ public class IRODSRandomAccessFileTest {
 		IcommandInvoker invoker = new IcommandInvoker(invocationContext);
 		invoker.invokeCommandAndGetResultAsString(iputCommand);
 
-
 		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager
 				.instance();
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
 		IRODSSession irodsSession = IRODSSession
 				.instance(irodsConnectionManager);
-		IRODSAccessObjectFactory accessObjectFactory = IRODSAccessObjectFactoryImpl
-				.instance(irodsSession);
+
 		IRODSFileFactory irodsFileFactory = new IRODSFileFactoryImpl(
 				irodsSession, irodsAccount);
 
 		IRODSRandomAccessFile randomAccessFile = irodsFileFactory
 				.instanceIRODSRandomAccessFile(targetIrodsCollection + '/'
 						+ testFileName);
-
 
 		int nbytes = 0;
 		int offset = 0;
@@ -271,9 +246,9 @@ public class IRODSRandomAccessFileTest {
 			dataRead = true;
 		}
 		randomAccessFile.close();
-		TestCase.assertTrue("did not read back any data", dataRead);
+		Assert.assertTrue("did not read back any data", dataRead);
 	}
-	
+
 	/**
 	 * Test method for
 	 * {@link org.irods.jargon.core.pub.io.IRODSRandomAccessFile#readBoolean()}.

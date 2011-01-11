@@ -12,28 +12,28 @@ package org.irods.jargon.core.exception;
  * 
  */
 public class JargonFileOrCollAlreadyExistsException extends JargonException {
- 
+
 	private static final long serialVersionUID = 8322543242606980799L;
 
-	public JargonFileOrCollAlreadyExistsException(String message,
-			Throwable cause) {
+	public JargonFileOrCollAlreadyExistsException(final String message,
+			final Throwable cause) {
 		super(message, cause);
 	}
 
-	public JargonFileOrCollAlreadyExistsException(String message) {
+	public JargonFileOrCollAlreadyExistsException(final String message) {
 		super(message);
 	}
 
-	public JargonFileOrCollAlreadyExistsException(Throwable cause) {
+	public JargonFileOrCollAlreadyExistsException(final Throwable cause) {
 		super(cause);
 	}
-	
+
 	/**
 	 * @param message
 	 * @param cause
 	 */
-	public JargonFileOrCollAlreadyExistsException(final String message, final Throwable cause,
-			final int underlyingIRODSExceptionCode) {
+	public JargonFileOrCollAlreadyExistsException(final String message,
+			final Throwable cause, final int underlyingIRODSExceptionCode) {
 		super(message, cause, underlyingIRODSExceptionCode);
 	}
 
@@ -45,7 +45,8 @@ public class JargonFileOrCollAlreadyExistsException extends JargonException {
 		super(cause, underlyingIRODSExceptionCode);
 	}
 
-	public JargonFileOrCollAlreadyExistsException(String message, int info) {
+	public JargonFileOrCollAlreadyExistsException(final String message,
+			final int info) {
 		super(message, info);
 	}
 

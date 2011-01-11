@@ -28,7 +28,7 @@ public final class IRODSSession {
 	private IRODSProtocolManager irodsProtocolManager;
 	private static final Logger LOG = LoggerFactory
 			.getLogger(IRODSSession.class);
-	public static JargonProperites jargonProperties;
+	public static JargonProperties jargonProperties;
 
 	static {
 		try {
@@ -46,7 +46,7 @@ public final class IRODSSession {
 	 * 
 	 * @return {@link JargonProperties} with configuration metadata.
 	 */
-	public static JargonProperites getJargonProperties() {
+	public static JargonProperties getJargonProperties() {
 		return jargonProperties;
 	}
 
@@ -59,7 +59,7 @@ public final class IRODSSession {
 	 *            customization to Jargon behavior
 	 */
 	public static void setJargonProperties(
-			final JargonProperites jargonProperties) {
+			final JargonProperties jargonProperties) {
 		IRODSSession.jargonProperties = jargonProperties;
 	}
 

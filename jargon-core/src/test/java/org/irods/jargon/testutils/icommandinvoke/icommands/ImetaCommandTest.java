@@ -2,7 +2,7 @@ package org.irods.jargon.testutils.icommandinvoke.icommands;
 
 import java.util.Properties;
 
-import junit.framework.TestCase;
+import junit.framework.Assert;
 
 import org.irods.jargon.testutils.IRODSTestSetupUtilities;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
@@ -91,10 +91,10 @@ public class ImetaCommandTest {
 		imetaList.setObjectPath(imetaAdd.getObjectPath());
 		String metaValues = invoker
 				.invokeCommandAndGetResultAsString(imetaList);
-		TestCase.assertTrue("did not find expected attrib name", metaValues
-				.indexOf(expectedAttribName) > -1);
-		TestCase.assertTrue("did not find expected attrib value", metaValues
-				.indexOf(expectedAttribValue) > -1);
+		Assert.assertTrue("did not find expected attrib name",
+				metaValues.indexOf(expectedAttribName) > -1);
+		Assert.assertTrue("did not find expected attrib value",
+				metaValues.indexOf(expectedAttribValue) > -1);
 
 	}
 
@@ -140,10 +140,10 @@ public class ImetaCommandTest {
 		imetaList.setObjectPath(imetaAdd.getObjectPath());
 		String metaValues = invoker
 				.invokeCommandAndGetResultAsString(imetaList);
-		TestCase.assertTrue("did not find expected attrib name", metaValues
-				.indexOf(expectedAttribName) > -1);
-		TestCase.assertTrue("did not find expected attrib value", metaValues
-				.indexOf(expectedAttribValue) > -1);
+		Assert.assertTrue("did not find expected attrib name",
+				metaValues.indexOf(expectedAttribName) > -1);
+		Assert.assertTrue("did not find expected attrib value",
+				metaValues.indexOf(expectedAttribValue) > -1);
 
 		// now delete
 		ImetaRemoveCommand imetaRemove = new ImetaRemoveCommand();
@@ -156,8 +156,8 @@ public class ImetaCommandTest {
 		// look up AVU, should be gone
 
 		metaValues = invoker.invokeCommandAndGetResultAsString(imetaList);
-		TestCase.assertFalse("found removed attrib name", metaValues
-				.indexOf(expectedAttribName) > -1);
+		Assert.assertFalse("found removed attrib name",
+				metaValues.indexOf(expectedAttribName) > -1);
 	}
 
 }

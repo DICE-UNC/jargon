@@ -44,7 +44,7 @@ public final class IRODSAccount implements Serializable {
 	 * Stores the org.ietf.jgss.GSSCredential, used in GSI connections to the
 	 * iRODS.
 	 */
-	private final GSSCredential gssCredential;
+	private transient final GSSCredential gssCredential;
 	/**
 	 * iRODS API version "d"
 	 */
@@ -346,6 +346,12 @@ public final class IRODSAccount implements Serializable {
 		}
 	}
 
+	@Override
+	public int hashCode() {
+		return host.hashCode() + port + userName.hashCode()
+				+ password.hashCode();
+	}
+
 	/**
 	 * Returns a string representation of this file system object. The string is
 	 * formated according to the iRODS URI model. Note: the user password will
@@ -353,8 +359,14 @@ public final class IRODSAccount implements Serializable {
 	 */
 	@Override
 	public String toString() {
-		return new String("irods://" + getUserName() + "@" + getHost() + ":"
-				+ getPort());
+		StringBuilder sb = new StringBuilder();
+		sb.append("irods://");
+		sb.append(getUserName());
+		sb.append("@");
+		sb.append(getHost());
+		sb.append(":");
+		sb.append(getPort());
+		return sb.toString();
 	}
 
 	/**

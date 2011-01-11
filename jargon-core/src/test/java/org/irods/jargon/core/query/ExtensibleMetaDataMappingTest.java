@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import junit.framework.Assert;
-import junit.framework.TestCase;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -98,6 +97,5 @@ public class ExtensibleMetaDataMappingTest {
 				"stale data still in metadata mapping, should have overridden",
 				key3, actual);
 	}
-
 
 }

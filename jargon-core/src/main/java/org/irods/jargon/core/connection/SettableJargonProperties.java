@@ -1,0 +1,57 @@
+/**
+ * 
+ */
+package org.irods.jargon.core.connection;
+
+import org.irods.jargon.core.exception.JargonException;
+
+/**
+ * Implementation of the <code>JargonProperties</code> interface that is sutable
+ * for user-definition and injection into the <code>IRODSession</code>.
+ * Typcially, properties that control Jargon are pulled from a default
+ * jargon.properties file. This class would allow, for example, the wiring of
+ * property opttions via Spring through various setters.
+ * <p/>
+ * Note that this is, at first, a minimal implementatoin with certain defaults.
+ * In the future, a mechanism that consults the jargon properties for defaults
+ * and operates to override specific properties can be implemented.
+ * 
+ * @author Mike Conway - DICE (www.irods.org)
+ * 
+ */
+public class SettableJargonProperties implements JargonProperties {
+
+	private boolean useParallelTransfer = true;
+	private int maxParallelThreads = 4;
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.connection.JargonProperites#isUseParallelTransfer()
+	 */
+	@Override
+	public boolean isUseParallelTransfer() throws JargonException {
+		return useParallelTransfer;
+	}
+
+	public void setUseParallelTransfer(final boolean useParallelTransfer) {
+		this.useParallelTransfer = useParallelTransfer;
+	}
+
+	public void setMaxParallelThreads(final int maxParallelThreads) {
+		this.maxParallelThreads = maxParallelThreads;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.connection.JargonProperites#getMaxParallelThreads()
+	 */
+	@Override
+	public int getMaxParallelThreads() throws JargonException {
+		return maxParallelThreads;
+	}
+
+}

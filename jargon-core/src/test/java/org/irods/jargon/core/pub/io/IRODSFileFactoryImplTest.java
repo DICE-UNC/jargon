@@ -6,15 +6,15 @@ package org.irods.jargon.core.pub.io;
 import java.net.URI;
 import java.util.Properties;
 
-import junit.framework.TestCase;
+import junit.framework.Assert;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSProtocolManager;
 import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.connection.IRODSSimpleProtocolManager;
 import org.irods.jargon.core.exception.JargonException;
-import org.irods.jargon.core.pub.IRODSAccessObjectFactoryImpl;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
+import org.irods.jargon.core.pub.IRODSAccessObjectFactoryImpl;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.irods.jargon.testutils.filemanip.FileGenerator;
 import org.irods.jargon.testutils.icommandinvoke.IcommandInvoker;
@@ -70,7 +70,7 @@ public class IRODSFileFactoryImplTest {
 		IRODSFileFactory irodsFileFactory = accessObjectFactory
 				.getIRODSFileFactory(irodsAccount);
 		irodsSession.closeSession();
-		TestCase.assertNotNull(irodsFileFactory);
+		Assert.assertNotNull(irodsFileFactory);
 	}
 
 	@Test
@@ -87,7 +87,7 @@ public class IRODSFileFactoryImplTest {
 				.getIRODSFileFactory(irodsAccount);
 		IRODSFile irodsFile = irodsFileFactory.instanceIRODSFile("/apath");
 		irodsSession.closeSession();
-		TestCase.assertNotNull(irodsFile);
+		Assert.assertNotNull(irodsFile);
 	}
 
 	@Test
@@ -107,7 +107,7 @@ public class IRODSFileFactoryImplTest {
 						"home/afile.txt");
 		IRODSFile irodsFile = irodsFileFactory.instanceIRODSFile(testURI);
 		irodsSession.closeSession();
-		TestCase.assertNotNull(irodsFile);
+		Assert.assertNotNull(irodsFile);
 	}
 
 	@Test
@@ -125,7 +125,7 @@ public class IRODSFileFactoryImplTest {
 		IRODSFile irodsFile = irodsFileFactory.instanceIRODSFile("/apath",
 				"child");
 		irodsSession.closeSession();
-		TestCase.assertNotNull(irodsFile);
+		Assert.assertNotNull(irodsFile);
 	}
 
 	@Test(expected = JargonException.class)
@@ -142,8 +142,7 @@ public class IRODSFileFactoryImplTest {
 				.getIRODSFileFactory(irodsAccount);
 		IRODSFile irodsFile = irodsFileFactory.instanceIRODSFile("/apath",
 				"child");
-		IRODSFileOutputStream fos = irodsFileFactory
-				.instanceIRODSFileOutputStream(irodsFile);
+		irodsFileFactory.instanceIRODSFileOutputStream(irodsFile);
 
 	}
 
@@ -153,9 +152,6 @@ public class IRODSFileFactoryImplTest {
 
 		String absPath = scratchFileUtils
 				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
-		String sourceFileName = FileGenerator
-				.generateFileOfFixedLengthGivenName(absPath, testFileName, 20);
-
 		// put scratch file into irods in the right place
 		org.irods.jargon.testutils.icommandinvoke.IrodsInvocationContext invocationContext = testingPropertiesHelper
 				.buildIRODSInvocationContextFromTestProperties(testingProperties);
@@ -192,11 +188,13 @@ public class IRODSFileFactoryImplTest {
 		IRODSFileOutputStream fos = irodsFileFactory
 				.instanceIRODSFileOutputStream(irodsFile);
 		irodsSession.closeSession();
-		TestCase.assertNotNull("null output stream returned from initializer",
+		Assert.assertNotNull("null output stream returned from initializer",
 				fos);
 	}
 
-	@Ignore // TODO: currently doesnt generate an exception, see about file permissions modification to make tese fail w/JargonException
+	@Ignore
+	// TODO: currently doesnt generate an exception, see about file permissions
+	// modification to make tese fail w/JargonException
 	public final void testCreateOutStreamFromFileThatICantWrite()
 			throws Exception {
 		String testFileName = "testCreateOutStreamFromFileThatDoesNotExist.csv";
@@ -236,7 +234,7 @@ public class IRODSFileFactoryImplTest {
 		IRODSFileOutputStream fos = irodsFileFactory
 				.instanceIRODSFileOutputStream(irodsFile);
 		irodsSession.closeSession();
-		TestCase.assertNotNull("null output stream returned from initializer",
+		Assert.assertNotNull("null output stream returned from initializer",
 				fos);
 	}
 
@@ -264,7 +262,7 @@ public class IRODSFileFactoryImplTest {
 		IRODSFileOutputStream fos = irodsFileFactory
 				.instanceIRODSFileOutputStream(irodsFile);
 		irodsSession.closeSession();
-		TestCase.assertNotNull("null output stream returned from initializer",
+		Assert.assertNotNull("null output stream returned from initializer",
 				fos);
 	}
 
@@ -281,8 +279,7 @@ public class IRODSFileFactoryImplTest {
 				.instance(irodsSession);
 		IRODSFileFactory irodsFileFactory = accessObjectFactory
 				.getIRODSFileFactory(irodsAccount);
-		IRODSFileOutputStream fos = irodsFileFactory
-				.instanceIRODSFileOutputStream("/stringfilename");
+		irodsFileFactory.instanceIRODSFileOutputStream("/stringfilename");
 
 	}
 
@@ -292,9 +289,6 @@ public class IRODSFileFactoryImplTest {
 
 		String absPath = scratchFileUtils
 				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
-		String sourceFileName = FileGenerator
-				.generateFileOfFixedLengthGivenName(absPath, testFileName, 11);
-
 		org.irods.jargon.testutils.icommandinvoke.IrodsInvocationContext invocationContext = testingPropertiesHelper
 				.buildIRODSInvocationContextFromTestProperties(testingProperties);
 		IputCommand iputCommand = new IputCommand();
@@ -328,7 +322,7 @@ public class IRODSFileFactoryImplTest {
 				.instanceIRODSFileOutputStream(targetIrodsCollection + '/'
 						+ testFileName);
 		irodsSession.closeSession();
-		TestCase.assertNotNull("null output stream returned from initializer",
+		Assert.assertNotNull("null output stream returned from initializer",
 				fos);
 
 	}
@@ -339,9 +333,6 @@ public class IRODSFileFactoryImplTest {
 
 		String absPath = scratchFileUtils
 				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
-		String sourceFileName = FileGenerator
-				.generateFileOfFixedLengthGivenName(absPath, testFileName, 20);
-
 		// put scratch file into irods in the right place
 		org.irods.jargon.testutils.icommandinvoke.IrodsInvocationContext invocationContext = testingPropertiesHelper
 				.buildIRODSInvocationContextFromTestProperties(testingProperties);
@@ -378,19 +369,16 @@ public class IRODSFileFactoryImplTest {
 		IRODSFileInputStream fos = irodsFileFactory
 				.instanceIRODSFileInputStream(irodsFile);
 		irodsSession.closeSession();
-		TestCase.assertNotNull("null input stream returned from initializer",
-				fos);
+		Assert.assertNotNull("null input stream returned from initializer", fos);
 	}
-	
+
 	@Test
-	public final void testCreateSessionClosingInputStreamFromFile() throws Exception {
+	public final void testCreateSessionClosingInputStreamFromFile()
+			throws Exception {
 		String testFileName = "testCreateSessionClosingInputStreamFromFile.csv";
 
 		String absPath = scratchFileUtils
 				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
-		String sourceFileName = FileGenerator
-				.generateFileOfFixedLengthGivenName(absPath, testFileName, 20);
-
 		// put scratch file into irods in the right place
 		org.irods.jargon.testutils.icommandinvoke.IrodsInvocationContext invocationContext = testingPropertiesHelper
 				.buildIRODSInvocationContextFromTestProperties(testingProperties);
@@ -426,8 +414,7 @@ public class IRODSFileFactoryImplTest {
 				targetIrodsCollection, testFileName);
 		SessionClosingIRODSFileInputStream fos = irodsFileFactory
 				.instanceSessionClosingIRODSFileInputStream(irodsFile);
-		TestCase.assertNotNull("null input stream returned from initializer",
-				fos);
+		Assert.assertNotNull("null input stream returned from initializer", fos);
 	}
 
 	@Test(expected = JargonException.class)
@@ -454,8 +441,7 @@ public class IRODSFileFactoryImplTest {
 		IRODSFileInputStream fos = irodsFileFactory
 				.instanceIRODSFileInputStream(irodsFile);
 		irodsSession.closeSession();
-		TestCase.assertNotNull("null input stream returned from initializer",
-				fos);
+		Assert.assertNotNull("null input stream returned from initializer", fos);
 	}
 
 	@Test
@@ -464,9 +450,6 @@ public class IRODSFileFactoryImplTest {
 
 		String absPath = scratchFileUtils
 				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
-		String sourceFileName = FileGenerator
-				.generateFileOfFixedLengthGivenName(absPath, testFileName, 23);
-
 		org.irods.jargon.testutils.icommandinvoke.IrodsInvocationContext invocationContext = testingPropertiesHelper
 				.buildIRODSInvocationContextFromTestProperties(testingProperties);
 		IputCommand iputCommand = new IputCommand();
@@ -500,19 +483,16 @@ public class IRODSFileFactoryImplTest {
 				.instanceIRODSFileInputStream(targetIrodsCollection + '/'
 						+ testFileName);
 		irodsSession.closeSession();
-		TestCase.assertNotNull("null input stream returned from initializer",
-				fos);
+		Assert.assertNotNull("null input stream returned from initializer", fos);
 	}
-	
+
 	@Test
-	public final void testCreateSessionClosingInputStreamFromFileName() throws Exception {
+	public final void testCreateSessionClosingInputStreamFromFileName()
+			throws Exception {
 		String testFileName = "testCreateSessionClosingInputStreamFromFileName.csv";
 
 		String absPath = scratchFileUtils
 				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
-		String sourceFileName = FileGenerator
-				.generateFileOfFixedLengthGivenName(absPath, testFileName, 23);
-
 		org.irods.jargon.testutils.icommandinvoke.IrodsInvocationContext invocationContext = testingPropertiesHelper
 				.buildIRODSInvocationContextFromTestProperties(testingProperties);
 		IputCommand iputCommand = new IputCommand();
@@ -543,13 +523,11 @@ public class IRODSFileFactoryImplTest {
 		IRODSFileFactory irodsFileFactory = accessObjectFactory
 				.getIRODSFileFactory(irodsAccount);
 		SessionClosingIRODSFileInputStream fos = irodsFileFactory
-				.instanceSessionClosingIRODSFileInputStream(targetIrodsCollection + '/'
-						+ testFileName);
+				.instanceSessionClosingIRODSFileInputStream(targetIrodsCollection
+						+ '/' + testFileName);
 		irodsSession.closeSession();
-		TestCase.assertNotNull("null input stream returned from initializer",
-				fos);
+		Assert.assertNotNull("null input stream returned from initializer", fos);
 	}
-
 
 	@Test(expected = JargonException.class)
 	public final void testCreateInputStreamFromFileNameMissing()
@@ -574,20 +552,17 @@ public class IRODSFileFactoryImplTest {
 				.instanceIRODSFileInputStream(targetIrodsCollection + '/'
 						+ testFileName);
 		irodsSession.closeSession();
-		TestCase.assertNotNull("null input stream returned from initializer",
-				fos);
+		Assert.assertNotNull("null input stream returned from initializer", fos);
 
 	}
 
 	@Test
-	public final void testCreateRandomAccessFileFromFileThatExists() throws Exception {
+	public final void testCreateRandomAccessFileFromFileThatExists()
+			throws Exception {
 		String testFileName = "testCreateRandomAccessFileFromFromFileThatExists.csv";
 
 		String absPath = scratchFileUtils
 				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
-		String sourceFileName = FileGenerator
-				.generateFileOfFixedLengthGivenName(absPath, testFileName, 1);
-
 		// put scratch file into irods in the right place
 		org.irods.jargon.testutils.icommandinvoke.IrodsInvocationContext invocationContext = testingPropertiesHelper
 				.buildIRODSInvocationContextFromTestProperties(testingProperties);
@@ -621,13 +596,16 @@ public class IRODSFileFactoryImplTest {
 				.getIRODSFileFactory(irodsAccount);
 		IRODSFile irodsFile = irodsFileFactory.instanceIRODSFile(
 				targetIrodsCollection, testFileName);
-		IRODSRandomAccessFile irodsRandomAccessFile = irodsFileFactory.instanceIRODSRandomAccessFile(irodsFile);
+		IRODSRandomAccessFile irodsRandomAccessFile = irodsFileFactory
+				.instanceIRODSRandomAccessFile(irodsFile);
 		irodsSession.closeSession();
-		TestCase.assertNotNull("should have a random access file", irodsRandomAccessFile);
+		Assert.assertNotNull("should have a random access file",
+				irodsRandomAccessFile);
 	}
-	
+
 	@Test
-	public final void testCreateRandomAccessFileFromFileThatDoesNotExist() throws Exception {
+	public final void testCreateRandomAccessFileFromFileThatDoesNotExist()
+			throws Exception {
 		String testFileName = "testCreateRandomAccessFileFromFromFileThatDoesNotExist.csv";
 
 		String targetIrodsCollection = testingPropertiesHelper
@@ -646,21 +624,22 @@ public class IRODSFileFactoryImplTest {
 				.getIRODSFileFactory(irodsAccount);
 		IRODSFile irodsFile = irodsFileFactory.instanceIRODSFile(
 				targetIrodsCollection, testFileName);
-		IRODSRandomAccessFile irodsRandomAccessFile = irodsFileFactory.instanceIRODSRandomAccessFile(irodsFile);
+		IRODSRandomAccessFile irodsRandomAccessFile = irodsFileFactory
+				.instanceIRODSRandomAccessFile(irodsFile);
 		irodsSession.closeSession();
-		TestCase.assertNotNull("should have a random access file", irodsRandomAccessFile);
-		assertionHelper.assertIrodsFileOrCollectionExists(irodsFile.getAbsolutePath());
+		Assert.assertNotNull("should have a random access file",
+				irodsRandomAccessFile);
+		assertionHelper.assertIrodsFileOrCollectionExists(irodsFile
+				.getAbsolutePath());
 	}
-	
+
 	@Test
-	public final void testCreateRandomAccessFileFromStringExists() throws Exception {
+	public final void testCreateRandomAccessFileFromStringExists()
+			throws Exception {
 		String testFileName = "testCreateRandomAccessFileFromFromStringExists.csv";
 
 		String absPath = scratchFileUtils
 				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
-		String sourceFileName = FileGenerator
-				.generateFileOfFixedLengthGivenName(absPath, testFileName, 1);
-
 		// put scratch file into irods in the right place
 		org.irods.jargon.testutils.icommandinvoke.IrodsInvocationContext invocationContext = testingPropertiesHelper
 				.buildIRODSInvocationContextFromTestProperties(testingProperties);
@@ -692,11 +671,12 @@ public class IRODSFileFactoryImplTest {
 				.instance(irodsSession);
 		IRODSFileFactory irodsFileFactory = accessObjectFactory
 				.getIRODSFileFactory(irodsAccount);
-		IRODSRandomAccessFile irodsRandomAccessFile = irodsFileFactory.instanceIRODSRandomAccessFile(targetIrodsCollection + '/' + testFileName);
+		IRODSRandomAccessFile irodsRandomAccessFile = irodsFileFactory
+				.instanceIRODSRandomAccessFile(targetIrodsCollection + '/'
+						+ testFileName);
 		irodsSession.closeSession();
-		TestCase.assertNotNull("should have a random access file", irodsRandomAccessFile);
+		Assert.assertNotNull("should have a random access file",
+				irodsRandomAccessFile);
 	}
-	
-	
-	
+
 }

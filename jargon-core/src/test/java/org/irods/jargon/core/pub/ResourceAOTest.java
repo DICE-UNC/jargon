@@ -250,9 +250,7 @@ public class ResourceAOTest {
 		// imetaRemoveCommand.setAttribValue(expectedAttribValue);
 		imetaRemoveCommand.setMetaObjectType(MetaObjectType.RESOURCE_META);
 		imetaRemoveCommand.setObjectPath(testResource);
-		@SuppressWarnings("unused")
-		String removeResult = invoker
-				.invokeCommandAndGetResultAsString(imetaRemoveCommand);
+		invoker.invokeCommandAndGetResultAsString(imetaRemoveCommand);
 
 		ImetaAddCommand imetaAddCommand = new ImetaAddCommand();
 		imetaAddCommand.setMetaObjectType(MetaObjectType.RESOURCE_META);

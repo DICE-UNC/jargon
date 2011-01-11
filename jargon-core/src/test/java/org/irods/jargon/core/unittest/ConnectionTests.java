@@ -11,12 +11,12 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
-@Suite.SuiteClasses( { IRODSSimpleConnectionTest.class,
+@Suite.SuiteClasses({ IRODSSimpleConnectionTest.class,
 		EnvironmentalInfoAccessorTest.class,
 		IRODSSimpleProtocolManagerTest.class,
-		ConnectionProxyDefinitionTest.class,
-		IRODSSessionTest.class, IRODSServerPropertiesTest.class, DefaultPropertiesJargonConfigTest.class
-		})
+		ConnectionProxyDefinitionTest.class, IRODSSessionTest.class,
+		IRODSServerPropertiesTest.class,
+		DefaultPropertiesJargonConfigTest.class })
 public class ConnectionTests {
 
 }

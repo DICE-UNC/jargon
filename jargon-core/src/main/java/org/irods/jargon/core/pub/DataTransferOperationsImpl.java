@@ -49,7 +49,7 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 
 	private static Logger log = LoggerFactory
 			.getLogger(DataTransferOperationsImpl.class);
-	public TransferOperationsHelper transferOperationsHelper = null;
+	private TransferOperationsHelper transferOperationsHelper = null;
 
 	/**
 	 * @param irodsSession
@@ -178,7 +178,8 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 	 */
 	@Override
 	public void move(final String absolutePathToSourceFile,
-			final String absolutePathToTargetFile) throws JargonFileOrCollAlreadyExistsException, JargonException {
+			final String absolutePathToTargetFile)
+			throws JargonFileOrCollAlreadyExistsException, JargonException {
 
 		if (absolutePathToSourceFile == null
 				|| absolutePathToSourceFile.isEmpty()) {
@@ -432,7 +433,12 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 
 		File newParentDirectory = new File(targetLocalFile.getAbsolutePath(),
 				thisDirName);
-		newParentDirectory.mkdir();
+
+		boolean result = newParentDirectory.mkdir();
+		if (!result) {
+			log.warn("mkdirs for {} did not return success",
+					newParentDirectory.getAbsolutePath());
+		}
 
 		log.debug("new parent directory created locally:{}",
 				newParentDirectory.getAbsolutePath());

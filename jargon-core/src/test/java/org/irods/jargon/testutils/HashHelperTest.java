@@ -3,7 +3,7 @@
  */
 package org.irods.jargon.testutils;
 
-import junit.framework.TestCase;
+import junit.framework.Assert;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -48,7 +48,7 @@ public class HashHelperTest {
 	@Test
 	public void testComputeHashFromString() throws Exception {
 		String computedHash = HashHelper.computeMD5FromString("test");
-		TestCase.assertTrue("no hash computed", computedHash.length() > 0);
+		Assert.assertTrue("no hash computed", computedHash.length() > 0);
 	}
 
 }

@@ -1127,7 +1127,7 @@ public abstract class GeneralRandomAccessFile implements DataOutput, DataInput//
 
 		if ((ch == '\r') && ((read()) != '\n')) {
 			seek(getFilePointer());
-		} else if ((ch == -1) && (line.length() == 0)) {
+		} else if ((line.length() == 0)) {
 			return null;
 		}
 

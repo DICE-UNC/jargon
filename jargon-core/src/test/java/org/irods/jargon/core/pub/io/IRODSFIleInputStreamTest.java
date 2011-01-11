@@ -7,14 +7,13 @@ import java.io.ByteArrayOutputStream;
 import java.util.Properties;
 
 import junit.framework.Assert;
-import junit.framework.TestCase;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSProtocolManager;
 import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.connection.IRODSSimpleProtocolManager;
-import org.irods.jargon.core.pub.IRODSAccessObjectFactoryImpl;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
+import org.irods.jargon.core.pub.IRODSAccessObjectFactoryImpl;
 import org.irods.jargon.testutils.AssertionHelper;
 import org.irods.jargon.testutils.IRODSTestSetupUtilities;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
@@ -123,8 +122,7 @@ public class IRODSFIleInputStreamTest {
 		}
 
 		irodsSession.closeSession();
-		Assert
-				.assertEquals("whole file not read back", fileLength, bytesRead);
+		Assert.assertEquals("whole file not read back", fileLength, bytesRead);
 	}
 
 	/**
@@ -192,8 +190,7 @@ public class IRODSFIleInputStreamTest {
 		}
 
 		irodsSession.closeSession();
-		Assert
-				.assertEquals("whole file not read back", fileLength, bytesRead);
+		Assert.assertEquals("whole file not read back", fileLength, bytesRead);
 	}
 
 	/**
@@ -258,8 +255,7 @@ public class IRODSFIleInputStreamTest {
 		}
 
 		irodsSession.closeSession();
-		Assert
-				.assertEquals("whole file not read back", fileLength, bytesRead);
+		Assert.assertEquals("whole file not read back", fileLength, bytesRead);
 	}
 
 	/**
@@ -322,7 +318,6 @@ public class IRODSFIleInputStreamTest {
 
 		// may have skipped a different value?
 
-		long leftToRead = (fileLengthInBytes - skipped);
 		long numberBytesReadAfterSkip = 0L;
 
 		// read the rest
@@ -336,10 +331,9 @@ public class IRODSFIleInputStreamTest {
 		}
 
 		irodsSession.closeSession();
-		Assert
-				.assertEquals(
-						"I did not skip and then read the remainder of the specified file",
-						fileLengthInBytes, skipped + numberBytesReadAfterSkip);
+		Assert.assertEquals(
+				"I did not skip and then read the remainder of the specified file",
+				fileLengthInBytes, skipped + numberBytesReadAfterSkip);
 	}
 
 	/**

@@ -708,7 +708,7 @@ public class DataObjectAOImplTest {
 		// clear the file from scratch
 
 		File scratchLocalFile = new File(localFileName);
-		scratchLocalFile.delete();
+		boolean success = scratchLocalFile.delete();
 
 		dataObjectAO.getDataObjectFromIrods(irodsFile, localFile);
 
@@ -716,6 +716,7 @@ public class DataObjectAOImplTest {
 				+ '/' + testFileName);
 		assertionHelper.assertLocalScratchFileLengthEquals(
 				IRODS_TEST_SUBDIR_PATH + '/' + testFileName, 100);
+		Assert.assertTrue("delete did not report success in response", success);
 
 	}
 

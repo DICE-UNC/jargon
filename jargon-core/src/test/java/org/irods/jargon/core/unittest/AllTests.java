@@ -10,10 +10,12 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
-@Suite.SuiteClasses( { ConnectionTests.class, IRODSQueryTest.class,
+@Suite.SuiteClasses({ ConnectionTests.class, IRODSQueryTest.class,
 		IRODSQueryTranslatorTest.class, TranslatedIRODSQueryTest.class,
 		ProtocolTests.class, AOTests.class, FileTests.class, RuleTests.class,
-		PackingInstructionTests.class, DomainTests.class, TransferTests.class, LocalFileUtilsTest.class, RemoteExecuteServiceImplTest.class, IRODSPasswordUtilitiesTest.class })
+		PackingInstructionTests.class, DomainTests.class, TransferTests.class,
+		LocalFileUtilsTest.class, RemoteExecuteServiceImplTest.class,
+		IRODSPasswordUtilitiesTest.class })
 public class AllTests {
 
 }

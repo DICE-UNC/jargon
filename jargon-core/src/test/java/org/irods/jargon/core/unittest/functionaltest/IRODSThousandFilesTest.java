@@ -4,21 +4,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
-import junit.framework.TestCase;
+import junit.framework.Assert;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.pub.DataObjectAO;
 import org.irods.jargon.core.pub.DataObjectAOImpl;
-import org.irods.jargon.core.pub.IRODSAccessObjectFactoryImpl;
 import org.irods.jargon.core.pub.IRODSFileSystem;
-import org.irods.jargon.core.pub.IRODSGenQueryExecutor;
 import org.irods.jargon.core.pub.domain.AvuData;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.query.AVUQueryElement;
-import org.irods.jargon.core.query.AVUQueryOperatorEnum;
-import org.irods.jargon.core.query.IRODSQuery;
-import org.irods.jargon.core.query.MetaDataAndDomainData;
 import org.irods.jargon.core.query.AVUQueryElement.AVUQueryPart;
+import org.irods.jargon.core.query.AVUQueryOperatorEnum;
+import org.irods.jargon.core.query.MetaDataAndDomainData;
 import org.irods.jargon.testutils.IRODSTestSetupUtilities;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.irods.jargon.testutils.filemanip.FileGenerator;
@@ -32,11 +29,6 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import edu.sdsc.grid.io.MetaDataCondition;
-import edu.sdsc.grid.io.MetaDataRecordList;
-import edu.sdsc.grid.io.MetaDataSelect;
-import edu.sdsc.grid.io.Namespace;
 
 public class IRODSThousandFilesTest {
 	private static Properties testingProperties = new Properties();
@@ -132,15 +124,15 @@ public class IRODSThousandFilesTest {
 		DataObjectAO dataObjectAO = irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataObjectAO(account);
 
-		for (int i = 0; i < fileList.length; i++) {
+		for (String element : fileList) {
 			subFile = irodsFileSystem.getIRODSFileFactory(account)
 					.instanceIRODSFile(
-							irodsFile.getAbsolutePath() + '/' + fileList[i]);
+							irodsFile.getAbsolutePath() + '/' + element);
 
-			dataObjectAO.addAVUMetadata(subFile.getAbsolutePath(), AvuData
-					.instance(avu1Attrib, avu1Value, ""));
-			dataObjectAO.addAVUMetadata(subFile.getAbsolutePath(), AvuData
-					.instance(avu2Attrib, avu1Value, ""));
+			dataObjectAO.addAVUMetadata(subFile.getAbsolutePath(),
+					AvuData.instance(avu1Attrib, avu1Value, ""));
+			dataObjectAO.addAVUMetadata(subFile.getAbsolutePath(),
+					AvuData.instance(avu2Attrib, avu1Value, ""));
 
 		}
 
@@ -150,7 +142,6 @@ public class IRODSThousandFilesTest {
 	@Test
 	public void testSearchForAvuFiles() throws Exception {
 		String avu1Attrib = "avu1";
-		String avu1Value = "avu1value";
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
 		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
@@ -162,10 +153,11 @@ public class IRODSThousandFilesTest {
 						AVUQueryPart.ATTRIBUTE, AVUQueryOperatorEnum.EQUAL,
 						avu1Attrib));
 
-		List<MetaDataAndDomainData> metadataElements = dataObjectAO.findMetadataValuesByMetadataQuery(avuQueryElements);
-		
+		List<MetaDataAndDomainData> metadataElements = dataObjectAO
+				.findMetadataValuesByMetadataQuery(avuQueryElements);
+
 		// should have 1000 in this batch
-		TestCase.assertEquals("did not get back the 1000 rows I requested",
+		Assert.assertEquals("did not get back the 1000 rows I requested",
 				DataObjectAOImpl.DEFAULT_REC_COUNT, metadataElements.size());
 
 		irodsFileSystem.close();

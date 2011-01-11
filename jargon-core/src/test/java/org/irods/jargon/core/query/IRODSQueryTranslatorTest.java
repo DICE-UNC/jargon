@@ -33,7 +33,7 @@ public class IRODSQueryTranslatorTest {
 	public final void testIRODSQueryTranslatorNullServerProps()
 			throws Exception {
 		// test passes if no exceptions were thrown
-		IRODSQueryTranslator translator = new IRODSQueryTranslator(null);
+		new IRODSQueryTranslator(null);
 	}
 
 	@Test
@@ -77,7 +77,7 @@ public class IRODSQueryTranslatorTest {
 		TestCase.assertEquals("1", cond.getValue());
 
 	}
-	
+
 	@Test
 	public final void testParseConditionsIntoListWithGroupBy() throws Exception {
 		String query = "select blah, yelp where a = 1 group by hello";
@@ -94,7 +94,6 @@ public class IRODSQueryTranslatorTest {
 		TestCase.assertEquals("1", cond.getValue());
 
 	}
-
 
 	@Test(expected = JargonQueryException.class)
 	public final void testParseConditionsIntoListNoSpaceAfterOperatorFinalPosition()
@@ -141,9 +140,10 @@ public class IRODSQueryTranslatorTest {
 		TestCase.assertEquals("1234", cond.getValue());
 
 	}
-	
+
 	@Test
-	public final void testParseConditionWithEmbeddedSingleQuote() throws Exception {
+	public final void testParseConditionWithEmbeddedSingleQuote()
+			throws Exception {
 		String query = "SELECT DATA_NAME WHERE COLL_NAME = '/test1/home/test1/test-scratch/IRODSFileTest' AND DATA_NAME = 'testExistsQuote\\'infilename.txt'";
 		IRODSServerProperties props = IRODSServerProperties.instance(
 				IRODSServerProperties.IcatEnabled.ICAT_ENABLED, 100, "rods2.4",
@@ -155,12 +155,14 @@ public class IRODSQueryTranslatorTest {
 		QueryCondition cond = conditions.get(0);
 		TestCase.assertEquals("COLL_NAME", cond.getFieldName());
 		TestCase.assertEquals("=", cond.getOperator());
-		TestCase.assertEquals("'/test1/home/test1/test-scratch/IRODSFileTest'", cond.getValue());
+		TestCase.assertEquals("'/test1/home/test1/test-scratch/IRODSFileTest'",
+				cond.getValue());
 
 		cond = conditions.get(1);
 		TestCase.assertEquals("DATA_NAME", cond.getFieldName());
 		TestCase.assertEquals("=", cond.getOperator());
-		TestCase.assertEquals("'testExistsQuote'infilename.txt'", cond.getValue());
+		TestCase.assertEquals("'testExistsQuote'infilename.txt'",
+				cond.getValue());
 
 	}
 
@@ -214,8 +216,9 @@ public class IRODSQueryTranslatorTest {
 				.getTranslatedQuery(irodsQuery);
 		TestCase.assertEquals(2, translatedQuery.getSelectFields().size());
 		SelectField sel1 = translatedQuery.getSelectFields().get(0);
-		TestCase.assertEquals(RodsGenQueryEnum.COL_DATA_ACCESS_DATA_ID
-				.getName(), sel1.getSelectFieldColumnName());
+		TestCase.assertEquals(
+				RodsGenQueryEnum.COL_DATA_ACCESS_DATA_ID.getName(),
+				sel1.getSelectFieldColumnName());
 		SelectField sel2 = translatedQuery.getSelectFields().get(1);
 		TestCase.assertEquals(RodsGenQueryEnum.COL_AUDIT_USER_ID.getName(),
 				sel2.getSelectFieldColumnName());
@@ -317,8 +320,8 @@ public class IRODSQueryTranslatorTest {
 		TestCase.assertEquals(1, translatedQuery.getSelectFields().size());
 		SelectField sel1 = translatedQuery.getSelectFields().get(0);
 		TestCase.assertEquals("field not translated",
-				RodsGenQueryEnum.COL_DATA_ACCESS_DATA_ID.getName(), sel1
-						.getSelectFieldColumnName());
+				RodsGenQueryEnum.COL_DATA_ACCESS_DATA_ID.getName(),
+				sel1.getSelectFieldColumnName());
 		TestCase.assertEquals("did not classify as a count()",
 				SelectField.SelectFieldTypes.COUNT, sel1.getSelectFieldType());
 
@@ -341,8 +344,8 @@ public class IRODSQueryTranslatorTest {
 		TestCase.assertEquals(1, translatedQuery.getSelectFields().size());
 		SelectField sel1 = translatedQuery.getSelectFields().get(0);
 		TestCase.assertEquals("field not translated",
-				RodsGenQueryEnum.COL_DATA_ACCESS_DATA_ID.getName(), sel1
-						.getSelectFieldColumnName());
+				RodsGenQueryEnum.COL_DATA_ACCESS_DATA_ID.getName(),
+				sel1.getSelectFieldColumnName());
 		TestCase.assertEquals("did not classify as a count()",
 				SelectField.SelectFieldTypes.SUM, sel1.getSelectFieldType());
 
@@ -365,8 +368,8 @@ public class IRODSQueryTranslatorTest {
 		TestCase.assertEquals(1, translatedQuery.getSelectFields().size());
 		SelectField sel1 = translatedQuery.getSelectFields().get(0);
 		TestCase.assertEquals("field not translated",
-				RodsGenQueryEnum.COL_DATA_ACCESS_DATA_ID.getName(), sel1
-						.getSelectFieldColumnName());
+				RodsGenQueryEnum.COL_DATA_ACCESS_DATA_ID.getName(),
+				sel1.getSelectFieldColumnName());
 		TestCase.assertEquals("did not classify as a count()",
 				SelectField.SelectFieldTypes.AVG, sel1.getSelectFieldType());
 
@@ -389,8 +392,8 @@ public class IRODSQueryTranslatorTest {
 		TestCase.assertEquals(1, translatedQuery.getSelectFields().size());
 		SelectField sel1 = translatedQuery.getSelectFields().get(0);
 		TestCase.assertEquals("field not translated",
-				RodsGenQueryEnum.COL_DATA_ACCESS_DATA_ID.getName(), sel1
-						.getSelectFieldColumnName());
+				RodsGenQueryEnum.COL_DATA_ACCESS_DATA_ID.getName(),
+				sel1.getSelectFieldColumnName());
 		TestCase.assertEquals("did not classify as a count()",
 				SelectField.SelectFieldTypes.MIN, sel1.getSelectFieldType());
 
@@ -413,8 +416,8 @@ public class IRODSQueryTranslatorTest {
 		TestCase.assertEquals(1, translatedQuery.getSelectFields().size());
 		SelectField sel1 = translatedQuery.getSelectFields().get(0);
 		TestCase.assertEquals("field not translated",
-				RodsGenQueryEnum.COL_DATA_ACCESS_DATA_ID.getName(), sel1
-						.getSelectFieldColumnName());
+				RodsGenQueryEnum.COL_DATA_ACCESS_DATA_ID.getName(),
+				sel1.getSelectFieldColumnName());
 		TestCase.assertEquals("did not classify as a count()",
 				SelectField.SelectFieldTypes.MAX, sel1.getSelectFieldType());
 
@@ -450,10 +453,7 @@ public class IRODSQueryTranslatorTest {
 
 		IRODSQuery irodsQuery = IRODSQuery.instance(query, 10);
 
-		TranslatedIRODSQuery translatedQuery = translator
-				.getTranslatedQuery(irodsQuery);
-		TestCase.assertEquals(1, translatedQuery.getSelectFields().size());
-		SelectField sel1 = translatedQuery.getSelectFields().get(0);
+		translator.getTranslatedQuery(irodsQuery);
 
 	}
 
@@ -470,10 +470,7 @@ public class IRODSQueryTranslatorTest {
 
 		IRODSQuery irodsQuery = IRODSQuery.instance(query, 10);
 
-		TranslatedIRODSQuery translatedQuery = translator
-				.getTranslatedQuery(irodsQuery);
-		TestCase.assertEquals(1, translatedQuery.getSelectFields().size());
-		SelectField sel1 = translatedQuery.getSelectFields().get(0);
+		translator.getTranslatedQuery(irodsQuery);
 
 	}
 
@@ -515,8 +512,8 @@ public class IRODSQueryTranslatorTest {
 		TestCase.assertEquals(1, translatedQuery.getSelectFields().size());
 		SelectField sel1 = translatedQuery.getSelectFields().get(0);
 		TestCase.assertEquals("field not translated",
-				RodsGenQueryEnum.COL_DATA_ACCESS_DATA_ID.getName(), sel1
-						.getSelectFieldColumnName());
+				RodsGenQueryEnum.COL_DATA_ACCESS_DATA_ID.getName(),
+				sel1.getSelectFieldColumnName());
 		TestCase.assertEquals("did not classify as a count()",
 				SelectField.SelectFieldTypes.SUM, sel1.getSelectFieldType());
 
@@ -541,8 +538,9 @@ public class IRODSQueryTranslatorTest {
 				.getTranslatedQuery(irodsQuery);
 		TestCase.assertEquals(2, translatedQuery.getSelectFields().size());
 		SelectField sel1 = translatedQuery.getSelectFields().get(0);
-		TestCase.assertEquals(RodsGenQueryEnum.COL_DATA_ACCESS_DATA_ID
-				.getName(), sel1.getSelectFieldColumnName());
+		TestCase.assertEquals(
+				RodsGenQueryEnum.COL_DATA_ACCESS_DATA_ID.getName(),
+				sel1.getSelectFieldColumnName());
 		SelectField sel2 = translatedQuery.getSelectFields().get(1);
 		TestCase.assertEquals(RodsGenQueryEnum.COL_AUDIT_USER_ID.getName(),
 				sel2.getSelectFieldColumnName());
@@ -604,8 +602,7 @@ public class IRODSQueryTranslatorTest {
 
 		IRODSQuery irodsQuery = IRODSQuery.instance(queryString, 10);
 
-		TranslatedIRODSQuery translatedQuery = translator
-				.getTranslatedQuery(irodsQuery);
+		translator.getTranslatedQuery(irodsQuery);
 	}
 
 	@Test(expected = JargonQueryException.class)
@@ -628,8 +625,7 @@ public class IRODSQueryTranslatorTest {
 
 		IRODSQuery irodsQuery = IRODSQuery.instance(queryString, 10);
 
-		TranslatedIRODSQuery translatedQuery = translator
-				.getTranslatedQuery(irodsQuery);
+		translator.getTranslatedQuery(irodsQuery);
 	}
 
 	@Test
@@ -660,7 +656,7 @@ public class IRODSQueryTranslatorTest {
 								.getNumericValue()), testCondition
 						.getColumnNumericTranslation());
 	}
-	
+
 	@Test
 	public final void queryExample1Test() throws Exception {
 		String query = "SELECT COLL_ID,COLL_NAME,META_COLL_ATTR_NAME,META_COLL_ATTR_VALUE,META_COLL_ATTR_UNITS WHERE META_COLL_ATTR_NAME = 'PolicyDrivenService:PolicyRepository' AND META_COLL_ATTR_VALUE = 'My first policy'";
@@ -671,7 +667,9 @@ public class IRODSQueryTranslatorTest {
 
 		IRODSQuery irodsQuery = IRODSQuery.instance(query, 10);
 
-		TranslatedIRODSQuery translatedQuery = translator
-				.getTranslatedQuery(irodsQuery);
+		translator.getTranslatedQuery(irodsQuery);
+
+		// no errors means good translation
+
 	}
 }

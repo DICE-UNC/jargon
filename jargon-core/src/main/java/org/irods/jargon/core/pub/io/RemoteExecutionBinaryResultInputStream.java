@@ -53,7 +53,8 @@ public class RemoteExecutionBinaryResultInputStream extends InputStream {
 	 */
 	@Override
 	public int available() throws IOException {
-		return 1;  //TODO: consider the effect of returning this available value here...
+		return 1; // TODO: consider the effect of returning this available value
+					// here...
 	}
 
 	/**
@@ -64,10 +65,13 @@ public class RemoteExecutionBinaryResultInputStream extends InputStream {
 	public void close() throws IOException {
 		log.info("closing input stream");
 		try {
-			ExecCmdStreamClose execCmdStreamClose = ExecCmdStreamClose.instance(fileDescriptor);
+			ExecCmdStreamClose execCmdStreamClose = ExecCmdStreamClose
+					.instance(fileDescriptor);
 			irodsCommands.irodsFunction(execCmdStreamClose);
 		} catch (JargonException e) {
-			log.error("Jargon exception will be rethrown as an IOException for the method contracts", e);
+			log.error(
+					"Jargon exception will be rethrown as an IOException for the method contracts",
+					e);
 			throw new IOException(e);
 		}
 	}
@@ -160,29 +164,33 @@ public class RemoteExecutionBinaryResultInputStream extends InputStream {
 	}
 
 	/**
-	 * Skip the desired amount of bytes from the stream.  This method will repeatedly attempt
-	 * to read past the skipped value, discard the bytes, and continue reading until the full amount
-	 * has been skipped, or the end of the stream is encountered.
-	 * @param n <code>long</code> with the amount to skip
-	 * @return <code>long</code> 
+	 * Skip the desired amount of bytes from the stream. This method will
+	 * repeatedly attempt to read past the skipped value, discard the bytes, and
+	 * continue reading until the full amount has been skipped, or the end of
+	 * the stream is encountered.
+	 * 
+	 * @param n
+	 *            <code>long</code> with the amount to skip
+	 * @return <code>long</code>
 	 */
 	@Override
 	public long skip(final long n) throws IOException {
-		
+
 		if (n <= 0) {
-			throw new IllegalArgumentException("attempt to skip a neg or zero amount");
+			throw new IllegalArgumentException(
+					"attempt to skip a neg or zero amount");
 		}
-		
+
 		int skippedSoFar = 0;
 		int read = 0;
-		
-		while (read > -1 && skippedSoFar < n ) {
+
+		while (read > -1 && skippedSoFar < n) {
 			read = read(new byte[(int) n]);
 			if (read > -1) {
 				skippedSoFar += read;
 			}
 		}
-		
+
 		return skippedSoFar;
 	}
 

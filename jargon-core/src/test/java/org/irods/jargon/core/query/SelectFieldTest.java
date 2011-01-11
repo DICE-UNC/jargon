@@ -1,7 +1,6 @@
 package org.irods.jargon.core.query;
 
-import static org.junit.Assert.*;
-import junit.framework.TestCase;
+import junit.framework.Assert;
 
 import org.irods.jargon.core.exception.JargonException;
 import org.junit.AfterClass;
@@ -25,7 +24,7 @@ public class SelectFieldTest {
 				RodsGenQueryEnum.COL_AUDIT_ACTION_ID,
 				SelectField.SelectFieldTypes.FIELD,
 				SelectField.SelectFieldSource.DEFINED_QUERY_FIELD);
-		TestCase.assertNotNull("null instance", selectField);
+		Assert.assertNotNull("null instance", selectField);
 	}
 
 	@Test(expected = JargonException.class)
@@ -51,7 +50,7 @@ public class SelectFieldTest {
 		SelectField selectField = SelectField.instance("blah", "1234",
 				SelectField.SelectFieldTypes.FIELD,
 				SelectField.SelectFieldSource.DEFINED_QUERY_FIELD);
-		TestCase.assertNotNull("null instance", selectField);
+		Assert.assertNotNull("null instance", selectField);
 	}
 
 }

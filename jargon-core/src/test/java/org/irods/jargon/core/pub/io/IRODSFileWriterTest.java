@@ -3,14 +3,14 @@ package org.irods.jargon.core.pub.io;
 import java.io.StringReader;
 import java.util.Properties;
 
-import junit.framework.TestCase;
+import junit.framework.Assert;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSProtocolManager;
 import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.connection.IRODSSimpleProtocolManager;
-import org.irods.jargon.core.pub.IRODSAccessObjectFactoryImpl;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
+import org.irods.jargon.core.pub.IRODSAccessObjectFactoryImpl;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -60,7 +60,7 @@ public class IRODSFileWriterTest {
 
 		IRODSFileWriter irodsFileWriter = irodsFileFactory
 				.instanceIRODSFileWriter(targetIrodsFile);
-		
+
 		String testString = "jfaeiiiiiiiiiiiiiiiiiiiiii838ejfiafjaskfjaisdfjaseij;ida8ehgasjfai'sjf;iadvajkdfgjasdl;jfasf";
 
 		StringReader stringReader = new StringReader(testString);
@@ -74,19 +74,21 @@ public class IRODSFileWriterTest {
 
 		irodsFileWriter.close();
 
-		TestCase.assertNotNull("null irodsFileWriter", irodsFileWriter);		
+		Assert.assertNotNull("null irodsFileWriter", irodsFileWriter);
 		irodsSession.closeSession();
-		
+
 		// now check the length
-		 irodsSession = IRODSSession
-			.instance(irodsConnectionManager);
-	
-	 irodsFileFactory = accessObjectFactory
-			.getIRODSFileFactory(irodsAccount);
-	 IRODSFile readbackFile = irodsFileFactory.instanceIRODSFile(targetIrodsFile);
-	 long length = readbackFile.length();
-	 irodsSession.closeSession();
-	 TestCase.assertEquals("file on irods is not same length as originating string", testString.length(), length);
+		irodsSession = IRODSSession.instance(irodsConnectionManager);
+
+		irodsFileFactory = accessObjectFactory
+				.getIRODSFileFactory(irodsAccount);
+		IRODSFile readbackFile = irodsFileFactory
+				.instanceIRODSFile(targetIrodsFile);
+		long length = readbackFile.length();
+		irodsSession.closeSession();
+		Assert.assertEquals(
+				"file on irods is not same length as originating string",
+				testString.length(), length);
 	}
 
 	@Test
@@ -112,7 +114,7 @@ public class IRODSFileWriterTest {
 		IRODSFileWriter irodsFileWriter = irodsFileFactory
 				.instanceIRODSFileWriter(targetIrodsFile);
 
-		TestCase.assertNotNull("null irodsFileWriter", irodsFileWriter);
+		Assert.assertNotNull("null irodsFileWriter", irodsFileWriter);
 		irodsSession.closeSession();
 	}
 

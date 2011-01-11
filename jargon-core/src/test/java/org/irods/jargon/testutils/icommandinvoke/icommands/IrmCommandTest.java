@@ -5,7 +5,7 @@ package org.irods.jargon.testutils.icommandinvoke.icommands;
 
 import java.util.Properties;
 
-import junit.framework.TestCase;
+import junit.framework.Assert;
 
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.irods.jargon.testutils.icommandinvoke.IcommandInvoker;
@@ -104,8 +104,8 @@ public class IrmCommandTest {
 		ilsCommand.setIlsBasePath("scratch");
 		String ilsResult = invoker
 				.invokeCommandAndGetResultAsString(ilsCommand);
-		TestCase.assertTrue("test directory is not there", ilsResult
-				.indexOf(testingDirName) > -1);
+		Assert.assertTrue("test directory is not there",
+				ilsResult.indexOf(testingDirName) > -1);
 
 		// dir is out there in the proper place, now zap, this is the exercise
 		// of the real test
@@ -119,8 +119,8 @@ public class IrmCommandTest {
 		ilsCommand = new IlsCommand();
 		ilsCommand.setIlsBasePath("scratch");
 		ilsResult = invoker.invokeCommandAndGetResultAsString(ilsCommand);
-		TestCase.assertTrue("test directory is still there", ilsResult
-				.indexOf(testingDirName) == -1);
+		Assert.assertTrue("test directory is still there",
+				ilsResult.indexOf(testingDirName) == -1);
 
 	}
 

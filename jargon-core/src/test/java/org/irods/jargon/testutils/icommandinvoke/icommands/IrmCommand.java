@@ -23,7 +23,7 @@ public class IrmCommand implements Icommand {
 		return verbose;
 	}
 
-	public void setVerbose(boolean verbose) {
+	public void setVerbose(final boolean verbose) {
 		this.verbose = verbose;
 	}
 
@@ -31,7 +31,7 @@ public class IrmCommand implements Icommand {
 		return force;
 	}
 
-	public void setForce(boolean force) {
+	public void setForce(final boolean force) {
 		this.force = force;
 	}
 
@@ -39,7 +39,7 @@ public class IrmCommand implements Icommand {
 		return objectName;
 	}
 
-	public void setObjectName(String objectName) {
+	public void setObjectName(final String objectName) {
 		this.objectName = objectName;
 	}
 
@@ -48,6 +48,7 @@ public class IrmCommand implements Icommand {
 	 * 
 	 * @see org.irods.jargon.icommandinvoke.icommands.Icommand#buildCommand()
 	 */
+	@Override
 	public List<String> buildCommand() throws IcommandException {
 		if ((objectName == null) || (objectName.length() == 0)) {
 			throw new IllegalArgumentException("no object name specified");

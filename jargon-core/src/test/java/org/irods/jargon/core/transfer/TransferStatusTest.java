@@ -1,6 +1,6 @@
 package org.irods.jargon.core.transfer;
 
-import junit.framework.TestCase;
+import junit.framework.Assert;
 
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.transfer.TransferStatus.TransferState;
@@ -14,10 +14,10 @@ public class TransferStatusTest {
 		TransferStatus transferStatus = TransferStatus.instance(
 				TransferType.GET, "source", "target", "", 10L, 2L, 3, 4,
 				TransferState.IN_PROGRESS);
-		TestCase.assertNotNull(transferStatus);
-		TestCase.assertEquals("total files not propery set from constructor",
-				4, transferStatus.getTotalFilesToTransfer());
-		TestCase.assertEquals(
+		Assert.assertNotNull(transferStatus);
+		Assert.assertEquals("total files not propery set from constructor", 4,
+				transferStatus.getTotalFilesToTransfer());
+		Assert.assertEquals(
 				"total files so far not propery set from constructor", 3,
 				transferStatus.getTotalFilesTransferredSoFar());
 	}
@@ -27,9 +27,9 @@ public class TransferStatusTest {
 		TransferStatus transferStatus = TransferStatus.instanceForException(
 				TransferType.GET, "source", "target", "", 10L, 2L, 3, 4,
 				new Exception("blah"));
-		TestCase.assertNotNull(transferStatus);
-		TestCase.assertEquals(TransferState.FAILURE, transferStatus
-				.getTransferState());
+		Assert.assertNotNull(transferStatus);
+		Assert.assertEquals(TransferState.FAILURE,
+				transferStatus.getTransferState());
 	}
 
 	@Test(expected = JargonException.class)

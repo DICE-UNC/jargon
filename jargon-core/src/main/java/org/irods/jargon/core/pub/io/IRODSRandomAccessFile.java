@@ -346,7 +346,7 @@ public class IRODSRandomAccessFile implements DataInput, DataOutput {
 
 		if ((ch == '\r') && ((read()) != '\n')) {
 			seek(getFilePointer(), null);
-		} else if ((ch == -1) && (line.length() == 0)) {
+		} else if ((line.length() == 0)) {
 			return null;
 		}
 

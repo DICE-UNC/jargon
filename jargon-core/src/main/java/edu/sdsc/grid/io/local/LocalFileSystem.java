@@ -134,9 +134,9 @@ public class LocalFileSystem extends GeneralFileSystem {
 	 * Sets the <code>account</code> object.
 	 */
 	@Override
-	protected void setAccount(GeneralAccount account) {
+	protected void setAccount(final GeneralAccount account) {
 		if (account == null) {
-			account = new LocalAccount();
+			this.account = new LocalAccount();
 		} else {
 			this.account = (LocalAccount) account.clone();
 		}

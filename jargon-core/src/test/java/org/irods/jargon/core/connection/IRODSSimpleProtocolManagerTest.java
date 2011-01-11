@@ -2,7 +2,7 @@ package org.irods.jargon.core.connection;
 
 import java.util.Properties;
 
-import junit.framework.TestCase;
+import junit.framework.Assert;
 
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
@@ -32,10 +32,10 @@ public class IRODSSimpleProtocolManagerTest {
 				.instance();
 		IRODSManagedConnection connection = irodsConnectionManager
 				.getIRODSProtocol(irodsAccount);
-		TestCase.assertTrue("this connection is not connected", connection
-				.isConnected());
+		Assert.assertTrue("this connection is not connected",
+				connection.isConnected());
 		connection.disconnect();
-		TestCase.assertFalse("the connection is not closed after disconnect",
+		Assert.assertFalse("the connection is not closed after disconnect",
 				connection.isConnected());
 	}
 
@@ -48,7 +48,7 @@ public class IRODSSimpleProtocolManagerTest {
 		IRODSManagedConnection connection = irodsConnectionManager
 				.getIRODSProtocol(irodsAccount);
 		irodsConnectionManager.returnIRODSConnection(connection);
-		TestCase.assertFalse("the connection is not closed after disconnect",
+		Assert.assertFalse("the connection is not closed after disconnect",
 				connection.isConnected());
 	}
 
@@ -62,7 +62,7 @@ public class IRODSSimpleProtocolManagerTest {
 				.getIRODSProtocol(irodsAccount);
 		connection.disconnect();
 		irodsConnectionManager.returnIRODSConnection(connection);
-		TestCase.assertFalse("the connection is not closed after disconnect",
+		Assert.assertFalse("the connection is not closed after disconnect",
 				connection.isConnected());
 	}
 
@@ -75,7 +75,7 @@ public class IRODSSimpleProtocolManagerTest {
 		IRODSManagedConnection connection = irodsConnectionManager
 				.getIRODSProtocol(irodsAccount);
 		irodsConnectionManager.returnConnectionWithIoException(connection);
-		TestCase.assertFalse("the connection is not closed after disconnect",
+		Assert.assertFalse("the connection is not closed after disconnect",
 				connection.isConnected());
 	}
 
@@ -90,7 +90,7 @@ public class IRODSSimpleProtocolManagerTest {
 				.getIRODSProtocol(irodsAccount);
 		connection.disconnect();
 		irodsConnectionManager.returnConnectionWithIoException(connection);
-		TestCase.assertFalse("the connection is not closed after disconnect",
+		Assert.assertFalse("the connection is not closed after disconnect",
 				connection.isConnected());
 	}
 
@@ -103,12 +103,11 @@ public class IRODSSimpleProtocolManagerTest {
 		for (int i = 0; i < 50; i++) {
 			IRODSManagedConnection connection = irodsConnectionManager
 					.getIRODSProtocol(irodsAccount);
-			TestCase.assertTrue("this connection is not connected", connection
-					.isConnected());
+			Assert.assertTrue("this connection is not connected",
+					connection.isConnected());
 			connection.disconnect();
-			TestCase.assertFalse(
-					"the connection is not closed after disconnect", connection
-							.isConnected());
+			Assert.assertFalse("the connection is not closed after disconnect",
+					connection.isConnected());
 		}
 
 	}
@@ -183,8 +182,9 @@ public class IRODSSimpleProtocolManagerTest {
 		private boolean finished = false;
 		private Exception caughtException = null;
 
-		public ConnectionLoop(IRODSAccount irodsAccount,
-				IRODSProtocolManager irodsConnectionManager, int iterations) {
+		public ConnectionLoop(final IRODSAccount irodsAccount,
+				final IRODSProtocolManager irodsConnectionManager,
+				final int iterations) {
 			this.irodsAccount = irodsAccount;
 			this.irodsConnectionManager = irodsConnectionManager;
 			this.iterations = iterations;
@@ -194,10 +194,11 @@ public class IRODSSimpleProtocolManagerTest {
 			return finished;
 		}
 
-		public synchronized void setFinished(boolean finished) {
+		public synchronized void setFinished(final boolean finished) {
 			this.finished = finished;
 		}
 
+		@Override
 		public void run() {
 			try {
 				for (int i = 0; i < iterations; i++) {
