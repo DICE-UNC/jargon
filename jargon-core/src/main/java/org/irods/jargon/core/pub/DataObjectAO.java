@@ -35,7 +35,7 @@ import org.irods.jargon.core.query.MetaDataAndDomainData;
  * @author Mike Conway - DICE (www.irods.org)
  * 
  */
-public interface DataObjectAO {
+public interface DataObjectAO extends IRODSAccessObject {
 
 	/**
 	 * Put a local file to IRODS

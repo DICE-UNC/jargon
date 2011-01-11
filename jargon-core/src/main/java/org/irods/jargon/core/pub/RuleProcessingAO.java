@@ -4,7 +4,7 @@ import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.rule.IRODSRuleExecResult;
 import org.irods.jargon.core.rule.JargonRuleException;
 
-public interface RuleProcessingAO {
+public interface RuleProcessingAO extends IRODSAccessObject {
 
 	/**
 	 * Submit a user-defined rule for processing (analagous to running irule)

@@ -1,5 +1,5 @@
 /**
- * 
+ * #define DataObjInp_PI "str objPath[MAX_NAME_LEN]; int createMode; int openFlags; double offset; double dataSize; int numThreads; int oprType; struct *SpecColl_PI; struct KeyValPair_PI;"
  */
 package org.irods.jargon.core.packinstr;
 
@@ -309,7 +309,7 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 	}
 
 	/**
-	 * Create the proper packing instruction for a put operatoin
+	 * Create the proper packing instruction for a put operation.
 	 * 
 	 * @param destinationAbsolutePath
 	 *            <code>String</code> with the absolute path to the file
@@ -326,6 +326,7 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 			final String destinationAbsolutePath, final long length,
 			final String destinationResource, final boolean overwrite)
 			throws JargonException {
+		
 		if (destinationAbsolutePath == null
 				|| destinationAbsolutePath.isEmpty()) {
 			throw new JargonException("null or empty destinationAbsolutePath");

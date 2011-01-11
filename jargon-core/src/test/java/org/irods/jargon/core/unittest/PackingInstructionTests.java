@@ -7,6 +7,7 @@ import org.irods.jargon.core.packinstr.DataObjCopyInpTest;
 import org.irods.jargon.core.packinstr.DataObjInpTest;
 import org.irods.jargon.core.packinstr.DataObjReadTest;
 import org.irods.jargon.core.packinstr.DataObjWriteInpTest;
+import org.irods.jargon.core.packinstr.ExecCmdStreamCloseTest;
 import org.irods.jargon.core.packinstr.ExecCmdTest;
 import org.irods.jargon.core.packinstr.ExecMyRuleInp_PITest;
 import org.irods.jargon.core.packinstr.FileReadInpTest;
@@ -27,7 +28,7 @@ import org.junit.runners.Suite;
 		ExecCmdTest.class, DataObjReadTest.class, OpenedDataObjInpTest.class,
 		ModAvuMetadataInpTest.class, ExecMyRuleInp_PITest.class,
 		UserAdminInpTest.class, StructFileExtAndRegInpTest.class,
-		FileReadInpTest.class })
+		FileReadInpTest.class, ExecCmdStreamCloseTest.class })
 public class PackingInstructionTests {
 
 }

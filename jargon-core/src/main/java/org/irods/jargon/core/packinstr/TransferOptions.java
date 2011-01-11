@@ -9,6 +9,8 @@ package org.irods.jargon.core.packinstr;
  * easier on the caller.
  * <p/>
  * Note that udp options are included here, but the UDP option is not yet implemented in jargon, and will have no effect.
+ * <p/>
+ * FIXME: <b>Note currently not integrated</b>
  * 
  * @author Mike Conway - DICE (www.irods.org)
  * 

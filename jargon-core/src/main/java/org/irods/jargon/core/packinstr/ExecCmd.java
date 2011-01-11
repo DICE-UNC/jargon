@@ -19,7 +19,9 @@ public final class ExecCmd extends AbstractIRODSPackingInstruction {
 
 	public static final String PI_TAG = "ExecCmd_PI";
 
-	public static final int API_NBR = 634;
+	public static final int STANDARD_EXEC_ENCAPSULATE_DATA_IN_RESPONSE_API_NBR = 634;
+	public static final int EXEC_AND_STREAM_RESPONSE_API_NBR = 692;
+	
 
 	public static final String CMD = "cmd";
 	public static final String CMD_ARGV = "cmdArgv";
@@ -27,6 +29,8 @@ public final class ExecCmd extends AbstractIRODSPackingInstruction {
 	public static final String HINT_PATH = "hintPath";
 	public static final String ADD_PATH_TO_ARGV = "addPathToArgv";
 	public static final String STREAM_STDOUT_KW = "streamStdout";
+	public static final String DUMMY = "dummy";
+
 
 	private final String commandToExecuteWithoutArguments;
 	private final String argumentsToPassWithCommand;
@@ -67,7 +71,7 @@ public final class ExecCmd extends AbstractIRODSPackingInstruction {
 	public static final ExecCmd instanceWithCommand(
 			final String commandToExecuteWithoutArguments,
 			final String argumentsToPassWithCommand) throws JargonException {
-		return new ExecCmd(commandToExecuteWithoutArguments,
+		return new ExecCmd(STANDARD_EXEC_ENCAPSULATE_DATA_IN_RESPONSE_API_NBR, commandToExecuteWithoutArguments,
 				argumentsToPassWithCommand, "", "", false);
 	}
 
@@ -88,7 +92,7 @@ public final class ExecCmd extends AbstractIRODSPackingInstruction {
 	public static final ExecCmd instanceWithCommandAllowingStreamingForLargeResults(
 			final String commandToExecuteWithoutArguments,
 			final String argumentsToPassWithCommand) throws JargonException {
-		return new ExecCmd(commandToExecuteWithoutArguments,
+		return new ExecCmd(EXEC_AND_STREAM_RESPONSE_API_NBR,commandToExecuteWithoutArguments,
 				argumentsToPassWithCommand, "", "", true);
 	}
 
@@ -118,7 +122,7 @@ public final class ExecCmd extends AbstractIRODSPackingInstruction {
 			final String executionHost,
 			final String absolutePathOfIrodsFileThatWillBeUsedToFindHostToExecuteOn)
 			throws JargonException {
-		return new ExecCmd(commandToExecuteWithoutArguments,
+		return new ExecCmd(STANDARD_EXEC_ENCAPSULATE_DATA_IN_RESPONSE_API_NBR, commandToExecuteWithoutArguments,
 				argumentsToPassWithCommand, executionHost,
 				absolutePathOfIrodsFileThatWillBeUsedToFindHostToExecuteOn,
 				false);
@@ -151,7 +155,7 @@ public final class ExecCmd extends AbstractIRODSPackingInstruction {
 			final String executionHost,
 			final String absolutePathOfIrodsFileThatWillBeUsedToFindHostToExecuteOn)
 			throws JargonException {
-		return new ExecCmd(commandToExecuteWithoutArguments,
+		return new ExecCmd(EXEC_AND_STREAM_RESPONSE_API_NBR, commandToExecuteWithoutArguments,
 				argumentsToPassWithCommand, executionHost,
 				absolutePathOfIrodsFileThatWillBeUsedToFindHostToExecuteOn,
 				true);
@@ -160,6 +164,7 @@ public final class ExecCmd extends AbstractIRODSPackingInstruction {
 	/**
 	 * Constructor for a remote execution service packing instruction call.
 	 * 
+	 * @param apiNumber <code>int</code> with the api number to use with this call.
 	 * @param commandToExecuteWithoutArguments
 	 *            <code>String</code> with the name of the command to execute.
 	 *            Do not put arguments into this field.
@@ -180,6 +185,7 @@ public final class ExecCmd extends AbstractIRODSPackingInstruction {
 	 * @throws JargonException
 	 */
 	private ExecCmd(
+			final int apiNumber,
 			final String commandToExecuteWithoutArguments,
 			final String argumentsToPassWithCommand,
 			final String executionHost,
@@ -212,8 +218,8 @@ public final class ExecCmd extends AbstractIRODSPackingInstruction {
 		this.argumentsToPassWithCommand = argumentsToPassWithCommand;
 		this.executionHost = executionHost;
 		this.absolutePathOfIrodsFileThatWillBeUsedToFindHostToExecuteOn = absolutePathOfIrodsFileThatWillBeUsedToFindHostToExecuteOn;
-		this.setApiNumber(API_NBR);
 		this.useStreaming = useStreaming;
+		this.setApiNumber(apiNumber);
 
 	}
 
@@ -237,6 +243,8 @@ public final class ExecCmd extends AbstractIRODSPackingInstruction {
 								absolutePathOfIrodsFileThatWillBeUsedToFindHostToExecuteOn),
 						new Tag(ADD_PATH_TO_ARGV, 0) });
 		if (useStreaming) {
+			// a dummy tag is in the pi for 64 bit alignment issues starting post 2.4.1
+			message.addTag(new Tag(DUMMY, 0));
 			message.addTag(Tag.createKeyValueTag(STREAM_STDOUT_KW, ""));
 		} else {
 			message.addTag(Tag.createKeyValueTag(null));

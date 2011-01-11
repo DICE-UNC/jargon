@@ -11,7 +11,7 @@ import org.irods.jargon.core.query.AVUQueryElement;
 import org.irods.jargon.core.query.JargonQueryException;
 import org.irods.jargon.core.query.MetaDataAndDomainData;
 
-public interface ResourceAO {
+public interface ResourceAO extends IRODSAccessObject {
 	List<Resource> listResourcesInZone(String zoneName) throws JargonException;
 
 	Resource getFirstResourceForIRODSFile(IRODSFile irodsFile)

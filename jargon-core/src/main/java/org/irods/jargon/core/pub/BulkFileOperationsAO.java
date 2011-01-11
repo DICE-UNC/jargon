@@ -2,7 +2,7 @@ package org.irods.jargon.core.pub;
 
 import org.irods.jargon.core.exception.JargonException;
 
-public interface BulkFileOperationsAO {
+public interface BulkFileOperationsAO extends IRODSAccessObject {
 
 	/**
 	 * Creates a bundle (tar) file to be stored in iRODS using the contents of the specified collection.  An optional (blank if not used) resource can be specified to

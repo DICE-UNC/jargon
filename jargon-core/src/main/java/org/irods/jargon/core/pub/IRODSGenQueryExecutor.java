@@ -19,7 +19,7 @@ import org.irods.jargon.core.query.JargonQueryException;
  * @author Mike Conway - DICE (www.irods.org)
  * 
  */
-public interface IRODSGenQueryExecutor {
+public interface IRODSGenQueryExecutor extends IRODSAccessObject {
 
 	/**
 	 * Execute an iquest-like query and return results in a convenient POJO

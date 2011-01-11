@@ -6,7 +6,7 @@ import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.domain.Zone;
 
-public interface ZoneAO {
+public interface ZoneAO extends IRODSAccessObject {
 
 	/**
 	 * List all zones 

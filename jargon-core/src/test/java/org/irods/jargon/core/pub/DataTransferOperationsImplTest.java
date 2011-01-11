@@ -7,6 +7,7 @@ import junit.framework.Assert;
 import junit.framework.TestCase;
 
 import org.irods.jargon.core.connection.IRODSAccount;
+import org.irods.jargon.core.connection.JargonProperites;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.exception.JargonFileOrCollAlreadyExistsException;
 import org.irods.jargon.core.pub.io.IRODSFile;
@@ -2021,6 +2022,23 @@ public class DataTransferOperationsImplTest {
 				irodsFile.exists());
 		irodsFileSystem.close();
 
+	}
+	
+	@Test
+	public void testGetJargonProperties() throws Exception {
+
+		
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
+		
+		DataTransferOperations dataTransferOperationsAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataTransferOperations(
+						irodsAccount);
+		JargonProperites jargonProperties = dataTransferOperationsAO.getJargonProperties();
+		irodsFileSystem.closeAndEatExceptions();
+		TestCase.assertNotNull("null jargonProperties", jargonProperties); 
 	}
 
 }

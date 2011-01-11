@@ -33,7 +33,7 @@ import org.irods.jargon.core.transfer.TransferStatusCallbackListener;
  * @author Mike Conway - DICE (www.irods.org)
  * 
  */
-public interface DataTransferOperations {
+public interface DataTransferOperations extends IRODSAccessObject {
 
 	/**
 	 * Transfer a file between iRODS resources

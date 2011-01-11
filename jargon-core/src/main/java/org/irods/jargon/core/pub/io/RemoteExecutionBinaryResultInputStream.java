@@ -9,6 +9,7 @@ import java.io.InputStream;
 
 import org.irods.jargon.core.connection.IRODSCommands;
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.packinstr.ExecCmdStreamClose;
 import org.irods.jargon.core.packinstr.FileReadInp;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,7 +53,7 @@ public class RemoteExecutionBinaryResultInputStream extends InputStream {
 	 */
 	@Override
 	public int available() throws IOException {
-		return 1;
+		return 1;  //TODO: consider the effect of returning this available value here...
 	}
 
 	/**
@@ -61,9 +62,14 @@ public class RemoteExecutionBinaryResultInputStream extends InputStream {
 	 */
 	@Override
 	public void close() throws IOException {
-		log.info("I need to implmement this");
-		throw new UnsupportedOperationException("need to implement...");
-		//FIXME: implement as soon as Mike W has code
+		log.info("closing input stream");
+		try {
+			ExecCmdStreamClose execCmdStreamClose = ExecCmdStreamClose.instance(fileDescriptor);
+			irodsCommands.irodsFunction(execCmdStreamClose);
+		} catch (JargonException e) {
+			log.error("Jargon exception will be rethrown as an IOException for the method contracts", e);
+			throw new IOException(e);
+		}
 	}
 
 	/**

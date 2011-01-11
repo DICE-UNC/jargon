@@ -160,7 +160,7 @@ public final class IRODSFileSystem {
 	 * this <code>IRODSFileSystem</code>, that Thread must close their own
 	 * connection. Connections are stored in a <code>ThreadLocal</code> which
 	 * means a Thread's connections to iRODS are only visible from that Thread.
-	 * 
+	 * <p/>
 	 * Note that this method wraps the close in a try/catch block, so that any
 	 * exception on close is logged and eaten. This is useful in code for neater
 	 * finally blocks. If you do want an error thrown, use the

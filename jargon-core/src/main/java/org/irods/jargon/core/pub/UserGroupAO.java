@@ -6,7 +6,7 @@ import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.domain.UserGroup;
 import org.irods.jargon.core.query.JargonQueryException;
 
-public interface UserGroupAO {
+public interface UserGroupAO extends IRODSAccessObject {
 
 	/**
 	 * Given a user group id, return the <code>UserGroup</code>, or return null

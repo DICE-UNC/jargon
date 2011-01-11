@@ -10,7 +10,7 @@ import org.irods.jargon.core.exception.JargonException;
  * @author Mike Conway - DICE (www.irods.org)
  * 
  */
-public interface RemoteExecutionOfCommandsAO {
+public interface RemoteExecutionOfCommandsAO extends IRODSAccessObject {
 
 	/**
 	 * Execute a script remotely and return the results as an InputStream.

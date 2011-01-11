@@ -3,8 +3,8 @@ package org.irods.jargon.core.packinstr;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
+import org.irods.jargon.core.exception.JargonException;
 import org.junit.Test;
-import org.irods.jargon.core.exception.*;
 
 public class ExecCmdTest {
 
@@ -14,45 +14,44 @@ public class ExecCmdTest {
 		String args = "";
 
 		ExecCmd execCmd = ExecCmd.instanceWithCommand(cmd, args);
-		Assert
-				.assertNotNull(
-						"basic check fails, null returned from PI initializer",
-						execCmd);
-		Assert.assertEquals("api number not set", ExecCmd.API_NBR, execCmd
-				.getApiNumber());
+		Assert.assertNotNull(
+				"basic check fails, null returned from PI initializer", execCmd);
+		Assert.assertEquals("api number not set",
+				ExecCmd.STANDARD_EXEC_ENCAPSULATE_DATA_IN_RESPONSE_API_NBR,
+				execCmd.getApiNumber());
 	}
-	
+
 	@Test
 	public void testInstanceIndicatingStreaming() throws Exception {
 		String cmd = "hello";
 		String args = "";
 
-		ExecCmd execCmd = ExecCmd.instanceWithCommandAllowingStreamingForLargeResults(cmd, args);
-		Assert
-				.assertNotNull(
-						"basic check fails, null returned from PI initializer",
-						execCmd);
-		Assert.assertEquals("api number not set", ExecCmd.API_NBR, execCmd
-				.getApiNumber());
+		ExecCmd execCmd = ExecCmd
+				.instanceWithCommandAllowingStreamingForLargeResults(cmd, args);
+		Assert.assertNotNull(
+				"basic check fails, null returned from PI initializer", execCmd);
+		Assert.assertEquals("api number not set",
+				ExecCmd.EXEC_AND_STREAM_RESPONSE_API_NBR,
+				execCmd.getApiNumber());
 	}
 
-	@Test(expected=JargonException.class)
+	@Test(expected = JargonException.class)
 	public void testInstanceBlankCommand() throws Exception {
 		String cmd = "";
 		String args = "";
 
 		ExecCmd.instanceWithCommand(cmd, args);
 	}
-	
-	@Test(expected=JargonException.class)
+
+	@Test(expected = JargonException.class)
 	public void testInstanceNullCommand() throws Exception {
 		String cmd = null;
 		String args = "";
 
 		ExecCmd.instanceWithCommand(cmd, args);
 	}
-	
-	@Test(expected=JargonException.class)
+
+	@Test(expected = JargonException.class)
 	public void testInstanceNullArgs() throws Exception {
 		String cmd = "hello";
 		String args = null;
@@ -64,8 +63,8 @@ public class ExecCmdTest {
 	public void testGetParsedTags() throws Exception {
 		String cmd = "hello";
 		String args = "";
-		
-		ExecCmd execCmd = ExecCmd.instanceWithCommand(cmd, args);		
+
+		ExecCmd execCmd = ExecCmd.instanceWithCommand(cmd, args);
 		String actualXML = execCmd.getParsedTags();
 
 		StringBuilder sb = new StringBuilder();
@@ -77,19 +76,20 @@ public class ExecCmdTest {
 		sb.append("<KeyValPair_PI><ssLen>0</ssLen>\n");
 		sb.append("</KeyValPair_PI>\n");
 		sb.append("</ExecCmd_PI>\n");
-		
+
 		String expectedXML = sb.toString();
-		
+
 		Assert.assertEquals("did not get expected XML from PI", expectedXML,
 				actualXML);
 	}
-	
+
 	@Test
 	public void testGetParsedTagsWithStreaming() throws Exception {
 		String cmd = "hello";
 		String args = "";
-		
-		ExecCmd execCmd = ExecCmd.instanceWithCommandAllowingStreamingForLargeResults(cmd, args);		
+
+		ExecCmd execCmd = ExecCmd
+				.instanceWithCommandAllowingStreamingForLargeResults(cmd, args);
 		String actualXML = execCmd.getParsedTags();
 
 		StringBuilder sb = new StringBuilder();
@@ -98,17 +98,20 @@ public class ExecCmdTest {
 		sb.append("<execAddr></execAddr>\n");
 		sb.append("<hintPath></hintPath>\n");
 		sb.append("<addPathToArgv>0</addPathToArgv>\n");
+		sb.append("<dummy>0</dummy>\n");
 		sb.append("<KeyValPair_PI><ssLen>1</ssLen>\n");
 		sb.append("<keyWord>streamStdout</keyWord>\n");
 		sb.append("<svalue></svalue>\n");
 		sb.append("</KeyValPair_PI>\n");
 		sb.append("</ExecCmd_PI>\n");
-		
+
 		String expectedXML = sb.toString();
-		
+
 		Assert.assertEquals("did not get expected XML from PI", expectedXML,
 				actualXML);
 		
+		TestCase.assertEquals("did not set streaming api nbr", ExecCmd.EXEC_AND_STREAM_RESPONSE_API_NBR, execCmd.getApiNumber());
+
 	}
 
 	@Test
@@ -118,15 +121,15 @@ public class ExecCmdTest {
 		String host = "host";
 		String absPath = "/an/abs/path";
 
-		ExecCmd execCmd = ExecCmd.instanceWithHostAndArgumentsToPassParameters(cmd, args, host, absPath);
-		Assert
-				.assertNotNull(
-						"basic check fails, null returned from PI initializer",
-						execCmd);
-		Assert.assertEquals("api number not set", ExecCmd.API_NBR, execCmd
-				.getApiNumber());
+		ExecCmd execCmd = ExecCmd.instanceWithHostAndArgumentsToPassParameters(
+				cmd, args, host, absPath);
+		Assert.assertNotNull(
+				"basic check fails, null returned from PI initializer", execCmd);
+		Assert.assertEquals("api number not set",
+				ExecCmd.STANDARD_EXEC_ENCAPSULATE_DATA_IN_RESPONSE_API_NBR,
+				execCmd.getApiNumber());
 	}
-	
+
 	@Test
 	public void testInstanceWithAllParmsBlankHost() throws Exception {
 		String cmd = "cmd";
@@ -134,14 +137,13 @@ public class ExecCmdTest {
 		String host = "";
 		String absPath = "/an/abs/path";
 
-		ExecCmd execCmd = ExecCmd.instanceWithHostAndArgumentsToPassParameters(cmd, args, host, absPath);
-		Assert
-				.assertNotNull(
-						"basic check fails, null returned from PI initializer",
-						execCmd);
-		Assert.assertEquals("api number not set", ExecCmd.API_NBR, execCmd
-				.getApiNumber());
+		ExecCmd execCmd = ExecCmd.instanceWithHostAndArgumentsToPassParameters(
+				cmd, args, host, absPath);
+		Assert.assertNotNull(
+				"basic check fails, null returned from PI initializer", execCmd);
+		Assert.assertEquals("api number not set",
+				ExecCmd.STANDARD_EXEC_ENCAPSULATE_DATA_IN_RESPONSE_API_NBR,
+				execCmd.getApiNumber());
 	}
-
 
 }

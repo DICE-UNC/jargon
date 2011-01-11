@@ -3,7 +3,7 @@ package org.irods.jargon.core.pub;
 import org.irods.jargon.core.connection.IRODSServerProperties;
 import org.irods.jargon.core.exception.JargonException;
 
-public interface EnvironmentalInfoAO {
+public interface EnvironmentalInfoAO extends IRODSAccessObject {
 
 	/**
 	 * Retrieve basic environmental information from the iRODS server

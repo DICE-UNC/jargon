@@ -489,7 +489,7 @@ public class RemoteExecuteServiceImplTest {
 	}
 	
 	@Test
-	public final void testExecuteExecStreamTestScriptWithStreamingOnLargeResultButWillCauseStreaming()
+	public final void testExecuteExecStreamTestScriptWithStreamingOnLargeResultButWillNotCauseStreaming()
 			throws Exception {
 		
 		if (!testingPropertiesHelper.isTestRemoteExecStream(testingProperties)) {
@@ -497,7 +497,7 @@ public class RemoteExecuteServiceImplTest {
 		}
 		
 		// threshold is 64M
-		int testLen = 2500 * 1024;
+		int testLen = 8388608;
 
 		String cmd = "test_execstream.py";
 		String args = String.valueOf(testLen);

@@ -33,7 +33,7 @@ import org.irods.jargon.core.query.MetaDataAndDomainData;
  * @author Mike Conway - DICE (www.irods.org)
  * 
  */
-public interface CollectionAO {
+public interface CollectionAO extends IRODSAccessObject {
 
 	/**
 	 * For a given absolute path, get an <code>IRODSFileImpl</code> that is a
