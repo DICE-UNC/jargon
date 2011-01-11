@@ -26,7 +26,7 @@ import edu.sdsc.grid.io.irods.Tag;
  * public API. Please consult the appropriate access object for public
  * interfaces for command execution.
  * <p/>
- * This object is immutable.
+ * This object is immutable, but should not be shared between threads, as it holds a reference to a connection to an iRODS Agent.
  * 
  * @author Mike Conway - DICE (www.irods.org)
  * 
@@ -269,7 +269,7 @@ public class RemoteExecuteServiceImpl implements RemoteExecutionService {
 			final StringBuilder buffer) {
 		InputStream resultStream;
 		/*
-		 * see if the status decriptor holds a non zero, positive int If it
+		 * see if the status descriptor holds a non zero, positive int If it
 		 * does, then I am streaming additional binary data using the int as a
 		 * file descriptor.
 		 */
@@ -286,6 +286,7 @@ public class RemoteExecuteServiceImpl implements RemoteExecutionService {
 
 			RemoteExecutionBinaryResultInputStream reStream = new RemoteExecutionBinaryResultInputStream(
 					this.getIrodsCommands(), status);
+			
 			resultStream = new SequenceInputStream(piData, reStream);
 		} else {
 			log.info("no additional data to stream, will return simple stream from result buffer");
