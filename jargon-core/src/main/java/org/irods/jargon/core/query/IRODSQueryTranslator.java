@@ -101,7 +101,7 @@ public class IRODSQueryTranslator {
 		List<SelectField> translatedSelects = translateSelects(selects);
 
 		List<TranslatedQueryCondition> translatedConditions = translateConditions(irodsQuery);
-
+		
 		// do a final check to make sure everything translated
 		reviewTranslationBeforeReturningQuery(translatedSelects,
 				translatedConditions);
