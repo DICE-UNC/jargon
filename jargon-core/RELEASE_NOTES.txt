@@ -43,7 +43,9 @@ caller
 *Work in progress, not yet completed, on modify user password from user and admin perspectives.  Need to finish implementing the admin-side obfuscation per
 fixme's in UserAOImplTest
 *Added cache of iRODS challenge during sign-on for later use in obfuscation routines, see IRODSCommands
-
+*Began working on a jargon.properties and the ability to inject customizations of Jargon behavior into iRODS session.
+**gets/puts now use new jargon properties to control number of threads
+*Began work on simpleQuery support
 ********* TODO ***************
 
 

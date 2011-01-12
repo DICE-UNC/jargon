@@ -26,11 +26,13 @@ import java.util.List;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSSession;
+import org.irods.jargon.core.connection.JargonProperties;
 import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.packinstr.DataObjInp;
 import org.irods.jargon.core.packinstr.ModAvuMetadataInp;
 import org.irods.jargon.core.packinstr.TransferOptions;
+import org.irods.jargon.core.packinstr.TransferOptions.TransferType;
 import org.irods.jargon.core.pub.aohelper.DataAOHelper;
 import org.irods.jargon.core.pub.domain.AvuData;
 import org.irods.jargon.core.pub.domain.DataObject;
@@ -245,10 +247,26 @@ public final class DataObjectAOImpl extends IRODSGenericAO implements
 	public void putLocalDataObjectToIRODS(final File localFile,
 			final IRODSFile irodsFileDestination, final boolean overwrite)
 			throws JargonException {
-
+		
+		TransferOptions transferOptions = buildTransferOptionsBasedOnJargonProperties();
+		
 		putLocalDataObjectToIRODS(localFile, irodsFileDestination, overwrite,
-				false, null);
+				false, transferOptions);
 
+	}
+
+	private TransferOptions buildTransferOptionsBasedOnJargonProperties()
+			throws JargonException {
+		JargonProperties jargonProperties = IRODSSession.getJargonProperties();
+		TransferOptions transferOptions = new TransferOptions();
+		transferOptions.setMaxThreads(jargonProperties.getMaxParallelThreads());
+		
+		if (jargonProperties.isUseParallelTransfer()) {
+			transferOptions.setTransferType(TransferType.STANDARD);
+		} else {
+			transferOptions.setTransferType(TransferType.NO_PARALLEL);
+		}
+		return transferOptions;
 	}
 
 	/*
@@ -263,8 +281,10 @@ public final class DataObjectAOImpl extends IRODSGenericAO implements
 			final File localFile, final IRODSFile irodsFileDestination,
 			final boolean overwrite) throws JargonException {
 
+		TransferOptions transferOptions = buildTransferOptionsBasedOnJargonProperties();
+
 		putLocalDataObjectToIRODS(localFile, irodsFileDestination, overwrite,
-				true, null);
+				true, transferOptions);
 
 	}
 
@@ -313,10 +333,9 @@ public final class DataObjectAOImpl extends IRODSGenericAO implements
 		IRODSFile targetFile = checkTargetFileForPutOperation(localFile,
 				irodsFileDestination, ignoreChecks);
 		
-		
 		DataObjInp dataObjInp = DataObjInp.instanceForInitialCallToPut(
 				targetFile.getAbsolutePath(), localFile.length(),
-				targetFile.getResource(), overwrite, null);
+				targetFile.getResource(), overwrite, transferOptions);
 
 		try {
 			Tag responseToInitialCallForPut = getIRODSProtocol().irodsFunction(
@@ -362,7 +381,7 @@ public final class DataObjectAOImpl extends IRODSGenericAO implements
 
 				dataObjInp = DataObjInp.instanceForNormalPutStrategy(
 						targetFile.getAbsolutePath(), localFile.length(),
-						targetFile.getResource(), overwrite, null);
+						targetFile.getResource(), overwrite, transferOptions);
 
 				Tag response = getIRODSProtocol().irodsFunction(RODS_API_REQ,
 						dataObjInp.getParsedTags(), 0, null,
@@ -467,13 +486,14 @@ public final class DataObjectAOImpl extends IRODSGenericAO implements
 		} else {
 			localFile = localFileToHoldData;
 		}
+		
+		TransferOptions transferOptions = buildTransferOptionsBasedOnJargonProperties();
 
 		log.info("target local file: {}", localFile.getAbsolutePath());
 		log.info("from source file: {}", irodsFileToGet.getAbsolutePath());
-		// LOG.info("resource: {}", irodsFileToGet.getResource());
 
 		final DataObjInp dataObjInp = DataObjInp.instanceForGet(irodsFileToGet
-				.getAbsolutePath(), null);
+				.getAbsolutePath(), transferOptions);
 
 		processGetAfterResourceDetermined(irodsFileToGet, localFile, dataObjInp);
 	}
@@ -513,12 +533,13 @@ public final class DataObjectAOImpl extends IRODSGenericAO implements
 
 		log.info("target local file: {}", localFile.getAbsolutePath());
 		log.info("from source file: {}", irodsFileToGet.getAbsolutePath());
-		// LOG.info("resource: {}", irodsFileToGet.getResource());
+		
+		TransferOptions transferOptions = buildTransferOptionsBasedOnJargonProperties();
 
 		final DataObjInp dataObjInp = DataObjInp
 				.instanceForGetSpecifyingResource(
 						irodsFileToGet.getAbsolutePath(),
-						irodsFileToGet.getResource(), null);
+						irodsFileToGet.getResource(), transferOptions);
 
 		processGetAfterResourceDetermined(irodsFileToGet, localFile, dataObjInp);
 	}
@@ -545,11 +566,11 @@ public final class DataObjectAOImpl extends IRODSGenericAO implements
 
 		log.info("target local file: {}", localFileToHoldData.getAbsolutePath());
 		log.info("from source file: {}", irodsFileToGet.getAbsolutePath());
-		// LOG.info("resource: {}", irodsFileToGet.getResource());
+		TransferOptions transferOptions = buildTransferOptionsBasedOnJargonProperties();
 
 		final DataObjInp dataObjInp = DataObjInp
 				.instanceForGetSpecifyingResource(
-						irodsFileToGet.getAbsolutePath(), "", null);
+						irodsFileToGet.getAbsolutePath(), "", transferOptions);
 
 		processGetAfterResourceDetermined(irodsFileToGet, localFileToHoldData,
 				dataObjInp);

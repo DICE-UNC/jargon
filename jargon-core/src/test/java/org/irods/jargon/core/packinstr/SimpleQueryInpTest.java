@@ -25,7 +25,7 @@ public class SimpleQueryInpTest {
 		SimpleQueryInp simpleQueryInp = SimpleQueryInp.instance(sq);
 		Assert.assertNotNull("null simpleQueryInp returned", simpleQueryInp);
 		Assert.assertEquals("did not correctly set api number",
-				SimpleQueryInp.SIMPLE_QUERY_API_NBR);
+				SimpleQueryInp.SIMPLE_QUERY_API_NBR, simpleQueryInp.getApiNumber());
 	}
 
 	@Test(expected = IllegalArgumentException.class)

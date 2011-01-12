@@ -76,7 +76,7 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 		// just delegate to the phymove implementation. Method contracts are
 		// checked there.
 		final IRODSFileSystemAO irodsFileSystemAO = new IRODSFileSystemAOImpl(
-				getIrodsSession(), getIrodsAccount());
+				getIRODSSession(), getIRODSAccount());
 		irodsFileSystemAO
 				.physicalMove(absolutePathToSourceFile, targetResource);
 	}
@@ -109,7 +109,7 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 		log.info("to {}", absolutePathToTheTargetCollection);
 
 		final IRODSFileFactory irodsFileFactory = new IRODSFileFactoryImpl(
-				getIrodsSession(), getIrodsAccount());
+				getIRODSSession(), getIRODSAccount());
 
 		final IRODSFile sourceFile = irodsFileFactory
 				.instanceIRODSFile(absolutePathToSourceFile);
@@ -195,7 +195,7 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 		log.info("to {}", absolutePathToTargetFile);
 
 		final IRODSFileFactory irodsFileFactory = new IRODSFileFactoryImpl(
-				getIrodsSession(), getIrodsAccount());
+				getIRODSSession(), getIRODSAccount());
 		final IRODSFile sourceFile = irodsFileFactory
 				.instanceIRODSFile(absolutePathToSourceFile);
 
@@ -304,9 +304,9 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 				log.debug("get opertation, treating as a directory");
 				if (operativeTransferControlBlock != null) {
 					IRODSAccessObjectFactory irodsAccessObjectFactory = IRODSAccessObjectFactoryImpl
-							.instance(getIrodsSession());
+							.instance(getIRODSSession());
 					CollectionAO collectionAO = irodsAccessObjectFactory
-							.getCollectionAO(getIrodsAccount());
+							.getCollectionAO(getIRODSAccount());
 					int fileCount = collectionAO
 							.countAllFilesUnderneathTheGivenCollection(irodsSourceFile
 									.getAbsolutePath());
@@ -688,7 +688,7 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 				thisDirName);
 
 		IRODSFileFactory irodsFileFactory = new IRODSFileFactoryImpl(
-				getIrodsSession(), getIrodsAccount());
+				getIRODSSession(), getIRODSAccount());
 		IRODSFile newIrodsParentDirectory = irodsFileFactory.instanceIRODSFile(
 				targetIrodsFile.getAbsolutePath(), thisDirName);
 
@@ -786,7 +786,7 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 		}
 
 		final IRODSFileFactory irodsFileFactory = new IRODSFileFactoryImpl(
-				getIrodsSession(), getIrodsAccount());
+				getIRODSSession(), getIRODSAccount());
 
 		IRODSFile sourceFile = irodsFileFactory
 				.instanceIRODSFile(irodsFileAbsolutePath);
@@ -829,9 +829,9 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 			throws JargonException {
 		if (operativeTransferControlBlock != null) {
 			IRODSAccessObjectFactory irodsAccessObjectFactory = IRODSAccessObjectFactoryImpl
-					.instance(getIrodsSession());
+					.instance(getIRODSSession());
 			CollectionAO collectionAO = irodsAccessObjectFactory
-					.getCollectionAO(getIrodsAccount());
+					.getCollectionAO(getIRODSAccount());
 			int fileCount = collectionAO
 					.countAllFilesUnderneathTheGivenCollection(irodsFileAbsolutePath);
 			log.info("replication operation for {} files)", fileCount);

@@ -20,13 +20,18 @@ public interface IRODSAccessObject {
 
 	IRODSCommands getIRODSProtocol() throws JargonException;
 
+	/**
+	 * Get the <code>IRODSSession</code> that provides connections to the iRODS
+	 * server.
+	 * 
+	 * @return {@link IRODSSession}
+	 */
 	IRODSSession getIRODSSession();
 
 	/**
-	 * Convenience method that gets the underlying <code>IRODSAccount</code>
-	 * associated with the connection.
+	 * Get the <code>IRODSAccount</code> that describes the connection.
 	 * 
-	 * @return
+	 * @return {@link IRODSAccount}
 	 */
 	IRODSAccount getIRODSAccount();
 
@@ -45,20 +50,5 @@ public interface IRODSAccessObject {
 	 * @return {@link JargonProperties}
 	 */
 	JargonProperties getJargonProperties();
-
-	/**
-	 * Get the <code>IRODSAccount</code> that describes the connection.
-	 * 
-	 * @return {@link IRODSAccount}
-	 */
-	IRODSAccount getIrodsAccount();
-
-	/**
-	 * Get the <code>IRODSSession</code> that provides connections to the iRODS
-	 * server.
-	 * 
-	 * @return {@link IRODSSession}
-	 */
-	IRODSSession getIrodsSession();
 
 }

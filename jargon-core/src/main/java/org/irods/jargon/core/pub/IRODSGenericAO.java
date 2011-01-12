@@ -13,7 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * General base class for objects that interact with IRODS through a connection
+ * General base class for objects that interact with IRODS through a connection.
  * 
  * @author Mike Conway - DICE (www.irods.org)
  * 
@@ -65,7 +65,7 @@ public abstract class IRODSGenericAO implements IRODSAccessObject {
 	 */
 	@Override
 	public final IRODSSession getIRODSSession() {
-		return getIrodsSession();
+		return irodsSession;
 	}
 
 	/*
@@ -75,7 +75,7 @@ public abstract class IRODSGenericAO implements IRODSAccessObject {
 	 */
 	@Override
 	public final IRODSAccount getIRODSAccount() {
-		return getIrodsAccount();
+		return irodsAccount;
 	}
 
 	/*
@@ -87,7 +87,7 @@ public abstract class IRODSGenericAO implements IRODSAccessObject {
 	@Override
 	public final IRODSServerProperties getIRODSServerProperties()
 			throws JargonException {
-		return getIrodsSession().currentConnection(getIrodsAccount())
+		return getIRODSSession().currentConnection(getIRODSAccount())
 				.getIRODSServerProperties();
 	}
 
@@ -98,19 +98,14 @@ public abstract class IRODSGenericAO implements IRODSAccessObject {
 	 */
 	@Override
 	public final IRODSCommands getIRODSProtocol() throws JargonException {
-		return getIrodsSession().currentConnection(getIrodsAccount());
+		return getIRODSSession().currentConnection(getIRODSAccount());
 	}
 
-	@Override
-	public IRODSSession getIrodsSession() {
-		return irodsSession;
-	}
-
-	@Override
-	public IRODSAccount getIrodsAccount() {
-		return irodsAccount;
-	}
-
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.pub.IRODSAccessObject#getJargonProperties()
+	 */
 	@Override
 	public JargonProperties getJargonProperties() {
 		return IRODSSession.getJargonProperties();
