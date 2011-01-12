@@ -314,13 +314,9 @@ public final class DataObjectAOImpl extends IRODSGenericAO implements
 				irodsFileDestination, ignoreChecks);
 		
 		
-		
-		
-		
-
 		DataObjInp dataObjInp = DataObjInp.instanceForInitialCallToPut(
 				targetFile.getAbsolutePath(), localFile.length(),
-				targetFile.getResource(), overwrite);
+				targetFile.getResource(), overwrite, null);
 
 		try {
 			Tag responseToInitialCallForPut = getIRODSProtocol().irodsFunction(
@@ -366,7 +362,7 @@ public final class DataObjectAOImpl extends IRODSGenericAO implements
 
 				dataObjInp = DataObjInp.instanceForNormalPutStrategy(
 						targetFile.getAbsolutePath(), localFile.length(),
-						targetFile.getResource(), overwrite);
+						targetFile.getResource(), overwrite, null);
 
 				Tag response = getIRODSProtocol().irodsFunction(RODS_API_REQ,
 						dataObjInp.getParsedTags(), 0, null,
@@ -477,7 +473,7 @@ public final class DataObjectAOImpl extends IRODSGenericAO implements
 		// LOG.info("resource: {}", irodsFileToGet.getResource());
 
 		final DataObjInp dataObjInp = DataObjInp.instanceForGet(irodsFileToGet
-				.getAbsolutePath());
+				.getAbsolutePath(), null);
 
 		processGetAfterResourceDetermined(irodsFileToGet, localFile, dataObjInp);
 	}
@@ -522,7 +518,7 @@ public final class DataObjectAOImpl extends IRODSGenericAO implements
 		final DataObjInp dataObjInp = DataObjInp
 				.instanceForGetSpecifyingResource(
 						irodsFileToGet.getAbsolutePath(),
-						irodsFileToGet.getResource());
+						irodsFileToGet.getResource(), null);
 
 		processGetAfterResourceDetermined(irodsFileToGet, localFile, dataObjInp);
 	}
@@ -553,7 +549,7 @@ public final class DataObjectAOImpl extends IRODSGenericAO implements
 
 		final DataObjInp dataObjInp = DataObjInp
 				.instanceForGetSpecifyingResource(
-						irodsFileToGet.getAbsolutePath(), "");
+						irodsFileToGet.getAbsolutePath(), "", null);
 
 		processGetAfterResourceDetermined(irodsFileToGet, localFileToHoldData,
 				dataObjInp);

@@ -38,7 +38,8 @@ import org.irods.jargon.core.query.MetaDataAndDomainData;
 public interface DataObjectAO extends IRODSAccessObject {
 
 	/**
-	 * Put a local file to IRODS
+	 * Put a local file to IRODS.  This method will operate using any defaults in 
+	 * the <code>JargonProperties</code>.
 	 * 
 	 * @param localFile
 	 *            <code>java.io.File</code> containing the data to go to IRODS

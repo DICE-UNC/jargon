@@ -60,7 +60,7 @@ public class DataObjInpTest {
 	@Test
 	public final void testInstanceForPut() throws Exception {
 		DataObjInp dataObjInp = DataObjInp.instanceForNormalPutStrategy(
-				"/abspath", 100, "aresource", true);
+				"/abspath", 100, "aresource", true, null);
 		TestCase.assertNotNull("data obj inp returned was null", dataObjInp);
 		TestCase.assertEquals("wrong API number assigned",
 				DataObjInp.PUT_FILE_API_NBR, dataObjInp.getApiNumber());
@@ -68,7 +68,7 @@ public class DataObjInpTest {
 
 	@Test
 	public final void testInstanceForGet() throws Exception {
-		DataObjInp dataObjInp = DataObjInp.instanceForGet("/abspath");
+		DataObjInp dataObjInp = DataObjInp.instanceForGet("/abspath", null);
 		TestCase.assertNotNull("data obj inp returned was null", dataObjInp);
 		TestCase.assertEquals("wrong API number assigned",
 				DataObjInp.GET_FILE_API_NBR, dataObjInp.getApiNumber());
@@ -108,7 +108,7 @@ public class DataObjInpTest {
 		DataObjInp dataObjInp = DataObjInp
 				.instanceForInitialCallToPut(
 						"/test1/home/test1/test-scratch/IrodsCommandsPutTest/testPutOverwriteFileNotInIRODS.txt",
-						716800000, "test1-resc", false);
+						716800000, "test1-resc", false, null);
 
 		StringBuilder sb = new StringBuilder();
 		sb.append("<DataObjInp_PI><objPath>/test1/home/test1/test-scratch/IrodsCommandsPutTest/testPutOverwriteFileNotInIRODS.txt</objPath>\n");
@@ -135,7 +135,7 @@ public class DataObjInpTest {
 		DataObjInp dataObjInp = DataObjInp
 				.instanceForNormalPutStrategy(
 						"/test1/home/test1/test-scratch/IrodsCommandsPutTest/testPutOverwriteFileNotInIRODS.txt",
-						1, "test1-resc", true);
+						1, "test1-resc", true, null);
 
 		StringBuilder sb = new StringBuilder();
 		sb.append("<DataObjInp_PI><objPath>/test1/home/test1/test-scratch/IrodsCommandsPutTest/testPutOverwriteFileNotInIRODS.txt</objPath>\n");
@@ -163,7 +163,7 @@ public class DataObjInpTest {
 	@Test
 	public final void testGetParsedTagsForGet() throws Exception {
 		DataObjInp dataObjInp = DataObjInp
-				.instanceForGet("/test1/home/test1/test-scratch/IrodsCommandsGetTest/testGet.txt");
+				.instanceForGet("/test1/home/test1/test-scratch/IrodsCommandsGetTest/testGet.txt", null);
 
 		StringBuilder sb = new StringBuilder();
 		sb.append("<DataObjInp_PI><objPath>/test1/home/test1/test-scratch/IrodsCommandsGetTest/testGet.txt</objPath>\n");
@@ -236,7 +236,7 @@ public class DataObjInpTest {
 		DataObjInp dataObjInp = DataObjInp
 				.instanceForGetSpecifyingResource(
 						"/test1/home/test1/test-scratch/IrodsCommandsGetTest/testGetSpecifyingResource.txt",
-						"test1-resc");
+						"test1-resc", null);
 
 		StringBuilder sb = new StringBuilder();
 		sb.append("<DataObjInp_PI><objPath>/test1/home/test1/test-scratch/IrodsCommandsGetTest/testGetSpecifyingResource.txt</objPath>\n");

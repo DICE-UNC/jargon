@@ -1171,14 +1171,13 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 
 		long offset = 0L;
 		long dataSize = 0L;
-		int numThreads = 0;
 
 		int responseFileNbr = 0;
 
 		try {
 			DataObjInp dataObjInp = DataObjInp.instance(absolutePath,
-					createMode, openFlags, offset, dataSize, numThreads,
-					resource);
+					createMode, openFlags, offset, dataSize,
+					resource, null);
 			Tag response = getIRODSProtocol().irodsFunction(DataObjInp.PI_TAG,
 					dataObjInp.getParsedTags(), DataObjInp.CREATE_FILE_API_NBR);
 			if (response == null) {
