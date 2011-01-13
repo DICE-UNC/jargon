@@ -46,6 +46,7 @@ import org.irods.jargon.core.query.IRODSQueryResultSet;
 import org.irods.jargon.core.query.JargonQueryException;
 import org.irods.jargon.core.query.MetaDataAndDomainData;
 import org.irods.jargon.core.query.RodsGenQueryEnum;
+import org.irods.jargon.core.transfer.KeepAliveProcess;
 import org.irods.jargon.core.transfer.ParallelGetFileTransferStrategy;
 import org.irods.jargon.core.transfer.ParallelPutFileTransferStrategy;
 import org.irods.jargon.core.utils.IRODSDataConversionUtil;
@@ -361,9 +362,17 @@ public final class DataObjectAOImpl extends IRODSGenericAO implements
 				log.info(
 						"getting ready to initiate parallel file transfer strategy:{}",
 						parallelPutFileStrategy);
-
+				
+				
+				// start a keep-alive that will ping the irods server every 30 seconds to keep the control channel alive
+				KeepAliveProcess keepAliveProcess = new KeepAliveProcess(new EnvironmentalInfoAOImpl(this.getIRODSSession(), this.getIRODSAccount()));
+				Thread keepAliveThread = new Thread(keepAliveProcess);
+				keepAliveThread.start();
+			
 				try {
 					parallelPutFileStrategy.transfer();
+					keepAliveProcess.setTerminate(true);
+					keepAliveThread.join(2000);
 				} catch (Exception e) {
 					log.error("error in parallel transfer", e);
 					throw new JargonException("error in parallel transfer", e);
@@ -634,8 +643,16 @@ public final class DataObjectAOImpl extends IRODSGenericAO implements
 			ParallelGetFileTransferStrategy parallelGetTransferStrategy = ParallelGetFileTransferStrategy
 					.instance(host, port, numberOfThreads, password,
 							localFileToHoldData);
+			
+			// start a keep-alive that will ping the irods server every 30 seconds to keep the control channel alive
+			KeepAliveProcess keepAliveProcess = new KeepAliveProcess(new EnvironmentalInfoAOImpl(this.getIRODSSession(), this.getIRODSAccount()));
+			Thread keepAliveThread = new Thread(keepAliveProcess);
+			keepAliveThread.start();
+		
 			try {
 				parallelGetTransferStrategy.transfer();
+				keepAliveProcess.setTerminate(true);
+				keepAliveThread.join(2000);
 			} catch (Exception e) {
 				log.error("error in parallel transfer", e);
 				throw new JargonException("error in parallel transfer", e);

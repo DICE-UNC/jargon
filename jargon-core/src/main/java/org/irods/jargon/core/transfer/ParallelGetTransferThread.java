@@ -71,7 +71,7 @@ public final class ParallelGetTransferThread extends
 		try {
 			setS(new Socket(parallelGetFileTransferStrategy.getHost(),
 					parallelGetFileTransferStrategy.getPort()));
-			getS().setSoTimeout(30000);
+			//getS().setSoTimeout(30000);
 			byte[] outputBuffer = new byte[4];
 			Host.copyInt(parallelGetFileTransferStrategy.getPassword(),
 					outputBuffer);
@@ -186,6 +186,7 @@ public final class ParallelGetTransferThread extends
 								e);
 					}
 
+					log.debug("parallel tranfsser read next header");
 					// read the next header
 					operation = readInt();
 					flags = readInt();
