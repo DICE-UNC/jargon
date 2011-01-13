@@ -26,11 +26,13 @@ final class TransferQueueService {
 
 	private static final Logger log = LoggerFactory
 			.getLogger(TransferQueueService.class);
-	
+
 	private final HibernateUtil hibernateUtil;
 
 	/**
-	 * Static initializer for a transfer queue service using default configuration.
+	 * Static initializer for a transfer queue service using default
+	 * configuration.
+	 * 
 	 * @return <code>TransferQueueService</code> instance.
 	 */
 	public static final TransferQueueService instance() throws JargonException {
@@ -38,34 +40,44 @@ final class TransferQueueService {
 	}
 
 	/**
-	 * Static initializer for an instance that will use a transfer database at a given location.  This is useful when the database should be
-	 * kept in a user directory.
-	 * @param pathToTransferDatabase <code>String</code> giving the path to the transfer database such that it can be used in the
-	 * JDBC database URL.
+	 * Static initializer for an instance that will use a transfer database at a
+	 * given location. This is useful when the database should be kept in a user
+	 * directory.
+	 * 
+	 * @param pathToTransferDatabase
+	 *            <code>String</code> giving the path to the transfer database
+	 *            such that it can be used in the JDBC database URL.
 	 * @throws JargonException
 	 */
-	public static final TransferQueueService instanceGivingPathToTransferDatabase(final String pathToTransferDatabase) throws JargonException {
+	public static final TransferQueueService instanceGivingPathToTransferDatabase(
+			final String pathToTransferDatabase) throws JargonException {
 		return new TransferQueueService(pathToTransferDatabase);
 	}
-	
+
 	/**
-	 * Create the transferQueueService using database defaults in the Hibernate config.
+	 * Create the transferQueueService using database defaults in the Hibernate
+	 * config.
+	 * 
 	 * @throws JargonException
 	 */
 	private TransferQueueService() throws JargonException {
 		hibernateUtil = HibernateUtil.instanceUsingDefaultConfig();
 	}
-	
+
 	/**
-	 * Create an instance that will use a transfer database at a given location.  This is useful when the database should be
-	 * kept in a user directory.
-	 * @param pathToTransferDatabase <code>String</code> giving the path to the transfer database such that it can be used in the
-	 * JDBC database URL.
+	 * Create an instance that will use a transfer database at a given location.
+	 * This is useful when the database should be kept in a user directory.
+	 * 
+	 * @param pathToTransferDatabase
+	 *            <code>String</code> giving the path to the transfer database
+	 *            such that it can be used in the JDBC database URL.
 	 * @throws JargonException
 	 */
-	private TransferQueueService(final String pathToTransferDatabase) throws JargonException {
+	private TransferQueueService(final String pathToTransferDatabase)
+			throws JargonException {
 		// param checks done in hibernateUtil.
-		hibernateUtil = HibernateUtil.instanceGivingPathToDatabase(pathToTransferDatabase);
+		hibernateUtil = HibernateUtil
+				.instanceGivingPathToDatabase(pathToTransferDatabase);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -96,23 +108,22 @@ final class TransferQueueService {
 			// FIXME: decide whether a restart and add to control block
 
 			transfer.setTransferStart(new Date());
-			transfer
-					.setTransferState(LocalIRODSTransfer.TRANSFER_STATE_PROCESSING);
-			transfer
-					.setTransferErrorStatus(LocalIRODSTransfer.TRANSFER_STATUS_OK);
+			transfer.setTransferState(LocalIRODSTransfer.TRANSFER_STATE_PROCESSING);
+			transfer.setTransferErrorStatus(LocalIRODSTransfer.TRANSFER_STATUS_OK);
 			session.update(transfer);
-			//session.flush();
+			// session.flush();
 			tx.commit();
 
 		} catch (RuntimeException e) {
 
-			if (tx != null)
+			if (tx != null) {
 				tx.rollback();
+			}
 
 			log.error("error in transaction", e);
 			throw new JargonException(e);
 		} finally {
-			//session.close();
+			// session.close();
 			log.info("session closed");
 		}
 
@@ -193,18 +204,19 @@ final class TransferQueueService {
 			log.info("saving...{}", enqueuedTransfer);
 
 			session.saveOrUpdate(enqueuedTransfer);
-			//session.flush();
+			// session.flush();
 			log.info("commit");
 			tx.commit();
 		} catch (RuntimeException e) {
 
-			if (tx != null)
+			if (tx != null) {
 				tx.rollback();
+			}
 
 			log.error("error in transaction", e);
 			throw new JargonException(e);
 		} finally {
-			//session.close();
+			// session.close();
 			log.info("session closed");
 		}
 
@@ -285,18 +297,19 @@ final class TransferQueueService {
 			log.info("saving...{}", enqueuedTransfer);
 
 			session.saveOrUpdate(enqueuedTransfer);
-			//session.flush();
+			// session.flush();
 			log.info("commit");
 			tx.commit();
 		} catch (RuntimeException e) {
 
-			if (tx != null)
+			if (tx != null) {
 				tx.rollback();
+			}
 
 			log.error("error in transaction", e);
 			throw new JargonException(e);
 		} finally {
-			//session.close();
+			// session.close();
 			log.info("session closed");
 		}
 
@@ -370,18 +383,19 @@ final class TransferQueueService {
 
 			session.update(mergedTransfer);
 			log.info("commit");
-			//session.flush();
+			// session.flush();
 			tx.commit();
 		} catch (RuntimeException e) {
 
-			if (tx != null)
+			if (tx != null) {
 				tx.rollback();
+			}
 
 			log.error("error in transaction", e);
 			throw new JargonException(e);
 		} finally {
 			notifyManagerOfError(transferManager);
-			//session.close();
+			// session.close();
 			log.info("session closed");
 		}
 
@@ -498,7 +512,7 @@ final class TransferQueueService {
 	private List<LocalIRODSTransfer> processQueryOfQueue(
 			final String queryString, final int rowCount)
 			throws JargonException {
-		
+
 		if (queryString == null || queryString.isEmpty()) {
 			throw new JargonException("queryString is null or empty");
 		}
@@ -525,20 +539,21 @@ final class TransferQueueService {
 			}
 
 			final List<LocalIRODSTransfer> irodsTransferQueue = q.list();
-			//session.flush();
+			// session.flush();
 			tx.commit();
 
 			return irodsTransferQueue;
 
 		} catch (RuntimeException e) {
 
-			if (tx != null)
+			if (tx != null) {
 				tx.rollback();
+			}
 
 			log.error("error in transaction", e);
 			throw new JargonException(e);
 		} finally {
-			//session.close();
+			// session.close();
 			log.info("session closed");
 		}
 
@@ -562,18 +577,19 @@ final class TransferQueueService {
 			tx = session.beginTransaction();
 			Query query = session.createQuery(queryString);
 			query.executeUpdate();
-			//session.flush();
+			// session.flush();
 			tx.commit();
 
 		} catch (RuntimeException e) {
 
-			if (tx != null)
+			if (tx != null) {
 				tx.rollback();
+			}
 
 			log.error("error in transaction", e);
 			throw new JargonException(e);
 		} finally {
-			//session.close();
+			// session.close();
 			log.info("session closed");
 		}
 
@@ -591,18 +607,19 @@ final class TransferQueueService {
 			tx = session.beginTransaction();
 			Query query = session.createQuery(queryString);
 			query.executeUpdate();
-			//session.flush();
+			// session.flush();
 			tx.commit();
 
 		} catch (RuntimeException e) {
 
-			if (tx != null)
+			if (tx != null) {
 				tx.rollback();
+			}
 
 			log.error("error in transaction", e);
 			throw new JargonException(e);
 		} finally {
-			//session.close();
+			// session.close();
 			log.info("session closed");
 		}
 	}
@@ -648,20 +665,21 @@ final class TransferQueueService {
 					"transferId", localIRODSTransferId);
 			final List<LocalIRODSTransferItem> irodsTransferQueue = q.list();
 
-			//session.flush();
+			// session.flush();
 			tx.commit();
 
 			return irodsTransferQueue;
 
 		} catch (RuntimeException e) {
 
-			if (tx != null)
+			if (tx != null) {
 				tx.rollback();
+			}
 
 			log.error("error in transaction", e);
 			throw new JargonException(e);
 		} finally {
-			//session.close();
+			// session.close();
 			log.info("session closed");
 		}
 	}
@@ -693,7 +711,7 @@ final class TransferQueueService {
 			final Query q = session.createQuery(queryString).setLong(
 					"transferId", localIRODSTransferId);
 			final List<LocalIRODSTransferItem> irodsTransferQueue = q.list();
-			//session.flush();
+			// session.flush();
 
 			tx.commit();
 
@@ -701,13 +719,14 @@ final class TransferQueueService {
 
 		} catch (RuntimeException e) {
 
-			if (tx != null)
+			if (tx != null) {
 				tx.rollback();
+			}
 
 			log.error("error in transaction", e);
 			throw new JargonException(e);
 		} finally {
-			//session.close();
+			// session.close();
 			log.info("session closed");
 		}
 	}
@@ -740,26 +759,27 @@ final class TransferQueueService {
 
 			LocalIRODSTransfer txfrToUpdate = (LocalIRODSTransfer) session
 					.load(LocalIRODSTransfer.class, localIRODSTransfer.getId());
-			log.info(">>>>restart last successful path:{}", txfrToUpdate
-					.getLastSuccessfulPath());
+			log.info(">>>>restart last successful path:{}",
+					txfrToUpdate.getLastSuccessfulPath());
 			txfrToUpdate
 					.setTransferErrorStatus(LocalIRODSTransfer.TRANSFER_STATUS_OK);
 			txfrToUpdate
 					.setTransferState(LocalIRODSTransfer.TRANSFER_STATE_ENQUEUED);
 			session.update(txfrToUpdate);
 			log.info("status reset and enqueued for restart");
-			//session.flush();
+			// session.flush();
 			tx.commit();
 
 		} catch (RuntimeException e) {
 
-			if (tx != null)
+			if (tx != null) {
 				tx.rollback();
+			}
 
 			log.error("error in transaction", e);
 			throw new JargonException(e);
 		} finally {
-			//session.close();
+			// session.close();
 			log.info("session closed");
 		}
 
@@ -796,8 +816,8 @@ final class TransferQueueService {
 
 			LocalIRODSTransfer txfrToUpdate = (LocalIRODSTransfer) session
 					.load(LocalIRODSTransfer.class, localIRODSTransfer.getId());
-			log.info(">>>>restart last successful path:{}", txfrToUpdate
-					.getLastSuccessfulPath());
+			log.info(">>>>restart last successful path:{}",
+					txfrToUpdate.getLastSuccessfulPath());
 			txfrToUpdate
 					.setTransferErrorStatus(LocalIRODSTransfer.TRANSFER_STATUS_OK);
 			txfrToUpdate
@@ -809,20 +829,20 @@ final class TransferQueueService {
 			query.setLong("id", txfrToUpdate.getId());
 			query.executeUpdate();
 
-			log
-					.info("status reset and enqueued for resubmit, old transfer items removed");
-			//session.flush();
+			log.info("status reset and enqueued for resubmit, old transfer items removed");
+			// session.flush();
 			tx.commit();
 
 		} catch (RuntimeException e) {
 
-			if (tx != null)
+			if (tx != null) {
 				tx.rollback();
+			}
 
 			log.error("error in transaction", e);
 			throw new JargonException(e);
 		} finally {
-			//session.close();
+			// session.close();
 			log.info("session closed");
 		}
 
@@ -843,8 +863,8 @@ final class TransferQueueService {
 	 *            replicated.
 	 */
 	protected LocalIRODSTransfer enqueueReplicateTransfer(
-			String irodsAbsolutePath, String targetResource,
-			IRODSAccount irodsAccount) throws JargonException {
+			final String irodsAbsolutePath, final String targetResource,
+			final IRODSAccount irodsAccount) throws JargonException {
 
 		if (irodsAbsolutePath == null || irodsAbsolutePath.isEmpty()) {
 			throw new JargonException("irodsAbsolutePath is null or empty");
@@ -859,9 +879,7 @@ final class TransferQueueService {
 			throw new JargonException("null irodsAccount");
 		}
 
-		log
-				.info("enqueue replicate transfer from iRODS: {}",
-						irodsAbsolutePath);
+		log.info("enqueue replicate transfer from iRODS: {}", irodsAbsolutePath);
 		log.info("   target resource:{}", targetResource);
 
 		log.info("getting hibernate session factory and opening session");
@@ -893,18 +911,19 @@ final class TransferQueueService {
 			log.info("saving...{}", enqueuedTransfer);
 
 			session.saveOrUpdate(enqueuedTransfer);
-			//session.flush();
+			// session.flush();
 			log.info("commit");
 			tx.commit();
 		} catch (RuntimeException e) {
 
-			if (tx != null)
+			if (tx != null) {
 				tx.rollback();
+			}
 
 			log.error("error in transaction", e);
 			throw new JargonException(e);
 		} finally {
-			//session.close();
+			// session.close();
 			log.info("session closed");
 		}
 
@@ -953,18 +972,19 @@ final class TransferQueueService {
 				log.info("status set to cancelled");
 			}
 
-			//session.flush();
+			// session.flush();
 			tx.commit();
 
 		} catch (RuntimeException e) {
 
-			if (tx != null)
+			if (tx != null) {
 				tx.rollback();
+			}
 
 			log.error("error in transaction", e);
 			throw new JargonException(e);
 		} finally {
-			//session.close();
+			// session.close();
 			log.info("session closed");
 		}
 	}
@@ -976,10 +996,9 @@ final class TransferQueueService {
 			throw new JargonException("retentionDays must be 0 or greater");
 		}
 
-		log
-				.info(
-						"purging the queue of all completed or cancelled items more than {} days old",
-						retentionDays);
+		log.info(
+				"purging the queue of all completed or cancelled items more than {} days old",
+				retentionDays);
 
 		final String queryString = "delete from LocalIRODSTransfer as transfer where transfer.transferState == 'COMPLETE' or transferState == 'CANCELLED'";
 
@@ -991,27 +1010,30 @@ final class TransferQueueService {
 			tx = session.beginTransaction();
 			Query query = session.createQuery(queryString);
 			query.executeUpdate();
-			//session.flush();
+			// session.flush();
 			tx.commit();
 
 		} catch (RuntimeException e) {
 
-			if (tx != null)
+			if (tx != null) {
 				tx.rollback();
+			}
 
 			log.error("error in transaction", e);
 			throw new JargonException(e);
 		} finally {
-			//session.close();
+			// session.close();
 			log.info("session closed");
 		}
 
 	}
 
 	/**
-	 * This method is for startup processing of the queue.  There may have been previous errors,
-	 * or transfers left in an indeterminate state.  This method is called at startup to set up the 
-	 * queue before the transfer engine starts.
+	 * This method is for startup processing of the queue. There may have been
+	 * previous errors, or transfers left in an indeterminate state. This method
+	 * is called at startup to set up the queue before the transfer engine
+	 * starts.
+	 * 
 	 * @throws JargonException
 	 */
 	protected void processQueueAtStartup() throws JargonException {
@@ -1050,7 +1072,8 @@ final class TransferQueueService {
 		Transaction tx = null;
 
 		try {
-			log.info("beginning tx to reset status of this transfer:{} ", transferToReset);
+			log.info("beginning tx to reset status of this transfer:{} ",
+					transferToReset);
 			tx = session.beginTransaction();
 
 			transferToReset
@@ -1060,18 +1083,19 @@ final class TransferQueueService {
 			session.update(transferToReset);
 			log.info("status set to enqueued");
 
-			//session.flush();
+			// session.flush();
 			tx.commit();
 
 		} catch (RuntimeException e) {
 
-			if (tx != null)
+			if (tx != null) {
 				tx.rollback();
+			}
 
 			log.error("error in transaction", e);
 			throw new JargonException(e);
 		} finally {
-			//session.close();
+			// session.close();
 			log.info("session closed");
 		}
 	}

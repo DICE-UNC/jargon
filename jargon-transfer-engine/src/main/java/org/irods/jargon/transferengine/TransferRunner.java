@@ -11,8 +11,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * @author Mike Conway - DICE (www.irods.org) FIXME: clean up error/complete
- *         notification and check thread safety, a bit hacked right now
+ * <code>Runnable</code> meant to run in a thread, processing the given
+ * transfer.
+ * 
+ * @author Mike Conway - DICE (www.irods.org)
  */
 public class TransferRunner implements Runnable {
 
@@ -26,11 +28,27 @@ public class TransferRunner implements Runnable {
 			.getLogger(TransferRunner.class);
 
 	/**
+	 * Constructs a process to transfer data to/from iRODS.
 	 * 
+	 * @param transferManager
+	 *            {@link TransferManager} that coordinates the transfer of data,
+	 *            and manages callbacks and notifications.
+	 * @param localIRODSTransfer
+	 *            {@link LocalIRODSTransfer} that contains data describing the
+	 *            type of transfer and the status.
+	 * @param transferControlBlock
+	 *            {@link TransferControlBlock} maintains shared references to
+	 *            data about the transfer between the client asking for the
+	 *            transfer, and the transfer process.
+	 * @param transferQueueService
+	 *            {@link TransferQueueService} that manages persistence and
+	 *            access to the transfer data.
+	 * @throws JargonException
 	 */
 	public TransferRunner(final TransferManager transferManager,
 			final LocalIRODSTransfer localIRODSTransfer,
-			final TransferControlBlock transferControlBlock, final TransferQueueService transferQueueService)
+			final TransferControlBlock transferControlBlock,
+			final TransferQueueService transferQueueService)
 			throws JargonException {
 		if (transferManager == null) {
 			throw new JargonException("null transfer manager");
@@ -43,7 +61,7 @@ public class TransferRunner implements Runnable {
 		if (transferControlBlock == null) {
 			throw new JargonException("null transferControlBlock");
 		}
-		
+
 		if (transferQueueService == null) {
 			throw new JargonException("null transferQueueService");
 		}
@@ -66,7 +84,8 @@ public class TransferRunner implements Runnable {
 
 		try {
 			irodsLocalTransferEngine = IRODSLocalTransferEngine.instance(
-					transferManager, transferControlBlock, transferManager.isLogSuccessfulTransfers());  // TODO: rethink how config can be propogated from transfer manager
+					transferManager, transferControlBlock,
+					transferManager.isLogSuccessfulTransfers());
 		} catch (JargonException je) {
 			handleErrorCreatingTransferEngineInstance(transferQueueService, je);
 			return;
@@ -79,12 +98,15 @@ public class TransferRunner implements Runnable {
 			 * I have tried the transfer. If any errors had occurred, the best
 			 * effort was made to LOG the error in the transfer database, and in
 			 * case of error would have returned or thrown an exception. I can
-			 * assume that the transfer went correctly and the database was updated
-			 * in the irodsLocalTransferEngine. processPutOperation() method.
+			 * assume that the transfer went correctly and the database was
+			 * updated in the irodsLocalTransferEngine. processPutOperation()
+			 * method.
 			 */
 			processCompletionOfTransfer();
 		} catch (Exception je) {
-			log.error("exception in run method when calling process operation, errors should have been passed back in callbacks", je);
+			log.error(
+					"exception in run method when calling process operation, errors should have been passed back in callbacks",
+					je);
 			try {
 				transferQueueService.markTransferAsErrorAndTerminate(
 						localIRODSTransfer, je, transferManager);
@@ -93,7 +115,7 @@ public class TransferRunner implements Runnable {
 			}
 			notifyTransferManagerWhenCompletedWithError();
 			return;
-		} 
+		}
 	}
 
 	/**
@@ -107,7 +129,6 @@ public class TransferRunner implements Runnable {
 			// ignored
 		}
 	}
-
 
 	/**
 	 * 
@@ -127,22 +148,20 @@ public class TransferRunner implements Runnable {
 	 * @throws JargonRuntimeException
 	 */
 	private void handleErrorCreatingTransferEngineInstance(
-			TransferQueueService transferQueueService, JargonException je)
-			throws JargonRuntimeException {
-		log
-				.error(
-						"error attempting to get transfer engine and irods file service, which are prerequisites to processing a transfer.  Transfer not tried",
-						je);
+			final TransferQueueService transferQueueService,
+			final JargonException je) throws JargonRuntimeException {
+		log.error(
+				"error attempting to get transfer engine and irods file service, which are prerequisites to processing a transfer.  Transfer not tried",
+				je);
 		try {
 			transferQueueService.markTransferAsErrorAndTerminate(
 					localIRODSTransfer, je, transferManager);
 			notifyTransferManagerWhenCompletedWithError();
 			return;
 		} catch (Exception e) {
-			log
-					.error(
-							"error marking transfer as an error, cannot update queue with this status",
-							e);
+			log.error(
+					"error marking transfer as an error, cannot update queue with this status",
+					e);
 
 			try {
 				transferManager.notifyComplete();
@@ -165,5 +184,5 @@ public class TransferRunner implements Runnable {
 	public TransferControlBlock getTransferControlBlock() {
 		return transferControlBlock;
 	}
-	
+
 }

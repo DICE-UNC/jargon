@@ -3,8 +3,6 @@
  */
 package org.irods.jargon.transferengine.util;
 
-import java.util.Properties;
-
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
@@ -79,8 +77,7 @@ public class HibernateUtil {
 	 * @throws JargonException
 	 */
 	private HibernateUtil() throws JargonException {
-		log
-				.info("creating hibernate session factory using default configuration in the hibernate.cfg.xml file");
+		log.info("creating hibernate session factory using default configuration in the hibernate.cfg.xml file");
 		factory = new Configuration().configure().buildSessionFactory();
 	}
 
@@ -108,7 +105,7 @@ public class HibernateUtil {
 		jdbcUrlBuilder.append("jdbc:derby:");
 		jdbcUrlBuilder.append(sb);
 		jdbcUrlBuilder.append(";create=true");
-		//jdbcUrlBuilder.append("target/transferDatabase");
+		// jdbcUrlBuilder.append("target/transferDatabase");
 
 		// Properties p = System.getProperties();
 		// p.put("derby.system.home", derbyPath);
@@ -140,7 +137,7 @@ public class HibernateUtil {
 
 	}
 
-	public static String obfuscate(String stringToObfuscate)
+	public static String obfuscate(final String stringToObfuscate)
 			throws JargonException {
 		String encryptionKey = "123456789012345678901234567890";
 
@@ -155,7 +152,7 @@ public class HibernateUtil {
 		}
 	}
 
-	public static String retrieve(String encryptedString)
+	public static String retrieve(final String encryptedString)
 			throws JargonException {
 		String encryptionKey = "123456789012345678901234567890";
 

@@ -8,28 +8,28 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Domain object that represents a transfer activity between the local host and an iRODS server.
+ * Domain object that represents a transfer activity between the local host and
+ * an iRODS server.
+ * 
  * @author Mike Conway - DICE (www.irods.org)
- *
+ * 
  */
 public class LocalIRODSTransfer {
-		
+
 	public static final String TRANSFER_STATE_PROCESSING = "PROCESSING";
 	public static final String TRANSFER_STATE_PAUSED = "PAUSED";
 	public static final String TRANSFER_STATE_CANCELLED = "CANCELLED";
 	public static final String TRANSFER_STATE_COMPLETE = "COMPLETE";
 	public static final String TRANSFER_STATE_ENQUEUED = "ENQUEUED";
 
-
-	
 	public static final String TRANSFER_STATUS_ERROR = "ERROR";
 	public static final String TRANSFER_STATUS_WARNING = "WARNING";
 	public static final String TRANSFER_STATUS_OK = "OK";
-	
+
 	public static final String TRANSFER_TYPE_PUT = "PUT";
 	public static final String TRANSFER_TYPE_GET = "GET";
 	public static final String TRANSFER_TYPE_REPLICATE = "REPLICATE";
-	
+
 	private Long id;
 	private String transferState;
 	private String transferErrorStatus;
@@ -52,11 +52,11 @@ public class LocalIRODSTransfer {
 	private String lastSuccessfulPath = "";
 	private int totalFilesCount = 0;
 	private int totalFilesTransferredSoFar = 0;
-	
+
 	public LocalIRODSTransfer() {
-		
+
 	}
-	
+
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
@@ -98,132 +98,132 @@ public class LocalIRODSTransfer {
 		return sb.toString();
 	}
 
-	public  String getTransferState() {
+	public String getTransferState() {
 		return transferState;
 	}
 
-	public  void setTransferState(
-			String transferState) {
+	public void setTransferState(final String transferState) {
 		this.transferState = transferState;
 	}
 
-	public  String getTransferType() {
+	public String getTransferType() {
 		return transferType;
 	}
 
-	public  void setTransferType(String transferType) {
+	public void setTransferType(final String transferType) {
 		this.transferType = transferType;
 	}
 
-	public  String getTransferHost() {
+	public String getTransferHost() {
 		return transferHost;
 	}
 
-	public  void setTransferHost(String transferHost) {
+	public void setTransferHost(final String transferHost) {
 		this.transferHost = transferHost;
 	}
 
-	public  int getTransferPort() {
+	public int getTransferPort() {
 		return transferPort;
 	}
 
-	public  void setTransferPort(int transferPort) {
+	public void setTransferPort(final int transferPort) {
 		this.transferPort = transferPort;
 	}
 
-	public  String getTransferZone() {
+	public String getTransferZone() {
 		return transferZone;
 	}
 
-	public  void setTransferZone(String transferZone) {
+	public void setTransferZone(final String transferZone) {
 		this.transferZone = transferZone;
 	}
 
-	public  String getTransferResource() {
+	public String getTransferResource() {
 		return transferResource;
 	}
 
-	public  void setTransferResource(String transferResource) {
+	public void setTransferResource(final String transferResource) {
 		this.transferResource = transferResource;
 	}
 
-	public  String getTransferUserName() {
+	public String getTransferUserName() {
 		return transferUserName;
 	}
 
-	public  void setTransferUserName(String transferUserName) {
+	public void setTransferUserName(final String transferUserName) {
 		this.transferUserName = transferUserName;
 	}
 
-	public  Date getTransferStart() {
+	public Date getTransferStart() {
 		return transferStart;
 	}
 
-	public  void setTransferStart(Date transferStart) {
+	public void setTransferStart(final Date transferStart) {
 		this.transferStart = transferStart;
 	}
 
-	public  Date getTransferEnd() {
+	public Date getTransferEnd() {
 		return transferEnd;
 	}
 
-	public  void setTransferEnd(Date transferEnd) {
+	public void setTransferEnd(final Date transferEnd) {
 		this.transferEnd = transferEnd;
 	}
 
-	public  String getLocalAbsolutePath() {
+	public String getLocalAbsolutePath() {
 		return localAbsolutePath;
 	}
 
-	public  void setLocalAbsolutePath(String localAbsolutePath) {
+	public void setLocalAbsolutePath(final String localAbsolutePath) {
 		this.localAbsolutePath = localAbsolutePath;
 	}
 
-	public  String getIrodsAbsolutePath() {
+	public String getIrodsAbsolutePath() {
 		return irodsAbsolutePath;
 	}
 
-	public  void setIrodsAbsolutePath(String irodsAbsolutePath) {
+	public void setIrodsAbsolutePath(final String irodsAbsolutePath) {
 		this.irodsAbsolutePath = irodsAbsolutePath;
 	}
 
-	public  Long getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public  void setId(Long id) {
+	public void setId(final Long id) {
 		this.id = id;
 	}
 
-	public  Date getCreatedAt() {
+	public Date getCreatedAt() {
 		return createdAt;
 	}
 
-	public  void setCreatedAt(Date createdAt) {
+	public void setCreatedAt(final Date createdAt) {
 		this.createdAt = createdAt;
 	}
 
-	public  Date getUpdatedAt() {
+	public Date getUpdatedAt() {
 		return updatedAt;
 	}
 
-	public  void setUpdatedAt(Date updatedAt) {
+	public void setUpdatedAt(final Date updatedAt) {
 		this.updatedAt = updatedAt;
 	}
 
-	public  String getTransferErrorStatus() {
+	public String getTransferErrorStatus() {
 		return transferErrorStatus;
 	}
 
-	public  void setTransferErrorStatus(String transferErrorStatus) {
+	public void setTransferErrorStatus(final String transferErrorStatus) {
 		this.transferErrorStatus = transferErrorStatus;
 	}
 
-	public  Set<LocalIRODSTransferItem> getLocalIRODSTransferItems() {
+	public Set<LocalIRODSTransferItem> getLocalIRODSTransferItems() {
 		return localIRODSTransferItems;
 	}
 
-	public  void setLocalIRODSTransferItems(Set<LocalIRODSTransferItem> localIRODSTransferItems) {
+	public void setLocalIRODSTransferItems(
+			final Set<LocalIRODSTransferItem> localIRODSTransferItems) {
 		this.localIRODSTransferItems = localIRODSTransferItems;
 	}
 
@@ -231,15 +231,15 @@ public class LocalIRODSTransfer {
 		return transferPassword;
 	}
 
-	public void setTransferPassword(String transferPassword) {
+	public void setTransferPassword(final String transferPassword) {
 		this.transferPassword = transferPassword;
 	}
 
-	public  String getGlobalException() {
+	public String getGlobalException() {
 		return globalException;
 	}
 
-	public  void setGlobalException(String globalException) {
+	public void setGlobalException(final String globalException) {
 		this.globalException = globalException;
 	}
 
@@ -247,7 +247,7 @@ public class LocalIRODSTransfer {
 		return lastSuccessfulPath;
 	}
 
-	public void setLastSuccessfulPath(String lastSuccessfulPath) {
+	public void setLastSuccessfulPath(final String lastSuccessfulPath) {
 		this.lastSuccessfulPath = lastSuccessfulPath;
 	}
 
@@ -255,7 +255,7 @@ public class LocalIRODSTransfer {
 		return totalFilesCount;
 	}
 
-	public void setTotalFilesCount(int totalFilesCount) {
+	public void setTotalFilesCount(final int totalFilesCount) {
 		this.totalFilesCount = totalFilesCount;
 	}
 
@@ -263,7 +263,8 @@ public class LocalIRODSTransfer {
 		return totalFilesTransferredSoFar;
 	}
 
-	public void setTotalFilesTransferredSoFar(int totalFilesTransferredSoFar) {
+	public void setTotalFilesTransferredSoFar(
+			final int totalFilesTransferredSoFar) {
 		this.totalFilesTransferredSoFar = totalFilesTransferredSoFar;
 	}
 
@@ -271,8 +272,9 @@ public class LocalIRODSTransfer {
 		return globalExceptionStackTrace;
 	}
 
-	public void setGlobalExceptionStackTrace(String globalExceptionStackTrace) {
+	public void setGlobalExceptionStackTrace(
+			final String globalExceptionStackTrace) {
 		this.globalExceptionStackTrace = globalExceptionStackTrace;
 	}
-	
+
 }

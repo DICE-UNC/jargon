@@ -14,7 +14,7 @@ import java.util.Date;
  * 
  */
 public class LocalIRODSTransferItem {
-	
+
 	private Long id;
 	private LocalIRODSTransfer localIRODSTransfer;
 	private String sourceFileAbsolutePath;
@@ -30,6 +30,7 @@ public class LocalIRODSTransferItem {
 
 	}
 
+	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("LocalIRODSTransferItem:");
@@ -52,59 +53,59 @@ public class LocalIRODSTransferItem {
 		return sb.toString();
 	}
 
-	public  Long getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public  void setId(Long id) {
+	public void setId(final Long id) {
 		this.id = id;
 	}
 
-	public  String getSourceFileAbsolutePath() {
+	public String getSourceFileAbsolutePath() {
 		return sourceFileAbsolutePath;
 	}
 
-	public  void setSourceFileAbsolutePath(String sourceFileAbsolutePath) {
+	public void setSourceFileAbsolutePath(final String sourceFileAbsolutePath) {
 		this.sourceFileAbsolutePath = sourceFileAbsolutePath;
 	}
 
-	public  String getTargetFileAbsolutePath() {
+	public String getTargetFileAbsolutePath() {
 		return targetFileAbsolutePath;
 	}
 
-	public  void setTargetFileAbsolutePath(String targetFileAbsolutePath) {
+	public void setTargetFileAbsolutePath(final String targetFileAbsolutePath) {
 		this.targetFileAbsolutePath = targetFileAbsolutePath;
 	}
 
-	public  boolean isFile() {
+	public boolean isFile() {
 		return file;
 	}
 
-	public  void setFile(boolean file) {
+	public void setFile(final boolean file) {
 		this.file = file;
 	}
 
-	public  boolean isError() {
+	public boolean isError() {
 		return error;
 	}
 
-	public  void setError(boolean error) {
+	public void setError(final boolean error) {
 		this.error = error;
 	}
 
-	public  String getErrorMessage() {
+	public String getErrorMessage() {
 		return errorMessage;
 	}
 
-	public  void setErrorMessage(String errorMessage) {
+	public void setErrorMessage(final String errorMessage) {
 		this.errorMessage = errorMessage;
 	}
 
-	public  Date getTransferredAt() {
+	public Date getTransferredAt() {
 		return transferredAt;
 	}
 
-	public  void setTransferredAt(Date transferredAt) {
+	public void setTransferredAt(final Date transferredAt) {
 		this.transferredAt = transferredAt;
 	}
 
@@ -112,7 +113,8 @@ public class LocalIRODSTransferItem {
 		return localIRODSTransfer;
 	}
 
-	public void setLocalIRODSTransfer(LocalIRODSTransfer localIRODSTransfer) {
+	public void setLocalIRODSTransfer(
+			final LocalIRODSTransfer localIRODSTransfer) {
 		this.localIRODSTransfer = localIRODSTransfer;
 	}
 
@@ -120,7 +122,7 @@ public class LocalIRODSTransferItem {
 		return lengthInBytes;
 	}
 
-	public void setLengthInBytes(long lengthInBytes) {
+	public void setLengthInBytes(final long lengthInBytes) {
 		this.lengthInBytes = lengthInBytes;
 	}
 
@@ -128,7 +130,7 @@ public class LocalIRODSTransferItem {
 		return errorStackTrace;
 	}
 
-	public void setErrorStackTrace(String errorStackTrace) {
+	public void setErrorStackTrace(final String errorStackTrace) {
 		this.errorStackTrace = errorStackTrace;
 	}
 }

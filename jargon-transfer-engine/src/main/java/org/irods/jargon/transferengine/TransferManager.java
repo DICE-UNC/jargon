@@ -50,9 +50,10 @@ public final class TransferManager {
 	private final TransferManagerCallbackListener transferManagerCallbackListener;
 	private final TransferQueueService transferQueueService;
 	private TransferRunner currentTransferRunner = null;
-	
+
 	/**
-	 * Indicates whether detailed logging is desired for successful transfers (might move into a config block later)
+	 * Indicates whether detailed logging is desired for successful transfers
+	 * (might move into a config block later)
 	 */
 	private boolean logSuccessfulTransfers = true;
 
@@ -78,62 +79,73 @@ public final class TransferManager {
 	public static TransferManager instanceWithCallbackListener(
 			final TransferManagerCallbackListener transferManagerCallbackListener)
 			throws JargonException {
-		return instanceWithCallbackListener(transferManagerCallbackListener, true);
+		return instanceWithCallbackListener(transferManagerCallbackListener,
+				true);
 	}
-	
+
 	/**
 	 * Create an instance of a <code>TransferManager</code>. There should only
-	 * be one transfer manager per application.  This initializer allows specification of 
-	 * recording of successful transfers.  Note that <code>logSuccessfulTransfers</code> will
-	 * likely move to a configuration block in later versions.
+	 * be one transfer manager per application. This initializer allows
+	 * specification of recording of successful transfers. Note that
+	 * <code>logSuccessfulTransfers</code> will likely move to a configuration
+	 * block in later versions.
 	 * 
 	 * @param transferManagerCallbackListener
 	 *            implementation of the
 	 *            {@link org.irods.jargon.transferengine.TransferManagerCallbackListener}
 	 *            class that can receive callbacks from the running transfer
 	 *            process.
-	 *  @param logSuccessfulTransfers <code>boolean</code> that indicates whether successful 
-	 *  transfers should be logged to the internal database.
+	 * @param logSuccessfulTransfers
+	 *            <code>boolean</code> that indicates whether successful
+	 *            transfers should be logged to the internal database.
 	 * @return instance of <code>TransferManager</code>
 	 * @throws JargonException
 	 */
 	public static TransferManager instanceWithCallbackListener(
-			final TransferManagerCallbackListener transferManagerCallbackListener, final boolean logSuccessfulTransfers)
-			throws JargonException {
-		return new TransferManager(transferManagerCallbackListener, logSuccessfulTransfers, null);
-		
+			final TransferManagerCallbackListener transferManagerCallbackListener,
+			final boolean logSuccessfulTransfers) throws JargonException {
+		return new TransferManager(transferManagerCallbackListener,
+				logSuccessfulTransfers, null);
+
 	}
-	
+
 	/**
 	 * Create an instance of a <code>TransferManager</code>. There should only
-	 * be one transfer manager per application.  This initializer allows specification of 
-	 * recording of successful transfers.  Note that <code>logSuccessfulTransfers</code> will
-	 * likely move to a configuration block in later versions.  This method also will create the transfer database in 
-	 * the users home directory with the given name
+	 * be one transfer manager per application. This initializer allows
+	 * specification of recording of successful transfers. Note that
+	 * <code>logSuccessfulTransfers</code> will likely move to a configuration
+	 * block in later versions. This method also will create the transfer
+	 * database in the users home directory with the given name
 	 * 
 	 * @param transferManagerCallbackListener
 	 *            implementation of the
 	 *            {@link org.irods.jargon.transferengine.TransferManagerCallbackListener}
 	 *            class that can receive callbacks from the running transfer
 	 *            process.
-	 *  @param logSuccessfulTransfers <code>boolean</code> that indicates whether successful 
-	 *  transfers should be logged to the internal database.
-	 *  @param transferDatabaseName <code>String</code> with the name of the transfer database.  The database
-	 *  will be in the .idrop directory under the user directory with the given name
+	 * @param logSuccessfulTransfers
+	 *            <code>boolean</code> that indicates whether successful
+	 *            transfers should be logged to the internal database.
+	 * @param transferDatabaseName
+	 *            <code>String</code> with the name of the transfer database.
+	 *            The database will be in the .idrop directory under the user
+	 *            directory with the given name
 	 * @return instance of <code>TransferManager</code>
 	 * @throws JargonException
 	 */
 	public static TransferManager instanceWithCallbackListenerAndUserLevelDatabase(
-			final TransferManagerCallbackListener transferManagerCallbackListener, final boolean logSuccessfulTransfers, final String transferDatabaseName)
-			throws JargonException {
-		return new TransferManager(transferManagerCallbackListener, logSuccessfulTransfers, transferDatabaseName);
-		
+			final TransferManagerCallbackListener transferManagerCallbackListener,
+			final boolean logSuccessfulTransfers,
+			final String transferDatabaseName) throws JargonException {
+		return new TransferManager(transferManagerCallbackListener,
+				logSuccessfulTransfers, transferDatabaseName);
+
 	}
 
 	private TransferManager(
-			final TransferManagerCallbackListener transferManagerCallbackListener, final boolean logSuccessfulTransfers, final String pathToTransferDatabase)
-			throws JargonException {
-		
+			final TransferManagerCallbackListener transferManagerCallbackListener,
+			final boolean logSuccessfulTransfers,
+			final String pathToTransferDatabase) throws JargonException {
+
 		this.errorStatus = ErrorStatus.OK;
 		this.runningStatus = RunningStatus.IDLE;
 		IRODSFileSystem.instance();
@@ -141,9 +153,10 @@ public final class TransferManager {
 		if (pathToTransferDatabase == null || pathToTransferDatabase.isEmpty()) {
 			transferQueueService = TransferQueueService.instance();
 		} else {
-			transferQueueService = TransferQueueService.instanceGivingPathToTransferDatabase(pathToTransferDatabase);
+			transferQueueService = TransferQueueService
+					.instanceGivingPathToTransferDatabase(pathToTransferDatabase);
 		}
-		
+
 		this.logSuccessfulTransfers = logSuccessfulTransfers;
 
 		// callback listener may be null
@@ -350,22 +363,26 @@ public final class TransferManager {
 			log.info("enqueue of put, current running status: {}",
 					runningStatus);
 			log.info("current error status:{}", errorStatus);
-			
+
 			processNextInQueueIfIdle();
 		}
 
 	}
-	
+
 	public void enqueueAGet(final String irodsSourceAbsolutePath,
 			final String targetLocalAbsolutePath, final String resource,
 			final IRODSAccount irodsAccount) throws JargonException {
 
-		if (irodsSourceAbsolutePath == null || irodsSourceAbsolutePath.isEmpty()) {
-			throw new JargonException("irodsSourceAbsolutePath is null or empty");
+		if (irodsSourceAbsolutePath == null
+				|| irodsSourceAbsolutePath.isEmpty()) {
+			throw new JargonException(
+					"irodsSourceAbsolutePath is null or empty");
 		}
 
-		if (targetLocalAbsolutePath == null || targetLocalAbsolutePath.isEmpty()) {
-			throw new JargonException("targetLocalAbsolutePath is null or empty");
+		if (targetLocalAbsolutePath == null
+				|| targetLocalAbsolutePath.isEmpty()) {
+			throw new JargonException(
+					"targetLocalAbsolutePath is null or empty");
 		}
 
 		if (resource == null) {
@@ -385,12 +402,13 @@ public final class TransferManager {
 
 		synchronized (this) {
 
-			transferQueueService.enqueueGetTransfer(irodsSourceAbsolutePath, targetLocalAbsolutePath, resource, irodsAccount);
-			
+			transferQueueService.enqueueGetTransfer(irodsSourceAbsolutePath,
+					targetLocalAbsolutePath, resource, irodsAccount);
+
 			log.info("enqueue of get, current running status: {}",
 					runningStatus);
 			log.info("current error status:{}", errorStatus);
-			
+
 			processNextInQueueIfIdle();
 		}
 
@@ -485,7 +503,7 @@ public final class TransferManager {
 		publishErrorStatus(errorStatus);
 		runningStatus = RunningStatus.PROCESSING;
 		publishRunningStatus(runningStatus);
-		
+
 		// last successful path will have a restart value or be blank
 		TransferControlBlock transferControlBlock = DefaultTransferControlBlock
 				.instance(dequeued.getLastSuccessfulPath());
@@ -498,8 +516,9 @@ public final class TransferManager {
 		log.info("launching transfer thread");
 		transferThread.start();
 
-		log
-				.info(">>>>transfer runner is launched to handle dequeued transfer:{}", currentTransferRunner);
+		log.info(
+				">>>>transfer runner is launched to handle dequeued transfer:{}",
+				currentTransferRunner);
 	}
 
 	/**
@@ -553,11 +572,11 @@ public final class TransferManager {
 		return transferManagerCallbackListener;
 	}
 
-	public synchronized void setErrorStatus(ErrorStatus errorStatus) {
+	public synchronized void setErrorStatus(final ErrorStatus errorStatus) {
 		this.errorStatus = errorStatus;
 	}
 
-	public synchronized void setRunningStatus(RunningStatus runningStatus) {
+	public synchronized void setRunningStatus(final RunningStatus runningStatus) {
 		this.runningStatus = runningStatus;
 	}
 
@@ -668,16 +687,15 @@ public final class TransferManager {
 
 			log.info("current txfr id:{}", runningTransfer.getId());
 			log.info("txr to cancel id: {}", localIRODSTransfer.getId());
-			log.info("are these equal: {}", runningTransfer.getId().equals(
-					localIRODSTransfer.getId()));
+			log.info("are these equal: {}",
+					runningTransfer.getId().equals(localIRODSTransfer.getId()));
 
 			if (runningTransfer.getId().equals(localIRODSTransfer.getId())) {
 				log.info("cancelling running transfer:{}", runningTransfer);
 				currentTransferRunner.getTransferControlBlock().setCancelled(
 						true);
 			} else {
-				log
-						.info("the given transfer not running, will just set the status to cancelled");
+				log.info("the given transfer not running, will just set the status to cancelled");
 				transferQueueService.setTransferAsCancelled(localIRODSTransfer);
 			}
 		}
@@ -688,22 +706,24 @@ public final class TransferManager {
 		return logSuccessfulTransfers;
 	}
 
-	public void setLogSuccessfulTransfers(boolean logSuccessfulTransfers) {
+	public void setLogSuccessfulTransfers(final boolean logSuccessfulTransfers) {
 		this.logSuccessfulTransfers = logSuccessfulTransfers;
 	}
-	
-	protected void notifyStatusUpdate(final TransferStatus transferStatus) throws JargonException {
+
+	protected void notifyStatusUpdate(final TransferStatus transferStatus)
+			throws JargonException {
 		if (transferStatus == null) {
 			throw new JargonException("null transfer status");
 		}
-		
+
 		if (transferManagerCallbackListener != null) {
-			transferManagerCallbackListener.transferStatusCallback(transferStatus);
+			transferManagerCallbackListener
+					.transferStatusCallback(transferStatus);
 		}
 	}
 
 	public TransferQueueService getTransferQueueService() {
 		return transferQueueService;
 	}
-	
+
 }

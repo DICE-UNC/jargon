@@ -9,8 +9,6 @@ import java.util.List;
 import org.irods.jargon.core.transfer.TransferStatus;
 import org.irods.jargon.transferengine.TransferManager.ErrorStatus;
 import org.irods.jargon.transferengine.TransferManager.RunningStatus;
-import org.irods.jargon.transferengine.domain.LocalIRODSTransfer;
-import org.irods.jargon.transferengine.domain.LocalIRODSTransferItem;
 
 /**
  * @author Mike Conway - DICE (www.irods.org)
@@ -18,6 +16,14 @@ import org.irods.jargon.transferengine.domain.LocalIRODSTransferItem;
  */
 public class DummyTransferManagerCallbackListener implements
 		TransferManagerCallbackListener {
+
+	public boolean isHasError() {
+		return hasError;
+	}
+
+	public boolean isComplete() {
+		return isComplete;
+	}
 
 	private boolean hasError = false;
 	private boolean isComplete = false;
@@ -31,7 +37,7 @@ public class DummyTransferManagerCallbackListener implements
 	 * (org.irods.jargon.transferengine.TransferManager.ErrorStatus)
 	 */
 	@Override
-	public void transferManagerErrorStatusUpdate(ErrorStatus errorStatus) {
+	public void transferManagerErrorStatusUpdate(final ErrorStatus errorStatus) {
 		if (errorStatus == ErrorStatus.ERROR) {
 			hasError = true;
 		}
@@ -45,7 +51,8 @@ public class DummyTransferManagerCallbackListener implements
 	 * (org.irods.jargon.transferengine.TransferManager.RunningStatus)
 	 */
 	@Override
-	public void transferManagerRunningStatusUpdate(RunningStatus runningStatus) {
+	public void transferManagerRunningStatusUpdate(
+			final RunningStatus runningStatus) {
 		if (runningStatus == RunningStatus.IDLE) {
 			isComplete = true;
 		}
@@ -53,14 +60,12 @@ public class DummyTransferManagerCallbackListener implements
 	}
 
 	@Override
-	public void transferStatusCallback(TransferStatus transferStatus) {
+	public void transferStatusCallback(final TransferStatus transferStatus) {
 		transferStatusHistory.add(transferStatus);
 	}
 
 	public List<TransferStatus> getTransferStatusHistory() {
 		return transferStatusHistory;
 	}
-
-
 
 }

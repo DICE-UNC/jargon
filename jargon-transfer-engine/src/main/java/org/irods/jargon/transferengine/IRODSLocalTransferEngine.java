@@ -130,8 +130,10 @@ final class IRODSLocalTransferEngine implements TransferStatusCallbackListener {
 
 	/**
 	 * Process the operation described by the <code>LocalIRODSTransfer</code>
-	 * @param localIrodsTransfer <code>LocalIRODSTransfer</code> that has information to accomplish a transfer
-	 * of data to or from iRODS.
+	 * 
+	 * @param localIrodsTransfer
+	 *            <code>LocalIRODSTransfer</code> that has information to
+	 *            accomplish a transfer of data to or from iRODS.
 	 * @throws JargonException
 	 */
 	protected synchronized void processOperation(
@@ -190,7 +192,8 @@ final class IRODSLocalTransferEngine implements TransferStatusCallbackListener {
 		Transaction tx = null;
 
 		log.info("getting hibernate session factory and opening session");
-		final Session session = transferManager.getTransferQueueService().getHibernateUtil().getSession();
+		final Session session = transferManager.getTransferQueueService()
+				.getHibernateUtil().getSession();
 
 		try {
 			log.info("beginning tx");
@@ -201,8 +204,7 @@ final class IRODSLocalTransferEngine implements TransferStatusCallbackListener {
 			log.info("wrap up transfer before update:{}", wrapUpTransfer);
 
 			if (aborted == true) {
-				log
-						.info("transfer was aborted, mark as cancelled, warning status, and add a message");
+				log.info("transfer was aborted, mark as cancelled, warning status, and add a message");
 				markTransferWasAborted(wrapUpTransfer);
 			} else if (transferException != null) {
 				markTransferException(wrapUpTransfer, transferException);
@@ -211,8 +213,7 @@ final class IRODSLocalTransferEngine implements TransferStatusCallbackListener {
 							LocalIRODSTransfer.TRANSFER_STATE_PAUSED) || wrapUpTransfer
 							.getTransferState()
 							.equals(LocalIRODSTransfer.TRANSFER_STATE_CANCELLED))) {
-				log
-						.info("paused or cancelled, do not compute error/warning global status");
+				log.info("paused or cancelled, do not compute error/warning global status");
 			} else if (transferControlBlock.getTotalFilesTransferredSoFar() == 0
 					&& transferControlBlock.getErrorCount() == 0) {
 				markWarningZeroFilesTransferred(wrapUpTransfer);
@@ -239,13 +240,14 @@ final class IRODSLocalTransferEngine implements TransferStatusCallbackListener {
 			log.error("error in transaction", e);
 			throw new JargonException(e);
 		} finally {
-			//session.close();
-			//LOG.info("session closed");
+			// session.close();
+			// LOG.info("session closed");
 		}
 
 	}
 
-	private void markTransferWasAborted(LocalIRODSTransfer wrapUpTransfer) throws JargonException {
+	private void markTransferWasAborted(final LocalIRODSTransfer wrapUpTransfer)
+			throws JargonException {
 		wrapUpTransfer
 				.setTransferErrorStatus(LocalIRODSTransfer.TRANSFER_STATUS_WARNING);
 		wrapUpTransfer
@@ -270,8 +272,8 @@ final class IRODSLocalTransferEngine implements TransferStatusCallbackListener {
 		final IRODSFile targetFile = irodsFileFactory
 				.instanceIRODSFile(localIrodsTransfer.getIrodsAbsolutePath());
 		targetFile.setResource(localIrodsTransfer.getTransferResource());
-		final File localFile = new File(localIrodsTransfer
-				.getLocalAbsolutePath());
+		final File localFile = new File(
+				localIrodsTransfer.getLocalAbsolutePath());
 
 		JargonException transferException = null;
 
@@ -279,8 +281,7 @@ final class IRODSLocalTransferEngine implements TransferStatusCallbackListener {
 			dataTransferOperations.putOperation(localFile, targetFile, this,
 					transferControlBlock);
 		} catch (JargonException je) {
-			log
-					.error("exception in transfer will be marked as a global exception, ending the transfer operation");
+			log.error("exception in transfer will be marked as a global exception, ending the transfer operation");
 			transferException = je;
 		}
 		return transferException;
@@ -302,8 +303,8 @@ final class IRODSLocalTransferEngine implements TransferStatusCallbackListener {
 		final IRODSFile sourceFile = irodsFileFactory
 				.instanceIRODSFile(localIrodsTransfer.getIrodsAbsolutePath());
 		sourceFile.setResource(localIrodsTransfer.getTransferResource());
-		final File localFile = new File(localIrodsTransfer
-				.getLocalAbsolutePath());
+		final File localFile = new File(
+				localIrodsTransfer.getLocalAbsolutePath());
 
 		JargonException transferException = null;
 
@@ -311,8 +312,7 @@ final class IRODSLocalTransferEngine implements TransferStatusCallbackListener {
 			dataTransferOperations.getOperation(sourceFile, localFile, this,
 					transferControlBlock);
 		} catch (JargonException je) {
-			log
-					.error("exception in transfer will be marked as a global exception, ending the transfer operation");
+			log.error("exception in transfer will be marked as a global exception, ending the transfer operation");
 			transferException = je;
 		}
 		return transferException;
@@ -335,12 +335,12 @@ final class IRODSLocalTransferEngine implements TransferStatusCallbackListener {
 		JargonException transferException = null;
 
 		try {
-			dataTransferOperations.replicate(localIrodsTransfer
-					.getIrodsAbsolutePath(), localIrodsTransfer
-					.getTransferResource(), this, transferControlBlock);
+			dataTransferOperations.replicate(
+					localIrodsTransfer.getIrodsAbsolutePath(),
+					localIrodsTransfer.getTransferResource(), this,
+					transferControlBlock);
 		} catch (JargonException je) {
-			log
-					.error("exception in transfer will be marked as a global exception, ending the transfer operation");
+			log.error("exception in transfer will be marked as a global exception, ending the transfer operation");
 			transferException = je;
 		}
 		return transferException;
@@ -441,7 +441,7 @@ final class IRODSLocalTransferEngine implements TransferStatusCallbackListener {
 	 * @throws JargonException
 	 */
 	private void processStatusCallback(final TransferStatus transferStatus,
-			LocalIRODSTransferItem localIRODSTransferItem)
+			final LocalIRODSTransferItem localIRODSTransferItem)
 			throws HibernateException, JargonException {
 
 		if (transferStatus.getTransferState() == TransferStatus.TransferState.FAILURE) {
@@ -454,8 +454,9 @@ final class IRODSLocalTransferEngine implements TransferStatusCallbackListener {
 			localIRODSTransferItem.setError(false);
 		}
 
-		final Session session = transferManager.getTransferQueueService().getHibernateUtil().getSession();
-		
+		final Session session = transferManager.getTransferQueueService()
+				.getHibernateUtil().getSession();
+
 		Transaction tx = null;
 		try {
 			log.info("beginning tx to store status of this transfer item");
@@ -483,8 +484,8 @@ final class IRODSLocalTransferEngine implements TransferStatusCallbackListener {
 
 			if (transferStatus.getTransferState() == TransferStatus.TransferState.SUCCESS) {
 
-				log.info("updated last good path to:{}", transferStatus
-						.getSourceFileAbsolutePath());
+				log.info("updated last good path to:{}",
+						transferStatus.getSourceFileAbsolutePath());
 				mergedTransfer.setLastSuccessfulPath(transferStatus
 						.getSourceFileAbsolutePath());
 				mergedTransfer.setTotalFilesCount(transferStatus
@@ -526,8 +527,8 @@ final class IRODSLocalTransferEngine implements TransferStatusCallbackListener {
 			log.error("error in transaction", e);
 			throw new JargonException(e);
 		} finally {
-			//session.close();
-			//LOG.info("session closed");
+			// session.close();
+			// LOG.info("session closed");
 		}
 	}
 
@@ -536,7 +537,7 @@ final class IRODSLocalTransferEngine implements TransferStatusCallbackListener {
 	}
 
 	protected synchronized void setCurrentTransfer(
-			LocalIRODSTransfer currentTransfer) {
+			final LocalIRODSTransfer currentTransfer) {
 		this.currentTransfer = currentTransfer;
 	}
 

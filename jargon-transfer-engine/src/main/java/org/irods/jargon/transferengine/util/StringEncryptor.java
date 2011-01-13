@@ -34,18 +34,21 @@ public class StringEncryptor {
 
 	private static final String UNICODE_FORMAT = "UTF8";
 
-	public StringEncryptor(String encryptionScheme) throws EncryptionException {
+	public StringEncryptor(final String encryptionScheme)
+			throws EncryptionException {
 		this(encryptionScheme, DEFAULT_ENCRYPTION_KEY);
 	}
 
-	public StringEncryptor(String encryptionScheme, String encryptionKey)
-			throws EncryptionException {
+	public StringEncryptor(final String encryptionScheme,
+			final String encryptionKey) throws EncryptionException {
 
-		if (encryptionKey == null)
+		if (encryptionKey == null) {
 			throw new IllegalArgumentException("encryption key was null");
-		if (encryptionKey.trim().length() < 24)
+		}
+		if (encryptionKey.trim().length() < 24) {
 			throw new IllegalArgumentException(
 					"encryption key was less than 24 characters");
+		}
 
 		try {
 			byte[] keyAsBytes = encryptionKey.getBytes(UNICODE_FORMAT);
@@ -74,10 +77,12 @@ public class StringEncryptor {
 
 	}
 
-	public String encrypt(String unencryptedString) throws EncryptionException {
-		if (unencryptedString == null || unencryptedString.trim().length() == 0)
+	public String encrypt(final String unencryptedString)
+			throws EncryptionException {
+		if (unencryptedString == null || unencryptedString.trim().length() == 0) {
 			throw new IllegalArgumentException(
 					"unencrypted string was null or empty");
+		}
 
 		try {
 			SecretKey key = keyFactory.generateSecret(keySpec);
@@ -92,10 +97,12 @@ public class StringEncryptor {
 		}
 	}
 
-	public String decrypt(String encryptedString) throws EncryptionException {
-		if (encryptedString == null || encryptedString.trim().length() <= 0)
+	public String decrypt(final String encryptedString)
+			throws EncryptionException {
+		if (encryptedString == null || encryptedString.trim().length() <= 0) {
 			throw new IllegalArgumentException(
 					"encrypted string was null or empty");
+		}
 
 		try {
 			SecretKey key = keyFactory.generateSecret(keySpec);
@@ -110,16 +117,16 @@ public class StringEncryptor {
 		}
 	}
 
-	private static String bytes2String(byte[] bytes) {
+	private static String bytes2String(final byte[] bytes) {
 		StringBuffer stringBuffer = new StringBuffer();
-		for (int i = 0; i < bytes.length; i++) {
-			stringBuffer.append((char) bytes[i]);
+		for (byte b : bytes) {
+			stringBuffer.append((char) b);
 		}
 		return stringBuffer.toString();
 	}
 
 	public static class EncryptionException extends Exception {
-		public EncryptionException(Throwable t) {
+		public EncryptionException(final Throwable t) {
 			super(t);
 		}
 	}

@@ -9,7 +9,7 @@
   <groupId>org.irods.jargon</groupId>
   <artifactId>jargon-transfer-engine</artifactId>
   <name>Jargon Transfer Engine</name>
-  <description>Services to manage data transfers, providing data movement libraries and tools to manage and monitor data movements</description>
+  <description>Services to manage data transfers, providing libraries and tools to manage and monitor data movements</description>
   <dependencies>
     <dependency>
       <groupId>org.dbunit</groupId>
