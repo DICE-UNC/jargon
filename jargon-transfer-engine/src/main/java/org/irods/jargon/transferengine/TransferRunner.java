@@ -50,6 +50,7 @@ public class TransferRunner implements Runnable {
 			final TransferControlBlock transferControlBlock,
 			final TransferQueueService transferQueueService)
 			throws JargonException {
+		
 		if (transferManager == null) {
 			throw new JargonException("null transfer manager");
 		}
@@ -80,6 +81,7 @@ public class TransferRunner implements Runnable {
 	 */
 	@Override
 	public void run() {
+		
 		log.info("running transfer:{}", localIRODSTransfer);
 
 		try {
@@ -96,7 +98,7 @@ public class TransferRunner implements Runnable {
 			irodsLocalTransferEngine.processOperation(localIRODSTransfer);
 			/*
 			 * I have tried the transfer. If any errors had occurred, the best
-			 * effort was made to LOG the error in the transfer database, and in
+			 * effort was made to log the error in the transfer database, and in
 			 * case of error would have returned or thrown an exception. I can
 			 * assume that the transfer went correctly and the database was
 			 * updated in the irodsLocalTransferEngine. processPutOperation()

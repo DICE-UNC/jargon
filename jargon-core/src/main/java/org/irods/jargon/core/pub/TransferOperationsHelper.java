@@ -59,7 +59,7 @@ final class TransferOperationsHelper {
 
 	/**
 	 * Recursively get a file from iRODS. This utility method is used
-	 * internally, and can pocess callbacks as well as filtering and
+	 * internally, and can process call-backs as well as filtering and
 	 * cancellation.
 	 * 
 	 * @param irodsSourceFile
@@ -188,8 +188,15 @@ final class TransferOperationsHelper {
 			final TransferStatusCallbackListener transferStatusCallbackListener,
 			final TransferControlBlock transferControlBlock)
 			throws JargonException {
-		log.info("get of single file");
+		
+		log.info("get of single file...filtered?");
+		
+		if (!transferControlBlock.filter(irodsSourceFile.getAbsolutePath())) {
+			log.info("file is filtered and discarded: {}", irodsSourceFile.getAbsolutePath());
+			return;
+		}
 
+		log.info("filter passed, process...");
 		try {
 			DataObjectAO dataObjectAO = new DataObjectAOImpl(irodsSession,
 					irodsAccount);

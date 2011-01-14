@@ -540,6 +540,11 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 		if (transferOptions != null) {
 			transferOptionsNumThreads = transferOptions.getMaxThreads();
 		}
+		
+		// TODO: trap for very strange bug, will remove later
+		if (transferOptionsNumThreads > 20) {
+			throw new JargonException("too many threads requested");
+		}
 
 		Tag message = new Tag(PI_TAG, new Tag[] {
 				new Tag(OBJ_PATH, getFileAbsolutePath()),

@@ -157,8 +157,8 @@ final class IRODSLocalTransferEngine implements TransferStatusCallbackListener {
 				"/", localIrodsTransfer.getTransferZone(), localIrodsTransfer
 						.getTransferResource());
 
-		// initiate the operation and process callbacks
-		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
+		// initiate the operation and process call-backs
+		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();  // FIXME: iRODSFileSystem should be passed here, not instanciated
 		final DataTransferOperations dataTransferOperations = irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataTransferOperations(
 						irodsAccount);
@@ -287,7 +287,7 @@ final class IRODSLocalTransferEngine implements TransferStatusCallbackListener {
 	}
 
 	/**
-	 * 
+	 * Process a get transfer
 	 * @param localIrodsTransfer
 	 * @param dataTransferOperations
 	 * @param irodsFileFactory

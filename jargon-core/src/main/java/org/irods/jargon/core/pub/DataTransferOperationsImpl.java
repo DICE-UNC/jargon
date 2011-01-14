@@ -271,7 +271,7 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 			throws JargonException {
 
 		TransferControlBlock operativeTransferControlBlock = transferControlBlock;
-
+		
 		try {
 
 			if (irodsSourceFile == null) {
@@ -300,7 +300,6 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 			}
 
 			if (irodsSourceFile.isDirectory()) {
-
 				log.debug("get opertation, treating as a directory");
 				if (operativeTransferControlBlock != null) {
 					IRODSAccessObjectFactory irodsAccessObjectFactory = IRODSAccessObjectFactoryImpl
@@ -641,7 +640,8 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 
 	/**
 	 * A put operation has been initiated for a directory. This means that
-	 * Jargon will recursively process the put operation.
+	 * Jargon will recursively process the put operation.  The containing folder of the source will be
+	 * used as the new subdirectory in iRODS under which the data will be moved.
 	 * 
 	 * @param sourceFile
 	 *            <code>File</code> that is the source of the transfer.
