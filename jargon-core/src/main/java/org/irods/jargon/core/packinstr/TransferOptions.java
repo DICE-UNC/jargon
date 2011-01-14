@@ -11,8 +11,8 @@ package org.irods.jargon.core.packinstr;
  * Note that udp options are included here, but the UDP option is not yet
  * implemented in jargon, and will have no effect.
  * <p/>
- * <b>Note:</b> this part of the API is new and subject to refactoring.  The transfer options are currently not fully supported
- * within the API.
+ * <b>Note:</b> this part of the API is new and subject to refactoring. The
+ * transfer options are currently not fully supported within the API.
  * 
  * @author Mike Conway - DICE (www.irods.org)
  * 
@@ -31,7 +31,7 @@ public class TransferOptions {
 	private int udpSendRate = DEFAULT_UDP_SEND_RATE;
 	private int udpPacketSize = DEFAULT_UDP_PACKET_SIZE;
 	private TransferType transferType = TransferType.STANDARD;
-	
+
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();

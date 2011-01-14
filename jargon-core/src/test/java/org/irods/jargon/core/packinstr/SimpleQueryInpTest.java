@@ -8,7 +8,8 @@ import org.junit.Test;
 
 public class SimpleQueryInpTest {
 
-	@Ignore //TODO: implement when pi is fixed
+	@Ignore
+	// TODO: implement when pi is fixed
 	public void testGetTagValue() throws Exception {
 		SimpleQuery sq = SimpleQuery.instance("query", "myargs");
 		SimpleQueryInp simpleQueryInp = SimpleQueryInp.instance(sq);
@@ -25,7 +26,8 @@ public class SimpleQueryInpTest {
 		SimpleQueryInp simpleQueryInp = SimpleQueryInp.instance(sq);
 		Assert.assertNotNull("null simpleQueryInp returned", simpleQueryInp);
 		Assert.assertEquals("did not correctly set api number",
-				SimpleQueryInp.SIMPLE_QUERY_API_NBR, simpleQueryInp.getApiNumber());
+				SimpleQueryInp.SIMPLE_QUERY_API_NBR,
+				simpleQueryInp.getApiNumber());
 	}
 
 	@Test(expected = IllegalArgumentException.class)

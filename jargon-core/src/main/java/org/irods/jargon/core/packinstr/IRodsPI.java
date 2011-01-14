@@ -8,8 +8,7 @@ import org.irods.jargon.core.exception.JargonException;
  * @author toaster
  */
 public interface IRodsPI {
-	// public byte[] getBytes();
-	// FIXME: transition to public String getParsedTags();
+	
 	public static final String MESSAGE_TAG = "msg";
 	public static final String MSG_HEADER_PI_TAG = "MsgHeader_PI";
 

@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
 import edu.sdsc.grid.io.irods.Tag;
 
 /**
- * Generic representation of a packing instruction fo rhte IRODS XML Protocol
+ * Generic representation of a packing instruction for the IRODS XML Protocol
  * 
  * @author Mike Conway - DICE (www.irods.org)
  * 
@@ -38,7 +38,18 @@ public abstract class AbstractIRODSPackingInstruction implements IRodsPI {
 	public AbstractIRODSPackingInstruction() {
 	}
 
-	Tag createKeyValueTag(final List<KeyValuePair> kvps) throws JargonException {
+	/**
+	 * Create a set of key value pair tags based on the input list. This is used
+	 * internally by many packing instructions.
+	 * 
+	 * @param kvps
+	 *            <code>List<KeyValuePair></code> with the data to be formatted
+	 *            as key value pair tags.
+	 * @return <code>Tag</code> containing key value pairs.
+	 * @throws JargonException
+	 */
+	protected Tag createKeyValueTag(final List<KeyValuePair> kvps)
+			throws JargonException {
 		/*
 		 * Must be like the following: <KeyValPair_PI> <ssLen>3</ssLen>
 		 * <keyWord>dataType</keyWord> <keyWord>destRescName</keyWord>
@@ -82,7 +93,18 @@ public abstract class AbstractIRODSPackingInstruction implements IRodsPI {
 		return pair;
 	}
 
-	Tag createInxValueTag(final List<InxVal> ivps) throws JargonException {
+	/**
+	 * Internally used method to format InxValue tags for various packing
+	 * instructions.
+	 * 
+	 * @param ivps
+	 *            <code>List<InxVal></code> of data to be formatted as InxVal
+	 *            tags.
+	 * @return <code>Tag</code> with the InxVal formatted data.
+	 * @throws JargonException
+	 */
+	protected Tag createInxValueTag(final List<InxVal> ivps)
+			throws JargonException {
 
 		/*
 		 * A key/value pair with an integer key and a string value #define
@@ -125,28 +147,42 @@ public abstract class AbstractIRODSPackingInstruction implements IRodsPI {
 		return pair;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.packinstr.IRodsPI#getParsedTags()
+	 */
 	@Override
 	public String getParsedTags() throws JargonException {
 
 		Tag message = getTagValue();
-
-		String tagOut = message.parseTag();
-
-		if (log.isDebugEnabled()) {
-			log.debug("tag created:" + tagOut);
-		}
-
-		return tagOut;
+		return message.parseTag();
 
 	}
 
+	/**
+	 * Abstract method returns the <code>Tag</code> structure for the given
+	 * packing instruction. Implemented by the specific subclass.
+	 * 
+	 * @return {@link Tag} with the packing instruction as a nested array of tag
+	 *         objects.
+	 * @throws JargonException
+	 */
 	public abstract Tag getTagValue() throws JargonException;
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.packinstr.IRodsPI#getApiNumber()
+	 */
 	@Override
 	public int getApiNumber() {
 		return apiNumber;
 	}
 
+	/**
+	 * @param apiNumber
+	 */
 	protected void setApiNumber(final int apiNumber) {
 		this.apiNumber = apiNumber;
 	}

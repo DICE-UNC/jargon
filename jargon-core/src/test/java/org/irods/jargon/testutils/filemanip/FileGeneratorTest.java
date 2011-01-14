@@ -8,7 +8,6 @@ import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-// FIXME: migrate to jargon-test when test framework code moved out of jargon-core
 public class FileGeneratorTest {
 
 	private static Properties testingProperties = new Properties();

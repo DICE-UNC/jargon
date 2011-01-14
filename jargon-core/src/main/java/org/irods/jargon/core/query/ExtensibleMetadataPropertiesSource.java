@@ -107,15 +107,6 @@ public class ExtensibleMetadataPropertiesSource implements
 			extensibleMetaDataProperties.put(keyString,
 					properties.getProperty((String) key));
 		}
-
-		if (log.isDebugEnabled()) {
-			log.debug("extensible meta data properties dump======================");
-			for (String key : extensibleMetaDataProperties.keySet()) {
-				log.debug("   key:" + key + "  value:"
-						+ extensibleMetaDataProperties.get(key));
-			}
-		}
-
 	}
 
 	/*

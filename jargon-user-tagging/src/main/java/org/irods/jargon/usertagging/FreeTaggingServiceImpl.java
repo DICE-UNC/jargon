@@ -371,7 +371,6 @@ public final class FreeTaggingServiceImpl extends AbstractIRODSTaggingService
 	public TagQuerySearchResult searchUsingFreeTagString(final String searchTags)
 			throws JargonException {
 
-		// FIXME: this papers over the question of adding a f
 		if (searchTags == null || searchTags.isEmpty()) {
 			throw new JargonException("null or empty searchTags");
 		}

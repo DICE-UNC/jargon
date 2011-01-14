@@ -323,7 +323,6 @@ public final class CollectionAOImpl extends IRODSGenericAO implements
 
 		for (AVUQueryElement queryElement : avuQuery) {
 
-			queryCondition = new StringBuilder();
 			if (previousElement) {
 				query.append(AND);
 			}
@@ -413,7 +412,6 @@ public final class CollectionAOImpl extends IRODSGenericAO implements
 
 		for (AVUQueryElement queryElement : avuQuery) {
 
-			queryCondition = new StringBuilder();
 			if (previousElement) {
 				query.append(AND);
 			}
@@ -497,7 +495,6 @@ public final class CollectionAOImpl extends IRODSGenericAO implements
 
 		for (AVUQueryElement queryElement : avuQuery) {
 
-			queryCondition = new StringBuilder();
 			if (previousElement) {
 				query.append(AND);
 			}

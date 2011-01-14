@@ -28,18 +28,6 @@ public final class IRODSAccount implements Serializable {
 	public static final String IRODS_VERSION_2_3 = "rods2.3jargon2.3";
 	public static final String IRODS_JARGON_RELEASE_NUMBER = "rods2.3";
 
-	private final String host;
-	private final int port;
-	private final String zone;
-	private final String userName;
-	private final String password;
-	private final String defaultStorageResource;
-	private final String homeDirectory;
-	private final String authenticationScheme = STANDARD_PASSWORD;
-	private final String serverDN;
-	private final int obfuscate = 0;
-	private List<String> authenticatedRoles = new ArrayList<String>();
-
 	/**
 	 * Stores the org.ietf.jgss.GSSCredential, used in GSI connections to the
 	 * iRODS.
@@ -85,6 +73,18 @@ public final class IRODSAccount implements Serializable {
 	static {
 		versionNumber.put(IRODS_VERSION_2_3, new Float(2.3));
 	}
+
+	private final String host;
+	private final int port;
+	private final String zone;
+	private final String userName;
+	private final String password;
+	private final String defaultStorageResource;
+	private final String homeDirectory;
+	private static final String authenticationScheme = STANDARD_PASSWORD;
+	private final String serverDN;
+	private static final int obfuscate = 0;
+	private List<String> authenticatedRoles = new ArrayList<String>();
 
 	/**
 	 * Creates an object to hold iRODS account information. All parameters need

@@ -32,7 +32,7 @@ public class OpenedDataObjInp extends AbstractIRODSPackingInstruction {
 	public static final int DEFAULT_OPERATION_TYPE = 0;
 
 	private final long offset;
-	private final int operationType = DEFAULT_OPERATION_TYPE;
+	private static final int operationType = DEFAULT_OPERATION_TYPE;
 	private final int fileDescriptor;
 	private final int whence;
 

@@ -1,7 +1,6 @@
 package org.irods.jargon.core.transfer;
 
 import junit.framework.Assert;
-import junit.framework.TestCase;
 
 import org.irods.jargon.core.exception.JargonException;
 import org.junit.Test;
@@ -28,28 +27,33 @@ public class DefaultTransferControlBlockTest {
 				.instance(null, 5);
 		Assert.assertNotNull(testControlBlock);
 	}
-	
+
 	@Test
 	public void testNoFiltersWhenLastGoodPathEmpty() throws Exception {
 		TransferControlBlock testControlBlock = DefaultTransferControlBlock
-		.instance("", 5);
-		
-		TestCase.assertTrue("did not pass filter when no last good path", testControlBlock.filter("bbb"));
+				.instance("", 5);
+
+		Assert.assertTrue("did not pass filter when no last good path",
+				testControlBlock.filter("bbb"));
 	}
-	
+
 	@Test
-	public void testFiltersWhenLastGoodPathNotEmptyAndFilterNotYetHit() throws Exception {
+	public void testFiltersWhenLastGoodPathNotEmptyAndFilterNotYetHit()
+			throws Exception {
 		TransferControlBlock testControlBlock = DefaultTransferControlBlock
-		.instance("bbb", 5);
-		TestCase.assertFalse("did not pass filter when no last good path", testControlBlock.filter("aaa"));
+				.instance("bbb", 5);
+		Assert.assertFalse("did not pass filter when no last good path",
+				testControlBlock.filter("aaa"));
 	}
-	
+
 	@Test
-	public void testFiltersWhenLastGoodPathNotEmptyAndFilterHit() throws Exception {
+	public void testFiltersWhenLastGoodPathNotEmptyAndFilterHit()
+			throws Exception {
 		TransferControlBlock testControlBlock = DefaultTransferControlBlock
-		.instance("aaa", 5);
+				.instance("aaa", 5);
 		testControlBlock.filter("aaa");
-		TestCase.assertTrue("did not pass filter when no last good path", testControlBlock.filter("bbb"));
+		Assert.assertTrue("did not pass filter when no last good path",
+				testControlBlock.filter("bbb"));
 	}
 
 }

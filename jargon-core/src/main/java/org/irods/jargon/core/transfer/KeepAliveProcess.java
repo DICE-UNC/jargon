@@ -10,10 +10,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- *TODO: this is experimental...
- *
- * Describes a thread that runs concurrently with a parallel or other transfer strategy, and does an occasional ping on the message socket 
- * to make sure that socket connection is alive.  This prevents time-outs on the main connection to an iRODS agent while waiting for a process to complete.
+ * TODO: this is experimental...
+ * 
+ * Describes a thread that runs concurrently with a parallel or other transfer
+ * strategy, and does an occasional ping on the message socket to make sure that
+ * socket connection is alive. This prevents time-outs on the main connection to
+ * an iRODS agent while waiting for a process to complete.
  * 
  * @author Mike Conway - DICE (www.renci.org)
  * 
@@ -35,11 +37,11 @@ public class KeepAliveProcess implements Runnable {
 	}
 
 	public KeepAliveProcess(final EnvironmentalInfoAO environmentalInfoAO) {
-		
+
 		if (environmentalInfoAO == null) {
 			throw new IllegalArgumentException("environmentalInfoAO is null");
 		}
-		
+
 		this.environmentalInfoAO = environmentalInfoAO;
 	}
 

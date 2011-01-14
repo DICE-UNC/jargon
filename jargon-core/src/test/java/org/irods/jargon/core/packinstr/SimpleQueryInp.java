@@ -17,8 +17,7 @@ import edu.sdsc.grid.io.irods.Tag;
  * <p/>
  * This is used in cases where it is easier to do a straight-forward SQL query
  * rather than go thru the generalQuery interface. This is used this in the
- * iadmin.c interface as it was easier  to work in SQL for admin
- * type ops.
+ * iadmin.c interface as it was easier to work in SQL for admin type ops.
  * <p/>
  * For improved security, this is available only to admin users and the code
  * checks that the input sql is one of the allowed forms.
@@ -37,7 +36,7 @@ import edu.sdsc.grid.io.irods.Tag;
 public class SimpleQueryInp extends AbstractIRODSPackingInstruction {
 
 	private final SimpleQuery simpleQuery;
-	private final int maxBuffSize = 1024;
+	private static final int maxBuffSize = 1024;
 
 	public static final String PI_TAG = "simpleQueryInp_PI";
 	public static final int SIMPLE_QUERY_API_NBR = 614;

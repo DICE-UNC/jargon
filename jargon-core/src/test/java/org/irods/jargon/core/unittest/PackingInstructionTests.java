@@ -29,7 +29,8 @@ import org.junit.runners.Suite;
 		ExecCmdTest.class, DataObjReadTest.class, OpenedDataObjInpTest.class,
 		ModAvuMetadataInpTest.class, ExecMyRuleInp_PITest.class,
 		UserAdminInpTest.class, StructFileExtAndRegInpTest.class,
-		FileReadInpTest.class, ExecCmdStreamCloseTest.class, SimpleQueryInpTest.class })
+		FileReadInpTest.class, ExecCmdStreamCloseTest.class,
+		SimpleQueryInpTest.class })
 public class PackingInstructionTests {
 
 }

@@ -78,9 +78,6 @@ public class TransferQueueServiceTest {
 		TransferQueueService transferQueueService = TransferQueueService
 				.instance();
 
-		// FIXME: three identical puts (should I have some sort of filter on
-		// duplicate puts?)
-
 		transferQueueService.enqueuePutTransfer(localCollectionAbsolutePath,
 				irodsCollectionRootAbsolutePath, "", irodsAccount);
 

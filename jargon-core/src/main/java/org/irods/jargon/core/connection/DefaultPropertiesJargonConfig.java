@@ -80,6 +80,7 @@ public class DefaultPropertiesJargonConfig implements JargonProperties {
 
 	private int verifyPropExistsAndGetAsInt(final String propKey)
 			throws JargonException {
+
 		String propVal = verifyPropExistsAndGetAsString(propKey);
 
 		try {

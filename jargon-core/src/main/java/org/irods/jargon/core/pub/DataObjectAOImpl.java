@@ -29,6 +29,7 @@ import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.connection.JargonProperties;
 import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.exception.JargonRuntimeException;
 import org.irods.jargon.core.packinstr.DataObjInp;
 import org.irods.jargon.core.packinstr.ModAvuMetadataInp;
 import org.irods.jargon.core.packinstr.TransferOptions;
@@ -63,8 +64,9 @@ import edu.sdsc.grid.io.irods.Tag;
  * class represents operations that are outside of the contracts one would
  * expect from an <code>java.io.File</code> object or the various streams.
  * <p/>
- * Note that the operations are tuned using parameters set in the <code>JargonProperties</code> object kept in
- * <code>IRODSession</code>.  Unless specifically indicated in the method signatures or comments, the defaults
+ * Note that the operations are tuned using parameters set in the
+ * <code>JargonProperties</code> object kept in <code>IRODSession</code>. Unless
+ * specifically indicated in the method signatures or comments, the defaults
  * control such aspects as whether paralllel file transfers are done.
  * 
  * @author Mike Conway - DICE (www.irods.org)
@@ -248,9 +250,9 @@ public final class DataObjectAOImpl extends IRODSGenericAO implements
 	public void putLocalDataObjectToIRODS(final File localFile,
 			final IRODSFile irodsFileDestination, final boolean overwrite)
 			throws JargonException {
-		
+
 		TransferOptions transferOptions = buildTransferOptionsBasedOnJargonProperties();
-		
+
 		putLocalDataObjectToIRODS(localFile, irodsFileDestination, overwrite,
 				false, transferOptions);
 
@@ -258,10 +260,16 @@ public final class DataObjectAOImpl extends IRODSGenericAO implements
 
 	private TransferOptions buildTransferOptionsBasedOnJargonProperties()
 			throws JargonException {
-		JargonProperties jargonProperties = IRODSSession.getJargonProperties();
+		JargonProperties jargonProperties = getIRODSSession()
+				.getJargonProperties();
 		TransferOptions transferOptions = new TransferOptions();
 		transferOptions.setMaxThreads(jargonProperties.getMaxParallelThreads());
-		
+
+		if (transferOptions.getMaxThreads() > 20) { // FIXME: test code for
+													// debugging strange error
+			throw new JargonRuntimeException("corrupted max threads value");
+		}
+
 		if (jargonProperties.isUseParallelTransfer()) {
 			transferOptions.setTransferType(TransferType.STANDARD);
 		} else {
@@ -291,23 +299,33 @@ public final class DataObjectAOImpl extends IRODSGenericAO implements
 
 	/**
 	 * Internal common method to execute puts.
-	 * @param localFile <code>File</code> with the local data.
-	 * @param irodsFileDestination <code>IRODSFile</code> that describe the target of the put.
-	 * @param overwrite <code>boolean</code> that adds a force option to overwrite any file already on iRODS.
-	 * @param ignoreChecks <code>boolean</code> that bypasses any checks of the iRODS data before attempting the put.
-	 * @param transferOptions {@link TransferOptions} that optionally give directions on details of the transfer.  Will be <code>null</code> if not set.
+	 * 
+	 * @param localFile
+	 *            <code>File</code> with the local data.
+	 * @param irodsFileDestination
+	 *            <code>IRODSFile</code> that describe the target of the put.
+	 * @param overwrite
+	 *            <code>boolean</code> that adds a force option to overwrite any
+	 *            file already on iRODS.
+	 * @param ignoreChecks
+	 *            <code>boolean</code> that bypasses any checks of the iRODS
+	 *            data before attempting the put.
+	 * @param transferOptions
+	 *            {@link TransferOptions} that optionally give directions on
+	 *            details of the transfer. Will be <code>null</code> if not set.
 	 * @throws JargonException
 	 */
 	protected void putLocalDataObjectToIRODS(final File localFile,
 			final IRODSFile irodsFileDestination, final boolean overwrite,
-			final boolean ignoreChecks, final TransferOptions transferOptions) throws JargonException {
+			final boolean ignoreChecks, final TransferOptions transferOptions)
+			throws JargonException {
 
 		if (localFile == null) {
 			throw new JargonException("null local file");
 		}
 
 		if (irodsFileDestination == null) {
-			throw new JargonException("nulll destination file");
+			throw new JargonException("null destination file");
 		}
 
 		log.info("put operation, localFile: {}", localFile.getAbsolutePath());
@@ -333,7 +351,7 @@ public final class DataObjectAOImpl extends IRODSGenericAO implements
 
 		IRODSFile targetFile = checkTargetFileForPutOperation(localFile,
 				irodsFileDestination, ignoreChecks);
-		
+
 		DataObjInp dataObjInp = DataObjInp.instanceForInitialCallToPut(
 				targetFile.getAbsolutePath(), localFile.length(),
 				targetFile.getResource(), overwrite, transferOptions);
@@ -362,13 +380,15 @@ public final class DataObjectAOImpl extends IRODSGenericAO implements
 				log.info(
 						"getting ready to initiate parallel file transfer strategy:{}",
 						parallelPutFileStrategy);
-				
-				
-				// start a keep-alive that will ping the irods server every 30 seconds to keep the control channel alive
-				KeepAliveProcess keepAliveProcess = new KeepAliveProcess(new EnvironmentalInfoAOImpl(this.getIRODSSession(), this.getIRODSAccount()));
+
+				// start a keep-alive that will ping the irods server every 30
+				// seconds to keep the control channel alive
+				KeepAliveProcess keepAliveProcess = new KeepAliveProcess(
+						new EnvironmentalInfoAOImpl(this.getIRODSSession(),
+								this.getIRODSAccount()));
 				Thread keepAliveThread = new Thread(keepAliveProcess);
 				keepAliveThread.start();
-			
+
 				try {
 					parallelPutFileStrategy.transfer();
 					keepAliveProcess.setTerminate(true);
@@ -495,14 +515,14 @@ public final class DataObjectAOImpl extends IRODSGenericAO implements
 		} else {
 			localFile = localFileToHoldData;
 		}
-		
+
 		TransferOptions transferOptions = buildTransferOptionsBasedOnJargonProperties();
 
 		log.info("target local file: {}", localFile.getAbsolutePath());
 		log.info("from source file: {}", irodsFileToGet.getAbsolutePath());
 
-		final DataObjInp dataObjInp = DataObjInp.instanceForGet(irodsFileToGet
-				.getAbsolutePath(), transferOptions);
+		final DataObjInp dataObjInp = DataObjInp.instanceForGet(
+				irodsFileToGet.getAbsolutePath(), transferOptions);
 
 		processGetAfterResourceDetermined(irodsFileToGet, localFile, dataObjInp);
 	}
@@ -542,7 +562,7 @@ public final class DataObjectAOImpl extends IRODSGenericAO implements
 
 		log.info("target local file: {}", localFile.getAbsolutePath());
 		log.info("from source file: {}", irodsFileToGet.getAbsolutePath());
-		
+
 		TransferOptions transferOptions = buildTransferOptionsBasedOnJargonProperties();
 
 		final DataObjInp dataObjInp = DataObjInp
@@ -643,12 +663,15 @@ public final class DataObjectAOImpl extends IRODSGenericAO implements
 			ParallelGetFileTransferStrategy parallelGetTransferStrategy = ParallelGetFileTransferStrategy
 					.instance(host, port, numberOfThreads, password,
 							localFileToHoldData);
-			
-			// start a keep-alive that will ping the irods server every 30 seconds to keep the control channel alive
-			KeepAliveProcess keepAliveProcess = new KeepAliveProcess(new EnvironmentalInfoAOImpl(this.getIRODSSession(), this.getIRODSAccount()));
+
+			// start a keep-alive that will ping the irods server every 30
+			// seconds to keep the control channel alive
+			KeepAliveProcess keepAliveProcess = new KeepAliveProcess(
+					new EnvironmentalInfoAOImpl(this.getIRODSSession(),
+							this.getIRODSAccount()));
 			Thread keepAliveThread = new Thread(keepAliveProcess);
 			keepAliveThread.start();
-		
+
 			try {
 				parallelGetTransferStrategy.transfer();
 				keepAliveProcess.setTerminate(true);
@@ -986,7 +1009,6 @@ public final class DataObjectAOImpl extends IRODSGenericAO implements
 
 		for (AVUQueryElement queryElement : avuQuery) {
 
-			queryCondition = new StringBuilder();
 			if (previousElement) {
 				query.append(AND);
 			}

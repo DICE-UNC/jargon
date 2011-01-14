@@ -138,8 +138,7 @@ public class ResourceAOTest {
 		IRODSFile irodsFile = irodsFileFactory
 				.instanceIRODSFile(targetIrodsCollection);
 		ResourceAO resourceAO = accessObjectFactory.getResourceAO(irodsAccount);
-		@SuppressWarnings("unused")
-		Resource resource = resourceAO.getFirstResourceForIRODSFile(irodsFile);
+		resourceAO.getFirstResourceForIRODSFile(irodsFile);
 
 	}
 

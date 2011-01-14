@@ -81,13 +81,13 @@ public class ExecCmdTest {
 		Assert.assertEquals("did not get expected XML from PI", expectedXML,
 				actualXML);
 	}
-	
+
 	@Test
 	public void testGetParsedTagsNewerAPI() throws Exception {
 		String cmd = "hello";
 		String args = "";
 
-		ExecCmd execCmd = ExecCmd.instanceWithCommandUsingAlignedAPI(cmd, args);   
+		ExecCmd execCmd = ExecCmd.instanceWithCommandUsingAlignedAPI(cmd, args);
 		String actualXML = execCmd.getParsedTags();
 
 		StringBuilder sb = new StringBuilder();
@@ -106,7 +106,6 @@ public class ExecCmdTest {
 		Assert.assertEquals("did not get expected XML from PI", expectedXML,
 				actualXML);
 	}
-
 
 	@Test
 	public void testGetParsedTagsWithStreaming() throws Exception {

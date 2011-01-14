@@ -163,7 +163,9 @@ public class DataObjInpTest {
 	@Test
 	public final void testGetParsedTagsForGet() throws Exception {
 		DataObjInp dataObjInp = DataObjInp
-				.instanceForGet("/test1/home/test1/test-scratch/IrodsCommandsGetTest/testGet.txt", null);
+				.instanceForGet(
+						"/test1/home/test1/test-scratch/IrodsCommandsGetTest/testGet.txt",
+						null);
 
 		StringBuilder sb = new StringBuilder();
 		sb.append("<DataObjInp_PI><objPath>/test1/home/test1/test-scratch/IrodsCommandsGetTest/testGet.txt</objPath>\n");

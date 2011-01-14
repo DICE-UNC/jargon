@@ -188,11 +188,12 @@ final class TransferOperationsHelper {
 			final TransferStatusCallbackListener transferStatusCallbackListener,
 			final TransferControlBlock transferControlBlock)
 			throws JargonException {
-		
+
 		log.info("get of single file...filtered?");
-		
+
 		if (!transferControlBlock.filter(irodsSourceFile.getAbsolutePath())) {
-			log.info("file is filtered and discarded: {}", irodsSourceFile.getAbsolutePath());
+			log.info("file is filtered and discarded: {}",
+					irodsSourceFile.getAbsolutePath());
 			return;
 		}
 

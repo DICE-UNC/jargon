@@ -1,11 +1,9 @@
 package org.irods.jargon.core.pub.io;
 
-import static org.junit.Assert.*;
-
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.Properties;
 
+import junit.framework.Assert;
 import junit.framework.TestCase;
 
 import org.irods.jargon.core.connection.IRODSAccount;
@@ -13,8 +11,8 @@ import org.irods.jargon.core.connection.IRODSProtocolManager;
 import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.connection.IRODSSimpleProtocolManager;
 import org.irods.jargon.core.exception.JargonException;
-import org.irods.jargon.core.pub.IRODSAccessObjectFactoryImpl;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
+import org.irods.jargon.core.pub.IRODSAccessObjectFactoryImpl;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.irods.jargon.testutils.filemanip.FileGenerator;
 import org.irods.jargon.testutils.icommandinvoke.IcommandInvoker;
@@ -88,7 +86,7 @@ public class IRODSFileOutputStreamTest {
 		irodsFile.close();
 		irodsSession.closeSession();
 
-		TestCase.assertEquals("did not get back the int I wrote", writtenInt,
+		Assert.assertEquals("did not get back the int I wrote", writtenInt,
 				readBackInt);
 
 	}
@@ -127,7 +125,8 @@ public class IRODSFileOutputStreamTest {
 		irodsFile.close();
 
 		irodsSession = IRODSSession.instance(irodsConnectionManager);
-		accessObjectFactory = IRODSAccessObjectFactoryImpl.instance(irodsSession);
+		accessObjectFactory = IRODSAccessObjectFactoryImpl
+				.instance(irodsSession);
 		irodsFileFactory = accessObjectFactory
 
 		.getIRODSFileFactory(irodsAccount);
@@ -136,14 +135,14 @@ public class IRODSFileOutputStreamTest {
 
 		long length = irodsFile.length();
 
-		TestCase.assertEquals("file length does not match bytes written",
+		Assert.assertEquals("file length does not match bytes written",
 				myBytesArray.length * 2, length);
 
 		irodsSession.closeSession();
 	}
 
 	@Test
-	public final void testWriteByteArrayIntInt() throws Exception{
+	public final void testWriteByteArrayIntInt() throws Exception {
 		String testFileName = "testWriteByteArrayIntInt.csv";
 
 		String targetIrodsCollection = testingPropertiesHelper
@@ -222,18 +221,15 @@ public class IRODSFileOutputStreamTest {
 
 		// get a simple byte array
 		String myBytes = "ajjjjjjjjjfjjifi98jdkjfaklsdfjaidnadfjaisdfaskdjfaijfjfjad;fasjgjgkjjasfgkasgkjas;dfjas;df9920jdsaklfaslkdfja;sdjfasffjjjjjjjjjjjjjfeiiiiiiiiiiiiiii54454545";
-		String expectedBytes = "fjjifi98jd";
 		byte[] myBytesArray = myBytes.getBytes();
-		byte[] myExpectedBytesArray = expectedBytes.getBytes();
-		
 		// should write fjjifi98jd
-		irodsFileOutputStream.write(myBytesArray,10, 10);
+		irodsFileOutputStream.write(myBytesArray, 10, 10);
 		irodsFileOutputStream.close();
 		irodsFile.close();
 		irodsSession.closeSession();
-		TestCase.assertTrue(irodsFile.getFileDescriptor() < 0);
+		Assert.assertTrue(irodsFile.getFileDescriptor() < 0);
 	}
-	
+
 	@Test
 	public final void testCloseStreamTwice() throws Exception {
 		String testFileName = "testCloseStreamTwice.csv";
@@ -261,19 +257,16 @@ public class IRODSFileOutputStreamTest {
 
 		// get a simple byte array
 		String myBytes = "ajjjjjjjjjfjjifi98jdkjfaklsdfjaidnadfjaisdfaskdjfaijfjfjad;fasjgjgkjjasfgkasgkjas;dfjas;df9920jdsaklfaslkdfja;sdjfasffjjjjjjjjjjjjjfeiiiiiiiiiiiiiii54454545";
-		String expectedBytes = "fjjifi98jd";
 		byte[] myBytesArray = myBytes.getBytes();
-		byte[] myExpectedBytesArray = expectedBytes.getBytes();
-		
 		// should write fjjifi98jd
-		irodsFileOutputStream.write(myBytesArray,10, 10);
+		irodsFileOutputStream.write(myBytesArray, 10, 10);
 		irodsFileOutputStream.close();
 		irodsFileOutputStream.close();
 		irodsFile.close();
 		irodsSession.closeSession();
-		TestCase.assertTrue(irodsFile.getFileDescriptor() < 0);
+		Assert.assertTrue(irodsFile.getFileDescriptor() < 0);
 	}
-	
+
 	@Test
 	public final void testCloseFileThenStream() throws Exception {
 		String testFileName = "testCloseStreamTwice.csv";
@@ -299,17 +292,10 @@ public class IRODSFileOutputStreamTest {
 		IRODSFileOutputStream irodsFileOutputStream = irodsFileFactory
 				.instanceIRODSFileOutputStream(irodsFile);
 
-		// get a simple byte array
-		String myBytes = "ajjjjjjjjjfjjifi98jdkjfaklsdfjaidnadfjaisdfaskdjfaijfjfjad;fasjgjgkjjasfgkasgkjas;dfjas;df9920jdsaklfaslkdfja;sdjfasffjjjjjjjjjjjjjfeiiiiiiiiiiiiiii54454545";
-		String expectedBytes = "fjjifi98jd";
-		byte[] myBytesArray = myBytes.getBytes();
-		byte[] myExpectedBytesArray = expectedBytes.getBytes();
-		
-		// should write fjjifi98jd
 		irodsFile.close();
 		irodsFileOutputStream.close();
 		irodsSession.closeSession();
-		TestCase.assertTrue(irodsFile.getFileDescriptor() < 0);
+		Assert.assertTrue(irodsFile.getFileDescriptor() < 0);
 	}
 
 	@Test
@@ -334,9 +320,10 @@ public class IRODSFileOutputStreamTest {
 		IRODSFile irodsFile = irodsFileFactory
 				.instanceIRODSFile(targetIrodsCollection + '/' + testFileName);
 
-		@SuppressWarnings("unused")
-		IRODSFileOutputStream irodsFileOutputStream = irodsFileFactory
-				.instanceIRODSFileOutputStream(irodsFile);
+		irodsFileFactory.instanceIRODSFileOutputStream(irodsFile);
+		irodsSession.closeSession();
+		assertionHelper.assertIrodsFileOrCollectionExists(targetIrodsCollection
+				+ '/' + testFileName);
 	}
 
 	@Test
@@ -362,9 +349,6 @@ public class IRODSFileOutputStreamTest {
 				.instanceIRODSFile(targetIrodsCollection + '/' + testFileName);
 
 		irodsFile.createNewFile();
-		@SuppressWarnings("unused")
-		IRODSFileOutputStream irodsFileOutputStream = irodsFileFactory
-				.instanceIRODSFileOutputStream(irodsFile);
 		irodsSession.closeSession();
 		assertionHelper.assertIrodsFileOrCollectionExists(targetIrodsCollection
 				+ '/' + testFileName);
@@ -385,7 +369,7 @@ public class IRODSFileOutputStreamTest {
 				.instance(irodsSession);
 		IRODSFileFactory irodsFileFactory = accessObjectFactory
 				.getIRODSFileFactory(irodsAccount);
-		IRODSFile irodsFile = irodsFileFactory.instanceIRODSFile("");
+		irodsFileFactory.instanceIRODSFile("");
 
 	}
 
@@ -437,7 +421,7 @@ public class IRODSFileOutputStreamTest {
 		irodsSession.closeSession();
 		assertionHelper.assertIrodsFileOrCollectionExists(targetIrodsCollection
 				+ '/' + testFileName);
-		TestCase.assertTrue("no file descriptor assigned",
+		Assert.assertTrue("no file descriptor assigned",
 				irodsFileOutputStream.getFileDescriptor() > -1);
 
 	}

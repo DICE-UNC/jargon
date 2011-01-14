@@ -19,7 +19,9 @@ import org.junit.runners.Suite;
 		IRODSFileSystemAOImplTest.class, IRODSFileOutputStreamTest.class,
 		IRODSFIleInputStreamTest.class, FileIOOperationsAOImplTest.class,
 		IRODSRandomAccessFileTest.class, IRODSFileWriterTest.class,
-		IRODSFileReaderTest.class, SessionClosingIRODSFIleInputStreamTest.class, RemoteExecutionBinaryResultInputStreamTest.class })
+		IRODSFileReaderTest.class,
+		SessionClosingIRODSFIleInputStreamTest.class,
+		RemoteExecutionBinaryResultInputStreamTest.class })
 public class FileTests {
 
 }

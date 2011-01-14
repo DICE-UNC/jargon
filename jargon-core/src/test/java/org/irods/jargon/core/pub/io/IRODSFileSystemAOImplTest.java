@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Properties;
 
 import junit.framework.Assert;
-import junit.framework.TestCase;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSProtocolManager;
@@ -1057,8 +1056,8 @@ public class IRODSFileSystemAOImplTest {
 		List<String> subdirs = fileSystemAO.getListInDirWithFilter(irodsFile,
 				new IRODSAcceptAllFileNameFilter());
 		irodsSession.closeSession();
-		TestCase.assertNotNull(subdirs);
-		TestCase.assertTrue("no results", subdirs.size() == 3);
+		Assert.assertNotNull(subdirs);
+		Assert.assertTrue("no results", subdirs.size() == 3);
 	}
 
 	@Test
@@ -1103,14 +1102,14 @@ public class IRODSFileSystemAOImplTest {
 
 		IRODSFile irodsFile = irodsFileFactory
 				.instanceIRODSFile(targetIrodsCollection + '/' + testFileName);
-		IRODSFileSystemAO fileSystemAO = (IRODSFileSystemAO) accessObjectFactory
+		IRODSFileSystemAO fileSystemAO = accessObjectFactory
 				.getIRODSFileSystemAO(irodsAccount);
 
 		IRODSFileImpl.DataType dataType = fileSystemAO
 				.getFileDataType(irodsFile);
 		irodsSession.closeSession();
 
-		TestCase.assertEquals("did not get expected data type for a file",
+		Assert.assertEquals("did not get expected data type for a file",
 				IRODSFile.DataType.GENERIC, dataType);
 	}
 
@@ -1135,14 +1134,14 @@ public class IRODSFileSystemAOImplTest {
 
 		IRODSFile irodsFile = irodsFileFactory
 				.instanceIRODSFile(targetIrodsCollection);
-		IRODSFileSystemAO fileSystemAO = (IRODSFileSystemAO) accessObjectFactory
+		IRODSFileSystemAO fileSystemAO = accessObjectFactory
 				.getIRODSFileSystemAO(irodsAccount);
 
 		IRODSFileImpl.DataType dataType = fileSystemAO
 				.getFileDataType(irodsFile);
 		irodsSession.closeSession();
 
-		TestCase.assertEquals("did not get expected data type for a directory",
+		Assert.assertEquals("did not get expected data type for a directory",
 				IRODSFile.DataType.DIRECTORY, dataType);
 	}
 
@@ -1165,14 +1164,13 @@ public class IRODSFileSystemAOImplTest {
 		IRODSAccessObjectFactory accessObjectFactory = IRODSAccessObjectFactoryImpl
 				.instance(irodsSession);
 
-		IRODSFileSystemAO fileSystemAO = (IRODSFileSystemAO) accessObjectFactory
+		IRODSFileSystemAO fileSystemAO = accessObjectFactory
 				.getIRODSFileSystemAO(irodsAccount);
 		int fileNbr = fileSystemAO.createFile(targetIrodsCollection + '/'
 				+ testFileName, DataObjInp.OpenFlags.READ_WRITE,
 				DataObjInp.DEFAULT_CREATE_MODE);
 		irodsSession.closeSession();
-		TestCase.assertTrue(
-				"should have received a file number for the create",
+		Assert.assertTrue("should have received a file number for the create",
 				fileNbr > 0);
 
 	}
@@ -1189,7 +1187,7 @@ public class IRODSFileSystemAOImplTest {
 				.instance(irodsConnectionManager);
 		IRODSAccessObjectFactory accessObjectFactory = IRODSAccessObjectFactoryImpl
 				.instance(irodsSession);
-		IRODSFileSystemAO fileSystemAO = (IRODSFileSystemAO) accessObjectFactory
+		IRODSFileSystemAO fileSystemAO = accessObjectFactory
 				.getIRODSFileSystemAO(irodsAccount);
 
 		String targetIrodsCollection = testingPropertiesHelper
@@ -1220,7 +1218,7 @@ public class IRODSFileSystemAOImplTest {
 				.instance(irodsConnectionManager);
 		IRODSAccessObjectFactory accessObjectFactory = IRODSAccessObjectFactoryImpl
 				.instance(irodsSession);
-		IRODSFileSystemAO fileSystemAO = (IRODSFileSystemAO) accessObjectFactory
+		IRODSFileSystemAO fileSystemAO = accessObjectFactory
 				.getIRODSFileSystemAO(irodsAccount);
 
 		String targetIrodsCollection = testingPropertiesHelper
@@ -1251,7 +1249,7 @@ public class IRODSFileSystemAOImplTest {
 				.instance(irodsConnectionManager);
 		IRODSAccessObjectFactory accessObjectFactory = IRODSAccessObjectFactoryImpl
 				.instance(irodsSession);
-		IRODSFileSystemAO fileSystemAO = (IRODSFileSystemAO) accessObjectFactory
+		IRODSFileSystemAO fileSystemAO = accessObjectFactory
 				.getIRODSFileSystemAO(irodsAccount);
 
 		String targetIrodsCollection = testingPropertiesHelper
@@ -1286,12 +1284,12 @@ public class IRODSFileSystemAOImplTest {
 		IRODSAccessObjectFactory accessObjectFactory = IRODSAccessObjectFactoryImpl
 				.instance(irodsSession);
 
-		IRODSFileSystemAO fileSystemAO = (IRODSFileSystemAO) accessObjectFactory
+		IRODSFileSystemAO fileSystemAO = accessObjectFactory
 				.getIRODSFileSystemAO(irodsAccount);
 		int fileNbr = fileSystemAO.createFile(targetIrodsCollection + '/'
 				+ testFileName, DataObjInp.OpenFlags.READ_WRITE,
 				DataObjInp.DEFAULT_CREATE_MODE);
-		TestCase.assertTrue("file id not returned", fileNbr > 0);
+		Assert.assertTrue("file id not returned", fileNbr > 0);
 
 		// fileSystemAO.fileClose(fileNbr);
 		// no error = success
@@ -1338,7 +1336,7 @@ public class IRODSFileSystemAOImplTest {
 		IRODSAccessObjectFactory accessObjectFactory = IRODSAccessObjectFactoryImpl
 				.instance(irodsSession);
 
-		IRODSFileSystemAO fileSystemAO = (IRODSFileSystemAO) accessObjectFactory
+		IRODSFileSystemAO fileSystemAO = accessObjectFactory
 				.getIRODSFileSystemAO(irodsAccount);
 		fileSystemAO
 				.createFile(targetIrodsCollection + '/' + testFileName,
@@ -1385,7 +1383,7 @@ public class IRODSFileSystemAOImplTest {
 		IRODSAccessObjectFactory accessObjectFactory = IRODSAccessObjectFactoryImpl
 				.instance(irodsSession);
 
-		IRODSFileSystemAO fileSystemAO = (IRODSFileSystemAO) accessObjectFactory
+		IRODSFileSystemAO fileSystemAO = accessObjectFactory
 				.getIRODSFileSystemAO(irodsAccount);
 
 		IRODSFileFactory irodsFileFactory = accessObjectFactory
@@ -1439,7 +1437,7 @@ public class IRODSFileSystemAOImplTest {
 		IRODSAccessObjectFactory accessObjectFactory = IRODSAccessObjectFactoryImpl
 				.instance(irodsSession);
 
-		IRODSFileSystemAO fileSystemAO = (IRODSFileSystemAO) accessObjectFactory
+		IRODSFileSystemAO fileSystemAO = accessObjectFactory
 				.getIRODSFileSystemAO(irodsAccount);
 
 		IRODSFileFactory irodsFileFactory = accessObjectFactory
@@ -1479,7 +1477,7 @@ public class IRODSFileSystemAOImplTest {
 		IRODSAccessObjectFactory accessObjectFactory = IRODSAccessObjectFactoryImpl
 				.instance(irodsSession);
 
-		IRODSFileSystemAO fileSystemAO = (IRODSFileSystemAO) accessObjectFactory
+		IRODSFileSystemAO fileSystemAO = accessObjectFactory
 				.getIRODSFileSystemAO(irodsAccount);
 
 		IRODSFileFactory irodsFileFactory = accessObjectFactory
@@ -1543,7 +1541,7 @@ public class IRODSFileSystemAOImplTest {
 		IRODSFile irodsRenameFile = irodsFileFactory
 				.instanceIRODSFile(targetIrodsCollection + '/'
 						+ testRenamedFileName);
-		IRODSFileSystemAO fileSystemAO = (IRODSFileSystemAO) accessObjectFactory
+		IRODSFileSystemAO fileSystemAO = accessObjectFactory
 				.getIRODSFileSystemAO(irodsAccount);
 
 		fileSystemAO.renameFile(irodsFile, irodsRenameFile);
@@ -1591,7 +1589,7 @@ public class IRODSFileSystemAOImplTest {
 		IRODSFile irodsRenameFile = irodsFileFactory
 				.instanceIRODSFile(targetIrodsCollection + '/'
 						+ testRenamedDirectory);
-		IRODSFileSystemAO fileSystemAO = (IRODSFileSystemAO) accessObjectFactory
+		IRODSFileSystemAO fileSystemAO = accessObjectFactory
 				.getIRODSFileSystemAO(irodsAccount);
 
 		fileSystemAO.renameDirectory(irodsFile, irodsRenameFile);
@@ -1639,7 +1637,7 @@ public class IRODSFileSystemAOImplTest {
 		IRODSFile irodsFile = irodsFileFactory
 				.instanceIRODSFile(targetIrodsCollection + '/' + testFileName);
 
-		IRODSFileSystemAO fileSystemAO = (IRODSFileSystemAO) accessObjectFactory
+		IRODSFileSystemAO fileSystemAO = accessObjectFactory
 				.getIRODSFileSystemAO(irodsAccount);
 
 		fileSystemAO
@@ -1653,7 +1651,7 @@ public class IRODSFileSystemAOImplTest {
 		ilsCommand.setIlsBasePath(targetIrodsCollection + '/' + testFileName);
 		String ilsResult = invoker
 				.invokeCommandAndGetResultAsString(ilsCommand);
-		TestCase.assertTrue(
+		Assert.assertTrue(
 				"file is not in new resource",
 				ilsResult.indexOf(testingProperties
 						.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_RESOURCE_KEY)) != -1);

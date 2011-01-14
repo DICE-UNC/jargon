@@ -471,10 +471,8 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 		}
 
 		IRODSQuery irodsQuery = IRODSQuery.instance(
-				filePermissionQuery.toString(), 100); // FIXME: issue with #
-														// results desired,
-		// verify with 2.3.1 query
-
+				filePermissionQuery.toString(), 100); 
+		
 		IRODSQueryResultSet resultSet;
 		try {
 			resultSet = irodsGenQueryExecutor.executeIRODSQuery(irodsQuery, 0);
@@ -1176,8 +1174,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 
 		try {
 			DataObjInp dataObjInp = DataObjInp.instance(absolutePath,
-					createMode, openFlags, offset, dataSize,
-					resource, null);
+					createMode, openFlags, offset, dataSize, resource, null);
 			Tag response = getIRODSProtocol().irodsFunction(DataObjInp.PI_TAG,
 					dataObjInp.getParsedTags(), DataObjInp.CREATE_FILE_API_NBR);
 			if (response == null) {

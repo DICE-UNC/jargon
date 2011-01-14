@@ -1876,9 +1876,6 @@ public class DataTransferOperationsImplTest {
 						irodsCollectionRootAbsolutePath + "/" + rootCollection,
 						targetParent.getAbsolutePath());
 
-		irodsFileSystem = IRODSFileSystem.instance();
-		irodsFileFactory = irodsFileSystem.getIRODSFileFactory(irodsAccount);
-
 		irodsFileSystem.close();
 		TestCase.assertTrue(true);
 	}

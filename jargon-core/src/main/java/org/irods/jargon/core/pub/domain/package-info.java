@@ -1,6 +1,5 @@
 /**
- * These domain objects are POJO's that represent the various entities in the iRODS metadata catalog.  These domain objects 
- * are used to work with the access objects in <code>org.irods.jargon.core.pub</code>.
+ * POJO domain objects that represent common entities in the iRODS catalog and other parts of iRODS.
  */
 package org.irods.jargon.core.pub.domain;
 

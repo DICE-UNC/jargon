@@ -552,7 +552,7 @@ public class IRODSFileImplTest {
 
 		irodsSession.closeSession();
 
-		TestCase.assertTrue("file creation not successful", success);
+		Assert.assertTrue("file creation not successful", success);
 	}
 
 	/**
@@ -605,7 +605,7 @@ public class IRODSFileImplTest {
 
 		irodsSession.closeSession();
 
-		TestCase.assertFalse("file creation should not be successful", success);
+		Assert.assertFalse("file creation should not be successful", success);
 	}
 
 	/**
@@ -657,7 +657,7 @@ public class IRODSFileImplTest {
 		boolean result = irodsFile.delete();
 		irodsSession.closeSession();
 
-		TestCase.assertTrue("did not get a true result from the file delete",
+		Assert.assertTrue("did not get a true result from the file delete",
 				result);
 		assertionHelper.assertIrodsFileOrCollectionDoesNotExist(irodsFile
 				.getAbsolutePath());
@@ -709,7 +709,7 @@ public class IRODSFileImplTest {
 		boolean result = irodsFile.deleteWithForceOption();
 		irodsSession.closeSession();
 
-		TestCase.assertTrue("did not get a true result from the file delete",
+		Assert.assertTrue("did not get a true result from the file delete",
 				result);
 		assertionHelper.assertIrodsFileOrCollectionDoesNotExist(irodsFile
 				.getAbsolutePath());
@@ -748,7 +748,7 @@ public class IRODSFileImplTest {
 		boolean result = irodsFile.delete();
 		irodsSession.closeSession();
 
-		TestCase.assertTrue(
+		Assert.assertTrue(
 				"did not get a true result from the collection delete", result);
 		assertionHelper.assertIrodsFileOrCollectionDoesNotExist(irodsFile
 				.getAbsolutePath());
@@ -788,7 +788,7 @@ public class IRODSFileImplTest {
 		boolean result = irodsFile.deleteWithForceOption();
 		irodsSession.closeSession();
 
-		TestCase.assertTrue(
+		Assert.assertTrue(
 				"did not get a true result from the collection delete", result);
 		assertionHelper.assertIrodsFileOrCollectionDoesNotExist(irodsFile
 				.getAbsolutePath());
@@ -946,7 +946,7 @@ public class IRODSFileImplTest {
 		irodsFile.mkdir();
 		boolean secondTime = irodsFile.mkdir();
 		irodsSession.closeSession();
-		TestCase.assertFalse(secondTime);
+		Assert.assertFalse(secondTime);
 	}
 
 	/**
@@ -1024,7 +1024,7 @@ public class IRODSFileImplTest {
 				.instance(irodsSession);
 		IRODSFileSystemAO fileSystemAO = accessObjectFactory
 				.getIRODSFileSystemAO(irodsAccount);
-		TestCase.assertNotNull("null fileSystem from factory", fileSystemAO);
+		Assert.assertNotNull("null fileSystem from factory", fileSystemAO);
 
 	}
 
@@ -1062,7 +1062,7 @@ public class IRODSFileImplTest {
 
 		irodsSession.closeSession();
 
-		TestCase.assertEquals("compare fails", -1, comp);
+		Assert.assertEquals("compare fails", -1, comp);
 	}
 
 	/**
@@ -1097,7 +1097,7 @@ public class IRODSFileImplTest {
 
 		irodsSession.closeSession();
 
-		TestCase.assertEquals(irodsFile, irodsFile2);
+		Assert.assertEquals(irodsFile, irodsFile2);
 	}
 
 	@Test

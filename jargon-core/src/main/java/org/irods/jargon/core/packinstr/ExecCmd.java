@@ -77,7 +77,7 @@ public final class ExecCmd extends AbstractIRODSPackingInstruction {
 				commandToExecuteWithoutArguments, argumentsToPassWithCommand,
 				"", "", false, true);
 	}
-	
+
 	/**
 	 * Create an instance of the packing instruction to execute a remote command
 	 * (script) using the newer API with 64 bit alignment for some platforms.
@@ -102,8 +102,8 @@ public final class ExecCmd extends AbstractIRODSPackingInstruction {
 	/**
 	 * Create an instance of the packing instruction to execute a remote command
 	 * (script). This initializer indicates to iRODS that large result buffers
-	 * should be transmitted via a stream. This uses an enhanced API post iRODS 2.4.1 and is 
-	 * not supported in prior releases.
+	 * should be transmitted via a stream. This uses an enhanced API post iRODS
+	 * 2.4.1 and is not supported in prior releases.
 	 * 
 	 * @param commandToExecuteWithoutArguments
 	 *            <code>String</code> with the name of the command to execute.
@@ -154,7 +154,7 @@ public final class ExecCmd extends AbstractIRODSPackingInstruction {
 				absolutePathOfIrodsFileThatWillBeUsedToFindHostToExecuteOn,
 				false, true);
 	}
-	
+
 	/**
 	 * Create an instance of the packing instruction to execute a remote command
 	 * (script) using the newer API with 64 bit alignment for some platforms.
@@ -191,7 +191,7 @@ public final class ExecCmd extends AbstractIRODSPackingInstruction {
 	/**
 	 * Create an instance of the packing instruction to execute a remote command
 	 * (script). This initializer indicates to iRODS that large result buffers
-	 * should be transmitted via a stream.  This uses an API that only works with
+	 * should be transmitted via a stream. This uses an API that only works with
 	 * iRODS releases after (but not including) version 2.4.1.
 	 * 
 	 * @param commandToExecuteWithoutArguments
@@ -245,9 +245,11 @@ public final class ExecCmd extends AbstractIRODSPackingInstruction {
 	 * @param useStreaming
 	 *            <code>boolean</code> that indicates whether streaming of large
 	 *            results should be allowed.
-	 *  @param userVersion241Instruction <code>boolean</code> that indicates that the older
-	 *  version (2.4.1 and prior) should be used.  Otherwise, the newer API with fixes for streaming and 64 bit
-	 *  alignment issues will be used.
+	 * @param userVersion241Instruction
+	 *            <code>boolean</code> that indicates that the older version
+	 *            (2.4.1 and prior) should be used. Otherwise, the newer API
+	 *            with fixes for streaming and 64 bit alignment issues will be
+	 *            used.
 	 * @throws JargonException
 	 */
 	private ExecCmd(
@@ -256,7 +258,8 @@ public final class ExecCmd extends AbstractIRODSPackingInstruction {
 			final String argumentsToPassWithCommand,
 			final String executionHost,
 			final String absolutePathOfIrodsFileThatWillBeUsedToFindHostToExecuteOn,
-			final boolean useStreaming, final boolean useVersion241Instruction) throws JargonException {
+			final boolean useStreaming, final boolean useVersion241Instruction)
+			throws JargonException {
 
 		super();
 
@@ -279,9 +282,10 @@ public final class ExecCmd extends AbstractIRODSPackingInstruction {
 			throw new JargonException(
 					"null absolutePathOfIrodsFileThatWillBeUsedToFindHostToExecuteOn, set to blank if not used");
 		}
-		
+
 		if (useStreaming && useVersion241Instruction) {
-			throw new JargonException("cannot stream binary data using the older version 241 instruction, the parameters are in conflict");
+			throw new JargonException(
+					"cannot stream binary data using the older version 241 instruction, the parameters are in conflict");
 		}
 
 		this.commandToExecuteWithoutArguments = commandToExecuteWithoutArguments;
@@ -303,10 +307,10 @@ public final class ExecCmd extends AbstractIRODSPackingInstruction {
 	 */
 	@Override
 	public Tag getTagValue() throws JargonException {
-		
+
 		String piTagToUse;
-		
-		if(useVersion241Instruction) {
+
+		if (useVersion241Instruction) {
 			piTagToUse = PI_TAG_241;
 		} else {
 			piTagToUse = PI_TAG;
@@ -321,13 +325,13 @@ public final class ExecCmd extends AbstractIRODSPackingInstruction {
 						new Tag(HINT_PATH,
 								absolutePathOfIrodsFileThatWillBeUsedToFindHostToExecuteOn),
 						new Tag(ADD_PATH_TO_ARGV, 0) });
-		
+
 		if (!useVersion241Instruction) {
 			// a dummy tag is in the pi for 64 bit alignment issues starting
 			// post 2.4.1
 			message.addTag(new Tag(DUMMY, 0));
 		}
-		
+
 		if (useStreaming) {
 			message.addTag(Tag.createKeyValueTag(STREAM_STDOUT_KW, ""));
 		} else {

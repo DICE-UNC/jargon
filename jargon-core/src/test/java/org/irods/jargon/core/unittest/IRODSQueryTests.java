@@ -12,9 +12,9 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
-@Suite.SuiteClasses({ IRODSQueryTranslatorTest.class,
-		SelectFieldTest.class, TranslatedIRODSQueryTest.class,
-		AVUQueryElementTest.class, SimpleQueryTest.class })
+@Suite.SuiteClasses({ IRODSQueryTranslatorTest.class, SelectFieldTest.class,
+		TranslatedIRODSQueryTest.class, AVUQueryElementTest.class,
+		SimpleQueryTest.class })
 public class IRODSQueryTests {
 
 }

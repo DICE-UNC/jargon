@@ -273,14 +273,14 @@ public class RemoteExecuteServiceImplTest {
 				"Hello world  from irods".trim(), result.trim());
 
 	}
-	
+
 	@Test
-	public final void testExecuteHelloWithPathUsingPost241API() throws Exception {
+	public final void testExecuteHelloWithPathUsingPost241API()
+			throws Exception {
 
 		if (!testingPropertiesHelper.isTestRemoteExecStream(testingProperties)) {
 			return;
 		}
-		
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
@@ -329,7 +329,6 @@ public class RemoteExecuteServiceImplTest {
 		IcommandInvoker invoker = new IcommandInvoker(invocationContext);
 		invoker.invokeCommandAndGetResultAsString(iputCommand);
 
-		
 		CollectionAO collectionAO = irodsFileSystem
 				.getIRODSAccessObjectFactory().getCollectionAO(irodsAccount);
 		CollectionAOImpl collectionAOImpl = (CollectionAOImpl) collectionAO;

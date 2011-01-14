@@ -42,7 +42,7 @@ public class IRODSSessionTest {
 		IRODSSession irodsSession = IRODSSession
 				.instance(irodsConnectionManager);
 		irodsSession.closeSession();
-		JargonProperties jargonProperties = IRODSSession.getJargonProperties();
+		JargonProperties jargonProperties = irodsSession.getJargonProperties();
 		Assert.assertNotNull("null jargon properties", jargonProperties);
 
 	}
@@ -59,9 +59,12 @@ public class IRODSSessionTest {
 
 		SettableJargonProperties overrideJargonProperties = new SettableJargonProperties();
 		overrideJargonProperties.setMaxParallelThreads(8000);
-		IRODSSession.setJargonProperties(overrideJargonProperties);
-		JargonProperties jargonProperties = IRODSSession.getJargonProperties();
-		Assert.assertEquals("did not get the preset number of threads", 8000,
+		irodsSession.setJargonProperties(overrideJargonProperties);
+		JargonProperties jargonProperties = irodsSession.getJargonProperties();
+		Assert.assertEquals("did not get the preset number of threads", 8000, // FIXME:
+																				// BUG
+																				// BUG
+																				// BUG
 				jargonProperties.getMaxParallelThreads());
 
 	}

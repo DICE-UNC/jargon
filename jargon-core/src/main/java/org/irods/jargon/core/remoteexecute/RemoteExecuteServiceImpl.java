@@ -26,7 +26,8 @@ import edu.sdsc.grid.io.irods.Tag;
  * public API. Please consult the appropriate access object for public
  * interfaces for command execution.
  * <p/>
- * This object is immutable, but should not be shared between threads, as it holds a reference to a connection to an iRODS Agent.
+ * This object is immutable, but should not be shared between threads, as it
+ * holds a reference to a connection to an iRODS Agent.
  * 
  * @author Mike Conway - DICE (www.irods.org)
  * 
@@ -286,7 +287,7 @@ public class RemoteExecuteServiceImpl implements RemoteExecutionService {
 
 			RemoteExecutionBinaryResultInputStream reStream = new RemoteExecutionBinaryResultInputStream(
 					this.getIrodsCommands(), status);
-			
+
 			resultStream = new SequenceInputStream(piData, reStream);
 		} else {
 			log.info("no additional data to stream, will return simple stream from result buffer");

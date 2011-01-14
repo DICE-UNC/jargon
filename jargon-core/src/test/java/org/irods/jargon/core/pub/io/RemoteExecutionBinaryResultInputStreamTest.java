@@ -162,6 +162,7 @@ public class RemoteExecutionBinaryResultInputStreamTest {
 		RemoteExecutionBinaryResultInputStream bis = new RemoteExecutionBinaryResultInputStream(
 				irodsCommands, 1);
 		bis.mark(100);
+		bis.close();
 	}
 
 	@Test(expected = UnsupportedOperationException.class)
@@ -170,13 +171,15 @@ public class RemoteExecutionBinaryResultInputStreamTest {
 		RemoteExecutionBinaryResultInputStream bis = new RemoteExecutionBinaryResultInputStream(
 				irodsCommands, 1);
 		bis.reset();
+		bis.close();
 	}
 
 	@Test
-	public void testMarkSupported() {
+	public void testMarkSupported() throws Exception {
 		IRODSCommands irodsCommands = Mockito.mock(IRODSCommands.class);
 		RemoteExecutionBinaryResultInputStream bis = new RemoteExecutionBinaryResultInputStream(
 				irodsCommands, 1);
+		bis.close();
 		Assert.assertFalse("mark should not be supported", bis.markSupported());
 	}
 
@@ -186,6 +189,8 @@ public class RemoteExecutionBinaryResultInputStreamTest {
 		IRODSCommands irodsCommands = Mockito.mock(IRODSCommands.class);
 		RemoteExecutionBinaryResultInputStream bis = new RemoteExecutionBinaryResultInputStream(
 				irodsCommands, 1);
+		bis.close();
+
 		Assert.assertEquals("did not set file descriptor", 1,
 				bis.getFileDescriptor());
 

@@ -28,15 +28,7 @@ public final class IRODSSession {
 	private IRODSProtocolManager irodsProtocolManager;
 	private static final Logger LOG = LoggerFactory
 			.getLogger(IRODSSession.class);
-	public static JargonProperties jargonProperties;
-
-	static {
-		try {
-			jargonProperties = new DefaultPropertiesJargonConfig();
-		} catch (Exception e) {
-			LOG.warn("unable to load default jargon properties");
-		}
-	}
+	private JargonProperties jargonProperties;
 
 	/**
 	 * Get the <code>JargonProperties</code> that contains metadata to tune the
@@ -46,8 +38,10 @@ public final class IRODSSession {
 	 * 
 	 * @return {@link JargonProperties} with configuration metadata.
 	 */
-	public static JargonProperties getJargonProperties() {
-		return jargonProperties;
+	public JargonProperties getJargonProperties() {
+		synchronized (this) {
+			return jargonProperties;
+		}
 	}
 
 	/**
@@ -58,9 +52,10 @@ public final class IRODSSession {
 	 *            {@link JargonProperties} implementation to provide
 	 *            customization to Jargon behavior
 	 */
-	public static void setJargonProperties(
-			final JargonProperties jargonProperties) {
-		IRODSSession.jargonProperties = jargonProperties;
+	public void setJargonProperties(final JargonProperties jargonProperties) {
+		synchronized (this) {
+			this.jargonProperties = jargonProperties;
+		}
 	}
 
 	/**
@@ -91,10 +86,25 @@ public final class IRODSSession {
 
 	public IRODSSession() {
 		LOG.info("IRODS Session creation");
+		try {
+			jargonProperties = new DefaultPropertiesJargonConfig();
+		} catch (Exception e) {
+			LOG.warn("unable to load default jargon properties");
+		}
 	}
 
+	/**
+	 * Create a session with an object that will hand out connections.
+	 * 
+	 * @param irodsConnectionManager
+	 *            {@link IRODSProtocolManager} that is in charge of handing out
+	 *            connections
+	 * @throws JargonException
+	 */
 	public IRODSSession(final IRODSProtocolManager irodsConnectionManager)
 			throws JargonException {
+
+		this();
 
 		if (irodsConnectionManager == null) {
 			throw new JargonException("irods connection manager cannot be null");

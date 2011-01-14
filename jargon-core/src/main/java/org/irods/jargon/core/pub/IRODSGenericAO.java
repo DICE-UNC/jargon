@@ -108,7 +108,7 @@ public abstract class IRODSGenericAO implements IRODSAccessObject {
 	 */
 	@Override
 	public JargonProperties getJargonProperties() {
-		return IRODSSession.getJargonProperties();
+		return getIRODSSession().getJargonProperties();
 	}
 
 }

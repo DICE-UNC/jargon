@@ -540,7 +540,7 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 		if (transferOptions != null) {
 			transferOptionsNumThreads = transferOptions.getMaxThreads();
 		}
-		
+
 		// TODO: trap for very strange bug, will remove later
 		if (transferOptionsNumThreads > 20) {
 			throw new JargonException("too many threads requested");
