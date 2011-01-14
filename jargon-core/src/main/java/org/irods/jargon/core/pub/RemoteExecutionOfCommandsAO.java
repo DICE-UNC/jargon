@@ -6,6 +6,9 @@ import org.irods.jargon.core.exception.JargonException;
 
 /**
  * Access object to remotely execute scripts and commands on iRODS.
+ * <p/>
+ * Note that in iRODS versions post 2.4.1, it is possible to stream large results from remote execution.  This object will interrogate the
+ * capabilities of the iRODS server, and automatically use the advanced streaming algorithm if available.  
  * 
  * @author Mike Conway - DICE (www.irods.org)
  * 

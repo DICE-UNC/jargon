@@ -53,7 +53,12 @@ public class RemoteExecutionOfCommandsAOImpl extends IRODSGenericAO implements
 				.instance(this.getIRODSProtocol(),
 						commandToExecuteWithoutArguments,
 						argumentsToPassWithCommand, "", "");
-		return remoteExecuteService.execute();
+		
+		if (isAbleToStreamLargeResults()) {
+			return remoteExecuteService.executeAndStream();
+		} else {
+			return remoteExecuteService.execute();
+		}
 	}
 
 	/*
@@ -74,7 +79,12 @@ public class RemoteExecutionOfCommandsAOImpl extends IRODSGenericAO implements
 				.instance(this.getIRODSProtocol(),
 						commandToExecuteWithoutArguments,
 						argumentsToPassWithCommand, executionHost, "");
-		return remoteExecuteService.execute();
+		
+		if (isAbleToStreamLargeResults()) {
+			return remoteExecuteService.executeAndStream();
+		} else {
+			return remoteExecuteService.execute();
+		}
 	}
 
 	/*
@@ -97,7 +107,25 @@ public class RemoteExecutionOfCommandsAOImpl extends IRODSGenericAO implements
 						commandToExecuteWithoutArguments,
 						argumentsToPassWithCommand, "",
 						absolutePathOfIrodsFileThatWillBeUsedToFindHostToExecuteOn);
-		return remoteExecuteService.execute();
+		
+		if (isAbleToStreamLargeResults()) {
+			return remoteExecuteService.executeAndStream();
+		} else {
+			return remoteExecuteService.execute();
+		}
+	}
+	
+	/**
+	 * Inquire if this irodsServer has the ability to stream large results back.
+	 * @return
+	 * @throws JargonException
+	 */
+	protected boolean isAbleToStreamLargeResults() throws JargonException {
+		if (this.getIRODSServerProperties().isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods2.4.1")) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 }
