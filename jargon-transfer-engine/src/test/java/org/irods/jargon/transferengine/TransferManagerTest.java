@@ -282,9 +282,7 @@ public class TransferManagerTest {
 			}
 
 			throw new JargonException(e);
-		} finally {
-			// session.close();
-		}
+		} 
 
 		// let put run
 

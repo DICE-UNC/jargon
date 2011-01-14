@@ -507,6 +507,7 @@ public final class TransferManager {
 		// last successful path will have a restart value or be blank
 		TransferControlBlock transferControlBlock = DefaultTransferControlBlock
 				.instance(dequeued.getLastSuccessfulPath());
+		
 		log.info(">>>> dequeue {}", dequeued);
 
 		log.info("getting a transferRunner to process");

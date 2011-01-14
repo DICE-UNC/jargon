@@ -47,7 +47,6 @@ final class IRODSLocalTransferEngine implements TransferStatusCallbackListener {
 	private LocalIRODSTransfer currentTransfer;
 	private final TransferControlBlock transferControlBlock;
 	private final boolean logSuccessfulTransfers;
-	private final IRODSFileSystem irodsFileSystem;
 	private boolean aborted = false;
 
 	private static final Logger log = LoggerFactory
@@ -124,7 +123,7 @@ final class IRODSLocalTransferEngine implements TransferStatusCallbackListener {
 		this.transferManager = transferManager;
 		this.transferControlBlock = transferControlBlock;
 		this.logSuccessfulTransfers = logSuccessfulTransfers;
-		this.irodsFileSystem = IRODSFileSystem.instance();
+		IRODSFileSystem.instance();
 
 	}
 

@@ -105,13 +105,10 @@ final class TransferQueueService {
 			transfer = irodsTransferQueue.get(0);
 			log.info("dequeue transfer:{}", transfer);
 
-			// FIXME: decide whether a restart and add to control block
-
 			transfer.setTransferStart(new Date());
 			transfer.setTransferState(LocalIRODSTransfer.TRANSFER_STATE_PROCESSING);
 			transfer.setTransferErrorStatus(LocalIRODSTransfer.TRANSFER_STATUS_OK);
 			session.update(transfer);
-			// session.flush();
 			tx.commit();
 
 		} catch (RuntimeException e) {
@@ -122,10 +119,7 @@ final class TransferQueueService {
 
 			log.error("error in transaction", e);
 			throw new JargonException(e);
-		} finally {
-			// session.close();
-			log.info("session closed");
-		}
+		} 
 
 		log.info("dequeued");
 		return transfer;
@@ -204,7 +198,6 @@ final class TransferQueueService {
 			log.info("saving...{}", enqueuedTransfer);
 
 			session.saveOrUpdate(enqueuedTransfer);
-			// session.flush();
 			log.info("commit");
 			tx.commit();
 		} catch (RuntimeException e) {
@@ -215,9 +208,6 @@ final class TransferQueueService {
 
 			log.error("error in transaction", e);
 			throw new JargonException(e);
-		} finally {
-			// session.close();
-			log.info("session closed");
 		}
 
 		log.info("enqueued...");
@@ -297,7 +287,6 @@ final class TransferQueueService {
 			log.info("saving...{}", enqueuedTransfer);
 
 			session.saveOrUpdate(enqueuedTransfer);
-			// session.flush();
 			log.info("commit");
 			tx.commit();
 		} catch (RuntimeException e) {
@@ -308,10 +297,7 @@ final class TransferQueueService {
 
 			log.error("error in transaction", e);
 			throw new JargonException(e);
-		} finally {
-			// session.close();
-			log.info("session closed");
-		}
+		} 
 
 		log.info("enqueued...");
 		return enqueuedTransfer;
@@ -383,7 +369,6 @@ final class TransferQueueService {
 
 			session.update(mergedTransfer);
 			log.info("commit");
-			// session.flush();
 			tx.commit();
 		} catch (RuntimeException e) {
 
@@ -393,10 +378,6 @@ final class TransferQueueService {
 
 			log.error("error in transaction", e);
 			throw new JargonException(e);
-		} finally {
-			notifyManagerOfError(transferManager);
-			// session.close();
-			log.info("session closed");
 		}
 
 	}
@@ -539,7 +520,6 @@ final class TransferQueueService {
 			}
 
 			final List<LocalIRODSTransfer> irodsTransferQueue = q.list();
-			// session.flush();
 			tx.commit();
 
 			return irodsTransferQueue;
@@ -552,11 +532,7 @@ final class TransferQueueService {
 
 			log.error("error in transaction", e);
 			throw new JargonException(e);
-		} finally {
-			// session.close();
-			log.info("session closed");
-		}
-
+		} 
 	}
 
 	/**
@@ -588,11 +564,7 @@ final class TransferQueueService {
 
 			log.error("error in transaction", e);
 			throw new JargonException(e);
-		} finally {
-			// session.close();
-			log.info("session closed");
-		}
-
+		} 
 	}
 
 	protected void purgeSuccessful() throws JargonException {
@@ -618,10 +590,7 @@ final class TransferQueueService {
 
 			log.error("error in transaction", e);
 			throw new JargonException(e);
-		} finally {
-			// session.close();
-			log.info("session closed");
-		}
+		} 
 	}
 
 	protected List<LocalIRODSTransfer> showErrorTransfers()
@@ -665,7 +634,6 @@ final class TransferQueueService {
 					"transferId", localIRODSTransferId);
 			final List<LocalIRODSTransferItem> irodsTransferQueue = q.list();
 
-			// session.flush();
 			tx.commit();
 
 			return irodsTransferQueue;
@@ -678,9 +646,6 @@ final class TransferQueueService {
 
 			log.error("error in transaction", e);
 			throw new JargonException(e);
-		} finally {
-			// session.close();
-			log.info("session closed");
 		}
 	}
 
@@ -711,7 +676,6 @@ final class TransferQueueService {
 			final Query q = session.createQuery(queryString).setLong(
 					"transferId", localIRODSTransferId);
 			final List<LocalIRODSTransferItem> irodsTransferQueue = q.list();
-			// session.flush();
 
 			tx.commit();
 
@@ -725,10 +689,7 @@ final class TransferQueueService {
 
 			log.error("error in transaction", e);
 			throw new JargonException(e);
-		} finally {
-			// session.close();
-			log.info("session closed");
-		}
+		} 
 	}
 
 	/**
@@ -765,9 +726,10 @@ final class TransferQueueService {
 					.setTransferErrorStatus(LocalIRODSTransfer.TRANSFER_STATUS_OK);
 			txfrToUpdate
 					.setTransferState(LocalIRODSTransfer.TRANSFER_STATE_ENQUEUED);
+			txfrToUpdate.setGlobalException("");
+			txfrToUpdate.setGlobalExceptionStackTrace("");
 			session.update(txfrToUpdate);
 			log.info("status reset and enqueued for restart");
-			// session.flush();
 			tx.commit();
 
 		} catch (RuntimeException e) {
@@ -778,11 +740,7 @@ final class TransferQueueService {
 
 			log.error("error in transaction", e);
 			throw new JargonException(e);
-		} finally {
-			// session.close();
-			log.info("session closed");
-		}
-
+		} 
 	}
 
 	/**
@@ -830,7 +788,6 @@ final class TransferQueueService {
 			query.executeUpdate();
 
 			log.info("status reset and enqueued for resubmit, old transfer items removed");
-			// session.flush();
 			tx.commit();
 
 		} catch (RuntimeException e) {
@@ -841,11 +798,7 @@ final class TransferQueueService {
 
 			log.error("error in transaction", e);
 			throw new JargonException(e);
-		} finally {
-			// session.close();
-			log.info("session closed");
-		}
-
+		} 
 	}
 
 	/**
@@ -911,7 +864,6 @@ final class TransferQueueService {
 			log.info("saving...{}", enqueuedTransfer);
 
 			session.saveOrUpdate(enqueuedTransfer);
-			// session.flush();
 			log.info("commit");
 			tx.commit();
 		} catch (RuntimeException e) {
@@ -922,11 +874,7 @@ final class TransferQueueService {
 
 			log.error("error in transaction", e);
 			throw new JargonException(e);
-		} finally {
-			// session.close();
-			log.info("session closed");
-		}
-
+		} 
 		log.info("enqueued...");
 		return enqueuedTransfer;
 
@@ -972,7 +920,6 @@ final class TransferQueueService {
 				log.info("status set to cancelled");
 			}
 
-			// session.flush();
 			tx.commit();
 
 		} catch (RuntimeException e) {
@@ -983,10 +930,7 @@ final class TransferQueueService {
 
 			log.error("error in transaction", e);
 			throw new JargonException(e);
-		} finally {
-			// session.close();
-			log.info("session closed");
-		}
+		} 
 	}
 
 	protected void purgeQueueBasedOnDate(final int retentionDays)
@@ -1010,7 +954,6 @@ final class TransferQueueService {
 			tx = session.beginTransaction();
 			Query query = session.createQuery(queryString);
 			query.executeUpdate();
-			// session.flush();
 			tx.commit();
 
 		} catch (RuntimeException e) {
@@ -1021,11 +964,7 @@ final class TransferQueueService {
 
 			log.error("error in transaction", e);
 			throw new JargonException(e);
-		} finally {
-			// session.close();
-			log.info("session closed");
-		}
-
+		} 
 	}
 
 	/**
@@ -1083,7 +1022,6 @@ final class TransferQueueService {
 			session.update(transferToReset);
 			log.info("status set to enqueued");
 
-			// session.flush();
 			tx.commit();
 
 		} catch (RuntimeException e) {
@@ -1094,10 +1032,7 @@ final class TransferQueueService {
 
 			log.error("error in transaction", e);
 			throw new JargonException(e);
-		} finally {
-			// session.close();
-			log.info("session closed");
-		}
+		} 
 	}
 
 	/**

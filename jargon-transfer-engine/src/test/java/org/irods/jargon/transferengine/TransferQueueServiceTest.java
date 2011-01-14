@@ -1485,4 +1485,180 @@ public class TransferQueueServiceTest {
 
 	}
 
+	@Test
+	public void testRestartClearsErrorAndStackTrace() throws Exception {
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		TransferQueueService transferQueueService = TransferQueueService
+				.instance();
+
+		final Session session = transferQueueService.getHibernateUtil()
+				.getSession();
+
+		Transaction tx = null;
+		final LocalIRODSTransfer enqueuedTransfer;
+		try {
+			tx = session.beginTransaction();
+			enqueuedTransfer = new LocalIRODSTransfer();
+			enqueuedTransfer.setCreatedAt(new Date());
+			enqueuedTransfer.setIrodsAbsolutePath("path");
+			enqueuedTransfer.setLocalAbsolutePath("localPath");
+			enqueuedTransfer.setLastSuccessfulPath("lastSuccessfulPath");
+			enqueuedTransfer.setTransferHost(irodsAccount.getHost());
+			enqueuedTransfer.setTransferPort(irodsAccount.getPort());
+			enqueuedTransfer.setTransferResource(irodsAccount
+					.getDefaultStorageResource());
+			enqueuedTransfer.setTransferZone(irodsAccount.getZone());
+			enqueuedTransfer.setTransferStart(new Date());
+			enqueuedTransfer.setTransferType("PUT");
+			enqueuedTransfer.setTransferUserName(irodsAccount.getUserName());
+			enqueuedTransfer.setTransferPassword(irodsAccount.getPassword());
+			enqueuedTransfer
+					.setTransferState(LocalIRODSTransfer.TRANSFER_STATE_COMPLETE);
+			enqueuedTransfer
+					.setTransferErrorStatus(LocalIRODSTransfer.TRANSFER_STATUS_ERROR);
+			enqueuedTransfer.setGlobalException("exception");
+			enqueuedTransfer.setGlobalExceptionStackTrace("stack trace");
+
+			session.save(enqueuedTransfer);
+
+			tx.commit();
+		} catch (RuntimeException e) {
+
+			if (tx != null) {
+				tx.rollback();
+			}
+
+			throw new JargonException(e);
+		}
+
+		transferQueueService.restartTransfer(enqueuedTransfer);
+
+		LocalIRODSTransfer dequeuedTransfer = transferQueueService
+				.dequeueTransfer();
+
+		TestCase.assertEquals("should be processing",
+				LocalIRODSTransfer.TRANSFER_STATE_PROCESSING,
+				dequeuedTransfer.getTransferState());
+		TestCase.assertTrue("should not have an error", dequeuedTransfer
+				.getGlobalException().isEmpty());
+		TestCase.assertTrue("should have no stack trace", dequeuedTransfer
+				.getGlobalExceptionStackTrace().isEmpty());
+	}
+
+	@Test
+	public void testRestartPreservesLastGoodPath() throws Exception {
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		TransferQueueService transferQueueService = TransferQueueService
+				.instance();
+
+		final Session session = transferQueueService.getHibernateUtil()
+				.getSession();
+
+		Transaction tx = null;
+		final LocalIRODSTransfer enqueuedTransfer;
+		try {
+			tx = session.beginTransaction();
+			enqueuedTransfer = new LocalIRODSTransfer();
+			enqueuedTransfer.setCreatedAt(new Date());
+			enqueuedTransfer.setIrodsAbsolutePath("path");
+			enqueuedTransfer.setLocalAbsolutePath("localPath");
+			enqueuedTransfer.setLastSuccessfulPath("lastSuccessfulPath");
+			enqueuedTransfer.setTransferHost(irodsAccount.getHost());
+			enqueuedTransfer.setTransferPort(irodsAccount.getPort());
+			enqueuedTransfer.setTransferResource(irodsAccount
+					.getDefaultStorageResource());
+			enqueuedTransfer.setTransferZone(irodsAccount.getZone());
+			enqueuedTransfer.setTransferStart(new Date());
+			enqueuedTransfer.setTransferType("PUT");
+			enqueuedTransfer.setTransferUserName(irodsAccount.getUserName());
+			enqueuedTransfer.setTransferPassword(irodsAccount.getPassword());
+			enqueuedTransfer
+					.setTransferState(LocalIRODSTransfer.TRANSFER_STATE_COMPLETE);
+			enqueuedTransfer
+					.setTransferErrorStatus(LocalIRODSTransfer.TRANSFER_STATUS_ERROR);
+			enqueuedTransfer.setGlobalException("exception");
+			enqueuedTransfer.setGlobalExceptionStackTrace("stack trace");
+
+			session.save(enqueuedTransfer);
+
+			tx.commit();
+		} catch (RuntimeException e) {
+
+			if (tx != null) {
+				tx.rollback();
+			}
+
+			throw new JargonException(e);
+		}
+
+		transferQueueService.restartTransfer(enqueuedTransfer);
+
+		LocalIRODSTransfer dequeuedTransfer = transferQueueService
+				.dequeueTransfer();
+
+		TestCase.assertEquals("should have retained last good path",
+				"lastSuccessfulPath", dequeuedTransfer.getLastSuccessfulPath());
+	}
+	
+	@Test
+	public void testResubmitClearsLastGoodPath() throws Exception {
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		TransferQueueService transferQueueService = TransferQueueService
+				.instance();
+
+		final Session session = transferQueueService.getHibernateUtil()
+				.getSession();
+
+		Transaction tx = null;
+		final LocalIRODSTransfer enqueuedTransfer;
+		try {
+			tx = session.beginTransaction();
+			enqueuedTransfer = new LocalIRODSTransfer();
+			enqueuedTransfer.setCreatedAt(new Date());
+			enqueuedTransfer.setIrodsAbsolutePath("path");
+			enqueuedTransfer.setLocalAbsolutePath("localPath");
+			enqueuedTransfer.setLastSuccessfulPath("lastSuccessfulPath");
+			enqueuedTransfer.setTransferHost(irodsAccount.getHost());
+			enqueuedTransfer.setTransferPort(irodsAccount.getPort());
+			enqueuedTransfer.setTransferResource(irodsAccount
+					.getDefaultStorageResource());
+			enqueuedTransfer.setTransferZone(irodsAccount.getZone());
+			enqueuedTransfer.setTransferStart(new Date());
+			enqueuedTransfer.setTransferType("PUT");
+			enqueuedTransfer.setTransferUserName(irodsAccount.getUserName());
+			enqueuedTransfer.setTransferPassword(irodsAccount.getPassword());
+			enqueuedTransfer
+					.setTransferState(LocalIRODSTransfer.TRANSFER_STATE_COMPLETE);
+			enqueuedTransfer
+					.setTransferErrorStatus(LocalIRODSTransfer.TRANSFER_STATUS_ERROR);
+			enqueuedTransfer.setGlobalException("exception");
+			enqueuedTransfer.setGlobalExceptionStackTrace("stack trace");
+
+			session.save(enqueuedTransfer);
+
+			tx.commit();
+		} catch (RuntimeException e) {
+
+			if (tx != null) {
+				tx.rollback();
+			}
+
+			throw new JargonException(e);
+		}
+
+		transferQueueService.resubmitTransfer(enqueuedTransfer);
+
+		LocalIRODSTransfer dequeuedTransfer = transferQueueService
+				.dequeueTransfer();
+
+		TestCase.assertTrue("should not have retained last good path",
+				dequeuedTransfer.getLastSuccessfulPath().isEmpty());
+	}
+
 }

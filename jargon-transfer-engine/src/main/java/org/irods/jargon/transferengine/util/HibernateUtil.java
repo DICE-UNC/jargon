@@ -121,8 +121,8 @@ public class HibernateUtil {
 		cfg.setProperty("hibernate.connection.password", "transfer");
 		cfg.setProperty("hibernate.connection.url", jdbcUrlBuilder.toString());
 		cfg.setProperty("hibernate.connection.username", "transfer");
-		cfg.setProperty("hibernate.c3p0.min_size", "2");
-		cfg.setProperty("hibernate.c3p0.max_size", "4");
+		cfg.setProperty("hibernate.c3p0.min_size", "1");
+		cfg.setProperty("hibernate.c3p0.max_size", "3");
 		cfg.setProperty("hibernate.c3p0.timeout", "1800");
 		cfg.setProperty("hibernate.c3p0.max_statements", "0");
 		cfg.setProperty("hibernate.dialect",
