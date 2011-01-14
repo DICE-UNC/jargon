@@ -18,6 +18,17 @@ import org.irods.jargon.core.exception.JargonException;
  */
 public class DefaultPropertiesJargonConfig implements JargonProperties {
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.connection.JargonProperties#
+	 * getParallelThreadsLengthThreshold()
+	 */
+	@Override
+	public long getParallelThreadsLengthThreshold() throws JargonException {
+		return verifyPropExistsAndGetAsLong("transfer.send.max.threads.threshold");
+	}
+
 	private final Properties jargonProperties;
 
 	/**
@@ -71,7 +82,7 @@ public class DefaultPropertiesJargonConfig implements JargonProperties {
 
 	private String verifyPropExistsAndGetAsString(final String propKey)
 			throws JargonException {
-		String propVal = (String) jargonProperties.get(propKey);
+		String propVal = ((String) jargonProperties.get(propKey)).trim();
 		if (propVal == null) {
 			throw new JargonException(propKey + " not set in jargon.properties");
 		}
@@ -88,6 +99,20 @@ public class DefaultPropertiesJargonConfig implements JargonProperties {
 		} catch (NumberFormatException nfe) {
 			throw new JargonException("prop " + propKey
 					+ "did not result in an int value, was:" + propVal);
+		}
+
+	}
+
+	private long verifyPropExistsAndGetAsLong(final String propKey)
+			throws JargonException {
+
+		String propVal = verifyPropExistsAndGetAsString(propKey);
+
+		try {
+			return Long.parseLong(propVal);
+		} catch (NumberFormatException nfe) {
+			throw new JargonException("prop " + propKey
+					+ "did not result in a long value, was:" + propVal);
 		}
 
 	}

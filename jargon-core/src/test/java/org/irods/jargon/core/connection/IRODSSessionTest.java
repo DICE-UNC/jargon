@@ -61,10 +61,7 @@ public class IRODSSessionTest {
 		overrideJargonProperties.setMaxParallelThreads(8000);
 		irodsSession.setJargonProperties(overrideJargonProperties);
 		JargonProperties jargonProperties = irodsSession.getJargonProperties();
-		Assert.assertEquals("did not get the preset number of threads", 8000, // FIXME:
-																				// BUG
-																				// BUG
-																				// BUG
+		Assert.assertEquals("did not get the preset number of threads", 8000, 
 				jargonProperties.getMaxParallelThreads());
 
 	}

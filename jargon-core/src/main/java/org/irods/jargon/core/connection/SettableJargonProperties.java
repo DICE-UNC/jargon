@@ -21,9 +21,22 @@ import org.irods.jargon.core.exception.JargonException;
  */
 public class SettableJargonProperties implements JargonProperties {
 
+	//FIXME: get defaults from prop and allow overrides
+	
+
 	private boolean useParallelTransfer = true;
 	private int maxParallelThreads = 4;
+	private long parallelThreadsLengthThreshold = 734003200;
 
+	
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.core.connection.JargonProperties#getParallelThreadsLengthThreshold()
+	 */
+	@Override
+	public long getParallelThreadsLengthThreshold() throws JargonException {
+		return parallelThreadsLengthThreshold;
+	}
+	
 	/*
 	 * (non-Javadoc)
 	 * 

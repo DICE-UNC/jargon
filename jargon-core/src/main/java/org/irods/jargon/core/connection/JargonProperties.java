@@ -20,12 +20,21 @@ public interface JargonProperties {
 	boolean isUseParallelTransfer() throws JargonException;
 
 	/**
-	 * If doing paralell transfers, what is the maximum number of threads I
+	 * If doing parallel transfers, what is the maximum number of threads I
 	 * should specify?
 	 * 
 	 * @return
 	 * @throws JargonException
 	 */
 	int getMaxParallelThreads() throws JargonException;
+	
+	/**
+	 * The file length above which a numThreads will be sent to iRODS in DataObjInp.  This is done for backwards compatibility.  Older
+	 * versions of iRODS will default to parallel processing if any nonzero number is sent in numThreads.
+	 * 
+	 * @return <code>long</code> in megabytes for the size above which a non-zero numThreads of value maxParallelThreads will be sent.
+	 * @throws JargonException
+	 */
+	long getParallelThreadsLengthThreshold() throws JargonException;
 
 }

@@ -252,6 +252,14 @@ public final class DataObjectAOImpl extends IRODSGenericAO implements
 			throws JargonException {
 
 		TransferOptions transferOptions = buildTransferOptionsBasedOnJargonProperties();
+		
+		log.info("testing file length to set parallel transfer options");
+		if (localFile.length() > getIRODSSession().getJargonProperties().getParallelThreadsLengthThreshold()) {
+			transferOptions.setMaxThreads(getIRODSSession().getJargonProperties().getMaxParallelThreads());
+			log.info("length above threshold, send max threads cap");
+		} else {
+			transferOptions.setMaxThreads(0);
+		}
 
 		putLocalDataObjectToIRODS(localFile, irodsFileDestination, overwrite,
 				false, transferOptions);
@@ -517,7 +525,15 @@ public final class DataObjectAOImpl extends IRODSGenericAO implements
 		}
 
 		TransferOptions transferOptions = buildTransferOptionsBasedOnJargonProperties();
-
+		
+		log.info("testing file length to set parallel transfer options");
+		if (irodsFileToGet.length() > getIRODSSession().getJargonProperties().getParallelThreadsLengthThreshold()) {
+			transferOptions.setMaxThreads(getIRODSSession().getJargonProperties().getMaxParallelThreads());
+			log.info("length above threshold, send max threads cap");
+		} else {
+			transferOptions.setMaxThreads(0);
+		}
+		
 		log.info("target local file: {}", localFile.getAbsolutePath());
 		log.info("from source file: {}", irodsFileToGet.getAbsolutePath());
 
@@ -564,6 +580,14 @@ public final class DataObjectAOImpl extends IRODSGenericAO implements
 		log.info("from source file: {}", irodsFileToGet.getAbsolutePath());
 
 		TransferOptions transferOptions = buildTransferOptionsBasedOnJargonProperties();
+		
+		log.info("testing file length to set parallel transfer options");
+		if (irodsFileToGet.length() > getIRODSSession().getJargonProperties().getParallelThreadsLengthThreshold()) {
+			transferOptions.setMaxThreads(getIRODSSession().getJargonProperties().getMaxParallelThreads());
+			log.info("length above threshold, send max threads cap");
+		} else {
+			transferOptions.setMaxThreads(0);
+		}
 
 		final DataObjInp dataObjInp = DataObjInp
 				.instanceForGetSpecifyingResource(
