@@ -62,7 +62,7 @@ public class RemoteExecuteServiceImpl implements RemoteExecutionService {
 	}
 
 	/**
-	 * static initializer for a remote execution service.
+	 * Static instance method for a remote execution service.
 	 * 
 	 * @param commandToExecuteWithoutArguments
 	 *            <code>String</code> with the name of the command to execute.
@@ -268,7 +268,9 @@ public class RemoteExecuteServiceImpl implements RemoteExecutionService {
 
 	private InputStream buildAppropriateResultStream(final Tag message,
 			final StringBuilder buffer) {
+		
 		InputStream resultStream;
+		
 		/*
 		 * see if the status descriptor holds a non zero, positive int If it
 		 * does, then I am streaming additional binary data using the int as a
@@ -279,9 +281,7 @@ public class RemoteExecuteServiceImpl implements RemoteExecutionService {
 		log.debug("status from remoteexec response:{}", status);
 		if (status > 0) {
 			log.info("additional data will be streamed, opening up will create concatenated stream");
-			// ByteArrayInputStream bis = new java.io.ByteArrayInputStream(
-			// Base64.fromString(buffer.toString()));
-
+			
 			InputStream piData = new java.io.ByteArrayInputStream(
 					Base64.decodeBase64(buffer.toString()));
 

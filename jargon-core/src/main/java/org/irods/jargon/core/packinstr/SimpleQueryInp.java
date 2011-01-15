@@ -16,7 +16,7 @@ import edu.sdsc.grid.io.irods.Tag;
  * This object is immutable and thread-safe.
  * <p/>
  * This is used in cases where it is easier to do a straight-forward SQL query
- * rather than go thru the generalQuery interface. This is used this in the
+ * rather than go thru the generalQuery interface. This is used in the
  * iadmin.c interface as it was easier to work in SQL for admin type ops.
  * <p/>
  * For improved security, this is available only to admin users and the code
@@ -29,6 +29,8 @@ import edu.sdsc.grid.io.irods.Tag;
  * positive it is the statement number (+1) that is being continued. format 1:
  * column-name : column value, and with CR after each column format 2: column
  * headings CR, rows and col values with CR.
+ * <p/>
+ * This implementation will default to format 2, as this is used to formulate a result set.
  * 
  * @author Mike Conway - DICE (www.irods.org)
  * 
@@ -94,11 +96,35 @@ public class SimpleQueryInp extends AbstractIRODSPackingInstruction {
 	 */
 	@Override
 	public Tag getTagValue() throws JargonException {
+		
+		String arg1 = "";
+		String arg2 = "";
+		String arg3 = "";
+		String arg4 = "";
+		
+		int sz = simpleQuery.getArguments().size();
+		
+		if (sz >0 && simpleQuery.getArguments().get(0) != null) {
+			arg1 = simpleQuery.getArguments().get(0);
+		}
+		
+		if (sz > 1 && simpleQuery.getArguments().get(1) != null) {
+			arg2 = simpleQuery.getArguments().get(1);
+		}
+		
+		if (sz > 2 && simpleQuery.getArguments().get(2) != null) {
+			arg3 = simpleQuery.getArguments().get(2);
+		}
+		
+		if (sz > 3 && simpleQuery.getArguments().get(3) != null) {
+			arg4 = simpleQuery.getArguments().get(3);
+		}
+		
 		Tag message = new Tag(PI_TAG, new Tag[] {
 				new Tag(SQL, simpleQuery.getQueryString()),
-				new Tag(ARG1, simpleQuery.getArguments()), new Tag(ARG2, ""),
-				new Tag(ARG3, ""), new Tag(ARG4, ""), new Tag(CONTROL, 0),
-				new Tag(FORM, 1), new Tag(MAX_BUF_SIZE, maxBuffSize), });
+				new Tag(ARG1, arg1), new Tag(ARG2, arg2),
+				new Tag(ARG3, arg3), new Tag(ARG4, arg4), new Tag(CONTROL, simpleQuery.getContinuationValue()),
+				new Tag(FORM, 2), new Tag(MAX_BUF_SIZE, maxBuffSize), });
 
 		return message;
 

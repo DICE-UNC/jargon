@@ -1,5 +1,8 @@
 package org.irods.jargon.core.query;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import junit.framework.Assert;
 
 import org.junit.Test;
@@ -7,33 +10,75 @@ import org.junit.Test;
 public class SimpleQueryTest {
 
 	@Test
-	public void testInstanceValid() throws Exception {
+	public void testInstanceOneArgValid() throws Exception {
 		String query = "query";
 		String args = "args";
-		SimpleQuery sq = SimpleQuery.instance(query, args);
+		SimpleQuery sq = SimpleQuery.instanceWithOneArgument(query, args, 0);
 		Assert.assertEquals("invalid query value", query, sq.getQueryString());
-		Assert.assertEquals("invalid args", args, sq.getArguments());
+		Assert.assertEquals("invalid args",1, sq.getArguments().size());
 	}
 
 	@Test(expected = IllegalArgumentException.class)
-	public void testInstanceNullQuery() throws Exception {
+	public void testInstanceWithOneArgumentNullQuery() throws Exception {
 		String query = null;
 		String args = "args";
-		SimpleQuery.instance(query, args);
+		SimpleQuery.instanceWithOneArgument(query, args, 0);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
-	public void testInstanceNullArgs() throws Exception {
+	public void testInstanceWithOneArgumentNullArgs() throws Exception {
 		String query = "query";
 		String args = null;
-		SimpleQuery.instance(query, args);
+		SimpleQuery.instanceWithOneArgument(query, args, 0);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
-	public void testInstanceBlankQuery() throws Exception {
+	public void testInstanceWithOneArgumentBlankQuery() throws Exception {
 		String query = "";
 		String args = "";
-		SimpleQuery.instance(query, args);
+		SimpleQuery.instanceWithOneArgument(query, args, 0);
 	}
+	
+	@Test(expected=IllegalArgumentException.class)
+	public void testInstaceTooManyParms() throws Exception {
+		List<String> parms = new ArrayList<String>();
+		parms.add("parm1");
+		parms.add("parm2");
+		parms.add("parm3");
+		parms.add("parm4");
+		parms.add("parm5");
+
+		SimpleQuery.instance("query", parms,
+				0);
+	}
+	
+	
+	@Test
+	public void testInstanceTwoArgsValid() throws Exception {
+		String query = "query";
+		String arg1 = "arg1";
+		String arg2 = "arg2";
+		SimpleQuery sq = SimpleQuery.instanceWithTwoArguments(query, arg1, arg2, 0);
+		Assert.assertEquals("invalid query value", query, sq.getQueryString());
+		Assert.assertEquals("invalid args",2, sq.getArguments().size());
+		Assert.assertEquals("did not set args correctly", arg1, sq.getArguments().get(0));
+		Assert.assertEquals("did not set args correctly", arg2, sq.getArguments().get(1));
+
+	}
+	
+	@Test(expected=IllegalArgumentException.class)
+	public void testInstanceTwoArgsSecondArgBlank() throws Exception {
+		String query = "query";
+		String arg1 = "arg1";
+		String arg2 = "";
+		 SimpleQuery.instanceWithTwoArguments(query, arg1, arg2, 0);
+	}
+	
+	@Test
+	public void testInstanceNullArray() throws Exception {
+		SimpleQuery sq = SimpleQuery.instance("xxx", null, 0);
+		Assert.assertNotNull("should have initialized blank array", sq.getArguments());
+	}
+
 
 }

@@ -334,6 +334,17 @@ public final class IRODSAccessObjectFactoryImpl implements
 		return new CollectionAndDataObjectListAndSearchAOImpl(irodsSession,
 				irodsAccount);
 	}
+	
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.core.pub.IRODSAccessObjectFactory#getSimpleQueryExecutorAO(org.irods.jargon.core.connection.IRODSAccount)
+	 */
+	@Override
+	public SimpleQueryExecutorAO getSimpleQueryExecutorAO(
+			final IRODSAccount irodsAccount) throws JargonException {
+		checkIrodsSessionSet();
+		return new SimpleQueryExecutorAOImpl(irodsSession,
+				irodsAccount);
+	}
 
 	/*
 	 * (non-Javadoc)

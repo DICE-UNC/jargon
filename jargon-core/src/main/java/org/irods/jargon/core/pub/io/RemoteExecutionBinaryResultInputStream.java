@@ -113,7 +113,6 @@ public class RemoteExecutionBinaryResultInputStream extends InputStream {
 
 			Tag message = irodsCommands.irodsFunction(fileReadInp);
 
-			// Need the total dataSize
 			if (message == null) {
 				log.warn("null response from iRODS on send of command, treat as eof");
 				return -1;

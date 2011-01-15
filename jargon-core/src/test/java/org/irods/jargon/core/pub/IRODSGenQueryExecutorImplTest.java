@@ -51,7 +51,6 @@ public class IRODSGenQueryExecutorImplTest {
 		irodsTestSetupUtilities
 				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
 
-		// put in the thousand files
 		String testFilePrefix = "IRODSGenQueryExcecutorImplTest";
 		String testFileSuffix = ".txt";
 		String absPath = scratchFileUtils

@@ -283,4 +283,15 @@ public interface IRODSAccessObjectFactory {
 	BulkFileOperationsAO getBulkFileOperationsAO(IRODSAccount irodsAccount)
 			throws JargonException;
 
+	/**
+	 * Returns a <code>SimpleQueryExecutorAO</code> that can execute queries on iRODS using the 
+	 * Simple Query facility.  This allows direct SQL queries using pre-arranged statements.  These queries
+	 * are typically used for various admin functions, and require admin rights.
+	 * @param irodsAccount
+	 * @return {@link SimpleQeryExecutorAO} to send and process results of a simple query.
+	 * @throws JargonException
+	 */
+	SimpleQueryExecutorAO getSimpleQueryExecutorAO(IRODSAccount irodsAccount)
+			throws JargonException;
+
 }

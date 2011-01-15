@@ -30,7 +30,7 @@ import org.junit.runners.Suite;
 		ModAvuMetadataInpTest.class, ExecMyRuleInp_PITest.class,
 		UserAdminInpTest.class, StructFileExtAndRegInpTest.class,
 		FileReadInpTest.class, ExecCmdStreamCloseTest.class,
-		SimpleQueryInpTest.class })
+		SimpleQueryInpTest.class, SimpleQueryInpTest.class })
 public class PackingInstructionTests {
 
 }
