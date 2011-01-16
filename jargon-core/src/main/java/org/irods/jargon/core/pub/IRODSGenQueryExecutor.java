@@ -4,8 +4,9 @@
 package org.irods.jargon.core.pub;
 
 import org.irods.jargon.core.exception.JargonException;
-import org.irods.jargon.core.query.IRODSQuery;
+import org.irods.jargon.core.query.IRODSGenQuery;
 import org.irods.jargon.core.query.IRODSQueryResultSet;
+import org.irods.jargon.core.query.IRODSQueryResultSetInterface;
 import org.irods.jargon.core.query.JargonQueryException;
 
 /**
@@ -26,7 +27,7 @@ public interface IRODSGenQueryExecutor extends IRODSAccessObject {
 	 * object.
 	 * 
 	 * @param irodsQuery
-	 *            {@link org.irods.jargon.core.query.IRODSQuery} that will wrap
+	 *            {@link org.irods.jargon.core.query.IRODSGenQuery} that will wrap
 	 *            the given iquest-like query
 	 * @param continueIndex
 	 *            <code>int</code> that indicates whether this is a requery when
@@ -36,7 +37,7 @@ public interface IRODSGenQueryExecutor extends IRODSAccessObject {
 	 * @throws JargonException
 	 * @throws JargonQueryException
 	 */
-	IRODSQueryResultSet executeIRODSQuery(final IRODSQuery irodsQuery,
+	IRODSQueryResultSet executeIRODSQuery(final IRODSGenQuery irodsQuery,
 			final int continueIndex) throws JargonException,
 			JargonQueryException;
 
@@ -46,7 +47,7 @@ public interface IRODSGenQueryExecutor extends IRODSAccessObject {
 	 * results
 	 * 
 	 * @param irodsQuery
-	 *            {@link org.irods.jargon.core.query.IRODSQuery} that will wrap
+	 *            {@link org.irods.jargon.core.query.IRODSGenQuery} that will wrap
 	 *            the given iquest-like query
 	 * @param partialStartIndex
 	 *            <code>int</code> that indicates an offset within the results
@@ -56,8 +57,8 @@ public interface IRODSGenQueryExecutor extends IRODSAccessObject {
 	 * @throws JargonException
 	 * @throws JargonQueryException
 	 */
-	IRODSQueryResultSet executeIRODSQueryWithPaging(
-			final IRODSQuery irodsQuery, final int partialStartIndex)
+	IRODSQueryResultSetInterface executeIRODSQueryWithPaging(
+			final IRODSGenQuery irodsQuery, final int partialStartIndex)
 			throws JargonException, JargonQueryException;
 
 	/**

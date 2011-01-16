@@ -24,9 +24,9 @@ import org.irods.jargon.core.pub.domain.Resource;
 import org.irods.jargon.core.pub.domain.Zone;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.query.AVUQueryElement;
-import org.irods.jargon.core.query.IRODSQuery;
+import org.irods.jargon.core.query.IRODSGenQuery;
 import org.irods.jargon.core.query.IRODSQueryResultRow;
-import org.irods.jargon.core.query.IRODSQueryResultSet;
+import org.irods.jargon.core.query.IRODSQueryResultSetInterface;
 import org.irods.jargon.core.query.JargonQueryException;
 import org.irods.jargon.core.query.MetaDataAndDomainData;
 import org.irods.jargon.core.query.MetaDataAndDomainData.MetadataDomain;
@@ -85,10 +85,10 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 			log.info("query:" + queryString);
 		}
 
-		final IRODSQuery irodsQuery = IRODSQuery.instance(queryString,
+		final IRODSGenQuery irodsQuery = IRODSGenQuery.instance(queryString,
 				DEFAULT_REC_COUNT);
 
-		IRODSQueryResultSet resultSet;
+		IRODSQueryResultSetInterface resultSet;
 		try {
 			resultSet = irodsGenQueryExecutorImpl.executeIRODSQuery(irodsQuery,
 					DEFAULT_REC_COUNT);
@@ -147,10 +147,10 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 			log.info("query:{}", queryString);
 		}
 
-		IRODSQuery irodsQuery = IRODSQuery.instance(queryString,
+		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(queryString,
 				DEFAULT_REC_COUNT);
 
-		IRODSQueryResultSet resultSet;
+		IRODSQueryResultSetInterface resultSet;
 		try {
 			resultSet = irodsGenQueryExecutorImpl.executeIRODSQuery(irodsQuery,
 					DEFAULT_REC_COUNT);
@@ -201,10 +201,10 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 			log.info("user query:{}", queryString);
 		}
 
-		IRODSQuery irodsQuery = IRODSQuery.instance(queryString,
+		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(queryString,
 				DEFAULT_REC_COUNT);
 
-		IRODSQueryResultSet resultSet;
+		IRODSQueryResultSetInterface resultSet;
 		try {
 			resultSet = irodsGenQueryExecutorImpl.executeIRODSQuery(irodsQuery,
 					0);
@@ -267,9 +267,9 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 			log.info("resource query:{}", toString());
 		}
 
-		IRODSQuery irodsQuery = IRODSQuery.instance(queryString, 500);
+		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(queryString, 500);
 
-		IRODSQueryResultSet resultSet;
+		IRODSQueryResultSetInterface resultSet;
 		try {
 			resultSet = irodsGenQueryExecutorImpl.executeIRODSQuery(irodsQuery,
 					0);
@@ -321,9 +321,9 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 			log.info("resource query:" + toString());
 		}
 
-		IRODSQuery irodsQuery = IRODSQuery.instance(queryString, 500);
+		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(queryString, 500);
 
-		IRODSQueryResultSet resultSet;
+		IRODSQueryResultSetInterface resultSet;
 		try {
 			resultSet = irodsGenQueryExecutorImpl.executeIRODSQuery(irodsQuery,
 					0);
@@ -362,12 +362,12 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 		sb.append(resourceName);
 		sb.append("'");
 		log.debug("resource avu list query: {}", sb.toString());
-		final IRODSQuery irodsQuery = IRODSQuery.instance(sb.toString(),
+		final IRODSGenQuery irodsQuery = IRODSGenQuery.instance(sb.toString(),
 				DEFAULT_REC_COUNT);
 		final IRODSGenQueryExecutorImpl irodsGenQueryExecutorImpl = new IRODSGenQueryExecutorImpl(
 				this.getIRODSSession(), this.getIRODSAccount());
 
-		IRODSQueryResultSet resultSet;
+		IRODSQueryResultSetInterface resultSet;
 
 		try {
 			resultSet = irodsGenQueryExecutorImpl.executeIRODSQuery(irodsQuery,
@@ -414,10 +414,10 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 			log.info("query: " + queryString);
 		}
 
-		IRODSQuery irodsQuery = IRODSQuery.instance(queryString,
+		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(queryString,
 				DEFAULT_REC_COUNT);
 
-		IRODSQueryResultSet resultSet;
+		IRODSQueryResultSetInterface resultSet;
 		try {
 			resultSet = irodsGenQueryExecutorImpl.executeIRODSQuery(irodsQuery,
 					0);
@@ -494,10 +494,10 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 		String queryString = query.toString();
 		log.debug("query string for AVU query: {}", queryString);
 
-		IRODSQuery irodsQuery = IRODSQuery.instance(queryString,
+		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(queryString,
 				DEFAULT_REC_COUNT);
 
-		IRODSQueryResultSet resultSet;
+		IRODSQueryResultSetInterface resultSet;
 		try {
 			resultSet = irodsGenQueryExecutorImpl.executeIRODSQuery(irodsQuery,
 					0);
@@ -607,7 +607,7 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 	}
 
 	private List<Resource> buildResourceListFromResultSet(
-			final IRODSQueryResultSet resultSet) throws JargonException {
+			final IRODSQueryResultSetInterface resultSet) throws JargonException {
 
 		List<Resource> resources = new ArrayList<Resource>();
 

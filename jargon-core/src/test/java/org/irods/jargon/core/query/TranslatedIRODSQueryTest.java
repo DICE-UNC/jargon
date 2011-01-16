@@ -22,40 +22,40 @@ public class TranslatedIRODSQueryTest {
 
 	@Test
 	public final void testInstance() throws Exception {
-		List<SelectField> selectFields = new ArrayList<SelectField>();
-		SelectField field = SelectField.instance(
+		List<GenQuerySelectField> selectFields = new ArrayList<GenQuerySelectField>();
+		GenQuerySelectField field = GenQuerySelectField.instance(
 				RodsGenQueryEnum.COL_AUDIT_ACTION_ID.name(), String
 						.valueOf(RodsGenQueryEnum.COL_AUDIT_ACTION_ID
 								.getNumericValue()),
-				SelectField.SelectFieldTypes.FIELD,
-				SelectField.SelectFieldSource.DEFINED_QUERY_FIELD);
+				GenQuerySelectField.SelectFieldTypes.FIELD,
+				GenQuerySelectField.SelectFieldSource.DEFINED_QUERY_FIELD);
 		selectFields.add(field);
-		List<TranslatedQueryCondition> queryConditions = new ArrayList<TranslatedQueryCondition>();
-		IRODSQuery query = IRODSQuery.instance("hello", 100);
-		TranslatedIRODSQuery translatedQuery = TranslatedIRODSQuery.instance(
+		List<TranslatedGenQueryCondition> queryConditions = new ArrayList<TranslatedGenQueryCondition>();
+		IRODSGenQuery query = IRODSGenQuery.instance("hello", 100);
+		TranslatedIRODSGenQuery translatedQuery = TranslatedIRODSGenQuery.instance(
 				selectFields, queryConditions, query);
 		Assert.assertNotNull("translated query not created", translatedQuery);
 	}
 
 	@Test(expected = JargonException.class)
 	public final void testInstanceNullSelects() throws Exception {
-		List<TranslatedQueryCondition> queryConditions = new ArrayList<TranslatedQueryCondition>();
-		IRODSQuery query = IRODSQuery.instance("hello", 100);
-		TranslatedIRODSQuery.instance(null, queryConditions, query);
+		List<TranslatedGenQueryCondition> queryConditions = new ArrayList<TranslatedGenQueryCondition>();
+		IRODSGenQuery query = IRODSGenQuery.instance("hello", 100);
+		TranslatedIRODSGenQuery.instance(null, queryConditions, query);
 	}
 
 	@Test(expected = JargonException.class)
 	public final void testInstanceNullConditions() throws Exception {
-		List<SelectField> selectFields = new ArrayList<SelectField>();
-		SelectField field = SelectField.instance(
+		List<GenQuerySelectField> selectFields = new ArrayList<GenQuerySelectField>();
+		GenQuerySelectField field = GenQuerySelectField.instance(
 				RodsGenQueryEnum.COL_AUDIT_ACTION_ID.name(), String
 						.valueOf(RodsGenQueryEnum.COL_AUDIT_ACTION_ID
 								.getNumericValue()),
-				SelectField.SelectFieldTypes.FIELD,
-				SelectField.SelectFieldSource.DEFINED_QUERY_FIELD);
+				GenQuerySelectField.SelectFieldTypes.FIELD,
+				GenQuerySelectField.SelectFieldSource.DEFINED_QUERY_FIELD);
 		selectFields.add(field);
-		IRODSQuery query = IRODSQuery.instance("hello", 100);
-		TranslatedIRODSQuery.instance(selectFields, null, query);
+		IRODSGenQuery query = IRODSGenQuery.instance("hello", 100);
+		TranslatedIRODSGenQuery.instance(selectFields, null, query);
 
 	}
 }

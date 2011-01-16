@@ -10,9 +10,9 @@ import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 import org.irods.jargon.core.pub.IRODSGenQueryExecutor;
-import org.irods.jargon.core.query.IRODSQuery;
+import org.irods.jargon.core.query.IRODSGenQuery;
 import org.irods.jargon.core.query.IRODSQueryResultRow;
-import org.irods.jargon.core.query.IRODSQueryResultSet;
+import org.irods.jargon.core.query.IRODSQueryResultSetInterface;
 import org.irods.jargon.core.query.JargonQueryException;
 import org.irods.jargon.core.query.RodsGenQueryEnum;
 import org.irods.jargon.core.utils.IRODSDataConversionUtil;
@@ -170,10 +170,10 @@ public final class UserTagCloudServiceImpl extends AbstractIRODSTaggingService
 		String cloudQuery = sb.toString();
 		log.debug("cloud tag query:{}", cloudQuery);
 
-		IRODSQuery irodsQuery = IRODSQuery.instance(cloudQuery, 2000);
+		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(cloudQuery, 2000);
 		IRODSGenQueryExecutor irodsGenQueryExecutor = irodsAccessObjectFactory
 				.getIRODSGenQueryExecutor(irodsAccount);
-		IRODSQueryResultSet resultSet;
+		IRODSQueryResultSetInterface resultSet;
 
 		try {
 			resultSet = irodsGenQueryExecutor.executeIRODSQuery(irodsQuery, 0);
@@ -252,10 +252,10 @@ public final class UserTagCloudServiceImpl extends AbstractIRODSTaggingService
 		String cloudQuery = sb.toString();
 		log.debug("cloud tag query:{}", cloudQuery);
 
-		IRODSQuery irodsQuery = IRODSQuery.instance(cloudQuery, 2000);
+		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(cloudQuery, 2000);
 		IRODSGenQueryExecutor irodsGenQueryExecutor = irodsAccessObjectFactory
 				.getIRODSGenQueryExecutor(irodsAccount);
-		IRODSQueryResultSet resultSet;
+		IRODSQueryResultSetInterface resultSet;
 
 		try {
 			resultSet = irodsGenQueryExecutor.executeIRODSQuery(irodsQuery, 0);

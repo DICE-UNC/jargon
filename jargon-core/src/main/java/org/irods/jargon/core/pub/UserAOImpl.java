@@ -16,9 +16,9 @@ import org.irods.jargon.core.packinstr.UserAdminInp;
 import org.irods.jargon.core.protovalues.UserTypeEnum;
 import org.irods.jargon.core.pub.domain.AvuData;
 import org.irods.jargon.core.pub.domain.User;
-import org.irods.jargon.core.query.IRODSQuery;
+import org.irods.jargon.core.query.IRODSGenQuery;
 import org.irods.jargon.core.query.IRODSQueryResultRow;
-import org.irods.jargon.core.query.IRODSQueryResultSet;
+import org.irods.jargon.core.query.IRODSQueryResultSetInterface;
 import org.irods.jargon.core.query.JargonQueryException;
 import org.irods.jargon.core.query.RodsGenQueryEnum;
 import org.irods.jargon.core.security.IRODSPasswordUtilities;
@@ -73,12 +73,12 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 		sb.append(userId);
 		sb.append("'");
 		log.debug("user avu list query: {}", sb.toString());
-		final IRODSQuery irodsQuery = IRODSQuery.instance(sb.toString(),
+		final IRODSGenQuery irodsQuery = IRODSGenQuery.instance(sb.toString(),
 				DEFAULT_REC_COUNT);
 		final IRODSGenQueryExecutorImpl irodsGenQueryExecutorImpl = new IRODSGenQueryExecutorImpl(
 				this.getIRODSSession(), this.getIRODSAccount());
 
-		IRODSQueryResultSet resultSet;
+		IRODSQueryResultSetInterface resultSet;
 
 		try {
 			resultSet = irodsGenQueryExecutorImpl.executeIRODSQuery(irodsQuery,
@@ -182,10 +182,10 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 			log.info("user query:" + userQueryString);
 		}
 
-		IRODSQuery irodsQuery = IRODSQuery.instance(userQueryString,
+		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(userQueryString,
 				DEFAULT_REC_COUNT);
 
-		IRODSQueryResultSet resultSet;
+		IRODSQueryResultSetInterface resultSet;
 		try {
 			resultSet = irodsGenQueryExecutorImpl.executeIRODSQuery(irodsQuery,
 					0);
@@ -234,10 +234,10 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 			log.info("user query: " + userQueryString);
 		}
 
-		IRODSQuery irodsQuery = IRODSQuery.instance(userQueryString,
+		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(userQueryString,
 				DEFAULT_REC_COUNT);
 
-		IRODSQueryResultSet resultSet;
+		IRODSQueryResultSetInterface resultSet;
 		try {
 			resultSet = irodsGenQueryExecutorImpl.executeIRODSQuery(irodsQuery,
 					0);
@@ -286,10 +286,10 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 			log.info("user query:" + userQueryString);
 		}
 
-		IRODSQuery irodsQuery = IRODSQuery.instance(userQueryString,
+		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(userQueryString,
 				DEFAULT_REC_COUNT);
 
-		IRODSQueryResultSet resultSet;
+		IRODSQueryResultSetInterface resultSet;
 		try {
 			resultSet = irodsGenQueryExecutorImpl.executeIRODSQuery(irodsQuery,
 					0);
@@ -372,10 +372,10 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 			log.info("user query:" + userQueryString);
 		}
 
-		IRODSQuery irodsQuery = IRODSQuery.instance(userQueryString,
+		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(userQueryString,
 				DEFAULT_REC_COUNT);
 
-		IRODSQueryResultSet resultSet;
+		IRODSQueryResultSetInterface resultSet;
 		try {
 			resultSet = irodsGenQueryExecutorImpl.executeIRODSQuery(irodsQuery,
 					DEFAULT_REC_COUNT);
@@ -461,10 +461,10 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 			log.info("user dn query:" + userQueryString);
 		}
 
-		IRODSQuery irodsQuery = IRODSQuery.instance(userQueryString,
+		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(userQueryString,
 				DEFAULT_REC_COUNT);
 
-		IRODSQueryResultSet resultSet;
+		IRODSQueryResultSetInterface resultSet;
 		try {
 			resultSet = irodsGenQueryExecutorImpl.executeIRODSQuery(irodsQuery,
 					DEFAULT_REC_COUNT);

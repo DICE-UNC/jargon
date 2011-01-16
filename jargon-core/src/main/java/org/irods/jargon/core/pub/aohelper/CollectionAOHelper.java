@@ -12,7 +12,7 @@ import org.irods.jargon.core.query.AVUQueryElement;
 import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry;
 import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry.ObjectType;
 import org.irods.jargon.core.query.IRODSQueryResultRow;
-import org.irods.jargon.core.query.IRODSQueryResultSet;
+import org.irods.jargon.core.query.IRODSQueryResultSetInterface;
 import org.irods.jargon.core.query.RodsGenQueryEnum;
 import org.irods.jargon.core.utils.IRODSDataConversionUtil;
 import org.slf4j.Logger;
@@ -177,7 +177,7 @@ public class CollectionAOHelper extends AOHelper {
 	}
 
 	public static List<Collection> buildListFromResultSet(
-			final IRODSQueryResultSet resultSet) throws JargonException {
+			final IRODSQueryResultSetInterface resultSet) throws JargonException {
 
 		final List<Collection> collections = new ArrayList<Collection>();
 

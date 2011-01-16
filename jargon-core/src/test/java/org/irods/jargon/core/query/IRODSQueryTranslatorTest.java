@@ -25,7 +25,7 @@ public class IRODSQueryTranslatorTest {
 		IRODSServerProperties props = IRODSServerProperties.instance(
 				IRODSServerProperties.IcatEnabled.ICAT_ENABLED, 100, "rods2.3",
 				"d", "zone");
-		new IRODSQueryTranslator(props);
+		new IRODSGenQueryTranslator(props);
 
 	}
 
@@ -33,7 +33,7 @@ public class IRODSQueryTranslatorTest {
 	public final void testIRODSQueryTranslatorNullServerProps()
 			throws Exception {
 		// test passes if no exceptions were thrown
-		new IRODSQueryTranslator(null);
+		new IRODSGenQueryTranslator(null);
 	}
 
 	@Test
@@ -42,7 +42,7 @@ public class IRODSQueryTranslatorTest {
 		IRODSServerProperties props = IRODSServerProperties.instance(
 				IRODSServerProperties.IcatEnabled.ICAT_ENABLED, 100, "rods2.2",
 				"d", "zone");
-		IRODSQueryTranslator translator = new IRODSQueryTranslator(props);
+		IRODSGenQueryTranslator translator = new IRODSGenQueryTranslator(props);
 		List<String> selects = translator.parseSelectsIntoListOfNames(query);
 		TestCase.assertEquals(2, selects.size());
 		TestCase.assertEquals("blah", selects.get(0));
@@ -56,7 +56,7 @@ public class IRODSQueryTranslatorTest {
 		IRODSServerProperties props = IRODSServerProperties.instance(
 				IRODSServerProperties.IcatEnabled.ICAT_ENABLED, 100, "rods2.2",
 				"d", "zone");
-		IRODSQueryTranslator translator = new IRODSQueryTranslator(props);
+		IRODSGenQueryTranslator translator = new IRODSGenQueryTranslator(props);
 		translator.parseSelectsIntoListOfNames(query);
 
 	}
@@ -67,11 +67,11 @@ public class IRODSQueryTranslatorTest {
 		IRODSServerProperties props = IRODSServerProperties.instance(
 				IRODSServerProperties.IcatEnabled.ICAT_ENABLED, 100, "rods2.2",
 				"d", "zone");
-		IRODSQueryTranslator translator = new IRODSQueryTranslator(props);
-		List<QueryCondition> conditions = translator
+		IRODSGenQueryTranslator translator = new IRODSGenQueryTranslator(props);
+		List<GenQueryCondition> conditions = translator
 				.parseConditionsIntoList(query);
 		TestCase.assertEquals(1, conditions.size());
-		QueryCondition cond = conditions.get(0);
+		GenQueryCondition cond = conditions.get(0);
 		TestCase.assertEquals("a", cond.getFieldName());
 		TestCase.assertEquals("=", cond.getOperator());
 		TestCase.assertEquals("1", cond.getValue());
@@ -84,11 +84,11 @@ public class IRODSQueryTranslatorTest {
 		IRODSServerProperties props = IRODSServerProperties.instance(
 				IRODSServerProperties.IcatEnabled.ICAT_ENABLED, 100, "rods2.2",
 				"d", "zone");
-		IRODSQueryTranslator translator = new IRODSQueryTranslator(props);
-		List<QueryCondition> conditions = translator
+		IRODSGenQueryTranslator translator = new IRODSGenQueryTranslator(props);
+		List<GenQueryCondition> conditions = translator
 				.parseConditionsIntoList(query);
 		TestCase.assertEquals(1, conditions.size());
-		QueryCondition cond = conditions.get(0);
+		GenQueryCondition cond = conditions.get(0);
 		TestCase.assertEquals("a", cond.getFieldName());
 		TestCase.assertEquals("=", cond.getOperator());
 		TestCase.assertEquals("1", cond.getValue());
@@ -102,7 +102,7 @@ public class IRODSQueryTranslatorTest {
 		IRODSServerProperties props = IRODSServerProperties.instance(
 				IRODSServerProperties.IcatEnabled.ICAT_ENABLED, 100, "rods2.2",
 				"d", "zone");
-		IRODSQueryTranslator translator = new IRODSQueryTranslator(props);
+		IRODSGenQueryTranslator translator = new IRODSGenQueryTranslator(props);
 		translator.parseConditionsIntoList(query);
 
 	}
@@ -114,7 +114,7 @@ public class IRODSQueryTranslatorTest {
 		IRODSServerProperties props = IRODSServerProperties.instance(
 				IRODSServerProperties.IcatEnabled.ICAT_ENABLED, 100, "rods2.2",
 				"d", "zone");
-		IRODSQueryTranslator translator = new IRODSQueryTranslator(props);
+		IRODSGenQueryTranslator translator = new IRODSGenQueryTranslator(props);
 		translator.parseConditionsIntoList(query);
 
 	}
@@ -125,11 +125,11 @@ public class IRODSQueryTranslatorTest {
 		IRODSServerProperties props = IRODSServerProperties.instance(
 				IRODSServerProperties.IcatEnabled.ICAT_ENABLED, 100, "rods2.2",
 				"d", "zone");
-		IRODSQueryTranslator translator = new IRODSQueryTranslator(props);
-		List<QueryCondition> conditions = translator
+		IRODSGenQueryTranslator translator = new IRODSGenQueryTranslator(props);
+		List<GenQueryCondition> conditions = translator
 				.parseConditionsIntoList(query);
 		TestCase.assertEquals(2, conditions.size());
-		QueryCondition cond = conditions.get(0);
+		GenQueryCondition cond = conditions.get(0);
 		TestCase.assertEquals("a", cond.getFieldName());
 		TestCase.assertEquals("=", cond.getOperator());
 		TestCase.assertEquals("1", cond.getValue());
@@ -148,11 +148,11 @@ public class IRODSQueryTranslatorTest {
 		IRODSServerProperties props = IRODSServerProperties.instance(
 				IRODSServerProperties.IcatEnabled.ICAT_ENABLED, 100, "rods2.4",
 				"d", "zone");
-		IRODSQueryTranslator translator = new IRODSQueryTranslator(props);
-		List<QueryCondition> conditions = translator
+		IRODSGenQueryTranslator translator = new IRODSGenQueryTranslator(props);
+		List<GenQueryCondition> conditions = translator
 				.parseConditionsIntoList(query);
 		TestCase.assertEquals(2, conditions.size());
-		QueryCondition cond = conditions.get(0);
+		GenQueryCondition cond = conditions.get(0);
 		TestCase.assertEquals("COLL_NAME", cond.getFieldName());
 		TestCase.assertEquals("=", cond.getOperator());
 		TestCase.assertEquals("'/test1/home/test1/test-scratch/IRODSFileTest'",
@@ -172,8 +172,8 @@ public class IRODSQueryTranslatorTest {
 		IRODSServerProperties props = IRODSServerProperties.instance(
 				IRODSServerProperties.IcatEnabled.ICAT_ENABLED, 100, "rods2.2",
 				"d", "zone");
-		IRODSQueryTranslator translator = new IRODSQueryTranslator(props);
-		List<QueryCondition> conditions = translator
+		IRODSGenQueryTranslator translator = new IRODSGenQueryTranslator(props);
+		List<GenQueryCondition> conditions = translator
 				.parseConditionsIntoList(query);
 		TestCase.assertEquals(0, conditions.size());
 	}
@@ -184,7 +184,7 @@ public class IRODSQueryTranslatorTest {
 		IRODSServerProperties props = IRODSServerProperties.instance(
 				IRODSServerProperties.IcatEnabled.ICAT_ENABLED, 100, "rods2.2",
 				"d", "zone");
-		IRODSQueryTranslator translator = new IRODSQueryTranslator(props);
+		IRODSGenQueryTranslator translator = new IRODSGenQueryTranslator(props);
 		translator.parseConditionsIntoList(query);
 	}
 
@@ -194,7 +194,7 @@ public class IRODSQueryTranslatorTest {
 		IRODSServerProperties props = IRODSServerProperties.instance(
 				IRODSServerProperties.IcatEnabled.ICAT_ENABLED, 100, "rods2.2",
 				"d", "zone");
-		IRODSQueryTranslator translator = new IRODSQueryTranslator(props);
+		IRODSGenQueryTranslator translator = new IRODSGenQueryTranslator(props);
 		translator.parseConditionsIntoList(query);
 	}
 
@@ -208,18 +208,18 @@ public class IRODSQueryTranslatorTest {
 		IRODSServerProperties props = IRODSServerProperties.instance(
 				IRODSServerProperties.IcatEnabled.ICAT_ENABLED, 100, "rods2.2",
 				"d", "zone");
-		IRODSQueryTranslator translator = new IRODSQueryTranslator(props);
+		IRODSGenQueryTranslator translator = new IRODSGenQueryTranslator(props);
 
-		IRODSQuery irodsQuery = IRODSQuery.instance(query, 10);
+		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(query, 10);
 
-		TranslatedIRODSQuery translatedQuery = translator
+		TranslatedIRODSGenQuery translatedQuery = translator
 				.getTranslatedQuery(irodsQuery);
 		TestCase.assertEquals(2, translatedQuery.getSelectFields().size());
-		SelectField sel1 = translatedQuery.getSelectFields().get(0);
+		GenQuerySelectField sel1 = translatedQuery.getSelectFields().get(0);
 		TestCase.assertEquals(
 				RodsGenQueryEnum.COL_DATA_ACCESS_DATA_ID.getName(),
 				sel1.getSelectFieldColumnName());
-		SelectField sel2 = translatedQuery.getSelectFields().get(1);
+		GenQuerySelectField sel2 = translatedQuery.getSelectFields().get(1);
 		TestCase.assertEquals(RodsGenQueryEnum.COL_AUDIT_USER_ID.getName(),
 				sel2.getSelectFieldColumnName());
 	}
@@ -233,11 +233,11 @@ public class IRODSQueryTranslatorTest {
 		IRODSServerProperties props = IRODSServerProperties.instance(
 				IRODSServerProperties.IcatEnabled.ICAT_ENABLED, 100, "rods2.2",
 				"d", "zone");
-		IRODSQueryTranslator translator = new IRODSQueryTranslator(props);
+		IRODSGenQueryTranslator translator = new IRODSGenQueryTranslator(props);
 
-		IRODSQuery irodsQuery = IRODSQuery.instance(query, 10);
+		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(query, 10);
 
-		TranslatedIRODSQuery translatedQuery = translator
+		TranslatedIRODSGenQuery translatedQuery = translator
 				.getTranslatedQuery(irodsQuery);
 		TestCase.assertTrue("this should be classified as a distinct query",
 				translatedQuery.isDistinct());
@@ -253,11 +253,11 @@ public class IRODSQueryTranslatorTest {
 		IRODSServerProperties props = IRODSServerProperties.instance(
 				IRODSServerProperties.IcatEnabled.ICAT_ENABLED, 100, "rods2.2",
 				"d", "zone");
-		IRODSQueryTranslator translator = new IRODSQueryTranslator(props);
+		IRODSGenQueryTranslator translator = new IRODSGenQueryTranslator(props);
 
-		IRODSQuery irodsQuery = IRODSQuery.instance(query, 10);
+		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(query, 10);
 
-		TranslatedIRODSQuery translatedQuery = translator
+		TranslatedIRODSGenQuery translatedQuery = translator
 				.getTranslatedQuery(irodsQuery);
 		TestCase.assertFalse(
 				"this should not be classified as a distinct query",
@@ -274,9 +274,9 @@ public class IRODSQueryTranslatorTest {
 		IRODSServerProperties props = IRODSServerProperties.instance(
 				IRODSServerProperties.IcatEnabled.ICAT_ENABLED, 100, "rods2.2",
 				"d", "zone");
-		IRODSQueryTranslator translator = new IRODSQueryTranslator(props);
+		IRODSGenQueryTranslator translator = new IRODSGenQueryTranslator(props);
 
-		IRODSQuery irodsQuery = IRODSQuery.instance(query, 10);
+		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(query, 10);
 
 		translator.getTranslatedQuery(irodsQuery);
 
@@ -291,11 +291,11 @@ public class IRODSQueryTranslatorTest {
 		IRODSServerProperties props = IRODSServerProperties.instance(
 				IRODSServerProperties.IcatEnabled.ICAT_ENABLED, 100, "rods2.2",
 				"d", "zone");
-		IRODSQueryTranslator translator = new IRODSQueryTranslator(props);
+		IRODSGenQueryTranslator translator = new IRODSGenQueryTranslator(props);
 
-		IRODSQuery irodsQuery = IRODSQuery.instance(query, 10);
+		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(query, 10);
 
-		TranslatedIRODSQuery translatedQuery = translator
+		TranslatedIRODSGenQuery translatedQuery = translator
 				.getTranslatedQuery(irodsQuery);
 		TestCase.assertFalse(
 				"this should not be classified as a distinct query",
@@ -311,19 +311,19 @@ public class IRODSQueryTranslatorTest {
 		IRODSServerProperties props = IRODSServerProperties.instance(
 				IRODSServerProperties.IcatEnabled.ICAT_ENABLED, 100, "rods2.2",
 				"d", "zone");
-		IRODSQueryTranslator translator = new IRODSQueryTranslator(props);
+		IRODSGenQueryTranslator translator = new IRODSGenQueryTranslator(props);
 
-		IRODSQuery irodsQuery = IRODSQuery.instance(query, 10);
+		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(query, 10);
 
-		TranslatedIRODSQuery translatedQuery = translator
+		TranslatedIRODSGenQuery translatedQuery = translator
 				.getTranslatedQuery(irodsQuery);
 		TestCase.assertEquals(1, translatedQuery.getSelectFields().size());
-		SelectField sel1 = translatedQuery.getSelectFields().get(0);
+		GenQuerySelectField sel1 = translatedQuery.getSelectFields().get(0);
 		TestCase.assertEquals("field not translated",
 				RodsGenQueryEnum.COL_DATA_ACCESS_DATA_ID.getName(),
 				sel1.getSelectFieldColumnName());
 		TestCase.assertEquals("did not classify as a count()",
-				SelectField.SelectFieldTypes.COUNT, sel1.getSelectFieldType());
+				GenQuerySelectField.SelectFieldTypes.COUNT, sel1.getSelectFieldType());
 
 	}
 
@@ -335,19 +335,19 @@ public class IRODSQueryTranslatorTest {
 		IRODSServerProperties props = IRODSServerProperties.instance(
 				IRODSServerProperties.IcatEnabled.ICAT_ENABLED, 100, "rods2.2",
 				"d", "zone");
-		IRODSQueryTranslator translator = new IRODSQueryTranslator(props);
+		IRODSGenQueryTranslator translator = new IRODSGenQueryTranslator(props);
 
-		IRODSQuery irodsQuery = IRODSQuery.instance(query, 10);
+		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(query, 10);
 
-		TranslatedIRODSQuery translatedQuery = translator
+		TranslatedIRODSGenQuery translatedQuery = translator
 				.getTranslatedQuery(irodsQuery);
 		TestCase.assertEquals(1, translatedQuery.getSelectFields().size());
-		SelectField sel1 = translatedQuery.getSelectFields().get(0);
+		GenQuerySelectField sel1 = translatedQuery.getSelectFields().get(0);
 		TestCase.assertEquals("field not translated",
 				RodsGenQueryEnum.COL_DATA_ACCESS_DATA_ID.getName(),
 				sel1.getSelectFieldColumnName());
 		TestCase.assertEquals("did not classify as a count()",
-				SelectField.SelectFieldTypes.SUM, sel1.getSelectFieldType());
+				GenQuerySelectField.SelectFieldTypes.SUM, sel1.getSelectFieldType());
 
 	}
 
@@ -359,19 +359,19 @@ public class IRODSQueryTranslatorTest {
 		IRODSServerProperties props = IRODSServerProperties.instance(
 				IRODSServerProperties.IcatEnabled.ICAT_ENABLED, 100, "rods2.2",
 				"d", "zone");
-		IRODSQueryTranslator translator = new IRODSQueryTranslator(props);
+		IRODSGenQueryTranslator translator = new IRODSGenQueryTranslator(props);
 
-		IRODSQuery irodsQuery = IRODSQuery.instance(query, 10);
+		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(query, 10);
 
-		TranslatedIRODSQuery translatedQuery = translator
+		TranslatedIRODSGenQuery translatedQuery = translator
 				.getTranslatedQuery(irodsQuery);
 		TestCase.assertEquals(1, translatedQuery.getSelectFields().size());
-		SelectField sel1 = translatedQuery.getSelectFields().get(0);
+		GenQuerySelectField sel1 = translatedQuery.getSelectFields().get(0);
 		TestCase.assertEquals("field not translated",
 				RodsGenQueryEnum.COL_DATA_ACCESS_DATA_ID.getName(),
 				sel1.getSelectFieldColumnName());
 		TestCase.assertEquals("did not classify as a count()",
-				SelectField.SelectFieldTypes.AVG, sel1.getSelectFieldType());
+				GenQuerySelectField.SelectFieldTypes.AVG, sel1.getSelectFieldType());
 
 	}
 
@@ -383,19 +383,19 @@ public class IRODSQueryTranslatorTest {
 		IRODSServerProperties props = IRODSServerProperties.instance(
 				IRODSServerProperties.IcatEnabled.ICAT_ENABLED, 100, "rods2.2",
 				"d", "zone");
-		IRODSQueryTranslator translator = new IRODSQueryTranslator(props);
+		IRODSGenQueryTranslator translator = new IRODSGenQueryTranslator(props);
 
-		IRODSQuery irodsQuery = IRODSQuery.instance(query, 10);
+		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(query, 10);
 
-		TranslatedIRODSQuery translatedQuery = translator
+		TranslatedIRODSGenQuery translatedQuery = translator
 				.getTranslatedQuery(irodsQuery);
 		TestCase.assertEquals(1, translatedQuery.getSelectFields().size());
-		SelectField sel1 = translatedQuery.getSelectFields().get(0);
+		GenQuerySelectField sel1 = translatedQuery.getSelectFields().get(0);
 		TestCase.assertEquals("field not translated",
 				RodsGenQueryEnum.COL_DATA_ACCESS_DATA_ID.getName(),
 				sel1.getSelectFieldColumnName());
 		TestCase.assertEquals("did not classify as a count()",
-				SelectField.SelectFieldTypes.MIN, sel1.getSelectFieldType());
+				GenQuerySelectField.SelectFieldTypes.MIN, sel1.getSelectFieldType());
 
 	}
 
@@ -407,19 +407,19 @@ public class IRODSQueryTranslatorTest {
 		IRODSServerProperties props = IRODSServerProperties.instance(
 				IRODSServerProperties.IcatEnabled.ICAT_ENABLED, 100, "rods2.2",
 				"d", "zone");
-		IRODSQueryTranslator translator = new IRODSQueryTranslator(props);
+		IRODSGenQueryTranslator translator = new IRODSGenQueryTranslator(props);
 
-		IRODSQuery irodsQuery = IRODSQuery.instance(query, 10);
+		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(query, 10);
 
-		TranslatedIRODSQuery translatedQuery = translator
+		TranslatedIRODSGenQuery translatedQuery = translator
 				.getTranslatedQuery(irodsQuery);
 		TestCase.assertEquals(1, translatedQuery.getSelectFields().size());
-		SelectField sel1 = translatedQuery.getSelectFields().get(0);
+		GenQuerySelectField sel1 = translatedQuery.getSelectFields().get(0);
 		TestCase.assertEquals("field not translated",
 				RodsGenQueryEnum.COL_DATA_ACCESS_DATA_ID.getName(),
 				sel1.getSelectFieldColumnName());
 		TestCase.assertEquals("did not classify as a count()",
-				SelectField.SelectFieldTypes.MAX, sel1.getSelectFieldType());
+				GenQuerySelectField.SelectFieldTypes.MAX, sel1.getSelectFieldType());
 
 	}
 
@@ -432,9 +432,9 @@ public class IRODSQueryTranslatorTest {
 		IRODSServerProperties props = IRODSServerProperties.instance(
 				IRODSServerProperties.IcatEnabled.ICAT_ENABLED, 100, "rods2.2",
 				"d", "zone");
-		IRODSQueryTranslator translator = new IRODSQueryTranslator(props);
+		IRODSGenQueryTranslator translator = new IRODSGenQueryTranslator(props);
 
-		IRODSQuery irodsQuery = IRODSQuery.instance(query, 10);
+		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(query, 10);
 
 		translator.getTranslatedQuery(irodsQuery);
 
@@ -449,9 +449,9 @@ public class IRODSQueryTranslatorTest {
 		IRODSServerProperties props = IRODSServerProperties.instance(
 				IRODSServerProperties.IcatEnabled.ICAT_ENABLED, 100, "rods2.2",
 				"d", "zone");
-		IRODSQueryTranslator translator = new IRODSQueryTranslator(props);
+		IRODSGenQueryTranslator translator = new IRODSGenQueryTranslator(props);
 
-		IRODSQuery irodsQuery = IRODSQuery.instance(query, 10);
+		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(query, 10);
 
 		translator.getTranslatedQuery(irodsQuery);
 
@@ -466,9 +466,9 @@ public class IRODSQueryTranslatorTest {
 		IRODSServerProperties props = IRODSServerProperties.instance(
 				IRODSServerProperties.IcatEnabled.ICAT_ENABLED, 100, "rods2.2",
 				"d", "zone");
-		IRODSQueryTranslator translator = new IRODSQueryTranslator(props);
+		IRODSGenQueryTranslator translator = new IRODSGenQueryTranslator(props);
 
-		IRODSQuery irodsQuery = IRODSQuery.instance(query, 10);
+		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(query, 10);
 
 		translator.getTranslatedQuery(irodsQuery);
 
@@ -482,14 +482,14 @@ public class IRODSQueryTranslatorTest {
 		IRODSServerProperties props = IRODSServerProperties.instance(
 				IRODSServerProperties.IcatEnabled.ICAT_ENABLED, 100, "rods2.2",
 				"d", "zone");
-		IRODSQueryTranslator translator = new IRODSQueryTranslator(props);
+		IRODSGenQueryTranslator translator = new IRODSGenQueryTranslator(props);
 
-		IRODSQuery irodsQuery = IRODSQuery.instance(query, 10);
+		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(query, 10);
 
-		TranslatedIRODSQuery translatedQuery = translator
+		TranslatedIRODSGenQuery translatedQuery = translator
 				.getTranslatedQuery(irodsQuery);
 		TestCase.assertEquals(1, translatedQuery.getSelectFields().size());
-		SelectField sel1 = translatedQuery.getSelectFields().get(0);
+		GenQuerySelectField sel1 = translatedQuery.getSelectFields().get(0);
 		TestCase.assertNull("should have null indicating irods lookup failed",
 				sel1);
 
@@ -503,19 +503,19 @@ public class IRODSQueryTranslatorTest {
 		IRODSServerProperties props = IRODSServerProperties.instance(
 				IRODSServerProperties.IcatEnabled.ICAT_ENABLED, 100, "rods2.2",
 				"d", "zone");
-		IRODSQueryTranslator translator = new IRODSQueryTranslator(props);
+		IRODSGenQueryTranslator translator = new IRODSGenQueryTranslator(props);
 
-		IRODSQuery irodsQuery = IRODSQuery.instance(query, 10);
+		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(query, 10);
 
-		TranslatedIRODSQuery translatedQuery = translator
+		TranslatedIRODSGenQuery translatedQuery = translator
 				.getTranslatedQuery(irodsQuery);
 		TestCase.assertEquals(1, translatedQuery.getSelectFields().size());
-		SelectField sel1 = translatedQuery.getSelectFields().get(0);
+		GenQuerySelectField sel1 = translatedQuery.getSelectFields().get(0);
 		TestCase.assertEquals("field not translated",
 				RodsGenQueryEnum.COL_DATA_ACCESS_DATA_ID.getName(),
 				sel1.getSelectFieldColumnName());
 		TestCase.assertEquals("did not classify as a count()",
-				SelectField.SelectFieldTypes.SUM, sel1.getSelectFieldType());
+				GenQuerySelectField.SelectFieldTypes.SUM, sel1.getSelectFieldType());
 
 	}
 
@@ -530,23 +530,23 @@ public class IRODSQueryTranslatorTest {
 		IRODSServerProperties props = IRODSServerProperties.instance(
 				IRODSServerProperties.IcatEnabled.ICAT_ENABLED, 100, "rods2.2",
 				"d", "zone");
-		IRODSQueryTranslator translator = new IRODSQueryTranslator(props);
+		IRODSGenQueryTranslator translator = new IRODSGenQueryTranslator(props);
 
-		IRODSQuery irodsQuery = IRODSQuery.instance(query, 10);
+		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(query, 10);
 
-		TranslatedIRODSQuery translatedQuery = translator
+		TranslatedIRODSGenQuery translatedQuery = translator
 				.getTranslatedQuery(irodsQuery);
 		TestCase.assertEquals(2, translatedQuery.getSelectFields().size());
-		SelectField sel1 = translatedQuery.getSelectFields().get(0);
+		GenQuerySelectField sel1 = translatedQuery.getSelectFields().get(0);
 		TestCase.assertEquals(
 				RodsGenQueryEnum.COL_DATA_ACCESS_DATA_ID.getName(),
 				sel1.getSelectFieldColumnName());
-		SelectField sel2 = translatedQuery.getSelectFields().get(1);
+		GenQuerySelectField sel2 = translatedQuery.getSelectFields().get(1);
 		TestCase.assertEquals(RodsGenQueryEnum.COL_AUDIT_USER_ID.getName(),
 				sel2.getSelectFieldColumnName());
 		TestCase.assertEquals(1, translatedQuery.getTranslatedQueryConditions()
 				.size());
-		TranslatedQueryCondition testCondition = translatedQuery
+		TranslatedGenQueryCondition testCondition = translatedQuery
 				.getTranslatedQueryConditions().get(0);
 		TestCase.assertEquals(RodsGenQueryEnum.COL_AUDIT_OBJ_ID.getName(),
 				testCondition.getColumnName());
@@ -565,19 +565,19 @@ public class IRODSQueryTranslatorTest {
 		IRODSServerProperties props = IRODSServerProperties.instance(
 				IRODSServerProperties.IcatEnabled.ICAT_ENABLED, 100, "rods2.2",
 				"d", "zone");
-		IRODSQueryTranslator translator = new IRODSQueryTranslator(props);
+		IRODSGenQueryTranslator translator = new IRODSGenQueryTranslator(props);
 
-		IRODSQuery irodsQuery = IRODSQuery.instance(query, 10);
+		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(query, 10);
 
-		TranslatedIRODSQuery translatedQuery = translator
+		TranslatedIRODSGenQuery translatedQuery = translator
 				.getTranslatedQuery(irodsQuery);
 
 		TestCase.assertEquals(1, translatedQuery.getTranslatedQueryConditions()
 				.size());
-		TranslatedQueryCondition testCondition = translatedQuery
+		TranslatedGenQueryCondition testCondition = translatedQuery
 				.getTranslatedQueryConditions().get(0);
 		TestCase.assertEquals("this should be an irods gen query field",
-				SelectField.SelectFieldSource.DEFINED_QUERY_FIELD,
+				GenQuerySelectField.SelectFieldSource.DEFINED_QUERY_FIELD,
 				testCondition.getFieldSource());
 	}
 
@@ -598,9 +598,9 @@ public class IRODSQueryTranslatorTest {
 		IRODSServerProperties props = IRODSServerProperties.instance(
 				IRODSServerProperties.IcatEnabled.ICAT_ENABLED, 100, "rods2.2",
 				"d", "zone");
-		IRODSQueryTranslator translator = new IRODSQueryTranslator(props);
+		IRODSGenQueryTranslator translator = new IRODSGenQueryTranslator(props);
 
-		IRODSQuery irodsQuery = IRODSQuery.instance(queryString, 10);
+		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(queryString, 10);
 
 		translator.getTranslatedQuery(irodsQuery);
 	}
@@ -621,9 +621,9 @@ public class IRODSQueryTranslatorTest {
 		IRODSServerProperties props = IRODSServerProperties.instance(
 				IRODSServerProperties.IcatEnabled.ICAT_ENABLED, 100, "rods2.2",
 				"d", "zone");
-		IRODSQueryTranslator translator = new IRODSQueryTranslator(props);
+		IRODSGenQueryTranslator translator = new IRODSGenQueryTranslator(props);
 
-		IRODSQuery irodsQuery = IRODSQuery.instance(queryString, 10);
+		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(queryString, 10);
 
 		translator.getTranslatedQuery(irodsQuery);
 	}
@@ -639,16 +639,16 @@ public class IRODSQueryTranslatorTest {
 		IRODSServerProperties props = IRODSServerProperties.instance(
 				IRODSServerProperties.IcatEnabled.ICAT_ENABLED, 100, "rods2.2",
 				"d", "zone");
-		IRODSQueryTranslator translator = new IRODSQueryTranslator(props);
+		IRODSGenQueryTranslator translator = new IRODSGenQueryTranslator(props);
 
-		IRODSQuery irodsQuery = IRODSQuery.instance(query, 10);
+		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(query, 10);
 
-		TranslatedIRODSQuery translatedQuery = translator
+		TranslatedIRODSGenQuery translatedQuery = translator
 				.getTranslatedQuery(irodsQuery);
 
 		TestCase.assertEquals(1, translatedQuery.getTranslatedQueryConditions()
 				.size());
-		TranslatedQueryCondition testCondition = translatedQuery
+		TranslatedGenQueryCondition testCondition = translatedQuery
 				.getTranslatedQueryConditions().get(0);
 		TestCase.assertEquals(
 				"this should be looked up and translated to irods code", String
@@ -663,9 +663,9 @@ public class IRODSQueryTranslatorTest {
 		IRODSServerProperties props = IRODSServerProperties.instance(
 				IRODSServerProperties.IcatEnabled.ICAT_ENABLED, 100, "rods2.2",
 				"d", "zone");
-		IRODSQueryTranslator translator = new IRODSQueryTranslator(props);
+		IRODSGenQueryTranslator translator = new IRODSGenQueryTranslator(props);
 
-		IRODSQuery irodsQuery = IRODSQuery.instance(query, 10);
+		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(query, 10);
 
 		translator.getTranslatedQuery(irodsQuery);
 

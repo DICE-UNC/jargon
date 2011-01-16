@@ -7,9 +7,9 @@ package org.irods.jargon.core.packinstr;
 import static edu.sdsc.grid.io.irods.IRODSConstants.options;
 
 import org.irods.jargon.core.exception.JargonException;
-import org.irods.jargon.core.query.SelectField;
-import org.irods.jargon.core.query.TranslatedIRODSQuery;
-import org.irods.jargon.core.query.TranslatedQueryCondition;
+import org.irods.jargon.core.query.GenQuerySelectField;
+import org.irods.jargon.core.query.TranslatedIRODSGenQuery;
+import org.irods.jargon.core.query.TranslatedGenQueryCondition;
 
 import edu.sdsc.grid.io.irods.Tag;
 
@@ -29,7 +29,7 @@ import edu.sdsc.grid.io.irods.Tag;
 public class GenQueryInp extends AbstractIRODSPackingInstruction implements
 		IRodsPI {
 
-	private final TranslatedIRODSQuery translatedIRODSQuery;
+	private final TranslatedIRODSGenQuery translatedIRODSQuery;
 	private final int continueIndex;
 	private final int partialStartIndex;
 	public static final String PI_TAG = "GenQueryInp_PI";
@@ -57,7 +57,7 @@ public class GenQueryInp extends AbstractIRODSPackingInstruction implements
 	 * @throws JargonException
 	 */
 	public static GenQueryInp instance(
-			final TranslatedIRODSQuery translatedIRODSQuery,
+			final TranslatedIRODSGenQuery translatedIRODSQuery,
 			final int continueIndex) throws JargonException {
 		return new GenQueryInp(translatedIRODSQuery, continueIndex, 0);
 	}
@@ -78,12 +78,12 @@ public class GenQueryInp extends AbstractIRODSPackingInstruction implements
 	 * @throws JargonException
 	 */
 	public static GenQueryInp instanceWithPartialStart(
-			final TranslatedIRODSQuery translatedIRODSQuery,
+			final TranslatedIRODSGenQuery translatedIRODSQuery,
 			final int partialStartIndex) throws JargonException {
 		return new GenQueryInp(translatedIRODSQuery, 0, partialStartIndex);
 	}
 
-	private GenQueryInp(final TranslatedIRODSQuery translatedIRODSQuery,
+	private GenQueryInp(final TranslatedIRODSGenQuery translatedIRODSQuery,
 			final int continueIndex, final int partialStartIndex)
 			throws JargonException {
 		if (translatedIRODSQuery == null) {
@@ -117,14 +117,14 @@ public class GenQueryInp extends AbstractIRODSPackingInstruction implements
 	}
 
 	/**
-	 * @return {@link org.irods.jargon.core.domain.TranslatedIRODSQuery
+	 * @return {@link org.irods.jargon.core.TranslatedIRODSGenQuery.TranslatedIRODSQuery
 	 *         TranslatedIRODSQuery} represents the parsed view of the query.
 	 *         Note that an exception is thrown if the translated query has not
 	 *         been derived TODO: refactor out, possibly with a return container
 	 *         of multiple objects in getParsedTags()
 	 * @throws JargonException
 	 */
-	public TranslatedIRODSQuery getTranslatedIRODSQuery()
+	public TranslatedIRODSGenQuery getTranslatedIRODSQuery()
 			throws JargonException {
 		if (translatedIRODSQuery == null) {
 			throw new JargonException("no translated query");
@@ -156,26 +156,26 @@ public class GenQueryInp extends AbstractIRODSPackingInstruction implements
 		subTags[0] = new Tag(IILEN, translatedIRODSQuery.getSelectFields()
 				.size());
 
-		for (SelectField select : translatedIRODSQuery.getSelectFields()) {
+		for (GenQuerySelectField select : translatedIRODSQuery.getSelectFields()) {
 			subTags[j] = new Tag(INX, select.getSelectFieldNumericTranslation());
 			j++;
 
 		}
 
-		for (SelectField select : translatedIRODSQuery.getSelectFields()) {
-			if (select.getSelectFieldType() == SelectField.SelectFieldTypes.FIELD) {
+		for (GenQuerySelectField select : translatedIRODSQuery.getSelectFields()) {
+			if (select.getSelectFieldType() == GenQuerySelectField.SelectFieldTypes.FIELD) {
 				subTags[j] = new Tag(IVALUE, 1);
-			} else if (select.getSelectFieldType() == SelectField.SelectFieldTypes.AVG) {
+			} else if (select.getSelectFieldType() == GenQuerySelectField.SelectFieldTypes.AVG) {
 				subTags[j] = new Tag(IVALUE, 5);
-			} else if (select.getSelectFieldType() == SelectField.SelectFieldTypes.COUNT) {
+			} else if (select.getSelectFieldType() == GenQuerySelectField.SelectFieldTypes.COUNT) {
 				subTags[j] = new Tag(IVALUE, 6);
-			} else if (select.getSelectFieldType() == SelectField.SelectFieldTypes.MAX) {
+			} else if (select.getSelectFieldType() == GenQuerySelectField.SelectFieldTypes.MAX) {
 				subTags[j] = new Tag(IVALUE, 3);
-			} else if (select.getSelectFieldType() == SelectField.SelectFieldTypes.MIN) {
+			} else if (select.getSelectFieldType() == GenQuerySelectField.SelectFieldTypes.MIN) {
 				subTags[j] = new Tag(IVALUE, 2);
-			} else if (select.getSelectFieldType() == SelectField.SelectFieldTypes.SUM) {
+			} else if (select.getSelectFieldType() == GenQuerySelectField.SelectFieldTypes.SUM) {
 				subTags[j] = new Tag(IVALUE, 4);
-			} else if (select.getSelectFieldType() == SelectField.SelectFieldTypes.FILE_ACCESS) {
+			} else if (select.getSelectFieldType() == GenQuerySelectField.SelectFieldTypes.FILE_ACCESS) {
 				subTags[j] = new Tag(IVALUE, 1024);
 			} else {
 				throw new JargonException(
@@ -198,13 +198,13 @@ public class GenQueryInp extends AbstractIRODSPackingInstruction implements
 			subTags[0] = new Tag(ISLEN, translatedIRODSQuery
 					.getTranslatedQueryConditions().size());
 			j = 1;
-			for (TranslatedQueryCondition queryCondition : translatedIRODSQuery
+			for (TranslatedGenQueryCondition queryCondition : translatedIRODSQuery
 					.getTranslatedQueryConditions()) {
 				subTags[j] = new Tag(INX,
 						queryCondition.getColumnNumericTranslation());
 				j++;
 			}
-			for (TranslatedQueryCondition queryCondition : translatedIRODSQuery
+			for (TranslatedGenQueryCondition queryCondition : translatedIRODSQuery
 					.getTranslatedQueryConditions()) {
 				// New for loop because they have to be in a certain order...
 				subTags[j] = new Tag(SVALUE, " " + queryCondition.getOperator()

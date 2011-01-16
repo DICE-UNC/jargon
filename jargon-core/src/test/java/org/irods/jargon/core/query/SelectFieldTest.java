@@ -20,36 +20,36 @@ public class SelectFieldTest {
 	@Test
 	public final void testInstanceRodsGenQueryEnumSelectFieldTypesSelectFieldSource()
 			throws Exception {
-		SelectField selectField = SelectField.instance(
+		GenQuerySelectField selectField = GenQuerySelectField.instance(
 				RodsGenQueryEnum.COL_AUDIT_ACTION_ID,
-				SelectField.SelectFieldTypes.FIELD,
-				SelectField.SelectFieldSource.DEFINED_QUERY_FIELD);
+				GenQuerySelectField.SelectFieldTypes.FIELD,
+				GenQuerySelectField.SelectFieldSource.DEFINED_QUERY_FIELD);
 		Assert.assertNotNull("null instance", selectField);
 	}
 
 	@Test(expected = JargonException.class)
 	public final void testInstanceNullRodsGenQueryEnum() throws Exception {
-		SelectField.instance(null, SelectField.SelectFieldTypes.FIELD,
-				SelectField.SelectFieldSource.DEFINED_QUERY_FIELD);
+		GenQuerySelectField.instance(null, GenQuerySelectField.SelectFieldTypes.FIELD,
+				GenQuerySelectField.SelectFieldSource.DEFINED_QUERY_FIELD);
 	}
 
 	@Test(expected = JargonException.class)
 	public final void testInstanceNullSelectFieldType() throws Exception {
-		SelectField.instance(RodsGenQueryEnum.COL_AUDIT_ACTION_ID, null,
-				SelectField.SelectFieldSource.DEFINED_QUERY_FIELD);
+		GenQuerySelectField.instance(RodsGenQueryEnum.COL_AUDIT_ACTION_ID, null,
+				GenQuerySelectField.SelectFieldSource.DEFINED_QUERY_FIELD);
 	}
 
 	@Test(expected = JargonException.class)
 	public final void testInstanceNullSelectFieldSource() throws Exception {
-		SelectField.instance(RodsGenQueryEnum.COL_AUDIT_ACTION_ID,
-				SelectField.SelectFieldTypes.FIELD, null);
+		GenQuerySelectField.instance(RodsGenQueryEnum.COL_AUDIT_ACTION_ID,
+				GenQuerySelectField.SelectFieldTypes.FIELD, null);
 	}
 
 	@Test
 	public final void testInstanceWithNameAndType() throws Exception {
-		SelectField selectField = SelectField.instance("blah", "1234",
-				SelectField.SelectFieldTypes.FIELD,
-				SelectField.SelectFieldSource.DEFINED_QUERY_FIELD);
+		GenQuerySelectField selectField = GenQuerySelectField.instance("blah", "1234",
+				GenQuerySelectField.SelectFieldTypes.FIELD,
+				GenQuerySelectField.SelectFieldSource.DEFINED_QUERY_FIELD);
 		Assert.assertNotNull("null instance", selectField);
 	}
 

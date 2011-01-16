@@ -9,7 +9,7 @@ import java.util.List;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.domain.AvuData;
 import org.irods.jargon.core.query.IRODSQueryResultRow;
-import org.irods.jargon.core.query.IRODSQueryResultSet;
+import org.irods.jargon.core.query.IRODSQueryResultSetInterface;
 import org.irods.jargon.core.query.MetaDataAndDomainData;
 import org.irods.jargon.core.query.MetaDataAndDomainData.MetadataDomain;
 import org.slf4j.Logger;
@@ -33,7 +33,7 @@ public class AccessObjectQueryProcessingUtils {
 	 * @throws JargonException
 	 */
 	public static List<AvuData> buildAvuDataListFromResultSet(
-			final IRODSQueryResultSet resultSet) throws JargonException {
+			final IRODSQueryResultSetInterface resultSet) throws JargonException {
 		final List<AvuData> avuDatas = new ArrayList<AvuData>();
 		AvuData avuData = null;
 
@@ -63,7 +63,7 @@ public class AccessObjectQueryProcessingUtils {
 	 */
 	public static List<MetaDataAndDomainData> buildMetaDataAndDomainDatalistFromResultSet(
 			final MetadataDomain metaDataDomain,
-			final IRODSQueryResultSet irodsQueryResultSet)
+			final IRODSQueryResultSetInterface irodsQueryResultSet)
 			throws JargonException {
 		if (metaDataDomain == null) {
 			throw new JargonException("null metaDataDomain");

@@ -9,12 +9,13 @@ import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.packinstr.GenQueryInp;
 import org.irods.jargon.core.packinstr.GenQueryOut;
-import org.irods.jargon.core.query.IRODSQuery;
+import org.irods.jargon.core.query.IRODSGenQuery;
 import org.irods.jargon.core.query.IRODSQueryResultRow;
 import org.irods.jargon.core.query.IRODSQueryResultSet;
-import org.irods.jargon.core.query.IRODSQueryTranslator;
+import org.irods.jargon.core.query.IRODSGenQueryTranslator;
+import org.irods.jargon.core.query.IRODSQueryResultSetInterface;
 import org.irods.jargon.core.query.JargonQueryException;
-import org.irods.jargon.core.query.TranslatedIRODSQuery;
+import org.irods.jargon.core.query.TranslatedIRODSGenQuery;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,7 +31,7 @@ import edu.sdsc.grid.io.irods.Tag;
 public final class IRODSGenQueryExecutorImpl extends IRODSGenericAO implements
 		IRODSGenQueryExecutor {
 
-	private Logger log = LoggerFactory.getLogger(this.getClass());
+	private static final  Logger log = LoggerFactory.getLogger(IRODSGenQueryExecutorImpl.class);
 
 	/**
 	 * Constructor for implementation class, called by
@@ -62,13 +63,13 @@ public final class IRODSGenQueryExecutorImpl extends IRODSGenericAO implements
 	 * .irods.jargon.core.query.IRODSQuery, int)
 	 */
 	@Override
-	public IRODSQueryResultSet executeIRODSQuery(final IRODSQuery irodsQuery,
+	public IRODSQueryResultSet executeIRODSQuery(final IRODSGenQuery irodsQuery,
 			final int continueIndex) throws JargonException,
 			JargonQueryException {
 		log.info("executing irods query: {}", irodsQuery.getQueryString());
-		IRODSQueryTranslator irodsQueryTranslator = new IRODSQueryTranslator(
+		IRODSGenQueryTranslator irodsQueryTranslator = new IRODSGenQueryTranslator(
 				getIRODSServerProperties());
-		TranslatedIRODSQuery translatedIRODSQuery = irodsQueryTranslator
+		TranslatedIRODSGenQuery translatedIRODSQuery = irodsQueryTranslator
 				.getTranslatedQuery(irodsQuery);
 		return executeTranslatedIRODSQuery(translatedIRODSQuery, 0, 0);
 	}
@@ -81,14 +82,14 @@ public final class IRODSGenQueryExecutorImpl extends IRODSGenericAO implements
 	 * (org.irods.jargon.core.query.IRODSQuery, int)
 	 */
 	@Override
-	public IRODSQueryResultSet executeIRODSQueryWithPaging(
-			final IRODSQuery irodsQuery, final int partialStartIndex)
+	public IRODSQueryResultSetInterface executeIRODSQueryWithPaging(
+			final IRODSGenQuery irodsQuery, final int partialStartIndex)
 			throws JargonException, JargonQueryException {
 
 		log.info("executing irods query: {}", irodsQuery.getQueryString());
-		IRODSQueryTranslator irodsQueryTranslator = new IRODSQueryTranslator(
+		IRODSGenQueryTranslator irodsQueryTranslator = new IRODSGenQueryTranslator(
 				getIRODSServerProperties());
-		TranslatedIRODSQuery translatedIRODSQuery = irodsQueryTranslator
+		TranslatedIRODSGenQuery translatedIRODSQuery = irodsQueryTranslator
 				.getTranslatedQuery(irodsQuery);
 
 		return executeTranslatedIRODSQuery(translatedIRODSQuery, 0,
@@ -107,7 +108,7 @@ public final class IRODSGenQueryExecutorImpl extends IRODSGenericAO implements
 	 * @throws JargonException
 	 */
 	private IRODSQueryResultSet executeTranslatedIRODSQuery(
-			final TranslatedIRODSQuery translatedIRODSQuery,
+			final TranslatedIRODSGenQuery translatedIRODSQuery,
 			final int continueIndex, final int partialStartIndex)
 			throws JargonException {
 
@@ -172,7 +173,7 @@ public final class IRODSGenQueryExecutorImpl extends IRODSGenericAO implements
 	 *            <code>Tag</code> set with the raw GenQuery response from
 	 *            iRODS.
 	 * @param translatedIRODSQuery
-	 *            {@link org.irods.jargon.core.query.TranslatedIRODSQuery} that
+	 *            {@link org.irods.jargon.core.query.TranslatedIRODSGenQuery} that
 	 *            has information about the query used to obtain the given
 	 *            response
 	 * @param continuation
@@ -184,7 +185,7 @@ public final class IRODSGenQueryExecutorImpl extends IRODSGenericAO implements
 	 */
 	private List<IRODSQueryResultRow> translateResponseIntoResultSet(
 			final Tag queryResponse,
-			final TranslatedIRODSQuery translatedIRODSQuery,
+			final TranslatedIRODSGenQuery translatedIRODSQuery,
 			final int continuation) throws JargonException {
 
 		List<IRODSQueryResultRow> resultSet = new ArrayList<IRODSQueryResultRow>();

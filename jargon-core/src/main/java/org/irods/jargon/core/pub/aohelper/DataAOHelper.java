@@ -10,7 +10,7 @@ import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.domain.DataObject;
 import org.irods.jargon.core.query.AVUQueryElement;
 import org.irods.jargon.core.query.IRODSQueryResultRow;
-import org.irods.jargon.core.query.IRODSQueryResultSet;
+import org.irods.jargon.core.query.IRODSQueryResultSetInterface;
 import org.irods.jargon.core.query.MetaDataAndDomainData;
 import org.irods.jargon.core.query.MetaDataAndDomainData.MetadataDomain;
 import org.irods.jargon.core.query.RodsGenQueryEnum;
@@ -159,7 +159,7 @@ public final class DataAOHelper extends AOHelper {
 
 	// TODO: looks like generics would help here...factor out later
 	public List<DataObject> buildListFromResultSet(
-			final IRODSQueryResultSet resultSet) throws JargonException {
+			final IRODSQueryResultSetInterface resultSet) throws JargonException {
 
 		final List<DataObject> data = new ArrayList<DataObject>();
 
@@ -230,7 +230,7 @@ public final class DataAOHelper extends AOHelper {
 	 * @throws JargonException
 	 */
 	public List<MetaDataAndDomainData> buildMetaDataAndDomainDataListFromResultSet(
-			final IRODSQueryResultSet irodsQueryResultSet)
+			final IRODSQueryResultSetInterface irodsQueryResultSet)
 			throws JargonException {
 
 		if (irodsQueryResultSet == null) {

@@ -25,9 +25,10 @@ import org.irods.jargon.core.pub.IRODSGenericAO;
 import org.irods.jargon.core.pub.ResourceAO;
 import org.irods.jargon.core.pub.ResourceAOImpl;
 import org.irods.jargon.core.pub.domain.Resource;
-import org.irods.jargon.core.query.IRODSQuery;
+import org.irods.jargon.core.query.IRODSGenQuery;
 import org.irods.jargon.core.query.IRODSQueryResultRow;
 import org.irods.jargon.core.query.IRODSQueryResultSet;
+import org.irods.jargon.core.query.IRODSQueryResultSetInterface;
 import org.irods.jargon.core.query.JargonQueryException;
 import org.irods.jargon.core.query.RodsGenQueryEnum;
 import org.irods.jargon.core.utils.IRODSDataConversionUtil;
@@ -188,10 +189,10 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 	private int extractHighestPermission(
 			final IRODSGenQueryExecutor irodsGenQueryExecutor,
 			final StringBuilder filePermissionQuery) throws JargonException {
-		IRODSQuery irodsQuery = IRODSQuery.instance(
+		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(
 				filePermissionQuery.toString(), 500);
 
-		IRODSQueryResultSet resultSet;
+		IRODSQueryResultSetInterface resultSet;
 		try {
 			resultSet = irodsGenQueryExecutor.executeIRODSQuery(irodsQuery, 0);
 		} catch (JargonQueryException e) {
@@ -384,10 +385,10 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 			log.debug("query for exists = {}", filePermissionQuery.toString());
 		}
 
-		IRODSQuery irodsQuery = IRODSQuery.instance(
+		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(
 				filePermissionQuery.toString(), 500);
 
-		IRODSQueryResultSet resultSet;
+		IRODSQueryResultSetInterface resultSet;
 		try {
 			resultSet = irodsGenQueryExecutor.executeIRODSQuery(irodsQuery, 0);
 		} catch (JargonQueryException e) {
@@ -414,7 +415,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 		filePermissionQuery.append(IRODSDataConversionUtil
 				.escapeSingleQuotes(irodsFile.getAbsolutePath()));
 		filePermissionQuery.append("'");
-		irodsQuery = IRODSQuery.instance(filePermissionQuery.toString(), 500);
+		irodsQuery = IRODSGenQuery.instance(filePermissionQuery.toString(), 500);
 
 		log.debug("query for exists = {}", filePermissionQuery.toString());
 
@@ -470,10 +471,10 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 			log.debug("query for directory =" + filePermissionQuery.toString());
 		}
 
-		IRODSQuery irodsQuery = IRODSQuery.instance(
+		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(
 				filePermissionQuery.toString(), 100); 
 		
-		IRODSQueryResultSet resultSet;
+		IRODSQueryResultSetInterface resultSet;
 		try {
 			resultSet = irodsGenQueryExecutor.executeIRODSQuery(irodsQuery, 0);
 
@@ -547,9 +548,9 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 			log.debug("query for mod date =" + query.toString());
 		}
 
-		IRODSQuery irodsQuery = IRODSQuery.instance(query.toString(), 500);
+		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(query.toString(), 500);
 
-		IRODSQueryResultSet resultSet;
+		IRODSQueryResultSetInterface resultSet;
 		try {
 			resultSet = irodsGenQueryExecutor.executeIRODSQuery(irodsQuery, 0);
 		} catch (JargonQueryException e) {
@@ -605,9 +606,9 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 			log.debug("query for size =" + query.toString());
 		}
 
-		IRODSQuery irodsQuery = IRODSQuery.instance(query.toString(), 500);
+		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(query.toString(), 500);
 
-		IRODSQueryResultSet resultSet;
+		IRODSQueryResultSetInterface resultSet;
 		try {
 			resultSet = irodsGenQueryExecutor.executeIRODSQuery(irodsQuery, 0);
 		} catch (JargonQueryException e) {
@@ -655,7 +656,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 		StringBuilder query = new StringBuilder();
 		query.append(IRODSFileSystemAOHelper.buildQueryListAllFiles(path));
 
-		IRODSQuery irodsQuery = IRODSQuery.instance(query.toString(), 5000);
+		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(query.toString(), 5000);
 
 		IRODSQueryResultSet resultSet;
 
@@ -688,7 +689,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 		query = new StringBuilder();
 		query.append(IRODSFileSystemAOHelper.buildQueryListAllDirs(path));
 
-		irodsQuery = IRODSQuery.instance(query.toString(), 5000);
+		irodsQuery = IRODSGenQuery.instance(query.toString(), 5000);
 
 		try {
 			resultSet = irodsGenQueryExecutor.executeIRODSQuery(irodsQuery, 0);
@@ -765,7 +766,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 		StringBuilder query = new StringBuilder(
 				IRODSFileSystemAOHelper.buildQueryListAllFiles(path));
 
-		IRODSQuery irodsQuery = IRODSQuery.instance(query.toString(), 5000);
+		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(query.toString(), 5000);
 
 		IRODSQueryResultSet resultSet;
 
@@ -796,7 +797,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 		query = new StringBuilder();
 		query.append(IRODSFileSystemAOHelper.buildQueryListAllDirs(path));
 
-		irodsQuery = IRODSQuery.instance(query.toString(), 5000);
+		irodsQuery = IRODSGenQuery.instance(query.toString(), 5000);
 
 		try {
 			resultSet = irodsGenQueryExecutor.executeIRODSQuery(irodsQuery, 0);
@@ -898,7 +899,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 		StringBuilder query = new StringBuilder(
 				IRODSFileSystemAOHelper.buildQueryListAllFiles(path));
 
-		IRODSQuery irodsQuery = IRODSQuery.instance(query.toString(), 5000);
+		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(query.toString(), 5000);
 
 		IRODSQueryResultSet resultSet;
 
@@ -931,7 +932,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 		query = new StringBuilder();
 		query.append(IRODSFileSystemAOHelper.buildQueryListAllDirs(path));
 
-		irodsQuery = IRODSQuery.instance(query.toString(), 5000);
+		irodsQuery = IRODSGenQuery.instance(query.toString(), 5000);
 
 		try {
 			resultSet = irodsGenQueryExecutor.executeIRODSQuery(irodsQuery, 0);
@@ -1035,11 +1036,11 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 			log.debug("query for type =" + query.toString());
 		}
 
-		IRODSQuery irodsQuery = IRODSQuery.instance(query.toString(), 500);
+		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(query.toString(), 500);
 		IRODSGenQueryExecutor irodsGenQueryExecutor = new IRODSGenQueryExecutorImpl(
 				this.getIRODSSession(), this.getIRODSAccount());
 
-		IRODSQueryResultSet resultSet;
+		IRODSQueryResultSetInterface resultSet;
 		try {
 			resultSet = irodsGenQueryExecutor.executeIRODSQuery(irodsQuery, 0);
 		} catch (JargonQueryException e) {

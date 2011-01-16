@@ -11,13 +11,15 @@ import org.irods.jargon.core.exception.JargonException;
  * Represents a row in a query response, with convenience methods to access
  * attributes
  * 
+ * FIXME: get of column name needs to be factored out
+ * 
  * @author Mike Conway - DICE (www.irods.org)
  * 
  */
 public class IRODSQueryResultRow {
 
 	private final List<String> queryResultColumns;
-	private final TranslatedIRODSQuery translatedIRODSQuery;
+	private final TranslatedIRODSGenQuery translatedIRODSQuery;
 
 	private final int recordCount;
 	private final boolean lastResult;
@@ -28,14 +30,14 @@ public class IRODSQueryResultRow {
 	 * @param queryResultColumns
 	 *            <code>List</code> of query result columns
 	 * @param translatedIRODSQuery
-	 *            {@link org.irods.jargon.core.query.TranslatedIRODSQuery} with
+	 *            {@link org.irods.jargon.core.query.TranslatedIRODSGenQuery} with
 	 *            the query specification
 	 * @return <code>IRODSQueryResultRow</code> with the data for this row.
 	 * @throws JargonException
 	 */
 	public static IRODSQueryResultRow instance(
 			final List<String> queryResultColumns,
-			final TranslatedIRODSQuery translatedIRODSQuery)
+			final TranslatedIRODSGenQuery translatedIRODSQuery)
 			throws JargonException {
 		return new IRODSQueryResultRow(queryResultColumns,
 				translatedIRODSQuery, 0, false);
@@ -55,7 +57,7 @@ public class IRODSQueryResultRow {
 	 */
 	public static IRODSQueryResultRow instance(
 			final List<String> queryResultColumns,
-			final TranslatedIRODSQuery translatedIRODSQuery,
+			final TranslatedIRODSGenQuery translatedIRODSQuery,
 			final int recordCount, final boolean lastResult)
 			throws JargonException {
 		return new IRODSQueryResultRow(queryResultColumns,
@@ -63,7 +65,7 @@ public class IRODSQueryResultRow {
 	}
 
 	private IRODSQueryResultRow(final List<String> queryResultColumns,
-			final TranslatedIRODSQuery translatedIRODSQuery,
+			final TranslatedIRODSGenQuery translatedIRODSQuery,
 			final int recordCount, final boolean lastResult)
 			throws JargonException {
 
@@ -139,7 +141,7 @@ public class IRODSQueryResultRow {
 	protected int getColumnNamePostiion(final String columnName) {
 		int returnIdx = -1;
 		int idx = 0;
-		for (SelectField selectField : translatedIRODSQuery.getSelectFields()) {
+		for (GenQuerySelectField selectField : translatedIRODSQuery.getSelectFields()) {
 			if (selectField.getSelectFieldColumnName().equalsIgnoreCase(
 					columnName)) {
 				returnIdx = idx;
@@ -166,7 +168,7 @@ public class IRODSQueryResultRow {
 		return queryResultColumns;
 	}
 
-	public TranslatedIRODSQuery getTranslatedIRODSQuery() {
+	public TranslatedIRODSGenQuery getTranslatedIRODSQuery() {
 		return translatedIRODSQuery;
 	}
 

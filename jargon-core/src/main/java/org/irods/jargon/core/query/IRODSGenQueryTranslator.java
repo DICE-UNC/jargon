@@ -9,7 +9,7 @@ import java.util.StringTokenizer;
 
 import org.irods.jargon.core.connection.IRODSServerProperties;
 import org.irods.jargon.core.exception.JargonException;
-import org.irods.jargon.core.query.SelectField.SelectFieldTypes;
+import org.irods.jargon.core.query.GenQuerySelectField.SelectFieldTypes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,11 +20,11 @@ import org.slf4j.LoggerFactory;
  * 
  * @author Mike Conway - DICE (www.irods.org)
  */
-public class IRODSQueryTranslator {
+public class IRODSGenQueryTranslator {
 
 	private IRODSServerProperties irodsServerProperties;
 	private static Logger log = LoggerFactory
-			.getLogger(IRODSQueryTranslator.class);
+			.getLogger(IRODSGenQueryTranslator.class);
 	private ExtensibleMetaDataMapping extensibleMetaDataMapping = null;
 
 	public static String[] operatorStrings = { "=", "<>", "<", ">", "<=", ">=",
@@ -41,7 +41,7 @@ public class IRODSQueryTranslator {
 	 *            server.
 	 * @throws JargonException
 	 */
-	public IRODSQueryTranslator(
+	public IRODSGenQueryTranslator(
 			final IRODSServerProperties irodsServerProperties)
 			throws JargonException {
 		if (irodsServerProperties == null) {
@@ -64,7 +64,7 @@ public class IRODSQueryTranslator {
 	 *            mapping may be set to null and will be ignored.
 	 * @throws JargonException
 	 */
-	public IRODSQueryTranslator(
+	public IRODSGenQueryTranslator(
 			final IRODSServerProperties irodsServerProperties,
 			final ExtensibleMetaDataMapping extensibleMetaDataMapping)
 			throws JargonException {
@@ -78,16 +78,16 @@ public class IRODSQueryTranslator {
 	 * conditions are formated such that iRODS can understand the fields.
 	 * 
 	 * @param irodsQuery
-	 *            {@link org.irods.jargon.core.query.IRODSQuery} containing the
+	 *            {@link org.irods.jargon.core.query.IRODSGenQuery} containing the
 	 *            desired GenQuery
-	 * @return {@link org.irods.jargon.core.query.TranslatedIRODSQuery} that
+	 * @return {@link org.irods.jargon.core.query.TranslatedIRODSGenQuery} that
 	 *         encapsulates a query where selects and conditions have been
 	 *         resolved and translated into a format that GenQuery can
 	 *         understand.
 	 * @throws JargonQueryException
 	 * @throws JargonException
 	 */
-	public TranslatedIRODSQuery getTranslatedQuery(final IRODSQuery irodsQuery)
+	public TranslatedIRODSGenQuery getTranslatedQuery(final IRODSGenQuery irodsQuery)
 			throws JargonQueryException, JargonException {
 		List<String> selects = parseSelectsIntoListOfNames(irodsQuery
 				.getQueryString());
@@ -98,15 +98,15 @@ public class IRODSQueryTranslator {
 			isDistinct = false;
 		}
 
-		List<SelectField> translatedSelects = translateSelects(selects);
+		List<GenQuerySelectField> translatedSelects = translateSelects(selects);
 
-		List<TranslatedQueryCondition> translatedConditions = translateConditions(irodsQuery);
+		List<TranslatedGenQueryCondition> translatedConditions = translateConditions(irodsQuery);
 
 		// do a final check to make sure everything translated
 		reviewTranslationBeforeReturningQuery(translatedSelects,
 				translatedConditions);
 
-		return TranslatedIRODSQuery.instance(translatedSelects,
+		return TranslatedIRODSGenQuery.instance(translatedSelects,
 				translatedConditions, irodsQuery, isDistinct);
 	}
 
@@ -116,8 +116,8 @@ public class IRODSQueryTranslator {
 	 * @throws JargonQueryException
 	 */
 	private void reviewTranslationBeforeReturningQuery(
-			final List<SelectField> translatedSelects,
-			final List<TranslatedQueryCondition> translatedConditions)
+			final List<GenQuerySelectField> translatedSelects,
+			final List<TranslatedGenQueryCondition> translatedConditions)
 			throws JargonQueryException {
 		int i;
 		if (translatedSelects.isEmpty()) {
@@ -125,7 +125,7 @@ public class IRODSQueryTranslator {
 		}
 
 		i = 0;
-		for (SelectField selectField : translatedSelects) {
+		for (GenQuerySelectField selectField : translatedSelects) {
 
 			if (selectField == null) {
 				throw new JargonQueryException(
@@ -140,7 +140,7 @@ public class IRODSQueryTranslator {
 		}
 
 		i = 0;
-		for (TranslatedQueryCondition condition : translatedConditions) {
+		for (TranslatedGenQueryCondition condition : translatedConditions) {
 			if (condition.getColumnNumericTranslation() == null) {
 				throw new JargonQueryException(
 						"untranslated condition field in position:" + i
@@ -156,22 +156,22 @@ public class IRODSQueryTranslator {
 	 * @throws JargonQueryException
 	 * @throws JargonException
 	 */
-	protected List<TranslatedQueryCondition> translateConditions(
-			final IRODSQuery irodsQuery) throws JargonQueryException,
+	protected List<TranslatedGenQueryCondition> translateConditions(
+			final IRODSGenQuery irodsQuery) throws JargonQueryException,
 			JargonException {
 		int i;
-		List<QueryCondition> conditions = parseConditionsIntoList(irodsQuery
+		List<GenQueryCondition> conditions = parseConditionsIntoList(irodsQuery
 				.getQueryString());
 
 		// FIXME: condition like x ='14' does not work....need to detect the
 		// conditional and compensate by putting spaces around
 
-		List<TranslatedQueryCondition> translatedConditions = new ArrayList<TranslatedQueryCondition>();
+		List<TranslatedGenQueryCondition> translatedConditions = new ArrayList<TranslatedGenQueryCondition>();
 
 		// process conditions
-		TranslatedQueryCondition translatedCondition;
+		TranslatedGenQueryCondition translatedCondition;
 		i = 0;
-		for (QueryCondition queryCondition : conditions) {
+		for (GenQueryCondition queryCondition : conditions) {
 			if (log.isDebugEnabled()) {
 				log.debug("translating condition:" + queryCondition);
 			}
@@ -182,7 +182,7 @@ public class IRODSQueryTranslator {
 			if (conditionEnumVal != null) {
 
 				// check condition as IRODS data
-				translatedCondition = TranslatedQueryCondition.instance(
+				translatedCondition = TranslatedGenQueryCondition.instance(
 						conditionEnumVal, queryCondition.getOperator(),
 						queryCondition.getValue());
 				translatedConditions.add(translatedCondition);
@@ -205,7 +205,7 @@ public class IRODSQueryTranslator {
 
 				if (extensibleMetaDataTranslationValue != null) {
 
-					translatedCondition = TranslatedQueryCondition
+					translatedCondition = TranslatedGenQueryCondition
 							.instanceForExtensibleMetaData(
 									queryCondition.getFieldName(),
 									queryCondition.getOperator(),
@@ -239,14 +239,14 @@ public class IRODSQueryTranslator {
 	 * @throws JargonException
 	 * @throws JargonQueryException
 	 */
-	protected List<SelectField> translateSelects(final List<String> selects)
+	protected List<GenQuerySelectField> translateSelects(final List<String> selects)
 			throws JargonException, JargonQueryException {
-		List<SelectField> translatedSelects = new ArrayList<SelectField>();
+		List<GenQuerySelectField> translatedSelects = new ArrayList<GenQuerySelectField>();
 
 		// go through selects and get the translation from the 'string' name to
 		// the index and other information contained in the enumeration
 		int i = 0;
-		SelectField translated = null;
+		GenQuerySelectField translated = null;
 		for (String select : selects) {
 			translated = translateSelectFieldAsIRODSQueryValue(select
 					.toUpperCase());
@@ -278,12 +278,12 @@ public class IRODSQueryTranslator {
 	 * 
 	 * @param originalSelectField
 	 *            <code>String</code> with query field
-	 * @return {@link org.irods.jargon.core.query.SelectField} with the
+	 * @return {@link org.irods.jargon.core.query.GenQuerySelectField} with the
 	 *         translation, or null if not found.
 	 * @throws JargonQueryException
 	 *             indicates malformed query field.
 	 */
-	protected SelectField translateSelectFieldAsIRODSQueryValue(
+	protected GenQuerySelectField translateSelectFieldAsIRODSQueryValue(
 			final String originalSelectField) throws JargonException,
 			JargonQueryException {
 		String rawField;
@@ -308,8 +308,8 @@ public class IRODSQueryTranslator {
 
 		SelectFieldTypes selectFieldType = extractSelectFieldTypeFromSelectValue(originalSelectField);
 
-		return SelectField.instance(field, selectFieldType,
-				SelectField.SelectFieldSource.DEFINED_QUERY_FIELD);
+		return GenQuerySelectField.instance(field, selectFieldType,
+				GenQuerySelectField.SelectFieldSource.DEFINED_QUERY_FIELD);
 	}
 
 	/**
@@ -322,12 +322,12 @@ public class IRODSQueryTranslator {
 	 * 
 	 * @param originalSelectField
 	 *            <code>String</code> with query field
-	 * @return {@link org.irods.jargon.core.query.SelectField} with the
+	 * @return {@link org.irods.jargon.core.query.GenQuerySelectField} with the
 	 *         translation, or null if not found.
 	 * @throws JargonQueryException
 	 *             indicates malformed query field.
 	 */
-	protected SelectField translateSelectAsMetadataSelectField(
+	protected GenQuerySelectField translateSelectAsMetadataSelectField(
 			final String originalSelectField) throws JargonException,
 			JargonQueryException {
 
@@ -353,8 +353,8 @@ public class IRODSQueryTranslator {
 		log.debug("translating as iRODS extensbile metadata field?");
 		SelectFieldTypes selectFieldType = extractSelectFieldTypeFromSelectValue(originalSelectField);
 
-		return SelectField.instance(field, selectFieldType,
-				SelectField.SelectFieldSource.EXTENSIBLE_METADATA);
+		return GenQuerySelectField.instance(field, selectFieldType,
+				GenQuerySelectField.SelectFieldSource.EXTENSIBLE_METADATA);
 	}
 
 	protected boolean doesQueryFlagNonDistinct(final String query) {
@@ -493,11 +493,11 @@ public class IRODSQueryTranslator {
 	 * @return
 	 * @throws JargonQueryException
 	 */
-	protected List<QueryCondition> parseConditionsIntoList(final String query)
+	protected List<GenQueryCondition> parseConditionsIntoList(final String query)
 			throws JargonQueryException {
 
 		String testQuery = query;
-		List<QueryCondition> conditions = new ArrayList<QueryCondition>();
+		List<GenQueryCondition> conditions = new ArrayList<GenQueryCondition>();
 
 		int idxOfWhere = -1;
 		int indexOfWhereUC = testQuery.indexOf(" WHERE ");
@@ -531,7 +531,7 @@ public class IRODSQueryTranslator {
 
 		// have a condition, begin parsing into discrete tokens, treating quoted
 		// literals as a token.
-		List<QueryConditionToken> tokens = tokenizeConditions(testQuery,
+		List<GenQueryConditionToken> tokens = tokenizeConditions(testQuery,
 				conditionOffset);
 
 		log.debug("query condition tokens were: {}", tokens);
@@ -554,11 +554,11 @@ public class IRODSQueryTranslator {
 	 * @return
 	 * @throws JargonQueryException
 	 */
-	private List<QueryCondition> buildListOfQueryConditionsFromParsedTokens(
-			final List<QueryConditionToken> tokens) throws JargonQueryException {
+	private List<GenQueryCondition> buildListOfQueryConditionsFromParsedTokens(
+			final List<GenQueryConditionToken> tokens) throws JargonQueryException {
 
-		QueryCondition queryCondition;
-		List<QueryCondition> queryConditions = new ArrayList<QueryCondition>();
+		GenQueryCondition queryCondition;
+		List<GenQueryCondition> queryConditions = new ArrayList<GenQueryCondition>();
 
 		int i = 0;
 		int tokenCtr = 0;
@@ -567,7 +567,7 @@ public class IRODSQueryTranslator {
 		String parsedValue = "";
 		String parsedOperator = "";
 
-		for (QueryConditionToken token : tokens) {
+		for (GenQueryConditionToken token : tokens) {
 
 			// I'm interested in the content after the where, and will skip
 			// before that
@@ -608,7 +608,7 @@ public class IRODSQueryTranslator {
 									+ tokenCtr);
 				}
 
-				queryCondition = QueryCondition.instance(parsedField,
+				queryCondition = GenQueryCondition.instance(parsedField,
 						parsedOperator, parsedValue);
 				queryConditions.add(queryCondition);
 				i = 0;
@@ -632,17 +632,17 @@ public class IRODSQueryTranslator {
 	 * @param conditionOffset
 	 * @throws JargonQueryException
 	 */
-	private List<QueryConditionToken> tokenizeConditions(final String query,
+	private List<GenQueryConditionToken> tokenizeConditions(final String query,
 			final int conditionOffset) throws JargonQueryException {
 		String conditionString = query.substring(conditionOffset);
 		log.debug("conditions in string: {}", conditionString);
 
 		// break conditions into tokens and store in an Array
-		List<QueryConditionToken> queryTokens = new ArrayList<QueryConditionToken>();
+		List<GenQueryConditionToken> queryTokens = new ArrayList<GenQueryConditionToken>();
 
 		StringBuilder tokenAccum = new StringBuilder();
 
-		QueryConditionToken token = null;
+		GenQueryConditionToken token = null;
 		boolean accumulatingQuotedLiteral = false;
 		boolean escaped = false;
 		char nextChar = ' ';
@@ -680,7 +680,7 @@ public class IRODSQueryTranslator {
 					tokenAccum.append(nextChar);
 				} else {
 					if (tokenAccum.length() > 0) {
-						token = new QueryConditionToken();
+						token = new GenQueryConditionToken();
 						token.setValue(tokenAccum.toString());
 						queryTokens.add(token);
 						// LOG.debug("part is:{}", token);
@@ -728,7 +728,7 @@ public class IRODSQueryTranslator {
 		// if I have accumulated a token, at the end put it into the tokens
 		// table
 		if (tokenAccum.length() > 0) {
-			token = new QueryConditionToken();
+			token = new GenQueryConditionToken();
 			token.setValue(tokenAccum.toString());
 			queryTokens.add(token);
 		}

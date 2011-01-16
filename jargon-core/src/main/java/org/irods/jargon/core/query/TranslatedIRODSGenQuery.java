@@ -19,11 +19,11 @@ import org.irods.jargon.core.exception.JargonException;
  * @author Mike Conway - DICE (www.irods.org)
  * 
  */
-public class TranslatedIRODSQuery {
-	private final List<SelectField> selectFields;
-	private final List<TranslatedQueryCondition> translatedQueryConditions;
-	private final List<SelectField> groupByFields;
-	private final IRODSQuery irodsQuery;
+public class TranslatedIRODSGenQuery {
+	private final List<GenQuerySelectField> selectFields;
+	private final List<TranslatedGenQueryCondition> translatedQueryConditions;
+	private final List<GenQuerySelectField> groupByFields;
+	private final IRODSGenQuery irodsQuery;
 	private final boolean distinct;
 
 	/**
@@ -33,14 +33,14 @@ public class TranslatedIRODSQuery {
 	 * 
 	 * @param translatedSelectFields
 	 *            <code>List</code> of
-	 *            {@link org.irods.jargon.core.pub.query.SelectField}
+	 *            {@link org.irods.jargon.core.pub.GenQuerySelectField.SelectField}
 	 *            representing the selects.
 	 * @param translatedQueryConditions
 	 *            <code>List</code> of
-	 *            {@link org.irods.jargon.core.pub.query.TranslatedQueryCondition}
+	 *            {@link org.irods.jargon.core.pub.TranslatedGenQueryCondition.TranslatedQueryCondition}
 	 *            representing the parsed conditions.
 	 * @param irodsQuery
-	 *            {@link org.irods.jargon.core.query.IRODSQuery} that
+	 *            {@link org.irods.jargon.core.query.IRODSGenQuery} that
 	 *            encapsulates the original user query.
 	 * @param distinct
 	 *            <code>boolean</code> indicating whether this is a distinct
@@ -48,23 +48,23 @@ public class TranslatedIRODSQuery {
 	 * @return <code>TranslatedIRODSQuery</code>
 	 * @throws JargonException
 	 */
-	public static TranslatedIRODSQuery instance(
-			final List<SelectField> translatedSelectFields,
-			final List<TranslatedQueryCondition> translatedQueryConditions,
-			final IRODSQuery irodsQuery, final boolean distinct)
+	public static TranslatedIRODSGenQuery instance(
+			final List<GenQuerySelectField> translatedSelectFields,
+			final List<TranslatedGenQueryCondition> translatedQueryConditions,
+			final IRODSGenQuery irodsQuery, final boolean distinct)
 			throws JargonException {
-		return new TranslatedIRODSQuery(translatedSelectFields,
-				translatedQueryConditions, new ArrayList<SelectField>(),
+		return new TranslatedIRODSGenQuery(translatedSelectFields,
+				translatedQueryConditions, new ArrayList<GenQuerySelectField>(),
 				irodsQuery, distinct);
 
 	}
 
-	public static TranslatedIRODSQuery instanceWithGroupBy(
-			final List<SelectField> translatedSelectFields,
-			final List<TranslatedQueryCondition> translatedQueryConditions,
-			final List<SelectField> groupByFields, final IRODSQuery irodsQuery,
+	public static TranslatedIRODSGenQuery instanceWithGroupBy(
+			final List<GenQuerySelectField> translatedSelectFields,
+			final List<TranslatedGenQueryCondition> translatedQueryConditions,
+			final List<GenQuerySelectField> groupByFields, final IRODSGenQuery irodsQuery,
 			final boolean distinct) throws JargonException {
-		return new TranslatedIRODSQuery(translatedSelectFields,
+		return new TranslatedIRODSGenQuery(translatedSelectFields,
 				translatedQueryConditions, groupByFields, irodsQuery, distinct);
 
 	}
@@ -76,31 +76,31 @@ public class TranslatedIRODSQuery {
 	 * 
 	 * @param translatedSelectFields
 	 *            <code>List</code> of
-	 *            {@link org.irods.jargon.core.pub.query.SelectField}
+	 *            {@link org.irods.jargon.core.pub.GenQuerySelectField.SelectField}
 	 *            representing the selects.
 	 * @param translatedQueryConditions
 	 *            <code>List</code> of
-	 *            {@link org.irods.jargon.core.pub.query.TranslatedQueryCondition}
+	 *            {@link org.irods.jargon.core.pub.TranslatedGenQueryCondition.TranslatedQueryCondition}
 	 *            representing the parsed conditions.
 	 * @param irodsQuery
-	 *            {@link org.irods.jargon.core.query.IRODSQuery} that
+	 *            {@link org.irods.jargon.core.query.IRODSGenQuery} that
 	 *            encapsulates the original user query.
 	 * @return
 	 * @throws JargonException
 	 */
-	public static TranslatedIRODSQuery instance(
-			final List<SelectField> translatedSelectFields,
-			final List<TranslatedQueryCondition> translatedQueryConditions,
-			final IRODSQuery irodsQuery) throws JargonException {
-		return new TranslatedIRODSQuery(translatedSelectFields,
-				translatedQueryConditions, new ArrayList<SelectField>(),
+	public static TranslatedIRODSGenQuery instance(
+			final List<GenQuerySelectField> translatedSelectFields,
+			final List<TranslatedGenQueryCondition> translatedQueryConditions,
+			final IRODSGenQuery irodsQuery) throws JargonException {
+		return new TranslatedIRODSGenQuery(translatedSelectFields,
+				translatedQueryConditions, new ArrayList<GenQuerySelectField>(),
 				irodsQuery, true);
 
 	}
 
-	private TranslatedIRODSQuery(final List<SelectField> selectFields,
-			final List<TranslatedQueryCondition> translatedQueryConditions,
-			final List<SelectField> groupByFields, final IRODSQuery irodsQuery,
+	private TranslatedIRODSGenQuery(final List<GenQuerySelectField> selectFields,
+			final List<TranslatedGenQueryCondition> translatedQueryConditions,
+			final List<GenQuerySelectField> groupByFields, final IRODSGenQuery irodsQuery,
 			final boolean distinct) throws JargonException {
 
 		if (translatedQueryConditions == null) {
@@ -138,7 +138,7 @@ public class TranslatedIRODSQuery {
 	 * @return <code>RodsGenQueryEnum</code> with the column names translated in
 	 *         the internal representation.
 	 */
-	public List<SelectField> getSelectFields() {
+	public List<GenQuerySelectField> getSelectFields() {
 		return selectFields;
 	}
 
@@ -146,15 +146,15 @@ public class TranslatedIRODSQuery {
 	 * Get the condition portion of a query translated into the internal
 	 * representation.
 	 * 
-	 * @return {@link org.irods.jargon.core.query.TranslatedQueryCondition
+	 * @return {@link org.irods.jargon.core.query.TranslatedGenQueryCondition
 	 *         TranslatedQueryCondition} containing the internal represntation
 	 *         of the condition portion of the query.
 	 */
-	public List<TranslatedQueryCondition> getTranslatedQueryConditions() {
+	public List<TranslatedGenQueryCondition> getTranslatedQueryConditions() {
 		return translatedQueryConditions;
 	}
 
-	public IRODSQuery getIrodsQuery() {
+	public IRODSGenQuery getIrodsQuery() {
 		return irodsQuery;
 	}
 
@@ -177,7 +177,7 @@ public class TranslatedIRODSQuery {
 		return sb.toString();
 	}
 
-	public List<SelectField> getGroupByFields() {
+	public List<GenQuerySelectField> getGroupByFields() {
 		return groupByFields;
 	}
 

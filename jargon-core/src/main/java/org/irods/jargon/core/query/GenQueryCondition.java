@@ -13,18 +13,18 @@ package org.irods.jargon.core.query;
  * @author mikeconway
  * 
  */
-public class QueryCondition {
+public class GenQueryCondition {
 	private final String fieldName;
 	private final String operator;
 	private final String value;
 
-	public static QueryCondition instance(final String fieldName,
+	public static GenQueryCondition instance(final String fieldName,
 			final String operator, final String value)
 			throws JargonQueryException {
-		return new QueryCondition(fieldName, operator, value);
+		return new GenQueryCondition(fieldName, operator, value);
 	}
 
-	private QueryCondition(final String fieldName, final String operator,
+	private GenQueryCondition(final String fieldName, final String operator,
 			final String value) throws JargonQueryException {
 		if (fieldName == null) {
 			throw new JargonQueryException("field name in condition is null");

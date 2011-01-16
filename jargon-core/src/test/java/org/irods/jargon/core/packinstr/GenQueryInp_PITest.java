@@ -5,10 +5,10 @@ import java.util.Properties;
 import junit.framework.Assert;
 
 import org.irods.jargon.core.connection.IRODSServerProperties;
-import org.irods.jargon.core.query.IRODSQuery;
-import org.irods.jargon.core.query.IRODSQueryTranslator;
+import org.irods.jargon.core.query.IRODSGenQuery;
+import org.irods.jargon.core.query.IRODSGenQueryTranslator;
 import org.irods.jargon.core.query.RodsGenQueryEnum;
-import org.irods.jargon.core.query.TranslatedIRODSQuery;
+import org.irods.jargon.core.query.TranslatedIRODSGenQuery;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -41,11 +41,11 @@ public class GenQueryInp_PITest {
 				IRODSServerProperties.IcatEnabled.ICAT_ENABLED, 100, "rods2.2",
 				"d", "zone");
 
-		IRODSQuery irodsQuery = IRODSQuery.instance(queryString, 500);
+		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(queryString, 500);
 
-		IRODSQueryTranslator irodsQueryTranslator = new IRODSQueryTranslator(
+		IRODSGenQueryTranslator irodsQueryTranslator = new IRODSGenQueryTranslator(
 				props);
-		TranslatedIRODSQuery translatedIRODSQuery = irodsQueryTranslator
+		TranslatedIRODSGenQuery translatedIRODSQuery = irodsQueryTranslator
 				.getTranslatedQuery(irodsQuery);
 
 		GenQueryInp genQueryInp = GenQueryInp.instance(translatedIRODSQuery, 0);
@@ -64,10 +64,10 @@ public class GenQueryInp_PITest {
 				IRODSServerProperties.IcatEnabled.ICAT_ENABLED, 100, "rods2.2",
 				"d", "zone");
 
-		IRODSQuery irodsQuery = IRODSQuery.instance(queryString, 500);
-		IRODSQueryTranslator irodsQueryTranslator = new IRODSQueryTranslator(
+		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(queryString, 500);
+		IRODSGenQueryTranslator irodsQueryTranslator = new IRODSGenQueryTranslator(
 				props);
-		TranslatedIRODSQuery translatedIRODSQuery = irodsQueryTranslator
+		TranslatedIRODSGenQuery translatedIRODSQuery = irodsQueryTranslator
 				.getTranslatedQuery(irodsQuery);
 		GenQueryInp genQueryInp = GenQueryInp.instance(translatedIRODSQuery, 0);
 		String tagData = genQueryInp.getParsedTags();

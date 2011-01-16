@@ -11,8 +11,9 @@ import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSProtocolManager;
 import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.connection.IRODSSimpleProtocolManager;
-import org.irods.jargon.core.query.IRODSQuery;
+import org.irods.jargon.core.query.IRODSGenQuery;
 import org.irods.jargon.core.query.IRODSQueryResultSet;
+import org.irods.jargon.core.query.IRODSQueryResultSetInterface;
 import org.irods.jargon.core.query.RodsGenQueryEnum;
 import org.irods.jargon.testutils.IRODSTestSetupUtilities;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
@@ -119,7 +120,7 @@ public class IRODSGenQueryExecutorImplTest {
 						.getProperty(TestingPropertiesHelper.IRODS_ZONE_KEY)
 				+ "'";
 
-		IRODSQuery irodsQuery = IRODSQuery.instance(queryString, 100);
+		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(queryString, 100);
 		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager
 				.instance();
 		IRODSAccount irodsAccount = testingPropertiesHelper
@@ -131,7 +132,7 @@ public class IRODSGenQueryExecutorImplTest {
 		IRODSGenQueryExecutor irodsGenQueryExecutor = accessObjectFactory
 				.getIRODSGenQueryExecutor(irodsAccount);
 
-		IRODSQueryResultSet resultSet = irodsGenQueryExecutor
+		IRODSQueryResultSetInterface resultSet = irodsGenQueryExecutor
 				.executeIRODSQuery(irodsQuery, 0);
 		irodsSession.closeSession();
 
@@ -154,7 +155,7 @@ public class IRODSGenQueryExecutorImplTest {
 						.getProperty(TestingPropertiesHelper.IRODS_ZONE_KEY)
 				+ "'";
 
-		IRODSQuery irodsQuery = IRODSQuery.instance(queryString, 100);
+		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(queryString, 100);
 		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager
 				.instance();
 		IRODSAccount irodsAccount = testingPropertiesHelper
@@ -166,7 +167,7 @@ public class IRODSGenQueryExecutorImplTest {
 		IRODSGenQueryExecutor irodsGenQueryExecutor = accessObjectFactory
 				.getIRODSGenQueryExecutor(irodsAccount);
 
-		IRODSQueryResultSet resultSet = null;
+		IRODSQueryResultSetInterface resultSet = null;
 		for (int i = 0; i < count; i++) {
 			resultSet = irodsGenQueryExecutor.executeIRODSQuery(irodsQuery, 0);
 		}
@@ -188,7 +189,7 @@ public class IRODSGenQueryExecutorImplTest {
 						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY)
 				+ "'";
 
-		IRODSQuery irodsQuery = IRODSQuery.instance(queryString, 100);
+		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(queryString, 100);
 
 		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager
 				.instance();
@@ -201,7 +202,7 @@ public class IRODSGenQueryExecutorImplTest {
 		IRODSGenQueryExecutor irodsGenQueryExecutor = accessObjectFactory
 				.getIRODSGenQueryExecutor(irodsAccount);
 
-		IRODSQueryResultSet resultSet = irodsGenQueryExecutor
+		IRODSQueryResultSetInterface resultSet = irodsGenQueryExecutor
 				.executeIRODSQuery(irodsQuery, 0);
 
 		irodsSession.closeSession();
@@ -229,7 +230,7 @@ public class IRODSGenQueryExecutorImplTest {
 				+ RodsGenQueryEnum.COL_COLL_NAME.getName() + " = '"
 				+ targetIrodsCollection + "'";
 
-		IRODSQuery irodsQuery = IRODSQuery.instance(queryString, 1000);
+		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(queryString, 1000);
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);

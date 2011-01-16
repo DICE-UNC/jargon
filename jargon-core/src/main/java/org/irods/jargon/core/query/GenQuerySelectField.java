@@ -10,7 +10,7 @@ import org.irods.jargon.core.exception.JargonException;
  *         translated form, including the type of select (e.g. a field, versus a
  *         sum() or count() of a field. This is an immutable, thread-safe type
  */
-public class SelectField {
+public class GenQuerySelectField {
 	public enum SelectFieldTypes {
 		FIELD, SUM, MIN, MAX, AVG, COUNT, FILE_ACCESS
 	}
@@ -41,13 +41,13 @@ public class SelectField {
 	 * @return <code>SelectField</code> describing details about this field.
 	 * @throws JargonException
 	 */
-	public static SelectField instance(final RodsGenQueryEnum selectField,
+	public static GenQuerySelectField instance(final RodsGenQueryEnum selectField,
 			final SelectFieldTypes selectFieldType,
 			final SelectFieldSource selectFieldSource) throws JargonException {
 		if (selectField == null) {
 			throw new JargonException("select field was null");
 		}
-		return new SelectField(selectField.getName(),
+		return new GenQuerySelectField(selectField.getName(),
 				String.valueOf(selectField.getNumericValue()), selectFieldType,
 				selectFieldSource);
 	}
@@ -73,11 +73,11 @@ public class SelectField {
 	 * @return <code>SelectField</code> describing details about this field.
 	 * @throws JargonException
 	 */
-	public static SelectField instance(final String selectFieldName,
+	public static GenQuerySelectField instance(final String selectFieldName,
 			final String selectFieldNumericTranslation,
 			final SelectFieldTypes selectFieldType,
 			final SelectFieldSource selectFieldSource) throws JargonException {
-		return new SelectField(selectFieldName, selectFieldNumericTranslation,
+		return new GenQuerySelectField(selectFieldName, selectFieldNumericTranslation,
 				selectFieldType, selectFieldSource);
 	}
 
@@ -96,7 +96,7 @@ public class SelectField {
 		return sb.toString();
 	}
 
-	private SelectField(final String selectFieldColumnName,
+	private GenQuerySelectField(final String selectFieldColumnName,
 			final String selectFieldNumericTranslation,
 			final SelectFieldTypes selectFieldType,
 			final SelectFieldSource selectFieldSource) throws JargonException {

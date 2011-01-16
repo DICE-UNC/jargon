@@ -11,7 +11,7 @@ import org.irods.jargon.core.exception.JargonException;
  * 
  * @author Mike Conway - DICE (www.irods.org)
  */
-public final class IRODSQuery {
+public final class IRODSGenQuery {
 
 	private final String queryString;
 	private final int numberOfResultsDesired;
@@ -33,9 +33,9 @@ public final class IRODSQuery {
 	 * @return
 	 * @throws JargonException
 	 */
-	public static IRODSQuery instance(final String queryString,
+	public static IRODSGenQuery instance(final String queryString,
 			final int numberOfResultsDesired) throws JargonException {
-		return new IRODSQuery(queryString, numberOfResultsDesired,
+		return new IRODSGenQuery(queryString, numberOfResultsDesired,
 				RowCountOptions.NO_ROW_COUNT, 0);
 	}
 
@@ -53,14 +53,14 @@ public final class IRODSQuery {
 	 *         row count to be returned.
 	 * @throws JargonException
 	 */
-	public static IRODSQuery instance(final String queryString,
+	public static IRODSGenQuery instance(final String queryString,
 			final int numberOfResultsDesired,
 			final RowCountOptions rowCountOption) throws JargonException {
-		return new IRODSQuery(queryString, numberOfResultsDesired,
+		return new IRODSGenQuery(queryString, numberOfResultsDesired,
 				rowCountOption, 0);
 	}
 
-	private IRODSQuery(final String queryString,
+	private IRODSGenQuery(final String queryString,
 			final int numberOfResultsDesired,
 			final RowCountOptions rowCountOption, final int skip)
 			throws JargonException {
@@ -85,7 +85,7 @@ public final class IRODSQuery {
 		this.numberOfResultsDesired = numberOfResultsDesired;
 	}
 
-	private IRODSQuery(final String queryString,
+	private IRODSGenQuery(final String queryString,
 			final int numberOfResultsDesired) throws JargonException {
 		this(queryString, numberOfResultsDesired, RowCountOptions.NO_ROW_COUNT,
 				0);

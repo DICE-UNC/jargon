@@ -19,20 +19,20 @@ public class IRODSQueryTest {
 
 	@Test
 	public final void testInstance() throws Exception {
-		IRODSQuery query = IRODSQuery.instance("test", 1);
+		IRODSGenQuery query = IRODSGenQuery.instance("test", 1);
 		Assert.assertEquals("test", query.getQueryString());
 		Assert.assertEquals(1, query.getNumberOfResultsDesired());
 	}
 
 	@Test(expected = JargonException.class)
 	public final void testInstanceNullQuery() throws Exception {
-		IRODSQuery.instance(null, 0);
+		IRODSGenQuery.instance(null, 0);
 
 	}
 
 	@Test(expected = JargonException.class)
 	public final void testInstanceZeroResults() throws Exception {
-		IRODSQuery.instance("test", 0);
+		IRODSGenQuery.instance("test", 0);
 	}
 
 }

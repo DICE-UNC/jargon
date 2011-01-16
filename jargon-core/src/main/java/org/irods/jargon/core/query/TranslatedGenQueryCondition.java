@@ -3,7 +3,7 @@
  */
 package org.irods.jargon.core.query;
 
-import org.irods.jargon.core.query.SelectField.SelectFieldSource;
+import org.irods.jargon.core.query.GenQuerySelectField.SelectFieldSource;
 
 /**
  * Represents the field name, operator, and value for a condition in an IRODS
@@ -14,7 +14,7 @@ import org.irods.jargon.core.query.SelectField.SelectFieldSource;
  * @author mikeconway
  * 
  */
-public class TranslatedQueryCondition {
+public class TranslatedGenQueryCondition {
 	private final String columnName;
 	private final SelectFieldSource fieldSource;
 	private final String columnNumericTranslation;
@@ -35,10 +35,10 @@ public class TranslatedQueryCondition {
 	 * @return <code>TranslatedQueryCondition</code> object.
 	 * @throws JargonQueryException
 	 */
-	public static TranslatedQueryCondition instance(
+	public static TranslatedGenQueryCondition instance(
 			final RodsGenQueryEnum fieldName, final String operator,
 			final String value) throws JargonQueryException {
-		return new TranslatedQueryCondition(fieldName, operator, value);
+		return new TranslatedGenQueryCondition(fieldName, operator, value);
 	}
 
 	/**
@@ -57,14 +57,14 @@ public class TranslatedQueryCondition {
 	 * @return <code>TranslatedQueryCondition</code> object.
 	 * @throws JargonQueryException
 	 */
-	public static TranslatedQueryCondition instanceForExtensibleMetaData(
+	public static TranslatedGenQueryCondition instanceForExtensibleMetaData(
 			final String fieldName, final String operator, final String value,
 			final String columnNumericTranslation) throws JargonQueryException {
-		return new TranslatedQueryCondition(fieldName, operator, value,
+		return new TranslatedGenQueryCondition(fieldName, operator, value,
 				columnNumericTranslation);
 	}
 
-	private TranslatedQueryCondition(final String fieldName,
+	private TranslatedGenQueryCondition(final String fieldName,
 			final String operator, final String value,
 			final String columnNumericTranslation) throws JargonQueryException {
 
@@ -88,14 +88,14 @@ public class TranslatedQueryCondition {
 		}
 
 		this.columnName = fieldName;
-		this.fieldSource = SelectField.SelectFieldSource.EXTENSIBLE_METADATA;
+		this.fieldSource = GenQuerySelectField.SelectFieldSource.EXTENSIBLE_METADATA;
 		this.operator = operator;
 		this.value = value;
 		this.columnNumericTranslation = columnNumericTranslation;
 
 	}
 
-	private TranslatedQueryCondition(final RodsGenQueryEnum fieldName,
+	private TranslatedGenQueryCondition(final RodsGenQueryEnum fieldName,
 			final String operator, final String value)
 			throws JargonQueryException {
 		if (fieldName == null) {
@@ -111,7 +111,7 @@ public class TranslatedQueryCondition {
 		}
 
 		this.columnName = fieldName.getName();
-		this.fieldSource = SelectField.SelectFieldSource.DEFINED_QUERY_FIELD;
+		this.fieldSource = GenQuerySelectField.SelectFieldSource.DEFINED_QUERY_FIELD;
 		this.operator = operator;
 		this.value = value;
 		this.columnNumericTranslation = String.valueOf(fieldName
@@ -119,7 +119,7 @@ public class TranslatedQueryCondition {
 
 	}
 
-	private TranslatedQueryCondition(final String fieldName,
+	private TranslatedGenQueryCondition(final String fieldName,
 			final SelectFieldSource fieldSource,
 			final String columnNumericTranslation, final String operator,
 			final String value) throws JargonQueryException {
@@ -147,7 +147,7 @@ public class TranslatedQueryCondition {
 		}
 
 		this.columnName = fieldName;
-		this.fieldSource = SelectField.SelectFieldSource.DEFINED_QUERY_FIELD;
+		this.fieldSource = GenQuerySelectField.SelectFieldSource.DEFINED_QUERY_FIELD;
 		this.operator = operator;
 		this.value = value;
 		this.columnNumericTranslation = columnNumericTranslation;

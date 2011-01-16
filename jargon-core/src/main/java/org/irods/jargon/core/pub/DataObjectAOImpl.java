@@ -42,8 +42,8 @@ import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.pub.io.IRODSFileFactory;
 import org.irods.jargon.core.pub.io.IRODSFileFactoryImpl;
 import org.irods.jargon.core.query.AVUQueryElement;
-import org.irods.jargon.core.query.IRODSQuery;
-import org.irods.jargon.core.query.IRODSQueryResultSet;
+import org.irods.jargon.core.query.IRODSGenQuery;
+import org.irods.jargon.core.query.IRODSQueryResultSetInterface;
 import org.irods.jargon.core.query.JargonQueryException;
 import org.irods.jargon.core.query.MetaDataAndDomainData;
 import org.irods.jargon.core.query.RodsGenQueryEnum;
@@ -143,10 +143,10 @@ public final class DataObjectAOImpl extends IRODSGenericAO implements
 		final String query = sb.toString();
 		log.debug("query for data object:{}", query);
 
-		final IRODSQuery irodsQuery = IRODSQuery.instance(query,
+		final IRODSGenQuery irodsQuery = IRODSGenQuery.instance(query,
 				DEFAULT_REC_COUNT);
 
-		IRODSQueryResultSet resultSet;
+		IRODSQueryResultSetInterface resultSet;
 		try {
 			resultSet = irodsGenQueryExecutor.executeIRODSQuery(irodsQuery, 0);
 
@@ -223,10 +223,10 @@ public final class DataObjectAOImpl extends IRODSGenericAO implements
 		final String query = sb.toString();
 		log.debug("query for data object:{}", query);
 
-		final IRODSQuery irodsQuery = IRODSQuery.instance(query,
+		final IRODSGenQuery irodsQuery = IRODSGenQuery.instance(query,
 				DEFAULT_REC_COUNT);
 
-		IRODSQueryResultSet resultSet;
+		IRODSQueryResultSetInterface resultSet;
 		try {
 			resultSet = irodsGenQueryExecutor.executeIRODSQueryWithPaging(
 					irodsQuery, partialStart);
@@ -828,10 +828,10 @@ public final class DataObjectAOImpl extends IRODSGenericAO implements
 		final String queryString = query.toString();
 		log.debug("query string for AVU query: {}", queryString);
 
-		final IRODSQuery irodsQuery = IRODSQuery.instance(queryString,
+		final IRODSGenQuery irodsQuery = IRODSGenQuery.instance(queryString,
 				DEFAULT_REC_COUNT);
 
-		IRODSQueryResultSet resultSet;
+		IRODSQueryResultSetInterface resultSet;
 		try {
 			resultSet = irodsGenQueryExecutorImpl.executeIRODSQuery(irodsQuery,
 					0);
@@ -1043,10 +1043,10 @@ public final class DataObjectAOImpl extends IRODSGenericAO implements
 		final String queryString = query.toString();
 		log.debug("query string for AVU query: {}", queryString);
 
-		final IRODSQuery irodsQuery = IRODSQuery.instance(queryString,
+		final IRODSGenQuery irodsQuery = IRODSGenQuery.instance(queryString,
 				DEFAULT_REC_COUNT);
 
-		IRODSQueryResultSet resultSet;
+		IRODSQueryResultSetInterface resultSet;
 		try {
 			resultSet = irodsGenQueryExecutor.executeIRODSQueryWithPaging(
 					irodsQuery, partialStartIndex);
@@ -1116,10 +1116,10 @@ public final class DataObjectAOImpl extends IRODSGenericAO implements
 		final String queryString = query.toString();
 		log.debug("query string for AVU query: {}", queryString);
 
-		final IRODSQuery irodsQuery = IRODSQuery.instance(queryString,
+		final IRODSGenQuery irodsQuery = IRODSGenQuery.instance(queryString,
 				DEFAULT_REC_COUNT);
 
-		IRODSQueryResultSet resultSet;
+		IRODSQueryResultSetInterface resultSet;
 		try {
 			resultSet = irodsGenQueryExecutor.executeIRODSQueryWithPaging(
 					irodsQuery, partialStartIndex);

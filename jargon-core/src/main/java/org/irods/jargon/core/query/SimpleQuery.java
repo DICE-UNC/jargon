@@ -17,13 +17,11 @@ import java.util.List;
  * @author Mike Conway - DICE (www.irods.org)
  * 
  */
-public final class SimpleQuery {
+public  class SimpleQuery {
 
 	private final String queryString;
 	private final List<String> arguments;
 	private final int continuationValue;
-
-	
 
 	/**
 	 * Creates a new instance of a <code>SimpleQuery</code> object.
@@ -39,6 +37,18 @@ public final class SimpleQuery {
 	public static SimpleQuery instance(final String queryString,
 			final List<String> arguments, final int continuationValue) {
 		return new SimpleQuery(queryString, arguments, continuationValue);
+	}
+	
+	/**
+	 * Creates an instance that has no arguments.
+	 * @param queryString
+	 *            <code>String</code> with the sql query to execute.
+	 * @param continuationValue <code>int</code> with the offset into the results.,  0 if no offset.
+	 * @return
+	 */
+	public static SimpleQuery instanceWithNoArguments(final String queryString, final int continuationValue) {
+		List<String> args = new ArrayList<String>();
+		return new SimpleQuery(queryString, args, continuationValue);
 	}
 
 	/**

@@ -11,9 +11,9 @@ import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.domain.UserGroup;
-import org.irods.jargon.core.query.IRODSQuery;
+import org.irods.jargon.core.query.IRODSGenQuery;
 import org.irods.jargon.core.query.IRODSQueryResultRow;
-import org.irods.jargon.core.query.IRODSQueryResultSet;
+import org.irods.jargon.core.query.IRODSQueryResultSetInterface;
 import org.irods.jargon.core.query.JargonQueryException;
 import org.irods.jargon.core.query.RodsGenQueryEnum;
 import org.slf4j.Logger;
@@ -69,9 +69,9 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements
 		String queryString = query.toString();
 		log.info("query string: {}", queryString);
 
-		IRODSQuery irodsQuery = IRODSQuery.instance(queryString, 500);
+		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(queryString, 500);
 
-		IRODSQueryResultSet resultSet;
+		IRODSQueryResultSetInterface resultSet;
 		try {
 			resultSet = irodsGenQueryExecutorImpl.executeIRODSQuery(irodsQuery,
 					0);
@@ -134,9 +134,9 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements
 		String queryString = query.toString();
 		log.info("query string: {}", queryString);
 
-		IRODSQuery irodsQuery = IRODSQuery.instance(queryString, 500);
+		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(queryString, 500);
 
-		IRODSQueryResultSet resultSet;
+		IRODSQueryResultSetInterface resultSet;
 		try {
 			resultSet = irodsGenQueryExecutorImpl.executeIRODSQuery(irodsQuery,
 					0);
@@ -198,9 +198,9 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements
 		String queryString = query.toString();
 		log.info("query string: {}", queryString);
 
-		IRODSQuery irodsQuery = IRODSQuery.instance(queryString, 500);
+		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(queryString, 500);
 
-		IRODSQueryResultSet resultSet;
+		IRODSQueryResultSetInterface resultSet;
 		try {
 			resultSet = irodsGenQueryExecutorImpl.executeIRODSQuery(irodsQuery,
 					0);
@@ -247,9 +247,9 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements
 		String queryString = query.toString();
 		log.info("query string: {}", queryString);
 
-		IRODSQuery irodsQuery = IRODSQuery.instance(queryString, 500);
+		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(queryString, 500);
 
-		IRODSQueryResultSet resultSet;
+		IRODSQueryResultSetInterface resultSet;
 		try {
 			resultSet = irodsGenQueryExecutorImpl.executeIRODSQuery(irodsQuery,
 					0);

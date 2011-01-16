@@ -11,7 +11,7 @@ package org.irods.jargon.core.query;
  * @author Mike Conway - DICE (www.irods.org)
  * 
  */
-class QueryConditionToken {
+class GenQueryConditionToken {
 
 	public enum TokenType {
 		FIELD, OPERATOR, LITERAL, CONNECTOR

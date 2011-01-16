@@ -25,8 +25,8 @@ import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.pub.io.IRODSFileFactory;
 import org.irods.jargon.core.pub.io.IRODSFileFactoryImpl;
 import org.irods.jargon.core.query.AVUQueryElement;
-import org.irods.jargon.core.query.IRODSQuery;
-import org.irods.jargon.core.query.IRODSQueryResultSet;
+import org.irods.jargon.core.query.IRODSGenQuery;
+import org.irods.jargon.core.query.IRODSQueryResultSetInterface;
 import org.irods.jargon.core.query.JargonQueryException;
 import org.irods.jargon.core.query.MetaDataAndDomainData;
 import org.irods.jargon.core.query.MetaDataAndDomainData.MetadataDomain;
@@ -152,10 +152,10 @@ public final class CollectionAOImpl extends IRODSGenericAO implements
 		final String queryString = query.toString();
 		LOG.debug(QUERY_STRING_FOR_AVU_QUERY, queryString);
 
-		final IRODSQuery irodsQuery = IRODSQuery.instance(queryString,
+		final IRODSGenQuery irodsQuery = IRODSGenQuery.instance(queryString,
 				DEFAULT_REC_COUNT);
 
-		IRODSQueryResultSet resultSet;
+		IRODSQueryResultSetInterface resultSet;
 		try {
 			resultSet = irodsGenQueryExecutor.executeIRODSQueryWithPaging(
 					irodsQuery, partialStartIndex);
@@ -214,10 +214,10 @@ public final class CollectionAOImpl extends IRODSGenericAO implements
 			LOG.info("coll query:" + queryString);
 		}
 
-		IRODSQuery irodsQuery = IRODSQuery.instance(queryString,
+		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(queryString,
 				DEFAULT_REC_COUNT);
 
-		IRODSQueryResultSet resultSet;
+		IRODSQueryResultSetInterface resultSet;
 
 		try {
 			resultSet = irodsGenQueryExecutor.executeIRODSQueryWithPaging(
@@ -252,10 +252,10 @@ public final class CollectionAOImpl extends IRODSGenericAO implements
 
 		LOG.info("coll query:{}", queryString);
 
-		IRODSQuery irodsQuery = IRODSQuery.instance(queryString,
+		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(queryString,
 				DEFAULT_REC_COUNT);
 
-		IRODSQueryResultSet resultSet;
+		IRODSQueryResultSetInterface resultSet;
 
 		try {
 			resultSet = irodsGenQueryExecutor.executeIRODSQueryWithPaging(
@@ -351,10 +351,10 @@ public final class CollectionAOImpl extends IRODSGenericAO implements
 		final String queryString = query.toString();
 		LOG.debug(QUERY_STRING_FOR_AVU_QUERY, queryString);
 
-		final IRODSQuery irodsQuery = IRODSQuery.instance(queryString,
+		final IRODSGenQuery irodsQuery = IRODSGenQuery.instance(queryString,
 				DEFAULT_REC_COUNT);
 
-		IRODSQueryResultSet resultSet;
+		IRODSQueryResultSetInterface resultSet;
 		try {
 			resultSet = irodsGenQueryExecutorImpl.executeIRODSQuery(irodsQuery,
 					0);
@@ -436,10 +436,10 @@ public final class CollectionAOImpl extends IRODSGenericAO implements
 		final String queryString = query.toString();
 		LOG.debug(QUERY_STRING_FOR_AVU_QUERY, queryString);
 
-		final IRODSQuery irodsQuery = IRODSQuery.instance(queryString,
+		final IRODSGenQuery irodsQuery = IRODSGenQuery.instance(queryString,
 				DEFAULT_REC_COUNT);
 
-		IRODSQueryResultSet resultSet;
+		IRODSQueryResultSetInterface resultSet;
 		try {
 			resultSet = irodsGenQueryExecutorImpl.executeIRODSQuery(irodsQuery,
 					0);
@@ -523,10 +523,10 @@ public final class CollectionAOImpl extends IRODSGenericAO implements
 		final String queryString = query.toString();
 		LOG.debug(QUERY_STRING_FOR_AVU_QUERY, queryString);
 
-		final IRODSQuery irodsQuery = IRODSQuery.instance(queryString,
+		final IRODSGenQuery irodsQuery = IRODSGenQuery.instance(queryString,
 				DEFAULT_REC_COUNT);
 
-		IRODSQueryResultSet resultSet;
+		IRODSQueryResultSetInterface resultSet;
 		try {
 			resultSet = irodsGenQueryExecutorImpl.executeIRODSQuery(irodsQuery,
 					0);
@@ -771,8 +771,8 @@ public final class CollectionAOImpl extends IRODSGenericAO implements
 		query.append(IRODSDataConversionUtil
 				.escapeSingleQuotes(irodsCollectionAbsolutePath));
 		query.append("%'");
-		IRODSQuery irodsQuery = IRODSQuery.instance(query.toString(), 1);
-		IRODSQueryResultSet resultSet;
+		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(query.toString(), 1);
+		IRODSQueryResultSetInterface resultSet;
 
 		try {
 			resultSet = irodsGenQueryExecutor.executeIRODSQuery(irodsQuery, 0);
