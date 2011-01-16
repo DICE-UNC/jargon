@@ -23,8 +23,6 @@ public class IRODSQueryResultRowTest {
 	public static void tearDownAfterClass() throws Exception {
 	}
 
-	// FIXME: fix mockito errors
-
 	@Test
 	public void testInstance() throws Exception {
 
@@ -49,9 +47,11 @@ public class IRODSQueryResultRowTest {
 		resultColumns.add(RodsGenQueryEnum.COL_AUDIT_ACTION_ID.getName());
 		resultColumns.add(RodsGenQueryEnum.COL_AUDIT_COMMENT.getName());
 		resultColumns.add(RodsGenQueryEnum.COL_AUDIT_CREATE_TIME.getName());
+		
+	
 
 		IRODSQueryResultRow resultRow = IRODSQueryResultRow.instance(
-				resultColumns, query);
+				resultColumns, resultColumns);
 		Assert.assertNotNull("no result row created", resultRow);
 
 	}
@@ -75,7 +75,7 @@ public class IRODSQueryResultRowTest {
 
 		TranslatedIRODSGenQuery query = mock(TranslatedIRODSGenQuery.class);
 		when(query.getSelectFields()).thenReturn(selectFields);
-		IRODSQueryResultRow.instance(null, query);
+		IRODSQueryResultRow.instance(null, new ArrayList<String>());
 
 	}
 
@@ -116,7 +116,7 @@ public class IRODSQueryResultRowTest {
 		resultColumns.add(RodsGenQueryEnum.COL_AUDIT_CREATE_TIME.getName());
 
 		IRODSQueryResultRow resultRow = IRODSQueryResultRow.instance(
-				resultColumns, query);
+				resultColumns, new ArrayList<String>());
 		String actualColumn = resultRow.getColumn(0);
 		Assert.assertEquals("did not get expected column",
 				RodsGenQueryEnum.COL_AUDIT_ACTION_ID.getName(), actualColumn);
@@ -149,7 +149,7 @@ public class IRODSQueryResultRowTest {
 		resultColumns.add(RodsGenQueryEnum.COL_AUDIT_CREATE_TIME.getName());
 
 		IRODSQueryResultRow resultRow = IRODSQueryResultRow.instance(
-				resultColumns, query);
+				resultColumns, new ArrayList<String>());
 		resultRow.getColumn(99);
 
 	}
@@ -180,7 +180,7 @@ public class IRODSQueryResultRowTest {
 		resultColumns.add(RodsGenQueryEnum.COL_AUDIT_CREATE_TIME.getName());
 
 		IRODSQueryResultRow resultRow = IRODSQueryResultRow.instance(
-				resultColumns, query);
+				resultColumns,resultColumns);
 		String actualColumn = resultRow
 				.getColumn(RodsGenQueryEnum.COL_AUDIT_ACTION_ID.getName());
 		Assert.assertEquals("did not get expected column",
@@ -213,7 +213,7 @@ public class IRODSQueryResultRowTest {
 		resultColumns.add(RodsGenQueryEnum.COL_AUDIT_CREATE_TIME.getName());
 
 		IRODSQueryResultRow resultRow = IRODSQueryResultRow.instance(
-				resultColumns, query);
+				resultColumns, new ArrayList<String>());
 		resultRow.getColumn(null);
 
 	}
@@ -244,7 +244,7 @@ public class IRODSQueryResultRowTest {
 		resultColumns.add(RodsGenQueryEnum.COL_AUDIT_CREATE_TIME.getName());
 
 		IRODSQueryResultRow resultRow = IRODSQueryResultRow.instance(
-				resultColumns, query);
+				resultColumns, new ArrayList<String>());
 		resultRow.getColumn("");
 
 	}
@@ -275,7 +275,7 @@ public class IRODSQueryResultRowTest {
 		resultColumns.add(RodsGenQueryEnum.COL_AUDIT_CREATE_TIME.getName());
 
 		IRODSQueryResultRow resultRow = IRODSQueryResultRow.instance(
-				resultColumns, query);
+				resultColumns, new ArrayList<String>());
 		resultRow.getColumn("bogus");
 
 	}

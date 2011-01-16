@@ -9,6 +9,7 @@ import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.packinstr.GenQueryInp;
 import org.irods.jargon.core.packinstr.GenQueryOut;
+import org.irods.jargon.core.query.GenQuerySelectField;
 import org.irods.jargon.core.query.IRODSGenQuery;
 import org.irods.jargon.core.query.IRODSQueryResultRow;
 import org.irods.jargon.core.query.IRODSQueryResultSet;
@@ -39,8 +40,7 @@ public final class IRODSGenQueryExecutorImpl extends IRODSGenericAO implements
 	 * not meant to be created directly by API users. The visibility of this
 	 * constructor is public so it may be invoked by
 	 * <code>org.irods.jargon.core.pub.io</code> classes. Those classes may
-	 * later be converted to create this object via factory (TODO: have io
-	 * classes use factory)
+	 * later be converted to create this object via factory 
 	 * 
 	 * @param irodsSession
 	 *            {@link org.irods.jargon.core.connection.IRODSSession}
@@ -154,9 +154,18 @@ public final class IRODSGenQueryExecutorImpl extends IRODSGenericAO implements
 				.getIntValue();
 
 		log.info(">>>> continuation value: {}", continuation);
+		
+		// get a list of the column names
+		List<String> columnNames = new ArrayList<String>();
 
+		for (GenQuerySelectField selectField : translatedIRODSQuery
+				.getSelectFields()) {
+			columnNames.add(selectField.getSelectFieldColumnName());
+		}
+		
+		// TODO: this is duplicative, need more refactoring, this is also done in constructor for result set
 		List<IRODSQueryResultRow> result = translateResponseIntoResultSet(
-				response, translatedIRODSQuery, continuation);
+				response, translatedIRODSQuery,  columnNames, continuation);
 
 		IRODSQueryResultSet resultSet = IRODSQueryResultSet.instance(
 				translatedIRODSQuery, result, continuation);
@@ -185,7 +194,7 @@ public final class IRODSGenQueryExecutorImpl extends IRODSGenericAO implements
 	 */
 	private List<IRODSQueryResultRow> translateResponseIntoResultSet(
 			final Tag queryResponse,
-			final TranslatedIRODSGenQuery translatedIRODSQuery,
+			final TranslatedIRODSGenQuery translatedIRODSQuery, final List<String> columnNames,
 			final int continuation) throws JargonException {
 
 		List<IRODSQueryResultRow> resultSet = new ArrayList<IRODSQueryResultRow>();
@@ -215,8 +224,8 @@ public final class IRODSGenQueryExecutorImpl extends IRODSGenericAO implements
 						.getStringValue());
 			}
 
-			resultSet.add(IRODSQueryResultRow.instance(row,
-					translatedIRODSQuery, recordCount++, lastRecord));
+			resultSet.add(IRODSQueryResultRow.instance(row, columnNames,
+					 recordCount++, lastRecord));
 
 		}
 

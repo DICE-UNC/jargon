@@ -18,13 +18,21 @@ public class IRODSSimpleQueryResultSet extends AbstractIRODSQueryResultSet {
 	private final SimpleQuery simpleQuery;
 	private final List<String> columnNames;
 
-
 	/**
-	 * Static instance method will create an initialized instance of the result set.
-	 * @param simpleQuery {@link org.irods.jargon.core.query.SimpleQuery} that created this result set.
-	 * @param results <code>List<List<String>></code> with the results in row/column format.
-	 * @param columnNames <code>List<String></code> with the headers for each column.
-	 * @param hasMoreRecords <code>boolean</code> that indicates whether there are more records to retrieve.
+	 * Static instance method will create an initialized instance of the result
+	 * set.
+	 * 
+	 * @param simpleQuery
+	 *            {@link org.irods.jargon.core.query.SimpleQuery} that created
+	 *            this result set.
+	 * @param results
+	 *            <code>List<List<String>></code> with the results in row/column
+	 *            format.
+	 * @param columnNames
+	 *            <code>List<String></code> with the headers for each column.
+	 * @param hasMoreRecords
+	 *            <code>boolean</code> that indicates whether there are more
+	 *            records to retrieve.
 	 * @return
 	 */
 	public static IRODSSimpleQueryResultSet instance(
@@ -37,6 +45,7 @@ public class IRODSSimpleQueryResultSet extends AbstractIRODSQueryResultSet {
 
 	/**
 	 * Constructor is private.
+	 * 
 	 * @param simpleQuery
 	 * @param results
 	 * @param columnNames
@@ -45,17 +54,17 @@ public class IRODSSimpleQueryResultSet extends AbstractIRODSQueryResultSet {
 	private IRODSSimpleQueryResultSet(final SimpleQuery simpleQuery,
 			final List<IRODSQueryResultRow> results,
 			final List<String> columnNames, final boolean hasMoreRecords) {
-		super(results, hasMoreRecords);
+		super(results, columnNames, hasMoreRecords);
 
 		if (simpleQuery == null) {
 			throw new IllegalArgumentException("null simpleQuery");
 		}
-		
+
 		if (results == null) {
 			throw new IllegalArgumentException("null results");
 		}
 
-		if (columnNames == null ) {
+		if (columnNames == null) {
 			throw new IllegalArgumentException("null columnNames");
 		}
 
@@ -63,25 +72,30 @@ public class IRODSSimpleQueryResultSet extends AbstractIRODSQueryResultSet {
 		this.columnNames = Collections.unmodifiableList(columnNames);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.query.AbstractIRODSQueryResultSet#getNumberOfResultColumns()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.query.AbstractIRODSQueryResultSet#
+	 * getNumberOfResultColumns()
 	 */
 	@Override
 	public int getNumberOfResultColumns() {
 		return columnNames.size();
 	}
 
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.query.AbstractIRODSQueryResultSet#getColumnNames()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.query.AbstractIRODSQueryResultSet#getColumnNames()
 	 */
 	@Override
 	public List<String> getColumnNames() {
 		return columnNames;
 	}
-	
+
 	public SimpleQuery getSimpleQuery() {
 		return simpleQuery;
 	}
-
 
 }

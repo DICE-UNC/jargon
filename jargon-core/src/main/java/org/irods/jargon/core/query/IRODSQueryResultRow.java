@@ -19,28 +19,26 @@ import org.irods.jargon.core.exception.JargonException;
 public class IRODSQueryResultRow {
 
 	private final List<String> queryResultColumns;
-	private final TranslatedIRODSGenQuery translatedIRODSQuery;
-
 	private final int recordCount;
 	private final boolean lastResult;
+	private final List<String> columnNames;
 
 	/**
 	 * Build a result row from a column of results produced by an IRODS GenQuery
 	 * 
 	 * @param queryResultColumns
 	 *            <code>List</code> of query result columns
-	 * @param translatedIRODSQuery
-	 *            {@link org.irods.jargon.core.query.TranslatedIRODSGenQuery} with
-	 *            the query specification
+	 * @param columnNames
+	 * 	<code>List<String></code> containing the column names.     
 	 * @return <code>IRODSQueryResultRow</code> with the data for this row.
 	 * @throws JargonException
 	 */
 	public static IRODSQueryResultRow instance(
 			final List<String> queryResultColumns,
-			final TranslatedIRODSGenQuery translatedIRODSQuery)
+			final List<String> columnNames)
 			throws JargonException {
 		return new IRODSQueryResultRow(queryResultColumns,
-				translatedIRODSQuery, 0, false);
+				columnNames, 0, false);
 	}
 
 	/**
@@ -57,15 +55,15 @@ public class IRODSQueryResultRow {
 	 */
 	public static IRODSQueryResultRow instance(
 			final List<String> queryResultColumns,
-			final TranslatedIRODSGenQuery translatedIRODSQuery,
+			final List<String> columnNames,
 			final int recordCount, final boolean lastResult)
 			throws JargonException {
 		return new IRODSQueryResultRow(queryResultColumns,
-				translatedIRODSQuery, recordCount, lastResult);
+				columnNames, recordCount, lastResult);
 	}
 
 	private IRODSQueryResultRow(final List<String> queryResultColumns,
-			final TranslatedIRODSGenQuery translatedIRODSQuery,
+			final List<String> columnNames,
 			final int recordCount, final boolean lastResult)
 			throws JargonException {
 
@@ -73,14 +71,14 @@ public class IRODSQueryResultRow {
 			throw new JargonException("queryResultColumns is null");
 		}
 
-		if (translatedIRODSQuery == null) {
-			throw new JargonException("translatedIRODSQuery is null");
+		if (columnNames == null) {
+			throw new JargonException("columnNames is null");
 		}
 
 		this.queryResultColumns = queryResultColumns;
-		this.translatedIRODSQuery = translatedIRODSQuery;
 		this.lastResult = lastResult;
 		this.recordCount = recordCount;
+		this.columnNames = columnNames;
 
 	}
 
@@ -99,7 +97,6 @@ public class IRODSQueryResultRow {
 		if (columnNumber < 0 || columnNumber >= queryResultColumns.size()) {
 			throw new JargonException("column out of range");
 		}
-
 		return queryResultColumns.get(columnNumber);
 	}
 
@@ -139,19 +136,16 @@ public class IRODSQueryResultRow {
 	 * @return
 	 */
 	protected int getColumnNamePostiion(final String columnName) {
-		int returnIdx = -1;
-		int idx = 0;
-		for (GenQuerySelectField selectField : translatedIRODSQuery.getSelectFields()) {
-			if (selectField.getSelectFieldColumnName().equalsIgnoreCase(
-					columnName)) {
-				returnIdx = idx;
+		int colPos = -1;
+		int i = 0;
+		for (String colNameInList : columnNames) {
+			if (columnName.equals(colNameInList)) {
+				colPos = i;
 				break;
-			} else {
-				idx++;
 			}
 		}
-		return returnIdx;
-
+		
+		return colPos;
 	}
 
 	/**
@@ -166,10 +160,6 @@ public class IRODSQueryResultRow {
 
 	public List<String> getQueryResultColumns() {
 		return queryResultColumns;
-	}
-
-	public TranslatedIRODSGenQuery getTranslatedIRODSQuery() {
-		return translatedIRODSQuery;
 	}
 
 	public int getRecordCount() {

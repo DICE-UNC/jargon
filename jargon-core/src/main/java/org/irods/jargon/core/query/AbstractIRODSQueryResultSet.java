@@ -19,13 +19,21 @@ public abstract class AbstractIRODSQueryResultSet implements IRODSQueryResultSet
 
 	protected final List<IRODSQueryResultRow> results;
 	protected final boolean hasMoreRecords;
+	protected final List<String> columnNames;
 
-	protected AbstractIRODSQueryResultSet(final List<IRODSQueryResultRow> results, final boolean hasMoreRecords) {
+	protected AbstractIRODSQueryResultSet(final List<IRODSQueryResultRow> results, final List<String> columnNames, final boolean hasMoreRecords) {
+		
 		if (results == null) {
 			throw new IllegalArgumentException("results was null");
 		}
+		
+		if (columnNames == null) {
+			throw new IllegalArgumentException("columnNames is null");
+		}
+		
 		this.results = Collections.unmodifiableList(results);
 		this.hasMoreRecords = hasMoreRecords;
+		this.columnNames = columnNames;
 	}
 
 	/* (non-Javadoc)
@@ -65,5 +73,7 @@ public abstract class AbstractIRODSQueryResultSet implements IRODSQueryResultSet
 	 * @see org.irods.jargon.core.query.IRODSQueryResultSetInterface#getColumnNames()
 	 */
 	@Override
-	public abstract List<String> getColumnNames();
+	public List<String> getColumnNames() {
+		return columnNames;
+	}
 }
