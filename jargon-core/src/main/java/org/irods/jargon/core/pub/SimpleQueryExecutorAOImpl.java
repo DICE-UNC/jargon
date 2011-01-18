@@ -65,9 +65,7 @@ public class SimpleQueryExecutorAOImpl extends IRODSGenericAO implements
 
 		SimpleQueryInp simpleQueryInp = SimpleQueryInp.instance(simpleQuery);
 
-		Tag response = null;
-
-		response = getIRODSProtocol().irodsFunction(simpleQueryInp);
+		Tag response =  getIRODSProtocol().irodsFunction(simpleQueryInp);
 
 		if (response == null) {
 			log.info("response from IRODS call indicates no rows found");
@@ -86,23 +84,53 @@ public class SimpleQueryExecutorAOImpl extends IRODSGenericAO implements
 		String[] rows = rawResponse.split("\n");
 		
 		List<String> colNames = new ArrayList<String>();
+		List<String> colValues = new ArrayList<String>();
 		
-		
+		// get the column names, they come in a colName : colValue format, and I need to just grab them once
 		
 		if (rows.length >= 0) {
 			String thisCol;
 			int idx = rows[0].indexOf(':');
-			String firstColName = rows[0].substring(idx + 1);
-			colNames.add(firstColName);
-			//irodsQueryResultRow = new 
-			for(String rowVal:rows) {
-				idx = rowVal.indexOf(':');
-				thisCol = rowVal.substring(idx + 1);
+			String firstColName = rows[0].substring(0, idx);
+			colNames.add(firstColName.trim());
+			
+			for(int i = 1; i < rows.length; i++) {
+				idx = rows[i].indexOf(':');
+				thisCol = rows[i].substring(0, idx).trim();
 				if (thisCol.equals(firstColName)) {
 					break;
 				}
-				colNames.add(thisCol);
+				colNames.add(thisCol.trim());
 			}
+		}
+		
+		// now grab the rows
+		if (rows.length >= 0) {
+			String thisCol;
+			int idx = rows[0].indexOf(':');
+			String firstColName = rows[0].substring(idx + 1).trim();
+			colValues.add(rows[0].substring(idx + 1).trim());
+			
+			for(int i = 1; i < rows.length; i++) {
+				idx = rows[i].indexOf(':');
+				thisCol = rows[i].substring(0, idx).trim();
+				if (thisCol.equals(firstColName)) {
+					// new row, put out the last one if data
+					if (colValues.size() > 0) {
+						irodsQueryResultRow = IRODSQueryResultRow.instance(colValues, colNames);
+						result.add(irodsQueryResultRow);
+						irodsQueryResultRow = null;
+						colValues = new ArrayList<String>();
+					}
+				}
+				colValues.add(rows[i].substring(idx + 1).trim());
+			}
+		}
+		
+		// get last set of values, if present
+		if (!colValues.isEmpty()) {
+			irodsQueryResultRow = IRODSQueryResultRow.instance(colValues, colNames);
+			result.add(irodsQueryResultRow);
 		}
 
 		IRODSQueryResultSetInterface resultSet = IRODSSimpleQueryResultSet
