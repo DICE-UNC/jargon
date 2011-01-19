@@ -7,10 +7,12 @@
   <packaging>pom</packaging>
   <version>2.4.1-SNAPSHOT</version>
   <name>Jargon</name>
-  <description>iRODS :: Jargon</description>
+  <description>Core Java API and related libraries for iRODS</description>
   <url>https://code.renci.org/gf/project/jargon</url>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <spring.core.version>3.0.5.RELEASE</spring.core.version>
+    <spring.security.version>3.0.2.RELEASE</spring.security.version>
   </properties>
   <issueManagement>
     <system>gForge</system>
@@ -149,7 +151,7 @@
       <dependency>
     	<groupId>org.irods</groupId>
     	<artifactId>jargon-core</artifactId>
-    	<version>${pom.version}</version>
+    	<version>${project.version}</version>
       </dependency>
       <dependency>
     	<groupId>junit</groupId>
@@ -189,7 +191,7 @@
       <dependency>
     	<groupId>org.irods.jargon</groupId>
     	<artifactId>jargon-test</artifactId>
-    	<version>${pom.version}</version>
+    	<version>${project.version}</version>
       </dependency>
       <dependency>
     	<groupId>javax.transaction</groupId>
@@ -241,6 +243,24 @@
     	<artifactId>antlr</artifactId>
     	<version>2.7.7</version>
       </dependency>
+      	<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>org.springframework.security.core</artifactId>
+			<version>${spring.security.version}</version>
+            <type>pom</type>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-web</artifactId>
+			<version>${spring.core.version}</version>
+            <type>jar</type>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-web</artifactId>
+			<version>${spring.core.version}</version>
+            <type>pom</type>
+		</dependency>
     </dependencies>
   </dependencyManagement>    
   <dependencies>
@@ -329,5 +349,6 @@
     <module>jargon-test</module>
     <module>jargon-transfer-engine</module>
     <module>jargon-user-tagging</module>
+    <module>jargon-security</module>
   </modules>
 </project>

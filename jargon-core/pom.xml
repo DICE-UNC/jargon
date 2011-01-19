@@ -10,7 +10,7 @@
 	<artifactId>jargon-core</artifactId>
 	<packaging>jar</packaging>
 	<name>Jargon Core</name>
-	<description>Core PAI for the iRODS Data grid</description>
+	<description>Core API for the iRODS Data grid</description>
 	<url>http://www.irods.org</url>
 	<dependencies>
 		<dependency>
