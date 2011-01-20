@@ -242,11 +242,11 @@
     	<artifactId>antlr</artifactId>
     	<version>2.7.7</version>
       </dependency>
-      	<dependency>
-   <groupId>org.springframework.security</groupId>
-   <artifactId>spring-security-core</artifactId>
-   <version>${spring.core.version}</version>
-</dependency>
+      <dependency>
+       <groupId>org.springframework.security</groupId>
+       <artifactId>spring-security-core</artifactId>
+        <version>${spring.core.version}</version>
+     </dependency>
 		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-web</artifactId>
