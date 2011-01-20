@@ -6,7 +6,7 @@
     <version>2.4.1-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
-  <groupId>org.irods.jargon</groupId>
+  <groupId>org.irods</groupId>
   <artifactId>jargon-user-tagging</artifactId>
   <packaging>jar</packaging>
   <name>Jargon User Tagging</name>
@@ -22,7 +22,7 @@
       <artifactId>jargon-core</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.irods.jargon</groupId>
+      <groupId>org.irods</groupId>
       <artifactId>jargon-test</artifactId>
       <scope>compile</scope>
     </dependency>
