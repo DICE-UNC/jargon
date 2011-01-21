@@ -809,6 +809,11 @@ public final class IRODSFileImpl extends File implements IRODSFile {
 	 */
 	@Override
 	public File[] listFiles() {
+		
+		
+		
+		
+		
 		try {
 			List<String> result = irodsFileSystemAO.getListInDir(this);
 			IRODSFileImpl[] a = new IRODSFileImpl[result.size()];

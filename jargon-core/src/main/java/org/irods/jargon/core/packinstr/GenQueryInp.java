@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.irods.jargon.core.packinstr;
 
 import static edu.sdsc.grid.io.irods.IRODSConstants.options;
@@ -17,14 +13,7 @@ import edu.sdsc.grid.io.irods.Tag;
  * Wrap a query to IRODS, note that the only shared object is
  * <code>IRODSQuery</code> which is immutable, so this class should be
  * thread-safe.
- * 
- * lib/core/include/rodsGenQuery.h
- * 
- * #define GenQueryInp_PI "int maxRows; int continueInx; int partialStartIndex;
- * int options; struct KeyValPair_PI; struct InxIvalPair_PI; struct
- * InxValPair_PI;"
- * 
- * @author toaster
+ * @author Mike Conway - DICE (www.irods.org)
  */
 public class GenQueryInp extends AbstractIRODSPackingInstruction implements
 		IRodsPI {
@@ -32,6 +21,7 @@ public class GenQueryInp extends AbstractIRODSPackingInstruction implements
 	private final TranslatedIRODSGenQuery translatedIRODSQuery;
 	private final int continueIndex;
 	private final int partialStartIndex;
+	private final int maxRowCount;
 	public static final String PI_TAG = "GenQueryInp_PI";
 	public static final String MAX_ROWS = "maxRows";
 	public static final String CONTINUE_INX = "continueInx";
@@ -61,6 +51,15 @@ public class GenQueryInp extends AbstractIRODSPackingInstruction implements
 			final int continueIndex) throws JargonException {
 		return new GenQueryInp(translatedIRODSQuery, continueIndex, 0);
 	}
+	
+	/**
+	 * Static instance method for version of the packing instruction to close the query down.
+	 * @param continueIndex <code>int</code> with value passed back from iRODS with the last query result.  
+	 * @return
+	 */
+	public static GenQueryInp instanceForCloseQuery(final TranslatedIRODSGenQuery translatedIRODSQuery, final int continueIndex) {
+		return new GenQueryInp(translatedIRODSQuery, continueIndex);
+	}
 
 	/**
 	 * Return an instance of a query command that has a partial start index for
@@ -82,31 +81,48 @@ public class GenQueryInp extends AbstractIRODSPackingInstruction implements
 			final int partialStartIndex) throws JargonException {
 		return new GenQueryInp(translatedIRODSQuery, 0, partialStartIndex);
 	}
+	
+	/**
+	 * Special private constructor builds the packing instruction when this is a close of a result set that had been continued.
+	 * @param continueIndex <code>int</code> with value passed back from iRODS with the last query result.  
+	 */
+	private GenQueryInp(final TranslatedIRODSGenQuery translatedIRODSGenQuery,final int continueIndex) {
+		
+		if (translatedIRODSGenQuery == null) {
+			throw new IllegalArgumentException("translatedIRODSGenQuery is null");
+		}
+		
+		if (continueIndex <= 0) {
+			throw new IllegalArgumentException("continueIndex must be > 0 when sending a close");
+		}
+		
+		this.translatedIRODSQuery = translatedIRODSGenQuery;
+		this.continueIndex = continueIndex;
+		this.partialStartIndex = 0;
+		this.maxRowCount = -1;
+	}
 
 	private GenQueryInp(final TranslatedIRODSGenQuery translatedIRODSQuery,
 			final int continueIndex, final int partialStartIndex)
 			throws JargonException {
+		
 		if (translatedIRODSQuery == null) {
-			throw new JargonException("irodsQuery is null");
+			throw new IllegalArgumentException("irodsQuery is null");
 		}
 
 		if (partialStartIndex < 0) {
-			throw new JargonException("partialStartIndex is less than 0");
+			throw new IllegalArgumentException("partialStartIndex is less than 0");
 		}
 
 		if (continueIndex < 0) {
-			throw new JargonException("continue Index must be 0 or greater");
+			throw new IllegalArgumentException("continue Index must be 0 or greater");
 		}
 
 		this.translatedIRODSQuery = translatedIRODSQuery;
 		this.continueIndex = continueIndex;
 		this.partialStartIndex = partialStartIndex;
+		this.maxRowCount = translatedIRODSQuery.getIrodsQuery().getNumberOfResultsDesired();
 		this.setApiNumber(API_NBR);
-	}
-
-	public Object responseAsObject() throws JargonException {
-		return null;
-
 	}
 
 	/**
@@ -126,17 +142,20 @@ public class GenQueryInp extends AbstractIRODSPackingInstruction implements
 	 */
 	public TranslatedIRODSGenQuery getTranslatedIRODSQuery()
 			throws JargonException {
+		
 		if (translatedIRODSQuery == null) {
-			throw new JargonException("no translated query");
+			throw new IllegalArgumentException("no translated query");
 		}
 		return translatedIRODSQuery;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.core.packinstr.AbstractIRODSPackingInstruction#getTagValue()
+	 */
 	@Override
 	public Tag getTagValue() throws JargonException {
 		Tag message = new Tag(PI_TAG, new Tag[] {
-				new Tag(MAX_ROWS, translatedIRODSQuery.getIrodsQuery()
-						.getNumberOfResultsDesired()),
+				new Tag(MAX_ROWS, maxRowCount),
 				new Tag(CONTINUE_INX, continueIndex), // new query
 				new Tag(PARTIAL_START_INDEX, partialStartIndex) });
 
@@ -185,8 +204,6 @@ public class GenQueryInp extends AbstractIRODSPackingInstruction implements
 			j++;
 		}
 
-		// FIXME: bug 112 fixes like in jargon trunk for query performance, need
-		// to fix here
 		message.addTag(new Tag(INX_IVAL_PAIR_PI, subTags));
 
 		if (translatedIRODSQuery.getTranslatedQueryConditions().size() > 0) {

@@ -17,13 +17,26 @@ import org.irods.jargon.core.exception.JargonException;
 public class IRODSQueryResultSet extends AbstractIRODSQueryResultSet {
 
 	private final TranslatedIRODSGenQuery translatedIRODSQuery;
+	/**
+	 * Used internally by gen query to signal a continuation of a query when sending a re-query
+	 */
+	private final int continuationIndex;
 
+	
+	/**
+	 * Creates an instance of a result set based on data coming back from iRODS GenQuery response data.
+	 * @param translatedIRODSQuery {@link TranslatedIRODSQuery} that had been sent to get these results.
+	 * @param results <code>List</code> of {@link IRODSQueryResultRow} with the raw results.
+	 * @param continuationIndex <code>int</code> that indicates the continuation sent by iRODS.  This indicates more data available, and the continuation index
+	 * will be sent with the request to get more results.
+	 * @return 
+	 * @throws JargonException
+	 */
 	public static IRODSQueryResultSet instance(
 			final TranslatedIRODSGenQuery translatedIRODSQuery,
 			final List<IRODSQueryResultRow> results, final int continuationIndex)
 			throws JargonException {
 
-		boolean hasMore = (continuationIndex > 0);
 		// get a list of the column names
 		List<String> columnNames = new ArrayList<String>();
 
@@ -33,23 +46,24 @@ public class IRODSQueryResultSet extends AbstractIRODSQueryResultSet {
 		}
 
 		return new IRODSQueryResultSet(translatedIRODSQuery, results,
-				columnNames, hasMore);
+				columnNames, continuationIndex);
 	}
 
 	private IRODSQueryResultSet(
 			final TranslatedIRODSGenQuery translatedIRODSQuery,
 			final List<IRODSQueryResultRow> results,
-			final List<String> columnNames, final boolean hasMoreRecords)
+			final List<String> columnNames, final int continuationIndex)
 			throws JargonException {
 
 		super(results, Collections.unmodifiableList(columnNames),
-				hasMoreRecords);
+				continuationIndex > 0);
 
 		if (translatedIRODSQuery == null) {
 			throw new JargonException("translated IRODS query is null");
 		}
 
 		this.translatedIRODSQuery = translatedIRODSQuery;
+		this.continuationIndex = continuationIndex;
 
 	}
 
@@ -75,10 +89,9 @@ public class IRODSQueryResultSet extends AbstractIRODSQueryResultSet {
 		return translatedIRODSQuery.getSelectFields().size();
 	}
 
-	@Override
-	public List<String> getColumnNames() {
-		// TODO implement for gen query based on selects
-		return null;
+	public int getContinuationIndex() {
+		return continuationIndex;
 	}
+
 
 }

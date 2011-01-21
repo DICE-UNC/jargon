@@ -120,7 +120,7 @@ public final class IRODSGenQueryExecutorImpl extends IRODSGenericAO implements
 			throw new JargonException(
 					"partial start index cannot be less than zero");
 		}
-
+		
 		GenQueryInp genQueryInp;
 
 		if (partialStartIndex == 0) {
@@ -131,29 +131,24 @@ public final class IRODSGenQueryExecutorImpl extends IRODSGenericAO implements
 					translatedIRODSQuery, partialStartIndex);
 		}
 
-		Tag response = null;
-
+		Tag response;
 		try {
-			response = getIRODSProtocol().irodsFunction(GenQueryInp.PI_TAG,
-					genQueryInp.getParsedTags(), GenQueryInp.API_NBR);
-		} catch (DataNotFoundException dnf) {
-			log.info(
-					"response from IRODS call indicates no rows found, original query was:{}",
-					translatedIRODSQuery);
-			List<IRODSQueryResultRow> result = new ArrayList<IRODSQueryResultRow>();
-			IRODSQueryResultSet resultSet = IRODSQueryResultSet.instance(
-					translatedIRODSQuery, result, 0);
-			return resultSet;
-		}
-
-		if (log.isDebugEnabled()) {
-			log.debug("query reult for query:{}", translatedIRODSQuery);
-		}
+		 response = sendGenQueryAndReturnResponse(genQueryInp);
+		
+		
+			} catch (DataNotFoundException dnf) {
+				log.info(
+						"response from IRODS call indicates no rows found");
+				List<IRODSQueryResultRow> result = new ArrayList<IRODSQueryResultRow>();
+				IRODSQueryResultSet resultSet = IRODSQueryResultSet.instance(
+						translatedIRODSQuery, result, 0);
+				return resultSet;
+			}
 
 		int continuation = response.getTag(GenQueryOut.CONTINUE_INX)
 				.getIntValue();
 
-		log.info(">>>> continuation value: {}", continuation);
+		log.info("continuation value: {}", continuation);
 		
 		// get a list of the column names
 		List<String> columnNames = new ArrayList<String>();
@@ -163,7 +158,6 @@ public final class IRODSGenQueryExecutorImpl extends IRODSGenericAO implements
 			columnNames.add(selectField.getSelectFieldColumnName());
 		}
 		
-		// TODO: this is duplicative, need more refactoring, this is also done in constructor for result set
 		List<IRODSQueryResultRow> result = translateResponseIntoResultSet(
 				response, translatedIRODSQuery,  columnNames, continuation);
 
@@ -172,6 +166,23 @@ public final class IRODSGenQueryExecutorImpl extends IRODSGenericAO implements
 
 		return resultSet;
 
+	}
+
+	/**
+	 * @param translatedIRODSQuery
+	 * @param continueIndex
+	 * @param partialStartIndex
+	 * @return
+	 * @throws JargonException
+	 */
+	private Tag sendGenQueryAndReturnResponse(
+			final GenQueryInp genQueryInp)
+			throws JargonException, DataNotFoundException {
+		
+		Tag response = getIRODSProtocol().irodsFunction(GenQueryInp.PI_TAG,
+					genQueryInp.getParsedTags(), GenQueryInp.API_NBR);
+		
+		return response;
 	}
 
 	/**
@@ -255,6 +266,28 @@ public final class IRODSGenQueryExecutorImpl extends IRODSGenericAO implements
 
 		return executeTranslatedIRODSQuery(
 				irodsQueryResultSet.getTranslatedIRODSQuery(), 1, 0);
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.core.pub.IRODSGenQueryExecutor#closeResults(org.irods.jargon.core.query.IRODSQueryResultSet)
+	 */
+	@Override
+	public void closeResults(
+			final IRODSQueryResultSet irodsQueryResultSet)
+			throws JargonException {
+		
+		log.info("getting more results for query");
+		if (irodsQueryResultSet == null) {
+			throw new JargonException("null irodsQueryResultSet");
+		}
+
+		if (!irodsQueryResultSet.isHasMoreRecords()) {
+			throw new JargonException("no more results, cannot close");
+		}
+		
+		GenQueryInp genQueryInp = GenQueryInp.instanceForCloseQuery(irodsQueryResultSet.getTranslatedIRODSQuery(), irodsQueryResultSet.getContinuationIndex());
+		sendGenQueryAndReturnResponse(genQueryInp);
+
 	}
 
 }

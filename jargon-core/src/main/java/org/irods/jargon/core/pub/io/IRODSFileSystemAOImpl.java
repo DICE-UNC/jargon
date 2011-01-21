@@ -45,8 +45,6 @@ import edu.sdsc.grid.io.irods.Tag;
  * <code>java.io.file</code> are not implemented in this particular access
  * object.
  * 
- * FIXME: think about where this should go and visibiity of constructors for
- * AO's
  * 
  * @author Mike Conway - DICE (www.irods.org)
  */

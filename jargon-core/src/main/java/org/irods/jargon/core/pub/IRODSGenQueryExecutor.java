@@ -76,4 +76,14 @@ public interface IRODSGenQueryExecutor extends IRODSAccessObject {
 	IRODSQueryResultSet getMoreResults(IRODSQueryResultSet irodsQueryResultSet)
 			throws JargonException, JargonQueryException;
 
+	/**
+	 * Close the result set that had been continued
+	 * @param irodsQueryResultSet
+	 *            {@link org.irods.jargon.core.query.IRODSQueryResultSet} that
+	 *            contains the results of the previous query.
+	 * @throws JargonException
+	 */
+	void closeResults(IRODSQueryResultSet irodsQueryResultSet)
+			throws JargonException;
+
 }

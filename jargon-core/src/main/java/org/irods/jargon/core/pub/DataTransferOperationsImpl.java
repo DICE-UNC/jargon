@@ -299,8 +299,12 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 						.instance();
 			}
 
+			/*
+			 * Compute the count of files to be transferred.  This is different depending on whether this is a single file, or whether
+			 * it's a collection.
+			 */
 			if (irodsSourceFile.isDirectory()) {
-				log.debug("get opertation, treating as a directory");
+				log.debug("get operation, treating as a directory");
 				if (operativeTransferControlBlock != null) {
 					IRODSAccessObjectFactory irodsAccessObjectFactory = IRODSAccessObjectFactoryImpl
 							.instance(getIRODSSession());

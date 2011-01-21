@@ -6,6 +6,7 @@ package org.irods.jargon.core.pub;
 import java.util.Properties;
 
 import junit.framework.Assert;
+import junit.framework.TestCase;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSProtocolManager;
@@ -262,5 +263,48 @@ public class IRODSGenQueryExecutorImplTest {
 		Assert.assertTrue("no results, some expected", resultSet.getResults()
 				.size() > 0);
 	}
+	
+	@Test
+	public final void testQueryHasContinuationCloseItBeforeFinished() throws Exception {
 
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + "/"
+								+ collDir);
+
+		String queryString = "select "
+				+ RodsGenQueryEnum.COL_COLL_NAME.getName() + " ,"
+				+ RodsGenQueryEnum.COL_DATA_NAME.getName() + " where "
+				+ RodsGenQueryEnum.COL_COLL_NAME.getName() + " = '"
+				+ targetIrodsCollection + "'";
+
+		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(queryString, 1000);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager
+				.instance();
+
+		IRODSSession irodsSession = IRODSSession
+				.instance(irodsConnectionManager);
+		IRODSAccessObjectFactory accessObjectFactory = IRODSAccessObjectFactoryImpl
+				.instance(irodsSession);
+		IRODSGenQueryExecutor irodsGenQueryExecutor = accessObjectFactory
+				.getIRODSGenQueryExecutor(irodsAccount);
+
+		IRODSQueryResultSet resultSet = irodsGenQueryExecutor
+				.executeIRODSQuery(irodsQuery, 0);
+
+		Assert.assertTrue("did not get expected continuation",
+				resultSet.isHasMoreRecords());
+
+		// now close
+		irodsGenQueryExecutor.closeResults(resultSet);
+
+		irodsSession.closeSession();
+		// no error considered success
+		TestCase.assertTrue(true);
+	}
+	
 }
