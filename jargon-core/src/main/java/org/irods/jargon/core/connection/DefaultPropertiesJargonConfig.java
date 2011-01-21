@@ -18,6 +18,13 @@ import org.irods.jargon.core.exception.JargonException;
  */
 public class DefaultPropertiesJargonConfig implements JargonProperties {
 
+	private final Properties jargonProperties;
+	
+	@Override
+	public int getMaxFilesAndDirsQueryMax() throws JargonException {
+		return verifyPropExistsAndGetAsInt("max.files.and.dirs.query.max");
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -29,8 +36,7 @@ public class DefaultPropertiesJargonConfig implements JargonProperties {
 		return verifyPropExistsAndGetAsLong("transfer.send.max.threads.threshold");
 	}
 
-	private final Properties jargonProperties;
-
+	
 	/**
 	 * Default constructor will load the default properties from the
 	 * 'jargon.properties' file on the classpath.

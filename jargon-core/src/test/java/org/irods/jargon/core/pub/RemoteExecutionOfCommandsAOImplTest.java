@@ -7,7 +7,6 @@ import java.io.SequenceInputStream;
 import java.util.Properties;
 
 import junit.framework.Assert;
-import junit.framework.TestCase;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSServerProperties;
@@ -229,9 +228,10 @@ public class RemoteExecutionOfCommandsAOImplTest {
 		InputStream inputStream = remoteExecutionOfCommandsAO
 				.executeARemoteCommandAndGetStreamGivingCommandNameAndArgs(cmd,
 						args);
-		
-		TestCase.assertTrue("should have gotten a SequenceInputStream", (inputStream instanceof SequenceInputStream));
-		
+
+		Assert.assertTrue("should have gotten a SequenceInputStream",
+				(inputStream instanceof SequenceInputStream));
+
 		inputStream.close();
 		irodsFileSystem.close();
 	}

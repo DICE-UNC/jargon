@@ -4,7 +4,6 @@ import java.util.Arrays;
 import java.util.Properties;
 
 import junit.framework.Assert;
-import junit.framework.TestCase;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSProtocolManager;
@@ -171,9 +170,9 @@ public class IRODSFileOutputStreamTest {
 		String expectedBytes = "fjjifi98jd";
 		byte[] myBytesArray = myBytes.getBytes();
 		byte[] myExpectedBytesArray = expectedBytes.getBytes();
-		
+
 		// should write fjjifi98jd
-		irodsFileOutputStream.write(myBytesArray,10, 10);
+		irodsFileOutputStream.write(myBytesArray, 10, 10);
 		irodsFileOutputStream.close();
 		irodsFile.close();
 
@@ -181,17 +180,18 @@ public class IRODSFileOutputStreamTest {
 		irodsFile.open();
 		IRODSFileInputStream irodsFileInputStream = irodsFileFactory
 				.instanceIRODSFileInputStream(irodsFile);
-		int bytesRead = 0;
-		int readLength = 0;
 		byte[] readBytesBuffer = new byte[myExpectedBytesArray.length];
-		int lenRead = irodsFileInputStream.read(readBytesBuffer);
-	
+		irodsFileInputStream.read(readBytesBuffer);
+
 		irodsFileInputStream.close();
 		irodsFile.close();
 		irodsSession.closeSession();
-		boolean equalArrays = Arrays.equals(myExpectedBytesArray, readBytesBuffer);
-		
-		TestCase.assertTrue("did not read back what I wrote to the output stream", equalArrays);
+		boolean equalArrays = Arrays.equals(myExpectedBytesArray,
+				readBytesBuffer);
+
+		Assert.assertTrue(
+				"did not read back what I wrote to the output stream",
+				equalArrays);
 	}
 
 	@Test

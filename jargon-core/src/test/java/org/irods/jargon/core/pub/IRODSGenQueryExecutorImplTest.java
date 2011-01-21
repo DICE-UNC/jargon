@@ -6,7 +6,6 @@ package org.irods.jargon.core.pub;
 import java.util.Properties;
 
 import junit.framework.Assert;
-import junit.framework.TestCase;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSProtocolManager;
@@ -263,9 +262,10 @@ public class IRODSGenQueryExecutorImplTest {
 		Assert.assertTrue("no results, some expected", resultSet.getResults()
 				.size() > 0);
 	}
-	
+
 	@Test
-	public final void testQueryHasContinuationCloseItBeforeFinished() throws Exception {
+	public final void testQueryHasContinuationCloseItBeforeFinished()
+			throws Exception {
 
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
@@ -304,7 +304,7 @@ public class IRODSGenQueryExecutorImplTest {
 
 		irodsSession.closeSession();
 		// no error considered success
-		TestCase.assertTrue(true);
+		Assert.assertTrue(true);
 	}
-	
+
 }

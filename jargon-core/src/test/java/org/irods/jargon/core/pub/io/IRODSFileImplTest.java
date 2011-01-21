@@ -1127,7 +1127,7 @@ public class IRODSFileImplTest {
 
 		irodsSession.closeSession();
 
-		TestCase.assertFalse("files should not be equal",
+		Assert.assertFalse("files should not be equal",
 				irodsFile.equals(irodsFile2));
 	}
 
@@ -1180,8 +1180,8 @@ public class IRODSFileImplTest {
 				.instanceIRODSFile(targetIrodsCollection + '/' + testFileName);
 		IRODSFile newIRODSFile = (IRODSFile) irodsFile.getAbsoluteFile();
 
-		TestCase.assertNotNull("my new file does not exist", newIRODSFile);
-		TestCase.assertEquals("absolute paths must match",
+		Assert.assertNotNull("my new file does not exist", newIRODSFile);
+		Assert.assertEquals("absolute paths must match",
 				irodsFile.getAbsolutePath(), newIRODSFile.getAbsolutePath());
 
 	}
@@ -1214,7 +1214,7 @@ public class IRODSFileImplTest {
 		IRODSFile irodsFile = irodsFileFactory
 				.instanceIRODSFile(targetIrodsCollection + '/' + testFileName);
 		String actualPath = irodsFile.getAbsolutePath();
-		TestCase.assertEquals("paths do not match", targetIrodsCollection + '/'
+		Assert.assertEquals("paths do not match", targetIrodsCollection + '/'
 				+ testFileName, actualPath);
 	}
 
@@ -1247,7 +1247,7 @@ public class IRODSFileImplTest {
 
 		File irodsCanonicalFile = irodsFile.getCanonicalFile();
 		irodsSession.closeSession();
-		TestCase.assertEquals("files", irodsCanonicalFile, irodsFile);
+		Assert.assertEquals("files", irodsCanonicalFile, irodsFile);
 	}
 
 	/**
@@ -1278,7 +1278,7 @@ public class IRODSFileImplTest {
 		IRODSFile irodsFile = irodsFileFactory
 				.instanceIRODSFile(targetIrodsCollection + '/' + testFileName);
 		String actualPath = irodsFile.getCanonicalPath();
-		TestCase.assertEquals("paths do not match", targetIrodsCollection + '/'
+		Assert.assertEquals("paths do not match", targetIrodsCollection + '/'
 				+ testFileName, actualPath);
 	}
 
@@ -1309,7 +1309,7 @@ public class IRODSFileImplTest {
 		IRODSFile irodsFile = irodsFileFactory
 				.instanceIRODSFile(targetIrodsCollection + '/' + testFileName);
 		String actualName = irodsFile.getName();
-		TestCase.assertEquals("names do not match", testFileName, actualName);
+		Assert.assertEquals("names do not match", testFileName, actualName);
 	}
 
 	/**
@@ -1339,8 +1339,8 @@ public class IRODSFileImplTest {
 		IRODSFile irodsFile = irodsFileFactory
 				.instanceIRODSFile(targetIrodsCollection + '/' + testFileName);
 		String actualParent = irodsFile.getParent();
-		TestCase.assertEquals("parent names do not match",
-				targetIrodsCollection, actualParent);
+		Assert.assertEquals("parent names do not match", targetIrodsCollection,
+				actualParent);
 	}
 
 	/**
@@ -1372,7 +1372,7 @@ public class IRODSFileImplTest {
 
 		File irodsParentFile = irodsFile.getParentFile();
 		irodsSession.closeSession();
-		TestCase.assertEquals("files", irodsFile.getParent(),
+		Assert.assertEquals("files", irodsFile.getParent(),
 				irodsParentFile.getAbsolutePath());
 	}
 
@@ -1401,7 +1401,7 @@ public class IRODSFileImplTest {
 				.instanceIRODSFile(targetIrodsCollection);
 		String[] subdirs = irodsFile.list();
 		irodsSession.closeSession();
-		TestCase.assertNotNull(subdirs);
+		Assert.assertNotNull(subdirs);
 		TestCase.assertTrue("no results", subdirs.length > 0);
 	}
 

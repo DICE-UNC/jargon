@@ -27,6 +27,7 @@ public class SettableJargonProperties implements JargonProperties {
 	private boolean useParallelTransfer = true;
 	private int maxParallelThreads = 4;
 	private long parallelThreadsLengthThreshold = 734003200;
+	private int maxFilesAndDirsQueryMax = 5000;
 
 	
 	/* (non-Javadoc)
@@ -65,6 +66,11 @@ public class SettableJargonProperties implements JargonProperties {
 	@Override
 	public int getMaxParallelThreads() throws JargonException {
 		return maxParallelThreads;
+	}
+
+	@Override
+	public int getMaxFilesAndDirsQueryMax() throws JargonException {
+		return maxFilesAndDirsQueryMax;
 	}
 
 }

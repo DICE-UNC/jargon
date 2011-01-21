@@ -9,13 +9,12 @@ import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.CollectionAO;
 import org.irods.jargon.core.pub.DataObjectAO;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
-import org.irods.jargon.core.pub.IRODSGenQueryExecutor;
 import org.irods.jargon.core.pub.domain.Collection;
 import org.irods.jargon.core.pub.domain.DataObject;
 import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry;
-import org.irods.jargon.core.query.RodsGenQueryEnum;
 import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry.ObjectType;
 import org.irods.jargon.core.query.MetaDataAndDomainData.MetadataDomain;
+import org.irods.jargon.core.query.RodsGenQueryEnum;
 import org.irods.jargon.usertagging.domain.IRODSTagGrouping;
 import org.irods.jargon.usertagging.domain.IRODSTagValue;
 import org.irods.jargon.usertagging.domain.TagQuerySearchResult;
@@ -216,10 +215,9 @@ public final class FreeTaggingServiceImpl extends AbstractIRODSTaggingService
 
 		// only allow updates as logged in user
 		if (!(irodsTagGrouping.getUserName().equals(irodsAccount.getUserName()))) {
-			log
-					.error(
-							"attempting to update for user:{} not allowed, must be same as logged in user",
-							irodsTagGrouping.getUserName());
+			log.error(
+					"attempting to update for user:{} not allowed, must be same as logged in user",
+					irodsTagGrouping.getUserName());
 			throw new JargonException(
 					"attempt to update user tags using user name not equal to logged in user");
 		}
@@ -233,9 +231,9 @@ public final class FreeTaggingServiceImpl extends AbstractIRODSTaggingService
 
 		// gather user tags
 		List<IRODSTagValue> currentTags = irodsTaggingService
-				.getTagsBasedOnMetadataDomain(irodsTagGrouping
-						.getMetadataDomain(), irodsTagGrouping
-						.getDomainUniqueName());
+				.getTagsBasedOnMetadataDomain(
+						irodsTagGrouping.getMetadataDomain(),
+						irodsTagGrouping.getDomainUniqueName());
 		log.debug("current user tags:{}", currentTags);
 
 		/*
@@ -253,8 +251,8 @@ public final class FreeTaggingServiceImpl extends AbstractIRODSTaggingService
 			for (IRODSTagValue irodsTagValue : currentTags) {
 				log.debug("deleting current tag:{}", currentTags);
 				irodsTaggingService.removeTagFromGivenDomain(irodsTagValue,
-						irodsTagGrouping.getMetadataDomain(), irodsTagGrouping
-								.getDomainUniqueName());
+						irodsTagGrouping.getMetadataDomain(),
+						irodsTagGrouping.getDomainUniqueName());
 			}
 		} else {
 			for (String desiredTag : userTags) {
@@ -297,9 +295,9 @@ public final class FreeTaggingServiceImpl extends AbstractIRODSTaggingService
 	 * @param userTags
 	 * @param irodsTagGrouping
 	 */
-	private void processCurrentTagAgainstDesiredTags(IRODSTagValue currentTag,
-			String[] userTags, IRODSTagGrouping irodsTagGrouping)
-			throws JargonException {
+	private void processCurrentTagAgainstDesiredTags(
+			final IRODSTagValue currentTag, final String[] userTags,
+			final IRODSTagGrouping irodsTagGrouping) throws JargonException {
 
 		log.info("looking to see if iRODS tag still desired:{}", currentTag);
 
@@ -316,8 +314,8 @@ public final class FreeTaggingServiceImpl extends AbstractIRODSTaggingService
 			log.info("removing tag from iRODS, no longer desired:{}",
 					currentTag);
 			irodsTaggingService.removeTagFromGivenDomain(currentTag,
-					irodsTagGrouping.getMetadataDomain(), irodsTagGrouping
-							.getDomainUniqueName());
+					irodsTagGrouping.getMetadataDomain(),
+					irodsTagGrouping.getDomainUniqueName());
 		}
 
 	}
@@ -351,11 +349,11 @@ public final class FreeTaggingServiceImpl extends AbstractIRODSTaggingService
 
 		if (!inCurrentTags) {
 			log.debug("desired tag not in current, will add: {}", desiredTag);
-			irodsTagValue = new IRODSTagValue(desiredTag, irodsAccount
-					.getUserName());
+			irodsTagValue = new IRODSTagValue(desiredTag,
+					irodsAccount.getUserName());
 			irodsTaggingService.addTagToGivenDomain(irodsTagValue,
-					irodsTagGrouping.getMetadataDomain(), irodsTagGrouping
-							.getDomainUniqueName());
+					irodsTagGrouping.getMetadataDomain(),
+					irodsTagGrouping.getDomainUniqueName());
 		}
 
 	}
@@ -385,8 +383,6 @@ public final class FreeTaggingServiceImpl extends AbstractIRODSTaggingService
 
 		List<CollectionAndDataObjectListingEntry> resultEntries = new ArrayList<CollectionAndDataObjectListingEntry>();
 
-		IRODSGenQueryExecutor irodsGenQueryExecutor = getIrodsAccessObjectFactory()
-				.getIRODSGenQueryExecutor(getIrodsAccount());
 		DataObjectAO dataObjectAO = getIrodsAccessObjectFactory()
 				.getDataObjectAO(getIrodsAccount());
 
@@ -414,10 +410,9 @@ public final class FreeTaggingServiceImpl extends AbstractIRODSTaggingService
 		List<DataObject> dataObjects = dataObjectAO.findWhere(wherePart
 				.toString());
 
-		log
-				.info(
-						"retrieved {} data objects based on query, converting to query result entries",
-						dataObjects.size());
+		log.info(
+				"retrieved {} data objects based on query, converting to query result entries",
+				dataObjects.size());
 
 		CollectionAndDataObjectListingEntry collectionAndDataObjectListingEntry = null;
 
@@ -466,30 +461,33 @@ public final class FreeTaggingServiceImpl extends AbstractIRODSTaggingService
 
 		log.debug("where part of collection query = {}", wherePart);
 
-		List<Collection> collections = collectionAO.findWhere(wherePart
-				.toString(), 0);
-		
+		List<Collection> collections = collectionAO.findWhere(
+				wherePart.toString(), 0);
+
 		for (Collection collection : collections) {
 			collectionAndDataObjectListingEntry = new CollectionAndDataObjectListingEntry();
 			collectionAndDataObjectListingEntry.setCount(collection.getCount());
 			collectionAndDataObjectListingEntry.setCreatedAt(collection
 					.getCreatedAt());
 			collectionAndDataObjectListingEntry.setDataSize(0);
-			collectionAndDataObjectListingEntry.setId(collection.getCollectionId());
+			collectionAndDataObjectListingEntry.setId(collection
+					.getCollectionId());
 			collectionAndDataObjectListingEntry.setLastResult(collection
 					.isLastResult());
-			collectionAndDataObjectListingEntry.setModifiedAt(collection.getModifiedAt());
+			collectionAndDataObjectListingEntry.setModifiedAt(collection
+					.getModifiedAt());
 			collectionAndDataObjectListingEntry
 					.setObjectType(ObjectType.COLLECTION);
-			collectionAndDataObjectListingEntry.setParentPath(collection.getCollectionParentName());
-			collectionAndDataObjectListingEntry.setPathOrName(collection.getCollectionName());
+			collectionAndDataObjectListingEntry.setParentPath(collection
+					.getCollectionParentName());
+			collectionAndDataObjectListingEntry.setPathOrName(collection
+					.getCollectionName());
 			resultEntries.add(collectionAndDataObjectListingEntry);
 		}
 
-		log
-				.info(
-						"retrieved {} collections based on query, converting to query result entries",
-						collections.size());
+		log.info(
+				"retrieved {} collections based on query, converting to query result entries",
+				collections.size());
 
 		return TagQuerySearchResult.instance(searchTags, resultEntries);
 

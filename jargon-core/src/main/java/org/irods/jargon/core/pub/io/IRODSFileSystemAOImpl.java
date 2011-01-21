@@ -149,13 +149,8 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 		String fileName = irodsFile.getName();
 		String userName = this.getIRODSAccount().getUserName();
 
-		if (log.isDebugEnabled()) {
-			log.debug("getting file permissions on file " + fileName);
-			log.debug("  parent dir:" + parent);
-			log.debug("   for user:" + userName);
-			log.debug("   in zone:" + zone);
-
-		}
+		log.debug("getting file permissions on file:{} ",
+				irodsFile.getAbsolutePath());
 
 		IRODSGenQueryExecutor irodsGenQueryExecutor = new IRODSGenQueryExecutorImpl(
 				this.getIRODSSession(), this.getIRODSAccount());
@@ -163,17 +158,13 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 		StringBuilder filePermissionQuery = buildPermisionsQueryFile(zone,
 				parent, fileName, userName);
 
-		if (log.isDebugEnabled()) {
-			log.debug("query for user permissions ="
-					+ filePermissionQuery.toString());
-		}
+		log.debug("query for user permissions = {}",
+				filePermissionQuery.toString());
 
 		int highestPermissionValue = extractHighestPermission(
 				irodsGenQueryExecutor, filePermissionQuery);
 
-		if (log.isDebugEnabled()) {
-			log.debug("highest permission value:" + highestPermissionValue);
-		}
+		log.debug("highest permission value:{}", highestPermissionValue);
 
 		return highestPermissionValue;
 	}
@@ -194,9 +185,8 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 		try {
 			resultSet = irodsGenQueryExecutor.executeIRODSQuery(irodsQuery, 0);
 		} catch (JargonQueryException e) {
-			log.error(
-					"query exception for  query:"
-							+ filePermissionQuery.toString(), e);
+			log.error("query exception for  query:{}",
+					filePermissionQuery.toString(), e);
 			throw new JargonException("error in file permissions query");
 		}
 
@@ -266,35 +256,26 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 
 	int getDirectoryPermissions(final IRODSFile irodsFile)
 			throws JargonException {
+
 		if (irodsFile == null) {
 			throw new JargonException("irods file is null");
 		}
-		if (log.isInfoEnabled()) {
-			log.info("checking directory permissions on:" + irodsFile);
-		}
+		log.info("checking directory permissions on:{}", irodsFile);
 
 		String zone = this.getIRODSServerProperties().getRodsZone();
 		String dir = irodsFile.getAbsolutePath();
 		String fileName = irodsFile.getName();
 		String userName = this.getIRODSAccount().getUserName();
 
-		if (log.isDebugEnabled()) {
-			log.debug("getting directory permissions on: " + fileName);
-			log.debug("   dir:" + dir);
-			log.debug("   for user:" + userName);
-			log.debug("   in zone:" + zone);
-
-		}
+		log.debug("getting directory permissions on:{} ", fileName);
 
 		IRODSGenQueryExecutor irodsGenQueryExecutor = new IRODSGenQueryExecutorImpl(
 				this.getIRODSSession(), this.getIRODSAccount());
 		StringBuilder filePermissionQuery = buildPermissionsQueryDirectory(
 				zone, dir, userName);
 
-		if (log.isDebugEnabled()) {
-			log.debug("query for user permissions ="
-					+ filePermissionQuery.toString());
-		}
+		log.debug("query for user permissions = {}",
+				filePermissionQuery.toString());
 
 		int highestPermissionValue = extractHighestPermission(
 				irodsGenQueryExecutor, filePermissionQuery);
@@ -379,12 +360,11 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 				.escapeSingleQuotes(fileName));
 		filePermissionQuery.append("'");
 
-		if (log.isDebugEnabled()) {
-			log.debug("query for exists = {}", filePermissionQuery.toString());
-		}
+		log.debug("query for exists = {}", filePermissionQuery.toString());
 
-		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(
-				filePermissionQuery.toString(), 500);
+		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(filePermissionQuery
+				.toString(), this.getJargonProperties()
+				.getMaxFilesAndDirsQueryMax());
 
 		IRODSQueryResultSetInterface resultSet;
 		try {
@@ -413,7 +393,8 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 		filePermissionQuery.append(IRODSDataConversionUtil
 				.escapeSingleQuotes(irodsFile.getAbsolutePath()));
 		filePermissionQuery.append("'");
-		irodsQuery = IRODSGenQuery.instance(filePermissionQuery.toString(), 500);
+		irodsQuery = IRODSGenQuery
+				.instance(filePermissionQuery.toString(), 500);
 
 		log.debug("query for exists = {}", filePermissionQuery.toString());
 
@@ -449,9 +430,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 			throw new JargonException("irods file is null");
 		}
 
-		if (log.isInfoEnabled()) {
-			log.info("checking if directory, file:" + irodsFile);
-		}
+		log.info("checking if directory, file:{}", irodsFile);
 
 		IRODSGenQueryExecutor irodsGenQueryExecutor = new IRODSGenQueryExecutorImpl(
 				this.getIRODSSession(), this.getIRODSAccount());
@@ -465,13 +444,11 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 				.escapeSingleQuotes(irodsFile.getAbsolutePath()));
 		filePermissionQuery.append("'");
 
-		if (log.isDebugEnabled()) {
-			log.debug("query for directory =" + filePermissionQuery.toString());
-		}
+		log.debug("query for directory = {}", filePermissionQuery.toString());
 
 		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(
-				filePermissionQuery.toString(), 100); 
-		
+				filePermissionQuery.toString(), 100);
+
 		IRODSQueryResultSetInterface resultSet;
 		try {
 			resultSet = irodsGenQueryExecutor.executeIRODSQuery(irodsQuery, 0);
@@ -542,17 +519,16 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 			query.append("'");
 		}
 
-		if (log.isDebugEnabled()) {
-			log.debug("query for mod date =" + query.toString());
-		}
+		log.debug("query for mod date = {}", query.toString());
 
-		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(query.toString(), 500);
+		IRODSGenQuery irodsQuery = IRODSGenQuery
+				.instance(query.toString(), 500);
 
 		IRODSQueryResultSetInterface resultSet;
 		try {
 			resultSet = irodsGenQueryExecutor.executeIRODSQuery(irodsQuery, 0);
 		} catch (JargonQueryException e) {
-			log.error("query exception for  query:" + query.toString(), e);
+			log.error("query exception for  query:{}", query.toString(), e);
 			throw new JargonException("error in exists query");
 		}
 
@@ -570,6 +546,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 	@Override
 	public long getLength(final IRODSFile irodsFile) throws JargonException,
 			DataNotFoundException {
+
 		if (irodsFile == null) {
 			throw new JargonException("irods file is null");
 		}
@@ -600,17 +577,16 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 				.getParent()));
 		query.append("'");
 
-		if (log.isDebugEnabled()) {
-			log.debug("query for size =" + query.toString());
-		}
+		log.debug("query for size = {}", query.toString());
 
-		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(query.toString(), 500);
+		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(query.toString(),
+				this.getJargonProperties().getMaxFilesAndDirsQueryMax());
 
 		IRODSQueryResultSetInterface resultSet;
 		try {
 			resultSet = irodsGenQueryExecutor.executeIRODSQuery(irodsQuery, 0);
 		} catch (JargonQueryException e) {
-			log.error("query exception for  query:" + query.toString(), e);
+			log.error("query exception for  query:{}", query.toString(), e);
 			throw new JargonException("error in exists query");
 		}
 
@@ -628,9 +604,12 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 	@Override
 	public List<String> getListInDir(final IRODSFile irodsFile)
 			throws JargonException, DataNotFoundException {
+
 		if (irodsFile == null) {
 			throw new JargonException("irods file is null");
 		}
+		
+		log.info("getListInDir for parent:{}", irodsFile.getAbsolutePath());
 
 		List<String> subdirs = new ArrayList<String>();
 		String path = "";
@@ -641,10 +620,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 			path = irodsFile.getParent();
 		}
 
-		if (log.isDebugEnabled()) {
-			log.debug("path for query:{}", path);
-
-		}
+		log.debug("path for query:{}", path);
 
 		// get all the files
 
@@ -654,7 +630,8 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 		StringBuilder query = new StringBuilder();
 		query.append(IRODSFileSystemAOHelper.buildQueryListAllFiles(path));
 
-		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(query.toString(), 5000);
+		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(query.toString(),
+				this.getJargonProperties().getMaxFilesAndDirsQueryMax());
 
 		IRODSQueryResultSet resultSet;
 
@@ -665,6 +642,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 
 		try {
 			resultSet = irodsGenQueryExecutor.executeIRODSQuery(irodsQuery, 0);
+			
 			for (IRODSQueryResultRow row : resultSet.getResults()) {
 				subdirs.add(row.getColumn(1));
 			}
@@ -678,7 +656,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 			}
 
 		} catch (JargonQueryException e) {
-			log.error("query exception for  query:" + query.toString(), e);
+			log.error("query exception for  query:{}", query.toString(), e);
 			throw new JargonException("error in exists query");
 		}
 
@@ -687,7 +665,8 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 		query = new StringBuilder();
 		query.append(IRODSFileSystemAOHelper.buildQueryListAllDirs(path));
 
-		irodsQuery = IRODSGenQuery.instance(query.toString(), 5000);
+		irodsQuery = IRODSGenQuery.instance(query.toString(), this
+				.getJargonProperties().getMaxFilesAndDirsQueryMax());
 
 		try {
 			resultSet = irodsGenQueryExecutor.executeIRODSQuery(irodsQuery, 0);
@@ -704,9 +683,11 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 
 			}
 		} catch (JargonQueryException e) {
-			log.error("query exception for  query:" + query.toString(), e);
+			log.error("query exception for  query:{}", query.toString(), e);
 			throw new JargonException("error in exists query");
 		}
+		
+		log.info("length of subdirs after gathering all results:{}", subdirs.size());
 
 		return subdirs;
 	}
@@ -735,6 +716,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 	public List<String> getListInDirWithFilter(final IRODSFile irodsFile,
 			final FilenameFilter fileNameFilter) throws JargonException,
 			DataNotFoundException {
+
 		if (irodsFile == null) {
 			throw new JargonException("irods file is null");
 		}
@@ -752,10 +734,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 			path = irodsFile.getParent();
 		}
 
-		if (log.isDebugEnabled()) {
-			log.debug("path for query:" + path);
-
-		}
+		log.debug("path for query:{}", path);
 
 		// get all the files
 
@@ -764,7 +743,8 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 		StringBuilder query = new StringBuilder(
 				IRODSFileSystemAOHelper.buildQueryListAllFiles(path));
 
-		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(query.toString(), 5000);
+		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(query.toString(),
+				this.getJargonProperties().getMaxFilesAndDirsQueryMax());
 
 		IRODSQueryResultSet resultSet;
 
@@ -786,7 +766,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 				}
 			}
 		} catch (JargonQueryException e) {
-			log.error("query exception for  query:" + query.toString(), e);
+			log.error("query exception for  query:{}", query.toString(), e);
 			throw new JargonException("error in exists query");
 		}
 
@@ -795,7 +775,8 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 		query = new StringBuilder();
 		query.append(IRODSFileSystemAOHelper.buildQueryListAllDirs(path));
 
-		irodsQuery = IRODSGenQuery.instance(query.toString(), 5000);
+		irodsQuery = IRODSGenQuery.instance(query.toString(), this
+				.getJargonProperties().getMaxFilesAndDirsQueryMax());
 
 		try {
 			resultSet = irodsGenQueryExecutor.executeIRODSQuery(irodsQuery, 0);
@@ -817,7 +798,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 			}
 
 		} catch (JargonQueryException e) {
-			log.error("query exception for  query:" + query.toString(), e);
+			log.error("query exception for  query:{}", query.toString(), e);
 			throw new JargonException("error in exists query");
 		}
 
@@ -849,6 +830,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 	private void processRowWhenListDirWithFilter(
 			final FilenameFilter fileNameFilter, final List<String> subdirs,
 			final IRODSQueryResultRow row) throws JargonException {
+
 		String thisFileName;
 		String thisFileDir;
 		// this is a file, does it pass the file name filter?
@@ -870,6 +852,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 	public List<String> getListInDirWithFileFilter(final IRODSFile irodsFile,
 			final FileFilter fileFilter) throws JargonException,
 			DataNotFoundException {
+
 		if (irodsFile == null) {
 			throw new JargonException("irods file is null");
 		}
@@ -887,17 +870,15 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 			path = irodsFile.getParent();
 		}
 
-		if (log.isDebugEnabled()) {
-			log.debug("path for query:" + path);
-
-		}
+		log.debug("path for query:{}", path);
 
 		IRODSGenQueryExecutor irodsGenQueryExecutor = new IRODSGenQueryExecutorImpl(
 				this.getIRODSSession(), this.getIRODSAccount());
 		StringBuilder query = new StringBuilder(
 				IRODSFileSystemAOHelper.buildQueryListAllFiles(path));
 
-		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(query.toString(), 5000);
+		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(query.toString(),
+				this.getJargonProperties().getMaxFilesAndDirsQueryMax());
 
 		IRODSQueryResultSet resultSet;
 
@@ -921,7 +902,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 			}
 
 		} catch (JargonQueryException e) {
-			log.error("query exception for  query:" + query.toString(), e);
+			log.error("query exception for  query:{}", query.toString(), e);
 			throw new JargonException("error in exists query");
 		}
 
@@ -930,7 +911,8 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 		query = new StringBuilder();
 		query.append(IRODSFileSystemAOHelper.buildQueryListAllDirs(path));
 
-		irodsQuery = IRODSGenQuery.instance(query.toString(), 5000);
+		irodsQuery = IRODSGenQuery.instance(query.toString(), this
+				.getJargonProperties().getMaxFilesAndDirsQueryMax());
 
 		try {
 			resultSet = irodsGenQueryExecutor.executeIRODSQuery(irodsQuery, 0);
@@ -951,7 +933,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 			}
 
 		} catch (JargonQueryException e) {
-			log.error("query exception for  query:" + query.toString(), e);
+			log.error("query exception for  query:{}", query.toString(), e);
 			throw new JargonException("error in exists query");
 		}
 
@@ -1005,9 +987,8 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 		if (irodsFile == null) {
 			throw new JargonException("irods file is null");
 		}
-		if (log.isInfoEnabled()) {
-			log.info("checking data type on:" + irodsFile);
-		}
+
+		log.info("checking data type on:{}", irodsFile);
 
 		if (irodsFile.isDirectory()) {
 			return IRODSFile.DataType.DIRECTORY;
@@ -1030,11 +1011,10 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 				.getParent()));
 		query.append("'");
 
-		if (log.isDebugEnabled()) {
-			log.debug("query for type =" + query.toString());
-		}
+		log.debug("query for type = {}", query.toString());
 
-		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(query.toString(), 500);
+		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(query.toString(),
+				this.getJargonProperties().getMaxFilesAndDirsQueryMax());
 		IRODSGenQueryExecutor irodsGenQueryExecutor = new IRODSGenQueryExecutorImpl(
 				this.getIRODSSession(), this.getIRODSAccount());
 
@@ -1042,15 +1022,13 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 		try {
 			resultSet = irodsGenQueryExecutor.executeIRODSQuery(irodsQuery, 0);
 		} catch (JargonQueryException e) {
-			log.error("query exception for  query:" + query.toString(), e);
+			log.error("query exception for  query:{}", query.toString(), e);
 			throw new JargonException("error in exists query");
 		}
 
 		try {
 			String type = resultSet.getFirstResult().getColumn(0);
-			if (log.isDebugEnabled()) {
-				log.debug("returned data type:" + type);
-			}
+			log.debug("returned data type:{}", type);
 
 			if (type.equals("generic")) {
 				return IRODSFile.DataType.GENERIC;
@@ -1080,9 +1058,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 		String defaultResource = this.getIRODSAccount()
 				.getDefaultStorageResource();
 
-		if (log.isDebugEnabled()) {
-			log.debug("setting resource to account default:" + defaultResource);
-		}
+		log.debug("setting resource to account default:{}", defaultResource);
 
 		int fileId = 0;
 
@@ -1134,9 +1110,8 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 		int fileId = response.getTag(MsgHeader.PI_NAME)
 				.getTag(MsgHeader.INT_INFO).getIntValue();
 
-		if (log.isDebugEnabled()) {
-			log.debug("file id for opened file:" + fileId);
-		}
+		log.debug("file id for opened file:{}", fileId);
+
 		return fileId;
 	}
 
@@ -1195,9 +1170,8 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 				throw e;
 			}
 		}
-		if (log.isDebugEnabled()) {
-			log.debug("response file nbr:" + responseFileNbr);
-		}
+		log.debug("response file nbr:{}", responseFileNbr);
+
 		return responseFileNbr;
 
 	}
@@ -1216,9 +1190,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 			throw new JargonException("irodsFile is null");
 		}
 
-		if (log.isInfoEnabled()) {
-			log.info("making dir for:" + irodsFile.getAbsolutePath());
-		}
+		log.info("making dir for:{}", irodsFile.getAbsolutePath());
 
 		CollInp collInp = CollInp.instance(irodsFile.getAbsolutePath(),
 				recursiveOpr);
@@ -1227,8 +1199,9 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 				collInp.getParsedTags(), CollInp.MKDIR_API_NBR);
 
 		if (response != null) {
-			log.warn("expected null response to mkdir, logged but not an error, received:"
-					+ response.parseTag());
+			log.warn(
+					"expected null response to mkdir, logged but not an error, received:{}",
+					response.parseTag());
 		}
 
 		log.debug("mkdir succesful");
@@ -1242,9 +1215,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 	@Override
 	public void fileClose(final int fileDescriptor) throws JargonException {
 
-		if (log.isInfoEnabled()) {
-			log.info("closing file:" + fileDescriptor);
-		}
+		log.info("closing file:{}", fileDescriptor);
 
 		if (fileDescriptor <= 0) {
 			throw new JargonException(
@@ -1259,8 +1230,9 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 				DataObjCloseInp.FILE_CLOSE_API_NBR);
 
 		if (response != null) {
-			log.warn("expected null response to close, logged but not an error, received:"
-					+ response.parseTag());
+			log.warn(
+					"expected null response to close, logged but not an error, received:{}",
+					response.parseTag());
 		}
 
 		log.debug("file close succesful");
@@ -1276,13 +1248,12 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 	@Override
 	public void fileDeleteForce(final IRODSFile irodsFile)
 			throws JargonException {
+
 		if (irodsFile == null) {
 			throw new JargonException("irodsFile is null");
 		}
 
-		if (log.isInfoEnabled()) {
-			log.info("deleting:" + irodsFile.getAbsolutePath());
-		}
+		log.info("deleting:{}", irodsFile.getAbsolutePath());
 
 		if (!irodsFile.isFile()) {
 			String msg = "file delete, given irodsFile is not a file";
@@ -1312,14 +1283,13 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 	@Override
 	public void fileDeleteNoForce(final IRODSFile irodsFile)
 			throws JargonException {
+
 		if (irodsFile == null) {
 			throw new JargonException("irodsFile is null");
 		}
 
-		if (log.isInfoEnabled()) {
-			log.info("deleting without force option:"
-					+ irodsFile.getAbsolutePath());
-		}
+		log.info("deleting without force option:{}",
+				irodsFile.getAbsolutePath());
 
 		if (!irodsFile.isFile()) {
 			String msg = "file delete, given irodsFile is not a file";
@@ -1332,8 +1302,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 		Tag response = getIRODSProtocol().irodsFunction(dataObjInp);
 
 		if (response != null) {
-			String msg = "unexpected response from irods, expected null message - logged and ignored ";
-			log.warn(msg);
+			log.warn("unexpected response from irods, expected null message - logged and ignored ");
 		}
 
 	}
@@ -1348,13 +1317,12 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 	@Override
 	public void directoryDeleteForce(final IRODSFile irodsFile)
 			throws JargonException {
+
 		if (irodsFile == null) {
 			throw new JargonException("irodsFile is null");
 		}
 
-		if (log.isInfoEnabled()) {
-			log.info("deleting:" + irodsFile.getAbsolutePath());
-		}
+		log.info("deleting:{}", irodsFile.getAbsolutePath());
 
 		if (!irodsFile.isDirectory()) {
 			String msg = "directory delete, given irodsFile is not a collection";
@@ -1369,8 +1337,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 				collInp.getParsedTags(), CollInp.RMDIR_API_NBR);
 
 		if (response != null) {
-			String msg = "unexpected response from irods, expected null message - logged and ignored ";
-			log.warn(msg);
+			log.warn("unexpected response from irods, expected null message - logged and ignored ");
 		}
 
 		log.info("deletion successful");
@@ -1386,13 +1353,12 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 	 */
 	public void directoryDeleteNoForce(final IRODSFile irodsFile)
 			throws JargonException {
+
 		if (irodsFile == null) {
 			throw new JargonException("irodsFile is null");
 		}
 
-		if (log.isInfoEnabled()) {
-			log.info("deleting:" + irodsFile.getAbsolutePath());
-		}
+		log.info("deleting:{}", irodsFile.getAbsolutePath());
 
 		if (!irodsFile.isDirectory()) {
 			String msg = "directory delete, given irodsFile is not a collection";
@@ -1407,8 +1373,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 				collInp.getParsedTags(), CollInp.RMDIR_API_NBR);
 
 		if (response != null) {
-			String msg = "unexpected response from irods, expected null message - logged and ignored ";
-			log.warn(msg);
+			log.warn("unexpected response from irods, expected null message - logged and ignored ");
 		}
 
 		log.info("deletion successful");
@@ -1436,9 +1401,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 		ResourceAO resourceAO = new ResourceAOImpl(this.getIRODSSession(),
 				this.getIRODSAccount());
 		Resource resource = resourceAO.getFirstResourceForIRODSFile(irodsFile);
-		if (log.isDebugEnabled()) {
-			log.debug("found resource for file:" + resource);
-		}
+		log.debug("found resource for file:{}", resource);
 
 		return resource;
 	}
@@ -1453,9 +1416,8 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 	@Override
 	public void renameDirectory(final IRODSFile fromFile, final IRODSFile toFile)
 			throws JargonException {
-		if (log.isInfoEnabled()) {
-			log.info("renaming directory:" + fromFile + " to:" + toFile);
-		}
+		log.info("renaming directory:{}", fromFile);
+		log.info(" to:{}", toFile);
 
 		if (!fromFile.isDirectory()) {
 			String msg = "from file:" + fromFile.getAbsolutePath()
@@ -1472,8 +1434,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 				DataObjCopyInp.RENAME_FILE_API_NBR);
 
 		if (response != null) {
-			String msg = "unexpected response from irods, expected null message - logged and ignored ";
-			log.warn(msg);
+			log.warn("unexpected response from irods, expected null message - logged and ignored ");
 		}
 
 		log.debug("rename successful");
@@ -1489,10 +1450,9 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 	@Override
 	public void renameFile(final IRODSFile fromFile, final IRODSFile toFile)
 			throws JargonException {
-		if (log.isInfoEnabled()) {
-			log.info("renaming file:" + fromFile.getAbsolutePath() + " to:"
-					+ toFile.getAbsolutePath());
-		}
+
+		log.info("renaming file:{}", fromFile.getAbsolutePath());
+		log.info(" to:{}", toFile.getAbsolutePath());
 
 		if (!fromFile.isFile()) {
 			String msg = "from file:" + fromFile.getAbsolutePath()
@@ -1509,8 +1469,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 				DataObjCopyInp.RENAME_FILE_API_NBR);
 
 		if (response != null) {
-			String msg = "unexpected response from irods, expected null message - logged and ignored ";
-			log.warn(msg);
+			log.warn("unexpected response from irods, expected null message - logged and ignored ");
 		}
 
 		log.debug("rename successful");
@@ -1527,15 +1486,14 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 	@Override
 	public String getResourceNameForFile(final IRODSFile irodsFile)
 			throws JargonException {
+
 		if (irodsFile == null) {
 			String msg = "null irodsFile";
 			log.error(msg);
 			throw new JargonException(msg);
 		}
 
-		if (log.isInfoEnabled()) {
-			log.info("getting resource for:" + irodsFile.getAbsolutePath());
-		}
+		log.info("getting resource for:{}", irodsFile.getAbsolutePath());
 
 		String resource = "";
 
@@ -1577,10 +1535,8 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 			throw new JargonException("to resource is null or blank");
 		}
 
-		if (log.isInfoEnabled()) {
-			log.info("physical move of file:" + fromFile.getAbsolutePath()
-					+ " to resource:" + targetResource);
-		}
+		log.info("physical move of file:{}", fromFile.getAbsolutePath());
+		log.info(" to resource:{}", targetResource);
 
 		if (!fromFile.isFile()) {
 			String msg = "from file:" + fromFile.getAbsolutePath()
@@ -1621,11 +1577,10 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 						DataObjInp.PHYMOVE_FILE_API_NBR);
 
 		if (response != null) {
-			String msg = "unexpected response from irods, expected null message - logged and ignored ";
-			log.warn(msg);
+			log.warn("unexpected response from irods, expected null message - logged and ignored ");
 		}
 
-		log.debug("physical move successful");
+		log.info("physical move successful");
 	}
 
 }

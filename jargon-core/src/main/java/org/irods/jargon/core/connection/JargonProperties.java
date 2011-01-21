@@ -36,5 +36,12 @@ public interface JargonProperties {
 	 * @throws JargonException
 	 */
 	long getParallelThreadsLengthThreshold() throws JargonException;
+	
+	/**
+	 * Sets a default number of results to ask for when executing GenQuery for listing files and collections.
+	 * @return
+	 * @throws JargonException
+	 */
+	int getMaxFilesAndDirsQueryMax() throws JargonException;
 
 }

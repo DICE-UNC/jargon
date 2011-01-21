@@ -32,8 +32,8 @@ public class TranslatedIRODSQueryTest {
 		selectFields.add(field);
 		List<TranslatedGenQueryCondition> queryConditions = new ArrayList<TranslatedGenQueryCondition>();
 		IRODSGenQuery query = IRODSGenQuery.instance("hello", 100);
-		TranslatedIRODSGenQuery translatedQuery = TranslatedIRODSGenQuery.instance(
-				selectFields, queryConditions, query);
+		TranslatedIRODSGenQuery translatedQuery = TranslatedIRODSGenQuery
+				.instance(selectFields, queryConditions, query);
 		Assert.assertNotNull("translated query not created", translatedQuery);
 	}
 

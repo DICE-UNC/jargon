@@ -1,6 +1,5 @@
 package org.irods.jargon.usertagging;
 
-import static org.junit.Assert.*;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -21,7 +20,6 @@ import org.irods.jargon.core.pub.io.IRODSFileFactory;
 import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry;
 import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry.ObjectType;
 import org.irods.jargon.core.query.MetaDataAndDomainData.MetadataDomain;
-import org.irods.jargon.testutils.AssertionHelper;
 import org.irods.jargon.testutils.IRODSTestSetupUtilities;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.irods.jargon.testutils.filemanip.FileGenerator;
@@ -41,7 +39,6 @@ public class FreeTaggingServiceImplTest {
 	private static ScratchFileUtils scratchFileUtils = null;
 	public static final String IRODS_TEST_SUBDIR_PATH = "FreeTaggingServiceImplTest";
 	private static IRODSTestSetupUtilities irodsTestSetupUtilities = null;
-	private static AssertionHelper assertionHelper = null;
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -54,7 +51,6 @@ public class FreeTaggingServiceImplTest {
 		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
 		irodsTestSetupUtilities
 				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
-		assertionHelper = new AssertionHelper();
 	}
 
 	@AfterClass
@@ -193,9 +189,6 @@ public class FreeTaggingServiceImplTest {
 
 		targetIrodsFile.mkdirs();
 
-		IRODSTagValue irodsTagValue = new IRODSTagValue(expectedTagName,
-				irodsAccount.getUserName());
-
 		FreeTaggingService freeTaggingService = FreeTaggingServiceImpl
 				.instance(irodsFileSystem.getIRODSAccessObjectFactory(),
 						irodsAccount);
@@ -240,9 +233,6 @@ public class FreeTaggingServiceImplTest {
 				irodsAccount).instanceIRODSFile(targetIrodsCollection);
 
 		targetIrodsFile.mkdirs();
-
-		IRODSTagValue irodsTagValue = new IRODSTagValue(expectedTagName,
-				irodsAccount.getUserName());
 
 		FreeTaggingService freeTaggingService = FreeTaggingServiceImpl
 				.instance(irodsFileSystem.getIRODSAccessObjectFactory(),
@@ -289,9 +279,6 @@ public class FreeTaggingServiceImplTest {
 				irodsAccount).instanceIRODSFile(targetIrodsCollection);
 
 		targetIrodsFile.mkdirs();
-
-		IRODSTagValue irodsTagValue = new IRODSTagValue(expectedTagName,
-				irodsAccount.getUserName());
 
 		FreeTaggingService freeTaggingService = FreeTaggingServiceImpl
 				.instance(irodsFileSystem.getIRODSAccessObjectFactory(),
@@ -474,9 +461,6 @@ public class FreeTaggingServiceImplTest {
 		dataTransferOperationsAO.putOperation(new File(fileNameOrig),
 				targetIrodsFile, null, null);
 
-		IRODSTaggingService irodsTaggingService = IRODSTaggingServiceImpl
-				.instance(irodsFileSystem.getIRODSAccessObjectFactory(),
-						irodsAccount);
 		FreeTaggingService freeTaggingService = FreeTaggingServiceImpl
 				.instance(irodsFileSystem.getIRODSAccessObjectFactory(),
 						irodsAccount);
@@ -573,9 +557,6 @@ public class FreeTaggingServiceImplTest {
 		dataTransferOperationsAO.putOperation(new File(fileNameOrig),
 				targetIrodsFile, null, null);
 
-		IRODSTaggingService irodsTaggingService = IRODSTaggingServiceImpl
-				.instance(irodsFileSystem.getIRODSAccessObjectFactory(),
-						irodsAccount);
 		FreeTaggingService freeTaggingService = FreeTaggingServiceImpl
 				.instance(irodsFileSystem.getIRODSAccessObjectFactory(),
 						irodsAccount);
@@ -628,7 +609,6 @@ public class FreeTaggingServiceImplTest {
 			throws Exception {
 		int collCount = 3;
 		int dataObjectCount = 3;
-		int fileLength = 1;
 		String collectionNameBase = "addSeveralCollectionsAndSeveralDataObjectsThenQueryOnOneTag";
 		String fileNameBase = "addSeveralCollectionsAndSeveralDataObjectsThenQueryOnOneTag.csv";
 		String tag1 = "abcxxx1";
@@ -658,7 +638,6 @@ public class FreeTaggingServiceImplTest {
 					avuData);
 		}
 
-		String targetIrodsDataObject = null;
 		IRODSFile targetIrodsFile = null;
 		DataObjectAO dataObjectAO = irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);

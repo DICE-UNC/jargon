@@ -281,6 +281,8 @@ public class FileGenerator {
 				numberOfFiles = generateRandomNumber(minNumberOfFiles,
 						maxNumberOfFiles);
 			}
+			
+			log.debug("generating {} files", numberOfFiles);
 
 			generateManyFilesInParentCollectionByAbsolutePath(
 					localFile.getAbsolutePath() + '/', filePrefix, fileSuffix,

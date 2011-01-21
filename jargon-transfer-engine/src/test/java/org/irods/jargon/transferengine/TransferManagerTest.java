@@ -439,6 +439,7 @@ public class TransferManagerTest {
 
 	@Test
 	public void enqueueAGet() throws Exception {
+		
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
 

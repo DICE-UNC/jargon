@@ -30,17 +30,16 @@ public class SimpleQueryInpTest {
 		Assert.assertEquals("did not get expected tag value", sb.toString(),
 				tagVal);
 	}
-	
+
 	@Test
 	public void testGetTagValueFourParams() throws Exception {
-		
+
 		List<String> parms = new ArrayList<String>();
 		parms.add("parm1");
 		parms.add("parm2");
 		parms.add("parm3");
 		parms.add("parm4");
-		SimpleQuery sq = SimpleQuery.instance("query", parms,
-				0);
+		SimpleQuery sq = SimpleQuery.instance("query", parms, 0);
 		SimpleQueryInp simpleQueryInp = SimpleQueryInp.instance(sq);
 		String tagVal = simpleQueryInp.getParsedTags();
 		StringBuilder sb = new StringBuilder();

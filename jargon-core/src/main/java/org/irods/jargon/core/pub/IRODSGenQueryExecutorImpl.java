@@ -112,8 +112,8 @@ public final class IRODSGenQueryExecutorImpl extends IRODSGenericAO implements
 			final int continueIndex, final int partialStartIndex)
 			throws JargonException {
 
-		if (!(continueIndex == 1 || continueIndex == 0)) {
-			throw new JargonException("continue index must be 0 or 1");
+		if ( continueIndex < 0) {
+			throw new JargonException("continue index must be >= 0");
 		}
 
 		if (partialStartIndex < 0) {
@@ -212,7 +212,7 @@ public final class IRODSGenQueryExecutorImpl extends IRODSGenericAO implements
 		List<String> row;
 		int recordCount = 1;
 		boolean lastRecord = (continuation == 0);
-		log.debug("do I have more? {}", lastRecord);
+		log.debug("are there more records? {}", lastRecord);
 
 		if (queryResponse == null) {
 			// no response, create an empty result set, and never return null
@@ -255,6 +255,7 @@ public final class IRODSGenQueryExecutorImpl extends IRODSGenericAO implements
 	public IRODSQueryResultSet getMoreResults(
 			final IRODSQueryResultSet irodsQueryResultSet)
 			throws JargonException, JargonQueryException {
+		
 		log.info("getting more results for query");
 		if (irodsQueryResultSet == null) {
 			throw new JargonException("null irodsQueryResultSet");
@@ -265,7 +266,7 @@ public final class IRODSGenQueryExecutorImpl extends IRODSGenericAO implements
 		}
 
 		return executeTranslatedIRODSQuery(
-				irodsQueryResultSet.getTranslatedIRODSQuery(), 1, 0);
+				irodsQueryResultSet.getTranslatedIRODSQuery(), irodsQueryResultSet.getContinuationIndex(), 0);
 	}
 	
 	/* (non-Javadoc)

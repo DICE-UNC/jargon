@@ -9,7 +9,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
-import java.util.Map;
 import java.util.Properties;
 
 import org.apache.commons.exec.CommandLine;
@@ -19,7 +18,6 @@ import org.apache.commons.exec.PumpStreamHandler;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.irods.jargon.testutils.TestingUtilsException;
 import org.irods.jargon.testutils.icommandinvoke.icommands.Icommand;
-
 
 /**
  * Invoke an icommand on a provided irods server
@@ -42,7 +40,7 @@ public class IcommandInvoker {
 	 * 
 	 * @param irodsInvocationContext
 	 */
-	public IcommandInvoker(IrodsInvocationContext irodsInvocationContext) {
+	public IcommandInvoker(final IrodsInvocationContext irodsInvocationContext) {
 		this();
 		this.irodsInvocationContext = irodsInvocationContext;
 	}
@@ -59,7 +57,7 @@ public class IcommandInvoker {
 	 *            the irodsInvocationContext to set
 	 */
 	public void setIrodsInvocationContext(
-			IrodsInvocationContext irodsInvocationContext) {
+			final IrodsInvocationContext irodsInvocationContext) {
 		this.irodsInvocationContext = irodsInvocationContext;
 	}
 
@@ -72,7 +70,8 @@ public class IcommandInvoker {
 	 *             if an error occurs in command invocation, with details in the
 	 *             error message
 	 */
-	private InputStream invoke(Icommand icommand) throws IcommandException {
+	private InputStream invoke(final Icommand icommand)
+			throws IcommandException {
 		/*
 		 * set irods enviroment variables like so
 		 * (https://www.irods.org/index.php/user_environment)
@@ -82,11 +81,7 @@ public class IcommandInvoker {
 		 * irodsUserName 'rods' irodsZone 'tempZone'
 		 */
 
-
-
 		ProcessBuilder pb = new ProcessBuilder(icommand.buildCommand());
-		Map<String, String> env = pb.environment();
-
 		Process p = null;
 		BufferedInputStream bis;
 		BufferedInputStream errStream = null;
@@ -147,7 +142,7 @@ public class IcommandInvoker {
 	 *             if an error occurs in command invocation, with details in the
 	 *             error message
 	 */
-	public String invokeCommandAndGetResultAsString(Icommand icommand)
+	public String invokeCommandAndGetResultAsString(final Icommand icommand)
 			throws IcommandException {
 
 		String result = "";
@@ -162,7 +157,7 @@ public class IcommandInvoker {
 		return result;
 	}
 
-	protected String invokeViaExecutor(Icommand icommand)
+	protected String invokeViaExecutor(final Icommand icommand)
 			throws IcommandException {
 		String result = "";
 
@@ -205,8 +200,7 @@ public class IcommandInvoker {
 			executor.setStreamHandler(pumpStreamHandler);
 			exitValue = executor.execute(cl);
 		} catch (ExecuteException e) {
-			String errors = bosErrors.toString();
-
+			throw new IcommandException(e);
 		} catch (IOException e) {
 			e.printStackTrace();
 			throw new IcommandException(e);
@@ -234,7 +228,7 @@ public class IcommandInvoker {
 
 	}
 
-	protected String invokeViaProcessBuilder(Icommand icommand)
+	protected String invokeViaProcessBuilder(final Icommand icommand)
 			throws IcommandException {
 		StringBuilder resultBuilder = new StringBuilder();
 

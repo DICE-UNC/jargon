@@ -47,8 +47,6 @@ public class IRODSQueryResultRowTest {
 		resultColumns.add(RodsGenQueryEnum.COL_AUDIT_ACTION_ID.getName());
 		resultColumns.add(RodsGenQueryEnum.COL_AUDIT_COMMENT.getName());
 		resultColumns.add(RodsGenQueryEnum.COL_AUDIT_CREATE_TIME.getName());
-		
-	
 
 		IRODSQueryResultRow resultRow = IRODSQueryResultRow.instance(
 				resultColumns, resultColumns);
@@ -180,7 +178,7 @@ public class IRODSQueryResultRowTest {
 		resultColumns.add(RodsGenQueryEnum.COL_AUDIT_CREATE_TIME.getName());
 
 		IRODSQueryResultRow resultRow = IRODSQueryResultRow.instance(
-				resultColumns,resultColumns);
+				resultColumns, resultColumns);
 		String actualColumn = resultRow
 				.getColumn(RodsGenQueryEnum.COL_AUDIT_ACTION_ID.getName());
 		Assert.assertEquals("did not get expected column",

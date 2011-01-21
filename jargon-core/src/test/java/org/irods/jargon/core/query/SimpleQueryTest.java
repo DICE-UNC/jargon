@@ -15,7 +15,7 @@ public class SimpleQueryTest {
 		String args = "args";
 		SimpleQuery sq = SimpleQuery.instanceWithOneArgument(query, args, 0);
 		Assert.assertEquals("invalid query value", query, sq.getQueryString());
-		Assert.assertEquals("invalid args",1, sq.getArguments().size());
+		Assert.assertEquals("invalid args", 1, sq.getArguments().size());
 	}
 
 	@Test(expected = IllegalArgumentException.class)
@@ -38,8 +38,8 @@ public class SimpleQueryTest {
 		String args = "";
 		SimpleQuery.instanceWithOneArgument(query, args, 0);
 	}
-	
-	@Test(expected=IllegalArgumentException.class)
+
+	@Test(expected = IllegalArgumentException.class)
 	public void testInstaceTooManyParms() throws Exception {
 		List<String> parms = new ArrayList<String>();
 		parms.add("parm1");
@@ -48,37 +48,38 @@ public class SimpleQueryTest {
 		parms.add("parm4");
 		parms.add("parm5");
 
-		SimpleQuery.instance("query", parms,
-				0);
+		SimpleQuery.instance("query", parms, 0);
 	}
-	
-	
+
 	@Test
 	public void testInstanceTwoArgsValid() throws Exception {
 		String query = "query";
 		String arg1 = "arg1";
 		String arg2 = "arg2";
-		SimpleQuery sq = SimpleQuery.instanceWithTwoArguments(query, arg1, arg2, 0);
+		SimpleQuery sq = SimpleQuery.instanceWithTwoArguments(query, arg1,
+				arg2, 0);
 		Assert.assertEquals("invalid query value", query, sq.getQueryString());
-		Assert.assertEquals("invalid args",2, sq.getArguments().size());
-		Assert.assertEquals("did not set args correctly", arg1, sq.getArguments().get(0));
-		Assert.assertEquals("did not set args correctly", arg2, sq.getArguments().get(1));
+		Assert.assertEquals("invalid args", 2, sq.getArguments().size());
+		Assert.assertEquals("did not set args correctly", arg1, sq
+				.getArguments().get(0));
+		Assert.assertEquals("did not set args correctly", arg2, sq
+				.getArguments().get(1));
 
 	}
-	
-	@Test(expected=IllegalArgumentException.class)
+
+	@Test(expected = IllegalArgumentException.class)
 	public void testInstanceTwoArgsSecondArgBlank() throws Exception {
 		String query = "query";
 		String arg1 = "arg1";
 		String arg2 = "";
-		 SimpleQuery.instanceWithTwoArguments(query, arg1, arg2, 0);
+		SimpleQuery.instanceWithTwoArguments(query, arg1, arg2, 0);
 	}
-	
+
 	@Test
 	public void testInstanceNullArray() throws Exception {
 		SimpleQuery sq = SimpleQuery.instance("xxx", null, 0);
-		Assert.assertNotNull("should have initialized blank array", sq.getArguments());
+		Assert.assertNotNull("should have initialized blank array",
+				sq.getArguments());
 	}
-
 
 }

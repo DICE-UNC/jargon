@@ -2,7 +2,6 @@ package org.irods.jargon.testutils;
 
 import java.util.Properties;
 
-import org.irods.jargon.testutils.filemanip.FileGenerator;
 import org.irods.jargon.testutils.filemanip.ScratchFileUtils;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -10,11 +9,9 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-
 public class AssertionHelperTest {
 
 	private static ScratchFileUtils scratchFileUtils = null;
-	private static String scratchFileSubdir = "";
 	public static final String IRODS_TEST_SUBDIR_PATH = "AssertionHelperTest";
 	private static Properties testingProperties = new Properties();
 	private static TestingPropertiesHelper testingPropertiesHelper = new TestingPropertiesHelper();
@@ -24,7 +21,7 @@ public class AssertionHelperTest {
 	public static void setUpBeforeClass() throws Exception {
 		testingProperties = testingPropertiesHelper.getTestProperties();
 		scratchFileUtils = new ScratchFileUtils(testingProperties);
-		scratchFileSubdir = scratchFileUtils
+		scratchFileUtils
 				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
 		irodsTestSetupUtilities = new IRODSTestSetupUtilities();
 		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
@@ -56,9 +53,6 @@ public class AssertionHelperTest {
 	public final void testAssertLocalFileExistsInScratchWhenValid()
 			throws Exception {
 		String testFileName = "testassertexists.txt";
-		String absolutePathToTestFile = FileGenerator
-				.generateFileOfFixedLengthGivenName(scratchFileSubdir,
-						testFileName, 10);
 		AssertionHelper assertionHelper = new AssertionHelper();
 		assertionHelper.assertLocalFileExistsInScratch(IRODS_TEST_SUBDIR_PATH
 				+ "/" + testFileName);
@@ -68,9 +62,6 @@ public class AssertionHelperTest {
 	public final void testAssertLocalScratchFileLengthEquals() throws Exception {
 		String testFileName = "testassertequals.txt";
 		long expectedLength = 15;
-		String absolutePathToTestFile = FileGenerator
-				.generateFileOfFixedLengthGivenName(scratchFileSubdir,
-						testFileName, expectedLength);
 		AssertionHelper assertionHelper = new AssertionHelper();
 		assertionHelper.assertLocalScratchFileLengthEquals(
 				IRODS_TEST_SUBDIR_PATH + "/" + testFileName, expectedLength);
@@ -81,9 +72,6 @@ public class AssertionHelperTest {
 			throws Exception {
 		String testFileName = "testassertequals.txt";
 		long expectedLength = 15;
-		String absolutePathToTestFile = FileGenerator
-				.generateFileOfFixedLengthGivenName(scratchFileSubdir,
-						testFileName, expectedLength + 1);
 		AssertionHelper assertionHelper = new AssertionHelper();
 		assertionHelper.assertLocalScratchFileLengthEquals(
 				IRODS_TEST_SUBDIR_PATH + "/" + testFileName, expectedLength);
@@ -92,11 +80,6 @@ public class AssertionHelperTest {
 	@Test
 	public final void testAssertLocalScratchFileHasChecksum() throws Exception {
 		String testFileName = "testchecksum.txt";
-		long fileLength = 15;
-		String absolutePathToTestFile = FileGenerator
-				.generateFileOfFixedLengthGivenName(scratchFileSubdir,
-						testFileName, fileLength);
-
 		// get the checksum of this file
 		byte[] actualChecksum = scratchFileUtils
 				.computeFileCheckSum(IRODS_TEST_SUBDIR_PATH + '/'
@@ -112,9 +95,6 @@ public class AssertionHelperTest {
 	public final void testAssertIrodsFileOrCollectionDoesNotExist()
 			throws Exception {
 		String testFileName = IRODS_TEST_SUBDIR_PATH + "/idontexistinirods.doc";
-		String irodsAbsolutePath = testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, testFileName);
 		AssertionHelper assertionHelper = new AssertionHelper();
 		assertionHelper.assertIrodsFileOrCollectionDoesNotExist(testFileName);
 
@@ -135,6 +115,5 @@ public class AssertionHelperTest {
 						.buildIRODSCollectionAbsolutePathFromTestProperties(
 								testingProperties, IRODS_TEST_SUBDIR_PATH));
 	}
-
 
 }

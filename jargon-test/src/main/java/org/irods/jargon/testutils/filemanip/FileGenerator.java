@@ -17,6 +17,8 @@ import java.util.Random;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.irods.jargon.testutils.TestingUtilsException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Helper methods to generate dummy files and directories useful for Jargon
@@ -32,6 +34,7 @@ public class FileGenerator {
 	private static final Random RANDOM = new Random();
 	private static Properties testingProperties = new Properties();
 	private static TestingPropertiesHelper testingPropertiesHelper = new TestingPropertiesHelper();
+	private static Logger log = LoggerFactory.getLogger(FileGenerator.class);
 
 	static {
 		fileExtensions.add(".doc");
@@ -244,6 +247,7 @@ public class FileGenerator {
 		File localFile;
 		StringBuilder subdirName;
 		StringBuilder absolutePath;
+		
 		for (int i = 0; i < numberThisParent; i++) {
 			subdirName = new StringBuilder();
 			absolutePath = new StringBuilder();
@@ -271,6 +275,8 @@ public class FileGenerator {
 				numberOfFiles = generateRandomNumber(minNumberOfFiles, maxNumberOfFiles);
 			}
 					
+			log.debug("generating {} number of files", numberOfFiles);
+			
 			generateManyFilesInParentCollectionByAbsolutePath(
 				 localFile.getAbsolutePath() + '/', filePrefix, fileSuffix, numberOfFiles,
 					fileLengthMin, fileLengthMax);
@@ -288,13 +294,9 @@ public class FileGenerator {
 			String fileSuffix, int numberOfFiles, int fileLengthMin,
 			int fileLengthMax) throws TestingUtilsException {
 
-		ScratchFileUtils scratchFileUtils = new ScratchFileUtils(
-				testingProperties);
-		
-		File localFile;
-
-		String genFileName = "";
-		String absLocalPath = "";
+		@SuppressWarnings("unused")
+		String genFileName;
+		String absLocalPath;
 		for (int i = 0; i < numberOfFiles; i++) {
 			genFileName = filePrefix + i + fileSuffix;
 			absLocalPath = FileGenerator.generateFileOfFixedLengthGivenName(

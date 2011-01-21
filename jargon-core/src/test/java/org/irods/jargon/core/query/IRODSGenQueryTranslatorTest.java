@@ -323,7 +323,8 @@ public class IRODSGenQueryTranslatorTest {
 				RodsGenQueryEnum.COL_DATA_ACCESS_DATA_ID.getName(),
 				sel1.getSelectFieldColumnName());
 		TestCase.assertEquals("did not classify as a count()",
-				GenQuerySelectField.SelectFieldTypes.COUNT, sel1.getSelectFieldType());
+				GenQuerySelectField.SelectFieldTypes.COUNT,
+				sel1.getSelectFieldType());
 
 	}
 
@@ -347,7 +348,8 @@ public class IRODSGenQueryTranslatorTest {
 				RodsGenQueryEnum.COL_DATA_ACCESS_DATA_ID.getName(),
 				sel1.getSelectFieldColumnName());
 		TestCase.assertEquals("did not classify as a count()",
-				GenQuerySelectField.SelectFieldTypes.SUM, sel1.getSelectFieldType());
+				GenQuerySelectField.SelectFieldTypes.SUM,
+				sel1.getSelectFieldType());
 
 	}
 
@@ -371,7 +373,8 @@ public class IRODSGenQueryTranslatorTest {
 				RodsGenQueryEnum.COL_DATA_ACCESS_DATA_ID.getName(),
 				sel1.getSelectFieldColumnName());
 		TestCase.assertEquals("did not classify as a count()",
-				GenQuerySelectField.SelectFieldTypes.AVG, sel1.getSelectFieldType());
+				GenQuerySelectField.SelectFieldTypes.AVG,
+				sel1.getSelectFieldType());
 
 	}
 
@@ -395,7 +398,8 @@ public class IRODSGenQueryTranslatorTest {
 				RodsGenQueryEnum.COL_DATA_ACCESS_DATA_ID.getName(),
 				sel1.getSelectFieldColumnName());
 		TestCase.assertEquals("did not classify as a count()",
-				GenQuerySelectField.SelectFieldTypes.MIN, sel1.getSelectFieldType());
+				GenQuerySelectField.SelectFieldTypes.MIN,
+				sel1.getSelectFieldType());
 
 	}
 
@@ -419,7 +423,8 @@ public class IRODSGenQueryTranslatorTest {
 				RodsGenQueryEnum.COL_DATA_ACCESS_DATA_ID.getName(),
 				sel1.getSelectFieldColumnName());
 		TestCase.assertEquals("did not classify as a count()",
-				GenQuerySelectField.SelectFieldTypes.MAX, sel1.getSelectFieldType());
+				GenQuerySelectField.SelectFieldTypes.MAX,
+				sel1.getSelectFieldType());
 
 	}
 
@@ -515,7 +520,8 @@ public class IRODSGenQueryTranslatorTest {
 				RodsGenQueryEnum.COL_DATA_ACCESS_DATA_ID.getName(),
 				sel1.getSelectFieldColumnName());
 		TestCase.assertEquals("did not classify as a count()",
-				GenQuerySelectField.SelectFieldTypes.SUM, sel1.getSelectFieldType());
+				GenQuerySelectField.SelectFieldTypes.SUM,
+				sel1.getSelectFieldType());
 
 	}
 

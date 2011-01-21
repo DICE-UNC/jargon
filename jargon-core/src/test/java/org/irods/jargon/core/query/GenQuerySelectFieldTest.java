@@ -29,14 +29,18 @@ public class GenQuerySelectFieldTest {
 
 	@Test(expected = JargonException.class)
 	public final void testInstanceNullRodsGenQueryEnum() throws Exception {
-		GenQuerySelectField.instance(null, GenQuerySelectField.SelectFieldTypes.FIELD,
+		GenQuerySelectField.instance(null,
+				GenQuerySelectField.SelectFieldTypes.FIELD,
 				GenQuerySelectField.SelectFieldSource.DEFINED_QUERY_FIELD);
 	}
 
 	@Test(expected = JargonException.class)
 	public final void testInstanceNullSelectFieldType() throws Exception {
-		GenQuerySelectField.instance(RodsGenQueryEnum.COL_AUDIT_ACTION_ID, null,
-				GenQuerySelectField.SelectFieldSource.DEFINED_QUERY_FIELD);
+		GenQuerySelectField
+				.instance(
+						RodsGenQueryEnum.COL_AUDIT_ACTION_ID,
+						null,
+						GenQuerySelectField.SelectFieldSource.DEFINED_QUERY_FIELD);
 	}
 
 	@Test(expected = JargonException.class)
@@ -47,8 +51,8 @@ public class GenQuerySelectFieldTest {
 
 	@Test
 	public final void testInstanceWithNameAndType() throws Exception {
-		GenQuerySelectField selectField = GenQuerySelectField.instance("blah", "1234",
-				GenQuerySelectField.SelectFieldTypes.FIELD,
+		GenQuerySelectField selectField = GenQuerySelectField.instance("blah",
+				"1234", GenQuerySelectField.SelectFieldTypes.FIELD,
 				GenQuerySelectField.SelectFieldSource.DEFINED_QUERY_FIELD);
 		Assert.assertNotNull("null instance", selectField);
 	}

@@ -1,16 +1,12 @@
 package org.irods.jargon.core.packinstr;
 
-import java.util.Properties;
-
 import junit.framework.Assert;
-import junit.framework.TestCase;
 
 import org.irods.jargon.core.connection.IRODSServerProperties;
 import org.irods.jargon.core.query.IRODSGenQuery;
 import org.irods.jargon.core.query.IRODSGenQueryTranslator;
 import org.irods.jargon.core.query.RodsGenQueryEnum;
 import org.irods.jargon.core.query.TranslatedIRODSGenQuery;
-import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -18,13 +14,9 @@ import org.mockito.Mockito;
 
 public class GenQueryInpTest {
 
-	private static Properties testingProperties = new Properties();
-	private static TestingPropertiesHelper testingPropertiesHelper = new TestingPropertiesHelper();
-
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		TestingPropertiesHelper testingPropertiesLoader = new TestingPropertiesHelper();
-		testingProperties = testingPropertiesLoader.getTestProperties();
+
 	}
 
 	@AfterClass
@@ -70,7 +62,7 @@ public class GenQueryInpTest {
 				translatedIRODSQuery, 2);
 		String response = genQueryInp.getParsedTags();
 		Assert.assertNotNull("no tags generated", response);
-		
+
 		StringBuilder sb = new StringBuilder();
 		sb.append("<GenQueryInp_PI><maxRows>-1</maxRows>\n");
 		sb.append("<continueInx>2</continueInx>\n");
@@ -90,7 +82,7 @@ public class GenQueryInpTest {
 		sb.append("</InxValPair_PI>\n");
 		sb.append("</GenQueryInp_PI>\n");
 		String tagVal = sb.toString();
-		TestCase.assertEquals("improper tags returned", tagVal, response);
+		Assert.assertEquals("improper tags returned", tagVal, response);
 	}
 
 	@Test
