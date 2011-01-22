@@ -8,6 +8,7 @@ import org.irods.jargon.core.connection.IRODSServerProperties;
 import org.irods.jargon.core.exception.JargonException;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class IRODSGenQueryTranslatorTest {
@@ -678,4 +679,49 @@ public class IRODSGenQueryTranslatorTest {
 		// no errors means good translation
 
 	}
+	
+	@Ignore //FIXME: between does not properly work in iquest?
+	public final void queryWithBetweenAndTwoValues() throws Exception {
+		String query = "SELECT COLL_ID,COLL_NAME,META_COLL_ATTR_NAME,META_COLL_ATTR_VALUE,META_COLL_ATTR_UNITS WHERE META_COLL_ATTR_NAME BETWEEN 'inval1' AND 'inval2'";
+		IRODSServerProperties props = IRODSServerProperties.instance(
+				IRODSServerProperties.IcatEnabled.ICAT_ENABLED, 100, "rods2.2",
+				"d", "zone");
+		
+		IRODSGenQueryTranslator translator = new IRODSGenQueryTranslator(props);
+		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(query, 10);
+		translator.getTranslatedQuery(irodsQuery);
+
+		// no errors means good translation
+
+	}
+	
+	@Test
+	public final void queryWithNotLike() throws Exception {
+		String query = "SELECT USER_NAME WHERE USER_NAME NOT LIKE 'thisname'";
+		IRODSServerProperties props = IRODSServerProperties.instance(
+				IRODSServerProperties.IcatEnabled.ICAT_ENABLED, 100, "rods2.2",
+				"d", "zone");
+		
+		IRODSGenQueryTranslator translator = new IRODSGenQueryTranslator(props);
+		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(query, 10);
+		TranslatedIRODSGenQuery gq = translator.getTranslatedQuery(irodsQuery);
+		TranslatedGenQueryCondition qc = gq.getTranslatedQueryConditions().get(0);
+		TestCase.assertNotNull("null condition set", qc);
+		TestCase.assertEquals("did not set not like in condition", "NOT LIKE", qc.getOperator());
+
+	}
+	
+	@Test(expected=JargonQueryException.class)
+	public final void queryWithNotNotLike() throws Exception {
+		String query = "SELECT USER_NAME WHERE USER_NAME NOT NOT LIKE 'thisname'";
+		IRODSServerProperties props = IRODSServerProperties.instance(
+				IRODSServerProperties.IcatEnabled.ICAT_ENABLED, 100, "rods2.2",
+				"d", "zone");
+		
+		IRODSGenQueryTranslator translator = new IRODSGenQueryTranslator(props);
+		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(query, 10);
+		translator.getTranslatedQuery(irodsQuery);
+	}
+
+
 }

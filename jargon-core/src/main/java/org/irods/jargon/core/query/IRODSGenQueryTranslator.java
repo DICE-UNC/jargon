@@ -566,6 +566,7 @@ public class IRODSGenQueryTranslator {
 		String parsedField = "";
 		String parsedValue = "";
 		String parsedOperator = "";
+		boolean negation = false;
 
 		for (GenQueryConditionToken token : tokens) {
 
@@ -592,12 +593,27 @@ public class IRODSGenQueryTranslator {
 			// the form of field, operator, condition(s)
 			if (i == 0) {
 				// treat as field
+				negation = false;
 				parsedField = token.getValue().trim();
 				i++;
 			} else if (i == 1) {
-				parsedOperator = token.getValue().trim();
+				
+				if (token.getValue().trim().equalsIgnoreCase("NOT")) {
+					if (negation) {
+						throw new JargonQueryException("multiple NOT in condition operator,  around token after the where " + tokenCtr);
+					}
+					negation = true;
+					parsedOperator = "NOT ";
+					tokenCtr++;
+					continue;
+				} else {
+					parsedOperator += token.getValue().trim();
+					validateOperatorAgainstPossibilities(parsedOperator);
+					negation = false;
+				}
+				
 				i++;
-			} else if (i == 2) {
+			} else if (i >= 2) {
 				parsedValue = token.getValue().trim();
 				// TODO: add multiple values for BETWEEN, etc
 
@@ -610,6 +626,7 @@ public class IRODSGenQueryTranslator {
 
 				queryCondition = GenQueryCondition.instance(parsedField,
 						parsedOperator, parsedValue);
+				parsedOperator = "";
 				queryConditions.add(queryCondition);
 				i = 0;
 			}
@@ -625,6 +642,24 @@ public class IRODSGenQueryTranslator {
 		return queryConditions;
 	}
 
+	/** 
+	 * Make sure the query operator is one of the allowed types
+	 * @param parsedOperator
+	 */
+	private void validateOperatorAgainstPossibilities(String parsedOperator) throws JargonQueryException {
+		boolean matched = false;
+		for (String opr : operatorStrings) {
+			if (opr.equalsIgnoreCase(parsedOperator.trim())) {
+				matched = true;
+			}
+		}
+		
+		if (!matched) {
+			throw new JargonQueryException("unexpected query operator:" + parsedOperator);
+		}
+		
+	}
+
 	/**
 	 * Take a single condition as a string and parse it out into components
 	 * 
@@ -636,7 +671,7 @@ public class IRODSGenQueryTranslator {
 			final int conditionOffset) throws JargonQueryException {
 		String conditionString = query.substring(conditionOffset);
 		log.debug("conditions in string: {}", conditionString);
-
+		
 		// break conditions into tokens and store in an Array
 		List<GenQueryConditionToken> queryTokens = new ArrayList<GenQueryConditionToken>();
 
@@ -651,7 +686,6 @@ public class IRODSGenQueryTranslator {
 		for (int i = 0; i < conditionString.length(); i++) {
 
 			nextChar = conditionString.charAt(i);
-			// LOG.debug("nextChar:{}", nextChar);
 
 			if (escaped) {
 				tokenAccum.append(nextChar);
@@ -661,12 +695,10 @@ public class IRODSGenQueryTranslator {
 
 			if (nextChar == '\\') {
 				if (escaped) {
-					// LOG.debug("escaped, go ahead and append");
 					tokenAccum.append(nextChar);
 					escaped = false;
 					continue;
 				} else {
-					// LOG.debug("slash indicates start of escape");
 					escaped = true;
 					continue;
 				}
@@ -683,7 +715,6 @@ public class IRODSGenQueryTranslator {
 						token = new GenQueryConditionToken();
 						token.setValue(tokenAccum.toString());
 						queryTokens.add(token);
-						// LOG.debug("part is:{}", token);
 						tokenAccum = new StringBuilder();
 					}
 				}

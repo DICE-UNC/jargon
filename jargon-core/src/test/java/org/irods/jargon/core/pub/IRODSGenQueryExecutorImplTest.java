@@ -215,6 +215,38 @@ public class IRODSGenQueryExecutorImplTest {
 				returnedResourceName);
 
 	}
+	
+	@Test
+	public final void testExecuteIRODSQueryForResourceUsingNotLike() throws Exception {
+
+		String queryString = "select "
+				+ RodsGenQueryEnum.COL_R_RESC_NAME.getName()
+				+ " where "
+				+ RodsGenQueryEnum.COL_R_RESC_NAME.getName()
+				+ " NOT LIKE "
+				+ "'joebobnotaresource'";
+
+		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(queryString, 100);
+
+		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager
+				.instance();
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSSession irodsSession = IRODSSession
+				.instance(irodsConnectionManager);
+		IRODSAccessObjectFactory accessObjectFactory = IRODSAccessObjectFactoryImpl
+				.instance(irodsSession);
+		IRODSGenQueryExecutor irodsGenQueryExecutor = accessObjectFactory
+				.getIRODSGenQueryExecutor(irodsAccount);
+
+		IRODSQueryResultSetInterface resultSet = irodsGenQueryExecutor
+				.executeIRODSQuery(irodsQuery, 0);
+
+		irodsSession.closeSession();
+
+		Assert.assertNotNull("null result set", resultSet);
+		Assert.assertFalse("empty result set", resultSet.getResults().isEmpty());
+	}
 
 	@Test
 	public final void testGetMoreResults() throws Exception {

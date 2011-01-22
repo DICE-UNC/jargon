@@ -8,8 +8,6 @@ package org.irods.jargon.core.query;
  * query. This is an internal representation for the query parser. This is an
  * immutable object, and is thread-safe.
  * 
- * TODO: potentially overlaps with AVUQueryElement?
- * 
  * @author mikeconway
  * 
  */
