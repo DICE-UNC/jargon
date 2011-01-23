@@ -46,8 +46,8 @@ public class IRODSGenQueryTranslatorTest {
 		IRODSGenQueryTranslator translator = new IRODSGenQueryTranslator(props);
 		List<String> selects = translator.parseSelectsIntoListOfNames(query);
 		TestCase.assertEquals(2, selects.size());
-		TestCase.assertEquals("blah", selects.get(0));
-		TestCase.assertEquals("yelp", selects.get(1));
+		TestCase.assertEquals("BLAH", selects.get(0));
+		TestCase.assertEquals("YELP", selects.get(1));
 	}
 
 	@Test(expected = JargonQueryException.class)
@@ -721,6 +721,57 @@ public class IRODSGenQueryTranslatorTest {
 		IRODSGenQueryTranslator translator = new IRODSGenQueryTranslator(props);
 		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(query, 10);
 		translator.getTranslatedQuery(irodsQuery);
+	}
+	
+	@Ignore // FIXME: working on integrating this now
+	public final void queryWithGroupByNoWhere() throws Exception {
+		String query = "SELECT COLL_ID,COLL_NAME,META_COLL_ATTR_NAME,META_COLL_ATTR_VALUE,META_COLL_ATTR_UNITS GROUP BY META_COLL_ATTR_NAME";
+		IRODSServerProperties props = IRODSServerProperties.instance(
+				IRODSServerProperties.IcatEnabled.ICAT_ENABLED, 100, "rods2.4",
+				"d", "zone");
+		IRODSGenQueryTranslator translator = new IRODSGenQueryTranslator(props);
+
+		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(query, 10);
+
+		TranslatedIRODSGenQuery gq = translator.getTranslatedQuery(irodsQuery);
+		List<GenQuerySelectField> groupBys =gq.getGroupByFields();
+		TestCase.assertEquals("did not set the group by", 1, groupBys.size());
+
+		// no errors means good translation
+		// FIXME ADD GROUP BY CHECKS
+
+	}
+	
+	@Test
+	public final void tokenizeOrderBy() throws Exception {
+		String query = "SELECT COLL_ID,COLL_NAME,META_COLL_ATTR_NAME,META_COLL_ATTR_VALUE,META_COLL_ATTR_UNITS ORDER BY META_COLL_ATTR_NAME";
+		IRODSServerProperties props = IRODSServerProperties.instance(
+				IRODSServerProperties.IcatEnabled.ICAT_ENABLED, 100, "rods2.4",
+				"d", "zone");
+		IRODSGenQueryTranslator translator = new IRODSGenQueryTranslator(props);
+
+		List<String> orderByFields = translator.parseOrderByFieldsIntoList(query);
+
+		TestCase.assertEquals("did not set the group by", 1, orderByFields.size());
+		TestCase.assertEquals("did not find order by field", "META_COLL_ATTR_NAME", orderByFields.get(0));
+
+	}
+	
+	@Test
+	public final void tokenizeTwoOrderBy() throws Exception {
+		String query = "SELECT COLL_ID,COLL_NAME,META_COLL_ATTR_NAME,META_COLL_ATTR_VALUE,META_COLL_ATTR_UNITS ORDER BY META_COLL_ATTR_NAME, META_COLL_ATTR_VALUE";
+		IRODSServerProperties props = IRODSServerProperties.instance(
+				IRODSServerProperties.IcatEnabled.ICAT_ENABLED, 100, "rods2.4",
+				"d", "zone");
+		IRODSGenQueryTranslator translator = new IRODSGenQueryTranslator(props);
+
+		List<String> orderByFields = translator.parseOrderByFieldsIntoList(query);
+
+		TestCase.assertEquals("did not set the group by", 2, orderByFields.size());
+		TestCase.assertEquals("did not find order by field", "META_COLL_ATTR_NAME", orderByFields.get(0));
+		TestCase.assertEquals("did not find order by field", "META_COLL_ATTR_VALUE", orderByFields.get(1));
+
+
 	}
 
 

@@ -27,10 +27,13 @@ public class IRODSGenQueryTranslator {
 			.getLogger(IRODSGenQueryTranslator.class);
 	private ExtensibleMetaDataMapping extensibleMetaDataMapping = null;
 
-	public static String[] operatorStrings = { "=", "<>", "<", ">", "<=", ">=",
-			"in", "not in", "between", "not between", "like", "not like",
+	public static final String[] operatorStrings = { "=", "<>", "<", ">", "<=",
+			">=", "in", "not in", "between", "not between", "like", "not like",
 			"sounds like", "sounds not like", "TABLE", "num<", "num>", "num<=",
 			"num>=", };
+
+	public static final String ORDER_BY = "ORDER BY";
+	private static final String GROUP_BY = "GROUP BY";
 
 	/**
 	 * Public constructor takes a <code>IRODSServerProperties</code> object that
@@ -78,8 +81,8 @@ public class IRODSGenQueryTranslator {
 	 * conditions are formated such that iRODS can understand the fields.
 	 * 
 	 * @param irodsQuery
-	 *            {@link org.irods.jargon.core.query.IRODSGenQuery} containing the
-	 *            desired GenQuery
+	 *            {@link org.irods.jargon.core.query.IRODSGenQuery} containing
+	 *            the desired GenQuery
 	 * @return {@link org.irods.jargon.core.query.TranslatedIRODSGenQuery} that
 	 *         encapsulates a query where selects and conditions have been
 	 *         resolved and translated into a format that GenQuery can
@@ -87,8 +90,9 @@ public class IRODSGenQueryTranslator {
 	 * @throws JargonQueryException
 	 * @throws JargonException
 	 */
-	public TranslatedIRODSGenQuery getTranslatedQuery(final IRODSGenQuery irodsQuery)
-			throws JargonQueryException, JargonException {
+	public TranslatedIRODSGenQuery getTranslatedQuery(
+			final IRODSGenQuery irodsQuery) throws JargonQueryException,
+			JargonException {
 		List<String> selects = parseSelectsIntoListOfNames(irodsQuery
 				.getQueryString());
 
@@ -111,6 +115,8 @@ public class IRODSGenQueryTranslator {
 	}
 
 	/**
+	 * Sanity check to make sure everything was translated properly
+	 * 
 	 * @param translatedSelects
 	 * @param translatedConditions
 	 * @throws JargonQueryException
@@ -239,8 +245,9 @@ public class IRODSGenQueryTranslator {
 	 * @throws JargonException
 	 * @throws JargonQueryException
 	 */
-	protected List<GenQuerySelectField> translateSelects(final List<String> selects)
-			throws JargonException, JargonQueryException {
+	protected List<GenQuerySelectField> translateSelects(
+			final List<String> selects) throws JargonException,
+			JargonQueryException {
 		List<GenQuerySelectField> translatedSelects = new ArrayList<GenQuerySelectField>();
 
 		// go through selects and get the translation from the 'string' name to
@@ -435,19 +442,28 @@ public class IRODSGenQueryTranslator {
 	 */
 	protected List<String> parseSelectsIntoListOfNames(final String query)
 			throws JargonQueryException {
+
+		String queryDelimited;
+
+		queryDelimited = query.toUpperCase();
+		queryDelimited = queryDelimited.replaceAll("  ", " ");
+		queryDelimited = queryDelimited.replaceAll(ORDER_BY, "ORDERBY");
+		queryDelimited = queryDelimited.replaceAll(GROUP_BY, "GROUPBY");
+
 		List<String> selectFieldNames = new ArrayList<String>();
 		boolean readPastSelect = false;
-		boolean haveNotHitWhere = true;
+		boolean haveNotHitEndOfSelects = true;
 		String token;
 		// convert ',' to ' ' for easier tokenizing
-		String queryNoCommas = query.replaceAll(",", " ");
+		String queryNoCommas = queryDelimited.replaceAll(",", " ");
 		StringTokenizer tokenizer = new StringTokenizer(queryNoCommas, " ");
 		int tokenCtr = 0;
 
-		while (tokenizer.hasMoreElements() && haveNotHitWhere) {
+		while (tokenizer.hasMoreElements() && haveNotHitEndOfSelects) {
 			token = tokenizer.nextToken();
 
-			// I'm interested in the content between the select and the where
+			// I'm interested in the content between the select and the where,
+			// orderby or groupby (whichever is first)
 			if (token.equalsIgnoreCase("select")) {
 				readPastSelect = true;
 				continue;
@@ -460,8 +476,10 @@ public class IRODSGenQueryTranslator {
 				throw qe;
 			}
 
-			if (token.equalsIgnoreCase("where")) {
-				haveNotHitWhere = false;
+			if (token.equalsIgnoreCase("where")
+					|| token.equalsIgnoreCase("ORDERBY")
+					|| token.equalsIgnoreCase("GROUPBY")) {
+				haveNotHitEndOfSelects = false;
 				continue;
 			}
 
@@ -516,7 +534,8 @@ public class IRODSGenQueryTranslator {
 
 		int conditionOffset = idxOfWhere + 7;
 
-		// stop condition tokenizing if a 'GROUP BY' was found, if entered
+		// stop condition tokenizing if a 'GROUP BY' or 'ORDER BY' was found, if
+		// entered
 		String findGroupByInStringMakingItAllUpperCase = testQuery.substring(
 				conditionOffset).toUpperCase();
 		int indexOfGroupBy = findGroupByInStringMakingItAllUpperCase
@@ -529,6 +548,16 @@ public class IRODSGenQueryTranslator {
 					- indexOfGroupBy - 8);
 		}
 
+		int indexOfOrderBy = findGroupByInStringMakingItAllUpperCase
+				.indexOf("ORDER BY");
+
+		if (indexOfOrderBy != -1) {
+			log.debug("found order by in query {}",
+					findGroupByInStringMakingItAllUpperCase);
+			testQuery = testQuery.substring(0, testQuery.length()
+					- indexOfOrderBy - 8);
+		}
+
 		// have a condition, begin parsing into discrete tokens, treating quoted
 		// literals as a token.
 		List<GenQueryConditionToken> tokens = tokenizeConditions(testQuery,
@@ -539,6 +568,47 @@ public class IRODSGenQueryTranslator {
 		// 'classified' list
 		return buildListOfQueryConditionsFromParsedTokens(tokens);
 
+	}
+
+	/**
+	 * Create a list where each entry is one order by field from the raw query.
+	 * 
+	 * @param query
+	 * @return
+	 * @throws JargonQueryException
+	 */
+	protected List<String> parseOrderByFieldsIntoList(final String query)
+			throws JargonQueryException {
+
+		List<String> orderByVals = new ArrayList<String>();
+
+		// stop condition tokenizing if a 'GROUP BY' or 'ORDER BY' was found, if
+		// entered
+		String upperCaseVersionOfQuery = query.toUpperCase();
+		int indexOfOrderBy = upperCaseVersionOfQuery.indexOf("ORDER BY");
+
+		if (indexOfOrderBy == -1) {
+			log.debug("no order by in query");
+			return orderByVals;
+		}
+
+		String orderBySectionOfQueryToParse;
+
+		orderBySectionOfQueryToParse = upperCaseVersionOfQuery
+				.substring(indexOfOrderBy + 8);
+
+		log.debug("order by section of query:{}", orderBySectionOfQueryToParse);
+		String token;
+		// convert ',' to ' ' for easier tokenizing
+		String queryNoCommas = orderBySectionOfQueryToParse
+				.replaceAll(",", " ");
+		StringTokenizer tokenizer = new StringTokenizer(queryNoCommas, " ");
+		while (tokenizer.hasMoreElements()) {
+			token = tokenizer.nextToken();
+			orderByVals.add(token);
+		}
+
+		return orderByVals;
 	}
 
 	/**
@@ -555,7 +625,8 @@ public class IRODSGenQueryTranslator {
 	 * @throws JargonQueryException
 	 */
 	private List<GenQueryCondition> buildListOfQueryConditionsFromParsedTokens(
-			final List<GenQueryConditionToken> tokens) throws JargonQueryException {
+			final List<GenQueryConditionToken> tokens)
+			throws JargonQueryException {
 
 		GenQueryCondition queryCondition;
 		List<GenQueryCondition> queryConditions = new ArrayList<GenQueryCondition>();
@@ -597,10 +668,12 @@ public class IRODSGenQueryTranslator {
 				parsedField = token.getValue().trim();
 				i++;
 			} else if (i == 1) {
-				
+
 				if (token.getValue().trim().equalsIgnoreCase("NOT")) {
 					if (negation) {
-						throw new JargonQueryException("multiple NOT in condition operator,  around token after the where " + tokenCtr);
+						throw new JargonQueryException(
+								"multiple NOT in condition operator,  around token after the where "
+										+ tokenCtr);
 					}
 					negation = true;
 					parsedOperator = "NOT ";
@@ -611,7 +684,7 @@ public class IRODSGenQueryTranslator {
 					validateOperatorAgainstPossibilities(parsedOperator);
 					negation = false;
 				}
-				
+
 				i++;
 			} else if (i >= 2) {
 				parsedValue = token.getValue().trim();
@@ -642,22 +715,25 @@ public class IRODSGenQueryTranslator {
 		return queryConditions;
 	}
 
-	/** 
+	/**
 	 * Make sure the query operator is one of the allowed types
+	 * 
 	 * @param parsedOperator
 	 */
-	private void validateOperatorAgainstPossibilities(String parsedOperator) throws JargonQueryException {
+	private void validateOperatorAgainstPossibilities(
+			final String parsedOperator) throws JargonQueryException {
 		boolean matched = false;
 		for (String opr : operatorStrings) {
 			if (opr.equalsIgnoreCase(parsedOperator.trim())) {
 				matched = true;
 			}
 		}
-		
+
 		if (!matched) {
-			throw new JargonQueryException("unexpected query operator:" + parsedOperator);
+			throw new JargonQueryException("unexpected query operator:"
+					+ parsedOperator);
 		}
-		
+
 	}
 
 	/**
@@ -671,7 +747,7 @@ public class IRODSGenQueryTranslator {
 			final int conditionOffset) throws JargonQueryException {
 		String conditionString = query.substring(conditionOffset);
 		log.debug("conditions in string: {}", conditionString);
-		
+
 		// break conditions into tokens and store in an Array
 		List<GenQueryConditionToken> queryTokens = new ArrayList<GenQueryConditionToken>();
 

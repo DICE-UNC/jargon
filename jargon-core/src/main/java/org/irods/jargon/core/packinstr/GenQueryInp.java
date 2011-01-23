@@ -33,6 +33,10 @@ public class GenQueryInp extends AbstractIRODSPackingInstruction implements
 	public static final String SVALUE = "svalue";
 	public static final String INX_VAL_PAIR_PI = "InxValPair_PI";
 	public static final String INX_IVAL_PAIR_PI = "InxIvalPair_PI";
+	
+	// working on this....no order by yet
+	public static final int ORDER_BY = 0x400;
+	public static final int ORDER_BY_DESC = 0x800;
 
 	public static final int API_NBR = 702;
 
@@ -178,7 +182,6 @@ public class GenQueryInp extends AbstractIRODSPackingInstruction implements
 		for (GenQuerySelectField select : translatedIRODSQuery.getSelectFields()) {
 			subTags[j] = new Tag(INX, select.getSelectFieldNumericTranslation());
 			j++;
-
 		}
 
 		for (GenQuerySelectField select : translatedIRODSQuery.getSelectFields()) {
