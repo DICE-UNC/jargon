@@ -446,4 +446,34 @@ public interface DataObjectAO extends IRODSAccessObject {
 	void updateComment(final String comment, final String dataObjectAbsolutePath)
 			throws JargonException;
 
+	/**
+	 * Set the permissions on a data object to read for the given user.
+	 * @param zone <code>String</code> with an optional zone for the file.  Leave blank if not used, it is not required.
+	 * @param absolutePath <code>String</code> with the absolute path to the data object.
+	 * @param userName <code>String</code> with the user name whose permissions will be set.
+	 * @throws JargonException
+	 */
+	void setAccessPermissionRead(String zone, String absolutePath,
+			String userName) throws JargonException;
+
+	/**
+	 * Set the permissions on a data object to write for the given user.
+	 * @param zone <code>String</code> with an optional zone for the file.  Leave blank if not used, it is not required.
+	 * @param absolutePath <code>String</code> with the absolute path to the data object.
+	 * @param userName <code>String</code> with the user name whose permissions will be set.
+	 * @throws JargonException
+	 */
+	void setAccessPermissionWrite(String zone, String absolutePath,
+			String userName) throws JargonException;
+
+	/**
+	 * Set the permissions on a data object to own for the given user.
+	 * @param zone <code>String</code> with an optional zone for the file.  Leave blank if not used, it is not required.
+	 * @param absolutePath <code>String</code> with the absolute path to the data object.
+	 * @param userName <code>String</code> with the user name whose permissions will be set.
+	 * @throws JargonException
+	 */
+	void setAccessPermissionOwn(String zone, String absolutePath,
+			String userName) throws JargonException;
+
 }

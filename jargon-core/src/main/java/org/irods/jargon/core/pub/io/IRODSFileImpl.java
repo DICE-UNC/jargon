@@ -331,10 +331,9 @@ public final class IRODSFileImpl extends File implements IRODSFile {
 		boolean canWrite = false;
 		try {
 			canWrite = irodsFileSystemAO.isFileWriteable(this);
-			if (log.isDebugEnabled()) {
-				log.info("checked if I could write this file, and got back:"
-						+ canWrite);
-			}
+				log.info("checked if I could write this file, and got back:{}"
+						,canWrite);
+			
 		} catch (JargonException e) {
 			String msg = "JargonException caught and rethrown as JargonRuntimeException:"
 					+ e.getMessage();

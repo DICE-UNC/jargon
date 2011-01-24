@@ -46,6 +46,7 @@ public interface IRODSFile {
 	public static final int PATH_IS_DIRECTORY = 2;
 	public static final int READ_PERMISSIONS = 1050;
 	public static final int WRITE_PERMISSIONS = 1120;
+	public static final int OWN_PERMISSIONS = 1200;
 	public static final String IRODS_ROOT = "/";
 
 	boolean canRead();

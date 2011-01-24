@@ -36,7 +36,6 @@ public class DataObjReadTest {
 		DataObjRead dataObjRead = DataObjRead.instance(3, 100);
 		Assert.assertNotNull("null object returned from initializer",
 				dataObjRead);
-
 	}
 
 	@Test(expected = JargonException.class)

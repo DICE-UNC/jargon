@@ -132,12 +132,11 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 		return writeable;
 	}
 
-	/**
-	 * @param irodsFile
-	 * @return
-	 * @throws JargonException
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.core.pub.io.IRODSFileSystemAO#getFilePermissions(org.irods.jargon.core.pub.io.IRODSFile)
 	 */
-	int getFilePermissions(final IRODSFile irodsFile) throws JargonException {
+	@Override
+	public int getFilePermissions(final IRODSFile irodsFile) throws JargonException {
 		if (irodsFile == null) {
 			throw new JargonException("irods file is null");
 		}
@@ -254,7 +253,11 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 		return filePermissionQuery;
 	}
 
-	int getDirectoryPermissions(final IRODSFile irodsFile)
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.core.pub.io.IRODSFileSystemAO#getDirectoryPermissions(org.irods.jargon.core.pub.io.IRODSFile)
+	 */
+	@Override
+	public int getDirectoryPermissions(final IRODSFile irodsFile)
 			throws JargonException {
 
 		if (irodsFile == null) {

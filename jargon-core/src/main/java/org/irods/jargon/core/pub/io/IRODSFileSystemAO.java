@@ -249,7 +249,7 @@ public interface IRODSFileSystemAO extends IRODSAccessObject {
 	 *            <code>String</code> with the target resource name iRODS.
 	 * @throws JargonException
 	 */
-	public void physicalMove(final String absolutePathToSourceFile,
+	 void physicalMove(final String absolutePathToSourceFile,
 			final String targetResource) throws JargonException;
 
 	/**
@@ -261,7 +261,7 @@ public interface IRODSFileSystemAO extends IRODSAccessObject {
 	 *            file/collection to be deleted
 	 * @throws JargonException
 	 */
-	public void directoryDeleteNoForce(IRODSFile irodsFile)
+	 void directoryDeleteNoForce(IRODSFile irodsFile)
 			throws JargonException;
 
 	/**
@@ -273,5 +273,27 @@ public interface IRODSFileSystemAO extends IRODSAccessObject {
 	 *            file/collection to be deleted
 	 * @throws JargonException
 	 */
-	public void fileDeleteNoForce(IRODSFile irodsFile) throws JargonException;
+	 void fileDeleteNoForce(IRODSFile irodsFile) throws JargonException;
+
+	 /**
+	  * Returns the iRODS encoded value that reflects the highest file permissions for the given iRODS collection.  Note that a separate
+	  * <code>getFilePermissions()</code> method is available that can retrieve the permissions for a data object.
+	* @param irodsFile
+	 *            {@link org.irods.jargon.core.pub.io.IRODSFile} which is a
+	 *            collection to be checked for permissions
+	  * @return <code>int</code> with the iRODS encoded permissions value
+	  * @throws JargonException
+	  */
+	int getDirectoryPermissions(IRODSFile irodsFile) throws JargonException;
+
+	 /**
+	  * Returns the iRODS encoded value that reflects the highest file permissions for the given iRODS data object.  Note that a separate
+	  * <code>getDirectoryPermissions()</code> method is available that can retrieve the permissions for a collection.
+	* @param irodsFile
+	 *            {@link org.irods.jargon.core.pub.io.IRODSFile} which is a
+	 *            data object to be checked for permissions
+	  * @return <code>int</code> with the iRODS encoded permissions value
+	  * @throws JargonException
+	  */
+	int getFilePermissions(IRODSFile irodsFile) throws JargonException;
 }

@@ -8,7 +8,7 @@ public class ModAccessControlInpTest {
 
 	@Test
 	public void testInstanceGoodNoZone() throws Exception {
-		ModAccessControlInp pi = ModAccessControlInp.instance(true, "", "path",
+		ModAccessControlInp pi = ModAccessControlInp.instanceForSetPermission(true, "", "path",
 				"userName", "own");
 		Assert.assertEquals(true, pi.isRecursive());
 		Assert.assertEquals("", pi.getZone());
@@ -18,58 +18,82 @@ public class ModAccessControlInpTest {
 		Assert.assertEquals(ModAccessControlInp.MOD_ACESS_CONTROL_API_NBR,
 				pi.getApiNumber());
 	}
-
+	
+	@Test
+	public void testInstanceInherit() throws Exception {
+		ModAccessControlInp pi = ModAccessControlInp.instanceForSetInheritOnACollection(true, "", "path");
+		Assert.assertEquals(true, pi.isRecursive());
+		Assert.assertEquals("", pi.getZone());
+		Assert.assertEquals("path", pi.getAbsolutePath());
+		Assert.assertEquals("", pi.getUserName());
+		Assert.assertEquals("inherit", pi.getPermission());
+		Assert.assertEquals(ModAccessControlInp.MOD_ACESS_CONTROL_API_NBR,
+				pi.getApiNumber());
+	}
+	
+	@Test
+	public void testInstanceNoInherit() throws Exception {
+		ModAccessControlInp pi = ModAccessControlInp.instanceForSetNoInheritOnACollection(true, "", "path");
+		Assert.assertEquals(true, pi.isRecursive());
+		Assert.assertEquals("", pi.getZone());
+		Assert.assertEquals("path", pi.getAbsolutePath());
+		Assert.assertEquals("", pi.getUserName());
+		Assert.assertEquals("noinherit", pi.getPermission());
+		Assert.assertEquals(ModAccessControlInp.MOD_ACESS_CONTROL_API_NBR,
+				pi.getApiNumber());
+	}
+	
 	@Test(expected = IllegalArgumentException.class)
 	public void testInstanceNullZone() throws Exception {
-		ModAccessControlInp.instance(true, null, "path", "userName",
+		ModAccessControlInp.instanceForSetPermission(true, null, "path", "userName",
 				"write");
 	}
 	
 	@Test(expected = IllegalArgumentException.class)
 	public void testInstanceBlankPath() throws Exception {
-		ModAccessControlInp.instance(true, "zone", "", "userName",
+		ModAccessControlInp.instanceForSetPermission(true, "zone", "", "userName",
 				"read");
 	}
 	
 	@Test(expected = IllegalArgumentException.class)
 	public void testInstanceNullPath() throws Exception {
-		ModAccessControlInp.instance(true, "zone", null, "userName",
+		ModAccessControlInp.instanceForSetPermission(true, "zone", null, "userName",
 				"read");
 	}
 	
 	@Test(expected = IllegalArgumentException.class)
 	public void testInstanceBlankUser() throws Exception {
-		ModAccessControlInp.instance(true, "zone", "path", "",
+		ModAccessControlInp.instanceForSetPermission(true, "zone", "path", "",
 				"read");
 	}
 	
 	@Test(expected = IllegalArgumentException.class)
 	public void testInstanceNullUser() throws Exception {
-		ModAccessControlInp.instance(true, "zone", "path", null,
+		ModAccessControlInp.instanceForSetPermission(true, "zone", "path", null,
 				"read");
 	}
 	
 	@Test(expected = IllegalArgumentException.class)
 	public void testInstanceBlankPermission() throws Exception {
-		ModAccessControlInp.instance(true, "zone", "path", "user",
+		ModAccessControlInp.instanceForSetPermission(true, "zone", "path", "user",
 				"");
 	}
 	
 	@Test(expected = IllegalArgumentException.class)
 	public void testInstanceNullPermission() throws Exception {
-		ModAccessControlInp.instance(true, "zone", "path", "user",
+		ModAccessControlInp.instanceForSetPermission(true, "zone", "path", "user",
 				null);
 	}
 	
 	@Test(expected = IllegalArgumentException.class)
 	public void testInstanceInvalidPermission() throws Exception {
-		ModAccessControlInp.instance(true, "zone", "path", "user",
+		ModAccessControlInp.instanceForSetPermission(true, "zone", "path", "user",
 				"nope");
 	}
 	
 	@Test
 	public final void testGetParsedTags() throws Exception {
-		ModAccessControlInp pi = ModAccessControlInp.instance(true, "", "path",
+		ModAccessControlInp pi = ModAccessControlInp.instanceForSetPermission(true, "", "path",
 				"userName", "read");
 		String actualTags = pi.getParsedTags();
 

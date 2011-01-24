@@ -31,6 +31,7 @@ import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.exception.JargonRuntimeException;
 import org.irods.jargon.core.packinstr.DataObjInp;
+import org.irods.jargon.core.packinstr.ModAccessControlInp;
 import org.irods.jargon.core.packinstr.ModAvuMetadataInp;
 import org.irods.jargon.core.packinstr.TransferOptions;
 import org.irods.jargon.core.packinstr.TransferOptions.TransferType;
@@ -1287,6 +1288,9 @@ public final class DataObjectAOImpl extends IRODSGenericAO implements
 		return returnedChecksum;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.core.pub.DataObjectAO#updateComment(java.lang.String, java.lang.String)
+	 */
 	@Override
 	public void updateComment(final String comment,
 			final String dataObjectAbsolutePath) throws JargonException {
@@ -1301,6 +1305,36 @@ public final class DataObjectAOImpl extends IRODSGenericAO implements
 		}
 
 		throw new UnsupportedOperationException("not yet implemented");
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.core.pub.DataObjectAO#setAccessPermissionRead(java.lang.String, java.lang.String, java.lang.String)
+	 */
+	@Override
+	public void setAccessPermissionRead(final String zone, final String absolutePath, final String userName) throws JargonException {
+		// pi tests parameters
+		ModAccessControlInp modAccessControlInp = ModAccessControlInp.instanceForSetPermission(false, zone, absolutePath, userName, ModAccessControlInp.READ_PERMISSION);
+		getIRODSProtocol().irodsFunction(modAccessControlInp);
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.core.pub.DataObjectAO#setAccessPermissionWrite(java.lang.String, java.lang.String, java.lang.String)
+	 */
+	@Override
+	public void setAccessPermissionWrite(final String zone, final String absolutePath, final String userName) throws JargonException {
+		// pi tests parameters
+		ModAccessControlInp modAccessControlInp = ModAccessControlInp.instanceForSetPermission(false, zone, absolutePath, userName, ModAccessControlInp.WRITE_PERMISSION);
+		getIRODSProtocol().irodsFunction(modAccessControlInp);
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.core.pub.DataObjectAO#setAccessPermissionOwn(java.lang.String, java.lang.String, java.lang.String)
+	 */
+	@Override
+	public void setAccessPermissionOwn(final String zone, final String absolutePath, final String userName) throws JargonException {
+		// pi tests parameters
+		ModAccessControlInp modAccessControlInp = ModAccessControlInp.instanceForSetPermission(false, zone, absolutePath, userName, ModAccessControlInp.OWN_PERMISSION);
+		getIRODSProtocol().irodsFunction(modAccessControlInp);
 	}
 
 }
