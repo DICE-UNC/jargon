@@ -73,7 +73,7 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements
 
 		IRODSQueryResultSetInterface resultSet;
 		try {
-			resultSet = irodsGenQueryExecutorImpl.executeIRODSQuery(irodsQuery,
+			resultSet = irodsGenQueryExecutorImpl.executeIRODSQueryAndCloseResult(irodsQuery,
 					0);
 		} catch (JargonQueryException e) {
 			log.error("query exception for user query:" + queryString, e);
@@ -138,7 +138,7 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements
 
 		IRODSQueryResultSetInterface resultSet;
 		try {
-			resultSet = irodsGenQueryExecutorImpl.executeIRODSQuery(irodsQuery,
+			resultSet = irodsGenQueryExecutorImpl.executeIRODSQueryAndCloseResult(irodsQuery,
 					0);
 		} catch (JargonQueryException e) {
 			log.error("query exception for user query:" + queryString, e);
@@ -202,7 +202,7 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements
 
 		IRODSQueryResultSetInterface resultSet;
 		try {
-			resultSet = irodsGenQueryExecutorImpl.executeIRODSQuery(irodsQuery,
+			resultSet = irodsGenQueryExecutorImpl.executeIRODSQueryAndCloseResult(irodsQuery,
 					0);
 		} catch (JargonQueryException e) {
 			log.error("query exception for user query:" + queryString, e);
@@ -251,7 +251,7 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements
 
 		IRODSQueryResultSetInterface resultSet;
 		try {
-			resultSet = irodsGenQueryExecutorImpl.executeIRODSQuery(irodsQuery,
+			resultSet = irodsGenQueryExecutorImpl.executeIRODSQueryAndCloseResult(irodsQuery,
 					0);
 		} catch (JargonQueryException e) {
 			log.error("query exception for user query:" + queryString, e);

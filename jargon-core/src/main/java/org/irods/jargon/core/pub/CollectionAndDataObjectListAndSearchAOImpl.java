@@ -116,7 +116,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		IRODSQueryResultSetInterface resultSet;
 
 		try {
-			resultSet = irodsGenQueryExecutor.executeIRODSQuery(irodsQuery, 0);
+			resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResult(irodsQuery, 0);
 		} catch (JargonQueryException e) {
 			LOG.error(QUERY_EXCEPTION_FOR_QUERY + query.toString(), e);
 			throw new JargonException(e);

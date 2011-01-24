@@ -572,7 +572,7 @@ public class IRODSGenQueryTranslator {
 
 	/**
 	 * Create a list where each entry is one order by field from the raw query.
-	 * 
+	 * Note this is experimental, and is not integrated in GenQuery as of yet
 	 * @param query
 	 * @return
 	 * @throws JargonQueryException
@@ -842,7 +842,7 @@ public class IRODSGenQueryTranslator {
 
 		return queryTokens;
 	}
-
+	
 	public IRODSServerProperties getIrodsServerProperties() {
 		return irodsServerProperties;
 	}

@@ -86,4 +86,29 @@ public interface IRODSGenQueryExecutor extends IRODSAccessObject {
 	void closeResults(IRODSQueryResultSet irodsQueryResultSet)
 			throws JargonException;
 
+	/**
+	 * Execute an iquest-like query and return results in a convenient POJO
+	 * object. This method allows partial starts to do paging of large query
+	 * results.  This method will send a close to iRODS if more results are available.
+	 * 
+	 * Note that the <code>getMoreResults()</code> method will not work, since the result 
+	 * set was closed.  This version of the query execute is suitable for 'session per request' situations, such
+	 * as mid-tier web applications, where connections are not held for stateful interaction.  In these situations, query
+	 * can be accomplished with an offset.
+	 * 
+	 * @param irodsQuery
+	 *            {@link org.irods.jargon.core.query.IRODSGenQuery} that will wrap
+	 *            the given iquest-like query
+	 * @param partialStartIndex
+	 *            <code>int</code> that indicates an offset within the results
+	 *            from which to build the returned result set.
+	 * @return {@link org.irods.jargon.core.query.IRODSQueryResultSet} that
+	 *         contains the results of the query
+	 * @throws JargonException
+	 * @throws JargonQueryException
+	 */
+	IRODSQueryResultSet executeIRODSQueryAndCloseResult(
+			IRODSGenQuery irodsQuery, int continueIndex)
+			throws JargonException, JargonQueryException;
+
 }

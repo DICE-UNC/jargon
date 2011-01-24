@@ -22,7 +22,6 @@ import org.irods.jargon.core.exception.JargonException;
 public class TranslatedIRODSGenQuery {
 	private final List<GenQuerySelectField> selectFields;
 	private final List<TranslatedGenQueryCondition> translatedQueryConditions;
-	private final List<GenQuerySelectField> groupByFields;
 	private final IRODSGenQuery irodsQuery;
 	private final boolean distinct;
 
@@ -125,7 +124,6 @@ public class TranslatedIRODSGenQuery {
 
 		this.translatedQueryConditions = translatedQueryConditions;
 		this.selectFields = selectFields;
-		this.groupByFields = groupByFields;
 		this.irodsQuery = irodsQuery;
 		this.distinct = distinct;
 
@@ -177,8 +175,5 @@ public class TranslatedIRODSGenQuery {
 		return sb.toString();
 	}
 
-	public List<GenQuerySelectField> getGroupByFields() {
-		return groupByFields;
-	}
-
+	
 }

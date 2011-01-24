@@ -13,6 +13,7 @@ import org.irods.jargon.core.packinstr.ExecMyRuleInp_PITest;
 import org.irods.jargon.core.packinstr.FileReadInpTest;
 import org.irods.jargon.core.packinstr.GenQueryInpTest;
 import org.irods.jargon.core.packinstr.GeneralAdminInpTest;
+import org.irods.jargon.core.packinstr.ModAccessControlInpTest;
 import org.irods.jargon.core.packinstr.ModAvuMetadataInpTest;
 import org.irods.jargon.core.packinstr.OpenedDataObjInpTest;
 import org.irods.jargon.core.packinstr.SimpleQueryInpTest;
@@ -30,7 +31,7 @@ import org.junit.runners.Suite;
 		ModAvuMetadataInpTest.class, ExecMyRuleInp_PITest.class,
 		UserAdminInpTest.class, StructFileExtAndRegInpTest.class,
 		FileReadInpTest.class, ExecCmdStreamCloseTest.class,
-		SimpleQueryInpTest.class, SimpleQueryInpTest.class })
+		SimpleQueryInpTest.class, SimpleQueryInpTest.class, ModAccessControlInpTest.class })
 public class PackingInstructionTests {
 
 }

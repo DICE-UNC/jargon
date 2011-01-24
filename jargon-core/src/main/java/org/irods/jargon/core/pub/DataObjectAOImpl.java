@@ -148,7 +148,7 @@ public final class DataObjectAOImpl extends IRODSGenericAO implements
 
 		IRODSQueryResultSetInterface resultSet;
 		try {
-			resultSet = irodsGenQueryExecutor.executeIRODSQuery(irodsQuery, 0);
+			resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResult(irodsQuery, 0);
 
 		} catch (JargonQueryException e) {
 			log.error("query exception for query: {}", query, e);
@@ -833,7 +833,7 @@ public final class DataObjectAOImpl extends IRODSGenericAO implements
 
 		IRODSQueryResultSetInterface resultSet;
 		try {
-			resultSet = irodsGenQueryExecutorImpl.executeIRODSQuery(irodsQuery,
+			resultSet = irodsGenQueryExecutorImpl.executeIRODSQueryAndCloseResult(irodsQuery,
 					0);
 
 		} catch (JargonQueryException e) {

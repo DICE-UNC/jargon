@@ -183,7 +183,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 
 		IRODSQueryResultSetInterface resultSet;
 		try {
-			resultSet = irodsGenQueryExecutor.executeIRODSQuery(irodsQuery, 0);
+			resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResult(irodsQuery, 0);
 		} catch (JargonQueryException e) {
 			log.error("query exception for  query:{}",
 					filePermissionQuery.toString(), e);
@@ -368,7 +368,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 
 		IRODSQueryResultSetInterface resultSet;
 		try {
-			resultSet = irodsGenQueryExecutor.executeIRODSQuery(irodsQuery, 0);
+			resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResult(irodsQuery, 0);
 		} catch (JargonQueryException e) {
 			log.error("query exception for  query: {}",
 					filePermissionQuery.toString(), e);
@@ -451,7 +451,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 
 		IRODSQueryResultSetInterface resultSet;
 		try {
-			resultSet = irodsGenQueryExecutor.executeIRODSQuery(irodsQuery, 0);
+			resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResult(irodsQuery, 0);
 
 			if (resultSet.isHasMoreRecords()) {
 				log.info("I have more records for query:{}",
@@ -526,7 +526,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 
 		IRODSQueryResultSetInterface resultSet;
 		try {
-			resultSet = irodsGenQueryExecutor.executeIRODSQuery(irodsQuery, 0);
+			resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResult(irodsQuery, 0);
 		} catch (JargonQueryException e) {
 			log.error("query exception for  query:{}", query.toString(), e);
 			throw new JargonException("error in exists query");
@@ -584,7 +584,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 
 		IRODSQueryResultSetInterface resultSet;
 		try {
-			resultSet = irodsGenQueryExecutor.executeIRODSQuery(irodsQuery, 0);
+			resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResult(irodsQuery, 0);
 		} catch (JargonQueryException e) {
 			log.error("query exception for  query:{}", query.toString(), e);
 			throw new JargonException("error in exists query");
@@ -1020,7 +1020,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 
 		IRODSQueryResultSetInterface resultSet;
 		try {
-			resultSet = irodsGenQueryExecutor.executeIRODSQuery(irodsQuery, 0);
+			resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResult(irodsQuery, 0);
 		} catch (JargonQueryException e) {
 			log.error("query exception for  query:{}", query.toString(), e);
 			throw new JargonException("error in exists query");

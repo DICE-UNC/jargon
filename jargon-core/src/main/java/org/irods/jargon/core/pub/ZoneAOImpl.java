@@ -76,7 +76,7 @@ public final class ZoneAOImpl extends IRODSGenericAO implements ZoneAO {
 
 		IRODSQueryResultSetInterface resultSet;
 		try {
-			resultSet = irodsGenQueryExecutorImpl.executeIRODSQuery(irodsQuery,
+			resultSet = irodsGenQueryExecutorImpl.executeIRODSQueryAndCloseResult(irodsQuery,
 					0);
 		} catch (JargonQueryException e) {
 			log.error("query exception for:" + queryString, e);
@@ -155,7 +155,7 @@ public final class ZoneAOImpl extends IRODSGenericAO implements ZoneAO {
 
 		IRODSQueryResultSetInterface resultSet;
 		try {
-			resultSet = irodsGenQueryExecutorImpl.executeIRODSQuery(irodsQuery,
+			resultSet = irodsGenQueryExecutorImpl.executeIRODSQueryAndCloseResult(irodsQuery,
 					0);
 		} catch (JargonQueryException e) {
 			log.error("query exception for:" + queryString, e);
