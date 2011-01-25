@@ -1,4 +1,4 @@
-package org.irods.jargon.core.pub.io;
+package org.irods.jargon.core.pub;
 
 import java.io.FileFilter;
 import java.io.FilenameFilter;
@@ -8,7 +8,8 @@ import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.exception.JargonFileOrCollAlreadyExistsException;
 import org.irods.jargon.core.packinstr.DataObjInp;
-import org.irods.jargon.core.pub.IRODSAccessObject;
+import org.irods.jargon.core.pub.io.IRODSFile;
+import org.irods.jargon.core.pub.io.IRODSFileImpl;
 
 public interface IRODSFileSystemAO extends IRODSAccessObject {
 
@@ -249,7 +250,7 @@ public interface IRODSFileSystemAO extends IRODSAccessObject {
 	 *            <code>String</code> with the target resource name iRODS.
 	 * @throws JargonException
 	 */
-	 void physicalMove(final String absolutePathToSourceFile,
+	void physicalMove(final String absolutePathToSourceFile,
 			final String targetResource) throws JargonException;
 
 	/**
@@ -261,8 +262,7 @@ public interface IRODSFileSystemAO extends IRODSAccessObject {
 	 *            file/collection to be deleted
 	 * @throws JargonException
 	 */
-	 void directoryDeleteNoForce(IRODSFile irodsFile)
-			throws JargonException;
+	void directoryDeleteNoForce(IRODSFile irodsFile) throws JargonException;
 
 	/**
 	 * Delete the given iRODS data object, using the no force option to move the
@@ -273,27 +273,36 @@ public interface IRODSFileSystemAO extends IRODSAccessObject {
 	 *            file/collection to be deleted
 	 * @throws JargonException
 	 */
-	 void fileDeleteNoForce(IRODSFile irodsFile) throws JargonException;
+	void fileDeleteNoForce(IRODSFile irodsFile) throws JargonException;
 
-	 /**
-	  * Returns the iRODS encoded value that reflects the highest file permissions for the given iRODS collection.  Note that a separate
-	  * <code>getFilePermissions()</code> method is available that can retrieve the permissions for a data object.
-	* @param irodsFile
+	/**
+	 * Returns the iRODS encoded value that reflects the highest file
+	 * permissions for the given iRODS collection. Note that a separate
+	 * <code>getFilePermissions()</code> method is available that can retrieve
+	 * the permissions for a data object. This method will get the permissions
+	 * associated with the logged-in user.
+	 * 
+	 * @param irodsFile
 	 *            {@link org.irods.jargon.core.pub.io.IRODSFile} which is a
 	 *            collection to be checked for permissions
-	  * @return <code>int</code> with the iRODS encoded permissions value
-	  * @throws JargonException
-	  */
+	 * @return <code>int</code> with the iRODS encoded permissions value
+	 * @throws JargonException
+	 */
 	int getDirectoryPermissions(IRODSFile irodsFile) throws JargonException;
 
-	 /**
-	  * Returns the iRODS encoded value that reflects the highest file permissions for the given iRODS data object.  Note that a separate
-	  * <code>getDirectoryPermissions()</code> method is available that can retrieve the permissions for a collection.
-	* @param irodsFile
-	 *            {@link org.irods.jargon.core.pub.io.IRODSFile} which is a
-	 *            data object to be checked for permissions
-	  * @return <code>int</code> with the iRODS encoded permissions value
-	  * @throws JargonException
-	  */
+	/**
+	 * Returns the iRODS encoded value that reflects the highest file
+	 * permissions for the given iRODS data object. Note that a separate
+	 * <code>getDirectoryPermissions()</code> method is available that can
+	 * retrieve the permissions for a collection. This method will get the
+	 * permissions associated with the logged in user.
+	 * 
+	 * @param irodsFile
+	 *            {@link org.irods.jargon.core.pub.io.IRODSFile} which is a data
+	 *            object to be checked for permissions
+	 * @return <code>int</code> with the iRODS encoded permissions value
+	 * @throws JargonException
+	 */
 	int getFilePermissions(IRODSFile irodsFile) throws JargonException;
+
 }

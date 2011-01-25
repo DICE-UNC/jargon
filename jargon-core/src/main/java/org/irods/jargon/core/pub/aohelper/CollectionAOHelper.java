@@ -283,7 +283,7 @@ public class CollectionAOHelper extends AOHelper {
 	 * 
 	 * @return
 	 */
-	public static Object buildSelectsNeededForDataObjectsInCollectionsAndDataObjectsListingEntry() {
+	public static String buildSelectsNeededForDataObjectsInCollectionsAndDataObjectsListingEntry() {
 		StringBuilder query = new StringBuilder();
 
 		query.append(RodsGenQueryEnum.COL_COLL_NAME.getName());
@@ -300,6 +300,28 @@ public class CollectionAOHelper extends AOHelper {
 
 		return query.toString();
 
+	}
+	
+	/**
+	 * Build a GenQuery string that will get the inheritance flag for a given collection.
+	 * @param absolutePathToCollection <code>String</code> with the absolute path to the collection.
+	 * @return <code>String</code> with the inheritance bit (1 or blank).
+	 */
+	public static String buildInheritanceQueryForCollectionAbsolutePath(final String absolutePathToCollection) {
+		
+		if (absolutePathToCollection == null || absolutePathToCollection.isEmpty()) {
+			throw new IllegalArgumentException("null or empty absolutePathToCollection");
+		}
+		
+		StringBuilder query = new StringBuilder();
+		query.append("SELECT ");
+		query.append(RodsGenQueryEnum.COL_COLL_INHERITANCE.getName());
+		query.append(" WHERE  ");
+		query.append(RodsGenQueryEnum.COL_COLL_NAME.getName());
+		query.append(" = '");
+		query.append(absolutePathToCollection);
+		query.append("'");
+		return query.toString();
 	}
 
 }

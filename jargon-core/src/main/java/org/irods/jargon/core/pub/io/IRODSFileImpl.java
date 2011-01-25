@@ -17,6 +17,7 @@ import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.exception.JargonFileOrCollAlreadyExistsException;
 import org.irods.jargon.core.exception.JargonRuntimeException;
 import org.irods.jargon.core.packinstr.DataObjInp;
+import org.irods.jargon.core.pub.IRODSFileSystemAO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -20,6 +20,7 @@ import org.irods.jargon.core.pub.DataTransferOperations;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactoryImpl;
 import org.irods.jargon.core.pub.IRODSFileSystem;
+import org.irods.jargon.core.pub.IRODSFileSystemAO;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.irods.jargon.testutils.filemanip.FileGenerator;
 import org.irods.jargon.testutils.icommandinvoke.IcommandInvoker;
@@ -1009,7 +1010,7 @@ public class IRODSFileImplTest {
 
 	/**
 	 * Test method for
-	 * {@link org.irods.jargon.core.pub.io.IRODSFileImpl#IRODSFile(java.lang.String, org.irods.jargon.core.pub.io.IRODSFileSystemAO)}
+	 * {@link org.irods.jargon.core.pub.io.IRODSFileImpl#IRODSFile(java.lang.String, org.irods.jargon.core.pub.IRODSFileSystemAO)}
 	 * .
 	 */
 	@Test

@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.protovalues.FilePermissionEnum;
 import org.irods.jargon.core.pub.domain.AvuData;
 import org.irods.jargon.core.pub.domain.DataObject;
 import org.irods.jargon.core.pub.domain.Resource;
@@ -475,5 +476,26 @@ public interface DataObjectAO extends IRODSAccessObject {
 	 */
 	void setAccessPermissionOwn(String zone, String absolutePath,
 			String userName) throws JargonException;
+
+	/**
+	 * Removes the permissions on a data object to own for the given user.
+	 * @param zone <code>String</code> with an optional zone for the file.  Leave blank if not used, it is not required.
+	 * @param absolutePath <code>String</code> with the absolute path to the data object.
+	 * @param userName <code>String</code> with the user name whose permissions will be set.
+	 * @throws JargonException
+	 */
+	void removeAccessPermissionsForUser(String zone, String absolutePath,
+			String userName) throws JargonException;
+
+	/**
+	 * Get the file permission pertaining to the given data object
+	 * @param absolutePath <code>String</code> with the absolute path to the data object.
+	 * @param userName <code>String</code> with the user name whose permissions will be checked.
+	 * @param zone <code>String</code> with an optional zone for the file.  Leave blank if not used, it is not required.
+	 * @return {@link FilePermissionEnum} value with the permissions for the file and user.
+	 * @throws JargonException
+	 */
+	FilePermissionEnum getPermissionForDataObject(String absolutePath,
+			String userName, String zone) throws JargonException;
 
 }

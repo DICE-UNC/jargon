@@ -11,6 +11,8 @@ import java.net.URI;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.pub.IRODSFileSystemAO;
+import org.irods.jargon.core.pub.IRODSFileSystemAOImpl;
 import org.irods.jargon.core.pub.IRODSGenericAO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

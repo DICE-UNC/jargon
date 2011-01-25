@@ -17,7 +17,9 @@ import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.packinstr.ModAccessControlInp;
 import org.irods.jargon.core.packinstr.ModAvuMetadataInp;
+import org.irods.jargon.core.protovalues.FilePermissionEnum;
 import org.irods.jargon.core.pub.aohelper.CollectionAOHelper;
 import org.irods.jargon.core.pub.domain.AvuData;
 import org.irods.jargon.core.pub.domain.Collection;
@@ -735,8 +737,6 @@ public final class CollectionAOImpl extends IRODSGenericAO implements
 	public int countAllFilesUnderneathTheGivenCollection(
 			final String irodsCollectionAbsolutePath) throws JargonException {
 
-		LOG.info("countAllFilesUnderneathTheGivenCollection()");
-
 		if (irodsCollectionAbsolutePath == null) {
 			throw new JargonException("irodsCollectionAbsolutePath is null");
 		}
@@ -791,6 +791,195 @@ public final class CollectionAOImpl extends IRODSGenericAO implements
 
 		return queryWithLikeCtr;
 
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.core.pub.CollectionAO#setAccessPermissionInherit(java.lang.String, java.lang.String, boolean)
+	 */
+	@Override
+	public void setAccessPermissionInherit(final String zone, final String absolutePath, final boolean recursive) throws JargonException {
+		
+		// pi tests parameters
+		LOG.info("setAccessPermissionInherit on absPath:{}", absolutePath);
+		boolean collNeedsRecursive = adjustRecursiveOption(absolutePath,
+				recursive);
+		
+		ModAccessControlInp modAccessControlInp = ModAccessControlInp.instanceForSetInheritOnACollection(collNeedsRecursive, zone, absolutePath);
+		getIRODSProtocol().irodsFunction(modAccessControlInp);
+		
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.core.pub.CollectionAO#setAccessPermissionToNotInherit(java.lang.String, java.lang.String, boolean)
+	 */
+	@Override
+	public void setAccessPermissionToNotInherit(final String zone, final String absolutePath, final boolean recursive) throws JargonException {
+		
+		// pi tests parameters
+		LOG.info("setAccessPermissionToNotInherit on absPath:{}", absolutePath);
+		boolean collNeedsRecursive = adjustRecursiveOption(absolutePath,
+				recursive);
+		
+		ModAccessControlInp modAccessControlInp = ModAccessControlInp.instanceForSetNoInheritOnACollection(collNeedsRecursive, zone, absolutePath);
+		getIRODSProtocol().irodsFunction(modAccessControlInp);
+		
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.core.pub.CollectionAO#setAccessPermissionRead(java.lang.String, java.lang.String, java.lang.String, boolean)
+	 */
+	@Override
+	public void setAccessPermissionRead(final String zone, final String absolutePath, final String userName, final boolean recursive) throws JargonException {
+		
+		// pi tests parameters
+		LOG.info("setAccessPermissionRead on absPath:{}", absolutePath);
+		boolean collNeedsRecursive = adjustRecursiveOption(absolutePath,
+				recursive);
+		
+		ModAccessControlInp modAccessControlInp = ModAccessControlInp.instanceForSetPermission(collNeedsRecursive, zone, absolutePath, userName, ModAccessControlInp.READ_PERMISSION);
+		getIRODSProtocol().irodsFunction(modAccessControlInp);
+		
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.core.pub.CollectionAO#setAccessPermissionWrite(java.lang.String, java.lang.String, java.lang.String, boolean)
+	 */
+	@Override
+	public void setAccessPermissionWrite(final String zone, final String absolutePath, final String userName, final boolean recursive) throws JargonException {
+		
+		// pi tests parameters
+		LOG.info("setAccessPermissionRead on absPath:{}", absolutePath);
+		// overhead iRODS behavior, if you set perm with recursive when no children, then won't take
+		boolean collNeedsRecursive = adjustRecursiveOption(absolutePath,
+				recursive);
+		
+		ModAccessControlInp modAccessControlInp = ModAccessControlInp.instanceForSetPermission(collNeedsRecursive, zone, absolutePath, userName, ModAccessControlInp.WRITE_PERMISSION);
+		getIRODSProtocol().irodsFunction(modAccessControlInp);
+		
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.core.pub.CollectionAO#setAccessPermissionOwn(java.lang.String, java.lang.String, java.lang.String, boolean)
+	 */
+	@Override
+	public void setAccessPermissionOwn(final String zone, final String absolutePath, final String userName, final boolean recursive) throws JargonException {
+		
+		// pi tests parameters
+		LOG.info("setAccessPermissionOwn on absPath:{}", absolutePath);
+		// overhead iRODS behavior, if you set perm with recursive when no children, then won't take
+		boolean collNeedsRecursive = adjustRecursiveOption(absolutePath,
+				recursive);
+		
+		ModAccessControlInp modAccessControlInp = ModAccessControlInp.instanceForSetPermission(collNeedsRecursive, zone, absolutePath, userName, ModAccessControlInp.OWN_PERMISSION);
+		getIRODSProtocol().irodsFunction(modAccessControlInp);
+		
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.core.pub.CollectionAO#removeAccessPermissionForUser(java.lang.String, java.lang.String, java.lang.String, boolean)
+	 */
+	@Override
+	public void removeAccessPermissionForUser(final String zone, final String absolutePath, final String userName, final boolean recursive) throws JargonException {
+		
+		// pi tests parameters
+		LOG.info("removeAccessPermission on absPath:{}", absolutePath);
+		LOG.info("for user:{}", userName);
+		// overhead iRODS behavior, if you set perm with recursive when no children, then won't take
+		boolean collNeedsRecursive = adjustRecursiveOption(absolutePath,
+				recursive);
+		
+		ModAccessControlInp modAccessControlInp = ModAccessControlInp.instanceForSetPermission(collNeedsRecursive, zone, absolutePath, userName, ModAccessControlInp.NULL_PERMISSION);
+		getIRODSProtocol().irodsFunction(modAccessControlInp);
+		
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.core.pub.CollectionAO#isCollectionSetForPermissionInheritance(java.lang.String)
+	 */
+	@Override
+	public boolean isCollectionSetForPermissionInheritance(final String absolutePath) throws JargonException {
+		
+		if (absolutePath == null || absolutePath.isEmpty()) {
+			throw new IllegalArgumentException("null or empty absolutePathToCollection");
+		}
+		
+		IRODSGenQueryExecutor irodsGenQueryExecutor = new IRODSGenQueryExecutorImpl(
+				this.getIRODSSession(), this.getIRODSAccount());
+		
+		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(CollectionAOHelper.buildInheritanceQueryForCollectionAbsolutePath(absolutePath), 1);
+		IRODSQueryResultSetInterface resultSet;
+
+		try {
+			resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResult(irodsQuery, 0);
+		} catch (JargonQueryException e) {
+			throw new JargonException("error querying for inheritance flag", e);
+		}
+		
+		String inheritanceFlag = resultSet.getFirstResult().getColumn(0);
+		boolean returnInheritanceVal = false;
+		
+		if (inheritanceFlag.trim().equals("1")) { 
+			returnInheritanceVal = true;
+		}
+		
+		return returnInheritanceVal;
+		
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.core.pub.CollectionAO#getPermissionForCollection(java.lang.String, java.lang.String, java.lang.String)
+	 */
+	@Override
+	public FilePermissionEnum getPermissionForCollection(final String irodsAbsolutePath, final String userName, final String zone) throws JargonException {
+		
+		if (irodsAbsolutePath == null || irodsAbsolutePath.isEmpty()) {
+			throw new IllegalArgumentException("null or empty irodsAbsolutePath");
+		}
+		
+		if (userName == null || userName.isEmpty()) {
+			throw new IllegalArgumentException("null or empty userName");
+		}
+		
+		if (zone == null) {
+			throw new IllegalArgumentException("null zone");
+		}
+		
+		LOG.info("getPermissionForCollection for absPath:{}", irodsAbsolutePath);
+		LOG.info("userName:{}", userName);
+		
+		IRODSFileSystemAO irodsFileSystemAO = new IRODSFileSystemAOImpl(this.getIRODSSession(), this.getIRODSAccount());
+		IRODSFileFactory irodsFileFactory = new IRODSFileFactoryImpl(this.getIRODSSession(), this.getIRODSAccount());
+		int permissionVal = irodsFileSystemAO.getDirectoryPermissions(irodsFileFactory.instanceIRODSFile(irodsAbsolutePath));
+		FilePermissionEnum filePermissionEnum = FilePermissionEnum.valueOf(permissionVal);
+		return filePermissionEnum;
+		
+	}
+
+	/**
+	 * Method overheads an iRODS protocol issue where recursive flag when collection has no children causes no permissions to be set.
+	 * @param absolutePath
+	 * @param recursive
+	 * @return
+	 * @throws JargonException
+	 */
+	private boolean adjustRecursiveOption(final String absolutePath,
+			final boolean recursive) throws JargonException {
+		IRODSFileFactory irodsFileFactory = new IRODSFileFactoryImpl(this.getIRODSSession(), this.getIRODSAccount());
+		IRODSFile collFile = irodsFileFactory.instanceIRODSFile(absolutePath);
+		
+		if (!collFile.exists()) {
+			throw new JargonException("irodsFile does not exist for given path, cannot set permissions on it");
+		}
+		
+		boolean collNeedsRecursive = recursive;
+		
+		if (recursive) {
+			if (collFile.list().length == 0) {
+				LOG.info("overridding recursive flag, file has no children");
+				collNeedsRecursive = false;
+			}
+		}
+		return collNeedsRecursive;
 	}
 
 }

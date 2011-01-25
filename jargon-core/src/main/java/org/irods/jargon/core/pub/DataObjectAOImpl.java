@@ -35,6 +35,7 @@ import org.irods.jargon.core.packinstr.ModAccessControlInp;
 import org.irods.jargon.core.packinstr.ModAvuMetadataInp;
 import org.irods.jargon.core.packinstr.TransferOptions;
 import org.irods.jargon.core.packinstr.TransferOptions.TransferType;
+import org.irods.jargon.core.protovalues.FilePermissionEnum;
 import org.irods.jargon.core.pub.aohelper.DataAOHelper;
 import org.irods.jargon.core.pub.domain.AvuData;
 import org.irods.jargon.core.pub.domain.DataObject;
@@ -1335,6 +1336,45 @@ public final class DataObjectAOImpl extends IRODSGenericAO implements
 		// pi tests parameters
 		ModAccessControlInp modAccessControlInp = ModAccessControlInp.instanceForSetPermission(false, zone, absolutePath, userName, ModAccessControlInp.OWN_PERMISSION);
 		getIRODSProtocol().irodsFunction(modAccessControlInp);
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.core.pub.DataObjectAO#removeAccessPermissionsForUser(java.lang.String, java.lang.String, java.lang.String)
+	 */
+	@Override
+	public void removeAccessPermissionsForUser(final String zone, final String absolutePath, final String userName) throws JargonException {
+		// pi tests parameters
+		ModAccessControlInp modAccessControlInp = ModAccessControlInp.instanceForSetPermission(false, zone, absolutePath, userName, ModAccessControlInp.NULL_PERMISSION);
+		getIRODSProtocol().irodsFunction(modAccessControlInp);
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.core.pub.DataObjectAO#getPermissionForDataObject(java.lang.String, java.lang.String, java.lang.String)
+	 */
+	@Override
+	public FilePermissionEnum getPermissionForDataObject(final String absolutePath, final String userName, final String zone) throws JargonException {
+		
+		if (absolutePath == null || absolutePath.isEmpty()) {
+			throw new IllegalArgumentException("null or empty absolutePath");
+		}
+		
+		if (userName == null || userName.isEmpty()) {
+			throw new IllegalArgumentException("null or empty userName");
+		}
+		
+		if (zone == null) {
+			throw new IllegalArgumentException("null zone");
+		}
+		
+		log.info("getPermissionForDataObject for absPath:{}", absolutePath);
+		log.info("userName:{}", userName);
+		
+		IRODSFileSystemAO irodsFileSystemAO = new IRODSFileSystemAOImpl(this.getIRODSSession(), this.getIRODSAccount());
+		IRODSFileFactory irodsFileFactory = new IRODSFileFactoryImpl(this.getIRODSSession(), this.getIRODSAccount());
+		int permissionVal = irodsFileSystemAO.getFilePermissions(irodsFileFactory.instanceIRODSFile(absolutePath));
+		FilePermissionEnum filePermissionEnum = FilePermissionEnum.valueOf(permissionVal);
+		return filePermissionEnum;
+		
 	}
 
 }

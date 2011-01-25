@@ -4,7 +4,6 @@ import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.io.IRODSFileFactory;
-import org.irods.jargon.core.pub.io.IRODSFileSystemAO;
 
 /**
  * Factory to produce IRODS access objects. This is the key object which can be
@@ -131,7 +130,7 @@ public interface IRODSAccessObjectFactory {
 	 * @param irodsAccount
 	 *            <code>IRODSAccount</code> that describes the irods instance to
 	 *            access.
-	 * @return {@link org.irods.jargon.core.pub.io.IRODSFileSystemAO}
+	 * @return {@link org.irods.jargon.core.pub.IRODSFileSystemAO}
 	 * @throws JargonException
 	 */
 	IRODSFileSystemAO getIRODSFileSystemAO(IRODSAccount irodsAccount)

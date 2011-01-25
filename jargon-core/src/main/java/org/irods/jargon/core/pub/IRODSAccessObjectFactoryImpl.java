@@ -5,8 +5,6 @@ import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.io.IRODSFileFactory;
 import org.irods.jargon.core.pub.io.IRODSFileFactoryImpl;
-import org.irods.jargon.core.pub.io.IRODSFileSystemAO;
-import org.irods.jargon.core.pub.io.IRODSFileSystemAOImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

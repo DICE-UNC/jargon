@@ -16,10 +16,7 @@ public enum ServerTypeEnum {
 
 	RCAT_NOT_ENABLED(0), RCAT_ENABLED(1);
 
-	private int i;
-
 	ServerTypeEnum(final int i) {
-		this.i = i;
 	}
 
 	public static ServerTypeEnum valueOf(final int i) {

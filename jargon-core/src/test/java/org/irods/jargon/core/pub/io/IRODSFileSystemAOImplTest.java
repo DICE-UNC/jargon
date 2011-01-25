@@ -18,6 +18,8 @@ import org.irods.jargon.core.pub.DataTransferOperations;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactoryImpl;
 import org.irods.jargon.core.pub.IRODSFileSystem;
+import org.irods.jargon.core.pub.IRODSFileSystemAO;
+import org.irods.jargon.core.pub.IRODSFileSystemAOImpl;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.irods.jargon.testutils.filemanip.FileGenerator;
 import org.irods.jargon.testutils.icommandinvoke.IcommandInvoker;

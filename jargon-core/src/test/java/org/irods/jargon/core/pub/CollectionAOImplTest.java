@@ -14,6 +14,7 @@ import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.connection.IRODSSimpleProtocolManager;
 import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.protovalues.FilePermissionEnum;
 import org.irods.jargon.core.pub.domain.AvuData;
 import org.irods.jargon.core.pub.domain.Collection;
 import org.irods.jargon.core.pub.io.IRODSFile;
@@ -1019,5 +1020,208 @@ public class CollectionAOImplTest {
 				.getCollectionName());
 
 	}
+	
+	@Test
+	public final void testSetRead() throws Exception {
+		
+		String testFileName = "testSetRead";
+		
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + "/" + testFileName);
 
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
+		CollectionAO collectionAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getCollectionAO(irodsAccount);
+		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetIrodsCollection);
+		irodsFile.mkdirs();		
+		
+		collectionAO.setAccessPermissionRead("", targetIrodsCollection , testingProperties.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY), true);
+		
+		// log in as the secondary user and test read access
+		IRODSAccount secondaryAccount = testingPropertiesHelper.buildIRODSAccountFromSecondaryTestProperties(testingProperties);
+		IRODSFile irodsFileForSecondaryUser = irodsFileSystem.getIRODSFileFactory(secondaryAccount)
+		.instanceIRODSFile(targetIrodsCollection);
+		TestCase.assertTrue(irodsFileForSecondaryUser.canRead());
+		irodsFileSystem.close();
+
+	}
+	
+	@Test(expected=JargonException.class)
+	public final void testSetReadFileNotExist() throws Exception {
+		
+		String testFileName = "testSetReadIDontExist";
+		
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + "/" + testFileName);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
+		CollectionAO collectionAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getCollectionAO(irodsAccount);
+		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetIrodsCollection);
+		
+		collectionAO.setAccessPermissionRead("", targetIrodsCollection , testingProperties.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY), true);
+		
+		irodsFileSystem.close();
+
+	}
+	
+	@Test
+	public final void testSetWrite() throws Exception {
+		
+		String testFileName = "testSetWrite";
+		
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + "/" + testFileName);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
+		CollectionAO collectionAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getCollectionAO(irodsAccount);
+		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetIrodsCollection);
+		irodsFile.mkdirs();		
+		
+		collectionAO.setAccessPermissionWrite("", targetIrodsCollection , testingProperties.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY), false);
+		
+		// log in as the secondary user and test write access
+		IRODSAccount secondaryAccount = testingPropertiesHelper.buildIRODSAccountFromSecondaryTestProperties(testingProperties);
+		IRODSFile irodsFileForSecondaryUser = irodsFileSystem.getIRODSFileFactory(secondaryAccount)
+		.instanceIRODSFile(targetIrodsCollection);
+		TestCase.assertTrue(irodsFileForSecondaryUser.canWrite());
+		irodsFileSystem.close();
+
+	}
+	
+	@Test
+	public final void testSetOwn() throws Exception {
+		
+		String testFileName = "testSetOwn";
+		
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + "/" + testFileName);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
+		CollectionAO collectionAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getCollectionAO(irodsAccount);
+		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetIrodsCollection);
+		irodsFile.mkdirs();		
+		
+		collectionAO.setAccessPermissionOwn("", targetIrodsCollection , testingProperties.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY), false);
+		
+		// log in as the secondary user and test write access
+		IRODSAccount secondaryAccount = testingPropertiesHelper.buildIRODSAccountFromSecondaryTestProperties(testingProperties);
+		IRODSFile irodsFileForSecondaryUser = irodsFileSystem.getIRODSFileFactory(secondaryAccount)
+		.instanceIRODSFile(targetIrodsCollection);
+		IRODSFileSystemAO irodsFileSystemAO = irodsFileSystem.getIRODSAccessObjectFactory().getIRODSFileSystemAO(secondaryAccount);
+		int permissions = irodsFileSystemAO.getDirectoryPermissions(irodsFileForSecondaryUser);
+		
+		TestCase.assertTrue(permissions >= IRODSFile.OWN_PERMISSIONS);
+		irodsFileSystem.close();
+
+	}
+	
+	@Test
+	public final void testGetFilePermissionForOwn() throws Exception {
+		
+		String testFileName = "testGetFilePermissionForOwn";
+		
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + "/" + testFileName);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
+		CollectionAO collectionAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getCollectionAO(irodsAccount);
+		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetIrodsCollection);
+		irodsFile.mkdirs();		
+		
+		collectionAO.setAccessPermissionOwn("", targetIrodsCollection , testingProperties.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY), false);
+		
+		// log in as the secondary user and test write access
+		IRODSAccount secondaryAccount = testingPropertiesHelper.buildIRODSAccountFromSecondaryTestProperties(testingProperties);
+		IRODSFile irodsFileForSecondaryUser = irodsFileSystem.getIRODSFileFactory(secondaryAccount)
+		.instanceIRODSFile(targetIrodsCollection);
+		
+		CollectionAO collectionAOSecondary = irodsFileSystem.getIRODSAccessObjectFactory().getCollectionAO(secondaryAccount);
+		FilePermissionEnum enumVal = collectionAOSecondary.getPermissionForCollection(targetIrodsCollection, secondaryAccount.getUserName(), "");
+		
+		irodsFileSystem.close();
+		TestCase.assertEquals("should have found own permissions", FilePermissionEnum.OWN, enumVal);
+
+	}
+	
+	@Test
+	public final void testSetInherit() throws Exception {
+		
+		String testFileName = "testSetInherit";
+		
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + "/" + testFileName);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
+		CollectionAO collectionAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getCollectionAO(irodsAccount);
+		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetIrodsCollection);
+		irodsFile.mkdirs();		
+		
+		collectionAO.setAccessPermissionInherit("", targetIrodsCollection, false);
+		
+		boolean isInherit = collectionAO.isCollectionSetForPermissionInheritance(targetIrodsCollection);		
+		
+		irodsFileSystem.close();
+		
+		TestCase.assertTrue("collection should have inherit set", isInherit);
+
+	}
+	
+	@Test
+	public final void testSetNoInherit() throws Exception {
+		
+		String testFileName = "testSetNoInherit";
+		
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + "/" + testFileName);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
+		CollectionAO collectionAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getCollectionAO(irodsAccount);
+		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetIrodsCollection);
+		irodsFile.mkdirs();		
+		
+		collectionAO.setAccessPermissionInherit("", targetIrodsCollection, false);
+		collectionAO.setAccessPermissionToNotInherit("", targetIrodsCollection, false);
+
+		boolean isInherit = collectionAO.isCollectionSetForPermissionInheritance(targetIrodsCollection);		
+		
+		irodsFileSystem.close();
+		
+		TestCase.assertFalse("collection should have inherit turned back off", isInherit);
+
+	}
+	
 }

@@ -29,6 +29,7 @@ public class ModAccessControlInp extends AbstractIRODSPackingInstruction {
 	public static final String OWN_PERMISSION = "own";
 	public static final String INHERIT_PERMISSION = "inherit";
 	public static final String NOINHERIT_PERMISSION = "noinherit";
+	public static final String NULL_PERMISSION = "null";
 
 
 	private final boolean recursive;
@@ -141,7 +142,7 @@ public class ModAccessControlInp extends AbstractIRODSPackingInstruction {
 			throw new IllegalArgumentException("null or empty permission");
 		}
 		
-		if (permission.equals(OWN_PERMISSION) || permission.equals(READ_PERMISSION) || permission.equals(WRITE_PERMISSION) || permission.equals(INHERIT_PERMISSION) || permission.equals(NOINHERIT_PERMISSION)) {
+		if (permission.equals(OWN_PERMISSION) || permission.equals(READ_PERMISSION) || permission.equals(WRITE_PERMISSION) || permission.equals(INHERIT_PERMISSION) || permission.equals(NOINHERIT_PERMISSION) || permission.equals(NULL_PERMISSION) ) {
 			// OK
 		} else {
 			throw new IllegalArgumentException("invalid permission");

@@ -10,8 +10,6 @@ import org.irods.jargon.core.packinstr.DataObjCopyInp;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.pub.io.IRODSFileFactory;
 import org.irods.jargon.core.pub.io.IRODSFileFactoryImpl;
-import org.irods.jargon.core.pub.io.IRODSFileSystemAO;
-import org.irods.jargon.core.pub.io.IRODSFileSystemAOImpl;
 import org.irods.jargon.core.transfer.DefaultTransferControlBlock;
 import org.irods.jargon.core.transfer.TransferControlBlock;
 import org.irods.jargon.core.transfer.TransferStatus;

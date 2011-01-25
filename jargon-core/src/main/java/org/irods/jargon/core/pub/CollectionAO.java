@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.protovalues.FilePermissionEnum;
 import org.irods.jargon.core.pub.domain.AvuData;
 import org.irods.jargon.core.pub.domain.Collection;
 import org.irods.jargon.core.pub.io.IRODSFile;
@@ -299,5 +300,89 @@ public interface CollectionAO extends IRODSAccessObject {
 	 */
 	int countAllFilesUnderneathTheGivenCollection(
 			final String irodsCollectionAbsolutePath) throws JargonException;
+
+	/**
+	 * For a given iRODS collection, set the access permission to read.  This can optionally be recursively applied.
+	 * @param zone <code>String</code> with an optional zone for the file.  Leave blank if not used, it is not required.
+	 * @param absolutePath <code>String</code> with the absolute path to the collection.
+	 * @param userName <code>String</code> with the user name whose permissions will be set.
+	 * @param recursive <code>boolean</code> that indicates whether the permission should be applied recursively
+	 * @throws JargonException
+	 */
+	void setAccessPermissionRead(String zone, String absolutePath,
+			String userName, boolean recursive) throws JargonException;
+
+	/**
+	 * For a given iRODS collection, set the access permission to write.  This can optionally be recursively applied.
+	 * @param zone <code>String</code> with an optional zone for the file.  Leave blank if not used, it is not required.
+	 * @param absolutePath <code>String</code> with the absolute path to the collection.
+	 * @param userName <code>String</code> with the user name whose permissions will be set.
+	 * @param recursive <code>boolean</code> that indicates whether the permission should be applied recursively
+	 * @throws JargonException
+	 */
+	void setAccessPermissionWrite(String zone, String absolutePath,
+			String userName, boolean recursive) throws JargonException;
+
+	/**
+	 * For a given iRODS collection, set the access permission to own.  This can optionally be recursively applied.
+	 * @param zone <code>String</code> with an optional zone for the file.  Leave blank if not used, it is not required.
+	 * @param absolutePath <code>String</code> with the absolute path to the collection.
+	 * @param userName <code>String</code> with the user name whose permissions will be set.
+	 * @param recursive <code>boolean</code> that indicates whether the permission should be applied recursively
+	 * @throws JargonException
+	 */
+	void setAccessPermissionOwn(String zone, String absolutePath,
+			String userName, boolean recursive) throws JargonException;
+
+	/**
+	 * For a given iRODS collection, remove access permissions for a given user.  This can optionally be recursively applied.
+	 * @param zone <code>String</code> with an optional zone for the file.  Leave blank if not used, it is not required.
+	 * @param absolutePath <code>String</code> with the absolute path to the collection.
+	 * @param userName <code>String</code> with the user name whose permissions will be set.
+	 * @param recursive <code>boolean</code> that indicates whether the permission should be applied recursively
+	 * @throws JargonException
+	 */
+	void removeAccessPermissionForUser(String zone, String absolutePath,
+			String userName, boolean recursive) throws JargonException;
+
+	/**
+	 * For a given iRODS collection, set he default to inherit access permissions
+	 * @param zone <code>String</code> with an optional zone for the file.  Leave blank if not used, it is not required.
+	 * @param absolutePath <code>String</code> with the absolute path to the collection.
+	 * @param recursive <code>boolean</code> that indicates whether the permission should be applied recursively
+	 * @throws JargonException
+	 */
+	void setAccessPermissionInherit(String zone, String absolutePath,
+			boolean recursive) throws JargonException;
+
+	/**
+	 * Check the given collection (by absolute path) to see if the inheritance flag is set.  This indicates that access permissions are inherited by children of the collection.
+	 * @param absolutePath <code>String</code> with the absolute path to the collection.
+	 * @return
+	 * @throws JargonException
+	 */
+	boolean isCollectionSetForPermissionInheritance(
+			String absolutePath) throws JargonException;
+
+	/**
+	 * For a given iRODS collection, set he default to not inherit access permissions
+	 * @param zone <code>String</code> with an optional zone for the file.  Leave blank if not used, it is not required.
+	 * @param absolutePath <code>String</code> with the absolute path to the collection.
+	 * @param recursive <code>boolean</code> that indicates whether the permission should be applied recursively
+	 * @throws JargonException
+	 */
+	void setAccessPermissionToNotInherit(String zone, String absolutePath,
+			boolean recursive) throws JargonException;
+
+	/**
+	 * Get the file permission value for the given absolute path for the given user.
+	 * @param absolutePath <code>String</code> with the absolute path to the collection.
+	 * @param userName <code>String</code> with the user name whose permissions will be set.
+	 * @param zone <code>String</code> with an optional zone for the file.  Leave blank if not used, it is not required.
+	 * @return {@link FilePermissionEnum} vlaue with the permission level for the given user.
+	 * @throws JargonException
+	 */
+	FilePermissionEnum getPermissionForCollection(String irodsAbsolutePath,
+			String userName, String zone) throws JargonException;
 
 }
