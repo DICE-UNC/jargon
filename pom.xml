@@ -348,5 +348,6 @@
     <module>jargon-transfer-engine</module>
     <module>jargon-user-tagging</module>
     <module>jargon-security</module>
+    <module>jargon-data-utils</module>
   </modules>
 </project>

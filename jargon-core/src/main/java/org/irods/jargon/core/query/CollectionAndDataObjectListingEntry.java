@@ -8,7 +8,7 @@ import org.irods.jargon.core.pub.domain.IRODSDomainObject;
 /**
  * Value object that holds information on data objects and collections. This
  * object includes info to distinguish between data object and collection, to
- * identify it in iRODS by path, and also information that can be used for
+ * identify it by path, and also information that can be used for
  * paging.
  * <p/>
  * This object is meant to be used for use cases such as iRODS file tree
