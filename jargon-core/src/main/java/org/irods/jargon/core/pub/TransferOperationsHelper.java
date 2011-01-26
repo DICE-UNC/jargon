@@ -601,7 +601,7 @@ final class TransferOperationsHelper {
 					}
 
 					TransferStatus status = TransferStatus.instance(
-							TransferType.PUT,
+							TransferType.REPLICATE,
 							fileInSourceCollection.getAbsolutePath(), "",
 							targetResource, fileInSourceCollection.length(),
 							fileInSourceCollection.length(), 0, 0,

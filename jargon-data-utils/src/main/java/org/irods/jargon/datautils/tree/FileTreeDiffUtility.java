@@ -105,10 +105,11 @@ public class FileTreeDiffUtility {
 		return fileTreeModel;
 	}
 
-	private static void diffTwoFiles(final FileTreeNode currentFileTreeNode,
+	private static int diffTwoFiles(final FileTreeNode currentFileTreeNode,
 			final File leftHandSide, final String leftHandSideRootPath,
 			final File rightHandSide, final String rightHandSideRootPath)
 			throws JargonException {
+
 		// get the relative paths of each side beneath the root so we compare
 		// apples to apples
 		String leftHandSideAsRelativePath = leftHandSide.getAbsolutePath()
@@ -125,8 +126,16 @@ public class FileTreeDiffUtility {
 
 		if (compValue < 0) {
 			log.debug("lhs < rhs");
+			FileTreeDiffEntry entry = buildFileTreeDiffEntryForFile(
+					leftHandSide, DiffType.LEFT_HAND_PLUS);
+			currentFileTreeNode.add(new FileTreeNode(entry));
+			return 1;
 		} else if (compValue > 0) {
-			log.debug("rhs > lhs");
+			log.debug("lhs > rhs");
+			FileTreeDiffEntry entry = buildFileTreeDiffEntryForFile(
+					rightHandSide, DiffType.RIGHT_HAND_PLUS);
+			currentFileTreeNode.add(new FileTreeNode(entry));
+			return -1;
 		} else {
 			log.debug("file name match");
 
@@ -135,48 +144,56 @@ public class FileTreeDiffUtility {
 
 			if (lhsFile && rhsFile) {
 				log.debug("file compare");
-				return;
+				return 0;
 			} else if (lhsFile != rhsFile) {
 				log.warn("a file is being compared to a directory of the same name");
 				FileTreeDiffEntry entry = buildFileTreeDiffEntryForFile(
 						leftHandSide, DiffType.FILE_NAME_DIR_NAME_COLLISION);
 				currentFileTreeNode.add(new FileTreeNode(entry));
-				return;
+				return 0;
 			}
 
-			// set up the new root node in the compare tree, these are both directories
-			
+			FileTreeNode parentNode;
+			// the root node has already been added
+			if (leftHandSideAsRelativePath.isEmpty()) {
+				parentNode = currentFileTreeNode;
+			} else {
+				FileTreeDiffEntry entry = buildFileTreeDiffEntryForFile(
+						leftHandSide, DiffType.DIRECTORY_NO_DIFF);
+				parentNode = new FileTreeNode(entry);
+				currentFileTreeNode.add(parentNode);
+			}
+
+			// set up the new root node in the compare tree, these are both
+			// directories
+
 			File[] lhsChildren = leftHandSide.listFiles();
 			File[] rhsChildren = rightHandSide.listFiles();
 
-			for (int i = 0; i < lhsChildren.length && i < rhsChildren.length; i++) {
-				if (i >= lhsChildren.length) {
-					log.debug("lhs runs out, more rhs put out an entry for rhs");
-					FileTreeDiffEntry entry = buildFileTreeDiffEntryForFile(
-							rhsChildren[i], DiffType.RIGHT_HAND_PLUS);
-					currentFileTreeNode.add(new FileTreeNode(entry));
-				} else if (i >= rhsChildren.length) {
-					log.debug("rhs runs out, more rhs put out an entry for lhs");
-					FileTreeDiffEntry entry = buildFileTreeDiffEntryForFile(
-							lhsChildren[i], DiffType.LEFT_HAND_PLUS);
-					currentFileTreeNode.add(new FileTreeNode(entry));
-				} else {
-					if (lhsChildren[i].isFile()) {
-						diffTwoFiles(currentFileTreeNode, lhsChildren[i],
-								leftHandSideRootPath, rhsChildren[i],
-								rightHandSideRootPath);
+			int lhMatchOrPass;
+			int j = 0;
+			for (int i = 0; i < lhsChildren.length; i++) {
+				while(j < rhsChildren.length) {
+					lhMatchOrPass = diffTwoFiles(parentNode, lhsChildren[i],
+							leftHandSideRootPath, rhsChildren[j],
+							rightHandSideRootPath);
+					
+					if (lhMatchOrPass == -1) {
+						// left hand side is greater than rhs, so keep pinging the rhs
+						j++;
+					} else if (lhMatchOrPass == 0) {
+					    // i was matched, so advance both
+						j++;
+						break;
 					} else {
-						FileTreeDiffEntry entry = buildFileTreeDiffEntryForFile(
-								lhsChildren[i], DiffType.DIRECTORY_NO_DIFF);
-						FileTreeNode newRoot = new FileTreeNode(entry);
-						currentFileTreeNode.add(newRoot);
-						diffTwoFiles(newRoot, lhsChildren[i],
-								leftHandSideRootPath, rhsChildren[i],
-								rightHandSideRootPath);
+						// rhs was greater, don't advance rhs
+						break;
 					}
 				}
 			}
 		}
+
+		return 0;
 
 	}
 
@@ -186,7 +203,7 @@ public class FileTreeDiffUtility {
 	 * @return
 	 */
 	private static FileTreeDiffEntry buildFileTreeDiffEntryForFile(
-			final File leftHandSide, DiffType diffType) {
+			final File leftHandSide, final DiffType diffType) {
 		CollectionAndDataObjectListingEntry entry = new CollectionAndDataObjectListingEntry();
 		entry.setCreatedAt(new Date(leftHandSide.lastModified()));
 		entry.setModifiedAt(entry.getCreatedAt());
