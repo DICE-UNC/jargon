@@ -123,78 +123,101 @@ public class FileTreeDiffUtility {
 		int compValue = leftHandSideAsRelativePath
 				.compareTo(rightHandSideAsRelativePath);
 		log.debug("comp value is:{}", compValue);
+		
+		int fileMatchIndex;
 
 		if (compValue < 0) {
 			log.debug("lhs < rhs");
 			FileTreeDiffEntry entry = buildFileTreeDiffEntryForFile(
 					leftHandSide, DiffType.LEFT_HAND_PLUS);
 			currentFileTreeNode.add(new FileTreeNode(entry));
-			return 1;
+			fileMatchIndex = 1;
 		} else if (compValue > 0) {
 			log.debug("lhs > rhs");
 			FileTreeDiffEntry entry = buildFileTreeDiffEntryForFile(
 					rightHandSide, DiffType.RIGHT_HAND_PLUS);
 			currentFileTreeNode.add(new FileTreeNode(entry));
-			return -1;
+			fileMatchIndex = -1;
 		} else {
 			log.debug("file name match");
 
-			boolean lhsFile = leftHandSide.isFile();
-			boolean rhsFile = rightHandSide.isFile();
+			processFileNameMatched(currentFileTreeNode, leftHandSide,
+					leftHandSideRootPath, rightHandSide, rightHandSideRootPath,
+					leftHandSideAsRelativePath);
+			
+			fileMatchIndex = 0;
+		}
 
-			if (lhsFile && rhsFile) {
-				log.debug("file compare");
-				return 0;
-			} else if (lhsFile != rhsFile) {
-				log.warn("a file is being compared to a directory of the same name");
-				FileTreeDiffEntry entry = buildFileTreeDiffEntryForFile(
-						leftHandSide, DiffType.FILE_NAME_DIR_NAME_COLLISION);
-				currentFileTreeNode.add(new FileTreeNode(entry));
-				return 0;
-			}
+		return fileMatchIndex;
 
-			FileTreeNode parentNode;
-			// the root node has already been added
-			if (leftHandSideAsRelativePath.isEmpty()) {
-				parentNode = currentFileTreeNode;
-			} else {
-				FileTreeDiffEntry entry = buildFileTreeDiffEntryForFile(
-						leftHandSide, DiffType.DIRECTORY_NO_DIFF);
-				parentNode = new FileTreeNode(entry);
-				currentFileTreeNode.add(parentNode);
-			}
+	}
 
-			// set up the new root node in the compare tree, these are both
-			// directories
+	/**
+	 * @param currentFileTreeNode
+	 * @param leftHandSide
+	 * @param leftHandSideRootPath
+	 * @param rightHandSide
+	 * @param rightHandSideRootPath
+	 * @param leftHandSideAsRelativePath
+	 * @throws JargonException
+	 */
+	private static void processFileNameMatched(
+			final FileTreeNode currentFileTreeNode, final File leftHandSide,
+			final String leftHandSideRootPath, final File rightHandSide,
+			final String rightHandSideRootPath,
+			String leftHandSideAsRelativePath) throws JargonException {
+		boolean lhsFile = leftHandSide.isFile();
+		boolean rhsFile = rightHandSide.isFile();
 
-			File[] lhsChildren = leftHandSide.listFiles();
-			File[] rhsChildren = rightHandSide.listFiles();
+		if (lhsFile && rhsFile) {
+			log.debug("file compare");
+			return;
+		} else if (lhsFile != rhsFile) {
+			log.warn("a file is being compared to a directory of the same name");
+			FileTreeDiffEntry entry = buildFileTreeDiffEntryForFile(
+					leftHandSide, DiffType.FILE_NAME_DIR_NAME_COLLISION);
+			currentFileTreeNode.add(new FileTreeNode(entry));
+			return;
+		}
 
-			int lhMatchOrPass;
-			int j = 0;
-			for (int i = 0; i < lhsChildren.length; i++) {
-				while(j < rhsChildren.length) {
-					lhMatchOrPass = diffTwoFiles(parentNode, lhsChildren[i],
-							leftHandSideRootPath, rhsChildren[j],
-							rightHandSideRootPath);
-					
-					if (lhMatchOrPass == -1) {
-						// left hand side is greater than rhs, so keep pinging the rhs
-						j++;
-					} else if (lhMatchOrPass == 0) {
-					    // i was matched, so advance both
-						j++;
-						break;
-					} else {
-						// rhs was greater, don't advance rhs
-						break;
-					}
+		FileTreeNode parentNode;
+		// the root node has already been added
+		if (leftHandSideAsRelativePath.isEmpty()) {
+			parentNode = currentFileTreeNode;
+		} else {
+			FileTreeDiffEntry entry = buildFileTreeDiffEntryForFile(
+					leftHandSide, DiffType.DIRECTORY_NO_DIFF);
+			parentNode = new FileTreeNode(entry);
+			currentFileTreeNode.add(parentNode);
+		}
+
+		// set up the new root node in the compare tree, these are both
+		// directories
+
+		File[] lhsChildren = leftHandSide.listFiles();
+		File[] rhsChildren = rightHandSide.listFiles();
+
+		int lhMatchOrPass;
+		int j = 0;
+		for (int i = 0; i < lhsChildren.length; i++) {
+			while(j < rhsChildren.length) {
+				lhMatchOrPass = diffTwoFiles(parentNode, lhsChildren[i],
+						leftHandSideRootPath, rhsChildren[j],
+						rightHandSideRootPath);
+				
+				if (lhMatchOrPass == -1) {
+					// left hand side is greater than rhs, so keep pinging the rhs
+					j++;
+				} else if (lhMatchOrPass == 0) {
+				    // i was matched, so advance both
+					j++;
+					break;
+				} else {
+					// rhs was greater, don't advance rhs
+					break;
 				}
 			}
 		}
-
-		return 0;
-
 	}
 
 	/**
@@ -213,44 +236,6 @@ public class FileTreeDiffUtility {
 		FileTreeDiffEntry diffEntry = FileTreeDiffEntry.instance(diffType,
 				entry);
 		return diffEntry;
-	}
-
-	private void blah() throws Exception {
-		/*
-		 * if (leftHandSide.isFile() && rightHandSide.isFile()) {
-		 * log.debug("both are files, compare name and ts"); DiffType diffType =
-		 * null; if
-		 * (leftHandSideAsRelativePath.compareTo(rightHandSideAsRelativePath) <
-		 * 0) { log.debug("lhs is lt right hand side, put up a diff"); diffType
-		 * = DiffType.LEFT_HAND_PLUS; FileTreeDiffEntry diffEntry =
-		 * buildFileTreeDiffEntryForFile( leftHandSide, diffType);
-		 * currentFileTreeNode.add(new FileTreeNode(diffEntry)); } else if
-		 * ((leftHandSideAsRelativePath.compareTo(rightHandSideAsRelativePath)
-		 * == 0)) { // FIXME: this test prob wont work (use fudge factor?
-		 * length? log.debug("files are the same name, compare time stamps"); if
-		 * (leftHandSide.lastModified() < rightHandSide.lastModified()) {
-		 * log.debug("irods file is newer"); diffType =
-		 * DiffType.RIGHT_HAND_NEWER; FileTreeDiffEntry diffEntry =
-		 * buildFileTreeDiffEntryForFile( leftHandSide, diffType);
-		 * currentFileTreeNode.add(new FileTreeNode(diffEntry)); } else if
-		 * (leftHandSide.lastModified() > rightHandSide.lastModified()) {
-		 * log.debug("local file is newer"); diffType =
-		 * DiffType.LEFT_HAND_NEWER; FileTreeDiffEntry diffEntry =
-		 * buildFileTreeDiffEntryForFile( leftHandSide, diffType);
-		 * currentFileTreeNode.add(new FileTreeNode(diffEntry)); }
-		 * log.debug("two files are equal, no diff"); } else {
-		 * log.debug("left hand side is gt rhs, put up a diff"); diffType =
-		 * DiffType.RIGHT_HAND_PLUS; FileTreeDiffEntry diffEntry =
-		 * buildFileTreeDiffEntryForFile( leftHandSide, diffType);
-		 * currentFileTreeNode.add(new FileTreeNode(diffEntry)); } }
-		 * 
-		 * // lhs or rhs is a directory
-		 * 
-		 * log.debug("listing children of lhs and rhs");
-		 * 
-		 * File[] lhsChildren = leftHandSide.listFiles(); File[] rhsChildren =
-		 * rightHandSide.listFiles();
-		 */
 	}
 
 }
