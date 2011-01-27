@@ -13,7 +13,7 @@ public class FileTreeDiffEntryTest {
 	@Test
 	public void testInstance() throws Exception {
 		CollectionAndDataObjectListingEntry entry = Mockito.mock(CollectionAndDataObjectListingEntry.class);
-		FileTreeDiffEntry diffEntry = FileTreeDiffEntry.instance(DiffType.LEFT_HAND_NEWER, entry);
+		FileTreeDiffEntry diffEntry = FileTreeDiffEntry.instance(DiffType.LEFT_HAND_PLUS, entry, 0, 0);
 		TestCase.assertNotNull("null diffEntry", diffEntry);
 	}
 	
@@ -25,7 +25,7 @@ public class FileTreeDiffEntryTest {
 	
 	@Test(expected=IllegalArgumentException.class)
 	public void testInstanceNullCollEntry() throws Exception {
-		FileTreeDiffEntry.instance(DiffType.RIGHT_HAND_NEWER, null);
+		FileTreeDiffEntry.instance(DiffType.RIGHT_HAND_PLUS, null);
 	}
 
 }

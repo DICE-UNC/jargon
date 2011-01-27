@@ -460,11 +460,11 @@ public class IRODSCommands implements IRODSManagedConnection {
 			// query with no results
 			return null;
 		} else if (info == ErrorEnum.OVERWITE_WITHOUT_FORCE_FLAG.getInt()) {
-			log.error("Attempt to overwrite file without force flag. Info val:"
-					+ info);
+			log.error("Attempt to overwrite file without force flag. Info val:{}"
+					, info);
 			throw new JargonFileOrCollAlreadyExistsException(
-					"Attempt to overwrite file without force flag. Info val:"
-							+ info);
+					"Attempt to overwrite file without force flag. Info val:{}"
+							, info);
 		} else if (info == ErrorEnum.CAT_INVALID_AUTHENTICATION.getInt()) {
 			throw new JargonException("invalid user or password");
 		}

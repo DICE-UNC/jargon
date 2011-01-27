@@ -13,7 +13,7 @@ public class FileTreeNodeTest {
 	@Test
 	public void testCreateNodeWithFileTreeDiffEntry() throws Exception {
 		CollectionAndDataObjectListingEntry entry = Mockito.mock(CollectionAndDataObjectListingEntry.class);
-		FileTreeDiffEntry diffEntry = FileTreeDiffEntry.instance(DiffType.LEFT_HAND_NEWER, entry);
+		FileTreeDiffEntry diffEntry = FileTreeDiffEntry.instance(DiffType.LEFT_HAND_PLUS, entry);
 		FileTreeNode fileTreeNode = new FileTreeNode(diffEntry);
 		Object userObj = fileTreeNode.getUserObject();
 		boolean isFileTreeNode = (userObj instanceof FileTreeDiffEntry);

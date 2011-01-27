@@ -14,25 +14,21 @@ import org.irods.jargon.core.exception.JargonException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import edu.sdsc.grid.io.GeneralRandomAccessFile;
 import edu.sdsc.grid.io.Host;
 
 /**
  * Wraps a connection to the iRODS server described by the given IRODSAccount.
- * 
+ * <p/>
  * Jargon services do not directly access the <code>IRODSConnection</code>,
  * rather, they use the {@link IRODSCommands IRODSProtocol} interface.
- * 
+ * <p/>
  * The connection is confined to one thread, and as such the various methods not
  * need to be synchronized.
  * 
  * @author Mike Conway - DICE (www.irods.org)
  * 
- *         FIXME: eventually switch to default visibility so no methods are
- *         public
- * 
  */
-public final class IRODSConnection implements IRODSManagedConnection {
+final class IRODSConnection implements IRODSManagedConnection {
 
 	private Logger log = LoggerFactory.getLogger(IRODSConnection.class);
 	private final IRODSProtocolManager irodsProtocolManager;
@@ -469,38 +465,6 @@ public final class IRODSConnection implements IRODSManagedConnection {
 	 * destination
 	 */
 	void read(final OutputStream destination, long length) throws IOException {
-
-		if (destination == null) {
-			String err = "destination is null";
-			log.error(err);
-			throw new IllegalArgumentException(err);
-		}
-
-		if (length == 0) {
-			String err = "read length is set to zero";
-			log.error(err);
-			throw new IllegalArgumentException(err);
-		}
-
-		byte[] temp = new byte[Math.min(DEFAULT_BUFFER_SIZE, (int) length)];
-		int n = 0;
-		while (length > 0) {
-			n = read(temp, 0, Math.min(DEFAULT_BUFFER_SIZE, (int) length));
-			if (n > 0) {
-				length -= n;
-				destination.write(temp, 0, n);
-			} else {
-				length = n;
-			}
-		}
-	}
-
-	/**
-	 * read length bytes from the server socket connection and write them to
-	 * destination
-	 */
-	void read(final GeneralRandomAccessFile destination, long length)
-			throws IOException {
 
 		if (destination == null) {
 			String err = "destination is null";

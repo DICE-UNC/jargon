@@ -69,7 +69,38 @@ public class DataObjCopyInp extends AbstractIRODSPackingInstruction {
 		dataObjCopyInp.setApiNumber(RENAME_FILE_API_NBR);
 		return dataObjCopyInp;
 	}
+	
+	/**
+	 * Create an instance of the packing instruction for a copy of a collection.  FIXME: work in progress do not use
+	 * 
+	 * @param sourceFileAbsolutePath
+	 *            <code>String</code> with the absolute path to the source file.
+	 * @param targetFileAbsolutePath
+	 *            <code>String</code> with the absolute path to the target file.
+	 * @return <code>DataObjCopyInp</code>
+	 * @throws JargonException
+	 */
+	public static final DataObjCopyInp instanceForCopyCollection(
+			final String sourceFileAbsolutePath,
+			final String targetFileAbsolutePath) throws JargonException {
 
+		DataObjCopyInp dataObjCopyInp = new DataObjCopyInp(
+				sourceFileAbsolutePath, targetFileAbsolutePath,
+				DataObjInp.RENAME_DIRECTORY_OPERATION_TYPE);
+		dataObjCopyInp.setApiNumber(RENAME_FILE_API_NBR);
+		return dataObjCopyInp;
+	}
+
+	/**
+	 * Create an instance with access to all parameters.  It is recommended that one of the instanceFor methods is used in lieu of 
+	 * this method.
+	 * 
+	 * @param fromFileAbsolutePath
+	 * @param toFileAbsolutePath
+	 * @param operationType
+	 * @return
+	 * @throws JargonException
+	 */
 	public static final DataObjCopyInp instance(
 			final String fromFileAbsolutePath, final String toFileAbsolutePath,
 			final int operationType) throws JargonException {
