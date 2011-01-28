@@ -383,17 +383,6 @@ final class TransferQueueService {
 	}
 
 	/**
-	 * @param transferManager
-	 */
-	private void notifyManagerOfError(final TransferManager transferManager) {
-		try {
-			transferManager.notifyErrorCondition();
-		} catch (JargonException e) {
-			// ignore
-		}
-	}
-
-	/**
 	 * Get a list of the recent transfer queue (all states), using the row count
 	 * desired.
 	 * 

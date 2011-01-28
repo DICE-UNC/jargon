@@ -24,6 +24,10 @@
       <artifactId>jargon-core</artifactId>
     </dependency>
     <dependency>
+      <groupId>org.irods</groupId>
+      <artifactId>jargon-data-utils</artifactId>
+    </dependency>
+    <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-core</artifactId>
     </dependency>

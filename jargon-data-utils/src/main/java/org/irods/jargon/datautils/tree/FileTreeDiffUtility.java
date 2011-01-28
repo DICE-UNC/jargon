@@ -325,7 +325,11 @@ public class FileTreeDiffUtility {
 		} else {
 			entry.setObjectType(ObjectType.COLLECTION);
 			entry.setParentPath(leftHandSide.getParent());
-			entry.setPathOrName(leftHandSide.getName());
+			StringBuilder sb = new StringBuilder();
+			sb.append(leftHandSide.getParent());
+			sb.append("/");
+			sb.append(leftHandSide.getName());
+			entry.setPathOrName(sb.toString());
 		}
 		FileTreeDiffEntry diffEntry = FileTreeDiffEntry.instance(diffType,
 				entry, lengthRightHandSide, timestampRightHandSide);

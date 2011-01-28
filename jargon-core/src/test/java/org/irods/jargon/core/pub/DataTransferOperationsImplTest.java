@@ -1302,7 +1302,7 @@ public class DataTransferOperationsImplTest {
 		irodsFileSystem.close();
 
 		Assert.assertTrue("did not get expected success callback",
-				listener.getReplicateCallbackCtr() == 3);
+				listener.getReplicateCallbackCtr() == 4);
 		Assert.assertTrue("should have a status callback of cancelled",
 				listener.isCancelEncountered());
 
@@ -1358,7 +1358,7 @@ public class DataTransferOperationsImplTest {
 		irodsFileSystem.close();
 
 		Assert.assertTrue("did not get expected success callback",
-				listener.getReplicateCallbackCtr() == 3);
+				listener.getReplicateCallbackCtr() == 4);
 		Assert.assertTrue("should have a status callback of paused",
 				listener.isPauseEncountered());
 
