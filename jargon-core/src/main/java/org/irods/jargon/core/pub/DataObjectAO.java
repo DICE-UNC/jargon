@@ -508,4 +508,15 @@ public interface DataObjectAO extends IRODSAccessObject {
 	void copyIrodsDataObject(String irodsSourceFileAbsolutePath,
 			String irodsTargetFileAbsolutePath, String targetResourceName) throws JargonException;
 
+	/**
+	 * Copy a file from one iRODS resource to another with a 'force' option that will overwrite another file.
+	 * @param irodsSourceFileAbsolutePath <code>String</code> with the absolute path to the source file
+	 * @param irodsTargetFileAbsolutePath <code>String</code> with the absolute path to the target file.
+	 * @param targetResourceName <code>String</code> with the optional (blank if not specified) resource that will hold the target file
+	 * @throws JargonException 
+	 */
+	void copyIrodsDataObjectWithForce(String irodsSourceFileAbsolutePath,
+			String irodsTargetFileAbsolutePath, String targetResourceName)
+			throws JargonException;
+
 }
