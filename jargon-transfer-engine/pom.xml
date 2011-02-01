@@ -6,7 +6,7 @@
     <version>2.4.1-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
-  <groupId>org.irods</groupId>
+  <groupId>org.irods.jargon</groupId>
   <artifactId>jargon-transfer-engine</artifactId>
   <name>Jargon Transfer Engine</name>
   <description>Services to manage data transfers, providing libraries and tools to manage and monitor data movements</description>
@@ -20,11 +20,11 @@
       <artifactId>derby</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.irods</groupId>
+      <groupId>org.irods.jargon</groupId>
       <artifactId>jargon-core</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.irods</groupId>
+      <groupId>org.irods.jargon</groupId>
       <artifactId>jargon-data-utils</artifactId>
     </dependency>
     <dependency>
@@ -44,7 +44,7 @@
       <artifactId>dom4j</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.irods</groupId>
+      <groupId>org.irods.jargon</groupId>
       <artifactId>jargon-test</artifactId>
     </dependency>
     <dependency>
