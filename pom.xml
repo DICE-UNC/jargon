@@ -38,6 +38,17 @@
 	<role>developer</role>
       </roles>
     </developer>
+    <developer>
+      <id>jdr0887</id>
+      <name>Jason Reilly</name>
+      <email>jdr0887@renci.org</email>
+      <url>http://www.renci.org/~jdr0887</url>
+      <organization>RENCI</organization>
+      <organizationUrl>http://www.renci.org</organizationUrl>
+      <roles>
+	<role>developer</role>
+      </roles>
+    </developer>
   </developers>
   <repositories>
     <repository>
@@ -48,7 +59,22 @@
 	<enabled>true</enabled>
       </releases>
       <snapshots>
+	<enabled>false</enabled>
+	<updatePolicy>never</updatePolicy>
+	<checksumPolicy>fail</checksumPolicy>
+      </snapshots>
+    </repository>
+    <repository>
+      <id>renci.repository</id>
+      <name>renci.repository</name>
+      <url>http://ci-dev.renci.org/nexus/content/repositories/public</url>
+      <releases>
 	<enabled>true</enabled>
+	<updatePolicy>always</updatePolicy>
+	<checksumPolicy>warn</checksumPolicy>
+      </releases>
+      <snapshots>
+	<enabled>false</enabled>
 	<updatePolicy>never</updatePolicy>
 	<checksumPolicy>fail</checksumPolicy>
       </snapshots>
@@ -64,21 +90,6 @@
       </releases>
       <snapshots>
 	<enabled>false</enabled>
-	<updatePolicy>never</updatePolicy>
-	<checksumPolicy>fail</checksumPolicy>
-      </snapshots>
-    </repository>
-    <repository>
-      <id>renci.repository</id>
-      <name>renci.repository</name>
-      <url>https://ci-dev.renci.org/nexus/content/repositories/release</url>
-      <releases>
-	<enabled>true</enabled>
-	<updatePolicy>always</updatePolicy>
-	<checksumPolicy>warn</checksumPolicy>
-      </releases>
-      <snapshots>
-	<enabled>true</enabled>
 	<updatePolicy>never</updatePolicy>
 	<checksumPolicy>fail</checksumPolicy>
       </snapshots>
@@ -148,19 +159,29 @@
   <dependencyManagement>
     <dependencies>
       <dependency>
-    	<groupId>org.irods</groupId>
-    	<artifactId>jargon-core</artifactId>
-    	<version>${project.version}</version>
+    	<groupId>antlr</groupId>
+    	<artifactId>antlr</artifactId>
+    	<version>2.7.7</version>
       </dependency>
       <dependency>
-	<groupId>org.irods</groupId>
-        <artifactId>jargon-data-utils</artifactId>
-        <version>${project.version}</version>
+    	<groupId>c3p0</groupId>
+    	<artifactId>c3p0</artifactId>
+    	<version>0.9.1</version>
       </dependency>
       <dependency>
-    	<groupId>junit</groupId>
-    	<artifactId>junit</artifactId>
-    	<version>4.7</version>
+    	<groupId>cglib</groupId>
+    	<artifactId>cglib-nodep</artifactId>
+    	<version>2.1_3</version>
+      </dependency>
+      <dependency>
+	<groupId>commons-codec</groupId>
+	<artifactId>commons-codec</artifactId>
+	<version>1.4</version>
+      </dependency>      
+      <dependency>
+    	<groupId>commons-collections</groupId>
+    	<artifactId>commons-collections</artifactId>
+    	<version>3.2.1</version>
       </dependency>
       <dependency>
     	<groupId>commons-logging</groupId>
@@ -168,9 +189,29 @@
     	<version>1.1.1</version>
       </dependency>
       <dependency>
-    	<groupId>org.slf4j</groupId>
-    	<artifactId>slf4j-api</artifactId>
-    	<version>1.5.10</version>
+    	<groupId>dom4j</groupId>
+    	<artifactId>dom4j</artifactId>
+    	<version>1.6.1</version>
+      </dependency>
+      <dependency>
+    	<groupId>hibernate</groupId>
+    	<artifactId>hibernate3</artifactId>
+    	<version>3.2.3.GA</version>
+      </dependency>
+      <dependency>
+    	<groupId>javax.transaction</groupId>
+    	<artifactId>jta</artifactId>
+    	<version>1.1</version>
+      </dependency>
+      <dependency>
+	<groupId>javax.servlet</groupId>
+	<artifactId>servlet-api</artifactId>
+	<version>2.5</version>
+      </dependency>
+      <dependency>
+    	<groupId>junit</groupId>
+    	<artifactId>junit</artifactId>
+    	<version>4.7</version>
       </dependency>
       <dependency>
     	<groupId>log4j</groupId>
@@ -183,24 +224,9 @@
     	<version>1.0.1</version>
       </dependency>
       <dependency>
-    	<groupId>org.slf4j</groupId>
-    	<artifactId>slf4j-log4j12</artifactId>
-    	<version>1.5.10</version>
-      </dependency>
-      <dependency>
-    	<groupId>org.mockito</groupId>
-    	<artifactId>mockito-all</artifactId>
-    	<version>1.8.1</version>
-      </dependency>
-      <dependency>
-    	<groupId>org.irods</groupId>
-    	<artifactId>jargon-test</artifactId>
-    	<version>${project.version}</version>
-      </dependency>
-      <dependency>
-    	<groupId>javax.transaction</groupId>
-    	<artifactId>jta</artifactId>
-    	<version>1.1</version>
+    	<groupId>org.apache.derby</groupId>
+    	<artifactId>derby</artifactId>
+    	<version>10.6.1.0</version>
       </dependency>
       <dependency>
     	<groupId>org.dbunit</groupId>
@@ -208,9 +234,34 @@
     	<version>2.2</version>
       </dependency>
       <dependency>
-    	<groupId>org.apache.derby</groupId>
-    	<artifactId>derby</artifactId>
-    	<version>10.6.1.0</version>
+    	<groupId>org.irods.jargon</groupId>
+    	<artifactId>jargon-core</artifactId>
+    	<version>${project.version}</version>
+      </dependency>
+      <dependency>
+	<groupId>org.irods.jargon</groupId>
+        <artifactId>jargon-data-utils</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+    	<groupId>org.irods.jargon</groupId>
+    	<artifactId>jargon-test</artifactId>
+    	<version>${project.version}</version>
+      </dependency>
+      <dependency>
+    	<groupId>org.mockito</groupId>
+    	<artifactId>mockito-all</artifactId>
+    	<version>1.8.1</version>
+      </dependency>
+      <dependency>
+    	<groupId>org.slf4j</groupId>
+    	<artifactId>slf4j-api</artifactId>
+    	<version>1.5.10</version>
+      </dependency>
+      <dependency>
+    	<groupId>org.slf4j</groupId>
+    	<artifactId>slf4j-log4j12</artifactId>
+    	<version>1.5.10</version>
       </dependency>
       <dependency>
     	<groupId>org.springframework</groupId>
@@ -218,58 +269,31 @@
     	<version>${spring.core.version}</version>
       </dependency>
       <dependency>
-    	<groupId>hibernate</groupId>
-    	<artifactId>hibernate3</artifactId>
-    	<version>3.2.3.GA</version>
-      </dependency>
-      <dependency>
-    	<groupId>c3p0</groupId>
-    	<artifactId>c3p0</artifactId>
-    	<version>0.9.1</version>
-      </dependency>
-      <dependency>
-    	<groupId>dom4j</groupId>
-    	<artifactId>dom4j</artifactId>
-    	<version>1.6.1</version>
-      </dependency>
-      <dependency>
-    	<groupId>commons-collections</groupId>
-    	<artifactId>commons-collections</artifactId>
-    	<version>3.2.1</version>
-      </dependency>
-      <dependency>
-    	<groupId>cglib</groupId>
-    	<artifactId>cglib-nodep</artifactId>
-    	<version>2.1_3</version>
-      </dependency>
-      <dependency>
-    	<groupId>antlr</groupId>
-    	<artifactId>antlr</artifactId>
-    	<version>2.7.7</version>
-      </dependency>
-      <dependency>
-       <groupId>org.springframework.security</groupId>
-       <artifactId>spring-security-core</artifactId>
+	<groupId>org.springframework.security</groupId>
+	<artifactId>spring-security-core</artifactId>
         <version>${spring.core.version}</version>
-     </dependency>
-		<dependency>
-			<groupId>org.springframework.security</groupId>
-			<artifactId>spring-security-web</artifactId>
-			<version>${spring.core.version}</version>
-            <type>jar</type>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-web</artifactId>
-			<version>${spring.core.version}</version>
-            <type>pom</type>
-		</dependency>
+      </dependency>
+      <dependency>
+	<groupId>org.springframework.security</groupId>
+	<artifactId>spring-security-web</artifactId>
+	<version>${spring.core.version}</version>
+      </dependency>
+      <dependency>
+	<groupId>org.springframework</groupId>
+	<artifactId>spring-web</artifactId>
+	<version>${spring.core.version}</version>
+	<type>pom</type>
+      </dependency>
     </dependencies>
   </dependencyManagement>    
   <dependencies>
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-log4j12</artifactId>
     </dependency>
     <dependency>
       <groupId>log4j</groupId>
