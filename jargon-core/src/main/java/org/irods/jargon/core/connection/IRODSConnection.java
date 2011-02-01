@@ -22,8 +22,9 @@ import edu.sdsc.grid.io.Host;
  * Jargon services do not directly access the <code>IRODSConnection</code>,
  * rather, they use the {@link IRODSCommands IRODSProtocol} interface.
  * <p/>
- * The connection is confined to one thread, and as such the various methods not
- * need to be synchronized.
+ * The connection is confined to one thread, and as such the various methods do not
+ * need to be synchronized.  They do remain so for any possible edge cases and as an extra layer of 
+ * protection.
  * 
  * @author Mike Conway - DICE (www.irods.org)
  * 
@@ -71,7 +72,7 @@ final class IRODSConnection implements IRODSManagedConnection {
 		// save the irods startup information to the IRODSServerProperties
 		// object in the irodsConnection
 
-		log.debug("initializing connection with account" + irodsAccount);
+		log.debug("initializing connection with account:{}", irodsAccount);
 
 		if (irodsAccount == null) {
 			log.error("no irods account");
@@ -98,8 +99,6 @@ final class IRODSConnection implements IRODSManagedConnection {
 		connectionInternalIdentifierBuilder.append(System.currentTimeMillis());
 		this.connectionInternalIdentifier = connectionInternalIdentifierBuilder
 				.toString();
-		log.info("connection identified as:"
-				+ this.connectionInternalIdentifier);
 	}
 
 	private IRODSConnection() {

@@ -85,6 +85,7 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements
 	@Override
 	public IRODSRuleExecResult executeRule(final String irodsRuleAsString)
 			throws JargonRuleException, JargonException {
+		
 		LOG.info("executing rule: {}", irodsRuleAsString);
 		final IRODSRuleTranslator irodsRuleTranslator = new IRODSRuleTranslator();
 		final IRODSRule irodsRule = irodsRuleTranslator
@@ -94,7 +95,10 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements
 		final Tag response = getIRODSProtocol().irodsFunction(execMyRuleInp);
 		LOG.debug("response from rule exec: {}", response.parseTag());
 
-		return processRuleResult(response, irodsRule);
+		IRODSRuleExecResult irodsRuleExecResult = processRuleResult(response, irodsRule);
+		LOG.debug("processing end of rule execution by reading message");
+		
+		return irodsRuleExecResult;
 	}
 
 	private IRODSRuleExecResult processRuleResult(final Tag irodsRuleResult,
@@ -146,6 +150,7 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements
 		Object value;
 
 		Map<String, IRODSRuleExecResultOutputParameter> irodsRuleOutputParameters = new HashMap<String, IRODSRuleExecResultOutputParameter>();
+		boolean clientSideActionOccurred = false;
 		// IRODSRuleExecResultOutputParameter irodsRuleOutputParameter;
 		for (int i = 0; i < parametersLength; i++) {
 			Tag msParam = rulesTag.getTag(IRODSConstants.MsParam_PI, i);
@@ -161,19 +166,25 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements
 
 			if (label.equals(CL_PUT_ACTION) || label.equals("CL_GET_ACTION")) {
 				// for recording a client side action
-
+				clientSideActionOccurred = true;
 				irodsRuleOutputParameters.put(
 						label,
 						(processRuleResponseWithClientSideActionTag(label,
 								type, value, msParam)));
+				operationComplete(0);
 			} else {
 				irodsRuleOutputParameters.put(label,
 						(processRuleResponseTag(label, type, value, msParam)));
 			}
 		}
+		
+		// now read the rest of the rule response if there were params that were processed
+		if (clientSideActionOccurred) {
+			LOG.info("a client side action ocurred, I have an irods message to consume to end the rule processing");
+			this.getIRODSProtocol().readMessage();
+		}
 
 		LOG.info("rule operation complete");
-		operationComplete(0);
 		return irodsRuleOutputParameters;
 
 	}

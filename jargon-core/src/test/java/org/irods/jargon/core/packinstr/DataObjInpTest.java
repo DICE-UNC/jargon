@@ -112,21 +112,20 @@ public class DataObjInpTest {
 
 		StringBuilder sb = new StringBuilder();
 		sb.append("<DataObjInp_PI><objPath>/test1/home/test1/test-scratch/IrodsCommandsPutTest/testPutOverwriteFileNotInIRODS.txt</objPath>\n");
-		sb.append("<createMode>448</createMode>\n");
+		sb.append("<createMode>33188</createMode>\n");
 		sb.append("<openFlags>1</openFlags>\n");
 		sb.append("<offset>0</offset>\n");
 		sb.append("<dataSize>716800000</dataSize>\n");
 		sb.append("<numThreads>0</numThreads>\n");
 		sb.append("<oprType>1</oprType>\n");
-		sb.append("<KeyValPair_PI><ssLen>2</ssLen>\n");
-		sb.append("<keyWord>dataType</keyWord>\n");
+		sb.append("<KeyValPair_PI><ssLen>1</ssLen>\n");
 		sb.append("<keyWord>destRescName</keyWord>\n");
-		sb.append("<svalue>generic</svalue>\n");
 		sb.append("<svalue>test1-resc</svalue>\n");
 		sb.append("</KeyValPair_PI>\n");
 		sb.append("</DataObjInp_PI>\n");
 		TestCase.assertEquals("did not get expected packing instruction",
 				sb.toString(), dataObjInp.getParsedTags());
+		
 	}
 
 	@Test
@@ -139,8 +138,8 @@ public class DataObjInpTest {
 
 		StringBuilder sb = new StringBuilder();
 		sb.append("<DataObjInp_PI><objPath>/test1/home/test1/test-scratch/IrodsCommandsPutTest/testPutOverwriteFileNotInIRODS.txt</objPath>\n");
-		sb.append("<createMode>448</createMode>\n");
-		sb.append("<openFlags>1</openFlags>\n");
+		sb.append("<createMode>33188</createMode>\n");
+		sb.append("<openFlags>2</openFlags>\n");
 		sb.append("<offset>0</offset>\n");
 		sb.append("<dataSize>1</dataSize>\n");
 		sb.append("<numThreads>0</numThreads>\n");

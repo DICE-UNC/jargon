@@ -192,10 +192,8 @@ public class IRODSCommands implements IRODSManagedConnection {
 			throws JargonException {
 
 		log.info("calling irods function with streams");
-		if (log.isDebugEnabled()) {
-			log.debug("calling irods function with:" + message);
-			log.debug("api number is:" + intInfo);
-		}
+		log.debug("calling irods function with:{}", message);
+		log.debug("api number is:{}", intInfo);
 
 		if (type == null || type.length() == 0) {
 			String err = "null or blank type";
@@ -209,9 +207,6 @@ public class IRODSCommands implements IRODSManagedConnection {
 			throw new IllegalArgumentException(err);
 		}
 
-		if (log.isDebugEnabled()) {
-			log.debug(message);
-		}
 		try {
 			irodsConnection
 					.send(createHeader(
@@ -429,11 +424,11 @@ public class IRODSCommands implements IRODSManagedConnection {
 		return full;
 	}
 
-	private Tag readMessage() throws JargonException {
+	public synchronized Tag readMessage() throws JargonException {
 		return readMessage(true);
 	}
 
-	private Tag readMessage(final boolean decode) throws JargonException {
+	public synchronized Tag readMessage(final boolean decode) throws JargonException {
 		log.info("reading message from irods");
 		Tag header = readHeader();
 		Tag message = null;
@@ -460,11 +455,12 @@ public class IRODSCommands implements IRODSManagedConnection {
 			// query with no results
 			return null;
 		} else if (info == ErrorEnum.OVERWITE_WITHOUT_FORCE_FLAG.getInt()) {
-			log.error("Attempt to overwrite file without force flag. Info val:{}"
-					, info);
+			log.error(
+					"Attempt to overwrite file without force flag. Info val:{}",
+					info);
 			throw new JargonFileOrCollAlreadyExistsException(
-					"Attempt to overwrite file without force flag. Info val:{}"
-							, info);
+					"Attempt to overwrite file without force flag. Info val:{}",
+					info);
 		} else if (info == ErrorEnum.CAT_INVALID_AUTHENTICATION.getInt()) {
 			throw new JargonException("invalid user or password");
 		}
@@ -610,8 +606,8 @@ public class IRODSCommands implements IRODSManagedConnection {
 					errorTag = Tag.readNextTag(errorMessage,
 							ConnectionConstants.JARGON_CONNECTION_ENCODING);
 				} catch (UnsupportedEncodingException e) {
-					log.error("Unsupported encoding for:"
-							+ ConnectionConstants.JARGON_CONNECTION_ENCODING);
+					log.error("Unsupported encoding for:{}",
+							ConnectionConstants.JARGON_CONNECTION_ENCODING);
 					throw new JargonException("Unsupported encoding for:"
 							+ ConnectionConstants.JARGON_CONNECTION_ENCODING);
 				}
@@ -647,14 +643,13 @@ public class IRODSCommands implements IRODSManagedConnection {
 			errorTag = Tag.readNextTag(errorMessage,
 					ConnectionConstants.JARGON_CONNECTION_ENCODING);
 		} catch (UnsupportedEncodingException e) {
-			log.error("Unsupported encoding for:"
-					+ ConnectionConstants.JARGON_CONNECTION_ENCODING);
+			log.error("Unsupported encoding for:{}",
+					ConnectionConstants.JARGON_CONNECTION_ENCODING);
 			throw new JargonException("Unsupported encoding for:"
 					+ ConnectionConstants.JARGON_CONNECTION_ENCODING);
 		}
-		log.error("IRODS error occured "
-				+ errorTag.getTag(RErrMsg.PI_TAG).getTag(
-						AbstractIRODSPackingInstruction.MESSAGE_TAG));
+		log.error("IRODS error occured: {} ", errorTag.getTag(RErrMsg.PI_TAG)
+				.getTag(AbstractIRODSPackingInstruction.MESSAGE_TAG));
 
 		throw new JargonException("IRODS error occured "
 				+ errorTag.getTag(RErrMsg.PI_TAG).getTag(
@@ -691,7 +686,7 @@ public class IRODSCommands implements IRODSManagedConnection {
 			 * </RErrMsg_PI> </RError_PI>
 			 */
 
-			log.warn("protocol error " + length);
+			log.warn("protocol error - length was:{}", length);
 
 			// to recover from some protocol errors, (slowly and if lucky)
 			// read until a new message header is found.
@@ -743,8 +738,9 @@ public class IRODSCommands implements IRODSManagedConnection {
 													header,
 													ConnectionConstants.JARGON_CONNECTION_ENCODING);
 								} catch (UnsupportedEncodingException e) {
-									log.error("Unsupported encoding for:"
-											+ ConnectionConstants.JARGON_CONNECTION_ENCODING);
+									log.error(
+											"Unsupported encoding for:{}",
+											ConnectionConstants.JARGON_CONNECTION_ENCODING);
 									throw new JargonException(
 											"Unsupported encoding for:"
 													+ ConnectionConstants.JARGON_CONNECTION_ENCODING);
@@ -775,8 +771,8 @@ public class IRODSCommands implements IRODSManagedConnection {
 			return Tag.readNextTag(header,
 					ConnectionConstants.JARGON_CONNECTION_ENCODING);
 		} catch (UnsupportedEncodingException e) {
-			log.error("Unsupported encoding for:"
-					+ ConnectionConstants.JARGON_CONNECTION_ENCODING);
+			log.error("Unsupported encoding for:{}",
+					ConnectionConstants.JARGON_CONNECTION_ENCODING);
 			throw new JargonException("Unsupported encoding for:"
 					+ ConnectionConstants.JARGON_CONNECTION_ENCODING);
 		}
@@ -825,8 +821,8 @@ public class IRODSCommands implements IRODSManagedConnection {
 			return Tag.readNextTag(body, decode,
 					ConnectionConstants.JARGON_CONNECTION_ENCODING);
 		} catch (UnsupportedEncodingException e) {
-			log.error("Unsupported encoding for:"
-					+ ConnectionConstants.JARGON_CONNECTION_ENCODING);
+			log.error("Unsupported encoding for:{}",
+					ConnectionConstants.JARGON_CONNECTION_ENCODING);
 			throw new JargonException("Unsupported encoding for:"
 					+ ConnectionConstants.JARGON_CONNECTION_ENCODING);
 		}
@@ -906,6 +902,7 @@ public class IRODSCommands implements IRODSManagedConnection {
 			e.printStackTrace();
 			throw new JargonException(e);
 		}
+		
 		Tag message = readMessage(false);
 
 		// Create and send the response
@@ -927,9 +924,11 @@ public class IRODSCommands implements IRODSManagedConnection {
 
 	void sendGSIPassword(final IRODSAccount irodsAccount)
 			throws JargonException {
+		
 		if (irodsAccount == null) {
 			throw new JargonException("irods account is null");
 		}
+		
 		try {
 			irodsConnection.send(createHeader(
 					RequestTypes.RODS_API_REQ.getRequestType(), 0, 0, 0,

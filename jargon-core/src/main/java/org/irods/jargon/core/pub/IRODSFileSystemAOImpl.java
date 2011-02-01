@@ -1446,9 +1446,8 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 			throw new JargonException(msg);
 		}
 
-		DataObjCopyInp dataObjCopyInp = DataObjCopyInp.instance(
-				fromFile.getAbsolutePath(), toFile.getAbsolutePath(),
-				DataObjInp.RENAME_DIRECTORY_OPERATION_TYPE);
+		DataObjCopyInp dataObjCopyInp = DataObjCopyInp.instanceForRenameCollection(
+				fromFile.getAbsolutePath(), toFile.getAbsolutePath());
 		Tag response = getIRODSProtocol().irodsFunction(DataObjInp.PI_TAG,
 				dataObjCopyInp.getParsedTags(),
 				DataObjCopyInp.RENAME_FILE_API_NBR);
@@ -1481,9 +1480,8 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 			throw new JargonException(msg);
 		}
 
-		DataObjCopyInp dataObjCopyInp = DataObjCopyInp.instance(
-				fromFile.getAbsolutePath(), toFile.getAbsolutePath(),
-				DataObjInp.RENAME_FILE_OPERATION_TYPE);
+		DataObjCopyInp dataObjCopyInp = DataObjCopyInp.instanceForRenameFile(
+				fromFile.getAbsolutePath(), toFile.getAbsolutePath());
 		Tag response = getIRODSProtocol().irodsFunction(DataObjInp.PI_TAG,
 				dataObjCopyInp.getParsedTags(),
 				DataObjCopyInp.RENAME_FILE_API_NBR);

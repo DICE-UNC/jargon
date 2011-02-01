@@ -1083,6 +1083,35 @@ public class DataObjectAOImplTest {
 						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY)) != -1);
 
 	}
+	
+	@Test
+	public final void testCopyNoForce() throws Exception {
+
+		String testFileName = "testCopyNoForce.txt";
+		String testCopyToFileName = "testCopyToFileName.txt";
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String fileNameOrig = FileGenerator.generateFileOfFixedLengthGivenName(
+				absPath, testFileName, 2);
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
+		DataObjectAO dataObjectAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
+		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount).instanceIRODSFile(targetIrodsCollection);
+		dataObjectAO.putLocalDataObjectToIRODS(new File(fileNameOrig), irodsFile, false);
+		dataObjectAO.copyIrodsDataObject(targetIrodsCollection + "/" + testFileName, targetIrodsCollection + "/" + testCopyToFileName, "");
+
+		IRODSFile checkCopiedFile = irodsFileSystem.getIRODSFileFactory(irodsAccount).instanceIRODSFile(targetIrodsCollection + "/" + testCopyToFileName);
+		TestCase.assertTrue("new file does not exist", checkCopiedFile.exists());
+		irodsFileSystem.close();
+		
+	}
 
 	@Test
 	public final void testGetResourcesForDataObject() throws Exception {

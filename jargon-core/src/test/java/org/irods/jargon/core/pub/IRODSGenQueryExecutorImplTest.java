@@ -315,13 +315,8 @@ public class IRODSGenQueryExecutorImplTest {
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
 
-		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager
-				.instance();
-
-		IRODSSession irodsSession = IRODSSession
-				.instance(irodsConnectionManager);
-		IRODSAccessObjectFactory accessObjectFactory = IRODSAccessObjectFactoryImpl
-				.instance(irodsSession);
+		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 		IRODSGenQueryExecutor irodsGenQueryExecutor = accessObjectFactory
 				.getIRODSGenQueryExecutor(irodsAccount);
 
@@ -334,7 +329,7 @@ public class IRODSGenQueryExecutorImplTest {
 		// now close
 		irodsGenQueryExecutor.closeResults(resultSet);
 
-		irodsSession.closeSession();
+		irodsFileSystem.close();
 		// no error considered success
 		Assert.assertTrue(true);
 	}

@@ -1148,13 +1148,13 @@ public final class IRODSFileImpl extends File implements IRODSFile {
 	 */
 	@Override
 	public String getResource() throws JargonException {
-		// I may have set the resource already
+		/*// I may have set the resource already
 		if (resource.length() == 0) {
 			// for files, get the actual resource associated with the file,
 			// otherwise,
 			// get any default set by the IRODS account
 			if (this.isFile()) {
-				resource = this.irodsFileSystemAO.getResourceNameForFile(this);
+				resource = this.irodsFileSystemAO.getResourceNameForFile(this);  
 			} else {
 				resource = this.irodsFileSystemAO.getIRODSAccount()
 						.getDefaultStorageResource();
@@ -1164,9 +1164,8 @@ public final class IRODSFileImpl extends File implements IRODSFile {
 			// for resource, try and
 			// standardize on null. This probably needs more work.
 		}
-
+*/
 		return resource;
-
 	}
 
 	/*

@@ -24,7 +24,7 @@ public interface TransferManagerCallbackListener {
 	 *            <code>TransferManager.RunningStatus</code> enum value with the
 	 *            new status
 	 */
-	public void transferManagerRunningStatusUpdate(
+	void transferManagerRunningStatusUpdate(
 			final TransferManager.RunningStatus runningStatus);
 
 	/**
@@ -35,7 +35,7 @@ public interface TransferManagerCallbackListener {
 	 *            <code>TransferManager.ErrorStatus</code> enum value with the
 	 *            new error status.
 	 */
-	public void transferManagerErrorStatusUpdate(
+	void transferManagerErrorStatusUpdate(
 			final TransferManager.ErrorStatus errorStatus);
 
 	/**
@@ -47,6 +47,6 @@ public interface TransferManagerCallbackListener {
 	 *            <code>TransferStatus</code> block with details of the current
 	 *            transfer.
 	 */
-	public void transferStatusCallback(final TransferStatus transferStatus);
+	void transferStatusCallback(final TransferStatus transferStatus);
 
 }

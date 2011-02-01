@@ -21,10 +21,14 @@ public class DataObjCopyInp extends AbstractIRODSPackingInstruction {
 	public static final String PI_TAG = "DataObjCopyInp_PI";
 	public static final int RENAME_API_NBR = 601;
 	public static final int RENAME_FILE_API_NBR = 627;
+	public static final int COPY_API_NBR = 613;
 
 	private final String fromFileAbsolutePath;
 	private final String toFileAbsolutePath;
 	private final int operationType;
+	private final String resourceName;
+	private final long sourceFileLength;
+	private final boolean force;
 
 	/**
 	 * Create an instance of the packing instruction for a move of a data object
@@ -41,10 +45,31 @@ public class DataObjCopyInp extends AbstractIRODSPackingInstruction {
 			final String sourceFileAbsolutePath,
 			final String targetFileAbsolutePath) throws JargonException {
 
-		DataObjCopyInp dataObjCopyInp = new DataObjCopyInp(
+		DataObjCopyInp dataObjCopyInp = new DataObjCopyInp(RENAME_FILE_API_NBR,
 				sourceFileAbsolutePath, targetFileAbsolutePath,
-				DataObjInp.RENAME_FILE_OPERATION_TYPE);
-		dataObjCopyInp.setApiNumber(RENAME_FILE_API_NBR);
+				DataObjInp.RENAME_FILE_OPERATION_TYPE, "", 0, false);
+		return dataObjCopyInp;
+	}
+
+	/**
+	 * Create an instance that will do a file copy between two iRODS directories
+	  * @param sourceFileAbsolutePath
+	 *            <code>String</code> with the absolute path to the source file
+	 * @param targetFileAbsolutePath
+	 *            <code>String</code> with the absolute path to the target file
+	 * @param copyToResource <code>String</code> with an optional resource for the target file
+	 * @param sourceFileLength <code>long</code> with the length of the source file
+	 * @param force <code>boolean</code> that indicates whether force option should be set
+	 * @return
+	 * @throws JargonException
+	 */
+	public static final DataObjCopyInp instanceForCopy(
+			final String sourceFileAbsolutePath,
+			final String targetFileAbsolutePath, final String copyToResource,
+			final long sourceFileLength, final boolean force) throws JargonException {
+		DataObjCopyInp dataObjCopyInp = new DataObjCopyInp(COPY_API_NBR,
+				sourceFileAbsolutePath, targetFileAbsolutePath,
+				DataObjInp.COPY_FILE_SRC_OPERATION_TYPE, copyToResource, sourceFileLength, force);
 		return dataObjCopyInp;
 	}
 
@@ -53,9 +78,9 @@ public class DataObjCopyInp extends AbstractIRODSPackingInstruction {
 	 * (not a data object, there is a different initializer for that).
 	 * 
 	 * @param sourceFileAbsolutePath
-	 *            <code>String</code> with the absolute path to the source file.
+	 *            <code>String</code> with the absolute path to the source file
 	 * @param targetFileAbsolutePath
-	 *            <code>String</code> with the absolute path to the target file.
+	 *            <code>String</code> with the absolute path to the target file
 	 * @return <code>DataObjCopyInp</code>
 	 * @throws JargonException
 	 */
@@ -63,75 +88,84 @@ public class DataObjCopyInp extends AbstractIRODSPackingInstruction {
 			final String sourceFileAbsolutePath,
 			final String targetFileAbsolutePath) throws JargonException {
 
-		DataObjCopyInp dataObjCopyInp = new DataObjCopyInp(
+		DataObjCopyInp dataObjCopyInp = new DataObjCopyInp(RENAME_FILE_API_NBR,
 				sourceFileAbsolutePath, targetFileAbsolutePath,
-				DataObjInp.RENAME_DIRECTORY_OPERATION_TYPE);
-		dataObjCopyInp.setApiNumber(RENAME_FILE_API_NBR);
+				DataObjInp.RENAME_DIRECTORY_OPERATION_TYPE, "", 0, false);
 		return dataObjCopyInp;
 	}
-	
+
 	/**
-	 * Create an instance of the packing instruction for a copy of a collection.  FIXME: work in progress do not use
+	 * Create an instance of the packing instruction for a copy of a collection.
 	 * 
 	 * @param sourceFileAbsolutePath
 	 *            <code>String</code> with the absolute path to the source file.
 	 * @param targetFileAbsolutePath
 	 *            <code>String</code> with the absolute path to the target file.
+	 * @param targetResourceName
+	 *            <code>String</code> with optional resource name for target.
+	 *            Blank if not used
 	 * @return <code>DataObjCopyInp</code>
 	 * @throws JargonException
 	 */
 	public static final DataObjCopyInp instanceForCopyCollection(
 			final String sourceFileAbsolutePath,
-			final String targetFileAbsolutePath) throws JargonException {
+			final String targetFileAbsolutePath,
+			final String targetResourceName, final long sourceFileLength, final boolean force)
+			throws JargonException {
 
-		DataObjCopyInp dataObjCopyInp = new DataObjCopyInp(
+		DataObjCopyInp dataObjCopyInp = new DataObjCopyInp(COPY_API_NBR,
 				sourceFileAbsolutePath, targetFileAbsolutePath,
-				DataObjInp.RENAME_DIRECTORY_OPERATION_TYPE);
-		dataObjCopyInp.setApiNumber(RENAME_FILE_API_NBR);
+				DataObjInp.COPY_FILE_SRC_OPERATION_TYPE, targetResourceName,
+				sourceFileLength, force);
 		return dataObjCopyInp;
 	}
 
-	/**
-	 * Create an instance with access to all parameters.  It is recommended that one of the instanceFor methods is used in lieu of 
-	 * this method.
-	 * 
-	 * @param fromFileAbsolutePath
-	 * @param toFileAbsolutePath
-	 * @param operationType
-	 * @return
-	 * @throws JargonException
-	 */
-	public static final DataObjCopyInp instance(
+	private DataObjCopyInp(final int apiNumber,
 			final String fromFileAbsolutePath, final String toFileAbsolutePath,
-			final int operationType) throws JargonException {
-		return new DataObjCopyInp(fromFileAbsolutePath, toFileAbsolutePath,
-				operationType);
-	}
-
-	private DataObjCopyInp(final String fromFileAbsolutePath,
-			final String toFileAbsolutePath, final int operationType)
-			throws JargonException {
+			final int operationType, final String resourceName,
+			final long sourceFileLength, final boolean force) throws JargonException {
 		super();
 
 		if (fromFileAbsolutePath == null || fromFileAbsolutePath.length() == 0) {
-			throw new JargonException(
+			throw new IllegalArgumentException(
 					"from file absolute path is null or empty");
 		}
 
 		if (toFileAbsolutePath == null || toFileAbsolutePath.length() == 0) {
-			throw new JargonException("to file absolute path is null or empty");
+			throw new IllegalArgumentException(
+					"to file absolute path is null or empty");
 		}
 
 		if (operationType == DataObjInp.RENAME_DIRECTORY_OPERATION_TYPE
-				|| operationType == DataObjInp.RENAME_FILE_OPERATION_TYPE) {
+				|| operationType == DataObjInp.RENAME_FILE_OPERATION_TYPE || operationType == DataObjInp.COPY_FILE_SRC_OPERATION_TYPE) {
 			// ok
 		} else {
-			throw new JargonException("unknown operation type:" + operationType);
+			throw new IllegalArgumentException("unknown operation type:"
+					+ operationType);
 		}
 
+		if (apiNumber == RENAME_API_NBR || apiNumber == RENAME_FILE_API_NBR
+				|| apiNumber == COPY_API_NBR) {
+			// ok
+		} else {
+			throw new IllegalArgumentException("invalid apiNumber");
+		}
+
+		if (resourceName == null) {
+			throw new IllegalArgumentException("null resourceName");
+		}
+
+		if (sourceFileLength < 0) {
+			throw new IllegalArgumentException("negative sourceFileLength");
+		}
+
+		this.setApiNumber(apiNumber);
 		this.fromFileAbsolutePath = fromFileAbsolutePath;
 		this.toFileAbsolutePath = toFileAbsolutePath;
 		this.operationType = operationType;
+		this.resourceName = resourceName;
+		this.sourceFileLength = sourceFileLength;
+		this.force = force;
 	}
 
 	/**
@@ -155,6 +189,14 @@ public class DataObjCopyInp extends AbstractIRODSPackingInstruction {
 
 	@Override
 	public Tag getTagValue() throws JargonException {
+		if (getApiNumber() == COPY_API_NBR) {
+			return getTagValueForCopy();
+		} else {
+			return getTagValueForReplicate();
+		}
+	}
+
+	private Tag getTagValueForReplicate() throws JargonException {
 		// get the DataObjInp tag for the from file
 		Tag fromFileTag = buildDataObjInpTag(fromFileAbsolutePath,
 				operationType);
@@ -165,6 +207,62 @@ public class DataObjCopyInp extends AbstractIRODSPackingInstruction {
 
 		return message;
 
+	}
+
+	private Tag getTagValueForCopy() throws JargonException {
+		// get the DataObjInp tag for the from file
+		Tag fromFileTag = buildDataObjInpTagForCopySource(fromFileAbsolutePath,
+				sourceFileLength);
+		Tag toFileTag = buildDataObjInpTagForCopyDest(toFileAbsolutePath,resourceName,force);
+
+		// now build the whole tag
+		Tag message = new Tag(PI_TAG, new Tag[] { fromFileTag, toFileTag });
+
+		return message;
+
+	}
+
+	private Tag buildDataObjInpTagForCopySource(final String fromFileAbsolutePath,
+			final long sourceFileLength) throws JargonException {
+		List<KeyValuePair> kvps = new ArrayList<KeyValuePair>();
+
+		Tag fileTag = new Tag(DataObjInp.PI_TAG, new Tag[] {
+				new Tag(DataObjInp.OBJ_PATH, fromFileAbsolutePath),
+				new Tag(DataObjInp.CREATE_MODE, 0),
+				new Tag(DataObjInp.OPEN_FLAGS, 0),
+				new Tag(DataObjInp.OFFSET, 0),
+				new Tag(DataObjInp.DATA_SIZE, sourceFileLength),
+				new Tag(DataObjInp.NUM_THREADS, 0),
+				new Tag(DataObjInp.OPR_TYPE, DataObjInp.COPY_FILE_SRC_OPERATION_TYPE),
+				this.createKeyValueTag(kvps) });
+		return fileTag;
+	}
+	
+	private Tag buildDataObjInpTagForCopyDest(final String destFileAbsolutePath,
+			final String destResource, final boolean overwrite) throws JargonException {
+		DataObjInp dataObjInp = DataObjInp.instanceForCopyDest(destFileAbsolutePath, destResource, overwrite);
+		return dataObjInp.getTagValue();
+	}
+
+
+	public String getFromFileAbsolutePath() {
+		return fromFileAbsolutePath;
+	}
+
+	public String getToFileAbsolutePath() {
+		return toFileAbsolutePath;
+	}
+
+	public int getOperationType() {
+		return operationType;
+	}
+
+	public String getResourceName() {
+		return resourceName;
+	}
+
+	public long getSourceFileLength() {
+		return sourceFileLength;
 	}
 
 }

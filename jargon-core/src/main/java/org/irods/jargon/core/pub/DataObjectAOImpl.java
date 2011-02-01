@@ -24,12 +24,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.irods.jargon.core.connection.ConnectionConstants;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.connection.JargonProperties;
 import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.exception.JargonRuntimeException;
+import org.irods.jargon.core.packinstr.DataObjCopyInp;
 import org.irods.jargon.core.packinstr.DataObjInp;
 import org.irods.jargon.core.packinstr.ModAccessControlInp;
 import org.irods.jargon.core.packinstr.ModAvuMetadataInp;
@@ -256,7 +258,7 @@ public final class DataObjectAOImpl extends IRODSGenericAO implements
 		TransferOptions transferOptions = buildTransferOptionsBasedOnJargonProperties();
 		
 		log.info("testing file length to set parallel transfer options");
-		if (localFile.length() > getIRODSSession().getJargonProperties().getParallelThreadsLengthThreshold()) {
+		if (localFile.length() > ConnectionConstants.MAX_SZ_FOR_SINGLE_BUF) { // FIXME: remove from props
 			transferOptions.setMaxThreads(getIRODSSession().getJargonProperties().getMaxParallelThreads());
 			log.info("length above threshold, send max threads cap");
 		} else {
@@ -361,6 +363,20 @@ public final class DataObjectAOImpl extends IRODSGenericAO implements
 
 		IRODSFile targetFile = checkTargetFileForPutOperation(localFile,
 				irodsFileDestination, ignoreChecks);
+		
+		long localFileLength = localFile.length();
+		
+		if (localFileLength < ConnectionConstants.MAX_SZ_FOR_SINGLE_BUF) {
+			try {
+				processNormalPutTransfer(localFile, overwrite, transferOptions,
+						targetFile);
+				return;
+			} catch (FileNotFoundException e) {
+				log.error("File not found for local file I was trying to put:{}",
+						localFile.getAbsolutePath());
+				throw new JargonException("localFile not found to put to irods", e);
+			}
+		}
 
 		DataObjInp dataObjInp = DataObjInp.instanceForInitialCallToPut(
 				targetFile.getAbsolutePath(), localFile.length(),
@@ -416,21 +432,8 @@ public final class DataObjectAOImpl extends IRODSGenericAO implements
 				this.getIRODSProtocol().operationComplete(statusForComplete);
 
 			} else {
-				log.info("processing as a normal put strategy");
-
-				dataObjInp = DataObjInp.instanceForNormalPutStrategy(
-						targetFile.getAbsolutePath(), localFile.length(),
-						targetFile.getResource(), overwrite, transferOptions);
-
-				Tag response = getIRODSProtocol().irodsFunction(RODS_API_REQ,
-						dataObjInp.getParsedTags(), 0, null,
-						localFile.length(), new FileInputStream(localFile),
-						dataObjInp.getApiNumber());
-
-				if (response == null) {
-					log.warn("send of put returned null, currently is ignored and null is returned from put operation");
-					return;
-				}
+				processNormalPutTransfer(localFile, overwrite, transferOptions,
+						targetFile);
 			}
 
 		} catch (DataNotFoundException dnf) {
@@ -453,6 +456,30 @@ public final class DataObjectAOImpl extends IRODSGenericAO implements
 
 		log.info("transfer complete");
 
+	}
+
+	/**
+	 * @param localFile
+	 * @param overwrite
+	 * @param transferOptions
+	 * @param targetFile
+	 * @throws JargonException
+	 * @throws FileNotFoundException
+	 */
+	private void processNormalPutTransfer(final File localFile,
+			final boolean overwrite, final TransferOptions transferOptions,
+			IRODSFile targetFile) throws JargonException, FileNotFoundException {
+		
+		log.info("processing as a normal put strategy");
+
+		DataObjInp dataObjInp = DataObjInp.instanceForNormalPutStrategy(
+				targetFile.getAbsolutePath(), localFile.length(),
+				targetFile.getResource(), overwrite, transferOptions);
+
+		getIRODSProtocol().irodsFunction(RODS_API_REQ,
+				dataObjInp.getParsedTags(), 0, null,
+				localFile.length(), new FileInputStream(localFile),
+				dataObjInp.getApiNumber());
 	}
 
 	/**
@@ -529,7 +556,7 @@ public final class DataObjectAOImpl extends IRODSGenericAO implements
 		TransferOptions transferOptions = buildTransferOptionsBasedOnJargonProperties();
 		
 		log.info("testing file length to set parallel transfer options");
-		if (irodsFileToGet.length() > getIRODSSession().getJargonProperties().getParallelThreadsLengthThreshold()) {
+		if (irodsFileToGet.length() > ConnectionConstants.MAX_SZ_FOR_SINGLE_BUF) {
 			transferOptions.setMaxThreads(getIRODSSession().getJargonProperties().getMaxParallelThreads());
 			log.info("length above threshold, send max threads cap");
 		} else {
@@ -1170,6 +1197,54 @@ public final class DataObjectAOImpl extends IRODSGenericAO implements
 		log.info("replication complete");
 	}
 
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.core.pub.DataObjectAO#copyIrodsDataObject(java.lang.String, java.lang.String, java.lang.String)
+	 */
+	@Override
+	public void copyIrodsDataObject(final String irodsSourceFileAbsolutePath, final String irodsTargetFileAbsolutePath,
+			final String targetResourceName) throws JargonException {
+
+		if (irodsSourceFileAbsolutePath == null || irodsSourceFileAbsolutePath.isEmpty()) {
+			throw new JargonException("null or empty irodsSourceFileAbsolutePath");
+		}
+		
+		if (irodsTargetFileAbsolutePath == null || irodsTargetFileAbsolutePath.isEmpty()) {
+			throw new JargonException("null or empty irodsTargetFileAbsolutePath");
+		}
+
+		if (targetResourceName == null) {
+			throw new JargonException("null or empty targetResourceName");
+		}
+
+		log.info("copyIrodsDataObject, irodsSourceFileAbsolutePath: {}",
+				irodsSourceFileAbsolutePath);
+		log.info("irodsTargetFileAbsolutePath:{}", irodsTargetFileAbsolutePath);
+		log.info("at resource: {}", targetResourceName);
+		
+		// I need the length of the file
+		IRODSFileFactory irodsFileFactory = new IRODSFileFactoryImpl(getIRODSSession(), getIRODSAccount());
+		IRODSFile sourceFile = irodsFileFactory.instanceIRODSFile(irodsSourceFileAbsolutePath);
+		
+		if (!sourceFile.exists()) {
+			throw new JargonException("the source file for the copy does not exist");
+		}
+		
+		if (!sourceFile.isFile()) {
+			throw new JargonException("the source file is not a data object");
+		}
+		
+		DataObjCopyInp dataObjCopyInp = DataObjCopyInp.instanceForCopy(irodsSourceFileAbsolutePath, irodsTargetFileAbsolutePath, targetResourceName, sourceFile.length(), false);
+
+		try {
+			getIRODSProtocol().irodsFunction(dataObjCopyInp);
+		} catch (JargonException je) {
+			log.error("error copying irods file", je);
+			throw je;
+		}
+		log.info("copy complete");
+	}
+	
+	
 	/*
 	 * (non-Javadoc)
 	 * 

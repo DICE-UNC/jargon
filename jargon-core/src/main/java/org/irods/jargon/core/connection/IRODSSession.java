@@ -156,10 +156,7 @@ public final class IRODSSession {
 			LOG.error("irodsAccount is null in connection");
 			throw new JargonException("irodsAccount is null");
 		}
-
-		LOG.debug("call to current connection for account: {}",
-				irodsAccount.toString());
-
+		
 		IRODSCommands irodsProtocol = null;
 
 		Map<String, IRODSCommands> irodsProtocols = sessionMap.get();
@@ -176,8 +173,6 @@ public final class IRODSSession {
 		}
 
 		// there is a protocol map, look up the connection for this account
-
-		LOG.debug("looking into the session map for a connection that might already be established");
 
 		irodsProtocol = irodsProtocols.get(irodsAccount.toString());
 

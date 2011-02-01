@@ -6,6 +6,7 @@ package org.irods.jargon.core.packinstr;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.irods.jargon.core.connection.ConnectionConstants;
 import org.irods.jargon.core.exception.JargonException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,6 +50,8 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 
 	public static final int DEFAULT_OPERATION_TYPE = 0;
 
+	public static final int COPY_FILE_SRC_OPERATION_TYPE = 10;
+	public static final int COPY_FILE_DEST_OPERATION_TYPE = 9;
 	public static final int RENAME_FILE_OPERATION_TYPE = 11;
 	public static final int RENAME_DIRECTORY_OPERATION_TYPE = 12;
 	public static final int PHYMOVE_OPERATION_TYPE = 15;
@@ -60,13 +63,13 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 
 	private static Logger log = LoggerFactory.getLogger(DataObjInp.class);
 
-	public static final int DEFAULT_CREATE_MODE = 448;
+	public static final int DEFAULT_CREATE_MODE = 33188;
 	public static final int ZERO_CREATE_MODE = 0;
 
 	public static final String BS_LEN = "bsLen";
 
 	public enum OpenFlags {
-		READ, WRITE, READ_WRITE
+	 READ, WRITE, READ_WRITE
 	}
 
 	public enum ForceOptions {
@@ -398,6 +401,7 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 			final String destinationAbsolutePath, final long length,
 			final String destinationResource, final boolean overwrite,
 			final TransferOptions transferOptions) throws JargonException {
+		
 		if (destinationAbsolutePath == null
 				|| destinationAbsolutePath.isEmpty()) {
 			throw new JargonException("null or empty destinationAbsolutePath");
@@ -412,7 +416,7 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 		}
 
 		DataObjInp dataObjInp = new DataObjInp(destinationAbsolutePath,
-				DEFAULT_CREATE_MODE, OpenFlags.WRITE, 0L, length,
+				DEFAULT_CREATE_MODE, OpenFlags.READ_WRITE, 0L, length,
 				destinationResource, transferOptions);
 		dataObjInp.operationType = PUT_OPERATION_TYPE;
 		dataObjInp.setApiNumber(PUT_FILE_API_NBR);
@@ -422,6 +426,18 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 
 		dataObjInp.setInitialPutGetCall(false);
 
+		return dataObjInp;
+	}
+	
+	public static final DataObjInp instanceForCopyDest(final String destinationAbsolutePath,
+			final String destinationResource, final boolean overwrite) throws JargonException {
+		DataObjInp dataObjInp = new DataObjInp(destinationAbsolutePath,
+				ZERO_CREATE_MODE, OpenFlags.READ, 0L, 0L,
+				destinationResource, null);
+		dataObjInp.operationType = DataObjInp.COPY_FILE_DEST_OPERATION_TYPE;
+		if (overwrite) {
+			dataObjInp.setForceOption(ForceOptions.FORCE);
+		}
 		return dataObjInp;
 	}
 
@@ -537,13 +553,8 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 		int tagOpenFlags = translateOpenFlagsValue();
 		int transferOptionsNumThreads = 0;
 
-		if (transferOptions != null) {
+		if (transferOptions != null && getDataSize() > ConnectionConstants.MAX_SZ_FOR_SINGLE_BUF) {  // FIXME: just pass max threads in without this calc, refactor away
 			transferOptionsNumThreads = transferOptions.getMaxThreads();
-		}
-
-		// TODO: trap for very strange bug, will remove later
-		if (transferOptionsNumThreads > 20) {
-			throw new JargonException("too many threads requested");
 		}
 
 		Tag message = new Tag(PI_TAG, new Tag[] {
@@ -561,8 +572,8 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 			// for puts, data included not put in the initial
 			// call
 
-			kvps.add(KeyValuePair.instance(DATA_TYPE, DATA_TYPE_GENERIC));
 			if (!isInitialPutGetCall()) {
+				kvps.add(KeyValuePair.instance(DATA_TYPE, DATA_TYPE_GENERIC));
 				kvps.add(KeyValuePair.instance(DATA_INCLUDED_KW, ""));
 			}
 		}

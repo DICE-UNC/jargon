@@ -82,6 +82,8 @@ public final class ConnectionConstants {
 	 * Standard challenge length. Used in challenge response.
 	 */
 	public static final int CHALLENGE_LENGTH = 64;
+	
+	public static final long  MAX_SZ_FOR_SINGLE_BUF  =   (32*1024*1024);
 
 	private ConnectionConstants() {
 	}

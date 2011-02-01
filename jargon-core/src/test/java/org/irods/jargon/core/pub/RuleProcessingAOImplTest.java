@@ -3,12 +3,14 @@ package org.irods.jargon.core.pub;
 import java.util.Properties;
 
 import junit.framework.Assert;
+import junit.framework.TestCase;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSProtocolManager;
 import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.connection.IRODSSimpleProtocolManager;
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.rule.IRODSRuleExecResult;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.irods.jargon.testutils.filemanip.FileGenerator;
@@ -129,7 +131,7 @@ public class RuleProcessingAOImplTest {
 		String expectedCondition = "COLL_NAME = '"
 				+ iputCommand.getIrodsFileName() + "'";
 		Assert.assertEquals("condition not found", expectedCondition,
-				conditionValue);
+				conditionValue);	
 
 	}
 
@@ -137,29 +139,27 @@ public class RuleProcessingAOImplTest {
 	public void testExecuteRequestClientActionPut() throws Exception {
 		// create a local file to put
 		// put a collection out to do a checksum on
-		String testFileName = "testClientAction.txt";
+		String testFileName = "testExecuteRequestClientActionPut.txt";
+		String testResultFileName = "testExecuteRequestClientActionPutResult.txt";
+
 		String absPath = scratchFileUtils
 				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
 		String putFileName = FileGenerator.generateFileOfFixedLengthGivenName(
 				absPath, testFileName, 1);
+		
+		String targetIrodsFileName = testingPropertiesHelper
+		.buildIRODSCollectionAbsolutePathFromTestProperties(
+				testingProperties, IRODS_TEST_SUBDIR_PATH) + "/" + testResultFileName;
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
 
-		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager
-				.instance();
-
-		IRODSSession irodsSession = IRODSSession
-				.instance(irodsConnectionManager);
-		IRODSAccessObjectFactory accessObjectFactory = IRODSAccessObjectFactoryImpl
-				.instance(irodsSession);
+		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 		StringBuilder builder = new StringBuilder();
 		builder.append("testClientAction||msiDataObjPut(");
-		builder.append(testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH));
-		builder.append('/');
-		builder.append("testExecuteRequestClientActionPutResult.txt,null,");
+		builder.append(targetIrodsFileName);
+		builder.append(",null,");
 		builder.append(putFileName);
 		builder.append(",*status)|nop\n");
 		builder.append("*A=null\n");
@@ -169,8 +169,13 @@ public class RuleProcessingAOImplTest {
 
 		IRODSRuleExecResult result = ruleProcessingAO.executeRule(builder
 				.toString());
-		irodsSession.closeSession();
 
+		IRODSFile putFile = irodsFileSystem.getIRODSFileFactory(irodsAccount).instanceIRODSFile(targetIrodsFileName);
+		
+		TestCase.assertTrue("file does not exist", putFile.exists());
+		
+		irodsFileSystem.close();
+		
 		Assert.assertNotNull("did not get a response", result);
 		Assert.assertEquals("did not get results for client side operation", 1,
 				result.getOutputParameterResults().size());
