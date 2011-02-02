@@ -1,0 +1,10 @@
+<document>
+  <properties>
+  </properties>
+  <body>
+    <section name="Eclipse 3.2+">
+      <p>Download <a href="./eclipse.xml">renci-eclipse.xml</a>.</p>
+      <p>After this, select Window > Preferences, and open up the configuration for Java > Code Style > Code Formatter. Click on the button labeled Import... and select the file you downloaded. Give the style a name, and click OK.</p>
+    </section>
+  </body>
+</document>
