@@ -1240,7 +1240,6 @@ public class DataObjectAOImplTest {
 		iputCommand.setForceOverride(true);
 
 		invoker.invokeCommandAndGetResultAsString(iputCommand);
-
 		iputCommand = new IputCommand();
 
 		iputCommand.setLocalFileName(fileNameOrig);

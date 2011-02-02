@@ -30,6 +30,9 @@ final class TransferOperationsHelper {
 	private final IRODSSession irodsSession;
 	private final IRODSAccount irodsAccount;
 
+	private final DataObjectAO dataObjectAO;
+	private final CollectionAO collectionAO;
+
 	/**
 	 * Initializer creates an instance of htis class.
 	 * 
@@ -54,6 +57,8 @@ final class TransferOperationsHelper {
 
 		this.irodsSession = irodsSession;
 		this.irodsAccount = irodsAccount;
+		this.dataObjectAO = new DataObjectAOImpl(irodsSession, irodsAccount);
+		this.collectionAO = new CollectionAOImpl(irodsSession, irodsAccount);
 
 	}
 
@@ -199,8 +204,7 @@ final class TransferOperationsHelper {
 
 		log.info("filter passed, process...");
 		try {
-			DataObjectAO dataObjectAO = new DataObjectAOImpl(irodsSession,
-					irodsAccount);
+
 			dataObjectAO.getDataObjectFromIrods(irodsSourceFile,
 					targetLocalFile);
 
@@ -293,12 +297,6 @@ final class TransferOperationsHelper {
 			final TransferControlBlock transferControlBlock)
 			throws JargonException {
 
-		// sourceFile is a directory, contracts were checked in putOperation()
-		final CollectionAO collectionAO = new CollectionAOImpl(irodsSession,
-				irodsAccount);
-		final DataObjectAO dataObjectAO = new DataObjectAOImpl(irodsSession,
-				irodsAccount);
-
 		if (!sourceFile.isDirectory()) {
 			throw new JargonException(
 					"source file is not a directory, cannot recursively put");
@@ -325,7 +323,7 @@ final class TransferOperationsHelper {
 			if (fileInSourceCollection.isDirectory()) {
 				recursivelyPutACollection(targetIrodsCollection,
 						transferStatusCallbackListener, transferControlBlock,
-						collectionAO, fileInSourceCollection);
+						fileInSourceCollection);
 
 				// a pause will need to bubble back up
 
@@ -355,8 +353,7 @@ final class TransferOperationsHelper {
 				}
 
 				putASingleFile(fileInSourceCollection, targetIrodsCollection,
-						transferStatusCallbackListener, transferControlBlock,
-						dataObjectAO);
+						transferStatusCallbackListener, transferControlBlock);
 			}
 		}
 	}
@@ -402,15 +399,14 @@ final class TransferOperationsHelper {
 	 * @param targetIrodsCollection
 	 * @param transferStatusCallbackListener
 	 * @param transferControlBlock
-	 * @param dataObjectAO
 	 * @throws JargonException
 	 */
 	private void putASingleFile(
 			final File fileInSourceCollection,
 			final IRODSFile targetIrodsCollection,
 			final TransferStatusCallbackListener transferStatusCallbackListener,
-			final TransferControlBlock transferControlBlock,
-			final DataObjectAO dataObjectAO) throws JargonException {
+			final TransferControlBlock transferControlBlock)
+			throws JargonException {
 
 		log.info("put of single file");
 
@@ -504,7 +500,6 @@ final class TransferOperationsHelper {
 	 * @param targetIrodsCollection
 	 * @param transferStatusCallbackListener
 	 * @param transferControlBlock
-	 * @param collectionAO
 	 * @param fileInSourceCollection
 	 * @throws JargonException
 	 */
@@ -512,8 +507,7 @@ final class TransferOperationsHelper {
 			final IRODSFile targetIrodsCollection,
 			final TransferStatusCallbackListener transferStatusCallbackListener,
 			final TransferControlBlock transferControlBlock,
-			final CollectionAO collectionAO, final File fileInSourceCollection)
-			throws JargonException {
+			final File fileInSourceCollection) throws JargonException {
 
 		// make a dir in the target collection
 		StringBuilder sb = new StringBuilder();
@@ -723,8 +717,6 @@ final class TransferOperationsHelper {
 			throws JargonException {
 
 		log.info("put of single file");
-		DataObjectAO dataObjectAO = new DataObjectAOImpl(irodsSession,
-				irodsAccount);
 
 		try {
 			dataObjectAO.putLocalDataObjectToIRODS(sourceFile, targetIrodsFile,
@@ -814,8 +806,6 @@ final class TransferOperationsHelper {
 		log.info("replicate single file");
 
 		try {
-			final DataObjectAO dataObjectAO = new DataObjectAOImpl(
-					irodsSession, irodsAccount);
 
 			dataObjectAO.replicateIrodsDataObject(irodsFileAbsolutePath,
 					targetResource);
@@ -861,6 +851,200 @@ final class TransferOperationsHelper {
 				TransferStatus status = TransferStatus.instanceForException(
 						TransferType.REPLICATE, irodsFileAbsolutePath, "",
 						targetResource, 0L, 0L, totalFilesSoFar, totalFiles, e);
+
+				transferStatusCallbackListener.statusCallback(status);
+
+			} else {
+				log.warn("exception will be re-thrown, as there is no status callback listener");
+				throw e;
+
+			}
+		}
+	}
+
+	protected void recursivelyCopy(
+			final IRODSFile irodsSourceFile,
+			final String targetResource,
+			final String targetIrodsFileAbsolutePath,
+			final boolean force,
+			final TransferStatusCallbackListener transferStatusCallbackListener,
+			final TransferControlBlock transferControlBlock)
+			throws JargonException {
+
+		if (!irodsSourceFile.isDirectory()) {
+			throw new JargonException(
+					"source file is not a directory, cannot recursively copy");
+		}
+
+		log.info("recursively copying source file: {}",
+				irodsSourceFile.getAbsolutePath());
+		log.info("to target file: {}", targetIrodsFileAbsolutePath);
+		log.info("resource: {}", targetResource);
+
+		for (File fileInSourceCollection : irodsSourceFile.listFiles()) {
+
+			// check for a cancel or pause at the top of the loop
+			if (transferControlBlock != null
+					&& (transferControlBlock.isCancelled() || transferControlBlock
+							.isPaused())) {
+				log.info("transfer cancelled or paused");
+				if (transferStatusCallbackListener != null) {
+					TransferState interruptStatus;
+					if (transferControlBlock
+							.shouldTransferBeAbandonedDueToNumberOfErrors()) {
+						interruptStatus = TransferState.FAILURE;
+					} else if (transferControlBlock.isCancelled()) {
+						interruptStatus = TransferState.CANCELLED;
+					} else {
+						interruptStatus = TransferState.PAUSED;
+					}
+
+					TransferStatus status = TransferStatus.instance(
+							TransferType.COPY,
+							fileInSourceCollection.getAbsolutePath(),
+							targetIrodsFileAbsolutePath, targetResource,
+							fileInSourceCollection.length(),
+							fileInSourceCollection.length(), 0, 0,
+							interruptStatus);
+					transferStatusCallbackListener.statusCallback(status);
+					return;
+				}
+			}
+
+			if (fileInSourceCollection.isDirectory()) {
+
+				copyWhenADirectory(fileInSourceCollection,
+						targetIrodsFileAbsolutePath, targetResource, force,
+						transferStatusCallbackListener, transferControlBlock);
+
+				// a pause will need to bubble back up
+				if (transferControlBlock != null
+						&& (transferControlBlock.isCancelled() || transferControlBlock
+								.isPaused())) {
+					log.info("returning, is paused or cancelled");
+					break;
+				}
+			} else {
+				if (force) {
+					dataObjectAO.copyIrodsDataObjectWithForce(
+							fileInSourceCollection.getAbsolutePath(),
+							targetIrodsFileAbsolutePath, targetResource);
+				} else {
+					dataObjectAO.copyIrodsDataObject(
+							fileInSourceCollection.getAbsolutePath(),
+							targetIrodsFileAbsolutePath, targetResource);
+
+				}
+			}
+		}
+	}
+
+	private void copyWhenADirectory(
+			final File fileInSourceCollection,
+			final String targetIrodsFileAbsolutePath,
+			final String targetResource,
+			final boolean force,
+			final TransferStatusCallbackListener transferStatusCallbackListener,
+			final TransferControlBlock transferControlBlock) {
+		// FIXME: finish implementing
+
+	}
+
+	/**
+	 * Process the copy of a source file to a given target file. This is an
+	 * iRODS to iRODS copy.
+	 * 
+	 * @param irodsSourceFileAbsolutePath
+	 *            <code>String</code> with the absolute path to the source file,
+	 *            which is an iRODS data object, not a collection
+	 * @param targetResource
+	 *            <code>String</code> with the optional (blank if not specified)
+	 *            resource to which the file wil be copied
+	 * @param irodsTargetFileAbsolutePath
+	 *            <code>String</code> with the absolute path to the iRODS target
+	 *            file or collection to which the single file will be copied.
+	 * @param force
+	 *            <code>boolean</code> that indicates whether an
+	 *            already-existing iRODS target file will be overwritten.
+	 * @param transferStatusCallbackListener
+	 *            {@link org.irods.jargon.core.transfer.TransferStatusCallbackListener}
+	 *            implementation that will receive callbacks of success/failure
+	 *            of each individual file transfer. This may be set to
+	 *            <code>null</code>, in which case, exceptions that are thrown
+	 *            will be rethrown by this method to the caller.
+	 * @param transferControlBlock
+	 *            {@link org.irods.jargon.core.transfer.TransferControlBlock}
+	 *            implementation that is the communications mechanism between
+	 *            the initiator of the transfer and the transfer process. This
+	 *            may be set to <code>null</code> if those facilities are not
+	 *            needed.
+	 * @throws JargonException
+	 */
+	protected void processCopyOfSingleFile(
+			final String irodsSourceFileAbsolutePath,
+			final String targetResource,
+			final String irodsTargetFileAbsolutePath,
+			final boolean force,
+			final TransferStatusCallbackListener transferStatusCallbackListener,
+			final TransferControlBlock transferControlBlock)
+			throws JargonException {
+
+		log.info("copy single file");
+
+		try {
+
+			if (force) {
+				dataObjectAO.copyIrodsDataObjectWithForce(
+						irodsSourceFileAbsolutePath,
+						irodsTargetFileAbsolutePath, targetResource);
+			} else {
+				dataObjectAO.copyIrodsDataObject(irodsSourceFileAbsolutePath,
+						irodsTargetFileAbsolutePath, targetResource);
+			}
+
+			log.info("copy successful for file: {}",
+					irodsSourceFileAbsolutePath);
+
+			int totalFiles = 0;
+			int totalFilesSoFar = 0;
+
+			if (transferControlBlock != null) {
+				transferControlBlock.incrementFilesTransferredSoFar();
+				totalFiles = transferControlBlock.getTotalFilesToTransfer();
+				totalFilesSoFar = transferControlBlock
+						.getTotalFilesTransferredSoFar();
+			}
+
+			// I do not track length during a copy
+			if (transferStatusCallbackListener != null) {
+				TransferStatus transferStatus = TransferStatus.instance(
+						TransferType.COPY, irodsSourceFileAbsolutePath,
+						irodsTargetFileAbsolutePath, targetResource, 0, 0,
+						totalFilesSoFar, totalFiles, TransferState.SUCCESS);
+				transferStatusCallbackListener.statusCallback(transferStatus);
+			}
+
+		} catch (JargonException e) {
+			// may rethrow or send back to the callback listener
+			log.error("exception in transfer", e);
+
+			int totalFiles = 0;
+			int totalFilesSoFar = 0;
+
+			if (transferControlBlock != null) {
+				transferControlBlock.reportErrorInTransfer();
+				totalFiles = transferControlBlock.getTotalFilesToTransfer();
+				totalFilesSoFar = transferControlBlock
+						.getTotalFilesTransferredSoFar();
+			}
+
+			if (transferStatusCallbackListener != null) {
+				log.warn("exception will be passed back to existing callback listener");
+
+				TransferStatus status = TransferStatus.instanceForException(
+						TransferType.COPY, irodsSourceFileAbsolutePath,
+						irodsTargetFileAbsolutePath, targetResource, 0L, 0L,
+						totalFilesSoFar, totalFiles, e);
 
 				transferStatusCallbackListener.statusCallback(status);
 

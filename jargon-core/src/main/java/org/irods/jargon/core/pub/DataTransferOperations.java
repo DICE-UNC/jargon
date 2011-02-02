@@ -17,18 +17,11 @@ import org.irods.jargon.core.transfer.TransferStatusCallbackListener;
  * collections - {@link org.irods.jargon.core.pub.DataObjectAO}, and that
  * represent iRODS data objects and collections as <code>java.io.*</code>
  * operations - see {@link org.irods.jargon.core.pub.io.IRODSFile}.
- * 
+ * <p/>
  * This interface has a default implementation within Jargon. The access object
  * should be obtained using a factory, either by creating from
  * {@link org.irods.jargon.core.pub.IRODSFileSystem}, or from an
  * {@link org.irods.jargon.core.pub.IRODSAccessObjectFactory} implementation.
- * This class is handy for retrieving and manipulating system and user metadata
- * associated with collection objects (files), as well as performing common
- * query operations. This class also supports various iRODS file operations that
- * are not included in the standard <code>java.io.*</code> libraries.
- * 
- * For general data movement operations, also see
- * {@link org.irods.jargon.core.pub.DataTransferOperations}.
  * 
  * @author Mike Conway - DICE (www.irods.org)
  * 
@@ -195,7 +188,7 @@ public interface DataTransferOperations extends IRODSAccessObject {
 	 * result of the move will be /col4/col5/col3.
 	 * 
 	 * This method will detect an attempt to reparent a file to its current
-	 * collection, and will LOG and ignore this case.
+	 * collection, and will log and ignore this case.
 	 * 
 	 * @param absolutePathToSourceFile
 	 *            <code>String</code> with the absolute path to the source
@@ -212,4 +205,39 @@ public interface DataTransferOperations extends IRODSAccessObject {
 			final String absolutePathToTheTargetCollection)
 			throws JargonException;
 
+
+	/**
+	 * Copy a file or collection from iRODS to iRODS.
+	 * 
+	 * @param irodsSourceFileAbsolutePath
+	 *            <code>String</code> with the absolute path to the source
+	 *            collection or data object. This will be copied up to the
+	 *            target
+	 * @param targetResource
+	 *            <code>String</code> with the optional (blank if not specified)
+	 *            resource to which the file or collection will be copied
+	 * @param irodsTargetFileAbsolutePath
+	 *            <code>String<code> with the absolute path to the target iRODS file or collection.   A file may be copied to a collection
+	 * @param force <code>boolean</code> that indicates that any files that exist in the target will be copied over
+	 * @param transferStatusCallbackListener
+	 *            an optional
+	 *            {@link org.irods.jargon.core.transfer.TransferStatusCallbackListener}
+	 *            that can receive status callbacks. This may be set to null if
+	 *            this functionality is not required.
+	 * @param transferControlBlock
+	 *            an optional
+	 *            {@link org.irods.jargon.core.transfer.TransferControlBlock}
+	 *            that provides a common object to communicate between the
+	 *            object requesting the transfer, and the method performing the
+	 *            transfer. This control block may contain a filter that can be
+	 *            used to control restarts, and provides a way for the
+	 *            requesting process to send a cancellation. This may be set to
+	 *            null if not required.
+	 * @throws JargonException
+	 */
+	void copy(String irodsSourceFileAbsolutePath, String targetResource,
+			String irodsTargetFileAbsolutePath,
+			TransferStatusCallbackListener transferStatusCallbackListener,
+			boolean force, TransferControlBlock transferControlBlock)
+			throws JargonException;
 }

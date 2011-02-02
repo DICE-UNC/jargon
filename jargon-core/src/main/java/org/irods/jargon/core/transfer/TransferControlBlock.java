@@ -6,7 +6,7 @@ import org.irods.jargon.core.exception.JargonException;
  * An interface for an object that can control a recursive transfer process,
  * providing a common reference object between the transferring process and the
  * recursive transfer method (get, put, rel, etc).
- * 
+ * <p/>
  * Implementations of this class can act as a filter to select items for
  * transfer, and can also be used to signal a cancel.
  * 
@@ -15,16 +15,16 @@ import org.irods.jargon.core.exception.JargonException;
  */
 public interface TransferControlBlock {
 
+	public final int MAX_ERROR_DEFAULT = 5;
+	public final int MAX_ERROR_IGNORE = -1;
+
 	/**
 	 * Indicates whether the given operation should be cancelled. This method
 	 * must be synchronized.
 	 * 
 	 * @return <code>boolean</code> if the operation should be cancelled.
 	 */
-	public boolean isCancelled();
-
-	public final int MAX_ERROR_DEFAULT = 5;
-	public final int MAX_ERROR_IGNORE = -1;
+	boolean isCancelled();
 
 	/**
 	 * Indicates that the given operation should be paused. This method must be
@@ -32,7 +32,7 @@ public interface TransferControlBlock {
 	 * 
 	 * @return<code>boolean</code> if the operation should be paused.
 	 */
-	public boolean isPaused();
+	boolean isPaused();
 
 	/**
 	 * Send a signal to cancel the operation. A transfer operation will check
@@ -43,7 +43,7 @@ public interface TransferControlBlock {
 	 *            <code>boolean</code> that will be true if the operation must
 	 *            be cancelled.
 	 */
-	public void setCancelled(final boolean cancelled);
+	void setCancelled(final boolean cancelled);
 
 	/**
 	 * Send a signal to pause the operation. A transfer operation will check
@@ -54,7 +54,7 @@ public interface TransferControlBlock {
 	 *            <code>boolean</code> that will be true if the operation must
 	 *            be paused.
 	 */
-	public void setPaused(final boolean paused);
+	void setPaused(final boolean paused);
 
 	/**
 	 * Method to filter the transfer. An absolute path appropriate to the
@@ -72,7 +72,7 @@ public interface TransferControlBlock {
 	 *         file should be acted upon.
 	 * @throws JargonException
 	 */
-	public boolean filter(final String absolutePath) throws JargonException;
+	boolean filter(final String absolutePath) throws JargonException;
 
 	/**
 	 * Get the maximum number of errors to allow before canceling the transfer
@@ -80,7 +80,7 @@ public interface TransferControlBlock {
 	 * @return <code>int</code> with the maximum number of errors before
 	 *         canceling.
 	 */
-	public int getMaximumErrorsBeforeCanceling();
+	int getMaximumErrorsBeforeCanceling();
 
 	/**
 	 * Set the maximum number of errors to allow before canceling the transfer
@@ -91,8 +91,8 @@ public interface TransferControlBlock {
 	 *            ignored
 	 * @throws JargonException
 	 */
-	public void setMaximumErrorsBeforeCanceling(
-			final int maximumErrorsBeforeCancelling) throws JargonException;
+	void setMaximumErrorsBeforeCanceling(final int maximumErrorsBeforeCancelling)
+			throws JargonException;
 
 	/**
 	 * Get the total number of transfer errors that have occurred in this
@@ -100,7 +100,7 @@ public interface TransferControlBlock {
 	 * 
 	 * @return <code>int</code> with the number of errors encountered so far.
 	 */
-	public int getErrorCount();
+	int getErrorCount();
 
 	/**
 	 * Check if enough errors have been accumulated to cause the transfer to be
@@ -109,13 +109,13 @@ public interface TransferControlBlock {
 	 * @return <code>boolean</code> that indicates whether reporting this error
 	 *         requires that the transfer be cancelled.
 	 */
-	public boolean shouldTransferBeAbandonedDueToNumberOfErrors();
+	boolean shouldTransferBeAbandonedDueToNumberOfErrors();
 
 	/**
 	 * Indicate an error in the transfer. This method will increment the error
 	 * counter in the <code>TransferControlBlock</code>.
 	 */
-	public void reportErrorInTransfer();
+	void reportErrorInTransfer();
 
 	/**
 	 * Gets the total number of files to be transferred. This is initialized
@@ -123,7 +123,7 @@ public interface TransferControlBlock {
 	 * 
 	 * @return
 	 */
-	public int getTotalFilesToTransfer();
+	int getTotalFilesToTransfer();
 
 	/**
 	 * Set the total number of files to be transferred. This is initialized
@@ -131,7 +131,7 @@ public interface TransferControlBlock {
 	 * 
 	 * @param totalFilesToTransfer
 	 */
-	public void setTotalFilesToTransfer(int totalFilesToTransfer);
+	void setTotalFilesToTransfer(int totalFilesToTransfer);
 
 	/**
 	 * Get a running total of the files transferred so far. This is initialized
@@ -139,11 +139,11 @@ public interface TransferControlBlock {
 	 * 
 	 * @return
 	 */
-	public int getTotalFilesTransferredSoFar();
+	int getTotalFilesTransferredSoFar();
 
 	/**
 	 * Increment the count of files that have been transferred so far
 	 */
-	public void incrementFilesTransferredSoFar();
+	void incrementFilesTransferredSoFar();
 
 }

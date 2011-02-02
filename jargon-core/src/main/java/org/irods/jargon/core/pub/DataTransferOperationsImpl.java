@@ -298,8 +298,9 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 			}
 
 			/*
-			 * Compute the count of files to be transferred.  This is different depending on whether this is a single file, or whether
-			 * it's a collection.
+			 * Compute the count of files to be transferred. This is different
+			 * depending on whether this is a single file, or whether it's a
+			 * collection.
 			 */
 			if (irodsSourceFile.isDirectory()) {
 				log.debug("get operation, treating as a directory");
@@ -484,7 +485,6 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 		transferOperationsHelper.processGetOfSingleFile(irodsSourceFile,
 				targetLocalFile, transferStatusCallbackListener,
 				transferControlBlock);
-
 	}
 
 	/*
@@ -815,6 +815,88 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 
 			processReplicationOfSingleFile(irodsFileAbsolutePath,
 					targetResource, transferStatusCallbackListener,
+					operativeTransferControlBlock);
+		}
+	}
+
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.core.pub.DataTransferOperations#copy(java.lang.String, java.lang.String, java.lang.String, org.irods.jargon.core.transfer.TransferStatusCallbackListener, boolean, org.irods.jargon.core.transfer.TransferControlBlock)
+	 */
+	@Override
+	public void copy(
+			final String irodsSourceFileAbsolutePath,
+			final String targetResource,
+			final String irodsTargetFileAbsolutePath,
+			final TransferStatusCallbackListener transferStatusCallbackListener,
+			final boolean force, final TransferControlBlock transferControlBlock)
+			throws JargonException {
+
+		if (irodsSourceFileAbsolutePath == null
+				|| irodsSourceFileAbsolutePath.isEmpty()) {
+			throw new JargonException(
+					"irodsSourceFileAbsolutePath is null or empty");
+		}
+
+		if (irodsTargetFileAbsolutePath == null
+				|| irodsTargetFileAbsolutePath.isEmpty()) {
+			throw new JargonException(
+					"irodsTargetFileAbsolutePath is null or empty");
+		}
+
+		if (targetResource == null || targetResource.isEmpty()) {
+			throw new JargonException("target resource is null or empty");
+		}
+
+		log.info("copy operation for source: {}", irodsSourceFileAbsolutePath);
+		log.info("to target file:{}", irodsTargetFileAbsolutePath);
+		log.info(" to target resource: {}", targetResource);
+
+		TransferControlBlock operativeTransferControlBlock = transferControlBlock;
+
+		/*
+		 * If a callback listener is given, make sure there is a transfer
+		 * control block, and do a pre-scan of the iRODS collection to get a
+		 * count of files to be copied
+		 */
+
+		if (transferStatusCallbackListener != null) {
+
+			if (transferControlBlock == null) {
+				log.info("creating default transfer control block, none was supplied and a callback listener is set");
+				operativeTransferControlBlock = DefaultTransferControlBlock
+						.instance();
+			}
+		}
+
+		final IRODSFileFactory irodsFileFactory = new IRODSFileFactoryImpl(
+				getIRODSSession(), getIRODSAccount());
+
+		IRODSFile sourceFile = irodsFileFactory
+				.instanceIRODSFile(irodsSourceFileAbsolutePath);
+
+		// look for recursive copy (collection to collection) and process,
+		// otherwise, just copy the file
+
+		if (sourceFile.isDirectory()) {
+			log.info("this copy operation is recursive");
+
+			preCountIrodsFilesBeforeTransfer(irodsSourceFileAbsolutePath,
+					operativeTransferControlBlock);
+
+			transferOperationsHelper.recursivelyCopy(sourceFile, targetResource, irodsTargetFileAbsolutePath, force,
+					transferStatusCallbackListener,
+					operativeTransferControlBlock);
+
+		} else {
+
+			if (operativeTransferControlBlock != null) {
+				operativeTransferControlBlock.setTotalFilesToTransfer(1);
+			}
+
+			transferOperationsHelper.processCopyOfSingleFile(
+					irodsSourceFileAbsolutePath, targetResource,
+					irodsTargetFileAbsolutePath, force,
+					transferStatusCallbackListener,
 					operativeTransferControlBlock);
 		}
 	}

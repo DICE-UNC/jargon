@@ -15,7 +15,7 @@ import org.irods.jargon.core.exception.JargonException;
 public final class TransferStatus {
 
 	public enum TransferType {
-		PUT, GET, REPLICATE
+		PUT, GET, REPLICATE, COPY
 	}
 
 	public enum TransferState {
