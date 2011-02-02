@@ -428,7 +428,8 @@ public class IRODSCommands implements IRODSManagedConnection {
 		return readMessage(true);
 	}
 
-	public synchronized Tag readMessage(final boolean decode) throws JargonException {
+	public synchronized Tag readMessage(final boolean decode)
+			throws JargonException {
 		log.info("reading message from irods");
 		Tag header = readHeader();
 		Tag message = null;
@@ -902,7 +903,7 @@ public class IRODSCommands implements IRODSManagedConnection {
 			e.printStackTrace();
 			throw new JargonException(e);
 		}
-		
+
 		Tag message = readMessage(false);
 
 		// Create and send the response
@@ -924,11 +925,11 @@ public class IRODSCommands implements IRODSManagedConnection {
 
 	void sendGSIPassword(final IRODSAccount irodsAccount)
 			throws JargonException {
-		
+
 		if (irodsAccount == null) {
 			throw new JargonException("irods account is null");
 		}
-		
+
 		try {
 			irodsConnection.send(createHeader(
 					RequestTypes.RODS_API_REQ.getRequestType(), 0, 0, 0,
@@ -976,16 +977,8 @@ public class IRODSCommands implements IRODSManagedConnection {
 
 		getIRODSAccount();
 		if (IRODSAccount.isDefaultObfuscate()) {
-			// FIXME: get rid of this utf stuff and just put the code in here,
-			// remove refs to other old Jargon cruft
 			try {
-				/*
-        \u002a\u002f\u0070\u0061\u0073\u0073\u0077\u006f\u0072\u0064 \u003d \u006e\u0065\u0077 \u004c\u0075\u0063\u0069\u0064\u0028
-						\u0046\u0069\u006c\u0065\u0046\u0061\u0063\u0074\u006f\u0072\u0079
-								\u002e\u006e\u0065\u0077\u0046\u0069\u006c\u0065\u0028\u006e\u0065\u0077 \u0055\u0052\u0049\u0028
-										\u0070\u0061\u0073\u0073\u0077\u006f\u0072\u0064\u0029\u0029\u0029
-						\u002e\u006c\u0031\u0036\u0028\u0029\u003b\u002f\u002a
-        */
+				password = new Lucid(FileFactory.newFile(new URI(password))).l16();
 			} catch (Throwable e) {
 				log.error("error during account obfuscation", e);
 			}
