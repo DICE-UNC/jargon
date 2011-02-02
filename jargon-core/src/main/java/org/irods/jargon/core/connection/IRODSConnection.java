@@ -385,6 +385,8 @@ final class IRODSConnection implements IRODSManagedConnection {
 
 		Host.copyInt(value, bytes);
 		send(bytes);
+		flush();
+		
 	}
 
 	/**

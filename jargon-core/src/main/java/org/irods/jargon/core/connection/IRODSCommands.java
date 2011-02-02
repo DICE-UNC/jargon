@@ -1126,5 +1126,18 @@ public class IRODSCommands implements IRODSManagedConnection {
 	protected String getCachedChallengeValue() {
 		return cachedChallengeValue;
 	}
+	
+	/**
+	 * used internally to consume status messages from various commands
+	 * @param value
+	 * @throws JargonException
+	 */
+	public synchronized void sendInNetworkOrder(final int value) throws JargonException {
+		try {
+			irodsConnection.sendInNetworkOrder(value);
+		} catch (IOException e) {
+			throw new JargonException(e);
+		}
+	}
 
 }

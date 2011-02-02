@@ -3,9 +3,14 @@
  */
 package org.irods.jargon.core.pub;
 
+import static edu.sdsc.grid.io.irods.IRODSConstants.CollOprStat_PI;
+import static edu.sdsc.grid.io.irods.IRODSConstants.SYS_CLI_TO_SVR_COLL_STAT_REPLY;
+import static edu.sdsc.grid.io.irods.IRODSConstants.SYS_CLI_TO_SVR_COLL_STAT_SIZE;
+
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FilenameFilter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -1356,9 +1361,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 		Tag response = getIRODSProtocol().irodsFunction(CollInp.PI_TAG,
 				collInp.getParsedTags(), CollInp.RMDIR_API_NBR);
 
-		if (response != null) {
-			log.warn("unexpected response from irods, expected null message - logged and ignored ");
-		}
+		processClientStatusMessages(response);
 
 		log.info("deletion successful");
 
@@ -1392,9 +1395,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 		Tag response = getIRODSProtocol().irodsFunction(CollInp.PI_TAG,
 				collInp.getParsedTags(), CollInp.RMDIR_API_NBR);
 
-		if (response != null) {
-			log.warn("unexpected response from irods, expected null message - logged and ignored ");
-		}
+		processClientStatusMessages(response);
 
 		log.info("deletion successful");
 
@@ -1599,6 +1600,46 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 		}
 
 		log.info("physical move successful");
+	}
+	
+	/**
+	 * Respond to client status messages for an operation until exhausted.
+	 *  FIXME: clean up and constants
+	 * @param reply
+	 *            <code>Tag</code> containing status messages from IRODS
+	 * @throws IOException
+	 */
+	private void processClientStatusMessages(final Tag reply)
+			throws JargonException {
+
+		boolean done = false;
+		Tag ackResult = reply;
+
+		while (!done) {
+			if (ackResult.getLength() > 0) {
+				if (ackResult.getName().equals(CollOprStat_PI)) {
+					// formulate an answer status reply
+
+					// if the total file count is 0, then I will continue and
+					// send
+					// the coll stat reply, otherwise, just ignore and
+					// don't send the reply.
+
+					Tag fileCountTag = ackResult.getTag("filesCnt");
+					int fileCount = Integer.parseInt((String) fileCountTag
+							.getValue());
+
+					if (fileCount < SYS_CLI_TO_SVR_COLL_STAT_SIZE) {
+						done = true;
+					} else {
+						this.getIRODSProtocol()
+								.sendInNetworkOrder(SYS_CLI_TO_SVR_COLL_STAT_REPLY);
+						ackResult = getIRODSProtocol().readMessage();
+					}
+				}
+			}
+		}
+
 	}
 
 }
