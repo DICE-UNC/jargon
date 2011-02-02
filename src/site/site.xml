@@ -11,10 +11,10 @@
       <item name="gForge" href="https://code.renci.org/gf/project/jargon"/>
       <item name="Hudson" href="https://ci-dev.renci.org/hudson"/>
     </links>
-    <menu ref="modules"/>
-    <menu name="Documentation" inherit="top">
-      <item name="How to build" href="build.html"/>
+    <menu name="Jargon">
+      <item name="About" href="index.html"/>
+      <item name="Code Format" href="codeFormat.html"/>
     </menu>
-    <menu ref="reports"/>
+    <menu ref="modules"/>
   </body>
 </project>
