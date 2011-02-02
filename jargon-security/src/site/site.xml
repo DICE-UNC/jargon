@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project name="Jargon Security">
+  <bannerLeft>
+    <name>Jargon Security</name>
+  </bannerLeft>
+  <bannerRight>
+    <src></src>
+  </bannerRight>
+  <body>
+    <links>
+      <item name="gForge" href="https://code.renci.org/gf/project/jargon"/>
+      <item name="Hudson" href="https://ci-dev.renci.org/hudson"/>
+    </links>
+    <menu ref="parent"/>
+    <menu name="Jargon Security" inherit="top">
+      <item name="Introduction" href="index.html"/>
+      <item name="How to Use" href="usage.html" />
+    </menu>
+    <menu ref="reports"/>
+  </body>
+</project>

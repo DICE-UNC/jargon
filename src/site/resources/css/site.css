@@ -1,0 +1,10 @@
+#navcolumn h5 {
+  font-size: smaller;
+  border: 1px solid #aaaaaa;
+  background-color: #bbb;
+  margin-top: 7px;
+  margin-bottom: 2px;
+  padding-top: 2px;
+  padding-left: 2px;
+  color: #000;
+}
