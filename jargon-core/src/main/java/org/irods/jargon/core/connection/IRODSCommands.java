@@ -39,7 +39,7 @@ import edu.sdsc.grid.io.irods.Tag;
 /**
  * Encapsulates sending of messages and parsing of responses above the socket
  * read/write level and below the abstract operation level.
- * 
+ * <p/>
  * Note that the IRODS Connection object that this protocol utilizes is not
  * synchronized. Since a connection manager may also be managing the connection.
  * This <code>IRODSProtocol</code> object manages any necessary synchronization

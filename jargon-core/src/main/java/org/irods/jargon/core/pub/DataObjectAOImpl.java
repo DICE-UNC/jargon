@@ -1244,6 +1244,53 @@ public final class DataObjectAOImpl extends IRODSGenericAO implements
 		log.info("copy complete");
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.core.pub.DataObjectAO#copyIrodsDataObjectWithForce(java.lang.String, java.lang.String, java.lang.String)
+	 */
+	@Override
+	public void copyIrodsDataObjectWithForce(final String irodsSourceFileAbsolutePath, final String irodsTargetFileAbsolutePath,
+			final String targetResourceName) throws JargonException {
+
+		if (irodsSourceFileAbsolutePath == null || irodsSourceFileAbsolutePath.isEmpty()) {
+			throw new JargonException("null or empty irodsSourceFileAbsolutePath");
+		}
+		
+		if (irodsTargetFileAbsolutePath == null || irodsTargetFileAbsolutePath.isEmpty()) {
+			throw new JargonException("null or empty irodsTargetFileAbsolutePath");
+		}
+
+		if (targetResourceName == null) {
+			throw new JargonException("null or empty targetResourceName");
+		}
+
+		log.info("copyIrodsDataObjectWithForce, irodsSourceFileAbsolutePath: {}",
+				irodsSourceFileAbsolutePath);
+		log.info("irodsTargetFileAbsolutePath:{}", irodsTargetFileAbsolutePath);
+		log.info("at resource: {}", targetResourceName);
+		
+		// I need the length of the file
+		IRODSFileFactory irodsFileFactory = new IRODSFileFactoryImpl(getIRODSSession(), getIRODSAccount());
+		IRODSFile sourceFile = irodsFileFactory.instanceIRODSFile(irodsSourceFileAbsolutePath);
+		
+		if (!sourceFile.exists()) {
+			throw new JargonException("the source file for the copy does not exist");
+		}
+		
+		if (!sourceFile.isFile()) {
+			throw new JargonException("the source file is not a data object");
+		}
+		
+		DataObjCopyInp dataObjCopyInp = DataObjCopyInp.instanceForCopy(irodsSourceFileAbsolutePath, irodsTargetFileAbsolutePath, targetResourceName, sourceFile.length(), true);
+
+		try {
+			getIRODSProtocol().irodsFunction(dataObjCopyInp);
+		} catch (JargonException je) {
+			log.error("error copying irods file", je);
+			throw je;
+		}
+		log.info("copy complete");
+	}
+	
 	
 	/*
 	 * (non-Javadoc)
