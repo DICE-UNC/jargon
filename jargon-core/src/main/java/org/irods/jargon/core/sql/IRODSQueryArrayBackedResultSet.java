@@ -21,7 +21,7 @@ import java.util.Calendar;
 import java.util.Map;
 
 /**
- * Version of a <code>java.sql.ResultSet</code> based on the results of an iRODS query using one of the varous query techniques.  The
+ * Version of a <code>java.sql.ResultSet</code> based on the results of an iRODS query using one of the various query techniques.  The
  * <code>ResultSet</code> is based on data parsed into an array of <code>String</code> data, and includes other information about the generating
  * query, and the capability to page the results.
  * <p/>

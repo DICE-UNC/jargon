@@ -11,7 +11,7 @@ import org.irods.jargon.core.query.JargonQueryException;
 
 /**
  * Access object to process 'iquest-like' GenQuery.
- * 
+ * <p/>
  * This access object can accept a query in iquest form, and will process that
  * query and return a result set with the query response and other related
  * information.
@@ -90,7 +90,7 @@ public interface IRODSGenQueryExecutor extends IRODSAccessObject {
 	 * Execute an iquest-like query and return results in a convenient POJO
 	 * object. This method allows partial starts to do paging of large query
 	 * results.  This method will send a close to iRODS if more results are available.
-	 * 
+	 * <p/>
 	 * Note that the <code>getMoreResults()</code> method will not work, since the result 
 	 * set was closed.  This version of the query execute is suitable for 'session per request' situations, such
 	 * as mid-tier web applications, where connections are not held for stateful interaction.  In these situations, query

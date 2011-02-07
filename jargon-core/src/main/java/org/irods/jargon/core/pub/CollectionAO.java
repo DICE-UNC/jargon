@@ -379,7 +379,7 @@ public interface CollectionAO extends IRODSAccessObject {
 	 * @param absolutePath <code>String</code> with the absolute path to the collection.
 	 * @param userName <code>String</code> with the user name whose permissions will be set.
 	 * @param zone <code>String</code> with an optional zone for the file.  Leave blank if not used, it is not required.
-	 * @return {@link FilePermissionEnum} vlaue with the permission level for the given user.
+	 * @return {@link FilePermissionEnum} value with the permission level for the given user.
 	 * @throws JargonException
 	 */
 	FilePermissionEnum getPermissionForCollection(String irodsAbsolutePath,

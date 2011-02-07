@@ -1128,8 +1128,9 @@ public class IRODSCommands implements IRODSManagedConnection {
 	}
 	
 	/**
-	 * used internally to consume status messages from various commands
-	 * @param value
+	 * Used internally to consume status messages from various commands, this will send a given integer value
+	 * in network order to iRODS.
+	 * @param value <code>int</code> with
 	 * @throws JargonException
 	 */
 	public synchronized void sendInNetworkOrder(final int value) throws JargonException {
