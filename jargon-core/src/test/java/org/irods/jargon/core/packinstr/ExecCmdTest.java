@@ -12,7 +12,7 @@ public class ExecCmdTest {
 		String cmd = "hello";
 		String args = "";
 
-		ExecCmd execCmd = ExecCmd.instanceWithCommand(cmd, args);
+		ExecCmd execCmd = ExecCmd.instanceWithCommandPriorTo25(cmd, args);
 		Assert.assertNotNull(
 				"basic check fails, null returned from PI initializer", execCmd);
 		Assert.assertEquals("api number not set",
@@ -26,11 +26,11 @@ public class ExecCmdTest {
 		String args = "";
 
 		ExecCmd execCmd = ExecCmd
-				.instanceWithCommandAllowingStreamingForLargeResults(cmd, args);
+				.instanceWithCommandAllowingStreamingForLargeResultsPost25(cmd, args);
 		Assert.assertNotNull(
 				"basic check fails, null returned from PI initializer", execCmd);
 		Assert.assertEquals("api number not set",
-				ExecCmd.EXEC_AND_STREAM_RESPONSE_API_NBR,
+				ExecCmd.EXEC_AND_USE_ENHANCED_STREAM,
 				execCmd.getApiNumber());
 	}
 
@@ -39,7 +39,7 @@ public class ExecCmdTest {
 		String cmd = "";
 		String args = "";
 
-		ExecCmd.instanceWithCommand(cmd, args);
+		ExecCmd.instanceWithCommandPost25(cmd, args);
 	}
 
 	@Test(expected = JargonException.class)
@@ -47,7 +47,7 @@ public class ExecCmdTest {
 		String cmd = null;
 		String args = "";
 
-		ExecCmd.instanceWithCommand(cmd, args);
+		ExecCmd.instanceWithCommandPriorTo25(cmd, args);
 	}
 
 	@Test(expected = JargonException.class)
@@ -55,7 +55,7 @@ public class ExecCmdTest {
 		String cmd = "hello";
 		String args = null;
 
-		ExecCmd.instanceWithCommand(cmd, args);
+		ExecCmd.instanceWithCommandPriorTo25(cmd, args);
 	}
 
 	@Test
@@ -63,18 +63,18 @@ public class ExecCmdTest {
 		String cmd = "hello";
 		String args = "";
 
-		ExecCmd execCmd = ExecCmd.instanceWithCommand(cmd, args);
+		ExecCmd execCmd = ExecCmd.instanceWithCommandPriorTo25(cmd, args);
 		String actualXML = execCmd.getParsedTags();
 
 		StringBuilder sb = new StringBuilder();
-		sb.append("<ExecCmd241_PI><cmd>hello</cmd>\n");
+		sb.append("<ExecCmd_PI><cmd>hello</cmd>\n");
 		sb.append("<cmdArgv></cmdArgv>\n");
 		sb.append("<execAddr></execAddr>\n");
 		sb.append("<hintPath></hintPath>\n");
 		sb.append("<addPathToArgv>0</addPathToArgv>\n");
 		sb.append("<KeyValPair_PI><ssLen>0</ssLen>\n");
 		sb.append("</KeyValPair_PI>\n");
-		sb.append("</ExecCmd241_PI>\n");
+		sb.append("</ExecCmd_PI>\n");
 
 		String expectedXML = sb.toString();
 
@@ -87,7 +87,7 @@ public class ExecCmdTest {
 		String cmd = "hello";
 		String args = "";
 
-		ExecCmd execCmd = ExecCmd.instanceWithCommandUsingAlignedAPI(cmd, args);
+		ExecCmd execCmd = ExecCmd.instanceWithCommandPost25(cmd, args);
 		String actualXML = execCmd.getParsedTags();
 
 		StringBuilder sb = new StringBuilder();
@@ -97,7 +97,9 @@ public class ExecCmdTest {
 		sb.append("<hintPath></hintPath>\n");
 		sb.append("<addPathToArgv>0</addPathToArgv>\n");
 		sb.append("<dummy>0</dummy>\n");
-		sb.append("<KeyValPair_PI><ssLen>0</ssLen>\n");
+		sb.append("<KeyValPair_PI><ssLen>1</ssLen>\n");
+		sb.append("<keyWord>streamStdout</keyWord>\n");
+		sb.append("<svalue></svalue>\n");
 		sb.append("</KeyValPair_PI>\n");
 		sb.append("</ExecCmd_PI>\n");
 
@@ -113,7 +115,7 @@ public class ExecCmdTest {
 		String args = "";
 
 		ExecCmd execCmd = ExecCmd
-				.instanceWithCommandAllowingStreamingForLargeResults(cmd, args);
+				.instanceWithCommandAllowingStreamingForLargeResultsPost25(cmd, args);
 		String actualXML = execCmd.getParsedTags();
 
 		StringBuilder sb = new StringBuilder();
@@ -135,24 +137,40 @@ public class ExecCmdTest {
 				actualXML);
 
 		Assert.assertEquals("did not set streaming api nbr",
-				ExecCmd.EXEC_AND_STREAM_RESPONSE_API_NBR,
+				ExecCmd.EXEC_AND_USE_ENHANCED_STREAM,
 				execCmd.getApiNumber());
 
 	}
 
 	@Test
-	public void testInstanceWithAllParms() throws Exception {
+	public void testInstanceWithAllParmsPre25() throws Exception {
 		String cmd = "hello";
 		String args = "";
 		String host = "host";
 		String absPath = "/an/abs/path";
 
-		ExecCmd execCmd = ExecCmd.instanceWithHostAndArgumentsToPassParameters(
+		ExecCmd execCmd = ExecCmd.instanceWithHostAndArgumentsToPassParametersPriorTo25(
 				cmd, args, host, absPath);
 		Assert.assertNotNull(
 				"basic check fails, null returned from PI initializer", execCmd);
 		Assert.assertEquals("api number not set",
 				ExecCmd.STANDARD_EXEC_ENCAPSULATE_DATA_IN_RESPONSE_API_NBR,
+				execCmd.getApiNumber());
+	}
+	
+	@Test
+	public void testInstanceWithAllParmsPost25() throws Exception {
+		String cmd = "hello";
+		String args = "";
+		String host = "host";
+		String absPath = "/an/abs/path";
+
+		ExecCmd execCmd = ExecCmd.instanceWithHostAndArgumentsToPassParametersPost25(
+				cmd, args, host, absPath);
+		Assert.assertNotNull(
+				"basic check fails, null returned from PI initializer", execCmd);
+		Assert.assertEquals("api number not set",
+				ExecCmd.EXEC_AND_USE_ENHANCED_STREAM,
 				execCmd.getApiNumber());
 	}
 
@@ -163,12 +181,12 @@ public class ExecCmdTest {
 		String host = "";
 		String absPath = "/an/abs/path";
 
-		ExecCmd execCmd = ExecCmd.instanceWithHostAndArgumentsToPassParameters(
+		ExecCmd execCmd = ExecCmd.instanceWithHostAndArgumentsToPassParametersPost25(
 				cmd, args, host, absPath);
 		Assert.assertNotNull(
 				"basic check fails, null returned from PI initializer", execCmd);
 		Assert.assertEquals("api number not set",
-				ExecCmd.STANDARD_EXEC_ENCAPSULATE_DATA_IN_RESPONSE_API_NBR,
+				ExecCmd.EXEC_AND_USE_ENHANCED_STREAM,
 				execCmd.getApiNumber());
 	}
 

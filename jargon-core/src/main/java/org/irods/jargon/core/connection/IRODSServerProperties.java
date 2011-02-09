@@ -92,7 +92,7 @@ public final class IRODSServerProperties {
 		// The result is a negative integer if this String object
 		// lexicographically precedes the argument string.
 		int compValue = getRelVersion().compareToIgnoreCase(releaseVersion);
-		return compValue > -1;
+		return compValue >= 0;
 
 	}
 

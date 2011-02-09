@@ -10,6 +10,7 @@ import junit.framework.TestCase;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSProtocolManager;
+import org.irods.jargon.core.connection.IRODSServerProperties;
 import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.connection.IRODSSimpleProtocolManager;
 import org.irods.jargon.core.exception.DataNotFoundException;
@@ -502,11 +503,13 @@ public class CollectionAOImplTest {
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
 		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
-		
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
 		CollectionAO collectionAO = accessObjectFactory
 				.getCollectionAO(irodsAccount);
-		IRODSFile targetCollectionAsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount).instanceIRODSFile(targetIrodsCollection);
+		IRODSFile targetCollectionAsFile = irodsFileSystem.getIRODSFileFactory(
+				irodsAccount).instanceIRODSFile(targetIrodsCollection);
 		targetCollectionAsFile.mkdirs();
 
 		AvuData dataToAdd = AvuData.instance(expectedAttribName,
@@ -515,11 +518,13 @@ public class CollectionAOImplTest {
 
 		collectionAO.deleteAVUMetadata(targetIrodsCollection, dataToAdd);
 
-		List<MetaDataAndDomainData> metadata = collectionAO.findMetadataValuesForCollection(targetIrodsCollection, 0);
+		List<MetaDataAndDomainData> metadata = collectionAO
+				.findMetadataValuesForCollection(targetIrodsCollection, 0);
 		irodsFileSystem.close();
-		
+
 		for (MetaDataAndDomainData metadataEntry : metadata) {
-			Assert.assertFalse("did not expect attrib name", metadataEntry.getAvuAttribute().equals(expectedAttribName));
+			Assert.assertFalse("did not expect attrib name", metadataEntry
+					.getAvuAttribute().equals(expectedAttribName));
 		}
 
 	}
@@ -945,6 +950,8 @@ public class CollectionAOImplTest {
 	public void testFindDomainByMetadataQueryWithTwoAVUQueryElements()
 			throws Exception {
 
+		// FIXME: add check of version, don't test before 2.4.1 as this was a
+		// bug in iRODS
 		String testDirName = "testFindDomainByMetadataQueryWithTwoAVUQueryElements";
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
@@ -964,6 +971,18 @@ public class CollectionAOImplTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
+						irodsAccount);
+		IRODSServerProperties props = environmentalInfoAO
+				.getIRODSServerPropertiesFromIRODSServer();
+
+		// test is only valid for post 2.4.1 
+		if (!props.isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods2.4.1")) {
+			irodsFileSystem.closeAndEatExceptions();
+			return;
+		}
 
 		CollectionAO collectionAO = irodsFileSystem
 				.getIRODSAccessObjectFactory().getCollectionAO(irodsAccount);

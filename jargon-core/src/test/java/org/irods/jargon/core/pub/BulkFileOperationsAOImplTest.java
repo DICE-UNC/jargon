@@ -6,6 +6,7 @@ import java.util.Properties;
 import junit.framework.Assert;
 
 import org.irods.jargon.core.connection.IRODSAccount;
+import org.irods.jargon.core.connection.IRODSServerProperties;
 import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.io.IRODSFile;
@@ -69,6 +70,18 @@ public class BulkFileOperationsAOImplTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
+						irodsAccount);
+		IRODSServerProperties props = environmentalInfoAO
+				.getIRODSServerPropertiesFromIRODSServer();
+
+		// test is only valid for post 2.4.1 
+		if (!props.isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods2.4.1")) {
+			irodsFileSystem.closeAndEatExceptions();
+			return;
+		}
 
 		IRODSFile irodsFile = null;
 
@@ -265,6 +278,18 @@ public class BulkFileOperationsAOImplTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
+		
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
+		.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
+				irodsAccount);
+IRODSServerProperties props = environmentalInfoAO
+		.getIRODSServerPropertiesFromIRODSServer();
+
+// test is only valid for post 2.4.1 
+if (!props.isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods2.4.1")) {
+	irodsFileSystem.closeAndEatExceptions();
+	return;
+}
 
 		IRODSFile irodsFile = null;
 
@@ -326,6 +351,17 @@ public class BulkFileOperationsAOImplTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
+		.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
+				irodsAccount);
+IRODSServerProperties props = environmentalInfoAO
+		.getIRODSServerPropertiesFromIRODSServer();
+
+// test is only valid for post 2.4.1 
+if (!props.isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods2.4.1")) {
+	irodsFileSystem.closeAndEatExceptions();
+	return;
+}
 
 		IRODSFile irodsFile = null;
 
@@ -469,6 +505,17 @@ public class BulkFileOperationsAOImplTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
+		.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
+				irodsAccount);
+IRODSServerProperties props = environmentalInfoAO
+		.getIRODSServerPropertiesFromIRODSServer();
+
+// test is only valid for post 2.4.1 
+if (!props.isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods2.4.1")) {
+	irodsFileSystem.closeAndEatExceptions();
+	return;
+}
 
 		IRODSFile irodsFile = null;
 
@@ -548,6 +595,17 @@ public class BulkFileOperationsAOImplTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
+		.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
+				irodsAccount);
+IRODSServerProperties props = environmentalInfoAO
+		.getIRODSServerPropertiesFromIRODSServer();
+
+// test is only valid for post 2.4.1 
+if (!props.isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods2.4.1")) {
+	irodsFileSystem.closeAndEatExceptions();
+	return;
+}
 
 		IRODSFile irodsFile = null;
 

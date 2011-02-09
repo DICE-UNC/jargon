@@ -10,6 +10,7 @@ import junit.framework.Assert;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSServerProperties;
+import org.irods.jargon.core.remoteexecute.RemoteExecuteServiceImpl;
 import org.irods.jargon.testutils.IRODSTestSetupUtilities;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.irods.jargon.testutils.filemanip.FileGenerator;
@@ -62,6 +63,7 @@ public class RemoteExecutionOfCommandsAOImplTest {
 	@Test
 	public final void testExecuteARemoteCommandAndGetStreamGivingCommandNameAndArgs()
 			throws Exception {
+		
 		String cmd = "hello";
 		String args = "";
 
@@ -216,7 +218,7 @@ public class RemoteExecutionOfCommandsAOImplTest {
 
 		// test is only valid for post 2.4.1 FIXME: bump this up to the next
 		// released version
-		if (!props.isTheIrodsServerAtLeastAtTheGivenReleaseVersion("2.4.1")) {
+		if (!props.isTheIrodsServerAtLeastAtTheGivenReleaseVersion(RemoteExecuteServiceImpl.STREAMING_API_CUTOFF)) {
 			irodsFileSystem.closeAndEatExceptions();
 			return;
 		}

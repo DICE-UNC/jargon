@@ -39,6 +39,7 @@ public class RemoteExecuteServiceImpl implements RemoteExecutionService {
 	private final String argumentsToPassWithCommand;
 	private final String executionHost;
 	private final String absolutePathOfIrodsFileThatWillBeUsedToFindHostToExecuteOn;
+	public static final String STREAMING_API_CUTOFF = "rods2.4.1";
 
 	private static final Logger log = LoggerFactory
 			.getLogger(RemoteExecuteServiceImpl.class);
@@ -166,10 +167,20 @@ public class RemoteExecuteServiceImpl implements RemoteExecutionService {
 	public InputStream execute() throws JargonException {
 		log.info("executing a remote command:{}", toString());
 
-		ExecCmd execCmd = ExecCmd.instanceWithHostAndArgumentsToPassParameters(
-				commandToExecuteWithoutArguments, argumentsToPassWithCommand,
-				executionHost,
-				absolutePathOfIrodsFileThatWillBeUsedToFindHostToExecuteOn);
+		ExecCmd execCmd = null;
+		if (this.getIrodsCommands().getIRODSServerProperties()
+				.isTheIrodsServerAtLeastAtTheGivenReleaseVersion(STREAMING_API_CUTOFF)) {
+			execCmd = ExecCmd
+					.instanceWithHostAndArgumentsToPassParametersPost25(
+							commandToExecuteWithoutArguments,
+							argumentsToPassWithCommand, executionHost,
+							absolutePathOfIrodsFileThatWillBeUsedToFindHostToExecuteOn);
+		} else {
+			execCmd = ExecCmd.instanceWithHostAndArgumentsToPassParametersPriorTo25(
+					commandToExecuteWithoutArguments,
+					argumentsToPassWithCommand, executionHost,
+					absolutePathOfIrodsFileThatWillBeUsedToFindHostToExecuteOn);
+		}
 
 		Tag message;
 		StringBuilder buffer = new StringBuilder();
@@ -218,7 +229,7 @@ public class RemoteExecuteServiceImpl implements RemoteExecutionService {
 		log.info("executing a remote command with streaming:{}", toString());
 
 		if (!getIrodsCommands().getIRODSServerProperties()
-				.isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods2.4.1")) {
+				.isTheIrodsServerAtLeastAtTheGivenReleaseVersion(STREAMING_API_CUTOFF)) {
 			log.error(
 					"cannot stream remote commands, unsupported on this iRODS version:{}",
 					getIrodsCommands().getIRODSServerProperties());
@@ -227,7 +238,7 @@ public class RemoteExecuteServiceImpl implements RemoteExecutionService {
 		}
 
 		ExecCmd execCmd = ExecCmd
-				.instanceWithHostAndArgumentsToPassParametersAllowingStreamingForLargeResults(
+				.instanceWithHostAndArgumentsToPassParametersAllowingStreamingForLargeResultsPost25(
 						commandToExecuteWithoutArguments,
 						argumentsToPassWithCommand, executionHost,
 						absolutePathOfIrodsFileThatWillBeUsedToFindHostToExecuteOn);
@@ -268,9 +279,9 @@ public class RemoteExecuteServiceImpl implements RemoteExecutionService {
 
 	private InputStream buildAppropriateResultStream(final Tag message,
 			final StringBuilder buffer) {
-		
+
 		InputStream resultStream;
-		
+
 		/*
 		 * see if the status descriptor holds a non zero, positive int If it
 		 * does, then I am streaming additional binary data using the int as a
@@ -281,7 +292,7 @@ public class RemoteExecuteServiceImpl implements RemoteExecutionService {
 		log.debug("status from remoteexec response:{}", status);
 		if (status > 0) {
 			log.info("additional data will be streamed, opening up will create concatenated stream");
-			
+
 			InputStream piData = new java.io.ByteArrayInputStream(
 					Base64.decodeBase64(buffer.toString()));
 

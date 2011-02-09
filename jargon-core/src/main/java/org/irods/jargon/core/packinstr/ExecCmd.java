@@ -10,6 +10,10 @@ import edu.sdsc.grid.io.irods.Tag;
 /**
  * Immutable object gives translation of an ExecCmd operation into XML. This is
  * the operation for remote execution protocol format.
+ * <p/>
+ * Note that this packing instruction must deal with backwards compatability for versions of ExecCmd prior to the 
+ * addition of enhanced streaming of large result sets.  The method names indicate which version of iRODS the packing
+ * instruction will be for.
  * 
  * @author Mike Conway - DICE (www.irods.org)
  * 
@@ -18,10 +22,10 @@ import edu.sdsc.grid.io.irods.Tag;
 public final class ExecCmd extends AbstractIRODSPackingInstruction {
 
 	public static final String PI_TAG = "ExecCmd_PI";
-	public static final String PI_TAG_241 = "ExecCmd241_PI";
+	public static final String PI_TAG_BACKWORD_COMPATABLE = "ExecCmd241_PI";
 
 	public static final int STANDARD_EXEC_ENCAPSULATE_DATA_IN_RESPONSE_API_NBR = 634;
-	public static final int EXEC_AND_STREAM_RESPONSE_API_NBR = 692;
+	public static final int EXEC_AND_USE_ENHANCED_STREAM=692;
 
 	public static final String CMD = "cmd";
 	public static final String CMD_ARGV = "cmdArgv";
@@ -35,8 +39,7 @@ public final class ExecCmd extends AbstractIRODSPackingInstruction {
 	private final String argumentsToPassWithCommand;
 	private final String executionHost;
 	private final String absolutePathOfIrodsFileThatWillBeUsedToFindHostToExecuteOn;
-	private final boolean useStreaming;
-	private final boolean useVersion241Instruction;
+	private final boolean useBackwardCompatableInstruction;
 
 	@Override
 	public String toString() {
@@ -50,16 +53,15 @@ public final class ExecCmd extends AbstractIRODSPackingInstruction {
 		sb.append(executionHost);
 		sb.append("\n   absolutePathOfIrodsFileThatWillBeUsedToFindHostToExecuteOn:");
 		sb.append(absolutePathOfIrodsFileThatWillBeUsedToFindHostToExecuteOn);
-		sb.append("\n useStreaming:");
-		sb.append(useStreaming);
-		sb.append("\n  use241Instruction:\n");
-		sb.append(useVersion241Instruction);
+		sb.append("\n  useBackwardCompatableInstruction:\n");
+		sb.append(useBackwardCompatableInstruction);
 		return sb.toString();
 	}
 
 	/**
 	 * Create an instance of the packing instruction to execute a remote command
-	 * (script)
+	 * (script).  This version is compatable with versions prior to iRODS 2.5.  iRODS 2.5 added a dummy
+	 * field for 64 bit alignment issues on some platform.
 	 * 
 	 * @param commandToExecuteWithoutArguments
 	 *            <code>String</code> with the name of the command to execute.
@@ -70,12 +72,12 @@ public final class ExecCmd extends AbstractIRODSPackingInstruction {
 	 * @return <code>ExcecCmd</code> instance.
 	 * @throws JargonException
 	 */
-	public static final ExecCmd instanceWithCommand(
+	public static final ExecCmd instanceWithCommandPriorTo25(
 			final String commandToExecuteWithoutArguments,
 			final String argumentsToPassWithCommand) throws JargonException {
 		return new ExecCmd(STANDARD_EXEC_ENCAPSULATE_DATA_IN_RESPONSE_API_NBR,
 				commandToExecuteWithoutArguments, argumentsToPassWithCommand,
-				"", "", false, true);
+				"", "",  true);
 	}
 
 	/**
@@ -91,12 +93,12 @@ public final class ExecCmd extends AbstractIRODSPackingInstruction {
 	 * @return <code>ExcecCmd</code> instance.
 	 * @throws JargonException
 	 */
-	public static final ExecCmd instanceWithCommandUsingAlignedAPI(
+	public static final ExecCmd instanceWithCommandPost25(
 			final String commandToExecuteWithoutArguments,
 			final String argumentsToPassWithCommand) throws JargonException {
-		return new ExecCmd(STANDARD_EXEC_ENCAPSULATE_DATA_IN_RESPONSE_API_NBR,
+		return new ExecCmd(EXEC_AND_USE_ENHANCED_STREAM,
 				commandToExecuteWithoutArguments, argumentsToPassWithCommand,
-				"", "", false, false);
+				"", "",  false);
 	}
 
 	/**
@@ -114,17 +116,18 @@ public final class ExecCmd extends AbstractIRODSPackingInstruction {
 	 * @return <code>ExcecCmd</code> instance.
 	 * @throws JargonException
 	 */
-	public static final ExecCmd instanceWithCommandAllowingStreamingForLargeResults(
+	public static final ExecCmd instanceWithCommandAllowingStreamingForLargeResultsPost25(
 			final String commandToExecuteWithoutArguments,
 			final String argumentsToPassWithCommand) throws JargonException {
-		return new ExecCmd(EXEC_AND_STREAM_RESPONSE_API_NBR,
+		return new ExecCmd(EXEC_AND_USE_ENHANCED_STREAM,
 				commandToExecuteWithoutArguments, argumentsToPassWithCommand,
-				"", "", true, false);
+				"", "", false);
 	}
 
 	/**
 	 * Create an instance of the packing instruction to execute a remote command
-	 * (script)
+	 * (script) This version is compatable with versions prior to iRODS 2.5.  iRODS 2.5 added a dummy
+	 * field for 64 bit alignment issues on some platform.
 	 * 
 	 * @param commandToExecuteWithoutArguments
 	 *            <code>String</code> with the name of the command to execute.
@@ -142,7 +145,7 @@ public final class ExecCmd extends AbstractIRODSPackingInstruction {
 	 *            given command.
 	 * @throws JargonException
 	 */
-	public static final ExecCmd instanceWithHostAndArgumentsToPassParameters(
+	public static final ExecCmd instanceWithHostAndArgumentsToPassParametersPriorTo25(
 			final String commandToExecuteWithoutArguments,
 			final String argumentsToPassWithCommand,
 			final String executionHost,
@@ -151,10 +154,9 @@ public final class ExecCmd extends AbstractIRODSPackingInstruction {
 		return new ExecCmd(STANDARD_EXEC_ENCAPSULATE_DATA_IN_RESPONSE_API_NBR,
 				commandToExecuteWithoutArguments, argumentsToPassWithCommand,
 				executionHost,
-				absolutePathOfIrodsFileThatWillBeUsedToFindHostToExecuteOn,
-				false, true);
+				absolutePathOfIrodsFileThatWillBeUsedToFindHostToExecuteOn, true);
 	}
-
+	
 	/**
 	 * Create an instance of the packing instruction to execute a remote command
 	 * (script) using the newer API with 64 bit alignment for some platforms.
@@ -175,24 +177,23 @@ public final class ExecCmd extends AbstractIRODSPackingInstruction {
 	 *            given command.
 	 * @throws JargonException
 	 */
-	public static final ExecCmd instanceWithHostAndArgumentsToPassParametersUsingAlignedAPI(
+	public static final ExecCmd instanceWithHostAndArgumentsToPassParametersPost25(
 			final String commandToExecuteWithoutArguments,
 			final String argumentsToPassWithCommand,
 			final String executionHost,
 			final String absolutePathOfIrodsFileThatWillBeUsedToFindHostToExecuteOn)
 			throws JargonException {
-		return new ExecCmd(STANDARD_EXEC_ENCAPSULATE_DATA_IN_RESPONSE_API_NBR,
+		return new ExecCmd(EXEC_AND_USE_ENHANCED_STREAM,
 				commandToExecuteWithoutArguments, argumentsToPassWithCommand,
 				executionHost,
-				absolutePathOfIrodsFileThatWillBeUsedToFindHostToExecuteOn,
-				false, false);
+				absolutePathOfIrodsFileThatWillBeUsedToFindHostToExecuteOn, false);
 	}
 
 	/**
 	 * Create an instance of the packing instruction to execute a remote command
 	 * (script). This initializer indicates to iRODS that large result buffers
 	 * should be transmitted via a stream. This uses an API that only works with
-	 * iRODS releases after (but not including) version 2.4.1.
+	 * iRODS releases after 2.5
 	 * 
 	 * @param commandToExecuteWithoutArguments
 	 *            <code>String</code> with the name of the command to execute.
@@ -210,17 +211,16 @@ public final class ExecCmd extends AbstractIRODSPackingInstruction {
 	 *            given command.
 	 * @throws JargonException
 	 */
-	public static final ExecCmd instanceWithHostAndArgumentsToPassParametersAllowingStreamingForLargeResults(
+	public static final ExecCmd instanceWithHostAndArgumentsToPassParametersAllowingStreamingForLargeResultsPost25(
 			final String commandToExecuteWithoutArguments,
 			final String argumentsToPassWithCommand,
 			final String executionHost,
 			final String absolutePathOfIrodsFileThatWillBeUsedToFindHostToExecuteOn)
 			throws JargonException {
-		return new ExecCmd(EXEC_AND_STREAM_RESPONSE_API_NBR,
+		return new ExecCmd(EXEC_AND_USE_ENHANCED_STREAM,
 				commandToExecuteWithoutArguments, argumentsToPassWithCommand,
 				executionHost,
-				absolutePathOfIrodsFileThatWillBeUsedToFindHostToExecuteOn,
-				true, false);
+				absolutePathOfIrodsFileThatWillBeUsedToFindHostToExecuteOn, false);
 	}
 
 	/**
@@ -242,10 +242,7 @@ public final class ExecCmd extends AbstractIRODSPackingInstruction {
 	 *            path. This is used within iRODS to find the host upon which
 	 *            the file is located, and that host can be used to execute the
 	 *            given command.
-	 * @param useStreaming
-	 *            <code>boolean</code> that indicates whether streaming of large
-	 *            results should be allowed.
-	 * @param userVersion241Instruction
+	 * @param useBackwardCompatableInstruction
 	 *            <code>boolean</code> that indicates that the older version
 	 *            (2.4.1 and prior) should be used. Otherwise, the newer API
 	 *            with fixes for streaming and 64 bit alignment issues will be
@@ -258,7 +255,7 @@ public final class ExecCmd extends AbstractIRODSPackingInstruction {
 			final String argumentsToPassWithCommand,
 			final String executionHost,
 			final String absolutePathOfIrodsFileThatWillBeUsedToFindHostToExecuteOn,
-			final boolean useStreaming, final boolean useVersion241Instruction)
+		final boolean useBackwardCompatableInstruction)
 			throws JargonException {
 
 		super();
@@ -283,17 +280,16 @@ public final class ExecCmd extends AbstractIRODSPackingInstruction {
 					"null absolutePathOfIrodsFileThatWillBeUsedToFindHostToExecuteOn, set to blank if not used");
 		}
 
-		if (useStreaming && useVersion241Instruction) {
+		if (getApiNumber() ==  STANDARD_EXEC_ENCAPSULATE_DATA_IN_RESPONSE_API_NBR && useBackwardCompatableInstruction) {
 			throw new JargonException(
-					"cannot stream binary data using the older version 241 instruction, the parameters are in conflict");
+					"cannot stream binary data using the older instruction, the parameters are in conflict");
 		}
 
 		this.commandToExecuteWithoutArguments = commandToExecuteWithoutArguments;
 		this.argumentsToPassWithCommand = argumentsToPassWithCommand;
 		this.executionHost = executionHost;
 		this.absolutePathOfIrodsFileThatWillBeUsedToFindHostToExecuteOn = absolutePathOfIrodsFileThatWillBeUsedToFindHostToExecuteOn;
-		this.useStreaming = useStreaming;
-		this.useVersion241Instruction = useVersion241Instruction;
+		this.useBackwardCompatableInstruction = useBackwardCompatableInstruction;
 		this.setApiNumber(apiNumber);
 
 	}
@@ -310,11 +306,9 @@ public final class ExecCmd extends AbstractIRODSPackingInstruction {
 
 		String piTagToUse;
 
-		if (useVersion241Instruction) {
-			piTagToUse = PI_TAG_241;
-		} else {
+	
 			piTagToUse = PI_TAG;
-		}
+		
 
 		Tag message = new Tag(
 				piTagToUse,
@@ -326,13 +320,13 @@ public final class ExecCmd extends AbstractIRODSPackingInstruction {
 								absolutePathOfIrodsFileThatWillBeUsedToFindHostToExecuteOn),
 						new Tag(ADD_PATH_TO_ARGV, 0) });
 
-		if (!useVersion241Instruction) {
+		if (!useBackwardCompatableInstruction) {
 			// a dummy tag is in the pi for 64 bit alignment issues starting
 			// post 2.4.1
 			message.addTag(new Tag(DUMMY, 0));
 		}
 
-		if (useStreaming) {
+		if (!useBackwardCompatableInstruction) {
 			message.addTag(Tag.createKeyValueTag(STREAM_STDOUT_KW, ""));
 		} else {
 			message.addTag(Tag.createKeyValueTag(null));
@@ -357,7 +351,4 @@ public final class ExecCmd extends AbstractIRODSPackingInstruction {
 		return absolutePathOfIrodsFileThatWillBeUsedToFindHostToExecuteOn;
 	}
 
-	protected boolean isUseStreaming() {
-		return useStreaming;
-	}
 }

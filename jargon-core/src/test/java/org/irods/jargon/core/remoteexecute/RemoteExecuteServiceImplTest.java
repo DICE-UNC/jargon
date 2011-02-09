@@ -174,7 +174,7 @@ public class RemoteExecuteServiceImplTest {
 
 		// test is only valid for post 2.4.1 FIXME: bump this up to the next
 		// released version
-		if (!props.isTheIrodsServerAtLeastAtTheGivenReleaseVersion("2.4.1")) {
+		if (!props.isTheIrodsServerAtLeastAtTheGivenReleaseVersion(RemoteExecuteServiceImpl.STREAMING_API_CUTOFF)) {
 			irodsFileSystem.closeAndEatExceptions();
 			return;
 		}
@@ -294,7 +294,7 @@ public class RemoteExecuteServiceImplTest {
 
 		// test is only valid for post 2.4.1 FIXME: bump this up to the next
 		// released version
-		if (!props.isTheIrodsServerAtLeastAtTheGivenReleaseVersion("2.4.1")) {
+		if (!props.isTheIrodsServerAtLeastAtTheGivenReleaseVersion(RemoteExecuteServiceImpl.STREAMING_API_CUTOFF)) {
 			irodsFileSystem.closeAndEatExceptions();
 			return;
 		}
@@ -482,10 +482,8 @@ public class RemoteExecuteServiceImplTest {
 						irodsAccount);
 		IRODSServerProperties props = environmentalInfoAO
 				.getIRODSServerPropertiesFromIRODSServer();
-
-		// test is only valid for post 2.4.1 FIXME: bump this up to the next
-		// released version
-		if (!props.isTheIrodsServerAtLeastAtTheGivenReleaseVersion("2.4.1")) {
+		if (!props.isTheIrodsServerAtLeastAtTheGivenReleaseVersion(RemoteExecuteServiceImpl.STREAMING_API_CUTOFF)) {
+			irodsFileSystem.closeAndEatExceptions();
 			return;
 		}
 
@@ -524,6 +522,7 @@ public class RemoteExecuteServiceImplTest {
 			return;
 		}
 
+
 		// threshold is 1M, this is 2M
 		int testLen = 2097152;
 
@@ -544,7 +543,7 @@ public class RemoteExecuteServiceImplTest {
 
 		// test is only valid for post 2.4.1 FIXME: bump this up to the next
 		// released version
-		if (!props.isTheIrodsServerAtLeastAtTheGivenReleaseVersion("2.4.1")) {
+		if (!props.isTheIrodsServerAtLeastAtTheGivenReleaseVersion(RemoteExecuteServiceImpl.STREAMING_API_CUTOFF)) {
 			irodsFileSystem.closeAndEatExceptions();
 			return;
 		}
@@ -604,7 +603,7 @@ public class RemoteExecuteServiceImplTest {
 
 		// test is only valid for post 2.4.1 FIXME: bump this up to the next
 		// released version
-		if (!props.isTheIrodsServerAtLeastAtTheGivenReleaseVersion("2.4.1")) {
+		if (!props.isTheIrodsServerAtLeastAtTheGivenReleaseVersion(RemoteExecuteServiceImpl.STREAMING_API_CUTOFF)) {
 			return;
 		}
 
