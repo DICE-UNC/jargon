@@ -109,7 +109,7 @@
     <site>
       <id>renci.site</id>
       <name>renci.site</name>
-      <url>file:///${user.dir}/target/jargon-site</url>
+      <url>file:///${user.dir}/target/site-deploy</url>
     </site>
   </distributionManagement>
   <reporting>
@@ -136,8 +136,7 @@
         <artifactId>maven-javadoc-plugin</artifactId>
         <configuration>
           <links>
-            <link>http://java.sun.com/javase/6/docs/api/</link>
-            <link>http://java.sun.com/javaee/5/docs/api/</link>
+            <link>http://download.oracle.com/javase/6/docs/api/</link>
             <link>http://commons.apache.org/logging/apidocs/</link>
             <link>http://commons.apache.org/io/apidocs/</link>
             <link>http://commons.apache.org/lang/apidocs/</link>
