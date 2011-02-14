@@ -58,7 +58,7 @@ public class TransferManagerTest {
 
 	@Test
 	public void testInstance() throws Exception {
-		TransferManager transferManager = TransferManager.instance();
+		TransferManager transferManager = TransferManagerImpl.instance();
 		Assert.assertNotNull("null transferManager from instance()",
 				transferManager);
 	}
@@ -76,21 +76,21 @@ public class TransferManagerTest {
 
 	@Test
 	public void testPause() throws Exception {
-		TransferManager transferManager = TransferManager.instance();
+		TransferManager transferManager = TransferManagerImpl.instance();
 		transferManager.pause();
 		Assert.assertTrue(transferManager.isPaused());
 	}
 
 	@Test
 	public void testResumeNotPaused() throws Exception {
-		TransferManager transferManager = TransferManager.instance();
+		TransferManager transferManager = TransferManagerImpl.instance();
 		transferManager.resume();
 		Assert.assertFalse(transferManager.getRunningStatus() == TransferManager.RunningStatus.PAUSED);
 	}
 
 	@Test
 	public void testResumeWhenPaused() throws Exception {
-		TransferManager transferManager = TransferManager.instance();
+		TransferManager transferManager = TransferManagerImpl.instance();
 		transferManager.pause();
 		transferManager.resume();
 		Assert.assertFalse(
@@ -100,7 +100,7 @@ public class TransferManagerTest {
 
 	@Test
 	public void testNotifyWarningCondition() throws Exception {
-		TransferManager transferManager = TransferManager.instance();
+		TransferManager transferManager = TransferManagerImpl.instance();
 		transferManager.notifyWarningCondition();
 		Assert.assertEquals("transferManager should be in a warning state",
 				TransferManager.ErrorStatus.WARNING,
@@ -109,7 +109,7 @@ public class TransferManagerTest {
 
 	@Test
 	public void testNotifyProcessingCondition() throws Exception {
-		TransferManager transferManager = TransferManager.instance();
+		TransferManager transferManager = TransferManagerImpl.instance();
 		transferManager.notifyProcessing();
 		Assert.assertEquals("transferManager should be in a processing state",
 				TransferManager.RunningStatus.PROCESSING,
@@ -118,7 +118,7 @@ public class TransferManagerTest {
 
 	@Test
 	public void testNotifyWarningConditionWhenAlreadyError() throws Exception {
-		TransferManager transferManager = TransferManager.instance();
+		TransferManager transferManager = TransferManagerImpl.instance();
 		transferManager.notifyErrorCondition();
 		transferManager.notifyWarningCondition();
 		Assert.assertEquals(
@@ -129,7 +129,7 @@ public class TransferManagerTest {
 
 	@Test
 	public void testNotifyErrorCondition() throws Exception {
-		TransferManager transferManager = TransferManager.instance();
+		TransferManager transferManager = TransferManagerImpl.instance();
 		transferManager.notifyErrorCondition();
 		Assert.assertEquals("transferManager should be in an error state",
 				TransferManager.ErrorStatus.ERROR,
@@ -155,7 +155,7 @@ public class TransferManagerTest {
 						localCollectionAbsolutePath, "testSubdir", 1, 2, 1,
 						"testFile", ".txt", 9, 8, 2, 21);
 
-		TransferManager transferManager = TransferManager.instance();
+		TransferManager transferManager = TransferManagerImpl.instance();
 		transferManager.pause();
 
 		transferManager.enqueueAPut(localCollectionAbsolutePath,
@@ -185,7 +185,7 @@ public class TransferManagerTest {
 						localCollectionAbsolutePath, "testSubdir", 1, 2, 1,
 						"testFile", ".txt", 9, 8, 2, 21);
 
-		TransferManager transferManager = TransferManager.instance();
+		TransferManager transferManager = TransferManagerImpl.instance();
 		transferManager.pause();
 
 		transferManager.enqueueAPut(localCollectionAbsolutePath,
@@ -241,7 +241,7 @@ public class TransferManagerTest {
 
 		String lastFileName = localFiles[2].getAbsolutePath();
 
-		TransferManager transferManager = TransferManager.instance();
+		TransferManager transferManager = TransferManagerImpl.instance();
 
 		final Session session = transferManager.getTransferQueueService()
 				.getHibernateUtil().getSession();
@@ -282,7 +282,7 @@ public class TransferManagerTest {
 			}
 
 			throw new JargonException(e);
-		} 
+		}
 
 		// let put run
 
@@ -350,7 +350,7 @@ public class TransferManagerTest {
 						localCollectionAbsolutePath, "testSubdir", 1, 2, 1,
 						"testFile", ".txt", 9, 8, 2, 21);
 
-		TransferManager transferManager = TransferManager.instance();
+		TransferManager transferManager = TransferManagerImpl.instance();
 		transferManager.pause();
 
 		transferManager.enqueueAPut(localCollectionAbsolutePath,
@@ -384,7 +384,7 @@ public class TransferManagerTest {
 						localCollectionAbsolutePath, "testSubdir", 1, 2, 1,
 						"testFile", ".txt", 9, 8, 2, 21);
 
-		TransferManager transferManager = TransferManager.instance();
+		TransferManager transferManager = TransferManagerImpl.instance();
 		// transferManager.pause();
 
 		transferManager.enqueueAPut(localCollectionAbsolutePath,
@@ -439,7 +439,7 @@ public class TransferManagerTest {
 
 	@Test
 	public void enqueueAGet() throws Exception {
-		
+
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
 
@@ -460,7 +460,7 @@ public class TransferManagerTest {
 						localCollectionAbsolutePath, "testSubdir", 1, 2, 1,
 						"testFile", ".txt", 9, 8, 2, 21);
 
-		TransferManager transferManager = TransferManager.instance();
+		TransferManager transferManager = TransferManagerImpl.instance();
 		// transferManager.pause();
 
 		transferManager.enqueueAPut(localCollectionAbsolutePath,
@@ -534,7 +534,7 @@ public class TransferManagerTest {
 		TransferQueueService transferQueueService = TransferQueueService
 				.instance();
 
-		TransferManager transferManager = TransferManager.instance();
+		TransferManager transferManager = TransferManagerImpl.instance();
 
 		final Session session = transferManager.getTransferQueueService()
 				.getHibernateUtil().getSession();
@@ -575,9 +575,9 @@ public class TransferManagerTest {
 		} finally {
 			// session.close();
 		}
-		
+
 		// recreating the transfer manager should reset the queue
-		transferManager = TransferManager.instance();
+		transferManager = TransferManagerImpl.instance();
 
 		// now get the queue
 		List<LocalIRODSTransfer> transferQueue = transferQueueService

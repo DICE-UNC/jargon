@@ -119,7 +119,7 @@ final class TransferQueueService {
 
 			log.error("error in transaction", e);
 			throw new JargonException(e);
-		} 
+		}
 
 		log.info("dequeued");
 		return transfer;
@@ -130,7 +130,7 @@ final class TransferQueueService {
 	 * Add a put transfer to the queue. This causes the entry to be made with a
 	 * status of enqueued. The entry into the database does not, however,
 	 * automatically cause the transfer to begin, that is done by the
-	 * {@link org.irods.jargon.transferengine.TransferManager}.
+	 * {@link org.irods.jargon.transferengine.TransferManagerImpl}.
 	 * 
 	 * @param localSourceAbsolutePath
 	 * @param targetIRODSAbsolutePath
@@ -219,7 +219,7 @@ final class TransferQueueService {
 	 * Add a get transfer to the queue. This causes the entry to be made with a
 	 * status of enqueued. The entry into the database does not, however,
 	 * automatically cause the transfer to begin, that is done by the
-	 * {@link org.irods.jargon.transferengine.TransferManager}.
+	 * {@link org.irods.jargon.transferengine.TransferManagerImpl}.
 	 * 
 	 * @param irodsSourceAbsolutePath
 	 * @param targetLocalAbsolutePath
@@ -297,7 +297,7 @@ final class TransferQueueService {
 
 			log.error("error in transaction", e);
 			throw new JargonException(e);
-		} 
+		}
 
 		log.info("enqueued...");
 		return enqueuedTransfer;
@@ -521,7 +521,7 @@ final class TransferQueueService {
 
 			log.error("error in transaction", e);
 			throw new JargonException(e);
-		} 
+		}
 	}
 
 	/**
@@ -553,7 +553,7 @@ final class TransferQueueService {
 
 			log.error("error in transaction", e);
 			throw new JargonException(e);
-		} 
+		}
 	}
 
 	protected void purgeSuccessful() throws JargonException {
@@ -579,7 +579,7 @@ final class TransferQueueService {
 
 			log.error("error in transaction", e);
 			throw new JargonException(e);
-		} 
+		}
 	}
 
 	protected List<LocalIRODSTransfer> showErrorTransfers()
@@ -678,7 +678,7 @@ final class TransferQueueService {
 
 			log.error("error in transaction", e);
 			throw new JargonException(e);
-		} 
+		}
 	}
 
 	/**
@@ -729,7 +729,7 @@ final class TransferQueueService {
 
 			log.error("error in transaction", e);
 			throw new JargonException(e);
-		} 
+		}
 	}
 
 	/**
@@ -787,7 +787,7 @@ final class TransferQueueService {
 
 			log.error("error in transaction", e);
 			throw new JargonException(e);
-		} 
+		}
 	}
 
 	/**
@@ -863,7 +863,7 @@ final class TransferQueueService {
 
 			log.error("error in transaction", e);
 			throw new JargonException(e);
-		} 
+		}
 		log.info("enqueued...");
 		return enqueuedTransfer;
 
@@ -919,7 +919,7 @@ final class TransferQueueService {
 
 			log.error("error in transaction", e);
 			throw new JargonException(e);
-		} 
+		}
 	}
 
 	protected void purgeQueueBasedOnDate(final int retentionDays)
@@ -953,7 +953,7 @@ final class TransferQueueService {
 
 			log.error("error in transaction", e);
 			throw new JargonException(e);
-		} 
+		}
 	}
 
 	/**
@@ -1021,7 +1021,7 @@ final class TransferQueueService {
 
 			log.error("error in transaction", e);
 			throw new JargonException(e);
-		} 
+		}
 	}
 
 	/**

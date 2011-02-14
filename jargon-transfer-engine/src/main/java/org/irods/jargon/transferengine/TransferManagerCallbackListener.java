@@ -25,7 +25,7 @@ public interface TransferManagerCallbackListener {
 	 *            new status
 	 */
 	void transferManagerRunningStatusUpdate(
-			final TransferManager.RunningStatus runningStatus);
+			final TransferManagerImpl.RunningStatus runningStatus);
 
 	/**
 	 * Callback when the error status of the <code>TransferManager</code> has
@@ -36,7 +36,7 @@ public interface TransferManagerCallbackListener {
 	 *            new error status.
 	 */
 	void transferManagerErrorStatusUpdate(
-			final TransferManager.ErrorStatus errorStatus);
+			final TransferManagerImpl.ErrorStatus errorStatus);
 
 	/**
 	 * Allows transfer managers to tap into the status callbacks coming from the

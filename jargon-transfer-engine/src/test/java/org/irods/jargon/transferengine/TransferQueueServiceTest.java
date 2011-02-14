@@ -330,7 +330,7 @@ public class TransferQueueServiceTest {
 		TransferQueueService transferQueueService = TransferQueueService
 				.instance();
 
-		TransferManager transferManager = TransferManager.instance();
+		TransferManager transferManager = TransferManagerImpl.instance();
 
 		transferQueueService.enqueuePutTransfer(localCollectionAbsolutePath,
 				irodsCollectionRootAbsolutePath, "", irodsAccount);
@@ -460,7 +460,7 @@ public class TransferQueueServiceTest {
 				.getLastNInQueue(1);
 
 		LocalIRODSTransfer transferToMark = transferQueue.get(0);
-		TransferManager transferManager = TransferManager.instance();
+		TransferManager transferManager = TransferManagerImpl.instance();
 		transferQueueService.markTransferAsErrorAndTerminate(transferToMark,
 				new JargonException("hello a jargon exception"),
 				transferManager);
@@ -1600,7 +1600,7 @@ public class TransferQueueServiceTest {
 		TestCase.assertEquals("should have retained last good path",
 				"lastSuccessfulPath", dequeuedTransfer.getLastSuccessfulPath());
 	}
-	
+
 	@Test
 	public void testResubmitClearsLastGoodPath() throws Exception {
 		IRODSAccount irodsAccount = testingPropertiesHelper

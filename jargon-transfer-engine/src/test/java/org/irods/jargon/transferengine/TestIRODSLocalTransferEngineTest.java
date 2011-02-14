@@ -81,7 +81,7 @@ public class TestIRODSLocalTransferEngineTest {
 
 		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
 
-		TransferManager transferManager = TransferManager.instance();
+		TransferManagerImpl transferManager = TransferManagerImpl.instance();
 		TransferControlBlock transferControlBlock = DefaultTransferControlBlock
 				.instance();
 		IRODSLocalTransferEngine irodsLocalTransferEngine = IRODSLocalTransferEngine
@@ -114,7 +114,7 @@ public class TestIRODSLocalTransferEngineTest {
 				.buildIRODSAccountFromTestProperties(testingProperties);
 
 		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
-		TransferManager transferManager = TransferManager.instance();
+		TransferManagerImpl transferManager = TransferManagerImpl.instance();
 
 		TransferControlBlock transferControlBlock = DefaultTransferControlBlock
 				.instance();
@@ -166,7 +166,7 @@ public class TestIRODSLocalTransferEngineTest {
 				.buildIRODSAccountFromTestProperties(testingProperties);
 
 		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
-		TransferManager transferManager = TransferManager.instance();
+		TransferManagerImpl transferManager = TransferManagerImpl.instance();
 
 		TransferControlBlock transferControlBlock = DefaultTransferControlBlock
 				.instance();
@@ -226,7 +226,7 @@ public class TestIRODSLocalTransferEngineTest {
 
 		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
 
-		TransferManager transferManager = TransferManager.instance();
+		TransferManager transferManager = TransferManagerImpl.instance();
 		transferManager.pause();
 
 		transferManager.enqueueAPut(localCollectionAbsolutePath,
@@ -258,7 +258,7 @@ public class TestIRODSLocalTransferEngineTest {
 
 		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
 
-		TransferManager transferManager = TransferManager.instance();
+		TransferManagerImpl transferManager = TransferManagerImpl.instance();
 
 		TransferControlBlock transferControlBlock = DefaultTransferControlBlock
 				.instance();
@@ -296,7 +296,7 @@ public class TestIRODSLocalTransferEngineTest {
 	@Test
 	public void testGetEmptyTransferQueue() throws Exception {
 
-		TransferManager transferManager = TransferManager.instance();
+		TransferManager transferManager = TransferManagerImpl.instance();
 		List<LocalIRODSTransfer> transfers = transferManager.getCurrentQueue();
 
 		Assert.assertNotNull("transfers should be empty, not null, there should be no current transfers");
@@ -313,7 +313,7 @@ public class TestIRODSLocalTransferEngineTest {
 
 		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
 
-		TransferManager transferManager = TransferManager.instance();
+		TransferManagerImpl transferManager = TransferManagerImpl.instance();
 
 		transferManager.pause();
 
@@ -395,7 +395,7 @@ public class TestIRODSLocalTransferEngineTest {
 
 		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
 
-		TransferManager transferManager = TransferManager.instance();
+		TransferManagerImpl transferManager = TransferManagerImpl.instance();
 
 		transferManager.pause();
 
@@ -501,7 +501,7 @@ public class TestIRODSLocalTransferEngineTest {
 		IRODSFileFactory irodsFileFactory = irodsFileSystem
 				.getIRODSFileFactory(irodsAccount);
 
-		TransferManager transferManager = TransferManager.instance();
+		TransferManagerImpl transferManager = TransferManagerImpl.instance();
 
 		TransferControlBlock transferControlBlock = DefaultTransferControlBlock
 				.instance(lastPath);
@@ -590,7 +590,7 @@ public class TestIRODSLocalTransferEngineTest {
 		IRODSFileFactory irodsFileFactory = irodsFileSystem
 				.getIRODSFileFactory(irodsAccount);
 
-		TransferManager transferManager = TransferManager.instance();
+		TransferManagerImpl transferManager = TransferManagerImpl.instance();
 
 		TransferControlBlock transferControlBlock = DefaultTransferControlBlock
 				.instance();
@@ -676,7 +676,7 @@ public class TestIRODSLocalTransferEngineTest {
 		File localFile = new File(localFileName);
 
 		dataTransferOperationsAO.putOperation(localFile, destFile, null, null);
-		TransferManager transferManager = TransferManager.instance();
+		TransferManagerImpl transferManager = TransferManagerImpl.instance();
 
 		TransferControlBlock transferControlBlock = DefaultTransferControlBlock
 				.instance();
@@ -744,7 +744,7 @@ public class TestIRODSLocalTransferEngineTest {
 
 		dataTransferOperationsAO.putOperation(localFile, destFile, null, null);
 		DummyTransferManagerCallbackListener transferManagerCallbackListener = new DummyTransferManagerCallbackListener();
-		TransferManager transferManager = TransferManager
+		TransferManagerImpl transferManager = TransferManagerImpl
 				.instanceWithCallbackListener(transferManagerCallbackListener);
 
 		TransferControlBlock transferControlBlock = DefaultTransferControlBlock

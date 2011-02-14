@@ -18,7 +18,7 @@ import org.slf4j.LoggerFactory;
  */
 public class TransferRunner implements Runnable {
 
-	private final TransferManager transferManager;
+	private final TransferManagerImpl transferManager;
 	private final LocalIRODSTransfer localIRODSTransfer;
 	private final TransferControlBlock transferControlBlock;
 	private IRODSLocalTransferEngine irodsLocalTransferEngine = null;
@@ -31,8 +31,8 @@ public class TransferRunner implements Runnable {
 	 * Constructs a process to transfer data to/from iRODS.
 	 * 
 	 * @param transferManager
-	 *            {@link TransferManager} that coordinates the transfer of data,
-	 *            and manages callbacks and notifications.
+	 *            {@link TransferManagerImpl} that coordinates the transfer of
+	 *            data, and manages callbacks and notifications.
 	 * @param localIRODSTransfer
 	 *            {@link LocalIRODSTransfer} that contains data describing the
 	 *            type of transfer and the status.
@@ -45,12 +45,12 @@ public class TransferRunner implements Runnable {
 	 *            access to the transfer data.
 	 * @throws JargonException
 	 */
-	public TransferRunner(final TransferManager transferManager,
+	public TransferRunner(final TransferManagerImpl transferManager,
 			final LocalIRODSTransfer localIRODSTransfer,
 			final TransferControlBlock transferControlBlock,
 			final TransferQueueService transferQueueService)
 			throws JargonException {
-		
+
 		if (transferManager == null) {
 			throw new JargonException("null transfer manager");
 		}
@@ -81,7 +81,7 @@ public class TransferRunner implements Runnable {
 	 */
 	@Override
 	public void run() {
-		
+
 		log.info("running transfer:{}", localIRODSTransfer);
 
 		try {

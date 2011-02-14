@@ -43,7 +43,7 @@ import org.slf4j.LoggerFactory;
  */
 final class IRODSLocalTransferEngine implements TransferStatusCallbackListener {
 
-	private final TransferManager transferManager;
+	private final TransferManagerImpl transferManager;
 	private LocalIRODSTransfer currentTransfer;
 	private final TransferControlBlock transferControlBlock;
 	private final boolean logSuccessfulTransfers;
@@ -71,7 +71,7 @@ final class IRODSLocalTransferEngine implements TransferStatusCallbackListener {
 	 */
 
 	protected static IRODSLocalTransferEngine instance(
-			final TransferManager transferManager,
+			final TransferManagerImpl transferManager,
 			final TransferControlBlock transferControlBlock)
 			throws JargonException {
 		return new IRODSLocalTransferEngine(transferManager,
@@ -101,14 +101,14 @@ final class IRODSLocalTransferEngine implements TransferStatusCallbackListener {
 	 */
 
 	protected static IRODSLocalTransferEngine instance(
-			final TransferManager transferManager,
+			final TransferManagerImpl transferManager,
 			final TransferControlBlock transferControlBlock,
 			final boolean logSuccessfulTransfers) throws JargonException {
 		return new IRODSLocalTransferEngine(transferManager,
 				transferControlBlock, logSuccessfulTransfers);
 	}
 
-	private IRODSLocalTransferEngine(final TransferManager transferManager,
+	private IRODSLocalTransferEngine(final TransferManagerImpl transferManager,
 			final TransferControlBlock transferControlBlock,
 			final boolean logSuccessfulTransfers) throws JargonException {
 
@@ -158,7 +158,14 @@ final class IRODSLocalTransferEngine implements TransferStatusCallbackListener {
 						.getTransferResource());
 
 		// initiate the operation and process call-backs
-		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();  // FIXME: iRODSFileSystem should be passed here, not instanciated
+		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance(); // FIXME:
+																		// iRODSFileSystem
+																		// should
+																		// be
+																		// passed
+																		// here,
+																		// not
+																		// instanciated
 		final DataTransferOperations dataTransferOperations = irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataTransferOperations(
 						irodsAccount);
@@ -288,6 +295,7 @@ final class IRODSLocalTransferEngine implements TransferStatusCallbackListener {
 
 	/**
 	 * Process a get transfer
+	 * 
 	 * @param localIrodsTransfer
 	 * @param dataTransferOperations
 	 * @param irodsFileFactory

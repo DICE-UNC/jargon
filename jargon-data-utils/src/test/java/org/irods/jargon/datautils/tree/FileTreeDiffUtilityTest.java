@@ -79,9 +79,9 @@ public class FileTreeDiffUtilityTest {
 				+ rootCollection;
 
 		// files now put, set up and call for the diff
-		FileTreeModel diffModel = FileTreeDiffUtility.generateDiffLocalToIRODS(
-				localFileRoot, irodsAccount,
-				irodsFileSystem.getIRODSAccessObjectFactory(),
+		FileTreeDiffUtility fileTreeDiffUtility = new FileTreeDiffUtilityImpl(irodsAccount, irodsFileSystem.getIRODSAccessObjectFactory());
+		FileTreeModel diffModel = fileTreeDiffUtility.generateDiffLocalToIRODS(
+				localFileRoot,
 				targetIrodsAbsolutePath, 0);
 		irodsFileSystem.close();
 		Assert.assertNotNull("null diffModel", diffModel);
@@ -151,9 +151,9 @@ public class FileTreeDiffUtilityTest {
 				+ rootCollection;
 
 		// files now put, set up and call for the diff
-		FileTreeModel diffModel = FileTreeDiffUtility.generateDiffLocalToIRODS(
-				localFileRoot, irodsAccount,
-				irodsFileSystem.getIRODSAccessObjectFactory(),
+		FileTreeDiffUtility fileTreeDiffUtility = new FileTreeDiffUtilityImpl(irodsAccount, irodsFileSystem.getIRODSAccessObjectFactory());
+		FileTreeModel diffModel = fileTreeDiffUtility.generateDiffLocalToIRODS(
+				localFileRoot,
 				targetIrodsAbsolutePath, 0);
 		irodsFileSystem.close();
 		Assert.assertNotNull("null diffModel", diffModel);
@@ -223,9 +223,9 @@ public class FileTreeDiffUtilityTest {
 				+ rootCollection;
 
 		// files now put, set up and call for the diff
-		FileTreeModel diffModel = FileTreeDiffUtility.generateDiffLocalToIRODS(
-				localFileRoot, irodsAccount,
-				irodsFileSystem.getIRODSAccessObjectFactory(),
+		FileTreeDiffUtility fileTreeDiffUtility = new FileTreeDiffUtilityImpl(irodsAccount, irodsFileSystem.getIRODSAccessObjectFactory());
+		FileTreeModel diffModel = fileTreeDiffUtility.generateDiffLocalToIRODS(
+				localFileRoot,
 				targetIrodsAbsolutePath, 0);
 		irodsFileSystem.close();
 		Assert.assertNotNull("null diffModel", diffModel);
@@ -291,11 +291,10 @@ public class FileTreeDiffUtilityTest {
 		Thread.sleep(5000);
 		dataTransferOperationsAO.putOperation(new File(absFileName1),
 				irodsRootFile, null, null);
-
-		// files now put, set up and call for the diff
-		FileTreeModel diffModel = FileTreeDiffUtility.generateDiffLocalToIRODS(
-				localRootFile, irodsAccount,
-				irodsFileSystem.getIRODSAccessObjectFactory(),
+		
+		FileTreeDiffUtility fileTreeDiffUtility = new FileTreeDiffUtilityImpl(irodsAccount, irodsFileSystem.getIRODSAccessObjectFactory());
+		FileTreeModel diffModel = fileTreeDiffUtility.generateDiffLocalToIRODS(
+				localRootFile,
 				irodsRootFile.getAbsolutePath(), cutoffTimestamp);
 		irodsFileSystem.close();
 
@@ -355,11 +354,10 @@ public class FileTreeDiffUtilityTest {
 		Thread.sleep(2000);
 		dataTransferOperationsAO.putOperation(new File(absFileName1),
 				irodsRootFile, null, null);
-
-		// files now put, set up and call for the diff
-		FileTreeModel diffModel = FileTreeDiffUtility.generateDiffLocalToIRODS(
-				localRootFile, irodsAccount,
-				irodsFileSystem.getIRODSAccessObjectFactory(),
+		
+		FileTreeDiffUtility fileTreeDiffUtility = new FileTreeDiffUtilityImpl(irodsAccount, irodsFileSystem.getIRODSAccessObjectFactory());
+		FileTreeModel diffModel = fileTreeDiffUtility.generateDiffLocalToIRODS(
+				localRootFile,
 				irodsRootFile.getAbsolutePath(), cutoffTimestamp);
 		irodsFileSystem.close();
 
