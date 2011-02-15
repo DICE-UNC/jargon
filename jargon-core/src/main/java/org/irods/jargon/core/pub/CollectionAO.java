@@ -254,13 +254,13 @@ public interface CollectionAO extends IRODSAccessObject {
 			final int partialStartIndex) throws JargonException;
 
 	/**
-	 * For the given absolute path, return the given collection. Note that this
-	 * method will return null if the collection is not found.
+	 * For the given absolute path, return the given collection.
 	 * 
 	 * @param irodsCollectionAbsolutePath
 	 *            <code>String</code> with the absolute path to the collection
 	 * @return {@link org.irods.jargon.core.pub.domain.Collection} or null if no
-	 *         collection found.
+	 *         collection found
+	 * @throws DataNotFoundException if collection does not exist
 	 * @throws JargonException
 	 */
 	Collection findByAbsolutePath(final String irodsCollectionAbsolutePath)

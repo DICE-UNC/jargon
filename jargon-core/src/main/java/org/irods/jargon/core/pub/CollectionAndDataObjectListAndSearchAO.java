@@ -2,6 +2,7 @@ package org.irods.jargon.core.pub;
 
 import java.util.List;
 
+import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry;
 
@@ -251,5 +252,16 @@ public interface CollectionAndDataObjectListAndSearchAO {
 	 */
 	List<CollectionAndDataObjectListingEntry> searchCollectionsAndDataObjectsBasedOnName(
 			String searchTerm) throws JargonException;
+
+	/**
+	 * Handy method will get the full domain object, {@link DataObject} or {@link Collection}, based on the given absolute path.  This can be handy for
+	 * display in interfaces or other applications that are concerned with retrieving 'info' about a given path.
+	 * @param objectAbsolutePath <code>String</code> with the absolute path to the given data object or collection.
+	 * @return <code>Object</code> that will be either a <code>DataObject</code> or <code>Collection</code> object based on the object at the given absolute path in iRODS.
+	 * @throws DataNotFoundException if no data object or collection found for the given path.  The method does not return null in this case
+	 * @throws JargonException
+	 */
+	Object getFullObjectForType(String objectAbsolutePath)
+			throws DataNotFoundException, JargonException;
 
 }

@@ -703,7 +703,7 @@ public final class CollectionAOImpl extends IRODSGenericAO implements
 	 */
 	@Override
 	public Collection findByAbsolutePath(
-			final String irodsCollectionAbsolutePath) throws JargonException {
+			final String irodsCollectionAbsolutePath) throws DataNotFoundException, JargonException {
 
 		if (irodsCollectionAbsolutePath == null
 				|| irodsCollectionAbsolutePath.isEmpty()) {
@@ -718,9 +718,9 @@ public final class CollectionAOImpl extends IRODSGenericAO implements
 				.escapeSingleQuotes(irodsCollectionAbsolutePath));
 		sb.append("'");
 		List<Collection> collectionList = this.findWhere(sb.toString(), 0);
-
+		
 		if (collectionList.size() == 0) {
-			return null;
+			throw new DataNotFoundException("no collection found for path:" + irodsCollectionAbsolutePath);
 		} else {
 			return collectionList.get(0);
 		}

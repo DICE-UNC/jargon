@@ -827,7 +827,7 @@ public class CollectionAOImplTest {
 				collection);
 	}
 
-	@Test
+	@Test(expected=DataNotFoundException.class)
 	public void findByAbsolutePathNotExists() throws Exception {
 		String testDirName = "findByAbsolutePathNotExists";
 
@@ -846,10 +846,9 @@ public class CollectionAOImplTest {
 				.instance(irodsSession);
 		CollectionAO collectionAO = accessObjectFactory
 				.getCollectionAO(irodsAccount);
-		Collection collection = collectionAO
+		collectionAO
 				.findByAbsolutePath(targetIrodsCollection);
-		TestCase.assertNull("found a collection, should have been null",
-				collection);
+		
 	}
 
 	@Test(expected = JargonException.class)

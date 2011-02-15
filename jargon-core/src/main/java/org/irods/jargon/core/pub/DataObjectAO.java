@@ -71,6 +71,7 @@ public interface DataObjectAO extends IRODSAccessObject {
 	 * @param dataName
 	 *            <code>String</code> with the data Object name
 	 * @return {@link org.irods.jargon.core.pub.DataObject}
+	 * @throws DataNotFoundException is thrown if the data object does not exist
 	 * @throws JargonException
 	 */
 	DataObject findByCollectionNameAndDataName(final String collectionPath,
@@ -430,10 +431,11 @@ public interface DataObjectAO extends IRODSAccessObject {
 	 *            data object.
 	 * @return {@link org.irods.jargon.core.pub.domain.DataObject} with catalog
 	 *         information for the given data object
+	 * @throws DataNotFoundException if data object is not found
 	 * @throws JargonException
 	 */
 	DataObject findByAbsolutePath(final String absolutePath)
-			throws JargonException;
+			throws DataNotFoundException, JargonException;
 
 	/**
 	 * FIXME: not yet implemented Update the comment for the given data object.

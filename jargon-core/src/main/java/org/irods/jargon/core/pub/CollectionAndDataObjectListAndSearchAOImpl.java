@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSSession;
+import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.aohelper.CollectionAOHelper;
 import org.irods.jargon.core.pub.io.IRODSFile;
@@ -116,7 +117,8 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		IRODSQueryResultSetInterface resultSet;
 
 		try {
-			resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResult(irodsQuery, 0);
+			resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResult(
+					irodsQuery, 0);
 		} catch (JargonQueryException e) {
 			LOG.error(QUERY_EXCEPTION_FOR_QUERY + query.toString(), e);
 			throw new JargonException(e);
@@ -279,7 +281,8 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 
 		StringBuilder query = new StringBuilder(
 				IRODSFileSystemAOHelper.buildQueryListAllDirs(path));
-		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(query.toString(), 1000);
+		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(query.toString(),
+				1000);
 		IRODSQueryResultSetInterface resultSet;
 
 		try {
@@ -354,7 +357,8 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		StringBuilder query = new StringBuilder(
 				IRODSFileSystemAOHelper
 						.buildQueryListAllFilesWithSizeAndDateInfo(path));
-		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(query.toString(), 1000);
+		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(query.toString(),
+				1000);
 		IRODSQueryResultSetInterface resultSet;
 
 		try {
@@ -487,6 +491,60 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 
 		return entries;
 
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.pub.CollectionAndDataObjectListAndSearchAO#
+	 * getFullObjectForType(java.lang.String)
+	 */
+	@Override
+	public Object getFullObjectForType(final String objectAbsolutePath)
+			throws DataNotFoundException, JargonException {
+
+		if (objectAbsolutePath == null || objectAbsolutePath.isEmpty()) {
+			throw new IllegalArgumentException(
+					"null or empty object absolute path");
+		}
+
+		LOG.info("getFullObjectForType for path:{}", objectAbsolutePath);
+
+		// see if file or coll
+
+		Object returnObject = null;
+
+		DataObjectAO dataObjectAO = new DataObjectAOImpl(getIRODSSession(),
+				getIRODSAccount());
+
+		LOG.debug("looking for as a data object");
+
+		try {
+			returnObject = dataObjectAO.findByAbsolutePath(objectAbsolutePath);
+		} catch (DataNotFoundException dnf) {
+			LOG.debug("not a data object, look as collection");
+
+		}
+
+		if (returnObject == null) {
+			try {
+				CollectionAO collectionAO = new CollectionAOImpl(
+						getIRODSSession(), getIRODSAccount());
+				returnObject = collectionAO
+						.findByAbsolutePath(objectAbsolutePath);
+			} catch (DataNotFoundException dnf) {
+				LOG.debug("not found as collection");
+			}
+		}
+
+		if (returnObject == null) {
+			LOG.debug("not found as a collection, data not found");
+			throw new DataNotFoundException(
+					"no object found for absolute path:" + objectAbsolutePath);
+		}
+
+		// get appropriate domain object and return
+		return returnObject;
 	}
 
 }

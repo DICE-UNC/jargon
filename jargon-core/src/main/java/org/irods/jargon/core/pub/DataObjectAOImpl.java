@@ -115,7 +115,7 @@ public final class DataObjectAOImpl extends IRODSGenericAO implements
 	@Override
 	public DataObject findByCollectionNameAndDataName(
 			final String collectionPath, final String dataName)
-			throws JargonException {
+			throws DataNotFoundException, JargonException {
 
 		DataObject dataObject = null;
 
@@ -178,7 +178,7 @@ public final class DataObjectAOImpl extends IRODSGenericAO implements
 	 */
 	@Override
 	public DataObject findByAbsolutePath(final String absolutePath)
-			throws JargonException {
+			throws DataNotFoundException, JargonException {
 
 		if (absolutePath == null || absolutePath.isEmpty()) {
 			throw new JargonException("null or empty absolutePath");
