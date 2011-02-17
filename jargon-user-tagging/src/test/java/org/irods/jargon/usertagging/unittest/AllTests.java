@@ -2,6 +2,7 @@ package org.irods.jargon.usertagging.unittest;
 
 import org.irods.jargon.usertagging.FreeTaggingServiceImplTest;
 import org.irods.jargon.usertagging.IRODSTaggingServiceTest;
+import org.irods.jargon.usertagging.TaggingServiceFactoryImplTest;
 import org.irods.jargon.usertagging.UserTagCloudServiceImplTest;
 import org.irods.jargon.usertagging.domain.IRODSTagGroupingTest;
 import org.irods.jargon.usertagging.domain.IRODSTagValueTest;
@@ -13,7 +14,7 @@ import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses( { IRODSTagValueTest.class, IRODSTaggingServiceTest.class, IRODSTagGroupingTest.class, FreeTaggingServiceImplTest.class, TagCloudEntryTest.class,
-	UserTagCloudViewTest.class, UserTagCloudServiceImplTest.class, TagQuerySearchResultTest.class})
+	UserTagCloudViewTest.class, UserTagCloudServiceImplTest.class, TagQuerySearchResultTest.class, TaggingServiceFactoryImplTest.class})
 public class AllTests {
 
 }

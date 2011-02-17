@@ -9,6 +9,7 @@ import java.util.Properties;
 import junit.framework.TestCase;
 
 import org.irods.jargon.core.connection.IRODSAccount;
+import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.CollectionAO;
 import org.irods.jargon.core.pub.DataObjectAO;
 import org.irods.jargon.core.pub.DataTransferOperations;
@@ -690,6 +691,214 @@ public class FreeTaggingServiceImplTest {
 		TestCase.assertEquals("did not get right count of data objects", dataObjectCount, countActualDataObjects);
 		TestCase.assertEquals("did not get right count of collections", collCount, countActualCollections);
 
+	}
+	
+	@Test
+	public final void updateTagsWhenCollection()
+			throws Exception {
+
+		String testCollection = "updateTagsWhenCollection";
+		String expectedTagName = "updateTagsWhenCollection";
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + "/"
+								+ testCollection);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
+		IRODSFile targetIrodsFile = irodsFileSystem.getIRODSFileFactory(
+				irodsAccount).instanceIRODSFile(targetIrodsCollection);
+
+		targetIrodsFile.mkdirs();
+
+		FreeTaggingService freeTaggingService = FreeTaggingServiceImpl
+				.instance(irodsFileSystem.getIRODSAccessObjectFactory(),
+						irodsAccount);
+
+		freeTaggingService.updateTagsForUserForADataObjectOrCollection(targetIrodsFile.getAbsolutePath(), irodsAccount.getUserName(), expectedTagName);
+
+		// now get the tags, should be a string with just the expected tag name
+		// in iRODS
+		IRODSTagGrouping actualTagGrouping = freeTaggingService
+				.getTagsForCollectionInFreeTagForm(targetIrodsCollection);
+		irodsFileSystem.close();
+
+		TestCase.assertNotNull(actualTagGrouping);
+		TestCase.assertEquals(targetIrodsCollection, actualTagGrouping
+				.getDomainUniqueName());
+		TestCase.assertEquals(MetadataDomain.COLLECTION, actualTagGrouping
+				.getMetadataDomain());
+		TestCase.assertEquals(expectedTagName, actualTagGrouping
+				.getSpaceDelimitedTagsForDomain());
+
+	}
+	
+	@Test
+	public final void updateTagsWhenDataObject()
+			throws Exception {
+
+		String testCollection = "updateTagsWhenDataObject";
+		String testFileName = "updateTagsWhenDataObject.txt";
+		String expectedTagName = "updateTagsWhenDataObject";
+		
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + "/"
+								+ testCollection);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
+		IRODSFile targetIrodsCollectionFile = irodsFileSystem
+				.getIRODSFileFactory(irodsAccount).instanceIRODSFile(
+						targetIrodsCollection);
+
+		targetIrodsCollectionFile.mkdirs();
+
+		String targetIrodsDataObject = targetIrodsCollection + "/"
+				+ testFileName;
+
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String fileNameOrig = FileGenerator.generateFileOfFixedLengthGivenName(
+				absPath, testFileName, 2);
+
+		IRODSFile targetIrodsFile = irodsFileSystem.getIRODSFileFactory(
+				irodsAccount).instanceIRODSFile(targetIrodsCollection);
+		DataTransferOperations dataTransferOperationsAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataTransferOperations(
+						irodsAccount);
+		dataTransferOperationsAO.putOperation(new File(fileNameOrig),
+				targetIrodsFile, null, null);
+		FreeTaggingService freeTaggingService = FreeTaggingServiceImpl
+				.instance(irodsFileSystem.getIRODSAccessObjectFactory(),
+						irodsAccount);
+
+		freeTaggingService.updateTagsForUserForADataObjectOrCollection(targetIrodsDataObject, irodsAccount.getUserName(), expectedTagName);
+
+		// now get the tags, should be a string with just the expected tag name
+		// in iRODS
+		IRODSTagGrouping actualTagGrouping = freeTaggingService.getTagsForDataObjectInFreeTagForm(targetIrodsDataObject);
+				
+		irodsFileSystem.close();
+
+		TestCase.assertNotNull(actualTagGrouping);
+		TestCase.assertEquals(targetIrodsDataObject, actualTagGrouping
+				.getDomainUniqueName());
+		TestCase.assertEquals(MetadataDomain.DATA, actualTagGrouping
+				.getMetadataDomain());
+		TestCase.assertEquals(expectedTagName, actualTagGrouping
+				.getSpaceDelimitedTagsForDomain());
+
+	}
+	
+	@Test(expected=JargonException.class)
+	public final void updateTagsWhenDataObjectNotExists()
+			throws Exception {
+
+		String testCollection = "updateTagsWhenDataObjectNotExists";
+		String testFileName = "updateTagsWhenDataObjectNotExists.txt";
+		String expectedTagName = "updateTagsWhenDataObjectNotExists";
+		
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + "/"
+								+ testCollection);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
+		IRODSFile targetIrodsCollectionFile = irodsFileSystem
+				.getIRODSFileFactory(irodsAccount).instanceIRODSFile(
+						targetIrodsCollection);
+
+		FreeTaggingService freeTaggingService = FreeTaggingServiceImpl
+				.instance(irodsFileSystem.getIRODSAccessObjectFactory(),
+						irodsAccount);
+
+		freeTaggingService.updateTagsForUserForADataObjectOrCollection(targetIrodsCollection + "/" + testFileName, irodsAccount.getUserName(), expectedTagName);
+	}
+	
+	@Test(expected=IllegalArgumentException.class)
+	public final void updateTagsNullPath()
+			throws Exception {
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		
+		IRODSAccessObjectFactory irodsAccessObjectFactory = Mockito.mock(IRODSAccessObjectFactory.class);
+		
+		FreeTaggingService freeTaggingService = FreeTaggingServiceImpl
+				.instance(irodsAccessObjectFactory,
+						irodsAccount);
+
+		freeTaggingService.updateTagsForUserForADataObjectOrCollection(null, irodsAccount.getUserName(), "tag");
+	}
+	
+	@Test(expected=IllegalArgumentException.class)
+	public final void updateTagsBlankPath()
+			throws Exception {
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		
+		IRODSAccessObjectFactory irodsAccessObjectFactory = Mockito.mock(IRODSAccessObjectFactory.class);
+		
+		FreeTaggingService freeTaggingService = FreeTaggingServiceImpl
+				.instance(irodsAccessObjectFactory,
+						irodsAccount);
+
+		freeTaggingService.updateTagsForUserForADataObjectOrCollection("", irodsAccount.getUserName(), "tag");
+	}
+	
+	@Test(expected=IllegalArgumentException.class)
+	public final void updateTagsNullUser()
+			throws Exception {
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		
+		IRODSAccessObjectFactory irodsAccessObjectFactory = Mockito.mock(IRODSAccessObjectFactory.class);
+		
+		FreeTaggingService freeTaggingService = FreeTaggingServiceImpl
+				.instance(irodsAccessObjectFactory,
+						irodsAccount);
+
+		freeTaggingService.updateTagsForUserForADataObjectOrCollection("file",null, "tag");
+	}
+	
+	@Test(expected=IllegalArgumentException.class)
+	public final void updateTagsBlankUser()
+			throws Exception {
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		
+		IRODSAccessObjectFactory irodsAccessObjectFactory = Mockito.mock(IRODSAccessObjectFactory.class);
+		
+		FreeTaggingService freeTaggingService = FreeTaggingServiceImpl
+				.instance(irodsAccessObjectFactory,
+						irodsAccount);
+
+		freeTaggingService.updateTagsForUserForADataObjectOrCollection("file","", "tag");
+	}
+
+	@Test(expected=IllegalArgumentException.class)
+	public final void updateTagsNullTags()
+			throws Exception {
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		
+		IRODSAccessObjectFactory irodsAccessObjectFactory = Mockito.mock(IRODSAccessObjectFactory.class);
+		
+		FreeTaggingService freeTaggingService = FreeTaggingServiceImpl
+				.instance(irodsAccessObjectFactory,
+						irodsAccount);
+
+		freeTaggingService.updateTagsForUserForADataObjectOrCollection("file","user", null);
 	}
 
 }

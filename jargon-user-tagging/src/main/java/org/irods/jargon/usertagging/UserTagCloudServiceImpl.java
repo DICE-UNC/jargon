@@ -50,11 +50,10 @@ public final class UserTagCloudServiceImpl extends AbstractIRODSTaggingService
 	 *            <code>IRODSAccount</code> that describes the target server and
 	 *            credentials.
 	 * @return instance of the <code>IRODSTaggingServiceImpl</code>
-	 * @throws JargonException
 	 */
 	public static UserTagCloudService instance(
 			final IRODSAccessObjectFactory irodsAccessObjectFactory,
-			final IRODSAccount irodsAccount) throws JargonException {
+			final IRODSAccount irodsAccount) {
 		return new UserTagCloudServiceImpl(irodsAccessObjectFactory,
 				irodsAccount);
 	}
@@ -69,11 +68,10 @@ public final class UserTagCloudServiceImpl extends AbstractIRODSTaggingService
 	 * @param irodsAccount
 	 *            <code>IRODSAccount</code> that describes the target server and
 	 *            credentials.
-	 * @throws JargonException
 	 */
 	private UserTagCloudServiceImpl(
 			IRODSAccessObjectFactory irodsAccessObjectFactory,
-			IRODSAccount irodsAccount) throws JargonException {
+			IRODSAccount irodsAccount)  {
 		super(irodsAccessObjectFactory, irodsAccount);
 	}
 	

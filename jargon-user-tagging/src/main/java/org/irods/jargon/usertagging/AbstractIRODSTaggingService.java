@@ -19,18 +19,17 @@ public abstract class AbstractIRODSTaggingService {
 	 * @param irodsAccount
 	 *            <code>IRODSAccount</code> that describes the target server and
 	 *            credentials.
-	 * @throws JargonException
 	 */
 	protected AbstractIRODSTaggingService(
 			final IRODSAccessObjectFactory irodsAccessObjectFactory,
-			final IRODSAccount irodsAccount) throws JargonException {
+			final IRODSAccount irodsAccount) {
 
 		if (irodsAccessObjectFactory == null) {
-			throw new JargonException("null irodsAccessObjectFactory");
+			throw new IllegalArgumentException("null irodsAccessObjectFactory");
 		}
 
 		if (irodsAccount == null) {
-			throw new JargonException("null irodsAccount");
+			throw new IllegalArgumentException("null irodsAccount");
 		}
 
 		this.irodsAccessObjectFactory = irodsAccessObjectFactory;

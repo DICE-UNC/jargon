@@ -11,6 +11,8 @@ import org.irods.jargon.core.pub.DataObjectAO;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 import org.irods.jargon.core.pub.domain.Collection;
 import org.irods.jargon.core.pub.domain.DataObject;
+import org.irods.jargon.core.pub.io.IRODSFile;
+import org.irods.jargon.core.pub.io.IRODSFileFactory;
 import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry;
 import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry.ObjectType;
 import org.irods.jargon.core.query.MetaDataAndDomainData.MetadataDomain;
@@ -59,11 +61,10 @@ public final class FreeTaggingServiceImpl extends AbstractIRODSTaggingService
 	 *            <code>IRODSAccount</code> that describes the target server and
 	 *            credentials.
 	 * @return <code>FreeTaggingService</code> implementation instance.
-	 * @throws JargonException
 	 */
 	public static FreeTaggingService instance(
 			final IRODSAccessObjectFactory irodsAccessObjectFactory,
-			final IRODSAccount irodsAccount) throws JargonException {
+			final IRODSAccount irodsAccount) {
 		return new FreeTaggingServiceImpl(irodsAccessObjectFactory,
 				irodsAccount, null);
 	}
@@ -115,8 +116,7 @@ public final class FreeTaggingServiceImpl extends AbstractIRODSTaggingService
 	private FreeTaggingServiceImpl(
 			final IRODSAccessObjectFactory irodsAccessObjectFactory,
 			final IRODSAccount irodsAccount,
-			final IRODSTaggingService irodsTaggingService)
-			throws JargonException {
+			final IRODSTaggingService irodsTaggingService) {
 		super(irodsAccessObjectFactory, irodsAccount);
 
 		if (irodsTaggingService == null) {
@@ -131,6 +131,67 @@ public final class FreeTaggingServiceImpl extends AbstractIRODSTaggingService
 	/*
 	 * (non-Javadoc)
 	 * 
+	 * @see org.irods.jargon.usertagging.FreeTaggingService#
+	 * updateTagsForUserForADataObjectOrCollection(java.lang.String,
+	 * java.lang.String, java.lang.String)
+	 */
+	@Override
+	public void updateTagsForUserForADataObjectOrCollection(
+			final String irodsAbsolutePath, final String userName,
+			final String tags) throws JargonException {
+
+		if (irodsAbsolutePath == null || irodsAbsolutePath.isEmpty()) {
+			throw new IllegalArgumentException(
+					"null or empty irodsAbsolutePath");
+		}
+
+		if (userName == null || userName.isEmpty()) {
+			throw new IllegalArgumentException("null or empty userName");
+		}
+		
+		if (tags == null) {
+			throw new IllegalArgumentException("null tags");
+		}
+
+
+		log.info("updateTagsForUser, irodsAbsolutePath:{}", irodsAbsolutePath);
+		log.info("userName:{}", userName);
+		log.info("tags:{}", tags);
+
+		// decide if file or collection
+
+		IRODSFileFactory irodsFileFactory = irodsAccessObjectFactory
+				.getIRODSFileFactory(irodsAccount);
+		IRODSFile fileToTag = irodsFileFactory
+				.instanceIRODSFile(irodsAbsolutePath);
+
+		if (!fileToTag.exists()) {
+			log.error("file to tag does not exist at absolute irods path:{}",
+					irodsAbsolutePath);
+			throw new JargonException("file to tag does not exist in irods");
+		}
+
+		boolean isDirectory = fileToTag.isDirectory();
+
+		MetadataDomain metadataDomain;
+
+		if (isDirectory) {
+			metadataDomain = MetadataDomain.COLLECTION;
+			log.debug("treating as a collection");
+		} else {
+			metadataDomain = MetadataDomain.DATA;
+		}
+
+		IRODSTagGrouping irodsTagGrouping = new IRODSTagGrouping(
+				metadataDomain, irodsAbsolutePath, tags, userName);
+		updateTags(irodsTagGrouping);
+		log.info("tags update");
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @seeorg.irods.jargon.usertagging.FreeTaggingService#
 	 * getTagsForDataObjectInFreeTagForm(java.lang.String)
 	 */
@@ -139,7 +200,8 @@ public final class FreeTaggingServiceImpl extends AbstractIRODSTaggingService
 			final String dataObjectAbsolutePath) throws JargonException {
 
 		if (dataObjectAbsolutePath == null || dataObjectAbsolutePath.isEmpty()) {
-			throw new JargonException("null or empty dataObjectAbsolutePath");
+			throw new IllegalArgumentException(
+					"null or empty dataObjectAbsolutePath");
 		}
 
 		log.info("getTagsForDataObjectInFreeTagForm for:{}",
@@ -176,7 +238,8 @@ public final class FreeTaggingServiceImpl extends AbstractIRODSTaggingService
 			final String collectionAbsolutePath) throws JargonException {
 
 		if (collectionAbsolutePath == null || collectionAbsolutePath.isEmpty()) {
-			throw new JargonException("null or empty collectionAbsolutePath");
+			throw new IllegalArgumentException(
+					"null or empty collectionAbsolutePath");
 		}
 
 		log.info("getTagsForCollectionInFreeTagForm for:{}",
@@ -370,7 +433,7 @@ public final class FreeTaggingServiceImpl extends AbstractIRODSTaggingService
 			throws JargonException {
 
 		if (searchTags == null || searchTags.isEmpty()) {
-			throw new JargonException("null or empty searchTags");
+			throw new IllegalArgumentException("null or empty searchTags");
 		}
 
 		log.info("searching on terms:{}", searchTags);

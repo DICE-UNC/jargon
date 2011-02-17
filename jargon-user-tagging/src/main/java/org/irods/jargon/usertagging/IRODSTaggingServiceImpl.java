@@ -56,7 +56,7 @@ public final class IRODSTaggingServiceImpl extends AbstractIRODSTaggingService i
 	 */
 	public static IRODSTaggingService instance(
 			final IRODSAccessObjectFactory irodsAccessObjectFactory,
-			final IRODSAccount irodsAccount) throws JargonException {
+			final IRODSAccount irodsAccount) {
 		return new IRODSTaggingServiceImpl(irodsAccessObjectFactory,
 				irodsAccount);
 	}
@@ -75,7 +75,7 @@ public final class IRODSTaggingServiceImpl extends AbstractIRODSTaggingService i
 	 */
 	private IRODSTaggingServiceImpl(
 			final IRODSAccessObjectFactory irodsAccessObjectFactory,
-			final IRODSAccount irodsAccount) throws JargonException {
+			final IRODSAccount irodsAccount) {
 
 		super(irodsAccessObjectFactory, irodsAccount);
 
@@ -93,11 +93,11 @@ public final class IRODSTaggingServiceImpl extends AbstractIRODSTaggingService i
 			final IRODSTagValue irodsTagValue) throws JargonException {
 
 		if (dataObjectAbsolutePath == null || dataObjectAbsolutePath.isEmpty()) {
-			throw new JargonException("null or empty dataObjectAbsolutepath");
+			throw new IllegalArgumentException("null or empty dataObjectAbsolutepath");
 		}
 
 		if (irodsTagValue == null) {
-			throw new JargonException("null irodsTagValue");
+			throw new IllegalArgumentException("null irodsTagValue");
 		}
 
 		log.info("adding tag:{}", irodsTagValue);

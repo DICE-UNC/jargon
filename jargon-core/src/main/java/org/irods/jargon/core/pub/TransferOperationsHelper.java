@@ -26,15 +26,11 @@ import org.slf4j.LoggerFactory;
 final class TransferOperationsHelper {
 
 	static Logger log = LoggerFactory.getLogger(TransferOperationsHelper.class);
-
-	private final IRODSSession irodsSession;
-	private final IRODSAccount irodsAccount;
-
 	private final DataObjectAO dataObjectAO;
 	private final CollectionAO collectionAO;
 
 	/**
-	 * Initializer creates an instance of htis class.
+	 * Initializer creates an instance of this class.
 	 * 
 	 * @param irodsSession
 	 *            <code>IRODSSession</code> that can connect to iRODS
@@ -54,9 +50,7 @@ final class TransferOperationsHelper {
 		if (irodsSession == null || irodsAccount == null) {
 			throw new JargonException("null irodsSession or irodsAccount");
 		}
-
-		this.irodsSession = irodsSession;
-		this.irodsAccount = irodsAccount;
+	
 		this.dataObjectAO = new DataObjectAOImpl(irodsSession, irodsAccount);
 		this.collectionAO = new CollectionAOImpl(irodsSession, irodsAccount);
 
