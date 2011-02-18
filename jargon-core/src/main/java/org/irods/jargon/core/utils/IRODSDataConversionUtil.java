@@ -8,8 +8,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
-import org.irods.jargon.core.exception.JargonException;
-
 /**
  * Handle iRODS representations of data from GenQuery and translation into
  * 
@@ -27,15 +25,13 @@ public class IRODSDataConversionUtil {
 	 * 
 	 * @param irodsValue
 	 * @return <code>int</code> equivilent of irods value
-	 * @throws JargonException
 	 */
-	public static int getIntOrZeroFromIRODSValue(final String irodsValue)
-			throws JargonException {
+	public static int getIntOrZeroFromIRODSValue(final String irodsValue) {
 
 		int result = 0;
 
 		if (irodsValue == null) {
-			throw new JargonException("null irodsValue");
+			throw new IllegalArgumentException("null irodsValue");
 		}
 
 		if (irodsValue.isEmpty()) {
@@ -44,8 +40,8 @@ public class IRODSDataConversionUtil {
 			try {
 				result = Integer.parseInt(irodsValue);
 			} catch (NumberFormatException nfe) {
-				throw new JargonException("cannot format number:" + irodsValue,
-						nfe);
+				throw new IllegalArgumentException("cannot format number:"
+						+ irodsValue, nfe);
 			}
 		}
 
@@ -59,15 +55,13 @@ public class IRODSDataConversionUtil {
 	 * 
 	 * @param irodsValue
 	 * @return <code>long</code> equivilent of irods value
-	 * @throws JargonException
 	 */
-	public static long getLongOrZeroFromIRODSValue(final String irodsValue)
-			throws JargonException {
+	public static long getLongOrZeroFromIRODSValue(final String irodsValue) {
 
 		long result = 0L;
 
 		if (irodsValue == null) {
-			throw new JargonException("null irodsValue");
+			throw new IllegalArgumentException("null irodsValue");
 		}
 
 		if (irodsValue.isEmpty()) {
@@ -76,8 +70,8 @@ public class IRODSDataConversionUtil {
 			try {
 				result = Long.parseLong(irodsValue);
 			} catch (NumberFormatException nfe) {
-				throw new JargonException("cannot format number:" + irodsValue,
-						nfe);
+				throw new IllegalArgumentException("cannot format number:"
+						+ irodsValue, nfe);
 			}
 		}
 
@@ -92,14 +86,11 @@ public class IRODSDataConversionUtil {
 	 *            <code>String</code> containing an IRODS date value as returned
 	 *            from a query to ICAT
 	 * @return <code>java.util.Date</code> reflecting the IRODS time
-	 * @throws JargonException
-	 *             thrown if the date value is missing or not numeric
 	 */
-	public static Date getDateFromIRODSValue(final String irodsValue)
-			throws JargonException {
+	public static Date getDateFromIRODSValue(final String irodsValue) {
 
 		if (irodsValue == null) {
-			throw new JargonException("null date value");
+			throw new IllegalArgumentException("null date value");
 		}
 
 		if (irodsValue.isEmpty()) {
@@ -111,7 +102,7 @@ public class IRODSDataConversionUtil {
 		try {
 			dateInteger = Integer.parseInt(irodsValue);
 		} catch (NumberFormatException nfe) {
-			throw new JargonException(
+			throw new IllegalArgumentException(
 					"malformed date value, cannot translate to integer:"
 							+ irodsValue);
 		}
@@ -127,10 +118,9 @@ public class IRODSDataConversionUtil {
 		return computedDate;
 	}
 
-	public static String escapeSingleQuotes(final String inputString)
-			throws JargonException {
+	public static String escapeSingleQuotes(final String inputString) {
 		if (inputString == null) {
-			throw new JargonException("null inputString");
+			throw new IllegalArgumentException("null inputString");
 		}
 
 		return inputString.replace("'", "\\'");

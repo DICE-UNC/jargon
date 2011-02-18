@@ -123,4 +123,13 @@ public class DefaultPropertiesJargonConfig implements JargonProperties {
 
 	}
 
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.core.connection.JargonProperties#cacheFIleMetadata()
+	 */
+	@Override
+	public boolean isCacheFIleMetadata() throws JargonException {
+		String propVal = verifyPropExistsAndGetAsString("cache.file.metadata");
+		return Boolean.valueOf(propVal);
+	}
+
 }

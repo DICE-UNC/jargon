@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.irods.jargon.core.exception.DataNotFoundException;
@@ -18,6 +19,7 @@ import org.irods.jargon.core.exception.JargonFileOrCollAlreadyExistsException;
 import org.irods.jargon.core.exception.JargonRuntimeException;
 import org.irods.jargon.core.packinstr.DataObjInp;
 import org.irods.jargon.core.pub.IRODSFileSystemAO;
+import org.irods.jargon.core.pub.domain.DataObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,6 +50,10 @@ public final class IRODSFileImpl extends File implements IRODSFile {
 	int fileDescriptor = -1;
 	private List<String> directory = new ArrayList<String>();
 	private PathNameType pathNameType = PathNameType.UNKNOWN;
+	
+	// note that these values are used internally for optional caching of system metadata.  Depending on the object type, only one will be cached.
+	private DataObject dataObject = null;
+	private Collection collection = null;
 
 	private static final long serialVersionUID = -6986662136294659059L;
 

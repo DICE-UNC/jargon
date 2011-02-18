@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.protovalues.FilePermissionEnum;
 import org.irods.jargon.core.pub.domain.Collection;
 import org.irods.jargon.core.query.AVUQueryElement;
 import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry;
@@ -212,6 +213,32 @@ public class CollectionAOHelper extends AOHelper {
 				.getColumn(3)));
 		entry.setId(IRODSDataConversionUtil.getIntOrZeroFromIRODSValue(row
 				.getColumn(4)));
+		entry.setOwnerName(row.getColumn(5));
+
+		entry.setCount(row.getRecordCount());
+		entry.setLastResult(row.isLastResult());
+
+		if (LOG.isDebugEnabled()) {
+			LOG.info("listing entry built {}", entry.toString());
+		}
+		return entry;
+	}
+	
+	public static CollectionAndDataObjectListingEntry buildCollectionListEntryFromResultSetRowForCollectionQueryWithAccessPermissions(
+			final IRODSQueryResultRow row) throws JargonException {
+		CollectionAndDataObjectListingEntry entry = new CollectionAndDataObjectListingEntry();
+		entry.setParentPath(row.getColumn(1));
+		entry.setObjectType(ObjectType.COLLECTION);
+		entry.setPathOrName(row.getColumn(0));
+		entry.setCreatedAt(IRODSDataConversionUtil.getDateFromIRODSValue(row
+				.getColumn(2)));
+		entry.setModifiedAt(IRODSDataConversionUtil.getDateFromIRODSValue(row
+				.getColumn(3)));
+		entry.setId(IRODSDataConversionUtil.getIntOrZeroFromIRODSValue(row
+				.getColumn(4)));
+		entry.setOwnerName(row.getColumn(5));
+		entry.setFilePermissionEnum(FilePermissionEnum.valueOf(IRODSDataConversionUtil.getIntOrZeroFromIRODSValue(row
+				.getColumn(6))));
 
 		entry.setCount(row.getRecordCount());
 		entry.setLastResult(row.isLastResult());
@@ -273,6 +300,8 @@ public class CollectionAOHelper extends AOHelper {
 		query.append(RodsGenQueryEnum.COL_COLL_MODIFY_TIME.getName());
 		query.append(COMMA);
 		query.append(RodsGenQueryEnum.COL_COLL_ID.getName());
+		query.append(COMMA);
+		query.append(RodsGenQueryEnum.COL_COLL_OWNER_NAME.getName());
 		return query.toString();
 	}
 
@@ -323,5 +352,6 @@ public class CollectionAOHelper extends AOHelper {
 		query.append("'");
 		return query.toString();
 	}
+
 
 }

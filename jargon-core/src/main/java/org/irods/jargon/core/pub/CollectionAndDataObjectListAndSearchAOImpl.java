@@ -8,6 +8,7 @@ import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.aohelper.CollectionAOHelper;
+import org.irods.jargon.core.pub.domain.User;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.pub.io.IRODSFileFactory;
 import org.irods.jargon.core.pub.io.IRODSFileFactoryImpl;
@@ -95,7 +96,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 					"attempting to count children under a file at path:"
 							+ absolutePathToParent);
 		}
-
+		
 		IRODSGenQueryExecutor irodsGenQueryExecutor = new IRODSGenQueryExecutorImpl(
 				this.getIRODSSession(), this.getIRODSAccount());
 
@@ -298,6 +299,82 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		for (IRODSQueryResultRow row : resultSet.getResults()) {
 			collectionAndDataObjectListingEntry = CollectionAOHelper
 					.buildCollectionListEntryFromResultSetRowForCollectionQuery(row);
+
+			/*
+			 * for some reason, a query for collections with a parent of '/'
+			 * returns the root as a result, which creates weird situations when
+			 * trying to show collections in a tree structure. This test papers
+			 * over that idiosyncrasy and discards that extraneous result.
+			 */
+			if (!collectionAndDataObjectListingEntry.getPathOrName()
+					.equals("/")) {
+				subdirs.add(collectionAndDataObjectListingEntry);
+			}
+		}
+
+		return subdirs;
+
+	}
+	
+	public List<CollectionAndDataObjectListingEntry> listCollectionsUnderPathWithPermissionsForUser(
+			final String absolutePathToParent, final String userName, final int partialStartIndex)
+			throws DataNotFoundException, JargonException {
+
+		if (absolutePathToParent == null) {
+			throw new IllegalArgumentException("absolutePathToParent is null");
+		}
+		
+		if (userName == null || userName.isEmpty())  {
+			throw new IllegalArgumentException("userName is null or empty");
+		}
+
+		String path;
+		List<CollectionAndDataObjectListingEntry> subdirs = new ArrayList<CollectionAndDataObjectListingEntry>();
+
+		if (absolutePathToParent.isEmpty()) {
+			path = "/";
+		} else {
+			path = absolutePathToParent;
+		}
+
+		LOG.info("listCollectionsUnderPathWithPermissionsForUser for: {}", path);
+		LOG.info("for user:{}", userName);
+		IRODSFile irodsFile = irodsFileFactory
+				.instanceIRODSFile(absolutePathToParent);
+
+		if (irodsFile.isDirectory()) {
+			LOG.debug("is directory");
+			path = irodsFile.getAbsolutePath();
+		} else {
+			path = irodsFile.getParent();
+			LOG.debug("is file, using parent path: {}", path);
+		}
+
+		IRODSGenQueryExecutor irodsGenQueryExecutor = new IRODSGenQueryExecutorImpl(
+				this.getIRODSSession(), this.getIRODSAccount());
+		
+		UserAO userAO = new UserAOImpl(getIRODSSession(), getIRODSAccount());
+		User user = userAO.findByName(userName);		
+		
+		StringBuilder query = new StringBuilder(
+				IRODSFileSystemAOHelper.buildQueryListAllDirsWithUserAccessInfo(path, user.getId()));
+		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(query.toString(),
+				1000);
+		IRODSQueryResultSetInterface resultSet;
+
+		try {
+			resultSet = irodsGenQueryExecutor.executeIRODSQueryWithPaging(
+					irodsQuery, partialStartIndex);
+		} catch (JargonQueryException e) {
+			LOG.error(QUERY_EXCEPTION_FOR_QUERY  + query.toString(), e);
+			throw new JargonException(e);
+		}
+
+		CollectionAndDataObjectListingEntry collectionAndDataObjectListingEntry = null;
+
+		for (IRODSQueryResultRow row : resultSet.getResults()) {
+			collectionAndDataObjectListingEntry = CollectionAOHelper
+					.buildCollectionListEntryFromResultSetRowForCollectionQueryWithAccessPermissions(row);
 
 			/*
 			 * for some reason, a query for collections with a parent of '/'

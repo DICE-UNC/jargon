@@ -121,11 +121,34 @@ public class IRODSFileSystemAOHelper extends AOHelper {
 		query.append(IRODSDataConversionUtil.escapeSingleQuotes(path));
 		query.append("'");
 
-		if (log.isDebugEnabled()) {
-			log.debug("query for files:" + query.toString());
+		log.debug("query for files:{}", query.toString());
 
-		}
 		return query.toString();
 
+	}
+
+	public static String buildQueryListAllDirsWithUserAccessInfo(String path,
+			String id) {
+		StringBuilder query;
+		query = new StringBuilder();
+		query.append("SELECT ");
+
+		query.append(CollectionAOHelper
+				.buildSelectsNeededForCollectionsInCollectionsAndDataObjectsListingEntry());
+		query.append(COMMA);
+		query.append(RodsGenQueryEnum.COL_COLL_ACCESS_TYPE.getName());
+		query.append(" WHERE ");
+		query.append(RodsGenQueryEnum.COL_COLL_PARENT_NAME.getName());
+		query.append(" = '");
+		query.append(IRODSDataConversionUtil.escapeSingleQuotes(path)); 
+		query.append("'");
+		query.append("  AND ");
+		query.append(RodsGenQueryEnum.COL_COLL_ACCESS_USER_ID.getName());
+		query.append(" = '");
+		query.append(id); 
+		query.append("'");
+
+		log.debug("query for dirs:{}", query.toString());
+		return query.toString();
 	}
 }

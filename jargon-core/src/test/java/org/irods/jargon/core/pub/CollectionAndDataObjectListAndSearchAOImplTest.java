@@ -9,6 +9,7 @@ import junit.framework.TestCase;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.DataNotFoundException;
+import org.irods.jargon.core.protovalues.FilePermissionEnum;
 import org.irods.jargon.core.pub.domain.Collection;
 import org.irods.jargon.core.pub.domain.DataObject;
 import org.irods.jargon.core.pub.io.IRODSFile;
@@ -120,6 +121,8 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 		Assert.assertEquals(
 				CollectionAndDataObjectListingEntry.ObjectType.COLLECTION,
 				entry.getObjectType());
+		Assert.assertEquals("i am not the owner", irodsAccount.getUserName(), entry.getOwnerName());
+
 
 		irodsFileSystem.close();
 
@@ -127,6 +130,56 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 		// TestCase.assertTrue(entry.isLastResult());
 		Assert.assertEquals(entry.getCount(), entries.size());
 		Assert.assertEquals(500, entries.size());
+
+	}
+	
+	@Test
+	public void testListCollectionsUnderPathForUser() throws Exception {
+
+		String subdirPrefix = "testListCollectionsUnderPathForUser";
+		int count = 20;
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + "/"
+								+ subdirPrefix);
+		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetIrodsCollection);
+		irodsFile.mkdir();
+		irodsFile.close();
+
+		String myTarget = "";
+
+		for (int i = 0; i < count; i++) {
+			myTarget = targetIrodsCollection + "/c" + (10000 + i)
+					+ subdirPrefix;
+			irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+					.instanceIRODSFile(myTarget);
+			irodsFile.mkdir();
+			irodsFile.close();
+		}
+
+		CollectionAndDataObjectListAndSearchAOImpl actual = (CollectionAndDataObjectListAndSearchAOImpl) irodsFileSystem
+				.getIRODSAccessObjectFactory()
+				.getCollectionAndDataObjectListAndSearchAO(irodsAccount);
+		List<CollectionAndDataObjectListingEntry> entries = actual
+				.listCollectionsUnderPathWithPermissionsForUser(targetIrodsCollection, irodsAccount.getUserName(), 0);
+		Assert.assertNotNull(entries);
+		Assert.assertFalse(entries.isEmpty());
+		CollectionAndDataObjectListingEntry entry = entries
+				.get(entries.size() - 1);
+		Assert.assertEquals(entry.getCount(), entries.size());
+		Assert.assertEquals("i should own this file", FilePermissionEnum.OWN, entry.getFilePermissionEnum());
+		Assert.assertEquals("i am not the owner", irodsAccount.getUserName(), entry.getOwnerName());
+
+		irodsFileSystem.close();
+
+		Assert.assertTrue(entry.isLastResult());
+		
 
 	}
 

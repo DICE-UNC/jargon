@@ -3,6 +3,7 @@ package org.irods.jargon.core.query;
 import java.util.Date;
 
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.protovalues.FilePermissionEnum;
 import org.irods.jargon.core.pub.domain.IRODSDomainObject;
 
 /**
@@ -34,6 +35,8 @@ public class CollectionAndDataObjectListingEntry extends IRODSDomainObject {
 	private Date createdAt = null;
 	private Date modifiedAt = null;
 	private long dataSize = 0L;
+	private String ownerName = "";
+	private FilePermissionEnum filePermissionEnum = FilePermissionEnum.NONE;
 	private int id;
 
 	/**
@@ -209,6 +212,22 @@ public class CollectionAndDataObjectListingEntry extends IRODSDomainObject {
 
 	public boolean isDataObject() {
 		return (objectType == ObjectType.DATA_OBJECT);
+	}
+
+	public FilePermissionEnum getFilePermissionEnum() {
+		return filePermissionEnum;
+	}
+
+	public void setFilePermissionEnum(FilePermissionEnum filePermissionEnum) {
+		this.filePermissionEnum = filePermissionEnum;
+	}
+
+	public String getOwnerName() {
+		return ownerName;
+	}
+
+	public void setOwnerName(String ownerName) {
+		this.ownerName = ownerName;
 	}
 
 }
