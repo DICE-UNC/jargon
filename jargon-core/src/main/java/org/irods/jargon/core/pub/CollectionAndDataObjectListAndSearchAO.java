@@ -309,4 +309,40 @@ public interface CollectionAndDataObjectListAndSearchAO {
 			String absolutePathToParent, int partialStartIndex)
 			throws JargonException;
 
+	/**
+	 * This method is in support of applications and interfaces that need to
+	 * support listing and paging of collections. This method returns a simple
+	 * value object that contains information about paging for each object, such
+	 * as record count, and whether this is the last record.  This method adds the user ACL information, which is
+	 * derived from an extended query.  
+	 * <p/>
+	 * This method is meant for listings, or building trees.  As such, it does not show any information about replicas, rather,
+	 * it groups the data by data object path for all replicas.
+	 * <p/>
+	 * Note that this collection is composed of a collection of objects for
+	 * child collections, and a collection of objects for child data objects
+	 * (subdirectories versus files). There are separate counts and
+	 * 'isLastEntry' values for each type, discriminated by the
+	 * <code>CollectionAndDataObjectListingEntry.objectType</code>. In usage,
+	 * this method would be called for the parent directory under which the
+	 * subdirectories and files should be listed. The response will include the
+	 * sum of both files and subdirectories, and each type may have more
+	 * results. Once this result is returned, the
+	 * <code>listDataObjectsUnderPath</code> and
+	 * <code>listCollectionsUnderPath</code> methods may be called separately
+	 * with a partial start index value as appropriate. It is up to the caller
+	 * to determine which types need paging.
+	 * 
+	 * @param absolutePathToParent
+	 *            <code>String</code> with the absolute path to the parent. If
+	 *            blank, the root is used. If the path is really a file, the
+	 *            method will list from the parent of the file.
+	 * @return <code>List</code> of
+	 *         {@link org.irods.jargon.core.query.CollectionAndDataObjectListingEntry}
+	 *         containing both files and collections
+	 * @throws JargonException
+	 */
+	List<CollectionAndDataObjectListingEntry> listDataObjectsAndCollectionsUnderPathWithPermissions(
+			String absolutePathToParent) throws JargonException;
+
 }

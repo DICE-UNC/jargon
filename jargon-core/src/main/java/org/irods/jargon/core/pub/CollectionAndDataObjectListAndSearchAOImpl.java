@@ -66,6 +66,18 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		entries.addAll(listDataObjectsUnderPath(absolutePathToParent, 0));
 		return entries;
 	}
+	
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.core.pub.CollectionAndDataObjectListAndSearchAO#listDataObjectsAndCollectionsUnderPathWithPermissions(java.lang.String)
+	 */
+	@Override
+	public List<CollectionAndDataObjectListingEntry> listDataObjectsAndCollectionsUnderPathWithPermissions(
+			final String absolutePathToParent) throws JargonException {
+		List<CollectionAndDataObjectListingEntry> entries = listCollectionsUnderPathWithPermissions(
+				absolutePathToParent, 0);
+		entries.addAll(listDataObjectsUnderPathWithPermissions(absolutePathToParent, 0));
+		return entries;
+	}
 
 	/*
 	 * (non-Javadoc)
