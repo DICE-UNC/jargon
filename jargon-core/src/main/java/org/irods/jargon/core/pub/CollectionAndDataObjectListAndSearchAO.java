@@ -264,4 +264,49 @@ public interface CollectionAndDataObjectListAndSearchAO {
 	Object getFullObjectForType(String objectAbsolutePath)
 			throws DataNotFoundException, JargonException;
 
+	/**
+	 * Retrieve a list of collections (not data objects) underneath a given parent path, with the user ACL permissions displayed.  This is equivalent to the ls -la 
+	 * results.  The returned <code>CollectionAndDataObjectListingEntry</code> objects will have a collection of <code>UserFilePermission</code> objects that 
+	 * detail the permissions.
+		 * @param absolutePathToParent
+	 *            <code>String</code> with the absolute path to the parent. If
+	 *            blank, the root is used. If the path is really a file, the
+	 *            method will list from the parent of the file.
+	 * @param partialStartIndex
+	 *            <code>int</code> with the offset from which to start returning
+	 *            results.
+	 * @return <code>List</code> of
+	 *         {@link org.irods.jargon.core.query.CollectionAndDataObjectListingEntry} including file permissions
+	 * @throws DataNotFoundException
+	 * @throws JargonException
+	 */
+	List<CollectionAndDataObjectListingEntry> listCollectionsUnderPathWithPermissions(
+			String absolutePathToParent, int partialStartIndex)
+			throws DataNotFoundException, JargonException;  //FIXME: why datanotfound exception?  clean up
+
+	/**
+	 * This is a method that can support listing and paging of data objects in a
+	 * collection, including ACL information.  This is suitable for creating interfaces that need to handle paging
+	 * of large collections. Note that this method returns a simple value object
+	 * that contains information about paging for each object. Clients of this
+	 * method can inspect the returned results to determine the position of each
+	 * result and whether there are more records to display.
+	 * <p/>
+	 * This method is not a search method, it simply lists.
+	 * 
+	 * @param absolutePathToParent
+	 *            <code>String</code> with the absolute path to the parent. If
+	 *            blank, the root is used. If the path is really a file, the
+	 *            method will list from the parent of the file.
+	 * @param partialStartIndex
+	 *            <code>int</code> with the offset from which to start returning
+	 *            results.
+	 * @return <code>List</code> of
+	 *         {@link org.irods.jargon.core.query.CollectionAndDataObjectListingEntry} with included per-user ACL information
+	 * @throws JargonException
+	 */
+	List<CollectionAndDataObjectListingEntry> listDataObjectsUnderPathWithPermissions(
+			String absolutePathToParent, int partialStartIndex)
+			throws JargonException;
+
 }

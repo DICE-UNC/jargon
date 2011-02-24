@@ -38,7 +38,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Access to CRUD and query operations on IRODS Resource.
- * 
+ * <p/>
  * AO objects are not shared between threads. Jargon services will confine
  * activities to one connection per thread.
  * 
