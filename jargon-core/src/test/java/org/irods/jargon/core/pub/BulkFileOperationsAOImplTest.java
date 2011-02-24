@@ -60,7 +60,7 @@ public class BulkFileOperationsAOImplTest {
 				bulkFileOperationsAO);
 	}
 
-	@Test
+	@Test(expected=JargonException.class)
 	public void testCreateBundleNoOverwriteCollectionExists() throws Exception {
 		String tarName = "testCreateBundleNoOverwriteCollectionExists.tar";
 		String testSubdir = "testCreateBundleNoOverwriteCollectionExists";
@@ -77,8 +77,8 @@ public class BulkFileOperationsAOImplTest {
 		IRODSServerProperties props = environmentalInfoAO
 				.getIRODSServerPropertiesFromIRODSServer();
 
-		// test is only valid for post 2.4.1 
-		if (!props.isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods2.4.1")) {
+		// test is only valid for 2.5
+		if (!props.isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods2.5")) {
 			irodsFileSystem.closeAndEatExceptions();
 			return;
 		}

@@ -66,16 +66,20 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		entries.addAll(listDataObjectsUnderPath(absolutePathToParent, 0));
 		return entries;
 	}
-	
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.pub.CollectionAndDataObjectListAndSearchAO#listDataObjectsAndCollectionsUnderPathWithPermissions(java.lang.String)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.pub.CollectionAndDataObjectListAndSearchAO#
+	 * listDataObjectsAndCollectionsUnderPathWithPermissions(java.lang.String)
 	 */
 	@Override
 	public List<CollectionAndDataObjectListingEntry> listDataObjectsAndCollectionsUnderPathWithPermissions(
 			final String absolutePathToParent) throws JargonException {
 		List<CollectionAndDataObjectListingEntry> entries = listCollectionsUnderPathWithPermissions(
 				absolutePathToParent, 0);
-		entries.addAll(listDataObjectsUnderPathWithPermissions(absolutePathToParent, 0));
+		entries.addAll(listDataObjectsUnderPathWithPermissions(
+				absolutePathToParent, 0));
 		return entries;
 	}
 
@@ -231,8 +235,11 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 				this.getIRODSSession(), this.getIRODSAccount());
 
 		StringBuilder query = new StringBuilder(
-				IRODSFileSystemAOHelper.buildQueryListAllCollections(sb.toString()));
-		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(sb.toString(), getIRODSSession().getJargonProperties().getMaxFilesAndDirsQueryMax());
+				IRODSFileSystemAOHelper.buildQueryListAllCollections(sb
+						.toString()));
+		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(sb.toString(),
+				getIRODSSession().getJargonProperties()
+						.getMaxFilesAndDirsQueryMax());
 		IRODSQueryResultSetInterface resultSet;
 
 		try {
@@ -277,7 +284,8 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 			path = absolutePathToParent;
 		}
 
-		String query = IRODSFileSystemAOHelper.buildQueryListAllCollections(path);
+		String query = IRODSFileSystemAOHelper
+				.buildQueryListAllCollections(path);
 
 		IRODSQueryResultSetInterface resultSet = queryForPathAndReturnResultSet(
 				path, query, partialStartIndex);
@@ -384,12 +392,12 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 
 		if (collectionAndDataObjectListingEntry != null) {
 			if (isAtEndOfQueryResults) {
-				LOG.debug("ignoring last entry, as it might carry over to the next page of results");
-			} else {
 				LOG.debug("adding last entry");
 				collectionAndDataObjectListingEntry
 						.setUserFilePermission(userFilePermissions);
 				subdirs.add(collectionAndDataObjectListingEntry);
+			} else {
+				LOG.debug("ignoring last entry, as it might carry over to the next page of results");
 			}
 		}
 
@@ -418,7 +426,9 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		IRODSGenQueryExecutor irodsGenQueryExecutor = new IRODSGenQueryExecutorImpl(
 				this.getIRODSSession(), this.getIRODSAccount());
 
-		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(queryString, getIRODSSession().getJargonProperties().getMaxFilesAndDirsQueryMax());
+		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(queryString,
+				getIRODSSession().getJargonProperties()
+						.getMaxFilesAndDirsQueryMax());
 		IRODSQueryResultSetInterface resultSet;
 
 		try {
@@ -476,7 +486,8 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 				IRODSFileSystemAOHelper
 						.buildQueryListAllDataObjectsWithSizeAndDateInfo(path));
 		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(query.toString(),
-				getIRODSSession().getJargonProperties().getMaxFilesAndDirsQueryMax());
+				getIRODSSession().getJargonProperties()
+						.getMaxFilesAndDirsQueryMax());
 		IRODSQueryResultSetInterface resultSet;
 
 		try {
@@ -489,8 +500,8 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 
 		/*
 		 * the query that gives the necessary data will cause duplication when
-		 * there are replicas,  so discard
-		 * duplicates.  This is the nature of GenQuery.
+		 * there are replicas, so discard duplicates. This is the nature of
+		 * GenQuery.
 		 */
 		String lastPath = "";
 		String currentPath = "";
@@ -516,8 +527,11 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 
 	}
 
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.pub.CollectionAndDataObjectListAndSearchAO#listDataObjectsUnderPathWithPermissions(java.lang.String, int)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.pub.CollectionAndDataObjectListAndSearchAO#
+	 * listDataObjectsUnderPathWithPermissions(java.lang.String, int)
 	 */
 	@Override
 	public List<CollectionAndDataObjectListingEntry> listDataObjectsUnderPathWithPermissions(
@@ -528,24 +542,28 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 			throw new JargonException("absolutePathToParent is null");
 		}
 
-		LOG.info("listDataObjectsUnderPathWithPermissions for: {}", absolutePathToParent);
-	
+		LOG.info("listDataObjectsUnderPathWithPermissions for: {}",
+				absolutePathToParent);
+
 		List<CollectionAndDataObjectListingEntry> files = new ArrayList<CollectionAndDataObjectListingEntry>();
-		
+
 		if (absolutePathToParent.isEmpty()) {
 			return files;
 		}
-		
-		String queryString = IRODSFileSystemAOHelper.buildQueryListAllDataObjectsWithUserAccessInfo(absolutePathToParent);
-		IRODSQueryResultSetInterface resultSet = this.queryForPathAndReturnResultSet(absolutePathToParent, queryString, partialStartIndex);
+
+		String queryString = IRODSFileSystemAOHelper
+				.buildQueryListAllDataObjectsWithUserAccessInfo(absolutePathToParent);
+		IRODSQueryResultSetInterface resultSet = this
+				.queryForPathAndReturnResultSet(absolutePathToParent,
+						queryString, partialStartIndex);
 		LOG.debug("got result set:{}}, resultSet");
-	
+
 		/*
 		 * the query that gives the necessary data will cause duplication when
 		 * there are replicas, but the data is necessary to get, so discard
 		 * duplicates.
 		 */
-		
+
 		String currentPath = null;
 		String lastPath = "";
 		String currentReplNumber = null;
@@ -556,23 +574,23 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		List<UserFilePermission> userFilePermissions = new ArrayList<UserFilePermission>();
 
 		for (IRODSQueryResultRow row : resultSet.getResults()) {
-			
+
 			StringBuilder sb = new StringBuilder();
 			sb.append(row.getColumn(0));
 			sb.append('/');
 			sb.append(row.getColumn(1));
 			currentPath = sb.toString();
-			
+
 			currentReplNumber = row.getColumn(6);
 			lastCount = row.getRecordCount();
 			lastRecord = row.isLastResult();
-			
+
 			// first look for break in path
-			
+
 			if (currentPath.equals(lastPath)) {
-				
+
 				// look for break in repl number
-				
+
 				if (currentReplNumber.equals(lastReplNumber)) {
 					// accumulate a permissions entry
 					CollectionAOHelper.buildUserFilePermissionForDataObject(
@@ -580,41 +598,54 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 				} else {
 					// ignore, is a replica
 				}
-				
+
 				continue;
 			}
-			
+
 			// a break has occurred on path
-			
+
 			if (entry != null) {
 				// put out previous entry
 				entry.setUserFilePermission(userFilePermissions);
-				// adjust the 'last count' so that it accurately reflects the actual query result row that caused the break, used in requery to not reread the same data
-				entry.setCount(lastCount -1); 
+				// adjust the 'last count' so that it accurately reflects the
+				// actual query result row that caused the break, used in
+				// requery to not reread the same data
+				entry.setCount(lastCount - 1);
 				files.add(entry);
 			}
-			
+
 			// clear and reinitialize for new entry set
-			entry = CollectionAOHelper.buildCollectionListEntryFromResultSetRowForDataObjectQuery(row);
+			entry = CollectionAOHelper
+					.buildCollectionListEntryFromResultSetRowForDataObjectQuery(row);
 			lastPath = currentPath;
 			lastReplNumber = currentReplNumber;
 			userFilePermissions = new ArrayList<UserFilePermission>();
 			CollectionAOHelper.buildUserFilePermissionForDataObject(
 					userFilePermissions, row);
-			
-		} 
 
-		// process the last entry, if needed
-		
-		if (entry != null) {
-			// put out previous entry
-			entry.setUserFilePermission(userFilePermissions);
-			// adjust the 'last count' so that it accurately reflects the actual query result row that caused the break, used in requery to not reread the same data
-			entry.setCount(lastCount); 
-			entry.setLastResult(lastRecord);
-			files.add(entry);
 		}
-		
+
+		/*
+		 * process the last entry, if needed. If more data is coming, then skip
+		 * the last entry. This is so the first entry of the next data object
+		 * will include this data.
+		 */
+
+		if (entry != null) {
+			if (lastRecord) {
+				// put out previous entry
+				entry.setUserFilePermission(userFilePermissions);
+				// adjust the 'last count' so that it accurately reflects the
+				// actual query result row that caused the break, used in
+				// requery to not reread the same data
+				entry.setCount(lastCount);
+				entry.setLastResult(lastRecord);
+				files.add(entry);
+			} else {
+				LOG.debug("skipping last entry as it may carry over to the next query page");
+			}
+		}
+
 		return files;
 
 	}
@@ -666,8 +697,11 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 				this.getIRODSSession(), this.getIRODSAccount());
 
 		StringBuilder query = new StringBuilder(
-				IRODSFileSystemAOHelper.buildQueryListAllCollections(sb.toString()));
-		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(sb.toString(), getIRODSSession().getJargonProperties().getMaxFilesAndDirsQueryMax());
+				IRODSFileSystemAOHelper.buildQueryListAllCollections(sb
+						.toString()));
+		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(sb.toString(),
+				getIRODSSession().getJargonProperties()
+						.getMaxFilesAndDirsQueryMax());
 		IRODSQueryResultSetInterface resultSet;
 
 		try {
