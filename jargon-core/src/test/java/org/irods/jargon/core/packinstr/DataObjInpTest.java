@@ -68,7 +68,7 @@ public class DataObjInpTest {
 
 	@Test
 	public final void testInstanceForGet() throws Exception {
-		DataObjInp dataObjInp = DataObjInp.instanceForGet("/abspath", null);
+		DataObjInp dataObjInp = DataObjInp.instanceForGet("/abspath", 0, null);
 		TestCase.assertNotNull("data obj inp returned was null", dataObjInp);
 		TestCase.assertEquals("wrong API number assigned",
 				DataObjInp.GET_FILE_API_NBR, dataObjInp.getApiNumber());
@@ -163,7 +163,7 @@ public class DataObjInpTest {
 	public final void testGetParsedTagsForGet() throws Exception {
 		DataObjInp dataObjInp = DataObjInp
 				.instanceForGet(
-						"/test1/home/test1/test-scratch/IrodsCommandsGetTest/testGet.txt",
+						"/test1/home/test1/test-scratch/IrodsCommandsGetTest/testGet.txt", 0,
 						null);
 
 		StringBuilder sb = new StringBuilder();

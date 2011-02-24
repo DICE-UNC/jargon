@@ -554,9 +554,9 @@ public final class DataObjectAOImpl extends IRODSGenericAO implements
 		}
 
 		TransferOptions transferOptions = buildTransferOptionsBasedOnJargonProperties();
-		
+		long irodsFileLength = irodsFileToGet.length();
 		log.info("testing file length to set parallel transfer options");
-		if (irodsFileToGet.length() > ConnectionConstants.MAX_SZ_FOR_SINGLE_BUF) {
+		if (irodsFileLength > ConnectionConstants.MAX_SZ_FOR_SINGLE_BUF) {
 			transferOptions.setMaxThreads(getIRODSSession().getJargonProperties().getMaxParallelThreads());
 			log.info("length above threshold, send max threads cap");
 		} else {
@@ -567,7 +567,7 @@ public final class DataObjectAOImpl extends IRODSGenericAO implements
 		log.info("from source file: {}", irodsFileToGet.getAbsolutePath());
 
 		final DataObjInp dataObjInp = DataObjInp.instanceForGet(
-				irodsFileToGet.getAbsolutePath(), transferOptions);
+				irodsFileToGet.getAbsolutePath(), irodsFileLength, transferOptions);
 
 		processGetAfterResourceDetermined(irodsFileToGet, localFile, dataObjInp);
 	}
