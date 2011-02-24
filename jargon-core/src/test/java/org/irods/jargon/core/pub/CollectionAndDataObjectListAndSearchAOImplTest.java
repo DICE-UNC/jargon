@@ -513,7 +513,7 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 				.getIRODSAccessObjectFactory()
 				.getCollectionAndDataObjectListAndSearchAO(irodsAccount);
 		List<CollectionAndDataObjectListingEntry> entries = actual
-				.listDataObjectsAndCollectionsUnderPath(targetIrodsCollection);
+				.listDataObjectsAndCollectionsUnderPathWithPermissions(targetIrodsCollection);
 		irodsFileSystem.close();
 		Assert.assertNotNull(entries);
 		Assert.assertFalse(entries.isEmpty());
