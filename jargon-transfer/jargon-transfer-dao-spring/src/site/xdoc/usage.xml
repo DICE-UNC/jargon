@@ -1,0 +1,23 @@
+<document>
+  <properties>
+  </properties>
+  <body>
+    <section name="How To Use">
+      <p>In order to use this project you will need to you will need to
+      specify the following in your pom.xml file:</p>
+      <source>
+	<![CDATA[ 
+ <dependency>
+	 <groupId>org.irods.jargon</groupId>
+	 <artifactId>jargon-core</artifactId>
+	 <version>2.4.1</version>
+ </dependency>]]>
+      </source>
+      <subsection name="Examples">
+	<source>
+
+	</source>
+      </subsection>
+    </section>
+  </body>
+</document>

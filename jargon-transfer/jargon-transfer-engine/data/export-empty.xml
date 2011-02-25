@@ -1,0 +1,41 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dataset>
+  <table name="HIBERNATE_UNIQUE_KEY">
+    <column>NEXT_HI</column>
+    <row>
+      <value>1</value>
+    </row>
+  </table>
+  <table name="LOCAL_IRODS_TRANSFER">
+    <column>ID</column>
+    <column>TRANSFER_STATE</column>
+    <column>TRANSFER_ERROR_STATUS</column>
+    <column>GLOBAL_EXCEPTION</column>
+    <column>LAST_SUCCESSFUL_PATH</column>
+    <column>TRANSFER_TYPE</column>
+    <column>HOST</column>
+    <column>PORT</column>
+    <column>ZONE</column>
+    <column>RESOURCE</column>
+    <column>USER_NAME</column>
+    <column>PASSWORD</column>
+    <column>TRANSFER_START</column>
+    <column>TRANSFER_END</column>
+    <column>LOCAL_ABSOLUTE_PATH</column>
+    <column>IRODS_ABSOLUTE_PATH</column>
+    <column>CREATED_AT</column>
+    <column>UPDATED_AT</column>
+   
+  </table>
+  <table name="LOCAL_IRODS_TRANSFER_ITEM">
+    <column>ID</column>
+    <column>SOURCE_FILE_ABSOLUTE_PATH</column>
+    <column>TARGET_FILE_ABSOLUTE_PATH</column>
+    <column>IS_FILE</column>
+    <column>LENGTH_IN_BYTES</column>
+    <column>IS_ERROR</column>
+    <column>ERROR_MESSAGE</column>
+    <column>TRANSFERRED_AT</column>
+    <column>LOCAL_IRODS_TRANSFER_ID</column>
+  </table>
+</dataset>
