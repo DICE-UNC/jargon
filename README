@@ -1,0 +1,68 @@
+
+            == Jargon ==
+
+Build prerequisites
+
+  1. Put the xml settings below in ~/.m2/settings.xml...change
+  properties to suite your environment
+
+
+<settings>
+  <profiles>
+    <profile>
+      <id>dev</id>
+      <properties>
+	<jargon.test.confirm>true</jargon.test.confirm>
+	<jargon.test.data.directory>/Users/mikeconway/Documents/workspace-sts/jargon-renci/jargon-core/target/scratch/</jargon.test.data.directory>
+	<jargon.test.irods.admin>rods</jargon.test.irods.admin>
+	<jargon.test.irods.admin.password>test</jargon.test.irods.admin.password>
+	<jargon.test.irods.user>test1</jargon.test.irods.user>
+	<jargon.test.irods.password>test</jargon.test.irods.password>
+	<jargon.test.irods.resource>test1-resc</jargon.test.irods.resource>
+	<jargon.test.irods.user2>test2</jargon.test.irods.user2>
+	<jargon.test.irods.password2>test</jargon.test.irods.password2>
+	<jargon.test.irods.resource2>test1-resc2</jargon.test.irods.resource2>
+	<jargon.test.irods.host>localhost</jargon.test.irods.host>
+	<jargon.test.irods.port>1247</jargon.test.irods.port>
+	<jargon.test.irods.zone>test1</jargon.test.irods.zone>
+	<jargon.test.resource.group>testResourceGroup</jargon.test.resource.group>
+	<jargon.test.irods.userDN>test1DN</jargon.test.irods.userDN>
+	<jargon.test.irods.scratch.subdir>test-scratch-jargon-renci</jargon.test.irods.scratch.subdir>
+	<jargon.test.mac.icommand.path>/opt/iRODS/iRODS2.2/clients/icommands/bin/</jargon.test.mac.icommand.path>
+	<jargon.test.option.exercise.remoteexecstream>true</jargon.test.option.exercise.remoteexecstream>
+      </properties>
+      <build>
+	<plugins>
+	  <plugin>
+	    <groupId>org.apache.maven.plugins</groupId>
+	    <artifactId>maven-compiler-plugin</artifactId>
+	    <configuration>
+	      <debug>false</debug>
+	      <optimize>true</optimize>
+	    </configuration>
+	  </plugin>
+	</plugins>
+      </build>
+    </profile>
+  </profiles>
+  <activeProfiles>
+    <activeProfile>dev</activeProfile>
+  </activeProfiles>
+</settings>
+
+
+  3. JAVA_HOME must be set
+     For example, 'export JAVA_HOME=~/jdk-1.6.0_02'
+
+
+  4. maven2 must be installed and M2_HOME must be set 
+     For example, 'export M2_HOME=~/m2'
+
+
+How to build
+
+  To build & run test cases: 'mvn clean install'.  To build without
+  running test cases: 'mvn clean install -Dmaven.test.skip=true'
+
+  
+
