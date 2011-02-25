@@ -28,4 +28,46 @@
       <artifactId>jargon-test</artifactId>
     </dependency>
   </dependencies>
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>0</id>
+            <phase>validate</phase>
+	    <configuration>
+	      <tasks>
+		<delete file="${basedir}/src/test/resources/testing.properties" />
+		<touch file="${basedir}/src/test/resources/testing.properties" mkdirs="true" />
+		<echo file="${basedir}/src/test/resources/testing.properties" append="true">
+test.confirm=${jargon.test.confirm}
+test.data.directory=${jargon.test.data.directory}
+test.irods.admin=${jargon.test.irods.admin}
+test.irods.admin.password=${jargon.test.irods.admin.password}
+test.irods.user=${jargon.test.irods.user}
+test.irods.password=${jargon.test.irods.password}
+test.irods.resource=${jargon.test.irods.resource}
+test.irods.user2=${jargon.test.irods.user2}
+test.irods.password2=${jargon.test.irods.password2}
+test.irods.resource2=${jargon.test.irods.resource2}
+test.irods.host=${jargon.test.irods.host}
+test.irods.port=${jargon.test.irods.port}
+test.irods.zone=${jargon.test.irods.zone}
+test.resource.group=${jargon.test.resource.group}
+test.irods.userDN=${jargon.test.irods.userDN}
+test.irods.scratch.subdir=${jargon.test.irods.scratch.subdir}
+test.mac.icommand.path=${jargon.test.mac.icommand.path}
+test.option.exercise.remoteexecstream=${jargon.test.option.exercise.remoteexecstream}
+		</echo>
+	      </tasks>
+	    </configuration>
+            <goals>
+              <goal>run</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
 </project>
