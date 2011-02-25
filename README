@@ -13,7 +13,7 @@ Build prerequisites
       <id>dev</id>
       <properties>
 	<jargon.test.confirm>true</jargon.test.confirm>
-	<jargon.test.data.directory>/Users/mikeconway/Documents/workspace-sts/jargon-renci/jargon-core/target/scratch/</jargon.test.data.directory>
+	<jargon.test.data.directory>${user.home}/workspace-sts/jargon-renci/jargon-core/target/scratch/</jargon.test.data.directory>
 	<jargon.test.irods.admin>rods</jargon.test.irods.admin>
 	<jargon.test.irods.admin.password>test</jargon.test.irods.admin.password>
 	<jargon.test.irods.user>test1</jargon.test.irods.user>
