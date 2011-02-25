@@ -11,16 +11,25 @@
   <url>https://code.renci.org/gf/project/jargon</url>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <spring.core.version>3.0.5.RELEASE</spring.core.version>
+    <spring.aop.version>2.0.8</spring.aop.version>		   
+    <spring.beans.version>2.0.8</spring.beans.version>		   
+    <spring.context.version>2.0.8</spring.context.version>	   
+    <spring.hibernate3.version>2.0.8</spring.hibernate3.version>	   
+    <spring.jdbc.version>2.0.8</spring.jdbc.version>		   
+    <spring.webmvc.version>2.0.8</spring.webmvc.version>	   
+    <spring.core.version>3.0.5.RELEASE</spring.core.version>		   
+    <spring.security.core.version>3.0.5.RELEASE</spring.security.core.version>	   
+    <spring.security.web.version>3.0.5.RELEASE</spring.security.web.version>	   
+    <spring.web.version>3.0.5.RELEASE</spring.web.version>
+    <hibernate.version>3.3.1.GA</hibernate.version>
   </properties>
   <issueManagement>
     <system>gForge</system>
     <url>https://code.renci.org/gf/project/jargon/tracker/</url>
   </issueManagement>
   <scm>
-    <connection>scm:git:ssh://anonymous@code.renci.org/gitroot/jargon</connection>
-    <developerConnection>scm:git:ssh://developername@code.renci.org/gitroot/jargon</developerConnection>
-    <url>scm:git:ssh://developername@code.renci.org/gitroot/jargon</url>
+    <connection>scm:git:ssh://developername@code.renci.org/gitroot/jargon</connection>
+    <developerConnection>scm:git:ssh://${user.name}@code.renci.org/gitroot/jargon</developerConnection>
   </scm>
   <organization>
     <name>DICE</name>
@@ -190,9 +199,19 @@
     	<version>1.6.1</version>
       </dependency>
       <dependency>
-    	<groupId>hibernate</groupId>
-    	<artifactId>hibernate3</artifactId>
-    	<version>3.2.3.GA</version>
+    	<groupId>org.hibernate</groupId>
+    	<artifactId>hibernate-core</artifactId>
+    	<version>${hibernate.version}</version>
+      </dependency>
+      <dependency>
+    	<groupId>org.hibernate</groupId>
+    	<artifactId>hibernate-annotations</artifactId>
+    	<version>${hibernate.version}</version>
+      </dependency>
+      <dependency>
+	<groupId>javax.persistence</groupId>
+	<artifactId>ejb</artifactId>
+	<version>3.0-public_review</version>
       </dependency>
       <dependency>
     	<groupId>javax.transaction</groupId>
@@ -250,6 +269,16 @@
         <version>${project.version}</version>
       </dependency>
       <dependency>
+	<groupId>org.irods.jargon.transfer</groupId>
+	<artifactId>jargon-transfer-dao-api</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+	<groupId>org.irods.jargon.transfer</groupId>
+	<artifactId>jargon-transfer-dao-spring</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
     	<groupId>org.irods.jargon</groupId>
     	<artifactId>jargon-test</artifactId>
     	<version>${project.version}</version>
@@ -270,6 +299,36 @@
     	<version>1.5.10</version>
       </dependency>
       <dependency>
+	<groupId>org.springframework</groupId>
+	<artifactId>spring-aop</artifactId>
+    	<version>${spring.aop.version}</version>
+      </dependency>
+      <dependency>
+	<groupId>org.springframework</groupId>
+	<artifactId>spring-beans</artifactId>
+    	<version>${spring.beans.version}</version>
+      </dependency>
+      <dependency>
+	<groupId>org.springframework</groupId>
+	<artifactId>spring-context</artifactId>
+    	<version>${spring.context.version}</version>
+      </dependency>
+      <dependency>
+	<groupId>org.springframework</groupId>
+	<artifactId>spring-hibernate3</artifactId>
+    	<version>${spring.hibernate3.version}</version>
+      </dependency>
+      <dependency>
+	<groupId>org.springframework</groupId>
+	<artifactId>spring-jdbc</artifactId>
+    	<version>${spring.jdbc.version}</version>
+      </dependency>
+      <dependency>
+	<groupId>org.springframework</groupId>
+	<artifactId>spring-webmvc</artifactId>
+    	<version>${spring.webmvc.version}</version>
+      </dependency>
+      <dependency>
     	<groupId>org.springframework</groupId>
     	<artifactId>spring-core</artifactId>
     	<version>${spring.core.version}</version>
@@ -277,17 +336,17 @@
       <dependency>
 	<groupId>org.springframework.security</groupId>
 	<artifactId>spring-security-core</artifactId>
-        <version>${spring.core.version}</version>
+        <version>${spring.security.core.version}</version>
       </dependency>
       <dependency>
 	<groupId>org.springframework.security</groupId>
 	<artifactId>spring-security-web</artifactId>
-	<version>${spring.core.version}</version>
+	<version>${spring.security.web.version}</version>
       </dependency>
       <dependency>
 	<groupId>org.springframework</groupId>
 	<artifactId>spring-web</artifactId>
-	<version>${spring.core.version}</version>
+	<version>${spring.web.version}</version>
 	<type>pom</type>
       </dependency>
     </dependencies>
@@ -380,7 +439,7 @@
   <modules>
     <module>jargon-core</module>
     <module>jargon-test</module>
-    <module>jargon-transfer-engine</module>
+    <module>jargon-transfer</module>
     <module>jargon-user-tagging</module>
     <module>jargon-security</module>
     <module>jargon-data-utils</module>
