@@ -15,6 +15,7 @@ import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry.ObjectTyp
 import org.irods.jargon.core.query.IRODSQueryResultRow;
 import org.irods.jargon.core.query.IRODSQueryResultSetInterface;
 import org.irods.jargon.core.query.RodsGenQueryEnum;
+import org.irods.jargon.core.query.UserFilePermission;
 import org.irods.jargon.core.utils.IRODSDataConversionUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -178,7 +179,8 @@ public class CollectionAOHelper extends AOHelper {
 	}
 
 	public static List<Collection> buildListFromResultSet(
-			final IRODSQueryResultSetInterface resultSet) throws JargonException {
+			final IRODSQueryResultSetInterface resultSet)
+			throws JargonException {
 
 		final List<Collection> collections = new ArrayList<Collection>();
 
@@ -223,31 +225,6 @@ public class CollectionAOHelper extends AOHelper {
 		}
 		return entry;
 	}
-	
-	public static CollectionAndDataObjectListingEntry buildCollectionListEntryFromResultSetRowForCollectionQueryWithAccessPermissions(
-			final IRODSQueryResultRow row) throws JargonException {
-		CollectionAndDataObjectListingEntry entry = new CollectionAndDataObjectListingEntry();
-		entry.setParentPath(row.getColumn(1));
-		entry.setObjectType(ObjectType.COLLECTION);
-		entry.setPathOrName(row.getColumn(0));
-		entry.setCreatedAt(IRODSDataConversionUtil.getDateFromIRODSValue(row
-				.getColumn(2)));
-		entry.setModifiedAt(IRODSDataConversionUtil.getDateFromIRODSValue(row
-				.getColumn(3)));
-		entry.setId(IRODSDataConversionUtil.getIntOrZeroFromIRODSValue(row
-				.getColumn(4)));
-		entry.setOwnerName(row.getColumn(5));
-		entry.setFilePermissionEnum(FilePermissionEnum.valueOf(IRODSDataConversionUtil.getIntOrZeroFromIRODSValue(row
-				.getColumn(6))));
-
-		entry.setCount(row.getRecordCount());
-		entry.setLastResult(row.isLastResult());
-
-		if (LOG.isDebugEnabled()) {
-			LOG.info("listing entry built {}", entry.toString());
-		}
-		return entry;
-	}
 
 	/**
 	 * for a result set row from a query for data objects in a collection,
@@ -271,8 +248,8 @@ public class CollectionAOHelper extends AOHelper {
 		entry.setId(IRODSDataConversionUtil.getIntOrZeroFromIRODSValue(row
 				.getColumn(4)));
 		entry.setDataSize(IRODSDataConversionUtil
-				.getLongOrZeroFromIRODSValue(row.getColumn(4)));
-
+				.getLongOrZeroFromIRODSValue(row.getColumn(5)));
+		entry.setOwnerName(row.getColumn(7));
 		entry.setCount(row.getRecordCount());
 		entry.setLastResult(row.isLastResult());
 
@@ -305,53 +282,65 @@ public class CollectionAOHelper extends AOHelper {
 		return query.toString();
 	}
 
+
 	/**
-	 * Shortcut to build selects used in creating
-	 * <code>CollectionAndDataObjectListingEntry</code> items for data objects.
-	 * Does not include the 'SELECT', just the field names.
+	 * Build a GenQuery string that will get the inheritance flag for a given
+	 * collection.
 	 * 
-	 * @return
-	 */
-	public static String buildSelectsNeededForDataObjectsInCollectionsAndDataObjectsListingEntry() {
-		StringBuilder query = new StringBuilder();
-
-		query.append(RodsGenQueryEnum.COL_COLL_NAME.getName());
-		query.append(COMMA);
-		query.append(RodsGenQueryEnum.COL_DATA_NAME.getName());
-		query.append(COMMA);
-		query.append(RodsGenQueryEnum.COL_D_CREATE_TIME.getName());
-		query.append(COMMA);
-		query.append(RodsGenQueryEnum.COL_D_MODIFY_TIME.getName());
-		query.append(COMMA);
-		query.append(RodsGenQueryEnum.COL_D_DATA_ID.getName());
-		query.append(COMMA);
-		query.append(RodsGenQueryEnum.COL_DATA_SIZE.getName());
-
-		return query.toString();
-
-	}
-	
-	/**
-	 * Build a GenQuery string that will get the inheritance flag for a given collection.
-	 * @param absolutePathToCollection <code>String</code> with the absolute path to the collection.
+	 * @param absolutePathToCollection
+	 *            <code>String</code> with the absolute path to the collection.
 	 * @return <code>String</code> with the inheritance bit (1 or blank).
 	 */
-	public static String buildInheritanceQueryForCollectionAbsolutePath(final String absolutePathToCollection) {
-		
-		if (absolutePathToCollection == null || absolutePathToCollection.isEmpty()) {
-			throw new IllegalArgumentException("null or empty absolutePathToCollection");
+	public static String buildInheritanceQueryForCollectionAbsolutePath(
+			final String absolutePathToCollection) {
+
+		if (absolutePathToCollection == null
+				|| absolutePathToCollection.isEmpty()) {
+			throw new IllegalArgumentException(
+					"null or empty absolutePathToCollection");
 		}
-		
+
 		StringBuilder query = new StringBuilder();
 		query.append("SELECT ");
 		query.append(RodsGenQueryEnum.COL_COLL_INHERITANCE.getName());
 		query.append(" WHERE  ");
 		query.append(RodsGenQueryEnum.COL_COLL_NAME.getName());
 		query.append(" = '");
-		query.append(absolutePathToCollection);
+		query.append(IRODSDataConversionUtil.escapeSingleQuotes(absolutePathToCollection));
 		query.append("'");
 		return query.toString();
 	}
-
+	
+	/**
+	 * @param userFilePermissions
+	 * @param row
+	 * @throws JargonException
+	 */
+	public static void buildUserFilePermissionForCollection(
+			final List<UserFilePermission> userFilePermissions,
+			final IRODSQueryResultRow row) throws JargonException {
+		UserFilePermission userFilePermission;
+		userFilePermission = new UserFilePermission(row.getColumn(8),
+				row.getColumn(7),
+				FilePermissionEnum.valueOf(IRODSDataConversionUtil
+						.getIntOrZeroFromIRODSValue(row.getColumn(6))));
+		userFilePermissions.add(userFilePermission);
+	}
+	
+	/**
+	 * @param userFilePermissions
+	 * @param row
+	 * @throws JargonException
+	 */
+	public static void buildUserFilePermissionForDataObject(
+			final List<UserFilePermission> userFilePermissions,
+			final IRODSQueryResultRow row) throws JargonException {
+		UserFilePermission userFilePermission;
+		userFilePermission = new UserFilePermission(row.getColumn(8),
+				row.getColumn(9),
+				FilePermissionEnum.valueOf(IRODSDataConversionUtil
+						.getIntOrZeroFromIRODSValue(row.getColumn(10))));
+		userFilePermissions.add(userFilePermission);
+	}
 
 }

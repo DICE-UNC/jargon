@@ -32,7 +32,7 @@ public class IRODSFileSystemAOHelper extends AOHelper {
 	 * @return
 	 * @throws JargonException
 	 */
-	public static String buildQueryListAllDirs(final String path)
+	public static String buildQueryListAllCollections(final String path)
 			throws JargonException {
 		StringBuilder query;
 		query = new StringBuilder();
@@ -64,11 +64,63 @@ public class IRODSFileSystemAOHelper extends AOHelper {
 	 * @return <code>StringBuilder<code> that contains the query information, useful when building up queries with other elements.
 	 * @throws JargonException
 	 */
-	public static String buildQueryListAllFilesWithSizeAndDateInfo(
+	public static String buildQueryListAllDataObjectsWithSizeAndDateInfo(
 			final String path) throws JargonException {
 		StringBuilder query = new StringBuilder();
 		query.append("SELECT DISTINCT ");
+		query.append(buildDataObjectQuerySelects());
+		query.append(" WHERE ");
+		query.append(RodsGenQueryEnum.COL_COLL_NAME.getName());
+		query.append(" = '");
+		query.append(IRODSDataConversionUtil.escapeSingleQuotes(path));
+		query.append("'");
 
+		if (log.isDebugEnabled()) {
+			log.debug("query for files:" + query.toString());
+		}
+		
+		return query.toString();
+
+	}
+	
+	/**
+	 * Build the GenQuery that lists all data objects and user access information.
+	 * @param path <code>String</code> iwtht he 
+	 * @return
+	 * @throws JargonException
+	 */
+	public static String buildQueryListAllDataObjectsWithUserAccessInfo(
+			final String path) throws JargonException {
+		StringBuilder query = new StringBuilder();
+		query.append("SELECT DISTINCT ");
+		query.append(buildDataObjectQuerySelects());
+		query.append(COMMA);
+		query.append(RodsGenQueryEnum.COL_USER_NAME.getName());
+		query.append(COMMA);
+		query.append(RodsGenQueryEnum.COL_DATA_ACCESS_USER_ID.getName());
+		query.append(COMMA);
+		query.append(RodsGenQueryEnum.COL_DATA_ACCESS_TYPE.getName());
+		query.append(" WHERE ");
+		query.append(RodsGenQueryEnum.COL_COLL_NAME.getName());
+		query.append(" = '");
+		query.append(IRODSDataConversionUtil.escapeSingleQuotes(path));
+		query.append("'");
+
+		if (log.isDebugEnabled()) {
+			log.debug("query for files:" + query.toString());
+		}
+		
+		return query.toString();
+
+	}
+
+	/**
+	 * Build the necessary GenQuery selects (the select statement is not added here) to query data objects for information.  Used
+	 * in many common queries for listing data objects, as in an ils-like command.
+	 * @return <code>String</code> with GenQuery select values.  Note that the 'SELECT' statement itself is not appended here
+	 */
+	public static String buildDataObjectQuerySelects() {
+		StringBuilder query = new StringBuilder();
 		query.append(RodsGenQueryEnum.COL_COLL_NAME.getName());
 		query.append(COMMA);
 		query.append(RodsGenQueryEnum.COL_DATA_NAME.getName());
@@ -80,19 +132,12 @@ public class IRODSFileSystemAOHelper extends AOHelper {
 		query.append(RodsGenQueryEnum.COL_D_DATA_ID.getName());
 		query.append(COMMA);
 		query.append(RodsGenQueryEnum.COL_DATA_SIZE.getName());
-
-		query.append(" WHERE ");
-		query.append(RodsGenQueryEnum.COL_COLL_NAME.getName());
-		query.append(" = '");
-		query.append(IRODSDataConversionUtil.escapeSingleQuotes(path));
-		query.append("'");
-
-		if (log.isDebugEnabled()) {
-			log.debug("query for files:" + query.toString());
-
-		}
+		query.append(COMMA);
+		query.append(RodsGenQueryEnum.COL_DATA_REPL_NUM.getName());
+		query.append(COMMA);
+		query.append(RodsGenQueryEnum.COL_D_OWNER_NAME.getName());
 		return query.toString();
-
+		
 	}
 
 	/**
@@ -105,7 +150,6 @@ public class IRODSFileSystemAOHelper extends AOHelper {
 	 * @return <code>StringBuilder<code> that contains the query information, useful when building up queries with other elements.
 	 * @throws JargonException
 	 */
-
 	public static String buildQueryListAllFiles(final String path)
 			throws JargonException {
 		StringBuilder query = new StringBuilder();
@@ -127,27 +171,31 @@ public class IRODSFileSystemAOHelper extends AOHelper {
 
 	}
 
-	public static String buildQueryListAllDirsWithUserAccessInfo(String path,
-			String id) {
+	/**
+	 * Build the appropriate GenQuery when listing collections under a given path, including the 
+	 * user access information
+	 * @param path <code>String</code> with the absolute path to the iRODS collection
+	 * @return
+	 */
+	public static String buildQueryListAllDirsWithUserAccessInfo(String path) {
 		StringBuilder query;
 		query = new StringBuilder();
 		query.append("SELECT ");
-
+		// 7 columns from the method
 		query.append(CollectionAOHelper
 				.buildSelectsNeededForCollectionsInCollectionsAndDataObjectsListingEntry());
 		query.append(COMMA);
 		query.append(RodsGenQueryEnum.COL_COLL_ACCESS_TYPE.getName());
+		query.append(COMMA);
+		query.append(RodsGenQueryEnum.COL_COLL_ACCESS_USER_ID.getName());
+		query.append(COMMA);
+		query.append(RodsGenQueryEnum.COL_COLL_ACCESS_USER_NAME.getName());
 		query.append(" WHERE ");
 		query.append(RodsGenQueryEnum.COL_COLL_PARENT_NAME.getName());
 		query.append(" = '");
 		query.append(IRODSDataConversionUtil.escapeSingleQuotes(path)); 
 		query.append("'");
-		query.append("  AND ");
-		query.append(RodsGenQueryEnum.COL_COLL_ACCESS_USER_ID.getName());
-		query.append(" = '");
-		query.append(id); 
-		query.append("'");
-
+		
 		log.debug("query for dirs:{}", query.toString());
 		return query.toString();
 	}

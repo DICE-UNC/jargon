@@ -446,6 +446,7 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 	 * 
 	 * @param sourceAbsolutePath
 	 *            <code>String</code> with the absolute path to the file to get
+	 * @param dataObjectSize <code>long</code> with the size of the data object to retrieve
 	 * @param transferOptions
 	 *            {@link TransferOptions} that configures details about the
 	 *            underlying technique used in the transfer. Can be set to null
@@ -455,14 +456,14 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 	 * @throws JargonException
 	 */
 	public static final DataObjInp instanceForGet(
-			final String sourceAbsolutePath,
+			final String sourceAbsolutePath,  final long dataObjectSize,
 			final TransferOptions transferOptions) throws JargonException {
 		if (sourceAbsolutePath == null || sourceAbsolutePath.isEmpty()) {
 			throw new JargonException("null or empty sourceAbsolutePath");
 		}
 
 		DataObjInp dataObjInp = new DataObjInp(sourceAbsolutePath, 0,
-				OpenFlags.READ, 0L, 0L, "", transferOptions);
+				OpenFlags.READ, 0L, dataObjectSize, "", transferOptions);
 		dataObjInp.operationType = GET_OPERATION_TYPE;
 		dataObjInp.setApiNumber(GET_FILE_API_NBR);
 

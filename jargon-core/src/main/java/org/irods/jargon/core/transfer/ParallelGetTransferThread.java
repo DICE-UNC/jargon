@@ -186,7 +186,7 @@ public final class ParallelGetTransferThread extends
 								e);
 					}
 
-					log.debug("parallel tranfsser read next header");
+					log.debug("parallel transfer read next header");
 					// read the next header
 					operation = readInt();
 					flags = readInt();

@@ -86,7 +86,7 @@
 	</dependencies>
 	<configuration>
 	  <driver>org.apache.derby.jdbc.EmbeddedDriver</driver>
-	  <url>jdbc:derby:target/transferDatabase</url>
+	  <url>jdbc:derby:target/database/transfer</url>
 	  <username>transfer</username>
 	  <password>transfer</password>
 	</configuration>

@@ -1,16 +1,16 @@
 package org.irods.jargon.core.query;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.irods.jargon.core.exception.JargonException;
-import org.irods.jargon.core.protovalues.FilePermissionEnum;
 import org.irods.jargon.core.pub.domain.IRODSDomainObject;
 
 /**
  * Value object that holds information on data objects and collections. This
  * object includes info to distinguish between data object and collection, to
- * identify it by path, and also information that can be used for
- * paging.
+ * identify it by path, and also information that can be used for paging.
  * <p/>
  * This object is meant to be used for use cases such as iRODS file tree
  * browsing, and as such it is meant to be returned in collections. The behavior
@@ -36,7 +36,7 @@ public class CollectionAndDataObjectListingEntry extends IRODSDomainObject {
 	private Date modifiedAt = null;
 	private long dataSize = 0L;
 	private String ownerName = "";
-	private FilePermissionEnum filePermissionEnum = FilePermissionEnum.NONE;
+	private List<UserFilePermission> userFilePermission = new ArrayList<UserFilePermission>();
 	private int id;
 
 	/**
@@ -214,20 +214,27 @@ public class CollectionAndDataObjectListingEntry extends IRODSDomainObject {
 		return (objectType == ObjectType.DATA_OBJECT);
 	}
 
-	public FilePermissionEnum getFilePermissionEnum() {
-		return filePermissionEnum;
-	}
-
-	public void setFilePermissionEnum(FilePermissionEnum filePermissionEnum) {
-		this.filePermissionEnum = filePermissionEnum;
-	}
-
 	public String getOwnerName() {
 		return ownerName;
 	}
 
-	public void setOwnerName(String ownerName) {
+	public void setOwnerName(final String ownerName) {
 		this.ownerName = ownerName;
+	}
+
+	/**
+	 * Gets the permissions associated with the collection or data object.  Note that this information is not retrieved in some
+	 * of the query methods within Jargon, so make sure that a method that adds user permissions is called.  In other cases, this
+	 * collection will be empty.
+	 * @return <code>List</code> of {@link UserFilePermission} with the per-user ACL information, included if explicity requested from Jargon, otherwise, empty
+	 */
+	public List<UserFilePermission> getUserFilePermission() {
+		return userFilePermission;
+	}
+
+	public void setUserFilePermission(
+			final List<UserFilePermission> userFilePermission) {
+		this.userFilePermission = userFilePermission;
 	}
 
 }

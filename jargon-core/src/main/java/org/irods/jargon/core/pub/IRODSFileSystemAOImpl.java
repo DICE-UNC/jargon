@@ -686,7 +686,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 		// get all the sub-directories
 
 		query = new StringBuilder();
-		query.append(IRODSFileSystemAOHelper.buildQueryListAllDirs(path));
+		query.append(IRODSFileSystemAOHelper.buildQueryListAllCollections(path));
 
 		irodsQuery = IRODSGenQuery.instance(query.toString(), this
 				.getJargonProperties().getMaxFilesAndDirsQueryMax());
@@ -797,7 +797,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 		// get all the sub-directories
 
 		query = new StringBuilder();
-		query.append(IRODSFileSystemAOHelper.buildQueryListAllDirs(path));
+		query.append(IRODSFileSystemAOHelper.buildQueryListAllCollections(path));
 
 		irodsQuery = IRODSGenQuery.instance(query.toString(), this
 				.getJargonProperties().getMaxFilesAndDirsQueryMax());
@@ -933,7 +933,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 		// get all the sub-directories
 
 		query = new StringBuilder();
-		query.append(IRODSFileSystemAOHelper.buildQueryListAllDirs(path));
+		query.append(IRODSFileSystemAOHelper.buildQueryListAllCollections(path));
 
 		irodsQuery = IRODSGenQuery.instance(query.toString(), this
 				.getJargonProperties().getMaxFilesAndDirsQueryMax());
