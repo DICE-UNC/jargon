@@ -80,6 +80,24 @@ public final class IRODSAccessObjectFactoryImpl implements
 		irodsSession.closeSession();
 
 	}
+	
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.core.pub.IRODSAccessObjectFactory#closeSessionAndEatExceptions()
+	 */
+	@Override
+	public void closeSessionAndEatExceptions() {
+
+		if (irodsSession == null) {
+			return;
+		}
+
+		try {
+		irodsSession.closeSession();
+		} catch (Exception e) {
+			LOG.warn("error encountered closing session, ignored", e);
+		}
+
+	}
 
 	/*
 	 * (non-Javadoc)
@@ -102,6 +120,31 @@ public final class IRODSAccessObjectFactoryImpl implements
 		irodsSession.closeSession(irodsAccount);
 
 	}
+	
+	
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.core.pub.IRODSAccessObjectFactory#closeSessionAndEatExceptions(org.irods.jargon.core.connection.IRODSAccount)
+	 */
+	@Override
+	public void closeSessionAndEatExceptions(final IRODSAccount irodsAccount)
+			 {
+		if (irodsSession == null) {
+			return;
+		}
+
+		if (irodsAccount == null) {
+			throw new IllegalArgumentException("null irodsAccount");
+		}
+
+		try {
+			irodsSession.closeSession(irodsAccount);
+			} catch (Exception e) {
+				LOG.warn("error encountered closing session, ignored", e);
+			}
+
+
+	}
+	
 
 	/**
 	 * Creates an instance of this access object factory.

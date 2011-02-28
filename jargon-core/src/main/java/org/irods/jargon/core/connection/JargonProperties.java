@@ -44,13 +44,6 @@ public interface JargonProperties {
 	 */
 	int getMaxFilesAndDirsQueryMax() throws JargonException;
 	
-	/**
-	 * IRODSFile system metadata, such as <code>length()</code> and <code>isFile()</code> issue a query when called,
-	 * this can cause performance issues.  This optimization will cache all data when one system metadata value is queried. 
-	 * Subsequent calls will read from the cache until the <code>refresh()</code> method is called in <code>IRODSFile</code>.
-	 * @return
-	 * @throws JargonException
-	 */ 
-	boolean isCacheFIleMetadata() throws JargonException;
+
 
 }

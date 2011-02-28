@@ -303,5 +303,19 @@ public interface IRODSAccessObjectFactory {
 	 */
 	SpecificQueryExcecutorAO getSpecificQueryExecutorAO(
 			IRODSAccount irodsAccount) throws JargonException;
+	
+	/**
+	 * Close all connections for this session.  Any resulting exceptions
+	 * are logged as a warning and ignored.
+	 */
+	void closeSessionAndEatExceptions() throws JargonException;
+
+	/**
+	 * Close the underlying connection for the given IRODSAccount.
+	 * 
+	 * @param irodsAccount
+	 * @throws JargonException
+	 */
+	void closeSessionAndEatExceptions(IRODSAccount irodsAccount);
 
 }

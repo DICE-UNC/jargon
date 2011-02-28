@@ -3,11 +3,24 @@
  */
 package org.irods.jargon.core.pub.aohelper;
 
+import static edu.sdsc.grid.io.irods.IRODSConstants.RODS_API_REQ;
+
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.irods.jargon.core.connection.IRODSCommands;
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.packinstr.DataObjInp;
+import org.irods.jargon.core.packinstr.TransferOptions;
 import org.irods.jargon.core.pub.domain.DataObject;
+import org.irods.jargon.core.pub.io.IRODSFile;
+import org.irods.jargon.core.pub.io.IRODSFileFactory;
 import org.irods.jargon.core.query.AVUQueryElement;
 import org.irods.jargon.core.query.IRODSQueryResultRow;
 import org.irods.jargon.core.query.IRODSQueryResultSetInterface;
@@ -275,6 +288,107 @@ public final class DataAOHelper extends AOHelper {
 
 		log.debug("metadataAndDomainData: {}", data);
 		return data;
+	}
+	
+	/**
+	 * @param localFileToHoldData
+	 * @param length
+	 * @throws JargonException
+	 */
+	public void processNormalGetTransfer(final File localFileToHoldData,
+			final long length, final IRODSCommands irodsProtocol) throws JargonException {
+
+		log.info("normal file transfer started, get output stream for local destination file");
+		// get an input stream from the irodsFile
+		BufferedOutputStream localFileOutputStream;
+		try {
+			localFileOutputStream = new BufferedOutputStream(
+					new FileOutputStream(localFileToHoldData));
+		} catch (FileNotFoundException e) {
+			log.error(
+					"FileNotFoundException when trying to create a new file for the local output stream for {}",
+					localFileToHoldData.getAbsolutePath(), e);
+			throw new JargonException(
+					"FileNotFoundException for local file when trying to get to: "
+							+ localFileToHoldData.getAbsolutePath(), e);
+		}
+
+		// read the message byte stream into the local file
+		irodsProtocol.read(localFileOutputStream, length);
+		log.info("transfer is complete");
+		try {
+			localFileOutputStream.flush();
+			localFileOutputStream.close();
+		} catch (IOException e) {
+			log.error(
+					"IOException when trying to create a new file for the local output stream for {}",
+					localFileToHoldData.getAbsolutePath(), e);
+			throw new JargonException(
+					"IOException for local file when trying to get to: "
+							+ localFileToHoldData.getAbsolutePath(), e);
+		}
+	}
+	
+	/**
+	 * @param localFile
+	 * @param overwrite
+	 * @param transferOptions
+	 * @param targetFile
+	 * @throws JargonException
+	 * @throws FileNotFoundException
+	 */
+	public void processNormalPutTransfer(final File localFile,
+			final boolean overwrite, final TransferOptions transferOptions,
+			IRODSFile targetFile, final IRODSCommands irodsProtocol) throws JargonException, FileNotFoundException {
+		
+		log.info("processing as a normal put strategy");
+
+		DataObjInp dataObjInp = DataObjInp.instanceForNormalPutStrategy(
+				targetFile.getAbsolutePath(), localFile.length(),
+				targetFile.getResource(), overwrite, transferOptions);
+
+		irodsProtocol.irodsFunction(RODS_API_REQ,
+				dataObjInp.getParsedTags(), 0, null,
+				localFile.length(), new FileInputStream(localFile),
+				dataObjInp.getApiNumber());
+	}
+	
+	/**
+	 * Check if the target of a put is an iRODS collection or data object name.
+	 * This method is smart enough to know that if you put a data object to an
+	 * iRODS collection, it can carry over the fileName in the specified iRODS
+	 * collection.
+	 * 
+	 * @param localFile
+	 * @param irodsFileDestination
+	 * @param ignoreChecks
+	 * @return
+	 * @throws JargonException
+	 */
+	public IRODSFile checkTargetFileForPutOperation(final File localFile,
+			final IRODSFile irodsFileDestination, final boolean ignoreChecks, final IRODSFileFactory irodsFileFactory)
+			throws JargonException {
+		IRODSFile targetFile;
+
+		if (ignoreChecks) {
+			log.debug("ignoring iRODS checks, assume this is a data object");
+			targetFile = irodsFileDestination;
+		} else {
+
+			log.debug(">>>>>checking if destination file is a collection");
+			if (irodsFileDestination.isDirectory()) {
+				log.info(
+						"put specifying an irods collection, will use the local file name as the iRODS file name:{}",
+						localFile.getName());
+				targetFile = irodsFileFactory.instanceIRODSFile(
+						irodsFileDestination.getAbsolutePath(),
+						localFile.getName());
+				targetFile.setResource(irodsFileDestination.getResource());
+			} else {
+				targetFile = irodsFileDestination;
+			}
+		}
+		return targetFile;
 	}
 
 }

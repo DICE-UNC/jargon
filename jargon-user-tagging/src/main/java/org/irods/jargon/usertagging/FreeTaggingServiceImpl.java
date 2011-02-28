@@ -27,7 +27,7 @@ import org.slf4j.LoggerFactory;
  * This object is a bridge between the typical user interface depiction of tags
  * as a free string of space-delimited tag values, and the underlying AVU
  * structures in iRODS.
- * 
+ * <p/>
  * This service can compare a set of free tags to existing tag data for an iRODS
  * domain object and generate the appropriate add and delete AVU operations to
  * reflect the delta between existing and desired tags.

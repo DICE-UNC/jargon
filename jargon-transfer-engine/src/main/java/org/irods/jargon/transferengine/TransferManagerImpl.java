@@ -23,10 +23,10 @@ import org.slf4j.LoggerFactory;
  * transfers that are underway. Clients can subscribe to this transfer manager
  * for information about the current operations of the transfer engine and
  * receive information about the status and history of the queue.
- * 
+ * <p/>
  * This manager also is the interface through which transfers may be enqueued by
  * clients,.
- * 
+ * <p/>
  * This class might evolve into some sort of scheduler, and these capabilities
  * would be exposed here in cooperation with the
  * <code>TransferQueueService</code>

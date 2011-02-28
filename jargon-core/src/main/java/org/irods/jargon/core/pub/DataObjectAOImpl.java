@@ -2,7 +2,6 @@ package org.irods.jargon.core.pub;
 
 import static edu.sdsc.grid.io.irods.IRODSConstants.MsgHeader_PI;
 import static edu.sdsc.grid.io.irods.IRODSConstants.PortList_PI;
-import static edu.sdsc.grid.io.irods.IRODSConstants.RODS_API_REQ;
 import static edu.sdsc.grid.io.irods.IRODSConstants.cookie;
 import static edu.sdsc.grid.io.irods.IRODSConstants.hostAddr;
 import static edu.sdsc.grid.io.irods.IRODSConstants.l1descInx;
@@ -15,12 +14,8 @@ import static org.irods.jargon.core.pub.aohelper.AOHelper.QUOTE;
 import static org.irods.jargon.core.pub.aohelper.AOHelper.SPACE;
 import static org.irods.jargon.core.pub.aohelper.AOHelper.WHERE;
 
-import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,7 +25,6 @@ import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.connection.JargonProperties;
 import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
-import org.irods.jargon.core.exception.JargonRuntimeException;
 import org.irods.jargon.core.packinstr.DataObjCopyInp;
 import org.irods.jargon.core.packinstr.DataObjInp;
 import org.irods.jargon.core.packinstr.ModAccessControlInp;
@@ -55,6 +49,7 @@ import org.irods.jargon.core.transfer.KeepAliveProcess;
 import org.irods.jargon.core.transfer.ParallelGetFileTransferStrategy;
 import org.irods.jargon.core.transfer.ParallelPutFileTransferStrategy;
 import org.irods.jargon.core.utils.IRODSDataConversionUtil;
+import org.irods.jargon.core.utils.LocalFileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -277,11 +272,6 @@ public final class DataObjectAOImpl extends IRODSGenericAO implements
 		TransferOptions transferOptions = new TransferOptions();
 		transferOptions.setMaxThreads(jargonProperties.getMaxParallelThreads());
 
-		if (transferOptions.getMaxThreads() > 20) { // FIXME: test code for
-													// debugging strange error
-			throw new JargonRuntimeException("corrupted max threads value");
-		}
-
 		if (jargonProperties.isUseParallelTransfer()) {
 			transferOptions.setTransferType(TransferType.STANDARD);
 		} else {
@@ -361,15 +351,15 @@ public final class DataObjectAOImpl extends IRODSGenericAO implements
 		 * results back when other instructions are intended.
 		 */
 
-		IRODSFile targetFile = checkTargetFileForPutOperation(localFile,
-				irodsFileDestination, ignoreChecks);
+		IRODSFile targetFile = dataAOHelper.checkTargetFileForPutOperation(localFile,
+				irodsFileDestination, ignoreChecks, irodsFileFactory);
 		
 		long localFileLength = localFile.length();
 		
 		if (localFileLength < ConnectionConstants.MAX_SZ_FOR_SINGLE_BUF) {
 			try {
-				processNormalPutTransfer(localFile, overwrite, transferOptions,
-						targetFile);
+				dataAOHelper.processNormalPutTransfer(localFile, overwrite, transferOptions,
+						targetFile, this.getIRODSProtocol());
 				return;
 			} catch (FileNotFoundException e) {
 				log.error("File not found for local file I was trying to put:{}",
@@ -432,8 +422,8 @@ public final class DataObjectAOImpl extends IRODSGenericAO implements
 				this.getIRODSProtocol().operationComplete(statusForComplete);
 
 			} else {
-				processNormalPutTransfer(localFile, overwrite, transferOptions,
-						targetFile);
+				dataAOHelper.processNormalPutTransfer(localFile, overwrite, transferOptions,
+						targetFile, this.getIRODSProtocol());
 			}
 
 		} catch (DataNotFoundException dnf) {
@@ -456,68 +446,6 @@ public final class DataObjectAOImpl extends IRODSGenericAO implements
 
 		log.info("transfer complete");
 
-	}
-
-	/**
-	 * @param localFile
-	 * @param overwrite
-	 * @param transferOptions
-	 * @param targetFile
-	 * @throws JargonException
-	 * @throws FileNotFoundException
-	 */
-	private void processNormalPutTransfer(final File localFile,
-			final boolean overwrite, final TransferOptions transferOptions,
-			IRODSFile targetFile) throws JargonException, FileNotFoundException {
-		
-		log.info("processing as a normal put strategy");
-
-		DataObjInp dataObjInp = DataObjInp.instanceForNormalPutStrategy(
-				targetFile.getAbsolutePath(), localFile.length(),
-				targetFile.getResource(), overwrite, transferOptions);
-
-		getIRODSProtocol().irodsFunction(RODS_API_REQ,
-				dataObjInp.getParsedTags(), 0, null,
-				localFile.length(), new FileInputStream(localFile),
-				dataObjInp.getApiNumber());
-	}
-
-	/**
-	 * Check if the target of a put is an iRODS collection or data object name.
-	 * This method is smart enough to know that if you put a data object to an
-	 * iRODS collection, it can carry over the fileName in the specified iRODS
-	 * collection.
-	 * 
-	 * @param localFile
-	 * @param irodsFileDestination
-	 * @param ignoreChecks
-	 * @return
-	 * @throws JargonException
-	 */
-	private IRODSFile checkTargetFileForPutOperation(final File localFile,
-			final IRODSFile irodsFileDestination, final boolean ignoreChecks)
-			throws JargonException {
-		IRODSFile targetFile;
-
-		if (ignoreChecks) {
-			log.debug("ignoring iRODS checks, assume this is a data object");
-			targetFile = irodsFileDestination;
-		} else {
-
-			log.debug(">>>>>checking if destination file is a collection");
-			if (irodsFileDestination.isDirectory()) {
-				log.info(
-						"put specifying an irods collection, will use the local file name as the iRODS file name:{}",
-						localFile.getName());
-				targetFile = irodsFileFactory.instanceIRODSFile(
-						irodsFileDestination.getAbsolutePath(),
-						localFile.getName());
-				targetFile.setResource(irodsFileDestination.getResource());
-			} else {
-				targetFile = irodsFileDestination;
-			}
-		}
-		return targetFile;
 	}
 
 	/*
@@ -670,7 +598,7 @@ public final class DataObjectAOImpl extends IRODSGenericAO implements
 			final IRODSFile irodsFileToGet, final File localFileToHoldData,
 			final DataObjInp dataObjInp) throws JargonException,
 			DataNotFoundException, UnsupportedOperationException {
-		createLocalFileIfNotExists(localFileToHoldData);
+		LocalFileUtils.createLocalFileIfNotExists(localFileToHoldData);
 
 		final Tag message = getIRODSProtocol().irodsFunction(dataObjInp);
 
@@ -735,48 +663,11 @@ public final class DataObjectAOImpl extends IRODSGenericAO implements
 			}
 
 		} else {
-			processNormalGetTransfer(localFileToHoldData, length);
+			dataAOHelper.processNormalGetTransfer(localFileToHoldData, length, this.getIRODSProtocol());
 		}
 	}
 
-	/**
-	 * @param localFileToHoldData
-	 * @param length
-	 * @throws JargonException
-	 */
-	private void processNormalGetTransfer(final File localFileToHoldData,
-			final long length) throws JargonException {
-
-		log.info("normal file transfer started, get output stream for local destination file");
-		// get an input stream from the irodsFile
-		BufferedOutputStream localFileOutputStream;
-		try {
-			localFileOutputStream = new BufferedOutputStream(
-					new FileOutputStream(localFileToHoldData));
-		} catch (FileNotFoundException e) {
-			log.error(
-					"FileNotFoundException when trying to create a new file for the local output stream for {}",
-					localFileToHoldData.getAbsolutePath(), e);
-			throw new JargonException(
-					"FileNotFoundException for local file when trying to get to: "
-							+ localFileToHoldData.getAbsolutePath(), e);
-		}
-
-		// read the message byte stream into the local file
-		getIRODSProtocol().read(localFileOutputStream, length);
-		log.info("transfer is complete");
-		try {
-			localFileOutputStream.flush();
-			localFileOutputStream.close();
-		} catch (IOException e) {
-			log.error(
-					"IOException when trying to create a new file for the local output stream for {}",
-					localFileToHoldData.getAbsolutePath(), e);
-			throw new JargonException(
-					"IOException for local file when trying to get to: "
-							+ localFileToHoldData.getAbsolutePath(), e);
-		}
-	}
+	
 
 	/*
 	 * (non-Javadoc)
@@ -874,32 +765,7 @@ public final class DataObjectAOImpl extends IRODSGenericAO implements
 				.buildMetaDataAndDomainDataListFromResultSet(resultSet);
 	}
 
-	/**
-	 * @param localFileToHoldData
-	 * @throws JargonException
-	 */
-	private void createLocalFileIfNotExists(final File localFileToHoldData)
-			throws JargonException {
-		if (localFileToHoldData.exists()) {
-			log.info(
-					"local file exists, will not create the local file for {}",
-					localFileToHoldData.getAbsolutePath());
-		} else {
-			log.info(
-					"local file does not exist, will attempt to create local file: {}",
-					localFileToHoldData.getAbsolutePath());
-			try {
-				localFileToHoldData.createNewFile();
-			} catch (IOException e) {
-				log.error(
-						"IOException when trying to create a new file for the local output stream for {}",
-						localFileToHoldData.getAbsolutePath(), e);
-				throw new JargonException(
-						"IOException trying to create new file: "
-								+ localFileToHoldData.getAbsolutePath(), e);
-			}
-		}
-	}
+	
 
 	/*
 	 * (non-Javadoc)
