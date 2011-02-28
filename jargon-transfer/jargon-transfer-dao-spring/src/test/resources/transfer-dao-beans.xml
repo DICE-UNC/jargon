@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+  
+  <!-- ========================= RESOURCE DEFINITIONS ========================= -->
+   <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+    <property name="driverClassName" value="org.apache.derby.jdbc.EmbeddedDriver"/>
+    <property name="url" value="jdbc:derby:target/database/transfer;create=true"/>
+    <property name="username" value="transfer"/>
+    <property name="password" value="transfer"/>
+  </bean>
+  
+  <bean id="sessionFactory" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+    <property name="dataSource" ref="dataSource"/>
+    <property name="configurationClass" value="org.hibernate.cfg.AnnotationConfiguration"/>
+    <property name="configLocation" value="classpath:transfer-dao-hibernate-spring.cfg.xml"/>
+    
+    <property name="hibernateProperties">
+      <props>
+        <prop key="hibernate.dialect">org.hibernate.dialect.DerbyDialect</prop>
+        <prop key="hibernate.show_sql">true</prop>
+        <prop key="hibernate.hbm2ddl.auto">update</prop>
+        <prop key="hibernate.generate_statistics">false</prop>
+        <prop key="hibernate.c3p0.minPoolSize">4</prop>
+        <prop key="hibernate.c3p0.maxPoolSize">8</prop>
+        <prop key="hibernate.c3p0.timeout">1800</prop>
+        <prop key="hibernate.c3p0.max_statement">50</prop>
+        <prop key="hibernate.c3p0.testConnectionOnCheckout">false</prop>
+      </props>
+    </property>
+  </bean> 
+  
+  <!-- Transaction manager for a single Hibernate SessionFactory (alternative to JTA) -->
+  <bean id="transactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+    <property name="sessionFactory" ref="sessionFactory"/>
+  </bean>
+  
+  <!-- ========================= BUSINESS OBJECT DEFINITIONS ========================= -->
+
+  <bean id="localIRODSTransferDAO" class="org.irods.jargon.transfer.dao.spring.LocalIRODSTransferDAOImpl">
+    <property name="sessionFactory" ref="sessionFactory"/>
+  </bean>
+
+  <bean id="localIRODSTransferItemDAO" class="org.irods.jargon.transfer.dao.spring.LocalIRODSTransferItemDAOImpl">
+    <property name="sessionFactory" ref="sessionFactory"/>
+  </bean>
+  
+  <!-- ========================= TRANSACTION DEFINITIONS ========================= -->
+  
+  <bean id="transferEngineTarget" class="org.irods.jargon.transfer.dao.TransferDAOBean">
+    <property name="localIRODSTransferDAO" ref="localIRODSTransferDAO"/>
+    <property name="localIRODSTransferItemDAO" ref="localIRODSTransferItemDAO"/>
+  </bean>
+  
+  <bean id="transferDAOBean" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+    <property name="transactionManager" ref="transactionManager"/>
+    <property name="target" ref="transferEngineTarget"/>
+    <property name="transactionAttributes">
+      <props>
+        <prop key="*">PROPAGATION_SUPPORTS,readOnly</prop>
+      </props>
+    </property>
+  </bean>
+  
+</beans>

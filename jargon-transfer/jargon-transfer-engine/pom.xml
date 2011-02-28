@@ -1,34 +1,31 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <parent>
-    <groupId>org.irods</groupId>
-    <artifactId>jargon</artifactId>
+    <groupId>org.irods.jargon</groupId>
+    <artifactId>transfer</artifactId>
     <version>2.4.1-SNAPSHOT</version>
   </parent>
-  <groupId>org.irods.jargon</groupId>
-  <artifactId>jargon-data-utils</artifactId>
-  <version>2.4.1-SNAPSHOT</version>
-  <name>Jargon Data Utils</name>
-  <description>Utilities for working with iRODS data.  These are higher level utilities that complement the jargon-core libraries for working with trees, data objects, collections, and metadata in iRODS	</description>
- <dependencies>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <scope>compile</scope>
-    </dependency>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.irods.jargon.transfer</groupId>
+  <artifactId>jargon-transfer-engine</artifactId>
+  <name>Jargon Transfer Engine</name>
+  <description>Services to manage data transfers, providing libraries and tools to manage and monitor data movements</description>
+  <dependencies>
     <dependency>
       <groupId>org.irods.jargon</groupId>
       <artifactId>jargon-core</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.irods.jargon</groupId>
-      <artifactId>jargon-test</artifactId>
-      <scope>compile</scope>
+      <groupId>org.irods.jargon.transfer</groupId>
+      <artifactId>jargon-transfer-dao-spring</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.apache.commons</groupId>
-      <artifactId>commons-exec</artifactId>
-      <scope>test</scope>
+      <groupId>org.irods.jargon</groupId>
+      <artifactId>jargon-data-utils</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.irods.jargon</groupId>
+      <artifactId>jargon-test</artifactId>
     </dependency>
   </dependencies>
   <build>
