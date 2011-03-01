@@ -60,7 +60,6 @@ public class LocalIRODSTransferItemDAOImpl extends HibernateDaoSupport implement
         try {
             Criteria criteria = session.createCriteria(LocalIRODSTransferItem.class);
             criteria.add(Restrictions.eq("id", id));
-            criteria.addOrder(Order.desc("transferredAt"));
             ret = (LocalIRODSTransferItem) criteria.uniqueResult();
         } catch (DataAccessResourceFailureException e) {
             e.printStackTrace();
@@ -75,15 +74,13 @@ public class LocalIRODSTransferItemDAOImpl extends HibernateDaoSupport implement
     }
 
     @Override
-    public void delete(LocalIRODSTransferItem... ea) throws TransferDAOException {
+    public void delete(LocalIRODSTransferItem ea) throws TransferDAOException {
         logger.debug("entering delete(LocalIRODSTransferItem)");
         Session session = getSession();
         Transaction tx = null;
         try {
             tx = session.beginTransaction();
-            for (LocalIRODSTransferItem item : ea) {
-                session.delete(item);
-            }
+            session.delete(ea);
             tx.commit();
         } catch (Exception e) {
             if (tx != null) {
@@ -92,7 +89,6 @@ public class LocalIRODSTransferItemDAOImpl extends HibernateDaoSupport implement
             log.error("error in delete(LocalIRODSTransferItem)", e);
             throw new TransferDAOException("Failed delete(LocalIRODSTransferItem)", e);
         } finally {
-            session.flush();
             session.close();
         }
     }
