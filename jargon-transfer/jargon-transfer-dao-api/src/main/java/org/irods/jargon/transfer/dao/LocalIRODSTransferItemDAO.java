@@ -29,6 +29,6 @@ public interface LocalIRODSTransferItemDAO {
      * @param ea
      * @throws TransferDAOException
      */
-    public void delete(LocalIRODSTransferItem... ea) throws TransferDAOException;
+    public void delete(LocalIRODSTransferItem ea) throws TransferDAOException;
 
 }
