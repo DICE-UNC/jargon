@@ -67,7 +67,7 @@ public class TestIRODSLocalTransferEngineTest {
         assertionHelper = new org.irods.jargon.testutils.AssertionHelper();
         DatabasePreparationUtils.makeSureDatabaseIsInitialized();
         databaseTester = new JdbcDatabaseTester("org.apache.derby.jdbc.EmbeddedDriver",
-                "jdbc:derby:target/transferDatabase", "transfer", "transfer");
+                "jdbc:derby:target/database/transfer", "transfer", "transfer");
     }
 
     @Before
