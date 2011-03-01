@@ -142,7 +142,7 @@ public interface TransferControlBlock {
 	int getTotalFilesTransferredSoFar();
 
 	/**
-	 * Increment the count of files that have been transferred so far
+	 * Increment the count of files that have been transferred so far // FIXME: change to increment and return value...avoid increment and get
 	 */
 	void incrementFilesTransferredSoFar();
 

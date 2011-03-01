@@ -4,511 +4,206 @@ import java.util.List;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.JargonException;
-import org.irods.jargon.core.pub.IRODSFileSystem;
-import org.irods.jargon.core.transfer.DefaultTransferControlBlock;
-import org.irods.jargon.core.transfer.TransferControlBlock;
-import org.irods.jargon.core.transfer.TransferStatus;
 import org.irods.jargon.transfer.dao.domain.LocalIRODSTransfer;
 import org.irods.jargon.transfer.dao.domain.LocalIRODSTransferItem;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
- * Central manager of transfer engine. Manages status of entire engine on behalf of client callers. This class is a
- * singleton, and will keep track of the current status of the transfer, receiving callbacks from the various transfers
- * that are underway. Clients can subscribe to this transfer manager for information about the current operations of the
- * transfer engine and receive information about the status and history of the queue.
- * 
- * This manager also is the interface through which transfers may be enqueued by clients,.
- * 
- * This class might evolve into some sort of scheduler, and these capabilities would be exposed here in cooperation with
- * the <code>TransferQueueService</code>
+ * Interface for a simple queue manager that can manage transfers to iRODS
  * 
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
-public class TransferManager {
-
-    public enum ErrorStatus {
-        OK, WARNING, ERROR
-    }
-
-    public enum RunningStatus {
-        IDLE, PROCESSING, PAUSED
-    }
-
-    private final Logger log = LoggerFactory.getLogger(TransferManager.class);
-
-    private TransferManagerCallbackListener transferManagerCallbackListener = null;
-
-    private TransferQueueService transferQueueService;
-
-    private ErrorStatus errorStatus;
-
-    private RunningStatus runningStatus;
-
-    private TransferRunner currentTransferRunner = null;
-
-    /**
-     * Indicates whether detailed logging is desired for successful transfers (might move into a config block later)
-     */
-    private boolean logSuccessfulTransfers = true;
-
-    public TransferManager() throws JargonException {
-        super();
-        this.logSuccessfulTransfers = true;
-        init();
-    }
-
-    /**
-     * Create an instance of a <code>TransferManager</code>. There should only be one transfer manager per application.
-     * 
-     * @param transferManagerCallbackListener
-     *            implementation of the {@link org.irods.jargon.transfer.engine.TransferManagerCallbackListener} class
-     *            that can receive callbacks from the running transfer process.
-     * @return instance of <code>TransferManager</code>
-     * @throws JargonException
-     */
-    public TransferManager(TransferManagerCallbackListener transferManagerCallbackListener) throws JargonException {
-        super();
-        this.transferManagerCallbackListener = transferManagerCallbackListener;
-        this.logSuccessfulTransfers = true;
-        init();
-    }
-
-    /**
-     * Create an instance of a <code>TransferManager</code>. There should only be one transfer manager per application.
-     * This initializer allows specification of recording of successful transfers. Note that
-     * <code>logSuccessfulTransfers</code> will likely move to a configuration block in later versions.
-     * 
-     * @param transferManagerCallbackListener
-     *            implementation of the {@link org.irods.jargon.transfer.engine.TransferManagerCallbackListener} class
-     *            that can receive callbacks from the running transfer process.
-     * @param logSuccessfulTransfers
-     *            <code>boolean</code> that indicates whether successful transfers should be logged to the internal
-     *            database.
-     * @return instance of <code>TransferManager</code>
-     * @throws JargonException
-     */
-    public TransferManager(TransferManagerCallbackListener transferManagerCallbackListener,
-            boolean logSuccessfulTransfers) throws JargonException {
-        super();
-        this.transferManagerCallbackListener = transferManagerCallbackListener;
-        this.logSuccessfulTransfers = logSuccessfulTransfers;
-        init();
-    }
-
-    private void init() throws JargonException {
-        this.errorStatus = ErrorStatus.OK;
-        this.runningStatus = RunningStatus.IDLE;
-        this.transferQueueService = new TransferQueueService();
-        IRODSFileSystem.instance();
-        log.info("processing queue at startup");
-        transferQueueService.processQueueAtStartup();
-    }
-
-    private void publishRunningStatus(final RunningStatus runningStatus) throws JargonException {
-        if (runningStatus == null) {
-            throw new JargonException("null running status");
-        }
-
-        if (transferManagerCallbackListener != null) {
-            transferManagerCallbackListener.transferManagerRunningStatusUpdate(runningStatus);
-        }
-    }
-
-    private void publishErrorStatus(final ErrorStatus errorStatus) throws JargonException {
-        if (errorStatus == null) {
-            throw new JargonException("null error status");
-        }
-
-        if (transferManagerCallbackListener != null) {
-            transferManagerCallbackListener.transferManagerErrorStatusUpdate(errorStatus);
-        }
-    }
-
-    public synchronized RunningStatus getRunningStatus() {
-        return runningStatus;
-    }
-
-    /**
-     * 
-     * @return
-     */
-    public synchronized boolean isPaused() {
-        return runningStatus == RunningStatus.PAUSED;
-    }
-
-    public synchronized void pause() throws JargonException {
-        log.info("pause...");
-        if (runningStatus == RunningStatus.PAUSED) {
-            log.info("already paused");
-        }
-
-        if (currentTransferRunner != null) {
-            log.info("pause currently running transfer: {}", currentTransferRunner.getLocalIRODSTransfer());
-            currentTransferRunner.getTransferControlBlock().setPaused(true);
-        }
-
-        runningStatus = RunningStatus.PAUSED;
-        publishRunningStatus(runningStatus);
-    }
-
-    public synchronized void resume() throws JargonException {
-        log.info("resume...");
-        if (runningStatus != RunningStatus.PAUSED) {
-            log.info("not paused");
-            return;
-        }
-
-        log.info("resuming");
-        // need to check for pending transfers via database and restart (idle
-        // versus processing)
-        runningStatus = RunningStatus.IDLE;
-        publishRunningStatus(runningStatus);
-        processNextInQueueIfIdle();
-    }
-
-    public synchronized void notifyWarningCondition() throws JargonException {
-        log.info("notify warning");
-
-        if (runningStatus == RunningStatus.PAUSED) {
-            return;
-        }
-
-        // warning does not override error status
-        if (errorStatus != ErrorStatus.ERROR) {
-            errorStatus = ErrorStatus.WARNING;
-            publishErrorStatus(errorStatus);
-        }
-    }
-
-    public synchronized void notifyErrorCondition() throws JargonException {
-
-        if (runningStatus == RunningStatus.PAUSED) {
-            return;
-        }
-
-        log.info("notify error");
-        errorStatus = ErrorStatus.ERROR;
-        publishErrorStatus(errorStatus);
-    }
-
-    public synchronized void notifyOKCondition() throws JargonException {
-
-        if (runningStatus == RunningStatus.PAUSED) {
-            return;
-        }
-
-        log.info("notify OK");
-        errorStatus = ErrorStatus.OK;
-        publishErrorStatus(errorStatus);
-    }
-
-    public synchronized void notifyProcessing() throws JargonException {
-
-        if (runningStatus == RunningStatus.PAUSED) {
-            return;
-        }
-
-        log.info("notify as processing");
-        runningStatus = RunningStatus.PROCESSING;
-        publishRunningStatus(runningStatus);
-    }
-
-    public synchronized void notifyEnqueued(final LocalIRODSTransfer enqueuedTransfer) {
-        log.info("a transfer has been enqueued: {}", enqueuedTransfer);
-    }
-
-    public synchronized void notifyComplete() throws JargonException {
-        log.info("notifyComplete");
-
-        // if I am paused, then remain paused until resumed
-        if (runningStatus != RunningStatus.PAUSED) {
-            runningStatus = RunningStatus.IDLE;
-            publishRunningStatus(runningStatus);
-            processNextInQueueIfIdle();
-        }
-    }
-
-    public synchronized ErrorStatus getErrorStatus() {
-        return errorStatus;
-    }
-
-    public synchronized void purgeAllTransfers() throws JargonException {
-        transferQueueService.purgeQueue();
-        resetStatus();
-    }
-
-    public synchronized void purgeSuccessfulTransfers() throws JargonException {
-        transferQueueService.purgeSuccessful();
-        resetStatus();
-    }
-
-    public void enqueueAPut(final String sourceAbsolutePath, final String targetAbsolutePath, final String resource,
-            final IRODSAccount irodsAccount) throws JargonException {
-
-        if (sourceAbsolutePath == null || sourceAbsolutePath.isEmpty()) {
-            throw new JargonException("sourceAbsolutePath is null or empty");
-        }
-
-        if (targetAbsolutePath == null || targetAbsolutePath.isEmpty()) {
-            throw new JargonException("targetAbsolutePath is null or empty");
-        }
-
-        if (resource == null) {
-            throw new JargonException("resource is null, set to blank if default is desired");
-        }
-
-        if (irodsAccount == null) {
-            throw new JargonException("irodsAccount is null");
-        }
-
-        log.info("enquing a put transfer");
-        log.info("   sourceAbsolutePath: {}", sourceAbsolutePath);
-        log.info("   targetAbsolutePath: {}", targetAbsolutePath);
-        log.info("   resource: {}", resource);
-        log.info("   irodsAccount: {}", irodsAccount);
-
-        synchronized (this) {
-
-            transferQueueService.enqueuePutTransfer(sourceAbsolutePath, targetAbsolutePath, resource, irodsAccount);
-
-            log.info("enqueue of put, current running status: {}", runningStatus);
-            log.info("current error status:{}", errorStatus);
-
-            processNextInQueueIfIdle();
-        }
-
-    }
-
-    public void enqueueAGet(final String irodsSourceAbsolutePath, final String targetLocalAbsolutePath,
-            final String resource, final IRODSAccount irodsAccount) throws JargonException {
-
-        if (irodsSourceAbsolutePath == null || irodsSourceAbsolutePath.isEmpty()) {
-            throw new JargonException("irodsSourceAbsolutePath is null or empty");
-        }
-
-        if (targetLocalAbsolutePath == null || targetLocalAbsolutePath.isEmpty()) {
-            throw new JargonException("targetLocalAbsolutePath is null or empty");
-        }
-
-        if (resource == null) {
-            throw new JargonException("resource is null, set to blank if default is desired");
-        }
-
-        if (irodsAccount == null) {
-            throw new JargonException("irodsAccount is null");
-        }
-
-        log.info("enquing a get transfer");
-        log.info("   irodsSourceAbsolutePath: {}", irodsSourceAbsolutePath);
-        log.info("   targetLocalAbsolutePath: {}", targetLocalAbsolutePath);
-        log.info("   resource: {}", resource);
-        log.info("   irodsAccount: {}", irodsAccount);
-
-        synchronized (this) {
-
-            transferQueueService.enqueueGetTransfer(irodsSourceAbsolutePath, targetLocalAbsolutePath, resource,
-                    irodsAccount);
-
-            log.info("enqueue of get, current running status: {}", runningStatus);
-            log.info("current error status:{}", errorStatus);
-
-            processNextInQueueIfIdle();
-        }
-
-    }
-
-    public void enqueueAReplicate(final String irodsAbsolutePath, final String targetResource,
-            final IRODSAccount irodsAccount) throws JargonException {
-
-        if (irodsAbsolutePath == null || irodsAbsolutePath.isEmpty()) {
-            throw new JargonException("irodsAbsolutePath is null or empty");
-        }
-
-        if (targetResource == null) {
-            throw new JargonException("targetResource is null, set to blank if default is desired");
-        }
-
-        if (irodsAccount == null) {
-            throw new JargonException("irodsAccount is null");
-        }
-
-        log.info("enquing a replicate transfer");
-        log.info("   irodsAbsolutePath: {}", irodsAbsolutePath);
-        log.info("   targetResource: {}", targetResource);
-        log.info("   irodsAccount: {}", irodsAccount);
-
-        synchronized (this) {
-
-            transferQueueService.enqueueReplicateTransfer(irodsAbsolutePath, targetResource, irodsAccount);
-
-            processNextInQueueIfIdle();
-        }
-
-    }
-
-    public synchronized void processNextInQueueIfIdle() throws JargonException {
-        log.info("process next in queue");
-
-        if (runningStatus == RunningStatus.IDLE) {
-            log.info("queue is idle, go ahead and process next");
-            dequeueNextAndLaunchTransferRunner();
-        } else {
-            log.info("not idle, do not process");
-        }
-    }
-
-    private void dequeueNextAndLaunchTransferRunner() throws JargonException {
-        log.info("process next in queue");
-
-        if (this.isPaused()) {
-            log.info("I am paused, don't process");
-            return;
-        }
-
-        LocalIRODSTransfer dequeued = transferQueueService.dequeueTransfer();
-
-        if (dequeued == null) {
-            log.info("queue is empty");
-            runningStatus = RunningStatus.IDLE;
-            publishRunningStatus(runningStatus);
-            return;
-        }
-
-        errorStatus = ErrorStatus.OK;
-        publishErrorStatus(errorStatus);
-        runningStatus = RunningStatus.PROCESSING;
-        publishRunningStatus(runningStatus);
-
-        // last successful path will have a restart value or be blank
-        TransferControlBlock transferControlBlock = DefaultTransferControlBlock.instance(dequeued
-                .getLastSuccessfulPath());
-
-        log.info(">>>> dequeue {}", dequeued);
-
-        log.info("getting a transferRunner to process");
-        currentTransferRunner = new TransferRunner(this, dequeued, transferControlBlock, transferQueueService);
-        final Thread transferThread = new Thread(currentTransferRunner);
-        log.info("launching transfer thread");
-        transferThread.start();
-
-        log.info(">>>>transfer runner is launched to handle dequeued transfer:{}", currentTransferRunner);
-    }
-
-    public List<LocalIRODSTransfer> getCurrentQueue() throws JargonException {
-        return transferQueueService.getCurrentQueue();
-    }
-
-    public List<LocalIRODSTransfer> getRecentQueue() throws JargonException {
-        return transferQueueService.getRecentQueue();
-    }
-
-    public List<LocalIRODSTransfer> getErrorQueue() throws JargonException {
-        return transferQueueService.getErrorQueue();
-    }
-
-    public List<LocalIRODSTransfer> getWarningQueue() throws JargonException {
-        return transferQueueService.getWarningQueue();
-    }
-
-    public TransferManagerCallbackListener getTransferManagerCallbackListener() {
-        return transferManagerCallbackListener;
-    }
-
-    public synchronized void setErrorStatus(final ErrorStatus errorStatus) {
-        this.errorStatus = errorStatus;
-    }
-
-    public synchronized void setRunningStatus(final RunningStatus runningStatus) {
-        this.runningStatus = runningStatus;
-    }
-
-    public synchronized void resetStatus() throws JargonException {
-        if (this.getRunningStatus() == RunningStatus.IDLE || this.getRunningStatus() == RunningStatus.PAUSED) {
-            this.notifyOKCondition();
-
-        }
-    }
-
-    public List<LocalIRODSTransferItem> getAllTransferItemsForTransfer(final Long localIRODSTransferId)
-            throws JargonException {
-        return transferQueueService.getAllTransferItemsForTransfer(localIRODSTransferId);
-    }
-
-    public List<LocalIRODSTransferItem> getErrorTransferItemsForTransfer(final Long localIRODSTransferId)
-            throws JargonException {
-        return transferQueueService.getErrorTransferItemsForTransfer(localIRODSTransferId);
-    }
-
-    public void restartTransfer(final LocalIRODSTransfer localIRODSTransfer) throws JargonException {
-        log.info("restarting:{}", localIRODSTransfer);
-        synchronized (this) {
-            transferQueueService.restartTransfer(localIRODSTransfer);
-            this.processNextInQueueIfIdle();
-        }
-    }
-
-    public void resubmitTransfer(final LocalIRODSTransfer localIRODSTransfer) throws JargonException {
-        log.info("restarting:{}", localIRODSTransfer);
-        synchronized (this) {
-            transferQueueService.resubmitTransfer(localIRODSTransfer);
-            this.processNextInQueueIfIdle();
-        }
-    }
-
-    public void cancelTransfer(final LocalIRODSTransfer localIRODSTransfer) throws JargonException {
-        // see if this is the current transfer, and cancel the running transfer
-        // if necessary
-        synchronized (this) {
-
-            if (currentTransferRunner == null) {
-                log.info("no running transfer to cancel");
-                return;
-            }
-
-            // if the current transfer equals the given transfer, then send a
-            // cancel
-            LocalIRODSTransfer runningTransfer = currentTransferRunner.getLocalIRODSTransfer();
-            log.info("cancel sent for:{}", localIRODSTransfer);
-            log.info("currently running transfer: {}", runningTransfer);
-
-            log.info("current txfr id:{}", runningTransfer.getId());
-            log.info("txr to cancel id: {}", localIRODSTransfer.getId());
-            log.info("are these equal: {}", runningTransfer.getId().equals(localIRODSTransfer.getId()));
-
-            if (runningTransfer.getId().equals(localIRODSTransfer.getId())) {
-                log.info("cancelling running transfer:{}", runningTransfer);
-                currentTransferRunner.getTransferControlBlock().setCancelled(true);
-            } else {
-                log.info("the given transfer not running, will just set the status to cancelled");
-                transferQueueService.setTransferAsCancelled(localIRODSTransfer);
-            }
-        }
-
-    }
-
-    public boolean isLogSuccessfulTransfers() {
-        return logSuccessfulTransfers;
-    }
-
-    public void setLogSuccessfulTransfers(final boolean logSuccessfulTransfers) {
-        this.logSuccessfulTransfers = logSuccessfulTransfers;
-    }
-
-    protected void notifyStatusUpdate(final TransferStatus transferStatus) throws JargonException {
-        if (transferStatus == null) {
-            throw new JargonException("null transfer status");
-        }
-
-        if (transferManagerCallbackListener != null) {
-            transferManagerCallbackListener.transferStatusCallback(transferStatus);
-        }
-    }
-
-    public TransferQueueService getTransferQueueService() {
-        return transferQueueService;
-    }
+public interface TransferManager {
+
+	public enum ErrorStatus {
+		OK, WARNING, ERROR
+	}
+
+	public enum RunningStatus {
+		IDLE, PROCESSING, PAUSED
+	}
+
+	/**
+	 * Get the running status of the tranfer queue (e.g. is it idle or busy).
+	 * @return {@link RunningStatus} with the current queue status
+	 */
+	RunningStatus getRunningStatus();
+
+	/**
+	 * Is the queue currently paused?
+	 * @return <code>boolean</code> that is true if paused
+	 */
+	boolean isPaused();
+
+	/**
+	 * Set the queue to a paused state.  
+	 * @throws JargonException
+	 */
+	void pause() throws JargonException;
+
+	/**
+	 * Resume a paused queue
+	 * @throws JargonException
+	 */
+	void resume() throws JargonException;
+
+	/**
+	 * Get the error status of the queue.  The error status reflects the current or last transfer, and will be overridden when the
+	 * queue is restarted.
+	 * @return {@link ErrorStatus}
+	 */
+	ErrorStatus getErrorStatus();
+
+	/**
+	 * Purge all transfers in the queue
+	 * @throws JargonException
+	 */
+	void purgeAllTransfers() throws JargonException;
+
+	/**
+	 * Purge all successful transfers that are in the queue
+	 * @throws JargonException
+	 */
+	void purgeSuccessfulTransfers() throws JargonException;
+
+	/**
+	 * Put a file from local to iRODS
+	 * @param sourceAbsolutePath <code>String</code> with the absolute path to the local file to be transferred to iRODS
+	 * @param targetAbsolutePath <code>String</code> with the absolute path to the target file in iRODS
+	 * @param resource <code>String</code> with the optional resource to specifiy as the transfer target
+	 * @param irodsAccount <code>IRODSAccount</code> that describes the target iRODS and user identity
+	 * @throws JargonException
+	 */
+	void enqueueAPut(final String sourceAbsolutePath,
+			final String targetAbsolutePath, final String resource,
+			final IRODSAccount irodsAccount) throws JargonException;
+
+	/**
+	 * Get a file from iRODS
+	 * @param sourceAbsolutePath <code>String</code> with the absolute path to the iRODS file to be transferred to the local file system
+	 * @param targetAbsolutePath <code>String</code> with the absolute path to the target file in the local file system
+	 * @param resource <code>String</code> with the optional resource to specifiy as the transfer target
+	 * @param irodsAccount <code>IRODSAccount</code> that describes the target iRODS and user identity
+	 * @throws JargonException
+	 */
+	void enqueueAGet(final String irodsSourceAbsolutePath,
+			final String targetLocalAbsolutePath, final String resource,
+			final IRODSAccount irodsAccount) throws JargonException;
+
+	/**
+	 * Replicate iRODS files
+	 * @param irodsAbsolutePath <code>String</code> with the iRODS file to replicate by absolute path
+	 * @param targetResource <code>String</code> with the resource to which the file will replicat
+	 * @param irodsAccount <code>IRODSAccount</code> describing the user and zone
+	 * @throws JargonException
+	 */
+	 void enqueueAReplicate(final String irodsAbsolutePath,
+			final String targetResource, final IRODSAccount irodsAccount)
+			throws JargonException;
+
+	 /**
+	  * Signal to check the queue and process if there's anything there
+	  * @throws JargonException
+	  */
+	void processNextInQueueIfIdle() throws JargonException;
+
+	/**
+	 * Get a view of the current queue, which includes enqueued, processing
+	 * @return <code>List</code> of {@link LocalIRODSTransfer} that reflects the current queue
+	 * @throws JargonException
+	 */
+	 List<LocalIRODSTransfer> getCurrentQueue()
+			throws JargonException;
+
+	/**
+	 * Get a view of the current queue, which includes enqueued, processing, and recently completed
+	 * @return <code>List</code> of {@link LocalIRODSTransfer} that reflects the recent queue
+	 * @throws JargonException
+	 */
+	 List<LocalIRODSTransfer> getRecentQueue()
+			throws JargonException;
+
+	 /**
+		 * Get a view of the errors in the queue
+		 * @return <code>List</code> of {@link LocalIRODSTransfer} that reflects the errors in the queue
+		 * @throws JargonException
+		 */
+	List<LocalIRODSTransfer> getErrorQueue()
+			throws JargonException;
+
+	/**
+	 * Get a view of the warning transfers in the queue
+	 * @return <code>List</code> of {@link LocalIRODSTransfer} that reflects the warnings in the queue
+	 * @throws JargonException
+	 */
+	List<LocalIRODSTransfer> getWarningQueue()
+			throws JargonException;
+
+	/**
+	 * Get a reference to the registered callback listener
+	 * @return {@link TransferManagerCallbackListener}
+	 */
+	 TransferManagerCallbackListener getTransferManagerCallbackListener();
+
+	 /**
+	  * Display a view of all items in a given transfer
+	  * @param localIRODSTransferId
+	  * @return
+	  * @throws JargonException
+	  */
+	List<LocalIRODSTransferItem> getAllTransferItemsForTransfer(
+			final Long localIRODSTransferId) throws JargonException;
+
+	/**
+	 * Get all errors associated with a given transfer
+	 * @param localIRODSTransferId
+	 * @return
+	 * @throws JargonException
+	 */
+	 List<LocalIRODSTransferItem> getErrorTransferItemsForTransfer(
+			final Long localIRODSTransferId) throws JargonException;
+
+	 /**
+	  * Restart the indicated transfer.  This will restart at the last good file.
+	  * @param localIRODSTransfer
+	  * @throws JargonException
+	  */
+	void restartTransfer(
+			final LocalIRODSTransfer localIRODSTransfer) throws JargonException;
+
+	/**
+	 * Restart a transfer, beginning at the first file.
+	 * @param localIRODSTransfer
+	 * @throws JargonException
+	 */
+	void resubmitTransfer(
+			final LocalIRODSTransfer localIRODSTransfer) throws JargonException;
+
+	/**
+	 * Cancel a running transfer at the first available time.
+	 * @param localIRODSTransfer
+	 * @throws JargonException
+	 */
+	void cancelTransfer(
+			final LocalIRODSTransfer localIRODSTransfer) throws JargonException;
+
+	/**
+	 * Indicate whether detail items are turned on
+	 * @return
+	 */
+	boolean isLogSuccessfulTransfers();
+
+	/**
+	 * Indicate whether successful transfer item details are recorded.
+	 * @param logSuccessfulTransfers
+	 */
+	void setLogSuccessfulTransfers(
+			final boolean logSuccessfulTransfers);
+
+	/**
+	 * Get a reference to a service that can manipulate the underlying queue.
+	 * @return
+	 */
+	TransferQueueService getTransferQueueService();
 
 }

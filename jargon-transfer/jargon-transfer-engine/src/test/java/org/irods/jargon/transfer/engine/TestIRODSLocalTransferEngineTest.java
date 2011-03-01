@@ -40,536 +40,669 @@ import org.junit.Test;
  */
 public class TestIRODSLocalTransferEngineTest {
 
-    private static Properties testingProperties = new Properties();
+	private static Properties testingProperties = new Properties();
+
+	private static org.irods.jargon.testutils.TestingPropertiesHelper testingPropertiesHelper = new TestingPropertiesHelper();
+
+	private static org.irods.jargon.testutils.filemanip.ScratchFileUtils scratchFileUtils = null;
+
+	public static final String IRODS_TEST_SUBDIR_PATH = "TestIRODSLocalTransferEngineTest";
+
+	private static org.irods.jargon.testutils.IRODSTestSetupUtilities irodsTestSetupUtilities = null;
+
+	private static org.irods.jargon.testutils.AssertionHelper assertionHelper = null;
+
+	private static IDatabaseTester databaseTester;
+
+	private final TransferDAOManager transferDAOMgr = TransferDAOManager
+			.getInstance();
+
+	@BeforeClass
+	public static void setUpBeforeClass() throws Exception {
+		org.irods.jargon.testutils.TestingPropertiesHelper testingPropertiesLoader = new TestingPropertiesHelper();
+		testingProperties = testingPropertiesLoader.getTestProperties();
+		scratchFileUtils = new org.irods.jargon.testutils.filemanip.ScratchFileUtils(
+				testingProperties);
+		irodsTestSetupUtilities = new org.irods.jargon.testutils.IRODSTestSetupUtilities();
+		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
+		irodsTestSetupUtilities
+				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
+		assertionHelper = new org.irods.jargon.testutils.AssertionHelper();
+		DatabasePreparationUtils.makeSureDatabaseIsInitialized();
+		databaseTester = new JdbcDatabaseTester(
+				"org.apache.derby.jdbc.EmbeddedDriver",
+				"jdbc:derby:target/database/transfer", "transfer", "transfer");
+	}
+
+	@Before
+	public void setUpEach() throws Exception {
+		IDataSet ds = new XmlDataSet(new FileReader("data/export-empty.xml"));
+		DatabaseOperation.CLEAN_INSERT.execute(databaseTester.getConnection(),
+				ds);
+		databaseTester.closeConnection(databaseTester.getConnection());
+	}
+
+	@Test
+	public void testInstance() throws Exception {
+
+		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
+
+		TransferManagerImpl transferManager = new TransferManagerImpl();
+		TransferControlBlock transferControlBlock = DefaultTransferControlBlock
+				.instance();
+		IRODSLocalTransferEngine irodsLocalTransferEngine = IRODSLocalTransferEngine
+				.getInstance(transferManager, transferControlBlock);
+		irodsFileSystem.close();
+		Assert.assertNotNull(
+				"no irodsLocalTransferEngine returned by initializer",
+				irodsLocalTransferEngine);
+	}
+
+	@Test(expected = JargonException.class)
+	public void testInstanceNullTransferManager() throws Exception {
+		IRODSLocalTransferEngine.getInstance(null, null);
+	}
+
+	@Test
+	public void testProcessPutOperationOneFile() throws Exception {
+
+		String testFileName = "testProcessPutOperation.txt";
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String localFileName = FileGenerator
+				.generateFileOfFixedLengthGivenName(absPath, testFileName, 30);
+
+		String targetIrodsFile = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
+								+ testFileName);
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
+		TransferManagerImpl transferManager = new TransferManagerImpl();
+
+		TransferControlBlock transferControlBlock = DefaultTransferControlBlock
+				.instance();
+		IRODSLocalTransferEngine irodsLocalTransferEngine = IRODSLocalTransferEngine
+				.getInstance(transferManager, transferControlBlock);
+
+		TransferQueueService transferQueueService = new TransferQueueService();
+
+		transferQueueService
+				.enqueuePutTransfer(
+						localFileName,
+						targetIrodsFile,
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
+						irodsAccount);
+
+		// get the queued transfer to give to the transfer engine, it needs to
+		// be in the database
+		LocalIRODSTransfer localIRODSTransfer = transferQueueService
+				.dequeueTransfer();
 
-    private static org.irods.jargon.testutils.TestingPropertiesHelper testingPropertiesHelper = new TestingPropertiesHelper();
+		irodsLocalTransferEngine.processOperation(localIRODSTransfer);
 
-    private static org.irods.jargon.testutils.filemanip.ScratchFileUtils scratchFileUtils = null;
+		irodsFileSystem.close();
 
-    public static final String IRODS_TEST_SUBDIR_PATH = "TestIRODSLocalTransferEngineTest";
+		// note that other tests cover the actual put transfer, this test is
+		// looking for an error-free invocation, maybe more sensitive assertions
+		// are needed
+		Assert.assertTrue(true);
 
-    private static org.irods.jargon.testutils.IRODSTestSetupUtilities irodsTestSetupUtilities = null;
+	}
 
-    private static org.irods.jargon.testutils.AssertionHelper assertionHelper = null;
+	@Test
+	public void testProcessPutOperationOneFileWithSpacesInTheName()
+			throws Exception {
 
-    private static IDatabaseTester databaseTester;
+		String testFileName = "Addendum - Duke Digital Projects Developer.docx";
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String localFileName = FileGenerator
+				.generateFileOfFixedLengthGivenName(absPath, testFileName, 30);
 
-    private final TransferDAOManager transferDAOMgr = TransferDAOManager.getInstance();
+		String targetIrodsFile = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + "/"
+								+ testFileName);
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
 
-    @BeforeClass
-    public static void setUpBeforeClass() throws Exception {
-        org.irods.jargon.testutils.TestingPropertiesHelper testingPropertiesLoader = new TestingPropertiesHelper();
-        testingProperties = testingPropertiesLoader.getTestProperties();
-        scratchFileUtils = new org.irods.jargon.testutils.filemanip.ScratchFileUtils(testingProperties);
-        irodsTestSetupUtilities = new org.irods.jargon.testutils.IRODSTestSetupUtilities();
-        irodsTestSetupUtilities.initializeIrodsScratchDirectory();
-        irodsTestSetupUtilities.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
-        assertionHelper = new org.irods.jargon.testutils.AssertionHelper();
-        DatabasePreparationUtils.makeSureDatabaseIsInitialized();
-        databaseTester = new JdbcDatabaseTester("org.apache.derby.jdbc.EmbeddedDriver",
-                "jdbc:derby:target/transferDatabase", "transfer", "transfer");
-    }
+		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
+		TransferManagerImpl transferManager = new TransferManagerImpl();
 
-    @Before
-    public void setUpEach() throws Exception {
-        IDataSet ds = new XmlDataSet(new FileReader("data/export-empty.xml"));
-        DatabaseOperation.CLEAN_INSERT.execute(databaseTester.getConnection(), ds);
-        databaseTester.closeConnection(databaseTester.getConnection());
-    }
+		TransferControlBlock transferControlBlock = DefaultTransferControlBlock
+				.instance();
+		IRODSLocalTransferEngine irodsLocalTransferEngine = IRODSLocalTransferEngine
+				.getInstance(transferManager, transferControlBlock);
 
-    @Test
-    public void testInstance() throws Exception {
+		TransferQueueService transferQueueService = new TransferQueueService();
 
-        IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
+		transferQueueService
+				.enqueuePutTransfer(
+						localFileName,
+						targetIrodsFile,
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
+						irodsAccount);
 
-        TransferManager transferManager = new TransferManager();
-        TransferControlBlock transferControlBlock = DefaultTransferControlBlock.instance();
-        IRODSLocalTransferEngine irodsLocalTransferEngine = IRODSLocalTransferEngine.getInstance(transferManager,
-                transferControlBlock);
-        irodsFileSystem.close();
-        Assert.assertNotNull("no irodsLocalTransferEngine returned by initializer", irodsLocalTransferEngine);
-    }
+		// get the queued transfer to give to the transfer engine, it needs to
+		// be in the database
+		LocalIRODSTransfer localIRODSTransfer = transferQueueService
+				.dequeueTransfer();
 
-    @Test(expected = JargonException.class)
-    public void testInstanceNullTransferManager() throws Exception {
-        IRODSLocalTransferEngine.getInstance(null, null);
-    }
+		irodsLocalTransferEngine.processOperation(localIRODSTransfer);
 
-    @Test
-    public void testProcessPutOperationOneFile() throws Exception {
+		IRODSFile actualFile = irodsFileSystem
+				.getIRODSFileFactory(irodsAccount).instanceIRODSFile(
+						targetIrodsFile);
+		Assert.assertTrue("file does not exist after put", actualFile.exists());
+		irodsFileSystem.close();
 
-        String testFileName = "testProcessPutOperation.txt";
-        String absPath = scratchFileUtils.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
-        String localFileName = FileGenerator.generateFileOfFixedLengthGivenName(absPath, testFileName, 30);
+		// note that other tests cover the actual put transfer, this test is
+		// looking for an error-free invocation, maybe more sensitive assertions
+		// are needed
+		Assert.assertTrue(true);
 
-        String targetIrodsFile = testingPropertiesHelper.buildIRODSCollectionAbsolutePathFromTestProperties(
-                testingProperties, IRODS_TEST_SUBDIR_PATH + '/' + testFileName);
-        IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+	}
 
-        IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
-        TransferManager transferManager = new TransferManager();
+	@Test
+	public void testEnqueuePutOperation() throws Exception {
 
-        TransferControlBlock transferControlBlock = DefaultTransferControlBlock.instance();
-        IRODSLocalTransferEngine irodsLocalTransferEngine = IRODSLocalTransferEngine.getInstance(transferManager,
-                transferControlBlock);
+		String rootCollection = "testEnqueuePutOperation";
+		String localCollectionAbsolutePath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH
+						+ '/' + rootCollection);
 
-        TransferQueueService transferQueueService = new TransferQueueService();
+		String irodsCollectionRootAbsolutePath = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
 
-        transferQueueService.enqueuePutTransfer(localFileName, targetIrodsFile,
-                testingProperties.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY), irodsAccount);
+		FileGenerator
+				.generateManyFilesAndCollectionsInParentCollectionByAbsolutePath(
+						localCollectionAbsolutePath, "testSubdir", 1, 2, 1,
+						"testFile", ".txt", 9, 8, 2, 21);
 
-        // get the queued transfer to give to the transfer engine, it needs to
-        // be in the database
-        LocalIRODSTransfer localIRODSTransfer = transferQueueService.dequeueTransfer();
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
 
-        irodsLocalTransferEngine.processOperation(localIRODSTransfer);
+		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
 
-        irodsFileSystem.close();
+		TransferManager transferManager = new TransferManagerImpl();
+		transferManager.pause();
 
-        // note that other tests cover the actual put transfer, this test is
-        // looking for an error-free invocation, maybe more sensitive assertions
-        // are needed
-        Assert.assertTrue(true);
+		transferManager.enqueueAPut(localCollectionAbsolutePath,
+				irodsCollectionRootAbsolutePath, "", irodsAccount);
 
-    }
+		irodsFileSystem.close();
 
-    @Test
-    public void testProcessPutOperationOneFileWithSpacesInTheName() throws Exception {
+	}
 
-        String testFileName = "Addendum - Duke Digital Projects Developer.docx";
-        String absPath = scratchFileUtils.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
-        String localFileName = FileGenerator.generateFileOfFixedLengthGivenName(absPath, testFileName, 30);
+	@Test
+	public void testTransferMutlipleCollectionsNoExpectedErrors()
+			throws Exception {
+		String rootCollection = "testTransferMutlipleCollectionsNoExpectedErrors";
+		String localCollectionAbsolutePath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH
+						+ '/' + rootCollection);
 
-        String targetIrodsFile = testingPropertiesHelper.buildIRODSCollectionAbsolutePathFromTestProperties(
-                testingProperties, IRODS_TEST_SUBDIR_PATH + "/" + testFileName);
-        IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		String irodsCollectionRootAbsolutePath = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
 
-        IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
-        TransferManager transferManager = new TransferManager();
+		FileGenerator
+				.generateManyFilesAndCollectionsInParentCollectionByAbsolutePath(
+						localCollectionAbsolutePath, "testSubdir", 2, 4, 2,
+						"testFile", ".txt", 10, 9, 20, 200);
 
-        TransferControlBlock transferControlBlock = DefaultTransferControlBlock.instance();
-        IRODSLocalTransferEngine irodsLocalTransferEngine = IRODSLocalTransferEngine.getInstance(transferManager,
-                transferControlBlock);
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
 
-        TransferQueueService transferQueueService = new TransferQueueService();
+		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
 
-        transferQueueService.enqueuePutTransfer(localFileName, targetIrodsFile,
-                testingProperties.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY), irodsAccount);
+		TransferManagerImpl transferManager = new TransferManagerImpl();
 
-        // get the queued transfer to give to the transfer engine, it needs to
-        // be in the database
-        LocalIRODSTransfer localIRODSTransfer = transferQueueService.dequeueTransfer();
+		TransferControlBlock transferControlBlock = DefaultTransferControlBlock
+				.instance();
+		IRODSLocalTransferEngine irodsLocalTransferEngine = IRODSLocalTransferEngine
+				.getInstance(transferManager, transferControlBlock);
 
-        irodsLocalTransferEngine.processOperation(localIRODSTransfer);
+		TransferQueueService transferQueueService = new TransferQueueService();
 
-        IRODSFile actualFile = irodsFileSystem.getIRODSFileFactory(irodsAccount).instanceIRODSFile(targetIrodsFile);
-        Assert.assertTrue("file does not exist after put", actualFile.exists());
-        irodsFileSystem.close();
+		transferQueueService
+				.enqueuePutTransfer(
+						localCollectionAbsolutePath,
+						irodsCollectionRootAbsolutePath,
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
+						irodsAccount);
 
-        // note that other tests cover the actual put transfer, this test is
-        // looking for an error-free invocation, maybe more sensitive assertions
-        // are needed
-        Assert.assertTrue(true);
+		// get the queued transfer to give to the transfer engine, it needs to
+		// be in the database
+		LocalIRODSTransfer localIRODSTransfer = transferQueueService
+				.dequeueTransfer();
 
-    }
+		irodsLocalTransferEngine.processOperation(localIRODSTransfer);
 
-    @Test
-    public void testEnqueuePutOperation() throws Exception {
+		irodsFileSystem.close();
 
-        String rootCollection = "testEnqueuePutOperation";
-        String localCollectionAbsolutePath = scratchFileUtils.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH
-                + '/' + rootCollection);
+		// I am actually only looking for no errors, transfers tested elsewhere
+		Assert.assertTrue(true);
 
-        String irodsCollectionRootAbsolutePath = testingPropertiesHelper
-                .buildIRODSCollectionAbsolutePathFromTestProperties(testingProperties, IRODS_TEST_SUBDIR_PATH);
+	}
 
-        FileGenerator.generateManyFilesAndCollectionsInParentCollectionByAbsolutePath(localCollectionAbsolutePath,
-                "testSubdir", 1, 2, 1, "testFile", ".txt", 9, 8, 2, 21);
+	/**
+	 * @throws Exception
+	 */
+	@Test
+	public void testGetEmptyTransferQueue() throws Exception {
 
-        IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		TransferManager transferManager = new TransferManagerImpl();
+		List<LocalIRODSTransfer> transfers = transferManager.getCurrentQueue();
 
-        IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
+		Assert.assertNotNull("transfers should be empty, not null, there should be no current transfers");
+		Assert.assertTrue("transfers has no queued items, should be empty",
+				transfers.isEmpty());
 
-        TransferManager transferManager = new TransferManager();
-        transferManager.pause();
+	}
 
-        transferManager.enqueueAPut(localCollectionAbsolutePath, irodsCollectionRootAbsolutePath, "", irodsAccount);
+	@Test
+	public void testSuccessCallbackSetsLastGoodPath() throws Exception {
 
-        irodsFileSystem.close();
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
 
-    }
+		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
 
-    @Test
-    public void testTransferMutlipleCollectionsNoExpectedErrors() throws Exception {
-        String rootCollection = "testTransferMutlipleCollectionsNoExpectedErrors";
-        String localCollectionAbsolutePath = scratchFileUtils.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH
-                + '/' + rootCollection);
+		TransferManagerImpl transferManager = new TransferManagerImpl();
 
-        String irodsCollectionRootAbsolutePath = testingPropertiesHelper
-                .buildIRODSCollectionAbsolutePathFromTestProperties(testingProperties, IRODS_TEST_SUBDIR_PATH);
+		transferManager.pause();
 
-        FileGenerator.generateManyFilesAndCollectionsInParentCollectionByAbsolutePath(localCollectionAbsolutePath,
-                "testSubdir", 2, 4, 2, "testFile", ".txt", 10, 9, 20, 200);
+		TransferControlBlock transferControlBlock = DefaultTransferControlBlock
+				.instance();
+		IRODSLocalTransferEngine irodsLocalTransferEngine = IRODSLocalTransferEngine
+				.getInstance(transferManager, transferControlBlock);
 
-        IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		LocalIRODSTransferDAO localIRODSTransferDAO = transferDAOMgr
+				.getTransferDAOBean().getLocalIRODSTransferDAO();
 
-        IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
+		LocalIRODSTransfer enqueuedTransfer = new LocalIRODSTransfer();
+		enqueuedTransfer.setCreatedAt(new Date());
+		enqueuedTransfer.setIrodsAbsolutePath("irodsPath");
+		enqueuedTransfer.setLocalAbsolutePath("localPath");
+		enqueuedTransfer.setTransferHost(irodsAccount.getHost());
+		enqueuedTransfer.setTransferPort(irodsAccount.getPort());
+		enqueuedTransfer.setTransferResource(irodsAccount
+				.getDefaultStorageResource());
+		enqueuedTransfer.setTransferZone(irodsAccount.getZone());
+		enqueuedTransfer.setTransferStart(new Date());
+		enqueuedTransfer.setTransferType(TransferType.PUT);
+		enqueuedTransfer.setTransferUserName(irodsAccount.getUserName());
+		enqueuedTransfer.setTransferPassword(irodsAccount.getPassword());
+		enqueuedTransfer.setTransferState(TransferState.ENQUEUED);
+		enqueuedTransfer
+				.setTransferStatus(org.irods.jargon.transfer.dao.domain.TransferStatus.OK);
 
-        TransferManager transferManager = new TransferManager();
+		localIRODSTransferDAO.save(enqueuedTransfer);
 
-        TransferControlBlock transferControlBlock = DefaultTransferControlBlock.instance();
-        IRODSLocalTransferEngine irodsLocalTransferEngine = IRODSLocalTransferEngine.getInstance(transferManager,
-                transferControlBlock);
+		irodsLocalTransferEngine.setCurrentTransfer(enqueuedTransfer);
+		TransferStatus transferStatus = TransferStatus.instance(
+				org.irods.jargon.core.transfer.TransferStatus.TransferType.PUT,
+				"sourceFromStatus", "targetFromStatus", "targetResource", 100L,
+				100L, 0, 0, TransferStatus.TransferState.SUCCESS);
 
-        TransferQueueService transferQueueService = new TransferQueueService();
+		irodsLocalTransferEngine.statusCallback(transferStatus);
 
-        transferQueueService.enqueuePutTransfer(localCollectionAbsolutePath, irodsCollectionRootAbsolutePath,
-                testingProperties.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY), irodsAccount);
+		// get the transfer now
 
-        // get the queued transfer to give to the transfer engine, it needs to
-        // be in the database
-        LocalIRODSTransfer localIRODSTransfer = transferQueueService.dequeueTransfer();
+		TransferQueueService transferQueueService = new TransferQueueService();
+		List<LocalIRODSTransfer> transfers = transferQueueService
+				.getLastNInQueue(10);
 
-        irodsLocalTransferEngine.processOperation(localIRODSTransfer);
+		irodsFileSystem.close();
 
-        irodsFileSystem.close();
+		Assert.assertEquals("expected one transfer", 1, transfers.size());
+		Assert.assertEquals("last good path not set", "sourceFromStatus",
+				transfers.get(0).getLastSuccessfulPath());
 
-        // I am actually only looking for no errors, transfers tested elsewhere
-        Assert.assertTrue(true);
+	}
 
-    }
+	@Test
+	public void testSuccessCallbackLastSuccessSetThenErrorOccurs()
+			throws Exception {
 
-    /**
-     * @throws Exception
-     */
-    @Test
-    public void testGetEmptyTransferQueue() throws Exception {
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
 
-        TransferManager transferManager = new TransferManager();
-        List<LocalIRODSTransfer> transfers = transferManager.getCurrentQueue();
+		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
 
-        Assert.assertNotNull("transfers should be empty, not null, there should be no current transfers");
-        Assert.assertTrue("transfers has no queued items, should be empty", transfers.isEmpty());
+		TransferManagerImpl transferManager = new TransferManagerImpl();
 
-    }
+		transferManager.pause();
 
-    @Test
-    public void testSuccessCallbackSetsLastGoodPath() throws Exception {
+		TransferControlBlock transferControlBlock = DefaultTransferControlBlock
+				.instance();
+		IRODSLocalTransferEngine irodsLocalTransferEngine = IRODSLocalTransferEngine
+				.getInstance(transferManager, transferControlBlock);
 
-        IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		LocalIRODSTransferDAO localIRODSTransferDAO = transferDAOMgr
+				.getTransferDAOBean().getLocalIRODSTransferDAO();
 
-        IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
+		LocalIRODSTransfer enqueuedTransfer = new LocalIRODSTransfer();
+		enqueuedTransfer.setCreatedAt(new Date());
+		enqueuedTransfer.setIrodsAbsolutePath("irodsPath");
+		enqueuedTransfer.setLocalAbsolutePath("localPath");
+		enqueuedTransfer.setTransferHost(irodsAccount.getHost());
+		enqueuedTransfer.setTransferPort(irodsAccount.getPort());
+		enqueuedTransfer.setTransferResource(irodsAccount
+				.getDefaultStorageResource());
+		enqueuedTransfer.setTransferZone(irodsAccount.getZone());
+		enqueuedTransfer.setTransferStart(new Date());
+		enqueuedTransfer.setTransferType(TransferType.PUT);
+		enqueuedTransfer.setTransferUserName(irodsAccount.getUserName());
+		enqueuedTransfer.setTransferPassword(irodsAccount.getPassword());
+		enqueuedTransfer.setTransferState(TransferState.ENQUEUED);
+		enqueuedTransfer
+				.setTransferStatus(org.irods.jargon.transfer.dao.domain.TransferStatus.OK);
 
-        TransferManager transferManager = new TransferManager();
+		localIRODSTransferDAO.save(enqueuedTransfer);
 
-        transferManager.pause();
+		irodsLocalTransferEngine.setCurrentTransfer(enqueuedTransfer);
+		TransferStatus transferStatus = TransferStatus.instance(
+				org.irods.jargon.core.transfer.TransferStatus.TransferType.PUT,
+				"sourceFromStatus", "targetFromStatus", "targetResource", 100L,
+				100L, 0, 0, TransferStatus.TransferState.SUCCESS);
+
+		irodsLocalTransferEngine.statusCallback(transferStatus);
 
-        TransferControlBlock transferControlBlock = DefaultTransferControlBlock.instance();
-        IRODSLocalTransferEngine irodsLocalTransferEngine = IRODSLocalTransferEngine.getInstance(transferManager,
-                transferControlBlock);
+		TransferStatus badStatus = TransferStatus
+				.instanceForException(
+						org.irods.jargon.core.transfer.TransferStatus.TransferType.PUT,
+						"sourceFromStatusError", "targetFromStatusError",
+						"targetResource", 100L, 100L, 0, 0,
+						new JargonException("blah"));
 
-        LocalIRODSTransferDAO localIRODSTransferDAO = transferDAOMgr.getTransferDAOBean().getLocalIRODSTransferDAO();
+		irodsLocalTransferEngine.statusCallback(badStatus);
+
+		// get the transfer now
+
+		TransferQueueService transferQueueService = new TransferQueueService();
+		List<LocalIRODSTransfer> transfers = transferQueueService
+				.getLastNInQueue(10);
 
-        LocalIRODSTransfer enqueuedTransfer = new LocalIRODSTransfer();
-        enqueuedTransfer.setCreatedAt(new Date());
-        enqueuedTransfer.setIrodsAbsolutePath("irodsPath");
-        enqueuedTransfer.setLocalAbsolutePath("localPath");
-        enqueuedTransfer.setTransferHost(irodsAccount.getHost());
-        enqueuedTransfer.setTransferPort(irodsAccount.getPort());
-        enqueuedTransfer.setTransferResource(irodsAccount.getDefaultStorageResource());
-        enqueuedTransfer.setTransferZone(irodsAccount.getZone());
-        enqueuedTransfer.setTransferStart(new Date());
-        enqueuedTransfer.setTransferType(TransferType.PUT);
-        enqueuedTransfer.setTransferUserName(irodsAccount.getUserName());
-        enqueuedTransfer.setTransferPassword(irodsAccount.getPassword());
-        enqueuedTransfer.setTransferState(TransferState.ENQUEUED);
-        enqueuedTransfer.setTransferStatus(org.irods.jargon.transfer.dao.domain.TransferStatus.OK);
+		irodsFileSystem.close();
+
+		Assert.assertEquals("expected one transfer", 1, transfers.size());
+		Assert.assertEquals("last good path not set", "sourceFromStatus",
+				transfers.get(0).getLastSuccessfulPath());
 
-        localIRODSTransferDAO.save(enqueuedTransfer);
+	}
 
-        irodsLocalTransferEngine.setCurrentTransfer(enqueuedTransfer);
-        TransferStatus transferStatus = TransferStatus.instance(
-                org.irods.jargon.core.transfer.TransferStatus.TransferType.PUT, "sourceFromStatus", "targetFromStatus",
-                "targetResource", 100L, 100L, 0, 0, TransferStatus.TransferState.SUCCESS);
+	@Test
+	public void testTransferPutWithRestart() throws Exception {
+		String rootCollection = "testTransferPutWithRestart";
+		String localCollectionAbsolutePath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH
+						+ '/' + rootCollection);
 
-        irodsLocalTransferEngine.statusCallback(transferStatus);
+		String irodsCollectionRootAbsolutePath = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
 
-        // get the transfer now
-
-        TransferQueueService transferQueueService = new TransferQueueService();
-        List<LocalIRODSTransfer> transfers = transferQueueService.getLastNInQueue(10);
-
-        irodsFileSystem.close();
-
-        Assert.assertEquals("expected one transfer", 1, transfers.size());
-        Assert.assertEquals("last good path not set", "sourceFromStatus", transfers.get(0).getLastSuccessfulPath());
-
-    }
-
-    @Test
-    public void testSuccessCallbackLastSuccessSetThenErrorOccurs() throws Exception {
-
-        IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
-
-        IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
-
-        TransferManager transferManager = new TransferManager();
-
-        transferManager.pause();
-
-        TransferControlBlock transferControlBlock = DefaultTransferControlBlock.instance();
-        IRODSLocalTransferEngine irodsLocalTransferEngine = IRODSLocalTransferEngine.getInstance(transferManager,
-                transferControlBlock);
-
-        LocalIRODSTransferDAO localIRODSTransferDAO = transferDAOMgr.getTransferDAOBean().getLocalIRODSTransferDAO();
-
-        LocalIRODSTransfer enqueuedTransfer = new LocalIRODSTransfer();
-        enqueuedTransfer.setCreatedAt(new Date());
-        enqueuedTransfer.setIrodsAbsolutePath("irodsPath");
-        enqueuedTransfer.setLocalAbsolutePath("localPath");
-        enqueuedTransfer.setTransferHost(irodsAccount.getHost());
-        enqueuedTransfer.setTransferPort(irodsAccount.getPort());
-        enqueuedTransfer.setTransferResource(irodsAccount.getDefaultStorageResource());
-        enqueuedTransfer.setTransferZone(irodsAccount.getZone());
-        enqueuedTransfer.setTransferStart(new Date());
-        enqueuedTransfer.setTransferType(TransferType.PUT);
-        enqueuedTransfer.setTransferUserName(irodsAccount.getUserName());
-        enqueuedTransfer.setTransferPassword(irodsAccount.getPassword());
-        enqueuedTransfer.setTransferState(TransferState.ENQUEUED);
-        enqueuedTransfer.setTransferStatus(org.irods.jargon.transfer.dao.domain.TransferStatus.OK);
-
-        localIRODSTransferDAO.save(enqueuedTransfer);
-
-        irodsLocalTransferEngine.setCurrentTransfer(enqueuedTransfer);
-        TransferStatus transferStatus = TransferStatus.instance(
-                org.irods.jargon.core.transfer.TransferStatus.TransferType.PUT, "sourceFromStatus", "targetFromStatus",
-                "targetResource", 100L, 100L, 0, 0, TransferStatus.TransferState.SUCCESS);
-
-        irodsLocalTransferEngine.statusCallback(transferStatus);
-
-        TransferStatus badStatus = TransferStatus.instanceForException(
-                org.irods.jargon.core.transfer.TransferStatus.TransferType.PUT, "sourceFromStatusError",
-                "targetFromStatusError", "targetResource", 100L, 100L, 0, 0, new JargonException("blah"));
-
-        irodsLocalTransferEngine.statusCallback(badStatus);
-
-        // get the transfer now
-
-        TransferQueueService transferQueueService = new TransferQueueService();
-        List<LocalIRODSTransfer> transfers = transferQueueService.getLastNInQueue(10);
-
-        irodsFileSystem.close();
-
-        Assert.assertEquals("expected one transfer", 1, transfers.size());
-        Assert.assertEquals("last good path not set", "sourceFromStatus", transfers.get(0).getLastSuccessfulPath());
-
-    }
-
-    @Test
-    public void testTransferPutWithRestart() throws Exception {
-        String rootCollection = "testTransferPutWithRestart";
-        String localCollectionAbsolutePath = scratchFileUtils.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH
-                + '/' + rootCollection);
-
-        String irodsCollectionRootAbsolutePath = testingPropertiesHelper
-                .buildIRODSCollectionAbsolutePathFromTestProperties(testingProperties, IRODS_TEST_SUBDIR_PATH);
-
-        FileGenerator.generateManyFilesInGivenDirectory(IRODS_TEST_SUBDIR_PATH + '/' + rootCollection, "test", ".csv",
-                10, 1, 2);
-
-        // nab the third file and use as the last successful file
-        File localSourceDir = new File(localCollectionAbsolutePath);
-        String sourcePaths[] = localSourceDir.list();
-        String lastPath = localCollectionAbsolutePath + sourcePaths[2];
-
-        IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
-
-        IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
-        IRODSFileFactory irodsFileFactory = irodsFileSystem.getIRODSFileFactory(irodsAccount);
-
-        TransferManager transferManager = new TransferManager();
-
-        TransferControlBlock transferControlBlock = DefaultTransferControlBlock.instance(lastPath);
-        IRODSLocalTransferEngine irodsLocalTransferEngine = IRODSLocalTransferEngine.getInstance(transferManager,
-                transferControlBlock);
-
-        // need to load this transfer to the database
-
-        LocalIRODSTransferDAO localIRODSTransferDAO = transferDAOMgr.getTransferDAOBean().getLocalIRODSTransferDAO();
-
-        LocalIRODSTransfer localIRODSTransfer = new LocalIRODSTransfer();
-        localIRODSTransfer.setLocalAbsolutePath(localCollectionAbsolutePath);
-        localIRODSTransfer.setIrodsAbsolutePath(irodsCollectionRootAbsolutePath);
-        localIRODSTransfer.setTransferType(TransferType.PUT);
-        localIRODSTransfer.setTransferHost(irodsAccount.getHost());
-        localIRODSTransfer.setTransferPort(irodsAccount.getPort());
-        localIRODSTransfer.setTransferPassword(HibernateUtil.obfuscate(irodsAccount.getPassword()));
-        localIRODSTransfer.setTransferUserName(irodsAccount.getUserName());
-        localIRODSTransfer.setTransferZone(irodsAccount.getZone());
-        localIRODSTransfer.setLastSuccessfulPath(lastPath);
-        localIRODSTransferDAO.save(localIRODSTransfer);
-
-        irodsLocalTransferEngine.processOperation(localIRODSTransfer);
-        IRODSFile targetIrodsCollection = irodsFileFactory.instanceIRODSFile(irodsCollectionRootAbsolutePath + "/"
-                + rootCollection);
-        irodsFileSystem.close();
-        String transferredFiles[] = targetIrodsCollection.list();
-        Assert.assertEquals("first transferred file should be after the last successful", sourcePaths[3],
-                transferredFiles[0]);
-
-    }
-
-    @Test
-    public void testTransferPutFileThenCollection() throws Exception {
-        String rootCollection = "testTransferPutFileThenCollection";
-        String subDirCollection = "subdirCollection";
-        String localCollectionAbsolutePath = scratchFileUtils.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH
-                + '/' + rootCollection);
-
-        String irodsCollectionRootAbsolutePath = testingPropertiesHelper
-                .buildIRODSCollectionAbsolutePathFromTestProperties(testingProperties, IRODS_TEST_SUBDIR_PATH);
-
-        FileGenerator.generateManyFilesInGivenDirectory(IRODS_TEST_SUBDIR_PATH + '/' + rootCollection, "aaa", ".csv",
-                1, 1, 2);
-
-        // now make a dir with some files and put in the top dir such that the
-        // file comes before this directory
-
-        File testCollectionLocal = new File(localCollectionAbsolutePath + "/" + subDirCollection);
-        testCollectionLocal.mkdirs();
-        FileGenerator.generateManyFilesInGivenDirectory(testCollectionLocal.getAbsolutePath(), "bbb", ".csv", 10, 1, 2);
-
-        IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
-
-        IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
-        IRODSFileFactory irodsFileFactory = irodsFileSystem.getIRODSFileFactory(irodsAccount);
-
-        TransferManager transferManager = new TransferManager();
-
-        TransferControlBlock transferControlBlock = DefaultTransferControlBlock.instance();
-        IRODSLocalTransferEngine irodsLocalTransferEngine = IRODSLocalTransferEngine.getInstance(transferManager,
-                transferControlBlock);
-
-        // need to load this transfer to the database
-
-        LocalIRODSTransferDAO localIRODSTransferDAO = transferDAOMgr.getTransferDAOBean().getLocalIRODSTransferDAO();
-
-        LocalIRODSTransfer localIRODSTransfer = new LocalIRODSTransfer();
-        localIRODSTransfer.setLocalAbsolutePath(localCollectionAbsolutePath);
-        localIRODSTransfer.setIrodsAbsolutePath(irodsCollectionRootAbsolutePath);
-        localIRODSTransfer.setTransferType(TransferType.PUT);
-        localIRODSTransfer.setTransferHost(irodsAccount.getHost());
-        localIRODSTransfer.setTransferPort(irodsAccount.getPort());
-        localIRODSTransfer.setTransferPassword(HibernateUtil.obfuscate(irodsAccount.getPassword()));
-        localIRODSTransfer.setTransferUserName(irodsAccount.getUserName());
-        localIRODSTransfer.setTransferZone(irodsAccount.getZone());
-        localIRODSTransferDAO.save(localIRODSTransfer);
-
-        irodsLocalTransferEngine.processOperation(localIRODSTransfer);
-        IRODSFile targetIrodsCollection = irodsFileFactory.instanceIRODSFile(irodsCollectionRootAbsolutePath + "/"
-                + rootCollection);
-        irodsFileSystem.close();
-        String transferredFiles[] = targetIrodsCollection.list();
-        Assert.assertTrue(transferredFiles.length > 0);
-
-    }
-
-    @Test
-    public void testProcessGetOperationOneFile() throws Exception {
-
-        String testFileName = "testProcessGetOperationOneFile.txt";
-        String testReturnedFileName = "testProcessGetOperationOneFileReturned.txt";
-
-        String absPath = scratchFileUtils.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
-        String localFileName = FileGenerator.generateFileOfFixedLengthGivenName(absPath, testFileName, 30);
-
-        String targetIrodsFile = testingPropertiesHelper.buildIRODSCollectionAbsolutePathFromTestProperties(
-                testingProperties, IRODS_TEST_SUBDIR_PATH + '/' + testFileName);
-        IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
-
-        IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
-
-        // put a file
-        IRODSFileFactory irodsFileFactory = irodsFileSystem.getIRODSFileFactory(irodsAccount);
-        IRODSFile destFile = irodsFileFactory.instanceIRODSFile(targetIrodsFile);
-        DataTransferOperations dataTransferOperationsAO = irodsFileSystem.getIRODSAccessObjectFactory()
-                .getDataTransferOperations(irodsAccount);
-        File localFile = new File(localFileName);
-
-        dataTransferOperationsAO.putOperation(localFile, destFile, null, null);
-        TransferManager transferManager = new TransferManager();
-
-        TransferControlBlock transferControlBlock = DefaultTransferControlBlock.instance();
-        IRODSLocalTransferEngine irodsLocalTransferEngine = IRODSLocalTransferEngine.getInstance(transferManager,
-                transferControlBlock);
-
-        TransferQueueService transferQueueService = new TransferQueueService();
-
-        String localReturnedAbsolutePath = scratchFileUtils.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
-        localReturnedAbsolutePath = localReturnedAbsolutePath + testReturnedFileName;
-
-        transferQueueService.enqueueGetTransfer(targetIrodsFile, localReturnedAbsolutePath,
-                testingProperties.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY), irodsAccount);
-
-        // get the queued transfer to give to the transfer engine, it needs to
-        // be in the database
-        LocalIRODSTransfer localIRODSTransfer = transferQueueService.dequeueTransfer();
-
-        irodsLocalTransferEngine.processOperation(localIRODSTransfer);
-        irodsFileSystem.close();
-
-        assertionHelper.assertLocalFileExistsInScratch(IRODS_TEST_SUBDIR_PATH + "/" + testReturnedFileName);
-
-    }
-
-    @Test
-    public void testProcessGetOperationOneFileTestCallbacks() throws Exception {
-
-        String testFileName = "testProcessGetOperationOneFileTestCallbacks.txt";
-        String testReturnedFileName = "testProcessGetOperationOneFileTestCallbacksReturned.txt";
-
-        String absPath = scratchFileUtils.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
-        String localFileName = FileGenerator.generateFileOfFixedLengthGivenName(absPath, testFileName, 30);
-
-        String targetIrodsFile = testingPropertiesHelper.buildIRODSCollectionAbsolutePathFromTestProperties(
-                testingProperties, IRODS_TEST_SUBDIR_PATH + '/' + testFileName);
-        IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
-
-        IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
-
-        // put a file
-        IRODSFileFactory irodsFileFactory = irodsFileSystem.getIRODSFileFactory(irodsAccount);
-        IRODSFile destFile = irodsFileFactory.instanceIRODSFile(targetIrodsFile);
-        DataTransferOperations dataTransferOperationsAO = irodsFileSystem.getIRODSAccessObjectFactory()
-                .getDataTransferOperations(irodsAccount);
-        File localFile = new File(localFileName);
-
-        dataTransferOperationsAO.putOperation(localFile, destFile, null, null);
-        DummyTransferManagerCallbackListener transferManagerCallbackListener = new DummyTransferManagerCallbackListener();
-        TransferManager transferManager = new TransferManager(transferManagerCallbackListener);
-
-        TransferControlBlock transferControlBlock = DefaultTransferControlBlock.instance();
-        IRODSLocalTransferEngine irodsLocalTransferEngine = IRODSLocalTransferEngine.getInstance(transferManager,
-                transferControlBlock);
-
-        TransferQueueService transferQueueService = new TransferQueueService();
-
-        String localReturnedAbsolutePath = scratchFileUtils.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
-        localReturnedAbsolutePath = localReturnedAbsolutePath + testReturnedFileName;
-
-        transferQueueService.enqueueGetTransfer(targetIrodsFile, localReturnedAbsolutePath,
-                testingProperties.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY), irodsAccount);
-
-        // get the queued transfer to give to the transfer engine, it needs to
-        // be in the database
-        LocalIRODSTransfer localIRODSTransfer = transferQueueService.dequeueTransfer();
-
-        irodsLocalTransferEngine.processOperation(localIRODSTransfer);
-        irodsFileSystem.close();
-
-        Assert.assertEquals("should have gotten a processed callback", 1, transferManagerCallbackListener
-                .getTransferStatusHistory().size());
-
-    }
+		FileGenerator.generateManyFilesInGivenDirectory(IRODS_TEST_SUBDIR_PATH
+				+ '/' + rootCollection, "test", ".csv", 10, 1, 2);
+
+		// nab the third file and use as the last successful file
+		File localSourceDir = new File(localCollectionAbsolutePath);
+		String sourcePaths[] = localSourceDir.list();
+		String lastPath = localCollectionAbsolutePath + sourcePaths[2];
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
+		IRODSFileFactory irodsFileFactory = irodsFileSystem
+				.getIRODSFileFactory(irodsAccount);
+
+		TransferManagerImpl transferManager = new TransferManagerImpl();
+
+		TransferControlBlock transferControlBlock = DefaultTransferControlBlock
+				.instance(lastPath);
+		IRODSLocalTransferEngine irodsLocalTransferEngine = IRODSLocalTransferEngine
+				.getInstance(transferManager, transferControlBlock);
+
+		// need to load this transfer to the database
+
+		LocalIRODSTransferDAO localIRODSTransferDAO = transferDAOMgr
+				.getTransferDAOBean().getLocalIRODSTransferDAO();
+
+		LocalIRODSTransfer localIRODSTransfer = new LocalIRODSTransfer();
+		localIRODSTransfer.setLocalAbsolutePath(localCollectionAbsolutePath);
+		localIRODSTransfer
+				.setIrodsAbsolutePath(irodsCollectionRootAbsolutePath);
+		localIRODSTransfer.setTransferType(TransferType.PUT);
+		localIRODSTransfer.setTransferHost(irodsAccount.getHost());
+		localIRODSTransfer.setTransferPort(irodsAccount.getPort());
+		localIRODSTransfer.setTransferPassword(HibernateUtil
+				.obfuscate(irodsAccount.getPassword()));
+		localIRODSTransfer.setTransferUserName(irodsAccount.getUserName());
+		localIRODSTransfer.setTransferZone(irodsAccount.getZone());
+		localIRODSTransfer.setLastSuccessfulPath(lastPath);
+		localIRODSTransferDAO.save(localIRODSTransfer);
+
+		irodsLocalTransferEngine.processOperation(localIRODSTransfer);
+		IRODSFile targetIrodsCollection = irodsFileFactory
+				.instanceIRODSFile(irodsCollectionRootAbsolutePath + "/"
+						+ rootCollection);
+		irodsFileSystem.close();
+		String transferredFiles[] = targetIrodsCollection.list();
+		Assert.assertEquals(
+				"first transferred file should be after the last successful",
+				sourcePaths[3], transferredFiles[0]);
+
+	}
+
+	@Test
+	public void testTransferPutFileThenCollection() throws Exception {
+		String rootCollection = "testTransferPutFileThenCollection";
+		String subDirCollection = "subdirCollection";
+		String localCollectionAbsolutePath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH
+						+ '/' + rootCollection);
+
+		String irodsCollectionRootAbsolutePath = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		FileGenerator.generateManyFilesInGivenDirectory(IRODS_TEST_SUBDIR_PATH
+				+ '/' + rootCollection, "aaa", ".csv", 1, 1, 2);
+
+		// now make a dir with some files and put in the top dir such that the
+		// file comes before this directory
+
+		File testCollectionLocal = new File(localCollectionAbsolutePath + "/"
+				+ subDirCollection);
+		testCollectionLocal.mkdirs();
+		FileGenerator.generateManyFilesInGivenDirectory(
+				testCollectionLocal.getAbsolutePath(), "bbb", ".csv", 10, 1, 2);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
+		IRODSFileFactory irodsFileFactory = irodsFileSystem
+				.getIRODSFileFactory(irodsAccount);
+
+		TransferManagerImpl transferManager = new TransferManagerImpl();
+
+		TransferControlBlock transferControlBlock = DefaultTransferControlBlock
+				.instance();
+		IRODSLocalTransferEngine irodsLocalTransferEngine = IRODSLocalTransferEngine
+				.getInstance(transferManager, transferControlBlock);
+
+		// need to load this transfer to the database
+
+		LocalIRODSTransferDAO localIRODSTransferDAO = transferDAOMgr
+				.getTransferDAOBean().getLocalIRODSTransferDAO();
+
+		LocalIRODSTransfer localIRODSTransfer = new LocalIRODSTransfer();
+		localIRODSTransfer.setLocalAbsolutePath(localCollectionAbsolutePath);
+		localIRODSTransfer
+				.setIrodsAbsolutePath(irodsCollectionRootAbsolutePath);
+		localIRODSTransfer.setTransferType(TransferType.PUT);
+		localIRODSTransfer.setTransferHost(irodsAccount.getHost());
+		localIRODSTransfer.setTransferPort(irodsAccount.getPort());
+		localIRODSTransfer.setTransferPassword(HibernateUtil
+				.obfuscate(irodsAccount.getPassword()));
+		localIRODSTransfer.setTransferUserName(irodsAccount.getUserName());
+		localIRODSTransfer.setTransferZone(irodsAccount.getZone());
+		localIRODSTransferDAO.save(localIRODSTransfer);
+
+		irodsLocalTransferEngine.processOperation(localIRODSTransfer);
+		IRODSFile targetIrodsCollection = irodsFileFactory
+				.instanceIRODSFile(irodsCollectionRootAbsolutePath + "/"
+						+ rootCollection);
+		irodsFileSystem.close();
+		String transferredFiles[] = targetIrodsCollection.list();
+		Assert.assertTrue(transferredFiles.length > 0);
+
+	}
+
+	@Test
+	public void testProcessGetOperationOneFile() throws Exception {
+
+		String testFileName = "testProcessGetOperationOneFile.txt";
+		String testReturnedFileName = "testProcessGetOperationOneFileReturned.txt";
+
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String localFileName = FileGenerator
+				.generateFileOfFixedLengthGivenName(absPath, testFileName, 30);
+
+		String targetIrodsFile = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
+								+ testFileName);
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
+
+		// put a file
+		IRODSFileFactory irodsFileFactory = irodsFileSystem
+				.getIRODSFileFactory(irodsAccount);
+		IRODSFile destFile = irodsFileFactory
+				.instanceIRODSFile(targetIrodsFile);
+		DataTransferOperations dataTransferOperationsAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataTransferOperations(
+						irodsAccount);
+		File localFile = new File(localFileName);
+
+		dataTransferOperationsAO.putOperation(localFile, destFile, null, null);
+		TransferManagerImpl transferManager = new TransferManagerImpl();
+
+		TransferControlBlock transferControlBlock = DefaultTransferControlBlock
+				.instance();
+		IRODSLocalTransferEngine irodsLocalTransferEngine = IRODSLocalTransferEngine
+				.getInstance(transferManager, transferControlBlock);
+
+		TransferQueueService transferQueueService = new TransferQueueService();
+
+		String localReturnedAbsolutePath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		localReturnedAbsolutePath = localReturnedAbsolutePath
+				+ testReturnedFileName;
+
+		transferQueueService
+				.enqueueGetTransfer(
+						targetIrodsFile,
+						localReturnedAbsolutePath,
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
+						irodsAccount);
+
+		// get the queued transfer to give to the transfer engine, it needs to
+		// be in the database
+		LocalIRODSTransfer localIRODSTransfer = transferQueueService
+				.dequeueTransfer();
+
+		irodsLocalTransferEngine.processOperation(localIRODSTransfer);
+		irodsFileSystem.close();
+
+		assertionHelper.assertLocalFileExistsInScratch(IRODS_TEST_SUBDIR_PATH
+				+ "/" + testReturnedFileName);
+
+	}
+
+	@Test
+	public void testProcessGetOperationOneFileTestCallbacks() throws Exception {
+
+		String testFileName = "testProcessGetOperationOneFileTestCallbacks.txt";
+		String testReturnedFileName = "testProcessGetOperationOneFileTestCallbacksReturned.txt";
+
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String localFileName = FileGenerator
+				.generateFileOfFixedLengthGivenName(absPath, testFileName, 30);
+
+		String targetIrodsFile = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
+								+ testFileName);
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
+
+		// put a file
+		IRODSFileFactory irodsFileFactory = irodsFileSystem
+				.getIRODSFileFactory(irodsAccount);
+		IRODSFile destFile = irodsFileFactory
+				.instanceIRODSFile(targetIrodsFile);
+		DataTransferOperations dataTransferOperationsAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataTransferOperations(
+						irodsAccount);
+		File localFile = new File(localFileName);
+
+		dataTransferOperationsAO.putOperation(localFile, destFile, null, null);
+		DummyTransferManagerCallbackListener transferManagerCallbackListener = new DummyTransferManagerCallbackListener();
+		TransferManagerImpl transferManager = new TransferManagerImpl(
+				transferManagerCallbackListener);
+
+		TransferControlBlock transferControlBlock = DefaultTransferControlBlock
+				.instance();
+		IRODSLocalTransferEngine irodsLocalTransferEngine = IRODSLocalTransferEngine
+				.getInstance(transferManager, transferControlBlock);
+
+		TransferQueueService transferQueueService = new TransferQueueService();
+
+		String localReturnedAbsolutePath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		localReturnedAbsolutePath = localReturnedAbsolutePath
+				+ testReturnedFileName;
+
+		transferQueueService
+				.enqueueGetTransfer(
+						targetIrodsFile,
+						localReturnedAbsolutePath,
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
+						irodsAccount);
+
+		// get the queued transfer to give to the transfer engine, it needs to
+		// be in the database
+		LocalIRODSTransfer localIRODSTransfer = transferQueueService
+				.dequeueTransfer();
+
+		irodsLocalTransferEngine.processOperation(localIRODSTransfer);
+		irodsFileSystem.close();
+
+		Assert.assertEquals("should have gotten a processed callback", 1,
+				transferManagerCallbackListener.getTransferStatusHistory()
+						.size());
+
+	}
 
 }

@@ -76,7 +76,7 @@ public class LocalIRODSTransfer implements Serializable {
     @Column(name = "irods_absolute_path", length = 32672)
     private String irodsAbsolutePath = "";
 
-    @OneToMany(targetEntity = LocalIRODSTransferItem.class, cascade = { CascadeType.ALL }, fetch = FetchType.EAGER)
+    @OneToMany(targetEntity = LocalIRODSTransferItem.class, cascade = { CascadeType.ALL }, fetch = FetchType.EAGER) // FIXME: this was extra lazy, this can potentially rerieve 10s of thousands of rows for every acces if per-file logging is enabled
     private Set<LocalIRODSTransferItem> localIRODSTransferItems = new HashSet<LocalIRODSTransferItem>();
 
     @Column(name = "created_at")

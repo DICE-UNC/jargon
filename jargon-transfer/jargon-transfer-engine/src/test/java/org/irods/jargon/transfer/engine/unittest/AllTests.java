@@ -8,8 +8,9 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
-@Suite.SuiteClasses({ TestIRODSLocalTransferEngineTest.class, TransferManagerTest.class,
-        TransferQueueServiceTest.class, SynchronizeProcessorImplTest.class })
+@Suite.SuiteClasses({ TestIRODSLocalTransferEngineTest.class,
+		TransferManagerTest.class, TransferQueueServiceTest.class,
+		SynchronizeProcessorImplTest.class })
 public class AllTests {
 
 }
