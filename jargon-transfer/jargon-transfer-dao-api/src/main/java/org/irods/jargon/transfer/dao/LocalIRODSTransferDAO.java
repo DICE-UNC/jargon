@@ -32,11 +32,28 @@ public interface LocalIRODSTransferDAO {
     /**
      * 
      * @param id
+     * @return
+     * @throws TransferDAOException
+     */
+    public LocalIRODSTransfer findInitializedById(Long id) throws TransferDAOException;
+
+    /**
+     * 
+     * @param id
      * @param error
      * @return
      * @throws TransferDAOException
      */
     public LocalIRODSTransfer findById(Long id, boolean error) throws TransferDAOException;
+
+    /**
+     * 
+     * @param id
+     * @param error
+     * @return
+     * @throws TransferDAOException
+     */
+    public LocalIRODSTransfer findInitializedById(Long id, boolean error) throws TransferDAOException;
 
     /**
      * 
@@ -108,6 +125,6 @@ public interface LocalIRODSTransferDAO {
      * @param ea
      * @throws TransferDAOException
      */
-    public void delete(LocalIRODSTransfer... ea) throws TransferDAOException;
+    public void delete(LocalIRODSTransfer ea) throws TransferDAOException;
 
 }
