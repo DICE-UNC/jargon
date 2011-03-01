@@ -4,6 +4,7 @@ import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.irods.jargon.transfer.dao.LocalIRODSTransferItemDAO;
 import org.irods.jargon.transfer.dao.TransferDAOException;
@@ -59,6 +60,7 @@ public class LocalIRODSTransferItemDAOImpl extends HibernateDaoSupport implement
         try {
             Criteria criteria = session.createCriteria(LocalIRODSTransferItem.class);
             criteria.add(Restrictions.eq("id", id));
+            criteria.addOrder(Order.desc("transferredAt"));
             ret = (LocalIRODSTransferItem) criteria.uniqueResult();
         } catch (DataAccessResourceFailureException e) {
             e.printStackTrace();
