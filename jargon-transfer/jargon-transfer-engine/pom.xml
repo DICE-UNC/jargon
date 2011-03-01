@@ -27,6 +27,10 @@
       <groupId>org.irods.jargon</groupId>
       <artifactId>jargon-test</artifactId>
     </dependency>
+    <dependency>
+      <groupId>javassist</groupId>
+      <artifactId>javassist</artifactId>
+    </dependency>
   </dependencies>
   <build>
     <plugins>

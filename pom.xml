@@ -344,6 +344,11 @@
 	<version>${spring.security.web.version}</version>
       </dependency>
       <dependency>
+	<groupId>javassist</groupId>
+	<artifactId>javassist</artifactId>
+	<version>3.8.0.GA</version>
+      </dependency>
+      <dependency>
 	<groupId>org.springframework</groupId>
 	<artifactId>spring-web</artifactId>
 	<version>${spring.web.version}</version>
