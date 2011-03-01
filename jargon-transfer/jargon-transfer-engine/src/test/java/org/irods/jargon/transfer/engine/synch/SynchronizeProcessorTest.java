@@ -4,9 +4,9 @@ import org.junit.Test;
 
 public class SynchronizeProcessorTest {
 
-    @Test
-    public void testInstance() throws Exception {
+	@Test
+	public void testInstance() throws Exception {
 
-    }
+	}
 
 }

@@ -250,7 +250,7 @@ public class TransferQueueServiceTest {
 
         TransferQueueService transferQueueService = new TransferQueueService();
 
-        TransferManager transferManager = new TransferManager();
+        TransferManager transferManager = new TransferManagerImpl();
 
         transferQueueService.enqueuePutTransfer(localCollectionAbsolutePath, irodsCollectionRootAbsolutePath, "",
                 irodsAccount);
@@ -342,7 +342,7 @@ public class TransferQueueServiceTest {
         List<LocalIRODSTransfer> transferQueue = transferQueueService.getLastNInQueue(1);
 
         LocalIRODSTransfer transferToMark = transferQueue.get(0);
-        TransferManager transferManager = new TransferManager();
+        TransferManager transferManager = new TransferManagerImpl();
         transferQueueService.markTransferAsErrorAndTerminate(transferToMark, new JargonException(
                 "hello a jargon exception"), transferManager);
 

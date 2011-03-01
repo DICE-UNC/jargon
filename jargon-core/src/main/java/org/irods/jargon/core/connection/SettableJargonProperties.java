@@ -28,7 +28,6 @@ public class SettableJargonProperties implements JargonProperties {
 	private int maxParallelThreads = 4;
 	private long parallelThreadsLengthThreshold = 734003200;
 	private int maxFilesAndDirsQueryMax = 5000;
-	private boolean cacheFileMetadata = true;
 
 	
 	/* (non-Javadoc)
@@ -75,18 +74,6 @@ public class SettableJargonProperties implements JargonProperties {
 	@Override
 	public int getMaxFilesAndDirsQueryMax() throws JargonException {
 		return maxFilesAndDirsQueryMax;
-	}
-
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.connection.JargonProperties#isCacheFIleMetadata()
-	 */
-	@Override
-	public boolean isCacheFIleMetadata() {
-		return cacheFileMetadata;
-	}
- 
-	public void setCacheFileMetadata(boolean cacheFileMetadata) {
-		this.cacheFileMetadata = cacheFileMetadata;
 	}
 
 }

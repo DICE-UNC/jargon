@@ -51,4 +51,12 @@ public interface IRODSAccessObject {
 	 */
 	JargonProperties getJargonProperties();
 
+	/**
+	 * Retrieve a factory that can create other access objects
+	 * @return {@link IRODSAccessObjectFactory}
+	 * @throws JargonException
+	 */
+	IRODSAccessObjectFactory getIRODSAccessObjectFactory()
+			throws JargonException;
+
 }

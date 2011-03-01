@@ -50,7 +50,7 @@ final class TransferOperationsHelper {
 		if (irodsSession == null || irodsAccount == null) {
 			throw new JargonException("null irodsSession or irodsAccount");
 		}
-	
+
 		this.dataObjectAO = new DataObjectAOImpl(irodsSession, irodsAccount);
 		this.collectionAO = new CollectionAOImpl(irodsSession, irodsAccount);
 
@@ -190,9 +190,25 @@ final class TransferOperationsHelper {
 
 		log.info("get of single file...filtered?");
 
+		int totalFiles = 0;
+		int totalFilesSoFar = 0;
+
+		if (transferControlBlock != null) {
+			transferControlBlock.incrementFilesTransferredSoFar();
+			totalFiles = transferControlBlock.getTotalFilesToTransfer();
+			totalFilesSoFar = transferControlBlock
+					.getTotalFilesTransferredSoFar();
+		}
+
 		if (!transferControlBlock.filter(irodsSourceFile.getAbsolutePath())) {
 			log.info("file is filtered and discarded: {}",
 					irodsSourceFile.getAbsolutePath());
+			TransferStatus status = TransferStatus.instance(TransferType.GET,
+					irodsSourceFile.getAbsolutePath(),
+					targetLocalFile.getAbsolutePath(), "", 0, 0,
+					totalFilesSoFar, totalFiles, TransferState.RESTARTING);
+
+			transferStatusCallbackListener.statusCallback(status);
 			return;
 		}
 
@@ -201,16 +217,6 @@ final class TransferOperationsHelper {
 
 			dataObjectAO.getDataObjectFromIrods(irodsSourceFile,
 					targetLocalFile);
-
-			int totalFiles = 0;
-			int totalFilesSoFar = 0;
-
-			if (transferControlBlock != null) {
-				transferControlBlock.incrementFilesTransferredSoFar();
-				totalFiles = transferControlBlock.getTotalFilesToTransfer();
-				totalFilesSoFar = transferControlBlock
-						.getTotalFilesTransferredSoFar();
-			}
 
 			if (transferStatusCallbackListener != null) {
 				log.warn("success will be passed back to existing callback listener");
@@ -229,9 +235,6 @@ final class TransferOperationsHelper {
 			// may rethrow or send back to the callback listener
 			log.error("exception in transfer", je);
 
-			int totalFiles = 0;
-			int totalFilesSoFar = 0;
-
 			if (transferControlBlock != null) {
 				transferControlBlock.reportErrorInTransfer();
 				totalFiles = transferControlBlock.getTotalFilesToTransfer();
@@ -243,7 +246,7 @@ final class TransferOperationsHelper {
 				log.warn("exception will be passed back to existing callback listener");
 
 				TransferStatus status = TransferStatus.instanceForException(
-						TransferType.PUT, irodsSourceFile.getAbsolutePath(),
+						TransferType.GET, irodsSourceFile.getAbsolutePath(),
 						targetLocalFile.getAbsolutePath(), "",
 						targetLocalFile.length(), targetLocalFile.length(),
 						totalFilesSoFar, totalFiles, je);
@@ -319,31 +322,24 @@ final class TransferOperationsHelper {
 						transferStatusCallbackListener, transferControlBlock,
 						fileInSourceCollection);
 
-				// a pause will need to bubble back up
-
-				if (transferControlBlock != null
-						&& (transferControlBlock.isCancelled() || transferControlBlock
-								.isPaused())) {
-					log.info("returning, is paused or cancelled");
-					break;
-				}
 			} else {
-				if (transferControlBlock != null) {
 
-					// bypass if pause encountered
-					if (transferControlBlock.isCancelled()
-							|| transferControlBlock.isPaused()) {
-						log.info("returning, is paused or cancelled");
-						break;
-					}
+				// if I am restarting, see if I need to transfer this file
+				if (!transferControlBlock.filter(fileInSourceCollection
+						.getAbsolutePath())) {
+					log.debug("file filtered and not transferred");
+					transferControlBlock.incrementFilesTransferredSoFar();
+					TransferStatus status = TransferStatus.instance(
+							TransferType.PUT, fileInSourceCollection
+									.getAbsolutePath(), targetIrodsCollection
+									.getAbsolutePath(), "", 0, 0,
+							transferControlBlock
+									.getTotalFilesTransferredSoFar(),
+							transferControlBlock.getTotalFilesToTransfer(),
+							TransferState.RESTARTING);
 
-					// if I am restarting, see if I need to transfer this file
-
-					if (!transferControlBlock.filter(fileInSourceCollection
-							.getAbsolutePath())) {
-						log.debug("file filtered and not transferred");
-						continue;
-					}
+					transferStatusCallbackListener.statusCallback(status);
+					continue;
 				}
 
 				putASingleFile(fileInSourceCollection, targetIrodsCollection,
@@ -799,22 +795,35 @@ final class TransferOperationsHelper {
 			throws JargonException {
 		log.info("replicate single file");
 
+		int totalFiles = 0;
+		int totalFilesSoFar = 0;
+
+		if (transferControlBlock != null) {
+			transferControlBlock.incrementFilesTransferredSoFar();
+			totalFiles = transferControlBlock.getTotalFilesToTransfer();
+			totalFilesSoFar = transferControlBlock
+					.getTotalFilesTransferredSoFar();
+
+			if (!transferControlBlock.filter(irodsFileAbsolutePath)) {
+				log.info("file is filtered and discarded: {}",
+						irodsFileAbsolutePath);
+				TransferStatus status = TransferStatus.instance(
+						TransferType.REPLICATE, irodsFileAbsolutePath, "",
+						targetResource, 0, 0, totalFilesSoFar, totalFiles,
+						TransferState.RESTARTING);
+				transferStatusCallbackListener.statusCallback(status);
+				return;
+			}
+		}
+
+		log.info("filter passed, process...");
+
 		try {
 
 			dataObjectAO.replicateIrodsDataObject(irodsFileAbsolutePath,
 					targetResource);
 
 			log.info("replicate successful for file: {}", irodsFileAbsolutePath);
-
-			int totalFiles = 0;
-			int totalFilesSoFar = 0;
-
-			if (transferControlBlock != null) {
-				transferControlBlock.incrementFilesTransferredSoFar();
-				totalFiles = transferControlBlock.getTotalFilesToTransfer();
-				totalFilesSoFar = transferControlBlock
-						.getTotalFilesTransferredSoFar();
-			}
 
 			// I do not track length during a replication
 			if (transferStatusCallbackListener != null) {
@@ -829,14 +838,8 @@ final class TransferOperationsHelper {
 			// may rethrow or send back to the callback listener
 			log.error("exception in transfer", e);
 
-			int totalFiles = 0;
-			int totalFilesSoFar = 0;
-
 			if (transferControlBlock != null) {
 				transferControlBlock.reportErrorInTransfer();
-				totalFiles = transferControlBlock.getTotalFilesToTransfer();
-				totalFilesSoFar = transferControlBlock
-						.getTotalFilesTransferredSoFar();
 			}
 
 			if (transferStatusCallbackListener != null) {

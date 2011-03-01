@@ -62,7 +62,7 @@ public class TransferManagerTest {
 
     @Test
     public void testInstance() throws Exception {
-        TransferManager transferManager = new TransferManager();
+        TransferManager transferManager = new TransferManagerImpl();
         Assert.assertNotNull("null transferManager from instance()", transferManager);
     }
 
@@ -78,21 +78,21 @@ public class TransferManagerTest {
 
     @Test
     public void testPause() throws Exception {
-        TransferManager transferManager = new TransferManager();
+        TransferManager transferManager = new TransferManagerImpl();
         transferManager.pause();
         Assert.assertTrue(transferManager.isPaused());
     }
 
     @Test
     public void testResumeNotPaused() throws Exception {
-        TransferManager transferManager = new TransferManager();
+        TransferManager transferManager = new TransferManagerImpl();
         transferManager.resume();
         Assert.assertFalse(transferManager.getRunningStatus() == TransferManager.RunningStatus.PAUSED);
     }
 
     @Test
     public void testResumeWhenPaused() throws Exception {
-        TransferManager transferManager = new TransferManager();
+        TransferManager transferManager = new TransferManagerImpl();
         transferManager.pause();
         transferManager.resume();
         Assert.assertFalse("transferManager should not be paused",
@@ -101,7 +101,7 @@ public class TransferManagerTest {
 
     @Test
     public void testNotifyWarningCondition() throws Exception {
-        TransferManager transferManager = new TransferManager();
+        TransferManagerImpl transferManager = new TransferManagerImpl();
         transferManager.notifyWarningCondition();
         Assert.assertEquals("transferManager should be in a warning state", TransferManager.ErrorStatus.WARNING,
                 transferManager.getErrorStatus());
@@ -109,7 +109,7 @@ public class TransferManagerTest {
 
     @Test
     public void testNotifyProcessingCondition() throws Exception {
-        TransferManager transferManager = new TransferManager();
+        TransferManagerImpl transferManager = new TransferManagerImpl();
         transferManager.notifyProcessing();
         Assert.assertEquals("transferManager should be in a processing state",
                 TransferManager.RunningStatus.PROCESSING, transferManager.getRunningStatus());
@@ -117,7 +117,7 @@ public class TransferManagerTest {
 
     @Test
     public void testNotifyWarningConditionWhenAlreadyError() throws Exception {
-        TransferManager transferManager = new TransferManager();
+        TransferManagerImpl transferManager = new TransferManagerImpl();
         transferManager.notifyErrorCondition();
         transferManager.notifyWarningCondition();
         Assert.assertEquals("transferManager should still be in an error state", TransferManager.ErrorStatus.ERROR,
@@ -126,7 +126,7 @@ public class TransferManagerTest {
 
     @Test
     public void testNotifyErrorCondition() throws Exception {
-        TransferManager transferManager = new TransferManager();
+        TransferManagerImpl transferManager = new TransferManagerImpl();
         transferManager.notifyErrorCondition();
         Assert.assertEquals("transferManager should be in an error state", TransferManager.ErrorStatus.ERROR,
                 transferManager.getErrorStatus());
@@ -146,7 +146,7 @@ public class TransferManagerTest {
         FileGenerator.generateManyFilesAndCollectionsInParentCollectionByAbsolutePath(localCollectionAbsolutePath,
                 "testSubdir", 1, 2, 1, "testFile", ".txt", 9, 8, 2, 21);
 
-        TransferManager transferManager = new TransferManager();
+        TransferManager transferManager = new TransferManagerImpl();
         transferManager.pause();
 
         transferManager.enqueueAPut(localCollectionAbsolutePath, irodsCollectionRootAbsolutePath, "", irodsAccount);
@@ -169,7 +169,7 @@ public class TransferManagerTest {
         FileGenerator.generateManyFilesAndCollectionsInParentCollectionByAbsolutePath(localCollectionAbsolutePath,
                 "testSubdir", 1, 2, 1, "testFile", ".txt", 9, 8, 2, 21);
 
-        TransferManager transferManager = new TransferManager();
+        TransferManager transferManager = new TransferManagerImpl();
         transferManager.pause();
 
         transferManager.enqueueAPut(localCollectionAbsolutePath, irodsCollectionRootAbsolutePath, "", irodsAccount);
@@ -215,7 +215,7 @@ public class TransferManagerTest {
 
         String lastFileName = localFiles[2].getAbsolutePath();
 
-        TransferManager transferManager = new TransferManager();
+        TransferManager transferManager = new TransferManagerImpl();
 
         LocalIRODSTransfer enqueuedTransfer = new LocalIRODSTransfer();
         enqueuedTransfer.setCreatedAt(new Date());
@@ -301,7 +301,7 @@ public class TransferManagerTest {
         FileGenerator.generateManyFilesAndCollectionsInParentCollectionByAbsolutePath(localCollectionAbsolutePath,
                 "testSubdir", 1, 2, 1, "testFile", ".txt", 9, 8, 2, 21);
 
-        TransferManager transferManager = new TransferManager();
+        TransferManager transferManager = new TransferManagerImpl();
         transferManager.pause();
 
         transferManager.enqueueAPut(localCollectionAbsolutePath, irodsCollectionRootAbsolutePath, "", irodsAccount);
@@ -327,7 +327,7 @@ public class TransferManagerTest {
         FileGenerator.generateManyFilesAndCollectionsInParentCollectionByAbsolutePath(localCollectionAbsolutePath,
                 "testSubdir", 1, 2, 1, "testFile", ".txt", 9, 8, 2, 21);
 
-        TransferManager transferManager = new TransferManager();
+        TransferManager transferManager = new TransferManagerImpl();
         // transferManager.pause();
 
         transferManager.enqueueAPut(localCollectionAbsolutePath, irodsCollectionRootAbsolutePath, "", irodsAccount);
@@ -344,15 +344,16 @@ public class TransferManagerTest {
             if (transferManager.getRunningStatus() == TransferManager.RunningStatus.IDLE) {
                 break;
             }
+
         }
 
         Assert.assertEquals("should have been no errors", TransferManager.ErrorStatus.OK,
                 transferManager.getErrorStatus());
 
         // put is done, now replicate
-        String targetResource = testingProperties.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_RESOURCE_KEY);
-        String irodsAbsolutePath = irodsCollectionRootAbsolutePath + "/" + rootCollection;
-        transferManager.enqueueAReplicate(irodsAbsolutePath, targetResource, irodsAccount);
+
+        transferManager.enqueueAReplicate(irodsCollectionRootAbsolutePath + "/" + rootCollection,
+                testingProperties.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_RESOURCE_KEY), irodsAccount);
 
         waitCtr = 0;
 
@@ -389,7 +390,7 @@ public class TransferManagerTest {
         FileGenerator.generateManyFilesAndCollectionsInParentCollectionByAbsolutePath(localCollectionAbsolutePath,
                 "testSubdir", 1, 2, 1, "testFile", ".txt", 9, 8, 2, 21);
 
-        TransferManager transferManager = new TransferManager();
+        TransferManager transferManager = new TransferManagerImpl();
         // transferManager.pause();
 
         transferManager.enqueueAPut(localCollectionAbsolutePath, irodsCollectionRootAbsolutePath, "", irodsAccount);
@@ -450,7 +451,7 @@ public class TransferManagerTest {
 
         TransferQueueService transferQueueService = new TransferQueueService();
 
-        TransferManager transferManager = new TransferManager();
+        new TransferManagerImpl();
 
         LocalIRODSTransfer enqueuedTransfer = new LocalIRODSTransfer();
         enqueuedTransfer.setCreatedAt(new Date());
@@ -477,8 +478,7 @@ public class TransferManagerTest {
             throw new JargonException(e);
         }
 
-        // recreating the transfer manager should reset the queue
-        transferManager = new TransferManager();
+        new TransferManagerImpl();
 
         // now get the queue
         List<LocalIRODSTransfer> transferQueue = transferQueueService.getCurrentQueue();

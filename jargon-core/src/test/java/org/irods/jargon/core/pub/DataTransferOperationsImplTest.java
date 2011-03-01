@@ -35,7 +35,7 @@ public class DataTransferOperationsImplTest {
 	private static org.irods.jargon.testutils.IRODSTestSetupUtilities irodsTestSetupUtilities = null;
 	private static org.irods.jargon.testutils.AssertionHelper assertionHelper = null;
 
-	// FIXME: add transfers with resource specified and not specified!!!
+	// FIXME: add transfers with resource specified and not specified, refactor recursive put/get/copy into common method, repl will remain
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {

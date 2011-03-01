@@ -76,7 +76,7 @@ public class LocalIRODSTransfer implements Serializable {
     @Column(name = "irods_absolute_path", length = 32672)
     private String irodsAbsolutePath = "";
 
-    @OneToMany(mappedBy = "localIRODSTransfer", targetEntity = LocalIRODSTransferItem.class, cascade = { CascadeType.ALL }, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "localIRODSTransfer", targetEntity = LocalIRODSTransferItem.class, cascade = { CascadeType.ALL }, fetch = FetchType.LAZY)
     private Set<LocalIRODSTransferItem> localIRODSTransferItems = new HashSet<LocalIRODSTransferItem>();
 
     @Column(name = "created_at")

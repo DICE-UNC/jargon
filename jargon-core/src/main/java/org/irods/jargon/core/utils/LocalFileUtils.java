@@ -4,6 +4,12 @@
 package org.irods.jargon.core.utils;
 
 import java.io.File;
+import java.io.IOException;
+
+import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.pub.DataObjectAOImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Utilities for working with the local file system.
@@ -12,6 +18,9 @@ import java.io.File;
  * 
  */
 public class LocalFileUtils {
+	
+	public static final Logger log = LoggerFactory
+	.getLogger(LocalFileUtils.class);
 
 	/**
 	 * private constructor, this is not meant to be an instantiated class.
@@ -44,6 +53,33 @@ public class LocalFileUtils {
 			}
 		}
 		return count;
+	}
+	
+	/**
+	 * @param localFileToHoldData
+	 * @throws JargonException
+	 */
+	public static void createLocalFileIfNotExists(final File localFileToHoldData)
+			throws JargonException {
+		if (localFileToHoldData.exists()) {
+			log.info(
+					"local file exists, will not create the local file for {}",
+					localFileToHoldData.getAbsolutePath());
+		} else {
+			log.info(
+					"local file does not exist, will attempt to create local file: {}",
+					localFileToHoldData.getAbsolutePath());
+			try {
+				localFileToHoldData.createNewFile();
+			} catch (IOException e) {
+				log.error(
+						"IOException when trying to create a new file for the local output stream for {}",
+						localFileToHoldData.getAbsolutePath(), e);
+				throw new JargonException(
+						"IOException trying to create new file: "
+								+ localFileToHoldData.getAbsolutePath(), e);
+			}
+		}
 	}
 
 }

@@ -19,7 +19,7 @@ public final class TransferStatus {
 	}
 
 	public enum TransferState {
-		IN_PROGRESS, SUCCESS, FAILURE, PAUSED, CANCELLED
+		IN_PROGRESS, SUCCESS, FAILURE, PAUSED, CANCELLED, RESTARTING
 	}
 
 	private final TransferState transferState;

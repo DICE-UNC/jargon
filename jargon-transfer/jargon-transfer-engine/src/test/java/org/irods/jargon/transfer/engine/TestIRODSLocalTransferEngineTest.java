@@ -82,7 +82,7 @@ public class TestIRODSLocalTransferEngineTest {
 
         IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
 
-        TransferManager transferManager = new TransferManager();
+        TransferManagerImpl transferManager = new TransferManagerImpl();
         TransferControlBlock transferControlBlock = DefaultTransferControlBlock.instance();
         IRODSLocalTransferEngine irodsLocalTransferEngine = IRODSLocalTransferEngine.getInstance(transferManager,
                 transferControlBlock);
@@ -107,7 +107,7 @@ public class TestIRODSLocalTransferEngineTest {
         IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
         IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
-        TransferManager transferManager = new TransferManager();
+        TransferManagerImpl transferManager = new TransferManagerImpl();
 
         TransferControlBlock transferControlBlock = DefaultTransferControlBlock.instance();
         IRODSLocalTransferEngine irodsLocalTransferEngine = IRODSLocalTransferEngine.getInstance(transferManager,
@@ -145,7 +145,7 @@ public class TestIRODSLocalTransferEngineTest {
         IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
         IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
-        TransferManager transferManager = new TransferManager();
+        TransferManagerImpl transferManager = new TransferManagerImpl();
 
         TransferControlBlock transferControlBlock = DefaultTransferControlBlock.instance();
         IRODSLocalTransferEngine irodsLocalTransferEngine = IRODSLocalTransferEngine.getInstance(transferManager,
@@ -190,7 +190,7 @@ public class TestIRODSLocalTransferEngineTest {
 
         IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
 
-        TransferManager transferManager = new TransferManager();
+        TransferManager transferManager = new TransferManagerImpl();
         transferManager.pause();
 
         transferManager.enqueueAPut(localCollectionAbsolutePath, irodsCollectionRootAbsolutePath, "", irodsAccount);
@@ -215,7 +215,7 @@ public class TestIRODSLocalTransferEngineTest {
 
         IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
 
-        TransferManager transferManager = new TransferManager();
+        TransferManagerImpl transferManager = new TransferManagerImpl();
 
         TransferControlBlock transferControlBlock = DefaultTransferControlBlock.instance();
         IRODSLocalTransferEngine irodsLocalTransferEngine = IRODSLocalTransferEngine.getInstance(transferManager,
@@ -245,7 +245,7 @@ public class TestIRODSLocalTransferEngineTest {
     @Test
     public void testGetEmptyTransferQueue() throws Exception {
 
-        TransferManager transferManager = new TransferManager();
+        TransferManager transferManager = new TransferManagerImpl();
         List<LocalIRODSTransfer> transfers = transferManager.getCurrentQueue();
 
         Assert.assertNotNull("transfers should be empty, not null, there should be no current transfers");
@@ -260,7 +260,7 @@ public class TestIRODSLocalTransferEngineTest {
 
         IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
 
-        TransferManager transferManager = new TransferManager();
+        TransferManagerImpl transferManager = new TransferManagerImpl();
 
         transferManager.pause();
 
@@ -313,7 +313,7 @@ public class TestIRODSLocalTransferEngineTest {
 
         IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
 
-        TransferManager transferManager = new TransferManager();
+        TransferManagerImpl transferManager = new TransferManagerImpl();
 
         transferManager.pause();
 
@@ -387,7 +387,7 @@ public class TestIRODSLocalTransferEngineTest {
         IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
         IRODSFileFactory irodsFileFactory = irodsFileSystem.getIRODSFileFactory(irodsAccount);
 
-        TransferManager transferManager = new TransferManager();
+        TransferManagerImpl transferManager = new TransferManagerImpl();
 
         TransferControlBlock transferControlBlock = DefaultTransferControlBlock.instance(lastPath);
         IRODSLocalTransferEngine irodsLocalTransferEngine = IRODSLocalTransferEngine.getInstance(transferManager,
@@ -444,7 +444,7 @@ public class TestIRODSLocalTransferEngineTest {
         IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
         IRODSFileFactory irodsFileFactory = irodsFileSystem.getIRODSFileFactory(irodsAccount);
 
-        TransferManager transferManager = new TransferManager();
+        TransferManagerImpl transferManager = new TransferManagerImpl();
 
         TransferControlBlock transferControlBlock = DefaultTransferControlBlock.instance();
         IRODSLocalTransferEngine irodsLocalTransferEngine = IRODSLocalTransferEngine.getInstance(transferManager,
@@ -497,7 +497,7 @@ public class TestIRODSLocalTransferEngineTest {
         File localFile = new File(localFileName);
 
         dataTransferOperationsAO.putOperation(localFile, destFile, null, null);
-        TransferManager transferManager = new TransferManager();
+        TransferManagerImpl transferManager = new TransferManagerImpl();
 
         TransferControlBlock transferControlBlock = DefaultTransferControlBlock.instance();
         IRODSLocalTransferEngine irodsLocalTransferEngine = IRODSLocalTransferEngine.getInstance(transferManager,
@@ -546,7 +546,7 @@ public class TestIRODSLocalTransferEngineTest {
 
         dataTransferOperationsAO.putOperation(localFile, destFile, null, null);
         DummyTransferManagerCallbackListener transferManagerCallbackListener = new DummyTransferManagerCallbackListener();
-        TransferManager transferManager = new TransferManager(transferManagerCallbackListener);
+        TransferManagerImpl transferManager = new TransferManagerImpl(transferManagerCallbackListener);
 
         TransferControlBlock transferControlBlock = DefaultTransferControlBlock.instance();
         IRODSLocalTransferEngine irodsLocalTransferEngine = IRODSLocalTransferEngine.getInstance(transferManager,
