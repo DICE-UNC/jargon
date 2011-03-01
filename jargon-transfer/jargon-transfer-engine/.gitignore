@@ -3,3 +3,4 @@
 .settings
 target
 src/test/resources/testing.properties
+derby.log
