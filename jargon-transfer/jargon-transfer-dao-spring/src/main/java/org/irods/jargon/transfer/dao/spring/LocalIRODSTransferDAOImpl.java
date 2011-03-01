@@ -3,6 +3,7 @@ package org.irods.jargon.transfer.dao.spring;
 import java.util.List;
 
 import org.hibernate.Criteria;
+import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -67,8 +68,29 @@ public class LocalIRODSTransferDAOImpl extends HibernateDaoSupport implements Lo
         try {
             Criteria criteria = session.createCriteria(LocalIRODSTransfer.class);
             criteria.add(Restrictions.eq("id", id));
-            criteria.addOrder(Order.asc("createdAt"));
             ret = (LocalIRODSTransfer) criteria.uniqueResult();
+        } catch (Exception e) {
+            log.error("error in findById(Long)", e);
+            throw new TransferDAOException("Failed findById(Long)", e);
+        } finally {
+            session.close();
+        }
+        return ret;
+    }
+
+    
+    @Override
+    public LocalIRODSTransfer findInitializedById(Long id) throws TransferDAOException {
+        logger.debug("entering findById(Long)");
+        LocalIRODSTransfer ret = null;
+        Session session = getSession();
+        try {
+            Criteria criteria = session.createCriteria(LocalIRODSTransfer.class);
+            criteria.add(Restrictions.eq("id", id));
+            ret = (LocalIRODSTransfer) criteria.uniqueResult();
+            if (ret != null) {
+                Hibernate.initialize(ret.getLocalIRODSTransferItems());
+            }
         } catch (Exception e) {
             log.error("error in findById(Long)", e);
             throw new TransferDAOException("Failed findById(Long)", e);
@@ -101,6 +123,32 @@ public class LocalIRODSTransferDAOImpl extends HibernateDaoSupport implements Lo
         return ret;
     }
 
+    @Override
+    public LocalIRODSTransfer findInitializedById(Long id, boolean error) throws TransferDAOException {
+        logger.debug("entering findById(Long, boolean)");
+        LocalIRODSTransfer ret = null;
+        Session session = getSession();
+        try {
+            Criteria criteria = session.createCriteria(LocalIRODSTransfer.class);
+            criteria.add(Restrictions.eq("id", id));
+            criteria.createCriteria("localIRODSTransferItems").add(Restrictions.eq("error", true));
+            criteria.addOrder(Order.asc("createdAt"));
+            ret = (LocalIRODSTransfer) criteria.uniqueResult();
+            if (ret != null) {
+            Hibernate.initialize(ret.getLocalIRODSTransferItems());
+            }
+        } catch (HibernateException e) {
+            log.error("HibernateException", e);
+            throw new TransferDAOException(e);
+        } catch (Exception e) {
+            log.error("error in findById(Long id)", e);
+            throw new TransferDAOException("Failed findById(Long id)", e);
+        } finally {
+            session.close();
+        }
+        return ret;
+    }
+    
     @Override
     public List<LocalIRODSTransfer> findByTransferState(TransferState... transferState) throws TransferDAOException {
         log.debug("entering findByTransferState(TransferState...)");
@@ -138,6 +186,9 @@ public class LocalIRODSTransferDAOImpl extends HibernateDaoSupport implements Lo
             criteria.setMaxResults(maxResults);
             criteria.addOrder(Order.desc("transferStart"));
             ret = criteria.list();
+            for (LocalIRODSTransfer xfer : ret) {
+                Hibernate.initialize(xfer.getLocalIRODSTransferItems());
+            }
         } catch (HibernateException e) {
             log.error("HibernateException", e);
             throw new TransferDAOException(e);
@@ -165,6 +216,9 @@ public class LocalIRODSTransferDAOImpl extends HibernateDaoSupport implements Lo
             criteria.setMaxResults(maxResults);
             criteria.addOrder(Order.desc("transferStart"));
             ret = criteria.list();
+            for (LocalIRODSTransfer xfer : ret) {
+                Hibernate.initialize(xfer.getLocalIRODSTransferItems());
+            }
         } catch (HibernateException e) {
             log.error("HibernateException", e);
             throw new TransferDAOException(e);
@@ -309,15 +363,13 @@ public class LocalIRODSTransferDAOImpl extends HibernateDaoSupport implements Lo
     }
 
     @Override
-    public void delete(LocalIRODSTransfer... ea) throws TransferDAOException {
+    public void delete(LocalIRODSTransfer ea) throws TransferDAOException {
         logger.debug("entering delete()");
         Session session = getSession();
         Transaction tx = null;
         try {
             tx = session.beginTransaction();
-            for (LocalIRODSTransfer xfer : ea) {
-                session.delete(xfer);
-            }
+            session.delete(ea);
             tx.commit();
         } catch (HibernateException e) {
             log.error("HibernateException", e);
@@ -329,7 +381,6 @@ public class LocalIRODSTransferDAOImpl extends HibernateDaoSupport implements Lo
             log.error("error in delete(LocalIRODSTransfer entity)", e);
             throw new TransferDAOException("Failed delete(LocalIRODSTransfer entity)", e);
         } finally {
-            session.flush();
             session.close();
         }
     }
