@@ -54,7 +54,7 @@ public class TransferQueueServiceTest {
         irodsTestSetupUtilities.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
         DatabasePreparationUtils.makeSureDatabaseIsInitialized();
         databaseTester = new JdbcDatabaseTester("org.apache.derby.jdbc.EmbeddedDriver",
-                "jdbc:derby:target/transferDatabase", "transfer", "transfer");
+                "jdbc:derby:target/database/transfer", "transfer", "transfer");
     }
 
     @Before
