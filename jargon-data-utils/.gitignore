@@ -2,3 +2,4 @@
 .classpath
 .settings
 target
+src/test/resources/testing.properties
