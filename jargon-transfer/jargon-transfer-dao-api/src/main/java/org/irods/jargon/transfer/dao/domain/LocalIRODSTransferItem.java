@@ -32,7 +32,7 @@ public class LocalIRODSTransferItem implements Serializable {
     @Column(name = "id")
     private Long id;
 
-    @ManyToOne(targetEntity = LocalIRODSTransfer.class, fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    @ManyToOne(targetEntity = LocalIRODSTransfer.class, fetch = FetchType.EAGER, cascade = { CascadeType.ALL })
     @JoinColumn(name = "local_irods_transfer_id", nullable = false)
     private LocalIRODSTransfer localIRODSTransfer;
 
