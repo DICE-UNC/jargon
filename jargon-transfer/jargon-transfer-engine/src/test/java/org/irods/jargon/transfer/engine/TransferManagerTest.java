@@ -344,16 +344,15 @@ public class TransferManagerTest {
             if (transferManager.getRunningStatus() == TransferManager.RunningStatus.IDLE) {
                 break;
             }
-
         }
 
         Assert.assertEquals("should have been no errors", TransferManager.ErrorStatus.OK,
                 transferManager.getErrorStatus());
 
         // put is done, now replicate
-
-        transferManager.enqueueAReplicate(irodsCollectionRootAbsolutePath + "/" + rootCollection,
-                testingProperties.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_RESOURCE_KEY), irodsAccount);
+        String targetResource = testingProperties.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_RESOURCE_KEY);
+        String irodsAbsolutePath = irodsCollectionRootAbsolutePath + "/" + rootCollection;
+        transferManager.enqueueAReplicate(irodsAbsolutePath, targetResource, irodsAccount);
 
         waitCtr = 0;
 
