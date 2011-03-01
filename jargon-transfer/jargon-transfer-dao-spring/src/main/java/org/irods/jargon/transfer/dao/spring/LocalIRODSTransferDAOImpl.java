@@ -67,7 +67,7 @@ public class LocalIRODSTransferDAOImpl extends HibernateDaoSupport implements Lo
         try {
             Criteria criteria = session.createCriteria(LocalIRODSTransfer.class);
             criteria.add(Restrictions.eq("id", id));
-            criteria.addOrder(Order.asc("transferredAt"));
+            criteria.addOrder(Order.asc("createdAt"));
             ret = (LocalIRODSTransfer) criteria.uniqueResult();
         } catch (Exception e) {
             log.error("error in findById(Long)", e);
@@ -87,7 +87,7 @@ public class LocalIRODSTransferDAOImpl extends HibernateDaoSupport implements Lo
             Criteria criteria = session.createCriteria(LocalIRODSTransfer.class);
             criteria.add(Restrictions.eq("id", id));
             criteria.createCriteria("localIRODSTransferItems").add(Restrictions.eq("error", true));
-            criteria.addOrder(Order.asc("transferredAt"));
+            criteria.addOrder(Order.asc("createdAt"));
             ret = (LocalIRODSTransfer) criteria.uniqueResult();
         } catch (HibernateException e) {
             log.error("HibernateException", e);
