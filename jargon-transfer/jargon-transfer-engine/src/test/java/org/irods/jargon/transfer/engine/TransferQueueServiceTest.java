@@ -551,7 +551,7 @@ public class TransferQueueServiceTest {
 
         TestCase.assertEquals("irodsAbsolutePath", actualTransfer.getIrodsAbsolutePath());
         TestCase.assertEquals("targetResource", actualTransfer.getTransferResource());
-        TestCase.assertEquals(TransferType.REPLICATE.name(), actualTransfer.getTransferType());
+        TestCase.assertEquals(TransferType.REPLICATE, actualTransfer.getTransferType());
     }
 
     @Test
@@ -570,7 +570,7 @@ public class TransferQueueServiceTest {
 
         TestCase.assertEquals("irodsSourceAbsolutePath", actualTransfer.getIrodsAbsolutePath());
         TestCase.assertEquals("sourceResource", actualTransfer.getTransferResource());
-        TestCase.assertEquals(TransferType.GET.name(), actualTransfer.getTransferType());
+        TestCase.assertEquals(TransferType.GET, actualTransfer.getTransferType());
     }
 
     @Test
@@ -594,7 +594,7 @@ public class TransferQueueServiceTest {
 
         TestCase.assertEquals(sb.toString(), actualTransfer.getIrodsAbsolutePath());
         TestCase.assertEquals("sourceResource", actualTransfer.getTransferResource());
-        TestCase.assertEquals(TransferType.GET.name(), actualTransfer.getTransferType());
+        TestCase.assertEquals(TransferType.GET, actualTransfer.getTransferType());
     }
 
     @Test(expected = JargonException.class)
