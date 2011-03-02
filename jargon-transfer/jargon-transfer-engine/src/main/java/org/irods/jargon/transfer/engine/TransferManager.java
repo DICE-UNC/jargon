@@ -206,4 +206,6 @@ public interface TransferManager {
 	 */
 	TransferQueueService getTransferQueueService();
 
+    public void resetStatus() throws JargonException;
+
 }
