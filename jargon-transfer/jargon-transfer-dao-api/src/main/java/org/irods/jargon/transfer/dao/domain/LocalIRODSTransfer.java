@@ -15,6 +15,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
 /**
@@ -77,6 +78,7 @@ public class LocalIRODSTransfer implements Serializable {
     private String irodsAbsolutePath = "";
 
     @OneToMany(mappedBy = "localIRODSTransfer", targetEntity = LocalIRODSTransferItem.class, cascade = { CascadeType.ALL }, fetch = FetchType.LAZY)
+    @OrderBy("transferredAt")
     private Set<LocalIRODSTransferItem> localIRODSTransferItems = new HashSet<LocalIRODSTransferItem>();
 
     @Column(name = "created_at")
