@@ -2,8 +2,10 @@ package org.irods.jargon.transfer.engine;
 
 import java.io.FileReader;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Properties;
+import java.util.Set;
 
 import junit.framework.Assert;
 import junit.framework.TestCase;
@@ -18,6 +20,7 @@ import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.IRODSFileSystem;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.irods.jargon.transfer.dao.LocalIRODSTransferDAO;
+import org.irods.jargon.transfer.dao.LocalIRODSTransferItemDAO;
 import org.irods.jargon.transfer.dao.TransferDAOManager;
 import org.irods.jargon.transfer.dao.domain.LocalIRODSTransfer;
 import org.irods.jargon.transfer.dao.domain.LocalIRODSTransferItem;
@@ -373,6 +376,7 @@ public class TransferQueueServiceTest {
 
         TransferQueueService transferQueueService = new TransferQueueService();
         LocalIRODSTransferDAO localIRODSTransferDAO = transferDAOMgr.getTransferDAOBean().getLocalIRODSTransferDAO();
+        LocalIRODSTransferItemDAO localIRODSTransferItemDAO = transferDAOMgr.getTransferDAOBean().getLocalIRODSTransferItemDAO();
 
         LocalIRODSTransfer enqueuedTransfer = new LocalIRODSTransfer();
         enqueuedTransfer.setCreatedAt(new Date());
@@ -399,7 +403,7 @@ public class TransferQueueServiceTest {
         localIRODSTransferItem.setTargetFileAbsolutePath("/targetpath1");
         localIRODSTransferItem.setTransferredAt(new Date());
         localIRODSTransferItem.setLocalIRODSTransfer(enqueuedTransfer);
-        enqueuedTransfer.getLocalIRODSTransferItems().add(localIRODSTransferItem);
+        localIRODSTransferItemDAO.save(localIRODSTransferItem);
 
         localIRODSTransferItem = new LocalIRODSTransferItem();
         localIRODSTransferItem.setError(false);
@@ -408,7 +412,7 @@ public class TransferQueueServiceTest {
         localIRODSTransferItem.setTargetFileAbsolutePath("/targetpath2");
         localIRODSTransferItem.setTransferredAt(new Date());
         localIRODSTransferItem.setLocalIRODSTransfer(enqueuedTransfer);
-        enqueuedTransfer.getLocalIRODSTransferItems().add(localIRODSTransferItem);
+        localIRODSTransferItemDAO.save(localIRODSTransferItem);
 
         // now get all items for the transfer
         List<LocalIRODSTransferItem> transferItems = transferQueueService
@@ -491,6 +495,7 @@ public class TransferQueueServiceTest {
 
         TransferQueueService transferQueueService = new TransferQueueService();
         LocalIRODSTransferDAO localIRODSTransferDAO = transferDAOMgr.getTransferDAOBean().getLocalIRODSTransferDAO();
+        LocalIRODSTransferItemDAO localIRODSTransferItemDAO = transferDAOMgr.getTransferDAOBean().getLocalIRODSTransferItemDAO();
 
         LocalIRODSTransfer enqueuedTransfer = new LocalIRODSTransfer();
         enqueuedTransfer.setCreatedAt(new Date());
@@ -517,7 +522,7 @@ public class TransferQueueServiceTest {
         localIRODSTransferItem.setTargetFileAbsolutePath("/targetpath1");
         localIRODSTransferItem.setTransferredAt(new Date());
         localIRODSTransferItem.setLocalIRODSTransfer(enqueuedTransfer);
-        enqueuedTransfer.getLocalIRODSTransferItems().add(localIRODSTransferItem);
+        localIRODSTransferItemDAO.save(localIRODSTransferItem);
 
         localIRODSTransferItem = new LocalIRODSTransferItem();
         localIRODSTransferItem.setError(true);
@@ -526,7 +531,7 @@ public class TransferQueueServiceTest {
         localIRODSTransferItem.setTargetFileAbsolutePath("/targetpath2");
         localIRODSTransferItem.setTransferredAt(new Date());
         localIRODSTransferItem.setLocalIRODSTransfer(enqueuedTransfer);
-        enqueuedTransfer.getLocalIRODSTransferItems().add(localIRODSTransferItem);
+        localIRODSTransferItemDAO.save(localIRODSTransferItem);
 
         // now get all items for the transfer
         List<LocalIRODSTransferItem> transferItems = transferQueueService
