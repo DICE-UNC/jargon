@@ -169,15 +169,16 @@ final class IRODSLocalTransferEngine implements TransferStatusCallbackListener {
                 .getDataTransferOperations(irodsAccount);
         final IRODSFileFactory irodsFileFactory = irodsFileSystem.getIRODSFileFactory(irodsAccount);
 
-        if (localIrodsTransfer.getTransferType().equals(TransferType.PUT)) {
-            transferException = transferTypePut(localIrodsTransfer, dataTransferOperations, irodsFileFactory);
-        } else if (localIrodsTransfer.getTransferType().equals(TransferType.REPLICATE)) {
-            transferException = transferTypeReplicate(localIrodsTransfer, dataTransferOperations, irodsFileFactory);
-        } else if (localIrodsTransfer.getTransferType().equals(TransferType.GET)) {
-            transferException = transferTypeGet(localIrodsTransfer, dataTransferOperations, irodsFileFactory);
-        } else {
-            log.error("invalid transfer type: {}", localIrodsTransfer);
-            throw new JargonException("invalid transfer type:" + localIrodsTransfer.getTransferType());
+        switch (localIrodsTransfer.getTransferType()) {
+            case PUT:
+                transferException = transferTypePut(localIrodsTransfer, dataTransferOperations, irodsFileFactory);
+                break;
+            case REPLICATE:
+                transferException = transferTypeReplicate(localIrodsTransfer, dataTransferOperations, irodsFileFactory);
+                break;
+            case GET:
+                transferException = transferTypeGet(localIrodsTransfer, dataTransferOperations, irodsFileFactory);
+                break;
         }
 
         // wrap up
@@ -190,7 +191,7 @@ final class IRODSLocalTransferEngine implements TransferStatusCallbackListener {
         try {
             LocalIRODSTransferDAO localIRODSTransferDAO = transferDAOMgr.getTransferDAOBean()
                     .getLocalIRODSTransferDAO();
-            LocalIRODSTransfer wrapUpTransfer = localIRODSTransferDAO.findById(localIrodsTransfer.getId());
+            LocalIRODSTransfer wrapUpTransfer = localIRODSTransferDAO.findInitializedById(localIrodsTransfer.getId());
 
             log.info("wrap up transfer before update:{}", wrapUpTransfer);
 
@@ -249,6 +250,7 @@ final class IRODSLocalTransferEngine implements TransferStatusCallbackListener {
         JargonException transferException = null;
 
         try {
+            System.out.println("put: {}" +  localFile);
             dataTransferOperations.putOperation(localFile, targetFile, this, transferControlBlock);
         } catch (JargonException je) {
             log.error("exception in transfer will be marked as a global exception, ending the transfer operation");
@@ -400,7 +402,7 @@ final class IRODSLocalTransferEngine implements TransferStatusCallbackListener {
         try {
             LocalIRODSTransferDAO localIRODSTransferDAO = transferDAOMgr.getTransferDAOBean()
                     .getLocalIRODSTransferDAO();
-            LocalIRODSTransfer mergedTransfer = localIRODSTransferDAO.findById(currentTransfer.getId());
+            LocalIRODSTransfer mergedTransfer = localIRODSTransferDAO.findInitializedById(currentTransfer.getId());
 
             log.info("loaded merged transfer for status update:{}", mergedTransfer);
 
