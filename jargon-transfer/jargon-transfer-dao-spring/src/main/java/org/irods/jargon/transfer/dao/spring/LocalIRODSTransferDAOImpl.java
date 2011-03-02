@@ -81,7 +81,7 @@ public class LocalIRODSTransferDAOImpl extends HibernateDaoSupport implements Lo
     
     @Override
     public LocalIRODSTransfer findInitializedById(Long id) throws TransferDAOException {
-        logger.debug("entering findById(Long)");
+        logger.debug("entering findInitializedById(Long)");
         LocalIRODSTransfer ret = null;
         Session session = getSession();
         try {
