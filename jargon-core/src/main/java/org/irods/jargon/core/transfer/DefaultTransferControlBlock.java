@@ -319,9 +319,9 @@ public class DefaultTransferControlBlock implements TransferControlBlock {
 	 * incrementFilesTransferredSoFar()
 	 */
 	@Override
-	public void incrementFilesTransferredSoFar() {
+	public int incrementFilesTransferredSoFar() {
 		synchronized (this) {
-			totalFilesTransferredSoFar++;
+			return ++totalFilesTransferredSoFar;
 		}
 	}
 

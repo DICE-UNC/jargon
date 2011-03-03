@@ -9,6 +9,7 @@ import org.irods.jargon.core.connection.IRODSServerProperties;
 import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.connection.JargonProperties;
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.pub.io.IRODSFileFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -117,6 +118,11 @@ public abstract class IRODSGenericAO implements IRODSAccessObject {
 	@Override
 	public IRODSAccessObjectFactory getIRODSAccessObjectFactory() throws JargonException {
 		return IRODSAccessObjectFactoryImpl.instance(irodsSession);
+	}
+	
+	@Override
+	public IRODSFileFactory getIRODSFileFactory() throws JargonException {
+		return IRODSAccessObjectFactoryImpl.instance(irodsSession).getIRODSFileFactory(irodsAccount);
 	}
 
 }

@@ -408,21 +408,9 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 	private IRODSQueryResultSetInterface queryForPathAndReturnResultSet(
 			final String irodsAbsolutePath, final String queryString,
 			final int partialStartIndex) throws JargonException {
+		
 		LOG.info("listCollectionsAndDataObjectsUnderPath for: {}",
 				irodsAbsolutePath);
-		IRODSFile irodsFile = irodsFileFactory
-				.instanceIRODSFile(irodsAbsolutePath);
-
-		String path;
-
-		if (irodsFile.isDirectory()) {
-			LOG.debug("is directory");
-			path = irodsFile.getAbsolutePath();
-		} else {
-			path = irodsFile.getParent();
-			LOG.debug("is file, using parent path: {}", path);
-		}
-
 		IRODSGenQueryExecutor irodsGenQueryExecutor = new IRODSGenQueryExecutorImpl(
 				this.getIRODSSession(), this.getIRODSAccount());
 

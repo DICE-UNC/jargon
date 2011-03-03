@@ -692,9 +692,15 @@ public class DataTransferOperationsImplTest {
 	public void testPutMultipleCollectionsMultipleFiles() throws Exception {
 
 		String rootCollection = "testPutMultipleCollectionsMultipleFiles";
+		String returnedCollection = "testPutMultipleCollectionsMultipleFilesReturned";
 		String localCollectionAbsolutePath = scratchFileUtils
 				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH
 						+ '/' + rootCollection);
+		
+		String returnedCollectionAbsolutePath = scratchFileUtils
+		.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH
+				+ '/' + returnedCollection);
+
 
 		String irodsCollectionRootAbsolutePath = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
@@ -721,17 +727,14 @@ public class DataTransferOperationsImplTest {
 
 		dataTransferOperationsAO.putOperation(localFile, destFile, null, null);
 		destFile.close();
+		
+		//File returnedData = new File(returnedCollectionAbsolutePath + "/" + rootCollection);
+		
+		dataTransferOperationsAO.getOperation(destFile.getAbsolutePath() + "/" + rootCollection, returnedCollectionAbsolutePath, "", null, null);
 
-		irodsFileSystem.close();
-
-		irodsFileSystem = IRODSFileSystem.instance();
-		irodsFileFactory = irodsFileSystem.getIRODSFileFactory(irodsAccount);
-		destFile = irodsFileFactory
-				.instanceIRODSFile(irodsCollectionRootAbsolutePath + '/'
-						+ rootCollection);
-
+		File returnedData = new File(returnedCollectionAbsolutePath + "/" + rootCollection);
 		assertionHelper.assertTwoFilesAreEqualByRecursiveTreeComparison(
-				localFile, (File) destFile);
+				localFile, returnedData);
 		irodsFileSystem.close();
 	}
 
@@ -2015,6 +2018,58 @@ public class DataTransferOperationsImplTest {
 				.getJargonProperties();
 		irodsFileSystem.closeAndEatExceptions();
 		TestCase.assertNotNull("null jargonProperties", jargonProperties);
+	}
+	
+	
+	@Test
+	public void testCopyCollectionNoForceNoOverwriteTransferControlBlock() throws Exception {
+
+		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
+		// generate a local scratch file
+		String testOrigDirectory = "testCopyCollectionNoForceNoOverwriteTransferControlBlockOrig";
+		String testTargetDirectory = "testCopyCollectionNoForceNoOverwriteTransferControlBlockTarget";
+		
+		String localCollectionAbsolutePath = scratchFileUtils
+		.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH  + '/' + testOrigDirectory);
+
+		String irodsCollectionRootAbsolutePath = testingPropertiesHelper
+		.buildIRODSCollectionAbsolutePathFromTestProperties(
+				testingProperties, IRODS_TEST_SUBDIR_PATH);
+		
+		String irodsOriginalAbsolutePath = testingPropertiesHelper
+		.buildIRODSCollectionAbsolutePathFromTestProperties(
+				testingProperties, IRODS_TEST_SUBDIR_PATH + "/" + testOrigDirectory);
+		
+		String irodsTargetAbsolutePath = testingPropertiesHelper
+		.buildIRODSCollectionAbsolutePathFromTestProperties(
+				testingProperties, IRODS_TEST_SUBDIR_PATH + "/" + testTargetDirectory);
+
+		FileGenerator
+		.generateManyFilesAndCollectionsInParentCollectionByAbsolutePath(
+				localCollectionAbsolutePath,
+				"prefixForColl",
+				2, 3, 2, "testFile", ".txt", 2, 2, 1, 2);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+		.buildIRODSAccountFromTestProperties(testingProperties);
+
+		DataTransferOperations dataTransferOperations = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataTransferOperations(
+						irodsAccount);
+		
+		dataTransferOperations.putOperation(localCollectionAbsolutePath,
+				irodsCollectionRootAbsolutePath,"",null,null);
+		
+		dataTransferOperations.copy(irodsOriginalAbsolutePath, "", irodsTargetAbsolutePath, null, false, null);
+		
+		File localFile = new File(localCollectionAbsolutePath);
+		IRODSFile targetFile = irodsFileSystem.getIRODSFileFactory(irodsAccount).instanceIRODSFile(irodsTargetAbsolutePath);
+		
+		// compare the local source to the copied-to target
+		assertionHelper.assertTwoFilesAreEqualByRecursiveTreeComparison(localFile, (File) targetFile);
+	
+		irodsFileSystem.close();
+
 	}
 
 }

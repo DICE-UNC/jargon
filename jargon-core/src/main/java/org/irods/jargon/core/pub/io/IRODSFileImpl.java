@@ -10,7 +10,6 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import org.irods.jargon.core.exception.DataNotFoundException;
@@ -19,7 +18,6 @@ import org.irods.jargon.core.exception.JargonFileOrCollAlreadyExistsException;
 import org.irods.jargon.core.exception.JargonRuntimeException;
 import org.irods.jargon.core.packinstr.DataObjInp;
 import org.irods.jargon.core.pub.IRODSFileSystemAO;
-import org.irods.jargon.core.pub.domain.DataObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -50,10 +48,6 @@ public final class IRODSFileImpl extends File implements IRODSFile {
 	int fileDescriptor = -1;
 	private List<String> directory = new ArrayList<String>();
 	private PathNameType pathNameType = PathNameType.UNKNOWN;
-	
-	// note that these values are used internally for optional caching of system metadata.  Depending on the object type, only one will be cached.
-	private DataObject dataObject = null;
-	private Collection collection = null;
 
 	private static final long serialVersionUID = -6986662136294659059L;
 
@@ -338,9 +332,9 @@ public final class IRODSFileImpl extends File implements IRODSFile {
 		boolean canWrite = false;
 		try {
 			canWrite = irodsFileSystemAO.isFileWriteable(this);
-				log.info("checked if I could write this file, and got back:{}"
-						,canWrite);
-			
+			log.info("checked if I could write this file, and got back:{}",
+					canWrite);
+
 		} catch (JargonException e) {
 			String msg = "JargonException caught and rethrown as JargonRuntimeException:"
 					+ e.getMessage();
@@ -815,7 +809,7 @@ public final class IRODSFileImpl extends File implements IRODSFile {
 	 */
 	@Override
 	public File[] listFiles() {
-		
+
 		try {
 			List<String> result = irodsFileSystemAO.getListInDir(this);
 			IRODSFileImpl[] a = new IRODSFileImpl[result.size()];
@@ -1154,23 +1148,17 @@ public final class IRODSFileImpl extends File implements IRODSFile {
 	 */
 	@Override
 	public String getResource() throws JargonException {
-		/*// I may have set the resource already
-		if (resource.length() == 0) {
-			// for files, get the actual resource associated with the file,
-			// otherwise,
-			// get any default set by the IRODS account
-			if (this.isFile()) {
-				resource = this.irodsFileSystemAO.getResourceNameForFile(this);  
-			} else {
-				resource = this.irodsFileSystemAO.getIRODSAccount()
-						.getDefaultStorageResource();
-			}
-		} else {
-			// note that there is some inconsistency between nulls and "" values
-			// for resource, try and
-			// standardize on null. This probably needs more work.
-		}
-*/
+		/*
+		 * // I may have set the resource already if (resource.length() == 0) {
+		 * // for files, get the actual resource associated with the file, //
+		 * otherwise, // get any default set by the IRODS account if
+		 * (this.isFile()) { resource =
+		 * this.irodsFileSystemAO.getResourceNameForFile(this); } else {
+		 * resource = this.irodsFileSystemAO.getIRODSAccount()
+		 * .getDefaultStorageResource(); } } else { // note that there is some
+		 * inconsistency between nulls and "" values // for resource, try and //
+		 * standardize on null. This probably needs more work. }
+		 */
 		return resource;
 	}
 

@@ -136,12 +136,6 @@ public final class IRODSFileOutputStream extends OutputStream {
 			log.error(msg);
 			throw new JargonRuntimeException(msg);
 		}
-
-		if (!(file instanceof IRODSFile)) {
-			String msg = "file is not an IRODSFileImpl";
-			log.error(msg);
-			throw new JargonRuntimeException(msg);
-		}
 	}
 
 	/*

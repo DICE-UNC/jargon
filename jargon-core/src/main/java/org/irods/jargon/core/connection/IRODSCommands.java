@@ -465,18 +465,26 @@ public class IRODSCommands implements IRODSManagedConnection {
 		} else if (info == ErrorEnum.CAT_INVALID_AUTHENTICATION.getInt()) {
 			throw new JargonException("invalid user or password");
 		}
+		
+		
+		if (messageLength > 0) {
+			log.debug("message length greater than zero");
+			message = readMessageBody(messageLength, decode);
+
+			// squelch genqueryout data for nicer logs
+			if (log.isDebugEnabled()) {
+				String messageAsString = message.parseTag();
+				if (message.parseTag().indexOf("GenQueryOut") == -1) {
+					log.debug("message from IRODS read back:{}",
+							messageAsString);
+				}
+			}
+		}
 
 		// previous will have returned or thrown exception
 
 		if (errorLength != 0) {
 			processMessageErrorNotEqualZero(errorLength);
-		}
-
-		if (messageLength > 0) {
-			log.debug("message length greater than zero");
-			message = readMessageBody(messageLength, decode);
-
-			log.debug("message from IRODS read back:{}", message.parseTag());
 		}
 
 		if (bytesLength != 0 || info > 0) {
@@ -648,6 +656,22 @@ public class IRODSCommands implements IRODSManagedConnection {
 					ConnectionConstants.JARGON_CONNECTION_ENCODING);
 			throw new JargonException("Unsupported encoding for:"
 					+ ConnectionConstants.JARGON_CONNECTION_ENCODING);
+		}
+		
+		Tag errorPITag = errorTag.getTag(RErrMsg.PI_TAG);
+		if (errorPITag == null) {
+			throw new JargonException("errorPITag missing when processing an error in response from iRODS");
+		}
+		
+		Tag status = errorPITag.getTag("status");
+		if (status == null) {
+			throw new JargonException("no status tag in error PI tag when processing error in response from iRODS");
+		}
+		
+		int statusVal = status.getIntValue();
+		if (statusVal == 0) {
+			log.debug("error status of 0 indicates normal operation, ignored");
+			return;
 		}
 		log.error("IRODS error occured: {} ", errorTag.getTag(RErrMsg.PI_TAG)
 				.getTag(AbstractIRODSPackingInstruction.MESSAGE_TAG));
@@ -978,7 +1002,8 @@ public class IRODSCommands implements IRODSManagedConnection {
 		getIRODSAccount();
 		if (IRODSAccount.isDefaultObfuscate()) {
 			try {
-				password = new Lucid(FileFactory.newFile(new URI(password))).l16();
+				password = new Lucid(FileFactory.newFile(new URI(password)))
+						.l16();
 			} catch (Throwable e) {
 				log.error("error during account obfuscation", e);
 			}
@@ -1126,14 +1151,17 @@ public class IRODSCommands implements IRODSManagedConnection {
 	protected String getCachedChallengeValue() {
 		return cachedChallengeValue;
 	}
-	
+
 	/**
-	 * Used internally to consume status messages from various commands, this will send a given integer value
-	 * in network order to iRODS.
-	 * @param value <code>int</code> with
+	 * Used internally to consume status messages from various commands, this
+	 * will send a given integer value in network order to iRODS.
+	 * 
+	 * @param value
+	 *            <code>int</code> with
 	 * @throws JargonException
 	 */
-	public synchronized void sendInNetworkOrder(final int value) throws JargonException {
+	public synchronized void sendInNetworkOrder(final int value)
+			throws JargonException {
 		try {
 			irodsConnection.sendInNetworkOrder(value);
 		} catch (IOException e) {

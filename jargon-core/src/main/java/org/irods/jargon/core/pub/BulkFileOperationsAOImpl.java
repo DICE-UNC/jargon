@@ -204,9 +204,9 @@ public class BulkFileOperationsAOImpl extends IRODSGenericAO implements
 			final boolean force, final boolean bulkOperation)
 			throws JargonException {
 
-		if (absolutePathToIrodsCollectionToHoldExtractedFiles.isEmpty()) {
+		if (absolutePathToBundleFileInIrodsToBeExtracted == null || absolutePathToBundleFileInIrodsToBeExtracted.isEmpty()) {
 			throw new IllegalArgumentException(
-					"null or empty absolutePathToIrodsCollectionToHoldExtractedFiles");
+					"null or empty absolutePathToBundleFileInIrodsToBeExtracted");
 		}
 
 		if (absolutePathToIrodsCollectionToHoldExtractedFiles == null

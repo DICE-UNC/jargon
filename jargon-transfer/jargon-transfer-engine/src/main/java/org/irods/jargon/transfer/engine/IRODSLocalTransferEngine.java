@@ -399,7 +399,7 @@ final class IRODSLocalTransferEngine implements TransferStatusCallbackListener {
             localIRODSTransferItem.setError(false);
         }
 
-        try {
+        try { 
             LocalIRODSTransferDAO localIRODSTransferDAO = transferDAOMgr.getTransferDAOBean()
                     .getLocalIRODSTransferDAO();
             LocalIRODSTransfer mergedTransfer = localIRODSTransferDAO.findInitializedById(currentTransfer.getId());

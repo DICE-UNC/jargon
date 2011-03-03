@@ -142,6 +142,39 @@ public interface DataTransferOperations extends IRODSAccessObject {
 			final TransferStatusCallbackListener transferStatusCallbackListener,
 			final TransferControlBlock transferControlBlock)
 			throws JargonException;
+	
+	/**
+	 * Get a file or collection from iRODS to the local file system. This method
+	 * will detect whether this is a get of a single file, or of a collection.
+	 * If this is a get of a collection, the method will recursively obtain the
+	 * data from iRODS.
+	 * 
+	 * @param irodsSourceFileAbsolutePath
+	 *          <code>String</code> with the absolute path to the iRODS source file to retrieve to the client
+	 * @param targetLocalFile
+	 *            <code>String</code> that is the absolute path to file in the local file system to which the iRODS data will be transferred
+	 * @param sourceResourceName <code>String</code> with the optional resource from which the file will be obtained.  This should be left blank if
+	 * not specified (not null)
+	 * @param transferStatusCallbackListener
+	 *            {@link org.irods.jargon.core.transfer.TransferStatusCallbackListener}
+	 *            implementation that will receive callbacks indicating the
+	 *            real-time status of the transfer. This may be set to null if
+	 *            not required
+	 * @param transferControlBlock
+	 *            an optional
+	 *            {@link org.irods.jargon.core.transfer.TransferControlBlock}
+	 *            that provides a common object to communicate between the
+	 *            object requesting the transfer, and the method performing the
+	 *            transfer. This control block may contain a filter that can be
+	 *            used to control restarts, and provides a way for the
+	 *            requesting process to send a cancellation. This may be set to
+	 *            null if not required.
+	 * @throws JargonException
+	 */
+	void getOperation(String irodsSourceFileAbsolutePath,
+			String targetLocalFileAbsolutePath, String sourceResourceName,
+			TransferStatusCallbackListener transferStatusCallbackListener,
+			TransferControlBlock transferControlBlock) throws JargonException;
 
 	/**
 	 * Perform a replication operation. This will copy the given file to a
@@ -240,4 +273,35 @@ public interface DataTransferOperations extends IRODSAccessObject {
 			TransferStatusCallbackListener transferStatusCallbackListener,
 			boolean force, TransferControlBlock transferControlBlock)
 			throws JargonException;
+
+	/**
+	 * Transfer a file from the local file system to iRODS.  This will be a recursive operation if a collection is specified.  If a collection is specified, that
+	 * collection will become a sub-directory added underneath the given parent.
+	 * 
+	 * @param sourceFileAbsolutePath <code>String</code> with the absolute path of the source file on the local file system
+	 * @param targetIrodsFileAbsolutePath <code>String</code> with the absolute path of the iRODS collection that will be the target of the put
+	 * @param targetResourceName <code>String</code> with the target resource name.  This may be set to blank if not used, in which case the iRODS 
+	 * default will be used.  Null is not acceptable
+	 * @param transferStatusCallbackListener
+	 *            an optional
+	 *            {@link org.irods.jargon.core.transfer.TransferStatusCallbackListener}
+	 *            that can receive status callbacks. This may be set to null if
+	 *            this functionality is not required.
+	 * @param transferControlBlock
+	 *            an optional
+	 *            {@link org.irods.jargon.core.transfer.TransferControlBlock}
+	 *            that provides a common object to communicate between the
+	 *            object requesting the transfer, and the method performing the
+	 *            transfer. This control block may contain a filter that can be
+	 *            used to control restarts, and provides a way for the
+	 *            requesting process to send a cancellation. This may be set to
+	 *            null if not required.
+	 * @throws JargonException
+	 */
+	void putOperation(String sourceFileAbsolutePath,
+			String targetIrodsFileAbsolutePath, String targetResourceName,
+			TransferStatusCallbackListener transferStatusCallbackListener,
+			TransferControlBlock transferControlBlock) throws JargonException;
+
+	
 }

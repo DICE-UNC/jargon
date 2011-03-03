@@ -5,7 +5,7 @@ import org.irods.jargon.core.exception.JargonException;
 /**
  * An interface for an object that can control a recursive transfer process,
  * providing a common reference object between the transferring process and the
- * recursive transfer method (get, put, rel, etc).
+ * recursive transfer method (get, put, replicate, etc).
  * <p/>
  * Implementations of this class can act as a filter to select items for
  * transfer, and can also be used to signal a cancel.
@@ -142,8 +142,9 @@ public interface TransferControlBlock {
 	int getTotalFilesTransferredSoFar();
 
 	/**
-	 * Increment the count of files that have been transferred so far // FIXME: change to increment and return value...avoid increment and get
+	 * Increment the count of files that have been transferred so far and return that amount (to avoid act-then-check)
+	 * @return incremented value from control block
 	 */
-	void incrementFilesTransferredSoFar();
+	int incrementFilesTransferredSoFar();
 
 }

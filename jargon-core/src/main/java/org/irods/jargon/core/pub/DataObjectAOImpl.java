@@ -667,8 +667,6 @@ public final class DataObjectAOImpl extends IRODSGenericAO implements
 		}
 	}
 
-	
-
 	/*
 	 * (non-Javadoc)
 	 * 

@@ -319,15 +319,24 @@ public class AssertionHelper {
 			final File file1, final File file2)
 			throws IRODSTestAssertionException {
 
+		if (file1.getName().equals(".DS_Store")
+				|| file2.getName().equals(".DS_Store")) {
+			throw new IRODSTestAssertionException(
+					"test data corrupted by Mac .DS_Store files, please reinitialize the scratch directories");
+		}
+
 		if (file1.isDirectory() && file2.isDirectory()) {
 			File[] file1Files = file1.listFiles();
 			File[] file2Files = file2.listFiles();
 
 			if (file1Files.length != file2Files.length) {
 				throw new IRODSTestAssertionException(
-						"directories differ in the number of files contained, dir1 has "
-								+ file1Files.length + " while dir2 has "
-								+ file2Files.length);
+						"directories differ in the number of files contained, dir1 is: "
+								+ file1.getAbsolutePath() + "\n and has"
+								+ +file1Files.length
+								+ " children \n while dir2 is:"
+								+ file2.getAbsolutePath() + " \n and has "
+								+ file2Files.length + " children");
 			}
 
 			for (int i = 0; i < file1Files.length; i++) {
@@ -338,8 +347,11 @@ public class AssertionHelper {
 		} else if (file1.isFile() && file2.isFile()) {
 			if (file1.length() != file2.length()) {
 				throw new IRODSTestAssertionException(
-						"file lengths differ, file1 has " + file1.length()
-								+ " while file2 has " + file2.length());
+						"file lengths differ,, file1 is: "
+								+ file1.getAbsolutePath()
+								+ "\n and has length:" + file1.length()
+								+ "\n while file is:" + file2.getAbsolutePath()
+								+ " \n and has length:" + file2.length());
 			}
 
 			if (file1.getName().equals(file2.getName())) {

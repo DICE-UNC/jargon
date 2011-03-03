@@ -412,7 +412,6 @@ public class TestIRODSLocalTransferEngineTest {
         irodsLocalTransferEngine.processOperation(localIRODSTransfer);
         IRODSFile targetIrodsCollection = irodsFileFactory.instanceIRODSFile(irodsCollectionRootAbsolutePath + "/"
                 + rootCollection);
-        irodsFileSystem.close();
         String transferredFiles[] = targetIrodsCollection.list();
         Assert.assertEquals("first transferred file should be after the last successful", sourcePaths[3],
                 transferredFiles[0]);

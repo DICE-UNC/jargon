@@ -273,11 +273,11 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 		try {
 
 			if (irodsSourceFile == null) {
-				throw new JargonException("irods source file is null");
+				throw new IllegalArgumentException("irods source file is null");
 			}
 
 			if (targetLocalFile == null) {
-				throw new JargonException("target local file is null");
+				throw new IllegalArgumentException("target local file is null");
 			}
 
 			log.info("get operation, irods source file is: {}",
@@ -339,6 +339,42 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 					targetLocalFile, transferStatusCallbackListener,
 					operativeTransferControlBlock, je);
 		}
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.core.pub.DataTransferOperations#getOperation(java.lang.String, java.lang.String, java.lang.String, org.irods.jargon.core.transfer.TransferStatusCallbackListener, org.irods.jargon.core.transfer.TransferControlBlock)
+	 */
+	@Override
+	public void getOperation(
+			final String irodsSourceFileAbsolutePath,
+			final String targetLocalFileAbsolutePath,
+			final String sourceResourceName,
+			final TransferStatusCallbackListener transferStatusCallbackListener,
+			final TransferControlBlock transferControlBlock)
+			throws JargonException {
+
+			if (irodsSourceFileAbsolutePath == null || irodsSourceFileAbsolutePath.isEmpty()) {
+				throw new IllegalArgumentException("irodsSourceFileAbsolutePath is null or empty");
+			}
+			
+			if (targetLocalFileAbsolutePath == null || targetLocalFileAbsolutePath.isEmpty()) {
+				throw new IllegalArgumentException("targetLocalFileAbsolutePath is null or empty");
+			}
+			
+			if (sourceResourceName == null) {
+				throw new IllegalArgumentException("sourceResourceName is null");
+			}
+
+			log.info("get operation, irods source file is: {}",
+					irodsSourceFileAbsolutePath);
+			log.info("  local file for get: {}",
+					targetLocalFileAbsolutePath);
+			log.info("   specifiying resource:", sourceResourceName);
+			
+			File localFile = new File(targetLocalFileAbsolutePath);
+			IRODSFile irodsSourceFile = getIRODSFileFactory().instanceIRODSFile(irodsSourceFileAbsolutePath);
+			irodsSourceFile.setResource(sourceResourceName);
+			getOperation(irodsSourceFile, localFile, transferStatusCallbackListener, transferControlBlock);
 	}
 
 	/**
@@ -568,6 +604,53 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.DataTransferOperations#putOperation(java.lang
+	 * .String, java.lang.String, java.lang.String,
+	 * org.irods.jargon.core.transfer.TransferStatusCallbackListener,
+	 * org.irods.jargon.core.transfer.TransferControlBlock)
+	 */
+	@Override
+	public void putOperation(
+			final String sourceFileAbsolutePath,
+			final String targetIrodsFileAbsolutePath,
+			final String targetResourceName,
+			final TransferStatusCallbackListener transferStatusCallbackListener,
+			final TransferControlBlock transferControlBlock)
+			throws JargonException {
+
+		if (sourceFileAbsolutePath == null || sourceFileAbsolutePath.isEmpty()) {
+			throw new IllegalArgumentException(
+					"sourceFileAbsolutePath is null or empty");
+		}
+
+		if (targetIrodsFileAbsolutePath == null
+				|| targetIrodsFileAbsolutePath.isEmpty()) {
+			throw new IllegalArgumentException(
+					"targetIrodsFileAbsolutePath is null or empty");
+		}
+
+		if (targetResourceName == null) {
+			throw new IllegalArgumentException("targetResourceName is null");
+		}
+		// the transfer status callback listener can be null
+
+		log.info("put operation for source: {}", sourceFileAbsolutePath);
+		log.info(" to target: {}", targetIrodsFileAbsolutePath);
+		log.info("  resource:{}", targetResourceName);
+
+		File sourceFile = new File(sourceFileAbsolutePath);
+		IRODSFile targetFile = this.getIRODSFileFactory().instanceIRODSFile(
+				targetIrodsFileAbsolutePath);
+		targetFile.setResource(targetResourceName);
+
+		putOperation(sourceFile, targetFile, transferStatusCallbackListener,
+				transferControlBlock);
+	}
+
 	/**
 	 * @param sourceFile
 	 * @param operativeTransferControlBlock
@@ -690,10 +773,10 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 		log.info("this dir name, will be the new parent directory in iRODS:{}",
 				thisDirName);
 
-		IRODSFileFactory irodsFileFactory = new IRODSFileFactoryImpl(
-				getIRODSSession(), getIRODSAccount());
-		IRODSFile newIrodsParentDirectory = irodsFileFactory.instanceIRODSFile(
+
+		IRODSFile newIrodsParentDirectory = getIRODSFileFactory().instanceIRODSFile(
 				targetIrodsFile.getAbsolutePath(), thisDirName);
+		newIrodsParentDirectory.setResource(targetIrodsFile.getResource());
 
 		try {
 			newIrodsParentDirectory.mkdir();
@@ -819,8 +902,14 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.pub.DataTransferOperations#copy(java.lang.String, java.lang.String, java.lang.String, org.irods.jargon.core.transfer.TransferStatusCallbackListener, boolean, org.irods.jargon.core.transfer.TransferControlBlock)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.DataTransferOperations#copy(java.lang.String,
+	 * java.lang.String, java.lang.String,
+	 * org.irods.jargon.core.transfer.TransferStatusCallbackListener, boolean,
+	 * org.irods.jargon.core.transfer.TransferControlBlock)
 	 */
 	@Override
 	public void copy(
@@ -833,18 +922,19 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 
 		if (irodsSourceFileAbsolutePath == null
 				|| irodsSourceFileAbsolutePath.isEmpty()) {
-			throw new JargonException(
+			throw new IllegalArgumentException(
 					"irodsSourceFileAbsolutePath is null or empty");
 		}
 
 		if (irodsTargetFileAbsolutePath == null
 				|| irodsTargetFileAbsolutePath.isEmpty()) {
-			throw new JargonException(
+			throw new IllegalArgumentException(
 					"irodsTargetFileAbsolutePath is null or empty");
 		}
 
-		if (targetResource == null || targetResource.isEmpty()) {
-			throw new JargonException("target resource is null or empty");
+		if (targetResource == null) {
+			throw new IllegalArgumentException(
+					"target resource is null or empty");
 		}
 
 		log.info("copy operation for source: {}", irodsSourceFileAbsolutePath);
@@ -860,7 +950,6 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 		 */
 
 		if (transferStatusCallbackListener != null) {
-
 			if (transferControlBlock == null) {
 				log.info("creating default transfer control block, none was supplied and a callback listener is set");
 				operativeTransferControlBlock = DefaultTransferControlBlock
@@ -868,9 +957,7 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 			}
 		}
 
-		final IRODSFileFactory irodsFileFactory = new IRODSFileFactoryImpl(
-				getIRODSSession(), getIRODSAccount());
-
+		IRODSFileFactory irodsFileFactory = this.getIRODSFileFactory();
 		IRODSFile sourceFile = irodsFileFactory
 				.instanceIRODSFile(irodsSourceFileAbsolutePath);
 
@@ -883,7 +970,8 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 			preCountIrodsFilesBeforeTransfer(irodsSourceFileAbsolutePath,
 					operativeTransferControlBlock);
 
-			transferOperationsHelper.recursivelyCopy(sourceFile, targetResource, irodsTargetFileAbsolutePath, force,
+			transferOperationsHelper.recursivelyCopy(sourceFile,
+					targetResource, irodsTargetFileAbsolutePath, force,
 					transferStatusCallbackListener,
 					operativeTransferControlBlock);
 

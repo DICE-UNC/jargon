@@ -95,6 +95,8 @@ final class TransferOperationsHelper {
 		for (File fileInSourceCollection : irodsSourceFile.listFiles()) {
 			// for each file in the given source collection, put the data file,
 			// or create the new irodsCollection and step into it
+			
+			((IRODSFile) fileInSourceCollection).setResource(irodsSourceFile.getResource());
 
 			// check for a cancel or pause at the top of the loop
 			if (transferControlBlock != null
@@ -194,22 +196,21 @@ final class TransferOperationsHelper {
 		int totalFilesSoFar = 0;
 
 		if (transferControlBlock != null) {
-			transferControlBlock.incrementFilesTransferredSoFar();
-			totalFiles = transferControlBlock.getTotalFilesToTransfer();
 			totalFilesSoFar = transferControlBlock
-					.getTotalFilesTransferredSoFar();
-		}
+					.incrementFilesTransferredSoFar();
+			totalFiles = transferControlBlock.getTotalFilesToTransfer();
 
-		if (!transferControlBlock.filter(irodsSourceFile.getAbsolutePath())) {
-			log.info("file is filtered and discarded: {}",
-					irodsSourceFile.getAbsolutePath());
-			TransferStatus status = TransferStatus.instance(TransferType.GET,
-					irodsSourceFile.getAbsolutePath(),
-					targetLocalFile.getAbsolutePath(), "", 0, 0,
-					totalFilesSoFar, totalFiles, TransferState.RESTARTING);
+			if (!transferControlBlock.filter(irodsSourceFile.getAbsolutePath())) {
+				log.info("file is filtered and discarded: {}",
+						irodsSourceFile.getAbsolutePath());
+				TransferStatus status = TransferStatus.instance(
+						TransferType.GET, irodsSourceFile.getAbsolutePath(),
+						targetLocalFile.getAbsolutePath(), "", 0, 0,
+						totalFilesSoFar, totalFiles, TransferState.RESTARTING);
 
-			transferStatusCallbackListener.statusCallback(status);
-			return;
+				transferStatusCallbackListener.statusCallback(status);
+				return;
+			}
 		}
 
 		log.info("filter passed, process...");
@@ -324,24 +325,6 @@ final class TransferOperationsHelper {
 
 			} else {
 
-				// if I am restarting, see if I need to transfer this file
-				if (!transferControlBlock.filter(fileInSourceCollection
-						.getAbsolutePath())) {
-					log.debug("file filtered and not transferred");
-					transferControlBlock.incrementFilesTransferredSoFar();
-					TransferStatus status = TransferStatus.instance(
-							TransferType.PUT, fileInSourceCollection
-									.getAbsolutePath(), targetIrodsCollection
-									.getAbsolutePath(), "", 0, 0,
-							transferControlBlock
-									.getTotalFilesTransferredSoFar(),
-							transferControlBlock.getTotalFilesToTransfer(),
-							TransferState.RESTARTING);
-
-					transferStatusCallbackListener.statusCallback(status);
-					continue;
-				}
-
 				putASingleFile(fileInSourceCollection, targetIrodsCollection,
 						transferStatusCallbackListener, transferControlBlock);
 			}
@@ -400,6 +383,33 @@ final class TransferOperationsHelper {
 
 		log.info("put of single file");
 
+		int totalFiles = 0;
+		int totalFilesSoFar = 0;
+
+		if (transferControlBlock != null) {
+			totalFilesSoFar = transferControlBlock
+					.incrementFilesTransferredSoFar();
+			totalFiles = transferControlBlock.getTotalFilesToTransfer();
+		}
+
+		// if I am restarting, see if I need to transfer this file
+		if (transferControlBlock != null) {
+			if (!transferControlBlock.filter(fileInSourceCollection
+					.getAbsolutePath())) {
+				log.debug("file filtered and not transferred");
+				TransferStatus status = TransferStatus.instance(
+						TransferType.PUT,
+						fileInSourceCollection.getAbsolutePath(),
+						targetIrodsCollection.getAbsolutePath(), "", 0, 0,
+						transferControlBlock.getTotalFilesTransferredSoFar(),
+						transferControlBlock.getTotalFilesToTransfer(),
+						TransferState.RESTARTING);
+
+				transferStatusCallbackListener.statusCallback(status);
+				return;
+			}
+		}
+
 		StringBuilder sb = new StringBuilder();
 		sb.append(targetIrodsCollection.getAbsolutePath());
 		sb.append('/');
@@ -411,16 +421,6 @@ final class TransferOperationsHelper {
 		try {
 			dataObjectAO.putLocalDataObjectToIRODS(fileInSourceCollection,
 					newIrodsFile, true);
-
-			int totalFiles = 0;
-			int totalFilesSoFar = 0;
-
-			if (transferControlBlock != null) {
-				transferControlBlock.incrementFilesTransferredSoFar();
-				totalFiles = transferControlBlock.getTotalFilesToTransfer();
-				totalFilesSoFar = transferControlBlock
-						.getTotalFilesTransferredSoFar();
-			}
 
 			if (transferStatusCallbackListener != null) {
 				TransferStatus status = TransferStatus.instance(
@@ -716,14 +716,12 @@ final class TransferOperationsHelper {
 			int totalFilesSoFar = 0;
 
 			if (transferControlBlock != null) {
-				transferControlBlock.incrementFilesTransferredSoFar();
-				totalFiles = transferControlBlock.getTotalFilesToTransfer();
 				totalFilesSoFar = transferControlBlock
-						.getTotalFilesTransferredSoFar();
+						.incrementFilesTransferredSoFar();
+				totalFiles = transferControlBlock.getTotalFilesToTransfer();
 			}
 
 			if (transferStatusCallbackListener != null) {
-				log.warn("success will be passed back to existing callback listener");
 
 				TransferStatus status = TransferStatus.instance(
 						TransferType.PUT, sourceFile.getAbsolutePath(),
@@ -799,10 +797,9 @@ final class TransferOperationsHelper {
 		int totalFilesSoFar = 0;
 
 		if (transferControlBlock != null) {
-			transferControlBlock.incrementFilesTransferredSoFar();
-			totalFiles = transferControlBlock.getTotalFilesToTransfer();
 			totalFilesSoFar = transferControlBlock
-					.getTotalFilesTransferredSoFar();
+					.incrementFilesTransferredSoFar();
+			totalFiles = transferControlBlock.getTotalFilesToTransfer();
 
 			if (!transferControlBlock.filter(irodsFileAbsolutePath)) {
 				log.info("file is filtered and discarded: {}",
@@ -910,41 +907,28 @@ final class TransferOperationsHelper {
 
 			if (fileInSourceCollection.isDirectory()) {
 
-				copyWhenADirectory(fileInSourceCollection,
-						targetIrodsFileAbsolutePath, targetResource, force,
+				log.debug("source is a collection, create the target");
+				StringBuilder targetCollectionName = new StringBuilder(
+						targetIrodsFileAbsolutePath);
+				targetCollectionName.append("/");
+				// FIXME: mkdir here?
+				targetCollectionName.append(fileInSourceCollection.getName());
+
+				recursivelyCopy((IRODSFileImpl) fileInSourceCollection,
+						targetResource, targetCollectionName.toString(), force,
 						transferStatusCallbackListener, transferControlBlock);
 
-				// a pause will need to bubble back up
-				if (transferControlBlock != null
-						&& (transferControlBlock.isCancelled() || transferControlBlock
-								.isPaused())) {
-					log.info("returning, is paused or cancelled");
-					break;
-				}
 			} else {
-				if (force) {
-					dataObjectAO.copyIrodsDataObjectWithForce(
-							fileInSourceCollection.getAbsolutePath(),
-							targetIrodsFileAbsolutePath, targetResource);
-				} else {
-					dataObjectAO.copyIrodsDataObject(
-							fileInSourceCollection.getAbsolutePath(),
-							targetIrodsFileAbsolutePath, targetResource);
-
-				}
+				StringBuilder sb = new StringBuilder();
+				sb.append(targetIrodsFileAbsolutePath);
+				sb.append("/");
+				sb.append(fileInSourceCollection.getName());
+				processCopyOfSingleFile(
+						fileInSourceCollection.getAbsolutePath(),
+						targetResource, sb.toString(), force,
+						transferStatusCallbackListener, transferControlBlock);
 			}
 		}
-	}
-
-	private void copyWhenADirectory(
-			final File fileInSourceCollection,
-			final String targetIrodsFileAbsolutePath,
-			final String targetResource,
-			final boolean force,
-			final TransferStatusCallbackListener transferStatusCallbackListener,
-			final TransferControlBlock transferControlBlock) {
-		// FIXME: finish implementing
-
 	}
 
 	/**
@@ -988,7 +972,30 @@ final class TransferOperationsHelper {
 
 		log.info("copy single file");
 
+		int totalFiles = 0;
+		int totalFilesSoFar = 0;
+
 		try {
+
+			if (transferControlBlock != null) {
+				totalFilesSoFar = transferControlBlock
+						.incrementFilesTransferredSoFar();
+				totalFiles = transferControlBlock.getTotalFilesToTransfer();
+
+				if (!transferControlBlock.filter(irodsSourceFileAbsolutePath)) {
+					log.info("file is filtered and discarded: {}",
+							irodsTargetFileAbsolutePath);
+					TransferStatus status = TransferStatus.instance(
+							TransferType.COPY, irodsSourceFileAbsolutePath,
+							irodsTargetFileAbsolutePath, targetResource, 0, 0,
+							totalFilesSoFar, totalFiles,
+							TransferState.RESTARTING);
+					transferStatusCallbackListener.statusCallback(status);
+					return;
+				}
+			}
+
+			log.info("filter passed, process...");
 
 			if (force) {
 				dataObjectAO.copyIrodsDataObjectWithForce(
@@ -1001,16 +1008,6 @@ final class TransferOperationsHelper {
 
 			log.info("copy successful for file: {}",
 					irodsSourceFileAbsolutePath);
-
-			int totalFiles = 0;
-			int totalFilesSoFar = 0;
-
-			if (transferControlBlock != null) {
-				transferControlBlock.incrementFilesTransferredSoFar();
-				totalFiles = transferControlBlock.getTotalFilesToTransfer();
-				totalFilesSoFar = transferControlBlock
-						.getTotalFilesTransferredSoFar();
-			}
 
 			// I do not track length during a copy
 			if (transferStatusCallbackListener != null) {
@@ -1025,14 +1022,8 @@ final class TransferOperationsHelper {
 			// may rethrow or send back to the callback listener
 			log.error("exception in transfer", e);
 
-			int totalFiles = 0;
-			int totalFilesSoFar = 0;
-
 			if (transferControlBlock != null) {
 				transferControlBlock.reportErrorInTransfer();
-				totalFiles = transferControlBlock.getTotalFilesToTransfer();
-				totalFilesSoFar = transferControlBlock
-						.getTotalFilesTransferredSoFar();
 			}
 
 			if (transferStatusCallbackListener != null) {
