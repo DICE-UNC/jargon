@@ -1,10 +1,15 @@
 package org.irods.jargon.transfer.engine;
 
+import static junit.framework.Assert.assertTrue;
+
 import java.io.File;
 import java.io.FileReader;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Properties;
+import java.util.Set;
 
 import junit.framework.Assert;
 
@@ -413,9 +418,12 @@ public class TestIRODSLocalTransferEngineTest {
         IRODSFile targetIrodsCollection = irodsFileFactory.instanceIRODSFile(irodsCollectionRootAbsolutePath + "/"
                 + rootCollection);
         String transferredFiles[] = targetIrodsCollection.list();
-        Assert.assertEquals("first transferred file should be after the last successful", sourcePaths[3],
-                transferredFiles[0]);
-
+        
+        Set<String> transferredFileSet = new HashSet<String>(Arrays.asList(transferredFiles)); 
+        
+        assertTrue("transferred files should be after the last successful", !transferredFileSet.contains(sourcePaths[0]));
+        assertTrue("transferred files should be after the last successful", !transferredFileSet.contains(sourcePaths[1]));
+        assertTrue("transferred files should be after the last successful", !transferredFileSet.contains(sourcePaths[2]));
     }
 
     @Test
