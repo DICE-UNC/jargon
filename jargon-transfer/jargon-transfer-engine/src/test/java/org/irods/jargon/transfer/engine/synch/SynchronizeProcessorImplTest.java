@@ -60,27 +60,6 @@ public class SynchronizeProcessorImplTest {
 		synchProcessor.synchronizeLocalToIRODS("name", "path", "path", 0);
 	}
 
-	@Ignore
-	// FIXME: fix mock returning null model
-	public void testCreateInstanceWithAllPrereqs() throws Exception {
-		FileTreeDiffUtility fileTreeDiffUtility = Mockito
-				.mock(FileTreeDiffUtility.class);
-		IRODSAccessObjectFactory irodsAccessObjectFactory = Mockito
-				.mock(IRODSAccessObjectFactory.class);
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		TransferManager transferManager = Mockito
-				.mock(TransferManagerImpl.class);
-		SynchronizeProcessor synchProcessor = new SynchronizeProcessorImpl();
-		synchProcessor.setIrodsAccessObjectFactory(irodsAccessObjectFactory);
-		synchProcessor.setIrodsAccount(irodsAccount);
-		synchProcessor.setTransferManager(transferManager);
-		synchProcessor.setFileTreeDiffUtility(fileTreeDiffUtility);
-		synchProcessor.synchronizeLocalToIRODS("name", "path", "path", 0);
-		// just looking for no errors here
-		Assert.assertTrue(true);
-	}
-
 	@Test(expected = IllegalStateException.class)
 	public void testCreateInstanceWithNullTransferManager() throws Exception {
 		FileTreeDiffUtility fileTreeDiffUtility = Mockito
