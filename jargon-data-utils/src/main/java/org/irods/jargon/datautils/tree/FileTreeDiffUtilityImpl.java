@@ -58,8 +58,12 @@ public class FileTreeDiffUtilityImpl implements FileTreeDiffUtility {
 		this.irodsAccessObjectFactory = irodsAccessObjectFactory;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.datautils.tree.FileTreeDiffUtility#generateDiffLocalToIRODS(java.io.File, java.lang.String, long)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.datautils.tree.FileTreeDiffUtility#generateDiffLocalToIRODS
+	 * (java.io.File, java.lang.String, long)
 	 */
 	@Override
 	public FileTreeModel generateDiffLocalToIRODS(final File localFileRoot,
@@ -230,7 +234,6 @@ public class FileTreeDiffUtilityImpl implements FileTreeDiffUtility {
 					currentFileTreeNode.add(new FileTreeNode(entry));
 				}
 			}
-
 			return;
 		} else if (lhsFile != rhsFile) {
 			log.warn("a file is being compared to a directory of the same name");
@@ -261,10 +264,57 @@ public class FileTreeDiffUtilityImpl implements FileTreeDiffUtility {
 
 		int lhMatchOrPass;
 		int j = 0;
+		// first compare files (platform by platform the ordering may be
+		// different iRODS vs. local)
 		// use the lhs as the point of ref, ping each child and do a match/merge
 		// w/rhs
 		for (File element : lhsChildren) {
+			if (!element.isFile()) {
+				continue;
+			}
 			while (j < rhsChildren.length) {
+
+				if (!rhsChildren[j].isFile()) {
+					j++;
+					continue;
+				}
+
+				lhMatchOrPass = diffTwoFiles(parentNode, element,
+						leftHandSideRootPath, rhsChildren[j],
+						rightHandSideRootPath,
+						timestampForIrodsFileThatIndicatesThatTheFileHasChanged);
+
+				if (lhMatchOrPass == -1) {
+					// left hand side is greater than rhs, so keep pinging the
+					// rhs
+					j++;
+				} else if (lhMatchOrPass == 0) {
+					// i was matched, so advance both
+					j++;
+					break;
+				} else {
+					// rhs was greater, don't advance rhs
+					break;
+				}
+			}
+		}
+
+		j = 0;
+		// files done, now match collections (platform by platform the ordering
+		// may be different iRODS vs. local)
+		// use the lhs as the point of ref, ping each child and do a match/merge
+		// w/rhs
+		for (File element : lhsChildren) {
+			if (element.isFile()) {
+				continue;
+			}
+			while (j < rhsChildren.length) {
+
+				if (rhsChildren[j].isFile()) {
+					j++;
+					continue;
+				}
+
 				lhMatchOrPass = diffTwoFiles(parentNode, element,
 						leftHandSideRootPath, rhsChildren[j],
 						rightHandSideRootPath,
