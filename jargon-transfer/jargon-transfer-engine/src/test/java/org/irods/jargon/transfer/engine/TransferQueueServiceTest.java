@@ -78,7 +78,7 @@ public class TransferQueueServiceTest {
         String irodsCollectionRootAbsolutePath = testingPropertiesHelper
                 .buildIRODSCollectionAbsolutePathFromTestProperties(testingProperties, IRODS_TEST_SUBDIR_PATH);
 
-        TransferQueueService transferQueueService = new TransferQueueService();
+        TransferQueueService transferQueueService = new TransferQueueServiceImpl();
 
         transferQueueService.enqueuePutTransfer(localCollectionAbsolutePath, irodsCollectionRootAbsolutePath, "",
                 irodsAccount);
@@ -107,7 +107,7 @@ public class TransferQueueServiceTest {
         String irodsCollectionRootAbsolutePath = testingPropertiesHelper
                 .buildIRODSCollectionAbsolutePathFromTestProperties(testingProperties, IRODS_TEST_SUBDIR_PATH);
 
-        TransferQueueService transferQueueService = new TransferQueueService();
+        TransferQueueService transferQueueService = new TransferQueueServiceImpl();
 
         LocalIRODSTransferDAO localIRODSTransferDAO = transferDAOMgr.getTransferDAOBean().getLocalIRODSTransferDAO();
 
@@ -164,7 +164,7 @@ public class TransferQueueServiceTest {
         String irodsCollectionRootAbsolutePath = testingPropertiesHelper
                 .buildIRODSCollectionAbsolutePathFromTestProperties(testingProperties, IRODS_TEST_SUBDIR_PATH);
 
-        TransferQueueService transferQueueService = new TransferQueueService();
+        TransferQueueService transferQueueService = new TransferQueueServiceImpl();
         LocalIRODSTransferDAO localIRODSTransferDAO = transferDAOMgr.getTransferDAOBean().getLocalIRODSTransferDAO();
 
         LocalIRODSTransfer enqueuedTransfer = new LocalIRODSTransfer();
@@ -221,7 +221,7 @@ public class TransferQueueServiceTest {
         String irodsCollectionRootAbsolutePath = testingPropertiesHelper
                 .buildIRODSCollectionAbsolutePathFromTestProperties(testingProperties, IRODS_TEST_SUBDIR_PATH);
 
-        TransferQueueService transferQueueService = new TransferQueueService();
+        TransferQueueService transferQueueService = new TransferQueueServiceImpl();
 
         transferQueueService.enqueuePutTransfer(localCollectionAbsolutePath, irodsCollectionRootAbsolutePath, "",
                 irodsAccount);
@@ -251,7 +251,7 @@ public class TransferQueueServiceTest {
         String irodsCollectionRootAbsolutePath = testingPropertiesHelper
                 .buildIRODSCollectionAbsolutePathFromTestProperties(testingProperties, IRODS_TEST_SUBDIR_PATH);
 
-        TransferQueueService transferQueueService = new TransferQueueService();
+        TransferQueueService transferQueueService = new TransferQueueServiceImpl();
 
         TransferManager transferManager = new TransferManagerImpl();
 
@@ -274,7 +274,7 @@ public class TransferQueueServiceTest {
     public void testRestartATransfer() throws Exception {
         IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
-        TransferQueueService transferQueueService = new TransferQueueService();
+        TransferQueueService transferQueueService = new TransferQueueServiceImpl();
         LocalIRODSTransferDAO localIRODSTransferDAO = transferDAOMgr.getTransferDAOBean().getLocalIRODSTransferDAO();
 
         final LocalIRODSTransfer enqueuedTransfer = new LocalIRODSTransfer();
@@ -338,7 +338,7 @@ public class TransferQueueServiceTest {
         String irodsCollectionRootAbsolutePath = testingPropertiesHelper
                 .buildIRODSCollectionAbsolutePathFromTestProperties(testingProperties, IRODS_TEST_SUBDIR_PATH);
 
-        TransferQueueService transferQueueService = new TransferQueueService();
+        TransferQueueService transferQueueService = new TransferQueueServiceImpl();
 
         transferQueueService.enqueuePutTransfer(localCollectionAbsolutePath, irodsCollectionRootAbsolutePath, "",
                 irodsAccount);
@@ -374,7 +374,7 @@ public class TransferQueueServiceTest {
         String irodsCollectionRootAbsolutePath = testingPropertiesHelper
                 .buildIRODSCollectionAbsolutePathFromTestProperties(testingProperties, IRODS_TEST_SUBDIR_PATH);
 
-        TransferQueueService transferQueueService = new TransferQueueService();
+        TransferQueueService transferQueueService = new TransferQueueServiceImpl();
         LocalIRODSTransferDAO localIRODSTransferDAO = transferDAOMgr.getTransferDAOBean().getLocalIRODSTransferDAO();
         LocalIRODSTransferItemDAO localIRODSTransferItemDAO = transferDAOMgr.getTransferDAOBean().getLocalIRODSTransferItemDAO();
 
@@ -434,7 +434,7 @@ public class TransferQueueServiceTest {
         String irodsCollectionRootAbsolutePath = testingPropertiesHelper
                 .buildIRODSCollectionAbsolutePathFromTestProperties(testingProperties, IRODS_TEST_SUBDIR_PATH);
 
-        TransferQueueService transferQueueService = new TransferQueueService();
+        TransferQueueService transferQueueService = new TransferQueueServiceImpl();
         LocalIRODSTransferDAO localIRODSTransferDAO = transferDAOMgr.getTransferDAOBean().getLocalIRODSTransferDAO();
 
         LocalIRODSTransfer enqueuedTransfer = new LocalIRODSTransfer();
@@ -493,7 +493,7 @@ public class TransferQueueServiceTest {
         String irodsCollectionRootAbsolutePath = testingPropertiesHelper
                 .buildIRODSCollectionAbsolutePathFromTestProperties(testingProperties, IRODS_TEST_SUBDIR_PATH);
 
-        TransferQueueService transferQueueService = new TransferQueueService();
+        TransferQueueService transferQueueService = new TransferQueueServiceImpl();
         LocalIRODSTransferDAO localIRODSTransferDAO = transferDAOMgr.getTransferDAOBean().getLocalIRODSTransferDAO();
         LocalIRODSTransferItemDAO localIRODSTransferItemDAO = transferDAOMgr.getTransferDAOBean().getLocalIRODSTransferItemDAO();
 
@@ -543,7 +543,7 @@ public class TransferQueueServiceTest {
 
     @Test
     public void testEnqueueReplicate() throws Exception {
-        TransferQueueService transferQueueService = new TransferQueueService();
+        TransferQueueService transferQueueService = new TransferQueueServiceImpl();
         IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
         transferQueueService.enqueueReplicateTransfer("irodsAbsolutePath", "targetResource", irodsAccount);
@@ -561,7 +561,7 @@ public class TransferQueueServiceTest {
 
     @Test
     public void testEnqueueGet() throws Exception {
-        TransferQueueService transferQueueService = new TransferQueueService();
+        TransferQueueService transferQueueService = new TransferQueueServiceImpl();
         IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
         transferQueueService.enqueueGetTransfer("irodsSourceAbsolutePath", "targetLocalAbsolutePath", "sourceResource",
@@ -580,7 +580,7 @@ public class TransferQueueServiceTest {
 
     @Test
     public void testEnqueueGetBigFileName() throws Exception {
-        TransferQueueService transferQueueService = new TransferQueueService();
+        TransferQueueService transferQueueService = new TransferQueueServiceImpl();
         IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
         String fileNamePart = "filenamefilenamefilenameabcdkjfkdjfiaeojkjkldjflasfdjfasdfjasdf";
@@ -604,7 +604,7 @@ public class TransferQueueServiceTest {
 
     @Test(expected = JargonException.class)
     public void testEnqueueGetNoSource() throws Exception {
-        TransferQueueService transferQueueService = new TransferQueueService();
+        TransferQueueService transferQueueService = new TransferQueueServiceImpl();
         IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
         transferQueueService.enqueueGetTransfer("", "targetLocalAbsolutePath", "sourceResource", irodsAccount);
@@ -612,7 +612,7 @@ public class TransferQueueServiceTest {
 
     @Test(expected = JargonException.class)
     public void testEnqueueGetNoTarget() throws Exception {
-        TransferQueueService transferQueueService = new TransferQueueService();
+        TransferQueueService transferQueueService = new TransferQueueServiceImpl();
         IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
         transferQueueService.enqueueGetTransfer("source", "", "sourceResource", irodsAccount);
@@ -620,7 +620,7 @@ public class TransferQueueServiceTest {
 
     @Test(expected = JargonException.class)
     public void testEnqueueGetNullTarget() throws Exception {
-        TransferQueueService transferQueueService = new TransferQueueService();
+        TransferQueueService transferQueueService = new TransferQueueServiceImpl();
         IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
         transferQueueService.enqueueGetTransfer("source", null, "sourceResource", irodsAccount);
@@ -628,7 +628,7 @@ public class TransferQueueServiceTest {
 
     @Test(expected = JargonException.class)
     public void testEnqueueGetNullResource() throws Exception {
-        TransferQueueService transferQueueService = new TransferQueueService();
+        TransferQueueService transferQueueService = new TransferQueueServiceImpl();
         IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
         transferQueueService.enqueueGetTransfer("source", "target", null, irodsAccount);
@@ -636,7 +636,7 @@ public class TransferQueueServiceTest {
 
     @Test(expected = JargonException.class)
     public void testEnqueueGetNullSource() throws Exception {
-        TransferQueueService transferQueueService = new TransferQueueService();
+        TransferQueueService transferQueueService = new TransferQueueServiceImpl();
         IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
         transferQueueService.enqueueGetTransfer(null, "targetLocalAbsolutePath", "sourceResource", irodsAccount);
@@ -644,7 +644,7 @@ public class TransferQueueServiceTest {
 
     @Test(expected = JargonException.class)
     public void testEnqueueReplicateNoPath() throws Exception {
-        TransferQueueService transferQueueService = new TransferQueueService();
+        TransferQueueService transferQueueService = new TransferQueueServiceImpl();
         IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
         transferQueueService.enqueueReplicateTransfer("", "targetResource", irodsAccount);
@@ -652,7 +652,7 @@ public class TransferQueueServiceTest {
 
     @Test(expected = JargonException.class)
     public void testEnqueueReplicateNullResource() throws Exception {
-        TransferQueueService transferQueueService = new TransferQueueService();
+        TransferQueueService transferQueueService = new TransferQueueServiceImpl();
         IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
         transferQueueService.enqueueReplicateTransfer("hello", null, irodsAccount);
@@ -660,7 +660,7 @@ public class TransferQueueServiceTest {
 
     @Test(expected = JargonException.class)
     public void testEnqueueReplicateNullPath() throws Exception {
-        TransferQueueService transferQueueService = new TransferQueueService();
+        TransferQueueService transferQueueService = new TransferQueueServiceImpl();
         IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
         transferQueueService.enqueueReplicateTransfer(null, "targetResource", irodsAccount);
@@ -670,7 +670,7 @@ public class TransferQueueServiceTest {
     public void testPurgeAll() throws Exception {
         IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
-        TransferQueueService transferQueueService = new TransferQueueService();
+        TransferQueueService transferQueueService = new TransferQueueServiceImpl();
         LocalIRODSTransferDAO localIRODSTransferDAO = transferDAOMgr.getTransferDAOBean().getLocalIRODSTransferDAO();
 
         LocalIRODSTransfer enqueuedTransfer = new LocalIRODSTransfer();
@@ -738,7 +738,7 @@ public class TransferQueueServiceTest {
     public void testPurgeComplete() throws Exception {
         IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
-        TransferQueueService transferQueueService = new TransferQueueService();
+        TransferQueueService transferQueueService = new TransferQueueServiceImpl();
         LocalIRODSTransferDAO localIRODSTransferDAO = transferDAOMgr.getTransferDAOBean().getLocalIRODSTransferDAO();
 
         LocalIRODSTransfer enqueuedTransfer = new LocalIRODSTransfer();
@@ -808,7 +808,7 @@ public class TransferQueueServiceTest {
     public void testResubmitATransfer() throws Exception {
         IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
-        TransferQueueService transferQueueService = new TransferQueueService();
+        TransferQueueService transferQueueService = new TransferQueueServiceImpl();
         LocalIRODSTransferDAO localIRODSTransferDAO = transferDAOMgr.getTransferDAOBean().getLocalIRODSTransferDAO();
 
         final LocalIRODSTransfer enqueuedTransfer;
@@ -870,7 +870,7 @@ public class TransferQueueServiceTest {
     public void testCancelATransfer() throws Exception {
         IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
-        TransferQueueService transferQueueService = new TransferQueueService();
+        TransferQueueService transferQueueService = new TransferQueueServiceImpl();
         LocalIRODSTransferDAO localIRODSTransferDAO = transferDAOMgr.getTransferDAOBean().getLocalIRODSTransferDAO();
 
         LocalIRODSTransfer enqueuedTransfer = new LocalIRODSTransfer();
@@ -907,7 +907,7 @@ public class TransferQueueServiceTest {
     public void testCancelACompletedTransfer() throws Exception {
         IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
-        TransferQueueService transferQueueService = new TransferQueueService();
+        TransferQueueService transferQueueService = new TransferQueueServiceImpl();
         LocalIRODSTransferDAO localIRODSTransferDAO = transferDAOMgr.getTransferDAOBean().getLocalIRODSTransferDAO();
 
         LocalIRODSTransfer enqueuedTransfer = new LocalIRODSTransfer();
@@ -951,7 +951,7 @@ public class TransferQueueServiceTest {
         String irodsCollectionRootAbsolutePath = testingPropertiesHelper
                 .buildIRODSCollectionAbsolutePathFromTestProperties(testingProperties, IRODS_TEST_SUBDIR_PATH);
 
-        TransferQueueService transferQueueService = new TransferQueueService();
+        TransferQueueService transferQueueService = new TransferQueueServiceImpl();
         LocalIRODSTransferDAO localIRODSTransferDAO = transferDAOMgr.getTransferDAOBean().getLocalIRODSTransferDAO();
 
         LocalIRODSTransfer enqueuedTransfer = new LocalIRODSTransfer();
@@ -986,7 +986,7 @@ public class TransferQueueServiceTest {
         IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
         String testUserDbName = testingProperties.getProperty("test.userdir.dbname");
-        TransferQueueService transferQueueService = new TransferQueueService();
+        TransferQueueService transferQueueService = new TransferQueueServiceImpl();
         LocalIRODSTransferDAO localIRODSTransferDAO = transferDAOMgr.getTransferDAOBean().getLocalIRODSTransferDAO();
 
         LocalIRODSTransfer enqueuedTransfer = new LocalIRODSTransfer();
@@ -1018,7 +1018,7 @@ public class TransferQueueServiceTest {
     public void testRestartClearsErrorAndStackTrace() throws Exception {
         IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
-        TransferQueueService transferQueueService = new TransferQueueService();
+        TransferQueueService transferQueueService = new TransferQueueServiceImpl();
 
         LocalIRODSTransferDAO localIRODSTransferDAO = transferDAOMgr.getTransferDAOBean().getLocalIRODSTransferDAO();
 
@@ -1055,7 +1055,7 @@ public class TransferQueueServiceTest {
     public void testRestartPreservesLastGoodPath() throws Exception {
         IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
-        TransferQueueService transferQueueService = new TransferQueueService();
+        TransferQueueService transferQueueService = new TransferQueueServiceImpl();
 
         LocalIRODSTransferDAO localIRODSTransferDAO = transferDAOMgr.getTransferDAOBean().getLocalIRODSTransferDAO();
 
@@ -1092,7 +1092,7 @@ public class TransferQueueServiceTest {
     public void testResubmitClearsLastGoodPath() throws Exception {
         IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
-        TransferQueueService transferQueueService = new TransferQueueService();
+        TransferQueueService transferQueueService = new TransferQueueServiceImpl();
 
         LocalIRODSTransferDAO localIRODSTransferDAO = transferDAOMgr.getTransferDAOBean().getLocalIRODSTransferDAO();
 

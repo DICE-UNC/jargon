@@ -9,7 +9,6 @@ import org.irods.jargon.core.exception.JargonFileOrCollAlreadyExistsException;
 import org.irods.jargon.core.packinstr.DataObjCopyInp;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.pub.io.IRODSFileFactory;
-import org.irods.jargon.core.pub.io.IRODSFileFactoryImpl;
 import org.irods.jargon.core.transfer.DefaultTransferControlBlock;
 import org.irods.jargon.core.transfer.TransferControlBlock;
 import org.irods.jargon.core.transfer.TransferStatus;
@@ -73,8 +72,9 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 			final String targetResource) throws JargonException {
 		// just delegate to the phymove implementation. Method contracts are
 		// checked there.
-		final IRODSFileSystemAO irodsFileSystemAO = new IRODSFileSystemAOImpl(
-				getIRODSSession(), getIRODSAccount());
+		final IRODSFileSystemAO irodsFileSystemAO = this
+				.getIRODSAccessObjectFactory().getIRODSFileSystemAO(
+						getIRODSAccount());
 		irodsFileSystemAO
 				.physicalMove(absolutePathToSourceFile, targetResource);
 	}
@@ -106,8 +106,7 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 		log.info("processing a move from {}", absolutePathToSourceFile);
 		log.info("to {}", absolutePathToTheTargetCollection);
 
-		final IRODSFileFactory irodsFileFactory = new IRODSFileFactoryImpl(
-				getIRODSSession(), getIRODSAccount());
+		final IRODSFileFactory irodsFileFactory = this.getIRODSFileFactory();
 
 		final IRODSFile sourceFile = irodsFileFactory
 				.instanceIRODSFile(absolutePathToSourceFile);
@@ -192,8 +191,7 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 		log.info("processing a move from {}", absolutePathToSourceFile);
 		log.info("to {}", absolutePathToTargetFile);
 
-		final IRODSFileFactory irodsFileFactory = new IRODSFileFactoryImpl(
-				getIRODSSession(), getIRODSAccount());
+		final IRODSFileFactory irodsFileFactory = this.getIRODSFileFactory();
 		final IRODSFile sourceFile = irodsFileFactory
 				.instanceIRODSFile(absolutePathToSourceFile);
 
@@ -340,9 +338,15 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 					operativeTransferControlBlock, je);
 		}
 	}
-	
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.pub.DataTransferOperations#getOperation(java.lang.String, java.lang.String, java.lang.String, org.irods.jargon.core.transfer.TransferStatusCallbackListener, org.irods.jargon.core.transfer.TransferControlBlock)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.DataTransferOperations#getOperation(java.lang
+	 * .String, java.lang.String, java.lang.String,
+	 * org.irods.jargon.core.transfer.TransferStatusCallbackListener,
+	 * org.irods.jargon.core.transfer.TransferControlBlock)
 	 */
 	@Override
 	public void getOperation(
@@ -353,28 +357,33 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 			final TransferControlBlock transferControlBlock)
 			throws JargonException {
 
-			if (irodsSourceFileAbsolutePath == null || irodsSourceFileAbsolutePath.isEmpty()) {
-				throw new IllegalArgumentException("irodsSourceFileAbsolutePath is null or empty");
-			}
-			
-			if (targetLocalFileAbsolutePath == null || targetLocalFileAbsolutePath.isEmpty()) {
-				throw new IllegalArgumentException("targetLocalFileAbsolutePath is null or empty");
-			}
-			
-			if (sourceResourceName == null) {
-				throw new IllegalArgumentException("sourceResourceName is null");
-			}
+		if (irodsSourceFileAbsolutePath == null
+				|| irodsSourceFileAbsolutePath.isEmpty()) {
+			throw new IllegalArgumentException(
+					"irodsSourceFileAbsolutePath is null or empty");
+		}
 
-			log.info("get operation, irods source file is: {}",
-					irodsSourceFileAbsolutePath);
-			log.info("  local file for get: {}",
-					targetLocalFileAbsolutePath);
-			log.info("   specifiying resource:", sourceResourceName);
-			
-			File localFile = new File(targetLocalFileAbsolutePath);
-			IRODSFile irodsSourceFile = getIRODSFileFactory().instanceIRODSFile(irodsSourceFileAbsolutePath);
-			irodsSourceFile.setResource(sourceResourceName);
-			getOperation(irodsSourceFile, localFile, transferStatusCallbackListener, transferControlBlock);
+		if (targetLocalFileAbsolutePath == null
+				|| targetLocalFileAbsolutePath.isEmpty()) {
+			throw new IllegalArgumentException(
+					"targetLocalFileAbsolutePath is null or empty");
+		}
+
+		if (sourceResourceName == null) {
+			throw new IllegalArgumentException("sourceResourceName is null");
+		}
+
+		log.info("get operation, irods source file is: {}",
+				irodsSourceFileAbsolutePath);
+		log.info("  local file for get: {}", targetLocalFileAbsolutePath);
+		log.info("   specifiying resource:", sourceResourceName);
+
+		File localFile = new File(targetLocalFileAbsolutePath);
+		IRODSFile irodsSourceFile = getIRODSFileFactory().instanceIRODSFile(
+				irodsSourceFileAbsolutePath);
+		irodsSourceFile.setResource(sourceResourceName);
+		getOperation(irodsSourceFile, localFile,
+				transferStatusCallbackListener, transferControlBlock);
 	}
 
 	/**
@@ -773,9 +782,9 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 		log.info("this dir name, will be the new parent directory in iRODS:{}",
 				thisDirName);
 
-
-		IRODSFile newIrodsParentDirectory = getIRODSFileFactory().instanceIRODSFile(
-				targetIrodsFile.getAbsolutePath(), thisDirName);
+		IRODSFile newIrodsParentDirectory = getIRODSFileFactory()
+				.instanceIRODSFile(targetIrodsFile.getAbsolutePath(),
+						thisDirName);
 		newIrodsParentDirectory.setResource(targetIrodsFile.getResource());
 
 		try {
@@ -871,8 +880,7 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 			}
 		}
 
-		final IRODSFileFactory irodsFileFactory = new IRODSFileFactoryImpl(
-				getIRODSSession(), getIRODSAccount());
+		final IRODSFileFactory irodsFileFactory = this.getIRODSFileFactory();
 
 		IRODSFile sourceFile = irodsFileFactory
 				.instanceIRODSFile(irodsFileAbsolutePath);
@@ -1001,8 +1009,8 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 			final TransferControlBlock operativeTransferControlBlock)
 			throws JargonException {
 		if (operativeTransferControlBlock != null) {
-			IRODSAccessObjectFactory irodsAccessObjectFactory = IRODSAccessObjectFactoryImpl
-					.instance(getIRODSSession());
+			IRODSAccessObjectFactory irodsAccessObjectFactory = this
+					.getIRODSAccessObjectFactory();
 			CollectionAO collectionAO = irodsAccessObjectFactory
 					.getCollectionAO(getIRODSAccount());
 			int fileCount = collectionAO

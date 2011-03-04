@@ -58,12 +58,22 @@ public final class IRODSFileImpl extends File implements IRODSFile {
 			throw new JargonException("path name is null or empty");
 		}
 	}
-
-	protected IRODSFileImpl(final URI uri,
-			final IRODSFileSystemAO irodsFileSystemAO) throws JargonException {
-		super(uri);
-		throw new JargonException(
-				"this method should not be called, rather, the IRODSFileImpl is built using the IRODSFileFactory");
+	
+	/**
+	 * Constructor that can preset the file type, thus avoiding a GenQuery lookup when <code>isFile</code> is subsequently called
+	 * @param pathName
+	 * @param irodsFileSystemAO
+	 * @param isFile
+	 * @throws JargonException
+	 */
+	protected IRODSFileImpl(final String pathName, 
+			final IRODSFileSystemAO irodsFileSystemAO, final boolean isFile) throws JargonException {
+		this("", pathName, irodsFileSystemAO);
+		if (isFile) {
+			pathNameType = PathNameType.FILE;
+		} else {
+			pathNameType = PathNameType.DIRECTORY;
+		}
 	}
 
 	protected IRODSFileImpl(final String parent, final String child,
@@ -72,19 +82,19 @@ public final class IRODSFileImpl extends File implements IRODSFile {
 		super(parent, child);
 
 		if (irodsFileSystemAO == null) {
-			throw new JargonException("irodsFileSystemAO is null");
+			throw new IllegalArgumentException("irodsFileSystemAO is null");
 		}
 
 		if (parent == null) {
-			throw new JargonException("null or missing parent name");
+			throw new IllegalArgumentException("null or missing parent name");
 		}
 
 		if (child == null) {
-			throw new JargonException("null child name");
+			throw new IllegalArgumentException("null child name");
 		}
 
 		if (parent.isEmpty() && child.isEmpty()) {
-			throw new JargonException("both parent and child names are empty");
+			throw new IllegalArgumentException("both parent and child names are empty");
 		}
 
 		this.irodsFileSystemAO = irodsFileSystemAO;

@@ -58,6 +58,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 	static Logger log = LoggerFactory.getLogger(IRODSFileSystemAOImpl.class);
 	public final char COMMA = ',';
 	public final String AND_VALUE = " AND ";
+	private final IRODSGenQueryExecutor irodsGenQueryExecutor;
 
 	/**
 	 * @param irodsProtocol
@@ -66,6 +67,9 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 	public IRODSFileSystemAOImpl(final IRODSSession irodsSession,
 			final IRODSAccount irodsAccount) throws JargonException {
 		super(irodsSession, irodsAccount);
+		irodsGenQueryExecutor = this.getIRODSAccessObjectFactory()
+				.getIRODSGenQueryExecutor(this.getIRODSAccount());
+
 	}
 
 	/*
@@ -160,14 +164,11 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 		log.debug("getting file permissions on file:{} ",
 				irodsFile.getAbsolutePath());
 
-		UserAO userAO = new UserAOImpl(this.getIRODSSession(),
-				this.getIRODSAccount());
+		UserAO userAO = this.getIRODSAccessObjectFactory().getUserAO(
+				getIRODSAccount());
 		User user = userAO.findByName(userName);
 
 		log.debug("user name translated to id:{}", user.getId());
-
-		IRODSGenQueryExecutor irodsGenQueryExecutor = new IRODSGenQueryExecutorImpl(
-				this.getIRODSSession(), this.getIRODSAccount());
 
 		StringBuilder filePermissionQuery = buildPermisionsQueryFile(parent,
 				fileName, user.getId());
@@ -192,6 +193,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 	private int extractHighestPermission(
 			final IRODSGenQueryExecutor irodsGenQueryExecutor,
 			final StringBuilder filePermissionQuery) throws JargonException {
+
 		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(
 				filePermissionQuery.toString(), 500);
 
@@ -286,15 +288,13 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 
 		// get the id for the user name, GenQuery can't do this join
 
-		UserAO userAO = new UserAOImpl(this.getIRODSSession(),
-				this.getIRODSAccount());
+		UserAO userAO = this.getIRODSAccessObjectFactory().getUserAO(
+				getIRODSAccount());
 		User user = userAO.findByName(userName);
 
 		log.debug("getting directory permissions on:{} ", fileName);
 		log.debug("user name translated to id:{}", user.getId());
 
-		IRODSGenQueryExecutor irodsGenQueryExecutor = new IRODSGenQueryExecutorImpl(
-				this.getIRODSSession(), this.getIRODSAccount());
 		StringBuilder filePermissionQuery = buildPermissionsQueryDirectory(dir,
 				user.getId());
 
@@ -357,8 +357,6 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 		String parent = irodsFile.getParent();
 		String fileName = irodsFile.getName();
 
-		IRODSGenQueryExecutor irodsGenQueryExecutor = new IRODSGenQueryExecutorImpl(
-				this.getIRODSSession(), this.getIRODSAccount());
 		StringBuilder filePermissionQuery = new StringBuilder();
 		filePermissionQuery.append("SELECT ");
 		filePermissionQuery.append(RodsGenQueryEnum.COL_DATA_NAME.getName());
@@ -451,8 +449,6 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 
 		log.info("checking if directory, file:{}", irodsFile);
 
-		IRODSGenQueryExecutor irodsGenQueryExecutor = new IRODSGenQueryExecutorImpl(
-				this.getIRODSSession(), this.getIRODSAccount());
 		StringBuilder filePermissionQuery = new StringBuilder();
 		filePermissionQuery.append("SELECT ");
 		filePermissionQuery.append(RodsGenQueryEnum.COL_COLL_NAME.getName());
@@ -510,8 +506,6 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 
 		log.debug("getting modification date");
 
-		IRODSGenQueryExecutor irodsGenQueryExecutor = new IRODSGenQueryExecutorImpl(
-				this.getIRODSSession(), this.getIRODSAccount());
 		StringBuilder query = new StringBuilder();
 		query.append("SELECT ");
 
@@ -579,8 +573,6 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 
 		log.debug("getting length");
 
-		IRODSGenQueryExecutor irodsGenQueryExecutor = new IRODSGenQueryExecutorImpl(
-				this.getIRODSSession(), this.getIRODSAccount());
 		StringBuilder query = new StringBuilder();
 		query.append("SELECT ");
 
@@ -644,16 +636,11 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 
 		log.debug("path for query:{}", path);
 
-		// get all the files
-
-		IRODSGenQueryExecutor irodsGenQueryExecutor = new IRODSGenQueryExecutorImpl(
-				this.getIRODSSession(), this.getIRODSAccount());
-
-		// get all the sub-directories
-
 		StringBuilder query;
 		IRODSGenQuery irodsQuery;
 		IRODSQueryResultSet resultSet;
+
+		// get all the subdirs
 
 		query = new StringBuilder();
 		query.append(IRODSFileSystemAOHelper.buildQueryListAllCollections(path));
@@ -680,16 +667,13 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 			throw new JargonException("error in exists query");
 		}
 
+		// get all files
+
 		query = new StringBuilder();
 		query.append(IRODSFileSystemAOHelper.buildQueryListAllFiles(path));
 
 		irodsQuery = IRODSGenQuery.instance(query.toString(), this
 				.getJargonProperties().getMaxFilesAndDirsQueryMax());
-
-		/*
-		 * accumulate all results to return by repeatedly requerying until no
-		 * more results
-		 */
 
 		try {
 			resultSet = irodsGenQueryExecutor.executeIRODSQuery(irodsQuery, 0);
@@ -759,47 +743,16 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 			path = irodsFile.getParent();
 		}
 
-		log.debug("path for query:{}", path);
-
-		// get all the files
-
-		IRODSGenQueryExecutor irodsGenQueryExecutor = new IRODSGenQueryExecutorImpl(
-				this.getIRODSSession(), this.getIRODSAccount());
-		StringBuilder query = new StringBuilder(
-				IRODSFileSystemAOHelper.buildQueryListAllFiles(path));
-
-		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(query.toString(),
-				this.getJargonProperties().getMaxFilesAndDirsQueryMax());
-
+		StringBuilder query;
+		IRODSGenQuery irodsQuery;
 		IRODSQueryResultSet resultSet;
 
-		try {
-			resultSet = irodsGenQueryExecutor.executeIRODSQuery(irodsQuery, 0);
-
-			for (IRODSQueryResultRow row : resultSet.getResults()) {
-				processRowWhenListDirWithFilter(fileNameFilter, subdirs, row);
-			}
-
-			// could be more...
-
-			while (resultSet.isHasMoreRecords()) {
-				log.debug("more results to get for listing files, requerying");
-				resultSet = irodsGenQueryExecutor.getMoreResults(resultSet);
-				for (IRODSQueryResultRow row : resultSet.getResults()) {
-					processRowWhenListDirWithFilter(fileNameFilter, subdirs,
-							row);
-				}
-			}
-		} catch (JargonQueryException e) {
-			log.error("query exception for  query:{}", query.toString(), e);
-			throw new JargonException("error in exists query");
-		}
+		log.debug("path for query:{}", path);
 
 		// get all the sub-directories
 
 		query = new StringBuilder();
 		query.append(IRODSFileSystemAOHelper.buildQueryListAllCollections(path));
-
 		irodsQuery = IRODSGenQuery.instance(query.toString(), this
 				.getJargonProperties().getMaxFilesAndDirsQueryMax());
 
@@ -822,6 +775,36 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 				}
 			}
 
+		} catch (JargonQueryException e) {
+			log.error("query exception for  query:{}", query.toString(), e);
+			throw new JargonException("error in exists query");
+		}
+
+		// get all the files
+
+		query = new StringBuilder(
+				IRODSFileSystemAOHelper.buildQueryListAllFiles(path));
+
+		irodsQuery = IRODSGenQuery.instance(query.toString(), this
+				.getJargonProperties().getMaxFilesAndDirsQueryMax());
+
+		try {
+			resultSet = irodsGenQueryExecutor.executeIRODSQuery(irodsQuery, 0);
+
+			for (IRODSQueryResultRow row : resultSet.getResults()) {
+				processRowWhenListDirWithFilter(fileNameFilter, subdirs, row);
+			}
+
+			// could be more...
+
+			while (resultSet.isHasMoreRecords()) {
+				log.debug("more results to get for listing files, requerying");
+				resultSet = irodsGenQueryExecutor.getMoreResults(resultSet);
+				for (IRODSQueryResultRow row : resultSet.getResults()) {
+					processRowWhenListDirWithFilter(fileNameFilter, subdirs,
+							row);
+				}
+			}
 		} catch (JargonQueryException e) {
 			log.error("query exception for  query:{}", query.toString(), e);
 			throw new JargonException("error in exists query");
@@ -895,41 +878,9 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 			path = irodsFile.getParent();
 		}
 
-		log.debug("path for query:{}", path);
-
-		IRODSGenQueryExecutor irodsGenQueryExecutor = new IRODSGenQueryExecutorImpl(
-				this.getIRODSSession(), this.getIRODSAccount());
-		StringBuilder query = new StringBuilder(
-				IRODSFileSystemAOHelper.buildQueryListAllFiles(path));
-
-		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(query.toString(),
-				this.getJargonProperties().getMaxFilesAndDirsQueryMax());
-
+		StringBuilder query;
+		IRODSGenQuery irodsQuery;
 		IRODSQueryResultSet resultSet;
-
-		try {
-
-			resultSet = irodsGenQueryExecutor.executeIRODSQuery(irodsQuery, 0);
-			for (IRODSQueryResultRow row : resultSet.getResults()) {
-				processFileRowWhenListFilesWithFileFilter(fileFilter, subdirs,
-						row);
-			}
-
-			// could be more...
-
-			while (resultSet.isHasMoreRecords()) {
-				log.debug("more results to get for listing files, requerying");
-				resultSet = irodsGenQueryExecutor.getMoreResults(resultSet);
-				for (IRODSQueryResultRow row : resultSet.getResults()) {
-					processFileRowWhenListFilesWithFileFilter(fileFilter,
-							subdirs, row);
-				}
-			}
-
-		} catch (JargonQueryException e) {
-			log.error("query exception for  query:{}", query.toString(), e);
-			throw new JargonException("error in exists query");
-		}
 
 		// get all the sub-directories
 
@@ -953,6 +904,38 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 				resultSet = irodsGenQueryExecutor.getMoreResults(resultSet);
 				for (IRODSQueryResultRow row : resultSet.getResults()) {
 					processSubdirRowWhenListFilesWithFileFilter(fileFilter,
+							subdirs, row);
+				}
+			}
+
+		} catch (JargonQueryException e) {
+			log.error("query exception for  query:{}", query.toString(), e);
+			throw new JargonException("error in exists query");
+		}
+
+		log.debug("path for query:{}", path);
+
+		query = new StringBuilder(
+				IRODSFileSystemAOHelper.buildQueryListAllFiles(path));
+
+		irodsQuery = IRODSGenQuery.instance(query.toString(), this
+				.getJargonProperties().getMaxFilesAndDirsQueryMax());
+
+		try {
+
+			resultSet = irodsGenQueryExecutor.executeIRODSQuery(irodsQuery, 0);
+			for (IRODSQueryResultRow row : resultSet.getResults()) {
+				processFileRowWhenListFilesWithFileFilter(fileFilter, subdirs,
+						row);
+			}
+
+			// could be more...
+
+			while (resultSet.isHasMoreRecords()) {
+				log.debug("more results to get for listing files, requerying");
+				resultSet = irodsGenQueryExecutor.getMoreResults(resultSet);
+				for (IRODSQueryResultRow row : resultSet.getResults()) {
+					processFileRowWhenListFilesWithFileFilter(fileFilter,
 							subdirs, row);
 				}
 			}
@@ -1040,8 +1023,6 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 
 		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(query.toString(),
 				this.getJargonProperties().getMaxFilesAndDirsQueryMax());
-		IRODSGenQueryExecutor irodsGenQueryExecutor = new IRODSGenQueryExecutorImpl(
-				this.getIRODSSession(), this.getIRODSAccount());
 
 		IRODSQueryResultSetInterface resultSet;
 		try {
@@ -1420,8 +1401,8 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 			throw new DataNotFoundException(msg);
 		}
 
-		ResourceAO resourceAO = new ResourceAOImpl(this.getIRODSSession(),
-				this.getIRODSAccount());
+		ResourceAO resourceAO = this.getIRODSAccessObjectFactory()
+				.getResourceAO(getIRODSAccount());
 		Resource resource = resourceAO.getFirstResourceForIRODSFile(irodsFile);
 		log.debug("found resource for file:{}", resource);
 
@@ -1524,8 +1505,8 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 			throw new JargonException(msg);
 		}
 
-		ResourceAO resourceAO = new ResourceAOImpl(this.getIRODSSession(),
-				this.getIRODSAccount());
+		ResourceAO resourceAO = this.getIRODSAccessObjectFactory()
+				.getResourceAO(getIRODSAccount());
 		try {
 			resource = resourceAO.getFirstResourceForIRODSFile(irodsFile)
 					.getName();

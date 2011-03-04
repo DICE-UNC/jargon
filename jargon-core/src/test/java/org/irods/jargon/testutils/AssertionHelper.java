@@ -324,11 +324,33 @@ public class AssertionHelper {
 			throw new IRODSTestAssertionException(
 					"test data corrupted by Mac .DS_Store files, please reinitialize the scratch directories");
 		}
-
+		
+	// FIXME: working this out....incomplete
 		if (file1.isDirectory() && file2.isDirectory()) {
 			File[] file1Files = file1.listFiles();
 			File[] file2Files = file2.listFiles();
 
+			// do comparisons on files first
+			// files and dirs may be presented in diff orders between the local OS and iRODS
+			
+			/*
+			int firstFileIdxLhs = 0;
+			int lastFileIdxLhs = 0;
+			int firstFileIdxRhs = 0;
+			int lastFileIdxRhs = 0;
+			
+			int firstColIdxLhs = 0;
+			int lastColIdxLhs = 0;
+			int firstColIdxRhs = 0;
+			int lastColIdxRhs = 0;
+			
+			for (File lhsFile : file1Files) {
+				
+			}
+
+			
+			*/
+			
 			if (file1Files.length != file2Files.length) {
 				throw new IRODSTestAssertionException(
 						"directories differ in the number of files contained, dir1 is: "

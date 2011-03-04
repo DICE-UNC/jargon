@@ -113,7 +113,7 @@ public class TestIRODSLocalTransferEngineTest {
         IRODSLocalTransferEngine irodsLocalTransferEngine = IRODSLocalTransferEngine.getInstance(transferManager,
                 transferControlBlock);
 
-        TransferQueueService transferQueueService = new TransferQueueService();
+        TransferQueueService transferQueueService = new TransferQueueServiceImpl();
 
         transferQueueService.enqueuePutTransfer(localFileName, targetIrodsFile,
                 testingProperties.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY), irodsAccount);
@@ -151,7 +151,7 @@ public class TestIRODSLocalTransferEngineTest {
         IRODSLocalTransferEngine irodsLocalTransferEngine = IRODSLocalTransferEngine.getInstance(transferManager,
                 transferControlBlock);
 
-        TransferQueueService transferQueueService = new TransferQueueService();
+        TransferQueueService transferQueueService = new TransferQueueServiceImpl();
 
         transferQueueService.enqueuePutTransfer(localFileName, targetIrodsFile,
                 testingProperties.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY), irodsAccount);
@@ -221,7 +221,7 @@ public class TestIRODSLocalTransferEngineTest {
         IRODSLocalTransferEngine irodsLocalTransferEngine = IRODSLocalTransferEngine.getInstance(transferManager,
                 transferControlBlock);
 
-        TransferQueueService transferQueueService = new TransferQueueService();
+        TransferQueueService transferQueueService = new TransferQueueServiceImpl();
 
         transferQueueService.enqueuePutTransfer(localCollectionAbsolutePath, irodsCollectionRootAbsolutePath,
                 testingProperties.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY), irodsAccount);
@@ -296,7 +296,7 @@ public class TestIRODSLocalTransferEngineTest {
 
         // get the transfer now
 
-        TransferQueueService transferQueueService = new TransferQueueService();
+        TransferQueueService transferQueueService = new TransferQueueServiceImpl();
         List<LocalIRODSTransfer> transfers = transferQueueService.getLastNInQueue(10);
 
         irodsFileSystem.close();
@@ -355,7 +355,7 @@ public class TestIRODSLocalTransferEngineTest {
 
         // get the transfer now
 
-        TransferQueueService transferQueueService = new TransferQueueService();
+        TransferQueueService transferQueueService = new TransferQueueServiceImpl();
         List<LocalIRODSTransfer> transfers = transferQueueService.getLastNInQueue(10);
 
         irodsFileSystem.close();
@@ -502,7 +502,7 @@ public class TestIRODSLocalTransferEngineTest {
         IRODSLocalTransferEngine irodsLocalTransferEngine = IRODSLocalTransferEngine.getInstance(transferManager,
                 transferControlBlock);
 
-        TransferQueueService transferQueueService = new TransferQueueService();
+        TransferQueueService transferQueueService = new TransferQueueServiceImpl();
 
         String localReturnedAbsolutePath = scratchFileUtils.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
         localReturnedAbsolutePath = localReturnedAbsolutePath + testReturnedFileName;
@@ -551,7 +551,7 @@ public class TestIRODSLocalTransferEngineTest {
         IRODSLocalTransferEngine irodsLocalTransferEngine = IRODSLocalTransferEngine.getInstance(transferManager,
                 transferControlBlock);
 
-        TransferQueueService transferQueueService = new TransferQueueService();
+        TransferQueueService transferQueueService = new TransferQueueServiceImpl();
 
         String localReturnedAbsolutePath = scratchFileUtils.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
         localReturnedAbsolutePath = localReturnedAbsolutePath + testReturnedFileName;

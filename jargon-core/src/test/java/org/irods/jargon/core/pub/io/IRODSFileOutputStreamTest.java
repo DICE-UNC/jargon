@@ -355,7 +355,7 @@ public class IRODSFileOutputStreamTest {
 
 	}
 
-	@Test(expected = JargonException.class)
+	@Test(expected = IllegalArgumentException.class)
 	public final void testIRODSFileOutputStreamEmptyStringFileName()
 			throws Exception {
 

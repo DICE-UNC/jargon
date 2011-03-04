@@ -106,7 +106,7 @@ public final class TransferManagerImpl implements TransferManager {
     private void init() throws JargonException {
         this.errorStatus = ErrorStatus.OK;
         this.runningStatus = RunningStatus.IDLE;
-        this.transferQueueService = new TransferQueueService();
+        this.transferQueueService = new TransferQueueServiceImpl();
         IRODSFileSystem.instance();
         log.info("processing queue at startup");
         transferQueueService.processQueueAtStartup();

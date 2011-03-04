@@ -51,6 +51,17 @@ public final class IRODSFileFactoryImpl extends IRODSGenericAO implements
 				this.getIRODSSession(), this.getIRODSAccount());
 		return new IRODSFileImpl(path, irodsFileSystem);
 	}
+	
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.core.pub.io.IRODSFileFactory#instanceIRODSFileIndicatingType(java.lang.String, boolean)
+	 */
+	@Override
+	public IRODSFile instanceIRODSFileIndicatingType(final String path, final boolean isFile)
+			throws JargonException {
+		IRODSFileSystemAO irodsFileSystem = new IRODSFileSystemAOImpl(
+				this.getIRODSSession(), this.getIRODSAccount());
+		return new IRODSFileImpl(path, irodsFileSystem, isFile);
+	}
 
 	/*
 	 * (non-Javadoc)

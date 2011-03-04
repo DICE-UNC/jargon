@@ -178,7 +178,7 @@ public class TransferManagerTest {
                 transferManager.getRunningStatus());
         Assert.assertEquals("should have been no errors", TransferManager.ErrorStatus.OK,
                 transferManager.getErrorStatus());
-        TransferQueueService transferQueueService = new TransferQueueService();
+        TransferQueueService transferQueueService = new TransferQueueServiceImpl();
 
         List<LocalIRODSTransfer> transferQueue = transferQueueService.getCurrentQueue();
         Assert.assertEquals(1, transferQueue.size());
@@ -449,7 +449,7 @@ public class TransferManagerTest {
         String irodsCollectionRootAbsolutePath = testingPropertiesHelper
                 .buildIRODSCollectionAbsolutePathFromTestProperties(testingProperties, IRODS_TEST_SUBDIR_PATH);
 
-        TransferQueueService transferQueueService = new TransferQueueService();
+        TransferQueueService transferQueueService = new TransferQueueServiceImpl();
 
         new TransferManagerImpl();
 

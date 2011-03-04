@@ -881,7 +881,7 @@ public class CollectionAOImplTest {
 
 	}
 
-	@Test(expected = JargonException.class)
+	@Test(expected = IllegalArgumentException.class)
 	public void testCountAllFilesUnderneathCollectionEmptyFile()
 			throws Exception {
 

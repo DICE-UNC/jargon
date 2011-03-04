@@ -45,7 +45,7 @@ public class TransferRunner implements Runnable {
 	 *            data about the transfer between the client asking for the
 	 *            transfer, and the transfer process.
 	 * @param transferQueueService
-	 *            {@link TransferQueueService} that manages persistence and
+	 *            {@link TransferQueueServiceImpl} that manages persistence and
 	 *            access to the transfer data.
 	 * @throws JargonException
 	 */
