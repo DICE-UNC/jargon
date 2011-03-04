@@ -66,14 +66,14 @@ public class UserTagCloudServiceImplTest {
 	@Test
 	public final void testDataObjectCloudTwoObjectsSomeSharedTags()
 			throws Exception {
-		String testCollection = "testDataObjectCloudTwoObjectsSomeSharedTags";
-		String testFileName = "testDataObjectCloudTwoObjectsSomeSharedTags1.txt";
-		String testFileName2 = "testDataObjectCloudTwoObjectsSomeSharedTags2.txt";
+		String testCollection = "testDataObjectCloudTwoObjectsSomeSharedTagsb";
+		String testFileName = "testDataObjectCloudTwoObjectsSomeSharedTags1b.txt";
+		String testFileName2 = "testDataObjectCloudTwoObjectsSomeSharedTags2b.txt";
 
-		String expectedTagName1 = "testDataObjectCloudTwoObjectsSomeSharedTags1File1";
-		String expectedTagName2 = "testDataObjectCloudTwoObjectsSomeSharedTags2File2";
-		String expectedTagName3 = "testDataObjectCloudTwoObjectsSomeSharedTags3File2";
-		String expectedTagNameShared = "testDataObjectCloudTwoObjectsSomeSharedTagsSharedTAg";
+		String expectedTagName1 = "testDataObjectCloudTwoObjectsSomeSharedTags1File1b";
+		String expectedTagName2 = "testDataObjectCloudTwoObjectsSomeSharedTags2File2b";
+		String expectedTagName3 = "testDataObjectCloudTwoObjectsSomeSharedTags3File2b";
+		String expectedTagNameShared = "testDataObjectCloudTwoObjectsSomeSharedTagsSharedTagb";
 
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
@@ -104,6 +104,7 @@ public class UserTagCloudServiceImplTest {
 
 		IRODSFile targetIrodsFile = irodsFileSystem.getIRODSFileFactory(
 				irodsAccount).instanceIRODSFile(targetIrodsCollection);
+		targetIrodsFile.setResource(irodsAccount.getDefaultStorageResource());
 		DataTransferOperations dataTransferOperationsAO = irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataTransferOperations(
 						irodsAccount);
@@ -165,9 +166,9 @@ public class UserTagCloudServiceImplTest {
 	@Test
 	public void testGetDataCloudForCollections() throws Exception {
 		int collCount = 20;
-		String testCollectionBase = "testGetDataCloudForCollections";
-		String expectedTagNameBase = "testGetDataCloudForCollectionsTag";
-		String expectedTagNameSharedBase = "testGetDataCloudForCollectionsTagShared";
+		String testCollectionBase = "testGetDataCloudForCollectionsc";
+		String expectedTagNameBase = "testGetDataCloudForCollectionsTagc";
+		String expectedTagNameSharedBase = "testGetDataCloudForCollectionsTagSharedc";
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
@@ -337,12 +338,12 @@ public class UserTagCloudServiceImplTest {
 	@Test
 	public void testGetTagCloudWithFileTagsAndCollectionTags() throws Exception {
 
-		String testCollection = "testGetTagCloudWithFileTagsAndCollectionTags";
-		String testFileName = "testGetTagCloudWithFileTagsAndCollectionTags1.txt";
-		String testFileName2 = "testGetTagCloudWithFileTagsAndCollectionTags2.txt";
+		String testCollection = "testGetTagCloudWithFileTagsAndCollectionTagsa";
+		String testFileName = "testGetTagCloudWithFileTagsAndCollectionTagsa1.txt";
+		String testFileName2 = "testGetTagCloudWithFileTagsAndCollectionTagsa2.txt";
 
-		String expectedTagName1 = "testGetTagCloudWithFileTagsAndCollectionTags1File1";
-		String expectedTagName2 = "testGetTagCloudWithFileTagsAndCollectionTags2File2";
+		String expectedTagName1 = "testGetTagCloudWithFileTagsAndCollectionTags1File1a";
+		String expectedTagName2 = "testGetTagCloudWithFileTagsAndCollectionTags2File2a";
 
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
