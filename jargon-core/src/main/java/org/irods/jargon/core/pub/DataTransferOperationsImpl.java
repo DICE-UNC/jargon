@@ -191,37 +191,52 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 		log.info("processing a move from {}", absolutePathToSourceFile);
 		log.info("to {}", absolutePathToTargetFile);
 
-		final IRODSFileFactory irodsFileFactory = this.getIRODSFileFactory();
-		final IRODSFile sourceFile = irodsFileFactory
-				.instanceIRODSFile(absolutePathToSourceFile);
+		IRODSFile irodsSourceFile = this.getIRODSFileFactory().instanceIRODSFile(absolutePathToSourceFile);
+		IRODSFile irodsTargetFile = this.getIRODSFileFactory().instanceIRODSFile(absolutePathToTargetFile);
+		move (irodsSourceFile, irodsTargetFile);
+	}
 
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.core.pub.DataTransferOperations#move(org.irods.jargon.core.pub.io.IRODSFile, org.irods.jargon.core.pub.io.IRODSFile)
+	 */
+	@Override
+	public void move(final IRODSFile irodsSourceFile,
+			final IRODSFile irodsTargetFile)
+			throws JargonFileOrCollAlreadyExistsException, JargonException {
+
+		if (irodsSourceFile == null) {
+			throw new IllegalArgumentException("null irodsSourceFile");
+		}
+
+		if (irodsTargetFile == null) {
+			throw new IllegalArgumentException("null irodsTargetFile");
+		}
+		log.info("processing a move from {}", irodsSourceFile);
+		log.info("to {}", irodsTargetFile);
 		// source file must exist or error
 
-		if (!sourceFile.exists()) {
+		if (!irodsSourceFile.exists()) {
 			log.info("the source file does not exist, cannot move");
 			throw new JargonException("source file does not exist");
 		}
 
 		log.info("source file exists, is collection? : {}",
-				sourceFile.isDirectory());
+				irodsSourceFile.isDirectory());
 
-		// if the target is a directory, automatically propogate the file name
-		// to the target
+		log.info("target file:{}", irodsTargetFile.getAbsolutePath());
+		log.info("target file isDir? {}", irodsTargetFile.isDirectory());
+		
+		IRODSFile actualTargetFile = irodsTargetFile;
 
-		IRODSFile targetFile = irodsFileFactory
-				.instanceIRODSFile(absolutePathToTargetFile);
-
-		log.info("target file:{}", targetFile.getAbsolutePath());
-		log.info("target file exists:{}", targetFile.exists());
-		log.info("target file isDir? {}", targetFile.isDirectory());
-
-		if (sourceFile.isFile() && targetFile.isDirectory()) {
+		if (irodsSourceFile.isFile() && irodsTargetFile.isDirectory()) {
 			log.info("target file is a directory, automatically propogate the source file name to the target");
-			targetFile = irodsFileFactory.instanceIRODSFile(
-					absolutePathToTargetFile, sourceFile.getName());
+			actualTargetFile = this.getIRODSFileFactory().instanceIRODSFile(
+					irodsTargetFile.getAbsolutePath(),
+					irodsSourceFile.getName());
 		}
 
-		if (sourceFile.getAbsolutePath().equals(targetFile.getAbsolutePath())) {
+		if (irodsSourceFile.getAbsolutePath().equals(
+				actualTargetFile.getAbsolutePath())) {
 			log.warn("attempt to move a fie: {} to the same file name, logged and ignored");
 			return;
 		}
@@ -231,14 +246,16 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 
 		DataObjCopyInp dataObjCopyInp = null;
 
-		if (sourceFile.isFile()) {
+		if (irodsSourceFile.isFile()) {
 			log.info("transfer is for a file");
 			dataObjCopyInp = DataObjCopyInp.instanceForRenameFile(
-					absolutePathToSourceFile, targetFile.getAbsolutePath());
+					irodsSourceFile.getAbsolutePath(),
+					actualTargetFile.getAbsolutePath());
 		} else {
 			log.info("transfer is for a collection");
 			dataObjCopyInp = DataObjCopyInp.instanceForRenameCollection(
-					absolutePathToSourceFile, absolutePathToTargetFile);
+					irodsSourceFile.getAbsolutePath(),
+					actualTargetFile.getAbsolutePath());
 		}
 
 		try {

@@ -54,16 +54,16 @@ public interface DataTransferOperations extends IRODSAccessObject {
 	 * target location. There are other methods in this class that will take the
 	 * last part of the source path, and use that as the collection name in the
 	 * target.
-	 * 
+	 *  <p/>
 	 * For this method, if the source is /coll1/coll2/coll3 and the target is
 	 * /coll4/coll5/coll6, the coll3 directory will be renamed to coll6 in the
 	 * target.
-	 * 
+	 * <p/>
 	 * For a data object, this method will automatically handle a case where the
 	 * source file is a data object, and the target file is a collection. In
 	 * this case, the file name is propagated as the name of the file under the
 	 * target collection.
-	 * 
+	 * <p/>
 	 * If an attempt is made to move a file to itself, the case will be logged
 	 * and ignored.
 	 * 
@@ -216,10 +216,10 @@ public interface DataTransferOperations extends IRODSAccessObject {
 	 * the source or target. This convenience method takes the last path
 	 * component of the source collection, and moves that collection underneath
 	 * the target.
-	 * 
+	 * <p/>
 	 * If the source is /col1/col2/col3 and the target is /col4/col5, then the
 	 * result of the move will be /col4/col5/col3.
-	 * 
+	 * <p/>
 	 * This method will detect an attempt to reparent a file to its current
 	 * collection, and will log and ignore this case.
 	 * 
@@ -303,5 +303,35 @@ public interface DataTransferOperations extends IRODSAccessObject {
 			TransferStatusCallbackListener transferStatusCallbackListener,
 			TransferControlBlock transferControlBlock) throws JargonException;
 
-	
+	/**
+	 * Move a file or collection between two locations in iRODS. This method
+	 * will inspect the paths and create the appropriate command to iRODS
+	 * automatically. In this method, the target file is expressed as the actual
+	 * target location. There are other methods in this class that will take the
+	 * last part of the source path, and use that as the collection name in the
+	 * target.
+	 * <p/>
+	 * For this method, if the source is /coll1/coll2/coll3 and the target is
+	 * /coll4/coll5/coll6, the coll3 directory will be renamed to coll6 in the
+	 * target.
+	 * <p/>
+	 * For a data object, this method will automatically handle a case where the
+	 * source file is a data object, and the target file is a collection. In
+	 * this case, the file name is propagated as the name of the file under the
+	 * target collection.
+	 * <p/>
+	 * If an attempt is made to move a file to itself, the case will be logged
+	 * and ignored.
+	 * 
+	 * @param irodsSourceFile
+	 *            <code>IRODSFile<code> with the the source file.
+	 * @param irodsTargetFile
+	 *            <code>IRODSFile</code> with the target of
+	 *            the move.
+	 * @throws JargonException
+	 * @throws JargonFileOrCollAlreadyExistsException
+	 *             if a move is made to a file or collection that already exists
+	 */
+	void move(IRODSFile irodsSourceFile, IRODSFile irodsTargetFile)
+			throws JargonFileOrCollAlreadyExistsException, JargonException;	
 }

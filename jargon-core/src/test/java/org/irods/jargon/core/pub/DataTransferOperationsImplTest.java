@@ -14,6 +14,8 @@ import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.pub.io.IRODSFileFactory;
 import org.irods.jargon.core.transfer.DefaultTransferControlBlock;
 import org.irods.jargon.core.transfer.TransferControlBlock;
+import org.irods.jargon.core.transfer.TransferStatus;
+import org.irods.jargon.core.transfer.TransferStatus.TransferState;
 import org.irods.jargon.core.transfer.TransferStatusCallbackListenerTestingImplementation;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.irods.jargon.testutils.filemanip.FileGenerator;
@@ -1443,7 +1445,7 @@ public class DataTransferOperationsImplTest {
 
 	}
 
-	@Ignore //FIXME: work in progress
+	@Test
 	public void testReplicateWithCancelThenRestart() throws Exception {
 
 		String rootCollection = "testReplicateWithCancelThenRestart";
@@ -1461,12 +1463,6 @@ public class DataTransferOperationsImplTest {
 		FileGenerator.generateManyFilesInParentCollectionByAbsolutePath(
 				localCollectionAbsolutePath, "testReplicateWithCancel", ".txt",
 				10, 1, 2);
-
-		TransferControlBlock transferControlBlock = DefaultTransferControlBlock
-				.instance();
-
-		TransferStatusCallbackListenerTestingImplementation listener = new TransferStatusCallbackListenerTestingImplementation(
-				transferControlBlock, 0, 3);
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
@@ -1487,6 +1483,11 @@ public class DataTransferOperationsImplTest {
 		dataTransferOperationsAO.putOperation(localFile, irodsFile, null, null);
 
 		// now replicate with a cancel that will occur
+		TransferControlBlock transferControlBlock = DefaultTransferControlBlock
+				.instance();
+
+		TransferStatusCallbackListenerTestingImplementation listener = new TransferStatusCallbackListenerTestingImplementation(
+				transferControlBlock, 0, 3);
 		dataTransferOperationsAO.replicate(irodsCollectionRootAbsolutePath
 				+ "/" + rootCollection, targetResource, listener,
 				transferControlBlock);
@@ -1497,10 +1498,22 @@ public class DataTransferOperationsImplTest {
 				listener.isCancelEncountered());
 
 		// now restart the replication providing the restart point
-		transferControlBlock = DefaultTransferControlBlock.instance();
+		IRODSFile parentOfFilesInIrods = irodsFileFactory
+				.instanceIRODSFile(irodsCollectionRootAbsolutePath + "/"
+						+ rootCollection);
 
+		transferControlBlock = DefaultTransferControlBlock
+				.instance(parentOfFilesInIrods.listFiles()[2].getAbsolutePath());
 		listener = new TransferStatusCallbackListenerTestingImplementation(
 				transferControlBlock, 0, 0);
+
+		dataTransferOperationsAO.replicate(irodsCollectionRootAbsolutePath
+				+ "/" + rootCollection, targetResource, listener,
+				transferControlBlock);
+
+		// assess the callbacks
+		Assert.assertEquals("should have counted 10 files", 10,
+				transferControlBlock.getTotalFilesTransferredSoFar());
 
 	}
 
@@ -2268,6 +2281,90 @@ public class DataTransferOperationsImplTest {
 				localFile, (File) targetFile);
 
 		irodsFileSystem.close();
+
+	}
+
+	@Test
+	public void testCopyCollectionWithCancelThenRestart() throws Exception {
+
+		String rootCollection = "testCopyCollectionWithCancelThenRestart";
+		String targetCollection = "testCopyCollectionWithCancelThenRestartTarget";
+
+		String localCollectionAbsolutePath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH
+						+ '/' + rootCollection);
+
+		String irodsCollectionRootAbsolutePath = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		String irodsCollectionTargetAbsolutePath = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + "/"
+								+ targetCollection);
+
+		FileGenerator.generateManyFilesInParentCollectionByAbsolutePath(
+				localCollectionAbsolutePath,
+				"testCopyCollectionWithCancelThenRestart", ".txt", 10, 1, 2);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
+		IRODSFileFactory irodsFileFactory = irodsFileSystem
+				.getIRODSFileFactory(irodsAccount);
+		IRODSFile destFile = irodsFileFactory
+				.instanceIRODSFile(irodsCollectionRootAbsolutePath);
+		DataTransferOperations dataTransferOperationsAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataTransferOperations(
+						irodsAccount);
+		File localFile = new File(localCollectionAbsolutePath);
+
+		dataTransferOperationsAO.putOperation(localFile, destFile, null, null);
+
+		// now move with a cancel
+
+		TransferControlBlock transferControlBlock = DefaultTransferControlBlock
+				.instance();
+
+		TransferStatusCallbackListenerTestingImplementation listener = new TransferStatusCallbackListenerTestingImplementation(
+				transferControlBlock, 0, 3);
+
+		dataTransferOperationsAO.copy(destFile.getAbsolutePath() + "/"
+				+ rootCollection, "", irodsCollectionTargetAbsolutePath,
+				listener, false, transferControlBlock);
+
+		TestCase.assertEquals("did not hit cancel as anticipated in copy", 3,
+				transferControlBlock.getTotalFilesTransferredSoFar());
+
+		// now do a restart and complete the copy
+		IRODSFile copySourceFiles = irodsFileSystem.getIRODSFileFactory(irodsAccount).instanceIRODSFile(destFile.getAbsolutePath() + "/"
+				+ rootCollection);
+	
+		transferControlBlock = DefaultTransferControlBlock.instance(copySourceFiles.listFiles()[2].getAbsolutePath());
+		listener = new TransferStatusCallbackListenerTestingImplementation(
+				transferControlBlock, 0, 0);
+
+		dataTransferOperationsAO.copy(destFile.getAbsolutePath() + "/"
+				+ rootCollection, "", irodsCollectionTargetAbsolutePath,
+				listener, false, transferControlBlock);
+		
+		int countRestarted = 0;
+		int countSuccess = 0;
+		
+		for (TransferStatus callback : listener.getStatusCache()) {
+			if (callback.getTransferState() == TransferState.RESTARTING) {
+				countRestarted++;
+			} else if (callback.getTransferState() == TransferState.SUCCESS) {
+				countSuccess++;
+			} else {
+				TestCase.fail("unknown transfer status in cache:" + callback);
+			}
+		}
+
+		irodsFileSystem.close();
+		TestCase.assertEquals("did not get expected number of restarting callbacks", 3, countRestarted);
+		TestCase.assertEquals("did not get expected number of success callbacks", 7, countSuccess);
 
 	}
 

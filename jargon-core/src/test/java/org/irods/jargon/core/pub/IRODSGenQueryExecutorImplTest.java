@@ -11,7 +11,10 @@ import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSProtocolManager;
 import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.connection.IRODSSimpleProtocolManager;
+import org.irods.jargon.core.pub.io.IRODSFile;
+import org.irods.jargon.core.pub.io.IRODSFileFactory;
 import org.irods.jargon.core.query.IRODSGenQuery;
+import org.irods.jargon.core.query.IRODSQueryResultRow;
 import org.irods.jargon.core.query.IRODSQueryResultSet;
 import org.irods.jargon.core.query.IRODSQueryResultSetInterface;
 import org.irods.jargon.core.query.RodsGenQueryEnum;
@@ -215,15 +218,14 @@ public class IRODSGenQueryExecutorImplTest {
 				returnedResourceName);
 
 	}
-	
+
 	@Test
-	public final void testExecuteIRODSQueryForResourceUsingNotLike() throws Exception {
+	public final void testExecuteIRODSQueryForResourceUsingNotLike()
+			throws Exception {
 
 		String queryString = "select "
-				+ RodsGenQueryEnum.COL_R_RESC_NAME.getName()
-				+ " where "
-				+ RodsGenQueryEnum.COL_R_RESC_NAME.getName()
-				+ " NOT LIKE "
+				+ RodsGenQueryEnum.COL_R_RESC_NAME.getName() + " where "
+				+ RodsGenQueryEnum.COL_R_RESC_NAME.getName() + " NOT LIKE "
 				+ "'joebobnotaresource'";
 
 		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(queryString, 100);
@@ -316,7 +318,8 @@ public class IRODSGenQueryExecutorImplTest {
 				.buildIRODSAccountFromTestProperties(testingProperties);
 
 		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
 		IRODSGenQueryExecutor irodsGenQueryExecutor = accessObjectFactory
 				.getIRODSGenQueryExecutor(irodsAccount);
 
@@ -332,6 +335,70 @@ public class IRODSGenQueryExecutorImplTest {
 		irodsFileSystem.close();
 		// no error considered success
 		Assert.assertTrue(true);
+	}
+
+	/*
+	 * [#125] 80600 sql error
+	 */
+	@Test
+	public void testFetchInfoManyTimes() throws Exception {
+		String testDirPath = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
+		IRODSFileFactory iff = irodsFileSystem
+				.getIRODSFileFactory(irodsAccount);
+
+		int nbrTimes = 100;
+
+		for (int i = 0; i < nbrTimes; i++) {
+			// get connection and file
+			IRODSFile f = null;
+			try {
+
+				f = iff.instanceIRODSFile(testDirPath);
+			} catch (Exception e) {
+				Assert.fail(e.getLocalizedMessage());
+			}
+
+			if (!f.exists()) {
+				Assert.fail("This directory should exist");
+			}
+			if (f.isDirectory()) {
+
+				StringBuilder q = new StringBuilder();
+				q.append("select ");
+				q.append(RodsGenQueryEnum.COL_COLL_ID.getName()).append(", ");
+				q.append(RodsGenQueryEnum.COL_COLL_NAME.getName()).append(", ");
+				q.append(RodsGenQueryEnum.COL_COLL_MODIFY_TIME.getName());
+				q.append(" where ");
+				q.append(RodsGenQueryEnum.COL_COLL_NAME.getName());
+				q.append(" = '").append(testDirPath).append("'");
+
+				IRODSGenQuery irodsQuery;
+				IRODSAccessObjectFactory aof = irodsFileSystem
+						.getIRODSAccessObjectFactory();
+				irodsQuery = IRODSGenQuery.instance(q.toString(), 1);
+
+				// execute query
+				IRODSGenQueryExecutor irodsGenQueryExecutor = aof
+						.getIRODSGenQueryExecutor(irodsAccount);
+				IRODSQueryResultSet resultSet = irodsGenQueryExecutor
+						.executeIRODSQueryAndCloseResult(irodsQuery, 0);
+
+				// set the file info object from the query result
+				IRODSQueryResultRow r = null;
+				r = resultSet.getFirstResult();
+				r.getColumn(RodsGenQueryEnum.COL_COLL_MODIFY_TIME.getName());
+				r.getColumn(RodsGenQueryEnum.COL_COLL_NAME.getName());
+
+			} else {
+				Assert.fail("This is a directory, not a file.");
+
+			}
+		}
 	}
 
 }

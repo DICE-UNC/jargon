@@ -25,6 +25,10 @@ public interface IRODSGenQueryExecutor extends IRODSAccessObject {
 	/**
 	 * Execute an iquest-like query and return results in a convenient POJO
 	 * object.
+	 * <p/>
+	 * Note: this command will not close the underlying result set, so that it may be paged by getting next result.  It is up to the caller to call
+	 * <code>closeResults()</code> when done with the result set.  Alternately, the <code>executeIRODSQueryAndCloseResults()</code> method
+	 * may be employed.
 	 * 
 	 * @param irodsQuery
 	 *            {@link org.irods.jargon.core.query.IRODSGenQuery} that will wrap

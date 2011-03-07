@@ -19,6 +19,7 @@ public class TransferStatusCallbackListenerTestingImplementation implements
 
 	private int putCallbackCtr = 0;
 	private int getCallbackCtr = 0;
+	private int copyCallbackCtr = 0;
 	private int exceptionCallbackCtr = 0;
 	private int replicateCallbackCtr = 0;
 
@@ -52,6 +53,8 @@ public class TransferStatusCallbackListenerTestingImplementation implements
 			putCallbackCtr++;
 		} else if (transferStatus.getTransferType() == TransferType.REPLICATE) {
 			replicateCallbackCtr++;
+		} else if (transferStatus.getTransferType() == TransferType.COPY) {
+			copyCallbackCtr++;
 		}
 
 		if (transferStatus.getTransferState() == TransferState.FAILURE) {
@@ -67,7 +70,7 @@ public class TransferStatusCallbackListenerTestingImplementation implements
 		}
 
 		int totalCallback = getCallbackCtr + putCallbackCtr
-				+ exceptionCallbackCtr + replicateCallbackCtr;
+				+ exceptionCallbackCtr + replicateCallbackCtr + copyCallbackCtr;
 
 		if (pauseAfter > 0 && totalCallback == pauseAfter) {
 			if (transferControlBlock != null) {
@@ -124,6 +127,14 @@ public class TransferStatusCallbackListenerTestingImplementation implements
 
 	public synchronized boolean isPauseEncountered() {
 		return pauseEncountered;
+	}
+
+	public synchronized int getCopyCallbackCtr() {
+		return copyCallbackCtr;
+	}
+
+	public synchronized List<TransferStatus> getStatusCache() {
+		return statusCache;
 	}
 
 }
