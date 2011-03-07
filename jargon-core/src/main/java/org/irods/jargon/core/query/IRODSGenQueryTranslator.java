@@ -27,10 +27,10 @@ public class IRODSGenQueryTranslator {
 			.getLogger(IRODSGenQueryTranslator.class);
 	private ExtensibleMetaDataMapping extensibleMetaDataMapping = null;
 
-	public static final String[] operatorStrings = { "=", "<>", "<", ">", "<=",
-			">=", "in", "not in", "between", "not between", "like", "not like",
+	public static final String[] operatorStrings = { "<>", "<=",
+			">=", "not in", "not between", "not like",
 			"sounds like", "sounds not like", "TABLE", "num<", "num>", "num<=",
-			"num>=", };
+			"num>=",  "=", "<", ">",  "in", "between", "like"};
 
 	public static final String ORDER_BY = "ORDER BY";
 	private static final String GROUP_BY = "GROUP BY";

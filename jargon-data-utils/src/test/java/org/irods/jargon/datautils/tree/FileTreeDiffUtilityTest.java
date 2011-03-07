@@ -41,7 +41,7 @@ public class FileTreeDiffUtilityTest {
 				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
 	}
 
-	@Test // FIXME: failing...diff in files/colls?
+	@Test
 	public void testFileTreeDiffNoDiff() throws Exception {
 
 		String rootCollection = "testFileTreeDiffNoDiff";
@@ -99,7 +99,7 @@ public class FileTreeDiffUtilityTest {
 
 	}
 
-	@Test //FIXME: compare check?
+	@Test 
 	public void testFileTreeDiffIrodsPlusOneDir() throws Exception {
 
 		String rootCollection = "testFileTreeDiffIrodsPlusOneDir";

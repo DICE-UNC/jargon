@@ -3,9 +3,11 @@
  */
 package org.irods.jargon.core.pub;
 
+import java.io.File;
 import java.util.Properties;
 
 import junit.framework.Assert;
+import junit.framework.TestCase;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSProtocolManager;
@@ -396,9 +398,81 @@ public class IRODSGenQueryExecutorImplTest {
 
 			} else {
 				Assert.fail("This is a directory, not a file.");
-
 			}
 		}
+	}
+
+	/*
+	 * [#126] every call to r.getColumn( X ) returns the name of the file as a string
+	 */
+	@Test
+	public void testColQueryThenAccessColByName() throws Exception {
+		String testDirPath = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		String testFileName = "testColQueryThenAccessColByName.jpg";
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String localFileName = FileGenerator
+				.generateFileOfFixedLengthGivenName(absPath, testFileName, 1);
+
+		File localFile = new File(localFileName);
+
+		// now put the file
+		String targetIrodsFile = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+		
+		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
+		IRODSFileFactory irodsFileFactory = accessObjectFactory
+				.getIRODSFileFactory(irodsAccount);
+		DataObjectAO dataObjectAO = accessObjectFactory
+				.getDataObjectAO(irodsAccount);
+		IRODSFile destFile = irodsFileFactory
+				.instanceIRODSFile(targetIrodsFile);
+		dataObjectAO.putLocalDataObjectToIRODS(localFile, destFile, true);
+
+		// build query
+		StringBuilder q = new StringBuilder();
+		q.append("select ");
+		q.append(RodsGenQueryEnum.COL_DATA_NAME.getName()).append(",");
+		q.append(RodsGenQueryEnum.COL_D_DATA_ID.getName()).append(",");
+		q.append(RodsGenQueryEnum.COL_D_MODIFY_TIME.getName()).append(",");
+		q.append(RodsGenQueryEnum.COL_DATA_SIZE.getName());
+		q.append(" where ");
+		q.append(RodsGenQueryEnum.COL_COLL_NAME.getName());
+		q.append(" = '").append(testDirPath).append("'");
+		q.append(" and ");
+		q.append(RodsGenQueryEnum.COL_DATA_NAME.getName());
+		q.append(" = '").append(testFileName).append("'");
+
+		System.out.println("fetchDataInfo query: " + q.toString());
+
+		IRODSGenQuery irodsQuery;
+		irodsQuery = IRODSGenQuery.instance(q.toString(), 1);
+
+		// execute query
+		IRODSGenQueryExecutor irodsGenQueryExecutor = accessObjectFactory
+				.getIRODSGenQueryExecutor(irodsAccount);
+		IRODSQueryResultSet resultSet = irodsGenQueryExecutor
+				.executeIRODSQuery(irodsQuery, 0);
+
+		// set the file info object from the query result
+		IRODSQueryResultRow r = resultSet.getFirstResult();
+		String modified = r.getColumn(RodsGenQueryEnum.COL_D_MODIFY_TIME
+				.getName());
+		Integer.parseInt(modified); // millisecond timestamp
+		String size = r.getColumn(RodsGenQueryEnum.COL_DATA_SIZE.getName());
+		Integer.parseInt(size);
+		irodsGenQueryExecutor.closeResults(resultSet);
+		irodsFileSystem.close();
+		
+		TestCase.assertEquals("did not find modified where expected", modified, r.getColumn(2));
+		TestCase.assertEquals("did not find size where expected", size, r.getColumn(3));
+	
 	}
 
 }

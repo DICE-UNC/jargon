@@ -117,7 +117,7 @@ public class IRODSQueryResultRow {
 			throw new JargonException("columnName is null or empty");
 		}
 
-		int idx = getColumnNamePostiion(columnName);
+		int idx = getColumnNamePosition(columnName);
 
 		if (idx == -1) {
 			throw new JargonException("column name not found in result set:"
@@ -135,7 +135,7 @@ public class IRODSQueryResultRow {
 	 * @param columnName
 	 * @return
 	 */
-	protected int getColumnNamePostiion(final String columnName) {
+	protected int getColumnNamePosition(final String columnName) {
 		int colPos = -1;
 		int i = 0;
 		for (String colNameInList : columnNames) {
@@ -143,6 +143,7 @@ public class IRODSQueryResultRow {
 				colPos = i;
 				break;
 			}
+			i++;
 		}
 		
 		return colPos;

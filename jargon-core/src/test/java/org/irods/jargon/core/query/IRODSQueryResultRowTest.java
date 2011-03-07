@@ -277,5 +277,7 @@ public class IRODSQueryResultRowTest {
 		resultRow.getColumn("bogus");
 
 	}
+	
+	
 
 }
