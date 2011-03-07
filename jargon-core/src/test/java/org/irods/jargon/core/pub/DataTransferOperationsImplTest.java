@@ -35,7 +35,8 @@ public class DataTransferOperationsImplTest {
 	private static org.irods.jargon.testutils.IRODSTestSetupUtilities irodsTestSetupUtilities = null;
 	private static org.irods.jargon.testutils.AssertionHelper assertionHelper = null;
 
-	// FIXME: add transfers with resource specified and not specified, refactor recursive put/get/copy into common method, repl will remain
+	// FIXME: add transfers with resource specified and not specified, refactor
+	// recursive put/get/copy into common method, repl will remain
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -533,6 +534,79 @@ public class DataTransferOperationsImplTest {
 	}
 
 	@Test
+	public void testGetWithCancelThenRestart() throws Exception {
+
+		String rootCollection = "testGetWithCancelThenRestart";
+		String getToCollection = "testGetWithCancelThenRestartGetToCollection";
+
+		TransferControlBlock transferControlBlock = DefaultTransferControlBlock
+				.instance();
+
+		TransferStatusCallbackListenerTestingImplementation listener = new TransferStatusCallbackListenerTestingImplementation(
+				transferControlBlock, 0, 4);
+
+		String localCollectionAbsolutePath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH
+						+ '/' + rootCollection);
+
+		String irodsCollectionRootAbsolutePath = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		FileGenerator.generateManyFilesInParentCollectionByAbsolutePath(
+				localCollectionAbsolutePath, "testPutWithCancel", ".txt", 10,
+				1, 2);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
+		IRODSFileFactory irodsFileFactory = irodsFileSystem
+				.getIRODSFileFactory(irodsAccount);
+		IRODSFile destFile = irodsFileFactory
+				.instanceIRODSFile(irodsCollectionRootAbsolutePath);
+		DataTransferOperations dataTransferOperationsAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataTransferOperations(
+						irodsAccount);
+		File localFile = new File(localCollectionAbsolutePath);
+		File[] localFiles = localFile.listFiles();
+
+		dataTransferOperationsAO.putOperation(localFile, destFile, null, null);
+
+		// now get, cancel after 4
+		dataTransferOperationsAO.getOperation(destFile.getAbsolutePath() + "/"
+				+ rootCollection, scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH
+						+ "/" + getToCollection), "", listener,
+				transferControlBlock);
+
+		IRODSFile irodsSourceFile = irodsFileSystem.getIRODSFileFactory(
+				irodsAccount).instanceIRODSFile(
+				irodsCollectionRootAbsolutePath + "/" + rootCollection);
+
+		// now restart with the 4th file
+		TransferControlBlock restartControlBlock = DefaultTransferControlBlock
+				.instance(irodsSourceFile.listFiles()[3].getAbsolutePath());
+		dataTransferOperationsAO
+				.getOperation(
+						destFile.getAbsolutePath() + "/" + rootCollection,
+						scratchFileUtils
+								.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH
+										+ "/" + getToCollection), "", null,
+						restartControlBlock);
+
+		File getToTargetFile = new File(
+				scratchFileUtils
+						.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH
+								+ "/" + getToCollection + "/" + rootCollection));
+
+		Assert.assertEquals("should have 10 files in coll after restart", 10,
+				getToTargetFile.list().length);
+		Assert.assertEquals("should have counted 10 files", 10,
+				restartControlBlock.getTotalFilesTransferredSoFar());
+	}
+
+	@Test
 	public void testGetOneFileWithNoCallbackAndControlBlock() throws Exception {
 		// generate a local scratch file
 		String testFileName = "testGetOneFileWithNoCallbackAndControlBlock.txt";
@@ -696,11 +770,10 @@ public class DataTransferOperationsImplTest {
 		String localCollectionAbsolutePath = scratchFileUtils
 				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH
 						+ '/' + rootCollection);
-		
-		String returnedCollectionAbsolutePath = scratchFileUtils
-		.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH
-				+ '/' + returnedCollection);
 
+		String returnedCollectionAbsolutePath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH
+						+ '/' + returnedCollection);
 
 		String irodsCollectionRootAbsolutePath = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
@@ -727,12 +800,16 @@ public class DataTransferOperationsImplTest {
 
 		dataTransferOperationsAO.putOperation(localFile, destFile, null, null);
 		destFile.close();
-		
-		//File returnedData = new File(returnedCollectionAbsolutePath + "/" + rootCollection);
-		
-		dataTransferOperationsAO.getOperation(destFile.getAbsolutePath() + "/" + rootCollection, returnedCollectionAbsolutePath, "", null, null);
 
-		File returnedData = new File(returnedCollectionAbsolutePath + "/" + rootCollection);
+		// File returnedData = new File(returnedCollectionAbsolutePath + "/" +
+		// rootCollection);
+
+		dataTransferOperationsAO.getOperation(destFile.getAbsolutePath() + "/"
+				+ rootCollection, returnedCollectionAbsolutePath, "", null,
+				null);
+
+		File returnedData = new File(returnedCollectionAbsolutePath + "/"
+				+ rootCollection);
 		assertionHelper.assertTwoFilesAreEqualByRecursiveTreeComparison(
 				localFile, returnedData);
 		irodsFileSystem.close();
@@ -1025,6 +1102,61 @@ public class DataTransferOperationsImplTest {
 	}
 
 	@Test
+	public void testPutWithCancelThenRestart() throws Exception {
+
+		String rootCollection = "testPutWithCancelThenRestart";
+		TransferControlBlock transferControlBlock = DefaultTransferControlBlock
+				.instance();
+
+		TransferStatusCallbackListenerTestingImplementation listener = new TransferStatusCallbackListenerTestingImplementation(
+				transferControlBlock, 0, 3);
+
+		String localCollectionAbsolutePath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH
+						+ '/' + rootCollection);
+
+		String irodsCollectionRootAbsolutePath = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		FileGenerator.generateManyFilesInParentCollectionByAbsolutePath(
+				localCollectionAbsolutePath, "testPutWithCancel", ".txt", 10,
+				1, 2);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
+		IRODSFileFactory irodsFileFactory = irodsFileSystem
+				.getIRODSFileFactory(irodsAccount);
+		IRODSFile destFile = irodsFileFactory
+				.instanceIRODSFile(irodsCollectionRootAbsolutePath);
+		DataTransferOperations dataTransferOperationsAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataTransferOperations(
+						irodsAccount);
+		File localFile = new File(localCollectionAbsolutePath);
+		File[] localFiles = localFile.listFiles();
+
+		dataTransferOperationsAO.putOperation(localFile, destFile, listener,
+				transferControlBlock);
+
+		// now restart with the 3rd file
+		TransferControlBlock restartControlBlock = DefaultTransferControlBlock
+				.instance(localFiles[2].getAbsolutePath());
+		dataTransferOperationsAO.putOperation(localFile, destFile, listener,
+				restartControlBlock);
+
+		IRODSFile destTarget = irodsFileSystem
+				.getIRODSFileFactory(irodsAccount).instanceIRODSFile(
+						destFile.getAbsolutePath() + "/" + rootCollection);
+
+		Assert.assertEquals("should have 10 files in coll after restart", 10,
+				destTarget.list().length);
+		Assert.assertEquals("should have counted 10 files", 10,
+				restartControlBlock.getTotalFilesTransferredSoFar());
+	}
+
+	@Test
 	public void testPutWithPause() throws Exception {
 
 		String rootCollection = "testPutWithPause";
@@ -1308,6 +1440,67 @@ public class DataTransferOperationsImplTest {
 				listener.getReplicateCallbackCtr() == 4);
 		Assert.assertTrue("should have a status callback of cancelled",
 				listener.isCancelEncountered());
+
+	}
+
+	@Ignore //FIXME: work in progress
+	public void testReplicateWithCancelThenRestart() throws Exception {
+
+		String rootCollection = "testReplicateWithCancelThenRestart";
+		String targetResource = testingProperties
+				.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_RESOURCE_KEY);
+
+		String localCollectionAbsolutePath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH
+						+ '/' + rootCollection);
+
+		String irodsCollectionRootAbsolutePath = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		FileGenerator.generateManyFilesInParentCollectionByAbsolutePath(
+				localCollectionAbsolutePath, "testReplicateWithCancel", ".txt",
+				10, 1, 2);
+
+		TransferControlBlock transferControlBlock = DefaultTransferControlBlock
+				.instance();
+
+		TransferStatusCallbackListenerTestingImplementation listener = new TransferStatusCallbackListenerTestingImplementation(
+				transferControlBlock, 0, 3);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
+
+		DataTransferOperations dataTransferOperationsAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataTransferOperations(
+						irodsAccount);
+
+		File localFile = new File(localCollectionAbsolutePath);
+
+		IRODSFileFactory irodsFileFactory = irodsFileSystem
+				.getIRODSFileFactory(irodsAccount);
+		IRODSFile irodsFile = irodsFileFactory
+				.instanceIRODSFile(irodsCollectionRootAbsolutePath);
+
+		dataTransferOperationsAO.putOperation(localFile, irodsFile, null, null);
+
+		// now replicate with a cancel that will occur
+		dataTransferOperationsAO.replicate(irodsCollectionRootAbsolutePath
+				+ "/" + rootCollection, targetResource, listener,
+				transferControlBlock);
+
+		Assert.assertTrue("did not get expected success callback",
+				listener.getReplicateCallbackCtr() == 4);
+		Assert.assertTrue("should have a status callback of cancelled",
+				listener.isCancelEncountered());
+
+		// now restart the replication providing the restart point
+		transferControlBlock = DefaultTransferControlBlock.instance();
+
+		listener = new TransferStatusCallbackListenerTestingImplementation(
+				transferControlBlock, 0, 0);
 
 	}
 
@@ -2019,55 +2212,61 @@ public class DataTransferOperationsImplTest {
 		irodsFileSystem.closeAndEatExceptions();
 		TestCase.assertNotNull("null jargonProperties", jargonProperties);
 	}
-	
-	
+
 	@Test
-	public void testCopyCollectionNoForceNoOverwriteTransferControlBlock() throws Exception {
+	public void testCopyCollectionNoForceNoOverwriteTransferControlBlock()
+			throws Exception {
 
 		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
 		// generate a local scratch file
 		String testOrigDirectory = "testCopyCollectionNoForceNoOverwriteTransferControlBlockOrig";
 		String testTargetDirectory = "testCopyCollectionNoForceNoOverwriteTransferControlBlockTarget";
-		
+
 		String localCollectionAbsolutePath = scratchFileUtils
-		.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH  + '/' + testOrigDirectory);
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH
+						+ '/' + testOrigDirectory);
 
 		String irodsCollectionRootAbsolutePath = testingPropertiesHelper
-		.buildIRODSCollectionAbsolutePathFromTestProperties(
-				testingProperties, IRODS_TEST_SUBDIR_PATH);
-		
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
 		String irodsOriginalAbsolutePath = testingPropertiesHelper
-		.buildIRODSCollectionAbsolutePathFromTestProperties(
-				testingProperties, IRODS_TEST_SUBDIR_PATH + "/" + testOrigDirectory);
-		
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + "/"
+								+ testOrigDirectory);
+
 		String irodsTargetAbsolutePath = testingPropertiesHelper
-		.buildIRODSCollectionAbsolutePathFromTestProperties(
-				testingProperties, IRODS_TEST_SUBDIR_PATH + "/" + testTargetDirectory);
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + "/"
+								+ testTargetDirectory);
 
 		FileGenerator
-		.generateManyFilesAndCollectionsInParentCollectionByAbsolutePath(
-				localCollectionAbsolutePath,
-				"prefixForColl",
-				2, 3, 2, "testFile", ".txt", 2, 2, 1, 2);
+				.generateManyFilesAndCollectionsInParentCollectionByAbsolutePath(
+						localCollectionAbsolutePath, "prefixForColl", 2, 3, 2,
+						"testFile", ".txt", 2, 2, 1, 2);
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
-		.buildIRODSAccountFromTestProperties(testingProperties);
+				.buildIRODSAccountFromTestProperties(testingProperties);
 
 		DataTransferOperations dataTransferOperations = irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataTransferOperations(
 						irodsAccount);
-		
+
 		dataTransferOperations.putOperation(localCollectionAbsolutePath,
-				irodsCollectionRootAbsolutePath,"",null,null);
-		
-		dataTransferOperations.copy(irodsOriginalAbsolutePath, "", irodsTargetAbsolutePath, null, false, null);
-		
+				irodsCollectionRootAbsolutePath, "", null, null);
+
+		dataTransferOperations.copy(irodsOriginalAbsolutePath, "",
+				irodsTargetAbsolutePath, null, false, null);
+
 		File localFile = new File(localCollectionAbsolutePath);
-		IRODSFile targetFile = irodsFileSystem.getIRODSFileFactory(irodsAccount).instanceIRODSFile(irodsTargetAbsolutePath);
-		
+		IRODSFile targetFile = irodsFileSystem
+				.getIRODSFileFactory(irodsAccount).instanceIRODSFile(
+						irodsTargetAbsolutePath);
+
 		// compare the local source to the copied-to target
-		assertionHelper.assertTwoFilesAreEqualByRecursiveTreeComparison(localFile, (File) targetFile);
-	
+		assertionHelper.assertTwoFilesAreEqualByRecursiveTreeComparison(
+				localFile, (File) targetFile);
+
 		irodsFileSystem.close();
 
 	}

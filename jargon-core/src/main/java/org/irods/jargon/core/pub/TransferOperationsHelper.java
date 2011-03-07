@@ -95,8 +95,9 @@ final class TransferOperationsHelper {
 		for (File fileInSourceCollection : irodsSourceFile.listFiles()) {
 			// for each file in the given source collection, put the data file,
 			// or create the new irodsCollection and step into it
-			
-			((IRODSFile) fileInSourceCollection).setResource(irodsSourceFile.getResource());
+
+			((IRODSFile) fileInSourceCollection).setResource(irodsSourceFile
+					.getResource());
 
 			// check for a cancel or pause at the top of the loop
 			if (transferControlBlock != null
@@ -203,12 +204,17 @@ final class TransferOperationsHelper {
 			if (!transferControlBlock.filter(irodsSourceFile.getAbsolutePath())) {
 				log.info("file is filtered and discarded: {}",
 						irodsSourceFile.getAbsolutePath());
-				TransferStatus status = TransferStatus.instance(
-						TransferType.GET, irodsSourceFile.getAbsolutePath(),
-						targetLocalFile.getAbsolutePath(), "", 0, 0,
-						totalFilesSoFar, totalFiles, TransferState.RESTARTING);
 
-				transferStatusCallbackListener.statusCallback(status);
+				if (transferStatusCallbackListener != null) {
+					TransferStatus status = TransferStatus.instance(
+							TransferType.GET,
+							irodsSourceFile.getAbsolutePath(),
+							targetLocalFile.getAbsolutePath(), "", 0, 0,
+							totalFilesSoFar, totalFiles,
+							TransferState.RESTARTING);
+
+					transferStatusCallbackListener.statusCallback(status);
+				}
 				return;
 			}
 		}

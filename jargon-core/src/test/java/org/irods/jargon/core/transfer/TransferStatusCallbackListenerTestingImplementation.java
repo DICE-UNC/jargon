@@ -1,5 +1,8 @@
 package org.irods.jargon.core.transfer;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.transfer.TransferStatus.TransferState;
 import org.irods.jargon.core.transfer.TransferStatus.TransferType;
@@ -25,6 +28,7 @@ public class TransferStatusCallbackListenerTestingImplementation implements
 
 	private boolean cancelEncountered = false;
 	private boolean pauseEncountered = false;
+	private List<TransferStatus> statusCache = new ArrayList<TransferStatus>();
 
 	public TransferStatusCallbackListenerTestingImplementation() {
 
@@ -76,6 +80,8 @@ public class TransferStatusCallbackListenerTestingImplementation implements
 				transferControlBlock.setCancelled(true);
 			}
 		}
+		
+		statusCache.add(transferStatus);
 
 	}
 
