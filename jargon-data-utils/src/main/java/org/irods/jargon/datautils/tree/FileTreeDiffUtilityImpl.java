@@ -175,12 +175,10 @@ public class FileTreeDiffUtilityImpl implements FileTreeDiffUtility {
 			fileMatchIndex = -1;
 		} else {
 			log.debug("file name match");
-
 			processFileNameMatched(currentFileTreeNode, leftHandSide,
 					leftHandSideRootPath, rightHandSide, rightHandSideRootPath,
 					leftHandSideAsRelativePath,
 					timestampForIrodsFileThatIndicatesThatTheFileHasChanged);
-
 			fileMatchIndex = 0;
 		}
 
@@ -208,42 +206,39 @@ public class FileTreeDiffUtilityImpl implements FileTreeDiffUtility {
 		boolean rhsFile = rightHandSide.isFile();
 
 		if (lhsFile && rhsFile) {
-			log.debug("file compare");
-
-			if (timestampForIrodsFileThatIndicatesThatTheFileHasChanged > 0) {
-				log.debug("checking file timestamp against cutoff");
-				/*
-				 * I have a timestamp that is a cut-off for the irods file. If
-				 * the local file or iRODS file has changed since that
-				 * timestamp, then a difference is noted.
-				 */
-				if (leftHandSide.lastModified() > timestampForIrodsFileThatIndicatesThatTheFileHasChanged
-						|| rightHandSide.lastModified() > timestampForIrodsFileThatIndicatesThatTheFileHasChanged) {
-					log.debug("file mod date is after the provided timestamp cutoff");
-					FileTreeDiffEntry entry = buildFileTreeDiffEntryForFile(
-							leftHandSide, DiffType.FILE_OUT_OF_SYNCH,
-							rightHandSide.length(),
-							rightHandSide.lastModified());
-					currentFileTreeNode.add(new FileTreeNode(entry));
-				}
-			} else if (leftHandSide.length() != rightHandSide.length()) {
-				// compare by length
-				log.debug("files differ based on length");
-				FileTreeDiffEntry entry = buildFileTreeDiffEntryForFile(
-						leftHandSide, DiffType.FILE_OUT_OF_SYNCH,
-						rightHandSide.length(), rightHandSide.lastModified());
-				currentFileTreeNode.add(new FileTreeNode(entry));
-
-			}
-			return;
+			compareTwoEqualFilesOnTimestamp(currentFileTreeNode, leftHandSide,
+					rightHandSide,
+					timestampForIrodsFileThatIndicatesThatTheFileHasChanged);
 		} else if (lhsFile != rhsFile) {
 			log.warn("a file is being compared to a directory of the same name");
 			FileTreeDiffEntry entry = buildFileTreeDiffEntryForFile(
 					leftHandSide, DiffType.FILE_NAME_DIR_NAME_COLLISION, 0, 0);
 			currentFileTreeNode.add(new FileTreeNode(entry));
-			return;
+		} else {
+			compareTwoEqualDirectories(currentFileTreeNode, leftHandSide,
+					leftHandSideRootPath, rightHandSide, rightHandSideRootPath,
+					leftHandSideAsRelativePath,
+					timestampForIrodsFileThatIndicatesThatTheFileHasChanged);
 		}
+	}
 
+	/**
+	 * @param currentFileTreeNode
+	 * @param leftHandSide
+	 * @param leftHandSideRootPath
+	 * @param rightHandSide
+	 * @param rightHandSideRootPath
+	 * @param leftHandSideAsRelativePath
+	 * @param timestampForIrodsFileThatIndicatesThatTheFileHasChanged
+	 * @throws JargonException
+	 */
+	private void compareTwoEqualDirectories(
+			final FileTreeNode currentFileTreeNode, final File leftHandSide,
+			final String leftHandSideRootPath, final File rightHandSide,
+			final String rightHandSideRootPath,
+			final String leftHandSideAsRelativePath,
+			final long timestampForIrodsFileThatIndicatesThatTheFileHasChanged)
+			throws JargonException {
 		FileTreeNode parentNode;
 		// the root node in the resulting diff tree has already been added when
 		// starting the diff, so don't double-add
@@ -334,6 +329,60 @@ public class FileTreeDiffUtilityImpl implements FileTreeDiffUtility {
 					break;
 				}
 			}
+		}
+	}
+
+	/**
+	 * @param currentFileTreeNode
+	 * @param leftHandSide
+	 * @param rightHandSide
+	 * @param timestampForIrodsFileThatIndicatesThatTheFileHasChanged
+	 */
+	private void compareTwoEqualFilesOnTimestamp(
+			final FileTreeNode currentFileTreeNode, final File leftHandSide,
+			final File rightHandSide,
+			final long timestampForIrodsFileThatIndicatesThatTheFileHasChanged) {
+		log.debug("file compare");
+
+		if (timestampForIrodsFileThatIndicatesThatTheFileHasChanged > 0) {
+			log.debug("checking file timestamp against cutoff");
+			/*
+			 * I have a timestamp that is a cut-off for the irods file. If the
+			 * local file or iRODS file has changed since that timestamp, then a
+			 * difference is noted.
+			 */
+			if (leftHandSide.lastModified() > timestampForIrodsFileThatIndicatesThatTheFileHasChanged
+					&& rightHandSide.lastModified() > timestampForIrodsFileThatIndicatesThatTheFileHasChanged) {
+				log.debug("both files after cutoff, will pick most recent file");
+
+				if (leftHandSide.lastModified() > rightHandSide.lastModified()) {
+					log.debug("left hand side is newer");
+					FileTreeDiffEntry entry = buildFileTreeDiffEntryForFile(
+							leftHandSide, DiffType.LEFT_HAND_NEWER,
+							leftHandSide.length(), leftHandSide.lastModified());
+					currentFileTreeNode.add(new FileTreeNode(entry));
+				} else if (rightHandSide.lastModified() > leftHandSide
+						.lastModified()) {
+					log.debug("left hand side is newer");
+					FileTreeDiffEntry entry = buildFileTreeDiffEntryForFile(
+							rightHandSide, DiffType.RIGHT_HAND_NEWER,
+							rightHandSide.length(),
+							rightHandSide.lastModified());
+					currentFileTreeNode.add(new FileTreeNode(entry));
+
+				} else {
+					log.debug("files are equal, skip");
+				}
+			}
+		} else if (leftHandSide.length() != rightHandSide.length()) {
+			// compare by length, I cannot tell which file to transfer so just
+			// say out of synch
+			log.debug("files differ based on length");
+			FileTreeDiffEntry entry = buildFileTreeDiffEntryForFile(
+					leftHandSide, DiffType.FILE_OUT_OF_SYNCH,
+					rightHandSide.length(), rightHandSide.lastModified());
+			currentFileTreeNode.add(new FileTreeNode(entry));
+
 		}
 	}
 

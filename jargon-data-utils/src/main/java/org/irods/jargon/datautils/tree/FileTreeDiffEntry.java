@@ -11,7 +11,7 @@ import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry;
  */
 public class FileTreeDiffEntry {
 
-	public enum DiffType{ LEFT_HAND_PLUS, RIGHT_HAND_PLUS,  DIRECTORY_NO_DIFF, FILE_NAME_DIR_NAME_COLLISION, FILE_OUT_OF_SYNCH}
+	public enum DiffType{ LEFT_HAND_PLUS, RIGHT_HAND_PLUS,  DIRECTORY_NO_DIFF, FILE_NAME_DIR_NAME_COLLISION, LEFT_HAND_NEWER, RIGHT_HAND_NEWER, FILE_OUT_OF_SYNCH}
 	private final DiffType diffType;
 	private final long lengthRhsFile;
 	private long timestampRhsFile;

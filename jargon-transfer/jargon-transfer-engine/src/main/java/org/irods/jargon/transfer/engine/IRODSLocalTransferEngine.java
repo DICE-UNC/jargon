@@ -441,6 +441,15 @@ final class IRODSLocalTransferEngine implements TransferStatusCallbackListener {
 			final LocalIRODSTransferItem localIRODSTransferItem)
 			throws HibernateException, JargonException {
 
+		
+		/* TODO: temp shim....this is the simplest case to handle the new RESTARTING callback, the code below can be reworked a bit when 
+		 * the logging requirements are better understood during the 'seek to restart' part of the operation.  Right now, nothing is updated.
+		*/
+		if (transferStatus.getTransferState() == TransferStatus.TransferState.RESTARTING) {
+			log.debug("restarting:{}", transferStatus);
+			return;
+		}
+		
 		if (transferStatus.getTransferState() == TransferStatus.TransferState.FAILURE) {
 			log.error("error in this transfer, mark");
 			localIRODSTransferItem.setError(true);
