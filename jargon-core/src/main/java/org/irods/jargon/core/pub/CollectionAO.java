@@ -11,6 +11,7 @@ import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.query.AVUQueryElement;
 import org.irods.jargon.core.query.JargonQueryException;
 import org.irods.jargon.core.query.MetaDataAndDomainData;
+import org.irods.jargon.core.query.UserFilePermission;
 
 /**
  * This is an access object that can be used to manipulate iRODS Collections.
@@ -384,5 +385,15 @@ public interface CollectionAO extends IRODSAccessObject {
 	 */
 	FilePermissionEnum getPermissionForCollection(String irodsAbsolutePath,
 			String userName, String zone) throws JargonException;
+
+	/**
+	 * Get a list of all permissions for all users on the given collection
+	 * @param irodsCollectionAbsolutePath <code>String</code> with the absolute path to the iRODS collection for which permissions
+	 * will be retrieved.
+	 * @return <code>List</code> of  {@link FilePermissionEnum} 
+	 * @throws JargonException
+	 */
+	List<UserFilePermission> listPermissionsForCollection(
+			String irodsCollectionAbsolutePath) throws JargonException;
 
 }

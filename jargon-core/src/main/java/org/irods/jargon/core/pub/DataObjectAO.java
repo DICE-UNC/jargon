@@ -13,6 +13,7 @@ import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.query.AVUQueryElement;
 import org.irods.jargon.core.query.JargonQueryException;
 import org.irods.jargon.core.query.MetaDataAndDomainData;
+import org.irods.jargon.core.query.UserFilePermission;
 
 /**
  * This is an access object that can be used to manipulate iRODS data objects
@@ -520,5 +521,14 @@ public interface DataObjectAO extends IRODSAccessObject {
 	void copyIrodsDataObjectWithForce(String irodsSourceFileAbsolutePath,
 			String irodsTargetFileAbsolutePath, String targetResourceName)
 			throws JargonException;
+
+	/**
+	 * List the user permissions for the given iRODS data object.  
+	 * @param irodsDataObjectAbsolutePath <code>String</code> with the absolute path to the iRODS data object.
+	 * @return <code>List</code> of {@link UserFilePermission} with the ACL's for the given file.
+	 * @throws JargonException
+	 */
+	List<UserFilePermission> listPermissionsForDataObject(
+			String irodsDataObjectAbsolutePath) throws JargonException;
 
 }

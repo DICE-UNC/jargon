@@ -24,6 +24,7 @@ import org.irods.jargon.core.query.AVUQueryElement;
 import org.irods.jargon.core.query.AVUQueryOperatorEnum;
 import org.irods.jargon.core.query.MetaDataAndDomainData;
 import org.irods.jargon.core.query.RodsGenQueryEnum;
+import org.irods.jargon.core.query.UserFilePermission;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.irods.jargon.testutils.filemanip.FileGenerator;
 import org.irods.jargon.testutils.icommandinvoke.IcommandInvoker;
@@ -851,7 +852,7 @@ public class CollectionAOImplTest {
 		
 	}
 
-	@Test(expected = JargonException.class)
+	@Test(expected = IllegalArgumentException.class)
 	public void findByAbsolutePathNullPath() throws Exception {
 
 		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager
@@ -867,7 +868,7 @@ public class CollectionAOImplTest {
 		collectionAO.findByAbsolutePath(null);
 	}
 
-	@Test(expected = JargonException.class)
+	@Test(expected = IllegalArgumentException.class)
 	public void testCountAllFilesUnderneathCollectionNullFile()
 			throws Exception {
 
@@ -1279,5 +1280,38 @@ public class CollectionAOImplTest {
 				isInherit);
 
 	}
+	
+	@Test
+	public final void testGetPermissionsForCollection() throws Exception {
+
+		String testCollectionName = "testGetPermissionsForCollection";
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + "/"
+								+ testCollectionName);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
+		CollectionAO collectionAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getCollectionAO(irodsAccount);
+		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetIrodsCollection);
+		irodsFile.mkdirs();
+
+		collectionAO
+				.setAccessPermissionRead(
+						"",
+						targetIrodsCollection,
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY),
+						true);
+
+		List<UserFilePermission> userFilePermissions = collectionAO.listPermissionsForCollection(targetIrodsCollection);
+		TestCase.assertNotNull("got a null userFilePermissions", userFilePermissions);
+		TestCase.assertEquals("did not find the two permissions", 2, userFilePermissions.size());
+	}
+
 
 }

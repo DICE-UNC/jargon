@@ -210,14 +210,7 @@ public class FileTreeDiffUtilityImpl implements FileTreeDiffUtility {
 		if (lhsFile && rhsFile) {
 			log.debug("file compare");
 
-			// compare by length
-			if (leftHandSide.length() != rightHandSide.length()) {
-				log.debug("files differ based on length");
-				FileTreeDiffEntry entry = buildFileTreeDiffEntryForFile(
-						leftHandSide, DiffType.FILE_OUT_OF_SYNCH,
-						rightHandSide.length(), rightHandSide.lastModified());
-				currentFileTreeNode.add(new FileTreeNode(entry));
-			} else if (timestampForIrodsFileThatIndicatesThatTheFileHasChanged > 0) {
+			if (timestampForIrodsFileThatIndicatesThatTheFileHasChanged > 0) {
 				log.debug("checking file timestamp against cutoff");
 				/*
 				 * I have a timestamp that is a cut-off for the irods file. If
@@ -233,6 +226,14 @@ public class FileTreeDiffUtilityImpl implements FileTreeDiffUtility {
 							rightHandSide.lastModified());
 					currentFileTreeNode.add(new FileTreeNode(entry));
 				}
+			} else if (leftHandSide.length() != rightHandSide.length()) {
+				// compare by length
+				log.debug("files differ based on length");
+				FileTreeDiffEntry entry = buildFileTreeDiffEntryForFile(
+						leftHandSide, DiffType.FILE_OUT_OF_SYNCH,
+						rightHandSide.length(), rightHandSide.lastModified());
+				currentFileTreeNode.add(new FileTreeNode(entry));
+
 			}
 			return;
 		} else if (lhsFile != rhsFile) {

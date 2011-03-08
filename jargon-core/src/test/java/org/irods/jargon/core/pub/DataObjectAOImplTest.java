@@ -25,6 +25,7 @@ import org.irods.jargon.core.query.AVUQueryElement.AVUQueryPart;
 import org.irods.jargon.core.query.AVUQueryOperatorEnum;
 import org.irods.jargon.core.query.MetaDataAndDomainData;
 import org.irods.jargon.core.query.RodsGenQueryEnum;
+import org.irods.jargon.core.query.UserFilePermission;
 import org.irods.jargon.testutils.AssertionHelper;
 import org.irods.jargon.testutils.IRODSTestSetupUtilities;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
@@ -433,7 +434,7 @@ public class DataObjectAOImplTest {
 
 	}
 
-	@Test(expected = JargonException.class)
+	@Test(expected = IllegalArgumentException.class)
 	public void testFindByAbsolutePathNullFileName() throws Exception {
 		// generate a local scratch file
 		String testFileName = null;
@@ -450,7 +451,7 @@ public class DataObjectAOImplTest {
 
 	}
 
-	@Test(expected = JargonException.class)
+	@Test(expected = IllegalArgumentException.class)
 	public void testFindByAbsolutePathBlankFileName() throws Exception {
 		// generate a local scratch file
 		String testFileName = "";
@@ -1722,5 +1723,42 @@ public class DataObjectAOImplTest {
 		irodsFileSystem.close();
 
 	}
+	
+	@Test
+	public final void testListPermissionsForDataObject() throws Exception {
+		// generate a local scratch file
+
+		String testFileName = "testListPermissionsForDataObject.xls";
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String fileNameOrig = FileGenerator.generateFileOfFixedLengthGivenName(
+				absPath, testFileName, 2);
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
+		DataObjectAO dataObjectAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
+		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetIrodsCollection);
+		dataObjectAO.putLocalDataObjectToIRODS(new File(fileNameOrig),
+				irodsFile, true);
+
+		dataObjectAO.setAccessPermissionRead("", targetIrodsCollection + "/"
+				+ testFileName, testingProperties
+				.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY));
+
+		List<UserFilePermission> userFilePermissions = dataObjectAO.listPermissionsForDataObject(targetIrodsCollection + "/" + testFileName);
+		TestCase.assertNotNull("got a null userFilePermissions", userFilePermissions);
+		TestCase.assertEquals("did not find the two permissions", 2, userFilePermissions.size());
+
+		irodsFileSystem.close();
+
+	}
+
 
 }
