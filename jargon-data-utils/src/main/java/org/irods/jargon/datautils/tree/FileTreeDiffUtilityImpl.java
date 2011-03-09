@@ -33,6 +33,7 @@ public class FileTreeDiffUtilityImpl implements FileTreeDiffUtility {
 
 	private final IRODSAccessObjectFactory irodsAccessObjectFactory;
 	private final IRODSAccount irodsAccount;
+	private static final int NO_TIMESTAMP_CHECKS = 0;
 
 	/**
 	 * Default constructor
@@ -163,15 +164,36 @@ public class FileTreeDiffUtilityImpl implements FileTreeDiffUtility {
 
 		if (compValue < 0) {
 			log.debug("lhs < rhs");
-			FileTreeDiffEntry entry = buildFileTreeDiffEntryForFile(
-					leftHandSide, DiffType.LEFT_HAND_PLUS, 0, 0);
-			currentFileTreeNode.add(new FileTreeNode(entry));
+			if (timestampForIrodsFileThatIndicatesThatTheFileHasChanged == NO_TIMESTAMP_CHECKS
+					|| leftHandSide.lastModified() > timestampForIrodsFileThatIndicatesThatTheFileHasChanged) {
+				FileTreeDiffEntry entry = buildFileTreeDiffEntryForFile(
+						leftHandSide, DiffType.LEFT_HAND_PLUS, 0, 0);
+				currentFileTreeNode.add(new FileTreeNode(entry));
+			} else {
+				// the lhs file is plus, but the mod date is before the last
+				// synch. This is an indeterminate state. This could be treated
+				// as an iRODS delete?
+				log.debug(
+						"lhs file is seen as new, but modified time is before last synch, iRODS delete?, currently no deletes done:{}",
+						leftHandSide.getAbsolutePath());
+			}
 			fileMatchIndex = 1;
 		} else if (compValue > 0) {
 			log.debug("lhs > rhs");
-			FileTreeDiffEntry entry = buildFileTreeDiffEntryForFile(
-					rightHandSide, DiffType.RIGHT_HAND_PLUS, 0, 0);
-			currentFileTreeNode.add(new FileTreeNode(entry));
+			if (timestampForIrodsFileThatIndicatesThatTheFileHasChanged == NO_TIMESTAMP_CHECKS
+					|| rightHandSide.lastModified() > timestampForIrodsFileThatIndicatesThatTheFileHasChanged) {
+				FileTreeDiffEntry entry = buildFileTreeDiffEntryForFile(
+						rightHandSide, DiffType.RIGHT_HAND_PLUS, 0, 0);
+				currentFileTreeNode.add(new FileTreeNode(entry));
+			} else {
+				// the rhs file is plus, but the mod date is before the last
+				// synch. This is an indeterminate state. This coul dbe treated
+				// as a local delete?
+				log.debug("rhs file last mod:{}", rightHandSide.lastModified());
+				log.debug(
+						"rhs file is seen as new, but modified time is before last synch, local delete? currently no deletes done:{}",
+						rightHandSide.getAbsolutePath());
+			}
 			fileMatchIndex = -1;
 		} else {
 			log.debug("file name match");
@@ -187,6 +209,9 @@ public class FileTreeDiffUtilityImpl implements FileTreeDiffUtility {
 	}
 
 	/**
+	 * Two file names have been matched. Decide on the course of action in the
+	 * diff process based on whether they are data objects, or directories
+	 * 
 	 * @param currentFileTreeNode
 	 * @param leftHandSide
 	 * @param leftHandSideRootPath
@@ -212,7 +237,8 @@ public class FileTreeDiffUtilityImpl implements FileTreeDiffUtility {
 		} else if (lhsFile != rhsFile) {
 			log.warn("a file is being compared to a directory of the same name");
 			FileTreeDiffEntry entry = buildFileTreeDiffEntryForFile(
-					leftHandSide, DiffType.FILE_NAME_DIR_NAME_COLLISION, 0, 0);
+					leftHandSide, DiffType.FILE_NAME_DIR_NAME_COLLISION,
+					rightHandSide.length(), rightHandSide.lastModified());
 			currentFileTreeNode.add(new FileTreeNode(entry));
 		} else {
 			compareTwoEqualDirectories(currentFileTreeNode, leftHandSide,
@@ -223,6 +249,9 @@ public class FileTreeDiffUtilityImpl implements FileTreeDiffUtility {
 	}
 
 	/**
+	 * I have matched two files by name, each is a directory. Proceed to diff
+	 * them.
+	 * 
 	 * @param currentFileTreeNode
 	 * @param leftHandSide
 	 * @param leftHandSideRootPath
@@ -333,6 +362,8 @@ public class FileTreeDiffUtilityImpl implements FileTreeDiffUtility {
 	}
 
 	/**
+	 * I have matched two files, each is a data object. Diff this one file
+	 * 
 	 * @param currentFileTreeNode
 	 * @param leftHandSide
 	 * @param rightHandSide
@@ -341,10 +372,14 @@ public class FileTreeDiffUtilityImpl implements FileTreeDiffUtility {
 	private void compareTwoEqualFilesOnTimestamp(
 			final FileTreeNode currentFileTreeNode, final File leftHandSide,
 			final File rightHandSide,
-			final long timestampForIrodsFileThatIndicatesThatTheFileHasChanged) {
+			final long timestampForIrodsFileThatIndicatesThatTheFileHasChanged)
+			throws JargonException {
 		log.debug("file compare");
 
-		if (timestampForIrodsFileThatIndicatesThatTheFileHasChanged > 0) {
+		if (timestampForIrodsFileThatIndicatesThatTheFileHasChanged == NO_TIMESTAMP_CHECKS) {
+			log.debug("comparing files without a last synch, use existing last mod data");
+		} else {
+
 			log.debug("checking file timestamp against cutoff");
 			/*
 			 * I have a timestamp that is a cut-off for the irods file. If the
@@ -353,66 +388,81 @@ public class FileTreeDiffUtilityImpl implements FileTreeDiffUtility {
 			 */
 			if (leftHandSide.lastModified() > timestampForIrodsFileThatIndicatesThatTheFileHasChanged
 					&& rightHandSide.lastModified() > timestampForIrodsFileThatIndicatesThatTheFileHasChanged) {
-				log.debug("both files after cutoff, will pick most recent file");
-
-				if (leftHandSide.lastModified() > rightHandSide.lastModified()) {
-					log.debug("left hand side is newer");
-					FileTreeDiffEntry entry = buildFileTreeDiffEntryForFile(
-							leftHandSide, DiffType.LEFT_HAND_NEWER,
-							leftHandSide.length(), leftHandSide.lastModified());
-					currentFileTreeNode.add(new FileTreeNode(entry));
-				} else if (rightHandSide.lastModified() > leftHandSide
-						.lastModified()) {
-					log.debug("left hand side is newer");
-					FileTreeDiffEntry entry = buildFileTreeDiffEntryForFile(
-							rightHandSide, DiffType.RIGHT_HAND_NEWER,
-							rightHandSide.length(),
-							rightHandSide.lastModified());
-					currentFileTreeNode.add(new FileTreeNode(entry));
-
-				} else {
-					log.debug("files are equal, skip");
-				}
+				twoFilesDifferAndBothArePostLastSynch(currentFileTreeNode,
+						leftHandSide, rightHandSide);
+			} else if (leftHandSide.lastModified() > timestampForIrodsFileThatIndicatesThatTheFileHasChanged) {
+				log.debug("left hand side file has been modified");
+				FileTreeDiffEntry entry = buildFileTreeDiffEntryForFile(
+						leftHandSide, DiffType.LEFT_HAND_NEWER,
+						rightHandSide.length(), rightHandSide.lastModified());
+				currentFileTreeNode.add(new FileTreeNode(entry));
+			} else if (rightHandSide.lastModified() > timestampForIrodsFileThatIndicatesThatTheFileHasChanged) {
+				log.debug("right hand side file has been modified");
+				FileTreeDiffEntry entry = buildFileTreeDiffEntryForFile(
+						rightHandSide, DiffType.RIGHT_HAND_NEWER,
+						leftHandSide.length(), leftHandSide.lastModified());
+				currentFileTreeNode.add(new FileTreeNode(entry));
+			} else {
+				log.debug("timestamps match, treat as no diff");
 			}
-		} else if (leftHandSide.length() != rightHandSide.length()) {
-			// compare by length, I cannot tell which file to transfer so just
-			// say out of synch
-			log.debug("files differ based on length");
-			FileTreeDiffEntry entry = buildFileTreeDiffEntryForFile(
-					leftHandSide, DiffType.FILE_OUT_OF_SYNCH,
-					rightHandSide.length(), rightHandSide.lastModified());
-			currentFileTreeNode.add(new FileTreeNode(entry));
-
 		}
 	}
 
 	/**
+	 * @param currentFileTreeNode
 	 * @param leftHandSide
+	 * @param rightHandSide
+	 */
+	private void twoFilesDifferAndBothArePostLastSynch(
+			final FileTreeNode currentFileTreeNode, final File leftHandSide,
+			final File rightHandSide) {
+		log.debug("both files after cutoff, will pick most recent file");
+
+		if (leftHandSide.lastModified() > rightHandSide.lastModified()) {
+			log.debug("left hand side is newer");
+			FileTreeDiffEntry entry = buildFileTreeDiffEntryForFile(
+					leftHandSide, DiffType.LEFT_HAND_NEWER,
+					rightHandSide.length(), rightHandSide.lastModified());
+			currentFileTreeNode.add(new FileTreeNode(entry));
+		} else if (rightHandSide.lastModified() > leftHandSide.lastModified()) {
+			log.debug("left hand side is newer");
+			FileTreeDiffEntry entry = buildFileTreeDiffEntryForFile(
+					rightHandSide, DiffType.RIGHT_HAND_NEWER,
+					rightHandSide.length(), rightHandSide.lastModified());
+			currentFileTreeNode.add(new FileTreeNode(entry));
+		} else {
+			log.debug("files are equal, skip");
+		}
+
+	}
+
+	/**
+	 * @param diffFile
 	 * @param diffType
 	 * @return
 	 */
 	private FileTreeDiffEntry buildFileTreeDiffEntryForFile(
-			final File leftHandSide, final DiffType diffType,
-			final long lengthRightHandSide, final long timestampRightHandSide) {
+			final File diffFile, final DiffType diffType,
+			final long lengthOppositeSide, final long timestampOppositeSide) {
 		CollectionAndDataObjectListingEntry entry = new CollectionAndDataObjectListingEntry();
-		entry.setCreatedAt(new Date(leftHandSide.lastModified()));
+		entry.setCreatedAt(new Date(diffFile.lastModified()));
 		entry.setModifiedAt(entry.getCreatedAt());
 
-		if (leftHandSide.isFile()) {
+		if (diffFile.isFile()) {
 			entry.setObjectType(ObjectType.DATA_OBJECT);
-			entry.setParentPath(leftHandSide.getParent());
-			entry.setPathOrName(leftHandSide.getName());
+			entry.setParentPath(diffFile.getParent());
+			entry.setPathOrName(diffFile.getName());
 		} else {
 			entry.setObjectType(ObjectType.COLLECTION);
-			entry.setParentPath(leftHandSide.getParent());
+			entry.setParentPath(diffFile.getParent());
 			StringBuilder sb = new StringBuilder();
-			sb.append(leftHandSide.getParent());
+			sb.append(diffFile.getParent());
 			sb.append("/");
-			sb.append(leftHandSide.getName());
+			sb.append(diffFile.getName());
 			entry.setPathOrName(sb.toString());
 		}
 		FileTreeDiffEntry diffEntry = FileTreeDiffEntry.instance(diffType,
-				entry, lengthRightHandSide, timestampRightHandSide);
+				entry, lengthOppositeSide, timestampOppositeSide);
 		return diffEntry;
 	}
 

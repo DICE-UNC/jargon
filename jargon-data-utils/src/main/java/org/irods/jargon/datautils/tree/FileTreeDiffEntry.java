@@ -13,8 +13,8 @@ public class FileTreeDiffEntry {
 
 	public enum DiffType{ LEFT_HAND_PLUS, RIGHT_HAND_PLUS,  DIRECTORY_NO_DIFF, FILE_NAME_DIR_NAME_COLLISION, LEFT_HAND_NEWER, RIGHT_HAND_NEWER, FILE_OUT_OF_SYNCH}
 	private final DiffType diffType;
-	private final long lengthRhsFile;
-	private long timestampRhsFile;
+	private final long lengthOppositeFile;
+	private long timestampOppositeFile;
 	
 	private final CollectionAndDataObjectListingEntry collectionAndDataObjectListingEntry;
 	
@@ -67,8 +67,8 @@ public class FileTreeDiffEntry {
 		
 		this.diffType = diffType;
 		this.collectionAndDataObjectListingEntry = collectionAndDataObjectListingEntry;
-		this.lengthRhsFile = lengthRhsFile;
-		this.timestampRhsFile = timestampRhsFile;
+		this.lengthOppositeFile = lengthRhsFile;
+		this.timestampOppositeFile = timestampRhsFile;
 		
 	}
 	
@@ -80,10 +80,10 @@ public class FileTreeDiffEntry {
 		sb.append(diffType);
 		sb.append("\n   collectionAndDataObjectListingEntry:");
 		sb.append(collectionAndDataObjectListingEntry);
-		sb.append("\n   lengthRhsFile:");
-		sb.append(lengthRhsFile);
-		sb.append("\n   timestampRhsFile");
-		sb.append(timestampRhsFile);
+		sb.append("\n   lengthOppositeFile:");
+		sb.append(lengthOppositeFile);
+		sb.append("\n   timestampOppositeFile");
+		sb.append(timestampOppositeFile);
 		return sb.toString();
 	}
 		
@@ -95,12 +95,12 @@ public class FileTreeDiffEntry {
 		return collectionAndDataObjectListingEntry;
 	}
 
-	public long getTimestampRhsFile() {
-		return timestampRhsFile;
+	public long getTimestampOppositeFile() {
+		return timestampOppositeFile;
 	}
 
-	public void setTimestampRhsFile(long timestampRhsFile) {
-		this.timestampRhsFile = timestampRhsFile;
+	public void setTimestampOppositeFile(long timestampOppositeFile) {
+		this.timestampOppositeFile = timestampOppositeFile;
 	}
 
 }
