@@ -896,7 +896,7 @@ public class FileTreeDiffUtilityTest {
 
 		dataTransferOperationsAO.putOperation(localFile, destFile, null, null);
 		
-		Thread.sleep(1000);
+		Thread.sleep(3000);
 
 		// navigate down a couple of levels and put a file somewhere
 		localFile = new File(localFile
@@ -919,7 +919,7 @@ public class FileTreeDiffUtilityTest {
 		// files now put, set up and call for the diff
 		FileTreeDiffUtility fileTreeDiffUtility = new FileTreeDiffUtilityImpl(
 				irodsAccount, irodsFileSystem.getIRODSAccessObjectFactory());
-		long timestampToUse = destFile.lastModified() - 800;
+		long timestampToUse = destFile.lastModified();
 
 		FileTreeModel diffModel = fileTreeDiffUtility.generateDiffLocalToIRODS(
 				localFileRoot, targetIrodsAbsolutePath,
