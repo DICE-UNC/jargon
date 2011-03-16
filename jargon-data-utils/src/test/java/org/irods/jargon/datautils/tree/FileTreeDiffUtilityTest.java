@@ -2,6 +2,7 @@ package org.irods.jargon.datautils.tree;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Properties;
@@ -241,7 +242,7 @@ public class FileTreeDiffUtilityTest {
 				fileTreeDiffEntry.getDiffType());
 
 		List<FileTreeDiffEntry> diffEntriesFound = new ArrayList<FileTreeDiffEntry>();
-		int ctr = descendModelAndFindTheDiff(newChildFileName, DiffType.RIGHT_HAND_PLUS, fileTreeNode, diffEntriesFound);
+		int ctr = descendModelAndFindTheDiff( DiffType.RIGHT_HAND_PLUS, fileTreeNode, diffEntriesFound);
 		TestCase.assertEquals("wrong number of cached diffs", 1, diffEntriesFound.size());
 		TestCase.assertEquals("should have just 1 diff", 1, ctr);
 		TestCase.assertEquals("wrong diff type", DiffType.RIGHT_HAND_PLUS, diffEntriesFound.get(0).getDiffType());
@@ -325,7 +326,7 @@ public class FileTreeDiffUtilityTest {
 		
 		List<FileTreeDiffEntry> diffEntriesFound = new ArrayList<FileTreeDiffEntry>();
 		
-		int ctr = descendModelAndFindTheDiff("newChild", DiffType.RIGHT_HAND_PLUS, fileTreeNode, diffEntriesFound);
+		int ctr = descendModelAndFindTheDiff( DiffType.RIGHT_HAND_PLUS, fileTreeNode, diffEntriesFound);
 		TestCase.assertEquals("wrong number of cached diffs", 1, diffEntriesFound.size());
 		TestCase.assertEquals("should have just 1 diff", 1, ctr);
 		TestCase.assertEquals("wrong diff type", DiffType.RIGHT_HAND_PLUS, diffEntriesFound.get(0).getDiffType());
@@ -408,7 +409,7 @@ public class FileTreeDiffUtilityTest {
 		
 		List<FileTreeDiffEntry> diffEntriesFound = new ArrayList<FileTreeDiffEntry>();
 		
-		int ctr = descendModelAndFindTheDiff("newChild", DiffType.RIGHT_HAND_PLUS, fileTreeNode, diffEntriesFound);
+		int ctr = descendModelAndFindTheDiff(DiffType.RIGHT_HAND_PLUS, fileTreeNode, diffEntriesFound);
 		TestCase.assertEquals("wrong number of cached diffs", 1, diffEntriesFound.size());
 		TestCase.assertEquals("should have just 1 diff", 1, ctr);
 		TestCase.assertEquals("wrong diff type", DiffType.RIGHT_HAND_PLUS, diffEntriesFound.get(0).getDiffType());
@@ -490,7 +491,7 @@ public class FileTreeDiffUtilityTest {
 		
 		List<FileTreeDiffEntry> diffEntriesFound = new ArrayList<FileTreeDiffEntry>();
 		
-		int ctr = descendModelAndFindTheDiff("newChild", DiffType.RIGHT_HAND_PLUS, fileTreeNode, diffEntriesFound);
+		int ctr = descendModelAndFindTheDiff(DiffType.RIGHT_HAND_PLUS, fileTreeNode, diffEntriesFound);
 		TestCase.assertEquals("wrong number of cached diffs", 0, diffEntriesFound.size());
 		TestCase.assertEquals("should have no diff, as irods dir added before last synch", 0, ctr);
 		
@@ -569,13 +570,12 @@ public class FileTreeDiffUtilityTest {
 
 	List<FileTreeDiffEntry> diffEntriesFound = new ArrayList<FileTreeDiffEntry>();
 		
-		int ctr = descendModelAndFindTheDiff("newChild", DiffType.RIGHT_HAND_PLUS, fileTreeNode, diffEntriesFound);
+		int ctr = descendModelAndFindTheDiff(DiffType.RIGHT_HAND_PLUS, fileTreeNode, diffEntriesFound);
 		TestCase.assertEquals("wrong number of cached diffs", 0, diffEntriesFound.size());
 		TestCase.assertEquals("should have no diff, since the mod was before the last synch", 0, ctr);
 	}
 
 	@Test
-	// FIXME: compare check?
 	public void testFileTreeDiffLocalPlusOneDir() throws Exception {
 
 		String rootCollection = "testFileTreeDiffLocalPlusOneDir";
@@ -645,6 +645,128 @@ public class FileTreeDiffUtilityTest {
 		Enumeration<?> nodes = fileTreeNode.children();
 		compareFileTreeToNodesForDirMatchesAndExpectADiff(childrenOfLocal,
 				nodes, DiffType.LEFT_HAND_PLUS, "newChild");
+	}
+	
+	@Test
+	public void testFileTreeDiffLocalMinusOneFileAtEndAfterTransfer() throws Exception {
+
+		String rootCollection = "testFileTreeDiffLocalMinusOneFileAtEndAfterTransfer";
+
+		String localCollectionAbsolutePath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH
+						+ '/' + rootCollection);
+
+		String irodsCollectionRootAbsolutePath = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+		
+		FileGenerator.generateManyFilesInGivenDirectory(IRODS_TEST_SUBDIR_PATH
+						+ '/' + rootCollection, "test", ".jsp", 20, 1, 2);
+					
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
+		IRODSFileFactory irodsFileFactory = irodsFileSystem
+				.getIRODSFileFactory(irodsAccount);
+		IRODSFile destFile = irodsFileFactory
+				.instanceIRODSFile(irodsCollectionRootAbsolutePath);
+		DataTransferOperations dataTransferOperationsAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataTransferOperations(
+						irodsAccount);
+
+		File localFile = new File(localCollectionAbsolutePath);
+
+		dataTransferOperationsAO.putOperation(localFile, destFile, null, null);
+
+		// now zap the last local file
+		File[] localFiles = localFile.listFiles();
+		
+		File lastFile = localFiles[localFiles.length -1];
+		String lastFileName = lastFile.getName();
+		lastFile.delete();
+
+		File localFileRoot = new File(localCollectionAbsolutePath);
+		String targetIrodsAbsolutePath = irodsCollectionRootAbsolutePath + "/"
+				+ rootCollection;
+
+		// files now put, set up and call for the diff
+		FileTreeDiffUtility fileTreeDiffUtility = new FileTreeDiffUtilityImpl(
+				irodsAccount, irodsFileSystem.getIRODSAccessObjectFactory());
+		FileTreeModel diffModel = fileTreeDiffUtility.generateDiffLocalToIRODS(
+				localFileRoot, targetIrodsAbsolutePath, 0);
+		irodsFileSystem.close();
+		Assert.assertNotNull("null diffModel", diffModel);
+		
+		List<FileTreeDiffEntry> diffEntriesFound = new ArrayList<FileTreeDiffEntry>();
+
+		descendModelAndFindTheDiff(DiffType.RIGHT_HAND_PLUS, (FileTreeNode) diffModel.getRoot(), diffEntriesFound);
+		TestCase.assertEquals("wrong number of cached diffs", 1, diffEntriesFound.size());
+		FileTreeDiffEntry diffEntry = diffEntriesFound.get(0);
+		TestCase.assertEquals("did not find the right hand plus", lastFileName, diffEntry.getCollectionAndDataObjectListingEntry().getPathOrName());
+		
+	}
+	
+	@Test
+	public void testFileTreeDiffLocalMinusOneDirAtEndAfterTransfer() throws Exception {
+
+		String rootCollection = "testFileTreeDiffLocalMinusOneDirAtEndAfterTransfer";
+		String subdirName = "subdir";
+		int nbrLocalDirs = 12;
+
+		String localCollectionAbsolutePath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH
+						+ '/' + rootCollection);
+
+		String irodsCollectionRootAbsolutePath = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+		
+		File localFile = new File(localCollectionAbsolutePath);
+		File subdirFile;
+		
+		for (int i = 0; i < nbrLocalDirs; i++) {
+			subdirFile = new File(localFile, subdirName + i);
+			subdirFile.mkdirs();
+		}
+		
+		
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
+		IRODSFileFactory irodsFileFactory = irodsFileSystem
+				.getIRODSFileFactory(irodsAccount);
+		IRODSFile destFile = irodsFileFactory
+				.instanceIRODSFile(irodsCollectionRootAbsolutePath);
+		DataTransferOperations dataTransferOperationsAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataTransferOperations(
+						irodsAccount);
+
+		dataTransferOperationsAO.putOperation(localFile, destFile, null, null);
+
+		// now zap the last local dir
+		File[] localFiles = localFile.listFiles();
+		
+		File lastFile = localFiles[localFiles.length -1];
+		lastFile.delete();
+
+		String targetIrodsAbsolutePath = irodsCollectionRootAbsolutePath + "/"
+				+ rootCollection;
+
+		// files now put, set up and call for the diff
+		FileTreeDiffUtility fileTreeDiffUtility = new FileTreeDiffUtilityImpl(
+				irodsAccount, irodsFileSystem.getIRODSAccessObjectFactory());
+		FileTreeModel diffModel = fileTreeDiffUtility.generateDiffLocalToIRODS(
+				localFile, targetIrodsAbsolutePath, 0);
+		irodsFileSystem.close();
+		Assert.assertNotNull("null diffModel", diffModel);
+		
+		List<FileTreeDiffEntry> diffEntriesFound = new ArrayList<FileTreeDiffEntry>();
+
+		descendModelAndFindTheDiff(DiffType.RIGHT_HAND_PLUS, (FileTreeNode) diffModel.getRoot(), diffEntriesFound);
+		TestCase.assertEquals("wrong number of cached diffs", 1, diffEntriesFound.size());
+		
 	}
 
 	@Test
@@ -803,7 +925,7 @@ public class FileTreeDiffUtilityTest {
 		}
 	}
 	
-	private int descendModelAndFindTheDiff(final String diffFileName, final DiffType expectedDiffType, final FileTreeNode node, final List<FileTreeDiffEntry> diffEntries) {
+	private int descendModelAndFindTheDiff(final DiffType expectedDiffType, final FileTreeNode node, final List<FileTreeDiffEntry> diffEntries) {
 		
 		int diffsFound = 0;
 		FileTreeDiffEntry diffEntry = (FileTreeDiffEntry) node.getUserObject();
@@ -813,12 +935,14 @@ public class FileTreeDiffUtilityTest {
 		
 		if (diffEntry.getDiffType() != DiffType.DIRECTORY_NO_DIFF) {
 			diffEntries.add(diffEntry);
+
 		}
 		
+		@SuppressWarnings("rawtypes")
 		Enumeration children = node.children();
 		
 		while (children.hasMoreElements()) {
-			diffsFound += descendModelAndFindTheDiff(diffFileName, expectedDiffType, (FileTreeNode) children.nextElement(), diffEntries);
+			diffsFound += descendModelAndFindTheDiff(expectedDiffType, (FileTreeNode) children.nextElement(), diffEntries);
 		}
 		
 		return diffsFound;
@@ -895,7 +1019,7 @@ public class FileTreeDiffUtilityTest {
 		File localFile = new File(localCollectionAbsolutePath);
 
 		dataTransferOperationsAO.putOperation(localFile, destFile, null, null);
-		
+		long timestampToUse = new Date().getTime();
 		Thread.sleep(3000);
 
 		// navigate down a couple of levels and put a file somewhere
@@ -919,7 +1043,7 @@ public class FileTreeDiffUtilityTest {
 		// files now put, set up and call for the diff
 		FileTreeDiffUtility fileTreeDiffUtility = new FileTreeDiffUtilityImpl(
 				irodsAccount, irodsFileSystem.getIRODSAccessObjectFactory());
-		long timestampToUse = destFile.lastModified();
+		
 
 		FileTreeModel diffModel = fileTreeDiffUtility.generateDiffLocalToIRODS(
 				localFileRoot, targetIrodsAbsolutePath,
@@ -927,16 +1051,239 @@ public class FileTreeDiffUtilityTest {
 		irodsFileSystem.close();
 		Assert.assertNotNull("null diffModel", diffModel);
 		FileTreeNode fileTreeNode = (FileTreeNode) diffModel.getRoot();
-		FileTreeDiffEntry fileTreeDiffEntry = (FileTreeDiffEntry) fileTreeNode
-				.getUserObject();
-		
 		List<FileTreeDiffEntry> diffEntriesFound = new ArrayList<FileTreeDiffEntry>();
 		
-		int ctr = descendModelAndFindTheDiff("newChild", DiffType.LEFT_HAND_PLUS, fileTreeNode, diffEntriesFound);
+		int ctr = descendModelAndFindTheDiff(DiffType.LEFT_HAND_PLUS, fileTreeNode, diffEntriesFound);
 		TestCase.assertEquals("wrong number of cached diffs", 1, diffEntriesFound.size());
 		TestCase.assertEquals("should have just 1 diff", 1, ctr);
 		TestCase.assertEquals("wrong diff type", DiffType.LEFT_HAND_PLUS, diffEntriesFound.get(0).getDiffType());
 		TestCase.assertEquals("unexpectedFileName",newChildFileName, diffEntriesFound.get(0).getCollectionAndDataObjectListingEntry().getPathOrName());
+	}
+	
+	@Test
+	public void testFileTreeDiffLocalPlusOneDirModifiedAfterLastSynch()
+			throws Exception {
+
+		String rootCollection = "testFileTreeDiffLocalPlusOneDirModifiedAfterLastSynch";
+		String newChildFileName = "newChild";
+
+		String localCollectionAbsolutePath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH
+						+ '/' + rootCollection);
+
+		String irodsCollectionRootAbsolutePath = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		FileGenerator
+				.generateManyFilesAndCollectionsInParentCollectionByAbsolutePath(
+						localCollectionAbsolutePath,
+						"testFileTreeDiffLocalPlusOneDirModifiedAfterLastSynch",
+						2, 3, 2, "testFile", ".txt", 3, 2, 1, 2);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
+		IRODSFileFactory irodsFileFactory = irodsFileSystem
+				.getIRODSFileFactory(irodsAccount);
+		IRODSFile destFile = irodsFileFactory
+				.instanceIRODSFile(irodsCollectionRootAbsolutePath);
+		DataTransferOperations dataTransferOperationsAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataTransferOperations(
+						irodsAccount);
+
+		File localFile = new File(localCollectionAbsolutePath);
+
+		dataTransferOperationsAO.putOperation(localFile, destFile, null, null);
+		long timestampToUse = new Date().getTime();
+
+		Thread.sleep(3000);
+
+		// navigate down a couple of levels and put a dir somewhere
+		localFile = new File(localFile
+				.getAbsolutePath());
+		File[] children = localFile.listFiles();
+		File newChildOfChild = null;
+		if (children.length > 1) {
+			File childFile = children[0];
+			newChildOfChild =new File(
+					childFile.getAbsolutePath(), newChildFileName);
+			newChildOfChild.mkdirs();
+		} else {
+			Assert.fail("test setup failed, no children");
+		}
+
+		File localFileRoot = new File(localCollectionAbsolutePath);
+		String targetIrodsAbsolutePath = irodsCollectionRootAbsolutePath + "/"
+				+ rootCollection;
+
+		// files now put, set up and call for the diff
+		FileTreeDiffUtility fileTreeDiffUtility = new FileTreeDiffUtilityImpl(
+				irodsAccount, irodsFileSystem.getIRODSAccessObjectFactory());
+		
+		FileTreeModel diffModel = fileTreeDiffUtility.generateDiffLocalToIRODS(
+				localFileRoot, targetIrodsAbsolutePath,
+				timestampToUse);
+		irodsFileSystem.close();
+		Assert.assertNotNull("null diffModel", diffModel);
+		FileTreeNode fileTreeNode = (FileTreeNode) diffModel.getRoot();
+		List<FileTreeDiffEntry> diffEntriesFound = new ArrayList<FileTreeDiffEntry>();
+		
+		int ctr = descendModelAndFindTheDiff(DiffType.LEFT_HAND_PLUS, fileTreeNode, diffEntriesFound);
+		TestCase.assertEquals("wrong number of cached diffs", 1, diffEntriesFound.size());
+		TestCase.assertEquals("should have just 1 diff", 1, ctr);
+		TestCase.assertEquals("wrong diff type", DiffType.LEFT_HAND_PLUS, diffEntriesFound.get(0).getDiffType());
+		TestCase.assertEquals("unexpectedFileName",newChildFileName, diffEntriesFound.get(0).getCollectionAndDataObjectListingEntry().getLastPathComponentForCollectionName());
+	}
+	
+	@Test
+	public void testFileTreeDiffLocalPlusOneFileModifiedBeforeLastSynch()
+			throws Exception {
+
+		String rootCollection = "testFileTreeDiffLocalPlusOneFileModifiedBeforeLastSynch";
+		String newChildFileName = "newChild.txt";
+
+		String localCollectionAbsolutePath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH
+						+ '/' + rootCollection);
+
+		String irodsCollectionRootAbsolutePath = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		FileGenerator
+				.generateManyFilesAndCollectionsInParentCollectionByAbsolutePath(
+						localCollectionAbsolutePath,
+						"testFileTreeDiffLocalPlusOneFileModifiedBeforeLastSynchSd",
+						2, 3, 2, "testFile", ".txt", 3, 2, 1, 2);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
+		IRODSFileFactory irodsFileFactory = irodsFileSystem
+				.getIRODSFileFactory(irodsAccount);
+		IRODSFile destFile = irodsFileFactory
+				.instanceIRODSFile(irodsCollectionRootAbsolutePath);
+		DataTransferOperations dataTransferOperationsAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataTransferOperations(
+						irodsAccount);
+
+		File localFile = new File(localCollectionAbsolutePath);
+
+		dataTransferOperationsAO.putOperation(localFile, destFile, null, null);
+	
+		// navigate down a couple of levels and put a file somewhere
+		localFile = new File(localFile
+				.getAbsolutePath());
+		File[] children = localFile.listFiles();
+		File newChildOfChild = null;
+		if (children.length > 1) {
+			File childFile = children[0];
+			newChildOfChild =new File(
+					childFile.getAbsolutePath(), newChildFileName);
+			newChildOfChild.createNewFile();
+		} else {
+			Assert.fail("test setup failed, no children");
+		}
+		
+		long timestampToUse = new Date().getTime();
+
+		File localFileRoot = new File(localCollectionAbsolutePath);
+		String targetIrodsAbsolutePath = irodsCollectionRootAbsolutePath + "/"
+				+ rootCollection;
+
+		// files now put, set up and call for the diff
+		FileTreeDiffUtility fileTreeDiffUtility = new FileTreeDiffUtilityImpl(
+				irodsAccount, irodsFileSystem.getIRODSAccessObjectFactory());
+		
+
+		FileTreeModel diffModel = fileTreeDiffUtility.generateDiffLocalToIRODS(
+				localFileRoot, targetIrodsAbsolutePath,
+				timestampToUse);
+		irodsFileSystem.close();
+		Assert.assertNotNull("null diffModel", diffModel);
+		FileTreeNode fileTreeNode = (FileTreeNode) diffModel.getRoot();
+		List<FileTreeDiffEntry> diffEntriesFound = new ArrayList<FileTreeDiffEntry>();
+		
+		descendModelAndFindTheDiff(DiffType.LEFT_HAND_PLUS, fileTreeNode, diffEntriesFound);
+		TestCase.assertEquals("should have no cached diffs", 0, diffEntriesFound.size());
+		
+	}
+	
+	@Test
+	public void testFileTreeDiffLocalPlusOneDirModifiedBeforeLastSynch()
+			throws Exception {
+
+		String rootCollection = "testFileTreeDiffLocalPlusOneDirModifiedBeforeLastSynch";
+		String newChildFileName = "newChild";
+
+		String localCollectionAbsolutePath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH
+						+ '/' + rootCollection);
+
+		String irodsCollectionRootAbsolutePath = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		FileGenerator
+				.generateManyFilesAndCollectionsInParentCollectionByAbsolutePath(
+						localCollectionAbsolutePath,
+						"testFileTreeDiffLocalPlusOneDirModifiedBeforeLastSynch",
+						2, 3, 2, "testFile", ".txt", 3, 2, 1, 2);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
+		IRODSFileFactory irodsFileFactory = irodsFileSystem
+				.getIRODSFileFactory(irodsAccount);
+		IRODSFile destFile = irodsFileFactory
+				.instanceIRODSFile(irodsCollectionRootAbsolutePath);
+		DataTransferOperations dataTransferOperationsAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataTransferOperations(
+						irodsAccount);
+
+		File localFile = new File(localCollectionAbsolutePath);
+
+		dataTransferOperationsAO.putOperation(localFile, destFile, null, null);
+		
+		// navigate down a couple of levels and put a dir somewhere
+		localFile = new File(localFile
+				.getAbsolutePath());
+		File[] children = localFile.listFiles();
+		File newChildOfChild = null;
+		if (children.length > 1) {
+			File childFile = children[0];
+			newChildOfChild =new File(
+					childFile.getAbsolutePath(), newChildFileName);
+			newChildOfChild.mkdirs();
+		} else {
+			Assert.fail("test setup failed, no children");
+		}
+
+		long timestampToUse = new Date().getTime();
+
+		File localFileRoot = new File(localCollectionAbsolutePath);
+		String targetIrodsAbsolutePath = irodsCollectionRootAbsolutePath + "/"
+				+ rootCollection;
+
+		// files now put, set up and call for the diff
+		FileTreeDiffUtility fileTreeDiffUtility = new FileTreeDiffUtilityImpl(
+				irodsAccount, irodsFileSystem.getIRODSAccessObjectFactory());
+
+		FileTreeModel diffModel = fileTreeDiffUtility.generateDiffLocalToIRODS(
+				localFileRoot, targetIrodsAbsolutePath,
+				timestampToUse);
+		irodsFileSystem.close();
+		Assert.assertNotNull("null diffModel", diffModel);
+		FileTreeNode fileTreeNode = (FileTreeNode) diffModel.getRoot();
+		List<FileTreeDiffEntry> diffEntriesFound = new ArrayList<FileTreeDiffEntry>();
+		
+		descendModelAndFindTheDiff(DiffType.LEFT_HAND_PLUS, fileTreeNode, diffEntriesFound);
+		TestCase.assertEquals("should have no cached diffs", 0, diffEntriesFound.size());
+		
 	}
 	
 

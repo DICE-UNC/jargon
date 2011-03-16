@@ -695,7 +695,7 @@ public final class DataObjectAOImpl extends IRODSGenericAO implements
 			JargonException {
 
 		if (avuQuery == null) {
-			throw new JargonException("null query");
+			throw new IllegalArgumentException("null query");
 		}
 
 		if (dataObjectCollectionAbsPath == null
@@ -1270,9 +1270,33 @@ public final class DataObjectAOImpl extends IRODSGenericAO implements
 			final String dataObjectCollectionAbsPath,
 			final String dataObjectFileName) throws JargonQueryException,
 			JargonException {
+		
+		// contract checks in delegated method
+		
 		List<AVUQueryElement> queryElements = new ArrayList<AVUQueryElement>();
 		return this.findMetadataValuesForDataObjectUsingAVUQuery(queryElements,
 				dataObjectCollectionAbsPath, dataObjectFileName);
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.core.pub.DataObjectAO#findMetadataValuesForDataObject(org.irods.jargon.core.pub.io.IRODSFile)
+	 */
+	@Override
+	public List<MetaDataAndDomainData> findMetadataValuesForDataObject(
+			final IRODSFile irodsFile) throws JargonException {
+		
+		if (irodsFile == null) {
+			throw new IllegalArgumentException("null irodsFile");
+		}
+		
+		List<AVUQueryElement> queryElements = new ArrayList<AVUQueryElement>();
+		try {
+			return this.findMetadataValuesForDataObjectUsingAVUQuery(queryElements,
+					irodsFile.getParent(), irodsFile.getName());
+		} catch (JargonQueryException e) {
+			log.error("query exception rethrown as Jargon Exception", e);
+			throw new JargonException(e);
+		}
 	}
 
 	/*

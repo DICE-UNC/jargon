@@ -531,4 +531,14 @@ public interface DataObjectAO extends IRODSAccessObject {
 	List<UserFilePermission> listPermissionsForDataObject(
 			String irodsDataObjectAbsolutePath) throws JargonException;
 
+	/**
+	 * List the AVU metadata associated with this irods data object.
+	 * @param irodsFile {@link IRODSfile} that points to the data object whose metadata will be retrieved
+	  * @return <code>List</code> of
+	 *         {@link org.irods.jargon.core.query.MetaDataAndDomainData}
+	 * @throws JargonException
+	 */
+	List<MetaDataAndDomainData> findMetadataValuesForDataObject(
+			IRODSFile irodsFile) throws JargonException;
+
 }

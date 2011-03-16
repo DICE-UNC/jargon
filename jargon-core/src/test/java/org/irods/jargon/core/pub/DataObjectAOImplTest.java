@@ -40,6 +40,7 @@ import org.irods.jargon.testutils.icommandinvoke.icommands.ImetaCommand.MetaObje
 import org.irods.jargon.testutils.icommandinvoke.icommands.ImetaRemoveCommand;
 import org.irods.jargon.testutils.icommandinvoke.icommands.IputCommand;
 import org.irods.jargon.testutils.icommandinvoke.icommands.IrmCommand;
+import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -52,6 +53,7 @@ public class DataObjectAOImplTest {
 	public static final String IRODS_TEST_SUBDIR_PATH = "dataObjectAOImplTest";
 	private static IRODSTestSetupUtilities irodsTestSetupUtilities = null;
 	private static AssertionHelper assertionHelper = null;
+	private static IRODSFileSystem irodsFileSystem;
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -65,6 +67,12 @@ public class DataObjectAOImplTest {
 		irodsTestSetupUtilities
 				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
 		assertionHelper = new AssertionHelper();
+		irodsFileSystem = IRODSFileSystem.instance();
+	}
+	
+	@AfterClass
+	public static void tearDownAfterClass() throws Exception {
+		irodsFileSystem.closeAndEatExceptions();
 	}
 
 	@Test
@@ -421,7 +429,6 @@ public class DataObjectAOImplTest {
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH);
 
-		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
 
@@ -440,7 +447,6 @@ public class DataObjectAOImplTest {
 		String testFileName = null;
 
 		// now put the file
-		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
 
@@ -457,7 +463,6 @@ public class DataObjectAOImplTest {
 		String testFileName = "";
 
 		// now put the file
-		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
 
@@ -865,6 +870,75 @@ public class DataObjectAOImplTest {
 	}
 
 	@Test
+	public final void testListMetadataValuesForDataObjectAsFile()
+			throws Exception {
+		String testFileName = "testListMetadataValuesForDataObjectAsFile.dat";
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String localFileName = FileGenerator
+				.generateFileOfFixedLengthGivenName(absPath, testFileName, 100);
+
+		// put scratch file into irods in the right place on the first resource
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		DataObjectAO dataObjectAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
+		IRODSFile targetIrodsFile = irodsFileSystem.getIRODSFileFactory(
+				irodsAccount).instanceIRODSFile(
+				targetIrodsCollection + "/" + testFileName);
+
+		DataTransferOperations transfer = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataTransferOperations(
+						irodsAccount);
+		transfer.putOperation(new File(localFileName), targetIrodsFile, null,
+				null);
+
+		// initialize the AVU data
+		String expectedAttribName = "testmdattrib1file";
+		String expectedAttribValue = "testmdvalue1file";
+		String expectedAttribUnits = "test1mdunitsfile";
+		AvuData avuData = AvuData.instance(expectedAttribName,
+				expectedAttribValue, expectedAttribUnits);
+
+		dataObjectAO.deleteAVUMetadata(targetIrodsFile.getAbsolutePath(),
+				avuData);
+
+		dataObjectAO.addAVUMetadata(targetIrodsFile.getAbsolutePath(), avuData);
+
+		List<AVUQueryElement> queryElements = new ArrayList<AVUQueryElement>();
+
+		queryElements.add(AVUQueryElement.instanceForValueQuery(
+				AVUQueryElement.AVUQueryPart.ATTRIBUTE,
+				AVUQueryOperatorEnum.EQUAL, expectedAttribName));
+
+		List<MetaDataAndDomainData> result = dataObjectAO
+				.findMetadataValuesForDataObject(targetIrodsFile);
+
+		irodsFileSystem.close();
+		Assert.assertFalse("no query result returned", result.isEmpty());
+	}
+	
+	@Test(expected=IllegalArgumentException.class)
+	public final void testListMetadataValuesForDataObjectAsFileNullFile()
+			throws Exception {
+		
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		DataObjectAO dataObjectAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
+		
+
+		List<MetaDataAndDomainData> result = dataObjectAO
+				.findMetadataValuesForDataObject(null);
+
+	}
+
+	@Test
 	public final void testFindMetadataValuesByMetadataQuery() throws Exception {
 		String testFileName = "testFindMetadataValuesByMetadataQuery.csv";
 		String absPath = scratchFileUtils
@@ -988,7 +1062,6 @@ public class DataObjectAOImplTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
 		DataObjectAO dataObjectAO = irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
 
@@ -1057,7 +1130,6 @@ public class DataObjectAOImplTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
 		DataObjectAO dataObjectAO = irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
 
@@ -1101,7 +1173,6 @@ public class DataObjectAOImplTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
 		DataObjectAO dataObjectAO = irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
 		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
@@ -1136,7 +1207,6 @@ public class DataObjectAOImplTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
 		DataObjectAO dataObjectAO = irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
 		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
@@ -1178,7 +1248,6 @@ public class DataObjectAOImplTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
 		DataObjectAO dataObjectAO = irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
 		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
@@ -1253,7 +1322,6 @@ public class DataObjectAOImplTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
 		DataObjectAO dataObjectAO = irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
 
@@ -1314,7 +1382,6 @@ public class DataObjectAOImplTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
 		DataObjectAO dataObjectAO = irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
 		IRODSFile testFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
@@ -1378,7 +1445,6 @@ public class DataObjectAOImplTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
 		DataObjectAO dataObjectAO = irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
 		dataObjectAO
@@ -1424,7 +1490,6 @@ public class DataObjectAOImplTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
 		IRODSFile targetIrodsFile = irodsFileSystem.getIRODSFileFactory(
 				irodsAccount).instanceIRODSFile(targetIrodsCollection);
 		DataTransferOperations dataTransferOperationsAO = irodsFileSystem
@@ -1470,7 +1535,6 @@ public class DataObjectAOImplTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
 		IRODSFile targetIrodsFile = irodsFileSystem.getIRODSFileFactory(
 				irodsAccount).instanceIRODSFile(targetIrodsCollection);
 		DataTransferOperations dataTransferOperationsAO = irodsFileSystem
@@ -1516,7 +1580,6 @@ public class DataObjectAOImplTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
 		DataObjectAO dataObjectAO = irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
 		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
@@ -1555,7 +1618,6 @@ public class DataObjectAOImplTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
 		DataObjectAO dataObjectAO = irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
 		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
@@ -1594,7 +1656,6 @@ public class DataObjectAOImplTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
 		DataObjectAO dataObjectAO = irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
 		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
@@ -1640,7 +1701,6 @@ public class DataObjectAOImplTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
 		DataObjectAO dataObjectAO = irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
 		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
@@ -1688,7 +1748,6 @@ public class DataObjectAOImplTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
 		DataObjectAO dataObjectAO = irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
 		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
@@ -1723,7 +1782,7 @@ public class DataObjectAOImplTest {
 		irodsFileSystem.close();
 
 	}
-	
+
 	@Test
 	public final void testListPermissionsForDataObject() throws Exception {
 		// generate a local scratch file
@@ -1740,7 +1799,6 @@ public class DataObjectAOImplTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
 		DataObjectAO dataObjectAO = irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
 		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
@@ -1752,13 +1810,16 @@ public class DataObjectAOImplTest {
 				+ testFileName, testingProperties
 				.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY));
 
-		List<UserFilePermission> userFilePermissions = dataObjectAO.listPermissionsForDataObject(targetIrodsCollection + "/" + testFileName);
-		TestCase.assertNotNull("got a null userFilePermissions", userFilePermissions);
-		TestCase.assertEquals("did not find the two permissions", 2, userFilePermissions.size());
+		List<UserFilePermission> userFilePermissions = dataObjectAO
+				.listPermissionsForDataObject(targetIrodsCollection + "/"
+						+ testFileName);
+		TestCase.assertNotNull("got a null userFilePermissions",
+				userFilePermissions);
+		TestCase.assertEquals("did not find the two permissions", 2,
+				userFilePermissions.size());
 
 		irodsFileSystem.close();
 
 	}
-
 
 }

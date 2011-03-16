@@ -150,9 +150,11 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 	@Override
 	public int getFilePermissions(final IRODSFile irodsFile)
 			throws JargonException {
+		
 		if (irodsFile == null) {
 			throw new JargonException("irods file is null");
 		}
+		
 		if (log.isInfoEnabled()) {
 			log.info("checking permissions on:" + irodsFile);
 		}

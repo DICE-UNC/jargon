@@ -289,14 +289,18 @@ public class FileTreeDiffUtilityImpl implements FileTreeDiffUtility {
 
 		int lhMatchOrPass;
 		int j = 0;
+		int i = 0;
 		// first compare files (platform by platform the ordering may be
 		// different iRODS vs. local)
 		// use the lhs as the point of ref, ping each child and do a match/merge
 		// w/rhs
-		for (File element : lhsChildren) {
-			if (!element.isFile()) {
+		File lhsFile = null;
+		for (i = 0; i < lhsChildren.length; i++) {
+			lhsFile = lhsChildren[i];
+			if (!lhsFile.isFile()) {
 				continue;
 			}
+			
 			while (j < rhsChildren.length) {
 
 				if (!rhsChildren[j].isFile()) {
@@ -304,7 +308,7 @@ public class FileTreeDiffUtilityImpl implements FileTreeDiffUtility {
 					continue;
 				}
 
-				lhMatchOrPass = diffTwoFiles(parentNode, element,
+				lhMatchOrPass = diffTwoFiles(parentNode, lhsFile,
 						leftHandSideRootPath, rhsChildren[j],
 						rightHandSideRootPath,
 						timestampForIrodsFileThatIndicatesThatTheFileHasChanged);
@@ -322,6 +326,24 @@ public class FileTreeDiffUtilityImpl implements FileTreeDiffUtility {
 					break;
 				}
 			}
+		}
+		
+		/*
+		 * the match is driven by the lhs file.  Once I've exhausted those, I need to see if any unmatched rhs files exist
+		 */
+		
+		File rhsFile;
+		
+		for(; j < rhsChildren.length; j++) {
+			rhsFile = rhsChildren[j];
+			if (!rhsFile.isFile()) {
+				continue;
+			}
+			
+			log.debug("unaccounted for rhs file: {}", rhsFile.getAbsolutePath());
+			FileTreeDiffEntry entry = buildFileTreeDiffEntryForFile(
+					rhsFile, DiffType.RIGHT_HAND_PLUS, 0, 0);
+			currentFileTreeNode.add(new FileTreeNode(entry));
 		}
 
 		j = 0;
@@ -359,6 +381,23 @@ public class FileTreeDiffUtilityImpl implements FileTreeDiffUtility {
 				}
 			}
 		}
+		
+		/*
+		 * the match is driven by the lhs file.  Once I've exhausted those, I need to see if any unmatched rhs collections exist
+		 */
+		
+		
+		for(; j < rhsChildren.length; j++) {
+			rhsFile = rhsChildren[j];
+			if (rhsFile.isFile()) {
+				continue;
+			}
+			
+			log.debug("unaccounted for rhs collection: {}", rhsFile.getAbsolutePath());
+			FileTreeDiffEntry entry = buildFileTreeDiffEntryForFile(
+					rhsFile, DiffType.RIGHT_HAND_PLUS, 0, 0);
+			currentFileTreeNode.add(new FileTreeNode(entry));
+		}
 	}
 
 	/**
@@ -380,7 +419,7 @@ public class FileTreeDiffUtilityImpl implements FileTreeDiffUtility {
 			log.debug("comparing files without a last synch, use existing last mod data");
 		} else {
 
-			log.debug("checking file timestamp against cutoff");
+			log.debug("checking file timestamp against cutoff:{}", timestampForIrodsFileThatIndicatesThatTheFileHasChanged);
 			/*
 			 * I have a timestamp that is a cut-off for the irods file. If the
 			 * local file or iRODS file has changed since that timestamp, then a
@@ -392,12 +431,16 @@ public class FileTreeDiffUtilityImpl implements FileTreeDiffUtility {
 						leftHandSide, rightHandSide);
 			} else if (leftHandSide.lastModified() > timestampForIrodsFileThatIndicatesThatTheFileHasChanged) {
 				log.debug("left hand side file has been modified");
+				log.debug("   rhs ts:{}", rightHandSide.lastModified());
+				log.debug("   lhs ts:{}", leftHandSide.lastModified());
 				FileTreeDiffEntry entry = buildFileTreeDiffEntryForFile(
 						leftHandSide, DiffType.LEFT_HAND_NEWER,
 						rightHandSide.length(), rightHandSide.lastModified());
 				currentFileTreeNode.add(new FileTreeNode(entry));
 			} else if (rightHandSide.lastModified() > timestampForIrodsFileThatIndicatesThatTheFileHasChanged) {
 				log.debug("right hand side file has been modified");
+				log.debug("   rhs ts:{}", rightHandSide.lastModified());
+				log.debug("   lhs ts:{}", leftHandSide.lastModified());
 				FileTreeDiffEntry entry = buildFileTreeDiffEntryForFile(
 						rightHandSide, DiffType.RIGHT_HAND_NEWER,
 						leftHandSide.length(), leftHandSide.lastModified());
