@@ -170,38 +170,48 @@ public class SynchronizeProcessorImpl implements SynchronizeProcessor {
 					.getFormattedAbsolutePath());
 			scheduleIrodsToLocal(diffNode, localRootAbsolutePath,
 					irodsRootAbsolutePath);
-		} else if (fileTreeDiffEntry.getDiffType() == DiffType.FILE_OUT_OF_SYNCH) {
-			log.debug("irods file is new directory {}", fileTreeDiffEntry
+		} else if (fileTreeDiffEntry.getDiffType() == DiffType.LEFT_HAND_NEWER) {
+			log.debug("left hand file is newer than irods{}", fileTreeDiffEntry
 					.getCollectionAndDataObjectListingEntry()
 					.getFormattedAbsolutePath());
-			processOutOfSynchOfFile(diffNode, localRootAbsolutePath,
+			scheduleLocalToIrods(diffNode, localRootAbsolutePath,
 					irodsRootAbsolutePath);
-		} else if (fileTreeDiffEntry.getDiffType() == DiffType.FILE_NAME_DIR_NAME_COLLISION) {
-			log.warn("file directory/name collision on:{}", fileTreeDiffEntry
+		} else if (fileTreeDiffEntry.getDiffType() == DiffType.RIGHT_HAND_NEWER) {
+			log.debug("irods files is newer than left hand side {}", fileTreeDiffEntry
 					.getCollectionAndDataObjectListingEntry()
 					.getFormattedAbsolutePath());
-			// TODO: figure out the disposition of this type of error. should
-			// this go back to the user in the transfer
-			// panel?
+			scheduleIrodsToLocal(diffNode, localRootAbsolutePath,
+					irodsRootAbsolutePath);
 		} else {
-			log.error("unknown diff type:{}", fileTreeDiffEntry);
-			throw new JargonException("unknown diff type");
+			log.warn("unknown diff type:{}", fileTreeDiffEntry);
 		}
-
-	}
-
-	private void processOutOfSynchOfFile(final FileTreeNode diffNode,
-			final String localRootAbsolutePath,
-			final String irodsRootAbsolutePath) {
-		// TODO Auto-generated method stub
 
 	}
 
 	private void scheduleIrodsToLocal(final FileTreeNode diffNode,
 			final String localRootAbsolutePath,
-			final String irodsRootAbsolutePath) {
-		// TODO Auto-generated method stub
+			final String irodsRootAbsolutePath)  throws JargonException {
+		
+		/*
+		 * the diff node will have the absolute local path of the file, this is
+		 * the source of the put. the iRODS path will be the local path minus
+		 * the local root, appended to the iRODS root
+		 */
 
+		FileTreeDiffEntry fileTreeDiffEntry = (FileTreeDiffEntry) diffNode
+				.getUserObject();
+		CollectionAndDataObjectListingEntry entry = fileTreeDiffEntry
+				.getCollectionAndDataObjectListingEntry();
+		String targetRelativePath = entry.getFormattedAbsolutePath().substring(
+				irodsRootAbsolutePath.length());
+		StringBuilder sb = new StringBuilder(localRootAbsolutePath);
+		sb.append(targetRelativePath);
+
+		log.info("enqueueing a put to irods under target at:{}",
+				targetRelativePath);
+		transferManager.enqueueAGet(entry.getFormattedAbsolutePath(),
+				sb.toString(), irodsAccount.getDefaultStorageResource(),
+				irodsAccount);
 	}
 
 	/**
@@ -216,9 +226,9 @@ public class SynchronizeProcessorImpl implements SynchronizeProcessor {
 			final String localRootAbsolutePath,
 			final String irodsRootAbsolutePath) throws JargonException {
 		/*
-		 * the diff node will have the absolute local path of the file, this is
-		 * the source of the put. the iRODS path will be the local path minus
-		 * the local root, appended to the iRODS root
+		 * the diff node will have the absolute path of the irods file file, this is
+		 * the source of the put. the local path will be the irods path minus
+		 * the irods root, appended to the local root
 		 */
 
 		FileTreeDiffEntry fileTreeDiffEntry = (FileTreeDiffEntry) diffNode

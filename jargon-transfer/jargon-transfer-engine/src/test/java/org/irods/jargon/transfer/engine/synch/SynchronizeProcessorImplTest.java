@@ -17,11 +17,9 @@ import org.irods.jargon.datautils.tree.FileTreeModel;
 import org.irods.jargon.datautils.tree.FileTreeNode;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.irods.jargon.transfer.engine.TransferManager;
-import org.irods.jargon.transfer.engine.TransferManagerImpl;
 import org.irods.jargon.transfer.synch.SynchronizeProcessor;
 import org.irods.jargon.transfer.synch.SynchronizeProcessorImpl;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Matchers;
 import org.mockito.Mockito;
@@ -74,7 +72,7 @@ public class SynchronizeProcessorImplTest {
 		synchProcessor.setIrodsAccount(irodsAccount);
 		synchProcessor.setTransferManager(transferManager);
 		synchProcessor.setFileTreeDiffUtility(fileTreeDiffUtility);
-		synchProcessor.synchronizeLocalToIRODS("name", "path", "path", 0,0);
+		synchProcessor.synchronizeLocalToIRODS("name", "path", "path", 0, 0);
 		// just looking for no errors here
 		Assert.assertTrue(true);
 	}
@@ -87,14 +85,13 @@ public class SynchronizeProcessorImplTest {
 		IRODSAccessObjectFactory irodsAccessObjectFactory = null;
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		TransferManager transferManager = Mockito
-				.mock(TransferManager.class);
+		TransferManager transferManager = Mockito.mock(TransferManager.class);
 		SynchronizeProcessor synchProcessor = new SynchronizeProcessorImpl();
 		synchProcessor.setIrodsAccessObjectFactory(irodsAccessObjectFactory);
 		synchProcessor.setIrodsAccount(irodsAccount);
 		synchProcessor.setTransferManager(transferManager);
 		synchProcessor.setFileTreeDiffUtility(fileTreeDiffUtility);
-		synchProcessor.synchronizeLocalToIRODS("name", "path", "path", 0,0);
+		synchProcessor.synchronizeLocalToIRODS("name", "path", "path", 0, 0);
 
 	}
 
@@ -105,14 +102,13 @@ public class SynchronizeProcessorImplTest {
 				.mock(IRODSAccessObjectFactory.class);
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		TransferManager transferManager = Mockito
-				.mock(TransferManager.class);
+		TransferManager transferManager = Mockito.mock(TransferManager.class);
 		SynchronizeProcessor synchProcessor = new SynchronizeProcessorImpl();
 		synchProcessor.setIrodsAccessObjectFactory(irodsAccessObjectFactory);
 		synchProcessor.setIrodsAccount(irodsAccount);
 		synchProcessor.setTransferManager(transferManager);
 		synchProcessor.setFileTreeDiffUtility(fileTreeDiffUtility);
-		synchProcessor.synchronizeLocalToIRODS("name", "path", "path", 0,0);
+		synchProcessor.synchronizeLocalToIRODS("name", "path", "path", 0, 0);
 
 	}
 
@@ -124,8 +120,7 @@ public class SynchronizeProcessorImplTest {
 				.mock(IRODSAccessObjectFactory.class);
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		TransferManager transferManager = Mockito
-				.mock(TransferManager.class);
+		TransferManager transferManager = Mockito.mock(TransferManager.class);
 		SynchronizeProcessor synchProcessor = new SynchronizeProcessorImpl();
 		synchProcessor.setIrodsAccessObjectFactory(irodsAccessObjectFactory);
 		synchProcessor.setIrodsAccount(irodsAccount);
@@ -142,14 +137,13 @@ public class SynchronizeProcessorImplTest {
 				.mock(IRODSAccessObjectFactory.class);
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		TransferManager transferManager = Mockito
-				.mock(TransferManager.class);
+		TransferManager transferManager = Mockito.mock(TransferManager.class);
 		SynchronizeProcessor synchProcessor = new SynchronizeProcessorImpl();
 		synchProcessor.setIrodsAccessObjectFactory(irodsAccessObjectFactory);
 		synchProcessor.setIrodsAccount(irodsAccount);
 		synchProcessor.setTransferManager(transferManager);
 		synchProcessor.setFileTreeDiffUtility(fileTreeDiffUtility);
-		synchProcessor.synchronizeLocalToIRODS(null, "path", "path",0, 0);
+		synchProcessor.synchronizeLocalToIRODS(null, "path", "path", 0, 0);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
@@ -160,14 +154,13 @@ public class SynchronizeProcessorImplTest {
 				.mock(IRODSAccessObjectFactory.class);
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		TransferManager transferManager = Mockito
-				.mock(TransferManager.class);
+		TransferManager transferManager = Mockito.mock(TransferManager.class);
 		SynchronizeProcessor synchProcessor = new SynchronizeProcessorImpl();
 		synchProcessor.setIrodsAccessObjectFactory(irodsAccessObjectFactory);
 		synchProcessor.setIrodsAccount(irodsAccount);
 		synchProcessor.setTransferManager(transferManager);
 		synchProcessor.setFileTreeDiffUtility(fileTreeDiffUtility);
-		synchProcessor.synchronizeLocalToIRODS("device", "", "path",0, 0);
+		synchProcessor.synchronizeLocalToIRODS("device", "", "path", 0, 0);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
@@ -178,14 +171,13 @@ public class SynchronizeProcessorImplTest {
 				.mock(IRODSAccessObjectFactory.class);
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		TransferManager transferManager = Mockito
-				.mock(TransferManager.class);
+		TransferManager transferManager = Mockito.mock(TransferManager.class);
 		SynchronizeProcessor synchProcessor = new SynchronizeProcessorImpl();
 		synchProcessor.setIrodsAccessObjectFactory(irodsAccessObjectFactory);
 		synchProcessor.setIrodsAccount(irodsAccount);
 		synchProcessor.setTransferManager(transferManager);
 		synchProcessor.setFileTreeDiffUtility(fileTreeDiffUtility);
-		synchProcessor.synchronizeLocalToIRODS("device", null, "path",0, 0);
+		synchProcessor.synchronizeLocalToIRODS("device", null, "path", 0, 0);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
@@ -196,14 +188,13 @@ public class SynchronizeProcessorImplTest {
 				.mock(IRODSAccessObjectFactory.class);
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		TransferManager transferManager = Mockito
-				.mock(TransferManager.class);
+		TransferManager transferManager = Mockito.mock(TransferManager.class);
 		SynchronizeProcessor synchProcessor = new SynchronizeProcessorImpl();
 		synchProcessor.setIrodsAccessObjectFactory(irodsAccessObjectFactory);
 		synchProcessor.setIrodsAccount(irodsAccount);
 		synchProcessor.setTransferManager(transferManager);
 		synchProcessor.setFileTreeDiffUtility(fileTreeDiffUtility);
-		synchProcessor.synchronizeLocalToIRODS("device", "local", "",0, 0);
+		synchProcessor.synchronizeLocalToIRODS("device", "local", "", 0, 0);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
@@ -214,14 +205,13 @@ public class SynchronizeProcessorImplTest {
 				.mock(IRODSAccessObjectFactory.class);
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		TransferManager transferManager = Mockito
-				.mock(TransferManager.class);
+		TransferManager transferManager = Mockito.mock(TransferManager.class);
 		SynchronizeProcessor synchProcessor = new SynchronizeProcessorImpl();
 		synchProcessor.setIrodsAccessObjectFactory(irodsAccessObjectFactory);
 		synchProcessor.setIrodsAccount(irodsAccount);
 		synchProcessor.setTransferManager(transferManager);
 		synchProcessor.setFileTreeDiffUtility(fileTreeDiffUtility);
-		synchProcessor.synchronizeLocalToIRODS("device", "local", null, 0,0);
+		synchProcessor.synchronizeLocalToIRODS("device", "local", null, 0, 0);
 	}
 
 	@Test(expected = JargonException.class)
@@ -232,15 +222,14 @@ public class SynchronizeProcessorImplTest {
 				.mock(IRODSAccessObjectFactory.class);
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		TransferManager transferManager = Mockito
-				.mock(TransferManager.class);
+		TransferManager transferManager = Mockito.mock(TransferManager.class);
 		SynchronizeProcessor synchProcessor = new SynchronizeProcessorImpl();
 		synchProcessor.setIrodsAccessObjectFactory(irodsAccessObjectFactory);
 		synchProcessor.setIrodsAccount(irodsAccount);
 		synchProcessor.setTransferManager(transferManager);
 		synchProcessor.setFileTreeDiffUtility(fileTreeDiffUtility);
 		synchProcessor.synchronizeLocalToIRODS("device", "/c1/c2",
-				"test1/home/theperson", 0,0);
+				"test1/home/theperson", 0, 0);
 	}
 
 	@Test
@@ -290,26 +279,231 @@ public class SynchronizeProcessorImplTest {
 		Mockito.when(
 				fileTreeDiffUtility.generateDiffLocalToIRODS(
 						(File) Matchers.any(), Matchers.anyString(),
-						Matchers.anyLong(),Matchers.anyLong())).thenReturn(fileTreeModel);
+						Matchers.anyLong(), Matchers.anyLong())).thenReturn(
+				fileTreeModel);
 
 		IRODSAccessObjectFactory irodsAccessObjectFactory = Mockito
 				.mock(IRODSAccessObjectFactory.class);
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		TransferManager transferManager = Mockito
-				.mock(TransferManager.class);
+		TransferManager transferManager = Mockito.mock(TransferManager.class);
 		SynchronizeProcessor synchProcessor = new SynchronizeProcessorImpl();
 		synchProcessor.setIrodsAccessObjectFactory(irodsAccessObjectFactory);
 		synchProcessor.setIrodsAccount(irodsAccount);
 		synchProcessor.setTransferManager(transferManager);
 		synchProcessor.setFileTreeDiffUtility(fileTreeDiffUtility);
 		synchProcessor.synchronizeLocalToIRODS("device", localRoot, irodsRoot,
-				0,0);
+				0, 0);
 
 		Mockito.verify(transferManager).enqueueAPut(localRoot + c2Name,
 				irodsRoot + c2Name, irodsAccount.getDefaultStorageResource(),
 				irodsAccount);
 	}
+	
+	@Test
+	public void testScheduleWithALocalFileNewer() throws Exception {
+
+		String localRoot = "/local/root/";
+		String irodsRoot = "/test1/home/test/";
+		String c1Name = "c1";
+		String c2Name = "c2";
+
+		FileTreeDiffUtility fileTreeDiffUtility = Mockito
+				.mock(FileTreeDiffUtility.class);
+
+		CollectionAndDataObjectListingEntry collEntry = new CollectionAndDataObjectListingEntry();
+		collEntry.setId(1);
+		collEntry.setCount(100);
+		collEntry.setObjectType(ObjectType.COLLECTION);
+		collEntry.setParentPath("/local");
+		collEntry.setPathOrName(localRoot);
+		FileTreeDiffEntry fileTreeDiffEntry = FileTreeDiffEntry.instance(
+				DiffType.DIRECTORY_NO_DIFF, collEntry);
+		FileTreeNode fileTreeNode = new FileTreeNode(fileTreeDiffEntry);
+		FileTreeModel fileTreeModel = new FileTreeModel(fileTreeNode);
+
+		// add a subdir that is ok
+		collEntry = new CollectionAndDataObjectListingEntry();
+		collEntry.setId(1);
+		collEntry.setCount(100);
+		collEntry.setObjectType(ObjectType.COLLECTION);
+		collEntry.setParentPath(localRoot);
+		collEntry.setPathOrName(localRoot + c1Name);
+		fileTreeDiffEntry = FileTreeDiffEntry.instance(
+				DiffType.DIRECTORY_NO_DIFF, collEntry);
+		fileTreeNode.add(new FileTreeNode(fileTreeDiffEntry));
+
+		// add a subdir that is left plus (new local)
+		collEntry = new CollectionAndDataObjectListingEntry();
+		collEntry.setId(1);
+		collEntry.setCount(100);
+		collEntry.setObjectType(ObjectType.COLLECTION);
+		collEntry.setParentPath(localRoot);
+		collEntry.setPathOrName(localRoot + c2Name);
+		fileTreeDiffEntry = FileTreeDiffEntry.instance(DiffType.LEFT_HAND_NEWER,
+				collEntry);
+		fileTreeNode.add(new FileTreeNode(fileTreeDiffEntry));
+
+		Mockito.when(
+				fileTreeDiffUtility.generateDiffLocalToIRODS(
+						(File) Matchers.any(), Matchers.anyString(),
+						Matchers.anyLong(), Matchers.anyLong())).thenReturn(
+				fileTreeModel);
+
+		IRODSAccessObjectFactory irodsAccessObjectFactory = Mockito
+				.mock(IRODSAccessObjectFactory.class);
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		TransferManager transferManager = Mockito.mock(TransferManager.class);
+		SynchronizeProcessor synchProcessor = new SynchronizeProcessorImpl();
+		synchProcessor.setIrodsAccessObjectFactory(irodsAccessObjectFactory);
+		synchProcessor.setIrodsAccount(irodsAccount);
+		synchProcessor.setTransferManager(transferManager);
+		synchProcessor.setFileTreeDiffUtility(fileTreeDiffUtility);
+		synchProcessor.synchronizeLocalToIRODS("device", localRoot, irodsRoot,
+				0, 0);
+
+		Mockito.verify(transferManager).enqueueAPut(localRoot + c2Name,
+				irodsRoot + c2Name, irodsAccount.getDefaultStorageResource(),
+				irodsAccount);
+	}
+	
+	@Test
+	public void testScheduleWithAnIrodsFileNewer() throws Exception {
+
+		String localRoot = "/local/root/";
+		String irodsRoot = "/test1/home/test/";
+		String c1Name = "c1";
+		String c2Name = "c2";
+
+		FileTreeDiffUtility fileTreeDiffUtility = Mockito
+				.mock(FileTreeDiffUtility.class);
+
+		CollectionAndDataObjectListingEntry collEntry = new CollectionAndDataObjectListingEntry();
+		collEntry.setId(1);
+		collEntry.setCount(100);
+		collEntry.setObjectType(ObjectType.COLLECTION);
+		collEntry.setParentPath("/local");
+		collEntry.setPathOrName(localRoot);
+		FileTreeDiffEntry fileTreeDiffEntry = FileTreeDiffEntry.instance(
+				DiffType.DIRECTORY_NO_DIFF, collEntry);
+		FileTreeNode fileTreeNode = new FileTreeNode(fileTreeDiffEntry);
+		FileTreeModel fileTreeModel = new FileTreeModel(fileTreeNode);
+
+		// add a subdir that is ok
+		collEntry = new CollectionAndDataObjectListingEntry();
+		collEntry.setId(1);
+		collEntry.setCount(100);
+		collEntry.setObjectType(ObjectType.COLLECTION);
+		collEntry.setParentPath(localRoot);
+		collEntry.setPathOrName(localRoot + c1Name);
+		fileTreeDiffEntry = FileTreeDiffEntry.instance(
+				DiffType.DIRECTORY_NO_DIFF, collEntry);
+		fileTreeNode.add(new FileTreeNode(fileTreeDiffEntry));
+
+		// add a file that is right plus (new irods)
+		collEntry = new CollectionAndDataObjectListingEntry();
+		collEntry.setId(1);
+		collEntry.setCount(100);
+		collEntry.setObjectType(ObjectType.DATA_OBJECT);
+		collEntry.setParentPath(irodsRoot.substring(0, irodsRoot.length() -1));
+		collEntry.setPathOrName(c2Name);
+		fileTreeDiffEntry = FileTreeDiffEntry.instance(DiffType.RIGHT_HAND_NEWER,
+				collEntry);
+		fileTreeNode.add(new FileTreeNode(fileTreeDiffEntry));
+
+		Mockito.when(
+				fileTreeDiffUtility.generateDiffLocalToIRODS(
+						(File) Matchers.any(), Matchers.anyString(),
+						Matchers.anyLong(), Matchers.anyLong())).thenReturn(
+				fileTreeModel);
+
+		IRODSAccessObjectFactory irodsAccessObjectFactory = Mockito
+				.mock(IRODSAccessObjectFactory.class);
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		TransferManager transferManager = Mockito.mock(TransferManager.class);
+		SynchronizeProcessor synchProcessor = new SynchronizeProcessorImpl();
+		synchProcessor.setIrodsAccessObjectFactory(irodsAccessObjectFactory);
+		synchProcessor.setIrodsAccount(irodsAccount);
+		synchProcessor.setTransferManager(transferManager);
+		synchProcessor.setFileTreeDiffUtility(fileTreeDiffUtility);
+		synchProcessor.synchronizeLocalToIRODS("device", localRoot, irodsRoot,
+				0, 0);
+
+		Mockito.verify(transferManager).enqueueAGet(irodsRoot + c2Name,
+				localRoot + c2Name, irodsAccount.getDefaultStorageResource(),
+				irodsAccount);
+	}
+	
+	@Test
+	public void testScheduleWithAnIrodsPlusFile() throws Exception {
+
+		String localRoot = "/local/root/";
+		String irodsRoot = "/test1/home/test/";
+		String c1Name = "c1";
+		String c2Name = "c2";
+
+		FileTreeDiffUtility fileTreeDiffUtility = Mockito
+				.mock(FileTreeDiffUtility.class);
+
+		CollectionAndDataObjectListingEntry collEntry = new CollectionAndDataObjectListingEntry();
+		collEntry.setId(1);
+		collEntry.setCount(100);
+		collEntry.setObjectType(ObjectType.COLLECTION);
+		collEntry.setParentPath("/local");
+		collEntry.setPathOrName(localRoot);
+		FileTreeDiffEntry fileTreeDiffEntry = FileTreeDiffEntry.instance(
+				DiffType.DIRECTORY_NO_DIFF, collEntry);
+		FileTreeNode fileTreeNode = new FileTreeNode(fileTreeDiffEntry);
+		FileTreeModel fileTreeModel = new FileTreeModel(fileTreeNode);
+
+		// add a subdir that is ok
+		collEntry = new CollectionAndDataObjectListingEntry();
+		collEntry.setId(1);
+		collEntry.setCount(100);
+		collEntry.setObjectType(ObjectType.COLLECTION);
+		collEntry.setParentPath(localRoot);
+		collEntry.setPathOrName(localRoot + c1Name);
+		fileTreeDiffEntry = FileTreeDiffEntry.instance(
+				DiffType.DIRECTORY_NO_DIFF, collEntry);
+		fileTreeNode.add(new FileTreeNode(fileTreeDiffEntry));
+
+		// add a file that is right plus (new irods)
+		collEntry = new CollectionAndDataObjectListingEntry();
+		collEntry.setId(1);
+		collEntry.setCount(100);
+		collEntry.setObjectType(ObjectType.DATA_OBJECT);
+		collEntry.setParentPath(irodsRoot.substring(0, irodsRoot.length() -1));
+		collEntry.setPathOrName(c2Name);
+		fileTreeDiffEntry = FileTreeDiffEntry.instance(DiffType.RIGHT_HAND_PLUS,
+				collEntry);
+		fileTreeNode.add(new FileTreeNode(fileTreeDiffEntry));
+
+		Mockito.when(
+				fileTreeDiffUtility.generateDiffLocalToIRODS(
+						(File) Matchers.any(), Matchers.anyString(),
+						Matchers.anyLong(), Matchers.anyLong())).thenReturn(
+				fileTreeModel);
+
+		IRODSAccessObjectFactory irodsAccessObjectFactory = Mockito
+				.mock(IRODSAccessObjectFactory.class);
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		TransferManager transferManager = Mockito.mock(TransferManager.class);
+		SynchronizeProcessor synchProcessor = new SynchronizeProcessorImpl();
+		synchProcessor.setIrodsAccessObjectFactory(irodsAccessObjectFactory);
+		synchProcessor.setIrodsAccount(irodsAccount);
+		synchProcessor.setTransferManager(transferManager);
+		synchProcessor.setFileTreeDiffUtility(fileTreeDiffUtility);
+		synchProcessor.synchronizeLocalToIRODS("device", localRoot, irodsRoot,
+				0, 0);
+
+		Mockito.verify(transferManager).enqueueAGet(irodsRoot + c2Name,
+				localRoot + c2Name, irodsAccount.getDefaultStorageResource(),
+				irodsAccount);
+	}
+
 
 	@Test
 	public void testScheduleWithALocalPlusLocalRootGivenNoTrailingSlash()
@@ -359,21 +553,21 @@ public class SynchronizeProcessorImplTest {
 		Mockito.when(
 				fileTreeDiffUtility.generateDiffLocalToIRODS(
 						(File) Matchers.any(), Matchers.anyString(),
-						Matchers.anyLong(),Matchers.anyLong())).thenReturn(fileTreeModel);
+						Matchers.anyLong(), Matchers.anyLong())).thenReturn(
+				fileTreeModel);
 
 		IRODSAccessObjectFactory irodsAccessObjectFactory = Mockito
 				.mock(IRODSAccessObjectFactory.class);
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		TransferManager transferManager = Mockito
-				.mock(TransferManager.class);
+		TransferManager transferManager = Mockito.mock(TransferManager.class);
 		SynchronizeProcessor synchProcessor = new SynchronizeProcessorImpl();
 		synchProcessor.setIrodsAccessObjectFactory(irodsAccessObjectFactory);
 		synchProcessor.setIrodsAccount(irodsAccount);
 		synchProcessor.setTransferManager(transferManager);
 		synchProcessor.setFileTreeDiffUtility(fileTreeDiffUtility);
 		synchProcessor.synchronizeLocalToIRODS("device", localRoot, irodsRoot,
-				0,0);
+				0, 0);
 
 		Mockito.verify(transferManager).enqueueAPut(localRoot + "/" + c2Name,
 				irodsRoot + c2Name, irodsAccount.getDefaultStorageResource(),
@@ -428,21 +622,21 @@ public class SynchronizeProcessorImplTest {
 		Mockito.when(
 				fileTreeDiffUtility.generateDiffLocalToIRODS(
 						(File) Matchers.any(), Matchers.anyString(),
-						Matchers.anyLong(),Matchers.anyLong())).thenReturn(fileTreeModel);
+						Matchers.anyLong(), Matchers.anyLong())).thenReturn(
+				fileTreeModel);
 
 		IRODSAccessObjectFactory irodsAccessObjectFactory = Mockito
 				.mock(IRODSAccessObjectFactory.class);
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		TransferManager transferManager = Mockito
-				.mock(TransferManager.class);
+		TransferManager transferManager = Mockito.mock(TransferManager.class);
 		SynchronizeProcessor synchProcessor = new SynchronizeProcessorImpl();
 		synchProcessor.setIrodsAccessObjectFactory(irodsAccessObjectFactory);
 		synchProcessor.setIrodsAccount(irodsAccount);
 		synchProcessor.setTransferManager(transferManager);
 		synchProcessor.setFileTreeDiffUtility(fileTreeDiffUtility);
 		synchProcessor.synchronizeLocalToIRODS("device", localRoot, irodsRoot,
-				0,0);
+				0, 0);
 
 		Mockito.verify(transferManager).enqueueAPut(localRoot + c2Name,
 				irodsRoot + "/" + c2Name,
