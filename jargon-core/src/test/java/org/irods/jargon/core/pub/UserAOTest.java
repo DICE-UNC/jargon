@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Properties;
 
 import junit.framework.Assert;
+import junit.framework.TestCase;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSProtocolManager;
@@ -39,18 +40,18 @@ public class UserAOTest {
 
 	private static Properties testingProperties = new Properties();
 	private static TestingPropertiesHelper testingPropertiesHelper = new TestingPropertiesHelper();
+	private static IRODSFileSystem irodsFileSystem;
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		TestingPropertiesHelper testingPropertiesLoader = new TestingPropertiesHelper();
 		testingProperties = testingPropertiesLoader.getTestProperties();
+		irodsFileSystem = IRODSFileSystem.instance();
 	}
 
-	/**
-	 * @throws java.lang.Exception
-	 */
 	@AfterClass
 	public static void tearDownAfterClass() throws Exception {
+		irodsFileSystem.closeAndEatExceptions();
 	}
 
 	@Test
@@ -124,7 +125,7 @@ public class UserAOTest {
 
 	}
 
-	@Test(expected = JargonException.class)
+	@Test(expected = IllegalArgumentException.class)
 	public void testFindWhereNullWhere() throws Exception {
 		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager
 				.instance();
@@ -565,7 +566,7 @@ public class UserAOTest {
 	}
 
 	@Test
-	public void testListUserMetadata() throws Exception {
+	public void testListUserMetadataForId() throws Exception {
 		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager
 				.instance();
 		IRODSAccount irodsAccount = testingPropertiesHelper
@@ -600,7 +601,51 @@ public class UserAOTest {
 
 		User user = userAO.findByName(irodsAccount.getUserName());
 
-		List<AvuData> avuList = userAO.listUserMetadata(user.getId());
+		List<AvuData> avuList = userAO.listUserMetadataForUserId(user.getId());
+
+		irodsSession.closeSession();
+
+		invoker.invokeCommandAndGetResultAsString(imr);
+
+		Assert.assertNotNull("null avu data returned", avuList);
+		Assert.assertFalse("no avus returned", avuList.isEmpty());
+	}
+	
+	@Test
+	public void testListUserMetadataForUserName() throws Exception {
+		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager
+				.instance();
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		org.irods.jargon.testutils.icommandinvoke.IrodsInvocationContext invocationContext = testingPropertiesHelper
+				.buildIRODSInvocationContextFromTestProperties(testingProperties);
+		IcommandInvoker invoker = new IcommandInvoker(invocationContext);
+
+		String meta1Attrib = "unattr1";
+		String meta1Value = "unc";
+
+		ImetaRemoveCommand imr = new ImetaRemoveCommand();
+		imr.setAttribName(meta1Attrib);
+		imr.setMetaObjectType(MetaObjectType.USER_META);
+		imr.setAttribValue(meta1Value);
+		imr.setObjectPath(irodsAccount.getUserName());
+		invoker.invokeCommandAndGetResultAsString(imr);
+
+		ImetaAddCommand metaAddCommand = new ImetaAddCommand();
+		metaAddCommand.setAttribName(meta1Attrib);
+		metaAddCommand.setAttribValue(meta1Value);
+		metaAddCommand.setMetaObjectType(MetaObjectType.USER_META);
+		metaAddCommand.setObjectPath(irodsAccount.getUserName());
+		invoker.invokeCommandAndGetResultAsString(metaAddCommand);
+
+		IRODSSession irodsSession = IRODSSession
+				.instance(irodsConnectionManager);
+		IRODSAccessObjectFactory accessObjectFactory = IRODSAccessObjectFactoryImpl
+				.instance(irodsSession);
+		UserAO userAO = accessObjectFactory.getUserAO(irodsAccount);
+
+		List<AvuData> avuList = userAO.listUserMetadataForUserName(irodsAccount.getUserName());
 
 		irodsSession.closeSession();
 
@@ -631,7 +676,6 @@ public class UserAOTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
 		UserAO adminUserAO = irodsFileSystem.getIRODSAccessObjectFactory()
 				.getUserAO(irodsAccount);
 
@@ -677,7 +721,207 @@ public class UserAOTest {
 		// now clean up as an admin
 
 		adminUserAO.deleteUser(testUser);
-		irodsFileSystem.closeAndEatExceptions();
 	}
+
+	@Test
+	public void testAddUserMetadata() throws Exception {
+		
+		String testAttrib = "testAddUserMetadataAttrib";
+		String testValue = "testAddUserMetadataValue";
+		String testUnit = "";
+		
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		UserAO userAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getUserAO(irodsAccount);
+		
+		AvuData avuData = AvuData.instance(testAttrib, testValue, testUnit);
+		
+		userAO.addAVUMetadata(irodsAccount.getUserName(), avuData);
+		List<AvuData> avuList = userAO.listUserMetadataForUserName(irodsAccount.getUserName());
+
+		boolean avuFound = false;
+		
+		for (AvuData actualAvuData : avuList) {
+			if (actualAvuData.getAttribute().equals(testAttrib) && actualAvuData.getValue().equals(testValue)) {
+				avuFound = true;
+				break;
+			}
+		}
+		
+		TestCase.assertTrue("did not find the expected AVU", avuFound);
+
+	}
+	
+	@Test(expected=JargonException.class)
+	public void testAddUserMetadataByNonAdminUser() throws Exception {
+		
+		String testAttrib = "testAddUserMetadataByNonAdminUserAttrib";
+		String testValue = "testAddUserMetadataByNonAdminUserValue";
+		String testUnit = "";
+		
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromSecondaryTestProperties(testingProperties);
+		UserAO userAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getUserAO(irodsAccount);
+		
+		AvuData avuData = AvuData.instance(testAttrib, testValue, testUnit);
+		
+		userAO.addAVUMetadata(irodsAccount.getUserName(), avuData);
+
+	}
+	
+	@Test
+	public void testDeleteUserMetadata() throws Exception {
+		
+		String testAttrib = "testDeleteUserMetadataAttrib";
+		String testValue = "testDeleteUserMetadataValue";
+		String testUnit = "";
+		
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		UserAO userAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getUserAO(irodsAccount);
+		
+		AvuData avuData = AvuData.instance(testAttrib, testValue, testUnit);
+		
+		userAO.addAVUMetadata(irodsAccount.getUserName(), avuData);
+		
+		userAO.deleteAVUMetadata(irodsAccount.getUserName(), avuData);
+		
+		List<AvuData> avuList = userAO.listUserMetadataForUserName(irodsAccount.getUserName());
+
+		boolean avuFound = false;
+		
+		for (AvuData actualAvuData : avuList) {
+			if (actualAvuData.getAttribute().equals(testAttrib) && actualAvuData.getValue().equals(testValue)) {
+				avuFound = true;
+				break;
+			}
+		}
+		
+		TestCase.assertFalse("found the expected AVU, should have been deleted", avuFound);
+
+	}
+	
+	/*
+	 * currently ignored for [#151] mod avu 816000 protocol errors
+	 */
+	@Ignore 
+	public void testModifyUserMetadata() throws Exception {
+		
+		String testAttrib = "testModifyUserMetadataAttrib";
+		String testValue = "testModifyUserMetadataValue";
+		String testUnit = "";
+		
+		String testValueUpdate = "testModifyUserMetadataValueUpdate";
+		
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		UserAO userAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getUserAO(irodsAccount);
+		
+		AvuData avuData = AvuData.instance(testAttrib, testValue, testUnit);
+		
+		userAO.addAVUMetadata(irodsAccount.getUserName(), avuData);
+		
+		avuData = AvuData.instance(testAttrib, testValueUpdate, testUnit);
+		
+		userAO.modifyAVUMetadata(irodsAccount.getUserName(), avuData);
+		
+		List<AvuData> avuList = userAO.listUserMetadataForUserName(irodsAccount.getUserName());
+
+		boolean avuFound = false;
+		
+		for (AvuData actualAvuData : avuList) {
+			if (actualAvuData.getAttribute().equals(testAttrib) && actualAvuData.getValue().equals(testValueUpdate)) {
+				avuFound = true;
+				break;
+			}
+		}
+		
+		TestCase.assertTrue("did not find the expected modified AVU", avuFound);
+
+	}
+	
+	@Test(expected=JargonException.class)
+	public void testAddUserMetadataInvalidUser() throws Exception {
+		
+		String testAttrib = "testDeleteUserMetadataAttrib";
+		String testValue = "testDeleteUserMetadataValue";
+		String testUnit = "";
+		String testUser = "xxxxxxx";
+		
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		UserAO userAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getUserAO(irodsAccount);
+		
+		AvuData avuData = AvuData.instance(testAttrib, testValue, testUnit);
+		
+		userAO.addAVUMetadata(testUser, avuData);
+		
+	}
+	
+	@Test(expected=JargonException.class)
+	public void testDeleteUserMetadataInvalidUser() throws Exception {
+		
+		String testAttrib = "testDeleteUserMetadataAttrib";
+		String testValue = "testDeleteUserMetadataValue";
+		String testUnit = "";
+		String testUser = "xxxxxxx";
+		
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		UserAO userAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getUserAO(irodsAccount);
+		
+		AvuData avuData = AvuData.instance(testAttrib, testValue, testUnit);
+		
+		userAO.deleteAVUMetadata(testUser, avuData);
+		
+	}
+	
+	@Test
+	public void testAddUserMetadataTwice() throws Exception {
+		
+		String testAttrib = "testAddUserMetadataTwiceAttrib";
+		String testValue = "testAddUserMetadataTwiceValue";
+		String testUnit = "";
+		
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		UserAO userAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getUserAO(irodsAccount);
+		
+		AvuData avuData = AvuData.instance(testAttrib, testValue, testUnit);
+		
+		userAO.addAVUMetadata(irodsAccount.getUserName(), avuData);
+		userAO.addAVUMetadata(irodsAccount.getUserName(), avuData);
+
+		List<AvuData> avuList = userAO.listUserMetadataForUserName(irodsAccount.getUserName());
+		
+		boolean avuFound = false;
+		
+		for (AvuData actualAvuData : avuList) {
+			if (actualAvuData.getAttribute().equals(testAttrib) && actualAvuData.getValue().equals(testValue)) {
+				avuFound = true;
+				break;
+			}
+		}
+		
+		TestCase.assertTrue("did not find the expected AVU", avuFound);
+
+	}
+	
+	
+	//TODO
+	/*
+	//revise
+	can another user access a user's metadata?
+	add metadata for non-existent user
+	is it by avu attr name, or name/value, or nam/value/units
+	can non-admin user update his avu?
+	*/
 
 }

@@ -12,6 +12,7 @@ import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.DuplicateDataException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.packinstr.GeneralAdminInp;
+import org.irods.jargon.core.packinstr.ModAvuMetadataInp;
 import org.irods.jargon.core.packinstr.UserAdminInp;
 import org.irods.jargon.core.protovalues.UserTypeEnum;
 import org.irods.jargon.core.pub.domain.AvuData;
@@ -50,13 +51,16 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.irods.jargon.core.pub.UserAO#listUserMetadata(java.lang.String)
+	 * @see
+	 * org.irods.jargon.core.pub.UserAO#listUserMetadataForUserId(java.lang.
+	 * String)
 	 */
 	@Override
-	public List<AvuData> listUserMetadata(final String userId)
+	public List<AvuData> listUserMetadataForUserId(final String userId)
 			throws JargonException {
+
 		if (userId == null || userId.isEmpty()) {
-			throw new JargonException("null or empty userId");
+			throw new IllegalArgumentException("null or empty userId");
 		}
 		log.info("list user metadata for {}", userId);
 
@@ -81,8 +85,8 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 		IRODSQueryResultSetInterface resultSet;
 
 		try {
-			resultSet = irodsGenQueryExecutorImpl.executeIRODSQueryAndCloseResult(irodsQuery,
-					0);
+			resultSet = irodsGenQueryExecutorImpl
+					.executeIRODSQueryAndCloseResult(irodsQuery, 0);
 		} catch (JargonQueryException e) {
 			log.error("query exception for user query: " + sb.toString(), e);
 			throw new JargonException(ERROR_IN_USER_QUERY);
@@ -115,6 +119,65 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 	 * (non-Javadoc)
 	 * 
 	 * @see
+	 * org.irods.jargon.core.pub.UserAO#listUserMetadataForUserName(java.lang
+	 * .String)
+	 */
+	@Override
+	public List<AvuData> listUserMetadataForUserName(final String userName)
+			throws JargonException {
+
+		if (userName == null || userName.isEmpty()) {
+			throw new IllegalArgumentException("null or empty userName");
+		}
+		log.info("list user metadata for user name: {}", userName);
+
+		final StringBuilder sb = new StringBuilder();
+		sb.append("SELECT ");
+		sb.append(RodsGenQueryEnum.COL_META_USER_ATTR_NAME.getName());
+		sb.append(COMMA);
+		sb.append(RodsGenQueryEnum.COL_META_USER_ATTR_VALUE.getName());
+		sb.append(COMMA);
+		sb.append(RodsGenQueryEnum.COL_META_USER_ATTR_UNITS.getName());
+		sb.append(" WHERE ");
+		sb.append(RodsGenQueryEnum.COL_USER_NAME.getName());
+		sb.append(" = '");
+		sb.append(userName);
+		sb.append("'");
+		log.debug("user avu list query: {}", sb.toString());
+		final IRODSGenQuery irodsQuery = IRODSGenQuery.instance(sb.toString(),
+				DEFAULT_REC_COUNT);
+		final IRODSGenQueryExecutorImpl irodsGenQueryExecutorImpl = new IRODSGenQueryExecutorImpl(
+				this.getIRODSSession(), this.getIRODSAccount());
+
+		IRODSQueryResultSetInterface resultSet;
+
+		try {
+			resultSet = irodsGenQueryExecutorImpl
+					.executeIRODSQueryAndCloseResult(irodsQuery, 0);
+		} catch (JargonQueryException e) {
+			log.error("query exception for user query:{} ", sb.toString(), e);
+			throw new JargonException(ERROR_IN_USER_QUERY);
+		}
+
+		final List<AvuData> avuDatas = new ArrayList<AvuData>();
+		AvuData avuData = null;
+
+		for (IRODSQueryResultRow row : resultSet.getResults()) {
+			avuData = AvuData.instance(row.getColumn(0), row.getColumn(1),
+					row.getColumn(2));
+			avuDatas.add(avuData);
+			log.debug("found avu for user:{}", avuData);
+
+		}
+
+		return avuDatas;
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
 	 * org.irods.jargon.core.accessobject.UserAO#addUser(org.irods.jargon.core
 	 * .domain.User)
 	 */
@@ -123,11 +186,11 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 			DuplicateDataException {
 
 		if (log.isDebugEnabled()) {
-			log.debug("adding a user:" + user);
+			log.debug("adding a user:{}", user);
 		}
 
 		if (user == null) {
-			throw new JargonException("cannot add null user");
+			throw new IllegalArgumentException("cannot add null user");
 		}
 
 		updatePreChecks(user);
@@ -187,8 +250,8 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 
 		IRODSQueryResultSetInterface resultSet;
 		try {
-			resultSet = irodsGenQueryExecutorImpl.executeIRODSQueryAndCloseResult(irodsQuery,
-					0);
+			resultSet = irodsGenQueryExecutorImpl
+					.executeIRODSQueryAndCloseResult(irodsQuery, 0);
 		} catch (JargonQueryException e) {
 			log.error("query exception for user query:" + userQueryString, e);
 			throw new JargonException(ERROR_IN_USER_QUERY);
@@ -214,7 +277,7 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 			throws JargonException {
 
 		if (whereStatement == null) {
-			throw new JargonException("null where statement");
+			throw new IllegalArgumentException("null where statement");
 		}
 
 		final IRODSGenQueryExecutorImpl irodsGenQueryExecutorImpl = new IRODSGenQueryExecutorImpl(
@@ -239,10 +302,10 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 
 		IRODSQueryResultSetInterface resultSet;
 		try {
-			resultSet = irodsGenQueryExecutorImpl.executeIRODSQueryAndCloseResult(irodsQuery,
-					0);
+			resultSet = irodsGenQueryExecutorImpl
+					.executeIRODSQueryAndCloseResult(irodsQuery, 0);
 		} catch (JargonQueryException e) {
-			log.error("query exception for user query:" + userQueryString, e);
+			log.error("query exception for user query: {}", userQueryString, e);
 			throw new JargonException(ERROR_IN_USER_QUERY);
 		}
 
@@ -291,10 +354,10 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 
 		IRODSQueryResultSetInterface resultSet;
 		try {
-			resultSet = irodsGenQueryExecutorImpl.executeIRODSQueryAndCloseResult(irodsQuery,
-					0);
+			resultSet = irodsGenQueryExecutorImpl
+					.executeIRODSQueryAndCloseResult(irodsQuery, 0);
 		} catch (JargonQueryException e) {
-			log.error("query exception for user query:" + userQueryString, e);
+			log.error("query exception for user query:{}", userQueryString, e);
 			throw new JargonException(ERROR_IN_USER_QUERY);
 		}
 
@@ -350,6 +413,7 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 	@Override
 	public User findByName(final String userName) throws JargonException,
 			DataNotFoundException {
+
 		final IRODSGenQueryExecutorImpl irodsGenQueryExecutorImpl = new IRODSGenQueryExecutorImpl(
 				this.getIRODSSession(), this.getIRODSAccount());
 		StringBuilder userQuery = new StringBuilder();
@@ -369,7 +433,7 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 
 		String userQueryString = userQuery.toString();
 		if (log.isInfoEnabled()) {
-			log.info("user query:" + userQueryString);
+			log.info("user query:{}", userQueryString);
 		}
 
 		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(userQueryString,
@@ -377,10 +441,11 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 
 		IRODSQueryResultSetInterface resultSet;
 		try {
-			resultSet = irodsGenQueryExecutorImpl.executeIRODSQueryAndCloseResult(irodsQuery,
-					DEFAULT_REC_COUNT);
+			resultSet = irodsGenQueryExecutorImpl
+					.executeIRODSQueryAndCloseResult(irodsQuery,
+							DEFAULT_REC_COUNT);
 		} catch (JargonQueryException e) {
-			log.error("query exception for user query:" + userQueryString, e);
+			log.error("query exception for user query:{}", userQueryString, e);
 			throw new JargonException(ERROR_IN_USER_QUERY);
 		}
 
@@ -458,7 +523,7 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 
 		String userQueryString = userQuery.toString();
 		if (log.isInfoEnabled()) {
-			log.info("user dn query:" + userQueryString);
+			log.info("user dn query:{}", userQueryString);
 		}
 
 		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(userQueryString,
@@ -466,10 +531,12 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 
 		IRODSQueryResultSetInterface resultSet;
 		try {
-			resultSet = irodsGenQueryExecutorImpl.executeIRODSQueryAndCloseResult(irodsQuery,
-					DEFAULT_REC_COUNT);
+			resultSet = irodsGenQueryExecutorImpl
+					.executeIRODSQueryAndCloseResult(irodsQuery,
+							DEFAULT_REC_COUNT);
 		} catch (JargonQueryException e) {
-			log.error("query exception for user dn query:" + userQueryString, e);
+			log.error("query exception for user dn query:{}", userQueryString,
+					e);
 			throw new JargonException(ERROR_IN_USER_QUERY);
 		}
 
@@ -502,7 +569,7 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 	@Override
 	public void deleteUser(final String userName) throws JargonException {
 		if (userName == null || userName.isEmpty()) {
-			throw new JargonException("null or empty user name");
+			throw new IllegalArgumentException("null or empty user name");
 		}
 		GeneralAdminInp adminPI = GeneralAdminInp
 				.instanceForDeleteUser(userName);
@@ -539,11 +606,12 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 			DataNotFoundException {
 
 		if (user == null) {
-			throw new JargonException("user is null");
+			throw new IllegalArgumentException("user is null");
 		}
 
 		if (user.getId() == null || user.getId().isEmpty()) {
-			throw new JargonException("user id is null or empty, cannot update");
+			throw new IllegalArgumentException(
+					"user id is null or empty, cannot update");
 		}
 
 		updatePreChecks(user);
@@ -584,15 +652,16 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 			throws JargonException {
 
 		if (userName == null || userName.isEmpty()) {
-			throw new JargonException("userName is null or missing");
+			throw new IllegalArgumentException("userName is null or missing");
 		}
 
 		if (currentPassword == null || currentPassword.isEmpty()) {
-			throw new JargonException("currentPassword is null or missing");
+			throw new IllegalArgumentException(
+					"currentPassword is null or missing");
 		}
 
 		if (newPassword == null || newPassword.isEmpty()) {
-			throw new JargonException("newPassword is null or missing");
+			throw new IllegalArgumentException("newPassword is null or missing");
 		}
 
 		log.info("changeAUserPasswordByThatUser for user:{}", userName);
@@ -620,11 +689,11 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 		// see clientLogin.c and iadmin.c(line 807) for details yet to be
 		// implemented
 		if (userName == null || userName.isEmpty()) {
-			throw new JargonException("userName is null or missing");
+			throw new IllegalArgumentException("userName is null or missing");
 		}
 
 		if (newPassword == null || newPassword.isEmpty()) {
-			throw new JargonException("newPassword is null or missing");
+			throw new IllegalArgumentException("newPassword is null or missing");
 		}
 
 		log.info("changeAUserPasswordByAnAdmin for user:{}", userName);
@@ -654,6 +723,129 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 				|| user.getUserType() == UserTypeEnum.RODS_UNKNOWN) {
 			throw new JargonException("null or unknown user type");
 		}
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.pub.UserAO#addAVUMetadata(java.lang.String,
+	 * org.irods.jargon.core.pub.domain.AvuData)
+	 */
+	@Override
+	public void addAVUMetadata(final String userName, final AvuData avuData)
+			throws DataNotFoundException, JargonException {
+
+		if (userName == null || userName.isEmpty()) {
+			throw new IllegalArgumentException("null or empty userName");
+		}
+
+		if (avuData == null) {
+			throw new IllegalArgumentException("null AVU data");
+		}
+
+		log.info("adding avu metadata to user: {}", avuData);
+		log.info("userName {}", userName);
+
+		final ModAvuMetadataInp modifyAvuMetadataInp = ModAvuMetadataInp
+				.instanceForAddUserMetadata(userName, avuData);
+
+		log.debug("sending avu request");
+
+		try {
+			getIRODSProtocol().irodsFunction(modifyAvuMetadataInp);
+		} catch (JargonException je) {
+
+			if (je.getMessage().indexOf("-827000") > -1) {
+				throw new DataNotFoundException(
+						"User was not found, could not add AVU");
+			}
+
+			log.error("jargon exception adding AVU metadata", je);
+			throw je;
+		}
+
+		log.debug("metadata added");
+
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.core.pub.UserAO#modifyAVUMetadata(java.lang.String, org.irods.jargon.core.pub.domain.AvuData)
+	 */
+	@Override
+	public void modifyAVUMetadata(final String userName, final AvuData avuData)
+			throws DataNotFoundException, JargonException {
+
+		if (userName == null || userName.isEmpty()) {
+			throw new IllegalArgumentException("null or empty userName");
+		}
+
+		if (avuData == null) {
+			throw new IllegalArgumentException("null AVU data");
+		}
+
+		log.info("modify avu metadata to user: {}", avuData);
+		log.info("userName {}", userName);
+
+		final ModAvuMetadataInp modifyAvuMetadataInp = ModAvuMetadataInp.instanceForModifyUserMetadata(userName, avuData);
+			
+		log.debug("sending avu request");
+
+		try {
+			getIRODSProtocol().irodsFunction(modifyAvuMetadataInp);
+		} catch (JargonException je) {
+
+			if (je.getMessage().indexOf("-827000") > -1) {
+				throw new DataNotFoundException(
+						"User was not found, could not modify AVU");
+			}
+
+			log.error("jargon exception modifying AVU metadata", je);
+			throw je;
+		}
+
+		log.debug("metadata modified");
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.pub.UserAO#deleteAVUMetadata(java.lang.String,
+	 * org.irods.jargon.core.pub.domain.AvuData)
+	 */
+	@Override
+	public void deleteAVUMetadata(final String userName, final AvuData avuData)
+			throws DataNotFoundException, JargonException {
+
+		if (userName == null || userName.isEmpty()) {
+			throw new IllegalArgumentException("null or empty userName");
+		}
+
+		if (avuData == null) {
+			throw new IllegalArgumentException("null AVU data");
+		}
+
+		log.info("deleting avu metadata for user: {}", avuData);
+		log.info("userName {}", userName);
+
+		final ModAvuMetadataInp modifyAvuMetadataInp = ModAvuMetadataInp
+				.instanceForDeleteUserMetadata(userName, avuData);
+
+		log.debug("sending avu request");
+		try {
+			getIRODSProtocol().irodsFunction(modifyAvuMetadataInp);
+		} catch (JargonException je) {
+
+			if (je.getMessage().indexOf("-827000") > -1) {
+				throw new DataNotFoundException(
+						"User was not found, could not delete AVU");
+			}
+
+			log.error("jargon exception adding AVU metadata", je);
+			throw je;
+		}
+		log.debug("metadata deleted");
 
 	}
 

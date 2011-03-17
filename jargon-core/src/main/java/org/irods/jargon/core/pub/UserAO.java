@@ -9,7 +9,7 @@ import org.irods.jargon.core.pub.domain.AvuData;
 import org.irods.jargon.core.pub.domain.User;
 
 /**
- * Interface for an object to interact with user data in IRODS
+ * Interface for an object to interact with user data in IRODS.
  * 
  * @author Mike Conway, DICE (www.irods.org)
  * 
@@ -65,7 +65,7 @@ public interface UserAO extends IRODSAccessObject {
 			DataNotFoundException;
 
 	/**
-	 * Query the AVU metadata associated with the given user.
+	 * Query the AVU metadata associated with the given user by Id.
 	 * 
 	 * @param userId
 	 *            <code>String</code> with the unique database key for the user.
@@ -74,7 +74,20 @@ public interface UserAO extends IRODSAccessObject {
 	 *         results.
 	 * @throws JargonException
 	 */
-	List<AvuData> listUserMetadata(String userId) throws JargonException;
+	List<AvuData> listUserMetadataForUserId(String userId) throws JargonException;
+	
+	/**
+	 * Query the AVU metadata associated with the given user by user name.
+	 * 
+	 * @param userId
+	 *            <code>String</code> with the user name for the user.
+	 * @return <code>List</code> of
+	 *         {@link org.irods.jargon.core.pub.domain.AvuData} with query
+	 *         results.
+	 * @throws JargonException
+	 */
+	List<AvuData> listUserMetadataForUserName(String userName)
+			throws JargonException;
 
 	/**
 	 * Remove the user from iRODS.
@@ -143,4 +156,35 @@ public interface UserAO extends IRODSAccessObject {
 	 */
 	void changeAUserPasswordByAnAdmin(String userName, String newPassword)
 			throws JargonException;
+
+	/**
+	 * Add the AVU metadata for the given user.  This is only possible when a rods admin.
+	 * @param userName <code>String</code> with the user name to whom the AVU metadata will be added
+	 * @param avuData {@link AvuData} to be added for the user
+	 * @throws JargonException
+	 */
+	void addAVUMetadata(String userName, AvuData avuData)
+			throws  JargonException;
+
+	/**
+	 * Remove the given AVU metadata from the user.  This is only possible when a rods admin.
+	 * @param userName <code>String</code> with the user name from whom the AVU metadata will be removed
+	 * @param avuData {@link AvuData} to be removed from the user
+	 * @throws DataNotFoundException
+	 * @throws JargonException
+	 */
+	void deleteAVUMetadata(String userName, AvuData avuData)
+			throws DataNotFoundException, JargonException;
+
+	/**
+	 * Modify the given AVU metadata from the user.  This is only possible when a rods admin.
+	 * @param userName <code>String</code> with the user name from whom the AVU metadata will be removed
+	 * @param avuData {@link AvuData} to be modified 
+	 * @throws DataNotFoundException
+	 * @throws JargonException
+	 */
+	void modifyAVUMetadata(String userName, AvuData avuData)
+			throws DataNotFoundException, JargonException;
+
+	
 }
