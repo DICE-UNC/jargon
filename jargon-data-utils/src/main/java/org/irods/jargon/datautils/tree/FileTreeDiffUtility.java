@@ -5,6 +5,8 @@ import java.io.File;
 import org.irods.jargon.core.exception.JargonException;
 
 public interface FileTreeDiffUtility {
+	
+	public static final int NO_TIMESTAMP_CHECKS = 0;
 
 	/**
 	 * Generate a tree model that is the diff between the left hand side and the
@@ -21,6 +23,9 @@ public interface FileTreeDiffUtility {
 	 * utility compares two file (data objects) based on length. Optionally, the
 	 * iRODS timestamp can be compared to a provided timestamp value to treat
 	 * files modified after the given cut-off as 'changed'.
+	 * <p/>
+	 * Note that setting either the left hand or right hand side timestamp to <code>NO_TIMESTAMP_CHECKS</code>
+	 * will turn of timestamp checking.  This is appropriate for an initial synch operation.
 	 * 
 	 * @param localFileRoot
 	 *            <code>File</code> that is the left hand side of the comparison
@@ -30,9 +35,14 @@ public interface FileTreeDiffUtility {
 	 *            compared to the <code>localFileRoot</code> The file and
 	 *            collection names will be compared relative to the respective
 	 *            left hand and right hand root absolute paths
-	 * @param timestampForIrodsFileThatIndicatesThatTheFileHasChanged
+	 * @param timestampForLastSynchLeftHandSide
 	 *            <code>long</code> with the timestamp that, if before the last
-	 *            modified date of the given left hand and right hand files,
+	 *            modified date of the given left hand files,
+	 *            indicates that the file has changed. Leave as zero to turn off
+	 *            this check.
+	 *   @param timestampForLastSynchRightHandSide
+	 *            <code>long</code> with the timestamp that, if before the last
+	 *            modified date of the given right hand files,
 	 *            indicates that the file has changed. Leave as zero to turn off
 	 *            this check.
 	 * @return {@link FileTreeModel} with the common directory structure and any
@@ -43,7 +53,8 @@ public interface FileTreeDiffUtility {
 	 */
 	public abstract FileTreeModel generateDiffLocalToIRODS(
 			final File localFileRoot, final String irodsAbsolutePath,
-			final long timestampForIrodsFileThatIndicatesThatTheFileHasChanged)
+			final long timestampForLastSynchLeftHandSide,
+			final long timestampForLastSynchRightHandSide)
 			throws JargonException;
 
 }

@@ -57,7 +57,7 @@ public class SynchronizeProcessorImplTest {
 	@Test(expected = IllegalStateException.class)
 	public void testSynchronizeLocalToIRODSNoInitialized() throws Exception {
 		SynchronizeProcessor synchProcessor = new SynchronizeProcessorImpl();
-		synchProcessor.synchronizeLocalToIRODS("name", "path", "path", 0);
+		synchProcessor.synchronizeLocalToIRODS("name", "path", "path", 0, 0);
 	}
 
 	@Test(expected = IllegalStateException.class)
@@ -74,7 +74,7 @@ public class SynchronizeProcessorImplTest {
 		synchProcessor.setIrodsAccount(irodsAccount);
 		synchProcessor.setTransferManager(transferManager);
 		synchProcessor.setFileTreeDiffUtility(fileTreeDiffUtility);
-		synchProcessor.synchronizeLocalToIRODS("name", "path", "path", 0);
+		synchProcessor.synchronizeLocalToIRODS("name", "path", "path", 0,0);
 		// just looking for no errors here
 		Assert.assertTrue(true);
 	}
@@ -94,7 +94,7 @@ public class SynchronizeProcessorImplTest {
 		synchProcessor.setIrodsAccount(irodsAccount);
 		synchProcessor.setTransferManager(transferManager);
 		synchProcessor.setFileTreeDiffUtility(fileTreeDiffUtility);
-		synchProcessor.synchronizeLocalToIRODS("name", "path", "path", 0);
+		synchProcessor.synchronizeLocalToIRODS("name", "path", "path", 0,0);
 
 	}
 
@@ -112,7 +112,7 @@ public class SynchronizeProcessorImplTest {
 		synchProcessor.setIrodsAccount(irodsAccount);
 		synchProcessor.setTransferManager(transferManager);
 		synchProcessor.setFileTreeDiffUtility(fileTreeDiffUtility);
-		synchProcessor.synchronizeLocalToIRODS("name", "path", "path", 0);
+		synchProcessor.synchronizeLocalToIRODS("name", "path", "path", 0,0);
 
 	}
 
@@ -131,7 +131,7 @@ public class SynchronizeProcessorImplTest {
 		synchProcessor.setIrodsAccount(irodsAccount);
 		synchProcessor.setTransferManager(transferManager);
 		synchProcessor.setFileTreeDiffUtility(fileTreeDiffUtility);
-		synchProcessor.synchronizeLocalToIRODS("", "path", "path", 0);
+		synchProcessor.synchronizeLocalToIRODS("", "path", "path", 0, 0);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
@@ -149,7 +149,7 @@ public class SynchronizeProcessorImplTest {
 		synchProcessor.setIrodsAccount(irodsAccount);
 		synchProcessor.setTransferManager(transferManager);
 		synchProcessor.setFileTreeDiffUtility(fileTreeDiffUtility);
-		synchProcessor.synchronizeLocalToIRODS(null, "path", "path", 0);
+		synchProcessor.synchronizeLocalToIRODS(null, "path", "path",0, 0);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
@@ -167,7 +167,7 @@ public class SynchronizeProcessorImplTest {
 		synchProcessor.setIrodsAccount(irodsAccount);
 		synchProcessor.setTransferManager(transferManager);
 		synchProcessor.setFileTreeDiffUtility(fileTreeDiffUtility);
-		synchProcessor.synchronizeLocalToIRODS("device", "", "path", 0);
+		synchProcessor.synchronizeLocalToIRODS("device", "", "path",0, 0);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
@@ -185,7 +185,7 @@ public class SynchronizeProcessorImplTest {
 		synchProcessor.setIrodsAccount(irodsAccount);
 		synchProcessor.setTransferManager(transferManager);
 		synchProcessor.setFileTreeDiffUtility(fileTreeDiffUtility);
-		synchProcessor.synchronizeLocalToIRODS("device", null, "path", 0);
+		synchProcessor.synchronizeLocalToIRODS("device", null, "path",0, 0);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
@@ -203,7 +203,7 @@ public class SynchronizeProcessorImplTest {
 		synchProcessor.setIrodsAccount(irodsAccount);
 		synchProcessor.setTransferManager(transferManager);
 		synchProcessor.setFileTreeDiffUtility(fileTreeDiffUtility);
-		synchProcessor.synchronizeLocalToIRODS("device", "local", "", 0);
+		synchProcessor.synchronizeLocalToIRODS("device", "local", "",0, 0);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
@@ -221,7 +221,7 @@ public class SynchronizeProcessorImplTest {
 		synchProcessor.setIrodsAccount(irodsAccount);
 		synchProcessor.setTransferManager(transferManager);
 		synchProcessor.setFileTreeDiffUtility(fileTreeDiffUtility);
-		synchProcessor.synchronizeLocalToIRODS("device", "local", null, 0);
+		synchProcessor.synchronizeLocalToIRODS("device", "local", null, 0,0);
 	}
 
 	@Test(expected = JargonException.class)
@@ -240,7 +240,7 @@ public class SynchronizeProcessorImplTest {
 		synchProcessor.setTransferManager(transferManager);
 		synchProcessor.setFileTreeDiffUtility(fileTreeDiffUtility);
 		synchProcessor.synchronizeLocalToIRODS("device", "/c1/c2",
-				"test1/home/theperson", 0);
+				"test1/home/theperson", 0,0);
 	}
 
 	@Test
@@ -290,7 +290,7 @@ public class SynchronizeProcessorImplTest {
 		Mockito.when(
 				fileTreeDiffUtility.generateDiffLocalToIRODS(
 						(File) Matchers.any(), Matchers.anyString(),
-						Matchers.anyLong())).thenReturn(fileTreeModel);
+						Matchers.anyLong(),Matchers.anyLong())).thenReturn(fileTreeModel);
 
 		IRODSAccessObjectFactory irodsAccessObjectFactory = Mockito
 				.mock(IRODSAccessObjectFactory.class);
@@ -304,7 +304,7 @@ public class SynchronizeProcessorImplTest {
 		synchProcessor.setTransferManager(transferManager);
 		synchProcessor.setFileTreeDiffUtility(fileTreeDiffUtility);
 		synchProcessor.synchronizeLocalToIRODS("device", localRoot, irodsRoot,
-				0);
+				0,0);
 
 		Mockito.verify(transferManager).enqueueAPut(localRoot + c2Name,
 				irodsRoot + c2Name, irodsAccount.getDefaultStorageResource(),
@@ -359,7 +359,7 @@ public class SynchronizeProcessorImplTest {
 		Mockito.when(
 				fileTreeDiffUtility.generateDiffLocalToIRODS(
 						(File) Matchers.any(), Matchers.anyString(),
-						Matchers.anyLong())).thenReturn(fileTreeModel);
+						Matchers.anyLong(),Matchers.anyLong())).thenReturn(fileTreeModel);
 
 		IRODSAccessObjectFactory irodsAccessObjectFactory = Mockito
 				.mock(IRODSAccessObjectFactory.class);
@@ -373,7 +373,7 @@ public class SynchronizeProcessorImplTest {
 		synchProcessor.setTransferManager(transferManager);
 		synchProcessor.setFileTreeDiffUtility(fileTreeDiffUtility);
 		synchProcessor.synchronizeLocalToIRODS("device", localRoot, irodsRoot,
-				0);
+				0,0);
 
 		Mockito.verify(transferManager).enqueueAPut(localRoot + "/" + c2Name,
 				irodsRoot + c2Name, irodsAccount.getDefaultStorageResource(),
@@ -428,7 +428,7 @@ public class SynchronizeProcessorImplTest {
 		Mockito.when(
 				fileTreeDiffUtility.generateDiffLocalToIRODS(
 						(File) Matchers.any(), Matchers.anyString(),
-						Matchers.anyLong())).thenReturn(fileTreeModel);
+						Matchers.anyLong(),Matchers.anyLong())).thenReturn(fileTreeModel);
 
 		IRODSAccessObjectFactory irodsAccessObjectFactory = Mockito
 				.mock(IRODSAccessObjectFactory.class);
@@ -442,7 +442,7 @@ public class SynchronizeProcessorImplTest {
 		synchProcessor.setTransferManager(transferManager);
 		synchProcessor.setFileTreeDiffUtility(fileTreeDiffUtility);
 		synchProcessor.synchronizeLocalToIRODS("device", localRoot, irodsRoot,
-				0);
+				0,0);
 
 		Mockito.verify(transferManager).enqueueAPut(localRoot + c2Name,
 				irodsRoot + "/" + c2Name,

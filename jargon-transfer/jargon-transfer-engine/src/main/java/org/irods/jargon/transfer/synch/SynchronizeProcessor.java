@@ -29,15 +29,22 @@ public interface SynchronizeProcessor {
 	 * @param irodsRootAbsolutePath
 	 *            <code>String</code> with the absolute path to the root
 	 *            directory in iRODS that will be synchronized
-	 * @param timestampOfLastSynch
-	 *            <code>long</code> with the time stamp of the last
-	 *            synchronization. This is used to decide when a file has
-	 *            changed on iRODS
+	 * @param timestampForLastSynchLeftHandSide
+	 *            <code>long</code> with the timestamp that, if before the last
+	 *            modified date of the given left hand files,
+	 *            indicates that the file has changed. Leave as zero to turn off
+	 *            this check.
+	 *   @param timestampForLastSynchRightHandSide
+	 *            <code>long</code> with the timestamp that, if before the last
+	 *            modified date of the given right hand files,
+	 *            indicates that the file has changed. Leave as zero to turn off
+	 *            this check.
 	 * @throws JargonException
 	 */
 	public abstract void synchronizeLocalToIRODS(final String synchDeviceName,
 			final String localRootAbsolutePath,
-			final String irodsRootAbsolutePath, final long timestampOfLastSynch)
+			final String irodsRootAbsolutePath,	final long timestampforLastSynchLeftHandSide,
+			final long timestampForLastSynchRightHandSide)
 			throws JargonException;
 
 	public abstract void setTransferManager(

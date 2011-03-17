@@ -87,7 +87,7 @@ public class FileTreeDiffUtilityTest {
 		FileTreeDiffUtility fileTreeDiffUtility = new FileTreeDiffUtilityImpl(
 				irodsAccount, irodsFileSystem.getIRODSAccessObjectFactory());
 		FileTreeModel diffModel = fileTreeDiffUtility.generateDiffLocalToIRODS(
-				localFileRoot, targetIrodsAbsolutePath, 0);
+				localFileRoot, targetIrodsAbsolutePath, 0, 0);
 		irodsFileSystem.close();
 		Assert.assertNotNull("null diffModel", diffModel);
 		FileTreeNode fileTreeNode = (FileTreeNode) diffModel.getRoot();
@@ -159,7 +159,7 @@ public class FileTreeDiffUtilityTest {
 		FileTreeDiffUtility fileTreeDiffUtility = new FileTreeDiffUtilityImpl(
 				irodsAccount, irodsFileSystem.getIRODSAccessObjectFactory());
 		FileTreeModel diffModel = fileTreeDiffUtility.generateDiffLocalToIRODS(
-				localFileRoot, targetIrodsAbsolutePath, 0);
+				localFileRoot, targetIrodsAbsolutePath, 0, 0);
 		irodsFileSystem.close();
 		Assert.assertNotNull("null diffModel", diffModel);
 		FileTreeNode fileTreeNode = (FileTreeNode) diffModel.getRoot();
@@ -232,7 +232,7 @@ public class FileTreeDiffUtilityTest {
 		FileTreeDiffUtility fileTreeDiffUtility = new FileTreeDiffUtilityImpl(
 				irodsAccount, irodsFileSystem.getIRODSAccessObjectFactory());
 		FileTreeModel diffModel = fileTreeDiffUtility.generateDiffLocalToIRODS(
-				localFileRoot, targetIrodsAbsolutePath, 0);
+				localFileRoot, targetIrodsAbsolutePath, 0,0);
 		Assert.assertNotNull("null diffModel", diffModel);
 		FileTreeNode fileTreeNode = (FileTreeNode) diffModel.getRoot();
 		FileTreeDiffEntry fileTreeDiffEntry = (FileTreeDiffEntry) fileTreeNode
@@ -313,7 +313,7 @@ public class FileTreeDiffUtilityTest {
 		long timestampToUse = newChildOfChild.lastModified() - 500;
 
 		FileTreeModel diffModel = fileTreeDiffUtility.generateDiffLocalToIRODS(
-				localFileRoot, targetIrodsAbsolutePath,
+				localFileRoot, targetIrodsAbsolutePath,  newChildOfChild.lastModified(),
 				timestampToUse);
 		irodsFileSystem.close();
 		Assert.assertNotNull("null diffModel", diffModel);
@@ -396,7 +396,7 @@ public class FileTreeDiffUtilityTest {
 		long timestampToUse = newChildOfChild.lastModified() - 500;
 
 		FileTreeModel diffModel = fileTreeDiffUtility.generateDiffLocalToIRODS(
-				localFileRoot, targetIrodsAbsolutePath,
+				localFileRoot, targetIrodsAbsolutePath, newChildOfChild.lastModified(),
 				timestampToUse);
 		irodsFileSystem.close();
 		Assert.assertNotNull("null diffModel", diffModel);
@@ -478,7 +478,7 @@ public class FileTreeDiffUtilityTest {
 		long timestampToUse = newChildOfChild.lastModified() + 5000;
 
 		FileTreeModel diffModel = fileTreeDiffUtility.generateDiffLocalToIRODS(
-				localFileRoot, targetIrodsAbsolutePath,
+				localFileRoot, targetIrodsAbsolutePath, newChildOfChild.lastModified(),
 				timestampToUse);
 		irodsFileSystem.close();
 		Assert.assertNotNull("null diffModel", diffModel);
@@ -557,7 +557,7 @@ public class FileTreeDiffUtilityTest {
 	
 		long timestampToUse = newChildOfChild.lastModified() + 500;
 		FileTreeModel diffModel = fileTreeDiffUtility.generateDiffLocalToIRODS(
-				localFileRoot, targetIrodsAbsolutePath,
+				localFileRoot, targetIrodsAbsolutePath, newChildOfChild.lastModified(),
 				timestampToUse);
 		irodsFileSystem.close();
 		Assert.assertNotNull("null diffModel", diffModel);
@@ -631,7 +631,7 @@ public class FileTreeDiffUtilityTest {
 		FileTreeDiffUtility fileTreeDiffUtility = new FileTreeDiffUtilityImpl(
 				irodsAccount, irodsFileSystem.getIRODSAccessObjectFactory());
 		FileTreeModel diffModel = fileTreeDiffUtility.generateDiffLocalToIRODS(
-				localFileRoot, targetIrodsAbsolutePath, 0);
+				localFileRoot, targetIrodsAbsolutePath, 0,0);
 		irodsFileSystem.close();
 		Assert.assertNotNull("null diffModel", diffModel);
 		FileTreeNode fileTreeNode = (FileTreeNode) diffModel.getRoot();
@@ -694,7 +694,7 @@ public class FileTreeDiffUtilityTest {
 		FileTreeDiffUtility fileTreeDiffUtility = new FileTreeDiffUtilityImpl(
 				irodsAccount, irodsFileSystem.getIRODSAccessObjectFactory());
 		FileTreeModel diffModel = fileTreeDiffUtility.generateDiffLocalToIRODS(
-				localFileRoot, targetIrodsAbsolutePath, 0);
+				localFileRoot, targetIrodsAbsolutePath, 0,0);
 		irodsFileSystem.close();
 		Assert.assertNotNull("null diffModel", diffModel);
 		
@@ -758,7 +758,7 @@ public class FileTreeDiffUtilityTest {
 		FileTreeDiffUtility fileTreeDiffUtility = new FileTreeDiffUtilityImpl(
 				irodsAccount, irodsFileSystem.getIRODSAccessObjectFactory());
 		FileTreeModel diffModel = fileTreeDiffUtility.generateDiffLocalToIRODS(
-				localFile, targetIrodsAbsolutePath, 0);
+				localFile, targetIrodsAbsolutePath, 0,0);
 		irodsFileSystem.close();
 		Assert.assertNotNull("null diffModel", diffModel);
 		
@@ -770,9 +770,9 @@ public class FileTreeDiffUtilityTest {
 	}
 
 	@Test
-	public void testFileTreeDiffTimestampAfterCutoff() throws Exception {
+	public void testFileTreeDiffWhereIrodsFIleTimestampIsAfterCutoff() throws Exception {
 
-		String rootCollection = "testFileTreeDiffTimestampAfterCutoff";
+		String rootCollection = "testFileTreeDiffWhereIrodsFIleTimestampIsAfterCutoff";
 		String testFileName1 = "testFileName1";
 		String testFileName2 = "testFileName2";
 
@@ -823,7 +823,7 @@ public class FileTreeDiffUtilityTest {
 				irodsAccount, irodsFileSystem.getIRODSAccessObjectFactory());
 		FileTreeModel diffModel = fileTreeDiffUtility
 				.generateDiffLocalToIRODS(localRootFile,
-						irodsRootFile.getAbsolutePath(), cutoffTimestamp);
+						irodsRootFile.getAbsolutePath(), cutoffTimestamp, cutoffTimestamp);
 		irodsFileSystem.close();
 
 		File[] childrenOfLocal = localRootFile.listFiles();
@@ -887,7 +887,7 @@ public class FileTreeDiffUtilityTest {
 				irodsAccount, irodsFileSystem.getIRODSAccessObjectFactory());
 		FileTreeModel diffModel = fileTreeDiffUtility
 				.generateDiffLocalToIRODS(localRootFile,
-						irodsRootFile.getAbsolutePath(), cutoffTimestamp);
+						irodsRootFile.getAbsolutePath(), cutoffTimestamp, cutoffTimestamp);
 		irodsFileSystem.close();
 
 		File[] childrenOfLocal = localRootFile.listFiles();
@@ -1019,8 +1019,10 @@ public class FileTreeDiffUtilityTest {
 		File localFile = new File(localCollectionAbsolutePath);
 
 		dataTransferOperationsAO.putOperation(localFile, destFile, null, null);
-		long timestampToUse = new Date().getTime();
+		long leftHandTimestampToUse = new Date().getTime();
 		Thread.sleep(3000);
+		long rightHandTimestampToUse = new Date().getTime() + 5000;
+
 
 		// navigate down a couple of levels and put a file somewhere
 		localFile = new File(localFile
@@ -1044,10 +1046,9 @@ public class FileTreeDiffUtilityTest {
 		FileTreeDiffUtility fileTreeDiffUtility = new FileTreeDiffUtilityImpl(
 				irodsAccount, irodsFileSystem.getIRODSAccessObjectFactory());
 		
-
 		FileTreeModel diffModel = fileTreeDiffUtility.generateDiffLocalToIRODS(
 				localFileRoot, targetIrodsAbsolutePath,
-				timestampToUse);
+				leftHandTimestampToUse, rightHandTimestampToUse);
 		irodsFileSystem.close();
 		Assert.assertNotNull("null diffModel", diffModel);
 		FileTreeNode fileTreeNode = (FileTreeNode) diffModel.getRoot();
@@ -1096,15 +1097,17 @@ public class FileTreeDiffUtilityTest {
 		File localFile = new File(localCollectionAbsolutePath);
 
 		dataTransferOperationsAO.putOperation(localFile, destFile, null, null);
-		long timestampToUse = new Date().getTime();
+		long leftTimestampToUse = new Date().getTime();
 
 		Thread.sleep(3000);
+		long rightTimestampToUse = new Date().getTime();
 
 		// navigate down a couple of levels and put a dir somewhere
 		localFile = new File(localFile
 				.getAbsolutePath());
 		File[] children = localFile.listFiles();
 		File newChildOfChild = null;
+		
 		if (children.length > 1) {
 			File childFile = children[0];
 			newChildOfChild =new File(
@@ -1124,7 +1127,7 @@ public class FileTreeDiffUtilityTest {
 		
 		FileTreeModel diffModel = fileTreeDiffUtility.generateDiffLocalToIRODS(
 				localFileRoot, targetIrodsAbsolutePath,
-				timestampToUse);
+				leftTimestampToUse, rightTimestampToUse);
 		irodsFileSystem.close();
 		Assert.assertNotNull("null diffModel", diffModel);
 		FileTreeNode fileTreeNode = (FileTreeNode) diffModel.getRoot();
@@ -1188,7 +1191,8 @@ public class FileTreeDiffUtilityTest {
 			Assert.fail("test setup failed, no children");
 		}
 		
-		long timestampToUse = new Date().getTime();
+		long leftTimestampToUse = new Date().getTime();
+		long rightTimestampToUse = new Date().getTime();
 
 		File localFileRoot = new File(localCollectionAbsolutePath);
 		String targetIrodsAbsolutePath = irodsCollectionRootAbsolutePath + "/"
@@ -1201,7 +1205,7 @@ public class FileTreeDiffUtilityTest {
 
 		FileTreeModel diffModel = fileTreeDiffUtility.generateDiffLocalToIRODS(
 				localFileRoot, targetIrodsAbsolutePath,
-				timestampToUse);
+				leftTimestampToUse, rightTimestampToUse);
 		irodsFileSystem.close();
 		Assert.assertNotNull("null diffModel", diffModel);
 		FileTreeNode fileTreeNode = (FileTreeNode) diffModel.getRoot();
@@ -1263,7 +1267,8 @@ public class FileTreeDiffUtilityTest {
 			Assert.fail("test setup failed, no children");
 		}
 
-		long timestampToUse = new Date().getTime();
+		long leftTimestampToUse = new Date().getTime();
+		long rightTimestampToUse = new Date().getTime();
 
 		File localFileRoot = new File(localCollectionAbsolutePath);
 		String targetIrodsAbsolutePath = irodsCollectionRootAbsolutePath + "/"
@@ -1275,7 +1280,7 @@ public class FileTreeDiffUtilityTest {
 
 		FileTreeModel diffModel = fileTreeDiffUtility.generateDiffLocalToIRODS(
 				localFileRoot, targetIrodsAbsolutePath,
-				timestampToUse);
+				leftTimestampToUse, rightTimestampToUse);
 		irodsFileSystem.close();
 		Assert.assertNotNull("null diffModel", diffModel);
 		FileTreeNode fileTreeNode = (FileTreeNode) diffModel.getRoot();

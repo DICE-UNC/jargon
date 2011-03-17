@@ -51,14 +51,16 @@ public class SynchronizeProcessorImpl implements SynchronizeProcessor {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.irods.jargon.transferengine.synch.SynchronizeProcessor#
-	 * synchronizeLocalToIRODS(java.lang.String, java.lang.String,
-	 * java.lang.String, long)
+	 * @see
+	 * org.irods.jargon.transfer.synch.SynchronizeProcessor#synchronizeLocalToIRODS
+	 * (java.lang.String, java.lang.String, java.lang.String, long, long)
 	 */
 	@Override
 	public void synchronizeLocalToIRODS(final String synchDeviceName,
 			final String localRootAbsolutePath,
-			final String irodsRootAbsolutePath, final long timestampOfLastSynch)
+			final String irodsRootAbsolutePath,
+			final long timestampforLastSynchLeftHandSide,
+			final long timestampForLastSynchRightHandSide)
 			throws JargonException {
 
 		if (synchDeviceName == null || synchDeviceName.isEmpty()) {
@@ -73,9 +75,14 @@ public class SynchronizeProcessorImpl implements SynchronizeProcessor {
 			throw new IllegalArgumentException("null irodsRootAbsolutePath");
 		}
 
-		if (timestampOfLastSynch < 0) {
+		if (timestampforLastSynchLeftHandSide < 0) {
 			throw new IllegalArgumentException(
-					"negative timestampOfLastSynch, set to 0 if not specified");
+					"negative timestampforLastSynchLeftHandSide, set to 0 if not specified");
+		}
+
+		if (timestampForLastSynchRightHandSide < 0) {
+			throw new IllegalArgumentException(
+					"negative timestampForLastSynchRightHandSide, set to 0 if not specified");
 		}
 
 		checkInitialization();
@@ -83,7 +90,10 @@ public class SynchronizeProcessorImpl implements SynchronizeProcessor {
 		log.info("synchronizeLocalToIRODS for device:{}", synchDeviceName);
 		log.info("   localRootAbsolutePath:{}", localRootAbsolutePath);
 		log.info("    irodsRootAbsolutePath:{}", irodsRootAbsolutePath);
-		log.info("   timestampOfLastSynch:{}", timestampOfLastSynch);
+		log.info("   timestampForLastSynchLeftHandSide:{}",
+				timestampforLastSynchLeftHandSide);
+		log.info("   timestampForLastSynchRightHandSide:{}",
+				timestampForLastSynchRightHandSide);
 
 		StringBuilder calculatedLocalRoot = new StringBuilder(
 				localRootAbsolutePath);
@@ -107,7 +117,9 @@ public class SynchronizeProcessorImpl implements SynchronizeProcessor {
 
 		FileTreeModel diffModel = fileTreeDiffUtility.generateDiffLocalToIRODS(
 				new File(calculatedLocalRoot.toString()),
-				calculatedIrodsRoot.toString(), timestampOfLastSynch);
+				calculatedIrodsRoot.toString(),
+				timestampforLastSynchLeftHandSide,
+				timestampForLastSynchRightHandSide);
 		log.debug("diff model obtained");
 		if (diffModel == null) {
 			throw new JargonException(
@@ -116,14 +128,17 @@ public class SynchronizeProcessorImpl implements SynchronizeProcessor {
 
 		processDiff((FileTreeNode) diffModel.getRoot(),
 				calculatedLocalRoot.toString(), calculatedIrodsRoot.toString(),
-				timestampOfLastSynch);
+				timestampforLastSynchLeftHandSide,
+				timestampForLastSynchRightHandSide);
 		log.debug("processing complete");
 	}
 
 	// given a tree model, do any necessary operations to synchronize
 	private void processDiff(final FileTreeNode diffNode,
 			final String localRootAbsolutePath,
-			final String irodsRootAbsolutePath, final long timestampOfLastSynch)
+			final String irodsRootAbsolutePath,
+			final long timestampforLastSynchLeftHandSide,
+			final long timestampForLastSynchRightHandSide)
 			throws JargonException {
 
 		FileTreeDiffEntry fileTreeDiffEntry = (FileTreeDiffEntry) diffNode
@@ -139,7 +154,9 @@ public class SynchronizeProcessorImpl implements SynchronizeProcessor {
 			while (children.hasMoreElements()) {
 				childNode = (FileTreeNode) children.nextElement();
 				processDiff(childNode, localRootAbsolutePath,
-						irodsRootAbsolutePath, timestampOfLastSynch);
+						irodsRootAbsolutePath,
+						timestampforLastSynchLeftHandSide,
+						timestampForLastSynchRightHandSide);
 			}
 		} else if (fileTreeDiffEntry.getDiffType() == DiffType.LEFT_HAND_PLUS) {
 			log.debug("local file is new directory {}", fileTreeDiffEntry
