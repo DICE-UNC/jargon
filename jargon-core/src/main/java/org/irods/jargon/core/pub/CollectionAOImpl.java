@@ -692,6 +692,18 @@ public final class CollectionAOImpl extends IRODSGenericAO implements
 				collectionAbsolutePath, partialStartIndex);
 
 	}
+	
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.core.pub.CollectionAO#findMetadataValuesForCollection(java.lang.String)
+	 */
+	@Override
+	public List<MetaDataAndDomainData> findMetadataValuesForCollection(
+			final String collectionAbsolutePath)
+			throws JargonException, JargonQueryException {
+
+		return findMetadataValuesForCollection(collectionAbsolutePath);
+
+	}
 
 	/*
 	 * (non-Javadoc)

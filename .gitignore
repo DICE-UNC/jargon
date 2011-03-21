@@ -1,3 +1,7 @@
 .project
+.DS_Store
+Servers
 .settings
 target
+bin
+*.war

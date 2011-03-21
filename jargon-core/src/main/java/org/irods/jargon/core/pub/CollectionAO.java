@@ -150,6 +150,24 @@ public interface CollectionAO extends IRODSAccessObject {
 	List<MetaDataAndDomainData> findMetadataValuesForCollection(
 			final String collectionAbsolutePath, final int partialStartIndex)
 			throws JargonException, JargonQueryException;
+	
+	/**
+	 * Get a list of the metadata values for the given collection absolute path.
+	 * 
+	 * @param collectionAbsolutePath
+	 *            <code>String</code> with the absolute path of a collection in
+	 *            iRODS
+	 * @return <code>List</code> of
+	 *         {@link org.irods.jargon.core.query.MetaDataAndDomainData} with
+	 *         AVU values and other values that identify the collection the AVU
+	 *         applies to.
+	 * @throws JargonException
+	 * @throws JargonQueryException
+	 */
+	List<MetaDataAndDomainData> findMetadataValuesForCollection(
+			final String collectionAbsolutePath)
+			throws JargonException, JargonQueryException;
+
 
 	/**
 	 * Overwrite AVU metadata for this collection

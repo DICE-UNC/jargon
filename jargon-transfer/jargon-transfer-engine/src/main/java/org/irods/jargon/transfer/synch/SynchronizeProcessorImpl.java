@@ -22,6 +22,9 @@ import org.slf4j.LoggerFactory;
  * 
  * @author Mike Conway - DICE (www.irods.org)
  * 
+ * TODO: dev notes
+ * a plus on one side before the last synch indicates a deletion?  Skip for now, but test out how this would look
+ * 
  */
 public class SynchronizeProcessorImpl implements SynchronizeProcessor {
 
@@ -86,6 +89,9 @@ public class SynchronizeProcessorImpl implements SynchronizeProcessor {
 		}
 
 		checkInitialization();
+		
+		// FIXME: implement
+		checkForPendingSynchsOnTargetDirectory();
 
 		log.info("synchronizeLocalToIRODS for device:{}", synchDeviceName);
 		log.info("   localRootAbsolutePath:{}", localRootAbsolutePath);
@@ -115,6 +121,7 @@ public class SynchronizeProcessorImpl implements SynchronizeProcessor {
 			}
 		}
 
+		// generate a diff between the lhs local directory and the rhs iRODS directory
 		FileTreeModel diffModel = fileTreeDiffUtility.generateDiffLocalToIRODS(
 				new File(calculatedLocalRoot.toString()),
 				calculatedIrodsRoot.toString(),
@@ -126,11 +133,22 @@ public class SynchronizeProcessorImpl implements SynchronizeProcessor {
 					"null diff model returned, cannot process");
 		}
 
+		// process the diff, scheduling appropriate transfers to synchronize
 		processDiff((FileTreeNode) diffModel.getRoot(),
 				calculatedLocalRoot.toString(), calculatedIrodsRoot.toString(),
 				timestampforLastSynchLeftHandSide,
 				timestampForLastSynchRightHandSide);
 		log.debug("processing complete");
+	}
+
+	/**
+	 * need to implement...
+	 * Check the transfer queue, if there are any transfers already in the queue for this directory on iRODS (including enqueued, error,  warning, paused, etc) that could
+	 * possibly be restarted, then don't do the transfer.  This is a check to avoid double-queue of a synch job.
+	 */
+	private void checkForPendingSynchsOnTargetDirectory() {
+		// TODO: implement me
+		
 	}
 
 	// given a tree model, do any necessary operations to synchronize

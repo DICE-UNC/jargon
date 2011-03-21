@@ -25,6 +25,11 @@ import org.slf4j.LoggerFactory;
  * 
  * @author Mike Conway - DICE (www.irods.org)
  * 
+ * TODO: dev notes
+ * There is a corresponding note in SynchronizeProcessorImpl, handle the idea of deletes as part of synch?
+ * Use file filters to optimize (for only grabbing files/collections, and perhaps for using timestamp to identify diffs
+ * Processing to compare to equal file names when timestamp data not useful (length, checksum?)
+ * 
  */
 public class FileTreeDiffUtilityImpl implements FileTreeDiffUtility {
 
@@ -445,6 +450,10 @@ public class FileTreeDiffUtilityImpl implements FileTreeDiffUtility {
 		if (timestampForLastSynchLeftHandSide == NO_TIMESTAMP_CHECKS
 				|| timestampForLastSynchLeftHandSide == NO_TIMESTAMP_CHECKS) {
 			log.debug("comparing files without a last synch, use existing last mod data");
+			
+			// FIXME: do a compare on length to see if diff (checksum probably too expensive, but could be an option
+			
+			
 		} else {
 
 			log.debug("checking file timestamp against lhs cutoff:{}",
