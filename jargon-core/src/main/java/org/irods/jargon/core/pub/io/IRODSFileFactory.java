@@ -208,17 +208,42 @@ public interface IRODSFileFactory {
 			IRODSFile file) throws JargonException;
 
 	/**
-	 * Create an instance of an <code>IRODSFile</code> by absolute path.  This call allows an optimization
-	 * to preset whether this is a file or collection, avoiding some subsequent queries if <code>isFile()</code> is called.
-	 * Internally, when that information is available in some methods, this will be pre-set and cached.
+	 * Create an instance of an <code>IRODSFile</code> by absolute path. This
+	 * call allows an optimization to preset whether this is a file or
+	 * collection, avoiding some subsequent queries if <code>isFile()</code> is
+	 * called. Internally, when that information is available in some methods,
+	 * this will be pre-set and cached.
 	 * 
 	 * @param path
 	 *            <code>String</code> with the absolute path to the iRODS file
 	 *            or collection
-	 *  @param isFile <code>boolean</code> that indicates whether this is a file (versus a collection)
+	 * @param isFile
+	 *            <code>boolean</code> that indicates whether this is a file
+	 *            (versus a collection)
 	 * @return {@link IRODSFile}
 	 * @throws JargonException
 	 */
 	IRODSFile instanceIRODSFileIndicatingType(String path, boolean isFile)
 			throws JargonException;
+
+	/**
+	 * Create an instance of an <code>IRODSFile</code> by parent and child path.
+	 * This call allows an optimization to preset whether this is a file or
+	 * collection, avoiding some subsequent queries if <code>isFile()</code> is
+	 * called. Internally, when that information is available in some methods,
+	 * this will be pre-set and cached.
+	 * 
+	 * @param parent
+	 *            <code>String</code> with the absolute path to the iRODS parent
+	 *            collection
+	 * @param child
+	 *            <code> String with the absolute path to the data object or collection
+	 * @param isFile
+	 *            <code>boolean</code> that indicates whether this is a file
+	 *            (versus a collection)
+	 * @return
+	 * @throws JargonException
+	 */
+	IRODSFile instanceIRODSFileIndicatingType(String parent, String child,
+			boolean isFile) throws JargonException;
 }

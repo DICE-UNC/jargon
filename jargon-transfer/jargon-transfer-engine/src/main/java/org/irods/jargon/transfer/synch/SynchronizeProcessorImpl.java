@@ -7,6 +7,7 @@ import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry;
+import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry.ObjectType;
 import org.irods.jargon.datautils.tree.FileTreeDiffEntry;
 import org.irods.jargon.datautils.tree.FileTreeDiffEntry.DiffType;
 import org.irods.jargon.datautils.tree.FileTreeDiffUtility;
@@ -21,7 +22,7 @@ import org.slf4j.LoggerFactory;
  * transfers to synchronize between the two.
  * 
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ * FIXME: decide on creation style
  * TODO: dev notes
  * a plus on one side before the last synch indicates a deletion?  Skip for now, but test out how this would look
  * 
@@ -58,6 +59,7 @@ public class SynchronizeProcessorImpl implements SynchronizeProcessor {
 	 * org.irods.jargon.transfer.synch.SynchronizeProcessor#synchronizeLocalToIRODS
 	 * (java.lang.String, java.lang.String, java.lang.String, long, long)
 	 */
+	// FIXME: refactor to lookup info from sych data, doesn't need to be passed here, add alt method for lookup
 	@Override
 	public void synchronizeLocalToIRODS(final String synchDeviceName,
 			final String localRootAbsolutePath,
@@ -101,23 +103,25 @@ public class SynchronizeProcessorImpl implements SynchronizeProcessor {
 		log.info("   timestampForLastSynchRightHandSide:{}",
 				timestampForLastSynchRightHandSide);
 
-		StringBuilder calculatedLocalRoot = new StringBuilder(
-				localRootAbsolutePath);
+		String calculatedLocalRoot = "";
 		if (localRootAbsolutePath.length() > 1) {
-			if (localRootAbsolutePath.lastIndexOf(SLASH) != localRootAbsolutePath
+			if (localRootAbsolutePath.lastIndexOf(SLASH) == localRootAbsolutePath
 					.length() - 1) {
-				log.debug("appending a trailing slash to local absolute path");
-				calculatedLocalRoot.append(SLASH);
+				log.debug("removing a trailing slash from local absolute path");
+				calculatedLocalRoot = localRootAbsolutePath.substring(0, localRootAbsolutePath.length() -1);
+			} else {
+				calculatedLocalRoot = localRootAbsolutePath;
 			}
 		}
 
-		StringBuilder calculatedIrodsRoot = new StringBuilder(
-				irodsRootAbsolutePath);
+		String calculatedIrodsRoot = "";
 		if (irodsRootAbsolutePath.length() > 1) {
-			if (irodsRootAbsolutePath.lastIndexOf(SLASH) != irodsRootAbsolutePath
+			if (irodsRootAbsolutePath.lastIndexOf(SLASH) == irodsRootAbsolutePath
 					.length() - 1) {
-				log.debug("appending a trailing slash to irods absolute path");
-				calculatedIrodsRoot.append(SLASH);
+				log.debug("removing a trailing slash from irods absolute path");
+				calculatedIrodsRoot = irodsRootAbsolutePath.substring(0, irodsRootAbsolutePath.length() -1);
+			} else {
+				calculatedIrodsRoot = irodsRootAbsolutePath;
 			}
 		}
 
@@ -127,7 +131,7 @@ public class SynchronizeProcessorImpl implements SynchronizeProcessor {
 				calculatedIrodsRoot.toString(),
 				timestampforLastSynchLeftHandSide,
 				timestampForLastSynchRightHandSide);
-		log.debug("diff model obtained");
+		log.debug("diff model obtained:{}", diffModel);
 		if (diffModel == null) {
 			throw new JargonException(
 					"null diff model returned, cannot process");
@@ -244,17 +248,25 @@ public class SynchronizeProcessorImpl implements SynchronizeProcessor {
 			final String localRootAbsolutePath,
 			final String irodsRootAbsolutePath) throws JargonException {
 		/*
-		 * the diff node will have the absolute path of the irods file file, this is
-		 * the source of the put. the local path will be the irods path minus
-		 * the irods root, appended to the local root
+		 * the diff node will have the absolute path of the local  file, this is
+		 * the source of the put. the irods path will be the local parent collection relative path,
+		 * appended to the local root.
 		 */
 
 		FileTreeDiffEntry fileTreeDiffEntry = (FileTreeDiffEntry) diffNode
 				.getUserObject();
 		CollectionAndDataObjectListingEntry entry = fileTreeDiffEntry
 				.getCollectionAndDataObjectListingEntry();
-		String targetRelativePath = entry.getFormattedAbsolutePath().substring(
-				localRootAbsolutePath.length());
+		
+		String targetRelativePath;
+		if (entry.getObjectType() == ObjectType.COLLECTION) {
+			targetRelativePath =  entry.getParentPath().substring(
+				localRootAbsolutePath.length()); 
+		} else {
+			targetRelativePath =  entry.getFormattedAbsolutePath().substring(
+					localRootAbsolutePath.length()); 
+		}
+
 		StringBuilder sb = new StringBuilder(irodsRootAbsolutePath);
 		sb.append(targetRelativePath);
 

@@ -150,11 +150,11 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 	@Override
 	public int getFilePermissions(final IRODSFile irodsFile)
 			throws JargonException {
-		
+
 		if (irodsFile == null) {
 			throw new JargonException("irods file is null");
 		}
-		
+
 		if (log.isInfoEnabled()) {
 			log.info("checking permissions on:" + irodsFile);
 		}
@@ -859,7 +859,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 	 * (org.irods.jargon.core.pub.io.IRODSFile, java.io.FileFilter)
 	 */
 	@Override
-	public List<String> getListInDirWithFileFilter(final IRODSFile irodsFile,
+	public List<File> getListInDirWithFileFilter(final IRODSFile irodsFile,
 			final FileFilter fileFilter) throws JargonException,
 			DataNotFoundException {
 
@@ -871,7 +871,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 			throw new JargonException("file filter is null");
 		}
 
-		List<String> subdirs = new ArrayList<String>();
+		List<File> subdirs = new ArrayList<File>();
 		String path = "";
 
 		if (irodsFile.isDirectory()) {
@@ -957,13 +957,14 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 	 * @throws JargonException
 	 */
 	private void processSubdirRowWhenListFilesWithFileFilter(
-			final FileFilter fileFilter, final List<String> subdirs,
+			final FileFilter fileFilter, final List<File> subdirs,
 			final IRODSQueryResultRow row) throws JargonException {
-		String thisFileDir;
-		// this is a dir, does it pass the file name filter?
-		thisFileDir = row.getColumn(0);
-		if (fileFilter.accept(new File(thisFileDir))) {
-			subdirs.add(row.getColumn(0));
+		String thisFileDir = row.getColumn(0);
+		File irodsFile = (File) this.getIRODSFileFactory()
+				.instanceIRODSFileIndicatingType(thisFileDir, false);
+
+		if (fileFilter.accept(irodsFile)) {
+			subdirs.add(irodsFile);
 		}
 	}
 
@@ -974,12 +975,17 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 	 * @throws JargonException
 	 */
 	private void processFileRowWhenListFilesWithFileFilter(
-			final FileFilter fileFilter, final List<String> subdirs,
+			final FileFilter fileFilter, final List<File> subdirs,
 			final IRODSQueryResultRow row) throws JargonException {
 		// this is a file, does it pass the file name filter?
 		String thisFileDir = row.getColumn(0);
-		if (fileFilter.accept(new File(thisFileDir))) {
-			subdirs.add(row.getColumn(1));
+		String thisFileName = row.getColumn(1);
+		File irodsFile = (File) this.getIRODSFileFactory()
+				.instanceIRODSFileIndicatingType(thisFileDir, thisFileName,
+						true);
+
+		if (fileFilter.accept(irodsFile)) {
+			subdirs.add(irodsFile);
 		}
 	}
 

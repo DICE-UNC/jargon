@@ -895,7 +895,7 @@ public class IRODSFileSystemAOImplTest {
 				.instanceIRODSFile(targetIrodsCollection);
 		IRODSFileSystemAO fileSystemAO = accessObjectFactory
 				.getIRODSFileSystemAO(irodsAccount);
-		List<String> subdirs = fileSystemAO.getListInDirWithFileFilter(
+		List<File> subdirs = fileSystemAO.getListInDirWithFileFilter(
 				irodsFile, new IRODSAcceptAllFileFilter());
 		irodsSession.closeSession();
 		Assert.assertNotNull(subdirs);

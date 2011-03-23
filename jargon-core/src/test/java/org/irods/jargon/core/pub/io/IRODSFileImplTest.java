@@ -1460,7 +1460,7 @@ public class IRODSFileImplTest {
 
 		IRODSFile irodsFile = irodsFileFactory
 				.instanceIRODSFile(targetIrodsCollection);
-		IRODSFile[] subdirs = (IRODSFile[]) irodsFile
+		File[] subdirs =irodsFile
 				.listFiles(new IRODSAcceptAllFileFilter());
 		irodsSession.closeSession();
 		TestCase.assertNotNull(subdirs);

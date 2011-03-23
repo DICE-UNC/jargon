@@ -701,7 +701,7 @@ public final class CollectionAOImpl extends IRODSGenericAO implements
 			final String collectionAbsolutePath)
 			throws JargonException, JargonQueryException {
 
-		return findMetadataValuesForCollection(collectionAbsolutePath);
+		return findMetadataValuesForCollection(collectionAbsolutePath, 0);
 
 	}
 

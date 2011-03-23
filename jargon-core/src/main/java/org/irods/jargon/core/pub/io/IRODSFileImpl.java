@@ -75,6 +75,25 @@ public final class IRODSFileImpl extends File implements IRODSFile {
 			pathNameType = PathNameType.DIRECTORY;
 		}
 	}
+	
+	/**
+	 * Constructor with parent and child name that can preset the file type, thus avoiding a GenQuery lookup when <code>isFile</code> is subsequently
+	 * called.
+	 * @param parentName
+	 * @param childName
+	 * @param irodsFileSystemAO
+	 * @param isFile
+	 * @throws JargonException
+	 */
+	protected IRODSFileImpl(final String parentName, final String childName,
+			final IRODSFileSystemAO irodsFileSystemAO, final boolean isFile) throws JargonException {
+		this(parentName, childName, irodsFileSystemAO);
+		if (isFile) {
+			pathNameType = PathNameType.FILE;
+		} else {
+			pathNameType = PathNameType.DIRECTORY;
+		}
+	}
 
 	protected IRODSFileImpl(final String parent, final String child,
 			final IRODSFileSystemAO irodsFileSystemAO) throws JargonException {
@@ -851,18 +870,11 @@ public final class IRODSFileImpl extends File implements IRODSFile {
 	@Override
 	public File[] listFiles(final FileFilter filter) {
 		try {
-			List<String> result = irodsFileSystemAO.getListInDirWithFileFilter(
+			List<File> result = (List<File>) irodsFileSystemAO.getListInDirWithFileFilter(
 					this, filter);
-			IRODSFileImpl[] a = new IRODSFileImpl[result.size()];
-			IRODSFileImpl irodsFile;
-			int i = 0;
-			for (String fileName : result) {
-				irodsFile = new IRODSFileImpl(fileName, this.irodsFileSystemAO);
-				a[i++] = irodsFile;
-
-			}
-			return a;
-		} catch (DataNotFoundException e) {
+			File[] resArray = new File[result.size()];
+			return result.toArray(resArray);
+			} catch (DataNotFoundException e) {
 			return new IRODSFileImpl[] {};
 		} catch (JargonException e) {
 			log.error("jargon exception, rethrow as unchecked", e);

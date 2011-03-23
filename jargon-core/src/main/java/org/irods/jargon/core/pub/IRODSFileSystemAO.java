@@ -1,5 +1,6 @@
 package org.irods.jargon.core.pub;
 
+import java.io.File;
 import java.io.FileFilter;
 import java.io.FilenameFilter;
 import java.util.List;
@@ -117,7 +118,7 @@ public interface IRODSFileSystemAO extends IRODSAccessObject {
 	 * @throws JargonException
 	 * @throws DataNotFoundException
 	 */
-	List<String> getListInDirWithFileFilter(IRODSFile irodsFile,
+	List<File> getListInDirWithFileFilter(IRODSFile irodsFile,
 			FileFilter fileFilter) throws JargonException,
 			DataNotFoundException;
 

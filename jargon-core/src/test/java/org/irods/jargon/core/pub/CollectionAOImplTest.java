@@ -489,6 +489,142 @@ public class CollectionAOImplTest {
 				metaValues.indexOf(expectedAttribValue) > -1);
 
 	}
+	
+	@Test
+	public void testAddAvuMetadataWithBarInVals() throws Exception {
+		String testDirName = "testAddAvuMetadataWithBarInVals";
+		String expectedAttribName = "testattrib1";
+		String expectedAttribValue = "testvalue1|somemore";
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
+								+ testDirName);
+
+		// put scratch collection into irods in the right place
+		IrodsInvocationContext invocationContext = testingPropertiesHelper
+				.buildIRODSInvocationContextFromTestProperties(testingProperties);
+		ImkdirCommand imkdirCommand = new ImkdirCommand();
+		imkdirCommand.setCollectionName(targetIrodsCollection);
+
+		IcommandInvoker invoker = new IcommandInvoker(invocationContext);
+		invoker.invokeCommandAndGetResultAsString(imkdirCommand);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+		CollectionAO collectionAO = accessObjectFactory
+				.getCollectionAO(irodsAccount);
+
+		AvuData dataToAdd = AvuData.instance(expectedAttribName,
+				expectedAttribValue, "");
+		collectionAO.addAVUMetadata(targetIrodsCollection, dataToAdd);
+
+		irodsFileSystem.close();
+
+		// verify the metadata was added
+		// now get back the avu data and make sure it's there
+		ImetaListCommand imetaList = new ImetaListCommand();
+		imetaList.setAttribName(expectedAttribName);
+		imetaList.setMetaObjectType(MetaObjectType.COLLECTION_META);
+		imetaList.setObjectPath(targetIrodsCollection);
+		String metaValues = invoker
+				.invokeCommandAndGetResultAsString(imetaList);
+		Assert.assertTrue("did not find expected attrib name",
+				metaValues.indexOf(expectedAttribName) > -1);
+		Assert.assertTrue("did not find expected attrib value",
+				metaValues.indexOf(expectedAttribValue) > -1);
+
+	}
+	
+	@Test
+	public void testAddAvuMetadataWithColonInArg() throws Exception {
+		String testDirName = "testAddAvuMetadataWithColonInArg";
+		String expectedAttribName = "testattrib1:testAttribAnother";
+		String expectedAttribValue = "testvalue1|somemore";
+		String expectedUnit = "test:thisHasAColon";
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
+								+ testDirName);
+
+		// put scratch collection into irods in the right place
+		IrodsInvocationContext invocationContext = testingPropertiesHelper
+				.buildIRODSInvocationContextFromTestProperties(testingProperties);
+		ImkdirCommand imkdirCommand = new ImkdirCommand();
+		imkdirCommand.setCollectionName(targetIrodsCollection);
+
+		IcommandInvoker invoker = new IcommandInvoker(invocationContext);
+		invoker.invokeCommandAndGetResultAsString(imkdirCommand);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+		CollectionAO collectionAO = accessObjectFactory
+				.getCollectionAO(irodsAccount);
+
+		AvuData dataToAdd = AvuData.instance(expectedAttribName,
+				expectedAttribValue, expectedUnit);
+		collectionAO.addAVUMetadata(targetIrodsCollection, dataToAdd);
+
+		irodsFileSystem.close();
+
+		// verify the metadata was added
+		// now get back the avu data and make sure it's there
+		ImetaListCommand imetaList = new ImetaListCommand();
+		imetaList.setAttribName(expectedAttribName);
+		imetaList.setMetaObjectType(MetaObjectType.COLLECTION_META);
+		imetaList.setObjectPath(targetIrodsCollection);
+		String metaValues = invoker
+				.invokeCommandAndGetResultAsString(imetaList);
+		Assert.assertTrue("did not find expected attrib name",
+				metaValues.indexOf(expectedAttribName) > -1);
+		Assert.assertTrue("did not find expected attrib value",
+				metaValues.indexOf(expectedAttribValue) > -1);
+
+	}
+	
+	@Test
+	public void testMkdirThenAddAvuMetadataWithColonInArg() throws Exception {
+		String testDirName = "testMkdirThenAddAvuMetadataWithColonInArg";
+		String expectedAttribName = "testattrib1:testAttribAnother";
+		String expectedAttribValue = "testvalue1|somemore";
+		String expectedUnit = "test:thisHasAColon";
+
+		String subdir = "subdir";
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
+								+ testDirName);
+
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
+		IRODSFile dirFile = irodsFileSystem.getIRODSFileFactory(irodsAccount).instanceIRODSFile(targetIrodsCollection + "/" + subdir);
+		dirFile.mkdirs();
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+		CollectionAO collectionAO = accessObjectFactory
+				.getCollectionAO(irodsAccount);
+
+		AvuData dataToAdd = AvuData.instance(expectedAttribName,
+				expectedAttribValue, expectedUnit);
+		collectionAO.addAVUMetadata(dirFile.getAbsolutePath(), dataToAdd);
+		List<MetaDataAndDomainData> actualMetadata = collectionAO.findMetadataValuesForCollection(dirFile.getAbsolutePath());
+
+		irodsFileSystem.close();
+		TestCase.assertEquals("did not get back metadata",1, actualMetadata.size());
+
+	}
 
 	@Test
 	public void testRemoveAvuMetadata() throws Exception {

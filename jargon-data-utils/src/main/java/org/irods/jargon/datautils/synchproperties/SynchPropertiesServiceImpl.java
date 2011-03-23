@@ -5,9 +5,12 @@ import java.util.List;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.DataNotFoundException;
+import org.irods.jargon.core.exception.DuplicateDataException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.CollectionAO;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
+import org.irods.jargon.core.pub.domain.AvuData;
+import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.query.AVUQueryElement;
 import org.irods.jargon.core.query.AVUQueryElement.AVUQueryPart;
 import org.irods.jargon.core.query.AVUQueryOperatorEnum;
@@ -23,7 +26,7 @@ import org.slf4j.LoggerFactory;
  * @author Mike Conway - DICE (www.irods.org)
  * 
  */
-public class SynchPropertiesServiceImpl implements SynchPropetiesService {
+public class SynchPropertiesServiceImpl implements SynchPropertiesService {
 
 	public static final Logger log = LoggerFactory
 			.getLogger(SynchPropertiesServiceImpl.class);
@@ -39,19 +42,43 @@ public class SynchPropertiesServiceImpl implements SynchPropetiesService {
 	 */
 	private IRODSAccount irodsAccount;
 
+	/**
+	 * Default (no-values) constructor.  The account and <code>IRODSFileSystem</code> need to be initialized va the setter methods.
+	 */
+	public SynchPropertiesServiceImpl() {
+		super();
+	}
+	/**
+	 * Constructor initializes dependencies.  These can also be set after using the default constructor.
+	 * @param irodsAccessObjectFactory <code>IRODSAccessObjectFactory</code> that can create various access objects to interact with iRODS
+	 * @param irodsAccount <code>IRODSAccount</code> that describes the user and server to connect to
+	 */
+
+	public SynchPropertiesServiceImpl(
+			IRODSAccessObjectFactory irodsAccessObjectFactory,
+			IRODSAccount irodsAccount) {
+		super();
+		this.irodsAccessObjectFactory = irodsAccessObjectFactory;
+		this.irodsAccount = irodsAccount;
+	}
+
+	@Override
 	public IRODSAccessObjectFactory getIrodsAccessObjectFactory() {
 		return irodsAccessObjectFactory;
 	}
 
+	@Override
 	public void setIrodsAccessObjectFactory(
 			final IRODSAccessObjectFactory irodsAccessObjectFactory) {
 		this.irodsAccessObjectFactory = irodsAccessObjectFactory;
 	}
 
+	@Override
 	public IRODSAccount getIrodsAccount() {
 		return irodsAccount;
 	}
 
+	@Override
 	public void setIrodsAccount(final IRODSAccount irodsAccount) {
 		this.irodsAccount = irodsAccount;
 	}
@@ -69,8 +96,12 @@ public class SynchPropertiesServiceImpl implements SynchPropetiesService {
 	 * localAbsPath] | iRODSSynch:userSynchDir
 	 */
 
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.datautils.synchproperties.SynchPropetiesService#getUserSynchTargetForUserAndAbsolutePath(java.lang.String, java.lang.String, java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.datautils.synchproperties.SynchPropetiesService#
+	 * getUserSynchTargetForUserAndAbsolutePath(java.lang.String,
+	 * java.lang.String, java.lang.String)
 	 */
 	@Override
 	public UserSynchTarget getUserSynchTargetForUserAndAbsolutePath(
@@ -100,10 +131,8 @@ public class SynchPropertiesServiceImpl implements SynchPropetiesService {
 		CollectionAO collectionAO = irodsAccessObjectFactory
 				.getCollectionAO(irodsAccount);
 
-		StringBuilder userDevAttrib = new StringBuilder();
-		userDevAttrib.append(userName);
-		userDevAttrib.append(":");
-		userDevAttrib.append(deviceName);
+		String userDevAttrib = buildAvuAttribForSynchUtilTarget(userName,
+				deviceName);
 
 		List<AVUQueryElement> avuQuery = new ArrayList<AVUQueryElement>();
 		List<MetaDataAndDomainData> queryResults;
@@ -117,7 +146,7 @@ public class SynchPropertiesServiceImpl implements SynchPropetiesService {
 			avuQuery.add(avuQueryElement);
 			avuQueryElement = AVUQueryElement.instanceForValueQuery(
 					AVUQueryPart.ATTRIBUTE, AVUQueryOperatorEnum.EQUAL,
-					userDevAttrib.toString());
+					userDevAttrib);
 			avuQuery.add(avuQueryElement);
 			queryResults = collectionAO
 					.findMetadataValuesByMetadataQueryForCollection(avuQuery,
@@ -144,7 +173,7 @@ public class SynchPropertiesServiceImpl implements SynchPropetiesService {
 		MetaDataAndDomainData deviceInfo = queryResults.get(0);
 		// split the data out of the avu data value
 
-		String[] valueComponents = deviceInfo.getAvuValue().split("[|]");
+		String[] valueComponents = deviceInfo.getAvuValue().split("[~]");
 		if (valueComponents.length != 3) {
 			log.error("did not find 3 expected values in the avu value: {}",
 					deviceInfo);
@@ -187,6 +216,7 @@ public class SynchPropertiesServiceImpl implements SynchPropetiesService {
 
 	}
 
+	
 	/**
 	 * Ensure whether the required dependencies have been set
 	 */
@@ -202,5 +232,101 @@ public class SynchPropertiesServiceImpl implements SynchPropetiesService {
 		}
 
 	}
+
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.datautils.synchproperties.SynchPropertiesService#addSynchDeviceForUserAndIrodsAbsolutePath(java.lang.String, java.lang.String, java.lang.String, java.lang.String)
+	 */
+	@Override
+	public void addSynchDeviceForUserAndIrodsAbsolutePath(
+			final String userName, final String deviceName,
+			final String irodsAbsolutePath, final String localAbsolutePath)
+			throws DuplicateDataException, JargonException {
+
+		checkDependencies();
+
+		if (userName == null || userName.isEmpty()) {
+			throw new IllegalArgumentException("null or empty userName");
+		}
+
+		if (deviceName == null || deviceName.isEmpty()) {
+			throw new IllegalArgumentException("null or empty deviceName");
+		}
+
+		if (irodsAbsolutePath == null || irodsAbsolutePath.isEmpty()) {
+			throw new IllegalArgumentException(
+					"null or empty irodsAbsolutePath");
+		}
+
+		if (localAbsolutePath == null || localAbsolutePath.isEmpty()) {
+			throw new IllegalArgumentException(
+					"null or empty localAbsolutePath");
+		}
+
+		log.info("addSynchDeviceForUserAndIrodsAbsolutePath");
+		log.info("   userName:{}", userName);
+		log.info("   deviceName:{}", deviceName);
+		log.info("   irodsAbsolutePath:{}", irodsAbsolutePath);
+		log.info("   localAbsolutepath:{}", localAbsolutePath);
+
+		log.info("checking for already-added synch device");
+
+		try {
+			UserSynchTarget userSynchTarget = getUserSynchTargetForUserAndAbsolutePath(
+					userName, deviceName, irodsAbsolutePath);
+			log.error("userSynchTarget already defined:{}", userSynchTarget);
+			throw new DuplicateDataException(
+					"cannot add userSyncTarget, already defined");
+		} catch (DataNotFoundException dnf) {
+			log.debug("no duplicate found, this is normal");
+		}
+		
+		log.info("checking to see if irods collection exists, if it does not, then create it and tag with AVU data, path:{}", irodsAbsolutePath);
+		
+		// see if the irods directory exists, create if it does not
+		IRODSFile irodsCollection = irodsAccessObjectFactory.getIRODSFileFactory(irodsAccount).instanceIRODSFile(irodsAbsolutePath);
+		
+		if (!irodsCollection.exists()) {
+			log.info("creating collection, does not exist");
+			irodsCollection.mkdirs();
+		}
+		
+		// TODO: what timestamp vals here?  I'm thinking 0 as it hasn't been synched yet, this would be updated at synch completes
+		log.info("adding marker avu for target collection");
+		AvuData marker = AvuData.instance(buildAvuAttribForSynchUtilTarget(userName, deviceName),
+				buildAvuValueForSynchUtilTarget(0L, 0L, localAbsolutePath), 
+				USER_SYNCH_DIR_TAG);
+		
+		CollectionAO collectionAO = irodsAccessObjectFactory
+		.getCollectionAO(irodsAccount);
+		
+		collectionAO.addAVUMetadata(irodsAbsolutePath, marker);
+		log.info("marker added:{}", marker);
+
+	}
+	
+	/**
+	 * @param userName
+	 * @param deviceName
+	 * @return
+	 */
+	private String buildAvuAttribForSynchUtilTarget(
+			final String userName, final String deviceName) {
+		StringBuilder userDevAttrib = new StringBuilder();
+		userDevAttrib.append(userName);
+		userDevAttrib.append(":");
+		userDevAttrib.append(deviceName);
+		return userDevAttrib.toString();
+	}
+	
+	private String buildAvuValueForSynchUtilTarget(final long localLastSynchTimestamp, final long irodsLastSynchTimestamp, final String localAbsolutePath) {
+		StringBuilder sb = new StringBuilder();
+		sb.append(localLastSynchTimestamp);
+		sb.append(SEPARATOR);
+		sb.append(irodsLastSynchTimestamp);
+		sb.append(SEPARATOR);
+		sb.append(localAbsolutePath);
+		return sb.toString();
+	}
+
 
 }

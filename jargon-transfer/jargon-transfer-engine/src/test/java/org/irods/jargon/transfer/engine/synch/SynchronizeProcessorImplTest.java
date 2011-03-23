@@ -296,7 +296,7 @@ public class SynchronizeProcessorImplTest {
 				0, 0);
 
 		Mockito.verify(transferManager).enqueueAPut(localRoot + c2Name,
-				irodsRoot + c2Name, irodsAccount.getDefaultStorageResource(),
+				irodsRoot, irodsAccount.getDefaultStorageResource(),
 				irodsAccount);
 	}
 	
@@ -364,7 +364,7 @@ public class SynchronizeProcessorImplTest {
 				0, 0);
 
 		Mockito.verify(transferManager).enqueueAPut(localRoot + c2Name,
-				irodsRoot + c2Name, irodsAccount.getDefaultStorageResource(),
+				irodsRoot , irodsAccount.getDefaultStorageResource(),
 				irodsAccount);
 	}
 	
@@ -510,7 +510,9 @@ public class SynchronizeProcessorImplTest {
 			throws Exception {
 
 		String localRoot = "/local/root";
-		String irodsRoot = "/test1/home/test/";
+		String expectedIrodsRoot = "/test1/home/test";
+		String irodsRoot = expectedIrodsRoot + "/";
+
 		String c1Name = "c1";
 		String c2Name = "c2";
 
@@ -570,7 +572,7 @@ public class SynchronizeProcessorImplTest {
 				0, 0);
 
 		Mockito.verify(transferManager).enqueueAPut(localRoot + "/" + c2Name,
-				irodsRoot + c2Name, irodsAccount.getDefaultStorageResource(),
+				expectedIrodsRoot, irodsAccount.getDefaultStorageResource(),
 				irodsAccount);
 	}
 
@@ -639,7 +641,7 @@ public class SynchronizeProcessorImplTest {
 				0, 0);
 
 		Mockito.verify(transferManager).enqueueAPut(localRoot + c2Name,
-				irodsRoot + "/" + c2Name,
+				irodsRoot + "/",
 				irodsAccount.getDefaultStorageResource(), irodsAccount);
 	}
 

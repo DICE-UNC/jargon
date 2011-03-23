@@ -109,4 +109,19 @@ public final class AvuData extends IRODSDomainObject {
 		this.unit = unit;
 	}
 
+	@Override
+	public boolean equals(Object obj) {
+		if (!(obj instanceof AvuData)) {
+			return false;
+		}
+		
+		AvuData other = (AvuData) obj;
+		return (attribute.equals(other.attribute) && value.equals(other.value) && unit.equals(other.unit));
+	}
+
+	@Override
+	public int hashCode() {
+			return attribute.hashCode() + value.hashCode() + unit.hashCode();
+	}
+
 }
