@@ -10,6 +10,7 @@ import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry;
 import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry.ObjectType;
+import org.irods.jargon.datautils.synchproperties.SynchPropertiesService;
 import org.irods.jargon.datautils.tree.FileTreeDiffEntry;
 import org.irods.jargon.datautils.tree.FileTreeDiffEntry.DiffType;
 import org.irods.jargon.datautils.tree.FileTreeDiffUtility;
@@ -68,6 +69,8 @@ public class SynchronizeProcessorImplTest {
 				.buildIRODSAccountFromTestProperties(testingProperties);
 		TransferManager transferManager = null;
 		SynchronizeProcessor synchProcessor = new SynchronizeProcessorImpl();
+		SynchPropertiesService synchPropertiesService = Mockito.mock(SynchPropertiesService.class);
+		synchProcessor.setSynchPropertiesService(synchPropertiesService);
 		synchProcessor.setIrodsAccessObjectFactory(irodsAccessObjectFactory);
 		synchProcessor.setIrodsAccount(irodsAccount);
 		synchProcessor.setTransferManager(transferManager);
@@ -87,6 +90,8 @@ public class SynchronizeProcessorImplTest {
 				.buildIRODSAccountFromTestProperties(testingProperties);
 		TransferManager transferManager = Mockito.mock(TransferManager.class);
 		SynchronizeProcessor synchProcessor = new SynchronizeProcessorImpl();
+		SynchPropertiesService synchPropertiesService = Mockito.mock(SynchPropertiesService.class);
+		synchProcessor.setSynchPropertiesService(synchPropertiesService);
 		synchProcessor.setIrodsAccessObjectFactory(irodsAccessObjectFactory);
 		synchProcessor.setIrodsAccount(irodsAccount);
 		synchProcessor.setTransferManager(transferManager);
@@ -104,6 +109,8 @@ public class SynchronizeProcessorImplTest {
 				.buildIRODSAccountFromTestProperties(testingProperties);
 		TransferManager transferManager = Mockito.mock(TransferManager.class);
 		SynchronizeProcessor synchProcessor = new SynchronizeProcessorImpl();
+		SynchPropertiesService synchPropertiesService = Mockito.mock(SynchPropertiesService.class);
+		synchProcessor.setSynchPropertiesService(synchPropertiesService);
 		synchProcessor.setIrodsAccessObjectFactory(irodsAccessObjectFactory);
 		synchProcessor.setIrodsAccount(irodsAccount);
 		synchProcessor.setTransferManager(transferManager);
@@ -122,6 +129,8 @@ public class SynchronizeProcessorImplTest {
 				.buildIRODSAccountFromTestProperties(testingProperties);
 		TransferManager transferManager = Mockito.mock(TransferManager.class);
 		SynchronizeProcessor synchProcessor = new SynchronizeProcessorImpl();
+		SynchPropertiesService synchPropertiesService = Mockito.mock(SynchPropertiesService.class);
+		synchProcessor.setSynchPropertiesService(synchPropertiesService);
 		synchProcessor.setIrodsAccessObjectFactory(irodsAccessObjectFactory);
 		synchProcessor.setIrodsAccount(irodsAccount);
 		synchProcessor.setTransferManager(transferManager);
@@ -139,6 +148,8 @@ public class SynchronizeProcessorImplTest {
 				.buildIRODSAccountFromTestProperties(testingProperties);
 		TransferManager transferManager = Mockito.mock(TransferManager.class);
 		SynchronizeProcessor synchProcessor = new SynchronizeProcessorImpl();
+		SynchPropertiesService synchPropertiesService = Mockito.mock(SynchPropertiesService.class);
+		synchProcessor.setSynchPropertiesService(synchPropertiesService);
 		synchProcessor.setIrodsAccessObjectFactory(irodsAccessObjectFactory);
 		synchProcessor.setIrodsAccount(irodsAccount);
 		synchProcessor.setTransferManager(transferManager);
@@ -156,6 +167,8 @@ public class SynchronizeProcessorImplTest {
 				.buildIRODSAccountFromTestProperties(testingProperties);
 		TransferManager transferManager = Mockito.mock(TransferManager.class);
 		SynchronizeProcessor synchProcessor = new SynchronizeProcessorImpl();
+		SynchPropertiesService synchPropertiesService = Mockito.mock(SynchPropertiesService.class);
+		synchProcessor.setSynchPropertiesService(synchPropertiesService);
 		synchProcessor.setIrodsAccessObjectFactory(irodsAccessObjectFactory);
 		synchProcessor.setIrodsAccount(irodsAccount);
 		synchProcessor.setTransferManager(transferManager);
@@ -173,6 +186,8 @@ public class SynchronizeProcessorImplTest {
 				.buildIRODSAccountFromTestProperties(testingProperties);
 		TransferManager transferManager = Mockito.mock(TransferManager.class);
 		SynchronizeProcessor synchProcessor = new SynchronizeProcessorImpl();
+		SynchPropertiesService synchPropertiesService = Mockito.mock(SynchPropertiesService.class);
+		synchProcessor.setSynchPropertiesService(synchPropertiesService);
 		synchProcessor.setIrodsAccessObjectFactory(irodsAccessObjectFactory);
 		synchProcessor.setIrodsAccount(irodsAccount);
 		synchProcessor.setTransferManager(transferManager);
@@ -190,6 +205,8 @@ public class SynchronizeProcessorImplTest {
 				.buildIRODSAccountFromTestProperties(testingProperties);
 		TransferManager transferManager = Mockito.mock(TransferManager.class);
 		SynchronizeProcessor synchProcessor = new SynchronizeProcessorImpl();
+		SynchPropertiesService synchPropertiesService = Mockito.mock(SynchPropertiesService.class);
+		synchProcessor.setSynchPropertiesService(synchPropertiesService);
 		synchProcessor.setIrodsAccessObjectFactory(irodsAccessObjectFactory);
 		synchProcessor.setIrodsAccount(irodsAccount);
 		synchProcessor.setTransferManager(transferManager);
@@ -207,6 +224,8 @@ public class SynchronizeProcessorImplTest {
 				.buildIRODSAccountFromTestProperties(testingProperties);
 		TransferManager transferManager = Mockito.mock(TransferManager.class);
 		SynchronizeProcessor synchProcessor = new SynchronizeProcessorImpl();
+		SynchPropertiesService synchPropertiesService = Mockito.mock(SynchPropertiesService.class);
+		synchProcessor.setSynchPropertiesService(synchPropertiesService);
 		synchProcessor.setIrodsAccessObjectFactory(irodsAccessObjectFactory);
 		synchProcessor.setIrodsAccount(irodsAccount);
 		synchProcessor.setTransferManager(transferManager);
@@ -224,6 +243,8 @@ public class SynchronizeProcessorImplTest {
 				.buildIRODSAccountFromTestProperties(testingProperties);
 		TransferManager transferManager = Mockito.mock(TransferManager.class);
 		SynchronizeProcessor synchProcessor = new SynchronizeProcessorImpl();
+		SynchPropertiesService synchPropertiesService = Mockito.mock(SynchPropertiesService.class);
+		synchProcessor.setSynchPropertiesService(synchPropertiesService);
 		synchProcessor.setIrodsAccessObjectFactory(irodsAccessObjectFactory);
 		synchProcessor.setIrodsAccount(irodsAccount);
 		synchProcessor.setTransferManager(transferManager);
@@ -288,6 +309,8 @@ public class SynchronizeProcessorImplTest {
 				.buildIRODSAccountFromTestProperties(testingProperties);
 		TransferManager transferManager = Mockito.mock(TransferManager.class);
 		SynchronizeProcessor synchProcessor = new SynchronizeProcessorImpl();
+		SynchPropertiesService synchPropertiesService = Mockito.mock(SynchPropertiesService.class);
+		synchProcessor.setSynchPropertiesService(synchPropertiesService);
 		synchProcessor.setIrodsAccessObjectFactory(irodsAccessObjectFactory);
 		synchProcessor.setIrodsAccount(irodsAccount);
 		synchProcessor.setTransferManager(transferManager);
@@ -356,6 +379,8 @@ public class SynchronizeProcessorImplTest {
 				.buildIRODSAccountFromTestProperties(testingProperties);
 		TransferManager transferManager = Mockito.mock(TransferManager.class);
 		SynchronizeProcessor synchProcessor = new SynchronizeProcessorImpl();
+		SynchPropertiesService synchPropertiesService = Mockito.mock(SynchPropertiesService.class);
+		synchProcessor.setSynchPropertiesService(synchPropertiesService);
 		synchProcessor.setIrodsAccessObjectFactory(irodsAccessObjectFactory);
 		synchProcessor.setIrodsAccount(irodsAccount);
 		synchProcessor.setTransferManager(transferManager);
@@ -424,6 +449,8 @@ public class SynchronizeProcessorImplTest {
 				.buildIRODSAccountFromTestProperties(testingProperties);
 		TransferManager transferManager = Mockito.mock(TransferManager.class);
 		SynchronizeProcessor synchProcessor = new SynchronizeProcessorImpl();
+		SynchPropertiesService synchPropertiesService = Mockito.mock(SynchPropertiesService.class);
+		synchProcessor.setSynchPropertiesService(synchPropertiesService);
 		synchProcessor.setIrodsAccessObjectFactory(irodsAccessObjectFactory);
 		synchProcessor.setIrodsAccount(irodsAccount);
 		synchProcessor.setTransferManager(transferManager);
@@ -492,6 +519,8 @@ public class SynchronizeProcessorImplTest {
 				.buildIRODSAccountFromTestProperties(testingProperties);
 		TransferManager transferManager = Mockito.mock(TransferManager.class);
 		SynchronizeProcessor synchProcessor = new SynchronizeProcessorImpl();
+		SynchPropertiesService synchPropertiesService = Mockito.mock(SynchPropertiesService.class);
+		synchProcessor.setSynchPropertiesService(synchPropertiesService);
 		synchProcessor.setIrodsAccessObjectFactory(irodsAccessObjectFactory);
 		synchProcessor.setIrodsAccount(irodsAccount);
 		synchProcessor.setTransferManager(transferManager);
@@ -564,6 +593,8 @@ public class SynchronizeProcessorImplTest {
 				.buildIRODSAccountFromTestProperties(testingProperties);
 		TransferManager transferManager = Mockito.mock(TransferManager.class);
 		SynchronizeProcessor synchProcessor = new SynchronizeProcessorImpl();
+		SynchPropertiesService synchPropertiesService = Mockito.mock(SynchPropertiesService.class);
+		synchProcessor.setSynchPropertiesService(synchPropertiesService);
 		synchProcessor.setIrodsAccessObjectFactory(irodsAccessObjectFactory);
 		synchProcessor.setIrodsAccount(irodsAccount);
 		synchProcessor.setTransferManager(transferManager);
@@ -633,6 +664,8 @@ public class SynchronizeProcessorImplTest {
 				.buildIRODSAccountFromTestProperties(testingProperties);
 		TransferManager transferManager = Mockito.mock(TransferManager.class);
 		SynchronizeProcessor synchProcessor = new SynchronizeProcessorImpl();
+		SynchPropertiesService synchPropertiesService = Mockito.mock(SynchPropertiesService.class);
+		synchProcessor.setSynchPropertiesService(synchPropertiesService);
 		synchProcessor.setIrodsAccessObjectFactory(irodsAccessObjectFactory);
 		synchProcessor.setIrodsAccount(irodsAccount);
 		synchProcessor.setTransferManager(transferManager);

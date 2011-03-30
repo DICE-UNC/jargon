@@ -8,6 +8,9 @@ import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSServerProperties;
 import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.rule.IRODSRuleExecResult;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Access object to access information about an IRODS Server
@@ -17,6 +20,9 @@ import org.irods.jargon.core.exception.JargonException;
  */
 public class EnvironmentalInfoAOImpl extends IRODSGenericAO implements
 		EnvironmentalInfoAO {
+
+	public static final Logger log = LoggerFactory
+			.getLogger(EnvironmentalInfoAOImpl.class);
 
 	protected EnvironmentalInfoAOImpl(final IRODSSession irodsSession,
 			final IRODSAccount irodsAccount) throws JargonException {
@@ -35,6 +41,47 @@ public class EnvironmentalInfoAOImpl extends IRODSGenericAO implements
 		EnvironmentalInfoAccessor environmentalInfoAccessor = new EnvironmentalInfoAccessor(
 				getIRODSSession().currentConnection(getIRODSAccount()));
 		return environmentalInfoAccessor.getIRODSServerProperties();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.EnvironmentalInfoAO#getIRODSServerCurrentTime()
+	 */
+	@Override
+	public long getIRODSServerCurrentTime() throws JargonException {
+		log.info("getIRODSServerCurrentTime");
+		StringBuilder sb = new StringBuilder(
+				"testrule||msiGetSystemTime(*Time,human)#writeLine(stdout, *Time)|nop\n");
+		sb.append("null\n");
+		sb.append("*Time%ruleExecOut");
+		RuleProcessingAO ruleProcessingAO = this.getIRODSAccessObjectFactory()
+				.getRuleProcessingAO(getIRODSAccount());
+		IRODSRuleExecResult result = ruleProcessingAO
+				.executeRule(sb.toString());
+		String execOut = (String) result.getOutputParameterResults()
+				.get("*Time").getResultObject();
+
+		if (execOut == null) {
+			throw new JargonException(
+					"no time returned from time rule execution");
+		}
+
+		log.debug("rule result:{}", execOut);
+		long timeVal;
+
+		try {
+			timeVal = Long.parseLong(execOut);
+		} catch (NumberFormatException nfe) {
+			log.error(
+					"error getting time val from *Time in rule results when results were:{}",
+					result);
+			throw new JargonException("error getting time value", nfe);
+		}
+
+		return timeVal;
+
 	}
 
 }

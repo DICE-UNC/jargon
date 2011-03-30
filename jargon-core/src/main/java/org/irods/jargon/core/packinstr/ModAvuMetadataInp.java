@@ -3,6 +3,9 @@
  */
 package org.irods.jargon.core.packinstr;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.domain.AvuData;
 
@@ -17,18 +20,6 @@ import edu.sdsc.grid.io.irods.Tag;
 public class ModAvuMetadataInp extends AbstractIRODSPackingInstruction {
 
 	public static final String PI_TAG = "ModAVUMetadataInp_PI";
-
-	public static final String ARG0 = "arg0";
-	public static final String ARG1 = "arg1";
-	public static final String ARG2 = "arg2";
-	public static final String ARG3 = "arg3";
-	public static final String ARG4 = "arg4";
-	public static final String ARG5 = "arg5";
-	public static final String ARG6 = "arg6";
-	public static final String ARG7 = "arg7";
-	public static final String ARG8 = "arg8";
-	public static final String ARG9 = "arg9";
-
 	public static final String ARG_PREFIX = "arg";
 
 	public static final int MOD_AVU_API_NBR = 706;
@@ -44,6 +35,7 @@ public class ModAvuMetadataInp extends AbstractIRODSPackingInstruction {
 	private final String targetIdentifier;
 	private final MetadataTargetType metadataTargetType;
 	private final AvuData avuData;
+	private final AvuData newAvuData;
 	private final ActionType actionType;
 
 	/**
@@ -54,13 +46,11 @@ public class ModAvuMetadataInp extends AbstractIRODSPackingInstruction {
 	 *            <code>String</code> with the path or unique name of the object
 	 *            to which the metadata will be added
 	 * @return
-	 * @throws JargonException
 	 */
 	public static final ModAvuMetadataInp instanceForAddCollectionMetadata(
-			final String targetIdentifier, final AvuData avuData)
-			throws JargonException {
+			final String targetIdentifier, final AvuData avuData) {
 		return new ModAvuMetadataInp(targetIdentifier,
-				MetadataTargetType.COLLECTION, avuData, ActionType.ADD);
+				MetadataTargetType.COLLECTION, avuData, null, ActionType.ADD);
 	}
 
 	/**
@@ -71,13 +61,18 @@ public class ModAvuMetadataInp extends AbstractIRODSPackingInstruction {
 	 *            <code>String</code> with the path or unique name of the object
 	 *            to which the metadata will be added
 	 * @return
-	 * @throws JargonException
 	 */
 	public static final ModAvuMetadataInp instanceForModifyCollectionMetadata(
-			final String targetIdentifier, final AvuData avuData)
-			throws JargonException {
+			final String targetIdentifier, final AvuData avuData,
+			final AvuData newAvuData) {
+
+		if (newAvuData == null) {
+			throw new IllegalArgumentException("Null newAvuData");
+		}
+
 		return new ModAvuMetadataInp(targetIdentifier,
-				MetadataTargetType.COLLECTION, avuData, ActionType.MOD);
+				MetadataTargetType.COLLECTION, avuData, newAvuData,
+				ActionType.MOD);
 	}
 
 	/**
@@ -88,13 +83,11 @@ public class ModAvuMetadataInp extends AbstractIRODSPackingInstruction {
 	 *            <code>String</code> with the path or unique name of the object
 	 *            to which the metadata will be added
 	 * @return
-	 * @throws JargonException
 	 */
 	public static final ModAvuMetadataInp instanceForDeleteCollectionMetadata(
-			final String targetIdentifier, final AvuData avuData)
-			throws JargonException {
+			final String targetIdentifier, final AvuData avuData) {
 		return new ModAvuMetadataInp(targetIdentifier,
-				MetadataTargetType.COLLECTION, avuData, ActionType.REMOVE);
+				MetadataTargetType.COLLECTION, avuData, null, ActionType.REMOVE);
 	}
 
 	/**
@@ -105,13 +98,11 @@ public class ModAvuMetadataInp extends AbstractIRODSPackingInstruction {
 	 *            <code>String</code> with the path or unique name of the object
 	 *            to which the metadata will be added
 	 * @return
-	 * @throws JargonException
 	 */
 	public static final ModAvuMetadataInp instanceForAddDataObjectMetadata(
-			final String targetIdentifier, final AvuData avuData)
-			throws JargonException {
+			final String targetIdentifier, final AvuData avuData) {
 		return new ModAvuMetadataInp(targetIdentifier,
-				MetadataTargetType.DATA_OBJECT, avuData, ActionType.ADD);
+				MetadataTargetType.DATA_OBJECT, avuData, null, ActionType.ADD);
 	}
 
 	/**
@@ -122,13 +113,18 @@ public class ModAvuMetadataInp extends AbstractIRODSPackingInstruction {
 	 *            <code>String</code> with the path or unique name of the object
 	 *            to which the metadata will be added
 	 * @return
-	 * @throws JargonException
 	 */
 	public static final ModAvuMetadataInp instanceForModifyDataObjectMetadata(
-			final String targetIdentifier, final AvuData avuData)
-			throws JargonException {
+			final String targetIdentifier, final AvuData avuData,
+			final AvuData newAvuData) {
+
+		if (newAvuData == null) {
+			throw new IllegalArgumentException("Null newAvuData");
+		}
+
 		return new ModAvuMetadataInp(targetIdentifier,
-				MetadataTargetType.DATA_OBJECT, avuData, ActionType.MOD);
+				MetadataTargetType.DATA_OBJECT, avuData, newAvuData,
+				ActionType.MOD);
 	}
 
 	/**
@@ -139,13 +135,12 @@ public class ModAvuMetadataInp extends AbstractIRODSPackingInstruction {
 	 *            <code>String</code> with the path or unique name of the object
 	 *            to which the metadata will be added
 	 * @return
-	 * @throws JargonException
 	 */
 	public static final ModAvuMetadataInp instanceForDeleteDataObjectMetadata(
-			final String targetIdentifier, final AvuData avuData)
-			throws JargonException {
+			final String targetIdentifier, final AvuData avuData) {
 		return new ModAvuMetadataInp(targetIdentifier,
-				MetadataTargetType.DATA_OBJECT, avuData, ActionType.REMOVE);
+				MetadataTargetType.DATA_OBJECT, avuData, null,
+				ActionType.REMOVE);
 	}
 
 	/**
@@ -156,13 +151,11 @@ public class ModAvuMetadataInp extends AbstractIRODSPackingInstruction {
 	 *            <code>String</code> with the path or unique name of the object
 	 *            to which the metadata will be added
 	 * @return
-	 * @throws JargonException
 	 */
 	public static final ModAvuMetadataInp instanceForAddResourceMetadata(
-			final String targetIdentifier, final AvuData avuData)
-			throws JargonException {
+			final String targetIdentifier, final AvuData avuData) {
 		return new ModAvuMetadataInp(targetIdentifier,
-				MetadataTargetType.RESOURCE, avuData, ActionType.ADD);
+				MetadataTargetType.RESOURCE, avuData, null, ActionType.ADD);
 	}
 
 	/**
@@ -173,13 +166,18 @@ public class ModAvuMetadataInp extends AbstractIRODSPackingInstruction {
 	 *            <code>String</code> with the path or unique name of the object
 	 *            to which the metadata will be added
 	 * @return
-	 * @throws JargonException
 	 */
 	public static final ModAvuMetadataInp instanceForModifyResourceMetadata(
-			final String targetIdentifier, final AvuData avuData)
-			throws JargonException {
+			final String targetIdentifier, final AvuData avuData,
+			final AvuData newAvuData) {
+
+		if (newAvuData == null) {
+			throw new IllegalArgumentException("Null newAvuData");
+		}
+
 		return new ModAvuMetadataInp(targetIdentifier,
-				MetadataTargetType.RESOURCE, avuData, ActionType.MOD);
+				MetadataTargetType.RESOURCE, avuData, newAvuData,
+				ActionType.MOD);
 	}
 
 	/**
@@ -190,13 +188,11 @@ public class ModAvuMetadataInp extends AbstractIRODSPackingInstruction {
 	 *            <code>String</code> with the path or unique name of the object
 	 *            to which the metadata will be added
 	 * @return
-	 * @throws JargonException
 	 */
 	public static final ModAvuMetadataInp instanceForDeleteResourceMetadata(
-			final String targetIdentifier, final AvuData avuData)
-			throws JargonException {
+			final String targetIdentifier, final AvuData avuData) {
 		return new ModAvuMetadataInp(targetIdentifier,
-				MetadataTargetType.RESOURCE, avuData, ActionType.REMOVE);
+				MetadataTargetType.RESOURCE, avuData, null, ActionType.REMOVE);
 	}
 
 	/**
@@ -207,13 +203,11 @@ public class ModAvuMetadataInp extends AbstractIRODSPackingInstruction {
 	 *            <code>String</code> with the path or unique name of the object
 	 *            to which the metadata will be added
 	 * @return
-	 * @throws JargonException
 	 */
 	public static final ModAvuMetadataInp instanceForAddUserMetadata(
-			final String targetIdentifier, final AvuData avuData)
-			throws JargonException {
+			final String targetIdentifier, final AvuData avuData) {
 		return new ModAvuMetadataInp(targetIdentifier, MetadataTargetType.USER,
-				avuData, ActionType.ADD);
+				avuData, null, ActionType.ADD);
 	}
 
 	/**
@@ -224,13 +218,17 @@ public class ModAvuMetadataInp extends AbstractIRODSPackingInstruction {
 	 *            <code>String</code> with the path or unique name of the object
 	 *            to which the metadata will be added
 	 * @return
-	 * @throws JargonException
 	 */
 	public static final ModAvuMetadataInp instanceForModifyUserMetadata(
-			final String targetIdentifier, final AvuData avuData)
-			throws JargonException {
+			final String targetIdentifier, final AvuData avuData,
+			final AvuData newAvuData) {
+
+		if (newAvuData == null) {
+			throw new IllegalArgumentException("Null newAvuData");
+		}
+
 		return new ModAvuMetadataInp(targetIdentifier, MetadataTargetType.USER,
-				avuData, ActionType.MOD);
+				avuData, newAvuData, ActionType.MOD);
 	}
 
 	/**
@@ -241,40 +239,40 @@ public class ModAvuMetadataInp extends AbstractIRODSPackingInstruction {
 	 *            <code>String</code> with the path or unique name of the object
 	 *            to which the metadata will be added
 	 * @return
-	 * @throws JargonException
 	 */
 	public static final ModAvuMetadataInp instanceForDeleteUserMetadata(
-			final String targetIdentifier, final AvuData avuData)
-			throws JargonException {
+			final String targetIdentifier, final AvuData avuData) {
 		return new ModAvuMetadataInp(targetIdentifier, MetadataTargetType.USER,
-				avuData, ActionType.REMOVE);
+				avuData, null, ActionType.REMOVE);
 	}
 
 	private ModAvuMetadataInp(final String targetIdentifier,
 			final MetadataTargetType metadataTargetType, final AvuData avuData,
-			final ActionType actionType) throws JargonException {
+			final AvuData newAvuData, final ActionType actionType) {
 		super();
 
 		if (targetIdentifier == null || targetIdentifier.isEmpty()) {
-			throw new JargonException("null or empty target identifier");
+			throw new IllegalArgumentException(
+					"null or empty target identifier");
 		}
 
 		if (metadataTargetType == null) {
-			throw new JargonException("metadataTargetType is null");
+			throw new IllegalArgumentException("metadataTargetType is null");
 		}
 
 		if (avuData == null) {
-			throw new JargonException("null or missing avuData");
+			throw new IllegalArgumentException("null or missing avuData");
 		}
 
 		if (actionType == null) {
-			throw new JargonException("null action type");
+			throw new IllegalArgumentException("null action type");
 		}
 
 		this.targetIdentifier = targetIdentifier;
 		this.metadataTargetType = metadataTargetType;
 		this.avuData = avuData;
 		this.actionType = actionType;
+		this.newAvuData = newAvuData;
 
 		this.setApiNumber(MOD_AVU_API_NBR);
 
@@ -282,42 +280,82 @@ public class ModAvuMetadataInp extends AbstractIRODSPackingInstruction {
 
 	@Override
 	public Tag getTagValue() throws JargonException {
+
+		List<String> argList = new ArrayList<String>();
 		Tag message = new Tag(PI_TAG);
 
 		if (actionType == ActionType.ADD) {
-			message.addTag(ARG0, "add");
+			argList.add("add");
 		} else if (actionType == ActionType.REMOVE) {
-			message.addTag(ARG0, "rmw");
+			argList.add("rmw");
 		} else if (actionType == ActionType.MOD) {
-			message.addTag(ARG0, "mod");
+			argList.add("mod");
 		}
 
 		if (metadataTargetType == MetadataTargetType.COLLECTION) {
-			message.addTag(ARG1, "-c");
+			argList.add("-c");
 		} else if (metadataTargetType == MetadataTargetType.DATA_OBJECT) {
-			message.addTag(ARG1, "-d");
+			argList.add("-d");
 		} else if (metadataTargetType == MetadataTargetType.RESOURCE) {
-			message.addTag(ARG1, "-R");
+			argList.add("-R");
 		} else if (metadataTargetType == MetadataTargetType.USER) {
-			message.addTag(ARG1, "-u");
+			argList.add("-u");
 		} else {
 			throw new JargonException(
 					"metadata target type is not currently supported:"
 							+ metadataTargetType);
 		}
 
-		message.addTag(ARG2, targetIdentifier);
+		argList.add(targetIdentifier);
 
 		// add the AVU elements
 
-		message.addTag(ARG3, avuData.getAttribute());
-		message.addTag(ARG4, avuData.getValue());
-		message.addTag(ARG5, avuData.getUnit());
-		// filler
-		message.addTag(ARG6, "");
-		message.addTag(ARG7, "");
-		message.addTag(ARG8, "");
-		message.addTag(ARG9, "");
+		argList.add(avuData.getAttribute());
+		argList.add(avuData.getValue());
+		if (!avuData.getUnit().isEmpty()) {
+			argList.add(avuData.getUnit());
+		}
+
+		if (actionType == ActionType.MOD) {
+			StringBuilder sb = new StringBuilder();
+
+			if (!newAvuData.getAttribute().isEmpty()) {
+				sb.append("n:");
+				sb.append(newAvuData.getAttribute());
+				argList.add(sb.toString());
+			}
+
+			sb = new StringBuilder();
+			if (!newAvuData.getValue().isEmpty()) {
+				sb.append("v:");
+				sb.append(newAvuData.getValue());
+				argList.add(sb.toString());
+
+			}
+
+			sb = new StringBuilder();
+			if (!newAvuData.getUnit().isEmpty()) {
+				sb.append("u:");
+				sb.append(newAvuData.getUnit());
+				argList.add(sb.toString());
+
+			}
+		}
+
+		StringBuilder argBuilder;
+		String val = "";
+		for (int i = 0; i < 10; i++) {
+			argBuilder = new StringBuilder(ARG_PREFIX);
+			argBuilder.append(i);
+			val = "";
+			if (i < argList.size()) {
+				val = argList.get(i);
+			}
+			message.addTag(argBuilder.toString(), val);
+		}
+
+		// take the arg list and compact the params
+
 		return message;
 
 	}
@@ -336,6 +374,10 @@ public class ModAvuMetadataInp extends AbstractIRODSPackingInstruction {
 
 	public ActionType getActionType() {
 		return actionType;
+	}
+
+	public AvuData getNewAvuData() {
+		return newAvuData;
 	}
 
 }

@@ -27,6 +27,7 @@ import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.pub.io.IRODSFileFactory;
 import org.irods.jargon.core.pub.io.IRODSFileFactoryImpl;
 import org.irods.jargon.core.query.AVUQueryElement;
+import org.irods.jargon.core.query.AVUQueryOperatorEnum;
 import org.irods.jargon.core.query.IRODSGenQuery;
 import org.irods.jargon.core.query.IRODSQueryResultRow;
 import org.irods.jargon.core.query.IRODSQueryResultSetInterface;
@@ -95,7 +96,8 @@ public final class CollectionAOImpl extends IRODSGenericAO implements
 			log.error(
 					"collection cannot be returned, the given path is not a collection: {}",
 					collectionPath);
-			throw new IllegalArgumentException("the given path is not a collection");
+			throw new IllegalArgumentException(
+					"the given path is not a collection");
 		}
 
 		return collection;
@@ -304,10 +306,12 @@ public final class CollectionAOImpl extends IRODSGenericAO implements
 		}
 
 		if (collectionAbsolutePath == null) {
-			throw new IllegalArgumentException("Null absolutePath for collection");
+			throw new IllegalArgumentException(
+					"Null absolutePath for collection");
 		}
 
-		final IRODSGenQueryExecutor irodsGenQueryExecutorImpl = getIRODSAccessObjectFactory().getIRODSGenQueryExecutor(getIRODSAccount());
+		final IRODSGenQueryExecutor irodsGenQueryExecutorImpl = getIRODSAccessObjectFactory()
+				.getIRODSGenQueryExecutor(getIRODSAccount());
 
 		log.info("building a metadata query for: {}", avuQuery);
 
@@ -359,8 +363,8 @@ public final class CollectionAOImpl extends IRODSGenericAO implements
 
 		IRODSQueryResultSetInterface resultSet;
 		try {
-			resultSet = irodsGenQueryExecutorImpl.executeIRODSQueryAndCloseResult(irodsQuery,
-					0);
+			resultSet = irodsGenQueryExecutorImpl
+					.executeIRODSQueryAndCloseResult(irodsQuery, 0);
 
 		} catch (JargonQueryException e) {
 			log.error(QUERY_EXCEPTION_FOR_QUERY + queryString, e);
@@ -394,7 +398,8 @@ public final class CollectionAOImpl extends IRODSGenericAO implements
 					"null additional where clause, set to blank if unused");
 		}
 
-		final IRODSGenQueryExecutor irodsGenQueryExecutorImpl = getIRODSAccessObjectFactory().getIRODSGenQueryExecutor(getIRODSAccount());
+		final IRODSGenQueryExecutor irodsGenQueryExecutorImpl = getIRODSAccessObjectFactory()
+				.getIRODSGenQueryExecutor(getIRODSAccount());
 
 		log.info("building a metadata query for: {}", avuQuery);
 		log.info("additional where data: {}", additionalWhere);
@@ -443,8 +448,8 @@ public final class CollectionAOImpl extends IRODSGenericAO implements
 
 		IRODSQueryResultSetInterface resultSet;
 		try {
-			resultSet = irodsGenQueryExecutorImpl.executeIRODSQueryAndCloseResult(irodsQuery,
-					0);
+			resultSet = irodsGenQueryExecutorImpl
+					.executeIRODSQueryAndCloseResult(irodsQuery, 0);
 
 		} catch (JargonQueryException e) {
 			log.error(QUERY_EXCEPTION_FOR_QUERY + queryString, e);
@@ -474,10 +479,12 @@ public final class CollectionAOImpl extends IRODSGenericAO implements
 		}
 
 		if (collectionAbsolutePath == null) {
-			throw new IllegalArgumentException("Null absolutePath for collection");
+			throw new IllegalArgumentException(
+					"Null absolutePath for collection");
 		}
 
-		final IRODSGenQueryExecutor irodsGenQueryExecutorImpl = getIRODSAccessObjectFactory().getIRODSGenQueryExecutor(getIRODSAccount());
+		final IRODSGenQueryExecutor irodsGenQueryExecutorImpl = getIRODSAccessObjectFactory()
+				.getIRODSGenQueryExecutor(getIRODSAccount());
 
 		log.info("building a metadata query for: {}", avuQuery);
 
@@ -529,8 +536,8 @@ public final class CollectionAOImpl extends IRODSGenericAO implements
 
 		IRODSQueryResultSetInterface resultSet;
 		try {
-			resultSet = irodsGenQueryExecutorImpl.executeIRODSQueryAndCloseResult(irodsQuery,
-					0);
+			resultSet = irodsGenQueryExecutorImpl
+					.executeIRODSQueryAndCloseResult(irodsQuery, 0);
 
 		} catch (JargonQueryException e) {
 			log.error(QUERY_EXCEPTION_FOR_QUERY + queryString, e);
@@ -630,34 +637,98 @@ public final class CollectionAOImpl extends IRODSGenericAO implements
 
 		log.debug("metadata removed");
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.irods.jargon.core.pub.CollectionAO#overwriteAVUMetadata(java.lang
-	 * .String, org.irods.jargon.core.pub.domain.AvuData)
+	
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.core.pub.CollectionAO#modifyAvuValueBasedOnGivenAttributeAndUnit(java.lang.String, org.irods.jargon.core.pub.domain.AvuData)
 	 */
 	@Override
-	public void overwriteAVUMetadata(final String absolutePath,
-			final AvuData avuData) throws DataNotFoundException,
-			JargonException {
-
-		// FIXME: implement via 'mod', see jargon2.3.1
-
+	public void modifyAvuValueBasedOnGivenAttributeAndUnit(final String absolutePath, final AvuData avuData) throws DataNotFoundException, JargonException {
 		if (absolutePath == null || absolutePath.isEmpty()) {
 			throw new IllegalArgumentException("null or empty absolutePath");
 		}
 
 		if (avuData == null) {
-			throw new IllegalArgumentException("null AVU data");
+			throw new IllegalArgumentException("null avuData");
+		}
+		
+		log.info("setting avu metadata value for collection");
+		log.info("with  avu metadata:{}", avuData);
+		log.info("absolute path: {}", absolutePath);
+		
+		// avu is distinct based on attrib and value, so do an attrib/unit query, can only be one result
+		List<AVUQueryElement> queryElements = new ArrayList<AVUQueryElement>();
+		List<MetaDataAndDomainData> result;
+		
+		try {
+		queryElements.add(AVUQueryElement.instanceForValueQuery(
+				AVUQueryElement.AVUQueryPart.ATTRIBUTE,
+				AVUQueryOperatorEnum.EQUAL, avuData.getAttribute()));
+		queryElements.add(AVUQueryElement.instanceForValueQuery(
+				AVUQueryElement.AVUQueryPart.UNITS,
+				AVUQueryOperatorEnum.EQUAL, avuData.getUnit()));
+			result  = this.findMetadataValuesByMetadataQueryForCollection(queryElements, absolutePath);
+		} catch (JargonQueryException e) {
+			log.error("error querying data for avu",e);
+			throw new JargonException("error querying data for AVU");
+		}
+		
+		if (result.isEmpty()) {
+			throw new DataNotFoundException("no avu data found");
+		} else if (result.size() > 1) {
+			throw new JargonException("more than one AVU found with given attribute and unit, cannot modify non-unique AVU's in this way");
+		}
+		
+		AvuData currentAvuData = new AvuData(result.get(0).getAvuAttribute(), result.get(0).getAvuValue(), result.get(0).getAvuUnit());
+		
+		AvuData modAvuData = new AvuData(result.get(0).getAvuAttribute(), avuData.getValue(), result.get(0).getAvuUnit());
+		modifyAVUMetadata(absolutePath, currentAvuData, modAvuData);
+		log.info("metadata modified to:{}", modAvuData);
+	}
+
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.core.pub.CollectionAO#modifyAVUMetadata(java.lang.String, org.irods.jargon.core.pub.domain.AvuData, org.irods.jargon.core.pub.domain.AvuData)
+	 */
+	@Override
+	public void modifyAVUMetadata(final String absolutePath,
+			final AvuData currentAvuData, final AvuData newAvuData)
+			throws DataNotFoundException, JargonException {
+
+		if (absolutePath == null || absolutePath.isEmpty()) {
+			throw new IllegalArgumentException("null or empty absolutePath");
 		}
 
-		log.info("overwrite avu metadata for collection: {}", avuData);
+		if (currentAvuData == null) {
+			throw new IllegalArgumentException("null currentAvuData");
+		}
+
+		if (newAvuData == null) {
+			throw new IllegalArgumentException("null newAvuData");
+		}
+
+		log.info("overwrite avu metadata for collection: {}", currentAvuData);
+		log.info("with new avu metadata:{}", newAvuData);
 		log.info("absolute path: {}", absolutePath);
 
-		this.deleteAVUMetadata(absolutePath, avuData);
-		this.addAVUMetadata(absolutePath, avuData);
+		final ModAvuMetadataInp modifyAvuMetadataInp = ModAvuMetadataInp
+				.instanceForModifyCollectionMetadata(absolutePath,
+						currentAvuData, newAvuData);
+
+		log.debug("sending avu request");
+
+		try {
+
+			getIRODSProtocol().irodsFunction(modifyAvuMetadataInp);
+
+		} catch (JargonException je) {
+
+			if (je.getMessage().indexOf("-814000") > -1) {
+				throw new DataNotFoundException(
+						"Target collection was not found, could not modify AVU");
+			}
+
+			log.error("jargon exception modifying AVU metadata", je);
+			throw je;
+		}
 
 		log.debug("metadata rewritten");
 	}
@@ -675,7 +746,8 @@ public final class CollectionAOImpl extends IRODSGenericAO implements
 			throws JargonException, JargonQueryException {
 
 		if (collectionAbsolutePath == null || collectionAbsolutePath.isEmpty()) {
-			throw new IllegalArgumentException("null or empty collectionAbsolutePath");
+			throw new IllegalArgumentException(
+					"null or empty collectionAbsolutePath");
 		}
 
 		if (partialStartIndex < 0) {
@@ -692,14 +764,18 @@ public final class CollectionAOImpl extends IRODSGenericAO implements
 				collectionAbsolutePath, partialStartIndex);
 
 	}
-	
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.pub.CollectionAO#findMetadataValuesForCollection(java.lang.String)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.CollectionAO#findMetadataValuesForCollection
+	 * (java.lang.String)
 	 */
 	@Override
 	public List<MetaDataAndDomainData> findMetadataValuesForCollection(
-			final String collectionAbsolutePath)
-			throws JargonException, JargonQueryException {
+			final String collectionAbsolutePath) throws JargonException,
+			JargonQueryException {
 
 		return findMetadataValuesForCollection(collectionAbsolutePath, 0);
 
@@ -714,7 +790,8 @@ public final class CollectionAOImpl extends IRODSGenericAO implements
 	 */
 	@Override
 	public Collection findByAbsolutePath(
-			final String irodsCollectionAbsolutePath) throws DataNotFoundException, JargonException {
+			final String irodsCollectionAbsolutePath)
+			throws DataNotFoundException, JargonException {
 
 		if (irodsCollectionAbsolutePath == null
 				|| irodsCollectionAbsolutePath.isEmpty()) {
@@ -729,9 +806,10 @@ public final class CollectionAOImpl extends IRODSGenericAO implements
 				.escapeSingleQuotes(irodsCollectionAbsolutePath));
 		sb.append("'");
 		List<Collection> collectionList = this.findWhere(sb.toString(), 0);
-		
+
 		if (collectionList.size() == 0) {
-			throw new DataNotFoundException("no collection found for path:" + irodsCollectionAbsolutePath);
+			throw new DataNotFoundException("no collection found for path:"
+					+ irodsCollectionAbsolutePath);
 		} else {
 			return collectionList.get(0);
 		}
@@ -749,7 +827,8 @@ public final class CollectionAOImpl extends IRODSGenericAO implements
 			final String irodsCollectionAbsolutePath) throws JargonException {
 
 		if (irodsCollectionAbsolutePath == null) {
-			throw new IllegalArgumentException("irodsCollectionAbsolutePath is null");
+			throw new IllegalArgumentException(
+					"irodsCollectionAbsolutePath is null");
 		}
 
 		log.info("countAllFilesUnderneathTheGivenCollection: {}",
@@ -768,7 +847,8 @@ public final class CollectionAOImpl extends IRODSGenericAO implements
 							+ irodsCollectionAbsolutePath);
 		}
 
-		IRODSGenQueryExecutor irodsGenQueryExecutor = getIRODSAccessObjectFactory().getIRODSGenQueryExecutor(getIRODSAccount());
+		IRODSGenQueryExecutor irodsGenQueryExecutor = getIRODSAccessObjectFactory()
+				.getIRODSGenQueryExecutor(getIRODSAccount());
 
 		StringBuilder query = new StringBuilder();
 		query.append("SELECT ");
@@ -785,7 +865,8 @@ public final class CollectionAOImpl extends IRODSGenericAO implements
 		IRODSQueryResultSetInterface resultSet;
 
 		try {
-			resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResult(irodsQuery, 0);
+			resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResult(
+					irodsQuery, 0);
 		} catch (JargonQueryException e) {
 			log.error("query exception for  query:" + query.toString(), e);
 			throw new JargonException("error in exists query");
@@ -802,170 +883,247 @@ public final class CollectionAOImpl extends IRODSGenericAO implements
 		return queryWithLikeCtr;
 
 	}
-	
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.pub.CollectionAO#setAccessPermissionInherit(java.lang.String, java.lang.String, boolean)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.CollectionAO#setAccessPermissionInherit(java
+	 * .lang.String, java.lang.String, boolean)
 	 */
 	@Override
-	public void setAccessPermissionInherit(final String zone, final String absolutePath, final boolean recursive) throws JargonException {
-		
+	public void setAccessPermissionInherit(final String zone,
+			final String absolutePath, final boolean recursive)
+			throws JargonException {
+
 		// pi tests parameters
 		log.info("setAccessPermissionInherit on absPath:{}", absolutePath);
 		boolean collNeedsRecursive = adjustRecursiveOption(absolutePath,
 				recursive);
-		
-		ModAccessControlInp modAccessControlInp = ModAccessControlInp.instanceForSetInheritOnACollection(collNeedsRecursive, zone, absolutePath);
+
+		ModAccessControlInp modAccessControlInp = ModAccessControlInp
+				.instanceForSetInheritOnACollection(collNeedsRecursive, zone,
+						absolutePath);
 		getIRODSProtocol().irodsFunction(modAccessControlInp);
-		
+
 	}
-	
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.pub.CollectionAO#setAccessPermissionToNotInherit(java.lang.String, java.lang.String, boolean)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.CollectionAO#setAccessPermissionToNotInherit
+	 * (java.lang.String, java.lang.String, boolean)
 	 */
 	@Override
-	public void setAccessPermissionToNotInherit(final String zone, final String absolutePath, final boolean recursive) throws JargonException {
-		
+	public void setAccessPermissionToNotInherit(final String zone,
+			final String absolutePath, final boolean recursive)
+			throws JargonException {
+
 		// pi tests parameters
 		log.info("setAccessPermissionToNotInherit on absPath:{}", absolutePath);
 		boolean collNeedsRecursive = adjustRecursiveOption(absolutePath,
 				recursive);
-		
-		ModAccessControlInp modAccessControlInp = ModAccessControlInp.instanceForSetNoInheritOnACollection(collNeedsRecursive, zone, absolutePath);
+
+		ModAccessControlInp modAccessControlInp = ModAccessControlInp
+				.instanceForSetNoInheritOnACollection(collNeedsRecursive, zone,
+						absolutePath);
 		getIRODSProtocol().irodsFunction(modAccessControlInp);
-		
+
 	}
-	
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.pub.CollectionAO#setAccessPermissionRead(java.lang.String, java.lang.String, java.lang.String, boolean)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.CollectionAO#setAccessPermissionRead(java.lang
+	 * .String, java.lang.String, java.lang.String, boolean)
 	 */
 	@Override
-	public void setAccessPermissionRead(final String zone, final String absolutePath, final String userName, final boolean recursive) throws JargonException {
-		
+	public void setAccessPermissionRead(final String zone,
+			final String absolutePath, final String userName,
+			final boolean recursive) throws JargonException {
+
 		// pi tests parameters
 		log.info("setAccessPermissionRead on absPath:{}", absolutePath);
 		boolean collNeedsRecursive = adjustRecursiveOption(absolutePath,
 				recursive);
-		
-		ModAccessControlInp modAccessControlInp = ModAccessControlInp.instanceForSetPermission(collNeedsRecursive, zone, absolutePath, userName, ModAccessControlInp.READ_PERMISSION);
+
+		ModAccessControlInp modAccessControlInp = ModAccessControlInp
+				.instanceForSetPermission(collNeedsRecursive, zone,
+						absolutePath, userName,
+						ModAccessControlInp.READ_PERMISSION);
 		getIRODSProtocol().irodsFunction(modAccessControlInp);
-		
+
 	}
-	
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.pub.CollectionAO#setAccessPermissionWrite(java.lang.String, java.lang.String, java.lang.String, boolean)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.CollectionAO#setAccessPermissionWrite(java.
+	 * lang.String, java.lang.String, java.lang.String, boolean)
 	 */
 	@Override
-	public void setAccessPermissionWrite(final String zone, final String absolutePath, final String userName, final boolean recursive) throws JargonException {
-		
+	public void setAccessPermissionWrite(final String zone,
+			final String absolutePath, final String userName,
+			final boolean recursive) throws JargonException {
+
 		// pi tests parameters
 		log.info("setAccessPermissionRead on absPath:{}", absolutePath);
-		// overhead iRODS behavior, if you set perm with recursive when no children, then won't take
+		// overhead iRODS behavior, if you set perm with recursive when no
+		// children, then won't take
 		boolean collNeedsRecursive = adjustRecursiveOption(absolutePath,
 				recursive);
-		
-		ModAccessControlInp modAccessControlInp = ModAccessControlInp.instanceForSetPermission(collNeedsRecursive, zone, absolutePath, userName, ModAccessControlInp.WRITE_PERMISSION);
+
+		ModAccessControlInp modAccessControlInp = ModAccessControlInp
+				.instanceForSetPermission(collNeedsRecursive, zone,
+						absolutePath, userName,
+						ModAccessControlInp.WRITE_PERMISSION);
 		getIRODSProtocol().irodsFunction(modAccessControlInp);
-		
+
 	}
-	
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.pub.CollectionAO#setAccessPermissionOwn(java.lang.String, java.lang.String, java.lang.String, boolean)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.CollectionAO#setAccessPermissionOwn(java.lang
+	 * .String, java.lang.String, java.lang.String, boolean)
 	 */
 	@Override
-	public void setAccessPermissionOwn(final String zone, final String absolutePath, final String userName, final boolean recursive) throws JargonException {
-		
+	public void setAccessPermissionOwn(final String zone,
+			final String absolutePath, final String userName,
+			final boolean recursive) throws JargonException {
+
 		// pi tests parameters
 		log.info("setAccessPermissionOwn on absPath:{}", absolutePath);
-		// overhead iRODS behavior, if you set perm with recursive when no children, then won't take
+		// overhead iRODS behavior, if you set perm with recursive when no
+		// children, then won't take
 		boolean collNeedsRecursive = adjustRecursiveOption(absolutePath,
 				recursive);
-		
-		ModAccessControlInp modAccessControlInp = ModAccessControlInp.instanceForSetPermission(collNeedsRecursive, zone, absolutePath, userName, ModAccessControlInp.OWN_PERMISSION);
+
+		ModAccessControlInp modAccessControlInp = ModAccessControlInp
+				.instanceForSetPermission(collNeedsRecursive, zone,
+						absolutePath, userName,
+						ModAccessControlInp.OWN_PERMISSION);
 		getIRODSProtocol().irodsFunction(modAccessControlInp);
-		
+
 	}
-	
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.pub.CollectionAO#removeAccessPermissionForUser(java.lang.String, java.lang.String, java.lang.String, boolean)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.CollectionAO#removeAccessPermissionForUser(
+	 * java.lang.String, java.lang.String, java.lang.String, boolean)
 	 */
 	@Override
-	public void removeAccessPermissionForUser(final String zone, final String absolutePath, final String userName, final boolean recursive) throws JargonException {
-		
+	public void removeAccessPermissionForUser(final String zone,
+			final String absolutePath, final String userName,
+			final boolean recursive) throws JargonException {
+
 		// pi tests parameters
 		log.info("removeAccessPermission on absPath:{}", absolutePath);
 		log.info("for user:{}", userName);
-		// overhead iRODS behavior, if you set perm with recursive when no children, then won't take
+		// overhead iRODS behavior, if you set perm with recursive when no
+		// children, then won't take
 		boolean collNeedsRecursive = adjustRecursiveOption(absolutePath,
 				recursive);
-		
-		ModAccessControlInp modAccessControlInp = ModAccessControlInp.instanceForSetPermission(collNeedsRecursive, zone, absolutePath, userName, ModAccessControlInp.NULL_PERMISSION);
+
+		ModAccessControlInp modAccessControlInp = ModAccessControlInp
+				.instanceForSetPermission(collNeedsRecursive, zone,
+						absolutePath, userName,
+						ModAccessControlInp.NULL_PERMISSION);
 		getIRODSProtocol().irodsFunction(modAccessControlInp);
-		
+
 	}
-	
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.pub.CollectionAO#isCollectionSetForPermissionInheritance(java.lang.String)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.pub.CollectionAO#
+	 * isCollectionSetForPermissionInheritance(java.lang.String)
 	 */
 	@Override
-	public boolean isCollectionSetForPermissionInheritance(final String absolutePath) throws JargonException {
-		
+	public boolean isCollectionSetForPermissionInheritance(
+			final String absolutePath) throws JargonException {
+
 		if (absolutePath == null || absolutePath.isEmpty()) {
-			throw new IllegalArgumentException("null or empty absolutePathToCollection");
+			throw new IllegalArgumentException(
+					"null or empty absolutePathToCollection");
 		}
-		
-		IRODSGenQueryExecutor irodsGenQueryExecutor = getIRODSAccessObjectFactory().getIRODSGenQueryExecutor(getIRODSAccount());
-		
-		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(CollectionAOHelper.buildInheritanceQueryForCollectionAbsolutePath(absolutePath), 1);
+
+		IRODSGenQueryExecutor irodsGenQueryExecutor = getIRODSAccessObjectFactory()
+				.getIRODSGenQueryExecutor(getIRODSAccount());
+
+		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(CollectionAOHelper
+				.buildInheritanceQueryForCollectionAbsolutePath(absolutePath),
+				1);
 		IRODSQueryResultSetInterface resultSet;
 
 		try {
-			resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResult(irodsQuery, 0);
+			resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResult(
+					irodsQuery, 0);
 		} catch (JargonQueryException e) {
 			throw new JargonException("error querying for inheritance flag", e);
 		}
-		
+
 		String inheritanceFlag = resultSet.getFirstResult().getColumn(0);
 		boolean returnInheritanceVal = false;
-		
-		if (inheritanceFlag.trim().equals("1")) { 
+
+		if (inheritanceFlag.trim().equals("1")) {
 			returnInheritanceVal = true;
 		}
-		
+
 		return returnInheritanceVal;
-		
+
 	}
-	
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.pub.CollectionAO#getPermissionForCollection(java.lang.String, java.lang.String, java.lang.String)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.CollectionAO#getPermissionForCollection(java
+	 * .lang.String, java.lang.String, java.lang.String)
 	 */
 	@Override
-	public FilePermissionEnum getPermissionForCollection(final String irodsAbsolutePath, final String userName, final String zone) throws JargonException {
-		
+	public FilePermissionEnum getPermissionForCollection(
+			final String irodsAbsolutePath, final String userName,
+			final String zone) throws JargonException {
+
 		if (irodsAbsolutePath == null || irodsAbsolutePath.isEmpty()) {
-			throw new IllegalArgumentException("null or empty irodsAbsolutePath");
+			throw new IllegalArgumentException(
+					"null or empty irodsAbsolutePath");
 		}
-		
+
 		if (userName == null || userName.isEmpty()) {
 			throw new IllegalArgumentException("null or empty userName");
 		}
-		
+
 		if (zone == null) {
 			throw new IllegalArgumentException("null zone");
 		}
-		
+
 		log.info("getPermissionForCollection for absPath:{}", irodsAbsolutePath);
 		log.info("userName:{}", userName);
-		
-		IRODSFileSystemAO irodsFileSystemAO = getIRODSAccessObjectFactory().getIRODSFileSystemAO(getIRODSAccount());
+
+		IRODSFileSystemAO irodsFileSystemAO = getIRODSAccessObjectFactory()
+				.getIRODSFileSystemAO(getIRODSAccount());
 		IRODSFileFactory irodsFileFactory = this.getIRODSFileFactory();
-		int permissionVal = irodsFileSystemAO.getDirectoryPermissions(irodsFileFactory.instanceIRODSFile(irodsAbsolutePath));
-		FilePermissionEnum filePermissionEnum = FilePermissionEnum.valueOf(permissionVal);
+		int permissionVal = irodsFileSystemAO
+				.getDirectoryPermissions(irodsFileFactory
+						.instanceIRODSFile(irodsAbsolutePath));
+		FilePermissionEnum filePermissionEnum = FilePermissionEnum
+				.valueOf(permissionVal);
 		return filePermissionEnum;
-		
+
 	}
 
 	/**
-	 * Method overheads an iRODS protocol issue where recursive flag when collection has no children causes no permissions to be set.
+	 * Method overheads an iRODS protocol issue where recursive flag when
+	 * collection has no children causes no permissions to be set.
+	 * 
 	 * @param absolutePath
 	 * @param recursive
 	 * @return
@@ -973,15 +1131,17 @@ public final class CollectionAOImpl extends IRODSGenericAO implements
 	 */
 	private boolean adjustRecursiveOption(final String absolutePath,
 			final boolean recursive) throws JargonException {
-		
-		IRODSFile collFile = this.getIRODSFileFactory().instanceIRODSFile(absolutePath);
-		
+
+		IRODSFile collFile = this.getIRODSFileFactory().instanceIRODSFile(
+				absolutePath);
+
 		if (!collFile.exists()) {
-			throw new JargonException("irodsFile does not exist for given path, cannot set permissions on it");
+			throw new JargonException(
+					"irodsFile does not exist for given path, cannot set permissions on it");
 		}
-		
+
 		boolean collNeedsRecursive = recursive;
-		
+
 		if (recursive) {
 			if (collFile.list().length == 0) {
 				log.info("overridding recursive flag, file has no children");
@@ -990,21 +1150,30 @@ public final class CollectionAOImpl extends IRODSGenericAO implements
 		}
 		return collNeedsRecursive;
 	}
-	
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.pub.CollectionAO#listPermissionsForCollection(java.lang.String)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.CollectionAO#listPermissionsForCollection(java
+	 * .lang.String)
 	 */
 	@Override
-	public List<UserFilePermission> listPermissionsForCollection(final String irodsCollectionAbsolutePath) throws JargonException {
-		
-		if (irodsCollectionAbsolutePath == null || irodsCollectionAbsolutePath.isEmpty()) {
-			throw new IllegalArgumentException("null or empty collectionAbsolutePath");
+	public List<UserFilePermission> listPermissionsForCollection(
+			final String irodsCollectionAbsolutePath) throws JargonException {
+
+		if (irodsCollectionAbsolutePath == null
+				|| irodsCollectionAbsolutePath.isEmpty()) {
+			throw new IllegalArgumentException(
+					"null or empty collectionAbsolutePath");
 		}
-		
-		log.info("listPermissionsForCollection: {}", irodsCollectionAbsolutePath);
+
+		log.info("listPermissionsForCollection: {}",
+				irodsCollectionAbsolutePath);
 		List<UserFilePermission> userFilePermissions = new ArrayList<UserFilePermission>();
-		
-		IRODSGenQueryExecutor irodsGenQueryExecutor = getIRODSAccessObjectFactory().getIRODSGenQueryExecutor(getIRODSAccount());
+
+		IRODSGenQueryExecutor irodsGenQueryExecutor = getIRODSAccessObjectFactory()
+				.getIRODSGenQueryExecutor(getIRODSAccount());
 
 		StringBuilder query = new StringBuilder();
 		query.append("SELECT ");
@@ -1019,26 +1188,33 @@ public final class CollectionAOImpl extends IRODSGenericAO implements
 		query.append(IRODSDataConversionUtil
 				.escapeSingleQuotes(irodsCollectionAbsolutePath));
 		query.append("'");
-		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(query.toString(), this.getJargonProperties().getMaxFilesAndDirsQueryMax());
+		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(query.toString(),
+				this.getJargonProperties().getMaxFilesAndDirsQueryMax());
 		IRODSQueryResultSetInterface resultSet;
 
 		try {
-			resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResult(irodsQuery, 0);
-			
+			resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResult(
+					irodsQuery, 0);
+
 			UserFilePermission userFilePermission = null;
 			for (IRODSQueryResultRow row : resultSet.getResults()) {
-				userFilePermission = new UserFilePermission(row.getColumn(0), row.getColumn(1), FilePermissionEnum.valueOf(IRODSDataConversionUtil.getIntOrZeroFromIRODSValue(row.getColumn(2))));
+				userFilePermission = new UserFilePermission(row.getColumn(0),
+						row.getColumn(1),
+						FilePermissionEnum.valueOf(IRODSDataConversionUtil
+								.getIntOrZeroFromIRODSValue(row.getColumn(2))));
 				log.debug("loaded filePermission:{}", userFilePermission);
 				userFilePermissions.add(userFilePermission);
 			}
-			
+
 		} catch (JargonQueryException e) {
-			log.error("query exception for  query:{}",query.toString(), e);
-			throw new JargonException("error in query loading user file permissions for collection", e);
+			log.error("query exception for  query:{}", query.toString(), e);
+			throw new JargonException(
+					"error in query loading user file permissions for collection",
+					e);
 		}
-		
+
 		return userFilePermissions;
-		
+
 	}
 
 }

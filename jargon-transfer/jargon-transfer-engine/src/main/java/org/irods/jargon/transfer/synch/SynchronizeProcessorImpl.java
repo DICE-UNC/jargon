@@ -8,6 +8,9 @@ import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry;
 import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry.ObjectType;
+import org.irods.jargon.datautils.synchproperties.SynchPropertiesService;
+import org.irods.jargon.datautils.synchproperties.SynchTimestamps;
+import org.irods.jargon.datautils.synchproperties.UserSynchTarget;
 import org.irods.jargon.datautils.tree.FileTreeDiffEntry;
 import org.irods.jargon.datautils.tree.FileTreeDiffEntry.DiffType;
 import org.irods.jargon.datautils.tree.FileTreeDiffUtility;
@@ -32,6 +35,8 @@ public class SynchronizeProcessorImpl implements SynchronizeProcessor {
 	private IRODSAccount irodsAccount;
 
 	private IRODSAccessObjectFactory irodsAccessObjectFactory;
+	
+	private SynchPropertiesService synchPropertiesService;
 
 	private TransferManager transferManager;
 
@@ -50,6 +55,23 @@ public class SynchronizeProcessorImpl implements SynchronizeProcessor {
 	 * @param transferManager
 	 */
 	public SynchronizeProcessorImpl() {
+	}
+	
+	public void synchronizeLocalToIrods(final String synchDeviceName, final String irodsRootAbsolutePath) throws JargonException {
+		if (synchDeviceName == null || synchDeviceName.isEmpty()) {
+			throw new IllegalArgumentException("null synchDeviceName");
+		}
+
+		if (irodsRootAbsolutePath == null || irodsRootAbsolutePath.isEmpty()) {
+			throw new IllegalArgumentException("null irodsRootAbsolutePath");
+		}
+		
+		log.info("synchronizeLocalToIrods for device:{}", synchDeviceName);
+		log.info("irodsRootAbsolutePath:{}", irodsRootAbsolutePath);
+		// look up the synch information stored in iRODS at the indicated root path
+		UserSynchTarget userSynchTarget = synchPropertiesService.getUserSynchTargetForUserAndAbsolutePath(irodsAccount.getUserName(), synchDeviceName, irodsRootAbsolutePath);
+		log.info("user synch target resolved as:{}", userSynchTarget);
+		synchronizeLocalToIRODS(synchDeviceName, userSynchTarget.getLocalSynchRootAbsolutePath(), irodsRootAbsolutePath, userSynchTarget.getLastLocalSynchTimestamp(), userSynchTarget.getLastIRODSSynchTimestamp());
 	}
 
 	/*
@@ -92,7 +114,25 @@ public class SynchronizeProcessorImpl implements SynchronizeProcessor {
 
 		checkInitialization();
 		
-		// FIXME: implement
+		processSynchGivenSynchMetadata(synchDeviceName, localRootAbsolutePath,
+				irodsRootAbsolutePath, timestampforLastSynchLeftHandSide,
+				timestampForLastSynchRightHandSide);
+	}
+
+	/**
+	 * @param synchDeviceName
+	 * @param localRootAbsolutePath
+	 * @param irodsRootAbsolutePath
+	 * @param timestampforLastSynchLeftHandSide
+	 * @param timestampForLastSynchRightHandSide
+	 * @throws JargonException
+	 */
+	private void processSynchGivenSynchMetadata(final String synchDeviceName,
+			final String localRootAbsolutePath,
+			final String irodsRootAbsolutePath,
+			final long timestampforLastSynchLeftHandSide,
+			final long timestampForLastSynchRightHandSide)
+			throws JargonException {
 		checkForPendingSynchsOnTargetDirectory();
 
 		log.info("synchronizeLocalToIRODS for device:{}", synchDeviceName);
@@ -124,6 +164,9 @@ public class SynchronizeProcessorImpl implements SynchronizeProcessor {
 				calculatedIrodsRoot = irodsRootAbsolutePath;
 			}
 		}
+		
+		// gather the synch times and update the AVU metadata to reflect this synch  TODO: do I do this here or at end of synch?  MCC
+		//getTimestampsAndUpdateSynchDataInIRODS(irodsAccount.getUserName(), synchDeviceName, irodsRootAbsolutePath);
 
 		// generate a diff between the lhs local directory and the rhs iRODS directory
 		FileTreeModel diffModel = fileTreeDiffUtility.generateDiffLocalToIRODS(
@@ -143,6 +186,15 @@ public class SynchronizeProcessorImpl implements SynchronizeProcessor {
 				timestampforLastSynchLeftHandSide,
 				timestampForLastSynchRightHandSide);
 		log.debug("processing complete");
+	}
+
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.transfer.synch.SynchronizeProcessor#getTimestampsAndUpdateSynchDataInIRODS(java.lang.String, java.lang.String, java.lang.String)
+	 */
+	@Override
+	public void getTimestampsAndUpdateSynchDataInIRODS(String userName,
+			String synchDeviceName, String irodsRootAbsolutePath) throws JargonException {
+		synchPropertiesService.updateTimestampsToCurrent(userName, synchDeviceName, irodsRootAbsolutePath);		
 	}
 
 	/**
@@ -216,7 +268,7 @@ public class SynchronizeProcessorImpl implements SynchronizeProcessor {
 		
 		/*
 		 * the diff node will have the absolute local path of the file, this is
-		 * the source of the put. the iRODS path will be the local path minus
+		 * the source of the get. the iRODS path will be the local path minus
 		 * the local root, appended to the iRODS root
 		 */
 
@@ -224,8 +276,16 @@ public class SynchronizeProcessorImpl implements SynchronizeProcessor {
 				.getUserObject();
 		CollectionAndDataObjectListingEntry entry = fileTreeDiffEntry
 				.getCollectionAndDataObjectListingEntry();
-		String targetRelativePath = entry.getFormattedAbsolutePath().substring(
-				irodsRootAbsolutePath.length());
+		
+		String targetRelativePath;
+		if (entry.getObjectType() == ObjectType.COLLECTION) {
+			targetRelativePath =  entry.getParentPath().substring(
+					irodsRootAbsolutePath.length()); 
+		} else {
+			targetRelativePath =  entry.getFormattedAbsolutePath().substring(
+					irodsRootAbsolutePath.length()); 
+		}
+		
 		StringBuilder sb = new StringBuilder(localRootAbsolutePath);
 		sb.append(targetRelativePath);
 
@@ -336,10 +396,25 @@ public class SynchronizeProcessorImpl implements SynchronizeProcessor {
 		if (transferManager == null) {
 			throw new IllegalStateException("no transferManager was set");
 		}
+		
+		if (synchPropertiesService == null) {
+			throw new IllegalStateException("no synchPropertiesService was set");
+		}
 
 		if (fileTreeDiffUtility == null) {
 			throw new IllegalStateException("no fileTreeDiffUtility was set");
 		}
+	}
+
+	@Override
+	public SynchPropertiesService getSynchPropertiesService() {
+		return synchPropertiesService;
+	}
+	
+	@Override
+	public void setSynchPropertiesService(
+			SynchPropertiesService synchPropertiesService) {
+		this.synchPropertiesService = synchPropertiesService;
 	}
 
 }

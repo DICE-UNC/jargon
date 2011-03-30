@@ -6,6 +6,7 @@ package org.irods.jargon.core.pub;
 import java.util.Properties;
 
 import junit.framework.Assert;
+import junit.framework.TestCase;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSProtocolManager;
@@ -55,6 +56,19 @@ public class EnvironmentalInfoAOTest {
 				.getIRODSServerPropertiesFromIRODSServer();
 		Assert.assertNotNull(irodsServerProperties);
 		irodsSession.closeSession();
+	}
+	
+	@Test
+	public void testGetIRODSServerCurrentTime() throws Exception {
+		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
+		EnvironmentalInfoAO environmentalInfoAO = accessObjectFactory
+				.getEnvironmentalInfoAO(irodsAccount);
+		long timeVal = environmentalInfoAO.getIRODSServerCurrentTime();
+		TestCase.assertTrue("time val was missing", timeVal > 0);
 	}
 
 }

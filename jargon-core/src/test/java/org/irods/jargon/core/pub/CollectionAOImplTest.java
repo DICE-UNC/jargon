@@ -667,6 +667,131 @@ public class CollectionAOImplTest {
 	}
 
 	@Test
+	public void testOverwriteAvuMetadata() throws Exception {
+		String testDirName = "testOverwriteAvuMetadataTestingDir";
+		String expectedAttribName = "testOverwriteAvuMetadataAttrib1";
+		String expectedAttribValue = "testOverwriteAvuMetadataValue1";
+		String expectedNewValue = "testOverwriteAvuMetadataValue1ThatsOverwriten";
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
+								+ testDirName);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+		CollectionAO collectionAO = accessObjectFactory
+				.getCollectionAO(irodsAccount);
+		IRODSFile targetCollectionAsFile = irodsFileSystem.getIRODSFileFactory(
+				irodsAccount).instanceIRODSFile(targetIrodsCollection);
+		targetCollectionAsFile.mkdirs();
+
+		AvuData dataToAdd = AvuData.instance(expectedAttribName,
+				expectedAttribValue, "");
+		collectionAO.addAVUMetadata(targetIrodsCollection, dataToAdd);
+		AvuData overwriteAvuData = AvuData.instance(expectedAttribName, expectedNewValue, "");
+
+		collectionAO.modifyAVUMetadata(targetIrodsCollection, dataToAdd, overwriteAvuData);
+
+		List<MetaDataAndDomainData> metadata = collectionAO
+				.findMetadataValuesForCollection(targetIrodsCollection, 0);
+		irodsFileSystem.close();
+		
+		TestCase.assertEquals("should only be one avu entry", 1, metadata.size());
+
+		for (MetaDataAndDomainData metadataEntry : metadata) {
+			Assert.assertEquals("did not find attrib name", expectedAttribName, metadataEntry
+					.getAvuAttribute());
+			Assert.assertEquals("did not find attrib val", expectedNewValue, metadataEntry
+					.getAvuValue());
+		}
+
+	}
+	
+	@Test
+	public void testOverwriteAvuMetadataGivenNameAndUnit() throws Exception {
+		String testDirName = "testOverwriteAvuMetadataGivenNameAndUnit";
+		String expectedAttribName = "testOverwriteAvuMetadataGivenNameAndUnitAttrib1";
+		String expectedAttribValue = "testOverwriteAvuMetadataGivenNameAndUnitValue1";
+		String expectedAttribUnit = "testOverwriteAvuMetadataGivenNameAndUnitUnit1";
+		String expectedNewValue = "testOverwriteAvuMetadataGivenNameAndUnitThatsOverwriten";
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
+								+ testDirName);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+		CollectionAO collectionAO = accessObjectFactory
+				.getCollectionAO(irodsAccount);
+		IRODSFile targetCollectionAsFile = irodsFileSystem.getIRODSFileFactory(
+				irodsAccount).instanceIRODSFile(targetIrodsCollection);
+		targetCollectionAsFile.mkdirs();
+
+		AvuData dataToAdd = AvuData.instance(expectedAttribName,
+				expectedAttribValue, expectedAttribUnit);
+		collectionAO.addAVUMetadata(targetIrodsCollection, dataToAdd);
+		AvuData overwriteAvuData = AvuData.instance(expectedAttribName, expectedNewValue, expectedAttribUnit);
+		collectionAO.modifyAvuValueBasedOnGivenAttributeAndUnit(targetIrodsCollection, overwriteAvuData);
+		List<MetaDataAndDomainData> metadata = collectionAO
+				.findMetadataValuesForCollection(targetIrodsCollection, 0);
+		irodsFileSystem.close();
+		
+		TestCase.assertEquals("should only be one avu entry", 1, metadata.size());
+
+		for (MetaDataAndDomainData metadataEntry : metadata) {
+			Assert.assertEquals("did not find attrib name", expectedAttribName, metadataEntry
+					.getAvuAttribute());
+			Assert.assertEquals("did not find attrib val", expectedNewValue, metadataEntry
+					.getAvuValue());
+			Assert.assertEquals("did not find attrib unit", expectedAttribUnit, metadataEntry
+					.getAvuUnit());
+			
+		}
+
+	}
+	
+	@Test(expected=DataNotFoundException.class)
+	public void testOverwriteAvuMetadataGivenNameAndUnitNoVals() throws Exception {
+		String testDirName = "testOverwriteAvuMetadataGivenNameAndUnitNoVals";
+		String expectedAttribName = "testOverwriteAvuMetadataGivenNameAndUnitAttrib1";
+		String expectedAttribUnit = "testOverwriteAvuMetadataGivenNameAndUnitUnit1";
+		String expectedNewValue = "testOverwriteAvuMetadataGivenNameAndUnitThatsOverwriten";
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
+								+ testDirName);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+		CollectionAO collectionAO = accessObjectFactory
+				.getCollectionAO(irodsAccount);
+		IRODSFile targetCollectionAsFile = irodsFileSystem.getIRODSFileFactory(
+				irodsAccount).instanceIRODSFile(targetIrodsCollection);
+		targetCollectionAsFile.mkdirs();
+
+		AvuData overwriteAvuData = AvuData.instance(expectedAttribName, expectedNewValue, expectedAttribUnit);
+		collectionAO.modifyAvuValueBasedOnGivenAttributeAndUnit(targetIrodsCollection, overwriteAvuData);
+		irodsFileSystem.close();
+		
+	}
+	
+	
+	@Test
 	public void testRemoveAvuMetadataAvuDataDoesNotExist() throws Exception {
 		String testDirName = "testRemoveAvuMetadataAvuDataDoesNotExistDir";
 		String expectedAttribName = "testattrib1";

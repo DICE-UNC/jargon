@@ -14,7 +14,7 @@ import org.irods.jargon.core.exception.JargonException;
  * @author Mike Conway - DICE (www.irods.org)
  * 
  */
-public final class IRODSRuleExecResult {
+public class IRODSRuleExecResult {
 
 	private final IRODSRule irodsRule;
 	private final Map<String, IRODSRuleExecResultOutputParameter> outputParameterResults;

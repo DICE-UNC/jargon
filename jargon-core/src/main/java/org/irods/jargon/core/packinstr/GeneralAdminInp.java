@@ -228,7 +228,8 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 				userType.getTextValue(), BLANK, BLANK, BLANK, BLANK, BLANK,
 				GEN_ADMIN_INP_API_NBR);
 	}
-
+	
+	
 	private GeneralAdminInp(final String arg0, final String arg1,
 			final String arg2, final String arg3, final String arg4,
 			final String arg5, final String arg6, final String arg7,

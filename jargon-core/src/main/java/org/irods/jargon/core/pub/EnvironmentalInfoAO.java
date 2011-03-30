@@ -15,4 +15,11 @@ public interface EnvironmentalInfoAO extends IRODSAccessObject {
 	IRODSServerProperties getIRODSServerPropertiesFromIRODSServer()
 			throws JargonException;
 
+	/**
+	 * Get the current time on the iRODS server
+	 * @return <code>long</code> with the time since epoch that is the current server time
+	 * @throws JargonException
+	 */
+	long getIRODSServerCurrentTime() throws JargonException;
+
 }

@@ -776,35 +776,7 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 	public void modifyAVUMetadata(final String userName, final AvuData avuData)
 			throws DataNotFoundException, JargonException {
 
-		if (userName == null || userName.isEmpty()) {
-			throw new IllegalArgumentException("null or empty userName");
-		}
-
-		if (avuData == null) {
-			throw new IllegalArgumentException("null AVU data");
-		}
-
-		log.info("modify avu metadata to user: {}", avuData);
-		log.info("userName {}", userName);
-
-		final ModAvuMetadataInp modifyAvuMetadataInp = ModAvuMetadataInp.instanceForModifyUserMetadata(userName, avuData);
-			
-		log.debug("sending avu request");
-
-		try {
-			getIRODSProtocol().irodsFunction(modifyAvuMetadataInp);
-		} catch (JargonException je) {
-
-			if (je.getMessage().indexOf("-827000") > -1) {
-				throw new DataNotFoundException(
-						"User was not found, could not modify AVU");
-			}
-
-			log.error("jargon exception modifying AVU metadata", je);
-			throw je;
-		}
-
-		log.debug("metadata modified");
+		//FIXME: reimplement with mod code as in collectionAO
 
 	}
 

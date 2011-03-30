@@ -170,19 +170,6 @@ public interface CollectionAO extends IRODSAccessObject {
 
 
 	/**
-	 * Overwrite AVU metadata for this collection
-	 * 
-	 * @param absolutePath
-	 *            <code>String</code> with the absolute path to the target
-	 *            collection
-	 * @param avuData
-	 *            {@link org.irods.jargon.core.pub.domain.AvuData}
-	 * @throws JargonException
-	 */
-	void overwriteAVUMetadata(final String absolutePath, final AvuData avuData)
-			throws DataNotFoundException, JargonException;
-
-	/**
 	 * Given a set of metadata query parameters, return a list of IRODS
 	 * Collections that match the metadata query. This query method allows a
 	 * partial start as an offset into the result set to get paging behaviors.
@@ -413,5 +400,36 @@ public interface CollectionAO extends IRODSAccessObject {
 	 */
 	List<UserFilePermission> listPermissionsForCollection(
 			String irodsCollectionAbsolutePath) throws JargonException;
+
+	/**
+	 * Overwrite AVU metadata for this collection
+	 * 
+	 * @param absolutePath
+	 *            <code>String</code> with the absolute path to the target
+	 *            collection
+	 * @param currentAvuData
+	 *            {@link org.irods.jargon.core.pub.domain.AvuData} describing the current avu.  This will be looked up by attribute + value
+	 *  @param newAvuData
+	 *            {@link org.irods.jargon.core.pub.domain.AvuData} describing the desired state of the avu
+	 * @throws JargonException
+	 * @throws DataNotFoundExeption if the AVU is not present
+	 */
+	void modifyAVUMetadata(String absolutePath, AvuData currentAvuData,
+			AvuData newAvuData) throws DataNotFoundException, JargonException;
+
+	/**
+	 * This is a special method to modify the Avu value for a given attribute name and unit.   Often, it is the case that applications want to keep unique values for a collection, and be able to easily change the value while preserving 
+	 * the attribute name and units.  This method allows the specification of an AVU with the known name and units, and an arbitrary value.  The method will find the unique attribute by 
+	 * name and unit, and overwrite the existing value with the value given in the <code>AvuData</code> parameter.  
+	* @param absolutePath
+	 *            <code>String</code> with the absolute path to the target
+	 *            collection
+	 * @param currentAvuData
+	 *            {@link org.irods.jargon.core.pub.domain.AvuData} describing the existing Avu name and unit, with the desired new value
+	 * @throws DataNotFoundException if the AVU data is not present
+	 * @throws JargonException
+	 */
+	void modifyAvuValueBasedOnGivenAttributeAndUnit(String absolutePath,
+			AvuData avuData) throws DataNotFoundException, JargonException;
 
 }
