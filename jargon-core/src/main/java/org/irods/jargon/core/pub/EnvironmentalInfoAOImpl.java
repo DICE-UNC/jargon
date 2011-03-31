@@ -72,7 +72,7 @@ public class EnvironmentalInfoAOImpl extends IRODSGenericAO implements
 		long timeVal;
 
 		try {
-			timeVal = Long.parseLong(execOut);
+			timeVal = Long.parseLong(execOut) * 1000;
 		} catch (NumberFormatException nfe) {
 			log.error(
 					"error getting time val from *Time in rule results when results were:{}",

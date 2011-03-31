@@ -182,6 +182,8 @@ public class FileTreeDiffUtilityImpl implements FileTreeDiffUtility {
 				.substring(leftHandSideRootPath.length());
 		String rightHandSideAsRelativePath = rightHandSide.getAbsolutePath()
 				.substring(rightHandSideRootPath.length());
+		
+		log.debug("diffTwoFiles in currentTreeNode:{}", currentFileTreeNode);
 
 		log.debug("lhs as relativePath:{}", leftHandSideAsRelativePath);
 		log.debug("rhs as relativePath:{}", rightHandSideAsRelativePath);
@@ -194,6 +196,8 @@ public class FileTreeDiffUtilityImpl implements FileTreeDiffUtility {
 
 		if (compValue < 0) {
 			log.debug("lhs < rhs");
+			log.debug("lhs timestamp:{}", leftHandSide.lastModified());
+			log.debug("lhs cutoff:{}", timestampforLastSynchLeftHandSide);
 			if (timestampforLastSynchLeftHandSide == NO_TIMESTAMP_CHECKS
 					|| leftHandSide.lastModified() > timestampforLastSynchLeftHandSide) {
 				FileTreeDiffEntry entry = buildFileTreeDiffEntryForFile(
@@ -305,6 +309,7 @@ public class FileTreeDiffUtilityImpl implements FileTreeDiffUtility {
 			final long timestampForLastSynchRightHandSide)
 			throws JargonException {
 
+		log.info("\n\n************************************\n************************************\n\n");
 		log.info("comparing two equal directories");
 		log.info("   lhs dir:{}", leftHandSide.getAbsolutePath());
 		log.info("   rhs dir:{}", rightHandSide.getAbsolutePath());
@@ -491,6 +496,8 @@ public class FileTreeDiffUtilityImpl implements FileTreeDiffUtility {
 			final long timestampForLastSynchRightHandSide) {
 		
 		log.info("lhsChildIsUnmatched:{}", leftHandSide.getAbsolutePath());
+		log.info("lhs last synch:{}", timestampForLastSynchLeftHandSide);
+		log.info("leftHandSide lastModified:{}", leftHandSide.lastModified());
 		
 		// lhs file has no match
 		if (timestampForLastSynchRightHandSide == NO_TIMESTAMP_CHECKS
@@ -550,29 +557,28 @@ public class FileTreeDiffUtilityImpl implements FileTreeDiffUtility {
 			log.debug("rhs file:{}", rightHandSide.getAbsolutePath());
 			log.debug("rhs mod:{}", rightHandSide.lastModified());
 			
-			
 			if (leftHandSide.lastModified() > timestampForLastSynchLeftHandSide
 					&& rightHandSide.lastModified() > timestampForLastSynchRightHandSide) {
 				twoFilesDifferAndBothArePostLastSynch(currentFileTreeNode,
 						leftHandSide, rightHandSide,
 						timestampForLastSynchRightHandSide,
 						timestampForLastSynchRightHandSide);
-			} else if (leftHandSide.lastModified() > timestampForLastSynchLeftHandSide) {
+			} else if (leftHandSide.lastModified() > timestampForLastSynchLeftHandSide && leftHandSide.length() != rightHandSide.length()) {
 				log.debug("left hand side file is newer");
 				FileTreeDiffEntry entry = buildFileTreeDiffEntryForFile(
 						leftHandSide, DiffType.LEFT_HAND_NEWER,
 						rightHandSide.length(), rightHandSide.lastModified());
 				currentFileTreeNode.add(new FileTreeNode(entry));
-			} else if (rightHandSide.lastModified() > timestampForLastSynchRightHandSide) {
+			} else if (rightHandSide.lastModified() > timestampForLastSynchRightHandSide && leftHandSide.length() != rightHandSide.length()) {
 				log.debug("right hand side file is newer");
 				FileTreeDiffEntry entry = buildFileTreeDiffEntryForFile(
 						rightHandSide, DiffType.RIGHT_HAND_NEWER,
 						leftHandSide.length(), leftHandSide.lastModified());
 				currentFileTreeNode.add(new FileTreeNode(entry));
 			} else {
-				log.debug("timestamps match, treat as no diff");
+				log.debug("files match treat as no diff");
 			}
-			log.debug("**************************************************");
+			log.debug("\n\n**************************************************\n");
 
 		}
 	}
@@ -592,6 +598,16 @@ public class FileTreeDiffUtilityImpl implements FileTreeDiffUtility {
 			final File rightHandSide,
 			final long timestampForLastSynchLeftHandSide,
 			final long timestampForLastSynchRightHandSide) {
+		
+		log.debug("twoFilesDifferAndBothArePostLastSynch");
+		
+		if (leftHandSide.length() == rightHandSide.length()) {
+			log.debug("lengths are same, don't treat as diff");
+			return;
+		}
+		
+		// lengths are different, pick a file.
+		
 		log.debug("both files after cutoff, will pick most recent file");
 
 		if (leftHandSide.lastModified() > rightHandSide.lastModified()) {

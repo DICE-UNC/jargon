@@ -293,6 +293,9 @@ public class SynchronizeProcessorImpl implements SynchronizeProcessor {
 	private void scheduleIrodsToLocal(final FileTreeNode diffNode,
 			final String localRootAbsolutePath,
 			final String irodsRootAbsolutePath) throws JargonException {
+		
+		
+		log.info("\n\n<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<\n\n");
 
 		log.info("scheduleIrodsToLocal for diffNode:{}", diffNode);
 
@@ -343,6 +346,7 @@ public class SynchronizeProcessorImpl implements SynchronizeProcessor {
 		 * collection relative path, appended to the local root.
 		 */
 
+		log.info("\n\n>>>>>>>>>>>>>>>>>>>>>>>>>>\n\n");
 		log.info("scheduleLocalToIrods for diffNode:{}", diffNode);
 
 		FileTreeDiffEntry fileTreeDiffEntry = (FileTreeDiffEntry) diffNode
