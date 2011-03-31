@@ -32,57 +32,78 @@ public interface SynchronizeProcessor {
 	 *            directory in iRODS that will be synchronized
 	 * @param timestampForLastSynchLeftHandSide
 	 *            <code>long</code> with the timestamp that, if before the last
-	 *            modified date of the given left hand files,
-	 *            indicates that the file has changed. Leave as zero to turn off
-	 *            this check.
-	 *   @param timestampForLastSynchRightHandSide
+	 *            modified date of the given left hand files, indicates that the
+	 *            file has changed. Leave as zero to turn off this check.
+	 * @param timestampForLastSynchRightHandSide
 	 *            <code>long</code> with the timestamp that, if before the last
-	 *            modified date of the given right hand files,
-	 *            indicates that the file has changed. Leave as zero to turn off
-	 *            this check.
+	 *            modified date of the given right hand files, indicates that
+	 *            the file has changed. Leave as zero to turn off this check.
 	 * @throws JargonException
 	 */
-	public abstract void synchronizeLocalToIRODS(final String synchDeviceName,
+	void synchronizeLocalToIRODS(final String synchDeviceName,
 			final String localRootAbsolutePath,
-			final String irodsRootAbsolutePath,	final long timestampforLastSynchLeftHandSide,
+			final String irodsRootAbsolutePath,
+			final long timestampforLastSynchLeftHandSide,
 			final long timestampForLastSynchRightHandSide)
 			throws JargonException;
 
-	public abstract void setTransferManager(
-			final TransferManager transferManager);
+	void setTransferManager(final TransferManager transferManager);
 
-	public abstract TransferManager getTransferManager();
+	TransferManager getTransferManager();
 
-	public abstract void setIrodsAccessObjectFactory(
+	void setIrodsAccessObjectFactory(
 			final IRODSAccessObjectFactory irodsAccessObjectFactory);
 
-	public abstract IRODSAccessObjectFactory getIrodsAccessObjectFactory();
+	IRODSAccessObjectFactory getIrodsAccessObjectFactory();
 
-	public abstract void setIrodsAccount(final IRODSAccount irodsAccount);
+	void setIrodsAccount(final IRODSAccount irodsAccount);
 
-	public abstract IRODSAccount getIrodsAccount();
+	IRODSAccount getIrodsAccount();
 
-	public abstract void setFileTreeDiffUtility(
-			final FileTreeDiffUtility fileTreeDiffUtility);
+	void setFileTreeDiffUtility(final FileTreeDiffUtility fileTreeDiffUtility);
 
-	public abstract FileTreeDiffUtility getFileTreeDiffUtility();
+	FileTreeDiffUtility getFileTreeDiffUtility();
 
 	SynchPropertiesService getSynchPropertiesService();
 
 	void setSynchPropertiesService(SynchPropertiesService synchPropertiesService);
 
 	/**
-	 * Method to trigger an update of the synch state information for this synch collection.  The data includes the
-	 * local and iRODS timestamps that mark the end of the synchronization, and are stored in special AVU information
+	 * Method to trigger an update of the synch state information for this synch
+	 * collection. The data includes the local and iRODS timestamps that mark
+	 * the end of the synchronization, and are stored in special AVU information
 	 * in the iRODS synch collection.
-	 * @param userName <code>String</code> with the name of the synching iRODS user
-	 * @param synchDeviceName <code>String</code> with the pre-configured synch device name.  Examples would be 'my laptop', or 'my work computer'
-	 * @param irodsRootAbsolutePath <code>String</code> with the absolute path to an iRODS synch directory.  This directory needs to be pre-configured
-	 * before it can be synchronized.
+	 * 
+	 * @param userName
+	 *            <code>String</code> with the name of the synching iRODS user
+	 * @param synchDeviceName
+	 *            <code>String</code> with the pre-configured synch device name.
+	 *            Examples would be 'my laptop', or 'my work computer'
+	 * @param irodsRootAbsolutePath
+	 *            <code>String</code> with the absolute path to an iRODS synch
+	 *            directory. This directory needs to be pre-configured before it
+	 *            can be synchronized.
 	 * @throws JargonException
 	 */
 	void getTimestampsAndUpdateSynchDataInIRODS(String userName,
 			String synchDeviceName, String irodsRootAbsolutePath)
 			throws JargonException;
+
+	/**
+	 * Method to trigger an update of the synch state information for this synch
+	 * collection. The synch will use data stored in special AVU information in
+	 * the iRODS synch collection for timestamps and other data.
+	 * 
+	 * @param synchDeviceName
+	 *            <code>String</code> with the pre-configured synch device name.
+	 *            Examples would be 'my laptop', or 'my work computer'
+	 * @param irodsRootAbsolutePath
+	 *            <code>String</code> with the absolute path to an iRODS synch
+	 *            directory. This directory needs to be pre-configured before it
+	 *            can be synchronized.
+	 * @throws JargonException
+	 */
+	void synchronizeLocalToIRODS(String synchDeviceName,
+			String irodsRootAbsolutePath) throws JargonException;
 
 }

@@ -206,9 +206,9 @@ public class CollectionAOHelper extends AOHelper {
 	public static CollectionAndDataObjectListingEntry buildCollectionListEntryFromResultSetRowForCollectionQuery(
 			final IRODSQueryResultRow row) throws JargonException {
 		CollectionAndDataObjectListingEntry entry = new CollectionAndDataObjectListingEntry();
-		entry.setParentPath(row.getColumn(1));
+		entry.setParentPath(row.getColumn(0));
 		entry.setObjectType(ObjectType.COLLECTION);
-		entry.setPathOrName(row.getColumn(0));
+		entry.setPathOrName(row.getColumn(1));
 		entry.setCreatedAt(IRODSDataConversionUtil.getDateFromIRODSValue(row
 				.getColumn(2)));
 		entry.setModifiedAt(IRODSDataConversionUtil.getDateFromIRODSValue(row
@@ -268,9 +268,9 @@ public class CollectionAOHelper extends AOHelper {
 	 */
 	public static String buildSelectsNeededForCollectionsInCollectionsAndDataObjectsListingEntry() {
 		StringBuilder query = new StringBuilder();
-		query.append(RodsGenQueryEnum.COL_COLL_NAME.getName());
-		query.append(COMMA);
 		query.append(RodsGenQueryEnum.COL_COLL_PARENT_NAME.getName());
+		query.append(COMMA);
+		query.append(RodsGenQueryEnum.COL_COLL_NAME.getName());
 		query.append(COMMA);
 		query.append(RodsGenQueryEnum.COL_COLL_CREATE_TIME.getName());
 		query.append(COMMA);

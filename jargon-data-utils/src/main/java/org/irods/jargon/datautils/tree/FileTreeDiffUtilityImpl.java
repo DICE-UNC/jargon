@@ -543,7 +543,14 @@ public class FileTreeDiffUtilityImpl implements FileTreeDiffUtility {
 
 			log.debug("checking file timestamp against lhs cutoff:{}",
 					timestampForLastSynchLeftHandSide);
+			log.debug("rhs cutoff timestamp:{}", timestampForLastSynchRightHandSide);
 
+			log.debug("lhs file:{}", leftHandSide.getAbsolutePath());
+			log.debug("lhs mod:{}", leftHandSide.lastModified());
+			log.debug("rhs file:{}", rightHandSide.getAbsolutePath());
+			log.debug("rhs mod:{}", rightHandSide.lastModified());
+			
+			
 			if (leftHandSide.lastModified() > timestampForLastSynchLeftHandSide
 					&& rightHandSide.lastModified() > timestampForLastSynchRightHandSide) {
 				twoFilesDifferAndBothArePostLastSynch(currentFileTreeNode,
@@ -551,17 +558,13 @@ public class FileTreeDiffUtilityImpl implements FileTreeDiffUtility {
 						timestampForLastSynchRightHandSide,
 						timestampForLastSynchRightHandSide);
 			} else if (leftHandSide.lastModified() > timestampForLastSynchLeftHandSide) {
-				log.debug("left hand side file has been modified");
-				log.debug("   rhs ts:{}", rightHandSide.lastModified());
-				log.debug("   lhs ts:{}", leftHandSide.lastModified());
+				log.debug("left hand side file is newer");
 				FileTreeDiffEntry entry = buildFileTreeDiffEntryForFile(
 						leftHandSide, DiffType.LEFT_HAND_NEWER,
 						rightHandSide.length(), rightHandSide.lastModified());
 				currentFileTreeNode.add(new FileTreeNode(entry));
 			} else if (rightHandSide.lastModified() > timestampForLastSynchRightHandSide) {
-				log.debug("right hand side file has been modified");
-				log.debug("   rhs ts:{}", rightHandSide.lastModified());
-				log.debug("   lhs ts:{}", leftHandSide.lastModified());
+				log.debug("right hand side file is newer");
 				FileTreeDiffEntry entry = buildFileTreeDiffEntryForFile(
 						rightHandSide, DiffType.RIGHT_HAND_NEWER,
 						leftHandSide.length(), leftHandSide.lastModified());
@@ -569,6 +572,8 @@ public class FileTreeDiffUtilityImpl implements FileTreeDiffUtility {
 			} else {
 				log.debug("timestamps match, treat as no diff");
 			}
+			log.debug("**************************************************");
+
 		}
 	}
 

@@ -663,6 +663,28 @@ public class IRODSFileImplTest {
 		assertionHelper.assertIrodsFileOrCollectionDoesNotExist(irodsFile
 				.getAbsolutePath());
 	}
+	
+	@Test
+	public final void testDeleteFileNotExists() throws Exception {
+		String testFileName = "testDeleteFileNotExists.txt";
+		String targetIrodsCollection = testingPropertiesHelper
+		.buildIRODSCollectionAbsolutePathFromTestProperties(
+				testingProperties, IRODS_TEST_SUBDIR_PATH);
+		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
+		IRODSFileFactory irodsFileFactory = accessObjectFactory
+				.getIRODSFileFactory(irodsAccount);
+		IRODSFile irodsFile = irodsFileFactory
+				.instanceIRODSFile(targetIrodsCollection + '/' + testFileName);
+
+		boolean result = irodsFile.delete();
+		Assert.assertFalse("did not get a true result from the file delete",
+				result);
+		
+	}
 
 	@Test
 	public final void testDeleteFileWithForce() throws Exception {

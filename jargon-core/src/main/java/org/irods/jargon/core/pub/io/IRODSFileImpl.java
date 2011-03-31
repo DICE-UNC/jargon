@@ -58,16 +58,19 @@ public final class IRODSFileImpl extends File implements IRODSFile {
 			throw new JargonException("path name is null or empty");
 		}
 	}
-	
+
 	/**
-	 * Constructor that can preset the file type, thus avoiding a GenQuery lookup when <code>isFile</code> is subsequently called
+	 * Constructor that can preset the file type, thus avoiding a GenQuery
+	 * lookup when <code>isFile</code> is subsequently called
+	 * 
 	 * @param pathName
 	 * @param irodsFileSystemAO
 	 * @param isFile
 	 * @throws JargonException
 	 */
-	protected IRODSFileImpl(final String pathName, 
-			final IRODSFileSystemAO irodsFileSystemAO, final boolean isFile) throws JargonException {
+	protected IRODSFileImpl(final String pathName,
+			final IRODSFileSystemAO irodsFileSystemAO, final boolean isFile)
+			throws JargonException {
 		this("", pathName, irodsFileSystemAO);
 		if (isFile) {
 			pathNameType = PathNameType.FILE;
@@ -75,10 +78,12 @@ public final class IRODSFileImpl extends File implements IRODSFile {
 			pathNameType = PathNameType.DIRECTORY;
 		}
 	}
-	
+
 	/**
-	 * Constructor with parent and child name that can preset the file type, thus avoiding a GenQuery lookup when <code>isFile</code> is subsequently
+	 * Constructor with parent and child name that can preset the file type,
+	 * thus avoiding a GenQuery lookup when <code>isFile</code> is subsequently
 	 * called.
+	 * 
 	 * @param parentName
 	 * @param childName
 	 * @param irodsFileSystemAO
@@ -86,7 +91,8 @@ public final class IRODSFileImpl extends File implements IRODSFile {
 	 * @throws JargonException
 	 */
 	protected IRODSFileImpl(final String parentName, final String childName,
-			final IRODSFileSystemAO irodsFileSystemAO, final boolean isFile) throws JargonException {
+			final IRODSFileSystemAO irodsFileSystemAO, final boolean isFile)
+			throws JargonException {
 		this(parentName, childName, irodsFileSystemAO);
 		if (isFile) {
 			pathNameType = PathNameType.FILE;
@@ -113,7 +119,8 @@ public final class IRODSFileImpl extends File implements IRODSFile {
 		}
 
 		if (parent.isEmpty() && child.isEmpty()) {
-			throw new IllegalArgumentException("both parent and child names are empty");
+			throw new IllegalArgumentException(
+					"both parent and child names are empty");
 		}
 
 		this.irodsFileSystemAO = irodsFileSystemAO;
@@ -417,11 +424,15 @@ public final class IRODSFileImpl extends File implements IRODSFile {
 			} else if (this.isDirectory()) {
 				irodsFileSystemAO.directoryDeleteNoForce(this);
 			}
-		} catch (JargonException e) {
-			String msg = "JargonException caught and logged on delete, method will return false and continue:"
-					+ e.getMessage();
-			log.error(msg, e);
+		} catch (DataNotFoundException dnf) {
 			successful = false;
+		} catch (JargonException e) {
+
+			log.error(
+					"irods error occurred on delete, this was not a data not found exception, rethrow as unchecked",
+					e);
+			throw new JargonRuntimeException("exception occurred on delete", e);
+
 		}
 		return successful;
 
@@ -870,11 +881,11 @@ public final class IRODSFileImpl extends File implements IRODSFile {
 	@Override
 	public File[] listFiles(final FileFilter filter) {
 		try {
-			List<File> result = (List<File>) irodsFileSystemAO.getListInDirWithFileFilter(
+			List<File> result = irodsFileSystemAO.getListInDirWithFileFilter(
 					this, filter);
 			File[] resArray = new File[result.size()];
 			return result.toArray(resArray);
-			} catch (DataNotFoundException e) {
+		} catch (DataNotFoundException e) {
 			return new IRODSFileImpl[] {};
 		} catch (JargonException e) {
 			log.error("jargon exception, rethrow as unchecked", e);

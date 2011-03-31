@@ -354,7 +354,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 			isAtEndOfQueryResults = row.isLastResult();
 			// compare to the previous path and see if I break, in which case
 			// add the last collection entry to the result
-			String thisPath = row.getColumn(0);
+			String thisPath = row.getColumn(1);
 
 			if (thisPath.equals(lastPath)) {
 				// parse out the file permission and continue,
@@ -684,9 +684,6 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		IRODSGenQueryExecutor irodsGenQueryExecutor = new IRODSGenQueryExecutorImpl(
 				this.getIRODSSession(), this.getIRODSAccount());
 
-		StringBuilder query = new StringBuilder(
-				IRODSFileSystemAOHelper.buildQueryListAllCollections(sb
-						.toString()));
 		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(sb.toString(),
 				getIRODSSession().getJargonProperties()
 						.getMaxFilesAndDirsQueryMax());
@@ -696,7 +693,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 			resultSet = irodsGenQueryExecutor.executeIRODSQueryWithPaging(
 					irodsQuery, partialStartIndex);
 		} catch (JargonQueryException e) {
-			LOG.error(QUERY_EXCEPTION_FOR_QUERY + query.toString(), e);
+			LOG.error(QUERY_EXCEPTION_FOR_QUERY + sb.toString(), e);
 			throw new JargonException("error in exists query", e);
 		}
 

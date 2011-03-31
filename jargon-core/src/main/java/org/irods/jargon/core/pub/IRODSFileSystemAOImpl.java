@@ -640,7 +640,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 
 		StringBuilder query;
 		IRODSGenQuery irodsQuery;
-		IRODSQueryResultSet resultSet;
+		IRODSQueryResultSet resultSet = null;
 
 		// get all the subdirs
 
@@ -667,7 +667,13 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 		} catch (JargonQueryException e) {
 			log.error("query exception for  query:{}", query.toString(), e);
 			throw new JargonException("error in exists query");
+		} finally {
+			if (resultSet != null) {
+				irodsGenQueryExecutor.closeResults(resultSet);
+			}
 		}
+
+		resultSet = null;
 
 		// get all files
 
@@ -695,6 +701,10 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 		} catch (JargonQueryException e) {
 			log.error("query exception for  query:{}", query.toString(), e);
 			throw new JargonException("error in exists query");
+		} finally {
+			if (resultSet != null) {
+				irodsGenQueryExecutor.closeResults(resultSet);
+			}
 		}
 
 		log.info("length of subdirs after gathering all results:{}",
@@ -712,8 +722,8 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 			final List<String> subdirs, final IRODSQueryResultRow row)
 			throws JargonException {
 		int idxLastSlash;
-		idxLastSlash = row.getColumn(0).lastIndexOf('/');
-		subdirs.add(row.getColumn(0).substring(idxLastSlash));
+		idxLastSlash = row.getColumn(1).lastIndexOf('/');
+		subdirs.add(row.getColumn(1).substring(idxLastSlash));
 	}
 
 	/*
@@ -747,7 +757,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 
 		StringBuilder query;
 		IRODSGenQuery irodsQuery;
-		IRODSQueryResultSet resultSet;
+		IRODSQueryResultSet resultSet = null;
 
 		log.debug("path for query:{}", path);
 
@@ -780,7 +790,13 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 		} catch (JargonQueryException e) {
 			log.error("query exception for  query:{}", query.toString(), e);
 			throw new JargonException("error in exists query");
+		} finally {
+			if (resultSet != null) {
+				irodsGenQueryExecutor.closeResults(resultSet);
+			}
 		}
+
+		resultSet = null;
 
 		// get all the files
 
@@ -810,6 +826,10 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 		} catch (JargonQueryException e) {
 			log.error("query exception for  query:{}", query.toString(), e);
 			throw new JargonException("error in exists query");
+		} finally {
+			if (resultSet != null) {
+				irodsGenQueryExecutor.closeResults(resultSet);
+			}
 		}
 
 		return subdirs;
@@ -882,7 +902,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 
 		StringBuilder query;
 		IRODSGenQuery irodsQuery;
-		IRODSQueryResultSet resultSet;
+		IRODSQueryResultSet resultSet = null;
 
 		// get all the sub-directories
 
@@ -913,7 +933,13 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 		} catch (JargonQueryException e) {
 			log.error("query exception for  query:{}", query.toString(), e);
 			throw new JargonException("error in exists query");
+		} finally {
+			if (resultSet != null) {
+				irodsGenQueryExecutor.closeResults(resultSet);
+			}
 		}
+
+		resultSet = null;
 
 		log.debug("path for query:{}", path);
 
@@ -945,6 +971,10 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 		} catch (JargonQueryException e) {
 			log.error("query exception for  query:{}", query.toString(), e);
 			throw new JargonException("error in exists query");
+		} finally {
+			if (resultSet != null) {
+				irodsGenQueryExecutor.closeResults(resultSet);
+			}
 		}
 
 		return subdirs;
@@ -959,7 +989,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 	private void processSubdirRowWhenListFilesWithFileFilter(
 			final FileFilter fileFilter, final List<File> subdirs,
 			final IRODSQueryResultRow row) throws JargonException {
-		String thisFileDir = row.getColumn(0);
+		String thisFileDir = row.getColumn(1);
 		File irodsFile = (File) this.getIRODSFileFactory()
 				.instanceIRODSFileIndicatingType(thisFileDir, false);
 

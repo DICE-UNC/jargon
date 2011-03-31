@@ -23,7 +23,7 @@ import org.irods.jargon.core.pub.domain.IRODSDomainObject;
  * @author Mike Conway - DICE (www.irods.org)
  * 
  */
-public class CollectionAndDataObjectListingEntry extends IRODSDomainObject {
+public class CollectionAndDataObjectListingEntry extends IRODSDomainObject implements Comparable<CollectionAndDataObjectListingEntry> {
 
 	public enum ObjectType {
 		COLLECTION, DATA_OBJECT
@@ -230,11 +230,15 @@ public class CollectionAndDataObjectListingEntry extends IRODSDomainObject {
 	 */
 	public List<UserFilePermission> getUserFilePermission() {
 		return userFilePermission;
-	}
+	} 
 
 	public void setUserFilePermission(
 			final List<UserFilePermission> userFilePermission) {
 		this.userFilePermission = userFilePermission;
 	}
 
+	@Override
+	public int compareTo(CollectionAndDataObjectListingEntry obj) {
+		return this.getFormattedAbsolutePath().compareTo(((CollectionAndDataObjectListingEntry) obj).getFormattedAbsolutePath());		
+	}
 }

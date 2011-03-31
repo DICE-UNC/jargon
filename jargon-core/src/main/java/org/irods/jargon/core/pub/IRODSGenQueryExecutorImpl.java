@@ -325,7 +325,8 @@ public final class IRODSGenQueryExecutorImpl extends IRODSGenericAO implements
 		}
 
 		if (!irodsQueryResultSet.isHasMoreRecords()) {
-			throw new JargonException("no more results, cannot close");
+			log.info("no results to close, ignore");
+			return;
 		}
 
 		GenQueryInp genQueryInp = GenQueryInp.instanceForCloseQuery(
