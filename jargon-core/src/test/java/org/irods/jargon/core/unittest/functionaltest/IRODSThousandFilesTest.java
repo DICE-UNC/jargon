@@ -157,8 +157,9 @@ public class IRODSThousandFilesTest {
 				.findMetadataValuesByMetadataQuery(avuQueryElements);
 
 		// should have 1000 in this batch
-		Assert.assertEquals("did not get back the 1000 rows I requested",
-				DataObjectAOImpl.DEFAULT_REC_COUNT, metadataElements.size());
+		Assert.assertEquals("did not get back the  rows I requested",
+				dataObjectAO.getIRODSSession().getJargonProperties()
+				.getMaxFilesAndDirsQueryMax(), metadataElements.size());
 
 		irodsFileSystem.close();
 

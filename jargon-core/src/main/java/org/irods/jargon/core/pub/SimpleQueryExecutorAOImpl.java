@@ -27,7 +27,7 @@ import edu.sdsc.grid.io.irods.Tag;
  * <p/>
  * Simple Query allows the the execution of queries as parameterized SQL. These
  * SQL statements are pre-loaded in iRODS and validated before being allowed to
- * run. Other techniques, such as GenQuery, and the new SpecialQuery facility,
+ * run. Other techniques, such as GenQuery, and the new SpecificQuery facility,
  * allow other methods of querying system and user metadata from the iCAT.
  * 
  * @author Mike Conway - DICE (www.irods.org)

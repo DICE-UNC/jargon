@@ -2,8 +2,10 @@ package org.irods.jargon.usertagging;
 
 import java.util.List;
 
+import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.query.MetaDataAndDomainData.MetadataDomain;
+import org.irods.jargon.usertagging.domain.IRODSDescriptionValue;
 import org.irods.jargon.usertagging.domain.IRODSTagValue;
 /**
  * Service interface for processing IRODS free tags. This method provides services on top
@@ -28,7 +30,7 @@ public interface IRODSTaggingService {
 	 * @throws JargonException
 	 */
 	public void addTagToDataObject(final String dataObjectAbsolutePath, final IRODSTagValue irodsTagValue)
-			throws JargonException;
+			throws  JargonException, DataNotFoundException;
 
 	/**
 	 * Remove the given tag from the data object.
@@ -55,7 +57,7 @@ public interface IRODSTaggingService {
 	 * @throws JargonException
 	 */
 	public void addTagToCollection(String collectionAbsolutePath,
-			IRODSTagValue irodsTagValue) throws JargonException;
+			IRODSTagValue irodsTagValue) throws  JargonException, DataNotFoundException;
 
 	/**
 	 * Retrieve the user tags associated with a given iRODS collection. This method will default to tags set by the user reflected
@@ -97,7 +99,7 @@ public interface IRODSTaggingService {
 	 */
 	public void addTagToGivenDomain(IRODSTagValue irodsTagValue,
 			MetadataDomain metadataDomain, String domainUniqueName)
-			throws JargonException;
+			throws  JargonException, DataNotFoundException;
 
 	/**
 	 * Remove the tag from the given domain, using the user supplied in the  <code>IRODSTagValue</code>
@@ -109,5 +111,32 @@ public interface IRODSTaggingService {
 	public void removeTagFromGivenDomain(IRODSTagValue irodsTagValue,
 			MetadataDomain metadataDomain, String domainUniqueName)
 			throws JargonException;
+
+	/**
+	 * Add a description for a data object, using the user supplied in the <code>IRODSDescriptionValue</code>
+	 * @param dataObjectAbsolutePath <code>String</code> with the absolute path to a data object that will have the specified description added for the user
+	 * @param irodsDescriptionValue <code>String</code> with the text value of a description that will be added to a data object for the specified user
+	 * @throws JargonException
+	 */
+	void addDescriptionToDataObject(String dataObjectAbsolutePath,
+			IRODSDescriptionValue irodsDescriptionValue) throws  JargonException, DataNotFoundException;
+
+	/**
+	 * Remove a description from a data object, using the user supplied in the  <code>IRODSDescriptionValue</code>
+	 * @param dataObjectAbsolutePath <code>String</code> with the absolute path to a data object that will have the specified description removed for the user
+	 * @param irodsDescriptionValue <code>String</code> with the text value of a description that will be removed from a data object for the specified user
+	 * @throws JargonException
+	 */
+	void deleteDescriptionFromDataObject(String dataObjectAbsolutePath,
+			IRODSDescriptionValue irodsDescriptionValue) throws JargonException;
+
+	/**
+	 * Retrieve the description value for a data object, using the logged-in user.  Note that this method returns null if no description is found.
+	 * @param dataObjectAbsolutePath <code>String</code> with the absolute path to a data object that will have the specified description removed for the user
+	 * @param irodsDescriptionValue <code>String</code> with the text value of a description that will be removed from a data object for the logged-in user, or <code>null</code> if no description is available
+	 * @throws JargonException
+	 */
+	IRODSDescriptionValue getDescriptionOnDataObjectForLoggedInUser(
+			String dataObjectAbsolutePath) throws JargonException;
 
 }

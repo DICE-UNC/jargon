@@ -68,7 +68,9 @@ public class Resource extends IRODSDomainObject {
 		b.append("  comment:");
 		b.append(comment);
 		b.append('\n');
-		b.append("  createTime:");
+		b.append("\n   status:");
+		b.append(status);
+		b.append("\n   createTime:");
 		b.append(createTime);
 		b.append('\n');
 		b.append("  modifyTime:");

@@ -11,5 +11,7 @@ package org.irods.jargon.usertagging;
 public class UserTaggingConstants {
 	
 	public static final String TAG_AVU_UNIT = "iRODSUserTagging:Tag";
+	public static final String DESCRIPTION_AVU_UNIT = "iRODSUserTagging:Description";
+
 
 }

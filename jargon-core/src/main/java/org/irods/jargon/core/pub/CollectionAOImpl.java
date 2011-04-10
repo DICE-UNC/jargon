@@ -16,6 +16,7 @@ import java.util.List;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.exception.DataNotFoundException;
+import org.irods.jargon.core.exception.DuplicateDataException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.packinstr.ModAccessControlInp;
 import org.irods.jargon.core.packinstr.ModAvuMetadataInp;
@@ -64,7 +65,6 @@ public final class CollectionAOImpl extends IRODSGenericAO implements
 			getIRODSSession(), getIRODSAccount());
 	public static final Logger log = LoggerFactory
 			.getLogger(CollectionAOImpl.class);
-	public static final int DEFAULT_REC_COUNT = 5000;
 
 	/**
 	 * Default constructor
@@ -159,7 +159,8 @@ public final class CollectionAOImpl extends IRODSGenericAO implements
 		log.debug(QUERY_STRING_FOR_AVU_QUERY, queryString);
 
 		final IRODSGenQuery irodsQuery = IRODSGenQuery.instance(queryString,
-				DEFAULT_REC_COUNT);
+				getIRODSSession().getJargonProperties()
+				.getMaxFilesAndDirsQueryMax());
 
 		IRODSQueryResultSetInterface resultSet;
 		try {
@@ -221,7 +222,8 @@ public final class CollectionAOImpl extends IRODSGenericAO implements
 		}
 
 		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(queryString,
-				DEFAULT_REC_COUNT);
+				getIRODSSession().getJargonProperties()
+				.getMaxFilesAndDirsQueryMax());
 
 		IRODSQueryResultSetInterface resultSet;
 
@@ -259,7 +261,8 @@ public final class CollectionAOImpl extends IRODSGenericAO implements
 		log.info("coll query:{}", queryString);
 
 		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(queryString,
-				DEFAULT_REC_COUNT);
+				getIRODSSession().getJargonProperties()
+				.getMaxFilesAndDirsQueryMax());
 
 		IRODSQueryResultSetInterface resultSet;
 
@@ -359,7 +362,8 @@ public final class CollectionAOImpl extends IRODSGenericAO implements
 		log.debug(QUERY_STRING_FOR_AVU_QUERY, queryString);
 
 		final IRODSGenQuery irodsQuery = IRODSGenQuery.instance(queryString,
-				DEFAULT_REC_COUNT);
+				getIRODSSession().getJargonProperties()
+				.getMaxFilesAndDirsQueryMax());
 
 		IRODSQueryResultSetInterface resultSet;
 		try {
@@ -444,7 +448,8 @@ public final class CollectionAOImpl extends IRODSGenericAO implements
 		log.debug(QUERY_STRING_FOR_AVU_QUERY, queryString);
 
 		final IRODSGenQuery irodsQuery = IRODSGenQuery.instance(queryString,
-				DEFAULT_REC_COUNT);
+				getIRODSSession().getJargonProperties()
+				.getMaxFilesAndDirsQueryMax());
 
 		IRODSQueryResultSetInterface resultSet;
 		try {
@@ -532,7 +537,8 @@ public final class CollectionAOImpl extends IRODSGenericAO implements
 		log.debug(QUERY_STRING_FOR_AVU_QUERY, queryString);
 
 		final IRODSGenQuery irodsQuery = IRODSGenQuery.instance(queryString,
-				DEFAULT_REC_COUNT);
+				getIRODSSession().getJargonProperties()
+				.getMaxFilesAndDirsQueryMax());
 
 		IRODSQueryResultSetInterface resultSet;
 		try {
@@ -558,7 +564,7 @@ public final class CollectionAOImpl extends IRODSGenericAO implements
 	 */
 	@Override
 	public void addAVUMetadata(final String absolutePath, final AvuData avuData)
-			throws DataNotFoundException, JargonException {
+			throws DataNotFoundException, DuplicateDataException, JargonException {
 
 		if (absolutePath == null || absolutePath.isEmpty()) {
 			throw new IllegalArgumentException("null or empty absolutePath");
@@ -585,6 +591,9 @@ public final class CollectionAOImpl extends IRODSGenericAO implements
 			if (je.getMessage().indexOf("-814000") > -1) {
 				throw new DataNotFoundException(
 						"Target collection was not found, could not add AVU");
+			} else if (je.getMessage().indexOf("-809000") > -1) {
+				throw new DuplicateDataException(
+				"Duplicate AVU exists, cannot add");
 			}
 
 			log.error("jargon exception adding AVU metadata", je);

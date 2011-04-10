@@ -14,6 +14,7 @@ import org.irods.jargon.core.connection.IRODSServerProperties;
 import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.connection.IRODSSimpleProtocolManager;
 import org.irods.jargon.core.exception.DataNotFoundException;
+import org.irods.jargon.core.exception.DuplicateDataException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.protovalues.FilePermissionEnum;
 import org.irods.jargon.core.pub.domain.AvuData;
@@ -34,6 +35,7 @@ import org.irods.jargon.testutils.icommandinvoke.icommands.ImetaCommand.MetaObje
 import org.irods.jargon.testutils.icommandinvoke.icommands.ImetaListCommand;
 import org.irods.jargon.testutils.icommandinvoke.icommands.ImetaRemoveCommand;
 import org.irods.jargon.testutils.icommandinvoke.icommands.ImkdirCommand;
+import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -46,6 +48,7 @@ public class CollectionAOImplTest {
 	private static org.irods.jargon.testutils.IRODSTestSetupUtilities irodsTestSetupUtilities = null;
 	@SuppressWarnings("unused")
 	private static org.irods.jargon.testutils.AssertionHelper assertionHelper = null;
+	private static IRODSFileSystem irodsFileSystem = null;
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -58,21 +61,23 @@ public class CollectionAOImplTest {
 		irodsTestSetupUtilities
 				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
 		assertionHelper = new org.irods.jargon.testutils.AssertionHelper();
+		irodsFileSystem = IRODSFileSystem.instance();
+	}
+	
+	@AfterClass
+	public static void tearDownAfterClass() throws Exception {
+		irodsFileSystem.closeAndEatExceptions();
 	}
 
 	@Test
 	public void testCollectionAOImpl() throws Exception {
-		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager
-				.instance();
+		
+
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSSession irodsSession = IRODSSession
-				.instance(irodsConnectionManager);
-		IRODSAccessObjectFactory accessObjectFactory = IRODSAccessObjectFactoryImpl
-				.instance(irodsSession);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 		CollectionAO collectionAO = accessObjectFactory
 				.getCollectionAO(irodsAccount);
-		irodsSession.closeSession();
 		Assert.assertNotNull(collectionAO);
 	}
 
@@ -83,19 +88,15 @@ public class CollectionAOImplTest {
 						testingProperties, IRODS_TEST_SUBDIR_PATH);
 
 		// now get an irods file and see if it is readable, it should be
-		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager
-				.instance();
+		
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSSession irodsSession = IRODSSession
-				.instance(irodsConnectionManager);
-		IRODSAccessObjectFactory accessObjectFactory = IRODSAccessObjectFactoryImpl
-				.instance(irodsSession);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
+
 		CollectionAO collectionAO = accessObjectFactory
 				.getCollectionAO(irodsAccount);
 		IRODSFile irodsFile = collectionAO
 				.instanceIRODSFileForCollectionPath(targetIrodsCollection);
-		irodsSession.closeSession();
 		Assert.assertNotNull(irodsFile);
 		Assert.assertTrue(irodsFile.isDirectory());
 	}
@@ -107,14 +108,9 @@ public class CollectionAOImplTest {
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH);
 
-		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager
-				.instance();
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSSession irodsSession = IRODSSession
-				.instance(irodsConnectionManager);
-		IRODSAccessObjectFactory accessObjectFactory = IRODSAccessObjectFactoryImpl
-				.instance(irodsSession);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 		CollectionAO collectionAO = accessObjectFactory
 				.getCollectionAO(irodsAccount);
 		IRODSFile irodsFile = collectionAO
@@ -126,21 +122,15 @@ public class CollectionAOImplTest {
 	@Test
 	public void testFindAll() throws Exception {
 
-		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager
-				.instance();
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSSession irodsSession = IRODSSession
-				.instance(irodsConnectionManager);
-		IRODSAccessObjectFactory accessObjectFactory = IRODSAccessObjectFactoryImpl
-				.instance(irodsSession);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 		CollectionAO collectionAO = accessObjectFactory
 				.getCollectionAO(irodsAccount);
 		List<Collection> collections = collectionAO.findAll("/"
 				+ testingProperties
 						.getProperty(TestingPropertiesHelper.IRODS_ZONE_KEY)
 				+ "/home");
-		irodsSession.closeSession();
 		Assert.assertNotNull(collections);
 		Assert.assertFalse(collections.isEmpty());
 
@@ -149,14 +139,10 @@ public class CollectionAOImplTest {
 	@Test
 	public void testFindAllPartialStart() throws Exception {
 
-		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager
-				.instance();
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSSession irodsSession = IRODSSession
-				.instance(irodsConnectionManager);
-		IRODSAccessObjectFactory accessObjectFactory = IRODSAccessObjectFactoryImpl
-				.instance(irodsSession);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
+
 		CollectionAO collectionAO = accessObjectFactory
 				.getCollectionAO(irodsAccount);
 		List<Collection> collections = collectionAO.findAll("/"
@@ -179,8 +165,6 @@ public class CollectionAOImplTest {
 		Assert.assertEquals("did not find right collection at partial start",
 				collections.get(partialStart).getCollectionId(),
 				moreCollections.get(0).getCollectionId());
-
-		irodsSession.closeSession();
 		Assert.assertNotNull(collections);
 		Assert.assertFalse(collections.isEmpty());
 
@@ -225,14 +209,9 @@ public class CollectionAOImplTest {
 		imetaAddCommand.setObjectPath(targetIrodsCollection);
 		invoker.invokeCommandAndGetResultAsString(imetaAddCommand);
 
-		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager
-				.instance();
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSSession irodsSession = IRODSSession
-				.instance(irodsConnectionManager);
-		IRODSAccessObjectFactory accessObjectFactory = IRODSAccessObjectFactoryImpl
-				.instance(irodsSession);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 		CollectionAO collectionAO = accessObjectFactory
 				.getCollectionAO(irodsAccount);
 
@@ -244,7 +223,6 @@ public class CollectionAOImplTest {
 
 		List<Collection> result = collectionAO
 				.findDomainByMetadataQuery(queryElements);
-		irodsSession.closeSession();
 		Assert.assertFalse("no query result returned", result.isEmpty());
 		Assert.assertEquals(targetIrodsCollection, result.get(0)
 				.getCollectionName());
@@ -288,14 +266,10 @@ public class CollectionAOImplTest {
 		imetaAddCommand.setObjectPath(targetIrodsCollection);
 		invoker.invokeCommandAndGetResultAsString(imetaAddCommand);
 
-		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager
-				.instance();
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSSession irodsSession = IRODSSession
-				.instance(irodsConnectionManager);
-		IRODSAccessObjectFactory accessObjectFactory = IRODSAccessObjectFactoryImpl
-				.instance(irodsSession);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
+
 		CollectionAO collectionAO = accessObjectFactory
 				.getCollectionAO(irodsAccount);
 
@@ -307,7 +281,6 @@ public class CollectionAOImplTest {
 
 		List<MetaDataAndDomainData> result = collectionAO
 				.findMetadataValuesByMetadataQuery(queryElements);
-		irodsSession.closeSession();
 		Assert.assertFalse("no query result returned", result.isEmpty());
 	}
 
@@ -350,14 +323,9 @@ public class CollectionAOImplTest {
 		imetaAddCommand.setObjectPath(targetIrodsCollection);
 		invoker.invokeCommandAndGetResultAsString(imetaAddCommand);
 
-		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager
-				.instance();
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSSession irodsSession = IRODSSession
-				.instance(irodsConnectionManager);
-		IRODSAccessObjectFactory accessObjectFactory = IRODSAccessObjectFactoryImpl
-				.instance(irodsSession);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 		CollectionAO collectionAO = accessObjectFactory
 				.getCollectionAO(irodsAccount);
 
@@ -370,7 +338,6 @@ public class CollectionAOImplTest {
 		List<MetaDataAndDomainData> result = collectionAO
 				.findMetadataValuesByMetadataQueryForCollection(queryElements,
 						targetIrodsCollection);
-		irodsSession.closeSession();
 		Assert.assertFalse("no query result returned", result.isEmpty());
 	}
 
@@ -413,14 +380,9 @@ public class CollectionAOImplTest {
 		imetaAddCommand.setObjectPath(targetIrodsCollection);
 		invoker.invokeCommandAndGetResultAsString(imetaAddCommand);
 
-		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager
-				.instance();
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSSession irodsSession = IRODSSession
-				.instance(irodsConnectionManager);
-		IRODSAccessObjectFactory accessObjectFactory = IRODSAccessObjectFactoryImpl
-				.instance(irodsSession);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 		CollectionAO collectionAO = accessObjectFactory
 				.getCollectionAO(irodsAccount);
 
@@ -436,7 +398,6 @@ public class CollectionAOImplTest {
 
 		List<MetaDataAndDomainData> result = collectionAO
 				.findMetadataValuesByMetadataQuery(queryElements);
-		irodsSession.closeSession();
 		Assert.assertFalse("no query result returned", result.isEmpty());
 	}
 
@@ -462,8 +423,7 @@ public class CollectionAOImplTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
-
+		
 		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
 				.getIRODSAccessObjectFactory();
 		CollectionAO collectionAO = accessObjectFactory
@@ -473,7 +433,6 @@ public class CollectionAOImplTest {
 				expectedAttribValue, "");
 		collectionAO.addAVUMetadata(targetIrodsCollection, dataToAdd);
 
-		irodsFileSystem.close();
 
 		// verify the metadata was added
 		// now get back the avu data and make sure it's there
@@ -487,6 +446,102 @@ public class CollectionAOImplTest {
 				metaValues.indexOf(expectedAttribName) > -1);
 		Assert.assertTrue("did not find expected attrib value",
 				metaValues.indexOf(expectedAttribValue) > -1);
+
+	}
+	
+	@Test(expected=DataNotFoundException.class)
+	public void testAddAvuMetadataMissingCollection() throws Exception {
+		String testDirName = "testAddAvuMetadataMissingCollection";
+		String expectedAttribName = "testattrib1";
+		String expectedAttribValue = "testvalue1";
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
+								+ testDirName);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+		CollectionAO collectionAO = accessObjectFactory
+				.getCollectionAO(irodsAccount);
+
+		AvuData dataToAdd = AvuData.instance(expectedAttribName,
+				expectedAttribValue, "");
+		collectionAO.addAVUMetadata(targetIrodsCollection, dataToAdd);
+	}
+	
+	@Test
+	public void testAddDuplicateAvuMetadata() throws Exception {
+		String testDirName = "testAddDuplicateAvuMetadata";
+		String expectedAttribName = "testattrib1";
+		String expectedAttribValue = "testvalue1";
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
+								+ testDirName);
+
+		// put scratch collection into irods in the right place
+		IrodsInvocationContext invocationContext = testingPropertiesHelper
+				.buildIRODSInvocationContextFromTestProperties(testingProperties);
+		ImkdirCommand imkdirCommand = new ImkdirCommand();
+		imkdirCommand.setCollectionName(targetIrodsCollection);
+
+		IcommandInvoker invoker = new IcommandInvoker(invocationContext);
+		invoker.invokeCommandAndGetResultAsString(imkdirCommand);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+		CollectionAO collectionAO = accessObjectFactory
+				.getCollectionAO(irodsAccount);
+
+		AvuData dataToAdd = AvuData.instance(expectedAttribName,
+				expectedAttribValue, "");
+		collectionAO.addAVUMetadata(targetIrodsCollection, dataToAdd);
+		collectionAO.addAVUMetadata(targetIrodsCollection, dataToAdd);
+
+	}
+	
+	@Test(expected=DuplicateDataException.class)
+	public void testAddDuplicateAvuMetadataWithUnits() throws Exception {
+		String testDirName = "testAddDuplicateAvuMetadata";
+		String expectedAttribName = "testattrib1";
+		String expectedAttribValue = "testvalue1";
+		String expectedUnitsValue = "testunits1";
+
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
+								+ testDirName);
+
+		// put scratch collection into irods in the right place
+		IrodsInvocationContext invocationContext = testingPropertiesHelper
+				.buildIRODSInvocationContextFromTestProperties(testingProperties);
+		ImkdirCommand imkdirCommand = new ImkdirCommand();
+		imkdirCommand.setCollectionName(targetIrodsCollection);
+
+		IcommandInvoker invoker = new IcommandInvoker(invocationContext);
+		invoker.invokeCommandAndGetResultAsString(imkdirCommand);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+		CollectionAO collectionAO = accessObjectFactory
+				.getCollectionAO(irodsAccount);
+
+		AvuData dataToAdd = AvuData.instance(expectedAttribName,
+				expectedAttribValue, expectedUnitsValue);
+		collectionAO.addAVUMetadata(targetIrodsCollection, dataToAdd);
+		collectionAO.addAVUMetadata(targetIrodsCollection, dataToAdd);
 
 	}
 	
@@ -512,7 +567,6 @@ public class CollectionAOImplTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
 
 		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
 				.getIRODSAccessObjectFactory();
@@ -522,8 +576,6 @@ public class CollectionAOImplTest {
 		AvuData dataToAdd = AvuData.instance(expectedAttribName,
 				expectedAttribValue, "");
 		collectionAO.addAVUMetadata(targetIrodsCollection, dataToAdd);
-
-		irodsFileSystem.close();
 
 		// verify the metadata was added
 		// now get back the avu data and make sure it's there
@@ -563,7 +615,6 @@ public class CollectionAOImplTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
 
 		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
 				.getIRODSAccessObjectFactory();
@@ -573,8 +624,6 @@ public class CollectionAOImplTest {
 		AvuData dataToAdd = AvuData.instance(expectedAttribName,
 				expectedAttribValue, expectedUnit);
 		collectionAO.addAVUMetadata(targetIrodsCollection, dataToAdd);
-
-		irodsFileSystem.close();
 
 		// verify the metadata was added
 		// now get back the avu data and make sure it's there
@@ -607,7 +656,6 @@ public class CollectionAOImplTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
 		IRODSFile dirFile = irodsFileSystem.getIRODSFileFactory(irodsAccount).instanceIRODSFile(targetIrodsCollection + "/" + subdir);
 		dirFile.mkdirs();
 
@@ -621,7 +669,6 @@ public class CollectionAOImplTest {
 		collectionAO.addAVUMetadata(dirFile.getAbsolutePath(), dataToAdd);
 		List<MetaDataAndDomainData> actualMetadata = collectionAO.findMetadataValuesForCollection(dirFile.getAbsolutePath());
 
-		irodsFileSystem.close();
 		TestCase.assertEquals("did not get back metadata",1, actualMetadata.size());
 
 	}
@@ -639,7 +686,6 @@ public class CollectionAOImplTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
 
 		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
 				.getIRODSAccessObjectFactory();
@@ -657,7 +703,6 @@ public class CollectionAOImplTest {
 
 		List<MetaDataAndDomainData> metadata = collectionAO
 				.findMetadataValuesForCollection(targetIrodsCollection, 0);
-		irodsFileSystem.close();
 
 		for (MetaDataAndDomainData metadataEntry : metadata) {
 			Assert.assertFalse("did not expect attrib name", metadataEntry
@@ -680,7 +725,6 @@ public class CollectionAOImplTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
 
 		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
 				.getIRODSAccessObjectFactory();
@@ -699,7 +743,6 @@ public class CollectionAOImplTest {
 
 		List<MetaDataAndDomainData> metadata = collectionAO
 				.findMetadataValuesForCollection(targetIrodsCollection, 0);
-		irodsFileSystem.close();
 		
 		TestCase.assertEquals("should only be one avu entry", 1, metadata.size());
 
@@ -727,7 +770,6 @@ public class CollectionAOImplTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
 
 		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
 				.getIRODSAccessObjectFactory();
@@ -744,7 +786,6 @@ public class CollectionAOImplTest {
 		collectionAO.modifyAvuValueBasedOnGivenAttributeAndUnit(targetIrodsCollection, overwriteAvuData);
 		List<MetaDataAndDomainData> metadata = collectionAO
 				.findMetadataValuesForCollection(targetIrodsCollection, 0);
-		irodsFileSystem.close();
 		
 		TestCase.assertEquals("should only be one avu entry", 1, metadata.size());
 
@@ -774,7 +815,6 @@ public class CollectionAOImplTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
 
 		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
 				.getIRODSAccessObjectFactory();
@@ -786,7 +826,6 @@ public class CollectionAOImplTest {
 
 		AvuData overwriteAvuData = AvuData.instance(expectedAttribName, expectedNewValue, expectedAttribUnit);
 		collectionAO.modifyAvuValueBasedOnGivenAttributeAndUnit(targetIrodsCollection, overwriteAvuData);
-		irodsFileSystem.close();
 		
 	}
 	
@@ -811,14 +850,10 @@ public class CollectionAOImplTest {
 		IcommandInvoker invoker = new IcommandInvoker(invocationContext);
 		invoker.invokeCommandAndGetResultAsString(imkdirCommand);
 
-		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager
-				.instance();
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSSession irodsSession = IRODSSession
-				.instance(irodsConnectionManager);
-		IRODSAccessObjectFactory accessObjectFactory = IRODSAccessObjectFactoryImpl
-				.instance(irodsSession);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
+
 		CollectionAO collectionAO = accessObjectFactory
 				.getCollectionAO(irodsAccount);
 
@@ -839,14 +874,10 @@ public class CollectionAOImplTest {
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
 								+ testDirName);
 
-		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager
-				.instance();
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSSession irodsSession = IRODSSession
-				.instance(irodsConnectionManager);
-		IRODSAccessObjectFactory accessObjectFactory = IRODSAccessObjectFactoryImpl
-				.instance(irodsSession);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
+
 		CollectionAO collectionAO = accessObjectFactory
 				.getCollectionAO(irodsAccount);
 
@@ -877,14 +908,10 @@ public class CollectionAOImplTest {
 		IcommandInvoker invoker = new IcommandInvoker(invocationContext);
 		invoker.invokeCommandAndGetResultAsString(imkdirCommand);
 
-		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager
-				.instance();
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSSession irodsSession = IRODSSession
-				.instance(irodsConnectionManager);
-		IRODSAccessObjectFactory accessObjectFactory = IRODSAccessObjectFactoryImpl
-				.instance(irodsSession);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
+
 		CollectionAO collectionAO = accessObjectFactory
 				.getCollectionAO(irodsAccount);
 
@@ -966,10 +993,9 @@ public class CollectionAOImplTest {
 				.setObjectPath(targetIrodsCollection + "/" + testSubdir2);
 		invoker.invokeCommandAndGetResultAsString(imetaAddCommand);
 
-		IRODSSimpleProtocolManager.instance();
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
+		
 		CollectionAO collectionAO = irodsFileSystem
 				.getIRODSAccessObjectFactory().getCollectionAO(irodsAccount);
 
@@ -991,7 +1017,6 @@ public class CollectionAOImplTest {
 				.findMetadataValuesByMetadataQueryWithAdditionalWhere(
 						queryElements, sb.toString());
 
-		irodsFileSystem.close();
 		Assert.assertFalse("no query result returned", queryResults.isEmpty());
 	}
 
@@ -1043,7 +1068,6 @@ public class CollectionAOImplTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
 		CollectionAO collectionAO = irodsFileSystem
 				.getIRODSAccessObjectFactory().getCollectionAO(irodsAccount);
 
@@ -1051,7 +1075,6 @@ public class CollectionAOImplTest {
 				.findMetadataValuesForCollection(targetIrodsCollection + "/"
 						+ testSubdir1, 0);
 
-		irodsFileSystem.close();
 		Assert.assertFalse("no query result returned", queryResults.isEmpty());
 	}
 
@@ -1073,14 +1096,10 @@ public class CollectionAOImplTest {
 		IcommandInvoker invoker = new IcommandInvoker(invocationContext);
 		invoker.invokeCommandAndGetResultAsString(imkdirCommand);
 
-		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager
-				.instance();
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSSession irodsSession = IRODSSession
-				.instance(irodsConnectionManager);
-		IRODSAccessObjectFactory accessObjectFactory = IRODSAccessObjectFactoryImpl
-				.instance(irodsSession);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
+
 		CollectionAO collectionAO = accessObjectFactory
 				.getCollectionAO(irodsAccount);
 		Collection collection = collectionAO
@@ -1098,14 +1117,10 @@ public class CollectionAOImplTest {
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
 								+ testDirName);
 
-		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager
-				.instance();
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSSession irodsSession = IRODSSession
-				.instance(irodsConnectionManager);
-		IRODSAccessObjectFactory accessObjectFactory = IRODSAccessObjectFactoryImpl
-				.instance(irodsSession);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
+
 		CollectionAO collectionAO = accessObjectFactory
 				.getCollectionAO(irodsAccount);
 		collectionAO
@@ -1116,14 +1131,9 @@ public class CollectionAOImplTest {
 	@Test(expected = IllegalArgumentException.class)
 	public void findByAbsolutePathNullPath() throws Exception {
 
-		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager
-				.instance();
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSSession irodsSession = IRODSSession
-				.instance(irodsConnectionManager);
-		IRODSAccessObjectFactory accessObjectFactory = IRODSAccessObjectFactoryImpl
-				.instance(irodsSession);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 		CollectionAO collectionAO = accessObjectFactory
 				.getCollectionAO(irodsAccount);
 		collectionAO.findByAbsolutePath(null);
@@ -1135,7 +1145,6 @@ public class CollectionAOImplTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
 
 		CollectionAO collectionAO = irodsFileSystem
 				.getIRODSAccessObjectFactory().getCollectionAO(irodsAccount);
@@ -1149,7 +1158,6 @@ public class CollectionAOImplTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
 
 		CollectionAO collectionAO = irodsFileSystem
 				.getIRODSAccessObjectFactory().getCollectionAO(irodsAccount);
@@ -1178,7 +1186,6 @@ public class CollectionAOImplTest {
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
 
-		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
 		IRODSFileFactory irodsFileFactory = irodsFileSystem
 				.getIRODSFileFactory(irodsAccount);
 		IRODSFile destFile = irodsFileFactory
@@ -1200,8 +1207,6 @@ public class CollectionAOImplTest {
 		int count = collectionAO
 				.countAllFilesUnderneathTheGivenCollection(destFile
 						.getAbsolutePath());
-
-		irodsFileSystem.close();
 
 		TestCase.assertEquals("did not get expected file count", 2, count);
 
@@ -1227,8 +1232,6 @@ public class CollectionAOImplTest {
 		String expectedAttribName2 = "avujfiejf1222";
 		String expectedAttribValue2 = "avujfiejf1221value2";
 		String expectedAttribUnits2 = "avujfiejf1221units2";
-
-		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
@@ -1280,7 +1283,6 @@ public class CollectionAOImplTest {
 
 		List<Collection> result = collectionAO
 				.findDomainByMetadataQuery(queryElements);
-		irodsFileSystem.closeAndEatExceptions();
 		Assert.assertFalse("no query result returned", result.isEmpty());
 		Assert.assertEquals(targetIrodsCollection, result.get(0)
 				.getCollectionName());
@@ -1299,7 +1301,6 @@ public class CollectionAOImplTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
 		CollectionAO collectionAO = irodsFileSystem
 				.getIRODSAccessObjectFactory().getCollectionAO(irodsAccount);
 		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
@@ -1321,7 +1322,6 @@ public class CollectionAOImplTest {
 				.getIRODSFileFactory(secondaryAccount).instanceIRODSFile(
 						targetIrodsCollection);
 		TestCase.assertTrue(irodsFileForSecondaryUser.canRead());
-		irodsFileSystem.close();
 
 	}
 
@@ -1337,7 +1337,6 @@ public class CollectionAOImplTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
 		CollectionAO collectionAO = irodsFileSystem
 				.getIRODSAccessObjectFactory().getCollectionAO(irodsAccount);
 		collectionAO
@@ -1347,8 +1346,6 @@ public class CollectionAOImplTest {
 						testingProperties
 								.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY),
 						true);
-
-		irodsFileSystem.close();
 
 	}
 
@@ -1364,7 +1361,6 @@ public class CollectionAOImplTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
 		CollectionAO collectionAO = irodsFileSystem
 				.getIRODSAccessObjectFactory().getCollectionAO(irodsAccount);
 		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
@@ -1386,7 +1382,6 @@ public class CollectionAOImplTest {
 				.getIRODSFileFactory(secondaryAccount).instanceIRODSFile(
 						targetIrodsCollection);
 		TestCase.assertTrue(irodsFileForSecondaryUser.canWrite());
-		irodsFileSystem.close();
 
 	}
 
@@ -1402,7 +1397,6 @@ public class CollectionAOImplTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
 		CollectionAO collectionAO = irodsFileSystem
 				.getIRODSAccessObjectFactory().getCollectionAO(irodsAccount);
 		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
@@ -1430,7 +1424,6 @@ public class CollectionAOImplTest {
 				.getDirectoryPermissions(irodsFileForSecondaryUser);
 
 		TestCase.assertTrue(permissions >= IRODSFile.OWN_PERMISSIONS);
-		irodsFileSystem.close();
 
 	}
 
@@ -1446,7 +1439,6 @@ public class CollectionAOImplTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
 		CollectionAO collectionAO = irodsFileSystem
 				.getIRODSAccessObjectFactory().getCollectionAO(irodsAccount);
 		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
@@ -1471,7 +1463,6 @@ public class CollectionAOImplTest {
 				.getPermissionForCollection(targetIrodsCollection,
 						secondaryAccount.getUserName(), "");
 
-		irodsFileSystem.close();
 		TestCase.assertEquals("should have found own permissions",
 				FilePermissionEnum.OWN, enumVal);
 
@@ -1489,7 +1480,6 @@ public class CollectionAOImplTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
 		CollectionAO collectionAO = irodsFileSystem
 				.getIRODSAccessObjectFactory().getCollectionAO(irodsAccount);
 		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
@@ -1501,8 +1491,6 @@ public class CollectionAOImplTest {
 
 		boolean isInherit = collectionAO
 				.isCollectionSetForPermissionInheritance(targetIrodsCollection);
-
-		irodsFileSystem.close();
 
 		TestCase.assertTrue("collection should have inherit set", isInherit);
 
@@ -1520,7 +1508,6 @@ public class CollectionAOImplTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
 		CollectionAO collectionAO = irodsFileSystem
 				.getIRODSAccessObjectFactory().getCollectionAO(irodsAccount);
 		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
@@ -1534,8 +1521,6 @@ public class CollectionAOImplTest {
 
 		boolean isInherit = collectionAO
 				.isCollectionSetForPermissionInheritance(targetIrodsCollection);
-
-		irodsFileSystem.close();
 
 		TestCase.assertFalse("collection should have inherit turned back off",
 				isInherit);
@@ -1554,7 +1539,6 @@ public class CollectionAOImplTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
 		CollectionAO collectionAO = irodsFileSystem
 				.getIRODSAccessObjectFactory().getCollectionAO(irodsAccount);
 		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)

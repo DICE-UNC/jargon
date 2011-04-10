@@ -24,6 +24,7 @@ import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.connection.JargonProperties;
 import org.irods.jargon.core.exception.DataNotFoundException;
+import org.irods.jargon.core.exception.DuplicateDataException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.packinstr.DataObjCopyInp;
 import org.irods.jargon.core.packinstr.DataObjInp;
@@ -38,6 +39,7 @@ import org.irods.jargon.core.pub.domain.DataObject;
 import org.irods.jargon.core.pub.domain.Resource;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.query.AVUQueryElement;
+import org.irods.jargon.core.query.AVUQueryOperatorEnum;
 import org.irods.jargon.core.query.IRODSGenQuery;
 import org.irods.jargon.core.query.IRODSQueryResultRow;
 import org.irods.jargon.core.query.IRODSQueryResultSetInterface;
@@ -78,8 +80,6 @@ public final class DataObjectAOImpl extends IRODSGenericAO implements
 	private transient final DataAOHelper dataAOHelper = new DataAOHelper();
 	private transient final IRODSGenQueryExecutor irodsGenQueryExecutor;
 
-	public static final int DEFAULT_REC_COUNT = 1000;
-
 	/**
 	 * Default constructor
 	 * 
@@ -114,7 +114,8 @@ public final class DataObjectAOImpl extends IRODSGenericAO implements
 		DataObject dataObject = null;
 
 		if (collectionPath == null || collectionPath.isEmpty()) {
-			throw new IllegalArgumentException("collection path is null or empty");
+			throw new IllegalArgumentException(
+					"collection path is null or empty");
 		}
 
 		if (dataName == null || dataName.isEmpty()) {
@@ -142,7 +143,8 @@ public final class DataObjectAOImpl extends IRODSGenericAO implements
 		log.debug("query for data object:{}", query);
 
 		final IRODSGenQuery irodsQuery = IRODSGenQuery.instance(query,
-				DEFAULT_REC_COUNT);
+				getIRODSSession().getJargonProperties()
+						.getMaxFilesAndDirsQueryMax());
 
 		IRODSQueryResultSetInterface resultSet;
 		try {
@@ -224,7 +226,8 @@ public final class DataObjectAOImpl extends IRODSGenericAO implements
 		log.debug("query for data object:{}", query);
 
 		final IRODSGenQuery irodsQuery = IRODSGenQuery.instance(query,
-				DEFAULT_REC_COUNT);
+				getIRODSSession().getJargonProperties()
+						.getMaxFilesAndDirsQueryMax());
 
 		IRODSQueryResultSetInterface resultSet;
 		try {
@@ -705,7 +708,8 @@ public final class DataObjectAOImpl extends IRODSGenericAO implements
 		}
 
 		if (dataObjectFileName == null || dataObjectFileName.isEmpty()) {
-			throw new IllegalArgumentException("null or empty dataObjectFileName");
+			throw new IllegalArgumentException(
+					"null or empty dataObjectFileName");
 		}
 
 		log.info("building a metadata query for: {}", avuQuery);
@@ -757,7 +761,8 @@ public final class DataObjectAOImpl extends IRODSGenericAO implements
 		log.debug("query string for AVU query: {}", queryString);
 
 		final IRODSGenQuery irodsQuery = IRODSGenQuery.instance(queryString,
-				DEFAULT_REC_COUNT);
+				getIRODSSession().getJargonProperties()
+						.getMaxFilesAndDirsQueryMax());
 
 		IRODSQueryResultSetInterface resultSet;
 		try {
@@ -771,6 +776,35 @@ public final class DataObjectAOImpl extends IRODSGenericAO implements
 
 		return dataAOHelper
 				.buildMetaDataAndDomainDataListFromResultSet(resultSet);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.pub.DataObjectAO#
+	 * findMetadataValuesForDataObjectUsingAVUQuery(java.util.List,
+	 * java.lang.String)
+	 */
+	@Override
+	public List<MetaDataAndDomainData> findMetadataValuesForDataObjectUsingAVUQuery(
+			final List<AVUQueryElement> avuQuery,
+			final String dataObjectAbsolutePath) throws JargonQueryException,
+			JargonException {
+
+		if (avuQuery == null) {
+			throw new IllegalArgumentException("null query");
+		}
+
+		if (dataObjectAbsolutePath == null || dataObjectAbsolutePath.isEmpty()) {
+			throw new IllegalArgumentException(
+					"null or empty absolutePath for dataObjectAbsolutePath");
+		}
+
+		IRODSFile irodsFile = getIRODSFileFactory().instanceIRODSFile(
+				dataObjectAbsolutePath);
+		return findMetadataValuesForDataObjectUsingAVUQuery(avuQuery,
+				irodsFile.getParent(), irodsFile.getName());
+
 	}
 
 	/*
@@ -799,8 +833,8 @@ public final class DataObjectAOImpl extends IRODSGenericAO implements
 	 */
 	@Override
 	public void addAVUMetadata(final String absolutePath, final AvuData avuData)
-			throws DataNotFoundException, JargonException {
-		
+			throws DataNotFoundException, DuplicateDataException, JargonException {
+
 		if (absolutePath == null || absolutePath.isEmpty()) {
 			throw new IllegalArgumentException("null or empty absolutePath");
 		}
@@ -823,9 +857,12 @@ public final class DataObjectAOImpl extends IRODSGenericAO implements
 
 		} catch (JargonException je) {
 
-			if (je.getMessage().indexOf("-814000") > -1) {
+			if (je.getMessage().indexOf("-817000") > -1) {
 				throw new DataNotFoundException(
-						"Target collection was not found, could not add AVU");
+						"Target dataObject was not found, could not add AVU");
+			} else if (je.getMessage().indexOf("-809000") > -1) {
+				throw new DuplicateDataException(
+				"Duplicate AVU exists, cannot add");
 			}
 
 			log.error("jargon exception adding AVU metadata", je);
@@ -833,6 +870,37 @@ public final class DataObjectAOImpl extends IRODSGenericAO implements
 		}
 
 		log.debug("metadata added");
+
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.core.pub.DataObjectAO#addAVUMetadata(java.lang.String, java.lang.String, org.irods.jargon.core.pub.domain.AvuData)
+	 */
+	@Override
+	public void addAVUMetadata(final String irodsCollectionAbsolutePath, final String fileName, final AvuData avuData)
+			throws DataNotFoundException, JargonException {
+
+		if (irodsCollectionAbsolutePath == null || irodsCollectionAbsolutePath.isEmpty()) {
+			throw new IllegalArgumentException("null or empty irodsCollectionAbsolutePath");
+		}
+		
+		if (fileName == null || fileName.isEmpty()) {
+			throw new IllegalArgumentException("null or empty fileName");
+		}
+
+		if (avuData == null) {
+			throw new IllegalArgumentException("null AVU data");
+		}
+
+		log.info("adding avu metadata to data object: {}", avuData);
+		log.info("parent collection absolute path: {}", irodsCollectionAbsolutePath);
+		log.info("file name: {}", fileName);
+		
+		StringBuilder sb = new StringBuilder(irodsCollectionAbsolutePath);
+		sb.append("/");
+		sb.append(fileName);
+
+		addAVUMetadata(sb.toString(), avuData);
 
 	}
 
@@ -868,7 +936,7 @@ public final class DataObjectAOImpl extends IRODSGenericAO implements
 			getIRODSProtocol().irodsFunction(modifyAvuMetadataInp);
 		} catch (JargonException je) {
 
-			if (je.getMessage().indexOf("-814000") > -1) {
+			if (je.getMessage().indexOf("-817000") > -1) {
 				throw new DataNotFoundException(
 						"Target data object was not found, could not remove AVU");
 			}
@@ -946,7 +1014,8 @@ public final class DataObjectAOImpl extends IRODSGenericAO implements
 		log.debug("query string for AVU query: {}", queryString);
 
 		final IRODSGenQuery irodsQuery = IRODSGenQuery.instance(queryString,
-				DEFAULT_REC_COUNT);
+				getIRODSSession().getJargonProperties()
+						.getMaxFilesAndDirsQueryMax());
 
 		IRODSQueryResultSetInterface resultSet;
 		try {
@@ -1019,7 +1088,8 @@ public final class DataObjectAOImpl extends IRODSGenericAO implements
 		log.debug("query string for AVU query: {}", queryString);
 
 		final IRODSGenQuery irodsQuery = IRODSGenQuery.instance(queryString,
-				DEFAULT_REC_COUNT);
+				getIRODSSession().getJargonProperties()
+						.getMaxFilesAndDirsQueryMax());
 
 		IRODSQueryResultSetInterface resultSet;
 		try {
@@ -1047,7 +1117,8 @@ public final class DataObjectAOImpl extends IRODSGenericAO implements
 			final String targetResource) throws JargonException {
 
 		if (irodsFileAbsolutePath == null || irodsFileAbsolutePath.isEmpty()) {
-			throw new IllegalArgumentException("null or empty irodsFileAbsolutePath");
+			throw new IllegalArgumentException(
+					"null or empty irodsFileAbsolutePath");
 		}
 
 		if (targetResource == null || targetResource.isEmpty()) {
@@ -1155,7 +1226,8 @@ public final class DataObjectAOImpl extends IRODSGenericAO implements
 		}
 
 		if (targetResourceName == null) {
-			throw new IllegalArgumentException("null or empty targetResourceName");
+			throw new IllegalArgumentException(
+					"null or empty targetResourceName");
 		}
 
 		log.info(
@@ -1201,9 +1273,10 @@ public final class DataObjectAOImpl extends IRODSGenericAO implements
 	public void replicateIrodsDataObjectToAllResourcesInResourceGroup(
 			final String irodsFileAbsolutePath,
 			final String irodsResourceGroupName) throws JargonException {
-		
+
 		if (irodsFileAbsolutePath == null || irodsFileAbsolutePath.isEmpty()) {
-			throw new IllegalArgumentException("null or empty irodsFileAbsolutePath");
+			throw new IllegalArgumentException(
+					"null or empty irodsFileAbsolutePath");
 		}
 
 		if (irodsResourceGroupName == null || irodsResourceGroupName.isEmpty()) {
@@ -1268,31 +1341,74 @@ public final class DataObjectAOImpl extends IRODSGenericAO implements
 	@Override
 	public List<MetaDataAndDomainData> findMetadataValuesForDataObject(
 			final String dataObjectCollectionAbsPath,
-			final String dataObjectFileName) throws JargonQueryException,
-			JargonException {
-		
+			final String dataObjectFileName) throws JargonException {
+
 		// contract checks in delegated method
-		
+
 		List<AVUQueryElement> queryElements = new ArrayList<AVUQueryElement>();
-		return this.findMetadataValuesForDataObjectUsingAVUQuery(queryElements,
-				dataObjectCollectionAbsPath, dataObjectFileName);
+		try {
+			return this.findMetadataValuesForDataObjectUsingAVUQuery(
+					queryElements, dataObjectCollectionAbsPath,
+					dataObjectFileName);
+		} catch (JargonQueryException e) {
+			log.error("query exception looking up data object:{}",
+					dataObjectCollectionAbsPath, e);
+			log.error("fileName: {}", dataObjectFileName);
+			throw new JargonException(e);
+		}
 	}
-	
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.pub.DataObjectAO#findMetadataValuesForDataObject(org.irods.jargon.core.pub.io.IRODSFile)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.DataObjectAO#findMetadataValuesForDataObject
+	 * (java.lang.String)
+	 */
+	@Override
+	public List<MetaDataAndDomainData> findMetadataValuesForDataObject(
+			final String dataObjectAbsolutePath) throws JargonException {
+
+		if (dataObjectAbsolutePath == null || dataObjectAbsolutePath.isEmpty()) {
+			throw new IllegalArgumentException(
+					"null or empty dataObjectAbsolutePath");
+		}
+
+		log.info("findMetadataValuesForDataObject: {}", dataObjectAbsolutePath);
+
+		IRODSFile irodsFile = getIRODSFileFactory().instanceIRODSFile(
+				dataObjectAbsolutePath);
+
+		List<AVUQueryElement> queryElements = new ArrayList<AVUQueryElement>();
+		try {
+			return this.findMetadataValuesForDataObjectUsingAVUQuery(
+					queryElements, irodsFile.getParent(), irodsFile.getName());
+		} catch (JargonQueryException e) {
+			log.error("query exception looking up data object:{}",
+					dataObjectAbsolutePath, e);
+			throw new JargonException(e);
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.DataObjectAO#findMetadataValuesForDataObject
+	 * (org.irods.jargon.core.pub.io.IRODSFile)
 	 */
 	@Override
 	public List<MetaDataAndDomainData> findMetadataValuesForDataObject(
 			final IRODSFile irodsFile) throws JargonException {
-		
+
 		if (irodsFile == null) {
 			throw new IllegalArgumentException("null irodsFile");
 		}
-		
+
 		List<AVUQueryElement> queryElements = new ArrayList<AVUQueryElement>();
 		try {
-			return this.findMetadataValuesForDataObjectUsingAVUQuery(queryElements,
-					irodsFile.getParent(), irodsFile.getName());
+			return this.findMetadataValuesForDataObjectUsingAVUQuery(
+					queryElements, irodsFile.getParent(), irodsFile.getName());
 		} catch (JargonQueryException e) {
 			log.error("query exception rethrown as Jargon Exception", e);
 			throw new JargonException(e);
@@ -1351,7 +1467,8 @@ public final class DataObjectAOImpl extends IRODSGenericAO implements
 		}
 
 		if (dataObjectAbsolutePath == null || dataObjectAbsolutePath.isEmpty()) {
-			throw new IllegalArgumentException("dataObjectAbsolutePath is null or empty");
+			throw new IllegalArgumentException(
+					"dataObjectAbsolutePath is null or empty");
 		}
 
 		throw new UnsupportedOperationException("not yet implemented");
@@ -1466,22 +1583,31 @@ public final class DataObjectAOImpl extends IRODSGenericAO implements
 		return filePermissionEnum;
 
 	}
-	
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.pub.DataObjectAO#listPermissionsForDataObject(java.lang.String)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.DataObjectAO#listPermissionsForDataObject(java
+	 * .lang.String)
 	 */
 	@Override
-	public List<UserFilePermission> listPermissionsForDataObject(final String irodsDataObjectAbsolutePath) throws JargonException {
-		
-		if (irodsDataObjectAbsolutePath == null || irodsDataObjectAbsolutePath.isEmpty()) {
-			throw new IllegalArgumentException("null or empty irodsDataObjectAbsolutePath");
+	public List<UserFilePermission> listPermissionsForDataObject(
+			final String irodsDataObjectAbsolutePath) throws JargonException {
+
+		if (irodsDataObjectAbsolutePath == null
+				|| irodsDataObjectAbsolutePath.isEmpty()) {
+			throw new IllegalArgumentException(
+					"null or empty irodsDataObjectAbsolutePath");
 		}
-		
-		log.info("listPermissionsForDataObject: {}", irodsDataObjectAbsolutePath);
-		IRODSFile irodsFile = getIRODSFileFactory().instanceIRODSFile(irodsDataObjectAbsolutePath);
-		
+
+		log.info("listPermissionsForDataObject: {}",
+				irodsDataObjectAbsolutePath);
+		IRODSFile irodsFile = getIRODSFileFactory().instanceIRODSFile(
+				irodsDataObjectAbsolutePath);
+
 		List<UserFilePermission> userFilePermissions = new ArrayList<UserFilePermission>();
-		
+
 		StringBuilder query = new StringBuilder();
 		query.append("SELECT ");
 		query.append(RodsGenQueryEnum.COL_USER_NAME.getName());
@@ -1492,33 +1618,191 @@ public final class DataObjectAOImpl extends IRODSGenericAO implements
 		query.append(" WHERE ");
 		query.append(RodsGenQueryEnum.COL_COLL_NAME.getName());
 		query.append(EQUALS_AND_QUOTE);
-		query.append(IRODSDataConversionUtil.escapeSingleQuotes(irodsFile.getParent()));
+		query.append(IRODSDataConversionUtil.escapeSingleQuotes(irodsFile
+				.getParent()));
 		query.append(QUOTE);
 		query.append(AND);
 		query.append(RodsGenQueryEnum.COL_DATA_NAME.getName());
 		query.append(EQUALS_AND_QUOTE);
-		query.append(IRODSDataConversionUtil.escapeSingleQuotes(irodsFile.getName()));
+		query.append(IRODSDataConversionUtil.escapeSingleQuotes(irodsFile
+				.getName()));
 		query.append(QUOTE);
 
-		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(query.toString(), this.getJargonProperties().getMaxFilesAndDirsQueryMax());
+		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(query.toString(),
+				this.getJargonProperties().getMaxFilesAndDirsQueryMax());
 		IRODSQueryResultSetInterface resultSet;
 
 		try {
-			resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResult(irodsQuery, 0);
-			
+			resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResult(
+					irodsQuery, 0);
+
 			UserFilePermission userFilePermission = null;
 			for (IRODSQueryResultRow row : resultSet.getResults()) {
-				userFilePermission = new UserFilePermission(row.getColumn(0), row.getColumn(1), FilePermissionEnum.valueOf(IRODSDataConversionUtil.getIntOrZeroFromIRODSValue(row.getColumn(2))));
+				userFilePermission = new UserFilePermission(row.getColumn(0),
+						row.getColumn(1),
+						FilePermissionEnum.valueOf(IRODSDataConversionUtil
+								.getIntOrZeroFromIRODSValue(row.getColumn(2))));
 				log.debug("loaded filePermission:{}", userFilePermission);
 				userFilePermissions.add(userFilePermission);
 			}
-			
+
 		} catch (JargonQueryException e) {
 			log.error("query exception for  query:{}", query.toString(), e);
-			throw new JargonException("error in query loading user file permissions for data object", e);
+			throw new JargonException(
+					"error in query loading user file permissions for data object",
+					e);
 		}
-		
+
 		return userFilePermissions;
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.pub.DataObjectAO#
+	 * modifyAvuValueBasedOnGivenAttributeAndUnit(java.lang.String,
+	 * org.irods.jargon.core.pub.domain.AvuData)
+	 */
+	@Override
+	public void modifyAvuValueBasedOnGivenAttributeAndUnit(
+			final String absolutePath, final AvuData avuData)
+			throws DataNotFoundException, JargonException {
+		if (absolutePath == null || absolutePath.isEmpty()) {
+			throw new IllegalArgumentException("null or empty absolutePath");
+		}
+
+		if (avuData == null) {
+			throw new IllegalArgumentException("null avuData");
+		}
+
+		log.info("setting avu metadata value for dataObject");
+		log.info("with  avu metadata:{}", avuData);
+		log.info("absolute path: {}", absolutePath);
+
+		// avu is distinct based on attrib and value, so do an attrib/unit
+		// query, can only be one result
+		List<AVUQueryElement> queryElements = new ArrayList<AVUQueryElement>();
+		List<MetaDataAndDomainData> result;
+
+		try {
+			queryElements.add(AVUQueryElement.instanceForValueQuery(
+					AVUQueryElement.AVUQueryPart.ATTRIBUTE,
+					AVUQueryOperatorEnum.EQUAL, avuData.getAttribute()));
+			queryElements.add(AVUQueryElement.instanceForValueQuery(
+					AVUQueryElement.AVUQueryPart.UNITS,
+					AVUQueryOperatorEnum.EQUAL, avuData.getUnit()));
+			result = this.findMetadataValuesForDataObjectUsingAVUQuery(
+					queryElements, absolutePath);
+		} catch (JargonQueryException e) {
+			log.error("error querying data for avu", e);
+			throw new JargonException("error querying data for AVU");
+		}
+
+		if (result.isEmpty()) {
+			throw new DataNotFoundException("no avu data found");
+		} else if (result.size() > 1) {
+			throw new JargonException(
+					"more than one AVU found with given attribute and unit, cannot modify non-unique AVU's in this way");
+		}
+
+		AvuData currentAvuData = new AvuData(result.get(0).getAvuAttribute(),
+				result.get(0).getAvuValue(), result.get(0).getAvuUnit());
+
+		AvuData modAvuData = new AvuData(result.get(0).getAvuAttribute(),
+				avuData.getValue(), result.get(0).getAvuUnit());
+		modifyAVUMetadata(absolutePath, currentAvuData, modAvuData);
+		log.info("metadata modified to:{}", modAvuData);
+	}
+
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.core.pub.DataObjectAO#modifyAVUMetadata(java.lang.String, org.irods.jargon.core.pub.domain.AvuData, org.irods.jargon.core.pub.domain.AvuData)
+	 */
+	@Override
+	public void modifyAVUMetadata(final String dataObjectAbsolutePath,
+			final AvuData currentAvuData, final AvuData newAvuData)
+			throws DataNotFoundException, JargonException {
+
+		if (dataObjectAbsolutePath == null || dataObjectAbsolutePath.isEmpty()) {
+			throw new IllegalArgumentException(
+					"null or empty dataObjectAbsolutePath");
+		}
+
+		if (currentAvuData == null) {
+			throw new IllegalArgumentException("null currentAvuData");
+		}
+
+		if (newAvuData == null) {
+			throw new IllegalArgumentException("null newAvuData");
+		}
+
+		log.info("overwrite avu metadata for data object: {}", currentAvuData);
+		log.info("with new avu metadata:{}", newAvuData);
+		log.info("absolute path: {}", dataObjectAbsolutePath);
+
+		final ModAvuMetadataInp modifyAvuMetadataInp = ModAvuMetadataInp
+				.instanceForModifyDataObjectMetadata(dataObjectAbsolutePath,
+						currentAvuData, newAvuData);
+
+		log.debug("sending avu request");
+
+		try {
+
+			getIRODSProtocol().irodsFunction(modifyAvuMetadataInp);
+
+		} catch (JargonException je) {
+
+			if (je.getMessage().indexOf("-817000") > -1) {
+				throw new DataNotFoundException(
+						"Target data object was not found, could not modify AVU");
+			}
+
+			log.error("jargon exception modifying AVU metadata", je);
+			throw je;
+		}
+
+		log.debug("metadata rewritten");
+
+	}
+
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.core.pub.DataObjectAO#modifyAVUMetadata(java.lang.String, java.lang.String, org.irods.jargon.core.pub.domain.AvuData, org.irods.jargon.core.pub.domain.AvuData)
+	 */
+	@Override
+	public void modifyAVUMetadata(final String irodsCollectionAbsolutePath,
+			final String dataObjectName, final AvuData currentAvuData,
+			final AvuData newAvuData) throws DataNotFoundException,
+			JargonException {
+
+		if (irodsCollectionAbsolutePath == null
+				|| irodsCollectionAbsolutePath.isEmpty()) {
+			throw new IllegalArgumentException(
+					"null or empty irodsCollectionAbsolutePath");
+		}
+
+		if (dataObjectName == null || dataObjectName.isEmpty()) {
+			throw new IllegalArgumentException("null or empty dataObjectName");
+		}
+
+		if (currentAvuData == null) {
+			throw new IllegalArgumentException("null currentAvuData");
+		}
+
+		if (newAvuData == null) {
+			throw new IllegalArgumentException("null newAvuData");
+		}
+
+		log.info("overwrite avu metadata for collection: {}", currentAvuData);
+		log.info("with new avu metadata:{}", newAvuData);
+		log.info("absolute path: {}", irodsCollectionAbsolutePath);
+		log.info(" data object name: {}", dataObjectName);
+		
+		StringBuilder sb = new StringBuilder();
+		sb.append(irodsCollectionAbsolutePath);
+		sb.append("/");
+		sb.append(dataObjectName);
+		
+		modifyAVUMetadata(sb.toString(), currentAvuData, newAvuData);
 		
 	}
 

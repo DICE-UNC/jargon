@@ -590,13 +590,14 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 		}
 
 		resource.setFreeSpaceTime(IRODSDataConversionUtil
-				.getDateFromIRODSValue(row.getColumn(7)));
+				.getDateFromIRODSValue(row.getColumn(8)));
 		resource.setInfo(row.getColumn(9));
 		resource.setComment(row.getColumn(10));
 		resource.setCreateTime(IRODSDataConversionUtil
 				.getDateFromIRODSValue(row.getColumn(11)));
 		resource.setModifyTime(IRODSDataConversionUtil
 				.getDateFromIRODSValue(row.getColumn(12)));
+		resource.setStatus(row.getColumn(13));
 
 		if (log.isInfoEnabled()) {
 			log.info("resource built \n");

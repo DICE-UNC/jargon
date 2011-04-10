@@ -524,6 +524,35 @@ public class IRODSFileImplTest {
 		Assert.assertEquals("size does not match", expectedSize, size);
 
 	}
+	
+	@Test
+	public final void testLengthSpacesInName() throws Exception {
+		String testFileName = "testSize File.zip";
+		int expectedSize = 8;
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		FileGenerator.generateFileOfFixedLengthGivenName(absPath, testFileName,
+				expectedSize);
+		
+		String targetIrodsCollection = testingPropertiesHelper
+		.buildIRODSCollectionAbsolutePathFromTestProperties(
+				testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+		.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
+		DataTransferOperations dataTransferOperations = irodsFileSystem.getIRODSAccessObjectFactory().getDataTransferOperations(irodsAccount);
+		dataTransferOperations.putOperation(absPath + testFileName, targetIrodsCollection, "", null, null);
+		IRODSFileFactory irodsFileFactory = irodsFileSystem.getIRODSFileFactory(irodsAccount);
+		
+		IRODSFile irodsFile = irodsFileFactory
+				.instanceIRODSFile(targetIrodsCollection + '/' + testFileName);
+
+		long size = irodsFile.length();
+		irodsFileSystem.close();
+		Assert.assertEquals("size does not match", expectedSize, size);
+
+	}
 
 	/**
 	 * Test method for

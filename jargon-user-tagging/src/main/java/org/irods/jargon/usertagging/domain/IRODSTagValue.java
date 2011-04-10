@@ -14,7 +14,7 @@ import org.irods.jargon.usertagging.UserTaggingConstants;
  * @author Mike Conway - DICE (www.irods.org)
  *
  */
-public final class IRODSTagValue implements Serializable, Comparable {
+public final class IRODSTagValue implements Serializable, Comparable<Object> {
 	
 	private static final long serialVersionUID = 8220689134583599950L;
 	private  final String tagData;

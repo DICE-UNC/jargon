@@ -199,7 +199,7 @@ public class FileTreeDiffUtilityImpl implements FileTreeDiffUtility {
 			log.debug("lhs timestamp:{}", leftHandSide.lastModified());
 			log.debug("lhs cutoff:{}", timestampforLastSynchLeftHandSide);
 			if (timestampforLastSynchLeftHandSide == NO_TIMESTAMP_CHECKS
-					|| leftHandSide.lastModified() > timestampforLastSynchLeftHandSide) {
+					|| true) { //leftHandSide.lastModified() > timestampforLastSynchLeftHandSide) {
 				FileTreeDiffEntry entry = buildFileTreeDiffEntryForFile(
 						leftHandSide, DiffType.LEFT_HAND_PLUS, 0, 0);
 				currentFileTreeNode.add(new FileTreeNode(entry));
@@ -215,7 +215,7 @@ public class FileTreeDiffUtilityImpl implements FileTreeDiffUtility {
 		} else if (compValue > 0) {
 			log.debug("lhs > rhs");
 			if (timestampForLastSynchRightHandSide == NO_TIMESTAMP_CHECKS
-					|| rightHandSide.lastModified() > timestampForLastSynchRightHandSide) {
+					|| true) { //rightHandSide.lastModified() > timestampForLastSynchRightHandSide) {
 				FileTreeDiffEntry entry = buildFileTreeDiffEntryForFile(
 						rightHandSide, DiffType.RIGHT_HAND_PLUS, 0, 0);
 				currentFileTreeNode.add(new FileTreeNode(entry));
@@ -499,7 +499,13 @@ public class FileTreeDiffUtilityImpl implements FileTreeDiffUtility {
 		log.info("lhs last synch:{}", timestampForLastSynchLeftHandSide);
 		log.info("leftHandSide lastModified:{}", leftHandSide.lastModified());
 		
-		// lhs file has no match
+		// lhs file has no match, right now this synchs up to irods
+		log.debug("unaccounted for lhs file: {}",
+				leftHandSide.getAbsolutePath());
+		FileTreeDiffEntry entry = buildFileTreeDiffEntryForFile(
+				leftHandSide, DiffType.LEFT_HAND_PLUS, 0, 0);
+		currentFileTreeNode.add(new FileTreeNode(entry));
+		/*
 		if (timestampForLastSynchRightHandSide == NO_TIMESTAMP_CHECKS
 				|| leftHandSide.lastModified() > timestampForLastSynchLeftHandSide) {
 			log.debug("unaccounted for lhs file: {}",
@@ -517,7 +523,7 @@ public class FileTreeDiffUtilityImpl implements FileTreeDiffUtility {
 			log.debug(
 					"lhs file is seen as new, but modified time is before last synch, irods delete? currently no deletes done:{}",
 					leftHandSide.getAbsolutePath());
-		}
+		}*/
 	}
 	
 	/**

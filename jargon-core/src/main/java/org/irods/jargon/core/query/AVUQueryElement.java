@@ -38,6 +38,7 @@ public class AVUQueryElement {
 			final AVUQueryOperatorEnum operator, final String value,
 			final String valueEndOfRange, final List<Object> valuesTable)
 			throws JargonQueryException {
+		
 		if (avuQueryPart == null) {
 			throw new JargonQueryException("avuQueryPart is null");
 		}
@@ -46,8 +47,8 @@ public class AVUQueryElement {
 			throw new JargonQueryException("avuQueryOperator is null");
 		}
 
-		if (value == null || value.isEmpty()) {
-			throw new JargonQueryException("null or empty value");
+		if (value == null) {
+			throw new JargonQueryException("null value");
 		}
 
 		this.avuQueryPart = avuQueryPart;

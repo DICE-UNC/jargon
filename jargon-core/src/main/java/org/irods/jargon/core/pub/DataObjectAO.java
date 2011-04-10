@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.List;
 
 import org.irods.jargon.core.exception.DataNotFoundException;
+import org.irods.jargon.core.exception.DuplicateDataException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.protovalues.FilePermissionEnum;
 import org.irods.jargon.core.pub.domain.AvuData;
@@ -72,7 +73,8 @@ public interface DataObjectAO extends IRODSAccessObject {
 	 * @param dataName
 	 *            <code>String</code> with the data Object name
 	 * @return {@link org.irods.jargon.core.pub.DataObject}
-	 * @throws DataNotFoundException is thrown if the data object does not exist
+	 * @throws DataNotFoundException
+	 *             is thrown if the data object does not exist
 	 * @throws JargonException
 	 */
 	DataObject findByCollectionNameAndDataName(final String collectionPath,
@@ -109,17 +111,17 @@ public interface DataObjectAO extends IRODSAccessObject {
 	/**
 	 * Add AVU metadata for this data object
 	 * 
-	 * FIXME: refactor along with data obj avu code
-	 * 
 	 * @param absolutePath
 	 *            <code>String</code> with the absolute path to the target
 	 *            collection
 	 * @param avuData
 	 *            {@link org.irods.jargon.core.pub.domain.AvuData}
 	 * @throws JargonException
+	 * @throws DataNotFoundException when data object is missing
+	 * @throws DuplicateDataException when an AVU already exists.  Note that iRODS (at least at 2.5) is inconsistent, where a duplicate will only be detected if units are not blank
 	 */
 	void addAVUMetadata(final String absolutePath, final AvuData avuData)
-			throws DataNotFoundException, JargonException;
+			throws DataNotFoundException, DuplicateDataException, JargonException;
 
 	/**
 	 * Retrieve a file from iRODS and store it locally. A specific resource is
@@ -161,6 +163,26 @@ public interface DataObjectAO extends IRODSAccessObject {
 			final String dataObjectCollectionAbsPath,
 			final String dataObjectFileName) throws JargonQueryException,
 			JargonException;
+
+	/**
+	 * List the AVU metadata for a particular data object, as well as
+	 * identifying information about the data object itself, based on a metadata
+	 * query.
+	 * 
+	 * @param avuQuery
+	 *            <code>List</code> of
+	 *            {@link org.irods.jargon.core.query.AVUQueryElement} that
+	 *            defines the metadata query
+	 * @param dataObjectAbsolutePath
+	 *            <code>String</code> with the absolute path of the data object
+	 * @return <code>List</code> of
+	 *         {@link org.irods.jargon.core.query.MetaDataAndDomainData}
+	 * @throws JargonQueryException
+	 * @throws JargonException
+	 */
+	List<MetaDataAndDomainData> findMetadataValuesForDataObjectUsingAVUQuery(
+			List<AVUQueryElement> avuQuery, String dataObjectAbsolutePath)
+			throws JargonQueryException, JargonException;
 
 	/**
 	 * List the AVU metadata for a particular data object, as well as
@@ -432,7 +454,8 @@ public interface DataObjectAO extends IRODSAccessObject {
 	 *            data object.
 	 * @return {@link org.irods.jargon.core.pub.domain.DataObject} with catalog
 	 *         information for the given data object
-	 * @throws DataNotFoundException if data object is not found
+	 * @throws DataNotFoundException
+	 *             if data object is not found
 	 * @throws JargonException
 	 */
 	DataObject findByAbsolutePath(final String absolutePath)
@@ -452,9 +475,15 @@ public interface DataObjectAO extends IRODSAccessObject {
 
 	/**
 	 * Set the permissions on a data object to read for the given user.
-	 * @param zone <code>String</code> with an optional zone for the file.  Leave blank if not used, it is not required.
-	 * @param absolutePath <code>String</code> with the absolute path to the data object.
-	 * @param userName <code>String</code> with the user name whose permissions will be set.
+	 * 
+	 * @param zone
+	 *            <code>String</code> with an optional zone for the file. Leave
+	 *            blank if not used, it is not required.
+	 * @param absolutePath
+	 *            <code>String</code> with the absolute path to the data object.
+	 * @param userName
+	 *            <code>String</code> with the user name whose permissions will
+	 *            be set.
 	 * @throws JargonException
 	 */
 	void setAccessPermissionRead(String zone, String absolutePath,
@@ -462,9 +491,15 @@ public interface DataObjectAO extends IRODSAccessObject {
 
 	/**
 	 * Set the permissions on a data object to write for the given user.
-	 * @param zone <code>String</code> with an optional zone for the file.  Leave blank if not used, it is not required.
-	 * @param absolutePath <code>String</code> with the absolute path to the data object.
-	 * @param userName <code>String</code> with the user name whose permissions will be set.
+	 * 
+	 * @param zone
+	 *            <code>String</code> with an optional zone for the file. Leave
+	 *            blank if not used, it is not required.
+	 * @param absolutePath
+	 *            <code>String</code> with the absolute path to the data object.
+	 * @param userName
+	 *            <code>String</code> with the user name whose permissions will
+	 *            be set.
 	 * @throws JargonException
 	 */
 	void setAccessPermissionWrite(String zone, String absolutePath,
@@ -472,9 +507,15 @@ public interface DataObjectAO extends IRODSAccessObject {
 
 	/**
 	 * Set the permissions on a data object to own for the given user.
-	 * @param zone <code>String</code> with an optional zone for the file.  Leave blank if not used, it is not required.
-	 * @param absolutePath <code>String</code> with the absolute path to the data object.
-	 * @param userName <code>String</code> with the user name whose permissions will be set.
+	 * 
+	 * @param zone
+	 *            <code>String</code> with an optional zone for the file. Leave
+	 *            blank if not used, it is not required.
+	 * @param absolutePath
+	 *            <code>String</code> with the absolute path to the data object.
+	 * @param userName
+	 *            <code>String</code> with the user name whose permissions will
+	 *            be set.
 	 * @throws JargonException
 	 */
 	void setAccessPermissionOwn(String zone, String absolutePath,
@@ -482,9 +523,15 @@ public interface DataObjectAO extends IRODSAccessObject {
 
 	/**
 	 * Removes the permissions on a data object to own for the given user.
-	 * @param zone <code>String</code> with an optional zone for the file.  Leave blank if not used, it is not required.
-	 * @param absolutePath <code>String</code> with the absolute path to the data object.
-	 * @param userName <code>String</code> with the user name whose permissions will be set.
+	 * 
+	 * @param zone
+	 *            <code>String</code> with an optional zone for the file. Leave
+	 *            blank if not used, it is not required.
+	 * @param absolutePath
+	 *            <code>String</code> with the absolute path to the data object.
+	 * @param userName
+	 *            <code>String</code> with the user name whose permissions will
+	 *            be set.
 	 * @throws JargonException
 	 */
 	void removeAccessPermissionsForUser(String zone, String absolutePath,
@@ -492,10 +539,17 @@ public interface DataObjectAO extends IRODSAccessObject {
 
 	/**
 	 * Get the file permission pertaining to the given data object
-	 * @param absolutePath <code>String</code> with the absolute path to the data object.
-	 * @param userName <code>String</code> with the user name whose permissions will be checked.
-	 * @param zone <code>String</code> with an optional zone for the file.  Leave blank if not used, it is not required.
-	 * @return {@link FilePermissionEnum} value with the permissions for the file and user.
+	 * 
+	 * @param absolutePath
+	 *            <code>String</code> with the absolute path to the data object.
+	 * @param userName
+	 *            <code>String</code> with the user name whose permissions will
+	 *            be checked.
+	 * @param zone
+	 *            <code>String</code> with an optional zone for the file. Leave
+	 *            blank if not used, it is not required.
+	 * @return {@link FilePermissionEnum} value with the permissions for the
+	 *         file and user.
 	 * @throws JargonException
 	 */
 	FilePermissionEnum getPermissionForDataObject(String absolutePath,
@@ -503,29 +557,45 @@ public interface DataObjectAO extends IRODSAccessObject {
 
 	/**
 	 * Copy a file from one iRODS resource to another with a 'no force' option.
-	 * @param irodsSourceFileAbsolutePath <code>String</code> with the absolute path to the source file
-	 * @param irodsTargetFileAbsolutePath <code>String</code> with the absolute path to the target file.
-	 * @param targetResourceName <code>String</code> with the optional (blank if not specified) resource that will hold the target file
-	 * @throws JargonException 
+	 * 
+	 * @param irodsSourceFileAbsolutePath
+	 *            <code>String</code> with the absolute path to the source file
+	 * @param irodsTargetFileAbsolutePath
+	 *            <code>String</code> with the absolute path to the target file.
+	 * @param targetResourceName
+	 *            <code>String</code> with the optional (blank if not specified)
+	 *            resource that will hold the target file
+	 * @throws JargonException
 	 */
 	void copyIrodsDataObject(String irodsSourceFileAbsolutePath,
-			String irodsTargetFileAbsolutePath, String targetResourceName) throws JargonException;
+			String irodsTargetFileAbsolutePath, String targetResourceName)
+			throws JargonException;
 
 	/**
-	 * Copy a file from one iRODS resource to another with a 'force' option that will overwrite another file.
-	 * @param irodsSourceFileAbsolutePath <code>String</code> with the absolute path to the source file
-	 * @param irodsTargetFileAbsolutePath <code>String</code> with the absolute path to the target file.
-	 * @param targetResourceName <code>String</code> with the optional (blank if not specified) resource that will hold the target file
-	 * @throws JargonException 
+	 * Copy a file from one iRODS resource to another with a 'force' option that
+	 * will overwrite another file.
+	 * 
+	 * @param irodsSourceFileAbsolutePath
+	 *            <code>String</code> with the absolute path to the source file
+	 * @param irodsTargetFileAbsolutePath
+	 *            <code>String</code> with the absolute path to the target file.
+	 * @param targetResourceName
+	 *            <code>String</code> with the optional (blank if not specified)
+	 *            resource that will hold the target file
+	 * @throws JargonException
 	 */
 	void copyIrodsDataObjectWithForce(String irodsSourceFileAbsolutePath,
 			String irodsTargetFileAbsolutePath, String targetResourceName)
 			throws JargonException;
 
 	/**
-	 * List the user permissions for the given iRODS data object.  
-	 * @param irodsDataObjectAbsolutePath <code>String</code> with the absolute path to the iRODS data object.
-	 * @return <code>List</code> of {@link UserFilePermission} with the ACL's for the given file.
+	 * List the user permissions for the given iRODS data object.
+	 * 
+	 * @param irodsDataObjectAbsolutePath
+	 *            <code>String</code> with the absolute path to the iRODS data
+	 *            object.
+	 * @return <code>List</code> of {@link UserFilePermission} with the ACL's
+	 *         for the given file.
 	 * @throws JargonException
 	 */
 	List<UserFilePermission> listPermissionsForDataObject(
@@ -533,12 +603,109 @@ public interface DataObjectAO extends IRODSAccessObject {
 
 	/**
 	 * List the AVU metadata associated with this irods data object.
-	 * @param irodsFile {@link IRODSfile} that points to the data object whose metadata will be retrieved
-	  * @return <code>List</code> of
+	 * 
+	 * @param irodsFile
+	 *            {@link IRODSfile} that points to the data object whose
+	 *            metadata will be retrieved
+	 * @return <code>List</code> of
 	 *         {@link org.irods.jargon.core.query.MetaDataAndDomainData}
 	 * @throws JargonException
 	 */
 	List<MetaDataAndDomainData> findMetadataValuesForDataObject(
 			IRODSFile irodsFile) throws JargonException;
+
+	/**
+	 * List the AVU metadata associated with this irods data object.
+	 * 
+	 * @param dataObjectAbsolutePath
+	 *            <code>String</code> with the absolute path to the iRODS data
+	 *            object
+	 * @return <code>List</code> of
+	 *         {@link org.irods.jargon.core.query.MetaDataAndDomainData}
+	 * @throws JargonException
+	 */
+	List<MetaDataAndDomainData> findMetadataValuesForDataObject(
+			String dataObjectAbsolutePath) throws JargonException;
+
+	/**
+	 * This is a special method to modify the Avu value for a given attribute
+	 * name and unit. Often, it is the case that applications want to keep
+	 * unique values for a data object, and be able to easily change the value
+	 * while preserving the attribute name and units. This method allows the
+	 * specification of an AVU with the known name and units, and an arbitrary
+	 * value. The method will find the unique attribute by name and unit, and
+	 * overwrite the existing value with the value given in the
+	 * <code>AvuData</code> parameter.
+	 * 
+	 * @param absolutePath
+	 * @param currentAvuData
+	 *            {@link org.irods.jargon.core.pub.domain.AvuData} describing
+	 *            the existing Avu name and unit, with the desired new value
+	 * @throws DataNotFoundException
+	 *             if the AVU data or collection is not present
+	 * @throws JargonException
+	 */
+	void modifyAvuValueBasedOnGivenAttributeAndUnit(String absolutePath,
+			AvuData avuData) throws DataNotFoundException, JargonException;
+
+	/**
+	 * Modify the AVU metadata for a data object, giving the absolute path to
+	 * the data object, as well as the current and desired AVU data.
+	 * 
+	 * @param dataObjectAbsolutePath
+	 *            <code>String</code> with the absolute path to the data object
+	 * @param currentAvuData
+	 *            {@link org.irods.jargon.core.pub.domain.AvuData} describing
+	 *            the existing Avu
+	 * @param newAvuData
+	 *            {@link org.irods.jargon.core.pub.domain.AvuData} describing
+	 *            the desired new AVU
+	 * @throws DataNotFoundException
+	 *             if the file or AVU was not found
+	 * @throws JargonException
+	 */
+	void modifyAVUMetadata(String dataObjectAbsolutePath,
+			AvuData currentAvuData, AvuData newAvuData)
+			throws DataNotFoundException, JargonException;
+
+	/**
+	 * Modify the AVU metadata for a data object, giving the absolute path to
+	 * the data object parent collection, and the data object file name, as well
+	 * as the current and desired AVU data.
+	 * 
+	 * @param irodsCollectionAbsolutePath
+	 *            <code>String</code> with the absolute path to the data object
+	 * @param dataObjectName
+	 *            <code>String</code> with the data object name
+	 * @param currentAvuData
+	 *            {@link org.irods.jargon.core.pub.domain.AvuData} describing
+	 *            the existing Avu
+	 * @param newAvuData
+	 *            {@link org.irods.jargon.core.pub.domain.AvuData} describing
+	 *            the desired new AVU
+	 * @throws DataNotFoundException
+	 *             if the file or AVU was not found
+	 * @throws JargonException
+	 */
+	void modifyAVUMetadata(String irodsCollectionAbsolutePath,
+			String dataObjectName, AvuData currentAvuData, AvuData newAvuData)
+			throws DataNotFoundException, JargonException;
+
+	/**
+	 * Add the AVU Metadata for the given irods parent collection/data name
+	 * 
+	 * @param irodsCollectionAbsolutePath
+	 *            <code>String</code> with the absolute path to the iRODS parent
+	 *            collection
+	 * @param fileName
+	 *            <code>String</code> with the file name
+	 *            {@link org.irods.jargon.core.pub.domain.AvuData} describing
+	 *            the desired new AVU
+	 * @throws JargonException
+	 * @throws DataNotFoundException when data object is missing
+	 * @throws DuplicateDataException when an AVU already exists.  Note that iRODS (at least at 2.5) is inconsistent, where a duplicate will only be detected if units are not blank
+	 */
+	void addAVUMetadata(String irodsCollectionAbsolutePath, String fileName,
+			AvuData avuData) throws DataNotFoundException, JargonException;
 
 }

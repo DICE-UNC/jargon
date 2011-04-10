@@ -3,6 +3,7 @@ package org.irods.jargon.core.pub;
 import java.util.List;
 
 import org.irods.jargon.core.exception.DataNotFoundException;
+import org.irods.jargon.core.exception.DuplicateDataException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.protovalues.FilePermissionEnum;
 import org.irods.jargon.core.pub.domain.AvuData;
@@ -92,9 +93,11 @@ public interface CollectionAO extends IRODSAccessObject {
 	 * @param avuData
 	 *            {@link org.irods.jargon.core.pub.domain.AvuData}
 	 * @throws JargonException
+	 * @throws DataNotFoundException when data object is missing
+	 * @throws DuplicateDataException when an AVU already exists.  Note that iRODS (at least at 2.5) is inconsistent, where a duplicate will only be detected if units are not blank
 	 */
 	void addAVUMetadata(final String absolutePath, final AvuData avuData)
-			throws JargonException;
+			throws  DataNotFoundException, DuplicateDataException, JargonException;
 
 	/**
 	 * Remove AVU metadata from this collection
