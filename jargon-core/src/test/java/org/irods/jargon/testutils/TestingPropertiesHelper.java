@@ -25,6 +25,9 @@ public class TestingPropertiesHelper {
 	public static String IRODS_SECONDARY_USER_KEY = "test2.irods.user";
 	public static String IRODS_SECONDARY_PASSWORD_KEY = "test2.irods.password";
 	public static String IRODS_SECONDARY_RESOURCE_KEY = "test2.irods.resource";
+	public static String IRODS_TERTIARY_USER_KEY = "test3.irods.user";
+	public static String IRODS_TERTIARY_PASSWORD_KEY = "test3.irods.password";
+	public static String IRODS_TERTIARY_RESOURCE_KEY = "test3.irods.resource";
 	public static String IRODS_HOST_KEY = "test.irods.host";
 	public static String IRODS_PORT_KEY = "test.irods.port";
 	public static String IRODS_ZONE_KEY = "test.irods.zone";
@@ -369,6 +372,38 @@ public class TestingPropertiesHelper {
 				homeBuilder.toString(), testingProperties
 						.getProperty(IRODS_ZONE_KEY), testingProperties
 						.getProperty(IRODS_SECONDARY_RESOURCE_KEY));
+
+		return account;
+	}
+	
+	/**
+	 * @param testingProperties
+	 *            <code>Properties</code> file with the standard names defined
+	 *            in
+	 *            {@link org.TestingPropertiesHelper.jargon.test.utils.TestingPropertiesLoader}
+	 * @return @link{ edu.sdsc.grid.io.irods.IRODSAccount}
+	 * @throws URISyntaxException
+	 */
+	public IRODSAccount buildIRODSAccountFromTertiaryTestProperties(
+			final Properties testingProperties) {
+
+		StringBuilder homeBuilder = new StringBuilder();
+		homeBuilder.append('/');
+		homeBuilder.append(testingProperties.getProperty(IRODS_ZONE_KEY));
+		homeBuilder.append('/');
+		homeBuilder.append("home");
+		homeBuilder.append('/');
+		homeBuilder.append(testingProperties
+				.getProperty(IRODS_TERTIARY_USER_KEY));
+
+		IRODSAccount account = new IRODSAccount(
+				testingProperties.getProperty(IRODS_HOST_KEY),
+				Integer.parseInt(testingProperties.getProperty(IRODS_PORT_KEY)),
+				testingProperties.getProperty(IRODS_TERTIARY_USER_KEY),
+				testingProperties.getProperty(IRODS_TERTIARY_PASSWORD_KEY),
+				homeBuilder.toString(), testingProperties
+						.getProperty(IRODS_ZONE_KEY), testingProperties
+						.getProperty(IRODS_TERTIARY_RESOURCE_KEY));
 
 		return account;
 	}

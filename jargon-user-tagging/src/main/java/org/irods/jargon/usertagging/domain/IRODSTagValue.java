@@ -53,10 +53,6 @@ public final class IRODSTagValue implements Serializable, Comparable<Object> {
 			throw new JargonException("null metadataAndDomainData");
 		}
 		
-		if (!(metadataAndDomainData.getAvuUnit().equals(UserTaggingConstants.TAG_AVU_UNIT))) {
-			throw new JargonException("the given metadata value is not a user tag, based on the value in unit");
-		}
-		
 		if (metadataAndDomainData.getAvuValue() == null || metadataAndDomainData.getAvuValue().isEmpty()) {
 			throw new JargonException("no user supplied");
 		}

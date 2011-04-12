@@ -33,9 +33,9 @@ public class IRODSFileInputStream extends InputStream {
 	 * Creates a <code>FileInputStream</code> by opening a connection to an
 	 * actual file, the file named by the path name <code>name</code> in the
 	 * file system.
-	 * <p>
+	 * <p/>
 	 * First, the security is checked to verify the file can be written.
-	 * <p>
+	 * <p/>
 	 * If the named file does not exist, is a directory rather than a regular
 	 * file, or for some other reason cannot be opened for reading then a
 	 * <code>FileNotFoundException</code> is thrown.
@@ -172,27 +172,27 @@ public class IRODSFileInputStream extends InputStream {
 	 * bytes, but a smaller number may be read, possibly zero. The number of
 	 * bytes actually read is returned as an integer.
 	 * 
-	 * <p>
+	 * <p/>
 	 * This method blocks until input data is available, end of file is
 	 * detected, or an exception is thrown.
 	 * 
-	 * <p>
+	 * <p/>
 	 * If <code>b</code> is <code>null</code>, a
 	 * <code>JargonRuntimeException</code> is thrown.
 	 * 
-	 * <p>
+	 * <p/>
 	 * If <code>off</code> is negative, or <code>len</code> is negative, or
 	 * <code>off+len</code> is greater than the length of the array
 	 * <code>b</code>, then an <code>IndexOutOfBoundsException</code> is thrown.
 	 * 
-	 * <p>
+	 * <p/>
 	 * If <code>len</code> is zero, then no bytes are read and <code>0</code> is
 	 * returned; otherwise, there is an attempt to read at least one byte. If no
 	 * byte is available because the stream is at end of file, the value
 	 * <code>-1</code> is returned; otherwise, at least one byte is read and
 	 * stored into <code>b</code>.
 	 * 
-	 * <p>
+	 * <p/>
 	 * The first byte read is stored into element <code>b[off]</code>, the next
 	 * one into <code>b[off+1]</code>, and so on. The number of bytes read is,
 	 * at most, equal to <code>len</code>. Let <i>k</i> be the number of bytes
@@ -201,17 +201,17 @@ public class IRODSFileInputStream extends InputStream {
 	 * <code>b[off+</code><i>k</i><code>]</code> through
 	 * <code>b[off+len-1]</code> unaffected.
 	 * 
-	 * <p>
+	 * <p/>
 	 * In every case, elements <code>b[0]</code> through <code>b[off]</code> and
 	 * elements <code>b[off+len]</code> through <code>b[b.length-1]</code> are
 	 * unaffected.
 	 * 
-	 * <p>
+	 * <p/>
 	 * If the first byte cannot be read for any reason other than end of file,
 	 * then an <code>IOException</code> is thrown. In particular, an
 	 * <code>IOException</code> is thrown if the input stream has been closed.
 	 * 
-	 * <p>
+	 * <p/>
 	 * The <code>read(b,</code> <code>off,</code> <code>len)</code> method for
 	 * class <code>InputStream</code> simply calls the method
 	 * <code>read()</code> repeatedly. If the first such call results in an
@@ -266,7 +266,7 @@ public class IRODSFileInputStream extends InputStream {
 	 * returned as an integer. This method blocks until input data is available,
 	 * end of file is detected, or an exception is thrown.
 	 * 
-	 * <p>
+	 * <p/>
 	 * If <code>b</code> is <code>null</code>, a
 	 * <code>JargonRuntimeException</code> is thrown. If the length of
 	 * <code>b</code> is zero, then no bytes are read and <code>0</code> is
@@ -275,7 +275,7 @@ public class IRODSFileInputStream extends InputStream {
 	 * <code>-1</code> is returned; otherwise, at least one byte is read and
 	 * stored into <code>b</code>.
 	 * 
-	 * <p>
+	 * <p/>
 	 * The first byte read is stored into element <code>b[0]</code>, the next
 	 * one into <code>b[1]</code>, and so on. The number of bytes read is, at
 	 * most, equal to the length of <code>b</code>. Let <i>k</i> be the number
@@ -284,12 +284,12 @@ public class IRODSFileInputStream extends InputStream {
 	 * leaving elements <code>b[</code><i>k</i><code>]</code> through
 	 * <code>b[b.length-1]</code> unaffected.
 	 * 
-	 * <p>
+	 * <p/>
 	 * If the first byte cannot be read for any reason other than end of file,
 	 * then an <code>IOException</code> is thrown. In particular, an
 	 * <code>IOException</code> is thrown if the input stream has been closed.
 	 * 
-	 * <p>
+	 * <p/>
 	 * The <code>read(b)</code> method for class <code>InputStream</code> has
 	 * the same effect as:
 	 * 
@@ -398,7 +398,7 @@ public class IRODSFileInputStream extends InputStream {
 	/**
 	 * Closes this file input stream and releases any system resources
 	 * associated with the stream.
-	 * <p>
+	 * <p/>
 	 * If this stream has an associated channel then the channel is closed as
 	 * well.
 	 * 
