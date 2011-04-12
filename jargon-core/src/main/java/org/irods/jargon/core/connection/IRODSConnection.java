@@ -2,6 +2,7 @@ package org.irods.jargon.core.connection;
 
 import static org.irods.jargon.core.connection.ConnectionConstants.INT_LENGTH;
 
+import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InterruptedIOException;
@@ -132,7 +133,7 @@ final class IRODSConnection implements IRODSManagedConnection {
 						CONNECTION_TIMEOUT_DEFAULT);
 				connection.setSoTimeout(CONNECTION_TIMEOUT_DEFAULT);
 			}
-			irodsInputStream = connection.getInputStream();
+			irodsInputStream = new BufferedInputStream(connection.getInputStream());
 			irodsOutputStream = connection.getOutputStream();
 		} catch (UnknownHostException e) {
 			log.error("exception opening socket to:" + irodsAccount.getHost()
