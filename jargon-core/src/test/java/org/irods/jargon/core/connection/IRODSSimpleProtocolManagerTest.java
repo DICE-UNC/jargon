@@ -40,6 +40,22 @@ public class IRODSSimpleProtocolManagerTest {
 	}
 
 	@Test
+	public void testGetIRODSConnectionForInvalidUser() throws Exception {
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountForIRODSUserFromTestPropertiesForGivenUser(testingProperties,
+						"iam-a-bogus-user", "irockthecode");
+		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager
+				.instance();
+		IRODSManagedConnection connection = irodsConnectionManager
+				.getIRODSProtocol(irodsAccount);
+		Assert.assertTrue("this connection is not connected",
+				connection.isConnected());
+		connection.disconnect();
+		Assert.assertFalse("the connection is not closed after disconnect",
+				connection.isConnected());
+	}
+
+	@Test
 	public void testReturnIRODSConnection() throws Exception {
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
