@@ -1808,6 +1808,51 @@ IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObj
 				FilePermissionEnum.OWN, filePermissionEnum);
 
 	}
+	
+	@Test
+	public final void testGetPermissionsForGivenUserWhoHasRead() throws Exception {
+		// generate a local scratch file
+
+		String testFileName = "testGetPermissionsForGivenUserWhoHasRead.txt";
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String fileNameOrig = FileGenerator.generateFileOfFixedLengthGivenName(
+				absPath, testFileName, 2);
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		DataObjectAO dataObjectAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
+		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetIrodsCollection);
+		dataObjectAO.putLocalDataObjectToIRODS(new File(fileNameOrig),
+				irodsFile, true);
+
+		dataObjectAO.setAccessPermissionRead("", targetIrodsCollection + "/"
+				+ testFileName, testingProperties
+				.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY));
+
+		// log in as the secondary user and test read access
+		IRODSAccount secondaryAccount = testingPropertiesHelper
+				.buildIRODSAccountFromSecondaryTestProperties(testingProperties);
+		IRODSFile irodsFileForSecondaryUser = irodsFileSystem
+				.getIRODSFileFactory(secondaryAccount).instanceIRODSFile(
+						targetIrodsCollection + "/" + testFileName);
+		
+		FilePermissionEnum filePermissionEnum = dataObjectAO
+				.getPermissionForDataObject(
+						irodsFileForSecondaryUser.getAbsolutePath(),
+						secondaryAccount.getUserName(), "");
+
+		TestCase.assertEquals("should have found read permissions",
+				FilePermissionEnum.READ, filePermissionEnum);
+
+	}
+
 
 	@Test
 	public final void testSetReadThenRemove() throws Exception {

@@ -1576,15 +1576,14 @@ public final class DataObjectAOImpl extends IRODSGenericAO implements
 		IRODSFileSystemAO irodsFileSystemAO = getIRODSAccessObjectFactory()
 				.getIRODSFileSystemAO(getIRODSAccount());
 		int permissionVal = irodsFileSystemAO
-				.getFilePermissions(getIRODSFileFactory().instanceIRODSFile(
-						absolutePath));
+				.getFilePermissionsForGivenUser(getIRODSFileFactory().instanceIRODSFile(
+						absolutePath), userName);
 		FilePermissionEnum filePermissionEnum = FilePermissionEnum
 				.valueOf(permissionVal);
 		return filePermissionEnum;
 
 	}
 
-	
 	/* (non-Javadoc)
 	 * @see org.irods.jargon.core.pub.DataObjectAO#listPermissionsForDataObject(java.lang.String, java.lang.String)
 	 */

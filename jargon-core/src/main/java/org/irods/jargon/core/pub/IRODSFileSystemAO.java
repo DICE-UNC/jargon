@@ -316,4 +316,14 @@ public interface IRODSFileSystemAO extends IRODSAccessObject {
 	int getDirectoryPermissionsForGivenUser(IRODSFile irodsFile, String userName)
 			throws JargonException;
 
+	/**
+	 * Retrive the permission value for the given user name
+	 * @param irodsFile
+	 * @param userName
+	 * @return
+	 * @throws JargonException
+	 */
+	int getFilePermissionsForGivenUser(IRODSFile irodsFile, String userName)
+			throws JargonException;
+
 }

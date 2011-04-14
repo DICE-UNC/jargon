@@ -159,9 +159,32 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 			log.info("checking permissions on:" + irodsFile);
 		}
 
+		return getFilePermissionsForGivenUser(irodsFile, this.getIRODSAccount().getUserName());
+		
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.core.pub.IRODSFileSystemAO#getFilePermissionsForGivenUser(org.irods.jargon.core.pub.io.IRODSFile, java.lang.String)
+	 */
+	@Override
+	public int getFilePermissionsForGivenUser(final IRODSFile irodsFile, final String userName)
+			throws JargonException {
+
+		if (irodsFile == null) {
+			throw new IllegalArgumentException("irods file is null");
+		}
+		
+		if (userName == null || userName.isEmpty()) {
+			throw new IllegalArgumentException("userName is null or empty");
+		}
+
+		if (log.isInfoEnabled()) {
+			log.info("checking permissions on:" + irodsFile);
+			log.info("for userName:{}", userName);
+		}
+
 		String parent = irodsFile.getParent();
 		String fileName = irodsFile.getName();
-		String userName = this.getIRODSAccount().getUserName();
 
 		log.debug("getting file permissions on file:{} ",
 				irodsFile.getAbsolutePath());
@@ -308,6 +331,8 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 		UserAO userAO = this.getIRODSAccessObjectFactory().getUserAO(
 				getIRODSAccount());
 		User user = userAO.findByName(userName);
+		
+		
 
 		log.debug("getting directory permissions on:{} ", fileName);
 		log.debug("user name translated to id:{}", user.getId());
@@ -1645,7 +1670,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 	 * @param reply
 	 *            <code>Tag</code> containing status messages from IRODS
 	 * @throws IOException
-	 */
+	 */ 
 	private void processClientStatusMessages(final Tag reply)
 			throws JargonException {
 
