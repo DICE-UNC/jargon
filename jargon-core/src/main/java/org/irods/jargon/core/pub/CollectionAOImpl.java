@@ -1121,8 +1121,8 @@ public final class CollectionAOImpl extends IRODSGenericAO implements
 				.getIRODSFileSystemAO(getIRODSAccount());
 		IRODSFileFactory irodsFileFactory = this.getIRODSFileFactory();
 		int permissionVal = irodsFileSystemAO
-				.getDirectoryPermissions(irodsFileFactory
-						.instanceIRODSFile(irodsAbsolutePath));
+				.getDirectoryPermissionsForGivenUser(irodsFileFactory
+						.instanceIRODSFile(irodsAbsolutePath), userName);
 		FilePermissionEnum filePermissionEnum = FilePermissionEnum
 				.valueOf(permissionVal);
 		return filePermissionEnum;

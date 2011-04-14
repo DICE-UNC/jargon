@@ -708,4 +708,19 @@ public interface DataObjectAO extends IRODSAccessObject {
 	void addAVUMetadata(String irodsCollectionAbsolutePath, String fileName,
 			AvuData avuData) throws DataNotFoundException, JargonException;
 
+	/**
+	 * List the user permissions for the given iRODS data object.
+	 * 
+	 * @param irodsCollectionAbsolutePath
+	 *            <code>String</code> with the absolute path to the iRODS data
+	 *            object parent collection
+	 * @param fileName <code>String</code> with the name of the iRODS data Object
+	 * @return <code>List</code> of {@link UserFilePermission} with the ACL's
+	 *         for the given file.
+	 * @throws JargonException
+	 */
+	List<UserFilePermission> listPermissionsForDataObject(
+			String irodsCollectionAbsolutePath, String dataName)
+			throws JargonException;
+
 }

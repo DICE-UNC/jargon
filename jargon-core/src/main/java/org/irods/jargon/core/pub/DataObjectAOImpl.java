@@ -1584,28 +1584,31 @@ public final class DataObjectAOImpl extends IRODSGenericAO implements
 
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.irods.jargon.core.pub.DataObjectAO#listPermissionsForDataObject(java
-	 * .lang.String)
+	
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.core.pub.DataObjectAO#listPermissionsForDataObject(java.lang.String, java.lang.String)
 	 */
 	@Override
 	public List<UserFilePermission> listPermissionsForDataObject(
-			final String irodsDataObjectAbsolutePath) throws JargonException {
+			final String irodsCollectionAbsolutePath, final String dataName) throws JargonException {
 
-		if (irodsDataObjectAbsolutePath == null
-				|| irodsDataObjectAbsolutePath.isEmpty()) {
+		if (irodsCollectionAbsolutePath == null
+				|| irodsCollectionAbsolutePath.isEmpty()) {
 			throw new IllegalArgumentException(
-					"null or empty irodsDataObjectAbsolutePath");
+					"null or empty irodsCollectionAbsolutePath");
+		}
+		
+		if (dataName == null
+				|| dataName.isEmpty()) {
+			throw new IllegalArgumentException(
+					"null or empty dataName");
 		}
 
-		log.info("listPermissionsForDataObject: {}",
-				irodsDataObjectAbsolutePath);
-		IRODSFile irodsFile = getIRODSFileFactory().instanceIRODSFile(
-				irodsDataObjectAbsolutePath);
-
+		log.info("listPermissionsForDataObject path: {}",
+				irodsCollectionAbsolutePath);
+		log.info("dataName: {}",
+				irodsCollectionAbsolutePath);
+		
 		List<UserFilePermission> userFilePermissions = new ArrayList<UserFilePermission>();
 
 		StringBuilder query = new StringBuilder();
@@ -1618,14 +1621,12 @@ public final class DataObjectAOImpl extends IRODSGenericAO implements
 		query.append(" WHERE ");
 		query.append(RodsGenQueryEnum.COL_COLL_NAME.getName());
 		query.append(EQUALS_AND_QUOTE);
-		query.append(IRODSDataConversionUtil.escapeSingleQuotes(irodsFile
-				.getParent()));
+		query.append(IRODSDataConversionUtil.escapeSingleQuotes(irodsCollectionAbsolutePath));
 		query.append(QUOTE);
 		query.append(AND);
 		query.append(RodsGenQueryEnum.COL_DATA_NAME.getName());
 		query.append(EQUALS_AND_QUOTE);
-		query.append(IRODSDataConversionUtil.escapeSingleQuotes(irodsFile
-				.getName()));
+		query.append(dataName);
 		query.append(QUOTE);
 
 		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(query.toString(),
@@ -1654,6 +1655,29 @@ public final class DataObjectAOImpl extends IRODSGenericAO implements
 		}
 
 		return userFilePermissions;
+
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.core.pub.DataObjectAO#listPermissionsForDataObject(java.lang.String)
+	 */
+	@Override
+	public List<UserFilePermission> listPermissionsForDataObject(
+			final String irodsDataObjectAbsolutePath) throws JargonException {
+
+		if (irodsDataObjectAbsolutePath == null
+				|| irodsDataObjectAbsolutePath.isEmpty()) {
+			throw new IllegalArgumentException(
+					"null or empty irodsDataObjectAbsolutePath");
+		}
+
+		log.info("listPermissionsForDataObject: {}",
+				irodsDataObjectAbsolutePath);
+		IRODSFile irodsFile = getIRODSFileFactory().instanceIRODSFile(
+				irodsDataObjectAbsolutePath);
+
+		
+		return listPermissionsForDataObject(irodsFile.getParent(), irodsFile.getName());
 
 	}
 

@@ -1467,6 +1467,45 @@ public class CollectionAOImplTest {
 				FilePermissionEnum.OWN, enumVal);
 
 	}
+	
+	@Test
+	public final void testGetFilePermissionForOtherUserWhoHasRead() throws Exception {
+
+		String testFileName = "testGetFilePermissionForOtherUserWhoHasRead";
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + "/"
+								+ testFileName);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		CollectionAO collectionAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getCollectionAO(irodsAccount);
+		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetIrodsCollection);
+		irodsFile.mkdirs();
+
+		collectionAO
+				.setAccessPermissionRead(
+						"",
+						targetIrodsCollection,
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY),
+						false);
+
+		// log in as the secondary user and test write access
+		IRODSAccount secondaryAccount = testingPropertiesHelper
+				.buildIRODSAccountFromSecondaryTestProperties(testingProperties);
+
+		FilePermissionEnum enumVal = collectionAO
+				.getPermissionForCollection(targetIrodsCollection,
+						secondaryAccount.getUserName(), "");
+
+		TestCase.assertEquals("should have found read permissions",
+				FilePermissionEnum.READ, enumVal);
+
+	}
 
 	@Test
 	public final void testSetInherit() throws Exception {

@@ -279,14 +279,29 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 	public int getDirectoryPermissions(final IRODSFile irodsFile)
 			throws JargonException {
 
+		return getDirectoryPermissionsForGivenUser(irodsFile, this.getIRODSAccount().getUserName());
+	}
+
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.core.pub.IRODSAccessObject#getDirectoryPermissionsForGivenUser(org.irods.jargon.core.pub.io.IRODSFile, java.lang.String)
+	 */
+	@Override 
+	public int getDirectoryPermissionsForGivenUser(final IRODSFile irodsFile,
+			final String userName) throws JargonException {
+
 		if (irodsFile == null) {
-			throw new JargonException("irods file is null");
+			throw new IllegalArgumentException("irods file is null");
 		}
+
+		if (userName == null || userName.isEmpty()) {
+			throw new IllegalArgumentException("userName is null or empty");
+		}
+
 		log.info("checking directory permissions on:{}", irodsFile);
+		log.info("for userName:{}", userName);
 
 		String dir = irodsFile.getAbsolutePath();
 		String fileName = irodsFile.getName();
-		String userName = this.getIRODSAccount().getUserName();
 
 		// get the id for the user name, GenQuery can't do this join
 

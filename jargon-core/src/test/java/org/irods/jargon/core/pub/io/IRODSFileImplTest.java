@@ -222,7 +222,27 @@ public class IRODSFileImplTest {
 		Assert.assertTrue(irodsFile.exists());
 		irodsSession.closeSession();
 	}
+	
+	@Test
+	public final void testExistsNoFile() throws Exception {
+		String testFileName = "testExistsNoFile.txt";
+		String targetIrodsCollection = testingPropertiesHelper
+		.buildIRODSCollectionAbsolutePathFromTestProperties(
+				testingProperties, IRODS_TEST_SUBDIR_PATH);
+		
+		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
+		IRODSFileFactory irodsFileFactory = accessObjectFactory
+				.getIRODSFileFactory(irodsAccount);
+		IRODSFile irodsFile = irodsFileFactory
+				.instanceIRODSFile(targetIrodsCollection + '/' + testFileName);
+		Assert.assertFalse(irodsFile.exists());
+		irodsFileSystem.close();
 
+	}
+	
 	@Test
 	public final void testExistsQuotesInFileName() throws Exception {
 		String testFileName = "testExistsQuote'infilename.txt";
