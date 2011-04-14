@@ -124,11 +124,6 @@
   <reporting>
     <plugins>
       <plugin>
-	<groupId>org.codehaus.mojo</groupId>
-	<artifactId>cobertura-maven-plugin</artifactId>
-	<version>2.4</version>
-      </plugin>
-      <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>taglist-maven-plugin</artifactId>
       </plugin>
@@ -385,7 +380,7 @@
       <plugin>
 	<groupId>org.apache.maven.plugins</groupId>
 	<artifactId>maven-surefire-plugin</artifactId>
-	<version>2.5</version>
+	<version>2.7.2</version>
 	<configuration>
 	  <includes>
 	    <include>**/AllTests.java</include>

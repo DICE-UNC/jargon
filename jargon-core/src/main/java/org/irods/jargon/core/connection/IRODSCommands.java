@@ -60,6 +60,7 @@ public class IRODSCommands implements IRODSManagedConnection {
 	private final IRODSProtocolManager irodsProtocolManager;
 
 	private String cachedChallengeValue = "";
+	
 	/**
 	 * note that this field is not final. This is due to the fact that it may be
 	 * altered during initialization to resolve GSI info. The field's setter

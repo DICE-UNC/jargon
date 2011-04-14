@@ -117,7 +117,7 @@ public final class IRODSAccount implements Serializable {
 			throw new JargonException(
 					"IRODSAccount values cannot be initialized with null");
 		} else if (host.length() == 0 || userName.length() == 0
-				|| password.length() == 0 || homeDirectory.length() == 0
+				|| password.length() == 0 
 				|| zone.length() == 0) {
 			throw new JargonException(
 					"data cannot be blank when initializing with this method");
