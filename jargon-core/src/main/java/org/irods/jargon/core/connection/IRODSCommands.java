@@ -16,6 +16,7 @@ import java.nio.channels.ClosedChannelException;
 import java.security.GeneralSecurityException;
 import java.security.MessageDigest;
 
+import org.irods.jargon.core.exception.AuthenticationException;
 import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.exception.JargonFileOrCollAlreadyExistsException;
@@ -524,6 +525,8 @@ public class IRODSCommands implements IRODSManagedConnection {
 		// Good place to refactor.
 		if (info == ErrorEnum.CAT_NO_ROWS_FOUND.getInt()) {
 			throw new DataNotFoundException("no data found");
+		} else if (info == ErrorEnum.CAT_INVALID_USER.getInt()) {
+			throw new AuthenticationException("invalid authentication");
 		} else if (info == ErrorEnum.CAT_SUCCESS_BUT_WITH_NO_INFO.getInt()) {
 			handleSuccessButNoRowsFound(errorLength, info);
 		} else if (info == ErrorEnum.CAT_NAME_EXISTS_AS_COLLECTION.getInt()
