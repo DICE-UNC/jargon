@@ -1069,5 +1069,67 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 		listAndSearchAO.getFullObjectForType("");
 
 	}
+	
+	@Test
+	public void testListDataObjectsSharedWithAUser() throws Exception {
+
+		String subdirPrefix = "testListFilesAndCollectionsUnderPathWithAccessInfoForTertiaryUser";
+		String fileName = "testListFilesAndCollectionsUnderPathWithAccessInfoForTertiaryUser.doc";
+
+		int count = 30;
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + "/"
+								+ subdirPrefix);
+		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetIrodsCollection);
+		irodsFile.mkdir();
+		irodsFile.close();
+
+		String myTarget = "";
+		
+		// add another acl for another user to this file
+
+		CollectionAO collectionAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getCollectionAO(irodsAccount);
+		DataObjectAO dataObjectAO = irodsFileSystem.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
+
+		for (int i = 0; i < count; i++) {
+			myTarget = targetIrodsCollection + "/c" + (10000 + i)
+					+ subdirPrefix;
+			irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+					.instanceIRODSFile(myTarget);
+			irodsFile.mkdir();
+			irodsFile.close();
+			collectionAO.setAccessPermissionWrite(irodsAccount.getZone(), irodsFile
+					.getAbsolutePath(), testingProperties
+					.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY),
+					false);
+		}
+
+		for (int i = 0; i < count; i++) {
+			myTarget = targetIrodsCollection + "/c" + (10000 + i) + fileName;
+			irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+					.instanceIRODSFile(myTarget);
+			irodsFile.createNewFile();
+			irodsFile.close();
+			dataObjectAO.setAccessPermissionWrite(irodsAccount.getZone(), irodsFile
+					.getAbsolutePath(), testingProperties
+					.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY));
+		}
+
+		CollectionAndDataObjectListAndSearchAO actual = irodsFileSystem
+				.getIRODSAccessObjectFactory()
+				.getCollectionAndDataObjectListAndSearchAO(irodsAccount);
+		List<CollectionAndDataObjectListingEntry> entries = actual.listDataObjectsSharedWithAGivenUser("/", "test2", 0);
+		irodsFileSystem.close();
+		
+		
+	}
 
 }

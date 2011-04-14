@@ -345,4 +345,16 @@ public interface CollectionAndDataObjectListAndSearchAO {
 	List<CollectionAndDataObjectListingEntry> listDataObjectsAndCollectionsUnderPathWithPermissions(
 			String absolutePathToParent) throws JargonException;
 
+	/**
+	 * TODO: work in progress
+	 * @param absolutePathToParent
+	 * @param userName
+	 * @param partialStartIndex
+	 * @return
+	 * @throws JargonException
+	 */
+	List<CollectionAndDataObjectListingEntry> listDataObjectsSharedWithAGivenUser(
+			String absolutePathToParent, String userName, int partialStartIndex)
+			throws JargonException;
+
 }

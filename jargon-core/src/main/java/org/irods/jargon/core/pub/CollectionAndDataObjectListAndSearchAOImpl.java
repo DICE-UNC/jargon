@@ -408,7 +408,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 	private IRODSQueryResultSetInterface queryForPathAndReturnResultSet(
 			final String irodsAbsolutePath, final String queryString,
 			final int partialStartIndex) throws JargonException {
-		
+
 		LOG.info("listCollectionsAndDataObjectsUnderPath for: {}",
 				irodsAbsolutePath);
 		IRODSGenQueryExecutor irodsGenQueryExecutor = new IRODSGenQueryExecutorImpl(
@@ -783,6 +783,43 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 
 		// get appropriate domain object and return
 		return returnObject;
+	}
+
+	@Override
+	public List<CollectionAndDataObjectListingEntry> listDataObjectsSharedWithAGivenUser(
+			final String absolutePathToParent, final String userName,
+			final int partialStartIndex) throws JargonException {
+
+		if (absolutePathToParent == null) {
+			throw new JargonException("absolutePathToParent is null");
+		}
+
+		if (userName == null || userName.isEmpty()) {
+			throw new JargonException("userName is null or empty");
+		}
+
+		LOG.info("listDataObjectsSharedWithAGivenUser for: {}",
+				absolutePathToParent);
+
+		String queryString = IRODSFileSystemAOHelper
+				.buildQueryListAllDataObjectsWithUserAccessInfo(absolutePathToParent);
+
+		StringBuilder sb = new StringBuilder("SELECT COLL_NAME, DATA_NAME, COLL_ACCESS_TYPE WHERE COLL_ACCESS_USER_ID = '10012'");
+		//sb.append(" WHERE ");
+	//	sb.append(RodsGenQueryEnum.COL_COLL_ACCESS_USER_NAME);
+		//sb.append(" = '");
+		//sb.append(userName);
+		//sb.append("' AND ");
+	//	sb.append(RodsGenQueryEnum.COL_DATA_ACCESS_TYPE);
+	//	sb.append(" = '1200'");
+
+		IRODSQueryResultSetInterface resultSet = this
+				.queryForPathAndReturnResultSet(absolutePathToParent,
+						queryString, partialStartIndex);
+		LOG.debug("got result set:{}}, resultSet");
+
+		return null;
+
 	}
 
 }

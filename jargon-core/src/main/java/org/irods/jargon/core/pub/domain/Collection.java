@@ -26,6 +26,9 @@ import java.util.Date;
  */
 public class Collection extends IRODSDomainObject {
 
+	// FIXME: date as long? equals()?  hash()?
+	
+	
 	private int collectionId = 0;
 	private String collectionName = "";
 	private String collectionParentName = "";
@@ -154,7 +157,7 @@ public class Collection extends IRODSDomainObject {
 	public Date getModifiedAt() {
 		return modifiedAt;
 	}
-
+	
 	public void setModifiedAt(final Date modifiedAt) {
 		this.modifiedAt = modifiedAt;
 	}
