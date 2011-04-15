@@ -9,7 +9,6 @@ import org.irods.jargon.core.connection.IRODSServerProperties;
 import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.connection.JargonProperties;
 import org.irods.jargon.core.exception.JargonException;
-import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.pub.io.IRODSFileFactory;
 
 /**
@@ -55,6 +54,7 @@ public interface IRODSAccessObject {
 
 	/**
 	 * Retrieve a factory that can create other access objects
+	 * 
 	 * @return {@link IRODSAccessObjectFactory}
 	 * @throws JargonException
 	 */
@@ -62,12 +62,12 @@ public interface IRODSAccessObject {
 			throws JargonException;
 
 	/**
-	 * Retrieve a factory that can create iRODS file objects for this connected account
+	 * Retrieve a factory that can create iRODS file objects for this connected
+	 * account
+	 * 
 	 * @return {@link IRODSFileFactory}
 	 * @throws JargonException
 	 */
 	IRODSFileFactory getIRODSFileFactory() throws JargonException;
-
-
 
 }

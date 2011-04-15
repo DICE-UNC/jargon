@@ -1762,6 +1762,44 @@ IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObj
 		TestCase.assertTrue(permissions >= IRODSFile.OWN_PERMISSIONS);
 
 	}
+	
+	
+	@Test
+	public final void testSetPublicWrite() throws Exception {
+		// generate a local scratch file
+
+		String testFileName = "testSetPublicRead.txt";
+		String testUserName = "public";
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String fileNameOrig = FileGenerator.generateFileOfFixedLengthGivenName(
+				absPath, testFileName, 2);
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		DataObjectAO dataObjectAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
+		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetIrodsCollection);
+		dataObjectAO.putLocalDataObjectToIRODS(new File(fileNameOrig),
+				irodsFile, true);
+
+		dataObjectAO.setAccessPermissionWrite("", targetIrodsCollection + "/"
+				+ testFileName, testUserName);
+
+		IRODSFileSystemAO irodsFileSystemAO = irodsFileSystem.getIRODSAccessObjectFactory().getIRODSFileSystemAO(irodsAccount);
+		 irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+			.instanceIRODSFile(targetIrodsCollection, testFileName);
+		int permissions = irodsFileSystemAO
+				.getFilePermissionsForGivenUser(irodsFile, testUserName);
+
+		TestCase.assertTrue(permissions >= IRODSFile.WRITE_PERMISSIONS);
+
+	}
 
 	@Test
 	public final void testGetPermissionsOwn() throws Exception {
@@ -1936,6 +1974,47 @@ IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObj
 		TestCase.assertNotNull("got a null userFilePermissions",
 				userFilePermissions);
 		TestCase.assertEquals("did not find the two permissions", 2,
+				userFilePermissions.size());
+
+	}
+	
+	@Test
+	public final void testListPermissionsForDataObjectAfterGivingPublicWrite() throws Exception {
+		// generate a local scratch file
+
+		String testFileName = "testListPermissionsForDataObjectAfterGivingPublicWrite.xls";
+		String testPublicUser = "public";
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String fileNameOrig = FileGenerator.generateFileOfFixedLengthGivenName(
+				absPath, testFileName, 2);
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		DataObjectAO dataObjectAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
+		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetIrodsCollection);
+		dataObjectAO.putLocalDataObjectToIRODS(new File(fileNameOrig),
+				irodsFile, true);
+
+		dataObjectAO.setAccessPermissionRead("", targetIrodsCollection + "/"
+				+ testFileName, testingProperties
+				.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY));
+		
+		dataObjectAO.setAccessPermissionWrite("", targetIrodsCollection + "/" + testFileName,
+				testPublicUser);
+
+		List<UserFilePermission> userFilePermissions = dataObjectAO
+				.listPermissionsForDataObject(targetIrodsCollection + "/"
+						+ testFileName);
+		TestCase.assertNotNull("got a null userFilePermissions",
+				userFilePermissions);
+		TestCase.assertEquals("did not find the 3 permissions", 3,
 				userFilePermissions.size());
 
 	}

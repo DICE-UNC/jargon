@@ -828,7 +828,6 @@ public final class IRODSFileImpl extends File implements IRODSFile {
 		} catch (JargonException e) {
 			log.error("jargon exception, rethrow as unchecked", e);
 			throw new JargonRuntimeException(e);
-
 		}
 	}
 
