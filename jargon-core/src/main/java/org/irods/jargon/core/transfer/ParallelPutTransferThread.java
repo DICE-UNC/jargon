@@ -3,6 +3,7 @@
  */
 package org.irods.jargon.core.transfer;
 
+import java.io.BufferedOutputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.Socket;
@@ -105,12 +106,13 @@ public final class ParallelPutTransferThread extends
 			setS(new Socket(parallelPutFileTransferStrategy.getHost(),
 					parallelPutFileTransferStrategy.getPort()));
 			getS().setSoTimeout(30000);
-			setOut(getS().getOutputStream());
+			setOut(new BufferedOutputStream(getS().getOutputStream()));
 
 			// write the cookie
 			byte b[] = new byte[4];
 			Host.copyInt(parallelPutFileTransferStrategy.getPassword(), b);
 			getOut().write(b);
+			getOut().flush();
 			put();
 
 		} catch (Exception e) {
@@ -157,6 +159,7 @@ public final class ParallelPutTransferThread extends
 				try {
 					transferLength -= read;
 					getOut().write(buffer, 0, read);
+					getOut().flush();
 				} catch (IOException e) {
 					log.error(
 							"An IO exception occurred during a parallel file put operation",

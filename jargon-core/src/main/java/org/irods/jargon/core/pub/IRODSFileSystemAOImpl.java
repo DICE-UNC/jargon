@@ -716,7 +716,6 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 		resultSet = null;
 
 		// get all files
-
 		query = new StringBuilder();
 		query.append(IRODSFileSystemAOHelper.buildQueryListAllFiles(path));
 

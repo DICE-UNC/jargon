@@ -6,6 +6,8 @@ package org.irods.jargon.core.transfer;
 import static edu.sdsc.grid.io.irods.IRODSConstants.DONE_OPR;
 import static edu.sdsc.grid.io.irods.IRODSConstants.GET_OPR;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -75,9 +77,10 @@ public final class ParallelGetTransferThread extends
 			byte[] outputBuffer = new byte[4];
 			Host.copyInt(parallelGetFileTransferStrategy.getPassword(),
 					outputBuffer);
-			setIn(getS().getInputStream());
-			this.setOut(getS().getOutputStream());
+			setIn(new BufferedInputStream(getS().getInputStream()));
+			this.setOut(new BufferedOutputStream(getS().getOutputStream()));
 			getOut().write(outputBuffer);
+			getOut().flush();
 		} catch (UnknownHostException e) {
 			log.error("Unknown host: {}",
 					parallelGetFileTransferStrategy.getHost());

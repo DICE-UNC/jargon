@@ -434,7 +434,6 @@ public class DataTransferOperationsImplTest {
 		File localFile = new File(localFileName);
 
 		// now put the file
-
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestPropertiesWithBlankResource(testingProperties);
 	IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
@@ -470,7 +469,6 @@ public class DataTransferOperationsImplTest {
 		File localFile = new File(localFileName);
 
 		// now put the file
-
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
 
