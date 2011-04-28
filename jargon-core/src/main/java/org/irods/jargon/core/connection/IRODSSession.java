@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.packinstr.TransferOptions;
+import org.irods.jargon.core.packinstr.TransferOptions.TransferType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -56,6 +58,31 @@ public final class IRODSSession {
 		synchronized (this) {
 			this.jargonProperties = jargonProperties;
 		}
+	}
+
+	/**
+	 * Get the default transfer options based on the properties that have been
+	 * set. This can then be tuned for an individual transfer
+	 * 
+	 * @return {@link TransferOptions} based on defaults set in the jargon
+	 *         properties
+	 * @throws JargonException
+	 */
+	public TransferOptions buildTransferOptionsBasedOnJargonProperties()
+			throws JargonException {
+
+		TransferOptions transferOptions = new TransferOptions();
+		synchronized (this) {
+			transferOptions.setMaxThreads(jargonProperties
+					.getMaxParallelThreads());
+
+			if (jargonProperties.isUseParallelTransfer()) {
+				transferOptions.setTransferType(TransferType.STANDARD);
+			} else {
+				transferOptions.setTransferType(TransferType.NO_PARALLEL);
+			}
+		}
+		return transferOptions;
 	}
 
 	/**
@@ -156,7 +183,7 @@ public final class IRODSSession {
 			LOG.error("irodsAccount is null in connection");
 			throw new JargonException("irodsAccount is null");
 		}
-		
+
 		IRODSCommands irodsProtocol = null;
 
 		Map<String, IRODSCommands> irodsProtocols = sessionMap.get();

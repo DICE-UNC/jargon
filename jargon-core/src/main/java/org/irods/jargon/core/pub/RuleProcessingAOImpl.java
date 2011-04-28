@@ -359,7 +359,7 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements
 				.instanceIRODSFileForPath(irodsFileAbsolutePath);
 		LOG.debug("performing put of file");
 		dataObjectAO.putLocalDataObjectToIRODSForClientSideRuleOperation(
-				localFile, irodsFile, true);
+				localFile, irodsFile, true, null);
 		LOG.debug("client side put action was successful");
 	}
 
@@ -380,7 +380,7 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements
 				.instanceIRODSFileForPath(irodsFileAbsolutePath);
 		LOG.info("performing get of file");
 		dataObjectAO.irodsDataObjectGetOperationForClientSideAction(irodsFile,
-				localFile);
+				localFile, null);
 		LOG.debug("client side get action was successful");
 	}
 

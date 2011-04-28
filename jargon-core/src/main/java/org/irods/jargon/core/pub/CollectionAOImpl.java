@@ -53,7 +53,7 @@ import org.slf4j.LoggerFactory;
  * @author Mike Conway - DICE (www.irods.org)
  * 
  */
-public final class CollectionAOImpl extends IRODSGenericAO implements
+public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 		CollectionAO {
 
 	private static final String QUERY_STRING_FOR_AVU_QUERY = "query string for AVU query: {}";

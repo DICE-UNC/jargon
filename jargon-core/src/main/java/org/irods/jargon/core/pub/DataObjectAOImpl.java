@@ -22,7 +22,6 @@ import java.util.List;
 import org.irods.jargon.core.connection.ConnectionConstants;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSSession;
-import org.irods.jargon.core.connection.JargonProperties;
 import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.DuplicateDataException;
 import org.irods.jargon.core.exception.JargonException;
@@ -31,7 +30,6 @@ import org.irods.jargon.core.packinstr.DataObjInp;
 import org.irods.jargon.core.packinstr.ModAccessControlInp;
 import org.irods.jargon.core.packinstr.ModAvuMetadataInp;
 import org.irods.jargon.core.packinstr.TransferOptions;
-import org.irods.jargon.core.packinstr.TransferOptions.TransferType;
 import org.irods.jargon.core.protovalues.FilePermissionEnum;
 import org.irods.jargon.core.pub.aohelper.DataAOHelper;
 import org.irods.jargon.core.pub.domain.AvuData;
@@ -50,6 +48,7 @@ import org.irods.jargon.core.query.UserFilePermission;
 import org.irods.jargon.core.transfer.KeepAliveProcess;
 import org.irods.jargon.core.transfer.ParallelGetFileTransferStrategy;
 import org.irods.jargon.core.transfer.ParallelPutFileTransferStrategy;
+import org.irods.jargon.core.transfer.TransferControlBlock;
 import org.irods.jargon.core.utils.IRODSDataConversionUtil;
 import org.irods.jargon.core.utils.LocalFileUtils;
 import org.slf4j.Logger;
@@ -72,7 +71,7 @@ import edu.sdsc.grid.io.irods.Tag;
  * 
  * @author Mike Conway - DICE (www.irods.org)
  */
-public final class DataObjectAOImpl extends IRODSGenericAO implements
+public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		DataObjectAO {
 
 	public static final Logger log = LoggerFactory
@@ -254,57 +253,49 @@ public final class DataObjectAOImpl extends IRODSGenericAO implements
 			final IRODSFile irodsFileDestination, final boolean overwrite)
 			throws JargonException {
 
-		TransferOptions transferOptions = buildTransferOptionsBasedOnJargonProperties();
+		putLocalDataObjectToIRODSGivingTransferOptions(localFile, irodsFileDestination, overwrite,
+				null);
+
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.core.pub.DataObjectAO#putLocalDataObjectToIRODSGivingTransferOptions(java.io.File, org.irods.jargon.core.pub.io.IRODSFile, boolean, org.irods.jargon.core.packinstr.TransferOptions)
+	 */
+	@Override
+	public void putLocalDataObjectToIRODSGivingTransferOptions(final File localFile,
+			final IRODSFile irodsFileDestination, final boolean overwrite, final TransferOptions transferOptions)
+			throws JargonException {
+
+		TransferOptions myTransferOptions = buildDefaultTransferOptionsIfNotSpecified(transferOptions);
 
 		log.info("testing file length to set parallel transfer options");
 		if (localFile.length() > ConnectionConstants.MAX_SZ_FOR_SINGLE_BUF) { // FIXME:
 																				// remove
 																				// from
 																				// props
-			transferOptions.setMaxThreads(getIRODSSession()
+			myTransferOptions.setMaxThreads(getIRODSSession()
 					.getJargonProperties().getMaxParallelThreads());
 			log.info("length above threshold, send max threads cap");
 		} else {
-			transferOptions.setMaxThreads(0);
+			myTransferOptions.setMaxThreads(0);
 		}
 
 		putLocalDataObjectToIRODS(localFile, irodsFileDestination, overwrite,
-				false, transferOptions);
+				false, myTransferOptions);
 
 	}
 
-	private TransferOptions buildTransferOptionsBasedOnJargonProperties()
-			throws JargonException {
-		JargonProperties jargonProperties = getIRODSSession()
-				.getJargonProperties();
-		TransferOptions transferOptions = new TransferOptions();
-		transferOptions.setMaxThreads(jargonProperties.getMaxParallelThreads());
-
-		if (jargonProperties.isUseParallelTransfer()) {
-			transferOptions.setTransferType(TransferType.STANDARD);
-		} else {
-			transferOptions.setTransferType(TransferType.NO_PARALLEL);
-		}
-		return transferOptions;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @seeorg.irods.jargon.core.pub.DataObjectAO#
-	 * putLocalDataObjectToIRODSForClientSideRuleOperation(java.io.File,
-	 * org.irods.jargon.core.pub.io.IRODSFile, boolean)
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.core.pub.DataObjectAO#putLocalDataObjectToIRODSForClientSideRuleOperation(java.io.File, org.irods.jargon.core.pub.io.IRODSFile, boolean, org.irods.jargon.core.packinstr.TransferOptions)
 	 */
 	@Override
 	public void putLocalDataObjectToIRODSForClientSideRuleOperation(
 			final File localFile, final IRODSFile irodsFileDestination,
-			final boolean overwrite) throws JargonException {
+			final boolean overwrite, final TransferOptions transferOptions) throws JargonException {
 
-		TransferOptions transferOptions = buildTransferOptionsBasedOnJargonProperties();
-
+		TransferOptions myTransferOptions = buildDefaultTransferOptionsIfNotSpecified(transferOptions);
 		putLocalDataObjectToIRODS(localFile, irodsFileDestination, overwrite,
-				true, transferOptions);
-
+				true, myTransferOptions);
 	}
 
 	/**
@@ -336,6 +327,10 @@ public final class DataObjectAOImpl extends IRODSGenericAO implements
 
 		if (irodsFileDestination == null) {
 			throw new IllegalArgumentException("null destination file");
+		}
+		
+		if (transferOptions == null) {
+			throw new IllegalArgumentException("null transferOptions");
 		}
 
 		log.info("put operation, localFile: {}", localFile.getAbsolutePath());
@@ -471,6 +466,17 @@ public final class DataObjectAOImpl extends IRODSGenericAO implements
 			final File localFileToHoldData) throws DataNotFoundException,
 			JargonException {
 
+		getDataObjectFromIrodsGivingTransferOptions(irodsFileToGet, localFileToHoldData, null);
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.core.pub.DataObjectAO#getDataObjectFromIrodsGivingTransferOptions(org.irods.jargon.core.pub.io.IRODSFile, java.io.File, org.irods.jargon.core.packinstr.TransferOptions)
+	 */
+	@Override
+	public void getDataObjectFromIrodsGivingTransferOptions(final IRODSFile irodsFileToGet,
+			final File localFileToHoldData, final TransferOptions transferOptions) throws DataNotFoundException,
+			JargonException {
+
 		if (localFileToHoldData == null) {
 			throw new IllegalArgumentException("null local file");
 		}
@@ -478,6 +484,8 @@ public final class DataObjectAOImpl extends IRODSGenericAO implements
 		if (irodsFileToGet == null) {
 			throw new IllegalArgumentException("nulll destination file");
 		}
+		
+		TransferOptions myTransferOptions = buildDefaultTransferOptionsIfNotSpecified(transferOptions);
 
 		File localFile;
 		if (localFileToHoldData.isDirectory()) {
@@ -491,16 +499,15 @@ public final class DataObjectAOImpl extends IRODSGenericAO implements
 		} else {
 			localFile = localFileToHoldData;
 		}
-
-		TransferOptions transferOptions = buildTransferOptionsBasedOnJargonProperties();
+		
 		long irodsFileLength = irodsFileToGet.length();
 		log.info("testing file length to set parallel transfer options");
 		if (irodsFileLength > ConnectionConstants.MAX_SZ_FOR_SINGLE_BUF) {
-			transferOptions.setMaxThreads(getIRODSSession()
+			myTransferOptions.setMaxThreads(getIRODSSession()
 					.getJargonProperties().getMaxParallelThreads());
 			log.info("length above threshold, send max threads cap");
 		} else {
-			transferOptions.setMaxThreads(0);
+			myTransferOptions.setMaxThreads(0);
 		}
 
 		log.info("target local file: {}", localFile.getAbsolutePath());
@@ -508,11 +515,12 @@ public final class DataObjectAOImpl extends IRODSGenericAO implements
 
 		final DataObjInp dataObjInp = DataObjInp.instanceForGet(
 				irodsFileToGet.getAbsolutePath(), irodsFileLength,
-				transferOptions);
+				myTransferOptions);
 
-		processGetAfterResourceDetermined(irodsFileToGet, localFile, dataObjInp);
+		processGetAfterResourceDetermined(irodsFileToGet, localFile, dataObjInp, myTransferOptions);
 	}
 
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -525,6 +533,18 @@ public final class DataObjectAOImpl extends IRODSGenericAO implements
 			final IRODSFile irodsFileToGet, final File localFileToHoldData)
 			throws DataNotFoundException, JargonException {
 
+		getDataObjectFromIrodsUsingTheSpecificResourceSetInIrodsFileSpecifyingTransferOptions(irodsFileToGet, localFileToHoldData, null);
+	
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.core.pub.DataObjectAO#getDataObjectFromIrodsUsingTheSpecificResourceSetInIrodsFileSpecifyingTransferOptions(org.irods.jargon.core.pub.io.IRODSFile, java.io.File, org.irods.jargon.core.packinstr.TransferOptions)
+	 */
+	@Override
+	public void getDataObjectFromIrodsUsingTheSpecificResourceSetInIrodsFileSpecifyingTransferOptions(
+			final IRODSFile irodsFileToGet, final File localFileToHoldData, final TransferOptions transferOptions)
+			throws DataNotFoundException, JargonException {
+
 		if (localFileToHoldData == null) {
 			throw new IllegalArgumentException("null local file");
 		}
@@ -549,36 +569,33 @@ public final class DataObjectAOImpl extends IRODSGenericAO implements
 		log.info("target local file: {}", localFile.getAbsolutePath());
 		log.info("from source file: {}", irodsFileToGet.getAbsolutePath());
 
-		TransferOptions transferOptions = buildTransferOptionsBasedOnJargonProperties();
+		TransferOptions myTransferOptions = buildDefaultTransferOptionsIfNotSpecified(transferOptions);
 
 		log.info("testing file length to set parallel transfer options");
 		if (irodsFileToGet.length() > getIRODSSession().getJargonProperties()
 				.getParallelThreadsLengthThreshold()) {
-			transferOptions.setMaxThreads(getIRODSSession()
+			myTransferOptions.setMaxThreads(getIRODSSession()
 					.getJargonProperties().getMaxParallelThreads());
 			log.info("length above threshold, send max threads cap");
 		} else {
-			transferOptions.setMaxThreads(0);
+			myTransferOptions.setMaxThreads(0);
 		}
 
 		final DataObjInp dataObjInp = DataObjInp
 				.instanceForGetSpecifyingResource(
 						irodsFileToGet.getAbsolutePath(),
-						irodsFileToGet.getResource(), transferOptions);
+						irodsFileToGet.getResource(), myTransferOptions);
 
-		processGetAfterResourceDetermined(irodsFileToGet, localFile, dataObjInp);
+		processGetAfterResourceDetermined(irodsFileToGet, localFile, dataObjInp, myTransferOptions);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @seeorg.irods.jargon.core.pub.DataObjectAO#
-	 * irodsDataObjectGetOperationForClientSideAction
-	 * (org.irods.jargon.core.pub.io.IRODSFile, java.io.File)
+	
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.core.pub.DataObjectAO#irodsDataObjectGetOperationForClientSideAction(org.irods.jargon.core.pub.io.IRODSFile, java.io.File, org.irods.jargon.core.packinstr.TransferOptions)
 	 */
 	@Override
 	public void irodsDataObjectGetOperationForClientSideAction(
-			final IRODSFile irodsFileToGet, final File localFileToHoldData)
+			final IRODSFile irodsFileToGet, final File localFileToHoldData, final TransferOptions transferOptions)
 			throws DataNotFoundException, JargonException {
 
 		if (localFileToHoldData == null) {
@@ -591,28 +608,34 @@ public final class DataObjectAOImpl extends IRODSGenericAO implements
 
 		log.info("target local file: {}", localFileToHoldData.getAbsolutePath());
 		log.info("from source file: {}", irodsFileToGet.getAbsolutePath());
-		TransferOptions transferOptions = buildTransferOptionsBasedOnJargonProperties();
+		TransferOptions myTransferOptions = this.buildDefaultTransferOptionsIfNotSpecified(transferOptions);
 
 		final DataObjInp dataObjInp = DataObjInp
 				.instanceForGetSpecifyingResource(
 						irodsFileToGet.getAbsolutePath(), "", transferOptions);
 
 		processGetAfterResourceDetermined(irodsFileToGet, localFileToHoldData,
-				dataObjInp);
+				dataObjInp, myTransferOptions);
 	}
 
 	/**
 	 * @param irodsFileToGet
 	 * @param localFileToHoldData
 	 * @param dataObjInp
+	 * @param transferOptions 
 	 * @throws JargonException
 	 * @throws DataNotFoundException
 	 * @throws UnsupportedOperationException
 	 */
 	private void processGetAfterResourceDetermined(
 			final IRODSFile irodsFileToGet, final File localFileToHoldData,
-			final DataObjInp dataObjInp) throws JargonException,
+			final DataObjInp dataObjInp, final TransferOptions transferOptions) throws JargonException,
 			DataNotFoundException, UnsupportedOperationException {
+		
+		if (transferOptions == null) {
+			throw new IllegalArgumentException("null transfer options");
+		}
+		
 		LocalFileUtils.createLocalFileIfNotExists(localFileToHoldData);
 
 		final Tag message = getIRODSProtocol().irodsFunction(dataObjInp);
@@ -679,7 +702,7 @@ public final class DataObjectAOImpl extends IRODSGenericAO implements
 
 		} else {
 			dataAOHelper.processNormalGetTransfer(localFileToHoldData, length,
-					this.getIRODSProtocol());
+					this.getIRODSProtocol(), transferOptions);
 		}
 	}
 
@@ -833,7 +856,8 @@ public final class DataObjectAOImpl extends IRODSGenericAO implements
 	 */
 	@Override
 	public void addAVUMetadata(final String absolutePath, final AvuData avuData)
-			throws DataNotFoundException, DuplicateDataException, JargonException {
+			throws DataNotFoundException, DuplicateDataException,
+			JargonException {
 
 		if (absolutePath == null || absolutePath.isEmpty()) {
 			throw new IllegalArgumentException("null or empty absolutePath");
@@ -862,7 +886,7 @@ public final class DataObjectAOImpl extends IRODSGenericAO implements
 						"Target dataObject was not found, could not add AVU");
 			} else if (je.getMessage().indexOf("-809000") > -1) {
 				throw new DuplicateDataException(
-				"Duplicate AVU exists, cannot add");
+						"Duplicate AVU exists, cannot add");
 			}
 
 			log.error("jargon exception adding AVU metadata", je);
@@ -872,18 +896,25 @@ public final class DataObjectAOImpl extends IRODSGenericAO implements
 		log.debug("metadata added");
 
 	}
-	
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.pub.DataObjectAO#addAVUMetadata(java.lang.String, java.lang.String, org.irods.jargon.core.pub.domain.AvuData)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.DataObjectAO#addAVUMetadata(java.lang.String,
+	 * java.lang.String, org.irods.jargon.core.pub.domain.AvuData)
 	 */
 	@Override
-	public void addAVUMetadata(final String irodsCollectionAbsolutePath, final String fileName, final AvuData avuData)
+	public void addAVUMetadata(final String irodsCollectionAbsolutePath,
+			final String fileName, final AvuData avuData)
 			throws DataNotFoundException, JargonException {
 
-		if (irodsCollectionAbsolutePath == null || irodsCollectionAbsolutePath.isEmpty()) {
-			throw new IllegalArgumentException("null or empty irodsCollectionAbsolutePath");
+		if (irodsCollectionAbsolutePath == null
+				|| irodsCollectionAbsolutePath.isEmpty()) {
+			throw new IllegalArgumentException(
+					"null or empty irodsCollectionAbsolutePath");
 		}
-		
+
 		if (fileName == null || fileName.isEmpty()) {
 			throw new IllegalArgumentException("null or empty fileName");
 		}
@@ -893,9 +924,10 @@ public final class DataObjectAOImpl extends IRODSGenericAO implements
 		}
 
 		log.info("adding avu metadata to data object: {}", avuData);
-		log.info("parent collection absolute path: {}", irodsCollectionAbsolutePath);
+		log.info("parent collection absolute path: {}",
+				irodsCollectionAbsolutePath);
 		log.info("file name: {}", fileName);
-		
+
 		StringBuilder sb = new StringBuilder(irodsCollectionAbsolutePath);
 		sb.append("/");
 		sb.append(fileName);
@@ -1576,38 +1608,40 @@ public final class DataObjectAOImpl extends IRODSGenericAO implements
 		IRODSFileSystemAO irodsFileSystemAO = getIRODSAccessObjectFactory()
 				.getIRODSFileSystemAO(getIRODSAccount());
 		int permissionVal = irodsFileSystemAO
-				.getFilePermissionsForGivenUser(getIRODSFileFactory().instanceIRODSFile(
-						absolutePath), userName);
+				.getFilePermissionsForGivenUser(getIRODSFileFactory()
+						.instanceIRODSFile(absolutePath), userName);
 		FilePermissionEnum filePermissionEnum = FilePermissionEnum
 				.valueOf(permissionVal);
 		return filePermissionEnum;
 
 	}
 
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.pub.DataObjectAO#listPermissionsForDataObject(java.lang.String, java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.DataObjectAO#listPermissionsForDataObject(java
+	 * .lang.String, java.lang.String)
 	 */
 	@Override
 	public List<UserFilePermission> listPermissionsForDataObject(
-			final String irodsCollectionAbsolutePath, final String dataName) throws JargonException {
+			final String irodsCollectionAbsolutePath, final String dataName)
+			throws JargonException {
 
 		if (irodsCollectionAbsolutePath == null
 				|| irodsCollectionAbsolutePath.isEmpty()) {
 			throw new IllegalArgumentException(
 					"null or empty irodsCollectionAbsolutePath");
 		}
-		
-		if (dataName == null
-				|| dataName.isEmpty()) {
-			throw new IllegalArgumentException(
-					"null or empty dataName");
+
+		if (dataName == null || dataName.isEmpty()) {
+			throw new IllegalArgumentException("null or empty dataName");
 		}
 
 		log.info("listPermissionsForDataObject path: {}",
 				irodsCollectionAbsolutePath);
-		log.info("dataName: {}",
-				irodsCollectionAbsolutePath);
-		
+		log.info("dataName: {}", irodsCollectionAbsolutePath);
+
 		List<UserFilePermission> userFilePermissions = new ArrayList<UserFilePermission>();
 
 		StringBuilder query = new StringBuilder();
@@ -1620,7 +1654,8 @@ public final class DataObjectAOImpl extends IRODSGenericAO implements
 		query.append(" WHERE ");
 		query.append(RodsGenQueryEnum.COL_COLL_NAME.getName());
 		query.append(EQUALS_AND_QUOTE);
-		query.append(IRODSDataConversionUtil.escapeSingleQuotes(irodsCollectionAbsolutePath));
+		query.append(IRODSDataConversionUtil
+				.escapeSingleQuotes(irodsCollectionAbsolutePath));
 		query.append(QUOTE);
 		query.append(AND);
 		query.append(RodsGenQueryEnum.COL_DATA_NAME.getName());
@@ -1656,9 +1691,13 @@ public final class DataObjectAOImpl extends IRODSGenericAO implements
 		return userFilePermissions;
 
 	}
-	
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.pub.DataObjectAO#listPermissionsForDataObject(java.lang.String)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.DataObjectAO#listPermissionsForDataObject(java
+	 * .lang.String)
 	 */
 	@Override
 	public List<UserFilePermission> listPermissionsForDataObject(
@@ -1675,8 +1714,8 @@ public final class DataObjectAOImpl extends IRODSGenericAO implements
 		IRODSFile irodsFile = getIRODSFileFactory().instanceIRODSFile(
 				irodsDataObjectAbsolutePath);
 
-		
-		return listPermissionsForDataObject(irodsFile.getParent(), irodsFile.getName());
+		return listPermissionsForDataObject(irodsFile.getParent(),
+				irodsFile.getName());
 
 	}
 
@@ -1738,8 +1777,13 @@ public final class DataObjectAOImpl extends IRODSGenericAO implements
 		log.info("metadata modified to:{}", modAvuData);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.pub.DataObjectAO#modifyAVUMetadata(java.lang.String, org.irods.jargon.core.pub.domain.AvuData, org.irods.jargon.core.pub.domain.AvuData)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.DataObjectAO#modifyAVUMetadata(java.lang.String
+	 * , org.irods.jargon.core.pub.domain.AvuData,
+	 * org.irods.jargon.core.pub.domain.AvuData)
 	 */
 	@Override
 	public void modifyAVUMetadata(final String dataObjectAbsolutePath,
@@ -1788,8 +1832,13 @@ public final class DataObjectAOImpl extends IRODSGenericAO implements
 
 	}
 
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.pub.DataObjectAO#modifyAVUMetadata(java.lang.String, java.lang.String, org.irods.jargon.core.pub.domain.AvuData, org.irods.jargon.core.pub.domain.AvuData)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.DataObjectAO#modifyAVUMetadata(java.lang.String
+	 * , java.lang.String, org.irods.jargon.core.pub.domain.AvuData,
+	 * org.irods.jargon.core.pub.domain.AvuData)
 	 */
 	@Override
 	public void modifyAVUMetadata(final String irodsCollectionAbsolutePath,
@@ -1819,14 +1868,32 @@ public final class DataObjectAOImpl extends IRODSGenericAO implements
 		log.info("with new avu metadata:{}", newAvuData);
 		log.info("absolute path: {}", irodsCollectionAbsolutePath);
 		log.info(" data object name: {}", dataObjectName);
-		
+
 		StringBuilder sb = new StringBuilder();
 		sb.append(irodsCollectionAbsolutePath);
 		sb.append("/");
 		sb.append(dataObjectName);
-		
+
 		modifyAVUMetadata(sb.toString(), currentAvuData, newAvuData);
-		
+
 	}
+	
+	/**
+	 * @param transferOptions
+	 * @return
+	 * @throws JargonException
+	 */
+	private TransferOptions buildDefaultTransferOptionsIfNotSpecified(
+			final TransferOptions transferOptions) throws JargonException {
+		TransferOptions myTransferOptions = transferOptions;
+		
+		if (transferOptions == null) {
+			myTransferOptions = getIRODSSession().buildTransferOptionsBasedOnJargonProperties();
+		} else {
+			myTransferOptions = new TransferOptions(transferOptions);
+		}
+		return myTransferOptions;
+	}
+
 
 }

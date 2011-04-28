@@ -61,6 +61,7 @@ test.irods.userDN=${jargon.test.irods.userDN}
 test.irods.scratch.subdir=${jargon.test.irods.scratch.subdir}
 test.mac.icommand.path=${jargon.test.mac.icommand.path}
 test.option.exercise.remoteexecstream=${jargon.test.option.exercise.remoteexecstream}
+test.option.distributed.resources=${test.option.distributed.resources}
 		</echo>
 	      </tasks>
 	    </configuration>

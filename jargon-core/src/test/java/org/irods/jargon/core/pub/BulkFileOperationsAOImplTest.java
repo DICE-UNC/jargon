@@ -120,7 +120,8 @@ public class BulkFileOperationsAOImplTest {
 
 		bulkFileOperationsAO.createABundleFromIrodsFilesAndStoreInIrods(
 				targetBunFileAbsPath, targetIrodsCollection, "");
-		assertionHelper.assertIrodsFileOrCollectionExists(targetBunFileAbsPath);
+		bulkFileOperationsAO.createABundleFromIrodsFilesAndStoreInIrods(
+				targetBunFileAbsPath, targetIrodsCollection, "");
 
 	}
 

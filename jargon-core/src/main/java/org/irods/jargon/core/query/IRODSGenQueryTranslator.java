@@ -198,7 +198,6 @@ public class IRODSGenQueryTranslator {
 				}
 
 				i++;
-
 				continue;
 
 			}

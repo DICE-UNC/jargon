@@ -1,6 +1,7 @@
 package org.irods.jargon.core.transfer;
 
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.packinstr.TransferOptions;
 
 /**
  * An interface for an object that can control a recursive transfer process,
@@ -142,9 +143,24 @@ public interface TransferControlBlock {
 	int getTotalFilesTransferredSoFar();
 
 	/**
-	 * Increment the count of files that have been transferred so far and return that amount (to avoid act-then-check)
+	 * Increment the count of files that have been transferred so far and return
+	 * that amount (to avoid act-then-check)
+	 * 
 	 * @return incremented value from control block
 	 */
 	int incrementFilesTransferredSoFar();
+
+	/**
+	 * Set the options that will control the details of the transfer
+	 * @param transferOptions {@link TransferOptions}
+	 */
+	void setTransferOptions(
+			TransferOptions transferOptions);
+
+	/**
+	 * Get the options currently controlling the details of the transfer
+	 * @return {@link TransferOptions}
+	 */
+	TransferOptions getTransferOptions();
 
 }

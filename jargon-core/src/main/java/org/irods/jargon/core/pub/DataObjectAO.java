@@ -6,6 +6,7 @@ import java.util.List;
 import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.DuplicateDataException;
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.packinstr.TransferOptions;
 import org.irods.jargon.core.protovalues.FilePermissionEnum;
 import org.irods.jargon.core.pub.domain.AvuData;
 import org.irods.jargon.core.pub.domain.DataObject;
@@ -38,13 +39,23 @@ import org.irods.jargon.core.query.UserFilePermission;
  * @author Mike Conway - DICE (www.irods.org)
  * 
  */
-public interface DataObjectAO extends IRODSAccessObject {
+public interface DataObjectAO extends FileCatalogObjectAO {
 
 	/**
 	 * Put a local file to IRODS. This method will operate using any defaults in
 	 * the <code>JargonProperties</code> to control things like behavior of
 	 * parallel transfers.
 	 * 
+	
+	 * @throws JargonException
+	 */
+	void putLocalDataObjectToIRODS(File localFile,
+			IRODSFile irodsFileDestination, boolean overwrite)
+			throws JargonException;
+	
+	/**
+	 * Transfer a single file from the local file system to iRODS.  This method allows the specification of a <code>TransferOptions</code> object that
+	 * controls aspects of the transfer.
 	 * @param localFile
 	 *            <code>java.io.File</code> containing the data to go to IRODS
 	 * @param irodsFileDestination
@@ -56,11 +67,12 @@ public interface DataObjectAO extends IRODSAccessObject {
 	 * @param overwrite
 	 *            <code>boolean</code> that determines whether this is an
 	 *            overwrite
+	 * @param transferOptions {@link TransferOptions} (null if not specified) that will control aspects of the transfer
 	 * @throws JargonException
 	 */
-	void putLocalDataObjectToIRODS(File localFile,
-			IRODSFile irodsFileDestination, boolean overwrite)
-			throws JargonException;
+	void putLocalDataObjectToIRODSGivingTransferOptions(File localFile,
+			IRODSFile irodsFileDestination, boolean overwrite,
+			TransferOptions transferOptions) throws JargonException;
 
 	/**
 	 * Query method will return the first data object found with the given
@@ -134,11 +146,32 @@ public interface DataObjectAO extends IRODSAccessObject {
 	 *            <code>File</code> which is the target of the transfer. If the
 	 *            given target is a collection, the file name of the iRODS file
 	 *            is used as the file name of the local file.
+	 * @throws DataNotFoundException
 	 * @throws JargonException
 	 */
 	void getDataObjectFromIrods(final IRODSFile irodsFileToGet,
 			final File localFileToHoldData) throws DataNotFoundException,
 			JargonException;
+	
+	/**
+	 * Get operation for a single data object.  This method allows specification of a <code>TransferOptions</code>, which
+	 * will be cloned and used in this individual transfer (the method may override the transferOptions based on evaluation of the transfer).  
+	 *  * @param irodsFileToGet
+	 *            {@link org.irods.jargon.core.pub.io.IRODSFile} that is the
+	 *            source of the transfer
+	 * @param localFileToHoldData
+	 *            <code>File</code> which is the target of the transfer. If the
+	 *            given target is a collection, the file name of the iRODS file
+	 *            is used as the file name of the local file.
+	 * @param transferOptions {@link TransferOptions} that will be cloned internally and used to control aspects of the transfer. This can be
+	 * <code>null</code> if not needed, in which case the <code>JargonProperties</code> will be consulted to build a default set of options. Note that the <code>TransferOptions</code>
+	 * object will be cloned, and as such the passed-in parameter will not be altered.
+	 * @throws DataNotFoundException
+	 * @throws JargonException
+	 */
+	void getDataObjectFromIrodsGivingTransferOptions(IRODSFile irodsFileToGet,
+			File localFileToHoldData, TransferOptions transferOptions)
+			throws DataNotFoundException, JargonException;
 
 	/**
 	 * List the AVU metadata for a particular data object, as well as
@@ -234,10 +267,12 @@ public interface DataObjectAO extends IRODSAccessObject {
 	 *            <code>IRODSFile</code> is controlling.
 	 * @param localFileToHoldData
 	 *            <code>File</code> which is the target of the transfer
+	 * @param {@link TransferOptions} to control the transfer, or null if not specified. Note that the <code>TransferOptions</code>
+	 * object will be cloned, and as such the passed-in parameter will not be altered.
 	 * @throws JargonException
 	 */
 	void irodsDataObjectGetOperationForClientSideAction(
-			final IRODSFile irodsFileToGet, final File localFileToHoldData)
+			final IRODSFile irodsFileToGet, final File localFileToHoldData, final TransferOptions transferOptions)
 			throws DataNotFoundException, JargonException;
 
 	/**
@@ -406,12 +441,15 @@ public interface DataObjectAO extends IRODSAccessObject {
 	 * @param overwrite
 	 *            <code>boolean</code> that determines whether this is an
 	 *            overwrite
+	  * @param transferOptions {@link TransferOptions} that controls details of the transfer.  This may be set to <code>null</code>,
+	 * in which case, default options will be created based on the {@link JargonProperties} that have been set.  Note that the <code>TransferOptions</code>
+	 * object will be cloned, and as such the passed-in parameter will not be altered.
 	 * @throws JargonException
 	 */
 	void putLocalDataObjectToIRODSForClientSideRuleOperation(
 			final File localFile, final IRODSFile irodsFileDestination,
-			final boolean overwrite) throws JargonException;
-
+			final boolean overwrite, final TransferOptions transferOptions) throws JargonException;
+	
 	/**
 	 * Retrieve a file from iRODS and store it locally. The resource provided in
 	 * the <code>IRODSFile<code> object is sent in the
@@ -424,11 +462,35 @@ public interface DataObjectAO extends IRODSAccessObject {
 	 *            <code>File</code> which is the target of the transfer. If the
 	 *            given target is a collection, the file name of the iRODS file
 	 *            is used as the file name of the local file.
+	 * @throws DataNotFoundException
 	 * @throws JargonException
 	 */
 	void getDataObjectFromIrodsUsingTheSpecificResourceSetInIrodsFile(
 			final IRODSFile irodsFileToGet, final File localFileToHoldData)
 			throws DataNotFoundException, JargonException;
+	
+	/**
+	 * Retrieve a file from iRODS and store it locally. The resource provided in
+	 * the <code>IRODSFile<code> object is sent in the
+	 * request to iRODS as the specific resource from which the file is retrieved.  
+	 * <p/>
+	 * This method allows specification of a <code>TransferOptions</code> that can control details of the iRODS transfer.
+		 * @param irodsFileToGet
+	 *            {@link org.irods.jargon.core.pub.io.IRODSFile} that is the
+	 *            source of the transfer
+	 * @param localFileToHoldData
+	 *            <code>File</code> which is the target of the transfer. If the
+	 *            given target is a collection, the file name of the iRODS file
+	 *            is used as the file name of the local file.
+	 * @param transferOptions {@link TransferOptions} that can specify details of the transfer techniques used.  Note that this can
+	 * be set to <code>null</code>, in which case a default set of options is derived from the <code>JargonProperties</code>.  Note that the <code>TransferOptions</code>
+	 * object will be cloned, and as such the passed-in parameter will not be altered.
+	 * @throws JargonException
+	 */
+	void getDataObjectFromIrodsUsingTheSpecificResourceSetInIrodsFileSpecifyingTransferOptions(
+			IRODSFile irodsFileToGet, File localFileToHoldData,
+			TransferOptions transferOptions) throws DataNotFoundException,
+			JargonException;
 
 	/**
 	 * Delete the given AVU from the data object identified by absolute path.
@@ -722,5 +784,7 @@ public interface DataObjectAO extends IRODSAccessObject {
 	List<UserFilePermission> listPermissionsForDataObject(
 			String irodsCollectionAbsolutePath, String dataName)
 			throws JargonException;
+
+	
 
 }

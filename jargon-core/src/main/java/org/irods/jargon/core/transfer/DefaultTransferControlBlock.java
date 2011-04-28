@@ -4,6 +4,7 @@
 package org.irods.jargon.core.transfer;
 
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.packinstr.TransferOptions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,6 +38,7 @@ public class DefaultTransferControlBlock implements TransferControlBlock {
 	private int errorCount = 0;
 	private int totalFilesToTransfer = 0;
 	private int totalFilesTransferredSoFar = 0;
+	private TransferOptions transferOptions;
 
 	/**
 	 * Initializer that takes a restart path. This will be ignored if blank or
@@ -323,6 +325,23 @@ public class DefaultTransferControlBlock implements TransferControlBlock {
 		synchronized (this) {
 			return ++totalFilesTransferredSoFar;
 		}
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.core.transfer.TransferControlBlock#getTransferOptions()
+	 */
+	@Override
+	public synchronized TransferOptions getTransferOptions() {
+		return transferOptions;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.core.transfer.TransferControlBlock#setTransferOptions(org.irods.jargon.core.packinstr.TransferOptions)
+	 */
+	@Override
+	public synchronized void setTransferOptions(
+			final TransferOptions transferOptions) {
+		this.transferOptions = transferOptions;
 	}
 
 }

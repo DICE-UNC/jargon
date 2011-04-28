@@ -306,6 +306,33 @@ public class TestingPropertiesHelper {
 
 		return account;
 	}
+	
+	/**
+	 * Build a test account where the default resource will be set to blank
+	 * @param testingProperties
+	 * @return
+	 */
+	public IRODSAccount buildIRODSAccountFromTestPropertiesWithBlankResource(
+			final Properties testingProperties) {
+
+		StringBuilder homeBuilder = new StringBuilder();
+		homeBuilder.append('/');
+		homeBuilder.append(testingProperties.getProperty(IRODS_ZONE_KEY));
+		homeBuilder.append('/');
+		homeBuilder.append("home");
+		homeBuilder.append('/');
+		homeBuilder.append(testingProperties.getProperty(IRODS_USER_KEY));
+
+		IRODSAccount account = new IRODSAccount(
+				testingProperties.getProperty(IRODS_HOST_KEY),
+				Integer.parseInt(testingProperties.getProperty(IRODS_PORT_KEY)),
+				testingProperties.getProperty(IRODS_USER_KEY),
+				testingProperties.getProperty(IRODS_PASSWORD_KEY), homeBuilder
+						.toString(), testingProperties
+						.getProperty(IRODS_ZONE_KEY),"");
+
+		return account;
+	}
 
 	/**
 	 * @param testingProperties

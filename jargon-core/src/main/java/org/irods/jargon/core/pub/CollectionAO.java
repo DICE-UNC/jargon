@@ -36,7 +36,7 @@ import org.irods.jargon.core.query.UserFilePermission;
  * @author Mike Conway - DICE (www.irods.org)
  * 
  */
-public interface CollectionAO extends IRODSAccessObject {
+public interface CollectionAO extends FileCatalogObjectAO {
 
 	/**
 	 * For a given absolute path, get an <code>IRODSFileImpl</code> that is a

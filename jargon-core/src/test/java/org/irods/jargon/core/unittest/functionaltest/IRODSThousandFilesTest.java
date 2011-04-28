@@ -158,8 +158,7 @@ public class IRODSThousandFilesTest {
 
 		// should have 1000 in this batch
 		Assert.assertEquals("did not get back the  rows I requested",
-				dataObjectAO.getIRODSSession().getJargonProperties()
-				.getMaxFilesAndDirsQueryMax(), metadataElements.size());
+				1000, metadataElements.size());
 
 		irodsFileSystem.close();
 

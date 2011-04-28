@@ -338,5 +338,100 @@ public class DataObjInpTest {
 	public final void instanceForReplicateNullResc() throws Exception {
 		DataObjInp.instanceForReplicate("/a/file/path", null);
 	}
+	
+	@Test
+	public final void testGetParsedTagsForGetHostForPut() throws Exception {
+		DataObjInp dataObjInp = DataObjInp
+				.instanceForGetHostForPut(
+						"/test1/home/test1/test-scratch/IrodsCommandsPutTest/testPutOverwriteFileNotInIRODS.txt",
+						"test1-resc");
+
+		StringBuilder sb = new StringBuilder();
+		sb.append("<DataObjInp_PI><objPath>/test1/home/test1/test-scratch/IrodsCommandsPutTest/testPutOverwriteFileNotInIRODS.txt</objPath>\n");
+		sb.append("<createMode>0</createMode>\n");
+		sb.append("<openFlags>0</openFlags>\n");
+		sb.append("<offset>0</offset>\n");
+		sb.append("<dataSize>0</dataSize>\n");
+		sb.append("<numThreads>0</numThreads>\n");
+		sb.append("<oprType>1</oprType>\n");
+		sb.append("<KeyValPair_PI><ssLen>1</ssLen>\n");
+		sb.append("<keyWord>rescName</keyWord>\n");
+		sb.append("<svalue>test1-resc</svalue>\n");
+		sb.append("</KeyValPair_PI>\n");
+		sb.append("</DataObjInp_PI>\n");
+
+		TestCase.assertEquals("did not get expected packing instruction",
+				sb.toString(), dataObjInp.getParsedTags());
+		TestCase.assertEquals("did not get expected API number",
+				DataObjInp.GET_HOST_FOR_PUT_API_NBR, dataObjInp.getApiNumber());
+	}
+
+	@Test(expected = JargonException.class)
+	public final void testGetHostForPutBlankSource() throws Exception {
+		DataObjInp.instanceForGetHostForPut("", "test1-resc");
+	}
+
+	@Test(expected = JargonException.class)
+	public final void testGetHostForPutNullSource() throws Exception {
+		DataObjInp.instanceForGetHostForPut(null, "test1-resc");
+	}
+
+	@Test(expected = JargonException.class)
+	public final void testGetHostForPutNullResource() throws Exception {
+		DataObjInp.instanceForGetHostForPut("hello", null);
+	}
+
+	@Test
+	public final void testGetHostForPutBlankResource() throws Exception {
+		DataObjInp.instanceForGetHostForPut("hello", "");
+	}
+
+	// implement this get test, then test via data object, include resource,
+	// then parallell get/put
+
+	@Test
+	public final void testGetParsedTagsForGetHostForGet() throws Exception {
+		DataObjInp dataObjInp = DataObjInp
+				.instanceForGetHostForGet(
+						"/test1/home/test1/test-scratch/IrodsCommandsGetTest/testGet.txt",
+						"");
+
+		StringBuilder sb = new StringBuilder();
+		sb.append("<DataObjInp_PI><objPath>/test1/home/test1/test-scratch/IrodsCommandsGetTest/testGet.txt</objPath>\n");
+		sb.append("<createMode>0</createMode>\n");
+		sb.append("<openFlags>0</openFlags>\n");
+		sb.append("<offset>0</offset>\n");
+		sb.append("<dataSize>0</dataSize>\n");
+		sb.append("<numThreads>0</numThreads>\n");
+		sb.append("<oprType>2</oprType>\n");
+		sb.append("<KeyValPair_PI><ssLen>0</ssLen>\n");
+		sb.append("</KeyValPair_PI>\n");
+		sb.append("</DataObjInp_PI>\n");
+
+		TestCase.assertEquals("did not get expected packing instruction",
+				sb.toString(), dataObjInp.getParsedTags());
+		TestCase.assertEquals("did not get expected API number",
+				DataObjInp.GET_HOST_FOR_GET_API_NBR, dataObjInp.getApiNumber());
+
+	}
+
+	@Test(expected = JargonException.class)
+	public final void testGetParsedTagsForGetHostForGetBlankSource()
+			throws Exception {
+		DataObjInp.instanceForGetHostForGet("", "");
+	}
+
+	@Test(expected = JargonException.class)
+	public final void testGetParsedTagsForGetHostForGetNullSource()
+			throws Exception {
+		DataObjInp.instanceForGetHostForGet(null, "");
+	}
+
+	@Test(expected = JargonException.class)
+	public final void testGetParsedTagsForGetHostForGetNullResource()
+			throws Exception {
+		DataObjInp.instanceForGetHostForGet("hello", null);
+	}
+
 
 }

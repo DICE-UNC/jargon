@@ -695,6 +695,21 @@ public class IRODSGenQueryTranslatorTest {
 
 	}
 	
+	@Ignore //FIXME: work in progress
+	public final void queryWithInAndTwoValues() throws Exception {
+		String query = "SELECT COLL_ID,COLL_NAME,META_COLL_ATTR_NAME,META_COLL_ATTR_VALUE,META_COLL_ATTR_UNITS WHERE META_COLL_ATTR_NAME IN ('inval1','inval2')";
+		IRODSServerProperties props = IRODSServerProperties.instance(
+				IRODSServerProperties.IcatEnabled.ICAT_ENABLED, 100, "rods2.5",
+				"d", "zone");
+		
+		IRODSGenQueryTranslator translator = new IRODSGenQueryTranslator(props);
+		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(query, 10);
+		translator.getTranslatedQuery(irodsQuery);
+
+		// no errors means good translation
+
+	}
+	
 	@Test
 	public final void queryWithNotLike() throws Exception {
 		String query = "SELECT USER_NAME WHERE USER_NAME NOT LIKE 'thisname'";

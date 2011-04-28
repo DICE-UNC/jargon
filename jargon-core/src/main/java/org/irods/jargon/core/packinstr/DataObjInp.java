@@ -45,6 +45,9 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 	public static final int GET_FILE_API_NBR = 608;
 	public static final int REPLICATE_API_NBR = 610;
 	public static final int CHECKSUM_API_NBR = 629;
+	public static final int GET_HOST_FOR_GET_API_NBR = 694;
+	public static final int GET_HOST_FOR_PUT_API_NBR = 686;
+
 
 	public static final String DATA_TYPE_GENERIC = "generic";
 
@@ -69,7 +72,7 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 	public static final String BS_LEN = "bsLen";
 
 	public enum OpenFlags {
-	 READ, WRITE, READ_WRITE
+		READ, WRITE, READ_WRITE
 	}
 
 	public enum ForceOptions {
@@ -401,7 +404,7 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 			final String destinationAbsolutePath, final long length,
 			final String destinationResource, final boolean overwrite,
 			final TransferOptions transferOptions) throws JargonException {
-		
+
 		if (destinationAbsolutePath == null
 				|| destinationAbsolutePath.isEmpty()) {
 			throw new JargonException("null or empty destinationAbsolutePath");
@@ -428,12 +431,14 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 
 		return dataObjInp;
 	}
-	
-	public static final DataObjInp instanceForCopyDest(final String destinationAbsolutePath,
-			final String destinationResource, final boolean overwrite) throws JargonException {
+
+	public static final DataObjInp instanceForCopyDest(
+			final String destinationAbsolutePath,
+			final String destinationResource, final boolean overwrite)
+			throws JargonException {
 		DataObjInp dataObjInp = new DataObjInp(destinationAbsolutePath,
-				ZERO_CREATE_MODE, OpenFlags.READ, 0L, 0L,
-				destinationResource, null);
+				ZERO_CREATE_MODE, OpenFlags.READ, 0L, 0L, destinationResource,
+				null);
 		dataObjInp.operationType = DataObjInp.COPY_FILE_DEST_OPERATION_TYPE;
 		if (overwrite) {
 			dataObjInp.setForceOption(ForceOptions.FORCE);
@@ -446,7 +451,8 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 	 * 
 	 * @param sourceAbsolutePath
 	 *            <code>String</code> with the absolute path to the file to get
-	 * @param dataObjectSize <code>long</code> with the size of the data object to retrieve
+	 * @param dataObjectSize
+	 *            <code>long</code> with the size of the data object to retrieve
 	 * @param transferOptions
 	 *            {@link TransferOptions} that configures details about the
 	 *            underlying technique used in the transfer. Can be set to null
@@ -456,7 +462,7 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 	 * @throws JargonException
 	 */
 	public static final DataObjInp instanceForGet(
-			final String sourceAbsolutePath,  final long dataObjectSize,
+			final String sourceAbsolutePath, final long dataObjectSize,
 			final TransferOptions transferOptions) throws JargonException {
 		if (sourceAbsolutePath == null || sourceAbsolutePath.isEmpty()) {
 			throw new JargonException("null or empty sourceAbsolutePath");
@@ -503,6 +509,72 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 				OpenFlags.READ, 0L, 0L, resource, transferOptions);
 		dataObjInp.operationType = GET_OPERATION_TYPE;
 		dataObjInp.setApiNumber(GET_FILE_API_NBR);
+
+		return dataObjInp;
+	}
+
+	/**
+	 * Create a packing instruction to inquire about the correct host to use for
+	 * a get. This supports re-routing a connection when data resides on a
+	 * different resource server.
+	 * 
+	 * @param sourceAbsolutePath
+	 *            <code>String</code> with the absolute path to the file to get
+	 * @param resource
+	 *            <code>String</code> with the resource that contains the file
+	 *            that should be retrieved
+	 * @return
+	 * @throws JargonException
+	 */
+	public static DataObjInp instanceForGetHostForGet(
+			final String sourceAbsolutePath, final String resource)
+			throws JargonException {
+
+		if (sourceAbsolutePath == null || sourceAbsolutePath.isEmpty()) {
+			throw new JargonException("null or empty sourceAbsolutePath");
+		}
+
+		if (resource == null) {
+			throw new JargonException("null resource");
+		}
+
+		DataObjInp dataObjInp = new DataObjInp(sourceAbsolutePath, 0,
+				OpenFlags.READ, 0L, 0L, resource, null);
+		dataObjInp.operationType = GET_OPERATION_TYPE;
+		dataObjInp.setApiNumber(GET_HOST_FOR_GET_API_NBR);
+
+		return dataObjInp;
+	}
+
+	/**
+	 * Create a packing instruction to inquire about the correct host to use for
+	 * a put. This supports re-routing a connection when data resides on a
+	 * different resource server.
+	 * 
+	 * @param sourceAbsolutePath
+	 *            <code>String</code> with the absolute path to the file to put
+	 * @param resource
+	 *            <code>String</code> with the resource that contains the file
+	 *            that should be retrieved
+	 * @return
+	 * @throws JargonException
+	 */
+	public static DataObjInp instanceForGetHostForPut(
+			final String sourceAbsolutePath, final String resource)
+			throws JargonException {
+
+		if (sourceAbsolutePath == null || sourceAbsolutePath.isEmpty()) {
+			throw new JargonException("null or empty sourceAbsolutePath");
+		}
+
+		if (resource == null) {
+			throw new JargonException("null resource");
+		}
+
+		DataObjInp dataObjInp = new DataObjInp(sourceAbsolutePath, 0,
+				OpenFlags.READ, 0L, 0L, resource, null);
+		dataObjInp.operationType = PUT_OPERATION_TYPE;
+		dataObjInp.setApiNumber(GET_HOST_FOR_PUT_API_NBR);
 
 		return dataObjInp;
 	}
@@ -554,7 +626,18 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 		int tagOpenFlags = translateOpenFlagsValue();
 		int transferOptionsNumThreads = 0;
 
-		if (transferOptions != null && getDataSize() > ConnectionConstants.MAX_SZ_FOR_SINGLE_BUF) {  // FIXME: just pass max threads in without this calc, refactor away
+		if (transferOptions != null
+				&& getDataSize() > ConnectionConstants.MAX_SZ_FOR_SINGLE_BUF) { // FIXME:
+																				// just
+																				// pass
+																				// max
+																				// threads
+																				// in
+																				// without
+																				// this
+																				// calc,
+																				// refactor
+																				// away
 			transferOptionsNumThreads = transferOptions.getMaxThreads();
 		}
 
@@ -591,7 +674,7 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 		// add a keyword tag for resource if a resource was given to the packing
 		// instruction.
 		if (getResource().length() > 0) {
-			if (this.getApiNumber() == DataObjInp.GET_FILE_API_NBR) {
+			if (this.getApiNumber() == DataObjInp.GET_FILE_API_NBR || this.getApiNumber() == DataObjInp.GET_HOST_FOR_GET_API_NBR || this.getApiNumber() == DataObjInp.GET_HOST_FOR_PUT_API_NBR) {
 				kvps.add(KeyValuePair.instance(RESC_NAME, getResource()));
 			} else {
 				kvps.add(KeyValuePair.instance(DEST_RESC_NAME, getResource()));

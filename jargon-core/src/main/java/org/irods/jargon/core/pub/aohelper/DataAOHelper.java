@@ -170,7 +170,6 @@ public final class DataAOHelper extends AOHelper {
 		return sb.toString();
 	}
 
-	// TODO: looks like generics would help here...factor out later
 	public List<DataObject> buildListFromResultSet(
 			final IRODSQueryResultSetInterface resultSet) throws JargonException {
 
@@ -293,10 +292,11 @@ public final class DataAOHelper extends AOHelper {
 	/**
 	 * @param localFileToHoldData
 	 * @param length
+	 * @param transferOptions 
 	 * @throws JargonException
 	 */
 	public void processNormalGetTransfer(final File localFileToHoldData,
-			final long length, final IRODSCommands irodsProtocol) throws JargonException {
+			final long length, final IRODSCommands irodsProtocol, final TransferOptions transferOptions) throws JargonException {
 
 		log.info("normal file transfer started, get output stream for local destination file");
 		// get an input stream from the irodsFile
@@ -341,6 +341,14 @@ public final class DataAOHelper extends AOHelper {
 			final boolean overwrite, final TransferOptions transferOptions,
 			IRODSFile targetFile, final IRODSCommands irodsProtocol) throws JargonException, FileNotFoundException {
 		
+		if (localFile == null) {
+			throw new IllegalArgumentException("null localFile");
+		}
+		
+		if (transferOptions == null) {
+			throw new IllegalArgumentException("null transferOptions");
+		}
+		
 		log.info("processing as a normal put strategy");
 
 		DataObjInp dataObjInp = DataObjInp.instanceForNormalPutStrategy(
@@ -368,6 +376,19 @@ public final class DataAOHelper extends AOHelper {
 	public IRODSFile checkTargetFileForPutOperation(final File localFile,
 			final IRODSFile irodsFileDestination, final boolean ignoreChecks, final IRODSFileFactory irodsFileFactory)
 			throws JargonException {
+		
+		if (localFile == null) {
+			throw new IllegalArgumentException("null localFile");
+		}
+		
+		if (irodsFileDestination == null) {
+			throw new IllegalArgumentException("null irodsFileDestination");
+		}
+		
+		if (irodsFileFactory == null) {
+			throw new IllegalArgumentException("null irodsFileFactory");
+		}
+		
 		IRODSFile targetFile;
 
 		if (ignoreChecks) {
