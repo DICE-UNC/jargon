@@ -2236,6 +2236,15 @@ public class DataObjectAOImplTest {
 	public void testGetHostForGetProvidingResourceNameWhenShouldDifferentResource()
 			throws Exception {
 
+		String useDistribResources = testingProperties
+				.getProperty("test.option.distributed.resources");
+
+		if (useDistribResources != null && useDistribResources.equals("true")) {
+			// do the test
+		} else {
+			return;
+		}
+
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
 
@@ -2271,21 +2280,24 @@ public class DataObjectAOImplTest {
 		DataTransferOperations transferOperationsAO = irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataTransferOperations(
 						irodsAccount);
-		transferOperationsAO.putOperation(fileNameAndPath.toString(),
-				targetIrodsCollection, testingProperties.getProperty(TestingPropertiesHelper.IRODS_TERTIARY_RESOURCE_KEY), null, null);
+		transferOperationsAO
+				.putOperation(
+						fileNameAndPath.toString(),
+						targetIrodsCollection,
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_TERTIARY_RESOURCE_KEY),
+						null, null);
 		DataObjectAO dataObjectAO = irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
 
-		String hostInfo = dataObjectAO
-				.getHostForGetOperation(
-						targetIrodsCollection + "/" + testFileName,
-						"");
- 		irodsFileSystem.close();
+		String hostInfo = dataObjectAO.getHostForGetOperation(
+				targetIrodsCollection + "/" + testFileName, "");
+		irodsFileSystem.close();
 		Assert.assertNotNull(
 				"null info from lookup of host for get operation was not expected, re-routing should occur",
 				hostInfo);
 	}
-	
+
 	@Test
 	public void testGetHostForGetProvidingResourceNameWhenShouldBeSameHost()
 			throws Exception {

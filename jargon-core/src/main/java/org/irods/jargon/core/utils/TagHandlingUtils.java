@@ -39,9 +39,10 @@ public class TagHandlingUtils {
 		
 		// get the length
 		int kvpLength = keyValPairPi.getTag(SS_LEN).getIntValue();
+		Tag[] tagArray = keyValPairPi.getTags();
 
-		for (int i = 1; i < kvpLength; i++) {
-			
+		for (int i = 1; i < kvpLength + 1; i++) {
+			kvps.put(tagArray[i].getStringValue(), tagArray[i+kvpLength].getStringValue());
 		}
 
 		return kvps;

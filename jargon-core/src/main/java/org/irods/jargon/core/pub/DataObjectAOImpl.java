@@ -357,7 +357,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		IRODSFile targetFile = dataAOHelper.checkTargetFileForPutOperation(
 				localFile, irodsFileDestination, ignoreChecks,
 				getIRODSFileFactory());
-
+		
 		long localFileLength = localFile.length();
 
 		if (localFileLength < ConnectionConstants.MAX_SZ_FOR_SINGLE_BUF) {
@@ -373,6 +373,8 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 						"localFile not found to put to irods", e);
 			}
 		}
+		
+		// if this was below the max_sz_for_single_buf, the data was included in the put above and will have returned
 
 		DataObjInp dataObjInp = DataObjInp.instanceForInitialCallToPut(
 				targetFile.getAbsolutePath(), localFile.length(),

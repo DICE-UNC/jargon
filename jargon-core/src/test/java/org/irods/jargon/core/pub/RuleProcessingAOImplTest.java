@@ -18,6 +18,7 @@ import org.irods.jargon.testutils.icommandinvoke.IcommandInvoker;
 import org.irods.jargon.testutils.icommandinvoke.IrodsInvocationContext;
 import org.irods.jargon.testutils.icommandinvoke.icommands.IputCommand;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class RuleProcessingAOImplTest {
@@ -289,19 +290,22 @@ public class RuleProcessingAOImplTest {
 	 * per bug report [#181] rule requests transfer from unknown protocol error
 	 * executing iRule rule sample:
 	 * https://www.irods.org/index.php/Complex_Rule_Samples
+	 * NOTE: requires the placing of the acObjPutWithDateAndChksumAsAVUs in core.irb.  Commented out in normal testing to keep
+	 * custom testing setups down
 	 */
-	@Test
+	@Ignore
 	public void testExecuteRequestClientActionPutBug181() throws Exception {
 		// create a local file to put
 		// put a collection out to do a checksum on
-		String testFileSubdir = "dataforbug181/danrw/AIP2archive/";
+		//String testFileSubdir = "dataforbug181/danrw/AIP2archive/";
+		String testFileSubdir = "";
 		String testFileName = "test2.txt";
-		String irodsFileName = "da-nrw/home/rods/test2.txt";
+		String irodsFileName = "test2.txt";
 
 		String absPath = scratchFileUtils
 				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
 		String putFileName = FileGenerator.generateFileOfFixedLengthGivenName(
-				absPath  + testFileSubdir, testFileName, 100);
+				absPath, testFileName, 100);
 
 		String targetIrodsFileName = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(

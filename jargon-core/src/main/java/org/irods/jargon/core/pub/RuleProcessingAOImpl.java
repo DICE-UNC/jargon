@@ -67,6 +67,8 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements
 	public static final String OBJ_PATH = "objPath";
 	public static final String RULE_EXEC_OUT = "ruleExecOut";
 
+	private static final Object DEST_RESC_NAME = "destRescName";
+
 	/**
 	 * @param irodsSession
 	 * @param irodsAccount
@@ -172,7 +174,7 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements
 						label,
 						(processRuleResponseWithClientSideActionTag(label,
 								type, value, msParam)));
-				operationComplete(0);
+				//operationComplete(0);
 			} else {
 				irodsRuleOutputParameters.put(label,
 						(processRuleResponseTag(label, type, value, msParam)));
@@ -182,7 +184,7 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements
 		// now read the rest of the rule response if there were params that were processed
 		if (clientSideActionOccurred) {
 			LOG.info("a client side action ocurred, I have an irods message to consume to end the rule processing");
-			this.getIRODSProtocol().readMessage();
+			//this.getIRODSProtocol().readMessage();
 		}
 
 		LOG.info("rule operation complete");
@@ -312,30 +314,27 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements
 		Tag kvp =  fileAction.getTag(KEY_VAL_PAIR_PI);
 		Map<String, String> kvpMap = TagHandlingUtils.translateKeyValuePairTagIntoMap(kvp);
 		LOG.debug("kvp map is:{}", kvpMap);
-
-		String otherFilePath = fileAction.getTag(KEY_VAL_PAIR_PI)
-				.getTag(SVALUE).getStringValue();
-		String otherFileType = fileAction.getTag(KEY_VAL_PAIR_PI)
-				.getTag(KEY_WORD).getStringValue();
-
-		if (otherFileType.equals(LOCAL_PATH)) {
-			LOG.info("received request for local file: {}", otherFilePath);
-		} else {
-			LOG.error("received invaid  request for local file: {}",
-					otherFilePath);
-			LOG.error("other file type was invalid: {}", otherFileType);
-			throw new JargonException(
-					"Rule requests transfer from unknown protocol");
+		
+		String localPath = kvpMap.get(LOCAL_PATH);
+		
+		if (localPath == null) {
+			LOG.error("no local file path found in tags");
+			throw new JargonException("client side action indicated, but no localPath in tag");
 		}
-
+		
+		String resourceName = kvpMap.get(DEST_RESC_NAME);
+		if (resourceName == null) {
+			resourceName = "";
+		}
+		
 		LOG.debug("getting reference to local file");
 
-		File localFile = new File(otherFilePath);
+		File localFile = new File(localPath);
 
 		if (label.equals(CL_GET_ACTION)) {
 			clientSideGetAction(irodsFileAbsolutePath, localFile);
 		} else if (label.equals(CL_PUT_ACTION)) {
-			clientSidePutAction(irodsFileAbsolutePath, localFile);
+			clientSidePutAction(irodsFileAbsolutePath, localFile, resourceName);
 		}
 
 		StringBuilder putLabel = new StringBuilder();
@@ -348,7 +347,7 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements
 				.instance(
 						labelValForAction,
 						IRODSRuleExecResultOutputParameter.OutputParamType.CLIENT_ACTION_RESULT,
-						otherFilePath);
+						localPath);
 	}
 
 	/**
@@ -357,11 +356,12 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements
 	 * @throws JargonException
 	 */
 	private void clientSidePutAction(final String irodsFileAbsolutePath,
-			final File localFile) throws JargonException {
+			final File localFile, final String resourceName) throws JargonException {
 		DataObjectAO dataObjectAO = new DataObjectAOImpl(getIRODSSession(),
 				getIRODSAccount());
 		IRODSFile irodsFile = dataObjectAO
 				.instanceIRODSFileForPath(irodsFileAbsolutePath);
+		irodsFile.setResource(resourceName);
 		LOG.debug("performing put of file");
 		dataObjectAO.putLocalDataObjectToIRODSForClientSideRuleOperation(
 				localFile, irodsFile, true, null);

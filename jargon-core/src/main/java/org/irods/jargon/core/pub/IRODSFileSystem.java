@@ -82,7 +82,7 @@ public final class IRODSFileSystem {
 		return new IRODSFileSystem();
 	}
 
-	private IRODSFileSystem() throws JargonException {
+	public IRODSFileSystem() throws JargonException {
 		this.irodsProtocolManager = IRODSSimpleProtocolManager.instance();
 		this.irodsSession = IRODSSession.instance(irodsProtocolManager);
 		log.info("IRODSfileSystem is initialized");
