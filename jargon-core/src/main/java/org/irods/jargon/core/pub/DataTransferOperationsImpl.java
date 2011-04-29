@@ -583,6 +583,12 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 			log.info("put operation for source: {}",
 					sourceFile.getAbsolutePath());
 			log.info(" to target: {}", targetIrodsFile.getAbsolutePath());
+			
+			if (targetIrodsFile.getResource().isEmpty()) {
+				log.debug("no resource provided, substitute the resource from the irodsAccount");
+				targetIrodsFile.setResource(getIRODSAccount().getDefaultStorageResource());
+			}
+			
 			log.info("  resource:{}", targetIrodsFile.getResource());
 
 			/*
@@ -643,7 +649,7 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 	public void putOperation(
 			final String sourceFileAbsolutePath,
 			final String targetIrodsFileAbsolutePath,
-			final String targetResourceName,
+			String targetResourceName,
 			final TransferStatusCallbackListener transferStatusCallbackListener,
 			final TransferControlBlock transferControlBlock)
 			throws JargonException {
@@ -662,8 +668,11 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 		if (targetResourceName == null) {
 			throw new IllegalArgumentException("targetResourceName is null");
 		}
-		// the transfer status callback listener can be null
 
+		if (targetResourceName.isEmpty()) {
+			targetResourceName = getIRODSAccount().getDefaultStorageResource();
+		}
+		
 		log.info("put operation for source: {}", sourceFileAbsolutePath);
 		log.info(" to target: {}", targetIrodsFileAbsolutePath);
 		log.info("  resource:{}", targetResourceName);

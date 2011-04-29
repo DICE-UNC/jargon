@@ -10,6 +10,7 @@ import junit.framework.TestCase;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSProtocolManager;
+import org.irods.jargon.core.connection.IRODSServerProperties;
 import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.connection.IRODSSimpleProtocolManager;
 import org.irods.jargon.core.exception.DataNotFoundException;
@@ -27,6 +28,7 @@ import org.irods.jargon.core.query.AVUQueryOperatorEnum;
 import org.irods.jargon.core.query.MetaDataAndDomainData;
 import org.irods.jargon.core.query.RodsGenQueryEnum;
 import org.irods.jargon.core.query.UserFilePermission;
+import org.irods.jargon.core.remoteexecute.RemoteExecuteServiceImpl;
 import org.irods.jargon.testutils.AssertionHelper;
 import org.irods.jargon.testutils.IRODSTestSetupUtilities;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
@@ -108,10 +110,11 @@ public class DataObjectAOImplTest {
 		String targetIrodsFile = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH);
-		
+
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
 		IRODSFileFactory irodsFileFactory = accessObjectFactory
 				.getIRODSFileFactory(irodsAccount);
 		DataObjectAO dataObjectAO = accessObjectFactory
@@ -140,10 +143,11 @@ IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObj
 		File localFile = new File(localFileName);
 
 		// now put the file
-		
+
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
 
 		IRODSFileFactory irodsFileFactory = accessObjectFactory
 				.getIRODSFileFactory(irodsAccount);
@@ -171,10 +175,11 @@ IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObj
 		File localFile = new File(localFileName);
 
 		// now put the file
-		
+
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
 
 		IRODSFileFactory irodsFileFactory = accessObjectFactory
 				.getIRODSFileFactory(irodsAccount);
@@ -199,10 +204,11 @@ IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObj
 		File localFile = new File(absPath + '/' + testFileName);
 
 		// now put the file
-		
+
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
 
 		IRODSFileFactory irodsFileFactory = accessObjectFactory
 				.getIRODSFileFactory(irodsAccount);
@@ -245,10 +251,11 @@ IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObj
 		invoker.invokeCommandAndGetResultAsString(iputCommand);
 
 		// now put the file
-	
+
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
 
 		IRODSFileFactory irodsFileFactory = accessObjectFactory
 				.getIRODSFileFactory(irodsAccount);
@@ -292,10 +299,11 @@ IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObj
 		invoker.invokeCommandAndGetResultAsString(iputCommand);
 
 		// now put the file
-		
+
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
 
 		IRODSFileFactory irodsFileFactory = accessObjectFactory
 				.getIRODSFileFactory(irodsAccount);
@@ -339,10 +347,11 @@ IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObj
 		invoker.invokeCommandAndGetResultAsString(iputCommand);
 
 		// now put the file
-		
+
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
 
 		accessObjectFactory.getIRODSFileFactory(irodsAccount);
 		DataObjectAO dataObjectAO = accessObjectFactory
@@ -482,10 +491,11 @@ IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObj
 		invoker.invokeCommandAndGetResultAsString(iputCommand);
 
 		// now put the file
-		
+
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
 
 		accessObjectFactory.getIRODSFileFactory(irodsAccount);
 		DataObjectAO dataObjectAO = accessObjectFactory
@@ -535,7 +545,8 @@ IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObj
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
 
 		accessObjectFactory.getIRODSFileFactory(irodsAccount);
 		DataObjectAO dataObjectAO = accessObjectFactory
@@ -561,7 +572,8 @@ IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObj
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
 
 		accessObjectFactory.getIRODSFileFactory(irodsAccount);
 		DataObjectAO dataObjectAO = accessObjectFactory
@@ -607,10 +619,10 @@ IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObj
 		IcommandInvoker invoker = new IcommandInvoker(invocationContext);
 		invoker.invokeCommandAndGetResultAsString(iputCommand);
 
-		
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
 
 		accessObjectFactory.getIRODSFileFactory(irodsAccount);
 		DataObjectAO dataObjectAO = accessObjectFactory
@@ -660,10 +672,10 @@ IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObj
 		IcommandInvoker invoker = new IcommandInvoker(invocationContext);
 		invoker.invokeCommandAndGetResultAsString(iputCommand);
 
-
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
 		DataObjectAO dataObjectAO = accessObjectFactory
 				.getDataObjectAO(irodsAccount);
 		IRODSFile irodsFile = dataObjectAO
@@ -720,7 +732,8 @@ IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObj
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
 		accessObjectFactory.getIRODSFileFactory(irodsAccount);
 		DataObjectAO dataObjectAO = accessObjectFactory
 				.getDataObjectAO(irodsAccount);
@@ -798,7 +811,8 @@ IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObj
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
 
 		DataObjectAO dataObjectAO = accessObjectFactory
 				.getDataObjectAO(irodsAccount);
@@ -917,10 +931,10 @@ IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObj
 		imetaAddCommand.setObjectPath(dataObjectAbsPath);
 		invoker.invokeCommandAndGetResultAsString(imetaAddCommand);
 
-
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
 
 		DataObjectAO dataObjectAO = accessObjectFactory
 				.getDataObjectAO(irodsAccount);
@@ -1475,12 +1489,13 @@ IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObj
 				.findDomainByMetadataQuery(avuQueryElements);
 		Assert.assertTrue(dataObjects.size() == 1);
 	}
-	
+
 	/*
 	 * [#161] iRODS inconsistantly handles duplicate AVU data for data objects
 	 */
-	@Test(expected=DuplicateDataException.class)
-	public void testAddAVUMetadataToDataObjectTwiceIncludeUnitsVal() throws Exception {
+	@Test(expected = DuplicateDataException.class)
+	public void testAddAVUMetadataToDataObjectTwiceIncludeUnitsVal()
+			throws Exception {
 		String testFileName = "testAddAVUMetadataToDataObjectTwice.txt";
 		String expectedAttribName = "testAddAVUMetadataToDataObjectTwice";
 		String expectedValueName = "testval1";
@@ -1762,8 +1777,7 @@ IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObj
 		TestCase.assertTrue(permissions >= IRODSFile.OWN_PERMISSIONS);
 
 	}
-	
-	
+
 	@Test
 	public final void testSetPublicWrite() throws Exception {
 		// generate a local scratch file
@@ -1791,11 +1805,13 @@ IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObj
 		dataObjectAO.setAccessPermissionWrite("", targetIrodsCollection + "/"
 				+ testFileName, testUserName);
 
-		IRODSFileSystemAO irodsFileSystemAO = irodsFileSystem.getIRODSAccessObjectFactory().getIRODSFileSystemAO(irodsAccount);
-		 irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
-			.instanceIRODSFile(targetIrodsCollection, testFileName);
-		int permissions = irodsFileSystemAO
-				.getFilePermissionsForGivenUser(irodsFile, testUserName);
+		IRODSFileSystemAO irodsFileSystemAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getIRODSFileSystemAO(
+						irodsAccount);
+		irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetIrodsCollection, testFileName);
+		int permissions = irodsFileSystemAO.getFilePermissionsForGivenUser(
+				irodsFile, testUserName);
 
 		TestCase.assertTrue(permissions >= IRODSFile.WRITE_PERMISSIONS);
 
@@ -1846,9 +1862,10 @@ IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObj
 				FilePermissionEnum.OWN, filePermissionEnum);
 
 	}
-	
+
 	@Test
-	public final void testGetPermissionsForGivenUserWhoHasRead() throws Exception {
+	public final void testGetPermissionsForGivenUserWhoHasRead()
+			throws Exception {
 		// generate a local scratch file
 
 		String testFileName = "testGetPermissionsForGivenUserWhoHasRead.txt";
@@ -1880,7 +1897,7 @@ IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObj
 		IRODSFile irodsFileForSecondaryUser = irodsFileSystem
 				.getIRODSFileFactory(secondaryAccount).instanceIRODSFile(
 						targetIrodsCollection + "/" + testFileName);
-		
+
 		FilePermissionEnum filePermissionEnum = dataObjectAO
 				.getPermissionForDataObject(
 						irodsFileForSecondaryUser.getAbsolutePath(),
@@ -1890,7 +1907,6 @@ IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObj
 				FilePermissionEnum.READ, filePermissionEnum);
 
 	}
-
 
 	@Test
 	public final void testSetReadThenRemove() throws Exception {
@@ -1977,9 +1993,10 @@ IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObj
 				userFilePermissions.size());
 
 	}
-	
+
 	@Test
-	public final void testListPermissionsForDataObjectAfterGivingPublicWrite() throws Exception {
+	public final void testListPermissionsForDataObjectAfterGivingPublicWrite()
+			throws Exception {
 		// generate a local scratch file
 
 		String testFileName = "testListPermissionsForDataObjectAfterGivingPublicWrite.xls";
@@ -2005,9 +2022,9 @@ IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObj
 		dataObjectAO.setAccessPermissionRead("", targetIrodsCollection + "/"
 				+ testFileName, testingProperties
 				.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY));
-		
-		dataObjectAO.setAccessPermissionWrite("", targetIrodsCollection + "/" + testFileName,
-				testPublicUser);
+
+		dataObjectAO.setAccessPermissionWrite("", targetIrodsCollection + "/"
+				+ testFileName, testPublicUser);
 
 		List<UserFilePermission> userFilePermissions = dataObjectAO
 				.listPermissionsForDataObject(targetIrodsCollection + "/"
@@ -2053,8 +2070,8 @@ IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObj
 		AvuData overwriteAvuData = AvuData.instance(expectedAttribName,
 				expectedNewValue, "");
 
-		dataObjectAO.modifyAVUMetadata(targetIrodsCollection, testFileName, dataToAdd,
-				overwriteAvuData);
+		dataObjectAO.modifyAVUMetadata(targetIrodsCollection, testFileName,
+				dataToAdd, overwriteAvuData);
 
 		List<MetaDataAndDomainData> metadata = dataObjectAO
 				.findMetadataValuesForDataObject(targetIrodsCollection,
@@ -2071,7 +2088,7 @@ IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObj
 		}
 
 	}
-	
+
 	@Test
 	public void testOverwriteFileAvuMetadataSpecifyAbsPath() throws Exception {
 		String testFileName = "testOverwriteFileAvuMetadataSpecifyAbsPath.txt";
@@ -2106,12 +2123,12 @@ IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObj
 		AvuData overwriteAvuData = AvuData.instance(expectedAttribName,
 				expectedNewValue, "");
 
-		dataObjectAO.modifyAVUMetadata(targetIrodsCollection + "/" + testFileName, dataToAdd,
-				overwriteAvuData);
+		dataObjectAO.modifyAVUMetadata(targetIrodsCollection + "/"
+				+ testFileName, dataToAdd, overwriteAvuData);
 
 		List<MetaDataAndDomainData> metadata = dataObjectAO
-				.findMetadataValuesForDataObject(targetIrodsCollection + "/" + 
-						testFileName);
+				.findMetadataValuesForDataObject(targetIrodsCollection + "/"
+						+ testFileName);
 		irodsFileSystem.close();
 
 		TestCase.assertEquals("should only be one avu entry", 1,
@@ -2159,8 +2176,9 @@ IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObj
 				dataToAdd);
 		AvuData overwriteAvuData = AvuData.instance(expectedAttribName,
 				expectedNewValue, "");
-		
-		dataObjectAO.modifyAvuValueBasedOnGivenAttributeAndUnit(targetIrodsCollection + "/" + testFileName, overwriteAvuData);
+
+		dataObjectAO.modifyAvuValueBasedOnGivenAttributeAndUnit(
+				targetIrodsCollection + "/" + testFileName, overwriteAvuData);
 
 		List<MetaDataAndDomainData> metadata = dataObjectAO
 				.findMetadataValuesForDataObject(targetIrodsCollection,
@@ -2212,6 +2230,116 @@ IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObj
 				expectedAttribValue, "");
 
 		collectionAO.deleteAVUMetadata(targetIrodsCollection, avuData);
+	}
+
+	@Test
+	public void testGetHostForGetProvidingResourceNameWhenShouldDifferentResource()
+			throws Exception {
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
+						irodsAccount);
+
+		IRODSServerProperties irodsServerProperties = environmentalInfoAO
+				.getIRODSServerProperties();
+
+		if (!irodsServerProperties
+				.isTheIrodsServerAtLeastAtTheGivenReleaseVersion(RemoteExecuteServiceImpl.STREAMING_API_CUTOFF)) {
+			irodsFileSystem.close();
+			return;
+		}
+
+		// generate a local scratch file
+		String testFileName = "testGetHostForGetProvidingResourceNameWhenShouldDifferentResource.txt";
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		FileGenerator.generateFileOfFixedLengthGivenName(absPath, testFileName,
+				1);
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		StringBuilder fileNameAndPath = new StringBuilder();
+		fileNameAndPath.append(absPath);
+
+		fileNameAndPath.append(testFileName);
+
+		DataTransferOperations transferOperationsAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataTransferOperations(
+						irodsAccount);
+		transferOperationsAO.putOperation(fileNameAndPath.toString(),
+				targetIrodsCollection, testingProperties.getProperty(TestingPropertiesHelper.IRODS_TERTIARY_RESOURCE_KEY), null, null);
+		DataObjectAO dataObjectAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
+
+		String hostInfo = dataObjectAO
+				.getHostForGetOperation(
+						targetIrodsCollection + "/" + testFileName,
+						"");
+ 		irodsFileSystem.close();
+		Assert.assertNotNull(
+				"null info from lookup of host for get operation was not expected, re-routing should occur",
+				hostInfo);
+	}
+	
+	@Test
+	public void testGetHostForGetProvidingResourceNameWhenShouldBeSameHost()
+			throws Exception {
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
+						irodsAccount);
+
+		IRODSServerProperties irodsServerProperties = environmentalInfoAO
+				.getIRODSServerProperties();
+
+		if (!irodsServerProperties
+				.isTheIrodsServerAtLeastAtTheGivenReleaseVersion(RemoteExecuteServiceImpl.STREAMING_API_CUTOFF)) {
+			irodsFileSystem.close();
+			return;
+		}
+
+		// generate a local scratch file
+		String testFileName = "testGetHostForGetProvidingResourceName.txt";
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		FileGenerator.generateFileOfFixedLengthGivenName(absPath, testFileName,
+				1);
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		StringBuilder fileNameAndPath = new StringBuilder();
+		fileNameAndPath.append(absPath);
+
+		fileNameAndPath.append(testFileName);
+
+		DataTransferOperations transferOperationsAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataTransferOperations(
+						irodsAccount);
+		transferOperationsAO.putOperation(fileNameAndPath.toString(),
+				targetIrodsCollection, "", null, null);
+		DataObjectAO dataObjectAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
+
+		String hostInfo = dataObjectAO
+				.getHostForGetOperation(
+						targetIrodsCollection + "/" + testFileName,
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_RESOURCE_KEY));
+		irodsFileSystem.close();
+		Assert.assertNull(
+				"null info from lookup of host for get operation was expected, as no re-routing should occur",
+				hostInfo);
+
 	}
 
 }

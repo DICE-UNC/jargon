@@ -36,7 +36,7 @@ returns to the available() implementation of the original Jargon).
 *Added code for remote execution of scripts.  This will be updated for new api that allows streaming once tested.
 *parallel transfer threads now cache any exceptions. These are reviewed by the parallel transfer runner and passed back up to the
 caller
-*added socket timeout processing, currently defaults to 10 seconds
+*added socket timeout processing as an option
 *fix path bug in IRODSFile that was putting windows path separators in irods file names on Windows for certain operations.
 *fix single quotes in file names
 *Added IRODSPasswordUtilities with an implementation of iRODS password obfuscation routines.
@@ -47,3 +47,6 @@ fixme's in UserAOImplTest
 **gets/puts now use new jargon properties to control number of threads
 *Began work on simpleQuery support
 *[#20] 10000 file transfer, marked complete after 5000
+*Added buffering to input/output streams for enhanced performance
+*[#180] [iROD-Chat:6165] Jargon 2.4.1 and Error -321000 (USER_NO_RESC_INPUT_ERR) - added capability to pull default resource from iRODS account if not specified.
+* [#176] put/get resource switching - WORK IN PROGRESS

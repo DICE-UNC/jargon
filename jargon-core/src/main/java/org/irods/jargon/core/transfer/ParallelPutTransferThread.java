@@ -3,6 +3,7 @@
  */
 package org.irods.jargon.core.transfer;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -84,8 +85,8 @@ public final class ParallelPutTransferThread extends
 	@Override
 	public void run() {
 		try {
-			setIn(new FileInputStream(
-					parallelPutFileTransferStrategy.getLocalFile()));
+			setIn(new BufferedInputStream(new FileInputStream(
+					parallelPutFileTransferStrategy.getLocalFile())));
 
 			long totalSkipped = 0;
 			long toSkip = 0;

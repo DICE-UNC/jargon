@@ -3,11 +3,16 @@
  */
 package org.irods.jargon.core.utils;
 
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.zip.CRC32;
+import java.util.zip.CheckedInputStream;
 
 import org.irods.jargon.core.exception.JargonException;
-import org.irods.jargon.core.pub.DataObjectAOImpl;
+import org.irods.jargon.testutils.TestingUtilsException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,9 +23,9 @@ import org.slf4j.LoggerFactory;
  * 
  */
 public class LocalFileUtils {
-	
+
 	public static final Logger log = LoggerFactory
-	.getLogger(LocalFileUtils.class);
+			.getLogger(LocalFileUtils.class);
 
 	/**
 	 * private constructor, this is not meant to be an instantiated class.
@@ -54,7 +59,7 @@ public class LocalFileUtils {
 		}
 		return count;
 	}
-	
+
 	/**
 	 * @param localFileToHoldData
 	 * @throws JargonException
@@ -80,6 +85,48 @@ public class LocalFileUtils {
 								+ localFileToHoldData.getAbsolutePath(), e);
 			}
 		}
+	}
+
+	/**
+	 * Compute a checksum for a local file given an absolute path
+	 * 
+	 * @param absolutePathToLocalFile
+	 *            <code>String</code> with absolute local file path under
+	 *            scratch (no leading '/')
+	 * @return <code>long</code> with the file's checksum value
+	 * @throws TestingUtilsException
+	 */
+	public static long computeFileCheckSumViaAbsolutePath(
+			final String absolutePathToLocalFile) throws TestingUtilsException {
+
+		FileInputStream file;
+		try {
+			file = new FileInputStream(absolutePathToLocalFile);
+		} catch (FileNotFoundException e1) {
+			throw new TestingUtilsException(
+					"error computing checksum, file not found:"
+							+ absolutePathToLocalFile, e1);
+
+		}
+		CheckedInputStream check = new CheckedInputStream(file, new CRC32());
+		BufferedInputStream in = new BufferedInputStream(check);
+		try {
+			while (in.read() != -1) {
+			}
+		} catch (IOException e) {
+			throw new TestingUtilsException(
+					"error computing checksum for file:"
+							+ absolutePathToLocalFile, e);
+		} finally {
+			try {
+				in.close();
+			} catch (IOException e) {
+				// ignore
+			}
+		}
+
+		return check.getChecksum().getValue();
+
 	}
 
 }

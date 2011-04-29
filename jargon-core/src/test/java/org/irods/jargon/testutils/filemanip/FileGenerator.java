@@ -131,6 +131,9 @@ public class FileGenerator {
 
 		// 1024 bytes of random stuff should be plenty, then just repeat it as
 		// needed
+		
+		File dir = new File(fileDirectory);
+		dir.mkdirs();
 
 		long chunkSize = 1024;
 		if (length <= chunkSize) {
