@@ -2,10 +2,15 @@
 <!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
 <beans>
   
+  <bean id="systemPropertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+    <property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE" />
+  </bean>
+
+
   <!-- ========================= RESOURCE DEFINITIONS ========================= -->
    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
     <property name="driverClassName" value="org.apache.derby.jdbc.EmbeddedDriver"/>
-    <property name="url" value="jdbc:derby:target/database/transfer;create=true"/>
+    <property name="url" value="jdbc:derby:${user.home}/.idrop/target/database/transfer;create=true"/>
     <property name="username" value="transfer"/>
     <property name="password" value="transfer"/>
   </bean>
