@@ -27,6 +27,7 @@ import org.irods.jargon.core.rule.IRODSRuleExecResult;
 import org.irods.jargon.core.rule.IRODSRuleExecResultOutputParameter;
 import org.irods.jargon.core.rule.IRODSRuleTranslator;
 import org.irods.jargon.core.rule.JargonRuleException;
+import org.irods.jargon.core.utils.TagHandlingUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -307,6 +308,10 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements
 				.getStringValue();
 		LOG.info("client side action - irods file absolute path: {}",
 				irodsFileAbsolutePath);
+		
+		Tag kvp =  fileAction.getTag(KEY_VAL_PAIR_PI);
+		Map<String, String> kvpMap = TagHandlingUtils.translateKeyValuePairTagIntoMap(kvp);
+		LOG.debug("kvp map is:{}", kvpMap);
 
 		String otherFilePath = fileAction.getTag(KEY_VAL_PAIR_PI)
 				.getTag(SVALUE).getStringValue();

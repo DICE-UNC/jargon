@@ -12,7 +12,6 @@ import java.util.zip.CRC32;
 import java.util.zip.CheckedInputStream;
 
 import org.irods.jargon.core.exception.JargonException;
-import org.irods.jargon.testutils.TestingUtilsException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -94,16 +93,16 @@ public class LocalFileUtils {
 	 *            <code>String</code> with absolute local file path under
 	 *            scratch (no leading '/')
 	 * @return <code>long</code> with the file's checksum value
-	 * @throws TestingUtilsException
+	 * @throws JargonException
 	 */
 	public static long computeFileCheckSumViaAbsolutePath(
-			final String absolutePathToLocalFile) throws TestingUtilsException {
+			final String absolutePathToLocalFile) throws JargonException {
 
 		FileInputStream file;
 		try {
 			file = new FileInputStream(absolutePathToLocalFile);
 		} catch (FileNotFoundException e1) {
-			throw new TestingUtilsException(
+			throw new JargonException(
 					"error computing checksum, file not found:"
 							+ absolutePathToLocalFile, e1);
 
@@ -114,9 +113,8 @@ public class LocalFileUtils {
 			while (in.read() != -1) {
 			}
 		} catch (IOException e) {
-			throw new TestingUtilsException(
-					"error computing checksum for file:"
-							+ absolutePathToLocalFile, e);
+			throw new JargonException("error computing checksum for file:"
+					+ absolutePathToLocalFile, e);
 		} finally {
 			try {
 				in.close();
