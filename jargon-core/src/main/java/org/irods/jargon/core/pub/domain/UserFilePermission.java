@@ -1,4 +1,4 @@
-package org.irods.jargon.core.query;
+package org.irods.jargon.core.pub.domain;
 
 import org.irods.jargon.core.protovalues.FilePermissionEnum;
 

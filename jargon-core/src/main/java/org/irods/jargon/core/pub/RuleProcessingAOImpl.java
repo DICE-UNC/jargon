@@ -13,7 +13,9 @@ import static org.irods.jargon.core.packinstr.ExecMyRuleInp.TYPE;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.irods.jargon.core.connection.IRODSAccount;
@@ -21,7 +23,14 @@ import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.packinstr.ExecMyRuleInp;
+import org.irods.jargon.core.packinstr.RuleExecDelInp;
+import org.irods.jargon.core.pub.domain.DelayedRuleExecution;
 import org.irods.jargon.core.pub.io.IRODSFile;
+import org.irods.jargon.core.query.IRODSGenQuery;
+import org.irods.jargon.core.query.IRODSQueryResultRow;
+import org.irods.jargon.core.query.IRODSQueryResultSetInterface;
+import org.irods.jargon.core.query.JargonQueryException;
+import org.irods.jargon.core.query.RodsGenQueryEnum;
 import org.irods.jargon.core.rule.IRODSRule;
 import org.irods.jargon.core.rule.IRODSRuleExecResult;
 import org.irods.jargon.core.rule.IRODSRuleExecResultOutputParameter;
@@ -51,6 +60,7 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements
 	public static final String KEY_WORD = "keyWord";
 
 	public static final String SVALUE = "svalue";
+	public static final String COMMA = ",";
 
 	private static final Logger LOG = LoggerFactory
 			.getLogger(RuleProcessingAOImpl.class);
@@ -88,7 +98,7 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements
 	@Override
 	public IRODSRuleExecResult executeRule(final String irodsRuleAsString)
 			throws JargonRuleException, JargonException {
-		
+
 		LOG.info("executing rule: {}", irodsRuleAsString);
 		final IRODSRuleTranslator irodsRuleTranslator = new IRODSRuleTranslator();
 		final IRODSRule irodsRule = irodsRuleTranslator
@@ -98,9 +108,10 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements
 		final Tag response = getIRODSProtocol().irodsFunction(execMyRuleInp);
 		LOG.debug("response from rule exec: {}", response.parseTag());
 
-		IRODSRuleExecResult irodsRuleExecResult = processRuleResult(response, irodsRule);
+		IRODSRuleExecResult irodsRuleExecResult = processRuleResult(response,
+				irodsRule);
 		LOG.debug("processing end of rule execution by reading message");
-		
+
 		return irodsRuleExecResult;
 	}
 
@@ -140,6 +151,138 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements
 
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.RuleProcessingAO#purgeAllDelayedExecQueue()
+	 */
+	@Override
+	public int purgeAllDelayedExecQueue() throws JargonException {
+		int numberPurged = 0;
+
+		LOG.info("purgeAllDelayedExecQueue");
+
+		List<DelayedRuleExecution> delayedRuleExecutions = listAllDelayedRuleExecutions(0);
+		RuleExecDelInp ruleExecDelInp = null;
+
+		for (DelayedRuleExecution delayedRuleExecution : delayedRuleExecutions) {
+			LOG.info("deleting rule with id:{}", delayedRuleExecution.getId());
+			ruleExecDelInp = RuleExecDelInp.instanceForDeleteRule(String
+					.valueOf(delayedRuleExecution.getId()));
+			// TODO: eval response
+			getIRODSProtocol().irodsFunction(ruleExecDelInp);
+			numberPurged++;
+		}
+
+		return numberPurged;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.RuleProcessingAO#listAllDelayedRuleExecutions
+	 * (int)
+	 */
+	@Override
+	public List<DelayedRuleExecution> listAllDelayedRuleExecutions(
+			final int partialStartIndex) throws JargonException {
+
+		if (partialStartIndex < 0) {
+			throw new IllegalArgumentException(
+					"partialStartIndex must be 0 or greater");
+		}
+
+		LOG.info("listAllDelayedRuleExecutions() with partial start of {}",
+				partialStartIndex);
+
+		List<DelayedRuleExecution> delayedRuleExecutions = new ArrayList<DelayedRuleExecution>();
+
+		final StringBuilder sb = new StringBuilder();
+		sb.append("SELECT ");
+		sb.append(RodsGenQueryEnum.COL_RULE_EXEC_ID.getName());
+		sb.append(COMMA);
+
+		sb.append(RodsGenQueryEnum.COL_RULE_EXEC_NAME.getName());
+		sb.append(COMMA);
+		sb.append(RodsGenQueryEnum.COL_RULE_EXEC_USER_NAME.getName());
+		sb.append(COMMA);
+		sb.append(RodsGenQueryEnum.COL_RULE_EXEC_ADDRESS.getName());
+		sb.append(COMMA);
+		sb.append(RodsGenQueryEnum.COL_RULE_EXEC_TIME.getName());
+		sb.append(COMMA);
+		sb.append(RodsGenQueryEnum.COL_RULE_EXEC_FREQUENCY.getName());
+		sb.append(COMMA);
+		sb.append(RodsGenQueryEnum.COL_RULE_EXEC_PRIORITY.getName());
+		sb.append(COMMA);
+		sb.append(RodsGenQueryEnum.COL_RULE_EXEC_ESTIMATED_EXE_TIME.getName());
+		sb.append(COMMA);
+		sb.append(RodsGenQueryEnum.COL_RULE_EXEC_NOTIFICATION_ADDR.getName());
+		sb.append(COMMA);
+		sb.append(RodsGenQueryEnum.COL_RULE_EXEC_LAST_EXE_TIME.getName());
+		sb.append(COMMA);
+		sb.append(RodsGenQueryEnum.COL_RULE_EXEC_STATUS.getName());
+
+		final String query = sb.toString();
+		LOG.debug("query for rule exec status:{}", query);
+
+		final IRODSGenQuery irodsQuery = IRODSGenQuery.instance(query, 5000); // FIXME:
+																				// put
+																				// into
+																				// props
+		IRODSGenQueryExecutor irodsGenQueryExecutor = getIRODSAccessObjectFactory()
+				.getIRODSGenQueryExecutor(getIRODSAccount());
+
+		IRODSQueryResultSetInterface resultSet;
+		try {
+			resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResult(
+					irodsQuery, 0);
+
+		} catch (JargonQueryException e) {
+			LOG.error("query exception for query: {}", query, e);
+			throw new JargonException(
+					"error in query for rule execution status", e);
+		}
+
+		for (IRODSQueryResultRow row : resultSet.getResults()) {
+			delayedRuleExecutions
+					.add(buildDelayedRuleExecutionFromResultRow(row));
+		}
+
+		return delayedRuleExecutions;
+
+	}
+
+	private DelayedRuleExecution buildDelayedRuleExecutionFromResultRow(
+			final IRODSQueryResultRow row) throws JargonException {
+
+		DelayedRuleExecution dre = new DelayedRuleExecution();
+		dre.setId(Integer.parseInt(row.getColumn(0)));
+		dre.setName(row.getColumn(1));
+		dre.setUserName(row.getColumn(2));
+		dre.setAddress(row.getColumn(3));
+		dre.setExecTime(row.getColumn(4));
+		dre.setFrequency(row.getColumn(5));
+		dre.setPriority(row.getColumn(6));
+		dre.setEstimatedExecTime(row.getColumn(7));
+		dre.setNotificationAddress(row.getColumn(8));
+		dre.setLastExecTime(row.getColumn(9));
+		dre.setExecStatus(row.getColumn(10));
+
+		// add info to track position in records for possible requery
+		dre.setLastResult(row.isLastResult());
+		dre.setCount(row.getRecordCount());
+
+		if (LOG.isInfoEnabled()) {
+			LOG.info("built delayed rule execution built \n");
+			LOG.info(dre.toString());
+		}
+
+		return dre;
+
+	}
+
 	/**
 	 * @param parametersLength
 	 * @return
@@ -174,17 +317,18 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements
 						label,
 						(processRuleResponseWithClientSideActionTag(label,
 								type, value, msParam)));
-				//operationComplete(0);
+				// operationComplete(0);
 			} else {
 				irodsRuleOutputParameters.put(label,
 						(processRuleResponseTag(label, type, value, msParam)));
 			}
 		}
-		
-		// now read the rest of the rule response if there were params that were processed
+
+		// now read the rest of the rule response if there were params that were
+		// processed
 		if (clientSideActionOccurred) {
 			LOG.info("a client side action ocurred, I have an irods message to consume to end the rule processing");
-			//this.getIRODSProtocol().readMessage();
+			// this.getIRODSProtocol().readMessage();
 		}
 
 		LOG.info("rule operation complete");
@@ -310,23 +454,25 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements
 				.getStringValue();
 		LOG.info("client side action - irods file absolute path: {}",
 				irodsFileAbsolutePath);
-		
-		Tag kvp =  fileAction.getTag(KEY_VAL_PAIR_PI);
-		Map<String, String> kvpMap = TagHandlingUtils.translateKeyValuePairTagIntoMap(kvp);
+
+		Tag kvp = fileAction.getTag(KEY_VAL_PAIR_PI);
+		Map<String, String> kvpMap = TagHandlingUtils
+				.translateKeyValuePairTagIntoMap(kvp);
 		LOG.debug("kvp map is:{}", kvpMap);
-		
+
 		String localPath = kvpMap.get(LOCAL_PATH);
-		
+
 		if (localPath == null) {
 			LOG.error("no local file path found in tags");
-			throw new JargonException("client side action indicated, but no localPath in tag");
+			throw new JargonException(
+					"client side action indicated, but no localPath in tag");
 		}
-		
+
 		String resourceName = kvpMap.get(DEST_RESC_NAME);
 		if (resourceName == null) {
 			resourceName = "";
 		}
-		
+
 		LOG.debug("getting reference to local file");
 
 		File localFile = new File(localPath);
@@ -356,7 +502,8 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements
 	 * @throws JargonException
 	 */
 	private void clientSidePutAction(final String irodsFileAbsolutePath,
-			final File localFile, final String resourceName) throws JargonException {
+			final File localFile, final String resourceName)
+			throws JargonException {
 		DataObjectAO dataObjectAO = new DataObjectAOImpl(getIRODSSession(),
 				getIRODSAccount());
 		IRODSFile irodsFile = dataObjectAO

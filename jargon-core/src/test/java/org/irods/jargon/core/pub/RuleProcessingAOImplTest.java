@@ -1,5 +1,6 @@
 package org.irods.jargon.core.pub;
 
+import java.util.List;
 import java.util.Properties;
 
 import junit.framework.Assert;
@@ -9,6 +10,7 @@ import org.irods.jargon.core.connection.IRODSProtocolManager;
 import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.connection.IRODSSimpleProtocolManager;
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.pub.domain.DelayedRuleExecution;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.rule.IRODSRuleExecResult;
 import org.irods.jargon.core.utils.LocalFileUtils;
@@ -289,16 +291,12 @@ public class RuleProcessingAOImplTest {
 	/*
 	 * per bug report [#181] rule requests transfer from unknown protocol error
 	 * executing iRule rule sample:
-	 * https://www.irods.org/index.php/Complex_Rule_Samples
-	 * NOTE: requires the placing of the acObjPutWithDateAndChksumAsAVUs in core.irb.  Commented out in normal testing to keep
-	 * custom testing setups down
+	 * https://www.irods.org/index.php/Complex_Rule_Samples NOTE: requires the
+	 * placing of the acObjPutWithDateAndChksumAsAVUs in core.irb. Commented out
+	 * in normal testing to keep custom testing setups down
 	 */
 	@Ignore
 	public void testExecuteRequestClientActionPutBug181() throws Exception {
-		// create a local file to put
-		// put a collection out to do a checksum on
-		//String testFileSubdir = "dataforbug181/danrw/AIP2archive/";
-		String testFileSubdir = "";
 		String testFileName = "test2.txt";
 		String irodsFileName = "test2.txt";
 
@@ -334,7 +332,7 @@ public class RuleProcessingAOImplTest {
 
 		builder.append("*ruleExecOut");
 		String ruleString = builder.toString();
-		
+
 		RuleProcessingAO ruleProcessingAO = accessObjectFactory
 				.getRuleProcessingAO(irodsAccount);
 
@@ -350,6 +348,121 @@ public class RuleProcessingAOImplTest {
 		Assert.assertNotNull("did not get a response", result);
 		Assert.assertEquals("did not get results for client side operation", 1,
 				result.getOutputParameterResults().size());
+
+	}
+
+	/*
+	 * [#182] Rule works on command line, does not execute via Jargon
+	 */
+	@Test
+	public void testExecuteRuleBug182() throws Exception {
+		// create a local file to put
+		// put a collection out to do a checksum on
+		// String testFileSubdir = "dataforbug181/danrw/AIP2archive/";
+		String testFileName = "testExecuteRuleBug182.txt";
+
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+
+		String putFileName = FileGenerator.generateFileOfFixedLengthGivenName(
+				absPath, testFileName, 100);
+
+		String targetIrodsFileName = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH)
+				+ "/" + testFileName;
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
+		DataTransferOperations dto = accessObjectFactory
+				.getDataTransferOperations(irodsAccount);
+		dto.putOperation(putFileName, targetIrodsFileName, "", null, null);
+
+		StringBuilder builder = new StringBuilder();
+		builder.append("sparAudit||assign(*rodsPath,");
+		builder.append(targetIrodsFileName);
+		builder.append(")");
+		builder.append("##acGetValueForDataObjMetaAttribute(*storedChecksumCondition,*objStoredChksum)");
+		builder.append("##acGetDataObjLocations(*locationsCondition,*matchingObjects)");
+		builder.append("##forEachExec(*matchingObjects,msiGetValByKey(*matchingObjects,RESC_LOC,*objReplicaHost)");
+		builder.append("##msiGetValByKey(*matchingObjects,DATA_PATH,*objPhysicalPath)");
+		builder.append("##msiGetValByKey(*matchingObjects,RESC_NAME,*currRescName)");
+		builder.append("##remoteExec(*objReplicaHost,null,acGetPhysicalDataObjMD5SUM(*objPhysicalPath,*objReplicaHost,*objPhysicalMD5),nop)");
+		builder.append("##writeLine(stdout,\"Checksum of *rodsPath at *objReplicaHost on *currRescName (*objPhysicalPath) is *objPhysicalMD5\")");
+		builder.append("##ifExec(*objStoredChksum == *objPhysicalMD5,writeLine(stdout,\"input and computed MD5 checksums match\" )");
+		builder.append(",writeLine(stdout,\"if recov - actual comparison failed:(\"),writeLine(stdout,\"replace policy is : *replacePolicy\")");
+		builder.append("##acPolicyBasedReplicaReplacement(*rodsPath,*currRescName,*replacePolicy),writeLine(stdout,\"repair schedule placeholder - recovery\")),nop)");
+		builder.append("##writeLine(stdout,\"getting *rodsName to *stagePath/*rodsName\")");
+		builder.append("#msiDataObjGet(*rodsPath,*stagePath/*rodsName,*getStatus)|nop##nop\n");
+		// input vars
+		builder.append("*rodsName=");
+		builder.append(testFileName);
+		builder.append("%*stagePath=");
+		builder.append(testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH));
+		builder.append("*replacePolicy='eager'%*locationsCondition=DATA_NAME = '*rodsName'");
+		builder.append("%*storedChecksumCondition=*locationsCondition AND META_DATA_ATTR_NAME = 'MD5SUM'\n");
+		// output vars
+		builder.append("*ruleExecOut");
+		String ruleString = builder.toString();
+
+		RuleProcessingAO ruleProcessingAO = accessObjectFactory
+				.getRuleProcessingAO(irodsAccount);
+
+		IRODSRuleExecResult result = ruleProcessingAO.executeRule(ruleString);
+
+		IRODSFile putFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetIrodsFileName);
+
+		Assert.assertTrue("file does not exist", putFile.exists());
+
+		irodsFileSystem.close();
+
+		Assert.assertNotNull("did not get a response", result);
+	}
+
+	@Ignore
+	public void testListAllDelayedRuleExecutions() throws Exception {
+
+		// TODO: purge, add 2
+		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		RuleProcessingAO ruleProcessingAO = irodsFileSystem
+				.getIRODSAccessObjectFactory()
+				.getRuleProcessingAO(irodsAccount);
+
+		List<DelayedRuleExecution> delayedRuleExecutions = ruleProcessingAO
+				.listAllDelayedRuleExecutions(0);
+		irodsFileSystem.close();
+		Assert.assertTrue("did not find delayedRuleExecutions",
+				delayedRuleExecutions.size() > 0);
+	}
+
+	@Ignore
+	public void testPurgeAllDelayedRuleExecutions() throws Exception {
+
+		// TODO: purge, add1, purge, test
+		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		RuleProcessingAO ruleProcessingAO = irodsFileSystem
+				.getIRODSAccessObjectFactory()
+				.getRuleProcessingAO(irodsAccount);
+
+		int countPurged = ruleProcessingAO.purgeAllDelayedExecQueue();
+		irodsFileSystem.close();
+		Assert.assertTrue("nothing purged", countPurged > 0);
+		List<DelayedRuleExecution> delayedRuleExecutions = ruleProcessingAO
+				.listAllDelayedRuleExecutions(0);
+		Assert.assertTrue("should be no delayedRuleExecutions after purge",
+				delayedRuleExecutions.isEmpty());
 
 	}
 

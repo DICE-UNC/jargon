@@ -3,6 +3,7 @@ package org.irods.jargon.core.query;
 import junit.framework.TestCase;
 
 import org.irods.jargon.core.protovalues.FilePermissionEnum;
+import org.irods.jargon.core.pub.domain.UserFilePermission;
 import org.junit.Test;
 
 

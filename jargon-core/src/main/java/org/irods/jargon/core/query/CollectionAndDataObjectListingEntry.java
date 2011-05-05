@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.domain.IRODSDomainObject;
+import org.irods.jargon.core.pub.domain.UserFilePermission;
 
 /**
  * Value object that holds information on data objects and collections. This

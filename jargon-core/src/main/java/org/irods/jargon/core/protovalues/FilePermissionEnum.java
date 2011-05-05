@@ -1,12 +1,15 @@
 package org.irods.jargon.core.protovalues;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Values for file permission
  * @author Mike Conway - DICE (www.irods.org)
  */
 public enum FilePermissionEnum {
 
-	OWN(1200), WRITE(1120), READ(1050), NONE(-1);
+	NONE(-1), OWN(1200), WRITE(1120), READ(1050), ;
 
 	FilePermissionEnum(final int i) {
 	}
@@ -24,5 +27,19 @@ public enum FilePermissionEnum {
 		default:
 			throw new IllegalArgumentException("No permission type for value: " + i);
 		}
+	}
+	
+	/**
+	 * Handy method to get all enum values as a list, good for building select boxes and the like
+	 * @return
+	 */
+	public static List<FilePermissionEnum> listAllValues() {
+		List<FilePermissionEnum> allValues = new ArrayList<FilePermissionEnum>();
+		FilePermissionEnum[] enumList = FilePermissionEnum.values();
+		for (FilePermissionEnum enumVal : enumList) {
+			allValues.add(enumVal);
+		}
+		return allValues;
+		
 	}
 }

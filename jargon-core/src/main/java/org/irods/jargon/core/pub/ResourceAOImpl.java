@@ -247,12 +247,7 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 					.getName()));
 			query.append("'");
 
-		} else if (irodsFile.isDirectory()) {
-			String msg = "looking for a resource for an IRODSFileImpl, but I the file is a collection:"
-					+ irodsFile.getAbsolutePath();
-			log.error(msg);
-			throw new JargonException(msg);
-		} else {
+		}  else {
 			String msg = "looking for a resource for an IRODSFileImpl, but I the file is a collection:"
 					+ irodsFile.getAbsolutePath();
 			log.error(msg);
