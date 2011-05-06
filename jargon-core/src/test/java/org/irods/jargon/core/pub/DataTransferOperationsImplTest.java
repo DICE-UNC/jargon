@@ -497,7 +497,7 @@ public class DataTransferOperationsImplTest {
 				getIRODSFile.getAbsolutePath(), getLocalFile.getAbsolutePath());
 		TestCase.assertEquals("did not expect any errors", 0,
 				testCallbackListener.getErrorCallbackCount());
-		TestCase.assertEquals("should have 1 callack", 1,
+		TestCase.assertEquals("should have 2 callacks, including a 0th", 2,
 				testCallbackListener.getSuccessCallbackCount());
 		TestCase.assertEquals(
 				"did not get the full irods file name in callback",
@@ -1129,7 +1129,7 @@ public class DataTransferOperationsImplTest {
 
 		// I've put a mess of stuff, now get it
 
-		Assert.assertEquals("should have 3 files in coll before cancelled", 3,
+		Assert.assertEquals("should have  2 files in coll before cancelled", 2,
 				destFile.list().length);
 		Assert.assertTrue("should have a status callback of cancelled",
 				listener.isCancelEncountered());
@@ -1184,7 +1184,7 @@ public class DataTransferOperationsImplTest {
 				.getIRODSFileFactory(irodsAccount).instanceIRODSFile(
 						destFile.getAbsolutePath() + "/" + rootCollection);
 
-		Assert.assertEquals("should have 10 files in coll after restart", 10,
+		Assert.assertEquals("should have 9 files in coll after restart", 9,
 				destTarget.list().length);
 		Assert.assertEquals("should have counted 10 files", 10,
 				restartControlBlock.getTotalFilesTransferredSoFar());
@@ -1236,7 +1236,7 @@ public class DataTransferOperationsImplTest {
 
 		// I've put a mess of stuff, now get it
 
-		Assert.assertEquals("should have 3 files in coll before pause", 3,
+		Assert.assertEquals("should have 2 files in coll before pause", 2,
 				destFile.list().length);
 		Assert.assertTrue("should have a status callback of pause",
 				listener.isPauseEncountered());
@@ -1303,7 +1303,7 @@ public class DataTransferOperationsImplTest {
 				ilsResult.indexOf(testingProperties
 						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY)) != -1);
 
-		Assert.assertEquals("did not get expected success callback", 1,
+		Assert.assertEquals("did not get expected success callbacks", 2,
 				transferStatusCallbackListener.getReplicateCallbackCtr());
 	}
 
@@ -2366,7 +2366,7 @@ public class DataTransferOperationsImplTest {
 				+ rootCollection, "", irodsCollectionTargetAbsolutePath,
 				listener, false, transferControlBlock);
 
-		TestCase.assertEquals("did not hit cancel as anticipated in copy", 3,
+		TestCase.assertEquals("did not hit cancel as anticipated in copy", 2,
 				transferControlBlock.getTotalFilesTransferredSoFar());
 
 		// now do a restart and complete the copy
@@ -2396,7 +2396,7 @@ public class DataTransferOperationsImplTest {
 
 		irodsFileSystem.close();
 		TestCase.assertEquals("did not get expected number of restarting callbacks", 3, countRestarted);
-		TestCase.assertEquals("did not get expected number of success callbacks", 7, countSuccess);
+		TestCase.assertEquals("did not get expected number of success callbacks", 8, countSuccess);
 
 	}
 

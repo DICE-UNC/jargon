@@ -415,6 +415,12 @@ final class IRODSLocalTransferEngine implements TransferStatusCallbackListener {
 			throws JargonException {
 
 		log.info("statusCallback: {}", transferStatus);
+		
+		if (transferStatus.getTotalFilesTransferredSoFar() == 0) {
+			log.debug("got startup 0th transfer callback, ignore in database, but do callback to transfer status listener");
+			transferManager.notifyStatusUpdate(transferStatus);
+			return;
+		}
 
 		// status callback from the recursive transfer operation in Jargon
 		synchronized (this) {

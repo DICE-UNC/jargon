@@ -352,9 +352,10 @@ public class RuleProcessingAOImplTest {
 	}
 
 	/*
-	 * [#182] Rule works on command line, does not execute via Jargon
+	 * [#182] Rule works on command line, does not execute via Jargon - NOTE: parked for now
+	 * Might be useful later, or delete after 182 issue resolved.  This is looking a like rule issue, not a Jargon issue
 	 */
-	@Test
+	@Ignore
 	public void testExecuteRuleBug182() throws Exception {
 		// create a local file to put
 		// put a collection out to do a checksum on

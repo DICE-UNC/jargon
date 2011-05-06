@@ -71,8 +71,10 @@ public class TestIRODSLocalTransferEngineTest {
         irodsTestSetupUtilities.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
         assertionHelper = new org.irods.jargon.testutils.AssertionHelper();
         DatabasePreparationUtils.makeSureDatabaseIsInitialized();
-        databaseTester = new JdbcDatabaseTester("org.apache.derby.jdbc.EmbeddedDriver",
-                "jdbc:derby:target/database/transfer", "transfer", "transfer");
+        String databaseUrl = 
+        "jdbc:derby:" +System.getProperty("user.home") +  "/.idrop/target/database/transfer";
+        databaseTester = new JdbcDatabaseTester("org.apache.derby.jdbc.EmbeddedDriver", databaseUrl, "transfer", "transfer");
+
     }
 
     @Before
@@ -295,7 +297,7 @@ public class TestIRODSLocalTransferEngineTest {
         irodsLocalTransferEngine.setCurrentTransfer(enqueuedTransfer);
         TransferStatus transferStatus = TransferStatus.instance(
                 org.irods.jargon.core.transfer.TransferStatus.TransferType.PUT, "sourceFromStatus", "targetFromStatus",
-                "targetResource", 100L, 100L, 0, 0, TransferStatus.TransferState.SUCCESS);
+                "targetResource", 100L, 100L, 1, 1, TransferStatus.TransferState.SUCCESS);
 
         irodsLocalTransferEngine.statusCallback(transferStatus);
 
@@ -348,13 +350,13 @@ public class TestIRODSLocalTransferEngineTest {
         irodsLocalTransferEngine.setCurrentTransfer(enqueuedTransfer);
         TransferStatus transferStatus = TransferStatus.instance(
                 org.irods.jargon.core.transfer.TransferStatus.TransferType.PUT, "sourceFromStatus", "targetFromStatus",
-                "targetResource", 100L, 100L, 0, 0, TransferStatus.TransferState.SUCCESS);
+                "targetResource", 100L, 100L, 1, 2, TransferStatus.TransferState.SUCCESS);
 
         irodsLocalTransferEngine.statusCallback(transferStatus);
 
         TransferStatus badStatus = TransferStatus.instanceForException(
                 org.irods.jargon.core.transfer.TransferStatus.TransferType.PUT, "sourceFromStatusError",
-                "targetFromStatusError", "targetResource", 100L, 100L, 0, 0, new JargonException("blah"));
+                "targetFromStatusError", "targetResource", 100L, 100L, 2, 2, new JargonException("blah"));
 
         irodsLocalTransferEngine.statusCallback(badStatus);
 
@@ -574,7 +576,7 @@ public class TestIRODSLocalTransferEngineTest {
         irodsLocalTransferEngine.processOperation(localIRODSTransfer);
         irodsFileSystem.close();
 
-        Assert.assertEquals("should have gotten a processed callback", 1, transferManagerCallbackListener
+        Assert.assertEquals("should have gotten a processed callback", 2, transferManagerCallbackListener
                 .getTransferStatusHistory().size());
 
     }

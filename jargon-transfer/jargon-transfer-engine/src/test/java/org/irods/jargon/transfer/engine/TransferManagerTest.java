@@ -55,9 +55,12 @@ public class TransferManagerTest {
         irodsTestSetupUtilities.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
         scratchFileUtils.clearAndReinitializeScratchDirectory(IRODS_TEST_SUBDIR_PATH);
         DatabasePreparationUtils.makeSureDatabaseIsInitialized();
-        databaseTester = new JdbcDatabaseTester("org.apache.derby.jdbc.EmbeddedDriver",
-                "jdbc:derby:target/database/transfer", "transfer", "transfer");
-
+        // get user home dir
+        
+        
+        String databaseUrl = 
+            "jdbc:derby:" +System.getProperty("user.home") +  "/.idrop/target/database/transfer";
+            databaseTester = new JdbcDatabaseTester("org.apache.derby.jdbc.EmbeddedDriver", databaseUrl, "transfer", "transfer");
     }
 
     @Test
