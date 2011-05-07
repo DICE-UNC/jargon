@@ -6,6 +6,7 @@ package org.irods.jargon.core.connection;
 import static edu.sdsc.grid.io.irods.IRODSConstants.OPR_COMPLETE_AN;
 import static edu.sdsc.grid.io.irods.IRODSConstants.RODS_API_REQ;
 
+import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InterruptedIOException;
@@ -217,10 +218,12 @@ public class IRODSCommands implements IRODSManagedConnection {
 							errorLength, byteStringLength, intInfo));
 			irodsConnection.send(message);
 			if (errorLength > 0) {
-				irodsConnection.send(errorStream, errorLength);
+				irodsConnection.send(new BufferedInputStream(errorStream), errorLength);
+				errorStream.close();
 			}
 			if (byteStringLength > 0) {
-				irodsConnection.send(byteStream, byteStringLength);
+				irodsConnection.send(new BufferedInputStream(byteStream), byteStringLength);
+				byteStream.close();
 			}
 			irodsConnection.flush();
 		} catch (UnsupportedEncodingException e) {

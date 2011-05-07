@@ -1,7 +1,11 @@
 package org.irods.jargon.datautils.tree;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Date;
+import java.util.List;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.JargonException;
@@ -13,7 +17,6 @@ import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry;
 import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry.ObjectType;
 import org.irods.jargon.datautils.tree.FileOrDirFilter.FilterFor;
 import org.irods.jargon.datautils.tree.FileTreeDiffEntry.DiffType;
-import org.irods.jargon.datautils.tree.FileOrDirFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -182,7 +185,7 @@ public class FileTreeDiffUtilityImpl implements FileTreeDiffUtility {
 				.substring(leftHandSideRootPath.length());
 		String rightHandSideAsRelativePath = rightHandSide.getAbsolutePath()
 				.substring(rightHandSideRootPath.length());
-		
+
 		log.debug("diffTwoFiles in currentTreeNode:{}", currentFileTreeNode);
 
 		log.debug("lhs as relativePath:{}", leftHandSideAsRelativePath);
@@ -198,8 +201,11 @@ public class FileTreeDiffUtilityImpl implements FileTreeDiffUtility {
 			log.debug("lhs < rhs");
 			log.debug("lhs timestamp:{}", leftHandSide.lastModified());
 			log.debug("lhs cutoff:{}", timestampforLastSynchLeftHandSide);
-			if (timestampforLastSynchLeftHandSide == NO_TIMESTAMP_CHECKS
-					|| true) { //leftHandSide.lastModified() > timestampforLastSynchLeftHandSide) {
+			if (timestampforLastSynchLeftHandSide == NO_TIMESTAMP_CHECKS || true) {  // FIXME: currently this bypasses the delete mode
+				// leftHandSide.lastModified()
+																					// >
+																					// timestampforLastSynchLeftHandSide)
+																					// {
 				FileTreeDiffEntry entry = buildFileTreeDiffEntryForFile(
 						leftHandSide, DiffType.LEFT_HAND_PLUS, 0, 0);
 				currentFileTreeNode.add(new FileTreeNode(entry));
@@ -214,8 +220,10 @@ public class FileTreeDiffUtilityImpl implements FileTreeDiffUtility {
 			fileMatchIndex = 1;
 		} else if (compValue > 0) {
 			log.debug("lhs > rhs");
-			if (timestampForLastSynchRightHandSide == NO_TIMESTAMP_CHECKS
-					|| true) { //rightHandSide.lastModified() > timestampForLastSynchRightHandSide) {
+			if (timestampForLastSynchRightHandSide == NO_TIMESTAMP_CHECKS || true) { // rightHandSide.lastModified()
+																						// >
+																						// timestampForLastSynchRightHandSide)
+																						// {
 				FileTreeDiffEntry entry = buildFileTreeDiffEntryForFile(
 						rightHandSide, DiffType.RIGHT_HAND_PLUS, 0, 0);
 				currentFileTreeNode.add(new FileTreeNode(entry));
@@ -329,12 +337,17 @@ public class FileTreeDiffUtilityImpl implements FileTreeDiffUtility {
 		// set up the new root node in the compare tree, these are both
 		// directories and I'll recursively descend to the children with this
 		// parent as the root.
+		
+		Comparator<File> fileNameComparator = new FileNameComparator();
 
 		log.debug("inspecting for files in this pass using a filter for files");
 		FileOrDirFilter filter = new FileOrDirFilter(FilterFor.FILE);
 		File[] lhsChildren = leftHandSide.listFiles(filter);
+		Arrays.sort(lhsChildren, fileNameComparator);
+		
 		log.debug("lhs files in dir:{}", lhsChildren);
 		File[] rhsChildren = rightHandSide.listFiles(filter);
+		Arrays.sort(rhsChildren, fileNameComparator);
 		log.debug("rhs files in dir:{}", rhsChildren);
 
 		int lhMatchOrPass;
@@ -384,7 +397,6 @@ public class FileTreeDiffUtilityImpl implements FileTreeDiffUtility {
 			}
 		}
 
-		
 		log.info("looking for unmatched rhs files");
 		/*
 		 * the match is driven by the lhs file. Once I've exhausted those, I
@@ -406,27 +418,30 @@ public class FileTreeDiffUtilityImpl implements FileTreeDiffUtility {
 		}
 
 		log.info("processing matches on dirs now");
-		
-		 filter = new FileOrDirFilter(FilterFor.DIR);
+
+		filter = new FileOrDirFilter(FilterFor.DIR);
 		lhsChildren = leftHandSide.listFiles(filter);
+		Arrays.sort(lhsChildren, fileNameComparator);
 		log.debug("lhs files in dir:{}", lhsChildren);
 		rhsChildren = rightHandSide.listFiles(filter);
+		Arrays.sort(rhsChildren, fileNameComparator);
 		log.debug("rhs files in dir:{}", rhsChildren);
 
-		
 		j = 0;
 		// files done, now match collections (platform by platform the ordering
 		// may be different iRODS vs. local)
 		// use the lhs as the point of ref, ping each child and do a match/merge
 		// w/rhs
 		for (File element : lhsChildren) {
-			log.debug("inspecting lhs dir, looking for dirs only:{}", element.getAbsolutePath());
+			log.debug("inspecting lhs dir, looking for dirs only:{}",
+					element.getAbsolutePath());
 
 			log.debug("j is:{}", j);
 			log.debug("rhsChildren.length() is: {}", rhsChildren.length);
 
 			if (j >= rhsChildren.length) {
-				log.debug("left hand side file is unmatched for : {}", element.getAbsolutePath());
+				log.debug("left hand side file is unmatched for : {}",
+						element.getAbsolutePath());
 				lhsChildIsUnmatched(currentFileTreeNode, element,
 						timestampForLastSynchLeftHandSide,
 						timestampForLastSynchRightHandSide);
@@ -444,8 +459,9 @@ public class FileTreeDiffUtilityImpl implements FileTreeDiffUtility {
 							rightHandSideRootPath,
 							timestampForLastSynchLeftHandSide,
 							timestampForLastSynchRightHandSide);
-					
-					log.info("checking match or pass for a lhs dir got:{}", lhMatchOrPass);
+
+					log.info("checking match or pass for a lhs dir got:{}",
+							lhMatchOrPass);
 
 					if (lhMatchOrPass == -1) {
 						// left hand side is greater than rhs, so keep pinging
@@ -494,38 +510,33 @@ public class FileTreeDiffUtilityImpl implements FileTreeDiffUtility {
 			final File leftHandSide,
 			final long timestampForLastSynchLeftHandSide,
 			final long timestampForLastSynchRightHandSide) {
-		
+
 		log.info("lhsChildIsUnmatched:{}", leftHandSide.getAbsolutePath());
 		log.info("lhs last synch:{}", timestampForLastSynchLeftHandSide);
 		log.info("leftHandSide lastModified:{}", leftHandSide.lastModified());
-		
+
 		// lhs file has no match, right now this synchs up to irods
 		log.debug("unaccounted for lhs file: {}",
 				leftHandSide.getAbsolutePath());
-		FileTreeDiffEntry entry = buildFileTreeDiffEntryForFile(
-				leftHandSide, DiffType.LEFT_HAND_PLUS, 0, 0);
+		FileTreeDiffEntry entry = buildFileTreeDiffEntryForFile(leftHandSide,
+				DiffType.LEFT_HAND_PLUS, 0, 0);
 		currentFileTreeNode.add(new FileTreeNode(entry));
 		/*
-		if (timestampForLastSynchRightHandSide == NO_TIMESTAMP_CHECKS
-				|| leftHandSide.lastModified() > timestampForLastSynchLeftHandSide) {
-			log.debug("unaccounted for lhs file: {}",
-					leftHandSide.getAbsolutePath());
-			FileTreeDiffEntry entry = buildFileTreeDiffEntryForFile(
-					leftHandSide, DiffType.LEFT_HAND_PLUS, 0, 0);
-			currentFileTreeNode.add(new FileTreeNode(entry));
-		} else {
-			// the rhs file is plus, but the mod date is before the last
-			// synch. This is an indeterminate state. This coul dbe
-			// treated
-			// as a local delete?
-			log.debug("lhs file last mod:{}",
-					leftHandSide.lastModified());
-			log.debug(
-					"lhs file is seen as new, but modified time is before last synch, irods delete? currently no deletes done:{}",
-					leftHandSide.getAbsolutePath());
-		}*/
+		 * if (timestampForLastSynchRightHandSide == NO_TIMESTAMP_CHECKS ||
+		 * leftHandSide.lastModified() > timestampForLastSynchLeftHandSide) {
+		 * log.debug("unaccounted for lhs file: {}",
+		 * leftHandSide.getAbsolutePath()); FileTreeDiffEntry entry =
+		 * buildFileTreeDiffEntryForFile( leftHandSide, DiffType.LEFT_HAND_PLUS,
+		 * 0, 0); currentFileTreeNode.add(new FileTreeNode(entry)); } else { //
+		 * the rhs file is plus, but the mod date is before the last // synch.
+		 * This is an indeterminate state. This coul dbe // treated // as a
+		 * local delete? log.debug("lhs file last mod:{}",
+		 * leftHandSide.lastModified()); log.debug(
+		 * "lhs file is seen as new, but modified time is before last synch, irods delete? currently no deletes done:{}"
+		 * , leftHandSide.getAbsolutePath()); }
+		 */
 	}
-	
+
 	/**
 	 * I've matched two files by relative paths. Now inspect for changes and
 	 * generate any appropriate diff. If either the right or left timestamp is
@@ -556,26 +567,29 @@ public class FileTreeDiffUtilityImpl implements FileTreeDiffUtility {
 
 			log.debug("checking file timestamp against lhs cutoff:{}",
 					timestampForLastSynchLeftHandSide);
-			log.debug("rhs cutoff timestamp:{}", timestampForLastSynchRightHandSide);
+			log.debug("rhs cutoff timestamp:{}",
+					timestampForLastSynchRightHandSide);
 
 			log.debug("lhs file:{}", leftHandSide.getAbsolutePath());
 			log.debug("lhs mod:{}", leftHandSide.lastModified());
 			log.debug("rhs file:{}", rightHandSide.getAbsolutePath());
 			log.debug("rhs mod:{}", rightHandSide.lastModified());
-			
+
 			if (leftHandSide.lastModified() > timestampForLastSynchLeftHandSide
 					&& rightHandSide.lastModified() > timestampForLastSynchRightHandSide) {
 				twoFilesDifferAndBothArePostLastSynch(currentFileTreeNode,
 						leftHandSide, rightHandSide,
 						timestampForLastSynchRightHandSide,
 						timestampForLastSynchRightHandSide);
-			} else if (leftHandSide.lastModified() > timestampForLastSynchLeftHandSide && leftHandSide.length() != rightHandSide.length()) {
+			} else if (leftHandSide.lastModified() > timestampForLastSynchLeftHandSide
+					&& leftHandSide.length() != rightHandSide.length()) {
 				log.debug("left hand side file is newer");
 				FileTreeDiffEntry entry = buildFileTreeDiffEntryForFile(
 						leftHandSide, DiffType.LEFT_HAND_NEWER,
 						rightHandSide.length(), rightHandSide.lastModified());
 				currentFileTreeNode.add(new FileTreeNode(entry));
-			} else if (rightHandSide.lastModified() > timestampForLastSynchRightHandSide && leftHandSide.length() != rightHandSide.length()) {
+			} else if (rightHandSide.lastModified() > timestampForLastSynchRightHandSide
+					&& leftHandSide.length() != rightHandSide.length()) {
 				log.debug("right hand side file is newer");
 				FileTreeDiffEntry entry = buildFileTreeDiffEntryForFile(
 						rightHandSide, DiffType.RIGHT_HAND_NEWER,
@@ -604,16 +618,16 @@ public class FileTreeDiffUtilityImpl implements FileTreeDiffUtility {
 			final File rightHandSide,
 			final long timestampForLastSynchLeftHandSide,
 			final long timestampForLastSynchRightHandSide) {
-		
+
 		log.debug("twoFilesDifferAndBothArePostLastSynch");
-		
+
 		if (leftHandSide.length() == rightHandSide.length()) {
 			log.debug("lengths are same, don't treat as diff");
 			return;
 		}
-		
+
 		// lengths are different, pick a file.
-		
+
 		log.debug("both files after cutoff, will pick most recent file");
 
 		if (leftHandSide.lastModified() > rightHandSide.lastModified()) {

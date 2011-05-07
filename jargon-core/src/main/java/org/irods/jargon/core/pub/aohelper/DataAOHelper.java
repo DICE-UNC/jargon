@@ -5,6 +5,7 @@ package org.irods.jargon.core.pub.aohelper;
 
 import static edu.sdsc.grid.io.irods.IRODSConstants.RODS_API_REQ;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
