@@ -190,7 +190,7 @@ public class IRODSCommands implements IRODSManagedConnection {
 	 */
 	public synchronized Tag irodsFunction(final String type,
 			final String message, final int errorLength,
-			final InputStream errorStream, final long byteStringLength,
+			final InputStream errorStream, final long byteStreamLength,
 			final InputStream byteStream, final int intInfo)
 			throws JargonException {
 
@@ -215,14 +215,14 @@ public class IRODSCommands implements IRODSManagedConnection {
 					.send(createHeader(
 							RODS_API_REQ,
 							message.getBytes(ConnectionConstants.JARGON_CONNECTION_ENCODING).length,
-							errorLength, byteStringLength, intInfo));
+							errorLength, byteStreamLength, intInfo));
 			irodsConnection.send(message);
 			if (errorLength > 0) {
 				irodsConnection.send(new BufferedInputStream(errorStream), errorLength);
 				errorStream.close();
 			}
-			if (byteStringLength > 0) {
-				irodsConnection.send(new BufferedInputStream(byteStream), byteStringLength);
+			if (byteStreamLength > 0) {
+				irodsConnection.send(new BufferedInputStream(byteStream), byteStreamLength);
 				byteStream.close();
 			}
 			irodsConnection.flush();
@@ -578,10 +578,10 @@ public class IRODSCommands implements IRODSManagedConnection {
 					errorTag = Tag.readNextTag(errorMessage,
 							ConnectionConstants.JARGON_CONNECTION_ENCODING);
 				} catch (UnsupportedEncodingException e) {
-					log.error("Unsupported encoding for:"
-							+ ConnectionConstants.JARGON_CONNECTION_ENCODING);
-					throw new JargonException("Unsupported encoding for:"
-							+ ConnectionConstants.JARGON_CONNECTION_ENCODING);
+					log.error("Unsupported encoding for: {}",
+							 ConnectionConstants.JARGON_CONNECTION_ENCODING);
+					throw new JargonException("Unsupported encoding for: " +
+							ConnectionConstants.JARGON_CONNECTION_ENCODING);
 				}
 				log.error("IRODS error occured "
 						+ errorTag.getTag(RErrMsg.PI_TAG).getTag(
@@ -882,7 +882,7 @@ public class IRODSCommands implements IRODSManagedConnection {
 	 * @throws IOException
 	 *             if the host cannot be opened or created.
 	 */
-	Tag sendStartupPacket(final IRODSAccount irodsAccount)
+	protected Tag sendStartupPacket(final IRODSAccount irodsAccount)
 			throws JargonException {
 
 		StartupPack startupPack = new StartupPack(irodsAccount);
@@ -910,7 +910,7 @@ public class IRODSCommands implements IRODSManagedConnection {
 		return responseMessage;
 	}
 
-	void sendStandardPassword(final IRODSAccount irodsAccount)
+	protected void sendStandardPassword(final IRODSAccount irodsAccount)
 			throws JargonException {
 		if (irodsAccount == null) {
 			throw new JargonException("irods account is null");
@@ -954,7 +954,7 @@ public class IRODSCommands implements IRODSManagedConnection {
 				XmlProtApis.AUTH_RESPONSE_AN.getApiNumber());
 	}
 
-	void sendGSIPassword(final IRODSAccount irodsAccount)
+	protected void sendGSIPassword(final IRODSAccount irodsAccount)
 			throws JargonException {
 
 		if (irodsAccount == null) {

@@ -3,10 +3,14 @@
  */
 package org.irods.jargon.core.pub;
 
+import java.util.List;
+
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.packinstr.DataObjInp;
+import org.irods.jargon.core.pub.domain.Resource;
+import org.irods.jargon.core.pub.io.IRODSFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -67,6 +71,37 @@ public abstract class FileCatalogObjectAOImpl extends IRODSGenericAO implements
 		log.info("getHostForGetOperation with sourceAbsolutePath: {}",
 				sourceAbsolutePath);
 		log.info("resourceName:{}", resourceName);
+
+		/*
+		 * If resource is specified, then the call for getHostForGet() will
+		 * return the correct resource server, otherwise, I need to see if this
+		 * is a data object. When a data object is being obtained, look to iRODS
+		 * to find the resources that data object is located on and pick the
+		 * first one
+		 */
+
+		if (resourceName.isEmpty()) {
+			IRODSFile fileToGet = this.getIRODSFileFactory().instanceIRODSFile(
+					sourceAbsolutePath);
+			if (fileToGet.isFile()) {
+				log.debug("this is a file, look for resource it is stored on to retrieve host");
+				DataObjectAO dataObjectAO = this.getIRODSAccessObjectFactory()
+						.getDataObjectAO(getIRODSAccount());
+				List<Resource> resources = dataObjectAO
+						.getResourcesForDataObject(fileToGet.getParent(),
+								fileToGet.getName());
+				if (resources.isEmpty()) {
+					return null;
+				} else {
+					log.debug("selecting first resource: {}", resources.get(0));
+					return resources.get(0).getLocation();
+				}
+			}
+		}
+
+		/*
+		 * Did not locate a resource based on a data object location, ask iRODS
+		 */
 
 		DataObjInp dataObjInp = DataObjInp.instanceForGetHostForGet(
 				sourceAbsolutePath, resourceName);

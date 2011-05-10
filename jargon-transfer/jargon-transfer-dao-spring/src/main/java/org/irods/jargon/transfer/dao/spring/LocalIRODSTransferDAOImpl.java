@@ -32,6 +32,9 @@ public class LocalIRODSTransferDAOImpl extends HibernateDaoSupport implements Lo
         super();
     }
 
+    /* (non-Javadoc)
+     * @see org.irods.jargon.transfer.dao.LocalIRODSTransferDAO#save(org.irods.jargon.transfer.dao.domain.LocalIRODSTransfer)
+     */
     @Override
     public void save(LocalIRODSTransfer ea) throws TransferDAOException {
         logger.debug("entering save(LocalIRODSTransfer)");
@@ -60,6 +63,9 @@ public class LocalIRODSTransferDAOImpl extends HibernateDaoSupport implements Lo
         }
     }
 
+    /* (non-Javadoc)
+     * @see org.irods.jargon.transfer.dao.LocalIRODSTransferDAO#findById(java.lang.Long)
+     */
     @Override
     public LocalIRODSTransfer findById(Long id) throws TransferDAOException {
         logger.debug("entering findById(Long)");
@@ -79,6 +85,9 @@ public class LocalIRODSTransferDAOImpl extends HibernateDaoSupport implements Lo
     }
 
     
+    /* (non-Javadoc)
+     * @see org.irods.jargon.transfer.dao.LocalIRODSTransferDAO#findInitializedById(java.lang.Long)
+     */
     @Override
     public LocalIRODSTransfer findInitializedById(Long id) throws TransferDAOException {
         logger.debug("entering findInitializedById(Long)");
@@ -100,6 +109,9 @@ public class LocalIRODSTransferDAOImpl extends HibernateDaoSupport implements Lo
         return ret;
     }
 
+    /* (non-Javadoc)
+     * @see org.irods.jargon.transfer.dao.LocalIRODSTransferDAO#findById(java.lang.Long, boolean)
+     */
     @Override
     public LocalIRODSTransfer findById(Long id, boolean error) throws TransferDAOException {
         logger.debug("entering findById(Long, boolean)");
@@ -123,6 +135,9 @@ public class LocalIRODSTransferDAOImpl extends HibernateDaoSupport implements Lo
         return ret;
     }
 
+    /* (non-Javadoc)
+     * @see org.irods.jargon.transfer.dao.LocalIRODSTransferDAO#findInitializedById(java.lang.Long, boolean)
+     */
     @Override
     public LocalIRODSTransfer findInitializedById(Long id, boolean error) throws TransferDAOException {
         logger.debug("entering findById(Long, boolean)");
@@ -149,6 +164,9 @@ public class LocalIRODSTransferDAOImpl extends HibernateDaoSupport implements Lo
         return ret;
     }
     
+    /* (non-Javadoc)
+     * @see org.irods.jargon.transfer.dao.LocalIRODSTransferDAO#findByTransferState(org.irods.jargon.transfer.dao.domain.TransferState[])
+     */
     @Override
     public List<LocalIRODSTransfer> findByTransferState(TransferState... transferState) throws TransferDAOException {
         log.debug("entering findByTransferState(TransferState...)");
@@ -174,6 +192,9 @@ public class LocalIRODSTransferDAOImpl extends HibernateDaoSupport implements Lo
         return ret;
     }
 
+    /* (non-Javadoc)
+     * @see org.irods.jargon.transfer.dao.LocalIRODSTransferDAO#findByTransferState(int, org.irods.jargon.transfer.dao.domain.TransferState[])
+     */
     @Override
     public List<LocalIRODSTransfer> findByTransferState(int maxResults, TransferState... transferState)
             throws TransferDAOException {
@@ -204,6 +225,9 @@ public class LocalIRODSTransferDAOImpl extends HibernateDaoSupport implements Lo
         return ret;
     }
 
+    /* (non-Javadoc)
+     * @see org.irods.jargon.transfer.dao.LocalIRODSTransferDAO#findByTransferStatus(int, org.irods.jargon.transfer.dao.domain.TransferStatus[])
+     */
     @Override
     public List<LocalIRODSTransfer> findByTransferStatus(int maxResults, TransferStatus... transferStatus)
             throws TransferDAOException {
@@ -234,6 +258,9 @@ public class LocalIRODSTransferDAOImpl extends HibernateDaoSupport implements Lo
         return ret;
     }
 
+    /* (non-Javadoc)
+     * @see org.irods.jargon.transfer.dao.LocalIRODSTransferDAO#findAllSortedDesc(int)
+     */
     @Override
     public List<LocalIRODSTransfer> findAllSortedDesc(int maxResults) throws TransferDAOException {
         log.debug("entering findAllSortedDesc(int)");
@@ -259,6 +286,9 @@ public class LocalIRODSTransferDAOImpl extends HibernateDaoSupport implements Lo
         return ret;
     }
 
+    /* (non-Javadoc)
+     * @see org.irods.jargon.transfer.dao.LocalIRODSTransferDAO#findAll()
+     */
     @Override
     public List<LocalIRODSTransfer> findAll() throws TransferDAOException {
         log.debug("entering findAll()");
@@ -283,6 +313,9 @@ public class LocalIRODSTransferDAOImpl extends HibernateDaoSupport implements Lo
         return ret;
     }
 
+    /* (non-Javadoc)
+     * @see org.irods.jargon.transfer.dao.LocalIRODSTransferDAO#purgeQueue()
+     */
     @Override
     public void purgeQueue() throws TransferDAOException {
         log.debug("entering purgeQueue()");
@@ -308,6 +341,9 @@ public class LocalIRODSTransferDAOImpl extends HibernateDaoSupport implements Lo
         }
     }
 
+    /* (non-Javadoc)
+     * @see org.irods.jargon.transfer.dao.LocalIRODSTransferDAO#purgeSuccessful()
+     */
     @Override
     public void purgeSuccessful() throws TransferDAOException {
         log.debug("entering purgeSuccessful()");
@@ -336,6 +372,9 @@ public class LocalIRODSTransferDAOImpl extends HibernateDaoSupport implements Lo
         }
     }
 
+    /* (non-Javadoc)
+     * @see org.irods.jargon.transfer.dao.LocalIRODSTransferDAO#purgeQueueByDate(int)
+     */
     @Override
     public void purgeQueueByDate(int retentionDays) throws TransferDAOException {
         log.debug("entering purgeQueueByDate(int)");
@@ -362,6 +401,9 @@ public class LocalIRODSTransferDAOImpl extends HibernateDaoSupport implements Lo
         }
     }
 
+    /* (non-Javadoc)
+     * @see org.irods.jargon.transfer.dao.LocalIRODSTransferDAO#delete(org.irods.jargon.transfer.dao.domain.LocalIRODSTransfer)
+     */
     @Override
     public void delete(LocalIRODSTransfer ea) throws TransferDAOException {
         logger.debug("entering delete()");
