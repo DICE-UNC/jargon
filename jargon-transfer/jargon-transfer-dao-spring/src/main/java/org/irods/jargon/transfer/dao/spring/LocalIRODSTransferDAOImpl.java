@@ -36,16 +36,16 @@ public class LocalIRODSTransferDAOImpl extends HibernateDaoSupport implements Lo
      * @see org.irods.jargon.transfer.dao.LocalIRODSTransferDAO#save(org.irods.jargon.transfer.dao.domain.LocalIRODSTransfer)
      */
     @Override
-    public void save(LocalIRODSTransfer ea) throws TransferDAOException {
-        logger.debug("entering save(LocalIRODSTransfer)");
+    public void save(LocalIRODSTransfer localIRODSTransfer) throws TransferDAOException {
+        logger.info("entering save(LocalIRODSTransfer)");
         Session session = getSession();
         Transaction tx = null;
         try {
             tx = session.beginTransaction();
-            if (ea.getId() == null) {
-                session.save(ea);
+            if (localIRODSTransfer.getId() == null) {
+                session.save(localIRODSTransfer);
             } else {
-                session.update(ea);
+                session.update(localIRODSTransfer);
             }
             tx.commit();
         } catch (HibernateException e) {

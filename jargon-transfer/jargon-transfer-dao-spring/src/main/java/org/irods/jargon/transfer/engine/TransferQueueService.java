@@ -8,7 +8,7 @@ import org.irods.jargon.transfer.dao.domain.LocalIRODSTransfer;
 import org.irods.jargon.transfer.dao.domain.LocalIRODSTransferItem;
 
 public interface TransferQueueService {
-
+   
 	/**
 	 * 
 	 * @return
