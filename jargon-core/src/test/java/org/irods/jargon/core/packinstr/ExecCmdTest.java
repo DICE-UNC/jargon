@@ -3,6 +3,7 @@ package org.irods.jargon.core.packinstr;
 import junit.framework.Assert;
 
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.packinstr.ExecCmd.PathHandlingMode;
 import org.junit.Test;
 
 public class ExecCmdTest {
@@ -34,7 +35,7 @@ public class ExecCmdTest {
 				execCmd.getApiNumber());
 	}
 
-	@Test(expected = JargonException.class)
+	@Test(expected = IllegalArgumentException.class)
 	public void testInstanceBlankCommand() throws Exception {
 		String cmd = "";
 		String args = "";
@@ -42,7 +43,7 @@ public class ExecCmdTest {
 		ExecCmd.instanceWithCommandPost25(cmd, args);
 	}
 
-	@Test(expected = JargonException.class)
+	@Test(expected = IllegalArgumentException.class)
 	public void testInstanceNullCommand() throws Exception {
 		String cmd = null;
 		String args = "";
@@ -50,7 +51,7 @@ public class ExecCmdTest {
 		ExecCmd.instanceWithCommandPriorTo25(cmd, args);
 	}
 
-	@Test(expected = JargonException.class)
+	@Test(expected = IllegalArgumentException.class)
 	public void testInstanceNullArgs() throws Exception {
 		String cmd = "hello";
 		String args = null;
@@ -150,7 +151,7 @@ public class ExecCmdTest {
 		String absPath = "/an/abs/path";
 
 		ExecCmd execCmd = ExecCmd.instanceWithHostAndArgumentsToPassParametersPriorTo25(
-				cmd, args, host, absPath);
+				cmd, args, host, absPath, PathHandlingMode.NONE);
 		Assert.assertNotNull(
 				"basic check fails, null returned from PI initializer", execCmd);
 		Assert.assertEquals("api number not set",
@@ -166,7 +167,7 @@ public class ExecCmdTest {
 		String absPath = "/an/abs/path";
 
 		ExecCmd execCmd = ExecCmd.instanceWithHostAndArgumentsToPassParametersPost25(
-				cmd, args, host, absPath);
+				cmd, args, host, absPath,PathHandlingMode.NONE);
 		Assert.assertNotNull(
 				"basic check fails, null returned from PI initializer", execCmd);
 		Assert.assertEquals("api number not set",
@@ -182,7 +183,7 @@ public class ExecCmdTest {
 		String absPath = "/an/abs/path";
 
 		ExecCmd execCmd = ExecCmd.instanceWithHostAndArgumentsToPassParametersPost25(
-				cmd, args, host, absPath);
+				cmd, args, host, absPath,PathHandlingMode.NONE);
 		Assert.assertNotNull(
 				"basic check fails, null returned from PI initializer", execCmd);
 		Assert.assertEquals("api number not set",

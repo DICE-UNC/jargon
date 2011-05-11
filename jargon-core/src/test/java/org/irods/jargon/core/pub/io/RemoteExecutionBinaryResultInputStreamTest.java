@@ -57,7 +57,6 @@ public class RemoteExecutionBinaryResultInputStreamTest {
 		String cmd = "test_execstream.py";
 		String args = String.valueOf(testLen);
 		String host = "";
-		String absPath = "";
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
@@ -81,7 +80,7 @@ public class RemoteExecutionBinaryResultInputStreamTest {
 		CollectionAOImpl collectionAOImpl = (CollectionAOImpl) collectionAO;
 		IRODSCommands irodsCommands = collectionAOImpl.getIRODSProtocol();
 		RemoteExecutionService remoteExecuteService = RemoteExecuteServiceImpl
-				.instance(irodsCommands, cmd, args, host, absPath);
+				.instance(irodsCommands, cmd, args, host);
 
 		InputStream inputStream = remoteExecuteService.executeAndStream();
 
@@ -111,7 +110,6 @@ public class RemoteExecutionBinaryResultInputStreamTest {
 		String cmd = "test_execstream.py";
 		String args = String.valueOf(testLen);
 		String host = "";
-		String absPath = "";
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
@@ -135,7 +133,7 @@ public class RemoteExecutionBinaryResultInputStreamTest {
 		CollectionAOImpl collectionAOImpl = (CollectionAOImpl) collectionAO;
 		IRODSCommands irodsCommands = collectionAOImpl.getIRODSProtocol();
 		RemoteExecutionService remoteExecuteService = RemoteExecuteServiceImpl
-				.instance(irodsCommands, cmd, args, host, absPath);
+				.instance(irodsCommands, cmd, args, host);
 
 		InputStream inputStream = remoteExecuteService.executeAndStream();
 		inputStream.skip(skipLen);

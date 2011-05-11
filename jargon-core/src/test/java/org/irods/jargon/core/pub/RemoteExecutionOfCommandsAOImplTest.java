@@ -173,7 +173,7 @@ public class RemoteExecutionOfCommandsAOImplTest {
 						irodsAccount);
 
 		InputStream inputStream = remoteExecutionOfCommandsAO
-				.executeARemoteCommandAndGetStreamUsingAnIRODSFileAbsPathToDetermineHost(
+		.executeARemoteCommandAndGetStreamUsingAnIRODSFileAbsPathToDetermineHost(
 						cmd, args, targetIrodsFile);
 
 		BufferedReader br = new BufferedReader(new InputStreamReader(
@@ -189,9 +189,9 @@ public class RemoteExecutionOfCommandsAOImplTest {
 		String result = sb.toString();
 		irodsFileSystem.close();
 
-		Assert.assertFalse("did not successfully execute hello command",
+		Assert.assertTrue("did not successfully execute hello command",
 				"Hello world  from irods".trim().equals(result.trim()));
-		Assert.assertTrue("should have responded with file name in response", result.indexOf(testFileName) > -1);
+		Assert.assertFalse("should not have responded with file name in response", result.indexOf(testFileName) > -1);
 	}
 
 	@Test
