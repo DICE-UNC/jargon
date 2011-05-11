@@ -51,6 +51,14 @@
     <property name="sessionFactory" ref="sessionFactory"/>
   </bean>
   
+  <bean id="synchConfigurationDAO" class="org.irods.jargon.transfer.dao.spring.SynchConfigurationDAOImpl">
+    <property name="sessionFactory" ref="sessionFactory"/>
+  </bean>
+  
+  <bean id="synchManagerService" class="org.irods.jargon.transfer.engine.synch.SynchManagerServiceImpl">
+  	<property name="synchConfigurationDAO" ref="synchConfigurationDAO"/>
+  </bean>
+  
   <!-- ========================= TRANSACTION DEFINITIONS ========================= -->
   
   <bean id="transferEngineTarget" class="org.irods.jargon.transfer.dao.TransferDAOBean">

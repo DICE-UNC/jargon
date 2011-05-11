@@ -52,6 +52,7 @@ public final class TransferManagerImpl implements TransferManager {
         try {
             init();
         } catch (Exception e) {
+        		log.error("error initing tranfer manager", e);
             throw new JargonException("Failed to init TransferManager");
         }
     }
@@ -99,7 +100,8 @@ public final class TransferManagerImpl implements TransferManager {
         try {
             init();
         } catch (Exception e) {
-            throw new JargonException("Failed to init TransferManager");
+        		log.error("error in init of TransferManagerImpl", e);
+            throw new JargonException("Failed to init TransferManager", e);
         }
     }
 

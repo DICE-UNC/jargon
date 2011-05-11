@@ -22,10 +22,10 @@
       <groupId>org.hibernate</groupId>
       <artifactId>hibernate-annotations</artifactId>
     </dependency>
-    <dependency>
+    <!--   <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-hibernate3</artifactId>
-    </dependency>
+    </dependency> -->
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-core</artifactId>
@@ -69,7 +69,27 @@
     <dependency>
       <groupId>antlr</groupId>
       <artifactId>antlr</artifactId>
-    </dependency>
+    </dependency>   
+    <dependency>
+   <groupId>org.springframework</groupId>
+   <artifactId>spring-test</artifactId>
+   <version>3.0.5.RELEASE</version>
+</dependency>
+<dependency>
+   <groupId>org.springframework</groupId>
+   <artifactId>spring-context</artifactId>
+   <version>3.0.5.RELEASE</version>
+</dependency>
+<dependency>
+   <groupId>org.springframework</groupId>
+   <artifactId>spring-beans</artifactId>
+   <version>3.0.5.RELEASE</version>
+</dependency>   
+<dependency>
+   <groupId>org.springframework</groupId>
+   <artifactId>spring-orm</artifactId>
+   <version>3.0.5.RELEASE</version>
+</dependency>
   </dependencies>
   <build>
     <plugins>
