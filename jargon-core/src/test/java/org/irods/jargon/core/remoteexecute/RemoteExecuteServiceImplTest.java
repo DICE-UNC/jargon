@@ -269,8 +269,11 @@ public class RemoteExecuteServiceImplTest {
 		String result = sb.toString();
 		irodsFileSystem.close();
 
-		Assert.assertEquals("did not successfully execute hello command",
-				"Hello world  from irods".trim(), result.trim());
+		Assert.assertTrue("did not successfully execute hello command",
+				result.indexOf("Hello world") > -1);
+		
+		Assert.assertTrue("did not successfully execute hello command, missing path info ",
+				result.indexOf(testFileName) > -1);
 
 	}
 
@@ -351,9 +354,11 @@ public class RemoteExecuteServiceImplTest {
 		String result = sb.toString();
 		irodsFileSystem.close();
 
-		Assert.assertEquals("did not successfully execute hello command",
-				"Hello world  from irods".trim(), result.trim());
-
+		Assert.assertTrue("did not successfully execute hello command",
+				result.indexOf("Hello world") > -1);
+		
+		Assert.assertTrue("did not successfully execute hello command, missing path info ",
+				result.indexOf(testFileName) > -1);
 	}
 
 	@Test

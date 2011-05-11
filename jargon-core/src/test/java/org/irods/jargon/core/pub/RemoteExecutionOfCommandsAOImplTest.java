@@ -189,8 +189,9 @@ public class RemoteExecutionOfCommandsAOImplTest {
 		String result = sb.toString();
 		irodsFileSystem.close();
 
-		Assert.assertEquals("did not successfully execute hello command",
-				"Hello world  from irods".trim(), result.trim());
+		Assert.assertFalse("did not successfully execute hello command",
+				"Hello world  from irods".trim().equals(result.trim()));
+		Assert.assertTrue("should have responded with file name in response", result.indexOf(testFileName) > -1);
 	}
 
 	@Test
