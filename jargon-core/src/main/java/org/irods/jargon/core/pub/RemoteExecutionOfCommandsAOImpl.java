@@ -99,8 +99,7 @@ public class RemoteExecutionOfCommandsAOImpl extends IRODSGenericAO implements
 			throws JargonException {
 		log.info("executing remote command");
 		// input parms checked in instance method
-		RemoteExecutionService remoteExecuteService = RemoteExecuteServiceImpl.instanceWhenUsingAbsPathToFindExecutionHost
-			(this.getIRODSProtocol(),
+		RemoteExecutionService remoteExecuteService = RemoteExecuteServiceImpl.instanceWhenUsingAbsPathToSetCommandArg(this.getIRODSProtocol(),
 						commandToExecuteWithoutArguments,
 						argumentsToPassWithCommand, "",
 						absolutePathOfIrodsFileThatWillBeUsedToFindHostToExecuteOn);

@@ -131,7 +131,7 @@ public class IRODSFileInputStream extends InputStream {
 	 * Note: Use of this method is inadvisable due to the long delays that can
 	 * occur with network communcations. Reading even a few bytes in this manner
 	 * could cause noticeable slowdowns.
-	 * 
+	 * <p/>
 	 * Reads the next byte of data from the input stream. The value byte is
 	 * returned as an <code>int</code> in the range <code>0</code> to
 	 * <code>255</code>. If no byte is available because the end of the stream

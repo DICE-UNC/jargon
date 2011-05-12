@@ -193,6 +193,68 @@ public class RemoteExecutionOfCommandsAOImplTest {
 				"Hello world  from irods".trim().equals(result.trim()));
 		Assert.assertFalse("should not have responded with file name in response", result.indexOf(testFileName) > -1);
 	}
+	
+	@Test
+	public final void testExecuteARemoteCommandAndGetStreamUsingAnIRODSFileAbsPathToAddPhysPathToCommandArgs()
+			throws Exception {
+		String cmd = "hello";
+		String args = "";
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		String testFileName = "testExecuteARemoteCommandAndGetStreamUsingAnIRODSFileAbsPathToAddPhysPathToCommandArgs.txt";
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String localFileName = FileGenerator
+				.generateFileOfFixedLengthGivenName(absPath, testFileName, 1);
+
+		String targetIrodsFile = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
+								+ testFileName);
+
+		IrodsInvocationContext invocationContext = testingPropertiesHelper
+				.buildIRODSInvocationContextFromTestProperties(testingProperties);
+		IputCommand iputCommand = new IputCommand();
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		iputCommand.setLocalFileName(localFileName);
+		iputCommand.setIrodsFileName(targetIrodsCollection);
+		iputCommand.setForceOverride(true);
+
+		IcommandInvoker invoker = new IcommandInvoker(invocationContext);
+		invoker.invokeCommandAndGetResultAsString(iputCommand);
+
+		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
+
+		RemoteExecutionOfCommandsAO remoteExecutionOfCommandsAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getRemoteExecutionOfCommandsAO(
+						irodsAccount);
+
+		InputStream inputStream = remoteExecutionOfCommandsAO.executeARemoteCommandAndGetStreamAddingPhysicalPathAsFirstArgumentToRemoteScript(
+						cmd, args, targetIrodsFile);
+
+		BufferedReader br = new BufferedReader(new InputStreamReader(
+				inputStream));
+		StringBuilder sb = new StringBuilder();
+		String line = null;
+
+		while ((line = br.readLine()) != null) {
+			sb.append(line + "\n");
+		}
+
+		br.close();
+		String result = sb.toString();
+		irodsFileSystem.close();
+
+		Assert.assertFalse("did not successfully execute hello command",
+				"Hello world  from irods".trim().equals(result.trim()));
+		Assert.assertTrue("should have responded with file name in response", result.indexOf(testFileName) > -1);
+	}
 
 	@Test
 	public final void testExecuteARemoteCommandAndGetStreamGivingCommandNameAndArgsTriggerLargeStream()

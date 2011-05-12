@@ -25,11 +25,26 @@ public class IRODSAuthenticationSuccessHandler extends
 
 	private static Logger log = LoggerFactory
 			.getLogger(IRODSAuthenticationSuccessHandler.class);
+	
+	private String securityRedirectUrl = "spring-security-redirect";
 
 	/**
 	 * Default (no-values) constructor.
 	 */
 	public IRODSAuthenticationSuccessHandler() {
+	}
+	
+	/**
+	 * 
+	 * @param securityRedirectUrl
+	 */
+	public void setSecurityRedirectUrl(String securityRedirectUrl) {
+		
+		if (securityRedirectUrl == null || securityRedirectUrl.isEmpty()) {
+			throw new IllegalArgumentException("null or empty securityRedirectUrl");
+		}
+		
+		this.securityRedirectUrl = securityRedirectUrl;
 	}
 
 	@Override
