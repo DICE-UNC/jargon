@@ -342,5 +342,27 @@ public class CollectionAOHelper extends AOHelper {
 						.getIntOrZeroFromIRODSValue(row.getColumn(10))));
 		userFilePermissions.add(userFilePermission);
 	}
+	
+	/**
+	 * Build a select for a collection ACL with the given collection absolute path
+	 * @param irodsCollectionAbsolutePath
+	 */
+	public static String  buildACLQueryForCollectionName(
+			final String irodsCollectionAbsolutePath) {
+		StringBuilder query = new StringBuilder();
+		query.append("SELECT ");
+		query.append(RodsGenQueryEnum.COL_COLL_ACCESS_USER_NAME.getName());
+		query.append(",");
+		query.append(RodsGenQueryEnum.COL_COLL_ACCESS_USER_ID.getName());
+		query.append(",");
+		query.append(RodsGenQueryEnum.COL_COLL_ACCESS_TYPE.getName());
+		query.append(" WHERE ");
+		query.append(RodsGenQueryEnum.COL_COLL_NAME.getName());
+		query.append(" = '");
+		query.append(IRODSDataConversionUtil
+				.escapeSingleQuotes(irodsCollectionAbsolutePath));
+		query.append("'");
+		return query.toString();
+	}
 
 }

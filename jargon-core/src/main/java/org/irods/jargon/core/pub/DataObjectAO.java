@@ -737,7 +737,7 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * 
 	 * @param irodsCollectionAbsolutePath
 	 *            <code>String</code> with the absolute path to the data object
-	 * @param dataObjectName
+	 * @param dataName
 	 *            <code>String</code> with the data object name
 	 * @param currentAvuData
 	 *            {@link org.irods.jargon.core.pub.domain.AvuData} describing
@@ -750,7 +750,7 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * @throws JargonException
 	 */
 	void modifyAVUMetadata(String irodsCollectionAbsolutePath,
-			String dataObjectName, AvuData currentAvuData, AvuData newAvuData)
+			String dataName, AvuData currentAvuData, AvuData newAvuData)
 			throws DataNotFoundException, JargonException;
 
 	/**
@@ -759,7 +759,7 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * @param irodsCollectionAbsolutePath
 	 *            <code>String</code> with the absolute path to the iRODS parent
 	 *            collection
-	 * @param fileName
+	 * @param dataName
 	 *            <code>String</code> with the file name
 	 *            {@link org.irods.jargon.core.pub.domain.AvuData} describing
 	 *            the desired new AVU
@@ -767,7 +767,7 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * @throws DataNotFoundException when data object is missing
 	 * @throws DuplicateDataException when an AVU already exists.  Note that iRODS (at least at 2.5) is inconsistent, where a duplicate will only be detected if units are not blank
 	 */
-	void addAVUMetadata(String irodsCollectionAbsolutePath, String fileName,
+	void addAVUMetadata(String irodsCollectionAbsolutePath, String dataName,
 			AvuData avuData) throws DataNotFoundException, JargonException;
 
 	/**
@@ -776,7 +776,7 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * @param irodsCollectionAbsolutePath
 	 *            <code>String</code> with the absolute path to the iRODS data
 	 *            object parent collection
-	 * @param fileName <code>String</code> with the name of the iRODS data Object
+	 * @param dataname <code>String</code> with the name of the iRODS data Object
 	 * @return <code>List</code> of {@link UserFilePermission} with the ACL's
 	 *         for the given file.
 	 * @throws JargonException
@@ -784,6 +784,38 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	List<UserFilePermission> listPermissionsForDataObject(
 			String irodsCollectionAbsolutePath, String dataName)
 			throws JargonException;
+
+	/**
+	 * List the user permissions for the given iRODS data object for a given user.  Note that <code>null</code>
+	 * will be returned if no permissions are available.
+	 * 
+	 * @param irodsCollectionAbsolutePath
+	 *            <code>String</code> with the absolute path to the iRODS data
+	 *            object parent collection
+	 * @param dataName <code>String</code> with the name of the iRODS data Object
+	 * @param userName <code>String</code> with the name of the iRODS User
+	 * @return <code>List</code> of {@link UserFilePermission} with the ACL's
+	 *         for the given file.
+	 * @throws JargonException
+	 */
+	UserFilePermission getPermissionForDataObjectForUserName(
+			String irodsCollectionAbsolutePath, String dataName, String userName)
+			throws JargonException;
+
+	/**
+	 * List the user permissions for the given iRODS data object for a given user.  Note that <code>null</code>
+	 * will be returned if no permissions are available.
+	 * 
+	 * @param irodsAbsolutePath
+	 *            <code>String</code> with the absolute path to the iRODS data
+	 *            object
+	 * @param userName <code>String</code> with the name of the iRODS User
+	 * @return <code>List</code> of {@link UserFilePermission} with the ACL's
+	 *         for the given file.
+	 * @throws JargonException
+	 */
+	UserFilePermission getPermissionForDataObjectForUserName(
+			String irodsAbsolutePath, String userName) throws JargonException;
 
 	
 

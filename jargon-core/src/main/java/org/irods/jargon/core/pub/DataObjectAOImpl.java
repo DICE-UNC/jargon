@@ -48,7 +48,6 @@ import org.irods.jargon.core.query.RodsGenQueryEnum;
 import org.irods.jargon.core.transfer.KeepAliveProcess;
 import org.irods.jargon.core.transfer.ParallelGetFileTransferStrategy;
 import org.irods.jargon.core.transfer.ParallelPutFileTransferStrategy;
-import org.irods.jargon.core.transfer.TransferControlBlock;
 import org.irods.jargon.core.utils.IRODSDataConversionUtil;
 import org.irods.jargon.core.utils.LocalFileUtils;
 import org.slf4j.Logger;
@@ -1646,24 +1645,8 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 		List<UserFilePermission> userFilePermissions = new ArrayList<UserFilePermission>();
 
-		StringBuilder query = new StringBuilder();
-		query.append("SELECT ");
-		query.append(RodsGenQueryEnum.COL_USER_NAME.getName());
-		query.append(",");
-		query.append(RodsGenQueryEnum.COL_DATA_ACCESS_USER_ID.getName());
-		query.append(",");
-		query.append(RodsGenQueryEnum.COL_DATA_ACCESS_TYPE.getName());
-		query.append(" WHERE ");
-		query.append(RodsGenQueryEnum.COL_COLL_NAME.getName());
-		query.append(EQUALS_AND_QUOTE);
-		query.append(IRODSDataConversionUtil
-				.escapeSingleQuotes(irodsCollectionAbsolutePath));
-		query.append(QUOTE);
-		query.append(AND);
-		query.append(RodsGenQueryEnum.COL_DATA_NAME.getName());
-		query.append(EQUALS_AND_QUOTE);
-		query.append(dataName);
-		query.append(QUOTE);
+		StringBuilder query = new StringBuilder(DataAOHelper.buildACLQueryForCollectionPathAndDataName(
+				irodsCollectionAbsolutePath, dataName));
 
 		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(query.toString(),
 				this.getJargonProperties().getMaxFilesAndDirsQueryMax());
@@ -1880,6 +1863,104 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 	}
 	
+	
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.core.pub.DataObjectAO#listPermissionsForDataObjectForUserName(java.lang.String, java.lang.String, java.lang.String)
+	 */
+	@Override
+	public UserFilePermission getPermissionForDataObjectForUserName(
+			final String irodsCollectionAbsolutePath, final String dataName, final String userName)
+			throws JargonException {
+
+		if (irodsCollectionAbsolutePath == null
+				|| irodsCollectionAbsolutePath.isEmpty()) {
+			throw new IllegalArgumentException(
+					"null or empty irodsCollectionAbsolutePath");
+		}
+
+		if (dataName == null || dataName.isEmpty()) {
+			throw new IllegalArgumentException("null or empty dataName");
+		}
+		
+		if (userName == null || userName.isEmpty()) {
+			throw new IllegalArgumentException("null or empty userName");
+		}
+
+		log.info("listPermissionsForDataObjectForUserName path: {}",
+				irodsCollectionAbsolutePath);
+		log.info("dataName: {}", irodsCollectionAbsolutePath);
+		log.info("userName:{}", userName);
+
+		UserFilePermission userFilePermission = null;
+
+		StringBuilder query = new StringBuilder(DataAOHelper.buildACLQueryForCollectionPathAndDataName(
+				irodsCollectionAbsolutePath, dataName));
+		query.append(" AND ");
+		query.append(RodsGenQueryEnum.COL_USER_NAME.getName());
+		query.append(" = '");
+		query.append(userName);
+		query.append("'");
+		
+
+		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(query.toString(),
+				this.getJargonProperties().getMaxFilesAndDirsQueryMax());
+		IRODSQueryResultSetInterface resultSet;
+
+		try {
+			resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResult(
+					irodsQuery, 0);
+			IRODSQueryResultRow row = resultSet.getFirstResult();
+
+			
+				userFilePermission = new UserFilePermission(row.getColumn(0),
+						row.getColumn(1),
+						FilePermissionEnum.valueOf(IRODSDataConversionUtil
+								.getIntOrZeroFromIRODSValue(row.getColumn(2))));
+				log.debug("loaded filePermission:{}", userFilePermission);
+			
+
+		} catch (JargonQueryException e) {
+			log.error("query exception for  query:{}", query.toString(), e);
+			throw new JargonException(
+					"error in query loading user file permissions for data object",
+					e);
+		} catch (DataNotFoundException dnf) {
+			log.info("no data found for user ACL");
+		}
+		
+		return userFilePermission;
+
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.core.pub.DataObjectAO#getPermissionForDataObjectForUserName(java.lang.String, java.lang.String)
+	 */
+	@Override
+	public UserFilePermission getPermissionForDataObjectForUserName(
+			final String irodsAbsolutePath,final String userName)
+			throws JargonException {
+
+		if (irodsAbsolutePath == null
+				|| irodsAbsolutePath.isEmpty()) {
+			throw new IllegalArgumentException(
+					"null or empty irodsAbsolutePath");
+		}
+
+		
+		if (userName == null || userName.isEmpty()) {
+			throw new IllegalArgumentException("null or empty userName");
+		}
+
+		log.info("listPermissionsForDataObjectForUserName path: {}",
+				irodsAbsolutePath);
+		log.info("userName:{}", userName);
+		
+		IRODSFile irodsFile = this.getIRODSFileFactory().instanceIRODSFile(irodsAbsolutePath);
+
+		return getPermissionForDataObjectForUserName(irodsFile.getParent(), irodsFile.getName(), userName);
+
+	}
+
 	/**
 	 * @param transferOptions
 	 * @return

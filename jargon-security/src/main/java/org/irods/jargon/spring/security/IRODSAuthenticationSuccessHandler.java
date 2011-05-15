@@ -60,7 +60,7 @@ public class IRODSAuthenticationSuccessHandler extends
 
 		if (this.getTargetUrlParameter() != null) {
 			log.debug("targetURL:{}", this.getTargetUrlParameter());
-			if (this.getTargetUrlParameter().equals("spring-security-redirect")) {
+			if (this.getTargetUrlParameter().equals(securityRedirectUrl)) {
 				log.debug("targetURL was security, redirect to home");
 				this.setTargetUrlParameter("/home");
 			}

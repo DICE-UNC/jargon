@@ -914,6 +914,63 @@ public class UserAOTest {
 
 	}
 	
+	@Test
+	public void testFindUserNameWhereUserNameLike() throws Exception {
+		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager
+				.instance();
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSSession irodsSession = IRODSSession
+				.instance(irodsConnectionManager);
+		IRODSAccessObjectFactory accessObjectFactory = IRODSAccessObjectFactoryImpl
+				.instance(irodsSession);
+		UserAO userAO = accessObjectFactory.getUserAO(irodsAccount);
+
+		
+		List<String> users = userAO.findUserNameLike("t");
+		irodsSession.closeSession();
+		Assert.assertTrue("no users returned", users.size() > 0);
+
+	}
+	
+	@Test
+	public void testFindUserNameWhereUserNameLikeNoResultExpected() throws Exception {
+		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager
+				.instance();
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSSession irodsSession = IRODSSession
+				.instance(irodsConnectionManager);
+		IRODSAccessObjectFactory accessObjectFactory = IRODSAccessObjectFactoryImpl
+				.instance(irodsSession);
+		UserAO userAO = accessObjectFactory.getUserAO(irodsAccount);
+
+		
+		List<String> users = userAO.findUserNameLike("zzzzzazzzz848848djdfajf");
+		irodsSession.closeSession();
+		Assert.assertFalse("should be no users returned", users.size() > 0);
+
+	}
+	
+	@Test
+	public void testFindUserNameWhereUserNameLikeUserNameSpaces() throws Exception {
+		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager
+				.instance();
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSSession irodsSession = IRODSSession
+				.instance(irodsConnectionManager);
+		IRODSAccessObjectFactory accessObjectFactory = IRODSAccessObjectFactoryImpl
+				.instance(irodsSession);
+		UserAO userAO = accessObjectFactory.getUserAO(irodsAccount);
+
+		
+		List<String> users = userAO.findUserNameLike("");
+		irodsSession.closeSession();
+		Assert.assertTrue("no users returned", users.size() > 0);
+
+	}
+	
 	
 	//TODO
 	/*
