@@ -109,4 +109,22 @@ public class ModAccessControlInpTest {
 				actualTags);
 	}
 
+	@Test
+	public final void testGetParsedTagsAdminMode() throws Exception {
+		ModAccessControlInp pi = ModAccessControlInp.instanceForSetPermissionInAdminMode(true, "", "path",
+				"userName", "read");
+		String actualTags = pi.getParsedTags();
+
+		StringBuilder sb = new StringBuilder();
+		sb.append("<modAccessControlInp_PI><recursiveFlag>1</recursiveFlag>\n");
+		sb.append("<accessLevel>admin:read</accessLevel>\n");
+		sb.append("<userName>userName</userName>\n");
+		sb.append("<zone></zone>\n");
+		sb.append("<path>path</path>\n");
+		sb.append("</modAccessControlInp_PI>\n");
+
+		Assert.assertEquals("invalid packing instruction", sb.toString(),
+				actualTags);
+	}
+	
 }

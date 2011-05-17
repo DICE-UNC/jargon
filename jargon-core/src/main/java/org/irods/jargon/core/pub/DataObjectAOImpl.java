@@ -1524,6 +1524,20 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 						ModAccessControlInp.READ_PERMISSION);
 		getIRODSProtocol().irodsFunction(modAccessControlInp);
 	}
+	
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.core.pub.DataObjectAO#setAccessPermissionReadInAdminMode(java.lang.String, java.lang.String, java.lang.String)
+	 */
+	@Override
+	public void setAccessPermissionReadInAdminMode(final String zone,
+			final String absolutePath, final String userName)
+			throws JargonException {
+		// pi tests parameters
+		ModAccessControlInp modAccessControlInp = ModAccessControlInp
+				.instanceForSetPermissionInAdminMode(false, zone, absolutePath, userName,
+						ModAccessControlInp.READ_PERMISSION);
+		getIRODSProtocol().irodsFunction(modAccessControlInp);
+	}
 
 	/*
 	 * (non-Javadoc)
@@ -1539,6 +1553,20 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		// pi tests parameters
 		ModAccessControlInp modAccessControlInp = ModAccessControlInp
 				.instanceForSetPermission(false, zone, absolutePath, userName,
+						ModAccessControlInp.WRITE_PERMISSION);
+		getIRODSProtocol().irodsFunction(modAccessControlInp);
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.core.pub.DataObjectAO#setAccessPermissionWriteInAdminMode(java.lang.String, java.lang.String, java.lang.String)
+	 */
+	@Override
+	public void setAccessPermissionWriteInAdminMode(final String zone,
+			final String absolutePath, final String userName)
+			throws JargonException {
+		// pi tests parameters
+		ModAccessControlInp modAccessControlInp = ModAccessControlInp
+				.instanceForSetPermissionInAdminMode(false, zone, absolutePath, userName,
 						ModAccessControlInp.WRITE_PERMISSION);
 		getIRODSProtocol().irodsFunction(modAccessControlInp);
 	}
@@ -1560,6 +1588,20 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 						ModAccessControlInp.OWN_PERMISSION);
 		getIRODSProtocol().irodsFunction(modAccessControlInp);
 	}
+	
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.core.pub.DataObjectAO#setAccessPermissionOwnInAdminMode(java.lang.String, java.lang.String, java.lang.String)
+	 */
+	@Override
+	public void setAccessPermissionOwnInAdminMode(final String zone,
+			final String absolutePath, final String userName)
+			throws JargonException {
+		// pi tests parameters
+		ModAccessControlInp modAccessControlInp = ModAccessControlInp
+				.instanceForSetPermissionInAdminMode(false, zone, absolutePath, userName,
+						ModAccessControlInp.OWN_PERMISSION);
+		getIRODSProtocol().irodsFunction(modAccessControlInp);
+	}
 
 	/*
 	 * (non-Javadoc)
@@ -1575,6 +1617,20 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		// pi tests parameters
 		ModAccessControlInp modAccessControlInp = ModAccessControlInp
 				.instanceForSetPermission(false, zone, absolutePath, userName,
+						ModAccessControlInp.NULL_PERMISSION);
+		getIRODSProtocol().irodsFunction(modAccessControlInp);
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.core.pub.DataObjectAO#removeAccessPermissionsForUserInAdminMode(java.lang.String, java.lang.String, java.lang.String)
+	 */
+	@Override
+	public void removeAccessPermissionsForUserInAdminMode(final String zone,
+			final String absolutePath, final String userName)
+			throws JargonException {
+		// pi tests parameters
+		ModAccessControlInp modAccessControlInp = ModAccessControlInp
+				.instanceForSetPermissionInAdminMode(false, zone, absolutePath, userName,
 						ModAccessControlInp.NULL_PERMISSION);
 		getIRODSProtocol().irodsFunction(modAccessControlInp);
 	}
