@@ -4,8 +4,6 @@
 package org.irods.jargon.core.pub.aohelper;
 
 import static edu.sdsc.grid.io.irods.IRODSConstants.RODS_API_REQ;
-
-import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -412,5 +410,36 @@ public final class DataAOHelper extends AOHelper {
 		}
 		return targetFile;
 	}
+	
+	/**
+	 * @param irodsCollectionAbsolutePath
+	 * @param dataName
+	 * @return
+	 */
+	public static String buildACLQueryForCollectionPathAndDataName(
+			final String irodsCollectionAbsolutePath, final String dataName) {
+		StringBuilder query = new StringBuilder();
+		query.append("SELECT ");
+		query.append(RodsGenQueryEnum.COL_USER_NAME.getName());
+		query.append(",");
+		query.append(RodsGenQueryEnum.COL_DATA_ACCESS_USER_ID.getName());
+		query.append(",");
+		query.append(RodsGenQueryEnum.COL_DATA_ACCESS_TYPE.getName());
+		query.append(" WHERE ");
+		query.append(RodsGenQueryEnum.COL_COLL_NAME.getName());
+		query.append(EQUALS_AND_QUOTE);
+		query.append(IRODSDataConversionUtil
+				.escapeSingleQuotes(irodsCollectionAbsolutePath));
+		query.append(QUOTE);
+		query.append(AND);
+		query.append(RodsGenQueryEnum.COL_DATA_NAME.getName());
+		query.append(EQUALS_AND_QUOTE);
+		query.append(dataName);
+		query.append(QUOTE);
+		return query.toString();
+	}
+
+	
+	
 
 }

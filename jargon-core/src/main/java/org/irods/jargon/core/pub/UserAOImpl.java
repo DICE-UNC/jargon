@@ -432,9 +432,8 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 		userQuery.append("'");
 
 		String userQueryString = userQuery.toString();
-		if (log.isInfoEnabled()) {
 			log.info("user query:{}", userQueryString);
-		}
+		
 
 		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(userQueryString,
 				DEFAULT_REC_COUNT);
@@ -474,6 +473,57 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 
 		return user;
 	}
+	
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.core.pub.UserAO#findUserNameLike(java.lang.String)
+	 */
+	@Override
+	public List<String> findUserNameLike(final String userName) throws JargonException {
+		
+		if (userName == null) {
+			throw new IllegalArgumentException("null userName");
+		}
+		
+		log.info("findUserNameLike userName{}", userName);
+		
+		final IRODSGenQueryExecutorImpl irodsGenQueryExecutorImpl = new IRODSGenQueryExecutorImpl(
+				this.getIRODSSession(), this.getIRODSAccount());
+		
+		List<String> results = new ArrayList<String>();
+		StringBuilder userQuery = new StringBuilder();
+		userQuery.append("select ");
+		userQuery.append(RodsGenQueryEnum.COL_USER_NAME.getName());
+		userQuery.append(" WHERE ");
+		userQuery.append(RodsGenQueryEnum.COL_USER_NAME.getName());
+		userQuery.append(" LIKE '");
+		userQuery.append(userName.trim());
+		userQuery.append("%'");
+		
+		log.info("user query:{}", userQuery);
+		
+		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(userQuery.toString(),
+				DEFAULT_REC_COUNT);
+
+		IRODSQueryResultSetInterface resultSet;
+		try {
+			resultSet = irodsGenQueryExecutorImpl
+					.executeIRODSQueryAndCloseResult(irodsQuery,
+							DEFAULT_REC_COUNT);
+		} catch (JargonQueryException e) {
+			log.error("query exception for user query:{}", userQuery.toString(), e);
+			throw new JargonException(ERROR_IN_USER_QUERY);
+		}
+		
+		for (IRODSQueryResultRow row : resultSet.getResults()) {
+			results.add(row.getColumn(0));
+		}
+		
+		log.debug("user list:{}", results);
+		return results;
+
+		
+	}
+	
 
 	/**
 	 * Handy method will build the select portion of a gen query that accesses

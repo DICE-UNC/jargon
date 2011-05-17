@@ -51,3 +51,4 @@ fixme's in UserAOImplTest
 *[#180] [iROD-Chat:6165] Jargon 2.4.1 and Error -321000 (USER_NO_RESC_INPUT_ERR) - added capability to pull default resource from iRODS account if not specified.
 * [#176] put/get resource switching - WORK IN PROGRESS
 * [#181] rule requests transfer from unknown protocol error executing iRule - added capability to process a dest resource in the rule return params.
+* [#50] Bugzilla import - -p and -P options in streaming

@@ -435,4 +435,18 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	void modifyAvuValueBasedOnGivenAttributeAndUnit(String absolutePath,
 			AvuData avuData) throws DataNotFoundException, JargonException;
 
+	/**
+	 * Retrieve the permission for the given user for the given collection.  Note that the method will return null if no 
+	 * ACL currently exists.
+	 * 
+	 * @param irodsCollectionAbsolutePath  <code>String</code> with the absolute path to the target
+	 *            collection
+	 * @param userName - <code>String</code> with the name of the user
+	 * @return {@link UserFilePermission} or <code>null</code> if no permission is found
+	 * @throws JargonException
+	 */
+	UserFilePermission getPermissionForUserName(
+			String irodsCollectionAbsolutePath, String userName)
+			throws JargonException;
+
 }

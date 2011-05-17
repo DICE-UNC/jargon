@@ -1596,6 +1596,70 @@ public class CollectionAOImplTest {
 		TestCase.assertNotNull("got a null userFilePermissions", userFilePermissions);
 		TestCase.assertEquals("did not find the two permissions", 2, userFilePermissions.size());
 	}
+	
+	@Test
+	public final void testGetPermissionsForCollectionForUser() throws Exception {
+
+		String testCollectionName = "testGetPermissionsForCollectionForUser";
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + "/"
+								+ testCollectionName);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		CollectionAO collectionAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getCollectionAO(irodsAccount);
+		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetIrodsCollection);
+		irodsFile.mkdirs();
+
+		collectionAO
+				.setAccessPermissionRead(
+						"",
+						targetIrodsCollection,
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY),
+						true);
+
+		UserFilePermission userFilePermission = collectionAO.getPermissionForUserName(targetIrodsCollection, testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY));
+		TestCase.assertNotNull("got a null userFilePermission", userFilePermission);
+		TestCase.assertEquals("userName did not match expected", testingProperties
+				.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY), userFilePermission.getUserName());
+	}
+	
+	@Test
+	public final void testGetPermissionsForCollectionForUserNoUser() throws Exception {
+
+		String testCollectionName = "testGetPermissionsForCollectionForUser";
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + "/"
+								+ testCollectionName);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		CollectionAO collectionAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getCollectionAO(irodsAccount);
+		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetIrodsCollection);
+		irodsFile.mkdirs();
+
+		collectionAO
+				.setAccessPermissionRead(
+						"",
+						targetIrodsCollection,
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY),
+						true);
+
+		UserFilePermission userFilePermission = collectionAO.getPermissionForUserName(targetIrodsCollection, "notausername");
+		TestCase.assertNull("got a userFilePermission when should have been null", userFilePermission);
+		
+	}
 
 
 }

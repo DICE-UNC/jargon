@@ -14,6 +14,7 @@ import org.apache.commons.codec.binary.Base64;
 import org.irods.jargon.core.connection.IRODSCommands;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.packinstr.ExecCmd;
+import org.irods.jargon.core.packinstr.ExecCmd.PathHandlingMode;
 import org.irods.jargon.core.pub.io.RemoteExecutionBinaryResultInputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,6 +41,7 @@ public class RemoteExecuteServiceImpl implements RemoteExecutionService {
 	private final String executionHost;
 	private final String absolutePathOfIrodsFileThatWillBeUsedToFindHostToExecuteOn;
 	public static final String STREAMING_API_CUTOFF = "rods2.4.1";
+	private PathHandlingMode pathHandlingMode = PathHandlingMode.NONE;
 
 	private static final Logger log = LoggerFactory
 			.getLogger(RemoteExecuteServiceImpl.class);
@@ -57,6 +59,8 @@ public class RemoteExecuteServiceImpl implements RemoteExecutionService {
 		sb.append(executionHost);
 		sb.append("\n   absolutePathOfIrodsFileThatWillBeUsedToFindHostToExecuteOn:");
 		sb.append(absolutePathOfIrodsFileThatWillBeUsedToFindHostToExecuteOn);
+		sb.append("\n   pathHandlingMode:");
+		sb.append(pathHandlingMode);
 		sb.append("\n   irodsCommands:");
 		sb.append(irodsCommands);
 		return sb.toString();
@@ -64,6 +68,35 @@ public class RemoteExecuteServiceImpl implements RemoteExecutionService {
 
 	/**
 	 * Static instance method for a remote execution service.
+	 * 
+	 * @param commandToExecuteWithoutArguments
+	 *            <code>String</code> with the name of the command to execute.
+	 *            Do not put arguments into this field.
+	 * @param argumentsToPassWithCommand
+	 *            <code>String</code> that is blank, or has the arguments to
+	 *            send with the given command
+	 * @param executionHost
+	 *            <code>String</code> that can optionally point to the host on
+	 *            which the command should be executed. Blank if not used.
+
+	 * @return <code>RemoteExecutionService</code>
+	 * @throws JargonException
+	 */
+	public static final RemoteExecutionService instance(
+			final IRODSCommands irodsCommands,
+			final String commandToExecuteWithoutArguments,
+			final String argumentsToPassWithCommand,
+			final String executionHost)
+			throws JargonException {
+		return new RemoteExecuteServiceImpl(irodsCommands,
+				commandToExecuteWithoutArguments, argumentsToPassWithCommand,
+				executionHost,
+				"", PathHandlingMode.NONE);
+	}
+	
+	/**
+	 * Static instance method for a remote execution service when using the provided iRODS absolute path to compute the physical path and
+	 * add it as a command argument.
 	 * 
 	 * @param commandToExecuteWithoutArguments
 	 *            <code>String</code> with the name of the command to execute.
@@ -82,7 +115,7 @@ public class RemoteExecuteServiceImpl implements RemoteExecutionService {
 	 * @return <code>RemoteExecutionService</code>
 	 * @throws JargonException
 	 */
-	public static final RemoteExecutionService instance(
+	public static final RemoteExecutionService instanceWhenUsingAbsPathToSetCommandArg(
 			final IRODSCommands irodsCommands,
 			final String commandToExecuteWithoutArguments,
 			final String argumentsToPassWithCommand,
@@ -92,7 +125,40 @@ public class RemoteExecuteServiceImpl implements RemoteExecutionService {
 		return new RemoteExecuteServiceImpl(irodsCommands,
 				commandToExecuteWithoutArguments, argumentsToPassWithCommand,
 				executionHost,
-				absolutePathOfIrodsFileThatWillBeUsedToFindHostToExecuteOn);
+				absolutePathOfIrodsFileThatWillBeUsedToFindHostToExecuteOn, PathHandlingMode.USE_PATH_TO_ADD_PHYS_PATH_ARGUMENT_TO_REMOTE_SCRIPT);
+	}
+	
+	/**
+	 * Static instance method for a remote execution service when using the provided iRODS absolute path to find the host upon which to execute.
+	 * 
+	 * @param commandToExecuteWithoutArguments
+	 *            <code>String</code> with the name of the command to execute.
+	 *            Do not put arguments into this field.
+	 * @param argumentsToPassWithCommand
+	 *            <code>String</code> that is blank, or has the arguments to
+	 *            send with the given command
+	 * @param executionHost
+	 *            <code>String</code> that can optionally point to the host on
+	 *            which the command should be executed. Blank if not used.
+	 * @param absolutePathOfIrodsFileThatWillBeUsedToFindHostToExecuteOn
+	 *            <code>String</code> that can optionally give an iRODS absolute
+	 *            path. This is used within iRODS to find the host upon which
+	 *            the file is located, and that host can be used to execute the
+	 *            given command.
+	 * @return <code>RemoteExecutionService</code>
+	 * @throws JargonException
+	 */
+	public static final RemoteExecutionService instanceWhenUsingAbsPathToFindExecutionHost(
+			final IRODSCommands irodsCommands,
+			final String commandToExecuteWithoutArguments,
+			final String argumentsToPassWithCommand,
+			final String executionHost,
+			final String absolutePathOfIrodsFileThatWillBeUsedToFindHostToExecuteOn)
+			throws JargonException {
+		return new RemoteExecuteServiceImpl(irodsCommands,
+				commandToExecuteWithoutArguments, argumentsToPassWithCommand,
+				executionHost,
+				absolutePathOfIrodsFileThatWillBeUsedToFindHostToExecuteOn, PathHandlingMode.USE_PATH_TO_FIND_EXECUTING_HOST);
 	}
 
 	/**
@@ -116,6 +182,11 @@ public class RemoteExecuteServiceImpl implements RemoteExecutionService {
 	 *            path. This is used within iRODS to find the host upon which
 	 *            the file is located, and that host can be used to execute the
 	 *            given command.
+	 * @param pathHandlingMode
+	 *            {@link ExecCmd.PathHandlingMode} enum value that provides
+	 *            additional information about the request functionality. This
+	 *            is used in the -P and -p equivalent modes, and otherwise is
+	 *            set to <code>NONE</code>
 	 * @throws JargonException
 	 */
 	private RemoteExecuteServiceImpl(
@@ -123,8 +194,8 @@ public class RemoteExecuteServiceImpl implements RemoteExecutionService {
 			final String commandToExecuteWithoutArguments,
 			final String argumentsToPassWithCommand,
 			final String executionHost,
-			final String absolutePathOfIrodsFileThatWillBeUsedToFindHostToExecuteOn)
-			throws JargonException {
+			final String absolutePathOfIrodsFileThatWillBeUsedToFindHostToExecuteOn,
+			final PathHandlingMode pathHandlingMode) throws JargonException {
 
 		if (irodsCommands == null) {
 			throw new JargonException("null irodsCommands");
@@ -149,12 +220,17 @@ public class RemoteExecuteServiceImpl implements RemoteExecutionService {
 			throw new JargonException(
 					"null absolutePathOfIrodsFileThatWillBeUsedToFindHostToExecuteOn, set to blank if not used");
 		}
+		
+		if (pathHandlingMode == null) {
+			throw new IllegalArgumentException("null pathHandlingMode");
+		}
 
 		this.irodsCommands = irodsCommands;
 		this.commandToExecuteWithoutArguments = commandToExecuteWithoutArguments;
 		this.argumentsToPassWithCommand = argumentsToPassWithCommand;
 		this.executionHost = executionHost;
 		this.absolutePathOfIrodsFileThatWillBeUsedToFindHostToExecuteOn = absolutePathOfIrodsFileThatWillBeUsedToFindHostToExecuteOn;
+		this.pathHandlingMode = pathHandlingMode;
 
 	}
 
@@ -168,18 +244,21 @@ public class RemoteExecuteServiceImpl implements RemoteExecutionService {
 		log.info("executing a remote command:{}", toString());
 
 		ExecCmd execCmd = null;
-		if (this.getIrodsCommands().getIRODSServerProperties()
-				.isTheIrodsServerAtLeastAtTheGivenReleaseVersion(STREAMING_API_CUTOFF)) {
+		if (this.getIrodsCommands()
+				.getIRODSServerProperties()
+				.isTheIrodsServerAtLeastAtTheGivenReleaseVersion(
+						STREAMING_API_CUTOFF)) {
 			execCmd = ExecCmd
 					.instanceWithHostAndArgumentsToPassParametersPost25(
 							commandToExecuteWithoutArguments,
 							argumentsToPassWithCommand, executionHost,
-							absolutePathOfIrodsFileThatWillBeUsedToFindHostToExecuteOn);
+							absolutePathOfIrodsFileThatWillBeUsedToFindHostToExecuteOn, pathHandlingMode);
 		} else {
-			execCmd = ExecCmd.instanceWithHostAndArgumentsToPassParametersPriorTo25(
-					commandToExecuteWithoutArguments,
-					argumentsToPassWithCommand, executionHost,
-					absolutePathOfIrodsFileThatWillBeUsedToFindHostToExecuteOn);
+			execCmd = ExecCmd
+					.instanceWithHostAndArgumentsToPassParametersPriorTo25(
+							commandToExecuteWithoutArguments,
+							argumentsToPassWithCommand, executionHost,
+							absolutePathOfIrodsFileThatWillBeUsedToFindHostToExecuteOn, pathHandlingMode);
 		}
 
 		Tag message;
@@ -229,7 +308,8 @@ public class RemoteExecuteServiceImpl implements RemoteExecutionService {
 		log.info("executing a remote command with streaming:{}", toString());
 
 		if (!getIrodsCommands().getIRODSServerProperties()
-				.isTheIrodsServerAtLeastAtTheGivenReleaseVersion(STREAMING_API_CUTOFF)) {
+				.isTheIrodsServerAtLeastAtTheGivenReleaseVersion(
+						STREAMING_API_CUTOFF)) {
 			log.error(
 					"cannot stream remote commands, unsupported on this iRODS version:{}",
 					getIrodsCommands().getIRODSServerProperties());
@@ -241,7 +321,7 @@ public class RemoteExecuteServiceImpl implements RemoteExecutionService {
 				.instanceWithHostAndArgumentsToPassParametersAllowingStreamingForLargeResultsPost25(
 						commandToExecuteWithoutArguments,
 						argumentsToPassWithCommand, executionHost,
-						absolutePathOfIrodsFileThatWillBeUsedToFindHostToExecuteOn);
+						absolutePathOfIrodsFileThatWillBeUsedToFindHostToExecuteOn, pathHandlingMode);
 
 		Tag message;
 		StringBuilder buffer = new StringBuilder();

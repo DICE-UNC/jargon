@@ -1,6 +1,3 @@
-/**
- * 
- */
 package org.irods.jargon.spring.security;
 
 import org.slf4j.Logger;

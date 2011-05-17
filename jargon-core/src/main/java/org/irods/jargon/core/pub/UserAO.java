@@ -186,5 +186,16 @@ public interface UserAO extends IRODSAccessObject {
 	void modifyAVUMetadata(String userName, AvuData avuData)
 			throws DataNotFoundException, JargonException;
 
+	/**
+	 * For a given partial user name, return the user names that are like that one.  This is handy for creating auto-complete
+	 * data entry components that need to do quick user name lookups.  If actual <code>User</code> domain objects are needed, the 
+	 * <code>findWhere()</code> method provides an easy shortcut for obtaining extended user data.  This method will do a 'LIKE' query
+	 * and add a '%' wild card to the provided term
+	 * @param userName
+	 * @return
+	 * @throws JargonException
+	 */
+	List<String> findUserNameLike(String userName) throws JargonException;
+
 	
 }

@@ -58,12 +58,12 @@ public class RemoteExecuteServiceImplTest {
 		String cmd = "hello";
 		String args = "";
 		String host = "host";
-		String absPath = "/an/abs/path";
+		
 
 		IRODSCommands irodsCommands = Mockito.mock(IRODSCommands.class);
 
 		RemoteExecutionService remoteExecuteService = RemoteExecuteServiceImpl
-				.instance(irodsCommands, cmd, args, host, absPath);
+				.instance(irodsCommands, cmd, args, host);
 		Assert.assertNotNull(remoteExecuteService);
 
 	}
@@ -74,7 +74,6 @@ public class RemoteExecuteServiceImplTest {
 		String cmd = "hello";
 		String args = "";
 		String host = "";
-		String absPath = "";
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
@@ -84,7 +83,7 @@ public class RemoteExecuteServiceImplTest {
 		CollectionAOImpl collectionAOImpl = (CollectionAOImpl) collectionAO;
 		IRODSCommands irodsCommands = collectionAOImpl.getIRODSProtocol();
 		RemoteExecutionService remoteExecuteService = RemoteExecuteServiceImpl
-				.instance(irodsCommands, cmd, args, host, absPath);
+				.instance(irodsCommands, cmd, args, host);
 
 		InputStream inputStream = remoteExecuteService.execute();
 
@@ -112,7 +111,6 @@ public class RemoteExecuteServiceImplTest {
 		String cmd = "hello";
 		String args = "";
 		String host = "";
-		String absPath = "";
 
 		int nbrTimes = 50;
 
@@ -124,7 +122,7 @@ public class RemoteExecuteServiceImplTest {
 		CollectionAOImpl collectionAOImpl = (CollectionAOImpl) collectionAO;
 		IRODSCommands irodsCommands = collectionAOImpl.getIRODSProtocol();
 		RemoteExecutionService remoteExecuteService = RemoteExecuteServiceImpl
-				.instance(irodsCommands, cmd, args, host, absPath);
+				.instance(irodsCommands, cmd, args, host);
 
 		InputStream inputStream;
 
@@ -160,7 +158,6 @@ public class RemoteExecuteServiceImplTest {
 		String cmd = "hello";
 		String args = "";
 		String host = "";
-		String absPath = "";
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
@@ -184,7 +181,7 @@ public class RemoteExecuteServiceImplTest {
 		CollectionAOImpl collectionAOImpl = (CollectionAOImpl) collectionAO;
 		IRODSCommands irodsCommands = collectionAOImpl.getIRODSProtocol();
 		RemoteExecutionService remoteExecuteService = RemoteExecuteServiceImpl
-				.instance(irodsCommands, cmd, args, host, absPath);
+				.instance(irodsCommands, cmd, args, host);
 
 		InputStream inputStream = remoteExecuteService.executeAndStream();
 
@@ -207,7 +204,7 @@ public class RemoteExecuteServiceImplTest {
 	}
 
 	@Test
-	public final void testExecuteHelloWithPath() throws Exception {
+	public final void testExecuteHelloWithPathExpectingToSetPhysPathInArg() throws Exception {
 
 		if (!testingPropertiesHelper.isTestRemoteExecStream(testingProperties)) {
 			return;
@@ -251,8 +248,8 @@ public class RemoteExecuteServiceImplTest {
 				.getIRODSAccessObjectFactory().getCollectionAO(irodsAccount);
 		CollectionAOImpl collectionAOImpl = (CollectionAOImpl) collectionAO;
 		IRODSCommands irodsCommands = collectionAOImpl.getIRODSProtocol();
-		RemoteExecutionService remoteExecuteService = RemoteExecuteServiceImpl
-				.instance(irodsCommands, cmd, args, host, targetIrodsFile);
+		RemoteExecutionService remoteExecuteService = RemoteExecuteServiceImpl.instanceWhenUsingAbsPathToSetCommandArg
+			(irodsCommands, cmd, args, host, targetIrodsFile);
 
 		InputStream inputStream = remoteExecuteService.execute();
 
@@ -269,13 +266,16 @@ public class RemoteExecuteServiceImplTest {
 		String result = sb.toString();
 		irodsFileSystem.close();
 
-		Assert.assertEquals("did not successfully execute hello command",
-				"Hello world  from irods".trim(), result.trim());
+		Assert.assertTrue("did not successfully execute hello command",
+				result.indexOf("Hello world") > -1);
+		
+		Assert.assertTrue("did not successfully execute hello command, missing path info ",
+				result.indexOf(testFileName) > -1);
 
 	}
 
 	@Test
-	public final void testExecuteHelloWithPathUsingPost241API()
+	public final void testExecuteHelloWithPathUsingPost241APIToSetCommandLineArg()
 			throws Exception {
 
 		if (!testingPropertiesHelper.isTestRemoteExecStream(testingProperties)) {
@@ -334,7 +334,7 @@ public class RemoteExecuteServiceImplTest {
 		CollectionAOImpl collectionAOImpl = (CollectionAOImpl) collectionAO;
 		IRODSCommands irodsCommands = collectionAOImpl.getIRODSProtocol();
 		RemoteExecutionService remoteExecuteService = RemoteExecuteServiceImpl
-				.instance(irodsCommands, cmd, args, host, targetIrodsFile);
+		.instanceWhenUsingAbsPathToSetCommandArg(irodsCommands, cmd, args, host, targetIrodsFile);
 
 		InputStream inputStream = remoteExecuteService.executeAndStream();
 
@@ -351,9 +351,95 @@ public class RemoteExecuteServiceImplTest {
 		String result = sb.toString();
 		irodsFileSystem.close();
 
-		Assert.assertEquals("did not successfully execute hello command",
-				"Hello world  from irods".trim(), result.trim());
+		Assert.assertTrue("did not successfully execute hello command",
+				result.indexOf("Hello world") > -1);
+		
+		Assert.assertTrue("did not successfully execute hello command, missing path info ",
+				result.indexOf(testFileName) > -1);
+	}
+	
+	@Test
+	public final void testExecuteHelloWithPathUsingPost241APIToDetermineHost()
+			throws Exception {
 
+		if (!testingPropertiesHelper.isTestRemoteExecStream(testingProperties)) {
+			return;
+		}
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
+						irodsAccount);
+		IRODSServerProperties props = environmentalInfoAO
+				.getIRODSServerPropertiesFromIRODSServer();
+
+		// test is only valid for post 2.4.1 FIXME: bump this up to the next
+		// released version
+		if (!props.isTheIrodsServerAtLeastAtTheGivenReleaseVersion(RemoteExecuteServiceImpl.STREAMING_API_CUTOFF)) {
+			irodsFileSystem.closeAndEatExceptions();
+			return;
+		}
+
+		String cmd = "hello";
+		String args = "";
+		String host = "";
+
+		String testFileName = "testExecuteHelloWithPathUsingPost241APIToDetermineHost.txt";
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String localFileName = FileGenerator
+				.generateFileOfFixedLengthGivenName(absPath, testFileName, 300);
+
+		String targetIrodsFile = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
+								+ testFileName);
+
+		IrodsInvocationContext invocationContext = testingPropertiesHelper
+				.buildIRODSInvocationContextFromTestProperties(testingProperties);
+		IputCommand iputCommand = new IputCommand();
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		iputCommand.setLocalFileName(localFileName);
+		iputCommand.setIrodsFileName(targetIrodsCollection);
+		iputCommand.setForceOverride(true);
+
+		IcommandInvoker invoker = new IcommandInvoker(invocationContext);
+		invoker.invokeCommandAndGetResultAsString(iputCommand);
+
+		CollectionAO collectionAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getCollectionAO(irodsAccount);
+		CollectionAOImpl collectionAOImpl = (CollectionAOImpl) collectionAO;
+		IRODSCommands irodsCommands = collectionAOImpl.getIRODSProtocol();
+		RemoteExecutionService remoteExecuteService = RemoteExecuteServiceImpl
+		.instanceWhenUsingAbsPathToFindExecutionHost(irodsCommands, cmd, args, host, targetIrodsFile);
+
+		InputStream inputStream = remoteExecuteService.executeAndStream();
+
+		BufferedReader br = new BufferedReader(new InputStreamReader(
+				inputStream));
+		StringBuilder sb = new StringBuilder();
+		String line = null;
+
+		while ((line = br.readLine()) != null) {
+			sb.append(line + "\n");
+		}
+
+		br.close();
+		String result = sb.toString();
+		irodsFileSystem.close();
+
+		Assert.assertTrue("did not successfully execute hello command",
+				result.indexOf("Hello world") > -1);
+		
+		Assert.assertFalse("attempted to return path info",
+				result.indexOf(testFileName) > -1);
 	}
 
 	@Test
@@ -366,7 +452,6 @@ public class RemoteExecuteServiceImplTest {
 		String cmd = "hello";
 		String args = "";
 		String host = "localhost";
-		String absPath = "";
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
@@ -376,7 +461,7 @@ public class RemoteExecuteServiceImplTest {
 		CollectionAOImpl collectionAOImpl = (CollectionAOImpl) collectionAO;
 		IRODSCommands irodsCommands = collectionAOImpl.getIRODSProtocol();
 		RemoteExecutionService remoteExecuteService = RemoteExecuteServiceImpl
-				.instance(irodsCommands, cmd, args, host, absPath);
+				.instance(irodsCommands, cmd, args, host);
 
 		InputStream inputStream = remoteExecuteService.execute();
 
@@ -404,7 +489,6 @@ public class RemoteExecuteServiceImplTest {
 		String cmd = "hello";
 		String args = "";
 		String host = "ImNotAHostWhyAreYouLookingAtMe";
-		String absPath = "";
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
@@ -414,7 +498,7 @@ public class RemoteExecuteServiceImplTest {
 		CollectionAOImpl collectionAOImpl = (CollectionAOImpl) collectionAO;
 		IRODSCommands irodsCommands = collectionAOImpl.getIRODSProtocol();
 		RemoteExecutionService remoteExecuteService = RemoteExecuteServiceImpl
-				.instance(irodsCommands, cmd, args, host, absPath);
+				.instance(irodsCommands, cmd, args, host);
 
 		remoteExecuteService.execute();
 
@@ -436,7 +520,7 @@ public class RemoteExecuteServiceImplTest {
 		CollectionAOImpl collectionAOImpl = (CollectionAOImpl) collectionAO;
 		IRODSCommands irodsCommands = collectionAOImpl.getIRODSProtocol();
 		RemoteExecutionService remoteExecuteService = RemoteExecuteServiceImpl
-				.instance(irodsCommands, cmd, args, host, absPath);
+		.instanceWhenUsingAbsPathToSetCommandArg(irodsCommands, cmd, args, host, absPath);
 
 		InputStream inputStream = remoteExecuteService.execute();
 		BufferedReader br = new BufferedReader(new InputStreamReader(
@@ -471,7 +555,6 @@ public class RemoteExecuteServiceImplTest {
 		String cmd = "test_execstream.py";
 		String args = String.valueOf(testLen);
 		String host = "";
-		String absPath = "";
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
@@ -492,7 +575,7 @@ public class RemoteExecuteServiceImplTest {
 		CollectionAOImpl collectionAOImpl = (CollectionAOImpl) collectionAO;
 		IRODSCommands irodsCommands = collectionAOImpl.getIRODSProtocol();
 		RemoteExecutionService remoteExecuteService = RemoteExecuteServiceImpl
-				.instance(irodsCommands, cmd, args, host, absPath);
+				.instance(irodsCommands, cmd, args, host);
 
 		InputStream inputStream = remoteExecuteService.executeAndStream();
 
@@ -529,7 +612,6 @@ public class RemoteExecuteServiceImplTest {
 		String cmd = "test_execstream.py";
 		String args = String.valueOf(testLen);
 		String host = "";
-		String absPath = "";
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
@@ -553,7 +635,7 @@ public class RemoteExecuteServiceImplTest {
 		CollectionAOImpl collectionAOImpl = (CollectionAOImpl) collectionAO;
 		IRODSCommands irodsCommands = collectionAOImpl.getIRODSProtocol();
 		RemoteExecutionService remoteExecuteService = RemoteExecuteServiceImpl
-				.instance(irodsCommands, cmd, args, host, absPath);
+				.instance(irodsCommands, cmd, args, host);
 
 		InputStream inputStream = remoteExecuteService.executeAndStream();
 
@@ -589,7 +671,6 @@ public class RemoteExecuteServiceImplTest {
 		String cmd = "test_execstream.py";
 		String args = String.valueOf(testLen);
 		String host = "";
-		String absPath = "";
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
@@ -612,7 +693,7 @@ public class RemoteExecuteServiceImplTest {
 		CollectionAOImpl collectionAOImpl = (CollectionAOImpl) collectionAO;
 		IRODSCommands irodsCommands = collectionAOImpl.getIRODSProtocol();
 		RemoteExecutionService remoteExecuteService = RemoteExecuteServiceImpl
-				.instance(irodsCommands, cmd, args, host, absPath);
+				.instance(irodsCommands, cmd, args, host);
 
 		InputStream inputStream = remoteExecuteService.executeAndStream();
 

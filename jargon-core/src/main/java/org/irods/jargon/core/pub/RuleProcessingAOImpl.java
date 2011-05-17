@@ -536,6 +536,7 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements
 		LOG.debug("client side get action was successful");
 	}
 
+	@SuppressWarnings("unused")
 	private void operationComplete(final int status) throws JargonException {
 		Tag message = new Tag(INT_PI, new Tag[] { new Tag(MY_INT, status), });
 		getIRODSProtocol().irodsFunction(RODS_API_REQ, message.parseTag(),
