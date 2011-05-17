@@ -449,4 +449,57 @@ public interface CollectionAO extends FileCatalogObjectAO {
 			String irodsCollectionAbsolutePath, String userName)
 			throws JargonException;
 
+	/**
+	 * For a given iRODS collection, set the access permission to read as an administrator.  This can optionally be recursively applied.
+	 * @param zone <code>String</code> with an optional zone for the file.  Leave blank if not used, it is not required.
+	 * <p/>
+	 * This method is equivalent to runnign the ichmod icommand with the -M flag.
+	 * @param absolutePath <code>String</code> with the absolute path to the collection.
+	 * @param userName <code>String</code> with the user name whose permissions will be set.
+	 * @param recursive <code>boolean</code> that indicates whether the permission should be applied recursively
+	 * @throws JargonException
+	 */
+	void setAccessPermissionReadAsAdmin(String zone, String absolutePath,
+			String userName, boolean recursive) throws JargonException;
+
+	/**
+	 * For a given iRODS collection, set the access permission to write as an administrator.  This can optionally be recursively applied.
+	 * @param zone <code>String</code> with an optional zone for the file.  Leave blank if not used, it is not required.
+	 * <p/>
+	 * This method is equivalent to runnign the ichmod icommand with the -M flag.
+	 * @param absolutePath <code>String</code> with the absolute path to the collection.
+	 * @param userName <code>String</code> with the user name whose permissions will be set.
+	 * @param recursive <code>boolean</code> that indicates whether the permission should be applied recursively
+	 * @throws JargonException
+	 */
+	void setAccessPermissionWriteAsAdmin(String zone, String absolutePath,
+			String userName, boolean recursive) throws JargonException;
+
+	/**
+	 * For a given iRODS collection, set the access permission to own as an administrator.  This can optionally be recursively applied.
+	 * @param zone <code>String</code> with an optional zone for the file.  Leave blank if not used, it is not required.
+	 * <p/>
+	 * This method is equivalent to runnign the ichmod icommand with the -M flag.
+	 * @param absolutePath <code>String</code> with the absolute path to the collection.
+	 * @param userName <code>String</code> with the user name whose permissions will be set.
+	 * @param recursive <code>boolean</code> that indicates whether the permission should be applied recursively
+	 * @throws JargonException
+	 */
+	void setAccessPermissionOwnAsAdmin(String zone, String absolutePath,
+			String userName, boolean recursive) throws JargonException;
+
+	/**
+	 * For a given iRODS collection,remove the access permission for the user as an administrator.  This can optionally be recursively applied.
+	 * @param zone <code>String</code> with an optional zone for the file.  Leave blank if not used, it is not required.
+	 * <p/>
+	 * This method is equivalent to runnign the ichmod icommand with the -M flag.
+	 * 
+	 * @param absolutePath <code>String</code> with the absolute path to the collection.
+	 * @param userName <code>String</code> with the user name whose permissions will be set.
+	 * @param recursive <code>boolean</code> that indicates whether the permission should be applied recursively
+	 * @throws JargonException
+	 */
+	void removeAccessPermissionForUserAsAdmin(String zone, String absolutePath,
+			String userName, boolean recursive) throws JargonException;
+
 }

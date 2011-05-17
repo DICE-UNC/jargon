@@ -52,3 +52,4 @@ fixme's in UserAOImplTest
 * [#176] put/get resource switching - WORK IN PROGRESS
 * [#181] rule requests transfer from unknown protocol error executing iRule - added capability to process a dest resource in the rule return params.
 * [#50] Bugzilla import - -p and -P options in streaming
+*methods added for setting ACL's in admin mode for data objects and collections
