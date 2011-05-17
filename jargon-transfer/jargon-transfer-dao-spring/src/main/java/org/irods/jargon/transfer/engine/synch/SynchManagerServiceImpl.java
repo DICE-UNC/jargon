@@ -29,6 +29,9 @@ public class SynchManagerServiceImpl implements SynchManagerService {
 		return synchConfigurationDAO;
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.transfer.engine.synch.SynchManagerService#createNewSynchConfiguration(org.irods.jargon.transfer.dao.domain.SynchConfiguration)
+	 */
 	@Override
 	@Transactional
 	public void createNewSynchConfiguration(final SynchConfiguration synchConfiguration) throws SynchException {
