@@ -965,6 +965,27 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 		getIRODSProtocol().irodsFunction(modAccessControlInp);
 
 	}
+	
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.core.pub.CollectionAO#setAccessPermissionReadAsAdmin(java.lang.String, java.lang.String, java.lang.String, boolean)
+	 */
+	@Override
+	public void setAccessPermissionReadAsAdmin(final String zone,
+			final String absolutePath, final String userName,
+			final boolean recursive) throws JargonException {
+
+		// pi tests parameters
+		log.info("setAccessPermissionReadAsAdmin on absPath:{}", absolutePath);
+		boolean collNeedsRecursive = adjustRecursiveOption(absolutePath,
+				recursive);
+
+		ModAccessControlInp modAccessControlInp = ModAccessControlInp
+				.instanceForSetPermissionInAdminMode(collNeedsRecursive, zone,
+						absolutePath, userName,
+						ModAccessControlInp.READ_PERMISSION);
+		getIRODSProtocol().irodsFunction(modAccessControlInp);
+
+	}
 
 	/*
 	 * (non-Javadoc)
@@ -979,7 +1000,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 			final boolean recursive) throws JargonException {
 
 		// pi tests parameters
-		log.info("setAccessPermissionRead on absPath:{}", absolutePath);
+		log.info("setAccessPermissionWrite on absPath:{}", absolutePath);
 		// overhead iRODS behavior, if you set perm with recursive when no
 		// children, then won't take
 		boolean collNeedsRecursive = adjustRecursiveOption(absolutePath,
@@ -987,6 +1008,29 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 
 		ModAccessControlInp modAccessControlInp = ModAccessControlInp
 				.instanceForSetPermission(collNeedsRecursive, zone,
+						absolutePath, userName,
+						ModAccessControlInp.WRITE_PERMISSION);
+		getIRODSProtocol().irodsFunction(modAccessControlInp);
+
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.core.pub.CollectionAO#setAccessPermissionWriteAsAdmin(java.lang.String, java.lang.String, java.lang.String, boolean)
+	 */
+	@Override
+	public void setAccessPermissionWriteAsAdmin(final String zone,
+			final String absolutePath, final String userName,
+			final boolean recursive) throws JargonException {
+
+		// pi tests parameters
+		log.info("setAccessPermissionWriteAsAdmin on absPath:{}", absolutePath);
+		// overhead iRODS behavior, if you set perm with recursive when no
+		// children, then won't take
+		boolean collNeedsRecursive = adjustRecursiveOption(absolutePath,
+				recursive);
+
+		ModAccessControlInp modAccessControlInp = ModAccessControlInp
+				.instanceForSetPermissionInAdminMode(collNeedsRecursive, zone,
 						absolutePath, userName,
 						ModAccessControlInp.WRITE_PERMISSION);
 		getIRODSProtocol().irodsFunction(modAccessControlInp);
@@ -1014,6 +1058,26 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 
 		ModAccessControlInp modAccessControlInp = ModAccessControlInp
 				.instanceForSetPermission(collNeedsRecursive, zone,
+						absolutePath, userName,
+						ModAccessControlInp.OWN_PERMISSION);
+		getIRODSProtocol().irodsFunction(modAccessControlInp);
+
+	}
+	
+	@Override
+	public void setAccessPermissionOwnAsAdmin(final String zone,
+			final String absolutePath, final String userName,
+			final boolean recursive) throws JargonException {
+
+		// pi tests parameters
+		log.info("setAccessPermissionOwnAsAdmin on absPath:{}", absolutePath);
+		// overhead iRODS behavior, if you set perm with recursive when no
+		// children, then won't take
+		boolean collNeedsRecursive = adjustRecursiveOption(absolutePath,
+				recursive);
+
+		ModAccessControlInp modAccessControlInp = ModAccessControlInp
+				.instanceForSetPermissionInAdminMode(collNeedsRecursive, zone,
 						absolutePath, userName,
 						ModAccessControlInp.OWN_PERMISSION);
 		getIRODSProtocol().irodsFunction(modAccessControlInp);
@@ -1048,6 +1112,30 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 
 	}
 
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.core.pub.CollectionAO#removeAccessPermissionForUserAsAdmin(java.lang.String, java.lang.String, java.lang.String, boolean)
+	 */
+	@Override
+	public void removeAccessPermissionForUserAsAdmin(final String zone,
+			final String absolutePath, final String userName,
+			final boolean recursive) throws JargonException {
+
+		// pi tests parameters
+		log.info("removeAccessPermissionAsAdmin on absPath:{}", absolutePath);
+		log.info("for user:{}", userName);
+		// overhead iRODS behavior, if you set perm with recursive when no
+		// children, then won't take
+		boolean collNeedsRecursive = adjustRecursiveOption(absolutePath,
+				recursive);
+
+		ModAccessControlInp modAccessControlInp = ModAccessControlInp
+				.instanceForSetPermissionInAdminMode(collNeedsRecursive, zone,
+						absolutePath, userName,
+						ModAccessControlInp.NULL_PERMISSION);
+		getIRODSProtocol().irodsFunction(modAccessControlInp);
+
+	}
+	
 	/*
 	 * (non-Javadoc)
 	 * 

@@ -817,6 +817,74 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	UserFilePermission getPermissionForDataObjectForUserName(
 			String irodsAbsolutePath, String userName) throws JargonException;
 
+	/**
+	 * Set the permissions on a data object to read for the given user as an admin.  This admin
+	 * mode is equivalent to the -M switch of the ichmod icommand.
+	 * 
+	 * @param zone
+	 *            <code>String</code> with an optional zone for the file. Leave
+	 *            blank if not used, it is not required.
+	 * @param absolutePath
+	 *            <code>String</code> with the absolute path to the data object.
+	 * @param userName
+	 *            <code>String</code> with the user name whose permissions will
+	 *            be set.
+	 * @throws JargonException
+	 */
+	void setAccessPermissionReadInAdminMode(String zone, String absolutePath,
+			String userName) throws JargonException;
+
+	/**
+	 * Set the permissions on a data object to write for the given user as an admin.  This admin
+	 * mode is equivalent to the -M switch of the ichmod icommand.
+	 * 
+	 * @param zone
+	 *            <code>String</code> with an optional zone for the file. Leave
+	 *            blank if not used, it is not required.
+	 * @param absolutePath
+	 *            <code>String</code> with the absolute path to the data object.
+	 * @param userName
+	 *            <code>String</code> with the user name whose permissions will
+	 *            be set.
+	 * @throws JargonException
+	 */
+	void setAccessPermissionWriteInAdminMode(String zone, String absolutePath,
+			String userName) throws JargonException;
+
+	/**
+	 * Set the permissions on a data object to own for the given user as an admin.  This admin
+	 * mode is equivalent to the -M switch of the ichmod icommand.
+	 * 
+	 * @param zone
+	 *            <code>String</code> with an optional zone for the file. Leave
+	 *            blank if not used, it is not required.
+	 * @param absolutePath
+	 *            <code>String</code> with the absolute path to the data object.
+	 * @param userName
+	 *            <code>String</code> with the user name whose permissions will
+	 *            be set.
+	 * @throws JargonException
+	 */
+	void setAccessPermissionOwnInAdminMode(String zone, String absolutePath,
+			String userName) throws JargonException;
+
+	/**
+	 * Remove the permissions on a data object to own for the given user as an admin.  This admin
+	 * mode is equivalent to the -M switch of the ichmod icommand.
+	 * 
+	 * @param zone
+	 *            <code>String</code> with an optional zone for the file. Leave
+	 *            blank if not used, it is not required.
+	 * @param absolutePath
+	 *            <code>String</code> with the absolute path to the data object.
+	 * @param userName
+	 *            <code>String</code> with the user name whose permissions will
+	 *            be set.
+	 * @throws JargonException
+	 */
+	void removeAccessPermissionsForUserInAdminMode(String zone,
+			String absolutePath, String userName) throws JargonException;
+
 	
 
 }

@@ -1696,6 +1696,132 @@ public class DataObjectAOImplTest {
 		TestCase.assertTrue(irodsFileForSecondaryUser.canRead());
 
 	}
+	
+	
+	@Test
+	public final void testSetReadAsAdmin() throws Exception {
+		// generate a local scratch file
+
+		String testFileName = "testSetReadAsAdmin.doc";
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String fileNameOrig = FileGenerator.generateFileOfFixedLengthGivenName(
+				absPath, testFileName, 2);
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		IRODSAccount irodsAccountRods = testingPropertiesHelper.buildIRODSAccountForIRODSUserFromTestPropertiesForGivenUser(testingProperties,
+				testingProperties.getProperty(TestingPropertiesHelper.IRODS_ADMIN_USER_KEY), testingProperties.getProperty(TestingPropertiesHelper.IRODS_ADMIN_PASSWORD_KEY));
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		
+		DataObjectAO dataObjectAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
+		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetIrodsCollection);
+		dataObjectAO.putLocalDataObjectToIRODS(new File(fileNameOrig),
+				irodsFile, true);
+		
+		DataObjectAO rodsDataObjectAO = irodsFileSystem.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccountRods);
+
+		rodsDataObjectAO.setAccessPermissionReadInAdminMode("", targetIrodsCollection + "/"
+				+ testFileName, testingProperties
+				.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY));
+
+		// log in as the secondary user and test read access
+		IRODSAccount secondaryAccount = testingPropertiesHelper
+				.buildIRODSAccountFromSecondaryTestProperties(testingProperties);
+		IRODSFile irodsFileForSecondaryUser = irodsFileSystem
+				.getIRODSFileFactory(secondaryAccount).instanceIRODSFile(
+						targetIrodsCollection + "/" + testFileName);
+		TestCase.assertTrue(irodsFileForSecondaryUser.canRead());
+
+	}
+	
+	@Test
+	public final void testSetWriteAsAdmin() throws Exception {
+		// generate a local scratch file
+
+		String testFileName = "testSetWriteAsAdmin.doc";
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String fileNameOrig = FileGenerator.generateFileOfFixedLengthGivenName(
+				absPath, testFileName, 2);
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		IRODSAccount irodsAccountRods = testingPropertiesHelper.buildIRODSAccountForIRODSUserFromTestPropertiesForGivenUser(testingProperties,
+				testingProperties.getProperty(TestingPropertiesHelper.IRODS_ADMIN_USER_KEY), testingProperties.getProperty(TestingPropertiesHelper.IRODS_ADMIN_PASSWORD_KEY));
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		
+		DataObjectAO dataObjectAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
+		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetIrodsCollection);
+		dataObjectAO.putLocalDataObjectToIRODS(new File(fileNameOrig),
+				irodsFile, true);
+		
+		DataObjectAO rodsDataObjectAO = irodsFileSystem.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccountRods);
+
+		rodsDataObjectAO.setAccessPermissionWriteInAdminMode("", targetIrodsCollection + "/"
+				+ testFileName, testingProperties
+				.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY));
+
+		// log in as the secondary user and test read access
+		IRODSAccount secondaryAccount = testingPropertiesHelper
+				.buildIRODSAccountFromSecondaryTestProperties(testingProperties);
+		IRODSFile irodsFileForSecondaryUser = irodsFileSystem
+				.getIRODSFileFactory(secondaryAccount).instanceIRODSFile(
+						targetIrodsCollection + "/" + testFileName);
+		TestCase.assertTrue(irodsFileForSecondaryUser.canWrite());
+
+	}
+	
+	@Test
+	public final void testSetOwnAsAdmin() throws Exception {
+		// generate a local scratch file
+
+		String testFileName = "testSetOwnAsAdmin.doc";
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String fileNameOrig = FileGenerator.generateFileOfFixedLengthGivenName(
+				absPath, testFileName, 2);
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		IRODSAccount irodsAccountRods = testingPropertiesHelper.buildIRODSAccountForIRODSUserFromTestPropertiesForGivenUser(testingProperties,
+				testingProperties.getProperty(TestingPropertiesHelper.IRODS_ADMIN_USER_KEY), testingProperties.getProperty(TestingPropertiesHelper.IRODS_ADMIN_PASSWORD_KEY));
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		
+		DataObjectAO dataObjectAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
+		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetIrodsCollection);
+		dataObjectAO.putLocalDataObjectToIRODS(new File(fileNameOrig),
+				irodsFile, true);
+		
+		DataObjectAO rodsDataObjectAO = irodsFileSystem.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccountRods);
+
+		rodsDataObjectAO.setAccessPermissionOwnInAdminMode("", targetIrodsCollection + "/"
+				+ testFileName, testingProperties
+				.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY));
+
+		// log in as the secondary user and test read access
+		IRODSAccount secondaryAccount = testingPropertiesHelper
+				.buildIRODSAccountFromSecondaryTestProperties(testingProperties);
+		IRODSFile irodsFileForSecondaryUser = irodsFileSystem
+				.getIRODSFileFactory(secondaryAccount).instanceIRODSFile(
+						targetIrodsCollection + "/" + testFileName);
+		DataObjectAO dataObjectAOSecondaryUser = irodsFileSystem.getIRODSAccessObjectFactory().getDataObjectAO(secondaryAccount);
+		UserFilePermission userFilePermission = dataObjectAOSecondaryUser.getPermissionForDataObjectForUserName(irodsFileForSecondaryUser.getAbsolutePath(), secondaryAccount.getUserName());
+		TestCase.assertTrue("user should have own permission",userFilePermission.getFilePermissionEnum() == FilePermissionEnum.OWN);
+
+	}
 
 	@Test
 	public final void testSetWrite() throws Exception {

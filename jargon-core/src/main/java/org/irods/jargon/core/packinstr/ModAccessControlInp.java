@@ -23,7 +23,8 @@ public class ModAccessControlInp extends AbstractIRODSPackingInstruction {
 	public static final String USER_NAME = "userName";
 	public static final String ZONE = "zone";
 	public static final String PATH = "path";
-
+	public static final String ADMIN = "admin:";
+	
 	public static final String READ_PERMISSION = "read";
 	public static final String WRITE_PERMISSION = "write";
 	public static final String OWN_PERMISSION = "own";
@@ -37,10 +38,11 @@ public class ModAccessControlInp extends AbstractIRODSPackingInstruction {
 	private final String absolutePath;
 	private final String userName;
 	private final String permission;
+	private final boolean adminMode;
 
 	/**
 	 * Create an instance of the packing instruction to change permissions on
-	 * the file.
+	 * the file as an administrator.  
 	 * 
 	 * @param recursive
 	 *            <code>boolean</code> that indicates whether this is a
@@ -63,7 +65,35 @@ public class ModAccessControlInp extends AbstractIRODSPackingInstruction {
 			final String zone, final String absolutePath,
 			final String userName, final String permission) {
 		return new ModAccessControlInp(MOD_ACESS_CONTROL_API_NBR, recursive,
-				zone, absolutePath, userName, permission);
+				zone, absolutePath, userName, permission, false);
+	}
+	
+	/**
+	 * Create an instance of the packing instruction to change permissions on
+	 * the file.  This is equivalent to the -M icommand option for ichmod.
+	 * 
+	 * @param recursive
+	 *            <code>boolean</code> that indicates whether this is a
+	 *            recursive operation
+	 * @param zone
+	 *            <code>String</code> that gives an optional zone id. Leave
+	 *            blank if not used.
+	 * @param absolutePath
+	 *            <code>String</code> with the absolute path to the iRODS file
+	 *            or collection.
+	 * @param userName
+	 *            <code>String</code> with the iRODS user name to set
+	 *            permissions for.
+	 * @param permission
+	 *            <code>String</code> of value read, write, or own to describe
+	 *            the permission.
+	 * @return
+	 */
+	public static ModAccessControlInp instanceForSetPermissionInAdminMode(final boolean recursive,
+			final String zone, final String absolutePath,
+			final String userName, final String permission) {
+		return new ModAccessControlInp(MOD_ACESS_CONTROL_API_NBR, recursive,
+				zone, absolutePath, userName, permission, true);
 	}
 	
 	/**
@@ -82,7 +112,7 @@ public class ModAccessControlInp extends AbstractIRODSPackingInstruction {
 	public static ModAccessControlInp instanceForSetInheritOnACollection(final boolean recursive,
 			final String zone, final String absolutePath) {
 		return new ModAccessControlInp(MOD_ACESS_CONTROL_API_NBR, recursive,
-				zone, absolutePath, "", INHERIT_PERMISSION);
+				zone, absolutePath, "", INHERIT_PERMISSION,false);
 	}
 	
 	/**
@@ -101,7 +131,7 @@ public class ModAccessControlInp extends AbstractIRODSPackingInstruction {
 	public static ModAccessControlInp instanceForSetNoInheritOnACollection(final boolean recursive,
 			final String zone, final String absolutePath) {
 		return new ModAccessControlInp(MOD_ACESS_CONTROL_API_NBR, recursive,
-				zone, absolutePath, "", NOINHERIT_PERMISSION);
+				zone, absolutePath, "", NOINHERIT_PERMISSION,false);
 	}
 
 
@@ -118,7 +148,7 @@ public class ModAccessControlInp extends AbstractIRODSPackingInstruction {
 	 */
 	private ModAccessControlInp(final int apiNumber, final boolean recursive,
 			final String zone, final String absolutePath,
-			final String userName, final String permission) {
+			final String userName, final String permission, final boolean adminMode) {
 		super();
 
 		if (apiNumber <= 0) {
@@ -164,6 +194,7 @@ public class ModAccessControlInp extends AbstractIRODSPackingInstruction {
 		this.absolutePath = absolutePath;
 		this.userName = userName;
 		this.permission = permission;
+		this.adminMode = adminMode;
 
 	}
 
@@ -183,10 +214,18 @@ public class ModAccessControlInp extends AbstractIRODSPackingInstruction {
 		} else {
 			recursiveVal = 0;
 		}
+		
+		StringBuilder myPermission = new StringBuilder();
+		if (adminMode) {
+			myPermission.append(ADMIN);
+			myPermission.append(permission);
+		} else {
+			myPermission.append(permission);
+		}
 
 		Tag message = new Tag(PI_TAG, new Tag[] {
 				new Tag(RECURSIVE_FLAG, recursiveVal),
-				new Tag(ACCESS_LEVEL, permission),
+				new Tag(ACCESS_LEVEL, myPermission.toString()),
 				new Tag(USER_NAME, userName), new Tag(ZONE, zone),
 				new Tag(PATH, absolutePath) });
 
