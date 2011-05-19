@@ -10,10 +10,36 @@
   <artifactId>jargon-transfer-dao-spring</artifactId>
   <name>Jargon Transfer DAO Spring</name>
   <dependencies>
-    <dependency>
-      <groupId>org.irods.jargon.transfer</groupId>
-      <artifactId>jargon-transfer-dao-api</artifactId>
-    </dependency>
+  <!--  requiring cleanup -->
+  <dependency>
+   <groupId>javassist</groupId>
+   <artifactId>javassist</artifactId>
+   <version>3.9.0.GA</version>
+</dependency>
+ <dependency>
+   <groupId>org.springframework</groupId>
+   <artifactId>spring-test</artifactId>
+   <version>3.0.5.RELEASE</version>
+</dependency>
+<dependency>
+   <groupId>org.springframework</groupId>
+   <artifactId>spring-context</artifactId>
+   <version>3.0.5.RELEASE</version>
+</dependency>
+<dependency>
+   <groupId>org.springframework</groupId>
+   <artifactId>spring-beans</artifactId>
+   <version>3.0.5.RELEASE</version>
+</dependency>   
+<dependency>
+   <groupId>org.springframework</groupId>
+   <artifactId>spring-orm</artifactId>
+   <version>3.0.5.RELEASE</version>
+</dependency>
+
+<!--  end requiring cleanup -->
+
+
     <dependency>
       <groupId>org.hibernate</groupId>
       <artifactId>hibernate-core</artifactId>
@@ -22,10 +48,6 @@
       <groupId>org.hibernate</groupId>
       <artifactId>hibernate-annotations</artifactId>
     </dependency>
-    <!--   <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-hibernate3</artifactId>
-    </dependency> -->
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-core</artifactId>
@@ -70,26 +92,7 @@
       <groupId>antlr</groupId>
       <artifactId>antlr</artifactId>
     </dependency>   
-    <dependency>
-   <groupId>org.springframework</groupId>
-   <artifactId>spring-test</artifactId>
-   <version>3.0.5.RELEASE</version>
-</dependency>
-<dependency>
-   <groupId>org.springframework</groupId>
-   <artifactId>spring-context</artifactId>
-   <version>3.0.5.RELEASE</version>
-</dependency>
-<dependency>
-   <groupId>org.springframework</groupId>
-   <artifactId>spring-beans</artifactId>
-   <version>3.0.5.RELEASE</version>
-</dependency>   
-<dependency>
-   <groupId>org.springframework</groupId>
-   <artifactId>spring-orm</artifactId>
-   <version>3.0.5.RELEASE</version>
-</dependency>
+   
   </dependencies>
   <build>
     <plugins>

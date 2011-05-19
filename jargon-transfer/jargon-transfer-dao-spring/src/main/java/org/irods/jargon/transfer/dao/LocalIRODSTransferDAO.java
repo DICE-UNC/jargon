@@ -39,24 +39,6 @@ public interface LocalIRODSTransferDAO {
 
     /**
      * 
-     * @param id
-     * @param error
-     * @return
-     * @throws TransferDAOException
-     */
-    public LocalIRODSTransfer findById(Long id, boolean error) throws TransferDAOException;
-
-    /**
-     * 
-     * @param id
-     * @param error
-     * @return
-     * @throws TransferDAOException
-     */
-    public LocalIRODSTransfer findInitializedById(Long id, boolean error) throws TransferDAOException;
-
-    /**
-     * 
      * @param transferState
      * @return
      * @throws TransferDAOException

@@ -8,6 +8,7 @@ import org.irods.jargon.core.pub.IRODSFileSystem;
 import org.irods.jargon.core.transfer.DefaultTransferControlBlock;
 import org.irods.jargon.core.transfer.TransferControlBlock;
 import org.irods.jargon.core.transfer.TransferStatus;
+import org.irods.jargon.transfer.TransferServiceFactoryImpl;
 import org.irods.jargon.transfer.dao.domain.LocalIRODSTransfer;
 import org.irods.jargon.transfer.dao.domain.LocalIRODSTransferItem;
 import org.slf4j.Logger;
@@ -32,6 +33,8 @@ public final class TransferManagerImpl implements TransferManager {
     private final Logger log = LoggerFactory.getLogger(TransferManagerImpl.class);
 
     private TransferManagerCallbackListener transferManagerCallbackListener = null;
+    
+    private final TransferServiceFactoryImpl transferServiceFactory = new TransferServiceFactoryImpl();
 
     private TransferQueueService transferQueueService;
 
@@ -40,15 +43,22 @@ public final class TransferManagerImpl implements TransferManager {
     private RunningStatus runningStatus;
 
     private TransferRunner currentTransferRunner = null;
+    
+    private final IRODSFileSystem irodsFileSystem;
 
     /**
      * Indicates whether detailed logging is desired for successful transfers (might move into a config block later)
      */
     private boolean logSuccessfulTransfers = true;
 
-    public TransferManagerImpl() throws JargonException {
-        super();
+    public TransferManagerImpl(final IRODSFileSystem irodsFileSystem) throws JargonException {
+        
+        if (irodsFileSystem == null) {
+        	throw new IllegalArgumentException("null irodsFileSystem");
+        }
+        
         this.logSuccessfulTransfers = true;
+        this.irodsFileSystem = irodsFileSystem;
         try {
             init();
         } catch (Exception e) {
@@ -66,9 +76,9 @@ public final class TransferManagerImpl implements TransferManager {
      * @return instance of <code>TransferManager</code>
      * @throws JargonException
      */
-    public TransferManagerImpl(final TransferManagerCallbackListener transferManagerCallbackListener)
+    public TransferManagerImpl(final IRODSFileSystem irodsFileSystem, final TransferManagerCallbackListener transferManagerCallbackListener)
             throws JargonException {
-        super();
+        this(irodsFileSystem);
         this.transferManagerCallbackListener = transferManagerCallbackListener;
         this.logSuccessfulTransfers = true;
         try {
@@ -92,9 +102,9 @@ public final class TransferManagerImpl implements TransferManager {
      * @return instance of <code>TransferManager</code>
      * @throws JargonException
      */
-    public TransferManagerImpl(final TransferManagerCallbackListener transferManagerCallbackListener,
+    public TransferManagerImpl(final IRODSFileSystem irodsFileSystem, final TransferManagerCallbackListener transferManagerCallbackListener,
             final boolean logSuccessfulTransfers) throws JargonException {
-        super();
+        this(irodsFileSystem, transferManagerCallbackListener);
         this.transferManagerCallbackListener = transferManagerCallbackListener;
         this.logSuccessfulTransfers = logSuccessfulTransfers;
         try {
@@ -108,8 +118,7 @@ public final class TransferManagerImpl implements TransferManager {
     private void init() throws JargonException {
         this.errorStatus = ErrorStatus.OK;
         this.runningStatus = RunningStatus.IDLE;
-        this.transferQueueService = new TransferQueueServiceImpl();
-        IRODSFileSystem.instance();
+        this.transferQueueService = transferServiceFactory.instanceTransferQueueService();
         log.info("processing queue at startup");
         transferQueueService.processQueueAtStartup();
     }
@@ -662,5 +671,13 @@ public final class TransferManagerImpl implements TransferManager {
     public TransferQueueService getTransferQueueService() {
         return transferQueueService;
     }
+
+	/**
+	 * @return the irodsFileSystem
+	 */
+    @Override
+	public IRODSFileSystem getIrodsFileSystem() {
+		return irodsFileSystem;
+	}
 
 }

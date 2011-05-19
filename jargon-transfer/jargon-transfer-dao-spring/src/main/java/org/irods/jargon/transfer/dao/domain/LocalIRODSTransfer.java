@@ -18,6 +18,9 @@ import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
+
 /**
  * Domain object that represents a transfer activity between the local host and an iRODS server.
  * 
@@ -79,6 +82,7 @@ public class LocalIRODSTransfer implements Serializable {
 
     @OneToMany(mappedBy = "localIRODSTransfer", targetEntity = LocalIRODSTransferItem.class, cascade = { CascadeType.ALL }, fetch = FetchType.LAZY)
     @OrderBy("transferredAt")
+    @LazyCollection(LazyCollectionOption.EXTRA)
     private Set<LocalIRODSTransferItem> localIRODSTransferItems = new HashSet<LocalIRODSTransferItem>();
 
     @Column(name = "created_at")

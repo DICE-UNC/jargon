@@ -264,12 +264,7 @@
 			</dependency>
 			<dependency>
 				<groupId>org.irods.jargon.transfer</groupId>
-				<artifactId>jargon-transfer-dao-api</artifactId>
-				<version>${project.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.irods.jargon.transfer</groupId>
-				<artifactId>jargon-transfer-dao-spring</artifactId>
+				<artifactId>jargon-transfer</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
@@ -307,11 +302,6 @@
 				<artifactId>spring-context</artifactId>
 				<version>${spring.context.version}</version>
 			</dependency>
-		<!--  	<dependency>
-				<groupId>org.springframework</groupId>
-				<artifactId>spring-hibernate3</artifactId>
-				<version>${spring.hibernate3.version}</version>
-			</dependency> -->
 			<dependency>
 				<groupId>org.springframework</groupId>
 				<artifactId>spring-jdbc</artifactId>

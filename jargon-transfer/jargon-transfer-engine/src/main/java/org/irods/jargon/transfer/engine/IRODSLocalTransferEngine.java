@@ -7,15 +7,11 @@ import org.hibernate.HibernateException;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.DataTransferOperations;
-import org.irods.jargon.core.pub.IRODSFileSystem;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.pub.io.IRODSFileFactory;
 import org.irods.jargon.core.transfer.TransferControlBlock;
 import org.irods.jargon.core.transfer.TransferStatus;
 import org.irods.jargon.core.transfer.TransferStatusCallbackListener;
-import org.irods.jargon.transfer.dao.LocalIRODSTransferDAO;
-import org.irods.jargon.transfer.dao.TransferDAOException;
-import org.irods.jargon.transfer.dao.TransferDAOManager;
 import org.irods.jargon.transfer.dao.domain.LocalIRODSTransfer;
 import org.irods.jargon.transfer.dao.domain.LocalIRODSTransferItem;
 import org.irods.jargon.transfer.dao.domain.TransferState;
@@ -44,9 +40,6 @@ final class IRODSLocalTransferEngine implements TransferStatusCallbackListener {
 
 	private final Logger log = LoggerFactory
 			.getLogger(IRODSLocalTransferEngine.class);
-
-	private final TransferDAOManager transferDAOMgr = TransferDAOManager
-			.getInstance();
 
 	private final TransferManagerImpl transferManager;
 
@@ -88,8 +81,8 @@ final class IRODSLocalTransferEngine implements TransferStatusCallbackListener {
 		}
 
 		return new IRODSLocalTransferEngine(transferManager,
-					transferControlBlock, true);
-		
+				transferControlBlock, true);
+
 	}
 
 	/**
@@ -126,9 +119,9 @@ final class IRODSLocalTransferEngine implements TransferStatusCallbackListener {
 			throw new JargonException("transferControlBlock is null");
 		}
 
-		return  new IRODSLocalTransferEngine(transferManager,
-					transferControlBlock, logSuccessfulTransfers);
-		
+		return new IRODSLocalTransferEngine(transferManager,
+				transferControlBlock, logSuccessfulTransfers);
+
 	}
 
 	private IRODSLocalTransferEngine(final TransferManagerImpl transferManager,
@@ -138,7 +131,7 @@ final class IRODSLocalTransferEngine implements TransferStatusCallbackListener {
 		this.transferManager = transferManager;
 		this.transferControlBlock = transferControlBlock;
 		this.logSuccessfulTransfers = logSuccessfulTransfers;
-		
+
 	}
 
 	/**
@@ -172,19 +165,12 @@ final class IRODSLocalTransferEngine implements TransferStatusCallbackListener {
 						.getTransferResource());
 
 		// initiate the operation and process call-backs
-		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance(); // FIXME:
-																		// iRODSFileSystem
-																		// should
-																		// be
-																		// passed
-																		// here,
-																		// not
-																		// instanciated
-		final DataTransferOperations dataTransferOperations = irodsFileSystem
-				.getIRODSAccessObjectFactory().getDataTransferOperations(
-						irodsAccount);
-		final IRODSFileFactory irodsFileFactory = irodsFileSystem
-				.getIRODSFileFactory(irodsAccount);
+
+		final DataTransferOperations dataTransferOperations = transferManager
+				.getIrodsFileSystem().getIRODSAccessObjectFactory()
+				.getDataTransferOperations(irodsAccount);
+		final IRODSFileFactory irodsFileFactory = transferManager
+				.getIrodsFileSystem().getIRODSFileFactory(irodsAccount);
 
 		switch (localIrodsTransfer.getTransferType()) {
 		case PUT:
@@ -203,48 +189,43 @@ final class IRODSLocalTransferEngine implements TransferStatusCallbackListener {
 
 		// wrap up
 		log.info("processing finished for this operation");
-		irodsFileSystem.close();
+		transferManager.getIrodsFileSystem().close();
 		// now update the transfer 'header'
 
 		log.info("getting hibernate session factory and opening session");
 
-		try {
-			LocalIRODSTransferDAO localIRODSTransferDAO = transferDAOMgr
-					.getTransferDAOBean().getLocalIRODSTransferDAO();
-			LocalIRODSTransfer wrapUpTransfer = localIRODSTransferDAO
-					.findInitializedById(localIrodsTransfer.getId());
+		LocalIRODSTransfer wrapUpTransfer = transferManager
+				.getTransferQueueService().findLocalIRODSTransferById(
+						localIrodsTransfer.getId());
 
-			log.info("wrap up transfer before update:{}", wrapUpTransfer);
+		log.info("wrap up transfer before update:{}", wrapUpTransfer);
 
-			if (aborted == true) {
-				log.info("transfer was aborted, mark as cancelled, warning status, and add a message");
-				markTransferWasAborted(wrapUpTransfer);
-			} else if (transferException != null) {
-				markTransferException(wrapUpTransfer, transferException);
-			} else if (wrapUpTransfer.getTransferState() != null
-					&& (wrapUpTransfer.getTransferState().equals(
-							TransferState.PAUSED) || wrapUpTransfer
-							.getTransferState().equals(TransferState.CANCELLED))) {
-				log.info("paused or cancelled, do not compute error/warning global status");
-			} else if (transferControlBlock.getTotalFilesTransferredSoFar() == 0
-					&& transferControlBlock.getErrorCount() == 0) {
-				markWarningZeroFilesTransferred(wrapUpTransfer);
-			} else {
-				evaluateTransferErrorsPerFile(wrapUpTransfer);
-			}
-
-			wrapUpTransfer.setTransferEnd(new Date());
-
-			log.info("wrap up of finished transfer at update time {}",
-					wrapUpTransfer);
-			localIRODSTransferDAO.save(wrapUpTransfer);
-			log.info("updated");
-			setCurrentTransfer(wrapUpTransfer);
-			log.info("commit");
-		} catch (TransferDAOException e) {
-			log.error("error in transaction", e);
-			throw new JargonException(e);
+		if (aborted == true) {
+			log.info("transfer was aborted, mark as cancelled, warning status, and add a message");
+			markTransferWasAborted(wrapUpTransfer);
+		} else if (transferException != null) {
+			markTransferException(wrapUpTransfer, transferException);
+		} else if (wrapUpTransfer.getTransferState() != null
+				&& (wrapUpTransfer.getTransferState().equals(
+						TransferState.PAUSED) || wrapUpTransfer
+						.getTransferState().equals(TransferState.CANCELLED))) {
+			log.info("paused or cancelled, do not compute error/warning global status");
+		} else if (transferControlBlock.getTotalFilesTransferredSoFar() == 0
+				&& transferControlBlock.getErrorCount() == 0) {
+			markWarningZeroFilesTransferred(wrapUpTransfer);
+		} else {
+			evaluateTransferErrorsPerFile(wrapUpTransfer);
 		}
+
+		wrapUpTransfer.setTransferEnd(new Date());
+
+		log.info("wrap up of finished transfer at update time {}",
+				wrapUpTransfer);
+		transferManager.getTransferQueueService().updateLocalIRODSTransfer(
+				wrapUpTransfer);
+		log.info("updated");
+		setCurrentTransfer(wrapUpTransfer);
+		log.info("commit");
 
 	}
 
@@ -415,7 +396,7 @@ final class IRODSLocalTransferEngine implements TransferStatusCallbackListener {
 			throws JargonException {
 
 		log.info("statusCallback: {}", transferStatus);
-		
+
 		if (transferStatus.getTotalFilesTransferredSoFar() == 0) {
 			log.debug("got startup 0th transfer callback, ignore in database, but do callback to transfer status listener");
 			transferManager.notifyStatusUpdate(transferStatus);
@@ -447,15 +428,17 @@ final class IRODSLocalTransferEngine implements TransferStatusCallbackListener {
 			final LocalIRODSTransferItem localIRODSTransferItem)
 			throws HibernateException, JargonException {
 
-		
-		/* TODO: temp shim....this is the simplest case to handle the new RESTARTING callback, the code below can be reworked a bit when 
-		 * the logging requirements are better understood during the 'seek to restart' part of the operation.  Right now, nothing is updated.
-		*/
+		/*
+		 * TODO: temp shim....this is the simplest case to handle the new
+		 * RESTARTING callback, the code below can be reworked a bit when the
+		 * logging requirements are better understood during the 'seek to
+		 * restart' part of the operation. Right now, nothing is updated.
+		 */
 		if (transferStatus.getTransferState() == TransferStatus.TransferState.RESTARTING) {
 			log.debug("restarting:{}", transferStatus);
 			return;
 		}
-		
+
 		if (transferStatus.getTransferState() == TransferStatus.TransferState.FAILURE) {
 			log.error("error in this transfer, mark");
 			localIRODSTransferItem.setError(true);
@@ -466,64 +449,56 @@ final class IRODSLocalTransferEngine implements TransferStatusCallbackListener {
 			localIRODSTransferItem.setError(false);
 		}
 
-		try {
-			LocalIRODSTransferDAO localIRODSTransferDAO = transferDAOMgr
-					.getTransferDAOBean().getLocalIRODSTransferDAO();
-			LocalIRODSTransfer mergedTransfer = localIRODSTransferDAO
-					.findInitializedById(currentTransfer.getId());
+		LocalIRODSTransfer mergedTransfer = getTransferManager()
+				.getTransferQueueService().findLocalIRODSTransferById(
+						currentTransfer.getId());
+		log.info("loaded merged transfer for status update:{}", mergedTransfer);
 
-			log.info("loaded merged transfer for status update:{}",
-					mergedTransfer);
-
-			boolean updateItemRequired = true;
-			// if pause or cancel, update overall status, no item to store
-			if (transferStatus.getTransferState() == TransferStatus.TransferState.CANCELLED) {
-				log.info("this transfer has been cancelled");
-				mergedTransfer.setTransferState(TransferState.CANCELLED);
-				updateItemRequired = false;
-			} else if (transferStatus.getTransferState() == TransferStatus.TransferState.PAUSED) {
-				log.info("this transfer has been paused");
-				mergedTransfer.setTransferState(TransferState.PAUSED);
-				updateItemRequired = false;
-			}
-
-			if (transferStatus.getTransferState() == TransferStatus.TransferState.SUCCESS) {
-
-				log.info("updated last good path to:{}",
-						transferStatus.getSourceFileAbsolutePath());
-				mergedTransfer.setLastSuccessfulPath(transferStatus
-						.getSourceFileAbsolutePath());
-				mergedTransfer.setTotalFilesCount(transferStatus
-						.getTotalFilesToTransfer());
-				mergedTransfer.setTotalFilesTransferredSoFar(transferStatus
-						.getTotalFilesTransferredSoFar());
-
-				if (this.logSuccessfulTransfers) {
-					updateItemRequired = true;
-				} else {
-					log.debug("transfer not logged in database");
-					updateItemRequired = false;
-				}
-			}
-
-			// add the item to the local transfers. Note that if this is a
-			// success, it is not added as a line item if logSuccessfulTransfers
-			// is false
-			if (updateItemRequired) {
-				localIRODSTransferItem.setLocalIRODSTransfer(mergedTransfer);
-				log.info("updating transfer item:", localIRODSTransferItem);
-				mergedTransfer.getLocalIRODSTransferItems().add(
-						localIRODSTransferItem);
-			}
-
-			log.info("final merged transfer:{}", mergedTransfer);
-			localIRODSTransferDAO.save(mergedTransfer);
-			log.info("update done");
-			log.info("transfer item status saved in database");
-		} catch (TransferDAOException e) {
-			log.error("error in transaction", e);
-			throw new JargonException(e);
+		boolean updateItemRequired = true;
+		// if pause or cancel, update overall status, no item to store
+		if (transferStatus.getTransferState() == TransferStatus.TransferState.CANCELLED) {
+			log.info("this transfer has been cancelled");
+			mergedTransfer.setTransferState(TransferState.CANCELLED);
+			updateItemRequired = false;
+		} else if (transferStatus.getTransferState() == TransferStatus.TransferState.PAUSED) {
+			log.info("this transfer has been paused");
+			mergedTransfer.setTransferState(TransferState.PAUSED);
+			updateItemRequired = false;
 		}
+
+		if (transferStatus.getTransferState() == TransferStatus.TransferState.SUCCESS) {
+
+			log.info("updated last good path to:{}",
+					transferStatus.getSourceFileAbsolutePath());
+			mergedTransfer.setLastSuccessfulPath(transferStatus
+					.getSourceFileAbsolutePath());
+			mergedTransfer.setTotalFilesCount(transferStatus
+					.getTotalFilesToTransfer());
+			mergedTransfer.setTotalFilesTransferredSoFar(transferStatus
+					.getTotalFilesTransferredSoFar());
+
+			if (this.logSuccessfulTransfers) {
+				updateItemRequired = true;
+			} else {
+				log.debug("transfer not logged in database");
+				updateItemRequired = false;
+			}
+		}
+
+		// add the item to the local transfers. Note that if this is a
+		// success, it is not added as a line item if logSuccessfulTransfers
+		// is false
+		if (updateItemRequired) {
+			localIRODSTransferItem.setLocalIRODSTransfer(mergedTransfer);
+			log.info("updating transfer item:", localIRODSTransferItem);
+			transferManager.getTransferQueueService().addItemToTransfer(mergedTransfer, localIRODSTransferItem);
+		}
+
+		log.info("final merged transfer:{}", mergedTransfer);
+		getTransferManager().getTransferQueueService()
+				.updateLocalIRODSTransfer(mergedTransfer);
+		log.info("update done");
+		log.info("transfer item status saved in database");
 
 	}
 

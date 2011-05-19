@@ -23,7 +23,7 @@ public class SynchConfigurationDAOImpl extends HibernateDaoSupport implements
 			.getLogger(SynchConfigurationDAOImpl.class);
 	
 	/*
-	 * (non-Javadoc)
+	 * (non-Javadoc) 
 	 * 
 	 * @see
 	 * org.irods.jargon.transfer.dao.SynchConfigurationDAO#save(org.irods.jargon
