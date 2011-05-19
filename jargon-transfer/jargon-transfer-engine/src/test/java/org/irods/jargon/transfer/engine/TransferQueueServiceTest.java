@@ -84,7 +84,8 @@ public class TransferQueueServiceTest {
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH);
 
-		TransferQueueService transferQueueService = transferServiceFactory.instanceTransferQueueService();
+		TransferQueueService transferQueueService = transferServiceFactory
+				.instanceTransferQueueService();
 
 		transferQueueService.enqueuePutTransfer(localCollectionAbsolutePath,
 				irodsCollectionRootAbsolutePath, "", irodsAccount);
@@ -380,7 +381,7 @@ public class TransferQueueServiceTest {
 						testingProperties, IRODS_TEST_SUBDIR_PATH);
 
 		TransferQueueService transferQueueService = transferServiceFactory
-		.instanceTransferQueueService();
+				.instanceTransferQueueService();
 
 		transferQueueService.enqueuePutTransfer(localCollectionAbsolutePath,
 				irodsCollectionRootAbsolutePath, "", irodsAccount);
@@ -409,277 +410,291 @@ public class TransferQueueServiceTest {
 
 	}
 
-	/*
-	 * @Test public void testGetAllTransferItemsForTransfer() throws Exception {
-	 * IRODSAccount irodsAccount =
-	 * testingPropertiesHelper.buildIRODSAccountFromTestProperties
-	 * (testingProperties);
-	 * 
-	 * IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance(); String
-	 * rootCollection = "getAllTransferItemsForTransfer"; String
-	 * localCollectionAbsolutePath =
-	 * scratchFileUtils.createAndReturnAbsoluteScratchPath
-	 * (IRODS_TEST_SUBDIR_PATH + '/' + rootCollection);
-	 * 
-	 * String irodsCollectionRootAbsolutePath = testingPropertiesHelper
-	 * .buildIRODSCollectionAbsolutePathFromTestProperties(testingProperties,
-	 * IRODS_TEST_SUBDIR_PATH);
-	 * 
-	 * TransferQueueService transferQueueService = new
-	 * TransferQueueServiceImpl(); LocalIRODSTransferDAO localIRODSTransferDAO =
-	 * transferDAOMgr.getTransferDAOBean().getLocalIRODSTransferDAO();
-	 * LocalIRODSTransferItemDAO localIRODSTransferItemDAO =
-	 * transferDAOMgr.getTransferDAOBean().getLocalIRODSTransferItemDAO();
-	 * 
-	 * LocalIRODSTransfer enqueuedTransfer = new LocalIRODSTransfer();
-	 * enqueuedTransfer.setCreatedAt(new Date());
-	 * enqueuedTransfer.setIrodsAbsolutePath(irodsCollectionRootAbsolutePath);
-	 * enqueuedTransfer.setLocalAbsolutePath(localCollectionAbsolutePath);
-	 * enqueuedTransfer.setTransferHost(irodsAccount.getHost());
-	 * enqueuedTransfer.setTransferPort(irodsAccount.getPort());
-	 * enqueuedTransfer
-	 * .setTransferResource(irodsAccount.getDefaultStorageResource());
-	 * enqueuedTransfer.setTransferZone(irodsAccount.getZone());
-	 * enqueuedTransfer.setTransferStart(new Date());
-	 * enqueuedTransfer.setTransferType(TransferType.PUT);
-	 * enqueuedTransfer.setTransferUserName(irodsAccount.getUserName());
-	 * enqueuedTransfer.setTransferPassword(irodsAccount.getPassword());
-	 * enqueuedTransfer.setTransferState(TransferState.ENQUEUED);
-	 * enqueuedTransfer.setTransferStatus(TransferStatus.OK);
-	 * 
-	 * localIRODSTransferDAO.save(enqueuedTransfer);
-	 * 
-	 * // add two test items LocalIRODSTransferItem localIRODSTransferItem = new
-	 * LocalIRODSTransferItem(); localIRODSTransferItem.setError(false);
-	 * localIRODSTransferItem.setFile(true);
-	 * localIRODSTransferItem.setSourceFileAbsolutePath("/sourcepath1");
-	 * localIRODSTransferItem.setTargetFileAbsolutePath("/targetpath1");
-	 * localIRODSTransferItem.setTransferredAt(new Date());
-	 * localIRODSTransferItem.setLocalIRODSTransfer(enqueuedTransfer);
-	 * localIRODSTransferItemDAO.save(localIRODSTransferItem);
-	 * 
-	 * localIRODSTransferItem = new LocalIRODSTransferItem();
-	 * localIRODSTransferItem.setError(false);
-	 * localIRODSTransferItem.setFile(true);
-	 * localIRODSTransferItem.setSourceFileAbsolutePath("/sourcepath2");
-	 * localIRODSTransferItem.setTargetFileAbsolutePath("/targetpath2");
-	 * localIRODSTransferItem.setTransferredAt(new Date());
-	 * localIRODSTransferItem.setLocalIRODSTransfer(enqueuedTransfer);
-	 * localIRODSTransferItemDAO.save(localIRODSTransferItem);
-	 * 
-	 * // now get all items for the transfer List<LocalIRODSTransferItem>
-	 * transferItems = transferQueueService
-	 * .getAllTransferItemsForTransfer(enqueuedTransfer.getId());
-	 * irodsFileSystem.close();
-	 * Assert.assertEquals("did not get the two transfer items", 2,
-	 * transferItems.size());
-	 * 
-	 * }
-	 */
+	@Test
+	public void testGetAllTransferItemsForTransfer() throws Exception {
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
 
-	/*
-	 * @Test public void testGetAllTransferItemsForTransferWrongId() throws
-	 * Exception { IRODSAccount irodsAccount =
-	 * testingPropertiesHelper.buildIRODSAccountFromTestProperties
-	 * (testingProperties);
-	 * 
-	 * IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance(); String
-	 * rootCollection = "getAllTransferItemsForTransfer"; String
-	 * localCollectionAbsolutePath =
-	 * scratchFileUtils.createAndReturnAbsoluteScratchPath
-	 * (IRODS_TEST_SUBDIR_PATH + '/' + rootCollection);
-	 * 
-	 * String irodsCollectionRootAbsolutePath = testingPropertiesHelper
-	 * .buildIRODSCollectionAbsolutePathFromTestProperties(testingProperties,
-	 * IRODS_TEST_SUBDIR_PATH);
-	 * 
-	 * TransferQueueService transferQueueService = new
-	 * TransferQueueServiceImpl(); LocalIRODSTransferDAO localIRODSTransferDAO =
-	 * transferDAOMgr.getTransferDAOBean().getLocalIRODSTransferDAO();
-	 * 
-	 * LocalIRODSTransfer enqueuedTransfer = new LocalIRODSTransfer();
-	 * enqueuedTransfer.setCreatedAt(new Date());
-	 * enqueuedTransfer.setIrodsAbsolutePath(irodsCollectionRootAbsolutePath);
-	 * enqueuedTransfer.setLocalAbsolutePath(localCollectionAbsolutePath);
-	 * enqueuedTransfer.setTransferHost(irodsAccount.getHost());
-	 * enqueuedTransfer.setTransferPort(irodsAccount.getPort());
-	 * enqueuedTransfer
-	 * .setTransferResource(irodsAccount.getDefaultStorageResource());
-	 * enqueuedTransfer.setTransferZone(irodsAccount.getZone());
-	 * enqueuedTransfer.setTransferStart(new Date());
-	 * enqueuedTransfer.setTransferType(TransferType.PUT);
-	 * enqueuedTransfer.setTransferUserName(irodsAccount.getUserName());
-	 * enqueuedTransfer.setTransferPassword(irodsAccount.getPassword());
-	 * enqueuedTransfer.setTransferState(TransferState.ENQUEUED);
-	 * enqueuedTransfer.setTransferStatus(TransferStatus.OK);
-	 * 
-	 * localIRODSTransferDAO.save(enqueuedTransfer);
-	 * 
-	 * // add two test items LocalIRODSTransferItem localIRODSTransferItem = new
-	 * LocalIRODSTransferItem(); localIRODSTransferItem.setError(false);
-	 * localIRODSTransferItem.setFile(true);
-	 * localIRODSTransferItem.setSourceFileAbsolutePath("/sourcepath1");
-	 * localIRODSTransferItem.setTargetFileAbsolutePath("/targetpath1");
-	 * localIRODSTransferItem.setTransferredAt(new Date());
-	 * localIRODSTransferItem.setLocalIRODSTransfer(enqueuedTransfer);
-	 * enqueuedTransfer
-	 * .getLocalIRODSTransferItems().add(localIRODSTransferItem);
-	 * 
-	 * localIRODSTransferItem = new LocalIRODSTransferItem();
-	 * localIRODSTransferItem.setError(false);
-	 * localIRODSTransferItem.setFile(true);
-	 * localIRODSTransferItem.setSourceFileAbsolutePath("/sourcepath2");
-	 * localIRODSTransferItem.setTargetFileAbsolutePath("/targetpath2");
-	 * localIRODSTransferItem.setTransferredAt(new Date());
-	 * localIRODSTransferItem.setLocalIRODSTransfer(enqueuedTransfer);
-	 * enqueuedTransfer
-	 * .getLocalIRODSTransferItems().add(localIRODSTransferItem);
-	 * 
-	 * // now get all items for the transfer List<LocalIRODSTransferItem>
-	 * transferItems = transferQueueService.getAllTransferItemsForTransfer(new
-	 * Long( 9999999)); irodsFileSystem.close();
-	 * Assert.assertEquals("wrong id, should have just returned empty", 0,
-	 * transferItems.size());
-	 * 
-	 * }
-	 * 
-	 * @Test public void testGetErrorTransferItemsForTransfer() throws Exception
-	 * { IRODSAccount irodsAccount =
-	 * testingPropertiesHelper.buildIRODSAccountFromTestProperties
-	 * (testingProperties);
-	 * 
-	 * IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance(); String
-	 * rootCollection = "getAllTransferItemsForTransfer"; String
-	 * localCollectionAbsolutePath =
-	 * scratchFileUtils.createAndReturnAbsoluteScratchPath
-	 * (IRODS_TEST_SUBDIR_PATH + '/' + rootCollection);
-	 * 
-	 * String irodsCollectionRootAbsolutePath = testingPropertiesHelper
-	 * .buildIRODSCollectionAbsolutePathFromTestProperties(testingProperties,
-	 * IRODS_TEST_SUBDIR_PATH);
-	 * 
-	 * TransferQueueService transferQueueService = new
-	 * TransferQueueServiceImpl(); LocalIRODSTransferDAO localIRODSTransferDAO =
-	 * transferDAOMgr.getTransferDAOBean().getLocalIRODSTransferDAO();
-	 * LocalIRODSTransferItemDAO localIRODSTransferItemDAO =
-	 * transferDAOMgr.getTransferDAOBean().getLocalIRODSTransferItemDAO();
-	 * 
-	 * LocalIRODSTransfer enqueuedTransfer = new LocalIRODSTransfer();
-	 * enqueuedTransfer.setCreatedAt(new Date());
-	 * enqueuedTransfer.setIrodsAbsolutePath(irodsCollectionRootAbsolutePath);
-	 * enqueuedTransfer.setLocalAbsolutePath(localCollectionAbsolutePath);
-	 * enqueuedTransfer.setTransferHost(irodsAccount.getHost());
-	 * enqueuedTransfer.setTransferPort(irodsAccount.getPort());
-	 * enqueuedTransfer
-	 * .setTransferResource(irodsAccount.getDefaultStorageResource());
-	 * enqueuedTransfer.setTransferZone(irodsAccount.getZone());
-	 * enqueuedTransfer.setTransferStart(new Date());
-	 * enqueuedTransfer.setTransferType(TransferType.PUT);
-	 * enqueuedTransfer.setTransferUserName(irodsAccount.getUserName());
-	 * enqueuedTransfer.setTransferPassword(irodsAccount.getPassword());
-	 * enqueuedTransfer.setTransferState(TransferState.ENQUEUED);
-	 * enqueuedTransfer.setTransferStatus(TransferStatus.OK);
-	 * 
-	 * localIRODSTransferDAO.save(enqueuedTransfer);
-	 * 
-	 * // add two test items LocalIRODSTransferItem localIRODSTransferItem = new
-	 * LocalIRODSTransferItem(); localIRODSTransferItem.setError(false);
-	 * localIRODSTransferItem.setFile(true);
-	 * localIRODSTransferItem.setSourceFileAbsolutePath("/sourcepath1");
-	 * localIRODSTransferItem.setTargetFileAbsolutePath("/targetpath1");
-	 * localIRODSTransferItem.setTransferredAt(new Date());
-	 * localIRODSTransferItem.setLocalIRODSTransfer(enqueuedTransfer);
-	 * localIRODSTransferItemDAO.save(localIRODSTransferItem);
-	 * 
-	 * localIRODSTransferItem = new LocalIRODSTransferItem();
-	 * localIRODSTransferItem.setError(true);
-	 * localIRODSTransferItem.setFile(true);
-	 * localIRODSTransferItem.setSourceFileAbsolutePath("/sourcepath2");
-	 * localIRODSTransferItem.setTargetFileAbsolutePath("/targetpath2");
-	 * localIRODSTransferItem.setTransferredAt(new Date());
-	 * localIRODSTransferItem.setLocalIRODSTransfer(enqueuedTransfer);
-	 * localIRODSTransferItemDAO.save(localIRODSTransferItem);
-	 * 
-	 * // now get all items for the transfer List<LocalIRODSTransferItem>
-	 * transferItems = transferQueueService
-	 * .getErrorTransferItemsForTransfer(enqueuedTransfer.getId());
-	 * irodsFileSystem.close();
-	 * Assert.assertEquals("did not get the error transfer item", 1,
-	 * transferItems.size());
-	 * 
-	 * }
-	 * 
-	 * @Test public void testEnqueueReplicate() throws Exception {
-	 * TransferQueueService transferQueueService = new
-	 * TransferQueueServiceImpl(); IRODSAccount irodsAccount =
-	 * testingPropertiesHelper
-	 * .buildIRODSAccountFromTestProperties(testingProperties);
-	 * 
-	 * transferQueueService.enqueueReplicateTransfer("irodsAbsolutePath",
-	 * "targetResource", irodsAccount);
-	 * 
-	 * // now get the data from the database
-	 * 
-	 * List<LocalIRODSTransfer> queue = transferQueueService.getCurrentQueue();
-	 * TestCase.assertEquals("should just be 1 replicate transfer in the queue",
-	 * 1, queue.size()); LocalIRODSTransfer actualTransfer = queue.get(0);
-	 * 
-	 * TestCase.assertEquals("irodsAbsolutePath",
-	 * actualTransfer.getIrodsAbsolutePath());
-	 * TestCase.assertEquals("targetResource",
-	 * actualTransfer.getTransferResource());
-	 * TestCase.assertEquals(TransferType.REPLICATE,
-	 * actualTransfer.getTransferType()); }
-	 * 
-	 * @Test public void testEnqueueGet() throws Exception {
-	 * TransferQueueService transferQueueService = new
-	 * TransferQueueServiceImpl(); IRODSAccount irodsAccount =
-	 * testingPropertiesHelper
-	 * .buildIRODSAccountFromTestProperties(testingProperties);
-	 * 
-	 * transferQueueService.enqueueGetTransfer("irodsSourceAbsolutePath",
-	 * "targetLocalAbsolutePath", "sourceResource", irodsAccount);
-	 * 
-	 * // now get the data from the database
-	 * 
-	 * List<LocalIRODSTransfer> queue = transferQueueService.getCurrentQueue();
-	 * TestCase.assertEquals("should just be 1 replicate transfer in the queue",
-	 * 1, queue.size()); LocalIRODSTransfer actualTransfer = queue.get(0);
-	 * 
-	 * TestCase.assertEquals("irodsSourceAbsolutePath",
-	 * actualTransfer.getIrodsAbsolutePath());
-	 * TestCase.assertEquals("sourceResource",
-	 * actualTransfer.getTransferResource());
-	 * TestCase.assertEquals(TransferType.GET,
-	 * actualTransfer.getTransferType()); }
-	 * 
-	 * @Test public void testEnqueueGetBigFileName() throws Exception {
-	 * TransferQueueService transferQueueService = new
-	 * TransferQueueServiceImpl(); IRODSAccount irodsAccount =
-	 * testingPropertiesHelper
-	 * .buildIRODSAccountFromTestProperties(testingProperties);
-	 * 
-	 * String fileNamePart =
-	 * "filenamefilenamefilenameabcdkjfkdjfiaeojkjkldjflasfdjfasdfjasdf";
-	 * StringBuilder sb = new StringBuilder(); for (int i = 0; i < 50; i++) {
-	 * sb.append(fileNamePart); }
-	 * 
-	 * transferQueueService.enqueueGetTransfer(sb.toString(), sb.toString(),
-	 * "sourceResource", irodsAccount);
-	 * 
-	 * // now get the data from the database
-	 * 
-	 * List<LocalIRODSTransfer> queue = transferQueueService.getCurrentQueue();
-	 * TestCase.assertEquals("should just be 1 replicate transfer in the queue",
-	 * 1, queue.size()); LocalIRODSTransfer actualTransfer = queue.get(0);
-	 * 
-	 * TestCase.assertEquals(sb.toString(),
-	 * actualTransfer.getIrodsAbsolutePath());
-	 * TestCase.assertEquals("sourceResource",
-	 * actualTransfer.getTransferResource());
-	 * TestCase.assertEquals(TransferType.GET,
-	 * actualTransfer.getTransferType()); }
-	 */
+		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
+		String rootCollection = "getAllTransferItemsForTransfer";
+		String localCollectionAbsolutePath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH
+						+ '/' + rootCollection);
+
+		String irodsCollectionRootAbsolutePath = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		TransferQueueService transferQueueService = transferServiceFactory
+				.instanceTransferQueueService();
+
+		LocalIRODSTransfer enqueuedTransfer = new LocalIRODSTransfer();
+		enqueuedTransfer.setCreatedAt(new Date());
+		enqueuedTransfer.setIrodsAbsolutePath(irodsCollectionRootAbsolutePath);
+		enqueuedTransfer.setLocalAbsolutePath(localCollectionAbsolutePath);
+		enqueuedTransfer.setTransferHost(irodsAccount.getHost());
+		enqueuedTransfer.setTransferPort(irodsAccount.getPort());
+		enqueuedTransfer.setTransferResource(irodsAccount
+				.getDefaultStorageResource());
+		enqueuedTransfer.setTransferZone(irodsAccount.getZone());
+		enqueuedTransfer.setTransferStart(new Date());
+		enqueuedTransfer.setTransferType(TransferType.PUT);
+		enqueuedTransfer.setTransferUserName(irodsAccount.getUserName());
+		enqueuedTransfer.setTransferPassword(irodsAccount.getPassword());
+		enqueuedTransfer.setTransferState(TransferState.ENQUEUED);
+		enqueuedTransfer.setTransferStatus(TransferStatus.OK);
+
+		transferQueueService.updateLocalIRODSTransfer(enqueuedTransfer);
+
+		// add two test items LocalIRODSTransferItem localIRODSTransferItem =
+		// new
+		LocalIRODSTransferItem localIRODSTransferItem = new LocalIRODSTransferItem();
+		localIRODSTransferItem.setError(false);
+		localIRODSTransferItem.setFile(true);
+		localIRODSTransferItem.setSourceFileAbsolutePath("/sourcepath1");
+		localIRODSTransferItem.setTargetFileAbsolutePath("/targetpath1");
+		localIRODSTransferItem.setTransferredAt(new Date());
+		localIRODSTransferItem.setLocalIRODSTransfer(enqueuedTransfer);
+
+		transferQueueService.addItemToTransfer(enqueuedTransfer,
+				localIRODSTransferItem);
+
+		localIRODSTransferItem = new LocalIRODSTransferItem();
+		localIRODSTransferItem.setError(false);
+		localIRODSTransferItem.setFile(true);
+		localIRODSTransferItem.setSourceFileAbsolutePath("/sourcepath2");
+		localIRODSTransferItem.setTargetFileAbsolutePath("/targetpath2");
+		localIRODSTransferItem.setTransferredAt(new Date());
+		localIRODSTransferItem.setLocalIRODSTransfer(enqueuedTransfer);
+		transferQueueService.addItemToTransfer(enqueuedTransfer,
+				localIRODSTransferItem);
+
+		// now get all items for the transfer
+		List<LocalIRODSTransferItem> transferItems = transferQueueService
+				.getAllTransferItemsForTransfer(enqueuedTransfer.getId());
+		irodsFileSystem.close();
+		Assert.assertEquals("did not get the two transfer items", 2,
+				transferItems.size());
+
+	}
+
+	@Test
+	public void testGetAllTransferItemsForTransferWrongId() throws Exception {
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
+		String rootCollection = "getAllTransferItemsForTransfer";
+		String localCollectionAbsolutePath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH
+						+ '/' + rootCollection);
+
+		String irodsCollectionRootAbsolutePath = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		TransferQueueService transferQueueService = transferServiceFactory
+				.instanceTransferQueueService();
+
+		LocalIRODSTransfer enqueuedTransfer = new LocalIRODSTransfer();
+		enqueuedTransfer.setCreatedAt(new Date());
+		enqueuedTransfer.setIrodsAbsolutePath(irodsCollectionRootAbsolutePath);
+		enqueuedTransfer.setLocalAbsolutePath(localCollectionAbsolutePath);
+		enqueuedTransfer.setTransferHost(irodsAccount.getHost());
+		enqueuedTransfer.setTransferPort(irodsAccount.getPort());
+		enqueuedTransfer.setTransferResource(irodsAccount
+				.getDefaultStorageResource());
+		enqueuedTransfer.setTransferZone(irodsAccount.getZone());
+		enqueuedTransfer.setTransferStart(new Date());
+		enqueuedTransfer.setTransferType(TransferType.PUT);
+		enqueuedTransfer.setTransferUserName(irodsAccount.getUserName());
+		enqueuedTransfer.setTransferPassword(irodsAccount.getPassword());
+		enqueuedTransfer.setTransferState(TransferState.ENQUEUED);
+		enqueuedTransfer.setTransferStatus(TransferStatus.OK);
+
+		transferQueueService.updateLocalIRODSTransfer(enqueuedTransfer);
+
+		// add two test items
+		LocalIRODSTransferItem localIRODSTransferItem = new LocalIRODSTransferItem();
+		localIRODSTransferItem.setError(false);
+		localIRODSTransferItem.setFile(true);
+		localIRODSTransferItem.setSourceFileAbsolutePath("/sourcepath1");
+		localIRODSTransferItem.setTargetFileAbsolutePath("/targetpath1");
+		localIRODSTransferItem.setTransferredAt(new Date());
+		localIRODSTransferItem.setLocalIRODSTransfer(enqueuedTransfer);
+		enqueuedTransfer.getLocalIRODSTransferItems().add(
+				localIRODSTransferItem);
+
+		localIRODSTransferItem = new LocalIRODSTransferItem();
+		localIRODSTransferItem.setError(false);
+		localIRODSTransferItem.setFile(true);
+		localIRODSTransferItem.setSourceFileAbsolutePath("/sourcepath2");
+		localIRODSTransferItem.setTargetFileAbsolutePath("/targetpath2");
+		localIRODSTransferItem.setTransferredAt(new Date());
+		localIRODSTransferItem.setLocalIRODSTransfer(enqueuedTransfer);
+		enqueuedTransfer.getLocalIRODSTransferItems().add(
+				localIRODSTransferItem);
+
+		// now get all items for the transfer
+		List<LocalIRODSTransferItem> transferItems = transferQueueService
+				.getAllTransferItemsForTransfer(new Long(9999999));
+		irodsFileSystem.close();
+		Assert.assertEquals("wrong id, should have just returned empty", 0,
+				transferItems.size());
+
+	}
+
+	@Test
+	public void testGetErrorTransferItemsForTransfer() throws Exception {
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
+		String rootCollection = "getAllTransferItemsForTransfer";
+		String localCollectionAbsolutePath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH
+						+ '/' + rootCollection);
+
+		String irodsCollectionRootAbsolutePath = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		TransferQueueService transferQueueService = transferServiceFactory
+				.instanceTransferQueueService();
+
+		LocalIRODSTransfer enqueuedTransfer = new LocalIRODSTransfer();
+		enqueuedTransfer.setCreatedAt(new Date());
+		enqueuedTransfer.setIrodsAbsolutePath(irodsCollectionRootAbsolutePath);
+		enqueuedTransfer.setLocalAbsolutePath(localCollectionAbsolutePath);
+		enqueuedTransfer.setTransferHost(irodsAccount.getHost());
+		enqueuedTransfer.setTransferPort(irodsAccount.getPort());
+		enqueuedTransfer.setTransferResource(irodsAccount
+				.getDefaultStorageResource());
+		enqueuedTransfer.setTransferZone(irodsAccount.getZone());
+		enqueuedTransfer.setTransferStart(new Date());
+		enqueuedTransfer.setTransferType(TransferType.PUT);
+		enqueuedTransfer.setTransferUserName(irodsAccount.getUserName());
+		enqueuedTransfer.setTransferPassword(irodsAccount.getPassword());
+		enqueuedTransfer.setTransferState(TransferState.ENQUEUED);
+		enqueuedTransfer.setTransferStatus(TransferStatus.OK);
+
+		transferQueueService.updateLocalIRODSTransfer(enqueuedTransfer);
+
+		// add two test items
+
+		LocalIRODSTransferItem localIRODSTransferItem = new LocalIRODSTransferItem();
+		localIRODSTransferItem.setError(false);
+		localIRODSTransferItem.setFile(true);
+		localIRODSTransferItem.setSourceFileAbsolutePath("/sourcepath1");
+		localIRODSTransferItem.setTargetFileAbsolutePath("/targetpath1");
+		localIRODSTransferItem.setTransferredAt(new Date());
+		localIRODSTransferItem.setLocalIRODSTransfer(enqueuedTransfer);
+		transferQueueService.addItemToTransfer(enqueuedTransfer,
+				localIRODSTransferItem);
+
+		localIRODSTransferItem = new LocalIRODSTransferItem();
+		localIRODSTransferItem.setError(true);
+		localIRODSTransferItem.setFile(true);
+		localIRODSTransferItem.setSourceFileAbsolutePath("/sourcepath2");
+		localIRODSTransferItem.setTargetFileAbsolutePath("/targetpath2");
+		localIRODSTransferItem.setTransferredAt(new Date());
+		localIRODSTransferItem.setLocalIRODSTransfer(enqueuedTransfer);
+		transferQueueService.addItemToTransfer(enqueuedTransfer,
+				localIRODSTransferItem);
+
+		// now get all items for the transfer
+		List<LocalIRODSTransferItem> transferItems = transferQueueService
+				.getErrorTransferItemsForTransfer(enqueuedTransfer.getId());
+		irodsFileSystem.close();
+		Assert.assertEquals("did not get the error transfer item", 1,
+				transferItems.size());
+
+	}
+
+	@Test
+	public void testEnqueueReplicate() throws Exception {
+		TransferQueueService transferQueueService = transferServiceFactory
+				.instanceTransferQueueService();
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		transferQueueService.enqueueReplicateTransfer("irodsAbsolutePath",
+				"targetResource", irodsAccount);
+
+		// now get the data from the database
+
+		List<LocalIRODSTransfer> queue = transferQueueService.getCurrentQueue();
+		TestCase.assertEquals(
+				"should just be 1 replicate transfer in the queue", 1,
+				queue.size());
+		LocalIRODSTransfer actualTransfer = queue.get(0);
+
+		TestCase.assertEquals("irodsAbsolutePath",
+				actualTransfer.getIrodsAbsolutePath());
+		TestCase.assertEquals("targetResource",
+				actualTransfer.getTransferResource());
+		TestCase.assertEquals(TransferType.REPLICATE,
+				actualTransfer.getTransferType());
+	}
+
+	@Test
+	public void testEnqueueGet() throws Exception {
+		TransferQueueService transferQueueService = transferServiceFactory
+				.instanceTransferQueueService();
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		transferQueueService.enqueueGetTransfer("irodsSourceAbsolutePath",
+				"targetLocalAbsolutePath", "sourceResource", irodsAccount);
+
+		// now get the data from the database
+
+		List<LocalIRODSTransfer> queue = transferQueueService.getCurrentQueue();
+		TestCase.assertEquals(
+				"should just be 1 replicate transfer in the queue", 1,
+				queue.size());
+		LocalIRODSTransfer actualTransfer = queue.get(0);
+
+		TestCase.assertEquals("irodsSourceAbsolutePath",
+				actualTransfer.getIrodsAbsolutePath());
+		TestCase.assertEquals("sourceResource",
+				actualTransfer.getTransferResource());
+		TestCase.assertEquals(TransferType.GET,
+				actualTransfer.getTransferType());
+	}
+
+	@Test
+	public void testEnqueueGetBigFileName() throws Exception {
+		TransferQueueService transferQueueService = transferServiceFactory
+				.instanceTransferQueueService();
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		String fileNamePart = "filenamefilenamefilenameabcdkjfkdjfiaeojkjkldjflasfdjfasdfjasdf";
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < 50; i++) {
+			sb.append(fileNamePart);
+		}
+
+		transferQueueService.enqueueGetTransfer(sb.toString(), sb.toString(),
+				"sourceResource", irodsAccount);
+
+		// now get the data from the database
+
+		List<LocalIRODSTransfer> queue = transferQueueService.getCurrentQueue();
+		TestCase.assertEquals(
+				"should just be 1 replicate transfer in the queue", 1,
+				queue.size());
+		LocalIRODSTransfer actualTransfer = queue.get(0);
+
+		TestCase.assertEquals(sb.toString(),
+				actualTransfer.getIrodsAbsolutePath());
+		TestCase.assertEquals("sourceResource",
+				actualTransfer.getTransferResource());
+		TestCase.assertEquals(TransferType.GET,
+				actualTransfer.getTransferType());
+	}
+
 	@Test(expected = JargonException.class)
 	public void testEnqueueGetNoSource() throws Exception {
 		TransferQueueService transferQueueService = new TransferQueueServiceImpl();
@@ -970,7 +985,7 @@ public class TransferQueueServiceTest {
 		Assert.assertEquals("this should still be enqueued",
 				actualEnqueuedTransfer.getTransferState(),
 				TransferState.ENQUEUED);
-		
+
 		Assert.assertEquals("this should still be ok status now",
 				actualEnqueuedTransfer.getTransferStatus(), TransferStatus.OK);
 	}
