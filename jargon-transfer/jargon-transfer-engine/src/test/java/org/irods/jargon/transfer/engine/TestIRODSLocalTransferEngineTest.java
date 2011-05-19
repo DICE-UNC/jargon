@@ -445,8 +445,8 @@ public class TestIRODSLocalTransferEngineTest {
 
 		// get the transfer now
 
-		TransferQueueService transferQueueService = new TransferQueueServiceImpl();
-		List<LocalIRODSTransfer> transfers = transferQueueService
+	
+		List<LocalIRODSTransfer> transfers =	transferManager.getTransferQueueService()
 				.getLastNInQueue(10);
 
 		irodsFileSystem.close();
@@ -629,14 +629,13 @@ public class TestIRODSLocalTransferEngineTest {
 		IRODSLocalTransferEngine irodsLocalTransferEngine = IRODSLocalTransferEngine
 				.getInstance(transferManager, transferControlBlock);
 
-		TransferQueueService transferQueueService = new TransferQueueServiceImpl();
 
 		String localReturnedAbsolutePath = scratchFileUtils
 				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
 		localReturnedAbsolutePath = localReturnedAbsolutePath
 				+ testReturnedFileName;
 
-		transferQueueService
+		transferManager.getTransferQueueService()
 				.enqueueGetTransfer(
 						targetIrodsFile,
 						localReturnedAbsolutePath,
@@ -646,7 +645,7 @@ public class TestIRODSLocalTransferEngineTest {
 
 		// get the queued transfer to give to the transfer engine, it needs to
 		// be in the database
-		LocalIRODSTransfer localIRODSTransfer = transferQueueService
+		LocalIRODSTransfer localIRODSTransfer = 	transferManager.getTransferQueueService()
 				.dequeueTransfer();
 
 		irodsLocalTransferEngine.processOperation(localIRODSTransfer);
@@ -697,14 +696,12 @@ public class TestIRODSLocalTransferEngineTest {
 		IRODSLocalTransferEngine irodsLocalTransferEngine = IRODSLocalTransferEngine
 				.getInstance(transferManager, transferControlBlock);
 
-		TransferQueueService transferQueueService = new TransferQueueServiceImpl();
-
 		String localReturnedAbsolutePath = scratchFileUtils
 				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
 		localReturnedAbsolutePath = localReturnedAbsolutePath
 				+ testReturnedFileName;
 
-		transferQueueService
+		transferManager.getTransferQueueService()
 				.enqueueGetTransfer(
 						targetIrodsFile,
 						localReturnedAbsolutePath,
@@ -714,7 +711,7 @@ public class TestIRODSLocalTransferEngineTest {
 
 		// get the queued transfer to give to the transfer engine, it needs to
 		// be in the database
-		LocalIRODSTransfer localIRODSTransfer = transferQueueService
+		LocalIRODSTransfer localIRODSTransfer = 	transferManager.getTransferQueueService()
 				.dequeueTransfer();
 
 		irodsLocalTransferEngine.processOperation(localIRODSTransfer);

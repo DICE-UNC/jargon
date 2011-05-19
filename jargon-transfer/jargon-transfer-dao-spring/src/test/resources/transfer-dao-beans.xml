@@ -53,7 +53,7 @@
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 
-	<tx:annotation-driven transaction-manager="txManager" />
+	<tx:annotation-driven transaction-manager="transactionManager" />
 
 	<!-- ========================= BUSINESS OBJECT DEFINITIONS ========================= -->
 

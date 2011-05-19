@@ -557,6 +557,9 @@ public class TransferManagerTest {
 				irodsFileSystem);
 		 transferManager.getTransferQueueService().updateLocalIRODSTransfer(
 				enqueuedTransfer);
+		 // reinit, simulating restart, so that the init() method in transferManagerImpl will fire
+		 transferManager = new TransferManagerImpl(
+					irodsFileSystem);
 
 		// now get the queue
 		List<LocalIRODSTransfer> transferQueue = transferManager.getTransferQueueService()
