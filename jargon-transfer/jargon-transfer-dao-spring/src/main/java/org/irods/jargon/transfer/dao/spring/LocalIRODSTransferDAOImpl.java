@@ -311,12 +311,12 @@ public class LocalIRODSTransferDAOImpl extends HibernateDaoSupport implements
 	 * jargon.transfer.dao.domain.LocalIRODSTransfer)
 	 */
 	@Override
-	public void delete(final LocalIRODSTransfer ea) throws TransferDAOException {
+	public void delete(final LocalIRODSTransfer localIRODSTransfer) throws TransferDAOException {
 		logger.debug("entering delete()");
 
 		try {
 
-			this.getSessionFactory().getCurrentSession().delete(ea);
+			this.getSessionFactory().getCurrentSession().delete(localIRODSTransfer);
 		} catch (HibernateException e) {
 			log.error("HibernateException", e);
 			throw new TransferDAOException(e);
