@@ -9,15 +9,27 @@ import org.irods.jargon.transfer.dao.domain.TransferState;
 import org.irods.jargon.transfer.dao.domain.TransferStatus;
 import org.irods.jargon.transfer.dao.domain.TransferType;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.transaction.TransactionConfiguration;
+import org.springframework.transaction.annotation.Transactional;
 
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = { "classpath:transfer-dao-beans.xml",
+		"classpath:transfer-dao-hibernate-spring.cfg.xml",
+		"classpath:test-beans.xml" })
+@TransactionConfiguration(transactionManager = "transactionManager", defaultRollback = true)
+@Transactional
 public class LocalIRODSTransferDAOTest {
-
-    private final TransferDAOManager transferDAOMgr = TransferDAOManager.getInstance();
+	
+	@Autowired
+	private LocalIRODSTransferDAO localIRODSTransferDAO;
 
     @Test
     public void testSave() {
         
-        LocalIRODSTransferDAO localIRODSTransferDAO = transferDAOMgr.getTransferDAOBean().getLocalIRODSTransferDAO();
         LocalIRODSTransfer enqueuedTransfer = new LocalIRODSTransfer();
         enqueuedTransfer.setCreatedAt(new Date());
         enqueuedTransfer.setIrodsAbsolutePath("/tmp");
@@ -45,7 +57,6 @@ public class LocalIRODSTransferDAOTest {
     
     @Test
     public void testPurgeQueue() {
-        LocalIRODSTransferDAO localIRODSTransferDAO = transferDAOMgr.getTransferDAOBean().getLocalIRODSTransferDAO();
         LocalIRODSTransfer enqueuedTransfer = new LocalIRODSTransfer();
         enqueuedTransfer.setCreatedAt(new Date());
         enqueuedTransfer.setIrodsAbsolutePath("/tmp");
@@ -76,6 +87,13 @@ public class LocalIRODSTransferDAOTest {
             e.printStackTrace();
         }
     }
+
+	/**
+	 * @param localIRODSTransferDAO the localIRODSTransferDAO to set
+	 */
+	public void setLocalIRODSTransferDAO(LocalIRODSTransferDAO localIRODSTransferDAO) {
+		this.localIRODSTransferDAO = localIRODSTransferDAO;
+	}
     
     
 }

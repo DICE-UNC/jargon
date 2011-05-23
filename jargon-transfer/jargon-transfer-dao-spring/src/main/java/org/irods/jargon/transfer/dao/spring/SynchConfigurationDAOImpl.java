@@ -2,66 +2,100 @@ package org.irods.jargon.transfer.dao.spring;
 
 import java.util.List;
 
+import org.hibernate.Criteria;
+import org.hibernate.Hibernate;
+import org.hibernate.SessionFactory;
 import org.irods.jargon.transfer.dao.SynchConfigurationDAO;
 import org.irods.jargon.transfer.dao.TransferDAOException;
 import org.irods.jargon.transfer.dao.domain.SynchConfiguration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 /**
  * @author Mike Conway - DICE (www.irods.org)
- *
+ * 
  */
-public class SynchConfigurationDAOImpl extends HibernateDaoSupport implements SynchConfigurationDAO {
+public class SynchConfigurationDAOImpl extends HibernateDaoSupport implements
+		SynchConfigurationDAO {
 
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.transfer.dao.SynchConfigurationDAO#save(org.irods.jargon.transfer.dao.domain.SynchConfiguration)
+	private static final Logger log = LoggerFactory
+			.getLogger(SynchConfigurationDAOImpl.class);
+	
+	/*
+	 * (non-Javadoc) 
+	 * 
+	 * @see
+	 * org.irods.jargon.transfer.dao.SynchConfigurationDAO#save(org.irods.jargon
+	 * .transfer.dao.domain.SynchConfiguration)
 	 */
 	@Override
-	public void save(SynchConfiguration synchConfiguration)
+	public void save(final SynchConfiguration synchConfiguration)
 			throws TransferDAOException {
+		logger.info("entering save(SynchConfiguration)");
 
+		this.getSessionFactory().getCurrentSession()
+				.saveOrUpdate(synchConfiguration);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.transfer.dao.SynchConfigurationDAO#findById(java.lang.Long)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.transfer.dao.SynchConfigurationDAO#findById(java.lang
+	 * .Long)
 	 */
 	@Override
-	public SynchConfiguration findById(Long id) throws TransferDAOException {
-		return null;
-	}
-
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.transfer.dao.SynchConfigurationDAO#findInitializedById(java.lang.Long)
-	 */
-	@Override
-	public SynchConfiguration findInitializedById(Long id)
+	public SynchConfiguration findById(final Long id)
 			throws TransferDAOException {
-		return null;
+		return (SynchConfiguration) this.getSessionFactory()
+				.getCurrentSession().get(SynchConfiguration.class, id);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.transfer.dao.SynchConfigurationDAO#findById(java.lang.Long, boolean)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.transfer.dao.SynchConfigurationDAO#findInitializedById
+	 * (java.lang.Long)
 	 */
 	@Override
-	public SynchConfiguration findById(Long id, boolean error)
+	public SynchConfiguration findInitializedById(final Long id)
 			throws TransferDAOException {
-		return null;
+		SynchConfiguration synchConfiguration = (SynchConfiguration) this
+				.getSessionFactory().getCurrentSession()
+				.get(SynchConfiguration.class, id);
+		Hibernate.initialize(synchConfiguration);
+		return synchConfiguration;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.irods.jargon.transfer.dao.SynchConfigurationDAO#findAll()
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<SynchConfiguration> findAll() throws TransferDAOException {
-		return null;
+		List<SynchConfiguration> retList = null;
+		Criteria criteria = this.getSessionFactory().getCurrentSession()
+				.createCriteria(SynchConfiguration.class);
+
+		retList = criteria.list();
+		return retList;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.transfer.dao.SynchConfigurationDAO#delete(org.irods.jargon.transfer.dao.domain.SynchConfiguration)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.transfer.dao.SynchConfigurationDAO#delete(org.irods.
+	 * jargon.transfer.dao.domain.SynchConfiguration)
 	 */
 	@Override
-	public void delete(SynchConfiguration synchConfiguration)
+	public void delete(final SynchConfiguration synchConfiguration)
 			throws TransferDAOException {
+		this.getSessionFactory().getCurrentSession().delete(synchConfiguration);
 	}
 
 }

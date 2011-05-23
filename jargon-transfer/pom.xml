@@ -14,14 +14,13 @@
   <packaging>pom</packaging>
   <modules>
     <module>jargon-transfer-engine</module>
-    <module>jargon-transfer-dao-api</module>
     <module>jargon-transfer-dao-spring</module>
   </modules>
   <dependencies>
     <dependency>
       <groupId>org.dbunit</groupId>
       <artifactId>dbunit</artifactId>
-    </dependency>
+    </dependency> 
     <dependency>
       <groupId>org.apache.derby</groupId>
       <artifactId>derby</artifactId>

@@ -8,7 +8,7 @@ import org.irods.jargon.transfer.dao.domain.LocalIRODSTransfer;
 import org.irods.jargon.transfer.dao.domain.LocalIRODSTransferItem;
 
 public interface TransferQueueService {
-
+   
 	/**
 	 * 
 	 * @return
@@ -193,5 +193,17 @@ public interface TransferQueueService {
 	 * @throws JargonException
 	 */
 	void processQueueAtStartup() throws JargonException;
+	
+	void updateLocalIRODSTransfer(final LocalIRODSTransfer localIrodsTransfer) throws JargonException;
+
+	LocalIRODSTransfer findLocalIRODSTransferById(Long id)
+			throws JargonException;
+
+	LocalIRODSTransfer findLocalIRODSTransferByIdInitializeItems(Long id)
+			throws JargonException;
+
+	void addItemToTransfer(LocalIRODSTransfer localIRODSTransfer,
+			LocalIRODSTransferItem localIRODSTransferItem)
+			throws JargonException;
 
 }

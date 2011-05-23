@@ -10,12 +10,12 @@
 	<url>https://code.renci.org/gf/project/jargon</url>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<spring.aop.version>2.0.8</spring.aop.version>
-		<spring.beans.version>2.0.8</spring.beans.version>
-		<spring.context.version>2.0.8</spring.context.version>
+		<spring.aop.version>3.0.5.RELEASE</spring.aop.version>
+		<spring.beans.version>3.0.5.RELEASE</spring.beans.version>
+		<spring.context.version>3.0.5.RELEASE</spring.context.version>
 		<spring.hibernate3.version>2.0.8</spring.hibernate3.version>
-		<spring.jdbc.version>2.0.8</spring.jdbc.version>
-		<spring.webmvc.version>2.0.8</spring.webmvc.version>
+		<spring.jdbc.version>3.0.5.RELEASE</spring.jdbc.version>
+		<spring.webmvc.version>3.0.5.RELEASE</spring.webmvc.version>
 		<spring.core.version>3.0.5.RELEASE</spring.core.version>
 		<spring.security.core.version>3.0.5.RELEASE</spring.security.core.version>
 		<spring.security.web.version>3.0.5.RELEASE</spring.security.web.version>
@@ -264,12 +264,7 @@
 			</dependency>
 			<dependency>
 				<groupId>org.irods.jargon.transfer</groupId>
-				<artifactId>jargon-transfer-dao-api</artifactId>
-				<version>${project.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.irods.jargon.transfer</groupId>
-				<artifactId>jargon-transfer-dao-spring</artifactId>
+				<artifactId>jargon-transfer</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
@@ -306,11 +301,6 @@
 				<groupId>org.springframework</groupId>
 				<artifactId>spring-context</artifactId>
 				<version>${spring.context.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.springframework</groupId>
-				<artifactId>spring-hibernate3</artifactId>
-				<version>${spring.hibernate3.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.springframework</groupId>

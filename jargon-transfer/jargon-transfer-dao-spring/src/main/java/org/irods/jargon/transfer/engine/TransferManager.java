@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.pub.IRODSFileSystem;
 import org.irods.jargon.transfer.dao.domain.LocalIRODSTransfer;
 import org.irods.jargon.transfer.dao.domain.LocalIRODSTransferItem;
 
@@ -207,5 +208,7 @@ public interface TransferManager {
 	TransferQueueService getTransferQueueService();
 
     public void resetStatus() throws JargonException;
+
+	IRODSFileSystem getIrodsFileSystem();
 
 }
