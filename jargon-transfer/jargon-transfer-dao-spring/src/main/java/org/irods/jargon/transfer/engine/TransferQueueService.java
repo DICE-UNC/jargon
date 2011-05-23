@@ -183,13 +183,6 @@ public interface TransferQueueService {
 
 	/**
 	 * 
-	 * @param retentionDays
-	 * @throws JargonException
-	 */
-	void purgeQueueBasedOnDate(final int retentionDays) throws JargonException;
-
-	/**
-	 * 
 	 * @throws JargonException
 	 */
 	void processQueueAtStartup() throws JargonException;

@@ -5,7 +5,6 @@ import java.util.List;
 import org.hibernate.Criteria;
 import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
-import org.hibernate.Session;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.irods.jargon.transfer.dao.LocalIRODSTransferDAO;
@@ -153,7 +152,7 @@ public class LocalIRODSTransferDAOImpl extends HibernateDaoSupport implements
 	public List<LocalIRODSTransfer> findByTransferStatus(final int maxResults,
 			final TransferStatus... transferStatus) throws TransferDAOException {
 		log.debug("entering findByTransferState(int, TransferStatus...)");
-		
+
 		try {
 			Criteria criteria = this.getSessionFactory().getCurrentSession()
 					.createCriteria(LocalIRODSTransfer.class);
@@ -168,7 +167,7 @@ public class LocalIRODSTransferDAOImpl extends HibernateDaoSupport implements
 			log.error("error in findByTransferState(int, TransferStatus...)", e);
 			throw new TransferDAOException(
 					"Failed findByTransferState(int, TransferStatus...)", e);
-		} 
+		}
 	}
 
 	/*
@@ -229,31 +228,28 @@ public class LocalIRODSTransferDAOImpl extends HibernateDaoSupport implements
 		log.debug("entering purgeQueue()");
 
 		try {
-			
+
 			StringBuilder sb = new StringBuilder();
 			sb.append("delete from LocalIRODSTransferItem as item where ");
 			sb.append("item.localIRODSTransfer.id in (");
 			sb.append("select id from LocalIRODSTransfer as transfer where transfer.transferState <> ?)");
-			
+
 			log.debug("delete items sql:{}", sb.toString());
-			
+
 			HibernateTemplate hibernateTemplate = super.getHibernateTemplate();
-		
-		
-			int rows = hibernateTemplate.bulkUpdate(
-					sb.toString(),
+
+			int rows = hibernateTemplate.bulkUpdate(sb.toString(),
 					TransferState.PROCESSING);
 			log.debug("deleted items count of: {}", rows);
-		
-			 sb = new StringBuilder();
-				sb.append("delete from LocalIRODSTransfer  where transferState <> ?");
-				
-				log.debug("delete items sql:{}", sb.toString());
-				
-				 rows = super.getHibernateTemplate().bulkUpdate(
-						sb.toString(),
-						TransferState.PROCESSING);
-				log.debug("deleted transfers count of: {}", rows);
+
+			sb = new StringBuilder();
+			sb.append("delete from LocalIRODSTransfer  where transferState <> ?");
+
+			log.debug("delete items sql:{}", sb.toString());
+
+			rows = super.getHibernateTemplate().bulkUpdate(sb.toString(),
+					TransferState.PROCESSING);
+			log.debug("deleted transfers count of: {}", rows);
 
 		} catch (HibernateException e) {
 			log.error("HibernateException", e);
@@ -276,13 +272,30 @@ public class LocalIRODSTransferDAOImpl extends HibernateDaoSupport implements
 
 		try {
 
-			int rows = super
-					.getHibernateTemplate()
-					.bulkUpdate(
-							"delete from LocalIRODSTransfer where transferState = ? or transferState = ? and transferErrorStatus = ?",
-							new Object[] { TransferState.COMPLETE,
-									TransferState.CANCELLED, TransferStatus.OK });
-			log.debug("updated rows: {}", rows);
+			StringBuilder sb = new StringBuilder();
+			sb.append("delete from LocalIRODSTransferItem as item where ");
+			sb.append("item.localIRODSTransfer.id in (");
+			sb.append("select id from LocalIRODSTransfer as transfer where transferState = ? or transferState = ? and transferStatus = ?)");
+
+			log.debug("delete transfer items sql:{}", sb.toString());
+
+			int rows = super.getHibernateTemplate().bulkUpdate(
+					sb.toString(),
+					new Object[] { TransferState.COMPLETE,
+							TransferState.CANCELLED, TransferStatus.OK });
+			log.debug("deleted items count= {}", rows);
+
+			sb = new StringBuilder();
+			sb.append("delete from LocalIRODSTransfer  where transferState = ? or transferState = ? and transferStatus = ?");
+
+			log.debug("delete transfers sql:{}", sb.toString());
+
+			rows = super.getHibernateTemplate().bulkUpdate(
+					sb.toString(),
+					new Object[] { TransferState.COMPLETE,
+							TransferState.CANCELLED, TransferStatus.OK });
+
+			log.debug("deleted transfers count= {}", rows);
 
 		} catch (HibernateException e) {
 			log.error("HibernateException", e);
@@ -298,46 +311,18 @@ public class LocalIRODSTransferDAOImpl extends HibernateDaoSupport implements
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * org.irods.jargon.transfer.dao.LocalIRODSTransferDAO#purgeQueueByDate(int)
-	 */
-	@Override
-	public void purgeQueueByDate(final int retentionDays)
-			throws TransferDAOException {
-
-		try {
-
-			int rows = super
-					.getHibernateTemplate()
-					.bulkUpdate(
-							"delete from LocalIRODSTransfer as transfer where transfer.transferState = ? or transferState = ?",
-							new Object[] { TransferState.COMPLETE,
-									TransferState.CANCELLED });
-			log.debug("updated rows: {}", rows);
-
-		} catch (HibernateException e) {
-			log.error("HibernateException", e);
-			throw new TransferDAOException(e);
-		} catch (DataAccessException e) {
-
-			log.error("error in purgeQueueByDate(int)", e);
-			throw new TransferDAOException("Failed purgeQueueByDate(int)", e);
-		}
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
 	 * org.irods.jargon.transfer.dao.LocalIRODSTransferDAO#delete(org.irods.
 	 * jargon.transfer.dao.domain.LocalIRODSTransfer)
 	 */
 	@Override
-	public void delete(final LocalIRODSTransfer localIRODSTransfer) throws TransferDAOException {
+	public void delete(final LocalIRODSTransfer localIRODSTransfer)
+			throws TransferDAOException {
 		logger.debug("entering delete()");
 
 		try {
 
-			this.getSessionFactory().getCurrentSession().delete(localIRODSTransfer);
+			this.getSessionFactory().getCurrentSession()
+					.delete(localIRODSTransfer);
 		} catch (HibernateException e) {
 			log.error("HibernateException", e);
 			throw new TransferDAOException(e);

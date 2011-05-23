@@ -97,13 +97,6 @@ public interface LocalIRODSTransferDAO {
 
     /**
      * 
-     * @param retentionDays
-     * @throws JargonException
-     */
-    public void purgeQueueByDate(int retentionDays) throws TransferDAOException;
-
-    /**
-     * 
      * @param ea
      * @throws TransferDAOException
      */

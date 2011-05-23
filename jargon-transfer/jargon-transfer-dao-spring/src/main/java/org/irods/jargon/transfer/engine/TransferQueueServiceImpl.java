@@ -651,36 +651,6 @@ public class TransferQueueServiceImpl implements TransferQueueService {
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * org.irods.jargon.transfer.engine.TransferQueueService#purgeQueueBasedOnDate
-	 * (int)
-	 */
-	@Override
-	@Transactional
-	public void purgeQueueBasedOnDate(final int retentionDays)
-			throws JargonException {
-
-		if (retentionDays < 0) {
-			throw new JargonException("retentionDays must be 0 or greater");
-		}
-
-		log.info(
-				"purging the queue of all completed or cancelled items more than {} days old",
-				retentionDays);
-
-		try {
-
-			localIRODSTransferDAO.purgeQueueByDate(retentionDays);
-		} catch (TransferDAOException e) {
-			log.error("error in transaction", e);
-			throw new JargonException(e);
-		}
-
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
 	 * org.irods.jargon.transfer.engine.TransferQueueService#processQueueAtStartup
 	 * ()
 	 */
