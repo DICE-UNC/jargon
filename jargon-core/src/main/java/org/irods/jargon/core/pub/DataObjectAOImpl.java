@@ -1105,13 +1105,11 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 		query.append(WHERE);
 		boolean previousElement = false;
-		StringBuilder queryCondition = null;
 
 		for (AVUQueryElement queryElement : avuQueryElements) {
 
-			queryCondition = new StringBuilder();
 			if (previousElement) {
-				queryCondition.append(AND);
+				query.append(AND);
 			}
 			previousElement = true;
 			query.append(dataAOHelper.buildConditionPart(queryElement));

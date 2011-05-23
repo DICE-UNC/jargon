@@ -93,45 +93,46 @@ public final class IRODSFileFactoryImpl extends IRODSGenericAO implements
 			throw new JargonException("null uri");
 		}
 
-		if (!uri.getScheme().equals("irods")) {
-			throw new JargonException("uri scheme is not irods, was:"
-					+ uri.getScheme());
+		String uriScheme = uri.getScheme();
+		if (uriScheme != null && equals("irods")) {
+			
+			String userInfo = uri.getUserInfo();
+			String userName = null;
+			String password = "";
+			String zone = "";
+			String homeDirectory = null;
+			int index = -1;
+
+			index = userInfo.indexOf(":");
+			if (index >= 0) {
+				password = userInfo.substring(index + 1); // password
+				userInfo = userInfo.substring(0, index);
+			}
+
+			index = userInfo.indexOf(".");
+			if (index >= 0) {
+				userName = userInfo.substring(0, index);
+				zone = userInfo.substring(index + 1);
+				homeDirectory = PATH_SEPARATOR + zone + PATH_SEPARATOR
+						+ userName;
+			} else {
+				userName = userInfo;
+				homeDirectory = uri.getPath();
+			}
+
+			log.debug("userName: {}", userName);
+			log.debug("home dir: {}", homeDirectory);
+			log.debug("zone: {}", zone);
+
+			IRODSAccount irodsAccountFromUri = IRODSAccount.instance(
+					uri.getHost(), uri.getPort(), userName, password,
+					homeDirectory, zone, "");
+
+			String fileName = uri.getPath();
+
+			log.debug("irods account: {}", irodsAccountFromUri.toString());
+			log.debug("fileName: {}", fileName);
 		}
-
-		String userInfo = uri.getUserInfo();
-		String userName = null;
-		String password = "";
-		String zone = "";
-		String homeDirectory = null;
-		int index = -1;
-
-		index = userInfo.indexOf(":");
-		if (index >= 0) {
-			password = userInfo.substring(index + 1); // password
-			userInfo = userInfo.substring(0, index);
-		}
-
-		index = userInfo.indexOf(".");
-		if (index >= 0) {
-			userName = userInfo.substring(0, index);
-			zone = userInfo.substring(index + 1);
-			homeDirectory = PATH_SEPARATOR + zone + PATH_SEPARATOR + userName;
-		} else {
-			userName = userInfo;
-			homeDirectory = uri.getPath();
-		}
-
-		log.debug("userName: {}", userName);
-		log.debug("home dir: {}", homeDirectory);
-		log.debug("zone: {}", zone);
-
-		IRODSAccount irodsAccountFromUri = IRODSAccount.instance(uri.getHost(),
-				uri.getPort(), userName, password, homeDirectory, zone, "");
-
-		String fileName = uri.getPath();
-
-		log.debug("irods account: {}", irodsAccountFromUri.toString());
-		log.debug("fileName: {}", fileName);
 
 		IRODSFileSystemAO irodsFileSystem = new IRODSFileSystemAOImpl(
 				this.getIRODSSession(), this.getIRODSAccount());
