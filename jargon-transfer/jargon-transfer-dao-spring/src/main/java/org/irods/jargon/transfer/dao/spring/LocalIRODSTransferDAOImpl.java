@@ -16,6 +16,7 @@ import org.irods.jargon.transfer.dao.domain.TransferStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
+import org.springframework.orm.hibernate3.HibernateTemplate;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 /**
@@ -228,11 +229,31 @@ public class LocalIRODSTransferDAOImpl extends HibernateDaoSupport implements
 		log.debug("entering purgeQueue()");
 
 		try {
-
-			int rows = super.getHibernateTemplate().bulkUpdate(
-					"delete from LocalIRODSTransfer where transferState <> ?",
+			
+			StringBuilder sb = new StringBuilder();
+			sb.append("delete from LocalIRODSTransferItem as item where ");
+			sb.append("item.localIRODSTransfer.id in (");
+			sb.append("select id from LocalIRODSTransfer as transfer where transfer.transferState <> ?)");
+			
+			log.debug("delete items sql:{}", sb.toString());
+			
+			HibernateTemplate hibernateTemplate = super.getHibernateTemplate();
+		
+		
+			int rows = hibernateTemplate.bulkUpdate(
+					sb.toString(),
 					TransferState.PROCESSING);
-			log.debug("updated rows: {}", rows);
+			log.debug("deleted items count of: {}", rows);
+		
+			 sb = new StringBuilder();
+				sb.append("delete from LocalIRODSTransfer  where transferState <> ?");
+				
+				log.debug("delete items sql:{}", sb.toString());
+				
+				 rows = super.getHibernateTemplate().bulkUpdate(
+						sb.toString(),
+						TransferState.PROCESSING);
+				log.debug("deleted transfers count of: {}", rows);
 
 		} catch (HibernateException e) {
 			log.error("HibernateException", e);

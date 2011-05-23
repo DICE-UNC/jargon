@@ -63,7 +63,7 @@ public class LocalIRODSTransfer implements Serializable {
     private String transferResource = "";
 
     @Column(name = "user_name")
-    private String transferUserName = "";
+    private String transferUserName = "";   
 
     @Column(name = "password")
     private String transferPassword = "";

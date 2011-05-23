@@ -834,7 +834,15 @@ public class TransferQueueServiceTest {
 		enqueuedTransfer.setTransferPassword(irodsAccount.getPassword());
 		enqueuedTransfer.setTransferState(TransferState.COMPLETE);
 		enqueuedTransfer.setTransferStatus(TransferStatus.ERROR);
-
+		
+		transferQueueService.updateLocalIRODSTransfer(enqueuedTransfer);
+		
+		LocalIRODSTransferItem item = new LocalIRODSTransferItem();
+		item.setLocalIRODSTransfer(enqueuedTransfer);
+		item.setSourceFileAbsolutePath("path");
+		item.setTargetFileAbsolutePath("path");
+		transferQueueService.addItemToTransfer(enqueuedTransfer, item);
+		
 		// now purge
 		transferQueueService.purgeQueue();
 

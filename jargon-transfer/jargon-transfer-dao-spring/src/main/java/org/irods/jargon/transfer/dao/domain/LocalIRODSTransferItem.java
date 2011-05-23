@@ -52,7 +52,7 @@ public class LocalIRODSTransferItem implements Serializable {
 	private long lengthInBytes = 0L;
 
 	@Column(name = "error_message")
-	private String errorMessage;
+	private String errorMessage;  
 
 	@Column(name = "error_stack_trace", length = 32672)
 	private String errorStackTrace;

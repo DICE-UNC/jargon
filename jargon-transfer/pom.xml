@@ -15,7 +15,6 @@
   <modules>
     <module>jargon-transfer-engine</module>
     <module>jargon-transfer-dao-spring</module>
-   
   </modules>
   <dependencies>
     <dependency>
