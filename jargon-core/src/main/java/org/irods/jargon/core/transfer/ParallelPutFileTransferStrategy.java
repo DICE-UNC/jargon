@@ -86,6 +86,7 @@ public final class ParallelPutFileTransferStrategy extends
 					transferLength, transferLength * i);
 
 			transferRunningThreads.add(new Thread(parallelTransferThread));
+			parallelPutTransferThreads.add(parallelTransferThread);
 
 			log.info("creating transfer thread:{}", parallelTransferThread);
 
@@ -98,6 +99,7 @@ public final class ParallelPutFileTransferStrategy extends
 				);
 
 		transferRunningThreads.add(new Thread(parallelTransferThread));
+		parallelPutTransferThreads.add(parallelTransferThread);
 
 		log.info("creating last transfer thread{}", parallelTransferThread);
 

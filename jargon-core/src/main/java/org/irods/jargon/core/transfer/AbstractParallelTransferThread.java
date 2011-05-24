@@ -140,5 +140,4 @@ public class AbstractParallelTransferThread {
 	protected void setExceptionInTransfer(final Exception exceptionInTransfer) {
 		this.exceptionInTransfer = exceptionInTransfer;
 	}
-
 }
