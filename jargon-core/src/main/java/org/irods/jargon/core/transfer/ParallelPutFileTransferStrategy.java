@@ -110,8 +110,9 @@ public final class ParallelPutFileTransferStrategy extends
 		}
 
 		for (Thread parallelTransferThreadToJoin : transferRunningThreads) {
-			if (parallelTransferThreadToJoin.isAlive()) {
+		
 				try {
+					log.debug("joining parallel transfer thread");
 					parallelTransferThreadToJoin.join();
 				} catch (InterruptedException e) {
 					log.error(
@@ -120,9 +121,7 @@ public final class ParallelPutFileTransferStrategy extends
 					throw new JargonException(
 							"parallel transfer thread interrupted when attempting to join");
 				}
-			}
-			log.info("started parallel transfer thread for thread: {}",
-					parallelTransferThreadToJoin.getName());
+			
 		}
 
 		log.info("closing threads");

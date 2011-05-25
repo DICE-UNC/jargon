@@ -32,7 +32,7 @@ public class SynchConfigurationDAOImpl extends HibernateDaoSupport implements
 	@Override
 	public void save(final SynchConfiguration synchConfiguration)
 			throws TransferDAOException {
-		logger.info("entering save(SynchConfiguration)");
+		log.info("entering save(SynchConfiguration)");
 
 		this.getSessionFactory().getCurrentSession()
 				.saveOrUpdate(synchConfiguration);

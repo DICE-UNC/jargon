@@ -15,17 +15,35 @@ import org.irods.jargon.transfer.dao.domain.ConfigurationProperty;
  */
 public interface ConfigurationPropertyDAO {
 
-	public void save(ConfigurationProperty configurationProperty)
+	/**
+	 * Save the property to the store.  Note that the key of the key/value pair is a unique database value, so that duplicate properties cannot be added
+	 * @param configurationProperty {@link ConfigurationProperty} that represents an entry of a configuration value in the database.
+	 * @throws TransferDAOException
+	 */
+	void saveOrUpdate(ConfigurationProperty configurationProperty)
 			throws TransferDAOException;
 
-	public ConfigurationProperty findById(Long id) throws TransferDAOException;
+	/**
+	 * Find a property based on the database id key
+	 * @param id <code>Long</code> that contains the id of the desired record
+	 * @return {@link ConfigurationProperty} that represents an entry of a configuration value in the database.
+	 * @throws TransferDAOException
+	 */
+	ConfigurationProperty findById(Long id) throws TransferDAOException;
 
-	public ConfigurationProperty findById(Long id, boolean error)
+	/**
+	 * Get all of the configuration properties stored in the database
+	 * @return <code>List</code> of  {@link ConfigurationProperty} representing the configuration properties store as key/value pairs
+	 * @throws TransferDAOException
+	 */
+	List<ConfigurationProperty> findAll() throws TransferDAOException;
+
+	/**
+	 * Delete the given property
+	 * @param configurationProperty
+	 * @throws TransferDAOException
+	 */
+	void delete(ConfigurationProperty configurationProperty)
 			throws TransferDAOException;
-
-	public List<ConfigurationProperty> findAll() throws TransferDAOException;
-
-	public void delete(ConfigurationProperty configurationProperty)
-			throws TransferDAOException;
-
+	
 }

@@ -116,6 +116,63 @@ public class ParallelTransferOperationsTest {
 				IRODS_TEST_SUBDIR_PATH + "/" + testRetrievedFileName,
 				testFileLength);
 	}
+	
+	@Test
+	public final void testParallelFilePutThenGetExtraFileExtension() throws Exception {
+		// make up a test file that triggers parallel transfer
+		String testFileName = "BR-0001-Normal.cov.tdf";
+		String testRetrievedFileName = "BR-0001-Normal.cov.Retrieved.tdf";
+		long testFileLength = 1718730902;
+
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String localFileName = FileGenerator
+				.generateFileOfFixedLengthGivenName(absPath, testFileName,
+						testFileLength);
+
+		String targetIrodsFile = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
+								+ testFileName);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
+		IRODSFileFactory irodsFileFactory = irodsFileSystem
+				.getIRODSFileFactory(irodsAccount);
+		IRODSFile destFile = irodsFileFactory
+				.instanceIRODSFile(targetIrodsFile);
+		DataTransferOperations dataTransferOperationsAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataTransferOperations(
+						irodsAccount);
+
+		File localSourceFile = new File(localFileName);
+
+		dataTransferOperationsAO.putOperation(localSourceFile, destFile, null,
+				null);
+
+		System.out.println("closing irodsfilesystem for put");
+		irodsFileSystem.close();
+
+		System.out.println("new file system for get");
+		irodsFileSystem = IRODSFileSystem.instance();
+		irodsFileFactory = irodsFileSystem.getIRODSFileFactory(irodsAccount);
+		destFile = irodsFileFactory.instanceIRODSFile(targetIrodsFile);
+		dataTransferOperationsAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataTransferOperations(
+						irodsAccount);
+
+		File retrievedLocalFile = new File(absPath + "/"
+				+ testRetrievedFileName);
+		dataTransferOperationsAO.getOperation(destFile, retrievedLocalFile,
+				null, null);
+
+		irodsFileSystem.close();
+		assertionHelper.assertLocalScratchFileLengthEquals(
+				IRODS_TEST_SUBDIR_PATH + "/" + testRetrievedFileName,
+				testFileLength);
+	}
 
 	/**
 	 * Was not working locally on original install of IRODS, may be an error due

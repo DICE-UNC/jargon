@@ -85,6 +85,7 @@ public final class ParallelPutTransferThread extends
 	@Override
 	public void run() {
 		try {
+			log.info("getting input stream for local file");
 			setIn(new BufferedInputStream(new FileInputStream(
 					parallelPutFileTransferStrategy.getLocalFile())));
 
@@ -104,18 +105,23 @@ public final class ParallelPutTransferThread extends
 				}
 			}
 
+			log.debug("opening socket to paralllel transfer (high) port at port:{}", parallelPutFileTransferStrategy.getPort());
 			setS(new Socket(parallelPutFileTransferStrategy.getHost(),
 					parallelPutFileTransferStrategy.getPort()));
-			getS().setSoTimeout(30000);
+			//getS().setSoTimeout(30000);
 			setOut(new BufferedOutputStream(getS().getOutputStream()));
+			
+			log.info("writing the cookie (password) for the output thread");
 
 			// write the cookie
 			byte b[] = new byte[4];
 			Host.copyInt(parallelPutFileTransferStrategy.getPassword(), b);
 			getOut().write(b);
 			getOut().flush();
+			log.debug("cookie written for output thread");
 			put();
-
+			log.debug("put operation completed");
+			
 		} catch (Exception e) {
 			log.error(
 					"An exception occurred during a parallel file put operation",
@@ -172,6 +178,7 @@ public final class ParallelPutTransferThread extends
 				throw new JargonException(
 						"unexpected end of data in transfer operation");
 			}
+			Thread.yield();
 		}
 	}
 

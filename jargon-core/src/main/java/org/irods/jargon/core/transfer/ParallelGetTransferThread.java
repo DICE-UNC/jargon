@@ -232,6 +232,7 @@ public final class ParallelGetTransferThread extends
 				throw new JargonException(
 						"possible loop condition in parallel file get");
 			}
+			Thread.yield();
 		}
 	}
 
