@@ -428,7 +428,7 @@ public class RuleProcessingAOImplTest {
 		Assert.assertNotNull("did not get a response", result);
 	}
 
-	@Test
+	@Ignore
 	public void testListAllDelayedRuleExecutions() throws Exception {
 
 		// TODO: purge, add 2
@@ -446,7 +446,7 @@ public class RuleProcessingAOImplTest {
 				delayedRuleExecutions.size() > 0);
 	}
 
-	@Test
+	@Ignore 
 	public void testPurgeAllDelayedRuleExecutions() throws Exception {
 
 		// TODO: purge, add1, purge, test
