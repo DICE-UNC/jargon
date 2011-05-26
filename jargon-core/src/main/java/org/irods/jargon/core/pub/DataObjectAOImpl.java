@@ -414,6 +414,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 				try {
 					parallelPutFileStrategy.transfer();
+					log.info("transfer is done, now terminate the keep alive process");
 					keepAliveProcess.setTerminate(true);
 					keepAliveThread.join(2000);
 				} catch (Exception e) {
@@ -421,11 +422,12 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 					throw new JargonException("error in parallel transfer", e);
 				}
 
-				log.info("transfer is complete");
+				log.info("transfer process is complete");
 				int statusForComplete = responseToInitialCallForPut.getTag(
 						l1descInx).getIntValue();
 				log.debug("status for complete:{}", statusForComplete);
 
+				log.info("sending operation complete at termination of parallel transfer");
 				this.getIRODSProtocol().operationComplete(statusForComplete);
 
 			} else {
