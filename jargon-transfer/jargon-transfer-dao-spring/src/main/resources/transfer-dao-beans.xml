@@ -72,10 +72,11 @@
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 	
+	<!--
 	<bean id="configurationPropertyDAO"
 		class="org.irods.jargon.transfer.dao.spring.ConfigurationPropertyDAOImpl">
 		<property name="sessionFactory" ref="sessionFactory" />
-	</bean>
+	</bean>  -->
 
 	<bean id="synchManagerService"
 		class="org.irods.jargon.transfer.engine.synch.SynchManagerServiceImpl">
