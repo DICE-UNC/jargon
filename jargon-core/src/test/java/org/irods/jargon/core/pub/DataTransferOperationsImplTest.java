@@ -620,7 +620,7 @@ public class DataTransferOperationsImplTest {
 
 		// now restart with the 4th file
 		TransferControlBlock restartControlBlock = DefaultTransferControlBlock
-				.instance(irodsSourceFile.listFiles()[3].getAbsolutePath());
+				.instance(irodsSourceFile.listFiles()[2].getAbsolutePath());
 		dataTransferOperationsAO
 				.getOperation(
 						destFile.getAbsolutePath() + "/" + rootCollection,
@@ -1809,7 +1809,7 @@ public class DataTransferOperationsImplTest {
 				returnLocalCollectionCompareAbsolutePath);
 
 		// I've put a mess of stuff, now get it
-		Assert.assertEquals("should have 3 files in coll before cancelled", 3,
+		Assert.assertEquals("should have 2 files in coll before cancelled", 2,
 				returnCompareLocalFile.list().length);
 		Assert.assertTrue("should have a status callback of cancelled",
 				listener.isCancelEncountered());

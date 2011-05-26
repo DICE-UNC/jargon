@@ -129,7 +129,7 @@ public final class ParallelPutFileTransferStrategy extends
 		for (ParallelPutTransferThread parallelPutTransferThread : parallelPutTransferThreads) {
 			parallelPutTransferThread.close();
 		}
-
+		
 		log.info("parallel transfer complete...checking for any exceptions that occurred in each thread");
 
 		log.info("parallel transfer complete, checking for any errors in the threads...");

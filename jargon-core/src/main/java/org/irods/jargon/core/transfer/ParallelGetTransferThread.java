@@ -234,6 +234,14 @@ public final class ParallelGetTransferThread extends
 			}
 			Thread.yield();
 		}
+		
+		log.info("closing local file in txfr thread");
+		try {
+			local.close();
+		} catch (IOException e) {
+			log.error("IOException closing local file", e);
+			throw new JargonRuntimeException("IOException closing local file");
+		}
 	}
 
 	/**
