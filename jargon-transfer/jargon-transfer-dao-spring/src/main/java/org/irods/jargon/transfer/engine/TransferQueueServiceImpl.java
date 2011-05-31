@@ -733,6 +733,9 @@ public class TransferQueueServiceImpl implements TransferQueueService {
 		
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.transfer.engine.TransferQueueService#findLocalIRODSTransferById(java.lang.Long)
+	 */
 	@Override
 	@Transactional
 	public LocalIRODSTransfer findLocalIRODSTransferById(final Long id) throws JargonException {
@@ -743,6 +746,9 @@ public class TransferQueueServiceImpl implements TransferQueueService {
 		}
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.transfer.engine.TransferQueueService#findLocalIRODSTransferByIdInitializeItems(java.lang.Long)
+	 */
 	@Override
 	@Transactional
 	public LocalIRODSTransfer findLocalIRODSTransferByIdInitializeItems(final Long id) throws JargonException {
@@ -753,6 +759,9 @@ public class TransferQueueServiceImpl implements TransferQueueService {
 		}
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.transfer.engine.TransferQueueService#addItemToTransfer(org.irods.jargon.transfer.dao.domain.LocalIRODSTransfer, org.irods.jargon.transfer.dao.domain.LocalIRODSTransferItem)
+	 */
 	@Override
 	@Transactional
 	public void addItemToTransfer(final LocalIRODSTransfer localIRODSTransfer, final LocalIRODSTransferItem localIRODSTransferItem) throws JargonException {

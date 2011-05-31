@@ -45,5 +45,11 @@ public interface ConfigurationPropertyDAO {
 	 */
 	void delete(ConfigurationProperty configurationProperty)
 			throws TransferDAOException;
+
+	/**
+	 * Clear all of the properties in the config database
+	 * @throws TransferDAOException
+	 */
+	void deleteAllProperties() throws TransferDAOException;
 	
 }

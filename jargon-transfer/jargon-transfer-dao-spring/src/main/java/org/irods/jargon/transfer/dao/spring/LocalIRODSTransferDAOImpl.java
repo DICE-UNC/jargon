@@ -117,19 +117,18 @@ public class LocalIRODSTransferDAOImpl extends HibernateDaoSupport implements
 	 * org.irods.jargon.transfer.dao.LocalIRODSTransferDAO#findByTransferState
 	 * (int, org.irods.jargon.transfer.dao.domain.TransferState[])
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<LocalIRODSTransfer> findByTransferState(final int maxResults,
 			final TransferState... transferState) throws TransferDAOException {
 		log.debug("entering findByTransferState(int, TransferState...)");
-		List<LocalIRODSTransfer> ret = null;
 		try {
 			Criteria criteria = this.getSessionFactory().getCurrentSession()
 					.createCriteria(LocalIRODSTransfer.class);
 			criteria.add(Restrictions.in("transferState", transferState));
 			criteria.setMaxResults(maxResults);
 			criteria.addOrder(Order.desc("transferStart"));
-			ret = criteria.list();
-			return ret;
+			return criteria.list();
 
 		} catch (HibernateException e) {
 			log.error("HibernateException", e);
@@ -148,6 +147,7 @@ public class LocalIRODSTransferDAOImpl extends HibernateDaoSupport implements
 	 * org.irods.jargon.transfer.dao.LocalIRODSTransferDAO#findByTransferStatus
 	 * (int, org.irods.jargon.transfer.dao.domain.TransferStatus[])
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<LocalIRODSTransfer> findByTransferStatus(final int maxResults,
 			final TransferStatus... transferStatus) throws TransferDAOException {
@@ -177,6 +177,7 @@ public class LocalIRODSTransferDAOImpl extends HibernateDaoSupport implements
 	 * org.irods.jargon.transfer.dao.LocalIRODSTransferDAO#findAllSortedDesc
 	 * (int)
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<LocalIRODSTransfer> findAllSortedDesc(final int maxResults)
 			throws TransferDAOException {
@@ -201,6 +202,7 @@ public class LocalIRODSTransferDAOImpl extends HibernateDaoSupport implements
 	 * 
 	 * @see org.irods.jargon.transfer.dao.LocalIRODSTransferDAO#findAll()
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<LocalIRODSTransfer> findAll() throws TransferDAOException {
 		log.debug("entering findAll()");

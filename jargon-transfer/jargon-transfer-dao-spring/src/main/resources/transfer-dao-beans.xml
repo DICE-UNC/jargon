@@ -72,11 +72,10 @@
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 	
-	<!--
 	<bean id="configurationPropertyDAO"
 		class="org.irods.jargon.transfer.dao.spring.ConfigurationPropertyDAOImpl">
 		<property name="sessionFactory" ref="sessionFactory" />
-	</bean>  -->
+	</bean>  
 
 	<bean id="synchManagerService"
 		class="org.irods.jargon.transfer.engine.synch.SynchManagerServiceImpl">
@@ -88,5 +87,11 @@
 		<property name="localIRODSTransferDAO" ref="localIRODSTransferDAO" />
 		<property name="localIRODSTransferItemDAO" ref="localIRODSTransferItemDAO" />
 	</bean>
+	
+	<bean id="configurationService" 
+		class="org.irods.jargon.transfer.engine.ConfigurationServiceImpl">
+		<property name="configurationPropertyDAO" ref="configurationPropertyDAO" />
+	</bean>
+	
 
 </beans>

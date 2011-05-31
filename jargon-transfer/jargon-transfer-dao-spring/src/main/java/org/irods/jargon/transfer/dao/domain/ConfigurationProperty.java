@@ -19,15 +19,12 @@ import javax.persistence.Table;
 @Table(name = "configuration_property")
 public class ConfigurationProperty implements Serializable {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -8108807996395281600L;
 
 	@Id()
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "id")
-	private Long id;
+	private Long id = 0L;
 
 	/**
 	 * iDrop configuration property, stored as a key
@@ -43,6 +40,23 @@ public class ConfigurationProperty implements Serializable {
 
 	@Column(name = "updated_at")
 	private Date updatedAt;
+	
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("ConfigurationProperty:");
+		sb.append("\n   id:");
+		sb.append(id);
+		sb.append("\n   propertyKey:");
+		sb.append(propertyKey);
+		sb.append("\n   propertyValue:");
+		sb.append(propertyValue);
+		sb.append("\n   createdAt:");
+		sb.append(createdAt);
+		sb.append("\n   updatedAt:");
+		sb.append(updatedAt);
+		return sb.toString();
+	}
 
 	/**
 	 * @return the id
