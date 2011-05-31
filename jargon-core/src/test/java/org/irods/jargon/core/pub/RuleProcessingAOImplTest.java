@@ -59,7 +59,7 @@ public class RuleProcessingAOImplTest {
 				.instance(irodsSession);
 		RuleProcessingAO ruleProcessingAO = accessObjectFactory
 				.getRuleProcessingAO(irodsAccount);
-		String ruleString = "List Available MS||msiListEnabledMS(*KVPairs)##writeKeyValPairs(stdout,*KVPairs, \": \")|nop\n*A=hello\n ruleExecOut";
+		String ruleString = "ListAvailableMS||msiListEnabledMS(*KVPairs)##writeKeyValPairs(stdout,*KVPairs, \": \")|nop\n*A=hello\n ruleExecOut";
 		IRODSRuleExecResult result = ruleProcessingAO.executeRule(ruleString);
 		irodsSession.closeSession();
 
