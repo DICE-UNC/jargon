@@ -12,6 +12,7 @@ import javax.persistence.Table;
 
 /**
  * Represents a store of kvp configuration properties
+ * 
  * @author Mike Conway - DICE (www.irods.org)
  * 
  */
@@ -29,18 +30,18 @@ public class ConfigurationProperty implements Serializable {
 	/**
 	 * iDrop configuration property, stored as a key
 	 */
-	@Column(name = "propertyKey", unique=true, nullable=false)
+	@Column(name = "propertyKey", unique = true, nullable = false)
 	private String propertyKey = "";
 
-	@Column(name = "propertyValue", nullable=false)
+	@Column(name = "propertyValue", nullable = false)
 	private String propertyValue = "";
 
-	@Column(name = "created_at", nullable=false)
+	@Column(name = "created_at", nullable = false)
 	private Date createdAt;
 
 	@Column(name = "updated_at")
 	private Date updatedAt;
-	
+
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
@@ -61,70 +62,75 @@ public class ConfigurationProperty implements Serializable {
 	/**
 	 * @return the id
 	 */
-	public  Long getId() {
+	public Long getId() {
 		return id;
 	}
 
 	/**
-	 * @param id the id to set
+	 * @param id
+	 *            the id to set
 	 */
-	public  void setId(Long id) {
+	public void setId(final Long id) {
 		this.id = id;
 	}
 
 	/**
 	 * @return the propertyKey
 	 */
-	public  String getPropertyKey() {
+	public String getPropertyKey() {
 		return propertyKey;
 	}
 
 	/**
-	 * @param propertyKey the propertyKey to set
+	 * @param propertyKey
+	 *            the propertyKey to set
 	 */
-	public  void setPropertyKey(String propertyKey) {
+	public void setPropertyKey(final String propertyKey) {
 		this.propertyKey = propertyKey;
 	}
 
 	/**
 	 * @return the propertyValue
 	 */
-	public  String getPropertyValue() {
+	public String getPropertyValue() {
 		return propertyValue;
 	}
 
 	/**
-	 * @param propertyValue the propertyValue to set
+	 * @param propertyValue
+	 *            the propertyValue to set
 	 */
-	public  void setPropertyValue(String propertyValue) {
+	public void setPropertyValue(final String propertyValue) {
 		this.propertyValue = propertyValue;
 	}
 
 	/**
 	 * @return the createdAt
 	 */
-	public  Date getCreatedAt() {
+	public Date getCreatedAt() {
 		return createdAt;
 	}
 
 	/**
-	 * @param createdAt the createdAt to set
+	 * @param createdAt
+	 *            the createdAt to set
 	 */
-	public  void setCreatedAt(Date createdAt) {
+	public void setCreatedAt(final Date createdAt) {
 		this.createdAt = createdAt;
 	}
 
 	/**
 	 * @return the updatedAt
 	 */
-	public  Date getUpdatedAt() {
+	public Date getUpdatedAt() {
 		return updatedAt;
 	}
 
 	/**
-	 * @param updatedAt the updatedAt to set
+	 * @param updatedAt
+	 *            the updatedAt to set
 	 */
-	public  void setUpdatedAt(Date updatedAt) {
+	public void setUpdatedAt(final Date updatedAt) {
 		this.updatedAt = updatedAt;
 	}
 

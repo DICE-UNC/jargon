@@ -2,8 +2,9 @@ package org.irods.jargon.transfer.engine.synch;
 
 /**
  * Exception in synchronization processing
+ * 
  * @author Mike Conway - DICE (www.irods.org)
- *
+ * 
  */
 public class SynchException extends Exception {
 
@@ -21,14 +22,14 @@ public class SynchException extends Exception {
 	/**
 	 * @param arg0
 	 */
-	public SynchException(String arg0) {
+	public SynchException(final String arg0) {
 		super(arg0);
 	}
 
 	/**
 	 * @param arg0
 	 */
-	public SynchException(Throwable arg0) {
+	public SynchException(final Throwable arg0) {
 		super(arg0);
 	}
 
@@ -36,7 +37,7 @@ public class SynchException extends Exception {
 	 * @param arg0
 	 * @param arg1
 	 */
-	public SynchException(String arg0, Throwable arg1) {
+	public SynchException(final String arg0, final Throwable arg1) {
 		super(arg0, arg1);
 	}
 

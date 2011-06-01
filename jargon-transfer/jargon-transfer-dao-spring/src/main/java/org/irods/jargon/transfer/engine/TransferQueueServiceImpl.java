@@ -137,7 +137,7 @@ public class TransferQueueServiceImpl implements TransferQueueService {
 				.obfuscate(irodsAccount.getPassword()));
 		enqueuedTransfer.setTransferState(TransferState.ENQUEUED);
 		enqueuedTransfer.setTransferStatus(TransferStatus.OK);
-		
+
 		this.updateLocalIRODSTransfer(enqueuedTransfer);
 
 		log.info("enqueued...");
@@ -485,7 +485,7 @@ public class TransferQueueServiceImpl implements TransferQueueService {
 	 * (org.irods.jargon.transfer.dao.domain.LocalIRODSTransfer)
 	 */
 	@Override
-	 @Transactional
+	@Transactional
 	public void restartTransfer(final LocalIRODSTransfer localIRODSTransfer)
 			throws JargonException {
 		if (localIRODSTransfer == null) {
@@ -717,70 +717,89 @@ public class TransferQueueServiceImpl implements TransferQueueService {
 		this.localIRODSTransferItemDAO = localIRODSTransferItemDAO;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.transfer.engine.TransferQueueService#updateLocalIRODSTransfer(org.irods.jargon.transfer.dao.domain.LocalIRODSTransfer)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.transfer.engine.TransferQueueService#
+	 * updateLocalIRODSTransfer
+	 * (org.irods.jargon.transfer.dao.domain.LocalIRODSTransfer)
 	 */
 	@Override
 	@Transactional
-	public void updateLocalIRODSTransfer(LocalIRODSTransfer localIrodsTransfer)
-			throws JargonException {
-		
+	public void updateLocalIRODSTransfer(
+			final LocalIRODSTransfer localIrodsTransfer) throws JargonException {
+
 		try {
 			localIRODSTransferDAO.save(localIrodsTransfer);
 		} catch (TransferDAOException e) {
 			throw new JargonException(e);
 		}
-		
+
 	}
-	
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.transfer.engine.TransferQueueService#findLocalIRODSTransferById(java.lang.Long)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.transfer.engine.TransferQueueService#
+	 * findLocalIRODSTransferById(java.lang.Long)
 	 */
 	@Override
 	@Transactional
-	public LocalIRODSTransfer findLocalIRODSTransferById(final Long id) throws JargonException {
+	public LocalIRODSTransfer findLocalIRODSTransferById(final Long id)
+			throws JargonException {
 		try {
 			return localIRODSTransferDAO.findById(id);
 		} catch (TransferDAOException e) {
 			throw new JargonException(e);
 		}
 	}
-	
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.transfer.engine.TransferQueueService#findLocalIRODSTransferByIdInitializeItems(java.lang.Long)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.transfer.engine.TransferQueueService#
+	 * findLocalIRODSTransferByIdInitializeItems(java.lang.Long)
 	 */
 	@Override
 	@Transactional
-	public LocalIRODSTransfer findLocalIRODSTransferByIdInitializeItems(final Long id) throws JargonException {
+	public LocalIRODSTransfer findLocalIRODSTransferByIdInitializeItems(
+			final Long id) throws JargonException {
 		try {
 			return localIRODSTransferDAO.findInitializedById(id);
 		} catch (TransferDAOException e) {
 			throw new JargonException(e);
 		}
 	}
-	
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.transfer.engine.TransferQueueService#addItemToTransfer(org.irods.jargon.transfer.dao.domain.LocalIRODSTransfer, org.irods.jargon.transfer.dao.domain.LocalIRODSTransferItem)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.transfer.engine.TransferQueueService#addItemToTransfer
+	 * (org.irods.jargon.transfer.dao.domain.LocalIRODSTransfer,
+	 * org.irods.jargon.transfer.dao.domain.LocalIRODSTransferItem)
 	 */
 	@Override
 	@Transactional
-	public void addItemToTransfer(final LocalIRODSTransfer localIRODSTransfer, final LocalIRODSTransferItem localIRODSTransferItem) throws JargonException {
-		
+	public void addItemToTransfer(final LocalIRODSTransfer localIRODSTransfer,
+			final LocalIRODSTransferItem localIRODSTransferItem)
+			throws JargonException {
+
 		if (localIRODSTransfer == null) {
 			throw new IllegalArgumentException("null localIRODSTransfer");
 		}
-		
+
 		if (localIRODSTransferItem == null) {
 			throw new IllegalArgumentException("null localIRODSTransferItem");
 		}
-	
+
 		try {
-			LocalIRODSTransfer merged = localIRODSTransferDAO.findInitializedById(localIRODSTransfer.getId());
+			LocalIRODSTransfer merged = localIRODSTransferDAO
+					.findInitializedById(localIRODSTransfer.getId());
 			merged.getLocalIRODSTransferItems().add(localIRODSTransferItem);
 		} catch (TransferDAOException e) {
 			throw new JargonException(e);
 		}
 	}
-
 
 }

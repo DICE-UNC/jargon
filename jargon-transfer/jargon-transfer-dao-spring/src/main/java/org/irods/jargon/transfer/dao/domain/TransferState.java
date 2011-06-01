@@ -2,16 +2,16 @@ package org.irods.jargon.transfer.dao.domain;
 
 public enum TransferState {
 
-    IDLE,
-    
-    PROCESSING,
+	IDLE,
 
-    PAUSED,
+	PROCESSING,
 
-    CANCELLED,
+	PAUSED,
 
-    COMPLETE,
+	CANCELLED,
 
-    ENQUEUED;
+	COMPLETE,
+
+	ENQUEUED;
 
 }

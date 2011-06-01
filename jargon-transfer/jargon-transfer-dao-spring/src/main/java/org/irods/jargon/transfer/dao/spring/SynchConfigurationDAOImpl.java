@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.hibernate.Criteria;
 import org.hibernate.Hibernate;
-import org.hibernate.SessionFactory;
 import org.irods.jargon.transfer.dao.SynchConfigurationDAO;
 import org.irods.jargon.transfer.dao.TransferDAOException;
 import org.irods.jargon.transfer.dao.domain.SynchConfiguration;
@@ -21,9 +20,9 @@ public class SynchConfigurationDAOImpl extends HibernateDaoSupport implements
 
 	private static final Logger log = LoggerFactory
 			.getLogger(SynchConfigurationDAOImpl.class);
-	
+
 	/*
-	 * (non-Javadoc) 
+	 * (non-Javadoc)
 	 * 
 	 * @see
 	 * org.irods.jargon.transfer.dao.SynchConfigurationDAO#save(org.irods.jargon

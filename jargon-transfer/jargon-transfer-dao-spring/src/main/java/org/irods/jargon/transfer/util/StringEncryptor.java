@@ -131,7 +131,7 @@ public class StringEncryptor {
 	}
 
 	public static class EncryptionException extends Exception {
-		
+
 		private static final long serialVersionUID = 3877601749214910931L;
 
 		public EncryptionException(final Throwable t) {

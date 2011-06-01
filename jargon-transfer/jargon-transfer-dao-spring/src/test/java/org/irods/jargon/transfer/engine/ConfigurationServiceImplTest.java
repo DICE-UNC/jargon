@@ -120,8 +120,7 @@ public class ConfigurationServiceImplTest {
 		configProperty.setPropertyValue(testValue);
 		configProperty.setCreatedAt(new Date());
 		configurationService.addConfigurationProperty(configProperty);
-		Properties properties = configurationService
-				.exportProperties();
+		Properties properties = configurationService.exportProperties();
 		Assert.assertNotNull("null configuration properties retrieved",
 				properties);
 		String actual = properties.getProperty(testKey);
@@ -139,8 +138,7 @@ public class ConfigurationServiceImplTest {
 		testProperties.put(testKey1, testValue);
 		testProperties.put(testKey2, testValue);
 		configurationService.importProperties(testProperties);
-		Properties properties = configurationService
-				.exportProperties();
+		Properties properties = configurationService.exportProperties();
 		Assert.assertNotNull("null configuration properties retrieved",
 				properties);
 		String actual = properties.getProperty(testKey1);
@@ -148,7 +146,6 @@ public class ConfigurationServiceImplTest {
 		Assert.assertEquals("property value not set", testValue, actual);
 
 	}
-	
 
 	public void setConfigurationService(
 			final ConfigurationService configurationService) {

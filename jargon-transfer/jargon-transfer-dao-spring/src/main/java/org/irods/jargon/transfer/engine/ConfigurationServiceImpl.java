@@ -21,7 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @author Mike Conway - DICE (www.irods.org)
  * 
  */
-public class ConfigurationServiceImpl implements ConfigurationService { 
+public class ConfigurationServiceImpl implements ConfigurationService {
 
 	private ConfigurationPropertyDAO configurationPropertyDAO;
 
@@ -63,40 +63,49 @@ public class ConfigurationServiceImpl implements ConfigurationService {
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.transfer.engine.ConfigurationService#deleteConfigurationProperty(org.irods.jargon.transfer.dao.domain.ConfigurationProperty)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.transfer.engine.ConfigurationService#
+	 * deleteConfigurationProperty
+	 * (org.irods.jargon.transfer.dao.domain.ConfigurationProperty)
 	 */
 	@Override
 	@Transactional
-	public void deleteConfigurationProperty(final ConfigurationProperty configurationProperty) throws TransferEngineException {
-		
+	public void deleteConfigurationProperty(
+			final ConfigurationProperty configurationProperty)
+			throws TransferEngineException {
+
 		if (configurationProperty == null) {
 			throw new TransferEngineException("null configurationProperty");
 		}
-		
+
 		log.info("deleteConfigurationProperty(ConfigurationProperty) with: {}",
 				configurationProperty);
-		
+
 		try {
 			configurationPropertyDAO.delete(configurationProperty);
 		} catch (TransferDAOException e) {
 			log.error("DAO exception", e);
 			throw new TransferEngineException(e);
 		}
-		
+
 		log.info("configuration deleted");
-		
+
 	}
-	
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.transfer.engine.ConfigurationService#addConfigurationProperty(org.irods.jargon.transfer.dao.domain.ConfigurationProperty)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.transfer.engine.ConfigurationService#
+	 * addConfigurationProperty
+	 * (org.irods.jargon.transfer.dao.domain.ConfigurationProperty)
 	 */
 	@Override
 	@Transactional
 	public ConfigurationProperty addConfigurationProperty(
 			final ConfigurationProperty configurationProperty)
 			throws TransferEngineException {
-		
 
 		if (configurationProperty == null) {
 			throw new IllegalArgumentException("null configurationProperty");
@@ -109,7 +118,7 @@ public class ConfigurationServiceImpl implements ConfigurationService {
 
 		log.info("addConfigurationProperty(ConfigurationProperty) with: {}",
 				configurationProperty);
-		
+
 		try {
 			configurationPropertyDAO.saveOrUpdate(configurationProperty);
 		} catch (TransferDAOException e) {
@@ -121,14 +130,20 @@ public class ConfigurationServiceImpl implements ConfigurationService {
 		return configurationProperty;
 
 	}
-	
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.transfer.engine.ConfigurationService#updateConfigurationProperty(org.irods.jargon.transfer.dao.domain.ConfigurationProperty)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.transfer.engine.ConfigurationService#
+	 * updateConfigurationProperty
+	 * (org.irods.jargon.transfer.dao.domain.ConfigurationProperty)
 	 */
 	@Override
 	@Transactional
-	public void updateConfigurationProperty(final ConfigurationProperty configurationProperty) throws TransferEngineException {
-		
+	public void updateConfigurationProperty(
+			final ConfigurationProperty configurationProperty)
+			throws TransferEngineException {
+
 		if (configurationProperty == null) {
 			throw new IllegalArgumentException("null configurationProperty");
 		}
@@ -137,10 +152,10 @@ public class ConfigurationServiceImpl implements ConfigurationService {
 			throw new IllegalArgumentException(
 					"attempting to update a configuration property that is not in the database");
 		}
-		
+
 		log.info("updateConfigurationProperty(ConfigurationProperty) with: {}",
 				configurationProperty);
-		
+
 		try {
 			configurationPropertyDAO.saveOrUpdate(configurationProperty);
 		} catch (TransferDAOException e) {
@@ -151,45 +166,54 @@ public class ConfigurationServiceImpl implements ConfigurationService {
 		log.info("configuration property updated");
 
 	}
-	
-	
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.transfer.engine.ConfigurationService#exportProperties()
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.transfer.engine.ConfigurationService#exportProperties()
 	 */
 	@Override
 	@Transactional
 	public Properties exportProperties() throws TransferEngineException {
 		log.info("exportProperties()");
 		Properties properties = new Properties();
-		
+
 		List<ConfigurationProperty> configurationProperties = null;
 		try {
 			configurationProperties = configurationPropertyDAO.findAll();
 		} catch (TransferDAOException e) {
 		}
-		
+
 		for (ConfigurationProperty configurationProperty : configurationProperties) {
-			log.info("adding configuration property from database: {}", configurationProperty);
-			properties.put(configurationProperty.getPropertyKey(), configurationProperty.getPropertyValue());
+			log.info("adding configuration property from database: {}",
+					configurationProperty);
+			properties.put(configurationProperty.getPropertyKey(),
+					configurationProperty.getPropertyValue());
 		}
-		
+
 		return properties;
-		
+
 	}
-	
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.transfer.engine.ConfigurationService#importProperties(java.util.Properties)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.transfer.engine.ConfigurationService#importProperties
+	 * (java.util.Properties)
 	 */
 	@Override
 	@Transactional
-	public void importProperties(final Properties propertiesToImport) throws TransferEngineException {
-		
+	public void importProperties(final Properties propertiesToImport)
+			throws TransferEngineException {
+
 		if (propertiesToImport == null) {
 			throw new IllegalArgumentException("null propertiesToImport");
 		}
-		
+
 		log.info("importing properties: {}", propertiesToImport);
-		
+
 		log.info("deleting old properties...");
 		try {
 			configurationPropertyDAO.deleteAllProperties();
@@ -197,11 +221,11 @@ public class ConfigurationServiceImpl implements ConfigurationService {
 			log.error("error deleting all configuration properties", e);
 			throw new TransferEngineException(e);
 		}
-		
+
 		log.info("adding new properties based on passed in values");
 		Object propVal;
 		ConfigurationProperty configurationProperty;
-		for(Object key : propertiesToImport.keySet()) {
+		for (Object key : propertiesToImport.keySet()) {
 			propVal = propertiesToImport.get(key);
 			configurationProperty = new ConfigurationProperty();
 			configurationProperty.setCreatedAt(new Date());
@@ -213,10 +237,12 @@ public class ConfigurationServiceImpl implements ConfigurationService {
 				log.error("error adding property: {}", configurationProperty, e);
 				throw new TransferEngineException(e);
 			}
-			
-			log.debug("added configuration property from provided properties:{}", configurationProperty);
-			
+
+			log.debug(
+					"added configuration property from provided properties:{}",
+					configurationProperty);
+
 		}
-			
+
 	}
 }

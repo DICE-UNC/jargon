@@ -1,8 +1,8 @@
 package org.irods.jargon.transfer;
+
+import org.irods.jargon.transfer.engine.ConfigurationService;
 import org.irods.jargon.transfer.engine.TransferQueueService;
-import org.irods.jargon.transfer.engine.TransferQueueServiceImpl;
 import org.irods.jargon.transfer.engine.synch.SynchManagerService;
-import org.irods.jargon.transfer.engine.synch.SynchManagerServiceImpl;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -25,11 +25,17 @@ public class TransferServiceFactoryImpl {
 	}
 
 	public TransferQueueService instanceTransferQueueService() {
-		return (TransferQueueService) beanFactory.getBean("transferQueueService");
+		return (TransferQueueService) beanFactory
+				.getBean("transferQueueService");
 	}
-	
+
 	public SynchManagerService instanceSynchManagerService() {
-		return beanFactory.getBean(SynchManagerServiceImpl.class);
+		return (SynchManagerService) beanFactory.getBean("synchManagerService");
 	}
-	
+
+	public ConfigurationService instanceConfigurationService() {
+		return (ConfigurationService) beanFactory
+				.getBean("configurationService");
+	}
+
 }
