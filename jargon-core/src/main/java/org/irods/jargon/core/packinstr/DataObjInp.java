@@ -365,7 +365,7 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 				destinationResource, transferOptions);
 		dataObjInp.operationType = PUT_OPERATION_TYPE;
 		dataObjInp.setApiNumber(PUT_FILE_API_NBR);
-
+ 
 		if (overwrite) {
 			dataObjInp.setForceOption(ForceOptions.FORCE);
 		}
