@@ -403,12 +403,19 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 				log.info(
 						"getting ready to initiate parallel file transfer strategy:{}",
 						parallelPutFileStrategy);
-
+				
+				/* the keep alive thread needs to use the current agent connection, so create it 
+				 * in this main thread and pass it to the keep alive process.  The keep alive thread will
+				 * maintain the connection to this same agent.
+				 */
+				
+				EnvironmentalInfoAO environmentalAO =  new EnvironmentalInfoAOImpl(this.getIRODSSession(),
+						this.getIRODSAccount());
+				
 				// start a keep-alive that will ping the irods server every 30
 				// seconds to keep the control channel alive
 				KeepAliveProcess keepAliveProcess = new KeepAliveProcess(
-						new EnvironmentalInfoAOImpl(this.getIRODSSession(),
-								this.getIRODSAccount()));
+						environmentalAO);
 				Thread keepAliveThread = new Thread(keepAliveProcess);
 				keepAliveThread.start();
 
@@ -685,12 +692,20 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			ParallelGetFileTransferStrategy parallelGetTransferStrategy = ParallelGetFileTransferStrategy
 					.instance(host, port, numberOfThreads, password,
 							localFileToHoldData);
+			
+			/* the keep alive thread needs to use the current agent connection, so create it 
+			 * in this main thread and pass it to the keep alive process.  The keep alive thread will
+			 * maintain the connection to this same agent.
+			 */
+			
+			EnvironmentalInfoAO environmentalAO =  new EnvironmentalInfoAOImpl(this.getIRODSSession(),
+					this.getIRODSAccount());
+			
 
 			// start a keep-alive that will ping the irods server every 30
 			// seconds to keep the control channel alive
 			KeepAliveProcess keepAliveProcess = new KeepAliveProcess(
-					new EnvironmentalInfoAOImpl(this.getIRODSSession(),
-							this.getIRODSAccount()));
+					environmentalAO);
 			Thread keepAliveThread = new Thread(keepAliveProcess);
 			keepAliveThread.start();
 

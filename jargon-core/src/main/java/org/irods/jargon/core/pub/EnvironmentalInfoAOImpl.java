@@ -23,10 +23,14 @@ public class EnvironmentalInfoAOImpl extends IRODSGenericAO implements
 
 	public static final Logger log = LoggerFactory
 			.getLogger(EnvironmentalInfoAOImpl.class);
+	
+	private final EnvironmentalInfoAccessor environmentalInfoAccessor;
 
 	protected EnvironmentalInfoAOImpl(final IRODSSession irodsSession,
 			final IRODSAccount irodsAccount) throws JargonException {
 		super(irodsSession, irodsAccount);
+		environmentalInfoAccessor = new EnvironmentalInfoAccessor(
+				getIRODSSession().currentConnection(getIRODSAccount()));
 	}
 
 	/*
@@ -38,8 +42,7 @@ public class EnvironmentalInfoAOImpl extends IRODSGenericAO implements
 	@Override
 	public IRODSServerProperties getIRODSServerPropertiesFromIRODSServer()
 			throws JargonException {
-		EnvironmentalInfoAccessor environmentalInfoAccessor = new EnvironmentalInfoAccessor(
-				getIRODSSession().currentConnection(getIRODSAccount()));
+	
 		return environmentalInfoAccessor.getIRODSServerProperties();
 	}
 
