@@ -112,8 +112,8 @@ public class DataObjInpTest {
 
 		StringBuilder sb = new StringBuilder();
 		sb.append("<DataObjInp_PI><objPath>/test1/home/test1/test-scratch/IrodsCommandsPutTest/testPutOverwriteFileNotInIRODS.txt</objPath>\n");
-		sb.append("<createMode>33188</createMode>\n");
-		sb.append("<openFlags>1</openFlags>\n");
+		sb.append("<createMode>33206</createMode>\n");
+		sb.append("<openFlags>2</openFlags>\n");
 		sb.append("<offset>0</offset>\n");
 		sb.append("<dataSize>716800000</dataSize>\n");
 		sb.append("<numThreads>0</numThreads>\n");
@@ -138,7 +138,7 @@ public class DataObjInpTest {
 
 		StringBuilder sb = new StringBuilder();
 		sb.append("<DataObjInp_PI><objPath>/test1/home/test1/test-scratch/IrodsCommandsPutTest/testPutOverwriteFileNotInIRODS.txt</objPath>\n");
-		sb.append("<createMode>33188</createMode>\n");
+		sb.append("<createMode>33206</createMode>\n");
 		sb.append("<openFlags>2</openFlags>\n");
 		sb.append("<offset>0</offset>\n");
 		sb.append("<dataSize>1</dataSize>\n");

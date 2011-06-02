@@ -66,7 +66,7 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 
 	private static Logger log = LoggerFactory.getLogger(DataObjInp.class);
 
-	public static final int DEFAULT_CREATE_MODE = 33188;
+	public static final int DEFAULT_CREATE_MODE = 33206;
 	public static final int ZERO_CREATE_MODE = 0;
 
 	public static final String BS_LEN = "bsLen";
@@ -361,7 +361,7 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 		}
 
 		DataObjInp dataObjInp = new DataObjInp(destinationAbsolutePath,
-				DEFAULT_CREATE_MODE, OpenFlags.WRITE, 0L, length,
+				DEFAULT_CREATE_MODE, OpenFlags.READ_WRITE, 0L, length,
 				destinationResource, transferOptions);
 		dataObjInp.operationType = PUT_OPERATION_TYPE;
 		dataObjInp.setApiNumber(PUT_FILE_API_NBR);
