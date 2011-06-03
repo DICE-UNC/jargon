@@ -122,22 +122,18 @@ public final class ParallelGetTransferThread extends
 
 		// read the header
 		int operation = readInt();
-
 		log.info("   operation:{}", operation);
 
 		// read the flags
 		int flags = readInt();
-
 		log.info("   flags:{}", flags);
 
 		// Where to seek into the data
 		long offset = readLong();
-
 		log.info("   offset:{}", offset);
 
 		// How much to read/write
 		long length = readLong();
-
 		log.info("   length:{}", length);
 
 		// Holds all the data for transfer
@@ -145,7 +141,6 @@ public final class ParallelGetTransferThread extends
 		int read = 0;
 
 		if (operation != GET_OPR) {
-
 			log.error("Parallel transfer expected GET,  server requested {}",
 					operation);
 			throw new JargonException(
