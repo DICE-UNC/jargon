@@ -45,7 +45,6 @@ import org.irods.jargon.core.query.IRODSQueryResultSetInterface;
 import org.irods.jargon.core.query.JargonQueryException;
 import org.irods.jargon.core.query.MetaDataAndDomainData;
 import org.irods.jargon.core.query.RodsGenQueryEnum;
-import org.irods.jargon.core.transfer.KeepAliveProcess;
 import org.irods.jargon.core.transfer.ParallelGetFileTransferStrategy;
 import org.irods.jargon.core.transfer.ParallelPutFileTransferStrategy;
 import org.irods.jargon.core.utils.IRODSDataConversionUtil;
@@ -252,17 +251,23 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			final IRODSFile irodsFileDestination, final boolean overwrite)
 			throws JargonException {
 
-		putLocalDataObjectToIRODSGivingTransferOptions(localFile, irodsFileDestination, overwrite,
-				null);
+		putLocalDataObjectToIRODSGivingTransferOptions(localFile,
+				irodsFileDestination, overwrite, null);
 
 	}
-	
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.pub.DataObjectAO#putLocalDataObjectToIRODSGivingTransferOptions(java.io.File, org.irods.jargon.core.pub.io.IRODSFile, boolean, org.irods.jargon.core.packinstr.TransferOptions)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.pub.DataObjectAO#
+	 * putLocalDataObjectToIRODSGivingTransferOptions(java.io.File,
+	 * org.irods.jargon.core.pub.io.IRODSFile, boolean,
+	 * org.irods.jargon.core.packinstr.TransferOptions)
 	 */
 	@Override
-	public void putLocalDataObjectToIRODSGivingTransferOptions(final File localFile,
-			final IRODSFile irodsFileDestination, final boolean overwrite, final TransferOptions transferOptions)
+	public void putLocalDataObjectToIRODSGivingTransferOptions(
+			final File localFile, final IRODSFile irodsFileDestination,
+			final boolean overwrite, final TransferOptions transferOptions)
 			throws JargonException {
 
 		TransferOptions myTransferOptions = buildDefaultTransferOptionsIfNotSpecified(transferOptions);
@@ -284,13 +289,19 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 	}
 
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.pub.DataObjectAO#putLocalDataObjectToIRODSForClientSideRuleOperation(java.io.File, org.irods.jargon.core.pub.io.IRODSFile, boolean, org.irods.jargon.core.packinstr.TransferOptions)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.pub.DataObjectAO#
+	 * putLocalDataObjectToIRODSForClientSideRuleOperation(java.io.File,
+	 * org.irods.jargon.core.pub.io.IRODSFile, boolean,
+	 * org.irods.jargon.core.packinstr.TransferOptions)
 	 */
 	@Override
 	public void putLocalDataObjectToIRODSForClientSideRuleOperation(
 			final File localFile, final IRODSFile irodsFileDestination,
-			final boolean overwrite, final TransferOptions transferOptions) throws JargonException {
+			final boolean overwrite, final TransferOptions transferOptions)
+			throws JargonException {
 
 		TransferOptions myTransferOptions = buildDefaultTransferOptionsIfNotSpecified(transferOptions);
 		putLocalDataObjectToIRODS(localFile, irodsFileDestination, overwrite,
@@ -327,7 +338,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		if (irodsFileDestination == null) {
 			throw new IllegalArgumentException("null destination file");
 		}
-		
+
 		if (transferOptions == null) {
 			throw new IllegalArgumentException("null transferOptions");
 		}
@@ -356,15 +367,15 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		IRODSFile targetFile = dataAOHelper.checkTargetFileForPutOperation(
 				localFile, irodsFileDestination, ignoreChecks,
 				getIRODSFileFactory());
-		
+
 		long localFileLength = localFile.length();
-		
+
 		log.debug("localFileLength:{}", localFileLength);
 
 		if (localFileLength < ConnectionConstants.MAX_SZ_FOR_SINGLE_BUF) {
-			
+
 			log.info("processing transfer as normal, length below max");
-			
+
 			try {
 				dataAOHelper.processNormalPutTransfer(localFile, overwrite,
 						transferOptions, targetFile, this.getIRODSProtocol());
@@ -377,12 +388,13 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 						"localFile not found to put to irods", e);
 			}
 		}
-		
-		log.info("processing as a parallel transfer, length above max");
-		
-		// if this was below the max_sz_for_single_buf, the data was included in the put above and will have returned
 
-		DataObjInp dataObjInp = DataObjInp.instanceForInitialCallToPut(
+		log.info("processing as a parallel transfer, length above max");
+
+		// if this was below the max_sz_for_single_buf, the data was included in
+		// the put above and will have returned
+
+		DataObjInp dataObjInp = DataObjInp.instanceForParallelPut(
 				targetFile.getAbsolutePath(), localFile.length(),
 				targetFile.getResource(), overwrite, transferOptions);
 
@@ -410,28 +422,30 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 				log.info(
 						"getting ready to initiate parallel file transfer strategy:{}",
 						parallelPutFileStrategy);
-				
-				/* the keep alive thread needs to use the current agent connection, so create it 
-				 * in this main thread and pass it to the keep alive process.  The keep alive thread will
-				 * maintain the connection to this same agent.
+
+				/*
+				 * the keep alive thread needs to use the current agent
+				 * connection, so create it in this main thread and pass it to
+				 * the keep alive process. The keep alive thread will maintain
+				 * the connection to this same agent.
 				 */
 				/*
-				EnvironmentalInfoAO environmentalAO =  new EnvironmentalInfoAOImpl(this.getIRODSSession(),
-						this.getIRODSAccount());
-				
-				// start a keep-alive that will ping the irods server every 30
-				// seconds to keep the control channel alive
-				KeepAliveProcess keepAliveProcess = new KeepAliveProcess(
-						environmentalAO);
-				Thread keepAliveThread = new Thread(keepAliveProcess);
-				keepAliveThread.start();
-				*/
+				 * EnvironmentalInfoAO environmentalAO = new
+				 * EnvironmentalInfoAOImpl(this.getIRODSSession(),
+				 * this.getIRODSAccount());
+				 * 
+				 * // start a keep-alive that will ping the irods server every
+				 * 30 // seconds to keep the control channel alive
+				 * KeepAliveProcess keepAliveProcess = new KeepAliveProcess(
+				 * environmentalAO); Thread keepAliveThread = new
+				 * Thread(keepAliveProcess); keepAliveThread.start();
+				 */
 
 				try {
 					parallelPutFileStrategy.transfer();
 					log.info("transfer is done, now terminate the keep alive process");
-					//keepAliveProcess.setTerminate(true);
-					//keepAliveThread.join(2000);
+					// keepAliveProcess.setTerminate(true);
+					// keepAliveThread.join(2000);
 				} catch (Exception e) {
 					log.error("error in parallel transfer", e);
 					throw new JargonException("error in parallel transfer", e);
@@ -484,16 +498,23 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			final File localFileToHoldData) throws DataNotFoundException,
 			JargonException {
 
-		getDataObjectFromIrodsGivingTransferOptions(irodsFileToGet, localFileToHoldData, null);
+		getDataObjectFromIrodsGivingTransferOptions(irodsFileToGet,
+				localFileToHoldData, null);
 	}
-	
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.pub.DataObjectAO#getDataObjectFromIrodsGivingTransferOptions(org.irods.jargon.core.pub.io.IRODSFile, java.io.File, org.irods.jargon.core.packinstr.TransferOptions)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.pub.DataObjectAO#
+	 * getDataObjectFromIrodsGivingTransferOptions
+	 * (org.irods.jargon.core.pub.io.IRODSFile, java.io.File,
+	 * org.irods.jargon.core.packinstr.TransferOptions)
 	 */
 	@Override
-	public void getDataObjectFromIrodsGivingTransferOptions(final IRODSFile irodsFileToGet,
-			final File localFileToHoldData, final TransferOptions transferOptions) throws DataNotFoundException,
-			JargonException {
+	public void getDataObjectFromIrodsGivingTransferOptions(
+			final IRODSFile irodsFileToGet, final File localFileToHoldData,
+			final TransferOptions transferOptions)
+			throws DataNotFoundException, JargonException {
 
 		if (localFileToHoldData == null) {
 			throw new IllegalArgumentException("null local file");
@@ -502,7 +523,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		if (irodsFileToGet == null) {
 			throw new IllegalArgumentException("nulll destination file");
 		}
-		
+
 		TransferOptions myTransferOptions = buildDefaultTransferOptionsIfNotSpecified(transferOptions);
 
 		File localFile;
@@ -517,7 +538,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		} else {
 			localFile = localFileToHoldData;
 		}
-		
+
 		long irodsFileLength = irodsFileToGet.length();
 		log.info("testing file length to set parallel transfer options");
 		if (irodsFileLength > ConnectionConstants.MAX_SZ_FOR_SINGLE_BUF) {
@@ -535,10 +556,10 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 				irodsFileToGet.getAbsolutePath(), irodsFileLength,
 				myTransferOptions);
 
-		processGetAfterResourceDetermined(irodsFileToGet, localFile, dataObjInp, myTransferOptions);
+		processGetAfterResourceDetermined(irodsFileToGet, localFile,
+				dataObjInp, myTransferOptions);
 	}
 
-	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -551,16 +572,23 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			final IRODSFile irodsFileToGet, final File localFileToHoldData)
 			throws DataNotFoundException, JargonException {
 
-		getDataObjectFromIrodsUsingTheSpecificResourceSetInIrodsFileSpecifyingTransferOptions(irodsFileToGet, localFileToHoldData, null);
-	
+		getDataObjectFromIrodsUsingTheSpecificResourceSetInIrodsFileSpecifyingTransferOptions(
+				irodsFileToGet, localFileToHoldData, null);
+
 	}
-	
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.pub.DataObjectAO#getDataObjectFromIrodsUsingTheSpecificResourceSetInIrodsFileSpecifyingTransferOptions(org.irods.jargon.core.pub.io.IRODSFile, java.io.File, org.irods.jargon.core.packinstr.TransferOptions)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.pub.DataObjectAO#
+	 * getDataObjectFromIrodsUsingTheSpecificResourceSetInIrodsFileSpecifyingTransferOptions
+	 * (org.irods.jargon.core.pub.io.IRODSFile, java.io.File,
+	 * org.irods.jargon.core.packinstr.TransferOptions)
 	 */
 	@Override
 	public void getDataObjectFromIrodsUsingTheSpecificResourceSetInIrodsFileSpecifyingTransferOptions(
-			final IRODSFile irodsFileToGet, final File localFileToHoldData, final TransferOptions transferOptions)
+			final IRODSFile irodsFileToGet, final File localFileToHoldData,
+			final TransferOptions transferOptions)
 			throws DataNotFoundException, JargonException {
 
 		if (localFileToHoldData == null) {
@@ -604,16 +632,22 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 						irodsFileToGet.getAbsolutePath(),
 						irodsFileToGet.getResource(), myTransferOptions);
 
-		processGetAfterResourceDetermined(irodsFileToGet, localFile, dataObjInp, myTransferOptions);
+		processGetAfterResourceDetermined(irodsFileToGet, localFile,
+				dataObjInp, myTransferOptions);
 	}
 
-	
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.pub.DataObjectAO#irodsDataObjectGetOperationForClientSideAction(org.irods.jargon.core.pub.io.IRODSFile, java.io.File, org.irods.jargon.core.packinstr.TransferOptions)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.pub.DataObjectAO#
+	 * irodsDataObjectGetOperationForClientSideAction
+	 * (org.irods.jargon.core.pub.io.IRODSFile, java.io.File,
+	 * org.irods.jargon.core.packinstr.TransferOptions)
 	 */
 	@Override
 	public void irodsDataObjectGetOperationForClientSideAction(
-			final IRODSFile irodsFileToGet, final File localFileToHoldData, final TransferOptions transferOptions)
+			final IRODSFile irodsFileToGet, final File localFileToHoldData,
+			final TransferOptions transferOptions)
 			throws DataNotFoundException, JargonException {
 
 		if (localFileToHoldData == null) {
@@ -626,7 +660,8 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 		log.info("target local file: {}", localFileToHoldData.getAbsolutePath());
 		log.info("from source file: {}", irodsFileToGet.getAbsolutePath());
-		TransferOptions myTransferOptions = this.buildDefaultTransferOptionsIfNotSpecified(transferOptions);
+		TransferOptions myTransferOptions = this
+				.buildDefaultTransferOptionsIfNotSpecified(transferOptions);
 
 		final DataObjInp dataObjInp = DataObjInp
 				.instanceForGetSpecifyingResource(
@@ -640,20 +675,21 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	 * @param irodsFileToGet
 	 * @param localFileToHoldData
 	 * @param dataObjInp
-	 * @param transferOptions 
+	 * @param transferOptions
 	 * @throws JargonException
 	 * @throws DataNotFoundException
 	 * @throws UnsupportedOperationException
 	 */
 	private void processGetAfterResourceDetermined(
 			final IRODSFile irodsFileToGet, final File localFileToHoldData,
-			final DataObjInp dataObjInp, final TransferOptions transferOptions) throws JargonException,
-			DataNotFoundException, UnsupportedOperationException {
-		
+			final DataObjInp dataObjInp, final TransferOptions transferOptions)
+			throws JargonException, DataNotFoundException,
+			UnsupportedOperationException {
+
 		if (transferOptions == null) {
 			throw new IllegalArgumentException("null transfer options");
 		}
-		
+
 		LocalFileUtils.createLocalFileIfNotExists(localFileToHoldData);
 
 		final Tag message = getIRODSProtocol().irodsFunction(dataObjInp);
@@ -700,27 +736,31 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			ParallelGetFileTransferStrategy parallelGetTransferStrategy = ParallelGetFileTransferStrategy
 					.instance(host, port, numberOfThreads, password,
 							localFileToHoldData);
-			
-			/* the keep alive thread needs to use the current agent connection, so create it 
-			 * in this main thread and pass it to the keep alive process.  The keep alive thread will
-			 * maintain the connection to this same agent.
-			 */
-			
-			/*EnvironmentalInfoAO environmentalAO =  new EnvironmentalInfoAOImpl(this.getIRODSSession(),
-					this.getIRODSAccount());
-			
 
-			// start a keep-alive that will ping the irods server every 30
-			// seconds to keep the control channel alive
-			KeepAliveProcess keepAliveProcess = new KeepAliveProcess(
-					environmentalAO);
-			Thread keepAliveThread = new Thread(keepAliveProcess);
-			keepAliveThread.start();*/
+			/*
+			 * the keep alive thread needs to use the current agent connection,
+			 * so create it in this main thread and pass it to the keep alive
+			 * process. The keep alive thread will maintain the connection to
+			 * this same agent.
+			 */
+
+			/*
+			 * EnvironmentalInfoAO environmentalAO = new
+			 * EnvironmentalInfoAOImpl(this.getIRODSSession(),
+			 * this.getIRODSAccount());
+			 * 
+			 * 
+			 * // start a keep-alive that will ping the irods server every 30 //
+			 * seconds to keep the control channel alive KeepAliveProcess
+			 * keepAliveProcess = new KeepAliveProcess( environmentalAO); Thread
+			 * keepAliveThread = new Thread(keepAliveProcess);
+			 * keepAliveThread.start();
+			 */
 
 			try {
 				parallelGetTransferStrategy.transfer();
-				//keepAliveProcess.setTerminate(true);
-				//keepAliveThread.join(2000);
+				// keepAliveProcess.setTerminate(true);
+				// keepAliveThread.join(2000);
 			} catch (Exception e) {
 				log.error("error in parallel transfer", e);
 				throw new JargonException("error in parallel transfer", e);
@@ -1547,9 +1587,13 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 						ModAccessControlInp.READ_PERMISSION);
 		getIRODSProtocol().irodsFunction(modAccessControlInp);
 	}
-	
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.pub.DataObjectAO#setAccessPermissionReadInAdminMode(java.lang.String, java.lang.String, java.lang.String)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.DataObjectAO#setAccessPermissionReadInAdminMode
+	 * (java.lang.String, java.lang.String, java.lang.String)
 	 */
 	@Override
 	public void setAccessPermissionReadInAdminMode(final String zone,
@@ -1557,8 +1601,8 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			throws JargonException {
 		// pi tests parameters
 		ModAccessControlInp modAccessControlInp = ModAccessControlInp
-				.instanceForSetPermissionInAdminMode(false, zone, absolutePath, userName,
-						ModAccessControlInp.READ_PERMISSION);
+				.instanceForSetPermissionInAdminMode(false, zone, absolutePath,
+						userName, ModAccessControlInp.READ_PERMISSION);
 		getIRODSProtocol().irodsFunction(modAccessControlInp);
 	}
 
@@ -1579,9 +1623,13 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 						ModAccessControlInp.WRITE_PERMISSION);
 		getIRODSProtocol().irodsFunction(modAccessControlInp);
 	}
-	
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.pub.DataObjectAO#setAccessPermissionWriteInAdminMode(java.lang.String, java.lang.String, java.lang.String)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.DataObjectAO#setAccessPermissionWriteInAdminMode
+	 * (java.lang.String, java.lang.String, java.lang.String)
 	 */
 	@Override
 	public void setAccessPermissionWriteInAdminMode(final String zone,
@@ -1589,8 +1637,8 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			throws JargonException {
 		// pi tests parameters
 		ModAccessControlInp modAccessControlInp = ModAccessControlInp
-				.instanceForSetPermissionInAdminMode(false, zone, absolutePath, userName,
-						ModAccessControlInp.WRITE_PERMISSION);
+				.instanceForSetPermissionInAdminMode(false, zone, absolutePath,
+						userName, ModAccessControlInp.WRITE_PERMISSION);
 		getIRODSProtocol().irodsFunction(modAccessControlInp);
 	}
 
@@ -1611,9 +1659,13 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 						ModAccessControlInp.OWN_PERMISSION);
 		getIRODSProtocol().irodsFunction(modAccessControlInp);
 	}
-	
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.pub.DataObjectAO#setAccessPermissionOwnInAdminMode(java.lang.String, java.lang.String, java.lang.String)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.DataObjectAO#setAccessPermissionOwnInAdminMode
+	 * (java.lang.String, java.lang.String, java.lang.String)
 	 */
 	@Override
 	public void setAccessPermissionOwnInAdminMode(final String zone,
@@ -1621,8 +1673,8 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			throws JargonException {
 		// pi tests parameters
 		ModAccessControlInp modAccessControlInp = ModAccessControlInp
-				.instanceForSetPermissionInAdminMode(false, zone, absolutePath, userName,
-						ModAccessControlInp.OWN_PERMISSION);
+				.instanceForSetPermissionInAdminMode(false, zone, absolutePath,
+						userName, ModAccessControlInp.OWN_PERMISSION);
 		getIRODSProtocol().irodsFunction(modAccessControlInp);
 	}
 
@@ -1643,9 +1695,13 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 						ModAccessControlInp.NULL_PERMISSION);
 		getIRODSProtocol().irodsFunction(modAccessControlInp);
 	}
-	
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.pub.DataObjectAO#removeAccessPermissionsForUserInAdminMode(java.lang.String, java.lang.String, java.lang.String)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.pub.DataObjectAO#
+	 * removeAccessPermissionsForUserInAdminMode(java.lang.String,
+	 * java.lang.String, java.lang.String)
 	 */
 	@Override
 	public void removeAccessPermissionsForUserInAdminMode(final String zone,
@@ -1653,8 +1709,8 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			throws JargonException {
 		// pi tests parameters
 		ModAccessControlInp modAccessControlInp = ModAccessControlInp
-				.instanceForSetPermissionInAdminMode(false, zone, absolutePath, userName,
-						ModAccessControlInp.NULL_PERMISSION);
+				.instanceForSetPermissionInAdminMode(false, zone, absolutePath,
+						userName, ModAccessControlInp.NULL_PERMISSION);
 		getIRODSProtocol().irodsFunction(modAccessControlInp);
 	}
 
@@ -1724,8 +1780,9 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 		List<UserFilePermission> userFilePermissions = new ArrayList<UserFilePermission>();
 
-		StringBuilder query = new StringBuilder(DataAOHelper.buildACLQueryForCollectionPathAndDataName(
-				irodsCollectionAbsolutePath, dataName));
+		StringBuilder query = new StringBuilder(
+				DataAOHelper.buildACLQueryForCollectionPathAndDataName(
+						irodsCollectionAbsolutePath, dataName));
 
 		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(query.toString(),
 				this.getJargonProperties().getMaxFilesAndDirsQueryMax());
@@ -1941,15 +1998,18 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		modifyAVUMetadata(sb.toString(), currentAvuData, newAvuData);
 
 	}
-	
-	
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.pub.DataObjectAO#listPermissionsForDataObjectForUserName(java.lang.String, java.lang.String, java.lang.String)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.pub.DataObjectAO#
+	 * listPermissionsForDataObjectForUserName(java.lang.String,
+	 * java.lang.String, java.lang.String)
 	 */
 	@Override
 	public UserFilePermission getPermissionForDataObjectForUserName(
-			final String irodsCollectionAbsolutePath, final String dataName, final String userName)
-			throws JargonException {
+			final String irodsCollectionAbsolutePath, final String dataName,
+			final String userName) throws JargonException {
 
 		if (irodsCollectionAbsolutePath == null
 				|| irodsCollectionAbsolutePath.isEmpty()) {
@@ -1960,7 +2020,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		if (dataName == null || dataName.isEmpty()) {
 			throw new IllegalArgumentException("null or empty dataName");
 		}
-		
+
 		if (userName == null || userName.isEmpty()) {
 			throw new IllegalArgumentException("null or empty userName");
 		}
@@ -1972,14 +2032,14 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 		UserFilePermission userFilePermission = null;
 
-		StringBuilder query = new StringBuilder(DataAOHelper.buildACLQueryForCollectionPathAndDataName(
-				irodsCollectionAbsolutePath, dataName));
+		StringBuilder query = new StringBuilder(
+				DataAOHelper.buildACLQueryForCollectionPathAndDataName(
+						irodsCollectionAbsolutePath, dataName));
 		query.append(" AND ");
 		query.append(RodsGenQueryEnum.COL_USER_NAME.getName());
 		query.append(" = '");
 		query.append(userName);
 		query.append("'");
-		
 
 		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(query.toString(),
 				this.getJargonProperties().getMaxFilesAndDirsQueryMax());
@@ -1990,13 +2050,11 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 					irodsQuery, 0);
 			IRODSQueryResultRow row = resultSet.getFirstResult();
 
-			
-				userFilePermission = new UserFilePermission(row.getColumn(0),
-						row.getColumn(1),
-						FilePermissionEnum.valueOf(IRODSDataConversionUtil
-								.getIntOrZeroFromIRODSValue(row.getColumn(2))));
-				log.debug("loaded filePermission:{}", userFilePermission);
-			
+			userFilePermission = new UserFilePermission(row.getColumn(0),
+					row.getColumn(1),
+					FilePermissionEnum.valueOf(IRODSDataConversionUtil
+							.getIntOrZeroFromIRODSValue(row.getColumn(2))));
+			log.debug("loaded filePermission:{}", userFilePermission);
 
 		} catch (JargonQueryException e) {
 			log.error("query exception for  query:{}", query.toString(), e);
@@ -2006,26 +2064,28 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		} catch (DataNotFoundException dnf) {
 			log.info("no data found for user ACL");
 		}
-		
+
 		return userFilePermission;
 
 	}
-	
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.pub.DataObjectAO#getPermissionForDataObjectForUserName(java.lang.String, java.lang.String)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.DataObjectAO#getPermissionForDataObjectForUserName
+	 * (java.lang.String, java.lang.String)
 	 */
 	@Override
 	public UserFilePermission getPermissionForDataObjectForUserName(
-			final String irodsAbsolutePath,final String userName)
+			final String irodsAbsolutePath, final String userName)
 			throws JargonException {
 
-		if (irodsAbsolutePath == null
-				|| irodsAbsolutePath.isEmpty()) {
+		if (irodsAbsolutePath == null || irodsAbsolutePath.isEmpty()) {
 			throw new IllegalArgumentException(
 					"null or empty irodsAbsolutePath");
 		}
 
-		
 		if (userName == null || userName.isEmpty()) {
 			throw new IllegalArgumentException("null or empty userName");
 		}
@@ -2033,10 +2093,12 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		log.info("listPermissionsForDataObjectForUserName path: {}",
 				irodsAbsolutePath);
 		log.info("userName:{}", userName);
-		
-		IRODSFile irodsFile = this.getIRODSFileFactory().instanceIRODSFile(irodsAbsolutePath);
 
-		return getPermissionForDataObjectForUserName(irodsFile.getParent(), irodsFile.getName(), userName);
+		IRODSFile irodsFile = this.getIRODSFileFactory().instanceIRODSFile(
+				irodsAbsolutePath);
+
+		return getPermissionForDataObjectForUserName(irodsFile.getParent(),
+				irodsFile.getName(), userName);
 
 	}
 
@@ -2048,14 +2110,14 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	private TransferOptions buildDefaultTransferOptionsIfNotSpecified(
 			final TransferOptions transferOptions) throws JargonException {
 		TransferOptions myTransferOptions = transferOptions;
-		
+
 		if (transferOptions == null) {
-			myTransferOptions = getIRODSSession().buildTransferOptionsBasedOnJargonProperties();
+			myTransferOptions = getIRODSSession()
+					.buildTransferOptionsBasedOnJargonProperties();
 		} else {
 			myTransferOptions = new TransferOptions(transferOptions);
 		}
 		return myTransferOptions;
 	}
-
 
 }

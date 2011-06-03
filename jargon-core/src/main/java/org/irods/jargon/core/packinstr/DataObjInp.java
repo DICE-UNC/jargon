@@ -374,6 +374,60 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 
 		return dataObjInp;
 	}
+	
+	/**
+	 * Create an instance of the packing instruction for a parallel put transfer
+	* @param destinationAbsolutePath
+	 *            <code>String</code> with the absolute path to the file
+	 * @param length
+	 *            <code>long</code> with the length of the file
+	 * @param destinationResource
+	 *            <code>String</code> with the IRODS Resource where the file
+	 *            will be placed.
+	 * @param overwrite
+	 *            <code>boolean</code> that indicates that a force option will
+	 *            be used.
+	 * @param transferOptions
+	 *            {@link TransferOptions} that configures details about the
+	 *            underlying technique used in the transfer. Can be set to null
+	 *            if not desired.
+	 * @return <code>DataObjInp</code> containing the necessary packing
+	 *         instruction
+	 * @throws JargonException
+	 */
+	public static final DataObjInp instanceForParallelPut(
+			final String destinationAbsolutePath, final long length,
+			final String destinationResource, final boolean overwrite,
+			final TransferOptions transferOptions) throws JargonException {
+
+		if (destinationAbsolutePath == null
+				|| destinationAbsolutePath.isEmpty()) {
+			throw new JargonException("null or empty destinationAbsolutePath");
+		}
+
+		if (destinationResource == null) {
+			throw new JargonException("null destinationResource");
+		}
+
+		if (length < 0) {
+			throw new JargonException("length is less than zero");
+		}
+
+		DataObjInp dataObjInp = new DataObjInp(destinationAbsolutePath,
+				DEFAULT_CREATE_MODE, OpenFlags.READ_WRITE, 0L, length,
+				destinationResource, transferOptions);
+		dataObjInp.operationType = PUT_OPERATION_TYPE;
+		dataObjInp.setApiNumber(PUT_FILE_API_NBR);
+ 
+		if (overwrite) {
+			dataObjInp.setForceOption(ForceOptions.FORCE);
+		}
+
+		dataObjInp.setInitialPutGetCall(true);
+
+		return dataObjInp;
+	}
+
 
 	/**
 	 * Create the proper packing instruction for a put operation. This method is
@@ -659,6 +713,8 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 			if (!isInitialPutGetCall()) {
 				kvps.add(KeyValuePair.instance(DATA_TYPE, DATA_TYPE_GENERIC));
 				kvps.add(KeyValuePair.instance(DATA_INCLUDED_KW, ""));
+			} else if (transferOptionsNumThreads > 0) {
+				kvps.add(KeyValuePair.instance(DATA_TYPE, DATA_TYPE_GENERIC));
 			}
 		}
 
