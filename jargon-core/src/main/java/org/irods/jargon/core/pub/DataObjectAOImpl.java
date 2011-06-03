@@ -358,8 +358,13 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 				getIRODSFileFactory());
 		
 		long localFileLength = localFile.length();
+		
+		log.debug("localFileLength:{}", localFileLength);
 
 		if (localFileLength < ConnectionConstants.MAX_SZ_FOR_SINGLE_BUF) {
+			
+			log.info("processing transfer as normal, length below max");
+			
 			try {
 				dataAOHelper.processNormalPutTransfer(localFile, overwrite,
 						transferOptions, targetFile, this.getIRODSProtocol());
@@ -372,6 +377,8 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 						"localFile not found to put to irods", e);
 			}
 		}
+		
+		log.info("processing as a parallel transfer, length above max");
 		
 		// if this was below the max_sz_for_single_buf, the data was included in the put above and will have returned
 
@@ -408,7 +415,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 				 * in this main thread and pass it to the keep alive process.  The keep alive thread will
 				 * maintain the connection to this same agent.
 				 */
-				
+				/*
 				EnvironmentalInfoAO environmentalAO =  new EnvironmentalInfoAOImpl(this.getIRODSSession(),
 						this.getIRODSAccount());
 				
@@ -418,12 +425,13 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 						environmentalAO);
 				Thread keepAliveThread = new Thread(keepAliveProcess);
 				keepAliveThread.start();
+				*/
 
 				try {
 					parallelPutFileStrategy.transfer();
 					log.info("transfer is done, now terminate the keep alive process");
-					keepAliveProcess.setTerminate(true);
-					keepAliveThread.join(2000);
+					//keepAliveProcess.setTerminate(true);
+					//keepAliveThread.join(2000);
 				} catch (Exception e) {
 					log.error("error in parallel transfer", e);
 					throw new JargonException("error in parallel transfer", e);
@@ -698,7 +706,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			 * maintain the connection to this same agent.
 			 */
 			
-			EnvironmentalInfoAO environmentalAO =  new EnvironmentalInfoAOImpl(this.getIRODSSession(),
+			/*EnvironmentalInfoAO environmentalAO =  new EnvironmentalInfoAOImpl(this.getIRODSSession(),
 					this.getIRODSAccount());
 			
 
@@ -707,12 +715,12 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			KeepAliveProcess keepAliveProcess = new KeepAliveProcess(
 					environmentalAO);
 			Thread keepAliveThread = new Thread(keepAliveProcess);
-			keepAliveThread.start();
+			keepAliveThread.start();*/
 
 			try {
 				parallelGetTransferStrategy.transfer();
-				keepAliveProcess.setTerminate(true);
-				keepAliveThread.join(2000);
+				//keepAliveProcess.setTerminate(true);
+				//keepAliveThread.join(2000);
 			} catch (Exception e) {
 				log.error("error in parallel transfer", e);
 				throw new JargonException("error in parallel transfer", e);

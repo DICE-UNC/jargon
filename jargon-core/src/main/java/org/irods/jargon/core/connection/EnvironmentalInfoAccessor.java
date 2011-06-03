@@ -39,6 +39,7 @@ public class EnvironmentalInfoAccessor {
 		log.info("getting irods server properties");
 		Tag response = irodsProtocol.irodsFunction(MiscSvrInfo.PI_TAG, "",
 				MiscSvrInfo.API_NBR);
+		log.info("server response obtained");
 		int serverType = response.getTag(MiscSvrInfo.SERVER_TYPE_TAG)
 				.getIntValue();
 
