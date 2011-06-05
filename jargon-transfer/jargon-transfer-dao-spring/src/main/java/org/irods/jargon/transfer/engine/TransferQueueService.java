@@ -187,17 +187,48 @@ public interface TransferQueueService {
 	 */
 	void processQueueAtStartup() throws JargonException;
 
+	/**
+	 * Update the information about a transfer
+	 * @param localIrodsTransfer {@link LocalIRODSTransfer} to be updated
+	 * @throws JargonException
+	 */
 	void updateLocalIRODSTransfer(final LocalIRODSTransfer localIrodsTransfer)
 			throws JargonException;
 
+	/**
+	 * Look up the given transfer from the transfer store based on the unique id
+	 * @param id <code>Long</code> with the unique id of the transfer
+	 * @return {@link LocalIRODSTransfer}
+	 * @throws JargonException
+	 */
 	LocalIRODSTransfer findLocalIRODSTransferById(Long id)
 			throws JargonException;
 
+	/**
+	 * Look up the given tranfer from the transfer store based on the unique id, and initialize any
+	 * child information
+	  * @param id <code>Long</code> with the unique id of the transfer
+	 * @return {@link LocalIRODSTransfer}
+	 * @throws JargonException
+	 */
 	LocalIRODSTransfer findLocalIRODSTransferByIdInitializeItems(Long id)
 			throws JargonException;
 
 	void addItemToTransfer(LocalIRODSTransfer localIRODSTransfer,
 			LocalIRODSTransferItem localIRODSTransferItem)
 			throws JargonException;
+
+	/**
+	 * Enqueue a copy operation from iRODS to iRODS
+	 * @param irodsSourceAbsolutePath <code>String</code> with the absolute path to the iRODS source file
+	 * @param targetResource <code>String</code> with the resource to which to copy the file
+	 * @param irodsTargetAbsolutePath <code>String</code> with the target absolute path for the copy operation
+	 * @param irodsAccount {@link IRODSAccount} that describes the host and user information
+	 * @return {@link LocalIRODSTransfer} that represents the enqueued operation
+	 * @throws JargonException
+	 */
+	LocalIRODSTransfer enqueueCopyTransfer(String irodsSourceAbsolutePath,
+			String targetResource, String irodsTargetAbsolutePath,
+			IRODSAccount irodsAccount) throws JargonException;
 
 }

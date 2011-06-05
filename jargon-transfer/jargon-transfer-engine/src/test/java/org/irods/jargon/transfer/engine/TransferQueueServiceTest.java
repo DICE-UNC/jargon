@@ -636,6 +636,32 @@ public class TransferQueueServiceTest {
 		TestCase.assertEquals(TransferType.REPLICATE,
 				actualTransfer.getTransferType());
 	}
+	
+	@Test
+	public void testEnqueueCopy() throws Exception {
+		TransferQueueService transferQueueService = transferServiceFactory
+				.instanceTransferQueueService();
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		transferQueueService.enqueueCopyTransfer("irodsAbsolutePath",
+				"targetResource", "irodsTargetPath", irodsAccount);
+
+		// now get the data from the database
+
+		List<LocalIRODSTransfer> queue = transferQueueService.getCurrentQueue();
+		TestCase.assertEquals(
+				"should just be 1 replicate transfer in the queue", 1,
+				queue.size());
+		LocalIRODSTransfer actualTransfer = queue.get(0);
+
+		TestCase.assertEquals("irodsTargetPath",
+				actualTransfer.getIrodsAbsolutePath());
+		TestCase.assertEquals("targetResource",
+				actualTransfer.getTransferResource());
+		TestCase.assertEquals(TransferType.COPY,
+				actualTransfer.getTransferType());
+	}
 
 	@Test
 	public void testEnqueueGet() throws Exception {

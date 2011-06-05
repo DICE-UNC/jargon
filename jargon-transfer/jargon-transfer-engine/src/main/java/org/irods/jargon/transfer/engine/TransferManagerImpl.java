@@ -481,6 +481,47 @@ public final class TransferManagerImpl implements TransferManager {
 		}
 
 	}
+	
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.transfer.engine.TransferManager#enqueueACopy(java.lang.String, java.lang.String, java.lang.String, org.irods.jargon.core.connection.IRODSAccount)
+	 */
+	@Override
+	public void enqueueACopy(final String irodsSourceAbsolutePath,
+			final String targetResource, final String irodsTargetAbsolutePath, final IRODSAccount irodsAccount)
+			throws JargonException {
+
+		if (irodsSourceAbsolutePath == null || irodsSourceAbsolutePath.isEmpty()) {
+			throw new JargonException("irodsSourceAbsolutePath is null or empty");
+		}
+
+		if (targetResource == null) {
+			throw new JargonException(
+					"targetResource is null, set to blank if default is desired");
+		}
+
+		if (irodsTargetAbsolutePath == null || irodsTargetAbsolutePath.isEmpty()) {
+			throw new JargonException("irodsTargetAbsolutePath is null or empty");
+		}
+		
+		if (irodsAccount == null) {
+			throw new JargonException("irodsAccount is null");
+		}
+
+		log.info("enquing a copy transfer");
+		log.info("   irodsSourceAbsolutePath: {}", irodsSourceAbsolutePath);
+		log.info("   targetResource: {}", targetResource);
+		log.info("   irodsTargetAbsolutePath: {}", irodsTargetAbsolutePath);
+		log.info("   irodsAccount: {}", irodsAccount);
+
+		synchronized (this) {
+
+			transferQueueService.enqueueCopyTransfer(irodsSourceAbsolutePath,
+					targetResource, irodsTargetAbsolutePath, irodsAccount);
+
+			processNextInQueueIfIdle();
+		}
+
+	}
 
 	/*
 	 * (non-Javadoc)

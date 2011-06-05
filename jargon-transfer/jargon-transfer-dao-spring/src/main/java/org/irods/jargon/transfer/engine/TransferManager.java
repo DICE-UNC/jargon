@@ -256,4 +256,16 @@ public interface TransferManager {
 
 	IRODSFileSystem getIrodsFileSystem();
 
+	/**
+	 * Initiate a copy of an iRODS from source to target
+	 * @param irodsSourceAbsolutePath <code>String</code> with the source collection or data object
+	 * @param targetResource <code>String<code> with the resource to which the file should be copied
+	 * @param irodsTargetAbsolutePath <code>String</code> with the absolute path to the target of the copy
+	 * @param irodsAccount {@link IRODSAccount} with the connection information for the given zone
+	 * @throws JargonException
+	 */
+	void enqueueACopy(String irodsSourceAbsolutePath, String targetResource,
+			String irodsTargetAbsolutePath, IRODSAccount irodsAccount)
+			throws JargonException;
+
 }

@@ -610,6 +610,67 @@ public class TransferQueueServiceImpl implements TransferQueueService {
 		return enqueuedTransfer;
 
 	}
+	
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.transfer.engine.TransferQueueService#enqueueCopyTransfer(java.lang.String, java.lang.String, java.lang.String, org.irods.jargon.core.connection.IRODSAccount)
+	 */
+	@Override
+	@Transactional
+	public LocalIRODSTransfer enqueueCopyTransfer(
+			final String irodsSourceAbsolutePath, final String targetResource,
+			final String irodsTargetAbsolutePath,
+			final IRODSAccount irodsAccount) throws JargonException {
+
+		if (irodsSourceAbsolutePath == null || irodsSourceAbsolutePath.isEmpty()) {
+			throw new JargonException("irodsSourceAbsolutePath is null or empty");
+		}
+
+		if (targetResource == null) {
+			throw new JargonException(
+					"targetResource is null, set as blank if not used");
+		}
+		
+		if (irodsTargetAbsolutePath == null || irodsTargetAbsolutePath.isEmpty()) {
+			throw new JargonException("irodsTargetAbsolutePath is null or empty");
+		}
+
+
+		if (irodsAccount == null) {
+			throw new JargonException("null irodsAccount");
+		}
+
+		log.info("enqueue copy transfer from iRODS: {}", irodsSourceAbsolutePath);
+		log.info("  to target iRODS path: {}", irodsTargetAbsolutePath);
+		log.info("   target resource:{}", targetResource);
+
+		LocalIRODSTransfer enqueuedTransfer = new LocalIRODSTransfer();
+		enqueuedTransfer.setCreatedAt(new Date());
+		enqueuedTransfer.setLocalAbsolutePath(irodsSourceAbsolutePath);
+		enqueuedTransfer.setIrodsAbsolutePath(irodsTargetAbsolutePath);
+		enqueuedTransfer.setTransferHost(irodsAccount.getHost());
+		enqueuedTransfer.setTransferPort(irodsAccount.getPort());
+		enqueuedTransfer.setTransferResource(targetResource);
+		enqueuedTransfer.setTransferZone(irodsAccount.getZone());
+		enqueuedTransfer.setTransferStart(new Date());
+		enqueuedTransfer.setTransferType(TransferType.COPY);
+		enqueuedTransfer.setTransferUserName(irodsAccount.getUserName());
+		enqueuedTransfer.setTransferPassword(HibernateUtil
+				.obfuscate(irodsAccount.getPassword()));
+		enqueuedTransfer.setTransferState(TransferState.ENQUEUED);
+		enqueuedTransfer.setTransferStatus(TransferStatus.OK);
+
+		try {
+
+			localIRODSTransferDAO.save(enqueuedTransfer);
+		} catch (TransferDAOException e) {
+			log.error("error in transaction", e);
+			throw new JargonException(e);
+		}
+
+		log.info("enqueued...");
+		return enqueuedTransfer;
+
+	}
 
 	/*
 	 * (non-Javadoc)

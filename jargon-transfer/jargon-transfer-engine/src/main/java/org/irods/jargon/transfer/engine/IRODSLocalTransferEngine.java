@@ -185,6 +185,12 @@ final class IRODSLocalTransferEngine implements TransferStatusCallbackListener {
 			transferException = transferTypeGet(localIrodsTransfer,
 					dataTransferOperations, irodsFileFactory);
 			break;
+		case COPY:
+			transferException = transferTypeCopy(localIrodsTransfer,
+					dataTransferOperations, irodsFileFactory);
+			break;
+		default:
+			throw new JargonException("unknown operation type in transfer");
 		}
 
 		// wrap up
@@ -227,6 +233,30 @@ final class IRODSLocalTransferEngine implements TransferStatusCallbackListener {
 		setCurrentTransfer(wrapUpTransfer);
 		log.info("commit");
 
+	}
+
+	private JargonException transferTypeCopy(
+			LocalIRODSTransfer localIrodsTransfer,
+			DataTransferOperations dataTransferOperations,
+			IRODSFileFactory irodsFileFactory) {
+		
+		JargonException transferException = null;
+
+		//TODO: get force option from future transferControlBlock
+		
+		try {
+			log.info("transferTypeCopy");
+			dataTransferOperations.copy(localIrodsTransfer.getLocalAbsolutePath(), 
+					localIrodsTransfer.getTransferResource(), 
+					localIrodsTransfer.getIrodsAbsolutePath(), this, true, transferControlBlock);
+		} catch (JargonException je) {
+			log.error("exception in transfer will be marked as a global exception, ending the transfer operation");
+			transferException = je;
+		}
+		return transferException;
+		
+		
+		
 	}
 
 	private void markTransferWasAborted(final LocalIRODSTransfer wrapUpTransfer)

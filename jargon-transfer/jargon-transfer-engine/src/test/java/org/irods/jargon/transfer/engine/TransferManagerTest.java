@@ -14,6 +14,7 @@ import org.dbunit.dataset.IDataSet;
 import org.dbunit.dataset.xml.XmlDataSet;
 import org.dbunit.operation.DatabaseOperation;
 import org.irods.jargon.core.connection.IRODSAccount;
+import org.irods.jargon.core.pub.DataTransferOperations;
 import org.irods.jargon.core.pub.IRODSFileSystem;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
@@ -438,7 +439,72 @@ public class TransferManagerTest {
 		irodsFileSystem.close();
 
 	}
+	
+	@Test
+	public void enqueueACopy() throws Exception {
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
 
+		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
+		String rootCollection = "enqueueACopy";
+		String localCollectionAbsolutePath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH
+						+ '/' + rootCollection);
+
+		String irodsCollectionRootAbsolutePath = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		FileGenerator
+				.generateManyFilesAndCollectionsInParentCollectionByAbsolutePath(
+						localCollectionAbsolutePath, "testSubdir", 1, 2, 1,
+						"testFile", ".txt", 9, 8, 2, 21);
+		
+		String targetCollection = "enqueueACopyTarget";
+		String irodsTargetCollectionRootAbsolutePath = testingPropertiesHelper
+		.buildIRODSCollectionAbsolutePathFromTestProperties(
+				testingProperties, IRODS_TEST_SUBDIR_PATH + "/" + targetCollection);
+		
+		// put the source data into place
+		
+		DataTransferOperations dto = irodsFileSystem.getIRODSAccessObjectFactory().getDataTransferOperations(irodsAccount);
+		dto.putOperation(localCollectionAbsolutePath, irodsCollectionRootAbsolutePath, "", null, null);
+
+		TransferManager transferManager = new TransferManagerImpl(
+				irodsFileSystem);
+
+		transferManager.enqueueACopy(irodsCollectionRootAbsolutePath + "/" + rootCollection, "",
+				irodsTargetCollectionRootAbsolutePath, irodsAccount);
+
+		// let put run
+
+		int waitCtr = 0;
+
+		while (true) {
+			if (waitCtr++ > 20) {
+				Assert.fail("put test timed out");
+			}
+			Thread.sleep(1000);
+			if (transferManager.getRunningStatus() == TransferManager.RunningStatus.IDLE) {
+				break;
+			}
+
+		}
+
+		Assert.assertEquals("should have been no errors",
+				TransferManager.ErrorStatus.OK,
+				transferManager.getErrorStatus());
+
+		Assert.assertEquals("should have been no errors",
+				TransferManager.ErrorStatus.OK,
+				transferManager.getErrorStatus());
+
+		irodsFileSystem.close();
+
+	}
+	
+	
+	
 	@Test
 	public void enqueueAGet() throws Exception {
 

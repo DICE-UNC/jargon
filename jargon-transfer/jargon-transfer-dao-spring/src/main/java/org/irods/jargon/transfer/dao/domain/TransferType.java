@@ -6,6 +6,8 @@ public enum TransferType {
 
 	GET,
 
-	REPLICATE;
+	REPLICATE,
+	
+	COPY;
 
 }
