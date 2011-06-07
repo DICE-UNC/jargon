@@ -105,7 +105,7 @@ public final class ParallelPutTransferThread extends
 			log.debug("opening socket to paralllel transfer (high) port at port:{}", parallelPutFileTransferStrategy.getPort());
 			setS(new Socket(parallelPutFileTransferStrategy.getHost(),
 					parallelPutFileTransferStrategy.getPort()));
-			getS().setSoTimeout(30000);
+			//getS().setSoTimeout(30000);
 			setOut(new BufferedOutputStream(getS().getOutputStream()));
 			
 			log.info("writing the cookie (password) for the output thread");
