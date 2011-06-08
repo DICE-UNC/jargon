@@ -44,6 +44,33 @@ public interface JargonProperties {
 	 */
 	int getMaxFilesAndDirsQueryMax() throws JargonException;
 	
-
+	/**
+	 * Am I using an executor pool for parallel transfer threads
+	 */
+	boolean isUseTransferThreadsPool() throws JargonException;
+	
+	/**
+	 * Minimum number of threads kept in the transfer threads executor pool.  This is stored in the {@link IRODSSession} object if
+	 * the <code>isUseTranfsferThreadsPool()</code> value is true;
+	 * @return <code>int</code> with the desired transfer thread pool core size
+	 * @throws JargonException
+	 */
+	int getTransferThreadCorePoolSize() throws JargonException;
+	
+	/**
+	 * Maximum number of threads kept in the transfer threads executor pool.  This is stored in the {@link IRODSSession} object if
+	 * the <code>isUseTranfsferThreadsPool()</code> value is true;
+	* @return <code>int</code> with the desired transfer thread pool max size
+	 * @throws JargonException
+	 */
+	int getTransferThreadMaxPoolSize() throws JargonException;
+	
+	/**
+	 * Timeout for keeping threads in the transfer threads executor pool above the core size.  This is stored in the {@link IRODSSession} object if
+	 * the <code>isUseTranfsferThreadsPool()</code> value is true;
+	* @return <code>int</code> with the desired transfer thread pool max size
+	 * @throws JargonException
+	 */
+	int getTransferThreadPoolTimeoutMillis() throws JargonException;
 
 }

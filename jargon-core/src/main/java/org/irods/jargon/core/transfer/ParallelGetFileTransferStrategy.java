@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,21 +44,23 @@ public final class ParallelGetFileTransferStrategy extends
 	 *            transfer.
 	 * @param localFile
 	 *            <code>File</code> representing the local file
+	 *              @param irodsAccessObjectFactory
+	 * 	{@link IRODSAccessObjectFactory} for the session.
 	 * @return
 	 * @throws JargonException
 	 */
 	public static ParallelGetFileTransferStrategy instance(final String host,
 			final int port, final int numberOfThreads, final int password,
-			final File localFile) throws JargonException {
+			final File localFile, final IRODSAccessObjectFactory irodsAccessObjectFactory) throws JargonException {
 		return new ParallelGetFileTransferStrategy(host, port, numberOfThreads,
-				password, localFile);
+				password, localFile, irodsAccessObjectFactory);
 	}
 
 	private ParallelGetFileTransferStrategy(final String host, final int port,
-			final int numberOfThreads, final int password, final File localFile)
+			final int numberOfThreads, final int password, final File localFile, final IRODSAccessObjectFactory irodsAccessObjectFactory)
 			throws JargonException {
 
-		super(host, port, numberOfThreads, password, localFile);
+		super(host, port, numberOfThreads, password, localFile, irodsAccessObjectFactory);
 
 	}
 

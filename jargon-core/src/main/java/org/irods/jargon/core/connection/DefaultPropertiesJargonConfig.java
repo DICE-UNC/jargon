@@ -19,7 +19,7 @@ import org.irods.jargon.core.exception.JargonException;
 public class DefaultPropertiesJargonConfig implements JargonProperties {
 
 	private final Properties jargonProperties;
-	
+
 	@Override
 	public int getMaxFilesAndDirsQueryMax() throws JargonException {
 		return verifyPropExistsAndGetAsInt("max.files.and.dirs.query.max");
@@ -36,7 +36,6 @@ public class DefaultPropertiesJargonConfig implements JargonProperties {
 		return verifyPropExistsAndGetAsLong("transfer.send.max.threads.threshold");
 	}
 
-	
 	/**
 	 * Default constructor will load the default properties from the
 	 * 'jargon.properties' file on the classpath.
@@ -86,6 +85,53 @@ public class DefaultPropertiesJargonConfig implements JargonProperties {
 		return verifyPropExistsAndGetAsInt("transfer.max.parallel.threads");
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.connection.JargonProperties#isUseTransferThreadsPool
+	 * ()
+	 */
+	@Override
+	public boolean isUseTransferThreadsPool() throws JargonException {
+		return verifyPropExistsAndGetAsBoolean("transfer.use.pool");
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.connection.JargonProperties#getTransferThreadCorePoolSize
+	 * ()
+	 */
+	@Override
+	public int getTransferThreadCorePoolSize() throws JargonException {
+		return verifyPropExistsAndGetAsInt("transfer.executor.pool.core.size");
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.connection.JargonProperties#getTransferThreadMaxPoolSize
+	 * ()
+	 */
+	@Override
+	public int getTransferThreadMaxPoolSize() throws JargonException {
+		return verifyPropExistsAndGetAsInt("transfer.executor.pool.max.size");
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.connection.JargonProperties#
+	 * getTransferThreadPoolTimeoutMillis()
+	 */
+	@Override
+	public int getTransferThreadPoolTimeoutMillis() throws JargonException {
+		return verifyPropExistsAndGetAsInt("transfer.executor.pool.timeout");
+	}
+
 	private String verifyPropExistsAndGetAsString(final String propKey)
 			throws JargonException {
 		String propVal = ((String) jargonProperties.get(propKey)).trim();
@@ -106,6 +152,14 @@ public class DefaultPropertiesJargonConfig implements JargonProperties {
 			throw new JargonException("prop " + propKey
 					+ "did not result in an int value, was:" + propVal);
 		}
+
+	}
+
+	private boolean verifyPropExistsAndGetAsBoolean(final String propKey)
+			throws JargonException {
+
+		String propVal = verifyPropExistsAndGetAsString(propKey);
+		return Boolean.getBoolean(propVal);
 
 	}
 

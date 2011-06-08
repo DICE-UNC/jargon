@@ -417,7 +417,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 						.getTag(PortList_PI).getTag(cookie).getIntValue();
 
 				final ParallelPutFileTransferStrategy parallelPutFileStrategy = ParallelPutFileTransferStrategy
-						.instance(host, port, numberOfThreads, pass, localFile);
+						.instance(host, port, numberOfThreads, pass, localFile, this.getIRODSAccessObjectFactory());
 
 				log.info(
 						"getting ready to initiate parallel file transfer strategy:{}",
@@ -735,7 +735,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 					numberOfThreads);
 			ParallelGetFileTransferStrategy parallelGetTransferStrategy = ParallelGetFileTransferStrategy
 					.instance(host, port, numberOfThreads, password,
-							localFileToHoldData);
+							localFileToHoldData, this.getIRODSAccessObjectFactory());
 
 			/*
 			 * the keep alive thread needs to use the current agent connection,

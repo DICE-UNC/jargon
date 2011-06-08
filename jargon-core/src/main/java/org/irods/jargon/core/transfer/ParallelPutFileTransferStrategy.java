@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,14 +39,18 @@ public final class ParallelPutFileTransferStrategy extends
 	 *            transfer.
 	 * @param localFile
 	 *            <code>File</code> representing the local file
+	 * @param irodsAccessObjectFactory
+	 *            {@link IRODSAccessObjectFactory} for the session.
 	 * @return
 	 * @throws JargonException
 	 */
 	public static ParallelPutFileTransferStrategy instance(final String host,
 			final int port, final int numberOfThreads, final int password,
-			final File localFile) throws JargonException {
+			final File localFile,
+			final IRODSAccessObjectFactory irodsAccessObjectFactory)
+			throws JargonException {
 		return new ParallelPutFileTransferStrategy(host, port, numberOfThreads,
-				password, localFile);
+				password, localFile, irodsAccessObjectFactory);
 	}
 
 	@Override
@@ -65,9 +70,12 @@ public final class ParallelPutFileTransferStrategy extends
 	}
 
 	private ParallelPutFileTransferStrategy(final String host, final int port,
-			final int numberOfThreads, final int password, final File localFile)
+			final int numberOfThreads, final int password,
+			final File localFile,
+			final IRODSAccessObjectFactory irodsAccessObjectFactory)
 			throws JargonException {
-		super(host, port, numberOfThreads, password, localFile);
+		super(host, port, numberOfThreads, password, localFile,
+				irodsAccessObjectFactory);
 	}
 
 	@Override
@@ -110,18 +118,18 @@ public final class ParallelPutFileTransferStrategy extends
 		}
 
 		for (Thread parallelTransferThreadToJoin : transferRunningThreads) {
-		
-				try {
-					log.debug("joining parallel transfer thread");
-					parallelTransferThreadToJoin.join();
-				} catch (InterruptedException e) {
-					log.error(
-							"parallel transfer thread {} was interrupted when attempting to join",
-							parallelTransferThreadToJoin.getName(), e);
-					throw new JargonException(
-							"parallel transfer thread interrupted when attempting to join");
-				}
-			
+
+			try {
+				log.debug("joining parallel transfer thread");
+				parallelTransferThreadToJoin.join();
+			} catch (InterruptedException e) {
+				log.error(
+						"parallel transfer thread {} was interrupted when attempting to join",
+						parallelTransferThreadToJoin.getName(), e);
+				throw new JargonException(
+						"parallel transfer thread interrupted when attempting to join");
+			}
+
 		}
 
 		log.info("closing threads");
@@ -129,7 +137,7 @@ public final class ParallelPutFileTransferStrategy extends
 		for (ParallelPutTransferThread parallelPutTransferThread : parallelPutTransferThreads) {
 			parallelPutTransferThread.close();
 		}
-		
+
 		log.info("parallel transfer complete...checking for any exceptions that occurred in each thread");
 
 		log.info("parallel transfer complete, checking for any errors in the threads...");

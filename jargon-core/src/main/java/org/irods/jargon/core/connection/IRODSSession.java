@@ -5,6 +5,10 @@ package org.irods.jargon.core.connection;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.Executor;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.packinstr.TransferOptions;
@@ -26,7 +30,24 @@ import org.slf4j.LoggerFactory;
  */
 public final class IRODSSession {
 
+	public static final Logger log = LoggerFactory
+			.getLogger(IRODSSession.class);
+
+	/**
+	 * <code>ThreadLocal</code> to cache connections to iRODS. This is a
+	 * <code>Map</code> that is keyed by the {@link IRODSAccount}, so that each
+	 * thread automatically shares a common connection to an iRODS server.
+	 */
 	public static final ThreadLocal<Map<String, IRODSCommands>> sessionMap = new ThreadLocal<Map<String, IRODSCommands>>();
+	/**
+	 * The parallel transfer thread pool is lazily initialized on the first
+	 * parallel transfer operation. This will use the
+	 * <code>JargonProperties</code> configured in this <code>Session</code> if
+	 * the properties indicate that the pool will be used. Once initialized,
+	 * changing the <code>JargonProperties</code> controlling the pool have no
+	 * effect.
+	 */
+	private Executor parallelTransferThreadPool = null;
 	private IRODSProtocolManager irodsProtocolManager;
 	private static final Logger LOG = LoggerFactory
 			.getLogger(IRODSSession.class);
@@ -43,20 +64,6 @@ public final class IRODSSession {
 	public JargonProperties getJargonProperties() {
 		synchronized (this) {
 			return jargonProperties;
-		}
-	}
-
-	/**
-	 * Override default properties that are created at load-time from the
-	 * jargon.properties file with a custom implementation.
-	 * 
-	 * @param jargonProperties
-	 *            {@link JargonProperties} implementation to provide
-	 *            customization to Jargon behavior
-	 */
-	public void setJargonProperties(final JargonProperties jargonProperties) {
-		synchronized (this) {
-			this.jargonProperties = jargonProperties;
 		}
 	}
 
@@ -86,7 +93,9 @@ public final class IRODSSession {
 	}
 
 	/**
-	 * Close all sessions to iRODS that exist for this Thread.
+	 * Close all sessions to iRODS that exist for this Thread. This method can
+	 * be safely called by multiple threads, as the connections are in a
+	 * <code>ThreadLocal</code>
 	 * 
 	 * @throws JargonException
 	 */
@@ -298,6 +307,63 @@ public final class IRODSSession {
 	protected void setIrodsProtocolManager(
 			final IRODSProtocolManager irodsProtocolManager) {
 		this.irodsProtocolManager = irodsProtocolManager;
+	}
+
+	/**
+	 * Get (lazily) the pool of parallel transfer threads. This will return
+	 * <code>null</code> if the use of the pool is not set in the
+	 * <code>JargonProperties</code>. The method will create the pool on the
+	 * first request based on the <code>JargonProperties</code>, and once
+	 * created, changing the properties does not reconfigure the pool, it just
+	 * returns the lazily created instance.
+	 * 
+	 * @return {@link Executor} that is the pool of threads for the paralllel
+	 *         transfers, or <code>null</code> if the pool is not configured in
+	 *         the jargon properties.
+	 * @throws JargonException
+	 */
+	public Executor getParallelTransferThreadPool() throws JargonException {
+		log.info("getting the ParallelTransferThreadPool");
+		synchronized (this) {
+
+			if (!jargonProperties.isUseTransferThreadsPool()) {
+				log.info("I am not using the parallel transfer threads pool, return null");
+				return null;
+			}
+
+			if (parallelTransferThreadPool != null) {
+				log.info("returning already created ParallelTransferThreadPool");
+				return parallelTransferThreadPool;
+			}
+
+			log.info("creating the parallel transfer threads pool");
+			log.info("   core # threads: {}",
+					jargonProperties.getTransferThreadCorePoolSize());
+			log.info("   max # threads: {}",
+					jargonProperties.getTransferThreadMaxPoolSize());
+			log.info("   pool timeout millis:{}",
+					jargonProperties.getTransferThreadPoolTimeoutMillis());
+			parallelTransferThreadPool = new ThreadPoolExecutor(
+					jargonProperties.getTransferThreadCorePoolSize(),
+					jargonProperties.getTransferThreadMaxPoolSize(),
+					jargonProperties.getTransferThreadPoolTimeoutMillis(),
+					TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>(),
+					new RejectedParallelThreadExecutionHandler());
+			log.info("parallelTransferThreadPool created");
+			return parallelTransferThreadPool;
+		}
+	}
+
+	/**
+	 * Set the Jargon properties
+	 * 
+	 * @param jargonProperties
+	 *            the jargonProperties to set
+	 */
+	public void setJargonProperties(final JargonProperties jargonProperties) {
+		synchronized (this) {
+			this.jargonProperties = jargonProperties;
+		}
 	}
 
 }

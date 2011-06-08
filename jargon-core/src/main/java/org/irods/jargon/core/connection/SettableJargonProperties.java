@@ -21,23 +21,28 @@ import org.irods.jargon.core.exception.JargonException;
  */
 public class SettableJargonProperties implements JargonProperties {
 
-	//FIXME: get defaults from prop and allow overrides
-	
+	// FIXME: get defaults from prop and allow overrides
 
 	private boolean useParallelTransfer = true;
 	private int maxParallelThreads = 4;
-	private long parallelThreadsLengthThreshold = 734003200;
+	private long parallelThreadsLengthThreshold = 33554432;
 	private int maxFilesAndDirsQueryMax = 5000;
+	private boolean useTransferThreadsPool = false;
+	private int transferThreadCorePoolSize = 0;
+	private int transferThreadMaxPoolSize = 16;
+	private int transferThreadPoolTimeoutMillis = 60000;
 
-	
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.connection.JargonProperties#getParallelThreadsLengthThreshold()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.connection.JargonProperties#
+	 * getParallelThreadsLengthThreshold()
 	 */
 	@Override
 	public long getParallelThreadsLengthThreshold() throws JargonException {
 		return parallelThreadsLengthThreshold;
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -68,12 +73,92 @@ public class SettableJargonProperties implements JargonProperties {
 		return maxParallelThreads;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.connection.JargonProperties#getMaxFilesAndDirsQueryMax()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.connection.JargonProperties#getMaxFilesAndDirsQueryMax
+	 * ()
 	 */
 	@Override
 	public int getMaxFilesAndDirsQueryMax() throws JargonException {
 		return maxFilesAndDirsQueryMax;
+	}
+
+	@Override
+	public boolean isUseTransferThreadsPool() throws JargonException {
+		return useTransferThreadsPool;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.connection.JargonProperties#
+	 * getTransferThreadCorePoolSize()
+	 */
+	@Override
+	public int getTransferThreadCorePoolSize() throws JargonException {
+		return transferThreadCorePoolSize;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.connection.JargonProperties#
+	 * getTransferThreadMaxPoolSize()
+	 */
+	@Override
+	public int getTransferThreadMaxPoolSize() throws JargonException {
+		return transferThreadMaxPoolSize;
+	}
+
+	@Override
+	public int getTransferThreadPoolTimeoutMillis() throws JargonException {
+		return transferThreadPoolTimeoutMillis;
+	}
+
+	/**
+	 * @param parallelThreadsLengthThreshold the parallelThreadsLengthThreshold to set
+	 */
+	protected void setParallelThreadsLengthThreshold(
+			long parallelThreadsLengthThreshold) {
+		this.parallelThreadsLengthThreshold = parallelThreadsLengthThreshold;
+	}
+
+	/**
+	 * @param maxFilesAndDirsQueryMax the maxFilesAndDirsQueryMax to set
+	 */
+	protected void setMaxFilesAndDirsQueryMax(int maxFilesAndDirsQueryMax) {
+		this.maxFilesAndDirsQueryMax = maxFilesAndDirsQueryMax;
+	}
+
+	/**
+	 * @param useTransferThreadsPool the useTransferThreadsPool to set
+	 */
+	protected void setUseTransferThreadsPool(boolean useTransferThreadsPool) {
+		this.useTransferThreadsPool = useTransferThreadsPool;
+	}
+
+	/**
+	 * @param transferThreadCorePoolSize the transferThreadCorePoolSize to set
+	 */
+	protected void setTransferThreadCorePoolSize(int transferThreadCorePoolSize) {
+		this.transferThreadCorePoolSize = transferThreadCorePoolSize;
+	}
+
+	/**
+	 * @param transferThreadMaxPoolSize the transferThreadMaxPoolSize to set
+	 */
+	protected void setTransferThreadMaxPoolSize(int transferThreadMaxPoolSize) {
+		this.transferThreadMaxPoolSize = transferThreadMaxPoolSize;
+	}
+
+	/**
+	 * @param transferThreadPoolTimeoutMillis the transferThreadPoolTimeoutMillis to set
+	 */
+	protected void setTransferThreadPoolTimeoutMillis(
+			int transferThreadPoolTimeoutMillis) {
+		this.transferThreadPoolTimeoutMillis = transferThreadPoolTimeoutMillis;
 	}
 
 }

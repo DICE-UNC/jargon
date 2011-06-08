@@ -3,6 +3,7 @@ package org.irods.jargon.core.transfer;
 import java.io.File;
 
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 
 /**
  * Abstract superclass for a parallel transfer controller. This will process
@@ -24,6 +25,7 @@ public abstract class AbstractParallelFileTransferStrategy {
 	protected final int numberOfThreads;
 	protected final int password;
 	protected final File localFile;
+	private final IRODSAccessObjectFactory irodsAccessObjectFactory;
 
 	/**
 	 * Constructor for a parallel file transfer runner. This runner will create
@@ -41,38 +43,46 @@ public abstract class AbstractParallelFileTransferStrategy {
 	 *            iRODS.
 	 * @param localFile
 	 *            <code>File</code> that will transferrred.
+	 * @param irodsAccessObjectFactory
+	 * 	{@link IRODSAccessObjectFactory} for the session.
 	 * @throws JargonException
 	 */
 	protected AbstractParallelFileTransferStrategy(final String host,
 			final int port, final int numberOfThreads, final int password,
-			final File localFile) throws JargonException {
+			final File localFile, final IRODSAccessObjectFactory irodsAccessObjectFactory) throws JargonException {
 
 		if (host == null || host.isEmpty()) {
-			throw new JargonException("host is null or empty");
+			throw new IllegalArgumentException("host is null or empty");
 		}
 
 		if (port < 1) {
-			throw new JargonException("port must be supplied");
+			throw new IllegalArgumentException("port must be supplied");
 		}
 
 		if (numberOfThreads == 0) {
-			throw new JargonException(
+			throw new IllegalArgumentException(
 					"this is not a parallel transfer, the number of threads supplied is zero");
 		}
 
 		if (password <= 0) {
-			throw new JargonException("password is invalid");
+			throw new IllegalArgumentException("password is invalid");
 		}
 
 		if (localFile == null) {
-			throw new JargonException("Local file is null");
+			throw new IllegalArgumentException("Local file is null");
 		}
+		
+		if (irodsAccessObjectFactory == null) {
+			throw new IllegalArgumentException("irodsAccessObjectFactory is null");
+		}
+
 
 		this.host = host;
 		this.port = port;
 		this.numberOfThreads = numberOfThreads;
 		this.password = password;
 		this.localFile = localFile;
+		this.irodsAccessObjectFactory = irodsAccessObjectFactory;
 
 	}
 
@@ -109,6 +119,13 @@ public abstract class AbstractParallelFileTransferStrategy {
 
 	public File getLocalFile() {
 		return localFile;
+	}
+
+	/**
+	 * @return the irodsAccessObjectFactory
+	 */
+	protected IRODSAccessObjectFactory getIrodsAccessObjectFactory() {
+		return irodsAccessObjectFactory;
 	}
 
 }

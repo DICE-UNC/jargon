@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.concurrent.Callable;
 
 import org.irods.jargon.core.connection.ConnectionConstants;
 import org.irods.jargon.core.exception.JargonException;
@@ -31,7 +32,7 @@ import edu.sdsc.grid.io.Host;
  * 
  */
 public final class ParallelGetTransferThread extends
-		AbstractParallelTransferThread implements Runnable {
+		AbstractParallelTransferThread implements Callable<Object>, Runnable {
 
 	final ParallelGetFileTransferStrategy parallelGetFileTransferStrategy;
 
@@ -69,11 +70,10 @@ public final class ParallelGetTransferThread extends
 	}
 
 	@Override
-	public void run() {
+	public Object call() throws JargonException {
 		try {
 			setS(new Socket(parallelGetFileTransferStrategy.getHost(),
 					parallelGetFileTransferStrategy.getPort()));
-			// getS().setSoTimeout(30000);
 			byte[] outputBuffer = new byte[4];
 			Host.copyInt(parallelGetFileTransferStrategy.getPassword(),
 					outputBuffer);
@@ -85,26 +85,21 @@ public final class ParallelGetTransferThread extends
 			log.error("Unknown host: {}",
 					parallelGetFileTransferStrategy.getHost());
 			this.setExceptionInTransfer(e);
-			throw new JargonRuntimeException("unknown host:"
+			throw new JargonException("unknown host:"
 					+ parallelGetFileTransferStrategy.getHost(), e);
 		} catch (IOException e) {
 			log.error(IO_EXEPTION_IN_PARALLEL_TRANSFER,
 					parallelGetFileTransferStrategy.toString());
 			this.setExceptionInTransfer(e);
-			throw new JargonRuntimeException(
+			throw new JargonException(
 					IO_EXCEPTION_OCCURRED_DURING_PARALLEL_FILE_TRANSFER, e);
 		}
 
 		log.info("sockets are open and password sent, now begin the get operation");
-		try {
-			get();
-		} catch (JargonException e) {
-			this.setExceptionInTransfer(e);
-			log.error("JargonException rethrown as runtime exception for method contract");
-			throw new JargonRuntimeException(
-					"JargonException rethrown as runtime exception for method contract",
-					e);
-		}
+
+		get();
+		return null;
+
 	}
 
 	public void get() throws JargonException {
@@ -168,7 +163,7 @@ public final class ParallelGetTransferThread extends
 			} catch (IOException e) {
 				log.error(IO_EXEPTION_IN_PARALLEL_TRANSFER,
 						parallelGetFileTransferStrategy.toString());
-				throw new JargonRuntimeException(
+				throw new JargonException(
 						IO_EXCEPTION_OCCURRED_DURING_PARALLEL_FILE_TRANSFER, e);
 			}
 			if (read > 0) {
@@ -179,7 +174,7 @@ public final class ParallelGetTransferThread extends
 					} catch (IOException e) {
 						log.error(IO_EXEPTION_IN_PARALLEL_TRANSFER,
 								parallelGetFileTransferStrategy.toString());
-						throw new JargonRuntimeException(
+						throw new JargonException(
 								IO_EXCEPTION_OCCURRED_DURING_PARALLEL_FILE_TRANSFER,
 								e);
 					}
@@ -201,7 +196,7 @@ public final class ParallelGetTransferThread extends
 					} catch (IOException e) {
 						log.error(IO_EXEPTION_IN_PARALLEL_TRANSFER,
 								parallelGetFileTransferStrategy.toString());
-						throw new JargonRuntimeException(
+						throw new JargonException(
 								IO_EXCEPTION_OCCURRED_DURING_PARALLEL_FILE_TRANSFER,
 								e);
 					}
@@ -216,7 +211,7 @@ public final class ParallelGetTransferThread extends
 					} catch (IOException e) {
 						log.error(IO_EXEPTION_IN_PARALLEL_TRANSFER,
 								parallelGetFileTransferStrategy.toString());
-						throw new JargonRuntimeException(
+						throw new JargonException(
 								IO_EXCEPTION_OCCURRED_DURING_PARALLEL_FILE_TRANSFER,
 								e);
 					}
@@ -229,14 +224,15 @@ public final class ParallelGetTransferThread extends
 			}
 			Thread.yield();
 		}
-		
+
 		log.info("closing local file in txfr thread");
 		try {
 			local.close();
 		} catch (IOException e) {
 			log.error("IOException closing local file", e);
-			throw new JargonRuntimeException("IOException closing local file");
+			throw new JargonException("IOException closing local file");
 		}
+
 	}
 
 	/**
@@ -245,7 +241,7 @@ public final class ParallelGetTransferThread extends
 	 * @throws JargonRuntimeException
 	 */
 	private void seekToOffset(final RandomAccessFile local, final long offset)
-			throws JargonRuntimeException {
+			throws JargonException {
 		if (offset < 0) {
 			log.error("offset < 0 in transfer get() operation, return from get method");
 			return;
@@ -255,9 +251,18 @@ public final class ParallelGetTransferThread extends
 			} catch (IOException e) {
 				log.error(IO_EXEPTION_IN_PARALLEL_TRANSFER,
 						parallelGetFileTransferStrategy.toString());
-				throw new JargonRuntimeException(
+				throw new JargonException(
 						IO_EXCEPTION_OCCURRED_DURING_PARALLEL_FILE_TRANSFER, e);
 			}
+		}
+	}
+
+	@Override
+	public void run() {
+		try {
+			call();
+		} catch (JargonException e) {
+			throw new JargonRuntimeException("error in parallel transfer", e);
 		}
 	}
 

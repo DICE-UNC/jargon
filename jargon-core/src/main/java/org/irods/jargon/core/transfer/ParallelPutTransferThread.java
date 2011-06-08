@@ -5,6 +5,7 @@ import java.io.BufferedOutputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.util.concurrent.Callable;
 
 import org.irods.jargon.core.connection.ConnectionConstants;
 import org.irods.jargon.core.exception.JargonException;
@@ -24,7 +25,7 @@ import edu.sdsc.grid.io.Host;
  * 
  */
 public final class ParallelPutTransferThread extends
-		AbstractParallelTransferThread implements Runnable {
+		AbstractParallelTransferThread implements Callable<Object>, Runnable {
 
 	private long transferLength;
 	private final long offset;
@@ -80,7 +81,7 @@ public final class ParallelPutTransferThread extends
 	}
 
 	@Override
-	public void run() {
+	public Object call() throws JargonException {
 		try {
 			log.info("getting input stream for local file");
 			setIn(new BufferedInputStream(new FileInputStream(
@@ -102,12 +103,14 @@ public final class ParallelPutTransferThread extends
 				}
 			}
 
-			log.debug("opening socket to paralllel transfer (high) port at port:{}", parallelPutFileTransferStrategy.getPort());
+			log.debug(
+					"opening socket to paralllel transfer (high) port at port:{}",
+					parallelPutFileTransferStrategy.getPort());
 			setS(new Socket(parallelPutFileTransferStrategy.getHost(),
 					parallelPutFileTransferStrategy.getPort()));
-			//getS().setSoTimeout(30000);
+			// getS().setSoTimeout(30000);
 			setOut(new BufferedOutputStream(getS().getOutputStream()));
-			
+
 			log.info("writing the cookie (password) for the output thread");
 
 			// write the cookie
@@ -118,15 +121,17 @@ public final class ParallelPutTransferThread extends
 			log.debug("cookie written for output thread");
 			put();
 			log.debug("put operation completed");
-			
+
 		} catch (Exception e) {
 			log.error(
 					"An exception occurred during a parallel file put operation",
 					e);
 			this.setExceptionInTransfer(e);
-			throw new JargonRuntimeException("error during parallel file put",
-					e);
+			throw new JargonException("error during parallel file put", e);
 		}
+
+		return null;
+
 	}
 
 	private void put() throws JargonException {
@@ -177,6 +182,16 @@ public final class ParallelPutTransferThread extends
 			}
 			Thread.yield();
 		}
+	}
+
+	@Override
+	public void run() {
+		try {
+			call();
+		} catch (JargonException e) {
+			throw new JargonRuntimeException("error in parallel transfer", e);
+		}
+		
 	}
 
 }
