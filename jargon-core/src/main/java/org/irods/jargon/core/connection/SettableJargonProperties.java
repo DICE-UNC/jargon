@@ -120,7 +120,7 @@ public class SettableJargonProperties implements JargonProperties {
 	/**
 	 * @param parallelThreadsLengthThreshold the parallelThreadsLengthThreshold to set
 	 */
-	protected void setParallelThreadsLengthThreshold(
+	public void setParallelThreadsLengthThreshold(
 			long parallelThreadsLengthThreshold) {
 		this.parallelThreadsLengthThreshold = parallelThreadsLengthThreshold;
 	}
@@ -128,35 +128,35 @@ public class SettableJargonProperties implements JargonProperties {
 	/**
 	 * @param maxFilesAndDirsQueryMax the maxFilesAndDirsQueryMax to set
 	 */
-	protected void setMaxFilesAndDirsQueryMax(int maxFilesAndDirsQueryMax) {
+	public void setMaxFilesAndDirsQueryMax(int maxFilesAndDirsQueryMax) {
 		this.maxFilesAndDirsQueryMax = maxFilesAndDirsQueryMax;
 	}
 
 	/**
 	 * @param useTransferThreadsPool the useTransferThreadsPool to set
 	 */
-	protected void setUseTransferThreadsPool(boolean useTransferThreadsPool) {
+	public void setUseTransferThreadsPool(boolean useTransferThreadsPool) {
 		this.useTransferThreadsPool = useTransferThreadsPool;
 	}
 
 	/**
 	 * @param transferThreadCorePoolSize the transferThreadCorePoolSize to set
 	 */
-	protected void setTransferThreadCorePoolSize(int transferThreadCorePoolSize) {
+	public void setTransferThreadCorePoolSize(int transferThreadCorePoolSize) {
 		this.transferThreadCorePoolSize = transferThreadCorePoolSize;
 	}
 
 	/**
 	 * @param transferThreadMaxPoolSize the transferThreadMaxPoolSize to set
 	 */
-	protected void setTransferThreadMaxPoolSize(int transferThreadMaxPoolSize) {
+	public void setTransferThreadMaxPoolSize(int transferThreadMaxPoolSize) {
 		this.transferThreadMaxPoolSize = transferThreadMaxPoolSize;
 	}
 
 	/**
 	 * @param transferThreadPoolTimeoutMillis the transferThreadPoolTimeoutMillis to set
 	 */
-	protected void setTransferThreadPoolTimeoutMillis(
+	public void setTransferThreadPoolTimeoutMillis(
 			int transferThreadPoolTimeoutMillis) {
 		this.transferThreadPoolTimeoutMillis = transferThreadPoolTimeoutMillis;
 	}

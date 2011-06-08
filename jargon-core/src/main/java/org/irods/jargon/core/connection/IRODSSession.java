@@ -5,7 +5,10 @@ package org.irods.jargon.core.connection;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -47,7 +50,7 @@ public final class IRODSSession {
 	 * changing the <code>JargonProperties</code> controlling the pool have no
 	 * effect.
 	 */
-	private Executor parallelTransferThreadPool = null;
+	private ExecutorService parallelTransferThreadPool = null;
 	private IRODSProtocolManager irodsProtocolManager;
 	private static final Logger LOG = LoggerFactory
 			.getLogger(IRODSSession.class);
@@ -317,12 +320,12 @@ public final class IRODSSession {
 	 * created, changing the properties does not reconfigure the pool, it just
 	 * returns the lazily created instance.
 	 * 
-	 * @return {@link Executor} that is the pool of threads for the paralllel
+	 * @return {@link ExecutorService} that is the pool of threads for the paralllel
 	 *         transfers, or <code>null</code> if the pool is not configured in
 	 *         the jargon properties.
 	 * @throws JargonException
 	 */
-	public Executor getParallelTransferThreadPool() throws JargonException {
+	public ExecutorService getParallelTransferThreadPool() throws JargonException {
 		log.info("getting the ParallelTransferThreadPool");
 		synchronized (this) {
 
@@ -343,12 +346,15 @@ public final class IRODSSession {
 					jargonProperties.getTransferThreadMaxPoolSize());
 			log.info("   pool timeout millis:{}",
 					jargonProperties.getTransferThreadPoolTimeoutMillis());
+			
 			parallelTransferThreadPool = new ThreadPoolExecutor(
 					jargonProperties.getTransferThreadCorePoolSize(),
 					jargonProperties.getTransferThreadMaxPoolSize(),
 					jargonProperties.getTransferThreadPoolTimeoutMillis(),
-					TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>(),
+					TimeUnit.MILLISECONDS, new ArrayBlockingQueue<Runnable>(jargonProperties.getTransferThreadMaxPoolSize()),
 					new RejectedParallelThreadExecutionHandler());
+					
+			//ExecutorService executorService = Executors.newFixedThreadPool(jargonProperties.getTransferThreadMaxPoolSize());
 			log.info("parallelTransferThreadPool created");
 			return parallelTransferThreadPool;
 		}

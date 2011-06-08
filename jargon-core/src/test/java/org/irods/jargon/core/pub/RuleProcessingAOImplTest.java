@@ -446,7 +446,7 @@ public class RuleProcessingAOImplTest {
 				delayedRuleExecutions.size() > 0);
 	}
 
-	@Test
+	@Ignore
 	public void testPurgeAllDelayedRuleExecutions() throws Exception {
 
 		// TODO: purge, add1, purge, test

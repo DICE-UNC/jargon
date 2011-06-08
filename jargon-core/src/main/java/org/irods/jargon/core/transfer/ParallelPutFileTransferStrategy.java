@@ -6,6 +6,7 @@ package org.irods.jargon.core.transfer;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
 
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
@@ -81,6 +82,59 @@ public final class ParallelPutFileTransferStrategy extends
 	@Override
 	public void transfer() throws JargonException {
 		log.info("initiating transfer for: {}", this.toString());
+		ExecutorService executor = getIrodsAccessObjectFactory()
+				.getIrodsSession().getParallelTransferThreadPool();
+		if (executor == null) {
+			log.info("no pool available, transfer using standard Threads");
+			transferWithoutExecutor();
+		} else {
+			log.info("transfer via executor");
+			transferWithExecutor(executor);
+		}
+	}
+
+	private void transferWithExecutor(final ExecutorService executor)
+			throws JargonException {
+		log.info("initiating transfer for: {} without executor",
+				this.toString());
+		final List<ParallelPutTransferThread> parallelPutTransferThreads = new ArrayList<ParallelPutTransferThread>();
+		final long localFileLength = localFile.length();
+		final long transferLength = localFileLength / numberOfThreads;
+
+		ParallelPutTransferThread parallelTransferThread;
+
+		for (int i = 0; i < numberOfThreads - 1; i++) {
+
+			parallelTransferThread = ParallelPutTransferThread.instance(this,
+					transferLength, transferLength * i);
+
+			parallelPutTransferThreads.add(parallelTransferThread);
+
+			log.info("created transfer thread:{}", parallelTransferThread);
+
+		}
+		// last thread is a little different
+		parallelTransferThread = ParallelPutTransferThread
+				.instance(this, (int) (localFileLength - transferLength
+						* (numberOfThreads - 1)), // length
+						transferLength * (numberOfThreads - 1) // offset
+				);
+
+		parallelPutTransferThreads.add(parallelTransferThread);
+
+		try {
+			log.info("invoking executor threads for put");
+			executor.invokeAll(parallelPutTransferThreads);
+			log.info("executor completed");
+		} catch (InterruptedException e) {
+			log.error("interrupted exception in thread", e);
+			throw new JargonException(e);
+		}
+	}
+
+	public void transferWithoutExecutor() throws JargonException {
+		log.info("initiating transfer for: {} without executor",
+				this.toString());
 		final List<Thread> transferRunningThreads = new ArrayList<Thread>();
 		final List<ParallelPutTransferThread> parallelPutTransferThreads = new ArrayList<ParallelPutTransferThread>();
 		final long localFileLength = localFile.length();
@@ -120,7 +174,6 @@ public final class ParallelPutFileTransferStrategy extends
 		for (Thread parallelTransferThreadToJoin : transferRunningThreads) {
 
 			try {
-				log.debug("joining parallel transfer thread");
 				parallelTransferThreadToJoin.join();
 			} catch (InterruptedException e) {
 				log.error(

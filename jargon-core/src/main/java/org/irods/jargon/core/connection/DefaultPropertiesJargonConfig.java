@@ -159,7 +159,7 @@ public class DefaultPropertiesJargonConfig implements JargonProperties {
 			throws JargonException {
 
 		String propVal = verifyPropExistsAndGetAsString(propKey);
-		return Boolean.getBoolean(propVal);
+		return Boolean.parseBoolean(propVal);
 
 	}
 

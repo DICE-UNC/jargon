@@ -6,6 +6,8 @@ package org.irods.jargon.core.transfer;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
 
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
@@ -74,6 +76,39 @@ public final class ParallelGetFileTransferStrategy extends
 	@Override
 	public void transfer() throws JargonException {
 		log.info("initiating transfer for: {}", this.toString());
+		ExecutorService executor = getIrodsAccessObjectFactory().getIrodsSession().getParallelTransferThreadPool();
+		if (executor == null) {
+			log.info("no pool available, transfer using standard Threads");
+			transferWithoutExecutor();
+		} else {
+			log.info("transfer via executor");
+			transferWithExecutor(executor);
+		}
+	}
+
+	private void transferWithExecutor(final ExecutorService executor) throws JargonException {
+		final List<ParallelGetTransferThread> parallelGetTransferThreads = new ArrayList<ParallelGetTransferThread>();
+
+		for (int i = 0; i < numberOfThreads; i++) {
+			final ParallelGetTransferThread parallelTransfer = ParallelGetTransferThread
+					.instance(this);
+			parallelGetTransferThreads.add(parallelTransfer);
+		}
+		
+		try {
+			log.info("invoking executor threads for get");
+			executor.invokeAll(parallelGetTransferThreads);
+			log.info("executor completed");
+		} catch (InterruptedException e) {
+			log.error("interrupted exception in thread", e);
+			throw new JargonException(e);
+		}
+	}
+
+	/**
+	 * @throws JargonException
+	 */
+	private void transferWithoutExecutor() throws JargonException {
 		final List<Thread> transferRunningThreads = new ArrayList<Thread>();
 		final List<ParallelGetTransferThread> parallelGetTransferThreads = new ArrayList<ParallelGetTransferThread>();
 
