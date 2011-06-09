@@ -6,16 +6,14 @@ package org.irods.jargon.core.connection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.packinstr.TransferOptions;
 import org.irods.jargon.core.packinstr.TransferOptions.TransferType;
+import org.irods.jargon.core.pub.IRODSFileSystem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,6 +25,15 @@ import org.slf4j.LoggerFactory;
  * <p/>
  * Connections are returned to the particular <code>IRODSProtocolManager</code>
  * for disposal or return to cache or pool.
+ * <p/>
+ * <code>IRODSSession</code> is also the place where shared, expensive objects
+ * are kept. Note that IRODSSession is not coded as a singleton. It is up to the
+ * developer to place the <code>IRODSSession</code> in a context where it can be
+ * shared across the application (such as in a Servlet application context). The
+ * comments for {@link IRODSFileSystem} have more information. Essentially,
+ * <code>IRODSSession</code> is meant to be created once, either directly, or
+ * wrapped in the shared <code>IRODSFileSystem</code>. If desired, the developer
+ * can wrap these objects as singletons, but that is not imposed by Jargon.
  * 
  * @author Mike Conway - DICE (www.irods.org)
  * 
@@ -155,7 +162,7 @@ public final class IRODSSession {
 	/**
 	 * Instance method, still supported (for now) but switching to straight
 	 * setter methods and a default constructor to make it easer to wire with
-	 * dependency injection. Look to see this depracated.
+	 * dependency injection. Look to see this deprecated.
 	 * 
 	 * @param irodsConnectionManager
 	 * @return
@@ -320,12 +327,13 @@ public final class IRODSSession {
 	 * created, changing the properties does not reconfigure the pool, it just
 	 * returns the lazily created instance.
 	 * 
-	 * @return {@link ExecutorService} that is the pool of threads for the paralllel
-	 *         transfers, or <code>null</code> if the pool is not configured in
-	 *         the jargon properties.
+	 * @return {@link ExecutorService} that is the pool of threads for the
+	 *         paralllel transfers, or <code>null</code> if the pool is not
+	 *         configured in the jargon properties.
 	 * @throws JargonException
 	 */
-	public ExecutorService getParallelTransferThreadPool() throws JargonException {
+	public ExecutorService getParallelTransferThreadPool()
+			throws JargonException {
 		log.info("getting the ParallelTransferThreadPool");
 		synchronized (this) {
 
@@ -346,15 +354,17 @@ public final class IRODSSession {
 					jargonProperties.getTransferThreadMaxPoolSize());
 			log.info("   pool timeout millis:{}",
 					jargonProperties.getTransferThreadPoolTimeoutMillis());
-			
+
 			parallelTransferThreadPool = new ThreadPoolExecutor(
 					jargonProperties.getTransferThreadCorePoolSize(),
 					jargonProperties.getTransferThreadMaxPoolSize(),
 					jargonProperties.getTransferThreadPoolTimeoutMillis(),
-					TimeUnit.MILLISECONDS, new ArrayBlockingQueue<Runnable>(jargonProperties.getTransferThreadMaxPoolSize()),
+					TimeUnit.MILLISECONDS, new ArrayBlockingQueue<Runnable>(
+							jargonProperties.getTransferThreadMaxPoolSize()),
 					new RejectedParallelThreadExecutionHandler());
-					
-			//ExecutorService executorService = Executors.newFixedThreadPool(jargonProperties.getTransferThreadMaxPoolSize());
+
+			// ExecutorService executorService =
+			// Executors.newFixedThreadPool(jargonProperties.getTransferThreadMaxPoolSize());
 			log.info("parallelTransferThreadPool created");
 			return parallelTransferThreadPool;
 		}

@@ -76,16 +76,23 @@ public final class ParallelPutTransferThread extends
 
 		this.parallelPutFileTransferStrategy = parallelPutFileTransferStrategy;
 		this.transferLength = transferLength;
+		log.info("transfer length:{}", transferLength);
 		this.offset = offset;
+		log.info("offset: {}", offset);
 
 	}
 
 	@Override
 	public Object call() throws JargonException {
+
+		BufferedInputStream bis = null;
 		try {
 			log.info("getting input stream for local file");
-			setIn(new BufferedInputStream(new FileInputStream(
-					parallelPutFileTransferStrategy.getLocalFile())));
+			bis = new BufferedInputStream(new FileInputStream(
+					parallelPutFileTransferStrategy.getLocalFile()));
+			// bis = new FileInputStream(
+			// parallelPutFileTransferStrategy.getLocalFile());
+			setIn(bis);
 
 			long totalSkipped = 0;
 			long toSkip = 0;
@@ -101,9 +108,15 @@ public final class ParallelPutTransferThread extends
 					toSkip = offset - totalSkipped;
 					skipped = getIn().skip(toSkip);
 				}
+
+				if (totalSkipped != offset) {
+					throw new JargonException(
+							"totalSkipped not equal to offset");
+				}
+
 			}
 
-			log.debug(
+			log.info(
 					"opening socket to paralllel transfer (high) port at port:{}",
 					parallelPutFileTransferStrategy.getPort());
 			setS(new Socket(parallelPutFileTransferStrategy.getHost(),
@@ -118,7 +131,7 @@ public final class ParallelPutTransferThread extends
 			Host.copyInt(parallelPutFileTransferStrategy.getPassword(), b);
 			getOut().write(b);
 			getOut().flush();
-			log.debug("cookie written for output thread");
+			log.debug("cookie written for output thread...calling put() to start read/write loop");
 			put();
 			log.debug("put operation completed");
 
@@ -128,6 +141,12 @@ public final class ParallelPutTransferThread extends
 					e);
 			this.setExceptionInTransfer(e);
 			throw new JargonException("error during parallel file put", e);
+		} finally {
+			try {
+				bis.close();
+			} catch (Exception e) {
+
+			}
 		}
 
 		return null;
@@ -135,53 +154,80 @@ public final class ParallelPutTransferThread extends
 	}
 
 	private void put() throws JargonException {
+		log.info("put()..");
 		// Holds all the data for transfer
 		byte[] buffer = null;
 		int read = 0;
+		long totalRead = 0;
+		long totalWritten = 0;
 
 		// begin transfer
 		if (transferLength <= 0) {
-			return;
+			throw new JargonException("this transfer length is zero");
 		} else {
 			// length has a max of 8mb?
 			buffer = new byte[ConnectionConstants.OUTPUT_BUFFER_LENGTH];
 		}
 
-		while (transferLength > 0) {
-			// need Math.min or reads into what the other threads are
-			// transferring
-			try {
+		log.info("buffer length for put is: {}", buffer.length);
+		
+		/*
+		 * Read/write loop moves data from file starting at offset down the socket until the anticipated 
+		 * transfer length is consumed.
+		 */
+		try {
+			while (transferLength > 0) {
+				log.debug("in put read/write loop at top");
+
 				read = getIn().read(
 						buffer,
 						0,
 						(int) Math.min(
 								ConnectionConstants.OUTPUT_BUFFER_LENGTH,
 								transferLength));
-			} catch (IOException e) {
-				log.error(
-						"An IO exception occurred during a parallel file put operation",
-						e);
-				throw new JargonException(
-						"IOException during parallel file put", e);
-			}
-			if (read > 0) {
-				try {
+
+				log.debug("read: {}", read);
+				totalRead += read;
+
+				if (read > 0) {
+
 					transferLength -= read;
+					log.debug("new txfr length:{}", transferLength);
 					getOut().write(buffer, 0, read);
-					getOut().flush();
-				} catch (IOException e) {
-					log.error(
-							"An IO exception occurred during a parallel file put operation",
-							e);
+					log.debug("wrote data to the buffer");
+					totalWritten += read;
+
+				} else if (read < 0) {
 					throw new JargonException(
-							"IOException during parallel file put", e);
+							"unexpected end of data in transfer operation");
 				}
-			} else if (read < 0) {
-				throw new JargonException(
-						"unexpected end of data in transfer operation");
+
+			
 			}
-			Thread.yield();
+
+			log.info("final flush of output buffer");
+			getOut().flush();
+
+		} catch (IOException e) {
+			log.error(
+					"An IO exception occurred during a parallel file put operation",
+					e);
+			throw new JargonException("IOException during parallel file put", e);
 		}
+
+		log.info("for thread, total read: {}", totalRead);
+		log.info("   total written: {}", totalWritten);
+		log.info("   transferLength: {}", transferLength);
+
+		if (totalRead != totalWritten) {
+			throw new JargonException("totalRead and totalWritten do not agree");
+		}
+
+		if (transferLength != 0) {
+			throw new JargonException(
+					"transferLength and totalWritten do not agree");
+		}
+
 	}
 
 	@Override
@@ -189,9 +235,10 @@ public final class ParallelPutTransferThread extends
 		try {
 			call();
 		} catch (JargonException e) {
+			this.setExceptionInTransfer(e);
 			throw new JargonRuntimeException("error in parallel transfer", e);
 		}
-		
+
 	}
 
 }

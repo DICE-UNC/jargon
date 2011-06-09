@@ -84,6 +84,7 @@ public final class ParallelGetFileTransferStrategy extends
 			log.info("transfer via executor");
 			transferWithExecutor(executor);
 		}
+		log.info("transfer process has returned");
 	}
 
 	private void transferWithExecutor(final ExecutorService executor) throws JargonException {

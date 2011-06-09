@@ -79,8 +79,10 @@ public final class ParallelGetTransferThread extends
 					outputBuffer);
 			setIn(new BufferedInputStream(getS().getInputStream()));
 			this.setOut(new BufferedOutputStream(getS().getOutputStream()));
+			log.debug("socket established, sending cookie to iRODS listener");
 			getOut().write(outputBuffer);
 			getOut().flush();
+			log.debug("cookie written");
 		} catch (UnknownHostException e) {
 			log.error("Unknown host: {}",
 					parallelGetFileTransferStrategy.getHost());
@@ -107,29 +109,58 @@ public final class ParallelGetTransferThread extends
 
 		RandomAccessFile local;
 		try {
+			log.debug("opening local randomAccessFile");
 			local = new RandomAccessFile(
 					parallelGetFileTransferStrategy.getLocalFile(), "rw");
+			log.debug("random access file opened rw mode");
 		} catch (FileNotFoundException e) {
 			log.error("FileNotFoundException in parallel get operation", e);
 			throw new JargonException(
 					"FileNotFoundException in parallel get operation", e);
 		}
+		
+		try {
+			
+			processingLoopForGetData(local);
+			
+		} catch (JargonException je) {
+			log.error("a jargon exception occurred in the get loop");
+			throw je;
+		} catch (Exception e) {
+			log.error("Exception closing local file", e);
+			throw new JargonException("IOException closing local file");
+		} finally {
+			log.info("parallel thread closing out local random access file stream");
+			try {
+				local.close();
+			} catch (IOException e) {
+			}
+		}
+	}
+
+	/**
+	 * @param local
+	 * @throws JargonException
+	 */
+	private void processingLoopForGetData(RandomAccessFile local)
+			throws JargonException {
+		log.debug("reading header info...");
 
 		// read the header
 		int operation = readInt();
-		log.info("   operation:{}", operation);
+		log.debug("   operation:{}", operation);
 
 		// read the flags
 		int flags = readInt();
-		log.info("   flags:{}", flags);
+		log.debug("   flags:{}", flags);
 
 		// Where to seek into the data
 		long offset = readLong();
-		log.info("   offset:{}", offset);
+		log.debug("   offset:{}", offset);
 
 		// How much to read/write
 		long length = readLong();
-		log.info("   length:{}", length);
+		log.debug("   length:{}", length);
 
 		// Holds all the data for transfer
 		byte[] buffer = null;
@@ -143,6 +174,7 @@ public final class ParallelGetTransferThread extends
 							+ operation);
 		}
 
+		log.debug("seeking to offset: {}", offset);
 		seekToOffset(local, offset);
 
 		if (length <= 0) {
@@ -151,47 +183,65 @@ public final class ParallelGetTransferThread extends
 			// length has a max of 8mb?
 			buffer = new byte[ConnectionConstants.OUTPUT_BUFFER_LENGTH];
 		}
-
+		
 		while (length > 0) {
 
 			try {
+				log.debug("reading....");
 				read = getIn().read(
 						buffer,
 						0,
 						Math.min(ConnectionConstants.OUTPUT_BUFFER_LENGTH,
 								(int) length));
+				log.debug("read={}", read);
+			
 			} catch (IOException e) {
 				log.error(IO_EXEPTION_IN_PARALLEL_TRANSFER,
 						parallelGetFileTransferStrategy.toString());
 				throw new JargonException(
 						IO_EXCEPTION_OCCURRED_DURING_PARALLEL_FILE_TRANSFER, e);
+			} catch (Exception e) {
+				log.error("exception in parallel transfer", e);
+				throw new JargonException("unexpected exception in parallel transfer",e);	
 			}
+			
 			if (read > 0) {
 				length -= read;
+				log.debug("length left after read={}", length);
 				if (length == 0) {
+					log.debug("length == 0, write the buffer, then get another header");
 					try {
 						local.write(buffer, 0, read);
+						log.debug("buffer written to file");	
 					} catch (IOException e) {
 						log.error(IO_EXEPTION_IN_PARALLEL_TRANSFER,
 								parallelGetFileTransferStrategy.toString());
 						throw new JargonException(
 								IO_EXCEPTION_OCCURRED_DURING_PARALLEL_FILE_TRANSFER,
 								e);
+					 } catch (Exception e) {
+						log.error("exception in parallel transfer", e);
+						throw new JargonException("unexpected exception in parallel transfer",e);	
 					}
 
 					log.debug("parallel transfer read next header");
 					// read the next header
 					operation = readInt();
+					log.debug("   operation:{}", operation);
 					flags = readInt();
+					log.debug("   flags:{}", flags);
 					offset = readLong();
+					log.debug("   offset:{}", offset);
 					length = readLong();
+					log.debug("   length:{}", length);
+
 					if (operation == DONE_OPR) {
-						log.debug("    done");
-						return;
+						log.debug("    done...received done flag in operation");
+						break;
 					}
 
-					// probably unnecessary
 					try {
+						log.debug("seeking to new offset");
 						local.seek(offset);
 					} catch (IOException e) {
 						log.error(IO_EXEPTION_IN_PARALLEL_TRANSFER,
@@ -202,12 +252,14 @@ public final class ParallelGetTransferThread extends
 					}
 
 				} else if (length < 0) {
-					String msg = "length < 0 when reading from iRODS during parallel get operation";
+					String msg = "length < 0 passed in header from iRODS during parallel get operation";
 					log.error(msg);
 					throw new JargonException(msg);
 				} else {
+					log.debug("length > 0, write what I have and read more...");
 					try {
 						local.write(buffer, 0, read);
+						log.debug("buffer written to file");
 					} catch (IOException e) {
 						log.error(IO_EXEPTION_IN_PARALLEL_TRANSFER,
 								parallelGetFileTransferStrategy.toString());
@@ -222,17 +274,8 @@ public final class ParallelGetTransferThread extends
 				throw new JargonException(
 						"possible loop condition in parallel file get");
 			}
-			Thread.yield();
+			//Thread.yield();
 		}
-
-		log.info("closing local file in txfr thread");
-		try {
-			local.close();
-		} catch (IOException e) {
-			log.error("IOException closing local file", e);
-			throw new JargonException("IOException closing local file");
-		}
-
 	}
 
 	/**
@@ -248,6 +291,7 @@ public final class ParallelGetTransferThread extends
 		} else if (offset > 0) {
 			try {
 				local.seek(offset);
+				log.debug("seek completed");
 			} catch (IOException e) {
 				log.error(IO_EXEPTION_IN_PARALLEL_TRANSFER,
 						parallelGetFileTransferStrategy.toString());

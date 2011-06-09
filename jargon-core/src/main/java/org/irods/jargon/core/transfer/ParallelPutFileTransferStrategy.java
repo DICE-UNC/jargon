@@ -7,6 +7,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Future;
 
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
@@ -124,7 +125,8 @@ public final class ParallelPutFileTransferStrategy extends
 
 		try {
 			log.info("invoking executor threads for put");
-			executor.invokeAll(parallelPutTransferThreads);
+			List<Future<Object>> transferThreadStates = executor.invokeAll(parallelPutTransferThreads);
+			log.info("state of threads at completion:{}", transferThreadStates);
 			log.info("executor completed");
 		} catch (InterruptedException e) {
 			log.error("interrupted exception in thread", e);
