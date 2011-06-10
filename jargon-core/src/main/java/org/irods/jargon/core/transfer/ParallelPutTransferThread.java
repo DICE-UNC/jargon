@@ -184,6 +184,8 @@ public final class ParallelPutTransferThread extends
 						(int) Math.min(
 								ConnectionConstants.OUTPUT_BUFFER_LENGTH,
 								transferLength));
+				
+				read = getIn().read(buffer);
 
 				log.debug("read: {}", read);
 				totalRead += read;

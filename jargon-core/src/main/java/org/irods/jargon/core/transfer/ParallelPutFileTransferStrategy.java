@@ -151,11 +151,10 @@ public final class ParallelPutFileTransferStrategy extends
 		final long localFileLength = localFile.length();
 		final long transferLength = localFileLength / numberOfThreads;
 
-		ParallelPutTransferThread parallelTransferThread;
 
 		for (int i = 0; i < numberOfThreads - 1; i++) {
 
-			parallelTransferThread = ParallelPutTransferThread.instance(this,
+			ParallelPutTransferThread  parallelTransferThread = ParallelPutTransferThread.instance(this,
 					transferLength, transferLength * i);
 
 			transferRunningThreads.add(new Thread(parallelTransferThread));
@@ -165,7 +164,7 @@ public final class ParallelPutFileTransferStrategy extends
 
 		}
 		// last thread is a little different
-		parallelTransferThread = ParallelPutTransferThread
+		ParallelPutTransferThread  parallelTransferThread = ParallelPutTransferThread
 				.instance(this, (int) (localFileLength - transferLength
 						* (numberOfThreads - 1)), // length
 						transferLength * (numberOfThreads - 1) // offset
