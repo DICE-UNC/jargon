@@ -100,7 +100,7 @@ public final class ParallelGetTransferThread extends
 		log.info("sockets are open and password sent, now begin the get operation");
 
 		get();
-		return null;
+		return "DONE"; // TODO: return status object?
 
 	}
 
@@ -109,20 +109,20 @@ public final class ParallelGetTransferThread extends
 
 		RandomAccessFile local;
 		try {
-			log.debug("opening local randomAccessFile");
+			log.info("opening local randomAccessFile");
 			local = new RandomAccessFile(
 					parallelGetFileTransferStrategy.getLocalFile(), "rw");
-			log.debug("random access file opened rw mode");
+			log.info("random access file opened rw mode");
 		} catch (FileNotFoundException e) {
 			log.error("FileNotFoundException in parallel get operation", e);
 			throw new JargonException(
 					"FileNotFoundException in parallel get operation", e);
 		}
-		
+
 		try {
-			
+
 			processingLoopForGetData(local);
-			
+
 		} catch (JargonException je) {
 			log.error("a jargon exception occurred in the get loop");
 			throw je;
@@ -132,6 +132,9 @@ public final class ParallelGetTransferThread extends
 		} finally {
 			log.info("parallel thread closing out local random access file stream");
 			try {
+				log.info("closing sockets, this close eats exceptions");
+				close();
+				log.info("closing local file");
 				local.close();
 			} catch (IOException e) {
 			}
@@ -142,25 +145,25 @@ public final class ParallelGetTransferThread extends
 	 * @param local
 	 * @throws JargonException
 	 */
-	private void processingLoopForGetData(RandomAccessFile local)
+	private void processingLoopForGetData(final RandomAccessFile local)
 			throws JargonException {
-		log.debug("reading header info...");
+		log.info("reading header info...");
 
 		// read the header
 		int operation = readInt();
-		log.debug("   operation:{}", operation);
+		log.info("   operation:{}", operation);
 
 		// read the flags
 		int flags = readInt();
-		log.debug("   flags:{}", flags);
+		log.info("   flags:{}", flags);
 
 		// Where to seek into the data
 		long offset = readLong();
-		log.debug("   offset:{}", offset);
+		log.info("   offset:{}", offset);
 
 		// How much to read/write
 		long length = readLong();
-		log.debug("   length:{}", length);
+		log.info("   length:{}", length);
 
 		// Holds all the data for transfer
 		byte[] buffer = null;
@@ -174,7 +177,7 @@ public final class ParallelGetTransferThread extends
 							+ operation);
 		}
 
-		log.debug("seeking to offset: {}", offset);
+		log.info("seeking to offset: {}", offset);
 		seekToOffset(local, offset);
 
 		if (length <= 0) {
@@ -183,10 +186,10 @@ public final class ParallelGetTransferThread extends
 			// length has a max of 8mb?
 			buffer = new byte[ConnectionConstants.OUTPUT_BUFFER_LENGTH];
 		}
-		
-		while (length > 0) {
 
-			try {
+		try {
+			while (length > 0) {
+
 				log.debug("reading....");
 				read = getIn().read(
 						buffer,
@@ -194,87 +197,64 @@ public final class ParallelGetTransferThread extends
 						Math.min(ConnectionConstants.OUTPUT_BUFFER_LENGTH,
 								(int) length));
 				log.debug("read={}", read);
-			
-			} catch (IOException e) {
-				log.error(IO_EXEPTION_IN_PARALLEL_TRANSFER,
-						parallelGetFileTransferStrategy.toString());
-				throw new JargonException(
-						IO_EXCEPTION_OCCURRED_DURING_PARALLEL_FILE_TRANSFER, e);
-			} catch (Exception e) {
-				log.error("exception in parallel transfer", e);
-				throw new JargonException("unexpected exception in parallel transfer",e);	
-			}
-			
-			if (read > 0) {
-				length -= read;
-				log.debug("length left after read={}", length);
-				if (length == 0) {
-					log.debug("length == 0, write the buffer, then get another header");
-					try {
-						local.write(buffer, 0, read);
-						log.debug("buffer written to file");	
-					} catch (IOException e) {
-						log.error(IO_EXEPTION_IN_PARALLEL_TRANSFER,
-								parallelGetFileTransferStrategy.toString());
-						throw new JargonException(
-								IO_EXCEPTION_OCCURRED_DURING_PARALLEL_FILE_TRANSFER,
-								e);
-					 } catch (Exception e) {
-						log.error("exception in parallel transfer", e);
-						throw new JargonException("unexpected exception in parallel transfer",e);	
-					}
 
-					log.debug("parallel transfer read next header");
-					// read the next header
-					operation = readInt();
-					log.debug("   operation:{}", operation);
-					flags = readInt();
-					log.debug("   flags:{}", flags);
-					offset = readLong();
-					log.debug("   offset:{}", offset);
-					length = readLong();
-					log.debug("   length:{}", length);
+				if (read > 0) {
+					length -= read;
+					log.debug("length left after read={}", length);
+					if (length == 0) {
+						log.debug("length == 0, write the buffer, then get another header");
 
-					if (operation == DONE_OPR) {
-						log.debug("    done...received done flag in operation");
-						break;
-					}
-
-					try {
-						log.debug("seeking to new offset");
-						local.seek(offset);
-					} catch (IOException e) {
-						log.error(IO_EXEPTION_IN_PARALLEL_TRANSFER,
-								parallelGetFileTransferStrategy.toString());
-						throw new JargonException(
-								IO_EXCEPTION_OCCURRED_DURING_PARALLEL_FILE_TRANSFER,
-								e);
-					}
-
-				} else if (length < 0) {
-					String msg = "length < 0 passed in header from iRODS during parallel get operation";
-					log.error(msg);
-					throw new JargonException(msg);
-				} else {
-					log.debug("length > 0, write what I have and read more...");
-					try {
 						local.write(buffer, 0, read);
 						log.debug("buffer written to file");
-					} catch (IOException e) {
-						log.error(IO_EXEPTION_IN_PARALLEL_TRANSFER,
-								parallelGetFileTransferStrategy.toString());
-						throw new JargonException(
-								IO_EXCEPTION_OCCURRED_DURING_PARALLEL_FILE_TRANSFER,
-								e);
+
+						log.debug("parallel transfer read next header");
+						// read the next header
+						operation = readInt();
+						log.debug("   operation:{}", operation);
+						flags = readInt();
+						log.debug("   flags:{}", flags);
+						offset = readLong();
+						log.debug("   offset:{}", offset);
+						length = readLong();
+						log.debug("   length:{}", length);
+
+						if (operation == DONE_OPR) {
+							log.debug("    done...received done flag in operation");
+							break;
+						}
+
+						log.debug("seeking to new offset");
+						local.seek(offset);
+
+					} else if (length < 0) {
+						String msg = "length < 0 passed in header from iRODS during parallel get operation";
+						log.error(msg);
+						throw new JargonException(msg);
+					} else {
+						log.debug("length > 0, write what I have and read more...");
+
+						local.write(buffer, 0, read);
+						log.debug("buffer written to file");
+
 					}
+				} else {
+					log.warn("intercepted a loop condition on parallel file get, length is > 0 but I just read and got nothing...breaking...");
+					// length = 0;
+					throw new JargonException(
+							"possible loop condition in parallel file get");
 				}
-			} else {
-				log.warn("intercepted a loop condition on parallel file get, length is > 0 but I just read and got nothing...breaking...");
-				// length = 0;
-				throw new JargonException(
-						"possible loop condition in parallel file get");
+
+				Thread.yield();
 			}
-			//Thread.yield();
+		} catch (IOException e) {
+			log.error(IO_EXEPTION_IN_PARALLEL_TRANSFER,
+					parallelGetFileTransferStrategy.toString());
+			throw new JargonException(
+					IO_EXCEPTION_OCCURRED_DURING_PARALLEL_FILE_TRANSFER, e);
+		} catch (Exception e) {
+			log.error("exception in parallel transfer", e);
+			throw new JargonException(
+					"unexpected exception in parallel transfer", e);
 		}
 	}
 

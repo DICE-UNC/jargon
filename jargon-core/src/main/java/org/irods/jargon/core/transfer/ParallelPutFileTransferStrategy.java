@@ -116,9 +116,9 @@ public final class ParallelPutFileTransferStrategy extends
 		}
 		// last thread is a little different
 		parallelTransferThread = ParallelPutTransferThread
-				.instance(this, (int) (localFileLength - transferLength
-						* (numberOfThreads - 1)), // length
-						transferLength * (numberOfThreads - 1) // offset
+				.instance(this,localFileLength - transferLength
+						* (numberOfThreads - 1), // length
+					transferLength * (numberOfThreads - 1) // offset
 				);
 
 		parallelPutTransferThreads.add(parallelTransferThread);
@@ -126,10 +126,19 @@ public final class ParallelPutFileTransferStrategy extends
 		try {
 			log.info("invoking executor threads for put");
 			List<Future<Object>> transferThreadStates = executor.invokeAll(parallelPutTransferThreads);
-			log.info("state of threads at completion:{}", transferThreadStates);
+			
+			if (log.isInfoEnabled()) {
+				for (Future<Object> transferState : transferThreadStates) {
+					log.info("transfer state:{}", transferState);
+				}
+			}
+			
 			log.info("executor completed");
 		} catch (InterruptedException e) {
 			log.error("interrupted exception in thread", e);
+			throw new JargonException(e);
+		} catch (Exception e) {
+			log.error("an error occurred in a parallel get", e);
 			throw new JargonException(e);
 		}
 	}

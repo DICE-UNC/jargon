@@ -123,7 +123,6 @@ public final class ParallelPutTransferThread extends
 					parallelPutFileTransferStrategy.getPort()));
 			// getS().setSoTimeout(30000);
 			setOut(new BufferedOutputStream(getS().getOutputStream()));
-
 			log.info("writing the cookie (password) for the output thread");
 
 			// write the cookie
@@ -149,7 +148,7 @@ public final class ParallelPutTransferThread extends
 			}
 		}
 
-		return null;
+		return "DONE"; // TODO: some sort of status object? counts, etc?
 
 	}
 
@@ -170,10 +169,10 @@ public final class ParallelPutTransferThread extends
 		}
 
 		log.info("buffer length for put is: {}", buffer.length);
-		
+
 		/*
-		 * Read/write loop moves data from file starting at offset down the socket until the anticipated 
-		 * transfer length is consumed.
+		 * Read/write loop moves data from file starting at offset down the
+		 * socket until the anticipated transfer length is consumed.
 		 */
 		try {
 			while (transferLength > 0) {
@@ -201,33 +200,35 @@ public final class ParallelPutTransferThread extends
 					throw new JargonException(
 							"unexpected end of data in transfer operation");
 				}
-
-			
+				Thread.yield();
 			}
 
 			log.info("final flush of output buffer");
 			getOut().flush();
+
+			log.info("for thread, total read: {}", totalRead);
+			log.info("   total written: {}", totalWritten);
+			log.info("   transferLength: {}", transferLength);
+
+			if (totalRead != totalWritten) {
+				throw new JargonException(
+						"totalRead and totalWritten do not agree");
+			}
+
+			if (transferLength != 0) {
+				throw new JargonException(
+						"transferLength and totalWritten do not agree");
+			}
 
 		} catch (IOException e) {
 			log.error(
 					"An IO exception occurred during a parallel file put operation",
 					e);
 			throw new JargonException("IOException during parallel file put", e);
+		} finally {
+			log.info("closing sockets");
+			this.close();
 		}
-
-		log.info("for thread, total read: {}", totalRead);
-		log.info("   total written: {}", totalWritten);
-		log.info("   transferLength: {}", transferLength);
-
-		if (totalRead != totalWritten) {
-			throw new JargonException("totalRead and totalWritten do not agree");
-		}
-
-		if (transferLength != 0) {
-			throw new JargonException(
-					"transferLength and totalWritten do not agree");
-		}
-
 	}
 
 	@Override

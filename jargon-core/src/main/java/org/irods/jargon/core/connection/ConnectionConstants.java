@@ -66,9 +66,15 @@ public final class ConnectionConstants {
 	/**
 	 * Size of the socket send buffer
 	 */
-	public static int OUTPUT_BUFFER_LENGTH = GeneralFileSystem
-			.getWriteBufferSize();
+	
+	// FIXME: temp
+	
+	//public static int OUTPUT_BUFFER_LENGTH = GeneralFileSystem
+	//		.getWriteBufferSize();
 
+	public static int OUTPUT_BUFFER_LENGTH =2048;
+	
+	
 	/**
 	 * 4 bytes at the front of the header, outside XML
 	 */

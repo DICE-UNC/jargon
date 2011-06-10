@@ -46,23 +46,28 @@ public final class ParallelGetFileTransferStrategy extends
 	 *            transfer.
 	 * @param localFile
 	 *            <code>File</code> representing the local file
-	 *              @param irodsAccessObjectFactory
-	 * 	{@link IRODSAccessObjectFactory} for the session.
+	 * @param irodsAccessObjectFactory
+	 *            {@link IRODSAccessObjectFactory} for the session.
 	 * @return
 	 * @throws JargonException
 	 */
 	public static ParallelGetFileTransferStrategy instance(final String host,
 			final int port, final int numberOfThreads, final int password,
-			final File localFile, final IRODSAccessObjectFactory irodsAccessObjectFactory) throws JargonException {
+			final File localFile,
+			final IRODSAccessObjectFactory irodsAccessObjectFactory)
+			throws JargonException {
 		return new ParallelGetFileTransferStrategy(host, port, numberOfThreads,
 				password, localFile, irodsAccessObjectFactory);
 	}
 
 	private ParallelGetFileTransferStrategy(final String host, final int port,
-			final int numberOfThreads, final int password, final File localFile, final IRODSAccessObjectFactory irodsAccessObjectFactory)
+			final int numberOfThreads, final int password,
+			final File localFile,
+			final IRODSAccessObjectFactory irodsAccessObjectFactory)
 			throws JargonException {
 
-		super(host, port, numberOfThreads, password, localFile, irodsAccessObjectFactory);
+		super(host, port, numberOfThreads, password, localFile,
+				irodsAccessObjectFactory);
 
 	}
 
@@ -76,7 +81,8 @@ public final class ParallelGetFileTransferStrategy extends
 	@Override
 	public void transfer() throws JargonException {
 		log.info("initiating transfer for: {}", this.toString());
-		ExecutorService executor = getIrodsAccessObjectFactory().getIrodsSession().getParallelTransferThreadPool();
+		ExecutorService executor = getIrodsAccessObjectFactory()
+				.getIrodsSession().getParallelTransferThreadPool();
 		if (executor == null) {
 			log.info("no pool available, transfer using standard Threads");
 			transferWithoutExecutor();
@@ -87,7 +93,8 @@ public final class ParallelGetFileTransferStrategy extends
 		log.info("transfer process has returned");
 	}
 
-	private void transferWithExecutor(final ExecutorService executor) throws JargonException {
+	private void transferWithExecutor(final ExecutorService executor)
+			throws JargonException {
 		final List<ParallelGetTransferThread> parallelGetTransferThreads = new ArrayList<ParallelGetTransferThread>();
 
 		for (int i = 0; i < numberOfThreads; i++) {
@@ -95,7 +102,7 @@ public final class ParallelGetFileTransferStrategy extends
 					.instance(this);
 			parallelGetTransferThreads.add(parallelTransfer);
 		}
-		
+
 		try {
 			log.info("invoking executor threads for get");
 			executor.invokeAll(parallelGetTransferThreads);
