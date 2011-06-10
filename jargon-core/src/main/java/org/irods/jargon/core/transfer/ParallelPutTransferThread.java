@@ -1,5 +1,7 @@
 package org.irods.jargon.core.transfer;
 
+import static edu.sdsc.grid.io.irods.IRODSConstants.GET_OPR;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.FileInputStream;
@@ -30,6 +32,7 @@ public final class ParallelPutTransferThread extends
 	private long transferLength;
 	private final long offset;
 	private final ParallelPutFileTransferStrategy parallelPutFileTransferStrategy;
+	private BufferedInputStream bis = null;
 
 	public static final Logger log = LoggerFactory
 			.getLogger(ParallelPutTransferThread.class);
@@ -79,34 +82,44 @@ public final class ParallelPutTransferThread extends
 		log.info("transfer length:{}", transferLength);
 		this.offset = offset;
 		log.info("offset: {}", offset);
-
+		
+		try {
+		log.info(
+				"opening socket to paralllel transfer (high) port at port:{}",
+				parallelPutFileTransferStrategy.getPort());
+		setS(new Socket(parallelPutFileTransferStrategy.getHost(),
+				parallelPutFileTransferStrategy.getPort()));
+		// getS().setSoTimeout(30000);
+		setOut(new BufferedOutputStream(getS().getOutputStream()));
+		setIn(new BufferedInputStream(getS().getInputStream()));
+		} catch (Exception e) {
+			log.error("unable to create transfer thread", e);
+			throw new JargonException(e);
+		} 
 	}
 
 	@Override
 	public Object call() throws JargonException {
-
-		BufferedInputStream bis = null;
+		
 		try {
+			
 			log.info("getting input stream for local file");
 			bis = new BufferedInputStream(new FileInputStream(
 					parallelPutFileTransferStrategy.getLocalFile()));
-			// bis = new FileInputStream(
-			// parallelPutFileTransferStrategy.getLocalFile());
-			setIn(bis);
-
+		
 			long totalSkipped = 0;
 			long toSkip = 0;
 
 			// guard against occasions where skip does not skip the full amount
 
 			if (offset > 0) {
-				long skipped = getIn().skip(offset);
+				long skipped = bis.skip(offset);
 				totalSkipped += skipped;
 
 				while (totalSkipped < offset) {
 					log.warn("did not skip entire offset amount, call skip again");
 					toSkip = offset - totalSkipped;
-					skipped = getIn().skip(toSkip);
+					skipped = bis.skip(toSkip);
 				}
 
 				if (totalSkipped != offset) {
@@ -116,13 +129,7 @@ public final class ParallelPutTransferThread extends
 
 			}
 
-			log.info(
-					"opening socket to paralllel transfer (high) port at port:{}",
-					parallelPutFileTransferStrategy.getPort());
-			setS(new Socket(parallelPutFileTransferStrategy.getHost(),
-					parallelPutFileTransferStrategy.getPort()));
-			// getS().setSoTimeout(30000);
-			setOut(new BufferedOutputStream(getS().getOutputStream()));
+			
 			log.info("writing the cookie (password) for the output thread");
 
 			// write the cookie
@@ -130,6 +137,7 @@ public final class ParallelPutTransferThread extends
 			Host.copyInt(parallelPutFileTransferStrategy.getPassword(), b);
 			getOut().write(b);
 			getOut().flush();
+			
 			log.debug("cookie written for output thread...calling put() to start read/write loop");
 			put();
 			log.debug("put operation completed");
@@ -141,10 +149,12 @@ public final class ParallelPutTransferThread extends
 			this.setExceptionInTransfer(e);
 			throw new JargonException("error during parallel file put", e);
 		} finally {
+			log.info("closing sockets, this eats any exceptions");
+			this.close();
+			// close file stream
 			try {
 				bis.close();
-			} catch (Exception e) {
-
+			} catch (IOException e) {
 			}
 		}
 
@@ -154,6 +164,7 @@ public final class ParallelPutTransferThread extends
 
 	private void put() throws JargonException {
 		log.info("put()..");
+		
 		// Holds all the data for transfer
 		byte[] buffer = null;
 		int read = 0;
@@ -178,15 +189,13 @@ public final class ParallelPutTransferThread extends
 			while (transferLength > 0) {
 				log.debug("in put read/write loop at top");
 
-				read = getIn().read(
+				read = bis.read(
 						buffer,
 						0,
 						(int) Math.min(
 								ConnectionConstants.OUTPUT_BUFFER_LENGTH,
 								transferLength));
 				
-				read = getIn().read(buffer);
-
 				log.debug("read: {}", read);
 				totalRead += read;
 
@@ -228,8 +237,7 @@ public final class ParallelPutTransferThread extends
 					e);
 			throw new JargonException("IOException during parallel file put", e);
 		} finally {
-			log.info("closing sockets");
-			this.close();
+			
 		}
 	}
 
