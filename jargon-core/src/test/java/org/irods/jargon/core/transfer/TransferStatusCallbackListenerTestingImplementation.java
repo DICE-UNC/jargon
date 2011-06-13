@@ -22,6 +22,7 @@ public class TransferStatusCallbackListenerTestingImplementation implements
 	private int copyCallbackCtr = 0;
 	private int exceptionCallbackCtr = 0;
 	private int replicateCallbackCtr = 0;
+	private int overallCallbackCtr = 0;
 
 	private int pauseAfter = 0;
 	private int cancelAfter = 0;
@@ -135,6 +136,21 @@ public class TransferStatusCallbackListenerTestingImplementation implements
 
 	public synchronized List<TransferStatus> getStatusCache() {
 		return statusCache;
+	}
+
+	@Override
+	public void overallStatusCallback(TransferStatus transferStatus)
+			throws JargonException {
+		
+		overallCallbackCtr++;
+		
+	}
+
+	/**
+	 * @return the overallCallbackCtr
+	 */
+	protected int getOverallCallbackCtr() {
+		return overallCallbackCtr;
 	}
 
 }

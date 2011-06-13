@@ -6,7 +6,9 @@ package org.irods.jargon.transfer.engine;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.transfer.TransferStatus;
+import org.irods.jargon.core.transfer.TransferStatus.TransferState;
 import org.irods.jargon.transfer.engine.TransferManager.ErrorStatus;
 import org.irods.jargon.transfer.engine.TransferManager.RunningStatus;
 
@@ -30,6 +32,7 @@ public class DummyTransferManagerCallbackListener implements
 	private boolean isComplete = false;
 
 	private List<TransferStatus> transferStatusHistory = new ArrayList<TransferStatus>();
+	private List<TransferStatus> overallStatusHistory = new ArrayList<TransferStatus>();
 
 	/*
 	 * (non-Javadoc)
@@ -62,12 +65,33 @@ public class DummyTransferManagerCallbackListener implements
 	}
 
 	@Override
-	public void transferStatusCallback(final TransferStatus transferStatus) {
+	public void statusCallback(final TransferStatus transferStatus) {
 		transferStatusHistory.add(transferStatus);
 	}
 
 	public List<TransferStatus> getTransferStatusHistory() {
 		return transferStatusHistory;
+	}
+
+	@Override
+	public void overallStatusCallback(TransferStatus transferStatus)
+			throws JargonException {
+		
+		if (transferStatus.getTransferState() == TransferState.OVERALL_COMPLETION || 
+				transferStatus.getTransferState() == TransferState.OVERALL_INITIATION) {
+			// OK
+		} else {
+			throw new JargonException("illegal status reported as overall");
+		}
+		
+		overallStatusHistory.add(transferStatus);
+	}
+
+	/**
+	 * @return the overallStatusHistory
+	 */
+	public List<TransferStatus> getOverallStatusHistory() {
+		return overallStatusHistory;
 	}
 
 }

@@ -90,7 +90,7 @@ public final class TransferManagerImpl implements TransferManager {
 			final IRODSFileSystem irodsFileSystem,
 			final TransferManagerCallbackListener transferManagerCallbackListener)
 			throws JargonException {
-		
+
 		if (irodsFileSystem == null) {
 			throw new IllegalArgumentException("null irodsFileSystem");
 		}
@@ -127,11 +127,11 @@ public final class TransferManagerImpl implements TransferManager {
 			final IRODSFileSystem irodsFileSystem,
 			final TransferManagerCallbackListener transferManagerCallbackListener,
 			final boolean logSuccessfulTransfers) throws JargonException {
-		
+
 		if (irodsFileSystem == null) {
 			throw new IllegalArgumentException("null irodsFileSystem");
 		}
-		
+
 		this.irodsFileSystem = irodsFileSystem;
 		this.transferManagerCallbackListener = transferManagerCallbackListener;
 		this.transferManagerCallbackListener = transferManagerCallbackListener;
@@ -481,17 +481,24 @@ public final class TransferManagerImpl implements TransferManager {
 		}
 
 	}
-	
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.transfer.engine.TransferManager#enqueueACopy(java.lang.String, java.lang.String, java.lang.String, org.irods.jargon.core.connection.IRODSAccount)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.transfer.engine.TransferManager#enqueueACopy(java.lang
+	 * .String, java.lang.String, java.lang.String,
+	 * org.irods.jargon.core.connection.IRODSAccount)
 	 */
 	@Override
 	public void enqueueACopy(final String irodsSourceAbsolutePath,
-			final String targetResource, final String irodsTargetAbsolutePath, final IRODSAccount irodsAccount)
-			throws JargonException {
+			final String targetResource, final String irodsTargetAbsolutePath,
+			final IRODSAccount irodsAccount) throws JargonException {
 
-		if (irodsSourceAbsolutePath == null || irodsSourceAbsolutePath.isEmpty()) {
-			throw new JargonException("irodsSourceAbsolutePath is null or empty");
+		if (irodsSourceAbsolutePath == null
+				|| irodsSourceAbsolutePath.isEmpty()) {
+			throw new JargonException(
+					"irodsSourceAbsolutePath is null or empty");
 		}
 
 		if (targetResource == null) {
@@ -499,10 +506,12 @@ public final class TransferManagerImpl implements TransferManager {
 					"targetResource is null, set to blank if default is desired");
 		}
 
-		if (irodsTargetAbsolutePath == null || irodsTargetAbsolutePath.isEmpty()) {
-			throw new JargonException("irodsTargetAbsolutePath is null or empty");
+		if (irodsTargetAbsolutePath == null
+				|| irodsTargetAbsolutePath.isEmpty()) {
+			throw new JargonException(
+					"irodsTargetAbsolutePath is null or empty");
 		}
-		
+
 		if (irodsAccount == null) {
 			throw new JargonException("irodsAccount is null");
 		}
@@ -783,8 +792,19 @@ public final class TransferManagerImpl implements TransferManager {
 		}
 
 		if (transferManagerCallbackListener != null) {
+			transferManagerCallbackListener.statusCallback(transferStatus);
+		}
+	}
+
+	protected void notifyOverallStatusUpdate(final TransferStatus transferStatus)
+			throws JargonException {
+		if (transferStatus == null) {
+			throw new JargonException("null transfer status");
+		}
+
+		if (transferManagerCallbackListener != null) {
 			transferManagerCallbackListener
-					.transferStatusCallback(transferStatus);
+					.overallStatusCallback(transferStatus);
 		}
 	}
 

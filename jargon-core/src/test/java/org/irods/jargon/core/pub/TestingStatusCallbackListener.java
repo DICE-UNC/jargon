@@ -1,6 +1,5 @@
 package org.irods.jargon.core.pub;
 
-import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.transfer.TransferStatus;
 import org.irods.jargon.core.transfer.TransferStatus.TransferState;
 import org.irods.jargon.core.transfer.TransferStatusCallbackListener;
@@ -15,8 +14,7 @@ public class TestingStatusCallbackListener implements
 	private String lastResource = "";
 
 	@Override
-	public void statusCallback(final TransferStatus transferStatus)
-			throws JargonException {
+	public void statusCallback(final TransferStatus transferStatus) {
 
 		if (transferStatus.getTransferState() == TransferState.FAILURE) {
 			errorCallbackCount++;
@@ -56,6 +54,20 @@ public class TestingStatusCallbackListener implements
 
 	public String getLastResource() {
 		return lastResource;
+	}
+
+	@Override
+	public void overallStatusCallback(final TransferStatus transferStatus) {
+
+		if (transferStatus.getTransferState() == TransferState.FAILURE) {
+			errorCallbackCount++;
+		} else {
+			successCallbackCount++;
+		}
+
+		lastSourcePath = transferStatus.getSourceFileAbsolutePath();
+		lastTargetPath = transferStatus.getTargetFileAbsolutePath();
+		lastResource = transferStatus.getTargetResource();
 	}
 
 }

@@ -39,6 +39,8 @@ public class DefaultTransferControlBlock implements TransferControlBlock {
 	private int totalFilesToTransfer = 0;
 	private int totalFilesTransferredSoFar = 0;
 	private TransferOptions transferOptions;
+	private long totalBytesTransferredSoFar = 0L;
+	private long totalBytesToTransfer = 0L;
 
 	/**
 	 * Initializer that takes a restart path. This will be ignored if blank or
@@ -342,6 +344,27 @@ public class DefaultTransferControlBlock implements TransferControlBlock {
 	public synchronized void setTransferOptions(
 			final TransferOptions transferOptions) {
 		this.transferOptions = transferOptions;
+	}
+
+	@Override
+	public synchronized long getTotalBytesTransferredSoFar() {
+		return this.totalBytesTransferredSoFar;
+	}
+
+	@Override
+	public synchronized void incrementTotalBytesTransferredSoFar(
+			final long totalBytesTransferredSoFar) {
+		this.totalBytesTransferredSoFar += totalBytesTransferredSoFar;
+	}
+
+	@Override
+	public synchronized long getTotalBytesToTransfer() {
+		return this.totalBytesToTransfer;
+	}
+
+	@Override
+	public void setTotalBytesToTransfer(long totalBytesToTransfer) {
+		this.totalBytesToTransfer = totalBytesToTransfer;
 	}
 
 }

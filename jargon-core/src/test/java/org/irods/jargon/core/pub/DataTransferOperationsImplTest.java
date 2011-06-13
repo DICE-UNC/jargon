@@ -417,7 +417,7 @@ public class DataTransferOperationsImplTest {
 		assertionHelper.assertIrodsFileMatchesLocalFileChecksum(
 				destFile.getAbsolutePath(), localFile.getAbsolutePath());
 	}
-	
+
 	@Test
 	public void testPutOneFileWithBlankInResource() throws Exception {
 		// generate a local scratch file
@@ -436,7 +436,7 @@ public class DataTransferOperationsImplTest {
 		// now put the file
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestPropertiesWithBlankResource(testingProperties);
-	IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
+		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
 		IRODSFileFactory irodsFileFactory = irodsFileSystem
 				.getIRODSFileFactory(irodsAccount);
 		IRODSFile destFile = irodsFileFactory
@@ -497,7 +497,7 @@ public class DataTransferOperationsImplTest {
 				getIRODSFile.getAbsolutePath(), getLocalFile.getAbsolutePath());
 		TestCase.assertEquals("did not expect any errors", 0,
 				testCallbackListener.getErrorCallbackCount());
-		TestCase.assertEquals("should have 2 callacks, including a 0th", 2,
+		TestCase.assertEquals("file callback, initial and completion", 3,
 				testCallbackListener.getSuccessCallbackCount());
 		TestCase.assertEquals(
 				"did not get the full irods file name in callback",
@@ -603,8 +603,6 @@ public class DataTransferOperationsImplTest {
 				.getIRODSAccessObjectFactory().getDataTransferOperations(
 						irodsAccount);
 		File localFile = new File(localCollectionAbsolutePath);
-		File[] localFiles = localFile.listFiles();
-
 		dataTransferOperationsAO.putOperation(localFile, destFile, null, null);
 
 		// now get, cancel after 4
@@ -1129,7 +1127,7 @@ public class DataTransferOperationsImplTest {
 
 		// I've put a mess of stuff, now get it
 
-		Assert.assertEquals("should have  2 files in coll before cancelled", 2,
+		Assert.assertEquals("should have  3 files in coll before cancelled", 3,
 				destFile.list().length);
 		Assert.assertTrue("should have a status callback of cancelled",
 				listener.isCancelEncountered());
@@ -1174,9 +1172,9 @@ public class DataTransferOperationsImplTest {
 		dataTransferOperationsAO.putOperation(localFile, destFile, listener,
 				transferControlBlock);
 
-		// now restart with the 3rd file
+		// now restart
 		TransferControlBlock restartControlBlock = DefaultTransferControlBlock
-				.instance(localFiles[2].getAbsolutePath());
+				.instance(localFiles[3].getAbsolutePath());
 		dataTransferOperationsAO.putOperation(localFile, destFile, listener,
 				restartControlBlock);
 
@@ -1198,7 +1196,7 @@ public class DataTransferOperationsImplTest {
 				.instance();
 
 		TransferStatusCallbackListenerTestingImplementation listener = new TransferStatusCallbackListenerTestingImplementation(
-				transferControlBlock, 3, 0);
+				transferControlBlock, 2, 0);
 
 		String localCollectionAbsolutePath = scratchFileUtils
 				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH
@@ -1236,7 +1234,7 @@ public class DataTransferOperationsImplTest {
 
 		// I've put a mess of stuff, now get it
 
-		Assert.assertEquals("should have 2 files in coll before pause", 2,
+		Assert.assertEquals("wrong number of files in coll before pause", 2,
 				destFile.list().length);
 		Assert.assertTrue("should have a status callback of pause",
 				listener.isPauseEncountered());
@@ -1303,7 +1301,7 @@ public class DataTransferOperationsImplTest {
 				ilsResult.indexOf(testingProperties
 						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY)) != -1);
 
-		Assert.assertEquals("did not get expected success callbacks", 2,
+		Assert.assertEquals("did not get expected success callbacks", 1,
 				transferStatusCallbackListener.getReplicateCallbackCtr());
 	}
 
@@ -1760,7 +1758,7 @@ public class DataTransferOperationsImplTest {
 				.instance();
 
 		TransferStatusCallbackListenerTestingImplementation listener = new TransferStatusCallbackListenerTestingImplementation(
-				transferControlBlock, 0, 3);
+				transferControlBlock, 0, 2);
 
 		String localCollectionAbsolutePath = scratchFileUtils
 				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH
@@ -1809,8 +1807,8 @@ public class DataTransferOperationsImplTest {
 				returnLocalCollectionCompareAbsolutePath);
 
 		// I've put a mess of stuff, now get it
-		Assert.assertEquals("should have 2 files in coll before cancelled", 2,
-				returnCompareLocalFile.list().length);
+		Assert.assertEquals("wrong number of files in coll before cancelled",
+				3, returnCompareLocalFile.list().length);
 		Assert.assertTrue("should have a status callback of cancelled",
 				listener.isCancelEncountered());
 	}
@@ -2360,7 +2358,7 @@ public class DataTransferOperationsImplTest {
 				.instance();
 
 		TransferStatusCallbackListenerTestingImplementation listener = new TransferStatusCallbackListenerTestingImplementation(
-				transferControlBlock, 0, 3);
+				transferControlBlock, 0, 2);
 
 		dataTransferOperationsAO.copy(destFile.getAbsolutePath() + "/"
 				+ rootCollection, "", irodsCollectionTargetAbsolutePath,
@@ -2370,20 +2368,22 @@ public class DataTransferOperationsImplTest {
 				transferControlBlock.getTotalFilesTransferredSoFar());
 
 		// now do a restart and complete the copy
-		IRODSFile copySourceFiles = irodsFileSystem.getIRODSFileFactory(irodsAccount).instanceIRODSFile(destFile.getAbsolutePath() + "/"
-				+ rootCollection);
-	
-		transferControlBlock = DefaultTransferControlBlock.instance(copySourceFiles.listFiles()[2].getAbsolutePath());
+		IRODSFile copySourceFiles = irodsFileSystem.getIRODSFileFactory(
+				irodsAccount).instanceIRODSFile(
+				destFile.getAbsolutePath() + "/" + rootCollection);
+
+		transferControlBlock = DefaultTransferControlBlock
+				.instance(copySourceFiles.listFiles()[2].getAbsolutePath());
 		listener = new TransferStatusCallbackListenerTestingImplementation(
 				transferControlBlock, 0, 0);
 
 		dataTransferOperationsAO.copy(destFile.getAbsolutePath() + "/"
 				+ rootCollection, "", irodsCollectionTargetAbsolutePath,
 				listener, false, transferControlBlock);
-		
+
 		int countRestarted = 0;
 		int countSuccess = 0;
-		
+
 		for (TransferStatus callback : listener.getStatusCache()) {
 			if (callback.getTransferState() == TransferState.RESTARTING) {
 				countRestarted++;
@@ -2395,8 +2395,12 @@ public class DataTransferOperationsImplTest {
 		}
 
 		irodsFileSystem.close();
-		TestCase.assertEquals("did not get expected number of restarting callbacks", 3, countRestarted);
-		TestCase.assertEquals("did not get expected number of success callbacks", 8, countSuccess);
+		TestCase.assertEquals(
+				"did not get expected number of restarting callbacks", 3,
+				countRestarted);
+		TestCase.assertEquals(
+				"did not get expected number of success callbacks", 7,
+				countSuccess);
 
 	}
 

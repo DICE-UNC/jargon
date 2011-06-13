@@ -18,6 +18,8 @@ public class TransferStatusCallbackListenerTestingImplementation implements
 	private int getCallbackCtr = 0;
 	private int exceptionCallbackCtr = 0;
 	private int replicateCallbackCtr = 0;
+	private int copyCallbackCtr = 0;
+	private int overallStatusCallbackCtr = 0;
 
 	public TransferStatusCallbackListenerTestingImplementation() {
 
@@ -33,6 +35,8 @@ public class TransferStatusCallbackListenerTestingImplementation implements
 			putCallbackCtr++;
 		} else if (transferStatus.getTransferType() == TransferType.REPLICATE) {
 			replicateCallbackCtr++;
+		} else if (transferStatus.getTransferType() == TransferType.COPY) {
+			copyCallbackCtr++;
 		}
 
 		if (transferStatus.getTransferState() == TransferState.FAILURE) {
@@ -58,6 +62,26 @@ public class TransferStatusCallbackListenerTestingImplementation implements
 
 	public void setReplicateCallbackCtr(int replicateCallbackCtr) {
 		this.replicateCallbackCtr = replicateCallbackCtr;
+	}
+
+	@Override
+	public void overallStatusCallback(TransferStatus transferStatus)
+			throws JargonException {
+		overallStatusCallbackCtr++;
+	}
+
+	/**
+	 * @return the copyCallbackCtr
+	 */
+	protected int getCopyCallbackCtr() {
+		return copyCallbackCtr;
+	}
+
+	/**
+	 * @return the overallStatusCallbackCtr
+	 */
+	protected int getOverallStatusCallbackCtr() {
+		return overallStatusCallbackCtr;
 	}
 
 }

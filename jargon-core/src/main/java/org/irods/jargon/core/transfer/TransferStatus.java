@@ -18,8 +18,15 @@ public final class TransferStatus {
 		PUT, GET, REPLICATE, COPY
 	}
 
+	/***
+	 * A transfer state represents tthe status of individual files. There is an
+	 * OVERALL_ status that indicates the beginning of an entire transfer, which
+	 * is either a file, or a collection of files recursively.
+	 * 
+	 * @author Mike Conway - DICE (www.irods.org)
+	 */
 	public enum TransferState {
-		IN_PROGRESS, SUCCESS, FAILURE, PAUSED, CANCELLED, RESTARTING
+		IN_PROGRESS, SUCCESS, FAILURE, PAUSED, CANCELLED, RESTARTING, OVERALL_INITIATION, OVERALL_COMPLETION
 	}
 
 	private final TransferState transferState;
@@ -30,11 +37,13 @@ public final class TransferStatus {
 	private final long totalSize;
 	private final long bytesTransfered;
 	private final int totalFilesTransferredSoFar;
-	private int totalFilesToTransfer;
+	private final int totalFilesToTransfer;
 	private final Exception transferException;
+	private final boolean intraFileStatusReport;
 
 	/**
-	 * Create an immutable transfer status object
+	 * Create an immutable transfer status object for a complete file or overall
+	 * transfer.
 	 * 
 	 * @param transferType
 	 *            <code>TransferType</code> that indicates the type of transfer
@@ -70,7 +79,46 @@ public final class TransferStatus {
 		return new TransferStatus(transferType, sourceFileAbsolutePath,
 				targetFileAbsolutePath, targetResource, totalSize,
 				bytesTransfered, totalFilesTransferredSoFar,
-				totalFilesToTransfer, transferState, null);
+				totalFilesToTransfer, transferState, null, false);
+
+	}
+
+	/**
+	 * Create an immutable transfer status object for a partial transfer of a
+	 * file. This status object represents partial progress within a file.
+	 * 
+	 * @param transferType
+	 *            <code>TransferType</code> that indicates the type of transfer
+	 * @param sourceFileAbsolutePath
+	 *            <code>String</code> absolute path to the source file
+	 * @param targetFileAbsolutePath
+	 *            <code>String</code> absolute path to the target file
+	 * @param targetResource
+	 *            <code>String</code> with an optional resource, set to blank if
+	 *            unused.
+	 * @param totalSize
+	 *            <code>long</code> with the total size of the file
+	 * @param bytesTransfered
+	 *            <code>long</code> with the total transferred so far, which is
+	 *            some fraction of the total size
+	 * @param totalFilesTransferredSoFar
+	 *            <code>int<code> with the total files transferred, including this status callback
+	 * @param totalFilesToTransfer
+	 *            <code>int</code> with the total files involved in this
+	 *            operation
+	 */
+	public static TransferStatus instanceForIntraFileStatus(
+			final TransferType transferType,
+			final String sourceFileAbsolutePath,
+			final String targetFileAbsolutePath, final String targetResource,
+			final long totalSize, final long bytesTransfered,
+			final int totalFilesTransferredSoFar, final int totalFilesToTransfer)
+			throws JargonException {
+
+		return new TransferStatus(transferType, sourceFileAbsolutePath,
+				targetFileAbsolutePath, targetResource, totalSize,
+				bytesTransfered, totalFilesTransferredSoFar,
+				totalFilesToTransfer, TransferState.IN_PROGRESS, null, true);
 
 	}
 
@@ -114,7 +162,7 @@ public final class TransferStatus {
 		return new TransferStatus(transferType, sourceFileAbsolutePath,
 				targetFileAbsolutePath, targetResource, totalSize,
 				bytesTransfered, totalFilesTransferredSoFar,
-				totalFilesToTransfer, TransferState.FAILURE, exception);
+				totalFilesToTransfer, TransferState.FAILURE, exception, false);
 
 	}
 
@@ -142,6 +190,8 @@ public final class TransferStatus {
 		sb.append(totalFilesToTransfer);
 		sb.append("\n   transferException:");
 		sb.append(transferException);
+		sb.append("\n   intraFileStatusReport");
+		sb.append(intraFileStatusReport);
 		return sb.toString();
 	}
 
@@ -156,6 +206,7 @@ public final class TransferStatus {
 	 * @param totalFilesToTransfer
 	 * @param transferState
 	 * @param transferException
+	 * @param intraFileStatusReport
 	 * @throws JargonException
 	 */
 	private TransferStatus(final TransferType transferType,
@@ -164,7 +215,8 @@ public final class TransferStatus {
 			final long totalSize, final long bytesTransferred,
 			final int totalFilesTransferredSoFar,
 			final int totalFilesToTransfer, final TransferState transferState,
-			final Exception transferException) throws JargonException {
+			final Exception transferException,
+			final boolean intraFileStatusReport) throws JargonException {
 
 		if (totalSize < 0) {
 			throw new JargonException("totalSize less than zero");
@@ -214,6 +266,7 @@ public final class TransferStatus {
 		this.transferException = transferException;
 		this.totalFilesToTransfer = totalFilesToTransfer;
 		this.totalFilesTransferredSoFar = totalFilesTransferredSoFar;
+		this.intraFileStatusReport = intraFileStatusReport;
 
 	}
 
@@ -253,12 +306,12 @@ public final class TransferStatus {
 		return totalFilesToTransfer;
 	}
 
-	public void setTotalFilesToTransfer(final int totalFilesToTransfer) {
-		this.totalFilesToTransfer = totalFilesToTransfer;
-	}
-
 	public int getTotalFilesTransferredSoFar() {
 		return totalFilesTransferredSoFar;
+	}
+
+	public boolean isIntraFileStatusReport() {
+		return intraFileStatusReport;
 	}
 
 }

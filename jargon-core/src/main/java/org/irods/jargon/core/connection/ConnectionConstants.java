@@ -72,7 +72,7 @@ public final class ConnectionConstants {
 	//public static int OUTPUT_BUFFER_LENGTH = GeneralFileSystem
 	//		.getWriteBufferSize();
 
-	public static int OUTPUT_BUFFER_LENGTH = 4096;
+	public static int OUTPUT_BUFFER_LENGTH = 8192;
 	
 	
 	/**

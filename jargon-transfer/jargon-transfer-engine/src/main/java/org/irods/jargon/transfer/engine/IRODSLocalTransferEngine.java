@@ -231,6 +231,7 @@ final class IRODSLocalTransferEngine implements TransferStatusCallbackListener {
 				wrapUpTransfer);
 		log.info("updated");
 		setCurrentTransfer(wrapUpTransfer);
+		
 		log.info("commit");
 
 	}
@@ -254,9 +255,7 @@ final class IRODSLocalTransferEngine implements TransferStatusCallbackListener {
 			transferException = je;
 		}
 		return transferException;
-		
-		
-		
+	
 	}
 
 	private void markTransferWasAborted(final LocalIRODSTransfer wrapUpTransfer)
@@ -422,8 +421,7 @@ final class IRODSLocalTransferEngine implements TransferStatusCallbackListener {
 	 * (org.irods.jargon.core.transfer.TransferStatus)
 	 */
 	@Override
-	public void statusCallback(final TransferStatus transferStatus)
-			throws JargonException {
+	public void statusCallback(final TransferStatus transferStatus) throws JargonException {
 
 		log.info("statusCallback: {}", transferStatus);
 
@@ -551,6 +549,13 @@ final class IRODSLocalTransferEngine implements TransferStatusCallbackListener {
 
 	public boolean isLogSuccessfulTransfers() {
 		return logSuccessfulTransfers;
+	}
+
+	@Override
+	public void overallStatusCallback(TransferStatus transferStatus)
+			throws JargonException {
+		log.info("overall status callback:{}", transferStatus);
+		transferManager.notifyOverallStatusUpdate(transferStatus);
 	}
 
 }
