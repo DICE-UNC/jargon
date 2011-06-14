@@ -58,7 +58,7 @@ public class TestIRODSLocalTransferEngineTest {
 
 	private static IDatabaseTester databaseTester;
 	
-	private static TransferServiceFactoryImpl transferServiceFactory = new TransferServiceFactoryImpl();
+	private static TransferServiceFactoryImpl transferServiceFactory = null;
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -77,6 +77,7 @@ public class TestIRODSLocalTransferEngineTest {
 		databaseTester = new JdbcDatabaseTester(
 				"org.apache.derby.jdbc.EmbeddedDriver", databaseUrl,
 				"transfer", "transfer");
+		transferServiceFactory = new TransferServiceFactoryImpl();
 
 	}
 

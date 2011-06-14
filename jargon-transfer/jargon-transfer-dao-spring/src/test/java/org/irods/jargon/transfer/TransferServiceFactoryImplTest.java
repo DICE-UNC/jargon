@@ -37,7 +37,7 @@ public class TransferServiceFactoryImplTest {
 	}
 
 	@Test
-	public void testInstanceSynchManagerService() {
+	public void testInstanceSynchManagerService() throws Exception {
 		TransferServiceFactoryImpl transferServiceFactory = new TransferServiceFactoryImpl();
 		SynchManagerService synchManagerService = transferServiceFactory
 				.instanceSynchManagerService();
@@ -46,7 +46,7 @@ public class TransferServiceFactoryImplTest {
 	}
 
 	@Test
-	public void testInstanceConfigurationService() {
+	public void testInstanceConfigurationService() throws Exception {
 		TransferServiceFactoryImpl transferServiceFactory = new TransferServiceFactoryImpl();
 		ConfigurationService configurationService = transferServiceFactory
 				.instanceConfigurationService();

@@ -1,8 +1,11 @@
 package org.irods.jargon.transfer;
 
+import org.irods.jargon.core.pub.DataTransferOperationsImpl;
 import org.irods.jargon.transfer.engine.ConfigurationService;
 import org.irods.jargon.transfer.engine.TransferQueueService;
 import org.irods.jargon.transfer.engine.synch.SynchManagerService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -15,13 +18,20 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 public class TransferServiceFactoryImpl {
 
 	private BeanFactory beanFactory;
+	private static Logger log = LoggerFactory
+			.getLogger(TransferServiceFactoryImpl.class);
 
-	public TransferServiceFactoryImpl() {
-		ClassPathXmlApplicationContext appContext = new ClassPathXmlApplicationContext(
-				new String[] { "classpath:transfer-dao-beans.xml",
-						"classpath:transfer-dao-hibernate-spring.cfg.xml" });
-		// of course, an ApplicationContext is just a BeanFactory
-		beanFactory = appContext;
+	public TransferServiceFactoryImpl() throws TransferEngineException {
+		try {
+			ClassPathXmlApplicationContext appContext = new ClassPathXmlApplicationContext(
+					new String[] { "classpath:transfer-dao-beans.xml",
+							"classpath:transfer-dao-hibernate-spring.cfg.xml" });
+			// of course, an ApplicationContext is just a BeanFactory
+			beanFactory = appContext;
+		} catch (Exception e) {
+			log.error("error starting app context", e);
+			throw new TransferEngineException(e.getMessage());
+		}
 	}
 
 	public TransferQueueService instanceTransferQueueService() {

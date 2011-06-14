@@ -39,7 +39,7 @@ public class TransferQueueServiceTest {
 
 	private static org.irods.jargon.testutils.IRODSTestSetupUtilities irodsTestSetupUtilities = null;
 
-	private static TransferServiceFactoryImpl transferServiceFactory = new TransferServiceFactoryImpl();
+	private static TransferServiceFactoryImpl transferServiceFactory = null;
 
 	private static IDatabaseTester databaseTester;
 
@@ -59,6 +59,7 @@ public class TransferQueueServiceTest {
 		databaseTester = new JdbcDatabaseTester(
 				"org.apache.derby.jdbc.EmbeddedDriver", databaseUrl,
 				"transfer", "transfer");
+		transferServiceFactory = new TransferServiceFactoryImpl();
 
 	}
 
