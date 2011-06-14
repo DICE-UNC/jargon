@@ -15,6 +15,11 @@ public class JargonRuntimeException extends RuntimeException {
 	/**
 	 * 
 	 */
+	private static final long serialVersionUID = -187881112002016775L;
+
+	/**
+	 * 
+	 */
 	public JargonRuntimeException() {
 	}
 
