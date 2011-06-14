@@ -418,21 +418,26 @@ public final class IRODSFileImpl extends File implements IRODSFile {
 	@Override
 	public boolean delete() {
 		boolean successful = true;
-		try {
-			if (this.isFile()) {
-				irodsFileSystemAO.fileDeleteNoForce(this);
-			} else if (this.isDirectory()) {
-				irodsFileSystemAO.directoryDeleteNoForce(this);
+		if (!exists()) {
+			successful = true;
+		} else {
+			try {
+				if (this.isFile()) {
+					irodsFileSystemAO.fileDeleteNoForce(this);
+				} else if (this.isDirectory()) {
+					irodsFileSystemAO.directoryDeleteNoForce(this);
+				}
+			} catch (DataNotFoundException dnf) {
+				successful = false;
+			} catch (JargonException e) {
+
+				log.error(
+						"irods error occurred on delete, this was not a data not found exception, rethrow as unchecked",
+						e);
+				throw new JargonRuntimeException(
+						"exception occurred on delete", e);
+
 			}
-		} catch (DataNotFoundException dnf) {
-			successful = false;
-		} catch (JargonException e) {
-
-			log.error(
-					"irods error occurred on delete, this was not a data not found exception, rethrow as unchecked",
-					e);
-			throw new JargonRuntimeException("exception occurred on delete", e);
-
 		}
 		return successful;
 
@@ -731,6 +736,11 @@ public final class IRODSFileImpl extends File implements IRODSFile {
 		} else if (pathNameType == PathNameType.FILE) {
 			return true;
 		} else if (pathNameType == PathNameType.DIRECTORY) {
+			return false;
+		}
+
+		if (!exists()) {
+			log.debug("does not exist, this is not a file");
 			return false;
 		}
 

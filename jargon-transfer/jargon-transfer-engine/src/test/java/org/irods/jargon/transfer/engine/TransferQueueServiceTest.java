@@ -1165,8 +1165,6 @@ public class TransferQueueServiceTest {
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
 
-		String testUserDbName = testingProperties
-				.getProperty("test.userdir.dbname");
 		TransferQueueService transferQueueService = transferServiceFactory
 				.instanceTransferQueueService();
 
@@ -1188,7 +1186,6 @@ public class TransferQueueServiceTest {
 		enqueuedTransfer.setTransferStatus(TransferStatus.OK);
 
 		transferQueueService.updateLocalIRODSTransfer(enqueuedTransfer);
-
 		transferQueueService.setTransferAsCancelled(enqueuedTransfer);
 
 		List<LocalIRODSTransfer> transferQueue = transferQueueService

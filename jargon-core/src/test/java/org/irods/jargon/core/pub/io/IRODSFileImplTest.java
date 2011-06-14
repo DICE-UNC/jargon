@@ -333,6 +333,64 @@ public class IRODSFileImplTest {
 		irodsSession.closeSession();
 		Assert.assertFalse("this should be a File, not a dir", isFile);
 	}
+	
+	/**
+	 * Test method for
+	 * {@link org.irods.jargon.core.pub.io.IRODSFileImpl#isDirectory()}.
+	 */
+	@Test
+	public final void testIsFileWhenNotExists() throws Exception {
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		// now get an irods file and see if it is readable, it should be
+
+		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager
+				.instance();
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSSession irodsSession = IRODSSession
+				.instance(irodsConnectionManager);
+		IRODSAccessObjectFactory accessObjectFactory = IRODSAccessObjectFactoryImpl
+				.instance(irodsSession);
+		IRODSFileFactory irodsFileFactory = accessObjectFactory
+				.getIRODSFileFactory(irodsAccount);
+		IRODSFile irodsFile = irodsFileFactory
+				.instanceIRODSFile(targetIrodsCollection + "/blah");
+		boolean isFile = irodsFile.isFile();
+		irodsSession.closeSession();
+		Assert.assertFalse("this should not be a file, it does not exist", isFile);
+	}
+	
+	/**
+	 * Test method for
+	 * {@link org.irods.jargon.core.pub.io.IRODSFileImpl#isDirectory()}.
+	 */
+	@Test
+	public final void testIsDirWhenNotExists() throws Exception {
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		// now get an irods file and see if it is readable, it should be
+
+		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager
+				.instance();
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSSession irodsSession = IRODSSession
+				.instance(irodsConnectionManager);
+		IRODSAccessObjectFactory accessObjectFactory = IRODSAccessObjectFactoryImpl
+				.instance(irodsSession);
+		IRODSFileFactory irodsFileFactory = accessObjectFactory
+				.getIRODSFileFactory(irodsAccount);
+		IRODSFile irodsFile = irodsFileFactory
+				.instanceIRODSFile(targetIrodsCollection + "/blah");
+		boolean isDir = irodsFile.isDirectory();
+		irodsSession.closeSession();
+		Assert.assertFalse("this should not be a dir, it does not exist", isDir);
+	}
 
 	/**
 	 * Test method for
@@ -730,14 +788,13 @@ public class IRODSFileImplTest {
 				.instanceIRODSFile(targetIrodsCollection + '/' + testFileName);
 
 		boolean result = irodsFile.delete();
-		Assert.assertFalse("did not get a true result from the file delete",
+		Assert.assertTrue("did not get a true result from the file delete",
 				result);
 		
 	}
 
 	@Test
 	public final void testDeleteFileWithForce() throws Exception {
-		// TODO: add assertions to check no trash
 		String testFileName = "testDeleteFileWithForce.txt";
 		String absPath = scratchFileUtils
 				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);

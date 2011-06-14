@@ -634,7 +634,6 @@ public class TransferQueueServiceImpl implements TransferQueueService {
 			throw new JargonException("irodsTargetAbsolutePath is null or empty");
 		}
 
-
 		if (irodsAccount == null) {
 			throw new JargonException("null irodsAccount");
 		}
@@ -660,7 +659,6 @@ public class TransferQueueServiceImpl implements TransferQueueService {
 		enqueuedTransfer.setTransferStatus(TransferStatus.OK);
 
 		try {
-
 			localIRODSTransferDAO.save(enqueuedTransfer);
 		} catch (TransferDAOException e) {
 			log.error("error in transaction", e);

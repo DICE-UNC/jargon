@@ -300,6 +300,8 @@ public class LocalIRODSTransfer implements Serializable {
 		sb.append(transferState);
 		sb.append("\n   transferStatus:");
 		sb.append(transferStatus);
+		sb.append("\n   transferType:");
+		sb.append(transferType);
 		sb.append("\n   globalException:");
 		sb.append(globalException);
 		sb.append("\n   lastSuccessfulPath:");

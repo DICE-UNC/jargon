@@ -917,7 +917,6 @@ final class TransferOperationsHelper {
 				StringBuilder targetCollectionName = new StringBuilder(
 						targetIrodsFileAbsolutePath);
 				targetCollectionName.append("/");
-				// FIXME: mkdir here?
 				targetCollectionName.append(fileInSourceCollection.getName());
 
 				recursivelyCopy((IRODSFileImpl) fileInSourceCollection,

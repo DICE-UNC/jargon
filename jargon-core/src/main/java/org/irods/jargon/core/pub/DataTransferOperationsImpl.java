@@ -1156,6 +1156,7 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 		IRODSFileFactory irodsFileFactory = this.getIRODSFileFactory();
 		IRODSFile sourceFile = irodsFileFactory
 				.instanceIRODSFile(irodsSourceFileAbsolutePath);
+		
 
 		// look for recursive copy (collection to collection) and process,
 		// otherwise, just copy the file
@@ -1166,12 +1167,36 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 			preCountIrodsFilesBeforeTransfer(irodsSourceFileAbsolutePath,
 					operativeTransferControlBlock);
 
+			// The source directory becomes the new target subdirectory
+			
+			IRODSFile targetFile = this.getIRODSFileFactory().instanceIRODSFile(irodsTargetFileAbsolutePath);
+			
+			/*
+			if (!targetFile.exists()) {
+				log.error("attempting copy, target does not exist:{}", targetFile.getAbsolutePath());
+				throw new JargonException("copy operation where target directory does not exist");
+			}
+			*/
+			
+			// if the target is a file, use the parent
+			if (targetFile.exists() && targetFile.isFile()) {
+				targetFile = (IRODSFile) targetFile.getParentFile();
+				log.info("target of copy is a file, path switched to parent: {}", targetFile.getAbsolutePath());
+			}
+			
+			// here I know the source file is a collection 
+			targetFile = this.getIRODSFileFactory().instanceIRODSFile(targetFile.getAbsolutePath(), sourceFile.getName());
+			
+			log.info("resolved target file with appended source file collection name is: {}", targetFile.getAbsolutePath());
+			targetFile.mkdirs();
+			log.info("any necessary subdirs created for target file");
+			
 			// send 0th file status callback that indicates startup
 			if (transferStatusCallbackListener != null) {
 				TransferStatus status = TransferStatus.instance(
 						TransferType.COPY,
 						sourceFile.getAbsolutePath(),
-						"", targetResource,
+						irodsTargetFileAbsolutePath, targetResource,
 						operativeTransferControlBlock.getTotalBytesToTransfer(),
 						operativeTransferControlBlock.getTotalBytesTransferredSoFar(), operativeTransferControlBlock.getTotalFilesTransferredSoFar(),
 						operativeTransferControlBlock.getTotalFilesToTransfer(), TransferState.OVERALL_INITIATION);
@@ -1179,7 +1204,7 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 			}
 			
 			transferOperationsHelper.recursivelyCopy(sourceFile,
-					targetResource, irodsTargetFileAbsolutePath, force,
+					targetResource, targetFile.getAbsolutePath(), force,
 					transferStatusCallbackListener,
 					operativeTransferControlBlock);
 			
@@ -1188,15 +1213,13 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 				TransferStatus status = TransferStatus.instance(
 						TransferType.COPY,
 						sourceFile.getAbsolutePath(),
-						"", targetResource,
+						targetFile.getAbsolutePath(), targetResource,
 						operativeTransferControlBlock.getTotalBytesToTransfer(),
 						operativeTransferControlBlock.getTotalBytesTransferredSoFar(), operativeTransferControlBlock.getTotalFilesTransferredSoFar(),
 						operativeTransferControlBlock.getTotalFilesToTransfer(), TransferState.OVERALL_COMPLETION);
 				transferStatusCallbackListener.overallStatusCallback(status);
 			}
 			
-			
-
 		} else {
 
 			if (operativeTransferControlBlock != null) {
@@ -1208,7 +1231,7 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 				TransferStatus status = TransferStatus.instance(
 						TransferType.COPY,
 						sourceFile.getAbsolutePath(),
-						"", targetResource,
+						irodsTargetFileAbsolutePath, targetResource,
 						operativeTransferControlBlock.getTotalBytesToTransfer(),
 						operativeTransferControlBlock.getTotalBytesTransferredSoFar(), operativeTransferControlBlock.getTotalFilesTransferredSoFar(),
 						operativeTransferControlBlock.getTotalFilesToTransfer(), TransferState.OVERALL_INITIATION);
@@ -1226,7 +1249,7 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 				TransferStatus status = TransferStatus.instance(
 						TransferType.COPY,
 						sourceFile.getAbsolutePath(),
-						"", targetResource,
+						irodsTargetFileAbsolutePath, targetResource,
 						operativeTransferControlBlock.getTotalBytesToTransfer(),
 						operativeTransferControlBlock.getTotalBytesTransferredSoFar(), operativeTransferControlBlock.getTotalFilesTransferredSoFar(),
 						operativeTransferControlBlock.getTotalFilesToTransfer(), TransferState.OVERALL_COMPLETION);
