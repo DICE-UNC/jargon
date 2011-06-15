@@ -1,6 +1,5 @@
 package org.irods.jargon.transfer;
 
-import org.irods.jargon.core.pub.DataTransferOperationsImpl;
 import org.irods.jargon.transfer.engine.ConfigurationService;
 import org.irods.jargon.transfer.engine.TransferQueueService;
 import org.irods.jargon.transfer.engine.synch.SynchManagerService;

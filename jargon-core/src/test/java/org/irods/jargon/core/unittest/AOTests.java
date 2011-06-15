@@ -13,6 +13,7 @@ import org.irods.jargon.core.pub.RemoteExecutionOfCommandsAOImplTest;
 import org.irods.jargon.core.pub.ResourceAOTest;
 import org.irods.jargon.core.pub.RuleProcessingAOImplTest;
 import org.irods.jargon.core.pub.SimpleQueryExecutorAOImplTest;
+import org.irods.jargon.core.pub.Stream2StreamAOImplTest;
 import org.irods.jargon.core.pub.UserAOTest;
 import org.irods.jargon.core.pub.UserGroupAOImplTest;
 import org.irods.jargon.core.pub.ZoneAOTest;
@@ -29,7 +30,7 @@ import org.junit.runners.Suite;
 		RemoteExecutionOfCommandsAOImplTest.class,
 		CollectionAndDataObjectListAndSearchAOImplTest.class,
 		IRODSAccessObjectFactoryImplTest.class,
-		BulkFileOperationsAOImplTest.class, SimpleQueryExecutorAOImplTest.class })
+		BulkFileOperationsAOImplTest.class, SimpleQueryExecutorAOImplTest.class, Stream2StreamAOImplTest.class })
 public class AOTests {
 
 }

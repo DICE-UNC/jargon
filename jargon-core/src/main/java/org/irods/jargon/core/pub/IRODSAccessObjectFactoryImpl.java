@@ -387,6 +387,19 @@ public final class IRODSAccessObjectFactoryImpl implements
 				irodsAccount);
 	}
 	
+	
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.core.pub.IRODSAccessObjectFactory#getStream2StreamAO(org.irods.jargon.core.connection.IRODSAccount)
+	 */
+	@Override
+	public Stream2StreamAO getStream2StreamAO(
+			final IRODSAccount irodsAccount) throws JargonException {
+		checkIrodsSessionSet();
+		return new Stream2StreamAOImpl(irodsSession,
+				irodsAccount);
+	}
+	
+	
 	/* (non-Javadoc)
 	 * @see org.irods.jargon.core.pub.IRODSAccessObjectFactory#getSpecificQueryExecutorAO(org.irods.jargon.core.connection.IRODSAccount)
 	 */

@@ -318,4 +318,13 @@ public interface IRODSAccessObjectFactory {
 	 */
 	void closeSessionAndEatExceptions(IRODSAccount irodsAccount);
 
+	/**
+	 * Get an access object that can assist in stream to stream or byte array to stream copies into iRODS.
+	 * @param irodsAccount
+	 * @return {@link Stream2StreamAO}
+	 * @throws JargonException
+	 */
+	Stream2StreamAO getStream2StreamAO(IRODSAccount irodsAccount)
+			throws JargonException;
+
 }

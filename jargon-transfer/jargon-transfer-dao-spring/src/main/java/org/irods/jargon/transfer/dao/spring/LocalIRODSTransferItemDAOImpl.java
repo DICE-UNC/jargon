@@ -44,6 +44,7 @@ public class LocalIRODSTransferItemDAOImpl extends HibernateDaoSupport
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<LocalIRODSTransferItem> findErrorItemsByTransferId(final Long id)
 			throws TransferDAOException {
@@ -67,6 +68,7 @@ public class LocalIRODSTransferItemDAOImpl extends HibernateDaoSupport
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<LocalIRODSTransferItem> findAllItemsForTransferByTransferId(
 			final Long id) throws TransferDAOException {

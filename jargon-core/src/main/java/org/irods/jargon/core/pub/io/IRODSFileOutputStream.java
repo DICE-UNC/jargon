@@ -65,7 +65,7 @@ public final class IRODSFileOutputStream extends OutputStream {
 			throw new FileNotFoundException(msg);
 		}
 
-		if (!irodsFile.isFile()) {
+		if (irodsFile.exists() && !irodsFile.isFile()) {
 			String msg = "this is not a file, it is a directory:"
 					+ irodsFile.getAbsolutePath();
 			log.error(msg);

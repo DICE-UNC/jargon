@@ -327,7 +327,7 @@ public class RuleProcessingAOImplTest {
 		builder.append(putFileName);
 		builder.append("%*inputChecksum=");
 		builder.append(LocalFileUtils
-				.computeFileCheckSumViaAbsolutePath(putFileName));
+				.computeCRC32FileCheckSumViaAbsolutePath(putFileName));
 		builder.append("\n");
 
 		builder.append("*ruleExecOut");

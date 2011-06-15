@@ -8,6 +8,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.zip.CRC32;
 import java.util.zip.CheckedInputStream;
 
@@ -87,7 +89,7 @@ public class LocalFileUtils {
 	}
 
 	/**
-	 * Compute a checksum for a local file given an absolute path
+	 * Compute a CRC32 checksum for a local file given an absolute path
 	 * 
 	 * @param absolutePathToLocalFile
 	 *            <code>String</code> with absolute local file path under
@@ -95,7 +97,7 @@ public class LocalFileUtils {
 	 * @return <code>long</code> with the file's checksum value
 	 * @throws JargonException
 	 */
-	public static long computeFileCheckSumViaAbsolutePath(
+	public static long computeCRC32FileCheckSumViaAbsolutePath(
 			final String absolutePathToLocalFile) throws JargonException {
 
 		FileInputStream file;
@@ -126,5 +128,72 @@ public class LocalFileUtils {
 		return check.getChecksum().getValue();
 
 	}
+
+	/**
+	 * Compute an MD5 checksum for a local file given an absolute path
+	 * 
+	 * @param absolutePathToLocalFile
+	 *            <code>String</code> with absolute local file path under
+	 *            scratch (no leading '/')
+	 * @return <code>byte[]</code> with the file's checksum value
+	 * @throws JargonException
+	 */
+	public static byte[] computeMD5FileCheckSumViaAbsolutePath(
+			final String absolutePathToLocalFile) throws JargonException {
+
+		FileInputStream file;
+		try {
+			file = new FileInputStream(absolutePathToLocalFile);
+		} catch (FileNotFoundException e1) {
+			throw new JargonException(
+					"error computing checksum, file not found:"
+							+ absolutePathToLocalFile, e1);
+
+		}
+
+		BufferedInputStream in = new BufferedInputStream(file);
+		byte[] buffer = new byte[4096];
+		MessageDigest complete;
+
+		try {
+			complete = MessageDigest.getInstance("MD5");
+		} catch (NoSuchAlgorithmException e) {
+			throw new JargonException("no such algorithm exception for MD5");
+		}
+
+		int numRead;
+
+		try {
+
+			do {
+				numRead = in.read(buffer);
+				if (numRead > 0) {
+					complete.update(buffer, 0, numRead);
+				}
+			} while (numRead != -1);
+
+			return complete.digest();
+
+		} catch (Exception e) {
+			throw new JargonException("Error computing MD5 checksum", e);
+		} finally {
+			try {
+				in.close();
+			} catch (IOException e) {
+				// ignore
+			}
+		}
+	}
+	
+	public static byte[] hexStringToByteArray(String s) {
+	    int len = s.length();
+	    byte[] data = new byte[len / 2];
+	    for (int i = 0; i < len; i += 2) {
+	        data[i / 2] = (byte) ((Character.digit(s.charAt(i), 16) << 4)
+	                             + Character.digit(s.charAt(i+1), 16));
+	    }
+	    return data;
+	}
+
 
 }
