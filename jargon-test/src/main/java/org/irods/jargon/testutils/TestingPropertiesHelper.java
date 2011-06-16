@@ -10,10 +10,9 @@ import java.util.Properties;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.testutils.icommandinvoke.IrodsInvocationContext;
 
-
 /**
  * Utilities to load testing properties from a properties file
- *
+ * 
  * @author Mike Conway, DICE (www.irods.org)
  * @since 10/18/2009
  */
@@ -26,6 +25,9 @@ public class TestingPropertiesHelper {
 	public static String IRODS_SECONDARY_USER_KEY = "test2.irods.user";
 	public static String IRODS_SECONDARY_PASSWORD_KEY = "test2.irods.password";
 	public static String IRODS_SECONDARY_RESOURCE_KEY = "test2.irods.resource";
+	public static String IRODS_TERTIARY_USER_KEY = "test3.irods.user";
+	public static String IRODS_TERTIARY_PASSWORD_KEY = "test3.irods.password";
+	public static String IRODS_TERTIARY_RESOURCE_KEY = "test3.irods.resource";
 	public static String IRODS_HOST_KEY = "test.irods.host";
 	public static String IRODS_PORT_KEY = "test.irods.port";
 	public static String IRODS_ZONE_KEY = "test.irods.zone";
@@ -33,34 +35,38 @@ public class TestingPropertiesHelper {
 	public static String IRODS_CONFIRM_TESTING_KEY = "test.confirm";
 	public static String IRODS_ADMIN_USER_KEY = "test.irods.admin";
 	public static String IRODS_ADMIN_PASSWORD_KEY = "test.irods.admin.password";
-	public static String MAC_ICOMMANDS_PATH="test.mac.icommand.path";
+	public static String MAC_ICOMMANDS_PATH = "test.mac.icommand.path";
+	public static String IRODS_RESOURCE_GROUP_KEY = "test.resource.group";
 
 	public static String IRODS_CONFIRM_TESTING_TRUE = "true";
 	public static String IRODS_CONFIRM_TESTING_FALSE = "false";
-	
-	public int getPortAsInt(Properties testingProperties) throws TestingUtilsException {
+
+	public int getPortAsInt(final Properties testingProperties)
+			throws TestingUtilsException {
 		String portString = (String) testingProperties.get(IRODS_PORT_KEY);
-		
+
 		if (portString == null || portString.length() == 0) {
-			throw new TestingUtilsException("missing or invalid test.irods.port in testing.properties");
+			throw new TestingUtilsException(
+					"missing or invalid test.irods.port in testing.properties");
 		}
-		
-		int retVal = 0; 
-		
+
+		int retVal = 0;
+
 		try {
 			retVal = Integer.parseInt(portString);
 		} catch (NumberFormatException nfe) {
-			throw new TestingUtilsException("port is in valid format to convert to int:" + portString, nfe);
+			throw new TestingUtilsException(
+					"port is in valid format to convert to int:" + portString,
+					nfe);
 		}
-		
+
 		return retVal;
 	}
-
 
 	/**
 	 * Load the properties that control various tests from the
 	 * testing.properties file on the code path
-	 *
+	 * 
 	 * @return <code>Properties</code> class with the test values
 	 * @throws TestingUtilsException
 	 */
@@ -82,42 +88,47 @@ public class TestingPropertiesHelper {
 			}
 		}
 
-		String testingConfirm = properties.getProperty(IRODS_CONFIRM_TESTING_KEY);
+		String testingConfirm = properties
+				.getProperty(IRODS_CONFIRM_TESTING_KEY);
 		if (testingConfirm == null) {
-			throw new TestingUtilsException("did not find a test.confirm property in testing.properties");
+			throw new TestingUtilsException(
+					"did not find a test.confirm property in testing.properties");
 		} else if (!testingConfirm.equals(IRODS_CONFIRM_TESTING_TRUE)) {
-			throw new TestingUtilsException("test.confirm property in testing.properties needs to be set to true");
+			throw new TestingUtilsException(
+					"test.confirm property in testing.properties needs to be set to true");
 		}
 
 		return properties;
 	}
 
-
-
 	/**
-	 * Get a URI in IRODS format that points to a scratch file, given the file name and any additional path
-	 * to that file without a leading '/'.  For example:
-	 *
-	 * Given that I have a file under the irods collection /test1/home/test/test-scratch/an_irods_subdir/file.txt
-	 *
+	 * Get a URI in IRODS format that points to a scratch file, given the file
+	 * name and any additional path to that file without a leading '/'. For
+	 * example:
+	 * 
+	 * Given that I have a file under the irods collection
+	 * /test1/home/test/test-scratch/an_irods_subdir/file.txt
+	 * 
 	 * I can construct a proper URI like this:
+	 * 
 	 * <pre>
-	 *
-	 *
-	 	StringBuilder uriPath = new StringBuilder();
-        	uriPath.append("an_irods_subdir");
-        	uriPath.append('/');
-        	uriPath.append(file.txt);
-
-
-        URI irodsUri = testingPropertiesHelper.buildUriFromTestPropertiesForFileInUserDir(testingProperties,
-                uriPath.toString());
-	 *
-	 *
+	 * 
+	 * 
+	 * StringBuilder uriPath = new StringBuilder();
+	 * uriPath.append(&quot;an_irods_subdir&quot;);
+	 * uriPath.append('/');
+	 * uriPath.append(file.txt);
+	 * 
+	 * URI irodsUri = testingPropertiesHelper
+	 * 		.buildUriFromTestPropertiesForFileInUserDir(testingProperties,
+	 * 				uriPath.toString());
+	 * 
+	 * 
 	 * </pre>
-	 *
-	 * Note that the scratch directory and everything above it is computed from testing.properties
-	 *
+	 * 
+	 * Note that the scratch directory and everything above it is computed from
+	 * testing.properties
+	 * 
 	 * @param testingProperties
 	 *            <code>Properties</code> file with the standard names defined
 	 *            in
@@ -129,7 +140,7 @@ public class TestingPropertiesHelper {
 	 * @throws URISyntaxException
 	 */
 	public URI buildUriFromTestPropertiesForFileInUserDir(
-			Properties testingProperties, String fileName)
+			final Properties testingProperties, final String fileName)
 			throws URISyntaxException {
 		StringBuilder irodsUri = new StringBuilder();
 
@@ -155,25 +166,32 @@ public class TestingPropertiesHelper {
 
 		return new URI(irodsUri.toString());
 	}
-	
+
 	/**
-	 * Create a URI compatable with a local <code>IRODSFileImpl</code> based on a set of peroperties, as well as
-	 * a relative path (no leading '/') underneath the users local scratch directory as defined in testing.properties.
-	 * @param testingProperties <code>Properties</code> defined in the testing.properties file
-	 * @param fileName <code>String</code> containing the relative path (no leading '/') underneath
-	 * the local scratch directory.  Note that the subdirectories will be created if they do not aleady exist.
-	 * @return <code>URI</code> to a local file in a format that can be used with an <code>IRODSFileImpl</code>
+	 * Create a URI compatable with a local <code>IRODSFileImpl</code> based on
+	 * a set of peroperties, as well as a relative path (no leading '/')
+	 * underneath the users local scratch directory as defined in
+	 * testing.properties.
+	 * 
+	 * @param testingProperties
+	 *            <code>Properties</code> defined in the testing.properties file
+	 * @param fileName
+	 *            <code>String</code> containing the relative path (no leading
+	 *            '/') underneath the local scratch directory. Note that the
+	 *            subdirectories will be created if they do not aleady exist.
+	 * @return <code>URI</code> to a local file in a format that can be used
+	 *         with an <code>IRODSFileImpl</code>
 	 * @throws URISyntaxException
 	 */
 	public URI buildUriFromTestPropertiesForFileInLocalScratchDir(
-			Properties testingProperties, String fileName)
+			final Properties testingProperties, final String fileName)
 			throws URISyntaxException {
 		StringBuilder irodsUri = new StringBuilder();
 
 		irodsUri.append("file://");
-		File scratchDir = new File(testingProperties
-				.getProperty(GENERATED_FILE_DIRECTORY_KEY)
-				+ fileName);
+		File scratchDir = new File(
+				testingProperties.getProperty(GENERATED_FILE_DIRECTORY_KEY)
+						+ fileName);
 		scratchDir.mkdirs();
 		irodsUri.append(scratchDir.getAbsolutePath());
 
@@ -181,11 +199,13 @@ public class TestingPropertiesHelper {
 	}
 
 	/**
-	 * Get a URI in IRODS format that points to a scratch file, given the file name and any additional path
-	 * to that file without a leading '/', for the secondary testing user.  For example:
-	 *
-	 * Note that the scratch directory and everything above it is computed from testing.properties
-	 *
+	 * Get a URI in IRODS format that points to a scratch file, given the file
+	 * name and any additional path to that file without a leading '/', for the
+	 * secondary testing user. For example:
+	 * 
+	 * Note that the scratch directory and everything above it is computed from
+	 * testing.properties
+	 * 
 	 * @param testingProperties
 	 *            <code>Properties</code> file with the standard names defined
 	 *            in
@@ -197,7 +217,7 @@ public class TestingPropertiesHelper {
 	 * @throws URISyntaxException
 	 */
 	public URI buildUriFromTestPropertiesForFileInSecondaryUserDir(
-			Properties testingProperties, String fileName)
+			final Properties testingProperties, final String fileName)
 			throws URISyntaxException {
 		StringBuilder irodsUri = new StringBuilder();
 
@@ -206,7 +226,8 @@ public class TestingPropertiesHelper {
 		irodsUri.append(".");
 		irodsUri.append(testingProperties.getProperty(IRODS_ZONE_KEY));
 		irodsUri.append(":");
-		irodsUri.append(testingProperties.getProperty(IRODS_SECONDARY_PASSWORD_KEY));
+		irodsUri.append(testingProperties
+				.getProperty(IRODS_SECONDARY_PASSWORD_KEY));
 		irodsUri.append("@");
 		irodsUri.append(testingProperties.getProperty(IRODS_HOST_KEY));
 		irodsUri.append(":");
@@ -229,28 +250,28 @@ public class TestingPropertiesHelper {
 	 *            <code>Properties</code> file with the standard names defined
 	 *            in
 	 *            {@link org.TestingPropertiesHelper.jargon.test.utils.TestingPropertiesLoader}
-	 * @return @link{ org.irods.grid.io.irods.IRODSAccount}
+	 * @return @link{ edu.sdsc.grid.io.irods.IRODSAccount}
 	 * @throws URISyntaxException
 	 */
 	public IRODSAccount buildIRODSAdminAccountFromTestProperties(
-			Properties testingProperties)  {
+			final Properties testingProperties) {
 
-		 StringBuilder homeBuilder = new StringBuilder();
-	        homeBuilder.append('/');
-	        homeBuilder.append(testingProperties.getProperty(IRODS_ZONE_KEY));
-	        homeBuilder.append('/');
-	        homeBuilder.append("home");
-	        homeBuilder.append('/');
-	        homeBuilder.append(testingProperties.getProperty(IRODS_USER_KEY));
+		StringBuilder homeBuilder = new StringBuilder();
+		homeBuilder.append('/');
+		homeBuilder.append(testingProperties.getProperty(IRODS_ZONE_KEY));
+		homeBuilder.append('/');
+		homeBuilder.append("home");
+		homeBuilder.append('/');
+		homeBuilder.append(testingProperties.getProperty(IRODS_USER_KEY));
 
 		IRODSAccount account = new IRODSAccount(
 				testingProperties.getProperty(IRODS_HOST_KEY),
 				Integer.parseInt(testingProperties.getProperty(IRODS_PORT_KEY)),
 				testingProperties.getProperty(IRODS_ADMIN_USER_KEY),
 				testingProperties.getProperty(IRODS_ADMIN_PASSWORD_KEY),
-				homeBuilder.toString(),
-				testingProperties.getProperty(IRODS_ZONE_KEY),
-				testingProperties.getProperty(IRODS_RESOURCE_KEY));
+				homeBuilder.toString(), testingProperties
+						.getProperty(IRODS_ZONE_KEY), testingProperties
+						.getProperty(IRODS_RESOURCE_KEY));
 
 		return account;
 	}
@@ -260,28 +281,55 @@ public class TestingPropertiesHelper {
 	 *            <code>Properties</code> file with the standard names defined
 	 *            in
 	 *            {@link org.TestingPropertiesHelper.jargon.test.utils.TestingPropertiesLoader}
-	 * @return @link{ org.irods.grid.io.irods.IRODSAccount}
+	 * @return @link{ edu.sdsc.grid.io.irods.IRODSAccount}
 	 * @throws URISyntaxException
 	 */
 	public IRODSAccount buildIRODSAccountFromTestProperties(
-			Properties testingProperties)  {
+			final Properties testingProperties) {
 
-		 StringBuilder homeBuilder = new StringBuilder();
-	        homeBuilder.append('/');
-	        homeBuilder.append(testingProperties.getProperty(IRODS_ZONE_KEY));
-	        homeBuilder.append('/');
-	        homeBuilder.append("home");
-	        homeBuilder.append('/');
-	        homeBuilder.append(testingProperties.getProperty(IRODS_USER_KEY));
+		StringBuilder homeBuilder = new StringBuilder();
+		homeBuilder.append('/');
+		homeBuilder.append(testingProperties.getProperty(IRODS_ZONE_KEY));
+		homeBuilder.append('/');
+		homeBuilder.append("home");
+		homeBuilder.append('/');
+		homeBuilder.append(testingProperties.getProperty(IRODS_USER_KEY));
 
 		IRODSAccount account = new IRODSAccount(
 				testingProperties.getProperty(IRODS_HOST_KEY),
 				Integer.parseInt(testingProperties.getProperty(IRODS_PORT_KEY)),
 				testingProperties.getProperty(IRODS_USER_KEY),
-				testingProperties.getProperty(IRODS_PASSWORD_KEY),
-				homeBuilder.toString(),
-				testingProperties.getProperty(IRODS_ZONE_KEY),
-				testingProperties.getProperty(IRODS_RESOURCE_KEY));
+				testingProperties.getProperty(IRODS_PASSWORD_KEY), homeBuilder
+						.toString(), testingProperties
+						.getProperty(IRODS_ZONE_KEY), testingProperties
+						.getProperty(IRODS_RESOURCE_KEY));
+
+		return account;
+	}
+	
+	/**
+	 * Build a test account where the default resource will be set to blank
+	 * @param testingProperties
+	 * @return
+	 */
+	public IRODSAccount buildIRODSAccountFromTestPropertiesWithBlankResource(
+			final Properties testingProperties) {
+
+		StringBuilder homeBuilder = new StringBuilder();
+		homeBuilder.append('/');
+		homeBuilder.append(testingProperties.getProperty(IRODS_ZONE_KEY));
+		homeBuilder.append('/');
+		homeBuilder.append("home");
+		homeBuilder.append('/');
+		homeBuilder.append(testingProperties.getProperty(IRODS_USER_KEY));
+
+		IRODSAccount account = new IRODSAccount(
+				testingProperties.getProperty(IRODS_HOST_KEY),
+				Integer.parseInt(testingProperties.getProperty(IRODS_PORT_KEY)),
+				testingProperties.getProperty(IRODS_USER_KEY),
+				testingProperties.getProperty(IRODS_PASSWORD_KEY), homeBuilder
+						.toString(), testingProperties
+						.getProperty(IRODS_ZONE_KEY),"");
 
 		return account;
 	}
@@ -291,28 +339,98 @@ public class TestingPropertiesHelper {
 	 *            <code>Properties</code> file with the standard names defined
 	 *            in
 	 *            {@link org.TestingPropertiesHelper.jargon.test.utils.TestingPropertiesLoader}
-	 * @return @link{ org.irods.grid.io.irods.IRODSAccount}
+	 * @param userName
+	 *            <code>String</code> user name which will be used for the
+	 *            account (will not automatically set the user from testing
+	 *            properties).
+	 * @param password
+	 *            <code>String</code> with the password to be used for the
+	 *            account.
+	 * @return @link{ edu.sdsc.grid.io.irods.IRODSAccount}
+	 * @throws URISyntaxException
+	 */
+	public IRODSAccount buildIRODSAccountForIRODSUserFromTestPropertiesForGivenUser(
+			final Properties testingProperties, final String userName,
+			final String password) {
+
+		StringBuilder homeBuilder = new StringBuilder();
+		homeBuilder.append('/');
+		homeBuilder.append(testingProperties.getProperty(IRODS_ZONE_KEY));
+		homeBuilder.append('/');
+		homeBuilder.append("home");
+		homeBuilder.append('/');
+		homeBuilder.append(testingProperties.getProperty(IRODS_USER_KEY));
+
+		IRODSAccount account = new IRODSAccount(
+				testingProperties.getProperty(IRODS_HOST_KEY),
+				Integer.parseInt(testingProperties.getProperty(IRODS_PORT_KEY)),
+				userName, password, homeBuilder.toString(), testingProperties
+						.getProperty(IRODS_ZONE_KEY), testingProperties
+						.getProperty(IRODS_RESOURCE_KEY));
+
+		return account;
+	}
+
+	/**
+	 * @param testingProperties
+	 *            <code>Properties</code> file with the standard names defined
+	 *            in
+	 *            {@link org.TestingPropertiesHelper.jargon.test.utils.TestingPropertiesLoader}
+	 * @return @link{ edu.sdsc.grid.io.irods.IRODSAccount}
 	 * @throws URISyntaxException
 	 */
 	public IRODSAccount buildIRODSAccountFromSecondaryTestProperties(
-			Properties testingProperties)  {
+			final Properties testingProperties) {
 
-		 StringBuilder homeBuilder = new StringBuilder();
-	        homeBuilder.append('/');
-	        homeBuilder.append(testingProperties.getProperty(IRODS_ZONE_KEY));
-	        homeBuilder.append('/');
-	        homeBuilder.append("home");
-	        homeBuilder.append('/');
-	        homeBuilder.append(testingProperties.getProperty(IRODS_SECONDARY_USER_KEY));
+		StringBuilder homeBuilder = new StringBuilder();
+		homeBuilder.append('/');
+		homeBuilder.append(testingProperties.getProperty(IRODS_ZONE_KEY));
+		homeBuilder.append('/');
+		homeBuilder.append("home");
+		homeBuilder.append('/');
+		homeBuilder.append(testingProperties
+				.getProperty(IRODS_SECONDARY_USER_KEY));
 
 		IRODSAccount account = new IRODSAccount(
 				testingProperties.getProperty(IRODS_HOST_KEY),
 				Integer.parseInt(testingProperties.getProperty(IRODS_PORT_KEY)),
 				testingProperties.getProperty(IRODS_SECONDARY_USER_KEY),
 				testingProperties.getProperty(IRODS_SECONDARY_PASSWORD_KEY),
-				homeBuilder.toString(),
-				testingProperties.getProperty(IRODS_ZONE_KEY),
-				testingProperties.getProperty(IRODS_SECONDARY_RESOURCE_KEY));
+				homeBuilder.toString(), testingProperties
+						.getProperty(IRODS_ZONE_KEY), testingProperties
+						.getProperty(IRODS_SECONDARY_RESOURCE_KEY));
+
+		return account;
+	}
+	
+	/**
+	 * @param testingProperties
+	 *            <code>Properties</code> file with the standard names defined
+	 *            in
+	 *            {@link org.TestingPropertiesHelper.jargon.test.utils.TestingPropertiesLoader}
+	 * @return @link{ edu.sdsc.grid.io.irods.IRODSAccount}
+	 * @throws URISyntaxException
+	 */
+	public IRODSAccount buildIRODSAccountFromTertiaryTestProperties(
+			final Properties testingProperties) {
+
+		StringBuilder homeBuilder = new StringBuilder();
+		homeBuilder.append('/');
+		homeBuilder.append(testingProperties.getProperty(IRODS_ZONE_KEY));
+		homeBuilder.append('/');
+		homeBuilder.append("home");
+		homeBuilder.append('/');
+		homeBuilder.append(testingProperties
+				.getProperty(IRODS_TERTIARY_USER_KEY));
+
+		IRODSAccount account = new IRODSAccount(
+				testingProperties.getProperty(IRODS_HOST_KEY),
+				Integer.parseInt(testingProperties.getProperty(IRODS_PORT_KEY)),
+				testingProperties.getProperty(IRODS_TERTIARY_USER_KEY),
+				testingProperties.getProperty(IRODS_TERTIARY_PASSWORD_KEY),
+				homeBuilder.toString(), testingProperties
+						.getProperty(IRODS_ZONE_KEY), testingProperties
+						.getProperty(IRODS_TERTIARY_RESOURCE_KEY));
 
 		return account;
 	}
@@ -323,11 +441,11 @@ public class TestingPropertiesHelper {
 	 *            in
 	 *            {@link org.TestingPropertiesHelper.jargon.test.utils.TestingPropertiesLoader}
 	 * @return @link{
-	 *         org.irods.jargon.testutils.icommandinvoker.IrodsInvocationContext}
+	 *         edu.sdsc.jargon.testutils.icommandinvoker.IrodsInvocationContext}
 	 * @throws URISyntaxException
 	 */
 	public IrodsInvocationContext buildIRODSInvocationContextFromTestProperties(
-			Properties testingProperties) {
+			final Properties testingProperties) {
 
 		IrodsInvocationContext context = new IrodsInvocationContext();
 		context.setIrodsHost(testingProperties.getProperty(IRODS_HOST_KEY));
@@ -353,11 +471,11 @@ public class TestingPropertiesHelper {
 	 *            in
 	 *            {@link org.TestingPropertiesHelper.jargon.test.utils.TestingPropertiesLoader}
 	 * @return @link{
-	 *         org.irods.jargon.testutils.icommandinvoker.IrodsInvocationContext}
+	 *         edu.sdsc.jargon.testutils.icommandinvoker.IrodsInvocationContext}
 	 * @throws URISyntaxException
 	 */
 	public IrodsInvocationContext buildIRODSInvocationContextFromSecondaryTestProperties(
-			Properties testingProperties) {
+			final Properties testingProperties) {
 
 		IrodsInvocationContext context = new IrodsInvocationContext();
 		context.setIrodsHost(testingProperties.getProperty(IRODS_HOST_KEY));
@@ -365,7 +483,8 @@ public class TestingPropertiesHelper {
 				.getProperty(IRODS_SECONDARY_PASSWORD_KEY));
 		context.setIrodsPort(Integer.parseInt(testingProperties
 				.getProperty(IRODS_PORT_KEY)));
-		context.setIrodsUser(testingProperties.getProperty(IRODS_SECONDARY_USER_KEY));
+		context.setIrodsUser(testingProperties
+				.getProperty(IRODS_SECONDARY_USER_KEY));
 		context.setIrodsZone(testingProperties.getProperty(IRODS_ZONE_KEY));
 		context.setLocalWorkingDirectory(testingProperties
 				.getProperty(GENERATED_FILE_DIRECTORY_KEY));
@@ -380,7 +499,7 @@ public class TestingPropertiesHelper {
 	/**
 	 * Handy method to give, from the root IRODS collection, a full path to a
 	 * given collection in the IRODS test scratch area on IRODS
-	 *
+	 * 
 	 * @param testingProperties
 	 *            <code>Properties</code> that define test behavior
 	 * @param collectionPathBelowScratch
@@ -392,10 +511,13 @@ public class TestingPropertiesHelper {
 	 * @throws URISyntaxException
 	 */
 	public String buildIRODSCollectionAbsolutePathFromTestProperties(
-			Properties testingProperties, String collectionPathBelowScratch) throws TestingUtilsException {
+			final Properties testingProperties,
+			final String collectionPathBelowScratch)
+			throws TestingUtilsException {
 
 		if (testingProperties.get(IRODS_SCRATCH_DIR_KEY) == null) {
-			throw new TestingUtilsException("scratch path not provided in testing.properties");
+			throw new TestingUtilsException(
+					"scratch path not provided in testing.properties");
 		}
 
 		StringBuilder pathBuilder = new StringBuilder();
@@ -413,7 +535,7 @@ public class TestingPropertiesHelper {
 	/**
 	 * Handy method to give, from the root IRODS collection, a full path to a
 	 * given collection in the IRODS test scratch area on IRODS
-	 *
+	 * 
 	 * @param testingProperties
 	 *            <code>Properties</code> that define test behavior
 	 * @param collectionPathBelowScratch
@@ -425,10 +547,13 @@ public class TestingPropertiesHelper {
 	 * @throws URISyntaxException
 	 */
 	public String buildIRODSCollectionAbsolutePathFromSecondaryTestProperties(
-			Properties testingProperties, String collectionPathBelowScratch) throws TestingUtilsException {
+			final Properties testingProperties,
+			final String collectionPathBelowScratch)
+			throws TestingUtilsException {
 
 		if (testingProperties.get(IRODS_SCRATCH_DIR_KEY) == null) {
-			throw new TestingUtilsException("scratch path not provided in testing.properties");
+			throw new TestingUtilsException(
+					"scratch path not provided in testing.properties");
 		}
 
 		StringBuilder pathBuilder = new StringBuilder();
@@ -443,11 +568,10 @@ public class TestingPropertiesHelper {
 		return pathBuilder.toString();
 	}
 
-
 	/**
 	 * Handy method to give, from the root IRODS collection, a relative path
 	 * under the home directory for the described user
-	 *
+	 * 
 	 * @param testingProperties
 	 *            <code>Properties</code> that define test behavior
 	 * @param collectionPathBelowScratch
@@ -458,11 +582,28 @@ public class TestingPropertiesHelper {
 	 * @throws URISyntaxException
 	 */
 	public String buildIRODSCollectionRelativePathFromTestProperties(
-			Properties testingProperties, String collectionPathBelowScratch) {
+			final Properties testingProperties,
+			final String collectionPathBelowScratch) {
 		StringBuilder pathBuilder = new StringBuilder();
 		pathBuilder.append(testingProperties.get(IRODS_SCRATCH_DIR_KEY));
 		pathBuilder.append('/');
 		pathBuilder.append(collectionPathBelowScratch);
 		return pathBuilder.toString();
+	}
+
+	/**
+	 * Check if optional remote stream execution is to be tested
+	 * 
+	 * @param testingProperties
+	 * @return
+	 */
+	public boolean isTestRemoteExecStream(final Properties testingProperties) {
+		String val = (String) testingProperties
+				.get("test.option.exercise.remoteexecstream");
+		if (val == null) {
+			return false;
+		} else {
+			return Boolean.parseBoolean(val);
+		}
 	}
 }

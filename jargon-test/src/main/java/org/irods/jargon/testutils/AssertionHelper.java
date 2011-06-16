@@ -15,7 +15,6 @@ import org.irods.jargon.testutils.icommandinvoke.IcommandInvoker;
 import org.irods.jargon.testutils.icommandinvoke.IrodsInvocationContext;
 import org.irods.jargon.testutils.icommandinvoke.icommands.IlsCommand;
 
-
 /**
  * Helpful assertions for unit testing IRODS
  * 
@@ -44,7 +43,7 @@ public class AssertionHelper {
 	 * @throws IRODSTestAssertionException
 	 */
 	public void assertLocalFileNotExistsInScratch(
-			String filePathRelativeToScratch)
+			final String filePathRelativeToScratch)
 			throws IRODSTestAssertionException {
 		StringBuilder fullPathToLocalFile = computeFullPathToLocalFile(filePathRelativeToScratch);
 		StringBuilder errorMessage = new StringBuilder();
@@ -66,7 +65,8 @@ public class AssertionHelper {
 	 *            scratch, with no leading separator character
 	 * @throws IRODSTestAssertionException
 	 */
-	public void assertLocalFileExistsInScratch(String filePathRelativeToScratch)
+	public void assertLocalFileExistsInScratch(
+			final String filePathRelativeToScratch)
 			throws IRODSTestAssertionException {
 		StringBuilder fullPathToLocalFile = computeFullPathToLocalFile(filePathRelativeToScratch);
 		StringBuilder errorMessage = new StringBuilder();
@@ -91,7 +91,7 @@ public class AssertionHelper {
 	 * @throws IRODSTestAssertionException
 	 */
 	public void assertLocalScratchFileLengthEquals(
-			String filePathRelativeToScratch, long expectedLength)
+			final String filePathRelativeToScratch, final long expectedLength)
 			throws IRODSTestAssertionException {
 		StringBuilder fullPathToLocalFile = computeFullPathToLocalFile(filePathRelativeToScratch);
 		File localFile = new File(fullPathToLocalFile.toString());
@@ -122,8 +122,9 @@ public class AssertionHelper {
 	 *            <code>long</code> value with the anticipated MD5 checksum
 	 * @throws IRODSTestAssertionException
 	 */
-	public void assertLocalFileHasChecksum(String filePathRelativeToScratch,
-			byte[] expectedChecksum) throws IRODSTestAssertionException {
+	public void assertLocalFileHasChecksum(
+			final String filePathRelativeToScratch,
+			final byte[] expectedChecksum) throws IRODSTestAssertionException {
 		byte[] actualChecksum;
 
 		try {
@@ -134,9 +135,9 @@ public class AssertionHelper {
 				StringBuilder errorMessage = new StringBuilder();
 				errorMessage.append(ASSERTION_ERROR_MESSAGE);
 				errorMessage.append("checksum error, expected:");
-				errorMessage.append(expectedChecksum);
+				errorMessage.append(String.valueOf(expectedChecksum));
 				errorMessage.append(" actual:");
-				errorMessage.append(actualChecksum);
+				errorMessage.append(String.valueOf(actualChecksum));
 				errorMessage.append(" for file:");
 				errorMessage.append(filePathRelativeToScratch);
 				throw new IRODSTestAssertionException(errorMessage.toString());
@@ -151,7 +152,7 @@ public class AssertionHelper {
 	}
 
 	protected StringBuilder computeFullPathToLocalFile(
-			String filePathRelativeToScratch) {
+			final String filePathRelativeToScratch) {
 		StringBuilder fullPathToLocalFile = new StringBuilder();
 		fullPathToLocalFile.append(testingProperties
 				.get(GENERATED_FILE_DIRECTORY_KEY));
@@ -159,18 +160,24 @@ public class AssertionHelper {
 		return fullPathToLocalFile;
 	}
 
-	
+	public void assertIrodsFileMatchesLocalFileChecksum(
+			final String absoluteIRODSPathUnderScratch,
+			final String absoluteLocalFileUnderScratch)
+			throws IRODSTestAssertionException {
+
+		// FIXME: need to update for jargon-core
+	}
 
 	/**
 	 * Make sure that a file or collection is in IRODS
 	 * 
 	 * @param absoluteIrodsPathUnderScratch
-	 *            <code>String</code> with absolute path (nleading '/', or a
-	 *            path and filename to look for
+	 *            <code>String</code> with absolute path (leading '/', or a path
+	 *            and filename to look for
 	 * @throws IRODSTestAssertionException
 	 */
 	public void assertIrodsFileOrCollectionExists(
-			String absoluteIrodsPathUnderScratch)
+			final String absoluteIrodsPathUnderScratch)
 			throws IRODSTestAssertionException {
 		IlsCommand ilsCommand = new IlsCommand();
 		ilsCommand.setIlsBasePath(absoluteIrodsPathUnderScratch);
@@ -207,9 +214,13 @@ public class AssertionHelper {
 	 *            <code>String</code> with relative path (no leading '/', or a
 	 *            path and filename to look for
 	 * @throws IRODSTestAssertionException
+	 * 
+	 *             FIXME: does not work for files, need to have a sep method
+	 *             that gets the parent collection and searches within that...
+	 * 
 	 */
 	public void assertIrodsFileOrCollectionDoesNotExist(
-			String relativeIrodsPathUnderScratch)
+			final String relativeIrodsPathUnderScratch)
 			throws IRODSTestAssertionException {
 		IlsCommand ilsCommand = new IlsCommand();
 		ilsCommand.setIlsBasePath(relativeIrodsPathUnderScratch);
@@ -237,8 +248,7 @@ public class AssertionHelper {
 			} else {
 
 				StringBuilder message = new StringBuilder();
-				message
-						.append("error ocurred processing assertion on ils path:");
+				message.append("error ocurred processing assertion on ils path:");
 				message.append(relativeIrodsPathUnderScratch);
 				throw new IRODSTestAssertionException(message.toString(), ice);
 			}
@@ -257,8 +267,8 @@ public class AssertionHelper {
 	 *            <code>String<code> with
 	 * @throws IRODSTestAssertionException
 	 */
-	public void assertLocalDirectoriesHaveSameData(String dir1, String dir2)
-			throws IRODSTestAssertionException {
+	public void assertLocalDirectoriesHaveSameData(final String dir1,
+			final String dir2) throws IRODSTestAssertionException {
 		File file1 = new File(dir1);
 		File file2 = new File(dir2);
 
@@ -289,7 +299,8 @@ public class AssertionHelper {
 		}
 
 		for (int i = 0; i < file1Files.length; i++) {
-			compareTwoFiles(file1Files[i], file2Files[i]);
+			assertTwoFilesAreEqualByRecursiveTreeComparison(file1Files[i],
+					file2Files[i]);
 		}
 
 	}
@@ -304,29 +315,49 @@ public class AssertionHelper {
 	 *            <code>File<code> with a file or directory
 	 * @throws IRODSTestAssertionException
 	 */
-	private void compareTwoFiles(File file1, File file2)
+	public void assertTwoFilesAreEqualByRecursiveTreeComparison(
+			final File file1, final File file2)
 			throws IRODSTestAssertionException {
 
+		if (file1.getName().equals(".DS_Store")
+				|| file2.getName().equals(".DS_Store")) {
+			throw new IRODSTestAssertionException(
+					"test data corrupted by Mac .DS_Store files, please reinitialize the scratch directories");
+		}
+
+		if (file1.exists() && file2.exists()) {
+			// ok
+		} else {
+			throw new IRODSTestAssertionException("compared files that do not exist in both trees - \nfile1:" + file1.getAbsolutePath() + " \nfile2:" + file2.getAbsolutePath());
+		}
+		
 		if (file1.isDirectory() && file2.isDirectory()) {
 			File[] file1Files = file1.listFiles();
 			File[] file2Files = file2.listFiles();
 
 			if (file1Files.length != file2Files.length) {
 				throw new IRODSTestAssertionException(
-						"directories differ in the number of files contained, dir1 has "
-								+ file1Files.length + " while dir2 has "
-								+ file2Files.length);
+						"directories differ in the number of files contained, dir1 is: "
+								+ file1.getAbsolutePath() + "\n and has"
+								+ +file1Files.length
+								+ " children \n while dir2 is:"
+								+ file2.getAbsolutePath() + " \n and has "
+								+ file2Files.length + " children");
 			}
 
 			for (int i = 0; i < file1Files.length; i++) {
-				compareTwoFiles(file1Files[i], file2Files[i]);
+				assertTwoFilesAreEqualByRecursiveTreeComparison(file1Files[i],
+						file2Files[i]);
 			}
 
 		} else if (file1.isFile() && file2.isFile()) {
 			if (file1.length() != file2.length()) {
 				throw new IRODSTestAssertionException(
-						"file lengths differ, file1 has " + file1.length()
-								+ " while file2 has " + file2.length());
+						"file lengths differ,, file1 is: "
+								+ file1.getAbsolutePath()
+								+ "\n and has length:" + file1.length()
+								+ "\n while file is:" + file2.getAbsolutePath()
+								+ " \n and has length:" + file2.length());
 			}
 
 			if (file1.getName().equals(file2.getName())) {

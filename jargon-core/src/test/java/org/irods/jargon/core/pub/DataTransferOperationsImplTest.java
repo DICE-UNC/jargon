@@ -40,9 +40,6 @@ public class DataTransferOperationsImplTest {
 	private static org.irods.jargon.testutils.AssertionHelper assertionHelper = null;
 	private static IRODSFileSystem irodsFileSystem = null;
 
-	// FIXME: add transfers with resource specified and not specified, refactor
-	// recursive put/get/copy into common method, repl will remain
-
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		irodsFileSystem = IRODSFileSystem.instance();
