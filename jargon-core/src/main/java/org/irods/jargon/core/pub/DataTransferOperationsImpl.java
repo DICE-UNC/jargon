@@ -280,7 +280,7 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 	@Override
 	public void getOperation(
 			final IRODSFile irodsSourceFile,
-			final File targetLocalFile,
+			 File targetLocalFile,
 			final TransferStatusCallbackListener transferStatusCallbackListener,
 			final TransferControlBlock transferControlBlock)
 			throws JargonException {
@@ -313,6 +313,12 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 				operativeTransferControlBlock = DefaultTransferControlBlock
 						.instance();
 			}
+			
+			// if source is a file and target is a drectory than normalize the the target name so that status callbacks show that a file was added.
+			if (irodsSourceFile.isFile() && targetLocalFile.isDirectory()) {
+				targetLocalFile = new File(targetLocalFile.getAbsolutePath(), irodsSourceFile.getName());
+				log.info("file name normailzed:{}", targetLocalFile);
+			}
 
 			/*
 			 * Compute the count of files to be transferred. This is different
@@ -332,7 +338,7 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 					log.info("get will transfer {} files)", fileCount);
 					operativeTransferControlBlock
 							.setTotalFilesToTransfer(fileCount);
-				}
+				} 
 				
 				// send a 0th file status callback that indicates initiation
 				if (transferStatusCallbackListener != null) {
@@ -616,7 +622,7 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 	@Override
 	public void putOperation(
 			final File sourceFile,
-			final IRODSFile targetIrodsFile,
+			 IRODSFile targetIrodsFile,
 			final TransferStatusCallbackListener transferStatusCallbackListener,
 			final TransferControlBlock transferControlBlock)
 			throws JargonException {
@@ -656,6 +662,14 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 				log.info("creating default transfer control block, none was supplied and a callback listener is set");
 				operativeTransferControlBlock = DefaultTransferControlBlock
 						.instance();
+			}
+			
+			// if source is a file and target is a drectory than normalize the the target name so that status callbacks show that a file was added.
+			if (sourceFile.isFile() && targetIrodsFile.isDirectory()) {
+				String savedResource = targetIrodsFile.getResource();
+				targetIrodsFile = getIRODSFileFactory().instanceIRODSFile(targetIrodsFile.getAbsolutePath(), sourceFile.getName());
+				targetIrodsFile.setResource(savedResource);
+				log.info("file name normailzed:{}", targetIrodsFile);
 			}
 
 			// look for recursive put (directory to collection) and process,
@@ -1199,6 +1213,13 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 		
 		if (operativeTransferControlBlock != null) {
 			operativeTransferControlBlock.setTotalFilesToTransfer(1);
+		}
+		
+		// source is a file, if target is a file than normalize the name so that status callbacks show that a file was added.
+		if (targetFile.isDirectory()) {
+			targetFile = getIRODSFileFactory().instanceIRODSFile(targetFile.getAbsolutePath(), sourceFile.getName());
+			targetFile.setResource(targetResource);
+			log.info("file name normailzed:{}", targetFile);
 		}
 		
 		// send 0th file status callback that indicates startup
