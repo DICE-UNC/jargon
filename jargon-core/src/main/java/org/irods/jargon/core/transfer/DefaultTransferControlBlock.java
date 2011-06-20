@@ -15,10 +15,10 @@ import org.slf4j.LoggerFactory;
  * doing operations such as a put or a get, there is a need to handle restarts,
  * and this object contains a method that can be overridden to filter which
  * files need to be transferred.
- * 
+ * <p/>
  * This class also contains a shared value that can be used to set a cancel in a
  * recursive transfer operation.
- * 
+ * <p/>
  * This implementation will cancel a transfer if the current errors exceeds the
  * maximum error threshold.
  * 

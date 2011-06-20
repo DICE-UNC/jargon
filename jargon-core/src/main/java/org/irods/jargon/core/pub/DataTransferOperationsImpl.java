@@ -314,11 +314,9 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 						.instance();
 			}
 			
-			// if source is a file and target is a drectory than normalize the the target name so that status callbacks show that a file was added.
-			if (irodsSourceFile.isFile() && targetLocalFile.isDirectory()) {
-				targetLocalFile = new File(targetLocalFile.getAbsolutePath(), irodsSourceFile.getName());
-				log.info("file name normailzed:{}", targetLocalFile);
-			}
+				File targetLocalFileNameForCallbacks = new File(targetLocalFile.getAbsolutePath(), irodsSourceFile.getName());
+				log.info("file name normailzed:{}", targetLocalFileNameForCallbacks);
+			
 
 			/*
 			 * Compute the count of files to be transferred. This is different
@@ -345,7 +343,7 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 					TransferStatus status = TransferStatus.instance(
 							TransferType.GET,
 							irodsSourceFile.getAbsolutePath(),
-							targetLocalFile.getAbsolutePath(), "", operativeTransferControlBlock.getTotalBytesToTransfer(),
+							targetLocalFileNameForCallbacks.getAbsolutePath(), "", operativeTransferControlBlock.getTotalBytesToTransfer(),
 							operativeTransferControlBlock.getTotalBytesTransferredSoFar(),
 							operativeTransferControlBlock.getTotalFilesTransferredSoFar(), 
 							operativeTransferControlBlock.getTotalFilesToTransfer(),
@@ -363,7 +361,7 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 					TransferStatus status = TransferStatus.instance(
 							TransferType.GET,
 							irodsSourceFile.getAbsolutePath(),
-							targetLocalFile.getAbsolutePath(), "", operativeTransferControlBlock.getTotalBytesToTransfer(),
+							targetLocalFileNameForCallbacks.getAbsolutePath(), "", operativeTransferControlBlock.getTotalBytesToTransfer(),
 							operativeTransferControlBlock.getTotalBytesTransferredSoFar(),
 							operativeTransferControlBlock.getTotalFilesTransferredSoFar(), 
 							operativeTransferControlBlock.getTotalFilesToTransfer(),
@@ -664,14 +662,9 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 						.instance();
 			}
 			
-			// if source is a file and target is a drectory than normalize the the target name so that status callbacks show that a file was added.
-			if (sourceFile.isFile() && targetIrodsFile.isDirectory()) {
-				String savedResource = targetIrodsFile.getResource();
-				targetIrodsFile = getIRODSFileFactory().instanceIRODSFile(targetIrodsFile.getAbsolutePath(), sourceFile.getName());
-				targetIrodsFile.setResource(savedResource);
-				log.info("file name normailzed:{}", targetIrodsFile);
-			}
-
+			// normalize the the target name so that status callbacks provide the full target path
+			IRODSFile targetIrodsFileForCallback = getIRODSFileFactory().instanceIRODSFile(targetIrodsFile.getAbsolutePath(), sourceFile.getName());
+				
 			// look for recursive put (directory to collection) and process,
 			// otherwise, just put the file
 
@@ -685,7 +678,7 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 					TransferStatus status = TransferStatus.instance(
 							TransferType.PUT,
 							sourceFile.getAbsolutePath(),
-							targetIrodsFile.getAbsolutePath(), "",
+							targetIrodsFileForCallback.getAbsolutePath(), "",
 							operativeTransferControlBlock.getTotalBytesToTransfer(),
 							operativeTransferControlBlock.getTotalBytesTransferredSoFar(),
 							operativeTransferControlBlock.getTotalFilesTransferredSoFar(),
@@ -702,7 +695,7 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 					TransferStatus status = TransferStatus.instance(
 							TransferType.PUT,
 							sourceFile.getAbsolutePath(),
-							targetIrodsFile.getAbsolutePath(), "",
+							targetIrodsFileForCallback.getAbsolutePath(), "",
 							operativeTransferControlBlock.getTotalBytesToTransfer(),
 							operativeTransferControlBlock.getTotalBytesTransferredSoFar(),
 							operativeTransferControlBlock.getTotalFilesTransferredSoFar(),
@@ -721,7 +714,7 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 					TransferStatus status = TransferStatus.instance(
 							TransferType.PUT,
 							sourceFile.getAbsolutePath(),
-							targetIrodsFile.getAbsolutePath(), "",
+							targetIrodsFileForCallback.getAbsolutePath(), "",
 							operativeTransferControlBlock.getTotalBytesToTransfer(),
 							operativeTransferControlBlock.getTotalBytesTransferredSoFar(),
 							operativeTransferControlBlock.getTotalFilesTransferredSoFar(),
@@ -738,7 +731,7 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 					TransferStatus status = TransferStatus.instance(
 							TransferType.PUT,
 							sourceFile.getAbsolutePath(),
-							targetIrodsFile.getAbsolutePath(), "",
+							targetIrodsFileForCallback.getAbsolutePath(), "",
 							operativeTransferControlBlock.getTotalBytesToTransfer(),
 							operativeTransferControlBlock.getTotalBytesTransferredSoFar(),
 							operativeTransferControlBlock.getTotalFilesTransferredSoFar(),
@@ -1215,7 +1208,6 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 			operativeTransferControlBlock.setTotalFilesToTransfer(1);
 		}
 		
-		// source is a file, if target is a file than normalize the name so that status callbacks show that a file was added.
 		if (targetFile.isDirectory()) {
 			targetFile = getIRODSFileFactory().instanceIRODSFile(targetFile.getAbsolutePath(), sourceFile.getName());
 			targetFile.setResource(targetResource);

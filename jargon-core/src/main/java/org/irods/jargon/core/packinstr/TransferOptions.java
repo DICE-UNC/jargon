@@ -6,9 +6,10 @@ package org.irods.jargon.core.packinstr;
 /**
  * Represents options that control the transfer of data to and from iRODS (get
  * and put). This is not an immutable object to make seting the various options
- * easier on the caller.  Within Jargon, the <code>TransferOptions</code> are not shared, rather
- * a copy constructor creates a new instance in the various data transfer methods, as these copies
- * may be overridden in the code when dealing with an individual file transfer.
+ * easier on the caller. Within Jargon, the <code>TransferOptions</code> are not
+ * shared, rather a copy constructor creates a new instance in the various data
+ * transfer methods, as these copies may be overridden in the code when dealing
+ * with an individual file transfer.
  * <p/>
  * Note that udp options are included here, but the UDP option is not yet
  * implemented in jargon, and will have no effect.
@@ -49,34 +50,40 @@ public class TransferOptions {
 		sb.append(udpPacketSize);
 		sb.append("\n allowPutGetResourceRedirects:");
 		sb.append(allowPutGetResourceRedirects);
-	
+
 		return sb.toString();
 	}
-	
+
 	/**
-	 * Copy constructor creates a new <code>TransferOptions</code> based on the passed-in version.  This is
-	 * done so that the options may be safely passed between transfer methods that may update the transfer options.
+	 * Copy constructor creates a new <code>TransferOptions</code> based on the
+	 * passed-in version. This is done so that the options may be safely passed
+	 * between transfer methods that may update the transfer options.
 	 * 
-	 * @param transferOptions <code>TransferOptions</code>
+	 * @param transferOptions
+	 *            <code>TransferOptions</code>
 	 */
 	public TransferOptions(final TransferOptions transferOptions) {
 		this();
 		if (transferOptions == null) {
 			throw new IllegalArgumentException("null transferOptions");
 		}
-		
-		setMaxThreads(transferOptions.getMaxThreads());
-		setTransferType(transferOptions.getTransferType());
-		setUdpPacketSize(transferOptions.getUdpPacketSize());
-		setUdpSendRate(transferOptions.getUdpSendRate());
-		setAllowPutGetResourceRedirects(transferOptions.isAllowPutGetResourceRedirects());
+
+		synchronized (this) {
+
+			setMaxThreads(transferOptions.getMaxThreads());
+			setTransferType(transferOptions.getTransferType());
+			setUdpPacketSize(transferOptions.getUdpPacketSize());
+			setUdpSendRate(transferOptions.getUdpSendRate());
+			setAllowPutGetResourceRedirects(transferOptions
+					.isAllowPutGetResourceRedirects());
+		}
 	}
 
 	/**
 	 * Default (no values) constructor.
 	 */
 	public TransferOptions() {
-		
+
 	}
 
 	public synchronized TransferType getTransferType() {
@@ -112,16 +119,22 @@ public class TransferOptions {
 	}
 
 	/**
-	 * Should puts/gets redirect to the resource server that holds the data? (equivalent to the -I in iput/iget>
-	 * @return the allowPutGetResourceRedirects <code>boolean</code> that will be <code>true</code> if redirecting is desired
+	 * Should puts/gets redirect to the resource server that holds the data?
+	 * (equivalent to the -I in iput/iget>
+	 * 
+	 * @return the allowPutGetResourceRedirects <code>boolean</code> that will
+	 *         be <code>true</code> if redirecting is desired
 	 */
 	public synchronized boolean isAllowPutGetResourceRedirects() {
 		return allowPutGetResourceRedirects;
 	}
 
 	/**
-	 * 	Should puts/gets redirect to the resource server that holds the data? (equivalent to the -I in iput/iget>
-	 * @param allowPutGetResourceRedirects the allowPutGetResourceRedirects to set
+	 * Should puts/gets redirect to the resource server that holds the data?
+	 * (equivalent to the -I in iput/iget>
+	 * 
+	 * @param allowPutGetResourceRedirects
+	 *            the allowPutGetResourceRedirects to set
 	 */
 	public synchronized void setAllowPutGetResourceRedirects(
 			boolean allowPutGetResourceRedirects) {
