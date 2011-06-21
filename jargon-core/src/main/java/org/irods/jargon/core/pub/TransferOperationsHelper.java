@@ -715,8 +715,8 @@ final class TransferOperationsHelper {
 		log.info("put of single file");
 
 		try {
-			dataObjectAO.putLocalDataObjectToIRODS(sourceFile, targetIrodsFile,
-					true);
+			dataObjectAO.putLocalDataObjectToIRODSGivingTransferOptions(sourceFile, targetIrodsFile,
+					true, transferControlBlock.getTransferOptions());
 
 			int totalFiles = 0;
 			int totalFilesSoFar = 0;

@@ -51,6 +51,23 @@ public class SynchManagerServiceImpl implements SynchManagerService {
 			log.error("synchConfiguration create failed with exception", e);
 			throw new SynchException(e);
 		}
+		
+		// TODO: per # 227, update irods synch folder 
+		/*
+		 *txfr engine has the synch device database, AVU data is also kept in iRODS that has similar information.  We'll need to keep these updated.
+		 * See data-utils in jargon, SynchPropertiesService.  The basic are already there, we might need a few extra methods.  The iRODS side is AVU
+		 * metadata.
+		 * 
+		 * check for already in use (is device name already used?  Is this a re-configuration of the same device? (allow) etc
+		 * There are methods in data-utils SynchConfigurationService.  We might need to add a 'getAllDevicesForUser', etc.
+		 * 
+		 * mkirs if necessary
+		 * 
+		 * update dbase
+		 * 
+		 * add synch config entry as avu via SynchPropertiesService
+		 * 
+		 */
 
 		log.info("synch created");
 	}
