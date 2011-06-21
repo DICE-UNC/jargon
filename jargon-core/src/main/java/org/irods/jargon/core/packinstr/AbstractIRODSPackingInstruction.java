@@ -156,6 +156,11 @@ public abstract class AbstractIRODSPackingInstruction implements IRodsPI {
 	public String getParsedTags() throws JargonException {
 
 		Tag message = getTagValue();
+		
+		if (message == null) {
+			return null;
+		}
+		
 		return message.parseTag();
 
 	}

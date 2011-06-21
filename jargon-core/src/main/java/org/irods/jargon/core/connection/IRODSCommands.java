@@ -204,17 +204,15 @@ public class IRODSCommands implements IRODSManagedConnection {
 			throw new IllegalArgumentException(err); // FIXME: jargon excep
 		}
 
-		if (message == null) {
-			String err = "null message";
-			log.error(err);
-			throw new IllegalArgumentException(err);
-		}
-
 		try {
+			int length = 0;
+			if (message != null) {
+				length = message.getBytes(ConnectionConstants.JARGON_CONNECTION_ENCODING).length;
+			}
 			irodsConnection
 					.send(createHeader(
 							RODS_API_REQ,
-							message.getBytes(ConnectionConstants.JARGON_CONNECTION_ENCODING).length,
+							length,
 							errorLength, byteStreamLength, intInfo));
 			irodsConnection.send(message);
 			if (errorLength > 0) {

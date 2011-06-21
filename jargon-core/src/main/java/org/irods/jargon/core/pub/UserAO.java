@@ -197,5 +197,12 @@ public interface UserAO extends IRODSAccessObject {
 	 */
 	List<String> findUserNameLike(String userName) throws JargonException;
 
+	/**
+	 * Generate a temporary password for the connected user
+	 * @return <code>String</code> with the temporary password
+	 * @throws JargonException
+	 */
+	String getTemporaryPasswordForConnectedUser() throws JargonException;
+
 	
 }

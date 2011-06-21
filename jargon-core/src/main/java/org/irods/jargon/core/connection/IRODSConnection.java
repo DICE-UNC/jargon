@@ -23,9 +23,9 @@ import edu.sdsc.grid.io.Host;
  * Jargon services do not directly access the <code>IRODSConnection</code>,
  * rather, they use the {@link IRODSCommands IRODSProtocol} interface.
  * <p/>
- * The connection is confined to one thread, and as such the various methods do not
- * need to be synchronized.  They do remain so for any possible edge cases and as an extra layer of 
- * protection.
+ * The connection is confined to one thread, and as such the various methods do
+ * not need to be synchronized. They do remain so for any possible edge cases
+ * and as an extra layer of protection.
  * 
  * @author Mike Conway - DICE (www.irods.org)
  * 
@@ -133,7 +133,8 @@ final class IRODSConnection implements IRODSManagedConnection {
 						CONNECTION_TIMEOUT_DEFAULT);
 				connection.setSoTimeout(CONNECTION_TIMEOUT_DEFAULT);
 			}
-			irodsInputStream = new BufferedInputStream(connection.getInputStream());
+			irodsInputStream = new BufferedInputStream(
+					connection.getInputStream());
 			irodsOutputStream = connection.getOutputStream();
 		} catch (UnknownHostException e) {
 			log.error("exception opening socket to:" + irodsAccount.getHost()
@@ -282,14 +283,13 @@ final class IRODSConnection implements IRODSManagedConnection {
 	 */
 	void send(final byte[] value) throws IOException {
 
+		// packing instructions may be null, in which case nothing is sent
 		if (value == null) {
-			log.error("value cannot be null");
-			throw new IllegalArgumentException("value cannot be null");
+			return;
 		}
 
 		if (value.length == 0) {
 			// nothing to send, warn and ignore
-			log.warn("nothing to send, ignoring...");
 			return;
 		}
 
@@ -365,9 +365,8 @@ final class IRODSConnection implements IRODSManagedConnection {
 	 */
 	void send(final String value) throws IOException {
 		if (value == null) {
-			String err = "value is null";
-			log.error(err);
-			throw new IllegalArgumentException(err);
+			log.debug("null input packing instruction, do not send");
+			return;
 		}
 		send(value.getBytes(ConnectionConstants.JARGON_CONNECTION_ENCODING));
 	}
@@ -387,7 +386,7 @@ final class IRODSConnection implements IRODSManagedConnection {
 		Host.copyInt(value, bytes);
 		send(bytes);
 		flush();
-		
+
 	}
 
 	/**

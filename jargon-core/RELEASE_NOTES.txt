@@ -54,3 +54,4 @@ fixme's in UserAOImplTest
 * [#50] Bugzilla import - -p and -P options in streaming
 *methods added for setting ACL's in admin mode for data objects and collections
 *[#220] file handle leak in ParallelGetTransferThread
+*[#297] add support for getTempPassword API

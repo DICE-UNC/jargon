@@ -8,6 +8,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.JargonException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -270,5 +271,61 @@ public class IRODSPasswordUtilities {
 	public static int unsignedByteToInt(final byte b) {
 		return b & 0xFF;
 	}
+	
+	public static String getHashedPassword(final String passwordHashValue, final IRODSAccount irodsAccount) throws JargonException {
+		StringBuilder sb = new StringBuilder();
+		sb.append(passwordHashValue);
+		sb.append(irodsAccount.getPassword());
+		String hashBuff = pad(sb.toString(), 100, '\0');
+
+		MessageDigest messageDigest;
+		try {
+			messageDigest = MessageDigest.getInstance("MD5");
+		} catch (NoSuchAlgorithmException e) {
+			throw new JargonException("error getting MD5 MessageDigest", e);
+		}
+
+		byte[] hashBytes = hashBuff.getBytes();
+		
+		messageDigest.update(hashBytes);
+		byte[] digestRound1 = messageDigest.digest();
+		
+		String hexString = getHexString(digestRound1);
+		return hexString;
+		
+	}
+	
+	/**
+	 * Pad a given string to a given length with the given pad character
+	 * @param str <code>String</code> to be padded
+	 * @param size <code>int</code> with the length of the final padded String value
+	 * @param padChar <code>char</code> that will pad the given string
+	 * @return <code>String</code> that is padded out to the given length
+	 */
+	public static String pad(String str, int size, char padChar)
+	{
+	    if (str.length() < size)
+	    {
+	        char[] temp = new char[size];
+	        int i = 0;
+
+	        while (i < str.length())
+	        {
+	            temp[i] = str.charAt(i);
+	            i++;
+	        }
+
+	        while (i < size)
+	        {
+	            temp[i] = padChar;
+	            i++;
+	        }
+
+	        str = new String(temp);
+	    }
+
+	    return str;
+	}
+
 
 }

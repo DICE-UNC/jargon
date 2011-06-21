@@ -12,6 +12,8 @@ import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.DuplicateDataException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.packinstr.GeneralAdminInp;
+import org.irods.jargon.core.packinstr.GetTempPasswordIn;
+import org.irods.jargon.core.packinstr.MiscSvrInfo;
 import org.irods.jargon.core.packinstr.ModAvuMetadataInp;
 import org.irods.jargon.core.packinstr.UserAdminInp;
 import org.irods.jargon.core.protovalues.UserTypeEnum;
@@ -25,6 +27,8 @@ import org.irods.jargon.core.query.RodsGenQueryEnum;
 import org.irods.jargon.core.security.IRODSPasswordUtilities;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import edu.sdsc.grid.io.irods.Tag;
 
 /**
  * Class to access underlying user information in IRODS
@@ -42,7 +46,9 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 	private static final char COMMA = ',';
 	private static final String AND = " AND ";
 	private static final String EQUALS = " = ";
-
+	public static final String GET_TEMP_PASSWORD_OUT_PI = "getTempPasswordOut_PI";
+	public static final String STRING_TO_HASH_WITH = "stringToHashWith";
+	
 	protected UserAOImpl(final IRODSSession irodsSession,
 			final IRODSAccount irodsAccount) throws JargonException {
 		super(irodsSession, irodsAccount);
@@ -432,8 +438,7 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 		userQuery.append("'");
 
 		String userQueryString = userQuery.toString();
-			log.info("user query:{}", userQueryString);
-		
+		log.info("user query:{}", userQueryString);
 
 		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(userQueryString,
 				DEFAULT_REC_COUNT);
@@ -473,22 +478,25 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 
 		return user;
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.irods.jargon.core.pub.UserAO#findUserNameLike(java.lang.String)
 	 */
 	@Override
-	public List<String> findUserNameLike(final String userName) throws JargonException {
-		
+	public List<String> findUserNameLike(final String userName)
+			throws JargonException {
+
 		if (userName == null) {
 			throw new IllegalArgumentException("null userName");
 		}
-		
+
 		log.info("findUserNameLike userName{}", userName);
-		
+
 		final IRODSGenQueryExecutorImpl irodsGenQueryExecutorImpl = new IRODSGenQueryExecutorImpl(
 				this.getIRODSSession(), this.getIRODSAccount());
-		
+
 		List<String> results = new ArrayList<String>();
 		StringBuilder userQuery = new StringBuilder();
 		userQuery.append("select ");
@@ -498,9 +506,9 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 		userQuery.append(" LIKE '");
 		userQuery.append(userName.trim());
 		userQuery.append("%'");
-		
+
 		log.info("user query:{}", userQuery);
-		
+
 		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(userQuery.toString(),
 				DEFAULT_REC_COUNT);
 
@@ -510,20 +518,19 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 					.executeIRODSQueryAndCloseResult(irodsQuery,
 							DEFAULT_REC_COUNT);
 		} catch (JargonQueryException e) {
-			log.error("query exception for user query:{}", userQuery.toString(), e);
+			log.error("query exception for user query:{}",
+					userQuery.toString(), e);
 			throw new JargonException(ERROR_IN_USER_QUERY);
 		}
-		
+
 		for (IRODSQueryResultRow row : resultSet.getResults()) {
 			results.add(row.getColumn(0));
 		}
-		
+
 		log.debug("user list:{}", results);
 		return results;
 
-		
 	}
-	
 
 	/**
 	 * Handy method will build the select portion of a gen query that accesses
@@ -724,6 +731,23 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 
 	}
 
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.core.pub.UserAO#getTemporaryPasswordForConnectedUser()
+	 */
+	@Override
+	public String getTemporaryPasswordForConnectedUser() throws JargonException {
+		GetTempPasswordIn getPasswordInPI = GetTempPasswordIn.instance();
+		log.debug("executing getPasswordInPI");
+
+		Tag response = getIRODSProtocol().irodsFunction(getPasswordInPI);
+		
+		String responseHashCode = response.getTag(STRING_TO_HASH_WITH).getStringValue();
+		log.info("hash value:{}", responseHashCode);
+		String tempPassword = IRODSPasswordUtilities.getHashedPassword(responseHashCode, this.getIRODSAccount());
+
+		return tempPassword;
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -734,7 +758,6 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 	@Override
 	public void changeAUserPasswordByAnAdmin(final String userName,
 			final String newPassword) throws JargonException {
-		// FIXME: not yet implemented, needs obfuscation of user password
 
 		// see clientLogin.c and iadmin.c(line 807) for details yet to be
 		// implemented
@@ -818,15 +841,18 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 		log.debug("metadata added");
 
 	}
-	
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.pub.UserAO#modifyAVUMetadata(java.lang.String, org.irods.jargon.core.pub.domain.AvuData)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.pub.UserAO#modifyAVUMetadata(java.lang.String,
+	 * org.irods.jargon.core.pub.domain.AvuData)
 	 */
 	@Override
 	public void modifyAVUMetadata(final String userName, final AvuData avuData)
 			throws DataNotFoundException, JargonException {
 
-		//FIXME: reimplement with mod code as in collectionAO
+		throw new UnsupportedOperationException("need to implement");
 
 	}
 
