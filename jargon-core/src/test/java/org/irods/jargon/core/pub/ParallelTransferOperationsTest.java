@@ -67,7 +67,7 @@ public class ParallelTransferOperationsTest {
 		// make up a test file that triggers parallel transfer
 		String testFileName = "testParallelFilePutThenGet.txt";
 		String testRetrievedFileName = "testParallelFilePutThenGetRetrieved.txt";
-		long testFileLength = 400000 * 1024;
+		long testFileLength = 600000 * 1024;
 
 		String absPath = scratchFileUtils
 				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);

@@ -925,14 +925,4 @@ public class UserAOTest {
 		TestCase.assertNotNull("did not connect and get environmental info", environmentalInfoAO.getIRODSServerProperties());
 	
 	}
-	
-	//TODO
-	/*
-	//revise
-	can another user access a user's metadata?
-	add metadata for non-existent user
-	is it by avu attr name, or name/value, or nam/value/units
-	can non-admin user update his avu?
-	*/
-
 }

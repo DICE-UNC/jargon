@@ -26,6 +26,9 @@ public class AbstractParallelTransferThread {
 	private InputStream in;
 	private OutputStream out;
 	private Exception exceptionInTransfer = null;
+	public static final int DONE_OPR = 9999;
+	public static final int PUT_OPR = 1;
+	public static final int GET_OPR = 2;
 
 	public static final Logger log = LoggerFactory
 			.getLogger(AbstractParallelTransferThread.class);

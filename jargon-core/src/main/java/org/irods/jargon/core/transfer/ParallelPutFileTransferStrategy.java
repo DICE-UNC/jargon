@@ -104,24 +104,15 @@ public final class ParallelPutFileTransferStrategy extends
 
 		ParallelPutTransferThread parallelTransferThread;
 
-		for (int i = 0; i < numberOfThreads - 1; i++) {
+		for (int i = 0; i < numberOfThreads; i++) {
 
-			parallelTransferThread = ParallelPutTransferThread.instance(this,
-					transferLength, transferLength * i);
+			parallelTransferThread = ParallelPutTransferThread.instance(this);
 
 			parallelPutTransferThreads.add(parallelTransferThread);
 
 			log.info("created transfer thread:{}", parallelTransferThread);
 
 		}
-		// last thread is a little different
-		parallelTransferThread = ParallelPutTransferThread
-				.instance(this,localFileLength - transferLength
-						* (numberOfThreads - 1), // length
-					transferLength * (numberOfThreads - 1) // offset
-				);
-
-		parallelPutTransferThreads.add(parallelTransferThread);
 
 		try {
 			log.info("invoking executor threads for put");
@@ -148,14 +139,11 @@ public final class ParallelPutFileTransferStrategy extends
 				this.toString());
 		final List<Thread> transferRunningThreads = new ArrayList<Thread>();
 		final List<ParallelPutTransferThread> parallelPutTransferThreads = new ArrayList<ParallelPutTransferThread>();
-		final long localFileLength = localFile.length();
-		final long transferLength = localFileLength / numberOfThreads;
+	
 
+		for (int i = 0; i < numberOfThreads; i++) {
 
-		for (int i = 0; i < numberOfThreads - 1; i++) {
-
-			ParallelPutTransferThread  parallelTransferThread = ParallelPutTransferThread.instance(this,
-					transferLength, transferLength * i);
+			ParallelPutTransferThread  parallelTransferThread = ParallelPutTransferThread.instance(this);
 
 			transferRunningThreads.add(new Thread(parallelTransferThread));
 			parallelPutTransferThreads.add(parallelTransferThread);
@@ -163,18 +151,7 @@ public final class ParallelPutFileTransferStrategy extends
 			log.info("creating transfer thread:{}", parallelTransferThread);
 
 		}
-		// last thread is a little different
-		ParallelPutTransferThread  parallelTransferThread = ParallelPutTransferThread
-				.instance(this, (int) (localFileLength - transferLength
-						* (numberOfThreads - 1)), // length
-						transferLength * (numberOfThreads - 1) // offset
-				);
-
-		transferRunningThreads.add(new Thread(parallelTransferThread));
-		parallelPutTransferThreads.add(parallelTransferThread);
-
-		log.info("creating last transfer thread{}", parallelTransferThread);
-
+	
 		for (Thread parallelTransferThreadToStart : transferRunningThreads) {
 			parallelTransferThreadToStart.start();
 			log.info("started parallel transfer thread for thread: {}",

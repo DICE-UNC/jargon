@@ -271,8 +271,9 @@ public class IRODSPasswordUtilities {
 	public static int unsignedByteToInt(final byte b) {
 		return b & 0xFF;
 	}
-	
-	public static String getHashedPassword(final String passwordHashValue, final IRODSAccount irodsAccount) throws JargonException {
+
+	public static String getHashedPassword(final String passwordHashValue,
+			final IRODSAccount irodsAccount) throws JargonException {
 		StringBuilder sb = new StringBuilder();
 		sb.append(passwordHashValue);
 		sb.append(irodsAccount.getPassword());
@@ -286,46 +287,46 @@ public class IRODSPasswordUtilities {
 		}
 
 		byte[] hashBytes = hashBuff.getBytes();
-		
+
 		messageDigest.update(hashBytes);
 		byte[] digestRound1 = messageDigest.digest();
-		
+
 		String hexString = getHexString(digestRound1);
 		return hexString;
-		
+
 	}
-	
+
 	/**
 	 * Pad a given string to a given length with the given pad character
-	 * @param str <code>String</code> to be padded
-	 * @param size <code>int</code> with the length of the final padded String value
-	 * @param padChar <code>char</code> that will pad the given string
+	 * 
+	 * @param str
+	 *            <code>String</code> to be padded
+	 * @param size
+	 *            <code>int</code> with the length of the final padded String
+	 *            value
+	 * @param padChar
+	 *            <code>char</code> that will pad the given string
 	 * @return <code>String</code> that is padded out to the given length
 	 */
-	public static String pad(String str, int size, char padChar)
-	{
-	    if (str.length() < size)
-	    {
-	        char[] temp = new char[size];
-	        int i = 0;
+	public static String pad(String str, final int size, final char padChar) {
+		if (str.length() < size) {
+			char[] temp = new char[size];
+			int i = 0;
 
-	        while (i < str.length())
-	        {
-	            temp[i] = str.charAt(i);
-	            i++;
-	        }
+			while (i < str.length()) {
+				temp[i] = str.charAt(i);
+				i++;
+			}
 
-	        while (i < size)
-	        {
-	            temp[i] = padChar;
-	            i++;
-	        }
+			while (i < size) {
+				temp[i] = padChar;
+				i++;
+			}
 
-	        str = new String(temp);
-	    }
+			str = new String(temp);
+		}
 
-	    return str;
+		return str;
 	}
-
 
 }

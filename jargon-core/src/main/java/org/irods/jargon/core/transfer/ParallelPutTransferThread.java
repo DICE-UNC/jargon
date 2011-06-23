@@ -27,8 +27,6 @@ import edu.sdsc.grid.io.Host;
 public final class ParallelPutTransferThread extends
 		AbstractParallelTransferThread implements Callable<Object>, Runnable {
 
-	private long transferLength;
-	private final long offset;
 	private final ParallelPutFileTransferStrategy parallelPutFileTransferStrategy;
 	private BufferedInputStream bis = null;
 
@@ -49,16 +47,13 @@ public final class ParallelPutTransferThread extends
 	 * @throws JargonException
 	 */
 	public static ParallelPutTransferThread instance(
-			final ParallelPutFileTransferStrategy parallelPutFileTransferStrategy,
-			final long transferLength, final long offset)
+			final ParallelPutFileTransferStrategy parallelPutFileTransferStrategy)
 			throws JargonException {
-		return new ParallelPutTransferThread(parallelPutFileTransferStrategy,
-				transferLength, offset);
+		return new ParallelPutTransferThread(parallelPutFileTransferStrategy);
 	}
 
 	private ParallelPutTransferThread(
-			final ParallelPutFileTransferStrategy parallelPutFileTransferStrategy,
-			final long transferLength, final long offset)
+			final ParallelPutFileTransferStrategy parallelPutFileTransferStrategy)
 			throws JargonException {
 
 		super();
@@ -67,23 +62,11 @@ public final class ParallelPutTransferThread extends
 			throw new JargonException("parallelPutFileTransferStrategy is null");
 		}
 
-		if (transferLength <= 0) {
-			throw new JargonException("transferLength is 0 or less than zero");
-		}
-
-		if (offset < 0) {
-			throw new JargonException("transferLength is 0 or less than zero");
-		}
-
 		this.parallelPutFileTransferStrategy = parallelPutFileTransferStrategy;
-		this.transferLength = transferLength;
-		log.info("transfer length:{}", transferLength);
-		this.offset = offset;
-		log.info("offset: {}", offset);
 
 		try {
 			log.info(
-					"opening socket to paralllel transfer (high) port at port:{}",
+					"opening socket to parallel transfer (high) port at port:{}",
 					parallelPutFileTransferStrategy.getPort());
 			setS(new Socket(parallelPutFileTransferStrategy.getHost(),
 					parallelPutFileTransferStrategy.getPort()));
@@ -103,29 +86,8 @@ public final class ParallelPutTransferThread extends
 
 			log.info("getting input stream for local file");
 			bis = new BufferedInputStream(new FileInputStream(
-					parallelPutFileTransferStrategy.getLocalFile()));
-
-			long totalSkipped = 0;
-			long toSkip = 0;
-
-			// guard against occasions where skip does not skip the full amount
-
-			if (offset > 0) {
-				long skipped = bis.skip(offset);
-				totalSkipped += skipped;
-
-				while (totalSkipped < offset) {
-					log.warn("did not skip entire offset amount, call skip again");
-					toSkip = offset - totalSkipped;
-					skipped = bis.skip(toSkip);
-				}
-
-				if (totalSkipped != offset) {
-					throw new JargonException(
-							"totalSkipped not equal to offset");
-				}
-
-			}
+					parallelPutFileTransferStrategy.getLocalFile()),
+					ConnectionConstants.OUTPUT_BUFFER_LENGTH);
 
 			log.info("writing the cookie (password) for the output thread");
 
@@ -159,70 +121,98 @@ public final class ParallelPutTransferThread extends
 
 	}
 
+	/**
+	 * @throws IOException
+	 * @throws JargonException
+	 */
+	private void seekToStartingPoint(final long offset) throws JargonException {
+		long totalSkipped = 0;
+		long toSkip = 0;
+
+		// guard against occasions where skip does not skip the full amount
+
+		try {
+			if (offset > 0) {
+				long skipped = bis.skip(offset);
+				totalSkipped += skipped;
+
+				while (totalSkipped < offset) {
+					log.warn("did not skip entire offset amount, call skip again");
+					toSkip = offset - totalSkipped;
+					skipped = bis.skip(toSkip);
+				}
+
+				if (totalSkipped != offset) {
+					throw new JargonException(
+							"totalSkipped not equal to offset");
+				}
+
+			}
+		} catch (IOException e) {
+			log.error("IOException in seek", e);
+			throw new JargonException(e);
+		}
+	}
+
 	private void put() throws JargonException {
 		log.info("put()..");
 
-		// Holds all the data for transfer
 		byte[] buffer = null;
-		int read = 0;
-		long totalRead = 0;
-		long totalWritten = 0;
+		boolean done = false;
 
-		// begin transfer
-		if (transferLength <= 0) {
-			throw new JargonException("this transfer length is zero");
-		} else {
-			// length has a max of 8mb?
 			buffer = new byte[ConnectionConstants.OUTPUT_BUFFER_LENGTH];
-		}
-
-		log.info("buffer length for put is: {}", buffer.length);
-
-		/*
-		 * Read/write loop moves data from file starting at offset down the
-		 * socket until the anticipated transfer length is consumed.
-		 */
+			long currentOffset = 0;
+	
 		try {
-			while (transferLength > 0) {
-				log.debug("in put read/write loop at top");
+			while (!done) {
 
-				read = bis.read(buffer, 0, (int) Math.min(
-						ConnectionConstants.OUTPUT_BUFFER_LENGTH,
-						transferLength));
-
-				log.debug("read: {}", read);
-				totalRead += read;
-
-				if (read > 0) {
-
-					transferLength -= read;
-					log.debug("new txfr length:{}", transferLength);
-					getOut().write(buffer, 0, read);
-					log.debug("wrote data to the buffer");
-					totalWritten += read;
-
-				} else if (read < 0) {
-					throw new JargonException(
-							"unexpected end of data in transfer operation");
+				// read the header
+				int operation = readInt();
+				if (log.isInfoEnabled()) {
+					log.info("   operation:" + operation);
 				}
-				Thread.yield();
-			}
+				
+				if (operation == AbstractParallelTransferThread.PUT_OPR) {
+					log.debug("put operation");
+				} else if (operation == AbstractParallelTransferThread.DONE_OPR) {
+					log.info("done received");
+					done = true;
+					break;
+				} else {
+					throw new JargonException("unknown operation received");
+				}
 
-			log.info("final flush of output buffer");
-			getOut().flush();
+				// read the flags
+				int flags = readInt();
+				if (log.isInfoEnabled()) {
+					log.info("   flags:" + flags);
+				}
+				// Where to seek into the data
+				long offset = readLong();
+				if (log.isInfoEnabled()) {
+					log.info("   offset:" + offset);
+				}
+				// How much to read/write
+				long length = readLong();
+				if (log.isInfoEnabled()) {
+					log.info("   length:" + length);
+				}
 
-			log.info("for thread, total read: {}", totalRead);
-			log.info("   total written: {}", totalWritten);
-			log.info("   transferLength: {}", transferLength);
+				if (offset != currentOffset) {
+				seekToStartingPoint(offset);
+				currentOffset = offset;
+				}
 
-			if (totalRead != totalWritten) {
-				throw new JargonException(
-						"totalRead and totalWritten do not agree");
-			}
+				log.info("buffer length for put is: {}", buffer.length);
 
-			if (transferLength != 0) {
-				throw new JargonException(
-						"transferLength and totalWritten do not agree");
+				/*
+				 * Read/write loop moves data from file starting at offset down
+				 * the socket until the anticipated transfer length is consumed.
+				 */
+
+				readWriteLoopForCurrentHeaderDirective(buffer, length);
+				currentOffset += length;
+						
 			}
 
 		} catch (IOException e) {
@@ -232,6 +222,76 @@ public final class ParallelPutTransferThread extends
 			throw new JargonException("IOException during parallel file put", e);
 		} finally {
 
+		}
+	}
+
+	/**
+	 * @param buffer
+	 * @param length
+	 * @throws IOException
+	 * @throws JargonException
+	 */
+	private void readWriteLoopForCurrentHeaderDirective(byte[] buffer,
+			long length) throws IOException,
+			JargonException {
+		int read = 0;
+		long totalRead = 0;
+		long transferLength = length;
+		long totalWritten = 0;
+		
+		while (transferLength > 0) {
+			log.debug("in put read/write loop at top");
+
+			read = bis.read(buffer, 0, (int) Math.min(
+					ConnectionConstants.OUTPUT_BUFFER_LENGTH,
+					transferLength));
+
+			log.debug("read: {}", read);
+			
+			if (read > 0) {
+
+				totalRead += read;
+				transferLength -= read;
+				log.debug("new txfr length:{}", transferLength);
+				try {
+					getOut().write(buffer, 0, read);
+				} catch (Exception e) {
+					log.error(
+							"error writing to iRODS parallel transfer socket",
+							e);
+					throw new JargonException(
+							"error writing to parallel transfer socket",
+							e);
+				}
+				log.debug("wrote data to the buffer");
+				totalWritten += read;
+
+			} else {
+				log.debug("no read...break out of read/write");
+				break;
+			}/*else if (read < 0) {
+			}
+				throw new JargonException(
+						"unexpected end of data in transfer operation");
+			}*/
+			Thread.yield();
+		}
+
+		log.info("final flush of output buffer");
+		getOut().flush();
+
+		log.info("for thread, total read: {}", totalRead);
+		log.info("   total written: {}", totalWritten);
+		log.info("   transferLength: {}", transferLength);
+
+		if (totalRead != totalWritten) {
+			throw new JargonException(
+					"totalRead and totalWritten do not agree");
+		}
+
+		if (transferLength != 0) {
+			throw new JargonException(
+					"transferLength and totalWritten do not agree");
 		}
 	}
 

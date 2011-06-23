@@ -13,7 +13,6 @@ import org.irods.jargon.core.exception.DuplicateDataException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.packinstr.GeneralAdminInp;
 import org.irods.jargon.core.packinstr.GetTempPasswordIn;
-import org.irods.jargon.core.packinstr.MiscSvrInfo;
 import org.irods.jargon.core.packinstr.ModAvuMetadataInp;
 import org.irods.jargon.core.packinstr.UserAdminInp;
 import org.irods.jargon.core.protovalues.UserTypeEnum;
@@ -48,7 +47,7 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 	private static final String EQUALS = " = ";
 	public static final String GET_TEMP_PASSWORD_OUT_PI = "getTempPasswordOut_PI";
 	public static final String STRING_TO_HASH_WITH = "stringToHashWith";
-	
+
 	protected UserAOImpl(final IRODSSession irodsSession,
 			final IRODSAccount irodsAccount) throws JargonException {
 		super(irodsSession, irodsAccount);
@@ -731,8 +730,11 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 
 	}
 
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.pub.UserAO#getTemporaryPasswordForConnectedUser()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.UserAO#getTemporaryPasswordForConnectedUser()
 	 */
 	@Override
 	public String getTemporaryPasswordForConnectedUser() throws JargonException {
@@ -740,10 +742,12 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 		log.debug("executing getPasswordInPI");
 
 		Tag response = getIRODSProtocol().irodsFunction(getPasswordInPI);
-		
-		String responseHashCode = response.getTag(STRING_TO_HASH_WITH).getStringValue();
+
+		String responseHashCode = response.getTag(STRING_TO_HASH_WITH)
+				.getStringValue();
 		log.info("hash value:{}", responseHashCode);
-		String tempPassword = IRODSPasswordUtilities.getHashedPassword(responseHashCode, this.getIRODSAccount());
+		String tempPassword = IRODSPasswordUtilities.getHashedPassword(
+				responseHashCode, this.getIRODSAccount());
 
 		return tempPassword;
 	}

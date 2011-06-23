@@ -456,20 +456,15 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		path = absolutePathToParent;
 
 		LOG.info("listDataObjectsUnderPath for: {}", path);
-	
-	/*
-		IRODSFile irodsFile = irodsFileFactory
-				.instanceIRODSFile(absolutePathToParent);
 
-		if (irodsFile.isDirectory()) {
-			LOG.debug("is directory");
-			path = irodsFile.getAbsolutePath();
-		} else {
-			path = irodsFile.getParent();
-			LOG.debug("is file, using parent path: {}", path);
-		}
-
-*/
+		/*
+		 * IRODSFile irodsFile = irodsFileFactory
+		 * .instanceIRODSFile(absolutePathToParent);
+		 * 
+		 * if (irodsFile.isDirectory()) { LOG.debug("is directory"); path =
+		 * irodsFile.getAbsolutePath(); } else { path = irodsFile.getParent();
+		 * LOG.debug("is file, using parent path: {}", path); }
+		 */
 		IRODSGenQueryExecutor irodsGenQueryExecutor = new IRODSGenQueryExecutorImpl(
 				this.getIRODSSession(), this.getIRODSAccount());
 
@@ -788,7 +783,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		return returnObject;
 	}
 
-	@Override // FIXME: this is in dev
+	@Override
 	public List<CollectionAndDataObjectListingEntry> listDataObjectsSharedWithAGivenUser(
 			final String absolutePathToParent, final String userName,
 			final int partialStartIndex) throws JargonException {
@@ -808,14 +803,15 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 				.buildQueryListAllDataObjectsWithUserAccessInfo(absolutePathToParent);
 
 		@SuppressWarnings("unused")
-		StringBuilder sb = new StringBuilder("SELECT COLL_NAME, DATA_NAME, COLL_ACCESS_TYPE WHERE COLL_ACCESS_USER_ID = '10012'");
-		//sb.append(" WHERE ");
-	//	sb.append(RodsGenQueryEnum.COL_COLL_ACCESS_USER_NAME);
-		//sb.append(" = '");
-		//sb.append(userName);
-		//sb.append("' AND ");
-	//	sb.append(RodsGenQueryEnum.COL_DATA_ACCESS_TYPE);
-	//	sb.append(" = '1200'");
+		StringBuilder sb = new StringBuilder(
+				"SELECT COLL_NAME, DATA_NAME, COLL_ACCESS_TYPE WHERE COLL_ACCESS_USER_ID = '10012'");
+		// sb.append(" WHERE ");
+		// sb.append(RodsGenQueryEnum.COL_COLL_ACCESS_USER_NAME);
+		// sb.append(" = '");
+		// sb.append(userName);
+		// sb.append("' AND ");
+		// sb.append(RodsGenQueryEnum.COL_DATA_ACCESS_TYPE);
+		// sb.append(" = '1200'");
 
 		@SuppressWarnings("unused")
 		IRODSQueryResultSetInterface resultSet = this

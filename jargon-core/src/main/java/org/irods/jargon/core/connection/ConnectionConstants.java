@@ -72,8 +72,7 @@ public final class ConnectionConstants {
 	//public static int OUTPUT_BUFFER_LENGTH = GeneralFileSystem
 	//		.getWriteBufferSize();
 
-	public static int OUTPUT_BUFFER_LENGTH = 8192;
-	
+	public static int OUTPUT_BUFFER_LENGTH = 32768;
 	
 	/**
 	 * 4 bytes at the front of the header, outside XML
