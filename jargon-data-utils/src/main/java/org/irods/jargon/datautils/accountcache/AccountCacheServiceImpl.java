@@ -64,7 +64,7 @@ public class AccountCacheServiceImpl {
 	 * @return <code>String</code> with the absolute path to the cache file
 	 * @throws JargonException
 	 */
-	public String putInformationIntoCache(final Object informationObject,
+	public String putSerializedEncryptedObjectIntoCache(final Object informationObject,
 			final String key) throws JargonException {
 
 		if (informationObject == null) {

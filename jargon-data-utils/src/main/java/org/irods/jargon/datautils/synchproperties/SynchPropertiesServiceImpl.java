@@ -34,13 +34,9 @@ public class SynchPropertiesServiceImpl implements SynchPropertiesService {
 	 * AVU conventions 
 	 * attrib | value | unit
 	 * 
-	 * in home dir??
-	 * 
-	 * [device name] | [user name] | iRODSSynch:userDevice
-	 * 
 	 * in synch root dir
 	 * 
-	 * [device name]:[user name] | [lastLocalSynch | lastIrodsSynch |
+	 * [user name]:[device] | [lastLocalSynch | lastIrodsSynch |
 	 * localAbsPath] | iRODSSynch:userSynchDir
 	 */
 
@@ -186,10 +182,80 @@ public class SynchPropertiesServiceImpl implements SynchPropertiesService {
 		MetaDataAndDomainData deviceInfo = queryResults.get(0);
 		// split the data out of the avu data value
 
-		String[] valueComponents = deviceInfo.getAvuValue().split("[~]");
+		UserSynchTarget userSynchTarget =buildUserSynchTargetFromMetaDataAndDomainData(deviceInfo);
+		return userSynchTarget;
+
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.datautils.synchproperties.SynchPropertiesService#getUserSynchTargets(java.lang.String)
+	 */
+	@Override
+	public List<UserSynchTarget> getUserSynchTargets(
+			final String userName) throws DataNotFoundException,
+			JargonException {
+
+		if (userName == null || userName.isEmpty()) {
+			throw new IllegalArgumentException("null or empty userName");
+		}
+
+		checkDependencies();
+
+		log.info("getUserSynchTargets for user:{}",
+				userName);
+		
+		CollectionAO collectionAO = irodsAccessObjectFactory
+				.getCollectionAO(irodsAccount);
+
+
+		List<AVUQueryElement> avuQuery = new ArrayList<AVUQueryElement>();
+		List<MetaDataAndDomainData> queryResults;
+
+		log.debug("building avu query");
+
+		try {
+			AVUQueryElement avuQueryElement = AVUQueryElement
+					.instanceForValueQuery(AVUQueryPart.UNITS,
+							AVUQueryOperatorEnum.EQUAL, USER_SYNCH_DIR_TAG);
+			avuQuery.add(avuQueryElement);
+			StringBuilder sb = new StringBuilder();
+			sb.append(userName);
+			sb.append(":%");
+			avuQueryElement = AVUQueryElement.instanceForValueQuery(
+					AVUQueryPart.ATTRIBUTE, AVUQueryOperatorEnum.LIKE,
+					sb.toString());
+			avuQuery.add(avuQueryElement);
+			queryResults = collectionAO.findMetadataValuesByMetadataQuery(avuQuery);
+		} catch (JargonQueryException e) {
+			log.error(
+					"error creating query for lookup of user synch target data",
+					e);
+			throw new JargonException(e);
+		}
+
+		log.debug("result of query for synch target data:{}", queryResults);
+		List<UserSynchTarget> userSynchTargets = new ArrayList<UserSynchTarget>();
+
+		for (MetaDataAndDomainData metadata : queryResults) {
+			userSynchTargets.add(buildUserSynchTargetFromMetaDataAndDomainData(metadata));	
+		}
+		
+		return userSynchTargets;
+
+	}
+
+	/**
+	 * Parse the synch directory AVU value for component values to build a <code>UserSynchTarget</code> description.
+	 * @param metaDataAndDomainData {@link MetaDataAndDomainData} from an AVU query
+	 * @return {@link UserSynchTarget} describing a synch relationship for this directory
+	 * @throws JargonException
+	 */
+	private UserSynchTarget buildUserSynchTargetFromMetaDataAndDomainData(
+			final MetaDataAndDomainData metaDataAndDomainData) throws JargonException {
+		String[] valueComponents = metaDataAndDomainData.getAvuValue().split("[~]");
 		if (valueComponents.length != 3) {
 			log.error("did not find 3 expected values in the avu value: {}",
-					deviceInfo);
+					metaDataAndDomainData);
 			throw new JargonException(
 					"unexpected data in AVU value for UserSynchTarget");
 		}
@@ -204,30 +270,37 @@ public class SynchPropertiesServiceImpl implements SynchPropertiesService {
 		} catch (NumberFormatException nfe) {
 			log.error(
 					"unable to parse out timestamps from synch data in AVU value:{}",
-					deviceInfo);
+					metaDataAndDomainData);
 			throw new JargonException("UserSynchTarget parse error");
 		}
 
 		localSynchAbsolutePath = valueComponents[2];
+		
+		String[] userComponents = metaDataAndDomainData.getAvuAttribute().split("[:]");
+		if (userComponents.length != 2) {
+			log.error("did not find 2 expected values in the avu attribute for user data: {}",
+					metaDataAndDomainData);
+			throw new JargonException(
+					"unexpected data in AVU attribute for UserSynchTarget");
+		}
 
 		if (localSynchAbsolutePath == null || localSynchAbsolutePath.isEmpty()) {
-			log.error("no local synch absolute path found in:{}", deviceInfo);
+			log.error("no local synch absolute path found in:{}", metaDataAndDomainData);
 			throw new JargonException("no local synch absolute path");
 		}
 
 		UserSynchTarget userSynchTarget = new UserSynchTarget();
-		userSynchTarget.setDeviceName(deviceName);
-		userSynchTarget.setIrodsSynchRootAbsolutePath(irodsAbsolutePath);
+		userSynchTarget.setDeviceName(userComponents[1]);
+		userSynchTarget.setIrodsSynchRootAbsolutePath(metaDataAndDomainData.getDomainObjectUniqueName());
 		userSynchTarget.setLocalSynchRootAbsolutePath(localSynchAbsolutePath);
 		userSynchTarget.setLastIRODSSynchTimestamp(lastIrodsSynch);
 		userSynchTarget.setLastLocalSynchTimestamp(lastLocalSynch);
-		userSynchTarget.setUserName(userName);
+		userSynchTarget.setUserName(userComponents[0]);
 
 		log.info("build UserSynchTarget:{}", userSynchTarget);
-
 		return userSynchTarget;
-
 	}
+	
 	
 	/* (non-Javadoc)
 	 * @see org.irods.jargon.datautils.synchproperties.SynchPropertiesService#updateTimestampsToCurrent(java.lang.String, java.lang.String, java.lang.String)

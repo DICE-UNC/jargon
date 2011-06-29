@@ -587,5 +587,82 @@ public class SynchPropertiesServiceImplTest {
 		Mockito.verify(collectionAO).modifyAvuValueBasedOnGivenAttributeAndUnit(Mockito.eq(testIrodsPath), Mockito.any(AvuData.class));
 
 	}
+	
+	@Test
+	public void testGetUserSynchTargets() throws Exception {
+
+		String testUserName = "testUser";
+		String testDeviceName = "testDevice";
+		String testIrodsPath = "/path/to/irods";
+
+		long expectedIrodsTimestamp = 949493049304L;
+		long expectedLocalTimestamp = 8483483948394L;
+		String expectedLocalPath = "/a/local/path";
+
+		StringBuilder userDevAttrib = new StringBuilder();
+		userDevAttrib.append(testUserName);
+		userDevAttrib.append(":");
+		userDevAttrib.append(testDeviceName);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory irodsAccessObjectFactory = Mockito
+				.mock(IRODSAccessObjectFactory.class);
+		CollectionAO collectionAO = Mockito.mock(CollectionAO.class);
+		Mockito.when(irodsAccessObjectFactory.getCollectionAO(irodsAccount))
+				.thenReturn(collectionAO);
+
+		// build expected query
+		List<AVUQueryElement> avuQuery = new ArrayList<AVUQueryElement>();
+		AVUQueryElement avuQueryElement = AVUQueryElement
+				.instanceForValueQuery(AVUQueryPart.UNITS,
+						AVUQueryOperatorEnum.EQUAL,
+						SynchPropertiesService.USER_SYNCH_DIR_TAG);
+		avuQuery.add(avuQueryElement);
+		avuQueryElement = AVUQueryElement.instanceForValueQuery(
+				AVUQueryPart.ATTRIBUTE, AVUQueryOperatorEnum.LIKE,
+				testUserName + ":%");
+		avuQuery.add(avuQueryElement);
+
+		StringBuilder anticipatedAvuValue = new StringBuilder();
+		anticipatedAvuValue.append(expectedIrodsTimestamp);
+		anticipatedAvuValue.append("~");
+		anticipatedAvuValue.append(expectedLocalTimestamp);
+		anticipatedAvuValue.append("~");
+		anticipatedAvuValue.append(expectedLocalPath);
+
+		List<MetaDataAndDomainData> queryResults = new ArrayList<MetaDataAndDomainData>();
+		MetaDataAndDomainData testResult = MetaDataAndDomainData.instance(
+				MetaDataAndDomainData.MetadataDomain.COLLECTION, "1",
+				testIrodsPath, userDevAttrib.toString(),
+				anticipatedAvuValue.toString(),
+				SynchPropertiesService.USER_SYNCH_DIR_TAG);
+		queryResults.add(testResult);
+		Mockito.when(
+				collectionAO.findMetadataValuesByMetadataQuery(
+						avuQuery)).thenReturn(queryResults);
+
+		SynchPropertiesServiceImpl synchPropertiesService = new SynchPropertiesServiceImpl();
+		synchPropertiesService
+				.setIrodsAccessObjectFactory(irodsAccessObjectFactory);
+		synchPropertiesService.setIrodsAccount(irodsAccount);
+		List<UserSynchTarget> userSynchTargets = synchPropertiesService.getUserSynchTargets(testUserName);
+				
+		Assert.assertNotNull("null userSynchTarget returned", userSynchTargets);
+		Assert.assertEquals("should be one synch target", 1, userSynchTargets.size());
+		UserSynchTarget userSynchTarget = userSynchTargets.get(0);
+		Assert.assertEquals("invalid user", testUserName,
+				userSynchTarget.getUserName());
+		Assert.assertEquals("invalid device", testDeviceName,
+				userSynchTarget.getDeviceName());
+		Assert.assertEquals("invalid irods path", testIrodsPath,
+				userSynchTarget.getIrodsSynchRootAbsolutePath());
+		Assert.assertEquals("invalid local path", expectedLocalPath,
+				userSynchTarget.getLocalSynchRootAbsolutePath());
+		Assert.assertEquals("invalid local timestamp", expectedLocalTimestamp,
+				userSynchTarget.getLastLocalSynchTimestamp());
+		Assert.assertEquals("invalid irods timestamp", expectedIrodsTimestamp,
+				userSynchTarget.getLastIRODSSynchTimestamp());
+	}
 
 }

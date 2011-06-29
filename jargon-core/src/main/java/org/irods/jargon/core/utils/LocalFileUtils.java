@@ -7,7 +7,10 @@ import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.zip.CRC32;
@@ -185,6 +188,11 @@ public class LocalFileUtils {
 		}
 	}
 	
+	/**
+	 * Given a <code>String</code> representing hex characters (e.g. b1f0a2), return the actual bytes represented by the hex value
+	 * @param s <code>String</code> with the representation of the hex bytes
+	 * @return <code>byte[]</code> with the actual translation
+	 */
 	public static byte[] hexStringToByteArray(String s) {
 	    int len = s.length();
 	    byte[] data = new byte[len / 2];
@@ -194,6 +202,5 @@ public class LocalFileUtils {
 	    }
 	    return data;
 	}
-
-
+	
 }

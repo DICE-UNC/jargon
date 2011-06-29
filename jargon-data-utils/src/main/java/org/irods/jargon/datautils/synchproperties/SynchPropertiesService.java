@@ -1,5 +1,7 @@
 package org.irods.jargon.datautils.synchproperties;
 
+import java.util.List;
+
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.DuplicateDataException;
@@ -92,5 +94,15 @@ public interface SynchPropertiesService {
 	 */
 	void updateTimestampsToCurrent(String userName, String deviceName,
 			String irodsAbsolutePath) throws JargonException;
+
+	/**
+	 * For a given user name, return all of the synch targets configured on the connected iRODS server.  
+	 * @param userName <code>String</code> with the iRODS user name.
+	 * @return <code>List</code> of {@link UserSynchTarget} giving the configured synch directories and devices on this iRODS server for this user
+	 * @throws DataNotFoundException
+	 * @throws JargonException
+	 */
+	List<UserSynchTarget> getUserSynchTargets(String userName)
+			throws DataNotFoundException, JargonException;
 
 }

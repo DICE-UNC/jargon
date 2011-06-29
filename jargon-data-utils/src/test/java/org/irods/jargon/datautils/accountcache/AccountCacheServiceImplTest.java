@@ -46,7 +46,7 @@ public class AccountCacheServiceImplTest {
 		AccountCacheServiceImpl accountCacheService = new AccountCacheServiceImpl();
 		accountCacheService.setIrodsAccessObjectFactory(Mockito
 				.mock(IRODSAccessObjectFactory.class));
-		accountCacheService.putInformationIntoCache("obj", "key");
+		accountCacheService.putSerializedEncryptedObjectIntoCache("obj", "key");
 	}
 
 	@Test(expected = JargonRuntimeException.class)
@@ -55,7 +55,7 @@ public class AccountCacheServiceImplTest {
 		AccountCacheServiceImpl accountCacheService = new AccountCacheServiceImpl();
 		accountCacheService.setIrodsAccount(testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties));
-		accountCacheService.putInformationIntoCache("obj", "key");
+		accountCacheService.putSerializedEncryptedObjectIntoCache("obj", "key");
 	}
 
 	@Test
@@ -71,7 +71,7 @@ public class AccountCacheServiceImplTest {
 				.buildIRODSAccountFromTestProperties(testingProperties));
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		String cacheFilePath = accountCacheService.putInformationIntoCache(irodsAccount, "key");
+		String cacheFilePath = accountCacheService.putSerializedEncryptedObjectIntoCache(irodsAccount, "key");
 		IRODSFile cacheFile = irodsFileSystem.getIRODSAccessObjectFactory().getIRODSFileFactory(irodsAccount).instanceIRODSFile(cacheFilePath);
 		TestCase.assertTrue("cache file not created", cacheFile.exists());
 	}
@@ -90,7 +90,7 @@ public class AccountCacheServiceImplTest {
 				.buildIRODSAccountFromTestProperties(testingProperties));
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		accountCacheService.putInformationIntoCache(irodsAccount, cacheKey);
+		accountCacheService.putSerializedEncryptedObjectIntoCache(irodsAccount, cacheKey);
 		
 		Object retrievedObject = accountCacheService.retrieveObjectFromCache(irodsAccount.getUserName(), cacheKey);
 		TestCase.assertNotNull("no cached object returned");
