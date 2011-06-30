@@ -14,6 +14,8 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
@@ -32,7 +34,7 @@ import org.hibernate.annotations.LazyCollectionOption;
 @Table(name = "local_irods_transfer")
 public class LocalIRODSTransfer implements Serializable {
 
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = -6714116121965036534L;
 
 	@Id()
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -50,6 +52,15 @@ public class LocalIRODSTransfer implements Serializable {
 	@Column(name = "transfer_type")
 	@Enumerated(EnumType.STRING)
 	private TransferType transferType;
+	
+	/**
+	 * Component transfer for this synchronization. in transfers, a diff is
+	 * created, and appropriate transfers are scheduled to resolve differences.
+	 * This links a transfer engine activity to the configured transfer that initiated it.
+	 */
+	@ManyToOne(targetEntity = SynchProcess.class, fetch = FetchType.LAZY)
+	@JoinColumn(name = "synch_process_id", nullable = true)
+	private SynchProcess synchProcess;
 
 	@Column(name = "host")
 	private String transferHost = "";
@@ -331,6 +342,20 @@ public class LocalIRODSTransfer implements Serializable {
 		sb.append("\n   updatedAt:");
 		sb.append(updatedAt);
 		return sb.toString();
+	}
+
+	/**
+	 * @param synchProcess the synchProcess to set
+	 */
+	public void setSynchProcess(SynchProcess synchProcess) {
+		this.synchProcess = synchProcess;
+	}
+
+	/**
+	 * @return the synchProcess
+	 */
+	public SynchProcess getSynchProcess() {
+		return synchProcess;
 	}
 
 }

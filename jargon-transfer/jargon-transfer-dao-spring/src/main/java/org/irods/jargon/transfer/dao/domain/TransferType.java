@@ -8,6 +8,8 @@ public enum TransferType {
 
 	REPLICATE,
 	
-	COPY;
+	COPY,
+	
+	SYNCH;
 
 }

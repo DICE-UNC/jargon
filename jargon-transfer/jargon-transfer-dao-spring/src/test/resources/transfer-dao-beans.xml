@@ -72,6 +72,13 @@
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 	
+	<!-- 
+	<bean id="synchProcessDAO"
+		class="org.irods.jargon.transfer.dao.spring.SynchProcessDAOImpl">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	 -->
+	
 	<bean id="configurationPropertyDAO"
 		class="org.irods.jargon.transfer.dao.spring.ConfigurationPropertyDAOImpl">
 		<property name="sessionFactory" ref="sessionFactory" />

@@ -5,6 +5,8 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -41,6 +43,10 @@ public class LocalIRODSTransferItem implements Serializable {
 
 	@Column(name = "target_file_absolute_path", length = 32672)
 	private String targetFileAbsolutePath;
+	
+	@Column(name = "transfer_type")
+	@Enumerated(EnumType.STRING)
+	private TransferType transferType;
 
 	@Column(name = "is_file")
 	private boolean file;
@@ -151,6 +157,8 @@ public class LocalIRODSTransferItem implements Serializable {
 		sb.append("LocalIRODSTransferItem:");
 		sb.append("\n   id:");
 		sb.append(id);
+		sb.append("\n   transferType:");
+		sb.append(transferType);
 		sb.append("\n   sourceFileAbsolutePath:");
 		sb.append(sourceFileAbsolutePath);
 		sb.append("\n   targetFileAbsolutePath:");
@@ -166,6 +174,20 @@ public class LocalIRODSTransferItem implements Serializable {
 		sb.append("\n   transferredAt:");
 		sb.append(transferredAt);
 		return sb.toString();
+	}
+
+	/**
+	 * @param transferType the transferType to set
+	 */
+	public void setTransferType(TransferType transferType) {
+		this.transferType = transferType;
+	}
+
+	/**
+	 * @return the transferType
+	 */
+	public TransferType getTransferType() {
+		return transferType;
 	}
 
 }

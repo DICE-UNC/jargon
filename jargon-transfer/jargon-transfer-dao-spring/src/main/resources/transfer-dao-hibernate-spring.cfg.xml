@@ -8,6 +8,7 @@
     <mapping class="org.irods.jargon.transfer.dao.domain.LocalIRODSTransfer"/>
     <mapping class="org.irods.jargon.transfer.dao.domain.LocalIRODSTransferItem"/>
     <mapping class="org.irods.jargon.transfer.dao.domain.SynchConfiguration"/>
+    <mapping class="org.irods.jargon.transfer.dao.domain.SynchProcess"/>
     <mapping class="org.irods.jargon.transfer.dao.domain.ConfigurationProperty"/>
   </session-factory>
 </hibernate-configuration>
