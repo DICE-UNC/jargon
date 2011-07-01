@@ -16,35 +16,32 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
  */
 public class TransferServiceFactoryImpl {
 
-	private BeanFactory beanFactory;
-	private static Logger log = LoggerFactory
-			.getLogger(TransferServiceFactoryImpl.class);
+    private BeanFactory beanFactory;
 
-	public TransferServiceFactoryImpl() throws TransferEngineException {
-		try {
-			ClassPathXmlApplicationContext appContext = new ClassPathXmlApplicationContext(
-					new String[] { "classpath:transfer-dao-beans.xml",
-							"classpath:transfer-dao-hibernate-spring.cfg.xml" });
-			// of course, an ApplicationContext is just a BeanFactory
-			beanFactory = appContext;
-		} catch (Exception e) {
-			log.error("error starting app context", e);
-			throw new TransferEngineException(e.getMessage());
-		}
-	}
+    private static Logger log = LoggerFactory.getLogger(TransferServiceFactoryImpl.class);
 
-	public TransferQueueService instanceTransferQueueService() {
-		return (TransferQueueService) beanFactory
-				.getBean("transferQueueService");
-	}
+    public TransferServiceFactoryImpl() throws TransferEngineException {
+        try {
+            ClassPathXmlApplicationContext appContext = new ClassPathXmlApplicationContext(new String[] {
+                    "classpath:transfer-dao-beans.xml", "classpath:transfer-dao-hibernate-spring.cfg.xml" });
+            // of course, an ApplicationContext is just a BeanFactory
+            beanFactory = appContext;
+        } catch (Exception e) {
+            log.error("error starting app context", e);
+            throw new TransferEngineException(e.getMessage());
+        }
+    }
 
-	public SynchManagerService instanceSynchManagerService() {
-		return (SynchManagerService) beanFactory.getBean("synchManagerService");
-	}
+    public TransferQueueService instanceTransferQueueService() {
+        return (TransferQueueService) beanFactory.getBean("transferQueueService");
+    }
 
-	public ConfigurationService instanceConfigurationService() {
-		return (ConfigurationService) beanFactory
-				.getBean("configurationService");
-	}
+    public SynchManagerService instanceSynchManagerService() {
+        return (SynchManagerService) beanFactory.getBean("synchManagerService");
+    }
+
+    public ConfigurationService instanceConfigurationService() {
+        return (ConfigurationService) beanFactory.getBean("configurationService");
+    }
 
 }
