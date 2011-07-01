@@ -1,6 +1,6 @@
 package org.irods.jargon.transfer.engine.synch;
 
-import org.irods.jargon.transfer.dao.domain.SynchConfiguration;
+import org.irods.jargon.transfer.dao.domain.Synchronization;
 
 /**
  * Interface for service to manage storage and processing of synch information
@@ -10,13 +10,12 @@ import org.irods.jargon.transfer.dao.domain.SynchConfiguration;
  */
 public interface SynchManagerService {
 
-	/**
-	 * Create a new synch configuration.
-	 * 
-	 * @param synchConfiguration
-	 * @throws SynchException
-	 */
-	void createNewSynchConfiguration(SynchConfiguration synchConfiguration)
-			throws SynchException;
+    /**
+     * Create a new synch configuration.
+     * 
+     * @param synchConfiguration
+     * @throws SynchException
+     */
+    void createNewSynchConfiguration(Synchronization synchConfiguration) throws SynchException;
 
 }
