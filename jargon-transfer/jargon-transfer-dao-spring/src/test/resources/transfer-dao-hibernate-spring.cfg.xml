@@ -6,7 +6,7 @@
 		<property name="dialect">org.hibernate.dialect.DerbyDialect</property>
 		<mapping class="org.irods.jargon.transfer.dao.domain.LocalIRODSTransfer" />
 		<mapping class="org.irods.jargon.transfer.dao.domain.LocalIRODSTransferItem" />
-		<mapping class="org.irods.jargon.transfer.dao.domain.SynchConfiguration" />
+		<mapping class="org.irods.jargon.transfer.dao.domain.Synchronization" />
 		<mapping class="org.irods.jargon.transfer.dao.domain.ConfigurationProperty" />
 
 	</session-factory>
