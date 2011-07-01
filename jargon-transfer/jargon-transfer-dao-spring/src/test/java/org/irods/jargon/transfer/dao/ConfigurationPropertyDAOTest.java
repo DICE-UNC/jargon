@@ -19,140 +19,129 @@ import org.springframework.transaction.annotation.Transactional;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = { "classpath:transfer-dao-beans.xml",
-		"classpath:transfer-dao-hibernate-spring.cfg.xml",
-		"classpath:test-beans.xml" })
+        "classpath:transfer-dao-hibernate-spring.cfg.xml", "classpath:test-beans.xml" })
 @TransactionConfiguration(transactionManager = "transactionManager", defaultRollback = true)
 @Transactional
 public class ConfigurationPropertyDAOTest {
 
-	@Autowired
-	private ConfigurationPropertyDAO configurationPropertyDAO;
+    @Autowired
+    private ConfigurationPropertyDAO configurationPropertyDAO;
 
-	@Test
-	public void testSave() throws Exception {
+    @Test
+    public void testSave() throws Exception {
 
-		String testKey = "testSave";
-		String testValue = "testSaveValue";
-		ConfigurationProperty configProperty = new ConfigurationProperty();
-		configProperty.setPropertyKey(testKey);
-		configProperty.setPropertyValue(testValue);
-		configProperty.setCreatedAt(new Date());
-		configurationPropertyDAO.saveOrUpdate(configProperty);
-		assertTrue(configProperty.getId() != null);
+        String testKey = "testSave";
+        String testValue = "testSaveValue";
+        ConfigurationProperty configProperty = new ConfigurationProperty();
+        configProperty.setPropertyKey(testKey);
+        configProperty.setPropertyValue(testValue);
+        configProperty.setCreatedAt(new Date());
+        configurationPropertyDAO.saveOrUpdate(configProperty);
+        assertTrue(configProperty.getId() != null);
 
-	}
+    }
 
-	@Test
-	public void testSaveBlankKey() throws Exception {
+    @Test
+    public void testSaveBlankKey() throws Exception {
 
-		String testKey = "";
-		String testValue = "testSaveValue";
-		ConfigurationProperty configProperty = new ConfigurationProperty();
-		configProperty.setPropertyKey(testKey);
-		configProperty.setPropertyValue(testValue);
-		configProperty.setCreatedAt(new Date());
+        String testKey = "";
+        String testValue = "testSaveValue";
+        ConfigurationProperty configProperty = new ConfigurationProperty();
+        configProperty.setPropertyKey(testKey);
+        configProperty.setPropertyValue(testValue);
+        configProperty.setCreatedAt(new Date());
 
-		configurationPropertyDAO.saveOrUpdate(configProperty);
-		assertTrue(configProperty.getId() != null);
+        configurationPropertyDAO.saveOrUpdate(configProperty);
+        assertTrue(configProperty.getId() != null);
 
-	}
+    }
 
-	@Test(expected = PropertyValueException.class)
-	public void testSaveNullKey() throws Exception {
+    @Test(expected = PropertyValueException.class)
+    public void testSaveNullKey() throws Exception {
 
-		String testKey = null;
-		String testValue = "testSaveValue";
-		ConfigurationProperty configProperty = new ConfigurationProperty();
-		configProperty.setPropertyKey(testKey);
-		configProperty.setPropertyValue(testValue);
-		configProperty.setCreatedAt(new Date());
+        String testKey = null;
+        String testValue = "testSaveValue";
+        ConfigurationProperty configProperty = new ConfigurationProperty();
+        configProperty.setPropertyKey(testKey);
+        configProperty.setPropertyValue(testValue);
+        configProperty.setCreatedAt(new Date());
 
-		configurationPropertyDAO.saveOrUpdate(configProperty);
+        configurationPropertyDAO.saveOrUpdate(configProperty);
 
-		assertTrue(configProperty.getId() != null);
+        assertTrue(configProperty.getId() != null);
 
-	}
+    }
 
-	@Test
-	public void testDelete() throws Exception {
+    @Test
+    public void testDelete() throws Exception {
 
-		String testKey = "testDelete";
-		String testValue = "testDeleteValue";
-		ConfigurationProperty configProperty = new ConfigurationProperty();
-		configProperty.setPropertyKey(testKey);
-		configProperty.setPropertyValue(testValue);
-		configProperty.setCreatedAt(new Date());
-		configurationPropertyDAO.saveOrUpdate(configProperty);
+        String testKey = "testDelete";
+        String testValue = "testDeleteValue";
+        ConfigurationProperty configProperty = new ConfigurationProperty();
+        configProperty.setPropertyKey(testKey);
+        configProperty.setPropertyValue(testValue);
+        configProperty.setCreatedAt(new Date());
+        configurationPropertyDAO.saveOrUpdate(configProperty);
 
-		assertTrue(configProperty.getId() != null);
-		configurationPropertyDAO.delete(configProperty);
-		configProperty = configurationPropertyDAO.findById(configProperty
-				.getId());
-		Assert.assertNull("should not get a config prop, was deleted",
-				configProperty);
+        assertTrue(configProperty.getId() != null);
+        configurationPropertyDAO.delete(configProperty);
+        configProperty = configurationPropertyDAO.findById(configProperty.getId());
+        Assert.assertNull("should not get a config prop, was deleted", configProperty);
 
-	}
+    }
 
-	@Test
-	public void testFindAll() throws Exception {
+    @Test
+    public void testFindAll() throws Exception {
 
-		String testKey1 = "testFindAll1";
-		String testKey2 = "testFindAll2";
+        String testKey1 = "testFindAll1";
+        String testKey2 = "testFindAll2";
 
-		String testValue = "testFindAllValue";
-		ConfigurationProperty configProperty = new ConfigurationProperty();
-		configProperty.setPropertyKey(testKey1);
-		configProperty.setPropertyValue(testValue);
-		configProperty.setCreatedAt(new Date());
-		configurationPropertyDAO.saveOrUpdate(configProperty);
+        String testValue = "testFindAllValue";
+        ConfigurationProperty configProperty = new ConfigurationProperty();
+        configProperty.setPropertyKey(testKey1);
+        configProperty.setPropertyValue(testValue);
+        configProperty.setCreatedAt(new Date());
+        configurationPropertyDAO.saveOrUpdate(configProperty);
 
-		configProperty = new ConfigurationProperty();
-		configProperty.setPropertyKey(testKey2);
-		configProperty.setPropertyValue(testValue);
-		configProperty.setCreatedAt(new Date());
-		configurationPropertyDAO.saveOrUpdate(configProperty);
+        configProperty = new ConfigurationProperty();
+        configProperty.setPropertyKey(testKey2);
+        configProperty.setPropertyValue(testValue);
+        configProperty.setCreatedAt(new Date());
+        configurationPropertyDAO.saveOrUpdate(configProperty);
 
-		List<ConfigurationProperty> configProperties = configurationPropertyDAO
-				.findAll();
-		Assert.assertNotNull("did not find confg properties, was null",
-				configProperties);
-		Assert.assertFalse("empty config properties returned",
-				configProperties.isEmpty());
+        List<ConfigurationProperty> configProperties = configurationPropertyDAO.findAll();
+        Assert.assertNotNull("did not find confg properties, was null", configProperties);
+        Assert.assertFalse("empty config properties returned", configProperties.isEmpty());
 
-	}
+    }
 
-	@Test
-	public void testDeleteAllProperties() throws Exception {
+    @Test
+    public void testDeleteAllProperties() throws Exception {
 
-		String testKey1 = "testDeleteAllProperties1";
-		String testKey2 = "testDeleteAllProperties2";
+        String testKey1 = "testDeleteAllProperties1";
+        String testKey2 = "testDeleteAllProperties2";
 
-		String testValue = "testDeleteAllPropertiesValue";
-		ConfigurationProperty configProperty = new ConfigurationProperty();
-		configProperty.setPropertyKey(testKey1);
-		configProperty.setPropertyValue(testValue);
-		configProperty.setCreatedAt(new Date());
-		configurationPropertyDAO.saveOrUpdate(configProperty);
+        String testValue = "testDeleteAllPropertiesValue";
+        ConfigurationProperty configProperty = new ConfigurationProperty();
+        configProperty.setPropertyKey(testKey1);
+        configProperty.setPropertyValue(testValue);
+        configProperty.setCreatedAt(new Date());
+        configurationPropertyDAO.saveOrUpdate(configProperty);
 
-		configProperty = new ConfigurationProperty();
-		configProperty.setPropertyKey(testKey2);
-		configProperty.setPropertyValue(testValue);
-		configProperty.setCreatedAt(new Date());
-		configurationPropertyDAO.saveOrUpdate(configProperty);
+        configProperty = new ConfigurationProperty();
+        configProperty.setPropertyKey(testKey2);
+        configProperty.setPropertyValue(testValue);
+        configProperty.setCreatedAt(new Date());
+        configurationPropertyDAO.saveOrUpdate(configProperty);
 
-		List<ConfigurationProperty> configProperties = configurationPropertyDAO
-				.findAll();
-		Assert.assertNotNull("did not find confg properties, was null",
-				configProperties);
-		Assert.assertFalse("empty config properties returned",
-				configProperties.isEmpty());
+        List<ConfigurationProperty> configProperties = configurationPropertyDAO.findAll();
+        Assert.assertNotNull("did not find confg properties, was null", configProperties);
+        Assert.assertFalse("empty config properties returned", configProperties.isEmpty());
 
-		configurationPropertyDAO.deleteAllProperties();
-		configProperties = configurationPropertyDAO.findAll();
-		Assert.assertNotNull("did not find confg properties, was null",
-				configProperties);
-		Assert.assertTrue("all properties should have been deleted",
-				configProperties.isEmpty());
-	}
+        configurationPropertyDAO.deleteAllProperties();
+        configProperties = configurationPropertyDAO.findAll();
+        Assert.assertNotNull("did not find confg properties, was null", configProperties);
+        Assert.assertTrue("all properties should have been deleted", configProperties.isEmpty());
+    }
 
 }
