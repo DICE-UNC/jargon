@@ -2,10 +2,10 @@ package org.irods.jargon.transfer.dao.domain;
 
 public enum TransferStatus {
 
-	ERROR,
+    ERROR,
 
-	WARNING,
+    WARNING,
 
-	OK;
+    OK;
 
 }

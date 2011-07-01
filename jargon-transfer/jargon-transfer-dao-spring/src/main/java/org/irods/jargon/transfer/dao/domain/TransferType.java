@@ -2,12 +2,12 @@ package org.irods.jargon.transfer.dao.domain;
 
 public enum TransferType {
 
-	PUT,
+    PUT,
 
-	GET,
+    GET,
 
-	REPLICATE,
-	
-	COPY;
+    REPLICATE,
+
+    COPY;
 
 }
