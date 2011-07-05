@@ -90,11 +90,7 @@ public class DataCacheServiceImpl implements DataCacheService {
 		IRODSFile cacheFile = this.getIrodsAccessObjectFactory()
 				.getIRODSFileFactory(irodsAccount)
 				.instanceIRODSFile(irodsFileAbsolutePath);
-		try {
-			cacheFile.createNewFile();
-		} catch (IOException e) {
-			throw new JargonException("error creating new cache file");
-		}
+		createCacheFileAndCacheDir(cacheFile);
 		Stream2StreamAO stream2StreamAO = this.getIrodsAccessObjectFactory()
 				.getStream2StreamAO(irodsAccount);
 		stream2StreamAO.streamBytesToIRODSFile(encrypted, cacheFile);
@@ -102,6 +98,20 @@ public class DataCacheServiceImpl implements DataCacheService {
 		log.info("done...");
 		return irodsFileAbsolutePath;
 
+	}
+
+	/**
+	 * @param cacheFile
+	 * @throws JargonException
+	 */
+	private void createCacheFileAndCacheDir(IRODSFile cacheFile)
+			throws JargonException {
+		try {
+			cacheFile.getParentFile().mkdirs();
+			cacheFile.createNewFile();
+		} catch (IOException e) {
+			throw new JargonException("error creating new cache file");
+		}
 	}
 	
 	/* (non-Javadoc)
@@ -199,11 +209,8 @@ public class DataCacheServiceImpl implements DataCacheService {
 		IRODSFile cacheFile = this.getIrodsAccessObjectFactory()
 				.getIRODSFileFactory(irodsAccount)
 				.instanceIRODSFile(irodsFileAbsolutePath);
-		try {
-			cacheFile.createNewFile();
-		} catch (IOException e) {
-			throw new JargonException("error creating new cache file");
-		}
+		createCacheFileAndCacheDir(cacheFile);
+
 		Stream2StreamAO stream2StreamAO = this.getIrodsAccessObjectFactory()
 				.getStream2StreamAO(irodsAccount);
 		stream2StreamAO.streamBytesToIRODSFile(encrypted, cacheFile);
