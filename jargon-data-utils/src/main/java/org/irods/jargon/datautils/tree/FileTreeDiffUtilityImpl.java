@@ -1,11 +1,9 @@
 package org.irods.jargon.datautils.tree;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Date;
-import java.util.List;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.JargonException;
@@ -159,7 +157,7 @@ public class FileTreeDiffUtilityImpl implements FileTreeDiffUtility {
 	}
 
 	/**
-	 * Given to relative paths, do the diff. This is the recursive call that
+	 * Given two relative paths, do the diff. This is the recursive call that
 	 * will descend into child directories and update a shared tree model.
 	 * 
 	 * @param currentFileTreeNode
@@ -201,11 +199,17 @@ public class FileTreeDiffUtilityImpl implements FileTreeDiffUtility {
 			log.debug("lhs < rhs");
 			log.debug("lhs timestamp:{}", leftHandSide.lastModified());
 			log.debug("lhs cutoff:{}", timestampforLastSynchLeftHandSide);
-			if (timestampforLastSynchLeftHandSide == NO_TIMESTAMP_CHECKS || true) {  // FIXME: currently this bypasses the delete mode
+			if (timestampforLastSynchLeftHandSide == NO_TIMESTAMP_CHECKS || true) { // FIXME:
+																					// currently
+																					// this
+																					// bypasses
+																					// the
+																					// delete
+																					// mode
 				// leftHandSide.lastModified()
-																					// >
-																					// timestampforLastSynchLeftHandSide)
-																					// {
+				// >
+				// timestampforLastSynchLeftHandSide)
+				// {
 				FileTreeDiffEntry entry = buildFileTreeDiffEntryForFile(
 						leftHandSide, DiffType.LEFT_HAND_PLUS, 0, 0);
 				currentFileTreeNode.add(new FileTreeNode(entry));
@@ -337,14 +341,14 @@ public class FileTreeDiffUtilityImpl implements FileTreeDiffUtility {
 		// set up the new root node in the compare tree, these are both
 		// directories and I'll recursively descend to the children with this
 		// parent as the root.
-		
+
 		Comparator<File> fileNameComparator = new FileNameComparator();
 
 		log.debug("inspecting for files in this pass using a filter for files");
 		FileOrDirFilter filter = new FileOrDirFilter(FilterFor.FILE);
 		File[] lhsChildren = leftHandSide.listFiles(filter);
 		Arrays.sort(lhsChildren, fileNameComparator);
-		
+
 		log.debug("lhs files in dir:{}", lhsChildren);
 		File[] rhsChildren = rightHandSide.listFiles(filter);
 		Arrays.sort(rhsChildren, fileNameComparator);

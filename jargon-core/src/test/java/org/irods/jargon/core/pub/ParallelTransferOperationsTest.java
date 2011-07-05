@@ -246,8 +246,8 @@ public class ParallelTransferOperationsTest {
 		String testFileName = "testParallelFilePutThenGetUsingExecutorMultipleClientsMoreClientsLessPool.txt";
 		String testRetrievedFileName = "testParallelFilePutThenGetUsingExecutorMultipleClientsMoreClientsLessPoolRetrieved.txt";
 		long testFileLength = 400000 * 1024;
-		int numberOfClients = 8;
-		int numberOfThreads = 4;
+		int numberOfClients = 3;
+		int numberOfThreads = 2;
 
 		for (int i = 0; i < numberOfClients; i++) {
 			String absPath = scratchFileUtils

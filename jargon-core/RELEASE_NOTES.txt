@@ -55,3 +55,4 @@ fixme's in UserAOImplTest
 *methods added for setting ACL's in admin mode for data objects and collections
 *[#220] file handle leak in ParallelGetTransferThread
 *[#297] add support for getTempPassword API
+*[#320] rule imposed no parallel txfrs - still attempt even when portal opr out indicates 0 threads

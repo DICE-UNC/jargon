@@ -405,60 +405,16 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			int numberOfThreads = responseToInitialCallForPut
 					.getTag(numThreads).getIntValue();
 
-			if (numberOfThreads > 0) {
+			if (numberOfThreads == 0) {
+				log.info("parallel operation deferred by server sending 0 threads back in PortalOperOut, revert to single thread transfer");
 
-				log.info("tranfer will be done using {} threads",
+				dataAOHelper.processNormalPutTransfer(localFile, overwrite,
+						transferOptions, targetFile, this.getIRODSProtocol());
+				return;
+
+			} else if (numberOfThreads > 0) {
+				parallelPutTransfer(localFile, responseToInitialCallForPut,
 						numberOfThreads);
-				final String host = responseToInitialCallForPut
-						.getTag(PortList_PI).getTag(hostAddr).getStringValue();
-				final int port = responseToInitialCallForPut
-						.getTag(PortList_PI).getTag(portNum).getIntValue();
-				final int pass = responseToInitialCallForPut
-						.getTag(PortList_PI).getTag(cookie).getIntValue();
-
-				final ParallelPutFileTransferStrategy parallelPutFileStrategy = ParallelPutFileTransferStrategy
-						.instance(host, port, numberOfThreads, pass, localFile, this.getIRODSAccessObjectFactory());
-
-				log.info(
-						"getting ready to initiate parallel file transfer strategy:{}",
-						parallelPutFileStrategy);
-
-				/*
-				 * the keep alive thread needs to use the current agent
-				 * connection, so create it in this main thread and pass it to
-				 * the keep alive process. The keep alive thread will maintain
-				 * the connection to this same agent.
-				 */
-				/*
-				 * EnvironmentalInfoAO environmentalAO = new
-				 * EnvironmentalInfoAOImpl(this.getIRODSSession(),
-				 * this.getIRODSAccount());
-				 * 
-				 * // start a keep-alive that will ping the irods server every
-				 * 30 // seconds to keep the control channel alive
-				 * KeepAliveProcess keepAliveProcess = new KeepAliveProcess(
-				 * environmentalAO); Thread keepAliveThread = new
-				 * Thread(keepAliveProcess); keepAliveThread.start();
-				 */
-
-				try {
-					parallelPutFileStrategy.transfer();
-					log.info("transfer is done, now terminate the keep alive process");
-					// keepAliveProcess.setTerminate(true);
-					// keepAliveThread.join(2000);
-				} catch (Exception e) {
-					log.error("error in parallel transfer", e);
-					throw new JargonException("error in parallel transfer", e);
-				}
-
-				log.info("transfer process is complete");
-				int statusForComplete = responseToInitialCallForPut.getTag(
-						l1descInx).getIntValue();
-				log.debug("status for complete:{}", statusForComplete);
-
-				log.info("sending operation complete at termination of parallel transfer");
-				this.getIRODSProtocol().operationComplete(statusForComplete);
-
 			} else {
 				dataAOHelper.processNormalPutTransfer(localFile, overwrite,
 						transferOptions, targetFile, this.getIRODSProtocol());
@@ -480,10 +436,49 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			log.error("File not found for local file I was trying to put:{}",
 					localFile.getAbsolutePath());
 			throw new JargonException("localFile not found to put to irods", e);
+		} catch (Exception e) {
+			log.error("error in parallel transfer", e);
+			throw new JargonException("error in parallel transfer", e);
 		}
-
 		log.info("transfer complete");
 
+	}
+
+	/**
+	 * @param localFile
+	 * @param responseToInitialCallForPut
+	 * @param numberOfThreads
+	 * @throws JargonException
+	 */
+	private void parallelPutTransfer(final File localFile,
+			final Tag responseToInitialCallForPut, final int numberOfThreads)
+			throws JargonException {
+		log.info("tranfer will be done using {} threads", numberOfThreads);
+		final String host = responseToInitialCallForPut.getTag(PortList_PI)
+				.getTag(hostAddr).getStringValue();
+		final int port = responseToInitialCallForPut.getTag(PortList_PI)
+				.getTag(portNum).getIntValue();
+		final int pass = responseToInitialCallForPut.getTag(PortList_PI)
+				.getTag(cookie).getIntValue();
+
+		final ParallelPutFileTransferStrategy parallelPutFileStrategy = ParallelPutFileTransferStrategy
+				.instance(host, port, numberOfThreads, pass, localFile,
+						this.getIRODSAccessObjectFactory());
+
+		log.info(
+				"getting ready to initiate parallel file transfer strategy:{}",
+				parallelPutFileStrategy);
+
+		parallelPutFileStrategy.transfer();
+		log.info("transfer is done, now terminate the keep alive process");
+
+		log.info("transfer process is complete");
+		int statusForComplete = responseToInitialCallForPut.getTag(l1descInx)
+				.getIntValue();
+		log.debug("status for complete:{}", statusForComplete);
+
+		log.info("sending operation complete at termination of parallel transfer");
+		this.getIRODSProtocol().operationComplete(statusForComplete);
 	}
 
 	/*
@@ -723,52 +718,36 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		log.info("transfer length is:", length);
 
 		// if length == zero, check for multiple thread copy
-		if (length == 0) {
-			final String host = message.getTag(PortList_PI).getTag(hostAddr)
-					.getStringValue();
-			int port = message.getTag(PortList_PI).getTag(portNum)
-					.getIntValue();
-			int password = message.getTag(PortList_PI).getTag(cookie)
-					.getIntValue();
-			int numberOfThreads = message.getTag(numThreads).getIntValue();
-			log.info("number of threads for this transfer = {} ",
-					numberOfThreads);
-			ParallelGetFileTransferStrategy parallelGetTransferStrategy = ParallelGetFileTransferStrategy
-					.instance(host, port, numberOfThreads, password,
-							localFileToHoldData, this.getIRODSAccessObjectFactory());
+		try {
+			if (length == 0) {
+				final String host = message.getTag(PortList_PI)
+						.getTag(hostAddr).getStringValue();
+				int port = message.getTag(PortList_PI).getTag(portNum)
+						.getIntValue();
+				int password = message.getTag(PortList_PI).getTag(cookie)
+						.getIntValue();
+				int numberOfThreads = message.getTag(numThreads).getIntValue();
+				log.info("number of threads for this transfer = {} ",
+						numberOfThreads);
+				ParallelGetFileTransferStrategy parallelGetTransferStrategy = ParallelGetFileTransferStrategy
+						.instance(host, port, numberOfThreads, password,
+								localFileToHoldData,
+								this.getIRODSAccessObjectFactory());
 
-			/*
-			 * the keep alive thread needs to use the current agent connection,
-			 * so create it in this main thread and pass it to the keep alive
-			 * process. The keep alive thread will maintain the connection to
-			 * this same agent.
-			 */
+				try {
+					parallelGetTransferStrategy.transfer();
+				} catch (Exception e) {
+					log.error("error in parallel transfer", e);
+					throw new JargonException("error in parallel transfer", e);
+				}
 
-			/*
-			 * EnvironmentalInfoAO environmentalAO = new
-			 * EnvironmentalInfoAOImpl(this.getIRODSSession(),
-			 * this.getIRODSAccount());
-			 * 
-			 * 
-			 * // start a keep-alive that will ping the irods server every 30 //
-			 * seconds to keep the control channel alive KeepAliveProcess
-			 * keepAliveProcess = new KeepAliveProcess( environmentalAO); Thread
-			 * keepAliveThread = new Thread(keepAliveProcess);
-			 * keepAliveThread.start();
-			 */
-
-			try {
-				parallelGetTransferStrategy.transfer();
-				// keepAliveProcess.setTerminate(true);
-				// keepAliveThread.join(2000);
-			} catch (Exception e) {
-				log.error("error in parallel transfer", e);
-				throw new JargonException("error in parallel transfer", e);
+			} else {
+				dataAOHelper.processNormalGetTransfer(localFileToHoldData,
+						length, this.getIRODSProtocol(), transferOptions);
 			}
-
-		} else {
-			dataAOHelper.processNormalGetTransfer(localFileToHoldData, length,
-					this.getIRODSProtocol(), transferOptions);
+		} catch (Exception e) {
+			log.error("error in parallel transfer", e);
+			throw new JargonException("error in parallel transfer", e);
 		}
 	}
 
