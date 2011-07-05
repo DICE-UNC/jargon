@@ -19,141 +19,132 @@ import org.springframework.transaction.annotation.Transactional;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = { "classpath:transfer-dao-beans.xml",
-		"classpath:transfer-dao-hibernate-spring.cfg.xml",
-		"classpath:test-beans.xml" })
+        "classpath:transfer-dao-hibernate-spring.cfg.xml", "classpath:test-beans.xml" })
 @TransactionConfiguration(transactionManager = "transactionManager", defaultRollback = true)
 @Transactional
 public class ConfigurationServiceImplTest {
 
-	@Autowired
-	private ConfigurationService configurationService;
+    @Autowired
+    private ConfigurationService configurationService;
 
-	@Before
-	public void setUp() throws Exception {
-	}
+    @Before
+    public void setUp() throws Exception {
+    }
 
-	@After
-	public void tearDown() throws Exception {
-	}
+    @After
+    public void tearDown() throws Exception {
+    }
 
-	@Test
-	public void testListConfigurationProperties() throws Exception {
-		String testKey1 = "testAddConfigurationProperty1";
-		String testKey2 = "testAddConfigurationProperty2";
-		String testValue = "testAddConfigurationPropertyValue";
-		ConfigurationProperty configProperty = new ConfigurationProperty();
-		configProperty.setPropertyKey(testKey1);
-		configProperty.setPropertyValue(testValue);
-		configProperty.setCreatedAt(new Date());
-		configurationService.addConfigurationProperty(configProperty);
+    @Test
+    public void testListConfigurationProperties() throws Exception {
+        String testKey1 = "testAddConfigurationProperty1";
+        String testKey2 = "testAddConfigurationProperty2";
+        String testValue = "testAddConfigurationPropertyValue";
+        ConfigurationProperty configProperty = new ConfigurationProperty();
+        configProperty.setPropertyKey(testKey1);
+        configProperty.setPropertyValue(testValue);
+        configProperty.setCreatedAt(new Date());
+        configurationService.addConfigurationProperty(configProperty);
 
-		configProperty = new ConfigurationProperty();
-		configProperty.setPropertyKey(testKey2);
-		configProperty.setPropertyValue(testValue);
-		configProperty.setCreatedAt(new Date());
-		configurationService.addConfigurationProperty(configProperty);
+        configProperty = new ConfigurationProperty();
+        configProperty.setPropertyKey(testKey2);
+        configProperty.setPropertyValue(testValue);
+        configProperty.setCreatedAt(new Date());
+        configurationService.addConfigurationProperty(configProperty);
 
-		List<ConfigurationProperty> configurationProperties = configurationService
-				.listConfigurationProperties();
-		Assert.assertNotNull("null configurationProperties",
-				configurationProperties);
-		Assert.assertFalse("no props found", configurationProperties.isEmpty());
+        List<ConfigurationProperty> configurationProperties = configurationService.listConfigurationProperties();
+        Assert.assertNotNull("null configurationProperties", configurationProperties);
+        Assert.assertFalse("no props found", configurationProperties.isEmpty());
 
-	}
+    }
 
-	@Test
-	public void testAddConfigurationProperty() throws Exception {
-		String testKey = "testAddConfigurationProperty";
-		String testValue = "testAddConfigurationPropertyValue";
-		ConfigurationProperty configProperty = new ConfigurationProperty();
-		configProperty.setPropertyKey(testKey);
-		configProperty.setPropertyValue(testValue);
-		configProperty.setCreatedAt(new Date());
-		ConfigurationProperty actual = configurationService
-				.addConfigurationProperty(configProperty);
-		Assert.assertNotNull("null configuration property", actual);
-	}
+    @Test
+    public void testAddConfigurationProperty() throws Exception {
+        String testKey = "testAddConfigurationProperty";
+        String testValue = "testAddConfigurationPropertyValue";
+        ConfigurationProperty configProperty = new ConfigurationProperty();
+        configProperty.setPropertyKey(testKey);
+        configProperty.setPropertyValue(testValue);
+        configProperty.setCreatedAt(new Date());
+        ConfigurationProperty actual = configurationService.addConfigurationProperty(configProperty);
+        Assert.assertNotNull("null configuration property", actual);
+    }
 
-	@Test
-	public void testDeleteConfigurationProperty() throws Exception {
-		String testKey = "testDeleteConfigurationProperty";
-		String testValue = "testDeleteConfigurationPropertyValue";
-		ConfigurationProperty configProperty = new ConfigurationProperty();
-		configProperty.setPropertyKey(testKey);
-		configProperty.setPropertyValue(testValue);
-		configProperty.setCreatedAt(new Date());
-		ConfigurationProperty actual = configurationService
-				.addConfigurationProperty(configProperty);
-		Assert.assertNotNull("null configuration property", actual);
-		configurationService.deleteConfigurationProperty(actual);
-		Assert.assertTrue(true);
-	}
+    @Test
+    public void testDeleteConfigurationProperty() throws Exception {
+        String testKey = "testDeleteConfigurationProperty";
+        String testValue = "testDeleteConfigurationPropertyValue";
+        ConfigurationProperty configProperty = new ConfigurationProperty();
+        configProperty.setPropertyKey(testKey);
+        configProperty.setPropertyValue(testValue);
+        configProperty.setCreatedAt(new Date());
+        ConfigurationProperty actual = configurationService.addConfigurationProperty(configProperty);
+        Assert.assertNotNull("null configuration property", actual);
+        configurationService.deleteConfigurationProperty(actual);
+        Assert.assertTrue(true);
+    }
 
-	@Test
-	public void testUpdateConfigurationProperty() throws Exception {
-		String testKey = "testUpdateConfigurationProperty";
-		String testValue = "testUpdateConfigurationPropertyVal";
-		String testUpdatedValue = "testUpdateConfigurationPropertyValUpdated";
+    @Test
+    public void testUpdateConfigurationProperty() throws Exception {
+        String testKey = "testUpdateConfigurationProperty";
+        String testValue = "testUpdateConfigurationPropertyVal";
+        String testUpdatedValue = "testUpdateConfigurationPropertyValUpdated";
 
-		ConfigurationProperty configProperty = new ConfigurationProperty();
-		configProperty.setPropertyKey(testKey);
-		configProperty.setPropertyValue(testValue);
-		configProperty.setCreatedAt(new Date());
-		ConfigurationProperty actual = configurationService
-				.addConfigurationProperty(configProperty);
-		Assert.assertNotNull("null configuration property", actual);
+        ConfigurationProperty configProperty = new ConfigurationProperty();
+        configProperty.setPropertyKey(testKey);
+        configProperty.setPropertyValue(testValue);
+        configProperty.setCreatedAt(new Date());
+        ConfigurationProperty actual = configurationService.addConfigurationProperty(configProperty);
+        Assert.assertNotNull("null configuration property", actual);
 
-		actual.setPropertyValue(testUpdatedValue);
-		configurationService.updateConfigurationProperty(actual);
+        actual.setPropertyValue(testUpdatedValue);
+        configurationService.updateConfigurationProperty(actual);
 
-		// no error means success
-		Assert.assertTrue(true);
+        // no error means success
+        Assert.assertTrue(true);
 
-	}
+    }
 
-	@Test
-	public void testExportConfigurationProperties() throws Exception {
-		String testKey = "testGetConfigurationProperties";
-		String testValue = "testGetConfigurationPropertiesPropertyValue";
-		ConfigurationProperty configProperty = new ConfigurationProperty();
-		configProperty.setPropertyKey(testKey);
-		configProperty.setPropertyValue(testValue);
-		configProperty.setCreatedAt(new Date());
-		configurationService.addConfigurationProperty(configProperty);
-		Properties properties = configurationService.exportProperties();
-		Assert.assertNotNull("null configuration properties retrieved",
-				properties);
-		String actual = properties.getProperty(testKey);
-		Assert.assertNotNull("test property not returned in properties", actual);
-		Assert.assertEquals("property value not set", testValue, actual);
-	}
+    @Test
+    public void testExportConfigurationProperties() throws Exception {
+        String testKey = "testGetConfigurationProperties";
+        String testValue = "testGetConfigurationPropertiesPropertyValue";
+        ConfigurationProperty configProperty = new ConfigurationProperty();
+        configProperty.setPropertyKey(testKey);
+        configProperty.setPropertyValue(testValue);
+        configProperty.setCreatedAt(new Date());
+        configurationService.addConfigurationProperty(configProperty);
+        Properties properties = configurationService.exportProperties();
+        Assert.assertNotNull("null configuration properties retrieved", properties);
+        String actual = properties.getProperty(testKey);
+        Assert.assertNotNull("test property not returned in properties", actual);
+        Assert.assertEquals("property value not set", testValue, actual);
+    }
 
-	@Test
-	public void testImportConfigurationProperties() throws Exception {
-		Properties testProperties = new Properties();
-		String testKey1 = "testAddConfigurationProperty1";
-		String testKey2 = "testAddConfigurationProperty2";
-		String testValue = "testAddConfigurationPropertyValue";
+    @Test
+    public void testImportConfigurationProperties() throws Exception {
+        Properties testProperties = new Properties();
+        String testKey1 = "testAddConfigurationProperty1";
+        String testKey2 = "testAddConfigurationProperty2";
+        String testValue = "testAddConfigurationPropertyValue";
 
-		testProperties.put(testKey1, testValue);
-		testProperties.put(testKey2, testValue);
-		configurationService.importProperties(testProperties);
-		Properties properties = configurationService.exportProperties();
-		Assert.assertNotNull("null configuration properties retrieved",
-				properties);
-		String actual = properties.getProperty(testKey1);
-		Assert.assertNotNull("test property not returned in properties", actual);
-		Assert.assertEquals("property value not set", testValue, actual);
+        testProperties.put(testKey1, testValue);
+        testProperties.put(testKey2, testValue);
+        configurationService.importProperties(testProperties);
+        Properties properties = configurationService.exportProperties();
+        Assert.assertNotNull("null configuration properties retrieved", properties);
+        String actual = properties.getProperty(testKey1);
+        Assert.assertNotNull("test property not returned in properties", actual);
+        Assert.assertEquals("property value not set", testValue, actual);
 
-	}
+    }
 
-	public void setConfigurationService(
-			final ConfigurationService configurationService) {
-		this.configurationService = configurationService;
-	}
+    public void setConfigurationService(final ConfigurationService configurationService) {
+        this.configurationService = configurationService;
+    }
 
-	public ConfigurationService getConfigurationService() {
-		return configurationService;
-	}
+    public ConfigurationService getConfigurationService() {
+        return configurationService;
+    }
 
 }

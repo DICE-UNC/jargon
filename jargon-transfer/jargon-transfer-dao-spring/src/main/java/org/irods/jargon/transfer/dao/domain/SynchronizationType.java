@@ -6,6 +6,12 @@ package org.irods.jargon.transfer.dao.domain;
  * @author Mike Conway - DICE (www.irods.org)
  * 
  */
-public enum SynchronizationMode {
-	ONE_WAY_LOCAL_TO_IRODS, ONE_WAY_IRODS_TO_LOCAL, BI_DIRECTIONAL
+public enum SynchronizationType {
+
+    ONE_WAY_LOCAL_TO_IRODS,
+
+    ONE_WAY_IRODS_TO_LOCAL,
+
+    BI_DIRECTIONAL
+
 }

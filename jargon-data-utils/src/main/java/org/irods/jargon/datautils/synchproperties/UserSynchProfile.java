@@ -10,30 +10,30 @@ import java.util.Map;
  */
 public class UserSynchProfile {
 
-	/**
-	 * iRODS user name for this profile.  This will be stored in the relevant iRODS server
-	 */
-	private String userName = "";
-	/**
-	 * Map (by device name assigned by user) of devices on this iRODS server that are synched
-	 */
-	private Map<String, UserSynchDeviceProfile> userSynchDevices;
+    /**
+     * iRODS user name for this profile. This will be stored in the relevant iRODS server
+     */
+    private String userName = "";
 
-	public String getUserName() {
-		return userName;
-	}
+    /**
+     * Map (by device name assigned by user) of devices on this iRODS server that are synched
+     */
+    private Map<String, UserSynchDeviceProfile> userSynchDevices;
 
-	public void setUserName(final String userName) {
-		this.userName = userName;
-	}
+    public String getUserName() {
+        return userName;
+    }
 
-	public Map<String, UserSynchDeviceProfile> getUserSynchDevices() {
-		return userSynchDevices;
-	}
+    public void setUserName(final String userName) {
+        this.userName = userName;
+    }
 
-	public void setUserSynchDevices(
-			final Map<String, UserSynchDeviceProfile> userSynchDevices) {
-		this.userSynchDevices = userSynchDevices;
-	}
+    public Map<String, UserSynchDeviceProfile> getUserSynchDevices() {
+        return userSynchDevices;
+    }
+
+    public void setUserSynchDevices(final Map<String, UserSynchDeviceProfile> userSynchDevices) {
+        this.userSynchDevices = userSynchDevices;
+    }
 
 }
