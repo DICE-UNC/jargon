@@ -3,6 +3,7 @@ package org.irods.jargon.transfer.dao.spring;
 import java.util.List;
 
 import org.hibernate.Criteria;
+import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
 import org.irods.jargon.transfer.dao.SynchronizationDAO;
 import org.irods.jargon.transfer.dao.TransferDAOException;
@@ -44,9 +45,20 @@ public class SynchronizationDAOImpl extends HibernateDaoSupport implements Synch
     public Synchronization findByName(String name) throws TransferDAOException {
         logger.debug("entering findByName(String)");
         Synchronization ret = null;
-        Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(Synchronization.class);
-        criteria.add(Restrictions.eq("name", name));
-        ret = (Synchronization) criteria.uniqueResult();
+        Session session = getSession();
+        try {
+            Criteria criteria = session.createCriteria(Synchronization.class);
+            criteria.add(Restrictions.eq("name", name));
+            ret = (Synchronization) criteria.uniqueResult();
+        } catch (Exception e) {
+            logger.error("error in findByName(String)", e);
+            throw new TransferDAOException("Failed findByName(String)", e);
+        } finally {
+            session.close();
+        }
+        // Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(Synchronization.class);
+        // criteria.add(Restrictions.eq("name", name));
+        // ret = (Synchronization) criteria.uniqueResult();
         return ret;
     }
 
