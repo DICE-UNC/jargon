@@ -3,7 +3,9 @@ package org.irods.jargon.transfer.dao.spring;
 import java.util.List;
 
 import org.hibernate.Criteria;
+import org.hibernate.HibernateException;
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 import org.hibernate.criterion.Restrictions;
 import org.irods.jargon.transfer.dao.SynchronizationDAO;
 import org.irods.jargon.transfer.dao.TransferDAOException;
@@ -32,8 +34,30 @@ public class SynchronizationDAOImpl extends HibernateDaoSupport implements Synch
      */
     @Override
     public void save(Synchronization ea) throws TransferDAOException {
-        logger.debug("entering save(Account)");
-        this.getSessionFactory().getCurrentSession().saveOrUpdate(ea);
+        logger.debug("entering save(Synchronization)");
+        Session session = getSession();
+        Transaction tx = null;
+        try {
+            tx = session.beginTransaction();
+            if (ea.getId() == null) {
+                session.save(ea);
+            } else {
+                session.update(ea);
+            }
+            tx.commit();
+        } catch (HibernateException e) {
+            logger.error("HibernateException", e);
+            throw new TransferDAOException(e);
+        } catch (Exception e) {
+            if (tx != null) {
+                tx.rollback();
+            }
+            logger.error("error in save(Account)", e);
+            throw new TransferDAOException("Failed save(Account)", e);
+        } finally {
+            session.flush();
+            session.close();
+        }
     }
 
     /*
@@ -56,9 +80,6 @@ public class SynchronizationDAOImpl extends HibernateDaoSupport implements Synch
         } finally {
             session.close();
         }
-        // Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(Synchronization.class);
-        // criteria.add(Restrictions.eq("name", name));
-        // ret = (Synchronization) criteria.uniqueResult();
         return ret;
     }
 
@@ -71,8 +92,16 @@ public class SynchronizationDAOImpl extends HibernateDaoSupport implements Synch
     public List<Synchronization> findAll() throws TransferDAOException {
         logger.debug("entering findAll()");
         List<Synchronization> ret = null;
-        Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(Synchronization.class);
-        ret = criteria.list();
+        Session session = getSession();
+        try {
+            Criteria criteria = session.createCriteria(Synchronization.class);
+            ret = criteria.list();
+        } catch (Exception e) {
+            logger.error("error in findAll()", e);
+            throw new TransferDAOException("Failed findAll()", e);
+        } finally {
+            session.close();
+        }
         return ret;
     }
 
@@ -84,7 +113,19 @@ public class SynchronizationDAOImpl extends HibernateDaoSupport implements Synch
     @Override
     public Synchronization findById(Long id) throws TransferDAOException {
         logger.debug("entering findById(Long)");
-        return (Synchronization) this.getSessionFactory().getCurrentSession().get(Synchronization.class, id);
+        Synchronization ret = null;
+        Session session = getSession();
+        try {
+            Criteria criteria = session.createCriteria(Synchronization.class);
+            criteria.add(Restrictions.eq("id", id));
+            ret = (Synchronization) criteria.uniqueResult();
+        } catch (Exception e) {
+            logger.error("error in findById(Long)", e);
+            throw new TransferDAOException("Failed findById(Long)", e);
+        } finally {
+            session.close();
+        }
+        return ret;
     }
 
     /*
@@ -95,7 +136,24 @@ public class SynchronizationDAOImpl extends HibernateDaoSupport implements Synch
     @Override
     public void delete(Synchronization ea) throws TransferDAOException {
         logger.debug("entering delete()");
-        this.getSessionFactory().getCurrentSession().delete(ea);
+        Session session = getSession();
+        Transaction tx = null;
+        try {
+            tx = session.beginTransaction();
+            session.delete(ea);
+            tx.commit();
+        } catch (HibernateException e) {
+            logger.error("HibernateException", e);
+            throw new TransferDAOException(e);
+        } catch (Exception e) {
+            if (tx != null) {
+                tx.rollback();
+            }
+            logger.error("error in delete(LocalIRODSTransfer entity)", e);
+            throw new TransferDAOException("Failed delete(LocalIRODSTransfer entity)", e);
+        } finally {
+            session.close();
+        }
     }
 
 }
