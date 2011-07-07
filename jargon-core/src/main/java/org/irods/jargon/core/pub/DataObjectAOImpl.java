@@ -275,8 +275,8 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		log.info("testing file length to set parallel transfer options");
 		if (localFile.length() > ConnectionConstants.MAX_SZ_FOR_SINGLE_BUF) { // FIXME:
 																				// remove
-																				// from
-																				// props
+			// from
+			// props
 			myTransferOptions.setMaxThreads(getIRODSSession()
 					.getJargonProperties().getMaxParallelThreads());
 			log.info("length above threshold, send max threads cap");
@@ -729,16 +729,20 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 				int numberOfThreads = message.getTag(numThreads).getIntValue();
 				log.info("number of threads for this transfer = {} ",
 						numberOfThreads);
-				ParallelGetFileTransferStrategy parallelGetTransferStrategy = ParallelGetFileTransferStrategy
-						.instance(host, port, numberOfThreads, password,
-								localFileToHoldData,
-								this.getIRODSAccessObjectFactory());
 
-				try {
+				if (numberOfThreads == 0) {
+					log.info("number of threads is zero, possibly parallel transfers were turned off via rule, process as normal");
+					dataAOHelper.processNormalGetTransfer(localFileToHoldData,
+							length, this.getIRODSProtocol(), transferOptions);
+				} else {
+
+					log.info("process as a parallel transfer");
+					ParallelGetFileTransferStrategy parallelGetTransferStrategy = ParallelGetFileTransferStrategy
+							.instance(host, port, numberOfThreads, password,
+									localFileToHoldData,
+									this.getIRODSAccessObjectFactory());
+
 					parallelGetTransferStrategy.transfer();
-				} catch (Exception e) {
-					log.error("error in parallel transfer", e);
-					throw new JargonException("error in parallel transfer", e);
 				}
 
 			} else {

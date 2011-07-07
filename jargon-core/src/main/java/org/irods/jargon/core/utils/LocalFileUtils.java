@@ -7,10 +7,7 @@ import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.zip.CRC32;
@@ -187,20 +184,45 @@ public class LocalFileUtils {
 			}
 		}
 	}
-	
+
 	/**
-	 * Given a <code>String</code> representing hex characters (e.g. b1f0a2), return the actual bytes represented by the hex value
-	 * @param s <code>String</code> with the representation of the hex bytes
+	 * Given a <code>String</code> representing hex characters (e.g. b1f0a2),
+	 * return the actual bytes represented by the hex value
+	 * 
+	 * @param s
+	 *            <code>String</code> with the representation of the hex bytes
 	 * @return <code>byte[]</code> with the actual translation
 	 */
-	public static byte[] hexStringToByteArray(String s) {
-	    int len = s.length();
-	    byte[] data = new byte[len / 2];
-	    for (int i = 0; i < len; i += 2) {
-	        data[i / 2] = (byte) ((Character.digit(s.charAt(i), 16) << 4)
-	                             + Character.digit(s.charAt(i+1), 16));
-	    }
-	    return data;
+	public static byte[] hexStringToByteArray(final String s) {
+		int len = s.length();
+		byte[] data = new byte[len / 2];
+		for (int i = 0; i < len; i += 2) {
+			data[i / 2] = (byte) ((Character.digit(s.charAt(i), 16) << 4) + Character
+					.digit(s.charAt(i + 1), 16));
+		}
+		return data;
 	}
 	
+	/**
+	 * Given an md5 checksum, return a <code>String</value> as used in iRODS packing instructions
+	 * @param md5 <code>byte[]</code> which is an MD5 checksum value
+	 * @return <code>String</code> in hex that represents this checkSum 
+	 */
+	public static String md5ByteArrayToString(final byte[] md5) {
+		
+		if (md5 == null || md5.length != 16) {
+			throw new IllegalArgumentException("unknown format, not recognized as an MD5 checksum in a byte array");
+		}
+		
+		StringBuilder sb = new StringBuilder();
+		
+		for (int i = 0; i < 16; i++) {
+			
+	        sb.append(String.format("%02x",md5[i]));
+		
+	    }
+
+		return sb.toString();
+	}
+
 }

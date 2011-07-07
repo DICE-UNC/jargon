@@ -22,6 +22,35 @@ import org.irods.jargon.core.transfer.TransferStatusCallbackListener;
  * should be obtained using a factory, either by creating from
  * {@link org.irods.jargon.core.pub.IRODSFileSystem}, or from an
  * {@link org.irods.jargon.core.pub.IRODSAccessObjectFactory} implementation.
+ * <p/>
+ * A word should be said about controlling transfers.  There are two important components to most of the methods in this class, these are
+ * the {@link TransferStatusCallbackListener} and the {@link TransferControlBlock}.  The <code>TransferStatusCallbackListener</code> allows a caller of a
+ * method in this class to receive call-backs.  The call-backs may be an overall initiation of a transfer process, intra-file call-backs that give progress within a file
+ * (under development, and will be controllable by setting transfer options}), and per file call-backs.  These are handy to display progress bars, monitor
+ * error status, and so forth.  The <code>TransferControlBlock</code> specifies a shared object between the caller, and a process running a transfer.  The 
+ * <code>TransferControlBlock</code> allows bi-directional communication between a client and a transfer process, and this should be synchronized properly.  
+ * The <code>TransferControlBlock</code> can signal a cancellation of a process, adjust a transfer as it progresses, and contains aggregate information about
+ * the transfer as it runs.
+ * <p/>
+ * Note that both the <code>TransferControlBlock</code> and <code>TransferStatusCallbackListener</code> are optional, and may be set to <code>null</code> in the 
+ * various method signatures if not needed.
+ * <p/>
+ * Note that the status call-backs you receive need to be quickly processed by the implementor of the <code>TransferStatusCallbackListener</code>.  Jargon does not
+ * play any tricks to queue up these call-backs, they are direct calls from the transfer process and can block progress of a transfer if not handled efficiently.
+ * <p/>
+ * Transfers can have multiple options that control their behavior.  These will be added as necessary, but will likely be too numerous to specify individually.  For this 
+ * reason, a {@TransferOptions} class has been developed.  By default, Jargon will consult the {@link JargonProperties} as configured in the {@link IRODSSession} object.  
+ * Those may be loaded from the default <code>jargon.properties</code> file, or those properties can be set up by an application.  If no <code>TransferOptions</code> are
+ * specified, the <code>JargonProperties</code> will be consulted to build a default set.  In many cases, this is all that is required. 
+ * <p/>
+ * If particular properties are required for an individual transfer, it is possible to specify those options, where they apply.  These will be mostly relevant to 
+ * 'put' and 'get' operations.  If custom properties should be set, the proper procedure is to create a <code>TransferControlBlock</code>, typically with the
+ * {@link DefaultTransferControlBlock}, and use the method to set a custom <code>TransferOptions</code>.  Note that, in <code>DefaultTransferControlBlock</code>, the
+ * get() and set() methods are synchronized so that <code>TransferOptions</code> may be changed while transfers occur.  This may be done, as each individual file transfer creates a copy of the <code>TransferOptions</code>.
+ * To change options while a transfer is running, one may create a new instance of <code>TransferOptions</code>, and then use the synchronized method to set those
+ * options in the <code>TransferControlBlock</code>
+ * <p/>
+ * It is important to note that this arrangement is quite new, and subject to refinement as testing proceeds!
  * 
  * @author Mike Conway - DICE (www.irods.org)
  * 

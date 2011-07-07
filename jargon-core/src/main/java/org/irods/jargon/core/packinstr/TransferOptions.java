@@ -35,6 +35,18 @@ public class TransferOptions {
 	private int udpPacketSize = DEFAULT_UDP_PACKET_SIZE;
 	private TransferType transferType = TransferType.STANDARD;
 	private boolean allowPutGetResourceRedirects = false;
+	/**
+	 * Store a checksum of the file after it has been transferred. This will
+	 * only take precidence over <code>computeAndVerifyChecksumAfterTransfer</code> if the value there
+	 * is <code>false</code>
+	 */
+	private boolean computeChecksumAfterTransfer = false;
+	/**
+	 * Store a checksum of the file and verify after it has been transferred.  This is 'stronger' than
+	 * <code>computeChecksumAfterTransfer</code>, and will do the verify even if both values are <code>true</code>
+	 */
+	private boolean computeAndVerifyChecksumAfterTransfer = false;
+
 
 	@Override
 	public String toString() {
@@ -50,6 +62,10 @@ public class TransferOptions {
 		sb.append(udpPacketSize);
 		sb.append("\n allowPutGetResourceRedirects:");
 		sb.append(allowPutGetResourceRedirects);
+		sb.append("\n   computeChecksumAfterTransfer:");
+		sb.append(computeChecksumAfterTransfer);
+		sb.append("\n   computeAndVerifyChecksumAfterTransfer:");
+		sb.append(computeAndVerifyChecksumAfterTransfer);
 
 		return sb.toString();
 	}
@@ -76,6 +92,8 @@ public class TransferOptions {
 			setUdpSendRate(transferOptions.getUdpSendRate());
 			setAllowPutGetResourceRedirects(transferOptions
 					.isAllowPutGetResourceRedirects());
+			setComputeChecksumAfterTransfer(transferOptions.isComputeChecksumAfterTransfer());
+			setComputeAndVerifyChecksumAfterTransfer(transferOptions.isComputeAndVerifyChecksumAfterTransfer());
 		}
 	}
 
@@ -137,8 +155,39 @@ public class TransferOptions {
 	 *            the allowPutGetResourceRedirects to set
 	 */
 	public synchronized void setAllowPutGetResourceRedirects(
-			boolean allowPutGetResourceRedirects) {
+			final boolean allowPutGetResourceRedirects) {
 		this.allowPutGetResourceRedirects = allowPutGetResourceRedirects;
+	}
+
+	/**
+	 * @param computeChecksumAfterTransfer
+	 *            the computeChecksumAfterTransfer to set
+	 */
+	public synchronized void setComputeChecksumAfterTransfer(
+			final boolean computeChecksumAfterTransfer) {
+		this.computeChecksumAfterTransfer = computeChecksumAfterTransfer;
+	}
+
+	/**
+	 * @return the computeChecksumAfterTransfer
+	 */
+	public synchronized boolean isComputeChecksumAfterTransfer() {
+		return computeChecksumAfterTransfer;
+	}
+
+	/**
+	 * @param computeAndVerifyChecksumAfterTransfer the computeAndVerifyChecksumAfterTransfer to set
+	 */
+	public void setComputeAndVerifyChecksumAfterTransfer(
+			boolean computeAndVerifyChecksumAfterTransfer) {
+		this.computeAndVerifyChecksumAfterTransfer = computeAndVerifyChecksumAfterTransfer;
+	}
+
+	/**
+	 * @return the computeAndVerifyChecksumAfterTransfer
+	 */
+	public boolean isComputeAndVerifyChecksumAfterTransfer() {
+		return computeAndVerifyChecksumAfterTransfer;
 	}
 
 }

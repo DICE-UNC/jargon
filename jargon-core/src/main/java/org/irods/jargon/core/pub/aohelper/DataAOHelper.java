@@ -27,6 +27,7 @@ import org.irods.jargon.core.query.MetaDataAndDomainData;
 import org.irods.jargon.core.query.MetaDataAndDomainData.MetadataDomain;
 import org.irods.jargon.core.query.RodsGenQueryEnum;
 import org.irods.jargon.core.utils.IRODSDataConversionUtil;
+import org.irods.jargon.core.utils.LocalFileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -353,6 +354,20 @@ public final class DataAOHelper extends AOHelper {
 		DataObjInp dataObjInp = DataObjInp.instanceForNormalPutStrategy(
 				targetFile.getAbsolutePath(), localFile.length(),
 				targetFile.getResource(), overwrite, transferOptions);
+		
+		
+		// see if checksum is required
+		
+		if (transferOptions != null) {
+			if (transferOptions.isComputeAndVerifyChecksumAfterTransfer() || transferOptions.isComputeChecksumAfterTransfer()) {
+				log.info("computing a checksum on the file at:{}", localFile.getAbsolutePath());
+				String localFileChecksum = LocalFileUtils.md5ByteArrayToString(LocalFileUtils.computeMD5FileCheckSumViaAbsolutePath(localFile.getAbsolutePath()));
+				log.info("local file checksum is:{}", localFileChecksum);
+				dataObjInp.setFileChecksumValue(localFileChecksum);
+			}
+		}
+		
+		
 
 		irodsProtocol.irodsFunction(RODS_API_REQ,
 				dataObjInp.getParsedTags(), 0, null,

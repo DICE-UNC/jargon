@@ -8,6 +8,7 @@ import java.util.List;
 
 import org.irods.jargon.core.connection.ConnectionConstants;
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.utils.LocalFileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -89,6 +90,11 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 	private int operationType = 0;
 	private boolean replicationToAll = false;
 	private TransferOptions transferOptions;
+	/**
+	 * Optional checksum value used for operations where a checksum validation is requested.  This will be the computed checksum of 
+	 * the file in question.
+	 */
+	private String fileChecksumValue = "";
 
 	/**
 	 * Generic instance creation method with all constructor parameters. In this
@@ -681,17 +687,7 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 		int transferOptionsNumThreads = 0;
 
 		if (transferOptions != null
-				&& getDataSize() > ConnectionConstants.MAX_SZ_FOR_SINGLE_BUF) { // FIXME:
-																				// just
-																				// pass
-																				// max
-																				// threads
-																				// in
-																				// without
-																				// this
-																				// calc,
-																				// refactor
-																				// away
+				&& getDataSize() > ConnectionConstants.MAX_SZ_FOR_SINGLE_BUF) { 
 			transferOptionsNumThreads = transferOptions.getMaxThreads();
 		}
 
@@ -716,6 +712,25 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 			} else if (transferOptionsNumThreads > 0) {
 				kvps.add(KeyValuePair.instance(DATA_TYPE, DATA_TYPE_GENERIC));
 			}
+			
+			if (transferOptions != null) {
+				if (transferOptions.isComputeAndVerifyChecksumAfterTransfer() || transferOptions.isComputeChecksumAfterTransfer()) {
+					if (fileChecksumValue == null || fileChecksumValue.isEmpty()) {
+						throw new JargonException("no fileChecksumValue set, call the setter with the hex encoded checksum value");
+					}
+					log.info("local file checksum is:{}", getFileChecksumValue());
+					
+					if (transferOptions.isComputeChecksumAfterTransfer()) {
+						log.info("adding dvp to compute checksum");
+						kvps.add(KeyValuePair.instance("regChksum", fileChecksumValue));
+					}
+					
+				}
+				
+				
+			}
+			
+			
 		}
 
 		if (forceOption == ForceOptions.FORCE) {
@@ -822,6 +837,20 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 
 	public void setTransferOptions(final TransferOptions transferOptions) {
 		this.transferOptions = transferOptions;
+	}
+
+	/**
+	 * @param fileChecksumValue the fileChecksumValue to set
+	 */
+	public void setFileChecksumValue(String fileChecksumValue) {
+		this.fileChecksumValue = fileChecksumValue;
+	}
+
+	/**
+	 * @return the fileChecksumValue
+	 */
+	public String getFileChecksumValue() {
+		return fileChecksumValue;
 	}
 
 }

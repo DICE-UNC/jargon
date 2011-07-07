@@ -5,6 +5,7 @@ import java.io.File;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.packinstr.TransferOptions;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.pub.io.IRODSFileImpl;
 import org.irods.jargon.core.transfer.TransferControlBlock;
@@ -220,10 +221,15 @@ final class TransferOperationsHelper {
 		}
 
 		log.info("filter passed, process...");
+		TransferOptions operativeTransferOptions = null;
+		if (transferControlBlock != null) {
+			operativeTransferOptions = transferControlBlock
+					.getTransferOptions();
+		}
 		try {
 
-			dataObjectAO.getDataObjectFromIrods(irodsSourceFile,
-					targetLocalFile);
+			dataObjectAO.getDataObjectFromIrodsGivingTransferOptions(
+					irodsSourceFile, targetLocalFile, operativeTransferOptions);
 
 			if (transferStatusCallbackListener != null) {
 				log.warn("success will be passed back to existing callback listener");
@@ -424,9 +430,16 @@ final class TransferOperationsHelper {
 				.toString());
 		newIrodsFile.setResource(targetIrodsCollection.getResource());
 
+		TransferOptions operativeTransferOptions = null;
+		if (transferControlBlock != null) {
+			operativeTransferOptions = transferControlBlock
+					.getTransferOptions();
+		}
+
 		try {
-			dataObjectAO.putLocalDataObjectToIRODS(fileInSourceCollection,
-					newIrodsFile, true);
+			dataObjectAO.putLocalDataObjectToIRODSGivingTransferOptions(
+					fileInSourceCollection, newIrodsFile, true,
+					operativeTransferOptions);
 
 			if (transferStatusCallbackListener != null) {
 				TransferStatus status = TransferStatus.instance(
@@ -715,8 +728,9 @@ final class TransferOperationsHelper {
 		log.info("put of single file");
 
 		try {
-			dataObjectAO.putLocalDataObjectToIRODSGivingTransferOptions(sourceFile, targetIrodsFile,
-					true, transferControlBlock.getTransferOptions());
+			dataObjectAO.putLocalDataObjectToIRODSGivingTransferOptions(
+					sourceFile, targetIrodsFile, true,
+					transferControlBlock.getTransferOptions());
 
 			int totalFiles = 0;
 			int totalFilesSoFar = 0;
