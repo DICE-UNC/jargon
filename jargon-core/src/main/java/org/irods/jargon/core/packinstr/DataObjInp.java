@@ -49,7 +49,6 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 	public static final int GET_HOST_FOR_GET_API_NBR = 694;
 	public static final int GET_HOST_FOR_PUT_API_NBR = 686;
 
-
 	public static final String DATA_TYPE_GENERIC = "generic";
 
 	public static final int DEFAULT_OPERATION_TYPE = 0;
@@ -91,8 +90,8 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 	private boolean replicationToAll = false;
 	private TransferOptions transferOptions;
 	/**
-	 * Optional checksum value used for operations where a checksum validation is requested.  This will be the computed checksum of 
-	 * the file in question.
+	 * Optional checksum value used for operations where a checksum validation
+	 * is requested. This will be the computed checksum of the file in question.
 	 */
 	private String fileChecksumValue = "";
 
@@ -371,7 +370,7 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 				destinationResource, transferOptions);
 		dataObjInp.operationType = PUT_OPERATION_TYPE;
 		dataObjInp.setApiNumber(PUT_FILE_API_NBR);
- 
+
 		if (overwrite) {
 			dataObjInp.setForceOption(ForceOptions.FORCE);
 		}
@@ -380,10 +379,11 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 
 		return dataObjInp;
 	}
-	
+
 	/**
 	 * Create an instance of the packing instruction for a parallel put transfer
-	* @param destinationAbsolutePath
+	 * 
+	 * @param destinationAbsolutePath
 	 *            <code>String</code> with the absolute path to the file
 	 * @param length
 	 *            <code>long</code> with the length of the file
@@ -424,7 +424,7 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 				destinationResource, transferOptions);
 		dataObjInp.operationType = PUT_OPERATION_TYPE;
 		dataObjInp.setApiNumber(PUT_FILE_API_NBR);
- 
+
 		if (overwrite) {
 			dataObjInp.setForceOption(ForceOptions.FORCE);
 		}
@@ -433,7 +433,6 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 
 		return dataObjInp;
 	}
-
 
 	/**
 	 * Create the proper packing instruction for a put operation. This method is
@@ -687,7 +686,7 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 		int transferOptionsNumThreads = 0;
 
 		if (transferOptions != null
-				&& getDataSize() > ConnectionConstants.MAX_SZ_FOR_SINGLE_BUF) { 
+				&& getDataSize() > ConnectionConstants.MAX_SZ_FOR_SINGLE_BUF) {
 			transferOptionsNumThreads = transferOptions.getMaxThreads();
 		}
 
@@ -703,34 +702,7 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 		List<KeyValuePair> kvps = new ArrayList<KeyValuePair>();
 
 		if (this.getApiNumber() == DataObjInp.PUT_FILE_API_NBR) {
-			// for puts, data included not put in the initial
-			// call
-
-			if (!isInitialPutGetCall()) {
-				kvps.add(KeyValuePair.instance(DATA_TYPE, DATA_TYPE_GENERIC));
-				kvps.add(KeyValuePair.instance(DATA_INCLUDED_KW, ""));
-			} else if (transferOptionsNumThreads > 0) {
-				kvps.add(KeyValuePair.instance(DATA_TYPE, DATA_TYPE_GENERIC));
-			}
-			
-			if (transferOptions != null) {
-				if (transferOptions.isComputeAndVerifyChecksumAfterTransfer() || transferOptions.isComputeChecksumAfterTransfer()) {
-					if (fileChecksumValue == null || fileChecksumValue.isEmpty()) {
-						throw new JargonException("no fileChecksumValue set, call the setter with the hex encoded checksum value");
-					}
-					log.info("local file checksum is:{}", getFileChecksumValue());
-					
-					if (transferOptions.isComputeChecksumAfterTransfer()) {
-						log.info("adding dvp to compute checksum");
-						kvps.add(KeyValuePair.instance("regChksum", fileChecksumValue));
-					}
-					
-				}
-				
-				
-			}
-			
-			
+			processPutOperationKvps(transferOptionsNumThreads, kvps);
 		}
 
 		if (forceOption == ForceOptions.FORCE) {
@@ -745,7 +717,9 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 		// add a keyword tag for resource if a resource was given to the packing
 		// instruction.
 		if (getResource().length() > 0) {
-			if (this.getApiNumber() == DataObjInp.GET_FILE_API_NBR || this.getApiNumber() == DataObjInp.GET_HOST_FOR_GET_API_NBR || this.getApiNumber() == DataObjInp.GET_HOST_FOR_PUT_API_NBR) {
+			if (this.getApiNumber() == DataObjInp.GET_FILE_API_NBR
+					|| this.getApiNumber() == DataObjInp.GET_HOST_FOR_GET_API_NBR
+					|| this.getApiNumber() == DataObjInp.GET_HOST_FOR_PUT_API_NBR) {
 				kvps.add(KeyValuePair.instance(RESC_NAME, getResource()));
 			} else {
 				kvps.add(KeyValuePair.instance(DEST_RESC_NAME, getResource()));
@@ -754,6 +728,47 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 
 		message.addTag(createKeyValueTag(kvps));
 		return message;
+	}
+
+	/**
+	 * @param transferOptionsNumThreads
+	 * @param kvps
+	 * @throws JargonException
+	 */
+	private void processPutOperationKvps(int transferOptionsNumThreads,
+			List<KeyValuePair> kvps) throws JargonException {
+		if (!isInitialPutGetCall()) {
+			kvps.add(KeyValuePair.instance(DATA_TYPE, DATA_TYPE_GENERIC));
+			kvps.add(KeyValuePair.instance(DATA_INCLUDED_KW, ""));
+		} else if (transferOptionsNumThreads > 0) {
+			kvps.add(KeyValuePair.instance(DATA_TYPE, DATA_TYPE_GENERIC));
+		}
+
+		if (transferOptions == null) {
+			return;
+		}
+
+		// transfer options passed, in, use in put operation kvps
+
+		if (transferOptions.isComputeAndVerifyChecksumAfterTransfer()
+				|| transferOptions.isComputeChecksumAfterTransfer()) {
+			if (fileChecksumValue == null || fileChecksumValue.isEmpty()) {
+				throw new JargonException(
+						"no fileChecksumValue set, call the setter with the hex encoded checksum value");
+			}
+			log.info("local file checksum is:{}", getFileChecksumValue());
+
+			// verify (if true) overrides a plain compute
+
+			if (transferOptions.isComputeAndVerifyChecksumAfterTransfer()) {
+				log.info("adding kvps to compute and verify checksum");
+				kvps.add(KeyValuePair.instance("verifyChksum",
+						fileChecksumValue));
+			} else if (transferOptions.isComputeChecksumAfterTransfer()) {
+				log.info("adding dvp to compute checksum");
+				kvps.add(KeyValuePair.instance("regChksum", fileChecksumValue));
+			}
+		}
 	}
 
 	/**
@@ -840,7 +855,8 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 	}
 
 	/**
-	 * @param fileChecksumValue the fileChecksumValue to set
+	 * @param fileChecksumValue
+	 *            the fileChecksumValue to set
 	 */
 	public void setFileChecksumValue(String fileChecksumValue) {
 		this.fileChecksumValue = fileChecksumValue;

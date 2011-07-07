@@ -98,6 +98,10 @@ public final class IRODSSession {
 			} else {
 				transferOptions.setTransferType(TransferType.NO_PARALLEL);
 			}
+			
+			transferOptions.setAllowPutGetResourceRedirects(jargonProperties.isAllowPutGetResourceRedirects());
+			transferOptions.setComputeAndVerifyChecksumAfterTransfer(jargonProperties.isComputeAndVerifyChecksumAfterTransfer());
+			transferOptions.setComputeChecksumAfterTransfer(jargonProperties.isComputeChecksumAfterTransfer());
 		}
 		return transferOptions;
 	}
@@ -131,7 +135,7 @@ public final class IRODSSession {
 	}
 
 	public IRODSSession() {
-		LOG.info("IRODS Session creation");
+		LOG.info("IRODS Session creation, loading default properties, these may be overridden...");
 		try {
 			jargonProperties = new DefaultPropertiesJargonConfig();
 		} catch (Exception e) {

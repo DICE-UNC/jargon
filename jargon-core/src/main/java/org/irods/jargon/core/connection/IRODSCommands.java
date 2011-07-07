@@ -19,6 +19,7 @@ import java.security.MessageDigest;
 
 import org.irods.jargon.core.exception.AuthenticationException;
 import org.irods.jargon.core.exception.DataNotFoundException;
+import org.irods.jargon.core.exception.FileIntegrityException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.exception.JargonFileOrCollAlreadyExistsException;
 import org.irods.jargon.core.packinstr.AbstractIRODSPackingInstruction;
@@ -533,6 +534,8 @@ public class IRODSCommands implements IRODSManagedConnection {
 		} else if (info == ErrorEnum.CAT_NAME_EXISTS_AS_COLLECTION.getInt()
 				|| info == ErrorEnum.CAT_NAME_EXISTS_AS_DATAOBJ.getInt()) {
 			handleOverwriteOfCollectionOrDataObject(errorLength, info);
+		} else if (info == ErrorEnum.USER_CHKSUM_MISMATCH.getInt()) {
+			throw new FileIntegrityException("File checksum verification mismatch");
 		} else {
 			String msg = "error occurred in irods with a return value of "
 					+ info;

@@ -13,7 +13,7 @@ import org.irods.jargon.core.transfer.TransferStatusCallbackListener;
  * iRODS resources. Generally, this should be the first place to look for
  * methods that move data. There are other objects that are of potential
  * interest, including objects that represent data objects -
- * {@link org.irods.jargon.core.pub.DataObjectAO}, objects that represent iRODS
+ * {@link org.irods.jargon.core.pub.CollectionAO}, objects that represent iRODS
  * collections - {@link org.irods.jargon.core.pub.DataObjectAO}, and that
  * represent iRODS data objects and collections as <code>java.io.*</code>
  * operations - see {@link org.irods.jargon.core.pub.io.IRODSFile}.

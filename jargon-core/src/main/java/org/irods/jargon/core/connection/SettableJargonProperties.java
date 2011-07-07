@@ -12,9 +12,8 @@ import org.irods.jargon.core.exception.JargonException;
  * jargon.properties file. This class would allow, for example, the wiring of
  * property opttions via Spring through various setters.
  * <p/>
- * Note that this is, at first, a minimal implementatoin with certain defaults.
- * In the future, a mechanism that consults the jargon properties for defaults
- * and operates to override specific properties can be implemented.
+ * Some of these properties serve as defaults that may be overridden in the various methods by the setting of parameters, 
+ * such as <code>TransferOptions</code>
  * 
  * @author Mike Conway - DICE (www.irods.org)
  * 
@@ -31,6 +30,9 @@ public class SettableJargonProperties implements JargonProperties {
 	private int transferThreadCorePoolSize = 0;
 	private int transferThreadMaxPoolSize = 16;
 	private int transferThreadPoolTimeoutMillis = 60000;
+	private boolean allowPutGetResourceRedirects = false;
+	private boolean computeChecksumAfterTransfer = false;
+	private boolean computeAndVerifyChecksumAfterTransfer = false;
 
 	/*
 	 * (non-Javadoc)
@@ -118,47 +120,119 @@ public class SettableJargonProperties implements JargonProperties {
 	}
 
 	/**
-	 * @param parallelThreadsLengthThreshold the parallelThreadsLengthThreshold to set
+	 * @param parallelThreadsLengthThreshold
+	 *            the parallelThreadsLengthThreshold to set
 	 */
 	public void setParallelThreadsLengthThreshold(
-			long parallelThreadsLengthThreshold) {
+			final long parallelThreadsLengthThreshold) {
 		this.parallelThreadsLengthThreshold = parallelThreadsLengthThreshold;
 	}
 
 	/**
-	 * @param maxFilesAndDirsQueryMax the maxFilesAndDirsQueryMax to set
+	 * @param maxFilesAndDirsQueryMax
+	 *            the maxFilesAndDirsQueryMax to set
 	 */
-	public void setMaxFilesAndDirsQueryMax(int maxFilesAndDirsQueryMax) {
+	public void setMaxFilesAndDirsQueryMax(final int maxFilesAndDirsQueryMax) {
 		this.maxFilesAndDirsQueryMax = maxFilesAndDirsQueryMax;
 	}
 
 	/**
-	 * @param useTransferThreadsPool the useTransferThreadsPool to set
+	 * @param useTransferThreadsPool
+	 *            the useTransferThreadsPool to set
 	 */
-	public void setUseTransferThreadsPool(boolean useTransferThreadsPool) {
+	public void setUseTransferThreadsPool(final boolean useTransferThreadsPool) {
 		this.useTransferThreadsPool = useTransferThreadsPool;
 	}
 
 	/**
-	 * @param transferThreadCorePoolSize the transferThreadCorePoolSize to set
+	 * @param transferThreadCorePoolSize
+	 *            the transferThreadCorePoolSize to set
 	 */
-	public void setTransferThreadCorePoolSize(int transferThreadCorePoolSize) {
+	public void setTransferThreadCorePoolSize(
+			final int transferThreadCorePoolSize) {
 		this.transferThreadCorePoolSize = transferThreadCorePoolSize;
 	}
 
 	/**
-	 * @param transferThreadMaxPoolSize the transferThreadMaxPoolSize to set
+	 * @param transferThreadMaxPoolSize
+	 *            the transferThreadMaxPoolSize to set
 	 */
-	public void setTransferThreadMaxPoolSize(int transferThreadMaxPoolSize) {
+	public void setTransferThreadMaxPoolSize(final int transferThreadMaxPoolSize) {
 		this.transferThreadMaxPoolSize = transferThreadMaxPoolSize;
 	}
 
 	/**
-	 * @param transferThreadPoolTimeoutMillis the transferThreadPoolTimeoutMillis to set
+	 * @param transferThreadPoolTimeoutMillis
+	 *            the transferThreadPoolTimeoutMillis to set
 	 */
 	public void setTransferThreadPoolTimeoutMillis(
-			int transferThreadPoolTimeoutMillis) {
+			final int transferThreadPoolTimeoutMillis) {
 		this.transferThreadPoolTimeoutMillis = transferThreadPoolTimeoutMillis;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.connection.JargonProperties#
+	 * isAllowPutGetResourceRedirects()
+	 */
+	@Override
+	public boolean isAllowPutGetResourceRedirects() throws JargonException {
+		return allowPutGetResourceRedirects;
+	}
+
+	/**
+	 * Allow resource redirects to occur
+	 * 
+	 * @param allowPutGetResourceRedirects
+	 *            <code>boolean</code> which allows resource redirects if
+	 *            <code>true</code>
+	 * @throws JargonException
+	 */
+	public void setAllowPutGetResourceRedirects(
+			final boolean allowPutGetResourceRedirects) throws JargonException {
+		this.allowPutGetResourceRedirects = allowPutGetResourceRedirects;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.connection.JargonProperties#
+	 * isComputeChecksumAfterTransfer()
+	 */
+	@Override
+	public boolean isComputeChecksumAfterTransfer() throws JargonException {
+		return computeChecksumAfterTransfer;
+	}
+
+	/**
+	 * Compute (but do not verify) a checksum after a transfer.
+	 * 
+	 * @param computeChecksumAfterTransfer
+	 *            <code>boolean</code> that will cause a checksum to be computed
+	 *            by default if <code>true</code>
+	 * @throws JargonException
+	 */
+	public void setComputeChecksumAfterTransfer(
+			final boolean computeChecksumAfterTransfer) throws JargonException {
+		this.computeChecksumAfterTransfer = computeChecksumAfterTransfer;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.core.connection.JargonProperties#isComputeAndVerifyChecksumAfterTransfer()
+	 */
+	@Override
+	public boolean isComputeAndVerifyChecksumAfterTransfer()
+			throws JargonException {
+		return this.computeAndVerifyChecksumAfterTransfer;
+	}
+	
+	/**
+	 * Compute and verify the file checksum after a put/get transfer
+	 * @param computeAndVerifyChecksumAfterTransfer <code>boolean</code> that causes a checksum validation if set to <code>true</code>
+	 */
+	public void setComputeAndVerifyChecksumAfterTransfer(final boolean computeAndVerifyChecksumAfterTransfer) {
+		this.computeAndVerifyChecksumAfterTransfer = computeAndVerifyChecksumAfterTransfer;
 	}
 
 }

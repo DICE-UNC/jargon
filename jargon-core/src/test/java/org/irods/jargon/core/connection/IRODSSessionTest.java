@@ -6,6 +6,7 @@ import java.util.concurrent.Executor;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
+import org.irods.jargon.core.packinstr.TransferOptions;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -134,5 +135,69 @@ public class IRODSSessionTest {
 		TestCase.assertNull("executor should be  null", executor);
 
 	}
+	
+	@Test
+	public void testGetTransferOptionsWithComputeAndVerifyChecksumValTrue() throws Exception {
+		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager
+				.instance();
+		testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSSession irodsSession = IRODSSession
+				.instance(irodsConnectionManager);
+		irodsSession.closeSession();
+
+		SettableJargonProperties overrideJargonProperties = new SettableJargonProperties();
+		overrideJargonProperties.setComputeAndVerifyChecksumAfterTransfer(true);
+		
+		irodsSession.setJargonProperties(overrideJargonProperties);
+		TransferOptions transferOptions = irodsSession.buildTransferOptionsBasedOnJargonProperties();
+		
+		Assert.assertEquals("did not set compute and verify checksum", true,
+				transferOptions.isComputeAndVerifyChecksumAfterTransfer());
+
+	}
+	
+	@Test
+	public void testGetTransferOptionsWithComputeChecksumValTrue() throws Exception {
+		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager
+				.instance();
+		testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSSession irodsSession = IRODSSession
+				.instance(irodsConnectionManager);
+		irodsSession.closeSession();
+
+		SettableJargonProperties overrideJargonProperties = new SettableJargonProperties();
+		overrideJargonProperties.setComputeChecksumAfterTransfer(true);
+		
+		irodsSession.setJargonProperties(overrideJargonProperties);
+		TransferOptions transferOptions = irodsSession.buildTransferOptionsBasedOnJargonProperties();
+		
+		Assert.assertEquals("did not set computechecksum", true,
+				transferOptions.isComputeChecksumAfterTransfer());
+
+	}
+	
+	@Test
+	public void testGetTransferOptionsWithResourceRedirectsTrue() throws Exception {
+		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager
+				.instance();
+		testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSSession irodsSession = IRODSSession
+				.instance(irodsConnectionManager);
+		irodsSession.closeSession();
+
+		SettableJargonProperties overrideJargonProperties = new SettableJargonProperties();
+		overrideJargonProperties.setAllowPutGetResourceRedirects(true);
+		
+		irodsSession.setJargonProperties(overrideJargonProperties);
+		TransferOptions transferOptions = irodsSession.buildTransferOptionsBasedOnJargonProperties();
+		
+		Assert.assertEquals("did not set allow resource redirects", true,
+				transferOptions.isAllowPutGetResourceRedirects());
+
+	}
+
 
 }

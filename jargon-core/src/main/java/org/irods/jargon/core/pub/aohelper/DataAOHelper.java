@@ -367,8 +367,6 @@ public final class DataAOHelper extends AOHelper {
 			}
 		}
 		
-		
-
 		irodsProtocol.irodsFunction(RODS_API_REQ,
 				dataObjInp.getParsedTags(), 0, null,
 				localFile.length(), new FileInputStream(localFile),

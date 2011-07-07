@@ -2593,6 +2593,191 @@ public class DataObjectAOImplTest {
 		dataObjectAO.putLocalDataObjectToIRODSGivingTransferOptions(localFile, destFile, true, transferOptions);
 		assertionHelper.assertIrodsFileOrCollectionExists(targetIrodsFile);
 	}
+	
+	@Test
+	public void testPutFileVerifyChecksum() throws Exception {
+		// generate a local scratch file
+		String testFileName = "testPutFileVerifyChecksum.txt";
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String localFileName = FileGenerator
+				.generateFileOfFixedLengthGivenName(absPath, testFileName, 20);
+
+		String targetIrodsFile = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
+								+ testFileName);
+		File localFile = new File(localFileName);
+
+		// now put the file
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
+		IRODSFileFactory irodsFileFactory = accessObjectFactory
+				.getIRODSFileFactory(irodsAccount);
+		DataObjectAO dataObjectAO = accessObjectFactory
+				.getDataObjectAO(irodsAccount);
+		IRODSFile destFile = irodsFileFactory
+				.instanceIRODSFile(targetIrodsFile);
+		TransferOptions transferOptions = new TransferOptions();
+		transferOptions.setComputeAndVerifyChecksumAfterTransfer(true);
+		
+		dataObjectAO.putLocalDataObjectToIRODSGivingTransferOptions(localFile, destFile, true, transferOptions);
+		assertionHelper.assertIrodsFileOrCollectionExists(targetIrodsFile);
+	}
+	
+	@Test
+	public void testParallelPutFileVerifyChecksum() throws Exception {
+		// generate a local scratch file
+		String testFileName = "testPutFileVerifyChecksum.txt";
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String localFileName = FileGenerator
+				.generateFileOfFixedLengthGivenName(absPath, testFileName, 40000 * 1024);
+
+		String targetIrodsFile = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
+								+ testFileName);
+		File localFile = new File(localFileName);
+
+		// now put the file
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
+		IRODSFileFactory irodsFileFactory = accessObjectFactory
+				.getIRODSFileFactory(irodsAccount);
+		DataObjectAO dataObjectAO = accessObjectFactory
+				.getDataObjectAO(irodsAccount);
+		IRODSFile destFile = irodsFileFactory
+				.instanceIRODSFile(targetIrodsFile);
+		TransferOptions transferOptions = new TransferOptions();
+		transferOptions.setComputeAndVerifyChecksumAfterTransfer(true);
+		
+		dataObjectAO.putLocalDataObjectToIRODSGivingTransferOptions(localFile, destFile, true, transferOptions);
+		assertionHelper.assertIrodsFileOrCollectionExists(targetIrodsFile);
+	}
+	
+	@Test
+	public final void testGetWithChecksumVerification() throws Exception {
+
+		// generate a local scratch file
+		String testFileName = "testGetWithChecksumVerification.txt";
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String localFileName = FileGenerator
+				.generateFileOfFixedLengthGivenName(absPath, testFileName, 100);
+
+		String getFileName = "testGetWithChecksumVerificationResult.txt";
+		String getResultLocalPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH + '/')
+				+ getFileName;
+		File localFile = new File(getResultLocalPath);
+
+		// put scratch file into irods in the right place on the first resource
+		IrodsInvocationContext invocationContext = testingPropertiesHelper
+				.buildIRODSInvocationContextFromTestProperties(testingProperties);
+		IputCommand iputCommand = new IputCommand();
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		iputCommand.setLocalFileName(localFileName);
+		iputCommand.setIrodsFileName(targetIrodsCollection);
+		iputCommand.setIrodsResource(testingProperties
+				.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY));
+		iputCommand.setForceOverride(true);
+
+		IcommandInvoker invoker = new IcommandInvoker(invocationContext);
+		invoker.invokeCommandAndGetResultAsString(iputCommand);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
+		accessObjectFactory.getIRODSFileFactory(irodsAccount);
+		DataObjectAO dataObjectAO = accessObjectFactory
+				.getDataObjectAO(irodsAccount);
+		IRODSFile irodsFile = dataObjectAO
+				.instanceIRODSFileForPath(targetIrodsCollection + '/'
+						+ testFileName);
+		
+		TransferOptions transferOptions = new TransferOptions();
+		transferOptions.setComputeAndVerifyChecksumAfterTransfer(true);
+
+		dataObjectAO.getDataObjectFromIrodsGivingTransferOptions(irodsFile, localFile, transferOptions);
+
+		assertionHelper.assertLocalFileExistsInScratch(IRODS_TEST_SUBDIR_PATH
+				+ '/' + getFileName);
+		assertionHelper.assertLocalScratchFileLengthEquals(
+				IRODS_TEST_SUBDIR_PATH + '/' + getFileName, 100);
+
+	}
+	
+	@Test
+	public final void testParallelGetWithChecksumVerification() throws Exception {
+
+		// generate a local scratch file
+		String testFileName = "testGetWithChecksumVerification.txt";
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String localFileName = FileGenerator
+				.generateFileOfFixedLengthGivenName(absPath, testFileName, 80000 * 1024);
+
+		String getFileName = "testGetWithChecksumVerificationResult.txt";
+		String getResultLocalPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH + '/')
+				+ getFileName;
+		File localFile = new File(getResultLocalPath);
+
+		// put scratch file into irods in the right place on the first resource
+		IrodsInvocationContext invocationContext = testingPropertiesHelper
+				.buildIRODSInvocationContextFromTestProperties(testingProperties);
+		IputCommand iputCommand = new IputCommand();
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		iputCommand.setLocalFileName(localFileName);
+		iputCommand.setIrodsFileName(targetIrodsCollection);
+		iputCommand.setIrodsResource(testingProperties
+				.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY));
+		iputCommand.setForceOverride(true);
+
+		IcommandInvoker invoker = new IcommandInvoker(invocationContext);
+		invoker.invokeCommandAndGetResultAsString(iputCommand);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
+		accessObjectFactory.getIRODSFileFactory(irodsAccount);
+		DataObjectAO dataObjectAO = accessObjectFactory
+				.getDataObjectAO(irodsAccount);
+		IRODSFile irodsFile = dataObjectAO
+				.instanceIRODSFileForPath(targetIrodsCollection + '/'
+						+ testFileName);
+		
+		TransferOptions transferOptions = new TransferOptions();
+		transferOptions.setComputeAndVerifyChecksumAfterTransfer(true);
+
+		dataObjectAO.getDataObjectFromIrodsGivingTransferOptions(irodsFile, localFile, transferOptions);
+
+		assertionHelper.assertLocalFileExistsInScratch(IRODS_TEST_SUBDIR_PATH
+				+ '/' + getFileName);
+		
+
+	}
 
 	
 }

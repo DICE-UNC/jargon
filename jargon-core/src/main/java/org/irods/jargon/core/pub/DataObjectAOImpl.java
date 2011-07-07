@@ -24,6 +24,7 @@ import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.DuplicateDataException;
+import org.irods.jargon.core.exception.FileIntegrityException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.packinstr.DataObjCopyInp;
 import org.irods.jargon.core.packinstr.DataObjInp;
@@ -387,10 +388,28 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 				throw new JargonException(
 						"localFile not found to put to irods", e);
 			}
+		} else {
+
+			log.info("processing as a parallel transfer, length above max");
+
+			processAsAParallelPutOperationIfMoreThanZeroThreads(localFile,
+					overwrite, transferOptions, targetFile);
 		}
+		log.info("transfer complete");
 
-		log.info("processing as a parallel transfer, length above max");
+	}
 
+	/**
+	 * @param localFile
+	 * @param overwrite
+	 * @param transferOptions
+	 * @param targetFile
+	 * @throws JargonException
+	 */
+	private void processAsAParallelPutOperationIfMoreThanZeroThreads(
+			final File localFile, final boolean overwrite,
+			final TransferOptions transferOptions, final IRODSFile targetFile)
+			throws JargonException {
 		// if this was below the max_sz_for_single_buf, the data was included in
 		// the put above and will have returned
 
@@ -399,30 +418,35 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 				targetFile.getResource(), overwrite, transferOptions);
 
 		try {
+			
+			if (transferOptions != null) {
+				if (transferOptions.isComputeAndVerifyChecksumAfterTransfer() || transferOptions.isComputeChecksumAfterTransfer()) {
+					log.info("computing a checksum on the file at:{}", localFile.getAbsolutePath());
+					String localFileChecksum = LocalFileUtils.md5ByteArrayToString(LocalFileUtils.computeMD5FileCheckSumViaAbsolutePath(localFile.getAbsolutePath()));
+					log.info("local file checksum is:{}", localFileChecksum);
+					dataObjInp.setFileChecksumValue(localFileChecksum);
+				}
+			}
+			
 			Tag responseToInitialCallForPut = getIRODSProtocol().irodsFunction(
 					dataObjInp);
 
 			int numberOfThreads = responseToInitialCallForPut
 					.getTag(numThreads).getIntValue();
 
-			if (numberOfThreads == 0) {
-				log.info("parallel operation deferred by server sending 0 threads back in PortalOperOut, revert to single thread transfer");
-
-				dataAOHelper.processNormalPutTransfer(localFile, overwrite,
-						transferOptions, targetFile, this.getIRODSProtocol());
-				return;
-
+			if (numberOfThreads < 0) {
+				throw new JargonException("numberOfThreads returned from iRODS is < 0, some error occurred");
 			} else if (numberOfThreads > 0) {
 				parallelPutTransfer(localFile, responseToInitialCallForPut,
 						numberOfThreads);
 			} else {
+				log.info("parallel operation deferred by server sending 0 threads back in PortalOperOut, revert to single thread transfer");
 				dataAOHelper.processNormalPutTransfer(localFile, overwrite,
 						transferOptions, targetFile, this.getIRODSProtocol());
 			}
 
 		} catch (DataNotFoundException dnf) {
 			log.warn("send of put returned no data found from irods, currently is ignored and null is returned from put operation");
-			return;
 		} catch (JargonException je) {
 			if (je.getMessage().indexOf("-312000") > -1) {
 				log.error("attempted put of file that exists in irods without overwrite");
@@ -440,8 +464,6 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			log.error("error in parallel transfer", e);
 			throw new JargonException("error in parallel transfer", e);
 		}
-		log.info("transfer complete");
-
 	}
 
 	/**
@@ -678,8 +700,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	private void processGetAfterResourceDetermined(
 			final IRODSFile irodsFileToGet, final File localFileToHoldData,
 			final DataObjInp dataObjInp, final TransferOptions transferOptions)
-			throws JargonException, DataNotFoundException,
-			UnsupportedOperationException {
+			throws JargonException, DataNotFoundException {
 
 		if (transferOptions == null) {
 			throw new IllegalArgumentException("null transfer options");
@@ -713,45 +734,74 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			log.info("no size returned, return from get with no update done");
 			return;
 		}
+
 		final long length = temp.getIntValue();
 
 		log.info("transfer length is:", length);
 
-		// if length == zero, check for multiple thread copy
+		// if length == zero, check for multiple thread copy, may still process
+		// as a standard txfr if 0 threads specified
 		try {
 			if (length == 0) {
-				final String host = message.getTag(PortList_PI)
-						.getTag(hostAddr).getStringValue();
-				int port = message.getTag(PortList_PI).getTag(portNum)
-						.getIntValue();
-				int password = message.getTag(PortList_PI).getTag(cookie)
-						.getIntValue();
-				int numberOfThreads = message.getTag(numThreads).getIntValue();
-				log.info("number of threads for this transfer = {} ",
-						numberOfThreads);
-
-				if (numberOfThreads == 0) {
-					log.info("number of threads is zero, possibly parallel transfers were turned off via rule, process as normal");
-					dataAOHelper.processNormalGetTransfer(localFileToHoldData,
-							length, this.getIRODSProtocol(), transferOptions);
-				} else {
-
-					log.info("process as a parallel transfer");
-					ParallelGetFileTransferStrategy parallelGetTransferStrategy = ParallelGetFileTransferStrategy
-							.instance(host, port, numberOfThreads, password,
-									localFileToHoldData,
-									this.getIRODSAccessObjectFactory());
-
-					parallelGetTransferStrategy.transfer();
-				}
+				checkNbrThreadsAndProcessAsParallelIfMoreThanZeroThreads(
+						localFileToHoldData, transferOptions, message, length);
 
 			} else {
 				dataAOHelper.processNormalGetTransfer(localFileToHoldData,
 						length, this.getIRODSProtocol(), transferOptions);
 			}
+			
+			if (transferOptions != null) {
+				if (transferOptions.isComputeAndVerifyChecksumAfterTransfer()) {
+					log.info("computing a checksum on the file at:{}", localFileToHoldData.getAbsolutePath());
+					String localFileChecksum = LocalFileUtils.md5ByteArrayToString(LocalFileUtils.computeMD5FileCheckSumViaAbsolutePath(localFileToHoldData.getAbsolutePath()));
+					log.info("local file checksum is:{}", localFileChecksum);
+					String irodsChecksum = computeMD5ChecksumOnDataObject(irodsFileToGet);
+					log.info("irods checksum:{}", irodsChecksum);
+					if (!(irodsChecksum.equals(localFileChecksum))) {
+						throw new FileIntegrityException("checksum verification after get fails");
+					}
+				}
+			}
+			
+			
 		} catch (Exception e) {
 			log.error("error in parallel transfer", e);
 			throw new JargonException("error in parallel transfer", e);
+		}
+	}
+
+	/**
+	 * @param localFileToHoldData
+	 * @param transferOptions
+	 * @param message
+	 * @param length
+	 * @throws JargonException
+	 */
+	private void checkNbrThreadsAndProcessAsParallelIfMoreThanZeroThreads(
+			final File localFileToHoldData,
+			final TransferOptions transferOptions, final Tag message,
+			final long length) throws JargonException {
+		final String host = message.getTag(PortList_PI).getTag(hostAddr)
+				.getStringValue();
+		int port = message.getTag(PortList_PI).getTag(portNum).getIntValue();
+		int password = message.getTag(PortList_PI).getTag(cookie).getIntValue();
+		int numberOfThreads = message.getTag(numThreads).getIntValue();
+		log.info("number of threads for this transfer = {} ", numberOfThreads);
+
+		if (numberOfThreads == 0) {
+			log.info("number of threads is zero, possibly parallel transfers were turned off via rule, process as normal");
+			dataAOHelper.processNormalGetTransfer(localFileToHoldData, length,
+					this.getIRODSProtocol(), transferOptions);
+		} else {
+
+			log.info("process as a parallel transfer");
+			ParallelGetFileTransferStrategy parallelGetTransferStrategy = ParallelGetFileTransferStrategy
+					.instance(host, port, numberOfThreads, password,
+							localFileToHoldData,
+							this.getIRODSAccessObjectFactory());
+
+			parallelGetTransferStrategy.transfer();
 		}
 	}
 
