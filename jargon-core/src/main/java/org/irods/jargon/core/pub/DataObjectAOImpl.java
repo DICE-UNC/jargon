@@ -574,7 +574,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 				myTransferOptions);
 
 		processGetAfterResourceDetermined(irodsFileToGet, localFile,
-				dataObjInp, myTransferOptions);
+				dataObjInp, myTransferOptions, irodsFileLength);
 	}
 
 	/*
@@ -650,7 +650,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 						irodsFileToGet.getResource(), myTransferOptions);
 
 		processGetAfterResourceDetermined(irodsFileToGet, localFile,
-				dataObjInp, myTransferOptions);
+				dataObjInp, myTransferOptions, irodsFileToGet.length());
 	}
 
 	/*
@@ -685,21 +685,34 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 						irodsFileToGet.getAbsolutePath(), "", transferOptions);
 
 		processGetAfterResourceDetermined(irodsFileToGet, localFileToHoldData,
-				dataObjInp, myTransferOptions);
+				dataObjInp, myTransferOptions, 0);//irodsFileToGet.length());
 	}
 
 	/**
+	 * The resource to use for the get operation has been determined.  Note that the state of the resource determination is important due to the fact that finding such state
+	 * information requires a GenQuery.  There are certain occasions where get operations are called, where doing an intervening query to the ICAT can cause a protocol issue.
+	 * Issuing such a GenQuery can confuse what can be a multi-step protocol.  For this reason, callers of this method can be assured that no queries will be issued to 
+	 * iRODS while processing the get.  An occasion where this has been problematic has been the processing of client-side get actions as the result of rule execution.
+	 * <p/>
+	 * Note that an iRODS file length is passed here.  This avoids any query from an <code>IRODSFile.length()</code> operation.  The length is passed in, as there are some occasions where
+	 * the multi-step protocol can show a zero file length, such as when iRODS is preparing to treat a get operation as a parallel file transfer.  There are cases where iRODS responds with a zero length,
+	 * indicating a parallel transfer, but a policy rule in place in iRODS may 'turn off' such parallel transfers.  In that case, the length usually referred to returns as a zero, and the number of
+	 * threads will be zero.  This must be handled.
+	 * 
+	 * 
 	 * @param irodsFileToGet
 	 * @param localFileToHoldData
 	 * @param dataObjInp
 	 * @param transferOptions
+	 * @param irodsFileLength - actual length of file from irods.  This is passed in as there are occasions where the protocol exchange results in a zero file length.  See
+	 * the note above.
 	 * @throws JargonException
 	 * @throws DataNotFoundException
 	 * @throws UnsupportedOperationException
 	 */
 	private void processGetAfterResourceDetermined(
 			final IRODSFile irodsFileToGet, final File localFileToHoldData,
-			final DataObjInp dataObjInp, final TransferOptions transferOptions)
+			final DataObjInp dataObjInp, final TransferOptions transferOptions, long irodsFileLength)
 			throws JargonException, DataNotFoundException {
 
 		if (transferOptions == null) {
@@ -735,20 +748,20 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			return;
 		}
 
-		final long length = temp.getIntValue();
+		final long lengthFromIrodsResponse = temp.getIntValue();
 
-		log.info("transfer length is:", length);
+		log.info("transfer length is:", lengthFromIrodsResponse);
 
 		// if length == zero, check for multiple thread copy, may still process
 		// as a standard txfr if 0 threads specified
 		try {
-			if (length == 0) {
+			if (lengthFromIrodsResponse == 0) {
 				checkNbrThreadsAndProcessAsParallelIfMoreThanZeroThreads(
-						localFileToHoldData, transferOptions, message, length);
+						localFileToHoldData, transferOptions, message, lengthFromIrodsResponse, irodsFileLength);
 
 			} else {
 				dataAOHelper.processNormalGetTransfer(localFileToHoldData,
-						length, this.getIRODSProtocol(), transferOptions);
+						lengthFromIrodsResponse, this.getIRODSProtocol(), transferOptions);
 			}
 			
 			if (transferOptions != null) {
@@ -775,13 +788,14 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	 * @param localFileToHoldData
 	 * @param transferOptions
 	 * @param message
-	 * @param length
+	 * @param length length returned from the initial DataObjInp call to iRODS
+	 * @param irodsFileLength actual length of irodsFile
 	 * @throws JargonException
 	 */
 	private void checkNbrThreadsAndProcessAsParallelIfMoreThanZeroThreads(
 			final File localFileToHoldData,
 			final TransferOptions transferOptions, final Tag message,
-			final long length) throws JargonException {
+			final long length, long irodsFileLength) throws JargonException {
 		final String host = message.getTag(PortList_PI).getTag(hostAddr)
 				.getStringValue();
 		int port = message.getTag(PortList_PI).getTag(portNum).getIntValue();
@@ -791,7 +805,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 		if (numberOfThreads == 0) {
 			log.info("number of threads is zero, possibly parallel transfers were turned off via rule, process as normal");
-			dataAOHelper.processNormalGetTransfer(localFileToHoldData, length,
+			dataAOHelper.processNormalGetTransfer(localFileToHoldData, irodsFileLength,
 					this.getIRODSProtocol(), transferOptions);
 		} else {
 

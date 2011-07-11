@@ -18,7 +18,7 @@ import org.junit.Test;
  * @author Mike Conway - DICE (www.irods.org)
  * 
  */
-public class RODSFileSystemTest {
+public class IRODSFileSystemTest {
 
 	private static Properties testingProperties = new Properties();
 	private static org.irods.jargon.testutils.TestingPropertiesHelper testingPropertiesHelper = new TestingPropertiesHelper();
