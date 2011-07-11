@@ -80,22 +80,6 @@
     <property name="configurationPropertyDAO" ref="configurationPropertyDAO" />
   </bean>
 
-  <!-- ========================= TRANSACTION DEFINITIONS ========================= -->
-
-  <bean id="transferEngineTarget" class="org.irods.jargon.transfer.TransferDAOBean">
-    <property name="synchronizationDAO" ref="synchronizationDAO" />
-    <property name="localIRODSTransferDAO" ref="localIRODSTransferDAO" />
-    <property name="localIRODSTransferItemDAO" ref="localIRODSTransferItemDAO" />
-  </bean>
-
-  <bean id="transferDAOBean" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
-    <property name="transactionManager" ref="transactionManager" />
-    <property name="target" ref="transferEngineTarget" />
-    <property name="transactionAttributes">
-      <props>
-        <prop key="*">PROPAGATION_SUPPORTS,readOnly</prop>
-      </props>
-    </property>
-  </bean>
+ 
 
 </beans>
