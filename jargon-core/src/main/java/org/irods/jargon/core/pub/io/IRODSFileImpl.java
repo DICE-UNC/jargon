@@ -45,11 +45,23 @@ public final class IRODSFileImpl extends File implements IRODSFile {
 
 	private String fileName = "";
 	private String resource = "";
-	int fileDescriptor = -1;
+	private int fileDescriptor = -1;
 	private List<String> directory = new ArrayList<String>();
 	private PathNameType pathNameType = PathNameType.UNKNOWN;
+	private long length = -1;
 
 	private static final long serialVersionUID = -6986662136294659059L;
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.pub.io.IRODSFile#reset()
+	 */
+	@Override
+	public void reset() {
+		this.length = -1;
+		this.pathNameType = PathNameType.UNKNOWN;
+	}
 
 	protected IRODSFileImpl(final String pathName,
 			final IRODSFileSystemAO irodsFileSystemAO) throws JargonException {
@@ -731,6 +743,8 @@ public final class IRODSFileImpl extends File implements IRODSFile {
 	 */
 	@Override
 	public boolean isFile() {
+		
+	
 		if (pathNameType == PathNameType.UNKNOWN) {
 			// do query
 		} else if (pathNameType == PathNameType.FILE) {
@@ -810,16 +824,23 @@ public final class IRODSFileImpl extends File implements IRODSFile {
 	 */
 	@Override
 	public long length() {
-		try {
-			return irodsFileSystemAO.getLength(this);
-		} catch (DataNotFoundException e) {
-			return 0;
-		} catch (JargonException e) {
-			log.error("jargon exception, rethrow as unchecked", e);
-			throw new JargonRuntimeException(e);
 
+		if (length == -1) {
+			log.info("caching new length val");
+
+			try {
+				length = irodsFileSystemAO.getLength(this);
+			} catch (DataNotFoundException e) {
+				length = 0;
+			} catch (JargonException e) {
+				log.error("jargon exception, rethrow as unchecked", e);
+				throw new JargonRuntimeException(e);
+
+			}
 		}
+		return length;
 	}
+	
 
 	/*
 	 * (non-Javadoc)
@@ -1299,6 +1320,26 @@ public final class IRODSFileImpl extends File implements IRODSFile {
 		}
 
 		this.irodsFileSystemAO.fileClose(this.getFileDescriptor());
+		this.setFileDescriptor(-1);
+
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.core.pub.io.IRODSFile#closeGivenDescriptor(int)
+	 */
+	@Override
+	public void closeGivenDescriptor(final int fd) throws JargonException {
+		if (log.isInfoEnabled()) {
+			log.info("closing irodsFile given descriptor:" + fd);
+		}
+
+		if (fd <= 0) {
+			log.info("file is not open, silently ignore");
+			this.setFileDescriptor(-1);
+			return;
+		}
+
+		this.irodsFileSystemAO.fileClose(fd);
 		this.setFileDescriptor(-1);
 
 	}

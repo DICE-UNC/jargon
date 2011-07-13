@@ -347,6 +347,23 @@ public final class IRODSFileFactoryImpl extends IRODSGenericAO implements
 			throw new JargonException(e);
 		}
 	}
+	
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.core.pub.io.IRODSFileFactory#instanceIRODSFileInputStreamGivingFD(org.irods.jargon.core.pub.io.IRODSFile, int)
+	 */
+	@Override
+	public IRODSFileInputStream instanceIRODSFileInputStreamGivingFD(
+			final IRODSFile file, final int fd) throws JargonException {
+
+		FileIOOperations fileIOOperations = new FileIOOperationsAOImpl(
+				this.getIRODSSession(), this.getIRODSAccount());
+		try {
+			return new IRODSFileInputStream(file, fileIOOperations, fd);
+		} catch (FileNotFoundException e) {
+			log.error("FileNotFound creating input stream", e);
+			throw new JargonException(e);
+		}
+	}
 
 	/*
 	 * (non-Javadoc)

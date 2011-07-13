@@ -27,6 +27,7 @@ public class IRODSFileInputStream extends InputStream {
 
 	private transient final IRODSFile irodsFile;
 	private transient final FileIOOperations fileIOOperations;
+	private transient int fd = 0;
 	private transient long filePointer = 0;
 
 	/**
@@ -47,39 +48,39 @@ public class IRODSFileInputStream extends InputStream {
 	 *                regular file, or for some other reason cannot be opened
 	 *                for reading.
 	 */
-	protected IRODSFileInputStream(final IRODSFile irodsFile2,
+	protected IRODSFileInputStream(final IRODSFile irodsFile,
 			final FileIOOperations fileIOOperations)
 			throws FileNotFoundException {
 
 		super();
-		checkFileParameter(irodsFile2);
+		checkFileParameter(irodsFile);
 		if (fileIOOperations == null) {
 			throw new JargonRuntimeException("fileIOOperations is null");
 		}
 
-		// FIXME: consider removing to optimize (reduce queries) useful???
-		if (!irodsFile2.exists()) {
+		
+		if (!irodsFile.exists()) {
 			final String msg = "file does not exist:"
-					+ irodsFile2.getAbsolutePath();
+					+ irodsFile.getAbsolutePath();
 			log.error(msg);
 			throw new FileNotFoundException(msg);
 		}
 
-		if (!irodsFile2.isFile()) {
+		if (!irodsFile.isFile()) {
 			final String msg = "this is not a file, it is a directory:"
-					+ irodsFile2.getAbsolutePath();
+					+ irodsFile.getAbsolutePath();
 			log.error(msg);
 			throw new FileNotFoundException(msg);
 		}
 
-		if (!irodsFile2.canRead()) {
+		if (!irodsFile.canRead()) {
 			final String msg = "cannot read the file:"
-					+ irodsFile2.getAbsolutePath();
+					+ irodsFile.getAbsolutePath();
 			log.error(msg);
 			throw new FileNotFoundException(msg);
 		}
 
-		this.irodsFile = irodsFile2;
+		this.irodsFile = irodsFile;
 
 		try {
 			openIRODSFile();
@@ -88,10 +89,41 @@ public class IRODSFileInputStream extends InputStream {
 			log.error(msg, e);
 			throw new JargonRuntimeException(msg, e);
 		}
-
+		
 		this.fileIOOperations = fileIOOperations;
+		this.fd = irodsFile.getFileDescriptor();
 
 	}
+
+	/**
+	 * Create an <code>IRODSFileInputStream</code> providing an already-opened file handle.
+	 * @param irodsFile
+	 * @param fileIOOperations
+	 * @param fd
+	 * @throws FileNotFoundException
+	 */
+	protected IRODSFileInputStream(final IRODSFile irodsFile,
+			final FileIOOperations fileIOOperations, final int fd)
+			throws FileNotFoundException {
+
+		super();
+		
+		if (irodsFile == null) {
+			throw new IllegalArgumentException("null irodsFile");
+		}
+		
+		if (fd <= 0) {
+			throw new IllegalArgumentException("fd <= 0");
+		}
+
+		this.fileIOOperations = fileIOOperations;
+		this.irodsFile = irodsFile;
+		
+		
+		this.fd = fd;
+
+	}
+
 
 	/**
 	 * @param file
@@ -108,7 +140,7 @@ public class IRODSFileInputStream extends InputStream {
 	}
 
 	private int openIRODSFile() throws JargonException {
-		int fileDescriptor = -1;
+		
 		if (!irodsFile.exists()) {
 			log.warn("opening non-existant file for read: {}",
 					irodsFile.getAbsolutePath());
@@ -117,13 +149,13 @@ public class IRODSFileInputStream extends InputStream {
 
 		log.info("opening the file");
 		// open the file (read-only since its an input stream)
-		fileDescriptor = irodsFile.openReadOnly();
+		fd = irodsFile.openReadOnly();
 
 		if (log.isDebugEnabled()) {
-			log.debug("file descriptor from open operation:{}", fileDescriptor);
+			log.debug("file descriptor from open operation:{}", fd);
 		}
 
-		return fileDescriptor;
+		return fd;
 
 	}
 
@@ -149,7 +181,7 @@ public class IRODSFileInputStream extends InputStream {
 		try {
 			byte buffer[] = new byte[1];
 
-			int temp = fileIOOperations.fileRead(irodsFile.getFileDescriptor(),
+			int temp = fileIOOperations.fileRead(fd,
 					buffer, 0, 1);
 
 			if (temp < 0) {
@@ -246,7 +278,7 @@ public class IRODSFileInputStream extends InputStream {
 
 		int temp;
 		try {
-			temp = fileIOOperations.fileRead(irodsFile.getFileDescriptor(), b,
+			temp = fileIOOperations.fileRead(fd, b,
 					off, len);
 		} catch (JargonException e) {
 			log.error(
@@ -336,14 +368,14 @@ public class IRODSFileInputStream extends InputStream {
 		try {
 			if ((filePointer + numberOfBytesToSkip) < length) {
 
-				fileIOOperations.seek(irodsFile.getFileDescriptor(),
+				fileIOOperations.seek(fd,
 						numberOfBytesToSkip,
 						FileIOOperations.SeekWhenceType.SEEK_CURRENT);
 
 				filePointer += numberOfBytesToSkip;
 				return numberOfBytesToSkip;
 			} else {
-				fileIOOperations.seek(irodsFile.getFileDescriptor(), length,
+				fileIOOperations.seek(fd, length,
 						FileIOOperations.SeekWhenceType.SEEK_CURRENT);
 				filePointer += length;
 				return length;

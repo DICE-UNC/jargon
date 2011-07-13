@@ -246,4 +246,24 @@ public interface IRODSFileFactory {
 	 */
 	IRODSFile instanceIRODSFileIndicatingType(String parent, String child,
 			boolean isFile) throws JargonException;
+
+	/**
+	 * Create an instance of a
+	 * {@link org.irods.jargon.core.pub.io.SessionClosingIRODSFileInputStream}.
+	 * This special input stream will close the underlying iRODS connection when
+	 * the stream is closed. This method provides the ability to add the
+	 * <code>fd</code> when the file is already opened.
+	 * 
+	 * @param name
+	 *            <code>String</code> with the absolute path to the iRODS file
+	 *            that will be read and streamed.
+	 * @param fd
+	 *            <code>int</code> with the file descriptor
+	 * @return{@link 
+	 *               org.irods.jargon.core.pub.io.SessionClosingIRODSFileInputStream
+	 *               }
+	 * @throws JargonException
+	 */
+	IRODSFileInputStream instanceIRODSFileInputStreamGivingFD(IRODSFile file,
+			int fd) throws JargonException;
 }

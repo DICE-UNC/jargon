@@ -10,16 +10,21 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSCommands;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.packinstr.DataObjInp;
 import org.irods.jargon.core.packinstr.TransferOptions;
+import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
+import org.irods.jargon.core.pub.Stream2StreamAO;
 import org.irods.jargon.core.pub.domain.DataObject;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.pub.io.IRODSFileFactory;
+import org.irods.jargon.core.pub.io.IRODSFileInputStream;
 import org.irods.jargon.core.query.AVUQueryElement;
 import org.irods.jargon.core.query.IRODSQueryResultRow;
 import org.irods.jargon.core.query.IRODSQueryResultSetInterface;
@@ -43,6 +48,26 @@ import org.slf4j.LoggerFactory;
 public final class DataAOHelper extends AOHelper {
 	public static final Logger log = LoggerFactory
 			.getLogger(DataAOHelper.class);
+
+	private final IRODSAccessObjectFactory irodsAccessObjectFactory;
+	private final IRODSAccount irodsAccount;
+
+	public DataAOHelper(
+			final IRODSAccessObjectFactory irodsAccessObjectFactory,
+			final IRODSAccount irodsAccount) {
+		super();
+		if (irodsAccessObjectFactory == null) {
+			throw new IllegalArgumentException("null irodsAccessObjectFactory");
+		}
+
+		if (irodsAccount == null) {
+			throw new IllegalArgumentException("null irodsAccount");
+		}
+
+		this.irodsAccessObjectFactory = irodsAccessObjectFactory;
+		this.irodsAccount = irodsAccount;
+
+	}
 
 	/**
 	 * Create a set of selects for a data object, used in general query. Note
@@ -171,7 +196,8 @@ public final class DataAOHelper extends AOHelper {
 	}
 
 	public List<DataObject> buildListFromResultSet(
-			final IRODSQueryResultSetInterface resultSet) throws JargonException {
+			final IRODSQueryResultSetInterface resultSet)
+			throws JargonException {
 
 		final List<DataObject> data = new ArrayList<DataObject>();
 
@@ -288,15 +314,16 @@ public final class DataAOHelper extends AOHelper {
 		log.debug("metadataAndDomainData: {}", data);
 		return data;
 	}
-	
+
 	/**
 	 * @param localFileToHoldData
 	 * @param length
-	 * @param transferOptions 
+	 * @param transferOptions
 	 * @throws JargonException
 	 */
 	public void processNormalGetTransfer(final File localFileToHoldData,
-			final long length, final IRODSCommands irodsProtocol, final TransferOptions transferOptions) throws JargonException {
+			final long length, final IRODSCommands irodsProtocol,
+			final TransferOptions transferOptions) throws JargonException {
 
 		log.info("normal file transfer started, get output stream for local destination file");
 		// get an input stream from the irodsFile
@@ -328,7 +355,7 @@ public final class DataAOHelper extends AOHelper {
 							+ localFileToHoldData.getAbsolutePath(), e);
 		}
 	}
-	
+
 	/**
 	 * @param localFile
 	 * @param overwrite
@@ -339,40 +366,44 @@ public final class DataAOHelper extends AOHelper {
 	 */
 	public void processNormalPutTransfer(final File localFile,
 			final boolean overwrite, final TransferOptions transferOptions,
-			IRODSFile targetFile, final IRODSCommands irodsProtocol) throws JargonException, FileNotFoundException {
-		
+			IRODSFile targetFile, final IRODSCommands irodsProtocol)
+			throws JargonException, FileNotFoundException {
+
 		if (localFile == null) {
 			throw new IllegalArgumentException("null localFile");
 		}
-		
+
 		if (transferOptions == null) {
 			throw new IllegalArgumentException("null transferOptions");
 		}
-		
+
 		log.info("processing as a normal put strategy");
 
 		DataObjInp dataObjInp = DataObjInp.instanceForNormalPutStrategy(
 				targetFile.getAbsolutePath(), localFile.length(),
 				targetFile.getResource(), overwrite, transferOptions);
-		
-		
+
 		// see if checksum is required
-		
+
 		if (transferOptions != null) {
-			if (transferOptions.isComputeAndVerifyChecksumAfterTransfer() || transferOptions.isComputeChecksumAfterTransfer()) {
-				log.info("computing a checksum on the file at:{}", localFile.getAbsolutePath());
-				String localFileChecksum = LocalFileUtils.md5ByteArrayToString(LocalFileUtils.computeMD5FileCheckSumViaAbsolutePath(localFile.getAbsolutePath()));
+			if (transferOptions.isComputeAndVerifyChecksumAfterTransfer()
+					|| transferOptions.isComputeChecksumAfterTransfer()) {
+				log.info("computing a checksum on the file at:{}",
+						localFile.getAbsolutePath());
+				String localFileChecksum = LocalFileUtils
+						.md5ByteArrayToString(LocalFileUtils
+								.computeMD5FileCheckSumViaAbsolutePath(localFile
+										.getAbsolutePath()));
 				log.info("local file checksum is:{}", localFileChecksum);
 				dataObjInp.setFileChecksumValue(localFileChecksum);
 			}
 		}
-		
-		irodsProtocol.irodsFunction(RODS_API_REQ,
-				dataObjInp.getParsedTags(), 0, null,
-				localFile.length(), new FileInputStream(localFile),
+
+		irodsProtocol.irodsFunction(RODS_API_REQ, dataObjInp.getParsedTags(),
+				0, null, localFile.length(), new FileInputStream(localFile),
 				dataObjInp.getApiNumber());
 	}
-	
+
 	/**
 	 * Check if the target of a put is an iRODS collection or data object name.
 	 * This method is smart enough to know that if you put a data object to an
@@ -386,21 +417,21 @@ public final class DataAOHelper extends AOHelper {
 	 * @throws JargonException
 	 */
 	public IRODSFile checkTargetFileForPutOperation(final File localFile,
-			final IRODSFile irodsFileDestination, final boolean ignoreChecks, final IRODSFileFactory irodsFileFactory)
-			throws JargonException {
-		
+			final IRODSFile irodsFileDestination, final boolean ignoreChecks,
+			final IRODSFileFactory irodsFileFactory) throws JargonException {
+
 		if (localFile == null) {
 			throw new IllegalArgumentException("null localFile");
 		}
-		
+
 		if (irodsFileDestination == null) {
 			throw new IllegalArgumentException("null irodsFileDestination");
 		}
-		
+
 		if (irodsFileFactory == null) {
 			throw new IllegalArgumentException("null irodsFileFactory");
 		}
-		
+
 		IRODSFile targetFile;
 
 		if (ignoreChecks) {
@@ -423,7 +454,7 @@ public final class DataAOHelper extends AOHelper {
 		}
 		return targetFile;
 	}
-	
+
 	/**
 	 * @param irodsCollectionAbsolutePath
 	 * @param dataName
@@ -452,7 +483,59 @@ public final class DataAOHelper extends AOHelper {
 		return query.toString();
 	}
 
-	
-	
+	/**
+	 * Special transfer operation when the file is to be read and streamed to
+	 * the given output.
+	 * 
+	 * @param irodsFile
+	 * @param localFileToHoldData
+	 * @param irodsFileLength
+	 * @param transferOptions
+	 * @param fd
+	 * @throws JargonException
+	 */
+	public void processGetTransferViaRead(final IRODSFile irodsFile,
+			final File localFileToHoldData, long irodsFileLength,
+			TransferOptions transferOptions, int fd) throws JargonException {
+		log.info("processGetTransferViaRead()");
+
+		if (localFileToHoldData == null) {
+			throw new IllegalArgumentException("null localFileToHoldData");
+		}
+
+		if (irodsFileLength < 0) {
+			throw new IllegalArgumentException("irodsFileLength < 0");
+		}
+
+		if (fd <= 0) {
+			throw new IllegalArgumentException("fd is <= 0");
+		}
+
+		log.info("normal file transfer started, get output stream for local destination file");
+		// get an input stream from the irodsFile
+		// BufferedOutputStream localFileOutputStream;
+		OutputStream localFileOutputStream;
+		try {
+			// localFileOutputStream = new BufferedOutputStream(
+			localFileOutputStream = new FileOutputStream(localFileToHoldData);
+			IRODSFileInputStream ifis = irodsAccessObjectFactory
+					.getIRODSFileFactory(irodsAccount)
+					.instanceIRODSFileInputStreamGivingFD(irodsFile, fd);
+
+			Stream2StreamAO stream2StreamAO = irodsAccessObjectFactory
+					.getStream2StreamAO(irodsAccount);
+			stream2StreamAO.streamToStreamCopy(ifis, localFileOutputStream);
+		} catch (FileNotFoundException e) {
+			log.error(
+					"FileNotFoundException when trying to create a new file for the local output stream for {}",
+					localFileToHoldData.getAbsolutePath(), e);
+			throw new JargonException(
+					"FileNotFoundException for local file when trying to get to: "
+							+ localFileToHoldData.getAbsolutePath(), e);
+		} finally {
+			irodsFile.closeGivenDescriptor(fd);
+		}
+
+	}
 
 }

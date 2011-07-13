@@ -81,6 +81,42 @@ public class Stream2StreamAOImpl extends IRODSGenericAO implements
 		}
 
 	}
+	
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.core.pub.Stream2StreamAO#streamToStreamCopy(java.io.InputStream, java.io.OutputStream)
+	 */
+	@Override
+	public void streamToStreamCopy(final InputStream inputStream,
+			final OutputStream outputStream) throws JargonException {
+
+		if (inputStream == null) {
+			throw new IllegalArgumentException("null inputStream");
+		}
+
+		if (outputStream == null) {
+			throw new IllegalArgumentException("null outputStream");
+		}
+
+		log.info("streamToStreamCopy()");
+		
+		final ReadableByteChannel inputChannel = Channels.newChannel(inputStream);
+		final WritableByteChannel outputChannel = Channels.newChannel(outputStream);
+		// copy the channels
+		try {
+			ChannelTools.fastChannelCopy(inputChannel, outputChannel);
+		} catch (IOException e) {
+			log.error("IO Exception copying buffers", e);
+			throw new JargonException("io exception copying buffers", e);
+		} finally {
+			try {
+				inputChannel.close();
+				outputChannel.close();
+			} catch (Exception e) {
+
+			}
+		}
+
+	}
 
 	/* (non-Javadoc)
 	 * @see org.irods.jargon.core.pub.Stream2StreamAO#streamFileToByte(org.irods.jargon.core.pub.io.IRODSFile)

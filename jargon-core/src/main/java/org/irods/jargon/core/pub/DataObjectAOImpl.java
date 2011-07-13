@@ -75,7 +75,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 	public static final Logger log = LoggerFactory
 			.getLogger(DataObjectAOImpl.class);
-	private transient final DataAOHelper dataAOHelper = new DataAOHelper();
+	private transient final DataAOHelper dataAOHelper = new DataAOHelper(this.getIRODSAccessObjectFactory(), this.getIRODSAccount());
 	private transient final IRODSGenQueryExecutor irodsGenQueryExecutor;
 
 	/**
@@ -757,7 +757,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		try {
 			if (lengthFromIrodsResponse == 0) {
 				checkNbrThreadsAndProcessAsParallelIfMoreThanZeroThreads(
-						localFileToHoldData, transferOptions, message, lengthFromIrodsResponse, irodsFileLength);
+						irodsFileToGet, localFileToHoldData, transferOptions, message, lengthFromIrodsResponse, irodsFileLength);
 
 			} else {
 				dataAOHelper.processNormalGetTransfer(localFileToHoldData,
@@ -792,7 +792,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	 * @param irodsFileLength actual length of irodsFile
 	 * @throws JargonException
 	 */
-	private void checkNbrThreadsAndProcessAsParallelIfMoreThanZeroThreads(
+	private void checkNbrThreadsAndProcessAsParallelIfMoreThanZeroThreads(final IRODSFile irodsSourceFile,
 			final File localFileToHoldData,
 			final TransferOptions transferOptions, final Tag message,
 			final long length, long irodsFileLength) throws JargonException {
@@ -801,12 +801,14 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		int port = message.getTag(PortList_PI).getTag(portNum).getIntValue();
 		int password = message.getTag(PortList_PI).getTag(cookie).getIntValue();
 		int numberOfThreads = message.getTag(numThreads).getIntValue();
+		
 		log.info("number of threads for this transfer = {} ", numberOfThreads);
 
 		if (numberOfThreads == 0) {
 			log.info("number of threads is zero, possibly parallel transfers were turned off via rule, process as normal");
-			dataAOHelper.processNormalGetTransfer(localFileToHoldData, irodsFileLength,
-					this.getIRODSProtocol(), transferOptions);
+			int fd = message.getTag(l1descInx).getIntValue();
+			dataAOHelper.processGetTransferViaRead(irodsSourceFile, localFileToHoldData, irodsFileLength,
+					 transferOptions, fd);
 		} else {
 
 			log.info("process as a parallel transfer");
