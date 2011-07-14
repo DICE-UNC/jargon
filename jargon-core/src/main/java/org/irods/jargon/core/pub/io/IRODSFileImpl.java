@@ -639,6 +639,7 @@ public final class IRODSFileImpl extends File implements IRODSFile {
 	@Override
 	public File getParentFile() {
 		String parentPath = getParent();
+		
 		try {
 			return new IRODSFileImpl(parentPath, this.irodsFileSystemAO);
 		} catch (JargonException e) {

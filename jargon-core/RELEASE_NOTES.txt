@@ -57,3 +57,4 @@ fixme's in UserAOImplTest
 *[#297] add support for getTempPassword API
 *[#320] rule imposed no parallel txfrs - still attempt even when portal opr out indicates 0 threads
 *[#104] Support for optional checksum on transfer
+*[#350] IRODSFIle.exists() when root gets null error
