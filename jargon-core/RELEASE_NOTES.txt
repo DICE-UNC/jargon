@@ -60,3 +60,4 @@ fixme's in UserAOImplTest
 *[#350] IRODSFIle.exists() when root gets null error
 *[#351] IRODSFIle.getParentFile() should return null when at root
 *[#352] file.listFiles() when root should not list root as child
+*[#353] getParent on folder beneath root should result in file '/'

@@ -1558,6 +1558,33 @@ public class IRODSFileImplTest {
 		Assert.assertEquals("parent names do not match", targetIrodsCollection,
 				actualParent);
 	}
+	
+	/*
+	 * [#353] getParent on folder beneath root should result in file '/'
+	 */
+	@Test
+	public final void testGetParentWhenSubdirBelowRoot() throws Exception {
+		
+		// now get an irods file and see if it is readable, it should be
+
+		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager
+				.instance();
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSSession irodsSession = IRODSSession
+				.instance(irodsConnectionManager);
+		IRODSAccessObjectFactory accessObjectFactory = IRODSAccessObjectFactoryImpl
+				.instance(irodsSession);
+		IRODSFileFactory irodsFileFactory = accessObjectFactory
+				.getIRODSFileFactory(irodsAccount);
+		IRODSFile irodsFile = irodsFileFactory
+				.instanceIRODSFile("/" + testingProperties.getProperty(TestingPropertiesHelper.IRODS_ZONE_KEY));
+		String actualParent = irodsFile.getParent();
+		TestCase.assertNotNull("null parent, should have been root", actualParent);
+		TestCase.assertEquals("should have gotten root as parent", "/", actualParent);
+		irodsSession.closeSession();
+	}
+
 
 	/**
 	 * Test method for

@@ -1378,6 +1378,11 @@ public final class IRODSFileImpl extends File implements IRODSFile {
 				i++;
 			}
 
+			// parent is / 
+			if (pathBuilder.length() == 0) {
+				pathBuilder.append("/");
+			}
+			
 			return pathBuilder.toString();
 		} else {
 
