@@ -58,3 +58,4 @@ fixme's in UserAOImplTest
 *[#320] rule imposed no parallel txfrs - still attempt even when portal opr out indicates 0 threads
 *[#104] Support for optional checksum on transfer
 *[#350] IRODSFIle.exists() when root gets null error
+*[#351] IRODSFIle.getParentFile() should return null when at root

@@ -248,6 +248,34 @@ public class IRODSFileImplTest {
 		irodsSession.closeSession();
 	}
 	
+	/*
+	 * Bug [#351] IRODSFIle.getParentFile() should return null when at root
+	 */
+	@Test
+	public final void testGetParentFileWhenRootGivesNull() throws Exception {
+		String testFileName = "/";
+
+
+		// now get an irods file and see if it is readable, it should be
+
+		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager
+				.instance();
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSSession irodsSession = IRODSSession
+				.instance(irodsConnectionManager);
+		IRODSAccessObjectFactory accessObjectFactory = IRODSAccessObjectFactoryImpl
+				.instance(irodsSession);
+		IRODSFileFactory irodsFileFactory = accessObjectFactory
+				.getIRODSFileFactory(irodsAccount);
+		IRODSFile irodsFile = irodsFileFactory
+				.instanceIRODSFile(testFileName);
+
+		Assert.assertNull(irodsFile.getParentFile());
+		irodsSession.closeSession();
+	}
+	
+	
 	@Test
 	public final void testExistsNoFile() throws Exception {
 		String testFileName = "testExistsNoFile.txt";

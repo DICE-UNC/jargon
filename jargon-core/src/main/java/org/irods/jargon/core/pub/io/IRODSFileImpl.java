@@ -640,6 +640,10 @@ public final class IRODSFileImpl extends File implements IRODSFile {
 	public File getParentFile() {
 		String parentPath = getParent();
 		
+		if (parentPath == null) {
+			return null;
+		}
+		
 		try {
 			return new IRODSFileImpl(parentPath, this.irodsFileSystemAO);
 		} catch (JargonException e) {
