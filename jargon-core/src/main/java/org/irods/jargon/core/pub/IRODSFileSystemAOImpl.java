@@ -775,7 +775,15 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 			throws JargonException {
 		int idxLastSlash;
 		idxLastSlash = row.getColumn(1).lastIndexOf('/');
-		subdirs.add(row.getColumn(1).substring(idxLastSlash));
+
+		/*
+		 * Special case when root is the parent, don't repeat root from query
+		 * results
+		 */
+
+		if (!(row.getColumn(1).equals("/"))) {
+			subdirs.add(row.getColumn(1).substring(idxLastSlash));
+		}
 	}
 
 	/*

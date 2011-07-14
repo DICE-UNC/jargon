@@ -275,6 +275,40 @@ public class IRODSFileImplTest {
 		irodsSession.closeSession();
 	}
 	
+
+	/*
+	 * Bug  [#352] file.listFiles() when root should not list root as child
+	 */
+	@Test
+	public final void testChildrenWhenRootDoesNotContainRoot() throws Exception {
+		String testFileName = "/";
+
+
+		// now get an irods file and see if it is readable, it should be
+
+		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager
+				.instance();
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSSession irodsSession = IRODSSession
+				.instance(irodsConnectionManager);
+		IRODSAccessObjectFactory accessObjectFactory = IRODSAccessObjectFactoryImpl
+				.instance(irodsSession);
+		IRODSFileFactory irodsFileFactory = accessObjectFactory
+				.getIRODSFileFactory(irodsAccount);
+		IRODSFile irodsFile = irodsFileFactory
+				.instanceIRODSFile(testFileName);
+
+		File[] children = irodsFile.listFiles();
+		TestCase.assertTrue("should have some children", children.length > 0);
+		for (File child : children) {
+			TestCase.assertFalse("child of root given as root", child.getName().equals("/"));
+		}
+		
+		
+		irodsSession.closeSession();
+	}
+	
 	
 	@Test
 	public final void testExistsNoFile() throws Exception {
