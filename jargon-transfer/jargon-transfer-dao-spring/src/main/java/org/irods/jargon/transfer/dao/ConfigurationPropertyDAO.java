@@ -58,4 +58,13 @@ public interface ConfigurationPropertyDAO {
      */
     void deleteAllProperties() throws TransferDAOException;
 
+    /**
+     * Find the configuration information based on the given key
+     * @param propertyKey <code>String</code> (required) with the property key
+     * @return {@link ConfigurationProperty} matching the key, or <code>null</code> if no result
+     * @throws TransferDAOException
+     */
+	ConfigurationProperty findByPropertyKey(String propertyKey)
+			throws TransferDAOException;
+
 }

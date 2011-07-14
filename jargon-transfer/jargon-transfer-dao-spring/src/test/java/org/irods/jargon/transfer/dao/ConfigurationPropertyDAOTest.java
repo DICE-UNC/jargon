@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 
 import junit.framework.Assert;
+import junit.framework.TestCase;
 
 import org.hibernate.PropertyValueException;
 import org.irods.jargon.transfer.dao.domain.ConfigurationProperty;
@@ -39,6 +40,32 @@ public class ConfigurationPropertyDAOTest {
         configurationPropertyDAO.saveOrUpdate(configProperty);
         assertTrue(configProperty.getId() != null);
 
+    }
+    
+    @Test
+    public void testFindByKey() throws Exception {
+
+        String testKey = "testFindByKey";
+        String testValue = "testFindByKeyValue";
+        ConfigurationProperty configProperty = new ConfigurationProperty();
+        configProperty.setPropertyKey(testKey);
+        configProperty.setPropertyValue(testValue);
+        configProperty.setCreatedAt(new Date());
+        configurationPropertyDAO.saveOrUpdate(configProperty);
+        assertTrue(configProperty.getId() != null);
+        
+        ConfigurationProperty actual = configurationPropertyDAO.findByPropertyKey(testKey);
+        TestCase.assertNotNull("did not find property by key", actual);
+        
+    }
+    
+    @Test
+    public void testFindByKeyWhenNotExists() throws Exception {
+
+        String testKey = "testFindByKeyWhenNotExists";
+        ConfigurationProperty actual = configurationPropertyDAO.findByPropertyKey(testKey);
+        TestCase.assertNull("expected null result", actual);
+        
     }
 
     @Test

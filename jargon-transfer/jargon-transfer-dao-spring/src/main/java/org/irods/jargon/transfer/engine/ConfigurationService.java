@@ -55,7 +55,7 @@ public interface ConfigurationService {
     void deleteConfigurationProperty(ConfigurationProperty configurationProperty) throws TransferEngineException;
 
     /**
-     * Given a set of properties, clear the config database and set to the provided property set
+     * Given a set of properties, add or update the database properties.  This method will retain any other existing properties in the database unaltered.
      * 
      * @param propertiesToImport
      *            {@link Properties} that contains the configuration information in key/value format. This will replace
@@ -71,5 +71,14 @@ public interface ConfigurationService {
      * @throws TransferEngineException
      */
     Properties exportProperties() throws TransferEngineException;
+
+    /**
+     * Given a key, find the configuration information for that key, or <code>null</code> if no such configuration property exists
+     * @param configurationKey <code>String</code> with the key for the given configuration
+     * @return {@link ConfigurationProperty} for the key, or <code>null</code> if not exists
+     * @throws TransferEngineException
+     */
+	ConfigurationProperty findConfigurationServiceByKey(String configurationKey)
+			throws TransferEngineException;
 
 }

@@ -57,6 +57,15 @@ public final class TransferManagerImpl implements TransferManager {
 	 */
 	private boolean logSuccessfulTransfers = true;
 
+	
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.transfer.engine.TransferManager#getTransferServiceFactory()
+	 */
+	@Override
+	public TransferServiceFactoryImpl getTransferServiceFactory() {
+		return transferServiceFactory;
+	}
+	
 	public TransferManagerImpl(final IRODSFileSystem irodsFileSystem)
 			throws JargonException {
 

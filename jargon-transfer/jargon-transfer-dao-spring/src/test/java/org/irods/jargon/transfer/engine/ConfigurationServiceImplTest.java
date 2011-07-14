@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Properties;
 
 import junit.framework.Assert;
+import junit.framework.TestCase;
 
 import org.irods.jargon.transfer.dao.domain.ConfigurationProperty;
 import org.junit.After;
@@ -102,6 +103,22 @@ public class ConfigurationServiceImplTest {
 
         // no error means success
         Assert.assertTrue(true);
+
+    }
+    
+    @Test
+    public void testFindConfigurationPropertyByKey() throws Exception {
+        String testKey = "testFindConfigurationPropertyByKeyProperty";
+        String testValue = "testFindConfigurationPropertyByKeyVal";
+     
+        ConfigurationProperty configProperty = new ConfigurationProperty();
+        configProperty.setPropertyKey(testKey);
+        configProperty.setPropertyValue(testValue);
+        configProperty.setCreatedAt(new Date());
+        configurationService.addConfigurationProperty(configProperty);
+       
+        ConfigurationProperty actual = configurationService.findConfigurationServiceByKey(testKey);
+        TestCase.assertNotNull("did not find key for props just added", actual);
 
     }
 
