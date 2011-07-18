@@ -12,7 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 /**
- * Represents the specification of a synchronization relationship between this transfer engine and
+ * Represents the specification of a synchronization relationship between a local file system and an iRODS file system
  * 
  * @author Mike Con way - DICE (www.irods.org)
  * 

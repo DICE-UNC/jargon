@@ -27,7 +27,7 @@ public class LocalIRODSTransferDAOTest {
     private LocalIRODSTransferDAO localIRODSTransferDAO;
 
     @Test
-    public void testSave() {
+    public void testSave() throws Exception {
 
         LocalIRODSTransfer enqueuedTransfer = new LocalIRODSTransfer();
         enqueuedTransfer.setCreatedAt(new Date());
@@ -45,17 +45,13 @@ public class LocalIRODSTransferDAOTest {
         enqueuedTransfer.setTransferStatus(TransferStatus.ERROR);
 
         assertTrue(enqueuedTransfer.getId() == null);
-        try {
             localIRODSTransferDAO.save(enqueuedTransfer);
-        } catch (TransferDAOException e) {
-            e.printStackTrace();
-        }
         assertTrue(enqueuedTransfer.getId() != null);
 
     }
 
     @Test
-    public void testPurgeQueue() {
+    public void testPurgeQueue() throws Exception {
         LocalIRODSTransfer enqueuedTransfer = new LocalIRODSTransfer();
         enqueuedTransfer.setCreatedAt(new Date());
         enqueuedTransfer.setIrodsAbsolutePath("/tmp");
@@ -72,19 +68,15 @@ public class LocalIRODSTransferDAOTest {
         enqueuedTransfer.setTransferStatus(TransferStatus.OK);
 
         assertTrue(enqueuedTransfer.getId() == null);
-        try {
+       
             localIRODSTransferDAO.save(enqueuedTransfer);
-        } catch (TransferDAOException e) {
-            e.printStackTrace();
-        }
+       
         assertTrue(enqueuedTransfer.getId() != null);
 
-        try {
+       
             localIRODSTransferDAO.purgeQueue();
             assertTrue(localIRODSTransferDAO.findByTransferState(TransferState.COMPLETE).size() == 0);
-        } catch (TransferDAOException e) {
-            e.printStackTrace();
-        }
+       
     }
 
     /**

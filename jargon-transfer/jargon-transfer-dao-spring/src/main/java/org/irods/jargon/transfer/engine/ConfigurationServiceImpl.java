@@ -77,7 +77,7 @@ public class ConfigurationServiceImpl implements ConfigurationService {
 			throw new IllegalArgumentException(
 					"configurationKey is null or empty");
 		}
-		log.info("findConfigurationServiceByKey() key =", configurationKey);
+		log.info("findConfigurationServiceByKey() key = {}", configurationKey);
 		try {
 			return configurationPropertyDAO.findByPropertyKey(configurationKey);
 		} catch (TransferDAOException e) {

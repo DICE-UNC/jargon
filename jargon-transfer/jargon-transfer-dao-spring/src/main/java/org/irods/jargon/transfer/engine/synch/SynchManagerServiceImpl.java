@@ -40,6 +40,13 @@ public class SynchManagerServiceImpl implements SynchManagerService {
             throw new IllegalArgumentException("null synchConfiguration");
         }
         log.info("createNewSynchConfiguration with config: {}", synchConfiguration);
+        
+        // is there already a sync config for this local/iRODS folder?
+        
+        
+        
+        
+        
         try {
             synchronizationDAO.save(synchConfiguration);
         } catch (TransferDAOException e) {
