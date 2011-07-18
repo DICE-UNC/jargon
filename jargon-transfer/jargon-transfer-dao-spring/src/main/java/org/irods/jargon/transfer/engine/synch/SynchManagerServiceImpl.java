@@ -1,5 +1,7 @@
 package org.irods.jargon.transfer.engine.synch;
 
+import java.util.List;
+
 import org.irods.jargon.transfer.dao.SynchronizationDAO;
 import org.irods.jargon.transfer.dao.TransferDAOException;
 import org.irods.jargon.transfer.dao.domain.Synchronization;
@@ -35,18 +37,19 @@ public class SynchManagerServiceImpl implements SynchManagerService {
      */
     @Override
     @Transactional
-    public void createNewSynchConfiguration(final Synchronization synchConfiguration) throws SynchException {
+    public void createNewSynchConfiguration(final Synchronization synchConfiguration) throws ConflictingSynchException, SynchException {
         if (synchConfiguration == null) {
             throw new IllegalArgumentException("null synchConfiguration");
         }
         log.info("createNewSynchConfiguration with config: {}", synchConfiguration);
         
-        // is there already a sync config for this local/iRODS folder?
+       /*
+        * review this synch configuration against existing ones, there should not be a lot, so just list them and analyze
+        */
         
+        evaluateSynchAgainstExistingForConflicts(synchConfiguration);
         
-        
-        
-        
+        // review pases, go ahead and add
         try {
             synchronizationDAO.save(synchConfiguration);
         } catch (TransferDAOException e) {
@@ -73,5 +76,50 @@ public class SynchManagerServiceImpl implements SynchManagerService {
 
         log.info("synch created");
     }
+
+	/**
+	 * @param synchConfiguration
+	 * @throws SynchException
+	 */
+	private void evaluateSynchAgainstExistingForConflicts(
+			final Synchronization synchConfiguration) throws ConflictingSynchException, SynchException {
+		List<Synchronization> synchronizations;
+        try {
+			synchronizations = synchronizationDAO.findAll();
+		} catch (TransferDAOException e) {
+			log.error("error listing existing synchronizations", e);
+			throw new SynchException("unable to find existing synchronizations", e);
+		}
+		
+		log.debug("existing synchs:{}", synchronizations);
+		for (Synchronization existingSynchronization : synchronizations) {
+			log.info("analyizing existing synchronization:{}", existingSynchronization);
+			if (synchConfiguration.getName().equalsIgnoreCase(existingSynchronization.getName())) {
+				log.error("a synch already exists with the name:{}", synchConfiguration.getName());
+				throw new ConflictingSynchException("a synchronization already exists with the same name");
+			}
+			
+			if (synchConfiguration.getIrodsHostName().equals(existingSynchronization.getIrodsHostName()) && 
+					synchConfiguration.getIrodsZone().equals(existingSynchronization.getIrodsZone())) {
+				log.debug("host/zone match");
+			} else {
+				log.debug("this config is not for the same host/zone, so through evaluating");
+				continue;
+			}
+			
+			log.debug("have an existing config for same host/zone, evaluate for overlap/conflict");
+			if (synchConfiguration.getIrodsSynchDirectory().equals(existingSynchronization.getIrodsSynchDirectory())) {
+				log.error("an existing synchronization is already using the desired iRODS target collection:{}:", synchConfiguration);
+				throw new ConflictingSynchException("syncronization has duplicate iRODS target collection");
+			}
+			
+			if (synchConfiguration.getLocalSynchDirectory().equals(existingSynchronization.getLocalSynchDirectory())) {
+				log.error("an existing synchronization is already using the desired local collection:{}:", synchConfiguration);
+				throw new ConflictingSynchException("syncronization has duplicate local collection");
+			}
+			
+			
+		}
+	}
 
 }
