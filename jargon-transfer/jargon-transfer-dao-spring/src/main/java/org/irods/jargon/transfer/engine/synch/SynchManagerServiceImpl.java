@@ -29,6 +29,9 @@ public class SynchManagerServiceImpl implements SynchManagerService {
         return synchronizationDAO;
     }
     
+    /* (non-Javadoc)
+     * @see org.irods.jargon.transfer.engine.synch.SynchManagerService#listAllSynchronizations()
+     */
     @Override
     @Transactional
     public List<Synchronization> listAllSynchronizations() throws SynchException {
@@ -37,6 +40,21 @@ public class SynchManagerServiceImpl implements SynchManagerService {
 		} catch (TransferDAOException e) {
 			log.error("dao exception listing synchs", e);
 			throw new SynchException("exception listing all synchronizations", e);
+		}
+    }
+    
+    /* (non-Javadoc)
+     * @see org.irods.jargon.transfer.engine.synch.SynchManagerService#findById(java.lang.Long)
+     */
+    @Override
+    @Transactional
+    public Synchronization findById(Long id) throws SynchException {
+    	log.info("findById()");
+    	try {
+			return synchronizationDAO.findById(id);
+		} catch (TransferDAOException e) {
+			log.error("dao exception finding synch", e);
+			throw new SynchException("exception finding synchronizations", e);
 		}
     }
 

@@ -28,4 +28,12 @@ public interface SynchManagerService {
      */
 	List<Synchronization> listAllSynchronizations() throws SynchException;
 
+	/**
+	 * Find the <code>Synchronization</code> with the given id, or <code>null</code> if no data found
+	 * @param id <code>Long</code> with the unique id for the synchronization
+	 * @return {@link Synchronization} or </code>null</code> if no data
+	 * @throws SynchException
+	 */
+	Synchronization findById(Long id) throws SynchException;
+
 }

@@ -3,7 +3,7 @@ package org.irods.jargon.transfer.engine.synch;
 import java.util.Date;
 import java.util.List;
 
-import junit.framework.TestCase;
+import junit.framework.Assert;
 
 import org.irods.jargon.transfer.dao.domain.Synchronization;
 import org.irods.jargon.transfer.dao.domain.SynchronizationType;
@@ -55,8 +55,8 @@ public class SynchManagerServiceImplTest {
 		synchConfiguration.setName("testCreateNewSynchConfiguration");
 		synchManagerService.createNewSynchConfiguration(synchConfiguration);
 	}
-	
-	@Test(expected=ConflictingSynchException.class)
+
+	@Test(expected = ConflictingSynchException.class)
 	public void testCreateNewSynchConfigurationDuplicateName() throws Exception {
 		Synchronization synchConfiguration = new Synchronization();
 		synchConfiguration.setCreatedAt(new Date());
@@ -89,9 +89,10 @@ public class SynchManagerServiceImplTest {
 		synchConfiguration.setName("testCreateNewSynchConfiguration");
 		synchManagerService.createNewSynchConfiguration(synchConfiguration);
 	}
-	
-	@Test(expected=ConflictingSynchException.class)
-	public void testCreateNewSynchConfigurationDuplicateLocal() throws Exception {
+
+	@Test(expected = ConflictingSynchException.class)
+	public void testCreateNewSynchConfigurationDuplicateLocal()
+			throws Exception {
 		Synchronization synchConfiguration = new Synchronization();
 		synchConfiguration.setCreatedAt(new Date());
 		synchConfiguration.setDefaultResourceName("test");
@@ -105,7 +106,8 @@ public class SynchManagerServiceImplTest {
 		synchConfiguration.setLocalSynchDirectory("/localdir");
 		synchConfiguration
 				.setSynchronizationMode(SynchronizationType.ONE_WAY_LOCAL_TO_IRODS);
-		synchConfiguration.setName("testCreateNewSynchConfigurationDuplicateLocal");
+		synchConfiguration
+				.setName("testCreateNewSynchConfigurationDuplicateLocal");
 		synchManagerService.createNewSynchConfiguration(synchConfiguration);
 		synchConfiguration = new Synchronization();
 		synchConfiguration.setCreatedAt(new Date());
@@ -120,12 +122,14 @@ public class SynchManagerServiceImplTest {
 		synchConfiguration.setLocalSynchDirectory("/localdir");
 		synchConfiguration
 				.setSynchronizationMode(SynchronizationType.ONE_WAY_LOCAL_TO_IRODS);
-		synchConfiguration.setName("testCreateNewSynchConfigurationDuplicateLocal2");
+		synchConfiguration
+				.setName("testCreateNewSynchConfigurationDuplicateLocal2");
 		synchManagerService.createNewSynchConfiguration(synchConfiguration);
 	}
-	
-	@Test(expected=ConflictingSynchException.class)
-	public void testCreateNewSynchConfigurationDuplicateIrods() throws Exception {
+
+	@Test(expected = ConflictingSynchException.class)
+	public void testCreateNewSynchConfigurationDuplicateIrods()
+			throws Exception {
 		Synchronization synchConfiguration = new Synchronization();
 		synchConfiguration.setCreatedAt(new Date());
 		synchConfiguration.setDefaultResourceName("test");
@@ -139,7 +143,8 @@ public class SynchManagerServiceImplTest {
 		synchConfiguration.setLocalSynchDirectory("/localdir");
 		synchConfiguration
 				.setSynchronizationMode(SynchronizationType.ONE_WAY_LOCAL_TO_IRODS);
-		synchConfiguration.setName("testCreateNewSynchConfigurationDuplicateIrods");
+		synchConfiguration
+				.setName("testCreateNewSynchConfigurationDuplicateIrods");
 		synchManagerService.createNewSynchConfiguration(synchConfiguration);
 		synchConfiguration = new Synchronization();
 		synchConfiguration.setCreatedAt(new Date());
@@ -154,12 +159,14 @@ public class SynchManagerServiceImplTest {
 		synchConfiguration.setLocalSynchDirectory("/localdir2");
 		synchConfiguration
 				.setSynchronizationMode(SynchronizationType.ONE_WAY_LOCAL_TO_IRODS);
-		synchConfiguration.setName("testCreateNewSynchConfigurationDuplicateIrods2");
+		synchConfiguration
+				.setName("testCreateNewSynchConfigurationDuplicateIrods2");
 		synchManagerService.createNewSynchConfiguration(synchConfiguration);
 	}
-	
+
 	@Test
-	public void testCreateNewSynchConfigurationDuplicateIrodsDiffZone() throws Exception {
+	public void testCreateNewSynchConfigurationDuplicateIrodsDiffZone()
+			throws Exception {
 		Synchronization synchConfiguration = new Synchronization();
 		synchConfiguration.setCreatedAt(new Date());
 		synchConfiguration.setDefaultResourceName("test");
@@ -173,7 +180,8 @@ public class SynchManagerServiceImplTest {
 		synchConfiguration.setLocalSynchDirectory("/localdir");
 		synchConfiguration
 				.setSynchronizationMode(SynchronizationType.ONE_WAY_LOCAL_TO_IRODS);
-		synchConfiguration.setName("testCreateNewSynchConfigurationDuplicateIrodsDiffZone");
+		synchConfiguration
+				.setName("testCreateNewSynchConfigurationDuplicateIrodsDiffZone");
 		synchManagerService.createNewSynchConfiguration(synchConfiguration);
 		synchConfiguration = new Synchronization();
 		synchConfiguration.setCreatedAt(new Date());
@@ -188,11 +196,12 @@ public class SynchManagerServiceImplTest {
 		synchConfiguration.setLocalSynchDirectory("/localdir2");
 		synchConfiguration
 				.setSynchronizationMode(SynchronizationType.ONE_WAY_LOCAL_TO_IRODS);
-		synchConfiguration.setName("testCreateNewSynchConfigurationDuplicateIrodsDiffZone2");
+		synchConfiguration
+				.setName("testCreateNewSynchConfigurationDuplicateIrodsDiffZone2");
 		synchManagerService.createNewSynchConfiguration(synchConfiguration);
-		TestCase.assertTrue(true);
+		Assert.assertTrue(true);
 	}
-	
+
 	@Test
 	public void testListAllSynchConfiguration() throws Exception {
 		Synchronization synchConfiguration = new Synchronization();
@@ -210,13 +219,36 @@ public class SynchManagerServiceImplTest {
 				.setSynchronizationMode(SynchronizationType.ONE_WAY_LOCAL_TO_IRODS);
 		synchConfiguration.setName("testCreateNewSynchConfiguration");
 		synchManagerService.createNewSynchConfiguration(synchConfiguration);
-		List<Synchronization> allSynchs = synchManagerService.listAllSynchronizations();
-		TestCase.assertTrue("did not list synchs", allSynchs.size() > 0);
-		
+		List<Synchronization> allSynchs = synchManagerService
+				.listAllSynchronizations();
+		Assert.assertTrue("did not list synchs", allSynchs.size() > 0);
+
 	}
 
+	@Test
+	public void testFindById() throws Exception {
+		Synchronization synchConfiguration = new Synchronization();
+		synchConfiguration.setCreatedAt(new Date());
+		synchConfiguration.setDefaultResourceName("test");
+		synchConfiguration.setIrodsHostName("host");
+		synchConfiguration.setIrodsPassword("xxx");
+		synchConfiguration.setIrodsPort(1247);
+		synchConfiguration.setIrodsSynchDirectory("/synchdir");
+		synchConfiguration.setIrodsUserName("userName");
+		synchConfiguration.setIrodsZone("zone");
+		synchConfiguration.setLastSynchronizationStatus(TransferStatus.OK);
+		synchConfiguration.setLocalSynchDirectory("/localdir");
+		synchConfiguration
+				.setSynchronizationMode(SynchronizationType.ONE_WAY_LOCAL_TO_IRODS);
+		synchConfiguration.setName("testFindById");
+		synchManagerService.createNewSynchConfiguration(synchConfiguration);
 
+		// now find
+		Synchronization actual = synchManagerService
+				.findById(synchConfiguration.getId());
+		Assert.assertNotNull("did not find synch I just added", actual);
 
+	}
 
 	@Autowired
 	public void setSynchManagerService(
