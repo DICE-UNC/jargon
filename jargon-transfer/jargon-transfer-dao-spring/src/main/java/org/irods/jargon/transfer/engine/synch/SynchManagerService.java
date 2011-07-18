@@ -1,5 +1,7 @@
 package org.irods.jargon.transfer.engine.synch;
 
+import java.util.List;
+
 import org.irods.jargon.transfer.dao.domain.Synchronization;
 
 /**
@@ -11,11 +13,19 @@ import org.irods.jargon.transfer.dao.domain.Synchronization;
 public interface SynchManagerService {
 
     /**
-     * Create a new synch configuration.
+     * Create a new synch configuration.  During creation, conflicts are evaluated and any necessary iRODS metadata checks are done
      * 
-     * @param synchConfiguration
+     * @param synchConfiguration {@link Synchronization} to be added
+     * @throws SynchException if a general error occurrs
+     * @throws ConflictingSynchException if the given synchronization conflicts with an existing synchronization
+     */
+    void createNewSynchConfiguration(Synchronization synchConfiguration) throws ConflictingSynchException, SynchException;
+
+    /**
+     * List all synch configurations
+     * @return <code>List</code> of {@link Synchronization} in the transfer engine config
      * @throws SynchException
      */
-    void createNewSynchConfiguration(Synchronization synchConfiguration) throws SynchException;
+	List<Synchronization> listAllSynchronizations() throws SynchException;
 
 }

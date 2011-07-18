@@ -1,6 +1,7 @@
 package org.irods.jargon.transfer.engine.synch;
 
 import java.util.Date;
+import java.util.List;
 
 import junit.framework.TestCase;
 
@@ -190,6 +191,28 @@ public class SynchManagerServiceImplTest {
 		synchConfiguration.setName("testCreateNewSynchConfigurationDuplicateIrodsDiffZone2");
 		synchManagerService.createNewSynchConfiguration(synchConfiguration);
 		TestCase.assertTrue(true);
+	}
+	
+	@Test
+	public void testListAllSynchConfiguration() throws Exception {
+		Synchronization synchConfiguration = new Synchronization();
+		synchConfiguration.setCreatedAt(new Date());
+		synchConfiguration.setDefaultResourceName("test");
+		synchConfiguration.setIrodsHostName("host");
+		synchConfiguration.setIrodsPassword("xxx");
+		synchConfiguration.setIrodsPort(1247);
+		synchConfiguration.setIrodsSynchDirectory("/synchdir");
+		synchConfiguration.setIrodsUserName("userName");
+		synchConfiguration.setIrodsZone("zone");
+		synchConfiguration.setLastSynchronizationStatus(TransferStatus.OK);
+		synchConfiguration.setLocalSynchDirectory("/localdir");
+		synchConfiguration
+				.setSynchronizationMode(SynchronizationType.ONE_WAY_LOCAL_TO_IRODS);
+		synchConfiguration.setName("testCreateNewSynchConfiguration");
+		synchManagerService.createNewSynchConfiguration(synchConfiguration);
+		List<Synchronization> allSynchs = synchManagerService.listAllSynchronizations();
+		TestCase.assertTrue("did not list synchs", allSynchs.size() > 0);
+		
 	}
 
 

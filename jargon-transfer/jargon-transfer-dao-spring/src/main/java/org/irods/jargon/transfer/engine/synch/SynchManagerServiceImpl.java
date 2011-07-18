@@ -28,6 +28,17 @@ public class SynchManagerServiceImpl implements SynchManagerService {
     public SynchronizationDAO getSynchronizationDAO() {
         return synchronizationDAO;
     }
+    
+    @Override
+    @Transactional
+    public List<Synchronization> listAllSynchronizations() throws SynchException {
+    	try {
+			return synchronizationDAO.findAll();
+		} catch (TransferDAOException e) {
+			log.error("dao exception listing synchs", e);
+			throw new SynchException("exception listing all synchronizations", e);
+		}
+    }
 
     /*
      * (non-Javadoc)
