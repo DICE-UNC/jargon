@@ -27,7 +27,7 @@
 		<url>https://code.renci.org/gf/project/jargon/tracker/</url>
 	</issueManagement>
 	<scm>
-		<connection>scm:git:ssh://developername@code.renci.org/gitroot/jargon</connection>
+		<connection>scm:git:ssh://${user.name}@code.renci.org/gitroot/jargon</connection>
 		<developerConnection>scm:git:ssh://${user.name}@code.renci.org/gitroot/jargon</developerConnection>
 	</scm>
 	<organization>
@@ -153,6 +153,16 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-changelog-plugin</artifactId>
 			</plugin>
+			
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-release-plugin</artifactId>
+					<version>2.2</version>
+					<configuration>
+					<!-- <tagBase>https://svn.apache.org/repos/asf/maven/components/releases</tagBase>  -->	
+					</configuration>
+				</plugin>
+			
 		</plugins>
 	</reporting>
 	<dependencyManagement>
