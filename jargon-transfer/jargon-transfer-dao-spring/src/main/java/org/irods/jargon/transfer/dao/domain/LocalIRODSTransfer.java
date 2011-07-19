@@ -53,15 +53,13 @@ public class LocalIRODSTransfer implements Serializable {
     private TransferType transferType;
 
     /**
-     * Component transfer for this synchronization. in transfers, a diff is created, and appropriate transfers are
-     * scheduled to resolve differences. This links a transfer engine activity to the configured transfer that initiated
-     * it.
+     * Overall synchronization configuration that is being processed by this transfer
      */
-    @ManyToOne(targetEntity = SynchProcess.class, fetch = FetchType.LAZY)
-    @JoinColumn(name = "synch_process_id", nullable = true)
-    private SynchProcess synchProcess;
+    @ManyToOne(targetEntity = Synchronization.class, fetch = FetchType.LAZY)
+    @JoinColumn(name = "synchronization_id", nullable = true)
+    private Synchronization synchronization;
 
-    @Column(name = "host")
+	@Column(name = "host")
     private String transferHost = "";
 
     @Column(name = "port")
@@ -296,6 +294,15 @@ public class LocalIRODSTransfer implements Serializable {
     public void setGlobalExceptionStackTrace(final String globalExceptionStackTrace) {
         this.globalExceptionStackTrace = globalExceptionStackTrace;
     }
+    
+    public Synchronization getSynchronization() {
+		return synchronization;
+	}
+
+	public void setSynchronization(Synchronization synchronization) {
+		this.synchronization = synchronization;
+	}
+
 
     @Override
     public String toString() {
@@ -340,19 +347,6 @@ public class LocalIRODSTransfer implements Serializable {
         return sb.toString();
     }
 
-    /**
-     * @param synchProcess
-     *            the synchProcess to set
-     */
-    public void setSynchProcess(SynchProcess synchProcess) {
-        this.synchProcess = synchProcess;
-    }
-
-    /**
-     * @return the synchProcess
-     */
-    public SynchProcess getSynchProcess() {
-        return synchProcess;
-    }
+  
 
 }

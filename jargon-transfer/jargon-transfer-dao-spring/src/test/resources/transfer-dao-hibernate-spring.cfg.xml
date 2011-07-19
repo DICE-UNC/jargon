@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
  <!DOCTYPE hibernate-configuration PUBLIC "-//Hibernate/Hibernate Configuration DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
-<!-- "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd"> -->
-<!-- "file:///Users/mikeconway/JavaLib/hibernate-configuration-3.0.dtd"> -->
 <hibernate-configuration>
   <session-factory>
-    <mapping class="org.irods.jargon.transfer.dao.domain.LocalIRODSTransfer" />
-    <mapping class="org.irods.jargon.transfer.dao.domain.LocalIRODSTransferItem" />
-    <mapping class="org.irods.jargon.transfer.dao.domain.Synchronization" />
-    <mapping class="org.irods.jargon.transfer.dao.domain.SynchProcess" />
-    <mapping class="org.irods.jargon.transfer.dao.domain.ConfigurationProperty" />
+    <mapping class="org.irods.jargon.transfer.dao.domain.LocalIRODSTransfer"/>
+    <mapping class="org.irods.jargon.transfer.dao.domain.LocalIRODSTransferItem"/>
+    <mapping class="org.irods.jargon.transfer.dao.domain.Synchronization"/>
+    <!--  <mapping class="org.irods.jargon.transfer.dao.domain.SynchProcess"/>-->
+    <mapping class="org.irods.jargon.transfer.dao.domain.ConfigurationProperty"/>
   </session-factory>
 </hibernate-configuration>

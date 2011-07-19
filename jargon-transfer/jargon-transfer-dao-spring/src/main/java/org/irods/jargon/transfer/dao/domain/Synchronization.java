@@ -1,14 +1,20 @@
 package org.irods.jargon.transfer.dao.domain;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
 /**
@@ -80,6 +86,10 @@ public class Synchronization {
      */
     @Column(name = "default_resource_name")
     private String defaultResourceName;
+    
+    @OneToMany(mappedBy = "synchronization", targetEntity = LocalIRODSTransfer.class, cascade = { CascadeType.ALL }, fetch = FetchType.EAGER)
+	@OrderBy("createdAt")
+	private Set<LocalIRODSTransfer> localIRODSTransfers = new HashSet<LocalIRODSTransfer>();
 
     /**
      * Time stamp of the last synchronization attempt
@@ -373,5 +383,19 @@ public class Synchronization {
     public void setFrequencyType(FrequencyType frequencyType) {
         this.frequencyType = frequencyType;
     }
+
+	/**
+	 * @param localIRODSTransfers the localIRODSTransfers to set
+	 */
+	public void setLocalIRODSTransfers(Set<LocalIRODSTransfer> localIRODSTransfers) {
+		this.localIRODSTransfers = localIRODSTransfers;
+	}
+
+	/**
+	 * @return the localIRODSTransfers
+	 */
+	public Set<LocalIRODSTransfer> getLocalIRODSTransfers() {
+		return localIRODSTransfers;
+	}
 
 }
