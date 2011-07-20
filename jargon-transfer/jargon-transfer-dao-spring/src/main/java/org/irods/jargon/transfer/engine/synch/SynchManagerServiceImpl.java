@@ -38,9 +38,23 @@ public class SynchManagerServiceImpl implements SynchManagerService {
     	try {
 			return synchronizationDAO.findAll();
 		} catch (TransferDAOException e) {
-			log.error("dao exception listing synchs", e);
-			throw new SynchException("exception listing all synchronizations", e);
-		}
+			log.error("dao exception finding synch", e);
+			throw new SynchException("exception finding synchronizations", e);
+		} 
+    }
+    
+    /* (non-Javadoc)
+     * @see org.irods.jargon.transfer.engine.synch.SynchManagerService#findByName(java.lang.String)
+     */
+    @Override
+    @Transactional
+    public Synchronization findByName(final String name) throws SynchException {
+    	try {
+    		return synchronizationDAO.findByName(name);
+    	} catch (TransferDAOException e) {
+			log.error("dao exception finding synch", e);
+			throw new SynchException("exception finding synchronizations", e);
+		} 
     }
     
     /* (non-Javadoc)
@@ -53,8 +67,10 @@ public class SynchManagerServiceImpl implements SynchManagerService {
     	try {
 			return synchronizationDAO.findById(id);
 		} catch (TransferDAOException e) {
-			log.error("dao exception finding synch", e);
-			throw new SynchException("exception finding synchronizations", e);
+			
+			
+			log.error("dao exception finding synch by name", e);
+			throw new SynchException("exception finding synch by name", e);
 		}
     }
 

@@ -11,6 +11,7 @@ import org.irods.jargon.core.transfer.TransferStatus;
 import org.irods.jargon.transfer.TransferServiceFactoryImpl;
 import org.irods.jargon.transfer.dao.domain.LocalIRODSTransfer;
 import org.irods.jargon.transfer.dao.domain.LocalIRODSTransferItem;
+import org.irods.jargon.transfer.dao.domain.Synchronization;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -539,6 +540,14 @@ public final class TransferManagerImpl implements TransferManager {
 			processNextInQueueIfIdle();
 		}
 
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.transfer.engine.TransferManager#enqueueASynch(org.irods.jargon.transfer.dao.domain.Synchronization, org.irods.jargon.core.connection.IRODSAccount)
+	 */
+	@Override
+	public synchronized void enqueueASynch(final Synchronization synchronization, final IRODSAccount irodsAccount) throws JargonException {
+		
 	}
 
 	/*

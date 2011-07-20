@@ -36,4 +36,12 @@ public interface SynchManagerService {
 	 */
 	Synchronization findById(Long id) throws SynchException;
 
+	/**
+	 * Find the <code>Synchronization</code> with the given name, or <code>null</code> if no such synchronization exists.
+	 * @param name <code>String</code> with the name of the desired <code>Synchronization</code>
+	 * @return {@link Synchronization} or <code>null</code>
+	 * @throws SynchException
+	 */
+	Synchronization findByName(String name) throws SynchException;
+
 }

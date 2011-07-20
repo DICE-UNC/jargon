@@ -5,3 +5,4 @@ Servers
 target
 bin
 *.war
+*.log

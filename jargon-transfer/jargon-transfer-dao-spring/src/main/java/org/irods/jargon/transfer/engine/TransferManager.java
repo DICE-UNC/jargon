@@ -8,6 +8,7 @@ import org.irods.jargon.core.pub.IRODSFileSystem;
 import org.irods.jargon.transfer.TransferServiceFactoryImpl;
 import org.irods.jargon.transfer.dao.domain.LocalIRODSTransfer;
 import org.irods.jargon.transfer.dao.domain.LocalIRODSTransferItem;
+import org.irods.jargon.transfer.dao.domain.Synchronization;
 
 /**
  * Interface for a simple queue manager that can manage transfers to iRODS
@@ -258,5 +259,16 @@ public interface TransferManager {
      * @return {@link TransferServiceFactoryImpl}
      */
 	TransferServiceFactoryImpl getTransferServiceFactory();
+
+	/**
+	 * Enqueue a synchronization process.  This process is scheduled and run using the normal transfer engine.
+	 * @param synchronization {@link Synchronization} that describes the configuration information
+	 * @param irodsAccount {@link IRODSAccount} pointing to the correct iRODS server
+	 * @throws JargonException
+	 */
+	void enqueueASynch(Synchronization synchronization,
+			IRODSAccount irodsAccount) throws JargonException;
+
+	
 
 }
