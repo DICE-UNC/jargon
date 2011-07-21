@@ -89,6 +89,7 @@ public class Synchronization {
     
     @OneToMany(mappedBy = "synchronization", targetEntity = LocalIRODSTransfer.class, cascade = { CascadeType.ALL }, fetch = FetchType.EAGER)
 	@OrderBy("createdAt")
+	@org.hibernate.annotations.Cascade(org.hibernate.annotations.CascadeType.DELETE_ORPHAN)
 	private Set<LocalIRODSTransfer> localIRODSTransfers = new HashSet<LocalIRODSTransfer>();
 
     /**

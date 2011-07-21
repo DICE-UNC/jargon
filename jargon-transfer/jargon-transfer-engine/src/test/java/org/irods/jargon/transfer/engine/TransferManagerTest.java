@@ -1,18 +1,12 @@
 package org.irods.jargon.transfer.engine;
 
 import java.io.File;
-import java.io.FileReader;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 
 import junit.framework.Assert;
 
-import org.dbunit.IDatabaseTester;
-import org.dbunit.JdbcDatabaseTester;
-import org.dbunit.dataset.IDataSet;
-import org.dbunit.dataset.xml.XmlDataSet;
-import org.dbunit.operation.DatabaseOperation;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.pub.DataTransferOperations;
 import org.irods.jargon.core.pub.IRODSFileSystem;
@@ -40,8 +34,6 @@ public class TransferManagerTest {
 
 	private static org.irods.jargon.testutils.IRODSTestSetupUtilities irodsTestSetupUtilities = null;
 
-	private static IDatabaseTester databaseTester;
-
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		org.irods.jargon.testutils.TestingPropertiesHelper testingPropertiesLoader = new TestingPropertiesHelper();
@@ -49,20 +41,14 @@ public class TransferManagerTest {
 		scratchFileUtils = new org.irods.jargon.testutils.filemanip.ScratchFileUtils(
 				testingProperties);
 		irodsTestSetupUtilities = new org.irods.jargon.testutils.IRODSTestSetupUtilities();
-
 		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
 		irodsTestSetupUtilities
 				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
-		scratchFileUtils
-				.clearAndReinitializeScratchDirectory(IRODS_TEST_SUBDIR_PATH);
-		DatabasePreparationUtils.makeSureDatabaseIsInitialized();
-		// get user home dir
-
 		String databaseUrl = "jdbc:derby:" + System.getProperty("user.home")
 				+ "/.idrop/target/database/transfer";
-		databaseTester = new JdbcDatabaseTester(
-				"org.apache.derby.jdbc.EmbeddedDriver", databaseUrl,
-				"transfer", "transfer");
+		DatabasePreparationUtils.clearAllDatabaseForTesting(databaseUrl,
+				"transfer", "transfer"); // TODO: make a prop
+
 	}
 
 	@Test
@@ -79,10 +65,7 @@ public class TransferManagerTest {
 	 */
 	@Before
 	public void setUpEach() throws Exception {
-		IDataSet ds = new XmlDataSet(new FileReader("data/export-empty.xml"));
-		DatabaseOperation.CLEAN_INSERT.execute(databaseTester.getConnection(),
-				ds);
-		databaseTester.closeConnection(databaseTester.getConnection());
+
 	}
 
 	@Test
@@ -217,14 +200,24 @@ public class TransferManagerTest {
 		Assert.assertEquals("should have been no errors",
 				TransferManager.ErrorStatus.OK,
 				transferManager.getErrorStatus());
-		TransferQueueService transferQueueService = transferManager.getTransferQueueService();
+		TransferQueueService transferQueueService = transferManager
+				.getTransferQueueService();
 
-		List<LocalIRODSTransfer> transferQueue = transferQueueService
+		List<LocalIRODSTransfer> transfers = transferQueueService
 				.getCurrentQueue();
-		Assert.assertEquals(1, transferQueue.size());
-		LocalIRODSTransfer enqueuedTransfer = transferQueue.get(0);
-		Assert.assertEquals("this should still be enqueued",
-				enqueuedTransfer.getTransferState(), TransferState.ENQUEUED);
+
+		boolean txfrFound = false;
+		for (LocalIRODSTransfer transfer : transfers) {
+			if (transfer.getIrodsAbsolutePath().equals(
+					irodsCollectionRootAbsolutePath)) {
+				txfrFound = true;
+				Assert.assertEquals("this should still be enqueued",
+						transfer.getTransferState(), TransferState.ENQUEUED);
+
+			}
+		}
+
+		Assert.assertTrue("did not find transfer", txfrFound);
 
 	}
 
@@ -439,7 +432,7 @@ public class TransferManagerTest {
 		irodsFileSystem.close();
 
 	}
-	
+
 	@Test
 	public void enqueueACopy() throws Exception {
 		IRODSAccount irodsAccount = testingPropertiesHelper
@@ -459,22 +452,27 @@ public class TransferManagerTest {
 				.generateManyFilesAndCollectionsInParentCollectionByAbsolutePath(
 						localCollectionAbsolutePath, "testSubdir", 1, 2, 1,
 						"testFile", ".txt", 9, 8, 2, 21);
-		
+
 		String targetCollection = "enqueueACopyTarget";
 		String irodsTargetCollectionRootAbsolutePath = testingPropertiesHelper
-		.buildIRODSCollectionAbsolutePathFromTestProperties(
-				testingProperties, IRODS_TEST_SUBDIR_PATH + "/" + targetCollection);
-		
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + "/"
+								+ targetCollection);
+
 		// put the source data into place
-		
-		DataTransferOperations dto = irodsFileSystem.getIRODSAccessObjectFactory().getDataTransferOperations(irodsAccount);
-		dto.putOperation(localCollectionAbsolutePath, irodsCollectionRootAbsolutePath, "", null, null);
+
+		DataTransferOperations dto = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataTransferOperations(
+						irodsAccount);
+		dto.putOperation(localCollectionAbsolutePath,
+				irodsCollectionRootAbsolutePath, "", null, null);
 
 		TransferManager transferManager = new TransferManagerImpl(
 				irodsFileSystem);
 
-		transferManager.enqueueACopy(irodsCollectionRootAbsolutePath + "/" + rootCollection, "",
-				irodsTargetCollectionRootAbsolutePath, irodsAccount);
+		transferManager.enqueueACopy(irodsCollectionRootAbsolutePath + "/"
+				+ rootCollection, "", irodsTargetCollectionRootAbsolutePath,
+				irodsAccount);
 
 		// let put run
 
@@ -502,9 +500,7 @@ public class TransferManagerTest {
 		irodsFileSystem.close();
 
 	}
-	
-	
-	
+
 	@Test
 	public void enqueueAGet() throws Exception {
 
@@ -621,15 +617,15 @@ public class TransferManagerTest {
 
 		TransferManager transferManager = new TransferManagerImpl(
 				irodsFileSystem);
-		 transferManager.getTransferQueueService().updateLocalIRODSTransfer(
+		transferManager.getTransferQueueService().updateLocalIRODSTransfer(
 				enqueuedTransfer);
-		 // reinit, simulating restart, so that the init() method in transferManagerImpl will fire
-		 transferManager = new TransferManagerImpl(
-					irodsFileSystem);
+		// reinit, simulating restart, so that the init() method in
+		// transferManagerImpl will fire
+		transferManager = new TransferManagerImpl(irodsFileSystem);
 
 		// now get the queue
-		List<LocalIRODSTransfer> transferQueue = transferManager.getTransferQueueService()
-				.getCurrentQueue();
+		List<LocalIRODSTransfer> transferQueue = transferManager
+				.getTransferQueueService().getCurrentQueue();
 		Assert.assertEquals("did not find the error transaction", 1,
 				transferQueue.size());
 		LocalIRODSTransfer transfer = transferQueue.get(0);

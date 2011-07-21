@@ -6,6 +6,7 @@ import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.transfer.dao.domain.LocalIRODSTransfer;
 import org.irods.jargon.transfer.dao.domain.LocalIRODSTransferItem;
+import org.irods.jargon.transfer.dao.domain.Synchronization;
 
 public interface TransferQueueService {
 
@@ -224,5 +225,15 @@ public interface TransferQueueService {
      */
     LocalIRODSTransfer enqueueCopyTransfer(String irodsSourceAbsolutePath, String targetResource,
             String irodsTargetAbsolutePath, IRODSAccount irodsAccount) throws JargonException;
+
+    /**
+     * Enqueue a synchronization operation between a local and an iRODS folder
+     * @param synchronization {@link Synchronization} that specifies the folder synch relationship
+     * @param irodsAccount {@link IRODSAccount} that specifies the connection information
+     * @return
+     * @throws JargonException
+     */
+	LocalIRODSTransfer enqueueSynchTransfer(Synchronization synchronization,
+			IRODSAccount irodsAccount) throws JargonException;
 
 }

@@ -58,15 +58,18 @@ public final class TransferManagerImpl implements TransferManager {
 	 */
 	private boolean logSuccessfulTransfers = true;
 
-	
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.transfer.engine.TransferManager#getTransferServiceFactory()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.transfer.engine.TransferManager#getTransferServiceFactory
+	 * ()
 	 */
 	@Override
 	public TransferServiceFactoryImpl getTransferServiceFactory() {
 		return transferServiceFactory;
 	}
-	
+
 	public TransferManagerImpl(final IRODSFileSystem irodsFileSystem)
 			throws JargonException {
 
@@ -541,13 +544,46 @@ public final class TransferManagerImpl implements TransferManager {
 		}
 
 	}
-	
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.transfer.engine.TransferManager#enqueueASynch(org.irods.jargon.transfer.dao.domain.Synchronization, org.irods.jargon.core.connection.IRODSAccount)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.transfer.engine.TransferManager#enqueueASynch(org.irods
+	 * .jargon.transfer.dao.domain.Synchronization,
+	 * org.irods.jargon.core.connection.IRODSAccount)
 	 */
 	@Override
-	public synchronized void enqueueASynch(final Synchronization synchronization, final IRODSAccount irodsAccount) throws JargonException {
-		
+	public synchronized void enqueueASynch(
+			final Synchronization synchronization,
+			final IRODSAccount irodsAccount) throws JargonException {
+
+		log.info("enqueueASynch()");
+
+		if (synchronization == null) {
+			throw new IllegalArgumentException("null synchronization");
+		}
+
+		if (irodsAccount == null) {
+			throw new IllegalArgumentException("null irodsAccount");
+		}
+
+		log.info("synchronization:{}", synchronization);
+		log.info("irodsAccount:{}", irodsAccount);
+
+		if (synchronization.getId() <= 0) {
+			throw new JargonException(
+					"synchronization does not appear to be persisted");
+		}
+
+		log.info("enqueuing synch");
+		synchronized (this) {
+			transferQueueService.enqueueSynchTransfer(synchronization,
+					irodsAccount);
+			processNextInQueueIfIdle();
+
+		}
+
 	}
 
 	/*
@@ -669,6 +705,7 @@ public final class TransferManagerImpl implements TransferManager {
 		this.runningStatus = runningStatus;
 	}
 
+	@Override
 	public synchronized void resetStatus() throws JargonException {
 		if (this.getRunningStatus() == RunningStatus.IDLE
 				|| this.getRunningStatus() == RunningStatus.PAUSED) {
@@ -838,8 +875,11 @@ public final class TransferManagerImpl implements TransferManager {
 		return transferQueueService;
 	}
 
-	/**
-	 * @return the irodsFileSystem
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.transfer.engine.TransferManager#getIrodsFileSystem()
 	 */
 	@Override
 	public IRODSFileSystem getIrodsFileSystem() {

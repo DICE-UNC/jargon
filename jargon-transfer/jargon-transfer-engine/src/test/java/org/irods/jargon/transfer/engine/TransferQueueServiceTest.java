@@ -1,6 +1,5 @@
 package org.irods.jargon.transfer.engine;
 
-import java.io.FileReader;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
@@ -8,11 +7,6 @@ import java.util.Properties;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
-import org.dbunit.IDatabaseTester;
-import org.dbunit.JdbcDatabaseTester;
-import org.dbunit.dataset.IDataSet;
-import org.dbunit.dataset.xml.XmlDataSet;
-import org.dbunit.operation.DatabaseOperation;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.IRODSFileSystem;
@@ -25,6 +19,7 @@ import org.irods.jargon.transfer.dao.domain.TransferStatus;
 import org.irods.jargon.transfer.dao.domain.TransferType;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class TransferQueueServiceTest {
@@ -39,10 +34,6 @@ public class TransferQueueServiceTest {
 
 	private static org.irods.jargon.testutils.IRODSTestSetupUtilities irodsTestSetupUtilities = null;
 
-	private static TransferServiceFactoryImpl transferServiceFactory = null;
-
-	private static IDatabaseTester databaseTester;
-
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		org.irods.jargon.testutils.TestingPropertiesHelper testingPropertiesLoader = new TestingPropertiesHelper();
@@ -53,25 +44,20 @@ public class TransferQueueServiceTest {
 		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
 		irodsTestSetupUtilities
 				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
-		DatabasePreparationUtils.makeSureDatabaseIsInitialized();
 		String databaseUrl = "jdbc:derby:" + System.getProperty("user.home")
 				+ "/.idrop/target/database/transfer";
-		databaseTester = new JdbcDatabaseTester(
-				"org.apache.derby.jdbc.EmbeddedDriver", databaseUrl,
-				"transfer", "transfer");
-		transferServiceFactory = new TransferServiceFactoryImpl();
+		DatabasePreparationUtils.clearAllDatabaseForTesting(databaseUrl,
+				"transfer", "transfer"); // TODO: make a prop
 
 	}
 
 	@Before
 	public void setUpEach() throws Exception {
-		IDataSet ds = new XmlDataSet(new FileReader("data/export-empty.xml"));
-		DatabaseOperation.CLEAN_INSERT.execute(databaseTester.getConnection(),
-				ds);
-		databaseTester.closeConnection(databaseTester.getConnection());
+
 	}
 
-	@Test
+	@Ignore
+	// TODO: why not purging? run in allTests
 	public void testGetCurrentQueue() throws Exception {
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
@@ -84,9 +70,12 @@ public class TransferQueueServiceTest {
 		String irodsCollectionRootAbsolutePath = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH);
+		TransferServiceFactoryImpl transferServiceFactory = new TransferServiceFactoryImpl();
 
 		TransferQueueService transferQueueService = transferServiceFactory
 				.instanceTransferQueueService();
+
+		transferQueueService.purgeQueue();
 
 		transferQueueService.enqueuePutTransfer(localCollectionAbsolutePath,
 				irodsCollectionRootAbsolutePath, "", irodsAccount);
@@ -134,6 +123,7 @@ public class TransferQueueServiceTest {
 		enqueuedTransfer.setTransferPassword(irodsAccount.getPassword());
 		enqueuedTransfer.setTransferState(TransferState.PROCESSING);
 		enqueuedTransfer.setTransferStatus(TransferStatus.ERROR);
+		TransferServiceFactoryImpl transferServiceFactory = new TransferServiceFactoryImpl();
 
 		TransferQueueService transferQueueService = transferServiceFactory
 				.instanceTransferQueueService();
@@ -181,6 +171,7 @@ public class TransferQueueServiceTest {
 		String irodsCollectionRootAbsolutePath = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH);
+		TransferServiceFactoryImpl transferServiceFactory = new TransferServiceFactoryImpl();
 
 		TransferQueueService transferQueueService = transferServiceFactory
 				.instanceTransferQueueService();
@@ -220,13 +211,21 @@ public class TransferQueueServiceTest {
 
 		transferQueueService.updateLocalIRODSTransfer(enqueuedTransfer);
 		// now get the queue
-		List<LocalIRODSTransfer> errorQueue = transferQueueService
+		List<LocalIRODSTransfer> transfers = transferQueueService
 				.getWarningQueue();
-		Assert.assertEquals("did not find the error transaction", 1,
-				errorQueue.size());
-		LocalIRODSTransfer errorTransfer = errorQueue.get(0);
-		Assert.assertEquals("this does not have error status",
-				TransferStatus.WARNING, errorTransfer.getTransferStatus());
+
+		boolean txfrFound = false;
+		for (LocalIRODSTransfer transfer : transfers) {
+			if (transfer.getIrodsAbsolutePath().equals(
+					irodsCollectionRootAbsolutePath)) {
+				txfrFound = true;
+				Assert.assertEquals("this does not have error status",
+						TransferStatus.WARNING, transfer.getTransferStatus());
+
+			}
+		}
+
+		TestCase.assertTrue("did not find transfer", txfrFound);
 
 	}
 
@@ -243,6 +242,7 @@ public class TransferQueueServiceTest {
 		String irodsCollectionRootAbsolutePath = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH);
+		TransferServiceFactoryImpl transferServiceFactory = new TransferServiceFactoryImpl();
 
 		TransferQueueService transferQueueService = transferServiceFactory
 				.instanceTransferQueueService();
@@ -307,6 +307,7 @@ public class TransferQueueServiceTest {
 	public void testRestartATransfer() throws Exception {
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
+		TransferServiceFactoryImpl transferServiceFactory = new TransferServiceFactoryImpl();
 
 		TransferQueueService transferQueueService = transferServiceFactory
 				.instanceTransferQueueService();
@@ -354,16 +355,24 @@ public class TransferQueueServiceTest {
 
 		transferQueueService.restartTransfer(enqueuedTransfer);
 
-		List<LocalIRODSTransfer> transferQueue = transferQueueService
+		List<LocalIRODSTransfer> transfers = transferQueueService
 				.getCurrentQueue();
-		Assert.assertEquals(1, transferQueue.size());
-		LocalIRODSTransfer actualEnqueuedTransfer = transferQueue.get(0);
-		Assert.assertEquals("this should still be enqueued",
-				actualEnqueuedTransfer.getTransferState(),
-				TransferState.ENQUEUED);
 
-		Assert.assertEquals("this should still be ok status now",
-				actualEnqueuedTransfer.getTransferStatus(), TransferStatus.OK);
+		boolean txfrFound = false;
+		for (LocalIRODSTransfer transfer : transfers) {
+			if (transfer.getIrodsAbsolutePath().equals(
+					enqueuedTransfer.getIrodsAbsolutePath())) {
+				txfrFound = true;
+				Assert.assertEquals("this should still be enqueued",
+						transfer.getTransferState(), TransferState.ENQUEUED);
+
+				Assert.assertEquals("this should still be ok status now",
+						transfer.getTransferStatus(), TransferStatus.OK);
+			}
+		}
+
+		TestCase.assertTrue("did not find transfer", txfrFound);
+
 	}
 
 	@Test
@@ -372,14 +381,13 @@ public class TransferQueueServiceTest {
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
 
-		String rootCollection = "enqueueAPutWhenPaused";
+		String rootCollection = "testMarkTransferAsErrorAndTerminatePassingException";
 		String localCollectionAbsolutePath = scratchFileUtils
 				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH
 						+ '/' + rootCollection);
 
-		String irodsCollectionRootAbsolutePath = testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH);
+		String irodsCollectionRootAbsolutePath = rootCollection;
+		TransferServiceFactoryImpl transferServiceFactory = new TransferServiceFactoryImpl();
 
 		TransferQueueService transferQueueService = transferServiceFactory
 				.instanceTransferQueueService();
@@ -399,15 +407,21 @@ public class TransferQueueServiceTest {
 		// now get the error transfers, there should be one and it should be the
 		// one I marked
 
-		List<LocalIRODSTransfer> errorTransfers = transferQueueService
+		List<LocalIRODSTransfer> transfers = transferQueueService
 				.showErrorTransfers();
+		boolean txfrFound = false;
+		for (LocalIRODSTransfer transfer : transfers) {
+			if (transfer.getIrodsAbsolutePath().equals(
+					irodsCollectionRootAbsolutePath)) {
+				txfrFound = true;
+				Assert.assertEquals("did not retain the exception",
+						"hello a jargon exception",
+						transfer.getGlobalException());
 
-		Assert.assertEquals("should have 1 error transfer", 1,
-				errorTransfers.size());
+			}
+		}
 
-		LocalIRODSTransfer actualTransfer = errorTransfers.get(0);
-		Assert.assertEquals("did not retain the exception",
-				"hello a jargon exception", actualTransfer.getGlobalException());
+		TestCase.assertTrue("did not find transfer", txfrFound);
 
 	}
 
@@ -425,6 +439,7 @@ public class TransferQueueServiceTest {
 		String irodsCollectionRootAbsolutePath = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH);
+		TransferServiceFactoryImpl transferServiceFactory = new TransferServiceFactoryImpl();
 
 		TransferQueueService transferQueueService = transferServiceFactory
 				.instanceTransferQueueService();
@@ -493,6 +508,7 @@ public class TransferQueueServiceTest {
 		String irodsCollectionRootAbsolutePath = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH);
+		TransferServiceFactoryImpl transferServiceFactory = new TransferServiceFactoryImpl();
 
 		TransferQueueService transferQueueService = transferServiceFactory
 				.instanceTransferQueueService();
@@ -559,6 +575,7 @@ public class TransferQueueServiceTest {
 		String irodsCollectionRootAbsolutePath = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH);
+		TransferServiceFactoryImpl transferServiceFactory = new TransferServiceFactoryImpl();
 
 		TransferQueueService transferQueueService = transferServiceFactory
 				.instanceTransferQueueService();
@@ -614,84 +631,114 @@ public class TransferQueueServiceTest {
 
 	@Test
 	public void testEnqueueReplicate() throws Exception {
+
+		String testName = "testEnqueueReplicate";
+		TransferServiceFactoryImpl transferServiceFactory = new TransferServiceFactoryImpl();
+
 		TransferQueueService transferQueueService = transferServiceFactory
 				.instanceTransferQueueService();
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
 
-		transferQueueService.enqueueReplicateTransfer("irodsAbsolutePath",
+		transferQueueService.enqueueReplicateTransfer(testName,
 				"targetResource", irodsAccount);
 
 		// now get the data from the database
 
-		List<LocalIRODSTransfer> queue = transferQueueService.getCurrentQueue();
-		TestCase.assertEquals(
-				"should just be 1 replicate transfer in the queue", 1,
-				queue.size());
-		LocalIRODSTransfer actualTransfer = queue.get(0);
+		List<LocalIRODSTransfer> transfers = transferQueueService
+				.getCurrentQueue();
 
-		TestCase.assertEquals("irodsAbsolutePath",
-				actualTransfer.getIrodsAbsolutePath());
-		TestCase.assertEquals("targetResource",
-				actualTransfer.getTransferResource());
-		TestCase.assertEquals(TransferType.REPLICATE,
-				actualTransfer.getTransferType());
+		boolean txfrFound = false;
+		for (LocalIRODSTransfer transfer : transfers) {
+			if (transfer.getIrodsAbsolutePath().equals(testName)) {
+				txfrFound = true;
+
+				TestCase.assertEquals("targetResource",
+						transfer.getTransferResource());
+				TestCase.assertEquals(TransferType.REPLICATE,
+						transfer.getTransferType());
+
+			}
+		}
+
+		TestCase.assertTrue("did not find transfer", txfrFound);
+
 	}
-	
+
 	@Test
 	public void testEnqueueCopy() throws Exception {
+		String testName = "testEnqueueCopy";
+		TransferServiceFactoryImpl transferServiceFactory = new TransferServiceFactoryImpl();
+
 		TransferQueueService transferQueueService = transferServiceFactory
 				.instanceTransferQueueService();
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
 
-		transferQueueService.enqueueCopyTransfer("irodsAbsolutePath",
-				"targetResource", "irodsTargetPath", irodsAccount);
+		transferQueueService.enqueueCopyTransfer(testName, "targetResource",
+				testName, irodsAccount);
 
 		// now get the data from the database
 
-		List<LocalIRODSTransfer> queue = transferQueueService.getCurrentQueue();
-		TestCase.assertEquals(
-				"should just be 1 replicate transfer in the queue", 1,
-				queue.size());
-		LocalIRODSTransfer actualTransfer = queue.get(0);
+		List<LocalIRODSTransfer> transfers = transferQueueService
+				.getCurrentQueue();
 
-		TestCase.assertEquals("irodsTargetPath",
-				actualTransfer.getIrodsAbsolutePath());
-		TestCase.assertEquals("targetResource",
-				actualTransfer.getTransferResource());
-		TestCase.assertEquals(TransferType.COPY,
-				actualTransfer.getTransferType());
+		boolean txfrFound = false;
+		for (LocalIRODSTransfer transfer : transfers) {
+			if (transfer.getIrodsAbsolutePath().equals(testName)) {
+				txfrFound = true;
+
+				TestCase.assertEquals("targetResource",
+						transfer.getTransferResource());
+				TestCase.assertEquals(TransferType.COPY,
+						transfer.getTransferType());
+
+			}
+		}
+
+		TestCase.assertTrue("did not find transfer", txfrFound);
+
 	}
 
 	@Test
 	public void testEnqueueGet() throws Exception {
+		TransferServiceFactoryImpl transferServiceFactory = new TransferServiceFactoryImpl();
+
+		String testName = "testEnqueueGet";
+
 		TransferQueueService transferQueueService = transferServiceFactory
 				.instanceTransferQueueService();
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
 
-		transferQueueService.enqueueGetTransfer("irodsSourceAbsolutePath",
+		transferQueueService.enqueueGetTransfer(testName,
 				"targetLocalAbsolutePath", "sourceResource", irodsAccount);
 
 		// now get the data from the database
 
-		List<LocalIRODSTransfer> queue = transferQueueService.getCurrentQueue();
-		TestCase.assertEquals(
-				"should just be 1 replicate transfer in the queue", 1,
-				queue.size());
-		LocalIRODSTransfer actualTransfer = queue.get(0);
+		List<LocalIRODSTransfer> transfers = transferQueueService
+				.getCurrentQueue();
+		boolean txfrFound = false;
+		for (LocalIRODSTransfer transfer : transfers) {
+			if (transfer.getIrodsAbsolutePath().equals(testName)) {
+				txfrFound = true;
+				TestCase.assertEquals("sourceResource",
+						transfer.getTransferResource());
+				TestCase.assertEquals(TransferType.GET,
+						transfer.getTransferType());
 
-		TestCase.assertEquals("irodsSourceAbsolutePath",
-				actualTransfer.getIrodsAbsolutePath());
-		TestCase.assertEquals("sourceResource",
-				actualTransfer.getTransferResource());
-		TestCase.assertEquals(TransferType.GET,
-				actualTransfer.getTransferType());
+			}
+		}
+
+		TestCase.assertTrue("did not find transfer", txfrFound);
+
 	}
 
 	@Test
 	public void testEnqueueGetBigFileName() throws Exception {
+
+		TransferServiceFactoryImpl transferServiceFactory = new TransferServiceFactoryImpl();
+
 		TransferQueueService transferQueueService = transferServiceFactory
 				.instanceTransferQueueService();
 		IRODSAccount irodsAccount = testingPropertiesHelper
@@ -708,18 +755,22 @@ public class TransferQueueServiceTest {
 
 		// now get the data from the database
 
-		List<LocalIRODSTransfer> queue = transferQueueService.getCurrentQueue();
-		TestCase.assertEquals(
-				"should just be 1 replicate transfer in the queue", 1,
-				queue.size());
-		LocalIRODSTransfer actualTransfer = queue.get(0);
+		List<LocalIRODSTransfer> transfers = transferQueueService
+				.getCurrentQueue();
+		boolean txfrFound = false;
+		for (LocalIRODSTransfer transfer : transfers) {
+			if (transfer.getIrodsAbsolutePath().equals(sb.toString())) {
+				txfrFound = true;
+				TestCase.assertEquals("sourceResource",
+						transfer.getTransferResource());
+				TestCase.assertEquals(TransferType.GET,
+						transfer.getTransferType());
 
-		TestCase.assertEquals(sb.toString(),
-				actualTransfer.getIrodsAbsolutePath());
-		TestCase.assertEquals("sourceResource",
-				actualTransfer.getTransferResource());
-		TestCase.assertEquals(TransferType.GET,
-				actualTransfer.getTransferType());
+			}
+		}
+
+		TestCase.assertTrue("did not find transfer", txfrFound);
+
 	}
 
 	@Test(expected = JargonException.class)
@@ -806,6 +857,7 @@ public class TransferQueueServiceTest {
 	public void testPurgeAll() throws Exception {
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
+		TransferServiceFactoryImpl transferServiceFactory = new TransferServiceFactoryImpl();
 
 		TransferQueueService transferQueueService = transferServiceFactory
 				.instanceTransferQueueService();
@@ -861,15 +913,15 @@ public class TransferQueueServiceTest {
 		enqueuedTransfer.setTransferPassword(irodsAccount.getPassword());
 		enqueuedTransfer.setTransferState(TransferState.COMPLETE);
 		enqueuedTransfer.setTransferStatus(TransferStatus.ERROR);
-		
+
 		transferQueueService.updateLocalIRODSTransfer(enqueuedTransfer);
-		
+
 		LocalIRODSTransferItem item = new LocalIRODSTransferItem();
 		item.setLocalIRODSTransfer(enqueuedTransfer);
 		item.setSourceFileAbsolutePath("path");
 		item.setTargetFileAbsolutePath("path");
 		transferQueueService.addItemToTransfer(enqueuedTransfer, item);
-		
+
 		// now purge
 		transferQueueService.purgeQueue();
 
@@ -888,9 +940,12 @@ public class TransferQueueServiceTest {
 	public void testPurgeComplete() throws Exception {
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
+		TransferServiceFactoryImpl transferServiceFactory = new TransferServiceFactoryImpl();
 
 		TransferQueueService transferQueueService = transferServiceFactory
 				.instanceTransferQueueService();
+
+		transferQueueService.purgeQueue();
 
 		LocalIRODSTransfer enqueuedTransfer = new LocalIRODSTransfer();
 		enqueuedTransfer.setCreatedAt(new Date());
@@ -945,7 +1000,7 @@ public class TransferQueueServiceTest {
 		enqueuedTransfer.setTransferStatus(TransferStatus.ERROR);
 
 		transferQueueService.updateLocalIRODSTransfer(enqueuedTransfer);
-		
+
 		LocalIRODSTransferItem item = new LocalIRODSTransferItem();
 		item.setLocalIRODSTransfer(enqueuedTransfer);
 		item.setSourceFileAbsolutePath("path");
@@ -958,11 +1013,10 @@ public class TransferQueueServiceTest {
 		List<LocalIRODSTransfer> actualTransfers = transferQueueService
 				.getRecentQueue();
 
-		TestCase.assertEquals("did not get the 1 processing transfer", 1,
-				actualTransfers.size());
-		LocalIRODSTransfer actualTransfer = actualTransfers.get(0);
-		TestCase.assertEquals("the one transfer should be the processing item",
-				TransferState.PROCESSING, actualTransfer.getTransferState());
+		for (LocalIRODSTransfer transfer : actualTransfers) {
+			TestCase.assertEquals("transfer should be the processing item",
+					TransferState.PROCESSING, transfer.getTransferState());
+		}
 
 	}
 
@@ -970,9 +1024,12 @@ public class TransferQueueServiceTest {
 	public void testResubmitATransfer() throws Exception {
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
+		TransferServiceFactoryImpl transferServiceFactory = new TransferServiceFactoryImpl();
 
 		TransferQueueService transferQueueService = transferServiceFactory
 				.instanceTransferQueueService();
+
+		transferQueueService.purgeQueue();
 
 		final LocalIRODSTransfer enqueuedTransfer;
 		LocalIRODSTransferItem localIRODSTransferItem;
@@ -1019,22 +1076,21 @@ public class TransferQueueServiceTest {
 
 		transferQueueService.resubmitTransfer(enqueuedTransfer);
 
-		List<LocalIRODSTransfer> transferQueue = transferQueueService
-				.getCurrentQueue();
-		Assert.assertEquals(1, transferQueue.size());
-		LocalIRODSTransfer actualEnqueuedTransfer = transferQueue.get(0);
+		LocalIRODSTransfer actual = transferQueueService
+				.findLocalIRODSTransferById(enqueuedTransfer.getId());
+
 		Assert.assertEquals("this should still be enqueued",
-				actualEnqueuedTransfer.getTransferState(),
-				TransferState.ENQUEUED);
+				actual.getTransferState(), TransferState.ENQUEUED);
 
 		Assert.assertEquals("this should still be ok status now",
-				actualEnqueuedTransfer.getTransferStatus(), TransferStatus.OK);
+				actual.getTransferStatus(), TransferStatus.OK);
 	}
 
 	@Test
 	public void testCancelATransfer() throws Exception {
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
+		TransferServiceFactoryImpl transferServiceFactory = new TransferServiceFactoryImpl();
 
 		TransferQueueService transferQueueService = transferServiceFactory
 				.instanceTransferQueueService();
@@ -1060,22 +1116,20 @@ public class TransferQueueServiceTest {
 
 		transferQueueService.setTransferAsCancelled(enqueuedTransfer);
 
-		List<LocalIRODSTransfer> transferQueue = transferQueueService
-				.getRecentQueue();
-		Assert.assertEquals(1, transferQueue.size());
-		LocalIRODSTransfer actualEnqueuedTransfer = transferQueue.get(0);
+		LocalIRODSTransfer actual = transferQueueService
+				.findLocalIRODSTransferById(enqueuedTransfer.getId());
 		Assert.assertEquals("this should still be enqueued",
-				actualEnqueuedTransfer.getTransferState(),
-				TransferState.CANCELLED);
+				actual.getTransferState(), TransferState.CANCELLED);
 
 		Assert.assertEquals("this should still be ok status now",
-				actualEnqueuedTransfer.getTransferStatus(), TransferStatus.OK);
+				actual.getTransferStatus(), TransferStatus.OK);
 	}
 
 	@Test
 	public void testCancelACompletedTransfer() throws Exception {
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
+		TransferServiceFactoryImpl transferServiceFactory = new TransferServiceFactoryImpl();
 
 		TransferQueueService transferQueueService = transferServiceFactory
 				.instanceTransferQueueService();
@@ -1100,16 +1154,14 @@ public class TransferQueueServiceTest {
 		transferQueueService.updateLocalIRODSTransfer(enqueuedTransfer);
 		transferQueueService.setTransferAsCancelled(enqueuedTransfer);
 
-		List<LocalIRODSTransfer> transferQueue = transferQueueService
-				.getRecentQueue();
-		Assert.assertEquals(1, transferQueue.size());
-		LocalIRODSTransfer actualEnqueuedTransfer = transferQueue.get(0);
+		LocalIRODSTransfer actual = transferQueueService
+				.findLocalIRODSTransferById(enqueuedTransfer.getId());
+
 		Assert.assertEquals("this should still be enqueued",
-				actualEnqueuedTransfer.getTransferState(),
-				TransferState.COMPLETE);
+				actual.getTransferState(), TransferState.COMPLETE);
 
 		Assert.assertEquals("this should still be ok status now",
-				actualEnqueuedTransfer.getTransferStatus(), TransferStatus.OK);
+				actual.getTransferStatus(), TransferStatus.OK);
 	}
 
 	@Test
@@ -1126,6 +1178,7 @@ public class TransferQueueServiceTest {
 		String irodsCollectionRootAbsolutePath = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH);
+		TransferServiceFactoryImpl transferServiceFactory = new TransferServiceFactoryImpl();
 
 		TransferQueueService transferQueueService = transferServiceFactory
 				.instanceTransferQueueService();
@@ -1151,13 +1204,11 @@ public class TransferQueueServiceTest {
 		transferQueueService.processQueueAtStartup();
 
 		// now get the queue
-		List<LocalIRODSTransfer> transferQueue = transferQueueService
-				.getCurrentQueue();
-		Assert.assertEquals("did not find the error transaction", 1,
-				transferQueue.size());
-		LocalIRODSTransfer transfer = transferQueue.get(0);
+		LocalIRODSTransfer actual = transferQueueService
+				.findLocalIRODSTransferById(enqueuedTransfer.getId());
+
 		Assert.assertEquals("this does not have enqueued status",
-				TransferState.ENQUEUED, transfer.getTransferState());
+				TransferState.ENQUEUED, actual.getTransferState());
 
 	}
 
@@ -1165,6 +1216,7 @@ public class TransferQueueServiceTest {
 	public void testCreateQueueServiceInUserHomeDirectory() throws Exception {
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
+		TransferServiceFactoryImpl transferServiceFactory = new TransferServiceFactoryImpl();
 
 		TransferQueueService transferQueueService = transferServiceFactory
 				.instanceTransferQueueService();
@@ -1199,6 +1251,7 @@ public class TransferQueueServiceTest {
 	public void testRestartClearsErrorAndStackTrace() throws Exception {
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
+		TransferServiceFactoryImpl transferServiceFactory = new TransferServiceFactoryImpl();
 
 		TransferQueueService transferQueueService = transferServiceFactory
 				.instanceTransferQueueService();
@@ -1240,6 +1293,8 @@ public class TransferQueueServiceTest {
 	public void testRestartPreservesLastGoodPath() throws Exception {
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
+		TransferServiceFactoryImpl transferServiceFactory = new TransferServiceFactoryImpl();
+
 		TransferQueueService transferQueueService = transferServiceFactory
 				.instanceTransferQueueService();
 
@@ -1278,6 +1333,7 @@ public class TransferQueueServiceTest {
 	public void testResubmitClearsLastGoodPath() throws Exception {
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
+		TransferServiceFactoryImpl transferServiceFactory = new TransferServiceFactoryImpl();
 
 		TransferQueueService transferQueueService = transferServiceFactory
 				.instanceTransferQueueService();

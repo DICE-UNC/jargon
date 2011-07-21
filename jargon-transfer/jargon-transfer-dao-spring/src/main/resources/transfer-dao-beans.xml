@@ -74,6 +74,7 @@
   <bean id="transferQueueService" class="org.irods.jargon.transfer.engine.TransferQueueServiceImpl">
     <property name="localIRODSTransferDAO" ref="localIRODSTransferDAO" />
     <property name="localIRODSTransferItemDAO" ref="localIRODSTransferItemDAO" />
+    <property name="synchronizationDAO" ref="synchronizationDAO" />
   </bean>
 
   <bean id="configurationService" class="org.irods.jargon.transfer.engine.ConfigurationServiceImpl">

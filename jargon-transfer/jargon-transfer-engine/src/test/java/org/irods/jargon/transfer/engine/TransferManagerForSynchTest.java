@@ -1,9 +1,7 @@
 package org.irods.jargon.transfer.engine;
 
-import java.io.File;
 import java.io.FileReader;
 import java.util.Date;
-import java.util.List;
 import java.util.Properties;
 
 import junit.framework.Assert;
@@ -14,22 +12,17 @@ import org.dbunit.dataset.IDataSet;
 import org.dbunit.dataset.xml.XmlDataSet;
 import org.dbunit.operation.DatabaseOperation;
 import org.irods.jargon.core.connection.IRODSAccount;
-import org.irods.jargon.core.pub.DataTransferOperations;
 import org.irods.jargon.core.pub.IRODSFileSystem;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.irods.jargon.testutils.filemanip.FileGenerator;
 import org.irods.jargon.transfer.dao.domain.FrequencyType;
-import org.irods.jargon.transfer.dao.domain.LocalIRODSTransfer;
 import org.irods.jargon.transfer.dao.domain.Synchronization;
 import org.irods.jargon.transfer.dao.domain.SynchronizationType;
-import org.irods.jargon.transfer.dao.domain.TransferState;
-import org.irods.jargon.transfer.dao.domain.TransferStatus;
-import org.irods.jargon.transfer.dao.domain.TransferType;
 import org.irods.jargon.transfer.engine.synch.SynchManagerService;
-import org.irods.jargon.transfer.util.HibernateUtil;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class TransferManagerForSynchTest {
@@ -43,10 +36,9 @@ public class TransferManagerForSynchTest {
 	public static final String IRODS_TEST_SUBDIR_PATH = "TransferManagerForSynchTest";
 
 	private static IRODSFileSystem irodsFileSystem;
-	
+
 	private static org.irods.jargon.testutils.IRODSTestSetupUtilities irodsTestSetupUtilities = null;
 
-	private static IDatabaseTester databaseTester;
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -55,35 +47,26 @@ public class TransferManagerForSynchTest {
 		scratchFileUtils = new org.irods.jargon.testutils.filemanip.ScratchFileUtils(
 				testingProperties);
 		irodsTestSetupUtilities = new org.irods.jargon.testutils.IRODSTestSetupUtilities();
-
 		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
 		irodsTestSetupUtilities
 				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
-		scratchFileUtils
-				.clearAndReinitializeScratchDirectory(IRODS_TEST_SUBDIR_PATH);
-		DatabasePreparationUtils.makeSureDatabaseIsInitialized();
-		irodsFileSystem = IRODSFileSystem.instance();
-		// get user home dir
-
 		String databaseUrl = "jdbc:derby:" + System.getProperty("user.home")
 				+ "/.idrop/target/database/transfer";
-		databaseTester = new JdbcDatabaseTester(
-				"org.apache.derby.jdbc.EmbeddedDriver", databaseUrl,
-				"transfer", "transfer");
-	}
+		DatabasePreparationUtils.clearAllDatabaseForTesting(databaseUrl,
+				"transfer", "transfer"); // TODO: make a prop
+		irodsFileSystem = IRODSFileSystem.instance();
+		
 
+	}
 	/**
 	 * @throws Exception
 	 */
 	@Before
 	public void setUpEach() throws Exception {
-		IDataSet ds = new XmlDataSet(new FileReader("data/export-empty.xml"));
-		DatabaseOperation.CLEAN_INSERT.execute(databaseTester.getConnection(),
-				ds);
-		databaseTester.closeConnection(databaseTester.getConnection());
+		
 	}
 
-	@Test
+	@Ignore // FIXME: work in progress
 	public void testEnqueueSynch() throws Exception {
 		TransferManager transferManager = new TransferManagerImpl(
 				IRODSFileSystem.instance());
@@ -98,8 +81,11 @@ public class TransferManagerForSynchTest {
 
 		String irodsCollectionRootAbsolutePath = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH + "/rootCollection");
-		IRODSFile irodsSynchFile = irodsFileSystem.getIRODSFileFactory(irodsAccount).instanceIRODSFile(irodsCollectionRootAbsolutePath);
+						testingProperties, IRODS_TEST_SUBDIR_PATH
+								+ "/rootCollection");
+		IRODSFile irodsSynchFile = irodsFileSystem.getIRODSFileFactory(
+				irodsAccount)
+				.instanceIRODSFile(irodsCollectionRootAbsolutePath);
 		irodsSynchFile.mkdirs();
 
 		FileGenerator
@@ -109,10 +95,12 @@ public class TransferManagerForSynchTest {
 
 		transferManager.pause();
 		Synchronization synchronization = new Synchronization();
-		synchronization.setSynchronizationMode(SynchronizationType.ONE_WAY_LOCAL_TO_IRODS);
+		synchronization
+				.setSynchronizationMode(SynchronizationType.ONE_WAY_LOCAL_TO_IRODS);
 		synchronization.setName(rootCollection);
 		synchronization.setCreatedAt(new Date());
-		synchronization.setDefaultResourceName(irodsAccount.getDefaultStorageResource());
+		synchronization.setDefaultResourceName(irodsAccount
+				.getDefaultStorageResource());
 		synchronization.setFrequencyType(FrequencyType.EVERY_FIFTEEN_MINUTES);
 		synchronization.setIrodsHostName(irodsAccount.getHost());
 		synchronization.setIrodsPassword(irodsAccount.getPassword());
@@ -121,14 +109,57 @@ public class TransferManagerForSynchTest {
 		synchronization.setIrodsUserName(irodsAccount.getUserName());
 		synchronization.setIrodsZone(irodsAccount.getZone());
 		synchronization.setLocalSynchDirectory(rootCollection);
-		SynchManagerService synchManagerService = transferManager.getTransferServiceFactory().instanceSynchManagerService();
+		SynchManagerService synchManagerService = transferManager
+				.getTransferServiceFactory().instanceSynchManagerService();
 		synchManagerService.createNewSynchConfiguration(synchronization);
-		
+
 		synchronization = synchManagerService.findByName(rootCollection);
-		
+
 		transferManager.enqueueASynch(synchronization, irodsAccount);
 		
+		// let synch run
+
+		transferManager.processNextInQueueIfIdle();
+
+		int waitCtr = 0;
+
+		while (true) {
+			if (waitCtr++ > 20) {
+				Assert.fail("synch timed out");
+			}
+			Thread.sleep(1000);
+			if (transferManager.getRunningStatus() == TransferManager.RunningStatus.IDLE) {
+				break;
+			}
+
+		}
+
+		Assert.assertEquals("should have been no errors",
+				TransferManager.ErrorStatus.OK,
+				transferManager.getErrorStatus());
 
 	}
+	
+	@Test(expected=IllegalArgumentException.class)
+	public void testEnqueueSynchNullSynch() throws Exception {
+		TransferManager transferManager = new TransferManagerImpl(
+				IRODSFileSystem.instance());
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		transferManager.enqueueASynch(null, irodsAccount);
+
+	}
+	
+	@Test(expected=IllegalArgumentException.class)
+	public void testEnqueueSynchNullAccount() throws Exception {
+		TransferManager transferManager = new TransferManagerImpl(
+				IRODSFileSystem.instance());
+		
+		transferManager.enqueueASynch(new Synchronization(), null);
+
+	}
+
 
 }

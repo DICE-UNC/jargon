@@ -271,9 +271,7 @@ public class SynchronizationDAOTest {
 				foundTransfer = true;
 				TestCase.assertNotNull("transfer did not have synch", actualTransfer.getSynchronization());
 				TestCase.assertEquals("synch did not have proper data", testName, actualTransfer.getSynchronization().getName());
-			} else {
-				TestCase.assertNull("should not have a synchronization", actualTransfer.getSynchronization());
-			}
+			} 
 		}
 		
 		TestCase.assertTrue("did not find synch", foundTransfer);
