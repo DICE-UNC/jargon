@@ -189,6 +189,10 @@ final class IRODSLocalTransferEngine implements TransferStatusCallbackListener {
 			transferException = transferTypeCopy(localIrodsTransfer,
 					dataTransferOperations, irodsFileFactory);
 			break;
+		case SYNCH:
+			transferException = transferTypeSynch(localIrodsTransfer,
+					dataTransferOperations, irodsFileFactory);
+			break;
 		default:
 			throw new JargonException("unknown operation type in transfer");
 		}
@@ -234,6 +238,18 @@ final class IRODSLocalTransferEngine implements TransferStatusCallbackListener {
 		
 		log.info("commit");
 
+	}
+
+	private JargonException transferTypeSynch(
+			LocalIRODSTransfer localIrodsTransfer,
+			DataTransferOperations dataTransferOperations,
+			IRODSFileFactory irodsFileFactory) {
+		
+		
+		
+		return null; // FIXME: implement synch
+		
+		
 	}
 
 	private JargonException transferTypeCopy(

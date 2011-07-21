@@ -66,7 +66,7 @@ public class TransferManagerForSynchTest {
 		
 	}
 
-	@Ignore // FIXME: work in progress
+	@Test 
 	public void testEnqueueSynch() throws Exception {
 		TransferManager transferManager = new TransferManagerImpl(
 				IRODSFileSystem.instance());
@@ -93,7 +93,6 @@ public class TransferManagerForSynchTest {
 						localCollectionAbsolutePath, "testSubdir", 1, 2, 1,
 						"testFile", ".txt", 3, 2, 2, 5);
 
-		transferManager.pause();
 		Synchronization synchronization = new Synchronization();
 		synchronization
 				.setSynchronizationMode(SynchronizationType.ONE_WAY_LOCAL_TO_IRODS);
