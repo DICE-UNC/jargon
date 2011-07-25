@@ -5,7 +5,7 @@ import java.io.File;
 import org.irods.jargon.core.exception.JargonException;
 
 public interface FileTreeDiffUtility {
-	
+
 	public static final int NO_TIMESTAMP_CHECKS = 0;
 
 	/**
@@ -24,8 +24,9 @@ public interface FileTreeDiffUtility {
 	 * iRODS timestamp can be compared to a provided timestamp value to treat
 	 * files modified after the given cut-off as 'changed'.
 	 * <p/>
-	 * Note that setting either the left hand or right hand side timestamp to <code>NO_TIMESTAMP_CHECKS</code>
-	 * will turn of timestamp checking.  This is appropriate for an initial synch operation.
+	 * Note that setting either the left hand or right hand side timestamp to
+	 * <code>NO_TIMESTAMP_CHECKS</code> will turn of timestamp checking. This is
+	 * appropriate for an initial synch operation.
 	 * 
 	 * @param localFileRoot
 	 *            <code>File</code> that is the left hand side of the comparison
@@ -37,14 +38,12 @@ public interface FileTreeDiffUtility {
 	 *            left hand and right hand root absolute paths
 	 * @param timestampForLastSynchLeftHandSide
 	 *            <code>long</code> with the timestamp that, if before the last
-	 *            modified date of the given left hand files,
-	 *            indicates that the file has changed. Leave as zero to turn off
-	 *            this check.
-	 *   @param timestampForLastSynchRightHandSide
+	 *            modified date of the given left hand files, indicates that the
+	 *            file has changed. Leave as zero to turn off this check.
+	 * @param timestampForLastSynchRightHandSide
 	 *            <code>long</code> with the timestamp that, if before the last
-	 *            modified date of the given right hand files,
-	 *            indicates that the file has changed. Leave as zero to turn off
-	 *            this check.
+	 *            modified date of the given right hand files, indicates that
+	 *            the file has changed. Leave as zero to turn off this check.
 	 * @return {@link FileTreeModel} with the common directory structure and any
 	 *         detected diffs. The model is made of {@link FileTreeNode} objects
 	 *         that contain the {@link FileTreeDiffEntry} as the user data
@@ -56,5 +55,33 @@ public interface FileTreeDiffUtility {
 			final long timestampForLastSynchLeftHandSide,
 			final long timestampForLastSynchRightHandSide)
 			throws JargonException;
+
+	/**
+	 * Handy method that checks a local and iRODS file trees and verifies that
+	 * there are no differences
+	 * 
+	 * @param localFileRoot
+	 *            <code>File</code> that is the left hand side of the comparison
+	 * 
+	 * @param irodsAbsolutePath
+	 *            <code>String</code> that is the root directory that will be
+	 *            compared to the <code>localFileRoot</code> The file and
+	 *            collection names will be compared relative to the respective
+	 *            left hand and right hand root absolute paths
+	 * @param timestampForLastSynchLeftHandSide
+	 *            <code>long</code> with the timestamp that, if before the last
+	 *            modified date of the given left hand files, indicates that the
+	 *            file has changed. Leave as zero to turn off this check.
+	 * @param timestampForLastSynchRightHandSide
+	 *            <code>long</code> with the timestamp that, if before the last
+	 *            modified date of the given right hand files, indicates that
+	 *            the file has changed. Leave as zero to turn off this check.
+	 * @return <code>boolean</code> that will be <code>true</code> if no
+	 *         differences exist
+	 * @throws JargonException
+	 */
+	boolean verifyLocalAndIRODSTreesMatch(File localFileRoot,
+			String irodsAbsolutePath, long timestampForLastSynchLeftHandSide,
+			long timestampForLastSynchRightHandSide) throws JargonException;
 
 }

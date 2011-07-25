@@ -4,10 +4,13 @@ import java.io.File;
 import java.util.Date;
 import java.util.Properties;
 
+import junit.framework.TestCase;
+
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 import org.irods.jargon.core.pub.IRODSFileSystem;
 import org.irods.jargon.datautils.synchproperties.SynchPropertiesServiceImpl;
+import org.irods.jargon.datautils.tree.FileTreeDiffUtility;
 import org.irods.jargon.datautils.tree.FileTreeDiffUtilityImpl;
 import org.irods.jargon.datautils.tree.FileTreeModel;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
@@ -20,7 +23,6 @@ import org.irods.jargon.transfer.dao.domain.SynchronizationType;
 import org.irods.jargon.transfer.dao.domain.TransferState;
 import org.irods.jargon.transfer.dao.domain.TransferType;
 import org.irods.jargon.transfer.engine.TransferManager;
-import org.irods.jargon.transfer.engine.TransferManagerImpl;
 import org.irods.jargon.transfer.synch.InPlaceSynchronizingDiffProcessorImpl;
 import org.irods.jargon.transfer.synch.SynchronizeProcessor;
 import org.irods.jargon.transfer.synch.SynchronizeProcessorImpl;
@@ -71,12 +73,10 @@ public class InPlaceSynchronizingDiffProcessorImplTest {
 		testTransfer.setTransferType(TransferType.SYNCH);
 		Synchronization synchronization = new Synchronization();
 		testTransfer.setSynchronization(synchronization);
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
 		FileTreeModel fileTreeModel = new FileTreeModel(null);
 
 		SynchronizingDiffProcessor processor = new InPlaceSynchronizingDiffProcessorImpl();
-		processor.processDiff(testTransfer, irodsAccount, fileTreeModel);
+		processor.processDiff(testTransfer, fileTreeModel);
 
 	}
 
@@ -93,12 +93,13 @@ public class InPlaceSynchronizingDiffProcessorImplTest {
 				.mock(IRODSAccessObjectFactory.class);
 		processor.setIrodsAccessObjectFactory(irodsAccessObjectFactory);
 		processor.setTransferManager(transferManager);
-		processor.processDiff(null, irodsAccount, fileTreeModel);
+		processor.setIrodsAccount(irodsAccount);
+		processor.processDiff(null, fileTreeModel);
 
 	}
 
-	@Test(expected = IllegalArgumentException.class)
-	public void testProcessDiffMissingAccount() throws Exception {
+	@Test(expected = TransferEngineException.class)
+	public void testProcessDiffMissingAccountInContract() throws Exception {
 
 		FileTreeModel fileTreeModel = new FileTreeModel(null);
 
@@ -113,7 +114,7 @@ public class InPlaceSynchronizingDiffProcessorImplTest {
 				.mock(IRODSAccessObjectFactory.class);
 		processor.setIrodsAccessObjectFactory(irodsAccessObjectFactory);
 		processor.setTransferManager(transferManager);
-		processor.processDiff(testTransfer, null, fileTreeModel);
+		processor.processDiff(testTransfer, fileTreeModel);
 
 	}
 
@@ -134,7 +135,9 @@ public class InPlaceSynchronizingDiffProcessorImplTest {
 				.mock(IRODSAccessObjectFactory.class);
 		processor.setIrodsAccessObjectFactory(irodsAccessObjectFactory);
 		processor.setTransferManager(transferManager);
-		processor.processDiff(testTransfer, irodsAccount, null);
+		processor.setIrodsAccount(irodsAccount);
+
+		processor.processDiff(testTransfer, null);
 
 	}
 
@@ -156,7 +159,9 @@ public class InPlaceSynchronizingDiffProcessorImplTest {
 				.mock(IRODSAccessObjectFactory.class);
 		processor.setIrodsAccessObjectFactory(irodsAccessObjectFactory);
 		processor.setTransferManager(transferManager);
-		processor.processDiff(testTransfer, irodsAccount, fileTreeModel);
+		processor.setIrodsAccount(irodsAccount);
+
+		processor.processDiff(testTransfer, fileTreeModel);
 
 	}
 
@@ -185,23 +190,29 @@ public class InPlaceSynchronizingDiffProcessorImplTest {
 
 		TransferManager transferManager = Mockito.mock(TransferManager.class);
 		SynchronizeProcessor synchronizeProcessor = new SynchronizeProcessorImpl();
+		FileTreeDiffUtility fileTreeDiffUtility = new FileTreeDiffUtilityImpl(
+				irodsAccount, irodsFileSystem
+				.getIRODSAccessObjectFactory());
 		synchronizeProcessor
-				.setFileTreeDiffUtility(new FileTreeDiffUtilityImpl(
-						irodsAccount, irodsFileSystem
-								.getIRODSAccessObjectFactory()));
+				.setFileTreeDiffUtility(fileTreeDiffUtility);
 		synchronizeProcessor.setIrodsAccount(irodsAccount);
 		synchronizeProcessor
 				.setSynchPropertiesService(new SynchPropertiesServiceImpl(
 						irodsFileSystem.getIRODSAccessObjectFactory(),
 						irodsAccount));
 		synchronizeProcessor.setTransferManager(transferManager);
-		synchronizeProcessor.setIrodsAccessObjectFactory(irodsFileSystem.getIRODSAccessObjectFactory());
-		
+		synchronizeProcessor.setIrodsAccessObjectFactory(irodsFileSystem
+				.getIRODSAccessObjectFactory());
+		synchronizeProcessor.setIrodsAccount(irodsAccount);
+
 		InPlaceSynchronizingDiffProcessorImpl processor = new InPlaceSynchronizingDiffProcessorImpl();
-		processor.setIrodsAccessObjectFactory(irodsFileSystem.getIRODSAccessObjectFactory());
+		processor.setIrodsAccessObjectFactory(irodsFileSystem
+				.getIRODSAccessObjectFactory());
+		processor.setTransferManager(transferManager);
+		processor.setIrodsAccount(irodsAccount);
 		synchronizeProcessor.setSynchronizingDiffProcessor(processor);
 		processor.setTransferManager(transferManager);
-		
+
 		Synchronization synchronization = new Synchronization();
 		synchronization.setCreatedAt(new Date());
 		synchronization.setDefaultResourceName(irodsAccount
@@ -235,5 +246,12 @@ public class InPlaceSynchronizingDiffProcessorImplTest {
 		localIRODSTransfer.setTransferType(TransferType.SYNCH);
 
 		synchronizeProcessor.synchronizeLocalToIRODS(localIRODSTransfer);
+		boolean noDiffs = fileTreeDiffUtility.verifyLocalAndIRODSTreesMatch(new File(localCollectionAbsolutePath),
+				irodsCollectionRootAbsolutePath, 0L, 0L);
+		
+		
+		TestCase.assertTrue("diffs found after synch", noDiffs);
+		
+
 	}
 }

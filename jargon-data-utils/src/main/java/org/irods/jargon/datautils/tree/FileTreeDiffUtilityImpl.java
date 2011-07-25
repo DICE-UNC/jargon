@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.Enumeration;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.JargonException;
@@ -66,6 +67,48 @@ public class FileTreeDiffUtilityImpl implements FileTreeDiffUtility {
 
 		this.irodsAccount = irodsAccount;
 		this.irodsAccessObjectFactory = irodsAccessObjectFactory;
+	}
+
+	@Override
+	public boolean verifyLocalAndIRODSTreesMatch(final File localFileRoot,
+			final String irodsAbsolutePath,
+			final long timestampForLastSynchLeftHandSide,
+			final long timestampForLastSynchRightHandSide)
+			throws JargonException {
+
+		log.info("verifyLocalAndIRODSTreesMatch");
+
+		FileTreeModel diffModel = generateDiffLocalToIRODS(localFileRoot,
+				irodsAbsolutePath, timestampForLastSynchLeftHandSide,
+				timestampForLastSynchRightHandSide);
+		
+		return assertNoDiffsInTree((FileTreeNode) diffModel.getRoot());
+
+	}
+
+	private boolean assertNoDiffsInTree(final FileTreeNode fileTreeNode) {
+
+		FileTreeDiffEntry entry = (FileTreeDiffEntry) fileTreeNode
+				.getUserObject();
+		if (entry.getDiffType() != FileTreeDiffEntry.DiffType.DIRECTORY_NO_DIFF) {
+			log.warn("diff found when not expected:{}", entry);
+			return false;
+		}
+
+		FileTreeNode childNode = null;
+		boolean noDiffs = true;
+		@SuppressWarnings("unchecked")
+		Enumeration<FileTreeNode> children = fileTreeNode.children();
+		while (children.hasMoreElements()) {
+			childNode = (FileTreeNode) children.nextElement();
+			noDiffs = assertNoDiffsInTree(childNode);
+			if (noDiffs) {
+				break;
+			}
+		}
+
+		return noDiffs;
+
 	}
 
 	/*

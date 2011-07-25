@@ -5,22 +5,15 @@ import java.util.Date;
 import java.util.Properties;
 
 import junit.framework.Assert;
+import junit.framework.TestCase;
 
 import org.irods.jargon.core.connection.IRODSAccount;
-import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 import org.irods.jargon.core.pub.IRODSFileSystem;
-import org.irods.jargon.core.pub.io.IRODSFile;
-import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry;
-import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry.ObjectType;
 import org.irods.jargon.datautils.synchproperties.SynchPropertiesService;
 import org.irods.jargon.datautils.synchproperties.SynchPropertiesServiceImpl;
-import org.irods.jargon.datautils.tree.FileTreeDiffEntry;
-import org.irods.jargon.datautils.tree.FileTreeDiffEntry.DiffType;
 import org.irods.jargon.datautils.tree.FileTreeDiffUtility;
 import org.irods.jargon.datautils.tree.FileTreeDiffUtilityImpl;
-import org.irods.jargon.datautils.tree.FileTreeModel;
-import org.irods.jargon.datautils.tree.FileTreeNode;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.irods.jargon.testutils.filemanip.FileGenerator;
 import org.irods.jargon.transfer.dao.domain.FrequencyType;
@@ -36,7 +29,6 @@ import org.irods.jargon.transfer.synch.SynchronizeProcessor;
 import org.irods.jargon.transfer.synch.SynchronizeProcessorImpl;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.mockito.Matchers;
 import org.mockito.Mockito;
 
 public class SynchronizeProcessorImplTest {
@@ -167,28 +159,41 @@ public class SynchronizeProcessorImplTest {
 
 		String irodsCollectionRootAbsolutePath = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH + "/" + rootCollection);
-		
-		File irodsRoot = (File) irodsFileSystem.getIRODSFileFactory(irodsAccount).instanceIRODSFile(irodsCollectionRootAbsolutePath);
+						testingProperties, IRODS_TEST_SUBDIR_PATH + "/"
+								+ rootCollection);
+
+		File irodsRoot = (File) irodsFileSystem.getIRODSFileFactory(
+				irodsAccount)
+				.instanceIRODSFile(irodsCollectionRootAbsolutePath);
 		irodsRoot.mkdirs();
 
 		FileGenerator.generateManyFilesInGivenDirectory(IRODS_TEST_SUBDIR_PATH
 				+ '/' + rootCollection, "test", ".doc", 20, 1, 2);
-		
-		
-		TransferManager transferManager = new TransferManagerImpl(irodsFileSystem);
+
+		TransferManager transferManager = new TransferManagerImpl(
+				irodsFileSystem);
 		SynchronizeProcessor synchronizeProcessor = new SynchronizeProcessorImpl();
-		synchronizeProcessor.setFileTreeDiffUtility(new FileTreeDiffUtilityImpl(irodsAccount, irodsFileSystem.getIRODSAccessObjectFactory()));	
+		synchronizeProcessor
+				.setFileTreeDiffUtility(new FileTreeDiffUtilityImpl(
+						irodsAccount, irodsFileSystem
+								.getIRODSAccessObjectFactory()));
 		synchronizeProcessor.setIrodsAccount(irodsAccount);
-		synchronizeProcessor.setSynchPropertiesService(new SynchPropertiesServiceImpl(irodsFileSystem.getIRODSAccessObjectFactory(), irodsAccount));
+		synchronizeProcessor
+				.setSynchPropertiesService(new SynchPropertiesServiceImpl(
+						irodsFileSystem.getIRODSAccessObjectFactory(),
+						irodsAccount));
 		synchronizeProcessor.setTransferManager(transferManager);
-		synchronizeProcessor.setIrodsAccessObjectFactory(irodsFileSystem.getIRODSAccessObjectFactory());
-		
+		synchronizeProcessor.setIrodsAccessObjectFactory(irodsFileSystem
+				.getIRODSAccessObjectFactory());
+		synchronizeProcessor.setIrodsAccount(irodsAccount);
+
 		InPlaceSynchronizingDiffProcessorImpl processor = new InPlaceSynchronizingDiffProcessorImpl();
-		processor.setIrodsAccessObjectFactory(irodsFileSystem.getIRODSAccessObjectFactory());
+		processor.setIrodsAccessObjectFactory(irodsFileSystem
+				.getIRODSAccessObjectFactory());
+		processor.setIrodsAccount(irodsAccount);
 		synchronizeProcessor.setSynchronizingDiffProcessor(processor);
 		processor.setTransferManager(transferManager);
-		
+
 		Synchronization synchronization = new Synchronization();
 		synchronization.setCreatedAt(new Date());
 		synchronization.setDefaultResourceName(irodsAccount
@@ -209,7 +214,8 @@ public class SynchronizeProcessorImplTest {
 		LocalIRODSTransfer localIRODSTransfer = new LocalIRODSTransfer();
 		localIRODSTransfer.setCreatedAt(new Date());
 		localIRODSTransfer.setId(new Long(1));
-		localIRODSTransfer.setIrodsAbsolutePath(irodsCollectionRootAbsolutePath);
+		localIRODSTransfer
+				.setIrodsAbsolutePath(irodsCollectionRootAbsolutePath);
 		localIRODSTransfer.setLocalAbsolutePath(localCollectionAbsolutePath);
 		localIRODSTransfer.setSynchronization(synchronization);
 		localIRODSTransfer.setTransferHost(irodsAccount.getHost());
@@ -222,6 +228,16 @@ public class SynchronizeProcessorImplTest {
 
 		synchronizeProcessor.synchronizeLocalToIRODS(localIRODSTransfer);
 		
+		FileTreeDiffUtility fileTreeDiffUtility = new FileTreeDiffUtilityImpl(
+				irodsAccount, irodsFileSystem
+				.getIRODSAccessObjectFactory());
+		
+		boolean noDiffs = fileTreeDiffUtility.verifyLocalAndIRODSTreesMatch(new File(localCollectionAbsolutePath),
+				irodsCollectionRootAbsolutePath, 0L, 0L);
+		
+		
+		TestCase.assertTrue("diffs found after synch", noDiffs);
+
 	}
 
 	/*

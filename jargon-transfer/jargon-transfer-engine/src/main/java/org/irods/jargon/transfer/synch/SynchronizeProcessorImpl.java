@@ -5,6 +5,8 @@ import java.io.File;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
+import org.irods.jargon.core.transfer.TransferStatus;
+import org.irods.jargon.core.transfer.TransferStatusCallbackListener;
 import org.irods.jargon.datautils.synchproperties.SynchPropertiesService;
 import org.irods.jargon.datautils.tree.FileTreeDiffUtility;
 import org.irods.jargon.datautils.tree.FileTreeModel;
@@ -23,19 +25,18 @@ import org.slf4j.LoggerFactory;
  *         deletion? Skip for now, but test out how this would look
  * 
  */
-public class SynchronizeProcessorImpl implements SynchronizeProcessor {
+public class SynchronizeProcessorImpl implements SynchronizeProcessor, TransferStatusCallbackListener {
 
 	private IRODSAccount irodsAccount;
-
 	private IRODSAccessObjectFactory irodsAccessObjectFactory;
-
 	private SynchPropertiesService synchPropertiesService;
-
 	private TransferManager transferManager;
-
 	private FileTreeDiffUtility fileTreeDiffUtility;
-
 	private SynchronizingDiffProcessor synchronizingDiffProcessor;
+	private static final char SLASH = '/';
+
+	private static final Logger log = LoggerFactory
+			.getLogger(SynchronizeProcessorImpl.class);
 
 	public SynchronizingDiffProcessor getSynchronizingDiffProcessor() {
 		return synchronizingDiffProcessor;
@@ -47,10 +48,7 @@ public class SynchronizeProcessorImpl implements SynchronizeProcessor {
 		this.synchronizingDiffProcessor = synchronizingDiffProcessor;
 	}
 
-	private static final char SLASH = '/';
-
-	private static final Logger log = LoggerFactory
-			.getLogger(SynchronizeProcessorImpl.class);
+	
 
 	/**
 	 * Private constructor
@@ -160,7 +158,7 @@ public class SynchronizeProcessorImpl implements SynchronizeProcessor {
 		}
 
 		synchronizingDiffProcessor.processDiff(localIRODSTransfer,
-				irodsAccount, diffModel);
+				 diffModel);
 
 		log.debug("processing complete");
 	}
@@ -262,6 +260,20 @@ public class SynchronizeProcessorImpl implements SynchronizeProcessor {
 	public void setSynchPropertiesService(
 			final SynchPropertiesService synchPropertiesService) {
 		this.synchPropertiesService = synchPropertiesService;
+	}
+
+	@Override
+	public void statusCallback(TransferStatus transferStatus)
+			throws JargonException {
+		log.debug("status callback:{}", transferStatus);
+		
+	}
+
+	@Override
+	public void overallStatusCallback(TransferStatus transferStatus)
+			throws JargonException {
+		log.debug("overall status callback:{}", transferStatus);
+		
 	}
 
 }
