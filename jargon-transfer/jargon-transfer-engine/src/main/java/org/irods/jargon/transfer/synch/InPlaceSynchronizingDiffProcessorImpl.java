@@ -1,6 +1,3 @@
-/**
- * 
- */
 package org.irods.jargon.transfer.synch;
 
 import java.util.Enumeration;
@@ -53,18 +50,28 @@ public class InPlaceSynchronizingDiffProcessorImpl implements
 	private static final Logger log = LoggerFactory
 			.getLogger(InPlaceSynchronizingDiffProcessorImpl.class);
 
+	
 	public IRODSAccount getIrodsAccount() {
 		return irodsAccount;
 	}
 
+	/**
+	 * Required dependency
+	 * @param irodsAccount {@link IRODSAccount} for the given synch
+	 */
 	public void setIrodsAccount(final IRODSAccount irodsAccount) {
 		this.irodsAccount = irodsAccount;
 	}
 
+	
 	public TransferStatusCallbackListener getCallbackListener() {
 		return callbackListener;
 	}
 
+	/**
+	 * Optional dependency
+	 * @param callbackListener {@link TransferStatusCallbackListener} implementation that can receive progress callbacks for transfers
+	 */
 	public void setCallbackListener(
 			final TransferStatusCallbackListener callbackListener) {
 		this.callbackListener = callbackListener;
@@ -74,6 +81,10 @@ public class InPlaceSynchronizingDiffProcessorImpl implements
 		return irodsAccessObjectFactory;
 	}
 
+	/**
+	 * Required dependency
+	 * @param irodsAccessObjectFactory {@link IRODSAccessObjectFactory} that can create various iRODS accessing service objects
+	 */
 	public void setIrodsAccessObjectFactory(
 			final IRODSAccessObjectFactory irodsAccessObjectFactory) {
 		this.irodsAccessObjectFactory = irodsAccessObjectFactory;
@@ -83,6 +94,10 @@ public class InPlaceSynchronizingDiffProcessorImpl implements
 		return transferManager;
 	}
 
+	/**
+	 * Required dependency
+	 * @param transferManager {@link TransferManager} implementation that manages the transfer queue and operations
+	 */
 	public void setTransferManager(final TransferManager transferManager) {
 		this.transferManager = transferManager;
 	}
@@ -406,7 +421,6 @@ public class InPlaceSynchronizingDiffProcessorImpl implements
 				.getCollectionAndDataObjectListingEntry();
 
 		String targetRelativePath;
-		// FIXME: breaks right here
 		if (entry.getObjectType() == ObjectType.COLLECTION) {
 			targetRelativePath = entry.getParentPath().substring(
 					localRootAbsolutePath.length());
@@ -423,11 +437,11 @@ public class InPlaceSynchronizingDiffProcessorImpl implements
 				targetRelativePath);
 
 		try {
+			transferControlBlock.resetTransferData();
 			dataTransferOperations.putOperation(
 					entry.getFormattedAbsolutePath(), sb.toString(),
 					irodsAccount.getDefaultStorageResource(), callbackListener,
-					transferControlBlock); // TODO: should this be a new TCB for
-											// each sub operation of a synch?
+					transferControlBlock);
 		} catch (Exception e) {
 
 			log.error("error in put operation as part of synch", e);

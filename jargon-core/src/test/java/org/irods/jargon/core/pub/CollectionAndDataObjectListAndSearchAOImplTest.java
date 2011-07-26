@@ -848,8 +848,8 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 	@Test
 	public void testSearchDataObjects() throws Exception {
 
-		String subdirPrefix = "testSearchDataObjects";
-		String searchTerm = "testSearchDataObjectsIBetYouWontReplicateThisNameAnywhere";
+		String subdirPrefix = "testSearchDataObjectsSubdir";
+		String searchTerm = "testSearchDataObjectsIBetYouWontReplicateThisNameAnywhereTerm";
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
@@ -881,7 +881,7 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 
 		// second file, slightly different prefix on name
 		localFileName = FileGenerator.generateFileOfFixedLengthGivenName(
-				absPath, "someSortOfPrefix" + searchTerm + "testv1.txt", 1);
+				absPath, "testSearchDataObjects" + searchTerm + "testv1.txt", 1);
 		localFile = new File(localFileName);
 		dataObjectAO.putLocalDataObjectToIRODS(localFile, irodsFile, true);
 
@@ -900,8 +900,8 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 	@Test
 	public void testSearchCollectionsAndDataObjects() throws Exception {
 
-		String subdirPrefix = "testSearchCollectionsAndDataObjects";
-		String searchTerm = "testSearchCollectionsAndDataObjectsAndThisIsAPrettyUniqueSearchNameToo";
+		String subdirPrefix = "testSearchCollectionsAndDataObjectsSubdir";
+		String searchTerm = "testSearchCollectionsAndDataObjectsAndThisIsAPrettyUniqueSearchNameTooTerm";
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);

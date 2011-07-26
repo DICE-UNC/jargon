@@ -9,26 +9,17 @@ import junit.framework.Assert;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.pub.IRODSFileSystem;
 import org.irods.jargon.core.pub.io.IRODSFile;
-import org.irods.jargon.core.transfer.DefaultTransferControlBlock;
-import org.irods.jargon.core.transfer.TransferControlBlock;
-import org.irods.jargon.datautils.synchproperties.SynchPropertiesServiceImpl;
 import org.irods.jargon.datautils.tree.FileTreeDiffUtility;
 import org.irods.jargon.datautils.tree.FileTreeDiffUtilityImpl;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.irods.jargon.testutils.filemanip.FileGenerator;
 import org.irods.jargon.transfer.dao.domain.FrequencyType;
-import org.irods.jargon.transfer.dao.domain.LocalIRODSTransfer;
 import org.irods.jargon.transfer.dao.domain.Synchronization;
 import org.irods.jargon.transfer.dao.domain.SynchronizationType;
-import org.irods.jargon.transfer.dao.domain.TransferState;
-import org.irods.jargon.transfer.dao.domain.TransferType;
 import org.irods.jargon.transfer.engine.synch.SynchManagerService;
-import org.irods.jargon.transfer.synch.InPlaceSynchronizingDiffProcessorImpl;
-import org.irods.jargon.transfer.synch.SynchronizeProcessorImpl;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.mockito.Mockito;
 
 public class TransferManagerForSynchTest {
 
@@ -77,7 +68,6 @@ public class TransferManagerForSynchTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		
 
 		String rootCollection = "testEnqueueSynch";
 		String localCollectionAbsolutePath = scratchFileUtils
@@ -86,8 +76,8 @@ public class TransferManagerForSynchTest {
 
 		String irodsCollectionRootAbsolutePath = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH
-								+ "/" + rootCollection);
+						testingProperties, IRODS_TEST_SUBDIR_PATH + "/"
+								+ rootCollection);
 		IRODSFile irodsSynchFile = irodsFileSystem.getIRODSFileFactory(
 				irodsAccount)
 				.instanceIRODSFile(irodsCollectionRootAbsolutePath);
@@ -118,7 +108,7 @@ public class TransferManagerForSynchTest {
 		synchManagerService.createNewSynchConfiguration(synchronization);
 
 		synchronization = synchManagerService.findByName(rootCollection);
-		
+
 		transferManager.purgeAllTransfers();
 
 		transferManager.enqueueASynch(synchronization, irodsAccount);
@@ -129,7 +119,8 @@ public class TransferManagerForSynchTest {
 
 		while (true) {
 			if (waitCtr++ > 20) {
-				//Assert.fail("synch timed out");  FIXME uncomment after debugging done
+				// Assert.fail("synch timed out"); FIXME uncomment after
+				// debugging done
 			}
 			Thread.sleep(1000);
 			if (transferManager.getRunningStatus() == TransferManager.RunningStatus.IDLE) {
@@ -137,9 +128,10 @@ public class TransferManagerForSynchTest {
 			}
 
 		}
-		
+
 		Assert.assertEquals("should have been no errors",
-		 TransferManager.ErrorStatus.OK, transferManager.getErrorStatus());
+				TransferManager.ErrorStatus.OK,
+				transferManager.getErrorStatus());
 		FileTreeDiffUtility fileTreeDiffUtility = new FileTreeDiffUtilityImpl(
 				irodsAccount, irodsFileSystem.getIRODSAccessObjectFactory());
 		boolean noDiffs = fileTreeDiffUtility.verifyLocalAndIRODSTreesMatch(
@@ -149,7 +141,6 @@ public class TransferManagerForSynchTest {
 		Assert.assertTrue("diffs found after synch", noDiffs);
 
 	}
-	
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testEnqueueSynchNullSynch() throws Exception {

@@ -41,6 +41,22 @@ public class DefaultTransferControlBlock implements TransferControlBlock {
 	private TransferOptions transferOptions;
 	private long totalBytesTransferredSoFar = 0L;
 	private long totalBytesToTransfer = 0L;
+	
+	
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.core.transfer.TransferControlBlock#resetTransferData()
+	 */
+	@Override
+	public synchronized void resetTransferData() {
+		cancelled = false;
+		restartHit = false;
+		errorCount = 0;
+		totalFilesToTransfer = 0;
+		totalFilesTransferredSoFar = 0;
+		totalBytesTransferredSoFar = 0;
+		totalBytesToTransfer = 0;
+	}
+
 
 	/**
 	 * Initializer that takes a restart path. This will be ignored if blank or
@@ -366,5 +382,6 @@ public class DefaultTransferControlBlock implements TransferControlBlock {
 	public void setTotalBytesToTransfer(long totalBytesToTransfer) {
 		this.totalBytesToTransfer = totalBytesToTransfer;
 	}
+	
 
 }

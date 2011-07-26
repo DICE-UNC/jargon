@@ -69,7 +69,7 @@ public interface SynchronizeProcessor {
 	void synchronizeLocalToIRODS(LocalIRODSTransfer localIRODSTransfer)
 			throws JargonException;
 
-	public abstract void setSynchronizingDiffProcessor(final SynchronizingDiffProcessor synchronizingDiffProcessor);
+	void setSynchronizingDiffProcessor(final SynchronizingDiffProcessor synchronizingDiffProcessor);
 
 	
 

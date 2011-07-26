@@ -17,6 +17,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
+import org.irods.jargon.core.connection.IRODSAccount;
+
 /**
  * Represents the specification of a synchronization relationship between a local file system and an iRODS file system
  * 
@@ -397,6 +399,22 @@ public class Synchronization {
 	 */
 	public Set<LocalIRODSTransfer> getLocalIRODSTransfers() {
 		return localIRODSTransfers;
+	}
+	
+	/**
+	 * Handy method to build an <code>IRODSAccount</code> from data in the <code>Synchronization</code>.
+	 * @return {@link IRODSAccount} built from synch data
+	 */
+	public IRODSAccount buildIRODSAccountFromSynchronizationData() {
+	
+			IRODSAccount irodsAccount = new IRODSAccount(this.irodsHostName,
+					this.irodsPort,
+					this.irodsUserName,
+					this.irodsPassword,
+					"",
+					this.irodsZone,
+					this.defaultResourceName);
+			return irodsAccount;
 	}
 
 }

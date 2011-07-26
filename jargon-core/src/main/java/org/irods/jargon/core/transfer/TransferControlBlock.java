@@ -187,4 +187,9 @@ public interface TransferControlBlock {
 	 */
 	TransferOptions getTransferOptions();
 
+	/**
+	 * Reset the 'per transfer' fields so that the control block can be used again with fresh statistics.
+	 */
+	void resetTransferData();
+
 }

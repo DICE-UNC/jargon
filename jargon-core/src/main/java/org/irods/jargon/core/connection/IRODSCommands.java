@@ -7,6 +7,7 @@ import static edu.sdsc.grid.io.irods.IRODSConstants.OPR_COMPLETE_AN;
 import static edu.sdsc.grid.io.irods.IRODSConstants.RODS_API_REQ;
 
 import java.io.BufferedInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InterruptedIOException;
@@ -1010,8 +1011,8 @@ public class IRODSCommands implements IRODSManagedConnection {
 		getIRODSAccount();
 		if (IRODSAccount.isDefaultObfuscate()) {
 			try {
-				password = new Lucid(FileFactory.newFile(new URI(password)))
-						.l16();
+				password = new Lucid(new File(password))
+						.encodePassword();
 			} catch (Throwable e) {
 				log.error("error during account obfuscation", e);
 			}
