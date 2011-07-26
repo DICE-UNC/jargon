@@ -2,7 +2,6 @@ package org.irods.jargon.core.packinstr;
 
 import junit.framework.Assert;
 
-import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.packinstr.ExecCmd.PathHandlingMode;
 import org.junit.Test;
 
@@ -27,12 +26,12 @@ public class ExecCmdTest {
 		String args = "";
 
 		ExecCmd execCmd = ExecCmd
-				.instanceWithCommandAllowingStreamingForLargeResultsPost25(cmd, args);
+				.instanceWithCommandAllowingStreamingForLargeResultsPost25(cmd,
+						args);
 		Assert.assertNotNull(
 				"basic check fails, null returned from PI initializer", execCmd);
 		Assert.assertEquals("api number not set",
-				ExecCmd.EXEC_AND_USE_ENHANCED_STREAM,
-				execCmd.getApiNumber());
+				ExecCmd.EXEC_AND_USE_ENHANCED_STREAM, execCmd.getApiNumber());
 	}
 
 	@Test(expected = IllegalArgumentException.class)
@@ -116,7 +115,8 @@ public class ExecCmdTest {
 		String args = "";
 
 		ExecCmd execCmd = ExecCmd
-				.instanceWithCommandAllowingStreamingForLargeResultsPost25(cmd, args);
+				.instanceWithCommandAllowingStreamingForLargeResultsPost25(cmd,
+						args);
 		String actualXML = execCmd.getParsedTags();
 
 		StringBuilder sb = new StringBuilder();
@@ -138,8 +138,7 @@ public class ExecCmdTest {
 				actualXML);
 
 		Assert.assertEquals("did not set streaming api nbr",
-				ExecCmd.EXEC_AND_USE_ENHANCED_STREAM,
-				execCmd.getApiNumber());
+				ExecCmd.EXEC_AND_USE_ENHANCED_STREAM, execCmd.getApiNumber());
 
 	}
 
@@ -150,15 +149,16 @@ public class ExecCmdTest {
 		String host = "host";
 		String absPath = "/an/abs/path";
 
-		ExecCmd execCmd = ExecCmd.instanceWithHostAndArgumentsToPassParametersPriorTo25(
-				cmd, args, host, absPath, PathHandlingMode.NONE);
+		ExecCmd execCmd = ExecCmd
+				.instanceWithHostAndArgumentsToPassParametersPriorTo25(cmd,
+						args, host, absPath, PathHandlingMode.NONE);
 		Assert.assertNotNull(
 				"basic check fails, null returned from PI initializer", execCmd);
 		Assert.assertEquals("api number not set",
 				ExecCmd.STANDARD_EXEC_ENCAPSULATE_DATA_IN_RESPONSE_API_NBR,
 				execCmd.getApiNumber());
 	}
-	
+
 	@Test
 	public void testInstanceWithAllParmsPost25() throws Exception {
 		String cmd = "hello";
@@ -166,13 +166,13 @@ public class ExecCmdTest {
 		String host = "host";
 		String absPath = "/an/abs/path";
 
-		ExecCmd execCmd = ExecCmd.instanceWithHostAndArgumentsToPassParametersPost25(
-				cmd, args, host, absPath,PathHandlingMode.NONE);
+		ExecCmd execCmd = ExecCmd
+				.instanceWithHostAndArgumentsToPassParametersPost25(cmd, args,
+						host, absPath, PathHandlingMode.NONE);
 		Assert.assertNotNull(
 				"basic check fails, null returned from PI initializer", execCmd);
 		Assert.assertEquals("api number not set",
-				ExecCmd.EXEC_AND_USE_ENHANCED_STREAM,
-				execCmd.getApiNumber());
+				ExecCmd.EXEC_AND_USE_ENHANCED_STREAM, execCmd.getApiNumber());
 	}
 
 	@Test
@@ -182,13 +182,13 @@ public class ExecCmdTest {
 		String host = "";
 		String absPath = "/an/abs/path";
 
-		ExecCmd execCmd = ExecCmd.instanceWithHostAndArgumentsToPassParametersPost25(
-				cmd, args, host, absPath,PathHandlingMode.NONE);
+		ExecCmd execCmd = ExecCmd
+				.instanceWithHostAndArgumentsToPassParametersPost25(cmd, args,
+						host, absPath, PathHandlingMode.NONE);
 		Assert.assertNotNull(
 				"basic check fails, null returned from PI initializer", execCmd);
 		Assert.assertEquals("api number not set",
-				ExecCmd.EXEC_AND_USE_ENHANCED_STREAM,
-				execCmd.getApiNumber());
+				ExecCmd.EXEC_AND_USE_ENHANCED_STREAM, execCmd.getApiNumber());
 	}
 
 }

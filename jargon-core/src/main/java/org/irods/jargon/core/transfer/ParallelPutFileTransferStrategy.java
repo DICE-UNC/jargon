@@ -99,9 +99,7 @@ public final class ParallelPutFileTransferStrategy extends
 		log.info("initiating transfer for: {} without executor",
 				this.toString());
 		final List<ParallelPutTransferThread> parallelPutTransferThreads = new ArrayList<ParallelPutTransferThread>();
-		final long localFileLength = localFile.length();
-		final long transferLength = localFileLength / numberOfThreads;
-
+		localFile.length();
 		ParallelPutTransferThread parallelTransferThread;
 
 		for (int i = 0; i < numberOfThreads; i++) {
@@ -116,14 +114,15 @@ public final class ParallelPutFileTransferStrategy extends
 
 		try {
 			log.info("invoking executor threads for put");
-			List<Future<Object>> transferThreadStates = executor.invokeAll(parallelPutTransferThreads);
-			
+			List<Future<Object>> transferThreadStates = executor
+					.invokeAll(parallelPutTransferThreads);
+
 			if (log.isInfoEnabled()) {
 				for (Future<Object> transferState : transferThreadStates) {
 					log.info("transfer state:{}", transferState);
 				}
 			}
-			
+
 			log.info("executor completed");
 		} catch (InterruptedException e) {
 			log.error("interrupted exception in thread", e);
@@ -139,11 +138,11 @@ public final class ParallelPutFileTransferStrategy extends
 				this.toString());
 		final List<Thread> transferRunningThreads = new ArrayList<Thread>();
 		final List<ParallelPutTransferThread> parallelPutTransferThreads = new ArrayList<ParallelPutTransferThread>();
-	
 
 		for (int i = 0; i < numberOfThreads; i++) {
 
-			ParallelPutTransferThread  parallelTransferThread = ParallelPutTransferThread.instance(this);
+			ParallelPutTransferThread parallelTransferThread = ParallelPutTransferThread
+					.instance(this);
 
 			transferRunningThreads.add(new Thread(parallelTransferThread));
 			parallelPutTransferThreads.add(parallelTransferThread);
@@ -151,7 +150,7 @@ public final class ParallelPutFileTransferStrategy extends
 			log.info("creating transfer thread:{}", parallelTransferThread);
 
 		}
-	
+
 		for (Thread parallelTransferThreadToStart : transferRunningThreads) {
 			parallelTransferThreadToStart.start();
 			log.info("started parallel transfer thread for thread: {}",

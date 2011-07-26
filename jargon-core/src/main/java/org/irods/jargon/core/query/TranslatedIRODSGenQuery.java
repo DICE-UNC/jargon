@@ -53,16 +53,17 @@ public class TranslatedIRODSGenQuery {
 			final IRODSGenQuery irodsQuery, final boolean distinct)
 			throws JargonException {
 		return new TranslatedIRODSGenQuery(translatedSelectFields,
-				translatedQueryConditions, new ArrayList<GenQuerySelectField>(),
-				irodsQuery, distinct);
+				translatedQueryConditions,
+				new ArrayList<GenQuerySelectField>(), irodsQuery, distinct);
 
 	}
 
 	public static TranslatedIRODSGenQuery instanceWithGroupBy(
 			final List<GenQuerySelectField> translatedSelectFields,
 			final List<TranslatedGenQueryCondition> translatedQueryConditions,
-			final List<GenQuerySelectField> groupByFields, final IRODSGenQuery irodsQuery,
-			final boolean distinct) throws JargonException {
+			final List<GenQuerySelectField> groupByFields,
+			final IRODSGenQuery irodsQuery, final boolean distinct)
+			throws JargonException {
 		return new TranslatedIRODSGenQuery(translatedSelectFields,
 				translatedQueryConditions, groupByFields, irodsQuery, distinct);
 
@@ -92,15 +93,17 @@ public class TranslatedIRODSGenQuery {
 			final List<TranslatedGenQueryCondition> translatedQueryConditions,
 			final IRODSGenQuery irodsQuery) throws JargonException {
 		return new TranslatedIRODSGenQuery(translatedSelectFields,
-				translatedQueryConditions, new ArrayList<GenQuerySelectField>(),
-				irodsQuery, true);
+				translatedQueryConditions,
+				new ArrayList<GenQuerySelectField>(), irodsQuery, true);
 
 	}
 
-	private TranslatedIRODSGenQuery(final List<GenQuerySelectField> selectFields,
+	private TranslatedIRODSGenQuery(
+			final List<GenQuerySelectField> selectFields,
 			final List<TranslatedGenQueryCondition> translatedQueryConditions,
-			final List<GenQuerySelectField> groupByFields, final IRODSGenQuery irodsQuery,
-			final boolean distinct) throws JargonException {
+			final List<GenQuerySelectField> groupByFields,
+			final IRODSGenQuery irodsQuery, final boolean distinct)
+			throws JargonException {
 
 		if (translatedQueryConditions == null) {
 			throw new JargonException("conditions are null");
@@ -175,5 +178,4 @@ public class TranslatedIRODSGenQuery {
 		return sb.toString();
 	}
 
-	
 }

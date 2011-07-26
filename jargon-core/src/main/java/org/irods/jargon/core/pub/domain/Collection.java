@@ -154,7 +154,7 @@ public class Collection extends IRODSDomainObject {
 	public Date getModifiedAt() {
 		return modifiedAt;
 	}
-	
+
 	public void setModifiedAt(final Date modifiedAt) {
 		this.modifiedAt = modifiedAt;
 	}

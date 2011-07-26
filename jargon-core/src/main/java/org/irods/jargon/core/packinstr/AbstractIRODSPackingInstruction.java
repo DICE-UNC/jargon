@@ -9,8 +9,6 @@ import org.irods.jargon.core.exception.JargonException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import edu.sdsc.grid.io.irods.Tag;
-
 /**
  * Generic representation of a packing instruction for the IRODS XML Protocol
  * 
@@ -156,11 +154,11 @@ public abstract class AbstractIRODSPackingInstruction implements IRodsPI {
 	public String getParsedTags() throws JargonException {
 
 		Tag message = getTagValue();
-		
+
 		if (message == null) {
 			return null;
 		}
-		
+
 		return message.parseTag();
 
 	}

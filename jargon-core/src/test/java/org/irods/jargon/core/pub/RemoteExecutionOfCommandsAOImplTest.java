@@ -63,7 +63,7 @@ public class RemoteExecutionOfCommandsAOImplTest {
 	@Test
 	public final void testExecuteARemoteCommandAndGetStreamGivingCommandNameAndArgs()
 			throws Exception {
-		
+
 		String cmd = "hello";
 		String args = "";
 
@@ -173,7 +173,7 @@ public class RemoteExecutionOfCommandsAOImplTest {
 						irodsAccount);
 
 		InputStream inputStream = remoteExecutionOfCommandsAO
-		.executeARemoteCommandAndGetStreamUsingAnIRODSFileAbsPathToDetermineHost(
+				.executeARemoteCommandAndGetStreamUsingAnIRODSFileAbsPathToDetermineHost(
 						cmd, args, targetIrodsFile);
 
 		BufferedReader br = new BufferedReader(new InputStreamReader(
@@ -191,9 +191,11 @@ public class RemoteExecutionOfCommandsAOImplTest {
 
 		Assert.assertTrue("did not successfully execute hello command",
 				"Hello world  from irods".trim().equals(result.trim()));
-		Assert.assertFalse("should not have responded with file name in response", result.indexOf(testFileName) > -1);
+		Assert.assertFalse(
+				"should not have responded with file name in response",
+				result.indexOf(testFileName) > -1);
 	}
-	
+
 	@Test
 	public final void testExecuteARemoteCommandAndGetStreamUsingAnIRODSFileAbsPathToAddPhysPathToCommandArgs()
 			throws Exception {
@@ -235,7 +237,8 @@ public class RemoteExecutionOfCommandsAOImplTest {
 				.getIRODSAccessObjectFactory().getRemoteExecutionOfCommandsAO(
 						irodsAccount);
 
-		InputStream inputStream = remoteExecutionOfCommandsAO.executeARemoteCommandAndGetStreamAddingPhysicalPathAsFirstArgumentToRemoteScript(
+		InputStream inputStream = remoteExecutionOfCommandsAO
+				.executeARemoteCommandAndGetStreamAddingPhysicalPathAsFirstArgumentToRemoteScript(
 						cmd, args, targetIrodsFile);
 
 		BufferedReader br = new BufferedReader(new InputStreamReader(
@@ -253,7 +256,8 @@ public class RemoteExecutionOfCommandsAOImplTest {
 
 		Assert.assertFalse("did not successfully execute hello command",
 				"Hello world  from irods".trim().equals(result.trim()));
-		Assert.assertTrue("should have responded with file name in response", result.indexOf(testFileName) > -1);
+		Assert.assertTrue("should have responded with file name in response",
+				result.indexOf(testFileName) > -1);
 	}
 
 	@Test
@@ -281,7 +285,8 @@ public class RemoteExecutionOfCommandsAOImplTest {
 
 		// test is only valid for post 2.4.1 FIXME: bump this up to the next
 		// released version
-		if (!props.isTheIrodsServerAtLeastAtTheGivenReleaseVersion(RemoteExecuteServiceImpl.STREAMING_API_CUTOFF)) {
+		if (!props
+				.isTheIrodsServerAtLeastAtTheGivenReleaseVersion(RemoteExecuteServiceImpl.STREAMING_API_CUTOFF)) {
 			irodsFileSystem.closeAndEatExceptions();
 			return;
 		}

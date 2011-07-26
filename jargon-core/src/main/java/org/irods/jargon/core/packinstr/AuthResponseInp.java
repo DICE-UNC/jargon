@@ -6,8 +6,6 @@ package org.irods.jargon.core.packinstr;
 
 import org.irods.jargon.core.exception.JargonException;
 
-import edu.sdsc.grid.io.irods.Tag;
-
 /**
  * Translate a request into an AuthResponse_PI xml protocol request.
  * 

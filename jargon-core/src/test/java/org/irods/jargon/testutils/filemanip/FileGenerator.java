@@ -131,7 +131,7 @@ public class FileGenerator {
 
 		// 1024 bytes of random stuff should be plenty, then just repeat it as
 		// needed
-		
+
 		File dir = new File(fileDirectory);
 		dir.mkdirs();
 
@@ -284,7 +284,7 @@ public class FileGenerator {
 				numberOfFiles = generateRandomNumber(minNumberOfFiles,
 						maxNumberOfFiles);
 			}
-			
+
 			log.debug("generating {} files", numberOfFiles);
 
 			generateManyFilesInParentCollectionByAbsolutePath(

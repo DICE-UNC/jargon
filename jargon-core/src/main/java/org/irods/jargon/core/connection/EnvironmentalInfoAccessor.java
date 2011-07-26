@@ -5,10 +5,9 @@ package org.irods.jargon.core.connection;
 
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.packinstr.MiscSvrInfo;
+import org.irods.jargon.core.packinstr.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import edu.sdsc.grid.io.irods.Tag;
 
 /**
  * Obtain information about the connected irods server.

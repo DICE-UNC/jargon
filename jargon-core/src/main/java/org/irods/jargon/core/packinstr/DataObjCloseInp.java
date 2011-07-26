@@ -5,8 +5,6 @@ package org.irods.jargon.core.packinstr;
 
 import org.irods.jargon.core.exception.JargonException;
 
-import edu.sdsc.grid.io.irods.Tag;
-
 /**
  * Translation of a DataObjInp operation into XML protocol format.
  * 

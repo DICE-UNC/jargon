@@ -63,26 +63,12 @@ public class ReadRandomFile {
 	}
 
 	/*
-	public static void main(final String args[]) {
-		if (args.length != 1) {
-			System.err.println("missing filename");
-			System.exit(1);
-		}
-
-		try {
-			ReadRandomFile rr = new ReadRandomFile(args[0]);
-			long pos = 0;
-			int c;
-			byte buf[] = new byte[1];
-			while ((c = rr.read(pos)) != -1) {
-				pos++;
-				buf[0] = (byte) c;
-				System.out.write(buf, 0, 1);
-			}
-			rr.close();
-		} catch (IOException e) {
-			System.err.println(e);
-		}
-	}
-	*/
+	 * public static void main(final String args[]) { if (args.length != 1) {
+	 * System.err.println("missing filename"); System.exit(1); }
+	 * 
+	 * try { ReadRandomFile rr = new ReadRandomFile(args[0]); long pos = 0; int
+	 * c; byte buf[] = new byte[1]; while ((c = rr.read(pos)) != -1) { pos++;
+	 * buf[0] = (byte) c; System.out.write(buf, 0, 1); } rr.close(); } catch
+	 * (IOException e) { System.err.println(e); } }
+	 */
 }

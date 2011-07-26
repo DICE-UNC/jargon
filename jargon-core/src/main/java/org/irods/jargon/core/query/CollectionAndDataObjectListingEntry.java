@@ -24,7 +24,8 @@ import org.irods.jargon.core.pub.domain.UserFilePermission;
  * @author Mike Conway - DICE (www.irods.org)
  * 
  */
-public class CollectionAndDataObjectListingEntry extends IRODSDomainObject implements Comparable<CollectionAndDataObjectListingEntry> {
+public class CollectionAndDataObjectListingEntry extends IRODSDomainObject
+		implements Comparable<CollectionAndDataObjectListingEntry> {
 
 	public enum ObjectType {
 		COLLECTION, DATA_OBJECT
@@ -224,14 +225,18 @@ public class CollectionAndDataObjectListingEntry extends IRODSDomainObject imple
 	}
 
 	/**
-	 * Gets the permissions associated with the collection or data object.  Note that this information is not retrieved in some
-	 * of the query methods within Jargon, so make sure that a method that adds user permissions is called.  In other cases, this
-	 * collection will be empty.
-	 * @return <code>List</code> of {@link UserFilePermission} with the per-user ACL information, included if explicity requested from Jargon, otherwise, empty
+	 * Gets the permissions associated with the collection or data object. Note
+	 * that this information is not retrieved in some of the query methods
+	 * within Jargon, so make sure that a method that adds user permissions is
+	 * called. In other cases, this collection will be empty.
+	 * 
+	 * @return <code>List</code> of {@link UserFilePermission} with the per-user
+	 *         ACL information, included if explicity requested from Jargon,
+	 *         otherwise, empty
 	 */
 	public List<UserFilePermission> getUserFilePermission() {
 		return userFilePermission;
-	} 
+	}
 
 	public void setUserFilePermission(
 			final List<UserFilePermission> userFilePermission) {
@@ -239,7 +244,8 @@ public class CollectionAndDataObjectListingEntry extends IRODSDomainObject imple
 	}
 
 	@Override
-	public int compareTo(CollectionAndDataObjectListingEntry obj) {
-		return this.getFormattedAbsolutePath().compareTo(((CollectionAndDataObjectListingEntry) obj).getFormattedAbsolutePath());		
+	public int compareTo(final CollectionAndDataObjectListingEntry obj) {
+		return this.getFormattedAbsolutePath().compareTo(
+				(obj).getFormattedAbsolutePath());
 	}
 }

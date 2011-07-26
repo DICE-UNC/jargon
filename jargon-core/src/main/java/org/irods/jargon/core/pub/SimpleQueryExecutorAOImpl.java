@@ -10,14 +10,13 @@ import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.packinstr.SimpleQueryInp;
+import org.irods.jargon.core.packinstr.Tag;
 import org.irods.jargon.core.query.IRODSQueryResultRow;
 import org.irods.jargon.core.query.IRODSQueryResultSetInterface;
 import org.irods.jargon.core.query.IRODSSimpleQueryResultSet;
 import org.irods.jargon.core.query.SimpleQuery;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import edu.sdsc.grid.io.irods.Tag;
 
 /**
  * Access object to execute queries using the iRODS Simple Query facility. This
@@ -65,7 +64,7 @@ public class SimpleQueryExecutorAOImpl extends IRODSGenericAO implements
 
 		SimpleQueryInp simpleQueryInp = SimpleQueryInp.instance(simpleQuery);
 
-		Tag response =  getIRODSProtocol().irodsFunction(simpleQueryInp);
+		Tag response = getIRODSProtocol().irodsFunction(simpleQueryInp);
 
 		if (response == null) {
 			log.info("response from IRODS call indicates no rows found");
@@ -80,21 +79,22 @@ public class SimpleQueryExecutorAOImpl extends IRODSGenericAO implements
 		String rawResponse = response.getTag(OUT_BUF).getStringValue();
 		List<IRODSQueryResultRow> result = new ArrayList<IRODSQueryResultRow>();
 		IRODSQueryResultRow irodsQueryResultRow;
-		
+
 		String[] rows = rawResponse.split("\n");
-		
+
 		List<String> colNames = new ArrayList<String>();
 		List<String> colValues = new ArrayList<String>();
-		
-		// get the column names, they come in a colName : colValue format, and I need to just grab them once
-		
+
+		// get the column names, they come in a colName : colValue format, and I
+		// need to just grab them once
+
 		if (rows.length >= 0) {
 			String thisCol;
 			int idx = rows[0].indexOf(':');
 			String firstColName = rows[0].substring(0, idx);
 			colNames.add(firstColName.trim());
-			
-			for(int i = 1; i < rows.length; i++) {
+
+			for (int i = 1; i < rows.length; i++) {
 				idx = rows[i].indexOf(':');
 				thisCol = rows[i].substring(0, idx).trim();
 				if (thisCol.equals(firstColName)) {
@@ -103,21 +103,22 @@ public class SimpleQueryExecutorAOImpl extends IRODSGenericAO implements
 				colNames.add(thisCol.trim());
 			}
 		}
-		
+
 		// now grab the rows
 		if (rows.length >= 0) {
 			String thisCol;
 			int idx = rows[0].indexOf(':');
 			String firstColName = rows[0].substring(idx + 1).trim();
 			colValues.add(rows[0].substring(idx + 1).trim());
-			
-			for(int i = 1; i < rows.length; i++) {
+
+			for (int i = 1; i < rows.length; i++) {
 				idx = rows[i].indexOf(':');
 				thisCol = rows[i].substring(0, idx).trim();
 				if (thisCol.equals(firstColName)) {
 					// new row, put out the last one if data
 					if (colValues.size() > 0) {
-						irodsQueryResultRow = IRODSQueryResultRow.instance(colValues, colNames);
+						irodsQueryResultRow = IRODSQueryResultRow.instance(
+								colValues, colNames);
 						result.add(irodsQueryResultRow);
 						irodsQueryResultRow = null;
 						colValues = new ArrayList<String>();
@@ -126,10 +127,11 @@ public class SimpleQueryExecutorAOImpl extends IRODSGenericAO implements
 				colValues.add(rows[i].substring(idx + 1).trim());
 			}
 		}
-		
+
 		// get last set of values, if present
 		if (!colValues.isEmpty()) {
-			irodsQueryResultRow = IRODSQueryResultRow.instance(colValues, colNames);
+			irodsQueryResultRow = IRODSQueryResultRow.instance(colValues,
+					colNames);
 			result.add(irodsQueryResultRow);
 		}
 

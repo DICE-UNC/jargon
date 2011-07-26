@@ -14,6 +14,7 @@ import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.packinstr.GeneralAdminInp;
 import org.irods.jargon.core.packinstr.GetTempPasswordIn;
 import org.irods.jargon.core.packinstr.ModAvuMetadataInp;
+import org.irods.jargon.core.packinstr.Tag;
 import org.irods.jargon.core.packinstr.UserAdminInp;
 import org.irods.jargon.core.protovalues.UserTypeEnum;
 import org.irods.jargon.core.pub.domain.AvuData;
@@ -26,8 +27,6 @@ import org.irods.jargon.core.query.RodsGenQueryEnum;
 import org.irods.jargon.core.security.IRODSPasswordUtilities;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import edu.sdsc.grid.io.irods.Tag;
 
 /**
  * Class to access underlying user information in IRODS

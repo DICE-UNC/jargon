@@ -2,9 +2,12 @@ package org.irods.jargon.core.pub;
 
 import java.io.File;
 
+import org.irods.jargon.core.connection.IRODSSession;
+import org.irods.jargon.core.connection.JargonProperties;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.exception.JargonFileOrCollAlreadyExistsException;
 import org.irods.jargon.core.pub.io.IRODSFile;
+import org.irods.jargon.core.transfer.DefaultTransferControlBlock;
 import org.irods.jargon.core.transfer.TransferControlBlock;
 import org.irods.jargon.core.transfer.TransferStatusCallbackListener;
 
@@ -23,34 +26,60 @@ import org.irods.jargon.core.transfer.TransferStatusCallbackListener;
  * {@link org.irods.jargon.core.pub.IRODSFileSystem}, or from an
  * {@link org.irods.jargon.core.pub.IRODSAccessObjectFactory} implementation.
  * <p/>
- * A word should be said about controlling transfers.  There are two important components to most of the methods in this class, these are
- * the {@link TransferStatusCallbackListener} and the {@link TransferControlBlock}.  The <code>TransferStatusCallbackListener</code> allows a caller of a
- * method in this class to receive call-backs.  The call-backs may be an overall initiation of a transfer process, intra-file call-backs that give progress within a file
- * (under development, and will be controllable by setting transfer options}), and per file call-backs.  These are handy to display progress bars, monitor
- * error status, and so forth.  The <code>TransferControlBlock</code> specifies a shared object between the caller, and a process running a transfer.  The 
- * <code>TransferControlBlock</code> allows bi-directional communication between a client and a transfer process, and this should be synchronized properly.  
- * The <code>TransferControlBlock</code> can signal a cancellation of a process, adjust a transfer as it progresses, and contains aggregate information about
+ * A word should be said about controlling transfers. There are two important
+ * components to most of the methods in this class, these are the
+ * {@link TransferStatusCallbackListener} and the {@link TransferControlBlock}.
+ * The <code>TransferStatusCallbackListener</code> allows a caller of a method
+ * in this class to receive call-backs. The call-backs may be an overall
+ * initiation of a transfer process, intra-file call-backs that give progress
+ * within a file (under development, and will be controllable by setting
+ * transfer options}), and per file call-backs. These are handy to display
+ * progress bars, monitor error status, and so forth. The
+ * <code>TransferControlBlock</code> specifies a shared object between the
+ * caller, and a process running a transfer. The
+ * <code>TransferControlBlock</code> allows bi-directional communication between
+ * a client and a transfer process, and this should be synchronized properly.
+ * The <code>TransferControlBlock</code> can signal a cancellation of a process,
+ * adjust a transfer as it progresses, and contains aggregate information about
  * the transfer as it runs.
  * <p/>
- * Note that both the <code>TransferControlBlock</code> and <code>TransferStatusCallbackListener</code> are optional, and may be set to <code>null</code> in the 
- * various method signatures if not needed.
+ * Note that both the <code>TransferControlBlock</code> and
+ * <code>TransferStatusCallbackListener</code> are optional, and may be set to
+ * <code>null</code> in the various method signatures if not needed.
  * <p/>
- * Note that the status call-backs you receive need to be quickly processed by the implementor of the <code>TransferStatusCallbackListener</code>.  Jargon does not
- * play any tricks to queue up these call-backs, they are direct calls from the transfer process and can block progress of a transfer if not handled efficiently.
+ * Note that the status call-backs you receive need to be quickly processed by
+ * the implementor of the <code>TransferStatusCallbackListener</code>. Jargon
+ * does not play any tricks to queue up these call-backs, they are direct calls
+ * from the transfer process and can block progress of a transfer if not handled
+ * efficiently.
  * <p/>
- * Transfers can have multiple options that control their behavior.  These will be added as necessary, but will likely be too numerous to specify individually.  For this 
- * reason, a {@TransferOptions} class has been developed.  By default, Jargon will consult the {@link JargonProperties} as configured in the {@link IRODSSession} object.  
- * Those may be loaded from the default <code>jargon.properties</code> file, or those properties can be set up by an application.  If no <code>TransferOptions</code> are
- * specified, the <code>JargonProperties</code> will be consulted to build a default set.  In many cases, this is all that is required. 
+ * Transfers can have multiple options that control their behavior. These will
+ * be added as necessary, but will likely be too numerous to specify
+ * individually. For this reason, a {@TransferOptions} class
+ * has been developed. By default, Jargon will consult the
+ * {@link JargonProperties} as configured in the {@link IRODSSession} object.
+ * Those may be loaded from the default <code>jargon.properties</code> file, or
+ * those properties can be set up by an application. If no
+ * <code>TransferOptions</code> are specified, the <code>JargonProperties</code>
+ * will be consulted to build a default set. In many cases, this is all that is
+ * required.
  * <p/>
- * If particular properties are required for an individual transfer, it is possible to specify those options, where they apply.  These will be mostly relevant to 
- * 'put' and 'get' operations.  If custom properties should be set, the proper procedure is to create a <code>TransferControlBlock</code>, typically with the
- * {@link DefaultTransferControlBlock}, and use the method to set a custom <code>TransferOptions</code>.  Note that, in <code>DefaultTransferControlBlock</code>, the
- * get() and set() methods are synchronized so that <code>TransferOptions</code> may be changed while transfers occur.  This may be done, as each individual file transfer creates a copy of the <code>TransferOptions</code>.
- * To change options while a transfer is running, one may create a new instance of <code>TransferOptions</code>, and then use the synchronized method to set those
- * options in the <code>TransferControlBlock</code>
+ * If particular properties are required for an individual transfer, it is
+ * possible to specify those options, where they apply. These will be mostly
+ * relevant to 'put' and 'get' operations. If custom properties should be set,
+ * the proper procedure is to create a <code>TransferControlBlock</code>,
+ * typically with the {@link DefaultTransferControlBlock}, and use the method to
+ * set a custom <code>TransferOptions</code>. Note that, in
+ * <code>DefaultTransferControlBlock</code>, the get() and set() methods are
+ * synchronized so that <code>TransferOptions</code> may be changed while
+ * transfers occur. This may be done, as each individual file transfer creates a
+ * copy of the <code>TransferOptions</code>. To change options while a transfer
+ * is running, one may create a new instance of <code>TransferOptions</code>,
+ * and then use the synchronized method to set those options in the
+ * <code>TransferControlBlock</code>
  * <p/>
- * It is important to note that this arrangement is quite new, and subject to refinement as testing proceeds!
+ * It is important to note that this arrangement is quite new, and subject to
+ * refinement as testing proceeds!
  * 
  * @author Mike Conway - DICE (www.irods.org)
  * 
@@ -83,7 +112,7 @@ public interface DataTransferOperations extends IRODSAccessObject {
 	 * target location. There are other methods in this class that will take the
 	 * last part of the source path, and use that as the collection name in the
 	 * target.
-	 *  <p/>
+	 * <p/>
 	 * For this method, if the source is /coll1/coll2/coll3 and the target is
 	 * /coll4/coll5/coll6, the coll3 directory will be renamed to coll6 in the
 	 * target.
@@ -171,7 +200,7 @@ public interface DataTransferOperations extends IRODSAccessObject {
 			final TransferStatusCallbackListener transferStatusCallbackListener,
 			final TransferControlBlock transferControlBlock)
 			throws JargonException;
-	
+
 	/**
 	 * Get a file or collection from iRODS to the local file system. This method
 	 * will detect whether this is a get of a single file, or of a collection.
@@ -179,11 +208,15 @@ public interface DataTransferOperations extends IRODSAccessObject {
 	 * data from iRODS.
 	 * 
 	 * @param irodsSourceFileAbsolutePath
-	 *          <code>String</code> with the absolute path to the iRODS source file to retrieve to the client
+	 *            <code>String</code> with the absolute path to the iRODS source
+	 *            file to retrieve to the client
 	 * @param targetLocalFile
-	 *            <code>String</code> that is the absolute path to file in the local file system to which the iRODS data will be transferred
-	 * @param sourceResourceName <code>String</code> with the optional resource from which the file will be obtained.  This should be left blank if
-	 * not specified (not null)
+	 *            <code>String</code> that is the absolute path to file in the
+	 *            local file system to which the iRODS data will be transferred
+	 * @param sourceResourceName
+	 *            <code>String</code> with the optional resource from which the
+	 *            file will be obtained. This should be left blank if not
+	 *            specified (not null)
 	 * @param transferStatusCallbackListener
 	 *            {@link org.irods.jargon.core.transfer.TransferStatusCallbackListener}
 	 *            implementation that will receive callbacks indicating the
@@ -267,7 +300,6 @@ public interface DataTransferOperations extends IRODSAccessObject {
 			final String absolutePathToTheTargetCollection)
 			throws JargonException;
 
-
 	/**
 	 * Copy a file or collection from iRODS to iRODS.
 	 * 
@@ -280,7 +312,9 @@ public interface DataTransferOperations extends IRODSAccessObject {
 	 *            resource to which the file or collection will be copied
 	 * @param irodsTargetFileAbsolutePath
 	 *            <code>String<code> with the absolute path to the target iRODS file or collection.   A file may be copied to a collection
-	 * @param force <code>boolean</code> that indicates that any files that exist in the target will be copied over
+	 * @param force
+	 *            <code>boolean</code> that indicates that any files that exist
+	 *            in the target will be copied over
 	 * @param transferStatusCallbackListener
 	 *            an optional
 	 *            {@link org.irods.jargon.core.transfer.TransferStatusCallbackListener}
@@ -304,13 +338,21 @@ public interface DataTransferOperations extends IRODSAccessObject {
 			throws JargonException;
 
 	/**
-	 * Transfer a file from the local file system to iRODS.  This will be a recursive operation if a collection is specified.  If a collection is specified, that
-	 * collection will become a sub-directory added underneath the given parent.
+	 * Transfer a file from the local file system to iRODS. This will be a
+	 * recursive operation if a collection is specified. If a collection is
+	 * specified, that collection will become a sub-directory added underneath
+	 * the given parent.
 	 * 
-	 * @param sourceFileAbsolutePath <code>String</code> with the absolute path of the source file on the local file system
-	 * @param targetIrodsFileAbsolutePath <code>String</code> with the absolute path of the iRODS collection that will be the target of the put
-	 * @param targetResourceName <code>String</code> with the target resource name.  This may be set to blank if not used, in which case the iRODS 
-	 * default will be used.  Null is not acceptable
+	 * @param sourceFileAbsolutePath
+	 *            <code>String</code> with the absolute path of the source file
+	 *            on the local file system
+	 * @param targetIrodsFileAbsolutePath
+	 *            <code>String</code> with the absolute path of the iRODS
+	 *            collection that will be the target of the put
+	 * @param targetResourceName
+	 *            <code>String</code> with the target resource name. This may be
+	 *            set to blank if not used, in which case the iRODS default will
+	 *            be used. Null is not acceptable
 	 * @param transferStatusCallbackListener
 	 *            an optional
 	 *            {@link org.irods.jargon.core.transfer.TransferStatusCallbackListener}
@@ -355,12 +397,11 @@ public interface DataTransferOperations extends IRODSAccessObject {
 	 * @param irodsSourceFile
 	 *            <code>IRODSFile<code> with the the source file.
 	 * @param irodsTargetFile
-	 *            <code>IRODSFile</code> with the target of
-	 *            the move.
+	 *            <code>IRODSFile</code> with the target of the move.
 	 * @throws JargonException
 	 * @throws JargonFileOrCollAlreadyExistsException
 	 *             if a move is made to a file or collection that already exists
 	 */
 	void move(IRODSFile irodsSourceFile, IRODSFile irodsTargetFile)
-			throws JargonFileOrCollAlreadyExistsException, JargonException;	
+			throws JargonFileOrCollAlreadyExistsException, JargonException;
 }

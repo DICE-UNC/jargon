@@ -100,9 +100,8 @@ public class DefaultPropertiesJargonConfig implements JargonProperties {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.irods.jargon.core.connection.JargonProperties#getTransferThreadCorePoolSize
-	 * ()
+	 * @see org.irods.jargon.core.connection.JargonProperties#
+	 * getTransferThreadCorePoolSize ()
 	 */
 	@Override
 	public int getTransferThreadCorePoolSize() throws JargonException {
@@ -112,9 +111,8 @@ public class DefaultPropertiesJargonConfig implements JargonProperties {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.irods.jargon.core.connection.JargonProperties#getTransferThreadMaxPoolSize
-	 * ()
+	 * @see org.irods.jargon.core.connection.JargonProperties#
+	 * getTransferThreadMaxPoolSize ()
 	 */
 	@Override
 	public int getTransferThreadMaxPoolSize() throws JargonException {
@@ -182,8 +180,11 @@ public class DefaultPropertiesJargonConfig implements JargonProperties {
 
 	}
 
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.connection.JargonProperties#isAllowPutGetResourceRedirects()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.connection.JargonProperties#
+	 * isAllowPutGetResourceRedirects()
 	 */
 	@Override
 	public boolean isAllowPutGetResourceRedirects() throws JargonException {
@@ -191,8 +192,11 @@ public class DefaultPropertiesJargonConfig implements JargonProperties {
 		return Boolean.valueOf(propVal);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.connection.JargonProperties#isComputeChecksumAfterTransfer()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.connection.JargonProperties#
+	 * isComputeChecksumAfterTransfer()
 	 */
 	@Override
 	public boolean isComputeChecksumAfterTransfer() throws JargonException {
@@ -200,11 +204,15 @@ public class DefaultPropertiesJargonConfig implements JargonProperties {
 		return Boolean.valueOf(propVal);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.connection.JargonProperties#isComputeAndVerifyChecksumAfterTransfer()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.connection.JargonProperties#
+	 * isComputeAndVerifyChecksumAfterTransfer()
 	 */
 	@Override
-	public boolean isComputeAndVerifyChecksumAfterTransfer() throws JargonException {
+	public boolean isComputeAndVerifyChecksumAfterTransfer()
+			throws JargonException {
 		String propVal = verifyPropExistsAndGetAsString("transfer.computeandvalidate.checksum");
 		return Boolean.valueOf(propVal);
 	}

@@ -90,7 +90,7 @@ public class SimpleQueryExecutorAOImplTest {
 			irodsFileSystem.closeAndEatExceptions();
 			return;
 		}
-		
+
 		String querySQL = "select R_RESC_GROUP.resc_group_name, R_RESC_GROUP.resc_id, resc_name, R_RESC_GROUP.create_ts, R_RESC_GROUP.modify_ts from R_RESC_MAIN, R_RESC_GROUP where R_RESC_MAIN.resc_id = R_RESC_GROUP.resc_id and resc_group_name=?";
 		String resourceGroup = testingProperties
 				.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_GROUP_KEY);

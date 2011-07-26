@@ -74,8 +74,9 @@ public interface UserAO extends IRODSAccessObject {
 	 *         results.
 	 * @throws JargonException
 	 */
-	List<AvuData> listUserMetadataForUserId(String userId) throws JargonException;
-	
+	List<AvuData> listUserMetadataForUserId(String userId)
+			throws JargonException;
+
 	/**
 	 * Query the AVU metadata associated with the given user by user name.
 	 * 
@@ -158,18 +159,28 @@ public interface UserAO extends IRODSAccessObject {
 			throws JargonException;
 
 	/**
-	 * Add the AVU metadata for the given user.  This is only possible when a rods admin.
-	 * @param userName <code>String</code> with the user name to whom the AVU metadata will be added
-	 * @param avuData {@link AvuData} to be added for the user
+	 * Add the AVU metadata for the given user. This is only possible when a
+	 * rods admin.
+	 * 
+	 * @param userName
+	 *            <code>String</code> with the user name to whom the AVU
+	 *            metadata will be added
+	 * @param avuData
+	 *            {@link AvuData} to be added for the user
 	 * @throws JargonException
 	 */
 	void addAVUMetadata(String userName, AvuData avuData)
-			throws  JargonException;
+			throws JargonException;
 
 	/**
-	 * Remove the given AVU metadata from the user.  This is only possible when a rods admin.
-	 * @param userName <code>String</code> with the user name from whom the AVU metadata will be removed
-	 * @param avuData {@link AvuData} to be removed from the user
+	 * Remove the given AVU metadata from the user. This is only possible when a
+	 * rods admin.
+	 * 
+	 * @param userName
+	 *            <code>String</code> with the user name from whom the AVU
+	 *            metadata will be removed
+	 * @param avuData
+	 *            {@link AvuData} to be removed from the user
 	 * @throws DataNotFoundException
 	 * @throws JargonException
 	 */
@@ -177,9 +188,14 @@ public interface UserAO extends IRODSAccessObject {
 			throws DataNotFoundException, JargonException;
 
 	/**
-	 * Modify the given AVU metadata from the user.  This is only possible when a rods admin.
-	 * @param userName <code>String</code> with the user name from whom the AVU metadata will be removed
-	 * @param avuData {@link AvuData} to be modified 
+	 * Modify the given AVU metadata from the user. This is only possible when a
+	 * rods admin.
+	 * 
+	 * @param userName
+	 *            <code>String</code> with the user name from whom the AVU
+	 *            metadata will be removed
+	 * @param avuData
+	 *            {@link AvuData} to be modified
 	 * @throws DataNotFoundException
 	 * @throws JargonException
 	 */
@@ -187,10 +203,13 @@ public interface UserAO extends IRODSAccessObject {
 			throws DataNotFoundException, JargonException;
 
 	/**
-	 * For a given partial user name, return the user names that are like that one.  This is handy for creating auto-complete
-	 * data entry components that need to do quick user name lookups.  If actual <code>User</code> domain objects are needed, the 
-	 * <code>findWhere()</code> method provides an easy shortcut for obtaining extended user data.  This method will do a 'LIKE' query
-	 * and add a '%' wild card to the provided term
+	 * For a given partial user name, return the user names that are like that
+	 * one. This is handy for creating auto-complete data entry components that
+	 * need to do quick user name lookups. If actual <code>User</code> domain
+	 * objects are needed, the <code>findWhere()</code> method provides an easy
+	 * shortcut for obtaining extended user data. This method will do a 'LIKE'
+	 * query and add a '%' wild card to the provided term
+	 * 
 	 * @param userName
 	 * @return
 	 * @throws JargonException
@@ -199,10 +218,10 @@ public interface UserAO extends IRODSAccessObject {
 
 	/**
 	 * Generate a temporary password for the connected user
+	 * 
 	 * @return <code>String</code> with the temporary password
 	 * @throws JargonException
 	 */
 	String getTemporaryPasswordForConnectedUser() throws JargonException;
 
-	
 }

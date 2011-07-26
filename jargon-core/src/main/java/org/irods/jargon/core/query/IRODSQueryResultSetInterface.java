@@ -5,11 +5,12 @@ import java.util.List;
 import org.irods.jargon.core.exception.DataNotFoundException;
 
 /**
- * Interface that represents a result from some type of query of iRODS data.  Each query type (GenQuery, SimpleQuery) will have a different
- * implementation that represents the result.
+ * Interface that represents a result from some type of query of iRODS data.
+ * Each query type (GenQuery, SimpleQuery) will have a different implementation
+ * that represents the result.
  * 
  * @author Mike Conway - DICE (www.irods.org)
- *
+ * 
  */
 public interface IRODSQueryResultSetInterface {
 
@@ -35,6 +36,7 @@ public interface IRODSQueryResultSetInterface {
 
 	/**
 	 * Returns a list of the column names in the results;
+	 * 
 	 * @return <code>List<String></code> with the query column names.
 	 */
 	public abstract List<String> getColumnNames();

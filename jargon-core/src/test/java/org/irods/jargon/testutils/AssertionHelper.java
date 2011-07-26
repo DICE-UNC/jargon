@@ -328,9 +328,12 @@ public class AssertionHelper {
 		if (file1.exists() && file2.exists()) {
 			// ok
 		} else {
-			throw new IRODSTestAssertionException("compared files that do not exist in both trees - \nfile1:" + file1.getAbsolutePath() + " \nfile2:" + file2.getAbsolutePath());
+			throw new IRODSTestAssertionException(
+					"compared files that do not exist in both trees - \nfile1:"
+							+ file1.getAbsolutePath() + " \nfile2:"
+							+ file2.getAbsolutePath());
 		}
-		
+
 		if (file1.isDirectory() && file2.isDirectory()) {
 			File[] file1Files = file1.listFiles();
 			File[] file2Files = file2.listFiles();

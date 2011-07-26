@@ -12,8 +12,6 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import edu.sdsc.grid.io.irods.Tag;
-
 /**
  * @author Mike Conway - DICE (www.irods.org)
  * 

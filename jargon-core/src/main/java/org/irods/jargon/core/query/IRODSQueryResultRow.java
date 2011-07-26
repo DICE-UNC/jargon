@@ -29,16 +29,15 @@ public class IRODSQueryResultRow {
 	 * @param queryResultColumns
 	 *            <code>List</code> of query result columns
 	 * @param columnNames
-	 * 	<code>List<String></code> containing the column names.     
+	 *            <code>List<String></code> containing the column names.
 	 * @return <code>IRODSQueryResultRow</code> with the data for this row.
 	 * @throws JargonException
 	 */
 	public static IRODSQueryResultRow instance(
 			final List<String> queryResultColumns,
-			final List<String> columnNames)
-			throws JargonException {
-		return new IRODSQueryResultRow(queryResultColumns,
-				columnNames, 0, false);
+			final List<String> columnNames) throws JargonException {
+		return new IRODSQueryResultRow(queryResultColumns, columnNames, 0,
+				false);
 	}
 
 	/**
@@ -55,17 +54,15 @@ public class IRODSQueryResultRow {
 	 */
 	public static IRODSQueryResultRow instance(
 			final List<String> queryResultColumns,
-			final List<String> columnNames,
-			final int recordCount, final boolean lastResult)
-			throws JargonException {
-		return new IRODSQueryResultRow(queryResultColumns,
-				columnNames, recordCount, lastResult);
+			final List<String> columnNames, final int recordCount,
+			final boolean lastResult) throws JargonException {
+		return new IRODSQueryResultRow(queryResultColumns, columnNames,
+				recordCount, lastResult);
 	}
 
 	private IRODSQueryResultRow(final List<String> queryResultColumns,
-			final List<String> columnNames,
-			final int recordCount, final boolean lastResult)
-			throws JargonException {
+			final List<String> columnNames, final int recordCount,
+			final boolean lastResult) throws JargonException {
 
 		if (queryResultColumns == null) {
 			throw new JargonException("queryResultColumns is null");
@@ -145,7 +142,7 @@ public class IRODSQueryResultRow {
 			}
 			i++;
 		}
-		
+
 		return colPos;
 	}
 

@@ -9,8 +9,6 @@ import java.util.List;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.domain.AvuData;
 
-import edu.sdsc.grid.io.irods.Tag;
-
 /**
  * Translation of a ModifyAvuMetadataInp operation into XML protocol format.
  * 

@@ -27,10 +27,10 @@ public class IRODSGenQueryTranslator {
 			.getLogger(IRODSGenQueryTranslator.class);
 	private ExtensibleMetaDataMapping extensibleMetaDataMapping = null;
 
-	public static final String[] operatorStrings = { "<>", "<=",
-			">=", "not in", "not between", "not like",
-			"sounds like", "sounds not like", "TABLE", "num<", "num>", "num<=",
-			"num>=",  "=", "<", ">",  "in", "between", "like"};
+	public static final String[] operatorStrings = { "<>", "<=", ">=",
+			"not in", "not between", "not like", "sounds like",
+			"sounds not like", "TABLE", "num<", "num>", "num<=", "num>=", "=",
+			"<", ">", "in", "between", "like" };
 
 	public static final String ORDER_BY = "ORDER BY";
 	private static final String GROUP_BY = "GROUP BY";
@@ -572,6 +572,7 @@ public class IRODSGenQueryTranslator {
 	/**
 	 * Create a list where each entry is one order by field from the raw query.
 	 * Note this is experimental, and is not integrated in GenQuery as of yet
+	 * 
 	 * @param query
 	 * @return
 	 * @throws JargonQueryException
@@ -841,7 +842,7 @@ public class IRODSGenQueryTranslator {
 
 		return queryTokens;
 	}
-	
+
 	public IRODSServerProperties getIrodsServerProperties() {
 		return irodsServerProperties;
 	}

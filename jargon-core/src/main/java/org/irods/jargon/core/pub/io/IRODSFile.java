@@ -215,14 +215,19 @@ public interface IRODSFile {
 	boolean deleteWithForceOption();
 
 	/**
-	 * Reset cached data about the file (exists, type, length) so it can be accessed again
+	 * Reset cached data about the file (exists, type, length) so it can be
+	 * accessed again
 	 */
 	void reset();
 
 	/**
-	 * Special form of close that can take a file descriptor to close.  This has special uses for narrow cases in Jargon,
-	 * and should not typically be used.  In normal usage, the <code>IRODSFile</code> keeps track of its file descriptor.
-	 * @param fd <code>int<code> with the file descriptor associated with this file that should be closed in iRODS.
+	 * Special form of close that can take a file descriptor to close. This has
+	 * special uses for narrow cases in Jargon, and should not typically be
+	 * used. In normal usage, the <code>IRODSFile</code> keeps track of its file
+	 * descriptor.
+	 * 
+	 * @param fd
+	 *            <code>int<code> with the file descriptor associated with this file that should be closed in iRODS.
 	 * @throws JargonException
 	 */
 	void closeGivenDescriptor(int fd) throws JargonException;

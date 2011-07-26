@@ -306,9 +306,10 @@ public class TestingPropertiesHelper {
 
 		return account;
 	}
-	
+
 	/**
 	 * Build a test account where the default resource will be set to blank
+	 * 
 	 * @param testingProperties
 	 * @return
 	 */
@@ -329,7 +330,7 @@ public class TestingPropertiesHelper {
 				testingProperties.getProperty(IRODS_USER_KEY),
 				testingProperties.getProperty(IRODS_PASSWORD_KEY), homeBuilder
 						.toString(), testingProperties
-						.getProperty(IRODS_ZONE_KEY),"");
+						.getProperty(IRODS_ZONE_KEY), "");
 
 		return account;
 	}
@@ -402,7 +403,7 @@ public class TestingPropertiesHelper {
 
 		return account;
 	}
-	
+
 	/**
 	 * @param testingProperties
 	 *            <code>Properties</code> file with the standard names defined

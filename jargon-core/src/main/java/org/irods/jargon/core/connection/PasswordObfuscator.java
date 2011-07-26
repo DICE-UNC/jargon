@@ -1,4 +1,4 @@
-package edu.sdsc.grid.io;
+package org.irods.jargon.core.connection;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -19,7 +19,9 @@ import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.PBEParameterSpec;
 import javax.net.ssl.SSLSocketFactory;
 
-public class Lucid {
+import org.irods.jargon.core.utils.Base64;
+
+public class PasswordObfuscator {
 
 	private String string1;
 
@@ -49,7 +51,7 @@ public class Lucid {
 
 	private long longVal;
 
-	public Lucid(final File inputFile) throws Throwable {
+	public PasswordObfuscator(final File inputFile) throws Throwable {
 		this.string1 = fileToString(inputFile);
 		initializeLongValWithTime();
 	}
@@ -248,9 +250,6 @@ public class Lucid {
 			byte[] bOut = Base64.fromString(new String(b));
 			return new String(this.cipher2.doFinal(bOut));
 		} catch (Throwable e) {
-			if (GeneralFileSystem.DEBUG > 0) {
-				e.printStackTrace();
-			}
 			securityException = new SecurityException();
 			securityException.initCause(e);
 		}

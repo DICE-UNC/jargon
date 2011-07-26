@@ -3,10 +3,6 @@
  */
 package org.irods.jargon.core.remoteexecute;
 
-import static edu.sdsc.grid.io.irods.IRODSConstants.BinBytesBuf_PI;
-import static edu.sdsc.grid.io.irods.IRODSConstants.buf;
-import static edu.sdsc.grid.io.irods.IRODSConstants.buflen;
-
 import java.io.InputStream;
 import java.io.SequenceInputStream;
 
@@ -15,11 +11,11 @@ import org.irods.jargon.core.connection.IRODSCommands;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.packinstr.ExecCmd;
 import org.irods.jargon.core.packinstr.ExecCmd.PathHandlingMode;
+import org.irods.jargon.core.packinstr.Tag;
 import org.irods.jargon.core.pub.io.RemoteExecutionBinaryResultInputStream;
+import org.irods.jargon.core.utils.IRODSConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import edu.sdsc.grid.io.irods.Tag;
 
 /**
  * Service for running remote commands (scripts) on iRODS. This is equivalent to
@@ -78,25 +74,24 @@ public class RemoteExecuteServiceImpl implements RemoteExecutionService {
 	 * @param executionHost
 	 *            <code>String</code> that can optionally point to the host on
 	 *            which the command should be executed. Blank if not used.
-
+	 * 
 	 * @return <code>RemoteExecutionService</code>
 	 * @throws JargonException
 	 */
 	public static final RemoteExecutionService instance(
 			final IRODSCommands irodsCommands,
 			final String commandToExecuteWithoutArguments,
-			final String argumentsToPassWithCommand,
-			final String executionHost)
+			final String argumentsToPassWithCommand, final String executionHost)
 			throws JargonException {
 		return new RemoteExecuteServiceImpl(irodsCommands,
 				commandToExecuteWithoutArguments, argumentsToPassWithCommand,
-				executionHost,
-				"", PathHandlingMode.NONE);
+				executionHost, "", PathHandlingMode.NONE);
 	}
-	
+
 	/**
-	 * Static instance method for a remote execution service when using the provided iRODS absolute path to compute the physical path and
-	 * add it as a command argument.
+	 * Static instance method for a remote execution service when using the
+	 * provided iRODS absolute path to compute the physical path and add it as a
+	 * command argument.
 	 * 
 	 * @param commandToExecuteWithoutArguments
 	 *            <code>String</code> with the name of the command to execute.
@@ -122,14 +117,18 @@ public class RemoteExecuteServiceImpl implements RemoteExecutionService {
 			final String executionHost,
 			final String absolutePathOfIrodsFileThatWillBeUsedToFindHostToExecuteOn)
 			throws JargonException {
-		return new RemoteExecuteServiceImpl(irodsCommands,
-				commandToExecuteWithoutArguments, argumentsToPassWithCommand,
+		return new RemoteExecuteServiceImpl(
+				irodsCommands,
+				commandToExecuteWithoutArguments,
+				argumentsToPassWithCommand,
 				executionHost,
-				absolutePathOfIrodsFileThatWillBeUsedToFindHostToExecuteOn, PathHandlingMode.USE_PATH_TO_ADD_PHYS_PATH_ARGUMENT_TO_REMOTE_SCRIPT);
+				absolutePathOfIrodsFileThatWillBeUsedToFindHostToExecuteOn,
+				PathHandlingMode.USE_PATH_TO_ADD_PHYS_PATH_ARGUMENT_TO_REMOTE_SCRIPT);
 	}
-	
+
 	/**
-	 * Static instance method for a remote execution service when using the provided iRODS absolute path to find the host upon which to execute.
+	 * Static instance method for a remote execution service when using the
+	 * provided iRODS absolute path to find the host upon which to execute.
 	 * 
 	 * @param commandToExecuteWithoutArguments
 	 *            <code>String</code> with the name of the command to execute.
@@ -158,7 +157,8 @@ public class RemoteExecuteServiceImpl implements RemoteExecutionService {
 		return new RemoteExecuteServiceImpl(irodsCommands,
 				commandToExecuteWithoutArguments, argumentsToPassWithCommand,
 				executionHost,
-				absolutePathOfIrodsFileThatWillBeUsedToFindHostToExecuteOn, PathHandlingMode.USE_PATH_TO_FIND_EXECUTING_HOST);
+				absolutePathOfIrodsFileThatWillBeUsedToFindHostToExecuteOn,
+				PathHandlingMode.USE_PATH_TO_FIND_EXECUTING_HOST);
 	}
 
 	/**
@@ -220,7 +220,7 @@ public class RemoteExecuteServiceImpl implements RemoteExecutionService {
 			throw new JargonException(
 					"null absolutePathOfIrodsFileThatWillBeUsedToFindHostToExecuteOn, set to blank if not used");
 		}
-		
+
 		if (pathHandlingMode == null) {
 			throw new IllegalArgumentException("null pathHandlingMode");
 		}
@@ -251,14 +251,18 @@ public class RemoteExecuteServiceImpl implements RemoteExecutionService {
 			execCmd = ExecCmd
 					.instanceWithHostAndArgumentsToPassParametersPost25(
 							commandToExecuteWithoutArguments,
-							argumentsToPassWithCommand, executionHost,
-							absolutePathOfIrodsFileThatWillBeUsedToFindHostToExecuteOn, pathHandlingMode);
+							argumentsToPassWithCommand,
+							executionHost,
+							absolutePathOfIrodsFileThatWillBeUsedToFindHostToExecuteOn,
+							pathHandlingMode);
 		} else {
 			execCmd = ExecCmd
 					.instanceWithHostAndArgumentsToPassParametersPriorTo25(
 							commandToExecuteWithoutArguments,
-							argumentsToPassWithCommand, executionHost,
-							absolutePathOfIrodsFileThatWillBeUsedToFindHostToExecuteOn, pathHandlingMode);
+							argumentsToPassWithCommand,
+							executionHost,
+							absolutePathOfIrodsFileThatWillBeUsedToFindHostToExecuteOn,
+							pathHandlingMode);
 		}
 
 		Tag message;
@@ -276,18 +280,18 @@ public class RemoteExecuteServiceImpl implements RemoteExecutionService {
 			throw new JargonException("null response from remote execution");
 		} else {
 			// message
-			int length = message.getTag(BinBytesBuf_PI, 0).getTag(buflen)
+			int length = message.getTag(IRODSConstants.BinBytesBuf_PI, 0).getTag(IRODSConstants.buflen)
 					.getIntValue();
 			if (length > 0) {
-				buffer.append(message.getTag(BinBytesBuf_PI, 0).getTag(buf)
+				buffer.append(message.getTag(IRODSConstants.BinBytesBuf_PI, 0).getTag(IRODSConstants.buf)
 						.getStringValue());
 			}
 
 			// error
-			length = message.getTag(BinBytesBuf_PI, 1).getTag(buflen)
+			length = message.getTag(IRODSConstants.BinBytesBuf_PI, 1).getTag(IRODSConstants.buflen)
 					.getIntValue();
 			if (length > 0) {
-				buffer.append(message.getTag(BinBytesBuf_PI, 1).getTag(buf)
+				buffer.append(message.getTag(IRODSConstants.BinBytesBuf_PI, 1).getTag(IRODSConstants.buf)
 						.getStringValue());
 			}
 
@@ -320,8 +324,10 @@ public class RemoteExecuteServiceImpl implements RemoteExecutionService {
 		ExecCmd execCmd = ExecCmd
 				.instanceWithHostAndArgumentsToPassParametersAllowingStreamingForLargeResultsPost25(
 						commandToExecuteWithoutArguments,
-						argumentsToPassWithCommand, executionHost,
-						absolutePathOfIrodsFileThatWillBeUsedToFindHostToExecuteOn, pathHandlingMode);
+						argumentsToPassWithCommand,
+						executionHost,
+						absolutePathOfIrodsFileThatWillBeUsedToFindHostToExecuteOn,
+						pathHandlingMode);
 
 		Tag message;
 		StringBuilder buffer = new StringBuilder();
@@ -339,17 +345,17 @@ public class RemoteExecuteServiceImpl implements RemoteExecutionService {
 		}
 
 		// message
-		int length = message.getTag(BinBytesBuf_PI, 0).getTag(buflen)
+		int length = message.getTag(IRODSConstants.BinBytesBuf_PI, 0).getTag(IRODSConstants.buflen)
 				.getIntValue();
 		if (length > 0) {
-			buffer.append(message.getTag(BinBytesBuf_PI, 0).getTag(buf)
+			buffer.append(message.getTag(IRODSConstants.BinBytesBuf_PI, 0).getTag(IRODSConstants.buf)
 					.getStringValue());
 		}
 
 		// error
-		length = message.getTag(BinBytesBuf_PI, 1).getTag(buflen).getIntValue();
+		length = message.getTag(IRODSConstants.BinBytesBuf_PI, 1).getTag(IRODSConstants.buflen).getIntValue();
 		if (length > 0) {
-			buffer.append(message.getTag(BinBytesBuf_PI, 1).getTag(buf)
+			buffer.append(message.getTag(IRODSConstants.BinBytesBuf_PI, 1).getTag(IRODSConstants.buf)
 					.getStringValue());
 		}
 

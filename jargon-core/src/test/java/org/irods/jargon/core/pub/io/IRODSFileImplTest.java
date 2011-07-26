@@ -222,12 +222,10 @@ public class IRODSFileImplTest {
 		Assert.assertTrue(irodsFile.exists());
 		irodsSession.closeSession();
 	}
-	
-	
+
 	@Test
 	public final void testRootExists() throws Exception {
 		String testFileName = "/";
-
 
 		// now get an irods file and see if it is readable, it should be
 
@@ -241,13 +239,12 @@ public class IRODSFileImplTest {
 				.instance(irodsSession);
 		IRODSFileFactory irodsFileFactory = accessObjectFactory
 				.getIRODSFileFactory(irodsAccount);
-		IRODSFile irodsFile = irodsFileFactory
-				.instanceIRODSFile(testFileName);
+		IRODSFile irodsFile = irodsFileFactory.instanceIRODSFile(testFileName);
 
 		Assert.assertTrue(irodsFile.exists());
 		irodsSession.closeSession();
 	}
-	
+
 	/*
 	 * Bug [#351] IRODSFIle.getParentFile() should return null when at root
 	 */
@@ -255,7 +252,6 @@ public class IRODSFileImplTest {
 	public final void testGetParentFileWhenRootGivesNull() throws Exception {
 		String testFileName = "/";
 
-
 		// now get an irods file and see if it is readable, it should be
 
 		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager
@@ -268,22 +264,19 @@ public class IRODSFileImplTest {
 				.instance(irodsSession);
 		IRODSFileFactory irodsFileFactory = accessObjectFactory
 				.getIRODSFileFactory(irodsAccount);
-		IRODSFile irodsFile = irodsFileFactory
-				.instanceIRODSFile(testFileName);
+		IRODSFile irodsFile = irodsFileFactory.instanceIRODSFile(testFileName);
 
 		Assert.assertNull(irodsFile.getParentFile());
 		irodsSession.closeSession();
 	}
-	
 
 	/*
-	 * Bug  [#352] file.listFiles() when root should not list root as child
+	 * Bug [#352] file.listFiles() when root should not list root as child
 	 */
 	@Test
 	public final void testChildrenWhenRootDoesNotContainRoot() throws Exception {
 		String testFileName = "/";
 
-
 		// now get an irods file and see if it is readable, it should be
 
 		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager
@@ -296,31 +289,30 @@ public class IRODSFileImplTest {
 				.instance(irodsSession);
 		IRODSFileFactory irodsFileFactory = accessObjectFactory
 				.getIRODSFileFactory(irodsAccount);
-		IRODSFile irodsFile = irodsFileFactory
-				.instanceIRODSFile(testFileName);
+		IRODSFile irodsFile = irodsFileFactory.instanceIRODSFile(testFileName);
 
 		File[] children = irodsFile.listFiles();
 		TestCase.assertTrue("should have some children", children.length > 0);
 		for (File child : children) {
-			TestCase.assertFalse("child of root given as root", child.getName().equals("/"));
+			TestCase.assertFalse("child of root given as root", child.getName()
+					.equals("/"));
 		}
-		
-		
+
 		irodsSession.closeSession();
 	}
-	
-	
+
 	@Test
 	public final void testExistsNoFile() throws Exception {
 		String testFileName = "testExistsNoFile.txt";
 		String targetIrodsCollection = testingPropertiesHelper
-		.buildIRODSCollectionAbsolutePathFromTestProperties(
-				testingProperties, IRODS_TEST_SUBDIR_PATH);
-		
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
 		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
 		IRODSFileFactory irodsFileFactory = accessObjectFactory
 				.getIRODSFileFactory(irodsAccount);
 		IRODSFile irodsFile = irodsFileFactory
@@ -329,7 +321,7 @@ public class IRODSFileImplTest {
 		irodsFileSystem.close();
 
 	}
-	
+
 	@Test
 	public final void testExistsQuotesInFileName() throws Exception {
 		String testFileName = "testExistsQuote'infilename.txt";
@@ -420,7 +412,7 @@ public class IRODSFileImplTest {
 		irodsSession.closeSession();
 		Assert.assertFalse("this should be a File, not a dir", isFile);
 	}
-	
+
 	/**
 	 * Test method for
 	 * {@link org.irods.jargon.core.pub.io.IRODSFileImpl#isDirectory()}.
@@ -447,9 +439,10 @@ public class IRODSFileImplTest {
 				.instanceIRODSFile(targetIrodsCollection + "/blah");
 		boolean isFile = irodsFile.isFile();
 		irodsSession.closeSession();
-		Assert.assertFalse("this should not be a file, it does not exist", isFile);
+		Assert.assertFalse("this should not be a file, it does not exist",
+				isFile);
 	}
-	
+
 	/**
 	 * Test method for
 	 * {@link org.irods.jargon.core.pub.io.IRODSFileImpl#isDirectory()}.
@@ -689,7 +682,7 @@ public class IRODSFileImplTest {
 		Assert.assertEquals("size does not match", expectedSize, size);
 
 	}
-	
+
 	@Test
 	public final void testLengthSpacesInName() throws Exception {
 		String testFileName = "testSize File.zip";
@@ -698,18 +691,22 @@ public class IRODSFileImplTest {
 				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
 		FileGenerator.generateFileOfFixedLengthGivenName(absPath, testFileName,
 				expectedSize);
-		
+
 		String targetIrodsCollection = testingPropertiesHelper
-		.buildIRODSCollectionAbsolutePathFromTestProperties(
-				testingProperties, IRODS_TEST_SUBDIR_PATH);
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
-		.buildIRODSAccountFromTestProperties(testingProperties);
+				.buildIRODSAccountFromTestProperties(testingProperties);
 		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
-		DataTransferOperations dataTransferOperations = irodsFileSystem.getIRODSAccessObjectFactory().getDataTransferOperations(irodsAccount);
-		dataTransferOperations.putOperation(absPath + testFileName, targetIrodsCollection, "", null, null);
-		IRODSFileFactory irodsFileFactory = irodsFileSystem.getIRODSFileFactory(irodsAccount);
-		
+		DataTransferOperations dataTransferOperations = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataTransferOperations(
+						irodsAccount);
+		dataTransferOperations.putOperation(absPath + testFileName,
+				targetIrodsCollection, "", null, null);
+		IRODSFileFactory irodsFileFactory = irodsFileSystem
+				.getIRODSFileFactory(irodsAccount);
+
 		IRODSFile irodsFile = irodsFileFactory
 				.instanceIRODSFile(targetIrodsCollection + '/' + testFileName);
 
@@ -857,18 +854,19 @@ public class IRODSFileImplTest {
 		assertionHelper.assertIrodsFileOrCollectionDoesNotExist(irodsFile
 				.getAbsolutePath());
 	}
-	
+
 	@Test
 	public final void testDeleteFileNotExists() throws Exception {
 		String testFileName = "testDeleteFileNotExists.txt";
 		String targetIrodsCollection = testingPropertiesHelper
-		.buildIRODSCollectionAbsolutePathFromTestProperties(
-				testingProperties, IRODS_TEST_SUBDIR_PATH);
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
 		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
 		IRODSFileFactory irodsFileFactory = accessObjectFactory
 				.getIRODSFileFactory(irodsAccount);
 		IRODSFile irodsFile = irodsFileFactory
@@ -877,7 +875,7 @@ public class IRODSFileImplTest {
 		boolean result = irodsFile.delete();
 		Assert.assertTrue("did not get a true result from the file delete",
 				result);
-		
+
 	}
 
 	@Test
@@ -1558,13 +1556,13 @@ public class IRODSFileImplTest {
 		Assert.assertEquals("parent names do not match", targetIrodsCollection,
 				actualParent);
 	}
-	
+
 	/*
 	 * [#353] getParent on folder beneath root should result in file '/'
 	 */
 	@Test
 	public final void testGetParentWhenSubdirBelowRoot() throws Exception {
-		
+
 		// now get an irods file and see if it is readable, it should be
 
 		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager
@@ -1577,14 +1575,16 @@ public class IRODSFileImplTest {
 				.instance(irodsSession);
 		IRODSFileFactory irodsFileFactory = accessObjectFactory
 				.getIRODSFileFactory(irodsAccount);
-		IRODSFile irodsFile = irodsFileFactory
-				.instanceIRODSFile("/" + testingProperties.getProperty(TestingPropertiesHelper.IRODS_ZONE_KEY));
+		IRODSFile irodsFile = irodsFileFactory.instanceIRODSFile("/"
+				+ testingProperties
+						.getProperty(TestingPropertiesHelper.IRODS_ZONE_KEY));
 		String actualParent = irodsFile.getParent();
-		TestCase.assertNotNull("null parent, should have been root", actualParent);
-		TestCase.assertEquals("should have gotten root as parent", "/", actualParent);
+		TestCase.assertNotNull("null parent, should have been root",
+				actualParent);
+		TestCase.assertEquals("should have gotten root as parent", "/",
+				actualParent);
 		irodsSession.closeSession();
 	}
-
 
 	/**
 	 * Test method for
@@ -1702,8 +1702,7 @@ public class IRODSFileImplTest {
 
 		IRODSFile irodsFile = irodsFileFactory
 				.instanceIRODSFile(targetIrodsCollection);
-		File[] subdirs =irodsFile
-				.listFiles(new IRODSAcceptAllFileFilter());
+		File[] subdirs = irodsFile.listFiles(new IRODSAcceptAllFileFilter());
 		irodsSession.closeSession();
 		TestCase.assertNotNull(subdirs);
 		TestCase.assertTrue("no results", subdirs.length > 0);

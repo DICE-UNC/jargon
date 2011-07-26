@@ -2,7 +2,7 @@
 // http://www.dnsjava.org/
 // dnsjava is released under the BSD license.
 
-package edu.sdsc.grid.io;
+package org.irods.jargon.core.utils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;

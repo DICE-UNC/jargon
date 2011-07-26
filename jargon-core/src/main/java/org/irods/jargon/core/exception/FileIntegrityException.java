@@ -1,10 +1,10 @@
-
 package org.irods.jargon.core.exception;
 
 /**
  * An exception in a file integrity check, such as a checksum validation error
+ * 
  * @author Mike Conway - DICE (www.irods.org)
- *
+ * 
  */
 public class FileIntegrityException extends JargonException {
 
@@ -16,7 +16,7 @@ public class FileIntegrityException extends JargonException {
 	/**
 	 * @param message
 	 */
-	public FileIntegrityException(String message) {
+	public FileIntegrityException(final String message) {
 		super(message);
 	}
 
@@ -24,14 +24,14 @@ public class FileIntegrityException extends JargonException {
 	 * @param message
 	 * @param cause
 	 */
-	public FileIntegrityException(String message, Throwable cause) {
+	public FileIntegrityException(final String message, final Throwable cause) {
 		super(message, cause);
 	}
 
 	/**
 	 * @param cause
 	 */
-	public FileIntegrityException(Throwable cause) {
+	public FileIntegrityException(final Throwable cause) {
 		super(cause);
 	}
 
@@ -40,8 +40,8 @@ public class FileIntegrityException extends JargonException {
 	 * @param cause
 	 * @param underlyingIRODSExceptionCode
 	 */
-	public FileIntegrityException(String message, Throwable cause,
-			int underlyingIRODSExceptionCode) {
+	public FileIntegrityException(final String message, final Throwable cause,
+			final int underlyingIRODSExceptionCode) {
 		super(message, cause, underlyingIRODSExceptionCode);
 	}
 
@@ -49,8 +49,8 @@ public class FileIntegrityException extends JargonException {
 	 * @param cause
 	 * @param underlyingIRODSExceptionCode
 	 */
-	public FileIntegrityException(Throwable cause,
-			int underlyingIRODSExceptionCode) {
+	public FileIntegrityException(final Throwable cause,
+			final int underlyingIRODSExceptionCode) {
 		super(cause, underlyingIRODSExceptionCode);
 	}
 
@@ -58,8 +58,8 @@ public class FileIntegrityException extends JargonException {
 	 * @param message
 	 * @param underlyingIRODSExceptionCode
 	 */
-	public FileIntegrityException(String message,
-			int underlyingIRODSExceptionCode) {
+	public FileIntegrityException(final String message,
+			final int underlyingIRODSExceptionCode) {
 		super(message, underlyingIRODSExceptionCode);
 	}
 

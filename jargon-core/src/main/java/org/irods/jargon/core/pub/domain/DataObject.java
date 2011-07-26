@@ -12,9 +12,8 @@ import java.util.Date;
  * 
  */
 public class DataObject extends IRODSDomainObject {
-	
-	// FIXME: date as long? equals()?  hash()?
 
+	// FIXME: date as long? equals()? hash()?
 
 	private int id = 0;
 	private int collectionId = 0;

@@ -26,8 +26,8 @@ import org.slf4j.LoggerFactory;
  * <p/>
  * Typical usage would be to create an instance of this object, then use the
  * <code>IRODSFileSystem</code> class to obtain a reference of an
- * <code>IRODSAccessObjectFactory</code> and a <code>IRODSFileFactory</code>
- * . These two factory objects allow creation of various iRODS file
+ * <code>IRODSAccessObjectFactory</code> and a <code>IRODSFileFactory</code> .
+ * These two factory objects allow creation of various iRODS file
  * implementations that map to the <code>java.io.*</code> packages, and to
  * create various Access Objects.
  * <p/>

@@ -32,8 +32,9 @@ import java.util.Map;
  * This is an implementation of the standard <code>java.sql.ResultSet</code> as
  * an abstract superclass that represents various types of iRODS query results.
  * <p/>
- * The primary purpose of this abstract class is to define a subset that can be implemented by 
- * the various query types (special query, simple query, gen query), and indicate unsupported operations for the rest.
+ * The primary purpose of this abstract class is to define a subset that can be
+ * implemented by the various query types (special query, simple query, gen
+ * query), and indicate unsupported operations for the rest.
  * 
  * @author Mike Conway - DICE (www.irods.org)
  * 
@@ -97,7 +98,7 @@ public abstract class AbstractIRODSSqlResultSet implements ResultSet {
 	 */
 
 	@Override
-	public  void clearWarnings() throws SQLException {
+	public void clearWarnings() throws SQLException {
 		// does nothing right now...
 	}
 
@@ -108,7 +109,8 @@ public abstract class AbstractIRODSSqlResultSet implements ResultSet {
 	 */
 	@Override
 	public void close() throws SQLException {
-		// does nothing right now, IRODSFileSystem takes care of any connection handling.
+		// does nothing right now, IRODSFileSystem takes care of any connection
+		// handling.
 	}
 
 	/*
@@ -341,8 +343,8 @@ public abstract class AbstractIRODSSqlResultSet implements ResultSet {
 	 * @see java.sql.ResultSet#getDate(int)
 	 */
 	@Override
-	public abstract Date getDate(final int arg0) throws SQLException; 
-	
+	public abstract Date getDate(final int arg0) throws SQLException;
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -376,6 +378,7 @@ public abstract class AbstractIRODSSqlResultSet implements ResultSet {
 	 */
 	@Override
 	public abstract double getDouble(final int arg0) throws SQLException;
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -478,14 +481,17 @@ public abstract class AbstractIRODSSqlResultSet implements ResultSet {
 	 * @see java.sql.ResultSet#getNCharacterStream(int)
 	 */
 	@Override
-	public abstract Reader getNCharacterStream(final int arg0) throws SQLException;
+	public abstract Reader getNCharacterStream(final int arg0)
+			throws SQLException;
+
 	/*
 	 * (non-Javadoc)
 	 * 
 	 * @see java.sql.ResultSet#getNCharacterStream(java.lang.String)
 	 */
 	@Override
-	public abstract Reader getNCharacterStream(final String arg0) throws SQLException;
+	public abstract Reader getNCharacterStream(final String arg0)
+			throws SQLException;
 
 	/*
 	 * (non-Javadoc)
@@ -493,7 +499,7 @@ public abstract class AbstractIRODSSqlResultSet implements ResultSet {
 	 * @see java.sql.ResultSet#getNClob(int)
 	 */
 	@Override
-	public abstract  NClob getNClob(final int arg0) throws SQLException;
+	public abstract NClob getNClob(final int arg0) throws SQLException;
 
 	/*
 	 * (non-Javadoc)
@@ -502,6 +508,7 @@ public abstract class AbstractIRODSSqlResultSet implements ResultSet {
 	 */
 	@Override
 	public abstract NClob getNClob(final String arg0) throws SQLException;
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -525,6 +532,7 @@ public abstract class AbstractIRODSSqlResultSet implements ResultSet {
 	 */
 	@Override
 	public abstract Object getObject(final int arg0) throws SQLException;
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -539,16 +547,17 @@ public abstract class AbstractIRODSSqlResultSet implements ResultSet {
 	 * @see java.sql.ResultSet#getObject(int, java.util.Map)
 	 */
 	@Override
-	public abstract Object getObject(final int arg0, final Map<String, Class<?>> arg1)
-			throws SQLException;
+	public abstract Object getObject(final int arg0,
+			final Map<String, Class<?>> arg1) throws SQLException;
+
 	/*
 	 * (non-Javadoc)
 	 * 
 	 * @see java.sql.ResultSet#getObject(java.lang.String, java.util.Map)
 	 */
 	@Override
-	public abstract Object getObject(final String arg0, final Map<String, Class<?>> arg1)
-			throws SQLException;
+	public abstract Object getObject(final String arg0,
+			final Map<String, Class<?>> arg1) throws SQLException;
 
 	/*
 	 * (non-Javadoc)
@@ -556,7 +565,7 @@ public abstract class AbstractIRODSSqlResultSet implements ResultSet {
 	 * @see java.sql.ResultSet#getRef(int)
 	 */
 	@Override
-	public  Ref getRef(final int arg0) throws SQLException {
+	public Ref getRef(final int arg0) throws SQLException {
 		throw new SQLFeatureNotSupportedException();
 	}
 
@@ -584,7 +593,7 @@ public abstract class AbstractIRODSSqlResultSet implements ResultSet {
 	 * @see java.sql.ResultSet#getRowId(int)
 	 */
 	@Override
-	public  RowId getRowId(final int arg0) throws SQLException {
+	public RowId getRowId(final int arg0) throws SQLException {
 		throw new SQLFeatureNotSupportedException();
 	}
 
@@ -637,7 +646,7 @@ public abstract class AbstractIRODSSqlResultSet implements ResultSet {
 	 */
 	@Override
 	public abstract Statement getStatement() throws SQLException;
-	
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -645,6 +654,7 @@ public abstract class AbstractIRODSSqlResultSet implements ResultSet {
 	 */
 	@Override
 	public abstract String getString(final int arg0) throws SQLException;
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -686,6 +696,7 @@ public abstract class AbstractIRODSSqlResultSet implements ResultSet {
 	@Override
 	public abstract Time getTime(final String arg0, final Calendar arg1)
 			throws SQLException;
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -700,7 +711,8 @@ public abstract class AbstractIRODSSqlResultSet implements ResultSet {
 	 * @see java.sql.ResultSet#getTimestamp(java.lang.String)
 	 */
 	@Override
-	public abstract Timestamp getTimestamp(final String arg0) throws SQLException;
+	public abstract Timestamp getTimestamp(final String arg0)
+			throws SQLException;
 
 	/*
 	 * (non-Javadoc)
@@ -718,8 +730,8 @@ public abstract class AbstractIRODSSqlResultSet implements ResultSet {
 	 * java.util.Calendar)
 	 */
 	@Override
-	public abstract Timestamp getTimestamp(final String arg0, final Calendar arg1)
-			throws SQLException;
+	public abstract Timestamp getTimestamp(final String arg0,
+			final Calendar arg1) throws SQLException;
 
 	/*
 	 * (non-Javadoc)
@@ -727,7 +739,7 @@ public abstract class AbstractIRODSSqlResultSet implements ResultSet {
 	 * @see java.sql.ResultSet#getType()
 	 */
 	@Override
-	public  int getType() throws SQLException {
+	public int getType() throws SQLException {
 		return ResultSet.TYPE_FORWARD_ONLY;
 	}
 
@@ -753,15 +765,17 @@ public abstract class AbstractIRODSSqlResultSet implements ResultSet {
 	 * @see java.sql.ResultSet#getUnicodeStream(int)
 	 */
 	@Override
-	public abstract InputStream getUnicodeStream(final int arg0) throws SQLException;
-	
+	public abstract InputStream getUnicodeStream(final int arg0)
+			throws SQLException;
+
 	/*
 	 * (non-Javadoc)
 	 * 
 	 * @see java.sql.ResultSet#getUnicodeStream(java.lang.String)
 	 */
 	@Override
-	public abstract InputStream getUnicodeStream(final String arg0) throws SQLException;
+	public abstract InputStream getUnicodeStream(final String arg0)
+			throws SQLException;
 
 	/*
 	 * (non-Javadoc)
@@ -806,6 +820,7 @@ public abstract class AbstractIRODSSqlResultSet implements ResultSet {
 	 */
 	@Override
 	public abstract boolean isClosed() throws SQLException;
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -813,7 +828,7 @@ public abstract class AbstractIRODSSqlResultSet implements ResultSet {
 	 */
 	@Override
 	public abstract boolean isFirst() throws SQLException;
-	
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -828,7 +843,7 @@ public abstract class AbstractIRODSSqlResultSet implements ResultSet {
 	 * @see java.sql.ResultSet#last()
 	 */
 	@Override
-	public abstract  boolean last() throws SQLException;
+	public abstract boolean last() throws SQLException;
 
 	/*
 	 * (non-Javadoc)
@@ -858,6 +873,7 @@ public abstract class AbstractIRODSSqlResultSet implements ResultSet {
 	 */
 	@Override
 	public abstract boolean next() throws SQLException;
+
 	/*
 	 * (non-Javadoc)
 	 * 

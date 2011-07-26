@@ -24,17 +24,19 @@ public interface RuleProcessingAO extends IRODSAccessObject {
 			throws JargonRuleException, JargonException;
 
 	/**
-	 * TODO: work in progress
-	 * Purge all rules from the delayed exec queue.  
+	 * TODO: work in progress Purge all rules from the delayed exec queue.
 	 * <p/>
-	 * <b>Note:  this method purges ALL rules in the queue</b>
-	 * @return <code>int</code> with a count of the rules purged from the delayed execution queue
+	 * <b>Note: this method purges ALL rules in the queue</b>
+	 * 
+	 * @return <code>int</code> with a count of the rules purged from the
+	 *         delayed execution queue
 	 * @throws JargonException
 	 */
 	int purgeAllDelayedExecQueue() throws JargonException;
 
 	/**
 	 * TODO: work in progress
+	 * 
 	 * @param partialStartIndex
 	 * @return
 	 * @throws JargonException

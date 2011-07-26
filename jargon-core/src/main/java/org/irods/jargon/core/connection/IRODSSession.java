@@ -98,10 +98,14 @@ public final class IRODSSession {
 			} else {
 				transferOptions.setTransferType(TransferType.NO_PARALLEL);
 			}
-			
-			transferOptions.setAllowPutGetResourceRedirects(jargonProperties.isAllowPutGetResourceRedirects());
-			transferOptions.setComputeAndVerifyChecksumAfterTransfer(jargonProperties.isComputeAndVerifyChecksumAfterTransfer());
-			transferOptions.setComputeChecksumAfterTransfer(jargonProperties.isComputeChecksumAfterTransfer());
+
+			transferOptions.setAllowPutGetResourceRedirects(jargonProperties
+					.isAllowPutGetResourceRedirects());
+			transferOptions
+					.setComputeAndVerifyChecksumAfterTransfer(jargonProperties
+							.isComputeAndVerifyChecksumAfterTransfer());
+			transferOptions.setComputeChecksumAfterTransfer(jargonProperties
+					.isComputeChecksumAfterTransfer());
 		}
 		return transferOptions;
 	}

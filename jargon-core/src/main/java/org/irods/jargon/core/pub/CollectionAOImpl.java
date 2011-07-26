@@ -160,7 +160,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 
 		final IRODSGenQuery irodsQuery = IRODSGenQuery.instance(queryString,
 				getIRODSSession().getJargonProperties()
-				.getMaxFilesAndDirsQueryMax());
+						.getMaxFilesAndDirsQueryMax());
 
 		IRODSQueryResultSetInterface resultSet;
 		try {
@@ -223,7 +223,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 
 		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(queryString,
 				getIRODSSession().getJargonProperties()
-				.getMaxFilesAndDirsQueryMax());
+						.getMaxFilesAndDirsQueryMax());
 
 		IRODSQueryResultSetInterface resultSet;
 
@@ -262,7 +262,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 
 		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(queryString,
 				getIRODSSession().getJargonProperties()
-				.getMaxFilesAndDirsQueryMax());
+						.getMaxFilesAndDirsQueryMax());
 
 		IRODSQueryResultSetInterface resultSet;
 
@@ -363,7 +363,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 
 		final IRODSGenQuery irodsQuery = IRODSGenQuery.instance(queryString,
 				getIRODSSession().getJargonProperties()
-				.getMaxFilesAndDirsQueryMax());
+						.getMaxFilesAndDirsQueryMax());
 
 		IRODSQueryResultSetInterface resultSet;
 		try {
@@ -449,7 +449,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 
 		final IRODSGenQuery irodsQuery = IRODSGenQuery.instance(queryString,
 				getIRODSSession().getJargonProperties()
-				.getMaxFilesAndDirsQueryMax());
+						.getMaxFilesAndDirsQueryMax());
 
 		IRODSQueryResultSetInterface resultSet;
 		try {
@@ -538,7 +538,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 
 		final IRODSGenQuery irodsQuery = IRODSGenQuery.instance(queryString,
 				getIRODSSession().getJargonProperties()
-				.getMaxFilesAndDirsQueryMax());
+						.getMaxFilesAndDirsQueryMax());
 
 		IRODSQueryResultSetInterface resultSet;
 		try {
@@ -564,7 +564,8 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 	 */
 	@Override
 	public void addAVUMetadata(final String absolutePath, final AvuData avuData)
-			throws DataNotFoundException, DuplicateDataException, JargonException {
+			throws DataNotFoundException, DuplicateDataException,
+			JargonException {
 
 		if (absolutePath == null || absolutePath.isEmpty()) {
 			throw new IllegalArgumentException("null or empty absolutePath");
@@ -593,7 +594,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 						"Target collection was not found, could not add AVU");
 			} else if (je.getMessage().indexOf("-809000") > -1) {
 				throw new DuplicateDataException(
-				"Duplicate AVU exists, cannot add");
+						"Duplicate AVU exists, cannot add");
 			}
 
 			log.error("jargon exception adding AVU metadata", je);
@@ -646,12 +647,18 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 
 		log.debug("metadata removed");
 	}
-	
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.pub.CollectionAO#modifyAvuValueBasedOnGivenAttributeAndUnit(java.lang.String, org.irods.jargon.core.pub.domain.AvuData)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.pub.CollectionAO#
+	 * modifyAvuValueBasedOnGivenAttributeAndUnit(java.lang.String,
+	 * org.irods.jargon.core.pub.domain.AvuData)
 	 */
 	@Override
-	public void modifyAvuValueBasedOnGivenAttributeAndUnit(final String absolutePath, final AvuData avuData) throws DataNotFoundException, JargonException {
+	public void modifyAvuValueBasedOnGivenAttributeAndUnit(
+			final String absolutePath, final AvuData avuData)
+			throws DataNotFoundException, JargonException {
 		if (absolutePath == null || absolutePath.isEmpty()) {
 			throw new IllegalArgumentException("null or empty absolutePath");
 		}
@@ -659,43 +666,53 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 		if (avuData == null) {
 			throw new IllegalArgumentException("null avuData");
 		}
-		
+
 		log.info("setting avu metadata value for collection");
 		log.info("with  avu metadata:{}", avuData);
 		log.info("absolute path: {}", absolutePath);
-		
-		// avu is distinct based on attrib and value, so do an attrib/unit query, can only be one result
+
+		// avu is distinct based on attrib and value, so do an attrib/unit
+		// query, can only be one result
 		List<AVUQueryElement> queryElements = new ArrayList<AVUQueryElement>();
 		List<MetaDataAndDomainData> result;
-		
+
 		try {
-		queryElements.add(AVUQueryElement.instanceForValueQuery(
-				AVUQueryElement.AVUQueryPart.ATTRIBUTE,
-				AVUQueryOperatorEnum.EQUAL, avuData.getAttribute()));
-		queryElements.add(AVUQueryElement.instanceForValueQuery(
-				AVUQueryElement.AVUQueryPart.UNITS,
-				AVUQueryOperatorEnum.EQUAL, avuData.getUnit()));
-			result  = this.findMetadataValuesByMetadataQueryForCollection(queryElements, absolutePath);
+			queryElements.add(AVUQueryElement.instanceForValueQuery(
+					AVUQueryElement.AVUQueryPart.ATTRIBUTE,
+					AVUQueryOperatorEnum.EQUAL, avuData.getAttribute()));
+			queryElements.add(AVUQueryElement.instanceForValueQuery(
+					AVUQueryElement.AVUQueryPart.UNITS,
+					AVUQueryOperatorEnum.EQUAL, avuData.getUnit()));
+			result = this.findMetadataValuesByMetadataQueryForCollection(
+					queryElements, absolutePath);
 		} catch (JargonQueryException e) {
-			log.error("error querying data for avu",e);
+			log.error("error querying data for avu", e);
 			throw new JargonException("error querying data for AVU");
 		}
-		
+
 		if (result.isEmpty()) {
 			throw new DataNotFoundException("no avu data found");
 		} else if (result.size() > 1) {
-			throw new JargonException("more than one AVU found with given attribute and unit, cannot modify non-unique AVU's in this way");
+			throw new JargonException(
+					"more than one AVU found with given attribute and unit, cannot modify non-unique AVU's in this way");
 		}
-		
-		AvuData currentAvuData = new AvuData(result.get(0).getAvuAttribute(), result.get(0).getAvuValue(), result.get(0).getAvuUnit());
-		
-		AvuData modAvuData = new AvuData(result.get(0).getAvuAttribute(), avuData.getValue(), result.get(0).getAvuUnit());
+
+		AvuData currentAvuData = new AvuData(result.get(0).getAvuAttribute(),
+				result.get(0).getAvuValue(), result.get(0).getAvuUnit());
+
+		AvuData modAvuData = new AvuData(result.get(0).getAvuAttribute(),
+				avuData.getValue(), result.get(0).getAvuUnit());
 		modifyAVUMetadata(absolutePath, currentAvuData, modAvuData);
 		log.info("metadata modified to:{}", modAvuData);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.pub.CollectionAO#modifyAVUMetadata(java.lang.String, org.irods.jargon.core.pub.domain.AvuData, org.irods.jargon.core.pub.domain.AvuData)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.CollectionAO#modifyAVUMetadata(java.lang.String
+	 * , org.irods.jargon.core.pub.domain.AvuData,
+	 * org.irods.jargon.core.pub.domain.AvuData)
 	 */
 	@Override
 	public void modifyAVUMetadata(final String absolutePath,
@@ -965,9 +982,13 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 		getIRODSProtocol().irodsFunction(modAccessControlInp);
 
 	}
-	
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.pub.CollectionAO#setAccessPermissionReadAsAdmin(java.lang.String, java.lang.String, java.lang.String, boolean)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.CollectionAO#setAccessPermissionReadAsAdmin
+	 * (java.lang.String, java.lang.String, java.lang.String, boolean)
 	 */
 	@Override
 	public void setAccessPermissionReadAsAdmin(final String zone,
@@ -1013,9 +1034,13 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 		getIRODSProtocol().irodsFunction(modAccessControlInp);
 
 	}
-	
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.pub.CollectionAO#setAccessPermissionWriteAsAdmin(java.lang.String, java.lang.String, java.lang.String, boolean)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.CollectionAO#setAccessPermissionWriteAsAdmin
+	 * (java.lang.String, java.lang.String, java.lang.String, boolean)
 	 */
 	@Override
 	public void setAccessPermissionWriteAsAdmin(final String zone,
@@ -1063,7 +1088,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 		getIRODSProtocol().irodsFunction(modAccessControlInp);
 
 	}
-	
+
 	@Override
 	public void setAccessPermissionOwnAsAdmin(final String zone,
 			final String absolutePath, final String userName,
@@ -1112,8 +1137,12 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 
 	}
 
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.pub.CollectionAO#removeAccessPermissionForUserAsAdmin(java.lang.String, java.lang.String, java.lang.String, boolean)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.CollectionAO#removeAccessPermissionForUserAsAdmin
+	 * (java.lang.String, java.lang.String, java.lang.String, boolean)
 	 */
 	@Override
 	public void removeAccessPermissionForUserAsAdmin(final String zone,
@@ -1135,7 +1164,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 		getIRODSProtocol().irodsFunction(modAccessControlInp);
 
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -1209,8 +1238,9 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 				.getIRODSFileSystemAO(getIRODSAccount());
 		IRODSFileFactory irodsFileFactory = this.getIRODSFileFactory();
 		int permissionVal = irodsFileSystemAO
-				.getDirectoryPermissionsForGivenUser(irodsFileFactory
-						.instanceIRODSFile(irodsAbsolutePath), userName);
+				.getDirectoryPermissionsForGivenUser(
+						irodsFileFactory.instanceIRODSFile(irodsAbsolutePath),
+						userName);
 		FilePermissionEnum filePermissionEnum = FilePermissionEnum
 				.valueOf(permissionVal);
 		return filePermissionEnum;
@@ -1247,37 +1277,42 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 		}
 		return collNeedsRecursive;
 	}
-	
-	
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.pub.CollectionAO#getPermissionForUserName(java.lang.String, java.lang.String)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.CollectionAO#getPermissionForUserName(java.
+	 * lang.String, java.lang.String)
 	 */
 	@Override
-	public UserFilePermission getPermissionForUserName(final String irodsCollectionAbsolutePath, final String userName) throws JargonException {
-		
+	public UserFilePermission getPermissionForUserName(
+			final String irodsCollectionAbsolutePath, final String userName)
+			throws JargonException {
+
 		UserFilePermission userFilePermission = null;
-		
+
 		if (irodsCollectionAbsolutePath == null
 				|| irodsCollectionAbsolutePath.isEmpty()) {
 			throw new IllegalArgumentException(
 					"null or empty irodsCollectionAbsolutePath");
 		}
-		
-		if (userName == null
-				|| userName.isEmpty()) {
-			throw new IllegalArgumentException(
-					"null or empty userName");
+
+		if (userName == null || userName.isEmpty()) {
+			throw new IllegalArgumentException("null or empty userName");
 		}
-		
-		log.info("getPermissionForUserName with irodsCollectionAbsolutePath: {}", irodsCollectionAbsolutePath);
+
+		log.info(
+				"getPermissionForUserName with irodsCollectionAbsolutePath: {}",
+				irodsCollectionAbsolutePath);
 		log.info("   userName:{}", userName);
-		
 
 		IRODSGenQueryExecutor irodsGenQueryExecutor = getIRODSAccessObjectFactory()
 				.getIRODSGenQueryExecutor(getIRODSAccount());
 
-		
-		StringBuilder query = new StringBuilder(CollectionAOHelper.buildACLQueryForCollectionName(irodsCollectionAbsolutePath));
+		StringBuilder query = new StringBuilder(
+				CollectionAOHelper
+						.buildACLQueryForCollectionName(irodsCollectionAbsolutePath));
 		query.append(" AND ");
 		query.append(RodsGenQueryEnum.COL_COLL_ACCESS_USER_NAME.getName());
 		query.append(" = '");
@@ -1292,13 +1327,11 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 					irodsQuery, 0);
 			IRODSQueryResultRow row = resultSet.getFirstResult();
 
-			
-				userFilePermission = new UserFilePermission(row.getColumn(0),
-						row.getColumn(1),
-						FilePermissionEnum.valueOf(IRODSDataConversionUtil
-								.getIntOrZeroFromIRODSValue(row.getColumn(2))));
-				log.debug("loaded filePermission:{}", userFilePermission);
-			
+			userFilePermission = new UserFilePermission(row.getColumn(0),
+					row.getColumn(1),
+					FilePermissionEnum.valueOf(IRODSDataConversionUtil
+							.getIntOrZeroFromIRODSValue(row.getColumn(2))));
+			log.debug("loaded filePermission:{}", userFilePermission);
 
 		} catch (JargonQueryException e) {
 			log.error("query exception for  query:{}", query.toString(), e);
@@ -1308,9 +1341,9 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 		} catch (DataNotFoundException dnf) {
 			log.info("no data found for user ACL");
 		}
-		
+
 		return userFilePermission;
- 
+
 	}
 
 	/*
@@ -1337,7 +1370,8 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 		IRODSGenQueryExecutor irodsGenQueryExecutor = getIRODSAccessObjectFactory()
 				.getIRODSGenQueryExecutor(getIRODSAccount());
 
-		String query = CollectionAOHelper.buildACLQueryForCollectionName(irodsCollectionAbsolutePath);
+		String query = CollectionAOHelper
+				.buildACLQueryForCollectionName(irodsCollectionAbsolutePath);
 		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(query.toString(),
 				this.getJargonProperties().getMaxFilesAndDirsQueryMax());
 		IRODSQueryResultSetInterface resultSet;
@@ -1366,7 +1400,5 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 		return userFilePermissions;
 
 	}
-
-	
 
 }

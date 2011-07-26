@@ -80,9 +80,12 @@ public final class IRODSAccessObjectFactoryImpl implements
 		irodsSession.closeSession();
 
 	}
-	
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.pub.IRODSAccessObjectFactory#closeSessionAndEatExceptions()
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.pub.IRODSAccessObjectFactory#
+	 * closeSessionAndEatExceptions()
 	 */
 	@Override
 	public void closeSessionAndEatExceptions() {
@@ -92,7 +95,7 @@ public final class IRODSAccessObjectFactoryImpl implements
 		}
 
 		try {
-		irodsSession.closeSession();
+			irodsSession.closeSession();
 		} catch (Exception e) {
 			LOG.warn("error encountered closing session, ignored", e);
 		}
@@ -120,14 +123,16 @@ public final class IRODSAccessObjectFactoryImpl implements
 		irodsSession.closeSession(irodsAccount);
 
 	}
-	
-	
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.pub.IRODSAccessObjectFactory#closeSessionAndEatExceptions(org.irods.jargon.core.connection.IRODSAccount)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.pub.IRODSAccessObjectFactory#
+	 * closeSessionAndEatExceptions
+	 * (org.irods.jargon.core.connection.IRODSAccount)
 	 */
 	@Override
-	public void closeSessionAndEatExceptions(final IRODSAccount irodsAccount)
-			 {
+	public void closeSessionAndEatExceptions(final IRODSAccount irodsAccount) {
 		if (irodsSession == null) {
 			return;
 		}
@@ -138,13 +143,11 @@ public final class IRODSAccessObjectFactoryImpl implements
 
 		try {
 			irodsSession.closeSession(irodsAccount);
-			} catch (Exception e) {
-				LOG.warn("error encountered closing session, ignored", e);
-			}
-
+		} catch (Exception e) {
+			LOG.warn("error encountered closing session, ignored", e);
+		}
 
 	}
-	
 
 	/**
 	 * Creates an instance of this access object factory.
@@ -375,42 +378,49 @@ public final class IRODSAccessObjectFactoryImpl implements
 		return new CollectionAndDataObjectListAndSearchAOImpl(irodsSession,
 				irodsAccount);
 	}
-	
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.pub.IRODSAccessObjectFactory#getSimpleQueryExecutorAO(org.irods.jargon.core.connection.IRODSAccount)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.IRODSAccessObjectFactory#getSimpleQueryExecutorAO
+	 * (org.irods.jargon.core.connection.IRODSAccount)
 	 */
 	@Override
 	public SimpleQueryExecutorAO getSimpleQueryExecutorAO(
 			final IRODSAccount irodsAccount) throws JargonException {
 		checkIrodsSessionSet();
-		return new SimpleQueryExecutorAOImpl(irodsSession,
-				irodsAccount);
+		return new SimpleQueryExecutorAOImpl(irodsSession, irodsAccount);
 	}
-	
-	
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.pub.IRODSAccessObjectFactory#getStream2StreamAO(org.irods.jargon.core.connection.IRODSAccount)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.IRODSAccessObjectFactory#getStream2StreamAO
+	 * (org.irods.jargon.core.connection.IRODSAccount)
 	 */
 	@Override
-	public Stream2StreamAO getStream2StreamAO(
-			final IRODSAccount irodsAccount) throws JargonException {
+	public Stream2StreamAO getStream2StreamAO(final IRODSAccount irodsAccount)
+			throws JargonException {
 		checkIrodsSessionSet();
-		return new Stream2StreamAOImpl(irodsSession,
-				irodsAccount);
+		return new Stream2StreamAOImpl(irodsSession, irodsAccount);
 	}
-	
-	
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.pub.IRODSAccessObjectFactory#getSpecificQueryExecutorAO(org.irods.jargon.core.connection.IRODSAccount)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.IRODSAccessObjectFactory#getSpecificQueryExecutorAO
+	 * (org.irods.jargon.core.connection.IRODSAccount)
 	 */
 	@Override
 	public SpecificQueryExcecutorAO getSpecificQueryExecutorAO(
 			final IRODSAccount irodsAccount) throws JargonException {
 		checkIrodsSessionSet();
-		return new SpecificQueryExecutorAOImpl(irodsSession,
-				irodsAccount);
-			}
-	
+		return new SpecificQueryExecutorAOImpl(irodsSession, irodsAccount);
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 

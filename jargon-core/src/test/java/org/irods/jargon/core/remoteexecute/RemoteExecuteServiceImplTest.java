@@ -58,7 +58,6 @@ public class RemoteExecuteServiceImplTest {
 		String cmd = "hello";
 		String args = "";
 		String host = "host";
-		
 
 		IRODSCommands irodsCommands = Mockito.mock(IRODSCommands.class);
 
@@ -171,7 +170,8 @@ public class RemoteExecuteServiceImplTest {
 
 		// test is only valid for post 2.4.1 FIXME: bump this up to the next
 		// released version
-		if (!props.isTheIrodsServerAtLeastAtTheGivenReleaseVersion(RemoteExecuteServiceImpl.STREAMING_API_CUTOFF)) {
+		if (!props
+				.isTheIrodsServerAtLeastAtTheGivenReleaseVersion(RemoteExecuteServiceImpl.STREAMING_API_CUTOFF)) {
 			irodsFileSystem.closeAndEatExceptions();
 			return;
 		}
@@ -204,7 +204,8 @@ public class RemoteExecuteServiceImplTest {
 	}
 
 	@Test
-	public final void testExecuteHelloWithPathExpectingToSetPhysPathInArg() throws Exception {
+	public final void testExecuteHelloWithPathExpectingToSetPhysPathInArg()
+			throws Exception {
 
 		if (!testingPropertiesHelper.isTestRemoteExecStream(testingProperties)) {
 			return;
@@ -248,8 +249,9 @@ public class RemoteExecuteServiceImplTest {
 				.getIRODSAccessObjectFactory().getCollectionAO(irodsAccount);
 		CollectionAOImpl collectionAOImpl = (CollectionAOImpl) collectionAO;
 		IRODSCommands irodsCommands = collectionAOImpl.getIRODSProtocol();
-		RemoteExecutionService remoteExecuteService = RemoteExecuteServiceImpl.instanceWhenUsingAbsPathToSetCommandArg
-			(irodsCommands, cmd, args, host, targetIrodsFile);
+		RemoteExecutionService remoteExecuteService = RemoteExecuteServiceImpl
+				.instanceWhenUsingAbsPathToSetCommandArg(irodsCommands, cmd,
+						args, host, targetIrodsFile);
 
 		InputStream inputStream = remoteExecuteService.execute();
 
@@ -268,8 +270,9 @@ public class RemoteExecuteServiceImplTest {
 
 		Assert.assertTrue("did not successfully execute hello command",
 				result.indexOf("Hello world") > -1);
-		
-		Assert.assertTrue("did not successfully execute hello command, missing path info ",
+
+		Assert.assertTrue(
+				"did not successfully execute hello command, missing path info ",
 				result.indexOf(testFileName) > -1);
 
 	}
@@ -294,7 +297,8 @@ public class RemoteExecuteServiceImplTest {
 
 		// test is only valid for post 2.4.1 FIXME: bump this up to the next
 		// released version
-		if (!props.isTheIrodsServerAtLeastAtTheGivenReleaseVersion(RemoteExecuteServiceImpl.STREAMING_API_CUTOFF)) {
+		if (!props
+				.isTheIrodsServerAtLeastAtTheGivenReleaseVersion(RemoteExecuteServiceImpl.STREAMING_API_CUTOFF)) {
 			irodsFileSystem.closeAndEatExceptions();
 			return;
 		}
@@ -334,7 +338,8 @@ public class RemoteExecuteServiceImplTest {
 		CollectionAOImpl collectionAOImpl = (CollectionAOImpl) collectionAO;
 		IRODSCommands irodsCommands = collectionAOImpl.getIRODSProtocol();
 		RemoteExecutionService remoteExecuteService = RemoteExecuteServiceImpl
-		.instanceWhenUsingAbsPathToSetCommandArg(irodsCommands, cmd, args, host, targetIrodsFile);
+				.instanceWhenUsingAbsPathToSetCommandArg(irodsCommands, cmd,
+						args, host, targetIrodsFile);
 
 		InputStream inputStream = remoteExecuteService.executeAndStream();
 
@@ -353,11 +358,12 @@ public class RemoteExecuteServiceImplTest {
 
 		Assert.assertTrue("did not successfully execute hello command",
 				result.indexOf("Hello world") > -1);
-		
-		Assert.assertTrue("did not successfully execute hello command, missing path info ",
+
+		Assert.assertTrue(
+				"did not successfully execute hello command, missing path info ",
 				result.indexOf(testFileName) > -1);
 	}
-	
+
 	@Test
 	public final void testExecuteHelloWithPathUsingPost241APIToDetermineHost()
 			throws Exception {
@@ -378,7 +384,8 @@ public class RemoteExecuteServiceImplTest {
 
 		// test is only valid for post 2.4.1 FIXME: bump this up to the next
 		// released version
-		if (!props.isTheIrodsServerAtLeastAtTheGivenReleaseVersion(RemoteExecuteServiceImpl.STREAMING_API_CUTOFF)) {
+		if (!props
+				.isTheIrodsServerAtLeastAtTheGivenReleaseVersion(RemoteExecuteServiceImpl.STREAMING_API_CUTOFF)) {
 			irodsFileSystem.closeAndEatExceptions();
 			return;
 		}
@@ -418,7 +425,8 @@ public class RemoteExecuteServiceImplTest {
 		CollectionAOImpl collectionAOImpl = (CollectionAOImpl) collectionAO;
 		IRODSCommands irodsCommands = collectionAOImpl.getIRODSProtocol();
 		RemoteExecutionService remoteExecuteService = RemoteExecuteServiceImpl
-		.instanceWhenUsingAbsPathToFindExecutionHost(irodsCommands, cmd, args, host, targetIrodsFile);
+				.instanceWhenUsingAbsPathToFindExecutionHost(irodsCommands,
+						cmd, args, host, targetIrodsFile);
 
 		InputStream inputStream = remoteExecuteService.executeAndStream();
 
@@ -437,7 +445,7 @@ public class RemoteExecuteServiceImplTest {
 
 		Assert.assertTrue("did not successfully execute hello command",
 				result.indexOf("Hello world") > -1);
-		
+
 		Assert.assertFalse("attempted to return path info",
 				result.indexOf(testFileName) > -1);
 	}
@@ -520,7 +528,8 @@ public class RemoteExecuteServiceImplTest {
 		CollectionAOImpl collectionAOImpl = (CollectionAOImpl) collectionAO;
 		IRODSCommands irodsCommands = collectionAOImpl.getIRODSProtocol();
 		RemoteExecutionService remoteExecuteService = RemoteExecuteServiceImpl
-		.instanceWhenUsingAbsPathToSetCommandArg(irodsCommands, cmd, args, host, absPath);
+				.instanceWhenUsingAbsPathToSetCommandArg(irodsCommands, cmd,
+						args, host, absPath);
 
 		InputStream inputStream = remoteExecuteService.execute();
 		BufferedReader br = new BufferedReader(new InputStreamReader(
@@ -565,7 +574,8 @@ public class RemoteExecuteServiceImplTest {
 						irodsAccount);
 		IRODSServerProperties props = environmentalInfoAO
 				.getIRODSServerPropertiesFromIRODSServer();
-		if (!props.isTheIrodsServerAtLeastAtTheGivenReleaseVersion(RemoteExecuteServiceImpl.STREAMING_API_CUTOFF)) {
+		if (!props
+				.isTheIrodsServerAtLeastAtTheGivenReleaseVersion(RemoteExecuteServiceImpl.STREAMING_API_CUTOFF)) {
 			irodsFileSystem.closeAndEatExceptions();
 			return;
 		}
@@ -605,7 +615,6 @@ public class RemoteExecuteServiceImplTest {
 			return;
 		}
 
-
 		// threshold is 1M, this is 2M
 		int testLen = 2097152;
 
@@ -625,7 +634,8 @@ public class RemoteExecuteServiceImplTest {
 
 		// test is only valid for post 2.4.1 FIXME: bump this up to the next
 		// released version
-		if (!props.isTheIrodsServerAtLeastAtTheGivenReleaseVersion(RemoteExecuteServiceImpl.STREAMING_API_CUTOFF)) {
+		if (!props
+				.isTheIrodsServerAtLeastAtTheGivenReleaseVersion(RemoteExecuteServiceImpl.STREAMING_API_CUTOFF)) {
 			irodsFileSystem.closeAndEatExceptions();
 			return;
 		}
@@ -684,7 +694,8 @@ public class RemoteExecuteServiceImplTest {
 
 		// test is only valid for post 2.4.1 FIXME: bump this up to the next
 		// released version
-		if (!props.isTheIrodsServerAtLeastAtTheGivenReleaseVersion(RemoteExecuteServiceImpl.STREAMING_API_CUTOFF)) {
+		if (!props
+				.isTheIrodsServerAtLeastAtTheGivenReleaseVersion(RemoteExecuteServiceImpl.STREAMING_API_CUTOFF)) {
 			return;
 		}
 

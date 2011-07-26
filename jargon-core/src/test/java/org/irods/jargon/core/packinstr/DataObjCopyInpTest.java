@@ -257,7 +257,5 @@ public class DataObjCopyInpTest {
 				dataObjCopyInp.getParsedTags());
 
 	}
-		
-	
 
 }

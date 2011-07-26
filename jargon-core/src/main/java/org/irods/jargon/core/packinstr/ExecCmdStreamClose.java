@@ -5,8 +5,6 @@ package org.irods.jargon.core.packinstr;
 
 import org.irods.jargon.core.exception.JargonException;
 
-import edu.sdsc.grid.io.irods.Tag;
-
 /**
  * Immutable object gives translation of an ExecCmd operation into XML in order
  * to close a stream opened by ExecCmd. For simplicity, this variant of the

@@ -78,14 +78,17 @@ public class IRODSFileSystemAOHelper extends AOHelper {
 		if (log.isDebugEnabled()) {
 			log.debug("query for files:" + query.toString());
 		}
-		
+
 		return query.toString();
 
 	}
-	
+
 	/**
-	 * Build the GenQuery that lists all data objects and user access information.
-	 * @param path <code>String</code> iwtht he 
+	 * Build the GenQuery that lists all data objects and user access
+	 * information.
+	 * 
+	 * @param path
+	 *            <code>String</code> iwtht he
 	 * @return
 	 * @throws JargonException
 	 */
@@ -109,15 +112,18 @@ public class IRODSFileSystemAOHelper extends AOHelper {
 		if (log.isDebugEnabled()) {
 			log.debug("query for files:" + query.toString());
 		}
-		
+
 		return query.toString();
 
 	}
 
 	/**
-	 * Build the necessary GenQuery selects (the select statement is not added here) to query data objects for information.  Used
-	 * in many common queries for listing data objects, as in an ils-like command.
-	 * @return <code>String</code> with GenQuery select values.  Note that the 'SELECT' statement itself is not appended here
+	 * Build the necessary GenQuery selects (the select statement is not added
+	 * here) to query data objects for information. Used in many common queries
+	 * for listing data objects, as in an ils-like command.
+	 * 
+	 * @return <code>String</code> with GenQuery select values. Note that the
+	 *         'SELECT' statement itself is not appended here
 	 */
 	public static String buildDataObjectQuerySelects() {
 		StringBuilder query = new StringBuilder();
@@ -137,7 +143,7 @@ public class IRODSFileSystemAOHelper extends AOHelper {
 		query.append(COMMA);
 		query.append(RodsGenQueryEnum.COL_D_OWNER_NAME.getName());
 		return query.toString();
-		
+
 	}
 
 	/**
@@ -172,12 +178,16 @@ public class IRODSFileSystemAOHelper extends AOHelper {
 	}
 
 	/**
-	 * Build the appropriate GenQuery when listing collections under a given path, including the 
-	 * user access information
-	 * @param path <code>String</code> with the absolute path to the iRODS collection
+	 * Build the appropriate GenQuery when listing collections under a given
+	 * path, including the user access information
+	 * 
+	 * @param path
+	 *            <code>String</code> with the absolute path to the iRODS
+	 *            collection
 	 * @return
 	 */
-	public static String buildQueryListAllDirsWithUserAccessInfo(String path) {
+	public static String buildQueryListAllDirsWithUserAccessInfo(
+			final String path) {
 		StringBuilder query;
 		query = new StringBuilder();
 		query.append("SELECT ");
@@ -193,9 +203,9 @@ public class IRODSFileSystemAOHelper extends AOHelper {
 		query.append(" WHERE ");
 		query.append(RodsGenQueryEnum.COL_COLL_PARENT_NAME.getName());
 		query.append(" = '");
-		query.append(IRODSDataConversionUtil.escapeSingleQuotes(path)); 
+		query.append(IRODSDataConversionUtil.escapeSingleQuotes(path));
 		query.append("'");
-		
+
 		log.debug("query for dirs:{}", query.toString());
 		return query.toString();
 	}

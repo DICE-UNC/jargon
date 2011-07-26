@@ -3,9 +3,6 @@
  */
 package org.irods.jargon.core.connection;
 
-import static edu.sdsc.grid.io.irods.IRODSConstants.OPR_COMPLETE_AN;
-import static edu.sdsc.grid.io.irods.IRODSConstants.RODS_API_REQ;
-
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.IOException;
@@ -13,7 +10,6 @@ import java.io.InputStream;
 import java.io.InterruptedIOException;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
-import java.net.URI;
 import java.nio.channels.ClosedChannelException;
 import java.security.GeneralSecurityException;
 import java.security.MessageDigest;
@@ -28,17 +24,14 @@ import org.irods.jargon.core.packinstr.AuthResponseInp;
 import org.irods.jargon.core.packinstr.IRodsPI;
 import org.irods.jargon.core.packinstr.RErrMsg;
 import org.irods.jargon.core.packinstr.StartupPack;
+import org.irods.jargon.core.packinstr.Tag;
 import org.irods.jargon.core.protovalues.ErrorEnum;
 import org.irods.jargon.core.protovalues.RequestTypes;
 import org.irods.jargon.core.protovalues.XmlProtApis;
+import org.irods.jargon.core.utils.Base64;
+import org.irods.jargon.core.utils.IRODSConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import edu.sdsc.grid.io.Base64;
-import edu.sdsc.grid.io.FileFactory;
-import edu.sdsc.grid.io.Host;
-import edu.sdsc.grid.io.Lucid;
-import edu.sdsc.grid.io.irods.Tag;
 
 /**
  * Encapsulates sending of messages and parsing of responses above the socket
@@ -63,7 +56,7 @@ public class IRODSCommands implements IRODSManagedConnection {
 	private final IRODSProtocolManager irodsProtocolManager;
 
 	private String cachedChallengeValue = "";
-	
+
 	/**
 	 * note that this field is not final. This is due to the fact that it may be
 	 * altered during initialization to resolve GSI info. The field's setter
@@ -164,7 +157,7 @@ public class IRODSCommands implements IRODSManagedConnection {
 		try {
 			irodsConnection
 					.send(createHeader(
-							RODS_API_REQ,
+							IRODSConstants.RODS_API_REQ,
 							message.getBytes(ConnectionConstants.JARGON_CONNECTION_ENCODING).length,
 							errorLength, byteStringLength, intInfo));
 
@@ -209,20 +202,20 @@ public class IRODSCommands implements IRODSManagedConnection {
 		try {
 			int length = 0;
 			if (message != null) {
-				length = message.getBytes(ConnectionConstants.JARGON_CONNECTION_ENCODING).length;
+				length = message
+						.getBytes(ConnectionConstants.JARGON_CONNECTION_ENCODING).length;
 			}
-			irodsConnection
-					.send(createHeader(
-							RODS_API_REQ,
-							length,
-							errorLength, byteStreamLength, intInfo));
+			irodsConnection.send(createHeader(IRODSConstants.RODS_API_REQ, length,
+					errorLength, byteStreamLength, intInfo));
 			irodsConnection.send(message);
 			if (errorLength > 0) {
-				irodsConnection.send(new BufferedInputStream(errorStream), errorLength);
+				irodsConnection.send(new BufferedInputStream(errorStream),
+						errorLength);
 				errorStream.close();
 			}
 			if (byteStreamLength > 0) {
-				irodsConnection.send(new BufferedInputStream(byteStream), byteStreamLength);
+				irodsConnection.send(new BufferedInputStream(byteStream),
+						byteStreamLength);
 				byteStream.close();
 			}
 			irodsConnection.flush();
@@ -267,7 +260,7 @@ public class IRODSCommands implements IRODSManagedConnection {
 		try {
 			irodsConnection
 					.send(createHeader(
-							RODS_API_REQ,
+							IRODSConstants.RODS_API_REQ,
 							out.getBytes(ConnectionConstants.JARGON_CONNECTION_ENCODING).length,
 							errorLength, byteStringLength, irodsPI
 									.getApiNumber()));
@@ -380,7 +373,7 @@ public class IRODSCommands implements IRODSManagedConnection {
 			throw new IllegalArgumentException(err);
 		}
 
-		return irodsFunction(RODS_API_REQ, irodsPI.getParsedTags(),
+		return irodsFunction(IRODSConstants.RODS_API_REQ, irodsPI.getParsedTags(),
 				irodsPI.getApiNumber());
 	}
 
@@ -423,7 +416,7 @@ public class IRODSCommands implements IRODSManagedConnection {
 		}
 		byte[] full = new byte[4 + temp.length];
 		// load first 4 byte with header length
-		Host.copyInt(temp.length, full);
+		org.irods.jargon.core.utils.Host.copyInt(temp.length, full);
 		// copy rest of header into full
 		System.arraycopy(temp, 0, full, 4, temp.length);
 		return full;
@@ -470,8 +463,7 @@ public class IRODSCommands implements IRODSManagedConnection {
 		} else if (info == ErrorEnum.CAT_INVALID_AUTHENTICATION.getInt()) {
 			throw new JargonException("invalid user or password");
 		}
-		
-		
+
 		if (messageLength > 0) {
 			log.debug("message length greater than zero");
 			message = readMessageBody(messageLength, decode);
@@ -536,7 +528,8 @@ public class IRODSCommands implements IRODSManagedConnection {
 				|| info == ErrorEnum.CAT_NAME_EXISTS_AS_DATAOBJ.getInt()) {
 			handleOverwriteOfCollectionOrDataObject(errorLength, info);
 		} else if (info == ErrorEnum.USER_CHKSUM_MISMATCH.getInt()) {
-			throw new FileIntegrityException("File checksum verification mismatch");
+			throw new FileIntegrityException(
+					"File checksum verification mismatch");
 		} else {
 			String msg = "error occurred in irods with a return value of "
 					+ info;
@@ -581,9 +574,9 @@ public class IRODSCommands implements IRODSManagedConnection {
 							ConnectionConstants.JARGON_CONNECTION_ENCODING);
 				} catch (UnsupportedEncodingException e) {
 					log.error("Unsupported encoding for: {}",
-							 ConnectionConstants.JARGON_CONNECTION_ENCODING);
-					throw new JargonException("Unsupported encoding for: " +
 							ConnectionConstants.JARGON_CONNECTION_ENCODING);
+					throw new JargonException("Unsupported encoding for: "
+							+ ConnectionConstants.JARGON_CONNECTION_ENCODING);
 				}
 				log.error("IRODS error occured "
 						+ errorTag.getTag(RErrMsg.PI_TAG).getTag(
@@ -666,17 +659,19 @@ public class IRODSCommands implements IRODSManagedConnection {
 			throw new JargonException("Unsupported encoding for:"
 					+ ConnectionConstants.JARGON_CONNECTION_ENCODING);
 		}
-		
+
 		Tag errorPITag = errorTag.getTag(RErrMsg.PI_TAG);
 		if (errorPITag == null) {
-			throw new JargonException("errorPITag missing when processing an error in response from iRODS");
+			throw new JargonException(
+					"errorPITag missing when processing an error in response from iRODS");
 		}
-		
+
 		Tag status = errorPITag.getTag("status");
 		if (status == null) {
-			throw new JargonException("no status tag in error PI tag when processing error in response from iRODS");
+			throw new JargonException(
+					"no status tag in error PI tag when processing error in response from iRODS");
 		}
-		
+
 		int statusVal = status.getIntValue();
 		if (statusVal == 0) {
 			log.debug("error status of 0 indicates normal operation, ignored");
@@ -830,7 +825,7 @@ public class IRODSCommands implements IRODSManagedConnection {
 			e.printStackTrace();
 			throw new JargonException(e);
 		}
-		return Host.castToInt(headerInt);
+		return org.irods.jargon.core.utils.Host.castToInt(headerInt);
 	}
 
 	private Tag readMessageBody(final int length, final boolean decode)
@@ -1011,7 +1006,7 @@ public class IRODSCommands implements IRODSManagedConnection {
 		getIRODSAccount();
 		if (IRODSAccount.isDefaultObfuscate()) {
 			try {
-				password = new Lucid(new File(password))
+				password = new PasswordObfuscator(new File(password))
 						.encodePassword();
 			} catch (Throwable e) {
 				log.error("error during account obfuscation", e);
@@ -1154,7 +1149,7 @@ public class IRODSCommands implements IRODSManagedConnection {
 		Tag message = new Tag(AbstractIRODSPackingInstruction.INT_PI,
 				new Tag[] { new Tag(AbstractIRODSPackingInstruction.MY_INT,
 						status), });
-		irodsFunction(RODS_API_REQ, message.parseTag(), OPR_COMPLETE_AN);
+		irodsFunction(IRODSConstants.RODS_API_REQ, message.parseTag(), IRODSConstants.OPR_COMPLETE_AN);
 	}
 
 	protected String getCachedChallengeValue() {

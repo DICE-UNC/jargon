@@ -1,15 +1,12 @@
 package org.irods.jargon.core.packinstr;
 
-import static edu.sdsc.grid.io.irods.IRODSConstants.flags;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.utils.IRODSConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import edu.sdsc.grid.io.irods.Tag;
 
 /**
  * Translation of a StructFileExtAndRegInp operation into XML protocol format.
@@ -264,7 +261,7 @@ public final class StructFileExtAndRegInp extends
 		Tag message = new Tag(PI_TAG, new Tag[] {
 				new Tag(OBJ_PATH, tarFileAbsolutePath),
 				new Tag(COLLECTION, tarCollectionAbsolutePath),
-				new Tag(OPR_TYPE, 0), new Tag(flags, 0) });
+				new Tag(OPR_TYPE, 0), new Tag(IRODSConstants.flags, 0) });
 
 		List<KeyValuePair> kvps = new ArrayList<KeyValuePair>();
 

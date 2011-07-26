@@ -58,7 +58,6 @@ public class IRODSFileInputStream extends InputStream {
 			throw new JargonRuntimeException("fileIOOperations is null");
 		}
 
-		
 		if (!irodsFile.exists()) {
 			final String msg = "file does not exist:"
 					+ irodsFile.getAbsolutePath();
@@ -89,14 +88,16 @@ public class IRODSFileInputStream extends InputStream {
 			log.error(msg, e);
 			throw new JargonRuntimeException(msg, e);
 		}
-		
+
 		this.fileIOOperations = fileIOOperations;
 		this.fd = irodsFile.getFileDescriptor();
 
 	}
 
 	/**
-	 * Create an <code>IRODSFileInputStream</code> providing an already-opened file handle.
+	 * Create an <code>IRODSFileInputStream</code> providing an already-opened
+	 * file handle.
+	 * 
 	 * @param irodsFile
 	 * @param fileIOOperations
 	 * @param fd
@@ -107,23 +108,21 @@ public class IRODSFileInputStream extends InputStream {
 			throws FileNotFoundException {
 
 		super();
-		
+
 		if (irodsFile == null) {
 			throw new IllegalArgumentException("null irodsFile");
 		}
-		
+
 		if (fd <= 0) {
 			throw new IllegalArgumentException("fd <= 0");
 		}
 
 		this.fileIOOperations = fileIOOperations;
 		this.irodsFile = irodsFile;
-		
-		
+
 		this.fd = fd;
 
 	}
-
 
 	/**
 	 * @param file
@@ -140,7 +139,7 @@ public class IRODSFileInputStream extends InputStream {
 	}
 
 	private int openIRODSFile() throws JargonException {
-		
+
 		if (!irodsFile.exists()) {
 			log.warn("opening non-existant file for read: {}",
 					irodsFile.getAbsolutePath());
@@ -181,8 +180,7 @@ public class IRODSFileInputStream extends InputStream {
 		try {
 			byte buffer[] = new byte[1];
 
-			int temp = fileIOOperations.fileRead(fd,
-					buffer, 0, 1);
+			int temp = fileIOOperations.fileRead(fd, buffer, 0, 1);
 
 			if (temp < 0) {
 				return -1;
@@ -278,8 +276,7 @@ public class IRODSFileInputStream extends InputStream {
 
 		int temp;
 		try {
-			temp = fileIOOperations.fileRead(fd, b,
-					off, len);
+			temp = fileIOOperations.fileRead(fd, b, off, len);
 		} catch (JargonException e) {
 			log.error(
 					"JargonException in read is converted to IOException for method contract",
@@ -368,8 +365,7 @@ public class IRODSFileInputStream extends InputStream {
 		try {
 			if ((filePointer + numberOfBytesToSkip) < length) {
 
-				fileIOOperations.seek(fd,
-						numberOfBytesToSkip,
+				fileIOOperations.seek(fd, numberOfBytesToSkip,
 						FileIOOperations.SeekWhenceType.SEEK_CURRENT);
 
 				filePointer += numberOfBytesToSkip;

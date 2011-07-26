@@ -1,7 +1,5 @@
 package org.irods.jargon.core.pub;
 
-import static edu.sdsc.grid.io.irods.IRODSConstants.OPR_COMPLETE_AN;
-import static edu.sdsc.grid.io.irods.IRODSConstants.RODS_API_REQ;
 import static org.irods.jargon.core.packinstr.ExecMyRuleInp.BUF;
 import static org.irods.jargon.core.packinstr.ExecMyRuleInp.BUF_LEN_PI;
 import static org.irods.jargon.core.packinstr.ExecMyRuleInp.INT_PI;
@@ -24,6 +22,7 @@ import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.packinstr.ExecMyRuleInp;
 import org.irods.jargon.core.packinstr.RuleExecDelInp;
+import org.irods.jargon.core.packinstr.Tag;
 import org.irods.jargon.core.pub.domain.DelayedRuleExecution;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.query.IRODSGenQuery;
@@ -36,13 +35,11 @@ import org.irods.jargon.core.rule.IRODSRuleExecResult;
 import org.irods.jargon.core.rule.IRODSRuleExecResultOutputParameter;
 import org.irods.jargon.core.rule.IRODSRuleTranslator;
 import org.irods.jargon.core.rule.JargonRuleException;
+import org.irods.jargon.core.utils.Base64;
+import org.irods.jargon.core.utils.IRODSConstants;
 import org.irods.jargon.core.utils.TagHandlingUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import edu.sdsc.grid.io.Base64;
-import edu.sdsc.grid.io.irods.IRODSConstants;
-import edu.sdsc.grid.io.irods.Tag;
 
 /**
  * Access object that an execute iRODS rules, useful in services as a
@@ -539,8 +536,8 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements
 	@SuppressWarnings("unused")
 	private void operationComplete(final int status) throws JargonException {
 		Tag message = new Tag(INT_PI, new Tag[] { new Tag(MY_INT, status), });
-		getIRODSProtocol().irodsFunction(RODS_API_REQ, message.parseTag(),
-				OPR_COMPLETE_AN);
+		getIRODSProtocol().irodsFunction(IRODSConstants.RODS_API_REQ, message.parseTag(),
+				IRODSConstants.OPR_COMPLETE_AN);
 	}
 
 }

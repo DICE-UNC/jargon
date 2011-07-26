@@ -9,6 +9,7 @@ import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.packinstr.GenQueryInp;
 import org.irods.jargon.core.packinstr.GenQueryOut;
+import org.irods.jargon.core.packinstr.Tag;
 import org.irods.jargon.core.query.GenQuerySelectField;
 import org.irods.jargon.core.query.IRODSGenQuery;
 import org.irods.jargon.core.query.IRODSGenQueryTranslator;
@@ -19,8 +20,6 @@ import org.irods.jargon.core.query.JargonQueryException;
 import org.irods.jargon.core.query.TranslatedIRODSGenQuery;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import edu.sdsc.grid.io.irods.Tag;
 
 /**
  * Implementation class that can process iquest-like queries using the genquery

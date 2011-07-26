@@ -17,7 +17,7 @@ import java.util.List;
  * @author Mike Conway - DICE (www.irods.org)
  * 
  */
-public  class SimpleQuery {
+public class SimpleQuery {
 
 	private final String queryString;
 	private final List<String> arguments;
@@ -31,22 +31,28 @@ public  class SimpleQuery {
 	 * @param arguments
 	 *            <code>List<String></code> with arguments to the query. This
 	 *            may be set to null if no arguments desired.
-	 * @param continuationValue <code>int</code> with the offset into the results.,  0 if no offset.
+	 * @param continuationValue
+	 *            <code>int</code> with the offset into the results., 0 if no
+	 *            offset.
 	 * @return <code>SimpleQuery</code>
 	 */
 	public static SimpleQuery instance(final String queryString,
 			final List<String> arguments, final int continuationValue) {
 		return new SimpleQuery(queryString, arguments, continuationValue);
 	}
-	
+
 	/**
 	 * Creates an instance that has no arguments.
+	 * 
 	 * @param queryString
 	 *            <code>String</code> with the sql query to execute.
-	 * @param continuationValue <code>int</code> with the offset into the results.,  0 if no offset.
+	 * @param continuationValue
+	 *            <code>int</code> with the offset into the results., 0 if no
+	 *            offset.
 	 * @return
 	 */
-	public static SimpleQuery instanceWithNoArguments(final String queryString, final int continuationValue) {
+	public static SimpleQuery instanceWithNoArguments(final String queryString,
+			final int continuationValue) {
 		List<String> args = new ArrayList<String>();
 		return new SimpleQuery(queryString, args, continuationValue);
 	}
@@ -60,7 +66,9 @@ public  class SimpleQuery {
 	 * @param arg
 	 *            <code>String</code> with the arugment for the query. Set to
 	 *            blank if unused.
-	 * @param continuationValue <code>int</code> with the offset into the results.,  0 if no offset.
+	 * @param continuationValue
+	 *            <code>int</code> with the offset into the results., 0 if no
+	 *            offset.
 	 * @return
 	 */
 	public static SimpleQuery instanceWithOneArgument(final String queryString,
@@ -88,11 +96,14 @@ public  class SimpleQuery {
 	 *            <code>String</code> with the argument for the query.
 	 * @param arg2
 	 *            <code>String</code> with the second argument for the query.
-	 * @param continuationValue <code>int</code> with the offset into the results.,  0 if no offset.
+	 * @param continuationValue
+	 *            <code>int</code> with the offset into the results., 0 if no
+	 *            offset.
 	 * @return
 	 */
-	public static SimpleQuery instanceWithTwoArguments(final String queryString,
-			final String arg1, final String arg2, final int continuationValue) {
+	public static SimpleQuery instanceWithTwoArguments(
+			final String queryString, final String arg1, final String arg2,
+			final int continuationValue) {
 
 		if (arg1 == null || arg1.isEmpty()) {
 			throw new IllegalArgumentException("arg1 is null or empty");
@@ -111,17 +122,18 @@ public  class SimpleQuery {
 
 	}
 
-	private SimpleQuery(final String queryString, final List<String> arguments, final int continuationValue) {
+	private SimpleQuery(final String queryString, final List<String> arguments,
+			final int continuationValue) {
 
 		if (queryString == null || queryString.isEmpty()) {
 			throw new IllegalArgumentException("empty or null queryString");
 		}
 
 		if (continuationValue < 0) {
-			throw new IllegalArgumentException("continuation value is less than zero");
+			throw new IllegalArgumentException(
+					"continuation value is less than zero");
 		}
-		
-		
+
 		this.queryString = queryString;
 		this.continuationValue = continuationValue;
 
@@ -152,7 +164,7 @@ public  class SimpleQuery {
 		sb.append(continuationValue);
 		return sb.toString();
 	}
-	
+
 	public int getContinuationValue() {
 		return continuationValue;
 	}

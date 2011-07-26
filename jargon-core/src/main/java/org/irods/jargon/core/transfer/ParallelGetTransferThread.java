@@ -3,9 +3,6 @@
  */
 package org.irods.jargon.core.transfer;
 
-import static edu.sdsc.grid.io.irods.IRODSConstants.DONE_OPR;
-import static edu.sdsc.grid.io.irods.IRODSConstants.GET_OPR;
-
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.FileNotFoundException;
@@ -18,10 +15,9 @@ import java.util.concurrent.Callable;
 import org.irods.jargon.core.connection.ConnectionConstants;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.exception.JargonRuntimeException;
+import org.irods.jargon.core.utils.Host;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import edu.sdsc.grid.io.Host;
 
 /**
  * Handle parallel file transfer get operation within Jargon. See

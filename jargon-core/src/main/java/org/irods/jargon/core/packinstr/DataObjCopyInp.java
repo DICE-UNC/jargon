@@ -8,8 +8,6 @@ import java.util.List;
 
 import org.irods.jargon.core.exception.JargonException;
 
-import edu.sdsc.grid.io.irods.Tag;
-
 /**
  * Translation of a DataObjInp operation into XML protocol format.
  * 
@@ -53,23 +51,31 @@ public class DataObjCopyInp extends AbstractIRODSPackingInstruction {
 
 	/**
 	 * Create an instance that will do a file copy between two iRODS directories
-	  * @param sourceFileAbsolutePath
+	 * 
+	 * @param sourceFileAbsolutePath
 	 *            <code>String</code> with the absolute path to the source file
 	 * @param targetFileAbsolutePath
 	 *            <code>String</code> with the absolute path to the target file
-	 * @param copyToResource <code>String</code> with an optional resource for the target file
-	 * @param sourceFileLength <code>long</code> with the length of the source file
-	 * @param force <code>boolean</code> that indicates whether force option should be set
+	 * @param copyToResource
+	 *            <code>String</code> with an optional resource for the target
+	 *            file
+	 * @param sourceFileLength
+	 *            <code>long</code> with the length of the source file
+	 * @param force
+	 *            <code>boolean</code> that indicates whether force option
+	 *            should be set
 	 * @return
 	 * @throws JargonException
 	 */
 	public static final DataObjCopyInp instanceForCopy(
 			final String sourceFileAbsolutePath,
 			final String targetFileAbsolutePath, final String copyToResource,
-			final long sourceFileLength, final boolean force) throws JargonException {
+			final long sourceFileLength, final boolean force)
+			throws JargonException {
 		DataObjCopyInp dataObjCopyInp = new DataObjCopyInp(COPY_API_NBR,
 				sourceFileAbsolutePath, targetFileAbsolutePath,
-				DataObjInp.COPY_FILE_SRC_OPERATION_TYPE, copyToResource, sourceFileLength, force);
+				DataObjInp.COPY_FILE_SRC_OPERATION_TYPE, copyToResource,
+				sourceFileLength, force);
 		return dataObjCopyInp;
 	}
 
@@ -110,8 +116,8 @@ public class DataObjCopyInp extends AbstractIRODSPackingInstruction {
 	public static final DataObjCopyInp instanceForCopyCollection(
 			final String sourceFileAbsolutePath,
 			final String targetFileAbsolutePath,
-			final String targetResourceName, final long sourceFileLength, final boolean force)
-			throws JargonException {
+			final String targetResourceName, final long sourceFileLength,
+			final boolean force) throws JargonException {
 
 		DataObjCopyInp dataObjCopyInp = new DataObjCopyInp(COPY_API_NBR,
 				sourceFileAbsolutePath, targetFileAbsolutePath,
@@ -123,7 +129,8 @@ public class DataObjCopyInp extends AbstractIRODSPackingInstruction {
 	private DataObjCopyInp(final int apiNumber,
 			final String fromFileAbsolutePath, final String toFileAbsolutePath,
 			final int operationType, final String resourceName,
-			final long sourceFileLength, final boolean force) throws JargonException {
+			final long sourceFileLength, final boolean force)
+			throws JargonException {
 		super();
 
 		if (fromFileAbsolutePath == null || fromFileAbsolutePath.length() == 0) {
@@ -137,7 +144,8 @@ public class DataObjCopyInp extends AbstractIRODSPackingInstruction {
 		}
 
 		if (operationType == DataObjInp.RENAME_DIRECTORY_OPERATION_TYPE
-				|| operationType == DataObjInp.RENAME_FILE_OPERATION_TYPE || operationType == DataObjInp.COPY_FILE_SRC_OPERATION_TYPE) {
+				|| operationType == DataObjInp.RENAME_FILE_OPERATION_TYPE
+				|| operationType == DataObjInp.COPY_FILE_SRC_OPERATION_TYPE) {
 			// ok
 		} else {
 			throw new IllegalArgumentException("unknown operation type:"
@@ -213,7 +221,8 @@ public class DataObjCopyInp extends AbstractIRODSPackingInstruction {
 		// get the DataObjInp tag for the from file
 		Tag fromFileTag = buildDataObjInpTagForCopySource(fromFileAbsolutePath,
 				sourceFileLength);
-		Tag toFileTag = buildDataObjInpTagForCopyDest(toFileAbsolutePath,resourceName,force);
+		Tag toFileTag = buildDataObjInpTagForCopyDest(toFileAbsolutePath,
+				resourceName, force);
 
 		// now build the whole tag
 		Tag message = new Tag(PI_TAG, new Tag[] { fromFileTag, toFileTag });
@@ -222,8 +231,9 @@ public class DataObjCopyInp extends AbstractIRODSPackingInstruction {
 
 	}
 
-	private Tag buildDataObjInpTagForCopySource(final String fromFileAbsolutePath,
-			final long sourceFileLength) throws JargonException {
+	private Tag buildDataObjInpTagForCopySource(
+			final String fromFileAbsolutePath, final long sourceFileLength)
+			throws JargonException {
 		List<KeyValuePair> kvps = new ArrayList<KeyValuePair>();
 
 		Tag fileTag = new Tag(DataObjInp.PI_TAG, new Tag[] {
@@ -233,17 +243,19 @@ public class DataObjCopyInp extends AbstractIRODSPackingInstruction {
 				new Tag(DataObjInp.OFFSET, 0),
 				new Tag(DataObjInp.DATA_SIZE, sourceFileLength),
 				new Tag(DataObjInp.NUM_THREADS, 0),
-				new Tag(DataObjInp.OPR_TYPE, DataObjInp.COPY_FILE_SRC_OPERATION_TYPE),
+				new Tag(DataObjInp.OPR_TYPE,
+						DataObjInp.COPY_FILE_SRC_OPERATION_TYPE),
 				this.createKeyValueTag(kvps) });
 		return fileTag;
 	}
-	
-	private Tag buildDataObjInpTagForCopyDest(final String destFileAbsolutePath,
-			final String destResource, final boolean overwrite) throws JargonException {
-		DataObjInp dataObjInp = DataObjInp.instanceForCopyDest(destFileAbsolutePath, destResource, overwrite);
+
+	private Tag buildDataObjInpTagForCopyDest(
+			final String destFileAbsolutePath, final String destResource,
+			final boolean overwrite) throws JargonException {
+		DataObjInp dataObjInp = DataObjInp.instanceForCopyDest(
+				destFileAbsolutePath, destResource, overwrite);
 		return dataObjInp.getTagValue();
 	}
-
 
 	public String getFromFileAbsolutePath() {
 		return fromFileAbsolutePath;

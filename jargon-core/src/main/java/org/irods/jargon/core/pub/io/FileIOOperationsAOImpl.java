@@ -3,12 +3,6 @@
  */
 package org.irods.jargon.core.pub.io;
 
-import static edu.sdsc.grid.io.irods.IRODSConstants.MsgHeader_PI;
-import static edu.sdsc.grid.io.irods.IRODSConstants.RODS_API_REQ;
-import static edu.sdsc.grid.io.irods.IRODSConstants.bsLen;
-import static edu.sdsc.grid.io.irods.IRODSConstants.intInfo;
-import static edu.sdsc.grid.io.irods.IRODSConstants.offset;
-
 import java.io.OutputStream;
 
 import org.irods.jargon.core.connection.IRODSAccount;
@@ -18,11 +12,11 @@ import org.irods.jargon.core.exception.JargonRuntimeException;
 import org.irods.jargon.core.packinstr.DataObjRead;
 import org.irods.jargon.core.packinstr.DataObjWriteInp;
 import org.irods.jargon.core.packinstr.OpenedDataObjInp;
+import org.irods.jargon.core.packinstr.Tag;
 import org.irods.jargon.core.pub.IRODSGenericAO;
+import org.irods.jargon.core.utils.IRODSConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import edu.sdsc.grid.io.irods.Tag;
 
 /**
  * @author Mike Conway - DICE (www.irods.org)
@@ -95,11 +89,11 @@ final class FileIOOperationsAOImpl extends IRODSGenericAO implements
 
 		DataObjWriteInp dataObjWriteInp = DataObjWriteInp.instance(fd, length);
 
-		Tag message = getIRODSProtocol().irodsFunction(RODS_API_REQ,
+		Tag message = getIRODSProtocol().irodsFunction(IRODSConstants.RODS_API_REQ,
 				dataObjWriteInp.getParsedTags(), null, 0, 0, buffer, offset,
 				length, DataObjWriteInp.WRITE_API_NBR);
 
-		return message.getTag(MsgHeader_PI).getTag(intInfo).getIntValue();
+		return message.getTag(IRODSConstants.MsgHeader_PI).getTag(IRODSConstants.intInfo).getIntValue();
 	}
 
 	/*
@@ -127,11 +121,11 @@ final class FileIOOperationsAOImpl extends IRODSGenericAO implements
 			return -1;
 		}
 
-		length = message.getTag(MsgHeader_PI).getTag(bsLen).getIntValue();
+		length = message.getTag(IRODSConstants.MsgHeader_PI).getTag(IRODSConstants.bsLen).getIntValue();
 
 		// read the message byte stream into the local file
 		getIRODSProtocol().read(destination, length);
-		return message.getTag(MsgHeader_PI).getTag(intInfo).getIntValue();
+		return message.getTag(IRODSConstants.MsgHeader_PI).getTag(IRODSConstants.intInfo).getIntValue();
 	}
 
 	/*
@@ -159,13 +153,13 @@ final class FileIOOperationsAOImpl extends IRODSGenericAO implements
 			return -1;
 		}
 
-		length = message.getTag(MsgHeader_PI).getTag(bsLen).getIntValue();
+		length = message.getTag(IRODSConstants.MsgHeader_PI).getTag(IRODSConstants.bsLen).getIntValue();
 
 		// read the message byte stream into the local file
 
 		int read = getIRODSProtocol().read(buffer, offset, length);
 
-		if (read == message.getTag(MsgHeader_PI).getTag(intInfo).getIntValue()) {
+		if (read == message.getTag(IRODSConstants.MsgHeader_PI).getTag(IRODSConstants.intInfo).getIntValue()) {
 			return read;
 		} else {
 			log.error("did not read length equal to response length, expected"
@@ -204,6 +198,6 @@ final class FileIOOperationsAOImpl extends IRODSGenericAO implements
 				.instanceForFileSeek(seek, fd, whence.ordinal());
 		message = getIRODSProtocol().irodsFunction(openedDataObjInp);
 
-		return message.getTag(offset).getLongValue();
+		return message.getTag(IRODSConstants.offset).getLongValue();
 	}
 }

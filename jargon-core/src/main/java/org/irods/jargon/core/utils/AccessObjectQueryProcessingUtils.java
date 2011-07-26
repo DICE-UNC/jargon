@@ -33,7 +33,8 @@ public class AccessObjectQueryProcessingUtils {
 	 * @throws JargonException
 	 */
 	public static List<AvuData> buildAvuDataListFromResultSet(
-			final IRODSQueryResultSetInterface resultSet) throws JargonException {
+			final IRODSQueryResultSetInterface resultSet)
+			throws JargonException {
 		final List<AvuData> avuDatas = new ArrayList<AvuData>();
 		AvuData avuData = null;
 

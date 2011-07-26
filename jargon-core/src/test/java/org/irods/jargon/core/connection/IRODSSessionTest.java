@@ -4,7 +4,6 @@ import java.util.Properties;
 import java.util.concurrent.Executor;
 
 import junit.framework.Assert;
-import junit.framework.TestCase;
 
 import org.irods.jargon.core.packinstr.TransferOptions;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
@@ -68,7 +67,7 @@ public class IRODSSessionTest {
 				jargonProperties.getMaxParallelThreads());
 
 	}
-	
+
 	@Test
 	public void testBuildTransferThreadPool() throws Exception {
 		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager
@@ -87,10 +86,10 @@ public class IRODSSessionTest {
 		overrideJargonProperties.setTransferThreadPoolTimeoutMillis(60000);
 		irodsSession.setJargonProperties(overrideJargonProperties);
 		Executor executor = irodsSession.getParallelTransferThreadPool();
-		TestCase.assertNotNull("executor was null", executor);
+		Assert.assertNotNull("executor was null", executor);
 
 	}
-	
+
 	@Test
 	public void testBuildTransferThreadPoolAndGetTwice() throws Exception {
 		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager
@@ -110,10 +109,10 @@ public class IRODSSessionTest {
 		irodsSession.setJargonProperties(overrideJargonProperties);
 		Executor executor = irodsSession.getParallelTransferThreadPool();
 		executor = irodsSession.getParallelTransferThreadPool();
-		TestCase.assertNotNull("executor was null", executor);
+		Assert.assertNotNull("executor was null", executor);
 
 	}
-	
+
 	@Test
 	public void testBuildTransferThreadPoolNotInProps() throws Exception {
 		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager
@@ -132,12 +131,13 @@ public class IRODSSessionTest {
 		overrideJargonProperties.setTransferThreadPoolTimeoutMillis(60000);
 		irodsSession.setJargonProperties(overrideJargonProperties);
 		Executor executor = irodsSession.getParallelTransferThreadPool();
-		TestCase.assertNull("executor should be  null", executor);
+		Assert.assertNull("executor should be  null", executor);
 
 	}
-	
+
 	@Test
-	public void testGetTransferOptionsWithComputeAndVerifyChecksumValTrue() throws Exception {
+	public void testGetTransferOptionsWithComputeAndVerifyChecksumValTrue()
+			throws Exception {
 		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager
 				.instance();
 		testingPropertiesHelper
@@ -148,17 +148,19 @@ public class IRODSSessionTest {
 
 		SettableJargonProperties overrideJargonProperties = new SettableJargonProperties();
 		overrideJargonProperties.setComputeAndVerifyChecksumAfterTransfer(true);
-		
+
 		irodsSession.setJargonProperties(overrideJargonProperties);
-		TransferOptions transferOptions = irodsSession.buildTransferOptionsBasedOnJargonProperties();
-		
+		TransferOptions transferOptions = irodsSession
+				.buildTransferOptionsBasedOnJargonProperties();
+
 		Assert.assertEquals("did not set compute and verify checksum", true,
 				transferOptions.isComputeAndVerifyChecksumAfterTransfer());
 
 	}
-	
+
 	@Test
-	public void testGetTransferOptionsWithComputeChecksumValTrue() throws Exception {
+	public void testGetTransferOptionsWithComputeChecksumValTrue()
+			throws Exception {
 		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager
 				.instance();
 		testingPropertiesHelper
@@ -169,17 +171,19 @@ public class IRODSSessionTest {
 
 		SettableJargonProperties overrideJargonProperties = new SettableJargonProperties();
 		overrideJargonProperties.setComputeChecksumAfterTransfer(true);
-		
+
 		irodsSession.setJargonProperties(overrideJargonProperties);
-		TransferOptions transferOptions = irodsSession.buildTransferOptionsBasedOnJargonProperties();
-		
+		TransferOptions transferOptions = irodsSession
+				.buildTransferOptionsBasedOnJargonProperties();
+
 		Assert.assertEquals("did not set computechecksum", true,
 				transferOptions.isComputeChecksumAfterTransfer());
 
 	}
-	
+
 	@Test
-	public void testGetTransferOptionsWithResourceRedirectsTrue() throws Exception {
+	public void testGetTransferOptionsWithResourceRedirectsTrue()
+			throws Exception {
 		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager
 				.instance();
 		testingPropertiesHelper
@@ -190,14 +194,14 @@ public class IRODSSessionTest {
 
 		SettableJargonProperties overrideJargonProperties = new SettableJargonProperties();
 		overrideJargonProperties.setAllowPutGetResourceRedirects(true);
-		
+
 		irodsSession.setJargonProperties(overrideJargonProperties);
-		TransferOptions transferOptions = irodsSession.buildTransferOptionsBasedOnJargonProperties();
-		
+		TransferOptions transferOptions = irodsSession
+				.buildTransferOptionsBasedOnJargonProperties();
+
 		Assert.assertEquals("did not set allow resource redirects", true,
 				transferOptions.isAllowPutGetResourceRedirects());
 
 	}
-
 
 }

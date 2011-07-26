@@ -41,7 +41,8 @@ public class GenQuerySelectField {
 	 * @return <code>SelectField</code> describing details about this field.
 	 * @throws JargonException
 	 */
-	public static GenQuerySelectField instance(final RodsGenQueryEnum selectField,
+	public static GenQuerySelectField instance(
+			final RodsGenQueryEnum selectField,
 			final SelectFieldTypes selectFieldType,
 			final SelectFieldSource selectFieldSource) throws JargonException {
 		if (selectField == null) {
@@ -77,8 +78,9 @@ public class GenQuerySelectField {
 			final String selectFieldNumericTranslation,
 			final SelectFieldTypes selectFieldType,
 			final SelectFieldSource selectFieldSource) throws JargonException {
-		return new GenQuerySelectField(selectFieldName, selectFieldNumericTranslation,
-				selectFieldType, selectFieldSource);
+		return new GenQuerySelectField(selectFieldName,
+				selectFieldNumericTranslation, selectFieldType,
+				selectFieldSource);
 	}
 
 	@Override

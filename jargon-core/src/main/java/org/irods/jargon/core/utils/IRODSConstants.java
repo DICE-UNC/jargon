@@ -1,7 +1,9 @@
 /**
  * 
  */
-package edu.sdsc.grid.io.irods;
+package org.irods.jargon.core.utils;
+
+import org.irods.jargon.core.packinstr.Tag;
 
 /**
  * Constants used for IRODS/Jargon

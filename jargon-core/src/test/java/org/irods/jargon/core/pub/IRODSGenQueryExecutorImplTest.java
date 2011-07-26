@@ -7,7 +7,6 @@ import java.io.File;
 import java.util.Properties;
 
 import junit.framework.Assert;
-import junit.framework.TestCase;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSProtocolManager;
@@ -403,7 +402,8 @@ public class IRODSGenQueryExecutorImplTest {
 	}
 
 	/*
-	 * [#126] every call to r.getColumn( X ) returns the name of the file as a string
+	 * [#126] every call to r.getColumn( X ) returns the name of the file as a
+	 * string
 	 */
 	@Test
 	public void testColQueryThenAccessColByName() throws Exception {
@@ -424,9 +424,10 @@ public class IRODSGenQueryExecutorImplTest {
 		String targetIrodsFile = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH);
-		
+
 		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
 		IRODSFileFactory irodsFileFactory = accessObjectFactory
 				.getIRODSFileFactory(irodsAccount);
 		DataObjectAO dataObjectAO = accessObjectFactory
@@ -469,10 +470,12 @@ public class IRODSGenQueryExecutorImplTest {
 		Integer.parseInt(size);
 		irodsGenQueryExecutor.closeResults(resultSet);
 		irodsFileSystem.close();
-		
-		TestCase.assertEquals("did not find modified where expected", modified, r.getColumn(2));
-		TestCase.assertEquals("did not find size where expected", size, r.getColumn(3));
-	
+
+		Assert.assertEquals("did not find modified where expected", modified,
+				r.getColumn(2));
+		Assert.assertEquals("did not find size where expected", size,
+				r.getColumn(3));
+
 	}
 
 }

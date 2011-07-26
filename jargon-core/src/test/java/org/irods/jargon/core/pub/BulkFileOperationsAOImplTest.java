@@ -60,7 +60,7 @@ public class BulkFileOperationsAOImplTest {
 				bulkFileOperationsAO);
 	}
 
-	@Test(expected=JargonException.class)
+	@Test(expected = JargonException.class)
 	public void testCreateBundleNoOverwriteCollectionExists() throws Exception {
 		String tarName = "testCreateBundleNoOverwriteCollectionExists.tar";
 		String testSubdir = "testCreateBundleNoOverwriteCollectionExists";
@@ -279,18 +279,18 @@ public class BulkFileOperationsAOImplTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		
-		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
-		.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
-				irodsAccount);
-IRODSServerProperties props = environmentalInfoAO
-		.getIRODSServerPropertiesFromIRODSServer();
 
-// test is only valid for post 2.4.1 
-if (!props.isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods2.4.1")) {
-	irodsFileSystem.closeAndEatExceptions();
-	return;
-}
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
+						irodsAccount);
+		IRODSServerProperties props = environmentalInfoAO
+				.getIRODSServerPropertiesFromIRODSServer();
+
+		// test is only valid for post 2.4.1
+		if (!props.isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods2.4.1")) {
+			irodsFileSystem.closeAndEatExceptions();
+			return;
+		}
 
 		IRODSFile irodsFile = null;
 
@@ -353,16 +353,16 @@ if (!props.isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods2.4.1")) {
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
 		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
-		.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
-				irodsAccount);
-IRODSServerProperties props = environmentalInfoAO
-		.getIRODSServerPropertiesFromIRODSServer();
+				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
+						irodsAccount);
+		IRODSServerProperties props = environmentalInfoAO
+				.getIRODSServerPropertiesFromIRODSServer();
 
-// test is only valid for post 2.4.1 
-if (!props.isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods2.4.1")) {
-	irodsFileSystem.closeAndEatExceptions();
-	return;
-}
+		// test is only valid for post 2.4.1
+		if (!props.isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods2.4.1")) {
+			irodsFileSystem.closeAndEatExceptions();
+			return;
+		}
 
 		IRODSFile irodsFile = null;
 
@@ -507,16 +507,16 @@ if (!props.isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods2.4.1")) {
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
 		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
-		.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
-				irodsAccount);
-IRODSServerProperties props = environmentalInfoAO
-		.getIRODSServerPropertiesFromIRODSServer();
+				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
+						irodsAccount);
+		IRODSServerProperties props = environmentalInfoAO
+				.getIRODSServerPropertiesFromIRODSServer();
 
-// test is only valid for post 2.4.1 
-if (!props.isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods2.4.1")) {
-	irodsFileSystem.closeAndEatExceptions();
-	return;
-}
+		// test is only valid for post 2.4.1
+		if (!props.isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods2.4.1")) {
+			irodsFileSystem.closeAndEatExceptions();
+			return;
+		}
 
 		IRODSFile irodsFile = null;
 
@@ -597,16 +597,16 @@ if (!props.isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods2.4.1")) {
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
 		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
-		.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
-				irodsAccount);
-IRODSServerProperties props = environmentalInfoAO
-		.getIRODSServerPropertiesFromIRODSServer();
+				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
+						irodsAccount);
+		IRODSServerProperties props = environmentalInfoAO
+				.getIRODSServerPropertiesFromIRODSServer();
 
-// test is only valid for post 2.4.1 
-if (!props.isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods2.4.1")) {
-	irodsFileSystem.closeAndEatExceptions();
-	return;
-}
+		// test is only valid for post 2.4.1
+		if (!props.isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods2.4.1")) {
+			irodsFileSystem.closeAndEatExceptions();
+			return;
+		}
 
 		IRODSFile irodsFile = null;
 

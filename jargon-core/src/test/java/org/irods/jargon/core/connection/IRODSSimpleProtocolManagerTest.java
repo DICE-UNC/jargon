@@ -40,16 +40,15 @@ public class IRODSSimpleProtocolManagerTest {
 				connection.isConnected());
 	}
 
-	@Test(expected=AuthenticationException.class)
+	@Test(expected = AuthenticationException.class)
 	public void testGetIRODSConnectionForInvalidUser() throws Exception {
 		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountForIRODSUserFromTestPropertiesForGivenUser(testingProperties,
-						"iam-a-bogus-user", "irockthecode");
+				.buildIRODSAccountForIRODSUserFromTestPropertiesForGivenUser(
+						testingProperties, "iam-a-bogus-user", "irockthecode");
 		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager
 				.instance();
-		IRODSManagedConnection connection = irodsConnectionManager
-				.getIRODSProtocol(irodsAccount);
-		
+		irodsConnectionManager.getIRODSProtocol(irodsAccount);
+
 	}
 
 	@Test

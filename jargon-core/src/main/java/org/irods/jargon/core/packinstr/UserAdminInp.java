@@ -2,8 +2,6 @@ package org.irods.jargon.core.packinstr;
 
 import org.irods.jargon.core.exception.JargonException;
 
-import edu.sdsc.grid.io.irods.Tag;
-
 public class UserAdminInp extends AbstractIRODSPackingInstruction {
 
 	/**

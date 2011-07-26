@@ -41,10 +41,12 @@ public class DefaultTransferControlBlock implements TransferControlBlock {
 	private TransferOptions transferOptions;
 	private long totalBytesTransferredSoFar = 0L;
 	private long totalBytesToTransfer = 0L;
-	
-	
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.transfer.TransferControlBlock#resetTransferData()
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.transfer.TransferControlBlock#resetTransferData()
 	 */
 	@Override
 	public synchronized void resetTransferData() {
@@ -56,7 +58,6 @@ public class DefaultTransferControlBlock implements TransferControlBlock {
 		totalBytesTransferredSoFar = 0;
 		totalBytesToTransfer = 0;
 	}
-
 
 	/**
 	 * Initializer that takes a restart path. This will be ignored if blank or
@@ -344,17 +345,24 @@ public class DefaultTransferControlBlock implements TransferControlBlock {
 			return ++totalFilesTransferredSoFar;
 		}
 	}
-	
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.transfer.TransferControlBlock#getTransferOptions()
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.transfer.TransferControlBlock#getTransferOptions()
 	 */
 	@Override
 	public synchronized TransferOptions getTransferOptions() {
 		return transferOptions;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.transfer.TransferControlBlock#setTransferOptions(org.irods.jargon.core.packinstr.TransferOptions)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.transfer.TransferControlBlock#setTransferOptions
+	 * (org.irods.jargon.core.packinstr.TransferOptions)
 	 */
 	@Override
 	public synchronized void setTransferOptions(
@@ -379,9 +387,8 @@ public class DefaultTransferControlBlock implements TransferControlBlock {
 	}
 
 	@Override
-	public void setTotalBytesToTransfer(long totalBytesToTransfer) {
+	public void setTotalBytesToTransfer(final long totalBytesToTransfer) {
 		this.totalBytesToTransfer = totalBytesToTransfer;
 	}
-	
 
 }

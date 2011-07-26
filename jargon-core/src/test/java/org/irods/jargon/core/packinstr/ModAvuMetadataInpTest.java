@@ -76,13 +76,14 @@ public class ModAvuMetadataInpTest {
 		Assert.assertEquals("packing instruction is malformed", sb.toString(),
 				modAvu.getParsedTags());
 	}
-	
+
 	@Test
 	public void testGetParsedTagsForCollectionModifyAvu() throws Exception {
 		AvuData avuData = AvuData.instance("attrib", "value", "unit");
 		AvuData newAvuData = AvuData.instance("newattr", "newval", "newunit");
 		ModAvuMetadataInp modAvu = ModAvuMetadataInp
-				.instanceForModifyCollectionMetadata("target", avuData, newAvuData);
+				.instanceForModifyCollectionMetadata("target", avuData,
+						newAvuData);
 
 		StringBuilder sb = new StringBuilder();
 		sb.append("<ModAVUMetadataInp_PI><arg0>mod</arg0>\n");
@@ -96,17 +97,19 @@ public class ModAvuMetadataInpTest {
 		sb.append("<arg8>u:newunit</arg8>\n");
 		sb.append("<arg9></arg9>\n");
 		sb.append("</ModAVUMetadataInp_PI>\n");
-		
+
 		Assert.assertEquals("packing instruction is malformed", sb.toString(),
 				modAvu.getParsedTags());
 	}
-	
+
 	@Test
-	public void testGetParsedTagsForCollectionModifyAvuNoUnit() throws Exception {
+	public void testGetParsedTagsForCollectionModifyAvuNoUnit()
+			throws Exception {
 		AvuData avuData = AvuData.instance("attrib", "value", "");
 		AvuData newAvuData = AvuData.instance("newattr", "newval", "newunit");
 		ModAvuMetadataInp modAvu = ModAvuMetadataInp
-				.instanceForModifyCollectionMetadata("target", avuData, newAvuData);
+				.instanceForModifyCollectionMetadata("target", avuData,
+						newAvuData);
 
 		StringBuilder sb = new StringBuilder();
 		sb.append("<ModAVUMetadataInp_PI><arg0>mod</arg0>\n");
@@ -120,9 +123,9 @@ public class ModAvuMetadataInpTest {
 		sb.append("<arg8></arg8>\n");
 		sb.append("<arg9></arg9>\n");
 		sb.append("</ModAVUMetadataInp_PI>\n");
-		
+
 		Assert.assertEquals("packing instruction is malformed", sb.toString(),
 				modAvu.getParsedTags());
 	}
-	
+
 }

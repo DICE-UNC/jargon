@@ -1,9 +1,5 @@
 package org.irods.jargon.core.pub.io;
 
-import static edu.sdsc.grid.io.irods.IRODSConstants.MsgHeader_PI;
-import static edu.sdsc.grid.io.irods.IRODSConstants.bsLen;
-import static edu.sdsc.grid.io.irods.IRODSConstants.intInfo;
-
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -11,10 +7,10 @@ import org.irods.jargon.core.connection.IRODSCommands;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.packinstr.ExecCmdStreamClose;
 import org.irods.jargon.core.packinstr.FileReadInp;
+import org.irods.jargon.core.packinstr.Tag;
+import org.irods.jargon.core.utils.IRODSConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import edu.sdsc.grid.io.irods.Tag;
 
 /**
  * Special subclass of <code>InputStream</code> meant to encapsulate binary data
@@ -118,7 +114,7 @@ public class RemoteExecutionBinaryResultInputStream extends InputStream {
 				return -1;
 			}
 
-			int buffLength = message.getTag(MsgHeader_PI).getTag(bsLen)
+			int buffLength = message.getTag(IRODSConstants.MsgHeader_PI).getTag(IRODSConstants.bsLen)
 					.getIntValue();
 
 			// read the message byte stream for the length that the header
@@ -126,7 +122,7 @@ public class RemoteExecutionBinaryResultInputStream extends InputStream {
 
 			int read = irodsCommands.read(b, off, buffLength);
 
-			if (read != message.getTag(MsgHeader_PI).getTag(intInfo)
+			if (read != message.getTag(IRODSConstants.MsgHeader_PI).getTag(IRODSConstants.intInfo)
 					.getIntValue()) {
 
 				log.error("did not read length equal to response length, expected"

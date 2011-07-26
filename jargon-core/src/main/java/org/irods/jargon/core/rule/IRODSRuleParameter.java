@@ -27,9 +27,9 @@ package org.irods.jargon.core.rule;
 
 import java.lang.reflect.Array;
 
-import edu.sdsc.grid.io.Base64;
-import edu.sdsc.grid.io.irods.IRODSConstants;
-import edu.sdsc.grid.io.irods.Tag;
+import org.irods.jargon.core.packinstr.Tag;
+import org.irods.jargon.core.utils.Base64;
+import org.irods.jargon.core.utils.IRODSConstants;
 
 /**
  * Represents A microservice/rule parameter for input or output, including type

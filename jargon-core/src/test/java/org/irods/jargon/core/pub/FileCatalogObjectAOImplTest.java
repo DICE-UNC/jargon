@@ -1,4 +1,5 @@
 package org.irods.jargon.core.pub;
+
 // FIXME: need to incorporate into tests when rerouting is done
 import java.util.Properties;
 
@@ -134,10 +135,8 @@ public class FileCatalogObjectAOImplTest {
 
 		DataObjectAO dataObjectAO = irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
-		String hostInfo = dataObjectAO
-				.getHostForGetOperation(
-						targetIrodsCollection + "/" + testFileName,
-						"");
+		String hostInfo = dataObjectAO.getHostForGetOperation(
+				targetIrodsCollection + "/" + testFileName, "");
 
 		Assert.assertNotNull("null info from lookup of host for get operation",
 				hostInfo);

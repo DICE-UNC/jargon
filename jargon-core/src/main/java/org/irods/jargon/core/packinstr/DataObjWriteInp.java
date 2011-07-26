@@ -7,8 +7,6 @@ import org.irods.jargon.core.exception.JargonException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import edu.sdsc.grid.io.irods.Tag;
-
 /**
  * Translation of a DataObjWriteInp operation into XML protocol format.
  * 

@@ -5,8 +5,6 @@ package org.irods.jargon.core.packinstr;
 
 import org.irods.jargon.core.exception.JargonException;
 
-import edu.sdsc.grid.io.irods.Tag;
-
 /**
  * Packing instruction to delete a rule from the delayed execution queue
  * 

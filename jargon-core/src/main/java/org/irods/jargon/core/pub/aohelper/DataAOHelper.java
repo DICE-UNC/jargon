@@ -3,7 +3,6 @@
  */
 package org.irods.jargon.core.pub.aohelper;
 
-import static edu.sdsc.grid.io.irods.IRODSConstants.RODS_API_REQ;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -31,6 +30,7 @@ import org.irods.jargon.core.query.IRODSQueryResultSetInterface;
 import org.irods.jargon.core.query.MetaDataAndDomainData;
 import org.irods.jargon.core.query.MetaDataAndDomainData.MetadataDomain;
 import org.irods.jargon.core.query.RodsGenQueryEnum;
+import org.irods.jargon.core.utils.IRODSConstants;
 import org.irods.jargon.core.utils.IRODSDataConversionUtil;
 import org.irods.jargon.core.utils.LocalFileUtils;
 import org.slf4j.Logger;
@@ -366,7 +366,7 @@ public final class DataAOHelper extends AOHelper {
 	 */
 	public void processNormalPutTransfer(final File localFile,
 			final boolean overwrite, final TransferOptions transferOptions,
-			IRODSFile targetFile, final IRODSCommands irodsProtocol)
+			final IRODSFile targetFile, final IRODSCommands irodsProtocol)
 			throws JargonException, FileNotFoundException {
 
 		if (localFile == null) {
@@ -399,7 +399,7 @@ public final class DataAOHelper extends AOHelper {
 			}
 		}
 
-		irodsProtocol.irodsFunction(RODS_API_REQ, dataObjInp.getParsedTags(),
+		irodsProtocol.irodsFunction(IRODSConstants.RODS_API_REQ, dataObjInp.getParsedTags(),
 				0, null, localFile.length(), new FileInputStream(localFile),
 				dataObjInp.getApiNumber());
 	}
@@ -495,8 +495,9 @@ public final class DataAOHelper extends AOHelper {
 	 * @throws JargonException
 	 */
 	public void processGetTransferViaRead(final IRODSFile irodsFile,
-			final File localFileToHoldData, long irodsFileLength,
-			TransferOptions transferOptions, int fd) throws JargonException {
+			final File localFileToHoldData, final long irodsFileLength,
+			final TransferOptions transferOptions, final int fd)
+			throws JargonException {
 		log.info("processGetTransferViaRead()");
 
 		if (localFileToHoldData == null) {

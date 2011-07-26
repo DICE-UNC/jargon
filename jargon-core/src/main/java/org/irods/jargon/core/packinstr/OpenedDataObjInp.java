@@ -8,8 +8,6 @@ import java.util.List;
 
 import org.irods.jargon.core.exception.JargonException;
 
-import edu.sdsc.grid.io.irods.Tag;
-
 /**
  * Translation of an OpenedDataObjInp operation into XML protocol format. This
  * is a 'newer' version of a seek operation.

@@ -26,14 +26,17 @@ public interface TransferStatusCallbackListener {
 	 *            information on the transfer.
 	 * @throws JargonException
 	 */
-	public void statusCallback(final TransferStatus transferStatus) throws JargonException;
-	
+	public void statusCallback(final TransferStatus transferStatus)
+			throws JargonException;
+
 	/**
-	 * Method will reeive a callback at the initiation and completion of an overall transfer
-	*            {@link org.irods.jargon.core.transfer.TransferStatus} with
-	 *            information on the transfer.
+	 * Method will reeive a callback at the initiation and completion of an
+	 * overall transfer {@link org.irods.jargon.core.transfer.TransferStatus}
+	 * with information on the transfer.
+	 * 
 	 * @throws JargonException
 	 */
-	public void overallStatusCallback(final TransferStatus transferStatus) throws JargonException;
-	
+	public void overallStatusCallback(final TransferStatus transferStatus)
+			throws JargonException;
+
 }

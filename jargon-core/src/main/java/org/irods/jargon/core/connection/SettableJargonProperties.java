@@ -12,8 +12,9 @@ import org.irods.jargon.core.exception.JargonException;
  * jargon.properties file. This class would allow, for example, the wiring of
  * property opttions via Spring through various setters.
  * <p/>
- * Some of these properties serve as defaults that may be overridden in the various methods by the setting of parameters, 
- * such as <code>TransferOptions</code>
+ * Some of these properties serve as defaults that may be overridden in the
+ * various methods by the setting of parameters, such as
+ * <code>TransferOptions</code>
  * 
  * @author Mike Conway - DICE (www.irods.org)
  * 
@@ -218,20 +219,27 @@ public class SettableJargonProperties implements JargonProperties {
 		this.computeChecksumAfterTransfer = computeChecksumAfterTransfer;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.connection.JargonProperties#isComputeAndVerifyChecksumAfterTransfer()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.connection.JargonProperties#
+	 * isComputeAndVerifyChecksumAfterTransfer()
 	 */
 	@Override
 	public boolean isComputeAndVerifyChecksumAfterTransfer()
 			throws JargonException {
 		return this.computeAndVerifyChecksumAfterTransfer;
 	}
-	
+
 	/**
 	 * Compute and verify the file checksum after a put/get transfer
-	 * @param computeAndVerifyChecksumAfterTransfer <code>boolean</code> that causes a checksum validation if set to <code>true</code>
+	 * 
+	 * @param computeAndVerifyChecksumAfterTransfer
+	 *            <code>boolean</code> that causes a checksum validation if set
+	 *            to <code>true</code>
 	 */
-	public void setComputeAndVerifyChecksumAfterTransfer(final boolean computeAndVerifyChecksumAfterTransfer) {
+	public void setComputeAndVerifyChecksumAfterTransfer(
+			final boolean computeAndVerifyChecksumAfterTransfer) {
 		this.computeAndVerifyChecksumAfterTransfer = computeAndVerifyChecksumAfterTransfer;
 	}
 

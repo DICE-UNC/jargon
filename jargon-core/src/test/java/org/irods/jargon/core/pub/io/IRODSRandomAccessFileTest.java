@@ -201,7 +201,8 @@ public class IRODSRandomAccessFileTest {
 		String testFileName = "testfileForApi.txt";
 		String absPath = scratchFileUtils
 				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
-		FileGenerator.generateFileOfFixedLengthGivenName(absPath, testFileName, 1);
+		FileGenerator.generateFileOfFixedLengthGivenName(absPath, testFileName,
+				1);
 
 		// put scratch file into irods in the right place
 		IrodsInvocationContext invocationContext = testingPropertiesHelper

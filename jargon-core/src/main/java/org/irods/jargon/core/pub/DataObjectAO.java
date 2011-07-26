@@ -3,6 +3,7 @@ package org.irods.jargon.core.pub;
 import java.io.File;
 import java.util.List;
 
+import org.irods.jargon.core.connection.JargonProperties;
 import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.DuplicateDataException;
 import org.irods.jargon.core.exception.JargonException;
@@ -46,16 +47,18 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * the <code>JargonProperties</code> to control things like behavior of
 	 * parallel transfers.
 	 * 
-	
+	 * 
 	 * @throws JargonException
 	 */
 	void putLocalDataObjectToIRODS(File localFile,
 			IRODSFile irodsFileDestination, boolean overwrite)
 			throws JargonException;
-	
+
 	/**
-	 * Transfer a single file from the local file system to iRODS.  This method allows the specification of a <code>TransferOptions</code> object that
+	 * Transfer a single file from the local file system to iRODS. This method
+	 * allows the specification of a <code>TransferOptions</code> object that
 	 * controls aspects of the transfer.
+	 * 
 	 * @param localFile
 	 *            <code>java.io.File</code> containing the data to go to IRODS
 	 * @param irodsFileDestination
@@ -67,7 +70,9 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * @param overwrite
 	 *            <code>boolean</code> that determines whether this is an
 	 *            overwrite
-	 * @param transferOptions {@link TransferOptions} (null if not specified) that will control aspects of the transfer
+	 * @param transferOptions
+	 *            {@link TransferOptions} (null if not specified) that will
+	 *            control aspects of the transfer
 	 * @throws JargonException
 	 */
 	void putLocalDataObjectToIRODSGivingTransferOptions(File localFile,
@@ -129,11 +134,16 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * @param avuData
 	 *            {@link org.irods.jargon.core.pub.domain.AvuData}
 	 * @throws JargonException
-	 * @throws DataNotFoundException when data object is missing
-	 * @throws DuplicateDataException when an AVU already exists.  Note that iRODS (at least at 2.5) is inconsistent, where a duplicate will only be detected if units are not blank
+	 * @throws DataNotFoundException
+	 *             when data object is missing
+	 * @throws DuplicateDataException
+	 *             when an AVU already exists. Note that iRODS (at least at 2.5)
+	 *             is inconsistent, where a duplicate will only be detected if
+	 *             units are not blank
 	 */
 	void addAVUMetadata(final String absolutePath, final AvuData avuData)
-			throws DataNotFoundException, DuplicateDataException, JargonException;
+			throws DataNotFoundException, DuplicateDataException,
+			JargonException;
 
 	/**
 	 * Retrieve a file from iRODS and store it locally. A specific resource is
@@ -152,20 +162,27 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	void getDataObjectFromIrods(final IRODSFile irodsFileToGet,
 			final File localFileToHoldData) throws DataNotFoundException,
 			JargonException;
-	
+
 	/**
-	 * Get operation for a single data object.  This method allows specification of a <code>TransferOptions</code>, which
-	 * will be cloned and used in this individual transfer (the method may override the transferOptions based on evaluation of the transfer).  
-	 *  * @param irodsFileToGet
-	 *            {@link org.irods.jargon.core.pub.io.IRODSFile} that is the
-	 *            source of the transfer
+	 * Get operation for a single data object. This method allows specification
+	 * of a <code>TransferOptions</code>, which will be cloned and used in this
+	 * individual transfer (the method may override the transferOptions based on
+	 * evaluation of the transfer). * @param irodsFileToGet
+	 * {@link org.irods.jargon.core.pub.io.IRODSFile} that is the source of the
+	 * transfer
+	 * 
 	 * @param localFileToHoldData
 	 *            <code>File</code> which is the target of the transfer. If the
 	 *            given target is a collection, the file name of the iRODS file
 	 *            is used as the file name of the local file.
-	 * @param transferOptions {@link TransferOptions} that will be cloned internally and used to control aspects of the transfer. This can be
-	 * <code>null</code> if not needed, in which case the <code>JargonProperties</code> will be consulted to build a default set of options. Note that the <code>TransferOptions</code>
-	 * object will be cloned, and as such the passed-in parameter will not be altered.
+	 * @param transferOptions
+	 *            {@link TransferOptions} that will be cloned internally and
+	 *            used to control aspects of the transfer. This can be
+	 *            <code>null</code> if not needed, in which case the
+	 *            <code>JargonProperties</code> will be consulted to build a
+	 *            default set of options. Note that the
+	 *            <code>TransferOptions</code> object will be cloned, and as
+	 *            such the passed-in parameter will not be altered.
 	 * @throws DataNotFoundException
 	 * @throws JargonException
 	 */
@@ -267,12 +284,15 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 *            <code>IRODSFile</code> is controlling.
 	 * @param localFileToHoldData
 	 *            <code>File</code> which is the target of the transfer
-	 * @param {@link TransferOptions} to control the transfer, or null if not specified. Note that the <code>TransferOptions</code>
-	 * object will be cloned, and as such the passed-in parameter will not be altered.
+	 * @param {@link TransferOptions} to control the transfer, or null if not
+	 *        specified. Note that the <code>TransferOptions</code> object will
+	 *        be cloned, and as such the passed-in parameter will not be
+	 *        altered.
 	 * @throws JargonException
 	 */
 	void irodsDataObjectGetOperationForClientSideAction(
-			final IRODSFile irodsFileToGet, final File localFileToHoldData, final TransferOptions transferOptions)
+			final IRODSFile irodsFileToGet, final File localFileToHoldData,
+			final TransferOptions transferOptions)
 			throws DataNotFoundException, JargonException;
 
 	/**
@@ -441,15 +461,20 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * @param overwrite
 	 *            <code>boolean</code> that determines whether this is an
 	 *            overwrite
-	  * @param transferOptions {@link TransferOptions} that controls details of the transfer.  This may be set to <code>null</code>,
-	 * in which case, default options will be created based on the {@link JargonProperties} that have been set.  Note that the <code>TransferOptions</code>
-	 * object will be cloned, and as such the passed-in parameter will not be altered.
+	 * @param transferOptions
+	 *            {@link TransferOptions} that controls details of the transfer.
+	 *            This may be set to <code>null</code>, in which case, default
+	 *            options will be created based on the {@link JargonProperties}
+	 *            that have been set. Note that the <code>TransferOptions</code>
+	 *            object will be cloned, and as such the passed-in parameter
+	 *            will not be altered.
 	 * @throws JargonException
 	 */
 	void putLocalDataObjectToIRODSForClientSideRuleOperation(
 			final File localFile, final IRODSFile irodsFileDestination,
-			final boolean overwrite, final TransferOptions transferOptions) throws JargonException;
-	
+			final boolean overwrite, final TransferOptions transferOptions)
+			throws JargonException;
+
 	/**
 	 * Retrieve a file from iRODS and store it locally. The resource provided in
 	 * the <code>IRODSFile<code> object is sent in the
@@ -468,23 +493,29 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	void getDataObjectFromIrodsUsingTheSpecificResourceSetInIrodsFile(
 			final IRODSFile irodsFileToGet, final File localFileToHoldData)
 			throws DataNotFoundException, JargonException;
-	
+
 	/**
 	 * Retrieve a file from iRODS and store it locally. The resource provided in
 	 * the <code>IRODSFile<code> object is sent in the
 	 * request to iRODS as the specific resource from which the file is retrieved.  
 	 * <p/>
-	 * This method allows specification of a <code>TransferOptions</code> that can control details of the iRODS transfer.
-		 * @param irodsFileToGet
+	 * This method allows specification of a <code>TransferOptions</code> that
+	 * can control details of the iRODS transfer.
+	 * 
+	 * @param irodsFileToGet
 	 *            {@link org.irods.jargon.core.pub.io.IRODSFile} that is the
 	 *            source of the transfer
 	 * @param localFileToHoldData
 	 *            <code>File</code> which is the target of the transfer. If the
 	 *            given target is a collection, the file name of the iRODS file
 	 *            is used as the file name of the local file.
-	 * @param transferOptions {@link TransferOptions} that can specify details of the transfer techniques used.  Note that this can
-	 * be set to <code>null</code>, in which case a default set of options is derived from the <code>JargonProperties</code>.  Note that the <code>TransferOptions</code>
-	 * object will be cloned, and as such the passed-in parameter will not be altered.
+	 * @param transferOptions
+	 *            {@link TransferOptions} that can specify details of the
+	 *            transfer techniques used. Note that this can be set to
+	 *            <code>null</code>, in which case a default set of options is
+	 *            derived from the <code>JargonProperties</code>. Note that the
+	 *            <code>TransferOptions</code> object will be cloned, and as
+	 *            such the passed-in parameter will not be altered.
 	 * @throws JargonException
 	 */
 	void getDataObjectFromIrodsUsingTheSpecificResourceSetInIrodsFileSpecifyingTransferOptions(
@@ -749,8 +780,8 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 *             if the file or AVU was not found
 	 * @throws JargonException
 	 */
-	void modifyAVUMetadata(String irodsCollectionAbsolutePath,
-			String dataName, AvuData currentAvuData, AvuData newAvuData)
+	void modifyAVUMetadata(String irodsCollectionAbsolutePath, String dataName,
+			AvuData currentAvuData, AvuData newAvuData)
 			throws DataNotFoundException, JargonException;
 
 	/**
@@ -764,8 +795,12 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 *            {@link org.irods.jargon.core.pub.domain.AvuData} describing
 	 *            the desired new AVU
 	 * @throws JargonException
-	 * @throws DataNotFoundException when data object is missing
-	 * @throws DuplicateDataException when an AVU already exists.  Note that iRODS (at least at 2.5) is inconsistent, where a duplicate will only be detected if units are not blank
+	 * @throws DataNotFoundException
+	 *             when data object is missing
+	 * @throws DuplicateDataException
+	 *             when an AVU already exists. Note that iRODS (at least at 2.5)
+	 *             is inconsistent, where a duplicate will only be detected if
+	 *             units are not blank
 	 */
 	void addAVUMetadata(String irodsCollectionAbsolutePath, String dataName,
 			AvuData avuData) throws DataNotFoundException, JargonException;
@@ -776,7 +811,8 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * @param irodsCollectionAbsolutePath
 	 *            <code>String</code> with the absolute path to the iRODS data
 	 *            object parent collection
-	 * @param dataname <code>String</code> with the name of the iRODS data Object
+	 * @param dataname
+	 *            <code>String</code> with the name of the iRODS data Object
 	 * @return <code>List</code> of {@link UserFilePermission} with the ACL's
 	 *         for the given file.
 	 * @throws JargonException
@@ -786,14 +822,17 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 			throws JargonException;
 
 	/**
-	 * List the user permissions for the given iRODS data object for a given user.  Note that <code>null</code>
-	 * will be returned if no permissions are available.
+	 * List the user permissions for the given iRODS data object for a given
+	 * user. Note that <code>null</code> will be returned if no permissions are
+	 * available.
 	 * 
 	 * @param irodsCollectionAbsolutePath
 	 *            <code>String</code> with the absolute path to the iRODS data
 	 *            object parent collection
-	 * @param dataName <code>String</code> with the name of the iRODS data Object
-	 * @param userName <code>String</code> with the name of the iRODS User
+	 * @param dataName
+	 *            <code>String</code> with the name of the iRODS data Object
+	 * @param userName
+	 *            <code>String</code> with the name of the iRODS User
 	 * @return <code>List</code> of {@link UserFilePermission} with the ACL's
 	 *         for the given file.
 	 * @throws JargonException
@@ -803,13 +842,15 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 			throws JargonException;
 
 	/**
-	 * List the user permissions for the given iRODS data object for a given user.  Note that <code>null</code>
-	 * will be returned if no permissions are available.
+	 * List the user permissions for the given iRODS data object for a given
+	 * user. Note that <code>null</code> will be returned if no permissions are
+	 * available.
 	 * 
 	 * @param irodsAbsolutePath
 	 *            <code>String</code> with the absolute path to the iRODS data
 	 *            object
-	 * @param userName <code>String</code> with the name of the iRODS User
+	 * @param userName
+	 *            <code>String</code> with the name of the iRODS User
 	 * @return <code>List</code> of {@link UserFilePermission} with the ACL's
 	 *         for the given file.
 	 * @throws JargonException
@@ -818,8 +859,9 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 			String irodsAbsolutePath, String userName) throws JargonException;
 
 	/**
-	 * Set the permissions on a data object to read for the given user as an admin.  This admin
-	 * mode is equivalent to the -M switch of the ichmod icommand.
+	 * Set the permissions on a data object to read for the given user as an
+	 * admin. This admin mode is equivalent to the -M switch of the ichmod
+	 * icommand.
 	 * 
 	 * @param zone
 	 *            <code>String</code> with an optional zone for the file. Leave
@@ -835,8 +877,9 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 			String userName) throws JargonException;
 
 	/**
-	 * Set the permissions on a data object to write for the given user as an admin.  This admin
-	 * mode is equivalent to the -M switch of the ichmod icommand.
+	 * Set the permissions on a data object to write for the given user as an
+	 * admin. This admin mode is equivalent to the -M switch of the ichmod
+	 * icommand.
 	 * 
 	 * @param zone
 	 *            <code>String</code> with an optional zone for the file. Leave
@@ -852,8 +895,9 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 			String userName) throws JargonException;
 
 	/**
-	 * Set the permissions on a data object to own for the given user as an admin.  This admin
-	 * mode is equivalent to the -M switch of the ichmod icommand.
+	 * Set the permissions on a data object to own for the given user as an
+	 * admin. This admin mode is equivalent to the -M switch of the ichmod
+	 * icommand.
 	 * 
 	 * @param zone
 	 *            <code>String</code> with an optional zone for the file. Leave
@@ -869,8 +913,9 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 			String userName) throws JargonException;
 
 	/**
-	 * Remove the permissions on a data object to own for the given user as an admin.  This admin
-	 * mode is equivalent to the -M switch of the ichmod icommand.
+	 * Remove the permissions on a data object to own for the given user as an
+	 * admin. This admin mode is equivalent to the -M switch of the ichmod
+	 * icommand.
 	 * 
 	 * @param zone
 	 *            <code>String</code> with an optional zone for the file. Leave
@@ -884,7 +929,5 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 */
 	void removeAccessPermissionsForUserInAdminMode(String zone,
 			String absolutePath, String userName) throws JargonException;
-
-	
 
 }

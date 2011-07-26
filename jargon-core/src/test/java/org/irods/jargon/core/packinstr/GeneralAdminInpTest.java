@@ -317,7 +317,7 @@ public class GeneralAdminInpTest {
 		TestCase.assertEquals("unexpected XML protocol result", sb.toString(),
 				tagOut);
 	}
-	
+
 	@Test(expected = JargonException.class)
 	public void testModifyUserPasswordBlankUser() throws Exception {
 		String userName = "";

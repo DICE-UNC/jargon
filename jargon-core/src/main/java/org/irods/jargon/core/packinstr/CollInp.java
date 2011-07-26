@@ -8,8 +8,6 @@ import java.util.List;
 
 import org.irods.jargon.core.exception.JargonException;
 
-import edu.sdsc.grid.io.irods.Tag;
-
 /**
  * Translation of a CollInp_PI operation into XML protocol format. Object is
  * immutable an thread-safe.

@@ -3,8 +3,6 @@ package org.irods.jargon.core.packinstr;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.JargonException;
 
-import edu.sdsc.grid.io.irods.Tag;
-
 public class StartupPack extends AbstractIRODSPackingInstruction {
 
 	public static final String PI_TAG = "StartupPack_PI";

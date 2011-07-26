@@ -3,8 +3,6 @@
  */
 package org.irods.jargon.core.connection;
 
-import edu.sdsc.grid.io.GeneralFileSystem;
-
 /**
  * Handy place to put common constants for connection-related purposes
  * 
@@ -66,14 +64,14 @@ public final class ConnectionConstants {
 	/**
 	 * Size of the socket send buffer
 	 */
-	
+
 	// FIXME: temp
-	
-	//public static int OUTPUT_BUFFER_LENGTH = GeneralFileSystem
-	//		.getWriteBufferSize();
+
+	// public static int OUTPUT_BUFFER_LENGTH = GeneralFileSystem
+	// .getWriteBufferSize();
 
 	public static int OUTPUT_BUFFER_LENGTH = 32768;
-	
+
 	/**
 	 * 4 bytes at the front of the header, outside XML
 	 */
@@ -87,8 +85,8 @@ public final class ConnectionConstants {
 	 * Standard challenge length. Used in challenge response.
 	 */
 	public static final int CHALLENGE_LENGTH = 64;
-	
-	public static final long  MAX_SZ_FOR_SINGLE_BUF  =   (32*1024*1024);
+
+	public static final long MAX_SZ_FOR_SINGLE_BUF = (32 * 1024 * 1024);
 
 	private ConnectionConstants() {
 	}

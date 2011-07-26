@@ -283,30 +283,36 @@ public interface IRODSAccessObjectFactory {
 			throws JargonException;
 
 	/**
-	 * Returns a <code>SimpleQueryExecutorAO</code> that can execute queries on iRODS using the 
-	 * Simple Query facility.  This allows direct SQL queries using pre-arranged statements.  These queries
-	 * are typically used for various admin functions, and require admin rights.
+	 * Returns a <code>SimpleQueryExecutorAO</code> that can execute queries on
+	 * iRODS using the Simple Query facility. This allows direct SQL queries
+	 * using pre-arranged statements. These queries are typically used for
+	 * various admin functions, and require admin rights.
+	 * 
 	 * @param irodsAccount
-	 * @return {@link SimpleQeryExecutorAO} to send and process results of a simple query.
+	 * @return {@link SimpleQeryExecutorAO} to send and process results of a
+	 *         simple query.
 	 * @throws JargonException
 	 */
 	SimpleQueryExecutorAO getSimpleQueryExecutorAO(IRODSAccount irodsAccount)
 			throws JargonException;
 
 	/**
-	 * Returns a <code>SpecificQueryExecutorAO</code> that manages the iRODS specific query
-	 * facility.  This was new in iRODS2.5, and allows administrators to define specific SQL to be run against the iCAT
-	 * in retrieval only mode when GenQuery is not expressive enough.
+	 * Returns a <code>SpecificQueryExecutorAO</code> that manages the iRODS
+	 * specific query facility. This was new in iRODS2.5, and allows
+	 * administrators to define specific SQL to be run against the iCAT in
+	 * retrieval only mode when GenQuery is not expressive enough.
+	 * 
 	 * @param irodsAccount
-	 * @return {@link SpecificQeryExecutorAO} to send and process results of a simple query.
+	 * @return {@link SpecificQeryExecutorAO} to send and process results of a
+	 *         simple query.
 	 * @throws JargonException
 	 */
 	SpecificQueryExcecutorAO getSpecificQueryExecutorAO(
 			IRODSAccount irodsAccount) throws JargonException;
-	
+
 	/**
-	 * Close all connections for this session.  Any resulting exceptions
-	 * are logged as a warning and ignored.
+	 * Close all connections for this session. Any resulting exceptions are
+	 * logged as a warning and ignored.
 	 */
 	void closeSessionAndEatExceptions() throws JargonException;
 
@@ -319,7 +325,9 @@ public interface IRODSAccessObjectFactory {
 	void closeSessionAndEatExceptions(IRODSAccount irodsAccount);
 
 	/**
-	 * Get an access object that can assist in stream to stream or byte array to stream copies into iRODS.
+	 * Get an access object that can assist in stream to stream or byte array to
+	 * stream copies into iRODS.
+	 * 
 	 * @param irodsAccount
 	 * @return {@link Stream2StreamAO}
 	 * @throws JargonException

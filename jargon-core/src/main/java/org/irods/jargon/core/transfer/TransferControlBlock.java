@@ -149,46 +149,57 @@ public interface TransferControlBlock {
 	 * @return incremented value from control block
 	 */
 	int incrementFilesTransferredSoFar();
-	
+
 	/**
 	 * Get the total number of bytes (for all files) transferred so far
-	 * @return <code>long</code> with the total number of byte that have been transferred for all files
+	 * 
+	 * @return <code>long</code> with the total number of byte that have been
+	 *         transferred for all files
 	 */
 	long getTotalBytesTransferredSoFar();
-	
+
 	/**
-	 * Add the given number of bytes to the running total of all bytes transferred
-	 * @param totalBytesTransferredSoFar <code>long</code> to add to the running total of bytes
+	 * Add the given number of bytes to the running total of all bytes
+	 * transferred
+	 * 
+	 * @param totalBytesTransferredSoFar
+	 *            <code>long</code> to add to the running total of bytes
 	 */
 	void incrementTotalBytesTransferredSoFar(long totalBytesTransferredSoFar);
 
 	/**
 	 * Get the total number of bytes to be transferred for all files
+	 * 
 	 * @return <code>long</code> with the total number of bytes
 	 */
 	long getTotalBytesToTransfer();
-	
+
 	/**
 	 * Set the total bytes that will be for the whole transfer
-	 * @param totalBytesToTransfer <code>long</code> with total bytes to transfer for all files
+	 * 
+	 * @param totalBytesToTransfer
+	 *            <code>long</code> with total bytes to transfer for all files
 	 */
 	void setTotalBytesToTransfer(long totalBytesToTransfer);
 
 	/**
 	 * Set the options that will control the details of the transfer
-	 * @param transferOptions {@link TransferOptions}
+	 * 
+	 * @param transferOptions
+	 *            {@link TransferOptions}
 	 */
-	void setTransferOptions(
-			TransferOptions transferOptions);
+	void setTransferOptions(TransferOptions transferOptions);
 
 	/**
 	 * Get the options currently controlling the details of the transfer
+	 * 
 	 * @return {@link TransferOptions}
 	 */
 	TransferOptions getTransferOptions();
 
 	/**
-	 * Reset the 'per transfer' fields so that the control block can be used again with fresh statistics.
+	 * Reset the 'per transfer' fields so that the control block can be used
+	 * again with fresh statistics.
 	 */
 	void resetTransferData();
 

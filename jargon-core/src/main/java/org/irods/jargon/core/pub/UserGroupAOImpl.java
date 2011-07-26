@@ -73,8 +73,8 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements
 
 		IRODSQueryResultSetInterface resultSet;
 		try {
-			resultSet = irodsGenQueryExecutorImpl.executeIRODSQueryAndCloseResult(irodsQuery,
-					0);
+			resultSet = irodsGenQueryExecutorImpl
+					.executeIRODSQueryAndCloseResult(irodsQuery, 0);
 		} catch (JargonQueryException e) {
 			log.error("query exception for user query:" + queryString, e);
 			throw new JargonException("error in user group query");
@@ -138,8 +138,8 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements
 
 		IRODSQueryResultSetInterface resultSet;
 		try {
-			resultSet = irodsGenQueryExecutorImpl.executeIRODSQueryAndCloseResult(irodsQuery,
-					0);
+			resultSet = irodsGenQueryExecutorImpl
+					.executeIRODSQueryAndCloseResult(irodsQuery, 0);
 		} catch (JargonQueryException e) {
 			log.error("query exception for user query:" + queryString, e);
 			throw new JargonException("error in user group query");
@@ -202,8 +202,8 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements
 
 		IRODSQueryResultSetInterface resultSet;
 		try {
-			resultSet = irodsGenQueryExecutorImpl.executeIRODSQueryAndCloseResult(irodsQuery,
-					0);
+			resultSet = irodsGenQueryExecutorImpl
+					.executeIRODSQueryAndCloseResult(irodsQuery, 0);
 		} catch (JargonQueryException e) {
 			log.error("query exception for user query:" + queryString, e);
 			throw new JargonException("error in user group query");
@@ -251,8 +251,8 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements
 
 		IRODSQueryResultSetInterface resultSet;
 		try {
-			resultSet = irodsGenQueryExecutorImpl.executeIRODSQueryAndCloseResult(irodsQuery,
-					0);
+			resultSet = irodsGenQueryExecutorImpl
+					.executeIRODSQueryAndCloseResult(irodsQuery, 0);
 		} catch (JargonQueryException e) {
 			log.error("query exception for user query:" + queryString, e);
 			throw new JargonException("error in user group query");

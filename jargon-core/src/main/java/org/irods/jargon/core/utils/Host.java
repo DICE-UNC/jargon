@@ -38,7 +38,7 @@
 //  PRINCIPAL AUTHOR
 //  David R. Nadeau, SDSC/UCSD
 //
-package edu.sdsc.grid.io;
+package org.irods.jargon.core.utils;
 
 /**
  * <DIV ALIGN=JUSTIFY> The Host class describes important attributes of the

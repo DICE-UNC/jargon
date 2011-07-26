@@ -3,13 +3,10 @@
  */
 package org.irods.jargon.core.packinstr;
 
-import static edu.sdsc.grid.io.irods.IRODSConstants.dataObjReadInp_PI;
-
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.utils.IRODSConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import edu.sdsc.grid.io.irods.Tag;
 
 /**
  * Translation of a DataObjRead operation into XML protocol format.
@@ -93,7 +90,7 @@ public class DataObjRead extends AbstractIRODSPackingInstruction {
 
 		// shim code for Bug 40 - IRODSCommands.fileRead() with length of 0
 		// causes null message from irods, so it's set to 1 and unused
-		Tag message = new Tag(dataObjReadInp_PI, new Tag[] {
+		Tag message = new Tag(IRODSConstants.dataObjReadInp_PI, new Tag[] {
 				new Tag(L1DESCINX, fileDescriptor), new Tag(LEN, length), });
 
 		return message;

@@ -1,18 +1,16 @@
 package org.irods.jargon.core.packinstr;
 
-import static edu.sdsc.grid.io.irods.IRODSConstants.options;
-
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.query.GenQuerySelectField;
-import org.irods.jargon.core.query.TranslatedIRODSGenQuery;
 import org.irods.jargon.core.query.TranslatedGenQueryCondition;
-
-import edu.sdsc.grid.io.irods.Tag;
+import org.irods.jargon.core.query.TranslatedIRODSGenQuery;
+import org.irods.jargon.core.utils.IRODSConstants;
 
 /**
  * Wrap a query to IRODS, note that the only shared object is
  * <code>IRODSQuery</code> which is immutable, so this class should be
  * thread-safe.
+ * 
  * @author Mike Conway - DICE (www.irods.org)
  */
 public class GenQueryInp extends AbstractIRODSPackingInstruction implements
@@ -33,7 +31,7 @@ public class GenQueryInp extends AbstractIRODSPackingInstruction implements
 	public static final String SVALUE = "svalue";
 	public static final String INX_VAL_PAIR_PI = "InxValPair_PI";
 	public static final String INX_IVAL_PAIR_PI = "InxIvalPair_PI";
-	
+
 	// working on this....no order by yet
 	public static final int ORDER_BY = 0x400;
 	public static final int ORDER_BY_DESC = 0x800;
@@ -55,13 +53,19 @@ public class GenQueryInp extends AbstractIRODSPackingInstruction implements
 			final int continueIndex) throws JargonException {
 		return new GenQueryInp(translatedIRODSQuery, continueIndex, 0);
 	}
-	
+
 	/**
-	 * Static instance method for version of the packing instruction to close the query down.
-	 * @param continueIndex <code>int</code> with value passed back from iRODS with the last query result.  
+	 * Static instance method for version of the packing instruction to close
+	 * the query down.
+	 * 
+	 * @param continueIndex
+	 *            <code>int</code> with value passed back from iRODS with the
+	 *            last query result.
 	 * @return
 	 */
-	public static GenQueryInp instanceForCloseQuery(final TranslatedIRODSGenQuery translatedIRODSQuery, final int continueIndex) {
+	public static GenQueryInp instanceForCloseQuery(
+			final TranslatedIRODSGenQuery translatedIRODSQuery,
+			final int continueIndex) {
 		return new GenQueryInp(translatedIRODSQuery, continueIndex);
 	}
 
@@ -85,21 +89,28 @@ public class GenQueryInp extends AbstractIRODSPackingInstruction implements
 			final int partialStartIndex) throws JargonException {
 		return new GenQueryInp(translatedIRODSQuery, 0, partialStartIndex);
 	}
-	
+
 	/**
-	 * Special private constructor builds the packing instruction when this is a close of a result set that had been continued.
-	 * @param continueIndex <code>int</code> with value passed back from iRODS with the last query result.  
+	 * Special private constructor builds the packing instruction when this is a
+	 * close of a result set that had been continued.
+	 * 
+	 * @param continueIndex
+	 *            <code>int</code> with value passed back from iRODS with the
+	 *            last query result.
 	 */
-	private GenQueryInp(final TranslatedIRODSGenQuery translatedIRODSGenQuery,final int continueIndex) {
-		
+	private GenQueryInp(final TranslatedIRODSGenQuery translatedIRODSGenQuery,
+			final int continueIndex) {
+
 		if (translatedIRODSGenQuery == null) {
-			throw new IllegalArgumentException("translatedIRODSGenQuery is null");
+			throw new IllegalArgumentException(
+					"translatedIRODSGenQuery is null");
 		}
-		
+
 		if (continueIndex <= 0) {
-			throw new IllegalArgumentException("continueIndex must be > 0 when sending a close");
+			throw new IllegalArgumentException(
+					"continueIndex must be > 0 when sending a close");
 		}
-		
+
 		this.translatedIRODSQuery = translatedIRODSGenQuery;
 		this.continueIndex = continueIndex;
 		this.partialStartIndex = 0;
@@ -109,23 +120,26 @@ public class GenQueryInp extends AbstractIRODSPackingInstruction implements
 	private GenQueryInp(final TranslatedIRODSGenQuery translatedIRODSQuery,
 			final int continueIndex, final int partialStartIndex)
 			throws JargonException {
-		
+
 		if (translatedIRODSQuery == null) {
 			throw new IllegalArgumentException("irodsQuery is null");
 		}
 
 		if (partialStartIndex < 0) {
-			throw new IllegalArgumentException("partialStartIndex is less than 0");
+			throw new IllegalArgumentException(
+					"partialStartIndex is less than 0");
 		}
 
 		if (continueIndex < 0) {
-			throw new IllegalArgumentException("continue Index must be 0 or greater");
+			throw new IllegalArgumentException(
+					"continue Index must be 0 or greater");
 		}
 
 		this.translatedIRODSQuery = translatedIRODSQuery;
 		this.continueIndex = continueIndex;
 		this.partialStartIndex = partialStartIndex;
-		this.maxRowCount = translatedIRODSQuery.getIrodsQuery().getNumberOfResultsDesired();
+		this.maxRowCount = translatedIRODSQuery.getIrodsQuery()
+				.getNumberOfResultsDesired();
 		this.setApiNumber(API_NBR);
 	}
 
@@ -146,15 +160,19 @@ public class GenQueryInp extends AbstractIRODSPackingInstruction implements
 	 */
 	public TranslatedIRODSGenQuery getTranslatedIRODSQuery()
 			throws JargonException {
-		
+
 		if (translatedIRODSQuery == null) {
 			throw new IllegalArgumentException("no translated query");
 		}
 		return translatedIRODSQuery;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.packinstr.AbstractIRODSPackingInstruction#getTagValue()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.packinstr.AbstractIRODSPackingInstruction#getTagValue
+	 * ()
 	 */
 	@Override
 	public Tag getTagValue() throws JargonException {
@@ -165,9 +183,9 @@ public class GenQueryInp extends AbstractIRODSPackingInstruction implements
 
 		// set distinct;
 		if (this.getTranslatedIRODSQuery().isDistinct()) {
-			message.addTag(new Tag(options, 0));
+			message.addTag(new Tag(IRODSConstants.options, 0));
 		} else {
-			message.addTag(new Tag(options, 1));
+			message.addTag(new Tag(IRODSConstants.options, 1));
 		}
 
 		message.addTag(Tag.createKeyValueTag(null));
@@ -179,12 +197,14 @@ public class GenQueryInp extends AbstractIRODSPackingInstruction implements
 		subTags[0] = new Tag(IILEN, translatedIRODSQuery.getSelectFields()
 				.size());
 
-		for (GenQuerySelectField select : translatedIRODSQuery.getSelectFields()) {
+		for (GenQuerySelectField select : translatedIRODSQuery
+				.getSelectFields()) {
 			subTags[j] = new Tag(INX, select.getSelectFieldNumericTranslation());
 			j++;
 		}
 
-		for (GenQuerySelectField select : translatedIRODSQuery.getSelectFields()) {
+		for (GenQuerySelectField select : translatedIRODSQuery
+				.getSelectFields()) {
 			if (select.getSelectFieldType() == GenQuerySelectField.SelectFieldTypes.FIELD) {
 				subTags[j] = new Tag(IVALUE, 1);
 			} else if (select.getSelectFieldType() == GenQuerySelectField.SelectFieldTypes.AVG) {

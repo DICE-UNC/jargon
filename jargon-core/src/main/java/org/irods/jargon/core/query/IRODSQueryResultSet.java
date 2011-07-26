@@ -18,18 +18,27 @@ public class IRODSQueryResultSet extends AbstractIRODSQueryResultSet {
 
 	private final TranslatedIRODSGenQuery translatedIRODSQuery;
 	/**
-	 * Used internally by gen query to signal a continuation of a query when sending a re-query
+	 * Used internally by gen query to signal a continuation of a query when
+	 * sending a re-query
 	 */
 	private final int continuationIndex;
 
-	
 	/**
-	 * Creates an instance of a result set based on data coming back from iRODS GenQuery response data.
-	 * @param translatedIRODSQuery {@link TranslatedIRODSQuery} that had been sent to get these results.
-	 * @param results <code>List</code> of {@link IRODSQueryResultRow} with the raw results.
-	 * @param continuationIndex <code>int</code> that indicates the continuation sent by iRODS.  This indicates more data available, and the continuation index
-	 * will be sent with the request to get more results.
-	 * @return 
+	 * Creates an instance of a result set based on data coming back from iRODS
+	 * GenQuery response data.
+	 * 
+	 * @param translatedIRODSQuery
+	 *            {@link TranslatedIRODSQuery} that had been sent to get these
+	 *            results.
+	 * @param results
+	 *            <code>List</code> of {@link IRODSQueryResultRow} with the raw
+	 *            results.
+	 * @param continuationIndex
+	 *            <code>int</code> that indicates the continuation sent by
+	 *            iRODS. This indicates more data available, and the
+	 *            continuation index will be sent with the request to get more
+	 *            results.
+	 * @return
 	 * @throws JargonException
 	 */
 	public static IRODSQueryResultSet instance(
@@ -92,6 +101,5 @@ public class IRODSQueryResultSet extends AbstractIRODSQueryResultSet {
 	public int getContinuationIndex() {
 		return continuationIndex;
 	}
-
 
 }

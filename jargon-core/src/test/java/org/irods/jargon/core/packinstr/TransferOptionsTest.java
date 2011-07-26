@@ -24,7 +24,7 @@ public class TransferOptionsTest {
 				expected.isComputeChecksumAfterTransfer(),
 				actual.isComputeChecksumAfterTransfer());
 	}
-	
+
 	@Test
 	public final void testCopyConstructorVerifyChecksum() throws Exception {
 		TransferOptions expected = new TransferOptions();

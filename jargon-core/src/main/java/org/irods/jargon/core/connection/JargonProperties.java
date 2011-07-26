@@ -6,9 +6,10 @@ import org.irods.jargon.core.exception.JargonException;
  * Represents a source of configuration metadata that will effect the behavior
  * of Jargon through a properties file or other configuration source.
  * <p/>
- * Note that many of these properties may be overridden in a particular operation
- * during invocation.  For example, many properties here control the behavior of transfers,
- * and can be overridden by setting <code>TransferOptions</code>.
+ * Note that many of these properties may be overridden in a particular
+ * operation during invocation. For example, many properties here control the
+ * behavior of transfers, and can be overridden by setting
+ * <code>TransferOptions</code>.
  * 
  * @author Mike Conway - DICE (www.irods.org)
  * 
@@ -94,21 +95,22 @@ public interface JargonProperties {
 	 * 
 	 * @return the allowPutGetResourceRedirects <code>boolean</code> that will
 	 *         be <code>true</code> if redirecting is desired
-	 * @throws JargonException 
+	 * @throws JargonException
 	 */
 	boolean isAllowPutGetResourceRedirects() throws JargonException;
 
-
 	/**
-	 * Should checksums be computed after the transfer?  This does not process things as a verification.
+	 * Should checksums be computed after the transfer? This does not process
+	 * things as a verification.
+	 * 
 	 * @return the computeChecksumAfterTransfer
 	 */
 	boolean isComputeChecksumAfterTransfer() throws JargonException;
 
-	
 	/**
-	 * Should checksums be computed, and a verify done, after a transfer, with a <code>FileIntegrityException</code> 
-	 * thrown in case of failure?
+	 * Should checksums be computed, and a verify done, after a transfer, with a
+	 * <code>FileIntegrityException</code> thrown in case of failure?
+	 * 
 	 * @return the computeAndVerifyChecksumAfterTransfer
 	 */
 	boolean isComputeAndVerifyChecksumAfterTransfer() throws JargonException;

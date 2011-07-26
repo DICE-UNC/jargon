@@ -5,8 +5,6 @@ package org.irods.jargon.core.packinstr;
 
 import org.irods.jargon.core.exception.JargonException;
 
-import edu.sdsc.grid.io.irods.Tag;
-
 /**
  * Immutable object gives translation of an ExecCmd operation into XML. This is
  * the operation for remote execution protocol format.
@@ -357,15 +355,15 @@ public final class ExecCmd extends AbstractIRODSPackingInstruction {
 
 		if (!absolutePathOfIrodsFileThatWillBeUsedToFindHostToExecuteOn
 				.isEmpty()) {
-			
+
 			if (pathHandlingMode == PathHandlingMode.USE_PATH_TO_ADD_PHYS_PATH_ARGUMENT_TO_REMOTE_SCRIPT) {
 				addPathToArgv = ExecCmd.ADD_PATH_TO_ARGV_WHEN_USING_PATH_TO_ADD_ARGUMENT;
 			} else if (pathHandlingMode == PathHandlingMode.USE_PATH_TO_FIND_EXECUTING_HOST) {
 				addPathToArgv = ExecCmd.ADD_PATH_TO_ARGV_WHEN_USING_PATH_TO_RESOLVE_HOST;
 			}
-			
+
 		} else {
-			
+
 		}
 
 		Tag message = new Tag(

@@ -1,6 +1,5 @@
 package org.irods.jargon.core.connection;
 
-
 import org.junit.After;
 import org.junit.Before;
 

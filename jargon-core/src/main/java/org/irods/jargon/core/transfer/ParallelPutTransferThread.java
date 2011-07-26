@@ -10,10 +10,9 @@ import java.util.concurrent.Callable;
 import org.irods.jargon.core.connection.ConnectionConstants;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.exception.JargonRuntimeException;
+import org.irods.jargon.core.utils.Host;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import edu.sdsc.grid.io.Host;
 
 /**
  * Handle parallel file transfer put operation, this is used within jargon.core,
@@ -160,9 +159,9 @@ public final class ParallelPutTransferThread extends
 		byte[] buffer = null;
 		boolean done = false;
 
-			buffer = new byte[ConnectionConstants.OUTPUT_BUFFER_LENGTH];
-			long currentOffset = 0;
-	
+		buffer = new byte[ConnectionConstants.OUTPUT_BUFFER_LENGTH];
+		long currentOffset = 0;
+
 		try {
 			while (!done) {
 
@@ -171,7 +170,7 @@ public final class ParallelPutTransferThread extends
 				if (log.isInfoEnabled()) {
 					log.info("   operation:" + operation);
 				}
-				
+
 				if (operation == AbstractParallelTransferThread.PUT_OPR) {
 					log.debug("put operation");
 				} else if (operation == AbstractParallelTransferThread.DONE_OPR) {
@@ -199,8 +198,8 @@ public final class ParallelPutTransferThread extends
 				}
 
 				if (offset != currentOffset) {
-				seekToStartingPoint(offset);
-				currentOffset = offset;
+					seekToStartingPoint(offset);
+					currentOffset = offset;
 				}
 
 				log.info("buffer length for put is: {}", buffer.length);
@@ -212,7 +211,7 @@ public final class ParallelPutTransferThread extends
 
 				readWriteLoopForCurrentHeaderDirective(buffer, length);
 				currentOffset += length;
-						
+
 			}
 
 		} catch (IOException e) {
@@ -231,23 +230,21 @@ public final class ParallelPutTransferThread extends
 	 * @throws IOException
 	 * @throws JargonException
 	 */
-	private void readWriteLoopForCurrentHeaderDirective(byte[] buffer,
-			long length) throws IOException,
-			JargonException {
+	private void readWriteLoopForCurrentHeaderDirective(final byte[] buffer,
+			final long length) throws IOException, JargonException {
 		int read = 0;
 		long totalRead = 0;
 		long transferLength = length;
 		long totalWritten = 0;
-		
+
 		while (transferLength > 0) {
 			log.debug("in put read/write loop at top");
 
 			read = bis.read(buffer, 0, (int) Math.min(
-					ConnectionConstants.OUTPUT_BUFFER_LENGTH,
-					transferLength));
+					ConnectionConstants.OUTPUT_BUFFER_LENGTH, transferLength));
 
 			log.debug("read: {}", read);
-			
+
 			if (read > 0) {
 
 				totalRead += read;
@@ -260,8 +257,7 @@ public final class ParallelPutTransferThread extends
 							"error writing to iRODS parallel transfer socket",
 							e);
 					throw new JargonException(
-							"error writing to parallel transfer socket",
-							e);
+							"error writing to parallel transfer socket", e);
 				}
 				log.debug("wrote data to the buffer");
 				totalWritten += read;
@@ -269,11 +265,10 @@ public final class ParallelPutTransferThread extends
 			} else {
 				log.debug("no read...break out of read/write");
 				break;
-			}/*else if (read < 0) {
-			}
-				throw new JargonException(
-						"unexpected end of data in transfer operation");
-			}*/
+			}/*
+			 * else if (read < 0) { } throw new JargonException(
+			 * "unexpected end of data in transfer operation"); }
+			 */
 			Thread.yield();
 		}
 
@@ -285,8 +280,7 @@ public final class ParallelPutTransferThread extends
 		log.info("   transferLength: {}", transferLength);
 
 		if (totalRead != totalWritten) {
-			throw new JargonException(
-					"totalRead and totalWritten do not agree");
+			throw new JargonException("totalRead and totalWritten do not agree");
 		}
 
 		if (transferLength != 0) {

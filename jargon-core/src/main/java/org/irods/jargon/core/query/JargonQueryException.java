@@ -11,7 +11,6 @@ package org.irods.jargon.core.query;
  */
 public class JargonQueryException extends Exception {
 
-	
 	private static final long serialVersionUID = -3526152048790551955L;
 	private String query = "";
 

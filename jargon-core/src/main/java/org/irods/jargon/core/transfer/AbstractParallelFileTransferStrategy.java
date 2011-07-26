@@ -44,12 +44,14 @@ public abstract class AbstractParallelFileTransferStrategy {
 	 * @param localFile
 	 *            <code>File</code> that will transferrred.
 	 * @param irodsAccessObjectFactory
-	 * 	{@link IRODSAccessObjectFactory} for the session.
+	 *            {@link IRODSAccessObjectFactory} for the session.
 	 * @throws JargonException
 	 */
 	protected AbstractParallelFileTransferStrategy(final String host,
 			final int port, final int numberOfThreads, final int password,
-			final File localFile, final IRODSAccessObjectFactory irodsAccessObjectFactory) throws JargonException {
+			final File localFile,
+			final IRODSAccessObjectFactory irodsAccessObjectFactory)
+			throws JargonException {
 
 		if (host == null || host.isEmpty()) {
 			throw new IllegalArgumentException("host is null or empty");
@@ -71,11 +73,11 @@ public abstract class AbstractParallelFileTransferStrategy {
 		if (localFile == null) {
 			throw new IllegalArgumentException("Local file is null");
 		}
-		
-		if (irodsAccessObjectFactory == null) {
-			throw new IllegalArgumentException("irodsAccessObjectFactory is null");
-		}
 
+		if (irodsAccessObjectFactory == null) {
+			throw new IllegalArgumentException(
+					"irodsAccessObjectFactory is null");
+		}
 
 		this.host = host;
 		this.port = port;

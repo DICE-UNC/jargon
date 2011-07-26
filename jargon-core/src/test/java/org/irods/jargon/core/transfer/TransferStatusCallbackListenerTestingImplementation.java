@@ -84,7 +84,7 @@ public class TransferStatusCallbackListenerTestingImplementation implements
 				transferControlBlock.setCancelled(true);
 			}
 		}
-		
+
 		statusCache.add(transferStatus);
 
 	}
@@ -139,11 +139,11 @@ public class TransferStatusCallbackListenerTestingImplementation implements
 	}
 
 	@Override
-	public void overallStatusCallback(TransferStatus transferStatus)
+	public void overallStatusCallback(final TransferStatus transferStatus)
 			throws JargonException {
-		
+
 		overallCallbackCtr++;
-		
+
 	}
 
 	/**

@@ -8,7 +8,6 @@ import junit.framework.Assert;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.pub.DataObjectAO;
-import org.irods.jargon.core.pub.DataObjectAOImpl;
 import org.irods.jargon.core.pub.IRODSFileSystem;
 import org.irods.jargon.core.pub.domain.AvuData;
 import org.irods.jargon.core.pub.io.IRODSFile;
@@ -157,8 +156,8 @@ public class IRODSThousandFilesTest {
 				.findMetadataValuesByMetadataQuery(avuQueryElements);
 
 		// should have 1000 in this batch
-		Assert.assertEquals("did not get back the  rows I requested",
-				1000, metadataElements.size());
+		Assert.assertEquals("did not get back the  rows I requested", 1000,
+				metadataElements.size());
 
 		irodsFileSystem.close();
 

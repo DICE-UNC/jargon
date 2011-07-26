@@ -125,7 +125,7 @@ public class DataObjInpTest {
 		sb.append("</DataObjInp_PI>\n");
 		TestCase.assertEquals("did not get expected packing instruction",
 				sb.toString(), dataObjInp.getParsedTags());
-		
+
 	}
 
 	@Test
@@ -163,8 +163,8 @@ public class DataObjInpTest {
 	public final void testGetParsedTagsForGet() throws Exception {
 		DataObjInp dataObjInp = DataObjInp
 				.instanceForGet(
-						"/test1/home/test1/test-scratch/IrodsCommandsGetTest/testGet.txt", 0,
-						null);
+						"/test1/home/test1/test-scratch/IrodsCommandsGetTest/testGet.txt",
+						0, null);
 
 		StringBuilder sb = new StringBuilder();
 		sb.append("<DataObjInp_PI><objPath>/test1/home/test1/test-scratch/IrodsCommandsGetTest/testGet.txt</objPath>\n");
@@ -338,7 +338,7 @@ public class DataObjInpTest {
 	public final void instanceForReplicateNullResc() throws Exception {
 		DataObjInp.instanceForReplicate("/a/file/path", null);
 	}
-	
+
 	@Test
 	public final void testGetParsedTagsForGetHostForPut() throws Exception {
 		DataObjInp dataObjInp = DataObjInp
@@ -432,6 +432,5 @@ public class DataObjInpTest {
 			throws Exception {
 		DataObjInp.instanceForGetHostForGet("hello", null);
 	}
-
 
 }

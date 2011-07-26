@@ -305,9 +305,10 @@ public interface IRODSFileSystemAO extends IRODSAccessObject {
 	 * @throws JargonException
 	 */
 	int getFilePermissions(IRODSFile irodsFile) throws JargonException;
-	
+
 	/**
 	 * Retrieve permission value for the given user name
+	 * 
 	 * @param irodsFile
 	 * @param userName
 	 * @return
@@ -318,6 +319,7 @@ public interface IRODSFileSystemAO extends IRODSAccessObject {
 
 	/**
 	 * Retrive the permission value for the given user name
+	 * 
 	 * @param irodsFile
 	 * @param userName
 	 * @return

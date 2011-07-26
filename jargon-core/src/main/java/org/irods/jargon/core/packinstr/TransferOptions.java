@@ -37,16 +37,17 @@ public class TransferOptions {
 	private boolean allowPutGetResourceRedirects = false;
 	/**
 	 * Store a checksum of the file after it has been transferred. This will
-	 * only take precidence over <code>computeAndVerifyChecksumAfterTransfer</code> if the value there
-	 * is <code>false</code>
+	 * only take precidence over
+	 * <code>computeAndVerifyChecksumAfterTransfer</code> if the value there is
+	 * <code>false</code>
 	 */
 	private boolean computeChecksumAfterTransfer = false;
 	/**
-	 * Store a checksum of the file and verify after it has been transferred.  This is 'stronger' than
-	 * <code>computeChecksumAfterTransfer</code>, and will do the verify even if both values are <code>true</code>
+	 * Store a checksum of the file and verify after it has been transferred.
+	 * This is 'stronger' than <code>computeChecksumAfterTransfer</code>, and
+	 * will do the verify even if both values are <code>true</code>
 	 */
 	private boolean computeAndVerifyChecksumAfterTransfer = false;
-
 
 	@Override
 	public String toString() {
@@ -92,8 +93,10 @@ public class TransferOptions {
 			setUdpSendRate(transferOptions.getUdpSendRate());
 			setAllowPutGetResourceRedirects(transferOptions
 					.isAllowPutGetResourceRedirects());
-			setComputeChecksumAfterTransfer(transferOptions.isComputeChecksumAfterTransfer());
-			setComputeAndVerifyChecksumAfterTransfer(transferOptions.isComputeAndVerifyChecksumAfterTransfer());
+			setComputeChecksumAfterTransfer(transferOptions
+					.isComputeChecksumAfterTransfer());
+			setComputeAndVerifyChecksumAfterTransfer(transferOptions
+					.isComputeAndVerifyChecksumAfterTransfer());
 		}
 	}
 
@@ -176,10 +179,11 @@ public class TransferOptions {
 	}
 
 	/**
-	 * @param computeAndVerifyChecksumAfterTransfer the computeAndVerifyChecksumAfterTransfer to set
+	 * @param computeAndVerifyChecksumAfterTransfer
+	 *            the computeAndVerifyChecksumAfterTransfer to set
 	 */
 	public void setComputeAndVerifyChecksumAfterTransfer(
-			boolean computeAndVerifyChecksumAfterTransfer) {
+			final boolean computeAndVerifyChecksumAfterTransfer) {
 		this.computeAndVerifyChecksumAfterTransfer = computeAndVerifyChecksumAfterTransfer;
 	}
 

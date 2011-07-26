@@ -8,11 +8,8 @@ import java.util.List;
 
 import org.irods.jargon.core.connection.ConnectionConstants;
 import org.irods.jargon.core.exception.JargonException;
-import org.irods.jargon.core.utils.LocalFileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import edu.sdsc.grid.io.irods.Tag;
 
 /**
  * Translation of a DataObjInp operation into XML protocol format.
@@ -735,8 +732,8 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 	 * @param kvps
 	 * @throws JargonException
 	 */
-	private void processPutOperationKvps(int transferOptionsNumThreads,
-			List<KeyValuePair> kvps) throws JargonException {
+	private void processPutOperationKvps(final int transferOptionsNumThreads,
+			final List<KeyValuePair> kvps) throws JargonException {
 		if (!isInitialPutGetCall()) {
 			kvps.add(KeyValuePair.instance(DATA_TYPE, DATA_TYPE_GENERIC));
 			kvps.add(KeyValuePair.instance(DATA_INCLUDED_KW, ""));
@@ -858,7 +855,7 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 	 * @param fileChecksumValue
 	 *            the fileChecksumValue to set
 	 */
-	public void setFileChecksumValue(String fileChecksumValue) {
+	public void setFileChecksumValue(final String fileChecksumValue) {
 		this.fileChecksumValue = fileChecksumValue;
 	}
 

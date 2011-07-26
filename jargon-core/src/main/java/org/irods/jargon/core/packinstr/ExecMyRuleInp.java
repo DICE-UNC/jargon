@@ -6,11 +6,9 @@ package org.irods.jargon.core.packinstr;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.rule.IRODSRule;
 import org.irods.jargon.core.rule.IRODSRuleParameter;
+import org.irods.jargon.core.utils.IRODSConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import edu.sdsc.grid.io.irods.IRODSConstants;
-import edu.sdsc.grid.io.irods.Tag;
 
 /**
  * Immutable object gives translation of an ExecMyRuleInp operation into XML

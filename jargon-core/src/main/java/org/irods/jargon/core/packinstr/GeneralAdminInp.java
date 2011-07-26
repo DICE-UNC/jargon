@@ -4,8 +4,6 @@ import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.protovalues.UserTypeEnum;
 import org.irods.jargon.core.pub.domain.User;
 
-import edu.sdsc.grid.io.irods.Tag;
-
 /**
  * Represents a packing instruction for iRODS general admin functionality. These
  * functions are equivalent to operations done using the iadmin icommands.
@@ -228,8 +226,7 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 				userType.getTextValue(), BLANK, BLANK, BLANK, BLANK, BLANK,
 				GEN_ADMIN_INP_API_NBR);
 	}
-	
-	
+
 	private GeneralAdminInp(final String arg0, final String arg1,
 			final String arg2, final String arg3, final String arg4,
 			final String arg5, final String arg6, final String arg7,

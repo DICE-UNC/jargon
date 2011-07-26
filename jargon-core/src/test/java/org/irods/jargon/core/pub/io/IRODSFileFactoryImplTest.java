@@ -152,9 +152,10 @@ public class IRODSFileFactoryImplTest {
 
 		String absPath = scratchFileUtils
 				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
-		
-		FileGenerator.generateFileOfFixedLengthGivenName(absPath, testFileName, 1);
-		
+
+		FileGenerator.generateFileOfFixedLengthGivenName(absPath, testFileName,
+				1);
+
 		// put scratch file into irods in the right place
 		org.irods.jargon.testutils.icommandinvoke.IrodsInvocationContext invocationContext = testingPropertiesHelper
 				.buildIRODSInvocationContextFromTestProperties(testingProperties);
@@ -292,8 +293,9 @@ public class IRODSFileFactoryImplTest {
 
 		String absPath = scratchFileUtils
 				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
-		FileGenerator.generateFileOfFixedLengthGivenName(absPath, testFileName, 1);
- 
+		FileGenerator.generateFileOfFixedLengthGivenName(absPath, testFileName,
+				1);
+
 		org.irods.jargon.testutils.icommandinvoke.IrodsInvocationContext invocationContext = testingPropertiesHelper
 				.buildIRODSInvocationContextFromTestProperties(testingProperties);
 		IputCommand iputCommand = new IputCommand();
@@ -338,7 +340,8 @@ public class IRODSFileFactoryImplTest {
 
 		String absPath = scratchFileUtils
 				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
-		FileGenerator.generateFileOfFixedLengthGivenName(absPath, testFileName, 1);
+		FileGenerator.generateFileOfFixedLengthGivenName(absPath, testFileName,
+				1);
 
 		// put scratch file into irods in the right place
 		org.irods.jargon.testutils.icommandinvoke.IrodsInvocationContext invocationContext = testingPropertiesHelper
@@ -386,7 +389,8 @@ public class IRODSFileFactoryImplTest {
 
 		String absPath = scratchFileUtils
 				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
-		FileGenerator.generateFileOfFixedLengthGivenName(absPath, testFileName, 1);
+		FileGenerator.generateFileOfFixedLengthGivenName(absPath, testFileName,
+				1);
 
 		// put scratch file into irods in the right place
 		org.irods.jargon.testutils.icommandinvoke.IrodsInvocationContext invocationContext = testingPropertiesHelper
@@ -459,7 +463,8 @@ public class IRODSFileFactoryImplTest {
 
 		String absPath = scratchFileUtils
 				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
-		FileGenerator.generateFileOfFixedLengthGivenName(absPath, testFileName, 1);
+		FileGenerator.generateFileOfFixedLengthGivenName(absPath, testFileName,
+				1);
 
 		org.irods.jargon.testutils.icommandinvoke.IrodsInvocationContext invocationContext = testingPropertiesHelper
 				.buildIRODSInvocationContextFromTestProperties(testingProperties);
@@ -504,7 +509,8 @@ public class IRODSFileFactoryImplTest {
 
 		String absPath = scratchFileUtils
 				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
-		FileGenerator.generateFileOfFixedLengthGivenName(absPath, testFileName, 1);
+		FileGenerator.generateFileOfFixedLengthGivenName(absPath, testFileName,
+				1);
 
 		org.irods.jargon.testutils.icommandinvoke.IrodsInvocationContext invocationContext = testingPropertiesHelper
 				.buildIRODSInvocationContextFromTestProperties(testingProperties);
@@ -576,7 +582,8 @@ public class IRODSFileFactoryImplTest {
 
 		String absPath = scratchFileUtils
 				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
-		FileGenerator.generateFileOfFixedLengthGivenName(absPath, testFileName, 1);
+		FileGenerator.generateFileOfFixedLengthGivenName(absPath, testFileName,
+				1);
 
 		// put scratch file into irods in the right place
 		org.irods.jargon.testutils.icommandinvoke.IrodsInvocationContext invocationContext = testingPropertiesHelper
@@ -655,7 +662,8 @@ public class IRODSFileFactoryImplTest {
 
 		String absPath = scratchFileUtils
 				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
-		FileGenerator.generateFileOfFixedLengthGivenName(absPath, testFileName, 1);
+		FileGenerator.generateFileOfFixedLengthGivenName(absPath, testFileName,
+				1);
 
 		// put scratch file into irods in the right place
 		org.irods.jargon.testutils.icommandinvoke.IrodsInvocationContext invocationContext = testingPropertiesHelper

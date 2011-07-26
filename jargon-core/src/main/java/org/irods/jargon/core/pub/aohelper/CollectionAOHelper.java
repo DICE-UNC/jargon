@@ -282,7 +282,6 @@ public class CollectionAOHelper extends AOHelper {
 		return query.toString();
 	}
 
-
 	/**
 	 * Build a GenQuery string that will get the inheritance flag for a given
 	 * collection.
@@ -306,11 +305,12 @@ public class CollectionAOHelper extends AOHelper {
 		query.append(" WHERE  ");
 		query.append(RodsGenQueryEnum.COL_COLL_NAME.getName());
 		query.append(" = '");
-		query.append(IRODSDataConversionUtil.escapeSingleQuotes(absolutePathToCollection));
+		query.append(IRODSDataConversionUtil
+				.escapeSingleQuotes(absolutePathToCollection));
 		query.append("'");
 		return query.toString();
 	}
-	
+
 	/**
 	 * @param userFilePermissions
 	 * @param row
@@ -326,7 +326,7 @@ public class CollectionAOHelper extends AOHelper {
 						.getIntOrZeroFromIRODSValue(row.getColumn(6))));
 		userFilePermissions.add(userFilePermission);
 	}
-	
+
 	/**
 	 * @param userFilePermissions
 	 * @param row
@@ -342,12 +342,14 @@ public class CollectionAOHelper extends AOHelper {
 						.getIntOrZeroFromIRODSValue(row.getColumn(10))));
 		userFilePermissions.add(userFilePermission);
 	}
-	
+
 	/**
-	 * Build a select for a collection ACL with the given collection absolute path
+	 * Build a select for a collection ACL with the given collection absolute
+	 * path
+	 * 
 	 * @param irodsCollectionAbsolutePath
 	 */
-	public static String  buildACLQueryForCollectionName(
+	public static String buildACLQueryForCollectionName(
 			final String irodsCollectionAbsolutePath) {
 		StringBuilder query = new StringBuilder();
 		query.append("SELECT ");

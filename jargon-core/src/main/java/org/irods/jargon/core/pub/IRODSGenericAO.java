@@ -111,18 +111,23 @@ public abstract class IRODSGenericAO implements IRODSAccessObject {
 	public JargonProperties getJargonProperties() {
 		return getIRODSSession().getJargonProperties();
 	}
-	
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.pub.IRODSAccessObject#getIRODSAccessObjectFactory()
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.IRODSAccessObject#getIRODSAccessObjectFactory()
 	 */
 	@Override
-	public IRODSAccessObjectFactory getIRODSAccessObjectFactory() throws JargonException {
+	public IRODSAccessObjectFactory getIRODSAccessObjectFactory()
+			throws JargonException {
 		return IRODSAccessObjectFactoryImpl.instance(irodsSession);
 	}
-	
+
 	@Override
 	public IRODSFileFactory getIRODSFileFactory() throws JargonException {
-		return IRODSAccessObjectFactoryImpl.instance(irodsSession).getIRODSFileFactory(irodsAccount);
+		return IRODSAccessObjectFactoryImpl.instance(irodsSession)
+				.getIRODSFileFactory(irodsAccount);
 	}
 
 }

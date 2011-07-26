@@ -5,6 +5,7 @@ import java.util.List;
 
 /**
  * Values for file permission
+ * 
  * @author Mike Conway - DICE (www.irods.org)
  */
 public enum FilePermissionEnum {
@@ -25,12 +26,15 @@ public enum FilePermissionEnum {
 		case 1200:
 			return OWN;
 		default:
-			throw new IllegalArgumentException("No permission type for value: " + i);
+			throw new IllegalArgumentException("No permission type for value: "
+					+ i);
 		}
 	}
-	
+
 	/**
-	 * Handy method to get all enum values as a list, good for building select boxes and the like
+	 * Handy method to get all enum values as a list, good for building select
+	 * boxes and the like
+	 * 
 	 * @return
 	 */
 	public static List<FilePermissionEnum> listAllValues() {
@@ -40,6 +44,6 @@ public enum FilePermissionEnum {
 			allValues.add(enumVal);
 		}
 		return allValues;
-		
+
 	}
 }

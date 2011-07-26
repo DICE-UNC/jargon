@@ -12,10 +12,9 @@ import java.net.UnknownHostException;
 import java.nio.channels.ClosedChannelException;
 
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.utils.Host;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import edu.sdsc.grid.io.Host;
 
 /**
  * Wraps a connection to the iRODS server described by the given IRODSAccount.

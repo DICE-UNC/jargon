@@ -639,11 +639,11 @@ public final class IRODSFileImpl extends File implements IRODSFile {
 	@Override
 	public File getParentFile() {
 		String parentPath = getParent();
-		
+
 		if (parentPath == null) {
 			return null;
 		}
-		
+
 		try {
 			return new IRODSFileImpl(parentPath, this.irodsFileSystemAO);
 		} catch (JargonException e) {
@@ -748,8 +748,7 @@ public final class IRODSFileImpl extends File implements IRODSFile {
 	 */
 	@Override
 	public boolean isFile() {
-		
-	
+
 		if (pathNameType == PathNameType.UNKNOWN) {
 			// do query
 		} else if (pathNameType == PathNameType.FILE) {
@@ -845,7 +844,6 @@ public final class IRODSFileImpl extends File implements IRODSFile {
 		}
 		return length;
 	}
-	
 
 	/*
 	 * (non-Javadoc)
@@ -1328,8 +1326,10 @@ public final class IRODSFileImpl extends File implements IRODSFile {
 		this.setFileDescriptor(-1);
 
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.irods.jargon.core.pub.io.IRODSFile#closeGivenDescriptor(int)
 	 */
 	@Override
@@ -1378,11 +1378,11 @@ public final class IRODSFileImpl extends File implements IRODSFile {
 				i++;
 			}
 
-			// parent is / 
+			// parent is /
 			if (pathBuilder.length() == 0) {
 				pathBuilder.append("/");
 			}
-			
+
 			return pathBuilder.toString();
 		} else {
 

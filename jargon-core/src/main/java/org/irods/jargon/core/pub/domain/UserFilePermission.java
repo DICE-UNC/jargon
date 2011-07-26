@@ -13,33 +13,37 @@ public class UserFilePermission {
 	private String userName = "";
 	private String userId = "";
 	private FilePermissionEnum filePermissionEnum;
-	
+
 	/**
 	 * Public values constructor.
-	 * @param userName <code>String</code> with the name of the user
-	 * @param userId <code>String</code> with the id of the user
-	 * @param filePermissionEnum <code>FilePermission</code> for the given user
+	 * 
+	 * @param userName
+	 *            <code>String</code> with the name of the user
+	 * @param userId
+	 *            <code>String</code> with the id of the user
+	 * @param filePermissionEnum
+	 *            <code>FilePermission</code> for the given user
 	 */
-	public UserFilePermission(String userName, String userId,
-			FilePermissionEnum filePermissionEnum) {
-		
+	public UserFilePermission(final String userName, final String userId,
+			final FilePermissionEnum filePermissionEnum) {
+
 		if (userName == null || userName.isEmpty()) {
 			throw new IllegalArgumentException("null or empty userName");
 		}
-		
+
 		if (userId == null || userId.isEmpty()) {
 			throw new IllegalArgumentException("null or empty userId");
 		}
-		
+
 		if (filePermissionEnum == null) {
 			throw new IllegalArgumentException("null filePermissionEnum");
 		}
-		
+
 		this.userName = userName;
 		this.userId = userId;
 		this.filePermissionEnum = filePermissionEnum;
 	}
-	
+
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
@@ -57,7 +61,7 @@ public class UserFilePermission {
 		return userName;
 	}
 
-	public void setUserName(String userName) {
+	public void setUserName(final String userName) {
 		this.userName = userName;
 	}
 
@@ -65,7 +69,7 @@ public class UserFilePermission {
 		return userId;
 	}
 
-	public void setUserId(String userId) {
+	public void setUserId(final String userId) {
 		this.userId = userId;
 	}
 
@@ -73,7 +77,8 @@ public class UserFilePermission {
 		return filePermissionEnum;
 	}
 
-	public void setFilePermissionEnum(FilePermissionEnum filePermissionEnum) {
+	public void setFilePermissionEnum(
+			final FilePermissionEnum filePermissionEnum) {
 		this.filePermissionEnum = filePermissionEnum;
 	}
 

@@ -11,11 +11,10 @@ import java.io.UTFDataFormatException;
 
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.io.FileIOOperations.SeekWhenceType;
+import org.irods.jargon.core.utils.BinaryDataFormat;
+import org.irods.jargon.core.utils.Host;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import edu.sdsc.grid.io.BinaryDataFormat;
-import edu.sdsc.grid.io.Host;
 
 /**
  * Instances of this class support I/O on random-access binary files. Methods on

@@ -81,9 +81,13 @@ public class Stream2StreamAOImpl extends IRODSGenericAO implements
 		}
 
 	}
-	
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.pub.Stream2StreamAO#streamToStreamCopy(java.io.InputStream, java.io.OutputStream)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.Stream2StreamAO#streamToStreamCopy(java.io.
+	 * InputStream, java.io.OutputStream)
 	 */
 	@Override
 	public void streamToStreamCopy(final InputStream inputStream,
@@ -98,9 +102,11 @@ public class Stream2StreamAOImpl extends IRODSGenericAO implements
 		}
 
 		log.info("streamToStreamCopy()");
-		
-		final ReadableByteChannel inputChannel = Channels.newChannel(inputStream);
-		final WritableByteChannel outputChannel = Channels.newChannel(outputStream);
+
+		final ReadableByteChannel inputChannel = Channels
+				.newChannel(inputStream);
+		final WritableByteChannel outputChannel = Channels
+				.newChannel(outputStream);
 		// copy the channels
 		try {
 			ChannelTools.fastChannelCopy(inputChannel, outputChannel);
@@ -118,8 +124,12 @@ public class Stream2StreamAOImpl extends IRODSGenericAO implements
 
 	}
 
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.pub.Stream2StreamAO#streamFileToByte(org.irods.jargon.core.pub.io.IRODSFile)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.Stream2StreamAO#streamFileToByte(org.irods.
+	 * jargon.core.pub.io.IRODSFile)
 	 */
 	@Override
 	public byte[] streamFileToByte(final IRODSFile irodsFile)

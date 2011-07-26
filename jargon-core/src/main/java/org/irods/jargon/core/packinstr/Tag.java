@@ -23,11 +23,13 @@
 //  Lucas Gilbert, SDSC/UCSD
 //
 //
-package edu.sdsc.grid.io.irods;
+package org.irods.jargon.core.packinstr;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
+import org.irods.jargon.core.exception.JargonRuntimeException;
+import org.irods.jargon.core.utils.IRODSConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,10 +38,10 @@ import org.slf4j.LoggerFactory;
  * Jargon and IRODS
  */
 public class Tag implements Cloneable {
-	static final char OPEN_START_TAG = '<';
-	static final char CLOSE_START_TAG = '>';
-	static final String OPEN_END_TAG = "</";
-	static final char CLOSE_END_TAG = '>';
+	public static final char OPEN_START_TAG = '<';
+	public static final char CLOSE_START_TAG = '>';
+	public static final String OPEN_END_TAG = "</";
+	public static final char CLOSE_END_TAG = '>';
 
 	private static Logger log = LoggerFactory.getLogger(Tag.class);
 
@@ -301,7 +303,7 @@ public class Tag implements Cloneable {
 	public static void status(final Tag message) throws IOException {
 		Tag s = message.getTag("status");
 		if ((s != null) && (s.getIntValue() < 0)) {
-			throw new IRODSException("" + s.getIntValue());
+			throw new JargonRuntimeException("" + s.getIntValue());
 		}
 	}
 

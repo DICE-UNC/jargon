@@ -3,10 +3,6 @@
  */
 package org.irods.jargon.core.pub;
 
-import static edu.sdsc.grid.io.irods.IRODSConstants.CollOprStat_PI;
-import static edu.sdsc.grid.io.irods.IRODSConstants.SYS_CLI_TO_SVR_COLL_STAT_REPLY;
-import static edu.sdsc.grid.io.irods.IRODSConstants.SYS_CLI_TO_SVR_COLL_STAT_SIZE;
-
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FilenameFilter;
@@ -24,6 +20,7 @@ import org.irods.jargon.core.packinstr.DataObjCloseInp;
 import org.irods.jargon.core.packinstr.DataObjCopyInp;
 import org.irods.jargon.core.packinstr.DataObjInp;
 import org.irods.jargon.core.packinstr.MsgHeader;
+import org.irods.jargon.core.packinstr.Tag;
 import org.irods.jargon.core.pub.domain.Resource;
 import org.irods.jargon.core.pub.domain.User;
 import org.irods.jargon.core.pub.io.IRODSFile;
@@ -35,11 +32,10 @@ import org.irods.jargon.core.query.IRODSQueryResultSet;
 import org.irods.jargon.core.query.IRODSQueryResultSetInterface;
 import org.irods.jargon.core.query.JargonQueryException;
 import org.irods.jargon.core.query.RodsGenQueryEnum;
+import org.irods.jargon.core.utils.IRODSConstants;
 import org.irods.jargon.core.utils.IRODSDataConversionUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import edu.sdsc.grid.io.irods.Tag;
 
 /**
  * This is a backing object for IRODSFileImpl, handling all IRODS interactions.
@@ -1699,7 +1695,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 
 		while (!done) {
 			if (ackResult.getLength() > 0) {
-				if (ackResult.getName().equals(CollOprStat_PI)) {
+				if (ackResult.getName().equals(IRODSConstants.CollOprStat_PI)) {
 					// formulate an answer status reply
 
 					// if the total file count is 0, then I will continue and
@@ -1711,11 +1707,11 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 					int fileCount = Integer.parseInt((String) fileCountTag
 							.getValue());
 
-					if (fileCount < SYS_CLI_TO_SVR_COLL_STAT_SIZE) {
+					if (fileCount < IRODSConstants.SYS_CLI_TO_SVR_COLL_STAT_SIZE) {
 						done = true;
 					} else {
 						this.getIRODSProtocol().sendInNetworkOrder(
-								SYS_CLI_TO_SVR_COLL_STAT_REPLY);
+								IRODSConstants.SYS_CLI_TO_SVR_COLL_STAT_REPLY);
 						ackResult = getIRODSProtocol().readMessage();
 					}
 				}
