@@ -2,9 +2,11 @@ package org.irods.jargon.transfer.engine;
 
 import java.io.File;
 import java.util.Date;
+import java.util.List;
 import java.util.Properties;
 
 import junit.framework.Assert;
+import junit.framework.TestCase;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.pub.IRODSFileSystem;
@@ -119,8 +121,7 @@ public class TransferManagerForSynchTest {
 
 		while (true) {
 			if (waitCtr++ > 20) {
-				// Assert.fail("synch timed out"); FIXME uncomment after
-				// debugging done
+				Assert.fail("synch timed out");
 			}
 			Thread.sleep(1000);
 			if (transferManager.getRunningStatus() == TransferManager.RunningStatus.IDLE) {
@@ -139,6 +140,105 @@ public class TransferManagerForSynchTest {
 				irodsCollectionRootAbsolutePath, 0L, 0L);
 
 		Assert.assertTrue("diffs found after synch", noDiffs);
+
+	}
+	
+	@Test
+	public void testEnqueueSynchTwice() throws Exception {
+		TransferManager transferManager = new TransferManagerImpl(
+				IRODSFileSystem.instance());
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		String rootCollection = "testEnqueueSynchTwice";
+		String localCollectionAbsolutePath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH
+						+ '/' + rootCollection);
+
+		String irodsCollectionRootAbsolutePath = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + "/"
+								+ rootCollection);
+		IRODSFile irodsSynchFile = irodsFileSystem.getIRODSFileFactory(
+				irodsAccount)
+				.instanceIRODSFile(irodsCollectionRootAbsolutePath);
+		irodsSynchFile.mkdirs();
+
+		FileGenerator
+				.generateManyFilesAndCollectionsInParentCollectionByAbsolutePath(
+						localCollectionAbsolutePath, "testSubdir", 1, 2, 1,
+						"testFile", ".txt", 3, 2, 2, 5);
+
+		Synchronization synchronization = new Synchronization();
+		synchronization
+				.setSynchronizationMode(SynchronizationType.ONE_WAY_LOCAL_TO_IRODS);
+		synchronization.setName(rootCollection);
+		synchronization.setCreatedAt(new Date());
+		synchronization.setDefaultResourceName(irodsAccount
+				.getDefaultStorageResource());
+		synchronization.setFrequencyType(FrequencyType.EVERY_FIFTEEN_MINUTES);
+		synchronization.setIrodsHostName(irodsAccount.getHost());
+		synchronization.setIrodsPassword(irodsAccount.getPassword());
+		synchronization.setIrodsPort(irodsAccount.getPort());
+		synchronization.setIrodsSynchDirectory(irodsCollectionRootAbsolutePath);
+		synchronization.setIrodsUserName(irodsAccount.getUserName());
+		synchronization.setIrodsZone(irodsAccount.getZone());
+		synchronization.setLocalSynchDirectory(localCollectionAbsolutePath);
+		SynchManagerService synchManagerService = transferManager
+				.getTransferServiceFactory().instanceSynchManagerService();
+		synchManagerService.createNewSynchConfiguration(synchronization);
+
+		synchronization = synchManagerService.findByName(rootCollection);
+
+		transferManager.purgeAllTransfers();
+
+		transferManager.enqueueASynch(synchronization, irodsAccount);
+		transferManager.enqueueASynch(synchronization, irodsAccount);
+
+		// let synch run
+
+		int waitCtr = 0;
+
+		while (true) {
+			if (waitCtr++ > 20) {
+				 //Assert.fail("synch timed out"); 
+			}
+			Thread.sleep(1000);
+			if (transferManager.getRunningStatus() == TransferManager.RunningStatus.IDLE) {
+				break;
+			}
+
+		}
+
+		/*
+		Assert.assertEquals("should have been no errors",
+				TransferManager.ErrorStatus.OK,
+				transferManager.getErrorStatus());
+				*/
+		FileTreeDiffUtility fileTreeDiffUtility = new FileTreeDiffUtilityImpl(
+				irodsAccount, irodsFileSystem.getIRODSAccessObjectFactory());
+		boolean noDiffs = fileTreeDiffUtility.verifyLocalAndIRODSTreesMatch(
+				new File(localCollectionAbsolutePath),
+				irodsCollectionRootAbsolutePath, 0L, 0L);
+
+		Assert.assertTrue("diffs found after synch", noDiffs);
+		
+		// make sure only one synch with this name
+		
+		List<Synchronization> synchronizations = synchManagerService.listAllSynchronizations();
+		int synchCount = 0;
+		
+		for (Synchronization actualSynchronization : synchronizations){
+			if (actualSynchronization.getName().equals(rootCollection)) {
+				synchCount++;
+			}
+		}
+		
+		TestCase.assertEquals("found more than one synch with a given name", 1, synchCount);
+		
+		
+		
 
 	}
 

@@ -91,6 +91,7 @@ public class SynchronizationDAOImpl extends HibernateDaoSupport implements
 		Session session = this.getSessionFactory().getCurrentSession();
 		try {
 			Criteria criteria = session.createCriteria(Synchronization.class);
+			criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 			ret = criteria.list();
 		} catch (Exception e) {
 			logger.error("error in findAll()", e);
