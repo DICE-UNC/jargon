@@ -213,20 +213,6 @@ public interface TransferManager {
     void cancelTransfer(final LocalIRODSTransfer localIRODSTransfer) throws JargonException;
 
     /**
-     * Indicate whether detail items are turned on
-     * 
-     * @return
-     */
-    boolean isLogSuccessfulTransfers();
-
-    /**
-     * Indicate whether successful transfer item details are recorded.
-     * 
-     * @param logSuccessfulTransfers
-     */
-    void setLogSuccessfulTransfers(final boolean logSuccessfulTransfers);
-
-    /**
      * Get a reference to a service that can manipulate the underlying queue.
      * 
      * @return

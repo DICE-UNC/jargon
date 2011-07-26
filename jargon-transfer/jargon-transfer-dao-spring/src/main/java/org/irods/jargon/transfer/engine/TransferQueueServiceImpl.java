@@ -186,11 +186,11 @@ public class TransferQueueServiceImpl implements TransferQueueService {
 		log.info("synchronization:{}", synchronization);
 		log.info("irodsAccount:{}", irodsAccount);
 
-		
 		if (synchronization.getId() == null) {
-			throw new JargonException("synchronization is not persisted in database?");
+			throw new JargonException(
+					"synchronization is not persisted in database?");
 		}
-		
+
 		LocalIRODSTransfer enqueuedTransfer = new LocalIRODSTransfer();
 		enqueuedTransfer.setCreatedAt(new Date());
 		enqueuedTransfer.setIrodsAbsolutePath(synchronization

@@ -10,6 +10,8 @@ import junit.framework.TestCase;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 import org.irods.jargon.core.pub.IRODSFileSystem;
+import org.irods.jargon.core.transfer.DefaultTransferControlBlock;
+import org.irods.jargon.core.transfer.TransferControlBlock;
 import org.irods.jargon.datautils.synchproperties.SynchPropertiesService;
 import org.irods.jargon.datautils.synchproperties.SynchPropertiesServiceImpl;
 import org.irods.jargon.datautils.tree.FileTreeDiffUtility;
@@ -172,12 +174,14 @@ public class SynchronizeProcessorImplTest {
 
 		TransferManager transferManager = new TransferManagerImpl(
 				irodsFileSystem);
-		SynchronizeProcessor synchronizeProcessor = new SynchronizeProcessorImpl();
+		TransferControlBlock transferControlBlock = DefaultTransferControlBlock.instance();
+		SynchronizeProcessorImpl synchronizeProcessor = new SynchronizeProcessorImpl();
 		synchronizeProcessor
 				.setFileTreeDiffUtility(new FileTreeDiffUtilityImpl(
 						irodsAccount, irodsFileSystem
 								.getIRODSAccessObjectFactory()));
 		synchronizeProcessor.setIrodsAccount(irodsAccount);
+		synchronizeProcessor.setTransferControlBlock(transferControlBlock);
 		synchronizeProcessor
 				.setSynchPropertiesService(new SynchPropertiesServiceImpl(
 						irodsFileSystem.getIRODSAccessObjectFactory(),
@@ -191,6 +195,7 @@ public class SynchronizeProcessorImplTest {
 		processor.setIrodsAccessObjectFactory(irodsFileSystem
 				.getIRODSAccessObjectFactory());
 		processor.setIrodsAccount(irodsAccount);
+		processor.setTransferControlBlock(transferControlBlock);
 		synchronizeProcessor.setSynchronizingDiffProcessor(processor);
 		processor.setTransferManager(transferManager);
 

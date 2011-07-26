@@ -18,7 +18,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Central manager of transfer engine. Manages status of entire engine on behalf
  * of client callers. This class is a singleton, and will keep track of the
- * current status of the transfer, receiving callbacks from the various
+ * current status of the transfer, receiving call-backs from the various
  * transfers that are underway. Clients can subscribe to this transfer manager
  * for information about the current operations of the transfer engine and
  * receive information about the status and history of the queue.
@@ -51,13 +51,30 @@ public final class TransferManagerImpl implements TransferManager {
 	private TransferRunner currentTransferRunner = null;
 
 	private final IRODSFileSystem irodsFileSystem;
+	
+	private TransferEngineConfigurationProperties transferEngineConfigurationProperties;
 
 	/**
-	 * Indicates whether detailed logging is desired for successful transfers
-	 * (might move into a config block later)
+	 * Get the configuration information that controls the behavior of the transfer engine
+	 * @return {@link TransferEngineConfigurationProperties} or <code>null</code> if none were specified
 	 */
-	private boolean logSuccessfulTransfers = true;
+	public synchronized TransferEngineConfigurationProperties getTransferEngineConfigurationProperties() {
+		return transferEngineConfigurationProperties;
+	}
 
+	/**
+	 * Set the configuration information that controls the behavior of the transfer engine.  If set to null, then 
+	 * the system will exhibit default behavior
+	 * 
+	 * @param transferEngineConfigurationProperties {@link TransferEngineConfigurationProperties} or <code>null</code> if default
+	 * behaviors are desired
+	 */
+	public synchronized void setTransferEngineConfigurationProperties(
+			TransferEngineConfigurationProperties transferEngineConfigurationProperties) {
+		this.transferEngineConfigurationProperties = transferEngineConfigurationProperties;
+	}
+
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -77,7 +94,6 @@ public final class TransferManagerImpl implements TransferManager {
 			throw new IllegalArgumentException("null irodsFileSystem");
 		}
 
-		this.logSuccessfulTransfers = true;
 		this.irodsFileSystem = irodsFileSystem;
 		try {
 			init();
@@ -110,7 +126,7 @@ public final class TransferManagerImpl implements TransferManager {
 
 		this.irodsFileSystem = irodsFileSystem;
 		this.transferManagerCallbackListener = transferManagerCallbackListener;
-		this.logSuccessfulTransfers = true;
+
 		try {
 			init();
 		} catch (Exception e) {
@@ -130,16 +146,16 @@ public final class TransferManagerImpl implements TransferManager {
 	 *            {@link org.irods.jargon.transfer.engine.TransferManagerCallbackListener}
 	 *            class that can receive callbacks from the running transfer
 	 *            process.
-	 * @param logSuccessfulTransfers
-	 *            <code>boolean</code> that indicates whether successful
-	 *            transfers should be logged to the internal database.
+	 * @param transferEngineConfigurationProperties {@link transferEngineConfigurationProperties} that controls behavior of transfers,
+	 * or <code>null</code> if default behaviors are desired
+	 * 
 	 * @return instance of <code>TransferManager</code>
 	 * @throws JargonException
 	 */
 	public TransferManagerImpl(
 			final IRODSFileSystem irodsFileSystem,
 			final TransferManagerCallbackListener transferManagerCallbackListener,
-			final boolean logSuccessfulTransfers) throws JargonException {
+			final TransferEngineConfigurationProperties transferEngineConfigurationProperties) throws JargonException {
 
 		if (irodsFileSystem == null) {
 			throw new IllegalArgumentException("null irodsFileSystem");
@@ -147,8 +163,7 @@ public final class TransferManagerImpl implements TransferManager {
 
 		this.irodsFileSystem = irodsFileSystem;
 		this.transferManagerCallbackListener = transferManagerCallbackListener;
-		this.transferManagerCallbackListener = transferManagerCallbackListener;
-		this.logSuccessfulTransfers = logSuccessfulTransfers;
+		this.transferEngineConfigurationProperties = transferEngineConfigurationProperties;
 		try {
 			init();
 		} catch (Exception e) {
@@ -630,6 +645,11 @@ public final class TransferManagerImpl implements TransferManager {
 		// last successful path will have a restart value or be blank
 		TransferControlBlock transferControlBlock = DefaultTransferControlBlock
 				.instance(dequeued.getLastSuccessfulPath());
+		
+		if (transferEngineConfigurationProperties != null) {
+			log.info("using passed-in transfer options in the transferControlBlock:{}", transferEngineConfigurationProperties.getTransferOptions());
+			transferControlBlock.setTransferOptions(transferEngineConfigurationProperties.getTransferOptions());
+		}
 
 		log.info(">>>> dequeue {}", dequeued);
 
@@ -814,30 +834,6 @@ public final class TransferManagerImpl implements TransferManager {
 			}
 		}
 
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.irods.jargon.transfer.engine.TransferManager#isLogSuccessfulTransfers
-	 * ()
-	 */
-	@Override
-	public boolean isLogSuccessfulTransfers() {
-		return logSuccessfulTransfers;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.irods.jargon.transfer.engine.TransferManager#setLogSuccessfulTransfers
-	 * (boolean)
-	 */
-	@Override
-	public void setLogSuccessfulTransfers(final boolean logSuccessfulTransfers) {
-		this.logSuccessfulTransfers = logSuccessfulTransfers;
 	}
 
 	protected void notifyStatusUpdate(final TransferStatus transferStatus)

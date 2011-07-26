@@ -12,19 +12,25 @@ import org.irods.jargon.core.pub.io.IRODSFileFactory;
 import org.irods.jargon.core.transfer.TransferControlBlock;
 import org.irods.jargon.core.transfer.TransferStatus;
 import org.irods.jargon.core.transfer.TransferStatusCallbackListener;
+import org.irods.jargon.datautils.synchproperties.SynchPropertiesService;
+import org.irods.jargon.datautils.synchproperties.SynchPropertiesServiceImpl;
+import org.irods.jargon.datautils.tree.FileTreeDiffUtility;
+import org.irods.jargon.datautils.tree.FileTreeDiffUtilityImpl;
 import org.irods.jargon.transfer.dao.domain.LocalIRODSTransfer;
 import org.irods.jargon.transfer.dao.domain.LocalIRODSTransferItem;
 import org.irods.jargon.transfer.dao.domain.TransferState;
+import org.irods.jargon.transfer.synch.InPlaceSynchronizingDiffProcessorImpl;
+import org.irods.jargon.transfer.synch.SynchronizeProcessorImpl;
 import org.irods.jargon.transfer.util.HibernateUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  * Service to manage a transfer from a client to an iRODS server via put ,
- * replicate, or get. This engine will monitor transfers and maintain status
- * information for reporting, restarting, and other management aspects,
- * reporting this information to the <code>TransferManager</code>.
- * 
+ * replicate, copy, synch, or get. This engine will monitor transfers and
+ * maintain status information for reporting, restarting, and other management
+ * aspects, reporting this information to the <code>TransferManager</code>.
+ * <p/>
  * Note that this class is meant to receive and process callbacks from a single
  * transfer process. If, in the future, multiple simultaneous transfers are
  * implemented, there will need to be one transfer engine per transfer
@@ -47,43 +53,9 @@ final class IRODSLocalTransferEngine implements TransferStatusCallbackListener {
 
 	private final TransferControlBlock transferControlBlock;
 
-	private final boolean logSuccessfulTransfers;
+	private TransferEngineConfigurationProperties transferEngineConfigurationProperties;
 
 	private boolean aborted = false;
-
-	/**
-	 * Static initializer to create transfer engine. By default, successful
-	 * transfers are to be logged.
-	 * 
-	 * @param irodsAccessObjectFactory
-	 *            <code>IRODSAccessObjectFactoryImpl</code> that provides access
-	 *            to objects that interact with iRODS.
-	 * @param transferControlBlock
-	 *            <code>TransferControlBlock</code> implementation that provides
-	 *            a common communications object between the manager and the
-	 *            actual transfer process. For example, this block has a method
-	 *            to communicate a cancellation from the manager to the running
-	 *            transfer. This block also can be implemented to provide a
-	 *            filter to select files to transfer, such as a restart filter.
-	 * @return <code>IRODSLocalTransferEngine</code> instance.
-	 * @throws JargonException
-	 */
-	public static IRODSLocalTransferEngine getInstance(
-			final TransferManagerImpl transferManager,
-			final TransferControlBlock transferControlBlock)
-			throws JargonException {
-		if (transferManager == null) {
-			throw new JargonException("transferManager is null");
-		}
-
-		if (transferControlBlock == null) {
-			throw new JargonException("transferControlBlock is null");
-		}
-
-		return new IRODSLocalTransferEngine(transferManager,
-				transferControlBlock, true);
-
-	}
 
 	/**
 	 * Static initializer to create transfer engine.
@@ -98,11 +70,18 @@ final class IRODSLocalTransferEngine implements TransferStatusCallbackListener {
 	 *            to communicate a cancellation from the manager to the running
 	 *            transfer. This block also can be implemented to provide a
 	 *            filter to select files to transfer, such as a restart filter.
-	 * @param logSuccessfulTransfers
-	 *            <code>boolean</code> that indicates whether successful
-	 *            transfers are logged. This can be turned off by setting to
-	 *            <code>false</code>, useful for very large transfers where
-	 *            local database overhead is an issue.
+	 * @param transferEngineConfigurationProperties
+	 *            {@link TransferEngineConfigurationProperties} that will
+	 *            control the behavior of the transfers. Note that the caller
+	 *            has already resolved the <code>TransferOptions</code> in the
+	 *            <code>TransferControlBlock</code>, and this class does no
+	 *            further option resolution, it uses the information in the
+	 *            <code>TransferControlBlock</code> to control transfer
+	 *            behavior, and only uses the
+	 *            <code>TransferEngineConfigurationProperties</code> for
+	 *            transfer engine specific configuration outside of options used
+	 *            within the Jargon core libraries
+	 * 
 	 * @return <code>IRODSLocalTransferEngine</code> instance.
 	 * @throws JargonException
 	 */
@@ -110,7 +89,8 @@ final class IRODSLocalTransferEngine implements TransferStatusCallbackListener {
 	protected static IRODSLocalTransferEngine instance(
 			final TransferManagerImpl transferManager,
 			final TransferControlBlock transferControlBlock,
-			final boolean logSuccessfulTransfers) throws JargonException {
+			final TransferEngineConfigurationProperties transferEngineConfigurationProperties)
+			throws JargonException {
 		if (transferManager == null) {
 			throw new JargonException("transferManager is null");
 		}
@@ -120,17 +100,19 @@ final class IRODSLocalTransferEngine implements TransferStatusCallbackListener {
 		}
 
 		return new IRODSLocalTransferEngine(transferManager,
-				transferControlBlock, logSuccessfulTransfers);
+				transferControlBlock, transferEngineConfigurationProperties);
 
 	}
 
-	private IRODSLocalTransferEngine(final TransferManagerImpl transferManager,
+	private IRODSLocalTransferEngine(
+			final TransferManagerImpl transferManager,
 			final TransferControlBlock transferControlBlock,
-			final boolean logSuccessfulTransfers) throws JargonException {
+			final TransferEngineConfigurationProperties transferEngineConfigurationProperties)
+			throws JargonException {
 
 		this.transferManager = transferManager;
 		this.transferControlBlock = transferControlBlock;
-		this.logSuccessfulTransfers = logSuccessfulTransfers;
+		this.transferEngineConfigurationProperties = transferEngineConfigurationProperties;
 
 	}
 
@@ -191,7 +173,7 @@ final class IRODSLocalTransferEngine implements TransferStatusCallbackListener {
 			break;
 		case SYNCH:
 			transferException = transferTypeSynch(localIrodsTransfer,
-					dataTransferOperations, irodsFileFactory);
+					dataTransferOperations, irodsFileFactory, irodsAccount);
 			break;
 		default:
 			throw new JargonException("unknown operation type in transfer");
@@ -235,43 +217,100 @@ final class IRODSLocalTransferEngine implements TransferStatusCallbackListener {
 				wrapUpTransfer);
 		log.info("updated");
 		setCurrentTransfer(wrapUpTransfer);
-		
+
 		log.info("commit");
 
 	}
 
 	private JargonException transferTypeSynch(
-			LocalIRODSTransfer localIrodsTransfer,
-			DataTransferOperations dataTransferOperations,
-			IRODSFileFactory irodsFileFactory) {
-		
-		
-		
-		return null; // FIXME: implement synch
-		
-		
-	}
+			final LocalIRODSTransfer localIrodsTransfer,
+			final DataTransferOperations dataTransferOperations,
+			final IRODSFileFactory irodsFileFactory,
+			final IRODSAccount irodsAccount) {
 
-	private JargonException transferTypeCopy(
-			LocalIRODSTransfer localIrodsTransfer,
-			DataTransferOperations dataTransferOperations,
-			IRODSFileFactory irodsFileFactory) {
-		
 		JargonException transferException = null;
 
-		//TODO: get force option from future transferControlBlock
-		
 		try {
-			log.info("transferTypeCopy");
-			dataTransferOperations.copy(localIrodsTransfer.getLocalAbsolutePath(), 
-					localIrodsTransfer.getTransferResource(), 
-					localIrodsTransfer.getIrodsAbsolutePath(), this, true, transferControlBlock);
+			log.info("transferTypeSynch");
+
+			/*
+			 * right now, the synchronizing processor is assumed to be the
+			 * InPlaceSynchronizingDiffProcessor, later this and other
+			 * dependencies for synch can be pulled out to configuration
+			 */
+
+			InPlaceSynchronizingDiffProcessorImpl synchronizingDiffProcessor = new InPlaceSynchronizingDiffProcessorImpl();
+			synchronizingDiffProcessor.setCallbackListener(this);
+			synchronizingDiffProcessor
+					.setIrodsAccessObjectFactory(transferManager
+							.getIrodsFileSystem().getIRODSAccessObjectFactory());
+			synchronizingDiffProcessor.setIrodsAccount(irodsAccount);
+			synchronizingDiffProcessor
+					.setTransferControlBlock(transferControlBlock);
+			synchronizingDiffProcessor.setTransferManager(transferManager);
+
+			log.info("built synchronizingDiffProcessor:{}",
+					synchronizingDiffProcessor);
+
+			FileTreeDiffUtility fileTreeDiffUtility = new FileTreeDiffUtilityImpl(
+					irodsAccount, transferManager.getIrodsFileSystem()
+							.getIRODSAccessObjectFactory());
+			SynchPropertiesService synchPropertiesService = new SynchPropertiesServiceImpl(
+					transferManager.getIrodsFileSystem()
+							.getIRODSAccessObjectFactory(), irodsAccount);
+
+			SynchronizeProcessorImpl synchronizeProcessorImpl = new SynchronizeProcessorImpl();
+			synchronizeProcessorImpl
+					.setFileTreeDiffUtility(fileTreeDiffUtility);
+			synchronizeProcessorImpl
+					.setIrodsAccessObjectFactory(transferManager
+							.getIrodsFileSystem().getIRODSAccessObjectFactory());
+			synchronizeProcessorImpl.setIrodsAccount(irodsAccount);
+			synchronizeProcessorImpl
+					.setSynchPropertiesService(synchPropertiesService);
+			synchronizeProcessorImpl
+					.setFileTreeDiffUtility(fileTreeDiffUtility);
+			synchronizeProcessorImpl
+					.setSynchronizingDiffProcessor(synchronizingDiffProcessor);
+			synchronizeProcessorImpl
+					.setTransferControlBlock(transferControlBlock);
+			synchronizeProcessorImpl.setTransferManager(transferManager);
+
+			log.info("synchronizeProcessor was built:{}",
+					synchronizeProcessorImpl);
+
+			synchronizeProcessorImpl
+					.synchronizeLocalToIRODS(localIrodsTransfer);
+			log.info("synchronize processing done...");
+
 		} catch (JargonException je) {
 			log.error("exception in transfer will be marked as a global exception, ending the transfer operation");
 			transferException = je;
 		}
 		return transferException;
-	
+
+	}
+
+	private JargonException transferTypeCopy(
+			final LocalIRODSTransfer localIrodsTransfer,
+			final DataTransferOperations dataTransferOperations,
+			final IRODSFileFactory irodsFileFactory) {
+
+		JargonException transferException = null;
+
+		try {
+			log.info("transferTypeCopy");
+			dataTransferOperations.copy(
+					localIrodsTransfer.getLocalAbsolutePath(),
+					localIrodsTransfer.getTransferResource(),
+					localIrodsTransfer.getIrodsAbsolutePath(), this, true,
+					transferControlBlock);
+		} catch (JargonException je) {
+			log.error("exception in transfer will be marked as a global exception, ending the transfer operation");
+			transferException = je;
+		}
+		return transferException;
+
 	}
 
 	private void markTransferWasAborted(final LocalIRODSTransfer wrapUpTransfer)
@@ -437,7 +476,8 @@ final class IRODSLocalTransferEngine implements TransferStatusCallbackListener {
 	 * (org.irods.jargon.core.transfer.TransferStatus)
 	 */
 	@Override
-	public void statusCallback(final TransferStatus transferStatus) throws JargonException {
+	public void statusCallback(final TransferStatus transferStatus)
+			throws JargonException {
 
 		log.info("statusCallback: {}", transferStatus);
 
@@ -472,12 +512,6 @@ final class IRODSLocalTransferEngine implements TransferStatusCallbackListener {
 			final LocalIRODSTransferItem localIRODSTransferItem)
 			throws HibernateException, JargonException {
 
-		/*
-		 * TODO: temp shim....this is the simplest case to handle the new
-		 * RESTARTING callback, the code below can be reworked a bit when the
-		 * logging requirements are better understood during the 'seek to
-		 * restart' part of the operation. Right now, nothing is updated.
-		 */
 		if (transferStatus.getTransferState() == TransferStatus.TransferState.RESTARTING) {
 			log.debug("restarting:{}", transferStatus);
 			return;
@@ -521,7 +555,7 @@ final class IRODSLocalTransferEngine implements TransferStatusCallbackListener {
 			mergedTransfer.setTotalFilesTransferredSoFar(transferStatus
 					.getTotalFilesTransferredSoFar());
 
-			if (this.logSuccessfulTransfers) {
+			if (isLogSuccessfulTransfers()) {
 				updateItemRequired = true;
 			} else {
 				log.debug("transfer not logged in database");
@@ -535,7 +569,8 @@ final class IRODSLocalTransferEngine implements TransferStatusCallbackListener {
 		if (updateItemRequired) {
 			localIRODSTransferItem.setLocalIRODSTransfer(mergedTransfer);
 			log.info("updating transfer item:", localIRODSTransferItem);
-			transferManager.getTransferQueueService().addItemToTransfer(mergedTransfer, localIRODSTransferItem);
+			transferManager.getTransferQueueService().addItemToTransfer(
+					mergedTransfer, localIRODSTransferItem);
 		}
 
 		log.info("final merged transfer:{}", mergedTransfer);
@@ -564,11 +599,16 @@ final class IRODSLocalTransferEngine implements TransferStatusCallbackListener {
 	}
 
 	public boolean isLogSuccessfulTransfers() {
-		return logSuccessfulTransfers;
+		boolean logSuccessful = false;
+		if (transferEngineConfigurationProperties != null) {
+			logSuccessful = transferEngineConfigurationProperties
+					.isLogSuccessfulTransfers();
+		}
+		return logSuccessful;
 	}
 
 	@Override
-	public void overallStatusCallback(TransferStatus transferStatus)
+	public void overallStatusCallback(final TransferStatus transferStatus)
 			throws JargonException {
 		log.info("overall status callback:{}", transferStatus);
 		transferManager.notifyOverallStatusUpdate(transferStatus);

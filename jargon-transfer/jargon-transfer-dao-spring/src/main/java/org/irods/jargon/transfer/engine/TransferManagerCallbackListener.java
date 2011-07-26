@@ -4,7 +4,7 @@ import org.irods.jargon.core.transfer.TransferStatusCallbackListener;
 
 /**
  * Interface to be implemented by a listener that will receive callbacks on the overall status of the
- * <code>TransferManager</code>. An example use-case would be a GUI interface that wants to present icons that depict
+ * <code>TransferManager</code>, as well as callbacks issued by the underlying Jargon transfer process. An example use-case would be a GUI interface that wants to present icons that depict
  * the real-time status of the transfer engine.
  * 
  * @author Mike Conway - DICE (www.irods.org)

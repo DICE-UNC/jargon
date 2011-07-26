@@ -15,7 +15,7 @@ import org.irods.jargon.core.exception.JargonException;
 public final class TransferStatus {
 
 	public enum TransferType {
-		PUT, GET, REPLICATE, COPY
+		PUT, GET, REPLICATE, COPY, SYNCH
 	}
 
 	/***
@@ -31,6 +31,7 @@ public final class TransferStatus {
 
 	private final TransferState transferState;
 	private final TransferType transferType;
+	private final TransferType transferEnclosingType;
 	private final String sourceFileAbsolutePath;
 	private final String targetFileAbsolutePath;
 	private final String targetResource;
@@ -76,7 +77,36 @@ public final class TransferStatus {
 			final int totalFilesToTransfer, final TransferState transferState)
 			throws JargonException {
 
-		return new TransferStatus(transferType, sourceFileAbsolutePath,
+		return new TransferStatus(transferType, null, sourceFileAbsolutePath,
+				targetFileAbsolutePath, targetResource, totalSize,
+				bytesTransfered, totalFilesTransferredSoFar,
+				totalFilesToTransfer, transferState, null, false);
+
+	}
+	
+	/**
+	 * Create a callback for a step in a synchronization process
+	 * @param transferType
+	 * @param sourceFileAbsolutePath
+	 * @param targetFileAbsolutePath
+	 * @param targetResource
+	 * @param totalSize
+	 * @param bytesTransfered
+	 * @param totalFilesTransferredSoFar
+	 * @param totalFilesToTransfer
+	 * @param transferState
+	 * @return
+	 * @throws JargonException
+	 */
+	public static TransferStatus instanceForSynch(final TransferType transferType,
+			final String sourceFileAbsolutePath,
+			final String targetFileAbsolutePath, final String targetResource,
+			final long totalSize, final long bytesTransfered,
+			final int totalFilesTransferredSoFar,
+			final int totalFilesToTransfer, final TransferState transferState)
+			throws JargonException {
+
+		return new TransferStatus(transferType, TransferType.SYNCH, sourceFileAbsolutePath,
 				targetFileAbsolutePath, targetResource, totalSize,
 				bytesTransfered, totalFilesTransferredSoFar,
 				totalFilesToTransfer, transferState, null, false);
@@ -115,7 +145,7 @@ public final class TransferStatus {
 			final int totalFilesTransferredSoFar, final int totalFilesToTransfer)
 			throws JargonException {
 
-		return new TransferStatus(transferType, sourceFileAbsolutePath,
+		return new TransferStatus(transferType, null, sourceFileAbsolutePath,
 				targetFileAbsolutePath, targetResource, totalSize,
 				bytesTransfered, totalFilesTransferredSoFar,
 				totalFilesToTransfer, TransferState.IN_PROGRESS, null, true);
@@ -159,7 +189,37 @@ public final class TransferStatus {
 			final int totalFilesToTransfer, final Exception exception)
 			throws JargonException {
 
-		return new TransferStatus(transferType, sourceFileAbsolutePath,
+		return new TransferStatus(transferType, null, sourceFileAbsolutePath,
+				targetFileAbsolutePath, targetResource, totalSize,
+				bytesTransfered, totalFilesTransferredSoFar,
+				totalFilesToTransfer, TransferState.FAILURE, exception, false);
+
+	}
+	
+	/**
+	 * Create an instance of a status call-back for an exception during a synchronization process
+	 * @param transferType
+	 * @param sourceFileAbsolutePath
+	 * @param targetFileAbsolutePath
+	 * @param targetResource
+	 * @param totalSize
+	 * @param bytesTransfered
+	 * @param totalFilesTransferredSoFar
+	 * @param totalFilesToTransfer
+	 * @param exception
+	 * @return
+	 * @throws JargonException
+	 */
+	public static TransferStatus instanceForExceptionForSynch(
+			final TransferType transferType,
+			final String sourceFileAbsolutePath,
+			final String targetFileAbsolutePath, final String targetResource,
+			final long totalSize, final long bytesTransfered,
+			final int totalFilesTransferredSoFar,
+			final int totalFilesToTransfer, final Exception exception)
+			throws JargonException {
+
+		return new TransferStatus(transferType, TransferType.SYNCH, sourceFileAbsolutePath,
 				targetFileAbsolutePath, targetResource, totalSize,
 				bytesTransfered, totalFilesTransferredSoFar,
 				totalFilesToTransfer, TransferState.FAILURE, exception, false);
@@ -174,6 +234,12 @@ public final class TransferStatus {
 		sb.append(transferState);
 		sb.append("\n   transferType:");
 		sb.append(transferType);
+		
+		if (transferEnclosingType != null) {
+			sb.append("\n  enclosed by transfer type:");
+			sb.append(transferEnclosingType);
+		}
+		
 		sb.append("\n   sourceFileAbsolutePath:");
 		sb.append(sourceFileAbsolutePath);
 		sb.append("\n   targetFileAbsolutePath:");
@@ -197,6 +263,7 @@ public final class TransferStatus {
 
 	/**
 	 * @param transferType
+	 * @param transferEnclosingType
 	 * @param sourceFileAbsolutePath
 	 * @param targetFileAbsolutePath
 	 * @param targetResource
@@ -209,7 +276,7 @@ public final class TransferStatus {
 	 * @param intraFileStatusReport
 	 * @throws JargonException
 	 */
-	private TransferStatus(final TransferType transferType,
+	private TransferStatus(final TransferType transferType, final TransferType transferEnclosingType,
 			final String sourceFileAbsolutePath,
 			final String targetFileAbsolutePath, final String targetResource,
 			final long totalSize, final long bytesTransferred,
@@ -257,6 +324,7 @@ public final class TransferStatus {
 		}
 
 		this.transferType = transferType;
+		this.transferEnclosingType = transferEnclosingType;
 		this.sourceFileAbsolutePath = sourceFileAbsolutePath;
 		this.targetFileAbsolutePath = targetFileAbsolutePath;
 		this.targetResource = targetResource;
@@ -312,6 +380,10 @@ public final class TransferStatus {
 
 	public boolean isIntraFileStatusReport() {
 		return intraFileStatusReport;
+	}
+
+	public TransferType getTransferEnclosingType() {
+		return transferEnclosingType;
 	}
 
 }

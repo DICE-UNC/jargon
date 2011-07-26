@@ -7,10 +7,13 @@ import java.util.Enumeration;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.exception.JargonRuntimeException;
 import org.irods.jargon.core.pub.DataTransferOperations;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry;
 import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry.ObjectType;
+import org.irods.jargon.core.transfer.TransferControlBlock;
+import org.irods.jargon.core.transfer.TransferStatus;
 import org.irods.jargon.core.transfer.TransferStatusCallbackListener;
 import org.irods.jargon.datautils.tree.FileTreeDiffEntry;
 import org.irods.jargon.datautils.tree.FileTreeDiffEntry.DiffType;
@@ -40,9 +43,12 @@ public class InPlaceSynchronizingDiffProcessorImpl implements
 
 	private IRODSAccessObjectFactory irodsAccessObjectFactory;
 	private TransferManager transferManager;
-	private DataTransferOperations dataTransferOperations;
+	private transient DataTransferOperations dataTransferOperations;
 	private TransferStatusCallbackListener callbackListener;
 	private IRODSAccount irodsAccount;
+	private TransferControlBlock transferControlBlock;
+
+	public static final String SLASH = "/";
 
 	private static final Logger log = LoggerFactory
 			.getLogger(InPlaceSynchronizingDiffProcessorImpl.class);
@@ -81,13 +87,15 @@ public class InPlaceSynchronizingDiffProcessorImpl implements
 		this.transferManager = transferManager;
 	}
 
-	/**
-	 * Default constructor, expects setting of dependencies by injection
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.transfer.synch.SynchronizingDiffProcessor#processDiff
+	 * (org.irods.jargon.transfer.dao.domain.LocalIRODSTransfer,
+	 * org.irods.jargon.datautils.tree.FileTreeModel)
 	 */
-	public InPlaceSynchronizingDiffProcessorImpl() {
-
-	}
-
 	@Override
 	public void processDiff(final LocalIRODSTransfer localIRODSTransfer,
 			final FileTreeModel diffModel) throws TransferEngineException {
@@ -111,45 +119,120 @@ public class InPlaceSynchronizingDiffProcessorImpl implements
 
 		checkContracts();
 
+		final Synchronization synchronization = localIRODSTransfer
+				.getSynchronization();
+
+		String calculatedLocalRoot = "";
+		if (synchronization.getLocalSynchDirectory().length() > 1) {
+			if (synchronization.getLocalSynchDirectory().lastIndexOf(SLASH) == synchronization
+					.getLocalSynchDirectory().length() - 1) {
+				log.debug("removing a trailing slash from local absolute path");
+				calculatedLocalRoot = synchronization.getLocalSynchDirectory()
+						.substring(
+								0,
+								synchronization.getLocalSynchDirectory()
+										.length() - 1);
+			} else {
+				calculatedLocalRoot = synchronization.getLocalSynchDirectory();
+			}
+		}
+
+		String calculatedIrodsRoot = "";
+		if (synchronization.getIrodsSynchDirectory().length() > 1) {
+			if (synchronization.getIrodsSynchDirectory().lastIndexOf(SLASH) == synchronization
+					.getIrodsSynchDirectory().length() - 1) {
+				log.debug("removing a trailing slash from irods absolute path");
+				calculatedIrodsRoot = synchronization.getIrodsSynchDirectory()
+						.substring(
+								0,
+								synchronization.getIrodsSynchDirectory()
+										.length() - 1);
+			} else {
+				calculatedIrodsRoot = synchronization.getIrodsSynchDirectory();
+			}
+		}
+
 		if (dataTransferOperations == null) {
 			try {
 				dataTransferOperations = irodsAccessObjectFactory
 						.getDataTransferOperations(irodsAccount);
-			} catch (JargonException e) {
+				processDiffWithValidData(diffModel,
+						calculatedLocalRoot, calculatedIrodsRoot);
+			} catch (Exception e) {
 				log.error("exception creating dataTransferOperations", e);
-				throw new TransferEngineException(e);
+
+				if (callbackListener == null) {
+					throw new TransferEngineException(
+							"error occurred in synch, no status callback listener was specified",
+							e);
+			
+				} else {
+				
+					
+					try {
+						final TransferStatus transferStatus = TransferStatus
+								.instanceForExceptionForSynch(
+										TransferStatus.TransferType.SYNCH,
+										localIRODSTransfer
+												.getLocalAbsolutePath(),
+										localIRODSTransfer
+												.getIrodsAbsolutePath(),
+										localIRODSTransfer
+												.getTransferResource(), 0L, 0L,
+										0, 0, e);
+						callbackListener.statusCallback(transferStatus);
+					} catch (JargonException e1) {
+						log.error("error building transfer status", e1);
+						throw new JargonRuntimeException(
+								"exception building transfer status", e1);
+					}
+				}
 			}
 		}
-
-		processDiffWithValidData(localIRODSTransfer, diffModel);
 
 	}
 
 	/**
+	 * 
 	 * Do the actual diff processing, since contracts and dependencies have all
-	 * been validated
+	 * been validated. Note that the calculated paths below should have trailing
+	 * slash characters trimmed so that relative paths can be computed
+	 * correctly.
 	 * 
 	 * @param localIRODSTransfer
-	 * @param irodsAccount
+	 *            {@link LocalIRODSTransfer} with data for synch
 	 * @param diffModel
-	 * @throws TransferEngineException
+	 *            {@link FileTreeModel} that contains a diff tree to process
+	 * @param calculatedLocalRoot
+	 *            <code>String</code> with the calculated local root path, this
+	 *            is used to calculate relative paths for the descending diff
+	 * @param calculatedIrodsRoot
+	 *            <code>String</code> with the calculated iRODS root path, this
+	 *            is used to calculate relative paths for the descending diff
+	 * 
 	 */
 	private void processDiffWithValidData(
-			final LocalIRODSTransfer localIRODSTransfer,
-			final FileTreeModel diffModel) throws TransferEngineException {
+			final FileTreeModel diffModel, final String calculatedLocalRoot,
+			final String calculatedIrodsRoot) throws TransferEngineException {
 
 		log.info("processDiffWithValidData");
 		log.info("difModel:{}", diffModel);
-		Synchronization synchronization = localIRODSTransfer
-				.getSynchronization();
 
-		processDiff((FileTreeNode) diffModel.getRoot(),
-				synchronization.getLocalSynchDirectory(),
-				synchronization.getIrodsSynchDirectory(), 0, 0);
+		processDiff((FileTreeNode) diffModel.getRoot(), calculatedLocalRoot,
+				calculatedIrodsRoot, 0, 0);
 
 	}
 
-	// given a tree model, do any necessary operations to synchronize
+	/**
+	 * Recursive method to process a difference node and its children
+	 * 
+	 * @param diffNode
+	 * @param localRootAbsolutePath
+	 * @param irodsRootAbsolutePath
+	 * @param timestampforLastSynchLeftHandSide
+	 * @param timestampForLastSynchRightHandSide
+	 * @throws TransferEngineException
+	 */
 	private void processDiff(final FileTreeNode diffNode,
 			final String localRootAbsolutePath,
 			final String irodsRootAbsolutePath,
@@ -157,25 +240,42 @@ public class InPlaceSynchronizingDiffProcessorImpl implements
 			final long timestampForLastSynchRightHandSide)
 			throws TransferEngineException {
 
-		FileTreeDiffEntry fileTreeDiffEntry = (FileTreeDiffEntry) diffNode
+		if (transferControlBlock.isCancelled()
+				|| transferControlBlock.isPaused()) {
+			log.info("cancelling...");
+			return;
+		}
+
+		final FileTreeDiffEntry fileTreeDiffEntry = (FileTreeDiffEntry) diffNode
 				.getUserObject();
 
 		log.debug("processing diff node:{}", fileTreeDiffEntry);
 
+		processDiffNode(diffNode, localRootAbsolutePath, irodsRootAbsolutePath,
+				timestampforLastSynchLeftHandSide,
+				timestampForLastSynchRightHandSide, fileTreeDiffEntry);
+
+	}
+
+	/**
+	 * @param diffNode
+	 * @param localRootAbsolutePath
+	 * @param irodsRootAbsolutePath
+	 * @param timestampforLastSynchLeftHandSide
+	 * @param timestampForLastSynchRightHandSide
+	 * @param fileTreeDiffEntry
+	 * @throws TransferEngineException
+	 */
+	private void processDiffNode(final FileTreeNode diffNode,
+			final String localRootAbsolutePath,
+			final String irodsRootAbsolutePath,
+			final long timestampforLastSynchLeftHandSide,
+			final long timestampForLastSynchRightHandSide,
+			final FileTreeDiffEntry fileTreeDiffEntry) throws TransferEngineException {
 		if (fileTreeDiffEntry.getDiffType() == DiffType.DIRECTORY_NO_DIFF) {
-			log.debug("evaluating directory: {}", fileTreeDiffEntry
-					.getCollectionAndDataObjectListingEntry()
-					.getFormattedAbsolutePath());
-			FileTreeNode childNode;
-			@SuppressWarnings("rawtypes")
-			Enumeration children = diffNode.children();
-			while (children.hasMoreElements()) {
-				childNode = (FileTreeNode) children.nextElement();
-				processDiff(childNode, localRootAbsolutePath,
-						irodsRootAbsolutePath,
-						timestampforLastSynchLeftHandSide,
-						timestampForLastSynchRightHandSide);
-			}
+			evaluateDirectoryNode(diffNode, localRootAbsolutePath,
+					irodsRootAbsolutePath, timestampforLastSynchLeftHandSide,
+					timestampForLastSynchRightHandSide, fileTreeDiffEntry);
 		} else if (fileTreeDiffEntry.getDiffType() == DiffType.LEFT_HAND_PLUS) {
 			log.debug("local file is new directory {}", fileTreeDiffEntry
 					.getCollectionAndDataObjectListingEntry()
@@ -203,7 +303,43 @@ public class InPlaceSynchronizingDiffProcessorImpl implements
 		} else {
 			log.warn("unknown diff type:{}", fileTreeDiffEntry);
 		}
+	}
 
+	/**
+	 * @param diffNode
+	 * @param localRootAbsolutePath
+	 * @param irodsRootAbsolutePath
+	 * @param timestampforLastSynchLeftHandSide
+	 * @param timestampForLastSynchRightHandSide
+	 * @param fileTreeDiffEntry
+	 * @throws TransferEngineException
+	 */
+	private void evaluateDirectoryNode(final FileTreeNode diffNode,
+			final String localRootAbsolutePath,
+			final String irodsRootAbsolutePath,
+			final long timestampforLastSynchLeftHandSide,
+			final long timestampForLastSynchRightHandSide,
+			final FileTreeDiffEntry fileTreeDiffEntry) throws TransferEngineException {
+		log.debug("evaluating directory: {}", fileTreeDiffEntry
+				.getCollectionAndDataObjectListingEntry()
+				.getFormattedAbsolutePath());
+		FileTreeNode childNode;
+		@SuppressWarnings("rawtypes")
+		final Enumeration children = diffNode.children();
+		while (children.hasMoreElements()) {
+
+			if (transferControlBlock.isCancelled()
+					|| transferControlBlock.isPaused()) {
+				log.info("cancelling...");
+				break;
+			}
+
+			childNode = (FileTreeNode) children.nextElement();
+			processDiff(childNode, localRootAbsolutePath,
+					irodsRootAbsolutePath,
+					timestampforLastSynchLeftHandSide,
+					timestampForLastSynchRightHandSide);
+		}
 	}
 
 	private void scheduleIrodsToLocal(final FileTreeNode diffNode,
@@ -270,6 +406,7 @@ public class InPlaceSynchronizingDiffProcessorImpl implements
 				.getCollectionAndDataObjectListingEntry();
 
 		String targetRelativePath;
+		// FIXME: breaks right here
 		if (entry.getObjectType() == ObjectType.COLLECTION) {
 			targetRelativePath = entry.getParentPath().substring(
 					localRootAbsolutePath.length());
@@ -289,16 +426,46 @@ public class InPlaceSynchronizingDiffProcessorImpl implements
 			dataTransferOperations.putOperation(
 					entry.getFormattedAbsolutePath(), sb.toString(),
 					irodsAccount.getDefaultStorageResource(), callbackListener,
-					null);
-		} catch (JargonException e) {
+					transferControlBlock); // TODO: should this be a new TCB for
+											// each sub operation of a synch?
+		} catch (Exception e) {
+
 			log.error("error in put operation as part of synch", e);
-			throw new TransferEngineException(e);
+			transferControlBlock.reportErrorInTransfer();
+
+			if (callbackListener == null) {
+				throw new TransferEngineException(
+						"error occurred in synch, no status callback listener was specified",
+						e);
+				
+			} else {
+				try {
+					TransferStatus transferStatus = TransferStatus
+							.instanceForExceptionForSynch(
+									TransferStatus.TransferType.SYNCH,
+									entry.getFormattedAbsolutePath(),
+									sb.toString(),
+									irodsAccount.getDefaultStorageResource(),
+									0L, 0L, 0, 0, e);
+					callbackListener.statusCallback(transferStatus);
+				} catch (JargonException e1) {
+					log.error("error building transfer status", e1);
+					throw new JargonRuntimeException(
+							"exception building transfer status", e1);
+				}
+			}
+
 		}
 
 		log.info("put done");
 
 	}
 
+	/**
+	 * Ensure that required dependencies are present before doing operations.
+	 * 
+	 * @throws TransferEngineException
+	 */
 	private void checkContracts() throws TransferEngineException {
 
 		if (irodsAccessObjectFactory == null) {
@@ -314,6 +481,19 @@ public class InPlaceSynchronizingDiffProcessorImpl implements
 		if (irodsAccount == null) {
 			throw new TransferEngineException("irodsAccount has not been set");
 		}
+
+		if (transferControlBlock == null) {
+			throw new TransferEngineException("null transferControlBlock");
+		}
+	}
+
+	public TransferControlBlock getTransferControlBlock() {
+		return transferControlBlock;
+	}
+
+	public void setTransferControlBlock(
+			final TransferControlBlock transferControlBlock) {
+		this.transferControlBlock = transferControlBlock;
 	}
 
 }

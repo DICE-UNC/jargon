@@ -5,6 +5,7 @@ import java.io.File;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
+import org.irods.jargon.core.transfer.TransferControlBlock;
 import org.irods.jargon.core.transfer.TransferStatus;
 import org.irods.jargon.core.transfer.TransferStatusCallbackListener;
 import org.irods.jargon.datautils.synchproperties.SynchPropertiesService;
@@ -33,6 +34,8 @@ public class SynchronizeProcessorImpl implements SynchronizeProcessor, TransferS
 	private TransferManager transferManager;
 	private FileTreeDiffUtility fileTreeDiffUtility;
 	private SynchronizingDiffProcessor synchronizingDiffProcessor;
+	private TransferControlBlock transferControlBlock;
+	
 	private static final char SLASH = '/';
 
 	private static final Logger log = LoggerFactory
@@ -249,6 +252,10 @@ public class SynchronizeProcessorImpl implements SynchronizeProcessor, TransferS
 			throw new IllegalStateException(
 					"no synchronizingDiffProcessor was set");
 		}
+		
+		if (transferControlBlock == null) {
+			throw new IllegalStateException("no transferControlBlock was set");
+		}
 	}
 
 	@Override
@@ -274,6 +281,14 @@ public class SynchronizeProcessorImpl implements SynchronizeProcessor, TransferS
 			throws JargonException {
 		log.debug("overall status callback:{}", transferStatus);
 		
+	}
+
+	public TransferControlBlock getTransferControlBlock() {
+		return transferControlBlock;
+	}
+
+	public void setTransferControlBlock(TransferControlBlock transferControlBlock) {
+		this.transferControlBlock = transferControlBlock;
 	}
 
 }

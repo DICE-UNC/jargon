@@ -3,6 +3,7 @@ package org.irods.jargon.transfer.dao.spring;
 import java.util.List;
 
 import org.hibernate.Criteria;
+import org.hibernate.FetchMode;
 import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
 import org.hibernate.criterion.Order;
@@ -84,6 +85,7 @@ public class LocalIRODSTransferDAOImpl extends HibernateDaoSupport implements Lo
             Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(LocalIRODSTransfer.class);
             criteria.add(Restrictions.in("transferState", transferState));
             criteria.addOrder(Order.desc("transferStart"));
+            criteria.setFetchMode("synchronization", FetchMode.JOIN);
             return criteria.list();
         } catch (HibernateException e) {
             log.error("HibernateException", e);

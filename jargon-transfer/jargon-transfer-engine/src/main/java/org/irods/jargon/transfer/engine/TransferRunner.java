@@ -91,7 +91,7 @@ public class TransferRunner implements Runnable {
 		try {
 			irodsLocalTransferEngine = IRODSLocalTransferEngine.instance(
 					transferManager, transferControlBlock,
-					transferManager.isLogSuccessfulTransfers());
+					transferManager.getTransferEngineConfigurationProperties());
 		} catch (JargonException je) {
 			handleErrorCreatingTransferEngineInstance(transferQueueService, je);
 			return;

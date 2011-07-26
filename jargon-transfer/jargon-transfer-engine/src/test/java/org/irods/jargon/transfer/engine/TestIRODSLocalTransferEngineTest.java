@@ -87,7 +87,7 @@ public class TestIRODSLocalTransferEngineTest {
 		TransferControlBlock transferControlBlock = DefaultTransferControlBlock
 				.instance();
 		IRODSLocalTransferEngine irodsLocalTransferEngine = IRODSLocalTransferEngine
-				.getInstance(transferManager, transferControlBlock);
+				.instance(transferManager, transferControlBlock, null);
 		irodsFileSystem.close();
 		Assert.assertNotNull(
 				"no irodsLocalTransferEngine returned by initializer",
@@ -96,7 +96,7 @@ public class TestIRODSLocalTransferEngineTest {
 
 	@Test(expected = JargonException.class)
 	public void testInstanceNullTransferManager() throws Exception {
-		IRODSLocalTransferEngine.getInstance(null, null);
+		IRODSLocalTransferEngine.instance(null, null, null);
 	}
 
 	@Test
@@ -122,7 +122,7 @@ public class TestIRODSLocalTransferEngineTest {
 		TransferControlBlock transferControlBlock = DefaultTransferControlBlock
 				.instance();
 		IRODSLocalTransferEngine irodsLocalTransferEngine = IRODSLocalTransferEngine
-				.getInstance(transferManager, transferControlBlock);
+				.instance(transferManager, transferControlBlock, null);
 
 		TransferServiceFactoryImpl transferServiceFactory = new TransferServiceFactoryImpl();
 
@@ -177,7 +177,7 @@ public class TestIRODSLocalTransferEngineTest {
 		TransferControlBlock transferControlBlock = DefaultTransferControlBlock
 				.instance();
 		IRODSLocalTransferEngine irodsLocalTransferEngine = IRODSLocalTransferEngine
-				.getInstance(transferManager, transferControlBlock);
+				.instance(transferManager, transferControlBlock, null);
 
 		TransferServiceFactoryImpl transferServiceFactory = new TransferServiceFactoryImpl();
 
@@ -273,7 +273,7 @@ public class TestIRODSLocalTransferEngineTest {
 		TransferControlBlock transferControlBlock = DefaultTransferControlBlock
 				.instance();
 		IRODSLocalTransferEngine irodsLocalTransferEngine = IRODSLocalTransferEngine
-				.getInstance(transferManager, transferControlBlock);
+				.instance(transferManager, transferControlBlock, null);
 
 		TransferServiceFactoryImpl transferServiceFactory = new TransferServiceFactoryImpl();
 
@@ -319,7 +319,7 @@ public class TestIRODSLocalTransferEngineTest {
 		TransferControlBlock transferControlBlock = DefaultTransferControlBlock
 				.instance();
 		IRODSLocalTransferEngine irodsLocalTransferEngine = IRODSLocalTransferEngine
-				.getInstance(transferManager, transferControlBlock);
+				.instance(transferManager, transferControlBlock, null);
 
 		LocalIRODSTransfer enqueuedTransfer = new LocalIRODSTransfer();
 		enqueuedTransfer.setCreatedAt(new Date());
@@ -393,7 +393,7 @@ public class TestIRODSLocalTransferEngineTest {
 		TransferControlBlock transferControlBlock = DefaultTransferControlBlock
 				.instance();
 		IRODSLocalTransferEngine irodsLocalTransferEngine = IRODSLocalTransferEngine
-				.getInstance(transferManager, transferControlBlock);
+				.instance(transferManager, transferControlBlock, null);
 
 		LocalIRODSTransfer enqueuedTransfer = new LocalIRODSTransfer();
 		enqueuedTransfer.setCreatedAt(new Date());
@@ -485,7 +485,7 @@ public class TestIRODSLocalTransferEngineTest {
 		TransferControlBlock transferControlBlock = DefaultTransferControlBlock
 				.instance(lastPath);
 		IRODSLocalTransferEngine irodsLocalTransferEngine = IRODSLocalTransferEngine
-				.getInstance(transferManager, transferControlBlock);
+				.instance(transferManager, transferControlBlock, null);
 
 		// need to load this transfer to the database
 		LocalIRODSTransfer localIRODSTransfer = new LocalIRODSTransfer();
@@ -557,7 +557,7 @@ public class TestIRODSLocalTransferEngineTest {
 		TransferControlBlock transferControlBlock = DefaultTransferControlBlock
 				.instance();
 		IRODSLocalTransferEngine irodsLocalTransferEngine = IRODSLocalTransferEngine
-				.getInstance(transferManager, transferControlBlock);
+				.instance(transferManager, transferControlBlock, null);
 
 		// need to load this transfer to the database
 
@@ -623,7 +623,7 @@ public class TestIRODSLocalTransferEngineTest {
 		TransferControlBlock transferControlBlock = DefaultTransferControlBlock
 				.instance();
 		IRODSLocalTransferEngine irodsLocalTransferEngine = IRODSLocalTransferEngine
-				.getInstance(transferManager, transferControlBlock);
+				.instance(transferManager, transferControlBlock,null);
 
 		String localReturnedAbsolutePath = scratchFileUtils
 				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
@@ -690,7 +690,7 @@ public class TestIRODSLocalTransferEngineTest {
 		TransferControlBlock transferControlBlock = DefaultTransferControlBlock
 				.instance();
 		IRODSLocalTransferEngine irodsLocalTransferEngine = IRODSLocalTransferEngine
-				.getInstance(transferManager, transferControlBlock);
+				.instance(transferManager, transferControlBlock, null);
 
 		String localReturnedAbsolutePath = scratchFileUtils
 				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
