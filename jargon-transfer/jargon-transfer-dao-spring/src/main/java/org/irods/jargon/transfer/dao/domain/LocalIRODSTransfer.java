@@ -347,6 +347,5 @@ public class LocalIRODSTransfer implements Serializable {
         return sb.toString();
     }
 
-  
 
 }

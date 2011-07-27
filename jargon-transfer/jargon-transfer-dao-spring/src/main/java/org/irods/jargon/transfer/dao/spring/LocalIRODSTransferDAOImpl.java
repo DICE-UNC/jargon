@@ -112,6 +112,7 @@ public class LocalIRODSTransferDAOImpl extends HibernateDaoSupport implements Lo
             criteria.add(Restrictions.in("transferState", transferState));
             criteria.setMaxResults(maxResults);
             criteria.addOrder(Order.desc("transferStart"));
+            criteria.setFetchMode("synchronization", FetchMode.JOIN);
             return criteria.list();
 
         } catch (HibernateException e) {
@@ -138,6 +139,7 @@ public class LocalIRODSTransferDAOImpl extends HibernateDaoSupport implements Lo
         try {
             Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(LocalIRODSTransfer.class);
             criteria.add(Restrictions.in("transferStatus", transferStatus));
+            criteria.setFetchMode("synchronization", FetchMode.JOIN);
             criteria.setMaxResults(maxResults);
             criteria.addOrder(Order.desc("transferStart"));
             return criteria.list();
@@ -163,6 +165,7 @@ public class LocalIRODSTransferDAOImpl extends HibernateDaoSupport implements Lo
             Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(LocalIRODSTransfer.class);
             criteria.setMaxResults(maxResults);
             criteria.addOrder(Order.desc("transferStart"));
+            criteria.setFetchMode("synchronization", FetchMode.JOIN);
             return criteria.list();
         } catch (HibernateException e) {
             log.error("HibernateException", e);
@@ -185,6 +188,7 @@ public class LocalIRODSTransferDAOImpl extends HibernateDaoSupport implements Lo
         try {
             Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(LocalIRODSTransfer.class);
             criteria.addOrder(Order.desc("transferStart"));
+            criteria.setFetchMode("synchronization", FetchMode.JOIN);
             return criteria.list();
         } catch (HibernateException e) {
             log.error("HibernateException", e);
@@ -288,7 +292,6 @@ public class LocalIRODSTransferDAOImpl extends HibernateDaoSupport implements Lo
         logger.debug("entering delete()");
 
         try {
-
             this.getSessionFactory().getCurrentSession().delete(localIRODSTransfer);
         } catch (HibernateException e) {
             log.error("HibernateException", e);
