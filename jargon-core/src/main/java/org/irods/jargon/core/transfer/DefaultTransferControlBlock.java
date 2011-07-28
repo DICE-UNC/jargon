@@ -30,10 +30,10 @@ public class DefaultTransferControlBlock implements TransferControlBlock {
 	private static final Logger log = LoggerFactory
 			.getLogger(DefaultTransferControlBlock.class);
 
-	private final String restartAbsolutePath;
+	private String restartAbsolutePath = "";
 	private boolean cancelled = false;
 	private boolean restartHit = false;
-	private boolean paused = false;
+	private boolean paused = false; 
 	private int maximumErrorsBeforeCanceling = MAX_ERROR_DEFAULT;
 	private int errorCount = 0;
 	private int totalFilesToTransfer = 0;
@@ -50,8 +50,8 @@ public class DefaultTransferControlBlock implements TransferControlBlock {
 	 */
 	@Override
 	public synchronized void resetTransferData() {
-		cancelled = false;
 		restartHit = false;
+		restartAbsolutePath = "";
 		errorCount = 0;
 		totalFilesToTransfer = 0;
 		totalFilesTransferredSoFar = 0;

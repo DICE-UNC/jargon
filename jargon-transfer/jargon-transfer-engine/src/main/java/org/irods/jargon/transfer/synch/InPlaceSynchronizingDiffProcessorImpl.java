@@ -36,7 +36,7 @@ import org.slf4j.LoggerFactory;
  * 
  */
 public class InPlaceSynchronizingDiffProcessorImpl implements
-		SynchronizingDiffProcessor {
+		SynchronizingDiffProcessor, TransferStatusCallbackListener {
 
 	private IRODSAccessObjectFactory irodsAccessObjectFactory;
 	private TransferManager transferManager;
@@ -440,7 +440,7 @@ public class InPlaceSynchronizingDiffProcessorImpl implements
 			transferControlBlock.resetTransferData();
 			dataTransferOperations.putOperation(
 					entry.getFormattedAbsolutePath(), sb.toString(),
-					irodsAccount.getDefaultStorageResource(), callbackListener,
+					irodsAccount.getDefaultStorageResource(), this,
 					transferControlBlock);
 		} catch (Exception e) {
 
@@ -508,6 +508,22 @@ public class InPlaceSynchronizingDiffProcessorImpl implements
 	public void setTransferControlBlock(
 			final TransferControlBlock transferControlBlock) {
 		this.transferControlBlock = transferControlBlock;
+	}
+
+	@Override
+	public void statusCallback(TransferStatus transferStatus)
+			throws JargonException {
+		log.info("status callback at SynchDiffProcessor level:{}", transferStatus);
+		callbackListener.statusCallback(transferStatus);
+		
+	}
+
+	@Override
+	public void overallStatusCallback(TransferStatus transferStatus)
+			throws JargonException {
+		log.info("overall status callback at SynchDiffProcessor level:{}", transferStatus);
+		callbackListener.overallStatusCallback(transferStatus);
+		
 	}
 
 }
