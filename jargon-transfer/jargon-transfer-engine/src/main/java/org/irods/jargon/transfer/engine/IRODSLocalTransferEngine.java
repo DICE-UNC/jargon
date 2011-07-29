@@ -275,6 +275,8 @@ final class IRODSLocalTransferEngine implements TransferStatusCallbackListener {
 			synchronizeProcessorImpl
 					.setTransferControlBlock(transferControlBlock);
 			synchronizeProcessorImpl.setTransferManager(transferManager);
+			synchronizeProcessorImpl.setCallbackListener(this);
+			synchronizingDiffProcessor.setCallbackListener(synchronizeProcessorImpl);
 
 			log.info("synchronizeProcessor was built:{}",
 					synchronizeProcessorImpl);

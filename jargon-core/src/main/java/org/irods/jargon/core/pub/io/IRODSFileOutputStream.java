@@ -25,12 +25,19 @@ import org.slf4j.LoggerFactory;
  * @author Mike Conway - DICE (www.irods.org)
  * 
  */
-public final class IRODSFileOutputStream extends OutputStream {
+public class IRODSFileOutputStream extends OutputStream {
 
 	private Logger log = LoggerFactory.getLogger(this.getClass());
 
 	private final IRODSFile irodsFile;
 	private final FileIOOperations fileIOOperations;
+
+	/**
+	 * @return the fileIOOperations
+	 */
+	protected FileIOOperations getFileIOOperations() {
+		return fileIOOperations;
+	}
 
 	/**
 	 * Creates a <code>FileOuputStream</code> by opening a connection to an

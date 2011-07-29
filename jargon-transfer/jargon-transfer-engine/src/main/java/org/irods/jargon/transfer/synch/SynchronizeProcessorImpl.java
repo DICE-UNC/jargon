@@ -7,6 +7,8 @@ import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 import org.irods.jargon.core.transfer.TransferControlBlock;
 import org.irods.jargon.core.transfer.TransferStatus;
+import org.irods.jargon.core.transfer.TransferStatus.TransferState;
+import org.irods.jargon.core.transfer.TransferStatus.TransferType;
 import org.irods.jargon.core.transfer.TransferStatusCallbackListener;
 import org.irods.jargon.datautils.synchproperties.SynchPropertiesService;
 import org.irods.jargon.datautils.tree.FileTreeDiffUtility;
@@ -19,14 +21,17 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Compare a local watched folder to a remote iRODS folder and enqueue necessary
- * transfers to synchronize between the two.  This implementation is meant to plug into the
- * <code>TransferManager</code>, and SYNCH transfer processes will delegate to this class.
+ * transfers to synchronize between the two. This implementation is meant to
+ * plug into the <code>TransferManager</code>, and SYNCH transfer processes will
+ * delegate to this class.
  * 
- * TODO: do I need all of the depenencies in the interface?  Move to impl for consistency
+ * TODO: do I need all of the depenencies in the interface? Move to impl for
+ * consistency
  * 
- * @author Mike Conway - DICE (www.irods.org) 
+ * @author Mike Conway - DICE (www.irods.org)
  */
-public class SynchronizeProcessorImpl implements SynchronizeProcessor, TransferStatusCallbackListener {
+public class SynchronizeProcessorImpl implements SynchronizeProcessor,
+		TransferStatusCallbackListener {
 
 	private IRODSAccount irodsAccount;
 	private IRODSAccessObjectFactory irodsAccessObjectFactory;
@@ -35,7 +40,24 @@ public class SynchronizeProcessorImpl implements SynchronizeProcessor, TransferS
 	private FileTreeDiffUtility fileTreeDiffUtility;
 	private SynchronizingDiffProcessor synchronizingDiffProcessor;
 	private TransferControlBlock transferControlBlock;
-	
+	private TransferStatusCallbackListener callbackListener;
+
+	/**
+	 * @return the callbackListener
+	 */
+	public TransferStatusCallbackListener getCallbackListener() {
+		return callbackListener;
+	}
+
+	/**
+	 * @param callbackListener
+	 *            the callbackListener to set
+	 */
+	public void setCallbackListener(
+			TransferStatusCallbackListener callbackListener) {
+		this.callbackListener = callbackListener;
+	}
+
 	private static final char SLASH = '/';
 
 	private static final Logger log = LoggerFactory
@@ -45,15 +67,19 @@ public class SynchronizeProcessorImpl implements SynchronizeProcessor, TransferS
 		return synchronizingDiffProcessor;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.transfer.synch.SynchronizeProcessor#setSynchronizingDiffProcessor(org.irods.jargon.transfer.synch.SynchronizingDiffProcessor)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.transfer.synch.SynchronizeProcessor#
+	 * setSynchronizingDiffProcessor
+	 * (org.irods.jargon.transfer.synch.SynchronizingDiffProcessor)
 	 */
 	@Override
 	public void setSynchronizingDiffProcessor(
 			final SynchronizingDiffProcessor synchronizingDiffProcessor) {
 		this.synchronizingDiffProcessor = synchronizingDiffProcessor;
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -72,6 +98,13 @@ public class SynchronizeProcessorImpl implements SynchronizeProcessor, TransferS
 		checkInitialization();
 
 		processSynchGivenSynchMetadata(localIRODSTransfer, 0, 0);
+		
+		TransferStatus overallSynchStartStatus = TransferStatus.instance(
+				TransferType.SYNCH, localIRODSTransfer.getSynchronization().getLocalSynchDirectory(),
+				localIRODSTransfer.getSynchronization().getIrodsSynchDirectory(),
+				localIRODSTransfer.getSynchronization().getDefaultResourceName(), 0L, 0L, 0, 0,
+				TransferState.SYNCH_COMPLETION);
+		callbackListener.overallStatusCallback(overallSynchStartStatus);
 
 		/*
 		 * // look up the synch information stored in iRODS at the indicated
@@ -138,6 +171,22 @@ public class SynchronizeProcessorImpl implements SynchronizeProcessor, TransferS
 			}
 		}
 
+		// make an overall status callback that a synch is initiated
+		TransferStatus overallSynchStartStatus = TransferStatus.instance(
+				TransferType.SYNCH, synchronization.getLocalSynchDirectory(),
+				synchronization.getIrodsSynchDirectory(),
+				synchronization.getDefaultResourceName(), 0L, 0L, 0, 0,
+				TransferState.SYNCH_INITIALIZATION);
+		callbackListener.overallStatusCallback(overallSynchStartStatus);
+		
+		// make an overall status callback that a synch is initiated
+		 overallSynchStartStatus = TransferStatus.instance(
+				TransferType.SYNCH, synchronization.getLocalSynchDirectory(),
+				synchronization.getIrodsSynchDirectory(),
+				synchronization.getDefaultResourceName(), 0L, 0L, 0, 0,
+				TransferState.SYNCH_DIFF_GENERATION);
+		callbackListener.overallStatusCallback(overallSynchStartStatus);
+
 		// generate a diff between the lhs local directory and the rhs iRODS
 		// directory
 		FileTreeModel diffModel = fileTreeDiffUtility.generateDiffLocalToIRODS(
@@ -151,8 +200,15 @@ public class SynchronizeProcessorImpl implements SynchronizeProcessor, TransferS
 					"null diff model returned, cannot process");
 		}
 
-		synchronizingDiffProcessor.processDiff(localIRODSTransfer,
-				 diffModel);
+		// make an overall status callback that a synch is initiated
+		 overallSynchStartStatus = TransferStatus.instance(
+				TransferType.SYNCH, synchronization.getLocalSynchDirectory(),
+				synchronization.getIrodsSynchDirectory(),
+				synchronization.getDefaultResourceName(), 0L, 0L, 0, 0,
+				TransferState.SYNCH_DIFF_STEP);
+		callbackListener.overallStatusCallback(overallSynchStartStatus);
+		
+		synchronizingDiffProcessor.processDiff(localIRODSTransfer, diffModel);
 
 		log.debug("processing complete");
 	}
@@ -172,32 +228,46 @@ public class SynchronizeProcessorImpl implements SynchronizeProcessor, TransferS
 				synchDeviceName, irodsRootAbsolutePath);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.transfer.synch.SynchronizeProcessor#getIrodsAccount()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.transfer.synch.SynchronizeProcessor#getIrodsAccount()
 	 */
 	@Override
 	public IRODSAccount getIrodsAccount() {
 		return irodsAccount;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.transfer.synch.SynchronizeProcessor#setIrodsAccount(org.irods.jargon.core.connection.IRODSAccount)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.transfer.synch.SynchronizeProcessor#setIrodsAccount(
+	 * org.irods.jargon.core.connection.IRODSAccount)
 	 */
 	@Override
 	public void setIrodsAccount(final IRODSAccount irodsAccount) {
 		this.irodsAccount = irodsAccount;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.transfer.synch.SynchronizeProcessor#getIrodsAccessObjectFactory()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.transfer.synch.SynchronizeProcessor#
+	 * getIrodsAccessObjectFactory()
 	 */
 	@Override
 	public IRODSAccessObjectFactory getIrodsAccessObjectFactory() {
 		return irodsAccessObjectFactory;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.transfer.synch.SynchronizeProcessor#setIrodsAccessObjectFactory(org.irods.jargon.core.pub.IRODSAccessObjectFactory)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.transfer.synch.SynchronizeProcessor#
+	 * setIrodsAccessObjectFactory
+	 * (org.irods.jargon.core.pub.IRODSAccessObjectFactory)
 	 */
 	@Override
 	public void setIrodsAccessObjectFactory(
@@ -205,32 +275,47 @@ public class SynchronizeProcessorImpl implements SynchronizeProcessor, TransferS
 		this.irodsAccessObjectFactory = irodsAccessObjectFactory;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.transfer.synch.SynchronizeProcessor#getTransferManager()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.transfer.synch.SynchronizeProcessor#getTransferManager()
 	 */
 	@Override
 	public TransferManager getTransferManager() {
 		return transferManager;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.transfer.synch.SynchronizeProcessor#setTransferManager(org.irods.jargon.transfer.engine.TransferManager)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.transfer.synch.SynchronizeProcessor#setTransferManager
+	 * (org.irods.jargon.transfer.engine.TransferManager)
 	 */
 	@Override
 	public void setTransferManager(final TransferManager transferManager) {
 		this.transferManager = transferManager;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.transfer.synch.SynchronizeProcessor#getFileTreeDiffUtility()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.transfer.synch.SynchronizeProcessor#getFileTreeDiffUtility
+	 * ()
 	 */
 	@Override
 	public FileTreeDiffUtility getFileTreeDiffUtility() {
 		return fileTreeDiffUtility;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.transfer.synch.SynchronizeProcessor#setFileTreeDiffUtility(org.irods.jargon.datautils.tree.FileTreeDiffUtility)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.transfer.synch.SynchronizeProcessor#setFileTreeDiffUtility
+	 * (org.irods.jargon.datautils.tree.FileTreeDiffUtility)
 	 */
 	@Override
 	public void setFileTreeDiffUtility(
@@ -267,22 +352,29 @@ public class SynchronizeProcessorImpl implements SynchronizeProcessor, TransferS
 			throw new IllegalStateException(
 					"no synchronizingDiffProcessor was set");
 		}
-		
+
 		if (transferControlBlock == null) {
 			throw new IllegalStateException("no transferControlBlock was set");
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.transfer.synch.SynchronizeProcessor#getSynchPropertiesService()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.transfer.synch.SynchronizeProcessor#
+	 * getSynchPropertiesService()
 	 */
 	@Override
 	public SynchPropertiesService getSynchPropertiesService() {
 		return synchPropertiesService;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.transfer.synch.SynchronizeProcessor#setSynchPropertiesService(org.irods.jargon.datautils.synchproperties.SynchPropertiesService)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.transfer.synch.SynchronizeProcessor#
+	 * setSynchPropertiesService
+	 * (org.irods.jargon.datautils.synchproperties.SynchPropertiesService)
 	 */
 	@Override
 	public void setSynchPropertiesService(
@@ -290,31 +382,44 @@ public class SynchronizeProcessorImpl implements SynchronizeProcessor, TransferS
 		this.synchPropertiesService = synchPropertiesService;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.transfer.TransferStatusCallbackListener#statusCallback(org.irods.jargon.core.transfer.TransferStatus)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.transfer.TransferStatusCallbackListener#statusCallback
+	 * (org.irods.jargon.core.transfer.TransferStatus)
 	 */
 	@Override
 	public void statusCallback(TransferStatus transferStatus)
 			throws JargonException {
-		log.debug("status callback:{}", transferStatus);
-		
+		if (callbackListener != null) {
+			log.debug("overall status callback:{}", transferStatus);
+			callbackListener.statusCallback(transferStatus);
+		}
 	}
 
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.transfer.TransferStatusCallbackListener#overallStatusCallback(org.irods.jargon.core.transfer.TransferStatus)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.transfer.TransferStatusCallbackListener#
+	 * overallStatusCallback(org.irods.jargon.core.transfer.TransferStatus)
 	 */
 	@Override
 	public void overallStatusCallback(TransferStatus transferStatus)
 			throws JargonException {
-		log.debug("overall status callback:{}", transferStatus);
-		
+		if (callbackListener != null) {
+			log.debug("overall status callback:{}", transferStatus);
+			callbackListener.overallStatusCallback(transferStatus);
+		}
+
 	}
 
 	public TransferControlBlock getTransferControlBlock() {
 		return transferControlBlock;
 	}
 
-	public void setTransferControlBlock(TransferControlBlock transferControlBlock) {
+	public void setTransferControlBlock(
+			TransferControlBlock transferControlBlock) {
 		this.transferControlBlock = transferControlBlock;
 	}
 

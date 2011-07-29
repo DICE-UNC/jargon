@@ -266,4 +266,21 @@ public interface IRODSFileFactory {
 	 */
 	IRODSFileInputStream instanceIRODSFileInputStreamGivingFD(IRODSFile file,
 			int fd) throws JargonException;
+
+	/**
+	 * Create an instance of a
+	 * {@link org.irods.jargon.core.pub.io.SessionClosingIRODSFileOutputStream}.
+	 * This special output stream will close the underlying iRODS connection when
+	 * the stream is closed.
+	 * 
+	 * @param name
+	 *            {@link org.irods.jargon.core.pub.io.IRODSFile} with the iRODS
+	 *            file that will be opened and streamed.
+	 * @return{@link 
+	 *               org.irods.jargon.core.pub.io.SessionClosingIRODSFileInputStream
+	 *               }
+	 * @throws JargonException
+	 */
+	SessionClosingIRODSFileOutputStream instanceSessionClosingIRODSFileOutputStream(
+			IRODSFile file) throws JargonException;
 }

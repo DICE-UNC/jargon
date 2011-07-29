@@ -240,6 +240,43 @@ public final class IRODSFileFactoryImpl extends IRODSGenericAO implements
 			throw new JargonException(ioException);
 		}
 	}
+	
+	
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.core.pub.io.IRODSFileFactory#instanceSessionClosingIRODSFileOutputStream(org.irods.jargon.core.pub.io.IRODSFile)
+	 */
+	@Override
+	public SessionClosingIRODSFileOutputStream instanceSessionClosingIRODSFileOutputStream(
+			final IRODSFile file) throws JargonException {
+
+		log.info("instanceSessionClosingIRODSFileOutputStream");
+		if (file == null) {
+			throw new IllegalArgumentException("null irodsFile");
+		}
+		
+		FileIOOperations fileIOOperations = new FileIOOperationsAOImpl(
+				this.getIRODSSession(), this.getIRODSAccount());
+		try {
+			if (!file.exists()) {
+				log.info("file does not exist, creating a new file");
+				file.createNewFile();
+			} else if (!file.canWrite()) {
+				log.info("this file is not writeable by the current user {}",
+						file.getAbsolutePath());
+				throw new JargonException("file is not writeable:"
+						+ file.getAbsolutePath());
+			}
+
+			return new SessionClosingIRODSFileOutputStream(file, fileIOOperations);
+		} catch (FileNotFoundException e) {
+			log.error("FileNotFound creating output stream", e);
+			throw new JargonException(e);
+		} catch (IOException ioException) {
+			log.error("IOException creating output stream", ioException);
+			throw new JargonException(ioException);
+		}
+	}
+
 
 	/*
 	 * (non-Javadoc)
