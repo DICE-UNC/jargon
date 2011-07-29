@@ -20,6 +20,10 @@ public class SessionClosingIRODSFileOutputStreamTest {
 	public static final String IRODS_TEST_SUBDIR_PATH = "SessionClosingIRODSFileOutputStreamTest";
 	private static IRODSTestSetupUtilities irodsTestSetupUtilities = null;
 	private static IRODSFileSystem irodsFileSystem;
+	
+	public SessionClosingIRODSFileOutputStreamTest() {
+		
+	}
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {

@@ -50,27 +50,30 @@ public class InPlaceSynchronizingDiffProcessorImpl implements
 	private static final Logger log = LoggerFactory
 			.getLogger(InPlaceSynchronizingDiffProcessorImpl.class);
 
-	
 	public IRODSAccount getIrodsAccount() {
 		return irodsAccount;
 	}
 
 	/**
 	 * Required dependency
-	 * @param irodsAccount {@link IRODSAccount} for the given synch
+	 * 
+	 * @param irodsAccount
+	 *            {@link IRODSAccount} for the given synch
 	 */
 	public void setIrodsAccount(final IRODSAccount irodsAccount) {
 		this.irodsAccount = irodsAccount;
 	}
 
-	
 	public TransferStatusCallbackListener getCallbackListener() {
 		return callbackListener;
 	}
 
 	/**
 	 * Optional dependency
-	 * @param callbackListener {@link TransferStatusCallbackListener} implementation that can receive progress callbacks for transfers
+	 * 
+	 * @param callbackListener
+	 *            {@link TransferStatusCallbackListener} implementation that can
+	 *            receive progress callbacks for transfers
 	 */
 	public void setCallbackListener(
 			final TransferStatusCallbackListener callbackListener) {
@@ -83,7 +86,10 @@ public class InPlaceSynchronizingDiffProcessorImpl implements
 
 	/**
 	 * Required dependency
-	 * @param irodsAccessObjectFactory {@link IRODSAccessObjectFactory} that can create various iRODS accessing service objects
+	 * 
+	 * @param irodsAccessObjectFactory
+	 *            {@link IRODSAccessObjectFactory} that can create various iRODS
+	 *            accessing service objects
 	 */
 	public void setIrodsAccessObjectFactory(
 			final IRODSAccessObjectFactory irodsAccessObjectFactory) {
@@ -96,12 +102,14 @@ public class InPlaceSynchronizingDiffProcessorImpl implements
 
 	/**
 	 * Required dependency
-	 * @param transferManager {@link TransferManager} implementation that manages the transfer queue and operations
+	 * 
+	 * @param transferManager
+	 *            {@link TransferManager} implementation that manages the
+	 *            transfer queue and operations
 	 */
 	public void setTransferManager(final TransferManager transferManager) {
 		this.transferManager = transferManager;
 	}
-
 
 	/*
 	 * (non-Javadoc)
@@ -171,19 +179,13 @@ public class InPlaceSynchronizingDiffProcessorImpl implements
 			try {
 				dataTransferOperations = irodsAccessObjectFactory
 						.getDataTransferOperations(irodsAccount);
-				processDiffWithValidData(diffModel,
-						calculatedLocalRoot, calculatedIrodsRoot);
+				processDiffWithValidData(diffModel, calculatedLocalRoot,
+						calculatedIrodsRoot);
 			} catch (Exception e) {
 				log.error("exception creating dataTransferOperations", e);
 
-				if (callbackListener == null) {
-					throw new TransferEngineException(
-							"error occurred in synch, no status callback listener was specified",
-							e);
-			
-				} else {
-				
-					
+				if (callbackListener != null) {
+
 					try {
 						final TransferStatus transferStatus = TransferStatus
 								.instanceForExceptionForSynch(
@@ -226,9 +228,9 @@ public class InPlaceSynchronizingDiffProcessorImpl implements
 	 *            is used to calculate relative paths for the descending diff
 	 * 
 	 */
-	private void processDiffWithValidData(
-			final FileTreeModel diffModel, final String calculatedLocalRoot,
-			final String calculatedIrodsRoot) throws TransferEngineException {
+	private void processDiffWithValidData(final FileTreeModel diffModel,
+			final String calculatedLocalRoot, final String calculatedIrodsRoot)
+			throws TransferEngineException {
 
 		log.info("processDiffWithValidData");
 		log.info("difModel:{}", diffModel);
@@ -286,7 +288,8 @@ public class InPlaceSynchronizingDiffProcessorImpl implements
 			final String irodsRootAbsolutePath,
 			final long timestampforLastSynchLeftHandSide,
 			final long timestampForLastSynchRightHandSide,
-			final FileTreeDiffEntry fileTreeDiffEntry) throws TransferEngineException {
+			final FileTreeDiffEntry fileTreeDiffEntry)
+			throws TransferEngineException {
 		if (fileTreeDiffEntry.getDiffType() == DiffType.DIRECTORY_NO_DIFF) {
 			evaluateDirectoryNode(diffNode, localRootAbsolutePath,
 					irodsRootAbsolutePath, timestampforLastSynchLeftHandSide,
@@ -334,7 +337,8 @@ public class InPlaceSynchronizingDiffProcessorImpl implements
 			final String irodsRootAbsolutePath,
 			final long timestampforLastSynchLeftHandSide,
 			final long timestampForLastSynchRightHandSide,
-			final FileTreeDiffEntry fileTreeDiffEntry) throws TransferEngineException {
+			final FileTreeDiffEntry fileTreeDiffEntry)
+			throws TransferEngineException {
 		log.debug("evaluating directory: {}", fileTreeDiffEntry
 				.getCollectionAndDataObjectListingEntry()
 				.getFormattedAbsolutePath());
@@ -351,8 +355,7 @@ public class InPlaceSynchronizingDiffProcessorImpl implements
 
 			childNode = (FileTreeNode) children.nextElement();
 			processDiff(childNode, localRootAbsolutePath,
-					irodsRootAbsolutePath,
-					timestampforLastSynchLeftHandSide,
+					irodsRootAbsolutePath, timestampforLastSynchLeftHandSide,
 					timestampForLastSynchRightHandSide);
 		}
 	}
@@ -451,7 +454,7 @@ public class InPlaceSynchronizingDiffProcessorImpl implements
 				throw new TransferEngineException(
 						"error occurred in synch, no status callback listener was specified",
 						e);
-				
+
 			} else {
 				try {
 					TransferStatus transferStatus = TransferStatus
@@ -511,19 +514,25 @@ public class InPlaceSynchronizingDiffProcessorImpl implements
 	}
 
 	@Override
-	public void statusCallback(TransferStatus transferStatus)
+	public void statusCallback(final TransferStatus transferStatus)
 			throws JargonException {
-		log.info("status callback at SynchDiffProcessor level:{}", transferStatus);
-		callbackListener.statusCallback(transferStatus);
-		
+		if (callbackListener != null) {
+			log.info("status callback at SynchDiffProcessor level:{}",
+					transferStatus);
+			callbackListener.statusCallback(transferStatus);
+		}
+
 	}
 
 	@Override
-	public void overallStatusCallback(TransferStatus transferStatus)
+	public void overallStatusCallback(final TransferStatus transferStatus)
 			throws JargonException {
-		log.info("overall status callback at SynchDiffProcessor level:{}", transferStatus);
-		callbackListener.overallStatusCallback(transferStatus);
-		
+		if (callbackListener != null) {
+			log.info("overall status callback at SynchDiffProcessor level:{}",
+					transferStatus);
+			callbackListener.overallStatusCallback(transferStatus);
+		}
+
 	}
 
 }

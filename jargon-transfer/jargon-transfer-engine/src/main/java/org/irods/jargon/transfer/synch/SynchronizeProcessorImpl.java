@@ -54,7 +54,7 @@ public class SynchronizeProcessorImpl implements SynchronizeProcessor,
 	 *            the callbackListener to set
 	 */
 	public void setCallbackListener(
-			TransferStatusCallbackListener callbackListener) {
+			final TransferStatusCallbackListener callbackListener) {
 		this.callbackListener = callbackListener;
 	}
 
@@ -98,14 +98,17 @@ public class SynchronizeProcessorImpl implements SynchronizeProcessor,
 		checkInitialization();
 
 		processSynchGivenSynchMetadata(localIRODSTransfer, 0, 0);
-		
-		TransferStatus overallSynchStartStatus = TransferStatus.instance(
-				TransferType.SYNCH, localIRODSTransfer.getSynchronization().getLocalSynchDirectory(),
-				localIRODSTransfer.getSynchronization().getIrodsSynchDirectory(),
-				localIRODSTransfer.getSynchronization().getDefaultResourceName(), 0L, 0L, 0, 0,
-				TransferState.SYNCH_COMPLETION);
-		callbackListener.overallStatusCallback(overallSynchStartStatus);
 
+		if (callbackListener != null) {
+			TransferStatus overallSynchStartStatus = TransferStatus.instance(
+					TransferType.SYNCH, localIRODSTransfer.getSynchronization()
+							.getLocalSynchDirectory(), localIRODSTransfer
+							.getSynchronization().getIrodsSynchDirectory(),
+					localIRODSTransfer.getSynchronization()
+							.getDefaultResourceName(), 0L, 0L, 0, 0,
+					TransferState.SYNCH_COMPLETION);
+			callbackListener.overallStatusCallback(overallSynchStartStatus);
+		}
 		/*
 		 * // look up the synch information stored in iRODS at the indicated
 		 * root // path UserSynchTarget userSynchTarget = synchPropertiesService
@@ -171,21 +174,28 @@ public class SynchronizeProcessorImpl implements SynchronizeProcessor,
 			}
 		}
 
+		if (callbackListener != null) {
+			// make an overall status callback that a synch is initiated
+			TransferStatus overallSynchStartStatus = TransferStatus.instance(
+					TransferType.SYNCH,
+					synchronization.getLocalSynchDirectory(),
+					synchronization.getIrodsSynchDirectory(),
+					synchronization.getDefaultResourceName(), 0L, 0L, 0, 0,
+					TransferState.SYNCH_INITIALIZATION);
+			callbackListener.overallStatusCallback(overallSynchStartStatus);
+		}
+
 		// make an overall status callback that a synch is initiated
-		TransferStatus overallSynchStartStatus = TransferStatus.instance(
-				TransferType.SYNCH, synchronization.getLocalSynchDirectory(),
-				synchronization.getIrodsSynchDirectory(),
-				synchronization.getDefaultResourceName(), 0L, 0L, 0, 0,
-				TransferState.SYNCH_INITIALIZATION);
-		callbackListener.overallStatusCallback(overallSynchStartStatus);
-		
-		// make an overall status callback that a synch is initiated
-		 overallSynchStartStatus = TransferStatus.instance(
-				TransferType.SYNCH, synchronization.getLocalSynchDirectory(),
-				synchronization.getIrodsSynchDirectory(),
-				synchronization.getDefaultResourceName(), 0L, 0L, 0, 0,
-				TransferState.SYNCH_DIFF_GENERATION);
-		callbackListener.overallStatusCallback(overallSynchStartStatus);
+		if (callbackListener != null) {
+
+			TransferStatus overallSynchStartStatus = TransferStatus.instance(
+					TransferType.SYNCH,
+					synchronization.getLocalSynchDirectory(),
+					synchronization.getIrodsSynchDirectory(),
+					synchronization.getDefaultResourceName(), 0L, 0L, 0, 0,
+					TransferState.SYNCH_DIFF_GENERATION);
+			callbackListener.overallStatusCallback(overallSynchStartStatus);
+		}
 
 		// generate a diff between the lhs local directory and the rhs iRODS
 		// directory
@@ -201,13 +211,17 @@ public class SynchronizeProcessorImpl implements SynchronizeProcessor,
 		}
 
 		// make an overall status callback that a synch is initiated
-		 overallSynchStartStatus = TransferStatus.instance(
-				TransferType.SYNCH, synchronization.getLocalSynchDirectory(),
-				synchronization.getIrodsSynchDirectory(),
-				synchronization.getDefaultResourceName(), 0L, 0L, 0, 0,
-				TransferState.SYNCH_DIFF_STEP);
-		callbackListener.overallStatusCallback(overallSynchStartStatus);
-		
+		if (callbackListener != null) {
+
+			TransferStatus overallSynchStartStatus = TransferStatus.instance(
+					TransferType.SYNCH,
+					synchronization.getLocalSynchDirectory(),
+					synchronization.getIrodsSynchDirectory(),
+					synchronization.getDefaultResourceName(), 0L, 0L, 0, 0,
+					TransferState.SYNCH_DIFF_STEP);
+			callbackListener.overallStatusCallback(overallSynchStartStatus);
+		}
+
 		synchronizingDiffProcessor.processDiff(localIRODSTransfer, diffModel);
 
 		log.debug("processing complete");
@@ -390,7 +404,7 @@ public class SynchronizeProcessorImpl implements SynchronizeProcessor,
 	 * (org.irods.jargon.core.transfer.TransferStatus)
 	 */
 	@Override
-	public void statusCallback(TransferStatus transferStatus)
+	public void statusCallback(final TransferStatus transferStatus)
 			throws JargonException {
 		if (callbackListener != null) {
 			log.debug("overall status callback:{}", transferStatus);
@@ -405,7 +419,7 @@ public class SynchronizeProcessorImpl implements SynchronizeProcessor,
 	 * overallStatusCallback(org.irods.jargon.core.transfer.TransferStatus)
 	 */
 	@Override
-	public void overallStatusCallback(TransferStatus transferStatus)
+	public void overallStatusCallback(final TransferStatus transferStatus)
 			throws JargonException {
 		if (callbackListener != null) {
 			log.debug("overall status callback:{}", transferStatus);
@@ -419,7 +433,7 @@ public class SynchronizeProcessorImpl implements SynchronizeProcessor,
 	}
 
 	public void setTransferControlBlock(
-			TransferControlBlock transferControlBlock) {
+			final TransferControlBlock transferControlBlock) {
 		this.transferControlBlock = transferControlBlock;
 	}
 
