@@ -85,17 +85,30 @@ public final class TransferStatus {
 	}
 
 	/**
-	 * Create a callback for a step in a synchronization process
+	 * Create a callback for a step in a synchronization process.
 	 * 
 	 * @param transferType
+	 *            <code>TransferType</code> that indicates the type of transfer
 	 * @param sourceFileAbsolutePath
+	 *            <code>String</code> absolute path to the source file
 	 * @param targetFileAbsolutePath
+	 *            <code>String</code> absolute path to the target file
 	 * @param targetResource
+	 *            <code>String</code> with an optional resource, set to blank if
+	 *            unused.
 	 * @param totalSize
+	 *            <code>long</code> with the total size of the file
 	 * @param bytesTransfered
+	 *            <code>long</code> with the total transferred so far, which is
+	 *            some fraction of the total size
 	 * @param totalFilesTransferredSoFar
+	 *            <code>int<code> with the total files transferred, including this status callback
 	 * @param totalFilesToTransfer
+	 *            <code>int</code> with the total files involved in this
+	 *            operation
 	 * @param transferState
+	 *            <code>TransferState</code> indicating whether the transfer is
+	 *            ongoing or has completed
 	 * @return
 	 * @throws JargonException
 	 */
@@ -266,6 +279,7 @@ public final class TransferStatus {
 	}
 
 	/**
+	 * Private constructor, use the static instance methods.
 	 * @param transferType
 	 * @param transferEnclosingType
 	 * @param sourceFileAbsolutePath

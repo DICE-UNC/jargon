@@ -400,7 +400,7 @@ public class InPlaceSynchronizingDiffProcessorImpl implements
 
 	/**
 	 * the node is a local file/collection that needs to be scheduled to move to
-	 * irods
+	 * iRODS
 	 * 
 	 * @param diffNode
 	 * @param localRootAbsolutePath
@@ -528,9 +528,22 @@ public class InPlaceSynchronizingDiffProcessorImpl implements
 	public void overallStatusCallback(final TransferStatus transferStatus)
 			throws JargonException {
 		if (callbackListener != null) {
-			log.info("overall status callback at SynchDiffProcessor level:{}",
+			log.info(
+					"wrap overall status callback at SynchDiffProcessor level:{}",
 					transferStatus);
-			callbackListener.overallStatusCallback(transferStatus);
+
+			TransferStatus newStatus = TransferStatus.instanceForSynch(
+					transferStatus.getTransferType(),
+					transferStatus.getSourceFileAbsolutePath(),
+					transferStatus.getTargetFileAbsolutePath(),
+					transferStatus.getTargetResource(),
+					transferStatus.getTotalSize(),
+					transferStatus.getBytesTransfered(),
+					transferStatus.getTotalFilesTransferredSoFar(),
+					transferStatus.getTotalFilesToTransfer(),
+					transferStatus.getTransferState());
+
+			callbackListener.overallStatusCallback(newStatus);
 		}
 
 	}

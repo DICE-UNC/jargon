@@ -11,13 +11,16 @@ import junit.framework.TestCase;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.pub.IRODSFileSystem;
 import org.irods.jargon.core.pub.io.IRODSFile;
+import org.irods.jargon.core.transfer.TransferStatus;
 import org.irods.jargon.datautils.tree.FileTreeDiffUtility;
 import org.irods.jargon.datautils.tree.FileTreeDiffUtilityImpl;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.irods.jargon.testutils.filemanip.FileGenerator;
 import org.irods.jargon.transfer.dao.domain.FrequencyType;
+import org.irods.jargon.transfer.dao.domain.LocalIRODSTransfer;
 import org.irods.jargon.transfer.dao.domain.Synchronization;
 import org.irods.jargon.transfer.dao.domain.SynchronizationType;
+import org.irods.jargon.transfer.dao.domain.TransferState;
 import org.irods.jargon.transfer.engine.synch.SynchManagerService;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -140,6 +143,13 @@ public class TransferManagerForSynchTest {
 				irodsCollectionRootAbsolutePath, 0L, 0L);
 
 		Assert.assertTrue("diffs found after synch", noDiffs);
+		
+		
+		List<LocalIRODSTransfer> transfers = transferManager.getRecentQueue();
+		TestCase.assertNotNull("no transfers in queue", transfers);
+		TestCase.assertEquals("expected one transfer", 1, transfers.size());
+		LocalIRODSTransfer actualTransfer = transfers.get(0);
+		TestCase.assertEquals("did not set to complete", TransferState.COMPLETE, actualTransfer.getTransferState());
 
 	}
 	

@@ -11,7 +11,6 @@ import org.irods.jargon.core.pub.io.IRODSFileWriterTest;
 import org.irods.jargon.core.pub.io.IRODSRandomAccessFileTest;
 import org.irods.jargon.core.pub.io.RemoteExecutionBinaryResultInputStreamTest;
 import org.irods.jargon.core.pub.io.SessionClosingIRODSFIleInputStreamTest;
-import org.irods.jargon.core.pub.io.SessionClosingIRODSFileOutputStream;
 import org.irods.jargon.core.pub.io.SessionClosingIRODSFileOutputStreamTest;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
@@ -22,7 +21,8 @@ import org.junit.runners.Suite;
 		IRODSFIleInputStreamTest.class, FileIOOperationsAOImplTest.class,
 		IRODSRandomAccessFileTest.class, IRODSFileWriterTest.class,
 		IRODSFileReaderTest.class,
-		SessionClosingIRODSFIleInputStreamTest.class, SessionClosingIRODSFileOutputStreamTest.class,
+		SessionClosingIRODSFIleInputStreamTest.class,
+		SessionClosingIRODSFileOutputStreamTest.class,
 		RemoteExecutionBinaryResultInputStreamTest.class })
 public class FileTests {
 

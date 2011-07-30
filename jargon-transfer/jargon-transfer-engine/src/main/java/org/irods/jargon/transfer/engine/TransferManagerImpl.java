@@ -569,7 +569,7 @@ public final class TransferManagerImpl implements TransferManager {
 	 * org.irods.jargon.core.connection.IRODSAccount)
 	 */
 	@Override
-	public synchronized void enqueueASynch(
+	public  void enqueueASynch(
 			final Synchronization synchronization,
 			final IRODSAccount irodsAccount) throws JargonException {
 

@@ -35,7 +35,6 @@ public class IRODSRandomAccessFileTest {
 	private static org.irods.jargon.testutils.filemanip.ScratchFileUtils scratchFileUtils = null;
 	public static final String IRODS_TEST_SUBDIR_PATH = "IRODSRandomAccessFileTest";
 	private static org.irods.jargon.testutils.IRODSTestSetupUtilities irodsTestSetupUtilities = null;
-	private static org.irods.jargon.testutils.AssertionHelper assertionHelper = null;
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -47,7 +46,6 @@ public class IRODSRandomAccessFileTest {
 		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
 		irodsTestSetupUtilities
 				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
-		assertionHelper = new org.irods.jargon.testutils.AssertionHelper();
 	}
 
 	@Test

@@ -98,6 +98,7 @@ public class SynchronizeProcessorImpl implements SynchronizeProcessor,
 		checkInitialization();
 
 		processSynchGivenSynchMetadata(localIRODSTransfer, 0, 0);
+		log.info("synch done");
 
 		if (callbackListener != null) {
 			TransferStatus overallSynchStartStatus = TransferStatus.instance(

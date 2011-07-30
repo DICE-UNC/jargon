@@ -184,11 +184,11 @@ final class IRODSLocalTransferEngine implements TransferStatusCallbackListener {
 		transferManager.getIrodsFileSystem().close();
 		// now update the transfer 'header'
 
-		log.info("getting hibernate session factory and opening session");
+		log.info("file system closed...getting transfer to wrap up");
 
-		LocalIRODSTransfer wrapUpTransfer = transferManager
+		LocalIRODSTransfer wrapUpTransfer = localIrodsTransfer; /* = transferManager
 				.getTransferQueueService().findLocalIRODSTransferById(
-						localIrodsTransfer.getId());
+						localIrodsTransfer.getId()); */
 
 		log.info("wrap up transfer before update:{}", wrapUpTransfer);
 
@@ -196,6 +196,8 @@ final class IRODSLocalTransferEngine implements TransferStatusCallbackListener {
 			log.info("transfer was aborted, mark as cancelled, warning status, and add a message");
 			markTransferWasAborted(wrapUpTransfer);
 		} else if (transferException != null) {
+			log.warn("error in transfer will be processed as exception",
+					transferException);
 			markTransferException(wrapUpTransfer, transferException);
 		} else if (wrapUpTransfer.getTransferState() != null
 				&& (wrapUpTransfer.getTransferState().equals(
@@ -218,7 +220,7 @@ final class IRODSLocalTransferEngine implements TransferStatusCallbackListener {
 		log.info("updated");
 		setCurrentTransfer(wrapUpTransfer);
 
-		log.info("commit");
+		log.info("transfer processing wrapped up");
 
 	}
 
@@ -276,7 +278,8 @@ final class IRODSLocalTransferEngine implements TransferStatusCallbackListener {
 					.setTransferControlBlock(transferControlBlock);
 			synchronizeProcessorImpl.setTransferManager(transferManager);
 			synchronizeProcessorImpl.setCallbackListener(this);
-			synchronizingDiffProcessor.setCallbackListener(synchronizeProcessorImpl);
+			synchronizingDiffProcessor
+					.setCallbackListener(synchronizeProcessorImpl);
 
 			log.info("synchronizeProcessor was built:{}",
 					synchronizeProcessorImpl);
@@ -345,7 +348,7 @@ final class IRODSLocalTransferEngine implements TransferStatusCallbackListener {
 		JargonException transferException = null;
 
 		try {
-			System.out.println("put: {}" + localFile);
+			log.info("put: {}" + localFile);
 			dataTransferOperations.putOperation(localFile, targetFile, this,
 					transferControlBlock);
 		} catch (JargonException je) {
@@ -447,6 +450,13 @@ final class IRODSLocalTransferEngine implements TransferStatusCallbackListener {
 	 */
 	private void markWarningZeroFilesTransferred(
 			final LocalIRODSTransfer localIrodsTransfer) throws JargonException {
+		if (localIrodsTransfer.getSynchronization() != null) {
+			log.info("transfer with no files is not a warning during synch");
+			localIrodsTransfer
+					.setTransferStatus(org.irods.jargon.transfer.dao.domain.TransferStatus.OK);
+			localIrodsTransfer.setTransferState(TransferState.COMPLETE);
+			return;
+		}
 		log.warn("no files transferred, ignore and close out as a warning");
 		localIrodsTransfer
 				.setTransferStatus(org.irods.jargon.transfer.dao.domain.TransferStatus.WARNING);
@@ -548,14 +558,19 @@ final class IRODSLocalTransferEngine implements TransferStatusCallbackListener {
 
 		if (transferStatus.getTransferState() == TransferStatus.TransferState.SUCCESS) {
 
-			log.info("updated last good path to:{}",
-					transferStatus.getSourceFileAbsolutePath());
-			mergedTransfer.setLastSuccessfulPath(transferStatus
-					.getSourceFileAbsolutePath());
-			mergedTransfer.setTotalFilesCount(transferStatus
-					.getTotalFilesToTransfer());
-			mergedTransfer.setTotalFilesTransferredSoFar(transferStatus
-					.getTotalFilesTransferredSoFar());
+			// if this is a stand alone transfer (not part of a synch) update
+			// the wrapping transfer with last status info
+			if (transferStatus.getTransferEnclosingType() != TransferStatus.TransferType.SYNCH) {
+
+				log.info("updated last good path to:{}",
+						transferStatus.getSourceFileAbsolutePath());
+				mergedTransfer.setLastSuccessfulPath(transferStatus
+						.getSourceFileAbsolutePath());
+				mergedTransfer.setTotalFilesCount(transferStatus
+						.getTotalFilesToTransfer());
+				mergedTransfer.setTotalFilesTransferredSoFar(transferStatus
+						.getTotalFilesTransferredSoFar());
+			}
 
 			if (isLogSuccessfulTransfers()) {
 				updateItemRequired = true;
@@ -575,10 +590,12 @@ final class IRODSLocalTransferEngine implements TransferStatusCallbackListener {
 					mergedTransfer, localIRODSTransferItem);
 		}
 
-		log.info("final merged transfer:{}", mergedTransfer);
-		getTransferManager().getTransferQueueService()
-				.updateLocalIRODSTransfer(mergedTransfer);
-		log.info("update done");
+		if (transferStatus.getTransferEnclosingType() != TransferStatus.TransferType.SYNCH) {
+			log.info("final merged transfer:{}", mergedTransfer);
+			getTransferManager().getTransferQueueService()
+					.updateLocalIRODSTransfer(mergedTransfer);
+			log.info("update done");
+		}
 		log.info("transfer item status saved in database");
 
 	}
