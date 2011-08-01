@@ -28,7 +28,8 @@ import org.irods.jargon.core.connection.IRODSAccount;
 @Entity
 @Table(name = "synchronization")
 public class Synchronization {
-
+	
+	
     @Id()
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
@@ -416,5 +417,25 @@ public class Synchronization {
 					this.defaultResourceName);
 			return irodsAccount;
 	}
+
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("synchronization");
+		sb.append("\n   id:");
+		sb.append(id);
+		sb.append("\n   name:");
+		sb.append(name);
+		sb.append("\n   localSynchDirectory:");
+		sb.append(localSynchDirectory);
+		sb.append("\n   irodsSynchDirectory:");
+		sb.append(irodsSynchDirectory);
+		sb.append("\n   frequencyType:");
+		sb.append(frequencyType);
+		sb.append("\n   synchronizationMode:");
+		sb.append(synchronizationMode);
+		return sb.toString();
+	}
+
 
 }

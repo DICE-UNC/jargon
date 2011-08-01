@@ -138,11 +138,13 @@ final class IRODSConnection implements IRODSManagedConnection {
 		} catch (UnknownHostException e) {
 			log.error("exception opening socket to:" + irodsAccount.getHost()
 					+ " port:" + irodsAccount.getPort(), e);
+			this.obliterateConnectionAndDiscardErrors();
 			throw new JargonException(e);
 		} catch (IOException ioe) {
 			log.error(
 					"io exception opening socket to:" + irodsAccount.getHost()
 							+ " port:" + irodsAccount.getPort(), ioe);
+			disconnectWithIOException();
 			throw new JargonException(ioe);
 		}
 
@@ -175,12 +177,11 @@ final class IRODSConnection implements IRODSManagedConnection {
 	 * disconnectWithIOException()
 	 */
 	@Override
-	public void disconnectWithIOException() throws JargonException {
-		if (!connected) {
-			log.debug("not connected, just bypass");
-		}
+	public void disconnectWithIOException() {
+
 		log.info("disconnecting...");
 		// disconnect from irods and close
+		this.connected = false;
 		this.irodsProtocolManager.returnConnectionWithIoException(this);
 	}
 
@@ -203,6 +204,7 @@ final class IRODSConnection implements IRODSManagedConnection {
 			connection.close();
 		} catch (IOException ex) {
 			log.error("IOException closing: ", ex);
+			disconnectWithIOException();
 		}
 		connected = false;
 	}
@@ -282,27 +284,33 @@ final class IRODSConnection implements IRODSManagedConnection {
 	 */
 	void send(final byte[] value) throws IOException {
 
-		// packing instructions may be null, in which case nothing is sent
-		if (value == null) {
-			return;
-		}
+		try {
+			// packing instructions may be null, in which case nothing is sent
+			if (value == null) {
+				return;
+			}
 
-		if (value.length == 0) {
-			// nothing to send, warn and ignore
-			return;
-		}
+			if (value.length == 0) {
+				// nothing to send, warn and ignore
+				return;
+			}
 
-		if ((value.length + outputOffset) >= DEFAULT_BUFFER_SIZE) {
-			// in cases where OUTPUT_BUFFER_LENGTH isn't big enough
-			irodsOutputStream.write(outputBuffer, 0, outputOffset);
-			irodsOutputStream.write(value);
-			outputOffset = 0;
-		} else {
+			if ((value.length + outputOffset) >= DEFAULT_BUFFER_SIZE) {
+				// in cases where OUTPUT_BUFFER_LENGTH isn't big enough
+				irodsOutputStream.write(outputBuffer, 0, outputOffset);
+				irodsOutputStream.write(value);
+				outputOffset = 0;
+			} else {
 
-			// the message sent isn't longer than OUTPUT_BUFFER_LENGTH
-			System.arraycopy(value, 0, outputBuffer, outputOffset, value.length);
-			outputOffset += value.length;
+				// the message sent isn't longer than OUTPUT_BUFFER_LENGTH
+				System.arraycopy(value, 0, outputBuffer, outputOffset,
+						value.length);
+				outputOffset += value.length;
 
+			}
+		} catch (IOException ioe) {
+			disconnectWithIOException();
+			throw ioe;
 		}
 	}
 
@@ -351,7 +359,12 @@ final class IRODSConnection implements IRODSManagedConnection {
 
 		System.arraycopy(value, offset, temp, 0, length);
 
-		send(temp);
+		try {
+			send(temp);
+		} catch (IOException ioe) {
+			disconnectWithIOException();
+			throw ioe;
+		}
 	}
 
 	/**
@@ -367,7 +380,13 @@ final class IRODSConnection implements IRODSManagedConnection {
 			log.debug("null input packing instruction, do not send");
 			return;
 		}
-		send(value.getBytes(ConnectionConstants.JARGON_CONNECTION_ENCODING));
+		try {
+			send(value.getBytes(ConnectionConstants.JARGON_CONNECTION_ENCODING));
+		} catch (IOException ioe) {
+			disconnectWithIOException();
+			throw ioe;
+		}
+
 	}
 
 	/**
@@ -382,9 +401,14 @@ final class IRODSConnection implements IRODSManagedConnection {
 	void sendInNetworkOrder(final int value) throws IOException {
 		byte bytes[] = new byte[INT_LENGTH];
 
-		Host.copyInt(value, bytes);
-		send(bytes);
-		flush();
+		try {
+			Host.copyInt(value, bytes);
+			send(bytes);
+			flush();
+		} catch (IOException ioe) {
+			disconnectWithIOException();
+			throw ioe;
+		}
 
 	}
 
@@ -403,13 +427,18 @@ final class IRODSConnection implements IRODSManagedConnection {
 			throw new IllegalArgumentException(err);
 		}
 
-		byte[] temp = new byte[Math.min(DEFAULT_BUFFER_SIZE, (int) length)];
-		while (length > 0) {
-			if (temp.length > length) {
-				temp = new byte[(int) length];
+		try {
+			byte[] temp = new byte[Math.min(DEFAULT_BUFFER_SIZE, (int) length)];
+			while (length > 0) {
+				if (temp.length > length) {
+					temp = new byte[(int) length];
+				}
+				length -= source.read(temp, 0, temp.length);
+				send(temp);
 			}
-			length -= source.read(temp, 0, temp.length);
-			send(temp);
+		} catch (IOException ioe) {
+			disconnectWithIOException();
+			throw ioe;
 		}
 	}
 
@@ -427,7 +456,12 @@ final class IRODSConnection implements IRODSManagedConnection {
 			throw new ClosedChannelException();
 		}
 
-		irodsOutputStream.write(outputBuffer, 0, outputOffset);
+		try {
+			irodsOutputStream.write(outputBuffer, 0, outputOffset);
+		} catch (IOException ioe) {
+			disconnectWithIOException();
+			throw ioe;
+		}
 		byte zerByte = (byte) 0;
 		java.util.Arrays.fill(outputBuffer, zerByte);
 
@@ -535,18 +569,35 @@ final class IRODSConnection implements IRODSManagedConnection {
 			throw new IllegalArgumentException(
 					"length + offset larger than byte array");
 		}
-		int bytesRead = 0;
-		while (bytesRead < length) {
-			int read = irodsInputStream.read(value, offset + bytesRead, length
-					- bytesRead);
-			if (read == -1) {
-				break;
-			}
-			bytesRead += read;
-		}
-		result = bytesRead;
 
-		return result;
+		try {
+			int bytesRead = 0;
+			while (bytesRead < length) {
+				int read = irodsInputStream.read(value, offset + bytesRead,
+						length - bytesRead);
+				if (read == -1) {
+					break;
+				}
+				bytesRead += read;
+			}
+			result = bytesRead;
+
+			return result;
+		} catch (ClosedChannelException e) {
+			log.error("exception reading from socket", e);
+			disconnectWithIOException();
+			throw e;
+
+		} catch (InterruptedIOException e) {
+			log.error("exception reading from socket", e);
+			disconnectWithIOException();
+			throw e;
+
+		} catch (IOException e) {
+			log.error("exception reading from socket", e);
+			disconnectWithIOException();
+			throw e;
+		}
 	}
 
 }

@@ -44,4 +44,13 @@ public interface SynchManagerService {
 	 */
 	Synchronization findByName(String name) throws SynchException;
 
+	/**
+	 * Update the given configuration, checking for duplicates and already-existing synchronizations
+	 * @param synchConfiguration {@link Synchronization} to be updated
+	 * @throws ConflictingSynchException thrown if a duplicate name, or path setup exists
+	 * @throws SynchException
+	 */
+	void updateSynchConfiguration(Synchronization synchConfiguration)
+			throws ConflictingSynchException, SynchException;
+
 }

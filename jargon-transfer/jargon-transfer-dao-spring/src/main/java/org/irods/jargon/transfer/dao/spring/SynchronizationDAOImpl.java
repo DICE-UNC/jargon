@@ -40,14 +40,22 @@ public class SynchronizationDAOImpl extends HibernateDaoSupport implements
 			throws TransferDAOException {
 		logger.debug("entering save(Synchronization)");
 		try {
-			this.getSessionFactory().getCurrentSession()
-					.saveOrUpdate(synchronization);
+			if (synchronization.getId() == null) {
+				log.info("not persisted yet, saving");
+				this.getSessionFactory().getCurrentSession()
+						.saveOrUpdate(synchronization);
+			} else {
+				log.info("already persisted, merging");
+				this.getSessionFactory().getCurrentSession()
+						.merge(synchronization);
+			}
 		} catch (Exception e) {
 
 			log.error("error in save(synchronization)", e);
 			throw new TransferDAOException("Failed save(synchronization)", e);
 		}
 	}
+	
 
 	/*
 	 * (non-Javadoc)

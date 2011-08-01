@@ -14,6 +14,7 @@ public interface SynchronizationDAO {
     /**
      * 
      * @param ea
+     * @return 
      * @throws DAOException
      */
     public void save(Synchronization ea) throws TransferDAOException;

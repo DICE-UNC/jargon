@@ -249,7 +249,7 @@ public class SynchManagerServiceImplTest {
 		Assert.assertNotNull("did not find synch I just added", actual);
 
 	}
-	
+
 	@Test
 	public void testFindByName() throws Exception {
 		String testName = "testFindByName";
@@ -270,9 +270,166 @@ public class SynchManagerServiceImplTest {
 		synchManagerService.createNewSynchConfiguration(synchConfiguration);
 
 		// now find
-		Synchronization actual = synchManagerService
-				.findByName(testName);
+		Synchronization actual = synchManagerService.findByName(testName);
 		Assert.assertNotNull("did not find synch I just added", actual);
+
+	}
+
+	@Test
+	public void testUpdateSynchConfiguration() throws Exception {
+		Synchronization synchConfiguration = new Synchronization();
+		synchConfiguration.setCreatedAt(new Date());
+		synchConfiguration.setDefaultResourceName("test");
+		synchConfiguration.setIrodsHostName("host");
+		synchConfiguration.setIrodsPassword("xxx");
+		synchConfiguration.setIrodsPort(1247);
+		synchConfiguration.setIrodsSynchDirectory("/synchdir");
+		synchConfiguration.setIrodsUserName("userName");
+		synchConfiguration.setIrodsZone("zone");
+		synchConfiguration.setLastSynchronizationStatus(TransferStatus.OK);
+		synchConfiguration.setLocalSynchDirectory("/localdir");
+		synchConfiguration
+				.setSynchronizationMode(SynchronizationType.ONE_WAY_LOCAL_TO_IRODS);
+		synchConfiguration.setName("testUpdateSynchConfiguration");
+		synchManagerService.createNewSynchConfiguration(synchConfiguration);
+
+		synchConfiguration.setUpdatedAt(new Date());
+		synchConfiguration.setLocalSynchDirectory("/localdir2");
+		synchConfiguration
+				.setSynchronizationMode(SynchronizationType.ONE_WAY_LOCAL_TO_IRODS);
+		synchConfiguration
+				.setName("testCreateNewSynchConfigurationDuplicateIrods2");
+		synchManagerService.updateSynchConfiguration(synchConfiguration);
+		// now find
+		Synchronization actual = synchManagerService
+				.findByName(synchConfiguration.getName());
+		Assert.assertNotNull("did not find synch I just added", actual);
+		Assert.assertEquals("did not get updated local synch directory",
+				synchConfiguration.getLocalSynchDirectory(),
+				actual.getLocalSynchDirectory());
+
+	}
+
+	@Test(expected = ConflictingSynchException.class)
+	public void testUpdateSynchConfigurationDuplicateName() throws Exception {
+		String testName = "testUpdateSynchConfigurationDuplicateName";
+		Synchronization synchConfiguration = new Synchronization();
+		synchConfiguration.setCreatedAt(new Date());
+		synchConfiguration.setDefaultResourceName("test");
+		synchConfiguration.setIrodsHostName("host");
+		synchConfiguration.setIrodsPassword("xxx");
+		synchConfiguration.setIrodsPort(1247);
+		synchConfiguration.setIrodsSynchDirectory("/synchdir");
+		synchConfiguration.setIrodsUserName("userName");
+		synchConfiguration.setIrodsZone("zone");
+		synchConfiguration.setLastSynchronizationStatus(TransferStatus.OK);
+		synchConfiguration.setLocalSynchDirectory("/localdir");
+		synchConfiguration
+				.setSynchronizationMode(SynchronizationType.ONE_WAY_LOCAL_TO_IRODS);
+		synchConfiguration.setName(testName);
+		synchManagerService.createNewSynchConfiguration(synchConfiguration);
+
+		Synchronization synchConfiguration2 = new Synchronization();
+		synchConfiguration2.setCreatedAt(new Date());
+		synchConfiguration2.setDefaultResourceName("test");
+		synchConfiguration2.setIrodsHostName("host");
+		synchConfiguration2.setIrodsPassword("xxx");
+		synchConfiguration2.setIrodsPort(1247);
+		synchConfiguration2.setIrodsSynchDirectory("/synchdirx");
+		synchConfiguration2.setIrodsUserName("userName");
+		synchConfiguration2.setIrodsZone("zone");
+		synchConfiguration2.setLastSynchronizationStatus(TransferStatus.OK);
+		synchConfiguration2.setLocalSynchDirectory("/localdir2");
+		synchConfiguration2
+				.setSynchronizationMode(SynchronizationType.ONE_WAY_LOCAL_TO_IRODS);
+		synchConfiguration2.setName(testName + "first");
+		synchManagerService.createNewSynchConfiguration(synchConfiguration2);
+
+		synchConfiguration2.setName(testName);
+
+		synchManagerService.updateSynchConfiguration(synchConfiguration2);
+
+	}
+	
+	@Test(expected = ConflictingSynchException.class)
+	public void testUpdateSynchConfigurationDuplicateIrodsPath() throws Exception {
+		String testName = "testUpdateSynchConfigurationDuplicateIrodsPath";
+		Synchronization synchConfiguration = new Synchronization();
+		synchConfiguration.setCreatedAt(new Date());
+		synchConfiguration.setDefaultResourceName("test");
+		synchConfiguration.setIrodsHostName("host");
+		synchConfiguration.setIrodsPassword("xxx");
+		synchConfiguration.setIrodsPort(1247);
+		synchConfiguration.setIrodsSynchDirectory(testName);
+		synchConfiguration.setIrodsUserName("userName");
+		synchConfiguration.setIrodsZone("zone");
+		synchConfiguration.setLastSynchronizationStatus(TransferStatus.OK);
+		synchConfiguration.setLocalSynchDirectory("/localdir");
+		synchConfiguration
+				.setSynchronizationMode(SynchronizationType.ONE_WAY_LOCAL_TO_IRODS);
+		synchConfiguration.setName(testName);
+		synchManagerService.createNewSynchConfiguration(synchConfiguration);
+
+		Synchronization synchConfiguration2 = new Synchronization();
+		synchConfiguration2.setCreatedAt(new Date());
+		synchConfiguration2.setDefaultResourceName("test");
+		synchConfiguration2.setIrodsHostName("host");
+		synchConfiguration2.setIrodsPassword("xxx");
+		synchConfiguration2.setIrodsPort(1247);
+		synchConfiguration2.setIrodsSynchDirectory(testName + "second");
+		synchConfiguration2.setIrodsUserName("userName");
+		synchConfiguration2.setIrodsZone("zone");
+		synchConfiguration2.setLastSynchronizationStatus(TransferStatus.OK);
+		synchConfiguration2.setLocalSynchDirectory("/localdir2");
+		synchConfiguration2
+				.setSynchronizationMode(SynchronizationType.ONE_WAY_LOCAL_TO_IRODS);
+		synchConfiguration2.setName(testName + "second");
+		synchManagerService.createNewSynchConfiguration(synchConfiguration2);
+
+		synchConfiguration2.setIrodsSynchDirectory(testName);
+
+		synchManagerService.updateSynchConfiguration(synchConfiguration2);
+
+	}
+	
+	@Test(expected = ConflictingSynchException.class)
+	public void testUpdateSynchConfigurationDuplicateLocalPath() throws Exception {
+		String testName = "testUpdateSynchConfigurationDuplicateLocalPath";
+		Synchronization synchConfiguration = new Synchronization();
+		synchConfiguration.setCreatedAt(new Date());
+		synchConfiguration.setDefaultResourceName("test");
+		synchConfiguration.setIrodsHostName("host");
+		synchConfiguration.setIrodsPassword("xxx");
+		synchConfiguration.setIrodsPort(1247);
+		synchConfiguration.setIrodsSynchDirectory(testName + "first");
+		synchConfiguration.setIrodsUserName("userName");
+		synchConfiguration.setIrodsZone("zone");
+		synchConfiguration.setLastSynchronizationStatus(TransferStatus.OK);
+		synchConfiguration.setLocalSynchDirectory(testName);
+		synchConfiguration
+				.setSynchronizationMode(SynchronizationType.ONE_WAY_LOCAL_TO_IRODS);
+		synchConfiguration.setName(testName);
+		synchManagerService.createNewSynchConfiguration(synchConfiguration);
+
+		Synchronization synchConfiguration2 = new Synchronization();
+		synchConfiguration2.setCreatedAt(new Date());
+		synchConfiguration2.setDefaultResourceName("test");
+		synchConfiguration2.setIrodsHostName("host");
+		synchConfiguration2.setIrodsPassword("xxx");
+		synchConfiguration2.setIrodsPort(1247);
+		synchConfiguration2.setIrodsSynchDirectory(testName + "second");
+		synchConfiguration2.setIrodsUserName("userName");
+		synchConfiguration2.setIrodsZone("zone");
+		synchConfiguration2.setLastSynchronizationStatus(TransferStatus.OK);
+		synchConfiguration2.setLocalSynchDirectory(testName);
+		synchConfiguration2
+				.setSynchronizationMode(SynchronizationType.ONE_WAY_LOCAL_TO_IRODS);
+		synchConfiguration2.setName(testName + "second");
+		synchManagerService.createNewSynchConfiguration(synchConfiguration2);
+
+		synchConfiguration2.setIrodsSynchDirectory(testName);
+
+		synchManagerService.updateSynchConfiguration(synchConfiguration2);
 
 	}
 
