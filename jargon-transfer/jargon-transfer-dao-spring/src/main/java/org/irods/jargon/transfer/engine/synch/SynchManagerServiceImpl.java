@@ -5,7 +5,9 @@ import java.util.List;
 import org.hibernate.exception.ConstraintViolationException;
 import org.irods.jargon.transfer.dao.SynchronizationDAO;
 import org.irods.jargon.transfer.dao.TransferDAOException;
+import org.irods.jargon.transfer.dao.domain.LocalIRODSTransfer;
 import org.irods.jargon.transfer.dao.domain.Synchronization;
+import org.irods.jargon.transfer.dao.domain.TransferState;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
@@ -185,51 +187,103 @@ public class SynchManagerServiceImpl implements SynchManagerService {
 		log.info("synch updated");
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.transfer.engine.synch.SynchManagerService#
+	 * deleteSynchronization
+	 * (org.irods.jargon.transfer.dao.domain.Synchronization)
+	 */
+	@Override
+	@Transactional
+	public void deleteSynchronization(Synchronization synchronization)
+			throws SynchException {
+		log.info("delete synchronization()");
+
+		if (synchronization == null) {
+			throw new IllegalArgumentException("null synchronization");
+		}
+		
+		// make sure synch is attached
+		try {
+			synchronization = synchronizationDAO.findById(synchronization.getId());
+		} catch (TransferDAOException e) {
+			log.error("error looking up synchronization", e);
+			throw new SynchException("error deleting synchronization", e);
+		}
+		
+		if (synchronization == null) {
+			log.warn("did not find synchronization, ignore and return");
+			return;
+		}
+		
+		// ensure that no enqueued or processing transfers are in the queue
+		for (LocalIRODSTransfer localIRODSTransfer : synchronization.getLocalIRODSTransfers()) {
+			if (localIRODSTransfer.getTransferState() == TransferState.ENQUEUED || localIRODSTransfer.getTransferState() == TransferState.PROCESSING) {
+				log.warn("cannot delete synch with enqueued or processing transfer:{}", localIRODSTransfer);
+				throw new ConflictingSynchException("cannot delete the synchronization, queue jobs need to be purged first");
+			}
+		}
+
+		try {
+			// synchronization.getLocalIRODSTransfers().clear();
+			synchronizationDAO.delete(synchronization);
+		} catch (TransferDAOException e) {
+			log.error("synchConfiguration delete failed with exception", e);
+			throw new SynchException("exception during delete", e);
+		}
+		log.info("synchronization deleted");
+	}
+
 	/**
 	 * @param synchConfiguration
 	 * @throws SynchException
 	 */
-	private void validateSynch(
-			final Synchronization synchConfiguration)
+	private void validateSynch(final Synchronization synchConfiguration)
 			throws ConflictingSynchException, SynchException {
-		
+
 		log.info("validateSynch()");
-		
+
 		log.info("synch:{}", synchConfiguration);
-		
+
 		if (synchConfiguration.getDefaultResourceName() == null) {
 			throw new SynchException("null defaultResourceName");
 		}
-		
+
 		if (synchConfiguration.getFrequencyType() == null) {
 			throw new SynchException("null frequency type");
 		}
-		
-		if (synchConfiguration.getIrodsHostName() == null || synchConfiguration.getIrodsHostName().isEmpty()) {
+
+		if (synchConfiguration.getIrodsHostName() == null
+				|| synchConfiguration.getIrodsHostName().isEmpty()) {
 			throw new SynchException("null or empty irodsHostName");
 		}
-		
-		if (synchConfiguration.getIrodsPassword() == null || synchConfiguration.getIrodsPassword().isEmpty()) {
+
+		if (synchConfiguration.getIrodsPassword() == null
+				|| synchConfiguration.getIrodsPassword().isEmpty()) {
 			throw new SynchException("null or empty irodsPassword");
 		}
-		
-		if (synchConfiguration.getIrodsSynchDirectory() == null || synchConfiguration.getIrodsSynchDirectory().isEmpty()) {
+
+		if (synchConfiguration.getIrodsSynchDirectory() == null
+				|| synchConfiguration.getIrodsSynchDirectory().isEmpty()) {
 			throw new SynchException("null or empty irodsSynchDirectory");
 		}
-		
-		if (synchConfiguration.getIrodsUserName() == null || synchConfiguration.getIrodsUserName().isEmpty()) {
+
+		if (synchConfiguration.getIrodsUserName() == null
+				|| synchConfiguration.getIrodsUserName().isEmpty()) {
 			throw new SynchException("null or empty irodsUserName");
 		}
-		
-		if (synchConfiguration.getIrodsZone() == null || synchConfiguration.getIrodsZone().isEmpty()) {
+
+		if (synchConfiguration.getIrodsZone() == null
+				|| synchConfiguration.getIrodsZone().isEmpty()) {
 			throw new SynchException("null or empty irodsZone");
 		}
-		
-		if (synchConfiguration.getLocalSynchDirectory() == null || synchConfiguration.getLocalSynchDirectory().isEmpty()) {
+
+		if (synchConfiguration.getLocalSynchDirectory() == null
+				|| synchConfiguration.getLocalSynchDirectory().isEmpty()) {
 			throw new SynchException("null or empty localSynchDirectory");
 		}
-		
-		
+
 		List<Synchronization> synchronizations;
 		try {
 			synchronizations = synchronizationDAO.findAll();
@@ -249,8 +303,10 @@ public class SynchManagerServiceImpl implements SynchManagerService {
 		for (Synchronization existingSynchronization : synchronizations) {
 			log.info("analyizing existing synchronization:{}",
 					existingSynchronization);
-			
-			if (synchConfiguration.getId() != null && existingSynchronization.getId().equals(synchConfiguration.getId())) {
+
+			if (synchConfiguration.getId() != null
+					&& existingSynchronization.getId().equals(
+							synchConfiguration.getId())) {
 				log.info("ids match, ignore");
 				continue;
 			}

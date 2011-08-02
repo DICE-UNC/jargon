@@ -53,4 +53,13 @@ public interface SynchManagerService {
 	void updateSynchConfiguration(Synchronization synchConfiguration)
 			throws ConflictingSynchException, SynchException;
 
+	/**
+	 * Delete the given synchronization.  Note that this method will not allow deletion if enqueued or processing synchronizations
+	 * are in the queue, and will delete all associated transfers during the deletion process.
+	 * @param synchronization {@link Synchronization} that will be deleted
+	 * @throws SynchException
+	 */
+	void deleteSynchronization(Synchronization synchronization)
+			throws SynchException;
+
 }

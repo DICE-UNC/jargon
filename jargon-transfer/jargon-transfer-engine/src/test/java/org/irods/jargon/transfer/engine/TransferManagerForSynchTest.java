@@ -212,7 +212,7 @@ public class TransferManagerForSynchTest {
 
 		while (true) {
 			if (waitCtr++ > 20) {
-				// Assert.fail("synch timed out");
+				 Assert.fail("synch timed out");
 			}
 			Thread.sleep(1000);
 			if (transferManager.getRunningStatus() == TransferManager.RunningStatus.IDLE) {

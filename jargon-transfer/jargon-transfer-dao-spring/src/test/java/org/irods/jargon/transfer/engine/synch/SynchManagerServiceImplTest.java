@@ -6,9 +6,13 @@ import java.util.List;
 import junit.framework.Assert;
 
 import org.irods.jargon.transfer.dao.domain.FrequencyType;
+import org.irods.jargon.transfer.dao.domain.LocalIRODSTransfer;
 import org.irods.jargon.transfer.dao.domain.Synchronization;
 import org.irods.jargon.transfer.dao.domain.SynchronizationType;
+import org.irods.jargon.transfer.dao.domain.TransferState;
 import org.irods.jargon.transfer.dao.domain.TransferStatus;
+import org.irods.jargon.transfer.engine.TransferQueueService;
+import org.irods.jargon.transfer.util.HibernateUtil;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -29,6 +33,9 @@ public class SynchManagerServiceImplTest {
 
 	@Autowired
 	private SynchManagerService synchManagerService;
+	
+	@Autowired
+	private TransferQueueService transferQueueService;
 
 	@Before
 	public void setUp() throws Exception {
@@ -474,7 +481,104 @@ public class SynchManagerServiceImplTest {
 		synchManagerService.updateSynchConfiguration(synchConfiguration2);
 
 	}
+	
+	@Test
+	public void testDeleteSynchronizationNoTxfrsInQueue()
+			throws Exception {
+		String testName = "testDeleteSynchronizationNoTxfrsInQueue";
+		Synchronization synchConfiguration = new Synchronization();
+		synchConfiguration.setCreatedAt(new Date());
+		synchConfiguration.setDefaultResourceName("test");
+		synchConfiguration.setIrodsHostName("host");
+		synchConfiguration.setIrodsPassword("xxx");
+		synchConfiguration.setIrodsPort(1247);
+		synchConfiguration.setIrodsSynchDirectory("/synchdir");
+		synchConfiguration.setIrodsUserName("userName");
+		synchConfiguration.setIrodsZone("zone");
+		synchConfiguration.setLastSynchronizationStatus(TransferStatus.OK);
+		synchConfiguration.setLocalSynchDirectory("/localdir");
+		synchConfiguration
+				.setSynchronizationMode(SynchronizationType.ONE_WAY_LOCAL_TO_IRODS);
+		synchConfiguration
+				.setName(testName);
+		synchConfiguration.setFrequencyType(FrequencyType.EVERY_DAY);
 
+		synchManagerService.createNewSynchConfiguration(synchConfiguration);
+		
+		Synchronization actual = synchManagerService.findByName(testName);
+		synchManagerService.deleteSynchronization(actual);
+		 actual = synchManagerService.findByName(testName);
+		Assert.assertNull("synch should be deleted", actual);
+	}
+	
+	@Test
+	public void testDeleteSynchronizationCompletedTxfrsInQueue()
+			throws Exception {
+		transferQueueService.purgeQueue();
+		String testName = "testDeleteSynchronizationCompletedTxfrsInQueue";
+		Synchronization synchConfiguration = new Synchronization();
+		synchConfiguration.setCreatedAt(new Date());
+		synchConfiguration.setDefaultResourceName("test");
+		synchConfiguration.setIrodsHostName("host");
+		synchConfiguration.setIrodsPassword(HibernateUtil.obfuscate("jjjjfjfj"));
+		synchConfiguration.setIrodsPort(1247);
+		synchConfiguration.setIrodsSynchDirectory("/synchdir");
+		synchConfiguration.setIrodsUserName("userName");
+		synchConfiguration.setIrodsZone("zone");
+		synchConfiguration.setLastSynchronizationStatus(TransferStatus.OK);
+		synchConfiguration.setLocalSynchDirectory("/localdir");
+		synchConfiguration
+				.setSynchronizationMode(SynchronizationType.ONE_WAY_LOCAL_TO_IRODS);
+		synchConfiguration
+				.setName(testName);
+		synchConfiguration.setFrequencyType(FrequencyType.EVERY_DAY);
+
+		synchManagerService.createNewSynchConfiguration(synchConfiguration);
+		
+		Synchronization actual = synchManagerService.findByName(testName);
+		transferQueueService.enqueueSynchTransfer(actual, actual.buildIRODSAccountFromSynchronizationData());
+		// tweak txfr to complete
+		
+		for (LocalIRODSTransfer localIRODSTransfer : actual.getLocalIRODSTransfers()) {
+			localIRODSTransfer.setTransferState(TransferState.COMPLETE);
+			transferQueueService.setTransferAsCancelled(localIRODSTransfer);
+		}
+		
+		synchManagerService.deleteSynchronization(actual);
+		 actual = synchManagerService.findByName(testName);
+		Assert.assertNull("synch should be deleted", actual);
+		List<LocalIRODSTransfer> queue = transferQueueService.getRecentQueue();
+		Assert.assertEquals("should be nothing in queue", 0, queue.size());
+	}
+	
+	@Test(expected=ConflictingSynchException.class)
+	public void testDeleteSynchronizationEnqueuedTxfrsInQueue()
+			throws Exception {
+		String testName = "testDeleteSynchronizationEnqueuedTxfrsInQueue";
+		Synchronization synchConfiguration = new Synchronization();
+		synchConfiguration.setCreatedAt(new Date());
+		synchConfiguration.setDefaultResourceName("test");
+		synchConfiguration.setIrodsHostName("host");
+		synchConfiguration.setIrodsPassword(HibernateUtil.obfuscate("jjjjfjfj"));
+		synchConfiguration.setIrodsPort(1247);
+		synchConfiguration.setIrodsSynchDirectory("/synchdir");
+		synchConfiguration.setIrodsUserName("userName");
+		synchConfiguration.setIrodsZone("zone");
+		synchConfiguration.setLastSynchronizationStatus(TransferStatus.OK);
+		synchConfiguration.setLocalSynchDirectory("/localdir");
+		synchConfiguration
+				.setSynchronizationMode(SynchronizationType.ONE_WAY_LOCAL_TO_IRODS);
+		synchConfiguration
+				.setName(testName);
+		synchConfiguration.setFrequencyType(FrequencyType.EVERY_DAY);
+
+		synchManagerService.createNewSynchConfiguration(synchConfiguration);
+		
+		Synchronization actual = synchManagerService.findByName(testName);
+		transferQueueService.enqueueSynchTransfer(actual, actual.buildIRODSAccountFromSynchronizationData());
+		synchManagerService.deleteSynchronization(actual);
+
+	}
 
 	@Autowired
 	public void setSynchManagerService(
@@ -484,6 +588,20 @@ public class SynchManagerServiceImplTest {
 
 	public SynchManagerService getSynchManagerService() {
 		return synchManagerService;
+	}
+
+	/**
+	 * @return the transferQueueService
+	 */
+	public TransferQueueService getTransferQueueService() {
+		return transferQueueService;
+	}
+
+	/**
+	 * @param transferQueueService the transferQueueService to set
+	 */
+	public void setTransferQueueService(TransferQueueService transferQueueService) {
+		this.transferQueueService = transferQueueService;
 	}
 
 }

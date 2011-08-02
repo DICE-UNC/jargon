@@ -147,7 +147,7 @@ public class HibernateUtil {
             String decryptedString = encrypter.decrypt(encryptedString);
             return decryptedString;
         } catch (EncryptionException e) {
-            throw new JargonException("error decrypting password");
+            throw new JargonException("error decrypting password",e);
         }
     }
 }

@@ -215,6 +215,7 @@ public class TransferQueueServiceImpl implements TransferQueueService {
 		enqueuedTransfer.setTransferState(TransferState.ENQUEUED);
 		enqueuedTransfer.setTransferStatus(TransferStatus.OK);
 		enqueuedTransfer.setSynchronization(synchronization);
+		synchronization.getLocalIRODSTransfers().add(enqueuedTransfer);
 		localIRODSTransferDAO.save(enqueuedTransfer);
 		log.info("transfer saved and associated with synchronization");
 		return enqueuedTransfer;

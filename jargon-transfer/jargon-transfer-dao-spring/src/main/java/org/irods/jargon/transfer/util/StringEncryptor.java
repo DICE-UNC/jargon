@@ -28,6 +28,9 @@ public class StringEncryptor {
     public static final String DESEDE_ENCRYPTION_SCHEME = "DESede";
 
     public static final String DES_ENCRYPTION_SCHEME = "DES";
+    
+   // public static final String DES_PADDED_ENCRYPTION_SCHEME = "DES/CFB/PKCS5Padding";
+    public static final String DES_PADDED_ENCRYPTION_SCHEME = "DES/CBC/PKCS5Padding";
 
     public static final String DEFAULT_ENCRYPTION_KEY = "jfiadsfijaisejflaisdfjjieiefjakdlfjasdlkfjasliejfasfjaiseajfas;irijgirgaisjfa;sidfja;seijfgas;ihgar;iafjas;df";
 
