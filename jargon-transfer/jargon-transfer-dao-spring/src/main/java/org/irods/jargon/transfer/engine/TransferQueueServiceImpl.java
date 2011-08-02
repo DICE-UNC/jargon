@@ -209,15 +209,13 @@ public class TransferQueueServiceImpl implements TransferQueueService {
 		enqueuedTransfer.setTransferZone(synchronization.getIrodsZone());
 		enqueuedTransfer.setTransferStart(new Date());
 		enqueuedTransfer.setTransferType(TransferType.SYNCH);
-		enqueuedTransfer.setTransferUserName(irodsAccount.getUserName());
-		enqueuedTransfer.setTransferPassword(HibernateUtil
-				.obfuscate(irodsAccount.getPassword()));
+		enqueuedTransfer.setTransferUserName(synchronization.getIrodsUserName());
+		// password passed along as encrypted
+		enqueuedTransfer.setTransferPassword(synchronization.getIrodsPassword());
 		enqueuedTransfer.setTransferState(TransferState.ENQUEUED);
 		enqueuedTransfer.setTransferStatus(TransferStatus.OK);
 		enqueuedTransfer.setSynchronization(synchronization);
 		localIRODSTransferDAO.save(enqueuedTransfer);
-		//synchronization.getLocalIRODSTransfers().add(enqueuedTransfer);
-		//synchronizationDAO.save(synchronization);
 		log.info("transfer saved and associated with synchronization");
 		return enqueuedTransfer;
 

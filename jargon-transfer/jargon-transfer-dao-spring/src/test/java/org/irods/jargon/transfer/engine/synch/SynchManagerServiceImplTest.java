@@ -5,6 +5,7 @@ import java.util.List;
 
 import junit.framework.Assert;
 
+import org.irods.jargon.transfer.dao.domain.FrequencyType;
 import org.irods.jargon.transfer.dao.domain.Synchronization;
 import org.irods.jargon.transfer.dao.domain.SynchronizationType;
 import org.irods.jargon.transfer.dao.domain.TransferStatus;
@@ -48,6 +49,8 @@ public class SynchManagerServiceImplTest {
 		synchConfiguration.setIrodsSynchDirectory("/synchdir");
 		synchConfiguration.setIrodsUserName("userName");
 		synchConfiguration.setIrodsZone("zone");
+		synchConfiguration.setFrequencyType(FrequencyType.EVERY_DAY);
+
 		synchConfiguration.setLastSynchronizationStatus(TransferStatus.OK);
 		synchConfiguration.setLocalSynchDirectory("/localdir");
 		synchConfiguration
@@ -69,6 +72,8 @@ public class SynchManagerServiceImplTest {
 		synchConfiguration.setIrodsZone("zone");
 		synchConfiguration.setLastSynchronizationStatus(TransferStatus.OK);
 		synchConfiguration.setLocalSynchDirectory("/localdir");
+		synchConfiguration.setFrequencyType(FrequencyType.EVERY_DAY);
+
 		synchConfiguration
 				.setSynchronizationMode(SynchronizationType.ONE_WAY_LOCAL_TO_IRODS);
 		synchConfiguration.setName("testCreateNewSynchConfiguration");
@@ -83,6 +88,8 @@ public class SynchManagerServiceImplTest {
 		synchConfiguration.setIrodsUserName("userName");
 		synchConfiguration.setIrodsZone("zone");
 		synchConfiguration.setLastSynchronizationStatus(TransferStatus.OK);
+		synchConfiguration.setFrequencyType(FrequencyType.EVERY_DAY);
+
 		synchConfiguration.setLocalSynchDirectory("/localdir2");
 		synchConfiguration
 				.setSynchronizationMode(SynchronizationType.ONE_WAY_LOCAL_TO_IRODS);
@@ -104,6 +111,8 @@ public class SynchManagerServiceImplTest {
 		synchConfiguration.setIrodsZone("zone");
 		synchConfiguration.setLastSynchronizationStatus(TransferStatus.OK);
 		synchConfiguration.setLocalSynchDirectory("/localdir");
+		synchConfiguration.setFrequencyType(FrequencyType.EVERY_DAY);
+
 		synchConfiguration
 				.setSynchronizationMode(SynchronizationType.ONE_WAY_LOCAL_TO_IRODS);
 		synchConfiguration
@@ -118,6 +127,8 @@ public class SynchManagerServiceImplTest {
 		synchConfiguration.setIrodsSynchDirectory("/synchdir2");
 		synchConfiguration.setIrodsUserName("userName");
 		synchConfiguration.setIrodsZone("zone");
+		synchConfiguration.setFrequencyType(FrequencyType.EVERY_DAY);
+
 		synchConfiguration.setLastSynchronizationStatus(TransferStatus.OK);
 		synchConfiguration.setLocalSynchDirectory("/localdir");
 		synchConfiguration
@@ -145,6 +156,8 @@ public class SynchManagerServiceImplTest {
 				.setSynchronizationMode(SynchronizationType.ONE_WAY_LOCAL_TO_IRODS);
 		synchConfiguration
 				.setName("testCreateNewSynchConfigurationDuplicateIrods");
+		synchConfiguration.setFrequencyType(FrequencyType.EVERY_DAY);
+
 		synchManagerService.createNewSynchConfiguration(synchConfiguration);
 		synchConfiguration = new Synchronization();
 		synchConfiguration.setCreatedAt(new Date());
@@ -161,6 +174,8 @@ public class SynchManagerServiceImplTest {
 				.setSynchronizationMode(SynchronizationType.ONE_WAY_LOCAL_TO_IRODS);
 		synchConfiguration
 				.setName("testCreateNewSynchConfigurationDuplicateIrods2");
+		synchConfiguration.setFrequencyType(FrequencyType.EVERY_DAY);
+
 		synchManagerService.createNewSynchConfiguration(synchConfiguration);
 	}
 
@@ -182,6 +197,8 @@ public class SynchManagerServiceImplTest {
 				.setSynchronizationMode(SynchronizationType.ONE_WAY_LOCAL_TO_IRODS);
 		synchConfiguration
 				.setName("testCreateNewSynchConfigurationDuplicateIrodsDiffZone");
+		synchConfiguration.setFrequencyType(FrequencyType.EVERY_DAY);
+
 		synchManagerService.createNewSynchConfiguration(synchConfiguration);
 		synchConfiguration = new Synchronization();
 		synchConfiguration.setCreatedAt(new Date());
@@ -196,6 +213,8 @@ public class SynchManagerServiceImplTest {
 		synchConfiguration.setLocalSynchDirectory("/localdir2");
 		synchConfiguration
 				.setSynchronizationMode(SynchronizationType.ONE_WAY_LOCAL_TO_IRODS);
+		synchConfiguration.setFrequencyType(FrequencyType.EVERY_DAY);
+
 		synchConfiguration
 				.setName("testCreateNewSynchConfigurationDuplicateIrodsDiffZone2");
 		synchManagerService.createNewSynchConfiguration(synchConfiguration);
@@ -217,6 +236,8 @@ public class SynchManagerServiceImplTest {
 		synchConfiguration.setLocalSynchDirectory("/localdir");
 		synchConfiguration
 				.setSynchronizationMode(SynchronizationType.ONE_WAY_LOCAL_TO_IRODS);
+		synchConfiguration.setFrequencyType(FrequencyType.EVERY_DAY);
+
 		synchConfiguration.setName("testCreateNewSynchConfiguration");
 		synchManagerService.createNewSynchConfiguration(synchConfiguration);
 		List<Synchronization> allSynchs = synchManagerService
@@ -238,6 +259,9 @@ public class SynchManagerServiceImplTest {
 		synchConfiguration.setIrodsZone("zone");
 		synchConfiguration.setLastSynchronizationStatus(TransferStatus.OK);
 		synchConfiguration.setLocalSynchDirectory("/localdir");
+		
+		synchConfiguration.setFrequencyType(FrequencyType.EVERY_DAY);
+		
 		synchConfiguration
 				.setSynchronizationMode(SynchronizationType.ONE_WAY_LOCAL_TO_IRODS);
 		synchConfiguration.setName("testFindById");
@@ -266,6 +290,8 @@ public class SynchManagerServiceImplTest {
 		synchConfiguration.setLocalSynchDirectory("/localdir");
 		synchConfiguration
 				.setSynchronizationMode(SynchronizationType.ONE_WAY_LOCAL_TO_IRODS);
+		synchConfiguration.setFrequencyType(FrequencyType.EVERY_DAY);
+
 		synchConfiguration.setName(testName);
 		synchManagerService.createNewSynchConfiguration(synchConfiguration);
 
@@ -291,12 +317,16 @@ public class SynchManagerServiceImplTest {
 		synchConfiguration
 				.setSynchronizationMode(SynchronizationType.ONE_WAY_LOCAL_TO_IRODS);
 		synchConfiguration.setName("testUpdateSynchConfiguration");
+		synchConfiguration.setFrequencyType(FrequencyType.EVERY_DAY);
+
 		synchManagerService.createNewSynchConfiguration(synchConfiguration);
 
 		synchConfiguration.setUpdatedAt(new Date());
 		synchConfiguration.setLocalSynchDirectory("/localdir2");
 		synchConfiguration
 				.setSynchronizationMode(SynchronizationType.ONE_WAY_LOCAL_TO_IRODS);
+		synchConfiguration.setFrequencyType(FrequencyType.EVERY_DAY);
+
 		synchConfiguration
 				.setName("testCreateNewSynchConfigurationDuplicateIrods2");
 		synchManagerService.updateSynchConfiguration(synchConfiguration);
@@ -327,6 +357,8 @@ public class SynchManagerServiceImplTest {
 		synchConfiguration
 				.setSynchronizationMode(SynchronizationType.ONE_WAY_LOCAL_TO_IRODS);
 		synchConfiguration.setName(testName);
+		synchConfiguration.setFrequencyType(FrequencyType.EVERY_DAY);
+
 		synchManagerService.createNewSynchConfiguration(synchConfiguration);
 
 		Synchronization synchConfiguration2 = new Synchronization();
@@ -342,6 +374,8 @@ public class SynchManagerServiceImplTest {
 		synchConfiguration2.setLocalSynchDirectory("/localdir2");
 		synchConfiguration2
 				.setSynchronizationMode(SynchronizationType.ONE_WAY_LOCAL_TO_IRODS);
+		synchConfiguration2.setFrequencyType(FrequencyType.EVERY_DAY);
+
 		synchConfiguration2.setName(testName + "first");
 		synchManagerService.createNewSynchConfiguration(synchConfiguration2);
 
@@ -368,6 +402,8 @@ public class SynchManagerServiceImplTest {
 		synchConfiguration
 				.setSynchronizationMode(SynchronizationType.ONE_WAY_LOCAL_TO_IRODS);
 		synchConfiguration.setName(testName);
+		synchConfiguration.setFrequencyType(FrequencyType.EVERY_DAY);
+
 		synchManagerService.createNewSynchConfiguration(synchConfiguration);
 
 		Synchronization synchConfiguration2 = new Synchronization();
@@ -383,6 +419,8 @@ public class SynchManagerServiceImplTest {
 		synchConfiguration2.setLocalSynchDirectory("/localdir2");
 		synchConfiguration2
 				.setSynchronizationMode(SynchronizationType.ONE_WAY_LOCAL_TO_IRODS);
+		synchConfiguration2.setFrequencyType(FrequencyType.EVERY_DAY);
+
 		synchConfiguration2.setName(testName + "second");
 		synchManagerService.createNewSynchConfiguration(synchConfiguration2);
 
@@ -409,6 +447,8 @@ public class SynchManagerServiceImplTest {
 		synchConfiguration
 				.setSynchronizationMode(SynchronizationType.ONE_WAY_LOCAL_TO_IRODS);
 		synchConfiguration.setName(testName);
+		synchConfiguration.setFrequencyType(FrequencyType.EVERY_DAY);
+
 		synchManagerService.createNewSynchConfiguration(synchConfiguration);
 
 		Synchronization synchConfiguration2 = new Synchronization();
@@ -425,6 +465,8 @@ public class SynchManagerServiceImplTest {
 		synchConfiguration2
 				.setSynchronizationMode(SynchronizationType.ONE_WAY_LOCAL_TO_IRODS);
 		synchConfiguration2.setName(testName + "second");
+		synchConfiguration2.setFrequencyType(FrequencyType.EVERY_DAY);
+
 		synchManagerService.createNewSynchConfiguration(synchConfiguration2);
 
 		synchConfiguration2.setIrodsSynchDirectory(testName);

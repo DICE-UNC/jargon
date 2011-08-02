@@ -6,12 +6,10 @@ import java.util.List;
 import java.util.Properties;
 
 import junit.framework.Assert;
-import junit.framework.TestCase;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.pub.IRODSFileSystem;
 import org.irods.jargon.core.pub.io.IRODSFile;
-import org.irods.jargon.core.transfer.TransferStatus;
 import org.irods.jargon.datautils.tree.FileTreeDiffUtility;
 import org.irods.jargon.datautils.tree.FileTreeDiffUtilityImpl;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
@@ -22,6 +20,7 @@ import org.irods.jargon.transfer.dao.domain.Synchronization;
 import org.irods.jargon.transfer.dao.domain.SynchronizationType;
 import org.irods.jargon.transfer.dao.domain.TransferState;
 import org.irods.jargon.transfer.engine.synch.SynchManagerService;
+import org.irods.jargon.transfer.util.HibernateUtil;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -102,7 +101,8 @@ public class TransferManagerForSynchTest {
 				.getDefaultStorageResource());
 		synchronization.setFrequencyType(FrequencyType.EVERY_FIFTEEN_MINUTES);
 		synchronization.setIrodsHostName(irodsAccount.getHost());
-		synchronization.setIrodsPassword(irodsAccount.getPassword());
+		synchronization.setIrodsPassword(HibernateUtil.obfuscate(irodsAccount
+				.getPassword()));
 		synchronization.setIrodsPort(irodsAccount.getPort());
 		synchronization.setIrodsSynchDirectory(irodsCollectionRootAbsolutePath);
 		synchronization.setIrodsUserName(irodsAccount.getUserName());
@@ -143,16 +143,16 @@ public class TransferManagerForSynchTest {
 				irodsCollectionRootAbsolutePath, 0L, 0L);
 
 		Assert.assertTrue("diffs found after synch", noDiffs);
-		
-		
+
 		List<LocalIRODSTransfer> transfers = transferManager.getRecentQueue();
-		TestCase.assertNotNull("no transfers in queue", transfers);
-		TestCase.assertEquals("expected one transfer", 1, transfers.size());
+		Assert.assertNotNull("no transfers in queue", transfers);
+		Assert.assertEquals("expected one transfer", 1, transfers.size());
 		LocalIRODSTransfer actualTransfer = transfers.get(0);
-		TestCase.assertEquals("did not set to complete", TransferState.COMPLETE, actualTransfer.getTransferState());
+		Assert.assertEquals("did not set to complete", TransferState.COMPLETE,
+				actualTransfer.getTransferState());
 
 	}
-	
+
 	@Test
 	public void testEnqueueSynchTwice() throws Exception {
 		TransferManager transferManager = new TransferManagerImpl(
@@ -189,7 +189,7 @@ public class TransferManagerForSynchTest {
 				.getDefaultStorageResource());
 		synchronization.setFrequencyType(FrequencyType.EVERY_FIFTEEN_MINUTES);
 		synchronization.setIrodsHostName(irodsAccount.getHost());
-		synchronization.setIrodsPassword(irodsAccount.getPassword());
+		synchronization.setIrodsPassword(HibernateUtil.obfuscate(irodsAccount.getPassword()));
 		synchronization.setIrodsPort(irodsAccount.getPort());
 		synchronization.setIrodsSynchDirectory(irodsCollectionRootAbsolutePath);
 		synchronization.setIrodsUserName(irodsAccount.getUserName());
@@ -212,7 +212,7 @@ public class TransferManagerForSynchTest {
 
 		while (true) {
 			if (waitCtr++ > 20) {
-				 //Assert.fail("synch timed out"); 
+				// Assert.fail("synch timed out");
 			}
 			Thread.sleep(1000);
 			if (transferManager.getRunningStatus() == TransferManager.RunningStatus.IDLE) {
@@ -222,10 +222,9 @@ public class TransferManagerForSynchTest {
 		}
 
 		/*
-		Assert.assertEquals("should have been no errors",
-				TransferManager.ErrorStatus.OK,
-				transferManager.getErrorStatus());
-				*/
+		 * Assert.assertEquals("should have been no errors",
+		 * TransferManager.ErrorStatus.OK, transferManager.getErrorStatus());
+		 */
 		FileTreeDiffUtility fileTreeDiffUtility = new FileTreeDiffUtilityImpl(
 				irodsAccount, irodsFileSystem.getIRODSAccessObjectFactory());
 		boolean noDiffs = fileTreeDiffUtility.verifyLocalAndIRODSTreesMatch(
@@ -233,22 +232,21 @@ public class TransferManagerForSynchTest {
 				irodsCollectionRootAbsolutePath, 0L, 0L);
 
 		Assert.assertTrue("diffs found after synch", noDiffs);
-		
+
 		// make sure only one synch with this name
-		
-		List<Synchronization> synchronizations = synchManagerService.listAllSynchronizations();
+
+		List<Synchronization> synchronizations = synchManagerService
+				.listAllSynchronizations();
 		int synchCount = 0;
-		
-		for (Synchronization actualSynchronization : synchronizations){
+
+		for (Synchronization actualSynchronization : synchronizations) {
 			if (actualSynchronization.getName().equals(rootCollection)) {
 				synchCount++;
 			}
 		}
-		
-		TestCase.assertEquals("found more than one synch with a given name", 1, synchCount);
-		
-		
-		
+
+		Assert.assertEquals("found more than one synch with a given name", 1,
+				synchCount);
 
 	}
 

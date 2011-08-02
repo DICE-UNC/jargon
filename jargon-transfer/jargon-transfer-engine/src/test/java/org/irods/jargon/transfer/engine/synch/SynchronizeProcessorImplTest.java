@@ -29,6 +29,7 @@ import org.irods.jargon.transfer.engine.TransferManagerImpl;
 import org.irods.jargon.transfer.synch.InPlaceSynchronizingDiffProcessorImpl;
 import org.irods.jargon.transfer.synch.SynchronizeProcessor;
 import org.irods.jargon.transfer.synch.SynchronizeProcessorImpl;
+import org.irods.jargon.transfer.util.HibernateUtil;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -206,7 +207,7 @@ public class SynchronizeProcessorImplTest {
 		synchronization.setFrequencyType(FrequencyType.EVERY_HOUR);
 		synchronization.setId(new Long(1));
 		synchronization.setIrodsHostName(irodsAccount.getHost());
-		synchronization.setIrodsPassword(irodsAccount.getPassword());
+		synchronization.setIrodsPassword(HibernateUtil.obfuscate(irodsAccount.getPassword()));
 		synchronization.setIrodsPort(irodsAccount.getPort());
 		synchronization.setIrodsSynchDirectory(irodsCollectionRootAbsolutePath);
 		synchronization.setLocalSynchDirectory(localCollectionAbsolutePath);
@@ -224,7 +225,7 @@ public class SynchronizeProcessorImplTest {
 		localIRODSTransfer.setLocalAbsolutePath(localCollectionAbsolutePath);
 		localIRODSTransfer.setSynchronization(synchronization);
 		localIRODSTransfer.setTransferHost(irodsAccount.getHost());
-		localIRODSTransfer.setTransferPassword(irodsAccount.getPassword());
+		localIRODSTransfer.setTransferPassword(synchronization.getIrodsPassword());
 		localIRODSTransfer.setTransferPort(irodsAccount.getPort());
 		localIRODSTransfer.setTransferResource(irodsAccount
 				.getDefaultStorageResource());

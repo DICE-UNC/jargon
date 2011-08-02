@@ -18,6 +18,8 @@ import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
 import org.irods.jargon.core.connection.IRODSAccount;
+import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.transfer.util.HibernateUtil;
 
 /**
  * Represents the specification of a synchronization relationship between a local file system and an iRODS file system
@@ -405,13 +407,14 @@ public class Synchronization {
 	/**
 	 * Handy method to build an <code>IRODSAccount</code> from data in the <code>Synchronization</code>.
 	 * @return {@link IRODSAccount} built from synch data
+	 * @throws JargonException 
 	 */
-	public IRODSAccount buildIRODSAccountFromSynchronizationData() {
+	public IRODSAccount buildIRODSAccountFromSynchronizationData() throws JargonException {
 	
 			IRODSAccount irodsAccount = new IRODSAccount(this.irodsHostName,
 					this.irodsPort,
 					this.irodsUserName,
-					this.irodsPassword,
+					HibernateUtil.retrieve(this.irodsPassword),
 					"",
 					this.irodsZone,
 					this.defaultResourceName);

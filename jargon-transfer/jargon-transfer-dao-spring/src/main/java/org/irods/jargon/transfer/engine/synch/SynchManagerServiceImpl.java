@@ -111,7 +111,7 @@ public class SynchManagerServiceImpl implements SynchManagerService {
 		 * not be a lot, so just list them and analyze
 		 */
 
-		evaluateSynchAgainstExistingForConflicts(synchConfiguration);
+		validateSynch(synchConfiguration);
 
 		// review pases, go ahead and add
 		try {
@@ -166,7 +166,7 @@ public class SynchManagerServiceImpl implements SynchManagerService {
 		 * not be a lot, so just list them and analyze
 		 */
 
-		evaluateSynchAgainstExistingForConflicts(synchConfiguration);
+		validateSynch(synchConfiguration);
 
 		// review pases, go ahead and add
 		try {
@@ -189,13 +189,46 @@ public class SynchManagerServiceImpl implements SynchManagerService {
 	 * @param synchConfiguration
 	 * @throws SynchException
 	 */
-	private void evaluateSynchAgainstExistingForConflicts(
+	private void validateSynch(
 			final Synchronization synchConfiguration)
 			throws ConflictingSynchException, SynchException {
 		
-		log.info("evaluateSynchAgainstExistingForConflicts()");
+		log.info("validateSynch()");
 		
 		log.info("synch:{}", synchConfiguration);
+		
+		if (synchConfiguration.getDefaultResourceName() == null) {
+			throw new SynchException("null defaultResourceName");
+		}
+		
+		if (synchConfiguration.getFrequencyType() == null) {
+			throw new SynchException("null frequency type");
+		}
+		
+		if (synchConfiguration.getIrodsHostName() == null || synchConfiguration.getIrodsHostName().isEmpty()) {
+			throw new SynchException("null or empty irodsHostName");
+		}
+		
+		if (synchConfiguration.getIrodsPassword() == null || synchConfiguration.getIrodsPassword().isEmpty()) {
+			throw new SynchException("null or empty irodsPassword");
+		}
+		
+		if (synchConfiguration.getIrodsSynchDirectory() == null || synchConfiguration.getIrodsSynchDirectory().isEmpty()) {
+			throw new SynchException("null or empty irodsSynchDirectory");
+		}
+		
+		if (synchConfiguration.getIrodsUserName() == null || synchConfiguration.getIrodsUserName().isEmpty()) {
+			throw new SynchException("null or empty irodsUserName");
+		}
+		
+		if (synchConfiguration.getIrodsZone() == null || synchConfiguration.getIrodsZone().isEmpty()) {
+			throw new SynchException("null or empty irodsZone");
+		}
+		
+		if (synchConfiguration.getLocalSynchDirectory() == null || synchConfiguration.getLocalSynchDirectory().isEmpty()) {
+			throw new SynchException("null or empty localSynchDirectory");
+		}
+		
 		
 		List<Synchronization> synchronizations;
 		try {
@@ -217,11 +250,9 @@ public class SynchManagerServiceImpl implements SynchManagerService {
 			log.info("analyizing existing synchronization:{}",
 					existingSynchronization);
 			
-			if (existingSynchronization.getId().equals(synchConfiguration.getId())) {
+			if (synchConfiguration.getId() != null && existingSynchronization.getId().equals(synchConfiguration.getId())) {
 				log.info("ids match, ignore");
 				continue;
-			} else {
-				log.info("inspecting synch with id:{}", synchConfiguration.getId());
 			}
 
 			if (synchConfiguration.getName().equalsIgnoreCase(
