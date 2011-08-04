@@ -231,6 +231,9 @@ public class FileTreeDiffUtilityImpl implements FileTreeDiffUtility {
 
 		log.debug("lhs as relativePath:{}", leftHandSideAsRelativePath);
 		log.debug("rhs as relativePath:{}", rightHandSideAsRelativePath);
+                
+                leftHandSideAsRelativePath.replace('\\', '/');
+                
 
 		int compValue = leftHandSideAsRelativePath
 				.compareTo(rightHandSideAsRelativePath);
@@ -243,12 +246,7 @@ public class FileTreeDiffUtilityImpl implements FileTreeDiffUtility {
 			log.debug("lhs timestamp:{}", leftHandSide.lastModified());
 			log.debug("lhs cutoff:{}", timestampforLastSynchLeftHandSide);
 			if (timestampforLastSynchLeftHandSide == NO_TIMESTAMP_CHECKS || true) { // FIXME:
-																					// currently
-																					// this
-																					// bypasses
-																					// the
-																					// delete
-																					// mode
+																				// mode
 				// leftHandSide.lastModified()
 				// >
 				// timestampforLastSynchLeftHandSide)
