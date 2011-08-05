@@ -18,7 +18,10 @@ import org.irods.jargon.datautils.tree.FileTreeDiffUtility;
 import org.irods.jargon.datautils.tree.FileTreeDiffUtilityImpl;
 import org.irods.jargon.transfer.dao.domain.LocalIRODSTransfer;
 import org.irods.jargon.transfer.dao.domain.LocalIRODSTransferItem;
+import org.irods.jargon.transfer.dao.domain.Synchronization;
 import org.irods.jargon.transfer.dao.domain.TransferState;
+import org.irods.jargon.transfer.engine.synch.ConflictingSynchException;
+import org.irods.jargon.transfer.engine.synch.SynchException;
 import org.irods.jargon.transfer.synch.InPlaceSynchronizingDiffProcessorImpl;
 import org.irods.jargon.transfer.synch.SynchronizeProcessorImpl;
 import org.irods.jargon.transfer.util.HibernateUtil;
@@ -179,16 +182,14 @@ final class IRODSLocalTransferEngine implements TransferStatusCallbackListener {
 			throw new JargonException("unknown operation type in transfer");
 		}
 
-		// wrap up
-		log.info("processing finished for this operation");
-		transferManager.getIrodsFileSystem().close();
+		// wrap up - cleanup call moved to transferrunner
+		//log.info("processing finished for this operation");
+		//transferManager.getIrodsFileSystem().close();
 		// now update the transfer 'header'
 
 		log.info("file system closed...getting transfer to wrap up");
 
-		LocalIRODSTransfer wrapUpTransfer = localIrodsTransfer; /* = transferManager
-				.getTransferQueueService().findLocalIRODSTransferById(
-						localIrodsTransfer.getId()); */
+		LocalIRODSTransfer wrapUpTransfer = localIrodsTransfer; 
 
 		log.info("wrap up transfer before update:{}", wrapUpTransfer);
 
@@ -217,11 +218,42 @@ final class IRODSLocalTransferEngine implements TransferStatusCallbackListener {
 				wrapUpTransfer);
 		transferManager.getTransferQueueService().updateLocalIRODSTransfer(
 				wrapUpTransfer);
+		
+		
+		if (localIrodsTransfer.getSynchronization() != null) {
+			updateSynchronizationWithTransferResults(localIrodsTransfer);
+		}
+		
+		
 		log.info("updated");
 		setCurrentTransfer(wrapUpTransfer);
 
 		log.info("transfer processing wrapped up");
 
+	}
+
+	/*
+	 * Update the enclosing synchronization with the transfer data
+	 */
+	private void updateSynchronizationWithTransferResults(
+			final LocalIRODSTransfer localIrodsTransfer) throws JargonException {
+		
+		Synchronization synchronization = localIrodsTransfer.getSynchronization();
+		synchronization.setLastSynchronizationMessage(localIrodsTransfer.getGlobalException());
+		synchronization.setLastSynchronizationStatus(localIrodsTransfer.getTransferStatus());
+		synchronization.setLastSynchronized(localIrodsTransfer.getTransferStart());
+		
+		log.info("updating synchronization after transfer process completed to:{}", synchronization);
+		try {
+			transferManager.getTransferServiceFactory().instanceSynchManagerService().updateSynchConfiguration(synchronization);
+		} catch (ConflictingSynchException e) {
+			log.error("conflicting synch exception updating synch after transfer", e);
+			throw new JargonException("conflicting synch exception updating after transfer completed", e);
+		} catch (SynchException e) {
+			log.error("synch exception updating synch after transfer", e);
+			throw new JargonException("synch exception updating after transfer completed", e);
+		}
+		
 	}
 
 	private JargonException transferTypeSynch(
@@ -598,6 +630,15 @@ final class IRODSLocalTransferEngine implements TransferStatusCallbackListener {
 		}
 		log.info("transfer item status saved in database");
 
+	}
+	
+	/**
+	 * Close the iRODS connection in this thread.  This is called by the creator of this <code>IRODSLocalTransferEngine</code> to wrap up any
+	 * connections that are in the <code>ThreadLocal</code> cache.
+	 */
+	protected synchronized void cleanUp() {
+		 transferManager
+			.getIrodsFileSystem().closeAndEatExceptions();
 	}
 
 	protected synchronized LocalIRODSTransfer getCurrentTransfer() {

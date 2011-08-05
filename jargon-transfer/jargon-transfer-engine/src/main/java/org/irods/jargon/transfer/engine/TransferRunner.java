@@ -94,6 +94,7 @@ public class TransferRunner implements Runnable {
 					transferManager.getTransferEngineConfigurationProperties());
 		} catch (JargonException je) {
 			handleErrorCreatingTransferEngineInstance(transferQueueService, je);
+			irodsLocalTransferEngine.cleanUp();
 			return;
 		}
 
@@ -121,6 +122,9 @@ public class TransferRunner implements Runnable {
 			}
 			notifyTransferManagerWhenCompletedWithError();
 			return;
+		} finally {
+			 transferManager
+				.getIrodsFileSystem().closeAndEatExceptions();
 		}
 	}
 
