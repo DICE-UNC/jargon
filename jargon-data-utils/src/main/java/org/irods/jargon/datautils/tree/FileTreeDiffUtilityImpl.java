@@ -228,11 +228,17 @@ public class FileTreeDiffUtilityImpl implements FileTreeDiffUtility {
 				.substring(rightHandSideRootPath.length());
 
 		log.debug("diffTwoFiles in currentTreeNode:{}", currentFileTreeNode);
+                
+                /*
+                 * On Win, filenames come across with a // as the delim, replace with a single / to normalize for
+                 * comparison
+                 */
+                //leftHandSideAsRelativePath.replace('\\', '/');
+                leftHandSideAsRelativePath = leftHandSideAsRelativePath.replace('\\', '/');
+
 
 		log.debug("lhs as relativePath:{}", leftHandSideAsRelativePath);
 		log.debug("rhs as relativePath:{}", rightHandSideAsRelativePath);
-                
-                leftHandSideAsRelativePath.replace('\\', '/');
                 
 
 		int compValue = leftHandSideAsRelativePath
