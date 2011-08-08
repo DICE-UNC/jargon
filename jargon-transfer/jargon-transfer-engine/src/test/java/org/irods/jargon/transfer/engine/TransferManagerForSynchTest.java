@@ -99,7 +99,7 @@ public class TransferManagerForSynchTest {
 		synchronization.setCreatedAt(new Date());
 		synchronization.setDefaultResourceName(irodsAccount
 				.getDefaultStorageResource());
-		synchronization.setFrequencyType(FrequencyType.EVERY_FIFTEEN_MINUTES);
+		synchronization.setFrequencyType(FrequencyType.EVERY_HOUR);
 		synchronization.setIrodsHostName(irodsAccount.getHost());
 		synchronization.setIrodsPassword(HibernateUtil.obfuscate(irodsAccount
 				.getPassword()));
@@ -187,7 +187,7 @@ public class TransferManagerForSynchTest {
 		synchronization.setCreatedAt(new Date());
 		synchronization.setDefaultResourceName(irodsAccount
 				.getDefaultStorageResource());
-		synchronization.setFrequencyType(FrequencyType.EVERY_FIFTEEN_MINUTES);
+		synchronization.setFrequencyType(FrequencyType.EVERY_HOUR);
 		synchronization.setIrodsHostName(irodsAccount.getHost());
 		synchronization.setIrodsPassword(HibernateUtil.obfuscate(irodsAccount.getPassword()));
 		synchronization.setIrodsPort(irodsAccount.getPort());

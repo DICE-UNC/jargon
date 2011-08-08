@@ -222,7 +222,7 @@ public class SynchManagerServiceImpl implements SynchManagerService {
 		// review pases, go ahead and update
 		try {
 			// ensure that no enqueued or processing transfers are in the queue
-
+/*
 			if (isSynchRunning(synchronization)) {
 				log.warn(
 						"cannot update synch with enqueued or processing transfer:{}",
@@ -230,6 +230,7 @@ public class SynchManagerServiceImpl implements SynchManagerService {
 				throw new ConflictingSynchException(
 						"cannot update the synchronization, queue jobs need to be purged first");
 			}
+			*/
 
 			synchronizationDAO.save(synchronization);
 		} catch (TransferDAOException e) {
