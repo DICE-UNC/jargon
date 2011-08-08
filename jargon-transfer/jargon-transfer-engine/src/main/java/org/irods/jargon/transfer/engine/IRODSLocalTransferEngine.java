@@ -241,7 +241,7 @@ final class IRODSLocalTransferEngine implements TransferStatusCallbackListener {
 		Synchronization synchronization = localIrodsTransfer.getSynchronization();
 		synchronization.setLastSynchronizationMessage(localIrodsTransfer.getGlobalException());
 		synchronization.setLastSynchronizationStatus(localIrodsTransfer.getTransferStatus());
-		synchronization.setLastSynchronized(localIrodsTransfer.getTransferStart());
+		synchronization.setLastSynchronized(localIrodsTransfer.getTransferEnd());
 		
 		log.info("updating synchronization after transfer process completed to:{}", synchronization);
 		try {

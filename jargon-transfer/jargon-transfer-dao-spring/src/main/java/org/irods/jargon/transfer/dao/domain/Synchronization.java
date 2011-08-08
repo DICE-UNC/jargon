@@ -25,7 +25,7 @@ import org.irods.jargon.transfer.util.HibernateUtil;
  * Represents the specification of a synchronization relationship between a
  * local file system and an iRODS file system
  * 
- * @author Mike Con way - DICE (www.irods.org)
+ * @author Mike Conway - DICE (www.irods.org)
  * 
  */
 @Entity

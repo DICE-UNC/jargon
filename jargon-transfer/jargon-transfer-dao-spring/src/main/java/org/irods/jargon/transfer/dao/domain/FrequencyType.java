@@ -1,6 +1,8 @@
 package org.irods.jargon.transfer.dao.domain;
 
 public enum FrequencyType {
+	
+	EVERY_TWO_MINUTES("Every 2 minutes"),
 
     EVERY_FIFTEEN_MINUTES("Every 15 minutes"),
 
@@ -9,6 +11,8 @@ public enum FrequencyType {
     EVERY_DAY("Every day"),
 
     EVERY_WEEK("Every week");
+    
+    
 
     private String readableName;
 

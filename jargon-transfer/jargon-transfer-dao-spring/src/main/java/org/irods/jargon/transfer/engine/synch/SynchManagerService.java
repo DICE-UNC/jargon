@@ -62,4 +62,13 @@ public interface SynchManagerService {
 	void deleteSynchronization(Synchronization synchronization)
 			throws SynchException;
 
+	/**
+	 * Method to check instantaneous queue status to see if a transfer is running
+	 * @param synchronization {@link Synchronization} to be checked
+	 * @return <code>boolean</code> that will be <code>true</code> if a synchronization is enqueued or processing
+	 * @throws SynchException
+	 */
+	boolean isSynchRunning(Synchronization synchronization)
+			throws SynchException;
+
 }

@@ -162,6 +162,11 @@ public class SynchPeriodicScheduler extends TimerTask {
 			log.info("target date for weekly:{}",
 					dateFormat.format(targetDate.getTime()));
 			break;
+		case EVERY_TWO_MINUTES:
+			targetDate.add(Calendar.MINUTE, -2);
+			log.info("target date for every two minutes:{}",
+					dateFormat.format(targetDate.getTime()));
+			break;
 		default:
 			log.error("unknown frequency type:{}",
 					synchronization.getFrequencyType());

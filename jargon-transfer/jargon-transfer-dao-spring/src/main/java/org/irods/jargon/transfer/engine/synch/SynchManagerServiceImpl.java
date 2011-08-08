@@ -56,6 +56,56 @@ public class SynchManagerServiceImpl implements SynchManagerService {
 	 * (non-Javadoc)
 	 * 
 	 * @see
+	 * org.irods.jargon.transfer.engine.synch.SynchManagerService#isSynchRunning
+	 * (org.irods.jargon.transfer.dao.domain.Synchronization)
+	 */
+	@Override
+	@Transactional
+	public boolean isSynchRunning(final Synchronization synchronization)
+			throws SynchException {
+
+		log.info("is SynchRunning()");
+
+		if (synchronization == null) {
+			throw new IllegalArgumentException("null synchronization");
+		}
+
+		log.info("synchronization:{}", synchronization);
+		boolean isRunning = false;
+
+		try {
+			Synchronization latestSynchronization = synchronizationDAO
+					.findById(synchronization.getId());
+
+			if (latestSynchronization.getLocalIRODSTransfers() != null
+					&& !latestSynchronization.getLocalIRODSTransfers()
+							.isEmpty()) {
+				for (LocalIRODSTransfer localIRODSTransfer : latestSynchronization
+						.getLocalIRODSTransfers()) {
+					if (localIRODSTransfer.getTransferState() == TransferState.ENQUEUED
+							|| localIRODSTransfer.getTransferState() == TransferState.PROCESSING) {
+						log.info("synch says it is running:{}",
+								localIRODSTransfer);
+						isRunning = true;
+						break;
+					}
+				}
+			}
+
+			return isRunning;
+
+		} catch (TransferDAOException e) {
+			log.error("dao exception", e);
+			throw new SynchException(
+					"exception occurred checking if synch running", e);
+		}
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
 	 * org.irods.jargon.transfer.engine.synch.SynchManagerService#findByName
 	 * (java.lang.String)
 	 */
@@ -155,24 +205,33 @@ public class SynchManagerServiceImpl implements SynchManagerService {
 	 */
 	@Override
 	@Transactional
-	public void updateSynchConfiguration(
-			final Synchronization synchConfiguration)
+	public void updateSynchConfiguration(final Synchronization synchronization)
 			throws ConflictingSynchException, SynchException {
-		if (synchConfiguration == null) {
+		if (synchronization == null) {
 			throw new IllegalArgumentException("null synchConfiguration");
 		}
-		log.info("updateSynchConfiguration with config: {}", synchConfiguration);
+		log.info("updateSynchConfiguration with config: {}", synchronization);
 
 		/*
 		 * review this synch configuration against existing ones, there should
 		 * not be a lot, so just list them and analyze
 		 */
 
-		validateSynch(synchConfiguration);
+		validateSynch(synchronization);
 
-		// review pases, go ahead and add
+		// review pases, go ahead and update
 		try {
-			synchronizationDAO.save(synchConfiguration);
+			// ensure that no enqueued or processing transfers are in the queue
+
+			if (isSynchRunning(synchronization)) {
+				log.warn(
+						"cannot update synch with enqueued or processing transfer:{}",
+						synchronization);
+				throw new ConflictingSynchException(
+						"cannot update the synchronization, queue jobs need to be purged first");
+			}
+
+			synchronizationDAO.save(synchronization);
 		} catch (TransferDAOException e) {
 			log.error("synchConfiguration update failed with exception", e);
 			if (e.getMessage().indexOf("duplicate key value") > -1) {
@@ -203,25 +262,31 @@ public class SynchManagerServiceImpl implements SynchManagerService {
 		if (synchronization == null) {
 			throw new IllegalArgumentException("null synchronization");
 		}
-		
+
 		// make sure synch is attached
 		try {
-			synchronization = synchronizationDAO.findById(synchronization.getId());
+			synchronization = synchronizationDAO.findById(synchronization
+					.getId());
 		} catch (TransferDAOException e) {
 			log.error("error looking up synchronization", e);
 			throw new SynchException("error deleting synchronization", e);
 		}
-		
+
 		if (synchronization == null) {
 			log.warn("did not find synchronization, ignore and return");
 			return;
 		}
-		
+
 		// ensure that no enqueued or processing transfers are in the queue
-		for (LocalIRODSTransfer localIRODSTransfer : synchronization.getLocalIRODSTransfers()) {
-			if (localIRODSTransfer.getTransferState() == TransferState.ENQUEUED || localIRODSTransfer.getTransferState() == TransferState.PROCESSING) {
-				log.warn("cannot delete synch with enqueued or processing transfer:{}", localIRODSTransfer);
-				throw new ConflictingSynchException("cannot delete the synchronization, queue jobs need to be purged first");
+		for (LocalIRODSTransfer localIRODSTransfer : synchronization
+				.getLocalIRODSTransfers()) {
+			if (localIRODSTransfer.getTransferState() == TransferState.ENQUEUED
+					|| localIRODSTransfer.getTransferState() == TransferState.PROCESSING) {
+				log.warn(
+						"cannot delete synch with enqueued or processing transfer:{}",
+						localIRODSTransfer);
+				throw new ConflictingSynchException(
+						"cannot delete the synchronization, queue jobs need to be purged first");
 			}
 		}
 
