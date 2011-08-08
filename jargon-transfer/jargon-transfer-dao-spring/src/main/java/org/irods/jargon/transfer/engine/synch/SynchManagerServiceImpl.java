@@ -69,6 +69,11 @@ public class SynchManagerServiceImpl implements SynchManagerService {
 		if (synchronization == null) {
 			throw new IllegalArgumentException("null synchronization");
 		}
+		
+		if (synchronization.getId() == null) {
+			log.warn("given synch is not persisted, return false");
+			return false;
+		}
 
 		log.info("synchronization:{}", synchronization);
 		boolean isRunning = false;

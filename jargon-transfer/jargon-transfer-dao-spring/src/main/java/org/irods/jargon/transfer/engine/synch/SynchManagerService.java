@@ -63,7 +63,8 @@ public interface SynchManagerService {
 			throws SynchException;
 
 	/**
-	 * Method to check instantaneous queue status to see if a transfer is running
+	 * Method to check instantaneous queue status to see if a transfer is running.  This method is smart enough to check the id of the synch,
+	 * and if it is <code>null</code> (not persisted) it returns false.
 	 * @param synchronization {@link Synchronization} to be checked
 	 * @return <code>boolean</code> that will be <code>true</code> if a synchronization is enqueued or processing
 	 * @throws SynchException
