@@ -116,7 +116,7 @@ public class TransferQueueServiceForSynchTest {
 
 	}
 
-	@Test(expected=JargonException.class)
+	@Test(expected = JargonException.class)
 	public void testEnqueueSynchSynchNotPersisted() throws Exception {
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
@@ -147,7 +147,7 @@ public class TransferQueueServiceForSynchTest {
 
 		transferQueueService
 				.enqueueSynchTransfer(synchronization, irodsAccount);
-		
+
 	}
 
 }

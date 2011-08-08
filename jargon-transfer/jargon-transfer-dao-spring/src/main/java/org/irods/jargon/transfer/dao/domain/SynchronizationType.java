@@ -8,10 +8,10 @@ package org.irods.jargon.transfer.dao.domain;
  */
 public enum SynchronizationType {
 
-    ONE_WAY_LOCAL_TO_IRODS,
+	ONE_WAY_LOCAL_TO_IRODS,
 
-    ONE_WAY_IRODS_TO_LOCAL,
+	ONE_WAY_IRODS_TO_LOCAL,
 
-    BI_DIRECTIONAL
+	BI_DIRECTIONAL
 
 }

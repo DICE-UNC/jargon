@@ -74,16 +74,16 @@ public class DummyTransferManagerCallbackListener implements
 	}
 
 	@Override
-	public void overallStatusCallback(TransferStatus transferStatus)
+	public void overallStatusCallback(final TransferStatus transferStatus)
 			throws JargonException {
-		
-		if (transferStatus.getTransferState() == TransferState.OVERALL_COMPLETION || 
-				transferStatus.getTransferState() == TransferState.OVERALL_INITIATION) {
+
+		if (transferStatus.getTransferState() == TransferState.OVERALL_COMPLETION
+				|| transferStatus.getTransferState() == TransferState.OVERALL_INITIATION) {
 			// OK
 		} else {
 			throw new JargonException("illegal status reported as overall");
 		}
-		
+
 		overallStatusHistory.add(transferStatus);
 	}
 

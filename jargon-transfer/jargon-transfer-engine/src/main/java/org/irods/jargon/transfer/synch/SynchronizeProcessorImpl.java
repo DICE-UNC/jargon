@@ -107,7 +107,8 @@ public class SynchronizeProcessorImpl implements SynchronizeProcessor,
 							.getSynchronization().getIrodsSynchDirectory(),
 					localIRODSTransfer.getSynchronization()
 							.getDefaultResourceName(), 0L, 0L, 0, 0,
-					TransferState.SYNCH_COMPLETION);
+					TransferState.SYNCH_COMPLETION, irodsAccount.getHost(),
+					irodsAccount.getZone());
 			callbackListener.overallStatusCallback(overallSynchStartStatus);
 		}
 		/*
@@ -182,7 +183,8 @@ public class SynchronizeProcessorImpl implements SynchronizeProcessor,
 					synchronization.getLocalSynchDirectory(),
 					synchronization.getIrodsSynchDirectory(),
 					synchronization.getDefaultResourceName(), 0L, 0L, 0, 0,
-					TransferState.SYNCH_INITIALIZATION);
+					TransferState.SYNCH_INITIALIZATION, irodsAccount.getHost(),
+					irodsAccount.getZone());
 			callbackListener.overallStatusCallback(overallSynchStartStatus);
 		}
 
@@ -194,7 +196,8 @@ public class SynchronizeProcessorImpl implements SynchronizeProcessor,
 					synchronization.getLocalSynchDirectory(),
 					synchronization.getIrodsSynchDirectory(),
 					synchronization.getDefaultResourceName(), 0L, 0L, 0, 0,
-					TransferState.SYNCH_DIFF_GENERATION);
+					TransferState.SYNCH_DIFF_GENERATION,
+					irodsAccount.getHost(), irodsAccount.getZone());
 			callbackListener.overallStatusCallback(overallSynchStartStatus);
 		}
 
@@ -219,7 +222,8 @@ public class SynchronizeProcessorImpl implements SynchronizeProcessor,
 					synchronization.getLocalSynchDirectory(),
 					synchronization.getIrodsSynchDirectory(),
 					synchronization.getDefaultResourceName(), 0L, 0L, 0, 0,
-					TransferState.SYNCH_DIFF_STEP);
+					TransferState.SYNCH_DIFF_STEP, irodsAccount.getHost(),
+					irodsAccount.getZone());
 			callbackListener.overallStatusCallback(overallSynchStartStatus);
 		}
 

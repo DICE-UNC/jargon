@@ -14,37 +14,44 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = { "classpath:transfer-dao-beans.xml",
-        "classpath:transfer-dao-hibernate-spring.cfg.xml", "classpath:test-beans.xml" })
+		"classpath:transfer-dao-hibernate-spring.cfg.xml",
+		"classpath:test-beans.xml" })
 public class TransferServiceFactoryImplTest {
 
-    @Before
-    public void setUp() throws Exception {
-    }
+	@Before
+	public void setUp() throws Exception {
+	}
 
-    @After
-    public void tearDown() throws Exception {
-    }
+	@After
+	public void tearDown() throws Exception {
+	}
 
-    @Test
-    public void testInstanceTransferQueueService() throws Exception {
-        TransferServiceFactoryImpl transferServiceFactory = new TransferServiceFactoryImpl();
-        TransferQueueService transferQueueService = transferServiceFactory.instanceTransferQueueService();
-        Assert.assertNotNull("null transfer queue service returned", transferQueueService);
+	@Test
+	public void testInstanceTransferQueueService() throws Exception {
+		TransferServiceFactoryImpl transferServiceFactory = new TransferServiceFactoryImpl();
+		TransferQueueService transferQueueService = transferServiceFactory
+				.instanceTransferQueueService();
+		Assert.assertNotNull("null transfer queue service returned",
+				transferQueueService);
 
-    }
+	}
 
-    @Test
-    public void testInstanceSynchManagerService() throws Exception {
-        TransferServiceFactoryImpl transferServiceFactory = new TransferServiceFactoryImpl();
-        SynchManagerService synchManagerService = transferServiceFactory.instanceSynchManagerService();
-        Assert.assertNotNull("null synchManagerServcie returned", synchManagerService);
-    }
+	@Test
+	public void testInstanceSynchManagerService() throws Exception {
+		TransferServiceFactoryImpl transferServiceFactory = new TransferServiceFactoryImpl();
+		SynchManagerService synchManagerService = transferServiceFactory
+				.instanceSynchManagerService();
+		Assert.assertNotNull("null synchManagerServcie returned",
+				synchManagerService);
+	}
 
-    @Test
-    public void testInstanceConfigurationService() throws Exception {
-        TransferServiceFactoryImpl transferServiceFactory = new TransferServiceFactoryImpl();
-        ConfigurationService configurationService = transferServiceFactory.instanceConfigurationService();
-        Assert.assertNotNull("null configurationService returned", configurationService);
-    }
+	@Test
+	public void testInstanceConfigurationService() throws Exception {
+		TransferServiceFactoryImpl transferServiceFactory = new TransferServiceFactoryImpl();
+		ConfigurationService configurationService = transferServiceFactory
+				.instanceConfigurationService();
+		Assert.assertNotNull("null configurationService returned",
+				configurationService);
+	}
 
 }

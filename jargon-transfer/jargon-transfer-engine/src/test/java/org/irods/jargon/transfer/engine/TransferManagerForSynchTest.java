@@ -189,7 +189,8 @@ public class TransferManagerForSynchTest {
 				.getDefaultStorageResource());
 		synchronization.setFrequencyType(FrequencyType.EVERY_HOUR);
 		synchronization.setIrodsHostName(irodsAccount.getHost());
-		synchronization.setIrodsPassword(HibernateUtil.obfuscate(irodsAccount.getPassword()));
+		synchronization.setIrodsPassword(HibernateUtil.obfuscate(irodsAccount
+				.getPassword()));
 		synchronization.setIrodsPort(irodsAccount.getPort());
 		synchronization.setIrodsSynchDirectory(irodsCollectionRootAbsolutePath);
 		synchronization.setIrodsUserName(irodsAccount.getUserName());
@@ -212,7 +213,7 @@ public class TransferManagerForSynchTest {
 
 		while (true) {
 			if (waitCtr++ > 20) {
-				 Assert.fail("synch timed out");
+				Assert.fail("synch timed out");
 			}
 			Thread.sleep(1000);
 			if (transferManager.getRunningStatus() == TransferManager.RunningStatus.IDLE) {

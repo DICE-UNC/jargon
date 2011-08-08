@@ -123,8 +123,7 @@ public class TransferRunner implements Runnable {
 			notifyTransferManagerWhenCompletedWithError();
 			return;
 		} finally {
-			 transferManager
-				.getIrodsFileSystem().closeAndEatExceptions();
+			transferManager.getIrodsFileSystem().closeAndEatExceptions();
 		}
 	}
 

@@ -98,35 +98,41 @@ public class SynchPeriodicScheduler extends TimerTask {
 	private void scheduleASynchronization(final Synchronization synchronization) {
 		log.info("scheduling a synchronizaton:{}", synchronization);
 		boolean alreadyInQueue = false;
-		Set<LocalIRODSTransfer> localIRODSTransfers = synchronization.getLocalIRODSTransfers();
+		Set<LocalIRODSTransfer> localIRODSTransfers = synchronization
+				.getLocalIRODSTransfers();
 		for (LocalIRODSTransfer localIRODSTransfer : localIRODSTransfers) {
-			if (localIRODSTransfer.getTransferState() == TransferState.ENQUEUED || 
-					localIRODSTransfer.getTransferState() == TransferState.PROCESSING ||
-					localIRODSTransfer.getTransferState() == TransferState.PAUSED) {
-				log.info("will not schedule this synch, as this synch transfer is already in the queue:{}", localIRODSTransfer);
+			if (localIRODSTransfer.getTransferState() == TransferState.ENQUEUED
+					|| localIRODSTransfer.getTransferState() == TransferState.PROCESSING
+					|| localIRODSTransfer.getTransferState() == TransferState.PAUSED) {
+				log.info(
+						"will not schedule this synch, as this synch transfer is already in the queue:{}",
+						localIRODSTransfer);
 				alreadyInQueue = true;
 				break;
 			}
 		}
-		
+
 		if (alreadyInQueue) {
 			return;
 		}
-		
+
 		log.info("no conflicting synch in queue, go ahead and schedule");
 		try {
-			transferManager.enqueueASynch(synchronization, synchronization.buildIRODSAccountFromSynchronizationData());
+			transferManager.enqueueASynch(synchronization,
+					synchronization.buildIRODSAccountFromSynchronizationData());
 		} catch (JargonException e) {
-			log.error("error enqueuing a synch process for synch:{}", synchronization, e);
+			log.error("error enqueuing a synch process for synch:{}",
+					synchronization, e);
 			throw new SynchRuntimeException("synch enqueue error", e);
 		}
-		
+
 		log.info("synchronization enqueued");
-		
+
 	}
 
 	/**
-	 * Given the specification in the <code>Synchronization</code>, 
+	 * Given the specification in the <code>Synchronization</code>,
+	 * 
 	 * @param synchronization
 	 * @param nowDate
 	 * @return

@@ -95,7 +95,9 @@ public class Synchronization {
 	private String defaultResourceName;
 
 	@OneToMany(mappedBy = "synchronization", targetEntity = LocalIRODSTransfer.class, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	@org.hibernate.annotations.Cascade({ org.hibernate.annotations.CascadeType.SAVE_UPDATE, org.hibernate.annotations.CascadeType.DELETE_ORPHAN })
+	@org.hibernate.annotations.Cascade({
+			org.hibernate.annotations.CascadeType.SAVE_UPDATE,
+			org.hibernate.annotations.CascadeType.DELETE_ORPHAN })
 	@org.hibernate.annotations.OnDelete(action = org.hibernate.annotations.OnDeleteAction.CASCADE)
 	@OrderBy("createdAt")
 	private Set<LocalIRODSTransfer> localIRODSTransfers = new HashSet<LocalIRODSTransfer>();

@@ -4,7 +4,6 @@ import java.util.Date;
 import java.util.List;
 
 import junit.framework.Assert;
-import junit.framework.TestCase;
 
 import org.irods.jargon.transfer.dao.domain.FrequencyType;
 import org.irods.jargon.transfer.dao.domain.LocalIRODSTransfer;
@@ -31,16 +30,16 @@ public class SynchronizationDAOTest {
 
 	@Autowired
 	private SynchronizationDAO synchronizationDAO;
-	
+
 	@Autowired
 	private LocalIRODSTransferDAO localIrodsTransferDAO;
-
 
 	public LocalIRODSTransferDAO getLocalIrodsTransferDAO() {
 		return localIrodsTransferDAO;
 	}
 
-	public void setLocalIrodsTransferDAO(LocalIRODSTransferDAO localIrodsTransferDAO) {
+	public void setLocalIrodsTransferDAO(
+			final LocalIRODSTransferDAO localIrodsTransferDAO) {
 		this.localIrodsTransferDAO = localIrodsTransferDAO;
 	}
 
@@ -183,7 +182,7 @@ public class SynchronizationDAOTest {
 		Assert.assertNull("did not delete synch", lookUpAgain);
 
 	}
-	
+
 	@Test
 	public void testSaveWithLocalIRODSTransfer() throws Exception {
 		Synchronization synchronization = new Synchronization();
@@ -201,7 +200,7 @@ public class SynchronizationDAOTest {
 		synchronization
 				.setSynchronizationMode(SynchronizationType.ONE_WAY_LOCAL_TO_IRODS);
 		synchronizationDAO.save(synchronization);
-		
+
 		LocalIRODSTransfer localIRODSTransfer = new LocalIRODSTransfer();
 		localIRODSTransfer.setCreatedAt(new Date());
 		localIRODSTransfer.setIrodsAbsolutePath("/irods/path");
@@ -217,19 +216,21 @@ public class SynchronizationDAOTest {
 		localIRODSTransfer.setTransferUserName("user");
 		localIRODSTransfer.setTransferZone("zone");
 		synchronization.getLocalIRODSTransfers().add(localIRODSTransfer);
-		
-		
+
 		Assert.assertTrue("did not set id", synchronization.getId() > 0);
 
-		Synchronization actual = synchronizationDAO.findById(synchronization.getId());
-		TestCase.assertNotNull("did not find actual synch", actual);
-		TestCase.assertTrue("did not find localIRODSTransfer in synchronization", synchronization.getLocalIRODSTransfers().size() > 0);
-		
+		Synchronization actual = synchronizationDAO.findById(synchronization
+				.getId());
+		Assert.assertNotNull("did not find actual synch", actual);
+		Assert.assertTrue("did not find localIRODSTransfer in synchronization",
+				synchronization.getLocalIRODSTransfers().size() > 0);
+
 	}
-	
+
 	@Test
-	public void testSaveWithLocalIRODSTransferThenFindAllTransfers() throws Exception {
-		
+	public void testSaveWithLocalIRODSTransferThenFindAllTransfers()
+			throws Exception {
+
 		String testName = "testSaveWithLocalIRODSTransferThenFindAllTransfers";
 		Synchronization synchronization = new Synchronization();
 		synchronization.setCreatedAt(new Date());
@@ -246,7 +247,7 @@ public class SynchronizationDAOTest {
 		synchronization
 				.setSynchronizationMode(SynchronizationType.ONE_WAY_LOCAL_TO_IRODS);
 		synchronizationDAO.save(synchronization);
-		
+
 		LocalIRODSTransfer localIRODSTransfer = new LocalIRODSTransfer();
 		localIRODSTransfer.setCreatedAt(new Date());
 		localIRODSTransfer.setIrodsAbsolutePath(testName);
@@ -262,22 +263,22 @@ public class SynchronizationDAOTest {
 		localIRODSTransfer.setTransferUserName("user");
 		localIRODSTransfer.setTransferZone("zone");
 		synchronization.getLocalIRODSTransfers().add(localIRODSTransfer);
-		
+
 		List<LocalIRODSTransfer> allTransfers = localIrodsTransferDAO.findAll();
-		
+
 		boolean foundTransfer = false;
 		for (LocalIRODSTransfer actualTransfer : allTransfers) {
 			if (actualTransfer.getIrodsAbsolutePath().equals(testName)) {
 				foundTransfer = true;
-				TestCase.assertNotNull("transfer did not have synch", actualTransfer.getSynchronization());
-				TestCase.assertEquals("synch did not have proper data", testName, actualTransfer.getSynchronization().getName());
-			} 
+				Assert.assertNotNull("transfer did not have synch",
+						actualTransfer.getSynchronization());
+				Assert.assertEquals("synch did not have proper data", testName,
+						actualTransfer.getSynchronization().getName());
+			}
 		}
-		
-		TestCase.assertTrue("did not find synch", foundTransfer);
-		
-		
-	}
 
+		Assert.assertTrue("did not find synch", foundTransfer);
+
+	}
 
 }

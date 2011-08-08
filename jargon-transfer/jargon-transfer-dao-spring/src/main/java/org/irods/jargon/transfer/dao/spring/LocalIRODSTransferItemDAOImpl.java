@@ -19,97 +19,112 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
  * @author jdr0887
  * 
  */
-public class LocalIRODSTransferItemDAOImpl extends HibernateDaoSupport implements LocalIRODSTransferItemDAO {
+public class LocalIRODSTransferItemDAOImpl extends HibernateDaoSupport
+		implements LocalIRODSTransferItemDAO {
 
-    private static final Logger log = LoggerFactory.getLogger(LocalIRODSTransferItemDAOImpl.class);
+	private static final Logger log = LoggerFactory
+			.getLogger(LocalIRODSTransferItemDAOImpl.class);
 
-    public LocalIRODSTransferItemDAOImpl() {
-        super();
-    }
+	public LocalIRODSTransferItemDAOImpl() {
+		super();
+	}
 
-    @Override
-    public void save(final LocalIRODSTransferItem localIRODSTransferItem) throws TransferDAOException {
+	@Override
+	public void save(final LocalIRODSTransferItem localIRODSTransferItem)
+			throws TransferDAOException {
 
-        try {
-            this.getSessionFactory().getCurrentSession().saveOrUpdate(localIRODSTransferItem);
-        } catch (Exception e) {
+		try {
+			this.getSessionFactory().getCurrentSession()
+					.saveOrUpdate(localIRODSTransferItem);
+		} catch (Exception e) {
 
-            log.error("error in save(LocalIRODSTransferItem)", e);
-            throw new TransferDAOException("Failed save(LocalIRODSTransferItem)", e);
-        }
-    }
+			log.error("error in save(LocalIRODSTransferItem)", e);
+			throw new TransferDAOException(
+					"Failed save(LocalIRODSTransferItem)", e);
+		}
+	}
 
-    @SuppressWarnings("unchecked")
-    @Override
-    public List<LocalIRODSTransferItem> findErrorItemsByTransferId(final Long id) throws TransferDAOException {
-        log.debug("entering findErrorItemsByTransferId(Long)");
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<LocalIRODSTransferItem> findErrorItemsByTransferId(final Long id)
+			throws TransferDAOException {
+		log.debug("entering findErrorItemsByTransferId(Long)");
 
-        try {
-            Criteria criteria = this.getSessionFactory().getCurrentSession()
-                    .createCriteria(LocalIRODSTransferItem.class);
-            criteria.add(Restrictions.eq("error", true));
-            criteria.createCriteria("localIRODSTransfer").add(Restrictions.eq("id", id));
-            criteria.addOrder(Order.asc("transferredAt"));
-            return criteria.list();
-        } catch (HibernateException e) {
-            log.error("HibernateException", e);
-            throw new TransferDAOException(e);
-        } catch (Exception e) {
-            log.error("error in findErrorItemsByTransferId(Long)", e);
-            throw new TransferDAOException("Failed findErrorItemsByTransferId(Long)", e);
-        }
-    }
+		try {
+			Criteria criteria = this.getSessionFactory().getCurrentSession()
+					.createCriteria(LocalIRODSTransferItem.class);
+			criteria.add(Restrictions.eq("error", true));
+			criteria.createCriteria("localIRODSTransfer").add(
+					Restrictions.eq("id", id));
+			criteria.addOrder(Order.asc("transferredAt"));
+			return criteria.list();
+		} catch (HibernateException e) {
+			log.error("HibernateException", e);
+			throw new TransferDAOException(e);
+		} catch (Exception e) {
+			log.error("error in findErrorItemsByTransferId(Long)", e);
+			throw new TransferDAOException(
+					"Failed findErrorItemsByTransferId(Long)", e);
+		}
+	}
 
-    @SuppressWarnings("unchecked")
-    @Override
-    public List<LocalIRODSTransferItem> findAllItemsForTransferByTransferId(final Long id) throws TransferDAOException {
-        log.debug("entering findAllItemsForTransferByTransferId(Long)");
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<LocalIRODSTransferItem> findAllItemsForTransferByTransferId(
+			final Long id) throws TransferDAOException {
+		log.debug("entering findAllItemsForTransferByTransferId(Long)");
 
-        try {
-            Criteria criteria = this.getSessionFactory().getCurrentSession()
-                    .createCriteria(LocalIRODSTransferItem.class);
-            criteria.createCriteria("localIRODSTransfer").add(Restrictions.eq("id", id));
-            criteria.addOrder(Order.asc("transferredAt"));
-            return criteria.list();
-        } catch (HibernateException e) {
-            log.error("HibernateException", e);
-            throw new TransferDAOException(e);
-        } catch (Exception e) {
-            log.error("error in findAllItemsForTransferByTransferId(Long)", e);
-            throw new TransferDAOException("Failed findAllItemsForTransferByTransferId(Long)", e);
-        }
-    }
+		try {
+			Criteria criteria = this.getSessionFactory().getCurrentSession()
+					.createCriteria(LocalIRODSTransferItem.class);
+			criteria.createCriteria("localIRODSTransfer").add(
+					Restrictions.eq("id", id));
+			criteria.addOrder(Order.asc("transferredAt"));
+			return criteria.list();
+		} catch (HibernateException e) {
+			log.error("HibernateException", e);
+			throw new TransferDAOException(e);
+		} catch (Exception e) {
+			log.error("error in findAllItemsForTransferByTransferId(Long)", e);
+			throw new TransferDAOException(
+					"Failed findAllItemsForTransferByTransferId(Long)", e);
+		}
+	}
 
-    @Override
-    public LocalIRODSTransferItem findById(final Long id) throws TransferDAOException {
-        logger.debug("entering findById(Long)");
+	@Override
+	public LocalIRODSTransferItem findById(final Long id)
+			throws TransferDAOException {
+		logger.debug("entering findById(Long)");
 
-        try {
-            Criteria criteria = this.getSessionFactory().getCurrentSession()
-                    .createCriteria(LocalIRODSTransferItem.class);
-            return (LocalIRODSTransferItem) criteria.uniqueResult();
-        } catch (DataAccessResourceFailureException e) {
-            throw new TransferDAOException(e);
-        } catch (HibernateException e) {
-            throw new TransferDAOException(e);
-        } catch (IllegalStateException e) {
-            throw new TransferDAOException(e);
-        }
-    }
+		try {
+			Criteria criteria = this.getSessionFactory().getCurrentSession()
+					.createCriteria(LocalIRODSTransferItem.class);
+			return (LocalIRODSTransferItem) criteria.uniqueResult();
+		} catch (DataAccessResourceFailureException e) {
+			throw new TransferDAOException(e);
+		} catch (HibernateException e) {
+			throw new TransferDAOException(e);
+		} catch (IllegalStateException e) {
+			throw new TransferDAOException(e);
+		}
+	}
 
-    @Override
-    public void delete(final LocalIRODSTransferItem localIrodsTransferItem) throws TransferDAOException {
-        logger.debug("entering delete(LocalIRODSTransferItem)");
+	@Override
+	public void delete(final LocalIRODSTransferItem localIrodsTransferItem)
+			throws TransferDAOException {
+		logger.debug("entering delete(LocalIRODSTransferItem)");
 
-        try {
+		try {
 
-            this.getSessionFactory().getCurrentSession().delete(localIrodsTransferItem);
+			this.getSessionFactory().getCurrentSession()
+					.delete(localIrodsTransferItem);
 
-        } catch (Exception e) {
+		} catch (Exception e) {
 
-            log.error("error in delete(LocalIRODSTransferItem)", e);
-            throw new TransferDAOException("Failed delete(LocalIRODSTransferItem)", e);
-        }
-    }
+			log.error("error in delete(LocalIRODSTransferItem)", e);
+			throw new TransferDAOException(
+					"Failed delete(LocalIRODSTransferItem)", e);
+		}
+	}
 
 }

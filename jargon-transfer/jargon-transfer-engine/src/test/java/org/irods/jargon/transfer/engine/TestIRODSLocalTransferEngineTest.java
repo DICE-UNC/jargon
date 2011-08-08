@@ -11,7 +11,6 @@ import java.util.Properties;
 import java.util.Set;
 
 import junit.framework.Assert;
-import junit.framework.TestCase;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.JargonException;
@@ -51,8 +50,6 @@ public class TestIRODSLocalTransferEngineTest {
 
 	private static org.irods.jargon.testutils.AssertionHelper assertionHelper = null;
 
-	
-
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		org.irods.jargon.testutils.TestingPropertiesHelper testingPropertiesLoader = new TestingPropertiesHelper();
@@ -68,13 +65,12 @@ public class TestIRODSLocalTransferEngineTest {
 				+ "/.idrop/target/database/transfer";
 		DatabasePreparationUtils.clearAllDatabaseForTesting(databaseUrl,
 				"transfer", "transfer"); // TODO: make a prop
-		
 
 	}
 
 	@Before
 	public void setUpEach() throws Exception {
-		
+
 	}
 
 	@Test
@@ -345,7 +341,7 @@ public class TestIRODSLocalTransferEngineTest {
 		TransferStatus transferStatus = TransferStatus.instance(
 				org.irods.jargon.core.transfer.TransferStatus.TransferType.PUT,
 				"sourceFromStatus", "targetFromStatus", "targetResource", 100L,
-				100L, 1, 1, TransferStatus.TransferState.SUCCESS);
+				100L, 1, 1, TransferStatus.TransferState.SUCCESS, "xx", "xx");
 
 		irodsLocalTransferEngine.statusCallback(transferStatus);
 
@@ -365,14 +361,14 @@ public class TestIRODSLocalTransferEngineTest {
 		for (LocalIRODSTransfer transfer : transfers) {
 			if (transfer.getIrodsAbsolutePath().equals(testName)) {
 				txfrFound = true;
-				Assert.assertEquals("last good path not set", "sourceFromStatus",
-						transfer.getLastSuccessfulPath());
-				
+				Assert.assertEquals("last good path not set",
+						"sourceFromStatus", transfer.getLastSuccessfulPath());
+
 			}
 		}
-		
-		TestCase.assertTrue("did not find transfer", txfrFound);
-		
+
+		Assert.assertTrue("did not find transfer", txfrFound);
+
 	}
 
 	@Test
@@ -419,16 +415,15 @@ public class TestIRODSLocalTransferEngineTest {
 		TransferStatus transferStatus = TransferStatus.instance(
 				org.irods.jargon.core.transfer.TransferStatus.TransferType.PUT,
 				"sourceFromStatus", "targetFromStatus", "targetResource", 100L,
-				100L, 1, 2, TransferStatus.TransferState.SUCCESS);
+				100L, 1, 2, TransferStatus.TransferState.SUCCESS, "xx", "xx");
 
 		irodsLocalTransferEngine.statusCallback(transferStatus);
 
-		TransferStatus badStatus = TransferStatus
-				.instanceForException(
-						org.irods.jargon.core.transfer.TransferStatus.TransferType.PUT,
-						"sourceFromStatusError", "targetFromStatusError",
-						"targetResource", 100L, 100L, 2, 2,
-						new JargonException("blah"));
+		TransferStatus badStatus = TransferStatus.instanceForException(
+				org.irods.jargon.core.transfer.TransferStatus.TransferType.PUT,
+				"sourceFromStatusError", "targetFromStatusError",
+				"targetResource", 100L, 100L, 2, 2,
+				new JargonException("blah"), "xx", "xx");
 
 		irodsLocalTransferEngine.statusCallback(badStatus);
 
@@ -443,13 +438,13 @@ public class TestIRODSLocalTransferEngineTest {
 		for (LocalIRODSTransfer transfer : transfers) {
 			if (transfer.getIrodsAbsolutePath().equals(testName)) {
 				txfrFound = true;
-				Assert.assertEquals("last good path not set", "sourceFromStatus",
-						transfer.getLastSuccessfulPath());
-				
+				Assert.assertEquals("last good path not set",
+						"sourceFromStatus", transfer.getLastSuccessfulPath());
+
 			}
 		}
-		
-		TestCase.assertTrue("did not find transfer", txfrFound);
+
+		Assert.assertTrue("did not find transfer", txfrFound);
 
 	}
 
@@ -623,7 +618,7 @@ public class TestIRODSLocalTransferEngineTest {
 		TransferControlBlock transferControlBlock = DefaultTransferControlBlock
 				.instance();
 		IRODSLocalTransferEngine irodsLocalTransferEngine = IRODSLocalTransferEngine
-				.instance(transferManager, transferControlBlock,null);
+				.instance(transferManager, transferControlBlock, null);
 
 		String localReturnedAbsolutePath = scratchFileUtils
 				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);

@@ -52,7 +52,6 @@ public class DatabasePreparationUtils {
 			sql = "DELETE FROM configuration_property";
 			delete = st.executeUpdate(sql);
 			log.info("deleted:{}", delete);
-			
 
 		} catch (SQLException e) {
 			if (e.getMessage().indexOf("not found") > -1) {
@@ -61,7 +60,8 @@ public class DatabasePreparationUtils {
 					makeSureDatabaseIsInitialized();
 				} catch (Exception e1) {
 					log.error("unable to initialize database", e1);
-					throw new JargonRuntimeException("error initializing database", e1);
+					throw new JargonRuntimeException(
+							"error initializing database", e1);
 				}
 			} else {
 				log.error("error clearing database", e);

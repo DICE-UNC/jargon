@@ -18,7 +18,6 @@ import org.irods.jargon.transfer.engine.TransferManager;
  */
 public interface SynchronizeProcessor {
 
-	
 	void setTransferManager(final TransferManager transferManager);
 
 	TransferManager getTransferManager();
@@ -63,15 +62,15 @@ public interface SynchronizeProcessor {
 
 	/**
 	 * Process a synchronization attempt
-	 * @param localIRODSTransfer {@link LocalIRODSTransfer} that describes the synch attempt
+	 * 
+	 * @param localIRODSTransfer
+	 *            {@link LocalIRODSTransfer} that describes the synch attempt
 	 * @throws JargonException
 	 */
 	void synchronizeLocalToIRODS(LocalIRODSTransfer localIRODSTransfer)
 			throws JargonException;
 
-	void setSynchronizingDiffProcessor(final SynchronizingDiffProcessor synchronizingDiffProcessor);
+	void setSynchronizingDiffProcessor(
+			final SynchronizingDiffProcessor synchronizingDiffProcessor);
 
-	
-
-	
 }

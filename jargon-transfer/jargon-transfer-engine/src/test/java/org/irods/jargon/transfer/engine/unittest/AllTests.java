@@ -13,7 +13,9 @@ import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({ TestIRODSLocalTransferEngineTest.class,
-		TransferManagerTest.class, TransferManagerForSynchTest.class, TransferQueueServiceTest.class, TransferQueueServiceForSynchTest.class, InPlaceSynchronizingDiffProcessorImplTest.class,
+		TransferManagerTest.class, TransferManagerForSynchTest.class,
+		TransferQueueServiceTest.class, TransferQueueServiceForSynchTest.class,
+		InPlaceSynchronizingDiffProcessorImplTest.class,
 		SynchronizeProcessorImplTest.class, SynchPeriodicSchedulerTest.class })
 public class AllTests {
 

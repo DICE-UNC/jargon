@@ -196,7 +196,8 @@ public class InPlaceSynchronizingDiffProcessorImpl implements
 												.getIrodsAbsolutePath(),
 										localIRODSTransfer
 												.getTransferResource(), 0L, 0L,
-										0, 0, e);
+										0, 0, e, irodsAccount.getHost(),
+										irodsAccount.getZone());
 						callbackListener.statusCallback(transferStatus);
 					} catch (JargonException e1) {
 						log.error("error building transfer status", e1);
@@ -424,25 +425,31 @@ public class InPlaceSynchronizingDiffProcessorImpl implements
 				.getCollectionAndDataObjectListingEntry();
 
 		String targetRelativePath;
+		StringBuilder sb = new StringBuilder(irodsRootAbsolutePath);
 		if (entry.getObjectType() == ObjectType.COLLECTION) {
 			targetRelativePath = entry.getParentPath().substring(
 					localRootAbsolutePath.length());
+			log.info("entry is a collection, setting targetRelativePath to:{}",
+					targetRelativePath);
+			sb.append("/");
 		} else {
 			targetRelativePath = entry.getFormattedAbsolutePath().substring(
 					localRootAbsolutePath.length());
+			log.info("entry is a file, setting targetRelativePath to:{}",
+					targetRelativePath);
 		}
 
-		StringBuilder sb = new StringBuilder(irodsRootAbsolutePath);
-		sb.append("/");
 		sb.append(targetRelativePath);
 
-		log.info("processing a put to irods under target at:{}",
-				targetRelativePath);
+		String putPath = sb.toString();
+
+		log.info("processing a put to irods under target at computed path:{}",
+				putPath);
 
 		try {
 			transferControlBlock.resetTransferData();
 			dataTransferOperations.putOperation(
-					entry.getFormattedAbsolutePath(), sb.toString(),
+					entry.getFormattedAbsolutePath(), putPath,
 					irodsAccount.getDefaultStorageResource(), this,
 					transferControlBlock);
 		} catch (Exception e) {
@@ -463,7 +470,8 @@ public class InPlaceSynchronizingDiffProcessorImpl implements
 									entry.getFormattedAbsolutePath(),
 									sb.toString(),
 									irodsAccount.getDefaultStorageResource(),
-									0L, 0L, 0, 0, e);
+									0L, 0L, 0, 0, e, irodsAccount.getHost(),
+									irodsAccount.getZone());
 					callbackListener.statusCallback(transferStatus);
 				} catch (JargonException e1) {
 					log.error("error building transfer status", e1);
@@ -541,7 +549,8 @@ public class InPlaceSynchronizingDiffProcessorImpl implements
 					transferStatus.getBytesTransfered(),
 					transferStatus.getTotalFilesTransferredSoFar(),
 					transferStatus.getTotalFilesToTransfer(),
-					transferStatus.getTransferState());
+					transferStatus.getTransferState(), irodsAccount.getHost(),
+					irodsAccount.getZone());
 
 			callbackListener.overallStatusCallback(newStatus);
 		}

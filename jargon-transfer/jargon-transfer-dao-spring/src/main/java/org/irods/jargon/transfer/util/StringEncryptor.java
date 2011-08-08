@@ -25,112 +25,121 @@ import sun.misc.BASE64Encoder;
 @SuppressWarnings("restriction")
 public class StringEncryptor {
 
-    public static final String DESEDE_ENCRYPTION_SCHEME = "DESede";
+	public static final String DESEDE_ENCRYPTION_SCHEME = "DESede";
 
-    public static final String DES_ENCRYPTION_SCHEME = "DES";
-    
-   // public static final String DES_PADDED_ENCRYPTION_SCHEME = "DES/CFB/PKCS5Padding";
-    public static final String DES_PADDED_ENCRYPTION_SCHEME = "DES/CBC/PKCS5Padding";
+	public static final String DES_ENCRYPTION_SCHEME = "DES";
 
-    public static final String DEFAULT_ENCRYPTION_KEY = "jfiadsfijaisejflaisdfjjieiefjakdlfjasdlkfjasliejfasfjaiseajfas;irijgirgaisjfa;sidfja;seijfgas;ihgar;iafjas;df";
+	// public static final String DES_PADDED_ENCRYPTION_SCHEME =
+	// "DES/CFB/PKCS5Padding";
+	public static final String DES_PADDED_ENCRYPTION_SCHEME = "DES/CBC/PKCS5Padding";
 
-    private KeySpec keySpec;
+	public static final String DEFAULT_ENCRYPTION_KEY = "jfiadsfijaisejflaisdfjjieiefjakdlfjasdlkfjasliejfasfjaiseajfas;irijgirgaisjfa;sidfja;seijfgas;ihgar;iafjas;df";
 
-    private SecretKeyFactory keyFactory;
+	private KeySpec keySpec;
 
-    private Cipher cipher;
+	private SecretKeyFactory keyFactory;
 
-    private static final String UNICODE_FORMAT = "UTF8";
+	private Cipher cipher;
 
-    public StringEncryptor(final String encryptionScheme) throws EncryptionException {
-        this(encryptionScheme, DEFAULT_ENCRYPTION_KEY);
-    }
+	private static final String UNICODE_FORMAT = "UTF8";
 
-    public StringEncryptor(final String encryptionScheme, final String encryptionKey) throws EncryptionException {
+	public StringEncryptor(final String encryptionScheme)
+			throws EncryptionException {
+		this(encryptionScheme, DEFAULT_ENCRYPTION_KEY);
+	}
 
-        if (encryptionKey == null) {
-            throw new IllegalArgumentException("encryption key was null");
-        }
-        if (encryptionKey.trim().length() < 24) {
-            throw new IllegalArgumentException("encryption key was less than 24 characters");
-        }
+	public StringEncryptor(final String encryptionScheme,
+			final String encryptionKey) throws EncryptionException {
 
-        try {
-            byte[] keyAsBytes = encryptionKey.getBytes(UNICODE_FORMAT);
+		if (encryptionKey == null) {
+			throw new IllegalArgumentException("encryption key was null");
+		}
+		if (encryptionKey.trim().length() < 24) {
+			throw new IllegalArgumentException(
+					"encryption key was less than 24 characters");
+		}
 
-            if (encryptionScheme.equals(DESEDE_ENCRYPTION_SCHEME)) {
-                keySpec = new DESedeKeySpec(keyAsBytes);
-            } else if (encryptionScheme.equals(DES_ENCRYPTION_SCHEME)) {
-                keySpec = new DESKeySpec(keyAsBytes);
-            } else {
-                throw new IllegalArgumentException("Encryption scheme not supported: " + encryptionScheme);
-            }
+		try {
+			byte[] keyAsBytes = encryptionKey.getBytes(UNICODE_FORMAT);
 
-            keyFactory = SecretKeyFactory.getInstance(encryptionScheme);
-            cipher = Cipher.getInstance(encryptionScheme);
+			if (encryptionScheme.equals(DESEDE_ENCRYPTION_SCHEME)) {
+				keySpec = new DESedeKeySpec(keyAsBytes);
+			} else if (encryptionScheme.equals(DES_ENCRYPTION_SCHEME)) {
+				keySpec = new DESKeySpec(keyAsBytes);
+			} else {
+				throw new IllegalArgumentException(
+						"Encryption scheme not supported: " + encryptionScheme);
+			}
 
-        } catch (InvalidKeyException e) {
-            throw new EncryptionException(e);
-        } catch (UnsupportedEncodingException e) {
-            throw new EncryptionException(e);
-        } catch (NoSuchAlgorithmException e) {
-            throw new EncryptionException(e);
-        } catch (NoSuchPaddingException e) {
-            throw new EncryptionException(e);
-        }
+			keyFactory = SecretKeyFactory.getInstance(encryptionScheme);
+			cipher = Cipher.getInstance(encryptionScheme);
 
-    }
+		} catch (InvalidKeyException e) {
+			throw new EncryptionException(e);
+		} catch (UnsupportedEncodingException e) {
+			throw new EncryptionException(e);
+		} catch (NoSuchAlgorithmException e) {
+			throw new EncryptionException(e);
+		} catch (NoSuchPaddingException e) {
+			throw new EncryptionException(e);
+		}
 
-    public String encrypt(final String unencryptedString) throws EncryptionException {
-        if (unencryptedString == null || unencryptedString.trim().length() == 0) {
-            throw new IllegalArgumentException("unencrypted string was null or empty");
-        }
+	}
 
-        try {
-            SecretKey key = keyFactory.generateSecret(keySpec);
-            cipher.init(Cipher.ENCRYPT_MODE, key);
-            byte[] cleartext = unencryptedString.getBytes(UNICODE_FORMAT);
-            byte[] ciphertext = cipher.doFinal(cleartext);
+	public String encrypt(final String unencryptedString)
+			throws EncryptionException {
+		if (unencryptedString == null || unencryptedString.trim().length() == 0) {
+			throw new IllegalArgumentException(
+					"unencrypted string was null or empty");
+		}
 
-            BASE64Encoder base64encoder = new BASE64Encoder();
-            return base64encoder.encode(ciphertext);
-        } catch (Exception e) {
-            throw new EncryptionException(e);
-        }
-    }
+		try {
+			SecretKey key = keyFactory.generateSecret(keySpec);
+			cipher.init(Cipher.ENCRYPT_MODE, key);
+			byte[] cleartext = unencryptedString.getBytes(UNICODE_FORMAT);
+			byte[] ciphertext = cipher.doFinal(cleartext);
 
-    public String decrypt(final String encryptedString) throws EncryptionException {
-        if (encryptedString == null || encryptedString.trim().length() <= 0) {
-            throw new IllegalArgumentException("encrypted string was null or empty");
-        }
+			BASE64Encoder base64encoder = new BASE64Encoder();
+			return base64encoder.encode(ciphertext);
+		} catch (Exception e) {
+			throw new EncryptionException(e);
+		}
+	}
 
-        try {
-            SecretKey key = keyFactory.generateSecret(keySpec);
-            cipher.init(Cipher.DECRYPT_MODE, key);
-            BASE64Decoder base64decoder = new BASE64Decoder();
-            byte[] cleartext = base64decoder.decodeBuffer(encryptedString);
-            byte[] ciphertext = cipher.doFinal(cleartext);
+	public String decrypt(final String encryptedString)
+			throws EncryptionException {
+		if (encryptedString == null || encryptedString.trim().length() <= 0) {
+			throw new IllegalArgumentException(
+					"encrypted string was null or empty");
+		}
 
-            return bytes2String(ciphertext);
-        } catch (Exception e) {
-            throw new EncryptionException(e);
-        }
-    }
+		try {
+			SecretKey key = keyFactory.generateSecret(keySpec);
+			cipher.init(Cipher.DECRYPT_MODE, key);
+			BASE64Decoder base64decoder = new BASE64Decoder();
+			byte[] cleartext = base64decoder.decodeBuffer(encryptedString);
+			byte[] ciphertext = cipher.doFinal(cleartext);
 
-    private static String bytes2String(final byte[] bytes) {
-        StringBuffer stringBuffer = new StringBuffer();
-        for (byte b : bytes) {
-            stringBuffer.append((char) b);
-        }
-        return stringBuffer.toString();
-    }
+			return bytes2String(ciphertext);
+		} catch (Exception e) {
+			throw new EncryptionException(e);
+		}
+	}
 
-    public static class EncryptionException extends Exception {
+	private static String bytes2String(final byte[] bytes) {
+		StringBuffer stringBuffer = new StringBuffer();
+		for (byte b : bytes) {
+			stringBuffer.append((char) b);
+		}
+		return stringBuffer.toString();
+	}
 
-        private static final long serialVersionUID = 3877601749214910931L;
+	public static class EncryptionException extends Exception {
 
-        public EncryptionException(final Throwable t) {
-            super(t);
-        }
-    }
+		private static final long serialVersionUID = 3877601749214910931L;
+
+		public EncryptionException(final Throwable t) {
+			super(t);
+		}
+	}
 }

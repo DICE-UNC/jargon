@@ -20,118 +20,118 @@ import javax.persistence.Table;
 @Table(name = "configuration_property")
 public class ConfigurationProperty implements Serializable {
 
-    private static final long serialVersionUID = -8108807996395281600L;
+	private static final long serialVersionUID = -8108807996395281600L;
 
-    @Id()
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id")
-    private Long id = 0L;
+	@Id()
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name = "id")
+	private Long id = 0L;
 
-    /**
-     * iDrop configuration property, stored as a key
-     */
-    @Column(name = "propertyKey", unique = true, nullable = false)
-    private String propertyKey = "";
+	/**
+	 * iDrop configuration property, stored as a key
+	 */
+	@Column(name = "propertyKey", unique = true, nullable = false)
+	private String propertyKey = "";
 
-    @Column(name = "propertyValue", nullable = false)
-    private String propertyValue = "";
+	@Column(name = "propertyValue", nullable = false)
+	private String propertyValue = "";
 
-    @Column(name = "created_at", nullable = false)
-    private Date createdAt;
+	@Column(name = "created_at", nullable = false)
+	private Date createdAt;
 
-    @Column(name = "updated_at")
-    private Date updatedAt;
+	@Column(name = "updated_at")
+	private Date updatedAt;
 
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("ConfigurationProperty:");
-        sb.append("\n   id:");
-        sb.append(id);
-        sb.append("\n   propertyKey:");
-        sb.append(propertyKey);
-        sb.append("\n   propertyValue:");
-        sb.append(propertyValue);
-        sb.append("\n   createdAt:");
-        sb.append(createdAt);
-        sb.append("\n   updatedAt:");
-        sb.append(updatedAt);
-        return sb.toString();
-    }
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("ConfigurationProperty:");
+		sb.append("\n   id:");
+		sb.append(id);
+		sb.append("\n   propertyKey:");
+		sb.append(propertyKey);
+		sb.append("\n   propertyValue:");
+		sb.append(propertyValue);
+		sb.append("\n   createdAt:");
+		sb.append(createdAt);
+		sb.append("\n   updatedAt:");
+		sb.append(updatedAt);
+		return sb.toString();
+	}
 
-    /**
-     * @return the id
-     */
-    public Long getId() {
-        return id;
-    }
+	/**
+	 * @return the id
+	 */
+	public Long getId() {
+		return id;
+	}
 
-    /**
-     * @param id
-     *            the id to set
-     */
-    public void setId(final Long id) {
-        this.id = id;
-    }
+	/**
+	 * @param id
+	 *            the id to set
+	 */
+	public void setId(final Long id) {
+		this.id = id;
+	}
 
-    /**
-     * @return the propertyKey
-     */
-    public String getPropertyKey() {
-        return propertyKey;
-    }
+	/**
+	 * @return the propertyKey
+	 */
+	public String getPropertyKey() {
+		return propertyKey;
+	}
 
-    /**
-     * @param propertyKey
-     *            the propertyKey to set
-     */
-    public void setPropertyKey(final String propertyKey) {
-        this.propertyKey = propertyKey;
-    }
+	/**
+	 * @param propertyKey
+	 *            the propertyKey to set
+	 */
+	public void setPropertyKey(final String propertyKey) {
+		this.propertyKey = propertyKey;
+	}
 
-    /**
-     * @return the propertyValue
-     */
-    public String getPropertyValue() {
-        return propertyValue;
-    }
+	/**
+	 * @return the propertyValue
+	 */
+	public String getPropertyValue() {
+		return propertyValue;
+	}
 
-    /**
-     * @param propertyValue
-     *            the propertyValue to set
-     */
-    public void setPropertyValue(final String propertyValue) {
-        this.propertyValue = propertyValue;
-    }
+	/**
+	 * @param propertyValue
+	 *            the propertyValue to set
+	 */
+	public void setPropertyValue(final String propertyValue) {
+		this.propertyValue = propertyValue;
+	}
 
-    /**
-     * @return the createdAt
-     */
-    public Date getCreatedAt() {
-        return createdAt;
-    }
+	/**
+	 * @return the createdAt
+	 */
+	public Date getCreatedAt() {
+		return createdAt;
+	}
 
-    /**
-     * @param createdAt
-     *            the createdAt to set
-     */
-    public void setCreatedAt(final Date createdAt) {
-        this.createdAt = createdAt;
-    }
+	/**
+	 * @param createdAt
+	 *            the createdAt to set
+	 */
+	public void setCreatedAt(final Date createdAt) {
+		this.createdAt = createdAt;
+	}
 
-    /**
-     * @return the updatedAt
-     */
-    public Date getUpdatedAt() {
-        return updatedAt;
-    }
+	/**
+	 * @return the updatedAt
+	 */
+	public Date getUpdatedAt() {
+		return updatedAt;
+	}
 
-    /**
-     * @param updatedAt
-     *            the updatedAt to set
-     */
-    public void setUpdatedAt(final Date updatedAt) {
-        this.updatedAt = updatedAt;
-    }
+	/**
+	 * @param updatedAt
+	 *            the updatedAt to set
+	 */
+	public void setUpdatedAt(final Date updatedAt) {
+		this.updatedAt = updatedAt;
+	}
 
 }

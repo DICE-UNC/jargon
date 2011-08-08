@@ -45,7 +45,9 @@ public class SynchProcessDAOImpl extends HibernateDaoSupport implements
 				.get(SynchProcess.class, id);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.irods.jargon.transfer.dao.SynchProcessDAO#findAll()
 	 */
 	@SuppressWarnings("unchecked")
@@ -59,8 +61,12 @@ public class SynchProcessDAOImpl extends HibernateDaoSupport implements
 		return retList;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.transfer.dao.SynchProcessDAO#delete(org.irods.jargon.transfer.dao.domain.SynchProcess)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.transfer.dao.SynchProcessDAO#delete(org.irods.jargon
+	 * .transfer.dao.domain.SynchProcess)
 	 */
 	@Override
 	public void delete(final SynchProcess synchProcess)
@@ -69,8 +75,12 @@ public class SynchProcessDAOImpl extends HibernateDaoSupport implements
 
 	}
 
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.transfer.dao.SynchProcessDAO#findInitializedById(java.lang.Long)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.transfer.dao.SynchProcessDAO#findInitializedById(java
+	 * .lang.Long)
 	 */
 	@Override
 	public SynchProcess findInitializedById(final Long id)

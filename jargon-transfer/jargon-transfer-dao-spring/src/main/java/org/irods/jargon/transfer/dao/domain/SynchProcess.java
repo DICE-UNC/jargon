@@ -22,12 +22,13 @@ import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
 /**
- * NOTE: not currently used, this is a potential impl choice, but starting with synch being a type of local irods transfer.  Kept for now, likely to go away
+ * NOTE: not currently used, this is a potential impl choice, but starting with
+ * synch being a type of local irods transfer. Kept for now, likely to go away
  * Represents an individual synchronization operation.
  * 
  * @author mikeconway
  * 
- * FIXME: use this or loose this
+ *         FIXME: use this or loose this
  * 
  */
 @Entity
@@ -300,9 +301,11 @@ public class SynchProcess implements Serializable {
 	}
 
 	/**
-	 * @param localIRODSTransfers the localIRODSTransfers to set
+	 * @param localIRODSTransfers
+	 *            the localIRODSTransfers to set
 	 */
-	public void setLocalIRODSTransfers(Set<LocalIRODSTransfer> localIRODSTransfers) {
+	public void setLocalIRODSTransfers(
+			final Set<LocalIRODSTransfer> localIRODSTransfers) {
 		this.localIRODSTransfers = localIRODSTransfers;
 	}
 

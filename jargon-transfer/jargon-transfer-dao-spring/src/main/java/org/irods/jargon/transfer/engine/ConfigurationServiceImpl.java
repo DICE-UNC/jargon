@@ -255,7 +255,7 @@ public class ConfigurationServiceImpl implements ConfigurationService {
 				configurationProperty = new ConfigurationProperty();
 				configurationProperty.setCreatedAt(new Date());
 				configurationProperty.setPropertyKey((String) key);
-				configurationProperty.setPropertyValue((String) propVal);
+				configurationProperty.setPropertyValue(propVal);
 			} else {
 				configurationProperty.setPropertyValue(propVal);
 				configurationProperty.setUpdatedAt(new Date());

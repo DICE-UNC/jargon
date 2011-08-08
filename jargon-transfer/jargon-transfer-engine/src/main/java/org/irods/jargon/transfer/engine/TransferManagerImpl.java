@@ -51,30 +51,34 @@ public final class TransferManagerImpl implements TransferManager {
 	private TransferRunner currentTransferRunner = null;
 
 	private final IRODSFileSystem irodsFileSystem;
-	
+
 	private TransferEngineConfigurationProperties transferEngineConfigurationProperties;
 
 	/**
-	 * Get the configuration information that controls the behavior of the transfer engine
-	 * @return {@link TransferEngineConfigurationProperties} or <code>null</code> if none were specified
+	 * Get the configuration information that controls the behavior of the
+	 * transfer engine
+	 * 
+	 * @return {@link TransferEngineConfigurationProperties} or
+	 *         <code>null</code> if none were specified
 	 */
 	public synchronized TransferEngineConfigurationProperties getTransferEngineConfigurationProperties() {
 		return transferEngineConfigurationProperties;
 	}
 
 	/**
-	 * Set the configuration information that controls the behavior of the transfer engine.  If set to null, then 
-	 * the system will exhibit default behavior
+	 * Set the configuration information that controls the behavior of the
+	 * transfer engine. If set to null, then the system will exhibit default
+	 * behavior
 	 * 
-	 * @param transferEngineConfigurationProperties {@link TransferEngineConfigurationProperties} or <code>null</code> if default
-	 * behaviors are desired
+	 * @param transferEngineConfigurationProperties
+	 *            {@link TransferEngineConfigurationProperties} or
+	 *            <code>null</code> if default behaviors are desired
 	 */
 	public synchronized void setTransferEngineConfigurationProperties(
-			TransferEngineConfigurationProperties transferEngineConfigurationProperties) {
+			final TransferEngineConfigurationProperties transferEngineConfigurationProperties) {
 		this.transferEngineConfigurationProperties = transferEngineConfigurationProperties;
 	}
 
-	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -146,8 +150,10 @@ public final class TransferManagerImpl implements TransferManager {
 	 *            {@link org.irods.jargon.transfer.engine.TransferManagerCallbackListener}
 	 *            class that can receive callbacks from the running transfer
 	 *            process.
-	 * @param transferEngineConfigurationProperties {@link transferEngineConfigurationProperties} that controls behavior of transfers,
-	 * or <code>null</code> if default behaviors are desired
+	 * @param transferEngineConfigurationProperties
+	 *            {@link transferEngineConfigurationProperties} that controls
+	 *            behavior of transfers, or <code>null</code> if default
+	 *            behaviors are desired
 	 * 
 	 * @return instance of <code>TransferManager</code>
 	 * @throws JargonException
@@ -155,7 +161,8 @@ public final class TransferManagerImpl implements TransferManager {
 	public TransferManagerImpl(
 			final IRODSFileSystem irodsFileSystem,
 			final TransferManagerCallbackListener transferManagerCallbackListener,
-			final TransferEngineConfigurationProperties transferEngineConfigurationProperties) throws JargonException {
+			final TransferEngineConfigurationProperties transferEngineConfigurationProperties)
+			throws JargonException {
 
 		if (irodsFileSystem == null) {
 			throw new IllegalArgumentException("null irodsFileSystem");
@@ -569,8 +576,7 @@ public final class TransferManagerImpl implements TransferManager {
 	 * org.irods.jargon.core.connection.IRODSAccount)
 	 */
 	@Override
-	public  void enqueueASynch(
-			final Synchronization synchronization,
+	public void enqueueASynch(final Synchronization synchronization,
 			final IRODSAccount irodsAccount) throws JargonException {
 
 		log.info("enqueueASynch()");
@@ -645,10 +651,14 @@ public final class TransferManagerImpl implements TransferManager {
 		// last successful path will have a restart value or be blank
 		TransferControlBlock transferControlBlock = DefaultTransferControlBlock
 				.instance(dequeued.getLastSuccessfulPath());
-		
+
 		if (transferEngineConfigurationProperties != null) {
-			log.info("using passed-in transfer options in the transferControlBlock:{}", transferEngineConfigurationProperties.getTransferOptions());
-			transferControlBlock.setTransferOptions(transferEngineConfigurationProperties.getTransferOptions());
+			log.info(
+					"using passed-in transfer options in the transferControlBlock:{}",
+					transferEngineConfigurationProperties.getTransferOptions());
+			transferControlBlock
+					.setTransferOptions(transferEngineConfigurationProperties
+							.getTransferOptions());
 		}
 
 		log.info(">>>> dequeue {}", dequeued);

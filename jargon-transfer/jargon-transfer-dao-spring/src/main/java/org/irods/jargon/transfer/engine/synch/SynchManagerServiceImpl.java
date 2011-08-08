@@ -69,7 +69,7 @@ public class SynchManagerServiceImpl implements SynchManagerService {
 		if (synchronization == null) {
 			throw new IllegalArgumentException("null synchronization");
 		}
-		
+
 		if (synchronization.getId() == null) {
 			log.warn("given synch is not persisted, return false");
 			return false;
@@ -227,15 +227,13 @@ public class SynchManagerServiceImpl implements SynchManagerService {
 		// review pases, go ahead and update
 		try {
 			// ensure that no enqueued or processing transfers are in the queue
-/*
-			if (isSynchRunning(synchronization)) {
-				log.warn(
-						"cannot update synch with enqueued or processing transfer:{}",
-						synchronization);
-				throw new ConflictingSynchException(
-						"cannot update the synchronization, queue jobs need to be purged first");
-			}
-			*/
+			/*
+			 * if (isSynchRunning(synchronization)) { log.warn(
+			 * "cannot update synch with enqueued or processing transfer:{}",
+			 * synchronization); throw new ConflictingSynchException(
+			 * "cannot update the synchronization, queue jobs need to be purged first"
+			 * ); }
+			 */
 
 			synchronizationDAO.save(synchronization);
 		} catch (TransferDAOException e) {

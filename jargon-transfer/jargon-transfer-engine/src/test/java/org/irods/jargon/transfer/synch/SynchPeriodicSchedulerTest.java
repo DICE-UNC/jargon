@@ -204,10 +204,11 @@ public class SynchPeriodicSchedulerTest {
 		synchronization.setIrodsPort(1247);
 		synchronization.setIrodsUserName("user");
 		scheduler.run();
-		Mockito.verify(transferManager).enqueueASynch(synchronization, synchronization.buildIRODSAccountFromSynchronizationData());
+		Mockito.verify(transferManager).enqueueASynch(synchronization,
+				synchronization.buildIRODSAccountFromSynchronizationData());
 
 	}
-	
+
 	@Test
 	public final void testScheduleADailySynchButOneInQueue() throws Exception {
 		IRODSAccessObjectFactory irodsAccessObjectFactory = Mockito
@@ -236,7 +237,7 @@ public class SynchPeriodicSchedulerTest {
 		LocalIRODSTransfer localIRODSTransfer = new LocalIRODSTransfer();
 		localIRODSTransfer.setTransferState(TransferState.ENQUEUED);
 		localIRODSTransfers.add(localIRODSTransfer);
-		
+
 		synchronization.setLocalIRODSTransfers(localIRODSTransfers);
 		Calendar targetDate = Calendar.getInstance();
 		targetDate.add(Calendar.DAY_OF_WEEK, -8);
@@ -246,7 +247,9 @@ public class SynchPeriodicSchedulerTest {
 		synchronization.setIrodsPort(1247);
 		synchronization.setIrodsUserName("user");
 		scheduler.run();
-		Mockito.verify(transferManager, Mockito.never()).enqueueASynch(synchronization, synchronization.buildIRODSAccountFromSynchronizationData());
+		Mockito.verify(transferManager, Mockito.never()).enqueueASynch(
+				synchronization,
+				synchronization.buildIRODSAccountFromSynchronizationData());
 
 	}
 

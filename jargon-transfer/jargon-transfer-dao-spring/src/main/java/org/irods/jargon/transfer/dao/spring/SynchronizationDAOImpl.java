@@ -5,6 +5,7 @@ import java.util.List;
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
+import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.Restrictions;
 import org.irods.jargon.transfer.dao.SynchronizationDAO;
 import org.irods.jargon.transfer.dao.TransferDAOException;
@@ -55,7 +56,6 @@ public class SynchronizationDAOImpl extends HibernateDaoSupport implements
 			throw new TransferDAOException("Failed save(synchronization)", e);
 		}
 	}
-	
 
 	/*
 	 * (non-Javadoc)
@@ -99,7 +99,7 @@ public class SynchronizationDAOImpl extends HibernateDaoSupport implements
 		Session session = this.getSessionFactory().getCurrentSession();
 		try {
 			Criteria criteria = session.createCriteria(Synchronization.class);
-			criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+			criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
 			ret = criteria.list();
 		} catch (Exception e) {
 			logger.error("error in findAll()", e);

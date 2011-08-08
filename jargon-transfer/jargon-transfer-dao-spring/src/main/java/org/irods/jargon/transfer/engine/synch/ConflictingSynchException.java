@@ -8,7 +8,7 @@ package org.irods.jargon.transfer.engine.synch;
  */
 public class ConflictingSynchException extends SynchException {
 
-    /**
+	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 4067726475052889087L;
@@ -16,29 +16,29 @@ public class ConflictingSynchException extends SynchException {
 	/**
 	 * 
 	 */
-    public ConflictingSynchException() {
-    }
+	public ConflictingSynchException() {
+	}
 
-    /**
-     * @param arg0
-     */
-    public ConflictingSynchException(final String arg0) {
-        super(arg0);
-    }
+	/**
+	 * @param arg0
+	 */
+	public ConflictingSynchException(final String arg0) {
+		super(arg0);
+	}
 
-    /**
-     * @param arg0
-     */
-    public ConflictingSynchException(final Throwable arg0) {
-        super(arg0);
-    }
+	/**
+	 * @param arg0
+	 */
+	public ConflictingSynchException(final Throwable arg0) {
+		super(arg0);
+	}
 
-    /**
-     * @param arg0
-     * @param arg1
-     */
-    public ConflictingSynchException(final String arg0, final Throwable arg1) {
-        super(arg0, arg1);
-    }
+	/**
+	 * @param arg0
+	 * @param arg1
+	 */
+	public ConflictingSynchException(final String arg0, final Throwable arg1) {
+		super(arg0, arg1);
+	}
 
 }

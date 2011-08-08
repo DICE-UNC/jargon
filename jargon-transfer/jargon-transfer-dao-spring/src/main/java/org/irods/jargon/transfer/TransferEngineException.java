@@ -10,29 +10,32 @@ import org.irods.jargon.core.exception.JargonException;
  */
 public class TransferEngineException extends JargonException {
 
-    private static final long serialVersionUID = -4464139285274100789L;
+	private static final long serialVersionUID = -4464139285274100789L;
 
-    public TransferEngineException(final String message, final int underlyingIRODSExceptionCode) {
-        super(message, underlyingIRODSExceptionCode);
-    }
+	public TransferEngineException(final String message,
+			final int underlyingIRODSExceptionCode) {
+		super(message, underlyingIRODSExceptionCode);
+	}
 
-    public TransferEngineException(final String message, final Throwable cause, final int underlyingIRODSExceptionCode) {
-        super(message, cause, underlyingIRODSExceptionCode);
-    }
+	public TransferEngineException(final String message, final Throwable cause,
+			final int underlyingIRODSExceptionCode) {
+		super(message, cause, underlyingIRODSExceptionCode);
+	}
 
-    public TransferEngineException(final String message, final Throwable cause) {
-        super(message, cause);
-    }
+	public TransferEngineException(final String message, final Throwable cause) {
+		super(message, cause);
+	}
 
-    public TransferEngineException(final String message) {
-        super(message);
-    }
+	public TransferEngineException(final String message) {
+		super(message);
+	}
 
-    public TransferEngineException(final Throwable cause, final int underlyingIRODSExceptionCode) {
-        super(cause, underlyingIRODSExceptionCode);
-    }
+	public TransferEngineException(final Throwable cause,
+			final int underlyingIRODSExceptionCode) {
+		super(cause, underlyingIRODSExceptionCode);
+	}
 
-    public TransferEngineException(final Throwable cause) {
-        super(cause);
-    }
+	public TransferEngineException(final Throwable cause) {
+		super(cause);
+	}
 }
