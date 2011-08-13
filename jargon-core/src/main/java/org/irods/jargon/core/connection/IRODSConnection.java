@@ -417,10 +417,20 @@ final class IRODSConnection implements IRODSManagedConnection {
 	 * 
 	 * @param value
 	 *            value to be sent
+	 * @param length
+	 *            <code>long</code> with the length of data to send
+	 * @param connectionProgressStatusListener
+	 *            {link ConnectionProgressStatusListener} or <code>null</code>
+	 *            if no listener desired. This listener can then receive
+	 *            call-backs of instantaneous byte counts.
 	 * @throws IOException
 	 *             If an IOException occurs
 	 */
-	void send(final InputStream source, long length) throws IOException {
+	void send(
+			final InputStream source,
+			long length,
+			final ConnectionProgressStatusListener connectionProgressStatusListener)
+			throws IOException {
 		if (source == null) {
 			String err = "value is null";
 			log.error(err);
@@ -435,6 +445,13 @@ final class IRODSConnection implements IRODSManagedConnection {
 				}
 				length -= source.read(temp, 0, temp.length);
 				send(temp);
+
+				if (connectionProgressStatusListener != null) {
+					connectionProgressStatusListener
+							.connectionProgressStatusCallback(ConnectionProgressStatus
+									.instanceForSend(temp.length));
+				}
+
 			}
 		} catch (IOException ioe) {
 			disconnectWithIOException();

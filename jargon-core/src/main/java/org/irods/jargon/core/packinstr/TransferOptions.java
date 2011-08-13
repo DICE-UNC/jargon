@@ -81,22 +81,21 @@ public class TransferOptions {
 	 */
 	public TransferOptions(final TransferOptions transferOptions) {
 		this();
-		if (transferOptions == null) {
-			throw new IllegalArgumentException("null transferOptions");
-		}
+		if (transferOptions != null) {
 
-		synchronized (this) {
+			synchronized (this) {
 
-			setMaxThreads(transferOptions.getMaxThreads());
-			setTransferType(transferOptions.getTransferType());
-			setUdpPacketSize(transferOptions.getUdpPacketSize());
-			setUdpSendRate(transferOptions.getUdpSendRate());
-			setAllowPutGetResourceRedirects(transferOptions
-					.isAllowPutGetResourceRedirects());
-			setComputeChecksumAfterTransfer(transferOptions
-					.isComputeChecksumAfterTransfer());
-			setComputeAndVerifyChecksumAfterTransfer(transferOptions
-					.isComputeAndVerifyChecksumAfterTransfer());
+				setMaxThreads(transferOptions.getMaxThreads());
+				setTransferType(transferOptions.getTransferType());
+				setUdpPacketSize(transferOptions.getUdpPacketSize());
+				setUdpSendRate(transferOptions.getUdpSendRate());
+				setAllowPutGetResourceRedirects(transferOptions
+						.isAllowPutGetResourceRedirects());
+				setComputeChecksumAfterTransfer(transferOptions
+						.isComputeChecksumAfterTransfer());
+				setComputeAndVerifyChecksumAfterTransfer(transferOptions
+						.isComputeAndVerifyChecksumAfterTransfer());
+			}
 		}
 	}
 

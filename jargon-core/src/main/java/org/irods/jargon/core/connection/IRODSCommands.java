@@ -121,11 +121,16 @@ public class IRODSCommands implements IRODSManagedConnection {
 	}
 
 	/**
-	 * Create a typical iRODS api call Tag
+	 * Create a typical iRODS function call where no binary data is streamed to iRODS
+	 * @param type <code>String</code> with the protocol type
+	 * @param message <code>String</code> with the actual protocol message
+	 * @param intInfo <code>int</code> with the iRODS api number
+	 * @return {@link Tag} with the iRODS protocol response
+	 * @throws JargonException
 	 */
 	public synchronized Tag irodsFunction(final String type,
 			final String message, final int intInfo) throws JargonException {
-		return irodsFunction(type, message, 0, null, 0, null, intInfo);
+		return irodsFunction(type, message, 0, null, 0, null, intInfo, null);
 	}
 
 	/**
@@ -181,12 +186,23 @@ public class IRODSCommands implements IRODSManagedConnection {
 	}
 
 	/**
-	 * Create an iRODS message Tag, including header.
+	 * Invoke an iRODS protocol function, including optional streams for binary data, and receive an iRODS response
+	 * @param type <code>String</code> with the type of iRODS function
+	 * @param message <code>String</code> with the XML protocol invocation to send to iRODS
+	 * @param errorLength <code>int</code> with the length of the error stream to be sent
+	 * @param errorStream <code>InputStream</code> with error data to send to iRODS
+	 * @param byteStreamLength <code>long</code> with the length of data to be streamed to iRODS
+	 * @param byteStream <code>InputStream</code> with binary data to send to iRODS
+	 * @param intInfo <code>int</code> with the api number for the iRODS function
+	 * @param connectionProgressStatusListener {@link ConnectionProgressStatusListener} or <code>null</code> if not listener. If provided, the listener
+	 * will receive progress messages for the low-level iRODS operation
+	 * @return {@link Tag} representing the iRODS protocol response
+	 * @throws JargonException
 	 */
 	public synchronized Tag irodsFunction(final String type,
 			final String message, final int errorLength,
 			final InputStream errorStream, final long byteStreamLength,
-			final InputStream byteStream, final int intInfo)
+			final InputStream byteStream, final int intInfo, final ConnectionProgressStatusListener connectionProgressStatusListener)
 			throws JargonException {
 
 		log.info("calling irods function with streams");
@@ -196,7 +212,7 @@ public class IRODSCommands implements IRODSManagedConnection {
 		if (type == null || type.length() == 0) {
 			String err = "null or blank type";
 			log.error(err);
-			throw new IllegalArgumentException(err); // FIXME: jargon excep
+			throw new IllegalArgumentException(err);
 		}
 
 		try {
@@ -210,12 +226,12 @@ public class IRODSCommands implements IRODSManagedConnection {
 			irodsConnection.send(message);
 			if (errorLength > 0) {
 				irodsConnection.send(new BufferedInputStream(errorStream),
-						errorLength);
+						errorLength, connectionProgressStatusListener);
 				errorStream.close();
 			}
 			if (byteStreamLength > 0) {
 				irodsConnection.send(new BufferedInputStream(byteStream),
-						byteStreamLength);
+						byteStreamLength, null);
 				byteStream.close();
 			}
 			irodsConnection.flush();

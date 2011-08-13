@@ -45,17 +45,6 @@
 				<role>developer</role>
 			</roles>
 		</developer>
-		<developer>
-			<id>jdr0887</id>
-			<name>Jason Reilly</name>
-			<email>jdr0887@renci.org</email>
-			<url>http://www.renci.org/~jdr0887</url>
-			<organization>RENCI</organization>
-			<organizationUrl>http://www.renci.org</organizationUrl>
-			<roles>
-				<role>developer</role>
-			</roles>
-		</developer>
 	</developers>
 	<repositories>
 		<repository>

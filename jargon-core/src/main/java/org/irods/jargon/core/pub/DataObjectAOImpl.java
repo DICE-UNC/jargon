@@ -40,8 +40,11 @@ import org.irods.jargon.core.query.IRODSQueryResultSetInterface;
 import org.irods.jargon.core.query.JargonQueryException;
 import org.irods.jargon.core.query.MetaDataAndDomainData;
 import org.irods.jargon.core.query.RodsGenQueryEnum;
+import org.irods.jargon.core.transfer.DefaultTransferControlBlock;
 import org.irods.jargon.core.transfer.ParallelGetFileTransferStrategy;
 import org.irods.jargon.core.transfer.ParallelPutFileTransferStrategy;
+import org.irods.jargon.core.transfer.TransferControlBlock;
+import org.irods.jargon.core.transfer.TransferStatusCallbackListener;
 import org.irods.jargon.core.utils.IRODSConstants;
 import org.irods.jargon.core.utils.IRODSDataConversionUtil;
 import org.irods.jargon.core.utils.LocalFileUtils;
@@ -239,50 +242,41 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	 * 
 	 * @see
 	 * org.irods.jargon.core.pub.DataObjectAO#putLocalDataObjectToIRODS(java
-	 * .io.File, org.irods.jargon.core.pub.io.IRODSFileImpl, boolean)
+	 * .io.File, org.irods.jargon.core.pub.io.IRODSFile, boolean,
+	 * org.irods.jargon.core.transfer.TransferControlBlock,
+	 * org.irods.jargon.core.transfer.TransferStatusCallbackListener)
+	 */
+	@Override
+	public void putLocalDataObjectToIRODS(final File localFile,
+			final IRODSFile irodsFileDestination, final boolean overwrite,
+			final TransferControlBlock transferControlBlock,
+			final TransferStatusCallbackListener transferStatusCallbackListener)
+			throws JargonException {
+
+		TransferControlBlock effectiveTransferControlBlock = checkTransferControlBlockForOptionsAndSetDefaultsIfNotSpecified(transferControlBlock);
+
+		putLocalDataObjectToIRODS(localFile, irodsFileDestination, overwrite,
+				false, effectiveTransferControlBlock,
+				transferStatusCallbackListener);
+
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.core.pub.DataObjectAO#putLocalDataObjectToIRODS(java.io.File, org.irods.jargon.core.pub.io.IRODSFile, boolean)
 	 */
 	@Override
 	public void putLocalDataObjectToIRODS(final File localFile,
 			final IRODSFile irodsFileDestination, final boolean overwrite)
 			throws JargonException {
-
-		putLocalDataObjectToIRODSGivingTransferOptions(localFile,
-				irodsFileDestination, overwrite, null);
-
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.irods.jargon.core.pub.DataObjectAO#
-	 * putLocalDataObjectToIRODSGivingTransferOptions(java.io.File,
-	 * org.irods.jargon.core.pub.io.IRODSFile, boolean,
-	 * org.irods.jargon.core.packinstr.TransferOptions)
-	 */
-	@Override
-	public void putLocalDataObjectToIRODSGivingTransferOptions(
-			final File localFile, final IRODSFile irodsFileDestination,
-			final boolean overwrite, final TransferOptions transferOptions)
-			throws JargonException {
-
-		TransferOptions myTransferOptions = buildDefaultTransferOptionsIfNotSpecified(transferOptions);
-
-		log.info("testing file length to set parallel transfer options");
-		if (localFile.length() > ConnectionConstants.MAX_SZ_FOR_SINGLE_BUF) { // FIXME:
-																				// remove
-			// from
-			// props
-			myTransferOptions.setMaxThreads(getIRODSSession()
-					.getJargonProperties().getMaxParallelThreads());
-			log.info("length above threshold, send max threads cap");
-		} else {
-			myTransferOptions.setMaxThreads(0);
-		}
-
+		
+		// call with no control block will create defaults
+		TransferControlBlock effectiveTransferControlBlock = checkTransferControlBlockForOptionsAndSetDefaultsIfNotSpecified(null);
 		putLocalDataObjectToIRODS(localFile, irodsFileDestination, overwrite,
-				false, myTransferOptions);
+				false, effectiveTransferControlBlock,
+				null);
 
 	}
+
 
 	/*
 	 * (non-Javadoc)
@@ -290,17 +284,21 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	 * @see org.irods.jargon.core.pub.DataObjectAO#
 	 * putLocalDataObjectToIRODSForClientSideRuleOperation(java.io.File,
 	 * org.irods.jargon.core.pub.io.IRODSFile, boolean,
-	 * org.irods.jargon.core.packinstr.TransferOptions)
+	 * org.irods.jargon.core.transfer.TransferControlBlock)
 	 */
 	@Override
 	public void putLocalDataObjectToIRODSForClientSideRuleOperation(
 			final File localFile, final IRODSFile irodsFileDestination,
-			final boolean overwrite, final TransferOptions transferOptions)
+			final boolean overwrite,
+			final TransferControlBlock transferControlBlock)
 			throws JargonException {
 
-		TransferOptions myTransferOptions = buildDefaultTransferOptionsIfNotSpecified(transferOptions);
+		TransferControlBlock effectiveTransferControlBlock = checkTransferControlBlockForOptionsAndSetDefaultsIfNotSpecified(transferControlBlock);
+
+		// no callback listener for client side operations, may add later
 		putLocalDataObjectToIRODS(localFile, irodsFileDestination, overwrite,
-				true, myTransferOptions);
+				true, effectiveTransferControlBlock, null);
+
 	}
 
 	/**
@@ -316,14 +314,20 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	 * @param ignoreChecks
 	 *            <code>boolean</code> that bypasses any checks of the iRODS
 	 *            data before attempting the put.
-	 * @param transferOptions
-	 *            {@link TransferOptions} that optionally give directions on
-	 *            details of the transfer. Will be <code>null</code> if not set.
+	 * @param transferControlBlock
+	 *            {@link TransferControlBlock} that contains information that
+	 *            controls the transfer operation, this is required
+	 * @param transferStatusCallbackListener
+	 *            {@link StatusCallbackListener} implementation to receive
+	 *            status callbacks, this can be set to <code>null</code> if
+	 *            desired
 	 * @throws JargonException
 	 */
 	protected void putLocalDataObjectToIRODS(final File localFile,
 			final IRODSFile irodsFileDestination, final boolean overwrite,
-			final boolean ignoreChecks, final TransferOptions transferOptions)
+			final boolean ignoreChecks,
+			final TransferControlBlock transferControlBlock,
+			final TransferStatusCallbackListener transferStatusCallbackListener)
 			throws JargonException {
 
 		if (localFile == null) {
@@ -334,8 +338,8 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			throw new IllegalArgumentException("null destination file");
 		}
 
-		if (transferOptions == null) {
-			throw new IllegalArgumentException("null transferOptions");
+		if (transferControlBlock == null) {
+			throw new IllegalArgumentException("null transferControlBlock");
 		}
 
 		log.info("put operation, localFile: {}", localFile.getAbsolutePath());
@@ -367,14 +371,15 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 		log.debug("localFileLength:{}", localFileLength);
 
+		// FIXME: make a jargon prop (max size)
 		if (localFileLength < ConnectionConstants.MAX_SZ_FOR_SINGLE_BUF) {
 
 			log.info("processing transfer as normal, length below max");
 
 			try {
 				dataAOHelper.processNormalPutTransfer(localFile, overwrite,
-						transferOptions, targetFile, this.getIRODSProtocol());
-				return;
+						targetFile, this.getIRODSProtocol(),
+						transferControlBlock, transferStatusCallbackListener);
 			} catch (FileNotFoundException e) {
 				log.error(
 						"File not found for local file I was trying to put:{}",
@@ -387,44 +392,78 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			log.info("processing as a parallel transfer, length above max");
 
 			processAsAParallelPutOperationIfMoreThanZeroThreads(localFile,
-					overwrite, transferOptions, targetFile);
+					overwrite, targetFile, transferControlBlock,
+					transferStatusCallbackListener);
 		}
 		log.info("transfer complete");
 
 	}
 
 	/**
+	 * This put will be handled as a parallel transfer. iRODS may have a no
+	 * parallel transfers policy, in which case, the transfer will fall back to
+	 * direct streaming of data
+	 * 
 	 * @param localFile
+	 *            <code>File</code> with source of the transfer in the local
+	 *            file system
 	 * @param overwrite
-	 * @param transferOptions
+	 *            <code>boolean</code> if overwrite is specified
 	 * @param targetFile
+	 *            {@link IRODSFile} that is the target of the transfer
+	 * @param transferControlBlock
+	 *            {@link TransferControlBlock} that controls the transfer, and
+	 *            any options involved, this is required
+	 * @param transferStatusCallbackListener
+	 *            {@link TransferStatusCallbackListener} or <code>null</code>
+	 *            for an optional listener to get status call-backs, this may be
+	 *            <code>null</code>
 	 * @throws JargonException
 	 */
 	private void processAsAParallelPutOperationIfMoreThanZeroThreads(
 			final File localFile, final boolean overwrite,
-			final TransferOptions transferOptions, final IRODSFile targetFile)
+			final IRODSFile targetFile,
+			final TransferControlBlock transferControlBlock,
+			final TransferStatusCallbackListener transferStatusCallbackListener)
 			throws JargonException {
-		// if this was below the max_sz_for_single_buf, the data was included in
-		// the put above and will have returned
+
+		if (localFile == null) {
+			throw new IllegalArgumentException("null localFile");
+		}
+
+		if (targetFile == null) {
+			throw new IllegalArgumentException("null target file");
+		}
+
+		if (transferControlBlock == null) {
+			throw new IllegalArgumentException("null transferControlBlock");
+		}
+
+		TransferOptions myTransferOptions = new TransferOptions(
+				transferControlBlock.getTransferOptions());
+
+		myTransferOptions.setMaxThreads(this.getJargonProperties()
+				.getMaxParallelThreads());
+		log.info("setting max threads cap to:{}",
+				myTransferOptions.getMaxThreads());
 
 		DataObjInp dataObjInp = DataObjInp.instanceForParallelPut(
 				targetFile.getAbsolutePath(), localFile.length(),
-				targetFile.getResource(), overwrite, transferOptions);
+				targetFile.getResource(), overwrite, myTransferOptions);
 
 		try {
 
-			if (transferOptions != null) {
-				if (transferOptions.isComputeAndVerifyChecksumAfterTransfer()
-						|| transferOptions.isComputeChecksumAfterTransfer()) {
-					log.info("computing a checksum on the file at:{}",
-							localFile.getAbsolutePath());
-					String localFileChecksum = LocalFileUtils
-							.md5ByteArrayToString(LocalFileUtils
-									.computeMD5FileCheckSumViaAbsolutePath(localFile
-											.getAbsolutePath()));
-					log.info("local file checksum is:{}", localFileChecksum);
-					dataObjInp.setFileChecksumValue(localFileChecksum);
-				}
+			if (myTransferOptions.isComputeAndVerifyChecksumAfterTransfer()
+					|| myTransferOptions.isComputeChecksumAfterTransfer()) {
+				log.info("computing a checksum on the file at:{}",
+						localFile.getAbsolutePath());
+				String localFileChecksum = LocalFileUtils
+						.md5ByteArrayToString(LocalFileUtils
+								.computeMD5FileCheckSumViaAbsolutePath(localFile
+										.getAbsolutePath()));
+				log.info("local file checksum is:{}", localFileChecksum);
+				dataObjInp.setFileChecksumValue(localFileChecksum);
+
 			}
 
 			Tag responseToInitialCallForPut = getIRODSProtocol().irodsFunction(
@@ -442,7 +481,8 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			} else {
 				log.info("parallel operation deferred by server sending 0 threads back in PortalOperOut, revert to single thread transfer");
 				dataAOHelper.processNormalPutTransfer(localFile, overwrite,
-						transferOptions, targetFile, this.getIRODSProtocol());
+						targetFile, this.getIRODSProtocol(),
+						transferControlBlock, transferStatusCallbackListener);
 			}
 
 		} catch (DataNotFoundException dnf) {
@@ -476,11 +516,14 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			final Tag responseToInitialCallForPut, final int numberOfThreads)
 			throws JargonException {
 		log.info("tranfer will be done using {} threads", numberOfThreads);
-		final String host = responseToInitialCallForPut.getTag(IRODSConstants.PortList_PI)
+		final String host = responseToInitialCallForPut
+				.getTag(IRODSConstants.PortList_PI)
 				.getTag(IRODSConstants.hostAddr).getStringValue();
-		final int port = responseToInitialCallForPut.getTag(IRODSConstants.PortList_PI)
+		final int port = responseToInitialCallForPut
+				.getTag(IRODSConstants.PortList_PI)
 				.getTag(IRODSConstants.portNum).getIntValue();
-		final int pass = responseToInitialCallForPut.getTag(IRODSConstants.PortList_PI)
+		final int pass = responseToInitialCallForPut
+				.getTag(IRODSConstants.PortList_PI)
 				.getTag(IRODSConstants.cookie).getIntValue();
 
 		final ParallelPutFileTransferStrategy parallelPutFileStrategy = ParallelPutFileTransferStrategy
@@ -495,8 +538,8 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		log.info("transfer is done, now terminate the keep alive process");
 
 		log.info("transfer process is complete");
-		int statusForComplete = responseToInitialCallForPut.getTag(IRODSConstants.l1descInx)
-				.getIntValue();
+		int statusForComplete = responseToInitialCallForPut.getTag(
+				IRODSConstants.l1descInx).getIntValue();
 		log.debug("status for complete:{}", statusForComplete);
 
 		log.info("sending operation complete at termination of parallel transfer");
@@ -819,11 +862,14 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			final TransferOptions transferOptions, final Tag message,
 			final long length, final long irodsFileLength)
 			throws JargonException {
-		final String host = message.getTag(IRODSConstants.PortList_PI).getTag(IRODSConstants.hostAddr)
-				.getStringValue();
-		int port = message.getTag(IRODSConstants.PortList_PI).getTag(IRODSConstants.portNum).getIntValue();
-		int password = message.getTag(IRODSConstants.PortList_PI).getTag(IRODSConstants.cookie).getIntValue();
-		int numberOfThreads = message.getTag(IRODSConstants.numThreads).getIntValue();
+		final String host = message.getTag(IRODSConstants.PortList_PI)
+				.getTag(IRODSConstants.hostAddr).getStringValue();
+		int port = message.getTag(IRODSConstants.PortList_PI)
+				.getTag(IRODSConstants.portNum).getIntValue();
+		int password = message.getTag(IRODSConstants.PortList_PI)
+				.getTag(IRODSConstants.cookie).getIntValue();
+		int numberOfThreads = message.getTag(IRODSConstants.numThreads)
+				.getIntValue();
 
 		log.info("number of threads for this transfer = {} ", numberOfThreads);
 
@@ -2179,6 +2225,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	 * @return
 	 * @throws JargonException
 	 */
+
 	private TransferOptions buildDefaultTransferOptionsIfNotSpecified(
 			final TransferOptions transferOptions) throws JargonException {
 		TransferOptions myTransferOptions = transferOptions;
@@ -2190,6 +2237,35 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			myTransferOptions = new TransferOptions(transferOptions);
 		}
 		return myTransferOptions;
+	}
+
+	/**
+	 * Check the provided <code>TransferControlBlock</code> to make sure the
+	 * <code>TransferOptions</code> are specified. If they are not specified,
+	 * then put in defaults.
+	 * 
+	 * @param transferControlBlock
+	 *            {@link TransferControlBlock} to check for
+	 *            <code>TransferOptions</code>, can be <code>null</code>
+	 * @throws JargonException
+	 */
+	private TransferControlBlock checkTransferControlBlockForOptionsAndSetDefaultsIfNotSpecified(
+			final TransferControlBlock transferControlBlock)
+			throws JargonException {
+		TransferControlBlock effectiveTransferControlBlock = transferControlBlock;
+		if (effectiveTransferControlBlock == null) {
+			log.info("no transferControlBlock provided, building a default version");
+			effectiveTransferControlBlock = DefaultTransferControlBlock
+					.instance();
+		}
+
+		if (effectiveTransferControlBlock.getTransferOptions() == null) {
+			log.info("creating a default transferOptions, as none specified");
+			effectiveTransferControlBlock.setTransferOptions(getIRODSSession()
+					.buildTransferOptionsBasedOnJargonProperties());
+		}
+
+		return effectiveTransferControlBlock;
 	}
 
 }

@@ -3,7 +3,6 @@ package org.irods.jargon.core.pub;
 import java.io.File;
 import java.util.List;
 
-import org.irods.jargon.core.connection.JargonProperties;
 import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.DuplicateDataException;
 import org.irods.jargon.core.exception.JargonException;
@@ -17,6 +16,8 @@ import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.query.AVUQueryElement;
 import org.irods.jargon.core.query.JargonQueryException;
 import org.irods.jargon.core.query.MetaDataAndDomainData;
+import org.irods.jargon.core.transfer.TransferControlBlock;
+import org.irods.jargon.core.transfer.TransferStatusCallbackListener;
 
 /**
  * This is an access object that can be used to manipulate iRODS data objects
@@ -41,43 +42,6 @@ import org.irods.jargon.core.query.MetaDataAndDomainData;
  * 
  */
 public interface DataObjectAO extends FileCatalogObjectAO {
-
-	/**
-	 * Put a local file to IRODS. This method will operate using any defaults in
-	 * the <code>JargonProperties</code> to control things like behavior of
-	 * parallel transfers.
-	 * 
-	 * 
-	 * @throws JargonException
-	 */
-	void putLocalDataObjectToIRODS(File localFile,
-			IRODSFile irodsFileDestination, boolean overwrite)
-			throws JargonException;
-
-	/**
-	 * Transfer a single file from the local file system to iRODS. This method
-	 * allows the specification of a <code>TransferOptions</code> object that
-	 * controls aspects of the transfer.
-	 * 
-	 * @param localFile
-	 *            <code>java.io.File</code> containing the data to go to IRODS
-	 * @param irodsFileDestination
-	 *            {@link org.IRODSFileImpl.jargon.core.pub.io.IRODSFile} that
-	 *            gives the destination for the put. If the given target
-	 *            destination is given as an iRODS collection, the name of the
-	 *            local file will be the name of the iRODS file, and it will
-	 *            proceed as normal.
-	 * @param overwrite
-	 *            <code>boolean</code> that determines whether this is an
-	 *            overwrite
-	 * @param transferOptions
-	 *            {@link TransferOptions} (null if not specified) that will
-	 *            control aspects of the transfer
-	 * @throws JargonException
-	 */
-	void putLocalDataObjectToIRODSGivingTransferOptions(File localFile,
-			IRODSFile irodsFileDestination, boolean overwrite,
-			TransferOptions transferOptions) throws JargonException;
 
 	/**
 	 * Query method will return the first data object found with the given
@@ -438,42 +402,80 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	void replicateIrodsDataObjectToAllResourcesInResourceGroup(
 			final String irodsFileAbsolutePath,
 			final String irodsResourceGroupName) throws JargonException;
-
+	
 	/**
-	 * Put a local file to IRODS with special consideration for the requirements
-	 * of client-side put operations in rules. There is a subtle issue with
-	 * issuing certain commands to an iRODS agent that is processing a rule, and
-	 * doing anything that causes a GenQuery to run will cause unexpected query
-	 * results to be returned from the agent when not requested. This method is
-	 * not intended for use other than when processing client side put actions
-	 * as commanded by an iRODS rule. This special method sets a flag to quash
-	 * certain checks that the normal put operation does on the target iRODS
-	 * file for the put.
-	 * 
+	 * Method to put local data to iRODS taking default options, and not specifying a call-back listener
 	 * @param localFile
-	 *            <code>java.io.File</code> containing the data to go to IRODS
+	 *            <code>File</code> with a source file or directory in the local
+	 *            file system
 	 * @param irodsFileDestination
-	 *            {@link org.IRODSFileImpl.jargon.core.pub.io.IRODSFile} that
-	 *            gives the destination for the put. If the given target
-	 *            destination is given as an iRODS collection, the name of the
-	 *            local file will be the name of the iRODS file, and it will
-	 *            proceed as normal.
+	 *            {@link IRODSFile} that is the target of the data transfer
 	 * @param overwrite
-	 *            <code>boolean</code> that determines whether this is an
-	 *            overwrite
-	 * @param transferOptions
-	 *            {@link TransferOptions} that controls details of the transfer.
-	 *            This may be set to <code>null</code>, in which case, default
-	 *            options will be created based on the {@link JargonProperties}
-	 *            that have been set. Note that the <code>TransferOptions</code>
-	 *            object will be cloned, and as such the passed-in parameter
-	 *            will not be altered.
+	 *            <code>boolean</code> that indicates whether data should be
+	 *            overwritten at the target
 	 * @throws JargonException
 	 */
-	void putLocalDataObjectToIRODSForClientSideRuleOperation(
-			final File localFile, final IRODSFile irodsFileDestination,
-			final boolean overwrite, final TransferOptions transferOptions)
+	void putLocalDataObjectToIRODS(File localFile,
+			IRODSFile irodsFileDestination, boolean overwrite)
 			throws JargonException;
+
+	/**
+	 * Transfer a file or directory from the local file system to iRODS.
+	 * 
+	 * @param localFile
+	 *            <code>File</code> with a source file or directory in the local
+	 *            file system
+	 * @param irodsFileDestination
+	 *            {@link IRODSFile} that is the target of the data transfer
+	 * @param overwrite
+	 *            <code>boolean</code> that indicates whether data should be
+	 *            overwritten at the target
+	 * @param transferControlBlock
+	 *            {@link TransferControlBlock} that will control aspects of the
+	 *            data transfer. Note that the {@link TransferOptions} that are
+	 *            a member of the <code>TransferControlBlock</code> may be
+	 *            specified here to pass to the running transfer. If this is set
+	 *            to <code>null</code> a default block will be created, and the
+	 *            <code>TransferOptions</code> will be set to the defined
+	 *            default parameters
+	 * @param transferStatusCallbackListener
+	 *            {@link TransferStatusCallbackListener}, or <code>null</code>
+	 *            if not specified, that can receive callbacks on the status of
+	 *            the transfer operation
+	 * @throws JargonException
+	 */
+	void putLocalDataObjectToIRODS(File localFile,
+			IRODSFile irodsFileDestination, boolean overwrite,
+			TransferControlBlock transferControlBlock,
+			TransferStatusCallbackListener transferStatusCallbackListener)
+			throws JargonException;
+
+	/**
+	 * Transfer a file or directory from the local file system to iRODS as
+	 * invoked by a client-side rule operation. This is used only for special
+	 * cases during rule invocation
+	 * 
+	 * @param localFile
+	 *            <code>File</code> with a source file or directory in the local
+	 *            file system
+	 * @param irodsFileDestination
+	 *            {@link IRODSFile} that is the target of the data transfer
+	 * @param overwrite
+	 *            <code>boolean</code> that indicates whether data should be
+	 *            overwritten at the target
+	 * @param transferControlBlock
+	 *            {@link TransferControlBlock} that will control aspects of the
+	 *            data transfer. Note that the {@link TransferOptions} that are
+	 *            a member of the <code>TransferControlBlock</code> may be
+	 *            specified here to pass to the running transfer. If this is set
+	 *            to <code>null</code> a default block will be created, and the
+	 *            <code>TransferOptions</code> will be set to the defined
+	 *            default parameters
+	 * @throws JargonException
+	 */
+	void putLocalDataObjectToIRODSForClientSideRuleOperation(File localFile,
+			IRODSFile irodsFileDestination, boolean overwrite,
+			TransferControlBlock transferControlBlock) throws JargonException;
 
 	/**
 	 * Retrieve a file from iRODS and store it locally. The resource provided in
@@ -929,5 +931,7 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 */
 	void removeAccessPermissionsForUserInAdminMode(String zone,
 			String absolutePath, String userName) throws JargonException;
+
+
 
 }

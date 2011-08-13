@@ -1,5 +1,6 @@
 package org.irods.jargon.core.unittest;
 
+import org.irods.jargon.core.connection.ConnectionProgressStatusTest;
 import org.irods.jargon.core.connection.ConnectionProxyDefinitionTest;
 import org.irods.jargon.core.connection.DefaultPropertiesJargonConfigTest;
 import org.irods.jargon.core.connection.EnvironmentalInfoAccessorTest;
@@ -16,7 +17,7 @@ import org.junit.runners.Suite;
 		IRODSSimpleProtocolManagerTest.class,
 		ConnectionProxyDefinitionTest.class, IRODSSessionTest.class,
 		IRODSServerPropertiesTest.class,
-		DefaultPropertiesJargonConfigTest.class })
+		DefaultPropertiesJargonConfigTest.class, ConnectionProgressStatusTest.class })
 public class ConnectionTests {
 
 }

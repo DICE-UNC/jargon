@@ -38,7 +38,10 @@ public class DefaultTransferControlBlock implements TransferControlBlock {
 	private int errorCount = 0;
 	private int totalFilesToTransfer = 0;
 	private int totalFilesTransferredSoFar = 0;
-	private TransferOptions transferOptions;
+	/**
+	 * Options to control transfer behavior, may be left null, in which case defaults will be used.  Specifying here overrides the default settings for this transfer
+	 */
+	private TransferOptions transferOptions = null;
 	private long totalBytesTransferredSoFar = 0L;
 	private long totalBytesToTransfer = 0L;
 

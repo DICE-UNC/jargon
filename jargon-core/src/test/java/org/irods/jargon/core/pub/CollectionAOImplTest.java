@@ -1192,7 +1192,7 @@ public class CollectionAOImplTest {
 	@Test
 	public void testPutCollectionWithTwoFilesAndCountThem() throws Exception {
 
-		String rootCollection = "testPutCollectionWithTwoFilesAndCountThem";
+		String rootCollection = "testPutCollectionWithTwoFilesAndCountThemAfter";
 		String localCollectionAbsolutePath = scratchFileUtils
 				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH
 						+ '/' + rootCollection);

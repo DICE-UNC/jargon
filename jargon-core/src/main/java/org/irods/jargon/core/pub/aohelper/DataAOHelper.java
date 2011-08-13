@@ -18,6 +18,7 @@ import org.irods.jargon.core.connection.IRODSCommands;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.packinstr.DataObjInp;
 import org.irods.jargon.core.packinstr.TransferOptions;
+import org.irods.jargon.core.pub.DataTransferOperations;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 import org.irods.jargon.core.pub.Stream2StreamAO;
 import org.irods.jargon.core.pub.domain.DataObject;
@@ -30,6 +31,8 @@ import org.irods.jargon.core.query.IRODSQueryResultSetInterface;
 import org.irods.jargon.core.query.MetaDataAndDomainData;
 import org.irods.jargon.core.query.MetaDataAndDomainData.MetadataDomain;
 import org.irods.jargon.core.query.RodsGenQueryEnum;
+import org.irods.jargon.core.transfer.TransferControlBlock;
+import org.irods.jargon.core.transfer.TransferStatusCallbackListener;
 import org.irods.jargon.core.utils.IRODSConstants;
 import org.irods.jargon.core.utils.IRODSDataConversionUtil;
 import org.irods.jargon.core.utils.LocalFileUtils;
@@ -357,37 +360,71 @@ public final class DataAOHelper extends AOHelper {
 	}
 
 	/**
+	 * Process a put transfer (uplaod a file to iRODS from the local file
+	 * system). This method is meant to be used within the API, and as such, is
+	 * not useful to api users. To do normal data transfers, please consult the
+	 * {@link DataTransferOperations} access object.
+	 * 
 	 * @param localFile
+	 *            <code>File</code> which points to the local data object or
+	 *            collection to uplaod
 	 * @param overwrite
-	 * @param transferOptions
+	 *            <code>boolean</code> that indicates whether the data can be
+	 *            overwritten // FIXME: migrate to the transfer control block
 	 * @param targetFile
+	 *            {@link IRODSFile} that will be the target of the put
+	 * @param irodsProtocol
+	 *            {@link IRODSProtocol} that represents the active connection to
+	 *            iRODS
+	 * @param transferControlBlock
+	 *            {@link TransferControlBlock} that contains information that
+	 *            controls the transfer operation, this is required
+	 * @param transferStatusCallbackListener
+	 *            {@link StatusCallbackListener} implementation to receive
+	 *            status callbacks, this can be set to <code>null</code> if
+	 *            desired
 	 * @throws JargonException
 	 * @throws FileNotFoundException
 	 */
 	public void processNormalPutTransfer(final File localFile,
-			final boolean overwrite, final TransferOptions transferOptions,
-			final IRODSFile targetFile, final IRODSCommands irodsProtocol)
+			final boolean overwrite, final IRODSFile targetFile,
+			final IRODSCommands irodsProtocol,
+			final TransferControlBlock transferControlBlock,
+			final TransferStatusCallbackListener transferStatusCallbackListener)
 			throws JargonException, FileNotFoundException {
 
 		if (localFile == null) {
 			throw new IllegalArgumentException("null localFile");
 		}
 
-		if (transferOptions == null) {
-			throw new IllegalArgumentException("null transferOptions");
+		if (targetFile == null) {
+			throw new IllegalArgumentException("null targetFile");
 		}
 
-		log.info("processing as a normal put strategy");
+		if (irodsProtocol == null) {
+			throw new IllegalArgumentException("null irodsProtocol");
+		}
+
+		if (transferControlBlock == null) {
+			throw new IllegalArgumentException("null transferControlBlock");
+		}
+
+		log.info("processNormalPutTransfer");
+
+		// make a defensive copy
+		TransferOptions myTransferOptions = new TransferOptions(
+				transferControlBlock.getTransferOptions());
+		myTransferOptions.setMaxThreads(0);
 
 		DataObjInp dataObjInp = DataObjInp.instanceForNormalPutStrategy(
 				targetFile.getAbsolutePath(), localFile.length(),
-				targetFile.getResource(), overwrite, transferOptions);
+				targetFile.getResource(), overwrite, myTransferOptions);
 
 		// see if checksum is required
 
-		if (transferOptions != null) {
-			if (transferOptions.isComputeAndVerifyChecksumAfterTransfer()
-					|| transferOptions.isComputeChecksumAfterTransfer()) {
+		if (myTransferOptions != null) {
+			if (myTransferOptions.isComputeAndVerifyChecksumAfterTransfer()
+					|| myTransferOptions.isComputeChecksumAfterTransfer()) {
 				log.info("computing a checksum on the file at:{}",
 						localFile.getAbsolutePath());
 				String localFileChecksum = LocalFileUtils
@@ -399,9 +436,13 @@ public final class DataAOHelper extends AOHelper {
 			}
 		}
 
-		irodsProtocol.irodsFunction(IRODSConstants.RODS_API_REQ, dataObjInp.getParsedTags(),
-				0, null, localFile.length(), new FileInputStream(localFile),
-				dataObjInp.getApiNumber());
+		irodsProtocol
+				.irodsFunction(IRODSConstants.RODS_API_REQ,
+						dataObjInp.getParsedTags(), 0, null,
+						localFile.length(), new FileInputStream(localFile),
+						dataObjInp.getApiNumber(), null); // FIXME: adding low
+															// level callback
+															// listener here
 	}
 
 	/**

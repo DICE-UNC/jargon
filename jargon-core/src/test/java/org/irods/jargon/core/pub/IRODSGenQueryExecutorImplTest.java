@@ -434,7 +434,7 @@ public class IRODSGenQueryExecutorImplTest {
 				.getDataObjectAO(irodsAccount);
 		IRODSFile destFile = irodsFileFactory
 				.instanceIRODSFile(targetIrodsFile);
-		dataObjectAO.putLocalDataObjectToIRODS(localFile, destFile, true);
+		dataObjectAO.putLocalDataObjectToIRODS(localFile, destFile, true, null, null);
 
 		// build query
 		StringBuilder q = new StringBuilder();

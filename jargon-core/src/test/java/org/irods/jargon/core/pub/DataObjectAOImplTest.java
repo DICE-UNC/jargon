@@ -30,6 +30,8 @@ import org.irods.jargon.core.query.AVUQueryOperatorEnum;
 import org.irods.jargon.core.query.MetaDataAndDomainData;
 import org.irods.jargon.core.query.RodsGenQueryEnum;
 import org.irods.jargon.core.remoteexecute.RemoteExecuteServiceImpl;
+import org.irods.jargon.core.transfer.DefaultTransferControlBlock;
+import org.irods.jargon.core.transfer.TransferControlBlock;
 import org.irods.jargon.testutils.AssertionHelper;
 import org.irods.jargon.testutils.IRODSTestSetupUtilities;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
@@ -1118,7 +1120,7 @@ public class DataObjectAOImplTest {
 		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
 				.instanceIRODSFile(targetIrodsCollection);
 		dataObjectAO.putLocalDataObjectToIRODS(new File(fileNameOrig),
-				irodsFile, false);
+				irodsFile, false, null, null);
 		dataObjectAO.copyIrodsDataObject(targetIrodsCollection + "/"
 				+ testFileName, targetIrodsCollection + "/"
 				+ testCopyToFileName, "");
@@ -1151,7 +1153,7 @@ public class DataObjectAOImplTest {
 		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
 				.instanceIRODSFile(targetIrodsCollection);
 		dataObjectAO.putLocalDataObjectToIRODS(new File(fileNameOrig),
-				irodsFile, false);
+				irodsFile, false, null, null);
 		dataObjectAO.copyIrodsDataObject(targetIrodsCollection + "/"
 				+ testFileName, targetIrodsCollection + "/"
 				+ testCopyToFileName, "");
@@ -1191,7 +1193,7 @@ public class DataObjectAOImplTest {
 		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
 				.instanceIRODSFile(targetIrodsCollection);
 		dataObjectAO.putLocalDataObjectToIRODS(new File(fileNameOrig),
-				irodsFile, false);
+				irodsFile, false, null, null);
 		dataObjectAO.copyIrodsDataObject(targetIrodsCollection + "/"
 				+ testFileName, targetIrodsCollection + "/"
 				+ testCopyToFileName, "");
@@ -1682,7 +1684,7 @@ public class DataObjectAOImplTest {
 		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
 				.instanceIRODSFile(targetIrodsCollection);
 		dataObjectAO.putLocalDataObjectToIRODS(new File(fileNameOrig),
-				irodsFile, true);
+				irodsFile, true, null, null);
 
 		dataObjectAO.setAccessPermissionRead("", targetIrodsCollection + "/"
 				+ testFileName, testingProperties
@@ -1727,7 +1729,7 @@ public class DataObjectAOImplTest {
 		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
 				.instanceIRODSFile(targetIrodsCollection);
 		dataObjectAO.putLocalDataObjectToIRODS(new File(fileNameOrig),
-				irodsFile, true);
+				irodsFile, true, null, null);
 
 		DataObjectAO rodsDataObjectAO = irodsFileSystem
 				.getIRODSAccessObjectFactory()
@@ -1779,7 +1781,7 @@ public class DataObjectAOImplTest {
 		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
 				.instanceIRODSFile(targetIrodsCollection);
 		dataObjectAO.putLocalDataObjectToIRODS(new File(fileNameOrig),
-				irodsFile, true);
+				irodsFile, true, null, null);
 
 		DataObjectAO rodsDataObjectAO = irodsFileSystem
 				.getIRODSAccessObjectFactory()
@@ -1831,7 +1833,7 @@ public class DataObjectAOImplTest {
 		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
 				.instanceIRODSFile(targetIrodsCollection);
 		dataObjectAO.putLocalDataObjectToIRODS(new File(fileNameOrig),
-				irodsFile, true);
+				irodsFile, true, null, null);
 
 		DataObjectAO rodsDataObjectAO = irodsFileSystem
 				.getIRODSAccessObjectFactory()
@@ -1884,7 +1886,7 @@ public class DataObjectAOImplTest {
 		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
 				.instanceIRODSFile(targetIrodsCollection);
 		dataObjectAO.putLocalDataObjectToIRODS(new File(fileNameOrig),
-				irodsFile, true);
+				irodsFile, true, null,null);
 
 		dataObjectAO.setAccessPermissionWrite("", targetIrodsCollection + "/"
 				+ testFileName, testingProperties
@@ -1921,7 +1923,7 @@ public class DataObjectAOImplTest {
 		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
 				.instanceIRODSFile(targetIrodsCollection);
 		dataObjectAO.putLocalDataObjectToIRODS(new File(fileNameOrig),
-				irodsFile, true);
+				irodsFile, true, null, null);
 
 		dataObjectAO.setAccessPermissionOwn("", targetIrodsCollection + "/"
 				+ testFileName, testingProperties
@@ -2639,9 +2641,11 @@ public class DataObjectAOImplTest {
 				.instanceIRODSFile(targetIrodsFile);
 		TransferOptions transferOptions = new TransferOptions();
 		transferOptions.setComputeChecksumAfterTransfer(true);
-
-		dataObjectAO.putLocalDataObjectToIRODSGivingTransferOptions(localFile,
-				destFile, true, transferOptions);
+		TransferControlBlock transferControlBlock = DefaultTransferControlBlock.instance();
+		transferControlBlock.setTransferOptions(transferOptions);
+		
+		dataObjectAO.putLocalDataObjectToIRODS(localFile,
+				destFile, true, transferControlBlock,null);
 		assertionHelper.assertIrodsFileOrCollectionExists(targetIrodsFile);
 	}
 
@@ -2675,9 +2679,12 @@ public class DataObjectAOImplTest {
 				.instanceIRODSFile(targetIrodsFile);
 		TransferOptions transferOptions = new TransferOptions();
 		transferOptions.setComputeAndVerifyChecksumAfterTransfer(true);
+		TransferControlBlock transferControlBlock = DefaultTransferControlBlock.instance();
+		transferControlBlock.setTransferOptions(transferOptions);
+		
+		dataObjectAO.putLocalDataObjectToIRODS(localFile,
+				destFile, true, transferControlBlock,null);
 
-		dataObjectAO.putLocalDataObjectToIRODSGivingTransferOptions(localFile,
-				destFile, true, transferOptions);
 		assertionHelper.assertIrodsFileOrCollectionExists(targetIrodsFile);
 	}
 
@@ -2712,9 +2719,11 @@ public class DataObjectAOImplTest {
 				.instanceIRODSFile(targetIrodsFile);
 		TransferOptions transferOptions = new TransferOptions();
 		transferOptions.setComputeAndVerifyChecksumAfterTransfer(true);
-
-		dataObjectAO.putLocalDataObjectToIRODSGivingTransferOptions(localFile,
-				destFile, true, transferOptions);
+		TransferControlBlock transferControlBlock = DefaultTransferControlBlock.instance();
+		transferControlBlock.setTransferOptions(transferOptions);
+		
+		dataObjectAO.putLocalDataObjectToIRODS(localFile,
+				destFile, true, transferControlBlock,null);
 		assertionHelper.assertIrodsFileOrCollectionExists(targetIrodsFile);
 	}
 

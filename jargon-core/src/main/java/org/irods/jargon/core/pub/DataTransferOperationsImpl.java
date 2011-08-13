@@ -653,8 +653,9 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 			final TransferControlBlock transferControlBlock)
 			throws JargonException {
 
-		TransferControlBlock operativeTransferControlBlock = transferControlBlock;
+		
 
+		TransferControlBlock operativeTransferControlBlock = transferControlBlock;
 		try {
 
 			if (targetIrodsFile == null) {
@@ -685,6 +686,7 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 			 * count of files to be transferred
 			 */
 
+			
 			if (transferControlBlock == null) {
 				log.info("creating default transfer control block, none was supplied and a callback listener is set");
 				operativeTransferControlBlock = DefaultTransferControlBlock
@@ -751,8 +753,8 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 							.overallStatusCallback(status);
 				}
 
-				processPutOfSingleFile(sourceFile, targetIrodsFile,
-						transferStatusCallbackListener,
+				transferOperationsHelper.processPutOfSingleFile(sourceFile,
+						targetIrodsFile, transferStatusCallbackListener,
 						operativeTransferControlBlock);
 
 				// send status callback that indicates completion
@@ -1015,40 +1017,6 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 		}
 	}
 
-	/**
-	 * Put a single file to iRODS.
-	 * 
-	 * @param sourceFile
-	 *            <code>File</code> on the local file system that will be the
-	 *            source of the put.
-	 * @param targetIrodsFile
-	 *            {@link org.irods.jargon.core.pub.io.File} that is the remote
-	 *            file on iRODS which is the target of the put.
-	 * @param transferStatusCallbackListener
-	 *            {@link org.irods.jargon.core.transfer.TransferStatusCallbackListener}
-	 *            implementation that will receive callbacks of success/failure
-	 *            of each individual file transfer. This may be set to
-	 *            <code>null</code>, in which case, exceptions that are thrown
-	 *            will be rethrown by this method to the caller.
-	 * @param transferControlBlock
-	 *            {@link org.irods.jargon.core.transfer.TransferControlBlock}
-	 *            implementation that is the communications mechanism between
-	 *            the initiator of the transfer and the transfer process. This
-	 *            may be set to <code>null</code> if those facilities are not
-	 *            needed.
-	 * @throws JargonException
-	 */
-	private void processPutOfSingleFile(
-			final File sourceFile,
-			final IRODSFile targetIrodsFile,
-			final TransferStatusCallbackListener transferStatusCallbackListener,
-			final TransferControlBlock transferControlBlock)
-			throws JargonException {
-
-		transferOperationsHelper.processPutOfSingleFile(sourceFile,
-				targetIrodsFile, transferStatusCallbackListener,
-				transferControlBlock);
-	}
 
 	/*
 	 * (non-Javadoc)
