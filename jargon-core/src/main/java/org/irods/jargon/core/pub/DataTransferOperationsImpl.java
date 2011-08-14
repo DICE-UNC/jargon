@@ -291,8 +291,9 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 			final TransferControlBlock transferControlBlock)
 			throws JargonException {
 
-		TransferControlBlock operativeTransferControlBlock = transferControlBlock;
-
+		TransferControlBlock operativeTransferControlBlock = buildTransferControlBlockAndOptionsBasedOnParameters(
+				transferControlBlock);
+		
 		try {
 
 			if (irodsSourceFile == null) {
@@ -302,23 +303,15 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 			if (targetLocalFile == null) {
 				throw new IllegalArgumentException("target local file is null");
 			}
+			
 
 			log.info("get operation, irods source file is: {}",
 					irodsSourceFile.getAbsolutePath());
 			log.info("  local file for get: {}",
 					targetLocalFile.getAbsolutePath());
+			
 
-			/*
-			 * If a callback listener is given, make sure there is a transfer
-			 * control block, and do a pre-scan of the iRODS collection to get a
-			 * count of files to be transferred
-			 */
-
-			if (transferControlBlock == null) {
-				log.info("creating default transfer control block, none was supplied and a callback listener is set");
-				operativeTransferControlBlock = DefaultTransferControlBlock
-						.instance();
-			}
+			// FIXME: look at normalization here (file to dir, file to file, etc)
 
 			File targetLocalFileNameForCallbacks = new File(
 					targetLocalFile.getAbsolutePath(),
@@ -558,9 +551,7 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 	 * @param transferControlBlock
 	 *            {@link org.irods.jargon.core.transfer.TransferControlBlock}
 	 *            implementation that is the communications mechanism between
-	 *            the initiator of the transfer and the transfer process. This
-	 *            may be set to <code>null</code> if those facilities are not
-	 *            needed.
+	 *            the initiator of the transfer and the transfer process. This is required
 	 * @throws JargonException
 	 */
 	private void getOperationWhenSourceFileIsDirectory(
@@ -570,6 +561,8 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 			final TransferControlBlock transferControlBlock)
 			throws JargonException {
 
+		log.info("getOperationWhenSourceFileIsDirectory");
+			
 		log.info("this get operation is recursive");
 		if (targetLocalFile.exists() && !targetLocalFile.isDirectory()) {
 			String msg = "attempt to put a collection (recursively) to a target local file that is not a directory";
@@ -618,9 +611,7 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 	 * @param transferControlBlock
 	 *            {@link org.irods.jargon.core.transfer.TransferControlBlock}
 	 *            implementation that is the communications mechanism between
-	 *            the initiator of the transfer and the transfer process. This
-	 *            may be set to <code>null</code> if those facilities are not
-	 *            needed.
+	 *            the initiator of the transfer and the transfer process. 
 	 * @throws JargonException
 	 */
 	private void processGetOfSingleFile(
@@ -655,7 +646,9 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 
 		
 
-		TransferControlBlock operativeTransferControlBlock = transferControlBlock;
+		TransferControlBlock operativeTransferControlBlock = buildTransferControlBlockAndOptionsBasedOnParameters(
+				transferControlBlock);
+		
 		try {
 
 			if (targetIrodsFile == null) {
@@ -685,14 +678,6 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 			 * control block, and do a pre-scan of the iRODS collection to get a
 			 * count of files to be transferred
 			 */
-
-			
-			if (transferControlBlock == null) {
-				log.info("creating default transfer control block, none was supplied and a callback listener is set");
-				operativeTransferControlBlock = DefaultTransferControlBlock
-						.instance();
-			}
-
 			
 			// look for recursive put (directory to collection) and process,
 			// otherwise, just put the file
@@ -701,19 +686,15 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 
 				preCountLocalFilesBeforeTransfer(sourceFile,
 						operativeTransferControlBlock);
-
 				
 				putWhenSourceFileIsDirectory(sourceFile, targetIrodsFile,
 						transferStatusCallbackListener,
 						operativeTransferControlBlock);
 
-			
 
 			} else {
-
-				if (operativeTransferControlBlock != null) {
+				
 					operativeTransferControlBlock.setTotalFilesToTransfer(1);
-				}
 				
 				/* source file is a file, target is either a collection, or specifies the file. 
 				 * If the target exists, or the target parent exists, format the appropriate callback so that
@@ -785,6 +766,29 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 					transferStatusCallbackListener,
 					operativeTransferControlBlock, je);
 		}
+	}
+
+	/**
+	 * @param transferControlBlock
+	 * @return
+	 * @throws JargonException
+	 */
+	private TransferControlBlock buildTransferControlBlockAndOptionsBasedOnParameters(
+			final TransferControlBlock transferControlBlock)
+			throws JargonException {
+		
+		TransferControlBlock operativeTransferControlBlock = transferControlBlock;
+		
+		if (operativeTransferControlBlock == null) {
+			log.info("creating default transfer control block, none was supplied and a callback listener is set");
+			operativeTransferControlBlock = DefaultTransferControlBlock
+					.instance();
+		}
+		
+		if (operativeTransferControlBlock.getTransferOptions() == null) {
+			operativeTransferControlBlock.setTransferOptions(getIRODSSession().buildTransferOptionsBasedOnJargonProperties());
+		}
+		return operativeTransferControlBlock;
 	}
 
 	/*
@@ -1046,23 +1050,9 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 		log.info("replicate operation for source: {}", irodsFileAbsolutePath);
 		log.info(" to target resource: {}", targetResource);
 
-		TransferControlBlock operativeTransferControlBlock = transferControlBlock;
-
-		/*
-		 * If a callback listener is given, make sure there is a transfer
-		 * control block, and do a pre-scan of the iRODS collection to get a
-		 * count of files to be transferred
-		 */
-
-		if (transferStatusCallbackListener != null) {
-
-			if (transferControlBlock == null) {
-				log.info("creating default transfer control block, none was supplied and a callback listener is set");
-				operativeTransferControlBlock = DefaultTransferControlBlock
-						.instance();
-			}
-		}
-
+		TransferControlBlock operativeTransferControlBlock = buildTransferControlBlockAndOptionsBasedOnParameters(
+				transferControlBlock);
+		
 		final IRODSFileFactory irodsFileFactory = this.getIRODSFileFactory();
 
 		IRODSFile sourceFile = irodsFileFactory
@@ -1118,11 +1108,9 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 			}
 
 		} else {
-
-			if (operativeTransferControlBlock != null) {
+			
 				operativeTransferControlBlock.setTotalFilesToTransfer(1);
-			}
-
+			
 			// send 0th file status callback that indicates startup
 			if (transferStatusCallbackListener != null) {
 				TransferStatus status = TransferStatus

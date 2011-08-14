@@ -260,23 +260,25 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 				transferStatusCallbackListener);
 
 	}
-	
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.pub.DataObjectAO#putLocalDataObjectToIRODS(java.io.File, org.irods.jargon.core.pub.io.IRODSFile, boolean)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.DataObjectAO#putLocalDataObjectToIRODS(java
+	 * .io.File, org.irods.jargon.core.pub.io.IRODSFile, boolean)
 	 */
 	@Override
 	public void putLocalDataObjectToIRODS(final File localFile,
 			final IRODSFile irodsFileDestination, final boolean overwrite)
 			throws JargonException {
-		
+
 		// call with no control block will create defaults
 		TransferControlBlock effectiveTransferControlBlock = checkTransferControlBlockForOptionsAndSetDefaultsIfNotSpecified(null);
 		putLocalDataObjectToIRODS(localFile, irodsFileDestination, overwrite,
-				false, effectiveTransferControlBlock,
-				null);
+				false, effectiveTransferControlBlock, null);
 
 	}
-
 
 	/*
 	 * (non-Javadoc)
@@ -584,7 +586,47 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			throw new IllegalArgumentException("nulll destination file");
 		}
 
+		/*
+		 * Create a TransferControlBlock with the given options (which may be
+		 * null) and then process as usual. No status call-backs are requested.
+		 */
+
 		TransferOptions myTransferOptions = buildDefaultTransferOptionsIfNotSpecified(transferOptions);
+		TransferControlBlock transferControlBlock = DefaultTransferControlBlock
+				.instance();
+		transferControlBlock.setTransferOptions(myTransferOptions);
+
+		getDataObjectFromIrods(irodsFileToGet, localFileToHoldData,
+				transferControlBlock, null);
+	}
+
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.core.pub.DataObjectAO#getDataObjectFromIrods(org.irods.jargon.core.pub.io.IRODSFile, java.io.File, org.irods.jargon.core.transfer.TransferControlBlock, org.irods.jargon.core.transfer.TransferStatusCallbackListener)
+	 */
+	@Override
+	public void getDataObjectFromIrods(final IRODSFile irodsFileToGet,
+			final File localFileToHoldData,
+			final TransferControlBlock transferControlBlock,
+			final TransferStatusCallbackListener transferStatusCallbackListener)
+			throws DataNotFoundException, JargonException {
+
+		log.info("getDataObjectFromIrods()");
+
+		if (localFileToHoldData == null) {
+			throw new IllegalArgumentException("null local file");
+		}
+
+		if (irodsFileToGet == null) {
+			throw new IllegalArgumentException("nulll destination file");
+		}
+
+		log.info("irodsFileToGet:{}", irodsFileToGet.getAbsolutePath());
+		log.info("localFileToHoldData:{}",
+				localFileToHoldData.getAbsolutePath());
+
+		TransferControlBlock operativeTransferControlBlock = checkTransferControlBlockForOptionsAndSetDefaultsIfNotSpecified(transferControlBlock);
+		TransferOptions thisFileTransferOptions = new TransferOptions(
+				operativeTransferControlBlock.getTransferOptions());
 
 		File localFile;
 		if (localFileToHoldData.isDirectory()) {
@@ -602,98 +644,28 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		long irodsFileLength = irodsFileToGet.length();
 		log.info("testing file length to set parallel transfer options");
 		if (irodsFileLength > ConnectionConstants.MAX_SZ_FOR_SINGLE_BUF) {
-			myTransferOptions.setMaxThreads(getIRODSSession()
+			thisFileTransferOptions.setMaxThreads(getIRODSSession()
 					.getJargonProperties().getMaxParallelThreads());
 			log.info("length above threshold, send max threads cap");
 		} else {
-			myTransferOptions.setMaxThreads(0);
+			thisFileTransferOptions.setMaxThreads(0);
 		}
 
 		log.info("target local file: {}", localFile.getAbsolutePath());
 		log.info("from source file: {}", irodsFileToGet.getAbsolutePath());
 
-		final DataObjInp dataObjInp = DataObjInp.instanceForGet(
+		final DataObjInp dataObjInp;
+		if (irodsFileToGet.getResource().isEmpty()) {
+			dataObjInp = DataObjInp.instanceForGet(
 				irodsFileToGet.getAbsolutePath(), irodsFileLength,
-				myTransferOptions);
+				thisFileTransferOptions);
+		} else {
+			dataObjInp = DataObjInp.instanceForGetSpecifyingResource(irodsFileToGet.getAbsolutePath(), irodsFileToGet.getResource(), thisFileTransferOptions);
+		}
 
 		processGetAfterResourceDetermined(irodsFileToGet, localFile,
-				dataObjInp, myTransferOptions, irodsFileLength);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @seeorg.irods.jargon.core.pub.DataObjectAO#
-	 * irodsDataObjectGetOperationUsingTheSpecificResourceSetInIrodsFile
-	 * (org.irods.jargon.core.pub.io.IRODSFile, java.io.File)
-	 */
-	@Override
-	public void getDataObjectFromIrodsUsingTheSpecificResourceSetInIrodsFile(
-			final IRODSFile irodsFileToGet, final File localFileToHoldData)
-			throws DataNotFoundException, JargonException {
-
-		getDataObjectFromIrodsUsingTheSpecificResourceSetInIrodsFileSpecifyingTransferOptions(
-				irodsFileToGet, localFileToHoldData, null);
-
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.irods.jargon.core.pub.DataObjectAO#
-	 * getDataObjectFromIrodsUsingTheSpecificResourceSetInIrodsFileSpecifyingTransferOptions
-	 * (org.irods.jargon.core.pub.io.IRODSFile, java.io.File,
-	 * org.irods.jargon.core.packinstr.TransferOptions)
-	 */
-	@Override
-	public void getDataObjectFromIrodsUsingTheSpecificResourceSetInIrodsFileSpecifyingTransferOptions(
-			final IRODSFile irodsFileToGet, final File localFileToHoldData,
-			final TransferOptions transferOptions)
-			throws DataNotFoundException, JargonException {
-
-		if (localFileToHoldData == null) {
-			throw new IllegalArgumentException("null local file");
-		}
-
-		if (irodsFileToGet == null) {
-			throw new IllegalArgumentException("nulll destination file");
-		}
-
-		File localFile;
-		if (localFileToHoldData.isDirectory()) {
-			log.info("a put to a directory, just use the source file name and accept the directory as a target");
-			StringBuilder sb = new StringBuilder();
-			sb.append(localFileToHoldData.getAbsolutePath());
-			sb.append("/");
-			sb.append(irodsFileToGet.getName());
-			log.info("target file name will be:{}", sb.toString());
-			localFile = new File(sb.toString());
-		} else {
-			localFile = localFileToHoldData;
-		}
-
-		log.info("target local file: {}", localFile.getAbsolutePath());
-		log.info("from source file: {}", irodsFileToGet.getAbsolutePath());
-
-		TransferOptions myTransferOptions = buildDefaultTransferOptionsIfNotSpecified(transferOptions);
-
-		log.info("testing file length to set parallel transfer options");
-		if (irodsFileToGet.length() > getIRODSSession().getJargonProperties()
-				.getParallelThreadsLengthThreshold()) {
-			myTransferOptions.setMaxThreads(getIRODSSession()
-					.getJargonProperties().getMaxParallelThreads());
-			log.info("length above threshold, send max threads cap");
-		} else {
-			myTransferOptions.setMaxThreads(0);
-		}
-
-		final DataObjInp dataObjInp = DataObjInp
-				.instanceForGetSpecifyingResource(
-						irodsFileToGet.getAbsolutePath(),
-						irodsFileToGet.getResource(), myTransferOptions);
-
-		processGetAfterResourceDetermined(irodsFileToGet, localFile,
-				dataObjInp, myTransferOptions, irodsFileToGet.length());
+				dataObjInp, thisFileTransferOptions, irodsFileLength,
+				transferControlBlock, transferStatusCallbackListener);
 	}
 
 	/*
@@ -725,10 +697,14 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 		final DataObjInp dataObjInp = DataObjInp
 				.instanceForGetSpecifyingResource(
-						irodsFileToGet.getAbsolutePath(), "", transferOptions);
+						irodsFileToGet.getAbsolutePath(), "", myTransferOptions);
+
+		TransferControlBlock transferControlBlock = DefaultTransferControlBlock
+				.instance();
+		transferControlBlock.setTransferOptions(myTransferOptions);
 
 		processGetAfterResourceDetermined(irodsFileToGet, localFileToHoldData,
-				dataObjInp, myTransferOptions, 0);// irodsFileToGet.length());
+				dataObjInp, myTransferOptions, 0, transferControlBlock, null);
 	}
 
 	/**
@@ -757,22 +733,27 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	 * @param irodsFileToGet
 	 * @param localFileToHoldData
 	 * @param dataObjInp
-	 * @param transferOptions
+	 * @param thisFileTransferOptions
 	 * @param irodsFileLength
-	 *            - actual length of file from irods. This is passed in as there
+	 *            actual length of file from iRODS. This is passed in as there
 	 *            are occasions where the protocol exchange results in a zero
 	 *            file length. See the note above.
+	 * @param transferStatusCallbackListener
+	 * @param transferControlBlock
 	 * @throws JargonException
 	 * @throws DataNotFoundException
 	 * @throws UnsupportedOperationException
 	 */
 	private void processGetAfterResourceDetermined(
 			final IRODSFile irodsFileToGet, final File localFileToHoldData,
-			final DataObjInp dataObjInp, final TransferOptions transferOptions,
-			final long irodsFileLength) throws JargonException,
-			DataNotFoundException {
+			final DataObjInp dataObjInp,
+			final TransferOptions thisFileTransferOptions,
+			final long irodsFileLength,
+			final TransferControlBlock transferControlBlock,
+			final TransferStatusCallbackListener transferStatusCallbackListener)
+			throws JargonException, DataNotFoundException {
 
-		if (transferOptions == null) {
+		if (thisFileTransferOptions == null) {
 			throw new IllegalArgumentException("null transfer options");
 		}
 
@@ -814,17 +795,19 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		try {
 			if (lengthFromIrodsResponse == 0) {
 				checkNbrThreadsAndProcessAsParallelIfMoreThanZeroThreads(
-						irodsFileToGet, localFileToHoldData, transferOptions,
-						message, lengthFromIrodsResponse, irodsFileLength);
+						irodsFileToGet, localFileToHoldData,
+						thisFileTransferOptions, message,
+						lengthFromIrodsResponse, irodsFileLength);
 
 			} else {
 				dataAOHelper.processNormalGetTransfer(localFileToHoldData,
 						lengthFromIrodsResponse, this.getIRODSProtocol(),
-						transferOptions);
+						thisFileTransferOptions);
 			}
 
-			if (transferOptions != null) {
-				if (transferOptions.isComputeAndVerifyChecksumAfterTransfer()) {
+			if (thisFileTransferOptions != null) {
+				if (thisFileTransferOptions
+						.isComputeAndVerifyChecksumAfterTransfer()) {
 					log.info("computing a checksum on the file at:{}",
 							localFileToHoldData.getAbsolutePath());
 					String localFileChecksum = LocalFileUtils

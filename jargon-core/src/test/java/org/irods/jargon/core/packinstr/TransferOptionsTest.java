@@ -34,5 +34,15 @@ public class TransferOptionsTest {
 				expected.isComputeAndVerifyChecksumAfterTransfer(),
 				actual.isComputeAndVerifyChecksumAfterTransfer());
 	}
+	
+	@Test
+	public final void testCopyConstructorIntraFileStatusCallbacks() throws Exception {
+		TransferOptions expected = new TransferOptions();
+		expected.setIntraFileStatusCallbacks(true);
+		TransferOptions actual = new TransferOptions(expected);
+		Assert.assertEquals("did not properly set intraFileStatusCallbacks",
+				expected.isIntraFileStatusCallbacks(),
+				actual.isIntraFileStatusCallbacks());
+	}
 
 }

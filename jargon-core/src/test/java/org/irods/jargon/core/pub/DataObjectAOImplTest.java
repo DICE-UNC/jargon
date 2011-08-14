@@ -747,10 +747,8 @@ public class DataObjectAOImplTest {
 				.setResource(testingProperties
 						.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_RESOURCE_KEY));
 
-		dataObjectAO
-				.getDataObjectFromIrodsUsingTheSpecificResourceSetInIrodsFile(
-						irodsFile, localFile);
-
+		dataObjectAO.getDataObjectFromIrods(irodsFile, localFile);
+				
 		assertionHelper
 				.assertLocalFileNotExistsInScratch(IRODS_TEST_SUBDIR_PATH + "/"
 						+ "GetResult" + testFileName);

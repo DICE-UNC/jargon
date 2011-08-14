@@ -5,16 +5,16 @@ package org.irods.jargon.core.packinstr;
 
 /**
  * Represents options that control the transfer of data to and from iRODS (get
- * and put). This is not an immutable object to make seting the various options
+ * and put). This is not an immutable object to make setting the various options
  * easier on the caller. Within Jargon, the <code>TransferOptions</code> are not
  * shared, rather a copy constructor creates a new instance in the various data
  * transfer methods, as these copies may be overridden in the code when dealing
  * with an individual file transfer.
  * <p/>
- * Note that udp options are included here, but the UDP option is not yet
+ * Note that UDP options are included here, but the UDP option is not yet
  * implemented in jargon, and will have no effect.
  * <p/>
- * <b>Note:</b> this part of the API is new and subject to refactoring. The
+ * <b>Note:</b> this part of the API is new and subject to re-factoring. The
  * transfer options are currently not fully supported within the API.
  * 
  * @author Mike Conway - DICE (www.irods.org)
@@ -35,9 +35,13 @@ public class TransferOptions {
 	private int udpPacketSize = DEFAULT_UDP_PACKET_SIZE;
 	private TransferType transferType = TransferType.STANDARD;
 	private boolean allowPutGetResourceRedirects = false;
+	private boolean intraFileStatusCallbacks = false;
+	
+	
+
 	/**
 	 * Store a checksum of the file after it has been transferred. This will
-	 * only take precidence over
+	 * only take precedence over
 	 * <code>computeAndVerifyChecksumAfterTransfer</code> if the value there is
 	 * <code>false</code>
 	 */
@@ -67,6 +71,8 @@ public class TransferOptions {
 		sb.append(computeChecksumAfterTransfer);
 		sb.append("\n   computeAndVerifyChecksumAfterTransfer:");
 		sb.append(computeAndVerifyChecksumAfterTransfer);
+		sb.append("\n   intraFileStatusCallbacks:");
+		sb.append(intraFileStatusCallbacks);
 
 		return sb.toString();
 	}
@@ -95,6 +101,7 @@ public class TransferOptions {
 						.isComputeChecksumAfterTransfer());
 				setComputeAndVerifyChecksumAfterTransfer(transferOptions
 						.isComputeAndVerifyChecksumAfterTransfer());
+				setIntraFileStatusCallbacks(transferOptions.intraFileStatusCallbacks);
 			}
 		}
 	}
@@ -193,4 +200,21 @@ public class TransferOptions {
 		return computeAndVerifyChecksumAfterTransfer;
 	}
 
+	/**
+	 * @return the intraFileStatusCallbacks value.  If <code>true</code>, then call-backs will
+	 * be sent on progress within-file, if a listener is present.
+	 */
+	public boolean isIntraFileStatusCallbacks() {
+		return intraFileStatusCallbacks;
+	}
+
+	/**
+	 * @param intraFileStatusCallbacks <code>boolean</code> with the intraFileStatusCallbacks behavior desired.  If <code>true</code>
+	 * and a call-back listener is provided, then within-file status call-backs will be generated during transfers.  This has a
+	 * slight performance penalty.
+	 */
+	public void setIntraFileStatusCallbacks(boolean intraFileStatusCallbacks) {
+		this.intraFileStatusCallbacks = intraFileStatusCallbacks;
+	}
+	
 }
