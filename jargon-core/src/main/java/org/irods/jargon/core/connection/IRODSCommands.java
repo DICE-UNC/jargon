@@ -4,6 +4,7 @@
 package org.irods.jargon.core.connection;
 
 import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -226,12 +227,12 @@ public class IRODSCommands implements IRODSManagedConnection {
 			irodsConnection.send(message);
 			if (errorLength > 0) {
 				irodsConnection.send(new BufferedInputStream(errorStream),
-						errorLength, connectionProgressStatusListener);
+						errorLength, null);
 				errorStream.close();
 			}
 			if (byteStreamLength > 0) {
 				irodsConnection.send(new BufferedInputStream(byteStream),
-						byteStreamLength, null);
+						byteStreamLength, connectionProgressStatusListener);
 				byteStream.close();
 			}
 			irodsConnection.flush();
@@ -356,6 +357,27 @@ public class IRODSCommands implements IRODSManagedConnection {
 	public synchronized void read(final OutputStream destination,
 			final long length) throws JargonException {
 
+		read(destination, length, null);
+	}
+	
+	/**
+	 * Read data from an input stream and write out to a destination
+	 * <code>OutputStream</code>. This method will delegate to the underlying
+	 * {@link org.irods.jargon.core.connection.IRODSConnection} and is included
+	 * in this class to provide a public hook for certain operations.
+	 *  @param destination
+	 *            <code>OutputStream</code> for writing data that is read from
+	 *            the input stream.
+	 * @param length
+	 *            <code>long</code> length of data to be read and written out.
+	 * @param intraFileStatusListener {@link ConnectionProgressStatusListener} or <code>null</code> if not utilized, that
+	 * can receive call-backs of streaming progress with a small peformance penalty.
+	 * @throws JargonException
+	 */
+	public void read(final OutputStream destination,
+			final long length,
+			ConnectionProgressStatusListener intraFileStatusListener) throws JargonException {
+		
 		if (length <= 0) {
 			throw new JargonException("length out of range");
 		}
@@ -365,7 +387,7 @@ public class IRODSCommands implements IRODSManagedConnection {
 		}
 
 		try {
-			irodsConnection.read(destination, length);
+			irodsConnection.read(destination, length, intraFileStatusListener);
 		} catch (UnsupportedEncodingException e) {
 			log.error("unsupported encoding", e);
 			throw new JargonException(e);
@@ -1188,5 +1210,7 @@ public class IRODSCommands implements IRODSManagedConnection {
 			throw new JargonException(e);
 		}
 	}
+
+	
 
 }

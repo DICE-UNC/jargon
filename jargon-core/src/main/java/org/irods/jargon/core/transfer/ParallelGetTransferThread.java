@@ -13,6 +13,7 @@ import java.net.UnknownHostException;
 import java.util.concurrent.Callable;
 
 import org.irods.jargon.core.connection.ConnectionConstants;
+import org.irods.jargon.core.connection.ConnectionProgressStatus;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.exception.JargonRuntimeException;
 import org.irods.jargon.core.utils.Host;
@@ -230,6 +231,12 @@ public final class ParallelGetTransferThread extends
 						log.debug("length > 0, write what I have and read more...");
 
 						local.write(buffer, 0, read);
+						/*
+						 * Make an intra-file status call-back if a listener is configured
+						 */
+						if (parallelGetFileTransferStrategy.getConnectionProgressStatusListener() != null) {
+							parallelGetFileTransferStrategy.getConnectionProgressStatusListener().connectionProgressStatusCallback(ConnectionProgressStatus.instanceForReceive(read));
+						}
 						log.debug("buffer written to file");
 
 					}

@@ -14,7 +14,7 @@ package org.irods.jargon.core.connection;
  */
 public class ConnectionProgressStatus {
 
-	public enum CallbackType { SEND_PROGRESS, READ_PROGRESS }
+	public enum CallbackType { SEND_PROGRESS, RECEIVE_PROGRESS, OPERATIONAL_MESSAGE }
 	private final long byteCount;
 	private final CallbackType callbackType;
 	
@@ -34,12 +34,21 @@ public class ConnectionProgressStatus {
 	}
 
 	/**
-	 * Create an immutable callback for progress sending data
+	 * Create an immutable callback for progress sending data (PUT)
 	 * @param byteCount <code>long</code> with the number of bytes instantaneously sent.
 	 * @return
 	 */
 	public static ConnectionProgressStatus instanceForSend(final long byteCount) {
 		return new ConnectionProgressStatus(CallbackType.SEND_PROGRESS, byteCount);
+	}
+	
+	/**
+	 * Create an immutable callback for progress receiving data (GET)
+	 * @param byteCount <code>long</code> with the number of bytes instantaneously sent.
+	 * @return
+	 */
+	public static ConnectionProgressStatus instanceForReceive(final long byteCount) {
+		return new ConnectionProgressStatus(CallbackType.RECEIVE_PROGRESS, byteCount);
 	}
 	
 	private ConnectionProgressStatus(final CallbackType callbackType, final long byteCount) {

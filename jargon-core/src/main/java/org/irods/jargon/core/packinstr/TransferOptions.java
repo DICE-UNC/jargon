@@ -38,7 +38,6 @@ public class TransferOptions {
 	private boolean intraFileStatusCallbacks = false;
 	
 	
-
 	/**
 	 * Store a checksum of the file after it has been transferred. This will
 	 * only take precedence over

@@ -8,6 +8,7 @@ import java.net.Socket;
 import java.util.concurrent.Callable;
 
 import org.irods.jargon.core.connection.ConnectionConstants;
+import org.irods.jargon.core.connection.ConnectionProgressStatus;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.exception.JargonRuntimeException;
 import org.irods.jargon.core.utils.Host;
@@ -252,6 +253,14 @@ public final class ParallelPutTransferThread extends
 				log.debug("new txfr length:{}", transferLength);
 				try {
 					getOut().write(buffer, 0, read);
+					
+					/*
+					 * Make an intra-file status call-back if a listener is configured
+					 */
+					if (parallelPutFileTransferStrategy.getConnectionProgressStatusListener() != null) {
+						parallelPutFileTransferStrategy.getConnectionProgressStatusListener().connectionProgressStatusCallback(ConnectionProgressStatus.instanceForSend(read));
+					}
+					
 				} catch (Exception e) {
 					log.error(
 							"error writing to iRODS parallel transfer socket",

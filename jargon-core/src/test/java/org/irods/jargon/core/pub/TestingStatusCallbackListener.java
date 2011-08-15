@@ -12,20 +12,26 @@ public class TestingStatusCallbackListener implements
 	private String lastSourcePath = "";
 	private String lastTargetPath = "";
 	private String lastResource = "";
+	
+	private long bytesReportedIntraFileCallbacks = 0L;
+	private int numberIntraFileCallbacks = 0;
 
 	@Override
 	public void statusCallback(final TransferStatus transferStatus) {
 
-		if (transferStatus.getTransferState() == TransferState.FAILURE) {
+		if (transferStatus.isIntraFileStatusReport()) {
+			numberIntraFileCallbacks++;
+			bytesReportedIntraFileCallbacks = transferStatus.getBytesTransfered();
+		} else if (transferStatus.getTransferState() == TransferState.FAILURE) {
 			errorCallbackCount++;
 		} else {
 			successCallbackCount++;
+			lastSourcePath = transferStatus.getSourceFileAbsolutePath();
+			lastTargetPath = transferStatus.getTargetFileAbsolutePath();
+			lastResource = transferStatus.getTargetResource();
 		}
 
-		lastSourcePath = transferStatus.getSourceFileAbsolutePath();
-		lastTargetPath = transferStatus.getTargetFileAbsolutePath();
-		lastResource = transferStatus.getTargetResource();
-
+		
 	}
 
 	public int getSuccessCallbackCount() {
@@ -68,6 +74,20 @@ public class TestingStatusCallbackListener implements
 		lastSourcePath = transferStatus.getSourceFileAbsolutePath();
 		lastTargetPath = transferStatus.getTargetFileAbsolutePath();
 		lastResource = transferStatus.getTargetResource();
+	}
+
+	/**
+	 * @return the bytesReportedIntraFileCallbacks
+	 */
+	public long getBytesReportedIntraFileCallbacks() {
+		return bytesReportedIntraFileCallbacks;
+	}
+
+	/**
+	 * @return the numberIntraFileCallbacks
+	 */
+	public int getNumberIntraFileCallbacks() {
+		return numberIntraFileCallbacks;
 	}
 
 }

@@ -2,6 +2,7 @@ package org.irods.jargon.core.transfer;
 
 import java.io.File;
 
+import org.irods.jargon.core.connection.ConnectionProgressStatusListener;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 
@@ -25,7 +26,11 @@ public abstract class AbstractParallelFileTransferStrategy {
 	protected final int numberOfThreads;
 	protected final int password;
 	protected final File localFile;
+	protected final long transferLength;
 	private final IRODSAccessObjectFactory irodsAccessObjectFactory;
+	private final TransferControlBlock transferControlBlock;
+	private final TransferStatusCallbackListener transferStatusCallbackListener;
+	private ConnectionProgressStatusListener connectionProgressStatusListener = null;
 
 	/**
 	 * Constructor for a parallel file transfer runner. This runner will create
@@ -45,12 +50,23 @@ public abstract class AbstractParallelFileTransferStrategy {
 	 *            <code>File</code> that will transferrred.
 	 * @param irodsAccessObjectFactory
 	 *            {@link IRODSAccessObjectFactory} for the session.
+	 * @param transferLength <code>long</code> with the total length of the file to transfer
+	 * @param transferControlBlock
+	 *            {@link TransferControlBlock} that controls and keeps track of
+	 *            the transfer operation, required.
+	 * @param transferStatusCallbackListener
+	 *            {@link TransferStatusCallbackListener} or <code>null</code> if
+	 *            not desired. This can receive call-backs on the status of the
+	 *            parallel transfer operation.
+	 * 
 	 * @throws JargonException
 	 */
 	protected AbstractParallelFileTransferStrategy(final String host,
 			final int port, final int numberOfThreads, final int password,
 			final File localFile,
-			final IRODSAccessObjectFactory irodsAccessObjectFactory)
+			final IRODSAccessObjectFactory irodsAccessObjectFactory, final long transferLength,
+			final TransferControlBlock transferControlBlock,
+			final TransferStatusCallbackListener transferStatusCallbackListener)
 			throws JargonException {
 
 		if (host == null || host.isEmpty()) {
@@ -79,12 +95,19 @@ public abstract class AbstractParallelFileTransferStrategy {
 					"irodsAccessObjectFactory is null");
 		}
 
+		if (transferControlBlock == null) {
+			throw new IllegalArgumentException("null transferControlBlock");
+		}
+
 		this.host = host;
 		this.port = port;
 		this.numberOfThreads = numberOfThreads;
 		this.password = password;
 		this.localFile = localFile;
 		this.irodsAccessObjectFactory = irodsAccessObjectFactory;
+		this.transferControlBlock = transferControlBlock;
+		this.transferStatusCallbackListener = transferStatusCallbackListener;
+		this.transferLength = transferLength;
 
 	}
 
@@ -128,6 +151,43 @@ public abstract class AbstractParallelFileTransferStrategy {
 	 */
 	protected IRODSAccessObjectFactory getIrodsAccessObjectFactory() {
 		return irodsAccessObjectFactory;
+	}
+
+	/**
+	 * @return the transferControlBlock
+	 */
+	protected TransferControlBlock getTransferControlBlock() {
+		return transferControlBlock;
+	}
+
+	/**
+	 * @return the transferStatusCallbackListener
+	 */
+	protected TransferStatusCallbackListener getTransferStatusCallbackListener() {
+		return transferStatusCallbackListener;
+	}
+
+	/**
+	 * @return the connectionProgressStatusListener
+	 */
+	protected synchronized ConnectionProgressStatusListener getConnectionProgressStatusListener() {
+		return connectionProgressStatusListener;
+	}
+
+	/**
+	 * @param connectionProgressStatusListener
+	 *            the connectionProgressStatusListener to set
+	 */
+	protected synchronized void setConnectionProgressStatusListener(
+			final ConnectionProgressStatusListener connectionProgressStatusListener) {
+		this.connectionProgressStatusListener = connectionProgressStatusListener;
+	}
+
+	/**
+	 * @return the transferLength
+	 */
+	protected long getTransferLength() {
+		return transferLength;
 	}
 
 }

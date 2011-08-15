@@ -438,18 +438,23 @@ final class IRODSConnection implements IRODSManagedConnection {
 		}
 
 		try {
+			int lenThisRead = 0;
 			byte[] temp = new byte[Math.min(DEFAULT_BUFFER_SIZE, (int) length)];
 			while (length > 0) {
 				if (temp.length > length) {
 					temp = new byte[(int) length];
 				}
-				length -= source.read(temp, 0, temp.length);
+				lenThisRead = source.read(temp, 0, temp.length);
+				length -= lenThisRead;
 				send(temp);
 
+				/*
+				 * If a listener is specified, send call-backs with progress 
+				 */
 				if (connectionProgressStatusListener != null) {
 					connectionProgressStatusListener
 							.connectionProgressStatusCallback(ConnectionProgressStatus
-									.instanceForSend(temp.length));
+									.instanceForSend(lenThisRead));
 				}
 
 			}
@@ -516,7 +521,20 @@ final class IRODSConnection implements IRODSManagedConnection {
 	 * destination
 	 */
 	void read(final OutputStream destination, long length) throws IOException {
-
+		read(destination, length, null);
+	}
+	
+	/**
+	 * Read from the iRODS connection for a given length, and write what is 
+	 * read from iRODS to the give <code>OutputStream</code>.
+	 * @param destination <code>OutputStream</code> to which data will be streamed from iRODS.
+	 * @param length <code>long</code> with the length of data to be read from iRODS and pushed to the stream.
+	 * @param intraFileStatusListener {@link ConnectionProgressStatusListener} that will receive progress on the streaming, or <code>null</code> for
+	 * no such call-backs.
+	 */
+	public void read(OutputStream destination, long length,
+			ConnectionProgressStatusListener intraFileStatusListener) throws IOException {
+		
 		if (destination == null) {
 			String err = "destination is null";
 			log.error(err);
@@ -536,6 +554,14 @@ final class IRODSConnection implements IRODSManagedConnection {
 			if (n > 0) {
 				length -= n;
 				destination.write(temp, 0, n);
+				/*
+				 * If a listener is specified, send call-backs with progress 
+				 */
+				if (intraFileStatusListener != null) {
+					intraFileStatusListener
+							.connectionProgressStatusCallback(ConnectionProgressStatus
+									.instanceForSend(n));
+				}
 			} else {
 				length = n;
 			}
@@ -616,5 +642,7 @@ final class IRODSConnection implements IRODSManagedConnection {
 			throw e;
 		}
 	}
+
+	
 
 }

@@ -598,36 +598,31 @@ public class DataObjectAOImplTest {
 		String localFileName = FileGenerator
 				.generateFileOfFixedLengthGivenName(absPath, testFileName, 100);
 
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
 		String getFileName = "testGetResult.txt";
 		String getResultLocalPath = scratchFileUtils
 				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH + '/')
 				+ getFileName;
 		File localFile = new File(getResultLocalPath);
 
-		// put scratch file into irods in the right place on the first resource
-		IrodsInvocationContext invocationContext = testingPropertiesHelper
-				.buildIRODSInvocationContextFromTestProperties(testingProperties);
-		IputCommand iputCommand = new IputCommand();
-
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH);
 
-		iputCommand.setLocalFileName(localFileName);
-		iputCommand.setIrodsFileName(targetIrodsCollection);
-		iputCommand.setIrodsResource(testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY));
-		iputCommand.setForceOverride(true);
+		DataTransferOperations dataTransferOperations = accessObjectFactory
+				.getDataTransferOperations(irodsAccount);
+		dataTransferOperations
+				.putOperation(
+						localFileName,
+						targetIrodsCollection,
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
+						null, null);
 
-		IcommandInvoker invoker = new IcommandInvoker(invocationContext);
-		invoker.invokeCommandAndGetResultAsString(iputCommand);
-
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
-
-		accessObjectFactory.getIRODSFileFactory(irodsAccount);
 		DataObjectAO dataObjectAO = accessObjectFactory
 				.getDataObjectAO(irodsAccount);
 		IRODSFile irodsFile = dataObjectAO
@@ -641,6 +636,147 @@ public class DataObjectAOImplTest {
 		assertionHelper.assertLocalScratchFileLengthEquals(
 				IRODS_TEST_SUBDIR_PATH + '/' + getFileName, 100);
 
+	}
+	
+	@Test
+	public final void testGetWithIntraFileCallbacks() throws Exception {
+
+		int testFileLen = 3000000;
+		// generate a local scratch file
+		String testFileName = "testGetWithIntraFileCallbacks.doc";
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String localFileName = FileGenerator
+				.generateFileOfFixedLengthGivenName(absPath, testFileName, testFileLen);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
+		String getFileName = "testGetWithIntraFileCallbacksResult.doc";
+		String getResultLocalPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH + '/')
+				+ getFileName;
+		File localFile = new File(getResultLocalPath);
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		DataTransferOperations dataTransferOperations = accessObjectFactory
+				.getDataTransferOperations(irodsAccount);
+		dataTransferOperations
+				.putOperation(
+						localFileName,
+						targetIrodsCollection,
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
+						null, null);
+
+		DataObjectAO dataObjectAO = accessObjectFactory
+				.getDataObjectAO(irodsAccount);
+		IRODSFile irodsFile = dataObjectAO
+				.instanceIRODSFileForPath(targetIrodsCollection + '/'
+						+ testFileName);
+		
+		TransferOptions transferOptions = new TransferOptions();
+		transferOptions.setIntraFileStatusCallbacks(true);
+		TransferControlBlock transferControlBlock = DefaultTransferControlBlock
+				.instance();
+		transferControlBlock.setTransferOptions(transferOptions);
+
+		TestingStatusCallbackListener transferStatusCallbackListener = new TestingStatusCallbackListener();
+
+		dataObjectAO.getDataObjectFromIrods(irodsFile, localFile, transferControlBlock, transferStatusCallbackListener);
+
+		assertionHelper.assertLocalFileExistsInScratch(IRODS_TEST_SUBDIR_PATH
+				+ '/' + getFileName);
+		assertionHelper.assertLocalScratchFileLengthEquals(
+				IRODS_TEST_SUBDIR_PATH + '/' + getFileName, testFileLen);
+
+		TestCase.assertTrue(
+				"did not get intra-file callbacks",
+				transferStatusCallbackListener.getNumberIntraFileCallbacks() > 0);
+		TestCase.assertTrue(
+				"did not get any byte count from intra-file callbacks",
+				transferStatusCallbackListener
+						.getBytesReportedIntraFileCallbacks() > 0);
+		TestCase.assertFalse("accumulated more bytes than file size",
+				transferStatusCallbackListener
+						.getBytesReportedIntraFileCallbacks() > testFileLen);
+		
+		
+	}
+	
+	@Test
+	public final void testGetParallelWithIntraFileCallbacks() throws Exception {
+
+		int testFileLen = 33 * 1024 * 1024;
+		// generate a local scratch file
+		String testFileName = "testGetParallelWithIntraFileCallbacks.doc";
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String localFileName = FileGenerator
+				.generateFileOfFixedLengthGivenName(absPath, testFileName, testFileLen);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
+		String getFileName = "testGetParallelWithIntraFileCallbacksResult.doc";
+		String getResultLocalPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH + '/')
+				+ getFileName;
+		File localFile = new File(getResultLocalPath);
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		DataTransferOperations dataTransferOperations = accessObjectFactory
+				.getDataTransferOperations(irodsAccount);
+		dataTransferOperations
+				.putOperation(
+						localFileName,
+						targetIrodsCollection,
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
+						null, null);
+
+		DataObjectAO dataObjectAO = accessObjectFactory
+				.getDataObjectAO(irodsAccount);
+		IRODSFile irodsFile = dataObjectAO
+				.instanceIRODSFileForPath(targetIrodsCollection + '/'
+						+ testFileName);
+		
+		TransferOptions transferOptions = new TransferOptions();
+		transferOptions.setIntraFileStatusCallbacks(true);
+		TransferControlBlock transferControlBlock = DefaultTransferControlBlock
+				.instance();
+		transferControlBlock.setTransferOptions(transferOptions);
+
+		TestingStatusCallbackListener transferStatusCallbackListener = new TestingStatusCallbackListener();
+
+		dataObjectAO.getDataObjectFromIrods(irodsFile, localFile, transferControlBlock, transferStatusCallbackListener);
+
+		assertionHelper.assertLocalFileExistsInScratch(IRODS_TEST_SUBDIR_PATH
+				+ '/' + getFileName);
+		assertionHelper.assertLocalScratchFileLengthEquals(
+				IRODS_TEST_SUBDIR_PATH + '/' + getFileName, testFileLen);
+
+		TestCase.assertTrue(
+				"did not get intra-file callbacks",
+				transferStatusCallbackListener.getNumberIntraFileCallbacks() > 0);
+		TestCase.assertTrue(
+				"did not get any byte count from intra-file callbacks",
+				transferStatusCallbackListener
+						.getBytesReportedIntraFileCallbacks() > 0);
+		TestCase.assertFalse("accumulated more bytes than file size",
+				transferStatusCallbackListener
+						.getBytesReportedIntraFileCallbacks() > testFileLen);
+		
 	}
 
 	@Test
@@ -657,28 +793,25 @@ public class DataObjectAOImplTest {
 				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
 		File localFile = new File(getResultLocalPath);
 
-		// put scratch file into irods in the right place on the first resource
-		IrodsInvocationContext invocationContext = testingPropertiesHelper
-				.buildIRODSInvocationContextFromTestProperties(testingProperties);
-		IputCommand iputCommand = new IputCommand();
-
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH);
-
-		iputCommand.setLocalFileName(localFileName);
-		iputCommand.setIrodsFileName(targetIrodsCollection);
-		iputCommand.setIrodsResource(testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY));
-		iputCommand.setForceOverride(true);
-
-		IcommandInvoker invoker = new IcommandInvoker(invocationContext);
-		invoker.invokeCommandAndGetResultAsString(iputCommand);
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
 		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
 				.getIRODSAccessObjectFactory();
+
+		DataTransferOperations dataTransferOperations = accessObjectFactory
+				.getDataTransferOperations(irodsAccount);
+		dataTransferOperations
+				.putOperation(
+						localFileName,
+						targetIrodsCollection,
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
+						null, null);
+
 		DataObjectAO dataObjectAO = accessObjectFactory
 				.getDataObjectAO(irodsAccount);
 		IRODSFile irodsFile = dataObjectAO
@@ -689,15 +822,26 @@ public class DataObjectAOImplTest {
 
 		File scratchLocalFile = new File(localFileName);
 		boolean success = scratchLocalFile.delete();
+		
+		TransferOptions transferOptions = new TransferOptions();
+		transferOptions.setIntraFileStatusCallbacks(false);
+		TransferControlBlock transferControlBlock = DefaultTransferControlBlock
+				.instance();
+		transferControlBlock.setTransferOptions(transferOptions);
 
-		dataObjectAO.getDataObjectFromIrods(irodsFile, localFile);
+		TestingStatusCallbackListener transferStatusCallbackListener = new TestingStatusCallbackListener();
+
+		dataObjectAO.getDataObjectFromIrods(irodsFile, localFile, transferControlBlock, transferStatusCallbackListener);
 
 		assertionHelper.assertLocalFileExistsInScratch(IRODS_TEST_SUBDIR_PATH
 				+ '/' + testFileName);
 		assertionHelper.assertLocalScratchFileLengthEquals(
 				IRODS_TEST_SUBDIR_PATH + '/' + testFileName, 100);
 		Assert.assertTrue("delete did not report success in response", success);
-
+		
+		TestCase.assertFalse(
+				"got intra-file callbacks",
+				transferStatusCallbackListener.getNumberIntraFileCallbacks() > 0);
 	}
 
 	@Test(expected = DataNotFoundException.class)
@@ -715,29 +859,26 @@ public class DataObjectAOImplTest {
 				+ getFileName;
 		File localFile = new File(getResultLocalPath);
 
-		// put scratch file into irods in the right place on the first resource
-		IrodsInvocationContext invocationContext = testingPropertiesHelper
-				.buildIRODSInvocationContextFromTestProperties(testingProperties);
-		IputCommand iputCommand = new IputCommand();
-
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH);
-
-		iputCommand.setLocalFileName(localFileName);
-		iputCommand.setIrodsFileName(targetIrodsCollection);
-		iputCommand.setIrodsResource(testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY));
-		iputCommand.setForceOverride(true);
-
-		IcommandInvoker invoker = new IcommandInvoker(invocationContext);
-		invoker.invokeCommandAndGetResultAsString(iputCommand);
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
 		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
 				.getIRODSAccessObjectFactory();
 		accessObjectFactory.getIRODSFileFactory(irodsAccount);
+
+		DataTransferOperations dataTransferOperations = accessObjectFactory
+				.getDataTransferOperations(irodsAccount);
+		dataTransferOperations
+				.putOperation(
+						localFileName,
+						targetIrodsCollection,
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
+						null, null);
+
 		DataObjectAO dataObjectAO = accessObjectFactory
 				.getDataObjectAO(irodsAccount);
 		IRODSFile irodsFile = dataObjectAO
@@ -748,7 +889,7 @@ public class DataObjectAOImplTest {
 						.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_RESOURCE_KEY));
 
 		dataObjectAO.getDataObjectFromIrods(irodsFile, localFile);
-				
+
 		assertionHelper
 				.assertLocalFileNotExistsInScratch(IRODS_TEST_SUBDIR_PATH + "/"
 						+ "GetResult" + testFileName);
@@ -1884,7 +2025,7 @@ public class DataObjectAOImplTest {
 		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
 				.instanceIRODSFile(targetIrodsCollection);
 		dataObjectAO.putLocalDataObjectToIRODS(new File(fileNameOrig),
-				irodsFile, true, null,null);
+				irodsFile, true, null, null);
 
 		dataObjectAO.setAccessPermissionWrite("", targetIrodsCollection + "/"
 				+ testFileName, testingProperties
@@ -2610,13 +2751,15 @@ public class DataObjectAOImplTest {
 	}
 
 	@Test
-	public void testPutFileComputeChecksum() throws Exception {
+	public void testPutFileReceiveIntraFileCallbacks() throws Exception {
+		long testSize = 800000;
 		// generate a local scratch file
-		String testFileName = "testPutFileComputeChecksum.txt";
+		String testFileName = "testPutFileReceiveIntraFileCallbacks.txt";
 		String absPath = scratchFileUtils
 				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
 		String localFileName = FileGenerator
-				.generateFileOfFixedLengthGivenName(absPath, testFileName, 20);
+				.generateFileOfFixedLengthGivenName(absPath, testFileName,
+						testSize);
 
 		String targetIrodsFile = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
@@ -2638,13 +2781,26 @@ public class DataObjectAOImplTest {
 		IRODSFile destFile = irodsFileFactory
 				.instanceIRODSFile(targetIrodsFile);
 		TransferOptions transferOptions = new TransferOptions();
-		transferOptions.setComputeChecksumAfterTransfer(true);
-		TransferControlBlock transferControlBlock = DefaultTransferControlBlock.instance();
+		transferOptions.setIntraFileStatusCallbacks(true);
+		TransferControlBlock transferControlBlock = DefaultTransferControlBlock
+				.instance();
 		transferControlBlock.setTransferOptions(transferOptions);
-		
-		dataObjectAO.putLocalDataObjectToIRODS(localFile,
-				destFile, true, transferControlBlock,null);
+
+		TestingStatusCallbackListener transferStatusCallbackListener = new TestingStatusCallbackListener();
+
+		dataObjectAO.putLocalDataObjectToIRODS(localFile, destFile, true,
+				transferControlBlock, transferStatusCallbackListener);
 		assertionHelper.assertIrodsFileOrCollectionExists(targetIrodsFile);
+		TestCase.assertTrue(
+				"did not get intra-file callbacks",
+				transferStatusCallbackListener.getNumberIntraFileCallbacks() > 0);
+		TestCase.assertTrue(
+				"did not get any byte count from intra-file callbacks",
+				transferStatusCallbackListener
+						.getBytesReportedIntraFileCallbacks() > 0);
+		TestCase.assertFalse("accumulated more bytes than file size",
+				transferStatusCallbackListener
+						.getBytesReportedIntraFileCallbacks() > testSize);
 	}
 
 	@Test
@@ -2677,11 +2833,12 @@ public class DataObjectAOImplTest {
 				.instanceIRODSFile(targetIrodsFile);
 		TransferOptions transferOptions = new TransferOptions();
 		transferOptions.setComputeAndVerifyChecksumAfterTransfer(true);
-		TransferControlBlock transferControlBlock = DefaultTransferControlBlock.instance();
+		TransferControlBlock transferControlBlock = DefaultTransferControlBlock
+				.instance();
 		transferControlBlock.setTransferOptions(transferOptions);
-		
-		dataObjectAO.putLocalDataObjectToIRODS(localFile,
-				destFile, true, transferControlBlock,null);
+
+		dataObjectAO.putLocalDataObjectToIRODS(localFile, destFile, true,
+				transferControlBlock, null);
 
 		assertionHelper.assertIrodsFileOrCollectionExists(targetIrodsFile);
 	}
@@ -2717,11 +2874,12 @@ public class DataObjectAOImplTest {
 				.instanceIRODSFile(targetIrodsFile);
 		TransferOptions transferOptions = new TransferOptions();
 		transferOptions.setComputeAndVerifyChecksumAfterTransfer(true);
-		TransferControlBlock transferControlBlock = DefaultTransferControlBlock.instance();
+		TransferControlBlock transferControlBlock = DefaultTransferControlBlock
+				.instance();
 		transferControlBlock.setTransferOptions(transferOptions);
-		
-		dataObjectAO.putLocalDataObjectToIRODS(localFile,
-				destFile, true, transferControlBlock,null);
+
+		dataObjectAO.putLocalDataObjectToIRODS(localFile, destFile, true,
+				transferControlBlock, null);
 		assertionHelper.assertIrodsFileOrCollectionExists(targetIrodsFile);
 	}
 

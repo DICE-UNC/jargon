@@ -114,5 +114,13 @@ public interface JargonProperties {
 	 * @return the computeAndVerifyChecksumAfterTransfer
 	 */
 	boolean isComputeAndVerifyChecksumAfterTransfer() throws JargonException;
+	
+	/**
+	 * Gets whether intra-file status call-backs are enabled for transfers.  If <code>true</code>, and a 
+	 * call-back listener is provided, these allow monitoring of progress of an individual file.
+	 * @return the intraFileStatusCallbacks
+	 * @throws JargonException 
+	 */
+	boolean isIntraFileStatusCallbacks() throws JargonException;
 
 }

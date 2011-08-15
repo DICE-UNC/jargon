@@ -35,7 +35,7 @@ public final class TransferStatus {
 	private final String sourceFileAbsolutePath;
 	private final String targetFileAbsolutePath;
 	private final String transferHost;
-	
+
 	private final String transferZone;
 	private final String targetResource;
 	private final long totalSize;
@@ -71,21 +71,25 @@ public final class TransferStatus {
 	 * @param transferState
 	 *            <code>TransferState</code> indicating whether the transfer is
 	 *            ongoing or has completed
-	 * @param transferHost <code>String</code> with the host name for the transfer
-	 * @param transferZone <code>String</code> with the zone name for the transfer
+	 * @param transferHost
+	 *            <code>String</code> with the host name for the transfer
+	 * @param transferZone
+	 *            <code>String</code> with the zone name for the transfer
 	 */
 	public static TransferStatus instance(final TransferType transferType,
 			final String sourceFileAbsolutePath,
 			final String targetFileAbsolutePath, final String targetResource,
 			final long totalSize, final long bytesTransfered,
 			final int totalFilesTransferredSoFar,
-			final int totalFilesToTransfer, final TransferState transferState, final String transferHost, final String transferZone)
+			final int totalFilesToTransfer, final TransferState transferState,
+			final String transferHost, final String transferZone)
 			throws JargonException {
 
 		return new TransferStatus(transferType, null, sourceFileAbsolutePath,
 				targetFileAbsolutePath, targetResource, totalSize,
 				bytesTransfered, totalFilesTransferredSoFar,
-				totalFilesToTransfer, transferState, null, false, transferHost, transferZone);
+				totalFilesToTransfer, transferState, null, false, transferHost,
+				transferZone);
 
 	}
 
@@ -114,8 +118,10 @@ public final class TransferStatus {
 	 * @param transferState
 	 *            <code>TransferState</code> indicating whether the transfer is
 	 *            ongoing or has completed
-	 * @param transferHost <code>String</code> with the host name for the transfer
-	 * @param transferZone <code>String</code> with the zone name for the transfer
+	 * @param transferHost
+	 *            <code>String</code> with the host name for the transfer
+	 * @param transferZone
+	 *            <code>String</code> with the zone name for the transfer
 	 * @return
 	 * @throws JargonException
 	 */
@@ -125,13 +131,15 @@ public final class TransferStatus {
 			final String targetFileAbsolutePath, final String targetResource,
 			final long totalSize, final long bytesTransfered,
 			final int totalFilesTransferredSoFar,
-			final int totalFilesToTransfer, final TransferState transferState,final String transferHost, final String transferZone)
+			final int totalFilesToTransfer, final TransferState transferState,
+			final String transferHost, final String transferZone)
 			throws JargonException {
 
 		return new TransferStatus(transferType, TransferType.SYNCH,
 				sourceFileAbsolutePath, targetFileAbsolutePath, targetResource,
 				totalSize, bytesTransfered, totalFilesTransferredSoFar,
-				totalFilesToTransfer, transferState, null, false, transferHost, transferZone);
+				totalFilesToTransfer, transferState, null, false, transferHost,
+				transferZone);
 
 	}
 
@@ -157,24 +165,19 @@ public final class TransferStatus {
 	 *            <code>int<code> with the total files transferred, including this status callback
 	 * @param totalFilesToTransfer
 	 *            <code>int</code> with the total files involved in this
-	 *            operation
-	 *  * @param transferHost <code>String</code> with the host name for the transfer
-	 * @param transferZone <code>String</code> with the zone name for the transfer
+	 *            operation * @param transferHost <code>String</code> with the
+	 *            host name for the transfer
+	 * @param transferZone
+	 *            <code>String</code> with the zone name for the transfer
 	 * 
 	 */
 	public static TransferStatus instanceForIntraFileStatus(
-			final TransferType transferType,
-			final String sourceFileAbsolutePath,
-			final String targetFileAbsolutePath, final String targetResource,
-			final long totalSize, final long bytesTransfered,
-			final int totalFilesTransferredSoFar, final int totalFilesToTransfer, final String transferHost, final String transferZone)
-			throws JargonException {
+			final TransferType transferType, final long totalSize,
+			final long bytesTransfered) throws JargonException {
 
-		return new TransferStatus(transferType, null, sourceFileAbsolutePath,
-				targetFileAbsolutePath, targetResource, totalSize,
-				bytesTransfered, totalFilesTransferredSoFar,
-				totalFilesToTransfer, TransferState.IN_PROGRESS, null, true, transferHost, transferZone);
-
+		return new TransferStatus(transferType, null, "", "", "", totalSize,
+				bytesTransfered, 0, 0, TransferState.IN_PROGRESS, null, true,
+				"", "");
 	}
 
 	/**
@@ -203,8 +206,10 @@ public final class TransferStatus {
 	 * @param exception
 	 *            <code>TransferState</code> indicating whether the transfer is
 	 *            ongoing or has completed
-	 * @param transferHost <code>String</code> with the host name for the transfer
-	 * @param transferZone <code>String</code> with the zone name for the transfer
+	 * @param transferHost
+	 *            <code>String</code> with the host name for the transfer
+	 * @param transferZone
+	 *            <code>String</code> with the zone name for the transfer
 	 */
 
 	public static TransferStatus instanceForException(
@@ -213,13 +218,15 @@ public final class TransferStatus {
 			final String targetFileAbsolutePath, final String targetResource,
 			final long totalSize, final long bytesTransfered,
 			final int totalFilesTransferredSoFar,
-			final int totalFilesToTransfer, final Exception exception, final String transferHost, final String transferZone)
+			final int totalFilesToTransfer, final Exception exception,
+			final String transferHost, final String transferZone)
 			throws JargonException {
 
 		return new TransferStatus(transferType, null, sourceFileAbsolutePath,
 				targetFileAbsolutePath, targetResource, totalSize,
 				bytesTransfered, totalFilesTransferredSoFar,
-				totalFilesToTransfer, TransferState.FAILURE, exception, false, transferHost, transferZone);
+				totalFilesToTransfer, TransferState.FAILURE, exception, false,
+				transferHost, transferZone);
 
 	}
 
@@ -236,8 +243,10 @@ public final class TransferStatus {
 	 * @param totalFilesTransferredSoFar
 	 * @param totalFilesToTransfer
 	 * @param exception
-	 * @param transferHost <code>String</code> with the host name for the transfer
-	 * @param transferZone <code>String</code> with the zone name for the transfer
+	 * @param transferHost
+	 *            <code>String</code> with the host name for the transfer
+	 * @param transferZone
+	 *            <code>String</code> with the zone name for the transfer
 	 * @return
 	 * @throws JargonException
 	 */
@@ -247,13 +256,15 @@ public final class TransferStatus {
 			final String targetFileAbsolutePath, final String targetResource,
 			final long totalSize, final long bytesTransfered,
 			final int totalFilesTransferredSoFar,
-			final int totalFilesToTransfer, final Exception exception, final String transferHost, final String transferZone)
+			final int totalFilesToTransfer, final Exception exception,
+			final String transferHost, final String transferZone)
 			throws JargonException {
 
 		return new TransferStatus(transferType, TransferType.SYNCH,
 				sourceFileAbsolutePath, targetFileAbsolutePath, targetResource,
 				totalSize, bytesTransfered, totalFilesTransferredSoFar,
-				totalFilesToTransfer, TransferState.FAILURE, exception, false, transferHost, transferZone);
+				totalFilesToTransfer, TransferState.FAILURE, exception, false,
+				transferHost, transferZone);
 
 	}
 
@@ -298,6 +309,7 @@ public final class TransferStatus {
 
 	/**
 	 * Private constructor, use the static instance methods.
+	 * 
 	 * @param transferType
 	 * @param transferEnclosingType
 	 * @param sourceFileAbsolutePath
@@ -320,7 +332,8 @@ public final class TransferStatus {
 			final int totalFilesTransferredSoFar,
 			final int totalFilesToTransfer, final TransferState transferState,
 			final Exception transferException,
-			final boolean intraFileStatusReport, final String transferHost, final String transferZone) throws JargonException {
+			final boolean intraFileStatusReport, final String transferHost,
+			final String transferZone) throws JargonException {
 
 		if (totalSize < 0) {
 			throw new JargonException("totalSize less than zero");
@@ -330,42 +343,48 @@ public final class TransferStatus {
 			throw new JargonException("bytesTransferred is less than zero");
 		}
 
-		if (totalFilesTransferredSoFar < 0) {
-			throw new JargonException(
-					"totalFilesTransferredSoFar is less than zero");
-		}
+		if (!intraFileStatusReport) {
 
-		if (totalFilesToTransfer < 0) {
-			throw new JargonException("totalFilesToTransfer is less than zero");
-		}
+			if (totalFilesTransferredSoFar < 0) {
+				throw new JargonException(
+						"totalFilesTransferredSoFar is less than zero");
+			}
 
-		if (transferType == null) {
-			throw new JargonException("null transfer type");
-		}
+			if (totalFilesToTransfer < 0) {
+				throw new JargonException(
+						"totalFilesToTransfer is less than zero");
+			}
 
-		if (sourceFileAbsolutePath == null || sourceFileAbsolutePath.isEmpty()) {
-			throw new JargonException("null or empty sourceFileAbsolutePath");
-		}
+			if (transferType == null) {
+				throw new JargonException("null transfer type");
+			}
 
-		if (targetFileAbsolutePath == null) {
-			throw new JargonException("null  targetFileAbsolutePath");
-		}
+			if (sourceFileAbsolutePath == null
+					|| sourceFileAbsolutePath.isEmpty()) {
+				throw new JargonException(
+						"null or empty sourceFileAbsolutePath");
+			}
 
-		if (targetResource == null) {
-			throw new JargonException(
-					"null targetResource, set to blank if unused");
-		}
+			if (targetFileAbsolutePath == null) {
+				throw new JargonException("null  targetFileAbsolutePath");
+			}
 
-		if (transferState == null) {
-			throw new JargonException("null transferState");
-		}
-		
-		if (transferHost == null || transferHost.isEmpty()) {
-			throw new JargonException("null transferHost");
-		}
-		
-		if (transferZone == null || transferZone.isEmpty()) {
-			throw new JargonException("null transferZone");
+			if (targetResource == null) {
+				throw new JargonException(
+						"null targetResource, set to blank if unused");
+			}
+
+			if (transferState == null) {
+				throw new JargonException("null transferState");
+			}
+
+			if (transferHost == null || transferHost.isEmpty()) {
+				throw new JargonException("null transferHost");
+			}
+
+			if (transferZone == null || transferZone.isEmpty()) {
+				throw new JargonException("null transferZone");
+			}
 		}
 
 		this.transferType = transferType;
@@ -432,7 +451,7 @@ public final class TransferStatus {
 	public TransferType getTransferEnclosingType() {
 		return transferEnclosingType;
 	}
-	
+
 	/**
 	 * @return the transferHost
 	 */
@@ -446,6 +465,5 @@ public final class TransferStatus {
 	public String getTransferZone() {
 		return transferZone;
 	}
-
 
 }

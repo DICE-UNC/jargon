@@ -6,11 +6,11 @@ package org.irods.jargon.core.connection;
 import org.irods.jargon.core.exception.JargonException;
 
 /**
- * Implementation of the <code>JargonProperties</code> interface that is sutable
+ * Implementation of the <code>JargonProperties</code> interface that is suitable
  * for user-definition and injection into the <code>IRODSession</code>.
- * Typcially, properties that control Jargon are pulled from a default
+ * Typicially, properties that control Jargon are pulled from a default
  * jargon.properties file. This class would allow, for example, the wiring of
- * property opttions via Spring through various setters.
+ * property options via Spring through various setters.
  * <p/>
  * Some of these properties serve as defaults that may be overridden in the
  * various methods by the setting of parameters, such as
@@ -34,6 +34,7 @@ public class SettableJargonProperties implements JargonProperties {
 	private boolean allowPutGetResourceRedirects = false;
 	private boolean computeChecksumAfterTransfer = false;
 	private boolean computeAndVerifyChecksumAfterTransfer = false;
+	private boolean intraFileStatusCallbacks = false;
 
 	/*
 	 * (non-Javadoc)
@@ -241,6 +242,23 @@ public class SettableJargonProperties implements JargonProperties {
 	public void setComputeAndVerifyChecksumAfterTransfer(
 			final boolean computeAndVerifyChecksumAfterTransfer) {
 		this.computeAndVerifyChecksumAfterTransfer = computeAndVerifyChecksumAfterTransfer;
+	}
+
+	/**
+	 * Set whether intra-file status call-backs for file transfers are enabled.  
+	 * This will give progress of bytes within transfers, with a slight performance penalty.
+	 * @param intraFileStatusCallbacks the intraFileStatusCallbacks to set
+	 */
+	public void setIntraFileStatusCallbacks(boolean intraFileStatusCallbacks) {
+		this.intraFileStatusCallbacks = intraFileStatusCallbacks;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.core.connection.JargonProperties#isIntraFileStatusCallbacks()
+	 */
+	@Override
+	public boolean isIntraFileStatusCallbacks() {
+		return intraFileStatusCallbacks;
 	}
 
 }

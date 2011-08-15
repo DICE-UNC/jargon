@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.pub.DefaultIntraFileProgressCallbackListener;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,27 +47,49 @@ public final class ParallelGetFileTransferStrategy extends
 	 * @param localFile
 	 *            <code>File</code> representing the local file
 	 * @param irodsAccessObjectFactory
-	 *            {@link IRODSAccessObjectFactory} for the session.
+	 *            {@link IRODSAccessObjectFactory} for the session. 
+	 *
+	 * @param transferLength <code>long</code> with the total length of the transfer
+	 * @param
+	 *            transferControlBlock {@link TransferControlBlock} that
+	 *            controls and keeps track of the transfer operation, required.
+	 * @param transferStatusCallbackListener
+	 *            {@link TransferStatusCallbackListener} or <code>null</code> if
+	 *            not desired. This can receive call-backs on the status of the
+	 *            parallel transfer operation.
 	 * @return
 	 * @throws JargonException
 	 */
 	public static ParallelGetFileTransferStrategy instance(final String host,
 			final int port, final int numberOfThreads, final int password,
 			final File localFile,
-			final IRODSAccessObjectFactory irodsAccessObjectFactory)
+			final IRODSAccessObjectFactory irodsAccessObjectFactory,
+			final long transferLength,
+			final TransferControlBlock transferControlBlock,
+			final TransferStatusCallbackListener transferStatusCallbackListener)
 			throws JargonException {
 		return new ParallelGetFileTransferStrategy(host, port, numberOfThreads,
-				password, localFile, irodsAccessObjectFactory);
+				password, localFile, irodsAccessObjectFactory, transferLength,
+				transferControlBlock, transferStatusCallbackListener);
 	}
 
 	private ParallelGetFileTransferStrategy(final String host, final int port,
 			final int numberOfThreads, final int password,
 			final File localFile,
-			final IRODSAccessObjectFactory irodsAccessObjectFactory)
+			final IRODSAccessObjectFactory irodsAccessObjectFactory, 
+			final long transferLength,
+			final TransferControlBlock transferControlBlock,
+			final TransferStatusCallbackListener transferStatusCallbackListener)
 			throws JargonException {
 
 		super(host, port, numberOfThreads, password, localFile,
-				irodsAccessObjectFactory);
+				irodsAccessObjectFactory, transferLength, transferControlBlock,
+				transferStatusCallbackListener);
+		
+		if (transferControlBlock.getTransferOptions().isIntraFileStatusCallbacks() && transferStatusCallbackListener != null) {
+			log.info("will do intra-file status callbacks from transfer");
+			this.setConnectionProgressStatusListener(DefaultIntraFileProgressCallbackListener.instance(TransferStatus.TransferType.GET, getTransferLength(), transferControlBlock, transferStatusCallbackListener));
+		}
 
 	}
 
@@ -169,5 +192,24 @@ public final class ParallelGetFileTransferStrategy extends
 			}
 		}
 	}
+	
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("ParallelGetFileTransferStrategy");
+		sb.append("\n   host:");
+		sb.append(this.getHost());
+		sb.append("\n   port:");
+		sb.append(this.getPort());
+		sb.append("\n   numberOfThreads:");
+		sb.append(this.getNumberOfThreads());
+		sb.append("\n   localFile:");
+		sb.append(localFile.getAbsolutePath());
+		sb.append("\n   transferLength:");
+		sb.append(transferLength);
+		return sb.toString();
+
+	}
+
 
 }

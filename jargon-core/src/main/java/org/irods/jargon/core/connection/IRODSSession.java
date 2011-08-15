@@ -106,6 +106,7 @@ public final class IRODSSession {
 							.isComputeAndVerifyChecksumAfterTransfer());
 			transferOptions.setComputeChecksumAfterTransfer(jargonProperties
 					.isComputeChecksumAfterTransfer());
+			transferOptions.setIntraFileStatusCallbacks(jargonProperties.isIntraFileStatusCallbacks());
 		}
 		return transferOptions;
 	}

@@ -683,6 +683,38 @@ public class IRODSFileImplTest {
 
 	}
 
+	/**
+	 * Test method for
+	 * {@link org.irods.jargon.core.pub.io.IRODSFileImpl#lastModified()}.
+	 */
+	@Test
+	public final void testLengthFileNotInIRODSYet() throws Exception {
+		String testFileName = "testLengthFileNotInIRODSYet.txt";
+		
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager
+				.instance();
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSSession irodsSession = IRODSSession
+				.instance(irodsConnectionManager);
+		IRODSAccessObjectFactory accessObjectFactory = IRODSAccessObjectFactoryImpl
+				.instance(irodsSession);
+		IRODSFileFactory irodsFileFactory = accessObjectFactory
+				.getIRODSFileFactory(irodsAccount);
+		IRODSFile irodsFile = irodsFileFactory
+				.instanceIRODSFile(targetIrodsCollection + '/' + testFileName);
+
+		long size = irodsFile.length();
+		irodsSession.closeSession();
+		Assert.assertEquals("size should be zero", 0, size);
+
+	}
+	
+	
 	@Test
 	public final void testLengthSpacesInName() throws Exception {
 		String testFileName = "testSize File.zip";

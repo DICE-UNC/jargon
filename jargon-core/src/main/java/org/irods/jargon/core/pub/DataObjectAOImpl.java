@@ -479,7 +479,8 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 						"numberOfThreads returned from iRODS is < 0, some error occurred");
 			} else if (numberOfThreads > 0) {
 				parallelPutTransfer(localFile, responseToInitialCallForPut,
-						numberOfThreads);
+						numberOfThreads, localFile.length(), transferControlBlock,
+						transferStatusCallbackListener);
 			} else {
 				log.info("parallel operation deferred by server sending 0 threads back in PortalOperOut, revert to single thread transfer");
 				dataAOHelper.processNormalPutTransfer(localFile, overwrite,
@@ -509,14 +510,21 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	}
 
 	/**
+	 * 
 	 * @param localFile
 	 * @param responseToInitialCallForPut
 	 * @param numberOfThreads
+	 * @param transferLength
+	 * @param transferControlBlock
+	 * @param transferStatusCallbackListener
 	 * @throws JargonException
 	 */
 	private void parallelPutTransfer(final File localFile,
-			final Tag responseToInitialCallForPut, final int numberOfThreads)
+			final Tag responseToInitialCallForPut, final int numberOfThreads, final long transferLength,
+			final TransferControlBlock transferControlBlock,
+			final TransferStatusCallbackListener transferStatusCallbackListener)
 			throws JargonException {
+		
 		log.info("tranfer will be done using {} threads", numberOfThreads);
 		final String host = responseToInitialCallForPut
 				.getTag(IRODSConstants.PortList_PI)
@@ -530,7 +538,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 		final ParallelPutFileTransferStrategy parallelPutFileStrategy = ParallelPutFileTransferStrategy
 				.instance(host, port, numberOfThreads, pass, localFile,
-						this.getIRODSAccessObjectFactory());
+						this.getIRODSAccessObjectFactory(), transferLength, transferControlBlock, transferStatusCallbackListener);
 
 		log.info(
 				"getting ready to initiate parallel file transfer strategy:{}",
@@ -600,8 +608,14 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 				transferControlBlock, null);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.pub.DataObjectAO#getDataObjectFromIrods(org.irods.jargon.core.pub.io.IRODSFile, java.io.File, org.irods.jargon.core.transfer.TransferControlBlock, org.irods.jargon.core.transfer.TransferStatusCallbackListener)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.DataObjectAO#getDataObjectFromIrods(org.irods
+	 * .jargon.core.pub.io.IRODSFile, java.io.File,
+	 * org.irods.jargon.core.transfer.TransferControlBlock,
+	 * org.irods.jargon.core.transfer.TransferStatusCallbackListener)
 	 */
 	@Override
 	public void getDataObjectFromIrods(final IRODSFile irodsFileToGet,
@@ -657,10 +671,12 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		final DataObjInp dataObjInp;
 		if (irodsFileToGet.getResource().isEmpty()) {
 			dataObjInp = DataObjInp.instanceForGet(
-				irodsFileToGet.getAbsolutePath(), irodsFileLength,
-				thisFileTransferOptions);
+					irodsFileToGet.getAbsolutePath(), irodsFileLength,
+					thisFileTransferOptions);
 		} else {
-			dataObjInp = DataObjInp.instanceForGetSpecifyingResource(irodsFileToGet.getAbsolutePath(), irodsFileToGet.getResource(), thisFileTransferOptions);
+			dataObjInp = DataObjInp.instanceForGetSpecifyingResource(
+					irodsFileToGet.getAbsolutePath(),
+					irodsFileToGet.getResource(), thisFileTransferOptions);
 		}
 
 		processGetAfterResourceDetermined(irodsFileToGet, localFile,
@@ -797,12 +813,12 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 				checkNbrThreadsAndProcessAsParallelIfMoreThanZeroThreads(
 						irodsFileToGet, localFileToHoldData,
 						thisFileTransferOptions, message,
-						lengthFromIrodsResponse, irodsFileLength);
+						lengthFromIrodsResponse, irodsFileLength, transferControlBlock, transferStatusCallbackListener);
 
 			} else {
 				dataAOHelper.processNormalGetTransfer(localFileToHoldData,
 						lengthFromIrodsResponse, this.getIRODSProtocol(),
-						thisFileTransferOptions);
+						thisFileTransferOptions, transferControlBlock, transferStatusCallbackListener);
 			}
 
 			if (thisFileTransferOptions != null) {
@@ -831,19 +847,21 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	}
 
 	/**
+	 * 
+	 * @param irodsSourceFile
 	 * @param localFileToHoldData
 	 * @param transferOptions
 	 * @param message
 	 * @param length
-	 *            length returned from the initial DataObjInp call to iRODS
 	 * @param irodsFileLength
-	 *            actual length of irodsFile
+	 * @param transferControlBlock
+	 * @param transferStatusCallbackListener
 	 * @throws JargonException
 	 */
 	private void checkNbrThreadsAndProcessAsParallelIfMoreThanZeroThreads(
 			final IRODSFile irodsSourceFile, final File localFileToHoldData,
 			final TransferOptions transferOptions, final Tag message,
-			final long length, final long irodsFileLength)
+			final long length, final long irodsFileLength, final TransferControlBlock transferControlBlock, final TransferStatusCallbackListener transferStatusCallbackListener)
 			throws JargonException {
 		final String host = message.getTag(IRODSConstants.PortList_PI)
 				.getTag(IRODSConstants.hostAddr).getStringValue();
@@ -860,14 +878,14 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			log.info("number of threads is zero, possibly parallel transfers were turned off via rule, process as normal");
 			int fd = message.getTag(IRODSConstants.l1descInx).getIntValue();
 			dataAOHelper.processGetTransferViaRead(irodsSourceFile,
-					localFileToHoldData, irodsFileLength, transferOptions, fd);
+					localFileToHoldData, irodsFileLength, transferOptions, fd, transferControlBlock, transferStatusCallbackListener);
 		} else {
 
 			log.info("process as a parallel transfer");
 			ParallelGetFileTransferStrategy parallelGetTransferStrategy = ParallelGetFileTransferStrategy
 					.instance(host, port, numberOfThreads, password,
 							localFileToHoldData,
-							this.getIRODSAccessObjectFactory());
+							this.getIRODSAccessObjectFactory(), irodsSourceFile.length(), transferControlBlock, transferStatusCallbackListener);
 
 			parallelGetTransferStrategy.transfer();
 		}

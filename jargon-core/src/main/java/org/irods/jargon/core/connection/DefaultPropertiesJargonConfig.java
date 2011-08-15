@@ -217,4 +217,13 @@ public class DefaultPropertiesJargonConfig implements JargonProperties {
 		return Boolean.valueOf(propVal);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.core.connection.JargonProperties#isIntraFileStatusCallbacks()
+	 */
+	@Override
+	public boolean isIntraFileStatusCallbacks() throws JargonException {
+		String propVal = verifyPropExistsAndGetAsString("transfer.intra.file.callbacks");
+		return Boolean.valueOf(propVal);
+	}
+
 }

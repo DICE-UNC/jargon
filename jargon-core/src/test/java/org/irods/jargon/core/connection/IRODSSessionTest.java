@@ -180,6 +180,30 @@ public class IRODSSessionTest {
 				transferOptions.isComputeChecksumAfterTransfer());
 
 	}
+	
+	@Test
+	public void testGetTransferOptionsWithIntraFileCallbacksTrue()
+			throws Exception {
+		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager
+				.instance();
+		testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSSession irodsSession = IRODSSession
+				.instance(irodsConnectionManager);
+		irodsSession.closeSession();
+
+		SettableJargonProperties overrideJargonProperties = new SettableJargonProperties();
+		overrideJargonProperties.setIntraFileStatusCallbacks(true);
+
+		irodsSession.setJargonProperties(overrideJargonProperties);
+		TransferOptions transferOptions = irodsSession
+				.buildTransferOptionsBasedOnJargonProperties();
+
+		Assert.assertEquals("did not set intra file callbacks", true,
+				transferOptions.isIntraFileStatusCallbacks());
+
+	}
+
 
 	@Test
 	public void testGetTransferOptionsWithResourceRedirectsTrue()
