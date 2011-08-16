@@ -38,7 +38,8 @@ final class IRODSConnection implements IRODSManagedConnection {
 	private Socket connection;
 	private InputStream irodsInputStream;
 	private OutputStream irodsOutputStream;
-	private final static int CONNECTION_TIMEOUT_DEFAULT = -1;
+	private IRODSSession irodsSession = null;
+	private final IRODSAccount irodsAccount;
 
 	static final int DEFAULT_BUFFER_SIZE = 65535;
 
@@ -103,16 +104,17 @@ final class IRODSConnection implements IRODSManagedConnection {
 
 	private IRODSConnection() {
 		this.irodsProtocolManager = null;
+		this.irodsAccount = null;
 	}
 
 	private IRODSConnection(final IRODSAccount irodsAccount,
 			final IRODSProtocolManager irodsConnectionManager)
 			throws JargonException {
 		this.irodsProtocolManager = irodsConnectionManager;
+		this.irodsAccount = irodsAccount;
 
 	}
 
-	@SuppressWarnings("unused")
 	private void connect(final IRODSAccount irodsAccount)
 			throws JargonException {
 		log.info("connecting socket...");
@@ -125,20 +127,25 @@ final class IRODSConnection implements IRODSManagedConnection {
 		try {
 			connection = new Socket(irodsAccount.getHost(),
 					irodsAccount.getPort());
-			// TODO: make a jargon.properties file to move out some of this
-			// config, as well as def rec counts, etc
-			if (CONNECTION_TIMEOUT_DEFAULT != -1) {
-				log.warn("setting a connection timeout of:{}",
-						CONNECTION_TIMEOUT_DEFAULT);
-				connection.setSoTimeout(CONNECTION_TIMEOUT_DEFAULT);
+
+			if (getIrodsSession() != null) {
+				int socketTimeout = getIrodsSession().getJargonProperties()
+						.getIRODSSocketTimeout();
+				if (socketTimeout > 0) {
+					log.warn("setting a connection timeout of:{} seconds",
+							socketTimeout);
+					connection.setSoTimeout(socketTimeout * 1000);
+				}
 			}
+
 			irodsInputStream = new BufferedInputStream(
 					connection.getInputStream());
 			irodsOutputStream = connection.getOutputStream();
+
 		} catch (UnknownHostException e) {
 			log.error("exception opening socket to:" + irodsAccount.getHost()
 					+ " port:" + irodsAccount.getPort(), e);
-			this.obliterateConnectionAndDiscardErrors();
+			disconnectWithIOException();
 			throw new JargonException(e);
 		} catch (IOException ioe) {
 			log.error(
@@ -181,32 +188,18 @@ final class IRODSConnection implements IRODSManagedConnection {
 
 		log.info("disconnecting...");
 		// disconnect from irods and close
-		this.connected = false;
 		this.irodsProtocolManager.returnConnectionWithIoException(this);
 	}
 
 	/*
-	 * Internal method to actually close the underlying connection by sending a
-	 * disconnect to IRODS, and then physically closing down the socket. This
-	 * method will be called at the appropriate time by the (@link
-	 * IRODSConnectionManager IRODSConnectionManager} at the appropriate time.
+	 * (non-Javadoc)
 	 * 
-	 * @throws JargonException
+	 * @see org.irods.jargon.core.connection.IRODSManagedConnection#shutdown()
 	 */
 	@Override
 	public void shutdown() throws JargonException {
 		log.info("shutting down connection: {}", connected);
-		if (!isConnected()) {
-			return;
-		}
-
-		try {
-			connection.close();
-		} catch (IOException ex) {
-			log.error("IOException closing: ", ex);
-			disconnectWithIOException();
-		}
-		connected = false;
+		closeDownSocketAndEatAnyExceptions();
 	}
 
 	/*
@@ -217,10 +210,16 @@ final class IRODSConnection implements IRODSManagedConnection {
 	 */
 	@Override
 	public void obliterateConnectionAndDiscardErrors() {
+		closeDownSocketAndEatAnyExceptions();
+	}
 
+	/**
+	 * 
+	 */
+	private void closeDownSocketAndEatAnyExceptions() {
 		if (this.isConnected()) {
 
-			log.info("obliterating connection and discarding errors");
+			log.info("closing underlying iRODS socket connections, errors will be discarded");
 			try {
 				connection.shutdownInput();
 			} catch (Exception e) {
@@ -381,7 +380,7 @@ final class IRODSConnection implements IRODSManagedConnection {
 			return;
 		}
 		try {
-			send(value.getBytes(ConnectionConstants.JARGON_CONNECTION_ENCODING));
+			send(value.getBytes(ConnectionConstants.JARGON_CONNECTION_ENCODING)); // FIXME: make encoding a jargon.properties value
 		} catch (IOException ioe) {
 			disconnectWithIOException();
 			throw ioe;
@@ -449,7 +448,7 @@ final class IRODSConnection implements IRODSManagedConnection {
 				send(temp);
 
 				/*
-				 * If a listener is specified, send call-backs with progress 
+				 * If a listener is specified, send call-backs with progress
 				 */
 				if (connectionProgressStatusListener != null) {
 					connectionProgressStatusListener
@@ -523,18 +522,26 @@ final class IRODSConnection implements IRODSManagedConnection {
 	void read(final OutputStream destination, long length) throws IOException {
 		read(destination, length, null);
 	}
-	
+
 	/**
-	 * Read from the iRODS connection for a given length, and write what is 
-	 * read from iRODS to the give <code>OutputStream</code>.
-	 * @param destination <code>OutputStream</code> to which data will be streamed from iRODS.
-	 * @param length <code>long</code> with the length of data to be read from iRODS and pushed to the stream.
-	 * @param intraFileStatusListener {@link ConnectionProgressStatusListener} that will receive progress on the streaming, or <code>null</code> for
-	 * no such call-backs.
+	 * Read from the iRODS connection for a given length, and write what is read
+	 * from iRODS to the give <code>OutputStream</code>.
+	 * 
+	 * @param destination
+	 *            <code>OutputStream</code> to which data will be streamed from
+	 *            iRODS.
+	 * @param length
+	 *            <code>long</code> with the length of data to be read from
+	 *            iRODS and pushed to the stream.
+	 * @param intraFileStatusListener
+	 *            {@link ConnectionProgressStatusListener} that will receive
+	 *            progress on the streaming, or <code>null</code> for no such
+	 *            call-backs.
 	 */
 	public void read(OutputStream destination, long length,
-			ConnectionProgressStatusListener intraFileStatusListener) throws IOException {
-		
+			ConnectionProgressStatusListener intraFileStatusListener)
+			throws IOException {
+
 		if (destination == null) {
 			String err = "destination is null";
 			log.error(err);
@@ -547,24 +554,30 @@ final class IRODSConnection implements IRODSManagedConnection {
 			throw new IllegalArgumentException(err);
 		}
 
-		byte[] temp = new byte[Math.min(DEFAULT_BUFFER_SIZE, (int) length)];
-		int n = 0;
-		while (length > 0) {
-			n = read(temp, 0, Math.min(DEFAULT_BUFFER_SIZE, (int) length));
-			if (n > 0) {
-				length -= n;
-				destination.write(temp, 0, n);
-				/*
-				 * If a listener is specified, send call-backs with progress 
-				 */
-				if (intraFileStatusListener != null) {
-					intraFileStatusListener
-							.connectionProgressStatusCallback(ConnectionProgressStatus
-									.instanceForSend(n));
+		try {
+			byte[] temp = new byte[Math.min(DEFAULT_BUFFER_SIZE, (int) length)];
+			int n = 0;
+			while (length > 0) {
+				n = read(temp, 0, Math.min(DEFAULT_BUFFER_SIZE, (int) length));
+				if (n > 0) {
+					length -= n;
+					destination.write(temp, 0, n);
+					/*
+					 * If a listener is specified, send call-backs with progress
+					 */
+					if (intraFileStatusListener != null) {
+						intraFileStatusListener
+								.connectionProgressStatusCallback(ConnectionProgressStatus
+										.instanceForSend(n));
+					}
+				} else {
+					length = n;
 				}
-			} else {
-				length = n;
 			}
+		} catch (IOException ioe) {
+			log.error("io exception reading", ioe);
+			disconnectWithIOException();
+			throw ioe;
 		}
 	}
 
@@ -643,6 +656,29 @@ final class IRODSConnection implements IRODSManagedConnection {
 		}
 	}
 
-	
+	/**
+	 * @return the irodsSession that created this connection
+	 */
+	@Override
+	public IRODSSession getIrodsSession() {
+		return irodsSession;
+	}
+
+	/**
+	 * @param irodsSession
+	 *            the irodsSession that created this connection
+	 */
+	@Override
+	public void setIrodsSession(IRODSSession irodsSession) {
+		this.irodsSession = irodsSession;
+	}
+
+	/**
+	 * @return the irodsAccount associated with this connection
+	 */
+	@Override
+	public IRODSAccount getIrodsAccount() {
+		return irodsAccount;
+	}
 
 }

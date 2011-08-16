@@ -24,7 +24,8 @@ import org.slf4j.LoggerFactory;
  * <code>IRODSAccount</code> as the key.
  * <p/>
  * Connections are returned to the particular <code>IRODSProtocolManager</code>
- * for disposal or return to cache or pool.
+ * for disposal or return to cache or pool.  See the comments for {@link IRODSCommands} for
+ * details on connection creation and disposal.
  * <p/>
  * <code>IRODSSession</code> is also the place where shared, expensive objects
  * are kept. Note that IRODSSession is not coded as a singleton. It is up to the
@@ -38,7 +39,7 @@ import org.slf4j.LoggerFactory;
  * @author Mike Conway - DICE (www.irods.org)
  * 
  */
-public final class IRODSSession {
+public class IRODSSession {
 
 	public static final Logger log = LoggerFactory
 			.getLogger(IRODSSession.class);
@@ -106,7 +107,8 @@ public final class IRODSSession {
 							.isComputeAndVerifyChecksumAfterTransfer());
 			transferOptions.setComputeChecksumAfterTransfer(jargonProperties
 					.isComputeChecksumAfterTransfer());
-			transferOptions.setIntraFileStatusCallbacks(jargonProperties.isIntraFileStatusCallbacks());
+			transferOptions.setIntraFileStatusCallbacks(jargonProperties
+					.isIntraFileStatusCallbacks());
 		}
 		return transferOptions;
 	}
@@ -219,8 +221,8 @@ public final class IRODSSession {
 		if (irodsProtocols == null) {
 			LOG.debug("no connections are cached, so create a new cache map");
 			irodsProtocols = new HashMap<String, IRODSCommands>();
-			irodsProtocol = irodsProtocolManager.getIRODSProtocol(irodsAccount);
-			irodsProtocols.put(irodsAccount.toString(), irodsProtocol);
+			irodsProtocol = connectAndAddToProtocolsMap(irodsAccount,
+					irodsProtocols);
 			LOG.debug("put a reference to a new connection for account: {}",
 					irodsAccount.toString());
 			sessionMap.set(irodsProtocols);
@@ -233,6 +235,15 @@ public final class IRODSSession {
 
 		if (irodsProtocol == null) {
 			LOG.debug("null connection in thread local, using IRODSConnectionManager to create a new connection");
+			irodsProtocol = connectAndAddToProtocolsMap(irodsAccount,
+					irodsProtocols);
+		} else if (irodsProtocol.isConnected()) {
+			LOG.debug("session using previously established connection:{}",
+					irodsProtocol);
+		} else {
+			LOG.warn(
+					"***************** session has a connection marked closed, create a new one and put back into the cache:{}",
+					irodsProtocol);
 			irodsProtocol = irodsProtocolManager.getIRODSProtocol(irodsAccount);
 			if (irodsProtocol == null) {
 				LOG.error("no connection returned from connection manager");
@@ -243,11 +254,33 @@ public final class IRODSSession {
 			LOG.debug("put a reference to a new connection for account: {}",
 					irodsAccount.toString());
 			sessionMap.set(irodsProtocols);
-		} else {
-			LOG.debug("session using previously established connection:"
-					+ irodsProtocol);
 		}
 
+		return irodsProtocol;
+	}
+
+	/**
+	 * @param irodsAccount
+	 * @param irodsProtocols
+	 * @return
+	 * @throws JargonException
+	 */
+	private IRODSCommands connectAndAddToProtocolsMap(
+			final IRODSAccount irodsAccount,
+			Map<String, IRODSCommands> irodsProtocols) throws JargonException {
+		IRODSCommands irodsProtocol;
+		irodsProtocol = irodsProtocolManager.getIRODSProtocol(irodsAccount);
+		if (irodsProtocol == null) {
+			LOG.error("no connection returned from connection manager");
+			throw new JargonException(
+					"null connection returned from connection manager");
+		}
+
+		irodsProtocol.setIrodsSession(this);
+		irodsProtocols.put(irodsAccount.toString(), irodsProtocol);
+		LOG.debug("put a reference to a new connection for account: {}",
+				irodsAccount.toString());
+		sessionMap.set(irodsProtocols);
 		return irodsProtocol;
 	}
 
@@ -301,6 +334,31 @@ public final class IRODSSession {
 		irodsProtocol.disconnect();
 
 		irodsProtocols.remove(irodsAccount.toString());
+		if (irodsProtocols.isEmpty()) {
+			LOG.debug("no more connections, so clear cache from ThreadLocal");
+			sessionMap.set(null);
+		}
+
+	}
+
+	/**
+	 * Signal to the <code>IRODSSession</code> that a connection has been forcefully terminated due to errors, and
+	 * should be removed from the cache.
+	 * @param irodsAccount {@link IRODSAccount} that maps the connection
+	 * @throws JargonException
+	 */
+	public void discardSessionForErrors(final IRODSAccount irodsAccount)
+			throws JargonException {
+
+		LOG.debug("discarding irods session for: {}", irodsAccount.toString());
+		final Map<String, IRODSCommands> irodsProtocols = sessionMap.get();
+		if (irodsProtocols == null) {
+			LOG.warn("discarding session that is already closed, silently ignore");
+			return;
+		}
+		
+		irodsProtocols.remove(irodsAccount.toString());
+
 		if (irodsProtocols.isEmpty()) {
 			LOG.debug("no more connections, so clear cache from ThreadLocal");
 			sessionMap.set(null);

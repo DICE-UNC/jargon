@@ -71,6 +71,18 @@ public final class ParallelGetTransferThread extends
 		try {
 			setS(new Socket(parallelGetFileTransferStrategy.getHost(),
 					parallelGetFileTransferStrategy.getPort()));
+
+			if (parallelGetFileTransferStrategy
+					.getParallelSocketTimeoutInSecs() > 0) {
+				log.info(
+						"timeout (in seconds) for parallel transfer sockets is:{}",
+						parallelGetFileTransferStrategy
+								.getParallelSocketTimeoutInSecs());
+				getS().setSoTimeout(
+						parallelGetFileTransferStrategy
+								.getParallelSocketTimeoutInSecs() * 1000);
+			}
+
 			byte[] outputBuffer = new byte[4];
 			Host.copyInt(parallelGetFileTransferStrategy.getPassword(),
 					outputBuffer);
@@ -103,6 +115,13 @@ public final class ParallelGetTransferThread extends
 
 	public void get() throws JargonException {
 		log.info("parallel transfer get");
+
+		if (this.parallelGetFileTransferStrategy
+				.getConnectionProgressStatusListener() == null) {
+			log.info("no connection progress status listener configured, no detailed callbacks");
+		} else {
+			log.info("connection listener configured, will produce callbacks");
+		}
 
 		RandomAccessFile local;
 		try {
@@ -204,6 +223,19 @@ public final class ParallelGetTransferThread extends
 						local.write(buffer, 0, read);
 						log.debug("buffer written to file");
 
+						/*
+						 * Make an intra-file status call-back if a listener is
+						 * configured
+						 */
+						if (parallelGetFileTransferStrategy
+								.getConnectionProgressStatusListener() != null) {
+							parallelGetFileTransferStrategy
+									.getConnectionProgressStatusListener()
+									.connectionProgressStatusCallback(
+											ConnectionProgressStatus
+													.instanceForReceive(read));
+						}
+
 						log.debug("parallel transfer read next header");
 						// read the next header
 						operation = readInt();
@@ -232,10 +264,16 @@ public final class ParallelGetTransferThread extends
 
 						local.write(buffer, 0, read);
 						/*
-						 * Make an intra-file status call-back if a listener is configured
+						 * Make an intra-file status call-back if a listener is
+						 * configured
 						 */
-						if (parallelGetFileTransferStrategy.getConnectionProgressStatusListener() != null) {
-							parallelGetFileTransferStrategy.getConnectionProgressStatusListener().connectionProgressStatusCallback(ConnectionProgressStatus.instanceForReceive(read));
+						if (parallelGetFileTransferStrategy
+								.getConnectionProgressStatusListener() != null) {
+							parallelGetFileTransferStrategy
+									.getConnectionProgressStatusListener()
+									.connectionProgressStatusCallback(
+											ConnectionProgressStatus
+													.instanceForReceive(read));
 						}
 						log.debug("buffer written to file");
 

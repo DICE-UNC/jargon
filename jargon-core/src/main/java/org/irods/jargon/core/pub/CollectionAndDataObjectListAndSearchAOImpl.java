@@ -802,16 +802,6 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		String queryString = IRODSFileSystemAOHelper
 				.buildQueryListAllDataObjectsWithUserAccessInfo(absolutePathToParent);
 
-		@SuppressWarnings("unused")
-		StringBuilder sb = new StringBuilder(
-				"SELECT COLL_NAME, DATA_NAME, COLL_ACCESS_TYPE WHERE COLL_ACCESS_USER_ID = '10012'");
-		// sb.append(" WHERE ");
-		// sb.append(RodsGenQueryEnum.COL_COLL_ACCESS_USER_NAME);
-		// sb.append(" = '");
-		// sb.append(userName);
-		// sb.append("' AND ");
-		// sb.append(RodsGenQueryEnum.COL_DATA_ACCESS_TYPE);
-		// sb.append(" = '1200'");
 
 		@SuppressWarnings("unused")
 		IRODSQueryResultSetInterface resultSet = this

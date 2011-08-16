@@ -4,10 +4,12 @@ import java.util.Properties;
 
 import junit.framework.Assert;
 
+import org.irods.jargon.core.pub.IRODSFileSystem;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.mockito.Mockito;
 
 public class IRODSSimpleConnectionTest {
 	private static Properties testingProperties = new Properties();
@@ -27,10 +29,10 @@ public class IRODSSimpleConnectionTest {
 	public void testOpenAndCloseSimpleConnection() throws Exception {
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSProtocolManager connectionManager = IRODSSimpleProtocolManager
-				.instance();
-		IRODSManagedConnection connection = connectionManager
+		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
+		IRODSManagedConnection connection = irodsFileSystem.getIrodsProtocolManager()
 				.getIRODSProtocol(irodsAccount);
+		connection.setIrodsSession(Mockito.mock(IRODSSession.class));
 		connection.disconnect();
 		Assert.assertFalse(connection.isConnected());
 	}

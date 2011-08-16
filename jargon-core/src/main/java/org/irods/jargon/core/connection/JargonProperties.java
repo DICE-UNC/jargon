@@ -122,5 +122,14 @@ public interface JargonProperties {
 	 * @throws JargonException 
 	 */
 	boolean isIntraFileStatusCallbacks() throws JargonException;
+	
+	/**
+	 * Get the time-out, in seconds, for the main iRODS socket.  Will be zero or less if not specified
+	 * @return
+	 * @throws JargonException
+	 */
+	int getIRODSSocketTimeout() throws JargonException;
+	
+	int getIRODSParallelTransferSocketTimeout() throws JargonException;
 
 }

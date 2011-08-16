@@ -390,7 +390,7 @@ public class DefaultTransferControlBlock implements TransferControlBlock {
 	}
 
 	@Override
-	public void setTotalBytesToTransfer(final long totalBytesToTransfer) {
+	public synchronized void setTotalBytesToTransfer(final long totalBytesToTransfer) {
 		this.totalBytesToTransfer = totalBytesToTransfer;
 	}
 

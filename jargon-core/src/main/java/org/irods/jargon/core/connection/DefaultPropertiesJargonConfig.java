@@ -226,4 +226,21 @@ public class DefaultPropertiesJargonConfig implements JargonProperties {
 		return Boolean.valueOf(propVal);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.core.connection.JargonProperties#getIRODSSocketTimeout()
+	 */
+	@Override
+	public int getIRODSSocketTimeout() throws JargonException {
+		return verifyPropExistsAndGetAsInt("socket.timeout");
+	}
+
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.core.connection.JargonProperties#getIRODSParallelTransferSocketTimeout()
+	 */
+	@Override
+	public int getIRODSParallelTransferSocketTimeout() throws JargonException {
+		return verifyPropExistsAndGetAsInt("parallel.socket.timeout");
+
+	}
+
 }

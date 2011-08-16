@@ -94,13 +94,7 @@ final class IRODSLocalTransferEngine implements TransferStatusCallbackListener {
 			final TransferControlBlock transferControlBlock,
 			final TransferEngineConfigurationProperties transferEngineConfigurationProperties)
 			throws JargonException {
-		if (transferManager == null) {
-			throw new JargonException("transferManager is null");
-		}
-
-		if (transferControlBlock == null) {
-			throw new JargonException("transferControlBlock is null");
-		}
+		
 
 		return new IRODSLocalTransferEngine(transferManager,
 				transferControlBlock, transferEngineConfigurationProperties);
@@ -112,6 +106,14 @@ final class IRODSLocalTransferEngine implements TransferStatusCallbackListener {
 			final TransferControlBlock transferControlBlock,
 			final TransferEngineConfigurationProperties transferEngineConfigurationProperties)
 			throws JargonException {
+		
+		if (transferManager == null) {
+			throw new JargonException("transferManager is null");
+		}
+
+		if (transferControlBlock == null) {
+			throw new JargonException("transferControlBlock is null");
+		}
 
 		this.transferManager = transferManager;
 		this.transferControlBlock = transferControlBlock;
@@ -683,6 +685,21 @@ final class IRODSLocalTransferEngine implements TransferStatusCallbackListener {
 			throws JargonException {
 		log.info("overall status callback:{}", transferStatus);
 		transferManager.notifyOverallStatusUpdate(transferStatus);
+	}
+
+	/**
+	 * @return the transferEngineConfigurationProperties
+	 */
+	public synchronized TransferEngineConfigurationProperties getTransferEngineConfigurationProperties() {
+		return transferEngineConfigurationProperties;
+	}
+
+	/**
+	 * @param transferEngineConfigurationProperties the transferEngineConfigurationProperties to set
+	 */
+	public synchronized void setTransferEngineConfigurationProperties(
+			TransferEngineConfigurationProperties transferEngineConfigurationProperties) {
+		this.transferEngineConfigurationProperties = transferEngineConfigurationProperties;
 	}
 
 }

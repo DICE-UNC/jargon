@@ -373,7 +373,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 		log.debug("localFileLength:{}", localFileLength);
 
-		// FIXME: make a jargon prop (max size)
+		
 		if (localFileLength < ConnectionConstants.MAX_SZ_FOR_SINGLE_BUF) {
 
 			log.info("processing transfer as normal, length below max");
@@ -625,6 +625,12 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			throws DataNotFoundException, JargonException {
 
 		log.info("getDataObjectFromIrods()");
+		
+		if (transferStatusCallbackListener == null) {
+			log.info("transferStatusCallbackListener not given to getDataObjectFromIrods() method");
+		} else {
+			log.info("transferStatusCallbackListener present for getDataObjectFromIrods() method");
+		}
 
 		if (localFileToHoldData == null) {
 			throw new IllegalArgumentException("null local file");
@@ -681,7 +687,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 		processGetAfterResourceDetermined(irodsFileToGet, localFile,
 				dataObjInp, thisFileTransferOptions, irodsFileLength,
-				transferControlBlock, transferStatusCallbackListener);
+				operativeTransferControlBlock, transferStatusCallbackListener);
 	}
 
 	/*
@@ -768,6 +774,12 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			final TransferControlBlock transferControlBlock,
 			final TransferStatusCallbackListener transferStatusCallbackListener)
 			throws JargonException, DataNotFoundException {
+		
+		log.info("process get after resource determined");
+		
+		if (transferStatusCallbackListener == null) {
+			log.info("no transfer status callback listener provided");
+		}
 
 		if (thisFileTransferOptions == null) {
 			throw new IllegalArgumentException("null transfer options");
@@ -882,6 +894,12 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		} else {
 
 			log.info("process as a parallel transfer");
+			if (transferStatusCallbackListener == null) {
+				log.info("no callback listener specified");
+			} else {
+				log.info("callback listener was provided");
+			}
+			
 			ParallelGetFileTransferStrategy parallelGetTransferStrategy = ParallelGetFileTransferStrategy
 					.instance(host, port, numberOfThreads, password,
 							localFileToHoldData,

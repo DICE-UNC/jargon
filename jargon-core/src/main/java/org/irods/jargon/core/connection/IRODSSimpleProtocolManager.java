@@ -4,6 +4,7 @@
 package org.irods.jargon.core.connection;
 
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.exception.JargonRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -58,7 +59,7 @@ public final class IRODSSimpleProtocolManager implements IRODSProtocolManager {
 
 	/**
 	 * A connection is returned to the connection manager. This implementation
-	 * of a connection manager will do a callback to the {@link IRODSConnection
+	 * of a connection manager will do a call-back to the {@link IRODSConnection
 	 * IRODSConnection} and the connection will be closed. Other implementations
 	 * may return the connection to a pool.
 	 * <p/>
@@ -71,7 +72,7 @@ public final class IRODSSimpleProtocolManager implements IRODSProtocolManager {
 	public void returnIRODSConnection(
 			final IRODSManagedConnection irodsConnection)
 			throws JargonException {
-		log.debug("connection returned:" + irodsConnection);
+		log.debug("connection returned:{}", irodsConnection);
 		irodsConnection.shutdown();
 	}
 
@@ -85,9 +86,17 @@ public final class IRODSSimpleProtocolManager implements IRODSProtocolManager {
 	@Override
 	public void returnConnectionWithIoException(
 			final IRODSManagedConnection irodsConnection) {
+		log.warn("connection returned with IOException, will forcefully close and remove from session cache");
 		if (irodsConnection != null) {
 			irodsConnection.obliterateConnectionAndDiscardErrors();
+			try {
+				irodsConnection.getIrodsSession().discardSessionForErrors(irodsConnection.getIrodsAccount());
+			} catch (JargonException e) {
+				log.error("unable to obliterate connection");
+				throw new JargonRuntimeException("unable to obliterate connection", e);
+			}
 		}
+		
 	}
 
 	/*

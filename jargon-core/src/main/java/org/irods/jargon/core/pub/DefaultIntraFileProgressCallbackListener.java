@@ -30,7 +30,7 @@ public class DefaultIntraFileProgressCallbackListener implements ConnectionProgr
 	private long totalBytesTransferred;
 	
 	private int countOfMessagesSinceLastSend = 0;
-	public static final int BYTE_COUNT_MESSAGE_THRESHOLD = 5;
+	public static final int BYTE_COUNT_MESSAGE_THRESHOLD = 10;
 	
 	/**
 	 * Static initializer method to create an immutable call-back listener for intra-file status information.

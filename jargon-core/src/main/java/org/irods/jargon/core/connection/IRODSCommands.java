@@ -4,7 +4,6 @@
 package org.irods.jargon.core.connection;
 
 import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -45,6 +44,30 @@ import org.slf4j.LoggerFactory;
  * This connection should not be shared between threads. A rule of thumb is to
  * treat a connection to IRODS the same way you would treat a JDBC database
  * connection.
+ * <p/>
+ * A note on iRODS connections and handling when things go bad.  Typically, an iRODS connection
+ * is created by opening a socket, and doing a handshake and other start-up procedures.  Once that is done
+ * you are connected to an iRODS agent.   This class is a proxy to that underlying connection, so any calls that result in i/o to the agent
+ * are passed to the connection.  This insulates the caller from knowledge about the actual networking that goes on,
+ * helps protect the integrity of the connection, and also centralizes i/o in case something bad happens on the network level.
+ * <p/>
+ * There are several cooperating objects involved in obtaining a connection.  There is an {@link IRODSSession} object that maintains
+ * a ThreadLocal cache of connections by account.  Jargon asks for connections from the <code>IRODSSession</code> when you create access
+ * objects or files.  When you call <code>close()</code> methods, you are actually telling <code>IRODSSession</code> to close the connection
+ * on your behalf and remove it from the cache.  <code>IRODSSession</code> will  tell the {@link IRODSProtocolManager} that you are through with the connection.   
+ * The actual behavior of the <code>IRODSProtocolManager</code>
+ * depends on the implementation.  It may just close the connection at that point, or return it to a pool or cache.  When the <code>IRODSProtocolManager</code> does
+ * decide to actually close a connection, it will call the <code>disconnect</code> method here.
+ * <p/>
+ * If something bad happens on the network level (IOException like a broken pipe), then it is doubtful that the iRODS disconnect sequence will succeed, or
+ * that the connection to the agent is still reliable.  In this case, it is the responsibility of the <code>IRODSConnection</code> that is wrapped
+ * by this class, to forcefully close the socket connection (without doing the disconnect sequence), and to tell the <code>IRODSSession</code> to remove the
+ * connection from the cache.  <code>IRODSSession</code> also has a secondary check when it hands out a connection to the caller, to make sure the returned
+ * <code>IRODSCommands</code> object is connected.  It does this by interrogating the <code>isConnected()</code> method.  In the future, or in alternative implementations,
+ * an actual ping could be made against the underlying connection, but this is not currently done.
+ * <p/>
+ * Bottom line, use the <code>IRODSSession</code> close methods.  These are exposed in the <code>IRODSFileSystem</code> and <code>IRODSAccesObjectFactory</code> as well.  Do not
+ * attempt to manipulate the connection using the methods here!
  * 
  * @author Mike Conway - DICE (www.irods.org)
  * 
@@ -122,10 +145,15 @@ public class IRODSCommands implements IRODSManagedConnection {
 	}
 
 	/**
-	 * Create a typical iRODS function call where no binary data is streamed to iRODS
-	 * @param type <code>String</code> with the protocol type
-	 * @param message <code>String</code> with the actual protocol message
-	 * @param intInfo <code>int</code> with the iRODS api number
+	 * Create a typical iRODS function call where no binary data is streamed to
+	 * iRODS
+	 * 
+	 * @param type
+	 *            <code>String</code> with the protocol type
+	 * @param message
+	 *            <code>String</code> with the actual protocol message
+	 * @param intInfo
+	 *            <code>int</code> with the iRODS api number
 	 * @return {@link Tag} with the iRODS protocol response
 	 * @throws JargonException
 	 */
@@ -187,23 +215,42 @@ public class IRODSCommands implements IRODSManagedConnection {
 	}
 
 	/**
-	 * Invoke an iRODS protocol function, including optional streams for binary data, and receive an iRODS response
-	 * @param type <code>String</code> with the type of iRODS function
-	 * @param message <code>String</code> with the XML protocol invocation to send to iRODS
-	 * @param errorLength <code>int</code> with the length of the error stream to be sent
-	 * @param errorStream <code>InputStream</code> with error data to send to iRODS
-	 * @param byteStreamLength <code>long</code> with the length of data to be streamed to iRODS
-	 * @param byteStream <code>InputStream</code> with binary data to send to iRODS
-	 * @param intInfo <code>int</code> with the api number for the iRODS function
-	 * @param connectionProgressStatusListener {@link ConnectionProgressStatusListener} or <code>null</code> if not listener. If provided, the listener
-	 * will receive progress messages for the low-level iRODS operation
+	 * Invoke an iRODS protocol function, including optional streams for binary
+	 * data, and receive an iRODS response
+	 * 
+	 * @param type
+	 *            <code>String</code> with the type of iRODS function
+	 * @param message
+	 *            <code>String</code> with the XML protocol invocation to send
+	 *            to iRODS
+	 * @param errorLength
+	 *            <code>int</code> with the length of the error stream to be
+	 *            sent
+	 * @param errorStream
+	 *            <code>InputStream</code> with error data to send to iRODS
+	 * @param byteStreamLength
+	 *            <code>long</code> with the length of data to be streamed to
+	 *            iRODS
+	 * @param byteStream
+	 *            <code>InputStream</code> with binary data to send to iRODS
+	 * @param intInfo
+	 *            <code>int</code> with the api number for the iRODS function
+	 * @param connectionProgressStatusListener
+	 *            {@link ConnectionProgressStatusListener} or <code>null</code>
+	 *            if not listener. If provided, the listener will receive
+	 *            progress messages for the low-level iRODS operation
 	 * @return {@link Tag} representing the iRODS protocol response
 	 * @throws JargonException
 	 */
-	public synchronized Tag irodsFunction(final String type,
-			final String message, final int errorLength,
-			final InputStream errorStream, final long byteStreamLength,
-			final InputStream byteStream, final int intInfo, final ConnectionProgressStatusListener connectionProgressStatusListener)
+	public synchronized Tag irodsFunction(
+			final String type,
+			final String message,
+			final int errorLength,
+			final InputStream errorStream,
+			final long byteStreamLength,
+			final InputStream byteStream,
+			final int intInfo,
+			final ConnectionProgressStatusListener connectionProgressStatusListener)
 			throws JargonException {
 
 		log.info("calling irods function with streams");
@@ -222,8 +269,8 @@ public class IRODSCommands implements IRODSManagedConnection {
 				length = message
 						.getBytes(ConnectionConstants.JARGON_CONNECTION_ENCODING).length;
 			}
-			irodsConnection.send(createHeader(IRODSConstants.RODS_API_REQ, length,
-					errorLength, byteStreamLength, intInfo));
+			irodsConnection.send(createHeader(IRODSConstants.RODS_API_REQ,
+					length, errorLength, byteStreamLength, intInfo));
 			irodsConnection.send(message);
 			if (errorLength > 0) {
 				irodsConnection.send(new BufferedInputStream(errorStream),
@@ -359,25 +406,28 @@ public class IRODSCommands implements IRODSManagedConnection {
 
 		read(destination, length, null);
 	}
-	
+
 	/**
 	 * Read data from an input stream and write out to a destination
 	 * <code>OutputStream</code>. This method will delegate to the underlying
 	 * {@link org.irods.jargon.core.connection.IRODSConnection} and is included
 	 * in this class to provide a public hook for certain operations.
-	 *  @param destination
+	 * 
+	 * @param destination
 	 *            <code>OutputStream</code> for writing data that is read from
 	 *            the input stream.
 	 * @param length
 	 *            <code>long</code> length of data to be read and written out.
-	 * @param intraFileStatusListener {@link ConnectionProgressStatusListener} or <code>null</code> if not utilized, that
-	 * can receive call-backs of streaming progress with a small peformance penalty.
+	 * @param intraFileStatusListener
+	 *            {@link ConnectionProgressStatusListener} or <code>null</code>
+	 *            if not utilized, that can receive call-backs of streaming
+	 *            progress with a small peformance penalty.
 	 * @throws JargonException
 	 */
-	public void read(final OutputStream destination,
-			final long length,
-			ConnectionProgressStatusListener intraFileStatusListener) throws JargonException {
-		
+	public void read(final OutputStream destination, final long length,
+			final ConnectionProgressStatusListener intraFileStatusListener)
+			throws JargonException {
+
 		if (length <= 0) {
 			throw new JargonException("length out of range");
 		}
@@ -411,8 +461,8 @@ public class IRODSCommands implements IRODSManagedConnection {
 			throw new IllegalArgumentException(err);
 		}
 
-		return irodsFunction(IRODSConstants.RODS_API_REQ, irodsPI.getParsedTags(),
-				irodsPI.getApiNumber());
+		return irodsFunction(IRODSConstants.RODS_API_REQ,
+				irodsPI.getParsedTags(), irodsPI.getApiNumber());
 	}
 
 	/**
@@ -1098,26 +1148,21 @@ public class IRODSCommands implements IRODSManagedConnection {
 		return Base64.toString(chal);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.core.connection.IRODSManagedConnection#obliterateConnectionAndDiscardErrors()
+	 */
 	@Override
 	public synchronized void obliterateConnectionAndDiscardErrors() {
 		irodsConnection.obliterateConnectionAndDiscardErrors();
 
 	}
 
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.core.connection.IRODSManagedConnection#shutdown()
+	 */
 	@Override
 	public synchronized void shutdown() throws JargonException {
 		log.info("shutting down, need to send disconnect to irods");
-
-		irodsConnection.shutdown();
-	}
-
-	/**
-	 * Send a shutdown message to irods, then tell the underlying
-	 * {@link IRODSConnection} to shut down;
-	 */
-	@Override
-	public synchronized void disconnect() throws JargonException {
-		log.info("closing connection");
 		if (isConnected()) {
 			log.info("sending disconnect message");
 			try {
@@ -1127,24 +1172,37 @@ public class IRODSCommands implements IRODSManagedConnection {
 				irodsConnection.flush();
 			} catch (ClosedChannelException e) {
 				log.error("closed channel", e);
-				e.printStackTrace();
 				throw new JargonException(e);
 			} catch (InterruptedIOException e) {
 				log.error("interrupted io", e);
-				e.printStackTrace();
 				throw new JargonException(e);
 			} catch (IOException e) {
 				log.error("io exception", e);
-				e.printStackTrace();
 				throw new JargonException(e);
+			} finally {
+				irodsConnection.shutdown();
 			}
 
-			irodsProtocolManager.returnIRODSConnection(irodsConnection);
 		} else {
 			log.warn("disconnect called, but isConnected() is false, this is an unexpected condition that is logged and ignored");
 		}
+
 	}
 
+	
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.core.connection.IRODSManagedConnection#disconnect()
+	 */
+	@Override
+	public synchronized void disconnect() throws JargonException {
+		log.info("closing connection");
+		irodsProtocolManager.returnIRODSConnection(this);
+		
+	}
+
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.core.connection.IRODSManagedConnection#disconnectWithIOException()
+	 */
 	@Override
 	public synchronized void disconnectWithIOException() throws JargonException {
 		irodsProtocolManager.returnConnectionWithIoException(irodsConnection);
@@ -1187,7 +1245,8 @@ public class IRODSCommands implements IRODSManagedConnection {
 		Tag message = new Tag(AbstractIRODSPackingInstruction.INT_PI,
 				new Tag[] { new Tag(AbstractIRODSPackingInstruction.MY_INT,
 						status), });
-		irodsFunction(IRODSConstants.RODS_API_REQ, message.parseTag(), IRODSConstants.OPR_COMPLETE_AN);
+		irodsFunction(IRODSConstants.RODS_API_REQ, message.parseTag(),
+				IRODSConstants.OPR_COMPLETE_AN);
 	}
 
 	protected String getCachedChallengeValue() {
@@ -1211,6 +1270,27 @@ public class IRODSCommands implements IRODSManagedConnection {
 		}
 	}
 
-	
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.connection.IRODSManagedConnection#getIrodsSession()
+	 */
+	@Override
+	public IRODSSession getIrodsSession() {
+		return irodsConnection.getIrodsSession();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.connection.IRODSManagedConnection#setIrodsSession
+	 * (org.irods.jargon.core.connection.IRODSSession)
+	 */
+	@Override
+	public void setIrodsSession(final IRODSSession irodsSession) {
+		irodsConnection.setIrodsSession(irodsSession);
+	}
 
 }

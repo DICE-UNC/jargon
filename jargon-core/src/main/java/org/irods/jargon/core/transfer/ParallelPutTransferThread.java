@@ -70,7 +70,16 @@ public final class ParallelPutTransferThread extends
 					parallelPutFileTransferStrategy.getPort());
 			setS(new Socket(parallelPutFileTransferStrategy.getHost(),
 					parallelPutFileTransferStrategy.getPort()));
-			// getS().setSoTimeout(30000);
+			if (parallelPutFileTransferStrategy
+					.getParallelSocketTimeoutInSecs() > 0) {
+				log.info(
+						"timeout (in seconds) for parallel transfer sockets is:{}",
+						parallelPutFileTransferStrategy
+								.getParallelSocketTimeoutInSecs());
+				getS().setSoTimeout(
+						parallelPutFileTransferStrategy
+								.getParallelSocketTimeoutInSecs() * 1000);
+			}
 			setOut(new BufferedOutputStream(getS().getOutputStream()));
 			setIn(new BufferedInputStream(getS().getInputStream()));
 		} catch (Exception e) {
@@ -253,14 +262,20 @@ public final class ParallelPutTransferThread extends
 				log.debug("new txfr length:{}", transferLength);
 				try {
 					getOut().write(buffer, 0, read);
-					
+
 					/*
-					 * Make an intra-file status call-back if a listener is configured
+					 * Make an intra-file status call-back if a listener is
+					 * configured
 					 */
-					if (parallelPutFileTransferStrategy.getConnectionProgressStatusListener() != null) {
-						parallelPutFileTransferStrategy.getConnectionProgressStatusListener().connectionProgressStatusCallback(ConnectionProgressStatus.instanceForSend(read));
+					if (parallelPutFileTransferStrategy
+							.getConnectionProgressStatusListener() != null) {
+						parallelPutFileTransferStrategy
+								.getConnectionProgressStatusListener()
+								.connectionProgressStatusCallback(
+										ConnectionProgressStatus
+												.instanceForSend(read));
 					}
-					
+
 				} catch (Exception e) {
 					log.error(
 							"error writing to iRODS parallel transfer socket",

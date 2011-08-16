@@ -9,6 +9,7 @@ import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class IRODSSimpleProtocolManagerTest {
@@ -78,7 +79,8 @@ public class IRODSSimpleProtocolManagerTest {
 				connection.isConnected());
 	}
 
-	@Test
+	@Ignore
+	// FIXME: recast this test using mocks
 	public void testReturnIRODSConnectionWithIoException() throws Exception {
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
@@ -91,7 +93,8 @@ public class IRODSSimpleProtocolManagerTest {
 				connection.isConnected());
 	}
 
-	@Test
+	@Ignore
+	// FIXME: recast this test using mocks
 	public void testReturnClosedIRODSConnectionWithIoException()
 			throws Exception {
 		IRODSAccount irodsAccount = testingPropertiesHelper

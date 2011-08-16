@@ -5,7 +5,6 @@ import java.io.File;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.exception.JargonException;
-import org.irods.jargon.core.packinstr.TransferOptions;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.pub.io.IRODSFileImpl;
 import org.irods.jargon.core.transfer.TransferControlBlock;
@@ -142,7 +141,11 @@ final class TransferOperationsHelper {
 						sb.toString());
 
 				File newSubCollection = new File(sb.toString());
-				newSubCollection.mkdirs();
+				boolean success = newSubCollection.mkdirs();
+
+				if (!success) {
+					log.warn("unable to make directories in local file system, log and proceed");
+				}
 
 				recursivelyGet((IRODSFileImpl) fileInSourceCollection,
 						newSubCollection, transferStatusCallbackListener,
@@ -215,14 +218,12 @@ final class TransferOperationsHelper {
 		// may have returned above if filtered
 
 		log.info("filter passed, process...");
-		TransferOptions operativeTransferOptions = null;
-
-		operativeTransferOptions = transferControlBlock.getTransferOptions();
 
 		try {
 
-			dataObjectAO.getDataObjectFromIrodsGivingTransferOptions(
-					irodsSourceFile, targetLocalFile, operativeTransferOptions);
+			dataObjectAO.getDataObjectFromIrods(irodsSourceFile,
+					targetLocalFile, transferControlBlock,
+					transferStatusCallbackListener);
 
 			if (transferStatusCallbackListener != null) {
 				log.warn("success will be passed back to existing callback listener");

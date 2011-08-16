@@ -86,11 +86,19 @@ public final class ParallelGetFileTransferStrategy extends
 				irodsAccessObjectFactory, transferLength, transferControlBlock,
 				transferStatusCallbackListener);
 		
+		
+		log.info("transfer options in transfer control block:{}", transferControlBlock.getTransferOptions());
+		
+		if (transferStatusCallbackListener == null) {
+			log.info("null transferStatusCallbackListener");
+		}
+		
 		if (transferControlBlock.getTransferOptions().isIntraFileStatusCallbacks() && transferStatusCallbackListener != null) {
 			log.info("will do intra-file status callbacks from transfer");
 			this.setConnectionProgressStatusListener(DefaultIntraFileProgressCallbackListener.instance(TransferStatus.TransferType.GET, getTransferLength(), transferControlBlock, transferStatusCallbackListener));
+		} else {
+			log.info("transfer status callbacks will not be processed");
 		}
-
 	}
 
 	/*

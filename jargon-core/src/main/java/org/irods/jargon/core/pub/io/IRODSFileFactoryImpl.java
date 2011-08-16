@@ -102,7 +102,7 @@ public final class IRODSFileFactoryImpl extends IRODSGenericAO implements
 		}
 
 		String uriScheme = uri.getScheme();
-		if (uriScheme != null && equals("irods")) {
+		if (uriScheme != null && uriScheme.equals("irods")) {
 
 			String userInfo = uri.getUserInfo();
 			String userName = null;

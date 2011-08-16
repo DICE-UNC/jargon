@@ -294,6 +294,12 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 		TransferControlBlock operativeTransferControlBlock = buildTransferControlBlockAndOptionsBasedOnParameters(
 				transferControlBlock);
 		
+		log.info("getOperation()");
+		
+		if (transferStatusCallbackListener == null) {
+			log.info("no transferStatusCallbackListener set for getOperation()");
+		}
+		
 		try {
 
 			if (irodsSourceFile == null) {
@@ -303,6 +309,8 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 			if (targetLocalFile == null) {
 				throw new IllegalArgumentException("target local file is null");
 			}
+			
+			
 			
 
 			log.info("get operation, irods source file is: {}",

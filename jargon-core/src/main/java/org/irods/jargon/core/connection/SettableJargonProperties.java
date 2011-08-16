@@ -6,8 +6,8 @@ package org.irods.jargon.core.connection;
 import org.irods.jargon.core.exception.JargonException;
 
 /**
- * Implementation of the <code>JargonProperties</code> interface that is suitable
- * for user-definition and injection into the <code>IRODSession</code>.
+ * Implementation of the <code>JargonProperties</code> interface that is
+ * suitable for user-definition and injection into the <code>IRODSession</code>.
  * Typicially, properties that control Jargon are pulled from a default
  * jargon.properties file. This class would allow, for example, the wiring of
  * property options via Spring through various setters.
@@ -35,6 +35,8 @@ public class SettableJargonProperties implements JargonProperties {
 	private boolean computeChecksumAfterTransfer = false;
 	private boolean computeAndVerifyChecksumAfterTransfer = false;
 	private boolean intraFileStatusCallbacks = false;
+	private int irodsSocketTimeout = 0;
+	private int irodsParallelSocketTimeout = 0;
 
 	/*
 	 * (non-Javadoc)
@@ -245,20 +247,83 @@ public class SettableJargonProperties implements JargonProperties {
 	}
 
 	/**
-	 * Set whether intra-file status call-backs for file transfers are enabled.  
-	 * This will give progress of bytes within transfers, with a slight performance penalty.
-	 * @param intraFileStatusCallbacks the intraFileStatusCallbacks to set
+	 * Set whether intra-file status call-backs for file transfers are enabled.
+	 * This will give progress of bytes within transfers, with a slight
+	 * performance penalty.
+	 * 
+	 * @param intraFileStatusCallbacks
+	 *            the intraFileStatusCallbacks to set
 	 */
-	public void setIntraFileStatusCallbacks(boolean intraFileStatusCallbacks) {
+	public void setIntraFileStatusCallbacks(
+			final boolean intraFileStatusCallbacks) {
 		this.intraFileStatusCallbacks = intraFileStatusCallbacks;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.connection.JargonProperties#isIntraFileStatusCallbacks()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.connection.JargonProperties#isIntraFileStatusCallbacks
+	 * ()
 	 */
 	@Override
 	public boolean isIntraFileStatusCallbacks() {
 		return intraFileStatusCallbacks;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.connection.JargonProperties#getIRODSSocketTimeout()
+	 */
+	@Override
+	public int getIRODSSocketTimeout() throws JargonException {
+		return irodsSocketTimeout;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.connection.JargonProperties#
+	 * getIRODSParallelTransferSocketTimeout()
+	 */
+	@Override
+	public int getIRODSParallelTransferSocketTimeout() throws JargonException {
+		return irodsParallelSocketTimeout;
+	}
+
+	/**
+	 * @return the irodsSocketTimeout in seconds, or 0 or less if not used
+	 */
+	public int getIrodsSocketTimeout() {
+		return irodsSocketTimeout;
+	}
+
+	/**
+	 * @param irodsSocketTimeout
+	 *            the irodsSocketTimeout in seconds or 0 or less if not used
+	 */
+	public void setIrodsSocketTimeout(final int irodsSocketTimeout) {
+		this.irodsSocketTimeout = irodsSocketTimeout;
+	}
+
+	/**
+	 * @return the irodsParallelSocketTimeout in seconds or 0 or less if not
+	 *         used
+	 */
+	public int getIrodsParallelSocketTimeout() {
+		return irodsParallelSocketTimeout;
+	}
+
+	/**
+	 * @param irodsParallelSocketTimeout
+	 *            the irodsParallelSocketTimeout to set in seconds or 0 or less
+	 *            if not used
+	 */
+	public void setIrodsParallelSocketTimeout(
+			final int irodsParallelSocketTimeout) {
+		this.irodsParallelSocketTimeout = irodsParallelSocketTimeout;
 	}
 
 }

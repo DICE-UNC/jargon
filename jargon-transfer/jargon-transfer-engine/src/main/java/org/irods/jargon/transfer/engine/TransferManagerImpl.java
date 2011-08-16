@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.packinstr.TransferOptions;
 import org.irods.jargon.core.pub.IRODSFileSystem;
 import org.irods.jargon.core.transfer.DefaultTransferControlBlock;
 import org.irods.jargon.core.transfer.TransferControlBlock;
@@ -54,13 +55,10 @@ public final class TransferManagerImpl implements TransferManager {
 
 	private TransferEngineConfigurationProperties transferEngineConfigurationProperties;
 
-	/**
-	 * Get the configuration information that controls the behavior of the
-	 * transfer engine
-	 * 
-	 * @return {@link TransferEngineConfigurationProperties} or
-	 *         <code>null</code> if none were specified
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.transfer.engine.TransferManager#getTransferEngineConfigurationProperties()
 	 */
+	@Override
 	public synchronized TransferEngineConfigurationProperties getTransferEngineConfigurationProperties() {
 		return transferEngineConfigurationProperties;
 	}
@@ -180,6 +178,13 @@ public final class TransferManagerImpl implements TransferManager {
 	}
 
 	private void init() throws JargonException {
+		
+		if (transferEngineConfigurationProperties == null) {
+			log.info("building transfer options using jargon defaults");
+			TransferOptions transferOptions = irodsFileSystem.getIrodsSession().buildTransferOptionsBasedOnJargonProperties();
+			transferEngineConfigurationProperties = new TransferEngineConfigurationProperties();
+		}
+		
 		this.errorStatus = ErrorStatus.OK;
 		this.runningStatus = RunningStatus.IDLE;
 		this.transferQueueService = transferServiceFactory

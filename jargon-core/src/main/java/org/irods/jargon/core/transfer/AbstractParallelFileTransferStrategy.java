@@ -31,6 +31,7 @@ public abstract class AbstractParallelFileTransferStrategy {
 	private final TransferControlBlock transferControlBlock;
 	private final TransferStatusCallbackListener transferStatusCallbackListener;
 	private ConnectionProgressStatusListener connectionProgressStatusListener = null;
+	private final int parallelSocketTimeoutInSecs;
 
 	/**
 	 * Constructor for a parallel file transfer runner. This runner will create
@@ -108,7 +109,9 @@ public abstract class AbstractParallelFileTransferStrategy {
 		this.transferControlBlock = transferControlBlock;
 		this.transferStatusCallbackListener = transferStatusCallbackListener;
 		this.transferLength = transferLength;
-
+		
+		this.parallelSocketTimeoutInSecs = irodsAccessObjectFactory.getIrodsSession().getJargonProperties().getIRODSParallelTransferSocketTimeout();
+		
 	}
 
 	@Override
@@ -188,6 +191,13 @@ public abstract class AbstractParallelFileTransferStrategy {
 	 */
 	protected long getTransferLength() {
 		return transferLength;
+	}
+
+	/**
+	 * @return the parallelSocketTimeoutInSecs
+	 */
+	protected int getParallelSocketTimeoutInSecs() {
+		return parallelSocketTimeoutInSecs;
 	}
 
 }

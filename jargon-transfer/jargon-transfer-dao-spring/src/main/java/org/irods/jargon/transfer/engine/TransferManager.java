@@ -285,4 +285,13 @@ public interface TransferManager {
 	void enqueueASynch(Synchronization synchronization,
 			IRODSAccount irodsAccount) throws JargonException;
 
+	/**
+	 * Get the configuration information that controls the behavior of the
+	 * transfer engine
+	 * 
+	 * @return {@link TransferEngineConfigurationProperties} or
+	 *         <code>null</code> if none were specified
+	 */
+	TransferEngineConfigurationProperties getTransferEngineConfigurationProperties();
+
 }
