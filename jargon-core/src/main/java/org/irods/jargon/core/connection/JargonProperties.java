@@ -20,18 +20,16 @@ public interface JargonProperties {
 	 * Do I want parallel transfers at all?
 	 * 
 	 * @return
-	 * @throws JargonException
 	 */
-	boolean isUseParallelTransfer() throws JargonException;
+	boolean isUseParallelTransfer();
 
 	/**
 	 * If doing parallel transfers, what is the maximum number of threads I
 	 * should specify?
 	 * 
 	 * @return
-	 * @throws JargonException
 	 */
-	int getMaxParallelThreads() throws JargonException;
+	int getMaxParallelThreads();
 
 	/**
 	 * The file length above which a numThreads will be sent to iRODS in
@@ -42,22 +40,20 @@ public interface JargonProperties {
 	 * @return <code>long</code> in megabytes for the size above which a
 	 *         non-zero numThreads of value maxParallelThreads will be sent.
 	 * @throws JargonException
-	 */
-	long getParallelThreadsLengthThreshold() throws JargonException;
+	long getParallelThreadsLengthThreshold();
 
 	/**
 	 * Sets a default number of results to ask for when executing GenQuery for
 	 * listing files and collections.
 	 * 
 	 * @return
-	 * @throws JargonException
 	 */
-	int getMaxFilesAndDirsQueryMax() throws JargonException;
+	int getMaxFilesAndDirsQueryMax();
 
 	/**
 	 * Am I using an executor pool for parallel transfer threads
 	 */
-	boolean isUseTransferThreadsPool() throws JargonException;
+	boolean isUseTransferThreadsPool();
 
 	/**
 	 * Minimum number of threads kept in the transfer threads executor pool.
@@ -65,9 +61,8 @@ public interface JargonProperties {
 	 * <code>isUseTranfsferThreadsPool()</code> value is true;
 	 * 
 	 * @return <code>int</code> with the desired transfer thread pool core size
-	 * @throws JargonException
 	 */
-	int getTransferThreadCorePoolSize() throws JargonException;
+	int getTransferThreadCorePoolSize();
 
 	/**
 	 * Maximum number of threads kept in the transfer threads executor pool.
@@ -75,9 +70,8 @@ public interface JargonProperties {
 	 * <code>isUseTranfsferThreadsPool()</code> value is true;
 	 * 
 	 * @return <code>int</code> with the desired transfer thread pool max size
-	 * @throws JargonException
 	 */
-	int getTransferThreadMaxPoolSize() throws JargonException;
+	int getTransferThreadMaxPoolSize();
 
 	/**
 	 * Timeout for keeping threads in the transfer threads executor pool above
@@ -87,7 +81,7 @@ public interface JargonProperties {
 	 * @return <code>int</code> with the desired transfer thread pool max size
 	 * @throws JargonException
 	 */
-	int getTransferThreadPoolTimeoutMillis() throws JargonException;
+	int getTransferThreadPoolTimeoutMillis();
 
 	/**
 	 * Should puts/gets redirect to the resource server that holds the data?
@@ -95,9 +89,8 @@ public interface JargonProperties {
 	 * 
 	 * @return the allowPutGetResourceRedirects <code>boolean</code> that will
 	 *         be <code>true</code> if redirecting is desired
-	 * @throws JargonException
 	 */
-	boolean isAllowPutGetResourceRedirects() throws JargonException;
+	boolean isAllowPutGetResourceRedirects();
 
 	/**
 	 * Should checksums be computed after the transfer? This does not process
@@ -105,7 +98,7 @@ public interface JargonProperties {
 	 * 
 	 * @return the computeChecksumAfterTransfer
 	 */
-	boolean isComputeChecksumAfterTransfer() throws JargonException;
+	boolean isComputeChecksumAfterTransfer();
 
 	/**
 	 * Should checksums be computed, and a verify done, after a transfer, with a
@@ -113,23 +106,25 @@ public interface JargonProperties {
 	 * 
 	 * @return the computeAndVerifyChecksumAfterTransfer
 	 */
-	boolean isComputeAndVerifyChecksumAfterTransfer() throws JargonException;
+	boolean isComputeAndVerifyChecksumAfterTransfer();
 	
 	/**
 	 * Gets whether intra-file status call-backs are enabled for transfers.  If <code>true</code>, and a 
 	 * call-back listener is provided, these allow monitoring of progress of an individual file.
 	 * @return the intraFileStatusCallbacks
-	 * @throws JargonException 
 	 */
-	boolean isIntraFileStatusCallbacks() throws JargonException;
+	boolean isIntraFileStatusCallbacks();
 	
 	/**
 	 * Get the time-out, in seconds, for the main iRODS socket.  Will be zero or less if not specified
 	 * @return
-	 * @throws JargonException
 	 */
-	int getIRODSSocketTimeout() throws JargonException;
+	int getIRODSSocketTimeout();
 	
-	int getIRODSParallelTransferSocketTimeout() throws JargonException;
+	/**
+	 * Get the time-out, in seconds, for the parallel transfer sockets.  Will be zero or less if not specified
+	 * @return
+	 */
+	int getIRODSParallelTransferSocketTimeout();
 
 }

@@ -1278,7 +1278,7 @@ public class IRODSCommands implements IRODSManagedConnection {
 	 */
 	@Override
 	public IRODSSession getIrodsSession() {
-		return irodsConnection.getIrodsSession();
+		return getIrodsSession();
 	}
 
 	/*
@@ -1290,6 +1290,9 @@ public class IRODSCommands implements IRODSManagedConnection {
 	 */
 	@Override
 	public void setIrodsSession(final IRODSSession irodsSession) {
+		if (irodsSession == null) {
+			throw new IllegalArgumentException("null irodsSession");
+		}
 		irodsConnection.setIrodsSession(irodsSession);
 	}
 

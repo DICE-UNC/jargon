@@ -31,7 +31,7 @@ import org.slf4j.LoggerFactory;
 public final class ParallelGetTransferThread extends
 		AbstractParallelTransferThread implements Callable<Object>, Runnable {
 
-	final ParallelGetFileTransferStrategy parallelGetFileTransferStrategy;
+	private final ParallelGetFileTransferStrategy parallelGetFileTransferStrategy;
 
 	public static final Logger log = LoggerFactory
 			.getLogger(ParallelGetTransferThread.class);
@@ -92,6 +92,11 @@ public final class ParallelGetTransferThread extends
 			getOut().write(outputBuffer);
 			getOut().flush();
 			log.debug("cookie written");
+			log.info("sockets are open and password sent, now begin the get operation");
+
+			get();
+			log.info("exiting get and returning the finish object");
+			return "DONE";
 		} catch (UnknownHostException e) {
 			log.error("Unknown host: {}",
 					parallelGetFileTransferStrategy.getHost());
@@ -106,11 +111,7 @@ public final class ParallelGetTransferThread extends
 					IO_EXCEPTION_OCCURRED_DURING_PARALLEL_FILE_TRANSFER, e);
 		}
 
-		log.info("sockets are open and password sent, now begin the get operation");
-
-		get();
-		return "DONE"; // TODO: return status object?
-
+		 
 	}
 
 	public void get() throws JargonException {
@@ -152,6 +153,7 @@ public final class ParallelGetTransferThread extends
 				close();
 				log.info("closing local file");
 				local.close();
+				log.info("local file closed, exiting get() method");
 			} catch (IOException e) {
 			}
 		}
@@ -194,6 +196,7 @@ public final class ParallelGetTransferThread extends
 		}
 
 		log.info("seeking to offset: {}", offset);
+		try {
 		seekToOffset(local, offset);
 
 		if (length <= 0) {
@@ -203,7 +206,7 @@ public final class ParallelGetTransferThread extends
 			buffer = new byte[ConnectionConstants.OUTPUT_BUFFER_LENGTH];
 		}
 
-		try {
+		
 			while (length > 0) {
 
 				log.debug("reading....");
@@ -326,8 +329,10 @@ public final class ParallelGetTransferThread extends
 	public void run() {
 		try {
 			call();
-		} catch (JargonException e) {
-			throw new JargonRuntimeException("error in parallel transfer", e);
+			log.info("exiting call() method");
+		} catch (Exception e) {
+			this.setExceptionInTransfer(e);
+			log.error("exception should have been preserved in the thread during the call()");
 		}
 	}
 

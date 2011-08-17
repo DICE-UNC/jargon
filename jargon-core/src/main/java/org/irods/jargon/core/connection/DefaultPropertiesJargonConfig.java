@@ -21,19 +21,8 @@ public class DefaultPropertiesJargonConfig implements JargonProperties {
 	private final Properties jargonProperties;
 
 	@Override
-	public int getMaxFilesAndDirsQueryMax() throws JargonException {
+	public int getMaxFilesAndDirsQueryMax() {
 		return verifyPropExistsAndGetAsInt("max.files.and.dirs.query.max");
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.irods.jargon.core.connection.JargonProperties#
-	 * getParallelThreadsLengthThreshold()
-	 */
-	@Override
-	public long getParallelThreadsLengthThreshold() throws JargonException {
-		return verifyPropExistsAndGetAsLong("transfer.send.max.threads.threshold");
 	}
 
 	/**
@@ -69,7 +58,7 @@ public class DefaultPropertiesJargonConfig implements JargonProperties {
 	 * org.irods.jargon.core.connection.JargonProperites#isUseParallelTransfer()
 	 */
 	@Override
-	public boolean isUseParallelTransfer() throws JargonException {
+	public boolean isUseParallelTransfer() {
 		String propVal = verifyPropExistsAndGetAsString("transfer.use.parallel");
 		return Boolean.valueOf(propVal);
 	}
@@ -81,7 +70,7 @@ public class DefaultPropertiesJargonConfig implements JargonProperties {
 	 * org.irods.jargon.core.connection.JargonProperites#getMaxParallelThreads()
 	 */
 	@Override
-	public int getMaxParallelThreads() throws JargonException {
+	public int getMaxParallelThreads() {
 		return verifyPropExistsAndGetAsInt("transfer.max.parallel.threads");
 	}
 
@@ -93,7 +82,7 @@ public class DefaultPropertiesJargonConfig implements JargonProperties {
 	 * ()
 	 */
 	@Override
-	public boolean isUseTransferThreadsPool() throws JargonException {
+	public boolean isUseTransferThreadsPool() {
 		return verifyPropExistsAndGetAsBoolean("transfer.use.pool");
 	}
 
@@ -104,7 +93,7 @@ public class DefaultPropertiesJargonConfig implements JargonProperties {
 	 * getTransferThreadCorePoolSize ()
 	 */
 	@Override
-	public int getTransferThreadCorePoolSize() throws JargonException {
+	public int getTransferThreadCorePoolSize() {
 		return verifyPropExistsAndGetAsInt("transfer.executor.pool.core.size");
 	}
 
@@ -115,7 +104,7 @@ public class DefaultPropertiesJargonConfig implements JargonProperties {
 	 * getTransferThreadMaxPoolSize ()
 	 */
 	@Override
-	public int getTransferThreadMaxPoolSize() throws JargonException {
+	public int getTransferThreadMaxPoolSize() {
 		return verifyPropExistsAndGetAsInt("transfer.executor.pool.max.size");
 	}
 
@@ -126,15 +115,15 @@ public class DefaultPropertiesJargonConfig implements JargonProperties {
 	 * getTransferThreadPoolTimeoutMillis()
 	 */
 	@Override
-	public int getTransferThreadPoolTimeoutMillis() throws JargonException {
+	public int getTransferThreadPoolTimeoutMillis() {
 		return verifyPropExistsAndGetAsInt("transfer.executor.pool.timeout");
 	}
 
-	private String verifyPropExistsAndGetAsString(final String propKey)
-			throws JargonException {
+	private String verifyPropExistsAndGetAsString(final String propKey) {
 		String propVal = ((String) jargonProperties.get(propKey)).trim();
 		if (propVal == null) {
-			throw new JargonException(propKey + " not set in jargon.properties");
+			throw new IllegalArgumentException(propKey
+					+ " not set in jargon.properties");
 		}
 		return propVal;
 	}
@@ -144,37 +133,35 @@ public class DefaultPropertiesJargonConfig implements JargonProperties {
 	 * @return
 	 * @throws JargonException
 	 */
-	private int verifyPropExistsAndGetAsInt(final String propKey)
-			throws JargonException {
+	private int verifyPropExistsAndGetAsInt(final String propKey) {
 
 		String propVal = verifyPropExistsAndGetAsString(propKey);
 
 		try {
 			return Integer.parseInt(propVal);
 		} catch (NumberFormatException nfe) {
-			throw new JargonException("prop " + propKey
+			throw new IllegalArgumentException("prop " + propKey
 					+ "did not result in an int value, was:" + propVal);
 		}
 
 	}
 
-	private boolean verifyPropExistsAndGetAsBoolean(final String propKey)
-			throws JargonException {
+	private boolean verifyPropExistsAndGetAsBoolean(final String propKey) {
 
 		String propVal = verifyPropExistsAndGetAsString(propKey);
 		return Boolean.parseBoolean(propVal);
 
 	}
 
-	private long verifyPropExistsAndGetAsLong(final String propKey)
-			throws JargonException {
+	@SuppressWarnings("unused")
+	private long verifyPropExistsAndGetAsLong(final String propKey) {
 
 		String propVal = verifyPropExistsAndGetAsString(propKey);
 
 		try {
 			return Long.parseLong(propVal);
 		} catch (NumberFormatException nfe) {
-			throw new JargonException("prop " + propKey
+			throw new IllegalArgumentException("prop " + propKey
 					+ "did not result in a long value, was:" + propVal);
 		}
 
@@ -187,7 +174,7 @@ public class DefaultPropertiesJargonConfig implements JargonProperties {
 	 * isAllowPutGetResourceRedirects()
 	 */
 	@Override
-	public boolean isAllowPutGetResourceRedirects() throws JargonException {
+	public boolean isAllowPutGetResourceRedirects() {
 		String propVal = verifyPropExistsAndGetAsString("transfer.allow.redirects");
 		return Boolean.valueOf(propVal);
 	}
@@ -199,7 +186,7 @@ public class DefaultPropertiesJargonConfig implements JargonProperties {
 	 * isComputeChecksumAfterTransfer()
 	 */
 	@Override
-	public boolean isComputeChecksumAfterTransfer() throws JargonException {
+	public boolean isComputeChecksumAfterTransfer() {
 		String propVal = verifyPropExistsAndGetAsString("transfer.compute.checksum");
 		return Boolean.valueOf(propVal);
 	}
@@ -211,34 +198,43 @@ public class DefaultPropertiesJargonConfig implements JargonProperties {
 	 * isComputeAndVerifyChecksumAfterTransfer()
 	 */
 	@Override
-	public boolean isComputeAndVerifyChecksumAfterTransfer()
-			throws JargonException {
+	public boolean isComputeAndVerifyChecksumAfterTransfer() {
 		String propVal = verifyPropExistsAndGetAsString("transfer.computeandvalidate.checksum");
 		return Boolean.valueOf(propVal);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.connection.JargonProperties#isIntraFileStatusCallbacks()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.connection.JargonProperties#isIntraFileStatusCallbacks
+	 * ()
 	 */
 	@Override
-	public boolean isIntraFileStatusCallbacks() throws JargonException {
+	public boolean isIntraFileStatusCallbacks() {
 		String propVal = verifyPropExistsAndGetAsString("transfer.intra.file.callbacks");
 		return Boolean.valueOf(propVal);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.connection.JargonProperties#getIRODSSocketTimeout()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.connection.JargonProperties#getIRODSSocketTimeout()
 	 */
 	@Override
-	public int getIRODSSocketTimeout() throws JargonException {
+	public int getIRODSSocketTimeout() {
 		return verifyPropExistsAndGetAsInt("socket.timeout");
 	}
 
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.connection.JargonProperties#getIRODSParallelTransferSocketTimeout()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.connection.JargonProperties#
+	 * getIRODSParallelTransferSocketTimeout()
 	 */
 	@Override
-	public int getIRODSParallelTransferSocketTimeout() throws JargonException {
+	public int getIRODSParallelTransferSocketTimeout() {
 		return verifyPropExistsAndGetAsInt("parallel.socket.timeout");
 
 	}

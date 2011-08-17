@@ -10,7 +10,6 @@ import java.util.concurrent.Callable;
 import org.irods.jargon.core.connection.ConnectionConstants;
 import org.irods.jargon.core.connection.ConnectionProgressStatus;
 import org.irods.jargon.core.exception.JargonException;
-import org.irods.jargon.core.exception.JargonRuntimeException;
 import org.irods.jargon.core.utils.Host;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -119,9 +118,11 @@ public final class ParallelPutTransferThread extends
 		} finally {
 			log.info("closing sockets, this eats any exceptions");
 			this.close();
+			log.info("socket conns for parallel transfer closed, now close the file stream");
 			// close file stream
 			try {
 				bis.close();
+				log.info("streams and files closed");
 			} catch (IOException e) {
 			}
 		}
@@ -174,6 +175,8 @@ public final class ParallelPutTransferThread extends
 
 		try {
 			while (!done) {
+
+				log.debug("in main put() loop, reading header data");
 
 				// read the header
 				int operation = readInt();
@@ -229,8 +232,6 @@ public final class ParallelPutTransferThread extends
 					"An IO exception occurred during a parallel file put operation",
 					e);
 			throw new JargonException("IOException during parallel file put", e);
-		} finally {
-
 		}
 	}
 
@@ -246,21 +247,25 @@ public final class ParallelPutTransferThread extends
 		long totalRead = 0;
 		long transferLength = length;
 		long totalWritten = 0;
+		log.debug("readWriteLoopForCurrentHeaderDirective()");
+		try {
+			while (transferLength > 0) {
+				log.debug("read/write loop at top");
 
-		while (transferLength > 0) {
-			log.debug("in put read/write loop at top");
+				read = bis.read(buffer, 0, (int) Math.min(
+						ConnectionConstants.OUTPUT_BUFFER_LENGTH,
+						transferLength));
 
-			read = bis.read(buffer, 0, (int) Math.min(
-					ConnectionConstants.OUTPUT_BUFFER_LENGTH, transferLength));
+				log.debug("bytes read: {}", read);
 
-			log.debug("read: {}", read);
+				if (read > 0) {
 
-			if (read > 0) {
+					totalRead += read;
+					transferLength -= read;
+					log.debug(
+							"getting ready to write to iRODS, new txfr length:{}",
+							transferLength);
 
-				totalRead += read;
-				transferLength -= read;
-				log.debug("new txfr length:{}", transferLength);
-				try {
 					getOut().write(buffer, 0, read);
 
 					/*
@@ -276,32 +281,31 @@ public final class ParallelPutTransferThread extends
 												.instanceForSend(read));
 					}
 
-				} catch (Exception e) {
-					log.error(
-							"error writing to iRODS parallel transfer socket",
-							e);
-					throw new JargonException(
-							"error writing to parallel transfer socket", e);
-				}
-				log.debug("wrote data to the buffer");
-				totalWritten += read;
+					log.debug("wrote data to the buffer");
+					totalWritten += read;
 
-			} else {
-				log.debug("no read...break out of read/write");
-				break;
-			}/*
-			 * else if (read < 0) { } throw new JargonException(
-			 * "unexpected end of data in transfer operation"); }
-			 */
-			Thread.yield();
+				} else {
+					log.debug("no read...break out of read/write");
+					break;
+				}/*
+				 * else if (read < 0) { } throw new JargonException(
+				 * "unexpected end of data in transfer operation"); }
+				 */
+				Thread.yield();
+			}
+
+			log.info("final flush of output buffer");
+			getOut().flush();
+
+			log.info("for thread, total read: {}", totalRead);
+			log.info("   total written: {}", totalWritten);
+			log.info("   transferLength: {}", transferLength);
+
+		} catch (Exception e) {
+			log.error("error writing to iRODS parallel transfer socket", e);
+			this.setExceptionInTransfer(e);
+			throw new JargonException(e);
 		}
-
-		log.info("final flush of output buffer");
-		getOut().flush();
-
-		log.info("for thread, total read: {}", totalRead);
-		log.info("   total written: {}", totalWritten);
-		log.info("   transferLength: {}", transferLength);
 
 		if (totalRead != totalWritten) {
 			throw new JargonException("totalRead and totalWritten do not agree");
@@ -319,7 +323,7 @@ public final class ParallelPutTransferThread extends
 			call();
 		} catch (JargonException e) {
 			this.setExceptionInTransfer(e);
-			throw new JargonRuntimeException("error in parallel transfer", e);
+			log.error("exception set in transfer to be picked up by caller", e);
 		}
 
 	}

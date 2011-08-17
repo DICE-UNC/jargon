@@ -26,7 +26,7 @@ public final class TransferStatus {
 	 * @author Mike Conway - DICE (www.irods.org)
 	 */
 	public enum TransferState {
-		IN_PROGRESS, SUCCESS, FAILURE, PAUSED, CANCELLED, RESTARTING, OVERALL_INITIATION, OVERALL_COMPLETION, SYNCH_INITIALIZATION, SYNCH_DIFF_GENERATION, SYNCH_DIFF_STEP, SYNCH_COMPLETION
+		IN_PROGRESS_START_FILE, IN_PROGRESS_COMPLETE_FILE, SUCCESS, FAILURE, PAUSED, CANCELLED, RESTARTING, OVERALL_INITIATION, OVERALL_COMPLETION, SYNCH_INITIALIZATION, SYNCH_DIFF_GENERATION, SYNCH_DIFF_STEP, SYNCH_COMPLETION
 	}
 
 	private final TransferState transferState;
@@ -176,7 +176,7 @@ public final class TransferStatus {
 			final long bytesTransfered) throws JargonException {
 
 		return new TransferStatus(transferType, null, "", "", "", totalSize,
-				bytesTransfered, 0, 0, TransferState.IN_PROGRESS, null, true,
+				bytesTransfered, 0, 0, TransferState.IN_PROGRESS_START_FILE, null, true,
 				"", "");
 	}
 

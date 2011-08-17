@@ -8,7 +8,7 @@ import org.irods.jargon.core.exception.JargonException;
 /**
  * Implementation of the <code>JargonProperties</code> interface that is
  * suitable for user-definition and injection into the <code>IRODSession</code>.
- * Typicially, properties that control Jargon are pulled from a default
+ * Typically, properties that control Jargon are pulled from a default
  * jargon.properties file. This class would allow, for example, the wiring of
  * property options via Spring through various setters.
  * <p/>
@@ -21,11 +21,8 @@ import org.irods.jargon.core.exception.JargonException;
  */
 public class SettableJargonProperties implements JargonProperties {
 
-	// FIXME: get defaults from prop and allow overrides
-
 	private boolean useParallelTransfer = true;
 	private int maxParallelThreads = 4;
-	private long parallelThreadsLengthThreshold = 33554432;
 	private int maxFilesAndDirsQueryMax = 5000;
 	private boolean useTransferThreadsPool = false;
 	private int transferThreadCorePoolSize = 0;
@@ -37,18 +34,46 @@ public class SettableJargonProperties implements JargonProperties {
 	private boolean intraFileStatusCallbacks = false;
 	private int irodsSocketTimeout = 0;
 	private int irodsParallelSocketTimeout = 0;
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.irods.jargon.core.connection.JargonProperties#
-	 * getParallelThreadsLengthThreshold()
+	
+	/**
+	 * Construct a default properties set based on the provided initial set of <code>JargonProperties</code>.
+	 * This can be used to wire in properties via configuration, as in Spring.
+	 * @param jargonProperties {@link JargonProperties} that has the initial set of properties.
 	 */
-	@Override
-	public long getParallelThreadsLengthThreshold() throws JargonException {
-		return parallelThreadsLengthThreshold;
+	public SettableJargonProperties(final JargonProperties jargonProperties) {
+		initialize(jargonProperties);
 	}
-
+	
+	/**
+	 * Construct a default properties set based on the <code>jargon.properties</code> in jargon, these can
+	 * then be overridden.
+	 * @throws JargonException if properties cannot be loaded
+	 */
+	public SettableJargonProperties() throws JargonException {
+		JargonProperties jargonProperties = new DefaultPropertiesJargonConfig();
+		initialize(jargonProperties);
+	}
+	
+	private void initialize(final JargonProperties jargonProperties) {
+		
+		if (jargonProperties == null) {
+			throw new IllegalArgumentException("null jargonProperties");
+		}
+		
+		this.useParallelTransfer = jargonProperties.isUseParallelTransfer();
+		this.maxFilesAndDirsQueryMax = jargonProperties.getMaxFilesAndDirsQueryMax();
+		this.allowPutGetResourceRedirects = jargonProperties.isAllowPutGetResourceRedirects();
+		this.computeAndVerifyChecksumAfterTransfer = jargonProperties.isComputeAndVerifyChecksumAfterTransfer();
+		this.computeChecksumAfterTransfer = jargonProperties.isComputeChecksumAfterTransfer();
+		this.intraFileStatusCallbacks = jargonProperties.isIntraFileStatusCallbacks();
+		this.irodsParallelSocketTimeout = jargonProperties.getIRODSParallelTransferSocketTimeout();
+		this.irodsSocketTimeout = jargonProperties.getIRODSSocketTimeout();
+		this.maxParallelThreads = jargonProperties.getMaxParallelThreads();
+		this.transferThreadCorePoolSize = jargonProperties.getTransferThreadCorePoolSize();
+		this.transferThreadMaxPoolSize = jargonProperties.getTransferThreadMaxPoolSize();
+		this.transferThreadPoolTimeoutMillis = jargonProperties.getTransferThreadPoolTimeoutMillis();
+	}
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -56,7 +81,7 @@ public class SettableJargonProperties implements JargonProperties {
 	 * org.irods.jargon.core.connection.JargonProperites#isUseParallelTransfer()
 	 */
 	@Override
-	public boolean isUseParallelTransfer() throws JargonException {
+	public boolean isUseParallelTransfer() {
 		return useParallelTransfer;
 	}
 
@@ -75,7 +100,7 @@ public class SettableJargonProperties implements JargonProperties {
 	 * org.irods.jargon.core.connection.JargonProperites#getMaxParallelThreads()
 	 */
 	@Override
-	public int getMaxParallelThreads() throws JargonException {
+	public int getMaxParallelThreads() {
 		return maxParallelThreads;
 	}
 
@@ -87,12 +112,12 @@ public class SettableJargonProperties implements JargonProperties {
 	 * ()
 	 */
 	@Override
-	public int getMaxFilesAndDirsQueryMax() throws JargonException {
+	public int getMaxFilesAndDirsQueryMax(){
 		return maxFilesAndDirsQueryMax;
 	}
 
 	@Override
-	public boolean isUseTransferThreadsPool() throws JargonException {
+	public boolean isUseTransferThreadsPool()  {
 		return useTransferThreadsPool;
 	}
 
@@ -103,7 +128,7 @@ public class SettableJargonProperties implements JargonProperties {
 	 * getTransferThreadCorePoolSize()
 	 */
 	@Override
-	public int getTransferThreadCorePoolSize() throws JargonException {
+	public int getTransferThreadCorePoolSize() {
 		return transferThreadCorePoolSize;
 	}
 
@@ -114,22 +139,13 @@ public class SettableJargonProperties implements JargonProperties {
 	 * getTransferThreadMaxPoolSize()
 	 */
 	@Override
-	public int getTransferThreadMaxPoolSize() throws JargonException {
+	public int getTransferThreadMaxPoolSize() {
 		return transferThreadMaxPoolSize;
 	}
 
 	@Override
-	public int getTransferThreadPoolTimeoutMillis() throws JargonException {
+	public int getTransferThreadPoolTimeoutMillis()  {
 		return transferThreadPoolTimeoutMillis;
-	}
-
-	/**
-	 * @param parallelThreadsLengthThreshold
-	 *            the parallelThreadsLengthThreshold to set
-	 */
-	public void setParallelThreadsLengthThreshold(
-			final long parallelThreadsLengthThreshold) {
-		this.parallelThreadsLengthThreshold = parallelThreadsLengthThreshold;
 	}
 
 	/**
@@ -181,7 +197,7 @@ public class SettableJargonProperties implements JargonProperties {
 	 * isAllowPutGetResourceRedirects()
 	 */
 	@Override
-	public boolean isAllowPutGetResourceRedirects() throws JargonException {
+	public boolean isAllowPutGetResourceRedirects() {
 		return allowPutGetResourceRedirects;
 	}
 
@@ -194,7 +210,7 @@ public class SettableJargonProperties implements JargonProperties {
 	 * @throws JargonException
 	 */
 	public void setAllowPutGetResourceRedirects(
-			final boolean allowPutGetResourceRedirects) throws JargonException {
+			final boolean allowPutGetResourceRedirects)  {
 		this.allowPutGetResourceRedirects = allowPutGetResourceRedirects;
 	}
 
@@ -205,7 +221,7 @@ public class SettableJargonProperties implements JargonProperties {
 	 * isComputeChecksumAfterTransfer()
 	 */
 	@Override
-	public boolean isComputeChecksumAfterTransfer() throws JargonException {
+	public boolean isComputeChecksumAfterTransfer()  {
 		return computeChecksumAfterTransfer;
 	}
 
@@ -218,7 +234,7 @@ public class SettableJargonProperties implements JargonProperties {
 	 * @throws JargonException
 	 */
 	public void setComputeChecksumAfterTransfer(
-			final boolean computeChecksumAfterTransfer) throws JargonException {
+			final boolean computeChecksumAfterTransfer) {
 		this.computeChecksumAfterTransfer = computeChecksumAfterTransfer;
 	}
 
@@ -230,7 +246,7 @@ public class SettableJargonProperties implements JargonProperties {
 	 */
 	@Override
 	public boolean isComputeAndVerifyChecksumAfterTransfer()
-			throws JargonException {
+			 {
 		return this.computeAndVerifyChecksumAfterTransfer;
 	}
 
@@ -278,7 +294,7 @@ public class SettableJargonProperties implements JargonProperties {
 	 * org.irods.jargon.core.connection.JargonProperties#getIRODSSocketTimeout()
 	 */
 	@Override
-	public int getIRODSSocketTimeout() throws JargonException {
+	public int getIRODSSocketTimeout() {
 		return irodsSocketTimeout;
 	}
 
@@ -289,7 +305,7 @@ public class SettableJargonProperties implements JargonProperties {
 	 * getIRODSParallelTransferSocketTimeout()
 	 */
 	@Override
-	public int getIRODSParallelTransferSocketTimeout() throws JargonException {
+	public int getIRODSParallelTransferSocketTimeout() {
 		return irodsParallelSocketTimeout;
 	}
 

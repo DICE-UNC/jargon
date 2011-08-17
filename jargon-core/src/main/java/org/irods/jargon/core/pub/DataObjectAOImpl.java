@@ -62,7 +62,7 @@ import org.slf4j.LoggerFactory;
  * Note that the operations are tuned using parameters set in the
  * <code>JargonProperties</code> object kept in <code>IRODSession</code>. Unless
  * specifically indicated in the method signatures or comments, the defaults
- * control such aspects as whether paralllel file transfers are done.
+ * control such aspects as whether parallel file transfers are done.
  * 
  * @author Mike Conway - DICE (www.irods.org)
  */

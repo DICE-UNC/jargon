@@ -709,9 +709,9 @@ public class TestIRODSLocalTransferEngineTest {
 		irodsLocalTransferEngine.processOperation(localIRODSTransfer);
 		irodsFileSystem.close();
 
-		Assert.assertEquals("should have gotten a processed callback", 1,
+		Assert.assertTrue("should have gotten a processed callback",
 				transferManagerCallbackListener.getTransferStatusHistory()
-						.size());
+						.size() > 0);
 
 	}
 

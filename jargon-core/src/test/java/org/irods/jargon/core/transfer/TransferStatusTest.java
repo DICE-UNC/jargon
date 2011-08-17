@@ -13,7 +13,7 @@ public class TransferStatusTest {
 	public void testInstance() throws Exception {
 		TransferStatus transferStatus = TransferStatus.instance(
 				TransferType.GET, "source", "target", "", 10L, 2L, 3, 4,
-				TransferState.IN_PROGRESS, "xxx", "xxx");
+				TransferState.IN_PROGRESS_START_FILE, "xxx", "xxx");
 		Assert.assertNotNull(transferStatus);
 		Assert.assertEquals("total files not propery set from constructor", 4,
 				transferStatus.getTotalFilesToTransfer());
@@ -35,25 +35,25 @@ public class TransferStatusTest {
 	@Test(expected = JargonException.class)
 	public void testInstanceNullType() throws Exception {
 		TransferStatus.instance(null, "source", "target", "", 10L, 2L, 0, 0,
-				TransferState.IN_PROGRESS, "xxx", "xxx");
+				TransferState.IN_PROGRESS_START_FILE, "xxx", "xxx");
 	}
 
 	@Test(expected = JargonException.class)
 	public void testInstanceNullSource() throws Exception {
 		TransferStatus.instance(TransferType.GET, null, "target", "", 10L, 2L,
-				0, 0, TransferState.IN_PROGRESS, "xxx", "xxx");
+				0, 0, TransferState.IN_PROGRESS_COMPLETE_FILE, "xxx", "xxx");
 	}
 
 	@Test(expected = JargonException.class)
 	public void testInstanceNullTarget() throws Exception {
 		TransferStatus.instance(TransferType.GET, "source", null, "", 10L, 2L,
-				0, 0, TransferState.IN_PROGRESS, "xxx", "xxx");
+				0, 0, TransferState.IN_PROGRESS_START_FILE, "xxx", "xxx");
 	}
 
 	@Test(expected = JargonException.class)
 	public void testInstanceTotalLessThanZero() throws Exception {
 		TransferStatus.instance(TransferType.GET, "source", "blah", "", -10L,
-				2L, 0, 0, TransferState.IN_PROGRESS, "xxx", "xxx");
+				2L, 0, 0, TransferState.IN_PROGRESS_COMPLETE_FILE, "xxx", "xxx");
 	}
 
 }

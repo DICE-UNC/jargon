@@ -442,8 +442,8 @@ public class DataTransferOperationsImplTest {
 	@Test
 	public void testGetOneFileWithCallback() throws Exception {
 		// generate a local scratch file
-		String testFileName = "testGetOneFile.txt";
-		String testRetrievedFileName = "testGetOneFileRetrieved.txt";
+		String testFileName = "testGetOneFileWithCallback.txt";
+		String testRetrievedFileName = "testGetOneFileWithCallbackRetrieved.txt";
 
 		String absPath = scratchFileUtils
 				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);

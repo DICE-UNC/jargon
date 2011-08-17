@@ -110,6 +110,9 @@ public class IRODSSession {
 			transferOptions.setIntraFileStatusCallbacks(jargonProperties
 					.isIntraFileStatusCallbacks());
 		}
+		
+		log.info("transfer options based on properties:{}", transferOptions);
+		
 		return transferOptions;
 	}
 
@@ -244,16 +247,8 @@ public class IRODSSession {
 			LOG.warn(
 					"***************** session has a connection marked closed, create a new one and put back into the cache:{}",
 					irodsProtocol);
-			irodsProtocol = irodsProtocolManager.getIRODSProtocol(irodsAccount);
-			if (irodsProtocol == null) {
-				LOG.error("no connection returned from connection manager");
-				throw new JargonException(
-						"null connection returned from connection manager");
-			}
-			irodsProtocols.put(irodsAccount.toString(), irodsProtocol);
-			LOG.debug("put a reference to a new connection for account: {}",
-					irodsAccount.toString());
-			sessionMap.set(irodsProtocols);
+			irodsProtocol = connectAndAddToProtocolsMap(irodsAccount,
+					irodsProtocols);
 		}
 
 		return irodsProtocol;
@@ -350,7 +345,7 @@ public class IRODSSession {
 	public void discardSessionForErrors(final IRODSAccount irodsAccount)
 			throws JargonException {
 
-		LOG.debug("discarding irods session for: {}", irodsAccount.toString());
+		LOG.warn("discarding irods session for: {}", irodsAccount.toString());
 		final Map<String, IRODSCommands> irodsProtocols = sessionMap.get();
 		if (irodsProtocols == null) {
 			LOG.warn("discarding session that is already closed, silently ignore");

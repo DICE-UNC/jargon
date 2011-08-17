@@ -10,6 +10,7 @@ import org.irods.jargon.core.connection.IRODSCommands;
 import org.irods.jargon.core.connection.IRODSProtocolManager;
 import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.connection.IRODSSimpleProtocolManager;
+import org.irods.jargon.core.connection.JargonProperties;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.io.IRODSFileFactory;
 import org.irods.jargon.core.pub.io.IRODSFileFactoryImpl;
@@ -210,8 +211,21 @@ public final class IRODSFileSystem {
 		return irodsSession;
 	}
 
+	/**
+	 * Get the <code>IRODSProtocolManager</code> that is the source of connections to iRODS
+	 * @return {@link IRODSProtocolManager} that can produce connections to iRODS upon request, and handles the
+	 * disposal of connections after they are finished
+	 */
 	public IRODSProtocolManager getIrodsProtocolManager() {
 		return irodsProtocolManager;
+	}
+	
+	/**
+	 * Get the <code>JargonProperties</code> as configured in the <code>IRODSSession</code>. This is here for convenience.
+	 * @return {@link JargonProperties} that control various configurations.
+	 */
+	public JargonProperties getJargonProperties() {
+		return getIrodsSession().getJargonProperties();
 	}
 
 }

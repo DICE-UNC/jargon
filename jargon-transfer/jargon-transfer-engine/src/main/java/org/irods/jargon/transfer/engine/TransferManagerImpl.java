@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.JargonException;
-import org.irods.jargon.core.packinstr.TransferOptions;
 import org.irods.jargon.core.pub.IRODSFileSystem;
 import org.irods.jargon.core.transfer.DefaultTransferControlBlock;
 import org.irods.jargon.core.transfer.TransferControlBlock;
@@ -55,8 +54,11 @@ public final class TransferManagerImpl implements TransferManager {
 
 	private TransferEngineConfigurationProperties transferEngineConfigurationProperties;
 
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.transfer.engine.TransferManager#getTransferEngineConfigurationProperties()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.transfer.engine.TransferManager#
+	 * getTransferEngineConfigurationProperties()
 	 */
 	@Override
 	public synchronized TransferEngineConfigurationProperties getTransferEngineConfigurationProperties() {
@@ -178,13 +180,12 @@ public final class TransferManagerImpl implements TransferManager {
 	}
 
 	private void init() throws JargonException {
-		
+
 		if (transferEngineConfigurationProperties == null) {
-			log.info("building transfer options using jargon defaults");
-			TransferOptions transferOptions = irodsFileSystem.getIrodsSession().buildTransferOptionsBasedOnJargonProperties();
+			log.info("building transfer configuration properties");
 			transferEngineConfigurationProperties = new TransferEngineConfigurationProperties();
 		}
-		
+
 		this.errorStatus = ErrorStatus.OK;
 		this.runningStatus = RunningStatus.IDLE;
 		this.transferQueueService = transferServiceFactory
@@ -656,16 +657,11 @@ public final class TransferManagerImpl implements TransferManager {
 		// last successful path will have a restart value or be blank
 		TransferControlBlock transferControlBlock = DefaultTransferControlBlock
 				.instance(dequeued.getLastSuccessfulPath());
+		transferControlBlock.setTransferOptions(this.getIrodsFileSystem().getIrodsSession().buildTransferOptionsBasedOnJargonProperties());
+		log.info("options for dequeued transfer:{}", transferControlBlock.getTransferOptions());
 
-		if (transferEngineConfigurationProperties != null) {
-			log.info(
-					"using passed-in transfer options in the transferControlBlock:{}",
-					transferEngineConfigurationProperties.getTransferOptions());
-			transferControlBlock
-					.setTransferOptions(transferEngineConfigurationProperties
-							.getTransferOptions());
-		}
-
+		// transfer options come from jargon default properties 
+		
 		log.info(">>>> dequeue {}", dequeued);
 
 		log.info("getting a transferRunner to process");

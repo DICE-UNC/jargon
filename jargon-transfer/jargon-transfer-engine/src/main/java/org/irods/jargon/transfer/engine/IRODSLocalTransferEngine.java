@@ -94,7 +94,6 @@ final class IRODSLocalTransferEngine implements TransferStatusCallbackListener {
 			final TransferControlBlock transferControlBlock,
 			final TransferEngineConfigurationProperties transferEngineConfigurationProperties)
 			throws JargonException {
-		
 
 		return new IRODSLocalTransferEngine(transferManager,
 				transferControlBlock, transferEngineConfigurationProperties);
@@ -106,7 +105,7 @@ final class IRODSLocalTransferEngine implements TransferStatusCallbackListener {
 			final TransferControlBlock transferControlBlock,
 			final TransferEngineConfigurationProperties transferEngineConfigurationProperties)
 			throws JargonException {
-		
+
 		if (transferManager == null) {
 			throw new JargonException("transferManager is null");
 		}
@@ -541,22 +540,26 @@ final class IRODSLocalTransferEngine implements TransferStatusCallbackListener {
 		if (transferStatus.getTotalFilesTransferredSoFar() == 0) {
 			log.debug("got startup 0th transfer callback, ignore in database, but do callback to transfer status listener");
 			transferManager.notifyStatusUpdate(transferStatus);
-			return;
-		}
 
-		// status callback from the recursive transfer operation in Jargon
-		synchronized (this) {
-			LocalIRODSTransferItem localIRODSTransferItem = new LocalIRODSTransferItem();
-			localIRODSTransferItem.setFile(true);
-			localIRODSTransferItem.setSourceFileAbsolutePath(transferStatus
-					.getSourceFileAbsolutePath());
-			localIRODSTransferItem.setTargetFileAbsolutePath(transferStatus
-					.getTargetFileAbsolutePath());
-			localIRODSTransferItem.setTransferredAt(new Date());
-			processStatusCallback(transferStatus, localIRODSTransferItem);
+		} else if (transferStatus.getTransferState() == TransferStatus.TransferState.IN_PROGRESS_START_FILE) {
+			log.debug("got start of file transfer callback, ignore in database, but do callback to transfer status listener");
 			transferManager.notifyStatusUpdate(transferStatus);
-		}
 
+		} else {
+
+			// status callback from the recursive transfer operation in Jargon
+			synchronized (this) {
+				LocalIRODSTransferItem localIRODSTransferItem = new LocalIRODSTransferItem();
+				localIRODSTransferItem.setFile(true);
+				localIRODSTransferItem.setSourceFileAbsolutePath(transferStatus
+						.getSourceFileAbsolutePath());
+				localIRODSTransferItem.setTargetFileAbsolutePath(transferStatus
+						.getTargetFileAbsolutePath());
+				localIRODSTransferItem.setTransferredAt(new Date());
+				processStatusCallback(transferStatus, localIRODSTransferItem);
+				transferManager.notifyStatusUpdate(transferStatus);
+			}
+		}
 	}
 
 	/**
@@ -601,7 +604,7 @@ final class IRODSLocalTransferEngine implements TransferStatusCallbackListener {
 			updateItemRequired = false;
 		}
 
-		if (transferStatus.getTransferState() == TransferStatus.TransferState.SUCCESS) {
+		if (transferStatus.getTransferState() == TransferStatus.TransferState.SUCCESS || transferStatus.getTransferState() == TransferStatus.TransferState.IN_PROGRESS_COMPLETE_FILE) {
 
 			// if this is a stand alone transfer (not part of a synch) update
 			// the wrapping transfer with last status info
@@ -695,10 +698,11 @@ final class IRODSLocalTransferEngine implements TransferStatusCallbackListener {
 	}
 
 	/**
-	 * @param transferEngineConfigurationProperties the transferEngineConfigurationProperties to set
+	 * @param transferEngineConfigurationProperties
+	 *            the transferEngineConfigurationProperties to set
 	 */
 	public synchronized void setTransferEngineConfigurationProperties(
-			TransferEngineConfigurationProperties transferEngineConfigurationProperties) {
+			final TransferEngineConfigurationProperties transferEngineConfigurationProperties) {
 		this.transferEngineConfigurationProperties = transferEngineConfigurationProperties;
 	}
 

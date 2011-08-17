@@ -48,9 +48,9 @@ public class TransferStatusCallbackListenerTestingImplementation implements
 	public synchronized void statusCallback(final TransferStatus transferStatus)
 			throws JargonException {
 
-		if (transferStatus.getTransferType() == TransferType.GET) {
+		if (transferStatus.getTransferType() == TransferType.GET && transferStatus.getTransferState() == TransferState.IN_PROGRESS_COMPLETE_FILE) {
 			getCallbackCtr++;
-		} else if (transferStatus.getTransferType() == TransferType.PUT) {
+		} else if (transferStatus.getTransferType() == TransferType.PUT &&  transferStatus.getTransferState() == TransferState.IN_PROGRESS_COMPLETE_FILE) {
 			putCallbackCtr++;
 		} else if (transferStatus.getTransferType() == TransferType.REPLICATE) {
 			replicateCallbackCtr++;

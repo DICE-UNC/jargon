@@ -523,7 +523,7 @@ public class SynchManagerServiceImplTest {
 		synchConfiguration
 				.setIrodsPassword(HibernateUtil.obfuscate("jjjjfjfj"));
 		synchConfiguration.setIrodsPort(1247);
-		synchConfiguration.setIrodsSynchDirectory("/synchdir");
+		synchConfiguration.setIrodsSynchDirectory(testName);
 		synchConfiguration.setIrodsUserName("userName");
 		synchConfiguration.setIrodsZone("zone");
 		synchConfiguration.setLastSynchronizationStatus(TransferStatus.OK);
@@ -550,7 +550,12 @@ public class SynchManagerServiceImplTest {
 		actual = synchManagerService.findByName(testName);
 		Assert.assertNull("synch should be deleted", actual);
 		List<LocalIRODSTransfer> queue = transferQueueService.getRecentQueue();
-		Assert.assertEquals("should be nothing in queue", 0, queue.size());
+		
+		for (LocalIRODSTransfer transfer : queue) {
+			Assert.assertFalse("should be no txfrs related to synch in queue", transfer.getIrodsAbsolutePath().equals(testName));
+		}
+		
+		
 	}
 
 	@Test(expected = ConflictingSynchException.class)

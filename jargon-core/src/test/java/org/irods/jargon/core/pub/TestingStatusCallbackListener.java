@@ -24,6 +24,8 @@ public class TestingStatusCallbackListener implements
 			bytesReportedIntraFileCallbacks = transferStatus.getBytesTransfered();
 		} else if (transferStatus.getTransferState() == TransferState.FAILURE) {
 			errorCallbackCount++;
+		} else if (transferStatus.getTransferState() == TransferState.IN_PROGRESS_START_FILE) {
+			// ignored
 		} else {
 			successCallbackCount++;
 			lastSourcePath = transferStatus.getSourceFileAbsolutePath();
