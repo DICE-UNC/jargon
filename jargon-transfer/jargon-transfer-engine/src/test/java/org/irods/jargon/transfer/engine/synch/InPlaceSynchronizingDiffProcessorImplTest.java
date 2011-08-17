@@ -7,8 +7,11 @@ import java.util.Properties;
 import junit.framework.Assert;
 
 import org.irods.jargon.core.connection.IRODSAccount;
+import org.irods.jargon.core.pub.DataTransferOperations;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 import org.irods.jargon.core.pub.IRODSFileSystem;
+import org.irods.jargon.core.pub.io.IRODSFile;
+import org.irods.jargon.core.pub.io.IRODSFileFactory;
 import org.irods.jargon.core.transfer.DefaultTransferControlBlock;
 import org.irods.jargon.core.transfer.TransferControlBlock;
 import org.irods.jargon.datautils.synchproperties.SynchPropertiesServiceImpl;
@@ -252,6 +255,125 @@ public class InPlaceSynchronizingDiffProcessorImplTest {
 		boolean noDiffs = fileTreeDiffUtility.verifyLocalAndIRODSTreesMatch(
 				new File(localCollectionAbsolutePath),
 				irodsCollectionRootAbsolutePath, 0L, 0L);
+
+		Assert.assertTrue("diffs found after synch", noDiffs);
+
+	}
+
+	@Test
+	public void testFileTreeDiffLocalLocalFileLengthSameLocalChecksumUpdated()
+			throws Exception {
+
+		String rootCollection = "testFileTreeDiffLocalLocalFileLengthSameLocalChecksumUpdated";
+		String newChildFileName = "testFileTreeDiffLocalLocalFileLengthSameLocalChecksumUpdated.txt";
+
+		int origLength = 1000;
+		int newLength = 1000;
+
+		String localCollectionAbsolutePath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH
+						+ '/' + rootCollection);
+
+		String irodsCollectionRootAbsolutePath = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		FileGenerator
+				.generateManyFilesAndCollectionsInParentCollectionByAbsolutePath(
+						localCollectionAbsolutePath, rootCollection, 2, 3, 2,
+						"testFile", ".txt", 3, 2, 1, 2);
+
+		FileGenerator.generateFileOfFixedLengthGivenName(
+				localCollectionAbsolutePath, newChildFileName, origLength);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
+		IRODSFileFactory irodsFileFactory = irodsFileSystem
+				.getIRODSFileFactory(irodsAccount);
+		IRODSFile destFile = irodsFileFactory
+				.instanceIRODSFile(irodsCollectionRootAbsolutePath);
+		DataTransferOperations dataTransferOperationsAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataTransferOperations(
+						irodsAccount);
+
+		File localFile = new File(localCollectionAbsolutePath);
+
+		dataTransferOperationsAO.putOperation(localFile, destFile, null, null);
+
+		FileGenerator.generateFileOfFixedLengthGivenName(
+				localCollectionAbsolutePath, newChildFileName, newLength);
+
+		TransferControlBlock transferControlBlock = DefaultTransferControlBlock
+				.instance();
+		TransferManager transferManager = Mockito.mock(TransferManager.class);
+		SynchronizeProcessorImpl synchronizeProcessor = new SynchronizeProcessorImpl();
+		FileTreeDiffUtility fileTreeDiffUtility = new FileTreeDiffUtilityImpl(
+				irodsAccount, irodsFileSystem.getIRODSAccessObjectFactory());
+		synchronizeProcessor.setFileTreeDiffUtility(fileTreeDiffUtility);
+		synchronizeProcessor.setIrodsAccount(irodsAccount);
+		synchronizeProcessor
+				.setSynchPropertiesService(new SynchPropertiesServiceImpl(
+						irodsFileSystem.getIRODSAccessObjectFactory(),
+						irodsAccount));
+		synchronizeProcessor.setTransferManager(transferManager);
+		synchronizeProcessor.setIrodsAccessObjectFactory(irodsFileSystem
+				.getIRODSAccessObjectFactory());
+		synchronizeProcessor.setIrodsAccount(irodsAccount);
+		synchronizeProcessor.setTransferControlBlock(transferControlBlock);
+
+		InPlaceSynchronizingDiffProcessorImpl processor = new InPlaceSynchronizingDiffProcessorImpl();
+		processor.setIrodsAccessObjectFactory(irodsFileSystem
+				.getIRODSAccessObjectFactory());
+		processor.setTransferManager(transferManager);
+		processor.setIrodsAccount(irodsAccount);
+		processor.setTransferControlBlock(transferControlBlock);
+		synchronizeProcessor.setSynchronizingDiffProcessor(processor);
+		processor.setTransferManager(transferManager);
+
+		Synchronization synchronization = new Synchronization();
+		synchronization.setCreatedAt(new Date());
+		synchronization.setDefaultResourceName(irodsAccount
+				.getDefaultStorageResource());
+		synchronization.setFrequencyType(FrequencyType.EVERY_HOUR);
+		synchronization.setId(new Long(1));
+		synchronization.setIrodsHostName(irodsAccount.getHost());
+		synchronization.setIrodsPassword(irodsAccount.getPassword());
+		synchronization.setIrodsPort(irodsAccount.getPort());
+		synchronization.setIrodsSynchDirectory(irodsCollectionRootAbsolutePath + '/' + rootCollection);
+		synchronization.setLocalSynchDirectory(localCollectionAbsolutePath);
+		synchronization.setIrodsUserName(irodsAccount.getUserName());
+		synchronization.setIrodsZone(irodsAccount.getZone());
+		synchronization.setName("testname");
+		synchronization
+				.setSynchronizationMode(SynchronizationType.ONE_WAY_LOCAL_TO_IRODS);
+
+		LocalIRODSTransfer localIRODSTransfer = new LocalIRODSTransfer();
+		localIRODSTransfer.setCreatedAt(new Date());
+		localIRODSTransfer.setId(new Long(1));
+		localIRODSTransfer
+				.setIrodsAbsolutePath(irodsCollectionRootAbsolutePath + '/' + rootCollection);
+		localIRODSTransfer.setLocalAbsolutePath(localCollectionAbsolutePath);
+		localIRODSTransfer.setSynchronization(synchronization);
+		localIRODSTransfer.setTransferHost(irodsAccount.getHost());
+		localIRODSTransfer.setTransferPassword(irodsAccount.getPassword());
+		localIRODSTransfer.setTransferPort(irodsAccount.getPort());
+		localIRODSTransfer.setTransferResource(irodsAccount
+				.getDefaultStorageResource());
+		localIRODSTransfer.setTransferState(TransferState.ENQUEUED);
+		localIRODSTransfer.setTransferType(TransferType.SYNCH);
+
+		synchronizeProcessor.synchronizeLocalToIRODS(localIRODSTransfer);
+		
+		
+		
+		
+		
+		
+		boolean noDiffs = fileTreeDiffUtility.verifyLocalAndIRODSTreesMatch(
+				new File(localCollectionAbsolutePath),
+				irodsCollectionRootAbsolutePath + '/' + rootCollection, 0L, 0L);
 
 		Assert.assertTrue("diffs found after synch", noDiffs);
 

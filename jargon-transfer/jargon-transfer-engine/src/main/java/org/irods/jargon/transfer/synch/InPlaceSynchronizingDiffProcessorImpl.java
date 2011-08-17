@@ -7,11 +7,14 @@ import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.exception.JargonRuntimeException;
 import org.irods.jargon.core.pub.DataTransferOperations;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
+import org.irods.jargon.core.pub.io.IRODSFile;
+import org.irods.jargon.core.pub.io.IRODSFileFactory;
 import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry;
 import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry.ObjectType;
 import org.irods.jargon.core.transfer.TransferControlBlock;
 import org.irods.jargon.core.transfer.TransferStatus;
 import org.irods.jargon.core.transfer.TransferStatusCallbackListener;
+import org.irods.jargon.core.utils.LocalFileUtils;
 import org.irods.jargon.datautils.tree.FileTreeDiffEntry;
 import org.irods.jargon.datautils.tree.FileTreeDiffEntry.DiffType;
 import org.irods.jargon.datautils.tree.FileTreeModel;
@@ -44,6 +47,7 @@ public class InPlaceSynchronizingDiffProcessorImpl implements
 	private TransferStatusCallbackListener callbackListener;
 	private IRODSAccount irodsAccount;
 	private TransferControlBlock transferControlBlock;
+	private IRODSFileFactory irodsFileFactory = null;
 
 	public static final String SLASH = "/";
 
@@ -301,6 +305,12 @@ public class InPlaceSynchronizingDiffProcessorImpl implements
 					.getFormattedAbsolutePath());
 			scheduleLocalToIrods(diffNode, localRootAbsolutePath,
 					irodsRootAbsolutePath);
+		} else if (fileTreeDiffEntry.getDiffType() == DiffType.FILE_OUT_OF_SYNCH) {
+			log.debug("local file out of synch with irods {}",
+					fileTreeDiffEntry.getCollectionAndDataObjectListingEntry()
+							.getFormattedAbsolutePath());
+			scheduleLocalToIrodsWithIrodsBackup(diffNode,
+					localRootAbsolutePath, irodsRootAbsolutePath);
 		} else if (fileTreeDiffEntry.getDiffType() == DiffType.RIGHT_HAND_PLUS) {
 			log.debug("irods file is new directory {}", fileTreeDiffEntry
 					.getCollectionAndDataObjectListingEntry()
@@ -322,6 +332,83 @@ public class InPlaceSynchronizingDiffProcessorImpl implements
 		} else {
 			log.warn("unknown diff type:{}", fileTreeDiffEntry);
 		}
+	}
+
+	/**
+	 * Move the local file to iRODS with iRODS backed up
+	 * 
+	 * @param diffNode
+	 * @param localRootAbsolutePath
+	 * @param irodsRootAbsolutePath
+	 * @throws TransferEngineException
+	 */
+	private void scheduleLocalToIrodsWithIrodsBackup(
+			final FileTreeNode diffNode, final String localRootAbsolutePath,
+			final String irodsRootAbsolutePath) throws TransferEngineException {
+		log.info("\n\n>>>>>>>>>>>>>>>>>>>>>>>>>>\n\n");
+		log.info("scheduleLocalToIrodsWithIrodsBackup for diffNode:{}",
+				diffNode);
+
+		FileTreeDiffEntry fileTreeDiffEntry = (FileTreeDiffEntry) diffNode
+				.getUserObject();
+		CollectionAndDataObjectListingEntry entry = fileTreeDiffEntry
+				.getCollectionAndDataObjectListingEntry();
+
+		try {
+
+			log.debug("getting target iRODS file to make backup:{}",
+					irodsRootAbsolutePath);
+
+			IRODSFile targetFile = getIRODSFileFactory().instanceIRODSFile(
+					irodsRootAbsolutePath, entry.getPathOrName());
+			String backupFileName = LocalFileUtils
+					.getFileNameWithTimeStampInterposed(targetFile.getName());
+			IRODSFile backupFile = getIRODSFileFactory().instanceIRODSFile(
+					targetFile.getParent(), backupFileName);
+			log.debug("backup file name:{}", backupFile.getAbsolutePath());
+
+			targetFile.renameTo(backupFile);
+			log.debug("rename done");
+
+			transferControlBlock.resetTransferData();
+			dataTransferOperations.putOperation(
+					entry.getFormattedAbsolutePath(),
+					targetFile.getAbsolutePath(),
+					irodsAccount.getDefaultStorageResource(), this,
+					transferControlBlock);
+
+		} catch (Exception e) {
+
+			log.error("error in put operation as part of synch", e);
+			transferControlBlock.reportErrorInTransfer();
+
+			if (callbackListener == null) {
+				throw new TransferEngineException(
+						"error occurred in synch, no status callback listener was specified",
+						e);
+
+			} else {
+				try {
+					TransferStatus transferStatus = TransferStatus
+							.instanceForExceptionForSynch(
+									TransferStatus.TransferType.SYNCH,
+									entry.getFormattedAbsolutePath(),
+									irodsRootAbsolutePath,
+									irodsAccount.getDefaultStorageResource(),
+									0L, 0L, 0, 0, e, irodsAccount.getHost(),
+									irodsAccount.getZone());
+					callbackListener.statusCallback(transferStatus);
+				} catch (JargonException e1) {
+					log.error("error building transfer status", e1);
+					throw new JargonRuntimeException(
+							"exception building transfer status", e1);
+				}
+			}
+
+		}
+
+		log.info("put done");
+
 	}
 
 	/**
@@ -554,6 +641,16 @@ public class InPlaceSynchronizingDiffProcessorImpl implements
 
 			callbackListener.overallStatusCallback(newStatus);
 		}
+
+	}
+
+	private IRODSFileFactory getIRODSFileFactory() throws JargonException {
+		if (irodsFileFactory == null) {
+			irodsFileFactory = this.irodsAccessObjectFactory
+					.getIRODSFileFactory(irodsAccount);
+		}
+
+		return irodsFileFactory;
 
 	}
 

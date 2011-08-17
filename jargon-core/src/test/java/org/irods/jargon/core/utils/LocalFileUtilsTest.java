@@ -15,7 +15,6 @@ import org.junit.Test;
 public class LocalFileUtilsTest {
 
 	private static Properties testingProperties = new Properties();
-	private static TestingPropertiesHelper testingPropertiesHelper = new TestingPropertiesHelper();
 	private static ScratchFileUtils scratchFileUtils = null;
 	public static final String IRODS_TEST_SUBDIR_PATH = "LocalFileUtilsTest";
 
@@ -48,6 +47,32 @@ public class LocalFileUtilsTest {
 		File rootCollectionFile = new File(localCollectionAbsolutePath);
 		int fileCtr = LocalFileUtils.countFilesInDirectory(rootCollectionFile);
 		Assert.assertEquals("did not count the two files", 2, fileCtr);
+
+	}
+
+	@Test
+	public void testGetFileExtension() throws Exception {
+		String testName = "blah.hellothere file name";
+		String testExtension = ".txt";
+
+		StringBuilder sb = new StringBuilder();
+		sb.append(testName);
+		sb.append(testExtension);
+		String actual = LocalFileUtils.getFileExtension(sb.toString());
+		Assert.assertEquals(testExtension, actual);
+
+	}
+
+	@Test
+	public void testGetFileNameUpToExtension() throws Exception {
+		String testName = "blah.hellothere file name";
+		String testExtension = ".txt";
+
+		StringBuilder sb = new StringBuilder();
+		sb.append(testName);
+		sb.append(testExtension);
+		String actual = LocalFileUtils.getFileNameUpToExtension(sb.toString());
+		Assert.assertEquals(testName, actual);
 
 	}
 

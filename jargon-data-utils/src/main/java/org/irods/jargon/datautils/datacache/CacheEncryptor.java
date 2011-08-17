@@ -11,6 +11,7 @@ import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.PBEParameterSpec;
 
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.exception.JargonRuntimeException;
 
 class CacheEncryptor {
 	Cipher ecipher;
@@ -41,10 +42,20 @@ class CacheEncryptor {
 			ecipher.init(Cipher.ENCRYPT_MODE, key, paramSpec);
 			dcipher.init(Cipher.DECRYPT_MODE, key, paramSpec);
 		} catch (java.security.InvalidAlgorithmParameterException e) {
+			throw new JargonRuntimeException("error creating cacheEncryptor");
+
 		} catch (java.security.spec.InvalidKeySpecException e) {
+			throw new JargonRuntimeException("error creating cacheEncryptor");
+
 		} catch (javax.crypto.NoSuchPaddingException e) {
+			throw new JargonRuntimeException("error creating cacheEncryptor");
+
 		} catch (java.security.NoSuchAlgorithmException e) {
+			throw new JargonRuntimeException("error creating cacheEncryptor");
+
 		} catch (java.security.InvalidKeyException e) {
+			throw new JargonRuntimeException("error creating cacheEncryptor");
+
 		}
 	}
 

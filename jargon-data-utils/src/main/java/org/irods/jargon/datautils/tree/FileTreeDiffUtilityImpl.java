@@ -8,12 +8,14 @@ import java.util.Enumeration;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.pub.DataObjectAO;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.pub.io.IRODSFileFactory;
 import org.irods.jargon.core.pub.io.IRODSFileImpl;
 import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry;
 import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry.ObjectType;
+import org.irods.jargon.core.utils.LocalFileUtils;
 import org.irods.jargon.datautils.tree.FileOrDirFilter.FilterFor;
 import org.irods.jargon.datautils.tree.FileTreeDiffEntry.DiffType;
 import org.slf4j.Logger;
@@ -44,6 +46,7 @@ public class FileTreeDiffUtilityImpl implements FileTreeDiffUtility {
 
 	private final IRODSAccessObjectFactory irodsAccessObjectFactory;
 	private final IRODSAccount irodsAccount;
+	private DataObjectAO dataObjectAO = null;
 
 	/**
 	 * Default constructor
@@ -57,6 +60,7 @@ public class FileTreeDiffUtilityImpl implements FileTreeDiffUtility {
 	 */
 	public FileTreeDiffUtilityImpl(final IRODSAccount irodsAccount,
 			final IRODSAccessObjectFactory irodsAccessObjectFactory) {
+		
 		if (irodsAccount == null) {
 			throw new IllegalArgumentException("null irodsAccount");
 		}
@@ -328,7 +332,7 @@ public class FileTreeDiffUtilityImpl implements FileTreeDiffUtility {
 		boolean rhsFile = rightHandSide.isFile();
 
 		if (lhsFile && rhsFile) {
-			compareTwoEqualFilesOnTimestamp(currentFileTreeNode, leftHandSide,
+			compareTwoMatchedFiles(currentFileTreeNode, leftHandSide,
 					rightHandSide, timestampForLastSynchLeftHandSide,
 					timestampForLastSynchRightHandSide);
 		} else if (lhsFile != rhsFile) {
@@ -600,14 +604,40 @@ public class FileTreeDiffUtilityImpl implements FileTreeDiffUtility {
 	 * @param timestampForLastSynchRightHandSide
 	 * @throws JargonException
 	 */
-	private void compareTwoEqualFilesOnTimestamp(
+	private void compareTwoMatchedFiles(
 			final FileTreeNode currentFileTreeNode, final File leftHandSide,
 			final File rightHandSide,
 			final long timestampForLastSynchLeftHandSide,
 			final long timestampForLastSynchRightHandSide)
 			throws JargonException {
 		log.debug("file compare");
+		
+		
+		 if (leftHandSide.length() != rightHandSide.length()) {
+			 
+			 FileTreeDiffEntry entry = buildFileTreeDiffEntryForFile(
+						leftHandSide, DiffType.FILE_OUT_OF_SYNCH,
+						rightHandSide.length(), rightHandSide.lastModified());
+			 log.debug("files differ on length:{}", entry);
+				currentFileTreeNode.add(new FileTreeNode(entry));
+		 } else {
+			 String lhsChecksum = LocalFileUtils.md5ByteArrayToString(LocalFileUtils.computeMD5FileCheckSumViaAbsolutePath(leftHandSide.getAbsolutePath()));
+			 log.debug("left hand side checksum:{}", lhsChecksum);
+			 String rhsChecksum = getIRODSChecksumOnDataObject(rightHandSide);
+			 if (lhsChecksum.equals(rhsChecksum)) {
+				 log.debug("checksum match, files are same");
+			 } else {
+				 log.debug("files differ on checksum");
+				 FileTreeDiffEntry entry = buildFileTreeDiffEntryForFile(
+							leftHandSide, DiffType.FILE_OUT_OF_SYNCH,
+							rightHandSide.length(), rightHandSide.lastModified());
+				 log.debug("files differ on checksum:{}", entry);
 
+					currentFileTreeNode.add(new FileTreeNode(entry));
+			 }
+		 }
+
+		/*
 		if (timestampForLastSynchLeftHandSide == NO_TIMESTAMP_CHECKS
 				|| timestampForLastSynchLeftHandSide == NO_TIMESTAMP_CHECKS) {
 			log.debug("comparing files without a last synch, use existing last mod data");
@@ -649,9 +679,11 @@ public class FileTreeDiffUtilityImpl implements FileTreeDiffUtility {
 			} else {
 				log.debug("files match treat as no diff");
 			}
+			
 			log.debug("\n\n**************************************************\n");
 
 		}
+		*/
 	}
 
 	/**
@@ -713,6 +745,7 @@ public class FileTreeDiffUtilityImpl implements FileTreeDiffUtility {
 		CollectionAndDataObjectListingEntry entry = new CollectionAndDataObjectListingEntry();
 		entry.setCreatedAt(new Date(diffFile.lastModified()));
 		entry.setModifiedAt(entry.getCreatedAt());
+		entry.setDataSize(diffFile.length());
 
 		if (diffFile.isFile()) {
 			entry.setObjectType(ObjectType.DATA_OBJECT);
@@ -739,4 +772,12 @@ public class FileTreeDiffUtilityImpl implements FileTreeDiffUtility {
 	public IRODSAccount getIrodsAccount() {
 		return irodsAccount;
 	}
+	
+	private String getIRODSChecksumOnDataObject(final File irodsFile) throws JargonException {
+		if (dataObjectAO == null) {
+			dataObjectAO = irodsAccessObjectFactory.getDataObjectAO(irodsAccount);
+		}
+		return dataObjectAO.computeMD5ChecksumOnDataObject((IRODSFile) irodsFile);
+	}
+	
 }

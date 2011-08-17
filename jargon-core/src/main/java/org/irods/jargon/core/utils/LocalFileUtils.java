@@ -10,6 +10,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Date;
 import java.util.zip.CRC32;
 import java.util.zip.CheckedInputStream;
 
@@ -35,6 +36,62 @@ public class LocalFileUtils {
 
 	}
 
+	/**
+	 * Parse a file name to get the stuff after the last '.' character to treat
+	 * as the file extension
+	 * @param fileName <code>String</code> with the file name to parse out.
+	 * @return <code>String</code> with the file extension
+	 */
+	public static String getFileExtension(final String fileName) {
+		if (fileName == null || fileName.isEmpty()) {
+			throw new IllegalArgumentException("null fileName");
+		}
+	
+		int lastDot = fileName.lastIndexOf('.');
+		if (lastDot == -1) {
+			return "";
+		} else {
+			return(fileName.substring(lastDot));
+		}
+	
+	}
+	
+	/**
+	 * Parse a file name to get the stuff before last '.' character to treat
+	 * as the file name
+	 * @param fileName <code>String</code> with the file name to parse out.
+	 * @return <code>String</code> with the file name before the extension, without the '.'
+	 */
+	public static String getFileNameUpToExtension(final String fileName) {
+		if (fileName == null || fileName.isEmpty()) {
+			throw new IllegalArgumentException("null fileName");
+		}
+	
+		int lastDot = fileName.lastIndexOf('.');
+		if (lastDot == -1) {
+			return "";
+		} else {
+			return(fileName.substring(0, lastDot));
+		}
+	
+	}
+	
+	/**
+	 * Interpose a time stamp between the file name and extension
+	 * @param fileName <code>String</code> with the file name to parse out
+	 * @return <code>String</code> with the updated file name containing a time stamp
+	 */
+	public static String getFileNameWithTimeStampInterposed(final String fileName) {
+		String namePart = getFileNameUpToExtension(fileName);
+		String extension = getFileExtension(fileName);
+		StringBuilder newName = new StringBuilder(namePart);
+		newName.append(".bak");
+		newName.append(new Date().getTime());
+		newName.append(extension);
+		return newName.toString();
+	}
+	
+	
 	/**
 	 * Count files in a directory (including files in all subdirectories)
 	 * 

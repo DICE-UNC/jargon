@@ -1,6 +1,7 @@
 package org.irods.jargon.datautils.tree;
 
 import java.io.File;
+import java.io.Serializable;
 import java.util.Comparator;
 
 /**
@@ -9,7 +10,12 @@ import java.util.Comparator;
  * @author Mike Conway - DICE (www.irods.org)
  *
  */
-public class FileNameComparator implements Comparator<File> {
+public class FileNameComparator implements Comparator<File>, Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1446774734347341929L;
 
 	/**
 	 * 

@@ -111,7 +111,6 @@ public final class ParallelGetTransferThread extends
 					IO_EXCEPTION_OCCURRED_DURING_PARALLEL_FILE_TRANSFER, e);
 		}
 
-		 
 	}
 
 	public void get() throws JargonException {
@@ -183,6 +182,7 @@ public final class ParallelGetTransferThread extends
 		long length = readLong();
 		log.info("   length:{}", length);
 
+		
 		// Holds all the data for transfer
 		byte[] buffer = null;
 		int read = 0;
@@ -197,16 +197,17 @@ public final class ParallelGetTransferThread extends
 
 		log.info("seeking to offset: {}", offset);
 		try {
-		seekToOffset(local, offset);
+			
+			
+			if (length <= 0) {
+				return;
+			} else {
+				// length has a max of 8mb?
+				buffer = new byte[ConnectionConstants.OUTPUT_BUFFER_LENGTH];
+			}
+			
+			seekToOffset(local, offset);
 
-		if (length <= 0) {
-			return;
-		} else {
-			// length has a max of 8mb?
-			buffer = new byte[ConnectionConstants.OUTPUT_BUFFER_LENGTH];
-		}
-
-		
 			while (length > 0) {
 
 				log.debug("reading....");
@@ -284,8 +285,7 @@ public final class ParallelGetTransferThread extends
 				} else {
 					log.warn("intercepted a loop condition on parallel file get, length is > 0 but I just read and got nothing...breaking...");
 					// length = 0;
-					throw new JargonException(
-							"possible loop condition in parallel file get");
+					throw new JargonException("possible loop condition in parallel file get");
 				}
 
 				Thread.yield();

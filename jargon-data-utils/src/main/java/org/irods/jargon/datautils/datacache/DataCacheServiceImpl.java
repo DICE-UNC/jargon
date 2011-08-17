@@ -341,7 +341,7 @@ public class DataCacheServiceImpl implements DataCacheService {
 	@Override
 	public void purgeOldRequests() throws JargonException {
 		log.info("purgeOldRequests()");
-		long minToMillis = this.getCacheServiceConfiguration().getLifetimeInMinutes() * 60 * 1000;
+		long minToMillis = (long) this.getCacheServiceConfiguration().getLifetimeInMinutes() * 60 * 1000;
 		long millisNow = System.currentTimeMillis();
 		long purgeThreshold = millisNow - minToMillis;
 		log.info("purge threshold:{}", purgeThreshold);
@@ -354,7 +354,10 @@ public class DataCacheServiceImpl implements DataCacheService {
 		for (File irodsFile : cacheDir.listFiles()) {
 			if (irodsFile.lastModified() < purgeThreshold) {
 				log.info("purging:{}", irodsFile.getAbsolutePath());
-				irodsFile.delete();
+				boolean delSuccess = irodsFile.delete();
+				if (!delSuccess) {
+					log.warn("error deleting file logged and ignored");
+				}
 			}
 		}
 		

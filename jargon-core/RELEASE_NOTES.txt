@@ -3,7 +3,7 @@ Jargon-core Release Notes
 
 Project: Jargon-core - next-gen IRODS Java API prototype
 Date: 10/06/2010
-Release Version: 0.0.2
+Release Version: 2.5.0-beta3
 
 This is an alpha-level release.  Jargon core is in use in several early-access projects.
 
