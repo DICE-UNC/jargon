@@ -266,6 +266,8 @@ public class InPlaceSynchronizingDiffProcessorImplTest {
 
 		String rootCollection = "testFileTreeDiffLocalLocalFileLengthSameLocalChecksumUpdated";
 		String newChildFileName = "testFileTreeDiffLocalLocalFileLengthSameLocalChecksumUpdated.txt";
+		String subChildFileName = "subchild.txt";
+		String subChildFolderName = "subchild";
 
 		int origLength = 1000;
 		int newLength = 1000;
@@ -277,6 +279,8 @@ public class InPlaceSynchronizingDiffProcessorImplTest {
 		String irodsCollectionRootAbsolutePath = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH);
+		
+		testingPropertiesHelper.buildIRODSCollectionRelativePathFromTestProperties(testingProperties, IRODS_TEST_SUBDIR_PATH);
 
 		FileGenerator
 				.generateManyFilesAndCollectionsInParentCollectionByAbsolutePath(
@@ -285,6 +289,9 @@ public class InPlaceSynchronizingDiffProcessorImplTest {
 
 		FileGenerator.generateFileOfFixedLengthGivenName(
 				localCollectionAbsolutePath, newChildFileName, origLength);
+		
+		
+		FileGenerator.generateFileOfFixedLengthGivenName(localCollectionAbsolutePath + "/" + subChildFolderName, subChildFileName, origLength);
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
@@ -292,6 +299,14 @@ public class InPlaceSynchronizingDiffProcessorImplTest {
 		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
 		IRODSFileFactory irodsFileFactory = irodsFileSystem
 				.getIRODSFileFactory(irodsAccount);
+		
+		
+		String irodsBackupDirRoot = "/" + irodsAccount.getZone() + "/home/" + irodsAccount.getUserName() + "/" + InPlaceSynchronizingDiffProcessorImpl.BACKUP_PREFIX + "/"
+		+ testingPropertiesHelper.buildIRODSCollectionRelativePathFromTestProperties(testingProperties, IRODS_TEST_SUBDIR_PATH);
+		
+		IRODSFile backupRoot = irodsFileFactory.instanceIRODSFile(irodsBackupDirRoot);
+		backupRoot.delete();
+		
 		IRODSFile destFile = irodsFileFactory
 				.instanceIRODSFile(irodsCollectionRootAbsolutePath);
 		DataTransferOperations dataTransferOperationsAO = irodsFileSystem
@@ -304,7 +319,9 @@ public class InPlaceSynchronizingDiffProcessorImplTest {
 
 		FileGenerator.generateFileOfFixedLengthGivenName(
 				localCollectionAbsolutePath, newChildFileName, newLength);
+		FileGenerator.generateFileOfFixedLengthGivenName(localCollectionAbsolutePath + "/" + subChildFolderName, subChildFileName, origLength);
 
+		
 		TransferControlBlock transferControlBlock = DefaultTransferControlBlock
 				.instance();
 		TransferManager transferManager = Mockito.mock(TransferManager.class);
@@ -366,14 +383,14 @@ public class InPlaceSynchronizingDiffProcessorImplTest {
 
 		synchronizeProcessor.synchronizeLocalToIRODS(localIRODSTransfer);
 		
-		
-		
-		
-		
+		// add checks to make sure back files are there
 		
 		boolean noDiffs = fileTreeDiffUtility.verifyLocalAndIRODSTreesMatch(
 				new File(localCollectionAbsolutePath),
 				irodsCollectionRootAbsolutePath + '/' + rootCollection, 0L, 0L);
+		
+		// TODO: look for the files in the backup area
+		
 
 		Assert.assertTrue("diffs found after synch", noDiffs);
 

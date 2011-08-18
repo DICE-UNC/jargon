@@ -48,8 +48,12 @@ public class InPlaceSynchronizingDiffProcessorImpl implements
 	private IRODSAccount irodsAccount;
 	private TransferControlBlock transferControlBlock;
 	private IRODSFileFactory irodsFileFactory = null;
+	private Synchronization synchronization = null;
+	private String usersHomeRoot = "";
+	private int usersHomeRootLength = 0;
 
 	public static final String SLASH = "/";
+	public static final String BACKUP_PREFIX = "synch-backup";
 
 	private static final Logger log = LoggerFactory
 			.getLogger(InPlaceSynchronizingDiffProcessorImpl.class);
@@ -146,8 +150,17 @@ public class InPlaceSynchronizingDiffProcessorImpl implements
 
 		checkContracts();
 
-		final Synchronization synchronization = localIRODSTransfer
-				.getSynchronization();
+		StringBuilder rootBuilder = new StringBuilder();
+		rootBuilder.append('/');
+		rootBuilder.append(irodsAccount.getZone());
+		rootBuilder.append("/home/");
+		rootBuilder.append(irodsAccount.getUserName());
+		this.usersHomeRoot = rootBuilder.toString();
+		log.info("using usersHomeRoot for relative path computation:{}",
+				usersHomeRoot);
+		usersHomeRootLength = usersHomeRoot.length();
+
+		synchronization = localIRODSTransfer.getSynchronization();
 
 		String calculatedLocalRoot = "";
 		if (synchronization.getLocalSynchDirectory().length() > 1) {
@@ -353,18 +366,53 @@ public class InPlaceSynchronizingDiffProcessorImpl implements
 				.getUserObject();
 		CollectionAndDataObjectListingEntry entry = fileTreeDiffEntry
 				.getCollectionAndDataObjectListingEntry();
+		
+		// local root /Users/mikeconway/temp/irodsscratch/ InPlaceSynchronizingDiffProcessorImplTest/testFileTreeDiffLocalLocalFileLengthSameLocalChecksumUpdated << synch root
+		
+		// irods root  /test1/home/test1/jargon-scratch/ InPlaceSynchronizingDiffProcessorImplTest/testFileTreeDiffLocalLocalFileLengthSameLocalChecksumUpdated << synch root
 
 		try {
 
-			log.debug("getting target iRODS file to make backup:{}",
-					irodsRootAbsolutePath);
-
+			
+			String targetRelativePath = entry.getFormattedAbsolutePath().substring(
+					localRootAbsolutePath.length());
+			
+			// became /testFileTreeDiffLocalLocalFileLengthSameLocalChecksumUpdated.txt
+			
 			IRODSFile targetFile = getIRODSFileFactory().instanceIRODSFile(
-					irodsRootAbsolutePath, entry.getPathOrName());
+					irodsRootAbsolutePath, targetRelativePath);
+			
+			
+			if (targetFile.getName().charAt(0) == '.') {
+				log.debug("no backups of hidden files");
+				return;
+			}
+			
+			// became irods://test1@localhost:1247/test1/home/test1/jargon-scratch/InPlaceSynchronizingDiffProcessorImplTest/testFileTreeDiffLocalLocalFileLengthSameLocalChecksumUpdated/testFileTreeDiffLocalLocalFileLengthSameLocalChecksumUpdated.txt
+			
+			
+			log.debug("target file name in iRODS:{}",
+					targetFile.getAbsolutePath());
+			
+			/*
+			 * For backup, take the path under the users home directory, remove the zone/home/username part, and stick it under zone/home/username/backup dir name/...
+			 */
+			
+			String pathBelowUserHome = targetFile.getParent().substring(usersHomeRootLength);
+			
+			StringBuilder irodsBackupAbsPath = new StringBuilder();
+			irodsBackupAbsPath.append(usersHomeRoot);
+			irodsBackupAbsPath.append(SLASH);
+			irodsBackupAbsPath.append(BACKUP_PREFIX);
+			irodsBackupAbsPath.append(pathBelowUserHome);
+
+			// this became /test1/home/test1/synch-backup/testFileTreeDiffLocalLocalFileLengthSameLocalChecksumUpdated.txt
+			
 			String backupFileName = LocalFileUtils
 					.getFileNameWithTimeStampInterposed(targetFile.getName());
 			IRODSFile backupFile = getIRODSFileFactory().instanceIRODSFile(
-					targetFile.getParent(), backupFileName);
+					irodsBackupAbsPath.toString(), backupFileName);
+			backupFile.getParentFile().mkdirs();
 			log.debug("backup file name:{}", backupFile.getAbsolutePath());
 
 			targetFile.renameTo(backupFile);
@@ -520,6 +568,12 @@ public class InPlaceSynchronizingDiffProcessorImpl implements
 					targetRelativePath);
 			sb.append("/");
 		} else {
+			
+			if (entry.getPathOrName().charAt(0) == '.') {
+				log.debug("no backups of hidden files");
+				return;
+			}
+			
 			targetRelativePath = entry.getFormattedAbsolutePath().substring(
 					localRootAbsolutePath.length());
 			log.info("entry is a file, setting targetRelativePath to:{}",

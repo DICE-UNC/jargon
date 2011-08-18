@@ -2752,7 +2752,7 @@ public class DataObjectAOImplTest {
 
 	@Test
 	public void testPutFileReceiveIntraFileCallbacks() throws Exception {
-		long testSize = 800000;
+		long testSize = 8000000;
 		// generate a local scratch file
 		String testFileName = "testPutFileReceiveIntraFileCallbacks.txt";
 		String absPath = scratchFileUtils

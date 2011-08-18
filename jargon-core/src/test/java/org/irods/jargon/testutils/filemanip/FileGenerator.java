@@ -129,13 +129,13 @@ public class FileGenerator {
 			final String fileDirectory, final String fileName, final long length)
 			throws TestingUtilsException {
 
-		// 1024 bytes of random stuff should be plenty, then just repeat it as
-		// needed
+		// 1023 bytes of random stuff should be plenty, then just repeat it as
+		// needed, this is odd number to prevent lining up on even number buffer offsets
 
 		File dir = new File(fileDirectory);
 		dir.mkdirs();
 
-		long chunkSize = 1024;
+		long chunkSize = 1023;
 		if (length <= chunkSize) {
 			chunkSize = (int) length;
 		}

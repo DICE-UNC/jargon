@@ -60,7 +60,7 @@ public class FileTreeDiffUtilityImpl implements FileTreeDiffUtility {
 	 */
 	public FileTreeDiffUtilityImpl(final IRODSAccount irodsAccount,
 			final IRODSAccessObjectFactory irodsAccessObjectFactory) {
-		
+
 		if (irodsAccount == null) {
 			throw new IllegalArgumentException("null irodsAccount");
 		}
@@ -85,7 +85,7 @@ public class FileTreeDiffUtilityImpl implements FileTreeDiffUtility {
 		FileTreeModel diffModel = generateDiffLocalToIRODS(localFileRoot,
 				irodsAbsolutePath, timestampForLastSynchLeftHandSide,
 				timestampForLastSynchRightHandSide);
-		
+
 		return assertNoDiffsInTree((FileTreeNode) diffModel.getRoot());
 
 	}
@@ -104,7 +104,7 @@ public class FileTreeDiffUtilityImpl implements FileTreeDiffUtility {
 		@SuppressWarnings("unchecked")
 		Enumeration<FileTreeNode> children = fileTreeNode.children();
 		while (children.hasMoreElements()) {
-			childNode = (FileTreeNode) children.nextElement();
+			childNode = children.nextElement();
 			noDiffs = assertNoDiffsInTree(childNode);
 			if (noDiffs) {
 				break;
@@ -232,18 +232,16 @@ public class FileTreeDiffUtilityImpl implements FileTreeDiffUtility {
 				.substring(rightHandSideRootPath.length());
 
 		log.debug("diffTwoFiles in currentTreeNode:{}", currentFileTreeNode);
-                
-                /*
-                 * On Win, filenames come across with a // as the delim, replace with a single / to normalize for
-                 * comparison
-                 */
-                //leftHandSideAsRelativePath.replace('\\', '/');
-                leftHandSideAsRelativePath = leftHandSideAsRelativePath.replace('\\', '/');
 
+		/*
+		 * On Win, filenames come across with a // as the delim, replace with a
+		 * single / to normalize for comparison
+		 */
+		leftHandSideAsRelativePath = leftHandSideAsRelativePath.replace('\\',
+				'/');
 
 		log.debug("lhs as relativePath:{}", leftHandSideAsRelativePath);
 		log.debug("rhs as relativePath:{}", rightHandSideAsRelativePath);
-                
 
 		int compValue = leftHandSideAsRelativePath
 				.compareTo(rightHandSideAsRelativePath);
@@ -256,7 +254,7 @@ public class FileTreeDiffUtilityImpl implements FileTreeDiffUtility {
 			log.debug("lhs timestamp:{}", leftHandSide.lastModified());
 			log.debug("lhs cutoff:{}", timestampforLastSynchLeftHandSide);
 			if (timestampforLastSynchLeftHandSide == NO_TIMESTAMP_CHECKS || true) { // FIXME:
-																				// mode
+				// mode
 				// leftHandSide.lastModified()
 				// >
 				// timestampforLastSynchLeftHandSide)
@@ -604,86 +602,39 @@ public class FileTreeDiffUtilityImpl implements FileTreeDiffUtility {
 	 * @param timestampForLastSynchRightHandSide
 	 * @throws JargonException
 	 */
-	private void compareTwoMatchedFiles(
-			final FileTreeNode currentFileTreeNode, final File leftHandSide,
-			final File rightHandSide,
+	private void compareTwoMatchedFiles(final FileTreeNode currentFileTreeNode,
+			final File leftHandSide, final File rightHandSide,
 			final long timestampForLastSynchLeftHandSide,
 			final long timestampForLastSynchRightHandSide)
 			throws JargonException {
 		log.debug("file compare");
-		
-		
-		 if (leftHandSide.length() != rightHandSide.length()) {
-			 
-			 FileTreeDiffEntry entry = buildFileTreeDiffEntryForFile(
+
+		if (leftHandSide.length() != rightHandSide.length()) {
+
+			FileTreeDiffEntry entry = buildFileTreeDiffEntryForFile(
+					leftHandSide, DiffType.FILE_OUT_OF_SYNCH,
+					rightHandSide.length(), rightHandSide.lastModified());
+			log.debug("files differ on length:{}", entry);
+			currentFileTreeNode.add(new FileTreeNode(entry));
+		} else {
+			String lhsChecksum = LocalFileUtils
+					.md5ByteArrayToString(LocalFileUtils
+							.computeMD5FileCheckSumViaAbsolutePath(leftHandSide
+									.getAbsolutePath()));
+			log.debug("left hand side checksum:{}", lhsChecksum);
+			String rhsChecksum = getIRODSChecksumOnDataObject(rightHandSide);
+			if (lhsChecksum.equals(rhsChecksum)) {
+				log.debug("checksum match, files are same");
+			} else {
+				log.debug("files differ on checksum");
+				FileTreeDiffEntry entry = buildFileTreeDiffEntryForFile(
 						leftHandSide, DiffType.FILE_OUT_OF_SYNCH,
 						rightHandSide.length(), rightHandSide.lastModified());
-			 log.debug("files differ on length:{}", entry);
+				log.debug("files differ on checksum:{}", entry);
+
 				currentFileTreeNode.add(new FileTreeNode(entry));
-		 } else {
-			 String lhsChecksum = LocalFileUtils.md5ByteArrayToString(LocalFileUtils.computeMD5FileCheckSumViaAbsolutePath(leftHandSide.getAbsolutePath()));
-			 log.debug("left hand side checksum:{}", lhsChecksum);
-			 String rhsChecksum = getIRODSChecksumOnDataObject(rightHandSide);
-			 if (lhsChecksum.equals(rhsChecksum)) {
-				 log.debug("checksum match, files are same");
-			 } else {
-				 log.debug("files differ on checksum");
-				 FileTreeDiffEntry entry = buildFileTreeDiffEntryForFile(
-							leftHandSide, DiffType.FILE_OUT_OF_SYNCH,
-							rightHandSide.length(), rightHandSide.lastModified());
-				 log.debug("files differ on checksum:{}", entry);
-
-					currentFileTreeNode.add(new FileTreeNode(entry));
-			 }
-		 }
-
-		/*
-		if (timestampForLastSynchLeftHandSide == NO_TIMESTAMP_CHECKS
-				|| timestampForLastSynchLeftHandSide == NO_TIMESTAMP_CHECKS) {
-			log.debug("comparing files without a last synch, use existing last mod data");
-
-			// FIXME: do a compare on length to see if diff (checksum probably
-			// too expensive, but could be an option
-		} else {
-
-			log.debug("checking file timestamp against lhs cutoff:{}",
-					timestampForLastSynchLeftHandSide);
-			log.debug("rhs cutoff timestamp:{}",
-					timestampForLastSynchRightHandSide);
-
-			log.debug("lhs file:{}", leftHandSide.getAbsolutePath());
-			log.debug("lhs mod:{}", leftHandSide.lastModified());
-			log.debug("rhs file:{}", rightHandSide.getAbsolutePath());
-			log.debug("rhs mod:{}", rightHandSide.lastModified());
-
-			if (leftHandSide.lastModified() > timestampForLastSynchLeftHandSide
-					&& rightHandSide.lastModified() > timestampForLastSynchRightHandSide) {
-				twoFilesDifferAndBothArePostLastSynch(currentFileTreeNode,
-						leftHandSide, rightHandSide,
-						timestampForLastSynchRightHandSide,
-						timestampForLastSynchRightHandSide);
-			} else if (leftHandSide.lastModified() > timestampForLastSynchLeftHandSide
-					&& leftHandSide.length() != rightHandSide.length()) {
-				log.debug("left hand side file is newer");
-				FileTreeDiffEntry entry = buildFileTreeDiffEntryForFile(
-						leftHandSide, DiffType.LEFT_HAND_NEWER,
-						rightHandSide.length(), rightHandSide.lastModified());
-				currentFileTreeNode.add(new FileTreeNode(entry));
-			} else if (rightHandSide.lastModified() > timestampForLastSynchRightHandSide
-					&& leftHandSide.length() != rightHandSide.length()) {
-				log.debug("right hand side file is newer");
-				FileTreeDiffEntry entry = buildFileTreeDiffEntryForFile(
-						rightHandSide, DiffType.RIGHT_HAND_NEWER,
-						leftHandSide.length(), leftHandSide.lastModified());
-				currentFileTreeNode.add(new FileTreeNode(entry));
-			} else {
-				log.debug("files match treat as no diff");
 			}
-			
-			log.debug("\n\n**************************************************\n");
-
 		}
-		*/
 	}
 
 	/**
@@ -772,12 +723,15 @@ public class FileTreeDiffUtilityImpl implements FileTreeDiffUtility {
 	public IRODSAccount getIrodsAccount() {
 		return irodsAccount;
 	}
-	
-	private String getIRODSChecksumOnDataObject(final File irodsFile) throws JargonException {
+
+	private String getIRODSChecksumOnDataObject(final File irodsFile)
+			throws JargonException {
 		if (dataObjectAO == null) {
-			dataObjectAO = irodsAccessObjectFactory.getDataObjectAO(irodsAccount);
+			dataObjectAO = irodsAccessObjectFactory
+					.getDataObjectAO(irodsAccount);
 		}
-		return dataObjectAO.computeMD5ChecksumOnDataObject((IRODSFile) irodsFile);
+		return dataObjectAO
+				.computeMD5ChecksumOnDataObject((IRODSFile) irodsFile);
 	}
-	
+
 }

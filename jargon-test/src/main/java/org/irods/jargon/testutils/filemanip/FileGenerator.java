@@ -34,6 +34,7 @@ public class FileGenerator {
 	private static final Random RANDOM = new Random();
 	private static Properties testingProperties = new Properties();
 	private static TestingPropertiesHelper testingPropertiesHelper = new TestingPropertiesHelper();
+
 	private static Logger log = LoggerFactory.getLogger(FileGenerator.class);
 
 	static {
@@ -73,7 +74,7 @@ public class FileGenerator {
 	 * @return <code>String</code> of n length composed of random alphabetic
 	 *         characters
 	 */
-	public static String generateRandomString(int length) {
+	public static String generateRandomString(final int length) {
 
 		StringBuilder outString = new StringBuilder();
 		Random generator = new Random();
@@ -101,7 +102,7 @@ public class FileGenerator {
 	 *         extension
 	 * @throws TestingUtilsException
 	 */
-	protected static String generateRandomFileName(int length)
+	protected static String generateRandomFileName(final int length)
 			throws TestingUtilsException {
 		StringBuilder fileName = new StringBuilder();
 		fileName.append(generateRandomString(length));
@@ -115,7 +116,8 @@ public class FileGenerator {
 	 * 
 	 * @param fileDirectory
 	 *            <code>String</code> containing a an absolute path to valid
-	 *            directory on the local file system.  This absolute path must have a leading and trailing '/'.
+	 *            directory on the local file system. This absolute path must
+	 *            have a leading and trailing '/'.
 	 * @param length
 	 *            <code>long</code> containing the desired length of the file in
 	 *            bytes
@@ -124,13 +126,16 @@ public class FileGenerator {
 	 * @throws TestingUtilsException
 	 */
 	public static String generateFileOfFixedLengthGivenName(
-			String fileDirectory, String fileName, long length)
+			final String fileDirectory, final String fileName, final long length)
 			throws TestingUtilsException {
 
-		// 1024 bytes of random stuff should be plenty, then just repeat it as
-		// needed
+		// 1023 bytes of random stuff should be plenty, then just repeat it as
+		// needed, this is odd number to prevent lining up on even number buffer offsets
 
-		long chunkSize = 1024;
+		File dir = new File(fileDirectory);
+		dir.mkdirs();
+
+		long chunkSize = 1023;
 		if (length <= chunkSize) {
 			chunkSize = (int) length;
 		}
@@ -191,7 +196,7 @@ public class FileGenerator {
 
 	}
 
-	public static int generateRandomNumber(int min, int max)
+	public static int generateRandomNumber(final int min, final int max)
 			throws TestingUtilsException {
 		if (max < min) {
 			throw new TestingUtilsException(
@@ -206,10 +211,10 @@ public class FileGenerator {
 	/**
 	 * Handy method to generate a tree of files and collections with given
 	 * parameters. This method will recursively build a local file tree under a
-	 * given absolute path. The collections are of random number within
-	 * a range, to a given depth, and containing files and subcollections given
-	 * the various size and range parameters. This method can provide a test-bed
-	 * for various functional testing scenarios.
+	 * given absolute path. The collections are of random number within a range,
+	 * to a given depth, and containing files and subcollections given the
+	 * various size and range parameters. This method can provide a test-bed for
+	 * various functional testing scenarios.
 	 * 
 	 * @param collectionPrefix
 	 * @param numberOfCollectionsMin
@@ -225,11 +230,12 @@ public class FileGenerator {
 	 * @throws JargonException
 	 */
 	public static void generateManyFilesAndCollectionsInParentCollectionByAbsolutePath(
-			String absolutePathToLocalParentCollection,
-			String collectionPrefix,
-			int numberOfCollectionsMin, int numberOfCollectionsMax, int depth,
-			String filePrefix, String fileSuffix, int maxNumberOfFiles,
-			int minNumberOfFiles, int fileLengthMin, int fileLengthMax)
+			final String absolutePathToLocalParentCollection,
+			final String collectionPrefix, final int numberOfCollectionsMin,
+			final int numberOfCollectionsMax, final int depth,
+			final String filePrefix, final String fileSuffix,
+			final int maxNumberOfFiles, final int minNumberOfFiles,
+			final int fileLengthMin, final int fileLengthMax)
 			throws TestingUtilsException {
 
 		int numberThisParent;
@@ -243,15 +249,13 @@ public class FileGenerator {
 		if (depth == 0) {
 			return;
 		}
-	
+
 		File localFile;
 		StringBuilder subdirName;
 		StringBuilder absolutePath;
-		
 		for (int i = 0; i < numberThisParent; i++) {
 			subdirName = new StringBuilder();
-			absolutePath = new StringBuilder();
-			
+
 			// create a new subtree name
 			subdirName.append(collectionPrefix);
 			subdirName.append("lvl");
@@ -259,29 +263,35 @@ public class FileGenerator {
 			subdirName.append("nbr");
 			subdirName.append(i);
 			subdirName.append('/');
-			
+
 			absolutePath = new StringBuilder();
 			absolutePath.append(absolutePathToLocalParentCollection);
 			absolutePath.append(subdirName);
 
 			localFile = new File(absolutePath.toString());
-			localFile.mkdirs();
-			
+			boolean success = localFile.mkdirs();
+
+			if (!success) {
+				log.warn("mkdirs for {} did not return success",
+						localFile.getAbsolutePath());
+			}
+
 			int numberOfFiles;
-			
+
 			if (minNumberOfFiles == maxNumberOfFiles) {
 				numberOfFiles = minNumberOfFiles;
 			} else {
-				numberOfFiles = generateRandomNumber(minNumberOfFiles, maxNumberOfFiles);
+				numberOfFiles = generateRandomNumber(minNumberOfFiles,
+						maxNumberOfFiles);
 			}
-					
-			log.debug("generating {} number of files", numberOfFiles);
-			
+
+			log.debug("generating {} files", numberOfFiles);
+
 			generateManyFilesInParentCollectionByAbsolutePath(
-				 localFile.getAbsolutePath() + '/', filePrefix, fileSuffix, numberOfFiles,
-					fileLengthMin, fileLengthMax);
+					localFile.getAbsolutePath() + '/', filePrefix, fileSuffix,
+					numberOfFiles, fileLengthMin, fileLengthMax);
 			generateManyFilesAndCollectionsInParentCollectionByAbsolutePath(
-				localFile.getAbsolutePath() + "/", collectionPrefix,
+					localFile.getAbsolutePath() + "/", collectionPrefix,
 					numberOfCollectionsMin, numberOfCollectionsMax, depth - 1,
 					filePrefix, fileSuffix, maxNumberOfFiles, minNumberOfFiles,
 					fileLengthMin, fileLengthMax);
@@ -290,26 +300,28 @@ public class FileGenerator {
 	}
 
 	public static void generateManyFilesInParentCollectionByAbsolutePath(
-			String absolutePathToLocalCollection, String filePrefix,
-			String fileSuffix, int numberOfFiles, int fileLengthMin,
-			int fileLengthMax) throws TestingUtilsException {
+			final String absolutePathToLocalCollection,
+			final String filePrefix, final String fileSuffix,
+			final int numberOfFiles, final int fileLengthMin,
+			final int fileLengthMax) throws TestingUtilsException {
 
-		@SuppressWarnings("unused")
-		String genFileName;
-		String absLocalPath;
+		String genFileName = "";
 		for (int i = 0; i < numberOfFiles; i++) {
 			genFileName = filePrefix + i + fileSuffix;
-			absLocalPath = FileGenerator.generateFileOfFixedLengthGivenName(
-					absolutePathToLocalCollection, genFileName, FileGenerator.generateRandomNumber(
-							fileLengthMin, fileLengthMax));
+			FileGenerator
+					.generateFileOfFixedLengthGivenName(
+							absolutePathToLocalCollection, genFileName,
+							FileGenerator.generateRandomNumber(fileLengthMin,
+									fileLengthMax));
 		}
 
 	}
 
 	public static List<String> generateManyFilesInGivenDirectory(
-			String relativePathUnderScratch, String filePrefix,
-			String fileSuffix, int numberOfFiles, int fileLengthMin,
-			int fileLengthMax) throws TestingUtilsException {
+			final String relativePathUnderScratch, final String filePrefix,
+			final String fileSuffix, final int numberOfFiles,
+			final int fileLengthMin, final int fileLengthMax)
+			throws TestingUtilsException {
 		// n number of random files in the source directory, with a random
 		// length between the min and max
 
