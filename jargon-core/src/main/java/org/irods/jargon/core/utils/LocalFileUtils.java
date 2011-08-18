@@ -10,6 +10,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.text.DateFormat;
 import java.util.Date;
 import java.util.zip.CRC32;
 import java.util.zip.CheckedInputStream;
@@ -28,6 +29,8 @@ public class LocalFileUtils {
 
 	public static final Logger log = LoggerFactory
 			.getLogger(LocalFileUtils.class);
+	
+	public static final DateFormat dateFormat = DateFormat.getDateTimeInstance();
 
 	/**
 	 * private constructor, this is not meant to be an instantiated class.
@@ -85,8 +88,9 @@ public class LocalFileUtils {
 		String namePart = getFileNameUpToExtension(fileName);
 		String extension = getFileExtension(fileName);
 		StringBuilder newName = new StringBuilder(namePart);
-		newName.append(".bak");
-		newName.append(new Date().getTime());
+		newName.append(".[backup from - ");
+		newName.append(dateFormat.format(new Date()));
+		newName.append("]");
 		newName.append(extension);
 		return newName.toString();
 	}
