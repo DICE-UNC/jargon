@@ -1,63 +1,135 @@
-Jargon-core Release Notes
-================================================================================================
 
-Project: Jargon-core - next-gen IRODS Java API prototype
-Date: 10/06/2010
-Release Version: 2.5.0-beta3
-
-This is an alpha-level release.  Jargon core is in use in several early-access projects.
+*'''Project''': Jargon-core - IRODS Java API
+*'''Date''': 08/30/2010
+*'''Release Version''': 3.0.0 Release
+*'''git tag''':  xxxxx
 
 
-================================================================================================
-Requirements
+==News==
+
+This is the first release of Jargon-core, the enhanced Jargon API for iRODS.  Jargon-core implements the iRODS protocol, and allows development of iRODS-enabled Java applications.  This API is especially useful for developing
+mid-tier applications and services, as well as desktop-clients (such as iDROP).  These libraries also provide a foundation for a new set of interfaces that will come with iRODS.
+
+Note that this release supports iRODS built-in authorization.  Adding GSI and general GSS support (including Kerberos) will come in a follow-on release planned shortly.
+
+Note that this API represents a fundamental shift, and is meant to make development of applications easier and faster.
+
+Please go to [[https://code.renci.org/gf/project/jargon/]] for the latest news and info.
+
+Jargon-core consists of the following libraries
+
+* jargon-core - base libraries, implementation of the iRODS protocol
+* jargon-data-utils - additional functionality for dealing with iRODS data, such as building trees, storing information in iRODS on behalf of applications, and doing diffs between local and iRODS
+*jargon-security - code for use with Spring security
+* jargon-user-tagging - code for using free tagging and other metadata metaphors on top of iRODS
+* jargon-transfer - transfer manager for managing and synchronizing data with iRODS
+
+Other libraries are planned, such as connection pooling, as well as administrative functions.
+
+==Requirements==
 
 -Jargon depends on Java 1.6+
 -Jargon is built using Apache Maven2, see POM for dependencies
 
-libraries
----------
+==Libraries==
 
 
-================================================================================================
-Features and Changes
---------------------
+Jargon-core uses Maven for dependency management.  See the pom.xml file for references to various dependencies.
 
-*Fixes to transfer engine, cleanup and refactoring of TransferOperationsHelper
-*In DataObjectAOImpl, removed specification of resource with get as a default, may add back another method with a signature to specify that resource
-is specified...this was causing some bugs in iren testing, it may be more of a problem with iren!
-*Fix count of files in a collection (CollectionAOImpl)
-*Fix parallel file transfers, still one bug in parallel get with large files.
-*Fix available in IRODSFileInputStream to return iRODS file length (0 does not cut it, and breaks the 'skip()' processing, so it
-returns to the available() implementation of the original Jargon).
-*Added query paging for IRODSFile.list() methods to accumulate all files/subdirs when listing
-*Fix seek to use OpenedDataObjInp, removed prior impl
-*Fix of connection disconnect behavior to return the connection to the IRODSProtocolManager
-*Addition of a SessionClosingFileInputStream in the io libraries.
-*Added code for remote execution of scripts.  This will be updated for new api that allows streaming once tested.
-*parallel transfer threads now cache any exceptions. These are reviewed by the parallel transfer runner and passed back up to the
-caller
-*added socket timeout processing as an option
-*fix path bug in IRODSFile that was putting windows path separators in irods file names on Windows for certain operations.
-*fix single quotes in file names
-*Added IRODSPasswordUtilities with an implementation of iRODS password obfuscation routines.
-*Work in progress, not yet completed, on modify user password from user and admin perspectives.  Need to finish implementing the admin-side obfuscation per
-fixme's in UserAOImplTest
-*Added cache of iRODS challenge during sign-on for later use in obfuscation routines, see IRODSCommands
-*Began working on a jargon.properties and the ability to inject customizations of Jargon behavior into iRODS session.
-**gets/puts now use new jargon properties to control number of threads
-*Began work on simpleQuery support
-*[#20] 10000 file transfer, marked complete after 5000
-*Added buffering to input/output streams for enhanced performance
-*[#180] [iROD-Chat:6165] Jargon 2.4.1 and Error -321000 (USER_NO_RESC_INPUT_ERR) - added capability to pull default resource from iRODS account if not specified.
-* [#176] put/get resource switching - WORK IN PROGRESS
-* [#181] rule requests transfer from unknown protocol error executing iRule - added capability to process a dest resource in the rule return params.
-* [#50] Bugzilla import - -p and -P options in streaming
-*methods added for setting ACL's in admin mode for data objects and collections
-*[#220] file handle leak in ParallelGetTransferThread
-*[#297] add support for getTempPassword API
-*[#320] rule imposed no parallel txfrs - still attempt even when portal opr out indicates 0 threads
-*[#104] Support for optional checksum on transfer
-*[#350] IRODSFIle.exists() when root gets null error
-*[#351] IRODSFIle.getParentFile() should return null when at root
-*[#352] file.listFiles() when root should not list root as child
-*[#353] getParent on folder beneath root should result in file '/'
+Note that the following bug and feature requests are logged in GForge with related commit information [[https://code.renci.org/gf/project/jargon/tracker/]]
+
+
+==Bug Fixes==
+
+
+iRODS Jargon > add version check for test that captured iRODS bug	2011-02-08 07:56:25
+
+iRODS Jargon > bundle when overwrite tests versus iRODS 2.3	2011-02-08 07:59:34
+
+iRODS Jargon > add version check overhead to tests of 
+
+RemoteExecutionBinaryResultInputStream	2011-02-08 08:00:23
+iRODS Jargon > file handle leak in ParallelGetTransferThread	2011-05-25 17:45:55
+
+iRODS Jargon > broken pipe in parallel txfr threads, needs to shut down agent and return	2011-06-09 16:00:59
+Mike Conway	iRODS Jargon > 10000 file transfer, marked complete after 5000	2011-01-14 12:07:06
+
+iRODS Jargon > errors in execcmd	2011-02-08 07:47:46
+
+iRODS Jargon > freddie error tac (constant filtering of same file in get operation?)	2011-02-16 05:37:35
+
+iRODS Jargon > [iROD-Chat:6165] Jargon 2.4.1 and Error -321000 (USER_NO_RESC_INPUT_ERR)	2011-04-27 10:17:30
+
+iRODS Jargon > rule requests transfer from unknown protocol error executing iRule	2011-04-29 03:49:14
+
+iRODS Jargon > file handle leak	2011-05-06 13:01:35
+
+iRODS Jargon > file handle leak in ParallelPutFileTransferStrategy	2011-05-24 07:25:32
+
+iRODS Jargon > parallel txfr fails in treads with -4028 error	2011-05-25 09:12:53
+
+iRODS Jargon > isFile when not exists	2011-06-13 14:55:10
+
+iRODS Jargon > mkdirs when putting cache file	2011-07-01 11:24:46
+
+iRODS Jargon > no para txfr rule causes txfr to hang	2011-07-12 11:33:16
+
+iRODS Jargon > IRODSFIle.exists() when root gets null error	2011-07-14 11:48:28
+
+iRODS Jargon > IRODSFIle.getParentFile() should return null when at root	
+
+2011-07-14 12:07:05
+iRODS Jargon > file.listFiles() when root should not list root as child	
+
+2011-07-14 12:27:25
+iRODS Jargon > getParent on folder beneath root should result in file '/'	
+
+2011-07-14 13:21:43
+iRODS Jargon > -15000 errors in remote exec for older version of iRODS	
+
+2011-02-08 07:57:26
+iRODS Jargon > Rule works on command line, does not execute via Jargon	
+
+2011-05-02 10:12:47
+iRODS Jargon > rule imposed no parallel txfrs - still attempt even when portal opr out indicates 0 threads	2011-07-05 02:26:12
+
+iRODS Jargon > 80600 sql error	2011-03-07 09:20:19
+
+iRODS Jargon > every call to r.getColumn( X ) returns the name of the file as a string	2011-03-07 11:54:20
+
+iRODS Jargon > error looking up user	2011-03-14 03:31:37
+
+iRODS Jargon > transfer engine purge queue broken	2011-05-17 08:25:21
+
+iRODS Jargon > -2700 error in parallel transfer (Solaris mostly) caused by partial read/broken pipe	2011-06-07 11:26:04
+
+iRODS Jargon > fedora 14 broken pipe parallel txfrs	2011-06-22 05:49:57
+
+==Features==
+
+
+iRODS Jargon > SimpleQuery	2011-01-05 10:51:40
+
+iRODS Jargon > query next result versus offset	2011-01-05 11:03:48
+
+iRODS Jargon > add factroy to user tagging service	2011-02-15 18:48:21
+
+iRODS Jargon > implement permissions methods in IRODSFile using dataobj and coll methods	2011-02-25 06:32:48
+
+iRODS Jargon > add stream2stream helper/access object	2011-04-05 04:58:05
+
+iRODS Jargon > Jargon transfer benchmark facility	2011-02-21 06:37:12
+
+iRODS Jargon > add copy function, addl transfer spec parms	2011-01-27 07:26:28
+
+Bugzilla import - -p and -P options in streaming	2011-02-01 06:38:24
+
+iRODS Jargon > ehnanced ls -la functionality	2011-02-01 06:43:44
+
+iRODS Jargon > user groups in add/query permissions	2011-04-14 14:52:41
+
+iRODS Jargon > Support for optional checksum on transfer	2011-02-18 10:40:06
+
+iRODS Jargon > add callback listener and control block to parallel txfrs, allow cancel/pause in parallel txfr	2011-06-13 06:27:25
+
+iRODS Jargon > add support for getTempPassword API

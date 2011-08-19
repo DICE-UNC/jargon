@@ -145,13 +145,13 @@ final class IRODSConnection implements IRODSManagedConnection {
 		} catch (UnknownHostException e) {
 			log.error("exception opening socket to:" + irodsAccount.getHost()
 					+ " port:" + irodsAccount.getPort(), e);
-			disconnectWithIOException();
+			//disconnectWithIOException();
 			throw new JargonException(e);
 		} catch (IOException ioe) {
 			log.error(
 					"io exception opening socket to:" + irodsAccount.getHost()
 							+ " port:" + irodsAccount.getPort(), ioe);
-			disconnectWithIOException();
+			//disconnectWithIOException();
 			throw new JargonException(ioe);
 		}
 

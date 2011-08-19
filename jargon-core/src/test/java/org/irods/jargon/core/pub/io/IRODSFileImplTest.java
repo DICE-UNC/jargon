@@ -341,6 +341,9 @@ public class IRODSFileImplTest {
 		File sourceFile = new File(absPath + testFileName);
 		IRODSFile targetIRODSColl = irodsFileSystem.getIRODSFileFactory(
 				irodsAccount).instanceIRODSFile(targetIrodsCollection);
+		
+		targetIRODSColl.deleteWithForceOption();
+		targetIRODSColl.mkdirs();
 
 		DataTransferOperations dataTransferOperations = irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataTransferOperations(
