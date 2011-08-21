@@ -30,7 +30,7 @@ public class IRODSTagValueTest {
 		TestCase.assertEquals(expectedTagUser, actual.getTagUser());
 	}
 	
-	@Test(expected=JargonException.class)
+	@Test
 	public void testCreateTagEmptyTag() throws Exception {
 		String expectedTagVal = "";
 		String expectedTagUser = "tagUser";

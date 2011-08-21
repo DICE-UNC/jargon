@@ -56,7 +56,7 @@ public class EnvironmentalInfoAOImpl extends IRODSGenericAO implements
 	public long getIRODSServerCurrentTime() throws JargonException {
 		log.info("getIRODSServerCurrentTime");
 		StringBuilder sb = new StringBuilder(
-				"testrule||msiGetSystemTime(*Time,human)#writeLine(stdout, *Time)|nop\n");
+				"testrule||msiGetSystemTime(*Time,null)##writeLine(stdout, *Time)|nop\n");
 		sb.append("null\n");
 		sb.append("*Time%ruleExecOut");
 		RuleProcessingAO ruleProcessingAO = this.getIRODSAccessObjectFactory()

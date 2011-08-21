@@ -223,6 +223,25 @@ public interface IRODSTaggingService {
 	void deleteDescriptionFromDataObject(String dataObjectAbsolutePath,
 			IRODSTagValue irodsDescriptionValue) throws DataNotFoundException, JargonException;
 
+	
+	/**
+	 * Remove a description from a collection, using the user supplied in the
+	 * <code>IRODSTagValue</code>
+	 * 
+	 * @param collectionAbsolutePath
+	 *            <code>String</code> with the absolute path to a collection
+	 *            that will have the specified description removed for the user
+	 * @param irodsDescriptionValue
+	 *            {@link IRODSTagValue} with the text value of a description
+	 *            that will be removed from a collection for the specified user
+	 * @throws DataNotFoundException if the target data object is missing
+	 * @throws JargonException
+	 */
+	void deleteDescriptionFromCollection(String collectionAbsolutePath,
+			IRODSTagValue irodsDescriptionValue) throws DataNotFoundException,
+			JargonException;
+	
+	
 	/**
 	 * Retrieve the description value for a data object, using the logged-in
 	 * user. Note that this method returns null if no description is found.
@@ -287,4 +306,35 @@ public interface IRODSTaggingService {
 			MetadataDomain metadataDomain, String domainUniqueName)
 			throws DataNotFoundException, JargonException;
 
+	/**
+	 * Method that takes the currently stored description data and compares it to the desired data.  Any necessary updates are handled by looking at the difference, e.g. it will
+	 * delete if description removed, add if not currently present, etc.
+	 * @param dataObjectAbsolutePath
+	 *            <code>String</code> with the absolute path to a data object
+	 *            that will have the specified description removed for the user
+	 * @param irodsDescriptionValue
+	 *            {@link IRODSTagValue} with the text value of a description
+	 *            that will be removed from a data object for the logged-in
+	 *            user, or <code>null</code> if no description is available
+	 * @throws JargonException
+	 */
+	void checkAndUpdateDescriptionOnDataObject(String dataObjectAbsolutePath,
+			IRODSTagValue irodsDescriptionValue) throws JargonException;
+
+	/**
+	 * Method that takes the currently stored description data and compares it to the desired data.  Any necessary updates are handled by looking at the difference, e.g. it will
+	 * delete if description removed, add if not currently present, etc.
+	 * @param collectionAbsolutePath
+	 *            <code>String</code> with the absolute path to a data object
+	 *            that will have the specified description removed for the user
+	 * @param irodsDescriptionValue
+	 *            {@link IRODSTagValue} with the text value of a description
+	 *            that will be removed from a data object for the logged-in
+	 *            user, or <code>null</code> if no description is available
+	 * @throws JargonException
+	 */
+	void checkAndUpdateDescriptionOnCollection(String collectionAbsolutePath,
+			IRODSTagValue irodsDescriptionValue) throws JargonException;
+
+	
 }
