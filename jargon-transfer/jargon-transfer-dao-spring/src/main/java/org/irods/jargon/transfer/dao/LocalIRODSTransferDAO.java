@@ -104,4 +104,10 @@ public interface LocalIRODSTransferDAO {
 	 */
 	public void delete(LocalIRODSTransfer ea) throws TransferDAOException;
 
+	/**
+	 * Delete the entire contents of the queue, no matter what the status is
+	 * @throws TransferDAOException
+	 */
+	void purgeEntireQueue() throws TransferDAOException;
+
 }

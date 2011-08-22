@@ -267,6 +267,42 @@ public class LocalIRODSTransferDAOImpl extends HibernateDaoSupport implements
 			throw new TransferDAOException("Failed purgeQueue()", e);
 		}
 	}
+	
+	
+	@Override
+	public void purgeEntireQueue() throws TransferDAOException {
+		log.debug("entering purgeQueue()");
+
+		try {
+
+			StringBuilder sb = new StringBuilder();
+			sb.append("delete from LocalIRODSTransferItem as item where ");
+			sb.append("item.localIRODSTransfer.id in (");
+			sb.append("select id from LocalIRODSTransfer as transfer)");
+
+			log.debug("delete items sql:{}", sb.toString());
+
+			HibernateTemplate hibernateTemplate = super.getHibernateTemplate();
+
+			int rows = hibernateTemplate.bulkUpdate(sb.toString());
+			log.debug("deleted items count of: {}", rows);
+
+			sb = new StringBuilder();
+			sb.append("delete from LocalIRODSTransfer");
+
+			log.debug("delete items sql:{}", sb.toString());
+
+			rows = super.getHibernateTemplate().bulkUpdate(sb.toString());
+			log.debug("deleted transfers count of: {}", rows);
+
+		} catch (HibernateException e) {
+			log.error("HibernateException", e);
+			throw new TransferDAOException(e);
+		} catch (Exception e) {
+			log.error("error in purgeQueue()", e);
+			throw new TransferDAOException("Failed purgeQueue()", e);
+		}
+	}
 
 	/*
 	 * (non-Javadoc)

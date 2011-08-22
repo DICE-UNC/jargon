@@ -9,6 +9,7 @@ import org.irods.jargon.transfer.TransferServiceFactoryImpl;
 import org.irods.jargon.transfer.dao.domain.LocalIRODSTransfer;
 import org.irods.jargon.transfer.dao.domain.LocalIRODSTransferItem;
 import org.irods.jargon.transfer.dao.domain.Synchronization;
+import org.irods.jargon.transfer.exception.CannotUpdateTransferInProgressException;
 
 /**
  * Interface for a simple queue manager that can manage transfers to iRODS
@@ -293,5 +294,16 @@ public interface TransferManager {
 	 *         <code>null</code> if none were specified
 	 */
 	TransferEngineConfigurationProperties getTransferEngineConfigurationProperties();
+
+	/**
+	 * Method to orchestrate password updates within the transfer engine.  This method coordinates updates when transfers are running by preventing update while a transfer
+	 * is running.  This method does not update the actual iRODS password, but will update anything relevent in the transfer queue.
+	 * @param irodsAccount {@link IRODSAccount} with the iRODS host/zone/user information
+	 * @param newPassword <code>String</code> with the new password value
+	 * @throws CannotUpdateTransferInProgressException thrown if a password update is not possible due to running or enqueued transfers
+	 * @throws JargonException
+	 */
+	void updatePassword(IRODSAccount irodsAccount, String newPassword)
+			throws CannotUpdateTransferInProgressException, JargonException;
 
 }

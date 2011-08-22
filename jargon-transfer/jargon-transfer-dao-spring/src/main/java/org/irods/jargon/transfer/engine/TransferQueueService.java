@@ -7,6 +7,7 @@ import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.transfer.dao.domain.LocalIRODSTransfer;
 import org.irods.jargon.transfer.dao.domain.LocalIRODSTransferItem;
 import org.irods.jargon.transfer.dao.domain.Synchronization;
+import org.irods.jargon.transfer.exception.CannotUpdateTransferInProgressException;
 
 public interface TransferQueueService {
 
@@ -260,5 +261,23 @@ public interface TransferQueueService {
 	 */
 	LocalIRODSTransfer enqueueSynchTransfer(Synchronization synchronization,
 			IRODSAccount irodsAccount) throws JargonException;
+
+	/**
+	 * Signal that a password should be changed for a given account.  This will update anything that's in the queue, and any relevant synchronizations.  Note that
+	 * an exception will be thrown if the change cannot occur, due to an enqueued or running transfer or synchronization activity.
+	 * @param irodsAccount {@link IRODSAccount} that describes the user and iRODS server for the password change
+	 * @param newPasswordValue <code>String</code> with the new password value.
+	 * @throws CannotUpdateTransferInProgressException thrown if a password change cannot be done, due to an enqueued or processing synchronization or transfer activity
+	 * @throws JargonException
+	 */
+	void updateUserPasswordInTransferManagerData(IRODSAccount irodsAccount,
+			String newPasswordValue)
+			throws CannotUpdateTransferInProgressException, JargonException;
+
+	/**
+	 * Delete the entire contents of the transfser queue, regardless of status
+	 * @throws JargonException
+	 */
+	void purgeEntireQueue() throws JargonException;
 
 }

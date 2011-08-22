@@ -12,6 +12,7 @@ import org.irods.jargon.transfer.TransferServiceFactoryImpl;
 import org.irods.jargon.transfer.dao.domain.LocalIRODSTransfer;
 import org.irods.jargon.transfer.dao.domain.LocalIRODSTransferItem;
 import org.irods.jargon.transfer.dao.domain.Synchronization;
+import org.irods.jargon.transfer.exception.CannotUpdateTransferInProgressException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -845,6 +846,15 @@ public final class TransferManagerImpl implements TransferManager {
 			}
 		}
 
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.transfer.engine.TransferManager#updatePassword(org.irods.jargon.core.connection.IRODSAccount, java.lang.String)
+	 */
+	@Override
+	public synchronized void updatePassword(final IRODSAccount irodsAccount, final String newPassword)  throws CannotUpdateTransferInProgressException, JargonException {
+		transferQueueService.updateUserPasswordInTransferManagerData(irodsAccount, newPassword);
+		
 	}
 
 	protected void notifyStatusUpdate(final TransferStatus transferStatus)

@@ -17,6 +17,8 @@ import org.irods.jargon.transfer.dao.domain.LocalIRODSTransferItem;
 import org.irods.jargon.transfer.dao.domain.TransferState;
 import org.irods.jargon.transfer.dao.domain.TransferStatus;
 import org.irods.jargon.transfer.dao.domain.TransferType;
+import org.irods.jargon.transfer.exception.CannotUpdateTransferInProgressException;
+import org.irods.jargon.transfer.util.HibernateUtil;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
@@ -57,7 +59,6 @@ public class TransferQueueServiceTest {
 	}
 
 	@Ignore
-	// TODO: why not purging? run in allTests
 	public void testGetCurrentQueue() throws Exception {
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
@@ -75,7 +76,7 @@ public class TransferQueueServiceTest {
 		TransferQueueService transferQueueService = transferServiceFactory
 				.instanceTransferQueueService();
 
-		transferQueueService.purgeQueue();
+		transferQueueService.purgeEntireQueue();
 
 		transferQueueService.enqueuePutTransfer(localCollectionAbsolutePath,
 				irodsCollectionRootAbsolutePath, "", irodsAccount);
@@ -1367,5 +1368,103 @@ public class TransferQueueServiceTest {
 		TestCase.assertTrue("should not have retained last good path",
 				dequeuedTransfer.getLastSuccessfulPath().isEmpty());
 	}
+
+	@Test
+	public void testUpdateUserPasswordInTransferManagerDataNothingInQueue() throws Exception {
+		
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		
+		String newPassword = "password";
+		TransferServiceFactoryImpl transferServiceFactory = new TransferServiceFactoryImpl();
+
+		TransferQueueService transferQueueService = transferServiceFactory
+				.instanceTransferQueueService();
+		transferQueueService.purgeEntireQueue();
+		
+		transferQueueService.updateUserPasswordInTransferManagerData(irodsAccount, newPassword);
+		
+		TestCase.assertTrue(true);
+		
+	}
+	
+	@Test
+	public void testUpdateUserPasswordInTransferManagerDataOneCompletedInQueue() throws Exception {
+		
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		
+		String newPassword = "password";
+		String encryptedNewPassword = HibernateUtil.obfuscate(newPassword);
+		TransferServiceFactoryImpl transferServiceFactory = new TransferServiceFactoryImpl();
+
+		TransferQueueService transferQueueService = transferServiceFactory
+				.instanceTransferQueueService();
+		transferQueueService.purgeEntireQueue();
+		
+		LocalIRODSTransfer enqueuedTransfer = new LocalIRODSTransfer();
+		enqueuedTransfer.setCreatedAt(new Date());
+		enqueuedTransfer.setIrodsAbsolutePath("path");
+		enqueuedTransfer.setLocalAbsolutePath("localPath");
+		enqueuedTransfer.setLastSuccessfulPath("lastSuccessfulPath");
+		enqueuedTransfer.setTransferHost(irodsAccount.getHost());
+		enqueuedTransfer.setTransferPort(irodsAccount.getPort());
+		enqueuedTransfer.setTransferResource(irodsAccount
+				.getDefaultStorageResource());
+		enqueuedTransfer.setTransferZone(irodsAccount.getZone());
+		enqueuedTransfer.setTransferStart(new Date());
+		enqueuedTransfer.setTransferType(TransferType.PUT);
+		enqueuedTransfer.setTransferUserName(irodsAccount.getUserName());
+		enqueuedTransfer.setTransferPassword(irodsAccount.getPassword());
+		enqueuedTransfer.setTransferState(TransferState.COMPLETE);
+		enqueuedTransfer.setTransferStatus(TransferStatus.OK);
+		
+		transferQueueService.updateLocalIRODSTransfer(enqueuedTransfer);
+		transferQueueService.updateUserPasswordInTransferManagerData(irodsAccount, newPassword);
+		
+		List<LocalIRODSTransfer> actualTransfers = transferQueueService.getRecentQueue();
+		TestCase.assertEquals("should be one in queue", 1, actualTransfers.size());
+		LocalIRODSTransfer actualTransfer = actualTransfers.get(0);
+		TestCase.assertEquals("should have new password", encryptedNewPassword, actualTransfer.getTransferPassword());
+		
+	}
+	
+	@Test(expected=CannotUpdateTransferInProgressException.class)
+	public void testUpdateUserPasswordInTransferManagerDataOneEnqueuedInQueue() throws Exception {
+		
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTertiaryTestProperties(testingProperties);
+		
+		String newPassword = "password";
+		TransferServiceFactoryImpl transferServiceFactory = new TransferServiceFactoryImpl();
+
+		TransferQueueService transferQueueService = transferServiceFactory
+				.instanceTransferQueueService();
+		transferQueueService.purgeEntireQueue();
+		
+		LocalIRODSTransfer enqueuedTransfer = new LocalIRODSTransfer();
+		enqueuedTransfer.setCreatedAt(new Date());
+		enqueuedTransfer.setIrodsAbsolutePath("path");
+		enqueuedTransfer.setLocalAbsolutePath("localPath");
+		enqueuedTransfer.setLastSuccessfulPath("lastSuccessfulPath");
+		enqueuedTransfer.setTransferHost(irodsAccount.getHost());
+		enqueuedTransfer.setTransferPort(irodsAccount.getPort());
+		enqueuedTransfer.setTransferResource(irodsAccount
+				.getDefaultStorageResource());
+		enqueuedTransfer.setTransferZone(irodsAccount.getZone());
+		enqueuedTransfer.setTransferStart(new Date());
+		enqueuedTransfer.setTransferType(TransferType.PUT);
+		enqueuedTransfer.setTransferUserName(irodsAccount.getUserName());
+		enqueuedTransfer.setTransferPassword(irodsAccount.getPassword());
+		enqueuedTransfer.setTransferState(TransferState.ENQUEUED);
+		enqueuedTransfer.setTransferStatus(TransferStatus.OK);
+		
+		transferQueueService.updateLocalIRODSTransfer(enqueuedTransfer);
+		transferQueueService.updateUserPasswordInTransferManagerData(irodsAccount, newPassword);
+		
+		
+		
+		
+	}
+
 
 }
