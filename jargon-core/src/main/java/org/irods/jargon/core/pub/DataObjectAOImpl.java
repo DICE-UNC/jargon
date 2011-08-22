@@ -457,7 +457,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 			if (myTransferOptions.isComputeAndVerifyChecksumAfterTransfer()
 					|| myTransferOptions.isComputeChecksumAfterTransfer()) {
-				log.info("computing a checksum on the file at:{}",
+				log.info("before generating parallel transfer threads, computing a checksum on the file at:{}",
 						localFile.getAbsolutePath());
 				String localFileChecksum = LocalFileUtils
 						.md5ByteArrayToString(LocalFileUtils
