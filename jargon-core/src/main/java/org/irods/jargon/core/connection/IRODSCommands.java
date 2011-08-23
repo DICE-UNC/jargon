@@ -14,11 +14,7 @@ import java.nio.channels.ClosedChannelException;
 import java.security.GeneralSecurityException;
 import java.security.MessageDigest;
 
-import org.irods.jargon.core.exception.AuthenticationException;
-import org.irods.jargon.core.exception.DataNotFoundException;
-import org.irods.jargon.core.exception.FileIntegrityException;
 import org.irods.jargon.core.exception.JargonException;
-import org.irods.jargon.core.exception.JargonFileOrCollAlreadyExistsException;
 import org.irods.jargon.core.packinstr.AbstractIRODSPackingInstruction;
 import org.irods.jargon.core.packinstr.AuthResponseInp;
 import org.irods.jargon.core.packinstr.IRodsPI;
@@ -45,29 +41,46 @@ import org.slf4j.LoggerFactory;
  * treat a connection to IRODS the same way you would treat a JDBC database
  * connection.
  * <p/>
- * A note on iRODS connections and handling when things go bad.  Typically, an iRODS connection
- * is created by opening a socket, and doing a handshake and other start-up procedures.  Once that is done
- * you are connected to an iRODS agent.   This class is a proxy to that underlying connection, so any calls that result in i/o to the agent
- * are passed to the connection.  This insulates the caller from knowledge about the actual networking that goes on,
- * helps protect the integrity of the connection, and also centralizes i/o in case something bad happens on the network level.
+ * A note on iRODS connections and handling when things go bad. Typically, an
+ * iRODS connection is created by opening a socket, and doing a handshake and
+ * other start-up procedures. Once that is done you are connected to an iRODS
+ * agent. This class is a proxy to that underlying connection, so any calls that
+ * result in i/o to the agent are passed to the connection. This insulates the
+ * caller from knowledge about the actual networking that goes on, helps protect
+ * the integrity of the connection, and also centralizes i/o in case something
+ * bad happens on the network level.
  * <p/>
- * There are several cooperating objects involved in obtaining a connection.  There is an {@link IRODSSession} object that maintains
- * a ThreadLocal cache of connections by account.  Jargon asks for connections from the <code>IRODSSession</code> when you create access
- * objects or files.  When you call <code>close()</code> methods, you are actually telling <code>IRODSSession</code> to close the connection
- * on your behalf and remove it from the cache.  <code>IRODSSession</code> will  tell the {@link IRODSProtocolManager} that you are through with the connection.   
- * The actual behavior of the <code>IRODSProtocolManager</code>
- * depends on the implementation.  It may just close the connection at that point, or return it to a pool or cache.  When the <code>IRODSProtocolManager</code> does
- * decide to actually close a connection, it will call the <code>disconnect</code> method here.
+ * There are several cooperating objects involved in obtaining a connection.
+ * There is an {@link IRODSSession} object that maintains a ThreadLocal cache of
+ * connections by account. Jargon asks for connections from the
+ * <code>IRODSSession</code> when you create access objects or files. When you
+ * call <code>close()</code> methods, you are actually telling
+ * <code>IRODSSession</code> to close the connection on your behalf and remove
+ * it from the cache. <code>IRODSSession</code> will tell the
+ * {@link IRODSProtocolManager} that you are through with the connection. The
+ * actual behavior of the <code>IRODSProtocolManager</code> depends on the
+ * implementation. It may just close the connection at that point, or return it
+ * to a pool or cache. When the <code>IRODSProtocolManager</code> does decide to
+ * actually close a connection, it will call the <code>disconnect</code> method
+ * here.
  * <p/>
- * If something bad happens on the network level (IOException like a broken pipe), then it is doubtful that the iRODS disconnect sequence will succeed, or
- * that the connection to the agent is still reliable.  In this case, it is the responsibility of the <code>IRODSConnection</code> that is wrapped
- * by this class, to forcefully close the socket connection (without doing the disconnect sequence), and to tell the <code>IRODSSession</code> to remove the
- * connection from the cache.  <code>IRODSSession</code> also has a secondary check when it hands out a connection to the caller, to make sure the returned
- * <code>IRODSCommands</code> object is connected.  It does this by interrogating the <code>isConnected()</code> method.  In the future, or in alternative implementations,
- * an actual ping could be made against the underlying connection, but this is not currently done.
+ * If something bad happens on the network level (IOException like a broken
+ * pipe), then it is doubtful that the iRODS disconnect sequence will succeed,
+ * or that the connection to the agent is still reliable. In this case, it is
+ * the responsibility of the <code>IRODSConnection</code> that is wrapped by
+ * this class, to forcefully close the socket connection (without doing the
+ * disconnect sequence), and to tell the <code>IRODSSession</code> to remove the
+ * connection from the cache. <code>IRODSSession</code> also has a secondary
+ * check when it hands out a connection to the caller, to make sure the returned
+ * <code>IRODSCommands</code> object is connected. It does this by interrogating
+ * the <code>isConnected()</code> method. In the future, or in alternative
+ * implementations, an actual ping could be made against the underlying
+ * connection, but this is not currently done.
  * <p/>
- * Bottom line, use the <code>IRODSSession</code> close methods.  These are exposed in the <code>IRODSFileSystem</code> and <code>IRODSAccesObjectFactory</code> as well.  Do not
- * attempt to manipulate the connection using the methods here!
+ * Bottom line, use the <code>IRODSSession</code> close methods. These are
+ * exposed in the <code>IRODSFileSystem</code> and
+ * <code>IRODSAccesObjectFactory</code> as well. Do not attempt to manipulate
+ * the connection using the methods here!
  * 
  * @author Mike Conway - DICE (www.irods.org)
  * 
@@ -533,23 +546,11 @@ public class IRODSCommands implements IRODSManagedConnection {
 		}
 
 		// Reports iRODS errors, throw exception if appropriate
-
-		// FIXME: insert iRODS error manager
-
 		if (info < 0) {
 			processMessageInfoLessThanZero(messageLength, errorLength, info);
 			log.debug("returning null, no results");
 			// query with no results
 			return null;
-		} else if (info == ErrorEnum.OVERWITE_WITHOUT_FORCE_FLAG.getInt()) {
-			log.error(
-					"Attempt to overwrite file without force flag. Info val:{}",
-					info);
-			throw new JargonFileOrCollAlreadyExistsException(
-					"Attempt to overwrite file without force flag. Info val:{}",
-					info);
-		} else if (info == ErrorEnum.CAT_INVALID_AUTHENTICATION.getInt()) {
-			throw new JargonException("invalid user or password");
 		}
 
 		if (messageLength > 0) {
@@ -604,34 +605,15 @@ public class IRODSCommands implements IRODSManagedConnection {
 			}
 		}
 
-		// TODO: create an iRODS error scanner class to throw correct exception.
-		// Good place to refactor.
-		if (info == ErrorEnum.CAT_NO_ROWS_FOUND.getInt()) {
-			throw new DataNotFoundException("no data found");
-		} else if (info == ErrorEnum.CAT_INVALID_USER.getInt()) {
-			throw new AuthenticationException("invalid authentication");
-		} else if (info == ErrorEnum.CAT_SUCCESS_BUT_WITH_NO_INFO.getInt()) {
-			handleSuccessButNoRowsFound(errorLength, info);
-		} else if (info == ErrorEnum.CAT_NAME_EXISTS_AS_COLLECTION.getInt()
-				|| info == ErrorEnum.CAT_NAME_EXISTS_AS_DATAOBJ.getInt()) {
-			handleOverwriteOfCollectionOrDataObject(errorLength, info);
-		} else if (info == ErrorEnum.USER_CHKSUM_MISMATCH.getInt()) {
-			throw new FileIntegrityException(
-					"File checksum verification mismatch");
-		} else {
-			String msg = "error occurred in irods with a return value of "
-					+ info;
-			log.error(msg);
-			throw new JargonException("IRODS Exception:" + info, info);
-		}
-	}
-
-	private void handleOverwriteOfCollectionOrDataObject(final int errorLength,
-			final int info) throws JargonException {
-		log.debug("was no rows found or success with no info");
 		readAndLogErrorMessage(errorLength, info);
-		throw new JargonFileOrCollAlreadyExistsException(
-				"Attempt to overwrite file without force flag", info);
+
+		if (info == ErrorEnum.CAT_SUCCESS_BUT_WITH_NO_INFO.getInt()) {
+			// handleSuccessButNoRowsFound(errorLength, info);
+			log.info("success but no info returned from irods");
+		} else {
+			IRODSErrorScanner.inspectAndThrowIfNeeded(info);
+		}
+
 	}
 
 	/**
@@ -1148,8 +1130,11 @@ public class IRODSCommands implements IRODSManagedConnection {
 		return Base64.toString(chal);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.connection.IRODSManagedConnection#obliterateConnectionAndDiscardErrors()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.connection.IRODSManagedConnection#
+	 * obliterateConnectionAndDiscardErrors()
 	 */
 	@Override
 	public synchronized void obliterateConnectionAndDiscardErrors() {
@@ -1157,7 +1142,9 @@ public class IRODSCommands implements IRODSManagedConnection {
 
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.irods.jargon.core.connection.IRODSManagedConnection#shutdown()
 	 */
 	@Override
@@ -1189,19 +1176,23 @@ public class IRODSCommands implements IRODSManagedConnection {
 
 	}
 
-	
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.irods.jargon.core.connection.IRODSManagedConnection#disconnect()
 	 */
 	@Override
 	public synchronized void disconnect() throws JargonException {
 		log.info("closing connection");
 		irodsProtocolManager.returnIRODSConnection(this);
-		
+
 	}
 
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.connection.IRODSManagedConnection#disconnectWithIOException()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.connection.IRODSManagedConnection#
+	 * disconnectWithIOException()
 	 */
 	@Override
 	public synchronized void disconnectWithIOException() throws JargonException {

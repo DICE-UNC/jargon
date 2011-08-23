@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.irods.jargon.core.exception.DataNotFoundException;
+import org.irods.jargon.core.exception.DuplicateDataException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.exception.JargonFileOrCollAlreadyExistsException;
 import org.irods.jargon.core.exception.JargonRuntimeException;
@@ -966,6 +967,9 @@ public final class IRODSFileImpl extends File implements IRODSFile {
 
 		try {
 			irodsFileSystemAO.mkdir(this, false);
+		} catch (DuplicateDataException e) {
+			log.info("duplicate data exception, return false from mkdir", e);
+			return false;
 		} catch (JargonException e) {
 			// check if this means that it already exists, and call that a
 			// 'false' instead of an error
@@ -989,6 +993,9 @@ public final class IRODSFileImpl extends File implements IRODSFile {
 	public boolean mkdirs() {
 		try {
 			irodsFileSystemAO.mkdir(this, true);
+		} catch (DuplicateDataException e) {
+			log.info("duplicate data exception, return false from mkdir", e);
+			return false;
 		} catch (JargonException e) {
 			log.error("jargon exception, rethrow as unchecked", e);
 			throw new JargonRuntimeException(e);

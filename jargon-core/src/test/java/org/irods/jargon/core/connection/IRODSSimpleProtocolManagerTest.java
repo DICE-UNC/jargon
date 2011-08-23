@@ -5,6 +5,7 @@ import java.util.Properties;
 import junit.framework.Assert;
 
 import org.irods.jargon.core.exception.AuthenticationException;
+import org.irods.jargon.core.exception.InvalidUserException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.junit.AfterClass;
@@ -41,7 +42,7 @@ public class IRODSSimpleProtocolManagerTest {
 				connection.isConnected());
 	}
 
-	@Test(expected = AuthenticationException.class)
+	@Test(expected = InvalidUserException.class)
 	public void testGetIRODSConnectionForInvalidUser() throws Exception {
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountForIRODSUserFromTestPropertiesForGivenUser(

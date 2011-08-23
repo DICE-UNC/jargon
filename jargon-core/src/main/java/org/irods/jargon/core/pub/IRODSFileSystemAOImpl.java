@@ -12,6 +12,7 @@ import java.util.List;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSSession;
+import org.irods.jargon.core.exception.CatalogAlreadyHasItemByThatNameException;
 import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.exception.JargonFileOrCollAlreadyExistsException;
@@ -1296,13 +1297,17 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 		CollInp collInp = CollInp.instance(irodsFile.getAbsolutePath(),
 				recursiveOpr);
 
-		Tag response = getIRODSProtocol().irodsFunction(CollInp.PI_TAG,
-				collInp.getParsedTags(), CollInp.MKDIR_API_NBR);
+		try {
+			Tag response = getIRODSProtocol().irodsFunction(CollInp.PI_TAG,
+					collInp.getParsedTags(), CollInp.MKDIR_API_NBR);
 
-		if (response != null) {
-			log.warn(
-					"expected null response to mkdir, logged but not an error, received:{}",
-					response.parseTag());
+			if (response != null) {
+				log.warn(
+						"expected null response to mkdir, logged but not an error, received:{}",
+						response.parseTag());
+			}
+		} catch (CatalogAlreadyHasItemByThatNameException e) {
+			log.info("directory already exists in mkdir, log and ignore");
 		}
 
 		log.debug("mkdir succesful");
@@ -1355,6 +1360,8 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 		}
 
 		log.info("deleting:{}", irodsFile.getAbsolutePath());
+		irodsFile.reset();
+
 
 		if (!irodsFile.isFile()) {
 			String msg = "file delete, given irodsFile is not a file";
@@ -1391,6 +1398,8 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 
 		log.info("deleting without force option:{}",
 				irodsFile.getAbsolutePath());
+		
+		irodsFile.reset();
 
 		if (!irodsFile.isFile()) {
 			String msg = "file delete, given irodsFile is not a file";
@@ -1424,6 +1433,8 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 		}
 
 		log.info("deleting:{}", irodsFile.getAbsolutePath());
+		
+		irodsFile.reset();
 
 		if (!irodsFile.isDirectory()) {
 			String msg = "directory delete, given irodsFile is not a collection";
@@ -1458,6 +1469,9 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 		}
 
 		log.info("deleting:{}", irodsFile.getAbsolutePath());
+		
+		irodsFile.reset();
+
 
 		if (!irodsFile.isDirectory()) {
 			String msg = "directory delete, given irodsFile is not a collection";

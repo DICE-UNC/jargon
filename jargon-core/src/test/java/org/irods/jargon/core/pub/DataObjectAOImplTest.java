@@ -16,6 +16,7 @@ import org.irods.jargon.core.connection.IRODSSimpleProtocolManager;
 import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.DuplicateDataException;
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.exception.JargonFileOrCollAlreadyExistsException;
 import org.irods.jargon.core.packinstr.TransferOptions;
 import org.irods.jargon.core.protovalues.FilePermissionEnum;
 import org.irods.jargon.core.pub.domain.AvuData;
@@ -637,7 +638,7 @@ public class DataObjectAOImplTest {
 				IRODS_TEST_SUBDIR_PATH + '/' + getFileName, 100);
 
 	}
-	
+
 	@Test
 	public final void testGetWithIntraFileCallbacks() throws Exception {
 
@@ -647,7 +648,8 @@ public class DataObjectAOImplTest {
 		String absPath = scratchFileUtils
 				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
 		String localFileName = FileGenerator
-				.generateFileOfFixedLengthGivenName(absPath, testFileName, testFileLen);
+				.generateFileOfFixedLengthGivenName(absPath, testFileName,
+						testFileLen);
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
@@ -679,7 +681,7 @@ public class DataObjectAOImplTest {
 		IRODSFile irodsFile = dataObjectAO
 				.instanceIRODSFileForPath(targetIrodsCollection + '/'
 						+ testFileName);
-		
+
 		TransferOptions transferOptions = new TransferOptions();
 		transferOptions.setIntraFileStatusCallbacks(true);
 		TransferControlBlock transferControlBlock = DefaultTransferControlBlock
@@ -688,7 +690,8 @@ public class DataObjectAOImplTest {
 
 		TestingStatusCallbackListener transferStatusCallbackListener = new TestingStatusCallbackListener();
 
-		dataObjectAO.getDataObjectFromIrods(irodsFile, localFile, transferControlBlock, transferStatusCallbackListener);
+		dataObjectAO.getDataObjectFromIrods(irodsFile, localFile,
+				transferControlBlock, transferStatusCallbackListener);
 
 		assertionHelper.assertLocalFileExistsInScratch(IRODS_TEST_SUBDIR_PATH
 				+ '/' + getFileName);
@@ -705,10 +708,9 @@ public class DataObjectAOImplTest {
 		TestCase.assertFalse("accumulated more bytes than file size",
 				transferStatusCallbackListener
 						.getBytesReportedIntraFileCallbacks() > testFileLen);
-		
-		
+
 	}
-	
+
 	@Test
 	public final void testGetParallelWithIntraFileCallbacks() throws Exception {
 
@@ -718,7 +720,8 @@ public class DataObjectAOImplTest {
 		String absPath = scratchFileUtils
 				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
 		String localFileName = FileGenerator
-				.generateFileOfFixedLengthGivenName(absPath, testFileName, testFileLen);
+				.generateFileOfFixedLengthGivenName(absPath, testFileName,
+						testFileLen);
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
@@ -750,7 +753,7 @@ public class DataObjectAOImplTest {
 		IRODSFile irodsFile = dataObjectAO
 				.instanceIRODSFileForPath(targetIrodsCollection + '/'
 						+ testFileName);
-		
+
 		TransferOptions transferOptions = new TransferOptions();
 		transferOptions.setIntraFileStatusCallbacks(true);
 		TransferControlBlock transferControlBlock = DefaultTransferControlBlock
@@ -759,7 +762,8 @@ public class DataObjectAOImplTest {
 
 		TestingStatusCallbackListener transferStatusCallbackListener = new TestingStatusCallbackListener();
 
-		dataObjectAO.getDataObjectFromIrods(irodsFile, localFile, transferControlBlock, transferStatusCallbackListener);
+		dataObjectAO.getDataObjectFromIrods(irodsFile, localFile,
+				transferControlBlock, transferStatusCallbackListener);
 
 		assertionHelper.assertLocalFileExistsInScratch(IRODS_TEST_SUBDIR_PATH
 				+ '/' + getFileName);
@@ -776,7 +780,7 @@ public class DataObjectAOImplTest {
 		TestCase.assertFalse("accumulated more bytes than file size",
 				transferStatusCallbackListener
 						.getBytesReportedIntraFileCallbacks() > testFileLen);
-		
+
 	}
 
 	@Test
@@ -822,7 +826,7 @@ public class DataObjectAOImplTest {
 
 		File scratchLocalFile = new File(localFileName);
 		boolean success = scratchLocalFile.delete();
-		
+
 		TransferOptions transferOptions = new TransferOptions();
 		transferOptions.setIntraFileStatusCallbacks(false);
 		TransferControlBlock transferControlBlock = DefaultTransferControlBlock
@@ -831,14 +835,15 @@ public class DataObjectAOImplTest {
 
 		TestingStatusCallbackListener transferStatusCallbackListener = new TestingStatusCallbackListener();
 
-		dataObjectAO.getDataObjectFromIrods(irodsFile, localFile, transferControlBlock, transferStatusCallbackListener);
+		dataObjectAO.getDataObjectFromIrods(irodsFile, localFile,
+				transferControlBlock, transferStatusCallbackListener);
 
 		assertionHelper.assertLocalFileExistsInScratch(IRODS_TEST_SUBDIR_PATH
 				+ '/' + testFileName);
 		assertionHelper.assertLocalScratchFileLengthEquals(
 				IRODS_TEST_SUBDIR_PATH + '/' + testFileName, 100);
 		Assert.assertTrue("delete did not report success in response", success);
-		
+
 		TestCase.assertFalse(
 				"got intra-file callbacks",
 				transferStatusCallbackListener.getNumberIntraFileCallbacks() > 0);
@@ -1271,7 +1276,7 @@ public class DataObjectAOImplTest {
 
 	}
 
-	@Test
+	@Test(expected = JargonFileOrCollAlreadyExistsException.class)
 	public final void testCopyNoForceOverwriteSituation() throws Exception {
 
 		String testFileName = "testCopyNoForceOverwriteSituation.txt";
@@ -1296,18 +1301,10 @@ public class DataObjectAOImplTest {
 		dataObjectAO.copyIrodsDataObject(targetIrodsCollection + "/"
 				+ testFileName, targetIrodsCollection + "/"
 				+ testCopyToFileName, "");
-		boolean errorCaught = false;
-		try {
-			dataObjectAO.copyIrodsDataObject(targetIrodsCollection + "/"
-					+ testFileName, targetIrodsCollection + "/"
-					+ testCopyToFileName, "");
-		} catch (JargonException e) {
-			TestCase.assertTrue("did not get overwrite error", e.getMessage()
-					.indexOf("-312000") > -1);
-			errorCaught = true;
-		}
 
-		TestCase.assertTrue("did not catch overwrite error", errorCaught);
+		dataObjectAO.copyIrodsDataObject(targetIrodsCollection + "/"
+				+ testFileName, targetIrodsCollection + "/"
+				+ testCopyToFileName, "");
 
 	}
 

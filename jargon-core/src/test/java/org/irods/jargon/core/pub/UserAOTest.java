@@ -13,6 +13,7 @@ import org.irods.jargon.core.connection.IRODSProtocolManager;
 import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.connection.IRODSSimpleProtocolManager;
 import org.irods.jargon.core.exception.DuplicateDataException;
+import org.irods.jargon.core.exception.InvalidUserException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.protovalues.UserTypeEnum;
 import org.irods.jargon.core.pub.domain.AvuData;
@@ -478,11 +479,10 @@ public class UserAOTest {
 
 	}
 
-	@Test
+	@Test(expected=InvalidUserException.class)
 	public void testDeleteNonExistentUser() throws Exception {
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAdminAccountFromTestProperties(testingProperties);
 
 		String testUser = "deleteUserThatDoesNotExist";
 		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem

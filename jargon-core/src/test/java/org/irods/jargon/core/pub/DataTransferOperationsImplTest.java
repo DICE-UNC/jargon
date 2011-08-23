@@ -1098,7 +1098,7 @@ public class DataTransferOperationsImplTest {
 	@Test
 	public void testPutWithCancelThenRestart() throws Exception {
 
-		String rootCollection = "testPutWithCancelThenRestart";
+		String rootCollection = "testPutWithCancelThenRestartCollection";
 		TransferControlBlock transferControlBlock = DefaultTransferControlBlock
 				.instance();
 
@@ -2229,7 +2229,7 @@ public class DataTransferOperationsImplTest {
 	public void testCopyCollectionToSelfParent() throws Exception {
 
 		// generate a local scratch file
-		String testOrigDirectory = "testCopyCollectionToTargetCollection";
+		String testOrigDirectory = "testCopyCollectionToSelfParent";
 
 		String localCollectionAbsolutePath = scratchFileUtils
 				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH

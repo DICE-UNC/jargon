@@ -324,7 +324,7 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 			File targetLocalFileNameForCallbacks = new File(
 					targetLocalFile.getAbsolutePath(),
 					irodsSourceFile.getName());
-			log.info("file name normailzed:{}", targetLocalFileNameForCallbacks);
+			log.info("file name normalized:{}", targetLocalFileNameForCallbacks);
 
 			/*
 			 * Compute the count of files to be transferred. This is different
@@ -705,18 +705,25 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 					operativeTransferControlBlock.setTotalFilesToTransfer(1);
 				
 				/* source file is a file, target is either a collection, or specifies the file. 
-				 * If the target exists, or the target parent exists, format the appropriate callback so that
+				 * If the target exists, or the target parent exists, format the appropriate call-back so that
 				 * it depicts the resulting file 
 				 */
 				
 				StringBuilder targetIrodsPathBuilder = new StringBuilder();
+				
+				/*
+				 * Reset the iRODS file, as the directory may have been created prior to the put operation.  The reset clears the cache
+				 * of the exists(), isFile(), and other basic file stat info
+				 * 
+				 */
+				targetIrodsFile.reset();
 				if (targetIrodsFile.exists() && targetIrodsFile.isDirectory()) {
 					log.info("target is a directory, source is file");
 					targetIrodsPathBuilder.append(targetIrodsFile.getAbsolutePath());
 					targetIrodsPathBuilder.append("/");
 					targetIrodsPathBuilder.append(sourceFile.getName());
 				} else if (targetIrodsFile.getParentFile().exists() && targetIrodsFile.getParentFile().isDirectory()) {
-					log.info("target is a file, but parent exists, source is file");
+					log.info("treating target as a file, using the whole path");
 					targetIrodsPathBuilder.append(targetIrodsFile.getAbsolutePath());
 				}
 				

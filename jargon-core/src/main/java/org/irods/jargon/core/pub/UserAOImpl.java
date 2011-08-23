@@ -10,6 +10,7 @@ import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.DuplicateDataException;
+import org.irods.jargon.core.exception.InvalidUserException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.packinstr.GeneralAdminInp;
 import org.irods.jargon.core.packinstr.GetTempPasswordIn;
@@ -622,7 +623,7 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 	 * @see org.irods.jargon.core.pub.UserAO#deleteUser(java.lang.String)
 	 */
 	@Override
-	public void deleteUser(final String userName) throws JargonException {
+	public void deleteUser(final String userName) throws InvalidUserException, JargonException {
 		if (userName == null || userName.isEmpty()) {
 			throw new IllegalArgumentException("null or empty user name");
 		}

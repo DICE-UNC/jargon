@@ -101,6 +101,7 @@ public class TransferRunner implements Runnable {
 		try {
 			// start the desired transfer by processing the first in the queue
 			irodsLocalTransferEngine.processOperation(localIRODSTransfer);
+			
 			/*
 			 * I have tried the transfer. If any errors had occurred, the best
 			 * effort was made to log the error in the transfer database, and in

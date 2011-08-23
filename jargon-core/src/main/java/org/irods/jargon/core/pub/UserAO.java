@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.DuplicateDataException;
+import org.irods.jargon.core.exception.InvalidUserException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.domain.AvuData;
 import org.irods.jargon.core.pub.domain.User;
@@ -95,9 +96,10 @@ public interface UserAO extends IRODSAccessObject {
 	 * 
 	 * @param userName
 	 *            <code>String</code> with the iRODS user name to be removed.
+	 * @throws InvalidUserException if the user is not in iRODS
 	 * @throws JargonException
 	 */
-	void deleteUser(String userName) throws JargonException;
+	void deleteUser(String userName) throws InvalidUserException, JargonException;
 
 	/**
 	 * Update the user data. Note that this method only updates certain

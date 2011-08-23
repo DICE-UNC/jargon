@@ -2,35 +2,40 @@ package org.irods.jargon.core.exception;
 
 import org.irods.jargon.core.protovalues.ErrorEnum;
 
-public class AuthenticationException extends JargonException {
+/**
+ * The given user is invalid in iRODS
+ * @author Mike Conway 
+ *
+ */
+public class InvalidUserException extends JargonException {
 	private static final long serialVersionUID = -8718442214402431485L;
-	private static final int ERROR_CODE = ErrorEnum.CAT_INVALID_AUTHENTICATION.getInt();
+	private static final int ERROR_CODE = ErrorEnum.CAT_INVALID_USER.getInt();
 
-	public AuthenticationException(String message,
+	public InvalidUserException(String message,
 			int underlyingIRODSExceptionCode) {
 		super(message, underlyingIRODSExceptionCode);
 	}
 
-	public AuthenticationException(String message, Throwable cause,
+	public InvalidUserException(String message, Throwable cause,
 			int underlyingIRODSExceptionCode) {
 		super(message, cause, underlyingIRODSExceptionCode);
 	}
 
-	public AuthenticationException(Throwable cause,
+	public InvalidUserException(Throwable cause,
 			int underlyingIRODSExceptionCode) {
 		super(cause, underlyingIRODSExceptionCode);
 	}
 
 	
-	public AuthenticationException(final String message) {
+	public InvalidUserException(final String message) {
 		super(message, ERROR_CODE);
 	}
 
-	public AuthenticationException(final String message, final Throwable cause) {
+	public InvalidUserException(final String message, final Throwable cause) {
 		super(message, cause, ERROR_CODE);
 	}
 
-	public AuthenticationException(final Throwable cause) {
+	public InvalidUserException(final Throwable cause) {
 		super(cause, ERROR_CODE);
 	}
 }
