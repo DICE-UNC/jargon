@@ -71,7 +71,7 @@ public class Stream2StreamAOImplTest {
 		final ReadableByteChannel inputChannel = Channels.newChannel(fis);
 		final WritableByteChannel outputChannel = Channels.newChannel(bos);
 
-		ChannelTools.fastChannelCopy(inputChannel, outputChannel);
+		ChannelTools.fastChannelCopy(inputChannel, outputChannel, 16384);
 
 		byte[] bytesToStream = bos.toByteArray();
 		Stream2StreamAO stream2StreamAO = irodsFileSystem

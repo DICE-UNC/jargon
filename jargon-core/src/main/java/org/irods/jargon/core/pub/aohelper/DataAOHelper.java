@@ -593,7 +593,7 @@ public final class DataAOHelper extends AOHelper {
 			throw new IllegalArgumentException("fd is <= 0");
 		}
 
-		log.info("normal file transfer started, get output stream for local destination file");
+		log.info("streaming file transfer started, get output stream for local destination file");
 		// get an input stream from the irodsFile
 		// BufferedOutputStream localFileOutputStream;
 		OutputStream localFileOutputStream;

@@ -245,25 +245,20 @@ public class UserAOTest {
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
 
-		String testUser = "addUserUpdateInfo";
+		String testUser = "addUserUpdateInfoTest";
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+		UserAO userAO = accessObjectFactory.getUserAO(irodsAccount);
 
 		// setup, delete user if it exists
 
 		try {
-			RemoveUserCommand command = new RemoveUserCommand();
-			command.setUserName(testUser);
-			IrodsInvocationContext invocationContext = testingPropertiesHelper
-					.buildIRODSInvocationContextFromTestProperties(testingProperties);
-			IcommandInvoker invoker = new IcommandInvoker(invocationContext);
-			invoker.invokeCommandAndGetResultAsString(command);
-		} catch (IcommandException ice) {
+			userAO.deleteUser(testUser);
+		} catch (Exception e) {
 			// ignore exception, user may not exist
 		}
 
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
-
-		UserAO userAO = accessObjectFactory.getUserAO(irodsAccount);
 		User addedUser = new User();
 		addedUser.setName(testUser);
 		addedUser.setUserType(UserTypeEnum.RODS_USER);
@@ -287,24 +282,16 @@ public class UserAOTest {
 				.buildIRODSAccountFromTestProperties(testingProperties);
 
 		String testUser = "addUserUpdatedZone";
-
-		// setup, delete user if it exists
-
-		try {
-			RemoveUserCommand command = new RemoveUserCommand();
-			command.setUserName(testUser);
-			IrodsInvocationContext invocationContext = testingPropertiesHelper
-					.buildIRODSInvocationContextFromTestProperties(testingProperties);
-			IcommandInvoker invoker = new IcommandInvoker(invocationContext);
-			invoker.invokeCommandAndGetResultAsString(command);
-		} catch (IcommandException ice) {
-			// ignore exception, user may not exist
-		}
-
 		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
 				.getIRODSAccessObjectFactory();
 
 		UserAO userAO = accessObjectFactory.getUserAO(irodsAccount);
+
+		try {
+			userAO.deleteUser(testUser);
+		} catch (Exception e) {
+			// ignore exception, user may not exist
+		}
 		User addedUser = new User();
 		addedUser.setName(testUser);
 		addedUser.setUserType(UserTypeEnum.RODS_USER);
@@ -330,23 +317,16 @@ public class UserAOTest {
 
 		String testUser = "addUserUpdatedInfoCommentZone";
 
-		// setup, delete user if it exists
-
-		try {
-			RemoveUserCommand command = new RemoveUserCommand();
-			command.setUserName(testUser);
-			IrodsInvocationContext invocationContext = testingPropertiesHelper
-					.buildIRODSInvocationContextFromTestProperties(testingProperties);
-			IcommandInvoker invoker = new IcommandInvoker(invocationContext);
-			invoker.invokeCommandAndGetResultAsString(command);
-		} catch (IcommandException ice) {
-			// ignore exception, user may not exist
-		}
-
 		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
 				.getIRODSAccessObjectFactory();
 
 		UserAO userAO = accessObjectFactory.getUserAO(irodsAccount);
+
+		try {
+			userAO.deleteUser(testUser);
+		} catch (Exception e) {
+			// ignore exception, user may not exist
+		}
 		User addedUser = new User();
 		addedUser.setName(testUser);
 		addedUser.setUserType(UserTypeEnum.RODS_USER);
@@ -379,23 +359,16 @@ public class UserAOTest {
 
 		String testUser = "addUserUpdatedInfoCommentZoneNullZone";
 
-		// setup, delete user if it exists
-
-		try {
-			RemoveUserCommand command = new RemoveUserCommand();
-			command.setUserName(testUser);
-			IrodsInvocationContext invocationContext = testingPropertiesHelper
-					.buildIRODSInvocationContextFromTestProperties(testingProperties);
-			IcommandInvoker invoker = new IcommandInvoker(invocationContext);
-			invoker.invokeCommandAndGetResultAsString(command);
-		} catch (IcommandException ice) {
-			// ignore exception, user may not exist
-		}
-
 		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
 				.getIRODSAccessObjectFactory();
 
 		UserAO userAO = accessObjectFactory.getUserAO(irodsAccount);
+
+		try {
+			userAO.deleteUser(testUser);
+		} catch (Exception e) {
+			// ignore exception, user may not exist
+		}
 		User addedUser = new User();
 
 		addedUser.setName(testUser);
@@ -441,23 +414,17 @@ public class UserAOTest {
 
 		String testUser = "deleteUserTestUser";
 
-		// setup, delete user if it exists
-
-		try {
-			RemoveUserCommand command = new RemoveUserCommand();
-			command.setUserName(testUser);
-			IrodsInvocationContext invocationContext = testingPropertiesHelper
-					.buildIRODSInvocationContextFromTestProperties(testingProperties);
-			IcommandInvoker invoker = new IcommandInvoker(invocationContext);
-			invoker.invokeCommandAndGetResultAsString(command);
-		} catch (IcommandException ice) {
-			// ignore exception, user may not exist
-		}
-
 		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		.getIRODSAccessObjectFactory();
 
-		UserAO userAO = accessObjectFactory.getUserAO(irodsAccount);
+UserAO userAO = accessObjectFactory.getUserAO(irodsAccount);
+
+try {
+	userAO.deleteUser(testUser);
+} catch (Exception e) {
+	// ignore exception, user may not exist
+}
+
 		User addedUser = new User();
 		addedUser.setName(testUser);
 		addedUser.setUserType(UserTypeEnum.RODS_USER);
@@ -479,10 +446,11 @@ public class UserAOTest {
 
 	}
 
-	@Test(expected=InvalidUserException.class)
+	@Test(expected = InvalidUserException.class)
 	public void testDeleteNonExistentUser() throws Exception {
 
-		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAdminAccountFromTestProperties(testingProperties);
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAdminAccountFromTestProperties(testingProperties);
 
 		String testUser = "deleteUserThatDoesNotExist";
 		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
@@ -502,21 +470,16 @@ public class UserAOTest {
 
 		// setup, delete user if it exists
 
-		try {
-			RemoveUserCommand command = new RemoveUserCommand();
-			command.setUserName(testUser);
-			IrodsInvocationContext invocationContext = testingPropertiesHelper
-					.buildIRODSInvocationContextFromTestProperties(testingProperties);
-			IcommandInvoker invoker = new IcommandInvoker(invocationContext);
-			invoker.invokeCommandAndGetResultAsString(command);
-		} catch (IcommandException ice) {
-			// ignore exception, user may not exist
-		}
-
 		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		.getIRODSAccessObjectFactory();
 
-		UserAO userAO = accessObjectFactory.getUserAO(irodsAccount);
+UserAO userAO = accessObjectFactory.getUserAO(irodsAccount);
+
+try {
+	userAO.deleteUser(testUser);
+} catch (Exception e) {
+	// ignore exception, user may not exist
+}
 		User addedUser = new User();
 		addedUser.setName(testUser);
 		addedUser.setUserType(UserTypeEnum.RODS_USER);

@@ -814,7 +814,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			return;
 		}
 
-		final long lengthFromIrodsResponse = temp.getIntValue();
+		final long lengthFromIrodsResponse = temp.getLongValue();
 
 		log.info("transfer length is:", lengthFromIrodsResponse);
 

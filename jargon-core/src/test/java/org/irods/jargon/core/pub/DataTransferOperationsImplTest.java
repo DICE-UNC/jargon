@@ -494,6 +494,63 @@ public class DataTransferOperationsImplTest {
 				testCallbackListener.getLastTargetPath());
 
 	}
+	
+	@Test
+	public void testGet1point5GBFileWhenNoParallelIsPolicy() throws Exception {
+		// generate a local scratch file
+		String testFileName = "testGet1point5GBFileWhenNoParallelIsPolicy.txt";
+		String testRetrievedFileName = "testGet1point5GBFileWhenNoParallelIsPolicyRetrieved.txt";
+		long length = 1610612736;
+
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String localFileName = FileGenerator
+				.generateFileOfFixedLengthGivenName(absPath, testFileName, length);
+
+		String targetIrodsFile = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
+								+ testFileName);
+		File localFile = new File(localFileName);
+
+		// now put the file
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSFileFactory irodsFileFactory = irodsFileSystem
+				.getIRODSFileFactory(irodsAccount);
+		IRODSFile destFile = irodsFileFactory
+				.instanceIRODSFile(targetIrodsFile);
+		DataTransferOperations dataTransferOperationsAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataTransferOperations(
+						irodsAccount);
+
+		dataTransferOperationsAO.putOperation(localFile, destFile, null, null);
+
+		IRODSFile getIRODSFile = irodsFileFactory
+				.instanceIRODSFile(targetIrodsFile);
+		File getLocalFile = new File(absPath + "/" + testRetrievedFileName);
+		TestingStatusCallbackListener testCallbackListener = new TestingStatusCallbackListener();
+
+		// now get the file
+		dataTransferOperationsAO.getOperation(getIRODSFile, getLocalFile,
+				testCallbackListener, null);
+
+		assertionHelper.assertIrodsFileMatchesLocalFileChecksum(
+				getIRODSFile.getAbsolutePath(), getLocalFile.getAbsolutePath());
+		TestCase.assertEquals("did not expect any errors", 0,
+				testCallbackListener.getErrorCallbackCount());
+		TestCase.assertEquals("file callback, initial and completion", 3,
+				testCallbackListener.getSuccessCallbackCount());
+		TestCase.assertEquals(
+				"did not get the full irods file name in callback",
+				targetIrodsFile, testCallbackListener.getLastSourcePath());
+		TestCase.assertEquals(
+				"did not get the full local file name in callback",
+				getLocalFile.getAbsolutePath(),
+				testCallbackListener.getLastTargetPath());
+
+	}
 
 	@Test
 	public void testGetOneFileWithCallbackAndControlBlockCheckOneFileToBeTransferred()

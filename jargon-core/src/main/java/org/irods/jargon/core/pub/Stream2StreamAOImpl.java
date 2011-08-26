@@ -28,6 +28,9 @@ import org.slf4j.LoggerFactory;
  */
 public class Stream2StreamAOImpl extends IRODSGenericAO implements
 		Stream2StreamAO {
+	
+	//private final int bufferSize = this.getJargonProperties().get
+	private static final int bufferSize = 32 * 1024;  // FIXME: temp code
 
 	public static final Logger log = LoggerFactory
 			.getLogger(Stream2StreamAOImpl.class);
@@ -67,7 +70,7 @@ public class Stream2StreamAOImpl extends IRODSGenericAO implements
 		final WritableByteChannel outputChannel = Channels.newChannel(ifOs);
 		// copy the channels
 		try {
-			ChannelTools.fastChannelCopy(inputChannel, outputChannel);
+			ChannelTools.fastChannelCopy(inputChannel, outputChannel, bufferSize);
 		} catch (IOException e) {
 			log.error("IO Exception copying buffers", e);
 			throw new JargonException("io exception copying buffers", e);
@@ -109,7 +112,7 @@ public class Stream2StreamAOImpl extends IRODSGenericAO implements
 				.newChannel(outputStream);
 		// copy the channels
 		try {
-			ChannelTools.fastChannelCopy(inputChannel, outputChannel);
+			ChannelTools.fastChannelCopy(inputChannel, outputChannel, bufferSize);
 		} catch (IOException e) {
 			log.error("IO Exception copying buffers", e);
 			throw new JargonException("io exception copying buffers", e);
@@ -155,7 +158,7 @@ public class Stream2StreamAOImpl extends IRODSGenericAO implements
 		final WritableByteChannel outputChannel = Channels.newChannel(bos);
 		// copy the channels
 		try {
-			ChannelTools.fastChannelCopy(inputChannel, outputChannel);
+			ChannelTools.fastChannelCopy(inputChannel, outputChannel, bufferSize);
 		} catch (IOException e) {
 			log.error("IO Exception copying buffers", e);
 			throw new JargonException("io exception copying buffers", e);
