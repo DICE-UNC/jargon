@@ -495,7 +495,7 @@ public class DataTransferOperationsImplTest {
 
 	}
 	
-	@Test
+	@Ignore
 	public void testGet1point5GBFileWhenNoParallelIsPolicy() throws Exception {
 		// generate a local scratch file
 		String testFileName = "testGet1point5GBFileWhenNoParallelIsPolicy.txt";
