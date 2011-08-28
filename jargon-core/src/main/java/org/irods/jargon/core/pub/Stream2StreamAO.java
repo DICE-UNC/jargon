@@ -1,5 +1,6 @@
 package org.irods.jargon.core.pub;
 
+import java.io.File;
 import java.io.InputStream;
 import java.io.OutputStream;
 
@@ -54,5 +55,8 @@ public interface Stream2StreamAO {
 	 */
 	void streamToStreamCopy(InputStream inputStream, OutputStream outputStream)
 			throws JargonException;
+
+	void transferStreamToFile(InputStream inputStream, File targetFile,
+			long length) throws JargonException;
 
 }

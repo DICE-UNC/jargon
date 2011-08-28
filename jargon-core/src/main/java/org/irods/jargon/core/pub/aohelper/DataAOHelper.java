@@ -594,26 +594,20 @@ public final class DataAOHelper extends AOHelper {
 		}
 
 		log.info("streaming file transfer started, get output stream for local destination file");
-		// get an input stream from the irodsFile
-		// BufferedOutputStream localFileOutputStream;
-		OutputStream localFileOutputStream;
+		
 		try {
-			// localFileOutputStream = new BufferedOutputStream(
-			localFileOutputStream = new FileOutputStream(localFileToHoldData);
 			IRODSFileInputStream ifis = irodsAccessObjectFactory
 					.getIRODSFileFactory(irodsAccount)
 					.instanceIRODSFileInputStreamGivingFD(irodsFile, fd);
 
 			Stream2StreamAO stream2StreamAO = irodsAccessObjectFactory
 					.getStream2StreamAO(irodsAccount);
-			stream2StreamAO.streamToStreamCopy(ifis, localFileOutputStream);  // FIXME: add progress to Stream2Stream
-		} catch (FileNotFoundException e) {
+			stream2StreamAO.transferStreamToFile(ifis, localFileToHoldData, irodsFileLength);
+		} catch (JargonException e) {
 			log.error(
-					"FileNotFoundException when trying to create a new file for the local output stream for {}",
+					"Exception streaming data to local file from iRODS: {}",
 					localFileToHoldData.getAbsolutePath(), e);
-			throw new JargonException(
-					"FileNotFoundException for local file when trying to get to: "
-							+ localFileToHoldData.getAbsolutePath(), e);
+			throw e;
 		} finally {
 			irodsFile.closeGivenDescriptor(fd);
 		}

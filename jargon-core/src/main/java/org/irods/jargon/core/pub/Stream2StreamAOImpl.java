@@ -2,10 +2,14 @@ package org.irods.jargon.core.pub;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.channels.Channels;
+import java.nio.channels.FileChannel;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.channels.WritableByteChannel;
 
@@ -28,9 +32,9 @@ import org.slf4j.LoggerFactory;
  */
 public class Stream2StreamAOImpl extends IRODSGenericAO implements
 		Stream2StreamAO {
-	
-	//private final int bufferSize = this.getJargonProperties().get
-	private static final int bufferSize = 32 * 1024;  // FIXME: temp code
+
+	// private final int bufferSize = this.getJargonProperties().get
+	private static final int bufferSize = 32 * 1024; // FIXME: temp code
 
 	public static final Logger log = LoggerFactory
 			.getLogger(Stream2StreamAOImpl.class);
@@ -40,6 +44,9 @@ public class Stream2StreamAOImpl extends IRODSGenericAO implements
 		super(irodsSession, irodsAccount);
 	}
 
+	/*
+	 * TODO: might depracate Potentially deprecated....experimental
+	 */
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -70,7 +77,8 @@ public class Stream2StreamAOImpl extends IRODSGenericAO implements
 		final WritableByteChannel outputChannel = Channels.newChannel(ifOs);
 		// copy the channels
 		try {
-			ChannelTools.fastChannelCopy(inputChannel, outputChannel, bufferSize);
+			ChannelTools.fastChannelCopy(inputChannel, outputChannel,
+					bufferSize);
 		} catch (IOException e) {
 			log.error("IO Exception copying buffers", e);
 			throw new JargonException("io exception copying buffers", e);
@@ -78,6 +86,51 @@ public class Stream2StreamAOImpl extends IRODSGenericAO implements
 			try {
 				inputChannel.close();
 				outputChannel.close();
+			} catch (Exception e) {
+
+			}
+		}
+
+	}
+
+	@Override
+	public void transferStreamToFile(final InputStream inputStream,
+			final File targetFile, final long length) throws JargonException {
+
+		if (inputStream == null) {
+			throw new IllegalArgumentException("null or empty inputStream");
+		}
+
+		if (targetFile == null) {
+			throw new IllegalArgumentException("null targetFile");
+		}
+
+		log.info("transferStreamToFile(), inputStream:{}", inputStream);
+		log.info("targetFile:{}", targetFile);
+
+		ReadableByteChannel inputChannel = Channels.newChannel(inputStream);
+		FileChannel fileChannel = null;
+		try {
+			FileOutputStream fileOutputStream = new FileOutputStream(targetFile);
+			fileChannel = fileOutputStream.getChannel();
+			fileChannel.transferFrom(inputChannel, 0, length);
+		} catch (FileNotFoundException e) {
+			log.error("File not found exception copying buffers", e);
+			throw new JargonException(
+					"file not found exception copying buffers", e);
+		} catch (IOException e) {
+			log.error("IOException exception copying buffers", e);
+			throw new JargonException("IOException copying buffers", e);
+		} finally {
+
+			try {
+				inputChannel.close();
+			} catch (Exception e) {
+
+			}
+
+			try {
+				fileChannel.close();
 			} catch (Exception e) {
 
 			}
@@ -112,7 +165,8 @@ public class Stream2StreamAOImpl extends IRODSGenericAO implements
 				.newChannel(outputStream);
 		// copy the channels
 		try {
-			ChannelTools.fastChannelCopy(inputChannel, outputChannel, bufferSize);
+			ChannelTools.fastChannelCopy(inputChannel, outputChannel,
+					bufferSize);
 		} catch (IOException e) {
 			log.error("IO Exception copying buffers", e);
 			throw new JargonException("io exception copying buffers", e);
@@ -158,7 +212,8 @@ public class Stream2StreamAOImpl extends IRODSGenericAO implements
 		final WritableByteChannel outputChannel = Channels.newChannel(bos);
 		// copy the channels
 		try {
-			ChannelTools.fastChannelCopy(inputChannel, outputChannel, bufferSize);
+			ChannelTools.fastChannelCopy(inputChannel, outputChannel,
+					bufferSize);
 		} catch (IOException e) {
 			log.error("IO Exception copying buffers", e);
 			throw new JargonException("io exception copying buffers", e);
