@@ -28,9 +28,10 @@ public class DefaultIntraFileProgressCallbackListener implements ConnectionProgr
 	private final TransferType transferType;
 	private final long totalBytesToTransfer;
 	private long totalBytesTransferred;
+	private final int interval;
 	
 	private int countOfMessagesSinceLastSend = 0;
-	public static final int BYTE_COUNT_MESSAGE_THRESHOLD = 20;
+	public static final int BYTE_COUNT_MESSAGE_THRESHOLD = 25;
 	
 	/**
 	 * Static initializer method to create an immutable call-back listener for intra-file status information.
@@ -41,10 +42,23 @@ public class DefaultIntraFileProgressCallbackListener implements ConnectionProgr
 	 * @return
 	 */
 	public static ConnectionProgressStatusListener instance(final TransferType transferType,  final long totalBytesToTransfer, final TransferControlBlock transferControlBlock, final TransferStatusCallbackListener transferStatusCallbackListener) {
-		return new DefaultIntraFileProgressCallbackListener(transferType, totalBytesToTransfer, transferControlBlock, transferStatusCallbackListener);
+		return new DefaultIntraFileProgressCallbackListener(transferType, totalBytesToTransfer, transferControlBlock, transferStatusCallbackListener, BYTE_COUNT_MESSAGE_THRESHOLD);
 	}
 	
-	private DefaultIntraFileProgressCallbackListener(final TransferType transferType, final long totalBytesToTransfer, final TransferControlBlock transferControlBlock, final TransferStatusCallbackListener transferStatusCallbackListener) {
+	/**
+	 * Static initializer method to create an immutable call-back listener, specifiy a skip interval that can be used to control the frequency that this object
+	 * will use to report up the callback chain.
+	 * @param transferType
+	 * @param totalBytesToTransfer
+	 * @param transferControlBlock
+	 * @param transferStatusCallbackListener
+	 * @return
+	 */
+	public static ConnectionProgressStatusListener instanceSettingInterval(final TransferType transferType,  final long totalBytesToTransfer, final TransferControlBlock transferControlBlock, final TransferStatusCallbackListener transferStatusCallbackListener, final int interval) {
+		return new DefaultIntraFileProgressCallbackListener(transferType, totalBytesToTransfer, transferControlBlock, transferStatusCallbackListener, interval);
+	}
+	
+	private DefaultIntraFileProgressCallbackListener(final TransferType transferType, final long totalBytesToTransfer, final TransferControlBlock transferControlBlock, final TransferStatusCallbackListener transferStatusCallbackListener, final int interval) {
 		
 		if (transferControlBlock == null) {
 			throw new IllegalArgumentException("transferControlBlock is null");
@@ -62,6 +76,7 @@ public class DefaultIntraFileProgressCallbackListener implements ConnectionProgr
 		this.transferStatusCallbackListener = transferStatusCallbackListener;
 		this.transferType = transferType;
 		this.totalBytesToTransfer = totalBytesToTransfer;
+		this.interval = interval;
 	}
 
 	/* (non-Javadoc)
@@ -85,7 +100,7 @@ public class DefaultIntraFileProgressCallbackListener implements ConnectionProgr
 			ConnectionProgressStatus connectionProgressStatus) {
 		countOfMessagesSinceLastSend++;
 		totalBytesTransferred += connectionProgressStatus.getByteCount();
-		if (countOfMessagesSinceLastSend > BYTE_COUNT_MESSAGE_THRESHOLD) {
+		if (countOfMessagesSinceLastSend > interval) {
 			try {
 				TransferStatus transferStatus = TransferStatus.instanceForIntraFileStatus(transferType, totalBytesToTransfer, totalBytesTransferred);
 				transferStatusCallbackListener.statusCallback(transferStatus);

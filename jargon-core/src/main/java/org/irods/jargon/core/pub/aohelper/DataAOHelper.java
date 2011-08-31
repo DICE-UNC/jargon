@@ -9,7 +9,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,6 +24,7 @@ import org.irods.jargon.core.pub.DefaultIntraFileProgressCallbackListener;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 import org.irods.jargon.core.pub.Stream2StreamAO;
 import org.irods.jargon.core.pub.domain.DataObject;
+import org.irods.jargon.core.pub.io.ByteCountingCallbackInputStreamWrapper;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.pub.io.IRODSFileFactory;
 import org.irods.jargon.core.pub.io.IRODSFileInputStream;
@@ -325,33 +326,36 @@ public final class DataAOHelper extends AOHelper {
 	 * @param localFileToHoldData
 	 * @param length
 	 * @param transferOptions
-	 * @param transferStatusCallbackListener 
-	 * @param transferControlBlock 
+	 * @param transferStatusCallbackListener
+	 * @param transferControlBlock
 	 * @throws JargonException
 	 */
 	public void processNormalGetTransfer(final File localFileToHoldData,
 			final long length, final IRODSCommands irodsProtocol,
-			final TransferOptions transferOptions, TransferControlBlock transferControlBlock, TransferStatusCallbackListener transferStatusCallbackListener) throws JargonException {
+			final TransferOptions transferOptions,
+			final TransferControlBlock transferControlBlock,
+			final TransferStatusCallbackListener transferStatusCallbackListener)
+			throws JargonException {
 
 		log.info("normal file transfer started, get output stream for local destination file");
-		
+
 		if (irodsProtocol == null) {
 			throw new IllegalArgumentException("null irodsProtocol");
 		}
-		
+
 		if (transferOptions == null) {
 			throw new IllegalArgumentException("null transferOptions");
 		}
-		
+
 		if (transferControlBlock == null) {
 			throw new IllegalArgumentException("null transferControlBlock");
 		}
-		
+
 		// get an input stream from the irodsFile
 		BufferedOutputStream localFileOutputStream;
 		try {
 			localFileOutputStream = new BufferedOutputStream(
-					new FileOutputStream(localFileToHoldData));
+					new FileOutputStream(localFileToHoldData));  // FIXME: set buffer size for file output stream jargon.io.local.output.stream.buffer.size 
 		} catch (FileNotFoundException e) {
 			log.error(
 					"FileNotFoundException when trying to create a new file for the local output stream for {}",
@@ -360,20 +364,25 @@ public final class DataAOHelper extends AOHelper {
 					"FileNotFoundException for local file when trying to get to: "
 							+ localFileToHoldData.getAbsolutePath(), e);
 		}
-		
+
 		ConnectionProgressStatusListener intraFileStatusListener = null;
-		
+
 		/*
-		 * If specified by options, and with a call-back listener registered, create an object to aggregate and channel
-		 * within-file progress reports to the caller.
+		 * If specified by options, and with a call-back listener registered,
+		 * create an object to aggregate and channel within-file progress
+		 * reports to the caller.
 		 */
-		if (transferStatusCallbackListener != null || transferControlBlock.getTransferOptions().isIntraFileStatusCallbacks()) {
-			 intraFileStatusListener = DefaultIntraFileProgressCallbackListener.instance(TransferType.GET, 
-					length, transferControlBlock, transferStatusCallbackListener);
+		if (transferStatusCallbackListener != null
+				|| transferControlBlock.getTransferOptions()
+						.isIntraFileStatusCallbacks()) {
+			intraFileStatusListener = DefaultIntraFileProgressCallbackListener
+					.instance(TransferType.GET, length, transferControlBlock,
+							transferStatusCallbackListener);
 		}
 
 		// read the message byte stream into the local file
-		irodsProtocol.read(localFileOutputStream, length, intraFileStatusListener);
+		irodsProtocol.read(localFileOutputStream, length,
+				intraFileStatusListener);
 		log.info("transfer is complete");
 		try {
 			localFileOutputStream.flush();
@@ -464,23 +473,26 @@ public final class DataAOHelper extends AOHelper {
 				dataObjInp.setFileChecksumValue(localFileChecksum);
 			}
 		}
-		
+
 		ConnectionProgressStatusListener intraFileStatusListener = null;
-		
+
 		/*
-		 * If specified by options, and with a call-back listener registered, create an object to aggregate and channel
-		 * within-file progress reports to the caller.
+		 * If specified by options, and with a call-back listener registered,
+		 * create an object to aggregate and channel within-file progress
+		 * reports to the caller.
 		 */
-		if (transferStatusCallbackListener != null || myTransferOptions.isIntraFileStatusCallbacks()) {
-			 intraFileStatusListener = DefaultIntraFileProgressCallbackListener.instance(TransferType.PUT, 
-					localFile.length(), transferControlBlock, transferStatusCallbackListener);
+		if (transferStatusCallbackListener != null
+				|| myTransferOptions.isIntraFileStatusCallbacks()) {
+			intraFileStatusListener = DefaultIntraFileProgressCallbackListener
+					.instance(TransferType.PUT, localFile.length(),
+							transferControlBlock,
+							transferStatusCallbackListener);
 		}
 
-		irodsProtocol
-				.irodsFunction(IRODSConstants.RODS_API_REQ,
-						dataObjInp.getParsedTags(), 0, null,
-						localFile.length(), new FileInputStream(localFile),
-						dataObjInp.getApiNumber(), intraFileStatusListener); 
+		irodsProtocol.irodsFunction(IRODSConstants.RODS_API_REQ,
+				dataObjInp.getParsedTags(), 0, null, localFile.length(),
+				new FileInputStream(localFile), dataObjInp.getApiNumber(),
+				intraFileStatusListener);
 	}
 
 	/**
@@ -571,13 +583,15 @@ public final class DataAOHelper extends AOHelper {
 	 * @param irodsFileLength
 	 * @param transferOptions
 	 * @param fd
-	 * @param transferStatusCallbackListener 
-	 * @param transferControlBlock 
+	 * @param transferStatusCallbackListener
+	 * @param transferControlBlock
 	 * @throws JargonException
 	 */
 	public void processGetTransferViaRead(final IRODSFile irodsFile,
 			final File localFileToHoldData, final long irodsFileLength,
-			final TransferOptions transferOptions, final int fd, TransferControlBlock transferControlBlock, TransferStatusCallbackListener transferStatusCallbackListener)
+			final TransferOptions transferOptions, final int fd,
+			final TransferControlBlock transferControlBlock,
+			final TransferStatusCallbackListener transferStatusCallbackListener)
 			throws JargonException {
 		log.info("processGetTransferViaRead()");
 
@@ -594,7 +608,7 @@ public final class DataAOHelper extends AOHelper {
 		}
 
 		log.info("streaming file transfer started, get output stream for local destination file");
-		
+
 		try {
 			IRODSFileInputStream ifis = irodsAccessObjectFactory
 					.getIRODSFileFactory(irodsAccount)
@@ -602,10 +616,32 @@ public final class DataAOHelper extends AOHelper {
 
 			Stream2StreamAO stream2StreamAO = irodsAccessObjectFactory
 					.getStream2StreamAO(irodsAccount);
-			stream2StreamAO.transferStreamToFile(ifis, localFileToHoldData, irodsFileLength);
+
+			if (transferControlBlock.getTransferOptions()
+					.isIntraFileStatusCallbacks()
+					&& transferStatusCallbackListener != null) {
+				log.info("wrapping stream with callback stream wrapper");
+				ConnectionProgressStatusListener connectionProgressStatusListener = DefaultIntraFileProgressCallbackListener
+						.instanceSettingInterval(TransferType.GET, irodsFileLength,
+								transferControlBlock,
+								transferStatusCallbackListener, 5);
+				InputStream wrapper = new ByteCountingCallbackInputStreamWrapper(
+						connectionProgressStatusListener, ifis);
+				/*
+				stream2StreamAO.transferStreamToFile(wrapper,
+						localFileToHoldData, irodsFileLength, 32768L);  // FIXME: parameterize buffer length */
+				stream2StreamAO.transferStreamToFileUsingIOStreams(wrapper, localFileToHoldData, irodsFileLength, 4194304);
+
+			} else {
+				/*stream2StreamAO.transferStreamToFile(ifis, localFileToHoldData,
+						irodsFileLength, 32768L);*/
+				stream2StreamAO.transferStreamToFileUsingIOStreams(ifis, localFileToHoldData, irodsFileLength, 4194304);
+
+				
+			}
+
 		} catch (JargonException e) {
-			log.error(
-					"Exception streaming data to local file from iRODS: {}",
+			log.error("Exception streaming data to local file from iRODS: {}",
 					localFileToHoldData.getAbsolutePath(), e);
 			throw e;
 		} finally {

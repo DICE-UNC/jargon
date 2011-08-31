@@ -291,7 +291,7 @@ public class IRODSCommands implements IRODSManagedConnection {
 				errorStream.close();
 			}
 			if (byteStreamLength > 0) {
-				irodsConnection.send(new BufferedInputStream(byteStream),
+				irodsConnection.send(new BufferedInputStream(byteStream), // FIXME: add buffer option  jargon.io.send.input.stream.bufffer.size
 						byteStreamLength, connectionProgressStatusListener);
 				byteStream.close();
 			}
@@ -314,7 +314,7 @@ public class IRODSCommands implements IRODSManagedConnection {
 	public synchronized Tag irodsFunction(final IRodsPI irodsPI,
 			final byte[] errorStream, final int errorOffset,
 			final int errorLength, final byte[] bytes, final int byteOffset,
-			final int byteStringLength) throws JargonException {
+			final int byteStreamLength) throws JargonException {
 
 		if (irodsPI == null) {
 			String err = "null irodsPI";
@@ -339,12 +339,12 @@ public class IRODSCommands implements IRODSManagedConnection {
 					.send(createHeader(
 							IRODSConstants.RODS_API_REQ,
 							out.getBytes(ConnectionConstants.JARGON_CONNECTION_ENCODING).length,
-							errorLength, byteStringLength, irodsPI
+							errorLength, byteStreamLength, irodsPI
 									.getApiNumber()));
 			irodsConnection.send(out);
 
-			if (byteStringLength > 0) {
-				irodsConnection.send(bytes, byteOffset, byteStringLength);
+			if (byteStreamLength > 0) {
+				irodsConnection.send(bytes, byteOffset, byteStreamLength);
 			}
 
 			irodsConnection.flush();
@@ -428,7 +428,8 @@ public class IRODSCommands implements IRODSManagedConnection {
 	 * 
 	 * @param destination
 	 *            <code>OutputStream</code> for writing data that is read from
-	 *            the input stream.
+	 *            the input stream.  This stream is not wrapped with a buffer here, so a buffer
+	 *            should be provided when calling.
 	 * @param length
 	 *            <code>long</code> length of data to be read and written out.
 	 * @param intraFileStatusListener
@@ -437,7 +438,7 @@ public class IRODSCommands implements IRODSManagedConnection {
 	 *            progress with a small peformance penalty.
 	 * @throws JargonException
 	 */
-	public void read(final OutputStream destination, final long length,
+	public void read(final OutputStream destination, final long length, // FIXME: decide if buffering should be done here, and appropriate parameter for buffer setting
 			final ConnectionProgressStatusListener intraFileStatusListener)
 			throws JargonException {
 
@@ -646,50 +647,6 @@ public class IRODSCommands implements IRODSManagedConnection {
 					log.error("Unsupported encoding for: {}",
 							ConnectionConstants.JARGON_CONNECTION_ENCODING);
 					throw new JargonException("Unsupported encoding for: "
-							+ ConnectionConstants.JARGON_CONNECTION_ENCODING);
-				}
-				log.error("IRODS error occured "
-						+ errorTag.getTag(RErrMsg.PI_TAG).getTag(
-								AbstractIRODSPackingInstruction.MESSAGE_TAG)
-						+ " : " + info);
-			}
-		}
-	}
-
-	/**
-	 * @param errorLength
-	 * @param info
-	 * @throws JargonException
-	 */
-	private void handleSuccessButNoRowsFound(final int errorLength,
-			final int info) throws JargonException {
-		log.debug("was no rows found or success with no info");
-		if (errorLength != 0) {
-			byte[] errorMessage = new byte[errorLength];
-			try {
-				irodsConnection.read(errorMessage, 0, errorLength);
-			} catch (ClosedChannelException e) {
-				log.error("closed channel", e);
-				e.printStackTrace();
-				throw new JargonException(e);
-			} catch (InterruptedIOException e) {
-				log.error("interrupted io", e);
-				e.printStackTrace();
-				throw new JargonException(e);
-			} catch (IOException e) {
-				log.error("io exception", e);
-				e.printStackTrace();
-				throw new JargonException(e);
-			}
-			if (log.isDebugEnabled()) {
-				Tag errorTag;
-				try {
-					errorTag = Tag.readNextTag(errorMessage,
-							ConnectionConstants.JARGON_CONNECTION_ENCODING);
-				} catch (UnsupportedEncodingException e) {
-					log.error("Unsupported encoding for:{}",
-							ConnectionConstants.JARGON_CONNECTION_ENCODING);
-					throw new JargonException("Unsupported encoding for:"
 							+ ConnectionConstants.JARGON_CONNECTION_ENCODING);
 				}
 				log.error("IRODS error occured "

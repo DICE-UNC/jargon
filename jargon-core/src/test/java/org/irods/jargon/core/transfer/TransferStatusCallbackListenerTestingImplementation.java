@@ -23,7 +23,8 @@ public class TransferStatusCallbackListenerTestingImplementation implements
 	private int exceptionCallbackCtr = 0;
 	private int replicateCallbackCtr = 0;
 	private int overallCallbackCtr = 0;
-
+	private int intraFileCallbackCtr = 0;
+	
 	private int pauseAfter = 0;
 	private int cancelAfter = 0;
 	private TransferControlBlock transferControlBlock = null;
@@ -47,6 +48,10 @@ public class TransferStatusCallbackListenerTestingImplementation implements
 	@Override
 	public synchronized void statusCallback(final TransferStatus transferStatus)
 			throws JargonException {
+		
+		if (transferStatus.isIntraFileStatusReport()) {
+			intraFileCallbackCtr++;
+		}
 
 		if (transferStatus.getTransferType() == TransferType.GET && transferStatus.getTransferState() == TransferState.IN_PROGRESS_COMPLETE_FILE) {
 			getCallbackCtr++;
@@ -149,8 +154,15 @@ public class TransferStatusCallbackListenerTestingImplementation implements
 	/**
 	 * @return the overallCallbackCtr
 	 */
-	protected int getOverallCallbackCtr() {
+	public int getOverallCallbackCtr() {
 		return overallCallbackCtr;
+	}
+
+	/**
+	 * @return the intraFileCallbackCtr
+	 */
+	public int getIntraFileCallbackCtr() {
+		return intraFileCallbackCtr;
 	}
 
 }

@@ -57,6 +57,10 @@ public interface Stream2StreamAO {
 			throws JargonException;
 
 	void transferStreamToFile(InputStream inputStream, File targetFile,
-			long length) throws JargonException;
+			long length, long readBuffSize) throws JargonException;
+
+	void transferStreamToFileUsingIOStreams(InputStream inputStream,
+			File targetFile, long length, int readBuffSize)
+			throws JargonException;
 
 }

@@ -6,6 +6,7 @@ package org.irods.jargon.core.pub.io;
 import java.io.OutputStream;
 
 import org.irods.jargon.core.connection.IRODSAccount;
+import org.irods.jargon.core.connection.IRODSCommands;
 import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.exception.JargonRuntimeException;
@@ -113,8 +114,9 @@ final class FileIOOperationsAOImpl extends IRODSGenericAO implements
 		}
 
 		DataObjRead dataObjReadPI = DataObjRead.instance(fd, length);
+		IRODSCommands irodsProtocol = getIRODSProtocol();
 
-		Tag message = getIRODSProtocol().irodsFunction(dataObjReadPI);
+		Tag message = irodsProtocol.irodsFunction(dataObjReadPI);
 
 		// Need the total dataSize
 		if (message == null) {
@@ -124,7 +126,7 @@ final class FileIOOperationsAOImpl extends IRODSGenericAO implements
 		length = message.getTag(IRODSConstants.MsgHeader_PI).getTag(IRODSConstants.bsLen).getIntValue();
 
 		// read the message byte stream into the local file
-		getIRODSProtocol().read(destination, length);
+		irodsProtocol.read(destination, length);
 		return message.getTag(IRODSConstants.MsgHeader_PI).getTag(IRODSConstants.intInfo).getIntValue();
 	}
 
@@ -135,7 +137,7 @@ final class FileIOOperationsAOImpl extends IRODSGenericAO implements
 	 * int, int)
 	 */
 	@Override
-	public int fileRead(final int fd, final byte buffer[], final int offset,
+	public int fileRead(final int fd, final byte buffer[], final int offset,  //FIXME: potentially implment a read of an Input Stream that would directly tie to the iRODS socket?
 			int length) throws JargonException {
 
 		log.info("file read for fd: {}", fd);
@@ -143,10 +145,12 @@ final class FileIOOperationsAOImpl extends IRODSGenericAO implements
 		if (fd <= 0) {
 			throw new JargonException("invalid file descriptor");
 		}
+		
+		IRODSCommands irodsProtocol = getIRODSProtocol();
 
 		DataObjRead dataObjReadPI = DataObjRead.instance(fd, length);
 
-		Tag message = getIRODSProtocol().irodsFunction(dataObjReadPI);
+		Tag message = irodsProtocol.irodsFunction(dataObjReadPI);
 
 		// Need the total dataSize
 		if (message == null) {
@@ -157,7 +161,7 @@ final class FileIOOperationsAOImpl extends IRODSGenericAO implements
 
 		// read the message byte stream into the local file
 
-		int read = getIRODSProtocol().read(buffer, offset, length);
+		int read = irodsProtocol.read(buffer, offset, length);
 
 		if (read == message.getTag(IRODSConstants.MsgHeader_PI).getTag(IRODSConstants.intInfo).getIntValue()) {
 			return read;

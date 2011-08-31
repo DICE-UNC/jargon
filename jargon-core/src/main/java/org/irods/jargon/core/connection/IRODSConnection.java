@@ -3,6 +3,7 @@ package org.irods.jargon.core.connection;
 import static org.irods.jargon.core.connection.ConnectionConstants.INT_LENGTH;
 
 import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InterruptedIOException;
@@ -139,19 +140,17 @@ final class IRODSConnection implements IRODSManagedConnection {
 			}
 
 			irodsInputStream = new BufferedInputStream(
-					connection.getInputStream());
-			irodsOutputStream = connection.getOutputStream();
+					connection.getInputStream()); // FIXME: parameterize
+			irodsOutputStream = new BufferedOutputStream(connection.getOutputStream());
 
 		} catch (UnknownHostException e) {
 			log.error("exception opening socket to:" + irodsAccount.getHost()
 					+ " port:" + irodsAccount.getPort(), e);
-			//disconnectWithIOException();
 			throw new JargonException(e);
 		} catch (IOException ioe) {
 			log.error(
 					"io exception opening socket to:" + irodsAccount.getHost()
 							+ " port:" + irodsAccount.getPort(), ioe);
-			//disconnectWithIOException();
 			throw new JargonException(ioe);
 		}
 
@@ -354,6 +353,10 @@ final class IRODSConnection implements IRODSManagedConnection {
 			throw new IllegalArgumentException(err);
 		}
 
+		
+		// FIXME: if offset = 0 and length == byte length, don't do array copy 
+		
+		
 		byte temp[] = new byte[length];
 
 		System.arraycopy(value, offset, temp, 0, length);
@@ -438,7 +441,7 @@ final class IRODSConnection implements IRODSManagedConnection {
 
 		try {
 			int lenThisRead = 0;
-			byte[] temp = new byte[Math.min(DEFAULT_BUFFER_SIZE, (int) length)];
+			byte[] temp = new byte[Math.min(DEFAULT_BUFFER_SIZE, (int) length)];  // FIXME: parameterize as jargon.io.input.stream.to.irods.output.stream.copy.byte.buffer.size
 			while (length > 0) {
 				if (temp.length > length) {
 					temp = new byte[(int) length];
@@ -479,6 +482,7 @@ final class IRODSConnection implements IRODSManagedConnection {
 
 		try {
 			irodsOutputStream.write(outputBuffer, 0, outputOffset);
+			irodsOutputStream.flush();
 		} catch (IOException ioe) {
 			disconnectWithIOException();
 			throw ioe;
@@ -529,7 +533,7 @@ final class IRODSConnection implements IRODSManagedConnection {
 	 * 
 	 * @param destination
 	 *            <code>OutputStream</code> to which data will be streamed from
-	 *            iRODS.
+	 *            iRODS.  Note that this method will wrap the output stream with a buffered stream for you.
 	 * @param length
 	 *            <code>long</code> with the length of data to be read from
 	 *            iRODS and pushed to the stream.
@@ -553,15 +557,17 @@ final class IRODSConnection implements IRODSManagedConnection {
 			log.error(err);
 			throw new IllegalArgumentException(err);
 		}
+		
+		BufferedOutputStream bos = new BufferedOutputStream(destination);
 
 		try {
-			byte[] temp = new byte[Math.min(DEFAULT_BUFFER_SIZE, (int) length)];
+			byte[] temp = new byte[Math.min(DEFAULT_BUFFER_SIZE, (int) length)];  // FIXME: parameterize to jargon.io.get.read.write.buffer.size
 			int n = 0;
 			while (length > 0) {
 				n = read(temp, 0, Math.min(DEFAULT_BUFFER_SIZE, (int) length));
 				if (n > 0) {
 					length -= n;
-					destination.write(temp, 0, n);
+					bos.write(temp, 0, n);
 					/*
 					 * If a listener is specified, send call-backs with progress
 					 */
@@ -574,10 +580,19 @@ final class IRODSConnection implements IRODSManagedConnection {
 					length = n;
 				}
 			}
+			
+			bos.flush();
+			
 		} catch (IOException ioe) {
 			log.error("io exception reading", ioe);
 			disconnectWithIOException();
 			throw ioe;
+		} finally {
+			try {
+				bos.close();
+			} catch (Exception e) {
+				// ignore
+			}
 		}
 	}
 

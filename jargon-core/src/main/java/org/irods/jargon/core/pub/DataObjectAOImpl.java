@@ -14,6 +14,7 @@ import java.util.List;
 
 import org.irods.jargon.core.connection.ConnectionConstants;
 import org.irods.jargon.core.connection.IRODSAccount;
+import org.irods.jargon.core.connection.IRODSCommands;
 import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.DuplicateDataException;
@@ -786,8 +787,9 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		}
 
 		LocalFileUtils.createLocalFileIfNotExists(localFileToHoldData);
+		IRODSCommands irodsProtocol =  getIRODSProtocol();
 
-		final Tag message = getIRODSProtocol().irodsFunction(dataObjInp);
+		final Tag message = irodsProtocol.irodsFunction(dataObjInp);
 
 		// irods file doesn't exist
 		if (message == null) {
@@ -829,7 +831,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 			} else {
 				dataAOHelper.processNormalGetTransfer(localFileToHoldData,
-						lengthFromIrodsResponse, this.getIRODSProtocol(),
+						lengthFromIrodsResponse, irodsProtocol,
 						thisFileTransferOptions, transferControlBlock, transferStatusCallbackListener);
 			}
 

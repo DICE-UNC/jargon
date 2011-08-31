@@ -1,5 +1,6 @@
 package org.irods.jargon.core.pub;
 
+import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -95,7 +96,8 @@ public class Stream2StreamAOImpl extends IRODSGenericAO implements
 
 	@Override
 	public void transferStreamToFile(final InputStream inputStream,
-			final File targetFile, final long length) throws JargonException {
+			final File targetFile, final long length, final long readBuffSize)
+			throws JargonException {
 
 		if (inputStream == null) {
 			throw new IllegalArgumentException("null or empty inputStream");
@@ -113,7 +115,24 @@ public class Stream2StreamAOImpl extends IRODSGenericAO implements
 		try {
 			FileOutputStream fileOutputStream = new FileOutputStream(targetFile);
 			fileChannel = fileOutputStream.getChannel();
-			fileChannel.transferFrom(inputChannel, 0, length);
+
+			long fileSize = length;
+
+			long offs = 0, doneCnt = 0, copyCnt = Math
+					.min(readBuffSize, length);
+
+			do {
+
+				doneCnt = fileChannel.transferFrom(inputChannel, offs, copyCnt);
+
+				offs += doneCnt;
+
+				fileSize -= doneCnt;
+
+			}
+
+			while (fileSize > 0);
+
 		} catch (FileNotFoundException e) {
 			log.error("File not found exception copying buffers", e);
 			throw new JargonException(
@@ -134,6 +153,66 @@ public class Stream2StreamAOImpl extends IRODSGenericAO implements
 			} catch (Exception e) {
 
 			}
+		}
+
+	}
+
+	@Override
+	public void transferStreamToFileUsingIOStreams(
+			final InputStream inputStream, final File targetFile,
+			final long length, final int readBuffSize) throws JargonException {
+
+		if (inputStream == null) {
+			throw new IllegalArgumentException("null or empty inputStream");
+		}
+
+		if (targetFile == null) {
+			throw new IllegalArgumentException("null targetFile");
+		}
+
+		log.info("transferStreamToFile(), inputStream:{}", inputStream);
+		log.info("targetFile:{}", targetFile);
+
+		OutputStream fileOutputStream = null;
+
+		try {
+			fileOutputStream = new BufferedOutputStream(new FileOutputStream(
+					targetFile)); // FIXME: set buffer size for file output stream jargon.io.local.output.stream.buffer.size 
+
+			int doneCnt = -1;
+
+			byte buf[] = new byte[readBuffSize];
+
+			while ((doneCnt = inputStream.read(buf, 0, readBuffSize)) >= 0) {
+
+				if (doneCnt == 0) {
+					Thread.yield();
+				} else {
+					fileOutputStream.write(buf, 0, doneCnt);
+				}
+			}
+
+			fileOutputStream.flush();
+
+		} catch (FileNotFoundException e) {
+			log.error("File not found exception copying buffers", e);
+			throw new JargonException(
+					"file not found exception copying buffers", e);
+		} catch (IOException e) {
+			log.error("IOException exception copying buffers", e);
+			throw new JargonException("IOException copying buffers", e);
+		} finally {
+
+			try {
+				inputStream.close();
+			} catch (IOException e) {
+			}
+
+			try {
+				fileOutputStream.close();
+			} catch (IOException e) {
+			}
+
 		}
 
 	}

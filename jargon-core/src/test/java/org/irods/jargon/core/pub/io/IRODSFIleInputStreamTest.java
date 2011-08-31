@@ -4,16 +4,26 @@
 package org.irods.jargon.core.pub.io;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.InputStream;
 import java.util.Properties;
 
 import junit.framework.Assert;
 
+import org.irods.jargon.core.connection.ConnectionProgressStatusListener;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSProtocolManager;
 import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.connection.IRODSSimpleProtocolManager;
+import org.irods.jargon.core.pub.DataTransferOperations;
+import org.irods.jargon.core.pub.DefaultIntraFileProgressCallbackListener;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactoryImpl;
+import org.irods.jargon.core.pub.IRODSFileSystem;
+import org.irods.jargon.core.transfer.DefaultTransferControlBlock;
+import org.irods.jargon.core.transfer.TransferControlBlock;
+import org.irods.jargon.core.transfer.TransferStatus.TransferType;
+import org.irods.jargon.core.transfer.TransferStatusCallbackListenerTestingImplementation;
 import org.irods.jargon.testutils.IRODSTestSetupUtilities;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.irods.jargon.testutils.filemanip.FileGenerator;
@@ -36,6 +46,7 @@ public class IRODSFIleInputStreamTest {
 	private static ScratchFileUtils scratchFileUtils = null;
 	public static final String IRODS_TEST_SUBDIR_PATH = "IrodsFileInputStreamTest";
 	private static IRODSTestSetupUtilities irodsTestSetupUtilities = null;
+	private static IRODSFileSystem irodsFileSystem;
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -46,6 +57,7 @@ public class IRODSFIleInputStreamTest {
 		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
 		irodsTestSetupUtilities
 				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
+		irodsFileSystem = IRODSFileSystem.instance();
 	}
 
 	/**
@@ -53,6 +65,7 @@ public class IRODSFIleInputStreamTest {
 	 */
 	@AfterClass
 	public static void tearDownAfterClass() throws Exception {
+		irodsFileSystem.closeAndEatExceptions();
 	}
 
 	/**
@@ -253,6 +266,63 @@ public class IRODSFIleInputStreamTest {
 
 		irodsSession.closeSession();
 		Assert.assertEquals("whole file not read back", fileLength, bytesRead);
+	}
+
+	@Test
+	public final void testReadWithByteCountingWrapper() throws Exception {
+		String testFileName = "testReadWithByteCountingWrapper.txt";
+		int fileLength = 23000000;
+
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String absPathToFile = org.irods.jargon.testutils.filemanip.FileGenerator
+				.generateFileOfFixedLengthGivenName(absPath, testFileName,
+						fileLength);
+
+		File sourceFile = new File(absPathToFile);
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+		IRODSFileFactory irodsFileFactory = accessObjectFactory
+				.getIRODSFileFactory(irodsAccount);
+		
+		IRODSFile irodsFile = irodsFileFactory.instanceIRODSFile(
+				targetIrodsCollection, testFileName);
+
+		DataTransferOperations transferOperations = accessObjectFactory
+				.getDataTransferOperations(irodsAccount);
+		transferOperations.putOperation(sourceFile, irodsFile, null, null);
+
+		IRODSFileInputStream fis = irodsFileFactory
+				.instanceIRODSFileInputStream(irodsFile);
+		TransferStatusCallbackListenerTestingImplementation transferStatusCallbackListener = new TransferStatusCallbackListenerTestingImplementation();
+		TransferControlBlock transferControlBlock = DefaultTransferControlBlock
+				.instance();
+		ConnectionProgressStatusListener connectionProgressStatusListener = DefaultIntraFileProgressCallbackListener
+				.instance(TransferType.GET, fileLength, transferControlBlock,
+						transferStatusCallbackListener);
+		InputStream wrapper = new ByteCountingCallbackInputStreamWrapper(
+				connectionProgressStatusListener, fis);
+
+		int bytesRead = 0;
+		int readLength = 0;
+		byte[] readBytesBuffer = new byte[2048];
+		while ((readLength = (wrapper.read(readBytesBuffer))) > -1) {
+			bytesRead += readLength;
+		}
+
+		fis.close();
+		Assert.assertEquals("whole file not read back", fileLength, bytesRead);
+		Assert.assertTrue("did not get callbacks",
+				transferStatusCallbackListener.getIntraFileCallbackCtr() > 0);
+
 	}
 
 	/**

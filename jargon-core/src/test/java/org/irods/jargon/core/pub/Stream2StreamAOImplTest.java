@@ -168,7 +168,7 @@ public class Stream2StreamAOImplTest {
 				.getIRODSAccessObjectFactory().getStream2StreamAO(irodsAccount);
 		
 
-		stream2StreamAO.transferStreamToFile(irodsFileInputStream, localFile, sourceFile.length());
+		stream2StreamAO.transferStreamToFile(irodsFileInputStream, localFile, sourceFile.length(), 32768L);
 		
 		TestCase.assertTrue("local file does not exist", localFile.exists());
 		TestCase.assertEquals("local file has wrong length", sourceFile.length(), localFile.length());

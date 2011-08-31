@@ -23,6 +23,8 @@ public abstract class IRODSGenericAO implements IRODSAccessObject {
 
 	private final IRODSSession irodsSession;
 	private final IRODSAccount irodsAccount;
+	
+	// FIXME: cache connection and don't call IRODSSession each time?
 
 	private static final Logger log = LoggerFactory
 			.getLogger(IRODSGenericAO.class);
