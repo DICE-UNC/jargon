@@ -92,36 +92,35 @@ public class PipelineConfiguration {
 	/**
 	 * @return the internalCacheBufferSize
 	 */
-	public synchronized int getInternalCacheBufferSize() {
+	public int getInternalCacheBufferSize() {
 		return internalCacheBufferSize;
 	}
 
-	
 	/**
 	 * @return the sendInputStreamBufferSize
 	 */
-	public synchronized int getSendInputStreamBufferSize() {
+	public int getSendInputStreamBufferSize() {
 		return sendInputStreamBufferSize;
 	}
 
 	/**
 	 * @return the localFileOutputStreamBufferSize
 	 */
-	public synchronized int getLocalFileOutputStreamBufferSize() {
+	public int getLocalFileOutputStreamBufferSize() {
 		return localFileOutputStreamBufferSize;
 	}
 
 	/**
 	 * @return the irodsSocketTimeout
 	 */
-	public synchronized int getIrodsSocketTimeout() {
+	public int getIrodsSocketTimeout() {
 		return irodsSocketTimeout;
 	}
 
 	/**
 	 * @return the irodsParallelSocketTimeout
 	 */
-	public synchronized int getIrodsParallelSocketTimeout() {
+	public int getIrodsParallelSocketTimeout() {
 		return irodsParallelSocketTimeout;
 	}
 
