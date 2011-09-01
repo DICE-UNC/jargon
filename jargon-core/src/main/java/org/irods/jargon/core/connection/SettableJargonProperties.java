@@ -25,8 +25,7 @@ public class SettableJargonProperties implements JargonProperties {
 	private int maxParallelThreads = 4;
 	private int maxFilesAndDirsQueryMax = 5000;
 	private boolean useTransferThreadsPool = false;
-	private int transferThreadCorePoolSize = 0;
-	private int transferThreadMaxPoolSize = 16;
+	private int transferThreadPoolMaxSimultaneousTransfers = 4;
 	private int transferThreadPoolTimeoutMillis = 60000;
 	private boolean allowPutGetResourceRedirects = false;
 	private boolean computeChecksumAfterTransfer = false;
@@ -34,46 +33,68 @@ public class SettableJargonProperties implements JargonProperties {
 	private boolean intraFileStatusCallbacks = false;
 	private int irodsSocketTimeout = 0;
 	private int irodsParallelSocketTimeout = 0;
-	
+	private int internalInputStreamBufferSize = 0;
+	private int internalOutputStreamBufferSize = 0;
+	private int internalCacheBufferSize = 0;
+	private int sendInputStreamBufferSize = 0;
+	private int localFileOutputStreamBufferSize = 0;
+
 	/**
-	 * Construct a default properties set based on the provided initial set of <code>JargonProperties</code>.
-	 * This can be used to wire in properties via configuration, as in Spring.
-	 * @param jargonProperties {@link JargonProperties} that has the initial set of properties.
+	 * Construct a default properties set based on the provided initial set of
+	 * <code>JargonProperties</code>. This can be used to wire in properties via
+	 * configuration, as in Spring.
+	 * 
+	 * @param jargonProperties
+	 *            {@link JargonProperties} that has the initial set of
+	 *            properties.
 	 */
 	public SettableJargonProperties(final JargonProperties jargonProperties) {
 		initialize(jargonProperties);
 	}
-	
+
 	/**
-	 * Construct a default properties set based on the <code>jargon.properties</code> in jargon, these can
-	 * then be overridden.
-	 * @throws JargonException if properties cannot be loaded
+	 * Construct a default properties set based on the
+	 * <code>jargon.properties</code> in jargon, these can then be overridden.
+	 * 
+	 * @throws JargonException
+	 *             if properties cannot be loaded
 	 */
 	public SettableJargonProperties() throws JargonException {
 		JargonProperties jargonProperties = new DefaultPropertiesJargonConfig();
 		initialize(jargonProperties);
 	}
-	
+
 	private void initialize(final JargonProperties jargonProperties) {
-		
+
 		if (jargonProperties == null) {
 			throw new IllegalArgumentException("null jargonProperties");
 		}
-		
+
 		this.useParallelTransfer = jargonProperties.isUseParallelTransfer();
-		this.maxFilesAndDirsQueryMax = jargonProperties.getMaxFilesAndDirsQueryMax();
-		this.allowPutGetResourceRedirects = jargonProperties.isAllowPutGetResourceRedirects();
-		this.computeAndVerifyChecksumAfterTransfer = jargonProperties.isComputeAndVerifyChecksumAfterTransfer();
-		this.computeChecksumAfterTransfer = jargonProperties.isComputeChecksumAfterTransfer();
-		this.intraFileStatusCallbacks = jargonProperties.isIntraFileStatusCallbacks();
-		this.irodsParallelSocketTimeout = jargonProperties.getIRODSParallelTransferSocketTimeout();
+		this.maxFilesAndDirsQueryMax = jargonProperties
+				.getMaxFilesAndDirsQueryMax();
+		this.allowPutGetResourceRedirects = jargonProperties
+				.isAllowPutGetResourceRedirects();
+		this.computeAndVerifyChecksumAfterTransfer = jargonProperties
+				.isComputeAndVerifyChecksumAfterTransfer();
+		this.computeChecksumAfterTransfer = jargonProperties
+				.isComputeChecksumAfterTransfer();
+		this.intraFileStatusCallbacks = jargonProperties
+				.isIntraFileStatusCallbacks();
+		this.irodsParallelSocketTimeout = jargonProperties
+				.getIRODSParallelTransferSocketTimeout();
 		this.irodsSocketTimeout = jargonProperties.getIRODSSocketTimeout();
 		this.maxParallelThreads = jargonProperties.getMaxParallelThreads();
-		this.transferThreadCorePoolSize = jargonProperties.getTransferThreadCorePoolSize();
-		this.transferThreadMaxPoolSize = jargonProperties.getTransferThreadMaxPoolSize();
-		this.transferThreadPoolTimeoutMillis = jargonProperties.getTransferThreadPoolTimeoutMillis();
+		this.transferThreadPoolTimeoutMillis = jargonProperties
+				.getTransferThreadPoolTimeoutMillis();
+		this.transferThreadPoolMaxSimultaneousTransfers = jargonProperties.getTransferThreadPoolMaxSimultaneousTransfers();
+		this.internalInputStreamBufferSize = jargonProperties.getInternalInputStreamBufferSize();
+		this.internalOutputStreamBufferSize = jargonProperties.getInternalOutputStreamBufferSize();
+		this.internalCacheBufferSize =jargonProperties.getInternalCacheBufferSize();
+		this.sendInputStreamBufferSize = jargonProperties.getSendInputStreamBufferSize();
+		this.localFileOutputStreamBufferSize = jargonProperties.getLocalFileOutputStreamBufferSize();
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -81,15 +102,16 @@ public class SettableJargonProperties implements JargonProperties {
 	 * org.irods.jargon.core.connection.JargonProperites#isUseParallelTransfer()
 	 */
 	@Override
-	public boolean isUseParallelTransfer() {
+	public synchronized boolean isUseParallelTransfer() {
 		return useParallelTransfer;
 	}
 
-	public void setUseParallelTransfer(final boolean useParallelTransfer) {
+	public synchronized void setUseParallelTransfer(
+			final boolean useParallelTransfer) {
 		this.useParallelTransfer = useParallelTransfer;
 	}
 
-	public void setMaxParallelThreads(final int maxParallelThreads) {
+	public synchronized void setMaxParallelThreads(final int maxParallelThreads) {
 		this.maxParallelThreads = maxParallelThreads;
 	}
 
@@ -100,7 +122,7 @@ public class SettableJargonProperties implements JargonProperties {
 	 * org.irods.jargon.core.connection.JargonProperites#getMaxParallelThreads()
 	 */
 	@Override
-	public int getMaxParallelThreads() {
+	public synchronized int getMaxParallelThreads() {
 		return maxParallelThreads;
 	}
 
@@ -112,39 +134,17 @@ public class SettableJargonProperties implements JargonProperties {
 	 * ()
 	 */
 	@Override
-	public int getMaxFilesAndDirsQueryMax(){
+	public synchronized int getMaxFilesAndDirsQueryMax() {
 		return maxFilesAndDirsQueryMax;
 	}
 
 	@Override
-	public boolean isUseTransferThreadsPool()  {
+	public synchronized boolean isUseTransferThreadsPool() {
 		return useTransferThreadsPool;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.irods.jargon.core.connection.JargonProperties#
-	 * getTransferThreadCorePoolSize()
-	 */
 	@Override
-	public int getTransferThreadCorePoolSize() {
-		return transferThreadCorePoolSize;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.irods.jargon.core.connection.JargonProperties#
-	 * getTransferThreadMaxPoolSize()
-	 */
-	@Override
-	public int getTransferThreadMaxPoolSize() {
-		return transferThreadMaxPoolSize;
-	}
-
-	@Override
-	public int getTransferThreadPoolTimeoutMillis()  {
+	public synchronized int getTransferThreadPoolTimeoutMillis() {
 		return transferThreadPoolTimeoutMillis;
 	}
 
@@ -152,7 +152,8 @@ public class SettableJargonProperties implements JargonProperties {
 	 * @param maxFilesAndDirsQueryMax
 	 *            the maxFilesAndDirsQueryMax to set
 	 */
-	public void setMaxFilesAndDirsQueryMax(final int maxFilesAndDirsQueryMax) {
+	public synchronized void setMaxFilesAndDirsQueryMax(
+			final int maxFilesAndDirsQueryMax) {
 		this.maxFilesAndDirsQueryMax = maxFilesAndDirsQueryMax;
 	}
 
@@ -160,32 +161,16 @@ public class SettableJargonProperties implements JargonProperties {
 	 * @param useTransferThreadsPool
 	 *            the useTransferThreadsPool to set
 	 */
-	public void setUseTransferThreadsPool(final boolean useTransferThreadsPool) {
+	public synchronized void setUseTransferThreadsPool(
+			final boolean useTransferThreadsPool) {
 		this.useTransferThreadsPool = useTransferThreadsPool;
-	}
-
-	/**
-	 * @param transferThreadCorePoolSize
-	 *            the transferThreadCorePoolSize to set
-	 */
-	public void setTransferThreadCorePoolSize(
-			final int transferThreadCorePoolSize) {
-		this.transferThreadCorePoolSize = transferThreadCorePoolSize;
-	}
-
-	/**
-	 * @param transferThreadMaxPoolSize
-	 *            the transferThreadMaxPoolSize to set
-	 */
-	public void setTransferThreadMaxPoolSize(final int transferThreadMaxPoolSize) {
-		this.transferThreadMaxPoolSize = transferThreadMaxPoolSize;
 	}
 
 	/**
 	 * @param transferThreadPoolTimeoutMillis
 	 *            the transferThreadPoolTimeoutMillis to set
 	 */
-	public void setTransferThreadPoolTimeoutMillis(
+	public synchronized void setTransferThreadPoolTimeoutMillis(
 			final int transferThreadPoolTimeoutMillis) {
 		this.transferThreadPoolTimeoutMillis = transferThreadPoolTimeoutMillis;
 	}
@@ -197,7 +182,7 @@ public class SettableJargonProperties implements JargonProperties {
 	 * isAllowPutGetResourceRedirects()
 	 */
 	@Override
-	public boolean isAllowPutGetResourceRedirects() {
+	public synchronized boolean isAllowPutGetResourceRedirects() {
 		return allowPutGetResourceRedirects;
 	}
 
@@ -209,8 +194,8 @@ public class SettableJargonProperties implements JargonProperties {
 	 *            <code>true</code>
 	 * @throws JargonException
 	 */
-	public void setAllowPutGetResourceRedirects(
-			final boolean allowPutGetResourceRedirects)  {
+	public synchronized void setAllowPutGetResourceRedirects(
+			final boolean allowPutGetResourceRedirects) {
 		this.allowPutGetResourceRedirects = allowPutGetResourceRedirects;
 	}
 
@@ -221,7 +206,7 @@ public class SettableJargonProperties implements JargonProperties {
 	 * isComputeChecksumAfterTransfer()
 	 */
 	@Override
-	public boolean isComputeChecksumAfterTransfer()  {
+	public synchronized boolean isComputeChecksumAfterTransfer() {
 		return computeChecksumAfterTransfer;
 	}
 
@@ -233,7 +218,7 @@ public class SettableJargonProperties implements JargonProperties {
 	 *            by default if <code>true</code>
 	 * @throws JargonException
 	 */
-	public void setComputeChecksumAfterTransfer(
+	public synchronized void setComputeChecksumAfterTransfer(
 			final boolean computeChecksumAfterTransfer) {
 		this.computeChecksumAfterTransfer = computeChecksumAfterTransfer;
 	}
@@ -245,8 +230,7 @@ public class SettableJargonProperties implements JargonProperties {
 	 * isComputeAndVerifyChecksumAfterTransfer()
 	 */
 	@Override
-	public boolean isComputeAndVerifyChecksumAfterTransfer()
-			 {
+	public synchronized boolean isComputeAndVerifyChecksumAfterTransfer() {
 		return this.computeAndVerifyChecksumAfterTransfer;
 	}
 
@@ -257,7 +241,7 @@ public class SettableJargonProperties implements JargonProperties {
 	 *            <code>boolean</code> that causes a checksum validation if set
 	 *            to <code>true</code>
 	 */
-	public void setComputeAndVerifyChecksumAfterTransfer(
+	public synchronized void setComputeAndVerifyChecksumAfterTransfer(
 			final boolean computeAndVerifyChecksumAfterTransfer) {
 		this.computeAndVerifyChecksumAfterTransfer = computeAndVerifyChecksumAfterTransfer;
 	}
@@ -270,7 +254,7 @@ public class SettableJargonProperties implements JargonProperties {
 	 * @param intraFileStatusCallbacks
 	 *            the intraFileStatusCallbacks to set
 	 */
-	public void setIntraFileStatusCallbacks(
+	public synchronized void setIntraFileStatusCallbacks(
 			final boolean intraFileStatusCallbacks) {
 		this.intraFileStatusCallbacks = intraFileStatusCallbacks;
 	}
@@ -283,7 +267,7 @@ public class SettableJargonProperties implements JargonProperties {
 	 * ()
 	 */
 	@Override
-	public boolean isIntraFileStatusCallbacks() {
+	public synchronized boolean isIntraFileStatusCallbacks() {
 		return intraFileStatusCallbacks;
 	}
 
@@ -294,8 +278,12 @@ public class SettableJargonProperties implements JargonProperties {
 	 * org.irods.jargon.core.connection.JargonProperties#getIRODSSocketTimeout()
 	 */
 	@Override
-	public int getIRODSSocketTimeout() {
+	public synchronized int getIRODSSocketTimeout() {
 		return irodsSocketTimeout;
+	}
+	
+	public synchronized void setIRODSSocketTimeout(final int irodsSocketTimeout) {
+		this.irodsSocketTimeout = irodsSocketTimeout;
 	}
 
 	/*
@@ -305,41 +293,145 @@ public class SettableJargonProperties implements JargonProperties {
 	 * getIRODSParallelTransferSocketTimeout()
 	 */
 	@Override
-	public int getIRODSParallelTransferSocketTimeout() {
+	public synchronized int getIRODSParallelTransferSocketTimeout() {
 		return irodsParallelSocketTimeout;
 	}
-
-	/**
-	 * @return the irodsSocketTimeout in seconds, or 0 or less if not used
-	 */
-	public int getIrodsSocketTimeout() {
-		return irodsSocketTimeout;
-	}
-
-	/**
-	 * @param irodsSocketTimeout
-	 *            the irodsSocketTimeout in seconds or 0 or less if not used
-	 */
-	public void setIrodsSocketTimeout(final int irodsSocketTimeout) {
-		this.irodsSocketTimeout = irodsSocketTimeout;
-	}
-
-	/**
-	 * @return the irodsParallelSocketTimeout in seconds or 0 or less if not
-	 *         used
-	 */
-	public int getIrodsParallelSocketTimeout() {
-		return irodsParallelSocketTimeout;
-	}
-
-	/**
-	 * @param irodsParallelSocketTimeout
-	 *            the irodsParallelSocketTimeout to set in seconds or 0 or less
-	 *            if not used
-	 */
-	public void setIrodsParallelSocketTimeout(
-			final int irodsParallelSocketTimeout) {
+	
+	public synchronized void setIRODSParallelTransferSocketTimeout(int irodsParallelSocketTimeout) {
 		this.irodsParallelSocketTimeout = irodsParallelSocketTimeout;
+	}
+
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.connection.JargonProperties#
+	 * getTransferThreadPoolMaxSimultaneousTransfers()
+	 */
+	@Override
+	public synchronized int getTransferThreadPoolMaxSimultaneousTransfers() {
+		return transferThreadPoolMaxSimultaneousTransfers;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.connection.JargonProperties#
+	 * getInternalInputStreamBufferSize()
+	 */
+	@Override
+	public synchronized int getInternalInputStreamBufferSize() {
+		return internalInputStreamBufferSize;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.connection.JargonProperties#
+	 * getInternalOutputStreamBufferSize()
+	 */
+	@Override
+	public synchronized int getInternalOutputStreamBufferSize() {
+		return internalOutputStreamBufferSize;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.connection.JargonProperties#getInternalCacheBufferSize
+	 * ()
+	 */
+	@Override
+	public synchronized int getInternalCacheBufferSize() {
+		return internalCacheBufferSize;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.connection.JargonProperties#
+	 * getSendInputStreamBufferSize()
+	 */
+	@Override
+	public synchronized int getSendInputStreamBufferSize() {
+		return sendInputStreamBufferSize;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.connection.JargonProperties#
+	 * getInputToOutputCopyBufferByteSize()
+	 */
+	@Override
+	public synchronized int getInputToOutputCopyBufferByteSize() {
+		return getInputToOutputCopyBufferByteSize();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.connection.JargonProperties#
+	 * getLocalFileOutputStreamBufferSize()
+	 */
+	@Override
+	public synchronized int getLocalFileOutputStreamBufferSize() {
+		return localFileOutputStreamBufferSize;
+	}
+
+	/**
+	 * @param transferThreadPoolMaxSimultaneousTransfers
+	 *            the transferThreadPoolMaxSimultaneousTransfers to set
+	 */
+	public synchronized void setTransferThreadPoolMaxSimultaneousTransfers(
+			final int transferThreadPoolMaxSimultaneousTransfers) {
+		this.transferThreadPoolMaxSimultaneousTransfers = transferThreadPoolMaxSimultaneousTransfers;
+	}
+
+	/**
+	 * @param internalInputStreamBufferSize
+	 *            the internalInputStreamBufferSize to set
+	 */
+	public synchronized void setInternalInputStreamBufferSize(
+			final int internalInputStreamBufferSize) {
+		this.internalInputStreamBufferSize = internalInputStreamBufferSize;
+	}
+
+	/**
+	 * @param internalOutputStreamBufferSize
+	 *            the internalOutputStreamBufferSize to set
+	 */
+	public synchronized void setInternalOutputStreamBufferSize(
+			final int internalOutputStreamBufferSize) {
+		this.internalOutputStreamBufferSize = internalOutputStreamBufferSize;
+	}
+
+	/**
+	 * @param internalCacheBufferSize
+	 *            the internalCacheBufferSize to set
+	 */
+	public synchronized void setInternalCacheBufferSize(
+			final int internalCacheBufferSize) {
+		this.internalCacheBufferSize = internalCacheBufferSize;
+	}
+
+	/**
+	 * @param sendInputStreamBufferSize
+	 *            the sendInputStreamBufferSize to set
+	 */
+	public synchronized void setSendInputStreamBufferSize(
+			final int sendInputStreamBufferSize) {
+		this.sendInputStreamBufferSize = sendInputStreamBufferSize;
+	}
+
+	/**
+	 * @param localFileOutputStreamBufferSize
+	 *            the localFileOutputStreamBufferSize to set
+	 */
+	public synchronized void setLocalFileOutputStreamBufferSize(
+			final int localFileOutputStreamBufferSize) {
+		this.localFileOutputStreamBufferSize = localFileOutputStreamBufferSize;
 	}
 
 }

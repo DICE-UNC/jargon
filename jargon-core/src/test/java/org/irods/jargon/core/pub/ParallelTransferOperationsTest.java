@@ -148,8 +148,8 @@ public class ParallelTransferOperationsTest {
 		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
 		SettableJargonProperties jargonProperties = new SettableJargonProperties();
 		jargonProperties.setUseTransferThreadsPool(true);
-		jargonProperties.setTransferThreadCorePoolSize(4);
-		jargonProperties.setTransferThreadMaxPoolSize(16);
+		jargonProperties.setTransferThreadPoolMaxSimultaneousTransfers(4);
+
 		jargonProperties.setTransferThreadPoolTimeoutMillis(30000);
 		irodsFileSystem.getIrodsSession().setJargonProperties(jargonProperties);
 
@@ -210,8 +210,8 @@ public class ParallelTransferOperationsTest {
 		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
 		SettableJargonProperties jargonProperties = new SettableJargonProperties();
 		jargonProperties.setUseTransferThreadsPool(true);
-		jargonProperties.setTransferThreadCorePoolSize(16);
-		jargonProperties.setTransferThreadMaxPoolSize(16);
+		jargonProperties.setTransferThreadPoolMaxSimultaneousTransfers(4);
+
 		jargonProperties.setTransferThreadPoolTimeoutMillis(30000);
 		irodsFileSystem.getIrodsSession().setJargonProperties(jargonProperties);
 
@@ -262,10 +262,8 @@ public class ParallelTransferOperationsTest {
 		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
 		SettableJargonProperties jargonProperties = new SettableJargonProperties();
 		jargonProperties.setUseTransferThreadsPool(true);
-		jargonProperties.setTransferThreadCorePoolSize(numberOfClients
-				* numberOfThreads);
-		jargonProperties.setTransferThreadMaxPoolSize(numberOfClients
-				* numberOfThreads);
+		jargonProperties.setTransferThreadPoolMaxSimultaneousTransfers(4);
+
 		jargonProperties.setTransferThreadPoolTimeoutMillis(30000);
 		irodsFileSystem.getIrodsSession().setJargonProperties(jargonProperties);
 

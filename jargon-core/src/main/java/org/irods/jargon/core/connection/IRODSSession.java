@@ -77,6 +77,18 @@ public class IRODSSession {
 			return jargonProperties;
 		}
 	}
+	
+	/**
+	 * Build an immutable <code>PipelineConfiguration</code> object that controls i/o behavior with iRODS
+	 * @return {@link PipelineConfiguration} which is an immutable set of properties to control i/o behavior of Jargon
+	 */
+	public PipelineConfiguration buildPipelineConfigurationBasedOnJargonProperties() {
+		
+		synchronized (this) {
+			return PipelineConfiguration.instance(jargonProperties);
+		}
+		
+	}
 
 	/**
 	 * Get the default transfer options based on the properties that have been
@@ -87,7 +99,7 @@ public class IRODSSession {
 	 * @throws JargonException
 	 */
 	public TransferOptions buildTransferOptionsBasedOnJargonProperties()
-			throws JargonException {
+			 {
 
 		TransferOptions transferOptions = new TransferOptions();
 		synchronized (this) {
@@ -282,7 +294,7 @@ public class IRODSSession {
 	/**
 	 * @return the irodsConnectionManager
 	 */
-	public IRODSProtocolManager getIrodsConnectionManager() {
+	public synchronized IRODSProtocolManager getIrodsConnectionManager() {
 		return irodsProtocolManager;
 	}
 
@@ -409,20 +421,22 @@ public class IRODSSession {
 				return parallelTransferThreadPool;
 			}
 
+			
+			int poolSize = jargonProperties.getTransferThreadPoolMaxSimultaneousTransfers() * jargonProperties.getMaxParallelThreads();
+			
 			log.info("creating the parallel transfer threads pool");
-			log.info("   core # threads: {}",
-					jargonProperties.getTransferThreadCorePoolSize());
 			log.info("   max # threads: {}",
-					jargonProperties.getTransferThreadMaxPoolSize());
+					poolSize);
+			
 			log.info("   pool timeout millis:{}",
 					jargonProperties.getTransferThreadPoolTimeoutMillis());
 
 			parallelTransferThreadPool = new ThreadPoolExecutor(
-					jargonProperties.getTransferThreadCorePoolSize(),
-					jargonProperties.getTransferThreadMaxPoolSize(),
+					jargonProperties.getTransferThreadPoolMaxSimultaneousTransfers(),
+					poolSize,
 					jargonProperties.getTransferThreadPoolTimeoutMillis(),
 					TimeUnit.MILLISECONDS, new ArrayBlockingQueue<Runnable>(
-							jargonProperties.getTransferThreadMaxPoolSize()),
+							poolSize),
 					new RejectedParallelThreadExecutionHandler());
 
 			// ExecutorService executorService =

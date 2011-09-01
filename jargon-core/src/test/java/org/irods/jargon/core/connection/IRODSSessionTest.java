@@ -4,6 +4,7 @@ import java.util.Properties;
 import java.util.concurrent.Executor;
 
 import junit.framework.Assert;
+import junit.framework.TestCase;
 
 import org.irods.jargon.core.packinstr.TransferOptions;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
@@ -81,8 +82,7 @@ public class IRODSSessionTest {
 		SettableJargonProperties overrideJargonProperties = new SettableJargonProperties();
 		overrideJargonProperties.setMaxParallelThreads(8000);
 		overrideJargonProperties.setUseTransferThreadsPool(true);
-		overrideJargonProperties.setTransferThreadCorePoolSize(4);
-		overrideJargonProperties.setTransferThreadMaxPoolSize(16);
+		overrideJargonProperties.setTransferThreadPoolMaxSimultaneousTransfers(4);
 		overrideJargonProperties.setTransferThreadPoolTimeoutMillis(60000);
 		irodsSession.setJargonProperties(overrideJargonProperties);
 		Executor executor = irodsSession.getParallelTransferThreadPool();
@@ -103,8 +103,7 @@ public class IRODSSessionTest {
 		SettableJargonProperties overrideJargonProperties = new SettableJargonProperties();
 		overrideJargonProperties.setMaxParallelThreads(8000);
 		overrideJargonProperties.setUseTransferThreadsPool(true);
-		overrideJargonProperties.setTransferThreadCorePoolSize(4);
-		overrideJargonProperties.setTransferThreadMaxPoolSize(16);
+		overrideJargonProperties.setTransferThreadPoolMaxSimultaneousTransfers(4);
 		overrideJargonProperties.setTransferThreadPoolTimeoutMillis(60000);
 		irodsSession.setJargonProperties(overrideJargonProperties);
 		Executor executor = irodsSession.getParallelTransferThreadPool();
@@ -126,8 +125,7 @@ public class IRODSSessionTest {
 		SettableJargonProperties overrideJargonProperties = new SettableJargonProperties();
 		overrideJargonProperties.setMaxParallelThreads(8000);
 		overrideJargonProperties.setUseTransferThreadsPool(false);
-		overrideJargonProperties.setTransferThreadCorePoolSize(4);
-		overrideJargonProperties.setTransferThreadMaxPoolSize(16);
+		overrideJargonProperties.setTransferThreadPoolMaxSimultaneousTransfers(4);
 		overrideJargonProperties.setTransferThreadPoolTimeoutMillis(60000);
 		irodsSession.setJargonProperties(overrideJargonProperties);
 		Executor executor = irodsSession.getParallelTransferThreadPool();
@@ -228,4 +226,38 @@ public class IRODSSessionTest {
 
 	}
 
+	@Test
+	public void testBuildPipelineConfiguration()
+			throws Exception {
+		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager
+				.instance();
+		testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSSession irodsSession = IRODSSession
+				.instance(irodsConnectionManager);
+		irodsSession.closeSession();
+
+		SettableJargonProperties overrideJargonProperties = new SettableJargonProperties();
+		overrideJargonProperties.setInternalCacheBufferSize(1);
+		overrideJargonProperties.setInternalInputStreamBufferSize(2);
+		overrideJargonProperties.setInternalOutputStreamBufferSize(3);
+		overrideJargonProperties.setIRODSParallelTransferSocketTimeout(4);
+		overrideJargonProperties.setIRODSSocketTimeout(5);
+		overrideJargonProperties.setLocalFileOutputStreamBufferSize(6);
+		overrideJargonProperties.setSendInputStreamBufferSize(7);
+		
+		irodsSession.setJargonProperties(overrideJargonProperties);
+		
+		PipelineConfiguration pipelineConfiguration = PipelineConfiguration.instance(overrideJargonProperties);
+
+		TestCase.assertEquals("did not set cacheBufferSize", overrideJargonProperties.getInternalCacheBufferSize(), pipelineConfiguration.getInternalCacheBufferSize());
+		TestCase.assertEquals("did not set internalInputStreamBufferSize", overrideJargonProperties.getInternalInputStreamBufferSize(), pipelineConfiguration.getInternalInputStreamBufferSize());
+		TestCase.assertEquals("did not set internalOutputStreamBufferSize", overrideJargonProperties.getInternalOutputStreamBufferSize(), pipelineConfiguration.getInternalOutputStreamBufferSize());
+		TestCase.assertEquals("did not set parallelSocketTimeout", overrideJargonProperties.getIRODSParallelTransferSocketTimeout(), pipelineConfiguration.getIrodsParallelSocketTimeout());
+		TestCase.assertEquals("did not set irodsSocketTimeout", overrideJargonProperties.getIRODSSocketTimeout(), pipelineConfiguration.getIrodsSocketTimeout());
+		TestCase.assertEquals("did not set localFileOutputStreamBuffer", overrideJargonProperties.getLocalFileOutputStreamBufferSize(), pipelineConfiguration.getLocalFileOutputStreamBufferSize());
+		TestCase.assertEquals("did not set sendInputStreamBufferSize", overrideJargonProperties.getSendInputStreamBufferSize(), pipelineConfiguration.getSendInputStreamBufferSize());
+		
+	}
+	
 }
