@@ -434,4 +434,33 @@ public class SettableJargonProperties implements JargonProperties {
 		this.localFileOutputStreamBufferSize = localFileOutputStreamBufferSize;
 	}
 
+	/**
+	 * @return the irodsSocketTimeout
+	 */
+	public synchronized int getIrodsSocketTimeout() {
+		return irodsSocketTimeout;
+	}
+
+	/**
+	 * @param irodsSocketTimeout the irodsSocketTimeout to set
+	 */
+	public synchronized void setIrodsSocketTimeout(int irodsSocketTimeout) {
+		this.irodsSocketTimeout = irodsSocketTimeout;
+	}
+
+	/**
+	 * @return the irodsParallelSocketTimeout
+	 */
+	public synchronized int getIrodsParallelSocketTimeout() {
+		return irodsParallelSocketTimeout;
+	}
+
+	/**
+	 * @param irodsParallelSocketTimeout the irodsParallelSocketTimeout to set
+	 */
+	public synchronized void setIrodsParallelSocketTimeout(
+			int irodsParallelSocketTimeout) {
+		this.irodsParallelSocketTimeout = irodsParallelSocketTimeout;
+	}
+
 }
