@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.irods.jargon.core.connection.ConnectionConstants;
+import org.irods.jargon.core.connection.ConnectionProgressStatusListener;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSCommands;
 import org.irods.jargon.core.connection.IRODSSession;
@@ -27,7 +28,6 @@ import org.irods.jargon.core.packinstr.ModAvuMetadataInp;
 import org.irods.jargon.core.packinstr.Tag;
 import org.irods.jargon.core.packinstr.TransferOptions;
 import org.irods.jargon.core.protovalues.FilePermissionEnum;
-import org.irods.jargon.core.pub.aohelper.DataAOHelper;
 import org.irods.jargon.core.pub.domain.AvuData;
 import org.irods.jargon.core.pub.domain.DataObject;
 import org.irods.jargon.core.pub.domain.Resource;
@@ -45,6 +45,7 @@ import org.irods.jargon.core.transfer.DefaultTransferControlBlock;
 import org.irods.jargon.core.transfer.ParallelGetFileTransferStrategy;
 import org.irods.jargon.core.transfer.ParallelPutFileTransferStrategy;
 import org.irods.jargon.core.transfer.TransferControlBlock;
+import org.irods.jargon.core.transfer.TransferStatus.TransferType;
 import org.irods.jargon.core.transfer.TransferStatusCallbackListener;
 import org.irods.jargon.core.utils.IRODSConstants;
 import org.irods.jargon.core.utils.IRODSDataConversionUtil;
@@ -449,6 +450,21 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 				.getMaxParallelThreads());
 		log.info("setting max threads cap to:{}",
 				myTransferOptions.getMaxThreads());
+		
+		ConnectionProgressStatusListener intraFileStatusListener = null;
+
+		/*
+		 * If specified by options, and with a call-back listener registered,
+		 * create an object to aggregate and channel within-file progress
+		 * reports to the caller.
+		 */
+		if (transferStatusCallbackListener != null
+				|| myTransferOptions.isIntraFileStatusCallbacks()) {
+			intraFileStatusListener = DefaultIntraFileProgressCallbackListener
+					.instance(TransferType.PUT, localFile.length(),
+							transferControlBlock,
+							transferStatusCallbackListener);
+		}
 
 		DataObjInp dataObjInp = DataObjInp.instanceForParallelPut(
 				targetFile.getAbsolutePath(), localFile.length(),
@@ -474,6 +490,10 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 			int numberOfThreads = responseToInitialCallForPut.getTag(
 					IRODSConstants.numThreads).getIntValue();
+			
+			int fd = responseToInitialCallForPut.getTag(IRODSConstants.l1descInx).getIntValue();
+			
+			log.debug("fd for file:{}", fd);
 
 			if (numberOfThreads < 0) {
 				throw new JargonException(
@@ -484,9 +504,9 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 						transferStatusCallbackListener);
 			} else {
 				log.info("parallel operation deferred by server sending 0 threads back in PortalOperOut, revert to single thread transfer");
-				dataAOHelper.processNormalPutTransfer(localFile, overwrite,
-						targetFile, this.getIRODSProtocol(),
-						transferControlBlock, transferStatusCallbackListener);
+				dataAOHelper.putReadWriteLoop(localFile, overwrite,
+						targetFile, fd, this.getIRODSProtocol(),
+						transferControlBlock, intraFileStatusListener);
 			}
 
 		} catch (DataNotFoundException dnf) {

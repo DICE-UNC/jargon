@@ -13,13 +13,11 @@ public class EnvironmentalInfoAccessorTest {
 
 	private static Properties testingProperties = new Properties();
 	private static TestingPropertiesHelper testingPropertiesHelper = new TestingPropertiesHelper();
-	private static org.irods.jargon.testutils.AssertionHelper assertionHelper = null;
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		TestingPropertiesHelper testingPropertiesLoader = new TestingPropertiesHelper();
 		testingProperties = testingPropertiesLoader.getTestProperties();
-		assertionHelper = new org.irods.jargon.testutils.AssertionHelper();
 	}
 
 	@AfterClass

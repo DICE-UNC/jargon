@@ -56,7 +56,7 @@ public class EnvironmentalInfoAOImpl extends IRODSGenericAO implements
 	public long getIRODSServerCurrentTime() throws JargonException {
 		log.info("getIRODSServerCurrentTime");
 		StringBuilder sb = new StringBuilder(
-				"testrule||msiGetSystemTime(*Time,null)##writeLine(stdout, *Time)|nop\n");
+				"getIRODSServerCurrentTime||msiGetSystemTime(*Time,null)##writeLine(stdout, *Time)|nop\n");
 		sb.append("null\n");
 		sb.append("*Time%ruleExecOut");
 		RuleProcessingAO ruleProcessingAO = this.getIRODSAccessObjectFactory()
@@ -87,4 +87,40 @@ public class EnvironmentalInfoAOImpl extends IRODSGenericAO implements
 
 	}
 
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.core.pub.EnvironmentalInfoAO#showLoadedRules()
+	 */
+	@Override
+	public String showLoadedRules() throws JargonException {
+		log.info("showLoadedRules");
+		StringBuilder sb = new StringBuilder(
+				"showLoadedRules||msiAdmShowIRB(null)|nop\n");
+		sb.append("null\n");
+		sb.append("ruleExecOut");
+		RuleProcessingAO ruleProcessingAO = this.getIRODSAccessObjectFactory()
+				.getRuleProcessingAO(getIRODSAccount());
+		IRODSRuleExecResult result = ruleProcessingAO
+				.executeRule(sb.toString());
+		return result.getRuleExecOut();
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.core.pub.EnvironmentalInfoAO#isStrictACLs()
+	 */
+	@Override
+	public boolean isStrictACLs() throws JargonException {
+		log.info("isSrictACLs()");
+		String coreRules = showLoadedRules();
+		boolean isStrict = false;
+		if (coreRules.indexOf("msiAclPolicy(\"STRICT\")") > -1) {
+			isStrict = true;
+		}
+		
+		log.info("is strict ACLs?: {}", isStrict);
+		
+		return isStrict;
+	}
+	
+	
+	
 }

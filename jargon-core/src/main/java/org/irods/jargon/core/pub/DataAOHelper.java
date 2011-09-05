@@ -1,8 +1,9 @@
 /**
  * 
  */
-package org.irods.jargon.core.pub.aohelper;
+package org.irods.jargon.core.pub;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -18,11 +19,10 @@ import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSCommands;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.packinstr.DataObjInp;
+import org.irods.jargon.core.packinstr.OpenedDataObjInp;
+import org.irods.jargon.core.packinstr.Tag;
 import org.irods.jargon.core.packinstr.TransferOptions;
-import org.irods.jargon.core.pub.DataTransferOperations;
-import org.irods.jargon.core.pub.DefaultIntraFileProgressCallbackListener;
-import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
-import org.irods.jargon.core.pub.Stream2StreamAO;
+import org.irods.jargon.core.pub.aohelper.AOHelper;
 import org.irods.jargon.core.pub.domain.DataObject;
 import org.irods.jargon.core.pub.io.ByteCountingCallbackInputStreamWrapper;
 import org.irods.jargon.core.pub.io.IRODSFile;
@@ -37,7 +37,6 @@ import org.irods.jargon.core.query.RodsGenQueryEnum;
 import org.irods.jargon.core.transfer.TransferControlBlock;
 import org.irods.jargon.core.transfer.TransferStatus.TransferType;
 import org.irods.jargon.core.transfer.TransferStatusCallbackListener;
-import org.irods.jargon.core.utils.IRODSConstants;
 import org.irods.jargon.core.utils.IRODSDataConversionUtil;
 import org.irods.jargon.core.utils.LocalFileUtils;
 import org.slf4j.Logger;
@@ -52,14 +51,16 @@ import org.slf4j.LoggerFactory;
  * @author Mike Conway - DICE (www.irods.org)
  * 
  */
-public final class DataAOHelper extends AOHelper {
+final class DataAOHelper extends AOHelper {
 	public static final Logger log = LoggerFactory
 			.getLogger(DataAOHelper.class);
 
 	private final IRODSAccessObjectFactory irodsAccessObjectFactory;
 	private final IRODSAccount irodsAccount;
+	private int streamBufferSize = 0;
+	private int putBufferSize = 0;
 
-	public DataAOHelper(
+	protected DataAOHelper(
 			final IRODSAccessObjectFactory irodsAccessObjectFactory,
 			final IRODSAccount irodsAccount) {
 		super();
@@ -74,6 +75,11 @@ public final class DataAOHelper extends AOHelper {
 		this.irodsAccessObjectFactory = irodsAccessObjectFactory;
 		this.irodsAccount = irodsAccount;
 
+		streamBufferSize = this.irodsAccessObjectFactory.getJargonProperties()
+				.getSendInputStreamBufferSize();
+		putBufferSize = this.irodsAccessObjectFactory.getJargonProperties()
+				.getPutBufferSize();
+
 	}
 
 	/**
@@ -86,7 +92,7 @@ public final class DataAOHelper extends AOHelper {
 	 * 
 	 * @return <code>String</code> with select statements for the domain object.
 	 */
-	public String buildSelects() {
+	protected String buildSelects() {
 		final StringBuilder query = new StringBuilder();
 		query.append("SELECT ");
 		query.append(RodsGenQueryEnum.COL_D_DATA_ID.getName());
@@ -144,8 +150,8 @@ public final class DataAOHelper extends AOHelper {
 	 *         the data in the row.
 	 * @throws JargonException
 	 */
-	public DataObject buildDomainFromResultSetRow(final IRODSQueryResultRow row)
-			throws JargonException {
+	protected DataObject buildDomainFromResultSetRow(
+			final IRODSQueryResultRow row) throws JargonException {
 		DataObject dataObject = new DataObject();
 		dataObject.setId(Integer.parseInt(row.getColumn(0)));
 		dataObject.setCollectionId(Integer.parseInt(row.getColumn(1)));
@@ -192,7 +198,7 @@ public final class DataAOHelper extends AOHelper {
 	 * @return <code>String</code> with an iquest-like set of select values for
 	 *         the metadata AVU elements.
 	 */
-	public String buildMetadataSelects() {
+	protected String buildMetadataSelects() {
 		StringBuilder sb = new StringBuilder();
 		sb.append(RodsGenQueryEnum.COL_META_DATA_ATTR_NAME.getName());
 		sb.append(COMMA);
@@ -202,7 +208,7 @@ public final class DataAOHelper extends AOHelper {
 		return sb.toString();
 	}
 
-	public List<DataObject> buildListFromResultSet(
+	protected List<DataObject> buildListFromResultSet(
 			final IRODSQueryResultSetInterface resultSet)
 			throws JargonException {
 
@@ -227,7 +233,8 @@ public final class DataAOHelper extends AOHelper {
 	 *            <codeStringBuilder</code> with the given AVU query in iquest
 	 *            query form.
 	 */
-	public StringBuilder buildConditionPart(final AVUQueryElement queryElement) {
+	protected StringBuilder buildConditionPart(
+			final AVUQueryElement queryElement) {
 		StringBuilder queryCondition = new StringBuilder();
 		if (queryElement.getAvuQueryPart() == AVUQueryElement.AVUQueryPart.ATTRIBUTE) {
 			queryCondition.append(RodsGenQueryEnum.COL_META_DATA_ATTR_NAME
@@ -274,7 +281,7 @@ public final class DataAOHelper extends AOHelper {
 	 * @return
 	 * @throws JargonException
 	 */
-	public List<MetaDataAndDomainData> buildMetaDataAndDomainDataListFromResultSet(
+	protected List<MetaDataAndDomainData> buildMetaDataAndDomainDataListFromResultSet(
 			final IRODSQueryResultSetInterface irodsQueryResultSet)
 			throws JargonException {
 
@@ -330,7 +337,7 @@ public final class DataAOHelper extends AOHelper {
 	 * @param transferControlBlock
 	 * @throws JargonException
 	 */
-	public void processNormalGetTransfer(final File localFileToHoldData,
+	protected void processNormalGetTransfer(final File localFileToHoldData,
 			final long length, final IRODSCommands irodsProtocol,
 			final TransferOptions transferOptions,
 			final TransferControlBlock transferControlBlock,
@@ -355,7 +362,11 @@ public final class DataAOHelper extends AOHelper {
 		BufferedOutputStream localFileOutputStream;
 		try {
 			localFileOutputStream = new BufferedOutputStream(
-					new FileOutputStream(localFileToHoldData));  // FIXME: set buffer size for file output stream jargon.io.local.output.stream.buffer.size 
+					new FileOutputStream(localFileToHoldData)); // FIXME: set
+																// buffer size
+																// for file
+																// output stream
+																// jargon.io.local.output.stream.buffer.size
 		} catch (FileNotFoundException e) {
 			log.error(
 					"FileNotFoundException when trying to create a new file for the local output stream for {}",
@@ -424,7 +435,7 @@ public final class DataAOHelper extends AOHelper {
 	 * @throws JargonException
 	 * @throws FileNotFoundException
 	 */
-	public void processNormalPutTransfer(final File localFile,
+	protected void processNormalPutTransfer(final File localFile,
 			final boolean overwrite, final IRODSFile targetFile,
 			final IRODSCommands irodsProtocol,
 			final TransferControlBlock transferControlBlock,
@@ -484,15 +495,107 @@ public final class DataAOHelper extends AOHelper {
 		if (transferStatusCallbackListener != null
 				|| myTransferOptions.isIntraFileStatusCallbacks()) {
 			intraFileStatusListener = DefaultIntraFileProgressCallbackListener
-					.instance(TransferType.PUT, localFile.length(),
-							transferControlBlock,
-							transferStatusCallbackListener);
+					.instanceSettingInterval(TransferType.PUT,
+							localFile.length(), transferControlBlock,
+							transferStatusCallbackListener, 100);
 		}
 
-		irodsProtocol.irodsFunction(IRODSConstants.RODS_API_REQ,
-				dataObjInp.getParsedTags(), 0, null, localFile.length(),
-				new FileInputStream(localFile), dataObjInp.getApiNumber(),
+		irodsProtocol.irodsFunctionIncludingAllDataInStream(dataObjInp,
+				localFile.length(), new FileInputStream(localFile),
 				intraFileStatusListener);
+
+	}
+
+	protected void putReadWriteLoop(final File localFile,
+			final boolean overwrite, final IRODSFile targetFile, final int fd,
+			final IRODSCommands irodsProtocol,
+			final TransferControlBlock transferControlBlock,
+			final ConnectionProgressStatusListener intraFileStatusListener)
+			throws JargonException, FileNotFoundException {
+
+		log.info("put read/write loop");
+
+		if (localFile == null) {
+			throw new IllegalArgumentException("null localFile");
+		}
+
+		if (targetFile == null) {
+			throw new IllegalArgumentException("null targetFile");
+		}
+
+		if (irodsProtocol == null) {
+			throw new IllegalArgumentException("null irodsProtocol");
+		}
+
+		if (transferControlBlock == null) {
+			throw new IllegalArgumentException("null transferControlBlock");
+		}
+
+		/*
+		 * Process the iRODS put operation by successively sending chunks of the
+		 * file in a loop
+		 */
+
+		long lengthLeftToSend = localFile.length();
+		InputStream fis = null;
+		try {
+			fis = new FileInputStream(localFile);
+
+			log.debug(
+					"stream buffer size for file input stream used to read local file:{}",
+					streamBufferSize);
+
+			if (streamBufferSize == 0) {
+				fis = new BufferedInputStream(fis);
+			} else if (streamBufferSize > 0) {
+				fis = new BufferedInputStream(fis, streamBufferSize);
+			}
+
+			log.info("starting read/write loop to send data to iRODS");
+			OpenedDataObjInp openedDataObjInp = null;
+			long lengthThisSend = 0;
+
+			while (lengthLeftToSend > 0) {
+				if (transferControlBlock.isCancelled()
+						|| transferControlBlock.isPaused()) {
+					log.info("cancelling");
+					break;
+				}
+				
+				lengthThisSend = Math.min(putBufferSize, lengthLeftToSend);
+
+				openedDataObjInp = OpenedDataObjInp.instanceForFilePut(fd,
+						lengthThisSend);
+				lengthLeftToSend -= irodsProtocol
+						.irodsFunctionForStreamingToIRODSInFrames(
+								openedDataObjInp, (int) lengthThisSend, fis,
+								intraFileStatusListener);
+
+				log.debug("length left:{}", lengthLeftToSend);
+
+			}
+			
+			if (lengthLeftToSend != 0) {
+				log.error("did not send all data");
+				irodsProtocol.disconnectWithIOException();
+				throw new JargonException("did not send all data");
+			}
+
+			log.info("send operation done, send opr complete");
+			irodsProtocol.operationComplete(fd);
+			
+			
+		} catch (Exception e) {
+			log.error("error encountered in read/write loop, will rethrow");
+			throw new JargonException(e);
+		} finally {
+			try {
+				fis.close();
+			} catch (IOException e) {
+				// ignore
+			}
+		}
+
 	}
 
 	/**
@@ -507,7 +610,7 @@ public final class DataAOHelper extends AOHelper {
 	 * @return
 	 * @throws JargonException
 	 */
-	public IRODSFile checkTargetFileForPutOperation(final File localFile,
+	protected IRODSFile checkTargetFileForPutOperation(final File localFile,
 			final IRODSFile irodsFileDestination, final boolean ignoreChecks,
 			final IRODSFileFactory irodsFileFactory) throws JargonException {
 
@@ -551,7 +654,7 @@ public final class DataAOHelper extends AOHelper {
 	 * @param dataName
 	 * @return
 	 */
-	public static String buildACLQueryForCollectionPathAndDataName(
+	protected static String buildACLQueryForCollectionPathAndDataName(
 			final String irodsCollectionAbsolutePath, final String dataName) {
 		StringBuilder query = new StringBuilder();
 		query.append("SELECT ");
@@ -587,7 +690,7 @@ public final class DataAOHelper extends AOHelper {
 	 * @param transferControlBlock
 	 * @throws JargonException
 	 */
-	public void processGetTransferViaRead(final IRODSFile irodsFile,
+	protected void processGetTransferViaRead(final IRODSFile irodsFile,
 			final File localFileToHoldData, final long irodsFileLength,
 			final TransferOptions transferOptions, final int fd,
 			final TransferControlBlock transferControlBlock,
@@ -622,22 +725,27 @@ public final class DataAOHelper extends AOHelper {
 					&& transferStatusCallbackListener != null) {
 				log.info("wrapping stream with callback stream wrapper");
 				ConnectionProgressStatusListener connectionProgressStatusListener = DefaultIntraFileProgressCallbackListener
-						.instanceSettingInterval(TransferType.GET, irodsFileLength,
-								transferControlBlock,
+						.instanceSettingInterval(TransferType.GET,
+								irodsFileLength, transferControlBlock,
 								transferStatusCallbackListener, 5);
 				InputStream wrapper = new ByteCountingCallbackInputStreamWrapper(
 						connectionProgressStatusListener, ifis);
 				/*
-				stream2StreamAO.transferStreamToFile(wrapper,
-						localFileToHoldData, irodsFileLength, 32768L);  // FIXME: parameterize buffer length */
-				stream2StreamAO.transferStreamToFileUsingIOStreams(wrapper, localFileToHoldData, irodsFileLength, 4194304);
+				 * stream2StreamAO.transferStreamToFile(wrapper,
+				 * localFileToHoldData, irodsFileLength, 32768L); // FIXME:
+				 * parameterize buffer length
+				 */
+				stream2StreamAO.transferStreamToFileUsingIOStreams(wrapper,
+						localFileToHoldData, irodsFileLength, 4194304);
 
 			} else {
-				/*stream2StreamAO.transferStreamToFile(ifis, localFileToHoldData,
-						irodsFileLength, 32768L);*/
-				stream2StreamAO.transferStreamToFileUsingIOStreams(ifis, localFileToHoldData, irodsFileLength, 4194304);
+				/*
+				 * stream2StreamAO.transferStreamToFile(ifis,
+				 * localFileToHoldData, irodsFileLength, 32768L);
+				 */
+				stream2StreamAO.transferStreamToFileUsingIOStreams(ifis,
+						localFileToHoldData, irodsFileLength, 4194304);
 
-				
 			}
 
 		} catch (JargonException e) {

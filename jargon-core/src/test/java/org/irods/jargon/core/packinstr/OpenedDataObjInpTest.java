@@ -33,7 +33,26 @@ public class OpenedDataObjInpTest {
 		sb.append("</OpenedDataObjInp_PI>\n");
 		Assert.assertEquals("did not generate expected XML", sb.toString(),
 				openedDataObjInp.getParsedTags());
+	}
+	
 
+	@Test
+	public final void testInstanceForFileWrite() throws Exception {
+		OpenedDataObjInp openedDataObjInp = OpenedDataObjInp
+				.instanceForFilePut(3,4194304L);
+		StringBuilder sb = new StringBuilder();
+		sb.append("<OpenedDataObjInp_PI>");
+		sb.append("<l1descInx>3</l1descInx>\n");
+		sb.append("<len>4194304</len>\n");
+		sb.append("<whence>0</whence>\n");
+		sb.append("<oprType>0</oprType>\n");
+		sb.append("<offset>0</offset>\n");
+		sb.append("<bytesWritten>0</bytesWritten>\n");
+		sb.append("<KeyValPair_PI><ssLen>0</ssLen>\n");
+		sb.append("</KeyValPair_PI>\n");
+		sb.append("</OpenedDataObjInp_PI>\n");
+		Assert.assertEquals("did not generate expected XML", sb.toString(),
+				openedDataObjInp.getParsedTags());
 	}
 
 	@Test

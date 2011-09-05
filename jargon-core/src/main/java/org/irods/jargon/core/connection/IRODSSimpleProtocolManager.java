@@ -43,18 +43,13 @@ public final class IRODSSimpleProtocolManager implements IRODSProtocolManager {
 	 * methods, such as GSI, to be fully resolved, and all necessary
 	 * transformations to the irodsAccount information will be accomplished when
 	 * this method returns.
-	 * <p/>
-	 * 
-	 * @see org.irods.jargon.core.connection.IRODSProtocolManager#getIRODSProtocol
-	 *      (org.irods.jargon.core.domain.IRODSAccount)
 	 */
 	@Override
-	public IRODSCommands getIRODSProtocol(final IRODSAccount irodsAccount)
+	public IRODSCommands getIRODSProtocol(final IRODSAccount irodsAccount, final PipelineConfiguration pipelineConfiguration)
 			throws JargonException {
-		log.debug("creating an IRODSSimpleConnection for account:"
-				+ irodsAccount);
+		log.debug("creating an IRODSSimpleConnection for account:{}", irodsAccount);
 
-		return IRODSCommands.instance(irodsAccount, this);
+		return IRODSCommands.instance(irodsAccount, this, pipelineConfiguration);
 	}
 
 	/**

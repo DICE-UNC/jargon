@@ -4,6 +4,7 @@ import java.util.Properties;
 
 import junit.framework.Assert;
 
+import org.irods.jargon.core.pub.IRODSFileSystem;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -13,15 +14,18 @@ public class IRODSProtocolTest {
 
 	private static Properties testingProperties = new Properties();
 	private static TestingPropertiesHelper testingPropertiesHelper = new TestingPropertiesHelper();
+	private static IRODSFileSystem irodsFileSystem = null;
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		TestingPropertiesHelper testingPropertiesLoader = new TestingPropertiesHelper();
 		testingProperties = testingPropertiesLoader.getTestProperties();
+		irodsFileSystem = IRODSFileSystem.instance();
 	}
 
 	@AfterClass
 	public static void tearDownAfterClass() throws Exception {
+		irodsFileSystem.closeAndEatExceptions();
 	}
 
 	@Test
@@ -31,7 +35,7 @@ public class IRODSProtocolTest {
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
 		IRODSCommands irodsProtocol = IRODSCommands.instance(irodsAccount,
-				irodsConnectionManager);
+				irodsConnectionManager, irodsFileSystem.getIrodsSession().buildPipelineConfigurationBasedOnJargonProperties());
 		Assert.assertTrue("i should have been connected",
 				irodsProtocol.isConnected());
 		irodsProtocol.disconnect();
@@ -44,7 +48,7 @@ public class IRODSProtocolTest {
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
 		IRODSCommands irodsProtocol = IRODSCommands.instance(irodsAccount,
-				irodsConnectionManager);
+				irodsConnectionManager, irodsFileSystem.getIrodsSession().buildPipelineConfigurationBasedOnJargonProperties());
 		Assert.assertTrue("i should have been connected", irodsProtocol
 				.getCachedChallengeValue().length() > 0);
 		irodsProtocol.disconnect();
@@ -57,7 +61,7 @@ public class IRODSProtocolTest {
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
 		IRODSCommands irodsProtocol = IRODSCommands.instance(irodsAccount,
-				irodsConnectionManager);
+				irodsConnectionManager, irodsFileSystem.getIrodsSession().buildPipelineConfigurationBasedOnJargonProperties());
 		irodsProtocol.disconnect();
 		Assert.assertFalse("i should have disconnected",
 				irodsProtocol.isConnected());
@@ -70,7 +74,7 @@ public class IRODSProtocolTest {
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
 		IRODSCommands irodsProtocolEngine = IRODSCommands.instance(
-				irodsAccount, irodsConnectionManager);
+				irodsAccount, irodsConnectionManager,irodsFileSystem.getIrodsSession().buildPipelineConfigurationBasedOnJargonProperties());
 		irodsProtocolEngine.disconnectWithIOException();
 		Assert.assertFalse("i should have disconnected",
 				irodsProtocolEngine.isConnected());
@@ -83,7 +87,7 @@ public class IRODSProtocolTest {
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
 		IRODSCommands irodsProtocolEngine = IRODSCommands.instance(
-				irodsAccount, irodsConnectionManager);
+				irodsAccount, irodsConnectionManager,irodsFileSystem.getIrodsSession().buildPipelineConfigurationBasedOnJargonProperties());
 		IRODSAccount actualIRODSAccount = irodsProtocolEngine.getIRODSAccount();
 		irodsProtocolEngine.disconnect();
 		Assert.assertEquals(
@@ -98,7 +102,7 @@ public class IRODSProtocolTest {
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
 		IRODSCommands irodsProtocolEngine = IRODSCommands.instance(
-				irodsAccount, irodsConnectionManager);
+				irodsAccount, irodsConnectionManager, irodsFileSystem.getIrodsSession().buildPipelineConfigurationBasedOnJargonProperties());
 		IRODSServerProperties irodsServerProperties = irodsProtocolEngine
 				.getIRODSServerProperties();
 		irodsProtocolEngine.disconnect();
@@ -112,7 +116,7 @@ public class IRODSProtocolTest {
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
 		IRODSCommands irodsProtocol = IRODSCommands.instance(irodsAccount,
-				irodsConnectionManager);
+				irodsConnectionManager, irodsFileSystem.getIrodsSession().buildPipelineConfigurationBasedOnJargonProperties());
 		irodsProtocol.disconnect();
 		Assert.assertNotNull(irodsProtocol.getConnectionUri());
 	}

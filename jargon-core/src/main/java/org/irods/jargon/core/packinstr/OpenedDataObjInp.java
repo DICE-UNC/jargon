@@ -27,12 +27,15 @@ public class OpenedDataObjInp extends AbstractIRODSPackingInstruction {
 	public static final String BYTES_WRITTEN = "bytesWritten";
 
 	public static final int SEEK_API_NBR = 674;
+	public static final int WRITE_API_NBR = 676;
+	
 	public static final int DEFAULT_OPERATION_TYPE = 0;
 
 	private final long offset;
 	private static final int operationType = DEFAULT_OPERATION_TYPE;
 	private final int fileDescriptor;
 	private final int whence;
+	private final long length;
 
 	public static final int SEEK_START = 0;
 	public static final int SEEK_CURRENT = 1;
@@ -53,35 +56,41 @@ public class OpenedDataObjInp extends AbstractIRODSPackingInstruction {
 	 * @throws JargonException
 	 */
 	public static final OpenedDataObjInp instanceForFileSeek(final long offset,
-			final int fileDescriptor, final int whence) throws JargonException {
-		return new OpenedDataObjInp(offset, fileDescriptor, whence);
+			final int fileDescriptor, final int whence)  {
+		return new OpenedDataObjInp(SEEK_API_NBR, offset, fileDescriptor, whence, 0L);
+	}
+	
+	
+	public static final OpenedDataObjInp instanceForFilePut(final int fileDescriptor, final long length) {
+		return new OpenedDataObjInp(WRITE_API_NBR, 0L, fileDescriptor, 0, length);
 	}
 
-	private OpenedDataObjInp(final long offset, final int fileDescriptor,
-			final int whence) throws JargonException {
+	private OpenedDataObjInp(final int apiNumber, final long offset, final int fileDescriptor,
+			final int whence, final long length) {
 		if (offset < 0) {
-			throw new JargonException("offset is less than zero");
+			throw new IllegalArgumentException("offset is less than zero");
 		}
 
 		if (fileDescriptor <= 0) {
-			throw new JargonException("fileDescriptor must be > 0");
+			throw new IllegalArgumentException("fileDescriptor must be > 0");
 		}
 
 		if (whence < 0 || whence > 2) {
-			throw new JargonException("invalid whence value");
+			throw new IllegalArgumentException("invalid whence value");
 		}
 
 		this.offset = offset;
 		this.fileDescriptor = fileDescriptor;
-		this.setApiNumber(SEEK_API_NBR);
+		this.setApiNumber(apiNumber);
 		this.whence = whence;
+		this.length = length;
 	}
 
 	@Override
 	public Tag getTagValue() throws JargonException {
 
 		Tag message = new Tag(PI_TAG, new Tag[] {
-				new Tag(L1_DESC_INX, getFileDescriptor()), new Tag(LEN, 0),
+				new Tag(L1_DESC_INX, getFileDescriptor()), new Tag(LEN, length),
 				new Tag(WHENCE, whence), new Tag(OPR_TYPE, getOperationType()),
 				new Tag(OFFSET, getOffset()), new Tag(BYTES_WRITTEN, 0) });
 

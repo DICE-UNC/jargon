@@ -2,6 +2,7 @@ package org.irods.jargon.core.pub;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSSession;
+import org.irods.jargon.core.connection.JargonProperties;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.io.IRODSFileFactory;
 import org.irods.jargon.core.pub.io.IRODSFileFactoryImpl;
@@ -448,5 +449,14 @@ public final class IRODSAccessObjectFactoryImpl implements
 			throw new JargonException(
 					"no irodsSession was set, this is likely due to wiring the IRODSAccessObjectFactory without setting the irodsSession property");
 		}
+	}
+
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.core.pub.IRODSAccessObjectFactory#getJargonProperties()
+	 */
+	@Override
+	public JargonProperties getJargonProperties() {
+		// irodsSession synchronizes access
+		return irodsSession.getJargonProperties();
 	}
 }

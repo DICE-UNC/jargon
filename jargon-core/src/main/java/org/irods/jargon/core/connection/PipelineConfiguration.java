@@ -15,11 +15,13 @@ public class PipelineConfiguration {
 
 	private final int irodsSocketTimeout;
 	private final int irodsParallelSocketTimeout;
-	private int internalInputStreamBufferSize;
-	private int internalOutputStreamBufferSize;
-	private int internalCacheBufferSize;
-	private int sendInputStreamBufferSize;
-	private int localFileOutputStreamBufferSize;
+	private final int internalInputStreamBufferSize;
+	private final int internalOutputStreamBufferSize;
+	private final int internalCacheBufferSize;
+	private final int sendInputStreamBufferSize;
+	private final int localFileOutputStreamBufferSize;
+	private final String defaultEncoding = "utf-8"; //FIXME: put into jargon.properties and propogate
+	private final int inputToOutputCopyBufferByteSize;
 
 	/**
 	 * Static initializer method will derive an immutable
@@ -53,6 +55,7 @@ public class PipelineConfiguration {
 				.getSendInputStreamBufferSize();
 		this.localFileOutputStreamBufferSize = jargonProperties
 				.getLocalFileOutputStreamBufferSize();
+		this.inputToOutputCopyBufferByteSize = jargonProperties.getInputToOutputCopyBufferByteSize();
 
 	}
 
@@ -72,6 +75,10 @@ public class PipelineConfiguration {
 		sb.append(internalCacheBufferSize);
 		sb.append("\n  localFileOutputStreamBufferSize:");
 		sb.append(localFileOutputStreamBufferSize);
+		sb.append("\n   defaultEncoding:");
+		sb.append(defaultEncoding);
+		sb.append("\n   inputToOutputCopyBufferByteSize:");
+		sb.append(inputToOutputCopyBufferByteSize);
 		return sb.toString();
 	}
 
@@ -122,6 +129,20 @@ public class PipelineConfiguration {
 	 */
 	public int getIrodsParallelSocketTimeout() {
 		return irodsParallelSocketTimeout;
+	}
+
+	/**
+	 * @return the defaultEncoding
+	 */
+	public synchronized String getDefaultEncoding() {
+		return defaultEncoding;
+	}
+
+	/**
+	 * @return the inputToOutputCopyBufferByteSize
+	 */
+	public synchronized int getInputToOutputCopyBufferByteSize() {
+		return inputToOutputCopyBufferByteSize;
 	}
 
 }

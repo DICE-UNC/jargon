@@ -245,6 +245,7 @@ public class IRODSSessionTest {
 		overrideJargonProperties.setIRODSSocketTimeout(5);
 		overrideJargonProperties.setLocalFileOutputStreamBufferSize(6);
 		overrideJargonProperties.setSendInputStreamBufferSize(7);
+		overrideJargonProperties.setInputToOutputCopyBufferByteSize(8);
 		
 		irodsSession.setJargonProperties(overrideJargonProperties);
 		
@@ -257,6 +258,7 @@ public class IRODSSessionTest {
 		TestCase.assertEquals("did not set irodsSocketTimeout", overrideJargonProperties.getIRODSSocketTimeout(), pipelineConfiguration.getIrodsSocketTimeout());
 		TestCase.assertEquals("did not set localFileOutputStreamBuffer", overrideJargonProperties.getLocalFileOutputStreamBufferSize(), pipelineConfiguration.getLocalFileOutputStreamBufferSize());
 		TestCase.assertEquals("did not set sendInputStreamBufferSize", overrideJargonProperties.getSendInputStreamBufferSize(), pipelineConfiguration.getSendInputStreamBufferSize());
+		TestCase.assertEquals("did not set intputToOutputCopyBufferByteSize", overrideJargonProperties.getInputToOutputCopyBufferByteSize(), pipelineConfiguration.getInputToOutputCopyBufferByteSize());
 		
 	}
 	

@@ -273,4 +273,36 @@ public class DefaultPropertiesJargonConfig implements JargonProperties {
 		return verifyPropExistsAndGetAsInt("jargon.io.local.output.stream.buffer.size");
 	}
 
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.core.connection.JargonProperties#getPutBufferSize()
+	 */
+	@Override
+	public int getPutBufferSize() {
+		return verifyPropExistsAndGetAsInt("jargon.put.buffer.size");
+	}
+
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.core.connection.JargonProperties#getGetBufferSize()
+	 */
+	@Override
+	public int getGetBufferSize() {
+		return verifyPropExistsAndGetAsInt("jargon.get.buffer.size");
+	}
+
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.core.connection.JargonProperties#getIrodsSocketTimeout()
+	 */
+	@Override
+	public int getIrodsSocketTimeout() {
+		return verifyPropExistsAndGetAsInt("socket.timeout");
+	}
+
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.core.connection.JargonProperties#getIrodsParallelSocketTimeout()
+	 */
+	@Override
+	public int getIrodsParallelSocketTimeout() {
+		return verifyPropExistsAndGetAsInt("parallel.socket.timeout");
+	}
+
 }

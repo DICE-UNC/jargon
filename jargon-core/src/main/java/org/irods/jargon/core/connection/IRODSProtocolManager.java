@@ -8,9 +8,10 @@ public interface IRODSProtocolManager {
 	 * For an account provided by the caller, return an open IRODS connection.
 	 * This may be created new, cached from previous connection by the same
 	 * user, or from a pool.
+	 * @param pipelineConfiguration  {@link PipelineConfiguration} that tunes the i/o pipline and other connection options
 	 */
-	public abstract IRODSCommands getIRODSProtocol(
-			final IRODSAccount irodsAccount) throws JargonException;
+	IRODSCommands getIRODSProtocol(
+			final IRODSAccount irodsAccount, PipelineConfiguration pipelineConfiguration) throws JargonException;
 
 	/**
 	 * This method is called by a client when the connection is no longer
@@ -20,7 +21,7 @@ public interface IRODSProtocolManager {
 	 *            an <code>IRODSConnection</code> that represents an open
 	 *            session with IRODS that is to be returned
 	 */
-	public abstract void returnIRODSConnection(
+	void returnIRODSConnection(
 			IRODSManagedConnection irodsConnection) throws JargonException;
 
 	/**
@@ -38,8 +39,8 @@ public interface IRODSProtocolManager {
 
 	void returnConnectionWithIoException(IRODSManagedConnection irodsConnection);
 
-	public void destroy() throws JargonException;
+	void destroy() throws JargonException;
 
-	public void initialize() throws JargonException;
+	void initialize() throws JargonException;
 
 }

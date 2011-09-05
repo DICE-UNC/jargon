@@ -3,7 +3,6 @@
  */
 package org.irods.jargon.core.connection;
 
-import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -91,6 +90,7 @@ public class IRODSCommands implements IRODSManagedConnection {
 	private final IRODSConnection irodsConnection;
 	private IRODSServerProperties irodsServerProperties;
 	private final IRODSProtocolManager irodsProtocolManager;
+	private final PipelineConfiguration pipelineConfiguration;
 
 	private String cachedChallengeValue = "";
 
@@ -103,7 +103,8 @@ public class IRODSCommands implements IRODSManagedConnection {
 	private IRODSAccount irodsAccount;
 
 	private IRODSCommands(final IRODSAccount irodsAccount,
-			final IRODSProtocolManager irodsConnectionManager)
+			final IRODSProtocolManager irodsConnectionManager,
+			final PipelineConfiguration pipelineConfiguration)
 			throws JargonException {
 		/*
 		 * create the IRODSConnection object. The connection object encapsulates
@@ -111,12 +112,17 @@ public class IRODSCommands implements IRODSManagedConnection {
 		 */
 
 		if (irodsConnectionManager == null) {
-			throw new JargonException("irodsConnectionManager is null");
+			throw new IllegalArgumentException("irodsConnectionManager is null");
+		}
+
+		if (pipelineConfiguration == null) {
+			throw new IllegalArgumentException("null pipelineConfiguration");
 		}
 
 		this.irodsConnection = IRODSConnection.instance(irodsAccount,
-				irodsConnectionManager);
+				irodsConnectionManager, pipelineConfiguration);
 		this.irodsProtocolManager = irodsConnectionManager;
+		this.pipelineConfiguration = pipelineConfiguration;
 		startupConnection(irodsAccount);
 
 	}
@@ -150,11 +156,22 @@ public class IRODSCommands implements IRODSManagedConnection {
 		return null;
 	}
 
+	/**
+	 * Instance method used to create an IRODSCommands object
+	 * 
+	 * @param irodsAccount
+	 * @param irodsConnectionManager
+	 * @param pipelineConfiguration
+	 * @return
+	 * @throws JargonException
+	 */
 	static IRODSCommands instance(final IRODSAccount irodsAccount,
-			final IRODSProtocolManager irodsConnectionManager)
+			final IRODSProtocolManager irodsConnectionManager,
+			final PipelineConfiguration pipelineConfiguration)
 			throws JargonException {
 
-		return new IRODSCommands(irodsAccount, irodsConnectionManager);
+		return new IRODSCommands(irodsAccount, irodsConnectionManager,
+				pipelineConfiguration);
 	}
 
 	/**
@@ -172,15 +189,27 @@ public class IRODSCommands implements IRODSManagedConnection {
 	 */
 	public synchronized Tag irodsFunction(final String type,
 			final String message, final int intInfo) throws JargonException {
-		return irodsFunction(type, message, 0, null, 0, null, intInfo, null);
+		return irodsFunction(type, message, null, 0, 0, null, 0, 0, intInfo);
 	}
 
+	
 	/**
-	 * Create an iRODS message Tag, including header. Send the bytes of the byte
-	 * array, no error stream.
+	 * Send the given iROD protocol request with any included binary data, and return the iRODS response as a <code>Tag</code> object.  This method has detailed parameters, and
+	 * there are other methods in the class with simpler signatures that should be used.
+	 * @param type <code>String</code> with the type of request, typically an iRODS protocol request
+	 * @param message <code>String</code> with an XML formatted messag
+	 * @param errorBytes <code>byte[]</code> with any error data to send to iRODS, can be set to <code>null</code>
+	 * @param errorOffset <code>int</code> with offset into the error data to send
+	 * @param errorLength <code>int</code> with the length of error data
+	 * @param bytes <code>byte[]</code> with binary data to send to iRODS.
+	 * @param byteOffset <code>int</code> with an offset into the byte array to send
+	 * @param byteStringLength <code>int</code> with the length of the bytes to send
+	 * @param intInfo <code>int</code> with the iRODS API number
+	 * @return
+	 * @throws JargonException
 	 */
 	public synchronized Tag irodsFunction(final String type,
-			final String message, final byte[] errorStream,
+			final String message, final byte[] errorBytes,
 			final int errorOffset, final int errorLength, final byte[] bytes,
 			final int byteOffset, final int byteStringLength, final int intInfo)
 			throws JargonException {
@@ -194,19 +223,21 @@ public class IRODSCommands implements IRODSManagedConnection {
 			log.error(err);
 			throw new JargonException(err);
 		}
-
-		if (message == null || message.length() == 0) {
-			String err = "null or missing message returned from parse";
-			log.error(err);
-			throw new JargonException(err);
-		}
+		
+		// message may be null for some operations
 
 		try {
+			int messageLength = 0;
+			
+			if (message != null) {
+				messageLength = message
+					.getBytes(pipelineConfiguration
+							.getDefaultEncoding()).length;
+			}
+			
 			irodsConnection
-					.send(createHeader(
-							IRODSConstants.RODS_API_REQ,
-							message.getBytes(ConnectionConstants.JARGON_CONNECTION_ENCODING).length,
-							errorLength, byteStringLength, intInfo));
+					.send(createHeader(IRODSConstants.RODS_API_REQ, messageLength, errorLength,
+							byteStringLength, intInfo));
 
 			irodsConnection.send(message);
 
@@ -228,74 +259,129 @@ public class IRODSCommands implements IRODSManagedConnection {
 	}
 
 	/**
-	 * Invoke an iRODS protocol function, including optional streams for binary
-	 * data, and receive an iRODS response
+	 * iRODS protocol request that sends data to iRODS using the <code>OpenedDataObjInp</code> protocol interaction to send binary data in frames of a given
+	 * size.  Note the frame size is defined in the jargon.properties as jargon.put.buffer.size.  The input stream should have any buffering wrapped around it before
+	 * making this call, as this method will not wrap any buffering around the input stream.  It is the responsibility of the caller of this method to properly close
+	 * the <code>inputStream</code> object at the appropriate time.
+	 * <p/>
+	 * This method is meant to handle the put operation when streaming to iRODS, this occurs when a parallel operation is overridden in server side policy, and is not
+	 * used for typical put operations.
 	 * 
-	 * @param type
-	 *            <code>String</code> with the type of iRODS function
-	 * @param message
-	 *            <code>String</code> with the XML protocol invocation to send
-	 *            to iRODS
-	 * @param errorLength
-	 *            <code>int</code> with the length of the error stream to be
-	 *            sent
-	 * @param errorStream
-	 *            <code>InputStream</code> with error data to send to iRODS
-	 * @param byteStreamLength
-	 *            <code>long</code> with the length of data to be streamed to
-	 *            iRODS
-	 * @param byteStream
-	 *            <code>InputStream</code> with binary data to send to iRODS
-	 * @param intInfo
-	 *            <code>int</code> with the api number for the iRODS function
-	 * @param connectionProgressStatusListener
-	 *            {@link ConnectionProgressStatusListener} or <code>null</code>
-	 *            if not listener. If provided, the listener will receive
-	 *            progress messages for the low-level iRODS operation
-	 * @return {@link Tag} representing the iRODS protocol response
+	 * 
+	 * @param irodsPI <code>IRodsPI</code> subclass that is the definition of the packing instruction
+	 * @param byteStreamLength <code>int</code> with the size of the input stream data to be sent per frame.  The method will make repeated <code>OpernedDataObjInp</code> protocol 
+	 * operations, each time sending jargon.put.buffer.size buffers.
+	 * @param byteStream <code>InputStream</code> that has been buffered if required before calling this method.  The method will not call <code>close()</code> on this stream.
+	 * @param connectionProgressStatusListener {@link ConnectionProgressStatusListener} that can optionally processes file progress.  Can be set to <code>null</code> if not required.
+	 * @return <code>long</code> with total bytes sent.  Note that this method will send the appropriate operation complete messages
 	 * @throws JargonException
 	 */
-	public synchronized Tag irodsFunction(
-			final String type,
-			final String message,
-			final int errorLength,
-			final InputStream errorStream,
-			final long byteStreamLength,
+	public synchronized long irodsFunctionForStreamingToIRODSInFrames(
+			final IRodsPI irodsPI,
+			final int byteStreamLength,
 			final InputStream byteStream,
-			final int intInfo,
+
 			final ConnectionProgressStatusListener connectionProgressStatusListener)
 			throws JargonException {
 
-		log.info("calling irods function with streams");
-		log.debug("calling irods function with:{}", message);
-		log.debug("api number is:{}", intInfo);
-
-		if (type == null || type.length() == 0) {
-			String err = "null or blank type";
-			log.error(err);
-			throw new IllegalArgumentException(err);
+		if (irodsPI == null) {
+			throw new IllegalArgumentException("null irodsPI");
 		}
+
+		if (byteStream == null) {
+			throw new IllegalArgumentException("null byteStream");
+		}
+
+		log.info("calling irodsFunctionForStreamingToIRODSInFrames");
+		log.debug("calling irods function with:{}", irodsPI);
+		log.debug("api number is:{}", irodsPI.getApiNumber());
+
+		long dataSent = 0;
 
 		try {
 			int length = 0;
+			String message = irodsPI.getParsedTags();
 			if (message != null) {
-				length = message
-						.getBytes(ConnectionConstants.JARGON_CONNECTION_ENCODING).length;
+				length = message.getBytes(pipelineConfiguration
+						.getDefaultEncoding()).length;
 			}
 			irodsConnection.send(createHeader(IRODSConstants.RODS_API_REQ,
-					length, errorLength, byteStreamLength, intInfo));
+					length, 0, byteStreamLength, irodsPI.getApiNumber()));
 			irodsConnection.send(message);
-			if (errorLength > 0) {
-				irodsConnection.send(new BufferedInputStream(errorStream),
-						errorLength, null);
-				errorStream.close();
-			}
+
 			if (byteStreamLength > 0) {
-				irodsConnection.send(new BufferedInputStream(byteStream), // FIXME: add buffer option  jargon.io.send.input.stream.bufffer.size
-						byteStreamLength, connectionProgressStatusListener);
+				dataSent += irodsConnection.send(byteStream, byteStreamLength,
+						connectionProgressStatusListener);
+				// do not close stream, it may be sent again in a subsequent
+				// call, and will maintain its internal pointer
+			}
+
+		} catch (UnsupportedEncodingException e) {
+			log.error("unsupported encoding", e);
+			throw new JargonException(e);
+		} catch (IOException e) {
+			log.error("ioexception", e);
+			throw new JargonException(e);
+		}
+
+		log.info("reading message from frame send...");
+		log.info("read commented out");
+		readMessage();
+		log.info("message read");
+		return dataSent;
+	}
+
+	/**
+	 * iRODS protocol request that sends data to iRODS.  This method will stream the entire <code>inputStream</code> data to the given length at one time.  This is used for normal
+	 * put operations that do not required parallel transfers.
+	 * <p/>
+	 * Note that the <code>inputStream</code> object is closed by this method when completed.  Any buffering that should be done on the stream must be done before passing the stream
+	 * to this method, as this method does not wrap the stream with any additional buffering.
+	 * 
+	 * @param irodsPI <code>IRodsPI</code> subclass that is the definition of the packing instruction
+	 * @param byteStreamLength <code>int</code> with the size of the input stream data to be sent
+	 * @param byteStream <code>InputStream</code> that has been buffered if required before calling this method.  The method will call <code>close()</code> on this stream.
+	 * @param connectionProgressStatusListener {@link ConnectionProgressStatusListener} that can optionally processes file progress.  Can be set to <code>null</code> if not required.
+	 * @return <code>long</code> with total bytes sent. 
+	 * @throws JargonException
+	 */
+	public synchronized Tag irodsFunctionIncludingAllDataInStream(
+			final IRodsPI irodsPI,
+			final long byteStreamLength,
+			final InputStream byteStream,
+			final ConnectionProgressStatusListener connectionProgressStatusListener)
+			throws JargonException {
+
+		if (irodsPI == null) {
+			throw new IllegalArgumentException("null irodsPI");
+		}
+
+		if (byteStream == null) {
+			throw new IllegalArgumentException("null byteStream");
+		}
+
+		log.info("calling irods function with streams");
+		log.debug("calling irods function with:{}", irodsPI);
+		log.debug("api number is:{}", irodsPI.getApiNumber());
+
+		try {
+			int length = 0;
+			String message = irodsPI.getParsedTags();
+			if (message != null) {
+				length = message.getBytes(pipelineConfiguration
+						.getDefaultEncoding()).length;
+			}
+			irodsConnection.send(createHeader(IRODSConstants.RODS_API_REQ,
+					length, 0, byteStreamLength, irodsPI.getApiNumber()));
+			irodsConnection.send(message);
+
+			if (byteStreamLength > 0) {
+				irodsConnection.send(byteStream, byteStreamLength,
+						connectionProgressStatusListener);
 				byteStream.close();
 			}
-			irodsConnection.flush();
+
+			//irodsConnection.flush();
 		} catch (UnsupportedEncodingException e) {
 			log.error("unsupported encoding", e);
 			throw new JargonException(e);
@@ -336,11 +422,10 @@ public class IRODSCommands implements IRODSManagedConnection {
 
 		try {
 			irodsConnection
-					.send(createHeader(
-							IRODSConstants.RODS_API_REQ,
-							out.getBytes(ConnectionConstants.JARGON_CONNECTION_ENCODING).length,
-							errorLength, byteStreamLength, irodsPI
-									.getApiNumber()));
+					.send(createHeader(IRODSConstants.RODS_API_REQ, out
+							.getBytes(pipelineConfiguration
+									.getDefaultEncoding()).length, errorLength,
+							byteStreamLength, irodsPI.getApiNumber()));
 			irodsConnection.send(out);
 
 			if (byteStreamLength > 0) {
@@ -428,8 +513,8 @@ public class IRODSCommands implements IRODSManagedConnection {
 	 * 
 	 * @param destination
 	 *            <code>OutputStream</code> for writing data that is read from
-	 *            the input stream.  This stream is not wrapped with a buffer here, so a buffer
-	 *            should be provided when calling.
+	 *            the input stream. This stream is not wrapped with a buffer
+	 *            here, so a buffer should be provided when calling.
 	 * @param length
 	 *            <code>long</code> length of data to be read and written out.
 	 * @param intraFileStatusListener
@@ -438,7 +523,7 @@ public class IRODSCommands implements IRODSManagedConnection {
 	 *            progress with a small peformance penalty.
 	 * @throws JargonException
 	 */
-	public void read(final OutputStream destination, final long length, // FIXME: decide if buffering should be done here, and appropriate parameter for buffer setting
+	public void read(final OutputStream destination, final long length,
 			final ConnectionProgressStatusListener intraFileStatusListener)
 			throws JargonException {
 
@@ -511,8 +596,7 @@ public class IRODSCommands implements IRODSManagedConnection {
 
 		byte[] temp;
 		try {
-			temp = header
-					.getBytes(ConnectionConstants.JARGON_CONNECTION_ENCODING);
+			temp = header.getBytes(pipelineConfiguration.getDefaultEncoding());
 		} catch (UnsupportedEncodingException e) {
 			throw new JargonException(e);
 		}
@@ -524,10 +608,21 @@ public class IRODSCommands implements IRODSManagedConnection {
 		return full;
 	}
 
+	/**
+	 * Read a message from iRODS in response to a protocol operation.  This method will decode the response using the configured encoding
+	 * @return {@link Tag} with the iRODS protocol response
+	 * @throws JargonException
+	 */
 	public synchronized Tag readMessage() throws JargonException {
 		return readMessage(true);
 	}
 
+	/**
+	 * Read a message from iRODS in response to a protocol operation.  This method will decode the response using the configured encoding based on the <code>decode</code> parameter.
+	 * @param decode <code>boolean</code> that will cause the protocol response to be decoded using the given character set if <code>true</code>
+	 * @return {@link Tag} with the iRODS protocol response
+	 * @throws JargonException
+	 */
 	public synchronized Tag readMessage(final boolean decode)
 			throws JargonException {
 		log.info("reading message from irods");
@@ -642,12 +737,12 @@ public class IRODSCommands implements IRODSManagedConnection {
 				Tag errorTag;
 				try {
 					errorTag = Tag.readNextTag(errorMessage,
-							ConnectionConstants.JARGON_CONNECTION_ENCODING);
+							pipelineConfiguration.getDefaultEncoding());
 				} catch (UnsupportedEncodingException e) {
 					log.error("Unsupported encoding for: {}",
-							ConnectionConstants.JARGON_CONNECTION_ENCODING);
+							pipelineConfiguration.getDefaultEncoding());
 					throw new JargonException("Unsupported encoding for: "
-							+ ConnectionConstants.JARGON_CONNECTION_ENCODING);
+							+ pipelineConfiguration.getDefaultEncoding());
 				}
 				log.error("IRODS error occured "
 						+ errorTag.getTag(RErrMsg.PI_TAG).getTag(
@@ -679,12 +774,12 @@ public class IRODSCommands implements IRODSManagedConnection {
 		Tag errorTag;
 		try {
 			errorTag = Tag.readNextTag(errorMessage,
-					ConnectionConstants.JARGON_CONNECTION_ENCODING);
+					pipelineConfiguration.getDefaultEncoding());
 		} catch (UnsupportedEncodingException e) {
 			log.error("Unsupported encoding for:{}",
-					ConnectionConstants.JARGON_CONNECTION_ENCODING);
+					pipelineConfiguration.getDefaultEncoding());
 			throw new JargonException("Unsupported encoding for:"
-					+ ConnectionConstants.JARGON_CONNECTION_ENCODING);
+					+ pipelineConfiguration.getDefaultEncoding());
 		}
 
 		Tag errorPITag = errorTag.getTag(RErrMsg.PI_TAG);
@@ -759,7 +854,7 @@ public class IRODSCommands implements IRODSManagedConnection {
 
 					try {
 						headerString = new String(temp,
-								ConnectionConstants.JARGON_CONNECTION_ENCODING);
+								pipelineConfiguration.getDefaultEncoding());
 					} catch (UnsupportedEncodingException e) {
 						log.error("unsupported encoding");
 						throw new JargonException(e);
@@ -789,17 +884,17 @@ public class IRODSCommands implements IRODSManagedConnection {
 										0, header, 0, 14);
 								System.arraycopy(temp, 0, header, 14, i + 1);
 								try {
-									return Tag
-											.readNextTag(
-													header,
-													ConnectionConstants.JARGON_CONNECTION_ENCODING);
+									return Tag.readNextTag(header,
+											pipelineConfiguration
+													.getDefaultEncoding());
 								} catch (UnsupportedEncodingException e) {
-									log.error(
-											"Unsupported encoding for:{}",
-											ConnectionConstants.JARGON_CONNECTION_ENCODING);
+									log.error("Unsupported encoding for:{}",
+											pipelineConfiguration
+													.getDefaultEncoding());
 									throw new JargonException(
 											"Unsupported encoding for:"
-													+ ConnectionConstants.JARGON_CONNECTION_ENCODING);
+													+ pipelineConfiguration
+															.getDefaultEncoding());
 								}
 							}
 						}
@@ -825,12 +920,12 @@ public class IRODSCommands implements IRODSManagedConnection {
 
 		try {
 			return Tag.readNextTag(header,
-					ConnectionConstants.JARGON_CONNECTION_ENCODING);
+					pipelineConfiguration.getDefaultEncoding());
 		} catch (UnsupportedEncodingException e) {
 			log.error("Unsupported encoding for:{}",
-					ConnectionConstants.JARGON_CONNECTION_ENCODING);
+					pipelineConfiguration.getDefaultEncoding());
 			throw new JargonException("Unsupported encoding for:"
-					+ ConnectionConstants.JARGON_CONNECTION_ENCODING);
+					+ pipelineConfiguration.getDefaultEncoding());
 		}
 	}
 
@@ -875,12 +970,12 @@ public class IRODSCommands implements IRODSManagedConnection {
 		}
 		try {
 			return Tag.readNextTag(body, decode,
-					ConnectionConstants.JARGON_CONNECTION_ENCODING);
+					pipelineConfiguration.getDefaultEncoding());
 		} catch (UnsupportedEncodingException e) {
 			log.error("Unsupported encoding for:{}",
-					ConnectionConstants.JARGON_CONNECTION_ENCODING);
+					pipelineConfiguration.getDefaultEncoding());
 			throw new JargonException("Unsupported encoding for:"
-					+ ConnectionConstants.JARGON_CONNECTION_ENCODING);
+					+ pipelineConfiguration.getDefaultEncoding());
 		}
 	}
 
@@ -1053,12 +1148,13 @@ public class IRODSCommands implements IRODSManagedConnection {
 		System.arraycopy(temp, 0, chal, 0, temp.length);
 		try {
 			temp = password
-					.getBytes(ConnectionConstants.JARGON_CONNECTION_ENCODING);
+					.getBytes(pipelineConfiguration.getDefaultEncoding());
 		} catch (UnsupportedEncodingException e1) {
-			log.error("unsupported encoding of:"
-					+ ConnectionConstants.JARGON_CONNECTION_ENCODING, e1);
+			log.error(
+					"unsupported encoding of:"
+							+ pipelineConfiguration.getDefaultEncoding(), e1);
 			throw new JargonException("unsupported encoding:"
-					+ ConnectionConstants.JARGON_CONNECTION_ENCODING);
+					+ pipelineConfiguration.getDefaultEncoding());
 		}
 		System.arraycopy(temp, 0, chal, ConnectionConstants.CHALLENGE_LENGTH,
 				temp.length);

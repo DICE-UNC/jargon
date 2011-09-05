@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 
-import org.irods.jargon.core.connection.ConnectionConstants;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.exception.JargonRuntimeException;
 import org.slf4j.Logger;
@@ -26,6 +25,7 @@ public class IRODSFileReader extends Reader {
 	@SuppressWarnings("unused")
 	private final transient IRODSFileFactory irodsFileFactory;
 	public static Logger log = LoggerFactory.getLogger(IRODSFileReader.class);
+	private final String connectionEncoding;
 
 	/**
 	 * iRODS-specific implementation of the <code>java.io.FileReader</code>.
@@ -62,6 +62,10 @@ public class IRODSFileReader extends Reader {
 		}
 
 		this.irodsFileFactory = irodsFileFactory;
+		this.connectionEncoding = irodsFileInputStream.getFileIOOperations()
+				.getIRODSSession()
+				.buildPipelineConfigurationBasedOnJargonProperties()
+				.getDefaultEncoding();
 	}
 
 	/*
@@ -95,7 +99,7 @@ public class IRODSFileReader extends Reader {
 		ByteArrayInputStream bais = new ByteArrayInputStream(b, 0, lenFromIrods);
 
 		final InputStreamReader isr = new InputStreamReader(bais,
-				ConnectionConstants.JARGON_CONNECTION_ENCODING);
+				connectionEncoding);
 
 		int dataRead = isr.read(cbuf, off, len);
 		log.debug("after decoding returning length {}", dataRead);

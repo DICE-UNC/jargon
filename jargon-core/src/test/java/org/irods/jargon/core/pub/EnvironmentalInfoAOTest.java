@@ -6,6 +6,7 @@ package org.irods.jargon.core.pub;
 import java.util.Properties;
 
 import junit.framework.Assert;
+import junit.framework.TestCase;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSProtocolManager;
@@ -69,6 +70,35 @@ public class EnvironmentalInfoAOTest {
 				.getEnvironmentalInfoAO(irodsAccount);
 		long timeVal = environmentalInfoAO.getIRODSServerCurrentTime();
 		Assert.assertTrue("time val was missing", timeVal > 0);
+	}
+	
+	@Test
+	public void testShowLoadedRules() throws Exception {
+		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+		EnvironmentalInfoAO environmentalInfoAO = accessObjectFactory
+				.getEnvironmentalInfoAO(irodsAccount);
+		String ruleVal = environmentalInfoAO.showLoadedRules();
+		Assert.assertNotNull("rule data missing", ruleVal);
+	}
+	
+	@Test
+	public void testIsStrictACLs() throws Exception {
+		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+		EnvironmentalInfoAO environmentalInfoAO = accessObjectFactory
+				.getEnvironmentalInfoAO(irodsAccount);
+		environmentalInfoAO.isStrictACLs();
+		// so as not to bias the test (difficult right now to set up as a test case) just see if the method works without error...
+		TestCase.assertTrue(true);
 	}
 
 }

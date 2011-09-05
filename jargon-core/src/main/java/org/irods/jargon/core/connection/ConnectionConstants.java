@@ -11,7 +11,6 @@ package org.irods.jargon.core.connection;
  */
 public final class ConnectionConstants {
 
-	public static final String JARGON_CONNECTION_ENCODING = "utf-8";
 	/**
 	 * Approximate maximum number of bytes transfered by each thread during a
 	 * parallel transfer.

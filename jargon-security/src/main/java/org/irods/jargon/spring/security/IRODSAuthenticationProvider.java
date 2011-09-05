@@ -82,7 +82,7 @@ public class IRODSAuthenticationProvider implements AuthenticationProvider {
 		IRODSManagedConnection connection = null;
 		try {
 			connection = irodsProtocolManager.getIRODSProtocol(irodsAuthToken
-					.getIrodsAccount());
+					.getIrodsAccount(), irodsAccessObjectFactory.getIrodsSession().buildPipelineConfigurationBasedOnJargonProperties());
 			irodsProtocolManager.returnIRODSConnection(connection);
 		} catch (JargonException e) {
 			log.error("unable to authenticate, JargonException", e);

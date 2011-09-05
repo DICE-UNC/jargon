@@ -276,7 +276,7 @@ public class IRODSSession {
 			final IRODSAccount irodsAccount,
 			Map<String, IRODSCommands> irodsProtocols) throws JargonException {
 		IRODSCommands irodsProtocol;
-		irodsProtocol = irodsProtocolManager.getIRODSProtocol(irodsAccount);
+		irodsProtocol = irodsProtocolManager.getIRODSProtocol(irodsAccount, this.buildPipelineConfigurationBasedOnJargonProperties());
 		if (irodsProtocol == null) {
 			LOG.error("no connection returned from connection manager");
 			throw new JargonException(
@@ -432,7 +432,7 @@ public class IRODSSession {
 					jargonProperties.getTransferThreadPoolTimeoutMillis());
 
 			parallelTransferThreadPool = new ThreadPoolExecutor(
-					jargonProperties.getTransferThreadPoolMaxSimultaneousTransfers(),
+					poolSize,
 					poolSize,
 					jargonProperties.getTransferThreadPoolTimeoutMillis(),
 					TimeUnit.MILLISECONDS, new ArrayBlockingQueue<Runnable>(

@@ -196,5 +196,21 @@ public interface JargonProperties {
 	 * @return
 	 */
 	int getIRODSParallelTransferSocketTimeout();
+	
+	/**
+	 * Get the size of the file segment for each successive call in normal put operations.
+	 * @return
+	 */
+	int getPutBufferSize();
+	
+	/**
+	 * Get the size of the file segment for each successive call in normal get operations.
+	 * @return
+	 */
+	int getGetBufferSize();
+
+	int getIrodsSocketTimeout();
+
+	int getIrodsParallelSocketTimeout();
 
 }

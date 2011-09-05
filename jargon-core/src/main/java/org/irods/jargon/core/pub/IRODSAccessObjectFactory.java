@@ -2,6 +2,7 @@ package org.irods.jargon.core.pub;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSSession;
+import org.irods.jargon.core.connection.JargonProperties;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.io.IRODSFileFactory;
 
@@ -334,5 +335,11 @@ public interface IRODSAccessObjectFactory {
 	 */
 	Stream2StreamAO getStream2StreamAO(IRODSAccount irodsAccount)
 			throws JargonException;
+	
+	/**
+	 * Convenience method to obtain a reference to the <code>JargonProperties</code> that controls behavior of Jargon.
+	 * @return {@link JargonProperties}
+	 */
+	JargonProperties getJargonProperties();
 
 }

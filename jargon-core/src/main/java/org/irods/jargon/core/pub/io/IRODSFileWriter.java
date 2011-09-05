@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 
-import org.irods.jargon.core.connection.ConnectionConstants;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.exception.JargonRuntimeException;
 import org.slf4j.Logger;
@@ -24,6 +23,7 @@ public class IRODSFileWriter extends Writer {
 
 	private final IRODSFileOutputStream irodsFileOutputStream;
 	public static Logger log = LoggerFactory.getLogger(IRODSFileWriter.class);
+	private final String connectionEncoding;
 
 	/**
 	 * Create an instance of a writer for iRODS.
@@ -54,6 +54,11 @@ public class IRODSFileWriter extends Writer {
 			throw new IOException("unable to open IRODSFileOutputStream for:"
 					+ irodsFile.getAbsolutePath());
 		}
+
+		this.connectionEncoding = irodsFileOutputStream.getFileIOOperations()
+				.getIRODSSession()
+				.buildPipelineConfigurationBasedOnJargonProperties()
+				.getDefaultEncoding();
 	}
 
 	/*
@@ -86,8 +91,7 @@ public class IRODSFileWriter extends Writer {
 	public void write(final char[] cbuf, final int off, final int len)
 			throws IOException {
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
-		OutputStreamWriter osw = new OutputStreamWriter(bos,
-				ConnectionConstants.JARGON_CONNECTION_ENCODING);
+		OutputStreamWriter osw = new OutputStreamWriter(bos, connectionEncoding);
 		osw.write(cbuf, off, len);
 		osw.flush();
 		byte[] oswBytes = bos.toByteArray();
