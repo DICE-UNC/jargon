@@ -20,7 +20,6 @@ import org.irods.jargon.core.connection.IRODSCommands;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.packinstr.DataObjInp;
 import org.irods.jargon.core.packinstr.OpenedDataObjInp;
-import org.irods.jargon.core.packinstr.Tag;
 import org.irods.jargon.core.packinstr.TransferOptions;
 import org.irods.jargon.core.pub.aohelper.AOHelper;
 import org.irods.jargon.core.pub.domain.DataObject;
@@ -561,7 +560,7 @@ final class DataAOHelper extends AOHelper {
 					log.info("cancelling");
 					break;
 				}
-				
+
 				lengthThisSend = Math.min(putBufferSize, lengthLeftToSend);
 
 				openedDataObjInp = OpenedDataObjInp.instanceForFilePut(fd,
@@ -574,7 +573,7 @@ final class DataAOHelper extends AOHelper {
 				log.debug("length left:{}", lengthLeftToSend);
 
 			}
-			
+
 			if (lengthLeftToSend != 0) {
 				log.error("did not send all data");
 				irodsProtocol.disconnectWithIOException();
@@ -583,8 +582,7 @@ final class DataAOHelper extends AOHelper {
 
 			log.info("send operation done, send opr complete");
 			irodsProtocol.operationComplete(fd);
-			
-			
+
 		} catch (Exception e) {
 			log.error("error encountered in read/write loop, will rethrow");
 			throw new JargonException(e);

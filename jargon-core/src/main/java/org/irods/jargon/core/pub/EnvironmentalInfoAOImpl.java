@@ -112,7 +112,7 @@ public class EnvironmentalInfoAOImpl extends IRODSGenericAO implements
 		log.info("isSrictACLs()");
 		String coreRules = showLoadedRules();
 		boolean isStrict = false;
-		if (coreRules.indexOf("msiAclPolicy(\"STRICT\")") > -1) {
+		if (coreRules.indexOf("STRICT") > -1) {
 			isStrict = true;
 		}
 		

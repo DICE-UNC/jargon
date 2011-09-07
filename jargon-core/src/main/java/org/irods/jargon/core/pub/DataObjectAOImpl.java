@@ -458,13 +458,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		 * create an object to aggregate and channel within-file progress
 		 * reports to the caller.
 		 */
-		if (transferStatusCallbackListener != null
-				|| myTransferOptions.isIntraFileStatusCallbacks()) {
-			intraFileStatusListener = DefaultIntraFileProgressCallbackListener
-					.instance(TransferType.PUT, localFile.length(),
-							transferControlBlock,
-							transferStatusCallbackListener);
-		}
+		
 
 		DataObjInp dataObjInp = DataObjInp.instanceForParallelPut(
 				targetFile.getAbsolutePath(), localFile.length(),
@@ -499,11 +493,24 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 				throw new JargonException(
 						"numberOfThreads returned from iRODS is < 0, some error occurred");
 			} else if (numberOfThreads > 0) {
+				if (transferStatusCallbackListener != null
+						|| myTransferOptions.isIntraFileStatusCallbacks()) {
+					intraFileStatusListener = DefaultIntraFileProgressCallbackListener
+							.instance(TransferType.PUT, localFile.length(),
+									transferControlBlock,
+									transferStatusCallbackListener);
+				}
 				parallelPutTransfer(localFile, responseToInitialCallForPut,
 						numberOfThreads, localFile.length(), transferControlBlock,
 						transferStatusCallbackListener);
 			} else {
 				log.info("parallel operation deferred by server sending 0 threads back in PortalOperOut, revert to single thread transfer");
+				if (transferStatusCallbackListener != null
+						|| myTransferOptions.isIntraFileStatusCallbacks()) {
+					intraFileStatusListener = DefaultIntraFileProgressCallbackListener.instanceSettingInterval(TransferType.PUT, localFile.length(),
+									transferControlBlock,
+									transferStatusCallbackListener, 100);
+				}
 				dataAOHelper.putReadWriteLoop(localFile, overwrite,
 						targetFile, fd, this.getIRODSProtocol(),
 						transferControlBlock, intraFileStatusListener);
