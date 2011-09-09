@@ -19,12 +19,17 @@ public interface IRODSQueryResultSetInterface {
 	 *         row/column form. Note that the columns line up with the selected
 	 *         column names in <code>TranslatedIRODSQuery</code>
 	 */
-	public abstract List<IRODSQueryResultRow> getResults();
+	List<IRODSQueryResultRow> getResults();
 
-	public abstract IRODSQueryResultRow getFirstResult()
+	/**
+	 * Get the first result returned from the query, or a <code>DataNotFoundException</code> if no rows were returned.
+	 * @return {@link IRODSQueryResultRow} with the first result
+	 * @throws DataNotFoundException if no results were returned
+	 */
+	IRODSQueryResultRow getFirstResult()
 			throws DataNotFoundException;
 
-	public abstract boolean isHasMoreRecords();
+	boolean isHasMoreRecords();
 
 	/**
 	 * Convenience method to get the number of result columns, based on the
@@ -32,13 +37,13 @@ public interface IRODSQueryResultSetInterface {
 	 * 
 	 * @return <code>int</code> with count of result columns.
 	 */
-	public abstract int getNumberOfResultColumns();
+	int getNumberOfResultColumns();
 
 	/**
 	 * Returns a list of the column names in the results;
 	 * 
 	 * @return <code>List<String></code> with the query column names.
 	 */
-	public abstract List<String> getColumnNames();
+	List<String> getColumnNames();
 
 }

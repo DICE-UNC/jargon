@@ -60,7 +60,7 @@ public class DataObjInpTest {
 	@Test
 	public final void testInstanceForPut() throws Exception {
 		DataObjInp dataObjInp = DataObjInp.instanceForNormalPutStrategy(
-				"/abspath", 100, "aresource", true, null);
+				"/abspath", 100, "aresource", true, null, false);
 		TestCase.assertNotNull("data obj inp returned was null", dataObjInp);
 		TestCase.assertEquals("wrong API number assigned",
 				DataObjInp.PUT_FILE_API_NBR, dataObjInp.getApiNumber());
@@ -108,7 +108,7 @@ public class DataObjInpTest {
 		DataObjInp dataObjInp = DataObjInp
 				.instanceForInitialCallToPut(
 						"/test1/home/test1/test-scratch/IrodsCommandsPutTest/testPutOverwriteFileNotInIRODS.txt",
-						716800000, "test1-resc", false, null);
+						716800000, "test1-resc", false, null, false);
 
 		StringBuilder sb = new StringBuilder();
 		sb.append("<DataObjInp_PI><objPath>/test1/home/test1/test-scratch/IrodsCommandsPutTest/testPutOverwriteFileNotInIRODS.txt</objPath>\n");
@@ -134,11 +134,42 @@ public class DataObjInpTest {
 		DataObjInp dataObjInp = DataObjInp
 				.instanceForNormalPutStrategy(
 						"/test1/home/test1/test-scratch/IrodsCommandsPutTest/testPutOverwriteFileNotInIRODS.txt",
-						1, "test1-resc", true, null);
+						1, "test1-resc", true, null, false);
 
 		StringBuilder sb = new StringBuilder();
 		sb.append("<DataObjInp_PI><objPath>/test1/home/test1/test-scratch/IrodsCommandsPutTest/testPutOverwriteFileNotInIRODS.txt</objPath>\n");
 		sb.append("<createMode>33206</createMode>\n");
+		sb.append("<openFlags>2</openFlags>\n");
+		sb.append("<offset>0</offset>\n");
+		sb.append("<dataSize>1</dataSize>\n");
+		sb.append("<numThreads>0</numThreads>\n");
+		sb.append("<oprType>1</oprType>\n");
+		sb.append("<KeyValPair_PI><ssLen>4</ssLen>\n");
+		sb.append("<keyWord>dataType</keyWord>\n");
+		sb.append("<keyWord>dataIncluded</keyWord>\n");
+		sb.append("<keyWord>forceFlag</keyWord>\n");
+		sb.append("<keyWord>destRescName</keyWord>\n");
+		sb.append("<svalue>generic</svalue>\n");
+		sb.append("<svalue></svalue>\n");
+		sb.append("<svalue></svalue>\n");
+		sb.append("<svalue>test1-resc</svalue>\n");
+		sb.append("</KeyValPair_PI>\n");
+		sb.append("</DataObjInp_PI>\n");
+		TestCase.assertEquals("did not get expected packing instruction",
+				sb.toString(), dataObjInp.getParsedTags());
+	}
+	
+	@Test
+	public final void testGetParsedTagsForCallToPutNormalModeWithExec()
+			throws Exception {
+		DataObjInp dataObjInp = DataObjInp
+				.instanceForNormalPutStrategy(
+						"/test1/home/test1/test-scratch/IrodsCommandsPutTest/testPutOverwriteFileNotInIRODS.txt",
+						1, "test1-resc", true, null, true);
+
+		StringBuilder sb = new StringBuilder();
+		sb.append("<DataObjInp_PI><objPath>/test1/home/test1/test-scratch/IrodsCommandsPutTest/testPutOverwriteFileNotInIRODS.txt</objPath>\n");
+		sb.append("<createMode>33261</createMode>\n");
 		sb.append("<openFlags>2</openFlags>\n");
 		sb.append("<offset>0</offset>\n");
 		sb.append("<dataSize>1</dataSize>\n");

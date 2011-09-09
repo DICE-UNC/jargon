@@ -64,6 +64,7 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 	private static Logger log = LoggerFactory.getLogger(DataObjInp.class);
 
 	public static final int DEFAULT_CREATE_MODE = 33206;
+	public static final int EXEC_CREATE_MODE = 33261;
 	public static final int ZERO_CREATE_MODE = 0;
 
 	public static final String BS_LEN = "bsLen";
@@ -340,14 +341,16 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 	 *            {@link TransferOptions} that configures details about the
 	 *            underlying technique used in the transfer. Can be set to null
 	 *            if not desired.
+	 * @param execFlag <code>boolean</code> that indicates that the execBit should be preserved          	
 	 * @return <code>DataObjInp</code> containing the necessary packing
 	 *         instruction
+	 *         
 	 * @throws JargonException
 	 */
 	public static final DataObjInp instanceForInitialCallToPut(
 			final String destinationAbsolutePath, final long length,
 			final String destinationResource, final boolean overwrite,
-			final TransferOptions transferOptions) throws JargonException {
+			final TransferOptions transferOptions, final boolean execFlag) throws JargonException {
 
 		if (destinationAbsolutePath == null
 				|| destinationAbsolutePath.isEmpty()) {
@@ -361,9 +364,14 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 		if (length < 0) {
 			throw new JargonException("length is less than zero");
 		}
+		
+		int createMode = DEFAULT_CREATE_MODE;
+		if (execFlag) {
+			createMode = EXEC_CREATE_MODE;
+		}
 
 		DataObjInp dataObjInp = new DataObjInp(destinationAbsolutePath,
-				DEFAULT_CREATE_MODE, OpenFlags.READ_WRITE, 0L, length,
+				createMode, OpenFlags.READ_WRITE, 0L, length,
 				destinationResource, transferOptions);
 		dataObjInp.operationType = PUT_OPERATION_TYPE;
 		dataObjInp.setApiNumber(PUT_FILE_API_NBR);
@@ -394,6 +402,7 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 	 *            {@link TransferOptions} that configures details about the
 	 *            underlying technique used in the transfer. Can be set to null
 	 *            if not desired.
+	 * @param execFlag <code>boolean</code> that indicates that the exec bit should be preserved      
 	 * @return <code>DataObjInp</code> containing the necessary packing
 	 *         instruction
 	 * @throws JargonException
@@ -401,7 +410,7 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 	public static final DataObjInp instanceForParallelPut(
 			final String destinationAbsolutePath, final long length,
 			final String destinationResource, final boolean overwrite,
-			final TransferOptions transferOptions) throws JargonException {
+			final TransferOptions transferOptions, boolean execFlag) throws JargonException {
 
 		if (destinationAbsolutePath == null
 				|| destinationAbsolutePath.isEmpty()) {
@@ -415,9 +424,14 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 		if (length < 0) {
 			throw new JargonException("length is less than zero");
 		}
+		
+		int createMode = DEFAULT_CREATE_MODE;
+		if (execFlag) {
+			createMode = EXEC_CREATE_MODE;
+		}
 
 		DataObjInp dataObjInp = new DataObjInp(destinationAbsolutePath,
-				DEFAULT_CREATE_MODE, OpenFlags.READ_WRITE, 0L, length,
+				createMode, OpenFlags.READ_WRITE, 0L, length,
 				destinationResource, transferOptions);
 		dataObjInp.operationType = PUT_OPERATION_TYPE;
 		dataObjInp.setApiNumber(PUT_FILE_API_NBR);
@@ -452,6 +466,7 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 	 *            {@link TransferOptions} that configures details about the
 	 *            underlying technique used in the transfer. Can be set to null
 	 *            if not desired.
+	 *  @param execFlag <code>boolean</code> that indicates that the exec bit should be preserved  
 	 * @return <code>DataObjInp</code> containing the necessary packing
 	 *         instruction
 	 * @throws JargonException
@@ -459,7 +474,7 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 	public static final DataObjInp instanceForNormalPutStrategy(
 			final String destinationAbsolutePath, final long length,
 			final String destinationResource, final boolean overwrite,
-			final TransferOptions transferOptions) throws JargonException {
+			final TransferOptions transferOptions, final boolean execFlag) throws JargonException {
 
 		if (destinationAbsolutePath == null
 				|| destinationAbsolutePath.isEmpty()) {
@@ -473,9 +488,14 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 		if (length < 0) {
 			throw new JargonException("length is less than zero");
 		}
+		
+		int createMode = DEFAULT_CREATE_MODE;
+		if (execFlag) {
+			createMode = EXEC_CREATE_MODE;
+		}
 
 		DataObjInp dataObjInp = new DataObjInp(destinationAbsolutePath,
-				DEFAULT_CREATE_MODE, OpenFlags.READ_WRITE, 0L, length,
+				createMode, OpenFlags.READ_WRITE, 0L, length,
 				destinationResource, transferOptions);
 		dataObjInp.operationType = PUT_OPERATION_TYPE;
 		dataObjInp.setApiNumber(PUT_FILE_API_NBR);

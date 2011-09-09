@@ -38,7 +38,7 @@ import org.slf4j.LoggerFactory;
  * 
  */
 
-public final class IRODSFileImpl extends File implements IRODSFile {
+public final class IRODSFileImpl extends File implements IRODSFile { // FIXME: why does this extend IRODSFile?  Should IRODSFile just have the particular non File methods?
 
 	static Logger log = LoggerFactory.getLogger(IRODSFileImpl.class);
 
@@ -456,6 +456,9 @@ public final class IRODSFileImpl extends File implements IRODSFile {
 
 	}
 
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.core.pub.io.IRODSFile#deleteWithForceOption()
+	 */
 	@Override
 	public boolean deleteWithForceOption() {
 		boolean successful = true;
@@ -1395,6 +1398,26 @@ public final class IRODSFileImpl extends File implements IRODSFile {
 
 			return null;
 		}
+	}
+
+	/* (non-Javadoc)
+	 * @see java.io.File#canExecute()
+	 */
+	@Override
+	public boolean canExecute() {
+		boolean canExec = false;
+		try {
+			canExec = irodsFileSystemAO.isFileExecutable(this);
+			log.info("checked if I could exec this file, and got back:{}",
+					canExec);
+
+		} catch (JargonException e) {
+			String msg = "JargonException caught and rethrown as JargonRuntimeException:"
+					+ e.getMessage();
+			log.error(msg, e);
+			throw new JargonRuntimeException(e);
+		}
+		return canExec;
 	}
 
 }

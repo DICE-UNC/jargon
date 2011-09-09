@@ -133,3 +133,5 @@ iRODS Jargon > Support for optional checksum on transfer	2011-02-18 10:40:06
 iRODS Jargon > add callback listener and control block to parallel txfrs, allow cancel/pause in parallel txfr	2011-06-13 06:27:25
 
 iRODS Jargon > add support for getTempPassword API
+
+ [#266] exec ACL support for get/put files

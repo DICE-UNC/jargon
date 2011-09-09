@@ -464,9 +464,15 @@ final class DataAOHelper extends AOHelper {
 				transferControlBlock.getTransferOptions());
 		myTransferOptions.setMaxThreads(0);
 
+		boolean execFlag = false;
+		if (localFile.canExecute()) {
+			log.info("file is executable");
+			execFlag = true;
+		}
+		
 		DataObjInp dataObjInp = DataObjInp.instanceForNormalPutStrategy(
 				targetFile.getAbsolutePath(), localFile.length(),
-				targetFile.getResource(), overwrite, myTransferOptions);
+				targetFile.getResource(), overwrite, myTransferOptions, execFlag);
 
 		// see if checksum is required
 

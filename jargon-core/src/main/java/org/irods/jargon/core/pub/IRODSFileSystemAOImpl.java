@@ -56,6 +56,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 	public final char COMMA = ',';
 	public final String AND_VALUE = " AND ";
 	private final IRODSGenQueryExecutor irodsGenQueryExecutor;
+	private final UserAO userAO;
 
 	/**
 	 * @param irodsProtocol
@@ -66,6 +67,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 		super(irodsSession, irodsAccount);
 		irodsGenQueryExecutor = this.getIRODSAccessObjectFactory()
 				.getIRODSGenQueryExecutor(this.getIRODSAccount());
+		userAO = this.getIRODSAccessObjectFactory().getUserAO(irodsAccount);
 
 	}
 
@@ -81,7 +83,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 			throws JargonException {
 		boolean readable = false;
 		if (irodsFile == null) {
-			throw new JargonException("irods file is null");
+			throw new IllegalArgumentException("irods file is null");
 		}
 		if (log.isInfoEnabled()) {
 			log.info("checking read permissions on:" + irodsFile);
@@ -102,6 +104,86 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 		}
 		return readable;
 	}
+	
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.core.pub.IRODSFileSystemAO#isFileExecutable(org.irods.jargon.core.pub.io.IRODSFile)
+	 */
+	@Override
+	public boolean isFileExecutable(final IRODSFile irodsFile) throws JargonException {
+		
+		log.info("isFileExecutable()");
+		if (irodsFile == null) {
+			throw new IllegalArgumentException("irodsFile is null");
+		}
+		
+		boolean executable = false;
+		
+		if (irodsFile.exists()) {
+			if (irodsFile.isDirectory())  {
+				executable = false;
+			} else {
+				executable = checkIfDataObjectExecutable(irodsFile);
+			}
+			
+		}
+		
+		log.info("is executable:{}", executable);
+		return executable;
+		
+	}
+	
+	/**
+	 * Do a query on the given file to see if it has an executable bit set
+	 * @param irodsFile
+	 * @return <code>boolean</code> of <code>true</code> if file is data object, exists, and is executable
+	 * @throws JargonException
+	 */
+	private boolean checkIfDataObjectExecutable(IRODSFile irodsFile) throws JargonException {
+		StringBuilder filePermissionQuery = new StringBuilder();
+		filePermissionQuery.append("SELECT ");
+		filePermissionQuery.append(RodsGenQueryEnum.COL_D_DATA_MODE
+				.getName());
+
+		filePermissionQuery.append(" WHERE ");
+		filePermissionQuery.append(RodsGenQueryEnum.COL_COLL_NAME.getName());
+		filePermissionQuery.append(" = '");
+		filePermissionQuery.append(IRODSDataConversionUtil
+				.escapeSingleQuotes(irodsFile.getParent()));
+		filePermissionQuery.append("'");
+		filePermissionQuery.append(AND_VALUE);
+
+		filePermissionQuery.append(RodsGenQueryEnum.COL_DATA_NAME
+				.getName());
+		filePermissionQuery.append(" = '");
+		filePermissionQuery.append(IRODSDataConversionUtil
+				.escapeSingleQuotes(irodsFile.getName()));
+		filePermissionQuery.append("'");
+		
+		log.debug("data oject exec query:{}", filePermissionQuery);
+		
+		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(
+				filePermissionQuery.toString(), 100);
+
+		IRODSQueryResultSetInterface resultSet;
+		try {
+			boolean executable = false;
+			resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResult(
+					irodsQuery, 0);
+			IRODSQueryResultRow resultRow = resultSet.getFirstResult();
+			if (resultRow.getColumn(0).equals("33261")) {
+				executable = true;
+			}
+			return executable;
+		} catch (DataNotFoundException dnf) {
+			log.info("no result found");
+			return false;
+		} catch (JargonQueryException e) {
+			log.error("query exception for  query:{}",
+					filePermissionQuery.toString(), e);
+			throw new JargonException("error in file permissions query");
+		}
+		
+	}
 
 	/*
 	 * (non-Javadoc)
@@ -115,7 +197,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 			throws JargonException {
 		boolean writeable = false;
 		if (irodsFile == null) {
-			throw new JargonException("irods file is null");
+			throw new IllegalArgumentException("irods file is null");
 		}
 		if (log.isInfoEnabled()) {
 			log.info("checking write permissions on:" + irodsFile);
@@ -149,12 +231,12 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 			throws JargonException {
 
 		if (irodsFile == null) {
-			throw new JargonException("irods file is null");
+			throw new IllegalArgumentException("irods file is null");
 		}
 
-		if (log.isInfoEnabled()) {
-			log.info("checking permissions on:" + irodsFile);
-		}
+		
+			log.info("checking permissions on:{}", irodsFile);
+		
 
 		return getFilePermissionsForGivenUser(irodsFile, this.getIRODSAccount()
 				.getUserName());
@@ -180,10 +262,10 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 			throw new IllegalArgumentException("userName is null or empty");
 		}
 
-		if (log.isInfoEnabled()) {
-			log.info("checking permissions on:" + irodsFile);
+		
+			log.info("checking permissions on:{}", irodsFile);
 			log.info("for userName:{}", userName);
-		}
+		
 
 		String parent = irodsFile.getParent();
 		String fileName = irodsFile.getName();
@@ -191,8 +273,6 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 		log.debug("getting file permissions on file:{} ",
 				irodsFile.getAbsolutePath());
 
-		UserAO userAO = this.getIRODSAccessObjectFactory().getUserAO(
-				getIRODSAccount());
 		User user = userAO.findByName(userName);
 
 		log.debug("user name translated to id:{}", user.getId());
@@ -335,8 +415,6 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 
 		// get the id for the user name, GenQuery can't do this join
 
-		UserAO userAO = this.getIRODSAccessObjectFactory().getUserAO(
-				getIRODSAccount());
 		User user = userAO.findByName(userName);
 
 		log.debug("getting directory permissions on:{} ", fileName);
@@ -395,8 +473,9 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 	@Override
 	public boolean isFileExists(final IRODSFile irodsFile)
 			throws JargonException {
+		
 		if (irodsFile == null) {
-			throw new JargonException("irods file is null");
+			throw new IllegalArgumentException("irods file is null");
 		}
 
 		log.info("checking existence of: {}", irodsFile.getAbsolutePath());
@@ -495,8 +574,9 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 	@Override
 	public boolean isDirectory(final IRODSFile irodsFile)
 			throws JargonException, DataNotFoundException {
+		
 		if (irodsFile == null) {
-			throw new JargonException("irods file is null");
+			throw new IllegalArgumentException("irods file is null");
 		}
 
 		log.info("checking if directory, file:{}", irodsFile);

@@ -105,6 +105,9 @@ public final class ParallelPutFileTransferStrategy extends
 
 	}
 
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.core.transfer.AbstractParallelFileTransferStrategy#transfer()
+	 */
 	@Override
 	public void transfer() throws JargonException {
 		log.info("initiating transfer for: {}", this.toString());

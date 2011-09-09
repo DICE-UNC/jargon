@@ -52,6 +52,8 @@ public interface IRODSFile {
 	boolean canRead();
 
 	boolean canWrite();
+	
+	boolean canExecute();
 
 	boolean createNewFile() throws IOException;
 

@@ -162,6 +162,42 @@ public class DataObjectAOImplTest {
 		dataObjectAO.putLocalDataObjectToIRODS(localFile, destFile, true);
 		assertionHelper.assertIrodsFileOrCollectionExists(targetIrodsFile);
 	}
+	
+	// TODO: add complemenary get and make sure exec is preserved
+	
+	@Test
+	public void testPutExecutableFile() throws Exception {
+		// generate a local scratch file
+		String testFileName = "testPutExecutableFile.sh";
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String localFileName = FileGenerator
+				.generateFileOfFixedLengthGivenName(absPath, testFileName, 2);
+
+		String targetIrodsFile = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
+								+ testFileName);
+		File localFile = new File(localFileName);
+		localFile.setExecutable(true);
+
+		// now put the file
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
+		IRODSFileFactory irodsFileFactory = accessObjectFactory
+				.getIRODSFileFactory(irodsAccount);
+		DataObjectAO dataObjectAO = accessObjectFactory
+				.getDataObjectAO(irodsAccount);
+		IRODSFile destFile = irodsFileFactory
+				.instanceIRODSFile(targetIrodsFile);
+		dataObjectAO.putLocalDataObjectToIRODS(localFile, destFile, true);
+		assertionHelper.assertIrodsFileOrCollectionExists(targetIrodsFile);
+	}
+
 
 	@Test(expected = JargonException.class)
 	public void testPutOverwriteUnknownCollection() throws Exception {
@@ -592,7 +628,6 @@ public class DataObjectAOImplTest {
 	@Test
 	public final void testGet() throws Exception {
 
-		// generate a local scratch file
 		String testFileName = "testGet.txt";
 		String absPath = scratchFileUtils
 				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
@@ -637,7 +672,116 @@ public class DataObjectAOImplTest {
 		assertionHelper.assertLocalScratchFileLengthEquals(
 				IRODS_TEST_SUBDIR_PATH + '/' + getFileName, 100);
 
+		
 	}
+	
+	@Test
+	public final void testGetExecutable() throws Exception {
+
+		String testFileName = "testGetExecutable.sh";
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String localFileName = FileGenerator
+				.generateFileOfFixedLengthGivenName(absPath, testFileName, 100);
+		
+		File localFile = new File(localFileName);
+		localFile.setExecutable(true);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
+		String getFileName = "testGetExecutableResult.sh";
+		String getResultLocalPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH + '/')
+				+ getFileName;
+		localFile = new File(getResultLocalPath);
+		localFile.setExecutable(true);
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		DataTransferOperations dataTransferOperations = accessObjectFactory
+				.getDataTransferOperations(irodsAccount);
+		dataTransferOperations
+				.putOperation(
+						localFileName,
+						targetIrodsCollection,
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
+						null, null);
+
+		DataObjectAO dataObjectAO = accessObjectFactory
+				.getDataObjectAO(irodsAccount);
+		IRODSFile irodsFile = dataObjectAO
+				.instanceIRODSFileForPath(targetIrodsCollection + '/'
+						+ testFileName);
+
+		dataObjectAO.getDataObjectFromIrods(irodsFile, localFile);
+
+		assertionHelper.assertLocalFileExistsInScratch(IRODS_TEST_SUBDIR_PATH
+				+ '/' + getFileName);
+		assertionHelper.assertLocalScratchFileLengthEquals(
+				IRODS_TEST_SUBDIR_PATH + '/' + getFileName, 100);
+		TestCase.assertTrue("local file should be executable", localFile.canExecute());
+
+	}
+	
+	@Test
+	public final void testGetNotExecutable() throws Exception {
+
+		String testFileName = "testGetNotExecutable.sh";
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String localFileName = FileGenerator
+				.generateFileOfFixedLengthGivenName(absPath, testFileName, 100);
+		
+		File localFile = new File(localFileName);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
+		String getFileName = "testGetNotExecutableResult.sh";
+		String getResultLocalPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH + '/')
+				+ getFileName;
+		localFile = new File(getResultLocalPath);
+		localFile.setExecutable(true);
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		DataTransferOperations dataTransferOperations = accessObjectFactory
+				.getDataTransferOperations(irodsAccount);
+		dataTransferOperations
+				.putOperation(
+						localFileName,
+						targetIrodsCollection,
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
+						null, null);
+
+		DataObjectAO dataObjectAO = accessObjectFactory
+				.getDataObjectAO(irodsAccount);
+		IRODSFile irodsFile = dataObjectAO
+				.instanceIRODSFileForPath(targetIrodsCollection + '/'
+						+ testFileName);
+
+		dataObjectAO.getDataObjectFromIrods(irodsFile, localFile);
+
+		assertionHelper.assertLocalFileExistsInScratch(IRODS_TEST_SUBDIR_PATH
+				+ '/' + getFileName);
+		assertionHelper.assertLocalScratchFileLengthEquals(
+				IRODS_TEST_SUBDIR_PATH + '/' + getFileName, 100);
+		TestCase.assertFalse("local file should not be executable", localFile.canExecute());
+
+	}
+
 
 	@Test
 	public final void testGetWithIntraFileCallbacks() throws Exception {

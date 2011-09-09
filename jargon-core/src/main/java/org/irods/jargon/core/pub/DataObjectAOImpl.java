@@ -452,6 +452,12 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 				myTransferOptions.getMaxThreads());
 		
 		ConnectionProgressStatusListener intraFileStatusListener = null;
+		
+		boolean execFlag = false;
+		if (localFile.canExecute()) {
+			log.info("file is executable");
+			execFlag = true;
+		}
 
 		/*
 		 * If specified by options, and with a call-back listener registered,
@@ -462,7 +468,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 		DataObjInp dataObjInp = DataObjInp.instanceForParallelPut(
 				targetFile.getAbsolutePath(), localFile.length(),
-				targetFile.getResource(), overwrite, myTransferOptions);
+				targetFile.getResource(), overwrite, myTransferOptions, execFlag);
 
 		try {
 
@@ -880,6 +886,13 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 					}
 				}
 			}
+			
+			log.info("looking for executable to set flag on local file");
+			if (irodsFileToGet.canExecute()) {
+				log.info("execute set on local file");
+				localFileToHoldData.setExecutable(true);
+			}
+			
 
 		} catch (Exception e) {
 			log.error("error in parallel transfer", e);

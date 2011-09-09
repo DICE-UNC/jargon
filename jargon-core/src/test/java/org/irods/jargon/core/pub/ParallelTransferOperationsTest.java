@@ -248,8 +248,6 @@ public class ParallelTransferOperationsTest {
 		String testRetrievedFileName = "testParallelFilePutThenGetUsingExecutorMultipleClientsMoreClientsLessPoolRetrieved.txt";
 		long testFileLength = 400000 * 1024;
 		int numberOfClients = 3;
-		int numberOfThreads = 2;
-
 		for (int i = 0; i < numberOfClients; i++) {
 			String absPath = scratchFileUtils
 					.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);

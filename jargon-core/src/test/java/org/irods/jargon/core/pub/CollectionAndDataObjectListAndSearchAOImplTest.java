@@ -1197,6 +1197,7 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 		CollectionAndDataObjectListAndSearchAO actual = irodsFileSystem
 				.getIRODSAccessObjectFactory()
 				.getCollectionAndDataObjectListAndSearchAO(irodsAccount);
+		@SuppressWarnings("unused")
 		List<CollectionAndDataObjectListingEntry> entries = actual
 				.listDataObjectsSharedWithAGivenUser("/", "test2", 0);
 		irodsFileSystem.close();
