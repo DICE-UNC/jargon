@@ -11,17 +11,14 @@ import static org.irods.jargon.core.pub.aohelper.AOHelper.QUOTE;
 import static org.irods.jargon.core.pub.aohelper.AOHelper.SPACE;
 import static org.irods.jargon.core.pub.aohelper.AOHelper.WHERE;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
-import org.irods.jargon.core.pub.aohelper.ResourceAOHelper;
 import org.irods.jargon.core.pub.domain.AvuData;
 import org.irods.jargon.core.pub.domain.Resource;
-import org.irods.jargon.core.pub.domain.Zone;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.query.AVUQueryElement;
 import org.irods.jargon.core.query.IRODSGenQuery;
@@ -50,14 +47,14 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 	private Logger log = LoggerFactory.getLogger(this.getClass());
 
 	public static final String ERROR_IN_RESOURCE_QUERY = "error in resource query";
-	private final transient ZoneAO zoneAO;
-	private transient Zone lastZone = new Zone();
-	private final transient ResourceAOHelper resourceAOHelper = new ResourceAOHelper();
+	private final transient ResourceAOHelper resourceAOHelper;
 
 	public ResourceAOImpl(final IRODSSession irodsSession,
 			final IRODSAccount irodsAccount) throws JargonException {
 		super(irodsSession, irodsAccount);
-		this.zoneAO = new ZoneAOImpl(irodsSession, irodsAccount);
+		this.getIRODSAccessObjectFactory().getZoneAO(getIRODSAccount());
+		resourceAOHelper = new ResourceAOHelper(getIRODSAccount(),
+				getIRODSAccessObjectFactory());
 	}
 
 	/*
@@ -119,7 +116,7 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 		// I know I have just one user
 
 		IRODSQueryResultRow row = resultSet.getFirstResult();
-		Resource resource = buildResourceFromResultSetRow(row);
+		Resource resource = resourceAOHelper.buildResourceFromResultSetRow(row);
 
 		return resource;
 	}
@@ -181,7 +178,7 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 
 		// I know I have just one resource
 		IRODSQueryResultRow row = resultSet.getFirstResult();
-		Resource resource = buildResourceFromResultSetRow(row);
+		Resource resource = resourceAOHelper.buildResourceFromResultSetRow(row);
 
 		return resource;
 	}
@@ -215,7 +212,7 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 			throw new JargonException(ERROR_IN_RESOURCE_QUERY);
 		}
 
-		return buildResourceListFromResultSet(resultSet);
+		return resourceAOHelper.buildResourceListFromResultSet(resultSet);
 	}
 
 	/*
@@ -275,7 +272,8 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 			throw new JargonException("error in query");
 		}
 
-		List<Resource> resources = buildResourceListFromResultSet(resultSet);
+		List<Resource> resources = resourceAOHelper
+				.buildResourceListFromResultSet(resultSet);
 
 		if (resources.isEmpty()) {
 			log.warn("no data found");
@@ -329,7 +327,7 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 			throw new JargonException("error in query");
 		}
 
-		return buildResourceListFromResultSet(resultSet);
+		return resourceAOHelper.buildResourceListFromResultSet(resultSet);
 
 	}
 
@@ -422,7 +420,7 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 			log.error("query exception for query:" + queryString, e);
 			throw new JargonException(ERROR_IN_RESOURCE_QUERY);
 		}
-		return buildResourceListFromResultSet(resultSet);
+		return resourceAOHelper.buildResourceListFromResultSet(resultSet);
 	}
 
 	/**
@@ -552,69 +550,6 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 		}
 
 		return queryCondition;
-	}
-
-	private Resource buildResourceFromResultSetRow(final IRODSQueryResultRow row)
-			throws JargonException {
-		Resource resource = new Resource();
-		resource.setId(row.getColumn(0));
-		resource.setName(row.getColumn(1));
-		String zoneName = row.getColumn(2);
-		if (!zoneName.equals(lastZone.getZoneName())) {
-			try {
-				lastZone = zoneAO.getZoneByName(zoneName);
-			} catch (DataNotFoundException e) {
-				String message = "no zone found for zone in resource="
-						+ zoneName;
-				log.error(message);
-				throw new JargonException(
-						"zone not found for resource, data integrity error", e);
-			}
-		}
-
-		resource.setZone(lastZone);
-		resource.setType(row.getColumn(3));
-		resource.setResourceClass(row.getColumn(4));
-		resource.setLocation(row.getColumn(5));
-		resource.setVaultPath(row.getColumn(6));
-
-		try {
-			resource.setFreeSpace(Long.parseLong(row.getColumn(7)));
-		} catch (NumberFormatException nfe) {
-			resource.setFreeSpace(0);
-			log.warn("unable to format resourceFreeSpace for value:"
-					+ row.getColumn(7) + " setting to 0");
-		}
-
-		resource.setFreeSpaceTime(IRODSDataConversionUtil
-				.getDateFromIRODSValue(row.getColumn(8)));
-		resource.setInfo(row.getColumn(9));
-		resource.setComment(row.getColumn(10));
-		resource.setCreateTime(IRODSDataConversionUtil
-				.getDateFromIRODSValue(row.getColumn(11)));
-		resource.setModifyTime(IRODSDataConversionUtil
-				.getDateFromIRODSValue(row.getColumn(12)));
-		resource.setStatus(row.getColumn(13));
-
-		if (log.isInfoEnabled()) {
-			log.info("resource built \n");
-			log.info(resource.toString());
-		}
-
-		return resource;
-	}
-
-	private List<Resource> buildResourceListFromResultSet(
-			final IRODSQueryResultSetInterface resultSet)
-			throws JargonException {
-
-		List<Resource> resources = new ArrayList<Resource>();
-
-		for (IRODSQueryResultRow row : resultSet.getResults()) {
-			resources.add(this.buildResourceFromResultSetRow(row));
-		}
-
-		return resources;
 	}
 
 }

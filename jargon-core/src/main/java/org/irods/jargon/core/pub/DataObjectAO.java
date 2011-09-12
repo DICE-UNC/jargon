@@ -460,7 +460,9 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 
 	/**
 	 * Method to put local data to iRODS taking default options, and not
-	 * specifying a call-back listener
+	 * specifying a call-back listener. Note that re-routing of connections to
+	 * resources is not done from methods in this class, but can be handled by
+	 * using the methods in {@link DataTransferOperations}.
 	 * 
 	 * @param localFile
 	 *            <code>File</code> with a source file or directory in the local
@@ -478,6 +480,10 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 
 	/**
 	 * Transfer a file or directory from the local file system to iRODS.
+	 * <p/>
+	 * Note that re-routing of connections to resources is not done from methods
+	 * in this class, but can be handled by using the methods in
+	 * {@link DataTransferOperations}.
 	 * 
 	 * @param localFile
 	 *            <code>File</code> with a source file or directory in the local
@@ -510,7 +516,11 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	/**
 	 * Transfer a file or directory from the local file system to iRODS as
 	 * invoked by a client-side rule operation. This is used only for special
-	 * cases during rule invocation
+	 * cases during rule invocation.
+	 * <p/>
+	 * Note that re-routing of connections to resources is not done from methods
+	 * in this class, but can be handled by using the methods in
+	 * {@link DataTransferOperations}.
 	 * 
 	 * @param localFile
 	 *            <code>File</code> with a source file or directory in the local
@@ -940,5 +950,18 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 */
 	void removeAccessPermissionsForUserInAdminMode(String zone,
 			String absolutePath, String userName) throws JargonException;
+
+	/**
+	 * List the resources that have a copy of the given iRODS file
+	 * 
+	 * @param irodsAbsolutePath
+	 *            <code>String</code> with the absolute path to the iRODS file
+	 *            that represents a data object.
+	 * @return <code>List</code> of {@Resource} that represent the
+	 *         resources in iRODS that have a copy of the file/
+	 * @throws JargonException
+	 */
+	List<Resource> listFileResources(String irodsAbsolutePath)
+			throws JargonException;
 
 }

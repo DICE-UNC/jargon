@@ -1322,69 +1322,30 @@ public class DataObjectAOImplTest {
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH);
 
-		// make sure all replicas are removed
-		IrodsInvocationContext invocationContext = testingPropertiesHelper
-				.buildIRODSInvocationContextFromTestProperties(testingProperties);
-		IcommandInvoker invoker = new IcommandInvoker(invocationContext);
-		IrmCommand rmvCommand = new IrmCommand();
-		rmvCommand.setForce(true);
-		rmvCommand.setObjectName(targetIrodsCollection + '/' + testFileName);
-		try {
-			invoker.invokeCommandAndGetResultAsString(rmvCommand);
-		} catch (IcommandException ice) {
-			if (ice.getMessage().indexOf("exist") != -1) {
-				// ignore, nothing to remove
-			} else {
-				throw ice;
-			}
-		}
-
-		// put scratch file into irods in the right place
-		IputCommand iputCommand = new IputCommand();
-
-		iputCommand.setLocalFileName(fileNameOrig);
-		iputCommand.setIrodsFileName(targetIrodsCollection);
-		iputCommand.setForceOverride(true);
-
-		invoker.invokeCommandAndGetResultAsString(iputCommand);
-
-		iputCommand = new IputCommand();
-
-		iputCommand.setLocalFileName(fileNameOrig);
-		iputCommand.setIrodsFileName(targetIrodsCollection);
-		iputCommand.setIrodsResource(testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY));
-		iputCommand.setForceOverride(true);
-
-		invoker.invokeCommandAndGetResultAsString(iputCommand);
-
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
+		
+		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount).instanceIRODSFile(targetIrodsCollection + "/" + testFileName);
+		irodsFile.deleteWithForceOption();
+		
+		irodsFile.reset();
+		irodsFile.setResource(testingProperties.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY));
+		File localFile = new File(fileNameOrig);
+				
 		DataObjectAO dataObjectAO = irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
-
+		
+		dataObjectAO.putLocalDataObjectToIRODS(localFile, irodsFile, true);
+		
 		dataObjectAO
 				.replicateIrodsDataObject(
 						targetIrodsCollection + '/' + testFileName,
 						testingProperties
 								.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_RESOURCE_KEY));
 
-		irodsFileSystem.close();
-
-		IlsCommand ilsCommand = new IlsCommand();
-		ilsCommand.setLongFormat(true);
-		ilsCommand.setIlsBasePath(targetIrodsCollection + '/' + testFileName);
-		String ilsResult = invoker
-				.invokeCommandAndGetResultAsString(ilsCommand);
-		Assert.assertTrue(
-				"file is not in new resource",
-				ilsResult.indexOf(testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_RESOURCE_KEY)) != -1);
-		Assert.assertTrue(
-				"file is not in original resource",
-				ilsResult.indexOf(testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY)) != -1);
-
+		List<Resource> resources = dataObjectAO.listFileResources(targetIrodsCollection + "/" + testFileName);
+		TestCase.assertEquals("did not find expected resources", 2, resources.size());
+		
 	}
 
 	@Test

@@ -141,8 +141,11 @@ public interface DataTransferOperations extends IRODSAccessObject {
 	/**
 	 * Put a file or a collection (recursively) to iRODS. This method allows
 	 * registration of a <code>TransferStatusCallbackListener</code> that will
-	 * provide callbacks about the status of the transfer suitable for progress
-	 * monitoring
+	 * provide call-backs about the status of the transfer suitable for progress
+	 * monitoring.
+	 * <p/>
+	 * Note that this method will, if the correct jargon properties are set, support connection re-routing to
+	 * appropriate resources for the transfer.
 	 * 
 	 * @param sourceFile
 	 *            <code>File</code> with the source directory or file.
@@ -342,6 +345,9 @@ public interface DataTransferOperations extends IRODSAccessObject {
 	 * recursive operation if a collection is specified. If a collection is
 	 * specified, that collection will become a sub-directory added underneath
 	 * the given parent.
+	 * <p/>
+	 * Note that this method will, if the correct jargon properties are set, support connection re-routing to
+	 * appropriate resources for the transfer.
 	 * 
 	 * @param sourceFileAbsolutePath
 	 *            <code>String</code> with the absolute path of the source file

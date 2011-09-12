@@ -2247,6 +2247,74 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		return userFilePermission;
 
 	}
+	
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.core.pub.DataObjectAO#listFileResources(java.lang.String)
+	 */
+	@Override
+	public List<Resource> listFileResources(final String irodsAbsolutePath) throws JargonException {
+		
+		if (irodsAbsolutePath == null || irodsAbsolutePath.isEmpty()) {
+			throw new IllegalArgumentException("null or empty irodsAbsolutePath");
+		}
+		
+		log.info("listFileResources() for path:{}", irodsAbsolutePath);
+		
+		ResourceAOHelper resourceAOHelper = new ResourceAOHelper(this.getIRODSAccount(), this.getIRODSAccessObjectFactory());
+		IRODSFile irodsFile = this.getIRODSFileFactory().instanceIRODSFile(irodsAbsolutePath);
+
+		StringBuilder query = new StringBuilder();
+		query.append(resourceAOHelper.buildResourceSelects());
+		query.append(" where ");
+
+		if (irodsFile.exists() && irodsFile.isFile()) {
+			query.append(RodsGenQueryEnum.COL_COLL_NAME.getName());
+			query.append(EQUALS_AND_QUOTE);
+			query.append(IRODSDataConversionUtil.escapeSingleQuotes(irodsFile
+					.getParent()));
+			query.append("'");
+			query.append(AND);
+			query.append(RodsGenQueryEnum.COL_DATA_NAME.getName());
+			query.append(EQUALS_AND_QUOTE);
+			query.append(IRODSDataConversionUtil.escapeSingleQuotes(irodsFile
+					.getName()));
+			query.append("'");
+
+		} else {
+			log.error("file for query does not exist, or is not a file at path:{}", irodsAbsolutePath);
+			throw new JargonException("file does not exist, or is not a file");
+		}
+
+		IRODSGenQueryExecutorImpl irodsGenQueryExecutorImpl = new IRODSGenQueryExecutorImpl(
+				this.getIRODSSession(), this.getIRODSAccount());
+
+		String queryString = query.toString();
+		if (log.isInfoEnabled()) {
+			log.info("resource query:{}", toString());
+		}
+
+		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(queryString, 500);
+
+		IRODSQueryResultSetInterface resultSet;
+		try {
+			resultSet = irodsGenQueryExecutorImpl
+					.executeIRODSQueryAndCloseResult(irodsQuery, 0);
+		} catch (JargonQueryException e) {
+			log.error("query exception for:{}", queryString, e);
+			throw new JargonException("error in query");
+		}
+
+		List<Resource> resources = resourceAOHelper.buildResourceListFromResultSet(resultSet);
+
+		if (resources.isEmpty()) {
+			log.warn("no data found");
+			throw new DataNotFoundException("no resources found for file:"
+					+ irodsFile.getAbsolutePath());
+		}
+
+		return resources;
+		
+	}
 
 	/*
 	 * (non-Javadoc)

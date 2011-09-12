@@ -125,6 +125,33 @@ public final class IRODSAccount implements Serializable {
 				zone, defaultStorageResource);
 
 	}
+	
+	/**
+	 * Create a re-routed iRODS account using an initial account, and a host name to which the connection should be re-routed
+	 * @param initialAccount {@link IRODSAccount} for the initial connection
+	 * @param reroutedHostName <code>String</code> with the host name to which the connection should be routed.
+	 * @return <code>IRODSAccount</code> connected to the new host.
+	 * @throws JargonException
+	 */
+	public static IRODSAccount instanceForReroutedHost(final IRODSAccount initialAccount, final String reroutedHostName) throws JargonException {
+		
+		if (initialAccount == null) {
+			throw new IllegalArgumentException("null initialAccount");
+		}
+		
+		if (reroutedHostName == null || reroutedHostName.isEmpty()) {
+			throw new IllegalArgumentException("null or empty reroutedHostName");
+		}
+		
+		return new IRODSAccount(reroutedHostName,
+				initialAccount.getPort(),
+				initialAccount.getUserName(),
+				initialAccount.getPassword(),
+				initialAccount.getHomeDirectory(),
+				initialAccount.getZone(), 
+				initialAccount.getDefaultStorageResource());
+		
+	}
 
 	/**
 	 * Creates an object to hold iRODS account information. Uses the

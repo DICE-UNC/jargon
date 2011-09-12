@@ -591,6 +591,24 @@ public class TestingPropertiesHelper {
 		pathBuilder.append(collectionPathBelowScratch);
 		return pathBuilder.toString();
 	}
+	
+	
+	
+	/**
+	 * Check if optional distributed resources are to be tested
+	 * 
+	 * @param testingProperties
+	 * @return
+	 */
+	public boolean isTestDistributedResources(final Properties testingProperties) {
+		String val = (String) testingProperties
+				.get("test.option.distributed.resources");
+		if (val == null) {
+			return false;
+		} else {
+			return Boolean.parseBoolean(val);
+		}
+	}
 
 	/**
 	 * Check if optional remote stream execution is to be tested
