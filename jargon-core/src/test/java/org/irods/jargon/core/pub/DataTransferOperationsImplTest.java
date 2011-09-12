@@ -414,7 +414,6 @@ public class DataTransferOperationsImplTest {
 	public void testPutOneFileWithResourceRerouting() throws Exception {
 		
 		if (!testingPropertiesHelper.isTestDistributedResources(testingProperties)) {
-			TestCase.assertTrue(true);
 			return;
 		} 
 		
@@ -460,6 +459,61 @@ public class DataTransferOperationsImplTest {
 		TestCase.assertEquals("did not get expected resource", 1, resources.size());
 		Resource firstResource = resources.get(0);
 		TestCase.assertEquals("resource for file not correct", destFile.getResource(), firstResource.getName());
+		irodsFileSystem.closeAndEatExceptions(irodsAccount);
+		// there should only be one connection in the session map (secondary account should have been closed
+		TestCase.assertNull("session from reroute leaking",  irodsFileSystem.getConnectionMap());
+		
+	}
+	
+	@Test
+	public void testGetOneFileWithResourceRerouting() throws Exception {
+		
+		if (!testingPropertiesHelper.isTestDistributedResources(testingProperties)) {
+			return;
+		} 
+		
+		String testFileName = "testGetOneFileWithResourceRerouting.txt";
+		String testRetrievedFileName = "testGetOneFileWithResourceReroutingRetrieved.txt";
+
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String localFileName = FileGenerator
+				.generateFileOfFixedLengthGivenName(absPath, testFileName, 300);
+
+		String targetIrodsFile = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
+								+ testFileName);
+		File localFile = new File(localFileName);
+
+		// now put the file
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		
+		irodsFileSystem.closeAndEatExceptions();
+
+		IRODSFileFactory irodsFileFactory = irodsFileSystem
+				.getIRODSFileFactory(irodsAccount);
+		IRODSFile destFile = irodsFileFactory
+				.instanceIRODSFile(targetIrodsFile);
+		destFile.setResource(testingProperties.getProperty(TestingPropertiesHelper.IRODS_TERTIARY_RESOURCE_KEY));
+		DataTransferOperations dataTransferOperationsAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataTransferOperations(
+						irodsAccount);
+		
+		SettableJargonProperties settableProperties = new SettableJargonProperties();
+		settableProperties.setAllowPutGetResourceRedirects(true);
+		irodsFileSystem.getIrodsSession().setJargonProperties(settableProperties);
+
+		dataTransferOperationsAO.putOperation(localFile, destFile, null, null);
+		
+		destFile.reset();
+		
+		File retrieveFile = new File(absPath + "/" + testRetrievedFileName);
+		dataTransferOperationsAO.getOperation(destFile, retrieveFile, null, null);
+		TestCase.assertTrue("retrieved file should exist", retrieveFile.exists());
+		
 		irodsFileSystem.closeAndEatExceptions(irodsAccount);
 		// there should only be one connection in the session map (secondary account should have been closed
 		TestCase.assertNull("session from reroute leaking",  irodsFileSystem.getConnectionMap());
