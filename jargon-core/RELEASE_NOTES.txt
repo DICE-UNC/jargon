@@ -1,7 +1,7 @@
 
 *'''Project''': Jargon-core - IRODS Java API
-*'''Date''': 08/30/2010
-*'''Release Version''': 3.0.0 Release
+*'''Date''': XX/XX/XX
+*'''Release Version''': 3.0.0 Release SNAPSHOT
 *'''git tag''':  xxxxx
 
 
@@ -135,3 +135,5 @@ iRODS Jargon > add callback listener and control block to parallel txfrs, allow 
 iRODS Jargon > add support for getTempPassword API
 
  [#266] exec ACL support for get/put files
+ 
+ [#176] put/get resource switching - added for put/get as well as input/output iRODS streams, controllable via jargon.properties setting

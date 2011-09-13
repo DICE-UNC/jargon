@@ -75,6 +75,19 @@ public interface IRODSFileFactory {
 	 */
 	IRODSFileOutputStream instanceIRODSFileOutputStream(String name)
 			throws JargonException;
+	
+	/**
+	* Creates an iRODS output stream such that data can be written to the given
+	 * iRODS file.
+	 * <p/>
+	 * This particular method will inspect the target resource, as set in the <code>irodsFile</code>, and
+	 * potentially re-route the connection to that resource.
+	 * @param irodsFile {@link IRODSFile} that is the target of the stream.
+	 * @return {@link IRODSFileOutputStream} that will write to the target <code>irodsFile</code>
+	 * @throws JargonException
+	 */
+	IRODSFileOutputStream instanceIRODSFileOutputStreamWithRerouting(
+			IRODSFile irodsFile) throws JargonException;
 
 	/**
 	 * Creates an iRODS version of an input stream such that data can be read
@@ -102,6 +115,24 @@ public interface IRODSFileFactory {
 	 */
 	IRODSFileInputStream instanceIRODSFileInputStream(String name)
 			throws JargonException;
+	
+	/**
+	 * Creates an iRODS input stream such that data can be read to the given
+	 * iRODS file.
+	 * <p/>
+	 * Note that this method signature will do any necessary connection re-routing based to a resource actually
+	 * containing the file.  If such rerouting is done, the <code>InputStream</code> will be wrapped with a
+	 * {@link SessionClosingIRODSFileInputStream} that will close the re-routed connection when the stream is closed.
+	 * 
+	 * @param name
+	 *            <code>String</code> with and absolute path to the file that
+	 *            will be read to via the given stream.
+	 * @return {@link IRODSFileInputStream} implementation of a
+	 *         <code>java.io.InputStream</code>
+	 * @throws JargonException
+	 */
+	IRODSFileInputStream instanceIRODSFileInputStreamWithRerouting(
+			String irodsAbsolutePath) throws JargonException;
 
 	/**
 	 * Create an IRODSRandomAccessFile given the <code>IRODSFileImpl</code>.
@@ -283,4 +314,8 @@ public interface IRODSFileFactory {
 	 */
 	SessionClosingIRODSFileOutputStream instanceSessionClosingIRODSFileOutputStream(
 			IRODSFile file) throws JargonException;
+
+	
+
+	
 }

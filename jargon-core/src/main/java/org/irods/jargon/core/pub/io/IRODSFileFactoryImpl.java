@@ -11,6 +11,8 @@ import java.net.URI;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.pub.DataObjectAO;
+import org.irods.jargon.core.pub.FileCatalogObjectAOImpl;
 import org.irods.jargon.core.pub.IRODSFileSystemAO;
 import org.irods.jargon.core.pub.IRODSFileSystemAOImpl;
 import org.irods.jargon.core.pub.IRODSGenericAO;
@@ -240,10 +242,77 @@ public final class IRODSFileFactoryImpl extends IRODSGenericAO implements
 			throw new JargonException(ioException);
 		}
 	}
-	
-	
+
 	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.pub.io.IRODSFileFactory#instanceSessionClosingIRODSFileOutputStream(org.irods.jargon.core.pub.io.IRODSFile)
+	 * @see org.irods.jargon.core.pub.io.IRODSFileFactory#instanceIRODSFileOutputStreamWithRerouting(org.irods.jargon.core.pub.io.IRODSFile)
+	 */
+	@Override
+	public IRODSFileOutputStream instanceIRODSFileOutputStreamWithRerouting(
+			final IRODSFile file) throws JargonException {
+
+		try {
+			if (!file.exists()) {
+				log.info("file does not exist, creating a new file");
+				file.createNewFile();
+			} else if (!file.canWrite()) {
+				log.info("this file is not writeable by the current user {}",
+						file.getAbsolutePath());
+				throw new JargonException("file is not writeable:"
+						+ file.getAbsolutePath());
+			}
+
+			IRODSAccount useThisAccount = this.getIRODSAccount();
+			boolean reroute = false;
+
+			if (this.getIRODSServerProperties().isSupportsConnectionRerouting()) {
+				log.info("redirects are available, check to see if I need to redirect to a resource server");
+				DataObjectAO dataObjectAO = this.getIRODSAccessObjectFactory()
+						.getDataObjectAO(getIRODSAccount());
+				String detectedHost = dataObjectAO.getHostForPutOperation(
+						file.getAbsolutePath(), file.getResource());
+
+				if (detectedHost == null
+						|| detectedHost
+								.equals(FileCatalogObjectAOImpl.USE_THIS_ADDRESS)) {
+					log.info("using given resource connection");
+				} else if (detectedHost.equals("localhost")) {
+					log.warn("localhost received as detected host, ignore and do not reroute");
+				} else {
+					useThisAccount = IRODSAccount.instanceForReroutedHost(
+							getIRODSAccount(), detectedHost);
+					reroute = true;
+				}
+			}
+
+			FileIOOperations fileIOOperations = new FileIOOperationsAOImpl(
+					this.getIRODSSession(), useThisAccount);
+
+			if (reroute) {
+				IRODSFileFactory rerouteFileFactory = getIRODSAccessObjectFactory()
+						.getIRODSFileFactory(useThisAccount);
+				IRODSFile irodsFile = rerouteFileFactory.instanceIRODSFile(file
+						.getAbsolutePath());
+				return new SessionClosingIRODSFileOutputStream(irodsFile,
+						fileIOOperations);
+			} else {
+				IRODSFile irodsFile = instanceIRODSFile(file.getAbsolutePath());
+				return new IRODSFileOutputStream(irodsFile, fileIOOperations);
+			}
+		} catch (FileNotFoundException e) {
+			log.error("FileNotFound creating output stream", e);
+			throw new JargonException(e);
+		} catch (IOException ioException) {
+			log.error("IOException creating output stream", ioException);
+			throw new JargonException(ioException);
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.pub.io.IRODSFileFactory#
+	 * instanceSessionClosingIRODSFileOutputStream
+	 * (org.irods.jargon.core.pub.io.IRODSFile)
 	 */
 	@Override
 	public SessionClosingIRODSFileOutputStream instanceSessionClosingIRODSFileOutputStream(
@@ -253,7 +322,7 @@ public final class IRODSFileFactoryImpl extends IRODSGenericAO implements
 		if (file == null) {
 			throw new IllegalArgumentException("null irodsFile");
 		}
-		
+
 		FileIOOperations fileIOOperations = new FileIOOperationsAOImpl(
 				this.getIRODSSession(), this.getIRODSAccount());
 		try {
@@ -267,7 +336,8 @@ public final class IRODSFileFactoryImpl extends IRODSGenericAO implements
 						+ file.getAbsolutePath());
 			}
 
-			return new SessionClosingIRODSFileOutputStream(file, fileIOOperations);
+			return new SessionClosingIRODSFileOutputStream(file,
+					fileIOOperations);
 		} catch (FileNotFoundException e) {
 			log.error("FileNotFound creating output stream", e);
 			throw new JargonException(e);
@@ -276,7 +346,6 @@ public final class IRODSFileFactoryImpl extends IRODSGenericAO implements
 			throw new JargonException(ioException);
 		}
 	}
-
 
 	/*
 	 * (non-Javadoc)
@@ -483,6 +552,62 @@ public final class IRODSFileFactoryImpl extends IRODSGenericAO implements
 			IRODSFile irodsFile = instanceIRODSFile(name);
 
 			return new IRODSFileInputStream(irodsFile, fileIOOperations);
+		} catch (FileNotFoundException e) {
+			log.error("FileNotFound creating output stream", e);
+			throw new JargonException(e);
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.pub.io.IRODSFileFactory#
+	 * instanceIRODSFileInputStreamWithRerouting(java.lang.String)
+	 */
+	@Override
+	public IRODSFileInputStream instanceIRODSFileInputStreamWithRerouting(
+			final String irodsAbsolutePath) throws JargonException {
+
+		IRODSAccount useThisAccount = this.getIRODSAccount();
+		boolean reroute = false;
+
+		if (this.getIRODSServerProperties().isSupportsConnectionRerouting()) {
+			log.info("redirects are available, check to see if I need to redirect to a resource server");
+			DataObjectAO dataObjectAO = this.getIRODSAccessObjectFactory()
+					.getDataObjectAO(getIRODSAccount());
+			String detectedHost = dataObjectAO.getHostForGetOperation(
+					irodsAbsolutePath, "");
+
+			if (detectedHost == null
+					|| detectedHost
+							.equals(FileCatalogObjectAOImpl.USE_THIS_ADDRESS)) {
+				log.info("using given resource connection");
+			} else {
+				useThisAccount = IRODSAccount.instanceForReroutedHost(
+						getIRODSAccount(), detectedHost);
+				reroute = true;
+			}
+		}
+
+		FileIOOperations fileIOOperations = new FileIOOperationsAOImpl(
+				this.getIRODSSession(), useThisAccount);
+		try {
+			if (log.isInfoEnabled()) {
+				log.info("opening IRODSFileImpl for:" + irodsAbsolutePath);
+			}
+
+			if (reroute) {
+				IRODSFileFactory rerouteFileFactory = getIRODSAccessObjectFactory()
+						.getIRODSFileFactory(useThisAccount);
+				IRODSFile irodsFile = rerouteFileFactory
+						.instanceIRODSFile(irodsAbsolutePath);
+				return new SessionClosingIRODSFileInputStream(irodsFile,
+						fileIOOperations);
+			} else {
+				IRODSFile irodsFile = instanceIRODSFile(irodsAbsolutePath);
+				return new IRODSFileInputStream(irodsFile, fileIOOperations);
+			}
+
 		} catch (FileNotFoundException e) {
 			log.error("FileNotFound creating output stream", e);
 			throw new JargonException(e);

@@ -43,7 +43,7 @@ public class SessionClosingIRODSFileOutputStream extends IRODSFileOutputStream {
 	public void close() throws IOException {
 		super.close();
 		try {			
-			this.getFileIOOperations().getIRODSSession().closeSession();
+			this.getFileIOOperations().getIRODSSession().closeSession(getFileIOOperations().getIRODSAccount());
 		} catch (JargonException e) {
 			throw new IOException(
 					"error in close session returned as IOException for method contracts");

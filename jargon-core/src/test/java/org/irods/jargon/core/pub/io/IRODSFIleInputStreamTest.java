@@ -9,6 +9,7 @@ import java.io.InputStream;
 import java.util.Properties;
 
 import junit.framework.Assert;
+import junit.framework.TestCase;
 
 import org.irods.jargon.core.connection.ConnectionProgressStatusListener;
 import org.irods.jargon.core.connection.IRODSAccount;
@@ -141,54 +142,52 @@ public class IRODSFIleInputStreamTest {
 	 * .
 	 */
 	@Test
-	public final void testReadByteArrayIntInt() throws Exception {
-		String testFileName = "testReadByteArrayInt.txt";
+	public final void testInputStreamWithRerouting() throws Exception {
+
+		if (!testingPropertiesHelper
+				.isTestDistributedResources(testingProperties)) {
+			return;
+		}
+
+		String testFileName = "testInputStreamWithRerouting.txt";
 		int fileLength = 100;
 
 		String absPath = scratchFileUtils
 				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
-		org.irods.jargon.testutils.filemanip.FileGenerator
+		String localFilePath = org.irods.jargon.testutils.filemanip.FileGenerator
 				.generateFileOfFixedLengthGivenName(absPath, testFileName,
 						fileLength);
+		File localFile = new File(localFilePath);
 
 		// put scratch file into irods in the right place
-		IrodsInvocationContext invocationContext = testingPropertiesHelper
-				.buildIRODSInvocationContextFromTestProperties(testingProperties);
-		IputCommand iputCommand = new IputCommand();
 
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH);
 
-		StringBuilder fileNameAndPath = new StringBuilder();
-		fileNameAndPath.append(absPath);
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
 
-		fileNameAndPath.append(testFileName);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+		IRODSFileFactory irodsFileFactory = accessObjectFactory
+				.getIRODSFileFactory(irodsAccount);
 
-		iputCommand.setLocalFileName(fileNameAndPath.toString());
-		iputCommand.setIrodsFileName(targetIrodsCollection);
-		iputCommand.setForceOverride(true);
+		IRODSFile irodsFile = irodsFileFactory.instanceIRODSFile(
+				targetIrodsCollection, testFileName);
+		irodsFile
+				.setResource(testingProperties
+						.getProperty(TestingPropertiesHelper.IRODS_TERTIARY_RESOURCE_KEY));
 
-		IcommandInvoker invoker = new IcommandInvoker(invocationContext);
-		invoker.invokeCommandAndGetResultAsString(iputCommand);
+		DataTransferOperations dto = accessObjectFactory
+				.getDataTransferOperations(irodsAccount);
+		dto.putOperation(localFile, irodsFile, null, null);
 
 		ByteArrayOutputStream actualFileContents = new ByteArrayOutputStream();
 
-		// now try to do the read
-		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager
-				.instance();
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSSession irodsSession = IRODSSession
-				.instance(irodsConnectionManager);
-		IRODSAccessObjectFactory accessObjectFactory = IRODSAccessObjectFactoryImpl
-				.instance(irodsSession);
-		IRODSFileFactory irodsFileFactory = accessObjectFactory
-				.getIRODSFileFactory(irodsAccount);
-		IRODSFile irodsFile = irodsFileFactory.instanceIRODSFile(
-				targetIrodsCollection, testFileName);
 		IRODSFileInputStream fis = irodsFileFactory
-				.instanceIRODSFileInputStream(irodsFile);
+				.instanceIRODSFileInputStreamWithRerouting(irodsFile
+						.getAbsolutePath());
 
 		int bytesRead = 0;
 		int readLength = 0;
@@ -199,8 +198,72 @@ public class IRODSFIleInputStreamTest {
 			bytesRead += readLength;
 		}
 
-		irodsSession.closeSession();
-		Assert.assertEquals("whole file not read back", fileLength, bytesRead);
+		fis.close();
+		irodsFileSystem.closeAndEatExceptions(irodsAccount);
+		TestCase.assertTrue("did not get instance of session closing stream",
+				fis instanceof SessionClosingIRODSFileInputStream);
+		TestCase.assertNull("session from reroute leaking",
+				irodsFileSystem.getConnectionMap());
+
+	}
+
+	@Test
+	public final void testInputStreamWithReroutingNoRerouteNeeded()
+			throws Exception {
+
+		String testFileName = "testInputStreamWithReroutingNoRerouteNeeded.txt";
+		int fileLength = 100;
+
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String localFilePath = org.irods.jargon.testutils.filemanip.FileGenerator
+				.generateFileOfFixedLengthGivenName(absPath, testFileName,
+						fileLength);
+		File localFile = new File(localFilePath);
+
+		// put scratch file into irods in the right place
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+		IRODSFileFactory irodsFileFactory = accessObjectFactory
+				.getIRODSFileFactory(irodsAccount);
+
+		IRODSFile irodsFile = irodsFileFactory.instanceIRODSFile(
+				targetIrodsCollection, testFileName);
+
+		DataTransferOperations dto = accessObjectFactory
+				.getDataTransferOperations(irodsAccount);
+		dto.putOperation(localFile, irodsFile, null, null);
+
+		ByteArrayOutputStream actualFileContents = new ByteArrayOutputStream();
+
+		IRODSFileInputStream fis = irodsFileFactory
+				.instanceIRODSFileInputStreamWithRerouting(irodsFile
+						.getAbsolutePath());
+
+		int bytesRead = 0;
+		int readLength = 0;
+		byte[] readBytesBuffer = new byte[512];
+		while ((readLength = (fis.read(readBytesBuffer, 0,
+				readBytesBuffer.length))) > -1) {
+			actualFileContents.write(readBytesBuffer);
+			bytesRead += readLength;
+		}
+
+		fis.close();
+		irodsFileSystem.closeAndEatExceptions(irodsAccount);
+		TestCase.assertFalse("did not get instance of session closing stream",
+				fis instanceof SessionClosingIRODSFileInputStream);
+		TestCase.assertNull("session from reroute leaking",
+				irodsFileSystem.getConnectionMap());
+
 	}
 
 	/**
@@ -292,7 +355,7 @@ public class IRODSFIleInputStreamTest {
 				.getIRODSAccessObjectFactory();
 		IRODSFileFactory irodsFileFactory = accessObjectFactory
 				.getIRODSFileFactory(irodsAccount);
-		
+
 		IRODSFile irodsFile = irodsFileFactory.instanceIRODSFile(
 				targetIrodsCollection, testFileName);
 

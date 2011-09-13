@@ -1,6 +1,3 @@
-/**
- * 
- */
 package org.irods.jargon.core.pub.io;
 
 import java.io.FileNotFoundException;
