@@ -371,6 +371,10 @@ public class IRODSCommands implements IRODSManagedConnection {
 				length = message.getBytes(pipelineConfiguration
 						.getDefaultEncoding()).length;
 			}
+			
+			log.debug("message:{}", message);
+			
+			
 			irodsConnection.send(createHeader(IRODSConstants.RODS_API_REQ,
 					length, 0, byteStreamLength, irodsPI.getApiNumber()));
 			irodsConnection.send(message);
@@ -379,9 +383,10 @@ public class IRODSCommands implements IRODSManagedConnection {
 				irodsConnection.send(byteStream, byteStreamLength,
 						connectionProgressStatusListener);
 				byteStream.close();
+			} else {
+				irodsConnection.flush();
 			}
 
-			//irodsConnection.flush();
 		} catch (UnsupportedEncodingException e) {
 			log.error("unsupported encoding", e);
 			throw new JargonException(e);

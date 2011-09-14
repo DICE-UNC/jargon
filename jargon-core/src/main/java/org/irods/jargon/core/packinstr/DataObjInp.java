@@ -341,16 +341,19 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 	 *            {@link TransferOptions} that configures details about the
 	 *            underlying technique used in the transfer. Can be set to null
 	 *            if not desired.
-	 * @param execFlag <code>boolean</code> that indicates that the execBit should be preserved          	
+	 * @param execFlag
+	 *            <code>boolean</code> that indicates that the execBit should be
+	 *            preserved
 	 * @return <code>DataObjInp</code> containing the necessary packing
 	 *         instruction
-	 *         
+	 * 
 	 * @throws JargonException
 	 */
 	public static final DataObjInp instanceForInitialCallToPut(
 			final String destinationAbsolutePath, final long length,
 			final String destinationResource, final boolean overwrite,
-			final TransferOptions transferOptions, final boolean execFlag) throws JargonException {
+			final TransferOptions transferOptions, final boolean execFlag)
+			throws JargonException {
 
 		if (destinationAbsolutePath == null
 				|| destinationAbsolutePath.isEmpty()) {
@@ -364,7 +367,7 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 		if (length < 0) {
 			throw new JargonException("length is less than zero");
 		}
-		
+
 		int createMode = DEFAULT_CREATE_MODE;
 		if (execFlag) {
 			createMode = EXEC_CREATE_MODE;
@@ -402,7 +405,9 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 	 *            {@link TransferOptions} that configures details about the
 	 *            underlying technique used in the transfer. Can be set to null
 	 *            if not desired.
-	 * @param execFlag <code>boolean</code> that indicates that the exec bit should be preserved      
+	 * @param execFlag
+	 *            <code>boolean</code> that indicates that the exec bit should
+	 *            be preserved
 	 * @return <code>DataObjInp</code> containing the necessary packing
 	 *         instruction
 	 * @throws JargonException
@@ -410,7 +415,8 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 	public static final DataObjInp instanceForParallelPut(
 			final String destinationAbsolutePath, final long length,
 			final String destinationResource, final boolean overwrite,
-			final TransferOptions transferOptions, boolean execFlag) throws JargonException {
+			final TransferOptions transferOptions, final boolean execFlag)
+			throws JargonException {
 
 		if (destinationAbsolutePath == null
 				|| destinationAbsolutePath.isEmpty()) {
@@ -424,7 +430,7 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 		if (length < 0) {
 			throw new JargonException("length is less than zero");
 		}
-		
+
 		int createMode = DEFAULT_CREATE_MODE;
 		if (execFlag) {
 			createMode = EXEC_CREATE_MODE;
@@ -466,7 +472,9 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 	 *            {@link TransferOptions} that configures details about the
 	 *            underlying technique used in the transfer. Can be set to null
 	 *            if not desired.
-	 *  @param execFlag <code>boolean</code> that indicates that the exec bit should be preserved  
+	 * @param execFlag
+	 *            <code>boolean</code> that indicates that the exec bit should
+	 *            be preserved
 	 * @return <code>DataObjInp</code> containing the necessary packing
 	 *         instruction
 	 * @throws JargonException
@@ -474,7 +482,8 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 	public static final DataObjInp instanceForNormalPutStrategy(
 			final String destinationAbsolutePath, final long length,
 			final String destinationResource, final boolean overwrite,
-			final TransferOptions transferOptions, final boolean execFlag) throws JargonException {
+			final TransferOptions transferOptions, final boolean execFlag)
+			throws JargonException {
 
 		if (destinationAbsolutePath == null
 				|| destinationAbsolutePath.isEmpty()) {
@@ -488,7 +497,7 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 		if (length < 0) {
 			throw new JargonException("length is less than zero");
 		}
-		
+
 		int createMode = DEFAULT_CREATE_MODE;
 		if (execFlag) {
 			createMode = EXEC_CREATE_MODE;
@@ -741,8 +750,8 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 			} else {
 				kvps.add(KeyValuePair.instance(DEST_RESC_NAME, getResource()));
 			}
-		}
-
+		} 
+		
 		message.addTag(createKeyValueTag(kvps));
 		return message;
 	}

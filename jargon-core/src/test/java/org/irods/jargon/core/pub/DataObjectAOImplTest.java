@@ -163,8 +163,6 @@ public class DataObjectAOImplTest {
 		assertionHelper.assertIrodsFileOrCollectionExists(targetIrodsFile);
 	}
 	
-	// TODO: add complemenary get and make sure exec is preserved
-	
 	@Test
 	public void testPutExecutableFile() throws Exception {
 		// generate a local scratch file
@@ -195,6 +193,42 @@ public class DataObjectAOImplTest {
 		IRODSFile destFile = irodsFileFactory
 				.instanceIRODSFile(targetIrodsFile);
 		dataObjectAO.putLocalDataObjectToIRODS(localFile, destFile, true);
+		assertionHelper.assertIrodsFileOrCollectionExists(targetIrodsFile);
+	}
+	
+	@Test
+	public void testChecksumAndPut0KFile() throws Exception {
+		// generate a local scratch file
+		String testFileName = "testChecksumAndPut0KFile.sh";
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String localFileName = absPath + testFileName;
+		String targetIrodsFile = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
+								+ testFileName);
+		File localFile = new File(localFileName);
+		localFile.createNewFile();
+		
+		// now put the file
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
+		IRODSFileFactory irodsFileFactory = accessObjectFactory
+				.getIRODSFileFactory(irodsAccount);
+		DataObjectAO dataObjectAO = accessObjectFactory
+				.getDataObjectAO(irodsAccount);
+		IRODSFile destFile = irodsFileFactory
+				.instanceIRODSFile(targetIrodsFile);
+		TransferOptions transferOptions = new TransferOptions();
+		transferOptions.setComputeAndVerifyChecksumAfterTransfer(true);
+		TransferControlBlock transferControlBlock = DefaultTransferControlBlock
+				.instance();
+		transferControlBlock.setTransferOptions(transferOptions);
+		dataObjectAO.putLocalDataObjectToIRODS(localFile, destFile, false, transferControlBlock, null);
 		assertionHelper.assertIrodsFileOrCollectionExists(targetIrodsFile);
 	}
 
