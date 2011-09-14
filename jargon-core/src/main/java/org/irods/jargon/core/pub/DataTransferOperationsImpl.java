@@ -324,6 +324,7 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 			/*
 			 * See if I am rerouting connections, if so see if the file is on another resource
 			 */
+			log.info("am I rerouting?");
 			if (operativeTransferControlBlock.getTransferOptions()
 					.isAllowPutGetResourceRedirects()
 					&& this.getIRODSServerProperties()
@@ -735,7 +736,7 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 			final TransferStatusCallbackListener transferStatusCallbackListener,
 			final TransferControlBlock transferControlBlock)
 			throws JargonException {
-
+		
 		TransferControlBlock operativeTransferControlBlock = buildTransferControlBlockAndOptionsBasedOnParameters(transferControlBlock);
 		IRODSAccount reroutedAccount = null;
 
@@ -762,7 +763,7 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 			}
 
 			log.info("  resource:{}", targetIrodsFile.getResource());
-
+			
 			if (operativeTransferControlBlock.getTransferOptions()
 					.isAllowPutGetResourceRedirects()
 					&& this.getIRODSServerProperties()
@@ -987,7 +988,7 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 			final TransferStatusCallbackListener transferStatusCallbackListener,
 			final TransferControlBlock transferControlBlock)
 			throws JargonException {
-
+		
 		if (sourceFileAbsolutePath == null || sourceFileAbsolutePath.isEmpty()) {
 			throw new IllegalArgumentException(
 					"sourceFileAbsolutePath is null or empty");

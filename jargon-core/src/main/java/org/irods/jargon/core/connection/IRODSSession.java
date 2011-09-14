@@ -423,22 +423,23 @@ public class IRODSSession {
 
 			
 			int poolSize = jargonProperties.getTransferThreadPoolMaxSimultaneousTransfers() * jargonProperties.getMaxParallelThreads();
+			int maxParallelThreads =  jargonProperties.getMaxParallelThreads();
 			
 			log.info("creating the parallel transfer threads pool");
 			log.info("   max # threads: {}",
-					poolSize);
+					maxParallelThreads);
 			
 			log.info("   pool timeout millis:{}",
 					jargonProperties.getTransferThreadPoolTimeoutMillis());
 
 			parallelTransferThreadPool = new ThreadPoolExecutor(
-					poolSize,
+					maxParallelThreads,
 					poolSize,
 					jargonProperties.getTransferThreadPoolTimeoutMillis(),
 					TimeUnit.MILLISECONDS, new ArrayBlockingQueue<Runnable>(
 							poolSize),
 					new RejectedParallelThreadExecutionHandler());
-
+			
 			// ExecutorService executorService =
 			// Executors.newFixedThreadPool(jargonProperties.getTransferThreadMaxPoolSize());
 			log.info("parallelTransferThreadPool created");

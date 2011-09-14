@@ -384,6 +384,7 @@ public class IRODSCommands implements IRODSManagedConnection {
 						connectionProgressStatusListener);
 				byteStream.close();
 			} else {
+				log.info("no byte stream data, so flush output");
 				irodsConnection.flush();
 			}
 
@@ -395,6 +396,7 @@ public class IRODSCommands implements IRODSManagedConnection {
 			throw new JargonException(e);
 		}
 
+		log.info("data sent, getting response");
 		return readMessage();
 	}
 
