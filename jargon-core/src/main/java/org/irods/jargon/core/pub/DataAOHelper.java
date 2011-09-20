@@ -50,7 +50,7 @@ import org.slf4j.LoggerFactory;
  * @author Mike Conway - DICE (www.irods.org)
  * 
  */
-final class DataAOHelper extends AOHelper {
+public final class DataAOHelper extends AOHelper {
 	public static final Logger log = LoggerFactory
 			.getLogger(DataAOHelper.class);
 
@@ -84,11 +84,7 @@ final class DataAOHelper extends AOHelper {
 	/**
 	 * Create a set of selects for a data object, used in general query. Note
 	 * that the 'SELECT' token is appended as the first token in the query.
-	 * 
-	 * FIXME: alternative queries for 1 result per object versus 1 result per
-	 * replica? Otherwise, perhaps the replica info could be in a list within
-	 * the data object?
-	 * 
+	 *
 	 * @return <code>String</code> with select statements for the domain object.
 	 */
 	protected String buildSelects() {
@@ -197,7 +193,7 @@ final class DataAOHelper extends AOHelper {
 	 * @return <code>String</code> with an iquest-like set of select values for
 	 *         the metadata AVU elements.
 	 */
-	protected String buildMetadataSelects() {
+	public static String buildMetadataSelects() {
 		StringBuilder sb = new StringBuilder();
 		sb.append(RodsGenQueryEnum.COL_META_DATA_ATTR_NAME.getName());
 		sb.append(COMMA);
@@ -280,7 +276,7 @@ final class DataAOHelper extends AOHelper {
 	 * @return
 	 * @throws JargonException
 	 */
-	protected List<MetaDataAndDomainData> buildMetaDataAndDomainDataListFromResultSet(
+	public static List<MetaDataAndDomainData> buildMetaDataAndDomainDataListFromResultSet(
 			final IRODSQueryResultSetInterface irodsQueryResultSet)
 			throws JargonException {
 
@@ -304,7 +300,7 @@ final class DataAOHelper extends AOHelper {
 	 * @return
 	 * @throws JargonException
 	 */
-	private static MetaDataAndDomainData buildMetaDataAndDomainDataFromResultSetRowForDataObject(
+	public static MetaDataAndDomainData buildMetaDataAndDomainDataFromResultSetRowForDataObject(
 			final IRODSQueryResultRow row) throws JargonException {
 
 		String domainId = row.getColumn(0);
@@ -567,7 +563,7 @@ final class DataAOHelper extends AOHelper {
 					break;
 				}
 
-				lengthThisSend = Math.min(putBufferSize, lengthLeftToSend);
+				lengthThisSend = Math.min((long) putBufferSize, lengthLeftToSend);
 
 				openedDataObjInp = OpenedDataObjInp.instanceForFilePut(fd,
 						lengthThisSend);
@@ -734,19 +730,12 @@ final class DataAOHelper extends AOHelper {
 								transferStatusCallbackListener, 5);
 				InputStream wrapper = new ByteCountingCallbackInputStreamWrapper(
 						connectionProgressStatusListener, ifis);
-				/*
-				 * stream2StreamAO.transferStreamToFile(wrapper,
-				 * localFileToHoldData, irodsFileLength, 32768L); // FIXME:
-				 * parameterize buffer length
-				 */
+			
 				stream2StreamAO.transferStreamToFileUsingIOStreams(wrapper,
-						localFileToHoldData, irodsFileLength, 4194304);
+						localFileToHoldData, irodsFileLength, irodsAccessObjectFactory.getJargonProperties().getGetBufferSize());
 
 			} else {
-				/*
-				 * stream2StreamAO.transferStreamToFile(ifis,
-				 * localFileToHoldData, irodsFileLength, 32768L);
-				 */
+				
 				stream2StreamAO.transferStreamToFileUsingIOStreams(ifis,
 						localFileToHoldData, irodsFileLength, 4194304);
 

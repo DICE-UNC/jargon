@@ -470,7 +470,8 @@ final class IRODSConnection implements IRODSManagedConnection {
 	 * agent
 	 * 
 	 * @param source
-	 *            <code>InputStream</code> to the data to be written
+	 *            <code>InputStream</code> to the data to be written.  This stream will have been buffered by the caller, no buffering
+	 *            is done here.
 	 * @param length
 	 *            <code>long</code> with the length of data to send
 	 * @param lengthLeftToSend
@@ -771,6 +772,27 @@ final class IRODSConnection implements IRODSManagedConnection {
 	@Override
 	public IRODSAccount getIrodsAccount() {
 		return irodsAccount;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#finalize()
+	 */
+	@Override
+	protected void finalize() throws Throwable {
+		/*
+		 * Check if a still-connected agent connection is being finalized, and nag in the log, then try and disconnect
+		 */
+		
+		if (connected) {
+			log.error("**************************************************************************************");
+			log.error("********  WARNING: POTENTIAL CONNECTION LEAK  ******************");
+			log.error("********  finalizer has run and found a connection left opened, please check your code to ensure that all connections are closed");
+			log.error("********  connection is:{}, will attempt to disconnect", getConnectionUri());
+			log.error("**************************************************************************************");
+			this.disconnect();
+		}
+		
+		super.finalize();
 	}
 
 }

@@ -901,7 +901,9 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	}
 
 	/**
-	 * 
+	 * This is expected to be a parallel transfer, due to the size of the file.   An initial request to get the file
+	 * has been sent.  iRODS may come back and decide (based on a rule) to not do a parallel transfer, in
+	 * which case, the file will be streamed normally.
 	 * @param irodsSourceFile
 	 * @param localFileToHoldData
 	 * @param transferOptions
@@ -1042,7 +1044,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			throw new JargonException("error in query for a data object");
 		}
 
-		return dataAOHelper
+		return DataAOHelper
 				.buildMetaDataAndDomainDataListFromResultSet(resultSet);
 	}
 
@@ -1303,7 +1305,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			throw new JargonException("error in data object AVU Query", e);
 		}
 
-		return dataAOHelper
+		return DataAOHelper
 				.buildMetaDataAndDomainDataListFromResultSet(resultSet);
 	}
 

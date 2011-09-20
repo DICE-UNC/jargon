@@ -157,6 +157,9 @@ public class Stream2StreamAOImpl extends IRODSGenericAO implements
 
 	}
 
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.core.pub.Stream2StreamAO#transferStreamToFileUsingIOStreams(java.io.InputStream, java.io.File, long, int)
+	 */
 	@Override
 	public void transferStreamToFileUsingIOStreams(
 			final InputStream inputStream, final File targetFile,
@@ -176,9 +179,26 @@ public class Stream2StreamAOImpl extends IRODSGenericAO implements
 		OutputStream fileOutputStream = null;
 
 		try {
-			fileOutputStream = new BufferedOutputStream(new FileOutputStream(
-					targetFile)); // FIXME: set buffer size for file output stream jargon.io.local.output.stream.buffer.size 
-
+			
+			int outputBufferSize = this.getJargonProperties().getLocalFileOutputStreamBufferSize();
+			log.debug("output buffer size for file output stream in copy:{}", outputBufferSize);
+			
+			if (outputBufferSize == -1) {
+				log.info("no buffer on file output stream to local file");
+				fileOutputStream = new FileOutputStream(
+						targetFile);
+			} else if (outputBufferSize == 0) {
+				log.info("default buffered io to file output stream to local file");
+				fileOutputStream = new BufferedOutputStream(new FileOutputStream(
+						targetFile));
+			} else {
+				log.info("buffer io to file output stream to local file with size of: {}", outputBufferSize);
+				fileOutputStream = new BufferedOutputStream(new FileOutputStream(
+						targetFile), outputBufferSize);
+			}
+	
+			// see [#470] optimization - look at buffer sizes for read/write in stream2stream copy  - MC
+			
 			int doneCnt = -1;
 
 			byte buf[] = new byte[readBuffSize];
