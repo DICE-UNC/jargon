@@ -31,7 +31,7 @@ public class StartupPack extends AbstractIRODSPackingInstruction {
 						new Tag("relVersion",
 								IRODSAccount.IRODS_JARGON_RELEASE_NUMBER),
 						new Tag("apiVersion", IRODSAccount.IRODS_API_VERSION),
-						new Tag("option", IRODSAccount.OPTION) });
+						new Tag("option", "0") });
 		return startupPacket;
 	}
 

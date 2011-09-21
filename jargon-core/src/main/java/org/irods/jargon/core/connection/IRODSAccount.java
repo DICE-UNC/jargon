@@ -19,14 +19,14 @@ import org.irods.jargon.core.exception.JargonException;
  * contained in the .irodsEnv file. The main account attributes are immutable,
  * but certain elements are mutable as they may be updated during processing.
  * 
- * @author Mike Conway - DICE (www.irods.org) TODO: move from constants to enum
+ * @author Mike Conway - DICE (www.irods.org) 
  * 
  */
 public final class IRODSAccount implements Serializable {
 
 	private static final long serialVersionUID = 8627989693793656697L;
-	public static final String IRODS_VERSION_2_3 = "rods2.3jargon2.3";
-	public static final String IRODS_JARGON_RELEASE_NUMBER = "rods2.3";
+	public static final String IRODS_VERSION_3_0 = "rods3.0jargon3.0";
+	public static final String IRODS_JARGON_RELEASE_NUMBER = "rods3.0";
 
 	/**
 	 * Stores the org.ietf.jgss.GSSCredential, used in GSI connections to the
@@ -58,21 +58,7 @@ public final class IRODSAccount implements Serializable {
 	 */
 	private final String certificateAuthority;
 
-	/**
-	 * The iRODS version.
-	 */
-
 	public static final boolean defaultObfuscate = false;
-
-	public static final int OPTION = 0;
-
-	/**
-	 * working with strings got annoying
-	 */
-	static Map<String, Float> versionNumber = new HashMap<String, Float>(10, 1);
-	static {
-		versionNumber.put(IRODS_VERSION_2_3, new Float(2.3));
-	}
 
 	private final String host;
 	private final int port;
@@ -83,7 +69,6 @@ public final class IRODSAccount implements Serializable {
 	private final String homeDirectory;
 	private static final String authenticationScheme = STANDARD_PASSWORD;
 	private final String serverDN;
-	private static final int obfuscate = 0;
 	private List<String> authenticatedRoles = new ArrayList<String>();
 
 	/**
@@ -277,33 +262,6 @@ public final class IRODSAccount implements Serializable {
 	}
 
 	/**
-	 * Gets the iRODS version.
-	 * 
-	 * @return version
-	 */
-	public static String getVersion() {
-		return IRODS_VERSION_2_3;
-	}
-
-	/**
-	 * Gets the iRODS version.
-	 * 
-	 * @return version
-	 */
-	static float getVersionNumber() {
-		return 2.2F; // TODO: what about all of this stuff? move to enum?
-	}
-
-	/**
-	 * Gets the iRODS option. (Not sure what that is...)
-	 * 
-	 * @return version
-	 */
-	static int getOption() {
-		return 0;
-	}
-
-	/**
 	 * @return the Server DN string used by the client.
 	 */
 	public String getServerDN() {
@@ -420,14 +378,6 @@ public final class IRODSAccount implements Serializable {
 		return uri;
 	}
 
-	public static String getIrodsVersion22() {
-		return IRODS_VERSION_2_3;
-	}
-
-	public static String getIrodsJargonReleaseNumber() {
-		return IRODS_JARGON_RELEASE_NUMBER;
-	}
-
 	public String getHost() {
 		return host;
 	}
@@ -444,16 +394,8 @@ public final class IRODSAccount implements Serializable {
 		return password;
 	}
 
-	public int getObfuscate() {
-		return obfuscate;
-	}
-
 	public GSSCredential getGssCredential() {
 		return gssCredential;
-	}
-
-	public static String getIrodsApiVersion() {
-		return IRODS_API_VERSION;
 	}
 
 	public static String getPublicUsername() {
