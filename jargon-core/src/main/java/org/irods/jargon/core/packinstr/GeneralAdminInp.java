@@ -140,6 +140,114 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 		return new GeneralAdminInp("rm", "user", userName, BLANK, BLANK, BLANK,
 				BLANK, BLANK, BLANK, BLANK, GEN_ADMIN_INP_API_NBR);
 	}
+	
+	/**
+	 * Create the packing instruction to set user quota total for a user
+	 * @param userName <code>String</code> with the user name
+	 * @param quotaValue <code>long</code> with the total (across resources) quota value
+	 * @return
+	 * @throws JargonException
+	 */
+	public static GeneralAdminInp instanceForSetUserQuotaTotal(final String userName, final long quotaValue) throws JargonException {
+		
+		if (userName == null || userName.isEmpty()) {
+			throw new IllegalArgumentException("null or empty userName");
+		}
+		
+		if (quotaValue <= 0) {
+			throw new IllegalArgumentException("quota value is less than or equal to zero");
+		}
+		
+		return new GeneralAdminInp("set-quota", "user", userName, "total", String.valueOf(quotaValue),  BLANK,
+				BLANK, BLANK, BLANK, BLANK, GEN_ADMIN_INP_API_NBR);
+	}
+	
+	/**
+	 * Set the 'total' quota for a user group
+	 * @param userGroupName <code>String</code> with the user group name
+	 * @param quotaValue <code>long</code> with the quota value for the given resource
+	 * @return
+	 * @throws JargonException
+	 */
+	public static GeneralAdminInp instanceForSetUserGroupQuotaTotal(
+			String userGroupName, long quotaValue) throws JargonException {
+		
+		if (userGroupName == null || userGroupName.isEmpty()) {
+			throw new IllegalArgumentException("null or empty userGroupName");
+		}
+		
+		if (quotaValue <= 0) {
+			throw new IllegalArgumentException("quota value is less than or equal to zero");
+		}
+		
+		return new GeneralAdminInp("set-quota", "group", userGroupName, "total", String.valueOf(quotaValue),  BLANK,
+				BLANK, BLANK, BLANK, BLANK, GEN_ADMIN_INP_API_NBR);
+	}
+
+	
+	/**
+	 * Create the packing instruction to set the user quota for a given resource
+	* @param userName <code>String</code> with the user name
+	 * @param resourceName
+	 * @param quotaValue <code>long</code> with the quota value for the given resource
+	 * @return
+	 * @throws JargonException
+	 */
+	public static GeneralAdminInp instanceForSetUserQuotaForResource(
+			String userName, String resourceName, long quotaValue)  throws JargonException {
+		
+		if (userName == null || userName.isEmpty()) {
+			throw new IllegalArgumentException("null or empty userName");
+		}
+		
+		if (resourceName == null || resourceName.isEmpty()) {
+			throw new IllegalArgumentException("null or empty resourceName");
+		}
+		
+		if (quotaValue <= 0) {
+			throw new IllegalArgumentException("quota value is less than or equal to zero");
+		}
+		
+		return new GeneralAdminInp("set-quota", "user", userName, resourceName, String.valueOf(quotaValue),  BLANK,
+				BLANK, BLANK, BLANK, BLANK, GEN_ADMIN_INP_API_NBR);
+	}
+	
+	/**
+	 * Create the packing instruction to set the user group quota for a given resource
+	* @param userGroupName <code>String</code> with the user group name
+	 * @param resourceName
+	 * @param quotaValue <code>long</code> with the quota value for the given resource
+	 * @return
+	 * @throws JargonException
+	 */
+	public static GeneralAdminInp instanceForSetUserGroupQuotaForResource(
+			String userGroupName, String resourceName, long quotaValue) throws JargonException {
+		
+		if (userGroupName == null || userGroupName.isEmpty()) {
+			throw new IllegalArgumentException("null or empty userGroupName");
+		}
+		
+		if (resourceName == null || resourceName.isEmpty()) {
+			throw new IllegalArgumentException("null or empty resourceName");
+		}
+		
+		if (quotaValue <= 0) {
+			throw new IllegalArgumentException("quota value is less than or equal to zero");
+		}
+		
+		return new GeneralAdminInp("set-quota", "group", userGroupName, resourceName, String.valueOf(quotaValue),  BLANK,
+				BLANK, BLANK, BLANK, BLANK, GEN_ADMIN_INP_API_NBR);
+	}
+	
+	/**
+	 * Create the command to cause quota usage to be calculated
+	 * @return
+	 * @throws JargonException
+	 */
+	public static GeneralAdminInp instanceForCalculateQuotaUsage() throws JargonException {
+		return new GeneralAdminInp("calculate-usage",BLANK, BLANK, BLANK, BLANK,  BLANK,
+				BLANK, BLANK, BLANK, BLANK, GEN_ADMIN_INP_API_NBR);
+	}
 
 	/**
 	 * Generate the packing instruction suitable for modifying the zone

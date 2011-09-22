@@ -157,6 +157,134 @@ public class GeneralAdminInpTest {
 				tagOut);
 	}
 
+	
+	@Test
+	public void testSetUserQuotaTotal() throws Exception {
+		String userName = "test";
+		long quota = 123L;
+
+		GeneralAdminInp pi = GeneralAdminInp.instanceForSetUserQuotaTotal(userName, quota);
+		String tagOut = pi.getParsedTags();
+
+		StringBuilder sb = new StringBuilder();
+		sb.append("<generalAdminInp_PI><arg0>set-quota</arg0>\n");
+		sb.append("<arg1>user</arg1>\n");
+		sb.append("<arg2>test</arg2>\n");
+		sb.append("<arg3>total</arg3>\n");
+		sb.append("<arg4>123</arg4>\n");
+		sb.append("<arg5></arg5>\n");
+		sb.append("<arg6></arg6>\n");
+		sb.append("<arg7></arg7>\n");
+		sb.append("<arg8></arg8>\n");
+		sb.append("<arg9></arg9>\n");
+		sb.append("</generalAdminInp_PI>\n");
+
+		TestCase.assertEquals("unexpected XML protocol result", sb.toString(),
+				tagOut);
+	}
+	
+	@Test
+	public void testSetUserGroupQuotaTotal() throws Exception {
+		String userName = "test";
+		long quota = 123L;
+
+		GeneralAdminInp pi = GeneralAdminInp.instanceForSetUserGroupQuotaTotal(userName, quota);
+		String tagOut = pi.getParsedTags();
+
+		StringBuilder sb = new StringBuilder();
+		sb.append("<generalAdminInp_PI><arg0>set-quota</arg0>\n");
+		sb.append("<arg1>group</arg1>\n");
+		sb.append("<arg2>test</arg2>\n");
+		sb.append("<arg3>total</arg3>\n");
+		sb.append("<arg4>123</arg4>\n");
+		sb.append("<arg5></arg5>\n");
+		sb.append("<arg6></arg6>\n");
+		sb.append("<arg7></arg7>\n");
+		sb.append("<arg8></arg8>\n");
+		sb.append("<arg9></arg9>\n");
+		sb.append("</generalAdminInp_PI>\n");
+
+		TestCase.assertEquals("unexpected XML protocol result", sb.toString(),
+				tagOut);
+	}
+	
+	@Test
+	public void testCalculateTotalQuotaUsage() throws Exception {
+	
+		GeneralAdminInp pi = GeneralAdminInp.instanceForCalculateQuotaUsage();
+		String tagOut = pi.getParsedTags();
+
+		StringBuilder sb = new StringBuilder();
+		sb.append("<generalAdminInp_PI><arg0>calculate-usage</arg0>\n");
+		sb.append("<arg1></arg1>\n");
+		sb.append("<arg2></arg2>\n");
+		sb.append("<arg3></arg3>\n");
+		sb.append("<arg4></arg4>\n");
+		sb.append("<arg5></arg5>\n");
+		sb.append("<arg6></arg6>\n");
+		sb.append("<arg7></arg7>\n");
+		sb.append("<arg8></arg8>\n");
+		sb.append("<arg9></arg9>\n");
+		sb.append("</generalAdminInp_PI>\n");
+
+		TestCase.assertEquals("unexpected XML protocol result", sb.toString(),
+				tagOut);
+	}
+	
+	@Test
+	public void testSetUserQuotaForResource() throws Exception {
+		String userName = "test";
+		String resourceName = "testResc";
+		long quota = 123L;
+
+		GeneralAdminInp pi = GeneralAdminInp.instanceForSetUserQuotaForResource(userName, resourceName, quota);
+		String tagOut = pi.getParsedTags();
+
+		StringBuilder sb = new StringBuilder();
+		sb.append("<generalAdminInp_PI><arg0>set-quota</arg0>\n");
+		sb.append("<arg1>user</arg1>\n");
+		sb.append("<arg2>test</arg2>\n");
+		sb.append("<arg3>testResc</arg3>\n");
+		sb.append("<arg4>123</arg4>\n");
+		sb.append("<arg5></arg5>\n");
+		sb.append("<arg6></arg6>\n");
+		sb.append("<arg7></arg7>\n");
+		sb.append("<arg8></arg8>\n");
+		sb.append("<arg9></arg9>\n");
+		sb.append("</generalAdminInp_PI>\n");
+
+		TestCase.assertEquals("unexpected XML protocol result", sb.toString(),
+				tagOut);
+	}
+	
+	@Test
+	public void testSetUserGroupQuotaForResource() throws Exception {
+		String userName = "test";
+		String resourceName = "testResc";
+		long quota = 123L;
+
+		GeneralAdminInp pi = GeneralAdminInp.instanceForSetUserGroupQuotaForResource(userName, resourceName, quota);
+		String tagOut = pi.getParsedTags();
+
+		StringBuilder sb = new StringBuilder();
+		sb.append("<generalAdminInp_PI><arg0>set-quota</arg0>\n");
+		sb.append("<arg1>group</arg1>\n");
+		sb.append("<arg2>test</arg2>\n");
+		sb.append("<arg3>testResc</arg3>\n");
+		sb.append("<arg4>123</arg4>\n");
+		sb.append("<arg5></arg5>\n");
+		sb.append("<arg6></arg6>\n");
+		sb.append("<arg7></arg7>\n");
+		sb.append("<arg8></arg8>\n");
+		sb.append("<arg9></arg9>\n");
+		sb.append("</generalAdminInp_PI>\n");
+
+		TestCase.assertEquals("unexpected XML protocol result", sb.toString(),
+				tagOut);
+	}
+
+	
+	
 	@Test
 	public void testModifyUserTypeCheckXML() throws Exception {
 		String userName = "test";

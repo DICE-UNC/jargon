@@ -8,6 +8,7 @@ import java.util.List;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSSession;
+import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.packinstr.SimpleQueryInp;
 import org.irods.jargon.core.packinstr.Tag;
@@ -64,7 +65,12 @@ public class SimpleQueryExecutorAOImpl extends IRODSGenericAO implements
 
 		SimpleQueryInp simpleQueryInp = SimpleQueryInp.instance(simpleQuery);
 
-		Tag response = getIRODSProtocol().irodsFunction(simpleQueryInp);
+		Tag response = null;
+		try {
+			response = getIRODSProtocol().irodsFunction(simpleQueryInp);
+		} catch (DataNotFoundException dnf) {
+			log.info("no data found");
+		}
 
 		if (response == null) {
 			log.info("response from IRODS call indicates no rows found");

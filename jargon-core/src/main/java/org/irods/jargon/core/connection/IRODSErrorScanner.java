@@ -11,6 +11,7 @@ import org.irods.jargon.core.exception.FileIntegrityException;
 import org.irods.jargon.core.exception.InvalidUserException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.exception.JargonFileOrCollAlreadyExistsException;
+import org.irods.jargon.core.exception.NoAPIPrivException;
 import org.irods.jargon.core.protovalues.ErrorEnum;
 
 /**
@@ -56,6 +57,8 @@ public class IRODSErrorScanner {
 					infoValue);
 		case CAT_INVALID_USER:
 			throw new InvalidUserException("InvalidUserException");
+		case SYS_NO_API_PRIV:
+			throw new NoAPIPrivException("User lacks privileges to invoke the given API");
 		case CAT_NO_ROWS_FOUND:
 			throw new DataNotFoundException("no data found");
 		case CAT_NAME_EXISTS_AS_COLLECTION:
@@ -77,7 +80,7 @@ public class IRODSErrorScanner {
 		case CAT_COLLECTION_NOT_EMPTY:
 			throw new CollectionNotEmptyException("collection not empty", infoValue);
 		default:
-			throw new JargonException("error code recieved from iRODS",
+			throw new JargonException("error code recieved from iRODS:" + infoValue,
 					infoValue);
 		}
 

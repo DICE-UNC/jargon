@@ -9,6 +9,7 @@ import org.irods.jargon.core.pub.EnvironmentalInfoAOTest;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactoryImplTest;
 import org.irods.jargon.core.pub.IRODSFileSystemTest;
 import org.irods.jargon.core.pub.IRODSGenQueryExecutorImplTest;
+import org.irods.jargon.core.pub.QuotaAOImplTest;
 import org.irods.jargon.core.pub.RemoteExecutionOfCommandsAOImplTest;
 import org.irods.jargon.core.pub.ResourceAOTest;
 import org.irods.jargon.core.pub.RuleProcessingAOImplTest;
@@ -31,7 +32,7 @@ import org.junit.runners.Suite;
 		CollectionAndDataObjectListAndSearchAOImplTest.class,
 		IRODSAccessObjectFactoryImplTest.class,
 		BulkFileOperationsAOImplTest.class,
-		SimpleQueryExecutorAOImplTest.class, Stream2StreamAOImplTest.class })
+		SimpleQueryExecutorAOImplTest.class, Stream2StreamAOImplTest.class, QuotaAOImplTest.class })
 public class AOTests {
 
 }

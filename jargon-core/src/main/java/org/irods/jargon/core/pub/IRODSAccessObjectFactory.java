@@ -282,6 +282,14 @@ public interface IRODSAccessObjectFactory {
 	 */
 	BulkFileOperationsAO getBulkFileOperationsAO(IRODSAccount irodsAccount)
 			throws JargonException;
+	
+	/**
+	 * Get the access object that can manage quota information and settings.
+	 * @param irodsAccount
+	 * @return {@link QuotaAO} instance
+	 * @throws JargonException
+	 */
+	QuotaAO getQuotaAO(IRODSAccount irodsAccount) throws JargonException;
 
 	/**
 	 * Returns a <code>SimpleQueryExecutorAO</code> that can execute queries on
@@ -341,5 +349,7 @@ public interface IRODSAccessObjectFactory {
 	 * @return {@link JargonProperties}
 	 */
 	JargonProperties getJargonProperties();
+
+	
 
 }

@@ -262,7 +262,7 @@ public class TestingPropertiesHelper {
 		homeBuilder.append('/');
 		homeBuilder.append("home");
 		homeBuilder.append('/');
-		homeBuilder.append(testingProperties.getProperty(IRODS_USER_KEY));
+		homeBuilder.append(testingProperties.getProperty(IRODS_ADMIN_USER_KEY));
 
 		IRODSAccount account = new IRODSAccount(
 				testingProperties.getProperty(IRODS_HOST_KEY),
@@ -403,7 +403,7 @@ public class TestingPropertiesHelper {
 
 		return account;
 	}
-
+	
 	/**
 	 * @param testingProperties
 	 *            <code>Properties</code> file with the standard names defined

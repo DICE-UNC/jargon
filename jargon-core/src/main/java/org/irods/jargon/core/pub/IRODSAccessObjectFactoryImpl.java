@@ -210,6 +210,17 @@ public final class IRODSAccessObjectFactoryImpl implements
 		checkIrodsSessionSet();
 		return new EnvironmentalInfoAOImpl(irodsSession, irodsAccount);
 	}
+	
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.core.pub.IRODSAccessObjectFactory#getQuotaAO(org.irods.jargon.core.connection.IRODSAccount)
+	 */
+	@Override
+	public QuotaAO getQuotaAO(
+			final IRODSAccount irodsAccount) throws JargonException {
+		checkIrodsSessionSet();
+		return new QuotaAOImpl(irodsSession, irodsAccount);
+	}
+
 
 	/*
 	 * (non-Javadoc)
