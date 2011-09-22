@@ -2360,7 +2360,7 @@ public class DataTransferOperationsImplTest {
 				.instance();
 
 		TransferStatusCallbackListenerTestingImplementation listener = new TransferStatusCallbackListenerTestingImplementation(
-				transferControlBlock, 0, 3);
+				transferControlBlock, 0, 2);
 
 		dataTransferOperationsAO.copy(destFile.getAbsolutePath() + "/"
 				+ rootCollection, "", irodsCollectionTargetAbsolutePath,
