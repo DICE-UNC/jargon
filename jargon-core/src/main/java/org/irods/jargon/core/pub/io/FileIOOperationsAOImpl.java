@@ -137,7 +137,7 @@ final class FileIOOperationsAOImpl extends IRODSGenericAO implements
 	 * int, int)
 	 */
 	@Override
-	public int fileRead(final int fd, final byte buffer[], final int offset,  //FIXME: potentially implment a read of an Input Stream that would directly tie to the iRODS socket?
+	public int fileRead(final int fd, final byte buffer[], final int offset, 
 			int length) throws JargonException {
 
 		log.info("file read for fd: {}", fd);

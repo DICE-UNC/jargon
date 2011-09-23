@@ -806,12 +806,13 @@ public class IRODSCommands implements IRODSManagedConnection {
 			log.debug("error status of 0 indicates normal operation, ignored");
 			return;
 		}
-		log.error("IRODS error occured: {} ", errorTag.getTag(RErrMsg.PI_TAG)
-				.getTag(AbstractIRODSPackingInstruction.MESSAGE_TAG));
+		
+		log.error("IRODS error encountered, value from error tag: {} ", errorTag.getTag(RErrMsg.PI_TAG)
+				.getTag(AbstractIRODSPackingInstruction.MESSAGE_TAG).getStringValue());
 
-		throw new JargonException("IRODS error occured "
+		throw new JargonException("IRODS error encountered, value from error tag: {}"
 				+ errorTag.getTag(RErrMsg.PI_TAG).getTag(
-						AbstractIRODSPackingInstruction.MESSAGE_TAG));
+						AbstractIRODSPackingInstruction.MESSAGE_TAG).getStringValue());
 	}
 
 	/**

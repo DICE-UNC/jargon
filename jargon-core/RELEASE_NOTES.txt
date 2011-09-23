@@ -105,6 +105,8 @@ iRODS Jargon > -2700 error in parallel transfer (Solaris mostly) caused by parti
 
 iRODS Jargon > fedora 14 broken pipe parallel txfrs	2011-06-22 05:49:57
 
+[#474] error message/error in fedora streaming
+
 ==Features==
 
 
