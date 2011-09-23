@@ -7,9 +7,7 @@ import java.io.Serializable;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.ietf.jgss.GSSCredential;
 import org.irods.jargon.core.exception.JargonException;
@@ -19,46 +17,31 @@ import org.irods.jargon.core.exception.JargonException;
  * contained in the .irodsEnv file. The main account attributes are immutable,
  * but certain elements are mutable as they may be updated during processing.
  * 
- * @author Mike Conway - DICE (www.irods.org) 
+ * @author Mike Conway - DICE (www.irods.org)
  * 
  */
 public final class IRODSAccount implements Serializable {
 
 	private static final long serialVersionUID = 8627989693793656697L;
-	public static final String IRODS_VERSION_3_0 = "rods3.0jargon3.0";
 	public static final String IRODS_JARGON_RELEASE_NUMBER = "rods3.0";
-
-	/**
-	 * Stores the org.ietf.jgss.GSSCredential, used in GSI connections to the
-	 * iRODS.
-	 */
-	private transient final GSSCredential gssCredential;
-	/**
-	 * iRODS API version "d"
-	 */
 	public static final String IRODS_API_VERSION = "d";
-
-	/**
-	 * User name for anonymous login
-	 */
-	public static final String PUBLIC_USERNAME = "anonymous";
-
-	/**
-	 * User name for anonymous login
-	 */
-	public static final String STANDARD_PASSWORD = "PASSWORD";
-	/**
-	 * User name for anonymous login
-	 */
-	public static final String GSI_PASSWORD = "GSI";
-
+	
+	public enum AuthScheme  {STANDARD, GSI, KERBEROS};
+	public static final boolean defaultObfuscate = false;
+	private AuthScheme authenticationScheme = AuthScheme.STANDARD;
+	
 	/**
 	 * The certificate authority (CA) list. By default, the CA definition comes
 	 * from the user's cog.properties file.
 	 */
 	private final String certificateAuthority;
+	/**
+	 * Stores the org.ietf.jgss.GSSCredential, used in GSI connections to the
+	 * iRODS.
+	 */
+	private transient final GSSCredential gssCredential;
 
-	public static final boolean defaultObfuscate = false;
+	
 
 	private final String host;
 	private final int port;
@@ -67,7 +50,6 @@ public final class IRODSAccount implements Serializable {
 	private final String password;
 	private final String defaultStorageResource;
 	private final String homeDirectory;
-	private static final String authenticationScheme = STANDARD_PASSWORD;
 	private final String serverDN;
 	private List<String> authenticatedRoles = new ArrayList<String>();
 
@@ -110,32 +92,36 @@ public final class IRODSAccount implements Serializable {
 				zone, defaultStorageResource);
 
 	}
-	
+
 	/**
-	 * Create a re-routed iRODS account using an initial account, and a host name to which the connection should be re-routed
-	 * @param initialAccount {@link IRODSAccount} for the initial connection
-	 * @param reroutedHostName <code>String</code> with the host name to which the connection should be routed.
+	 * Create a re-routed iRODS account using an initial account, and a host
+	 * name to which the connection should be re-routed
+	 * 
+	 * @param initialAccount
+	 *            {@link IRODSAccount} for the initial connection
+	 * @param reroutedHostName
+	 *            <code>String</code> with the host name to which the connection
+	 *            should be routed.
 	 * @return <code>IRODSAccount</code> connected to the new host.
 	 * @throws JargonException
 	 */
-	public static IRODSAccount instanceForReroutedHost(final IRODSAccount initialAccount, final String reroutedHostName) throws JargonException {
-		
+	public static IRODSAccount instanceForReroutedHost(
+			final IRODSAccount initialAccount, final String reroutedHostName)
+			throws JargonException {
+
 		if (initialAccount == null) {
 			throw new IllegalArgumentException("null initialAccount");
 		}
-		
+
 		if (reroutedHostName == null || reroutedHostName.isEmpty()) {
 			throw new IllegalArgumentException("null or empty reroutedHostName");
 		}
-		
-		return new IRODSAccount(reroutedHostName,
-				initialAccount.getPort(),
-				initialAccount.getUserName(),
-				initialAccount.getPassword(),
-				initialAccount.getHomeDirectory(),
-				initialAccount.getZone(), 
+
+		return new IRODSAccount(reroutedHostName, initialAccount.getPort(),
+				initialAccount.getUserName(), initialAccount.getPassword(),
+				initialAccount.getHomeDirectory(), initialAccount.getZone(),
 				initialAccount.getDefaultStorageResource());
-		
+
 	}
 
 	/**
@@ -253,11 +239,10 @@ public final class IRODSAccount implements Serializable {
 	}
 
 	/**
-	 * Gets the iRODS options.
-	 * 
-	 * @return options
+	 * Get the authentication scheme used for login to iRODS
+	 * @return {@link AuthScheme} enum value
 	 */
-	public String getAuthenticationScheme() {
+	public AuthScheme getAuthenticationScheme() {
 		return authenticationScheme;
 	}
 
@@ -396,18 +381,6 @@ public final class IRODSAccount implements Serializable {
 
 	public GSSCredential getGssCredential() {
 		return gssCredential;
-	}
-
-	public static String getPublicUsername() {
-		return PUBLIC_USERNAME;
-	}
-
-	public static String getStandardPassword() {
-		return STANDARD_PASSWORD;
-	}
-
-	public static String getGsiPassword() {
-		return GSI_PASSWORD;
 	}
 
 	public static boolean isDefaultObfuscate() {

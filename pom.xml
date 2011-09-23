@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.irods</groupId>
 	<artifactId>jargon</artifactId>
@@ -20,6 +21,7 @@
 		<spring.security.web.version>3.0.5.RELEASE</spring.security.web.version>
 		<spring.web.version>3.0.5.RELEASE</spring.web.version>
 		<hibernate.version>3.3.1.GA</hibernate.version>
+		<globus.version>2.0.4</globus.version>
 	</properties>
 	<issueManagement>
 		<system>gForge</system>
@@ -96,7 +98,7 @@
 		<repository>
 			<id>renci.repository</id>
 			<name>renci.repository</name>
-			<url>https://ci-dev.renci.org/nexus/content/repositories/releases</url>   
+			<url>https://ci-dev.renci.org/nexus/content/repositories/releases</url>
 		</repository>
 		<snapshotRepository>
 			<id>renci.snapshots</id>
@@ -142,16 +144,16 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-changelog-plugin</artifactId>
 			</plugin>
-			
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-release-plugin</artifactId>
-					<version>2.2</version>
-					<configuration>
-					<!-- <tagBase>https://svn.apache.org/repos/asf/maven/components/releases</tagBase>  -->	
-					</configuration>
-				</plugin>
-			
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-release-plugin</artifactId>
+				<version>2.2</version>
+				<configuration>
+					<!-- <tagBase>https://svn.apache.org/repos/asf/maven/components/releases</tagBase> -->
+				</configuration>
+			</plugin>
+
 		</plugins>
 	</reporting>
 	<dependencyManagement>
@@ -341,6 +343,11 @@
 				<artifactId>spring-web</artifactId>
 				<version>${spring.web.version}</version>
 				<type>pom</type>
+			</dependency>
+			<dependency>
+				<groupId>org.jglobus</groupId>
+				<artifactId>JGlobus-Core</artifactId>
+				<version>${globus.version}</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>

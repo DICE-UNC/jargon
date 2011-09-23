@@ -1,0 +1,30 @@
+krb notes
+
+for testing use realm IRODS.GSS
+
+test principals
+
+admin/admin@IRODS.GSS / test
+test1@IRODS.GSS / test
+
+
+-----------------------------------------------
+krb admin notes
+
+At this point, you are ready to start the Kerberos daemons on the Master KDC. To do so, type:
+
+     shell% /usr/local/sbin/krb5kdc
+     shell% /usr/local/sbin/kadmind
+     
+
+
+-----------------------------------------------
+irods krb setup notes
+
+adding host key for irods server to kdc: http://web.mit.edu/kerberos/krb5-1.9/krb5-1.9.1/doc/krb5-install.html#Create%20Host%20Keys%20for%20the%20Slave%20KDCs
+
+irods/krb notes: https://www.irods.org/index.php/Kerberos
+
+host princ will be: irods/irods.gss@IRODS.GSS
+
+add host to keytab: irods/irods.gss@IRODS.GSS --- extracted to /etc/krb5.keytab

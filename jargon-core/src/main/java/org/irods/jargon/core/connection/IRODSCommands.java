@@ -13,6 +13,7 @@ import java.nio.channels.ClosedChannelException;
 import java.security.GeneralSecurityException;
 import java.security.MessageDigest;
 
+import org.irods.jargon.core.connection.IRODSAccount.AuthScheme;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.packinstr.AbstractIRODSPackingInstruction;
 import org.irods.jargon.core.packinstr.AuthResponseInp;
@@ -132,8 +133,7 @@ public class IRODSCommands implements IRODSManagedConnection {
 		// send startup packet here
 		this.sendStartupPacket(irodsAccount);
 		// LOG in and augment/store IRODS Account
-		if (irodsAccount.getAuthenticationScheme().equals(
-				IRODSAccount.GSI_PASSWORD)) {
+		if (irodsAccount.getAuthenticationScheme() == AuthScheme.GSI) {
 			sendGSIPassword(irodsAccount);
 			this.irodsAccount = lookupAdditionalIRODSAccountInfoWhenGSI(irodsAccount);
 		} else {
