@@ -2523,6 +2523,7 @@ public class DataTransferOperationsImplTest {
 	}
 
 	@Test
+	@Ignore
 	public void testCopyCollectionWithCancelThenRestart() throws Exception {
 
 		String rootCollection = "testCopyCollectionWithCancelThenRestart";
