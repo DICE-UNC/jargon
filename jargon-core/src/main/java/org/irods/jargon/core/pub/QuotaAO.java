@@ -6,7 +6,8 @@ import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.domain.Quota;
 
 /**
- * Manage and administer quota information
+ * Manage and administer quota information.  These functions require the invoking user to have rodsadmin, due to the
+ * underlying use of simple query as well as iadmin functions.  
  * @author Mike Conway - DICE (www.irods.org)
  *
  */
@@ -92,11 +93,4 @@ public interface QuotaAO {
 	 * @throws JargonException
 	 */
 	void calculateQuotaUsage() throws JargonException;
-
-	
-
-
-
-	
-
 }
