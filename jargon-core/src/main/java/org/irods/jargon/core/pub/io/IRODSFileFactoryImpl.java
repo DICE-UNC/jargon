@@ -223,23 +223,10 @@ public final class IRODSFileFactoryImpl extends IRODSGenericAO implements
 		FileIOOperations fileIOOperations = new FileIOOperationsAOImpl(
 				this.getIRODSSession(), this.getIRODSAccount());
 		try {
-			if (!file.exists()) {
-				log.info("file does not exist, creating a new file");
-				file.createNewFile();
-			} else if (!file.canWrite()) {
-				log.info("this file is not writeable by the current user {}",
-						file.getAbsolutePath());
-				throw new JargonException("file is not writeable:"
-						+ file.getAbsolutePath());
-			}
-
 			return new IRODSFileOutputStream(file, fileIOOperations);
 		} catch (FileNotFoundException e) {
 			log.error("FileNotFound creating output stream", e);
 			throw new JargonException(e);
-		} catch (IOException ioException) {
-			log.error("IOException creating output stream", ioException);
-			throw new JargonException(ioException);
 		}
 	}
 

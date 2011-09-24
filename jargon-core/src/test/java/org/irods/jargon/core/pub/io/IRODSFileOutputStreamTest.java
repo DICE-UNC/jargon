@@ -22,6 +22,7 @@ import org.irods.jargon.testutils.icommandinvoke.IrodsInvocationContext;
 import org.irods.jargon.testutils.icommandinvoke.icommands.IputCommand;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class IRODSFileOutputStreamTest {
@@ -92,7 +93,7 @@ public class IRODSFileOutputStreamTest {
 		irodsFileSystem.closeAndEatExceptions();
 
 	}
-
+	
 	@Test
 	public final void testWriteByteArray() throws Exception {
 		String testFileName = "testWriteByteArray.csv";

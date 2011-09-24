@@ -800,19 +800,21 @@ public class IRODSCommands implements IRODSManagedConnection {
 			throw new JargonException(
 					"no status tag in error PI tag when processing error in response from iRODS");
 		}
-
+		
+		
 		int statusVal = status.getIntValue();
 		if (statusVal == 0) {
 			log.debug("error status of 0 indicates normal operation, ignored");
 			return;
 		}
 		
-		log.error("IRODS error encountered, value from error tag: {} ", errorTag.getTag(RErrMsg.PI_TAG)
-				.getTag(AbstractIRODSPackingInstruction.MESSAGE_TAG).getStringValue());
+		String errorText =  errorTag.getTag(RErrMsg.PI_TAG)
+		.getTag(AbstractIRODSPackingInstruction.MESSAGE_TAG).getStringValue();
+		
+		log.error("IRODS error encountered:{}", errorText);
+		log.error("status from error is:{}", statusVal);
 
-		throw new JargonException("IRODS error encountered, value from error tag: {}"
-				+ errorTag.getTag(RErrMsg.PI_TAG).getTag(
-						AbstractIRODSPackingInstruction.MESSAGE_TAG).getStringValue());
+		throw new JargonException("error returned from iRODS, status = " + statusVal + " message:" + errorText);
 	}
 
 	/**

@@ -52,49 +52,26 @@ public class IRODSFileOutputStream extends OutputStream {
 	 * 
 	 * @param name
 	 *            the system-dependent file name.
-	 * @exception IOException
-	 *                if the file does not exist, is a directory rather than a
-	 *                regular file, or for some other reason cannot be opened
-	 *                for reading.
+	 * @exception FileNotFoundException
+	 *                when file is not found in iRODS
+	 * @exception JargonException
+	 *                when other iRODS errors occur
 	 */
 	protected IRODSFileOutputStream(final IRODSFile irodsFile,
 			final FileIOOperations fileIOOperations)
-			throws FileNotFoundException {
+			throws FileNotFoundException, JargonException {
 		super();
 		checkFileParameter(irodsFile);
 		if (fileIOOperations == null) {
 			throw new JargonRuntimeException("fileIOOperations is null");
 		}
 
-		if (!irodsFile.exists()) {
-			String msg = "file does not exist:" + irodsFile.getAbsolutePath();
-			log.error(msg);
-			throw new FileNotFoundException(msg);
-		}
-
-		if (irodsFile.exists() && !irodsFile.isFile()) {
-			String msg = "this is not a file, it is a directory:"
-					+ irodsFile.getAbsolutePath();
-			log.error(msg);
-			throw new FileNotFoundException(msg);
-		}
-
-		if (!irodsFile.canWrite()) {
-			String msg = "cannot write the file:" + irodsFile.getAbsolutePath();
-			log.error(msg);
-			throw new FileNotFoundException(msg);
-		}
+		/*
+		 * Exists and other checks done by object calling this constructor
+		 */
 
 		this.irodsFile = irodsFile;
-
-		try {
-			openIRODSFile();
-		} catch (JargonException e) {
-			String msg = "JargonException caught in constructor, rethrow as JargonRuntimeException";
-			log.error(msg, e);
-			throw new JargonRuntimeException(msg, e);
-		}
-
+		openIRODSFile();
 		this.fileIOOperations = fileIOOperations;
 
 	}
@@ -111,8 +88,9 @@ public class IRODSFileOutputStream extends OutputStream {
 					throw new JargonException(msg);
 				}
 				fileDescriptor = irodsFile.getFileDescriptor();
+
 			} catch (IOException e) {
-				log.error("error creating file:" + this, e);
+				log.error("error creating file: {}", this, e);
 				throw new JargonException(
 						"IOException rethrown as Jargon exception when creating file:"
 								+ irodsFile, e);
@@ -124,9 +102,11 @@ public class IRODSFileOutputStream extends OutputStream {
 		}
 
 		if (log.isDebugEnabled()) {
-			log.debug("file descriptor from open/create operation ="
-					+ fileDescriptor);
+			log.debug("file descriptor from open/create operation = {}",
+					fileDescriptor);
 		}
+
+		irodsFile.reset();
 
 		return fileDescriptor;
 
