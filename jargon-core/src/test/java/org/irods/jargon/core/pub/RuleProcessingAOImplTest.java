@@ -1,5 +1,6 @@
 package org.irods.jargon.core.pub;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 
@@ -60,7 +61,45 @@ public class RuleProcessingAOImplTest {
 		RuleProcessingAO ruleProcessingAO = accessObjectFactory
 				.getRuleProcessingAO(irodsAccount);
 		String ruleString = "ListAvailableMS||msiListEnabledMS(*KVPairs)##writeKeyValPairs(stdout,*KVPairs, \": \")|nop\n*A=hello\n ruleExecOut";
+	
+		Date before = new Date();
 		IRODSRuleExecResult result = ruleProcessingAO.executeRule(ruleString);
+		irodsSession.closeSession();
+		
+	Date after = new Date();
+		
+		System.out.println(">>>>>>>>>>>>>>>>>>>without delay:" + String.valueOf(after.getTime() - before.getTime()));
+		
+
+		String execOut = (String) result.getOutputParameterResults()
+				.get(RuleProcessingAOImpl.RULE_EXEC_OUT).getResultObject();
+		Assert.assertEquals("irodsRule did not have original string",
+				ruleString, result.getIrodsRule().getRuleAsOriginalText());
+		Assert.assertNotNull("did not get exec out", execOut.length() > 0);
+
+	}
+	
+	@Test
+	public void testExecuteRuleWithDelay() throws Exception {
+		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager
+				.instance();
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSSession irodsSession = IRODSSession
+				.instance(irodsConnectionManager);
+		IRODSAccessObjectFactory accessObjectFactory = IRODSAccessObjectFactoryImpl
+				.instance(irodsSession);
+		RuleProcessingAO ruleProcessingAO = accessObjectFactory
+				.getRuleProcessingAO(irodsAccount);
+		String ruleString = "ListAvailableMS||delayExec(<PLUSET>1m</PLUSET>,msiListEnabledMS(*KVPairs)##writeKeyValPairs(stdout,*KVPairs, \": \"),nop)|nop\n*A=hello\n ruleExecOut";
+		
+		Date before = new Date();
+		
+		IRODSRuleExecResult result = ruleProcessingAO.executeRule(ruleString);
+		Date after = new Date();
+		
+		System.out.println(">>>>>>>>>>>>>>>>>>>with delay:" + String.valueOf(after.getTime() - before.getTime()));
+		
 		irodsSession.closeSession();
 
 		String execOut = (String) result.getOutputParameterResults()

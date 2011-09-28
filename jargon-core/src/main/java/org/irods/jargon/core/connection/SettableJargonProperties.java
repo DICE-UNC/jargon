@@ -40,7 +40,7 @@ public class SettableJargonProperties implements JargonProperties {
 	private int localFileOutputStreamBufferSize = 0;
 	private int putBufferSize=4194304;
 	private int getBufferSize=4194304;
-	private int inputToOutputCopyBufferByteSize = 8096;
+	private int inputToOutputCopyBufferByteSize = 8192;
 
 
 	/**

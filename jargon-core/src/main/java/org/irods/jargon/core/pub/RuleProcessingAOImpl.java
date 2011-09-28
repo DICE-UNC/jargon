@@ -396,13 +396,20 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements
 			throw new JargonException(
 					"invalid status in response ExecCmdOut_PI tag:" + status);
 		}
+		
+		Tag bufTag =  exec.getTag(BIN_BYTES_BUF_PI, 0).getTag(BUF);
 
-		String base64Encoded = exec.getTag(BIN_BYTES_BUF_PI, 0).getTag(BUF)
+		String results;
+		
+		if (bufTag != null) {
+		String base64Encoded = bufTag
 				.getStringValue();
 
 		byte[] decoded = Base64.fromString(base64Encoded);
-
-		String results = new String(decoded);
+			results = new String(decoded);
+		} else {
+			results = "";
+		}
 
 		return results;
 	}

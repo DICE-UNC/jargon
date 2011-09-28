@@ -456,15 +456,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		path = absolutePathToParent;
 
 		LOG.info("listDataObjectsUnderPath for: {}", path);
-
-		/*
-		 * IRODSFile irodsFile = irodsFileFactory
-		 * .instanceIRODSFile(absolutePathToParent);
-		 * 
-		 * if (irodsFile.isDirectory()) { LOG.debug("is directory"); path =
-		 * irodsFile.getAbsolutePath(); } else { path = irodsFile.getParent();
-		 * LOG.debug("is file, using parent path: {}", path); }
-		 */
+		
 		IRODSGenQueryExecutor irodsGenQueryExecutor = new IRODSGenQueryExecutorImpl(
 				this.getIRODSSession(), this.getIRODSAccount());
 
