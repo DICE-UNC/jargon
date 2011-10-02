@@ -7,6 +7,7 @@ import static org.irods.jargon.testutils.TestingPropertiesHelper.GENERATED_FILE_
 
 import java.io.File;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Properties;
 
 import org.irods.jargon.testutils.filemanip.ScratchFileUtils;
@@ -337,6 +338,8 @@ public class AssertionHelper {
 		if (file1.isDirectory() && file2.isDirectory()) {
 			File[] file1Files = file1.listFiles();
 			File[] file2Files = file2.listFiles();
+			Arrays.sort(file1Files, new DirAlphaComparator());
+			Arrays.sort(file2Files, new DirAlphaComparator());
 
 			if (file1Files.length != file2Files.length) {
 				throw new IRODSTestAssertionException(
@@ -382,4 +385,22 @@ public class AssertionHelper {
 
 	}
 
+}
+
+class DirAlphaComparator implements Comparator<File> {
+
+    // Comparator interface requires defining compare method.
+    public int compare(File filea, File fileb) {
+        //... Sort directories before files,
+        //    otherwise alphabetical ignoring case.
+        if (filea.isDirectory() && !fileb.isDirectory()) {
+            return -1;
+
+        } else if (!filea.isDirectory() && fileb.isDirectory()) {
+            return 1;
+
+        } else {
+            return filea.getName().compareToIgnoreCase(fileb.getName());
+        }
+    }
 }
