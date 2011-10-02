@@ -1,9 +1,8 @@
 
 *'''Project''': Jargon-core - IRODS Java API
-*'''Date''': XX/XX/XX
-*'''Release Version''': 3.0.0 Release SNAPSHOT
-*'''git tag''':  xxxxx
-
+*'''Date''': 10/1/2011
+*'''Release Version''': 3.0.0 Release 
+*'''git tag''':  3_0_0_RELEASE
 
 ==News==
 
@@ -20,7 +19,7 @@ Jargon-core consists of the following libraries
 
 * jargon-core - base libraries, implementation of the iRODS protocol
 * jargon-data-utils - additional functionality for dealing with iRODS data, such as building trees, storing information in iRODS on behalf of applications, and doing diffs between local and iRODS
-*jargon-security - code for use with Spring security
+* jargon-security - code for use with Spring security
 * jargon-user-tagging - code for using free tagging and other metadata metaphors on top of iRODS
 * jargon-transfer - transfer manager for managing and synchronizing data with iRODS
 
@@ -107,6 +106,10 @@ iRODS Jargon > fedora 14 broken pipe parallel txfrs	2011-06-22 05:49:57
 
 [#474] error message/error in fedora streaming
 
+iRODS Jargon > fedora 14 broken pipe parallel txfrs	2011-06-22 05:49:57
+
+iRODS Jargon > error in put operations when no parallel transfers	2011-09-05 06:49:46
+
 ==Features==
 
 
@@ -139,3 +142,5 @@ iRODS Jargon > add support for getTempPassword API
  [#266] exec ACL support for get/put files
  
  [#176] put/get resource switching - added for put/get as well as input/output iRODS streams, controllable via jargon.properties setting
+ 
+ [#215] use thread pooling on multi-threaded transfers
