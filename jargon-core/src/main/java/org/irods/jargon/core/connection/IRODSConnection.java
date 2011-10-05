@@ -33,7 +33,7 @@ import org.slf4j.LoggerFactory;
 final class IRODSConnection implements IRODSManagedConnection {
 
 	private Logger log = LoggerFactory.getLogger(IRODSConnection.class);
-	private final IRODSProtocolManager irodsProtocolManager;
+	private IRODSProtocolManager irodsProtocolManager;
 	private String connectionInternalIdentifier;
 	private boolean connected = false;
 	private Socket connection;
@@ -798,6 +798,20 @@ final class IRODSConnection implements IRODSManagedConnection {
 		}
 		
 		super.finalize();
+	}
+
+	/**
+	 * @return the irodsProtocolManager
+	 */
+	public IRODSProtocolManager getIrodsProtocolManager() {
+		return irodsProtocolManager;
+	}
+
+	/**
+	 * @param irodsProtocolManager the irodsProtocolManager to set
+	 */
+	public void setIrodsProtocolManager(IRODSProtocolManager irodsProtocolManager) {
+		this.irodsProtocolManager = irodsProtocolManager;
 	}
 
 }

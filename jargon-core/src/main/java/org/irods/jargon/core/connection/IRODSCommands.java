@@ -89,7 +89,7 @@ public class IRODSCommands implements IRODSManagedConnection {
 	private Logger log = LoggerFactory.getLogger(IRODSCommands.class);
 	private final IRODSConnection irodsConnection;
 	private IRODSServerProperties irodsServerProperties;
-	private final IRODSProtocolManager irodsProtocolManager;
+	private IRODSProtocolManager irodsProtocolManager;
 	private final PipelineConfiguration pipelineConfiguration;
 
 	private String cachedChallengeValue = "";
@@ -1348,6 +1348,20 @@ public class IRODSCommands implements IRODSManagedConnection {
 			throw new IllegalArgumentException("null irodsSession");
 		}
 		irodsConnection.setIrodsSession(irodsSession);
+	}
+
+	/**
+	 * @return the irodsProtocolManager
+	 */
+	public synchronized IRODSProtocolManager getIrodsProtocolManager() {
+		return irodsProtocolManager;
+	}
+
+	/**
+	 * @param irodsProtocolManager the irodsProtocolManager to set
+	 */
+	public synchronized void setIrodsProtocolManager(IRODSProtocolManager irodsProtocolManager) {
+		this.irodsProtocolManager = irodsProtocolManager;
 	}
 
 }
