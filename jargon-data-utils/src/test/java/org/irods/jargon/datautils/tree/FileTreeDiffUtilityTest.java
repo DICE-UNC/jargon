@@ -1605,6 +1605,7 @@ public class FileTreeDiffUtilityTest {
 	 * 
 	 * @throws Exception
 	 */
+	@Ignore
 	@Test
 	public void testFileTreeDiffLocalAndIrodsWithMixedCaseFileNames()
 			throws Exception {
