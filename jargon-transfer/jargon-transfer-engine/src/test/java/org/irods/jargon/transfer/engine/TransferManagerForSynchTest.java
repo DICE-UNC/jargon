@@ -123,7 +123,7 @@ public class TransferManagerForSynchTest {
 		int waitCtr = 0;
 
 		while (true) {
-			if (waitCtr++ > 20) {
+			if (waitCtr++ > 30) {
 				Assert.fail("synch timed out");
 			}
 			Thread.sleep(1000);
@@ -212,7 +212,7 @@ public class TransferManagerForSynchTest {
 		int waitCtr = 0;
 
 		while (true) {
-			if (waitCtr++ > 20) {
+			if (waitCtr++ > 30) {
 				Assert.fail("synch timed out");
 			}
 			Thread.sleep(1000);
