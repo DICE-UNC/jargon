@@ -76,6 +76,11 @@ public class IRODSFileInputStream extends InputStream {
 			throw new FileNotFoundException(msg);
 		}
 
+		/* File is not opened until first read. 
+		 * This avoids situations, such as in Fedora repository, where the stream would otherwise be opened by one thread and 
+		 * read by another, causing an invalid fd (irods -345000 error).
+		 */
+		
 		this.irodsFile = irodsFile;
 		this.fileIOOperations = fileIOOperations;
 	
