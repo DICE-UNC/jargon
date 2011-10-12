@@ -532,7 +532,15 @@ final class IRODSLocalTransferEngine implements TransferStatusCallbackListener {
 	public void statusCallback(final TransferStatus transferStatus)
 			throws JargonException {
 
-		if (transferStatus.getTotalFilesTransferredSoFar() == 0) {
+		if (log.isInfoEnabled()) {
+			if (transferStatus.getTransferState() == TransferStatus.TransferState.PAUSED
+					|| transferStatus.getTransferState() == TransferStatus.TransferState.CANCELLED) {
+				log.info("pause or cancel was encountered in the callbacks:{}",
+						transferStatus);
+			}
+		}
+
+		if (transferStatus.getTransferState() == TransferStatus.TransferState.OVERALL_INITIATION) {
 			log.debug("got startup 0th transfer callback, ignore in database, but do callback to transfer status listener");
 			transferManager.notifyStatusUpdate(transferStatus);
 
@@ -567,6 +575,8 @@ final class IRODSLocalTransferEngine implements TransferStatusCallbackListener {
 			final LocalIRODSTransferItem localIRODSTransferItem)
 			throws HibernateException, JargonException {
 
+		log.info("processing status callback of :{}", transferStatus);
+
 		if (transferStatus.getTransferState() == TransferStatus.TransferState.RESTARTING) {
 			log.debug("restarting:{}", transferStatus);
 			return;
@@ -590,7 +600,7 @@ final class IRODSLocalTransferEngine implements TransferStatusCallbackListener {
 		boolean updateItemRequired = true;
 		// if pause or cancel, update overall status, no item to store
 		if (transferStatus.getTransferState() == TransferStatus.TransferState.CANCELLED) {
-			log.info("this transfer has been cancelled");
+			log.info(">>>>>>>>>>>>>>>>>>this transfer has been cancelled");
 			mergedTransfer.setTransferState(TransferState.CANCELLED);
 			updateItemRequired = false;
 		} else if (transferStatus.getTransferState() == TransferStatus.TransferState.PAUSED) {
@@ -640,6 +650,7 @@ final class IRODSLocalTransferEngine implements TransferStatusCallbackListener {
 					.updateLocalIRODSTransfer(mergedTransfer);
 			log.info("update done");
 		}
+		this.currentTransfer = mergedTransfer;
 		log.info("transfer item status saved in database");
 
 	}
