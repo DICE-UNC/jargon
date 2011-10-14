@@ -84,7 +84,6 @@ public class IRODSFileInputStream extends InputStream {
 		this.irodsFile = irodsFile;
 		this.fileIOOperations = fileIOOperations;
 	
-
 	}
 
 	/**

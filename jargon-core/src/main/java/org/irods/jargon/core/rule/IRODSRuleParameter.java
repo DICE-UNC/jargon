@@ -56,27 +56,27 @@ public class IRODSRuleParameter {
 	private Object value;
 	private String type;
 
-	IRODSRuleParameter() {
+	public IRODSRuleParameter() {
 		this(null, null, STR_PI);
 	}
 
-	IRODSRuleParameter(final int value) {
+	public IRODSRuleParameter(final int value) {
 		this(null, Integer.valueOf(value), INT_PI);
 	}
 
-	IRODSRuleParameter(final String value) {
+	public IRODSRuleParameter(final String value) {
 		this(null, value, STR_PI);
 	}
 
-	IRODSRuleParameter(final byte[] value) {
+	public IRODSRuleParameter(final byte[] value) {
 		this(null, value, BUF_LEN_PI);
 	}
 
-	IRODSRuleParameter(final String name, final String value) {
+	public IRODSRuleParameter(final String name, final String value) {
 		this(name, value, STR_PI);
 	}
 
-	IRODSRuleParameter(final String name, final Object value, final String type) {
+	public IRODSRuleParameter(final String name, final Object value, final String type) {
 		if (value == null) {
 			setNullValue();
 		} else {

@@ -41,6 +41,7 @@ Note that the following bug and feature requests are logged in GForge with relat
 ==Bug Fixes==
 
  [#494] looses localIRODSTransfer data on final update
+ [#496] BAD_INPUT_DESC_INDEX errors are being sent to irods client
 
 ==Features==
 
