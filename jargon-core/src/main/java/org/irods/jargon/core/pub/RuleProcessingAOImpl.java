@@ -93,11 +93,24 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements
 	 * org.irods.jargon.core.pub.RuleProcessingAO#executeRule(java.lang.String)
 	 */
 	@Override
-	public IRODSRuleExecResult executeRule(final String irodsRuleAsString)
+	public IRODSRuleExecResult executeRule(String irodsRuleAsString)
 			throws JargonRuleException, JargonException {
 
 		LOG.info("executing rule: {}", irodsRuleAsString);
 		final IRODSRuleTranslator irodsRuleTranslator = new IRODSRuleTranslator();
+		
+		/*
+		 * if iRODS 3.0+, add the @external parameter to the rule body 
+		 * FIXME: @external necessity TBD
+		 */
+		/*
+		if (this.getIRODSServerProperties().isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods3.0")) {
+			LOG.debug("adding @external to the rule body");
+			StringBuilder bodyWithExtern = new StringBuilder("@external\n");
+			bodyWithExtern.append(irodsRuleAsString);
+			irodsRuleAsString = bodyWithExtern.toString();
+		} */
+	
 		final IRODSRule irodsRule = irodsRuleTranslator
 				.translatePlainTextRuleIntoIRODSRule(irodsRuleAsString);
 		LOG.debug("translated rule: {}", irodsRule);

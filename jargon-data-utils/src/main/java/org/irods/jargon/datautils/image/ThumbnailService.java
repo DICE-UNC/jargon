@@ -13,6 +13,8 @@ import org.irods.jargon.core.exception.JargonException;
  * 
  */
 public interface ThumbnailService {
+	
+	public static final String THUMBNAIL_RULE_DATA_PARAMETER = "*StdoutStr";
 
 	/**
 	 * Given a <code>File</code> that represents a local working directory, ask iRODS to generate 
@@ -28,11 +30,12 @@ public interface ThumbnailService {
 	 * @param irodsAbsolutePathToGenerateThumbnailFor <code>String</code> that is the absolute path to the iRODS file
 	 * for which a thumbnail will be generated.
 	 * @return <code>File</code> that points to the thumbnail image.
+	 * @throws IRODSThumbnailProcessUnavailableException if thumbnail processing is not set up on iRODS (imagemagik services)
 	 * @throws JargonException
 	 */
-	File generateThumbnailForIRODSPath(final File workingDirectory,
+	File generateThumbnailForIRODSPathViaRule(final File workingDirectory,
 			final String irodsAbsolutePathToGenerateThumbnailFor)
-			throws JargonException;
+	throws IRODSThumbnailProcessUnavailableException, JargonException;
 
 	/**
 	 * Given an iRODS absolute path to a data object, retrieve an <code>InputStream</code> which is a thumbnail of
@@ -40,16 +43,14 @@ public interface ThumbnailService {
 	 * <p/>
 	 * Currently, this is done by generating the thumbnail when requested, later, this can include a caching scheme,
 	 * and alternative cache locations (local verus in iRODS AVU, etc).  Consider this a first approximation.
-	 * 
-	 * @param workingDirectory <code>File</code> with the path to the top level of a working directory to hold the
-	 * thumbnail image.
+	 *
 	 * @param irodsAbsolutePathToGenerateThumbnailFor <code>String</code> that is the absolute path to the iRODS file
 	 * for which a thumbnail will be generated.
 	 * @return <code>InputStream</code> that is the thumbnail image data.  No buffering is done to the stream that is returned.  
 	 * @throws JargonException
 	 */
-	InputStream retrieveThumbnailByIRODSAbsolutePath(
-			final File workingDirectory,
+	InputStream retrieveThumbnailByIRODSAbsolutePathViaRule(
+			
 			final String irodsAbsolutePathToGenerateThumbnailFor)
 			throws JargonException;
 

@@ -37,7 +37,7 @@ public class ExecMyRuleInp_PITest {
 		String outputXML = rulePI.getParsedTags();
 
 		StringBuilder sb = new StringBuilder();
-		sb.append("<ExecMyRuleInp_PI><myRule>List Available MS||msiListEnabledMS(*KVPairs)##writeKeyValPairs(stdout,*KVPairs, &quot;: &quot;)|nop</myRule>\n");
+		sb.append("<ExecMyRuleInp_PI><myRule>List Available MS||msiListEnabledMS(*KVPairs)##writeKeyValPairs(stdout,*KVPairs, &quot;: &quot;)|nop\n</myRule>\n");
 		sb.append("<RHostAddr_PI><hostAddr></hostAddr>\n");
 		sb.append("<rodsZone></rodsZone>\n");
 		sb.append("<port>0</port>\n");
@@ -88,7 +88,7 @@ public class ExecMyRuleInp_PITest {
 		String outputXML = rulePI.getParsedTags();
 
 		StringBuilder sb = new StringBuilder();
-		sb.append("<ExecMyRuleInp_PI><myRule>myTestRule||acGetIcatResults(*Action,*Condition,*B)##forEachExec(*B,msiGetValByKey(*B,RESC_LOC,*R)##remoteExec(*R,null,msiDataObjChksum(*B,*Operation,*C),nop)##msiGetValByKey(*B,DATA_NAME,*D)##msiGetValByKey(*B,COLL_NAME,*E)##writeLine(stdout,CheckSum of *E/*D at *R is *C),nop)|nop##nop</myRule>\n");
+		sb.append("<ExecMyRuleInp_PI><myRule>myTestRule||acGetIcatResults(*Action,*Condition,*B)##forEachExec(*B,msiGetValByKey(*B,RESC_LOC,*R)##remoteExec(*R,null,msiDataObjChksum(*B,*Operation,*C),nop)##msiGetValByKey(*B,DATA_NAME,*D)##msiGetValByKey(*B,COLL_NAME,*E)##writeLine(stdout,CheckSum of *E/*D at *R is *C),nop)|nop##nop\n</myRule>\n");
 		sb.append("<RHostAddr_PI><hostAddr></hostAddr>\n");
 		sb.append("<rodsZone></rodsZone>\n");
 		sb.append("<port>0</port>\n");
@@ -138,7 +138,7 @@ public class ExecMyRuleInp_PITest {
 
 		StringBuilder sb = new StringBuilder();
 
-		sb.append("<ExecMyRuleInp_PI><myRule>testExecReturnArray||msiMakeGenQuery(&quot;RESC_NAME, RESC_LOC&quot;,*Condition,*GenQInp)##msiExecGenQuery(*GenQInp, *GenQOut)|nop</myRule>\n");
+		sb.append("<ExecMyRuleInp_PI><myRule>testExecReturnArray||msiMakeGenQuery(&quot;RESC_NAME, RESC_LOC&quot;,*Condition,*GenQInp)##msiExecGenQuery(*GenQInp, *GenQOut)|nop\n</myRule>\n");
 		sb.append("<RHostAddr_PI><hostAddr></hostAddr>\n");
 		sb.append("<rodsZone></rodsZone>\n");
 		sb.append("<port>0</port>\n");

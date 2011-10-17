@@ -46,3 +46,4 @@ Note that the following bug and feature requests are logged in GForge with relat
 ==Features==
 
 [#483] pool to share single conn - initial implementation of commons-pool to share a single connection from multiple threads
+[#499] add thumbnail generation facility to Jargon data utls

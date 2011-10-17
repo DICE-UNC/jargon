@@ -101,6 +101,43 @@ public class IRODSRuleTranslatorTest {
 				1, translatedRule.getIrodsRuleInputParameters().size());
 	}
 
+	/*
+	 * feature [#500] enhanced 3.0 rule parsing and load rule from resource
+	 */
+	@Test
+	public final void testTranslateMultiLineRuleNewFormat() throws Exception {
+		StringBuilder sb = new StringBuilder();
+
+		sb.append("makeThumbnailFromObj {\n");
+		sb.append("msiSplitPath(*objPath,*collName,*objName);\n");
+		sb.append(" msiAddSelectFieldToGenQuery(\"DATA_PATH\", \"null\", *GenQInp);\n");
+		sb.append("msiAddSelectFieldToGenQuery(\"RESC_LOC\", \"null\", *GenQInp);\n");
+		sb.append(" msiAddConditionToGenQuery(\"COLL_NAME\", \"=\", *collName, *GenQInp);\n");
+		sb.append("msiAddConditionToGenQuery(\"DATA_NAME\", \"=\", *objName, *GenQInp);\n");
+		sb.append("msiAddConditionToGenQuery(\"DATA_RESC_NAME\",\"=\", *resource, *GenQInp);\n");
+		sb.append("msiExecGenQuery(*GenQInp, *GenQOut);\n");
+		sb.append("foreach (*GenQOut)\n{\n");
+		sb.append(" msiGetValByKey(*GenQOut, \"DATA_PATH\", *data_path);\n");
+		sb.append("msiGetValByKey(*GenQOut, \"RESC_LOC\", *resc_loc);\n}\n");
+		sb.append("msiExecCmd(\"makeThumbnail.py\", '*data_path', *resc_loc, \"null\", \"null\", *CmdOut);\n");
+		sb.append("msiGetStdoutInExecCmdOut(*CmdOut, *StdoutStr);\n");
+		// sb.append(" writeLine(\"stdout\", *StdoutStr);\n");
+		sb.append("INPUT *objPath=\"");
+		sb.append("/a/irods/path");
+		sb.append("\",*resource=\"");
+		sb.append("resource");
+		sb.append("\"\n");
+		sb.append("OUTPUT *ruleExecOut");
+		String ruleString = sb.toString();
+		IRODSRuleTranslator irodsRuleTranslator = new IRODSRuleTranslator();
+		IRODSRule translatedRule = irodsRuleTranslator
+				.translatePlainTextRuleIntoIRODSRule(ruleString);
+		Assert.assertEquals("did not parse the two input parameters", 2,
+				translatedRule.getIrodsRuleInputParameters().size());
+		Assert.assertEquals("did not parse the one output parameter", 1,
+				translatedRule.getIrodsRuleOutputParameters().size());
+	}
+
 	@Test(expected = JargonRuleException.class)
 	public final void testTranslateInputParmsStringOfnullTwiceAsOnlyParm()
 			throws Exception {

@@ -7,9 +7,7 @@ import java.io.Serializable;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.ietf.jgss.GSSCredential;
 import org.irods.jargon.core.exception.JargonException;
@@ -19,7 +17,7 @@ import org.irods.jargon.core.exception.JargonException;
  * contained in the .irodsEnv file. The main account attributes are immutable,
  * but certain elements are mutable as they may be updated during processing.
  * 
- * @author Mike Conway - DICE (www.irods.org) 
+ * @author Mike Conway - DICE (www.irods.org)
  * 
  */
 public final class IRODSAccount implements Serializable {
@@ -110,32 +108,36 @@ public final class IRODSAccount implements Serializable {
 				zone, defaultStorageResource);
 
 	}
-	
+
 	/**
-	 * Create a re-routed iRODS account using an initial account, and a host name to which the connection should be re-routed
-	 * @param initialAccount {@link IRODSAccount} for the initial connection
-	 * @param reroutedHostName <code>String</code> with the host name to which the connection should be routed.
+	 * Create a re-routed iRODS account using an initial account, and a host
+	 * name to which the connection should be re-routed
+	 * 
+	 * @param initialAccount
+	 *            {@link IRODSAccount} for the initial connection
+	 * @param reroutedHostName
+	 *            <code>String</code> with the host name to which the connection
+	 *            should be routed.
 	 * @return <code>IRODSAccount</code> connected to the new host.
 	 * @throws JargonException
 	 */
-	public static IRODSAccount instanceForReroutedHost(final IRODSAccount initialAccount, final String reroutedHostName) throws JargonException {
-		
+	public static IRODSAccount instanceForReroutedHost(
+			final IRODSAccount initialAccount, final String reroutedHostName)
+			throws JargonException {
+
 		if (initialAccount == null) {
 			throw new IllegalArgumentException("null initialAccount");
 		}
-		
+
 		if (reroutedHostName == null || reroutedHostName.isEmpty()) {
 			throw new IllegalArgumentException("null or empty reroutedHostName");
 		}
-		
-		return new IRODSAccount(reroutedHostName,
-				initialAccount.getPort(),
-				initialAccount.getUserName(),
-				initialAccount.getPassword(),
-				initialAccount.getHomeDirectory(),
-				initialAccount.getZone(), 
+
+		return new IRODSAccount(reroutedHostName, initialAccount.getPort(),
+				initialAccount.getUserName(), initialAccount.getPassword(),
+				initialAccount.getHomeDirectory(), initialAccount.getZone(),
 				initialAccount.getDefaultStorageResource());
-		
+
 	}
 
 	/**
