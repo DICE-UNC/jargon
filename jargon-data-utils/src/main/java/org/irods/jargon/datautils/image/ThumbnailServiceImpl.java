@@ -180,8 +180,7 @@ public class ThumbnailServiceImpl implements ThumbnailService {
 		// generated thumbnail
 
 		StringBuilder sb = new StringBuilder();
-
-		sb.append("makeThumbnailFromObj {\n");
+		sb.append("@external\n makeThumbnailFromObj {\n");
 		sb.append("msiSplitPath(*objPath,*collName,*objName);\n");
 		sb.append(" msiAddSelectFieldToGenQuery(\"DATA_PATH\", \"null\", *GenQInp);\n");
 		sb.append("msiAddSelectFieldToGenQuery(\"RESC_LOC\", \"null\", *GenQInp);\n");
@@ -192,6 +191,7 @@ public class ThumbnailServiceImpl implements ThumbnailService {
 		sb.append("foreach (*GenQOut)\n{\n");
 		sb.append(" msiGetValByKey(*GenQOut, \"DATA_PATH\", *data_path);\n");
 		sb.append("msiGetValByKey(*GenQOut, \"RESC_LOC\", *resc_loc);\n}\n");
+		//sb.append("msiExecCmd(\"makeThumbnail.py\", \"'*data_path'\", *resc_loc, \"null\", \"null\", *CmdOut);\n");
 		sb.append("msiExecCmd(\"makeThumbnail.py\", \"'*data_path'\", *resc_loc, \"null\", \"null\", *CmdOut);\n");
 		sb.append("msiGetStdoutInExecCmdOut(*CmdOut, *StdoutStr);\n");
 		sb.append(" writeLine(\"stdout\", *StdoutStr);\n}\n");

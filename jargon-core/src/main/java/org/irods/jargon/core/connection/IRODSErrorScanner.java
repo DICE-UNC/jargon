@@ -42,7 +42,7 @@ public class IRODSErrorScanner {
 			errorEnum = ErrorEnum.valueOf(infoValue);
 		} catch (IllegalArgumentException ie) {
 			throw new JargonException(
-					"error code received from iRODS, not in ErrorEnum translation table",
+					"error code received from iRODS, not in ErrorEnum translation table:" + infoValue,
 					infoValue);
 		}
 

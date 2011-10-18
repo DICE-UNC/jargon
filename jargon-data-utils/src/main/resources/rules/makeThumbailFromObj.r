@@ -33,6 +33,7 @@ makeThumbnailFromObj
 	
 	#### Testing
 	writeLine("stdout", *StdoutStr);
+
 }
-INPUT *objPath='/lifelibZone/home/mconway/personal/photos/1250361556689.jpg', *resource='lifelibResc1', *dummy=1
-OUTPUT ruleExecOut,*StdoutStr
+INPUT *objPath="/lifelibZone/home/adetorcy/IMG 20110426_165927.jpg", *resource="lifelibResc1"
+OUTPUT ruleExecOut
