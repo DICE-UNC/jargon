@@ -1058,6 +1058,44 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 		Assert.assertTrue("was not a data object", isDataObject);
 
 	}
+	
+	@Test
+	public void testGetFullObjectForTypeDataObjectEmbeddedPlusAndSpacesInDataName() throws Exception {
+
+		String testCollName = "2003_01_26_02 + band";
+		String testFileName = "106-0653_IMG.JPG";
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String fileNameOrig = FileGenerator.generateFileOfFixedLengthGivenName(
+				absPath, testFileName, 2);
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + "/" + testCollName);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
+		DataObjectAO dataObjectAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
+		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetIrodsCollection);
+		irodsFile.mkdirs();
+		dataObjectAO.putLocalDataObjectToIRODS(new File(fileNameOrig),
+				irodsFile, true);
+		CollectionAndDataObjectListAndSearchAO listAndSearchAO = irodsFileSystem
+				.getIRODSAccessObjectFactory()
+				.getCollectionAndDataObjectListAndSearchAO(irodsAccount);
+
+		Object actual = listAndSearchAO
+				.getFullObjectForType(targetIrodsCollection 
+						+ "/" + testFileName);
+		irodsFileSystem.close();
+		Assert.assertNotNull("object was null", actual);
+		boolean isDataObject = actual instanceof DataObject;
+		Assert.assertTrue("was not a data object", isDataObject);
+
+	}
 
 	@Test
 	public void testGetFullObjectForCollection() throws Exception {

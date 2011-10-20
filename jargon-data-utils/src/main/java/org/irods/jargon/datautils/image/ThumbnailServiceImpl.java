@@ -15,7 +15,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import org.apache.commons.codec.binary.Base64;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.DataObjectAO;
@@ -23,6 +22,7 @@ import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 import org.irods.jargon.core.pub.RuleProcessingAO;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.rule.IRODSRuleExecResult;
+import org.irods.jargon.core.utils.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -217,7 +217,7 @@ public class ThumbnailServiceImpl implements ThumbnailService {
 		}
 
 		InputStream is = new java.io.ByteArrayInputStream(
-				Base64.decodeBase64(execOut));
+				Base64.fromString(execOut));
 		return is;
 
 	}

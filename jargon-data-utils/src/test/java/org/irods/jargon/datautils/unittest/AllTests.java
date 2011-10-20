@@ -3,6 +3,7 @@ package org.irods.jargon.datautils.unittest;
 import org.irods.jargon.datautils.connection.ConnectionCreatingPoolableObjectFactoryTest;
 import org.irods.jargon.datautils.connection.TempPasswordCachingProtocolManagerTest;
 import org.irods.jargon.datautils.datacache.DataCacheServiceImplTest;
+import org.irods.jargon.datautils.image.ImageServiceFactoryImplTest;
 import org.irods.jargon.datautils.image.ThumbnailServiceImplTest;
 import org.irods.jargon.datautils.synchproperties.SynchPropertiesServiceImplTest;
 import org.irods.jargon.datautils.tree.FileTreeDiffEntryTest;
@@ -17,7 +18,7 @@ import org.junit.runners.Suite;
 		DataCacheServiceImplTest.class,
 		ConnectionCreatingPoolableObjectFactoryTest.class,
 		TempPasswordCachingProtocolManagerTest.class,
-		ThumbnailServiceImplTest.class })
+		ThumbnailServiceImplTest.class, ImageServiceFactoryImplTest.class})
 public class AllTests {
 
 }
