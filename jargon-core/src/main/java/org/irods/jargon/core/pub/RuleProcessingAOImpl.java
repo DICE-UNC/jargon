@@ -101,7 +101,6 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements
 		
 		/*
 		 * if iRODS 3.0+, add the @external parameter to the rule body 
-		 * FIXME: @external necessity TBD
 		 */
 		/*
 		if (this.getIRODSServerProperties().isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods3.0")) {
@@ -109,7 +108,8 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements
 			StringBuilder bodyWithExtern = new StringBuilder("@external\n");
 			bodyWithExtern.append(irodsRuleAsString);
 			irodsRuleAsString = bodyWithExtern.toString();
-		} */
+		} 
+		*/
 	
 		final IRODSRule irodsRule = irodsRuleTranslator
 				.translatePlainTextRuleIntoIRODSRule(irodsRuleAsString);
