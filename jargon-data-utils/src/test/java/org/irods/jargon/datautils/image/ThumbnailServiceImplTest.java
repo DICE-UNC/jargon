@@ -296,5 +296,6 @@ public class ThumbnailServiceImplTest {
 				&& actual.isFile());
 
 	}
+	
 
 }

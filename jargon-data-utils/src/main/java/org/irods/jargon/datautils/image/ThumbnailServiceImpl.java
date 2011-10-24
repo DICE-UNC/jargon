@@ -191,7 +191,6 @@ public class ThumbnailServiceImpl implements ThumbnailService {
 		sb.append("foreach (*GenQOut)\n{\n");
 		sb.append(" msiGetValByKey(*GenQOut, \"DATA_PATH\", *data_path);\n");
 		sb.append("msiGetValByKey(*GenQOut, \"RESC_LOC\", *resc_loc);\n}\n");
-		//sb.append("msiExecCmd(\"makeThumbnail.py\", \"'*data_path'\", *resc_loc, \"null\", \"null\", *CmdOut);\n");
 		sb.append("msiExecCmd(\"makeThumbnail.py\", \"'*data_path'\", *resc_loc, \"null\", \"null\", *CmdOut);\n");
 		sb.append("msiGetStdoutInExecCmdOut(*CmdOut, *StdoutStr);\n");
 		sb.append(" writeLine(\"stdout\", *StdoutStr);\n}\n");
@@ -200,7 +199,7 @@ public class ThumbnailServiceImpl implements ThumbnailService {
 		sb.append("\',*resource=\'");
 		sb.append(irodsAccount.getDefaultStorageResource());
 		sb.append("'\n");
-		sb.append("OUTPUT ruleExecOut%");
+		sb.append("OUTPUT ");
 		sb.append(THUMBNAIL_RULE_DATA_PARAMETER);
 		RuleProcessingAO ruleProcessingAO = getIrodsAccessObjectFactory()
 				.getRuleProcessingAO(getIrodsAccount());
@@ -291,6 +290,9 @@ public class ThumbnailServiceImpl implements ThumbnailService {
 		return targetTempFile;
 	}
 
+	
+	
+	
 	/**
 	 * @return the irodsAccessObjectFactory
 	 */

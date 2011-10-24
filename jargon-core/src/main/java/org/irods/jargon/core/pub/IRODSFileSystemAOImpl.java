@@ -1250,8 +1250,6 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 		} catch (JargonFileOrCollAlreadyExistsException jfcae) {
 			log.error("file or collection already exists");
 			throw jfcae;
-		} catch (JargonException je) {
-			log.warn("jargon exception creating file", je);
 		}
 		log.info("file created and closed");
 		return fileId;

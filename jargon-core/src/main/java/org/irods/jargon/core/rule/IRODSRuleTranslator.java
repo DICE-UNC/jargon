@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 
+import org.irods.jargon.core.connection.IRODSServerProperties;
 import org.irods.jargon.core.exception.JargonException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,12 +20,33 @@ public class IRODSRuleTranslator {
 
 	private static final String SPLAT = "*";
 	private Logger log = LoggerFactory.getLogger(this.getClass());
+	private final IRODSServerProperties irodsServerProperties;
 
+	public IRODSRuleTranslator(final IRODSServerProperties irodsServerProperties) {
+		if (irodsServerProperties == null) {
+			throw new IllegalArgumentException("null irodsServerProperties");
+		}
+		this.irodsServerProperties = irodsServerProperties;
+	}
+
+	/**
+	 * Given a string representing an iRODS rule (including the rule body, as
+	 * well as input and output lines, produce a translated rule object to send
+	 * to iRODS.
+	 * 
+	 * @param ruleAsPlainText
+	 *            <code>String</code> with the rule body and input and output
+	 *            parameters
+	 * @return {@link IRODSRule}
+	 * @throws JargonRuleException
+	 * @throws JargonException
+	 */
 	public IRODSRule translatePlainTextRuleIntoIRODSRule(
 			final String ruleAsPlainText) throws JargonRuleException,
 			JargonException {
+
 		if (ruleAsPlainText == null || ruleAsPlainText.isEmpty()) {
-			throw new JargonRuleException("null or empty rule text");
+			throw new IllegalArgumentException("null or empty rule text");
 		}
 
 		log.info("translating rule: {}", ruleAsPlainText);
@@ -56,6 +78,137 @@ public class IRODSRuleTranslator {
 				inputParameters, outputParameters, ruleBody);
 
 		return irodsRule;
+	}
+
+	/**
+	 * Given a string representing an iRODS rule (including the rule body, as
+	 * well as input and output lines, produce a translated rule object to send
+	 * to iRODS.
+	 * 
+	 * @param ruleAsPlainText
+	 *            <code>String</code> with the rule body and input and output
+	 *            parameters
+	 * @return {@link IRODSRule}
+	 * @throws JargonRuleException
+	 * @throws JargonException
+	 */
+	public IRODSRule translatePlainTextRuleIntoIRODSRule(
+			final String ruleAsPlainText,
+			final List<IRODSRuleParameter> overrideInputParameters)
+			throws JargonRuleException, JargonException {
+
+		if (ruleAsPlainText == null || ruleAsPlainText.isEmpty()) {
+			throw new IllegalArgumentException("null or empty rule text");
+		}
+
+		log.info("translating rule: {}", ruleAsPlainText);
+		StringTokenizer tokens = new StringTokenizer(ruleAsPlainText, "\n");
+		List<String> tokenLines = new ArrayList<String>();
+
+		while (tokens.hasMoreElements()) {
+			tokenLines.add(tokens.nextToken());
+		}
+
+		String ruleBody = processRuleBody(tokenLines);
+
+		if (tokenLines.size() < 3) {
+			log.error(
+					"unable to find the required lines (rule body, input parameters, output parameters) in rule body:{}",
+					ruleAsPlainText);
+			throw new JargonRuleException(
+					"Rule requires at least 3 lines for body, input, and output parameters");
+		}
+
+		// process the rule attributes, line above last
+		List<IRODSRuleParameter> inputParameters = processRuleInputAttributesLine(tokenLines
+				.get(tokenLines.size() - 2));
+
+		if (overrideInputParameters != null) {
+			log.info("will override parameters");
+			inputParameters = collateOverridesIntoInputParameters(
+					overrideInputParameters, inputParameters);
+		}
+
+		List<IRODSRuleParameter> outputParameters = processRuleOutputAttributesLine(tokenLines
+				.get(tokenLines.size() - 1));
+
+		IRODSRule irodsRule = IRODSRule.instance(ruleAsPlainText,
+				inputParameters, outputParameters, ruleBody);
+
+		return irodsRule;
+	}
+
+	/**
+	 * Given a set of derived input parameters (coming from the supplied rule
+	 * body), and a set of overrides, arrive at the combined set.
+	 * 
+	 * @param overrideInputParameters
+	 *            <code>List</code> of {@link IRODSRuleParameter} which contains
+	 *            the supplied set of input parameters that should override
+	 *            those derived from the rule body.
+	 * @param inputParameters
+	 *            <code>List</code> of {@link IRODSRuleParameter} which contains
+	 *            the input parameters as derived from the iRODS rule body
+	 * @return <code>List</code> of {@link IRODSRuleParameter} with the collated
+	 *         rule input parameters, including overrides
+	 */
+	protected List<IRODSRuleParameter> collateOverridesIntoInputParameters(
+			final List<IRODSRuleParameter> overrideInputParameters,
+			List<IRODSRuleParameter> inputParameters) {
+
+		if (overrideInputParameters == null) {
+			throw new IllegalArgumentException("null overrideInputParameters");
+		}
+
+		if (inputParameters == null) {
+			throw new IllegalArgumentException("null inputParameters");
+		}
+
+		List<IRODSRuleParameter> overriddenParms = new ArrayList<IRODSRuleParameter>();
+
+		/*
+		 * Look at current params, if they have an override, then save the
+		 * override, otherwise, propogate the current value
+		 */
+		for (IRODSRuleParameter current : inputParameters) {
+			boolean found = false;
+			for (IRODSRuleParameter override : overrideInputParameters) {
+				// try to find an overriding
+				if (current.getUniqueName().equals(override.getUniqueName())) {
+					overriddenParms.add(override);
+					found = true;
+				}
+			}
+
+			if (!found) {
+				// no override found, propogate current over
+				overriddenParms.add(current);
+			}
+		}
+
+		// I may have overrides that are not in current, propagate those over
+		// too
+
+		for (IRODSRuleParameter override : overrideInputParameters) {
+			boolean found = false;
+			for (IRODSRuleParameter current : overriddenParms) {
+				// try to find the corresponding current
+				if (current.getUniqueName().equals(override.getUniqueName())) {
+					found = true;
+				}
+			}
+
+			if (!found) {
+				// no current found, propogate current over
+				overriddenParms.add(override);
+			}
+
+			log.info("replacing original parms with overridden parms:{}",
+					overriddenParms);
+			inputParameters = overriddenParms;
+
+		}
+		return inputParameters;
 	}
 
 	/**
@@ -122,10 +275,9 @@ public class IRODSRuleTranslator {
 		List<IRODSRuleParameter> outputAttributes = new ArrayList<IRODSRuleParameter>();
 
 		StringTokenizer outputParmsTokenizer = null;
-		
-		outputParmsTokenizer = new StringTokenizer(outputAttributesLine,
-					"%");
-		
+
+		outputParmsTokenizer = new StringTokenizer(outputAttributesLine, "%");
+
 		while (outputParmsTokenizer.hasMoreTokens()) {
 			outputAttributes.add(processOutputParmsToken(outputParmsTokenizer
 					.nextToken().trim()));
@@ -180,13 +332,21 @@ public class IRODSRuleTranslator {
 		int idxInput = inputAttributesLine.indexOf("INPUT");
 
 		if (idxInput > -1) {
-			inputAttributesLine = inputAttributesLine.substring(idxInput + 5);
+			inputAttributesLine = inputAttributesLine.substring(idxInput + 5)
+					.trim();
 		}
 
 		List<IRODSRuleParameter> inputAttributes = new ArrayList<IRODSRuleParameter>();
 
 		if (inputAttributesLine.equals("null")) {
-			inputAttributes.add(new IRODSRuleParameter());
+			if (irodsServerProperties
+					.isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods3.0")
+					&& idxInput > -1) {
+				log.info("no null prop for new format irods rules");
+			} else {
+				log.info("adding null param for old style rule");
+				inputAttributes.add(new IRODSRuleParameter());
+			}
 			return inputAttributes;
 		}
 
@@ -282,5 +442,28 @@ public class IRODSRuleTranslator {
 		log.debug("parm value: {}", val);
 
 		return new IRODSRuleParameter(parmName, val);
+	}
+
+	/**
+	 * Convenience method that uses a simple heuristic to determine whether the
+	 * given rule uses the 'new' rule syntax.
+	 * 
+	 * @param ruleText
+	 *            <code>String</code> with the rule body
+	 * @return <code>boolean</code> that will be <code>true</code> if the rule
+	 *         is using the new syntax
+	 */
+	public static final boolean isUsingNewRuleSyntax(final String ruleText) {
+		if (ruleText == null || ruleText.isEmpty()) {
+			throw new IllegalArgumentException("null or empty ruleText");
+		}
+		boolean isNew = false;
+
+		if (ruleText.indexOf('|') == -1 && ruleText.indexOf('{') > -1) {
+			isNew = true;
+		}
+
+		return isNew;
+
 	}
 }

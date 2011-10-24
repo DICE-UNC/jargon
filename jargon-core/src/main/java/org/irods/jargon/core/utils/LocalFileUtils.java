@@ -8,6 +8,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.StringWriter;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.DateFormat;
@@ -16,6 +18,7 @@ import java.util.zip.CRC32;
 import java.util.zip.CheckedInputStream;
 
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.pub.RuleProcessingAOImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -288,6 +291,53 @@ public class LocalFileUtils {
 		}
 
 		return sb.toString();
+	}
+	
+	/**
+	 * Given a path to a classpath resource, return that resource data as a string
+	 * @param resourcePath <code>String</code> for a classpath resource
+	 * @return <code>String</code> with the String value of that resource data
+	 * @throws JargonException
+	 */
+	public static String getClasspathResourceFileAsString(final String resourcePath)
+			throws JargonException {
+		
+		
+		if (resourcePath == null || resourcePath.isEmpty()) {
+			throw new IllegalArgumentException("null or empty resourcePath");
+		}
+		
+		InputStreamReader resourceReader = new InputStreamReader(
+				new BufferedInputStream(
+						RuleProcessingAOImpl.class
+								.getResourceAsStream(resourcePath)));
+
+		StringWriter writer = null;
+		String ruleString = null;
+
+		try {
+			writer = new StringWriter();
+			char[] buff = new char[1024];
+			int i = 0;
+			while ((i = resourceReader.read(buff)) > -1) {
+				writer.write(buff, 0, i);
+			}
+
+			ruleString = writer.toString();
+
+		} catch (IOException ioe) {
+			log.error("io exception reading rule data from resource", ioe);
+			throw new JargonException("error reading rule from resource", ioe);
+		} finally {
+			try {
+				resourceReader.close();
+				writer.close();
+			} catch (IOException e) {
+				// ignore
+			}
+
+		}
+		return ruleString;
 	}
 
 }

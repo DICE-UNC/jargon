@@ -1,25 +1,31 @@
 package org.irods.jargon.core.pub;
 
-import java.util.Date;
+import java.io.File;
+import java.io.StringReader;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
 import junit.framework.Assert;
 
 import org.irods.jargon.core.connection.IRODSAccount;
-import org.irods.jargon.core.connection.IRODSProtocolManager;
-import org.irods.jargon.core.connection.IRODSSession;
+import org.irods.jargon.core.connection.IRODSServerProperties;
 import org.irods.jargon.core.connection.IRODSSimpleProtocolManager;
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.pub.RuleProcessingAO.RuleProcessingType;
 import org.irods.jargon.core.pub.domain.DelayedRuleExecution;
 import org.irods.jargon.core.pub.io.IRODSFile;
+import org.irods.jargon.core.pub.io.IRODSFileFactory;
+import org.irods.jargon.core.pub.io.IRODSFileWriter;
 import org.irods.jargon.core.rule.IRODSRuleExecResult;
+import org.irods.jargon.core.rule.IRODSRuleParameter;
 import org.irods.jargon.core.utils.LocalFileUtils;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.irods.jargon.testutils.filemanip.FileGenerator;
 import org.irods.jargon.testutils.icommandinvoke.IcommandInvoker;
 import org.irods.jargon.testutils.icommandinvoke.IrodsInvocationContext;
 import org.irods.jargon.testutils.icommandinvoke.icommands.IputCommand;
+import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -32,6 +38,7 @@ public class RuleProcessingAOImplTest {
 	public static final String IRODS_TEST_SUBDIR_PATH = "RuleProcessingAOImplTest";
 	private static org.irods.jargon.testutils.IRODSTestSetupUtilities irodsTestSetupUtilities = null;
 	private static org.irods.jargon.testutils.AssertionHelper assertionHelper = null;
+	private static IRODSFileSystem irodsFileSystem;
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -46,30 +53,27 @@ public class RuleProcessingAOImplTest {
 		irodsTestSetupUtilities
 				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
 		assertionHelper = new org.irods.jargon.testutils.AssertionHelper();
+		irodsFileSystem = IRODSFileSystem.instance();
+	}
+
+	@AfterClass
+	public static void tearDown() throws Exception {
+		irodsFileSystem.closeAndEatExceptions();
 	}
 
 	@Test
 	public void testExecuteRule() throws Exception {
-		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager
-				.instance();
+		IRODSSimpleProtocolManager.instance();
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSSession irodsSession = IRODSSession
-				.instance(irodsConnectionManager);
-		IRODSAccessObjectFactory accessObjectFactory = IRODSAccessObjectFactoryImpl
-				.instance(irodsSession);
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
 		RuleProcessingAO ruleProcessingAO = accessObjectFactory
 				.getRuleProcessingAO(irodsAccount);
 		String ruleString = "ListAvailableMS||msiListEnabledMS(*KVPairs)##writeKeyValPairs(stdout,*KVPairs, \": \")|nop\n*A=hello\n ruleExecOut";
-	
-		Date before = new Date();
+
 		IRODSRuleExecResult result = ruleProcessingAO.executeRule(ruleString);
-		irodsSession.closeSession();
-		
-	Date after = new Date();
-		
-		System.out.println(">>>>>>>>>>>>>>>>>>>without delay:" + String.valueOf(after.getTime() - before.getTime()));
-		
 
 		String execOut = (String) result.getOutputParameterResults()
 				.get(RuleProcessingAOImpl.RULE_EXEC_OUT).getResultObject();
@@ -78,29 +82,198 @@ public class RuleProcessingAOImplTest {
 		Assert.assertNotNull("did not get exec out", execOut.length() > 0);
 
 	}
-	
+
 	@Test
-	public void testExecuteRuleWithDelay() throws Exception {
-		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager
-				.instance();
+	public void testExecuteRuleNewSyntax() throws Exception {
+
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSSession irodsSession = IRODSSession
-				.instance(irodsConnectionManager);
-		IRODSAccessObjectFactory accessObjectFactory = IRODSAccessObjectFactoryImpl
-				.instance(irodsSession);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
+						irodsAccount);
+		IRODSServerProperties props = environmentalInfoAO
+				.getIRODSServerPropertiesFromIRODSServer();
+
+		if (!props.isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods3.0")) {
+			return;
+		}
+
+		RuleProcessingAO ruleProcessingAO = accessObjectFactory
+				.getRuleProcessingAO(irodsAccount);
+		String ruleString = "HelloWorld { \n writeLine(\"stdout\", \"Hello, world!\");\n}\nINPUT null\nOUTPUT ruleExecOut\n";
+
+		IRODSRuleExecResult result = ruleProcessingAO.executeRule(ruleString);
+		Assert.assertNotNull("null result from rule execution", result);
+
+	}
+
+	@Test
+	public void testExecuteRuleFromResourceFileNullParmOverrides()
+			throws Exception {
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
+						irodsAccount);
+		IRODSServerProperties props = environmentalInfoAO
+				.getIRODSServerPropertiesFromIRODSServer();
+
+		if (!props.isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods3.0")) {
+			return;
+		}
+
+		String ruleFile = "/rules/rulemsiGetIcatTime.r";
+
+		RuleProcessingAO ruleProcessingAO = accessObjectFactory
+				.getRuleProcessingAO(irodsAccount);
+
+		IRODSRuleExecResult result = ruleProcessingAO.executeRuleFromResource(
+				ruleFile, null, RuleProcessingType.EXTERNAL);
+		String execOut = (String) result.getOutputParameterResults()
+				.get(RuleProcessingAOImpl.RULE_EXEC_OUT).getResultObject();
+		Assert.assertNotNull("null execOut", execOut);
+
+	}
+	
+	@Test
+	public void testExecuteRuleFromResourceWithOverrides()
+			throws Exception {
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
+						irodsAccount);
+		IRODSServerProperties props = environmentalInfoAO
+				.getIRODSServerPropertiesFromIRODSServer();
+
+		if (!props.isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods3.0")) {
+			return;
+		}
+
+		String ruleFile = "/rules/rulemsiDataObjChksum.r";
+		
+		// place a test file to checksum
+		
+		String testFileName = "testExecuteRuleFromResourceWithOverrides.txt";
+
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String localFileName = FileGenerator
+				.generateFileOfFixedLengthGivenName(absPath, testFileName, 300);
+
+		String targetIrodsFile = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
+								+ testFileName);
+		File localFile = new File(localFileName);
+
+		IRODSFileFactory irodsFileFactory = irodsFileSystem
+				.getIRODSFileFactory(irodsAccount);
+		IRODSFile destFile = irodsFileFactory
+				.instanceIRODSFile(targetIrodsFile);
+		DataTransferOperations dataTransferOperationsAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataTransferOperations(
+						irodsAccount);
+
+		dataTransferOperationsAO.putOperation(localFile, destFile, null, null);
+
+		RuleProcessingAO ruleProcessingAO = accessObjectFactory
+				.getRuleProcessingAO(irodsAccount);
+
+		// override the file name for  *dataObject
+		
+		List<IRODSRuleParameter> inputOverrides = new ArrayList<IRODSRuleParameter>();
+		inputOverrides.add(new IRODSRuleParameter("*dataObject", '"' + destFile.getAbsolutePath() + '"'));
+		
+		IRODSRuleExecResult result = ruleProcessingAO.executeRuleFromResource(
+				ruleFile, inputOverrides, RuleProcessingType.EXTERNAL);
+		String execOut = (String) result.getOutputParameterResults()
+				.get(RuleProcessingAOImpl.RULE_EXEC_OUT).getResultObject();
+		Assert.assertNotNull("null execOut", execOut);
+
+	}
+
+	@Test
+	public void testExecuteRuleFromIrodsFileNullParmOverrides()
+			throws Exception {
+
+	
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
+						irodsAccount);
+		IRODSServerProperties props = environmentalInfoAO
+				.getIRODSServerPropertiesFromIRODSServer();
+
+		if (!props.isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods3.0")) {
+			return;
+		}
+
+		String ruleFile = "/rules/rulemsiGetIcatTime.r";
+		String irodsRuleFile = "rulemsiGetIcatTime.r";
+		String targetIrodsCollection = testingPropertiesHelper
+		.buildIRODSCollectionAbsolutePathFromTestProperties(
+				testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		String ruleString = LocalFileUtils
+				.getClasspathResourceFileAsString(ruleFile);
+		IRODSFile irodsRuleFileAsFile = accessObjectFactory
+				.getIRODSFileFactory(irodsAccount).instanceIRODSFile(
+						targetIrodsCollection + "/" + irodsRuleFile);
+		irodsRuleFileAsFile.deleteWithForceOption();
+		IRODSFileWriter irodsFileWriter = accessObjectFactory
+				.getIRODSFileFactory(irodsAccount).instanceIRODSFileWriter(
+						targetIrodsCollection + "/" + irodsRuleFile);
+		char[] buff = new char[1024];
+		StringReader reader = new StringReader(ruleString);
+
+		int len = 0;
+		while ((len = reader.read(buff)) > -1) {
+			irodsFileWriter.write(buff, 0, len);
+		}
+
+		irodsFileWriter.close();
+		reader.close();
+
+		RuleProcessingAO ruleProcessingAO = accessObjectFactory
+				.getRuleProcessingAO(irodsAccount);
+
+		IRODSRuleExecResult result = ruleProcessingAO.executeRuleFromIRODSFile(
+				irodsRuleFileAsFile.getAbsolutePath(), null, RuleProcessingType.EXTERNAL);
+		String execOut = (String) result.getOutputParameterResults()
+				.get(RuleProcessingAOImpl.RULE_EXEC_OUT).getResultObject();
+		Assert.assertNotNull("null execOut", execOut);
+
+	}
+
+	@Test
+	public void testExecuteRuleWithDelay() throws Exception {
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
 		RuleProcessingAO ruleProcessingAO = accessObjectFactory
 				.getRuleProcessingAO(irodsAccount);
 		String ruleString = "ListAvailableMS||delayExec(<PLUSET>1m</PLUSET>,msiListEnabledMS(*KVPairs)##writeKeyValPairs(stdout,*KVPairs, \": \"),nop)|nop\n*A=hello\n ruleExecOut";
-		
-		Date before = new Date();
-		
+
 		IRODSRuleExecResult result = ruleProcessingAO.executeRule(ruleString);
-		Date after = new Date();
-		
-		System.out.println(">>>>>>>>>>>>>>>>>>>with delay:" + String.valueOf(after.getTime() - before.getTime()));
-		
-		irodsSession.closeSession();
 
 		String execOut = (String) result.getOutputParameterResults()
 				.get(RuleProcessingAOImpl.RULE_EXEC_OUT).getResultObject();
@@ -150,19 +323,15 @@ public class RuleProcessingAOImplTest {
 		ruleBuilder.append("*Action%*Condition%*Operation%*C%ruleExecOut");
 		String ruleString = ruleBuilder.toString();
 
-		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager
-				.instance();
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSSession irodsSession = IRODSSession
-				.instance(irodsConnectionManager);
-		IRODSAccessObjectFactory accessObjectFactory = IRODSAccessObjectFactoryImpl
-				.instance(irodsSession);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
 		RuleProcessingAO ruleProcessingAO = accessObjectFactory
 				.getRuleProcessingAO(irodsAccount);
 
 		IRODSRuleExecResult result = ruleProcessingAO.executeRule(ruleString);
-		irodsSession.closeSession();
 
 		Assert.assertNotNull("did not get a response", result);
 		Assert.assertEquals("did not get results for each output parameter", 5,
@@ -197,7 +366,6 @@ public class RuleProcessingAOImplTest {
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
 
-		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
 		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
 				.getIRODSAccessObjectFactory();
 		StringBuilder builder = new StringBuilder();
@@ -240,13 +408,8 @@ public class RuleProcessingAOImplTest {
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
 
-		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager
-				.instance();
-
-		IRODSSession irodsSession = IRODSSession
-				.instance(irodsConnectionManager);
-		IRODSAccessObjectFactory accessObjectFactory = IRODSAccessObjectFactoryImpl
-				.instance(irodsSession);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
 		StringBuilder builder = new StringBuilder();
 		builder.append("testClientAction||msiDataObjPut(");
 		builder.append(testingPropertiesHelper
@@ -262,7 +425,7 @@ public class RuleProcessingAOImplTest {
 				.getRuleProcessingAO(irodsAccount);
 
 		ruleProcessingAO.executeRule(builder.toString());
-		irodsSession.closeSession();
+
 	}
 
 	@Test
@@ -292,13 +455,8 @@ public class RuleProcessingAOImplTest {
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
 
-		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager
-				.instance();
-
-		IRODSSession irodsSession = IRODSSession
-				.instance(irodsConnectionManager);
-		IRODSAccessObjectFactory accessObjectFactory = IRODSAccessObjectFactoryImpl
-				.instance(irodsSession);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
 
 		StringBuilder builder = new StringBuilder();
 		builder.append("testClientAction||msiDataObjGet(");
@@ -318,7 +476,6 @@ public class RuleProcessingAOImplTest {
 				.getRuleProcessingAO(irodsAccount);
 
 		ruleProcessingAO.executeRule(builder.toString());
-		irodsSession.closeSession();
 
 		assertionHelper.assertLocalFileExistsInScratch(IRODS_TEST_SUBDIR_PATH
 				+ '/' + testFileGetName);
@@ -352,7 +509,6 @@ public class RuleProcessingAOImplTest {
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
 
-		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
 		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
 				.getIRODSAccessObjectFactory();
 		StringBuilder builder = new StringBuilder();
@@ -381,8 +537,6 @@ public class RuleProcessingAOImplTest {
 				.instanceIRODSFile(targetIrodsFileName);
 
 		Assert.assertTrue("file does not exist", putFile.exists());
-
-		irodsFileSystem.close();
 
 		Assert.assertNotNull("did not get a response", result);
 		Assert.assertEquals("did not get results for client side operation", 1,
@@ -416,7 +570,6 @@ public class RuleProcessingAOImplTest {
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
 
-		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
 		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
 				.getIRODSAccessObjectFactory();
 
@@ -462,9 +615,6 @@ public class RuleProcessingAOImplTest {
 				.instanceIRODSFile(targetIrodsFileName);
 
 		Assert.assertTrue("file does not exist", putFile.exists());
-
-		irodsFileSystem.close();
-
 		Assert.assertNotNull("did not get a response", result);
 	}
 
@@ -490,7 +640,7 @@ public class RuleProcessingAOImplTest {
 	public void testPurgeAllDelayedRuleExecutions() throws Exception {
 
 		// TODO: purge, add1, purge, test
-		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
+
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
 		RuleProcessingAO ruleProcessingAO = irodsFileSystem
@@ -498,7 +648,6 @@ public class RuleProcessingAOImplTest {
 				.getRuleProcessingAO(irodsAccount);
 
 		int countPurged = ruleProcessingAO.purgeAllDelayedExecQueue();
-		irodsFileSystem.close();
 		Assert.assertTrue("nothing purged", countPurged > 0);
 		List<DelayedRuleExecution> delayedRuleExecutions = ruleProcessingAO
 				.listAllDelayedRuleExecutions(0);
