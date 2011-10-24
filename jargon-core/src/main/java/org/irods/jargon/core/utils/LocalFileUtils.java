@@ -32,8 +32,9 @@ public class LocalFileUtils {
 
 	public static final Logger log = LoggerFactory
 			.getLogger(LocalFileUtils.class);
-	
-	public static final DateFormat dateFormat = DateFormat.getDateTimeInstance();
+
+	public static final DateFormat dateFormat = DateFormat
+			.getDateTimeInstance();
 
 	/**
 	 * private constructor, this is not meant to be an instantiated class.
@@ -45,49 +46,58 @@ public class LocalFileUtils {
 	/**
 	 * Parse a file name to get the stuff after the last '.' character to treat
 	 * as the file extension
-	 * @param fileName <code>String</code> with the file name to parse out.
+	 * 
+	 * @param fileName
+	 *            <code>String</code> with the file name to parse out.
 	 * @return <code>String</code> with the file extension
 	 */
 	public static String getFileExtension(final String fileName) {
 		if (fileName == null || fileName.isEmpty()) {
 			throw new IllegalArgumentException("null fileName");
 		}
-	
+
 		int lastDot = fileName.lastIndexOf('.');
 		if (lastDot == -1) {
 			return "";
 		} else {
-			return(fileName.substring(lastDot));
+			return (fileName.substring(lastDot));
 		}
-	
+
 	}
-	
+
 	/**
-	 * Parse a file name to get the stuff before last '.' character to treat
-	 * as the file name
-	 * @param fileName <code>String</code> with the file name to parse out.
-	 * @return <code>String</code> with the file name before the extension, without the '.'
+	 * Parse a file name to get the stuff before last '.' character to treat as
+	 * the file name
+	 * 
+	 * @param fileName
+	 *            <code>String</code> with the file name to parse out.
+	 * @return <code>String</code> with the file name before the extension,
+	 *         without the '.'
 	 */
 	public static String getFileNameUpToExtension(final String fileName) {
 		if (fileName == null || fileName.isEmpty()) {
 			throw new IllegalArgumentException("null fileName");
 		}
-	
+
 		int lastDot = fileName.lastIndexOf('.');
 		if (lastDot == -1) {
 			return "";
 		} else {
-			return(fileName.substring(0, lastDot));
+			return (fileName.substring(0, lastDot));
 		}
-	
+
 	}
-	
+
 	/**
 	 * Interpose a time stamp between the file name and extension
-	 * @param fileName <code>String</code> with the file name to parse out
-	 * @return <code>String</code> with the updated file name containing a time stamp
+	 * 
+	 * @param fileName
+	 *            <code>String</code> with the file name to parse out
+	 * @return <code>String</code> with the updated file name containing a time
+	 *         stamp
 	 */
-	public static String getFileNameWithTimeStampInterposed(final String fileName) {
+	public static String getFileNameWithTimeStampInterposed(
+			final String fileName) {
 		String namePart = getFileNameUpToExtension(fileName);
 		String extension = getFileExtension(fileName);
 		StringBuilder newName = new StringBuilder(namePart);
@@ -97,8 +107,7 @@ public class LocalFileUtils {
 		newName.append(extension);
 		return newName.toString();
 	}
-	
-	
+
 	/**
 	 * Count files in a directory (including files in all subdirectories)
 	 * 
@@ -292,21 +301,23 @@ public class LocalFileUtils {
 
 		return sb.toString();
 	}
-	
+
 	/**
-	 * Given a path to a classpath resource, return that resource data as a string
-	 * @param resourcePath <code>String</code> for a classpath resource
+	 * Given a path to a classpath resource, return that resource data as a
+	 * string
+	 * 
+	 * @param resourcePath
+	 *            <code>String</code> for a classpath resource
 	 * @return <code>String</code> with the String value of that resource data
 	 * @throws JargonException
 	 */
-	public static String getClasspathResourceFileAsString(final String resourcePath)
-			throws JargonException {
-		
-		
+	public static String getClasspathResourceFileAsString(
+			final String resourcePath) throws JargonException {
+
 		if (resourcePath == null || resourcePath.isEmpty()) {
 			throw new IllegalArgumentException("null or empty resourcePath");
 		}
-		
+
 		InputStreamReader resourceReader = new InputStreamReader(
 				new BufferedInputStream(
 						RuleProcessingAOImpl.class

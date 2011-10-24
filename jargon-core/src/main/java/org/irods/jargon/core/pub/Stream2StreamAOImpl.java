@@ -1,5 +1,6 @@
 package org.irods.jargon.core.pub;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -18,6 +19,7 @@ import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.io.IRODSFile;
+import org.irods.jargon.core.pub.io.IRODSFileOutputStream;
 import org.irods.jargon.core.utils.ChannelTools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -157,8 +159,12 @@ public class Stream2StreamAOImpl extends IRODSGenericAO implements
 
 	}
 
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.pub.Stream2StreamAO#transferStreamToFileUsingIOStreams(java.io.InputStream, java.io.File, long, int)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.Stream2StreamAO#transferStreamToFileUsingIOStreams
+	 * (java.io.InputStream, java.io.File, long, int)
 	 */
 	@Override
 	public void transferStreamToFileUsingIOStreams(
@@ -179,26 +185,30 @@ public class Stream2StreamAOImpl extends IRODSGenericAO implements
 		OutputStream fileOutputStream = null;
 
 		try {
-			
-			int outputBufferSize = this.getJargonProperties().getLocalFileOutputStreamBufferSize();
-			log.debug("output buffer size for file output stream in copy:{}", outputBufferSize);
-			
+
+			int outputBufferSize = this.getJargonProperties()
+					.getLocalFileOutputStreamBufferSize();
+			log.debug("output buffer size for file output stream in copy:{}",
+					outputBufferSize);
+
 			if (outputBufferSize == -1) {
 				log.info("no buffer on file output stream to local file");
-				fileOutputStream = new FileOutputStream(
-						targetFile);
+				fileOutputStream = new FileOutputStream(targetFile);
 			} else if (outputBufferSize == 0) {
 				log.info("default buffered io to file output stream to local file");
-				fileOutputStream = new BufferedOutputStream(new FileOutputStream(
-						targetFile));
+				fileOutputStream = new BufferedOutputStream(
+						new FileOutputStream(targetFile));
 			} else {
-				log.info("buffer io to file output stream to local file with size of: {}", outputBufferSize);
-				fileOutputStream = new BufferedOutputStream(new FileOutputStream(
-						targetFile), outputBufferSize);
+				log.info(
+						"buffer io to file output stream to local file with size of: {}",
+						outputBufferSize);
+				fileOutputStream = new BufferedOutputStream(
+						new FileOutputStream(targetFile), outputBufferSize);
 			}
-	
-			// see [#470] optimization - look at buffer sizes for read/write in stream2stream copy  - MC
-			
+
+			// see [#470] optimization - look at buffer sizes for read/write in
+			// stream2stream copy - MC
+
 			int doneCnt = -1;
 
 			byte buf[] = new byte[readBuffSize];
@@ -326,6 +336,62 @@ public class Stream2StreamAOImpl extends IRODSGenericAO implements
 		}
 
 		return bos.toByteArray();
+
+	}
+
+	
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.core.pub.Stream2StreamAO#streamClasspathResourceToIRODSFile(java.lang.String, java.lang.String)
+	 */
+	@Override
+	public void streamClasspathResourceToIRODSFile(final String resourcePath,
+			final String irodsFileAbsolutePath) throws JargonException {
+
+		if (resourcePath == null || resourcePath.isEmpty()) {
+			throw new IllegalArgumentException("null or empty resourcePath");
+		}
+
+		if (irodsFileAbsolutePath == null || irodsFileAbsolutePath.isEmpty()) {
+			throw new IllegalArgumentException(
+					"null or empty irodsFileAbsolutePath");
+		}
+		
+		IRODSFile irodsTarget = this.getIRODSFileFactory().instanceIRODSFile(irodsFileAbsolutePath);
+		irodsTarget.getParentFile().mkdirs();
+		irodsTarget.delete();
+
+		InputStream inputStream = new BufferedInputStream(this.getClass()
+				.getResourceAsStream(resourcePath));
+
+		IRODSFileOutputStream irodsFileOutputStream = this
+				.getIRODSFileFactory().instanceIRODSFileOutputStream(
+						irodsFileAbsolutePath);
+
+		byte[] buff = new byte[1024];
+
+		try {
+
+			int i = 0;
+			while ((i = inputStream.read(buff)) > -1) {
+				irodsFileOutputStream.write(buff, 0, i);
+			}
+
+		} catch (IOException ioe) {
+			log.error("io exception reading rule data from resource", ioe);
+			throw new JargonException("error reading rule from resource", ioe);
+		} finally {
+			try {
+				irodsFileOutputStream.close();
+			} catch (IOException e) {
+				// ignore
+			}
+			try {
+				inputStream.close();
+			} catch (IOException e) {
+				// ignore
+			}
+
+		}
 
 	}
 

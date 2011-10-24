@@ -17,6 +17,7 @@ import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 import org.irods.jargon.core.pub.IRODSFileSystem;
 import org.irods.jargon.core.pub.RuleProcessingAO;
+import org.irods.jargon.core.pub.Stream2StreamAO;
 import org.irods.jargon.core.rule.IRODSRule;
 import org.irods.jargon.core.rule.IRODSRuleExecResult;
 import org.irods.jargon.core.rule.IRODSRuleExecResultOutputParameter;
@@ -221,7 +222,7 @@ public class ThumbnailServiceImplTest {
 				&& actual.isFile());
 
 	}
-	
+
 	@Test(expected = IRODSThumbnailProcessUnavailableException.class)
 	public void testGenerateThumbnailForIRODSPathNoService() throws Exception {
 
@@ -296,6 +297,91 @@ public class ThumbnailServiceImplTest {
 				&& actual.isFile());
 
 	}
+
+	@Test
+	public void testGenerateThumbnailLocallyForIRODSPath() throws Exception {
+
+		/*
+		 * Grab the test image, base64 encode as a string and emulate return
+		 * from iRODS.
+		 */
+		String testDir = "testGenerateThumbnailLocallyForIRODSPath";
+		String imageFileName = "/img/irodsimg.png";
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory irodsAccessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
+		String targetIrodsFile = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH 
+								+ imageFileName);
+
+		Stream2StreamAO stream2StreamAO = irodsAccessObjectFactory
+				.getStream2StreamAO(irodsAccount);
+		stream2StreamAO.streamClasspathResourceToIRODSFile(imageFileName,
+				targetIrodsFile);
+
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH
+						+ "/" + testDir);
+		File workingDirAsFile = new File(absPath);
+		workingDirAsFile.mkdirs();
+
+		ThumbnailService thumbnailService = new ThumbnailServiceImpl(
+				irodsAccessObjectFactory, irodsAccount);
+		File actual = thumbnailService.createThumbnailLocally(workingDirAsFile,
+				targetIrodsFile, 100, 100);
+
+		Assert.assertNotNull("null file returned", actual);
+		Assert.assertTrue("file does not exist as file", actual.exists()
+				&& actual.isFile());
+
+	}
 	
+	@Test
+	public void testGenerateThumbnailLocallyForIRODSPathTwice() throws Exception {
+
+		/*
+		 * Grab the test image, base64 encode as a string and emulate return
+		 * from iRODS.
+		 */
+		String testDir = "testGenerateThumbnailLocallyForIRODSPathTwice";
+		String imageFileName = "/img/irodsimg.png";
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory irodsAccessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
+		String targetIrodsFile = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH 
+								+ imageFileName);
+
+		Stream2StreamAO stream2StreamAO = irodsAccessObjectFactory
+				.getStream2StreamAO(irodsAccount);
+		stream2StreamAO.streamClasspathResourceToIRODSFile(imageFileName,
+				targetIrodsFile);
+
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH
+						+ "/" + testDir);
+		File workingDirAsFile = new File(absPath);
+		workingDirAsFile.mkdirs();
+
+		ThumbnailService thumbnailService = new ThumbnailServiceImpl(
+				irodsAccessObjectFactory, irodsAccount);
+		File actual = thumbnailService.createThumbnailLocally(workingDirAsFile,
+				targetIrodsFile, 100, 100);
+		actual = thumbnailService.createThumbnailLocally(workingDirAsFile,
+				targetIrodsFile, 100, 100);
+
+		Assert.assertNotNull("null file returned", actual);
+		Assert.assertTrue("file does not exist as file", actual.exists()
+				&& actual.isFile());
+
+	}
 
 }

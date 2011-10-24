@@ -63,4 +63,14 @@ public interface Stream2StreamAO {
 			File targetFile, long length, int readBuffSize)
 			throws JargonException;
 
+	/**
+	 * Stream a class-path resource to a target iRODS file
+	 * @param resourcePath <code>String</code> with a path to a resource that can be loaded by the class loader.
+	 * @param irodsFileAbsolutePath <code>String</code> with an iRODS file absolute path to which the resource will
+	 * be loaded.
+	 * @throws JargonException
+	 */
+	void streamClasspathResourceToIRODSFile(String resourcePath,
+			String irodsFileAbsolutePath) throws JargonException;
+
 }

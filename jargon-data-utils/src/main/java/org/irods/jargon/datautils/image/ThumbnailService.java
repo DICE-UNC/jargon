@@ -54,4 +54,19 @@ public interface ThumbnailService {
 			final String irodsAbsolutePathToGenerateThumbnailFor)
 			throws JargonException;
 
+	/**
+	 * Create a thumb-nail by down-loading the file and processing the image locally.
+	 * @param workingDirectory <code>File</code> with the path to the top level of a working directory to hold the
+	 * thumbnail image.
+	 * @param irodsAbsolutePathToGenerateThumbnailFor <code>String</code> that is the absolute path to the iRODS file
+	 * for which a thumbnail will be generated.
+	 * @param thumbWidth <code>int</code> with the desired image width
+	 * @param thumbHeight <code>int</code> with the desired image height
+	 * @return {@link File} with the thumbnail image
+	 * @throws Exception
+	 */
+	File createThumbnailLocally(File workingDirectory,
+			String irodsAbsolutePathToGenerateThumbnailFor, int thumbWidth,
+			int thumbHeight) throws Exception;
+
 }

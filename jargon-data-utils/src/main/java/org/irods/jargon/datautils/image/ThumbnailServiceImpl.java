@@ -23,6 +23,7 @@ import org.irods.jargon.core.pub.RuleProcessingAO;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.rule.IRODSRuleExecResult;
 import org.irods.jargon.core.utils.Base64;
+import org.irods.jargon.core.utils.LocalFileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -106,7 +107,7 @@ public class ThumbnailServiceImpl implements ThumbnailService {
 
 		File targetTempFile = createWorkingDirectoryImageFile(workingDirectory,
 				irodsAbsolutePathToGenerateThumbnailFor);
-		
+
 		if (targetTempFile.exists()) {
 			targetTempFile.delete();
 		}
@@ -147,17 +148,20 @@ public class ThumbnailServiceImpl implements ThumbnailService {
 	private File createWorkingDirectoryImageFile(final File workingDirectory,
 			final String irodsAbsolutePathToGenerateThumbnailFor)
 			throws JargonException {
-		if (workingDirectory.exists() && workingDirectory.isDirectory()) {
-			// OK
+		if (workingDirectory.exists()) {
+			if (workingDirectory.isDirectory()) {
+				// OK
+			} else {
+				throw new IllegalArgumentException("workingDirectory is a file");
+			}
 		} else {
-			throw new IllegalArgumentException(
-					"working directory non existent or not a directory");
+			workingDirectory.mkdirs();
 		}
 
 		File targetTempFile = new File(workingDirectory,
 				irodsAbsolutePathToGenerateThumbnailFor);
 		targetTempFile.getParentFile().mkdirs();
-	
+
 		log.info("thumbnail target temp file:${}",
 				targetTempFile.getAbsolutePath());
 		return targetTempFile;
@@ -221,7 +225,14 @@ public class ThumbnailServiceImpl implements ThumbnailService {
 
 	}
 
-	// TODO: finish implementing and test...cache strategy, etc
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.datautils.image.ThumbnailService#createThumbnailLocally
+	 * (java.io.File, java.lang.String, int, int)
+	 */
+	@Override
 	public File createThumbnailLocally(final File workingDirectory,
 			final String irodsAbsolutePathToGenerateThumbnailFor,
 			int thumbWidth, int thumbHeight) throws Exception {
@@ -236,11 +247,15 @@ public class ThumbnailServiceImpl implements ThumbnailService {
 					"nul irodsAbsolutePathToGenerateThumbnailFor");
 		}
 
-		File targetTempFile = createWorkingDirectoryImageFile(workingDirectory,
+		File temp = new File(workingDirectory,
 				irodsAbsolutePathToGenerateThumbnailFor);
 
-		createWorkingDirectoryImageFile(workingDirectory,
-				irodsAbsolutePathToGenerateThumbnailFor);
+		StringBuilder targetTempBuilder = new StringBuilder(
+				LocalFileUtils.getFileNameUpToExtension(temp.getName()));
+		targetTempBuilder.append(".jpg");
+
+		File targetTempFile = createWorkingDirectoryImageFile(
+				temp.getParentFile(), targetTempBuilder.toString());
 
 		/*
 		 * Bring the image file down to the local file system to be the
@@ -290,9 +305,6 @@ public class ThumbnailServiceImpl implements ThumbnailService {
 		return targetTempFile;
 	}
 
-	
-	
-	
 	/**
 	 * @return the irodsAccessObjectFactory
 	 */
