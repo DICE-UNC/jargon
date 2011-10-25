@@ -15,6 +15,8 @@ import org.irods.jargon.core.exception.JargonException;
  * 
  */
 public interface JargonProperties {
+	
+	String getEncoding();
 
 	/**
 	 * Do I want parallel transfers at all?

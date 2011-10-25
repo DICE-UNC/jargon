@@ -41,6 +41,7 @@ public class SettableJargonProperties implements JargonProperties {
 	private int putBufferSize=4194304;
 	private int getBufferSize=4194304;
 	private int inputToOutputCopyBufferByteSize = 8192;
+	private String encoding = "UTF-8";
 
 
 	/**
@@ -99,6 +100,7 @@ public class SettableJargonProperties implements JargonProperties {
 		this.localFileOutputStreamBufferSize = jargonProperties.getLocalFileOutputStreamBufferSize();
 		this.putBufferSize = jargonProperties.getPutBufferSize();
 		this.getBufferSize = jargonProperties.getGetBufferSize();
+		this.encoding = jargonProperties.getEncoding();
 	}
 
 	/*
@@ -507,6 +509,22 @@ public class SettableJargonProperties implements JargonProperties {
 	public synchronized void setInputToOutputCopyBufferByteSize(
 			int inputToOutputCopyBufferByteSize) {
 		this.inputToOutputCopyBufferByteSize = inputToOutputCopyBufferByteSize;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.core.connection.JargonProperties#getEncoding()
+	 */
+	@Override
+	public synchronized String getEncoding() {
+		return encoding;
+	}
+	
+	public void setEncoding(final String encoding) {
+		if (encoding == null || encoding.isEmpty()) {
+			throw new IllegalArgumentException("encoding is null or empty");
+		} 
+		
+		this.encoding = encoding;
 	}
 
 }

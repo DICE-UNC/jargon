@@ -305,4 +305,9 @@ public class DefaultPropertiesJargonConfig implements JargonProperties {
 		return verifyPropExistsAndGetAsInt("parallel.socket.timeout");
 	}
 
+	@Override
+	public String getEncoding() {
+		return verifyPropExistsAndGetAsString("encoding");
+	}
+
 }

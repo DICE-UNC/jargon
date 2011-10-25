@@ -12,6 +12,7 @@ import org.irods.jargon.core.exception.InvalidUserException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.exception.JargonFileOrCollAlreadyExistsException;
 import org.irods.jargon.core.exception.NoAPIPrivException;
+import org.irods.jargon.core.exception.RemoteScriptExecutionException;
 import org.irods.jargon.core.protovalues.ErrorEnum;
 
 /**
@@ -79,6 +80,8 @@ public class IRODSErrorScanner {
 			throw new DataNotFoundException("unknown collection");
 		case CAT_COLLECTION_NOT_EMPTY:
 			throw new CollectionNotEmptyException("collection not empty", infoValue);
+		case EXEC_CMD_ERROR:
+			throw new RemoteScriptExecutionException("remote script execution error" + infoValue);
 		default:
 			throw new JargonException("error code recieved from iRODS:" + infoValue,
 					infoValue);

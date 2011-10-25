@@ -1,7 +1,11 @@
 package org.irods.jargon.core.pub;
 
+import java.util.List;
+
 import org.irods.jargon.core.connection.IRODSServerProperties;
+import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.pub.domain.RemoteCommandInformation;
 
 public interface EnvironmentalInfoAO extends IRODSAccessObject {
 
@@ -38,5 +42,28 @@ public interface EnvironmentalInfoAO extends IRODSAccessObject {
 	 * @throws JargonException
 	 */
 	boolean isStrictACLs() throws JargonException;
+
+	/**
+	 * List the available remote commands.  This is an experimental method subject to API change.
+	 * <p/>
+	 * Note that this command requires the cmd-scripts/listCommands.sh to be installed in the target iRODS server/cmd/bin 
+	 * directory, otherwise, a DataNotFoundException will be thrown.
+	 * @return
+	 * @throws DataNotFoundException if the <code>listCommands.sh</code> script is not in the iRODS remote exec bin directory
+	 * @throws JargonException
+	 */
+	List<RemoteCommandInformation> listAvailableRemoteCommands()
+			throws DataNotFoundException, JargonException;
+
+	/**
+	 * Generate a list of the available microservices on the target server.
+	 * <p/>
+	 * Note that the result will be in the format microservice name:module
+	 * 
+	 * This method will operate on iRODS servers version 3.0 and up.
+	 * @return <code>List<String></code> with the names of the available microservices.
+	 * @throws JargonException
+	 */
+	List<String> listAvailableMicroservices() throws JargonException;
 
 }
