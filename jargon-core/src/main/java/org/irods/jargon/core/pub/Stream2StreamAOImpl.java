@@ -367,7 +367,7 @@ public class Stream2StreamAOImpl extends IRODSGenericAO implements
 				.getIRODSFileFactory().instanceIRODSFileOutputStream(
 						irodsFileAbsolutePath);
 
-		byte[] buff = new byte[1024];
+		byte[] buff = new byte[4096];
 
 		try {
 

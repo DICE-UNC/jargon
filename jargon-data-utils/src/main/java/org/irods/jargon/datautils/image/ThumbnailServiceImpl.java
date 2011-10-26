@@ -14,12 +14,16 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.List;
 
 import org.irods.jargon.core.connection.IRODSAccount;
+import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.DataObjectAO;
+import org.irods.jargon.core.pub.EnvironmentalInfoAO;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 import org.irods.jargon.core.pub.RuleProcessingAO;
+import org.irods.jargon.core.pub.domain.RemoteCommandInformation;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.rule.IRODSRuleExecResult;
 import org.irods.jargon.core.utils.Base64;
@@ -79,6 +83,38 @@ public class ThumbnailServiceImpl implements ThumbnailService {
 
 		this.irodsAccessObjectFactory = irodsAccessObjectFactory;
 		this.irodsAccount = irodsAccount;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.datautils.image.ThumbnailService#
+	 * isIRODSThumbnailGeneratorAvailable()
+	 */
+	@Override
+	public boolean isIRODSThumbnailGeneratorAvailable() throws JargonException {
+		log.info("isIRODSThumbnailGeneratorAvailable()");
+		boolean found = false;
+		EnvironmentalInfoAO environmentalInfoAO = irodsAccessObjectFactory
+				.getEnvironmentalInfoAO(getIrodsAccount());
+		try {
+			List<RemoteCommandInformation> scripts = environmentalInfoAO
+					.listAvailableRemoteCommands();
+
+			for (RemoteCommandInformation script : scripts) {
+				if (script.getCommand().equals("makeThumbnail.py")) {
+					found = true;
+					break;
+				}
+			}
+
+			return found;
+
+		} catch (DataNotFoundException e) {
+			log.info("no ability to list commands, assume no thumbnail service");
+			return false;
+		}
+
 	}
 
 	/*
@@ -302,6 +338,87 @@ public class ThumbnailServiceImpl implements ThumbnailService {
 		encoder.setJPEGEncodeParam(param);
 		encoder.encode(thumbImage);
 		out.close();
+		
+		/*
+		 * If the original file is a .jpg, then don't delete the temp file, it
+		 * will be used by the caller. If the original is not a .jpg, then that
+		 * original file can be deleted, and the caller will delete the
+		 * thumbnail when required.
+		 */
+
+		if (!(temp.getAbsolutePath().equals(targetTempFile.getAbsolutePath()))) {
+			log.info("deleting intermediate temp file");
+			temp.delete();
+		}
+
+		
+		return targetTempFile;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.datautils.image.ThumbnailService#
+	 * createThumbnailLocallyViaJAI(java.io.File, java.lang.String, int)
+	 */
+	@Override
+	public File createThumbnailLocallyViaJAI(final File workingDirectory,
+			final String irodsAbsolutePathToGenerateThumbnailFor, int maxEdge)
+			throws Exception {
+
+		if (workingDirectory == null) {
+			throw new IllegalArgumentException("null workingDirectory");
+		}
+
+		if (irodsAbsolutePathToGenerateThumbnailFor == null
+				|| irodsAbsolutePathToGenerateThumbnailFor.isEmpty()) {
+			throw new IllegalArgumentException(
+					"nul irodsAbsolutePathToGenerateThumbnailFor");
+		}
+
+		File temp = new File(workingDirectory,
+				irodsAbsolutePathToGenerateThumbnailFor);
+
+		StringBuilder targetTempBuilder = new StringBuilder(
+				LocalFileUtils.getFileNameUpToExtension(temp.getName()));
+		targetTempBuilder.append(".png");
+
+		File targetTempFile = createWorkingDirectoryImageFile(
+				temp.getParentFile(), targetTempBuilder.toString());
+
+		/*
+		 * Bring the image file down to the local file system to be the
+		 * thumbnail source
+		 */
+
+		log.info("bringing down image to generate thumbnail");
+		IRODSFile sourceAsFile = this.getIrodsAccessObjectFactory()
+				.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(irodsAbsolutePathToGenerateThumbnailFor);
+		DataObjectAO dataObjectAO = this.getIrodsAccessObjectFactory()
+				.getDataObjectAO(irodsAccount);
+
+		dataObjectAO.getDataObjectFromIrods(sourceAsFile, temp);
+		log.info("image retrieved to: {}, make thumbnail...",
+				targetTempFile.getAbsolutePath());
+
+		ImageTool imageTool = new ImageTool();
+		imageTool.load(temp.getAbsolutePath());
+		imageTool.thumbnail(maxEdge);
+		imageTool.writeResult(targetTempFile.getAbsolutePath(), "PNG");
+
+		/*
+		 * If the original file is a .png, then don't delete the temp file, it
+		 * will be used by the caller. If the original is not a .png, then that
+		 * original file can be deleted, and the caller will delete the
+		 * thumbnail when required.
+		 */
+
+		if (!(temp.getAbsolutePath().equals(targetTempFile.getAbsolutePath()))) {
+			log.info("deleting intermediate temp file");
+			temp.delete();
+		}
+
 		return targetTempFile;
 	}
 

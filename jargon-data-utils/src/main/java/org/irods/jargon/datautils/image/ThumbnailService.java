@@ -55,7 +55,8 @@ public interface ThumbnailService {
 			throws JargonException;
 
 	/**
-	 * Create a thumb-nail by down-loading the file and processing the image locally.
+	 * Create a thumb-nail by down-loading the file and processing the image locally.  This version uses the AWT image
+	 * processing code, and creates a .jpg thumbnail.
 	 * @param workingDirectory <code>File</code> with the path to the top level of a working directory to hold the
 	 * thumbnail image.
 	 * @param irodsAbsolutePathToGenerateThumbnailFor <code>String</code> that is the absolute path to the iRODS file
@@ -68,5 +69,31 @@ public interface ThumbnailService {
 	File createThumbnailLocally(File workingDirectory,
 			String irodsAbsolutePathToGenerateThumbnailFor, int thumbWidth,
 			int thumbHeight) throws Exception;
+
+	/**
+	 * Do a check to see whether the thumbnail service is available on the iRODS server.  If it is not available, the mid-tier fallback can be used
+	 * <code>createThumbnailLocally()</code>.
+	 * <p/>
+	 * Note that it is not efficient to call this method repeatedly, rather, a client service should call once for an iRODS server and cache the result.
+	 * @return <code>true</code> if the iRODS server has support for imagemagik thumbnail generation.  If the hueristic cannot determine, it will
+	 * return false.  The current heuristic is to use the listCommands.sh script, which must be added to the /server/bin/cmd directory, along with the 
+	 * makeThumbnail.py script.  
+	 * @throws JargonException
+	 */
+	boolean isIRODSThumbnailGeneratorAvailable() throws JargonException;
+
+	/**
+	 * Create a thumb-nail by down-loading the file and processing the image locally using the JAI image library, which can process a 
+	 * TIFF file.  The JAI version will create a .PNG thumbnail.
+	 * @param workingDirectory <code>File</code> with the path to the top level of a working directory to hold the
+	 * thumbnail image.
+	 * @param irodsAbsolutePathToGenerateThumbnailFor <code>String</code> that is the absolute path to the iRODS file
+	 * for which a thumbnail will be generated.
+	 * @param maxEdge <code>int</code> with the desired max edge length
+	 * @return {@link File} with the thumbnail image
+	 * @throws Exception
+	 */
+	File createThumbnailLocallyViaJAI(File workingDirectory,
+			String irodsAbsolutePathToGenerateThumbnailFor, int maxEdge) throws Exception;
 
 }

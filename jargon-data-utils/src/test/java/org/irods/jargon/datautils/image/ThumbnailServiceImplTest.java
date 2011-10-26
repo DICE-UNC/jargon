@@ -14,10 +14,12 @@ import junit.framework.Assert;
 
 import org.apache.commons.codec.binary.Base64InputStream;
 import org.irods.jargon.core.connection.IRODSAccount;
+import org.irods.jargon.core.pub.EnvironmentalInfoAO;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 import org.irods.jargon.core.pub.IRODSFileSystem;
 import org.irods.jargon.core.pub.RuleProcessingAO;
 import org.irods.jargon.core.pub.Stream2StreamAO;
+import org.irods.jargon.core.pub.domain.RemoteCommandInformation;
 import org.irods.jargon.core.rule.IRODSRule;
 import org.irods.jargon.core.rule.IRODSRuleExecResult;
 import org.irods.jargon.core.rule.IRODSRuleExecResultOutputParameter;
@@ -139,6 +141,56 @@ public class ThumbnailServiceImplTest {
 		Assert.assertTrue("file does not exist as file", actual.exists()
 				&& actual.isFile());
 
+	}
+
+	@Test
+	public void testIsIRODSThumbnailGeneratorAvailable() throws Exception {
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory irodsAccessObjectFactory = Mockito
+				.mock(IRODSAccessObjectFactory.class);
+		EnvironmentalInfoAO environmentalInfoAO = Mockito
+				.mock(EnvironmentalInfoAO.class);
+		List<RemoteCommandInformation> scripts = new ArrayList<RemoteCommandInformation>();
+		RemoteCommandInformation info = new RemoteCommandInformation();
+		info.setCommand("makeThumbnail.py");
+		scripts.add(info);
+		Mockito.when(environmentalInfoAO.listAvailableRemoteCommands())
+				.thenReturn(scripts);
+		Mockito.when(
+				irodsAccessObjectFactory.getEnvironmentalInfoAO(irodsAccount))
+				.thenReturn(environmentalInfoAO);
+		ThumbnailService thumbnailService = new ThumbnailServiceImpl(
+				irodsAccessObjectFactory, irodsAccount);
+		boolean isThumbnailGenerator = thumbnailService
+				.isIRODSThumbnailGeneratorAvailable();
+		Assert.assertTrue("should have said yes to thumbnail service",
+				isThumbnailGenerator);
+	}
+	
+	@Test
+	public void testIsIRODSThumbnailGeneratorNotAvailable() throws Exception {
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory irodsAccessObjectFactory = Mockito
+				.mock(IRODSAccessObjectFactory.class);
+		EnvironmentalInfoAO environmentalInfoAO = Mockito
+				.mock(EnvironmentalInfoAO.class);
+		List<RemoteCommandInformation> scripts = new ArrayList<RemoteCommandInformation>();
+		RemoteCommandInformation info = new RemoteCommandInformation();
+		info.setCommand("dontMakeThumbnail.py");
+		scripts.add(info);
+		Mockito.when(environmentalInfoAO.listAvailableRemoteCommands())
+				.thenReturn(scripts);
+		Mockito.when(
+				irodsAccessObjectFactory.getEnvironmentalInfoAO(irodsAccount))
+				.thenReturn(environmentalInfoAO);
+		ThumbnailService thumbnailService = new ThumbnailServiceImpl(
+				irodsAccessObjectFactory, irodsAccount);
+		boolean isThumbnailGenerator = thumbnailService
+				.isIRODSThumbnailGeneratorAvailable();
+		Assert.assertFalse("should have said no to thumbnail service",
+				isThumbnailGenerator);
 	}
 
 	@Test
@@ -315,7 +367,7 @@ public class ThumbnailServiceImplTest {
 
 		String targetIrodsFile = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH 
+						testingProperties, IRODS_TEST_SUBDIR_PATH
 								+ imageFileName);
 
 		Stream2StreamAO stream2StreamAO = irodsAccessObjectFactory
@@ -341,7 +393,135 @@ public class ThumbnailServiceImplTest {
 	}
 	
 	@Test
-	public void testGenerateThumbnailLocallyForIRODSPathTwice() throws Exception {
+	public void testGenerateThumbnailLocallyFromJPGForIRODSPath() throws Exception {
+
+		/*
+		 * Grab the test image, base64 encode as a string and emulate return
+		 * from iRODS.
+		 */
+		String testDir = "testGenerateThumbnailLocallyForIRODSPath";
+		String imageFileName = "/img/test.jpg";
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory irodsAccessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
+		String targetIrodsFile = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH
+								+ imageFileName);
+
+		Stream2StreamAO stream2StreamAO = irodsAccessObjectFactory
+				.getStream2StreamAO(irodsAccount);
+		stream2StreamAO.streamClasspathResourceToIRODSFile(imageFileName,
+				targetIrodsFile);
+
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH
+						+ "/" + testDir);
+		File workingDirAsFile = new File(absPath);
+		workingDirAsFile.mkdirs();
+
+		ThumbnailService thumbnailService = new ThumbnailServiceImpl(
+				irodsAccessObjectFactory, irodsAccount);
+		File actual = thumbnailService.createThumbnailLocally(workingDirAsFile,
+				targetIrodsFile, 100, 100);
+
+		Assert.assertNotNull("null file returned", actual);
+		Assert.assertTrue("file does not exist as file", actual.exists()
+				&& actual.isFile());
+
+	}
+	
+	
+	@Test
+	public void testGenerateThumbnailLocallyFromTiffUsingJAI() throws Exception {
+
+		/*
+		 * Grab the test image, base64 encode as a string and emulate return
+		 * from iRODS.
+		 */
+		String testDir = "testGenerateThumbnailLocallyForIRODSPathUsingJAI";
+		String imageFileName = "/img/idrop.tiff";
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory irodsAccessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
+		String targetIrodsFile = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH
+								+ imageFileName);
+
+		Stream2StreamAO stream2StreamAO = irodsAccessObjectFactory
+				.getStream2StreamAO(irodsAccount);
+		stream2StreamAO.streamClasspathResourceToIRODSFile(imageFileName,
+				targetIrodsFile);
+
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH
+						+ "/" + testDir);
+		File workingDirAsFile = new File(absPath);
+		workingDirAsFile.mkdirs();
+
+		ThumbnailService thumbnailService = new ThumbnailServiceImpl(
+				irodsAccessObjectFactory, irodsAccount);
+		File actual = thumbnailService.createThumbnailLocallyViaJAI(workingDirAsFile,
+				targetIrodsFile, 200);  
+
+		Assert.assertNotNull("null file returned", actual);
+		Assert.assertTrue("file does not exist as file", actual.exists()
+				&& actual.isFile());
+
+	}
+	
+	@Test
+	public void testGenerateThumbnailLocallyFromPNGUsingJAI() throws Exception {
+
+		/*
+		 * Grab the test image, base64 encode as a string and emulate return
+		 * from iRODS.
+		 */
+		String testDir = "testGenerateThumbnailLocallyFromPNGUsingJAI";
+		String imageFileName = "/img/irodsimg.png";
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory irodsAccessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
+		String targetIrodsFile = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH
+								+ imageFileName);
+
+		Stream2StreamAO stream2StreamAO = irodsAccessObjectFactory
+				.getStream2StreamAO(irodsAccount);
+		stream2StreamAO.streamClasspathResourceToIRODSFile(imageFileName,
+				targetIrodsFile);
+
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH
+						+ "/" + testDir);
+		File workingDirAsFile = new File(absPath);
+		workingDirAsFile.mkdirs();
+
+		ThumbnailService thumbnailService = new ThumbnailServiceImpl(
+				irodsAccessObjectFactory, irodsAccount);
+		File actual = thumbnailService.createThumbnailLocallyViaJAI(workingDirAsFile,
+				targetIrodsFile, 200);  
+
+		Assert.assertNotNull("null file returned", actual);
+		Assert.assertTrue("file does not exist as file", actual.exists()
+				&& actual.isFile());
+
+	}
+
+	@Test
+	public void testGenerateThumbnailLocallyForIRODSPathTwice()
+			throws Exception {
 
 		/*
 		 * Grab the test image, base64 encode as a string and emulate return
@@ -357,7 +537,7 @@ public class ThumbnailServiceImplTest {
 
 		String targetIrodsFile = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH 
+						testingProperties, IRODS_TEST_SUBDIR_PATH
 								+ imageFileName);
 
 		Stream2StreamAO stream2StreamAO = irodsAccessObjectFactory
