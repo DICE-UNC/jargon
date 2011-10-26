@@ -9,6 +9,10 @@ import org.irods.jargon.core.exception.JargonException;
  * Manage the creation and maintenance of thumbnail images for image files
  * stored in iRODS.
  * 
+ * Note that local processing of tiff files requires JAI - see http://java.net/projects/jai-core/
+ * and see http://java.sun.com/products/java-media/jai/downloads/download-1_1_2.html for download
+ * The JAI libraries may need to be installed on the client or mid-tier machine 
+ * 
  * @author Mike Conway - DICE (www.irods.org)
  * 
  */
