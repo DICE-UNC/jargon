@@ -166,6 +166,50 @@ public class TestingPropertiesHelper {
 
 		return new URI(irodsUri.toString());
 	}
+	
+	/**
+	 * Get a URI in IRODS format that points to a scratch file, given the file
+	 * name and any additional path to that file without a leading '/'. 
+	 * <p/>
+	 * This version will not include user information.
+	 * <p/>
+	 * 
+	 * Note that the scratch directory and everything above it is computed from
+	 * testing.properties
+	 * 
+	 * @param testingProperties
+	 *            <code>Properties</code> file with the standard names defined
+	 *            in
+	 *            {@link org.TestingPropertiesHelper.jargon.test.utils.TestingPropertiesLoader}
+	 * @param fileName
+	 *            <code>String</code> with the path (no leading '/') below the
+	 *            user scratch directory as defined in testing.properties
+	 * @return <code>URI</code>
+	 * @throws URISyntaxException
+	 */
+	public URI buildUriFromTestPropertiesForFileNoUserInfo(
+			final Properties testingProperties, final String fileName)
+			throws URISyntaxException {
+		StringBuilder irodsUri = new StringBuilder();
+
+		irodsUri.append("irods://");
+		irodsUri.append(testingProperties.getProperty(IRODS_ZONE_KEY));
+		irodsUri.append("@");
+		irodsUri.append(testingProperties.getProperty(IRODS_HOST_KEY));
+		irodsUri.append(":");
+		irodsUri.append(String.valueOf(testingProperties
+				.getProperty(IRODS_PORT_KEY)));
+		irodsUri.append("/");
+		irodsUri.append(testingProperties.get(IRODS_ZONE_KEY));
+		irodsUri.append("/home/");
+		irodsUri.append(testingProperties.get(IRODS_USER_KEY));
+		irodsUri.append("/");
+		irodsUri.append(testingProperties.getProperty(IRODS_SCRATCH_DIR_KEY));
+		irodsUri.append("/");
+		irodsUri.append(fileName);
+
+		return new URI(irodsUri.toString());
+	}
 
 	/**
 	 * Create a URI compatable with a local <code>IRODSFileImpl</code> based on

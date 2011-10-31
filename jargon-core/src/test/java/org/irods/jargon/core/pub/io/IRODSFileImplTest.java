@@ -917,6 +917,30 @@ public class IRODSFileImplTest {
 
 		Assert.assertTrue("file creation not successful", success);
 	}
+	
+	@Test
+	public final void testCreateNewCollectionGivingParentAndChild() throws Exception {
+		String testNewChild = "testCreateNewCollectionGivingParentAndChild";
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
+		IRODSFileFactory irodsFileFactory = accessObjectFactory
+				.getIRODSFileFactory(irodsAccount);
+		IRODSFile delFile = irodsFileFactory
+		.instanceIRODSFile(targetIrodsCollection + "/" + testNewChild);
+		delFile.deleteWithForceOption();
+		IRODSFile irodsFile = irodsFileFactory
+				.instanceIRODSFile(targetIrodsCollection, testNewChild);
+		boolean success = irodsFile.mkdirs();
+		TestCase.assertEquals("path set correctly", targetIrodsCollection + "/" + testNewChild, irodsFile.getAbsolutePath());
+		TestCase.assertTrue("new collection does not exist", irodsFile.exists());
+		Assert.assertTrue("file creation not successful", success);
+	}
 
 	/**
 	 * Test method for

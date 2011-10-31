@@ -16,6 +16,7 @@ import org.irods.jargon.core.pub.FileCatalogObjectAOImpl;
 import org.irods.jargon.core.pub.IRODSFileSystemAO;
 import org.irods.jargon.core.pub.IRODSFileSystemAOImpl;
 import org.irods.jargon.core.pub.IRODSGenericAO;
+import org.irods.jargon.core.utils.IRODSUriUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -93,60 +94,27 @@ public final class IRODSFileFactoryImpl extends IRODSGenericAO implements
 	 */
 	@Override
 	public IRODSFile instanceIRODSFile(final URI uri) throws JargonException {
-		// TODO: how about a URI that is outside of any
-		// cache or pool, this
-		// might have some impact on irodssession? Potential that arbitrary
-		// connections would need to
-		// happen given a URI.
 
 		if (uri == null) {
 			throw new JargonException("null uri");
 		}
 
-		String uriScheme = uri.getScheme();
-		if (uriScheme != null && uriScheme.equals("irods")) {
-
-			String userInfo = uri.getUserInfo();
-			String userName = null;
-			String password = "";
-			String zone = "";
-			String homeDirectory = null;
-			int index = -1;
-
-			index = userInfo.indexOf(":");
-			if (index >= 0) {
-				password = userInfo.substring(index + 1); // password
-				userInfo = userInfo.substring(0, index);
-			}
-
-			index = userInfo.indexOf(".");
-			if (index >= 0) {
-				userName = userInfo.substring(0, index);
-				zone = userInfo.substring(index + 1);
-				homeDirectory = PATH_SEPARATOR + zone + PATH_SEPARATOR
-						+ userName;
-			} else {
-				userName = userInfo;
-				homeDirectory = uri.getPath();
-			}
-
-			log.debug("userName: {}", userName);
-			log.debug("home dir: {}", homeDirectory);
-			log.debug("zone: {}", zone);
-
-			IRODSAccount irodsAccountFromUri = IRODSAccount.instance(
-					uri.getHost(), uri.getPort(), userName, password,
-					homeDirectory, zone, "");
-
-			String fileName = uri.getPath();
-
-			log.debug("irods account: {}", irodsAccountFromUri.toString());
-			log.debug("fileName: {}", fileName);
+		IRODSAccount irodsAccount = null;
+		try {
+			irodsAccount = IRODSUriUtils.getIRODSAccountFromURI(uri);
+		} catch (JargonException je) {
+			log.info("no account info in URI, use default account");
+			irodsAccount = this.getIRODSAccount();
 		}
 
-		IRODSFileSystemAO irodsFileSystem = new IRODSFileSystemAOImpl(
-				this.getIRODSSession(), this.getIRODSAccount());
-		return new IRODSFileImpl(uri.getPath(), irodsFileSystem);
+		String fileName = uri.getPath();
+
+		log.debug("irods account: {}", irodsAccount.toString());
+		log.debug("fileName: {}", fileName);
+
+		IRODSFileSystemAO irodsFileSystemAO = new IRODSFileSystemAOImpl(
+				this.getIRODSSession(), irodsAccount);
+		return new IRODSFileImpl(uri.getPath(), irodsFileSystemAO);
 	}
 
 	/*
@@ -230,8 +198,12 @@ public final class IRODSFileFactoryImpl extends IRODSGenericAO implements
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.pub.io.IRODSFileFactory#instanceIRODSFileOutputStreamWithRerouting(org.irods.jargon.core.pub.io.IRODSFile)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.pub.io.IRODSFileFactory#
+	 * instanceIRODSFileOutputStreamWithRerouting
+	 * (org.irods.jargon.core.pub.io.IRODSFile)
 	 */
 	@Override
 	public IRODSFileOutputStream instanceIRODSFileOutputStreamWithRerouting(

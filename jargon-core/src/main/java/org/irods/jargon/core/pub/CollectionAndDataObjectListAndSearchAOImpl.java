@@ -775,6 +775,9 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		return returnObject;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.core.pub.CollectionAndDataObjectListAndSearchAO#listDataObjectsSharedWithAGivenUser(java.lang.String, java.lang.String, int)
+	 */
 	@Override
 	public List<CollectionAndDataObjectListingEntry> listDataObjectsSharedWithAGivenUser(
 			final String absolutePathToParent, final String userName,
@@ -792,7 +795,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 				absolutePathToParent);
 
 		String queryString = IRODSFileSystemAOHelper
-				.buildQueryListAllDataObjectsWithUserAccessInfo(absolutePathToParent);
+				.buildQueryListAllDataObjectsSharedWithAGivenUser(absolutePathToParent, userName);
 
 
 		@SuppressWarnings("unused")
@@ -804,5 +807,9 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		return null;
 
 	}
+	
+	
+	
+	
 
 }

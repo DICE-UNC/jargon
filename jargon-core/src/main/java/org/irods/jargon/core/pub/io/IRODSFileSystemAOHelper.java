@@ -116,6 +116,44 @@ public class IRODSFileSystemAOHelper extends AOHelper {
 		return query.toString();
 
 	}
+	
+	/**
+	 * Build the GenQuery that lists all data objects and user access
+	 * information.
+	 * 
+	 * @param path
+	 *            <code>String</code> iwtht he
+	 * @return
+	 * @throws JargonException
+	 */
+	public static String buildQueryListAllDataObjectsSharedWithAGivenUser(
+			final String path, final String userName) throws JargonException {
+		StringBuilder query = new StringBuilder();
+		query.append("SELECT DISTINCT ");
+		query.append(buildDataObjectQuerySelects());
+		query.append(COMMA);
+		query.append(RodsGenQueryEnum.COL_USER_NAME.getName());
+		query.append(COMMA);
+		query.append(RodsGenQueryEnum.COL_DATA_ACCESS_USER_ID.getName());
+		query.append(COMMA);
+		query.append(RodsGenQueryEnum.COL_DATA_ACCESS_TYPE.getName());
+		query.append(" WHERE ");
+		query.append(RodsGenQueryEnum.COL_COLL_NAME.getName());
+		query.append(" = '");
+		query.append(IRODSDataConversionUtil.escapeSingleQuotes(path));
+		query.append("' AND ");
+		query.append(RodsGenQueryEnum.COL_COLL_ACCESS_USER_NAME.getName());
+		query.append(" = '");
+		query.append(userName.trim());
+		query.append("'");
+		
+		if (log.isDebugEnabled()) {
+			log.debug("query for files:" + query.toString());
+		}
+
+		return query.toString();
+
+	}
 
 	/**
 	 * Build the necessary GenQuery selects (the select statement is not added
