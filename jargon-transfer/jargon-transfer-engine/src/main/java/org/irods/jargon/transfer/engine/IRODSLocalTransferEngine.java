@@ -585,8 +585,11 @@ final class IRODSLocalTransferEngine implements TransferStatusCallbackListener {
 		if (transferStatus.getTransferState() == TransferStatus.TransferState.FAILURE) {
 			log.error("error in this transfer, mark");
 			localIRODSTransferItem.setError(true);
-			localIRODSTransferItem.setErrorMessage(transferStatus
-					.getTransferException().getMessage());
+			Exception exception = transferStatus.getTransferException();
+			
+			if (exception != null) {
+				localIRODSTransferItem.setErrorMessage(exception.getMessage());
+			}
 
 		} else {
 			localIRODSTransferItem.setError(false);
