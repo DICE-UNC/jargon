@@ -1177,7 +1177,7 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 		}
 
 		try {
-			newIrodsParentDirectory.mkdir();
+			newIrodsParentDirectory.mkdirs();
 		} catch (Exception e) {
 			log.error("exeption in mkdir of: {}",
 					newIrodsParentDirectory.getAbsolutePath());

@@ -38,6 +38,7 @@ public class CollectionAndDataObjectListingEntry extends IRODSDomainObject
 	private Date modifiedAt = null;
 	private long dataSize = 0L;
 	private String ownerName = "";
+	private String ownerZone = "";
 	private List<UserFilePermission> userFilePermission = new ArrayList<UserFilePermission>();
 	private int id;
 
@@ -247,5 +248,19 @@ public class CollectionAndDataObjectListingEntry extends IRODSDomainObject
 	public int compareTo(final CollectionAndDataObjectListingEntry obj) {
 		return this.getFormattedAbsolutePath().compareTo(
 				(obj).getFormattedAbsolutePath());
+	}
+
+	/**
+	 * @return the ownerZone
+	 */
+	public String getOwnerZone() {
+		return ownerZone;
+	}
+
+	/**
+	 * @param ownerZone the ownerZone to set
+	 */
+	public void setOwnerZone(String ownerZone) {
+		this.ownerZone = ownerZone;
 	}
 }

@@ -107,8 +107,8 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 				.getCollectionAndDataObjectListAndSearchAO(irodsAccount);
 		List<CollectionAndDataObjectListingEntry> entries = actual
 				.listCollectionsUnderPath(targetIrodsCollection, 0);
-		Assert.assertNotNull(entries);
-		Assert.assertFalse(entries.isEmpty());
+		Assert.assertNotNull("null result from query", entries);
+		Assert.assertFalse("should not have been and empty result list", entries.isEmpty());
 		CollectionAndDataObjectListingEntry entry = entries
 				.get(entries.size() - 1);
 		Assert.assertEquals(entry.getCount(), entries.size());
@@ -128,7 +128,7 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 		// TestCase.assertTrue(entry.isLastResult());
 		Assert.assertEquals(entry.getCount(), entries.size());
 		Assert.assertEquals(500, entries.size());
-
+   
 	}
 
 	@Test
@@ -168,8 +168,8 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 				.getCollectionAndDataObjectListAndSearchAO(secondaryAccount);
 		List<CollectionAndDataObjectListingEntry> entries = actual
 				.listCollectionsUnderPath(targetIrodsCollection, 0);
-		Assert.assertNotNull(entries);
-		Assert.assertFalse(entries.isEmpty());
+		Assert.assertNotNull("null result returned", entries);
+		Assert.assertFalse("entries should not be empty", entries.isEmpty());
 		CollectionAndDataObjectListingEntry entry = entries
 				.get(entries.size() - 1);
 		Assert.assertEquals(entry.getCount(), entries.size());
@@ -275,8 +275,8 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 				.getCollectionAndDataObjectListAndSearchAO(irodsAccount);
 		List<CollectionAndDataObjectListingEntry> entries = actual
 				.listCollectionsUnderPath(targetIrodsCollection, 0);
-		Assert.assertNotNull(entries);
-		Assert.assertFalse(entries.isEmpty());
+		Assert.assertNotNull("null entries list returned", entries);
+		Assert.assertFalse("result entries should not be empty", entries.isEmpty());
 
 		// bounce thru the results and make sure a root entry is not returned as
 		// a child of the root entry

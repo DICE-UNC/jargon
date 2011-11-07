@@ -234,9 +234,6 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		IRODSGenQueryExecutor irodsGenQueryExecutor = new IRODSGenQueryExecutorImpl(
 				this.getIRODSSession(), this.getIRODSAccount());
 
-		StringBuilder query = new StringBuilder(
-				IRODSFileSystemAOHelper.buildQueryListAllCollections(sb
-						.toString()));
 		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(sb.toString(),
 				getIRODSSession().getJargonProperties()
 						.getMaxFilesAndDirsQueryMax());
@@ -246,7 +243,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 			resultSet = irodsGenQueryExecutor.executeIRODSQueryWithPaging(
 					irodsQuery, partialStartIndex);
 		} catch (JargonQueryException e) {
-			LOG.error(QUERY_EXCEPTION_FOR_QUERY + query.toString(), e);
+			LOG.error("query exception", e);
 			throw new JargonException("error in exists query", e);
 		}
 
@@ -282,7 +279,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 			path = "/";
 		} else {
 			path = absolutePathToParent;
-		}
+		}  
 
 		String query = IRODSFileSystemAOHelper
 				.buildQueryListAllCollections(path);
