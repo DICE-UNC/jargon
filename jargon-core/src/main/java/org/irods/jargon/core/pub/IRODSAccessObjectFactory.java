@@ -350,6 +350,15 @@ public interface IRODSAccessObjectFactory {
 	 */
 	JargonProperties getJargonProperties();
 
+	/**
+	 * Get an AO to query audit trail info for a data object
+	 * @param irodsAccount
+	 * @return
+	 * @throws JargonException
+	 */
+	DataObjectAuditAO getDataObjectAuditAO(IRODSAccount irodsAccount)
+			throws JargonException;
+
 	
 
 }

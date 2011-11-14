@@ -79,11 +79,12 @@ public class DataObjectAuditAOImpl extends IRODSGenericAO implements
 		List<AuditedAction> auditedActions = new ArrayList<AuditedAction>();
 
 		final StringBuilder sb = new StringBuilder();
+		sb.append("SELECT ");
 		sb.append(RodsGenQueryEnum.COL_AUDIT_OBJ_ID.getName());
 		sb.append(COMMA);
 		sb.append(RodsGenQueryEnum.COL_AUDIT_USER_ID.getName());
 		sb.append(COMMA);
-		sb.append(RodsGenQueryEnum.COL_USER_NAME);
+		sb.append(RodsGenQueryEnum.COL_USER_NAME.getName());
 		sb.append(COMMA);
 		sb.append(RodsGenQueryEnum.COL_AUDIT_ACTION_ID.getName());
 		sb.append(COMMA);
@@ -92,7 +93,6 @@ public class DataObjectAuditAOImpl extends IRODSGenericAO implements
 		sb.append(RodsGenQueryEnum.COL_AUDIT_CREATE_TIME.getName());
 		sb.append(COMMA);
 		sb.append(RodsGenQueryEnum.COL_AUDIT_MODIFY_TIME.getName());
-		sb.append(WHERE);
 		sb.append(WHERE);
 		sb.append(RodsGenQueryEnum.COL_COLL_NAME.getName());
 		sb.append(EQUALS_AND_QUOTE);
@@ -105,7 +105,7 @@ public class DataObjectAuditAOImpl extends IRODSGenericAO implements
 		sb.append(IRODSDataConversionUtil.escapeSingleQuotes(irodsFile
 				.getName().trim()));
 		sb.append(QUOTE);
-		sb.append(RodsGenQueryEnum.COL_DATA_NAME.getName());
+		
 
 		final String query = sb.toString();
 		log.debug("query for audit object:{}", query);
