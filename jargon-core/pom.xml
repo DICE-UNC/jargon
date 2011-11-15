@@ -66,15 +66,15 @@ test.irods.scratch.subdir=${jargon.test.irods.scratch.subdir}
 test.mac.icommand.path=${jargon.test.mac.icommand.path}
 test.option.exercise.remoteexecstream=${jargon.test.option.exercise.remoteexecstream}
 test.option.distributed.resources=${test.option.distributed.resources}
-test.option.federated.zone={$test.option.federated.zone}
+test.option.federated.zone=${test.option.federated.zone}
 test.federated.irods.admin=${jargon.test.federated.irods.admin}
-test.federated.irods.admin.password=${jargon.test.test.federated.irods.admin.password}
-test.federated.irods.user=${jargon.test.test.federated.irods.user}
-test.federated.irods.password=${jargon.test.test.federated.irods.password}
-test.federated.irods.resource=${jargon.test.test.federated.irods.resource}
-test.federated.irods.host=${jargon.test.test.federated.irods.host}
-test.federated.irods.port=${jargon.test.test.federated.irods.port}
-test.federated.irods.zone=${jargon.test.test.federated.irods.zone}
+test.federated.irods.admin.password=${jargon.test.federated.irods.admin.password}
+test.federated.irods.user=${jargon.test.federated.irods.user}
+test.federated.irods.password=${jargon.test.federated.irods.password}
+test.federated.irods.resource=${jargon.test.federated.irods.resource}
+test.federated.irods.host=${jargon.test.federated.irods.host}
+test.federated.irods.port=${jargon.test.federated.irods.port}
+test.federated.irods.zone=${jargon.test.federated.irods.zone}
 
 		</echo>
 	      </tasks>

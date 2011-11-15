@@ -4,8 +4,10 @@ import org.irods.jargon.core.pub.BulkFileOperationsAOImplTest;
 import org.irods.jargon.core.pub.CollectionAOImplTest;
 import org.irods.jargon.core.pub.CollectionAndDataObjectListAndSearchAOImplTest;
 import org.irods.jargon.core.pub.DataObjectAOImplTest;
+import org.irods.jargon.core.pub.DataObjectAuditAOImplTest;
 import org.irods.jargon.core.pub.DataTransferOperationsImplTest;
 import org.irods.jargon.core.pub.EnvironmentalInfoAOTest;
+import org.irods.jargon.core.pub.FederatedCollectionAndDataObjectListAndSearchAOImplTest;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactoryImplTest;
 import org.irods.jargon.core.pub.IRODSFileSystemTest;
 import org.irods.jargon.core.pub.IRODSGenQueryExecutorImplTest;
@@ -32,7 +34,12 @@ import org.junit.runners.Suite;
 		CollectionAndDataObjectListAndSearchAOImplTest.class,
 		IRODSAccessObjectFactoryImplTest.class,
 		BulkFileOperationsAOImplTest.class,
-		SimpleQueryExecutorAOImplTest.class, Stream2StreamAOImplTest.class, QuotaAOImplTest.class })
+		SimpleQueryExecutorAOImplTest.class, Stream2StreamAOImplTest.class,
+		QuotaAOImplTest.class, DataObjectAuditAOImplTest.class,
+		FederatedCollectionAndDataObjectListAndSearchAOImplTest.class })
+		/**
+		 * Suite to run Access Object tests in org.irods.jargon.pub.*
+		 */
 public class AOTests {
 
 }
