@@ -1,11 +1,15 @@
 package org.irods.jargon.core.pub;
 
 import java.io.File;
+import java.util.List;
 import java.util.Properties;
+
+import junit.framework.TestCase;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.pub.io.IRODSFileFactory;
+import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.irods.jargon.testutils.filemanip.FileGenerator;
 import org.junit.AfterClass;
@@ -84,7 +88,18 @@ public class FederatedCollectionAndDataObjectListAndSearchAOImplTest {
 						irodsAccount);
 
 		dataTransferOperationsAO.putOperation(localFile, destFile, null, null);
-
+		
+		/*
+		 * setup done, now connect from the first zone and try to list the coll with the data object
+		 */
+		
+		IRODSAccount fedAccount = testingPropertiesHelper
+		.buildIRODSAccountFromTestProperties(testingProperties);
+		
+		CollectionAndDataObjectListAndSearchAO collectionListAndSearchAO = irodsFileSystem.getIRODSAccessObjectFactory().getCollectionAndDataObjectListAndSearchAO(fedAccount);
+		List<CollectionAndDataObjectListingEntry> entries = collectionListAndSearchAO.listDataObjectsUnderPath(targetIrodsPath, 0);		
+		TestCase.assertNotNull("null entries returned", entries);
+				
 	}
 
 }

@@ -27,8 +27,11 @@ import org.irods.jargon.core.pub.domain.UserFilePermission;
 public class CollectionAndDataObjectListingEntry extends IRODSDomainObject
 		implements Comparable<CollectionAndDataObjectListingEntry> {
 
+	/**
+	 * Analogous to objType_t defined in rodsType.h
+	 */
 	public enum ObjectType {
-		COLLECTION, DATA_OBJECT
+		UNKNOWN,DATA_OBJECT, COLLECTION, UNKNOWN_FILE, LOCAL_FILE, LOCAL_DIR, NO_INPUT
 	}
 
 	private String parentPath = "";

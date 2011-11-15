@@ -5,6 +5,7 @@ import java.util.List;
 import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.domain.DataObject;
+import org.irods.jargon.core.pub.domain.ObjStat;
 import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry;
 
 /**
@@ -377,6 +378,17 @@ public interface CollectionAndDataObjectListAndSearchAO {
 	 */
 	List<CollectionAndDataObjectListingEntry> listDataObjectsSharedWithAGivenUser(
 			String absolutePathToParent, String userName, int partialStartIndex)
+			throws JargonException;
+
+	/**
+	 * Retrieve the <code>ObjStat</code> for a collection or data object at the given absolute path in iRODS.  This is the result
+	 * of a call to rsObjStat.
+	 * 
+	 * @param irodsAbsolutePath <code>String</code> with the absolute path to an iRODS collection or data object.
+	 * @return {@link ObjStat} with object data, or <code>null</code> if no data is found.
+	 * @throws JargonException
+	 */
+	ObjStat retrieveObjectStatForPath(String irodsAbsolutePath)
 			throws JargonException;
 
 }
