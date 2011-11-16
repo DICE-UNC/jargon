@@ -90,6 +90,8 @@ public class DataCacheServiceImplTest {
 		.buildIRODSAccountFromTestProperties(testingProperties);
 		DataCacheService accountCacheService = new DataCacheServiceImpl();
 		CacheServiceConfiguration cacheServiceConfiguration = new CacheServiceConfiguration();
+		cacheServiceConfiguration.setLifetimeInMinutes(90);
+		cacheServiceConfiguration.setDoCleanupDuringRequests(false);
 		String testDir = testingProperties.getProperty(TestingPropertiesHelper.IRODS_SCRATCH_DIR_KEY) + "/" + IRODS_TEST_SUBDIR_PATH;
 		cacheServiceConfiguration.setCacheDirPath(testDir);
 		accountCacheService.setIrodsAccessObjectFactory(irodsFileSystem.getIRODSAccessObjectFactory());
@@ -132,6 +134,7 @@ public class DataCacheServiceImplTest {
 		CacheServiceConfiguration cacheServiceConfiguration = new CacheServiceConfiguration();
 		String testDir = testingProperties.getProperty(TestingPropertiesHelper.IRODS_SCRATCH_DIR_KEY) + "/" + IRODS_TEST_SUBDIR_PATH;
 		cacheServiceConfiguration.setCacheDirPath(testDir);
+		cacheServiceConfiguration.setDoCleanupDuringRequests(false);
 		accountCacheService.setIrodsAccessObjectFactory(irodsFileSystem.getIRODSAccessObjectFactory());
 		accountCacheService.setCacheServiceConfiguration(cacheServiceConfiguration);
 		accountCacheService.setIrodsAccount(testingPropertiesHelper

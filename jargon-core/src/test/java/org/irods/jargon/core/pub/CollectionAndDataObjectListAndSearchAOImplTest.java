@@ -8,7 +8,7 @@ import junit.framework.Assert;
 import junit.framework.TestCase;
 
 import org.irods.jargon.core.connection.IRODSAccount;
-import org.irods.jargon.core.exception.DataNotFoundException;
+import org.irods.jargon.core.exception.FileNotFoundException;
 import org.irods.jargon.core.pub.domain.Collection;
 import org.irods.jargon.core.pub.domain.DataObject;
 import org.irods.jargon.core.pub.domain.ObjStat;
@@ -1124,7 +1124,7 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 
 	}
 
-	@Test(expected = DataNotFoundException.class)
+	@Test(expected = FileNotFoundException.class)
 	public void testGetFullObjectForNonExistant() throws Exception {
 
 		String testFileName = "testGetFullObjectForNonExistant.txt";

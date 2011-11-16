@@ -2,7 +2,7 @@ package org.irods.jargon.core.pub;
 
 import java.util.List;
 
-import org.irods.jargon.core.exception.DataNotFoundException;
+import org.irods.jargon.core.exception.FileNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.domain.DataObject;
 import org.irods.jargon.core.pub.domain.ObjStat;
@@ -45,11 +45,13 @@ public interface CollectionAndDataObjectListAndSearchAO {
 	 *            results.
 	 * @return <code>List</code> of
 	 *         {@link org.irods.jargon.core.query.CollectionAndDataObjectListingEntry}
+	 * @throws FileNotFoundException
+	 *             if the absolutePathToParent does not exist
 	 * @throws JargonException
 	 */
 	List<CollectionAndDataObjectListingEntry> listCollectionsUnderPath(
 			final String absolutePathToParent, final int partialStartIndex)
-			throws JargonException;
+			throws FileNotFoundException, JargonException;
 
 	/**
 	 * This is a method that can support listing and paging of files in a
@@ -70,11 +72,13 @@ public interface CollectionAndDataObjectListAndSearchAO {
 	 *            results.
 	 * @return <code>List</code> of
 	 *         {@link org.irods.jargon.core.query.CollectionAndDataObjectListingEntry}
+	 * @throws FileNotFoundException
+	 *             if the absolutePathToParent does not exist
 	 * @throws JargonException
 	 */
 	List<CollectionAndDataObjectListingEntry> listDataObjectsUnderPath(
 			final String absolutePathToParent, final int partialStartIndex)
-			throws JargonException;
+			throws FileNotFoundException, JargonException;
 
 	/**
 	 * This method is in support of applications and interfaces that need to
@@ -103,10 +107,13 @@ public interface CollectionAndDataObjectListAndSearchAO {
 	 * @return <code>List</code> of
 	 *         {@link org.irods.jargon.core.query.CollectionAndDataObjectListingEntry}
 	 *         containing both files and collections
+	 * @throws FileNotFoundException
+	 *             if the given path does not exist
 	 * @throws JargonException
 	 */
 	List<CollectionAndDataObjectListingEntry> listDataObjectsAndCollectionsUnderPath(
-			final String absolutePathToParent) throws JargonException;
+			final String absolutePathToParent) throws FileNotFoundException,
+			JargonException;
 
 	/**
 	 * This method is in support of applications and interfaces that need to
@@ -119,6 +126,8 @@ public interface CollectionAndDataObjectListAndSearchAO {
 	 *            parent must be a collection or an error is thrown
 	 * @return <code>int</code> with a count of the files that are children of
 	 *         the parent.
+	 * @throws FileNotFoundException
+	 *             if the given absolutePathToParent does not exist
 	 * @throws JargonException
 	 */
 	int countDataObjectsAndCollectionsUnderPath(
@@ -267,13 +276,15 @@ public interface CollectionAndDataObjectListAndSearchAO {
 	 * @return <code>Object</code> that will be either a <code>DataObject</code>
 	 *         or <code>Collection</code> object based on the object at the
 	 *         given absolute path in iRODS.
-	 * @throws DataNotFoundException
-	 *             if no data object or collection found for the given path. The
-	 *             method does not return null in this case
+	 * @throws FileNotFoundException
+	 *             , if no data object or collection found for the given path.
+	 *             The method does not return null in this case
+	 * @throws FileNotFoundException
+	 *             if the given objectAbsolutePath does not exist
 	 * @throws JargonException
 	 */
 	Object getFullObjectForType(String objectAbsolutePath)
-			throws DataNotFoundException, JargonException;
+			throws FileNotFoundException, JargonException;
 
 	/**
 	 * Retrieve a list of collections (not data objects) underneath a given
@@ -293,15 +304,13 @@ public interface CollectionAndDataObjectListAndSearchAO {
 	 * @return <code>List</code> of
 	 *         {@link org.irods.jargon.core.query.CollectionAndDataObjectListingEntry}
 	 *         including file permissions
-	 * @throws DataNotFoundException
+	 * @throws FileNotFoundException
+	 *             if the given absolutePathToParent does not exist
 	 * @throws JargonException
 	 */
 	List<CollectionAndDataObjectListingEntry> listCollectionsUnderPathWithPermissions(
 			String absolutePathToParent, int partialStartIndex)
-			throws DataNotFoundException, JargonException; // FIXME: why
-															// datanotfound
-															// exception? clean
-															// up
+			throws FileNotFoundException, JargonException;
 
 	/**
 	 * This is a method that can support listing and paging of data objects in a
@@ -324,11 +333,13 @@ public interface CollectionAndDataObjectListAndSearchAO {
 	 * @return <code>List</code> of
 	 *         {@link org.irods.jargon.core.query.CollectionAndDataObjectListingEntry}
 	 *         with included per-user ACL information
+	 * @throws FileNotFound
+	 *             exception if the given absolutePathToParent does not exist
 	 * @throws JargonException
 	 */
 	List<CollectionAndDataObjectListingEntry> listDataObjectsUnderPathWithPermissions(
 			String absolutePathToParent, int partialStartIndex)
-			throws JargonException;
+			throws FileNotFoundException, JargonException;
 
 	/**
 	 * This method is in support of applications and interfaces that need to
@@ -362,10 +373,13 @@ public interface CollectionAndDataObjectListAndSearchAO {
 	 * @return <code>List</code> of
 	 *         {@link org.irods.jargon.core.query.CollectionAndDataObjectListingEntry}
 	 *         containing both files and collections
+	 * @throws FileNotFoundException
+	 *             if the given absolutePathToParent does not exist
 	 * @throws JargonException
 	 */
 	List<CollectionAndDataObjectListingEntry> listDataObjectsAndCollectionsUnderPathWithPermissions(
-			String absolutePathToParent) throws JargonException;
+			String absolutePathToParent) throws FileNotFoundException,
+			JargonException;
 
 	/**
 	 * TODO: work in progress
@@ -381,11 +395,14 @@ public interface CollectionAndDataObjectListAndSearchAO {
 			throws JargonException;
 
 	/**
-	 * Retrieve the <code>ObjStat</code> for a collection or data object at the given absolute path in iRODS.  This is the result
-	 * of a call to rsObjStat.
+	 * Retrieve the <code>ObjStat</code> for a collection or data object at the
+	 * given absolute path in iRODS. This is the result of a call to rsObjStat.
 	 * 
-	 * @param irodsAbsolutePath <code>String</code> with the absolute path to an iRODS collection or data object.
-	 * @return {@link ObjStat} with object data, or <code>null</code> if no data is found.
+	 * @param irodsAbsolutePath
+	 *            <code>String</code> with the absolute path to an iRODS
+	 *            collection or data object.
+	 * @return {@link ObjStat} with object data, or <code>null</code> if no data
+	 *         is found.
 	 * @throws JargonException
 	 */
 	ObjStat retrieveObjectStatForPath(String irodsAbsolutePath)

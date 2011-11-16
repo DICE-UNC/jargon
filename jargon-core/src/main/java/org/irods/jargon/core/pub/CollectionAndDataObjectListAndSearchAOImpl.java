@@ -51,7 +51,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 			.getLogger(CollectionAndDataObjectListAndSearchAOImpl.class);
 	private transient final IRODSFileFactory irodsFileFactory = new IRODSFileFactoryImpl(
 			getIRODSSession(), getIRODSAccount());
-	
+
 	protected CollectionAndDataObjectListAndSearchAOImpl(
 			final IRODSSession irodsSession, final IRODSAccount irodsAccount)
 			throws JargonException {
@@ -66,20 +66,26 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 	 */
 	@Override
 	public List<CollectionAndDataObjectListingEntry> listDataObjectsAndCollectionsUnderPath(
-			final String absolutePathToParent) throws JargonException {
-		
+			final String absolutePathToParent) throws FileNotFoundException, JargonException {
+
 		if (absolutePathToParent == null) {
 			throw new IllegalArgumentException("absolutePathToParent is null");
 		}
-		
+
 		if (absolutePathToParent.isEmpty()) {
 			throw new IllegalArgumentException("absolutePathToParent is null");
 		}
-		
+
 		ObjStat objStat = retrieveObjectStatForPath(absolutePathToParent);
 		
-		List<CollectionAndDataObjectListingEntry> entries = listCollectionsUnderPath(
-				objStat, 0);
+		if (objStat == null) {
+			log.error("no file found for path:{}", absolutePathToParent);
+			throw new FileNotFoundException("no file found for given path");
+		}
+		
+		List<CollectionAndDataObjectListingEntry> entries = new ArrayList<CollectionAndDataObjectListingEntry>();
+
+		entries.addAll(listCollectionsUnderPath(objStat, 0));
 		entries.addAll(listDataObjectsUnderPath(objStat, 0));
 		return entries;
 	}
@@ -92,7 +98,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 	 */
 	@Override
 	public List<CollectionAndDataObjectListingEntry> listDataObjectsAndCollectionsUnderPathWithPermissions(
-			final String absolutePathToParent) throws JargonException {
+			final String absolutePathToParent) throws FileNotFoundException,JargonException {
 		List<CollectionAndDataObjectListingEntry> entries = listCollectionsUnderPathWithPermissions(
 				absolutePathToParent, 0);
 		entries.addAll(listDataObjectsUnderPathWithPermissions(
@@ -118,6 +124,11 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 				absolutePathToParent);
 		IRODSFile irodsFile = irodsFileFactory
 				.instanceIRODSFile(absolutePathToParent);
+		
+		if (!irodsFile.exists()) {
+			log.error("File does not exist for path:{}", absolutePathToParent);
+			throw new FileNotFoundException("file at given path does not exist");
+		}
 
 		// I cannot get children if this is not a directory (a file has no
 		// children)
@@ -283,36 +294,35 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 	@Override
 	public List<CollectionAndDataObjectListingEntry> listCollectionsUnderPath(
 			final String absolutePathToParent, final int partialStartIndex)
-			throws JargonException {
+			throws FileNotFoundException, JargonException {
 
 		if (absolutePathToParent == null) {
 			throw new JargonException("absolutePathToParent is null");
 		}
 
 		String path;
-	
+
 		if (absolutePathToParent.isEmpty()) {
 			path = "/";
 		} else {
 			path = absolutePathToParent;
-		}  
+		}
 
 		ObjStat objStat = retrieveObjectStatForPath(path);
 		return listCollectionsUnderPath(objStat, partialStartIndex);
-	
+
 	}
-	
+
 	private List<CollectionAndDataObjectListingEntry> listCollectionsUnderPath(
 			final ObjStat objStat, final int partialStartIndex)
-			throws JargonException {
+			throws FileNotFoundException, JargonException {
 
 		if (objStat == null) {
-			throw new JargonException("objStat is null");
+			throw new IllegalArgumentException("objStat is null");
 		}
 
-		
 		List<CollectionAndDataObjectListingEntry> subdirs = new ArrayList<CollectionAndDataObjectListingEntry>();
-		
+
 		String query = IRODSFileSystemAOHelper
 				.buildQueryListAllCollections(objStat.getAbsolutePath());
 
@@ -350,12 +360,14 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 	@Override
 	public List<CollectionAndDataObjectListingEntry> listCollectionsUnderPathWithPermissions(
 			final String absolutePathToParent, final int partialStartIndex)
-			throws DataNotFoundException, JargonException {
+			throws FileNotFoundException, JargonException {
 
 		if (absolutePathToParent == null) {
 			throw new IllegalArgumentException("absolutePathToParent is null");
 		}
 
+		// FIXME: add objStat call and fileNotFoundException
+		
 		String path;
 		List<CollectionAndDataObjectListingEntry> subdirs = new ArrayList<CollectionAndDataObjectListingEntry>();
 
@@ -476,29 +488,36 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		}
 
 		ObjStat objStat = retrieveObjectStatForPath(absolutePathToParent);
+		
+		if (objStat == null) {
+			log.error("unable to find objStat for collection path:{}", absolutePathToParent);
+			throw new FileNotFoundException("unable to find objStat for collection");
+		}
+		
 		return listDataObjectsUnderPath(objStat, partialStartIndex);
 
 	}
-	
+
 	private List<CollectionAndDataObjectListingEntry> listDataObjectsUnderPath(
 			final ObjStat objStat, final int partialStartIndex)
 			throws JargonException {
 
 		if (objStat == null) {
-			throw new IllegalArgumentException("collectionAndDataObjectListingEntry is null");
+			throw new IllegalArgumentException(
+					"collectionAndDataObjectListingEntry is null");
 		}
 
 		List<CollectionAndDataObjectListingEntry> files = new ArrayList<CollectionAndDataObjectListingEntry>();
 
-
 		log.info("listDataObjectsUnderPath for: {}", objStat);
-		
+
 		IRODSGenQueryExecutor irodsGenQueryExecutor = new IRODSGenQueryExecutorImpl(
 				this.getIRODSSession(), this.getIRODSAccount());
 
 		StringBuilder query = new StringBuilder(
 				IRODSFileSystemAOHelper
-						.buildQueryListAllDataObjectsWithSizeAndDateInfo(objStat.getAbsolutePath()));
+						.buildQueryListAllDataObjectsWithSizeAndDateInfo(objStat
+								.getAbsolutePath()));
 		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(query.toString(),
 				getIRODSSession().getJargonProperties()
 						.getMaxFilesAndDirsQueryMax());
@@ -550,7 +569,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 	@Override
 	public List<CollectionAndDataObjectListingEntry> listDataObjectsUnderPathWithPermissions(
 			final String absolutePathToParent, final int partialStartIndex)
-			throws JargonException {
+			throws FileNotFoundException, JargonException {
 
 		if (absolutePathToParent == null) {
 			throw new JargonException("absolutePathToParent is null");
@@ -558,6 +577,8 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 
 		log.info("listDataObjectsUnderPathWithPermissions for: {}",
 				absolutePathToParent);
+		
+		//FIXME: add obj stat and FileNotFoundException
 
 		List<CollectionAndDataObjectListingEntry> files = new ArrayList<CollectionAndDataObjectListingEntry>();
 
@@ -766,7 +787,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 	 */
 	@Override
 	public Object getFullObjectForType(final String objectAbsolutePath)
-			throws DataNotFoundException, JargonException {
+			throws FileNotFoundException, JargonException {
 
 		if (objectAbsolutePath == null || objectAbsolutePath.isEmpty()) {
 			throw new IllegalArgumentException(
@@ -803,7 +824,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 
 		if (returnObject == null) {
 			log.debug("not found as a collection, data not found");
-			throw new DataNotFoundException(
+			throw new FileNotFoundException(
 					"no object found for absolute path:" + objectAbsolutePath);
 		}
 
@@ -811,13 +832,17 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		return returnObject;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.pub.CollectionAndDataObjectListAndSearchAO#listDataObjectsSharedWithAGivenUser(java.lang.String, java.lang.String, int)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.pub.CollectionAndDataObjectListAndSearchAO#
+	 * listDataObjectsSharedWithAGivenUser(java.lang.String, java.lang.String,
+	 * int)
 	 */
 	@Override
 	public List<CollectionAndDataObjectListingEntry> listDataObjectsSharedWithAGivenUser(
 			final String absolutePathToParent, final String userName,
-			final int partialStartIndex) throws JargonException {
+			final int partialStartIndex) throws FileNotFoundException, JargonException {
 
 		if (absolutePathToParent == null) {
 			throw new JargonException("absolutePathToParent is null");
@@ -831,8 +856,8 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 				absolutePathToParent);
 
 		String queryString = IRODSFileSystemAOHelper
-				.buildQueryListAllDataObjectsSharedWithAGivenUser(absolutePathToParent, userName);
-
+				.buildQueryListAllDataObjectsSharedWithAGivenUser(
+						absolutePathToParent, userName);
 
 		@SuppressWarnings("unused")
 		IRODSQueryResultSetInterface resultSet = this
@@ -843,21 +868,27 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		return null;
 
 	}
-	
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.pub.CollectionAndDataObjectListAndSearchAO#retrieveObjectStatForPath(java.lang.String)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.pub.CollectionAndDataObjectListAndSearchAO#
+	 * retrieveObjectStatForPath(java.lang.String)
 	 */
 	@Override
-	public ObjStat retrieveObjectStatForPath(final String irodsAbsolutePath) throws JargonException {
+	public ObjStat retrieveObjectStatForPath(final String irodsAbsolutePath)
+			throws JargonException {
 		if (irodsAbsolutePath == null || irodsAbsolutePath.isEmpty()) {
-			throw new IllegalArgumentException("irodsAbsolutePath is null or empty");
+			throw new IllegalArgumentException(
+					"irodsAbsolutePath is null or empty");
 		}
-		
+
 		try {
-			DataObjInpForObjStat dataObjInp = DataObjInpForObjStat.instance(irodsAbsolutePath);
+			DataObjInpForObjStat dataObjInp = DataObjInpForObjStat
+					.instance(irodsAbsolutePath);
 			final Tag response = getIRODSProtocol().irodsFunction(dataObjInp);
 			log.debug("response from objStat: {}", response.parseTag());
-			
+
 			ObjStat objStat = new ObjStat();
 			objStat.setAbsolutePath(irodsAbsolutePath);
 			objStat.setChecksum(response.getTag("chksum").getStringValue());
@@ -867,12 +898,16 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 			objStat.setObjSize(response.getTag("objSize").getLongValue());
 			objStat.setOwnerName(response.getTag("ownerName").getStringValue());
 			objStat.setOwnerZone(response.getTag("ownerZone").getStringValue());
-			objStat.setSpecColType(SpecColType.NORMAL); // TODO: only normal for now
+			objStat.setSpecColType(SpecColType.NORMAL); // TODO: only normal for
+														// now
 
 			String createdDate = response.getTag("createTime").getStringValue();
-			String modifiedDate = response.getTag("modifyTime").getStringValue();
-			objStat.setCreatedAt(IRODSDataConversionUtil.getDateFromIRODSValue(createdDate));
-			objStat.setModifiedAt(IRODSDataConversionUtil.getDateFromIRODSValue(modifiedDate));
+			String modifiedDate = response.getTag("modifyTime")
+					.getStringValue();
+			objStat.setCreatedAt(IRODSDataConversionUtil
+					.getDateFromIRODSValue(createdDate));
+			objStat.setModifiedAt(IRODSDataConversionUtil
+					.getDateFromIRODSValue(modifiedDate));
 			log.info(objStat.toString());
 			return objStat;
 		} catch (FileNotFoundException e) {
