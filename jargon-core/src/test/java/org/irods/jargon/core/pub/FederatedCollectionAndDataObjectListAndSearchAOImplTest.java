@@ -99,6 +99,7 @@ public class FederatedCollectionAndDataObjectListAndSearchAOImplTest {
 		CollectionAndDataObjectListAndSearchAO collectionListAndSearchAO = irodsFileSystem.getIRODSAccessObjectFactory().getCollectionAndDataObjectListAndSearchAO(fedAccount);
 		List<CollectionAndDataObjectListingEntry> entries = collectionListAndSearchAO.listDataObjectsUnderPath(targetIrodsPath, 0);		
 		TestCase.assertNotNull("null entries returned", entries);
+		//TestCase.assertFalse("no entries found for federated collection", entries.isEmpty());
 				
 	}
 
