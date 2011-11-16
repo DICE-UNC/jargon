@@ -8,6 +8,7 @@ import org.irods.jargon.core.exception.CollectionNotEmptyException;
 import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.DuplicateDataException;
 import org.irods.jargon.core.exception.FileIntegrityException;
+import org.irods.jargon.core.exception.FileNotFoundException;
 import org.irods.jargon.core.exception.InvalidUserException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.exception.JargonFileOrCollAlreadyExistsException;
@@ -82,6 +83,8 @@ public class IRODSErrorScanner {
 			throw new CollectionNotEmptyException("collection not empty", infoValue);
 		case EXEC_CMD_ERROR:
 			throw new RemoteScriptExecutionException("remote script execution error" + infoValue);
+		case USER_FILE_DOES_NOT_EXIST:
+			throw new FileNotFoundException("file not found", infoValue);
 		default:
 			throw new JargonException("error code recieved from iRODS:" + infoValue,
 					infoValue);

@@ -51,3 +51,6 @@ Note that the following bug and feature requests are logged in GForge with relat
 [#499] add thumbnail generation facility to Jargon data utls
 [#500] enhanced 3.0 rule parsing and load rule from resource
 [#515] add irods file factory support for uri file create without user info
+ [#114] support for mounted collections, cross zone browsing, and soft links
+ 	* Added support for obj stat, initial ObjStat domain object [work in progress]
+ 	* Added cross zone query capability

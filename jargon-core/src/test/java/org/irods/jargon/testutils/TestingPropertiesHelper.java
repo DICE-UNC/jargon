@@ -38,6 +38,16 @@ public class TestingPropertiesHelper {
 	public static String MAC_ICOMMANDS_PATH = "test.mac.icommand.path";
 	public static String IRODS_RESOURCE_GROUP_KEY = "test.resource.group";
 
+	public static String IRODS_TEST_FEDERATED_ZONE_KEY = "test.option.federated.zone";
+	public static String IRODS_FEDERATED_HOST_KEY = "test.federated.irods.host";
+	public static String IRODS_FEDERATED_PORT_KEY = "test.federated.irods.port";
+	public static String IRODS_FEDERATED_ZONE_KEY = "test.federated.irods.zone";
+	public static String IRODS_FEDERATED_RESOURCE_KEY = "test.federated.irods.resource";
+	public static String IRODS_FEDERATED_USER_KEY = "test.federated.irods.user";
+	public static String IRODS_FEDERATED_PASSWORD_KEY = "test.federated.irods.password";
+	public static String IRODS_FEDERATED_ADMIN_USER_KEY = "test.federated.irods.admin";
+	public static String IRODS_FEDERATED_ADMIN_PASSWORD_KEY = "test.federated.irods.admin.password";
+
 	public static String IRODS_CONFIRM_TESTING_TRUE = "true";
 	public static String IRODS_CONFIRM_TESTING_FALSE = "false";
 
@@ -166,10 +176,10 @@ public class TestingPropertiesHelper {
 
 		return new URI(irodsUri.toString());
 	}
-	
+
 	/**
 	 * Get a URI in IRODS format that points to a scratch file, given the file
-	 * name and any additional path to that file without a leading '/'. 
+	 * name and any additional path to that file without a leading '/'.
 	 * <p/>
 	 * This version will not include user information.
 	 * <p/>
@@ -350,6 +360,39 @@ public class TestingPropertiesHelper {
 
 		return account;
 	}
+	
+	/**
+	 * Build an <code>IRODSAccount</code> object for connecting to the federated zone as defined in the 
+	 * testing.properties file.
+	 * @param testingProperties
+	 *            <code>Properties</code> file with the standard names defined
+	 *            in
+	 *            {@link org.TestingPropertiesHelper.jargon.test.utils.TestingPropertiesLoader}
+	 * @return @link{ edu.sdsc.grid.io.irods.IRODSAccount}
+	 * @throws URISyntaxException
+	 */
+	public IRODSAccount buildIRODSAccountForFederatedZoneFromTestProperties(
+			final Properties testingProperties) {
+
+		StringBuilder homeBuilder = new StringBuilder();
+		homeBuilder.append('/');
+		homeBuilder.append(testingProperties.getProperty(IRODS_FEDERATED_ZONE_KEY));
+		homeBuilder.append('/');
+		homeBuilder.append("home");
+		homeBuilder.append('/');
+		homeBuilder.append(testingProperties.getProperty(IRODS_FEDERATED_USER_KEY));
+
+		IRODSAccount account = new IRODSAccount(
+				testingProperties.getProperty(IRODS_FEDERATED_HOST_KEY),
+				Integer.parseInt(testingProperties.getProperty(IRODS_FEDERATED_PORT_KEY)),
+				testingProperties.getProperty(IRODS_FEDERATED_USER_KEY),
+				testingProperties.getProperty(IRODS_FEDERATED_PASSWORD_KEY), homeBuilder
+						.toString(), testingProperties
+						.getProperty(IRODS_FEDERATED_ZONE_KEY), testingProperties
+						.getProperty(IRODS_FEDERATED_RESOURCE_KEY));
+
+		return account;
+	}
 
 	/**
 	 * Build a test account where the default resource will be set to blank
@@ -447,7 +490,7 @@ public class TestingPropertiesHelper {
 
 		return account;
 	}
-	
+
 	/**
 	 * @param testingProperties
 	 *            <code>Properties</code> file with the standard names defined
@@ -576,7 +619,43 @@ public class TestingPropertiesHelper {
 		pathBuilder.append(collectionPathBelowScratch);
 		return pathBuilder.toString();
 	}
+	
+	/**
+	 * Handy method to give, from the root IRODS collection, a full path to a
+	 * given collection in the IRODS test scratch area on IRODS on the configured federated zone.
+	 * 
+	 * @param testingProperties
+	 *            <code>Properties</code> that define test behavior
+	 * @param collectionPathBelowScratch
+	 *            <code>String</code> with no leading '/' that defines the
+	 *            desired path underneath the IRODS scratch directory
+	 * @return <code>String</code> with trailing '/' that gives the absolute
+	 *         path for an IRODS collection
+	 * @throws TestingUtilsException
+	 * @throws URISyntaxException
+	 */
+	public String buildIRODSCollectionAbsolutePathFromFederatedZoneReadTestProperties(
+			final Properties testingProperties,
+			final String collectionPathBelowScratch)
+			throws TestingUtilsException {
 
+		if (testingProperties.get(IRODS_SCRATCH_DIR_KEY) == null) {
+			throw new TestingUtilsException(
+					"scratch path not provided in testing.properties");
+		}
+
+		StringBuilder pathBuilder = new StringBuilder();
+		pathBuilder.append('/');
+		pathBuilder.append(testingProperties.get(IRODS_FEDERATED_ZONE_KEY));
+		pathBuilder.append("/home/");
+		pathBuilder.append(testingProperties.get(IRODS_FEDERATED_USER_KEY));
+		pathBuilder.append("/fedread/");
+		pathBuilder.append(testingProperties.get(IRODS_SCRATCH_DIR_KEY));
+		pathBuilder.append('/');
+		pathBuilder.append(collectionPathBelowScratch);
+		return pathBuilder.toString();
+	}
+	
 	/**
 	 * Handy method to give, from the root IRODS collection, a full path to a
 	 * given collection in the IRODS test scratch area on IRODS
@@ -635,9 +714,7 @@ public class TestingPropertiesHelper {
 		pathBuilder.append(collectionPathBelowScratch);
 		return pathBuilder.toString();
 	}
-	
-	
-	
+
 	/**
 	 * Check if optional distributed resources are to be tested
 	 * 
@@ -669,4 +746,21 @@ public class TestingPropertiesHelper {
 			return Boolean.parseBoolean(val);
 		}
 	}
+
+	/**
+	 * Check if tests depending on a federated zone should be run.  The federated zone must be configured as described in the 
+	 * test-scripts/fedTestSetup.txt file.
+	 * @param testingProperties
+	 * @return <code>true</code> if the federated zone testing should occur
+	 */
+	public boolean isTestFederatedZone(final Properties testingProperties) {
+		String val = (String) testingProperties
+				.get(IRODS_TEST_FEDERATED_ZONE_KEY);
+		if (val == null) {
+			return false;
+		} else {
+			return Boolean.parseBoolean(val);
+		}
+	}
+
 }
