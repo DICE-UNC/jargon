@@ -4,7 +4,7 @@ import java.io.File;
 import java.util.List;
 import java.util.Properties;
 
-import junit.framework.TestCase;
+import junit.framework.Assert;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.pub.io.IRODSFile;
@@ -14,7 +14,6 @@ import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.irods.jargon.testutils.filemanip.FileGenerator;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 public class FederatedCollectionAndDataObjectListAndSearchAOImplTest {
@@ -47,10 +46,11 @@ public class FederatedCollectionAndDataObjectListAndSearchAOImplTest {
 
 	@Test
 	public void testSomething() {
-		
+
 	}
-	
-	@Ignore //FIXME: currently ignored
+
+	@Test
+	// FIXME: currently ignored
 	public void testListCollectionWithOneDataObject() throws Exception {
 
 		if (!testingPropertiesHelper.isTestFederatedZone(testingProperties)) {
@@ -84,29 +84,34 @@ public class FederatedCollectionAndDataObjectListAndSearchAOImplTest {
 				.getIRODSFileFactory(irodsAccount);
 		IRODSFile destFile = irodsFileFactory
 				.instanceIRODSFile(targetIrodsPath);
-		
+
 		// delete to clean up
 		destFile.deleteWithForceOption();
 		destFile.mkdirs();
-		
+
 		DataTransferOperations dataTransferOperationsAO = irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataTransferOperations(
 						irodsAccount);
 
 		dataTransferOperationsAO.putOperation(localFile, destFile, null, null);
-		
+
 		/*
-		 * setup done, now connect from the first zone and try to list the coll with the data object
+		 * setup done, now connect from the first zone and try to list the coll
+		 * with the data object
 		 */
-		
+
 		IRODSAccount fedAccount = testingPropertiesHelper
-		.buildIRODSAccountFromTestProperties(testingProperties);
-		
-		CollectionAndDataObjectListAndSearchAO collectionListAndSearchAO = irodsFileSystem.getIRODSAccessObjectFactory().getCollectionAndDataObjectListAndSearchAO(fedAccount);
-		List<CollectionAndDataObjectListingEntry> entries = collectionListAndSearchAO.listDataObjectsUnderPath(targetIrodsPath, 0);		
-		TestCase.assertNotNull("null entries returned", entries);
-		//TestCase.assertFalse("no entries found for federated collection", entries.isEmpty());
-				
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		CollectionAndDataObjectListAndSearchAO collectionListAndSearchAO = irodsFileSystem
+				.getIRODSAccessObjectFactory()
+				.getCollectionAndDataObjectListAndSearchAO(fedAccount);
+		List<CollectionAndDataObjectListingEntry> entries = collectionListAndSearchAO
+				.listDataObjectsUnderPath(targetIrodsPath, 0);
+		Assert.assertNotNull("null entries returned", entries);
+		// TestCase.assertFalse("no entries found for federated collection",
+		// entries.isEmpty());
+
 	}
 
 }
