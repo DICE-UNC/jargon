@@ -15,7 +15,7 @@ import org.irods.jargon.core.pub.io.IRODSFile;
  * 
  * @author Mike Conway - DICE (www.irods.org)
  */
-public interface Stream2StreamAO {
+public interface Stream2StreamAO  extends IRODSAccessObject {
 
 	/**
 	 * Given the set of bytes, copy them to the given target file in iRODS.

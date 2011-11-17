@@ -11,7 +11,7 @@ import org.irods.jargon.core.pub.domain.Quota;
  * @author Mike Conway - DICE (www.irods.org)
  *
  */
-public interface QuotaAO {
+public interface QuotaAO  extends IRODSAccessObject {
 
 	/**
 	 * List the quota for all users and groups by resource.  This differs from the global quota information

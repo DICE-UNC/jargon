@@ -22,7 +22,7 @@ import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry;
  * @author Mike Conway - DICE (www.irods.org)
  * 
  */
-public interface CollectionAndDataObjectListAndSearchAO {
+public interface CollectionAndDataObjectListAndSearchAO extends IRODSAccessObject {
 
 	/**
 	 * This is a method that can support listing and paging of collections,

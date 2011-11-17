@@ -11,7 +11,7 @@ import java.util.Date;
  * @author Mike Conway - DICE (www.irods.org)
  * 
  */
-public final class IRODSServerProperties {
+public class IRODSServerProperties {
 
 	public static final String JARGON_VERSION = "2.2";
 
