@@ -50,6 +50,7 @@ public class IRODSSession {
 	 * thread automatically shares a common connection to an iRODS server.
 	 */
 	public static final ThreadLocal<Map<String, IRODSCommands>> sessionMap = new ThreadLocal<Map<String, IRODSCommands>>();
+	
 	/**
 	 * The parallel transfer thread pool is lazily initialized on the first
 	 * parallel transfer operation. This will use the
@@ -421,7 +422,6 @@ public class IRODSSession {
 				return parallelTransferThreadPool;
 			}
 
-			
 			int poolSize = jargonProperties.getTransferThreadPoolMaxSimultaneousTransfers() * jargonProperties.getMaxParallelThreads();
 			int maxParallelThreads =  jargonProperties.getMaxParallelThreads();
 			
@@ -440,8 +440,6 @@ public class IRODSSession {
 							poolSize),
 					new RejectedParallelThreadExecutionHandler());
 			
-			// ExecutorService executorService =
-			// Executors.newFixedThreadPool(jargonProperties.getTransferThreadMaxPoolSize());
 			log.info("parallelTransferThreadPool created");
 			return parallelTransferThreadPool;
 		}

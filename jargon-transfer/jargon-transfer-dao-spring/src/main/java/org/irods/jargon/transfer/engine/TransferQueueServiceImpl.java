@@ -889,7 +889,13 @@ public class TransferQueueServiceImpl implements TransferQueueService {
 	public LocalIRODSTransfer findLocalIRODSTransferById(final Long id)
 			throws JargonException {
 		try {
-			return localIRODSTransferDAO.findById(id);
+			LocalIRODSTransfer transfer =  localIRODSTransferDAO.findById(id);
+			// go ahead and load the synch
+			Synchronization synchronization = transfer.getSynchronization();
+			if (synchronization != null) {
+				synchronization.getName();
+			}
+			return transfer;
 		} catch (TransferDAOException e) {
 			throw new JargonException(e);
 		}

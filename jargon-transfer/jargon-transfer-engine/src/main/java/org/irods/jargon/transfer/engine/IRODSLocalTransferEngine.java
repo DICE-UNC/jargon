@@ -183,14 +183,11 @@ final class IRODSLocalTransferEngine implements TransferStatusCallbackListener {
 			throw new JargonException("unknown operation type in transfer");
 		}
 
-		// wrap up - cleanup call moved to transferrunner
-		// log.info("processing finished for this operation");
-		// transferManager.getIrodsFileSystem().close();
-		// now update the transfer 'header'
-
 		log.info("file system closed...getting transfer to wrap up");
 
-		LocalIRODSTransfer wrapUpTransfer = localIrodsTransfer;
+		LocalIRODSTransfer wrapUpTransfer = getTransferManager()
+				.getTransferQueueService().findLocalIRODSTransferById(
+						localIrodsTransfer.getId());
 
 		log.info("wrap up transfer before update:{}", wrapUpTransfer);
 
@@ -220,8 +217,8 @@ final class IRODSLocalTransferEngine implements TransferStatusCallbackListener {
 		transferManager.getTransferQueueService().updateLocalIRODSTransfer(
 				wrapUpTransfer);
 
-		if (localIrodsTransfer.getSynchronization() != null) {
-			updateSynchronizationWithTransferResults(localIrodsTransfer);
+		if (wrapUpTransfer.getSynchronization() != null) {
+			updateSynchronizationWithTransferResults(wrapUpTransfer);
 		}
 
 		log.info("updated");
@@ -535,8 +532,15 @@ final class IRODSLocalTransferEngine implements TransferStatusCallbackListener {
 	public void statusCallback(final TransferStatus transferStatus)
 			throws JargonException {
 
+		if (log.isInfoEnabled()) {
+			if (transferStatus.getTransferState() == TransferStatus.TransferState.PAUSED
+					|| transferStatus.getTransferState() == TransferStatus.TransferState.CANCELLED) {
+				log.info("pause or cancel was encountered in the callbacks:{}",
+						transferStatus);
+			}
+		}
 
-		if (transferStatus.getTotalFilesTransferredSoFar() == 0) {
+		if (transferStatus.getTransferState() == TransferStatus.TransferState.OVERALL_INITIATION) {
 			log.debug("got startup 0th transfer callback, ignore in database, but do callback to transfer status listener");
 			transferManager.notifyStatusUpdate(transferStatus);
 
@@ -571,6 +575,8 @@ final class IRODSLocalTransferEngine implements TransferStatusCallbackListener {
 			final LocalIRODSTransferItem localIRODSTransferItem)
 			throws HibernateException, JargonException {
 
+		log.info("processing status callback of :{}", transferStatus);
+
 		if (transferStatus.getTransferState() == TransferStatus.TransferState.RESTARTING) {
 			log.debug("restarting:{}", transferStatus);
 			return;
@@ -579,8 +585,11 @@ final class IRODSLocalTransferEngine implements TransferStatusCallbackListener {
 		if (transferStatus.getTransferState() == TransferStatus.TransferState.FAILURE) {
 			log.error("error in this transfer, mark");
 			localIRODSTransferItem.setError(true);
-			localIRODSTransferItem.setErrorMessage(transferStatus
-					.getTransferException().getMessage());
+			Exception exception = transferStatus.getTransferException();
+			
+			if (exception != null) {
+				localIRODSTransferItem.setErrorMessage(exception.getMessage());
+			}
 
 		} else {
 			localIRODSTransferItem.setError(false);
@@ -594,7 +603,7 @@ final class IRODSLocalTransferEngine implements TransferStatusCallbackListener {
 		boolean updateItemRequired = true;
 		// if pause or cancel, update overall status, no item to store
 		if (transferStatus.getTransferState() == TransferStatus.TransferState.CANCELLED) {
-			log.info("this transfer has been cancelled");
+			log.info(">>>>>>>>>>>>>>>>>>this transfer has been cancelled");
 			mergedTransfer.setTransferState(TransferState.CANCELLED);
 			updateItemRequired = false;
 		} else if (transferStatus.getTransferState() == TransferStatus.TransferState.PAUSED) {
@@ -603,7 +612,8 @@ final class IRODSLocalTransferEngine implements TransferStatusCallbackListener {
 			updateItemRequired = false;
 		}
 
-		if (transferStatus.getTransferState() == TransferStatus.TransferState.SUCCESS || transferStatus.getTransferState() == TransferStatus.TransferState.IN_PROGRESS_COMPLETE_FILE) {
+		if (transferStatus.getTransferState() == TransferStatus.TransferState.SUCCESS
+				|| transferStatus.getTransferState() == TransferStatus.TransferState.IN_PROGRESS_COMPLETE_FILE) {
 
 			// if this is a stand alone transfer (not part of a synch) update
 			// the wrapping transfer with last status info
@@ -643,6 +653,7 @@ final class IRODSLocalTransferEngine implements TransferStatusCallbackListener {
 					.updateLocalIRODSTransfer(mergedTransfer);
 			log.info("update done");
 		}
+		this.currentTransfer = mergedTransfer;
 		log.info("transfer item status saved in database");
 
 	}

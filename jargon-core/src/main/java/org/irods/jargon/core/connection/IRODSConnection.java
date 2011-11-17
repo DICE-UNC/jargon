@@ -33,7 +33,7 @@ import org.slf4j.LoggerFactory;
 final class IRODSConnection implements IRODSManagedConnection {
 
 	private Logger log = LoggerFactory.getLogger(IRODSConnection.class);
-	private final IRODSProtocolManager irodsProtocolManager;
+	private IRODSProtocolManager irodsProtocolManager;
 	private String connectionInternalIdentifier;
 	private boolean connected = false;
 	private Socket connection;
@@ -396,6 +396,7 @@ final class IRODSConnection implements IRODSManagedConnection {
 		if (offset > value.length) {
 			String err = "trying to send a byte buffer from an offset that is out of range";
 			log.error(err);
+			disconnectWithIOException();
 			throw new IllegalArgumentException(err);
 		}
 
@@ -403,6 +404,7 @@ final class IRODSConnection implements IRODSManagedConnection {
 			// nothing to send, warn and ignore
 			String err = "send length is zero";
 			log.error(err);
+			disconnectWithIOException();
 			throw new IllegalArgumentException(err);
 		}
 
@@ -696,6 +698,7 @@ final class IRODSConnection implements IRODSManagedConnection {
 		if (value == null) {
 			String err = "no data sent";
 			log.error(err);
+			disconnectWithIOException();
 			throw new IllegalArgumentException(err);
 		}
 
@@ -709,12 +712,14 @@ final class IRODSConnection implements IRODSManagedConnection {
 		if (length == 0) {
 			String err = "read length is set to zero";
 			log.error(err);
-			throw new IllegalArgumentException(err);
+			disconnectWithIOException();
+			throw new IOException(err);
 		}
 
 		int result = 0;
 		if (length + offset > value.length) {
 			log.error("index out of bounds exception, length + offset larger then byte array");
+			disconnectWithIOException();
 			throw new IllegalArgumentException(
 					"length + offset larger than byte array");
 		}
@@ -793,6 +798,20 @@ final class IRODSConnection implements IRODSManagedConnection {
 		}
 		
 		super.finalize();
+	}
+
+	/**
+	 * @return the irodsProtocolManager
+	 */
+	public IRODSProtocolManager getIrodsProtocolManager() {
+		return irodsProtocolManager;
+	}
+
+	/**
+	 * @param irodsProtocolManager the irodsProtocolManager to set
+	 */
+	public void setIrodsProtocolManager(IRODSProtocolManager irodsProtocolManager) {
+		this.irodsProtocolManager = irodsProtocolManager;
 	}
 
 }

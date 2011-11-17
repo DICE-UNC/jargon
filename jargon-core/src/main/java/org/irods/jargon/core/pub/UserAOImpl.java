@@ -777,6 +777,10 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 		GeneralAdminInp adminPI = GeneralAdminInp
 				.instanceForModifyUserPassword(userName, newPassword);
 		getIRODSProtocol().irodsFunction(adminPI);
+		
+		// FIXME: finish implement
+		
+		
 	}
 
 	private void updatePreChecks(final User user) throws JargonException {

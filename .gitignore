@@ -9,3 +9,4 @@ bin
 *.log
 */nbactions.xml
 nbactions.xml
+*/testing.properties

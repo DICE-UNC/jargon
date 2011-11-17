@@ -2,21 +2,26 @@ package org.irods.jargon.core.packinstr;
 
 import junit.framework.Assert;
 
+import org.irods.jargon.core.connection.IRODSServerProperties;
+import org.irods.jargon.core.connection.IRODSServerProperties.IcatEnabled;
 import org.irods.jargon.core.rule.IRODSRule;
 import org.irods.jargon.core.rule.IRODSRuleTranslator;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class ExecMyRuleInp_PITest {
 
-	@Test
-	public void testInstanceWithRemoteAttributes() {
-		// TODO: test in Jargon 2.3.1 and then here
+	private static IRODSServerProperties irodsServerProperties = null;
+	
+	@BeforeClass
+	public static void setUp() throws Exception {
+		irodsServerProperties = IRODSServerProperties.instance(IcatEnabled.ICAT_ENABLED, 1, "rods3.0", "2", "zone");
 	}
 
 	@Test
 	public void testInstance() throws Exception {
 		String ruleString = "List Available MS||msiListEnabledMS(*KVPairs)##writeKeyValPairs(stdout,*KVPairs, \": \")|nop\nnull\n ruleExecOut";
-		IRODSRuleTranslator irodsRuleTranslator = new IRODSRuleTranslator();
+		IRODSRuleTranslator irodsRuleTranslator = new IRODSRuleTranslator(irodsServerProperties);
 		IRODSRule irodsRule = irodsRuleTranslator
 				.translatePlainTextRuleIntoIRODSRule(ruleString);
 		ExecMyRuleInp rulePI = ExecMyRuleInp.instance(irodsRule);
@@ -30,14 +35,14 @@ public class ExecMyRuleInp_PITest {
 	@Test
 	public void testGetParsedTags() throws Exception {
 		String ruleString = "List Available MS||msiListEnabledMS(*KVPairs)##writeKeyValPairs(stdout,*KVPairs, \": \")|nop\nnull\n ruleExecOut";
-		IRODSRuleTranslator irodsRuleTranslator = new IRODSRuleTranslator();
+		IRODSRuleTranslator irodsRuleTranslator = new IRODSRuleTranslator(irodsServerProperties);
 		IRODSRule irodsRule = irodsRuleTranslator
 				.translatePlainTextRuleIntoIRODSRule(ruleString);
 		ExecMyRuleInp rulePI = ExecMyRuleInp.instance(irodsRule);
 		String outputXML = rulePI.getParsedTags();
 
 		StringBuilder sb = new StringBuilder();
-		sb.append("<ExecMyRuleInp_PI><myRule>List Available MS||msiListEnabledMS(*KVPairs)##writeKeyValPairs(stdout,*KVPairs, &quot;: &quot;)|nop</myRule>\n");
+		sb.append("<ExecMyRuleInp_PI><myRule>List Available MS||msiListEnabledMS(*KVPairs)##writeKeyValPairs(stdout,*KVPairs, &quot;: &quot;)|nop\n</myRule>\n");
 		sb.append("<RHostAddr_PI><hostAddr></hostAddr>\n");
 		sb.append("<rodsZone></rodsZone>\n");
 		sb.append("<port>0</port>\n");
@@ -81,14 +86,14 @@ public class ExecMyRuleInp_PITest {
 		ruleBuilder.append("'%*Operation=ChksumAll\n");
 		ruleBuilder.append("*Action%*Condition%*Operation%*C%ruleExecOut");
 		String ruleString = ruleBuilder.toString();
-		IRODSRuleTranslator irodsRuleTranslator = new IRODSRuleTranslator();
+		IRODSRuleTranslator irodsRuleTranslator = new IRODSRuleTranslator(irodsServerProperties);
 		IRODSRule irodsRule = irodsRuleTranslator
 				.translatePlainTextRuleIntoIRODSRule(ruleString);
 		ExecMyRuleInp rulePI = ExecMyRuleInp.instance(irodsRule);
 		String outputXML = rulePI.getParsedTags();
 
 		StringBuilder sb = new StringBuilder();
-		sb.append("<ExecMyRuleInp_PI><myRule>myTestRule||acGetIcatResults(*Action,*Condition,*B)##forEachExec(*B,msiGetValByKey(*B,RESC_LOC,*R)##remoteExec(*R,null,msiDataObjChksum(*B,*Operation,*C),nop)##msiGetValByKey(*B,DATA_NAME,*D)##msiGetValByKey(*B,COLL_NAME,*E)##writeLine(stdout,CheckSum of *E/*D at *R is *C),nop)|nop##nop</myRule>\n");
+		sb.append("<ExecMyRuleInp_PI><myRule>myTestRule||acGetIcatResults(*Action,*Condition,*B)##forEachExec(*B,msiGetValByKey(*B,RESC_LOC,*R)##remoteExec(*R,null,msiDataObjChksum(*B,*Operation,*C),nop)##msiGetValByKey(*B,DATA_NAME,*D)##msiGetValByKey(*B,COLL_NAME,*E)##writeLine(stdout,CheckSum of *E/*D at *R is *C),nop)|nop##nop\n</myRule>\n");
 		sb.append("<RHostAddr_PI><hostAddr></hostAddr>\n");
 		sb.append("<rodsZone></rodsZone>\n");
 		sb.append("<port>0</port>\n");
@@ -130,7 +135,7 @@ public class ExecMyRuleInp_PITest {
 		builder.append("*Condition=RESC_NAME > 'a'\n");
 		builder.append("*GenQOut");
 		String ruleString = builder.toString();
-		IRODSRuleTranslator irodsRuleTranslator = new IRODSRuleTranslator();
+		IRODSRuleTranslator irodsRuleTranslator = new IRODSRuleTranslator(irodsServerProperties);
 		IRODSRule irodsRule = irodsRuleTranslator
 				.translatePlainTextRuleIntoIRODSRule(ruleString);
 		ExecMyRuleInp rulePI = ExecMyRuleInp.instance(irodsRule);
@@ -138,7 +143,7 @@ public class ExecMyRuleInp_PITest {
 
 		StringBuilder sb = new StringBuilder();
 
-		sb.append("<ExecMyRuleInp_PI><myRule>testExecReturnArray||msiMakeGenQuery(&quot;RESC_NAME, RESC_LOC&quot;,*Condition,*GenQInp)##msiExecGenQuery(*GenQInp, *GenQOut)|nop</myRule>\n");
+		sb.append("<ExecMyRuleInp_PI><myRule>testExecReturnArray||msiMakeGenQuery(&quot;RESC_NAME, RESC_LOC&quot;,*Condition,*GenQInp)##msiExecGenQuery(*GenQInp, *GenQOut)|nop\n</myRule>\n");
 		sb.append("<RHostAddr_PI><hostAddr></hostAddr>\n");
 		sb.append("<rodsZone></rodsZone>\n");
 		sb.append("<port>0</port>\n");

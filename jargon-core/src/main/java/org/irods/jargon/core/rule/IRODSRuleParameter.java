@@ -56,27 +56,27 @@ public class IRODSRuleParameter {
 	private Object value;
 	private String type;
 
-	IRODSRuleParameter() {
+	public IRODSRuleParameter() {
 		this(null, null, STR_PI);
 	}
 
-	IRODSRuleParameter(final int value) {
+	public IRODSRuleParameter(final int value) {
 		this(null, Integer.valueOf(value), INT_PI);
 	}
 
-	IRODSRuleParameter(final String value) {
+	public IRODSRuleParameter(final String value) {
 		this(null, value, STR_PI);
 	}
 
-	IRODSRuleParameter(final byte[] value) {
+	public IRODSRuleParameter(final byte[] value) {
 		this(null, value, BUF_LEN_PI);
 	}
 
-	IRODSRuleParameter(final String name, final String value) {
+	public IRODSRuleParameter(final String name, final String value) {
 		this(name, value, STR_PI);
 	}
 
-	IRODSRuleParameter(final String name, final Object value, final String type) {
+	public IRODSRuleParameter(final String name, final Object value, final String type) {
 		if (value == null) {
 			setNullValue();
 		} else {
@@ -190,13 +190,7 @@ public class IRODSRuleParameter {
 	}
 
 	public Tag createMsParamArray() {
-		/*
-		 * <MsParamArray_PI> <paramLen>2</paramLen> <oprType>0</oprType>
-		 * <MsParam_PI> <label>*A</label> <type>STR_PI</type> <STR_PI>
-		 * <myStr>getErrorStr</myStr> </STR_PI> </MsParam_PI> <MsParam_PI>
-		 * <label>*B</label> <type>STR_PI</type> <STR_PI> <myStr>513000</myStr>
-		 * </STR_PI> </MsParam_PI> </MsParamArray_PI>
-		 */
+		
 		Tag param = new Tag(IRODSConstants.MsParam_PI, new Tag[] {
 				new Tag(IRODSConstants.label, getUniqueName()),
 				new Tag(IRODSConstants.type, getType()), });

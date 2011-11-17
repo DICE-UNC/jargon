@@ -246,6 +246,120 @@ public class SynchronizeProcessorImplTest {
 		Assert.assertTrue("diffs found after synch", noDiffs);
 
 	}
+	
+	/*
+	 * For [#521] iDrop synch issue (nothing happens during synch) ref [iROD-Chat:7184] iDrop troubles
+	 */
+	@Test
+	public void testSynchLocalPlusWithZeroLengthFile() throws Exception {
+
+		int  nbrFiles = 10;
+		
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		
+
+		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
+		String rootCollection = "testSynchLocalPlusWithZeroLengthFile";
+		String localCollectionAbsolutePath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH
+						+ '/' + rootCollection);
+		
+		File localDir = new File(localCollectionAbsolutePath);
+		localDir.mkdirs();
+		
+		// make n number of empty files in test dir
+	
+		File localFile = null;
+		for (int i = 0; i < nbrFiles; i++) {
+			localFile = new File(localDir, rootCollection + i + ".txt");
+			localFile.createNewFile();
+		}
+
+		String irodsCollectionRootAbsolutePath = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + "/"
+								+ rootCollection);
+
+		File irodsRoot = (File) irodsFileSystem.getIRODSFileFactory(
+				irodsAccount)
+				.instanceIRODSFile(irodsCollectionRootAbsolutePath);
+		irodsRoot.mkdirs();
+
+		TransferManager transferManager = new TransferManagerImpl(
+				irodsFileSystem);
+		TransferControlBlock transferControlBlock = DefaultTransferControlBlock
+				.instance();
+		SynchronizeProcessorImpl synchronizeProcessor = new SynchronizeProcessorImpl();
+		synchronizeProcessor
+				.setFileTreeDiffUtility(new FileTreeDiffUtilityImpl(
+						irodsAccount, irodsFileSystem
+								.getIRODSAccessObjectFactory()));
+		synchronizeProcessor.setIrodsAccount(irodsAccount);
+		synchronizeProcessor.setTransferControlBlock(transferControlBlock);
+		synchronizeProcessor
+				.setSynchPropertiesService(new SynchPropertiesServiceImpl(
+						irodsFileSystem.getIRODSAccessObjectFactory(),
+						irodsAccount));
+		synchronizeProcessor.setTransferManager(transferManager);
+		synchronizeProcessor.setIrodsAccessObjectFactory(irodsFileSystem
+				.getIRODSAccessObjectFactory());
+		synchronizeProcessor.setIrodsAccount(irodsAccount);
+
+		InPlaceSynchronizingDiffProcessorImpl processor = new InPlaceSynchronizingDiffProcessorImpl();
+		processor.setIrodsAccessObjectFactory(irodsFileSystem
+				.getIRODSAccessObjectFactory());
+		processor.setIrodsAccount(irodsAccount);
+		processor.setTransferControlBlock(transferControlBlock);
+		synchronizeProcessor.setSynchronizingDiffProcessor(processor);
+		processor.setTransferManager(transferManager);
+
+		Synchronization synchronization = new Synchronization();
+		synchronization.setCreatedAt(new Date());
+		synchronization.setDefaultResourceName(irodsAccount
+				.getDefaultStorageResource());
+		synchronization.setFrequencyType(FrequencyType.EVERY_HOUR);
+		synchronization.setId(new Long(1));
+		synchronization.setIrodsHostName(irodsAccount.getHost());
+		synchronization.setIrodsPassword(HibernateUtil.obfuscate(irodsAccount
+				.getPassword()));
+		synchronization.setIrodsPort(irodsAccount.getPort());
+		synchronization.setIrodsSynchDirectory(irodsCollectionRootAbsolutePath);
+		synchronization.setLocalSynchDirectory(localCollectionAbsolutePath);
+		synchronization.setIrodsUserName(irodsAccount.getUserName());
+		synchronization.setIrodsZone(irodsAccount.getZone());
+		synchronization.setName("testname");
+		synchronization
+				.setSynchronizationMode(SynchronizationType.ONE_WAY_LOCAL_TO_IRODS);
+
+		LocalIRODSTransfer localIRODSTransfer = new LocalIRODSTransfer();
+		localIRODSTransfer.setCreatedAt(new Date());
+		localIRODSTransfer.setId(new Long(1));
+		localIRODSTransfer
+				.setIrodsAbsolutePath(irodsCollectionRootAbsolutePath);
+		localIRODSTransfer.setLocalAbsolutePath(localCollectionAbsolutePath);
+		localIRODSTransfer.setSynchronization(synchronization);
+		localIRODSTransfer.setTransferHost(irodsAccount.getHost());
+		localIRODSTransfer.setTransferPassword(synchronization
+				.getIrodsPassword());
+		localIRODSTransfer.setTransferPort(irodsAccount.getPort());
+		localIRODSTransfer.setTransferResource(irodsAccount
+				.getDefaultStorageResource());
+		localIRODSTransfer.setTransferState(TransferState.ENQUEUED);
+		localIRODSTransfer.setTransferType(TransferType.SYNCH);
+
+		synchronizeProcessor.synchronizeLocalToIRODS(localIRODSTransfer);
+
+		FileTreeDiffUtility fileTreeDiffUtility = new FileTreeDiffUtilityImpl(
+				irodsAccount, irodsFileSystem.getIRODSAccessObjectFactory());
+
+		boolean noDiffs = fileTreeDiffUtility.verifyLocalAndIRODSTreesMatch(
+				new File(localCollectionAbsolutePath),
+				irodsCollectionRootAbsolutePath, 0L, 0L);
+
+		Assert.assertTrue("diffs found after synch", noDiffs);
+
+	}
 
 	/*
 	 * 

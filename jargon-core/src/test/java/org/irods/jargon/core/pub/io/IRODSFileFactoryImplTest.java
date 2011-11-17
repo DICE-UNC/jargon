@@ -109,6 +109,26 @@ public class IRODSFileFactoryImplTest {
 		irodsSession.closeSession();
 		Assert.assertNotNull(irodsFile);
 	}
+	
+	@Test
+	public final void testCreateFileByUriNoUserInfo() throws Exception {
+		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager
+				.instance();
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSSession irodsSession = IRODSSession
+				.instance(irodsConnectionManager);
+		IRODSAccessObjectFactory accessObjectFactory = IRODSAccessObjectFactoryImpl
+				.instance(irodsSession);
+		IRODSFileFactory irodsFileFactory = accessObjectFactory
+				.getIRODSFileFactory(irodsAccount);
+		URI testURI = testingPropertiesHelper
+				.buildUriFromTestPropertiesForFileNoUserInfo(testingProperties,
+						"home/afile.txt");
+		IRODSFile irodsFile = irodsFileFactory.instanceIRODSFile(testURI);
+		irodsSession.closeSession();
+		Assert.assertNotNull(irodsFile);
+	}
 
 	@Test
 	public final void testCreateFileByParentChildString() throws Exception {

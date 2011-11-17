@@ -31,13 +31,6 @@ import org.slf4j.LoggerFactory;
  * 
  * @author Mike Conway - DICE (www.irods.org)
  * 
- *         TODO: dev notes There is a corresponding note in
- *         SynchronizeProcessorImpl, handle the idea of deletes as part of
- *         synch? Use file filters to optimize (for only grabbing
- *         files/collections, and perhaps for using timestamp to identify diffs
- *         Processing to compare to equal file names when timestamp data not
- *         useful (length, checksum?)
- * 
  */
 public class FileTreeDiffUtilityImpl implements FileTreeDiffUtility {
 
@@ -262,6 +255,7 @@ public class FileTreeDiffUtilityImpl implements FileTreeDiffUtility {
 				FileTreeDiffEntry entry = buildFileTreeDiffEntryForFile(
 						leftHandSide, DiffType.LEFT_HAND_PLUS, 0, 0);
 				currentFileTreeNode.add(new FileTreeNode(entry));
+				log.info("left hand plus generated:{}", entry);
 			} else {
 				// the lhs file is plus, but the mod date is before the last
 				// synch. This is an indeterminate state. This could be treated
@@ -279,6 +273,7 @@ public class FileTreeDiffUtilityImpl implements FileTreeDiffUtility {
 																						// {
 				FileTreeDiffEntry entry = buildFileTreeDiffEntryForFile(
 						rightHandSide, DiffType.RIGHT_HAND_PLUS, 0, 0);
+				log.info("right hand plus generated:{}", entry);
 				currentFileTreeNode.add(new FileTreeNode(entry));
 			} else {
 				// the rhs file is plus, but the mod date is before the last
@@ -438,9 +433,11 @@ public class FileTreeDiffUtilityImpl implements FileTreeDiffUtility {
 						// the
 						// rhs
 						j++;
+						log.info("advance rhs pointer");
 					} else if (lhMatchOrPass == 0) {
 						// i was matched, so advance both
 						j++;
+						log.info("advance rhs pointer");
 						break;
 					} else {
 						// rhs was greater, don't advance rhs
@@ -574,20 +571,6 @@ public class FileTreeDiffUtilityImpl implements FileTreeDiffUtility {
 		FileTreeDiffEntry entry = buildFileTreeDiffEntryForFile(leftHandSide,
 				DiffType.LEFT_HAND_PLUS, 0, 0);
 		currentFileTreeNode.add(new FileTreeNode(entry));
-		/*
-		 * if (timestampForLastSynchRightHandSide == NO_TIMESTAMP_CHECKS ||
-		 * leftHandSide.lastModified() > timestampForLastSynchLeftHandSide) {
-		 * log.debug("unaccounted for lhs file: {}",
-		 * leftHandSide.getAbsolutePath()); FileTreeDiffEntry entry =
-		 * buildFileTreeDiffEntryForFile( leftHandSide, DiffType.LEFT_HAND_PLUS,
-		 * 0, 0); currentFileTreeNode.add(new FileTreeNode(entry)); } else { //
-		 * the rhs file is plus, but the mod date is before the last // synch.
-		 * This is an indeterminate state. This coul dbe // treated // as a
-		 * local delete? log.debug("lhs file last mod:{}",
-		 * leftHandSide.lastModified()); log.debug(
-		 * "lhs file is seen as new, but modified time is before last synch, irods delete? currently no deletes done:{}"
-		 * , leftHandSide.getAbsolutePath()); }
-		 */
 	}
 
 	/**

@@ -26,11 +26,12 @@ public class SessionClosingIRODSFileOutputStream extends IRODSFileOutputStream {
 	 * @param fileIOOperations
 	 *            {@link FileIOOperations} object that handles the actual iRODS
 	 *            communication.
-	 * @throws FileNotFoundException
+	 * @throws FileNotFoundException if file cannot be found
+	 * @throws JargonException for other iRODS errors
 	 */
 	protected SessionClosingIRODSFileOutputStream(final IRODSFile irodsFile,
 			final FileIOOperations fileIOOperations)
-			throws FileNotFoundException {
+			throws FileNotFoundException, JargonException {
 		super(irodsFile, fileIOOperations);
 	}
 

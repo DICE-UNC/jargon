@@ -99,6 +99,27 @@ public class Stream2StreamAOImplTest {
 				Arrays.equals(localChecksum, irodsChecksumAsByte));
 
 	}
+	
+	@Test
+	public void testStreamResourceToIRODSFile() throws Exception {
+		String testFileName = "testStreamResourceToIRODSFile.r";
+		String sourceFileName = "/rules/rulemsiGetIcatTime.r";
+		
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSAccessObjectFactory irodsAccessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
+		Stream2StreamAO stream2StreamAO = irodsAccessObjectFactory.getStream2StreamAO(irodsAccount);
+		stream2StreamAO.streamClasspathResourceToIRODSFile(sourceFileName, targetIrodsCollection + "/" + testFileName);
+		IRODSFile targetIrodsFile = irodsAccessObjectFactory.getIRODSFileFactory(irodsAccount).instanceIRODSFile(targetIrodsCollection + "/" + testFileName);
+		TestCase.assertTrue("file does not exist", targetIrodsFile.exists());
+		TestCase.assertTrue("no data in target file", targetIrodsFile.length() > 0);
+	
+	}
 
 	@Test
 	public void testStreamIRODSFileToByteArray() throws Exception {

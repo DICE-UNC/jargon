@@ -27,8 +27,11 @@ import org.irods.jargon.core.pub.domain.UserFilePermission;
 public class CollectionAndDataObjectListingEntry extends IRODSDomainObject
 		implements Comparable<CollectionAndDataObjectListingEntry> {
 
+	/**
+	 * Analogous to objType_t defined in rodsType.h
+	 */
 	public enum ObjectType {
-		COLLECTION, DATA_OBJECT
+		UNKNOWN,DATA_OBJECT, COLLECTION, UNKNOWN_FILE, LOCAL_FILE, LOCAL_DIR, NO_INPUT
 	}
 
 	private String parentPath = "";
@@ -38,6 +41,7 @@ public class CollectionAndDataObjectListingEntry extends IRODSDomainObject
 	private Date modifiedAt = null;
 	private long dataSize = 0L;
 	private String ownerName = "";
+	private String ownerZone = "";
 	private List<UserFilePermission> userFilePermission = new ArrayList<UserFilePermission>();
 	private int id;
 
@@ -247,5 +251,19 @@ public class CollectionAndDataObjectListingEntry extends IRODSDomainObject
 	public int compareTo(final CollectionAndDataObjectListingEntry obj) {
 		return this.getFormattedAbsolutePath().compareTo(
 				(obj).getFormattedAbsolutePath());
+	}
+
+	/**
+	 * @return the ownerZone
+	 */
+	public String getOwnerZone() {
+		return ownerZone;
+	}
+
+	/**
+	 * @param ownerZone the ownerZone to set
+	 */
+	public void setOwnerZone(String ownerZone) {
+		this.ownerZone = ownerZone;
 	}
 }

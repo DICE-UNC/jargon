@@ -9,6 +9,6 @@ package org.irods.jargon.core.pub;
  * @author Mike Conway - DICE (www.irods.org)
  * 
  */
-public interface SpecificQueryExcecutorAO {
+public interface SpecificQueryExcecutorAO  extends IRODSAccessObject {
 
 }

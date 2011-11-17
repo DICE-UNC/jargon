@@ -24,7 +24,7 @@ public class IRODSFileInputStream extends InputStream {
 
 	private transient final IRODSFile irodsFile;
 	private transient final FileIOOperations fileIOOperations;
-	private transient int fd = 0;
+	private transient int fd = -1;
 	private transient long filePointer = 0;
 
 	/**
@@ -76,19 +76,35 @@ public class IRODSFileInputStream extends InputStream {
 			throw new FileNotFoundException(msg);
 		}
 
+		/* File is not opened until first read. 
+		 * This avoids situations, such as in Fedora repository, where the stream would otherwise be opened by one thread and 
+		 * read by another, causing an invalid fd (irods -345000 error).
+		 */
+		
 		this.irodsFile = irodsFile;
+		this.fileIOOperations = fileIOOperations;
+	
+	}
 
+	/**
+	 * 
+	 */
+	private void openFile() {
+		
+		if (fd == -1) {
+			log.debug("file will be opened on this operation");
+		} else {
+			return;
+		}
+		
 		try {
 			openIRODSFile();
+			this.fd = irodsFile.getFileDescriptor();
 		} catch (JargonException e) {
 			final String msg = "JargonException caught in constructor, rethrow as JargonRuntimeException";
 			log.error(msg, e);
 			throw new JargonRuntimeException(msg, e);
 		}
-
-		this.fileIOOperations = fileIOOperations;
-		this.fd = irodsFile.getFileDescriptor();
-
 	}
 
 	/**
@@ -175,6 +191,7 @@ public class IRODSFileInputStream extends InputStream {
 	@Override
 	public int read() throws IOException {
 		try {
+			openFile();
 			byte buffer[] = new byte[1];
 
 			int temp = fileIOOperations.fileRead(fd, buffer, 0, 1);
@@ -273,6 +290,7 @@ public class IRODSFileInputStream extends InputStream {
 
 		int temp;
 		try {
+			openFile();
 			temp = fileIOOperations.fileRead(fd, b, off, len);
 		} catch (JargonException e) {
 			log.error(
@@ -336,6 +354,7 @@ public class IRODSFileInputStream extends InputStream {
 	 */
 	@Override
 	public int read(final byte b[]) throws IOException {
+		openFile();
 		return read(b, 0, b.length);
 	}
 
@@ -360,6 +379,7 @@ public class IRODSFileInputStream extends InputStream {
 		}
 
 		try {
+			openFile();
 			if ((filePointer + numberOfBytesToSkip) < length) {
 
 				fileIOOperations.seek(fd, numberOfBytesToSkip,

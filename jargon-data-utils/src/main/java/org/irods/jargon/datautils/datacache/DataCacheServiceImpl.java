@@ -90,6 +90,7 @@ public class DataCacheServiceImpl implements DataCacheService {
 		IRODSFile cacheFile = this.getIrodsAccessObjectFactory()
 				.getIRODSFileFactory(irodsAccount)
 				.instanceIRODSFile(irodsFileAbsolutePath);
+		
 		createCacheFileAndCacheDir(cacheFile);
 		Stream2StreamAO stream2StreamAO = this.getIrodsAccessObjectFactory()
 				.getStream2StreamAO(irodsAccount);

@@ -319,6 +319,16 @@ public final class IRODSAccessObjectFactoryImpl implements
 		return new DataObjectAOImpl(irodsSession, irodsAccount);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.core.pub.IRODSAccessObjectFactory#getDataObjectAuditAO(org.irods.jargon.core.connection.IRODSAccount)
+	 */
+	@Override
+	public DataObjectAuditAO getDataObjectAuditAO(final IRODSAccount irodsAccount)
+			throws JargonException {
+		checkIrodsSessionSet();
+		return new DataObjectAuditAOImpl(irodsSession, irodsAccount);
+	}
+	
 	/*
 	 * (non-Javadoc)
 	 * 

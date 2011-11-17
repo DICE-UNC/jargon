@@ -410,7 +410,7 @@ public final class IRODSFileImpl extends File implements IRODSFile { // FIXME: w
 			// in irods the file must be closed, then opened when doing a create
 			// new
 			this.close();
-			this.open();
+			this.openKnowingExists();
 			log.debug("file now closed");
 		} catch (JargonFileOrCollAlreadyExistsException e) {
 			return false;
@@ -1224,17 +1224,6 @@ public final class IRODSFileImpl extends File implements IRODSFile { // FIXME: w
 	 */
 	@Override
 	public String getResource() throws JargonException {
-		/*
-		 * // I may have set the resource already if (resource.length() == 0) {
-		 * // for files, get the actual resource associated with the file, //
-		 * otherwise, // get any default set by the IRODS account if
-		 * (this.isFile()) { resource =
-		 * this.irodsFileSystemAO.getResourceNameForFile(this); } else {
-		 * resource = this.irodsFileSystemAO.getIRODSAccount()
-		 * .getDefaultStorageResource(); } } else { // note that there is some
-		 * inconsistency between nulls and "" values // for resource, try and //
-		 * standardize on null. This probably needs more work. }
-		 */
 		return resource;
 	}
 
@@ -1268,13 +1257,15 @@ public final class IRODSFileImpl extends File implements IRODSFile { // FIXME: w
 		this.fileDescriptor = fileDescriptor;
 	}
 
-	private int openWithMode(final DataObjInp.OpenFlags openFlags)
+	private int openWithMode(final DataObjInp.OpenFlags openFlags, boolean checkExists)
 			throws JargonException {
+		
 		if (log.isInfoEnabled()) {
 			log.info("opening irodsFile:" + this.getAbsolutePath());
 		}
 
-		if (!this.exists()) {
+	
+		if (checkExists && !this.exists()) {
 			throw new JargonException(
 					"this file does not exist, so it cannot be opened.  The file should be created first!");
 		}
@@ -1301,7 +1292,7 @@ public final class IRODSFileImpl extends File implements IRODSFile { // FIXME: w
 	 */
 	@Override
 	public int openReadOnly() throws JargonException {
-		return openWithMode(DataObjInp.OpenFlags.READ);
+		return openWithMode(DataObjInp.OpenFlags.READ, true);
 	}
 
 	/*
@@ -1311,8 +1302,17 @@ public final class IRODSFileImpl extends File implements IRODSFile { // FIXME: w
 	 */
 	@Override
 	public int open() throws JargonException {
-		return openWithMode(DataObjInp.OpenFlags.READ_WRITE);
-
+		return openWithMode(DataObjInp.OpenFlags.READ_WRITE, true);
+	}
+	
+	/**
+	 * Open the file without doing an <code>exists()</code> check, since I know it already does.  This saves
+	 * a bit of time
+	 * @return
+	 * @throws JargonException
+	 */
+	private int openKnowingExists() throws JargonException {
+		return openWithMode(DataObjInp.OpenFlags.READ_WRITE, false);
 	}
 
 	/*
@@ -1323,8 +1323,10 @@ public final class IRODSFileImpl extends File implements IRODSFile { // FIXME: w
 	@Override
 	public void close() throws JargonException {
 		if (log.isInfoEnabled()) {
-			log.info("closing irodsFile:" + this.getAbsolutePath());
+			log.info("closing irodsFile:{}", this.getAbsolutePath());
 		}
+		
+		this.reset();
 
 		if (this.getFileDescriptor() <= 0) {
 			log.info("file is not open, silently ignore");
@@ -1334,7 +1336,7 @@ public final class IRODSFileImpl extends File implements IRODSFile { // FIXME: w
 
 		this.irodsFileSystemAO.fileClose(this.getFileDescriptor());
 		this.setFileDescriptor(-1);
-
+		
 	}
 
 	/*

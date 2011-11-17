@@ -209,6 +209,7 @@ public class DefaultTransferControlBlock implements TransferControlBlock {
 	 */
 	@Override
 	public void setPaused(final boolean paused) {
+		log.info("set paused:{}", paused);
 		synchronized (this) {
 			this.paused = paused;
 		}

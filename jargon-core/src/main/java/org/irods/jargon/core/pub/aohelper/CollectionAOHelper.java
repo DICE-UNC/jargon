@@ -216,6 +216,7 @@ public class CollectionAOHelper extends AOHelper {
 		entry.setId(IRODSDataConversionUtil.getIntOrZeroFromIRODSValue(row
 				.getColumn(4)));
 		entry.setOwnerName(row.getColumn(5));
+		entry.setOwnerZone(row.getColumn(6));
 
 		entry.setCount(row.getRecordCount());
 		entry.setLastResult(row.isLastResult());
@@ -279,6 +280,8 @@ public class CollectionAOHelper extends AOHelper {
 		query.append(RodsGenQueryEnum.COL_COLL_ID.getName());
 		query.append(COMMA);
 		query.append(RodsGenQueryEnum.COL_COLL_OWNER_NAME.getName());
+		query.append(COMMA);
+		query.append(RodsGenQueryEnum.COL_COLL_OWNER_ZONE.getName());
 		return query.toString();
 	}
 
@@ -320,10 +323,10 @@ public class CollectionAOHelper extends AOHelper {
 			final List<UserFilePermission> userFilePermissions,
 			final IRODSQueryResultRow row) throws JargonException {
 		UserFilePermission userFilePermission;
-		userFilePermission = new UserFilePermission(row.getColumn(8),
-				row.getColumn(7),
+		userFilePermission = new UserFilePermission(row.getColumn(9),
+				row.getColumn(8),
 				FilePermissionEnum.valueOf(IRODSDataConversionUtil
-						.getIntOrZeroFromIRODSValue(row.getColumn(6))));
+						.getIntOrZeroFromIRODSValue(row.getColumn(7))));
 		userFilePermissions.add(userFilePermission);
 	}
 

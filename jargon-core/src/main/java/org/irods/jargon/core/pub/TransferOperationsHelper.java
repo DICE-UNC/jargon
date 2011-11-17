@@ -335,7 +335,8 @@ final class TransferOperationsHelper {
 			if (transferControlBlock != null
 					&& (transferControlBlock.isCancelled() || transferControlBlock
 							.isPaused())) {
-				noifyPauseOrCancelCallbackForPut(targetIrodsCollection,
+				log.info("will notify pause or cancel for this put");
+				notifyPauseOrCancelCallbackForPut(targetIrodsCollection,
 						transferStatusCallbackListener, transferControlBlock,
 						fileInSourceCollection);
 				break;
@@ -355,19 +356,22 @@ final class TransferOperationsHelper {
 	}
 
 	/**
-	 * @param targetIrodsCollection
-	 * @param transferStatusCallbackListener
-	 * @param transferControlBlock
-	 * @param fileInSourceCollection
+	 * A put operation has been cancelled or paused, give the appropraite callback
+	 * @param targetIrodsCollection {@link IRODSFile} that was the source
+	 * @param transferStatusCallbackListener {@link TransferStatusCallbackListener} that receives the call-back
+	 * @param transferControlBlock {@link TransferControlBlock} that contains information about the transfer
+	 * @param fileInSourceCollection {@link File} that was the current source of the put
 	 * @throws JargonException
 	 */
-	private void noifyPauseOrCancelCallbackForPut(
+	private void notifyPauseOrCancelCallbackForPut(
 			final IRODSFile targetIrodsCollection,
 			final TransferStatusCallbackListener transferStatusCallbackListener,
 			final TransferControlBlock transferControlBlock,
 			final File fileInSourceCollection) throws JargonException {
-		log.info("transfer cancelled or paused");
+		
+		log.info("transfer cancelled or paused, signal with a callback");
 		if (transferStatusCallbackListener != null) {
+		
 			TransferState interruptStatus;
 
 			if (transferControlBlock
@@ -383,9 +387,10 @@ final class TransferOperationsHelper {
 					fileInSourceCollection.getAbsolutePath(),
 					targetIrodsCollection.getAbsolutePath(), "",
 					fileInSourceCollection.length(), fileInSourceCollection
-							.length(), 0, 0, interruptStatus, dataObjectAO
+							.length(), transferControlBlock.getTotalFilesTransferredSoFar(), transferControlBlock.getTotalFilesToTransfer(), interruptStatus, dataObjectAO
 							.getIRODSAccount().getHost(), dataObjectAO
 							.getIRODSAccount().getZone());
+			log.info("status callback for cancel:{}", status);
 			transferStatusCallbackListener.statusCallback(status);
 		}
 	}

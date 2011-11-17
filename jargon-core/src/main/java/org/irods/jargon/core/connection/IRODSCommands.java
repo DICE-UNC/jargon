@@ -90,7 +90,7 @@ public class IRODSCommands implements IRODSManagedConnection {
 	private Logger log = LoggerFactory.getLogger(IRODSCommands.class);
 	private final IRODSConnection irodsConnection;
 	private IRODSServerProperties irodsServerProperties;
-	private final IRODSProtocolManager irodsProtocolManager;
+	private IRODSProtocolManager irodsProtocolManager;
 	private final PipelineConfiguration pipelineConfiguration;
 
 	private String cachedChallengeValue = "";
@@ -800,18 +800,21 @@ public class IRODSCommands implements IRODSManagedConnection {
 			throw new JargonException(
 					"no status tag in error PI tag when processing error in response from iRODS");
 		}
-
+		
+		
 		int statusVal = status.getIntValue();
 		if (statusVal == 0) {
 			log.debug("error status of 0 indicates normal operation, ignored");
 			return;
 		}
-		log.error("IRODS error occured: {} ", errorTag.getTag(RErrMsg.PI_TAG)
-				.getTag(AbstractIRODSPackingInstruction.MESSAGE_TAG));
+		
+		String errorText =  errorTag.getTag(RErrMsg.PI_TAG)
+		.getTag(AbstractIRODSPackingInstruction.MESSAGE_TAG).getStringValue();
+		
+		log.error("IRODS error encountered:{}", errorText);
+		log.error("status from error is:{}", statusVal);
 
-		throw new JargonException("IRODS error occured "
-				+ errorTag.getTag(RErrMsg.PI_TAG).getTag(
-						AbstractIRODSPackingInstruction.MESSAGE_TAG));
+		throw new JargonException("error returned from iRODS, status = " + statusVal + " message:" + errorText);
 	}
 
 	/**
@@ -1345,6 +1348,20 @@ public class IRODSCommands implements IRODSManagedConnection {
 			throw new IllegalArgumentException("null irodsSession");
 		}
 		irodsConnection.setIrodsSession(irodsSession);
+	}
+
+	/**
+	 * @return the irodsProtocolManager
+	 */
+	public synchronized IRODSProtocolManager getIrodsProtocolManager() {
+		return irodsProtocolManager;
+	}
+
+	/**
+	 * @param irodsProtocolManager the irodsProtocolManager to set
+	 */
+	public synchronized void setIrodsProtocolManager(IRODSProtocolManager irodsProtocolManager) {
+		this.irodsProtocolManager = irodsProtocolManager;
 	}
 
 }

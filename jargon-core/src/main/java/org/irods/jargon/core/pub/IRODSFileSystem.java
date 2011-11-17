@@ -86,7 +86,27 @@ public final class IRODSFileSystem {
 	public IRODSFileSystem() throws JargonException {
 		this.irodsProtocolManager = IRODSSimpleProtocolManager.instance();
 		this.irodsSession = IRODSSession.instance(irodsProtocolManager);
+		initialize();
 		log.info("IRODSfileSystem is initialized");
+	}
+	
+	/**
+	 * Constructor that accepts an <code>irodsProtocolManager</code>.  This object is in charge of 
+	 * producing iRODS connections upon request, through some arbitrary mechanism.  This constructor 
+	 * allows pool, proxy, and other connection sources.
+	 * 
+	 * @param irodsProtocolManager {@link IRODSProtocolManager} instance
+	 * @throws JargonException
+	 */
+	public IRODSFileSystem(IRODSProtocolManager irodsProtocolManager) throws JargonException {
+		if (irodsProtocolManager == null) {
+			throw new IllegalArgumentException("null irodsProtocolManager");
+		}
+		this.irodsProtocolManager = irodsProtocolManager;
+		this.irodsSession = IRODSSession.instance(irodsProtocolManager);
+		initialize();
+		log.info("IRODSfileSystem is initialized");
+		
 	}
 
 	/**
@@ -226,6 +246,10 @@ public final class IRODSFileSystem {
 	 */
 	public JargonProperties getJargonProperties() {
 		return getIrodsSession().getJargonProperties();
+	}
+	
+	private void initialize() throws JargonException {
+		irodsProtocolManager.initialize();
 	}
 
 }

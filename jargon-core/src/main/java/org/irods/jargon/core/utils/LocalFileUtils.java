@@ -8,6 +8,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.StringWriter;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.DateFormat;
@@ -16,6 +18,7 @@ import java.util.zip.CRC32;
 import java.util.zip.CheckedInputStream;
 
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.pub.RuleProcessingAOImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,8 +32,9 @@ public class LocalFileUtils {
 
 	public static final Logger log = LoggerFactory
 			.getLogger(LocalFileUtils.class);
-	
-	public static final DateFormat dateFormat = DateFormat.getDateTimeInstance();
+
+	public static final DateFormat dateFormat = DateFormat
+			.getDateTimeInstance();
 
 	/**
 	 * private constructor, this is not meant to be an instantiated class.
@@ -42,49 +46,58 @@ public class LocalFileUtils {
 	/**
 	 * Parse a file name to get the stuff after the last '.' character to treat
 	 * as the file extension
-	 * @param fileName <code>String</code> with the file name to parse out.
+	 * 
+	 * @param fileName
+	 *            <code>String</code> with the file name to parse out.
 	 * @return <code>String</code> with the file extension
 	 */
 	public static String getFileExtension(final String fileName) {
 		if (fileName == null || fileName.isEmpty()) {
 			throw new IllegalArgumentException("null fileName");
 		}
-	
+
 		int lastDot = fileName.lastIndexOf('.');
 		if (lastDot == -1) {
 			return "";
 		} else {
-			return(fileName.substring(lastDot));
+			return (fileName.substring(lastDot));
 		}
-	
+
 	}
-	
+
 	/**
-	 * Parse a file name to get the stuff before last '.' character to treat
-	 * as the file name
-	 * @param fileName <code>String</code> with the file name to parse out.
-	 * @return <code>String</code> with the file name before the extension, without the '.'
+	 * Parse a file name to get the stuff before last '.' character to treat as
+	 * the file name
+	 * 
+	 * @param fileName
+	 *            <code>String</code> with the file name to parse out.
+	 * @return <code>String</code> with the file name before the extension,
+	 *         without the '.'
 	 */
 	public static String getFileNameUpToExtension(final String fileName) {
 		if (fileName == null || fileName.isEmpty()) {
 			throw new IllegalArgumentException("null fileName");
 		}
-	
+
 		int lastDot = fileName.lastIndexOf('.');
 		if (lastDot == -1) {
 			return "";
 		} else {
-			return(fileName.substring(0, lastDot));
+			return (fileName.substring(0, lastDot));
 		}
-	
+
 	}
-	
+
 	/**
 	 * Interpose a time stamp between the file name and extension
-	 * @param fileName <code>String</code> with the file name to parse out
-	 * @return <code>String</code> with the updated file name containing a time stamp
+	 * 
+	 * @param fileName
+	 *            <code>String</code> with the file name to parse out
+	 * @return <code>String</code> with the updated file name containing a time
+	 *         stamp
 	 */
-	public static String getFileNameWithTimeStampInterposed(final String fileName) {
+	public static String getFileNameWithTimeStampInterposed(
+			final String fileName) {
 		String namePart = getFileNameUpToExtension(fileName);
 		String extension = getFileExtension(fileName);
 		StringBuilder newName = new StringBuilder(namePart);
@@ -94,8 +107,7 @@ public class LocalFileUtils {
 		newName.append(extension);
 		return newName.toString();
 	}
-	
-	
+
 	/**
 	 * Count files in a directory (including files in all subdirectories)
 	 * 
@@ -288,6 +300,55 @@ public class LocalFileUtils {
 		}
 
 		return sb.toString();
+	}
+
+	/**
+	 * Given a path to a classpath resource, return that resource data as a
+	 * string
+	 * 
+	 * @param resourcePath
+	 *            <code>String</code> for a classpath resource
+	 * @return <code>String</code> with the String value of that resource data
+	 * @throws JargonException
+	 */
+	public static String getClasspathResourceFileAsString(
+			final String resourcePath) throws JargonException {
+
+		if (resourcePath == null || resourcePath.isEmpty()) {
+			throw new IllegalArgumentException("null or empty resourcePath");
+		}
+
+		InputStreamReader resourceReader = new InputStreamReader(
+				new BufferedInputStream(
+						RuleProcessingAOImpl.class
+								.getResourceAsStream(resourcePath)));
+
+		StringWriter writer = null;
+		String ruleString = null;
+
+		try {
+			writer = new StringWriter();
+			char[] buff = new char[1024];
+			int i = 0;
+			while ((i = resourceReader.read(buff)) > -1) {
+				writer.write(buff, 0, i);
+			}
+
+			ruleString = writer.toString();
+
+		} catch (IOException ioe) {
+			log.error("io exception reading rule data from resource", ioe);
+			throw new JargonException("error reading rule from resource", ioe);
+		} finally {
+			try {
+				resourceReader.close();
+				writer.close();
+			} catch (IOException e) {
+				// ignore
+			}
+
+		}
+		return ruleString;
 	}
 
 }

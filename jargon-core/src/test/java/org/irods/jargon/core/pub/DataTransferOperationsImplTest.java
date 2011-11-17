@@ -870,6 +870,51 @@ public class DataTransferOperationsImplTest {
 		assertionHelper.assertIrodsFileMatchesLocalFileChecksum(
 				destFile.getAbsolutePath(), localFile.getAbsolutePath());
 	}
+	
+	/*
+	 * For [#521] iDrop synch issue (nothing happens during synch) ref [iROD-Chat:7184] iDrop troubles
+	 */
+	@Test
+	public void testPutCollectionWithZeroLengthFilesInIt() throws Exception {
+		// generate a local scratch file
+		String testColl = "testPutCollectionWithZeroLengthFilesInIt";
+		int nbrFiles = 10;
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH + "/" + testColl);
+		
+		File localDir = new File(absPath);
+		localDir.mkdirs();
+		
+		// make n number of empty files in test dir
+	
+		String targetIrodsFile = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH );
+		
+		File localFile = null;
+		for (int i = 0; i < nbrFiles; i++) {
+			localFile = new File(localDir, testColl + i + ".txt");
+			localFile.createNewFile();
+		}
+		
+		// now put the files
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSFileFactory irodsFileFactory = irodsFileSystem
+				.getIRODSFileFactory(irodsAccount);
+		IRODSFile destFile = irodsFileFactory
+				.instanceIRODSFile(targetIrodsFile);
+		DataTransferOperations dataTransferOperationsAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataTransferOperations(
+						irodsAccount);
+
+		dataTransferOperationsAO.putOperation(localDir, destFile, null, null);
+		 destFile = irodsFileFactory
+			.instanceIRODSFile(targetIrodsFile, testColl);
+		assertionHelper.assertTwoFilesAreEqualByRecursiveTreeComparison(localDir, (File) destFile);
+	}
 
 	@Test
 	public void testGetCollectionWithTwoFilesNoCallbacks() throws Exception {
@@ -2523,6 +2568,7 @@ public class DataTransferOperationsImplTest {
 	}
 
 	@Test
+	@Ignore
 	public void testCopyCollectionWithCancelThenRestart() throws Exception {
 
 		String rootCollection = "testCopyCollectionWithCancelThenRestart";

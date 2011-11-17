@@ -1,86 +1,131 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <parent>
-    <groupId>org.irods</groupId>
-    <artifactId>jargon</artifactId>
-    <version>3.0.0-SNAPSHOT</version>
-  </parent>
-  <groupId>org.irods.jargon</groupId>
-  <artifactId>jargon-data-utils</artifactId>
-  <name>Jargon Data Utils</name>
-  <description>Utilities for working with iRODS data.  These are higher level utilities that complement the jargon-core libraries for working with trees, data objects, collections, and metadata in iRODS	</description>
- <dependencies>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.irods.jargon</groupId>
-      <artifactId>jargon-core</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.irods.jargon</groupId>
-      <artifactId>jargon-test</artifactId>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.commons</groupId>
-      <artifactId>commons-exec</artifactId>
-      <scope>test</scope>
-    </dependency>
-  </dependencies>
-  <build>
-    <plugins>
-      <plugin>
-        <artifactId>maven-antrun-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>0</id>
-            <phase>validate</phase>
-	    <configuration>
-	      <tasks>
-		<delete file="${basedir}/src/test/resources/testing.properties" />
-		<touch file="${basedir}/src/test/resources/testing.properties" mkdirs="true" />
-		<echo file="${basedir}/src/test/resources/testing.properties" append="true">
-test.confirm=${jargon.test.confirm}
-test.data.directory=${jargon.test.data.directory}
-test.irods.admin=${jargon.test.irods.admin}
-test.irods.admin.password=${jargon.test.irods.admin.password}
-test.irods.user=${jargon.test.irods.user}
-test.irods.password=${jargon.test.irods.password}
-test.irods.resource=${jargon.test.irods.resource}
-test2.irods.user=${jargon.test.irods.user2}
-test2.irods.password=${jargon.test.irods.password2}
-test2.irods.resource=${jargon.test.irods.resource2}
-test3.irods.user=${jargon.test.irods.user3}
-test3.irods.password=${jargon.test.irods.password3}
-test3.irods.resource=${jargon.test.irods.resource3}
-test.irods.host=${jargon.test.irods.host}
-test.irods.port=${jargon.test.irods.port}
-test.irods.zone=${jargon.test.irods.zone}
-test.resource.group=${jargon.test.resource.group}
-test.irods.userDN=${jargon.test.irods.userDN}
-test.irods.scratch.subdir=${jargon.test.irods.scratch.subdir}
-test.mac.icommand.path=${jargon.test.mac.icommand.path}
-test.option.exercise.remoteexecstream=${jargon.test.option.exercise.remoteexecstream}
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.irods</groupId>
+		<artifactId>jargon</artifactId>
+		<version>3.0.1-SNAPSHOT</version>
+	</parent>
+	<groupId>org.irods.jargon</groupId>
+	<artifactId>jargon-data-utils</artifactId>
+	<name>Jargon Data Utils</name>
+	<description>Utilities for working with iRODS data.  These are higher level utilities that complement the jargon-core libraries for working with trees, data objects, collections, and metadata in iRODS	</description>
+	<dependencies>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.irods.jargon</groupId>
+			<artifactId>jargon-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.irods.jargon</groupId>
+			<artifactId>jargon-test</artifactId>
+			<scope>compile</scope>
+		</dependency>
+		<dependency> 
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-exec</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+				<groupId>commons-io</groupId>
+				<artifactId>commons-io</artifactId>
+				<scope>compile</scope>
+			</dependency>
+		<dependency>
+			<groupId>commons-pool</groupId>
+			<artifactId>commons-pool</artifactId>
+			<version>1.5.6</version>
+			<scope>compile</scope>
+		</dependency>
+		<!--  JAI image manipulate dependencies -->
+		<dependency>
+			<groupId>javax.media</groupId>
+			<artifactId>jai_core</artifactId>
+			<version>1.1.3</version>
+			<type>pom</type>
+		</dependency>
+		<dependency>
+			<groupId>com.sun.media</groupId>
+			<artifactId>jai_codec</artifactId>
+			<version>1.1.2_01</version>
+			<type>pom</type>
+			<exclusions>
+				<exclusion>
+					<groupId>javax.media</groupId>
+					<artifactId>jai_core</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>com.sun.media</groupId>
+			<artifactId>jai_imageio</artifactId>
+			<version>1.1</version>
+			<type>pom</type>
+			<exclusions>
+				<exclusion>
+					<groupId>javax.media</groupId>
+					<artifactId>jai_core</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+	</dependencies>  
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>0</id>
+						<phase>validate</phase>
+						<configuration>
+							<tasks>
+								<delete file="${basedir}/src/test/resources/testing.properties" />
+								<touch file="${basedir}/src/test/resources/testing.properties"
+									mkdirs="true" />
+								<echo file="${basedir}/src/test/resources/testing.properties"
+									append="true">
+									test.confirm=${jargon.test.confirm}
+									test.data.directory=${jargon.test.data.directory}
+									test.irods.admin=${jargon.test.irods.admin}
+									test.irods.admin.password=${jargon.test.irods.admin.password}
+									test.irods.user=${jargon.test.irods.user}
+									test.irods.password=${jargon.test.irods.password}
+									test.irods.resource=${jargon.test.irods.resource}
+									test2.irods.user=${jargon.test.irods.user2}
+									test2.irods.password=${jargon.test.irods.password2}
+									test2.irods.resource=${jargon.test.irods.resource2}
+									test3.irods.user=${jargon.test.irods.user3}
+									test3.irods.password=${jargon.test.irods.password3}
+									test3.irods.resource=${jargon.test.irods.resource3}
+									test.irods.host=${jargon.test.irods.host}
+									test.irods.port=${jargon.test.irods.port}
+									test.irods.zone=${jargon.test.irods.zone}
+									test.resource.group=${jargon.test.resource.group}
+									test.irods.userDN=${jargon.test.irods.userDN}
+									test.irods.scratch.subdir=${jargon.test.irods.scratch.subdir}
+									test.mac.icommand.path=${jargon.test.mac.icommand.path}
+									test.option.exercise.remoteexecstream=${jargon.test.option.exercise.remoteexecstream}
 		</echo>
-	      </tasks>
-	    </configuration>
-            <goals>
-              <goal>run</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>2.3.2</version>
-        <configuration>
-          <debug>true</debug>
-        </configuration>
-      </plugin>
-    </plugins>
-  </build>
+							</tasks>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.3.2</version>
+				<configuration>
+					<debug>true</debug>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
 </project>

@@ -26,6 +26,7 @@ public class FileNameComparator implements Comparator<File>, Serializable {
 
 	@Override
 	public int compare(File file1, File file2) {
-		return file1.getName().compareToIgnoreCase( file2.getName() );
+		//return file1.getName().compareToIgnoreCase( file2.getName() );
+		return file1.getName().compareTo( file2.getName() );
 	}
 }

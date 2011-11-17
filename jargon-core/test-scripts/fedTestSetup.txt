@@ -1,0 +1,35 @@
+Federation unit/functional tests setup
+
+This documents the setup of extended test facilities for testing cross-zone federation.   For this initial version,
+the test rig is comprised of two zones, which we will call test1 and fedzone2.  These names can be adjusted through 
+testing.properties configuration.
+
+Each zone has a test1-resc and a test1-resc2 resource, and a test1 user, such that that user is registered in the corresponding
+federated zone.  There are a set of scripts for running on each zone to do the confguration, fedtestsetup_fedzone1.sh, and 
+fedtestsetup_fedzone2.sh.
+
+These setup scripts should be run after running testsetup.sh on BOTH test1 and fedzone2
+
+The setup is based on the documentation at https://www.irods.org/index.php/Federation_Administration
+
+The user test1 is set up in each zone with a /zone/home/test1/fedread directory with recursive read permissions
+The user test1 is set up in each zone with a /zone/home/test1/fedwrite directory with recursive write permissions
+
+The testing.properties in jargon.core has additional properties for testing with a federated zone configuration.  These tests
+are off by default, but can be turned on by setting test.option.federated.zone to true.
+
+The following is from the jargon-core pom.xml file properties, these should refer to properties set in the particular settings.xml file on the test 
+machine, and should point to the properties of the second federated zone.  The first federated zone will use the normal test.irods.user, etc, and
+this should typically be the 'test1' zone.
+
+test.option.federated.zone={$test.option.federated.zone}
+test.federated.irods.admin=${jargon.test.irods.admin}
+test.federated.irods.admin.password=${jargon.test.irods.admin.password}
+test.federated.irods.user=${jargon.test.irods.user}
+test.federated.irods.password=${jargon.test.irods.password}
+test.federated.irods.resource=${jargon.test.irods.resource}
+test.federated.irods.host=${jargon.test.irods.host}
+test.federated.irods.port=${jargon.test.irods.port}
+test.federated.irods.zone=${jargon.test.irods.zone}
+
+
