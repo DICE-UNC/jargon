@@ -21,7 +21,7 @@ import org.irods.jargon.core.query.SimpleQuery;
  * @author Mike Conway - DICE (www.irods.org)
  * 
  */
-public interface SimpleQueryExecutorAO {
+public interface SimpleQueryExecutorAO  extends IRODSAccessObject {
 
 	/**
 	 * Execute a simpleQuery and return a result set.
