@@ -81,42 +81,24 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 		irodsFileSystemAO
 				.physicalMove(absolutePathToSourceFile, targetResource);
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.irods.jargon.core.pub.DataTransferOperations#
-	 * moveTheSourceCollectionUnderneathTheTargetCollectionUsingSourceParentCollectionName
-	 * (java.lang.String, java.lang.String)
-	 */
-	@Override
-	public void moveTheSourceCollectionUnderneathTheTargetCollectionUsingSourceParentCollectionName(
-			final String absolutePathToSourceFile,
-			final String absolutePathToTheTargetCollection)
+	
+	private void moveTheSourceCollectionUnderneathTheTargetCollectionUsingSourceParentCollectionName(
+			final IRODSFile sourceFile,
+			final IRODSFile targetFile)
 			throws JargonFileOrCollAlreadyExistsException, JargonException {
 
-		if (absolutePathToSourceFile == null
-				|| absolutePathToSourceFile.isEmpty()) {
-			throw new JargonException("null absolutePathToSourceFile");
+		if (sourceFile == null) {
+			throw new IllegalArgumentException("null sourceFile");
+		}
+		
+		if (targetFile == null) {
+			throw new IllegalArgumentException("null targetFile");
 		}
 
-		if (absolutePathToTheTargetCollection == null
-				|| absolutePathToTheTargetCollection.isEmpty()) {
-			throw new JargonException(
-					"absolutePathToTheTargetCollection is empty");
-		}
 
-		log.info("processing a move from {}", absolutePathToSourceFile);
-		log.info("to {}", absolutePathToTheTargetCollection);
-
-		final IRODSFileFactory irodsFileFactory = this.getIRODSFileFactory();
-
-		final IRODSFile sourceFile = irodsFileFactory
-				.instanceIRODSFile(absolutePathToSourceFile);
-
-		final IRODSFile targetParentFile = irodsFileFactory
-				.instanceIRODSFile(absolutePathToTheTargetCollection);
-
+		log.info("moveTheSourceCollectionUnderneathTheTargetCollectionUsingSourceParentCollectionName from {}", sourceFile.getAbsolutePath());
+		log.info("to {}", targetFile.getAbsolutePath());
+		
 		// source file must exist or error
 		if (!sourceFile.exists()) {
 			log.info("the source file does not exist, cannot move");
@@ -128,19 +110,16 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 			log.error(msg);
 			throw new JargonException(msg);
 		}
-
-		if (!targetParentFile.isDirectory()) {
-			String msg = "target file is not a directory, cannot move under target";
-			log.error(msg);
-			throw new JargonException(msg);
-		}
+		
+		// make sure the target parent dir exists
+		targetFile.mkdirs();
 
 		String lastPartOfSourcePath = sourceFile.getName();
 		log.debug(
 				"last part of source path to move under target collection is: {}",
 				lastPartOfSourcePath);
 		StringBuilder sb = new StringBuilder();
-		sb.append(targetParentFile.getAbsolutePath());
+		sb.append(targetFile.getAbsolutePath());
 		sb.append('/');
 		sb.append(lastPartOfSourcePath);
 		String collectionUnderTargetAbsPath = sb.toString();
@@ -157,7 +136,7 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 		DataObjCopyInp dataObjCopyInp = null;
 
 		dataObjCopyInp = DataObjCopyInp.instanceForRenameCollection(
-				absolutePathToSourceFile, sb.toString());
+				sourceFile.getAbsolutePath(), sb.toString());
 
 		try {
 			getIRODSProtocol().irodsFunction(dataObjCopyInp);
@@ -169,47 +148,8 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 		log.info("successful move");
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.irods.jargon.core.pub.DataTransferOperations#move(java.lang.String,
-	 * java.lang.String)
-	 */
-	@Override
-	public void move(final String absolutePathToSourceFile,
-			final String absolutePathToTargetFile)
-			throws JargonFileOrCollAlreadyExistsException, JargonException {
 
-		if (absolutePathToSourceFile == null
-				|| absolutePathToSourceFile.isEmpty()) {
-			throw new JargonException("null absolutePathToSourceFile");
-		}
-
-		if (absolutePathToTargetFile == null
-				|| absolutePathToTargetFile.isEmpty()) {
-			throw new JargonException("absolutePathToTargetFile is empty");
-		}
-
-		log.info("processing a move from {}", absolutePathToSourceFile);
-		log.info("to {}", absolutePathToTargetFile);
-
-		IRODSFile irodsSourceFile = this.getIRODSFileFactory()
-				.instanceIRODSFile(absolutePathToSourceFile);
-		IRODSFile irodsTargetFile = this.getIRODSFileFactory()
-				.instanceIRODSFile(absolutePathToTargetFile);
-		move(irodsSourceFile, irodsTargetFile);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.irods.jargon.core.pub.DataTransferOperations#move(org.irods.jargon
-	 * .core.pub.io.IRODSFile, org.irods.jargon.core.pub.io.IRODSFile)
-	 */
-	@Override
-	public void move(final IRODSFile irodsSourceFile,
+	private void moveWhenSourceIsFile(final IRODSFile irodsSourceFile,
 			final IRODSFile irodsTargetFile)
 			throws JargonFileOrCollAlreadyExistsException, JargonException {
 
@@ -273,6 +213,69 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 			log.error("jargon exception in move operation", je);
 			throw je;
 		}
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.core.pub.DataTransferOperations#move(java.lang.String, java.lang.String)
+	 */
+	@Override
+	public void move(String sourceFileAbsolutePath, String targetFileAbsolutePath) throws JargonException {
+		
+		if (sourceFileAbsolutePath == null
+				|| sourceFileAbsolutePath.isEmpty()) {
+			throw new IllegalArgumentException("null sourceFileAbsolutePath");
+		}
+
+		if (targetFileAbsolutePath == null
+				|| targetFileAbsolutePath.isEmpty()) {
+			throw new IllegalArgumentException("targetFileAbsolutePath is empty");
+		}
+
+		log.info("moveAFileOrCollection() from {}", sourceFileAbsolutePath);
+		log.info("to {}", targetFileAbsolutePath);
+		
+		IRODSFile sourceFile = this.getIRODSFileFactory().instanceIRODSFile(sourceFileAbsolutePath);
+		IRODSFile targetFile = this.getIRODSFileFactory().instanceIRODSFile(targetFileAbsolutePath);
+		this.move(sourceFile,targetFile);
+	}
+
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.core.pub.DataTransferOperations#move(org.irods.jargon.core.pub.io.IRODSFile, org.irods.jargon.core.pub.io.IRODSFile)
+	 */
+	@Override
+	public  void move(IRODSFile sourceFile,
+			IRODSFile targetFile) throws JargonException {
+		
+		log.info("moveAFileOrCollection");
+		
+		if (sourceFile == null) {
+			throw new IllegalArgumentException("null sourceFile");
+		}
+		
+		if (targetFile == null) {
+			throw new IllegalArgumentException("null targetFile");
+		}
+		
+		log.info("sourceFile:{}", sourceFile.getAbsolutePath());
+		log.info("targetFile:{}", targetFile.getAbsolutePath());
+		
+		// evaluate the type of move and delegate appropriately
+		
+		if (!sourceFile.exists()) {
+			log.error("move error, source file does not exist:{}", sourceFile.getAbsolutePath());
+			throw new IllegalArgumentException("sourceFile does not exist");
+		}
+		
+		if (sourceFile.isFile()) {
+			log.info("source file is a data object");
+			moveWhenSourceIsFile(sourceFile,targetFile);
+		} else {
+			log.info("source file is a collection, reparent it");
+			 moveTheSourceCollectionUnderneathTheTargetCollectionUsingSourceParentCollectionName(
+                      sourceFile,
+                      targetFile);
+		}
+		
 	}
 
 	/*

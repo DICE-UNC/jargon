@@ -112,10 +112,9 @@ public interface DataTransferOperations extends IRODSAccessObject {
 	 * target location. There are other methods in this class that will take the
 	 * last part of the source path, and use that as the collection name in the
 	 * target.
-	 * <p/>
+	* <p/>
 	 * For this method, if the source is /coll1/coll2/coll3 and the target is
-	 * /coll4/coll5/coll6, the coll3 directory will be renamed to coll6 in the
-	 * target.
+	 * /coll4/coll5/coll6, the result will be /coll4/coll5/coll6/coll3.
 	 * <p/>
 	 * For a data object, this method will automatically handle a case where the
 	 * source file is a data object, and the target file is a collection. In
@@ -274,35 +273,7 @@ public interface DataTransferOperations extends IRODSAccessObject {
 			final TransferControlBlock transferControlBlock)
 			throws JargonException;
 
-	/**
-	 * Move the given source collection (must be a collection) underneath the
-	 * given target collection. This method only applies to moving a collection
-	 * to a collection, and will throw an exception if a data object is used for
-	 * the source or target. This convenience method takes the last path
-	 * component of the source collection, and moves that collection underneath
-	 * the target.
-	 * <p/>
-	 * If the source is /col1/col2/col3 and the target is /col4/col5, then the
-	 * result of the move will be /col4/col5/col3.
-	 * <p/>
-	 * This method will detect an attempt to reparent a file to its current
-	 * collection, and will log and ignore this case.
-	 * 
-	 * @param absolutePathToSourceFile
-	 *            <code>String</code> with the absolute path to the source
-	 *            collection. The last path component will b moved underneath
-	 *            the target as described above.
-	 * @param absolutePathToTheTargetCollection
-	 *            <code>String</code> with the absoulute path to the target
-	 *            collection, which will be the parent of the source collection
-	 *            as described above.
-	 * @throws JargonException
-	 */
-	void moveTheSourceCollectionUnderneathTheTargetCollectionUsingSourceParentCollectionName(
-			final String absolutePathToSourceFile,
-			final String absolutePathToTheTargetCollection)
-			throws JargonException;
-
+	
 	/**
 	 * Copy a file or collection from iRODS to iRODS.
 	 * 
@@ -389,8 +360,7 @@ public interface DataTransferOperations extends IRODSAccessObject {
 	 * target.
 	 * <p/>
 	 * For this method, if the source is /coll1/coll2/coll3 and the target is
-	 * /coll4/coll5/coll6, the coll3 directory will be renamed to coll6 in the
-	 * target.
+	 * /coll4/coll5/coll6, the result will be /coll4/coll5/coll6/coll3.
 	 * <p/>
 	 * For a data object, this method will automatically handle a case where the
 	 * source file is a data object, and the target file is a collection. In

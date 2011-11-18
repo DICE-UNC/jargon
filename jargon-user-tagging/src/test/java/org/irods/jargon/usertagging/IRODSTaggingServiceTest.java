@@ -216,10 +216,6 @@ public class IRODSTaggingServiceTest {
 		Assert.assertEquals("should have returned the three tags added", 3,
 				queryResultValues.size());
 
-		IRODSTagValue testTag1 = queryResultValues.get(0);
-		Assert.assertEquals("tag value is not what was expected",
-				expectedAttribName1, testTag1.getTagData());
-
 	}
 
 	@Test
