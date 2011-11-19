@@ -95,7 +95,6 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 			throw new IllegalArgumentException("null targetFile");
 		}
 
-
 		log.info("moveTheSourceCollectionUnderneathTheTargetCollectionUsingSourceParentCollectionName from {}", sourceFile.getAbsolutePath());
 		log.info("to {}", targetFile.getAbsolutePath());
 		

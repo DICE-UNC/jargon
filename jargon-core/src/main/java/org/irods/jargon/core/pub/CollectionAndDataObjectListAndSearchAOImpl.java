@@ -66,7 +66,8 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 	 */
 	@Override
 	public List<CollectionAndDataObjectListingEntry> listDataObjectsAndCollectionsUnderPath(
-			final String absolutePathToParent) throws FileNotFoundException, JargonException {
+			final String absolutePathToParent) throws FileNotFoundException,
+			JargonException {
 
 		if (absolutePathToParent == null) {
 			throw new IllegalArgumentException("absolutePathToParent is null");
@@ -77,12 +78,12 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		}
 
 		ObjStat objStat = retrieveObjectStatForPath(absolutePathToParent);
-		
+
 		if (objStat == null) {
 			log.error("no file found for path:{}", absolutePathToParent);
 			throw new FileNotFoundException("no file found for given path");
 		}
-		
+
 		List<CollectionAndDataObjectListingEntry> entries = new ArrayList<CollectionAndDataObjectListingEntry>();
 
 		entries.addAll(listCollectionsUnderPath(objStat, 0));
@@ -98,7 +99,8 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 	 */
 	@Override
 	public List<CollectionAndDataObjectListingEntry> listDataObjectsAndCollectionsUnderPathWithPermissions(
-			final String absolutePathToParent) throws FileNotFoundException,JargonException {
+			final String absolutePathToParent) throws FileNotFoundException,
+			JargonException {
 		List<CollectionAndDataObjectListingEntry> entries = listCollectionsUnderPathWithPermissions(
 				absolutePathToParent, 0);
 		entries.addAll(listDataObjectsUnderPathWithPermissions(
@@ -124,7 +126,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 				absolutePathToParent);
 		IRODSFile irodsFile = irodsFileFactory
 				.instanceIRODSFile(absolutePathToParent);
-		
+
 		if (!irodsFile.exists()) {
 			log.error("File does not exist for path:{}", absolutePathToParent);
 			throw new FileNotFoundException("file at given path does not exist");
@@ -367,7 +369,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		}
 
 		// FIXME: add objStat call and fileNotFoundException
-		
+
 		String path;
 		List<CollectionAndDataObjectListingEntry> subdirs = new ArrayList<CollectionAndDataObjectListingEntry>();
 
@@ -488,12 +490,14 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		}
 
 		ObjStat objStat = retrieveObjectStatForPath(absolutePathToParent);
-		
+
 		if (objStat == null) {
-			log.error("unable to find objStat for collection path:{}", absolutePathToParent);
-			throw new FileNotFoundException("unable to find objStat for collection");
+			log.error("unable to find objStat for collection path:{}",
+					absolutePathToParent);
+			throw new FileNotFoundException(
+					"unable to find objStat for collection");
 		}
-		
+
 		return listDataObjectsUnderPath(objStat, partialStartIndex);
 
 	}
@@ -577,8 +581,8 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 
 		log.info("listDataObjectsUnderPathWithPermissions for: {}",
 				absolutePathToParent);
-		
-		//FIXME: add obj stat and FileNotFoundException
+
+		// FIXME: add obj stat and FileNotFoundException
 
 		List<CollectionAndDataObjectListingEntry> files = new ArrayList<CollectionAndDataObjectListingEntry>();
 
@@ -842,7 +846,8 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 	@Override
 	public List<CollectionAndDataObjectListingEntry> listDataObjectsSharedWithAGivenUser(
 			final String absolutePathToParent, final String userName,
-			final int partialStartIndex) throws FileNotFoundException, JargonException {
+			final int partialStartIndex) throws FileNotFoundException,
+			JargonException {
 
 		if (absolutePathToParent == null) {
 			throw new JargonException("absolutePathToParent is null");
