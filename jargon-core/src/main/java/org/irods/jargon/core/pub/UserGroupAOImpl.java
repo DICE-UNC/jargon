@@ -9,6 +9,7 @@ import java.util.List;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.exception.DataNotFoundException;
+import org.irods.jargon.core.exception.InvalidUserException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.packinstr.GeneralAdminInp;
 import org.irods.jargon.core.pub.domain.UserGroup;
@@ -47,6 +48,8 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements
 	 */
 	@Override
 	public void addUserGroup(final UserGroup userGroup) throws JargonException {
+	
+		log.info("addUserGroup()");
 		if (userGroup == null) {
 			throw new IllegalArgumentException("null userGroup");
 		}
@@ -55,12 +58,55 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements
 				|| userGroup.getUserGroupName().isEmpty()) {
 			throw new IllegalArgumentException("userGroup has no userGroupName");
 		}
+		
+
+		if (userGroup.getZone() == null
+				|| userGroup.getZone().isEmpty()) {
+			throw new IllegalArgumentException("userGroup has no zone");
+		}
+
+		log.info("user group:{}", userGroup);
 
 		GeneralAdminInp adminPI = GeneralAdminInp
 				.instanceForAddUserGroup(userGroup);
 		log.debug("executing admin PI");
 
 		getIRODSProtocol().irodsFunction(adminPI);
+
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.core.pub.UserGroupAO#removeUserGroup(org.irods.jargon.core.pub.domain.UserGroup)
+	 */
+	@Override
+	public void removeUserGroup(final UserGroup userGroup) throws JargonException {
+		log.info("removeUserGroup()");
+		if (userGroup == null) {
+			throw new IllegalArgumentException("null userGroup");
+		}
+
+		if (userGroup.getUserGroupName() == null
+				|| userGroup.getUserGroupName().isEmpty()) {
+			throw new IllegalArgumentException("userGroup has no userGroupName");
+		}
+		
+
+		if (userGroup.getZone() == null
+				|| userGroup.getZone().isEmpty()) {
+			throw new IllegalArgumentException("userGroup has no zone");
+		}
+
+		log.info("user group:{}", userGroup);
+
+		GeneralAdminInp adminPI = GeneralAdminInp
+				.instanceForRemoveUserGroup(userGroup);
+		log.debug("executing admin PI");
+
+		try {
+			getIRODSProtocol().irodsFunction(adminPI);
+		} catch (InvalidUserException e) {
+			log.warn("user group {} does not exist, ignoring remove", userGroup);
+		}
 
 	}
 

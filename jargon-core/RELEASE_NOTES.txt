@@ -55,3 +55,4 @@ Note that the following bug and feature requests are logged in GForge with relat
  	* Added support for obj stat, initial ObjStat domain object [work in progress]
  	* Added cross zone query capability
  [#533] consolidate and simply move methods in DataTransferOperations
+ [#536] User group CRUD functionality and tests

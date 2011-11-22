@@ -62,9 +62,17 @@ public interface UserGroupAO extends IRODSAccessObject {
 
 	/**
 	 * Add the given user group to iRODS
-	 * @param userGroup
+	 * @param userGroup {@link UserGroup} to add
 	 * @throws JargonException
 	 */
 	void addUserGroup(UserGroup userGroup) throws JargonException;
+
+	/**
+	 * Remove the given user group from iRODS.  Note that if the user group is not found, a warning is logged, and the 
+	 * exception is ignored.
+	 * @param userGroup {@link UserGroup} to remove
+	 * @throws JargonException
+	 */
+	void removeUserGroup(UserGroup userGroup) throws JargonException;
 
 }

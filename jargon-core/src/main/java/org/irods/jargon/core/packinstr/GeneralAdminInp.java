@@ -306,7 +306,7 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 	
 	/**
 	 * Create a packing instruction to add the given iRODS user group to the zone
-	 * @param userGroup
+	 * @param userGroup {@link UserGroup} to add
 	 * @return
 	 * @throws JargonException
 	 */
@@ -318,6 +318,21 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 				userGroup.getZone(), BLANK, BLANK, BLANK, BLANK, BLANK,
 				GEN_ADMIN_INP_API_NBR);
 	}
+	
+	/**
+	 * Create a packing instruction to remove a given iRODS user group
+	 * @param userGroup  {@link UserGroup} to remove
+	 * @return
+	 */
+	public static GeneralAdminInp instanceForRemoveUserGroup(UserGroup userGroup) throws JargonException {
+		if (userGroup == null) {
+			throw new IllegalArgumentException("null userGroup");
+		}
+		return new GeneralAdminInp("rm", "user", userGroup.getUserGroupName(), 
+				userGroup.getZone(), BLANK, BLANK, BLANK, BLANK, BLANK, BLANK,
+				GEN_ADMIN_INP_API_NBR);
+	}
+
 
 	/**
 	 * Generate the packing instruction suitable for modifying the type
@@ -435,6 +450,7 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 
 		return message;
 	}
+
 
 	
 	
