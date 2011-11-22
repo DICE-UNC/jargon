@@ -42,6 +42,10 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements
 		super(irodsSession, irodsAccount);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.core.pub.UserGroupAO#addUserGroup(org.irods.jargon.core.pub.domain.UserGroup)
+	 */
+	@Override
 	public void addUserGroup(final UserGroup userGroup) throws JargonException {
 		if (userGroup == null) {
 			throw new IllegalArgumentException("null userGroup");
