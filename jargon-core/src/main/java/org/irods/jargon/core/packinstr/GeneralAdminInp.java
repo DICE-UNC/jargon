@@ -3,6 +3,7 @@ package org.irods.jargon.core.packinstr;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.protovalues.UserTypeEnum;
 import org.irods.jargon.core.pub.domain.User;
+import org.irods.jargon.core.pub.domain.UserGroup;
 
 /**
  * Represents a packing instruction for iRODS general admin functionality. These
@@ -302,6 +303,21 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 				password, BLANK, BLANK, BLANK, BLANK, BLANK,
 				GEN_ADMIN_INP_API_NBR);
 	}
+	
+	/**
+	 * Create a packing instruction to add the given iRODS user group to the zone
+	 * @param userGroup
+	 * @return
+	 * @throws JargonException
+	 */
+	public static GeneralAdminInp instanceForAddUserGroup(UserGroup userGroup) throws JargonException {
+		if (userGroup == null) {
+			throw new IllegalArgumentException("null userGroup");
+		}
+		return new GeneralAdminInp("add", "user", userGroup.getUserGroupName(), "rodsgroup",
+				userGroup.getZone(), BLANK, BLANK, BLANK, BLANK, BLANK,
+				GEN_ADMIN_INP_API_NBR);
+	}
 
 	/**
 	 * Generate the packing instruction suitable for modifying the type
@@ -419,5 +435,8 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 
 		return message;
 	}
+
+	
+	
 
 }

@@ -13,6 +13,7 @@ package org.irods.jargon.core.pub.domain;
 public class UserGroup extends IRODSDomainObject {
 	private String userGroupId = "";
 	private String userGroupName = "";
+	private String zone = "";
 
 	public UserGroup() {
 
@@ -43,6 +44,20 @@ public class UserGroup extends IRODSDomainObject {
 		sb.append("\n    name:");
 		sb.append(userGroupName);
 		return sb.toString();
+	}
+
+	/**
+	 * @return the zone
+	 */
+	public String getZone() {
+		return zone;
+	}
+
+	/**
+	 * @param zone the zone to set
+	 */
+	public void setZone(String zone) {
+		this.zone = zone;
 	}
 
 }

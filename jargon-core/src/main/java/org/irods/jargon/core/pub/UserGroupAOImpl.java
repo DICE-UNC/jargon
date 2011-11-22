@@ -10,6 +10,7 @@ import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.packinstr.GeneralAdminInp;
 import org.irods.jargon.core.pub.domain.UserGroup;
 import org.irods.jargon.core.query.IRODSGenQuery;
 import org.irods.jargon.core.query.IRODSQueryResultRow;
@@ -39,6 +40,24 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements
 	protected UserGroupAOImpl(final IRODSSession irodsSession,
 			final IRODSAccount irodsAccount) throws JargonException {
 		super(irodsSession, irodsAccount);
+	}
+
+	public void addUserGroup(final UserGroup userGroup) throws JargonException {
+		if (userGroup == null) {
+			throw new IllegalArgumentException("null userGroup");
+		}
+
+		if (userGroup.getUserGroupName() == null
+				|| userGroup.getUserGroupName().isEmpty()) {
+			throw new IllegalArgumentException("userGroup has no userGroupName");
+		}
+
+		GeneralAdminInp adminPI = GeneralAdminInp
+				.instanceForAddUserGroup(userGroup);
+		log.debug("executing admin PI");
+
+		getIRODSProtocol().irodsFunction(adminPI);
+
 	}
 
 	/*

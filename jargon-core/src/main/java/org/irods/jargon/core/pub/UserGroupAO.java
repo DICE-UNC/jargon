@@ -60,4 +60,11 @@ public interface UserGroupAO extends IRODSAccessObject {
 	List<UserGroup> findUserGroupsForUser(String userName)
 			throws JargonException;
 
+	/**
+	 * Add the given user group to iRODS
+	 * @param userGroup
+	 * @throws JargonException
+	 */
+	void addUserGroup(UserGroup userGroup) throws JargonException;
+
 }
