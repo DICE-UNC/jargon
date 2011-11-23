@@ -62,6 +62,62 @@ public class FileShoppingCartTest {
 	}
 	
 	@Test
+	public void testClear() {
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		FileShoppingCart fileShoppingCart = FileShoppingCart
+				.instance(irodsAccount);
+		String file = "file";
+		ShoppingCartEntry entry = ShoppingCartEntry.instance(file);
+		fileShoppingCart.addAnItem(entry);
+		fileShoppingCart.clearCart();
+		Assert.assertFalse("cart should not have items after being cleared",
+				fileShoppingCart.hasItems());
+	}
+	
+	@Test
+	public void testRemove() {
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		FileShoppingCart fileShoppingCart = FileShoppingCart
+				.instance(irodsAccount);
+		String file = "file";
+		ShoppingCartEntry entry = ShoppingCartEntry.instance(file);
+		fileShoppingCart.addAnItem(entry);
+		fileShoppingCart.removeAnItem(file);
+		Assert.assertFalse("cart should not have items after delete",
+				fileShoppingCart.hasItems());
+	}
+	
+	@Test(expected=IllegalArgumentException.class)
+	public void testRemoveNull() {
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		FileShoppingCart fileShoppingCart = FileShoppingCart
+				.instance(irodsAccount);
+		fileShoppingCart.removeAnItem(null);
+	
+	}
+	
+	@Test(expected=IllegalArgumentException.class)
+	public void testRemoveBlank() {
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		FileShoppingCart fileShoppingCart = FileShoppingCart
+				.instance(irodsAccount);
+		fileShoppingCart.removeAnItem(null);
+	
+	}
+	
+	public void testRemoveNotInCart() {
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		FileShoppingCart fileShoppingCart = FileShoppingCart
+				.instance(irodsAccount);
+		fileShoppingCart.removeAnItem("this is not in the cart");
+	}
+	
+	@Test
 	public void testGetFilesInCartWithEntries() {
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);

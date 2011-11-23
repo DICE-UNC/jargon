@@ -79,6 +79,19 @@ public class FileShoppingCart implements Serializable {
 	}
 	
 	/**
+	 * Remove a file from the shopping cart.  Silently ignore if the item is not there
+	 * @param fileName <code>String</code> with the absolute file path to the item to be removed from the cart
+	 */
+	public void removeAnItem(final String fileName) {
+		if (fileName == null || fileName.isEmpty()) {
+			throw new IllegalArgumentException("null or empty fileName");
+		}
+		
+		shoppingCartEntries.remove(fileName);
+	
+	}
+	
+	/**
 	 * Get a <code>List<String></code> of the file names in the shopping cart
 	 * @return <code>List<String></code> with the files in the shopping cart
 	 */
@@ -90,5 +103,11 @@ public class FileShoppingCart implements Serializable {
 		return fileNames;
 	}
 	
+	/**
+	 * Clear the contents of the shopping cart
+	 */
+	public void clearCart() {
+		shoppingCartEntries.clear();
+	}
 	
 }
