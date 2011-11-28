@@ -28,6 +28,7 @@ import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.rule.IRODSRuleExecResult;
 import org.irods.jargon.core.utils.Base64;
 import org.irods.jargon.core.utils.LocalFileUtils;
+import org.irods.jargon.datautils.AbstractDataUtilsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,46 +44,28 @@ import com.sun.image.codec.jpeg.JPEGImageEncoder;
  * 
  */
 @SuppressWarnings("restriction")
-public class ThumbnailServiceImpl implements ThumbnailService {
-
-	/**
-	 * Factory to create necessary Jargon access objects, which interact with
-	 * the iRODS server
-	 */
-	private IRODSAccessObjectFactory irodsAccessObjectFactory;
-
-	/**
-	 * Describes iRODS server and account information
-	 */
-	private IRODSAccount irodsAccount;
+public class ThumbnailServiceImpl extends AbstractDataUtilsService implements
+		ThumbnailService {
 
 	public static final Logger log = LoggerFactory
 			.getLogger(ThumbnailServiceImpl.class);
 
 	/**
-	 * Create and service to manage thumbnail images in iRODS
-	 * 
-	 * @param irodsAccessObjectFactory
-	 *            {@link IRODSAccessObjectFactory} to create iRODS objects
-	 * @param irodsAccount
-	 *            {@link IRODSAccount} that repesents the connection to the
-	 *            iRODS server
+	 * Constructor with required dependencies
+	 * @param irodsAccessObjectFactory {@link IRODSAccessObjectFactory} that can create necessary objects
+	 * @param irodsAccount {@link IRODSAccount} that contains the login information
 	 */
 	public ThumbnailServiceImpl(
-			final IRODSAccessObjectFactory irodsAccessObjectFactory,
-			final IRODSAccount irodsAccount) {
+			IRODSAccessObjectFactory irodsAccessObjectFactory,
+			IRODSAccount irodsAccount) {
+		super(irodsAccessObjectFactory, irodsAccount);
+	}
+	
+	/**
+	 * Default (no-values) constructor.
+	 */
+	public ThumbnailServiceImpl() {
 		super();
-
-		if (irodsAccessObjectFactory == null) {
-			throw new IllegalArgumentException("null irodsAccessObjectFactory");
-		}
-
-		if (irodsAccount == null) {
-			throw new IllegalArgumentException("null irodsAccount");
-		}
-
-		this.irodsAccessObjectFactory = irodsAccessObjectFactory;
-		this.irodsAccount = irodsAccount;
 	}
 
 	/*
@@ -338,7 +321,7 @@ public class ThumbnailServiceImpl implements ThumbnailService {
 		encoder.setJPEGEncodeParam(param);
 		encoder.encode(thumbImage);
 		out.close();
-		
+
 		/*
 		 * If the original file is a .jpg, then don't delete the temp file, it
 		 * will be used by the caller. If the original is not a .jpg, then that
@@ -351,7 +334,6 @@ public class ThumbnailServiceImpl implements ThumbnailService {
 			temp.delete();
 		}
 
-		
 		return targetTempFile;
 	}
 
@@ -363,8 +345,8 @@ public class ThumbnailServiceImpl implements ThumbnailService {
 	 */
 	@Override
 	public File createThumbnailLocallyViaJAI(final File workingDirectory,
-			final String irodsAbsolutePathToGenerateThumbnailFor, int maxEdge)
-			throws Exception {
+			final String irodsAbsolutePathToGenerateThumbnailFor,
+			final int maxEdge) throws Exception {
 
 		if (workingDirectory == null) {
 			throw new IllegalArgumentException("null workingDirectory");
@@ -420,37 +402,6 @@ public class ThumbnailServiceImpl implements ThumbnailService {
 		}
 
 		return targetTempFile;
-	}
-
-	/**
-	 * @return the irodsAccessObjectFactory
-	 */
-	public IRODSAccessObjectFactory getIrodsAccessObjectFactory() {
-		return irodsAccessObjectFactory;
-	}
-
-	/**
-	 * @param irodsAccessObjectFactory
-	 *            the irodsAccessObjectFactory to set
-	 */
-	public void setIrodsAccessObjectFactory(
-			final IRODSAccessObjectFactory irodsAccessObjectFactory) {
-		this.irodsAccessObjectFactory = irodsAccessObjectFactory;
-	}
-
-	/**
-	 * @return the irodsAccount
-	 */
-	public IRODSAccount getIrodsAccount() {
-		return irodsAccount;
-	}
-
-	/**
-	 * @param irodsAccount
-	 *            the irodsAccount to set
-	 */
-	public void setIrodsAccount(final IRODSAccount irodsAccount) {
-		this.irodsAccount = irodsAccount;
 	}
 
 }

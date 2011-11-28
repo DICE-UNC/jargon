@@ -18,6 +18,7 @@ import org.irods.jargon.core.query.AVUQueryElement.AVUQueryPart;
 import org.irods.jargon.core.query.AVUQueryOperatorEnum;
 import org.irods.jargon.core.query.JargonQueryException;
 import org.irods.jargon.core.query.MetaDataAndDomainData;
+import org.irods.jargon.datautils.AbstractDataUtilsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,7 +28,7 @@ import org.slf4j.LoggerFactory;
  * @author Mike Conway - DICE (www.irods.org)
  * 
  */
-public class SynchPropertiesServiceImpl implements SynchPropertiesService {
+public class SynchPropertiesServiceImpl extends AbstractDataUtilsService implements SynchPropertiesService {
 
     /*
      * AVU conventions attrib | value | unit
@@ -38,16 +39,6 @@ public class SynchPropertiesServiceImpl implements SynchPropertiesService {
      */
 
     public static final Logger log = LoggerFactory.getLogger(SynchPropertiesServiceImpl.class);
-
-    /**
-     * Factory to create necessary Jargon access objects, which interact with the iRODS server
-     */
-    private IRODSAccessObjectFactory irodsAccessObjectFactory;
-
-    /**
-     * Describes iRODS server and account information
-     */
-    private IRODSAccount irodsAccount;
 
     /**
      * Default (no-values) constructor. The account and <code>IRODSFileSystem</code> need to be initialized va the
@@ -67,29 +58,8 @@ public class SynchPropertiesServiceImpl implements SynchPropertiesService {
      */
     public SynchPropertiesServiceImpl(final IRODSAccessObjectFactory irodsAccessObjectFactory,
             final IRODSAccount irodsAccount) {
-        super();
-        this.irodsAccessObjectFactory = irodsAccessObjectFactory;
-        this.irodsAccount = irodsAccount;
-    }
-
-    @Override
-    public IRODSAccessObjectFactory getIrodsAccessObjectFactory() {
-        return irodsAccessObjectFactory;
-    }
-
-    @Override
-    public void setIrodsAccessObjectFactory(final IRODSAccessObjectFactory irodsAccessObjectFactory) {
-        this.irodsAccessObjectFactory = irodsAccessObjectFactory;
-    }
-
-    @Override
-    public IRODSAccount getIrodsAccount() {
-        return irodsAccount;
-    }
-
-    @Override
-    public void setIrodsAccount(final IRODSAccount irodsAccount) {
-        this.irodsAccount = irodsAccount;
+        super(irodsAccessObjectFactory, irodsAccount);
+     
     }
 
     /*

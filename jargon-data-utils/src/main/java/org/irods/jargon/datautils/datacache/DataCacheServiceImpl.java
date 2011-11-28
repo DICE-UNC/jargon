@@ -8,14 +8,13 @@ import java.io.ObjectInput;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
+
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.JargonException;
-import org.irods.jargon.core.exception.JargonRuntimeException;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 import org.irods.jargon.core.pub.Stream2StreamAO;
 import org.irods.jargon.core.pub.io.IRODSFile;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.irods.jargon.datautils.AbstractDataUtilsService;
 
 /**
  * Service to provide a secure data cache. This allows information to be serialized
@@ -25,30 +24,34 @@ import org.slf4j.LoggerFactory;
  * @author Mike Conway - DICE (www.irods.org)
  * 
  */
-public class DataCacheServiceImpl implements DataCacheService {
+public class DataCacheServiceImpl extends AbstractDataUtilsService implements DataCacheService {
+
+	/**
+	 * Constructor with required dependencies
+	 * @param irodsAccessObjectFactory {@link IRODSAccessObjectFactory} that can create necessary objects
+	 * @param irodsAccount {@link IRODSAccount} that contains the login information
+	 */
+	public DataCacheServiceImpl(
+			IRODSAccessObjectFactory irodsAccessObjectFactory,
+			IRODSAccount irodsAccount) {
+		super(irodsAccessObjectFactory, irodsAccount);
+	}
+
+	/**
+	 * Default (no-values) constructor.
+	 */
+	public DataCacheServiceImpl() {
+		super();
+	}
 
 	String xform = "DES/ECB/PKCS5Padding";
-
-	public static final Logger log = LoggerFactory
-			.getLogger(DataCacheServiceImpl.class);
-
-	/**
-	 * Factory to create necessary Jargon access objects, which interact with
-	 * the iRODS server
-	 */
-	private IRODSAccessObjectFactory irodsAccessObjectFactory;
-
-	/**
-	 * Describes iRODS server and account information
-	 */
-	private IRODSAccount irodsAccount;
 
 	/**
 	 * Configuration controls behavior of the cache. This can be set, or can
 	 * just use the defaults, which cache in the users home dir and do cleanups
 	 * as part of request processing.
 	 */
-	private CacheServiceConfiguration cacheServiceConfiguration = new CacheServiceConfiguration();
+	CacheServiceConfiguration cacheServiceConfiguration = new CacheServiceConfiguration();
 
 	/* (non-Javadoc)
 	 * @see org.irods.jargon.datautils.datacache.AccountCacheService#putStringValueIntoCache(java.lang.String, java.lang.String)
@@ -364,57 +367,6 @@ public class DataCacheServiceImpl implements DataCacheService {
 		
 		log.info("purge complete");
 
-	}
-
-	/**
-	 * Check for correct dependencies
-	 */
-	private void checkContracts() throws JargonRuntimeException {
-		if (irodsAccessObjectFactory == null) {
-			throw new JargonRuntimeException("missing irodsAccessObjectFactory");
-		}
-
-		if (irodsAccount == null) {
-			throw new JargonRuntimeException("irodsAccount is null");
-		}
-
-		if (cacheServiceConfiguration == null) {
-			throw new JargonRuntimeException("null cacheServiceConfiguration");
-		}
-
-	}
-
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.datautils.datacache.AccountCacheService#getIrodsAccessObjectFactory()
-	 */
-	@Override
-	public IRODSAccessObjectFactory getIrodsAccessObjectFactory() {
-		return irodsAccessObjectFactory;
-	}
-
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.datautils.datacache.AccountCacheService#setIrodsAccessObjectFactory(org.irods.jargon.core.pub.IRODSAccessObjectFactory)
-	 */
-	@Override
-	public void setIrodsAccessObjectFactory(
-			final IRODSAccessObjectFactory irodsAccessObjectFactory) {
-		this.irodsAccessObjectFactory = irodsAccessObjectFactory;
-	}
-
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.datautils.datacache.AccountCacheService#getIrodsAccount()
-	 */
-	@Override
-	public IRODSAccount getIrodsAccount() {
-		return irodsAccount;
-	}
-
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.datautils.datacache.AccountCacheService#setIrodsAccount(org.irods.jargon.core.connection.IRODSAccount)
-	 */
-	@Override
-	public void setIrodsAccount(final IRODSAccount irodsAccount) {
-		this.irodsAccount = irodsAccount;
 	}
 
 	/* (non-Javadoc)
