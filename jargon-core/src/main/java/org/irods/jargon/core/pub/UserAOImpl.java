@@ -778,7 +778,7 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 				.instanceForModifyUserPassword(userName, newPassword);
 		getIRODSProtocol().irodsFunction(adminPI);
 		
-		// FIXME: finish implement
+		// FIXME: finish implementing
 		
 		
 	}

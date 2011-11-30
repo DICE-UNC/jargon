@@ -37,6 +37,8 @@ public class GenQueryInp extends AbstractIRODSPackingInstruction implements
 	public static final int ORDER_BY_DESC = 0x800;
 
 	public static final int API_NBR = 702;
+	
+	private String zoneName = null;
 
 	/**
 	 * Return an instance of a query command that defaults to no partial start.
@@ -45,13 +47,14 @@ public class GenQueryInp extends AbstractIRODSPackingInstruction implements
 	 * @param continueIndex
 	 *            <code>int</code> with a 0 or 1 to indicate continuation of a
 	 *            previous query that had more results
+	 *  @param zoneName  <code>String</code> (<code>null</code> or blank if not used) that indicates an optional zone for the query
 	 * @return <code>GenQueryInp</code> instance
 	 * @throws JargonException
 	 */
 	public static GenQueryInp instance(
 			final TranslatedIRODSGenQuery translatedIRODSQuery,
-			final int continueIndex) throws JargonException {
-		return new GenQueryInp(translatedIRODSQuery, continueIndex, 0);
+			final int continueIndex, final String zoneName) throws JargonException {
+		return new GenQueryInp(translatedIRODSQuery, continueIndex, 0, zoneName);
 	}
 
 	/**
@@ -86,8 +89,8 @@ public class GenQueryInp extends AbstractIRODSPackingInstruction implements
 	 */
 	public static GenQueryInp instanceWithPartialStart(
 			final TranslatedIRODSGenQuery translatedIRODSQuery,
-			final int partialStartIndex) throws JargonException {
-		return new GenQueryInp(translatedIRODSQuery, 0, partialStartIndex);
+			final int partialStartIndex, final String zoneName) throws JargonException {
+		return new GenQueryInp(translatedIRODSQuery, 0, partialStartIndex, zoneName);
 	}
 
 	/**
@@ -118,7 +121,7 @@ public class GenQueryInp extends AbstractIRODSPackingInstruction implements
 	}
 
 	private GenQueryInp(final TranslatedIRODSGenQuery translatedIRODSQuery,
-			final int continueIndex, final int partialStartIndex)
+			final int continueIndex, final int partialStartIndex, final String zoneName)
 			throws JargonException {
 
 		if (translatedIRODSQuery == null) {
@@ -141,6 +144,7 @@ public class GenQueryInp extends AbstractIRODSPackingInstruction implements
 		this.maxRowCount = translatedIRODSQuery.getIrodsQuery()
 				.getNumberOfResultsDesired();
 		this.setApiNumber(API_NBR);
+		this.zoneName = zoneName;
 	}
 
 	/**
@@ -187,9 +191,18 @@ public class GenQueryInp extends AbstractIRODSPackingInstruction implements
 		} else {
 			message.addTag(new Tag(IRODSConstants.options, 1));
 		}
-
-		message.addTag(Tag.createKeyValueTag(null));
-
+		
+		/*
+		 * If a zoneName is specified, this means the query is for another federated zone to process, add a keyword to the packing
+		 * instruction to process the query.
+		 */
+		
+		if (zoneName == null || zoneName.isEmpty()) {
+			message.addTag(Tag.createKeyValueTag(null));
+		} else {
+			message.addTag(Tag.createKeyValueTag("zone", zoneName));
+		}
+		
 		Tag[] subTags = null;
 		int j = 1;
 

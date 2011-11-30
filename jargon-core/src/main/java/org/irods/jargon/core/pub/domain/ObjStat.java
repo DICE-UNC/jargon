@@ -41,6 +41,8 @@ public class ObjStat {
 		sb.append(checksum);
 		sb.append("\n   ownerName:");
 		sb.append(ownerName);
+		sb.append("\n   ownerZone:");
+		sb.append(ownerZone);
 		sb.append("\n  objSize:");
 		sb.append(objSize);
 		sb.append("\n   createdAt:");
