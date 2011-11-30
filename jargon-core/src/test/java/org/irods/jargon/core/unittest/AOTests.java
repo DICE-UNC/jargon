@@ -8,6 +8,7 @@ import org.irods.jargon.core.pub.DataObjectAuditAOImplTest;
 import org.irods.jargon.core.pub.DataTransferOperationsImplTest;
 import org.irods.jargon.core.pub.EnvironmentalInfoAOTest;
 import org.irods.jargon.core.pub.FederatedCollectionAndDataObjectListAndSearchAOImplTest;
+import org.irods.jargon.core.pub.FederatedDataTransferOperationsImplTest;
 import org.irods.jargon.core.pub.FederatedIRODSGenQueryExecutorImplTest;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactoryImplTest;
 import org.irods.jargon.core.pub.IRODSFileSystemTest;
@@ -37,9 +38,13 @@ import org.junit.runners.Suite;
 		BulkFileOperationsAOImplTest.class,
 		SimpleQueryExecutorAOImplTest.class, Stream2StreamAOImplTest.class,
 		QuotaAOImplTest.class, DataObjectAuditAOImplTest.class,
-		FederatedCollectionAndDataObjectListAndSearchAOImplTest.class,FederatedIRODSGenQueryExecutorImplTest.class })
+		FederatedCollectionAndDataObjectListAndSearchAOImplTest.class,FederatedIRODSGenQueryExecutorImplTest.class,
+		FederatedDataTransferOperationsImplTest.class})
 		/**
 		 * Suite to run Access Object tests in org.irods.jargon.pub.*
+		 * <p/>
+		 * Note that 'Federated*' tests will run, but a check prevents the test from actually doing anything unless the federated zone
+		 * has been set up per the test-scripts/fedTestSetup.txt file
 		 */
 public class AOTests {
 

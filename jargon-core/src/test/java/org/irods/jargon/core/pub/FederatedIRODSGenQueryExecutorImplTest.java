@@ -46,6 +46,10 @@ public class FederatedIRODSGenQueryExecutorImplTest {
 		irodsFileSystem = IRODSFileSystem.instance();
 		TestingPropertiesHelper testingPropertiesLoader = new TestingPropertiesHelper();
 		testingProperties = testingPropertiesLoader.getTestProperties();
+		
+		if (!testingPropertiesHelper.isTestFederatedZone(testingProperties)) {
+			return;
+		}
 		scratchFileUtils = new ScratchFileUtils(testingProperties);
 		scratchFileUtils
 				.clearAndReinitializeScratchDirectory(IRODS_TEST_SUBDIR_PATH);

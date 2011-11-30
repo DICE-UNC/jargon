@@ -308,7 +308,7 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements
 		StringBuilder query = new StringBuilder();
 
 		query.append(buildUserGroupSelects());
-		query.append(" WHERE "); // FIXME: no where causes NPE
+		query.append(" WHERE "); 
 		query.append(RodsGenQueryEnum.COL_USER_NAME.getName());
 		query.append(" = '");
 		query.append(userName.trim());

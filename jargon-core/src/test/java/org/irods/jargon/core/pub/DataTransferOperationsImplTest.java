@@ -434,6 +434,11 @@ public class DataTransferOperationsImplTest {
 
 	}
 
+	/**
+	 * Get one file, using rerouting of resources.  This will only run if configured in testing properites, and with
+	 * a proper test configuration.
+	 * @throws Exception
+	 */
 	@Test
 	public void testGetOneFileWithResourceRerouting() throws Exception {
 

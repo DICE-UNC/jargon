@@ -19,6 +19,15 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+/**
+ * Test collection list and search operations between federated zones
+ * <p/>
+ * Note that the test properties and server config must be set up per the
+ * test-scripts/fedTestSetup.txt file. By default, the tests will be skipped.
+ * 
+ * @author Mike Conway - DICE (www.irods.org)
+ * 
+ */
 public class FederatedCollectionAndDataObjectListAndSearchAOImplTest {
 
 	private static Properties testingProperties = new Properties();
@@ -31,8 +40,18 @@ public class FederatedCollectionAndDataObjectListAndSearchAOImplTest {
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
+
+		if (!testingPropertiesHelper.isTestFederatedZone(testingProperties)) {
+			return;
+		}
+
 		org.irods.jargon.testutils.TestingPropertiesHelper testingPropertiesLoader = new TestingPropertiesHelper();
 		testingProperties = testingPropertiesLoader.getTestProperties();
+
+		if (!testingPropertiesHelper.isTestFederatedZone(testingProperties)) {
+			return;
+		}
+
 		scratchFileUtils = new org.irods.jargon.testutils.filemanip.ScratchFileUtils(
 				testingProperties);
 		irodsTestSetupUtilities = new org.irods.jargon.testutils.IRODSTestSetupUtilities();
@@ -44,12 +63,9 @@ public class FederatedCollectionAndDataObjectListAndSearchAOImplTest {
 
 	@AfterClass
 	public static void tearDownAfterClass() throws Exception {
-		irodsFileSystem.closeAndEatExceptions();
-	}
-
-	@Test
-	public void testSomething() {
-
+		if (irodsFileSystem != null) {
+			irodsFileSystem.closeAndEatExceptions();
+		}
 	}
 
 	@Test
@@ -210,7 +226,7 @@ public class FederatedCollectionAndDataObjectListAndSearchAOImplTest {
 
 	}
 
-	@Test(expected = FileNotFoundException.class)
+	@Test
 	public void testListCollectionsUnderPathNotExists() throws Exception {
 
 		if (!testingPropertiesHelper.isTestFederatedZone(testingProperties)) {
@@ -228,17 +244,27 @@ public class FederatedCollectionAndDataObjectListAndSearchAOImplTest {
 		CollectionAndDataObjectListAndSearchAO actual = irodsFileSystem
 				.getIRODSAccessObjectFactory()
 				.getCollectionAndDataObjectListAndSearchAO(zone1Account);
-		actual.listCollectionsUnderPath(targetIrodsCollection, 0);
+
+		boolean gotError = false;
+
+		try {
+			actual.listCollectionsUnderPath(targetIrodsCollection, 0);
+		} catch (FileNotFoundException e) {
+			gotError = true;
+		}
+
+		Assert.assertTrue("should have gotten fileNotFoundException", gotError);
 
 	}
-	
+
 	@Test
-	public void testListCollectionsUnderPathWithPermissionsInAnotherZone() throws Exception {
+	public void testListCollectionsUnderPathWithPermissionsInAnotherZone()
+			throws Exception {
 
 		if (!testingPropertiesHelper.isTestFederatedZone(testingProperties)) {
 			return;
 		}
-		
+
 		String subdirPrefix = "testListCollectionsUnderPathWithPermissionsInAnotherZone";
 		int count = 20;
 
@@ -297,21 +323,23 @@ public class FederatedCollectionAndDataObjectListAndSearchAOImplTest {
 		Assert.assertEquals("i am not the owner", irodsAccount.getUserName(),
 				entry.getOwnerName());
 
-		// each entry has two permissions, will have extra for fed so tolerate that
+		// each entry has two permissions, will have extra for fed so tolerate
+		// that
 		for (CollectionAndDataObjectListingEntry actualEntry : entries) {
-			TestCase.assertTrue("did not get both expected permissions", 
+			TestCase.assertTrue("did not get both expected permissions",
 					actualEntry.getUserFilePermission().size() > 2);
 		}
 
 	}
-	
+
 	@Test
-	public void testListDataObjectsUnderPathWithAccessInfoInAnotherZone() throws Exception {
+	public void testListDataObjectsUnderPathWithAccessInfoInAnotherZone()
+			throws Exception {
 
 		if (!testingPropertiesHelper.isTestFederatedZone(testingProperties)) {
 			return;
 		}
-		
+
 		String fileName = "testListDataObjectsUnderPathWithAccessInfo.txt";
 		String testSubdir = "testListDataObjectsUnderPathWithAccessInfo";
 		int count = 10;
@@ -372,22 +400,23 @@ public class FederatedCollectionAndDataObjectListAndSearchAOImplTest {
 			Assert.assertTrue("file name not correctly returned", resultEntry
 					.getPathOrName().indexOf(fileName) > -1);
 		}
-		
-		// each entry has two permissions, will have extra for fed so tolerate that
-				for (CollectionAndDataObjectListingEntry actualEntry : entries) {
-					TestCase.assertTrue("did not get both expected permissions", 
-							actualEntry.getUserFilePermission().size() > 2);
-				}
+
+		// each entry has two permissions, will have extra for fed so tolerate
+		// that
+		for (CollectionAndDataObjectListingEntry actualEntry : entries) {
+			TestCase.assertTrue("did not get both expected permissions",
+					actualEntry.getUserFilePermission().size() > 2);
+		}
 
 	}
-	
+
 	@Test
 	public void testGetFullObjectForCollectionInAnotherZone() throws Exception {
 
 		if (!testingPropertiesHelper.isTestFederatedZone(testingProperties)) {
 			return;
 		}
-		
+
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromFederatedZoneReadTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH);

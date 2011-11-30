@@ -17,6 +17,7 @@ import org.irods.jargon.core.transfer.TransferStatus.TransferState;
 import org.irods.jargon.core.transfer.TransferStatus.TransferType;
 import org.irods.jargon.core.transfer.TransferStatusCallbackListener;
 import org.irods.jargon.core.utils.LocalFileUtils;
+import org.irods.jargon.core.utils.MiscIRODSUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -432,9 +433,8 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 		if (irodsSourceFile.isDirectory()) {
 			log.debug("get operation, treating as a directory");
 			if (operativeTransferControlBlock != null) {
-				IRODSAccessObjectFactory irodsAccessObjectFactory = IRODSAccessObjectFactoryImpl
-						.instance(getIRODSSession());
-				CollectionAO collectionAO = irodsAccessObjectFactory
+				
+				CollectionAO collectionAO = getIRODSAccessObjectFactory()
 						.getCollectionAO(getIRODSAccount());
 				int fileCount = collectionAO
 						.countAllFilesUnderneathTheGivenCollection(irodsSourceFile
@@ -772,8 +772,7 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 
 			if (targetIrodsFile.getResource().isEmpty()) {
 				log.debug("no resource provided, substitute the resource from the irodsAccount");
-				targetIrodsFile.setResource(getIRODSAccount()
-						.getDefaultStorageResource());
+				targetIrodsFile.setResource(MiscIRODSUtils.getDefaultIRODSResourceFromAccountIfFileInZone(targetIrodsFile.getAbsolutePath(), getIRODSAccount()));
 			}
 
 			log.info("  resource:{}", targetIrodsFile.getResource());
