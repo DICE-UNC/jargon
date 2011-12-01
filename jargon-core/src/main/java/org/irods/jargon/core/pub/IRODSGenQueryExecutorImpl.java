@@ -40,6 +40,9 @@ public final class IRODSGenQueryExecutorImpl extends IRODSGenericAO implements
 	private static final Logger log = LoggerFactory
 			.getLogger(IRODSGenQueryExecutorImpl.class);
 
+	/**
+	 * enum describes how to handle closing of a query
+	 */
 	public enum QueryCloseBehavior {
 		AUTO_CLOSE, MANUAL_CLOSE
 	}
@@ -77,28 +80,32 @@ public final class IRODSGenQueryExecutorImpl extends IRODSGenericAO implements
 			final IRODSGenQuery irodsQuery, final int continueIndex)
 			throws JargonException, JargonQueryException {
 		log.info("executeIRODSQuery()");
-		
+
 		return executeIRODSQueryInZone(irodsQuery, continueIndex, null);
 	}
-	
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.pub.IRODSGenQueryExecutor#executeIRODSQueryInZone(org.irods.jargon.core.query.IRODSGenQuery, int, java.lang.String)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.IRODSGenQueryExecutor#executeIRODSQueryInZone
+	 * (org.irods.jargon.core.query.IRODSGenQuery, int, java.lang.String)
 	 */
 	@Override
 	public IRODSQueryResultSet executeIRODSQueryInZone(
-			final IRODSGenQuery irodsQuery, final int continueIndex, final String zoneName)
-			throws JargonException, JargonQueryException {
-		
+			final IRODSGenQuery irodsQuery, final int continueIndex,
+			final String zoneName) throws JargonException, JargonQueryException {
+
 		log.info("executeIRODSQueryInZone()");
 
 		if (irodsQuery == null) {
 			throw new IllegalArgumentException("null irodsQuery");
 		}
-		
+
 		if (continueIndex < 0) {
 			throw new IllegalArgumentException("continue index must be > 0");
 		}
-		
+
 		log.info("query: {}", irodsQuery.getQueryString());
 		IRODSGenQueryTranslator irodsQueryTranslator = new IRODSGenQueryTranslator(
 				getIRODSServerProperties());
@@ -121,27 +128,32 @@ public final class IRODSGenQueryExecutorImpl extends IRODSGenericAO implements
 			throws JargonException, JargonQueryException {
 		log.info("executeIRODSQueryAndCloseResult()");
 
-		return executeIRODSQueryAndCloseResultInZone(irodsQuery, continueIndex, null);
+		return executeIRODSQueryAndCloseResultInZone(irodsQuery, continueIndex,
+				null);
 	}
-	
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.pub.IRODSGenQueryExecutor#executeIRODSQueryAndCloseResultInZone(org.irods.jargon.core.query.IRODSGenQuery, int, java.lang.String)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.pub.IRODSGenQueryExecutor#
+	 * executeIRODSQueryAndCloseResultInZone
+	 * (org.irods.jargon.core.query.IRODSGenQuery, int, java.lang.String)
 	 */
 	@Override
 	public IRODSQueryResultSet executeIRODSQueryAndCloseResultInZone(
-			final IRODSGenQuery irodsQuery, final int continueIndex, final String zoneName)
-			throws JargonException, JargonQueryException {
-		
+			final IRODSGenQuery irodsQuery, final int continueIndex,
+			final String zoneName) throws JargonException, JargonQueryException {
+
 		log.info("executeIRODSQueryAndCloseResultInZone()");
-		
+
 		if (irodsQuery == null) {
 			throw new IllegalArgumentException("null irodsQuery");
 		}
-			
+
 		if (continueIndex < 0) {
 			throw new IllegalArgumentException("continueIndex is < 0");
 		}
-		
+
 		log.info("query: {}", irodsQuery.getQueryString());
 		IRODSGenQueryTranslator irodsQueryTranslator = new IRODSGenQueryTranslator(
 				getIRODSServerProperties());
@@ -164,23 +176,28 @@ public final class IRODSGenQueryExecutorImpl extends IRODSGenericAO implements
 			throws JargonException, JargonQueryException {
 
 		log.info("executeIRODSQueryWithPaging()");
-		return executeIRODSQueryWithPagingInZone(irodsQuery, partialStartIndex, null);
+		return executeIRODSQueryWithPagingInZone(irodsQuery, partialStartIndex,
+				null);
 	}
-	
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.pub.IRODSGenQueryExecutor#executeIRODSQueryWithPagingInZone(org.irods.jargon.core.query.IRODSGenQuery, int, java.lang.String)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.pub.IRODSGenQueryExecutor#
+	 * executeIRODSQueryWithPagingInZone
+	 * (org.irods.jargon.core.query.IRODSGenQuery, int, java.lang.String)
 	 */
 	@Override
 	public IRODSQueryResultSetInterface executeIRODSQueryWithPagingInZone(
-			final IRODSGenQuery irodsQuery, final int partialStartIndex, final String zoneName)
-			throws JargonException, JargonQueryException {
+			final IRODSGenQuery irodsQuery, final int partialStartIndex,
+			final String zoneName) throws JargonException, JargonQueryException {
 
 		log.info("executeIRODSQueryWithPagingInZone()");
 
 		if (irodsQuery == null) {
 			throw new IllegalArgumentException("null irodsQuery");
 		}
-		
+
 		log.info("query: {}", irodsQuery.getQueryString());
 		IRODSGenQueryTranslator irodsQueryTranslator = new IRODSGenQueryTranslator(
 				getIRODSServerProperties());
@@ -191,7 +208,6 @@ public final class IRODSGenQueryExecutorImpl extends IRODSGenericAO implements
 				partialStartIndex, QueryCloseBehavior.AUTO_CLOSE, zoneName);
 	}
 
-
 	/**
 	 * Take a result set from a previous query and do a paging operation. This
 	 * result set contains information on the original query, and the state of
@@ -201,14 +217,17 @@ public final class IRODSGenQueryExecutorImpl extends IRODSGenericAO implements
 	 * @param continueIndex
 	 * @param partialStartIndex
 	 * @param queryCloseBehavior
-	 * @param zoneName <code>String</code> (<code>null</code> or blank if not used) that indicates an optional zone for the query
+	 * @param zoneName
+	 *            <code>String</code> (<code>null</code> or blank if not used)
+	 *            that indicates an optional zone for the query
 	 * @return {@link IRODSQueryResultSet}
 	 * @throws JargonException
 	 */
 	private IRODSQueryResultSet executeTranslatedIRODSQuery(
 			final TranslatedIRODSGenQuery translatedIRODSQuery,
 			final int continueIndex, final int partialStartIndex,
-			final QueryCloseBehavior queryCloseBehavior, final String zoneName) throws JargonException {
+			final QueryCloseBehavior queryCloseBehavior, final String zoneName)
+			throws JargonException {
 
 		if (continueIndex < 0) {
 			throw new JargonException("continue index must be >= 0");
@@ -373,12 +392,16 @@ public final class IRODSGenQueryExecutorImpl extends IRODSGenericAO implements
 				QueryCloseBehavior.MANUAL_CLOSE, null);
 	}
 
-	
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.pub.IRODSGenQueryExecutor#closeResults(org.irods.jargon.core.query.IRODSQueryResultSetInterface)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.IRODSGenQueryExecutor#closeResults(org.irods
+	 * .jargon.core.query.IRODSQueryResultSetInterface)
 	 */
 	@Override
-	public void closeResults(final IRODSQueryResultSetInterface irodsQueryResultSet)
+	public void closeResults(
+			final IRODSQueryResultSetInterface irodsQueryResultSet)
 			throws JargonException {
 
 		log.info("getting more results for query");

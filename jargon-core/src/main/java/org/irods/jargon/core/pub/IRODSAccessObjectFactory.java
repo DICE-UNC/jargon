@@ -268,7 +268,8 @@ public interface IRODSAccessObjectFactory {
 	void setIrodsSession(final IRODSSession irodsSession);
 
 	/**
-	 * @return
+	 * Get the <code>IRODSSession</code> that manages connections
+	 * @return {@link IRODSSession}
 	 */
 	IRODSSession getIrodsSession();
 
@@ -277,7 +278,7 @@ public interface IRODSAccessObjectFactory {
 	 * and extraction of compressed file archives (tars) in iRODS.
 	 * 
 	 * @param irodsAccount
-	 * @return
+	 * @return {@link BulkFileOperationsAO}
 	 * @throws JargonException
 	 */
 	BulkFileOperationsAO getBulkFileOperationsAO(IRODSAccount irodsAccount)
@@ -298,7 +299,7 @@ public interface IRODSAccessObjectFactory {
 	 * various admin functions, and require admin rights.
 	 * 
 	 * @param irodsAccount
-	 * @return {@link SimpleQeryExecutorAO} to send and process results of a
+	 * @return {@link SimpleQueryExecutorAO} to send and process results of a
 	 *         simple query.
 	 * @throws JargonException
 	 */
@@ -312,7 +313,7 @@ public interface IRODSAccessObjectFactory {
 	 * retrieval only mode when GenQuery is not expressive enough.
 	 * 
 	 * @param irodsAccount
-	 * @return {@link SpecificQeryExecutorAO} to send and process results of a
+	 * @return {@link SpecificQueryExcecutorAO} to send and process results of a
 	 *         simple query.
 	 * @throws JargonException
 	 */
@@ -322,6 +323,7 @@ public interface IRODSAccessObjectFactory {
 	/**
 	 * Close all connections for this session. Any resulting exceptions are
 	 * logged as a warning and ignored.
+	 * @throws JargonException 
 	 */
 	void closeSessionAndEatExceptions() throws JargonException;
 
@@ -329,7 +331,6 @@ public interface IRODSAccessObjectFactory {
 	 * Close the underlying connection for the given IRODSAccount.
 	 * 
 	 * @param irodsAccount
-	 * @throws JargonException
 	 */
 	void closeSessionAndEatExceptions(IRODSAccount irodsAccount);
 

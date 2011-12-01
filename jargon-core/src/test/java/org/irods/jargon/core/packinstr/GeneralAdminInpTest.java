@@ -479,7 +479,161 @@ public class GeneralAdminInpTest {
 		String password = null;
 
 		GeneralAdminInp.instanceForModifyUserPassword(userName, password);
-
 	}
+	
+	@Test(expected=IllegalArgumentException.class)
+	public void testAddUserToGroupNullUser() throws Exception {
+		GeneralAdminInp.instanceForAddUserToGroup(null, "test", null);
+	}
+	
+	@Test(expected=IllegalArgumentException.class)
+	public void testAddUserToGroupBlankUser() throws Exception {
+		GeneralAdminInp.instanceForAddUserToGroup("", "test", null);
+	}
+	
+	@Test(expected=IllegalArgumentException.class)
+	public void testAddUserToGroupNullGroup() throws Exception {
+		GeneralAdminInp.instanceForAddUserToGroup("test", null, null);
+	}
+	
+	@Test(expected=IllegalArgumentException.class)
+	public void testAddUserToGroupBlankGroup() throws Exception {
+		GeneralAdminInp.instanceForAddUserToGroup("test", "",null);
+	}
+	
+	@Test
+	public void testAddUserToGroupNullZone() throws Exception {
+		GeneralAdminInp actual = GeneralAdminInp.instanceForAddUserToGroup("userGroup", "userName", null);
+		String tagOut = actual.getParsedTags();
 
+		StringBuilder sb = new StringBuilder();
+		sb.append("<generalAdminInp_PI><arg0>modify</arg0>\n");
+		sb.append("<arg1>group</arg1>\n");
+		sb.append("<arg2>userGroup</arg2>\n");
+		sb.append("<arg3>add</arg3>\n");
+		sb.append("<arg4>userName</arg4>\n");
+		sb.append("<arg5></arg5>\n");
+		sb.append("<arg6></arg6>\n");
+		sb.append("<arg7></arg7>\n");
+		sb.append("<arg8></arg8>\n");
+		sb.append("<arg9></arg9>\n");
+		sb.append("</generalAdminInp_PI>\n");
+		
+		TestCase.assertEquals("unexpected XML protocol result", sb.toString(),
+				tagOut);
+	
+	}
+	
+	@Test
+	public void testAddUserToGroupSpacesZone() throws Exception {
+		GeneralAdminInp actual = GeneralAdminInp.instanceForAddUserToGroup("userGroup", "userName", "");
+		String tagOut = actual.getParsedTags();
+
+		StringBuilder sb = new StringBuilder();
+		sb.append("<generalAdminInp_PI><arg0>modify</arg0>\n");
+		sb.append("<arg1>group</arg1>\n");
+		sb.append("<arg2>userGroup</arg2>\n");
+		sb.append("<arg3>add</arg3>\n");
+		sb.append("<arg4>userName</arg4>\n");
+		sb.append("<arg5></arg5>\n");
+		sb.append("<arg6></arg6>\n");
+		sb.append("<arg7></arg7>\n");
+		sb.append("<arg8></arg8>\n");
+		sb.append("<arg9></arg9>\n");
+		sb.append("</generalAdminInp_PI>\n");
+		
+		TestCase.assertEquals("unexpected XML protocol result", sb.toString(),
+				tagOut);
+	
+	}
+	
+	@Test
+	public void testAddUserToGroupWithZone() throws Exception {
+		GeneralAdminInp actual = GeneralAdminInp.instanceForAddUserToGroup("userGroup", "userName", "zone");
+		String tagOut = actual.getParsedTags();
+
+		StringBuilder sb = new StringBuilder();
+		sb.append("<generalAdminInp_PI><arg0>modify</arg0>\n");
+		sb.append("<arg1>group</arg1>\n");
+		sb.append("<arg2>userGroup</arg2>\n");
+		sb.append("<arg3>add</arg3>\n");
+		sb.append("<arg4>userName#zone</arg4>\n");
+		sb.append("<arg5></arg5>\n");
+		sb.append("<arg6></arg6>\n");
+		sb.append("<arg7></arg7>\n");
+		sb.append("<arg8></arg8>\n");
+		sb.append("<arg9></arg9>\n");
+		sb.append("</generalAdminInp_PI>\n");
+		
+		TestCase.assertEquals("unexpected XML protocol result", sb.toString(),
+				tagOut);
+	
+	}
+	
+	@Test(expected=IllegalArgumentException.class)
+	public void testRemoveUserFromGroupNullUser() throws Exception {
+		GeneralAdminInp.instanceForRemoveUserFromGroup(null, "test", null);
+	}
+	
+	@Test(expected=IllegalArgumentException.class)
+	public void testRemoveUserFromGroupBlankUser() throws Exception {
+		GeneralAdminInp.instanceForRemoveUserFromGroup("", "test", null);
+	}
+	
+	@Test(expected=IllegalArgumentException.class)
+	public void testRemoveUserFromGroupNullGroup() throws Exception {
+		GeneralAdminInp.instanceForRemoveUserFromGroup("test", null, null);
+	}
+	
+	@Test(expected=IllegalArgumentException.class)
+	public void testRemoveUserFromGroupBlankGroup() throws Exception {
+		GeneralAdminInp.instanceForRemoveUserFromGroup("test", "",null);
+	}
+	
+	@Test
+	public void testRemoveUserFromGroupNullZone() throws Exception {
+		GeneralAdminInp actual = GeneralAdminInp.instanceForRemoveUserFromGroup("userGroup", "userName", null);
+		String tagOut = actual.getParsedTags();
+
+		StringBuilder sb = new StringBuilder();
+		sb.append("<generalAdminInp_PI><arg0>modify</arg0>\n");
+		sb.append("<arg1>group</arg1>\n");
+		sb.append("<arg2>userGroup</arg2>\n");
+		sb.append("<arg3>remove</arg3>\n");
+		sb.append("<arg4>userName</arg4>\n");
+		sb.append("<arg5></arg5>\n");
+		sb.append("<arg6></arg6>\n");
+		sb.append("<arg7></arg7>\n");
+		sb.append("<arg8></arg8>\n");
+		sb.append("<arg9></arg9>\n");
+		sb.append("</generalAdminInp_PI>\n");
+		
+		TestCase.assertEquals("unexpected XML protocol result", sb.toString(),
+				tagOut);
+	
+	}
+	
+	@Test
+	public void testRemoveUserFromGroupSpacesZone() throws Exception {
+		GeneralAdminInp actual = GeneralAdminInp.instanceForRemoveUserFromGroup("userGroup", "userName", "");
+		String tagOut = actual.getParsedTags();
+
+		StringBuilder sb = new StringBuilder();
+		sb.append("<generalAdminInp_PI><arg0>modify</arg0>\n");
+		sb.append("<arg1>group</arg1>\n");
+		sb.append("<arg2>userGroup</arg2>\n");
+		sb.append("<arg3>remove</arg3>\n");
+		sb.append("<arg4>userName</arg4>\n");
+		sb.append("<arg5></arg5>\n");
+		sb.append("<arg6></arg6>\n");
+		sb.append("<arg7></arg7>\n");
+		sb.append("<arg8></arg8>\n");
+		sb.append("<arg9></arg9>\n");
+		sb.append("</generalAdminInp_PI>\n");
+		
+		TestCase.assertEquals("unexpected XML protocol result", sb.toString(),
+				tagOut);
+	
+	}
+	
 }

@@ -71,7 +71,11 @@ import org.slf4j.LoggerFactory;
 public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		DataObjectAO {
 
-	public static final Logger log = LoggerFactory
+	private static final String NULL_OR_EMPTY_IRODS_COLLECTION_ABSOLUTE_PATH = "null or empty irodsCollectionAbsolutePath";
+	private static final String ERROR_IN_PARALLEL_TRANSFER = "error in parallel transfer";
+	private static final String NULL_LOCAL_FILE = "null local file";
+	private static final String NULL_OR_EMPTY_ABSOLUTE_PATH = "null or empty absolutePath";
+	public static final Logger log = LoggerFactory // NOPMD by mikeconway on 12/1/11 7:37 AM
 			.getLogger(DataObjectAOImpl.class);
 	private transient final DataAOHelper dataAOHelper = new DataAOHelper(
 			this.getIRODSAccessObjectFactory(), this.getIRODSAccount());
@@ -175,7 +179,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			throws DataNotFoundException, JargonException {
 
 		if (absolutePath == null || absolutePath.isEmpty()) {
-			throw new IllegalArgumentException("null or empty absolutePath");
+			throw new IllegalArgumentException(NULL_OR_EMPTY_ABSOLUTE_PATH);
 		}
 
 		log.info("findByAbsolutePath() with path:{}", absolutePath);
@@ -335,7 +339,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			throws JargonException {
 
 		if (localFile == null) {
-			throw new IllegalArgumentException("null local file");
+			throw new IllegalArgumentException(NULL_LOCAL_FILE);
 		}
 
 		if (irodsFileDestination == null) {
@@ -375,7 +379,6 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 		log.debug("localFileLength:{}", localFileLength);
 
-		
 		if (localFileLength < ConnectionConstants.MAX_SZ_FOR_SINGLE_BUF) {
 
 			log.info("processing transfer as normal, length below max");
@@ -450,9 +453,9 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 				.getMaxParallelThreads());
 		log.info("setting max threads cap to:{}",
 				myTransferOptions.getMaxThreads());
-		
+
 		ConnectionProgressStatusListener intraFileStatusListener = null;
-		
+
 		boolean execFlag = false;
 		if (localFile.canExecute()) {
 			log.info("file is executable");
@@ -464,17 +467,18 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		 * create an object to aggregate and channel within-file progress
 		 * reports to the caller.
 		 */
-		
 
 		DataObjInp dataObjInp = DataObjInp.instanceForParallelPut(
 				targetFile.getAbsolutePath(), localFile.length(),
-				targetFile.getResource(), overwrite, myTransferOptions, execFlag);
+				targetFile.getResource(), overwrite, myTransferOptions,
+				execFlag);
 
 		try {
 
 			if (myTransferOptions.isComputeAndVerifyChecksumAfterTransfer()
 					|| myTransferOptions.isComputeChecksumAfterTransfer()) {
-				log.info("before generating parallel transfer threads, computing a checksum on the file at:{}",
+				log.info(
+						"before generating parallel transfer threads, computing a checksum on the file at:{}",
 						localFile.getAbsolutePath());
 				String localFileChecksum = LocalFileUtils
 						.md5ByteArrayToString(LocalFileUtils
@@ -490,36 +494,31 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 			int numberOfThreads = responseToInitialCallForPut.getTag(
 					IRODSConstants.numThreads).getIntValue();
-			
-			int fd = responseToInitialCallForPut.getTag(IRODSConstants.l1descInx).getIntValue();
-			
+
+			int fd = responseToInitialCallForPut.getTag(
+					IRODSConstants.l1descInx).getIntValue();
+
 			log.debug("fd for file:{}", fd);
 
 			if (numberOfThreads < 0) {
 				throw new JargonException(
 						"numberOfThreads returned from iRODS is < 0, some error occurred");
 			} else if (numberOfThreads > 0) {
-				if (transferStatusCallbackListener != null
-						|| myTransferOptions.isIntraFileStatusCallbacks()) {
-					intraFileStatusListener = DefaultIntraFileProgressCallbackListener
-							.instance(TransferType.PUT, localFile.length(),
-									transferControlBlock,
-									transferStatusCallbackListener);
-				}
 				parallelPutTransfer(localFile, responseToInitialCallForPut,
-						numberOfThreads, localFile.length(), transferControlBlock,
-						transferStatusCallbackListener);
+						numberOfThreads, localFile.length(),
+						transferControlBlock, transferStatusCallbackListener);
 			} else {
 				log.info("parallel operation deferred by server sending 0 threads back in PortalOperOut, revert to single thread transfer");
 				if (transferStatusCallbackListener != null
 						|| myTransferOptions.isIntraFileStatusCallbacks()) {
-					intraFileStatusListener = DefaultIntraFileProgressCallbackListener.instanceSettingInterval(TransferType.PUT, localFile.length(),
-									transferControlBlock,
+					intraFileStatusListener = DefaultIntraFileProgressCallbackListener
+							.instanceSettingInterval(TransferType.PUT,
+									localFile.length(), transferControlBlock,
 									transferStatusCallbackListener, 100);
 				}
-				dataAOHelper.putReadWriteLoop(localFile, overwrite,
-						targetFile, fd, this.getIRODSProtocol(),
-						transferControlBlock, intraFileStatusListener);
+				dataAOHelper.putReadWriteLoop(localFile, overwrite, targetFile,
+						fd, this.getIRODSProtocol(), transferControlBlock,
+						intraFileStatusListener);
 			}
 
 		} catch (DataNotFoundException dnf) {
@@ -538,8 +537,8 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 					localFile.getAbsolutePath());
 			throw new JargonException("localFile not found to put to irods", e);
 		} catch (Exception e) {
-			log.error("error in parallel transfer", e);
-			throw new JargonException("error in parallel transfer", e);
+			log.error(ERROR_IN_PARALLEL_TRANSFER, e);
+			throw new JargonException(ERROR_IN_PARALLEL_TRANSFER, e);
 		}
 	}
 
@@ -554,11 +553,12 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	 * @throws JargonException
 	 */
 	private void parallelPutTransfer(final File localFile,
-			final Tag responseToInitialCallForPut, final int numberOfThreads, final long transferLength,
+			final Tag responseToInitialCallForPut, final int numberOfThreads,
+			final long transferLength,
 			final TransferControlBlock transferControlBlock,
 			final TransferStatusCallbackListener transferStatusCallbackListener)
 			throws JargonException {
-		
+
 		log.info("tranfer will be done using {} threads", numberOfThreads);
 		final String host = responseToInitialCallForPut
 				.getTag(IRODSConstants.PortList_PI)
@@ -572,7 +572,8 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 		final ParallelPutFileTransferStrategy parallelPutFileStrategy = ParallelPutFileTransferStrategy
 				.instance(host, port, numberOfThreads, pass, localFile,
-						this.getIRODSAccessObjectFactory(), transferLength, transferControlBlock, transferStatusCallbackListener);
+						this.getIRODSAccessObjectFactory(), transferLength,
+						transferControlBlock, transferStatusCallbackListener);
 
 		log.info(
 				"getting ready to initiate parallel file transfer strategy:{}",
@@ -621,7 +622,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			throws DataNotFoundException, JargonException {
 
 		if (localFileToHoldData == null) {
-			throw new IllegalArgumentException("null local file");
+			throw new IllegalArgumentException(NULL_LOCAL_FILE);
 		}
 
 		if (irodsFileToGet == null) {
@@ -659,7 +660,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			throws DataNotFoundException, JargonException {
 
 		log.info("getDataObjectFromIrods()");
-		
+
 		if (transferStatusCallbackListener == null) {
 			log.info("transferStatusCallbackListener not given to getDataObjectFromIrods() method");
 		} else {
@@ -667,7 +668,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		}
 
 		if (localFileToHoldData == null) {
-			throw new IllegalArgumentException("null local file");
+			throw new IllegalArgumentException(NULL_LOCAL_FILE);
 		}
 
 		if (irodsFileToGet == null) {
@@ -739,7 +740,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			throws DataNotFoundException, JargonException {
 
 		if (localFileToHoldData == null) {
-			throw new IllegalArgumentException("null local file");
+			throw new IllegalArgumentException(NULL_LOCAL_FILE);
 		}
 
 		if (irodsFileToGet == null) {
@@ -808,9 +809,9 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			final TransferControlBlock transferControlBlock,
 			final TransferStatusCallbackListener transferStatusCallbackListener)
 			throws JargonException, DataNotFoundException {
-		
+
 		log.info("process get after resource determined");
-		
+
 		if (transferStatusCallbackListener == null) {
 			log.info("no transfer status callback listener provided");
 		}
@@ -820,7 +821,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		}
 
 		LocalFileUtils.createLocalFileIfNotExists(localFileToHoldData);
-		IRODSCommands irodsProtocol =  getIRODSProtocol();
+		IRODSCommands irodsProtocol = getIRODSProtocol();
 
 		final Tag message = irodsProtocol.irodsFunction(dataObjInp);
 
@@ -860,16 +861,17 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 				checkNbrThreadsAndProcessAsParallelIfMoreThanZeroThreads(
 						irodsFileToGet, localFileToHoldData,
 						thisFileTransferOptions, message,
-						lengthFromIrodsResponse, irodsFileLength, transferControlBlock, transferStatusCallbackListener);
+						lengthFromIrodsResponse, irodsFileLength,
+						transferControlBlock, transferStatusCallbackListener);
 
 			} else {
 				dataAOHelper.processNormalGetTransfer(localFileToHoldData,
 						lengthFromIrodsResponse, irodsProtocol,
-						thisFileTransferOptions, transferControlBlock, transferStatusCallbackListener);
+						thisFileTransferOptions, transferControlBlock,
+						transferStatusCallbackListener);
 			}
 
-			if (thisFileTransferOptions != null) {
-				if (thisFileTransferOptions
+			if (thisFileTransferOptions != null && thisFileTransferOptions
 						.isComputeAndVerifyChecksumAfterTransfer()) {
 					log.info("computing a checksum on the file at:{}",
 							localFileToHoldData.getAbsolutePath());
@@ -885,25 +887,25 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 								"checksum verification after get fails");
 					}
 				}
-			}
-			
+
 			log.info("looking for executable to set flag on local file");
 			if (irodsFileToGet.canExecute()) {
 				log.info("execute set on local file");
 				localFileToHoldData.setExecutable(true);
 			}
-			
 
 		} catch (Exception e) {
-			log.error("error in parallel transfer", e);
-			throw new JargonException("error in parallel transfer", e);
+			log.error(ERROR_IN_PARALLEL_TRANSFER, e);
+			throw new JargonException(ERROR_IN_PARALLEL_TRANSFER, e);
 		}
 	}
 
 	/**
-	 * This is expected to be a parallel transfer, due to the size of the file.   An initial request to get the file
-	 * has been sent.  iRODS may come back and decide (based on a rule) to not do a parallel transfer, in
-	 * which case, the file will be streamed normally.
+	 * This is expected to be a parallel transfer, due to the size of the file.
+	 * An initial request to get the file has been sent. iRODS may come back and
+	 * decide (based on a rule) to not do a parallel transfer, in which case,
+	 * the file will be streamed normally.
+	 * 
 	 * @param irodsSourceFile
 	 * @param localFileToHoldData
 	 * @param transferOptions
@@ -917,7 +919,9 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	private void checkNbrThreadsAndProcessAsParallelIfMoreThanZeroThreads(
 			final IRODSFile irodsSourceFile, final File localFileToHoldData,
 			final TransferOptions transferOptions, final Tag message,
-			final long length, final long irodsFileLength, final TransferControlBlock transferControlBlock, final TransferStatusCallbackListener transferStatusCallbackListener)
+			final long length, final long irodsFileLength,
+			final TransferControlBlock transferControlBlock,
+			final TransferStatusCallbackListener transferStatusCallbackListener)
 			throws JargonException {
 		final String host = message.getTag(IRODSConstants.PortList_PI)
 				.getTag(IRODSConstants.hostAddr).getStringValue();
@@ -934,7 +938,8 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			log.info("number of threads is zero, possibly parallel transfers were turned off via rule, process as normal");
 			int fd = message.getTag(IRODSConstants.l1descInx).getIntValue();
 			dataAOHelper.processGetTransferViaRead(irodsSourceFile,
-					localFileToHoldData, irodsFileLength, transferOptions, fd, transferControlBlock, transferStatusCallbackListener);
+					localFileToHoldData, irodsFileLength, transferOptions, fd,
+					transferControlBlock, transferStatusCallbackListener);
 		} else {
 
 			log.info("process as a parallel transfer");
@@ -943,11 +948,13 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			} else {
 				log.info("callback listener was provided");
 			}
-			
+
 			ParallelGetFileTransferStrategy parallelGetTransferStrategy = ParallelGetFileTransferStrategy
 					.instance(host, port, numberOfThreads, password,
 							localFileToHoldData,
-							this.getIRODSAccessObjectFactory(), irodsSourceFile.length(), transferControlBlock, transferStatusCallbackListener);
+							this.getIRODSAccessObjectFactory(),
+							irodsSourceFile.length(), transferControlBlock,
+							transferStatusCallbackListener);
 
 			parallelGetTransferStrategy.transfer();
 		}
@@ -1107,7 +1114,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			JargonException {
 
 		if (absolutePath == null || absolutePath.isEmpty()) {
-			throw new IllegalArgumentException("null or empty absolutePath");
+			throw new IllegalArgumentException(NULL_OR_EMPTY_ABSOLUTE_PATH);
 		}
 
 		if (avuData == null) {
@@ -1159,7 +1166,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		if (irodsCollectionAbsolutePath == null
 				|| irodsCollectionAbsolutePath.isEmpty()) {
 			throw new IllegalArgumentException(
-					"null or empty irodsCollectionAbsolutePath");
+					NULL_OR_EMPTY_IRODS_COLLECTION_ABSOLUTE_PATH);
 		}
 
 		if (fileName == null || fileName.isEmpty()) {
@@ -1196,7 +1203,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			JargonException {
 
 		if (absolutePath == null || absolutePath.isEmpty()) {
-			throw new IllegalArgumentException("null or empty absolutePath");
+			throw new IllegalArgumentException(NULL_OR_EMPTY_ABSOLUTE_PATH);
 		}
 
 		if (avuData == null) {
@@ -1908,7 +1915,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			throws JargonException {
 
 		if (absolutePath == null || absolutePath.isEmpty()) {
-			throw new IllegalArgumentException("null or empty absolutePath");
+			throw new IllegalArgumentException(NULL_OR_EMPTY_ABSOLUTE_PATH);
 		}
 
 		if (userName == null || userName.isEmpty()) {
@@ -1948,7 +1955,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		if (irodsCollectionAbsolutePath == null
 				|| irodsCollectionAbsolutePath.isEmpty()) {
 			throw new IllegalArgumentException(
-					"null or empty irodsCollectionAbsolutePath");
+					NULL_OR_EMPTY_IRODS_COLLECTION_ABSOLUTE_PATH);
 		}
 
 		if (dataName == null || dataName.isEmpty()) {
@@ -2033,7 +2040,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			final String absolutePath, final AvuData avuData)
 			throws DataNotFoundException, JargonException {
 		if (absolutePath == null || absolutePath.isEmpty()) {
-			throw new IllegalArgumentException("null or empty absolutePath");
+			throw new IllegalArgumentException(NULL_OR_EMPTY_ABSOLUTE_PATH);
 		}
 
 		if (avuData == null) {
@@ -2151,7 +2158,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		if (irodsCollectionAbsolutePath == null
 				|| irodsCollectionAbsolutePath.isEmpty()) {
 			throw new IllegalArgumentException(
-					"null or empty irodsCollectionAbsolutePath");
+					NULL_OR_EMPTY_IRODS_COLLECTION_ABSOLUTE_PATH);
 		}
 
 		if (dataObjectName == null || dataObjectName.isEmpty()) {
@@ -2195,7 +2202,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		if (irodsCollectionAbsolutePath == null
 				|| irodsCollectionAbsolutePath.isEmpty()) {
 			throw new IllegalArgumentException(
-					"null or empty irodsCollectionAbsolutePath");
+					NULL_OR_EMPTY_IRODS_COLLECTION_ABSOLUTE_PATH);
 		}
 
 		if (dataName == null || dataName.isEmpty()) {
@@ -2249,21 +2256,29 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		return userFilePermission;
 
 	}
-	
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.pub.DataObjectAO#listFileResources(java.lang.String)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.DataObjectAO#listFileResources(java.lang.String
+	 * )
 	 */
 	@Override
-	public List<Resource> listFileResources(final String irodsAbsolutePath) throws JargonException {
-		
+	public List<Resource> listFileResources(final String irodsAbsolutePath)
+			throws JargonException {
+
 		if (irodsAbsolutePath == null || irodsAbsolutePath.isEmpty()) {
-			throw new IllegalArgumentException("null or empty irodsAbsolutePath");
+			throw new IllegalArgumentException(
+					"null or empty irodsAbsolutePath");
 		}
-		
+
 		log.info("listFileResources() for path:{}", irodsAbsolutePath);
-		
-		ResourceAOHelper resourceAOHelper = new ResourceAOHelper(this.getIRODSAccount(), this.getIRODSAccessObjectFactory());
-		IRODSFile irodsFile = this.getIRODSFileFactory().instanceIRODSFile(irodsAbsolutePath);
+
+		ResourceAOHelper resourceAOHelper = new ResourceAOHelper(
+				this.getIRODSAccount(), this.getIRODSAccessObjectFactory());
+		IRODSFile irodsFile = this.getIRODSFileFactory().instanceIRODSFile(
+				irodsAbsolutePath);
 
 		StringBuilder query = new StringBuilder();
 		query.append(resourceAOHelper.buildResourceSelects());
@@ -2283,7 +2298,9 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			query.append("'");
 
 		} else {
-			log.error("file for query does not exist, or is not a file at path:{}", irodsAbsolutePath);
+			log.error(
+					"file for query does not exist, or is not a file at path:{}",
+					irodsAbsolutePath);
 			throw new JargonException("file does not exist, or is not a file");
 		}
 
@@ -2306,7 +2323,8 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			throw new JargonException("error in query");
 		}
 
-		List<Resource> resources = resourceAOHelper.buildResourceListFromResultSet(resultSet);
+		List<Resource> resources = resourceAOHelper
+				.buildResourceListFromResultSet(resultSet);
 
 		if (resources.isEmpty()) {
 			log.warn("no data found");
@@ -2315,7 +2333,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		}
 
 		return resources;
-		
+
 	}
 
 	/*

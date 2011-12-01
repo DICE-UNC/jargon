@@ -2,10 +2,19 @@ package org.irods.jargon.core.pub;
 
 import java.util.List;
 
+import org.irods.jargon.core.exception.InvalidGroupException;
+import org.irods.jargon.core.exception.InvalidUserException;
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.pub.domain.User;
 import org.irods.jargon.core.pub.domain.UserGroup;
 import org.irods.jargon.core.query.JargonQueryException;
 
+/**
+ * Interface for an access object dealing with iRODS user groups.  Includes methods to obtain information on,
+ * and to manage iRODS user groups.
+ * @author Mike Conway - DICE (www.irods.org)
+ *
+ */
 public interface UserGroupAO extends IRODSAccessObject {
 
 	/**
@@ -54,7 +63,7 @@ public interface UserGroupAO extends IRODSAccessObject {
 	 * 
 	 * @param userName
 	 *            <code>String</code> with an IRODS user name
-	 * @return
+	 * @return <code>List</code> of {@UserGroup}
 	 * @throws JargonException
 	 */
 	List<UserGroup> findUserGroupsForUser(String userName)
@@ -62,17 +71,63 @@ public interface UserGroupAO extends IRODSAccessObject {
 
 	/**
 	 * Add the given user group to iRODS
-	 * @param userGroup {@link UserGroup} to add
+	 * 
+	 * @param userGroup
+	 *            {@link UserGroup} to add
 	 * @throws JargonException
 	 */
 	void addUserGroup(UserGroup userGroup) throws JargonException;
 
 	/**
-	 * Remove the given user group from iRODS.  Note that if the user group is not found, a warning is logged, and the 
-	 * exception is ignored.
-	 * @param userGroup {@link UserGroup} to remove
+	 * Remove the given user group from iRODS. Note that if the user group is
+	 * not found, a warning is logged, and the exception is ignored.
+	 * 
+	 * @param userGroup
+	 *            {@link UserGroup} to remove
 	 * @throws JargonException
 	 */
 	void removeUserGroup(UserGroup userGroup) throws JargonException;
+
+	/**
+	 * List the <code>User</code>s that are members of an iRODS
+	 * <code>UserGroup</code>.
+	 * 
+	 * @param userGroupName
+	 *            <code>String<code> with the name of an iRODS user group
+	 * @return <code>List<code> of {@link User} with the group membership. This
+	 *         will be an empty <code>List</code> if the group has no members.
+	 * @throws JargonException
+	 */
+	List<User> listUserGroupMembers(String userGroupName)
+			throws JargonException;
+
+	/**
+	 * Add the given user to the iRODS user group
+	 * @param userGroupName <code>String</code> with the name of the iRODS user group.  This group must exist.
+	 * @param userName <code>String</code> with the name of the iRODS user to add to the group.  This user must exist.
+	 * @param zoneName <code>String</code> with the name of the iRODS zone for the user.  This is optional and may be set to
+	 * blank or <code>null</code> if not needed.
+	 * @throws InvalidGroupException 
+	 * @throws InvalidUserException 
+	 * @throws JargonException
+	 */
+	void addUserToGroup(String userGroupName, String userName, String zoneName)
+			throws InvalidGroupException, InvalidUserException, JargonException;
+
+	/**
+	 * Remove the given user (with optional zone) from the given group.  If the user is valid but not in group,
+	 * the method will return normally.
+	 * @param userGroupName <code>String</code> with the name of the iRODS user group. 
+	 * @param userName <code>String</code> with the name of the iRODS user to add to the group.  
+	 * @param zoneName <code>String</code> with the name of the iRODS zone for the user.  This is optional and may be set to
+	 * blank or <code>null</code> if not needed.
+	 * @throws InvalidUserException 
+	 * @throws InvalidGroupException
+	 * @throws JargonException
+	 */
+	void removeUserFromGroup(String userGroupName, String userName,
+			String zoneName) throws InvalidUserException, InvalidGroupException, JargonException;
+
+	
 
 }
