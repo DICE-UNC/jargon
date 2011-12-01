@@ -103,7 +103,7 @@ public class AVUQueryElement {
 
 		return (avuQueryPart.equals(otherObj.avuQueryPart)
 				&& operator.equals(otherObj.operator) && value
-				.equals(otherObj.value));
+					.equals(otherObj.value));
 
 	}
 

@@ -15,7 +15,7 @@ import org.irods.jargon.core.pub.io.IRODSFile;
  * 
  * @author Mike Conway - DICE (www.irods.org)
  */
-public interface Stream2StreamAO  extends IRODSAccessObject {
+public interface Stream2StreamAO extends IRODSAccessObject {
 
 	/**
 	 * Given the set of bytes, copy them to the given target file in iRODS.
@@ -65,9 +65,13 @@ public interface Stream2StreamAO  extends IRODSAccessObject {
 
 	/**
 	 * Stream a class-path resource to a target iRODS file
-	 * @param resourcePath <code>String</code> with a path to a resource that can be loaded by the class loader.
-	 * @param irodsFileAbsolutePath <code>String</code> with an iRODS file absolute path to which the resource will
-	 * be loaded.
+	 * 
+	 * @param resourcePath
+	 *            <code>String</code> with a path to a resource that can be
+	 *            loaded by the class loader.
+	 * @param irodsFileAbsolutePath
+	 *            <code>String</code> with an iRODS file absolute path to which
+	 *            the resource will be loaded.
 	 * @throws JargonException
 	 */
 	void streamClasspathResourceToIRODSFile(String resourcePath,

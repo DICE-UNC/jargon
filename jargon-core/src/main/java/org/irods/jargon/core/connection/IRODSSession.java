@@ -13,7 +13,6 @@ import java.util.concurrent.TimeUnit;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.packinstr.TransferOptions;
 import org.irods.jargon.core.packinstr.TransferOptions.TransferType;
-import org.irods.jargon.core.pub.IRODSFileSystem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,8 +23,8 @@ import org.slf4j.LoggerFactory;
  * <code>IRODSAccount</code> as the key.
  * <p/>
  * Connections are returned to the particular <code>IRODSProtocolManager</code>
- * for disposal or return to cache or pool.  See the comments for {@link IRODSCommands} for
- * details on connection creation and disposal.
+ * for disposal or return to cache or pool. See the comments for
+ * {@link IRODSCommands} for details on connection creation and disposal.
  * <p/>
  * <code>IRODSSession</code> is also the place where shared, expensive objects
  * are kept. Note that IRODSSession is not coded as a singleton. It is up to the
@@ -50,7 +49,7 @@ public class IRODSSession {
 	 * thread automatically shares a common connection to an iRODS server.
 	 */
 	public static final ThreadLocal<Map<String, IRODSCommands>> sessionMap = new ThreadLocal<Map<String, IRODSCommands>>();
-	
+
 	/**
 	 * The parallel transfer thread pool is lazily initialized on the first
 	 * parallel transfer operation. This will use the
@@ -78,17 +77,20 @@ public class IRODSSession {
 			return jargonProperties;
 		}
 	}
-	
+
 	/**
-	 * Build an immutable <code>PipelineConfiguration</code> object that controls i/o behavior with iRODS
-	 * @return {@link PipelineConfiguration} which is an immutable set of properties to control i/o behavior of Jargon
+	 * Build an immutable <code>PipelineConfiguration</code> object that
+	 * controls i/o behavior with iRODS
+	 * 
+	 * @return {@link PipelineConfiguration} which is an immutable set of
+	 *         properties to control i/o behavior of Jargon
 	 */
 	public PipelineConfiguration buildPipelineConfigurationBasedOnJargonProperties() {
-		
+
 		synchronized (this) {
 			return PipelineConfiguration.instance(jargonProperties);
 		}
-		
+
 	}
 
 	/**
@@ -99,8 +101,7 @@ public class IRODSSession {
 	 *         properties
 	 * @throws JargonException
 	 */
-	public TransferOptions buildTransferOptionsBasedOnJargonProperties()
-			 {
+	public TransferOptions buildTransferOptionsBasedOnJargonProperties() {
 
 		TransferOptions transferOptions = new TransferOptions();
 		synchronized (this) {
@@ -123,9 +124,9 @@ public class IRODSSession {
 			transferOptions.setIntraFileStatusCallbacks(jargonProperties
 					.isIntraFileStatusCallbacks());
 		}
-		
+
 		log.info("transfer options based on properties:{}", transferOptions);
-		
+
 		return transferOptions;
 	}
 
@@ -275,9 +276,11 @@ public class IRODSSession {
 	 */
 	private IRODSCommands connectAndAddToProtocolsMap(
 			final IRODSAccount irodsAccount,
-			Map<String, IRODSCommands> irodsProtocols) throws JargonException {
+			final Map<String, IRODSCommands> irodsProtocols)
+			throws JargonException {
 		IRODSCommands irodsProtocol;
-		irodsProtocol = irodsProtocolManager.getIRODSProtocol(irodsAccount, this.buildPipelineConfigurationBasedOnJargonProperties());
+		irodsProtocol = irodsProtocolManager.getIRODSProtocol(irodsAccount,
+				this.buildPipelineConfigurationBasedOnJargonProperties());
 		if (irodsProtocol == null) {
 			LOG.error("no connection returned from connection manager");
 			throw new JargonException(
@@ -350,9 +353,12 @@ public class IRODSSession {
 	}
 
 	/**
-	 * Signal to the <code>IRODSSession</code> that a connection has been forcefully terminated due to errors, and
-	 * should be removed from the cache.
-	 * @param irodsAccount {@link IRODSAccount} that maps the connection
+	 * Signal to the <code>IRODSSession</code> that a connection has been
+	 * forcefully terminated due to errors, and should be removed from the
+	 * cache.
+	 * 
+	 * @param irodsAccount
+	 *            {@link IRODSAccount} that maps the connection
 	 * @throws JargonException
 	 */
 	public void discardSessionForErrors(final IRODSAccount irodsAccount)
@@ -364,7 +370,7 @@ public class IRODSSession {
 			LOG.warn("discarding session that is already closed, silently ignore");
 			return;
 		}
-		
+
 		irodsProtocols.remove(irodsAccount.toString());
 
 		if (irodsProtocols.isEmpty()) {
@@ -422,24 +428,24 @@ public class IRODSSession {
 				return parallelTransferThreadPool;
 			}
 
-			int poolSize = jargonProperties.getTransferThreadPoolMaxSimultaneousTransfers() * jargonProperties.getMaxParallelThreads();
-			int maxParallelThreads =  jargonProperties.getMaxParallelThreads();
-			
+			int poolSize = jargonProperties
+					.getTransferThreadPoolMaxSimultaneousTransfers()
+					* jargonProperties.getMaxParallelThreads();
+			int maxParallelThreads = jargonProperties.getMaxParallelThreads();
+
 			log.info("creating the parallel transfer threads pool");
-			log.info("   max # threads: {}",
-					maxParallelThreads);
-			
+			log.info("   max # threads: {}", maxParallelThreads);
+
 			log.info("   pool timeout millis:{}",
 					jargonProperties.getTransferThreadPoolTimeoutMillis());
 
 			parallelTransferThreadPool = new ThreadPoolExecutor(
-					maxParallelThreads,
-					poolSize,
+					maxParallelThreads, poolSize,
 					jargonProperties.getTransferThreadPoolTimeoutMillis(),
 					TimeUnit.MILLISECONDS, new ArrayBlockingQueue<Runnable>(
 							poolSize),
 					new RejectedParallelThreadExecutionHandler());
-			
+
 			log.info("parallelTransferThreadPool created");
 			return parallelTransferThreadPool;
 		}

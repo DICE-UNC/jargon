@@ -183,8 +183,9 @@ public interface TransferControlBlock {
 	void setTotalBytesToTransfer(long totalBytesToTransfer);
 
 	/**
-	 * Set the options that will control the details of the transfer.  Note that this may be set to <code>null</code>, in which case, defaults will be computed
-	 * during the transfer.
+	 * Set the options that will control the details of the transfer. Note that
+	 * this may be set to <code>null</code>, in which case, defaults will be
+	 * computed during the transfer.
 	 * 
 	 * @param transferOptions
 	 *            {@link TransferOptions}
@@ -192,8 +193,8 @@ public interface TransferControlBlock {
 	void setTransferOptions(TransferOptions transferOptions);
 
 	/**
-	 * Get the options currently controlling the details of the transfer.  These may be <code>null</code> if they have not yet
-	 * been specified.
+	 * Get the options currently controlling the details of the transfer. These
+	 * may be <code>null</code> if they have not yet been specified.
 	 * 
 	 * @return {@link TransferOptions}
 	 */

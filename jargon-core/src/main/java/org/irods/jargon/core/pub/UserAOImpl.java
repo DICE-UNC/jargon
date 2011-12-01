@@ -31,10 +31,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Class to access underlying user information in IRODS. 
+ * Class to access underlying user information in IRODS.
  * <p/>
- * Note that, currently, user DN information requires an additional GenQuery call per retrieved user, so this
- * is off by default for list methods, and on by default when retrieving an individual user.  There is a method to retrieve the user DN if required. 
+ * Note that, currently, user DN information requires an additional GenQuery
+ * call per retrieved user, so this is off by default for list methods, and on
+ * by default when retrieving an individual user. There is a method to retrieve
+ * the user DN if required.
  * 
  * @author Mike Conway - DICE (www.irods.org)
  * 
@@ -92,8 +94,8 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 		IRODSQueryResultSetInterface resultSet;
 
 		try {
-			resultSet =  getGenQueryExecutor()
-					.executeIRODSQueryAndCloseResult(irodsQuery, 0);
+			resultSet = getGenQueryExecutor().executeIRODSQueryAndCloseResult(
+					irodsQuery, 0);
 		} catch (JargonQueryException e) {
 			log.error("query exception for user query: " + sb.toString(), e);
 			throw new JargonException(ERROR_IN_USER_QUERY);
@@ -157,8 +159,8 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 		IRODSQueryResultSetInterface resultSet;
 
 		try {
-			resultSet =  getGenQueryExecutor()
-					.executeIRODSQueryAndCloseResult(irodsQuery, 0);
+			resultSet = getGenQueryExecutor().executeIRODSQueryAndCloseResult(
+					irodsQuery, 0);
 		} catch (JargonQueryException e) {
 			log.error("query exception for user query:{} ", sb.toString(), e);
 			throw new JargonException(ERROR_IN_USER_QUERY);
@@ -240,7 +242,6 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 	 */
 	@Override
 	public List<User> findAll() throws JargonException {
-		
 
 		StringBuilder userQuery = new StringBuilder();
 		userQuery.append(UserAOHelper.buildUserSelects());
@@ -255,8 +256,8 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 
 		IRODSQueryResultSetInterface resultSet;
 		try {
-			resultSet = getGenQueryExecutor()
-					.executeIRODSQueryAndCloseResult(irodsQuery, 0);
+			resultSet = getGenQueryExecutor().executeIRODSQueryAndCloseResult(
+					irodsQuery, 0);
 		} catch (JargonQueryException e) {
 			log.error("query exception for user query:" + userQueryString, e);
 			throw new JargonException(ERROR_IN_USER_QUERY);
@@ -265,7 +266,8 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 		List<User> users = new ArrayList<User>();
 		User user;
 		for (IRODSQueryResultRow row : resultSet.getResults()) {
-			user = UserAOHelper.buildUserFromResultSet(row,  getGenQueryExecutor(), false);
+			user = UserAOHelper.buildUserFromResultSet(row,
+					getGenQueryExecutor(), false);
 			users.add(user);
 		}
 
@@ -284,7 +286,6 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 		if (whereStatement == null) {
 			throw new IllegalArgumentException("null where statement");
 		}
-
 
 		StringBuilder sb = new StringBuilder();
 		sb.append(UserAOHelper.buildUserSelects());
@@ -306,8 +307,8 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 
 		IRODSQueryResultSetInterface resultSet;
 		try {
-			resultSet =  getGenQueryExecutor()
-					.executeIRODSQueryAndCloseResult(irodsQuery, 0);
+			resultSet = getGenQueryExecutor().executeIRODSQueryAndCloseResult(
+					irodsQuery, 0);
 		} catch (JargonQueryException e) {
 			log.error("query exception for user query: {}", userQueryString, e);
 			throw new JargonException(ERROR_IN_USER_QUERY);
@@ -316,7 +317,8 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 		List<User> users = new ArrayList<User>();
 		User user;
 		for (IRODSQueryResultRow row : resultSet.getResults()) {
-			user = UserAOHelper.buildUserFromResultSet(row, getGenQueryExecutor(), false);
+			user = UserAOHelper.buildUserFromResultSet(row,
+					getGenQueryExecutor(), false);
 			users.add(user);
 		}
 
@@ -386,13 +388,13 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 		// I know I have just one user
 
 		IRODSQueryResultRow row = resultSet.getFirstResult();
-		User user = UserAOHelper.buildUserFromResultSet(row,  getGenQueryExecutor(), true);
+		User user = UserAOHelper.buildUserFromResultSet(row,
+				getGenQueryExecutor(), true);
 
 		return user;
 
 	}
 
-	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -402,7 +404,6 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 	public User findByName(final String userName) throws JargonException,
 			DataNotFoundException {
 
-		
 		StringBuilder userQuery = new StringBuilder();
 
 		userQuery.append(UserAOHelper.buildUserSelects());
@@ -426,9 +427,8 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 
 		IRODSQueryResultSetInterface resultSet;
 		try {
-			resultSet =  getGenQueryExecutor()
-					.executeIRODSQueryAndCloseResult(irodsQuery,
-							DEFAULT_REC_COUNT);
+			resultSet = getGenQueryExecutor().executeIRODSQueryAndCloseResult(
+					irodsQuery, DEFAULT_REC_COUNT);
 		} catch (JargonQueryException e) {
 			log.error("query exception for user query:{}", userQueryString, e);
 			throw new JargonException(ERROR_IN_USER_QUERY);
@@ -455,7 +455,8 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 		// I know I have just one user
 
 		IRODSQueryResultRow row = resultSet.getResults().get(0);
-		User user = UserAOHelper.buildUserFromResultSet(row,  getGenQueryExecutor(), true);
+		User user = UserAOHelper.buildUserFromResultSet(row,
+				getGenQueryExecutor(), true);
 
 		return user;
 	}
@@ -492,9 +493,8 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 
 		IRODSQueryResultSetInterface resultSet;
 		try {
-			resultSet =  getGenQueryExecutor()
-					.executeIRODSQueryAndCloseResult(irodsQuery,
-							DEFAULT_REC_COUNT);
+			resultSet = getGenQueryExecutor().executeIRODSQueryAndCloseResult(
+					irodsQuery, DEFAULT_REC_COUNT);
 		} catch (JargonQueryException e) {
 			log.error("query exception for user query:{}",
 					userQuery.toString(), e);
@@ -509,12 +509,16 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 		return results;
 
 	}
-	
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.pub.UserAO#retriveUserDNByUserId(java.lang.String)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.UserAO#retriveUserDNByUserId(java.lang.String)
 	 */
 	@Override
-	public String retriveUserDNByUserId(final String userId) throws JargonException {
+	public String retriveUserDNByUserId(final String userId)
+			throws JargonException {
 		return UserAOHelper.findUserDnIfExists(userId, getGenQueryExecutor());
 	}
 
@@ -524,7 +528,8 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 	 * @see org.irods.jargon.core.pub.UserAO#deleteUser(java.lang.String)
 	 */
 	@Override
-	public void deleteUser(final String userName) throws InvalidUserException, JargonException {
+	public void deleteUser(final String userName) throws InvalidUserException,
+			JargonException {
 		if (userName == null || userName.isEmpty()) {
 			throw new IllegalArgumentException("null or empty user name");
 		}
@@ -676,7 +681,7 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 		GeneralAdminInp adminPI = GeneralAdminInp
 				.instanceForModifyUserPassword(userName, newPassword);
 		getIRODSProtocol().irodsFunction(adminPI);
-		
+
 		// FIXME: finish implementing
 	}
 
@@ -825,12 +830,13 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 				user.getName(), user.getInfo());
 		getIRODSProtocol().irodsFunction(adminPI);
 	}
-	
+
 	private IRODSGenQueryExecutor getGenQueryExecutor() throws JargonException {
 		if (irodsGenQueryExecutor == null) {
-		irodsGenQueryExecutor = this.getIRODSAccessObjectFactory().getIRODSGenQueryExecutor(getIRODSAccount());
-		} 
-		
+			irodsGenQueryExecutor = this.getIRODSAccessObjectFactory()
+					.getIRODSGenQueryExecutor(getIRODSAccount());
+		}
+
 		return irodsGenQueryExecutor;
 
 	}

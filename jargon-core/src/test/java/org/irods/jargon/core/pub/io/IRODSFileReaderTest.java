@@ -167,12 +167,9 @@ public class IRODSFileReaderTest {
 
 		char[] readBuff = new char[buffLen];
 		int readCtr = 0;
-		int totalRead = 0;
-
 		StringBuilder outputStringBuilder = new StringBuilder();
 
 		while ((readCtr = reader.read(readBuff)) > -1) {
-			totalRead += readCtr;
 			outputStringBuilder.append(readBuff, 0, readCtr);
 		}
 

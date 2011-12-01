@@ -75,15 +75,19 @@ public interface IRODSFileFactory {
 	 */
 	IRODSFileOutputStream instanceIRODSFileOutputStream(String name)
 			throws JargonException;
-	
+
 	/**
-	* Creates an iRODS output stream such that data can be written to the given
+	 * Creates an iRODS output stream such that data can be written to the given
 	 * iRODS file.
 	 * <p/>
-	 * This particular method will inspect the target resource, as set in the <code>irodsFile</code>, and
-	 * potentially re-route the connection to that resource.
-	 * @param irodsFile {@link IRODSFile} that is the target of the stream.
-	 * @return {@link IRODSFileOutputStream} that will write to the target <code>irodsFile</code>
+	 * This particular method will inspect the target resource, as set in the
+	 * <code>irodsFile</code>, and potentially re-route the connection to that
+	 * resource.
+	 * 
+	 * @param irodsFile
+	 *            {@link IRODSFile} that is the target of the stream.
+	 * @return {@link IRODSFileOutputStream} that will write to the target
+	 *         <code>irodsFile</code>
 	 * @throws JargonException
 	 */
 	IRODSFileOutputStream instanceIRODSFileOutputStreamWithRerouting(
@@ -115,14 +119,16 @@ public interface IRODSFileFactory {
 	 */
 	IRODSFileInputStream instanceIRODSFileInputStream(String name)
 			throws JargonException;
-	
+
 	/**
 	 * Creates an iRODS input stream such that data can be read to the given
 	 * iRODS file.
 	 * <p/>
-	 * Note that this method signature will do any necessary connection re-routing based to a resource actually
-	 * containing the file.  If such rerouting is done, the <code>InputStream</code> will be wrapped with a
-	 * {@link SessionClosingIRODSFileInputStream} that will close the re-routed connection when the stream is closed.
+	 * Note that this method signature will do any necessary connection
+	 * re-routing based to a resource actually containing the file. If such
+	 * rerouting is done, the <code>InputStream</code> will be wrapped with a
+	 * {@link SessionClosingIRODSFileInputStream} that will close the re-routed
+	 * connection when the stream is closed.
 	 * 
 	 * @param name
 	 *            <code>String</code> with and absolute path to the file that
@@ -301,8 +307,8 @@ public interface IRODSFileFactory {
 	/**
 	 * Create an instance of a
 	 * {@link org.irods.jargon.core.pub.io.SessionClosingIRODSFileOutputStream}.
-	 * This special output stream will close the underlying iRODS connection when
-	 * the stream is closed.
+	 * This special output stream will close the underlying iRODS connection
+	 * when the stream is closed.
 	 * 
 	 * @param name
 	 *            {@link org.irods.jargon.core.pub.io.IRODSFile} with the iRODS
@@ -315,7 +321,4 @@ public interface IRODSFileFactory {
 	SessionClosingIRODSFileOutputStream instanceSessionClosingIRODSFileOutputStream(
 			IRODSFile file) throws JargonException;
 
-	
-
-	
 }

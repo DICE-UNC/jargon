@@ -38,7 +38,21 @@ import org.slf4j.LoggerFactory;
  * 
  */
 
-public final class IRODSFileImpl extends File implements IRODSFile { // FIXME: why does this extend IRODSFile?  Should IRODSFile just have the particular non File methods?
+public final class IRODSFileImpl extends File implements IRODSFile { // FIXME:
+																		// why
+																		// does
+																		// this
+																		// extend
+																		// IRODSFile?
+																		// Should
+																		// IRODSFile
+																		// just
+																		// have
+																		// the
+																		// particular
+																		// non
+																		// File
+																		// methods?
 
 	static Logger log = LoggerFactory.getLogger(IRODSFileImpl.class);
 
@@ -456,7 +470,9 @@ public final class IRODSFileImpl extends File implements IRODSFile { // FIXME: w
 
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.irods.jargon.core.pub.io.IRODSFile#deleteWithForceOption()
 	 */
 	@Override
@@ -1257,14 +1273,13 @@ public final class IRODSFileImpl extends File implements IRODSFile { // FIXME: w
 		this.fileDescriptor = fileDescriptor;
 	}
 
-	private int openWithMode(final DataObjInp.OpenFlags openFlags, boolean checkExists)
-			throws JargonException {
-		
+	private int openWithMode(final DataObjInp.OpenFlags openFlags,
+			final boolean checkExists) throws JargonException {
+
 		if (log.isInfoEnabled()) {
 			log.info("opening irodsFile:" + this.getAbsolutePath());
 		}
 
-	
 		if (checkExists && !this.exists()) {
 			throw new JargonException(
 					"this file does not exist, so it cannot be opened.  The file should be created first!");
@@ -1304,10 +1319,11 @@ public final class IRODSFileImpl extends File implements IRODSFile { // FIXME: w
 	public int open() throws JargonException {
 		return openWithMode(DataObjInp.OpenFlags.READ_WRITE, true);
 	}
-	
+
 	/**
-	 * Open the file without doing an <code>exists()</code> check, since I know it already does.  This saves
-	 * a bit of time
+	 * Open the file without doing an <code>exists()</code> check, since I know
+	 * it already does. This saves a bit of time
+	 * 
 	 * @return
 	 * @throws JargonException
 	 */
@@ -1325,7 +1341,7 @@ public final class IRODSFileImpl extends File implements IRODSFile { // FIXME: w
 		if (log.isInfoEnabled()) {
 			log.info("closing irodsFile:{}", this.getAbsolutePath());
 		}
-		
+
 		this.reset();
 
 		if (this.getFileDescriptor() <= 0) {
@@ -1336,7 +1352,7 @@ public final class IRODSFileImpl extends File implements IRODSFile { // FIXME: w
 
 		this.irodsFileSystemAO.fileClose(this.getFileDescriptor());
 		this.setFileDescriptor(-1);
-		
+
 	}
 
 	/*
@@ -1402,7 +1418,9 @@ public final class IRODSFileImpl extends File implements IRODSFile { // FIXME: w
 		}
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.io.File#canExecute()
 	 */
 	@Override

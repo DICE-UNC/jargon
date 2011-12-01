@@ -4,7 +4,6 @@
 package org.irods.jargon.core.packinstr;
 
 import junit.framework.Assert;
-import junit.framework.TestCase;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -73,13 +72,13 @@ public class DataObjCopyInpTest {
 		DataObjCopyInp dataObjCopyInp = DataObjCopyInp.instanceForCopy(
 				testFileName, testNewFileName, testResource, testLength, false);
 
-		TestCase.assertEquals("invalid api number set",
+		Assert.assertEquals("invalid api number set",
 				DataObjCopyInp.COPY_API_NBR, dataObjCopyInp.getApiNumber());
-		TestCase.assertEquals("invalid source path", testFileName,
+		Assert.assertEquals("invalid source path", testFileName,
 				dataObjCopyInp.getFromFileAbsolutePath());
-		TestCase.assertEquals("invalid target path", testNewFileName,
+		Assert.assertEquals("invalid target path", testNewFileName,
 				dataObjCopyInp.getToFileAbsolutePath());
-		TestCase.assertEquals("invalid resource", testResource,
+		Assert.assertEquals("invalid resource", testResource,
 				dataObjCopyInp.getResourceName());
 	}
 

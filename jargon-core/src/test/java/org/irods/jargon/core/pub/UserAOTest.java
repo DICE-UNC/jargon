@@ -415,15 +415,15 @@ public class UserAOTest {
 		String testUser = "deleteUserTestUser";
 
 		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-		.getIRODSAccessObjectFactory();
+				.getIRODSAccessObjectFactory();
 
-UserAO userAO = accessObjectFactory.getUserAO(irodsAccount);
+		UserAO userAO = accessObjectFactory.getUserAO(irodsAccount);
 
-try {
-	userAO.deleteUser(testUser);
-} catch (Exception e) {
-	// ignore exception, user may not exist
-}
+		try {
+			userAO.deleteUser(testUser);
+		} catch (Exception e) {
+			// ignore exception, user may not exist
+		}
 
 		User addedUser = new User();
 		addedUser.setName(testUser);
@@ -471,15 +471,15 @@ try {
 		// setup, delete user if it exists
 
 		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-		.getIRODSAccessObjectFactory();
+				.getIRODSAccessObjectFactory();
 
-UserAO userAO = accessObjectFactory.getUserAO(irodsAccount);
+		UserAO userAO = accessObjectFactory.getUserAO(irodsAccount);
 
-try {
-	userAO.deleteUser(testUser);
-} catch (Exception e) {
-	// ignore exception, user may not exist
-}
+		try {
+			userAO.deleteUser(testUser);
+		} catch (Exception e) {
+			// ignore exception, user may not exist
+		}
 		User addedUser = new User();
 		addedUser.setName(testUser);
 		addedUser.setUserType(UserTypeEnum.RODS_USER);

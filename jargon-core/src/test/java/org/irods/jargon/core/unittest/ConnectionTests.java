@@ -17,7 +17,8 @@ import org.junit.runners.Suite;
 		IRODSSimpleProtocolManagerTest.class,
 		ConnectionProxyDefinitionTest.class, IRODSSessionTest.class,
 		IRODSServerPropertiesTest.class,
-		DefaultPropertiesJargonConfigTest.class, ConnectionProgressStatusTest.class })
+		DefaultPropertiesJargonConfigTest.class,
+		ConnectionProgressStatusTest.class })
 public class ConnectionTests {
 
 }

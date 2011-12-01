@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.irods.jargon.core.exception.FileNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
-import org.irods.jargon.core.pub.domain.DataObject;
 import org.irods.jargon.core.pub.domain.ObjStat;
 import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry;
 
@@ -22,7 +21,8 @@ import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry;
  * @author Mike Conway - DICE (www.irods.org)
  * 
  */
-public interface CollectionAndDataObjectListAndSearchAO extends IRODSAccessObject {
+public interface CollectionAndDataObjectListAndSearchAO extends
+		IRODSAccessObject {
 
 	/**
 	 * This is a method that can support listing and paging of collections,

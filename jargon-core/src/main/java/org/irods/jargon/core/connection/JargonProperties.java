@@ -1,6 +1,5 @@
 package org.irods.jargon.core.connection;
 
-import org.irods.jargon.core.exception.JargonException;
 
 /**
  * Represents a source of configuration metadata that will effect the behavior
@@ -15,7 +14,7 @@ import org.irods.jargon.core.exception.JargonException;
  * 
  */
 public interface JargonProperties {
-	
+
 	String getEncoding();
 
 	/**
@@ -184,8 +183,7 @@ public interface JargonProperties {
 	 * that wraps the output stream for the local file. This is used in
 	 * processing get operations where the iRODS data is being saved to the
 	 * local file system. (0 = use defaults, -1 = do not wrap with buffered
-	 * output stream) 
-	 * jargon.io.local.output.stream.buffer.size
+	 * output stream) jargon.io.local.output.stream.buffer.size
 	 * 
 	 * @return <code>int</code> with the buffer size
 	 */
@@ -198,15 +196,19 @@ public interface JargonProperties {
 	 * @return
 	 */
 	int getIRODSParallelTransferSocketTimeout();
-	
+
 	/**
-	 * Get the size of the file segment for each successive call in normal put operations.
+	 * Get the size of the file segment for each successive call in normal put
+	 * operations.
+	 * 
 	 * @return
 	 */
 	int getPutBufferSize();
-	
+
 	/**
-	 * Get the size of the file segment for each successive call in normal get operations.
+	 * Get the size of the file segment for each successive call in normal get
+	 * operations.
+	 * 
 	 * @return
 	 */
 	int getGetBufferSize();

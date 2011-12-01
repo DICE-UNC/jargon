@@ -22,12 +22,14 @@ public interface IRODSQueryResultSetInterface {
 	List<IRODSQueryResultRow> getResults();
 
 	/**
-	 * Get the first result returned from the query, or a <code>DataNotFoundException</code> if no rows were returned.
+	 * Get the first result returned from the query, or a
+	 * <code>DataNotFoundException</code> if no rows were returned.
+	 * 
 	 * @return {@link IRODSQueryResultRow} with the first result
-	 * @throws DataNotFoundException if no results were returned
+	 * @throws DataNotFoundException
+	 *             if no results were returned
 	 */
-	IRODSQueryResultRow getFirstResult()
-			throws DataNotFoundException;
+	IRODSQueryResultRow getFirstResult() throws DataNotFoundException;
 
 	boolean isHasMoreRecords();
 

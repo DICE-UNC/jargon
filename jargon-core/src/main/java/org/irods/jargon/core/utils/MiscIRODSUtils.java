@@ -23,19 +23,22 @@ public class MiscIRODSUtils {
 	}
 
 	/**
-	 * Given an iRODS path to a file, and an iRODS account, get a default storage resource name from the iRODS account if
-	 * that path is in the same zone as an iRODS account, otherwise, return an empty resource.
+	 * Given an iRODS path to a file, and an iRODS account, get a default
+	 * storage resource name from the iRODS account if that path is in the same
+	 * zone as an iRODS account, otherwise, return an empty resource.
 	 * <p/>
-	 * This is used in places in Jargon so that a default storage resource in an iRODS account is not propagated to the wrong zone.
+	 * This is used in places in Jargon so that a default storage resource in an
+	 * iRODS account is not propagated to the wrong zone.
 	 * 
 	 * @param irodsAbsolutePath
 	 * @param irodsAccount
 	 * @return
 	 */
-	public static String getDefaultIRODSResourceFromAccountIfFileInZone(final String irodsAbsolutePath, final IRODSAccount irodsAccount) {
-		
+	public static String getDefaultIRODSResourceFromAccountIfFileInZone(
+			final String irodsAbsolutePath, final IRODSAccount irodsAccount) {
+
 		String defaultResource = "";
-		
+
 		if (irodsAbsolutePath == null || irodsAbsolutePath.isEmpty()) {
 			throw new IllegalArgumentException("null irodsAbsolutePath");
 		}
@@ -43,19 +46,19 @@ public class MiscIRODSUtils {
 		if (irodsAccount == null) {
 			throw new IllegalArgumentException("null irodsAccount");
 		}
-		
+
 		List<String> pathComponents = breakIRODSPathIntoComponents(irodsAbsolutePath);
 
 		boolean inZone = isFirstPartOfPathInZone(irodsAccount, pathComponents);
-		
+
 		if (inZone) {
 			defaultResource = irodsAccount.getDefaultStorageResource();
 		}
-		
+
 		return defaultResource;
 
 	}
-	
+
 	/**
 	 * Determine if the given iRODS absolute path is in the zone of the given
 	 * <code>IRODSAccount</code>. This is done by inspecting the path for first
@@ -97,8 +100,7 @@ public class MiscIRODSUtils {
 	 * @return
 	 */
 	private static boolean isFirstPartOfPathInZone(
-			final IRODSAccount irodsAccount, 
-			List<String> pathComponents) {
+			final IRODSAccount irodsAccount, final List<String> pathComponents) {
 		boolean inZone = true;
 		if (pathComponents.isEmpty() || pathComponents.size() == 1) {
 			// inZone will remain true, this should be the 'root' directory

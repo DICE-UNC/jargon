@@ -360,10 +360,11 @@ public class TestingPropertiesHelper {
 
 		return account;
 	}
-	
+
 	/**
-	 * Build an <code>IRODSAccount</code> object for connecting to the federated zone as defined in the 
-	 * testing.properties file.
+	 * Build an <code>IRODSAccount</code> object for connecting to the federated
+	 * zone as defined in the testing.properties file.
+	 * 
 	 * @param testingProperties
 	 *            <code>Properties</code> file with the standard names defined
 	 *            in
@@ -376,20 +377,23 @@ public class TestingPropertiesHelper {
 
 		StringBuilder homeBuilder = new StringBuilder();
 		homeBuilder.append('/');
-		homeBuilder.append(testingProperties.getProperty(IRODS_FEDERATED_ZONE_KEY));
+		homeBuilder.append(testingProperties
+				.getProperty(IRODS_FEDERATED_ZONE_KEY));
 		homeBuilder.append('/');
 		homeBuilder.append("home");
 		homeBuilder.append('/');
-		homeBuilder.append(testingProperties.getProperty(IRODS_FEDERATED_USER_KEY));
+		homeBuilder.append(testingProperties
+				.getProperty(IRODS_FEDERATED_USER_KEY));
 
 		IRODSAccount account = new IRODSAccount(
 				testingProperties.getProperty(IRODS_FEDERATED_HOST_KEY),
-				Integer.parseInt(testingProperties.getProperty(IRODS_FEDERATED_PORT_KEY)),
+				Integer.parseInt(testingProperties
+						.getProperty(IRODS_FEDERATED_PORT_KEY)),
 				testingProperties.getProperty(IRODS_FEDERATED_USER_KEY),
-				testingProperties.getProperty(IRODS_FEDERATED_PASSWORD_KEY), homeBuilder
-						.toString(), testingProperties
-						.getProperty(IRODS_FEDERATED_ZONE_KEY), testingProperties
-						.getProperty(IRODS_FEDERATED_RESOURCE_KEY));
+				testingProperties.getProperty(IRODS_FEDERATED_PASSWORD_KEY),
+				homeBuilder.toString(),
+				testingProperties.getProperty(IRODS_FEDERATED_ZONE_KEY),
+				testingProperties.getProperty(IRODS_FEDERATED_RESOURCE_KEY));
 
 		return account;
 	}
@@ -619,10 +623,11 @@ public class TestingPropertiesHelper {
 		pathBuilder.append(collectionPathBelowScratch);
 		return pathBuilder.toString();
 	}
-	
+
 	/**
 	 * Handy method to give, from the root IRODS collection, a full path to a
-	 * given collection in the IRODS test scratch area on IRODS on the configured federated zone.
+	 * given collection in the IRODS test scratch area on IRODS on the
+	 * configured federated zone.
 	 * 
 	 * @param testingProperties
 	 *            <code>Properties</code> that define test behavior
@@ -655,7 +660,7 @@ public class TestingPropertiesHelper {
 		pathBuilder.append(collectionPathBelowScratch);
 		return pathBuilder.toString();
 	}
-	
+
 	/**
 	 * Handy method to give, from the root IRODS collection, a full path to a
 	 * given collection in the IRODS test scratch area on IRODS
@@ -748,8 +753,10 @@ public class TestingPropertiesHelper {
 	}
 
 	/**
-	 * Check if tests depending on a federated zone should be run.  The federated zone must be configured as described in the 
-	 * test-scripts/fedTestSetup.txt file.
+	 * Check if tests depending on a federated zone should be run. The federated
+	 * zone must be configured as described in the test-scripts/fedTestSetup.txt
+	 * file.
+	 * 
 	 * @param testingProperties
 	 * @return <code>true</code> if the federated zone testing should occur
 	 */
@@ -765,7 +772,8 @@ public class TestingPropertiesHelper {
 
 	/**
 	 * Handy method to give, from the root IRODS collection, a full path to a
-	 * given collection in the IRODS test scratch area on IRODS on the configured federated zone enabled for writing cross-zone.
+	 * given collection in the IRODS test scratch area on IRODS on the
+	 * configured federated zone enabled for writing cross-zone.
 	 * 
 	 * @param testingProperties
 	 *            <code>Properties</code> that define test behavior

@@ -2,12 +2,9 @@ package org.irods.jargon.core.pub;
 
 import java.io.File;
 
-import org.irods.jargon.core.connection.IRODSSession;
-import org.irods.jargon.core.connection.JargonProperties;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.exception.JargonFileOrCollAlreadyExistsException;
 import org.irods.jargon.core.pub.io.IRODSFile;
-import org.irods.jargon.core.transfer.DefaultTransferControlBlock;
 import org.irods.jargon.core.transfer.TransferControlBlock;
 import org.irods.jargon.core.transfer.TransferStatusCallbackListener;
 
@@ -112,7 +109,7 @@ public interface DataTransferOperations extends IRODSAccessObject {
 	 * target location. There are other methods in this class that will take the
 	 * last part of the source path, and use that as the collection name in the
 	 * target.
-	* <p/>
+	 * <p/>
 	 * For this method, if the source is /coll1/coll2/coll3 and the target is
 	 * /coll4/coll5/coll6, the result will be /coll4/coll5/coll6/coll3.
 	 * <p/>
@@ -143,8 +140,8 @@ public interface DataTransferOperations extends IRODSAccessObject {
 	 * provide call-backs about the status of the transfer suitable for progress
 	 * monitoring.
 	 * <p/>
-	 * Note that this method will, if the correct jargon properties are set, support connection re-routing to
-	 * appropriate resources for the transfer.
+	 * Note that this method will, if the correct jargon properties are set,
+	 * support connection re-routing to appropriate resources for the transfer.
 	 * 
 	 * @param sourceFile
 	 *            <code>File</code> with the source directory or file.
@@ -273,7 +270,6 @@ public interface DataTransferOperations extends IRODSAccessObject {
 			final TransferControlBlock transferControlBlock)
 			throws JargonException;
 
-	
 	/**
 	 * Copy a file or collection from iRODS to iRODS.
 	 * 
@@ -317,8 +313,8 @@ public interface DataTransferOperations extends IRODSAccessObject {
 	 * specified, that collection will become a sub-directory added underneath
 	 * the given parent.
 	 * <p/>
-	 * Note that this method will, if the correct jargon properties are set, support connection re-routing to
-	 * appropriate resources for the transfer.
+	 * Note that this method will, if the correct jargon properties are set,
+	 * support connection re-routing to appropriate resources for the transfer.
 	 * 
 	 * @param sourceFileAbsolutePath
 	 *            <code>String</code> with the absolute path of the source file

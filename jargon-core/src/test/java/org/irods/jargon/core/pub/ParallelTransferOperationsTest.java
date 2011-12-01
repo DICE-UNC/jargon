@@ -68,8 +68,7 @@ public class ParallelTransferOperationsTest {
 		String testFileName = "testParallelFilePutThenGet.txt";
 		String testRetrievedFileName = "testParallelFilePutThenGetRetrieved.txt";
 		long testFileLength = 4294967296L;
-		
-		
+
 		String absPath = scratchFileUtils
 				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
 		String localFileName = FileGenerator

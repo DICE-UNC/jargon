@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Properties;
 
 import junit.framework.Assert;
-import junit.framework.TestCase;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.FileNotFoundException;
@@ -326,7 +325,7 @@ public class FederatedCollectionAndDataObjectListAndSearchAOImplTest {
 		// each entry has two permissions, will have extra for fed so tolerate
 		// that
 		for (CollectionAndDataObjectListingEntry actualEntry : entries) {
-			TestCase.assertTrue("did not get both expected permissions",
+			Assert.assertTrue("did not get both expected permissions",
 					actualEntry.getUserFilePermission().size() > 2);
 		}
 
@@ -404,7 +403,7 @@ public class FederatedCollectionAndDataObjectListAndSearchAOImplTest {
 		// each entry has two permissions, will have extra for fed so tolerate
 		// that
 		for (CollectionAndDataObjectListingEntry actualEntry : entries) {
-			TestCase.assertTrue("did not get both expected permissions",
+			Assert.assertTrue("did not get both expected permissions",
 					actualEntry.getUserFilePermission().size() > 2);
 		}
 

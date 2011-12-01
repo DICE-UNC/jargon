@@ -141,10 +141,9 @@ public class RuleProcessingAOImplTest {
 		Assert.assertNotNull("null execOut", execOut);
 
 	}
-	
+
 	@Test
-	public void testExecuteRuleFromResourceWithOverrides()
-			throws Exception {
+	public void testExecuteRuleFromResourceWithOverrides() throws Exception {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
@@ -162,9 +161,9 @@ public class RuleProcessingAOImplTest {
 		}
 
 		String ruleFile = "/rules/rulemsiDataObjChksum.r";
-		
+
 		// place a test file to checksum
-		
+
 		String testFileName = "testExecuteRuleFromResourceWithOverrides.txt";
 
 		String absPath = scratchFileUtils
@@ -191,11 +190,12 @@ public class RuleProcessingAOImplTest {
 		RuleProcessingAO ruleProcessingAO = accessObjectFactory
 				.getRuleProcessingAO(irodsAccount);
 
-		// override the file name for  *dataObject
-		
+		// override the file name for *dataObject
+
 		List<IRODSRuleParameter> inputOverrides = new ArrayList<IRODSRuleParameter>();
-		inputOverrides.add(new IRODSRuleParameter("*dataObject", '"' + destFile.getAbsolutePath() + '"'));
-		
+		inputOverrides.add(new IRODSRuleParameter("*dataObject", '"' + destFile
+				.getAbsolutePath() + '"'));
+
 		IRODSRuleExecResult result = ruleProcessingAO.executeRuleFromResource(
 				ruleFile, inputOverrides, RuleProcessingType.EXTERNAL);
 		String execOut = (String) result.getOutputParameterResults()
@@ -208,7 +208,6 @@ public class RuleProcessingAOImplTest {
 	public void testExecuteRuleFromIrodsFileNullParmOverrides()
 			throws Exception {
 
-	
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
 		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
@@ -227,8 +226,8 @@ public class RuleProcessingAOImplTest {
 		String ruleFile = "/rules/rulemsiGetIcatTime.r";
 		String irodsRuleFile = "rulemsiGetIcatTime.r";
 		String targetIrodsCollection = testingPropertiesHelper
-		.buildIRODSCollectionAbsolutePathFromTestProperties(
-				testingProperties, IRODS_TEST_SUBDIR_PATH);
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
 
 		String ruleString = LocalFileUtils
 				.getClasspathResourceFileAsString(ruleFile);
@@ -254,7 +253,8 @@ public class RuleProcessingAOImplTest {
 				.getRuleProcessingAO(irodsAccount);
 
 		IRODSRuleExecResult result = ruleProcessingAO.executeRuleFromIRODSFile(
-				irodsRuleFileAsFile.getAbsolutePath(), null, RuleProcessingType.EXTERNAL);
+				irodsRuleFileAsFile.getAbsolutePath(), null,
+				RuleProcessingType.EXTERNAL);
 		String execOut = (String) result.getOutputParameterResults()
 				.get(RuleProcessingAOImpl.RULE_EXEC_OUT).getResultObject();
 		Assert.assertNotNull("null execOut", execOut);

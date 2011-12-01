@@ -96,15 +96,16 @@ public abstract class FileCatalogObjectAOImpl extends IRODSGenericAO implements
 					String thisHostName = this.getIRODSAccount().getHost();
 					for (Resource resource : resources) {
 						if (resource.getLocation().equals(thisHostName)) {
-							log.info("file replica is on current host:{}", thisHostName);
+							log.info("file replica is on current host:{}",
+									thisHostName);
 							return null;
 						}
 					}
-					
+
 					// not on same host, find another
 					log.info("file is not on this host, so reroute to another host (first found)");
 					return resources.get(0).getLocation();
-					
+
 				}
 			}
 		}

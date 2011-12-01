@@ -56,7 +56,8 @@ public class IRODSProxyingProtocolManager implements IRODSProtocolManager {
 	 * (org.irods.jargon.core.connection.IRODSAccount)
 	 */
 	@Override
-	public IRODSCommands getIRODSProtocol(final IRODSAccount irodsAccount, final PipelineConfiguration pipelineConfiguration)
+	public IRODSCommands getIRODSProtocol(final IRODSAccount irodsAccount,
+			final PipelineConfiguration pipelineConfiguration)
 			throws JargonException {
 		return null;
 	}

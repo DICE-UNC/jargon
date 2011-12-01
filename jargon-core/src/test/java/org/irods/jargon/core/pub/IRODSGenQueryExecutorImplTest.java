@@ -139,7 +139,7 @@ public class IRODSGenQueryExecutorImplTest {
 		Assert.assertNotNull(resultSet);
 	}
 
-	@Test(expected=IllegalArgumentException.class)
+	@Test(expected = IllegalArgumentException.class)
 	public final void testExecuteIRODSQueryNullQuery() throws Exception {
 
 		IRODSGenQuery irodsQuery = null;
@@ -157,7 +157,8 @@ public class IRODSGenQueryExecutorImplTest {
 	}
 
 	@Test
-	public final void testExecuteIRODSQueryWithPagingSupplySameZone() throws Exception {
+	public final void testExecuteIRODSQueryWithPagingSupplySameZone()
+			throws Exception {
 
 		String queryString = "select "
 				+ RodsGenQueryEnum.COL_R_RESC_NAME.getName()
@@ -183,12 +184,15 @@ public class IRODSGenQueryExecutorImplTest {
 				.getIRODSGenQueryExecutor(irodsAccount);
 
 		IRODSQueryResultSetInterface resultSet = irodsGenQueryExecutor
-				.executeIRODSQueryWithPagingInZone(irodsQuery, 0, testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_ZONE_KEY));
+				.executeIRODSQueryWithPagingInZone(
+						irodsQuery,
+						0,
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_ZONE_KEY));
 
 		Assert.assertNotNull(resultSet);
 	}
-	
+
 	@Test
 	public final void testExecuteIRODSQuerySupplySameZone() throws Exception {
 
@@ -221,9 +225,10 @@ public class IRODSGenQueryExecutorImplTest {
 
 		Assert.assertNotNull(resultSet);
 	}
-	
-	@Test(expected=IllegalArgumentException.class)
-	public final void testExecuteIRODSQuerySupplySameZoneNegativeContinuation() throws Exception {
+
+	@Test(expected = IllegalArgumentException.class)
+	public final void testExecuteIRODSQuerySupplySameZoneNegativeContinuation()
+			throws Exception {
 
 		String queryString = "select "
 				+ RodsGenQueryEnum.COL_R_RESC_NAME.getName()
@@ -248,14 +253,15 @@ public class IRODSGenQueryExecutorImplTest {
 		IRODSGenQueryExecutor irodsGenQueryExecutor = accessObjectFactory
 				.getIRODSGenQueryExecutor(irodsAccount);
 
-		irodsGenQueryExecutor
-				.executeIRODSQueryInZone(irodsQuery, -1, testingProperties
+		irodsGenQueryExecutor.executeIRODSQueryInZone(irodsQuery, -1,
+				testingProperties
 						.getProperty(TestingPropertiesHelper.IRODS_ZONE_KEY));
 
 	}
-	
-	@Test(expected=IllegalArgumentException.class)
-	public final void testExecuteIRODSQueryAndCloseSupplySameZoneNegativeContinuation() throws Exception {
+
+	@Test(expected = IllegalArgumentException.class)
+	public final void testExecuteIRODSQueryAndCloseSupplySameZoneNegativeContinuation()
+			throws Exception {
 
 		String queryString = "select "
 				+ RodsGenQueryEnum.COL_R_RESC_NAME.getName()
@@ -280,14 +286,15 @@ public class IRODSGenQueryExecutorImplTest {
 		IRODSGenQueryExecutor irodsGenQueryExecutor = accessObjectFactory
 				.getIRODSGenQueryExecutor(irodsAccount);
 
-		irodsGenQueryExecutor
-				.executeIRODSQueryAndCloseResultInZone(irodsQuery, -1, testingProperties
+		irodsGenQueryExecutor.executeIRODSQueryAndCloseResultInZone(irodsQuery,
+				-1, testingProperties
 						.getProperty(TestingPropertiesHelper.IRODS_ZONE_KEY));
 
 	}
-	
-	@Test(expected=IllegalArgumentException.class)
-	public final void testExecuteIRODSQueryAndCloseSupplySameZoneNullQuery() throws Exception {
+
+	@Test(expected = IllegalArgumentException.class)
+	public final void testExecuteIRODSQueryAndCloseSupplySameZoneNullQuery()
+			throws Exception {
 
 		IRODSGenQuery irodsQuery = null;
 		IRODSAccount irodsAccount = testingPropertiesHelper
@@ -299,12 +306,11 @@ public class IRODSGenQueryExecutorImplTest {
 		IRODSGenQueryExecutor irodsGenQueryExecutor = accessObjectFactory
 				.getIRODSGenQueryExecutor(irodsAccount);
 
-		irodsGenQueryExecutor
-				.executeIRODSQueryAndCloseResultInZone(irodsQuery, 0, testingProperties
+		irodsGenQueryExecutor.executeIRODSQueryAndCloseResultInZone(irodsQuery,
+				0, testingProperties
 						.getProperty(TestingPropertiesHelper.IRODS_ZONE_KEY));
 
 	}
-
 
 	@Test
 	public final void testExecuteIRODSQuerySupplyBlankZone() throws Exception {

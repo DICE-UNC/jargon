@@ -97,7 +97,9 @@ public class ByteCountingCallbackInputStreamWrapper extends InputStream {
 		}
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.io.InputStream#available()
 	 */
 	@Override
@@ -105,7 +107,9 @@ public class ByteCountingCallbackInputStreamWrapper extends InputStream {
 		return inputStream.available();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.io.InputStream#close()
 	 */
 	@Override
@@ -113,24 +117,30 @@ public class ByteCountingCallbackInputStreamWrapper extends InputStream {
 		inputStream.close();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.io.InputStream#mark(int)
 	 */
 	@Override
-	public synchronized void mark(int readlimit) {
+	public synchronized void mark(final int readlimit) {
 		inputStream.mark(readlimit);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.io.InputStream#markSupported()
 	 */
 	@Override
 	public boolean markSupported() {
-		
+
 		return inputStream.markSupported();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.io.InputStream#reset()
 	 */
 	@Override
@@ -138,12 +148,14 @@ public class ByteCountingCallbackInputStreamWrapper extends InputStream {
 		inputStream.reset();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.io.InputStream#skip(long)
 	 */
 	@Override
-	public long skip(long n) throws IOException {
-		
+	public long skip(final long n) throws IOException {
+
 		return inputStream.skip(n);
 	}
 

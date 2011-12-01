@@ -280,19 +280,19 @@ public class RemoteExecuteServiceImpl implements RemoteExecutionService {
 			throw new JargonException("null response from remote execution");
 		} else {
 			// message
-			int length = message.getTag(IRODSConstants.BinBytesBuf_PI, 0).getTag(IRODSConstants.buflen)
-					.getIntValue();
+			int length = message.getTag(IRODSConstants.BinBytesBuf_PI, 0)
+					.getTag(IRODSConstants.buflen).getIntValue();
 			if (length > 0) {
-				buffer.append(message.getTag(IRODSConstants.BinBytesBuf_PI, 0).getTag(IRODSConstants.buf)
-						.getStringValue());
+				buffer.append(message.getTag(IRODSConstants.BinBytesBuf_PI, 0)
+						.getTag(IRODSConstants.buf).getStringValue());
 			}
 
 			// error
-			length = message.getTag(IRODSConstants.BinBytesBuf_PI, 1).getTag(IRODSConstants.buflen)
-					.getIntValue();
+			length = message.getTag(IRODSConstants.BinBytesBuf_PI, 1)
+					.getTag(IRODSConstants.buflen).getIntValue();
 			if (length > 0) {
-				buffer.append(message.getTag(IRODSConstants.BinBytesBuf_PI, 1).getTag(IRODSConstants.buf)
-						.getStringValue());
+				buffer.append(message.getTag(IRODSConstants.BinBytesBuf_PI, 1)
+						.getTag(IRODSConstants.buf).getStringValue());
 			}
 
 		}
@@ -345,18 +345,19 @@ public class RemoteExecuteServiceImpl implements RemoteExecutionService {
 		}
 
 		// message
-		int length = message.getTag(IRODSConstants.BinBytesBuf_PI, 0).getTag(IRODSConstants.buflen)
-				.getIntValue();
+		int length = message.getTag(IRODSConstants.BinBytesBuf_PI, 0)
+				.getTag(IRODSConstants.buflen).getIntValue();
 		if (length > 0) {
-			buffer.append(message.getTag(IRODSConstants.BinBytesBuf_PI, 0).getTag(IRODSConstants.buf)
-					.getStringValue());
+			buffer.append(message.getTag(IRODSConstants.BinBytesBuf_PI, 0)
+					.getTag(IRODSConstants.buf).getStringValue());
 		}
 
 		// error
-		length = message.getTag(IRODSConstants.BinBytesBuf_PI, 1).getTag(IRODSConstants.buflen).getIntValue();
+		length = message.getTag(IRODSConstants.BinBytesBuf_PI, 1)
+				.getTag(IRODSConstants.buflen).getIntValue();
 		if (length > 0) {
-			buffer.append(message.getTag(IRODSConstants.BinBytesBuf_PI, 1).getTag(IRODSConstants.buf)
-					.getStringValue());
+			buffer.append(message.getTag(IRODSConstants.BinBytesBuf_PI, 1)
+					.getTag(IRODSConstants.buf).getStringValue());
 		}
 
 		return buildAppropriateResultStream(message, buffer);

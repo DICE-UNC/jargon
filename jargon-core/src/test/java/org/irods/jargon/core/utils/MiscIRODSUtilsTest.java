@@ -54,36 +54,47 @@ public class MiscIRODSUtilsTest {
 				irodsAccount);
 		Assert.assertTrue("should be in zone", inZone);
 	}
-	
+
 	@Test
 	public final void testIsFileInThisZoneWhenNotInZone() throws Exception {
-		String targetIrodsPath = testingPropertiesHelper.buildIRODSCollectionAbsolutePathFromFederatedZoneReadTestProperties(testingProperties, IRODS_TEST_SUBDIR_PATH);
+		String targetIrodsPath = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromFederatedZoneReadTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
 		boolean inZone = MiscIRODSUtils.isFileInThisZone(targetIrodsPath,
 				irodsAccount);
 		Assert.assertFalse("should not be in zone", inZone);
 	}
-	
+
 	@Test
-	public final void testGetDefaultStorageResourceWhenInZone() throws Exception {
+	public final void testGetDefaultStorageResourceWhenInZone()
+			throws Exception {
 		String targetIrodsPath = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH);
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		String defaultStorageResource = MiscIRODSUtils.getDefaultIRODSResourceFromAccountIfFileInZone(targetIrodsPath, irodsAccount);
-		Assert.assertEquals("should pull default resource from IRODS account", irodsAccount.getDefaultStorageResource(), defaultStorageResource);
+		String defaultStorageResource = MiscIRODSUtils
+				.getDefaultIRODSResourceFromAccountIfFileInZone(
+						targetIrodsPath, irodsAccount);
+		Assert.assertEquals("should pull default resource from IRODS account",
+				irodsAccount.getDefaultStorageResource(),
+				defaultStorageResource);
 	}
-	
+
 	@Test
-	public final void testGetDefaultStorageResourceWhenNotInZone() throws Exception {
+	public final void testGetDefaultStorageResourceWhenNotInZone()
+			throws Exception {
 		String targetIrodsPath = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromFederatedZoneReadTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH);
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		String defaultStorageResource = MiscIRODSUtils.getDefaultIRODSResourceFromAccountIfFileInZone(targetIrodsPath, irodsAccount);
-		Assert.assertEquals("should pull default resource from IRODS account", "", defaultStorageResource);
+		String defaultStorageResource = MiscIRODSUtils
+				.getDefaultIRODSResourceFromAccountIfFileInZone(
+						targetIrodsPath, irodsAccount);
+		Assert.assertEquals("should pull default resource from IRODS account",
+				"", defaultStorageResource);
 	}
 }

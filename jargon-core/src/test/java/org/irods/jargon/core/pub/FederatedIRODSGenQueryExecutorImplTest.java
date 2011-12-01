@@ -46,7 +46,7 @@ public class FederatedIRODSGenQueryExecutorImplTest {
 		irodsFileSystem = IRODSFileSystem.instance();
 		TestingPropertiesHelper testingPropertiesLoader = new TestingPropertiesHelper();
 		testingProperties = testingPropertiesLoader.getTestProperties();
-		
+
 		if (!testingPropertiesHelper.isTestFederatedZone(testingProperties)) {
 			return;
 		}
@@ -169,5 +169,5 @@ public class FederatedIRODSGenQueryExecutorImplTest {
 				.getResults().size() > 0);
 
 	}
-	
+
 }

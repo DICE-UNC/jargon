@@ -89,16 +89,19 @@ public final class IRODSFileSystem {
 		initialize();
 		log.info("IRODSfileSystem is initialized");
 	}
-	
+
 	/**
-	 * Constructor that accepts an <code>irodsProtocolManager</code>.  This object is in charge of 
-	 * producing iRODS connections upon request, through some arbitrary mechanism.  This constructor 
-	 * allows pool, proxy, and other connection sources.
+	 * Constructor that accepts an <code>irodsProtocolManager</code>. This
+	 * object is in charge of producing iRODS connections upon request, through
+	 * some arbitrary mechanism. This constructor allows pool, proxy, and other
+	 * connection sources.
 	 * 
-	 * @param irodsProtocolManager {@link IRODSProtocolManager} instance
+	 * @param irodsProtocolManager
+	 *            {@link IRODSProtocolManager} instance
 	 * @throws JargonException
 	 */
-	public IRODSFileSystem(IRODSProtocolManager irodsProtocolManager) throws JargonException {
+	public IRODSFileSystem(final IRODSProtocolManager irodsProtocolManager)
+			throws JargonException {
 		if (irodsProtocolManager == null) {
 			throw new IllegalArgumentException("null irodsProtocolManager");
 		}
@@ -106,7 +109,7 @@ public final class IRODSFileSystem {
 		this.irodsSession = IRODSSession.instance(irodsProtocolManager);
 		initialize();
 		log.info("IRODSfileSystem is initialized");
-		
+
 	}
 
 	/**
@@ -232,22 +235,27 @@ public final class IRODSFileSystem {
 	}
 
 	/**
-	 * Get the <code>IRODSProtocolManager</code> that is the source of connections to iRODS
-	 * @return {@link IRODSProtocolManager} that can produce connections to iRODS upon request, and handles the
-	 * disposal of connections after they are finished
+	 * Get the <code>IRODSProtocolManager</code> that is the source of
+	 * connections to iRODS
+	 * 
+	 * @return {@link IRODSProtocolManager} that can produce connections to
+	 *         iRODS upon request, and handles the disposal of connections after
+	 *         they are finished
 	 */
 	public IRODSProtocolManager getIrodsProtocolManager() {
 		return irodsProtocolManager;
 	}
-	
+
 	/**
-	 * Get the <code>JargonProperties</code> as configured in the <code>IRODSSession</code>. This is here for convenience.
+	 * Get the <code>JargonProperties</code> as configured in the
+	 * <code>IRODSSession</code>. This is here for convenience.
+	 * 
 	 * @return {@link JargonProperties} that control various configurations.
 	 */
 	public JargonProperties getJargonProperties() {
 		return getIrodsSession().getJargonProperties();
 	}
-	
+
 	private void initialize() throws JargonException {
 		irodsProtocolManager.initialize();
 	}

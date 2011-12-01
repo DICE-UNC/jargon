@@ -24,7 +24,8 @@ import org.junit.runners.Suite;
 		IRODSFileReaderTest.class,
 		SessionClosingIRODSFIleInputStreamTest.class,
 		SessionClosingIRODSFileOutputStreamTest.class,
-		RemoteExecutionBinaryResultInputStreamTest.class, ByteCountingCallbackInputStreamWrapperTest.class })
+		RemoteExecutionBinaryResultInputStreamTest.class,
+		ByteCountingCallbackInputStreamWrapperTest.class })
 public class FileTests {
 
 }

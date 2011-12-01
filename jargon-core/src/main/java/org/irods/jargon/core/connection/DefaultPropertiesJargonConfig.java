@@ -217,63 +217,87 @@ public class DefaultPropertiesJargonConfig implements JargonProperties {
 
 	}
 
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.connection.JargonProperties#getTransferThreadPoolMaxSimultaneousTransfers()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.connection.JargonProperties#
+	 * getTransferThreadPoolMaxSimultaneousTransfers()
 	 */
 	@Override
 	public int getTransferThreadPoolMaxSimultaneousTransfers() {
 		return verifyPropExistsAndGetAsInt("transfer.executor.pool.max.simultaneous.transfers");
 	}
 
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.connection.JargonProperties#getInternalInputStreamBufferSize()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.connection.JargonProperties#
+	 * getInternalInputStreamBufferSize()
 	 */
 	@Override
 	public int getInternalInputStreamBufferSize() {
 		return verifyPropExistsAndGetAsInt("jargon.io.internal.input.stream.buffer.size");
 	}
 
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.connection.JargonProperties#getInternalOutputStreamBufferSize()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.connection.JargonProperties#
+	 * getInternalOutputStreamBufferSize()
 	 */
 	@Override
 	public int getInternalOutputStreamBufferSize() {
 		return verifyPropExistsAndGetAsInt("jargon.io.internal.output.stream.buffer.size");
 	}
 
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.connection.JargonProperties#getInternalCacheBufferSize()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.connection.JargonProperties#getInternalCacheBufferSize
+	 * ()
 	 */
 	@Override
 	public int getInternalCacheBufferSize() {
 		return verifyPropExistsAndGetAsInt("jargon.io.internal.cache.buffer.size");
 	}
 
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.connection.JargonProperties#getSendInputStreamBufferSize()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.connection.JargonProperties#
+	 * getSendInputStreamBufferSize()
 	 */
 	@Override
 	public int getSendInputStreamBufferSize() {
 		return verifyPropExistsAndGetAsInt("jargon.io.send.input.stream.buffer.size");
 	}
 
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.connection.JargonProperties#getInputToOutputCopyBufferByteSize()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.connection.JargonProperties#
+	 * getInputToOutputCopyBufferByteSize()
 	 */
 	@Override
 	public int getInputToOutputCopyBufferByteSize() {
 		return verifyPropExistsAndGetAsInt("jargon.io.input.to.output.copy.byte.buffer.size");
 	}
 
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.connection.JargonProperties#getLocalFileOutputStreamBufferSize()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.connection.JargonProperties#
+	 * getLocalFileOutputStreamBufferSize()
 	 */
 	@Override
 	public int getLocalFileOutputStreamBufferSize() {
 		return verifyPropExistsAndGetAsInt("jargon.io.local.output.stream.buffer.size");
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.irods.jargon.core.connection.JargonProperties#getPutBufferSize()
 	 */
 	@Override
@@ -281,7 +305,9 @@ public class DefaultPropertiesJargonConfig implements JargonProperties {
 		return verifyPropExistsAndGetAsInt("jargon.put.buffer.size");
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.irods.jargon.core.connection.JargonProperties#getGetBufferSize()
 	 */
 	@Override
@@ -289,16 +315,22 @@ public class DefaultPropertiesJargonConfig implements JargonProperties {
 		return verifyPropExistsAndGetAsInt("jargon.get.buffer.size");
 	}
 
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.connection.JargonProperties#getIrodsSocketTimeout()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.connection.JargonProperties#getIrodsSocketTimeout()
 	 */
 	@Override
 	public int getIrodsSocketTimeout() {
 		return verifyPropExistsAndGetAsInt("socket.timeout");
 	}
 
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.connection.JargonProperties#getIrodsParallelSocketTimeout()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.connection.JargonProperties#
+	 * getIrodsParallelSocketTimeout()
 	 */
 	@Override
 	public int getIrodsParallelSocketTimeout() {

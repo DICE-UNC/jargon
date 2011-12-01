@@ -44,7 +44,9 @@ public final class ParallelPutFileTransferStrategy extends
 	 *            <code>File</code> representing the local file
 	 * @param irodsAccessObjectFactory
 	 *            {@link IRODSAccessObjectFactory} for the session.
-	 * @param transferLength <code>long</code> with the length of the total file to transfer
+	 * @param transferLength
+	 *            <code>long</code> with the length of the total file to
+	 *            transfer
 	 * @param transferControlBlock
 	 *            {@link TransferControlBlock} that controls and keeps track of
 	 *            the transfer operation, required.
@@ -98,15 +100,24 @@ public final class ParallelPutFileTransferStrategy extends
 				irodsAccessObjectFactory, transferLength, transferControlBlock,
 				transferStatusCallbackListener);
 
-		if (transferControlBlock.getTransferOptions().isIntraFileStatusCallbacks() && transferStatusCallbackListener != null) {
+		if (transferControlBlock.getTransferOptions()
+				.isIntraFileStatusCallbacks()
+				&& transferStatusCallbackListener != null) {
 			log.info("will do intra-file status callbacks from transfer");
-			this.setConnectionProgressStatusListener(DefaultIntraFileProgressCallbackListener.instance(TransferStatus.TransferType.PUT, transferLength, transferControlBlock, transferStatusCallbackListener));
+			this.setConnectionProgressStatusListener(DefaultIntraFileProgressCallbackListener
+					.instance(TransferStatus.TransferType.PUT, transferLength,
+							transferControlBlock,
+							transferStatusCallbackListener));
 		}
 
 	}
 
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.transfer.AbstractParallelFileTransferStrategy#transfer()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.transfer.AbstractParallelFileTransferStrategy#transfer
+	 * ()
 	 */
 	@Override
 	public void transfer() throws JargonException {

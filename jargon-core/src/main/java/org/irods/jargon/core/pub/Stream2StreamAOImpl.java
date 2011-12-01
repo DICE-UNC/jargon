@@ -339,9 +339,12 @@ public class Stream2StreamAOImpl extends IRODSGenericAO implements
 
 	}
 
-	
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.pub.Stream2StreamAO#streamClasspathResourceToIRODSFile(java.lang.String, java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.Stream2StreamAO#streamClasspathResourceToIRODSFile
+	 * (java.lang.String, java.lang.String)
 	 */
 	@Override
 	public void streamClasspathResourceToIRODSFile(final String resourcePath,
@@ -355,8 +358,9 @@ public class Stream2StreamAOImpl extends IRODSGenericAO implements
 			throw new IllegalArgumentException(
 					"null or empty irodsFileAbsolutePath");
 		}
-		
-		IRODSFile irodsTarget = this.getIRODSFileFactory().instanceIRODSFile(irodsFileAbsolutePath);
+
+		IRODSFile irodsTarget = this.getIRODSFileFactory().instanceIRODSFile(
+				irodsFileAbsolutePath);
 		irodsTarget.getParentFile().mkdirs();
 		irodsTarget.delete();
 

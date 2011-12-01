@@ -750,8 +750,8 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 			} else {
 				kvps.add(KeyValuePair.instance(DEST_RESC_NAME, getResource()));
 			}
-		} 
-		
+		}
+
 		message.addTag(createKeyValueTag(kvps));
 		return message;
 	}

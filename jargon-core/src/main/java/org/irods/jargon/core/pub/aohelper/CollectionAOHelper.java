@@ -8,7 +8,10 @@ import java.util.List;
 
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.protovalues.FilePermissionEnum;
+import org.irods.jargon.core.protovalues.UserTypeEnum;
+import org.irods.jargon.core.pub.UserAO;
 import org.irods.jargon.core.pub.domain.Collection;
+import org.irods.jargon.core.pub.domain.User;
 import org.irods.jargon.core.pub.domain.UserFilePermission;
 import org.irods.jargon.core.query.AVUQueryElement;
 import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry;
@@ -317,16 +320,25 @@ public class CollectionAOHelper extends AOHelper {
 	/**
 	 * @param userFilePermissions
 	 * @param row
+	 * @param userAO
 	 * @throws JargonException
 	 */
 	public static void buildUserFilePermissionForCollection(
 			final List<UserFilePermission> userFilePermissions,
-			final IRODSQueryResultRow row) throws JargonException {
+			final IRODSQueryResultRow row, final UserAO userAO)
+			throws JargonException {
+		/*
+		 * There appears to be a gen query issue with getting user type in the
+		 * permissions query, so, unfortunately, I need to do another query to
+		 * get the user type
+		 */
 		UserFilePermission userFilePermission;
+		User user = userAO.findById(row.getColumn(8));
 		userFilePermission = new UserFilePermission(row.getColumn(9),
 				row.getColumn(8),
 				FilePermissionEnum.valueOf(IRODSDataConversionUtil
-						.getIntOrZeroFromIRODSValue(row.getColumn(7))));
+						.getIntOrZeroFromIRODSValue(row.getColumn(7))),
+				user.getUserType());
 		userFilePermissions.add(userFilePermission);
 	}
 
@@ -342,7 +354,8 @@ public class CollectionAOHelper extends AOHelper {
 		userFilePermission = new UserFilePermission(row.getColumn(8),
 				row.getColumn(9),
 				FilePermissionEnum.valueOf(IRODSDataConversionUtil
-						.getIntOrZeroFromIRODSValue(row.getColumn(10))));
+						.getIntOrZeroFromIRODSValue(row.getColumn(10))),
+				UserTypeEnum.findTypeByString(row.getColumn(11)));
 		userFilePermissions.add(userFilePermission);
 	}
 

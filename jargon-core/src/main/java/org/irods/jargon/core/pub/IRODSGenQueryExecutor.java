@@ -46,10 +46,11 @@ public interface IRODSGenQueryExecutor extends IRODSAccessObject {
 	IRODSQueryResultSet executeIRODSQuery(final IRODSGenQuery irodsQuery,
 			final int continueIndex) throws JargonException,
 			JargonQueryException;
-	
+
 	/**
 	 * Execute an iquest-like query and return results in a convenient POJO
-	 * object.  This query allows specification of the target zone, so that queries may be run on federated zones.
+	 * object. This query allows specification of the target zone, so that
+	 * queries may be run on federated zones.
 	 * <p/>
 	 * Note: this command will not close the underlying result set, so that it
 	 * may be paged by getting next result. It is up to the caller to call
@@ -63,12 +64,13 @@ public interface IRODSGenQueryExecutor extends IRODSAccessObject {
 	 * @param continueIndex
 	 *            <code>int</code> that indicates whether this is a requery when
 	 *            more resuts than the limit have been generated
-	 * @param zoneName <code>String</code> (<code>null</code> or blank if not used) that indicates an optional zone for the query
+	 * @param zoneName
+	 *            <code>String</code> (<code>null</code> or blank if not used)
+	 *            that indicates an optional zone for the query
 	 * @return {@link org.irods.jargon.core.query.IRODSQueryResultSet} that
 	 *         contains the results of the query
 	 * @throws JargonException
 	 * @throws JargonQueryException
-	
 	 */
 	IRODSQueryResultSet executeIRODSQueryInZone(IRODSGenQuery irodsQuery,
 			int continueIndex, String zoneName) throws JargonException,
@@ -93,13 +95,14 @@ public interface IRODSGenQueryExecutor extends IRODSAccessObject {
 	IRODSQueryResultSetInterface executeIRODSQueryWithPaging(
 			final IRODSGenQuery irodsQuery, final int partialStartIndex)
 			throws JargonException, JargonQueryException;
-	
+
 	/**
 	 * Execute an iquest-like query and return results in a convenient POJO
 	 * object. This method allows partial starts to do paging of large query
 	 * results.
 	 * <p/>
-	 * This version of the method allows the optional specification of a zone to run the query in.
+	 * This version of the method allows the optional specification of a zone to
+	 * run the query in.
 	 * 
 	 * @param irodsQuery
 	 *            {@link org.irods.jargon.core.query.IRODSGenQuery} that will
@@ -107,7 +110,9 @@ public interface IRODSGenQueryExecutor extends IRODSAccessObject {
 	 * @param partialStartIndex
 	 *            <code>int</code> that indicates an offset within the results
 	 *            from which to build the returned result set.
-	 *  @param zoneName <code>String</code> (<code>null</code> or blank if not used) that indicates an optional zone for the query
+	 * @param zoneName
+	 *            <code>String</code> (<code>null</code> or blank if not used)
+	 *            that indicates an optional zone for the query
 	 * @return {@link org.irods.jargon.core.query.IRODSQueryResultSet} that
 	 *         contains the results of the query
 	 * @throws JargonException
@@ -116,7 +121,6 @@ public interface IRODSGenQueryExecutor extends IRODSAccessObject {
 	IRODSQueryResultSetInterface executeIRODSQueryWithPagingInZone(
 			IRODSGenQuery irodsQuery, int partialStartIndex, String zoneName)
 			throws JargonException, JargonQueryException;
-	
 
 	/**
 	 * Execute a requery meant to retrieve more results. The previous result set
@@ -137,8 +141,8 @@ public interface IRODSGenQueryExecutor extends IRODSAccessObject {
 	 * Close the result set that had been continued
 	 * 
 	 * @param resultSet
-	 *            {@link org.irods.jargon.core.query.IRODSQueryResultSetInterface} that
-	 *            contains the results of the previous query.
+	 *            {@link org.irods.jargon.core.query.IRODSQueryResultSetInterface}
+	 *            that contains the results of the previous query.
 	 * @throws JargonException
 	 */
 	void closeResults(IRODSQueryResultSetInterface resultSet)
@@ -191,7 +195,9 @@ public interface IRODSGenQueryExecutor extends IRODSAccessObject {
 	 * @param partialStartIndex
 	 *            <code>int</code> that indicates an offset within the results
 	 *            from which to build the returned result set.
-	 * @param zoneName <code>String</code> (<code>null</code> or blank if not used) that indicates an optional zone for the query
+	 * @param zoneName
+	 *            <code>String</code> (<code>null</code> or blank if not used)
+	 *            that indicates an optional zone for the query
 	 * @return {@link org.irods.jargon.core.query.IRODSQueryResultSet} that
 	 *         contains the results of the query
 	 * @throws JargonException
@@ -200,9 +206,5 @@ public interface IRODSGenQueryExecutor extends IRODSAccessObject {
 	IRODSQueryResultSet executeIRODSQueryAndCloseResultInZone(
 			IRODSGenQuery irodsQuery, int continueIndex, String zoneName)
 			throws JargonException, JargonQueryException;
-
-	
-
-
 
 }

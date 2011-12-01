@@ -330,8 +330,11 @@ public interface IRODSFileSystemAO extends IRODSAccessObject {
 
 	/**
 	 * Check if the data object (must exist) has an executable bit set
-	 * @param irodsFile {@link IRODSFile} to test
-	 * @return <code>boolean</code> that is <code>true</code> if the file is executable
+	 * 
+	 * @param irodsFile
+	 *            {@link IRODSFile} to test
+	 * @return <code>boolean</code> that is <code>true</code> if the file is
+	 *         executable
 	 * @throws JargonException
 	 */
 	boolean isFileExecutable(IRODSFile irodsFile) throws JargonException;

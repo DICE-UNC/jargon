@@ -6,7 +6,6 @@ package org.irods.jargon.core.pub;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FilenameFilter;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -104,45 +103,52 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 		}
 		return readable;
 	}
-	
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.pub.IRODSFileSystemAO#isFileExecutable(org.irods.jargon.core.pub.io.IRODSFile)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.IRODSFileSystemAO#isFileExecutable(org.irods
+	 * .jargon.core.pub.io.IRODSFile)
 	 */
 	@Override
-	public boolean isFileExecutable(final IRODSFile irodsFile) throws JargonException {
-		
+	public boolean isFileExecutable(final IRODSFile irodsFile)
+			throws JargonException {
+
 		log.info("isFileExecutable()");
 		if (irodsFile == null) {
 			throw new IllegalArgumentException("irodsFile is null");
 		}
-		
+
 		boolean executable = false;
-		
+
 		if (irodsFile.exists()) {
-			if (irodsFile.isDirectory())  {
+			if (irodsFile.isDirectory()) {
 				executable = false;
 			} else {
 				executable = checkIfDataObjectExecutable(irodsFile);
 			}
-			
+
 		}
-		
+
 		log.info("is executable:{}", executable);
 		return executable;
-		
+
 	}
-	
+
 	/**
 	 * Do a query on the given file to see if it has an executable bit set
+	 * 
 	 * @param irodsFile
-	 * @return <code>boolean</code> of <code>true</code> if file is data object, exists, and is executable
+	 * @return <code>boolean</code> of <code>true</code> if file is data object,
+	 *         exists, and is executable
 	 * @throws JargonException
 	 */
-	private boolean checkIfDataObjectExecutable(IRODSFile irodsFile) throws JargonException {
+	private boolean checkIfDataObjectExecutable(final IRODSFile irodsFile)
+			throws JargonException {
 		StringBuilder filePermissionQuery = new StringBuilder();
 		filePermissionQuery.append("SELECT ");
-		filePermissionQuery.append(RodsGenQueryEnum.COL_D_DATA_MODE
-				.getName());
+		filePermissionQuery.append(RodsGenQueryEnum.COL_D_DATA_MODE.getName());
 
 		filePermissionQuery.append(" WHERE ");
 		filePermissionQuery.append(RodsGenQueryEnum.COL_COLL_NAME.getName());
@@ -152,15 +158,14 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 		filePermissionQuery.append("'");
 		filePermissionQuery.append(AND_VALUE);
 
-		filePermissionQuery.append(RodsGenQueryEnum.COL_DATA_NAME
-				.getName());
+		filePermissionQuery.append(RodsGenQueryEnum.COL_DATA_NAME.getName());
 		filePermissionQuery.append(" = '");
 		filePermissionQuery.append(IRODSDataConversionUtil
 				.escapeSingleQuotes(irodsFile.getName()));
 		filePermissionQuery.append("'");
-		
+
 		log.debug("data oject exec query:{}", filePermissionQuery);
-		
+
 		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(
 				filePermissionQuery.toString(), 100);
 
@@ -182,7 +187,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 					filePermissionQuery.toString(), e);
 			throw new JargonException("error in file permissions query");
 		}
-		
+
 	}
 
 	/*
@@ -234,9 +239,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 			throw new IllegalArgumentException("irods file is null");
 		}
 
-		
-			log.info("checking permissions on:{}", irodsFile);
-		
+		log.info("checking permissions on:{}", irodsFile);
 
 		return getFilePermissionsForGivenUser(irodsFile, this.getIRODSAccount()
 				.getUserName());
@@ -262,10 +265,8 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 			throw new IllegalArgumentException("userName is null or empty");
 		}
 
-		
-			log.info("checking permissions on:{}", irodsFile);
-			log.info("for userName:{}", userName);
-		
+		log.info("checking permissions on:{}", irodsFile);
+		log.info("for userName:{}", userName);
 
 		String parent = irodsFile.getParent();
 		String fileName = irodsFile.getName();
@@ -473,7 +474,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 	@Override
 	public boolean isFileExists(final IRODSFile irodsFile)
 			throws JargonException {
-		
+
 		if (irodsFile == null) {
 			throw new IllegalArgumentException("irods file is null");
 		}
@@ -574,7 +575,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 	@Override
 	public boolean isDirectory(final IRODSFile irodsFile)
 			throws JargonException, DataNotFoundException {
-		
+
 		if (irodsFile == null) {
 			throw new IllegalArgumentException("irods file is null");
 		}
@@ -1440,7 +1441,6 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 		log.info("deleting:{}", irodsFile.getAbsolutePath());
 		irodsFile.reset();
 
-
 		if (!irodsFile.isFile()) {
 			String msg = "file delete, given irodsFile is not a file";
 			log.error(msg);
@@ -1476,7 +1476,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 
 		log.info("deleting without force option:{}",
 				irodsFile.getAbsolutePath());
-		
+
 		irodsFile.reset();
 
 		if (!irodsFile.isFile()) {
@@ -1511,7 +1511,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 		}
 
 		log.info("deleting:{}", irodsFile.getAbsolutePath());
-		
+
 		irodsFile.reset();
 
 		if (!irodsFile.isDirectory()) {
@@ -1539,6 +1539,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 	 * org.irods.jargon.core.pub.io.IRODSFileSystemAO#directoryDeleteNoForce
 	 * (org.irods.jargon.core.pub.io.IRODSFile)
 	 */
+	@Override
 	public void directoryDeleteNoForce(final IRODSFile irodsFile)
 			throws JargonException {
 
@@ -1547,9 +1548,8 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 		}
 
 		log.info("deleting:{}", irodsFile.getAbsolutePath());
-		
-		irodsFile.reset();
 
+		irodsFile.reset();
 
 		if (!irodsFile.isDirectory()) {
 			String msg = "directory delete, given irodsFile is not a collection";

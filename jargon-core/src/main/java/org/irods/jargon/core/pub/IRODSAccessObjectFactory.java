@@ -269,6 +269,7 @@ public interface IRODSAccessObjectFactory {
 
 	/**
 	 * Get the <code>IRODSSession</code> that manages connections
+	 * 
 	 * @return {@link IRODSSession}
 	 */
 	IRODSSession getIrodsSession();
@@ -283,9 +284,10 @@ public interface IRODSAccessObjectFactory {
 	 */
 	BulkFileOperationsAO getBulkFileOperationsAO(IRODSAccount irodsAccount)
 			throws JargonException;
-	
+
 	/**
 	 * Get the access object that can manage quota information and settings.
+	 * 
 	 * @param irodsAccount
 	 * @return {@link QuotaAO} instance
 	 * @throws JargonException
@@ -323,7 +325,8 @@ public interface IRODSAccessObjectFactory {
 	/**
 	 * Close all connections for this session. Any resulting exceptions are
 	 * logged as a warning and ignored.
-	 * @throws JargonException 
+	 * 
+	 * @throws JargonException
 	 */
 	void closeSessionAndEatExceptions() throws JargonException;
 
@@ -344,15 +347,18 @@ public interface IRODSAccessObjectFactory {
 	 */
 	Stream2StreamAO getStream2StreamAO(IRODSAccount irodsAccount)
 			throws JargonException;
-	
+
 	/**
-	 * Convenience method to obtain a reference to the <code>JargonProperties</code> that controls behavior of Jargon.
+	 * Convenience method to obtain a reference to the
+	 * <code>JargonProperties</code> that controls behavior of Jargon.
+	 * 
 	 * @return {@link JargonProperties}
 	 */
 	JargonProperties getJargonProperties();
 
 	/**
 	 * Get an AO to query audit trail info for a data object
+	 * 
 	 * @param irodsAccount
 	 * @return {@link DataObjectAuditAO}
 	 * @throws JargonException
@@ -362,13 +368,12 @@ public interface IRODSAccessObjectFactory {
 
 	/**
 	 * Get an AO to query audit trail info for a collection
+	 * 
 	 * @param irodsAccount
 	 * @return {@link CollectionAuditAO}
 	 * @throws JargonException
 	 */
 	CollectionAuditAO getCollectionAuditAO(IRODSAccount irodsAccount)
 			throws JargonException;
-
-	
 
 }

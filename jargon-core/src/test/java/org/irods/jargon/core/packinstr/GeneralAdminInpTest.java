@@ -1,6 +1,6 @@
 package org.irods.jargon.core.packinstr;
 
-import junit.framework.TestCase;
+import junit.framework.Assert;
 
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.protovalues.UserTypeEnum;
@@ -28,13 +28,13 @@ public class GeneralAdminInpTest {
 
 		GeneralAdminInp pi = GeneralAdminInp.instanceForAddUser(user);
 
-		TestCase.assertNotNull(pi);
+		Assert.assertNotNull(pi);
 
 	}
 
 	@Test
 	public void testDeleteUser() throws Exception {
-		TestCase.assertNotNull(GeneralAdminInp.instanceForDeleteUser("test"));
+		Assert.assertNotNull(GeneralAdminInp.instanceForDeleteUser("test"));
 	}
 
 	@Test(expected = JargonException.class)
@@ -127,7 +127,7 @@ public class GeneralAdminInpTest {
 		sb.append("<arg9></arg9>\n");
 		sb.append("</generalAdminInp_PI>\n");
 
-		TestCase.assertEquals("unexpected XML protocol result", sb.toString(),
+		Assert.assertEquals("unexpected XML protocol result", sb.toString(),
 				tagOut);
 	}
 
@@ -153,17 +153,17 @@ public class GeneralAdminInpTest {
 		sb.append("<arg9></arg9>\n");
 		sb.append("</generalAdminInp_PI>\n");
 
-		TestCase.assertEquals("unexpected XML protocol result", sb.toString(),
+		Assert.assertEquals("unexpected XML protocol result", sb.toString(),
 				tagOut);
 	}
 
-	
 	@Test
 	public void testSetUserQuotaTotal() throws Exception {
 		String userName = "test";
 		long quota = 123L;
 
-		GeneralAdminInp pi = GeneralAdminInp.instanceForSetUserQuotaTotal(userName, quota);
+		GeneralAdminInp pi = GeneralAdminInp.instanceForSetUserQuotaTotal(
+				userName, quota);
 		String tagOut = pi.getParsedTags();
 
 		StringBuilder sb = new StringBuilder();
@@ -179,16 +179,17 @@ public class GeneralAdminInpTest {
 		sb.append("<arg9></arg9>\n");
 		sb.append("</generalAdminInp_PI>\n");
 
-		TestCase.assertEquals("unexpected XML protocol result", sb.toString(),
+		Assert.assertEquals("unexpected XML protocol result", sb.toString(),
 				tagOut);
 	}
-	
+
 	@Test
 	public void testSetUserGroupQuotaTotal() throws Exception {
 		String userName = "test";
 		long quota = 123L;
 
-		GeneralAdminInp pi = GeneralAdminInp.instanceForSetUserGroupQuotaTotal(userName, quota);
+		GeneralAdminInp pi = GeneralAdminInp.instanceForSetUserGroupQuotaTotal(
+				userName, quota);
 		String tagOut = pi.getParsedTags();
 
 		StringBuilder sb = new StringBuilder();
@@ -204,13 +205,13 @@ public class GeneralAdminInpTest {
 		sb.append("<arg9></arg9>\n");
 		sb.append("</generalAdminInp_PI>\n");
 
-		TestCase.assertEquals("unexpected XML protocol result", sb.toString(),
+		Assert.assertEquals("unexpected XML protocol result", sb.toString(),
 				tagOut);
 	}
-	
+
 	@Test
 	public void testCalculateTotalQuotaUsage() throws Exception {
-	
+
 		GeneralAdminInp pi = GeneralAdminInp.instanceForCalculateQuotaUsage();
 		String tagOut = pi.getParsedTags();
 
@@ -227,17 +228,19 @@ public class GeneralAdminInpTest {
 		sb.append("<arg9></arg9>\n");
 		sb.append("</generalAdminInp_PI>\n");
 
-		TestCase.assertEquals("unexpected XML protocol result", sb.toString(),
+		Assert.assertEquals("unexpected XML protocol result", sb.toString(),
 				tagOut);
 	}
-	
+
 	@Test
 	public void testSetUserQuotaForResource() throws Exception {
 		String userName = "test";
 		String resourceName = "testResc";
 		long quota = 123L;
 
-		GeneralAdminInp pi = GeneralAdminInp.instanceForSetUserQuotaForResource(userName, resourceName, quota);
+		GeneralAdminInp pi = GeneralAdminInp
+				.instanceForSetUserQuotaForResource(userName, resourceName,
+						quota);
 		String tagOut = pi.getParsedTags();
 
 		StringBuilder sb = new StringBuilder();
@@ -253,17 +256,19 @@ public class GeneralAdminInpTest {
 		sb.append("<arg9></arg9>\n");
 		sb.append("</generalAdminInp_PI>\n");
 
-		TestCase.assertEquals("unexpected XML protocol result", sb.toString(),
+		Assert.assertEquals("unexpected XML protocol result", sb.toString(),
 				tagOut);
 	}
-	
+
 	@Test
 	public void testSetUserGroupQuotaForResource() throws Exception {
 		String userName = "test";
 		String resourceName = "testResc";
 		long quota = 123L;
 
-		GeneralAdminInp pi = GeneralAdminInp.instanceForSetUserGroupQuotaForResource(userName, resourceName, quota);
+		GeneralAdminInp pi = GeneralAdminInp
+				.instanceForSetUserGroupQuotaForResource(userName,
+						resourceName, quota);
 		String tagOut = pi.getParsedTags();
 
 		StringBuilder sb = new StringBuilder();
@@ -279,12 +284,10 @@ public class GeneralAdminInpTest {
 		sb.append("<arg9></arg9>\n");
 		sb.append("</generalAdminInp_PI>\n");
 
-		TestCase.assertEquals("unexpected XML protocol result", sb.toString(),
+		Assert.assertEquals("unexpected XML protocol result", sb.toString(),
 				tagOut);
 	}
 
-	
-	
 	@Test
 	public void testModifyUserTypeCheckXML() throws Exception {
 		String userName = "test";
@@ -307,7 +310,7 @@ public class GeneralAdminInpTest {
 		sb.append("<arg9></arg9>\n");
 		sb.append("</generalAdminInp_PI>\n");
 
-		TestCase.assertEquals("unexpected XML protocol result", sb.toString(),
+		Assert.assertEquals("unexpected XML protocol result", sb.toString(),
 				tagOut);
 	}
 
@@ -333,7 +336,7 @@ public class GeneralAdminInpTest {
 		sb.append("<arg9></arg9>\n");
 		sb.append("</generalAdminInp_PI>\n");
 
-		TestCase.assertEquals("unexpected XML protocol result", sb.toString(),
+		Assert.assertEquals("unexpected XML protocol result", sb.toString(),
 				tagOut);
 	}
 
@@ -358,7 +361,7 @@ public class GeneralAdminInpTest {
 		sb.append("<arg9></arg9>\n");
 		sb.append("</generalAdminInp_PI>\n");
 
-		TestCase.assertEquals("unexpected XML protocol result", sb.toString(),
+		Assert.assertEquals("unexpected XML protocol result", sb.toString(),
 				tagOut);
 	}
 
@@ -383,7 +386,7 @@ public class GeneralAdminInpTest {
 		sb.append("<arg9></arg9>\n");
 		sb.append("</generalAdminInp_PI>\n");
 
-		TestCase.assertEquals("unexpected XML protocol result", sb.toString(),
+		Assert.assertEquals("unexpected XML protocol result", sb.toString(),
 				tagOut);
 	}
 
@@ -395,7 +398,7 @@ public class GeneralAdminInpTest {
 		user.setUserType(UserTypeEnum.RODS_USER);
 
 		GeneralAdminInp pi = GeneralAdminInp.instanceForAddUser(user);
-		TestCase.assertEquals("incorrect api type",
+		Assert.assertEquals("incorrect api type",
 				GeneralAdminInp.GEN_ADMIN_INP_API_NBR, pi.getApiNumber());
 	}
 
@@ -442,7 +445,7 @@ public class GeneralAdminInpTest {
 		sb.append("<arg9></arg9>\n");
 		sb.append("</generalAdminInp_PI>\n");
 
-		TestCase.assertEquals("unexpected XML protocol result", sb.toString(),
+		Assert.assertEquals("unexpected XML protocol result", sb.toString(),
 				tagOut);
 	}
 
@@ -480,30 +483,31 @@ public class GeneralAdminInpTest {
 
 		GeneralAdminInp.instanceForModifyUserPassword(userName, password);
 	}
-	
-	@Test(expected=IllegalArgumentException.class)
+
+	@Test(expected = IllegalArgumentException.class)
 	public void testAddUserToGroupNullUser() throws Exception {
 		GeneralAdminInp.instanceForAddUserToGroup(null, "test", null);
 	}
-	
-	@Test(expected=IllegalArgumentException.class)
+
+	@Test(expected = IllegalArgumentException.class)
 	public void testAddUserToGroupBlankUser() throws Exception {
 		GeneralAdminInp.instanceForAddUserToGroup("", "test", null);
 	}
-	
-	@Test(expected=IllegalArgumentException.class)
+
+	@Test(expected = IllegalArgumentException.class)
 	public void testAddUserToGroupNullGroup() throws Exception {
 		GeneralAdminInp.instanceForAddUserToGroup("test", null, null);
 	}
-	
-	@Test(expected=IllegalArgumentException.class)
+
+	@Test(expected = IllegalArgumentException.class)
 	public void testAddUserToGroupBlankGroup() throws Exception {
-		GeneralAdminInp.instanceForAddUserToGroup("test", "",null);
+		GeneralAdminInp.instanceForAddUserToGroup("test", "", null);
 	}
-	
+
 	@Test
 	public void testAddUserToGroupNullZone() throws Exception {
-		GeneralAdminInp actual = GeneralAdminInp.instanceForAddUserToGroup("userGroup", "userName", null);
+		GeneralAdminInp actual = GeneralAdminInp.instanceForAddUserToGroup(
+				"userGroup", "userName", null);
 		String tagOut = actual.getParsedTags();
 
 		StringBuilder sb = new StringBuilder();
@@ -518,15 +522,16 @@ public class GeneralAdminInpTest {
 		sb.append("<arg8></arg8>\n");
 		sb.append("<arg9></arg9>\n");
 		sb.append("</generalAdminInp_PI>\n");
-		
-		TestCase.assertEquals("unexpected XML protocol result", sb.toString(),
+
+		Assert.assertEquals("unexpected XML protocol result", sb.toString(),
 				tagOut);
-	
+
 	}
-	
+
 	@Test
 	public void testAddUserToGroupSpacesZone() throws Exception {
-		GeneralAdminInp actual = GeneralAdminInp.instanceForAddUserToGroup("userGroup", "userName", "");
+		GeneralAdminInp actual = GeneralAdminInp.instanceForAddUserToGroup(
+				"userGroup", "userName", "");
 		String tagOut = actual.getParsedTags();
 
 		StringBuilder sb = new StringBuilder();
@@ -541,15 +546,16 @@ public class GeneralAdminInpTest {
 		sb.append("<arg8></arg8>\n");
 		sb.append("<arg9></arg9>\n");
 		sb.append("</generalAdminInp_PI>\n");
-		
-		TestCase.assertEquals("unexpected XML protocol result", sb.toString(),
+
+		Assert.assertEquals("unexpected XML protocol result", sb.toString(),
 				tagOut);
-	
+
 	}
-	
+
 	@Test
 	public void testAddUserToGroupWithZone() throws Exception {
-		GeneralAdminInp actual = GeneralAdminInp.instanceForAddUserToGroup("userGroup", "userName", "zone");
+		GeneralAdminInp actual = GeneralAdminInp.instanceForAddUserToGroup(
+				"userGroup", "userName", "zone");
 		String tagOut = actual.getParsedTags();
 
 		StringBuilder sb = new StringBuilder();
@@ -564,35 +570,36 @@ public class GeneralAdminInpTest {
 		sb.append("<arg8></arg8>\n");
 		sb.append("<arg9></arg9>\n");
 		sb.append("</generalAdminInp_PI>\n");
-		
-		TestCase.assertEquals("unexpected XML protocol result", sb.toString(),
+
+		Assert.assertEquals("unexpected XML protocol result", sb.toString(),
 				tagOut);
-	
+
 	}
-	
-	@Test(expected=IllegalArgumentException.class)
+
+	@Test(expected = IllegalArgumentException.class)
 	public void testRemoveUserFromGroupNullUser() throws Exception {
 		GeneralAdminInp.instanceForRemoveUserFromGroup(null, "test", null);
 	}
-	
-	@Test(expected=IllegalArgumentException.class)
+
+	@Test(expected = IllegalArgumentException.class)
 	public void testRemoveUserFromGroupBlankUser() throws Exception {
 		GeneralAdminInp.instanceForRemoveUserFromGroup("", "test", null);
 	}
-	
-	@Test(expected=IllegalArgumentException.class)
+
+	@Test(expected = IllegalArgumentException.class)
 	public void testRemoveUserFromGroupNullGroup() throws Exception {
 		GeneralAdminInp.instanceForRemoveUserFromGroup("test", null, null);
 	}
-	
-	@Test(expected=IllegalArgumentException.class)
+
+	@Test(expected = IllegalArgumentException.class)
 	public void testRemoveUserFromGroupBlankGroup() throws Exception {
-		GeneralAdminInp.instanceForRemoveUserFromGroup("test", "",null);
+		GeneralAdminInp.instanceForRemoveUserFromGroup("test", "", null);
 	}
-	
+
 	@Test
 	public void testRemoveUserFromGroupNullZone() throws Exception {
-		GeneralAdminInp actual = GeneralAdminInp.instanceForRemoveUserFromGroup("userGroup", "userName", null);
+		GeneralAdminInp actual = GeneralAdminInp
+				.instanceForRemoveUserFromGroup("userGroup", "userName", null);
 		String tagOut = actual.getParsedTags();
 
 		StringBuilder sb = new StringBuilder();
@@ -607,15 +614,16 @@ public class GeneralAdminInpTest {
 		sb.append("<arg8></arg8>\n");
 		sb.append("<arg9></arg9>\n");
 		sb.append("</generalAdminInp_PI>\n");
-		
-		TestCase.assertEquals("unexpected XML protocol result", sb.toString(),
+
+		Assert.assertEquals("unexpected XML protocol result", sb.toString(),
 				tagOut);
-	
+
 	}
-	
+
 	@Test
 	public void testRemoveUserFromGroupSpacesZone() throws Exception {
-		GeneralAdminInp actual = GeneralAdminInp.instanceForRemoveUserFromGroup("userGroup", "userName", "");
+		GeneralAdminInp actual = GeneralAdminInp
+				.instanceForRemoveUserFromGroup("userGroup", "userName", "");
 		String tagOut = actual.getParsedTags();
 
 		StringBuilder sb = new StringBuilder();
@@ -630,10 +638,10 @@ public class GeneralAdminInpTest {
 		sb.append("<arg8></arg8>\n");
 		sb.append("<arg9></arg9>\n");
 		sb.append("</generalAdminInp_PI>\n");
-		
-		TestCase.assertEquals("unexpected XML protocol result", sb.toString(),
+
+		Assert.assertEquals("unexpected XML protocol result", sb.toString(),
 				tagOut);
-	
+
 	}
-	
+
 }

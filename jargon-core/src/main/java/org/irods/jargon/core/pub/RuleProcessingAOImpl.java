@@ -257,16 +257,18 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements
 		if (this.getIRODSServerProperties()
 				.isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods3.0")
 				&& IRODSRuleTranslator.isUsingNewRuleSyntax(irodsRuleAsString)) {
-			
+
 			if (ruleProcessingType == RuleProcessingType.CLASSIC) {
-				throw new JargonRuleException("cannot run new format rule as CLASSIC");
+				throw new JargonRuleException(
+						"cannot run new format rule as CLASSIC");
 			}
 
 			// ok
 			log.info("verified as new format");
 		} else {
 			if (ruleProcessingType != RuleProcessingType.CLASSIC) {
-				throw new JargonRuleException("must run old format rule as CLASSIC");
+				throw new JargonRuleException(
+						"must run old format rule as CLASSIC");
 			}
 		}
 
@@ -283,7 +285,8 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements
 		}
 
 		final IRODSRule irodsRule = irodsRuleTranslator
-				.translatePlainTextRuleIntoIRODSRule(irodsRuleAsString, inputParameterOverrides);
+				.translatePlainTextRuleIntoIRODSRule(irodsRuleAsString,
+						inputParameterOverrides);
 		log.debug("translated rule: {}", irodsRule);
 		final ExecMyRuleInp execMyRuleInp = ExecMyRuleInp.instance(irodsRule);
 		final Tag response = getIRODSProtocol().irodsFunction(execMyRuleInp);
@@ -717,13 +720,6 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements
 		dataObjectAO.irodsDataObjectGetOperationForClientSideAction(irodsFile,
 				localFile, null);
 		log.debug("client side get action was successful");
-	}
-
-	@SuppressWarnings("unused")
-	private void operationComplete(final int status) throws JargonException {
-		Tag message = new Tag(INT_PI, new Tag[] { new Tag(MY_INT, status), });
-		getIRODSProtocol().irodsFunction(IRODSConstants.RODS_API_REQ,
-				message.parseTag(), IRODSConstants.OPR_COMPLETE_AN);
 	}
 
 }

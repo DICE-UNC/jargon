@@ -15,7 +15,6 @@ import java.util.concurrent.Callable;
 import org.irods.jargon.core.connection.ConnectionConstants;
 import org.irods.jargon.core.connection.ConnectionProgressStatus;
 import org.irods.jargon.core.exception.JargonException;
-import org.irods.jargon.core.exception.JargonRuntimeException;
 import org.irods.jargon.core.utils.Host;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -182,7 +181,6 @@ public final class ParallelGetTransferThread extends
 		long length = readLong();
 		log.info("   length:{}", length);
 
-		
 		// Holds all the data for transfer
 		byte[] buffer = null;
 		int read = 0;
@@ -197,15 +195,14 @@ public final class ParallelGetTransferThread extends
 
 		log.info("seeking to offset: {}", offset);
 		try {
-			
-			
+
 			if (length <= 0) {
 				return;
 			} else {
 				// length has a max of 8mb?
 				buffer = new byte[ConnectionConstants.OUTPUT_BUFFER_LENGTH];
 			}
-			
+
 			seekToOffset(local, offset);
 
 			while (length > 0) {
@@ -285,7 +282,8 @@ public final class ParallelGetTransferThread extends
 				} else {
 					log.warn("intercepted a loop condition on parallel file get, length is > 0 but I just read and got nothing...breaking...");
 					// length = 0;
-					throw new JargonException("possible loop condition in parallel file get");
+					throw new JargonException(
+							"possible loop condition in parallel file get");
 				}
 
 				Thread.yield();

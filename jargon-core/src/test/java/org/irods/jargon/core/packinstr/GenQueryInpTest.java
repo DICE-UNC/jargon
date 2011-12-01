@@ -104,7 +104,8 @@ public class GenQueryInpTest {
 		TranslatedIRODSGenQuery translatedIRODSQuery = irodsQueryTranslator
 				.getTranslatedQuery(irodsQuery);
 
-		GenQueryInp genQueryInp = GenQueryInp.instance(translatedIRODSQuery, 0, null);
+		GenQueryInp genQueryInp = GenQueryInp.instance(translatedIRODSQuery, 0,
+				null);
 		Assert.assertNotNull(genQueryInp.getParsedTags());
 	}
 
@@ -125,7 +126,8 @@ public class GenQueryInpTest {
 				props);
 		TranslatedIRODSGenQuery translatedIRODSQuery = irodsQueryTranslator
 				.getTranslatedQuery(irodsQuery);
-		GenQueryInp genQueryInp = GenQueryInp.instance(translatedIRODSQuery, 0, null);
+		GenQueryInp genQueryInp = GenQueryInp.instance(translatedIRODSQuery, 0,
+				null);
 		String tagData = genQueryInp.getParsedTags();
 		Assert.assertTrue("did not find select field",
 				tagData.indexOf(String.valueOf(RodsGenQueryEnum.COL_D_COLL_ID
@@ -135,7 +137,7 @@ public class GenQueryInpTest {
 						.getNumericValue())) > -1);
 
 	}
-	
+
 	@Test
 	public final void testGetParsedTagsWithZone() throws Exception {
 		String zoneName = "zoneNameHere";
@@ -154,7 +156,8 @@ public class GenQueryInpTest {
 				props);
 		TranslatedIRODSGenQuery translatedIRODSQuery = irodsQueryTranslator
 				.getTranslatedQuery(irodsQuery);
-		GenQueryInp genQueryInp = GenQueryInp.instance(translatedIRODSQuery, 0, zoneName);
+		GenQueryInp genQueryInp = GenQueryInp.instance(translatedIRODSQuery, 0,
+				zoneName);
 		String response = genQueryInp.getParsedTags();
 		StringBuilder sb = new StringBuilder();
 		sb.append("<GenQueryInp_PI><maxRows>500</maxRows>\n");
@@ -176,10 +179,10 @@ public class GenQueryInpTest {
 		sb.append("<svalue> = '2' </svalue>\n");
 		sb.append("</InxValPair_PI>\n");
 		sb.append("</GenQueryInp_PI>\n");
-		
+
 		String tagVal = sb.toString();
 		Assert.assertEquals("improper tags returned", tagVal, response);
-	
+
 	}
 
 }

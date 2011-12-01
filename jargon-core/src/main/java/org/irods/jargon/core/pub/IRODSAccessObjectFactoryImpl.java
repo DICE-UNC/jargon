@@ -210,17 +210,20 @@ public final class IRODSAccessObjectFactoryImpl implements
 		checkIrodsSessionSet();
 		return new EnvironmentalInfoAOImpl(irodsSession, irodsAccount);
 	}
-	
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.pub.IRODSAccessObjectFactory#getQuotaAO(org.irods.jargon.core.connection.IRODSAccount)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.IRODSAccessObjectFactory#getQuotaAO(org.irods
+	 * .jargon.core.connection.IRODSAccount)
 	 */
 	@Override
-	public QuotaAO getQuotaAO(
-			final IRODSAccount irodsAccount) throws JargonException {
+	public QuotaAO getQuotaAO(final IRODSAccount irodsAccount)
+			throws JargonException {
 		checkIrodsSessionSet();
 		return new QuotaAOImpl(irodsSession, irodsAccount);
 	}
-
 
 	/*
 	 * (non-Javadoc)
@@ -319,26 +322,34 @@ public final class IRODSAccessObjectFactoryImpl implements
 		return new DataObjectAOImpl(irodsSession, irodsAccount);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.pub.IRODSAccessObjectFactory#getDataObjectAuditAO(org.irods.jargon.core.connection.IRODSAccount)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.IRODSAccessObjectFactory#getDataObjectAuditAO
+	 * (org.irods.jargon.core.connection.IRODSAccount)
 	 */
 	@Override
-	public DataObjectAuditAO getDataObjectAuditAO(final IRODSAccount irodsAccount)
-			throws JargonException {
+	public DataObjectAuditAO getDataObjectAuditAO(
+			final IRODSAccount irodsAccount) throws JargonException {
 		checkIrodsSessionSet();
 		return new DataObjectAuditAOImpl(irodsSession, irodsAccount);
 	}
-	
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.pub.IRODSAccessObjectFactory#getCollectionAuditAO(org.irods.jargon.core.connection.IRODSAccount)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.IRODSAccessObjectFactory#getCollectionAuditAO
+	 * (org.irods.jargon.core.connection.IRODSAccount)
 	 */
 	@Override
-	public CollectionAuditAO getCollectionAuditAO(final IRODSAccount irodsAccount)
-			throws JargonException {
+	public CollectionAuditAO getCollectionAuditAO(
+			final IRODSAccount irodsAccount) throws JargonException {
 		checkIrodsSessionSet();
 		return new CollectionAuditAOImpl(irodsSession, irodsAccount);
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -482,8 +493,11 @@ public final class IRODSAccessObjectFactoryImpl implements
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.pub.IRODSAccessObjectFactory#getJargonProperties()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.IRODSAccessObjectFactory#getJargonProperties()
 	 */
 	@Override
 	public JargonProperties getJargonProperties() {

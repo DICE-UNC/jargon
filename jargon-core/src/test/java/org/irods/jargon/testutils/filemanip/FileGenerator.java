@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.Properties;
 import java.util.Random;
 
-import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.irods.jargon.testutils.TestingUtilsException;
 import org.slf4j.Logger;
@@ -130,7 +129,8 @@ public class FileGenerator {
 			throws TestingUtilsException {
 
 		// 1023 bytes of random stuff should be plenty, then just repeat it as
-		// needed, this is odd number to prevent lining up on even number buffer offsets
+		// needed, this is odd number to prevent lining up on even number buffer
+		// offsets
 
 		File dir = new File(fileDirectory);
 		dir.mkdirs();

@@ -47,12 +47,13 @@ public final class ParallelGetFileTransferStrategy extends
 	 * @param localFile
 	 *            <code>File</code> representing the local file
 	 * @param irodsAccessObjectFactory
-	 *            {@link IRODSAccessObjectFactory} for the session. 
-	 *
-	 * @param transferLength <code>long</code> with the total length of the transfer
-	 * @param
-	 *            transferControlBlock {@link TransferControlBlock} that
-	 *            controls and keeps track of the transfer operation, required.
+	 *            {@link IRODSAccessObjectFactory} for the session.
+	 * 
+	 * @param transferLength
+	 *            <code>long</code> with the total length of the transfer
+	 * @param transferControlBlock
+	 *            {@link TransferControlBlock} that controls and keeps track of
+	 *            the transfer operation, required.
 	 * @param transferStatusCallbackListener
 	 *            {@link TransferStatusCallbackListener} or <code>null</code> if
 	 *            not desired. This can receive call-backs on the status of the
@@ -76,7 +77,7 @@ public final class ParallelGetFileTransferStrategy extends
 	private ParallelGetFileTransferStrategy(final String host, final int port,
 			final int numberOfThreads, final int password,
 			final File localFile,
-			final IRODSAccessObjectFactory irodsAccessObjectFactory, 
+			final IRODSAccessObjectFactory irodsAccessObjectFactory,
 			final long transferLength,
 			final TransferControlBlock transferControlBlock,
 			final TransferStatusCallbackListener transferStatusCallbackListener)
@@ -85,17 +86,22 @@ public final class ParallelGetFileTransferStrategy extends
 		super(host, port, numberOfThreads, password, localFile,
 				irodsAccessObjectFactory, transferLength, transferControlBlock,
 				transferStatusCallbackListener);
-		
-		
-		log.info("transfer options in transfer control block:{}", transferControlBlock.getTransferOptions());
-		
+
+		log.info("transfer options in transfer control block:{}",
+				transferControlBlock.getTransferOptions());
+
 		if (transferStatusCallbackListener == null) {
 			log.info("null transferStatusCallbackListener");
 		}
-		
-		if (transferControlBlock.getTransferOptions().isIntraFileStatusCallbacks() && transferStatusCallbackListener != null) {
+
+		if (transferControlBlock.getTransferOptions()
+				.isIntraFileStatusCallbacks()
+				&& transferStatusCallbackListener != null) {
 			log.info("will do intra-file status callbacks from transfer");
-			this.setConnectionProgressStatusListener(DefaultIntraFileProgressCallbackListener.instance(TransferStatus.TransferType.GET, getTransferLength(), transferControlBlock, transferStatusCallbackListener));
+			this.setConnectionProgressStatusListener(DefaultIntraFileProgressCallbackListener
+					.instance(TransferStatus.TransferType.GET,
+							getTransferLength(), transferControlBlock,
+							transferStatusCallbackListener));
 		} else {
 			log.info("transfer status callbacks will not be processed");
 		}
@@ -200,7 +206,7 @@ public final class ParallelGetFileTransferStrategy extends
 			}
 		}
 	}
-	
+
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
@@ -218,6 +224,5 @@ public final class ParallelGetFileTransferStrategy extends
 		return sb.toString();
 
 	}
-
 
 }

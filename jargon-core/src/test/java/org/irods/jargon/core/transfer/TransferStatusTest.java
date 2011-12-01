@@ -52,8 +52,10 @@ public class TransferStatusTest {
 
 	@Test(expected = JargonException.class)
 	public void testInstanceTotalLessThanZero() throws Exception {
-		TransferStatus.instance(TransferType.GET, "source", "blah", "", -10L,
-				2L, 0, 0, TransferState.IN_PROGRESS_COMPLETE_FILE, "xxx", "xxx");
+		TransferStatus
+				.instance(TransferType.GET, "source", "blah", "", -10L, 2L, 0,
+						0, TransferState.IN_PROGRESS_COMPLETE_FILE, "xxx",
+						"xxx");
 	}
 
 }

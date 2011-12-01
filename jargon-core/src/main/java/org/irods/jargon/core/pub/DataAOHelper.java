@@ -84,7 +84,7 @@ public final class DataAOHelper extends AOHelper {
 	/**
 	 * Create a set of selects for a data object, used in general query. Note
 	 * that the 'SELECT' token is appended as the first token in the query.
-	 *
+	 * 
 	 * @return <code>String</code> with select statements for the domain object.
 	 */
 	protected String buildSelects() {
@@ -465,10 +465,11 @@ public final class DataAOHelper extends AOHelper {
 			log.info("file is executable");
 			execFlag = true;
 		}
-		
+
 		DataObjInp dataObjInp = DataObjInp.instanceForNormalPutStrategy(
 				targetFile.getAbsolutePath(), localFile.length(),
-				targetFile.getResource(), overwrite, myTransferOptions, execFlag);
+				targetFile.getResource(), overwrite, myTransferOptions,
+				execFlag);
 
 		// see if checksum is required
 
@@ -563,7 +564,7 @@ public final class DataAOHelper extends AOHelper {
 					break;
 				}
 
-				lengthThisSend = Math.min((long) putBufferSize, lengthLeftToSend);
+				lengthThisSend = Math.min(putBufferSize, lengthLeftToSend);
 
 				openedDataObjInp = OpenedDataObjInp.instanceForFilePut(fd,
 						lengthThisSend);
@@ -663,6 +664,8 @@ public final class DataAOHelper extends AOHelper {
 		query.append(RodsGenQueryEnum.COL_DATA_ACCESS_USER_ID.getName());
 		query.append(",");
 		query.append(RodsGenQueryEnum.COL_DATA_ACCESS_TYPE.getName());
+		query.append(",");
+		query.append(RodsGenQueryEnum.COL_USER_TYPE.getName());
 		query.append(" WHERE ");
 		query.append(RodsGenQueryEnum.COL_COLL_NAME.getName());
 		query.append(EQUALS_AND_QUOTE);
@@ -672,8 +675,7 @@ public final class DataAOHelper extends AOHelper {
 		query.append(AND);
 		query.append(RodsGenQueryEnum.COL_DATA_NAME.getName());
 		query.append(EQUALS_AND_QUOTE);
-		query.append(IRODSDataConversionUtil
-				.escapeSingleQuotes(dataName));
+		query.append(IRODSDataConversionUtil.escapeSingleQuotes(dataName));
 		query.append(QUOTE);
 		return query.toString();
 	}
@@ -731,12 +733,14 @@ public final class DataAOHelper extends AOHelper {
 								transferStatusCallbackListener, 5);
 				InputStream wrapper = new ByteCountingCallbackInputStreamWrapper(
 						connectionProgressStatusListener, ifis);
-			
+
 				stream2StreamAO.transferStreamToFileUsingIOStreams(wrapper,
-						localFileToHoldData, irodsFileLength, irodsAccessObjectFactory.getJargonProperties().getGetBufferSize());
+						localFileToHoldData, irodsFileLength,
+						irodsAccessObjectFactory.getJargonProperties()
+								.getGetBufferSize());
 
 			} else {
-				
+
 				stream2StreamAO.transferStreamToFileUsingIOStreams(ifis,
 						localFileToHoldData, irodsFileLength, 4194304);
 

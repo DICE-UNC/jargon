@@ -96,10 +96,12 @@ public interface UserAO extends IRODSAccessObject {
 	 * 
 	 * @param userName
 	 *            <code>String</code> with the iRODS user name to be removed.
-	 * @throws InvalidUserException if the user is not in iRODS
+	 * @throws InvalidUserException
+	 *             if the user is not in iRODS
 	 * @throws JargonException
 	 */
-	void deleteUser(String userName) throws InvalidUserException, JargonException;
+	void deleteUser(String userName) throws InvalidUserException,
+			JargonException;
 
 	/**
 	 * Update the user data. Note that this method only updates certain
@@ -213,7 +215,8 @@ public interface UserAO extends IRODSAccessObject {
 	 * query and add a '%' wild card to the provided term
 	 * 
 	 * @param userName
-	 * @return <code>List<String></code> that are the user names that match the partial query
+	 * @return <code>List<String></code> that are the user names that match the
+	 *         partial query
 	 * @throws JargonException
 	 */
 	List<String> findUserNameLike(String userName) throws JargonException;
@@ -227,17 +230,20 @@ public interface UserAO extends IRODSAccessObject {
 	String getTemporaryPasswordForConnectedUser() throws JargonException;
 
 	/**
-	 * Given a unique numeric user ID, retrieve the user's distinguished name.  Note that the various list methods
-	 * do not retrieve the DN by default, as it causes unnecessary GenQueries to be issued per user.  This method can
+	 * Given a unique numeric user ID, retrieve the user's distinguished name.
+	 * Note that the various list methods do not retrieve the DN by default, as
+	 * it causes unnecessary GenQueries to be issued per user. This method can
 	 * retrieve that data as needed.
 	 * <p/>
-	 * The methods that retrieve an individual user do retrieve the DN by default.
-	 * @param userId <code>String</code> with the iRODS user id (not name)
-	 * @return <code>String</code> with the user DN, or <code>null</code> if the DN does not exist for the user
+	 * The methods that retrieve an individual user do retrieve the DN by
+	 * default.
+	 * 
+	 * @param userId
+	 *            <code>String</code> with the iRODS user id (not name)
+	 * @return <code>String</code> with the user DN, or <code>null</code> if the
+	 *         DN does not exist for the user
 	 * @throws JargonException
 	 */
 	String retriveUserDNByUserId(String userId) throws JargonException;
-
-	
 
 }

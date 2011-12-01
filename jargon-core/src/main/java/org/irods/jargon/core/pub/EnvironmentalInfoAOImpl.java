@@ -185,7 +185,7 @@ public class EnvironmentalInfoAOImpl extends IRODSGenericAO implements
 		StringTokenizer st = new StringTokenizer(rawCommandOutput, "\n");
 		RemoteCommandInformation remoteCommandInformationEntry = null;
 		String token = null;
-		
+
 		while (st.hasMoreTokens()) {
 			token = st.nextToken();
 			log.debug(token);
@@ -195,11 +195,10 @@ public class EnvironmentalInfoAOImpl extends IRODSGenericAO implements
 			if (command.charAt(0) == '.') {
 				continue;
 			}
-			
+
 			remoteCommandInformationEntry = new RemoteCommandInformation();
 			remoteCommandInformationEntry.setRawData(token);
-			remoteCommandInformationEntry
-					.setCommand(command);
+			remoteCommandInformationEntry.setCommand(command);
 			remoteCommandInformationEntry.setHostName(this.getIRODSAccount()
 					.getHost());
 			remoteCommandInformationEntry.setZone(getIRODSAccount().getZone());
@@ -210,30 +209,38 @@ public class EnvironmentalInfoAOImpl extends IRODSGenericAO implements
 		return remoteCommandInformation;
 
 	}
-	
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.pub.EnvironmentalInfoAO#listAvailableMicroservices()
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.EnvironmentalInfoAO#listAvailableMicroservices
+	 * ()
 	 */
 	@Override
-	public List<String> listAvailableMicroservices()
-			throws JargonException {
+	public List<String> listAvailableMicroservices() throws JargonException {
 		log.info("listAvailableMicroservices()");
 		List<String> availableMicroservices = new ArrayList<String>();
-		
-		if (!this.getIRODSServerProperties().isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods3.0")) {
-			throw new JargonException("service not available on servers prior to rods3.0");
+
+		if (!this.getIRODSServerProperties()
+				.isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods3.0")) {
+			throw new JargonException(
+					"service not available on servers prior to rods3.0");
 		}
-		
-		RuleProcessingAO ruleProcessingAO = this.getIRODSAccessObjectFactory().getRuleProcessingAO(getIRODSAccount());
-		IRODSRuleExecResult result = ruleProcessingAO.executeRuleFromResource("/rules/rulemsiListEnabledMS.r", null, RuleProcessingType.EXTERNAL);
+
+		RuleProcessingAO ruleProcessingAO = this.getIRODSAccessObjectFactory()
+				.getRuleProcessingAO(getIRODSAccount());
+		IRODSRuleExecResult result = ruleProcessingAO.executeRuleFromResource(
+				"/rules/rulemsiListEnabledMS.r", null,
+				RuleProcessingType.EXTERNAL);
 		String resultBuff = result.getRuleExecOut().trim();
 		log.info("raw microservice list:{}", resultBuff);
 		StringTokenizer st = new StringTokenizer(resultBuff, "\n");
-		
+
 		while (st.hasMoreTokens()) {
 			availableMicroservices.add(st.nextToken());
 		}
-		
+
 		return availableMicroservices;
 	}
 

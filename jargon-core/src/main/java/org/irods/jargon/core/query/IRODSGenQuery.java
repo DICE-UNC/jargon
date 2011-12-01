@@ -18,7 +18,7 @@ public final class IRODSGenQuery {
 
 	public enum RowCountOptions {
 		NO_ROW_COUNT, ROW_COUNT_FOR_THIS_RESULT, ROW_COUNT_INCLUDING_SKIPPED_ROWS
-	};
+	}
 
 	/**
 	 * Creates an immutable description of a general query to IRODS with

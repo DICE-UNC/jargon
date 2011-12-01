@@ -4,29 +4,29 @@ import org.irods.jargon.core.protovalues.ErrorEnum;
 
 /**
  * The given user is invalid in iRODS
- * @author Mike Conway 
- *
+ * 
+ * @author Mike Conway
+ * 
  */
 public class InvalidUserException extends JargonException {
 	private static final long serialVersionUID = -8718442214402431485L;
 	private static final int ERROR_CODE = ErrorEnum.CAT_INVALID_USER.getInt();
 
-	public InvalidUserException(String message,
-			int underlyingIRODSExceptionCode) {
+	public InvalidUserException(final String message,
+			final int underlyingIRODSExceptionCode) {
 		super(message, underlyingIRODSExceptionCode);
 	}
 
-	public InvalidUserException(String message, Throwable cause,
-			int underlyingIRODSExceptionCode) {
+	public InvalidUserException(final String message, final Throwable cause,
+			final int underlyingIRODSExceptionCode) {
 		super(message, cause, underlyingIRODSExceptionCode);
 	}
 
-	public InvalidUserException(Throwable cause,
-			int underlyingIRODSExceptionCode) {
+	public InvalidUserException(final Throwable cause,
+			final int underlyingIRODSExceptionCode) {
 		super(cause, underlyingIRODSExceptionCode);
 	}
 
-	
 	public InvalidUserException(final String message) {
 		super(message, ERROR_CODE);
 	}

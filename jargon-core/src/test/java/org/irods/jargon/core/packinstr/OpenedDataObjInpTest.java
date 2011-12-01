@@ -34,12 +34,11 @@ public class OpenedDataObjInpTest {
 		Assert.assertEquals("did not generate expected XML", sb.toString(),
 				openedDataObjInp.getParsedTags());
 	}
-	
 
 	@Test
 	public final void testInstanceForFileWrite() throws Exception {
 		OpenedDataObjInp openedDataObjInp = OpenedDataObjInp
-				.instanceForFilePut(3,4194304L);
+				.instanceForFilePut(3, 4194304L);
 		StringBuilder sb = new StringBuilder();
 		sb.append("<OpenedDataObjInp_PI>");
 		sb.append("<l1descInx>3</l1descInx>\n");

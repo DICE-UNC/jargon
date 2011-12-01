@@ -192,19 +192,32 @@ public class IRODSCommands implements IRODSManagedConnection {
 		return irodsFunction(type, message, null, 0, 0, null, 0, 0, intInfo);
 	}
 
-	
 	/**
-	 * Send the given iROD protocol request with any included binary data, and return the iRODS response as a <code>Tag</code> object.  This method has detailed parameters, and
-	 * there are other methods in the class with simpler signatures that should be used.
-	 * @param type <code>String</code> with the type of request, typically an iRODS protocol request
-	 * @param message <code>String</code> with an XML formatted messag
-	 * @param errorBytes <code>byte[]</code> with any error data to send to iRODS, can be set to <code>null</code>
-	 * @param errorOffset <code>int</code> with offset into the error data to send
-	 * @param errorLength <code>int</code> with the length of error data
-	 * @param bytes <code>byte[]</code> with binary data to send to iRODS.
-	 * @param byteOffset <code>int</code> with an offset into the byte array to send
-	 * @param byteStringLength <code>int</code> with the length of the bytes to send
-	 * @param intInfo <code>int</code> with the iRODS API number
+	 * Send the given iROD protocol request with any included binary data, and
+	 * return the iRODS response as a <code>Tag</code> object. This method has
+	 * detailed parameters, and there are other methods in the class with
+	 * simpler signatures that should be used.
+	 * 
+	 * @param type
+	 *            <code>String</code> with the type of request, typically an
+	 *            iRODS protocol request
+	 * @param message
+	 *            <code>String</code> with an XML formatted messag
+	 * @param errorBytes
+	 *            <code>byte[]</code> with any error data to send to iRODS, can
+	 *            be set to <code>null</code>
+	 * @param errorOffset
+	 *            <code>int</code> with offset into the error data to send
+	 * @param errorLength
+	 *            <code>int</code> with the length of error data
+	 * @param bytes
+	 *            <code>byte[]</code> with binary data to send to iRODS.
+	 * @param byteOffset
+	 *            <code>int</code> with an offset into the byte array to send
+	 * @param byteStringLength
+	 *            <code>int</code> with the length of the bytes to send
+	 * @param intInfo
+	 *            <code>int</code> with the iRODS API number
 	 * @return
 	 * @throws JargonException
 	 */
@@ -223,21 +236,19 @@ public class IRODSCommands implements IRODSManagedConnection {
 			log.error(err);
 			throw new JargonException(err);
 		}
-		
+
 		// message may be null for some operations
 
 		try {
 			int messageLength = 0;
-			
+
 			if (message != null) {
-				messageLength = message
-					.getBytes(pipelineConfiguration
-							.getDefaultEncoding()).length;
+				messageLength = message.getBytes(pipelineConfiguration
+						.getDefaultEncoding()).length;
 			}
-			
-			irodsConnection
-					.send(createHeader(IRODSConstants.RODS_API_REQ, messageLength, errorLength,
-							byteStringLength, intInfo));
+
+			irodsConnection.send(createHeader(IRODSConstants.RODS_API_REQ,
+					messageLength, errorLength, byteStringLength, intInfo));
 
 			irodsConnection.send(message);
 
@@ -259,21 +270,38 @@ public class IRODSCommands implements IRODSManagedConnection {
 	}
 
 	/**
-	 * iRODS protocol request that sends data to iRODS using the <code>OpenedDataObjInp</code> protocol interaction to send binary data in frames of a given
-	 * size.  Note the frame size is defined in the jargon.properties as jargon.put.buffer.size.  The input stream should have any buffering wrapped around it before
-	 * making this call, as this method will not wrap any buffering around the input stream.  It is the responsibility of the caller of this method to properly close
-	 * the <code>inputStream</code> object at the appropriate time.
+	 * iRODS protocol request that sends data to iRODS using the
+	 * <code>OpenedDataObjInp</code> protocol interaction to send binary data in
+	 * frames of a given size. Note the frame size is defined in the
+	 * jargon.properties as jargon.put.buffer.size. The input stream should have
+	 * any buffering wrapped around it before making this call, as this method
+	 * will not wrap any buffering around the input stream. It is the
+	 * responsibility of the caller of this method to properly close the
+	 * <code>inputStream</code> object at the appropriate time.
 	 * <p/>
-	 * This method is meant to handle the put operation when streaming to iRODS, this occurs when a parallel operation is overridden in server side policy, and is not
-	 * used for typical put operations.
+	 * This method is meant to handle the put operation when streaming to iRODS,
+	 * this occurs when a parallel operation is overridden in server side
+	 * policy, and is not used for typical put operations.
 	 * 
 	 * 
-	 * @param irodsPI <code>IRodsPI</code> subclass that is the definition of the packing instruction
-	 * @param byteStreamLength <code>int</code> with the size of the input stream data to be sent per frame.  The method will make repeated <code>OpernedDataObjInp</code> protocol 
-	 * operations, each time sending jargon.put.buffer.size buffers.
-	 * @param byteStream <code>InputStream</code> that has been buffered if required before calling this method.  The method will not call <code>close()</code> on this stream.
-	 * @param connectionProgressStatusListener {@link ConnectionProgressStatusListener} that can optionally processes file progress.  Can be set to <code>null</code> if not required.
-	 * @return <code>long</code> with total bytes sent.  Note that this method will send the appropriate operation complete messages
+	 * @param irodsPI
+	 *            <code>IRodsPI</code> subclass that is the definition of the
+	 *            packing instruction
+	 * @param byteStreamLength
+	 *            <code>int</code> with the size of the input stream data to be
+	 *            sent per frame. The method will make repeated
+	 *            <code>OpernedDataObjInp</code> protocol operations, each time
+	 *            sending jargon.put.buffer.size buffers.
+	 * @param byteStream
+	 *            <code>InputStream</code> that has been buffered if required
+	 *            before calling this method. The method will not call
+	 *            <code>close()</code> on this stream.
+	 * @param connectionProgressStatusListener
+	 *            {@link ConnectionProgressStatusListener} that can optionally
+	 *            processes file progress. Can be set to <code>null</code> if
+	 *            not required.
+	 * @return <code>long</code> with total bytes sent. Note that this method
+	 *         will send the appropriate operation complete messages
 	 * @throws JargonException
 	 */
 	public synchronized long irodsFunctionForStreamingToIRODSInFrames(
@@ -332,17 +360,31 @@ public class IRODSCommands implements IRODSManagedConnection {
 	}
 
 	/**
-	 * iRODS protocol request that sends data to iRODS.  This method will stream the entire <code>inputStream</code> data to the given length at one time.  This is used for normal
-	 * put operations that do not required parallel transfers.
+	 * iRODS protocol request that sends data to iRODS. This method will stream
+	 * the entire <code>inputStream</code> data to the given length at one time.
+	 * This is used for normal put operations that do not required parallel
+	 * transfers.
 	 * <p/>
-	 * Note that the <code>inputStream</code> object is closed by this method when completed.  Any buffering that should be done on the stream must be done before passing the stream
-	 * to this method, as this method does not wrap the stream with any additional buffering.
+	 * Note that the <code>inputStream</code> object is closed by this method
+	 * when completed. Any buffering that should be done on the stream must be
+	 * done before passing the stream to this method, as this method does not
+	 * wrap the stream with any additional buffering.
 	 * 
-	 * @param irodsPI <code>IRodsPI</code> subclass that is the definition of the packing instruction
-	 * @param byteStreamLength <code>int</code> with the size of the input stream data to be sent
-	 * @param byteStream <code>InputStream</code> that has been buffered if required before calling this method.  The method will call <code>close()</code> on this stream.
-	 * @param connectionProgressStatusListener {@link ConnectionProgressStatusListener} that can optionally processes file progress.  Can be set to <code>null</code> if not required.
-	 * @return <code>long</code> with total bytes sent. 
+	 * @param irodsPI
+	 *            <code>IRodsPI</code> subclass that is the definition of the
+	 *            packing instruction
+	 * @param byteStreamLength
+	 *            <code>int</code> with the size of the input stream data to be
+	 *            sent
+	 * @param byteStream
+	 *            <code>InputStream</code> that has been buffered if required
+	 *            before calling this method. The method will call
+	 *            <code>close()</code> on this stream.
+	 * @param connectionProgressStatusListener
+	 *            {@link ConnectionProgressStatusListener} that can optionally
+	 *            processes file progress. Can be set to <code>null</code> if
+	 *            not required.
+	 * @return <code>long</code> with total bytes sent.
 	 * @throws JargonException
 	 */
 	public synchronized Tag irodsFunctionIncludingAllDataInStream(
@@ -371,10 +413,9 @@ public class IRODSCommands implements IRODSManagedConnection {
 				length = message.getBytes(pipelineConfiguration
 						.getDefaultEncoding()).length;
 			}
-			
+
 			log.debug("message:{}", message);
-			
-			
+
 			irodsConnection.send(createHeader(IRODSConstants.RODS_API_REQ,
 					length, 0, byteStreamLength, irodsPI.getApiNumber()));
 			irodsConnection.send(message);
@@ -616,7 +657,9 @@ public class IRODSCommands implements IRODSManagedConnection {
 	}
 
 	/**
-	 * Read a message from iRODS in response to a protocol operation.  This method will decode the response using the configured encoding
+	 * Read a message from iRODS in response to a protocol operation. This
+	 * method will decode the response using the configured encoding
+	 * 
 	 * @return {@link Tag} with the iRODS protocol response
 	 * @throws JargonException
 	 */
@@ -625,8 +668,13 @@ public class IRODSCommands implements IRODSManagedConnection {
 	}
 
 	/**
-	 * Read a message from iRODS in response to a protocol operation.  This method will decode the response using the configured encoding based on the <code>decode</code> parameter.
-	 * @param decode <code>boolean</code> that will cause the protocol response to be decoded using the given character set if <code>true</code>
+	 * Read a message from iRODS in response to a protocol operation. This
+	 * method will decode the response using the configured encoding based on
+	 * the <code>decode</code> parameter.
+	 * 
+	 * @param decode
+	 *            <code>boolean</code> that will cause the protocol response to
+	 *            be decoded using the given character set if <code>true</code>
 	 * @return {@link Tag} with the iRODS protocol response
 	 * @throws JargonException
 	 */
@@ -753,8 +801,7 @@ public class IRODSCommands implements IRODSManagedConnection {
 				}
 				log.error("IRODS error occured "
 						+ errorTag.getTag(RErrMsg.PI_TAG).getTag(
-								AbstractIRODSPackingInstruction.MESSAGE_TAG)
-						+ " : " + info);
+								IRodsPI.MESSAGE_TAG) + " : " + info);
 			}
 		}
 	}
@@ -800,21 +847,21 @@ public class IRODSCommands implements IRODSManagedConnection {
 			throw new JargonException(
 					"no status tag in error PI tag when processing error in response from iRODS");
 		}
-		
-		
+
 		int statusVal = status.getIntValue();
 		if (statusVal == 0) {
 			log.debug("error status of 0 indicates normal operation, ignored");
 			return;
 		}
-		
-		String errorText =  errorTag.getTag(RErrMsg.PI_TAG)
-		.getTag(AbstractIRODSPackingInstruction.MESSAGE_TAG).getStringValue();
-		
+
+		String errorText = errorTag.getTag(RErrMsg.PI_TAG)
+				.getTag(IRodsPI.MESSAGE_TAG).getStringValue();
+
 		log.error("IRODS error encountered:{}", errorText);
 		log.error("status from error is:{}", statusVal);
 
-		throw new JargonException("error returned from iRODS, status = " + statusVal + " message:" + errorText);
+		throw new JargonException("error returned from iRODS, status = "
+				+ statusVal + " message:" + errorText);
 	}
 
 	/**
@@ -858,7 +905,7 @@ public class IRODSCommands implements IRODSManagedConnection {
 			// hopefully won't be too many bytes...
 			do {
 				protoChar = irodsConnection.read();
-				if (protoChar == (int) '<') {
+				if (protoChar == '<') {
 					protoChar = irodsConnection.read(temp);
 					String headerString;
 
@@ -874,7 +921,7 @@ public class IRODSCommands implements IRODSManagedConnection {
 						temp = new byte[1000];
 						// find the end of the header and proceed from there
 						for (int i = 0; i < temp.length; i++) {
-							temp[i] = (byte) irodsConnection.read();
+							temp[i] = irodsConnection.read();
 							if (temp[i] == '>' && temp[i - 1] == 'I'
 									&& temp[i - 2] == 'P' && temp[i - 3] == '_'
 									&& temp[i - 4] == 'r' && temp[i - 5] == 'e'
@@ -1274,6 +1321,7 @@ public class IRODSCommands implements IRODSManagedConnection {
 		return irodsServerProperties;
 	}
 
+	@Override
 	public IRODSAccount getIrodsAccount() {
 		return irodsAccount;
 	}
@@ -1358,9 +1406,11 @@ public class IRODSCommands implements IRODSManagedConnection {
 	}
 
 	/**
-	 * @param irodsProtocolManager the irodsProtocolManager to set
+	 * @param irodsProtocolManager
+	 *            the irodsProtocolManager to set
 	 */
-	public synchronized void setIrodsProtocolManager(IRODSProtocolManager irodsProtocolManager) {
+	public synchronized void setIrodsProtocolManager(
+			final IRODSProtocolManager irodsProtocolManager) {
 		this.irodsProtocolManager = irodsProtocolManager;
 	}
 

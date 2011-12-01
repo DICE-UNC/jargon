@@ -33,13 +33,15 @@ public class DefaultTransferControlBlock implements TransferControlBlock {
 	private String restartAbsolutePath = "";
 	private boolean cancelled = false;
 	private boolean restartHit = false;
-	private boolean paused = false; 
+	private boolean paused = false;
 	private int maximumErrorsBeforeCanceling = MAX_ERROR_DEFAULT;
 	private int errorCount = 0;
 	private int totalFilesToTransfer = 0;
 	private int totalFilesTransferredSoFar = 0;
 	/**
-	 * Options to control transfer behavior, may be left null, in which case defaults will be used.  Specifying here overrides the default settings for this transfer
+	 * Options to control transfer behavior, may be left null, in which case
+	 * defaults will be used. Specifying here overrides the default settings for
+	 * this transfer
 	 */
 	private TransferOptions transferOptions = null;
 	private long totalBytesTransferredSoFar = 0L;
@@ -391,7 +393,8 @@ public class DefaultTransferControlBlock implements TransferControlBlock {
 	}
 
 	@Override
-	public synchronized void setTotalBytesToTransfer(final long totalBytesToTransfer) {
+	public synchronized void setTotalBytesToTransfer(
+			final long totalBytesToTransfer) {
 		this.totalBytesToTransfer = totalBytesToTransfer;
 	}
 

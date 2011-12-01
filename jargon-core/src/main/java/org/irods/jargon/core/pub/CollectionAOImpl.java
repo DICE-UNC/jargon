@@ -24,6 +24,7 @@ import org.irods.jargon.core.protovalues.FilePermissionEnum;
 import org.irods.jargon.core.pub.aohelper.CollectionAOHelper;
 import org.irods.jargon.core.pub.domain.AvuData;
 import org.irods.jargon.core.pub.domain.Collection;
+import org.irods.jargon.core.pub.domain.User;
 import org.irods.jargon.core.pub.domain.UserFilePermission;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.pub.io.IRODSFileFactory;
@@ -328,8 +329,6 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 
 		query.append(WHERE);
 		boolean previousElement = false;
-		@SuppressWarnings("unused")
-		StringBuilder queryCondition;
 
 		for (AVUQueryElement queryElement : avuQuery) {
 
@@ -418,8 +417,6 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 
 		query.append(WHERE);
 		boolean previousElement = false;
-		@SuppressWarnings("unused")
-		StringBuilder queryCondition = null;
 
 		for (AVUQueryElement queryElement : avuQuery) {
 
@@ -503,8 +500,6 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 
 		query.append(WHERE);
 		boolean previousElement = false;
-		@SuppressWarnings("unused")
-		StringBuilder queryCondition;
 
 		for (AVUQueryElement queryElement : avuQuery) {
 
@@ -1321,16 +1316,27 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(query.toString(),
 				this.getJargonProperties().getMaxFilesAndDirsQueryMax());
 		IRODSQueryResultSetInterface resultSet;
+		UserAO userAO = this.getIRODSAccessObjectFactory().getUserAO(
+				getIRODSAccount());
+		User user = null;
 
 		try {
 			resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResult(
 					irodsQuery, 0);
 			IRODSQueryResultRow row = resultSet.getFirstResult();
 
+			/**
+			 * Due to a gen query limitation getting user type with the user
+			 * permission, a separate query must be done
+			 */
+
+			user = userAO.findById(row.getColumn(1));
+
 			userFilePermission = new UserFilePermission(row.getColumn(0),
 					row.getColumn(1),
 					FilePermissionEnum.valueOf(IRODSDataConversionUtil
-							.getIntOrZeroFromIRODSValue(row.getColumn(2))));
+							.getIntOrZeroFromIRODSValue(row.getColumn(2))),
+					user.getUserType());
 			log.debug("loaded filePermission:{}", userFilePermission);
 
 		} catch (JargonQueryException e) {
@@ -1375,17 +1381,28 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(query.toString(),
 				this.getJargonProperties().getMaxFilesAndDirsQueryMax());
 		IRODSQueryResultSetInterface resultSet;
+		UserAO userAO = this.getIRODSAccessObjectFactory().getUserAO(
+				getIRODSAccount());
 
+		/*
+		 * There appears to be a gen query limitation on grabbing user type by a
+		 * straight query, so, unfortunately, we need to do another query per
+		 * user.
+		 */
+
+		User user = null;
 		try {
 			resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResult(
 					irodsQuery, 0);
 
 			UserFilePermission userFilePermission = null;
 			for (IRODSQueryResultRow row : resultSet.getResults()) {
+				user = userAO.findById(row.getColumn(1));
 				userFilePermission = new UserFilePermission(row.getColumn(0),
 						row.getColumn(1),
 						FilePermissionEnum.valueOf(IRODSDataConversionUtil
-								.getIntOrZeroFromIRODSValue(row.getColumn(2))));
+								.getIntOrZeroFromIRODSValue(row.getColumn(2))),
+						user.getUserType());
 				log.debug("loaded filePermission:{}", userFilePermission);
 				userFilePermissions.add(userFilePermission);
 			}

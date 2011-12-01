@@ -6,15 +6,15 @@ import java.io.IOException;
 import org.irods.jargon.core.exception.JargonException;
 
 /**
-* This is a special version of a <code>IRODSFileOutputStream</code> that adds the
-* capability to close the underlying <code>IRODSSession</code> when the stream
-* is closed. This is used in situations where a stream is created and returned
-* from a method, and the caller is not aware of the need to close the iRODS
-* connection.
-* 
-* @author Mike Conway - DICE (www.irods.org)
-* 
-*/
+ * This is a special version of a <code>IRODSFileOutputStream</code> that adds
+ * the capability to close the underlying <code>IRODSSession</code> when the
+ * stream is closed. This is used in situations where a stream is created and
+ * returned from a method, and the caller is not aware of the need to close the
+ * iRODS connection.
+ * 
+ * @author Mike Conway - DICE (www.irods.org)
+ * 
+ */
 public class SessionClosingIRODSFileOutputStream extends IRODSFileOutputStream {
 
 	/**
@@ -26,8 +26,10 @@ public class SessionClosingIRODSFileOutputStream extends IRODSFileOutputStream {
 	 * @param fileIOOperations
 	 *            {@link FileIOOperations} object that handles the actual iRODS
 	 *            communication.
-	 * @throws FileNotFoundException if file cannot be found
-	 * @throws JargonException for other iRODS errors
+	 * @throws FileNotFoundException
+	 *             if file cannot be found
+	 * @throws JargonException
+	 *             for other iRODS errors
 	 */
 	protected SessionClosingIRODSFileOutputStream(final IRODSFile irodsFile,
 			final FileIOOperations fileIOOperations)
@@ -43,8 +45,9 @@ public class SessionClosingIRODSFileOutputStream extends IRODSFileOutputStream {
 	@Override
 	public void close() throws IOException {
 		super.close();
-		try {			
-			this.getFileIOOperations().getIRODSSession().closeSession(getFileIOOperations().getIRODSAccount());
+		try {
+			this.getFileIOOperations().getIRODSSession()
+					.closeSession(getFileIOOperations().getIRODSAccount());
 		} catch (JargonException e) {
 			throw new IOException(
 					"error in close session returned as IOException for method contracts");

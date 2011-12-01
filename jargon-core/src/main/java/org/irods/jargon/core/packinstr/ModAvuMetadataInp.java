@@ -22,10 +22,17 @@ public class ModAvuMetadataInp extends AbstractIRODSPackingInstruction {
 
 	public static final int MOD_AVU_API_NBR = 706;
 
+	/**
+	 * Type of metadata to be modified
+	 * 
+	 */
 	public enum MetadataTargetType {
 		RESOURCE, USER, COLLECTION, DATA_OBJECT
-	};
+	}
 
+	/**
+	 * Modify action
+	 */
 	public enum ActionType {
 		ADD, REMOVE, MOD
 	}

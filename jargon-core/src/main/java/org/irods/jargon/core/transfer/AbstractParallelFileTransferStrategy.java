@@ -51,7 +51,9 @@ public abstract class AbstractParallelFileTransferStrategy {
 	 *            <code>File</code> that will transferrred.
 	 * @param irodsAccessObjectFactory
 	 *            {@link IRODSAccessObjectFactory} for the session.
-	 * @param transferLength <code>long</code> with the total length of the file to transfer
+	 * @param transferLength
+	 *            <code>long</code> with the total length of the file to
+	 *            transfer
 	 * @param transferControlBlock
 	 *            {@link TransferControlBlock} that controls and keeps track of
 	 *            the transfer operation, required.
@@ -65,7 +67,8 @@ public abstract class AbstractParallelFileTransferStrategy {
 	protected AbstractParallelFileTransferStrategy(final String host,
 			final int port, final int numberOfThreads, final int password,
 			final File localFile,
-			final IRODSAccessObjectFactory irodsAccessObjectFactory, final long transferLength,
+			final IRODSAccessObjectFactory irodsAccessObjectFactory,
+			final long transferLength,
 			final TransferControlBlock transferControlBlock,
 			final TransferStatusCallbackListener transferStatusCallbackListener)
 			throws JargonException {
@@ -109,9 +112,11 @@ public abstract class AbstractParallelFileTransferStrategy {
 		this.transferControlBlock = transferControlBlock;
 		this.transferStatusCallbackListener = transferStatusCallbackListener;
 		this.transferLength = transferLength;
-		
-		this.parallelSocketTimeoutInSecs = irodsAccessObjectFactory.getIrodsSession().getJargonProperties().getIRODSParallelTransferSocketTimeout();
-		
+
+		this.parallelSocketTimeoutInSecs = irodsAccessObjectFactory
+				.getIrodsSession().getJargonProperties()
+				.getIRODSParallelTransferSocketTimeout();
+
 	}
 
 	@Override

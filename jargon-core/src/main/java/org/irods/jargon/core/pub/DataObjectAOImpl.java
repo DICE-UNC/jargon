@@ -28,6 +28,7 @@ import org.irods.jargon.core.packinstr.ModAvuMetadataInp;
 import org.irods.jargon.core.packinstr.Tag;
 import org.irods.jargon.core.packinstr.TransferOptions;
 import org.irods.jargon.core.protovalues.FilePermissionEnum;
+import org.irods.jargon.core.protovalues.UserTypeEnum;
 import org.irods.jargon.core.pub.domain.AvuData;
 import org.irods.jargon.core.pub.domain.DataObject;
 import org.irods.jargon.core.pub.domain.Resource;
@@ -75,7 +76,8 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	private static final String ERROR_IN_PARALLEL_TRANSFER = "error in parallel transfer";
 	private static final String NULL_LOCAL_FILE = "null local file";
 	private static final String NULL_OR_EMPTY_ABSOLUTE_PATH = "null or empty absolutePath";
-	public static final Logger log = LoggerFactory // NOPMD by mikeconway on 12/1/11 7:37 AM
+	public static final Logger log = LoggerFactory // NOPMD by mikeconway on
+													// 12/1/11 7:37 AM
 			.getLogger(DataObjectAOImpl.class);
 	private transient final DataAOHelper dataAOHelper = new DataAOHelper(
 			this.getIRODSAccessObjectFactory(), this.getIRODSAccount());
@@ -871,22 +873,23 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 						transferStatusCallbackListener);
 			}
 
-			if (thisFileTransferOptions != null && thisFileTransferOptions
-						.isComputeAndVerifyChecksumAfterTransfer()) {
-					log.info("computing a checksum on the file at:{}",
-							localFileToHoldData.getAbsolutePath());
-					String localFileChecksum = LocalFileUtils
-							.md5ByteArrayToString(LocalFileUtils
-									.computeMD5FileCheckSumViaAbsolutePath(localFileToHoldData
-											.getAbsolutePath()));
-					log.info("local file checksum is:{}", localFileChecksum);
-					String irodsChecksum = computeMD5ChecksumOnDataObject(irodsFileToGet);
-					log.info("irods checksum:{}", irodsChecksum);
-					if (!(irodsChecksum.equals(localFileChecksum))) {
-						throw new FileIntegrityException(
-								"checksum verification after get fails");
-					}
+			if (thisFileTransferOptions != null
+					&& thisFileTransferOptions
+							.isComputeAndVerifyChecksumAfterTransfer()) {
+				log.info("computing a checksum on the file at:{}",
+						localFileToHoldData.getAbsolutePath());
+				String localFileChecksum = LocalFileUtils
+						.md5ByteArrayToString(LocalFileUtils
+								.computeMD5FileCheckSumViaAbsolutePath(localFileToHoldData
+										.getAbsolutePath()));
+				log.info("local file checksum is:{}", localFileChecksum);
+				String irodsChecksum = computeMD5ChecksumOnDataObject(irodsFileToGet);
+				log.info("irods checksum:{}", irodsChecksum);
+				if (!(irodsChecksum.equals(localFileChecksum))) {
+					throw new FileIntegrityException(
+							"checksum verification after get fails");
 				}
+			}
 
 			log.info("looking for executable to set flag on local file");
 			if (irodsFileToGet.canExecute()) {
@@ -1284,8 +1287,6 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 		query.append(WHERE);
 		boolean previousElement = false;
-		@SuppressWarnings("unused")
-		StringBuilder queryCondition;
 
 		for (AVUQueryElement queryElement : avuQuery) {
 
@@ -1980,14 +1981,9 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResult(
 					irodsQuery, 0);
 
-			UserFilePermission userFilePermission = null;
 			for (IRODSQueryResultRow row : resultSet.getResults()) {
-				userFilePermission = new UserFilePermission(row.getColumn(0),
-						row.getColumn(1),
-						FilePermissionEnum.valueOf(IRODSDataConversionUtil
-								.getIntOrZeroFromIRODSValue(row.getColumn(2))));
-				log.debug("loaded filePermission:{}", userFilePermission);
-				userFilePermissions.add(userFilePermission);
+				userFilePermissions
+						.add(buildUserFilePermissionFromResultRow(row));
 			}
 
 		} catch (JargonQueryException e) {
@@ -1999,6 +1995,22 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 		return userFilePermissions;
 
+	}
+
+	/**
+	 * @param row
+	 * @return
+	 * @throws JargonException
+	 */
+	private UserFilePermission buildUserFilePermissionFromResultRow(
+			IRODSQueryResultRow row) throws JargonException {
+		UserFilePermission userFilePermission;
+		userFilePermission = new UserFilePermission(row.getColumn(0),
+				row.getColumn(1),
+				FilePermissionEnum.valueOf(IRODSDataConversionUtil
+						.getIntOrZeroFromIRODSValue(row.getColumn(2))),
+				UserTypeEnum.findTypeByString(row.getColumn(3)));
+		return userFilePermission;
 	}
 
 	/*
@@ -2237,11 +2249,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResult(
 					irodsQuery, 0);
 			IRODSQueryResultRow row = resultSet.getFirstResult();
-
-			userFilePermission = new UserFilePermission(row.getColumn(0),
-					row.getColumn(1),
-					FilePermissionEnum.valueOf(IRODSDataConversionUtil
-							.getIntOrZeroFromIRODSValue(row.getColumn(2))));
+			userFilePermission = buildUserFilePermissionFromResultRow(row);
 			log.debug("loaded filePermission:{}", userFilePermission);
 
 		} catch (JargonQueryException e) {

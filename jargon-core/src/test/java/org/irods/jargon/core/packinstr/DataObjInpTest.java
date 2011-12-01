@@ -1,6 +1,6 @@
 package org.irods.jargon.core.packinstr;
 
-import junit.framework.TestCase;
+import junit.framework.Assert;
 
 import org.irods.jargon.core.exception.JargonException;
 import org.junit.AfterClass;
@@ -22,7 +22,7 @@ public class DataObjInpTest {
 			throws Exception {
 		DataObjInp dataObjInp = DataObjInp.instanceForReplicateToResourceGroup(
 				"file", "rg");
-		TestCase.assertNotNull("got a null dataObjInp", dataObjInp);
+		Assert.assertNotNull("got a null dataObjInp", dataObjInp);
 
 	}
 
@@ -54,23 +54,23 @@ public class DataObjInpTest {
 	public final void testInstanceForOpen() throws Exception {
 		DataObjInp dataObjInp = DataObjInp.instanceForOpen("/abspath",
 				DataObjInp.OpenFlags.READ_WRITE);
-		TestCase.assertNotNull("data obj inp returned was null", dataObjInp);
+		Assert.assertNotNull("data obj inp returned was null", dataObjInp);
 	}
 
 	@Test
 	public final void testInstanceForPut() throws Exception {
 		DataObjInp dataObjInp = DataObjInp.instanceForNormalPutStrategy(
 				"/abspath", 100, "aresource", true, null, false);
-		TestCase.assertNotNull("data obj inp returned was null", dataObjInp);
-		TestCase.assertEquals("wrong API number assigned",
+		Assert.assertNotNull("data obj inp returned was null", dataObjInp);
+		Assert.assertEquals("wrong API number assigned",
 				DataObjInp.PUT_FILE_API_NBR, dataObjInp.getApiNumber());
 	}
 
 	@Test
 	public final void testInstanceForGet() throws Exception {
 		DataObjInp dataObjInp = DataObjInp.instanceForGet("/abspath", 0, null);
-		TestCase.assertNotNull("data obj inp returned was null", dataObjInp);
-		TestCase.assertEquals("wrong API number assigned",
+		Assert.assertNotNull("data obj inp returned was null", dataObjInp);
+		Assert.assertEquals("wrong API number assigned",
 				DataObjInp.GET_FILE_API_NBR, dataObjInp.getApiNumber());
 	}
 
@@ -78,8 +78,8 @@ public class DataObjInpTest {
 	public final void testInstanceForChecksum() throws Exception {
 		DataObjInp dataObjInp = DataObjInp
 				.instanceForDataObjectChecksum("/abspath");
-		TestCase.assertNotNull("data obj inp returned was null", dataObjInp);
-		TestCase.assertEquals("wrong API number assigned",
+		Assert.assertNotNull("data obj inp returned was null", dataObjInp);
+		Assert.assertEquals("wrong API number assigned",
 				DataObjInp.CHECKSUM_API_NBR, dataObjInp.getApiNumber());
 	}
 
@@ -123,7 +123,7 @@ public class DataObjInpTest {
 		sb.append("<svalue>test1-resc</svalue>\n");
 		sb.append("</KeyValPair_PI>\n");
 		sb.append("</DataObjInp_PI>\n");
-		TestCase.assertEquals("did not get expected packing instruction",
+		Assert.assertEquals("did not get expected packing instruction",
 				sb.toString(), dataObjInp.getParsedTags());
 
 	}
@@ -155,10 +155,10 @@ public class DataObjInpTest {
 		sb.append("<svalue>test1-resc</svalue>\n");
 		sb.append("</KeyValPair_PI>\n");
 		sb.append("</DataObjInp_PI>\n");
-		TestCase.assertEquals("did not get expected packing instruction",
+		Assert.assertEquals("did not get expected packing instruction",
 				sb.toString(), dataObjInp.getParsedTags());
 	}
-	
+
 	@Test
 	public final void testGetParsedTagsForCallToPutNormalModeWithExec()
 			throws Exception {
@@ -186,7 +186,7 @@ public class DataObjInpTest {
 		sb.append("<svalue>test1-resc</svalue>\n");
 		sb.append("</KeyValPair_PI>\n");
 		sb.append("</DataObjInp_PI>\n");
-		TestCase.assertEquals("did not get expected packing instruction",
+		Assert.assertEquals("did not get expected packing instruction",
 				sb.toString(), dataObjInp.getParsedTags());
 	}
 
@@ -209,9 +209,9 @@ public class DataObjInpTest {
 		sb.append("</KeyValPair_PI>\n");
 		sb.append("</DataObjInp_PI>\n");
 
-		TestCase.assertEquals("did not get expected packing instruction",
+		Assert.assertEquals("did not get expected packing instruction",
 				sb.toString(), dataObjInp.getParsedTags());
-		TestCase.assertEquals("did not get expected API number",
+		Assert.assertEquals("did not get expected API number",
 				DataObjInp.GET_FILE_API_NBR, dataObjInp.getApiNumber());
 
 	}
@@ -233,9 +233,9 @@ public class DataObjInpTest {
 		sb.append("</KeyValPair_PI>\n");
 		sb.append("</DataObjInp_PI>\n");
 
-		TestCase.assertEquals("did not get expected packing instruction",
+		Assert.assertEquals("did not get expected packing instruction",
 				sb.toString(), dataObjInp.getParsedTags());
-		TestCase.assertEquals("did not get expected API number",
+		Assert.assertEquals("did not get expected API number",
 				DataObjInp.DELETE_FILE_API_NBR, dataObjInp.getApiNumber());
 
 	}
@@ -257,9 +257,9 @@ public class DataObjInpTest {
 		sb.append("</KeyValPair_PI>\n");
 		sb.append("</DataObjInp_PI>\n");
 
-		TestCase.assertEquals("did not get expected packing instruction",
+		Assert.assertEquals("did not get expected packing instruction",
 				sb.toString(), dataObjInp.getParsedTags());
-		TestCase.assertEquals("did not get expected API number",
+		Assert.assertEquals("did not get expected API number",
 				DataObjInp.CHECKSUM_API_NBR, dataObjInp.getApiNumber());
 	}
 
@@ -284,9 +284,9 @@ public class DataObjInpTest {
 		sb.append("</KeyValPair_PI>\n");
 		sb.append("</DataObjInp_PI>\n");
 
-		TestCase.assertEquals("did not get expected packing instruction",
+		Assert.assertEquals("did not get expected packing instruction",
 				sb.toString(), dataObjInp.getParsedTags());
-		TestCase.assertEquals("did not get expected API number",
+		Assert.assertEquals("did not get expected API number",
 				DataObjInp.GET_FILE_API_NBR, dataObjInp.getApiNumber());
 
 	}
@@ -312,9 +312,9 @@ public class DataObjInpTest {
 		sb.append("</KeyValPair_PI>\n");
 		sb.append("</DataObjInp_PI>\n");
 
-		TestCase.assertEquals("did not get expected packing instruction",
+		Assert.assertEquals("did not get expected packing instruction",
 				sb.toString(), dataObjInp.getParsedTags());
-		TestCase.assertEquals("did not get expected API number",
+		Assert.assertEquals("did not get expected API number",
 				DataObjInp.REPLICATE_API_NBR, dataObjInp.getApiNumber());
 
 	}
@@ -343,9 +343,9 @@ public class DataObjInpTest {
 		sb.append("</KeyValPair_PI>\n");
 		sb.append("</DataObjInp_PI>\n");
 
-		TestCase.assertEquals("did not get expected packing instruction",
+		Assert.assertEquals("did not get expected packing instruction",
 				sb.toString(), dataObjInp.getParsedTags());
-		TestCase.assertEquals("did not get expected API number",
+		Assert.assertEquals("did not get expected API number",
 				DataObjInp.REPLICATE_API_NBR, dataObjInp.getApiNumber());
 
 	}
@@ -391,9 +391,9 @@ public class DataObjInpTest {
 		sb.append("</KeyValPair_PI>\n");
 		sb.append("</DataObjInp_PI>\n");
 
-		TestCase.assertEquals("did not get expected packing instruction",
+		Assert.assertEquals("did not get expected packing instruction",
 				sb.toString(), dataObjInp.getParsedTags());
-		TestCase.assertEquals("did not get expected API number",
+		Assert.assertEquals("did not get expected API number",
 				DataObjInp.GET_HOST_FOR_PUT_API_NBR, dataObjInp.getApiNumber());
 	}
 
@@ -439,9 +439,9 @@ public class DataObjInpTest {
 		sb.append("</KeyValPair_PI>\n");
 		sb.append("</DataObjInp_PI>\n");
 
-		TestCase.assertEquals("did not get expected packing instruction",
+		Assert.assertEquals("did not get expected packing instruction",
 				sb.toString(), dataObjInp.getParsedTags());
-		TestCase.assertEquals("did not get expected API number",
+		Assert.assertEquals("did not get expected API number",
 				DataObjInp.GET_HOST_FOR_GET_API_NBR, dataObjInp.getApiNumber());
 
 	}

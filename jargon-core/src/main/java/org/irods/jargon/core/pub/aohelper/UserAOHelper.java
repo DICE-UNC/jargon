@@ -70,7 +70,7 @@ public class UserAOHelper {
 	 */
 	public static User buildUserFromResultSet(final IRODSQueryResultRow row,
 			final IRODSGenQueryExecutor irodsGenQueryExecutor,
-			boolean retrieveDN) throws JargonException {
+			final boolean retrieveDN) throws JargonException {
 		User user = new User();
 		user.setId(row.getColumn(0));
 		user.setName(row.getColumn(1));

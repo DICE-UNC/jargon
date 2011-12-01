@@ -38,14 +38,15 @@ import org.junit.runners.Suite;
 		BulkFileOperationsAOImplTest.class,
 		SimpleQueryExecutorAOImplTest.class, Stream2StreamAOImplTest.class,
 		QuotaAOImplTest.class, DataObjectAuditAOImplTest.class,
-		FederatedCollectionAndDataObjectListAndSearchAOImplTest.class,FederatedIRODSGenQueryExecutorImplTest.class,
-		FederatedDataTransferOperationsImplTest.class})
-		/**
-		 * Suite to run Access Object tests in org.irods.jargon.pub.*
-		 * <p/>
-		 * Note that 'Federated*' tests will run, but a check prevents the test from actually doing anything unless the federated zone
-		 * has been set up per the test-scripts/fedTestSetup.txt file
-		 */
+		FederatedCollectionAndDataObjectListAndSearchAOImplTest.class,
+		FederatedIRODSGenQueryExecutorImplTest.class,
+		FederatedDataTransferOperationsImplTest.class })
+/**
+ * Suite to run Access Object tests in org.irods.jargon.pub.*
+ * <p/>
+ * Note that 'Federated*' tests will run, but a check prevents the test from actually doing anything unless the federated zone
+ * has been set up per the test-scripts/fedTestSetup.txt file
+ */
 public class AOTests {
 
 }

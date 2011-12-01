@@ -103,6 +103,8 @@ public class IRODSFileSystemAOHelper extends AOHelper {
 		query.append(RodsGenQueryEnum.COL_DATA_ACCESS_USER_ID.getName());
 		query.append(COMMA);
 		query.append(RodsGenQueryEnum.COL_DATA_ACCESS_TYPE.getName());
+		query.append(",");
+		query.append(RodsGenQueryEnum.COL_USER_TYPE.getName());
 		query.append(" WHERE ");
 		query.append(RodsGenQueryEnum.COL_COLL_NAME.getName());
 		query.append(" = '");
@@ -116,7 +118,7 @@ public class IRODSFileSystemAOHelper extends AOHelper {
 		return query.toString();
 
 	}
-	
+
 	/**
 	 * Build the GenQuery that lists all data objects and user access
 	 * information.
@@ -146,7 +148,7 @@ public class IRODSFileSystemAOHelper extends AOHelper {
 		query.append(" = '");
 		query.append(userName.trim());
 		query.append("'");
-		
+
 		if (log.isDebugEnabled()) {
 			log.debug("query for files:" + query.toString());
 		}

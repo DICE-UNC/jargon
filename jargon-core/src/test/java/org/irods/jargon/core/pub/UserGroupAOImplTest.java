@@ -257,6 +257,7 @@ public class UserGroupAOImplTest {
 
 	/**
 	 * Add a non-existent user to an existing user group
+	 * 
 	 * @throws Exception
 	 */
 	@Test(expected = InvalidUserException.class)
@@ -338,10 +339,10 @@ public class UserGroupAOImplTest {
 
 		userGroupAO.removeUserGroup(userGroup);
 	}
-	
-	
+
 	/**
 	 * List members of a non-existent group
+	 * 
 	 * @throws Exception
 	 */
 	@Test
@@ -356,7 +357,6 @@ public class UserGroupAOImplTest {
 		UserGroupAO userGroupAO = accessObjectFactory
 				.getUserGroupAO(irodsAccount);
 
-	
 		List<User> users = userGroupAO.listUserGroupMembers(testUserGroup);
 		Assert.assertTrue("no users should have been found", users.isEmpty());
 
@@ -477,7 +477,7 @@ public class UserGroupAOImplTest {
 		userGroupAO.addUserToGroup(null, "test", null);
 
 	}
-	
+
 	@Test(expected = IllegalArgumentException.class)
 	public void testRemoveUserFromGroupNullUserGroup() throws Exception {
 		IRODSAccount irodsAccount = testingPropertiesHelper
@@ -490,7 +490,7 @@ public class UserGroupAOImplTest {
 		userGroupAO.removeUserFromGroup(null, "test", null);
 
 	}
-	
+
 	@Test(expected = IllegalArgumentException.class)
 	public void testRemoveUserFromGroupBlankUserGroup() throws Exception {
 		IRODSAccount irodsAccount = testingPropertiesHelper
@@ -503,8 +503,7 @@ public class UserGroupAOImplTest {
 		userGroupAO.removeUserFromGroup("", "test", null);
 
 	}
-	
-	
+
 	@Test(expected = IllegalArgumentException.class)
 	public void testRemoveUserFromGroupNullUser() throws Exception {
 		IRODSAccount irodsAccount = testingPropertiesHelper
@@ -517,7 +516,7 @@ public class UserGroupAOImplTest {
 		userGroupAO.removeUserFromGroup("test", null, null);
 
 	}
-	
+
 	@Test(expected = IllegalArgumentException.class)
 	public void testRemoveUserFromGroupBlankUser() throws Exception {
 		IRODSAccount irodsAccount = testingPropertiesHelper
@@ -527,7 +526,7 @@ public class UserGroupAOImplTest {
 				.getIRODSAccessObjectFactory();
 		UserGroupAO userGroupAO = accessObjectFactory
 				.getUserGroupAO(irodsAccount);
-		userGroupAO.removeUserFromGroup("test","", null);
+		userGroupAO.removeUserFromGroup("test", "", null);
 
 	}
 
@@ -543,9 +542,10 @@ public class UserGroupAOImplTest {
 		userGroupAO.addUserToGroup("test", null, "");
 
 	}
-	
+
 	/**
 	 * Test a normal remove of an existing user from an existing group
+	 * 
 	 * @throws Exception
 	 */
 	@Test
@@ -569,11 +569,12 @@ public class UserGroupAOImplTest {
 
 		userGroupAO.addUserToGroup(testUserGroup, irodsAccount.getUserName(),
 				null);
-		
-		userGroupAO.removeUserFromGroup(testUserGroup, irodsAccount.getUserName(), null);
+
+		userGroupAO.removeUserFromGroup(testUserGroup,
+				irodsAccount.getUserName(), null);
 
 		List<User> users = userGroupAO.listUserGroupMembers(testUserGroup);
-	
+
 		boolean foundMine = false;
 		for (User user : users) {
 			if (user.getName().equals(irodsAccount.getUserName())) {
@@ -584,12 +585,13 @@ public class UserGroupAOImplTest {
 		userGroupAO.removeUserGroup(userGroup);
 		Assert.assertFalse("found removed user", foundMine);
 	}
-	
+
 	/**
 	 * Remove a user that does not exist from the group
+	 * 
 	 * @throws Exception
 	 */
-	@Test(expected=InvalidUserException.class)
+	@Test(expected = InvalidUserException.class)
 	public final void testRemoveUserFromGroupUserNotExists() throws Exception {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
@@ -608,10 +610,11 @@ public class UserGroupAOImplTest {
 		userGroupAO.removeUserGroup(userGroup);
 		userGroupAO.addUserGroup(userGroup);
 
-		userGroupAO.removeUserFromGroup(testUserGroup, "testRemoveUserFromGroupUserNotExists-bogus", null);
+		userGroupAO.removeUserFromGroup(testUserGroup,
+				"testRemoveUserFromGroupUserNotExists-bogus", null);
 	}
-	
-	@Test(expected=InvalidGroupException.class)
+
+	@Test(expected = InvalidGroupException.class)
 	public final void testRemoveUserFromGroupGroupNotExists() throws Exception {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
@@ -623,12 +626,13 @@ public class UserGroupAOImplTest {
 		UserGroupAO userGroupAO = accessObjectFactory
 				.getUserGroupAO(irodsAccount);
 
-		userGroupAO.removeUserFromGroup(testUserGroup, irodsAccount.getUserName(), null);
+		userGroupAO.removeUserFromGroup(testUserGroup,
+				irodsAccount.getUserName(), null);
 	}
-	
-	
+
 	/**
 	 * Test removal of valid user not in group.
+	 * 
 	 * @throws Exception
 	 */
 	@Test
@@ -650,7 +654,9 @@ public class UserGroupAOImplTest {
 		userGroupAO.removeUserGroup(userGroup);
 		userGroupAO.addUserGroup(userGroup);
 
-		userGroupAO.removeUserFromGroup(testUserGroup, testingProperties.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY), null);
+		userGroupAO.removeUserFromGroup(testUserGroup, testingProperties
+				.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY),
+				null);
 	}
 
 }

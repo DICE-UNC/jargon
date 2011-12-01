@@ -54,9 +54,10 @@ public class UserGroup extends IRODSDomainObject {
 	}
 
 	/**
-	 * @param zone the zone to set
+	 * @param zone
+	 *            the zone to set
 	 */
-	public void setZone(String zone) {
+	public void setZone(final String zone) {
 		this.zone = zone;
 	}
 

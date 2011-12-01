@@ -1,18 +1,19 @@
 package org.irods.jargon.core.pub.domain;
 
 /**
- * Represents information about remote commands in the iRODS server/cmd/bin directory.  These commands
- * are executable by the {@link RemoteExecutionOfCommandsAO}.
+ * Represents information about remote commands in the iRODS server/cmd/bin
+ * directory. These commands are executable by the
+ * {@link RemoteExecutionOfCommandsAO}.
  * 
  * @author Mike Conway - DICE (www.irods.org)
- *
+ * 
  */
 public class RemoteCommandInformation {
 	private String hostName = "";
 	private String zone = "";
 	private String command = "";
 	private String rawData = "";
-	
+
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
@@ -34,46 +35,57 @@ public class RemoteCommandInformation {
 	public String getHostName() {
 		return hostName;
 	}
+
 	/**
-	 * @param hostName the hostName to set
+	 * @param hostName
+	 *            the hostName to set
 	 */
-	public void setHostName(String hostName) {
+	public void setHostName(final String hostName) {
 		this.hostName = hostName;
 	}
+
 	/**
 	 * @return the zone
 	 */
 	public String getZone() {
 		return zone;
 	}
+
 	/**
-	 * @param zone the zone to set
+	 * @param zone
+	 *            the zone to set
 	 */
-	public void setZone(String zone) {
+	public void setZone(final String zone) {
 		this.zone = zone;
 	}
+
 	/**
 	 * @return the command
 	 */
 	public String getCommand() {
 		return command;
 	}
+
 	/**
-	 * @param command the command to set
+	 * @param command
+	 *            the command to set
 	 */
-	public void setCommand(String command) {
+	public void setCommand(final String command) {
 		this.command = command;
 	}
+
 	/**
 	 * @return the rawData
 	 */
 	public String getRawData() {
 		return rawData;
 	}
+
 	/**
-	 * @param rawData the rawData to set
+	 * @param rawData
+	 *            the rawData to set
 	 */
-	public void setRawData(String rawData) {
+	public void setRawData(final String rawData) {
 		this.rawData = rawData;
 	}
 }

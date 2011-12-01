@@ -31,7 +31,7 @@ public class CollectionAndDataObjectListingEntry extends IRODSDomainObject
 	 * Analogous to objType_t defined in rodsType.h
 	 */
 	public enum ObjectType {
-		UNKNOWN,DATA_OBJECT, COLLECTION, UNKNOWN_FILE, LOCAL_FILE, LOCAL_DIR, NO_INPUT
+		UNKNOWN, DATA_OBJECT, COLLECTION, UNKNOWN_FILE, LOCAL_FILE, LOCAL_DIR, NO_INPUT
 	}
 
 	private String parentPath = "";
@@ -261,9 +261,10 @@ public class CollectionAndDataObjectListingEntry extends IRODSDomainObject
 	}
 
 	/**
-	 * @param ownerZone the ownerZone to set
+	 * @param ownerZone
+	 *            the ownerZone to set
 	 */
-	public void setOwnerZone(String ownerZone) {
+	public void setOwnerZone(final String ownerZone) {
 		this.ownerZone = ownerZone;
 	}
 }

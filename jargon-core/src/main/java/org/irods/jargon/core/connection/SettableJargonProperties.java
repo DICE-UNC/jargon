@@ -38,11 +38,10 @@ public class SettableJargonProperties implements JargonProperties {
 	private int internalCacheBufferSize = 65535;
 	private int sendInputStreamBufferSize = 0;
 	private int localFileOutputStreamBufferSize = 0;
-	private int putBufferSize=4194304;
-	private int getBufferSize=4194304;
+	private int putBufferSize = 4194304;
+	private int getBufferSize = 4194304;
 	private int inputToOutputCopyBufferByteSize = 8192;
 	private String encoding = "UTF-8";
-
 
 	/**
 	 * Construct a default properties set based on the provided initial set of
@@ -92,12 +91,18 @@ public class SettableJargonProperties implements JargonProperties {
 		this.maxParallelThreads = jargonProperties.getMaxParallelThreads();
 		this.transferThreadPoolTimeoutMillis = jargonProperties
 				.getTransferThreadPoolTimeoutMillis();
-		this.transferThreadPoolMaxSimultaneousTransfers = jargonProperties.getTransferThreadPoolMaxSimultaneousTransfers();
-		this.internalInputStreamBufferSize = jargonProperties.getInternalInputStreamBufferSize();
-		this.internalOutputStreamBufferSize = jargonProperties.getInternalOutputStreamBufferSize();
-		this.internalCacheBufferSize =jargonProperties.getInternalCacheBufferSize();
-		this.sendInputStreamBufferSize = jargonProperties.getSendInputStreamBufferSize();
-		this.localFileOutputStreamBufferSize = jargonProperties.getLocalFileOutputStreamBufferSize();
+		this.transferThreadPoolMaxSimultaneousTransfers = jargonProperties
+				.getTransferThreadPoolMaxSimultaneousTransfers();
+		this.internalInputStreamBufferSize = jargonProperties
+				.getInternalInputStreamBufferSize();
+		this.internalOutputStreamBufferSize = jargonProperties
+				.getInternalOutputStreamBufferSize();
+		this.internalCacheBufferSize = jargonProperties
+				.getInternalCacheBufferSize();
+		this.sendInputStreamBufferSize = jargonProperties
+				.getSendInputStreamBufferSize();
+		this.localFileOutputStreamBufferSize = jargonProperties
+				.getLocalFileOutputStreamBufferSize();
 		this.putBufferSize = jargonProperties.getPutBufferSize();
 		this.getBufferSize = jargonProperties.getGetBufferSize();
 		this.encoding = jargonProperties.getEncoding();
@@ -289,7 +294,7 @@ public class SettableJargonProperties implements JargonProperties {
 	public synchronized int getIRODSSocketTimeout() {
 		return irodsSocketTimeout;
 	}
-	
+
 	public synchronized void setIRODSSocketTimeout(final int irodsSocketTimeout) {
 		this.irodsSocketTimeout = irodsSocketTimeout;
 	}
@@ -304,11 +309,11 @@ public class SettableJargonProperties implements JargonProperties {
 	public synchronized int getIRODSParallelTransferSocketTimeout() {
 		return irodsParallelSocketTimeout;
 	}
-	
-	public synchronized void setIRODSParallelTransferSocketTimeout(int irodsParallelSocketTimeout) {
+
+	public synchronized void setIRODSParallelTransferSocketTimeout(
+			final int irodsParallelSocketTimeout) {
 		this.irodsParallelSocketTimeout = irodsParallelSocketTimeout;
 	}
-
 
 	/*
 	 * (non-Javadoc)
@@ -442,8 +447,11 @@ public class SettableJargonProperties implements JargonProperties {
 		this.localFileOutputStreamBufferSize = localFileOutputStreamBufferSize;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.connection.JargonProperties#getIrodsSocketTimeout()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.connection.JargonProperties#getIrodsSocketTimeout()
 	 */
 	@Override
 	public synchronized int getIrodsSocketTimeout() {
@@ -451,14 +459,18 @@ public class SettableJargonProperties implements JargonProperties {
 	}
 
 	/**
-	 * @param irodsSocketTimeout the irodsSocketTimeout to set
+	 * @param irodsSocketTimeout
+	 *            the irodsSocketTimeout to set
 	 */
-	public synchronized void setIrodsSocketTimeout(int irodsSocketTimeout) {
+	public synchronized void setIrodsSocketTimeout(final int irodsSocketTimeout) {
 		this.irodsSocketTimeout = irodsSocketTimeout;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.connection.JargonProperties#getIrodsParallelSocketTimeout()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.connection.JargonProperties#
+	 * getIrodsParallelSocketTimeout()
 	 */
 	@Override
 	public synchronized int getIrodsParallelSocketTimeout() {
@@ -466,14 +478,17 @@ public class SettableJargonProperties implements JargonProperties {
 	}
 
 	/**
-	 * @param irodsParallelSocketTimeout the irodsParallelSocketTimeout to set
+	 * @param irodsParallelSocketTimeout
+	 *            the irodsParallelSocketTimeout to set
 	 */
 	public synchronized void setIrodsParallelSocketTimeout(
-			int irodsParallelSocketTimeout) {
+			final int irodsParallelSocketTimeout) {
 		this.irodsParallelSocketTimeout = irodsParallelSocketTimeout;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.irods.jargon.core.connection.JargonProperties#getPutBufferSize()
 	 */
 	@Override
@@ -481,7 +496,9 @@ public class SettableJargonProperties implements JargonProperties {
 		return putBufferSize;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.irods.jargon.core.connection.JargonProperties#getGetBufferSize()
 	 */
 	@Override
@@ -490,40 +507,45 @@ public class SettableJargonProperties implements JargonProperties {
 	}
 
 	/**
-	 * @param putBufferSize the putBufferSize to set
+	 * @param putBufferSize
+	 *            the putBufferSize to set
 	 */
-	public synchronized void setPutBufferSize(int putBufferSize) {
+	public synchronized void setPutBufferSize(final int putBufferSize) {
 		this.putBufferSize = putBufferSize;
 	}
 
 	/**
-	 * @param getBufferSize the getBufferSize to set
+	 * @param getBufferSize
+	 *            the getBufferSize to set
 	 */
-	public synchronized void setGetBufferSize(int getBufferSize) {
+	public synchronized void setGetBufferSize(final int getBufferSize) {
 		this.getBufferSize = getBufferSize;
 	}
 
 	/**
-	 * @param inputToOutputCopyBufferByteSize the inputToOutputCopyBufferByteSize to set
+	 * @param inputToOutputCopyBufferByteSize
+	 *            the inputToOutputCopyBufferByteSize to set
 	 */
 	public synchronized void setInputToOutputCopyBufferByteSize(
-			int inputToOutputCopyBufferByteSize) {
+			final int inputToOutputCopyBufferByteSize) {
 		this.inputToOutputCopyBufferByteSize = inputToOutputCopyBufferByteSize;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.irods.jargon.core.connection.JargonProperties#getEncoding()
 	 */
 	@Override
 	public synchronized String getEncoding() {
 		return encoding;
 	}
-	
+
 	public void setEncoding(final String encoding) {
 		if (encoding == null || encoding.isEmpty()) {
 			throw new IllegalArgumentException("encoding is null or empty");
-		} 
-		
+		}
+
 		this.encoding = encoding;
 	}
 

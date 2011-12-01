@@ -31,10 +31,17 @@ import org.irods.jargon.core.exception.JargonException;
  */
 public interface IRODSFile {
 
+	/**
+	 * Type of file
+	 * 
+	 */
 	public enum DataType {
 		GENERIC, DIRECTORY, UNKNOWN
-	};
+	}
 
+	/**
+	 * Type of object described by path
+	 */
 	public enum PathNameType {
 		UNKNOWN, FILE, DIRECTORY
 	}
@@ -52,7 +59,7 @@ public interface IRODSFile {
 	boolean canRead();
 
 	boolean canWrite();
-	
+
 	boolean canExecute();
 
 	boolean createNewFile() throws IOException;

@@ -398,7 +398,8 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 	 * Create the packing instruction to remove a user from a group
 	 * 
 	 * @param userGroupName
-	 *            <code>String</code> with the user group name from which the user will be removed
+	 *            <code>String</code> with the user group name from which the
+	 *            user will be removed
 	 * @param userName
 	 *            <code>String</code> user name to remove
 	 * @param zoneName
@@ -428,8 +429,8 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 		}
 
 		return new GeneralAdminInp("modify", "group", userGroupName.trim(),
-				"remove", userNameBuilder.toString(), BLANK, BLANK, BLANK, BLANK,
-				BLANK, GEN_ADMIN_INP_API_NBR);
+				"remove", userNameBuilder.toString(), BLANK, BLANK, BLANK,
+				BLANK, BLANK, GEN_ADMIN_INP_API_NBR);
 	}
 
 	/**

@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Properties;
 
 import junit.framework.Assert;
-import junit.framework.TestCase;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSServerProperties;
@@ -48,9 +47,6 @@ public class CollectionAOImplTest {
 
 	private static org.irods.jargon.testutils.IRODSTestSetupUtilities irodsTestSetupUtilities = null;
 
-	@SuppressWarnings("unused")
-	private static org.irods.jargon.testutils.AssertionHelper assertionHelper = null;
-
 	private static IRODSFileSystem irodsFileSystem = null;
 
 	@BeforeClass
@@ -63,7 +59,6 @@ public class CollectionAOImplTest {
 		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
 		irodsTestSetupUtilities
 				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
-		assertionHelper = new org.irods.jargon.testutils.AssertionHelper();
 		irodsFileSystem = IRODSFileSystem.instance();
 	}
 
@@ -679,7 +674,7 @@ public class CollectionAOImplTest {
 		List<MetaDataAndDomainData> actualMetadata = collectionAO
 				.findMetadataValuesForCollection(dirFile.getAbsolutePath());
 
-		TestCase.assertEquals("did not get back metadata", 1,
+		Assert.assertEquals("did not get back metadata", 1,
 				actualMetadata.size());
 
 	}
@@ -757,8 +752,7 @@ public class CollectionAOImplTest {
 		List<MetaDataAndDomainData> metadata = collectionAO
 				.findMetadataValuesForCollection(targetIrodsCollection, 0);
 
-		TestCase.assertEquals("should only be one avu entry", 1,
-				metadata.size());
+		Assert.assertEquals("should only be one avu entry", 1, metadata.size());
 
 		for (MetaDataAndDomainData metadataEntry : metadata) {
 			Assert.assertEquals("did not find attrib name", expectedAttribName,
@@ -803,8 +797,7 @@ public class CollectionAOImplTest {
 		List<MetaDataAndDomainData> metadata = collectionAO
 				.findMetadataValuesForCollection(targetIrodsCollection, 0);
 
-		TestCase.assertEquals("should only be one avu entry", 1,
-				metadata.size());
+		Assert.assertEquals("should only be one avu entry", 1, metadata.size());
 
 		for (MetaDataAndDomainData metadataEntry : metadata) {
 			Assert.assertEquals("did not find attrib name", expectedAttribName,
@@ -1127,7 +1120,7 @@ public class CollectionAOImplTest {
 				.getCollectionAO(irodsAccount);
 		Collection collection = collectionAO
 				.findByAbsolutePath(targetIrodsCollection);
-		TestCase.assertNotNull("did not find the collection, was null",
+		Assert.assertNotNull("did not find the collection, was null",
 				collection);
 	}
 
@@ -1232,7 +1225,7 @@ public class CollectionAOImplTest {
 				.countAllFilesUnderneathTheGivenCollection(destFile
 						.getAbsolutePath());
 
-		TestCase.assertEquals("did not get expected file count", 2, count);
+		Assert.assertEquals("did not get expected file count", 2, count);
 
 	}
 
@@ -1345,7 +1338,7 @@ public class CollectionAOImplTest {
 		IRODSFile irodsFileForSecondaryUser = irodsFileSystem
 				.getIRODSFileFactory(secondaryAccount).instanceIRODSFile(
 						targetIrodsCollection);
-		TestCase.assertTrue(irodsFileForSecondaryUser.canRead());
+		Assert.assertTrue(irodsFileForSecondaryUser.canRead());
 
 	}
 
@@ -1390,7 +1383,7 @@ public class CollectionAOImplTest {
 		IRODSFile irodsFileForSecondaryUser = irodsFileSystem
 				.getIRODSFileFactory(secondaryAccount).instanceIRODSFile(
 						targetIrodsCollection);
-		TestCase.assertTrue(irodsFileForSecondaryUser.canRead());
+		Assert.assertTrue(irodsFileForSecondaryUser.canRead());
 
 	}
 
@@ -1435,7 +1428,7 @@ public class CollectionAOImplTest {
 		IRODSFile irodsFileForSecondaryUser = irodsFileSystem
 				.getIRODSFileFactory(secondaryAccount).instanceIRODSFile(
 						targetIrodsCollection);
-		TestCase.assertTrue("user should be able to write",
+		Assert.assertTrue("user should be able to write",
 				irodsFileForSecondaryUser.canWrite());
 
 	}
@@ -1481,7 +1474,7 @@ public class CollectionAOImplTest {
 		IRODSFile irodsFileForSecondaryUser = irodsFileSystem
 				.getIRODSFileFactory(secondaryAccount).instanceIRODSFile(
 						targetIrodsCollection);
-		TestCase.assertTrue("user should be ownder",
+		Assert.assertTrue("user should be ownder",
 				irodsFileForSecondaryUser.canWrite());
 
 	}
@@ -1530,7 +1523,7 @@ public class CollectionAOImplTest {
 				.getPermissionForCollection(targetIrodsCollection,
 						secondaryAccount.getUserName(), "");
 
-		TestCase.assertTrue("user should be owner",
+		Assert.assertTrue("user should be owner",
 				userAccessPermission == FilePermissionEnum.OWN);
 
 		collectionAORods
@@ -1542,7 +1535,7 @@ public class CollectionAOImplTest {
 						true);
 		userAccessPermission = collectionAO.getPermissionForCollection(
 				targetIrodsCollection, secondaryAccount.getUserName(), "");
-		TestCase.assertTrue("user should not be owner",
+		Assert.assertTrue("user should not be owner",
 				userAccessPermission == FilePermissionEnum.NONE);
 	}
 
@@ -1602,7 +1595,7 @@ public class CollectionAOImplTest {
 		IRODSFile irodsFileForSecondaryUser = irodsFileSystem
 				.getIRODSFileFactory(secondaryAccount).instanceIRODSFile(
 						targetIrodsCollection);
-		TestCase.assertTrue(irodsFileForSecondaryUser.canWrite());
+		Assert.assertTrue(irodsFileForSecondaryUser.canWrite());
 
 	}
 
@@ -1644,7 +1637,7 @@ public class CollectionAOImplTest {
 		int permissions = irodsFileSystemAO
 				.getDirectoryPermissions(irodsFileForSecondaryUser);
 
-		TestCase.assertTrue(permissions >= IRODSFile.OWN_PERMISSIONS);
+		Assert.assertTrue(permissions >= IRODSFile.OWN_PERMISSIONS);
 
 	}
 
@@ -1684,7 +1677,7 @@ public class CollectionAOImplTest {
 				.getPermissionForCollection(targetIrodsCollection,
 						secondaryAccount.getUserName(), "");
 
-		TestCase.assertEquals("should have found own permissions",
+		Assert.assertEquals("should have found own permissions",
 				FilePermissionEnum.OWN, enumVal);
 
 	}
@@ -1723,7 +1716,7 @@ public class CollectionAOImplTest {
 		FilePermissionEnum enumVal = collectionAO.getPermissionForCollection(
 				targetIrodsCollection, secondaryAccount.getUserName(), "");
 
-		TestCase.assertEquals("should have found read permissions",
+		Assert.assertEquals("should have found read permissions",
 				FilePermissionEnum.READ, enumVal);
 
 	}
@@ -1752,7 +1745,7 @@ public class CollectionAOImplTest {
 		boolean isInherit = collectionAO
 				.isCollectionSetForPermissionInheritance(targetIrodsCollection);
 
-		TestCase.assertTrue("collection should have inherit set", isInherit);
+		Assert.assertTrue("collection should have inherit set", isInherit);
 
 	}
 
@@ -1782,7 +1775,7 @@ public class CollectionAOImplTest {
 		boolean isInherit = collectionAO
 				.isCollectionSetForPermissionInheritance(targetIrodsCollection);
 
-		TestCase.assertFalse("collection should have inherit turned back off",
+		Assert.assertFalse("collection should have inherit turned back off",
 				isInherit);
 
 	}
@@ -1815,9 +1808,9 @@ public class CollectionAOImplTest {
 
 		List<UserFilePermission> userFilePermissions = collectionAO
 				.listPermissionsForCollection(targetIrodsCollection);
-		TestCase.assertNotNull("got a null userFilePermissions",
+		Assert.assertNotNull("got a null userFilePermissions",
 				userFilePermissions);
-		TestCase.assertEquals("did not find the two permissions", 2,
+		Assert.assertEquals("did not find the two permissions", 2,
 				userFilePermissions.size());
 	}
 
@@ -1852,9 +1845,9 @@ public class CollectionAOImplTest {
 						targetIrodsCollection,
 						testingProperties
 								.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY));
-		TestCase.assertNotNull("got a null userFilePermission",
+		Assert.assertNotNull("got a null userFilePermission",
 				userFilePermission);
-		TestCase.assertEquals(
+		Assert.assertEquals(
 				"userName did not match expected",
 				testingProperties
 						.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY),
@@ -1890,7 +1883,7 @@ public class CollectionAOImplTest {
 
 		UserFilePermission userFilePermission = collectionAO
 				.getPermissionForUserName(targetIrodsCollection, "notausername");
-		TestCase.assertNull(
+		Assert.assertNull(
 				"got a userFilePermission when should have been null",
 				userFilePermission);
 

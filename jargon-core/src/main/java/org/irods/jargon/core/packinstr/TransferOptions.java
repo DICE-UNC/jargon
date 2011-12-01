@@ -36,8 +36,7 @@ public class TransferOptions {
 	private TransferType transferType = TransferType.STANDARD;
 	private boolean allowPutGetResourceRedirects = false;
 	private boolean intraFileStatusCallbacks = false;
-	
-	
+
 	/**
 	 * Store a checksum of the file after it has been transferred. This will
 	 * only take precedence over
@@ -200,20 +199,25 @@ public class TransferOptions {
 	}
 
 	/**
-	 * @return the intraFileStatusCallbacks value.  If <code>true</code>, then call-backs will
-	 * be sent on progress within-file, if a listener is present.
+	 * @return the intraFileStatusCallbacks value. If <code>true</code>, then
+	 *         call-backs will be sent on progress within-file, if a listener is
+	 *         present.
 	 */
 	public boolean isIntraFileStatusCallbacks() {
 		return intraFileStatusCallbacks;
 	}
 
 	/**
-	 * @param intraFileStatusCallbacks <code>boolean</code> with the intraFileStatusCallbacks behavior desired.  If <code>true</code>
-	 * and a call-back listener is provided, then within-file status call-backs will be generated during transfers.  This has a
-	 * slight performance penalty.
+	 * @param intraFileStatusCallbacks
+	 *            <code>boolean</code> with the intraFileStatusCallbacks
+	 *            behavior desired. If <code>true</code> and a call-back
+	 *            listener is provided, then within-file status call-backs will
+	 *            be generated during transfers. This has a slight performance
+	 *            penalty.
 	 */
-	public void setIntraFileStatusCallbacks(boolean intraFileStatusCallbacks) {
+	public void setIntraFileStatusCallbacks(
+			final boolean intraFileStatusCallbacks) {
 		this.intraFileStatusCallbacks = intraFileStatusCallbacks;
 	}
-	
+
 }

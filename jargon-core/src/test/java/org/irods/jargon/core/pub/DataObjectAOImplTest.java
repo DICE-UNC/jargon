@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Properties;
 
 import junit.framework.Assert;
-import junit.framework.TestCase;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSProtocolManager;
@@ -19,10 +18,12 @@ import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.exception.JargonFileOrCollAlreadyExistsException;
 import org.irods.jargon.core.packinstr.TransferOptions;
 import org.irods.jargon.core.protovalues.FilePermissionEnum;
+import org.irods.jargon.core.protovalues.UserTypeEnum;
 import org.irods.jargon.core.pub.domain.AvuData;
 import org.irods.jargon.core.pub.domain.DataObject;
 import org.irods.jargon.core.pub.domain.Resource;
 import org.irods.jargon.core.pub.domain.UserFilePermission;
+import org.irods.jargon.core.pub.domain.UserGroup;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.pub.io.IRODSFileFactory;
 import org.irods.jargon.core.query.AVUQueryElement;
@@ -162,7 +163,7 @@ public class DataObjectAOImplTest {
 		dataObjectAO.putLocalDataObjectToIRODS(localFile, destFile, true);
 		assertionHelper.assertIrodsFileOrCollectionExists(targetIrodsFile);
 	}
-	
+
 	@Test
 	public void testPutExecutableFile() throws Exception {
 		// generate a local scratch file
@@ -195,7 +196,7 @@ public class DataObjectAOImplTest {
 		dataObjectAO.putLocalDataObjectToIRODS(localFile, destFile, true);
 		assertionHelper.assertIrodsFileOrCollectionExists(targetIrodsFile);
 	}
-	
+
 	@Test
 	public void testChecksumAndPut0KFile() throws Exception {
 		// generate a local scratch file
@@ -209,7 +210,7 @@ public class DataObjectAOImplTest {
 								+ testFileName);
 		File localFile = new File(localFileName);
 		localFile.createNewFile();
-		
+
 		// now put the file
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
@@ -228,10 +229,10 @@ public class DataObjectAOImplTest {
 		TransferControlBlock transferControlBlock = DefaultTransferControlBlock
 				.instance();
 		transferControlBlock.setTransferOptions(transferOptions);
-		dataObjectAO.putLocalDataObjectToIRODS(localFile, destFile, false, transferControlBlock, null);
+		dataObjectAO.putLocalDataObjectToIRODS(localFile, destFile, false,
+				transferControlBlock, null);
 		assertionHelper.assertIrodsFileOrCollectionExists(targetIrodsFile);
 	}
-
 
 	@Test(expected = JargonException.class)
 	public void testPutOverwriteUnknownCollection() throws Exception {
@@ -706,9 +707,8 @@ public class DataObjectAOImplTest {
 		assertionHelper.assertLocalScratchFileLengthEquals(
 				IRODS_TEST_SUBDIR_PATH + '/' + getFileName, 100);
 
-		
 	}
-	
+
 	@Test
 	public final void testGetExecutable() throws Exception {
 
@@ -717,7 +717,7 @@ public class DataObjectAOImplTest {
 				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
 		String localFileName = FileGenerator
 				.generateFileOfFixedLengthGivenName(absPath, testFileName, 100);
-		
+
 		File localFile = new File(localFileName);
 		localFile.setExecutable(true);
 
@@ -759,10 +759,11 @@ public class DataObjectAOImplTest {
 				+ '/' + getFileName);
 		assertionHelper.assertLocalScratchFileLengthEquals(
 				IRODS_TEST_SUBDIR_PATH + '/' + getFileName, 100);
-		TestCase.assertTrue("local file should be executable", localFile.canExecute());
+		Assert.assertTrue("local file should be executable",
+				localFile.canExecute());
 
 	}
-	
+
 	@Test
 	public final void testGetNotExecutable() throws Exception {
 
@@ -771,7 +772,7 @@ public class DataObjectAOImplTest {
 				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
 		String localFileName = FileGenerator
 				.generateFileOfFixedLengthGivenName(absPath, testFileName, 100);
-		
+
 		File localFile = new File(localFileName);
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
@@ -812,10 +813,10 @@ public class DataObjectAOImplTest {
 				+ '/' + getFileName);
 		assertionHelper.assertLocalScratchFileLengthEquals(
 				IRODS_TEST_SUBDIR_PATH + '/' + getFileName, 100);
-		TestCase.assertFalse("local file should not be executable", localFile.canExecute());
+		Assert.assertFalse("local file should not be executable",
+				localFile.canExecute());
 
 	}
-
 
 	@Test
 	public final void testGetWithIntraFileCallbacks() throws Exception {
@@ -876,14 +877,14 @@ public class DataObjectAOImplTest {
 		assertionHelper.assertLocalScratchFileLengthEquals(
 				IRODS_TEST_SUBDIR_PATH + '/' + getFileName, testFileLen);
 
-		TestCase.assertTrue(
+		Assert.assertTrue(
 				"did not get intra-file callbacks",
 				transferStatusCallbackListener.getNumberIntraFileCallbacks() > 0);
-		TestCase.assertTrue(
+		Assert.assertTrue(
 				"did not get any byte count from intra-file callbacks",
 				transferStatusCallbackListener
 						.getBytesReportedIntraFileCallbacks() > 0);
-		TestCase.assertFalse("accumulated more bytes than file size",
+		Assert.assertFalse("accumulated more bytes than file size",
 				transferStatusCallbackListener
 						.getBytesReportedIntraFileCallbacks() > testFileLen);
 
@@ -948,14 +949,14 @@ public class DataObjectAOImplTest {
 		assertionHelper.assertLocalScratchFileLengthEquals(
 				IRODS_TEST_SUBDIR_PATH + '/' + getFileName, testFileLen);
 
-		TestCase.assertTrue(
+		Assert.assertTrue(
 				"did not get intra-file callbacks",
 				transferStatusCallbackListener.getNumberIntraFileCallbacks() > 0);
-		TestCase.assertTrue(
+		Assert.assertTrue(
 				"did not get any byte count from intra-file callbacks",
 				transferStatusCallbackListener
 						.getBytesReportedIntraFileCallbacks() > 0);
-		TestCase.assertFalse("accumulated more bytes than file size",
+		Assert.assertFalse("accumulated more bytes than file size",
 				transferStatusCallbackListener
 						.getBytesReportedIntraFileCallbacks() > testFileLen);
 
@@ -1022,7 +1023,7 @@ public class DataObjectAOImplTest {
 				IRODS_TEST_SUBDIR_PATH + '/' + testFileName, 100);
 		Assert.assertTrue("delete did not report success in response", success);
 
-		TestCase.assertFalse(
+		Assert.assertFalse(
 				"got intra-file callbacks",
 				transferStatusCallbackListener.getNumberIntraFileCallbacks() > 0);
 	}
@@ -1358,28 +1359,32 @@ public class DataObjectAOImplTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		
-		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount).instanceIRODSFile(targetIrodsCollection + "/" + testFileName);
+
+		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetIrodsCollection + "/" + testFileName);
 		irodsFile.deleteWithForceOption();
-		
+
 		irodsFile.reset();
-		irodsFile.setResource(testingProperties.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY));
+		irodsFile.setResource(testingProperties
+				.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY));
 		File localFile = new File(fileNameOrig);
-				
+
 		DataObjectAO dataObjectAO = irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
-		
+
 		dataObjectAO.putLocalDataObjectToIRODS(localFile, irodsFile, true);
-		
+
 		dataObjectAO
 				.replicateIrodsDataObject(
 						targetIrodsCollection + '/' + testFileName,
 						testingProperties
 								.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_RESOURCE_KEY));
 
-		List<Resource> resources = dataObjectAO.listFileResources(targetIrodsCollection + "/" + testFileName);
-		TestCase.assertEquals("did not find expected resources", 2, resources.size());
-		
+		List<Resource> resources = dataObjectAO
+				.listFileResources(targetIrodsCollection + "/" + testFileName);
+		Assert.assertEquals("did not find expected resources", 2,
+				resources.size());
+
 	}
 
 	@Test
@@ -1411,7 +1416,7 @@ public class DataObjectAOImplTest {
 		IRODSFile checkCopiedFile = irodsFileSystem.getIRODSFileFactory(
 				irodsAccount).instanceIRODSFile(
 				targetIrodsCollection + "/" + testCopyToFileName);
-		TestCase.assertTrue("new file does not exist", checkCopiedFile.exists());
+		Assert.assertTrue("new file does not exist", checkCopiedFile.exists());
 
 	}
 
@@ -1480,7 +1485,7 @@ public class DataObjectAOImplTest {
 		IRODSFile checkCopiedFile = irodsFileSystem.getIRODSFileFactory(
 				irodsAccount).instanceIRODSFile(
 				targetIrodsCollection + "/" + testCopyToFileName);
-		TestCase.assertTrue("new file does not exist", checkCopiedFile.exists());
+		Assert.assertTrue("new file does not exist", checkCopiedFile.exists());
 
 	}
 
@@ -1864,7 +1869,7 @@ public class DataObjectAOImplTest {
 
 		List<MetaDataAndDomainData> metadata = dataObjectAO
 				.findMetadataValuesByMetadataQuery(avuQueryElements);
-		TestCase.assertEquals("did not find 2 metadata values", 2,
+		Assert.assertEquals("did not find 2 metadata values", 2,
 				metadata.size());
 	}
 
@@ -1971,7 +1976,7 @@ public class DataObjectAOImplTest {
 		IRODSFile irodsFileForSecondaryUser = irodsFileSystem
 				.getIRODSFileFactory(secondaryAccount).instanceIRODSFile(
 						targetIrodsCollection + "/" + testFileName);
-		TestCase.assertTrue(irodsFileForSecondaryUser.canRead());
+		Assert.assertTrue(irodsFileForSecondaryUser.canRead());
 
 	}
 
@@ -2023,7 +2028,7 @@ public class DataObjectAOImplTest {
 		IRODSFile irodsFileForSecondaryUser = irodsFileSystem
 				.getIRODSFileFactory(secondaryAccount).instanceIRODSFile(
 						targetIrodsCollection + "/" + testFileName);
-		TestCase.assertTrue(irodsFileForSecondaryUser.canRead());
+		Assert.assertTrue(irodsFileForSecondaryUser.canRead());
 
 	}
 
@@ -2075,7 +2080,7 @@ public class DataObjectAOImplTest {
 		IRODSFile irodsFileForSecondaryUser = irodsFileSystem
 				.getIRODSFileFactory(secondaryAccount).instanceIRODSFile(
 						targetIrodsCollection + "/" + testFileName);
-		TestCase.assertTrue(irodsFileForSecondaryUser.canWrite());
+		Assert.assertTrue(irodsFileForSecondaryUser.canWrite());
 
 	}
 
@@ -2134,7 +2139,7 @@ public class DataObjectAOImplTest {
 				.getPermissionForDataObjectForUserName(
 						irodsFileForSecondaryUser.getAbsolutePath(),
 						secondaryAccount.getUserName());
-		TestCase.assertTrue(
+		Assert.assertTrue(
 				"user should have own permission",
 				userFilePermission.getFilePermissionEnum() == FilePermissionEnum.OWN);
 
@@ -2173,7 +2178,7 @@ public class DataObjectAOImplTest {
 		IRODSFile irodsFileForSecondaryUser = irodsFileSystem
 				.getIRODSFileFactory(secondaryAccount).instanceIRODSFile(
 						targetIrodsCollection + "/" + testFileName);
-		TestCase.assertTrue(irodsFileForSecondaryUser.canWrite());
+		Assert.assertTrue(irodsFileForSecondaryUser.canWrite());
 
 	}
 
@@ -2217,7 +2222,7 @@ public class DataObjectAOImplTest {
 		int permissions = irodsFileSystemAO
 				.getFilePermissions(irodsFileForSecondaryUser);
 
-		TestCase.assertTrue(permissions >= IRODSFile.OWN_PERMISSIONS);
+		Assert.assertTrue(permissions >= IRODSFile.OWN_PERMISSIONS);
 
 	}
 
@@ -2256,7 +2261,7 @@ public class DataObjectAOImplTest {
 		int permissions = irodsFileSystemAO.getFilePermissionsForGivenUser(
 				irodsFile, testUserName);
 
-		TestCase.assertTrue(permissions >= IRODSFile.WRITE_PERMISSIONS);
+		Assert.assertTrue(permissions >= IRODSFile.WRITE_PERMISSIONS);
 
 	}
 
@@ -2301,7 +2306,7 @@ public class DataObjectAOImplTest {
 						irodsFileForSecondaryUser.getAbsolutePath(),
 						secondaryAccount.getUserName(), "");
 
-		TestCase.assertEquals("should have found own permissions",
+		Assert.assertEquals("should have found own permissions",
 				FilePermissionEnum.OWN, filePermissionEnum);
 
 	}
@@ -2346,7 +2351,7 @@ public class DataObjectAOImplTest {
 						irodsFileForSecondaryUser.getAbsolutePath(),
 						secondaryAccount.getUserName(), "");
 
-		TestCase.assertEquals("should have found read permissions",
+		Assert.assertEquals("should have found read permissions",
 				FilePermissionEnum.READ, filePermissionEnum);
 
 	}
@@ -2384,7 +2389,7 @@ public class DataObjectAOImplTest {
 		IRODSFile irodsFileForSecondaryUser = irodsFileSystem
 				.getIRODSFileFactory(secondaryAccount).instanceIRODSFile(
 						targetIrodsCollection + "/" + testFileName);
-		TestCase.assertTrue(irodsFileForSecondaryUser.canRead());
+		Assert.assertTrue(irodsFileForSecondaryUser.canRead());
 
 		dataObjectAO.removeAccessPermissionsForUser("", targetIrodsCollection
 				+ "/" + testFileName, testingProperties
@@ -2395,7 +2400,7 @@ public class DataObjectAOImplTest {
 						secondaryAccount);
 		int permissions = irodsFileSystemAO
 				.getFilePermissions(irodsFileForSecondaryUser);
-		TestCase.assertTrue("should not have permissions anymore",
+		Assert.assertTrue("should not have permissions anymore",
 				permissions < IRODSFile.WRITE_PERMISSIONS);
 
 	}
@@ -2430,10 +2435,90 @@ public class DataObjectAOImplTest {
 		List<UserFilePermission> userFilePermissions = dataObjectAO
 				.listPermissionsForDataObject(targetIrodsCollection + "/"
 						+ testFileName);
-		TestCase.assertNotNull("got a null userFilePermissions",
+		Assert.assertNotNull("got a null userFilePermissions",
 				userFilePermissions);
-		TestCase.assertEquals("did not find the two permissions", 2,
+		Assert.assertEquals("did not find the two permissions", 2,
 				userFilePermissions.size());
+
+		boolean foundIt = false;
+		for (UserFilePermission permission : userFilePermissions) {
+			if (permission
+					.getUserName()
+					.equals(testingProperties
+							.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY))) {
+				foundIt = true;
+				Assert.assertEquals("user group not correctly determined",
+						UserTypeEnum.RODS_USER, permission.getUserType());
+			}
+		}
+		Assert.assertTrue("did not find user group in permissions", foundIt);
+
+	}
+	
+	/**
+	 * Add a user to a group, add that group to file permissions, and list the group
+	 * @throws Exception
+	 */
+	@Test
+	public final void testListPermissionsForDataObjectLookingForGroupPermissions() throws Exception {
+		// generate a local scratch file
+
+		String testFileName = "testListPermissionsForDataObjectLookingForGroupPermissions.xls";
+		String testUserGroup = "testListPermissionsForDataObjectLookingForGroupPermissions";
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String fileNameOrig = FileGenerator.generateFileOfFixedLengthGivenName(
+				absPath, testFileName, 2);
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		
+		UserGroupAO userGroupAO =irodsFileSystem
+				.getIRODSAccessObjectFactory()
+				.getUserGroupAO(irodsAccount);
+
+		UserGroup userGroup = new UserGroup();
+		userGroup.setUserGroupName(testUserGroup);
+		userGroup.setZone(irodsAccount.getZone());
+
+		userGroupAO.removeUserGroup(userGroup);
+		userGroupAO.addUserGroup(userGroup);
+
+		userGroupAO.addUserToGroup(testUserGroup, irodsAccount.getUserName(),
+				null);
+
+		DataObjectAO dataObjectAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
+		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetIrodsCollection);
+		dataObjectAO.putLocalDataObjectToIRODS(new File(fileNameOrig),
+				irodsFile, true);
+
+		dataObjectAO.setAccessPermissionRead("", targetIrodsCollection + "/"
+				+ testFileName, testUserGroup);
+
+		List<UserFilePermission> userFilePermissions = dataObjectAO
+				.listPermissionsForDataObject(targetIrodsCollection + "/"
+						+ testFileName);
+		userGroupAO.removeUserGroup(userGroup);
+		Assert.assertNotNull("got a null userFilePermissions",
+				userFilePermissions);
+		Assert.assertEquals("did not find the two permissions", 2,
+				userFilePermissions.size());
+
+		boolean foundIt = false;
+		for (UserFilePermission permission : userFilePermissions) {
+			if (permission.getUserName().equals(testUserGroup)) {
+				foundIt = true;
+				Assert.assertEquals("user group not correctly determined",
+						UserTypeEnum.RODS_GROUP, permission.getUserType());
+			}
+		}
+		Assert.assertTrue("did not find user group in permissions", foundIt);
 
 	}
 
@@ -2472,9 +2557,9 @@ public class DataObjectAOImplTest {
 		List<UserFilePermission> userFilePermissions = dataObjectAO
 				.listPermissionsForDataObject(targetIrodsCollection + "/"
 						+ testFileName);
-		TestCase.assertNotNull("got a null userFilePermissions",
+		Assert.assertNotNull("got a null userFilePermissions",
 				userFilePermissions);
-		TestCase.assertEquals("did not find the 3 permissions", 3,
+		Assert.assertEquals("did not find the 3 permissions", 3,
 				userFilePermissions.size());
 
 	}
@@ -2520,8 +2605,7 @@ public class DataObjectAOImplTest {
 				.findMetadataValuesForDataObject(targetIrodsCollection,
 						testFileName);
 
-		TestCase.assertEquals("should only be one avu entry", 1,
-				metadata.size());
+		Assert.assertEquals("should only be one avu entry", 1, metadata.size());
 
 		for (MetaDataAndDomainData metadataEntry : metadata) {
 			Assert.assertEquals("did not find attrib name", expectedAttribName,
@@ -2574,8 +2658,7 @@ public class DataObjectAOImplTest {
 						+ testFileName);
 		irodsFileSystem.close();
 
-		TestCase.assertEquals("should only be one avu entry", 1,
-				metadata.size());
+		Assert.assertEquals("should only be one avu entry", 1, metadata.size());
 
 		for (MetaDataAndDomainData metadataEntry : metadata) {
 			Assert.assertEquals("did not find attrib name", expectedAttribName,
@@ -2627,8 +2710,7 @@ public class DataObjectAOImplTest {
 				.findMetadataValuesForDataObject(targetIrodsCollection,
 						testFileName);
 
-		TestCase.assertEquals("should only be one avu entry", 1,
-				metadata.size());
+		Assert.assertEquals("should only be one avu entry", 1, metadata.size());
 
 		for (MetaDataAndDomainData metadataEntry : metadata) {
 			Assert.assertEquals("did not find attrib name", expectedAttribName,
@@ -2831,9 +2913,9 @@ public class DataObjectAOImplTest {
 						testingProperties
 								.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY));
 
-		TestCase.assertNotNull("got a null userFilePermission",
+		Assert.assertNotNull("got a null userFilePermission",
 				userFilePermission);
-		TestCase.assertEquals(
+		Assert.assertEquals(
 				"did not find the right user name",
 				testingProperties
 						.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY),
@@ -2876,9 +2958,9 @@ public class DataObjectAOImplTest {
 						testingProperties
 								.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY));
 
-		TestCase.assertNotNull("got a null userFilePermission",
+		Assert.assertNotNull("got a null userFilePermission",
 				userFilePermission);
-		TestCase.assertEquals(
+		Assert.assertEquals(
 				"did not find the right user name",
 				testingProperties
 						.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY),
@@ -2927,14 +3009,14 @@ public class DataObjectAOImplTest {
 		dataObjectAO.putLocalDataObjectToIRODS(localFile, destFile, true,
 				transferControlBlock, transferStatusCallbackListener);
 		assertionHelper.assertIrodsFileOrCollectionExists(targetIrodsFile);
-		TestCase.assertTrue(
+		Assert.assertTrue(
 				"did not get intra-file callbacks",
 				transferStatusCallbackListener.getNumberIntraFileCallbacks() > 0);
-		TestCase.assertTrue(
+		Assert.assertTrue(
 				"did not get any byte count from intra-file callbacks",
 				transferStatusCallbackListener
 						.getBytesReportedIntraFileCallbacks() > 0);
-		TestCase.assertFalse("accumulated more bytes than file size",
+		Assert.assertFalse("accumulated more bytes than file size",
 				transferStatusCallbackListener
 						.getBytesReportedIntraFileCallbacks() > testSize);
 	}

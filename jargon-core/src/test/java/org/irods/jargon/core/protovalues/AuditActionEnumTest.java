@@ -23,12 +23,11 @@ public class AuditActionEnumTest {
 		Assert.assertTrue(actual.getAuditCode() == AuditActionEnum.ACCESS_GRANTED
 				.getAuditCode());
 	}
-	
-	@Test(expected=IllegalArgumentException.class)
+
+	@Test(expected = IllegalArgumentException.class)
 	public void testValueOfInvalid() {
-		 AuditActionEnum
-				.valueOf(1);
-		
+		AuditActionEnum.valueOf(1);
+
 	}
 
 }

@@ -20,7 +20,9 @@ public class PipelineConfiguration {
 	private final int internalCacheBufferSize;
 	private final int sendInputStreamBufferSize;
 	private final int localFileOutputStreamBufferSize;
-	private final String defaultEncoding = "utf-8"; //FIXME: put into jargon.properties and propogate
+	private final String defaultEncoding = "utf-8"; // FIXME: put into
+													// jargon.properties and
+													// propogate
 	private final int inputToOutputCopyBufferByteSize;
 
 	/**
@@ -55,7 +57,8 @@ public class PipelineConfiguration {
 				.getSendInputStreamBufferSize();
 		this.localFileOutputStreamBufferSize = jargonProperties
 				.getLocalFileOutputStreamBufferSize();
-		this.inputToOutputCopyBufferByteSize = jargonProperties.getInputToOutputCopyBufferByteSize();
+		this.inputToOutputCopyBufferByteSize = jargonProperties
+				.getInputToOutputCopyBufferByteSize();
 
 	}
 
