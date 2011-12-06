@@ -143,4 +143,12 @@ public interface UserGroupAO extends IRODSAccessObject {
 			String zoneName) throws InvalidUserException,
 			InvalidGroupException, JargonException;
 
+	/**
+	 * List all user groups
+	 * 
+	 * @return <code>List</code> of {@link UserGroup}
+	 * @throws JargonException
+	 */
+	List<UserGroup> findAll() throws JargonException;
+
 }

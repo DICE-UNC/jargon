@@ -183,6 +183,45 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements
 	/*
 	 * (non-Javadoc)
 	 * 
+	 * @see org.irods.jargon.core.pub.UserGroupAO#findAll()
+	 */
+	@Override
+	public List<UserGroup> findAll() throws JargonException {
+
+		log.info("findAll()");
+
+		IRODSGenQueryExecutor irodsGenQueryExecutor = getGenQueryExecutor();
+		StringBuilder query = new StringBuilder();
+
+		query.append(buildUserGroupSelects());
+
+		String queryString = query.toString();
+		log.info("query string: {}", queryString);
+
+		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(queryString, 500);
+
+		IRODSQueryResultSetInterface resultSet;
+		try {
+			resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResult(
+					irodsQuery, 0);
+		} catch (JargonQueryException e) {
+			log.error("query exception for user query:" + queryString, e);
+			throw new JargonException("error in user group query");
+		}
+
+		List<UserGroup> userGroups = new ArrayList<UserGroup>();
+
+		for (IRODSQueryResultRow row : resultSet.getResults()) {
+			userGroups.add(buildUserGroupFromResultSet(row));
+		}
+
+		return userGroups;
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see
 	 * org.irods.jargon.core.pub.IRODSUserGroupAO#findByName(java.lang.String)
 	 */

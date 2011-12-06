@@ -61,7 +61,8 @@ public interface CollectionAndDataObjectListAndSearchAO extends
 	 * method can inspect the returned results to determine the position of each
 	 * result and whether there are more records to display.
 	 * <p/>
-	 * This method is not a search method, it simply lists.
+	 * This method is not a search method, it simply lists the directories that
+	 * are direct children of the given path.
 	 * 
 	 * @param absolutePathToParent
 	 *            <code>String</code> with the absolute path to the parent. If
@@ -84,7 +85,8 @@ public interface CollectionAndDataObjectListAndSearchAO extends
 	 * This method is in support of applications and interfaces that need to
 	 * support listing and paging of collections. This method returns a simple
 	 * value object that contains information about paging for each object, such
-	 * as record count, and whether this is the last record.
+	 * as record count, and whether this is the last record. This method will
+	 * list objects that are direct children underneath the given parent.
 	 * <p/>
 	 * Note that this collection is composed of a collection of objects for
 	 * child collections, and a collection of objects for child data objects
@@ -119,7 +121,7 @@ public interface CollectionAndDataObjectListAndSearchAO extends
 	 * This method is in support of applications and interfaces that need to
 	 * support listing and paging of collections. This method returns a simple
 	 * count of the children (data objects and collections) underneath this
-	 * directory.
+	 * directory, and includes all children.
 	 * 
 	 * @param absolutePathToParent
 	 *            <code>String</code> with the absolute path to the parent. The

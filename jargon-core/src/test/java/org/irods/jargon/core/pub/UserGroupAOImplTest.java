@@ -142,6 +142,26 @@ public class UserGroupAOImplTest {
 	}
 
 	@Test
+	public final void testFindAll() throws Exception {
+		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager
+				.instance();
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSSession irodsSession = IRODSSession
+				.instance(irodsConnectionManager);
+		IRODSAccessObjectFactory accessObjectFactory = IRODSAccessObjectFactoryImpl
+				.instance(irodsSession);
+		UserGroupAO userGroupAO = accessObjectFactory
+				.getUserGroupAO(irodsAccount);
+
+		List<UserGroup> userGroup = userGroupAO.findAll();
+		irodsSession.closeSession();
+		Assert.assertNotNull("no user group returned", userGroup);
+		Assert.assertFalse("no user groups returned for query",
+				userGroup.isEmpty());
+	}
+
+	@Test
 	public final void testFindUserGroupsForUser() throws Exception {
 		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager
 				.instance();
