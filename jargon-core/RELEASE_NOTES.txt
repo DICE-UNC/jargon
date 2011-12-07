@@ -45,6 +45,7 @@ Note that the following bug and feature requests are logged in GForge with relat
 [#502] bug in synch
 [#519] tolerate quote in data name for acl query
 [#547] error running old style rule via irods file
+[#548] user list all not ordered
 
 
 ==Features==

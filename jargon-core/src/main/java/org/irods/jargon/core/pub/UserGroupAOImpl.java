@@ -523,17 +523,17 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements
 	private String buildUserGroupSelects() {
 		StringBuilder query = new StringBuilder();
 		query.append("SELECT ");
-		query.append(RodsGenQueryEnum.COL_USER_GROUP_ID.getName());
-		query.append(COMMA);
 		query.append(RodsGenQueryEnum.COL_USER_GROUP_NAME.getName());
+		query.append(COMMA);
+		query.append(RodsGenQueryEnum.COL_USER_GROUP_ID.getName());
 		return query.toString();
 	}
 
 	private UserGroup buildUserGroupFromResultSet(final IRODSQueryResultRow row)
 			throws JargonException {
 		UserGroup userGroup = new UserGroup();
-		userGroup.setUserGroupId(row.getColumn(0));
-		userGroup.setUserGroupName(row.getColumn(1));
+		userGroup.setUserGroupId(row.getColumn(1));
+		userGroup.setUserGroupName(row.getColumn(0));
 
 		return userGroup;
 	}
