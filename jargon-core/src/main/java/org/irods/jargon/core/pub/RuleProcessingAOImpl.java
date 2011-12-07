@@ -272,7 +272,9 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements
 			}
 		}
 
-		if (ruleProcessingType == RuleProcessingType.INTERNAL) {
+		if (ruleProcessingType == RuleProcessingType.CLASSIC) {
+			log.debug("classic, do not add external or internal");
+		} else if (ruleProcessingType == RuleProcessingType.INTERNAL) {
 			log.debug("adding @internal to the rule body");
 			StringBuilder bodyWithExtern = new StringBuilder("@internal\n");
 			bodyWithExtern.append(irodsRuleAsString);

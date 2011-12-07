@@ -261,6 +261,68 @@ public class RuleProcessingAOImplTest {
 
 	}
 
+	/**
+	 * [#547] error running old style rule via irods file
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void testExecuteOldStyleRuleFromIrodsFileNullParmOverrides()
+			throws Exception {
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
+						irodsAccount);
+		IRODSServerProperties props = environmentalInfoAO
+				.getIRODSServerPropertiesFromIRODSServer();
+
+		if (!props.isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods3.0")) {
+			return;
+		}
+
+		String ruleFile = "/rules/ruleListAvailableMSOldStyle.r";
+		String irodsRuleFile = "testExecuteOldStyleRuleFromIrodsFileNullParmOverrides.r";
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		String ruleString = LocalFileUtils
+				.getClasspathResourceFileAsString(ruleFile);
+		IRODSFile irodsRuleFileAsFile = accessObjectFactory
+				.getIRODSFileFactory(irodsAccount).instanceIRODSFile(
+						targetIrodsCollection + "/" + irodsRuleFile);
+		irodsRuleFileAsFile.deleteWithForceOption();
+		IRODSFileWriter irodsFileWriter = accessObjectFactory
+				.getIRODSFileFactory(irodsAccount).instanceIRODSFileWriter(
+						targetIrodsCollection + "/" + irodsRuleFile);
+		char[] buff = new char[1024];
+		StringReader reader = new StringReader(ruleString);
+
+		int len = 0;
+		while ((len = reader.read(buff)) > -1) {
+			irodsFileWriter.write(buff, 0, len);
+		}
+
+		irodsFileWriter.close();
+		reader.close();
+
+		RuleProcessingAO ruleProcessingAO = accessObjectFactory
+				.getRuleProcessingAO(irodsAccount);
+
+		IRODSRuleExecResult result = ruleProcessingAO.executeRuleFromIRODSFile(
+				irodsRuleFileAsFile.getAbsolutePath(), null,
+				RuleProcessingType.CLASSIC);
+		String execOut = (String) result.getOutputParameterResults()
+				.get(RuleProcessingAOImpl.RULE_EXEC_OUT).getResultObject();
+		Assert.assertNotNull("null execOut", execOut);
+
+	}
+
 	@Test
 	public void testExecuteRuleWithDelay() throws Exception {
 
