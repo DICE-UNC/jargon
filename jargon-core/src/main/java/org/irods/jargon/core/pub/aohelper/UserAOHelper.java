@@ -34,13 +34,13 @@ public class UserAOHelper {
 	public static String buildUserSelects() {
 		StringBuilder userQuery = new StringBuilder();
 		userQuery.append("select ");
+		userQuery.append(RodsGenQueryEnum.COL_USER_ZONE.getName());
+		userQuery.append(COMMA);
 		userQuery.append(RodsGenQueryEnum.COL_USER_NAME.getName());
 		userQuery.append(COMMA);
 		userQuery.append(RodsGenQueryEnum.COL_USER_ID.getName());
 		userQuery.append(COMMA);
 		userQuery.append(RodsGenQueryEnum.COL_USER_TYPE.getName());
-		userQuery.append(COMMA);
-		userQuery.append(RodsGenQueryEnum.COL_USER_ZONE.getName());
 		userQuery.append(COMMA);
 		userQuery.append(RodsGenQueryEnum.COL_USER_INFO.getName());
 		userQuery.append(COMMA);
@@ -71,17 +71,28 @@ public class UserAOHelper {
 	public static User buildUserFromResultSet(final IRODSQueryResultRow row,
 			final IRODSGenQueryExecutor irodsGenQueryExecutor,
 			final boolean retrieveDN) throws JargonException {
+		String homeZone = irodsGenQueryExecutor.getIRODSAccount().getZone();
 		User user = new User();
-		user.setId(row.getColumn(1));
-		user.setName(row.getColumn(0));
-		user.setUserType(UserTypeEnum.findTypeByString(row.getColumn(2)));
-		user.setZone(row.getColumn(3));
+		user.setId(row.getColumn(2));
+		user.setName(row.getColumn(1));
+		user.setUserType(UserTypeEnum.findTypeByString(row.getColumn(3)));
+		user.setZone(row.getColumn(0));
 		user.setInfo(row.getColumn(4));
 		user.setComment(row.getColumn(5));
 		user.setCreateTime(IRODSDataConversionUtil.getDateFromIRODSValue(row
 				.getColumn(6)));
 		user.setModifyTime(IRODSDataConversionUtil.getDateFromIRODSValue(row
 				.getColumn(7)));
+
+		if (user.getZone().equals(homeZone)) {
+			user.setNameWithZone(user.getName());
+		} else {
+			StringBuilder sb = new StringBuilder();
+			sb.append(user.getName());
+			sb.append('#');
+			sb.append(user.getZone());
+			user.setNameWithZone(sb.toString());
+		}
 
 		// do add'l lookup of DN if requested
 		if (retrieveDN) {

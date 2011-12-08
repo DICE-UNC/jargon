@@ -16,6 +16,7 @@ public final class User extends IRODSDomainObject {
 	private String name = "";
 	private String id = "";
 	private String zone = "";
+	private String nameWithZone = "";
 	private String info = "";
 	private String comment = "";
 	private Date createTime = null;
@@ -23,9 +24,6 @@ public final class User extends IRODSDomainObject {
 	private UserTypeEnum userType = UserTypeEnum.RODS_UNKNOWN;
 	private String userDN = "";
 
-	/**
-	 *
-	 */
 	public User() {
 	}
 
@@ -36,6 +34,16 @@ public final class User extends IRODSDomainObject {
 	 */
 	public String getName() {
 		return name;
+	}
+
+	/**
+	 * Get a name that will include the zone when a user in a federated zone:
+	 * user#zone
+	 * 
+	 * @return <code>String</code> with the extended zone
+	 */
+	public String getNameWithZone() {
+		return nameWithZone;
 	}
 
 	/**
@@ -226,6 +234,17 @@ public final class User extends IRODSDomainObject {
 	 */
 	public void setModifyTime(final Date modifyTime) {
 		this.modifyTime = modifyTime;
+	}
+
+	/**
+	 * Set an extended user name appropriate for the zone in which the user list
+	 * was derived.
+	 * 
+	 * @param nameWithZone
+	 *            <code>String</code> in user#zone format.
+	 */
+	public void setNameWithZone(String nameWithZone) {
+		this.nameWithZone = nameWithZone;
 	}
 
 }
