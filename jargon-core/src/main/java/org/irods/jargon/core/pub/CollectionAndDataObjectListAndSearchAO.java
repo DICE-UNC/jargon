@@ -384,19 +384,6 @@ public interface CollectionAndDataObjectListAndSearchAO extends
 			JargonException;
 
 	/**
-	 * TODO: work in progress
-	 * 
-	 * @param absolutePathToParent
-	 * @param userName
-	 * @param partialStartIndex
-	 * @return
-	 * @throws JargonException
-	 */
-	List<CollectionAndDataObjectListingEntry> listDataObjectsSharedWithAGivenUser(
-			String absolutePathToParent, String userName, int partialStartIndex)
-			throws JargonException;
-
-	/**
 	 * Retrieve the <code>ObjStat</code> for a collection or data object at the
 	 * given absolute path in iRODS. This is the result of a call to rsObjStat.
 	 * 

@@ -954,55 +954,6 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 	 * (non-Javadoc)
 	 * 
 	 * @see org.irods.jargon.core.pub.CollectionAndDataObjectListAndSearchAO#
-	 * listDataObjectsSharedWithAGivenUser(java.lang.String, java.lang.String,
-	 * int)
-	 */
-	@Override
-	public List<CollectionAndDataObjectListingEntry> listDataObjectsSharedWithAGivenUser(
-			final String absolutePathToParent, final String userName,
-			final int partialStartIndex) throws FileNotFoundException,
-			JargonException {
-
-		if (absolutePathToParent == null) {
-			throw new JargonException("absolutePathToParent is null");
-		}
-
-		if (userName == null || userName.isEmpty()) {
-			throw new JargonException("userName is null or empty");
-		}
-
-		log.info("listDataObjectsSharedWithAGivenUser for: {}",
-				absolutePathToParent);
-
-		ObjStat objStat = retrieveObjectStatForPath(absolutePathToParent);
-
-		if (objStat == null) {
-			log.error("unable to find objStat for collection path:{}",
-					absolutePathToParent);
-			throw new FileNotFoundException(
-					"unable to find objStat for collection");
-		}
-
-		/*
-		 * String queryString = IRODSFileSystemAOHelper
-		 * .buildQueryListAllDataObjectsSharedWithAGivenUser(
-		 * absolutePathToParent, userName);
-		 * 
-		 * 
-		 * @SuppressWarnings("unused") IRODSQueryResultSetInterface resultSet =
-		 * this .queryForPathAndReturnResultSet(absolutePathToParent,
-		 * queryString, partialStartIndex, objStat);
-		 * log.debug("got result set:{}}, resultSet");
-		 */
-
-		return null;
-
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.irods.jargon.core.pub.CollectionAndDataObjectListAndSearchAO#
 	 * retrieveObjectStatForPath(java.lang.String)
 	 */
 	@Override
