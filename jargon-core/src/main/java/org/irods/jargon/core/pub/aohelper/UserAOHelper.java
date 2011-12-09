@@ -165,4 +165,47 @@ public class UserAOHelper {
 
 	}
 
+	/**
+	 * Given a user name that might be in the format user#zone, get the user
+	 * part
+	 * 
+	 * @param userName
+	 *            <code>String</code> with the user name, possibly in user#zone
+	 *            format
+	 * @return <code>String</code> with only the user name, not the zone
+	 */
+	public static String getUserNameFromUserPoundZone(final String userName) {
+		if (userName == null || userName.isEmpty()) {
+			throw new IllegalArgumentException("null or empty userName");
+		}
+		int poundIdx = userName.indexOf("#");
+		if (poundIdx > -1) {
+			return userName.substring(0, poundIdx);
+		} else {
+			return userName;
+		}
+	}
+
+	/**
+	 * Given a user name that might be in the format user#zone, get the zone
+	 * part
+	 * 
+	 * @param userName
+	 *            <code>String</code> with the user name, possibly in user#zone
+	 *            format
+	 * @return <code>String</code> with only the zone name, not the user
+	 */
+	public static String getZoneFromUserPoundZone(final String userName) {
+		if (userName == null || userName.isEmpty()) {
+			throw new IllegalArgumentException("null or empty userName");
+		}
+		int poundIdx = userName.indexOf("#");
+		if (poundIdx > -1) {
+			return userName.substring(poundIdx + 1);
+		} else {
+			return "";
+		}
+	}
+
 }
+

@@ -40,7 +40,8 @@ public interface UserAO extends IRODSAccessObject {
 
 	/**
 	 * Query users and return the <code>User</code> object with the given user
-	 * name
+	 * name. Note that user names may be given in user#zone format, and that
+	 * federated user registered on the current zone will be returned.
 	 * 
 	 * @param name
 	 *            <code>String</code> with the name of the user to query.

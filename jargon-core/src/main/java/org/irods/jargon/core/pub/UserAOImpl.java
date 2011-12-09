@@ -404,19 +404,29 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 	public User findByName(final String userName) throws JargonException,
 			DataNotFoundException {
 
+		/*
+		 * See if there is a zone component
+		 */
+
+		String theUser = UserAOHelper.getUserNameFromUserPoundZone(userName);
+		String theZone = UserAOHelper.getZoneFromUserPoundZone(userName);
+		if (theZone.isEmpty()) {
+			theZone = getIRODSAccount().getZone();
+		}
+
 		StringBuilder userQuery = new StringBuilder();
 
 		userQuery.append(UserAOHelper.buildUserSelects());
 		userQuery.append(" where ");
 		userQuery.append(RodsGenQueryEnum.COL_USER_NAME.getName());
 		userQuery.append(" = '");
-		userQuery.append(userName.trim());
+		userQuery.append(theUser);
 		userQuery.append("'");
 		userQuery.append(AND);
 		userQuery.append(RodsGenQueryEnum.COL_USER_ZONE.getName());
 		userQuery.append(EQUALS);
 		userQuery.append("'");
-		userQuery.append(this.getIRODSAccount().getZone());
+		userQuery.append(theZone);
 		userQuery.append("'");
 
 		String userQueryString = userQuery.toString();
