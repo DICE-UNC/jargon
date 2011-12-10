@@ -4,6 +4,7 @@ import org.irods.jargon.datautils.connection.ConnectionCreatingPoolableObjectFac
 import org.irods.jargon.datautils.connection.TempPasswordCachingProtocolManagerTest;
 import org.irods.jargon.datautils.datacache.DataCacheServiceImplTest;
 import org.irods.jargon.datautils.image.ImageServiceFactoryImplTest;
+import org.irods.jargon.datautils.image.MediaHandlingUtilsTest;
 import org.irods.jargon.datautils.image.ThumbnailServiceImplTest;
 import org.irods.jargon.datautils.shoppingcart.FileShoppingCartTest;
 import org.irods.jargon.datautils.shoppingcart.ShoppingCartEntryTest;
@@ -20,7 +21,9 @@ import org.junit.runners.Suite;
 		DataCacheServiceImplTest.class,
 		ConnectionCreatingPoolableObjectFactoryTest.class,
 		TempPasswordCachingProtocolManagerTest.class,
-		ThumbnailServiceImplTest.class, ImageServiceFactoryImplTest.class, ShoppingCartEntryTest.class, FileShoppingCartTest.class})
+		ThumbnailServiceImplTest.class, ImageServiceFactoryImplTest.class,
+		ShoppingCartEntryTest.class, FileShoppingCartTest.class,
+		MediaHandlingUtilsTest.class })
 public class AllTests {
 
 }
