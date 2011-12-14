@@ -28,7 +28,7 @@ import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.rule.IRODSRuleExecResult;
 import org.irods.jargon.core.utils.Base64;
 import org.irods.jargon.core.utils.LocalFileUtils;
-import org.irods.jargon.datautils.AbstractDataUtilsService;
+import org.irods.jargon.datautils.AbstractDataUtilsServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,7 +44,7 @@ import com.sun.image.codec.jpeg.JPEGImageEncoder;
  * 
  */
 @SuppressWarnings("restriction")
-public class ThumbnailServiceImpl extends AbstractDataUtilsService implements
+public class ThumbnailServiceImpl extends AbstractDataUtilsServiceImpl implements
 		ThumbnailService {
 
 	public static final Logger log = LoggerFactory

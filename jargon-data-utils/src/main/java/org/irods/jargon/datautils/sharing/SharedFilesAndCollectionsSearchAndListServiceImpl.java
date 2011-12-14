@@ -9,7 +9,7 @@ import org.irods.jargon.core.pub.io.IRODSFileSystemAOHelper;
 import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry;
 import org.irods.jargon.core.query.RodsGenQueryEnum;
 import org.irods.jargon.core.utils.IRODSDataConversionUtil;
-import org.irods.jargon.datautils.AbstractDataUtilsService;
+import org.irods.jargon.datautils.AbstractDataUtilsServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,7 +25,7 @@ import org.slf4j.LoggerFactory;
  * 
  */
 public class SharedFilesAndCollectionsSearchAndListServiceImpl extends
-		AbstractDataUtilsService implements SharedFilesAndCollectionsSearchAndListService {
+		AbstractDataUtilsServiceImpl implements SharedFilesAndCollectionsSearchAndListService {
 
 	private static final char COMMA = ',';
 

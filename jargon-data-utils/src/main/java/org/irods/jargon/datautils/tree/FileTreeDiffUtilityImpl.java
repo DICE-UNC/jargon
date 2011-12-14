@@ -16,7 +16,7 @@ import org.irods.jargon.core.pub.io.IRODSFileImpl;
 import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry;
 import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry.ObjectType;
 import org.irods.jargon.core.utils.LocalFileUtils;
-import org.irods.jargon.datautils.AbstractDataUtilsService;
+import org.irods.jargon.datautils.AbstractDataUtilsServiceImpl;
 import org.irods.jargon.datautils.tree.FileOrDirFilter.FilterFor;
 import org.irods.jargon.datautils.tree.FileTreeDiffEntry.DiffType;
 import org.slf4j.Logger;
@@ -33,7 +33,7 @@ import org.slf4j.LoggerFactory;
  * @author Mike Conway - DICE (www.irods.org)
  * 
  */
-public class FileTreeDiffUtilityImpl extends AbstractDataUtilsService implements
+public class FileTreeDiffUtilityImpl extends AbstractDataUtilsServiceImpl implements
 		FileTreeDiffUtility {
 
 	private static Logger log = LoggerFactory

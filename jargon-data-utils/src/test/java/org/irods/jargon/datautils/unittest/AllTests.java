@@ -8,6 +8,7 @@ import org.irods.jargon.datautils.image.MediaHandlingUtilsTest;
 import org.irods.jargon.datautils.image.ThumbnailServiceImplTest;
 import org.irods.jargon.datautils.shoppingcart.FileShoppingCartTest;
 import org.irods.jargon.datautils.shoppingcart.ShoppingCartEntryTest;
+import org.irods.jargon.datautils.shoppingcart.ShoppingCartServiceImplTest;
 import org.irods.jargon.datautils.synchproperties.SynchPropertiesServiceImplTest;
 import org.irods.jargon.datautils.tree.FileTreeDiffEntryTest;
 import org.irods.jargon.datautils.tree.FileTreeDiffUtilityTest;
@@ -23,7 +24,7 @@ import org.junit.runners.Suite;
 		TempPasswordCachingProtocolManagerTest.class,
 		ThumbnailServiceImplTest.class, ImageServiceFactoryImplTest.class,
 		ShoppingCartEntryTest.class, FileShoppingCartTest.class,
-		MediaHandlingUtilsTest.class })
+		MediaHandlingUtilsTest.class, ShoppingCartServiceImplTest.class })
 public class AllTests {
 
 }

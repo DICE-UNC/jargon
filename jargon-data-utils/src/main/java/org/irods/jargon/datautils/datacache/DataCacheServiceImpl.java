@@ -14,7 +14,9 @@ import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 import org.irods.jargon.core.pub.Stream2StreamAO;
 import org.irods.jargon.core.pub.io.IRODSFile;
-import org.irods.jargon.datautils.AbstractDataUtilsService;
+import org.irods.jargon.datautils.AbstractDataUtilsServiceImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Service to provide a secure data cache. This allows information to be serialized
@@ -24,7 +26,19 @@ import org.irods.jargon.datautils.AbstractDataUtilsService;
  * @author Mike Conway - DICE (www.irods.org)
  * 
  */
-public class DataCacheServiceImpl extends AbstractDataUtilsService implements DataCacheService {
+public class DataCacheServiceImpl extends AbstractDataUtilsServiceImpl implements DataCacheService {
+
+	String xform = "DES/ECB/PKCS5Padding";
+
+	/**
+	 * Configuration controls behavior of the cache. This can be set, or can
+	 * just use the defaults, which cache in the users home dir and do cleanups
+	 * as part of request processing.
+	 */
+	CacheServiceConfiguration cacheServiceConfiguration = new CacheServiceConfiguration();
+
+	public static final Logger log = LoggerFactory
+			.getLogger(DataCacheServiceImpl.class);
 
 	/**
 	 * Constructor with required dependencies
@@ -44,14 +58,6 @@ public class DataCacheServiceImpl extends AbstractDataUtilsService implements Da
 		super();
 	}
 
-	String xform = "DES/ECB/PKCS5Padding";
-
-	/**
-	 * Configuration controls behavior of the cache. This can be set, or can
-	 * just use the defaults, which cache in the users home dir and do cleanups
-	 * as part of request processing.
-	 */
-	CacheServiceConfiguration cacheServiceConfiguration = new CacheServiceConfiguration();
 
 	/* (non-Javadoc)
 	 * @see org.irods.jargon.datautils.datacache.AccountCacheService#putStringValueIntoCache(java.lang.String, java.lang.String)

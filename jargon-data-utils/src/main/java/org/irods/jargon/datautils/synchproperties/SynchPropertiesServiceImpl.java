@@ -18,7 +18,7 @@ import org.irods.jargon.core.query.AVUQueryElement.AVUQueryPart;
 import org.irods.jargon.core.query.AVUQueryOperatorEnum;
 import org.irods.jargon.core.query.JargonQueryException;
 import org.irods.jargon.core.query.MetaDataAndDomainData;
-import org.irods.jargon.datautils.AbstractDataUtilsService;
+import org.irods.jargon.datautils.AbstractDataUtilsServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,7 +28,7 @@ import org.slf4j.LoggerFactory;
  * @author Mike Conway - DICE (www.irods.org)
  * 
  */
-public class SynchPropertiesServiceImpl extends AbstractDataUtilsService implements SynchPropertiesService {
+public class SynchPropertiesServiceImpl extends AbstractDataUtilsServiceImpl implements SynchPropertiesService {
 
     /*
      * AVU conventions attrib | value | unit

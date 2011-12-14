@@ -3,14 +3,13 @@ package org.irods.jargon.datautils;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.JargonRuntimeException;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
-import org.irods.jargon.datautils.datacache.DataCacheServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class AbstractDataUtilsService {
+public class AbstractDataUtilsServiceImpl implements DataUtilsService {
 
 	public static final Logger log = LoggerFactory
-				.getLogger(DataCacheServiceImpl.class);
+			.getLogger(AbstractDataUtilsServiceImpl.class);
 	/**
 	 * Factory to create necessary Jargon access objects, which interact with
 	 * the iRODS server
@@ -26,7 +25,7 @@ public class AbstractDataUtilsService {
 	 * @param irodsAccessObjectFactory {@link IRODSAccessObjectFactory} that can create necessary objects
 	 * @param irodsAccount {@link IRODSAccount} that contains the login information
 	 */
-	public AbstractDataUtilsService(IRODSAccessObjectFactory irodsAccessObjectFactory, IRODSAccount irodsAccount) {
+	public AbstractDataUtilsServiceImpl(IRODSAccessObjectFactory irodsAccessObjectFactory, IRODSAccount irodsAccount) {
 		if (irodsAccessObjectFactory == null) {
 			throw new IllegalArgumentException("null irodsAccessObjectFactory");
 		}
@@ -43,7 +42,7 @@ public class AbstractDataUtilsService {
 	/**
 	 * Default (no-values) constructor.
 	 */
-	public AbstractDataUtilsService() {
+	public AbstractDataUtilsServiceImpl() {
 	}
 
 	/**
@@ -60,18 +59,23 @@ public class AbstractDataUtilsService {
 	
 	}
 
+	
+	@Override
 	public IRODSAccessObjectFactory getIrodsAccessObjectFactory() {
 		return irodsAccessObjectFactory;
 	}
 
+	@Override
 	public void setIrodsAccessObjectFactory(final IRODSAccessObjectFactory irodsAccessObjectFactory) {
 		this.irodsAccessObjectFactory = irodsAccessObjectFactory;
 	}
 
+	@Override
 	public IRODSAccount getIrodsAccount() {
 		return irodsAccount;
 	}
 
+	@Override
 	public void setIrodsAccount(final IRODSAccount irodsAccount) {
 		this.irodsAccount = irodsAccount;
 	}
