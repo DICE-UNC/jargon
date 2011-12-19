@@ -243,7 +243,7 @@ public final class User extends IRODSDomainObject {
 	 * @param nameWithZone
 	 *            <code>String</code> in user#zone format.
 	 */
-	public void setNameWithZone(String nameWithZone) {
+	public void setNameWithZone(final String nameWithZone) {
 		this.nameWithZone = nameWithZone;
 	}
 

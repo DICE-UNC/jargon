@@ -958,43 +958,37 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 	 */
 	@Override
 	public ObjStat retrieveObjectStatForPath(final String irodsAbsolutePath)
-			throws JargonException {
+			throws FileNotFoundException, JargonException {
 		if (irodsAbsolutePath == null || irodsAbsolutePath.isEmpty()) {
 			throw new IllegalArgumentException(
 					"irodsAbsolutePath is null or empty");
 		}
 
-		try {
-			DataObjInpForObjStat dataObjInp = DataObjInpForObjStat
-					.instance(irodsAbsolutePath);
-			final Tag response = getIRODSProtocol().irodsFunction(dataObjInp);
-			log.debug("response from objStat: {}", response.parseTag());
+		DataObjInpForObjStat dataObjInp = DataObjInpForObjStat
+				.instance(irodsAbsolutePath);
+		final Tag response = getIRODSProtocol().irodsFunction(dataObjInp);
+		log.debug("response from objStat: {}", response.parseTag());
 
-			ObjStat objStat = new ObjStat();
-			objStat.setAbsolutePath(irodsAbsolutePath);
-			objStat.setChecksum(response.getTag("chksum").getStringValue());
-			objStat.setDataId(response.getTag("dataId").getIntValue());
-			int objType = response.getTag("objType").getIntValue();
-			objStat.setObjectType(ObjectType.values()[objType]);
-			objStat.setObjSize(response.getTag("objSize").getLongValue());
-			objStat.setOwnerName(response.getTag("ownerName").getStringValue());
-			objStat.setOwnerZone(response.getTag("ownerZone").getStringValue());
-			objStat.setSpecColType(SpecColType.NORMAL); // TODO: only normal for
-														// now
+		ObjStat objStat = new ObjStat();
+		objStat.setAbsolutePath(irodsAbsolutePath);
+		objStat.setChecksum(response.getTag("chksum").getStringValue());
+		objStat.setDataId(response.getTag("dataId").getIntValue());
+		int objType = response.getTag("objType").getIntValue();
+		objStat.setObjectType(ObjectType.values()[objType]);
+		objStat.setObjSize(response.getTag("objSize").getLongValue());
+		objStat.setOwnerName(response.getTag("ownerName").getStringValue());
+		objStat.setOwnerZone(response.getTag("ownerZone").getStringValue());
+		objStat.setSpecColType(SpecColType.NORMAL); // TODO: only normal for
+													// now
 
-			String createdDate = response.getTag("createTime").getStringValue();
-			String modifiedDate = response.getTag("modifyTime")
-					.getStringValue();
-			objStat.setCreatedAt(IRODSDataConversionUtil
-					.getDateFromIRODSValue(createdDate));
-			objStat.setModifiedAt(IRODSDataConversionUtil
-					.getDateFromIRODSValue(modifiedDate));
-			log.info(objStat.toString());
-			return objStat;
-		} catch (FileNotFoundException e) {
-			log.info("file not found for stat on path:{}", irodsAbsolutePath);
-			return null;
-		}
+		String createdDate = response.getTag("createTime").getStringValue();
+		String modifiedDate = response.getTag("modifyTime").getStringValue();
+		objStat.setCreatedAt(IRODSDataConversionUtil
+				.getDateFromIRODSValue(createdDate));
+		objStat.setModifiedAt(IRODSDataConversionUtil
+				.getDateFromIRODSValue(modifiedDate));
+		log.info(objStat.toString());
+		return objStat;
+
 	}
-
 }

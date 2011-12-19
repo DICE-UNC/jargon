@@ -144,7 +144,7 @@ public class UserFilePermission {
 	 * @param userType
 	 *            {@link UserTypeEnum}
 	 */
-	public synchronized void setUserType(UserTypeEnum userType) {
+	public synchronized void setUserType(final UserTypeEnum userType) {
 		this.userType = userType;
 	}
 

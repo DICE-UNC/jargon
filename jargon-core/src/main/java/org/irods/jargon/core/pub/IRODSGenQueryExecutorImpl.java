@@ -396,6 +396,33 @@ public final class IRODSGenQueryExecutorImpl extends IRODSGenericAO implements
 	 * (non-Javadoc)
 	 * 
 	 * @see
+	 * org.irods.jargon.core.pub.IRODSGenQueryExecutor#getMoreResultsInZone(
+	 * org.irods.jargon.core.query.IRODSQueryResultSet, java.lang.String)
+	 */
+	@Override
+	public IRODSQueryResultSet getMoreResultsInZone(
+			final IRODSQueryResultSet irodsQueryResultSet, final String zoneName)
+			throws JargonException, JargonQueryException {
+
+		log.info("getting more results for query");
+		if (irodsQueryResultSet == null) {
+			throw new JargonException("null irodsQueryResultSet");
+		}
+
+		if (!irodsQueryResultSet.isHasMoreRecords()) {
+			throw new JargonQueryException("no more results");
+		}
+
+		return executeTranslatedIRODSQuery(
+				irodsQueryResultSet.getTranslatedIRODSQuery(),
+				irodsQueryResultSet.getContinuationIndex(), 0,
+				QueryCloseBehavior.MANUAL_CLOSE, zoneName);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
 	 * org.irods.jargon.core.pub.IRODSGenQueryExecutor#closeResults(org.irods
 	 * .jargon.core.query.IRODSQueryResultSetInterface)
 	 */

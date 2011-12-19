@@ -10,7 +10,6 @@ import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.irods.jargon.testutils.filemanip.FileGenerator;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -119,9 +118,13 @@ public class FederatedDataTransferOperationsImplTest {
 				localFile, (File) destFile);
 	}
 
-	@Ignore
+	@Test
 	// FIXME: bug in setup?
 	public void testGetCollectionWithTwoFilesInAnotherZone() throws Exception {
+
+		if (!testingPropertiesHelper.isTestFederatedZone(testingProperties)) {
+			return;
+		}
 
 		String rootCollection = "testGetCollectionWithTwoFilesInAnotherZone";
 		String returnedLocalCollection = "testGetCollectionWithTwoFilesInAnotherZoneReturnedLocalFiles";

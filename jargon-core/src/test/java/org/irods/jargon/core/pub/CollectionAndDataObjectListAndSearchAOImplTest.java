@@ -45,7 +45,7 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 
 	@AfterClass
 	public static void tearDownAfterClass() throws Exception {
-		irodsFileSystem.close();
+		irodsFileSystem.closeAndEatExceptions();
 
 	}
 
@@ -1234,7 +1234,7 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 				objStat.getObjSize() == 0);
 	}
 
-	@Test
+	@Test(expected = FileNotFoundException.class)
 	public void testObjectStatForPathNotExists() throws Exception {
 
 		String targetIrodsCollection = testingPropertiesHelper
@@ -1249,10 +1249,9 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 				.getIRODSAccessObjectFactory()
 				.getCollectionAndDataObjectListAndSearchAO(irodsAccount);
 
-		ObjStat objStat = listAndSearchAO
+		listAndSearchAO
 				.retrieveObjectStatForPath(targetIrodsCollection);
-		Assert.assertNull("null objStat expected for non-existent path",
-				objStat);
+
 	}
 
 	@Test(expected = IllegalArgumentException.class)

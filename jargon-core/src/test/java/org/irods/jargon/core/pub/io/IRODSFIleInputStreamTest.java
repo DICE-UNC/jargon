@@ -188,10 +188,8 @@ public class IRODSFIleInputStreamTest {
 				.instanceIRODSFileInputStreamWithRerouting(irodsFile
 						.getAbsolutePath());
 
-		int readLength = 0;
 		byte[] readBytesBuffer = new byte[512];
-		while ((readLength = (fis.read(readBytesBuffer, 0,
-				readBytesBuffer.length))) > -1) {
+		while (((fis.read(readBytesBuffer, 0, readBytesBuffer.length))) > -1) {
 			actualFileContents.write(readBytesBuffer);
 		}
 
@@ -245,10 +243,8 @@ public class IRODSFIleInputStreamTest {
 				.instanceIRODSFileInputStreamWithRerouting(irodsFile
 						.getAbsolutePath());
 
-		int readLength = 0;
 		byte[] readBytesBuffer = new byte[512];
-		while ((readLength = (fis.read(readBytesBuffer, 0,
-				readBytesBuffer.length))) > -1) {
+		while (((fis.read(readBytesBuffer, 0, readBytesBuffer.length))) > -1) {
 			actualFileContents.write(readBytesBuffer);
 		}
 

@@ -119,8 +119,6 @@ public class IRODSFileSystemAOHelper extends AOHelper {
 
 	}
 
-
-
 	/**
 	 * Build the necessary GenQuery selects (the select statement is not added
 	 * here) to query data objects for information. Used in many common queries

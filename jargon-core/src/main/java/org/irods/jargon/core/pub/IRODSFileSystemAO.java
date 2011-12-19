@@ -6,11 +6,13 @@ import java.io.FilenameFilter;
 import java.util.List;
 
 import org.irods.jargon.core.exception.DataNotFoundException;
+import org.irods.jargon.core.exception.FileNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.exception.JargonFileOrCollAlreadyExistsException;
 import org.irods.jargon.core.packinstr.DataObjInp;
+import org.irods.jargon.core.pub.domain.ObjStat;
 import org.irods.jargon.core.pub.io.IRODSFile;
-import org.irods.jargon.core.pub.io.IRODSFileImpl;
+import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry.ObjectType;
 
 public interface IRODSFileSystemAO extends IRODSAccessObject {
 
@@ -52,35 +54,11 @@ public interface IRODSFileSystemAO extends IRODSAccessObject {
 	 * @param irodsFile
 	 *            <code>IRODSFile</code> to be checked.
 	 * @return <code>boolean</code> that will be true if the given
-	 *         <code>IRODSFile</code> is an iRODS Collection.
+	 *         <code>IRODSFile</code> is an iRODS Collection, and
+	 *         <code>false</code> if not exists or not a dir.
 	 * @throws JargonException
-	 * @throws DataNotFoundException
-	 *             thrown if the given file does not exist in iRODS.
 	 */
-	boolean isDirectory(IRODSFile irodsFile) throws JargonException,
-			DataNotFoundException;
-
-	/**
-	 * Get the modification date of the file.
-	 * 
-	 * @param irodsFile
-	 * @return
-	 * @throws JargonException
-	 * @throws DataNotFoundException
-	 */
-	long getModificationDate(IRODSFile irodsFile) throws JargonException,
-			DataNotFoundException;
-
-	/**
-	 * Get the length of the file.
-	 * 
-	 * @param irodsFile
-	 * @return
-	 * @throws JargonException
-	 * @throws DataNotFoundException
-	 */
-	long getLength(IRODSFile irodsFile) throws JargonException,
-			DataNotFoundException;
+	boolean isDirectory(IRODSFile irodsFile) throws JargonException;
 
 	/**
 	 * Get a list of irodsFIles that are in the Collection. If this file is a
@@ -126,11 +104,11 @@ public interface IRODSFileSystemAO extends IRODSAccessObject {
 	 * Get the iRODS file type for the given file
 	 * 
 	 * @param irodsFile
-	 * @return <code>IRODSFileImpl.DataType</code> enum value that is the file
-	 *         type in the iRODS catalog.
+	 * @return {@link ObjStat.ObjectType} enum value that is the file type in
+	 *         the iRODS catalog.
 	 * @throws JargonException
 	 */
-	IRODSFileImpl.DataType getFileDataType(final IRODSFile irodsFile)
+	ObjectType getFileDataType(final IRODSFile irodsFile)
 			throws JargonException;
 
 	int createFile(String absolutePath, DataObjInp.OpenFlags openFlags,
@@ -338,5 +316,29 @@ public interface IRODSFileSystemAO extends IRODSAccessObject {
 	 * @throws JargonException
 	 */
 	boolean isFileExecutable(IRODSFile irodsFile) throws JargonException;
+
+	/**
+	 * Check if the data object (must exist) is a file versus a collection or
+	 * directory
+	 * 
+	 * @param irodsFileImpl
+	 *            {@link IRODSFile} to test
+	 * @return <code> true</code> if a data object and it exists
+	 * @throws JargonException
+	 */
+	boolean isFile(IRODSFile irodsFile) throws JargonException;
+
+	/**
+	 * Handy method to return the
+	 * <code>ObjStat<code> that represents the given iRODS file path
+	 * 
+	 * @param irodsAbsolutePath
+	 *            <code>String</code> with the iRODS file absolute path
+	 * @return {@link ObjStat}, note that a <code>FileNotFoundException</code>
+	 *         will result if the file is not in iRODS
+	 * @throws JargonException
+	 */
+	ObjStat getObjStat(String irodsAbsolutePath) throws FileNotFoundException,
+			JargonException;
 
 }

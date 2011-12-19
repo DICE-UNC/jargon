@@ -2003,7 +2003,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	 * @throws JargonException
 	 */
 	private UserFilePermission buildUserFilePermissionFromResultRow(
-			IRODSQueryResultRow row) throws JargonException {
+			final IRODSQueryResultRow row) throws JargonException {
 		UserFilePermission userFilePermission;
 		userFilePermission = new UserFilePermission(row.getColumn(0),
 				row.getColumn(1),

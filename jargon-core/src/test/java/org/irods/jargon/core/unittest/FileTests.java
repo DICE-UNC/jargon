@@ -1,6 +1,7 @@
 package org.irods.jargon.core.unittest;
 
 import org.irods.jargon.core.pub.io.ByteCountingCallbackInputStreamWrapperTest;
+import org.irods.jargon.core.pub.io.FederatedIRODSFileImplTest;
 import org.irods.jargon.core.pub.io.FileIOOperationsAOImplTest;
 import org.irods.jargon.core.pub.io.IRODSFIleInputStreamTest;
 import org.irods.jargon.core.pub.io.IRODSFileFactoryImplTest;
@@ -25,7 +26,8 @@ import org.junit.runners.Suite;
 		SessionClosingIRODSFIleInputStreamTest.class,
 		SessionClosingIRODSFileOutputStreamTest.class,
 		RemoteExecutionBinaryResultInputStreamTest.class,
-		ByteCountingCallbackInputStreamWrapperTest.class })
+		ByteCountingCallbackInputStreamWrapperTest.class,
+		FederatedIRODSFileImplTest.class })
 public class FileTests {
 
 }

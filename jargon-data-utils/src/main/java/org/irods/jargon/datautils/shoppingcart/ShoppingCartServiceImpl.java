@@ -174,6 +174,13 @@ public class ShoppingCartServiceImpl extends AbstractDataUtilsServiceImpl
 
 	}
 
+	@Override
+	public String serializeShoppingCartAsSpecifiedUser(
+			final FileShoppingCart fileShoppingCart, final String key)
+			throws JargonException {
+		return null;
+	}
+
 	/**
 	 * Set the factory (required) used to create data cache service components
 	 * 

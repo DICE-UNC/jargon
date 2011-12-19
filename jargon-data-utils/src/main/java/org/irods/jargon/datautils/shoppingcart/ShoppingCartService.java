@@ -72,4 +72,18 @@ public interface ShoppingCartService extends DataUtilsService {
 	FileShoppingCart retreiveShoppingCartAsLoggedInUser(String key)
 			throws DataNotFoundException, JargonException;
 
+	/**
+	 * Place the shopping cart as a serialized file in the given user's home
+	 * directory and return a temporary password for that specified user that
+	 * may be passed to iDrop lite as the password parameter.
+	 * 
+	 * @param fileShoppingCart
+	 * @param key
+	 * @return
+	 * @throws JargonException
+	 */
+	String serializeShoppingCartAsSpecifiedUser(
+			FileShoppingCart fileShoppingCart, String key)
+			throws JargonException;
+
 }

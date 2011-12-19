@@ -154,7 +154,7 @@ public class IRODSFileInputStream extends InputStream {
 	}
 
 	private int openIRODSFile() throws JargonException {
-
+		log.info("openIRODSFile()");
 		if (!irodsFile.exists()) {
 			log.warn("opening non-existant file for read: {}",
 					irodsFile.getAbsolutePath());

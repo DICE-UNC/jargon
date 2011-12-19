@@ -138,6 +138,25 @@ public interface IRODSGenQueryExecutor extends IRODSAccessObject {
 			throws JargonException, JargonQueryException;
 
 	/**
+	 * Execute a requery meant to retrieve more results. The previous result set
+	 * contains information to requery iRODS. This query is targeted at a
+	 * specific zone
+	 * 
+	 * @param irodsQueryResultSet
+	 *            {@link org.irods.jargon.core.query.IRODSQueryResultSet} that
+	 *            contains the results of the previous query.
+	 * @param zone
+	 *            <code>String</code> with the zone for the query
+	 * @return <code>IRODSQueryResultSet</code> containing the previous batch of
+	 *         query results.
+	 * @throws JargonException
+	 * @throws JargonQueryException
+	 */
+	IRODSQueryResultSet getMoreResultsInZone(
+			IRODSQueryResultSet irodsQueryResultSet, String zoneName)
+			throws JargonException, JargonQueryException;
+
+	/**
 	 * Close the result set that had been continued
 	 * 
 	 * @param resultSet

@@ -390,11 +390,14 @@ public interface CollectionAndDataObjectListAndSearchAO extends
 	 * @param irodsAbsolutePath
 	 *            <code>String</code> with the absolute path to an iRODS
 	 *            collection or data object.
-	 * @return {@link ObjStat} with object data, or <code>null</code> if no data
-	 *         is found.
+	 * @return {@link ObjStat} with object data. Note that a
+	 *         <code>FileNotFoundException<code> will occur if the objStat cannot
+	 * be found
+	 * @throws FileNotFoundException
+	 *             if the file is not found
 	 * @throws JargonException
 	 */
 	ObjStat retrieveObjectStatForPath(String irodsAbsolutePath)
-			throws JargonException;
+			throws FileNotFoundException, JargonException;
 
 }
