@@ -202,6 +202,8 @@ public class IRODSFileSystemAOHelper extends AOHelper {
 		query.append(RodsGenQueryEnum.COL_COLL_ACCESS_USER_ID.getName());
 		query.append(COMMA);
 		query.append(RodsGenQueryEnum.COL_COLL_ACCESS_USER_NAME.getName());
+		query.append(COMMA);
+		query.append(RodsGenQueryEnum.COL_COLL_ACCESS_USER_ZONE.getName());
 		query.append(" WHERE ");
 		query.append(RodsGenQueryEnum.COL_COLL_PARENT_NAME.getName());
 		query.append(" = '");

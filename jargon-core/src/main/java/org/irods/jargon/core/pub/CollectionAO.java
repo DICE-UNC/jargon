@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.DuplicateDataException;
+import org.irods.jargon.core.exception.FileNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.protovalues.FilePermissionEnum;
 import org.irods.jargon.core.pub.domain.AvuData;
@@ -468,10 +469,13 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	 *            <code>String</code> with the absolute path to the iRODS
 	 *            collection for which permissions will be retrieved.
 	 * @return <code>List</code> of {@link FilePermissionEnum}
+	 * @throws FileNotFoundException
+	 *             if file is not located
 	 * @throws JargonException
 	 */
 	List<UserFilePermission> listPermissionsForCollection(
-			String irodsCollectionAbsolutePath) throws JargonException;
+			String irodsCollectionAbsolutePath) throws FileNotFoundException,
+			JargonException;
 
 	/**
 	 * Overwrite AVU metadata for this collection

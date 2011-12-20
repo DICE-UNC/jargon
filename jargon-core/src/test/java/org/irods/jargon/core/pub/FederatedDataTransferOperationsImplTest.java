@@ -109,7 +109,8 @@ public class FederatedDataTransferOperationsImplTest {
 		dataTransferOperationsAO.putOperation(localFile, destFile, null, null);
 		destFile.close();
 
-		irodsFileFactory = irodsFileSystem.getIRODSFileFactory(irodsAccount);
+		irodsFileFactory = irodsFileSystem
+				.getIRODSFileFactory(crossZoneAccount);
 		destFile = irodsFileFactory
 				.instanceIRODSFile(irodsCollectionRootAbsolutePath + "/"
 						+ rootCollection);
@@ -119,7 +120,6 @@ public class FederatedDataTransferOperationsImplTest {
 	}
 
 	@Test
-	// FIXME: bug in setup?
 	public void testGetCollectionWithTwoFilesInAnotherZone() throws Exception {
 
 		if (!testingPropertiesHelper.isTestFederatedZone(testingProperties)) {
@@ -178,6 +178,7 @@ public class FederatedDataTransferOperationsImplTest {
 				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH
 						+ '/' + returnedLocalCollection);
 		File returnLocalFile = new File(returnLocalCollectionAbsolutePath);
+
 
 		dataTransferOperationsAO.getOperation(getIrodsFile, returnLocalFile,
 				null, null);

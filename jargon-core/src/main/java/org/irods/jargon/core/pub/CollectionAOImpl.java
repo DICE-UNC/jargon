@@ -17,6 +17,7 @@ import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.DuplicateDataException;
+import org.irods.jargon.core.exception.FileNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.packinstr.ModAccessControlInp;
 import org.irods.jargon.core.packinstr.ModAvuMetadataInp;
@@ -1263,9 +1264,15 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 		}
 
 		boolean collNeedsRecursive = recursive;
+		CollectionAndDataObjectListAndSearchAO collectionAndDataObjectListAndSearchAO = this
+				.getIRODSAccessObjectFactory()
+				.getCollectionAndDataObjectListAndSearchAO(
+						this.getIRODSAccount());
+		int countFilesUnderParent = collectionAndDataObjectListAndSearchAO
+				.countDataObjectsAndCollectionsUnderPath(absolutePath);
 
 		if (recursive) {
-			if (collFile.list().length == 0) {
+			if (countFilesUnderParent == 0) {
 				log.info("overridding recursive flag, file has no children");
 				collNeedsRecursive = false;
 			}
@@ -1361,7 +1368,8 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 	 */
 	@Override
 	public List<UserFilePermission> listPermissionsForCollection(
-			final String irodsCollectionAbsolutePath) throws JargonException {
+			final String irodsCollectionAbsolutePath)
+			throws FileNotFoundException, JargonException {
 
 		if (irodsCollectionAbsolutePath == null
 				|| irodsCollectionAbsolutePath.isEmpty()) {
@@ -1369,6 +1377,15 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 					"null or empty collectionAbsolutePath");
 		}
 
+		/*
+		 * ObjStat objStat =
+		 * this.getObjectStatForAbsolutePath(irodsCollectionAbsolutePath);
+		 * log.info("objStat obtained:{}", objStat); // objStat will be more
+		 * important later on, when we deal with mounted // collections, etc
+		 * 
+		 * String zone =
+		 * MiscIRODSUtils.getZoneInPath(irodsCollectionAbsolutePath);
+		 */
 		log.info("listPermissionsForCollection: {}",
 				irodsCollectionAbsolutePath);
 		List<UserFilePermission> userFilePermissions = new ArrayList<UserFilePermission>();
@@ -1396,13 +1413,17 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 					irodsQuery, 0);
 
 			UserFilePermission userFilePermission = null;
+			StringBuilder userAndZone = null;
 			for (IRODSQueryResultRow row : resultSet.getResults()) {
-				user = userAO.findById(row.getColumn(1));
+				userAndZone = new StringBuilder(row.getColumn(0));
+				userAndZone.append('#');
+				userAndZone.append(row.getColumn(3));
+				user = userAO.findByName(userAndZone.toString());
 				userFilePermission = new UserFilePermission(row.getColumn(0),
 						row.getColumn(1),
 						FilePermissionEnum.valueOf(IRODSDataConversionUtil
 								.getIntOrZeroFromIRODSValue(row.getColumn(2))),
-						user.getUserType());
+						user.getUserType(), row.getColumn(3));
 				log.debug("loaded filePermission:{}", userFilePermission);
 				userFilePermissions.add(userFilePermission);
 			}

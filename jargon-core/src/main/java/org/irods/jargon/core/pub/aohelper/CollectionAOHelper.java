@@ -333,12 +333,15 @@ public class CollectionAOHelper extends AOHelper {
 		 * get the user type
 		 */
 		UserFilePermission userFilePermission;
-		User user = userAO.findById(row.getColumn(8));
+		StringBuilder userAndZone = new StringBuilder(row.getColumn(9));
+		userAndZone.append('#');
+		userAndZone.append(row.getColumn(10));
+		User user = userAO.findByName(userAndZone.toString());
 		userFilePermission = new UserFilePermission(row.getColumn(9),
 				row.getColumn(8),
 				FilePermissionEnum.valueOf(IRODSDataConversionUtil
 						.getIntOrZeroFromIRODSValue(row.getColumn(7))),
-				user.getUserType());
+				user.getUserType(), row.getColumn(10));
 		userFilePermissions.add(userFilePermission);
 	}
 
@@ -365,6 +368,8 @@ public class CollectionAOHelper extends AOHelper {
 	 * 
 	 * @param irodsCollectionAbsolutePath
 	 */
+	
+
 	public static String buildACLQueryForCollectionName(
 			final String irodsCollectionAbsolutePath) {
 		StringBuilder query = new StringBuilder();
@@ -374,6 +379,8 @@ public class CollectionAOHelper extends AOHelper {
 		query.append(RodsGenQueryEnum.COL_COLL_ACCESS_USER_ID.getName());
 		query.append(",");
 		query.append(RodsGenQueryEnum.COL_COLL_ACCESS_TYPE.getName());
+		query.append(",");
+		query.append(RodsGenQueryEnum.COL_COLL_ACCESS_USER_ZONE.getName());
 		query.append(" WHERE ");
 		query.append(RodsGenQueryEnum.COL_COLL_NAME.getName());
 		query.append(" = '");

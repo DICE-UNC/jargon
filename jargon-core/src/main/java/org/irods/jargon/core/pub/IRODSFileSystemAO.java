@@ -67,11 +67,11 @@ public interface IRODSFileSystemAO extends IRODSAccessObject {
 	 * @param irodsFile
 	 * @return
 	 * @throws JargonException
-	 * @throws DataNotFoundException
+	 * @throws FileNoFoundException
 	 *             Thrown if the file does not exist in iRODS
 	 */
-	List<String> getListInDir(IRODSFile irodsFile) throws JargonException,
-			DataNotFoundException;
+	List<String> getListInDir(IRODSFile irodsFile)
+			throws FileNotFoundException, JargonException;
 
 	/**
 	 * Apply a filter implementation that will select result files.

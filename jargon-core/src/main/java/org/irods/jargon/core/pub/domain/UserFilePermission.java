@@ -13,6 +13,7 @@ import org.irods.jargon.core.protovalues.UserTypeEnum;
 public class UserFilePermission {
 
 	private String userName = "";
+	private String userZone = "";
 	private String userId = "";
 	private UserTypeEnum userType = UserTypeEnum.RODS_UNKNOWN;
 	private FilePermissionEnum filePermissionEnum;
@@ -33,6 +34,28 @@ public class UserFilePermission {
 			final FilePermissionEnum filePermissionEnum,
 			final UserTypeEnum userType) {
 
+		this(userName, userId, filePermissionEnum, userType, "");
+	}
+
+	/**
+	 * Public values constructor.
+	 * 
+	 * @param userName
+	 *            <code>String</code> with the name of the user
+	 * @param userId
+	 *            <code>String</code> with the id of the user
+	 * @param filePermissionEnum
+	 *            {@link FilePermissionEnum} for the given user
+	 * @param userType
+	 *            {@link UserTypeEnum} value for user
+	 * @param userZone
+	 *            <code>String</code> with an optional zone name, set to blank
+	 *            if not used
+	 */
+	public UserFilePermission(final String userName, final String userId,
+			final FilePermissionEnum filePermissionEnum,
+			final UserTypeEnum userType, final String userZone) {
+
 		if (userName == null || userName.isEmpty()) {
 			throw new IllegalArgumentException("null or empty userName");
 		}
@@ -49,10 +72,16 @@ public class UserFilePermission {
 			throw new IllegalArgumentException("null userType");
 		}
 
+		if (userZone == null) {
+			throw new IllegalArgumentException("null userZone");
+		}
+
 		this.userName = userName;
 		this.userId = userId;
 		this.filePermissionEnum = filePermissionEnum;
 		this.userType = userType;
+		this.userZone = userZone;
+
 	}
 
 	@Override
@@ -67,6 +96,8 @@ public class UserFilePermission {
 		sb.append(filePermissionEnum);
 		sb.append("\n   userType:");
 		sb.append(userType);
+		sb.append("\n   userZone:");
+		sb.append(userZone);
 		return sb.toString();
 	}
 
@@ -146,6 +177,42 @@ public class UserFilePermission {
 	 */
 	public synchronized void setUserType(final UserTypeEnum userType) {
 		this.userType = userType;
+	}
+
+	public String getUserZone() {
+		return userZone;
+	}
+
+	public void setUserZone(String userZone) {
+		this.userZone = userZone;
+	}
+
+	/**
+	 * Get the user name in user#zone format if from another zone. An optional
+	 * <code>homeZoneName</code> parameter can be supplied so that users in the
+	 * home zone do not have the #zone appended. This is appropriate for display
+	 * in interfaces.
+	 * 
+	 * @param homeZoneName
+	 *            <code>String</code> with the home zone used to filter the
+	 *            formatted zone display. This may be <code>null</code> or
+	 *            blank, which results in all users having the #zone appended.
+	 * @return <code>String</code> with the format of user#zone
+	 */
+	public String getConcatenatedUserAndZone(final String homeZoneName) {
+		StringBuilder sb = new StringBuilder(userName);
+		if (!userZone.isEmpty()) {
+			if (homeZoneName == null || homeZoneName.isEmpty()) {
+				sb.append('#');
+				sb.append(userZone);
+			} else {
+				if (!homeZoneName.equals(userZone)) {
+					sb.append('#');
+					sb.append(userZone);
+				}
+			}
+		}
+		return sb.toString();
 	}
 
 }

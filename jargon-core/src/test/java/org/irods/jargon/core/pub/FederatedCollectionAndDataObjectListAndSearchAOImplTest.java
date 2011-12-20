@@ -5,10 +5,12 @@ import java.util.List;
 import java.util.Properties;
 
 import junit.framework.Assert;
+import junit.framework.TestCase;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.FileNotFoundException;
 import org.irods.jargon.core.pub.domain.Collection;
+import org.irods.jargon.core.pub.domain.UserFilePermission;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.pub.io.IRODSFileFactory;
 import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry;
@@ -40,12 +42,12 @@ public class FederatedCollectionAndDataObjectListAndSearchAOImplTest {
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 
+		org.irods.jargon.testutils.TestingPropertiesHelper testingPropertiesLoader = new TestingPropertiesHelper();
+		testingProperties = testingPropertiesLoader.getTestProperties();
+
 		if (!testingPropertiesHelper.isTestFederatedZone(testingProperties)) {
 			return;
 		}
-
-		org.irods.jargon.testutils.TestingPropertiesHelper testingPropertiesLoader = new TestingPropertiesHelper();
-		testingProperties = testingPropertiesLoader.getTestProperties();
 
 		if (!testingPropertiesHelper.isTestFederatedZone(testingProperties)) {
 			return;
@@ -256,79 +258,89 @@ public class FederatedCollectionAndDataObjectListAndSearchAOImplTest {
 
 	}
 
+	/**
+	 * For a collection, add a federated user, and then query the collections
+	 * with permissions to make sure the cross zone user is found, with the
+	 * appropriate zone.
+	 * 
+	 * @throws Exception
+	 */
 	@Test
-	public void testListCollectionsUnderPathWithPermissionsInAnotherZone()
+	public void testListCollectionsUnderPathWithPermissionsIncludingACrossZoneUser()
 			throws Exception {
 
 		if (!testingPropertiesHelper.isTestFederatedZone(testingProperties)) {
 			return;
 		}
 
-		String subdirPrefix = "testListCollectionsUnderPathWithPermissionsInAnotherZone";
-		int count = 20;
-
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountForFederatedZoneFromTestProperties(testingProperties);
+		String testCollectionName = "testListCollectionsUnderPathWithPermissionsIncludingACrossZoneUser";
+		String subCollName = "testListCollectionsUnderPathWithPermissionsIncludingACrossZoneUserSubColl";
 
 		String targetIrodsCollection = testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromFederatedZoneReadTestProperties(
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + "/"
-								+ subdirPrefix);
-		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
-				.instanceIRODSFile(targetIrodsCollection);
-		irodsFile.mkdir();
-		irodsFile.close();
+								+ testCollectionName);
 
-		// add another acl for another user to this file
-
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
 		CollectionAO collectionAO = irodsFileSystem
 				.getIRODSAccessObjectFactory().getCollectionAO(irodsAccount);
-		collectionAO.setAccessPermissionWrite(irodsAccount.getZone(), irodsFile
-				.getAbsolutePath(), testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY),
-				false);
+		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetIrodsCollection, subCollName);
+		irodsFile.mkdirs();
 
-		String myTarget = "";
+		collectionAO
+				.setAccessPermissionRead(
+						"",
+						irodsFile.getAbsolutePath(),
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY),
+						true);
 
-		for (int i = 0; i < count; i++) {
-			myTarget = targetIrodsCollection + "/c" + (10000 + i)
-					+ subdirPrefix;
-			irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
-					.instanceIRODSFile(myTarget);
-			irodsFile.mkdir();
-			irodsFile.close();
-			collectionAO
-					.setAccessPermissionWrite(
-							irodsAccount.getZone(),
-							irodsFile.getAbsolutePath(),
-							testingProperties
-									.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY),
-							false);
-		}
+		collectionAO
+				.setAccessPermissionRead(
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_ZONE_KEY),
+						irodsFile.getAbsolutePath(),
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_USER_KEY),
+						true);
 
-		IRODSAccount zone1Account = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		CollectionAndDataObjectListAndSearchAOImpl actual = (CollectionAndDataObjectListAndSearchAOImpl) irodsFileSystem
+		CollectionAndDataObjectListAndSearchAO collectionAndDataObjectListAndSearchAO = irodsFileSystem
 				.getIRODSAccessObjectFactory()
-				.getCollectionAndDataObjectListAndSearchAO(zone1Account);
-		List<CollectionAndDataObjectListingEntry> entries = actual
+				.getCollectionAndDataObjectListAndSearchAO(irodsAccount);
+
+		List<CollectionAndDataObjectListingEntry> collections = collectionAndDataObjectListAndSearchAO
 				.listCollectionsUnderPathWithPermissions(targetIrodsCollection,
 						0);
 
-		Assert.assertNotNull(entries);
-		Assert.assertFalse("entries was empty", entries.isEmpty());
-		CollectionAndDataObjectListingEntry entry = entries
-				.get(entries.size() - 1);
-		Assert.assertEquals("i am not the owner", irodsAccount.getUserName(),
-				entry.getOwnerName());
+		TestCase.assertEquals("should have 1 collection", 1, collections.size());
 
-		// each entry has two permissions, will have extra for fed so tolerate
-		// that
-		for (CollectionAndDataObjectListingEntry actualEntry : entries) {
-			Assert.assertTrue("did not get both expected permissions",
-					actualEntry.getUserFilePermission().size() > 2);
+		boolean foundCrossZone = false;
+
+		List<UserFilePermission> userFilePermissions = collections.get(0)
+				.getUserFilePermission();
+		Assert.assertNotNull("got a null userFilePermissions",
+				userFilePermissions);
+		Assert.assertEquals("did not find the three permissions", 3,
+				userFilePermissions.size());
+
+		for (UserFilePermission userFilePermission : userFilePermissions) {
+			if (userFilePermission
+					.getUserZone()
+					.equals(testingProperties
+							.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_ZONE_KEY))
+					&& userFilePermission
+							.getUserName()
+							.equals(testingProperties
+									.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_USER_KEY))) {
+				foundCrossZone = true;
+			}
+
 		}
 
+		TestCase.assertTrue("did not find cross zone user with zone info",
+				foundCrossZone);
 	}
 
 	@Test
@@ -432,6 +444,61 @@ public class FederatedCollectionAndDataObjectListAndSearchAOImplTest {
 		Assert.assertNotNull("object was null", actual);
 		boolean isCollection = actual instanceof Collection;
 		Assert.assertTrue("was not a collection", isCollection);
+
+	}
+
+	@Test
+	public void testCountFilesAndCollectionsUnderPathInAnotherZone()
+			throws Exception {
+
+		if (!testingPropertiesHelper.isTestFederatedZone(testingProperties)) {
+			return;
+		}
+
+		String subdirPrefix = "testCountFilesAndCollectionsUnderPathInAnotherZone";
+		String fileName = "testCountFilesAndCollectionsUnderPathInAnotherZone.txt";
+
+		int count = 10;
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountForFederatedZoneFromTestProperties(testingProperties);
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromFederatedZoneReadTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + "/"
+								+ subdirPrefix);
+		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetIrodsCollection);
+		irodsFile.mkdir();
+		irodsFile.close();
+
+		String myTarget = "";
+
+		for (int i = 0; i < count; i++) {
+			myTarget = targetIrodsCollection + "/c" + (10000 + i)
+					+ subdirPrefix;
+			irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+					.instanceIRODSFile(myTarget);
+			irodsFile.mkdir();
+			irodsFile.close();
+		}
+
+		for (int i = 0; i < count; i++) {
+			myTarget = targetIrodsCollection + "/c" + (10000 + i) + fileName;
+			irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+					.instanceIRODSFile(myTarget);
+			irodsFile.createNewFile();
+			irodsFile.close();
+		}
+
+		IRODSAccount zone1Account = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		CollectionAndDataObjectListAndSearchAO actual = irodsFileSystem
+				.getIRODSAccessObjectFactory()
+				.getCollectionAndDataObjectListAndSearchAO(zone1Account);
+		int ctr = actual
+				.countDataObjectsAndCollectionsUnderPath(targetIrodsCollection);
+		Assert.assertEquals(count * 2, ctr);
 
 	}
 

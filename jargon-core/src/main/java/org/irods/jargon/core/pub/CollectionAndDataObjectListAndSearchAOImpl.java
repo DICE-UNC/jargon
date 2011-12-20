@@ -26,6 +26,7 @@ import org.irods.jargon.core.query.IRODSQueryResultSetInterface;
 import org.irods.jargon.core.query.JargonQueryException;
 import org.irods.jargon.core.query.RodsGenQueryEnum;
 import org.irods.jargon.core.utils.IRODSDataConversionUtil;
+import org.irods.jargon.core.utils.MiscIRODSUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -185,11 +186,12 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 
 		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(query.toString(), 1);
 		IRODSQueryResultSetInterface resultSet;
+		String zone = MiscIRODSUtils.getZoneInPath(absolutePathToParent);
 
 		try {
 			resultSet = irodsGenQueryExecutor
 					.executeIRODSQueryAndCloseResultInZone(irodsQuery, 0,
-							objStat.getOwnerZone());
+ zone);
 		} catch (JargonQueryException e) {
 			log.error(QUERY_EXCEPTION_FOR_QUERY + query.toString(), e);
 			throw new JargonException(e);
@@ -220,7 +222,8 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		irodsQuery = IRODSGenQuery.instance(query.toString(), 1);
 
 		try {
-			resultSet = irodsGenQueryExecutor.executeIRODSQuery(irodsQuery, 0);
+			resultSet = irodsGenQueryExecutor
+					.executeIRODSQueryAndCloseResultInZone(irodsQuery, 0, zone);
 		} catch (JargonQueryException e) {
 			log.error(QUERY_EXCEPTION_FOR_QUERY + query.toString(), e);
 			throw new JargonException("error in exists query", e);
@@ -543,7 +546,8 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		try {
 			resultSet = irodsGenQueryExecutor
 					.executeIRODSQueryWithPagingInZone(irodsQuery,
-							partialStartIndex, objStat.getOwnerZone());
+							partialStartIndex,
+							MiscIRODSUtils.getZoneInPath(irodsAbsolutePath));
 		} catch (JargonQueryException e) {
 			log.error(QUERY_EXCEPTION_FOR_QUERY + queryString, e);
 			throw new JargonException(e);

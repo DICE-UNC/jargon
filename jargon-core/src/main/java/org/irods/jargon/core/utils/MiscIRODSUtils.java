@@ -94,6 +94,30 @@ public class MiscIRODSUtils {
 	}
 
 	/**
+	 * Get the zone name from the provided iRODS absolute path
+	 * 
+	 * @param irodsAbsolutePath
+	 *            <code>String</code> with the absolute path to an iRODS file or
+	 *            collection
+	 * @return <code>String</code> with the zone name, or null if the zone name
+	 *         is not in the path (e.g. if the path is just '/')
+	 */
+	public static String getZoneInPath(final String irodsAbsolutePath) {
+		if (irodsAbsolutePath == null || irodsAbsolutePath.isEmpty()) {
+			throw new IllegalArgumentException(
+					"null or empty irodsAbsolutePath");
+		}
+
+		List<String> pathComponents = breakIRODSPathIntoComponents(irodsAbsolutePath);
+
+		if (pathComponents.size() <= 1) {
+			return null;
+		} else {
+			return pathComponents.get(1);
+		}
+	}
+
+	/**
 	 * @param irodsAccount
 	 * @param inZone
 	 * @param pathComponents

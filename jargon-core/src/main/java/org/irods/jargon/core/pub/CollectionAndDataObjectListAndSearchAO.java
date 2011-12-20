@@ -350,6 +350,14 @@ public interface CollectionAndDataObjectListAndSearchAO extends
 	 * as record count, and whether this is the last record. This method adds
 	 * the user ACL information, which is derived from an extended query.
 	 * <p/>
+	 * Note that there is an issue with GenQuery that makes it impossible to
+	 * derive user zone in this query. This is something that may be addressed
+	 * by converting the GenQuery to 'specific SQL query' at a later time. If
+	 * zone information is desired, it is recommended that the
+	 * <code>listPermissionsForDataObject()</code> in {@link DataObjectAO} and
+	 * <code>listPermissionsForCollection</code> in {@link CollectionAO} be
+	 * consulted.
+	 * <p/>
 	 * This method is meant for listings, or building trees. As such, it does
 	 * not show any information about replicas, rather, it groups the data by
 	 * data object path for all replicas.

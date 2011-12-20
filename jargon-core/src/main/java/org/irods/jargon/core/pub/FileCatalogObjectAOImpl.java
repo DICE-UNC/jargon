@@ -7,9 +7,11 @@ import java.util.List;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSSession;
+import org.irods.jargon.core.exception.FileNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.packinstr.DataObjInp;
 import org.irods.jargon.core.packinstr.Tag;
+import org.irods.jargon.core.pub.domain.ObjStat;
 import org.irods.jargon.core.pub.domain.Resource;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.slf4j.Logger;
@@ -184,6 +186,23 @@ public abstract class FileCatalogObjectAOImpl extends IRODSGenericAO implements
 		}
 
 		return hostResponse;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.FileCatalogObjectAO#getObjectStatForAbsolutePath
+	 * (java.lang.String)
+	 */
+	@Override
+	public ObjStat getObjectStatForAbsolutePath(final String irodsAbsolutePath)
+			throws FileNotFoundException, JargonException {
+		CollectionAndDataObjectListAndSearchAO collectionAndDataObjectListAndSearchAO = this
+				.getIRODSAccessObjectFactory()
+				.getCollectionAndDataObjectListAndSearchAO(getIRODSAccount());
+		return collectionAndDataObjectListAndSearchAO
+				.retrieveObjectStatForPath(irodsAbsolutePath);
 	}
 
 }
