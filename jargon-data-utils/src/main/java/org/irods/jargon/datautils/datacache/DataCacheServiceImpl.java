@@ -19,14 +19,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Service to provide a secure data cache. This allows information to be serialized
- * by a key and stored as an iRODS file in an encrypted format, and later
- * retrieved.
+ * Service to provide a secure data cache. This allows information to be
+ * serialized by a key and stored as an iRODS file in an encrypted format, and
+ * later retrieved.
  * 
  * @author Mike Conway - DICE (www.irods.org)
  * 
  */
-public class DataCacheServiceImpl extends AbstractDataUtilsServiceImpl implements DataCacheService {
+public class DataCacheServiceImpl extends AbstractDataUtilsServiceImpl
+		implements DataCacheService {
 
 	String xform = "DES/ECB/PKCS5Padding";
 
@@ -42,12 +43,16 @@ public class DataCacheServiceImpl extends AbstractDataUtilsServiceImpl implement
 
 	/**
 	 * Constructor with required dependencies
-	 * @param irodsAccessObjectFactory {@link IRODSAccessObjectFactory} that can create necessary objects
-	 * @param irodsAccount {@link IRODSAccount} that contains the login information
+	 * 
+	 * @param irodsAccessObjectFactory
+	 *            {@link IRODSAccessObjectFactory} that can create necessary
+	 *            objects
+	 * @param irodsAccount
+	 *            {@link IRODSAccount} that contains the login information
 	 */
 	public DataCacheServiceImpl(
-			IRODSAccessObjectFactory irodsAccessObjectFactory,
-			IRODSAccount irodsAccount) {
+			final IRODSAccessObjectFactory irodsAccessObjectFactory,
+			final IRODSAccount irodsAccount) {
 		super(irodsAccessObjectFactory, irodsAccount);
 	}
 
@@ -58,9 +63,11 @@ public class DataCacheServiceImpl extends AbstractDataUtilsServiceImpl implement
 		super();
 	}
 
-
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.datautils.datacache.AccountCacheService#putStringValueIntoCache(java.lang.String, java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.datautils.datacache.AccountCacheService#
+	 * putStringValueIntoCache(java.lang.String, java.lang.String)
 	 */
 	@Override
 	public String putStringValueIntoCache(final String stringToCache,
@@ -99,7 +106,7 @@ public class DataCacheServiceImpl extends AbstractDataUtilsServiceImpl implement
 		IRODSFile cacheFile = this.getIrodsAccessObjectFactory()
 				.getIRODSFileFactory(irodsAccount)
 				.instanceIRODSFile(irodsFileAbsolutePath);
-		
+
 		createCacheFileAndCacheDir(cacheFile);
 		Stream2StreamAO stream2StreamAO = this.getIrodsAccessObjectFactory()
 				.getStream2StreamAO(irodsAccount);
@@ -114,7 +121,7 @@ public class DataCacheServiceImpl extends AbstractDataUtilsServiceImpl implement
 	 * @param cacheFile
 	 * @throws JargonException
 	 */
-	private void createCacheFileAndCacheDir(IRODSFile cacheFile)
+	private void createCacheFileAndCacheDir(final IRODSFile cacheFile)
 			throws JargonException {
 		try {
 			cacheFile.getParentFile().mkdirs();
@@ -123,9 +130,12 @@ public class DataCacheServiceImpl extends AbstractDataUtilsServiceImpl implement
 			throw new JargonException("error creating new cache file");
 		}
 	}
-	
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.datautils.datacache.DataCacheService#retrieveStringValueFromCache(java.lang.String, java.lang.String)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.datautils.datacache.DataCacheService#
+	 * retrieveStringValueFromCache(java.lang.String, java.lang.String)
 	 */
 	@Override
 	public String retrieveStringValueFromCache(final String userName,
@@ -169,8 +179,11 @@ public class DataCacheServiceImpl extends AbstractDataUtilsServiceImpl implement
 
 	}
 
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.datautils.datacache.AccountCacheService#putSerializedEncryptedObjectIntoCache(java.lang.Object, java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.datautils.datacache.AccountCacheService#
+	 * putSerializedEncryptedObjectIntoCache(java.lang.Object, java.lang.String)
 	 */
 	@Override
 	public String putSerializedEncryptedObjectIntoCache(
@@ -230,8 +243,11 @@ public class DataCacheServiceImpl extends AbstractDataUtilsServiceImpl implement
 
 	}
 
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.datautils.datacache.AccountCacheService#retrieveObjectFromCache(java.lang.String, java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.datautils.datacache.AccountCacheService#
+	 * retrieveObjectFromCache(java.lang.String, java.lang.String)
 	 */
 	@Override
 	public Object retrieveObjectFromCache(final String userName,
@@ -284,7 +300,8 @@ public class DataCacheServiceImpl extends AbstractDataUtilsServiceImpl implement
 	 * @param userName
 	 * @return
 	 */
-	private String buildIRODSFileAbsolutePath(int keyHash, String userName) {
+	private String buildIRODSFileAbsolutePath(final int keyHash,
+			final String userName) {
 		StringBuilder sb = new StringBuilder();
 		if (cacheServiceConfiguration.isCacheInHomeDir()) {
 			log.info("building home dir cache file");
@@ -345,22 +362,45 @@ public class DataCacheServiceImpl extends AbstractDataUtilsServiceImpl implement
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.datautils.datacache.AccountCacheService#purgeOldRequests()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.datautils.datacache.AccountCacheService#purgeOldRequests
+	 * ()
 	 */
 	@Override
 	public void purgeOldRequests() throws JargonException {
 		log.info("purgeOldRequests()");
-		long minToMillis = (long) this.getCacheServiceConfiguration().getLifetimeInMinutes() * 60 * 1000;
+		long minToMillis = (long) this.getCacheServiceConfiguration()
+				.getLifetimeInMinutes() * 60 * 1000;
 		long millisNow = System.currentTimeMillis();
 		long purgeThreshold = millisNow - minToMillis;
 		log.info("purge threshold:{}", purgeThreshold);
 		log.info("millis now:{}", millisNow);
-	
+
+		IRODSFile cacheDir = null;
+		if (cacheServiceConfiguration.isCacheInHomeDir()) {
+			StringBuilder homeDir = new StringBuilder(this.getIrodsAccount()
+					.getZone());
+			homeDir.append("/home/");
+			homeDir.append(cacheServiceConfiguration.getCacheDirPath());
+			cacheDir = irodsAccessObjectFactory.getIRODSFileFactory(
+					irodsAccount).instanceIRODSFile(homeDir.toString());
+		} else {
+			cacheDir = irodsAccessObjectFactory.getIRODSFileFactory(
+					irodsAccount).instanceIRODSFile(
+					cacheServiceConfiguration.getCacheDirPath());
+		}
+
 		// list the files in the cache and purge any expired
-		
-		IRODSFile cacheDir = irodsAccessObjectFactory.getIRODSFileFactory(irodsAccount).instanceIRODSFile(cacheServiceConfiguration.getCacheDirPath());
-		
+		log.info("cache dir path:{}", cacheDir.getAbsolutePath());
+
+		if (!cacheDir.exists()) {
+			log.info("cache dir does not exist, do not purge");
+			return;
+		}
+
 		for (File irodsFile : cacheDir.listFiles()) {
 			if (irodsFile.lastModified() < purgeThreshold) {
 				log.info("purging:{}", irodsFile.getAbsolutePath());
@@ -370,22 +410,29 @@ public class DataCacheServiceImpl extends AbstractDataUtilsServiceImpl implement
 				}
 			}
 		}
-		
+
 		log.info("purge complete");
 
 	}
 
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.datautils.datacache.AccountCacheService#setCacheServiceConfiguration(org.irods.jargon.datautils.datacache.CacheServiceConfiguration)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.datautils.datacache.AccountCacheService#
+	 * setCacheServiceConfiguration
+	 * (org.irods.jargon.datautils.datacache.CacheServiceConfiguration)
 	 */
 	@Override
 	public void setCacheServiceConfiguration(
-			CacheServiceConfiguration cacheServiceConfiguration) {
+			final CacheServiceConfiguration cacheServiceConfiguration) {
 		this.cacheServiceConfiguration = cacheServiceConfiguration;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.datautils.datacache.AccountCacheService#getCacheServiceConfiguration()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.datautils.datacache.AccountCacheService#
+	 * getCacheServiceConfiguration()
 	 */
 	@Override
 	public CacheServiceConfiguration getCacheServiceConfiguration() {

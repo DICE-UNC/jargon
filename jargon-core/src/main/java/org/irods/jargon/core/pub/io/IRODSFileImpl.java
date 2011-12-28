@@ -493,7 +493,6 @@ public final class IRODSFileImpl extends File implements IRODSFile {
 		boolean isExists = false;
 
 		try {
-			initializeObjStatForFile();
 			isExists = irodsFileSystemAO.isFileExists(this);
 		} catch (FileNotFoundException e) {
 			log.warn("file not found exception, return false", e);
@@ -694,7 +693,6 @@ public final class IRODSFileImpl extends File implements IRODSFile {
 		boolean isDir = false;
 		try {
 			if (objStat == null) {
-
 				log.info("looking up objStat, not cached in file");
 				objStat = irodsFileSystemAO.getObjStat(this.getAbsolutePath());
 			}
