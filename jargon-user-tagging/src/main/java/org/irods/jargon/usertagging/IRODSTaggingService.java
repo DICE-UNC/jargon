@@ -190,7 +190,10 @@ public interface IRODSTaggingService {
 
 	/**
 	 * Add a description for a data object, using the user supplied in the
-	 * <code>IRODSTagValue</code>
+	 * <code>IRODSTagValue</code>.
+	 * <p/>
+	 * Note that, if the description is blank, an attempt will be made to delete
+	 * any description information currently stored.
 	 * 
 	 * @param dataObjectAbsolutePath
 	 *            <code>String</code> with the absolute path to a data object
@@ -198,8 +201,10 @@ public interface IRODSTaggingService {
 	 * @param irodsDescriptionValue
 	 *            {@link IRODSTagValue} with the text value of a description
 	 *            that will be added to a data object for the specified user
-	 * @throws DataNotFoundException if the target data object is not found
-	 * @throws DuplicateDataException if the tag already exists
+	 * @throws DataNotFoundException
+	 *             if the target data object is not found
+	 * @throws DuplicateDataException
+	 *             if the tag already exists
 	 * @throws JargonException
 	 * 
 	 */
@@ -261,6 +266,9 @@ public interface IRODSTaggingService {
 	/**
 	 * Add a description to the collection using the user in the provided
 	 * <code>IRODSTagValue</code>
+	 * <p/>
+	 * Note that adding a blank description will delete any description AVU data
+	 * in iRODS.
 	 * 
 	 * @param collectionAbsolutePath
 	 *            <code>String</code> with the absolute path to the iRODS
@@ -268,8 +276,10 @@ public interface IRODSTaggingService {
 	 * @param irodsDescriptionValue
 	 *            {@link IRODSTagValue} with the value of a description that
 	 *            will be added to the collection
-	 * @throws DataNotFoundException if the target collection is not found
-	 * @throws DuplicateDataException if the tag already exists
+	 * @throws DataNotFoundException
+	 *             if the target collection is not found
+	 * @throws DuplicateDataException
+	 *             if the tag already exists
 	 * @throws JargonException
 	 */
 	void addDescriptionToCollection(String collectionAbsolutePath,

@@ -46,6 +46,7 @@ Note that the following bug and feature requests are logged in GForge with relat
 [#519] tolerate quote in data name for acl query
 [#547] error running old style rule via irods file
 [#548] user list all not ordered
+[#546] handle setting blank comment on data or collection, causing delete of comment AVU data
 
 
 ==Features==

@@ -124,8 +124,12 @@ public final class IRODSTaggingServiceImpl extends AbstractIRODSTaggingService
 
 	}
 
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.usertagging.IRODSTaggingService#checkAndUpdateDescriptionOnDataObject(java.lang.String, org.irods.jargon.usertagging.domain.IRODSTagValue)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.usertagging.IRODSTaggingService#
+	 * checkAndUpdateDescriptionOnDataObject(java.lang.String,
+	 * org.irods.jargon.usertagging.domain.IRODSTagValue)
 	 */
 	@Override
 	public void checkAndUpdateDescriptionOnDataObject(
@@ -147,7 +151,8 @@ public final class IRODSTaggingServiceImpl extends AbstractIRODSTaggingService
 		 * update
 		 */
 
-		if (irodsDescriptionValue == null || irodsDescriptionValue.getTagData().isEmpty()) {
+		if (irodsDescriptionValue == null
+				|| irodsDescriptionValue.getTagData().isEmpty()) {
 			log.info("description is being deleted:{}", irodsDescriptionValue);
 			deleteDescriptionFromDataObject(dataObjectAbsolutePath,
 					currentIrodsDescriptionValue);
@@ -171,10 +176,13 @@ public final class IRODSTaggingServiceImpl extends AbstractIRODSTaggingService
 		log.info("update done");
 
 	}
-	
-	
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.usertagging.IRODSTaggingService#checkAndUpdateDescriptionOnCollection(java.lang.String, org.irods.jargon.usertagging.domain.IRODSTagValue)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.usertagging.IRODSTaggingService#
+	 * checkAndUpdateDescriptionOnCollection(java.lang.String,
+	 * org.irods.jargon.usertagging.domain.IRODSTagValue)
 	 */
 	@Override
 	public void checkAndUpdateDescriptionOnCollection(
@@ -196,7 +204,8 @@ public final class IRODSTaggingServiceImpl extends AbstractIRODSTaggingService
 		 * update
 		 */
 
-		if (irodsDescriptionValue == null || irodsDescriptionValue.getTagData().isEmpty()) {
+		if (irodsDescriptionValue == null
+				|| irodsDescriptionValue.getTagData().isEmpty()) {
 			log.info("description is being deleted:{}", irodsDescriptionValue);
 			deleteDescriptionFromCollection(collectionAbsolutePath,
 					currentIrodsDescriptionValue);
@@ -221,7 +230,6 @@ public final class IRODSTaggingServiceImpl extends AbstractIRODSTaggingService
 
 	}
 
-
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -243,17 +251,24 @@ public final class IRODSTaggingServiceImpl extends AbstractIRODSTaggingService
 			throw new IllegalArgumentException("null irodsDescriptionValue");
 		}
 
-		log.info("adding descrition:{}", irodsDescriptionValue);
+		log.info("adding description:{}", irodsDescriptionValue);
 		log.info("to data object:{}", dataObjectAbsolutePath);
 
-		AvuData avuData = AvuData.instance(irodsDescriptionValue.getTagData(),
-				irodsDescriptionValue.getTagUser(),
-				UserTaggingConstants.DESCRIPTION_AVU_UNIT);
 
-		DataObjectAO dataObjectAO = irodsAccessObjectFactory
-				.getDataObjectAO(irodsAccount);
-		dataObjectAO.addAVUMetadata(dataObjectAbsolutePath, avuData);
-		log.debug("description added successfully");
+		if (irodsDescriptionValue.getTagData().isEmpty()) {
+			log.info("empty description will be treated as a deletion, look up existing...");
+			IRODSTagValue current = getDescriptionOnDataObjectForLoggedInUser(dataObjectAbsolutePath);
+			deleteDescriptionFromDataObject(dataObjectAbsolutePath, current);
+		} else {
+			DataObjectAO dataObjectAO = irodsAccessObjectFactory
+					.getDataObjectAO(irodsAccount);
+			AvuData avuData = AvuData.instance(
+					irodsDescriptionValue.getTagData(),
+					irodsDescriptionValue.getTagUser(),
+					UserTaggingConstants.DESCRIPTION_AVU_UNIT);
+			dataObjectAO.addAVUMetadata(dataObjectAbsolutePath, avuData);
+			log.info("description added successfully");
+		}
 
 	}
 
@@ -609,15 +624,20 @@ public final class IRODSTaggingServiceImpl extends AbstractIRODSTaggingService
 		log.info("adding description:{}", irodsDescriptionValue);
 		log.info("to collection:{}", collectionAbsolutePath);
 
-		AvuData avuData = AvuData.instance(irodsDescriptionValue.getTagData(),
-				irodsDescriptionValue.getTagUser(),
-				UserTaggingConstants.DESCRIPTION_AVU_UNIT);
-
-		CollectionAO collectionAO = irodsAccessObjectFactory
-				.getCollectionAO(irodsAccount);
-		collectionAO.addAVUMetadata(collectionAbsolutePath, avuData);
-		log.debug("description added successfully");
-
+		if (irodsDescriptionValue.getTagData().isEmpty()) {
+			log.info("empty description will be treated as a deletion, look up existing...");
+			IRODSTagValue current = getDescriptionOnCollectionForLoggedInUser(collectionAbsolutePath);
+			deleteDescriptionFromCollection(collectionAbsolutePath, current);
+		} else {
+			CollectionAO collectionAO = irodsAccessObjectFactory
+					.getCollectionAO(irodsAccount);
+			AvuData avuData = AvuData.instance(
+					irodsDescriptionValue.getTagData(),
+					irodsDescriptionValue.getTagUser(),
+					UserTaggingConstants.DESCRIPTION_AVU_UNIT);
+			collectionAO.addAVUMetadata(collectionAbsolutePath, avuData);
+			log.info("description added successfully");
+		}
 	}
 
 	/*
