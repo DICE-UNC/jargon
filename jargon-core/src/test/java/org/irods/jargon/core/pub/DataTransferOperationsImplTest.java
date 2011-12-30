@@ -2414,6 +2414,55 @@ public class DataTransferOperationsImplTest {
 
 	}
 
+	@Test
+	public void testCopyCollectionWithAnEmptyChildCollectionToTarget()
+			throws Exception {
+
+		// generate a local scratch file
+		String testOrigDirectory = "testCopyCollectionWithAnEmptyChildCollectionToTarget";
+		String testOrigSubdir = "testCopyCollectionWithAnEmptyChildCollectionToTargetSubdir";
+		String testTargetDirectory = "testCopyCollectionWithAnEmptyChildCollectionToTargetTarget";
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		String irodsOriginalAbsolutePath = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + "/"
+								+ testOrigDirectory);
+
+		IRODSFile testDir = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(irodsOriginalAbsolutePath);
+		testDir.mkdirs();
+
+		testDir = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(irodsOriginalAbsolutePath, testOrigSubdir);
+		testDir.mkdirs();
+
+		String irodsTargetAbsolutePath = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + "/"
+								+ testTargetDirectory);
+
+		DataTransferOperations dataTransferOperations = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataTransferOperations(
+						irodsAccount);
+
+		dataTransferOperations.copy(irodsOriginalAbsolutePath, "",
+				irodsTargetAbsolutePath, null, false, null);
+
+		IRODSFile targetDir = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(irodsTargetAbsolutePath, testOrigDirectory);
+		Assert.assertTrue("did not find copied directory under target",
+				targetDir.exists() && targetDir.isDirectory());
+		targetDir = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetDir.getAbsolutePath(), testOrigSubdir);
+		Assert.assertTrue(
+				"did not find child of copied directory under target",
+				targetDir.exists() && targetDir.isDirectory());
+
+	}
+
 	@Test(expected = DuplicateDataException.class)
 	public void testCopyCollectionToSelfParent() throws Exception {
 

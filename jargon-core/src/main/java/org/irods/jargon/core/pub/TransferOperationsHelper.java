@@ -963,6 +963,7 @@ final class TransferOperationsHelper {
 				irodsSourceFile.getAbsolutePath());
 		log.info("to target file: {}", targetIrodsFileAbsolutePath);
 		log.info("resource: {}", targetResource);
+		IRODSFile childTargetFile = null;
 
 		for (File fileInSourceCollection : irodsSourceFile.listFiles()) {
 
@@ -1003,9 +1004,13 @@ final class TransferOperationsHelper {
 						targetIrodsFileAbsolutePath);
 				targetCollectionName.append("/");
 				targetCollectionName.append(fileInSourceCollection.getName());
+				String targetCollection = targetCollectionName.toString();
+				childTargetFile = this.collectionAO
+						.instanceIRODSFileForCollectionPath(targetCollection);
+				childTargetFile.mkdirs();
 
 				recursivelyCopy((IRODSFileImpl) fileInSourceCollection,
-						targetResource, targetCollectionName.toString(), force,
+						targetResource, targetCollection, force,
 						transferStatusCallbackListener, transferControlBlock);
 
 			} else {
