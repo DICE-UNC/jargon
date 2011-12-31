@@ -68,7 +68,7 @@ Note that the following bug and feature requests are logged in GForge with relat
 
  
  ---------------------
- notepad - ignore and clear from notes at release
+ notepad below - ignore and clear from notes at release
  ---------------------
  
  
