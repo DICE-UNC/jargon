@@ -9,7 +9,6 @@ import junit.framework.TestCase;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.DataNotFoundException;
-import org.irods.jargon.core.exception.DuplicateDataException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.DataTransferOperations;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
@@ -284,8 +283,44 @@ public class IRODSTaggingServiceTest {
 
 		IRODSTagValue actualDescription = irodsTaggingService
 				.getDescriptionOnCollectionForLoggedInUser(targetIrodsCollection);
-		TestCase.assertNull("description should have been deleted",
+		Assert.assertNull("description should have been deleted",
 				actualDescription);
+
+	}
+
+	@Test
+	public final void testAddDescriptionToCollectionTwice() throws Exception {
+
+		String testCollection = "testAddDescriptionToCollectionTwice";
+		String expectedTagName = "testAddDescriptionToCollectionTwice";
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + "/"
+								+ testCollection);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSFile targetIrodsFile = irodsFileSystem.getIRODSFileFactory(
+				irodsAccount).instanceIRODSFile(targetIrodsCollection);
+
+		targetIrodsFile.mkdirs();
+
+		IRODSTagValue irodsTagValue = new IRODSTagValue(expectedTagName,
+				irodsAccount.getUserName());
+
+		IRODSTaggingService irodsTaggingService = IRODSTaggingServiceImpl
+				.instance(irodsFileSystem.getIRODSAccessObjectFactory(),
+						irodsAccount);
+		irodsTaggingService.addDescriptionToCollection(targetIrodsCollection,
+				irodsTagValue);
+
+		irodsTaggingService.addDescriptionToCollection(targetIrodsCollection,
+				irodsTagValue);
+
+		IRODSTagValue actualDescription = irodsTaggingService
+				.getDescriptionOnCollectionForLoggedInUser(targetIrodsCollection);
+		Assert.assertNotNull("description should be present", actualDescription);
 
 	}
 
@@ -318,10 +353,42 @@ public class IRODSTaggingServiceTest {
 
 		IRODSTagValue actualDescription = irodsTaggingService
 				.getDescriptionOnCollectionForLoggedInUser(targetIrodsCollection);
-		TestCase.assertNotNull("null IRODSTagValue, no description was added");
-		TestCase.assertEquals("description not found in tag", expectedTagName,
+		Assert.assertNotNull("null IRODSTagValue, no description was added");
+		Assert.assertEquals("description not found in tag", expectedTagName,
 				actualDescription.getTagData());
 
+	}
+
+	@Test
+	public final void testAddDescriptionToLiveCollectionBlankDescriptionNoPrior()
+			throws Exception {
+
+		String testCollection = "testAddDescriptionToLiveCollectionBlankDescriptionNoPrior";
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + "/"
+								+ testCollection);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSFile targetIrodsFile = irodsFileSystem.getIRODSFileFactory(
+				irodsAccount).instanceIRODSFile(targetIrodsCollection);
+
+		targetIrodsFile.mkdirs();
+
+		IRODSTagValue irodsTagValue = new IRODSTagValue("",
+				irodsAccount.getUserName());
+
+		IRODSTaggingService irodsTaggingService = IRODSTaggingServiceImpl
+				.instance(irodsFileSystem.getIRODSAccessObjectFactory(),
+						irodsAccount);
+		irodsTaggingService.addDescriptionToCollection(targetIrodsCollection,
+				irodsTagValue);
+
+		IRODSTagValue actual = irodsTaggingService
+				.getDescriptionOnCollectionForLoggedInUser(targetIrodsCollection);
+		Assert.assertNull("should not be a description", actual);
 	}
 
 	@Test
@@ -329,8 +396,6 @@ public class IRODSTaggingServiceTest {
 			throws Exception {
 
 		String testCollection = "testGetDescriptionOnLiveCollectionCollectionExistsNoDescription";
-		String expectedTagName = "testGetDescriptionOnLiveCollectionCollectionExistsNoDescription";
-
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + "/"
@@ -348,8 +413,7 @@ public class IRODSTaggingServiceTest {
 						irodsAccount);
 		IRODSTagValue actualDescription = irodsTaggingService
 				.getDescriptionOnCollectionForLoggedInUser(targetIrodsCollection);
-		TestCase.assertNull(
-				"should have returned null when no collection found",
+		Assert.assertNull("should have returned null when no collection found",
 				actualDescription);
 
 	}
@@ -721,6 +785,90 @@ public class IRODSTaggingServiceTest {
 	}
 
 	@Test
+	public final void testAddDescriptionToDataObjectTwice() throws Exception {
+		String testFileName = "testAddDescriptionToDataObjectTwice.txt";
+		String expectedAttribName = "testattrib1";
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		String targetIrodsDataObject = targetIrodsCollection + "/"
+				+ testFileName;
+
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String fileNameOrig = FileGenerator.generateFileOfFixedLengthGivenName(
+				absPath, testFileName, 2);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSFile targetIrodsFile = irodsFileSystem.getIRODSFileFactory(
+				irodsAccount).instanceIRODSFile(targetIrodsCollection);
+		DataTransferOperations dataTransferOperationsAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataTransferOperations(
+						irodsAccount);
+		dataTransferOperationsAO.putOperation(new File(fileNameOrig),
+				targetIrodsFile, null, null);
+
+		IRODSTagValue irodsTagValue = new IRODSTagValue(expectedAttribName,
+				irodsAccount.getUserName());
+
+		IRODSTaggingService irodsTaggingService = IRODSTaggingServiceImpl
+				.instance(irodsFileSystem.getIRODSAccessObjectFactory(),
+						irodsAccount);
+		irodsTaggingService.addDescriptionToDataObject(targetIrodsDataObject,
+				irodsTagValue);
+		irodsTaggingService.addDescriptionToDataObject(targetIrodsDataObject,
+				irodsTagValue);
+		IRODSTagValue actual = irodsTaggingService
+				.getDescriptionOnDataObjectForLoggedInUser(targetIrodsDataObject);
+		TestCase.assertNotNull("did not find data object", actual);
+
+	}
+
+	@Test
+	public final void testAddBlankDescriptionToDataObjectNoPrior()
+			throws Exception {
+		String testFileName = "testAddBlankDescriptionToDataObjectNoPrior.txt";
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		String targetIrodsDataObject = targetIrodsCollection + "/"
+				+ testFileName;
+
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String fileNameOrig = FileGenerator.generateFileOfFixedLengthGivenName(
+				absPath, testFileName, 2);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSFile targetIrodsFile = irodsFileSystem.getIRODSFileFactory(
+				irodsAccount).instanceIRODSFile(targetIrodsCollection);
+		DataTransferOperations dataTransferOperationsAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataTransferOperations(
+						irodsAccount);
+		dataTransferOperationsAO.putOperation(new File(fileNameOrig),
+				targetIrodsFile, null, null);
+
+		IRODSTagValue irodsTagValue = new IRODSTagValue("",
+				irodsAccount.getUserName());
+
+		IRODSTaggingService irodsTaggingService = IRODSTaggingServiceImpl
+				.instance(irodsFileSystem.getIRODSAccessObjectFactory(),
+						irodsAccount);
+		irodsTaggingService.addDescriptionToDataObject(targetIrodsDataObject,
+				irodsTagValue);
+		IRODSTagValue actual = irodsTaggingService
+				.getDescriptionOnDataObjectForLoggedInUser(targetIrodsDataObject);
+		Assert.assertNull("should not be a description", actual);
+
+	}
+
+	@Test
 	public final void testAddDescriptionThenAddBlankDescriptionToDelete()
 			throws Exception {
 		String testFileName = "testAddDescriptionThenAddBlankDescription.txt";
@@ -761,8 +909,7 @@ public class IRODSTaggingServiceTest {
 				irodsTagValue);
 		IRODSTagValue value = irodsTaggingService
 				.getDescriptionOnDataObjectForLoggedInUser(targetIrodsDataObject);
-		TestCase.assertNull("should have deleted data object description",
-				value);
+		Assert.assertNull("should have deleted data object description", value);
 	}
 
 	@Test
@@ -797,11 +944,11 @@ public class IRODSTaggingServiceTest {
 
 		IRODSTagValue actual = irodsTaggingService
 				.getDescriptionOnCollectionForLoggedInUser(targetIrodsCollection);
-		TestCase.assertNull("should have an empty description", actual);
+		Assert.assertNull("should have an empty description", actual);
 
 	}
 
-	@Test(expected = DuplicateDataException.class)
+	@Test
 	public final void testAddDuplicateDescriptionToLiveDataObject()
 			throws Exception {
 		String testFileName = "testAddDuplicateDescriptionToLiveDataObject.txt";
@@ -880,9 +1027,9 @@ public class IRODSTaggingServiceTest {
 				targetIrodsDataObject, irodsTagValue);
 		IRODSTagValue actualTagValue = irodsTaggingService
 				.getDescriptionOnDataObjectForLoggedInUser(targetIrodsDataObject);
-		TestCase.assertNotNull("did not get tag value", actualTagValue);
-		TestCase.assertEquals("did not get same description",
-				expectedAttribName, actualTagValue.getTagData());
+		Assert.assertNotNull("did not get tag value", actualTagValue);
+		Assert.assertEquals("did not get same description", expectedAttribName,
+				actualTagValue.getTagData());
 
 	}
 
@@ -923,18 +1070,17 @@ public class IRODSTaggingServiceTest {
 						irodsAccount);
 		irodsTaggingService.checkAndUpdateDescriptionOnDataObject(
 				targetIrodsDataObject, irodsTagValue);
-		
 
-		 irodsTagValue = new IRODSTagValue(expectedNewAttribName,
+		irodsTagValue = new IRODSTagValue(expectedNewAttribName,
 				irodsAccount.getUserName());
-	
+
 		irodsTaggingService.checkAndUpdateDescriptionOnDataObject(
 				targetIrodsDataObject, irodsTagValue);
-	
+
 		IRODSTagValue actualTagValue = irodsTaggingService
 				.getDescriptionOnDataObjectForLoggedInUser(targetIrodsDataObject);
-		TestCase.assertNotNull("did not get tag value", actualTagValue);
-		TestCase.assertEquals("did not get same description",
+		Assert.assertNotNull("did not get tag value", actualTagValue);
+		Assert.assertEquals("did not get same description",
 				expectedNewAttribName, actualTagValue.getTagData());
 
 	}
@@ -984,7 +1130,7 @@ public class IRODSTaggingServiceTest {
 
 		IRODSTagValue actualTagValue = irodsTaggingService
 				.getDescriptionOnDataObjectForLoggedInUser(targetIrodsDataObject);
-		TestCase.assertNull("should have deleted tag", actualTagValue);
+		Assert.assertNull("should have deleted tag", actualTagValue);
 
 	}
 
@@ -1017,9 +1163,9 @@ public class IRODSTaggingServiceTest {
 				targetIrodsDataObject, irodsTagValue);
 		IRODSTagValue actualTagValue = irodsTaggingService
 				.getDescriptionOnCollectionForLoggedInUser(targetIrodsDataObject);
-		TestCase.assertNotNull("did not get tag value", actualTagValue);
-		TestCase.assertEquals("did not get same description",
-				expectedAttribName, actualTagValue.getTagData());
+		Assert.assertNotNull("did not get tag value", actualTagValue);
+		Assert.assertEquals("did not get same description", expectedAttribName,
+				actualTagValue.getTagData());
 
 	}
 
@@ -1058,9 +1204,9 @@ public class IRODSTaggingServiceTest {
 				targetIrodsDataObject, irodsTagValue);
 		IRODSTagValue actualTagValue = irodsTaggingService
 				.getDescriptionOnCollectionForLoggedInUser(targetIrodsDataObject);
-		TestCase.assertNotNull("did not get tag value", actualTagValue);
-		TestCase.assertEquals("did not get same description",
-				newAttribName, actualTagValue.getTagData());
+		Assert.assertNotNull("did not get tag value", actualTagValue);
+		Assert.assertEquals("did not get same description", newAttribName,
+				actualTagValue.getTagData());
 
 	}
 
@@ -1099,7 +1245,7 @@ public class IRODSTaggingServiceTest {
 				targetIrodsDataObject, irodsTagValue);
 		IRODSTagValue actualTagValue = irodsTaggingService
 				.getDescriptionOnCollectionForLoggedInUser(targetIrodsDataObject);
-		TestCase.assertNull("did not delete tag value", actualTagValue);
+		Assert.assertNull("did not delete tag value", actualTagValue);
 
 	}
 

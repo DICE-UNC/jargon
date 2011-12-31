@@ -203,14 +203,12 @@ public interface IRODSTaggingService {
 	 *            that will be added to a data object for the specified user
 	 * @throws DataNotFoundException
 	 *             if the target data object is not found
-	 * @throws DuplicateDataException
-	 *             if the tag already exists
 	 * @throws JargonException
 	 * 
 	 */
 	void addDescriptionToDataObject(String dataObjectAbsolutePath,
 			IRODSTagValue irodsDescriptionValue) throws  JargonException,
-			DataNotFoundException, DuplicateDataException;
+			DataNotFoundException;
 
 	/**
 	 * Remove a description from a data object, using the user supplied in the
@@ -268,7 +266,8 @@ public interface IRODSTaggingService {
 	 * <code>IRODSTagValue</code>
 	 * <p/>
 	 * Note that adding a blank description will delete any description AVU data
-	 * in iRODS.
+	 * in iRODS. Adding a description when one already exists will replace the
+	 * previous value.
 	 * 
 	 * @param collectionAbsolutePath
 	 *            <code>String</code> with the absolute path to the iRODS
@@ -278,8 +277,6 @@ public interface IRODSTaggingService {
 	 *            will be added to the collection
 	 * @throws DataNotFoundException
 	 *             if the target collection is not found
-	 * @throws DuplicateDataException
-	 *             if the tag already exists
 	 * @throws JargonException
 	 */
 	void addDescriptionToCollection(String collectionAbsolutePath,

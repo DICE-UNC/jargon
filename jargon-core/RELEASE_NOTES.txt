@@ -48,6 +48,7 @@ Note that the following bug and feature requests are logged in GForge with relat
 [#548] user list all not ordered
 [#546] handle setting blank comment on data or collection, causing delete of comment AVU data
 [#565] copy of directories with empty child dirs leaves out empty directories
+[#566] handle duplicate comments on collections and data objects
 
 
 ==Features==

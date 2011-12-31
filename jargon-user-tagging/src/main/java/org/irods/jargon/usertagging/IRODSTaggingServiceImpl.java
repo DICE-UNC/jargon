@@ -240,7 +240,7 @@ public final class IRODSTaggingServiceImpl extends AbstractIRODSTaggingService
 	@Override
 	public void addDescriptionToDataObject(final String dataObjectAbsolutePath,
 			final IRODSTagValue irodsDescriptionValue) throws JargonException,
-			DuplicateDataException, DataNotFoundException {
+			DataNotFoundException {
 
 		if (dataObjectAbsolutePath == null || dataObjectAbsolutePath.isEmpty()) {
 			throw new IllegalArgumentException(
@@ -253,23 +253,50 @@ public final class IRODSTaggingServiceImpl extends AbstractIRODSTaggingService
 
 		log.info("adding description:{}", irodsDescriptionValue);
 		log.info("to data object:{}", dataObjectAbsolutePath);
-
+		IRODSTagValue current = getDescriptionOnDataObjectForLoggedInUser(dataObjectAbsolutePath);
 
 		if (irodsDescriptionValue.getTagData().isEmpty()) {
 			log.info("empty description will be treated as a deletion, look up existing...");
-			IRODSTagValue current = getDescriptionOnDataObjectForLoggedInUser(dataObjectAbsolutePath);
-			deleteDescriptionFromDataObject(dataObjectAbsolutePath, current);
+			if (current != null) {
+				deleteDescriptionFromDataObject(dataObjectAbsolutePath, current);
+			}
 		} else {
-			DataObjectAO dataObjectAO = irodsAccessObjectFactory
-					.getDataObjectAO(irodsAccount);
-			AvuData avuData = AvuData.instance(
-					irodsDescriptionValue.getTagData(),
-					irodsDescriptionValue.getTagUser(),
-					UserTaggingConstants.DESCRIPTION_AVU_UNIT);
-			dataObjectAO.addAVUMetadata(dataObjectAbsolutePath, avuData);
-			log.info("description added successfully");
+			if (current == null) {
+				log.info("no previous description, just add");
+				doAddOfDescriptionToDataObject(dataObjectAbsolutePath,
+						irodsDescriptionValue);
+			} else if (!current.getTagData().equals(
+					irodsDescriptionValue.getTagData())) {
+				// description changes, delete then add
+				log.info("previous description found, and is changed, so delete and add");
+				deleteDescriptionFromDataObject(dataObjectAbsolutePath, current);
+				doAddOfDescriptionToDataObject(dataObjectAbsolutePath,
+						irodsDescriptionValue);
+			} else {
+				log.info("description does not change, ignore");
+			}
 		}
 
+	}
+
+	/**
+	 * @param dataObjectAbsolutePath
+	 * @param irodsDescriptionValue
+	 * @throws JargonException
+	 * @throws DataNotFoundException
+	 * @throws DuplicateDataException
+	 */
+	private void doAddOfDescriptionToDataObject(
+			final String dataObjectAbsolutePath,
+			final IRODSTagValue irodsDescriptionValue) throws JargonException,
+			DataNotFoundException, DuplicateDataException {
+		DataObjectAO dataObjectAO = irodsAccessObjectFactory
+				.getDataObjectAO(irodsAccount);
+		AvuData avuData = AvuData.instance(irodsDescriptionValue.getTagData(),
+				irodsDescriptionValue.getTagUser(),
+				UserTaggingConstants.DESCRIPTION_AVU_UNIT);
+		dataObjectAO.addAVUMetadata(dataObjectAbsolutePath, avuData);
+		log.info("description added successfully");
 	}
 
 	/*
@@ -611,7 +638,7 @@ public final class IRODSTaggingServiceImpl extends AbstractIRODSTaggingService
 	@Override
 	public void addDescriptionToCollection(final String collectionAbsolutePath,
 			final IRODSTagValue irodsDescriptionValue) throws JargonException,
-			DuplicateDataException, DataNotFoundException {
+			DataNotFoundException {
 
 		if (collectionAbsolutePath == null || collectionAbsolutePath.isEmpty()) {
 			throw new JargonException("null or empty collectionAbsolutePath");
@@ -623,21 +650,50 @@ public final class IRODSTaggingServiceImpl extends AbstractIRODSTaggingService
 
 		log.info("adding description:{}", irodsDescriptionValue);
 		log.info("to collection:{}", collectionAbsolutePath);
+		IRODSTagValue current = getDescriptionOnCollectionForLoggedInUser(collectionAbsolutePath);
 
 		if (irodsDescriptionValue.getTagData().isEmpty()) {
 			log.info("empty description will be treated as a deletion, look up existing...");
-			IRODSTagValue current = getDescriptionOnCollectionForLoggedInUser(collectionAbsolutePath);
-			deleteDescriptionFromCollection(collectionAbsolutePath, current);
+			if (current != null) {
+				deleteDescriptionFromCollection(collectionAbsolutePath, current);
+			}
 		} else {
-			CollectionAO collectionAO = irodsAccessObjectFactory
-					.getCollectionAO(irodsAccount);
-			AvuData avuData = AvuData.instance(
-					irodsDescriptionValue.getTagData(),
-					irodsDescriptionValue.getTagUser(),
-					UserTaggingConstants.DESCRIPTION_AVU_UNIT);
-			collectionAO.addAVUMetadata(collectionAbsolutePath, avuData);
-			log.info("description added successfully");
+			if (current == null) {
+				log.info("no previous description, just add");
+				doAddOfDescriptionToCollection(collectionAbsolutePath,
+						irodsDescriptionValue);
+			} else if (!current.getTagData().equals(
+					irodsDescriptionValue.getTagData())) {
+				// description changes, delete then add
+				log.info("previous description found, and is changed, so delete and add");
+				deleteDescriptionFromCollection(collectionAbsolutePath, current);
+				doAddOfDescriptionToCollection(collectionAbsolutePath,
+						irodsDescriptionValue);
+			} else {
+				log.info("description does not change, ignore");
+			}
 		}
+	}
+
+	/**
+	 * @param collectionAbsolutePath
+	 * @param irodsDescriptionValue
+	 * @throws JargonException
+	 * @throws DataNotFoundException
+	 * @throws DuplicateDataException
+	 */
+	private void doAddOfDescriptionToCollection(
+			final String collectionAbsolutePath,
+			final IRODSTagValue irodsDescriptionValue) throws JargonException,
+			DataNotFoundException, DuplicateDataException {
+		// add this description now, any previous value will be deleted
+		CollectionAO collectionAO = irodsAccessObjectFactory
+				.getCollectionAO(irodsAccount);
+		AvuData avuData = AvuData.instance(irodsDescriptionValue.getTagData(),
+				irodsDescriptionValue.getTagUser(),
+				UserTaggingConstants.DESCRIPTION_AVU_UNIT);
+		collectionAO.addAVUMetadata(collectionAbsolutePath, avuData);
+		log.info("description added successfully");
 	}
 
 	/*
