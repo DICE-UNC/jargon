@@ -139,15 +139,11 @@ public class MediaHandlingUtils {
 				}
 			}
 		}
-
-		if (!isMedia) {
-			for (String type : IFRAME_CONTENT) {
-				if (extension.equals(type)) {
-					isMedia = true;
-					break;
-				}
-			}
-		}
+		/*
+		 * temp comment out for pdf media if (!isMedia) { for (String type :
+		 * IFRAME_CONTENT) { if (extension.equals(type)) { isMedia = true;
+		 * break; } } }
+		 */
 
 		return isMedia;
 	}
