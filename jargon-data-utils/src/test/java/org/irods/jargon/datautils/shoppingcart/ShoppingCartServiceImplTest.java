@@ -3,7 +3,6 @@ package org.irods.jargon.datautils.shoppingcart;
 import java.util.Properties;
 
 import junit.framework.Assert;
-import junit.framework.TestCase;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.JargonRuntimeException;
@@ -12,6 +11,7 @@ import org.irods.jargon.datautils.datacache.DataCacheServiceFactory;
 import org.irods.jargon.datautils.datacache.DataCacheServiceFactoryImpl;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class ShoppingCartServiceImplTest {
@@ -118,11 +118,54 @@ public class ShoppingCartServiceImplTest {
 		FileShoppingCart fileShoppingCart = FileShoppingCart.instance();
 		fileShoppingCart.addAnItem(ShoppingCartEntry.instance(expectedPath1));
 		fileShoppingCart.addAnItem(ShoppingCartEntry.instance(expectedPath2));
-		shoppingCartService
-				.serializeShoppingCartAsLoggedInUser(fileShoppingCart, key);
+		shoppingCartService.serializeShoppingCartAsLoggedInUser(
+				fileShoppingCart, key);
 		FileShoppingCart cart = shoppingCartService
 				.retreiveShoppingCartAsLoggedInUser(key);
-		TestCase.assertTrue("no files in cart", cart.hasItems());
+		Assert.assertTrue("no files in cart", cart.hasItems());
+
+	}
+
+	/**
+	 * Create a valid cart for another user as rods admin and then attempt to
+	 * access as that target user.
+	 * 
+	 * @throws Exception
+	 */
+	@Ignore
+	// wait for next iRODS release
+	public final void testSerializeShoppingCartAsSpecifiedUserAsRodsadmin()
+			throws Exception {
+		String testUserName = testingProperties
+				.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY);
+		String key = "key";
+		String expectedPath = "/a/path";
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		DataCacheServiceFactory dataCacheServiceFactory = new DataCacheServiceFactoryImpl(
+				irodsFileSystem.getIRODSAccessObjectFactory());
+
+		ShoppingCartService shoppingCartService = new ShoppingCartServiceImpl(
+				irodsFileSystem.getIRODSAccessObjectFactory(), irodsAccount,
+				dataCacheServiceFactory);
+		FileShoppingCart fileShoppingCart = FileShoppingCart.instance();
+		fileShoppingCart.addAnItem(ShoppingCartEntry.instance(expectedPath));
+		String tempPassword = shoppingCartService
+				.serializeShoppingCartAsSpecifiedUser(fileShoppingCart, key,
+						testUserName);
+		// log in as the other user with the temp password and retrieve
+		IRODSAccount tempUserAccount = IRODSAccount.instance(
+				irodsAccount.getHost(), irodsAccount.getPort(), testUserName,
+				tempPassword, "", irodsAccount.getZone(),
+				irodsAccount.getDefaultStorageResource());
+
+		shoppingCartService = new ShoppingCartServiceImpl(
+				irodsFileSystem.getIRODSAccessObjectFactory(), tempUserAccount,
+				dataCacheServiceFactory);
+		FileShoppingCart cart = shoppingCartService
+				.retreiveShoppingCartAsLoggedInUser(key);
+		Assert.assertTrue("no files in cart", cart.hasItems());
 
 	}
 

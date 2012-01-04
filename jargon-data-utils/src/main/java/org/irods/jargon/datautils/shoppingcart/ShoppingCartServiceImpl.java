@@ -5,6 +5,7 @@ import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.exception.JargonRuntimeException;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
+import org.irods.jargon.core.pub.UserAO;
 import org.irods.jargon.datautils.AbstractDataUtilsServiceImpl;
 import org.irods.jargon.datautils.datacache.CacheServiceConfiguration;
 import org.irods.jargon.datautils.datacache.DataCacheService;
@@ -56,9 +57,9 @@ public class ShoppingCartServiceImpl extends AbstractDataUtilsServiceImpl
 	 *            DataCacheServiceComponents
 	 */
 	public ShoppingCartServiceImpl(
-			IRODSAccessObjectFactory irodsAccessObjectFactory,
-			IRODSAccount irodsAccount,
-			DataCacheServiceFactory dataCacheServiceFactory) {
+			final IRODSAccessObjectFactory irodsAccessObjectFactory,
+			final IRODSAccount irodsAccount,
+			final DataCacheServiceFactory dataCacheServiceFactory) {
 		super(irodsAccessObjectFactory, irodsAccount);
 
 		if (dataCacheServiceFactory == null) {
@@ -174,12 +175,83 @@ public class ShoppingCartServiceImpl extends AbstractDataUtilsServiceImpl
 
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.datautils.shoppingcart.ShoppingCartService#
+	 * serializeShoppingCartAsSpecifiedUser
+	 * (org.irods.jargon.datautils.shoppingcart.FileShoppingCart,
+	 * java.lang.String, java.lang.String)
+	 */
 	@Override
 	public String serializeShoppingCartAsSpecifiedUser(
-			final FileShoppingCart fileShoppingCart, final String key)
-			throws JargonException {
-		
-		return null;
+			final FileShoppingCart fileShoppingCart, final String key,
+			final String userName) throws JargonException {
+
+		log.info("serializeShoppingCartAsSpecifiedUser()");
+
+		if (fileShoppingCart == null) {
+			throw new IllegalArgumentException("null fileShoppingCart");
+		}
+
+		if (key == null || key.isEmpty()) {
+			throw new IllegalArgumentException("null or empty key");
+		}
+
+		if (userName == null || userName.isEmpty()) {
+			throw new IllegalArgumentException("null or empty userName");
+		}
+
+		// check for dependencies
+		checkContracts();
+
+		log.info("fileShoppingCart:${}", fileShoppingCart);
+		log.info("key:${}", key);
+		log.info("userName:${}", userName);
+
+		// generate a temp password for the given user
+		UserAO userAO = this.getIrodsAccessObjectFactory().getUserAO(
+				irodsAccount);
+		String tempPassword = userAO
+				.getTemporaryPasswordForASpecifiedUser(userName);
+		IRODSAccount tempUserAccount = IRODSAccount.instance(this
+				.getIrodsAccount().getHost(), this.getIrodsAccount().getPort(),
+				userName, tempPassword, "", this.getIrodsAccount().getZone(),
+				this.getIrodsAccount().getDefaultStorageResource());
+
+		log.info("generated temp password and created temp account:${}",
+				tempUserAccount);
+
+		/*
+		 * For the shopping cart, have it clean up old carts and cache in the
+		 * standard place in the user home directory
+		 */
+		CacheServiceConfiguration config = new CacheServiceConfiguration();
+		config.setDoCleanupDuringRequests(true);
+		config.setCacheInHomeDir(true);
+
+		log.info("create data cache service from factory");
+		DataCacheService dataCacheService = dataCacheServiceFactory
+				.instanceDataCacheService(tempUserAccount);
+
+		dataCacheService.setCacheServiceConfiguration(config);
+		log.info("putting data into cache");
+		dataCacheService.putStringValueIntoCache(fileShoppingCart
+				.serializeShoppingCartContentsToStringOneItemPerLine(), key);
+		// close and regenerate a temp password to pass to the caller
+		this.getIrodsAccessObjectFactory().closeSession(tempUserAccount);
+
+		log.info("generate a new temp password that the caller can use");
+
+		tempPassword = userAO.getTemporaryPasswordForASpecifiedUser(userName);
+		tempUserAccount = IRODSAccount.instance(this.getIrodsAccount()
+				.getHost(), this.getIrodsAccount().getPort(), userName,
+				tempPassword, "", this.getIrodsAccount().getZone(), this
+						.getIrodsAccount().getDefaultStorageResource());
+
+		log.info("generated temp password and created temp account:${}",
+				tempUserAccount);
+		return tempPassword;
 	}
 
 	/**
@@ -194,7 +266,7 @@ public class ShoppingCartServiceImpl extends AbstractDataUtilsServiceImpl
 
 	@Override
 	public void setDataCacheServiceFactory(
-			DataCacheServiceFactory dataCacheServiceFactory) {
+			final DataCacheServiceFactory dataCacheServiceFactory) {
 		this.dataCacheServiceFactory = dataCacheServiceFactory;
 	}
 

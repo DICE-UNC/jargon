@@ -75,15 +75,30 @@ public interface ShoppingCartService extends DataUtilsService {
 	/**
 	 * Place the shopping cart as a serialized file in the given user's home
 	 * directory and return a temporary password for that specified user that
-	 * may be passed to iDrop lite as the password parameter.
+	 * may be passed to iDrop lite as the password parameter, or used in another
+	 * client.
+	 * <p/>
+	 * This method may only be called by a rodsadmin user, as it needs to
+	 * generate a temporary password. This functionality was added after iRODS
+	 * 3.0, and will cause an error if used on a prior iRODS version.
 	 * 
 	 * @param fileShoppingCart
+	 *            {@link FileShoppingCart} representing the file cart data to
+	 *            persist
 	 * @param key
-	 * @return
+	 *            <code>String</code> that will be used to serialize the
+	 *            shopping cart. Without the correct key, the cart cannot be
+	 *            found or de-serialized. This is just an arbitrary shared key
+	 *            value.
+	 * @param userName
+	 *            <code>String</code> with the name of the user for whom the
+	 *            cart will be serialized.
+	 * @return <code>String</code> with the temporary password that may be used
+	 *         to access the cart for the given user and key.
 	 * @throws JargonException
 	 */
 	String serializeShoppingCartAsSpecifiedUser(
-			FileShoppingCart fileShoppingCart, String key)
+			FileShoppingCart fileShoppingCart, String key, String userName)
 			throws JargonException;
 
 }
