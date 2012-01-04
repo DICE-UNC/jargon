@@ -6,6 +6,7 @@ import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry;
 import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry.ObjectType;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class MediaHandlingUtilsTest {
@@ -88,7 +89,8 @@ public class MediaHandlingUtilsTest {
 		TestCase.assertTrue("did not identify as media", actual);
 	}
 
-	@Test
+	@Ignore
+	// pdf processing temp removed
 	public final void testIsMediaFileIframe() {
 		CollectionAndDataObjectListingEntry entry = new CollectionAndDataObjectListingEntry();
 		entry.setPathOrName("image.pdf");

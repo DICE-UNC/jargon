@@ -64,6 +64,7 @@ Note that the following bug and feature requests are logged in GForge with relat
 [#536] User group CRUD functionality and tests
 [#535] shopping cart capability in idrop web and idrop lite
 	*Added package to data utils for shopping cart maintenance, serialization, de-serialization
+[#578] Temp password as another user
 
 
  
@@ -71,4 +72,6 @@ Note that the following bug and feature requests are logged in GForge with relat
  notepad below - ignore and clear from notes at release
  ---------------------
  
+ Release checklist:
  
+ -review ignores in UserAO test and datautils cart that depend on temp password

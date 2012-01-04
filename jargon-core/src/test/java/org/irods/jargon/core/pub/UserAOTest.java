@@ -918,4 +918,63 @@ public class UserAOTest {
 				environmentalInfoAO.getIRODSServerProperties());
 
 	}
+
+	/**
+	 * As a rods admin, generate a password on behalf of a normal test user
+	 * 
+	 * @throws Exception
+	 */
+	@Ignore
+	// wait for next iRODS release
+	public void testGenerateTempPasswordForAnotherUserAsRodsAdmin()
+			throws Exception {
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAdminAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
+		UserAO userAO = accessObjectFactory.getUserAO(irodsAccount);
+		String tempUserName = testingProperties
+				.getProperty(TestingPropertiesHelper.IRODS_USER_KEY);
+
+		String tempPassword = userAO
+				.getTemporaryPasswordForASpecifiedUser(tempUserName);
+		Assert.assertNotNull("null temp password", tempPassword);
+
+		IRODSAccount account = testingPropertiesHelper
+				.buildIRODSAccountForIRODSUserFromTestPropertiesForGivenUser(
+						testingProperties, tempUserName, tempPassword);
+		irodsFileSystem.closeAndEatExceptions();
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(account);
+		Assert.assertNotNull("did not connect and get environmental info",
+				environmentalInfoAO.getIRODSServerProperties());
+
+	}
+
+	/**
+	 * Generate a password on behalf of a normal test user. In this case, I am
+	 * not rodsadmin and not privileged. This should cause an error
+	 * 
+	 * @throws Exception
+	 */
+	@Ignore
+	// wait for next irods release (expected = NoAPIPrivException.class)
+	public void testGenerateTempPasswordForAnotherUserWhenNotRodsAdmin()
+			throws Exception {
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTertiaryTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
+		UserAO userAO = accessObjectFactory.getUserAO(irodsAccount);
+		String tempUserName = testingProperties
+				.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY);
+
+		userAO
+				.getTemporaryPasswordForASpecifiedUser(tempUserName);
+
+	}
 }

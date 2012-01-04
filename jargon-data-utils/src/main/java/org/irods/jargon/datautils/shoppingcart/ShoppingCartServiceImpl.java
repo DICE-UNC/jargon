@@ -178,6 +178,7 @@ public class ShoppingCartServiceImpl extends AbstractDataUtilsServiceImpl
 	public String serializeShoppingCartAsSpecifiedUser(
 			final FileShoppingCart fileShoppingCart, final String key)
 			throws JargonException {
+		
 		return null;
 	}
 

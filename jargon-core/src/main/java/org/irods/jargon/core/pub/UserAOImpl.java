@@ -13,6 +13,7 @@ import org.irods.jargon.core.exception.DuplicateDataException;
 import org.irods.jargon.core.exception.InvalidUserException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.packinstr.GeneralAdminInp;
+import org.irods.jargon.core.packinstr.GetTempPasswordForOther;
 import org.irods.jargon.core.packinstr.GetTempPasswordIn;
 import org.irods.jargon.core.packinstr.ModAvuMetadataInp;
 import org.irods.jargon.core.packinstr.Tag;
@@ -664,6 +665,33 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 				responseHashCode, this.getIRODSAccount());
 
 		return tempPassword;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.UserAO#getTemporaryPasswordForASpecifiedUser
+	 * (java.lang.String)
+	 */
+	@Override
+	public String getTemporaryPasswordForASpecifiedUser(
+			final String targetUserName) throws JargonException {
+		log.debug("getTemporaryPasswordForASpecifiedUser()");
+		// parm checks done in packing instruction
+		GetTempPasswordForOther getTempPasswordForOtherPI = GetTempPasswordForOther
+				.instance(targetUserName);
+		Tag response = getIRODSProtocol().irodsFunction(
+				getTempPasswordForOtherPI);
+
+		String responseHashCode = response.getTag(STRING_TO_HASH_WITH)
+				.getStringValue();
+		log.info("hash value:{}", responseHashCode);
+		String tempPassword = IRODSPasswordUtilities.getHashedPassword(
+				responseHashCode, this.getIRODSAccount());
+
+		return tempPassword;
+
 	}
 
 	/*

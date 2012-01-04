@@ -223,12 +223,28 @@ public interface UserAO extends IRODSAccessObject {
 	List<String> findUserNameLike(String userName) throws JargonException;
 
 	/**
-	 * Generate a temporary password for the connected user
+	 * Generate a temporary password for the connected user. Password validity
+	 * times and number of connections will be set by the iRODS server.
 	 * 
 	 * @return <code>String</code> with the temporary password
 	 * @throws JargonException
 	 */
 	String getTemporaryPasswordForConnectedUser() throws JargonException;
+
+	/**
+	 * Generate a temporary password for another user. Password validity times
+	 * and number of connections will be set by the iRODS server.
+	 * <p/>
+	 * This is a rodsadmin only function, and was added post iRODS 3.0.
+	 * 
+	 * @param targetUserName
+	 *            <code>String</code> (required) with the user name for which
+	 *            the temporary password will be issued
+	 * @return <code>String</code> with the temporary password
+	 * @throws JargonException
+	 */
+	String getTemporaryPasswordForASpecifiedUser(String targetUserName)
+			throws JargonException;
 
 	/**
 	 * Given a unique numeric user ID, retrieve the user's distinguished name.
@@ -246,5 +262,6 @@ public interface UserAO extends IRODSAccessObject {
 	 * @throws JargonException
 	 */
 	String retriveUserDNByUserId(String userId) throws JargonException;
+
 
 }
