@@ -63,7 +63,7 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 
 	private static Logger log = LoggerFactory.getLogger(DataObjInp.class);
 
-	public static final int DEFAULT_CREATE_MODE = 33206;
+	public static final int DEFAULT_CREATE_MODE = 33188;
 	public static final int EXEC_CREATE_MODE = 33261;
 	public static final int ZERO_CREATE_MODE = 0;
 

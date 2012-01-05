@@ -343,11 +343,12 @@ public class DataTransferOperationsImplTest {
 	@Test
 	public void testPutOneFile() throws Exception {
 		// generate a local scratch file
-		String testFileName = "testPutOverwriteFileNotInIRODS.txt";
+		String testFileName = "testPutOneFile.txt";
 		String absPath = scratchFileUtils
 				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
 		String localFileName = FileGenerator
-				.generateFileOfFixedLengthGivenName(absPath, testFileName, 300);
+				.generateFileOfFixedLengthGivenName(absPath, testFileName,
+						32 * 1024);
 
 		String targetIrodsFile = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(

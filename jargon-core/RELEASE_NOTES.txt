@@ -75,3 +75,4 @@ Note that the following bug and feature requests are logged in GForge with relat
  Release checklist:
  
  -review ignores in UserAO test and datautils cart that depend on temp password
+ -review ignores in shopping cart service tests that depend on temp password
