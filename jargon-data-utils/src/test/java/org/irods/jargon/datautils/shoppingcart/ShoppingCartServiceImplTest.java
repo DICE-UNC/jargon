@@ -11,7 +11,6 @@ import org.irods.jargon.datautils.datacache.DataCacheServiceFactory;
 import org.irods.jargon.datautils.datacache.DataCacheServiceFactoryImpl;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 public class ShoppingCartServiceImplTest {
@@ -132,7 +131,7 @@ public class ShoppingCartServiceImplTest {
 	 * 
 	 * @throws Exception
 	 */
-	@Ignore
+	@Test
 	// wait for next iRODS release
 	public final void testSerializeShoppingCartAsSpecifiedUserAsRodsadmin()
 			throws Exception {

@@ -381,10 +381,14 @@ public class DataCacheServiceImpl extends AbstractDataUtilsServiceImpl
 
 		IRODSFile cacheDir = null;
 		if (cacheServiceConfiguration.isCacheInHomeDir()) {
-			StringBuilder homeDir = new StringBuilder(this.getIrodsAccount()
+			StringBuilder homeDir = new StringBuilder("/");
+			homeDir.append(this.getIrodsAccount()
 					.getZone());
 			homeDir.append("/home/");
 			homeDir.append(cacheServiceConfiguration.getCacheDirPath());
+			log.info(
+					"built home dir automatically for cache using account zone and user name:{}",
+					homeDir.toString());
 			cacheDir = irodsAccessObjectFactory.getIRODSFileFactory(
 					irodsAccount).instanceIRODSFile(homeDir.toString());
 		} else {
