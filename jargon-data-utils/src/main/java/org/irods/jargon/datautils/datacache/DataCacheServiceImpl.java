@@ -298,9 +298,27 @@ public class DataCacheServiceImpl extends AbstractDataUtilsServiceImpl
 	 * 
 	 * @param keyHash
 	 * @param userName
-	 * @return
+	 * @return // FIXME: make sure purge method is calling this
 	 */
 	private String buildIRODSFileAbsolutePath(final int keyHash,
+			final String userName) {
+		StringBuilder sb = computeCacheDirPathFromHomeDirFromUserAndZone(userName);
+
+		sb.append("/");
+		sb.append(userName);
+		sb.append("-");
+		sb.append(keyHash);
+		sb.append(".dat");
+
+		return sb.toString();
+
+	}
+
+	/**
+	 * @param userName
+	 * @return
+	 */
+	private StringBuilder computeCacheDirPathFromHomeDirFromUserAndZone(
 			final String userName) {
 		StringBuilder sb = new StringBuilder();
 		if (cacheServiceConfiguration.isCacheInHomeDir()) {
@@ -315,15 +333,7 @@ public class DataCacheServiceImpl extends AbstractDataUtilsServiceImpl
 			log.debug("building cache based on config provided absolute path");
 			sb.append(cacheServiceConfiguration.getCacheDirPath());
 		}
-
-		sb.append("/");
-		sb.append(userName);
-		sb.append("-");
-		sb.append(keyHash);
-		sb.append(".dat");
-
-		return sb.toString();
-
+		return sb;
 	}
 
 	private byte[] serializeObjectToByteStream(final Object informationObject,
@@ -381,16 +391,13 @@ public class DataCacheServiceImpl extends AbstractDataUtilsServiceImpl
 
 		IRODSFile cacheDir = null;
 		if (cacheServiceConfiguration.isCacheInHomeDir()) {
-			StringBuilder homeDir = new StringBuilder("/");
-			homeDir.append(this.getIrodsAccount()
-					.getZone());
-			homeDir.append("/home/");
-			homeDir.append(cacheServiceConfiguration.getCacheDirPath());
+			StringBuilder sb = computeCacheDirPathFromHomeDirFromUserAndZone(irodsAccount
+					.getUserName());
 			log.info(
 					"built home dir automatically for cache using account zone and user name:{}",
-					homeDir.toString());
+					sb.toString());
 			cacheDir = irodsAccessObjectFactory.getIRODSFileFactory(
-					irodsAccount).instanceIRODSFile(homeDir.toString());
+					irodsAccount).instanceIRODSFile(sb.toString());
 		} else {
 			cacheDir = irodsAccessObjectFactory.getIRODSFileFactory(
 					irodsAccount).instanceIRODSFile(
