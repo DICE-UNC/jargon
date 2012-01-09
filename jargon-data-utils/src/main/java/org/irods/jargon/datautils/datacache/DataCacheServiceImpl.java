@@ -298,7 +298,7 @@ public class DataCacheServiceImpl extends AbstractDataUtilsServiceImpl
 	 * 
 	 * @param keyHash
 	 * @param userName
-	 * @return // FIXME: make sure purge method is calling this
+	 * @return
 	 */
 	private String buildIRODSFileAbsolutePath(final int keyHash,
 			final String userName) {
@@ -315,8 +315,14 @@ public class DataCacheServiceImpl extends AbstractDataUtilsServiceImpl
 	}
 
 	/**
+	 * Given a user and zone, come up with the absolute path to the cach dir
+	 * parent directory based on the standard /zone/home/user/cacheDir as
+	 * configured in teh CacheDirConfig
+	 * 
 	 * @param userName
-	 * @return
+	 *            <code>String</code> with the name of the user for whom the
+	 *            home cache dir will be computed
+	 * @return <code>StringBuilder</code> with computed part of the abs path
 	 */
 	private StringBuilder computeCacheDirPathFromHomeDirFromUserAndZone(
 			final String userName) {

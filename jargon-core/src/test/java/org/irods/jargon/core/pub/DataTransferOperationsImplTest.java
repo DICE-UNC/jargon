@@ -2591,7 +2591,7 @@ public class DataTransferOperationsImplTest {
 
 	}
 
-	@Test
+	// @Test
 	@Ignore
 	public void testCopyCollectionWithCancelThenRestart() throws Exception {
 

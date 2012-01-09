@@ -188,32 +188,54 @@ public class Stream2StreamAOImpl extends IRODSGenericAO implements
 
 			int outputBufferSize = this.getJargonProperties()
 					.getLocalFileOutputStreamBufferSize();
+
+			if (targetFile instanceof IRODSFile) {
+				log.info("target file is an iRODS file");
+
+				fileOutputStream = this.getIRODSFileFactory()
+						.instanceIRODSFileOutputStreamWithRerouting(
+								(IRODSFile) targetFile);
+			} else {
+				log.info("target file is a normal file");
+				fileOutputStream = new FileOutputStream(targetFile);
+			}
+
 			log.debug("output buffer size for file output stream in copy:{}",
 					outputBufferSize);
 
 			if (outputBufferSize == -1) {
 				log.info("no buffer on file output stream to local file");
-				fileOutputStream = new FileOutputStream(targetFile);
+
 			} else if (outputBufferSize == 0) {
 				log.info("default buffered io to file output stream to local file");
-				fileOutputStream = new BufferedOutputStream(
-						new FileOutputStream(targetFile));
+				fileOutputStream = new BufferedOutputStream(fileOutputStream);
 			} else {
 				log.info(
 						"buffer io to file output stream to local file with size of: {}",
 						outputBufferSize);
-				fileOutputStream = new BufferedOutputStream(
-						new FileOutputStream(targetFile), outputBufferSize);
+				fileOutputStream = new BufferedOutputStream(fileOutputStream,
+						outputBufferSize);
 			}
 
-			// see [#470] optimization - look at buffer sizes for read/write in
-			// stream2stream copy - MC
+			int myBuffSize = readBuffSize;
+			if (myBuffSize <= 0) {
+				myBuffSize = this.getJargonProperties()
+						.getInputToOutputCopyBufferByteSize();
+			}
+
+			if (myBuffSize <= 0) {
+				throw new JargonException(
+						"invalid stream to stream copy buffer size of {}",
+						myBuffSize);
+			}
+
+			log.debug("using {} as copy buffer size", myBuffSize);
 
 			int doneCnt = -1;
 
-			byte buf[] = new byte[readBuffSize];
+			byte buf[] = new byte[myBuffSize];
 
-			while ((doneCnt = inputStream.read(buf, 0, readBuffSize)) >= 0) {
+			while ((doneCnt = inputStream.read(buf, 0, myBuffSize)) >= 0) {
 
 				if (doneCnt == 0) {
 					Thread.yield();
