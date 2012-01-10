@@ -44,23 +44,27 @@ import com.sun.image.codec.jpeg.JPEGImageEncoder;
  * 
  */
 @SuppressWarnings("restriction")
-public class ThumbnailServiceImpl extends AbstractDataUtilsServiceImpl implements
-		ThumbnailService {
+public class ThumbnailServiceImpl extends AbstractDataUtilsServiceImpl
+		implements ThumbnailService {
 
 	public static final Logger log = LoggerFactory
 			.getLogger(ThumbnailServiceImpl.class);
 
 	/**
 	 * Constructor with required dependencies
-	 * @param irodsAccessObjectFactory {@link IRODSAccessObjectFactory} that can create necessary objects
-	 * @param irodsAccount {@link IRODSAccount} that contains the login information
+	 * 
+	 * @param irodsAccessObjectFactory
+	 *            {@link IRODSAccessObjectFactory} that can create necessary
+	 *            objects
+	 * @param irodsAccount
+	 *            {@link IRODSAccount} that contains the login information
 	 */
 	public ThumbnailServiceImpl(
-			IRODSAccessObjectFactory irodsAccessObjectFactory,
-			IRODSAccount irodsAccount) {
+			final IRODSAccessObjectFactory irodsAccessObjectFactory,
+			final IRODSAccount irodsAccount) {
 		super(irodsAccessObjectFactory, irodsAccount);
 	}
-	
+
 	/**
 	 * Default (no-values) constructor.
 	 */
@@ -81,6 +85,7 @@ public class ThumbnailServiceImpl extends AbstractDataUtilsServiceImpl implement
 		EnvironmentalInfoAO environmentalInfoAO = irodsAccessObjectFactory
 				.getEnvironmentalInfoAO(getIrodsAccount());
 		try {
+			log.info("listing available scripts...");
 			List<RemoteCommandInformation> scripts = environmentalInfoAO
 					.listAvailableRemoteCommands();
 
@@ -112,7 +117,7 @@ public class ThumbnailServiceImpl extends AbstractDataUtilsServiceImpl implement
 			final String irodsAbsolutePathToGenerateThumbnailFor)
 			throws IRODSThumbnailProcessUnavailableException, JargonException {
 
-		log.info("generateThumbnailForIRODSPath()");
+		log.info("generateThumbnailForIRODSPathViaRule()");
 
 		if (workingDirectory == null) {
 			throw new IllegalArgumentException("null workingDirectory");
@@ -159,6 +164,9 @@ public class ThumbnailServiceImpl extends AbstractDataUtilsServiceImpl implement
 	}
 
 	/**
+	 * Create any necessary directories in the working directory to house the
+	 * generated image.
+	 * 
 	 * @param workingDirectory
 	 * @param irodsAbsolutePathToGenerateThumbnailFor
 	 * @return
@@ -167,6 +175,11 @@ public class ThumbnailServiceImpl extends AbstractDataUtilsServiceImpl implement
 	private File createWorkingDirectoryImageFile(final File workingDirectory,
 			final String irodsAbsolutePathToGenerateThumbnailFor)
 			throws JargonException {
+
+		log.info("createWorkingDirectoryImageFile(), working directory is:{}",
+				workingDirectory);
+		log.info("irodsAbsolutePathToGenerateThumbnailFor:{}",
+				irodsAbsolutePathToGenerateThumbnailFor);
 		if (workingDirectory.exists()) {
 			if (workingDirectory.isDirectory()) {
 				// OK
@@ -174,6 +187,7 @@ public class ThumbnailServiceImpl extends AbstractDataUtilsServiceImpl implement
 				throw new IllegalArgumentException("workingDirectory is a file");
 			}
 		} else {
+			log.info("mkdirs on working directory");
 			workingDirectory.mkdirs();
 		}
 
@@ -198,6 +212,15 @@ public class ThumbnailServiceImpl extends AbstractDataUtilsServiceImpl implement
 			throws JargonException {
 
 		log.info("retrieveThumbnailByIRODSAbsolutePath()");
+
+		if (irodsAbsolutePathToGenerateThumbnailFor == null
+				|| irodsAbsolutePathToGenerateThumbnailFor.isEmpty()) {
+			throw new IllegalArgumentException(
+					"null or empty irodsAbsolutePathToGenerateThumbnailFor");
+		}
+
+		log.info("irodsAbsolutePathToGenerateThumbnailFor:{}",
+				irodsAbsolutePathToGenerateThumbnailFor);
 
 		// get Base64 Encoded data from a rule invocation, this represents the
 		// generated thumbnail
@@ -256,6 +279,8 @@ public class ThumbnailServiceImpl extends AbstractDataUtilsServiceImpl implement
 			final String irodsAbsolutePathToGenerateThumbnailFor,
 			int thumbWidth, int thumbHeight) throws Exception {
 
+		log.info("createThumbnailLocally()");
+
 		if (workingDirectory == null) {
 			throw new IllegalArgumentException("null workingDirectory");
 		}
@@ -266,15 +291,24 @@ public class ThumbnailServiceImpl extends AbstractDataUtilsServiceImpl implement
 					"nul irodsAbsolutePathToGenerateThumbnailFor");
 		}
 
+		log.info("workingDirectory:{}", workingDirectory.getAbsolutePath());
+		log.info("irodsAbsolutePathToGenerateThumbnailFor:{}",
+				irodsAbsolutePathToGenerateThumbnailFor);
+
 		File temp = new File(workingDirectory,
 				irodsAbsolutePathToGenerateThumbnailFor);
 
 		StringBuilder targetTempBuilder = new StringBuilder(
 				LocalFileUtils.getFileNameUpToExtension(temp.getName()));
+		targetTempBuilder
+				.append("###-jargon-data-utils-generated-thumbnail-image-###");
+		targetTempBuilder.append(System.currentTimeMillis());
 		targetTempBuilder.append(".jpg");
 
 		File targetTempFile = createWorkingDirectoryImageFile(
 				temp.getParentFile(), targetTempBuilder.toString());
+
+		log.info(">>>targetTempFile:{}", targetTempFile);
 
 		/*
 		 * Bring the image file down to the local file system to be the
@@ -312,6 +346,8 @@ public class ThumbnailServiceImpl extends AbstractDataUtilsServiceImpl implement
 		graphics2D.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
 				RenderingHints.VALUE_INTERPOLATION_BILINEAR);
 		graphics2D.drawImage(image, 0, 0, thumbWidth, thumbHeight, null);
+		log.info("creating a (buffered) output stream to temp file:{}",
+				targetTempFile.getAbsolutePath());
 		BufferedOutputStream out = new BufferedOutputStream(
 				new FileOutputStream(targetTempFile.getAbsolutePath()));
 		JPEGImageEncoder encoder = JPEGCodec.createJPEGEncoder(out);
@@ -321,18 +357,6 @@ public class ThumbnailServiceImpl extends AbstractDataUtilsServiceImpl implement
 		encoder.setJPEGEncodeParam(param);
 		encoder.encode(thumbImage);
 		out.close();
-
-		/*
-		 * If the original file is a .jpg, then don't delete the temp file, it
-		 * will be used by the caller. If the original is not a .jpg, then that
-		 * original file can be deleted, and the caller will delete the
-		 * thumbnail when required.
-		 */
-
-		if (!(temp.getAbsolutePath().equals(targetTempFile.getAbsolutePath()))) {
-			log.info("deleting intermediate temp file");
-			temp.delete();
-		}
 
 		return targetTempFile;
 	}
@@ -348,6 +372,8 @@ public class ThumbnailServiceImpl extends AbstractDataUtilsServiceImpl implement
 			final String irodsAbsolutePathToGenerateThumbnailFor,
 			final int maxEdge) throws Exception {
 
+		log.info("createThumbnailLocallyViaJAI()");
+
 		if (workingDirectory == null) {
 			throw new IllegalArgumentException("null workingDirectory");
 		}
@@ -358,11 +384,20 @@ public class ThumbnailServiceImpl extends AbstractDataUtilsServiceImpl implement
 					"nul irodsAbsolutePathToGenerateThumbnailFor");
 		}
 
+		if (maxEdge <= 0) {
+			throw new IllegalArgumentException("maxEdge must be > 0");
+		}
+
+		// build a temporary path for the thumbnail file that differentiates the
+		// irods file from the thumbnail
 		File temp = new File(workingDirectory,
 				irodsAbsolutePathToGenerateThumbnailFor);
 
 		StringBuilder targetTempBuilder = new StringBuilder(
 				LocalFileUtils.getFileNameUpToExtension(temp.getName()));
+		targetTempBuilder
+				.append("###-jargon-data-utils-generated-thumbnail-image-###");
+		targetTempBuilder.append(System.currentTimeMillis());
 		targetTempBuilder.append(".png");
 
 		File targetTempFile = createWorkingDirectoryImageFile(
@@ -381,26 +416,28 @@ public class ThumbnailServiceImpl extends AbstractDataUtilsServiceImpl implement
 				.getDataObjectAO(irodsAccount);
 
 		dataObjectAO.getDataObjectFromIrods(sourceAsFile, temp);
-		log.info("image retrieved to: {}, make thumbnail...",
+		log.info("image retrieved, create thumbnail image at:{}",
 				targetTempFile.getAbsolutePath());
 
-		ImageTool imageTool = new ImageTool();
-		imageTool.load(temp.getAbsolutePath());
-		imageTool.thumbnail(maxEdge);
-		imageTool.writeResult(targetTempFile.getAbsolutePath(), "PNG");
+		try {
 
-		/*
-		 * If the original file is a .png, then don't delete the temp file, it
-		 * will be used by the caller. If the original is not a .png, then that
-		 * original file can be deleted, and the caller will delete the
-		 * thumbnail when required.
-		 */
-
-		if (!(temp.getAbsolutePath().equals(targetTempFile.getAbsolutePath()))) {
-			log.info("deleting intermediate temp file");
-			temp.delete();
+			ImageTool imageTool = new ImageTool();
+			imageTool.load(temp.getAbsolutePath());
+			imageTool.thumbnail(maxEdge);
+			imageTool.writeResult(targetTempFile.getAbsolutePath(), "PNG");
+			if (!targetTempFile.exists()) {
+				throw new JargonException(
+						"image file was not created for some reason by JAI");
+			}
+		} catch (Exception e) {
+			log.error("exception occurred during thumbnail processing via JAI",
+					e);
+			throw new JargonException(
+					"Error during thumbnail creation via JAI", e);
 		}
 
+		log.info("clean up base image, thumbnail image to be deleted by caller");
+		temp.delete();
 		return targetTempFile;
 	}
 
