@@ -1063,6 +1063,25 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 	}
 
 	@Test
+	public void testGetFullObjectForRoot() throws Exception {
+
+		String targetIrodsCollection = "/";
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		CollectionAndDataObjectListAndSearchAO listAndSearchAO = irodsFileSystem
+				.getIRODSAccessObjectFactory()
+				.getCollectionAndDataObjectListAndSearchAO(irodsAccount);
+
+		Object actual = listAndSearchAO
+				.getFullObjectForType(targetIrodsCollection);
+		Assert.assertNotNull("object was null", actual);
+		boolean isCollection = actual instanceof Collection;
+		Assert.assertTrue("was not a collection", isCollection);
+
+	}
+
+	@Test
 	public void testGetFullObjectForCollection() throws Exception {
 
 		String targetIrodsCollection = testingPropertiesHelper
