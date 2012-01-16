@@ -59,6 +59,52 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		super(irodsSession, irodsAccount);
 	}
 
+	/**
+	 * @param absolutePath
+	 * @return
+	 * @throws FileNotFoundException
+	 * @throws JargonException
+	 */
+	@Override
+	public CollectionAndDataObjectListingEntry getCollectionAndDataObjectListingEntryAtGivenAbsolutePath(
+			final String absolutePath) throws FileNotFoundException,
+			JargonException {
+		if (absolutePath == null || absolutePath.isEmpty()) {
+			throw new IllegalArgumentException("absolutePath is null or empty");
+		}
+
+		ObjStat objStat = retrieveObjectStatForPath(absolutePath);
+
+		if (objStat == null) {
+			log.error("no file found for path:{}", absolutePath);
+			throw new FileNotFoundException("no file found for given path");
+		}
+
+		IRODSFile entryFile = this.getIRODSFileFactory().instanceIRODSFile(
+				absolutePath);
+
+		CollectionAndDataObjectListingEntry entry = new CollectionAndDataObjectListingEntry();
+		entry.setParentPath(entryFile.getParent());
+
+		if (objStat.getObjectType() == ObjectType.DATA_OBJECT
+				|| objStat.getObjectType() == ObjectType.LOCAL_FILE) {
+			entry.setPathOrName(entryFile.getName());
+		} else {
+			entry.setPathOrName(absolutePath);
+		}
+
+		entry.setCreatedAt(objStat.getCreatedAt());
+		entry.setModifiedAt(objStat.getModifiedAt());
+		entry.setDataSize(objStat.getObjSize());
+		entry.setId(objStat.getDataId());
+		entry.setObjectType(objStat.getObjectType());
+		entry.setOwnerName(objStat.getOwnerName());
+		entry.setOwnerZone(objStat.getOwnerZone());
+		log.info("created entry for path as: {}", entry);
+		return entry;
+
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -70,12 +116,9 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 			final String absolutePathToParent) throws FileNotFoundException,
 			JargonException {
 
-		if (absolutePathToParent == null) {
-			throw new IllegalArgumentException("absolutePathToParent is null");
-		}
-
-		if (absolutePathToParent.isEmpty()) {
-			throw new IllegalArgumentException("absolutePathToParent is null");
+		if (absolutePathToParent == null || absolutePathToParent.isEmpty()) {
+			throw new IllegalArgumentException(
+					"absolutePathToParent is null or empty");
 		}
 
 		ObjStat objStat = retrieveObjectStatForPath(absolutePathToParent);
