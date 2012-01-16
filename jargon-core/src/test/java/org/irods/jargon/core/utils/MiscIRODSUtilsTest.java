@@ -1,8 +1,11 @@
 package org.irods.jargon.core.utils;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 import junit.framework.Assert;
+import junit.framework.TestCase;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
@@ -97,4 +100,97 @@ public class MiscIRODSUtilsTest {
 		Assert.assertEquals("should pull default resource from IRODS account",
 				"", defaultStorageResource);
 	}
+
+	/**
+	 * Break an iRODS abs path into components, then rebuild the whole path
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public final void testBreakAndRebuildPathFromComponents() throws Exception {
+		String targetPath = "/a/path/in/irods/here";
+		List<String> pathComponents = MiscIRODSUtils
+				.breakIRODSPathIntoComponents(targetPath);
+		TestCase.assertEquals("did not break into right number of paths", 6,
+				pathComponents.size());
+		String actual = MiscIRODSUtils.buildPathFromComponentsUpToIndex(
+				pathComponents, -1);
+		TestCase.assertEquals("did not reconstitute path correctly",
+				targetPath, actual);
+
+	}
+
+	/**
+	 * Break an iRODS abs path into components. Null path should be error
+	 * 
+	 * @throws Exception
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public final void testBuildPathFromComponentsWhenNull()
+			throws Exception {
+		MiscIRODSUtils.buildPathFromComponentsUpToIndex(null, -1);
+
+	}
+
+	/**
+	 * Break an iRODS abs path into components. If the path is empty, should
+	 * give '/' as the path back
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public final void testBreakAndRebuildPathFromComponentsWhenEmpty()
+			throws Exception {
+		String targetPath = "/";
+		List<String> pathComponents = new ArrayList<String>();
+
+		String actual = MiscIRODSUtils.buildPathFromComponentsUpToIndex(
+				pathComponents, -1);
+		TestCase.assertEquals("did not reconstitute path correctly",
+				targetPath, actual);
+
+	}
+
+	/**
+	 * Break an iRODS abs path into components, then rebuild the whole path when
+	 * the path is just root
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public final void testBreakAndRebuildPathFromComponentsWhenRoot()
+			throws Exception {
+		String targetPath = "/";
+		List<String> pathComponents = MiscIRODSUtils
+				.breakIRODSPathIntoComponents(targetPath);
+		TestCase.assertEquals("did not break into right number of paths", 0,
+				pathComponents.size());
+		String actual = MiscIRODSUtils.buildPathFromComponentsUpToIndex(
+				pathComponents, -1);
+		TestCase.assertEquals("did not reconstitute path correctly",
+				targetPath, actual);
+
+	}
+
+
+	/**
+	 * Break an iRODS abs path into components, then rebuild the path using the
+	 * first 3 components
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public final void testBreakAndRebuildPathFromComponentsGetFirstThreeParts()
+			throws Exception {
+		String targetPath = "/a/path/in/irods/here";
+		List<String> pathComponents = MiscIRODSUtils
+				.breakIRODSPathIntoComponents(targetPath);
+		String actual = MiscIRODSUtils.buildPathFromComponentsUpToIndex(
+				pathComponents, 3);
+		TestCase.assertEquals("did not reconstitute path correctly",
+				"/a/path/in", actual);
+
+	}
+
+
 }

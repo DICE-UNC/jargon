@@ -156,4 +156,53 @@ public class MiscIRODSUtils {
 
 	}
 
+	/**
+	 * Given a list of path components, as produced by the
+	 * <code>breakIRODSPathIntoComponents</code>, re-create an iRODS absolute
+	 * path by simply stringing together the path components with the iRODS '/'
+	 * delimiter.
+	 * 
+	 * @param pathComponents
+	 *            <code>List<String></code> with the iRODS path components.
+	 * @param lastIndex
+	 *            <code>int</code>, set to -1 if there is no limit, that
+	 *            indicates the index of the last component to string together
+	 *            into the path
+	 * @return <code>String</code> with an iRODS absolute path built from the
+	 *         given components.
+	 */
+	public static String buildPathFromComponentsUpToIndex(
+			final List<String> pathComponents, final int lastIndex) {
+
+		if (pathComponents == null) {
+			throw new IllegalArgumentException("null pathComponents");
+		}
+
+		StringBuilder sb = new StringBuilder();
+		// keep track of how many components are processed
+		int i = 0;
+		for (String pathComponent : pathComponents) {
+
+			// root path will be blank, so ignore, as slashes are already
+			// appended
+			if (!pathComponent.isEmpty()) {
+				// if i've specified a limit to the path components, respect it
+				if (lastIndex >= 0) {
+					if (i++ >= lastIndex) {
+						break;
+					}
+				}
+				sb.append("/");
+				sb.append(pathComponent);
+			}
+		}
+
+		// If I don't get a path, set it to root
+		if (sb.length() == 0) {
+			sb.append("/");
+		}
+
+		return sb.toString();
+	}
+
 }
