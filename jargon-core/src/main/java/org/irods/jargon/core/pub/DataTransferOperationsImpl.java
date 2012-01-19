@@ -2,7 +2,6 @@ package org.irods.jargon.core.pub;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
@@ -1661,17 +1660,16 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 				transferStatusCallbackListener, transferControlBlock);
 	}
 	
-	/**
-	 * Upload an URL to IRODS
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @param sourceURL
-	 * @param targetIrodsFileAbsolutePath
-	 * @param targetResourceName
-	 * @param transferStatusCallbackListener
-	 * @param transferControlBlock
-	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.DataTransferOperations#putOperationURL(java
+	 * .lang.String, java.lang.String, java.lang.String,
+	 * org.irods.jargon.core.transfer.TransferStatusCallbackListener,
+	 * org.irods.jargon.core.transfer.TransferControlBlock)
 	 */
-	
+	@Override
 	public void putOperationURL(
 			final String sourceURL,
 			final String targetIrodsFileAbsolutePath, String targetResourceName,

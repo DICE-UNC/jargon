@@ -932,6 +932,61 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 	}
 
 	@Test
+	public void testSearchDataObjectsReplicated() throws Exception {
+
+		String subdirPrefix = "testSearchDataObjectsOneReplicated";
+		String searchTerm = "testSearchDataObjectsOneReplicated";
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + "/"
+								+ subdirPrefix);
+		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetIrodsCollection);
+		irodsFile.mkdir();
+
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String localFileName = FileGenerator
+				.generateFileOfFixedLengthGivenName(absPath, searchTerm
+						+ "testv1.txt", 1);
+
+		irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetIrodsCollection);
+		irodsFile.mkdir();
+
+		File localFile = new File(localFileName);
+		DataObjectAO dataObjectAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
+
+		dataObjectAO.putLocalDataObjectToIRODS(localFile, irodsFile, true);
+		dataObjectAO
+				.replicateIrodsDataObject(
+						irodsFile.getAbsolutePath() + "/" + localFile.getName(),
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_RESOURCE_KEY));
+
+		// second file, slightly different prefix on name
+		localFileName = FileGenerator
+				.generateFileOfFixedLengthGivenName(absPath,
+ "xxx" + searchTerm + "testv1.txt", 1);
+		localFile = new File(localFileName);
+		dataObjectAO.putLocalDataObjectToIRODS(localFile, irodsFile, true);
+
+		CollectionAndDataObjectListAndSearchAO actual = irodsFileSystem
+				.getIRODSAccessObjectFactory()
+				.getCollectionAndDataObjectListAndSearchAO(irodsAccount);
+		List<CollectionAndDataObjectListingEntry> entries = actual
+				.searchDataObjectsBasedOnName(searchTerm, 0);
+		Assert.assertNotNull(entries);
+		Assert.assertEquals(2, entries.size());
+
+	}
+
+	@Test
 	public void testSearchCollectionsAndDataObjects() throws Exception {
 
 		String subdirPrefix = "testSearchCollectionsAndDataObjectsSubdir";

@@ -50,6 +50,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 	private static final String QUERY_EXCEPTION_FOR_QUERY = "query exception for  query:";
 	public static final Logger log = LoggerFactory
 			.getLogger(CollectionAndDataObjectListAndSearchAOImpl.class);
+	private static final char COMMA = ',';
 	private transient final IRODSFileFactory irodsFileFactory = new IRODSFileFactoryImpl(
 			getIRODSSession(), getIRODSAccount());
 
@@ -886,7 +887,20 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 
 		StringBuilder sb = new StringBuilder();
 		sb.append("SELECT DISTINCT ");
-		sb.append(IRODSFileSystemAOHelper.buildDataObjectQuerySelects());
+		sb.append(RodsGenQueryEnum.COL_COLL_NAME.getName());
+		sb.append(COMMA);
+		sb.append(RodsGenQueryEnum.COL_DATA_NAME.getName());
+		sb.append(COMMA);
+		sb.append(RodsGenQueryEnum.COL_D_CREATE_TIME.getName());
+		sb.append(COMMA);
+		sb.append(RodsGenQueryEnum.COL_D_MODIFY_TIME.getName());
+		sb.append(COMMA);
+		sb.append(RodsGenQueryEnum.COL_D_DATA_ID.getName());
+		sb.append(COMMA);
+		sb.append(RodsGenQueryEnum.COL_DATA_SIZE.getName());
+
+		sb.append(COMMA);
+		sb.append(RodsGenQueryEnum.COL_D_OWNER_NAME.getName());
 		sb.append(" WHERE ");
 		sb.append(RodsGenQueryEnum.COL_DATA_NAME.getName());
 		sb.append(" LIKE '%");
@@ -911,8 +925,24 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 
 		List<CollectionAndDataObjectListingEntry> entries = new ArrayList<CollectionAndDataObjectListingEntry>();
 		for (IRODSQueryResultRow row : resultSet.getResults()) {
-			entries.add(CollectionAOHelper
-					.buildCollectionListEntryFromResultSetRowForDataObjectQuery(row));
+			CollectionAndDataObjectListingEntry entry = new CollectionAndDataObjectListingEntry();
+			entry.setParentPath(row.getColumn(0));
+			entry.setObjectType(ObjectType.DATA_OBJECT);
+			entry.setPathOrName(row.getColumn(1));
+			entry.setCreatedAt(IRODSDataConversionUtil
+					.getDateFromIRODSValue(row.getColumn(2)));
+			entry.setModifiedAt(IRODSDataConversionUtil
+					.getDateFromIRODSValue(row.getColumn(3)));
+			entry.setId(IRODSDataConversionUtil.getIntOrZeroFromIRODSValue(row
+					.getColumn(4)));
+			entry.setDataSize(IRODSDataConversionUtil
+					.getLongOrZeroFromIRODSValue(row.getColumn(5)));
+			entry.setOwnerName(row.getColumn(6));
+			entry.setCount(row.getRecordCount());
+			entry.setLastResult(row.isLastResult());
+
+			log.info("listing entry built {}", entry.toString());
+			entries.add(entry);
 		}
 
 		return entries;

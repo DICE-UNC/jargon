@@ -11,7 +11,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.channels.Channels;
-import java.nio.channels.FileChannel;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.channels.WritableByteChannel;
 
@@ -93,72 +92,7 @@ public class Stream2StreamAOImpl extends IRODSGenericAO implements
 
 			}
 		}
-
 	}
-
-	@Override
-	public void transferStreamToFile(final InputStream inputStream,
-			final File targetFile, final long length, final long readBuffSize)
-			throws JargonException {
-
-		if (inputStream == null) {
-			throw new IllegalArgumentException("null or empty inputStream");
-		}
-
-		if (targetFile == null) {
-			throw new IllegalArgumentException("null targetFile");
-		}
-
-		log.info("transferStreamToFile(), inputStream:{}", inputStream);
-		log.info("targetFile:{}", targetFile);
-
-		ReadableByteChannel inputChannel = Channels.newChannel(inputStream);
-		FileChannel fileChannel = null;
-		try {
-			FileOutputStream fileOutputStream = new FileOutputStream(targetFile);
-			fileChannel = fileOutputStream.getChannel();
-
-			long fileSize = length;
-
-			long offs = 0, doneCnt = 0, copyCnt = Math
-					.min(readBuffSize, length);
-
-			do {
-
-				doneCnt = fileChannel.transferFrom(inputChannel, offs, copyCnt);
-
-				offs += doneCnt;
-
-				fileSize -= doneCnt;
-
-			}
-
-			while (fileSize > 0);
-
-		} catch (FileNotFoundException e) {
-			log.error("File not found exception copying buffers", e);
-			throw new JargonException(
-					"file not found exception copying buffers", e);
-		} catch (IOException e) {
-			log.error("IOException exception copying buffers", e);
-			throw new JargonException("IOException copying buffers", e);
-		} finally {
-
-			try {
-				inputChannel.close();
-			} catch (Exception e) {
-
-			}
-
-			try {
-				fileChannel.close();
-			} catch (Exception e) {
-
-			}
-		}
-
-	}
-
 	/*
 	 * (non-Javadoc)
 	 * 

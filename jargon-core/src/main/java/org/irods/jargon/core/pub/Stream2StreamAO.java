@@ -57,9 +57,6 @@ public interface Stream2StreamAO extends IRODSAccessObject {
 			throws JargonException;
 
 
-	void transferStreamToFile(InputStream inputStream, File targetFile,
-			long length, long readBuffSize) throws JargonException;
-
 	/**
 	 * Transfer the contents of a stream to a given file. Note that this method
 	 * will detect if the target file is an <code>IRODSFile</code>, and in that
