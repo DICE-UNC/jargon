@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Properties;
 
 import junit.framework.Assert;
+import junit.framework.TestCase;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.FileNotFoundException;
@@ -1063,6 +1064,25 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 	}
 
 	@Test
+	public void testGetFullObjectForRoot() throws Exception {
+
+		String targetIrodsCollection = "/";
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		CollectionAndDataObjectListAndSearchAO listAndSearchAO = irodsFileSystem
+				.getIRODSAccessObjectFactory()
+				.getCollectionAndDataObjectListAndSearchAO(irodsAccount);
+
+		Object actual = listAndSearchAO
+				.getFullObjectForType(targetIrodsCollection);
+		Assert.assertNotNull("object was null", actual);
+		boolean isCollection = actual instanceof Collection;
+		Assert.assertTrue("was not a collection", isCollection);
+
+	}
+
+	@Test
 	public void testGetFullObjectForCollection() throws Exception {
 
 		String targetIrodsCollection = testingPropertiesHelper
@@ -1198,6 +1218,144 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 		 * List<CollectionAndDataObjectListingEntry> entries = actual
 		 * .listDataObjectsSharedWithAGivenUser("/", "test2", 0);
 		 */
+
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	/**
+	 * collectionAndDataObjectListingEntry for a null path should give exception
+	 */
+	public void testCollectionAndDataObjectListingEntryForNullPath()
+			throws Exception {
+
+		String targetIrodsCollection = null;
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		CollectionAndDataObjectListAndSearchAO listAndSearchAO = irodsFileSystem
+				.getIRODSAccessObjectFactory()
+				.getCollectionAndDataObjectListAndSearchAO(irodsAccount);
+
+		listAndSearchAO
+				.getCollectionAndDataObjectListingEntryAtGivenAbsolutePath(targetIrodsCollection);
+
+	}
+
+	@Test(expected = FileNotFoundException.class)
+	/**
+	 * collectionAndDataObjectListingEntry for a non existent path should give FileNotFoundException
+	 */
+	public void testCollectionAndDataObjectListingEntryForNonExistentCollection()
+			throws Exception {
+
+		String targetIrodsCollection = "/this/is/not/a/path";
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		CollectionAndDataObjectListAndSearchAO listAndSearchAO = irodsFileSystem
+				.getIRODSAccessObjectFactory()
+				.getCollectionAndDataObjectListAndSearchAO(irodsAccount);
+
+		listAndSearchAO
+				.getCollectionAndDataObjectListingEntryAtGivenAbsolutePath(targetIrodsCollection);
+
+	}
+
+	@Test
+	/**
+	 * collectionAndDataObjectListingEntry as a collection at the given irods absolute path
+	 */
+	public void testCollectionAndDataObjectListingEntryForCollection() throws Exception {
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		CollectionAndDataObjectListAndSearchAO listAndSearchAO = irodsFileSystem
+				.getIRODSAccessObjectFactory()
+				.getCollectionAndDataObjectListAndSearchAO(irodsAccount);
+
+		CollectionAndDataObjectListingEntry entry = listAndSearchAO
+				.getCollectionAndDataObjectListingEntryAtGivenAbsolutePath(targetIrodsCollection);
+		TestCase.assertNotNull("did not find collection", entry);
+	}
+
+	@Test
+	/**
+	 * collectionAndDataObjectListingEntry as a collection at the given irods absolute path
+	 */
+	public void testCollectionAndDataObjectListingEntryForCollectionWhenRoot()
+			throws Exception {
+
+		String targetIrodsCollection = "/";
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		CollectionAndDataObjectListAndSearchAO listAndSearchAO = irodsFileSystem
+				.getIRODSAccessObjectFactory()
+				.getCollectionAndDataObjectListAndSearchAO(irodsAccount);
+
+		CollectionAndDataObjectListingEntry entry = listAndSearchAO
+				.getCollectionAndDataObjectListingEntryAtGivenAbsolutePath(targetIrodsCollection);
+		TestCase.assertNotNull("did not find collection", entry);
+	}
+
+
+	@Test
+	/**
+	 * Obtain an entry at the given valid abs path that is a data object
+	 * @throws Exception
+	 */
+	public void testCollectionAndDataObjectListingEntryForDataObject()
+			throws Exception {
+
+		String testFileName = "testCollectionAndDataObjectListingEntryForDataObject.txt";
+		long fileSize = 2;
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String fileNameOrig = FileGenerator.generateFileOfFixedLengthGivenName(
+				absPath, testFileName, fileSize);
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		DataObjectAO dataObjectAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
+		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetIrodsCollection);
+		dataObjectAO.putLocalDataObjectToIRODS(new File(fileNameOrig),
+				irodsFile, true);
+		CollectionAndDataObjectListAndSearchAO listAndSearchAO = irodsFileSystem
+				.getIRODSAccessObjectFactory()
+				.getCollectionAndDataObjectListAndSearchAO(irodsAccount);
+
+		ObjStat objStat = listAndSearchAO
+				.retrieveObjectStatForPath(targetIrodsCollection + "/"
+						+ testFileName);
+		Assert.assertNotNull("null objStat returned", objStat);
+		CollectionAndDataObjectListingEntry entry = listAndSearchAO
+				.getCollectionAndDataObjectListingEntryAtGivenAbsolutePath(targetIrodsCollection
+						+ "/" + testFileName);
+		Assert.assertEquals("wrong path", objStat.getAbsolutePath(),
+				entry.getFormattedAbsolutePath());
+		Assert.assertEquals("wrong length", objStat.getObjSize(),
+				entry.getDataSize());
+		Assert.assertEquals("wrong created", objStat.getCreatedAt(),
+				entry.getCreatedAt());
+		Assert.assertEquals("wrong modified", objStat.getModifiedAt(),
+				entry.getModifiedAt());
+		Assert.assertEquals("wrong objType",
+				CollectionAndDataObjectListingEntry.ObjectType.DATA_OBJECT,
+				entry.getObjectType());
 
 	}
 

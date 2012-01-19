@@ -87,14 +87,22 @@ public interface ThumbnailService {
 	boolean isIRODSThumbnailGeneratorAvailable() throws JargonException;
 
 	/**
-	 * Create a thumb-nail by down-loading the file and processing the image locally using the JAI image library, which can process a 
-	 * TIFF file.  The JAI version will create a .PNG thumbnail.
-	 * @param workingDirectory <code>File</code> with the path to the top level of a working directory to hold the
-	 * thumbnail image.
-	 * @param irodsAbsolutePathToGenerateThumbnailFor <code>String</code> that is the absolute path to the iRODS file
-	 * for which a thumbnail will be generated.
-	 * @param maxEdge <code>int</code> with the desired max edge length
-	 * @return {@link File} with the thumbnail image
+	 * Create a thumb-nail by down-loading the file and processing the image
+	 * locally using the JAI image library, which can process a TIFF file. The
+	 * JAI version will create a .PNG thumbnail.
+	 * 
+	 * @param workingDirectory
+	 *            <code>File</code> with the path to the top level of a working
+	 *            directory to hold the thumbnail image.
+	 * @param irodsAbsolutePathToGenerateThumbnailFor
+	 *            <code>String</code> that is the absolute path to the iRODS
+	 *            file for which a thumbnail will be generated.
+	 * @param maxEdge
+	 *            <code>int</code> with the desired max edge length
+	 * @return {@link File} with the thumbnail image. Note that it is the
+	 *         responsibility of the caller to clean up this image after
+	 *         processing, either by deleting the returned file or by adding a
+	 *         reaper process. This might be added to the API later.
 	 * @throws Exception
 	 */
 	File createThumbnailLocallyViaJAI(File workingDirectory,

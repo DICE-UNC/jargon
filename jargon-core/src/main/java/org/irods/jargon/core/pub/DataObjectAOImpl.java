@@ -116,11 +116,6 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 		DataObject dataObject = null;
 
-		if (collectionPath == null || collectionPath.isEmpty()) {
-			throw new IllegalArgumentException(
-					"collection path is null or empty");
-		}
-
 		if (dataName == null || dataName.isEmpty()) {
 			throw new IllegalArgumentException("dataName is null or empty");
 		}
@@ -131,12 +126,18 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		final StringBuilder sb = new StringBuilder();
 		sb.append(dataAOHelper.buildSelects());
 		sb.append(WHERE);
-		sb.append(RodsGenQueryEnum.COL_COLL_NAME.getName());
-		sb.append(EQUALS_AND_QUOTE);
-		sb.append(IRODSDataConversionUtil.escapeSingleQuotes(collectionPath
-				.trim()));
-		sb.append(QUOTE);
-		sb.append(AND);
+
+		if (collectionPath == null || collectionPath.isEmpty()) {
+			log.info("ignoring collection path in query");
+		} else {
+			sb.append(RodsGenQueryEnum.COL_COLL_NAME.getName());
+			sb.append(EQUALS_AND_QUOTE);
+			sb.append(IRODSDataConversionUtil.escapeSingleQuotes(collectionPath
+					.trim()));
+			sb.append(QUOTE);
+			sb.append(AND);
+		}
+
 		sb.append(RodsGenQueryEnum.COL_DATA_NAME.getName());
 		sb.append(EQUALS_AND_QUOTE);
 		sb.append(IRODSDataConversionUtil.escapeSingleQuotes(dataName.trim()));

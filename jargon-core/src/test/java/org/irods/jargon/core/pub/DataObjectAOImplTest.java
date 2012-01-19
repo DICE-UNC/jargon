@@ -709,6 +709,63 @@ public class DataObjectAOImplTest {
 
 	}
 
+	/**
+	 * Get a data object where the source name and the target name are
+	 * different. It should be retrieved as the target name.
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public final void testGetProvidingDifferentSourceAndTargetDataNames()
+			throws Exception {
+
+		String sourceFileName = "testGetProvidingDifferentSourceAndTargetDataNames.txt";
+		String targetFileName = "target file for testGetProvidingDifferentSourceAndTargetDataNames.txt";
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String localFileName = FileGenerator
+				.generateFileOfFixedLengthGivenName(absPath, sourceFileName,
+						100);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
+		String getResultLocalPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH + '/')
+				+ targetFileName;
+		File localFile = new File(getResultLocalPath);
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		DataTransferOperations dataTransferOperations = accessObjectFactory
+				.getDataTransferOperations(irodsAccount);
+		dataTransferOperations
+				.putOperation(
+						localFileName,
+						targetIrodsCollection,
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
+						null, null);
+
+		DataObjectAO dataObjectAO = accessObjectFactory
+				.getDataObjectAO(irodsAccount);
+		IRODSFile irodsFile = dataObjectAO
+				.instanceIRODSFileForPath(targetIrodsCollection + '/'
+						+ sourceFileName);
+
+		dataObjectAO.getDataObjectFromIrods(irodsFile, localFile);
+
+		assertionHelper.assertLocalFileExistsInScratch(IRODS_TEST_SUBDIR_PATH
+				+ '/' + targetFileName);
+		assertionHelper.assertLocalScratchFileLengthEquals(
+				IRODS_TEST_SUBDIR_PATH + '/' + targetFileName, 100);
+
+	}
+
 	@Test
 	public final void testGetExecutable() throws Exception {
 

@@ -408,4 +408,22 @@ public interface CollectionAndDataObjectListAndSearchAO extends
 	ObjStat retrieveObjectStatForPath(String irodsAbsolutePath)
 			throws FileNotFoundException, JargonException;
 
+	/**
+	 * Return the <code>CollectionAndDataObjectListingEntry</code> that is
+	 * associated with the given iRODS absolute path. This is equivalent to
+	 * doing an 'objStat' on the given path, and in fact, this is how the data
+	 * is retrieved from iRODS.
+	 * 
+	 * @param absolutePath
+	 *            <code>String</code> with the absolute path to an iRODS
+	 *            collection or data object.
+	 * @return {@link org.irods.jargon.core.query.CollectionAndDataObjectListingEntry}
+	 *         containing information on the given file or directory at the
+	 *         given absolute path.
+	 * @throws FileNotFoundException
+	 * @throws JargonException
+	 */
+	CollectionAndDataObjectListingEntry getCollectionAndDataObjectListingEntryAtGivenAbsolutePath(
+			String absolutePath) throws FileNotFoundException, JargonException;
+
 }
