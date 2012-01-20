@@ -68,6 +68,7 @@ Note that the following bug and feature requests are logged in GForge with relat
 [#578] Temp password as another user
 [#574] Added more capable Stream2Stream copy for input stream to target file, supporting iRODS file with jargon properties
 support and connection re-routing capability automatically.
+[#613] add method def for putOperationURL()
 
 
  

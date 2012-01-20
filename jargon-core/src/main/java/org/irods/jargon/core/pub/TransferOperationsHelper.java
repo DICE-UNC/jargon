@@ -1,5 +1,6 @@
 package org.irods.jargon.core.pub;
 
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -7,9 +8,11 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 
+import org.irods.jargon.core.connection.ConnectionProgressStatusListener;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.pub.io.ByteCountingCallbackInputStreamWrapper;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.pub.io.IRODSFileImpl;
 import org.irods.jargon.core.transfer.TransferControlBlock;
@@ -1204,7 +1207,7 @@ protected void processPutOfURL(
 		url = new URL(sourceURL);
 		connection = url.openConnection();
 		urlSize = connection.getContentLength();
-		inStream = url.openStream();
+			inStream = new BufferedInputStream(url.openStream());
 	} catch (MalformedURLException e) {
 		log.error("Cannot get size of specified URL: {}", sourceURL);
 		e.printStackTrace();
@@ -1225,23 +1228,6 @@ protected void processPutOfURL(
 				.incrementFilesTransferredSoFar();
 		totalFiles = transferControlBlock.getTotalFilesToTransfer();
 
-		// if I am restarting, see if I need to transfer this file???
-
-//		if (!transferControlBlock.filter(sourceFile.getAbsolutePath())) {
-//			log.debug("file filtered and not transferred");
-//			TransferStatus status = TransferStatus.instance(
-//					TransferType.PUT, sourceFile.getAbsolutePath(),
-//					targetIrodsFile.getAbsolutePath(), "", 0, 0,
-//					transferControlBlock.getTotalFilesTransferredSoFar(),
-//					transferControlBlock.getTotalFilesToTransfer(),
-//					TransferState.RESTARTING, dataObjectAO
-//							.getIRODSAccount().getHost(), dataObjectAO
-//							.getIRODSAccount().getZone());
-//
-//			transferStatusCallbackListener.statusCallback(status);
-//			return;
-//		}
-
 		if (transferStatusCallbackListener != null) {
 
 			TransferStatus status = TransferStatus.instance(
@@ -1255,7 +1241,19 @@ protected void processPutOfURL(
 			transferStatusCallbackListener.statusCallback(status);
 		}
 
-		stream2StreamAO.transferStreamToFileUsingIOStreams(inStream, (File)targetIrodsFile,
+			InputStream transferStream = inStream;
+			if (transferStatusCallbackListener != null) {
+				log.info("setting up a callback listener for within stream progress");
+				ConnectionProgressStatusListener listener = DefaultIntraFileProgressCallbackListener
+						.instance(TransferType.PUT, urlSize,
+								transferControlBlock,
+								transferStatusCallbackListener);
+				transferStream = new ByteCountingCallbackInputStreamWrapper(
+						listener, transferStream);
+			}
+
+			stream2StreamAO.transferStreamToFileUsingIOStreams(transferStream,
+					(File) targetIrodsFile,
 				urlSize, 0);
 
 		if (transferStatusCallbackListener != null) {
