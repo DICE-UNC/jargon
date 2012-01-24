@@ -4,6 +4,8 @@ import java.io.File;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.packinstr.TransferOptions;
+import org.irods.jargon.core.packinstr.TransferOptions.ForceOption;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 import org.irods.jargon.core.transfer.TransferControlBlock;
 import org.irods.jargon.core.transfer.TransferStatus;
@@ -24,9 +26,9 @@ import org.slf4j.LoggerFactory;
  * transfers to synchronize between the two. This implementation is meant to
  * plug into the <code>TransferManager</code>, and SYNCH transfer processes will
  * delegate to this class.
- * 
- * TODO: do I need all of the depenencies in the interface? Move to impl for
- * consistency
+ * <p/>
+ * The synchronizing processor is not thread-safe, and is meant to be
+ * initialized and run by one thread.
  * 
  * @author Mike Conway - DICE (www.irods.org)
  */
@@ -433,13 +435,41 @@ public class SynchronizeProcessorImpl implements SynchronizeProcessor,
 
 	}
 
+	/**
+	 * Get the {@link TransferControlBlock} that is managing, and provides a
+	 * communication method to the transferring process.
+	 * 
+	 * @return {@link TransferControlBlock} that provides 2-way communication
+	 *         with the transferring process.
+	 */
 	public TransferControlBlock getTransferControlBlock() {
 		return transferControlBlock;
 	}
 
+	/**
+	 * Set the <code>TransferControlBlock</code> that manages the transferring
+	 * process.
+	 * 
+	 * @param transferControlBlock
+	 *            {@link TransferControlBlock} controlling the current transfer.
+	 */
 	public void setTransferControlBlock(
 			final TransferControlBlock transferControlBlock) {
 		this.transferControlBlock = transferControlBlock;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.transfer.TransferStatusCallbackListener#
+	 * transferAsksWhetherToOverwriteDuringOperation(java.lang.String, boolean)
+	 */
+	@Override
+	public ForceOption transferAsksWhetherToForceOperation(
+			String irodsAbsolutePath, boolean isCollection) {
+		// currently will overwrite, this needs to be set in transfer options
+		return TransferOptions.ForceOption.USE_FORCE;
+
 	}
 
 }

@@ -325,6 +325,8 @@ public final class DataAOHelper extends AOHelper {
 	}
 
 	/**
+	 * Overwrites have already been checked
+	 * 
 	 * @param localFileToHoldData
 	 * @param length
 	 * @param transferOptions

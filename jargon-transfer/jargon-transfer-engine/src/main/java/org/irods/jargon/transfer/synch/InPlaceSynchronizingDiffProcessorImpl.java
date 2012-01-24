@@ -5,6 +5,8 @@ import java.util.Enumeration;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.exception.JargonRuntimeException;
+import org.irods.jargon.core.packinstr.TransferOptions;
+import org.irods.jargon.core.packinstr.TransferOptions.ForceOption;
 import org.irods.jargon.core.pub.DataTransferOperations;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 import org.irods.jargon.core.pub.io.IRODSFile;
@@ -705,6 +707,20 @@ public class InPlaceSynchronizingDiffProcessorImpl implements
 		}
 
 		return irodsFileFactory;
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.transfer.TransferStatusCallbackListener#
+	 * transferAsksWhetherToOverwriteDuringOperation(java.lang.String, boolean)
+	 */
+	@Override
+	public ForceOption transferAsksWhetherToForceOperation(
+			String irodsAbsolutePath, boolean isCollection) {
+		// currently will overwrite, this needs to be set in transfer options
+		return TransferOptions.ForceOption.USE_FORCE;
 
 	}
 

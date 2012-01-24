@@ -13,6 +13,8 @@ import java.util.concurrent.TimeUnit;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.packinstr.TransferOptions;
 import org.irods.jargon.core.packinstr.TransferOptions.TransferType;
+import org.irods.jargon.core.transfer.DefaultTransferControlBlock;
+import org.irods.jargon.core.transfer.TransferControlBlock;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -76,6 +78,28 @@ public class IRODSSession {
 		synchronized (this) {
 			return jargonProperties;
 		}
+	}
+
+	/**
+	 * Convenience method builds a default <code>TransferControlBlock</code>
+	 * that has default <code>TransferOptions</code> based on the
+	 * <code>JargonProperties</code> configured for the system.
+	 * 
+	 * @return {@link TransferControlBlock} containing default
+	 *         {@link TransferOptions} based on the configured
+	 *         {@link JargonProperties}
+	 * @throws JargonException
+	 */
+	public TransferControlBlock getDefaultTransferControlBlockBasedOnJargonProperties()
+			throws JargonException {
+		TransferControlBlock transferControlBlock = DefaultTransferControlBlock
+				.instance();
+		synchronized (this) {
+
+			transferControlBlock
+					.setTransferOptions(buildTransferOptionsBasedOnJargonProperties());
+		}
+		return transferControlBlock;
 	}
 
 	/**
