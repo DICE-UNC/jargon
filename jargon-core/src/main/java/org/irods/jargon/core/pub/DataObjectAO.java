@@ -231,9 +231,6 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 *            {@link TransferStatusCallbackListener}, or <code>null</code>
 	 *            if not specified, that can receive callbacks on the status of
 	 *            the transfer operation
-	 * @throws DataNotFoundException
-	 *             thrown if iRODS file is not found, this can be caused by
-	 *             specifying a resource in which the file is not stored
 	 * @throws OverwriteException
 	 *             if an overwrite is attempted and the force option has not
 	 *             been set and no callback listener can be consulted, or set to

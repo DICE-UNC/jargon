@@ -766,7 +766,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			if (thisFileTransferOptions.getForceOption() == ForceOption.NO_FORCE) {
 				throw new OverwriteException(
 						"attempt to get file, local file already exists and no force option specified");
-			} else if (thisFileTransferOptions.getForceOption() == ForceOption.NO_FORCE) {
+			} else if (thisFileTransferOptions.getForceOption() == ForceOption.USE_FORCE) {
 				log.info("force specified, do the overwrite");
 			} else if (thisFileTransferOptions.getForceOption() == ForceOption.ASK_CALLBACK_LISTENER) {
 				if (transferStatusCallbackListener == null) {
@@ -799,6 +799,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 							skip=true;
 						} else {
 							transferControlBlock.getTransferOptions().setForceOption(ForceOption.NO_FORCE);
+							skip = true;
 						}
 						break;
 					default:

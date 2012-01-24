@@ -8,9 +8,11 @@ import java.net.URLConnection;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSSession;
+import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.DuplicateDataException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.exception.JargonFileOrCollAlreadyExistsException;
+import org.irods.jargon.core.exception.OverwriteException;
 import org.irods.jargon.core.packinstr.DataObjCopyInp;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.pub.io.IRODSFileFactory;
@@ -570,7 +572,7 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 			final String sourceResourceName,
 			final TransferStatusCallbackListener transferStatusCallbackListener,
 			final TransferControlBlock transferControlBlock)
-			throws JargonException {
+			throws DataNotFoundException, OverwriteException, JargonException {
 
 		if (irodsSourceFileAbsolutePath == null
 				|| irodsSourceFileAbsolutePath.isEmpty()) {
