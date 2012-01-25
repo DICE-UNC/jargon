@@ -229,7 +229,7 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 *            default parameters
 	 * @param transferStatusCallbackListener
 	 *            {@link TransferStatusCallbackListener}, or <code>null</code>
-	 *            if not specified, that can receive callbacks on the status of
+	 *            if not specified, that can receive call-backs on the status of
 	 *            the transfer operation
 	 * @throws OverwriteException
 	 *             if an overwrite is attempted and the force option has not
@@ -498,7 +498,18 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * Method to put local data to iRODS taking default options, and not
 	 * specifying a call-back listener. Note that re-routing of connections to
 	 * resources is not done from methods in this class, but can be handled by
-	 * using the methods in {@link DataTransferOperations}.
+	 * using the methods in {@link DataTransferOperations}. Note that this
+	 * operation is for a single data object, not for recursive transfers of
+	 * collections. See {@link DataTransferOperations} for recursive data
+	 * transfers.
+	 * <p/>
+	 * If the <code>TransferOptions</code> specified in the
+	 * <code>TransferControlBlock</code> indicates no force, then an attempted
+	 * overwrite will throw the <code>OverwriteException</code>. If the tranfer
+	 * option is set to ask the callback listener, then the
+	 * <code>TransferStatusCallbackListener</code> will receive a message asking
+	 * for the overwrite option for this transfer operation. This is the
+	 * appropriate mode when the client is interactive.
 	 * 
 	 * @param localFile
 	 *            <code>File</code> with a source file or directory in the local
@@ -508,11 +519,18 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * @param overwrite
 	 *            <code>boolean</code> that indicates whether data should be
 	 *            overwritten at the target
+	 * @throws OverwriteException
+	 *             if an overwrite is attempted and the force option has not
+	 *             been set and no callback listener can be consulted, or set to
+	 *             no overwrite,
+	 * @throws DataNotFoundException
+	 *             if the source local file does not exist or the target iRODS
+	 *             collection does not exist
 	 * @throws JargonException
 	 */
 	void putLocalDataObjectToIRODS(File localFile,
 			IRODSFile irodsFileDestination, boolean overwrite)
-			throws JargonException;
+			throws DataNotFoundException, OverwriteException, JargonException;
 
 	/**
 	 * Transfer a file or directory from the local file system to iRODS.
@@ -520,6 +538,18 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * Note that re-routing of connections to resources is not done from methods
 	 * in this class, but can be handled by using the methods in
 	 * {@link DataTransferOperations}.
+	 * <p/>
+	 * Note that this operation is for a single data object, not for recursive
+	 * transfers of collections. See {@link DataTransferOperations} for
+	 * recursive data transfers.
+	 * <p/>
+	 * If the <code>TransferOptions</code> specified in the
+	 * <code>TransferControlBlock</code> indicates no force, then an attempted
+	 * overwrite will throw the <code>OverwriteException</code>. If the tranfer
+	 * option is set to ask the callback listener, then the
+	 * <code>TransferStatusCallbackListener</code> will receive a message asking
+	 * for the overwrite option for this transfer operation. This is the
+	 * appropriate mode when the client is interactive.
 	 * 
 	 * @param localFile
 	 *            <code>File</code> with a source file or directory in the local
@@ -528,7 +558,8 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 *            {@link IRODSFile} that is the target of the data transfer
 	 * @param overwrite
 	 *            <code>boolean</code> that indicates whether data should be
-	 *            overwritten at the target
+	 *            overwritten at the target. This is used to over-ride the
+	 *            setting in the <code>TransferControlBlock</code>.
 	 * @param transferControlBlock
 	 *            {@link TransferControlBlock} that will control aspects of the
 	 *            data transfer. Note that the {@link TransferOptions} that are
@@ -541,13 +572,77 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 *            {@link TransferStatusCallbackListener}, or <code>null</code>
 	 *            if not specified, that can receive callbacks on the status of
 	 *            the transfer operation
+	 * @throws OverwriteException
+	 *             if an overwrite is attempted and the force option has not
+	 *             been set and no callback listener can be consulted, or set to
+	 *             no overwrite,
+	 * @throws DataNotFoundException
+	 *             if the source local file does not exist or the target iRODS
+	 *             collection does not exist
 	 * @throws JargonException
+	 * @deprecated for consistency, the signature with both the transfer control
+	 *             block and the over-write flag will be removed, please use the
+	 *             method without <code>overwrite</code>, and specify the
+	 *             over-write behavior in the <code>transferControlBlock</code>
+	 *             along with other <code>TransferOptions</code> parameters
 	 */
+	@Deprecated
 	void putLocalDataObjectToIRODS(File localFile,
 			IRODSFile irodsFileDestination, boolean overwrite,
 			TransferControlBlock transferControlBlock,
 			TransferStatusCallbackListener transferStatusCallbackListener)
-			throws JargonException;
+			throws DataNotFoundException, OverwriteException, JargonException;
+
+	/**
+	 * Transfer a file or directory from the local file system to iRODS.
+	 * <p/>
+	 * Note that re-routing of connections to resources is not done from methods
+	 * in this class, but can be handled by using the methods in
+	 * {@link DataTransferOperations}.
+	 * <p/>
+	 * Note that this operation is for a single data object, not for recursive
+	 * transfers of collections. See {@link DataTransferOperations} for
+	 * recursive data transfers.
+	 * <p/>
+	 * If the <code>TransferOptions</code> specified in the
+	 * <code>TransferControlBlock</code> indicates no force, then an attempted
+	 * overwrite will throw the <code>OverwriteException</code>. If the tranfer
+	 * option is set to ask the callback listener, then the
+	 * <code>TransferStatusCallbackListener</code> will receive a message asking
+	 * for the overwrite option for this transfer operation. This is the
+	 * appropriate mode when the client is interactive.
+	 * 
+	 * @param localFile
+	 *            <code>File</code> with a source file or directory in the local
+	 *            file system
+	 * @param irodsFileDestination
+	 *            {@link IRODSFile} that is the target of the data transfer
+	 * @param transferControlBlock
+	 *            {@link TransferControlBlock} that will control aspects of the
+	 *            data transfer. Note that the {@link TransferOptions} that are
+	 *            a member of the <code>TransferControlBlock</code> may be
+	 *            specified here to pass to the running transfer. If this is set
+	 *            to <code>null</code> a default block will be created, and the
+	 *            <code>TransferOptions</code> will be set to the defined
+	 *            default parameters
+	 * @param transferStatusCallbackListener
+	 *            {@link TransferStatusCallbackListener}, or <code>null</code>
+	 *            if not specified, that can receive callbacks on the status of
+	 *            the transfer operation
+	 * @throws OverwriteException
+	 *             if an overwrite is attempted and the force option has not
+	 *             been set and no callback listener can be consulted, or set to
+	 *             no overwrite,
+	 * @throws DataNotFoundException
+	 *             if the source local file does not exist or the target iRODS
+	 *             collection does not exist
+	 * @throws JargonException
+	 */
+	void putLocalDataObjectToIRODS(File localFile,
+			IRODSFile irodsFileDestination,
+			TransferControlBlock transferControlBlock,
+			TransferStatusCallbackListener transferStatusCallbackListener)
+			throws DataNotFoundException, OverwriteException, JargonException;
 
 	/**
 	 * Transfer a file or directory from the local file system to iRODS as
@@ -557,6 +652,18 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * Note that re-routing of connections to resources is not done from methods
 	 * in this class, but can be handled by using the methods in
 	 * {@link DataTransferOperations}.
+	 * <p/>
+	 * Note that this operation is for a single data object, not for recursive
+	 * transfers of collections. See {@link DataTransferOperations} for
+	 * recursive data transfers.
+	 * <p/>
+	 * If the <code>TransferOptions</code> specified in the
+	 * <code>TransferControlBlock</code> indicates no force, then an attempted
+	 * overwrite will throw the <code>OverwriteException</code>. If the tranfer
+	 * option is set to ask the callback listener, then the
+	 * <code>TransferStatusCallbackListener</code> will receive a message asking
+	 * for the overwrite option for this transfer operation. This is the
+	 * appropriate mode when the client is interactive.
 	 * 
 	 * @param localFile
 	 *            <code>File</code> with a source file or directory in the local

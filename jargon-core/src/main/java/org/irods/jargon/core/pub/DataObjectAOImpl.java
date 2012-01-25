@@ -21,6 +21,7 @@ import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.DuplicateDataException;
 import org.irods.jargon.core.exception.FileIntegrityException;
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.exception.JargonRuntimeException;
 import org.irods.jargon.core.exception.OverwriteException;
 import org.irods.jargon.core.packinstr.DataObjCopyInp;
 import org.irods.jargon.core.packinstr.DataObjInp;
@@ -78,12 +79,15 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	private static final String ERROR_IN_PARALLEL_TRANSFER = "error in parallel transfer";
 	private static final String NULL_LOCAL_FILE = "null local file";
 	private static final String NULL_OR_EMPTY_ABSOLUTE_PATH = "null or empty absolutePath";
-	public static final Logger log = LoggerFactory // NOPMD by mikeconway on
-													// 12/1/11 7:37 AM
+	public static final Logger log = LoggerFactory
 			.getLogger(DataObjectAOImpl.class);
 	private transient final DataAOHelper dataAOHelper = new DataAOHelper(
 			this.getIRODSAccessObjectFactory(), this.getIRODSAccount());
 	private transient final IRODSGenQueryExecutor irodsGenQueryExecutor;
+
+	private enum OverwriteResponse {
+		SKIP, PROCEED_WITH_NO_FORCE, PROCEED_WITH_FORCE
+	};
 
 	/**
 	 * Default constructor
@@ -258,6 +262,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	 * org.irods.jargon.core.transfer.TransferStatusCallbackListener)
 	 */
 	@Override
+	@Deprecated
 	public void putLocalDataObjectToIRODS(final File localFile,
 			final IRODSFile irodsFileDestination, final boolean overwrite,
 			final TransferControlBlock transferControlBlock,
@@ -265,9 +270,47 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			throws JargonException {
 
 		TransferControlBlock effectiveTransferControlBlock = checkTransferControlBlockForOptionsAndSetDefaultsIfNotSpecified(transferControlBlock);
+		ForceOption forceOption;
 
-		putLocalDataObjectToIRODS(localFile, irodsFileDestination, overwrite,
-				false, effectiveTransferControlBlock,
+		if (overwrite) {
+			forceOption = ForceOption.USE_FORCE;
+		} else {
+			forceOption = ForceOption.NO_FORCE;
+		}
+
+		/*
+		 * The overwrite flag will override what is in the transfer control
+		 * block
+		 */
+
+		effectiveTransferControlBlock.getTransferOptions().setForceOption(
+				forceOption);
+		putLocalDataObjectToIRODS(localFile, irodsFileDestination,
+				effectiveTransferControlBlock,
+				transferStatusCallbackListener);
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.DataObjectAO#putLocalDataObjectToIRODS(java
+	 * .io.File, org.irods.jargon.core.pub.io.IRODSFile,
+	 * org.irods.jargon.core.transfer.TransferControlBlock,
+	 * org.irods.jargon.core.transfer.TransferStatusCallbackListener)
+	 */
+	@Override
+	public void putLocalDataObjectToIRODS(final File localFile,
+			final IRODSFile irodsFileDestination,
+			final TransferControlBlock transferControlBlock,
+			final TransferStatusCallbackListener transferStatusCallbackListener)
+			throws JargonException {
+
+		TransferControlBlock effectiveTransferControlBlock = checkTransferControlBlockForOptionsAndSetDefaultsIfNotSpecified(transferControlBlock);
+
+		putLocalDataObjectToIRODSCommonProcessing(localFile,
+				irodsFileDestination, false, effectiveTransferControlBlock,
 				transferStatusCallbackListener);
 
 	}
@@ -282,11 +325,16 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	@Override
 	public void putLocalDataObjectToIRODS(final File localFile,
 			final IRODSFile irodsFileDestination, final boolean overwrite)
-			throws JargonException {
+			throws DataNotFoundException, OverwriteException, JargonException {
 
 		// call with no control block will create defaults
 		TransferControlBlock effectiveTransferControlBlock = checkTransferControlBlockForOptionsAndSetDefaultsIfNotSpecified(null);
-		putLocalDataObjectToIRODS(localFile, irodsFileDestination, overwrite,
+		if (overwrite) {
+			effectiveTransferControlBlock.getTransferOptions().setForceOption(
+					ForceOption.USE_FORCE);
+		}
+		putLocalDataObjectToIRODSCommonProcessing(localFile,
+				irodsFileDestination,
 				false, effectiveTransferControlBlock, null);
 
 	}
@@ -304,12 +352,13 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			final File localFile, final IRODSFile irodsFileDestination,
 			final boolean overwrite,
 			final TransferControlBlock transferControlBlock)
-			throws JargonException {
+			throws DataNotFoundException, OverwriteException, JargonException {
 
 		TransferControlBlock effectiveTransferControlBlock = checkTransferControlBlockForOptionsAndSetDefaultsIfNotSpecified(transferControlBlock);
 
 		// no callback listener for client side operations, may add later
-		putLocalDataObjectToIRODS(localFile, irodsFileDestination, overwrite,
+		putLocalDataObjectToIRODSCommonProcessing(localFile,
+				irodsFileDestination,
 				true, effectiveTransferControlBlock, null);
 
 	}
@@ -321,9 +370,6 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	 *            <code>File</code> with the local data.
 	 * @param irodsFileDestination
 	 *            <code>IRODSFile</code> that describe the target of the put.
-	 * @param overwrite
-	 *            <code>boolean</code> that adds a force option to overwrite any
-	 *            file already on iRODS.
 	 * @param ignoreChecks
 	 *            <code>boolean</code> that bypasses any checks of the iRODS
 	 *            data before attempting the put.
@@ -336,12 +382,12 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	 *            desired
 	 * @throws JargonException
 	 */
-	protected void putLocalDataObjectToIRODS(final File localFile,
-			final IRODSFile irodsFileDestination, final boolean overwrite,
+	protected void putLocalDataObjectToIRODSCommonProcessing(
+			final File localFile, final IRODSFile irodsFileDestination,
 			final boolean ignoreChecks,
 			final TransferControlBlock transferControlBlock,
 			final TransferStatusCallbackListener transferStatusCallbackListener)
-			throws JargonException {
+			throws DataNotFoundException, OverwriteException, JargonException {
 
 		if (localFile == null) {
 			throw new IllegalArgumentException(NULL_LOCAL_FILE);
@@ -361,7 +407,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		if (!localFile.exists()) {
 			log.error("put error, local file does not exist: {}",
 					localFile.getAbsolutePath());
-			throw new JargonException(
+			throw new DataNotFoundException(
 					"put attempt where local file does not exist:"
 							+ localFile.getAbsolutePath());
 		}
@@ -380,8 +426,38 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 				localFile, irodsFileDestination, ignoreChecks,
 				getIRODSFileFactory());
 
-		long localFileLength = localFile.length();
+		boolean force = false;
 
+		/*
+		 * The check above has set target file to be the data object name, so
+		 * see if this results in an over-write
+		 */
+		if (!ignoreChecks && targetFile.exists()) {
+
+			if (transferControlBlock.getTransferOptions() == null) {
+				throw new JargonRuntimeException(
+						"transfer control block does not have a transfer options set");
+			}
+			/*
+			 * Handle potential overwrites, will consult the client if so configured
+			 */
+			OverwriteResponse overwriteResponse = evaluateOverwrite(localFile,
+					transferControlBlock,
+					transferStatusCallbackListener,
+					transferControlBlock.getTransferOptions(),
+					(File) targetFile);
+
+			if (overwriteResponse == OverwriteResponse.SKIP) {
+				log.info("skipping due to overwrite status");
+				return;
+			} else if (overwriteResponse == OverwriteResponse.PROCEED_WITH_FORCE) {
+				force = true;
+			}
+		}
+
+
+
+		long localFileLength = localFile.length();
 		log.debug("localFileLength:{}", localFileLength);
 
 		if (localFileLength < ConnectionConstants.MAX_SZ_FOR_SINGLE_BUF) {
@@ -389,7 +465,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			log.info("processing transfer as normal, length below max");
 
 			try {
-				dataAOHelper.processNormalPutTransfer(localFile, overwrite,
+				dataAOHelper.processNormalPutTransfer(localFile, force,
 						targetFile, this.getIRODSProtocol(),
 						transferControlBlock, transferStatusCallbackListener);
 			} catch (FileNotFoundException e) {
@@ -404,7 +480,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			log.info("processing as a parallel transfer, length above max");
 
 			processAsAParallelPutOperationIfMoreThanZeroThreads(localFile,
-					overwrite, targetFile, transferControlBlock,
+					targetFile, force, transferControlBlock,
 					transferStatusCallbackListener);
 		}
 		log.info("transfer complete");
@@ -419,10 +495,15 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	 * @param localFile
 	 *            <code>File</code> with source of the transfer in the local
 	 *            file system
-	 * @param overwrite
-	 *            <code>boolean</code> if overwrite is specified
 	 * @param targetFile
 	 *            {@link IRODSFile} that is the target of the transfer
+	 * @param overwrite
+	 *            <code>boolean</code> that indicates whether to over-write the
+	 *            current file. This is a per file value that is derived from
+	 *            the transfer options contained in the
+	 *            <code>TransferControlBlock</code>, but accounts for any
+	 *            real-time decisions on whether to proceed with an over-write
+	 *            by including responses of clients.
 	 * @param transferControlBlock
 	 *            {@link TransferControlBlock} that controls the transfer, and
 	 *            any options involved, this is required
@@ -430,14 +511,14 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	 *            {@link TransferStatusCallbackListener} or <code>null</code>
 	 *            for an optional listener to get status call-backs, this may be
 	 *            <code>null</code>
-	 * @throws JargonException
 	 */
 	private void processAsAParallelPutOperationIfMoreThanZeroThreads(
-			final File localFile, final boolean overwrite,
+			final File localFile,
 			final IRODSFile targetFile,
+			final boolean overwrite,
 			final TransferControlBlock transferControlBlock,
 			final TransferStatusCallbackListener transferStatusCallbackListener)
-			throws JargonException {
+			throws DataNotFoundException, OverwriteException, JargonException {
 
 		if (localFile == null) {
 			throw new IllegalArgumentException("null localFile");
@@ -540,7 +621,8 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		} catch (FileNotFoundException e) {
 			log.error("File not found for local file I was trying to put:{}",
 					localFile.getAbsolutePath());
-			throw new JargonException("localFile not found to put to irods", e);
+			throw new DataNotFoundException(
+					"localFile not found to put to irods", e);
 		} catch (Exception e) {
 			log.error(ERROR_IN_PARALLEL_TRANSFER, e);
 			throw new JargonException(ERROR_IN_PARALLEL_TRANSFER, e);
@@ -555,16 +637,15 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	 * @param transferLength
 	 * @param transferControlBlock
 	 * @param transferStatusCallbackListener
-	 * @throws JargonException
 	 */
 	private void parallelPutTransfer(final File localFile,
 			final Tag responseToInitialCallForPut, final int numberOfThreads,
 			final long transferLength,
 			final TransferControlBlock transferControlBlock,
 			final TransferStatusCallbackListener transferStatusCallbackListener)
-			throws JargonException {
+			throws DataNotFoundException, OverwriteException, JargonException {
 
-		log.info("tranfer will be done using {} threads", numberOfThreads);
+		log.info("transfer will be done using {} threads", numberOfThreads);
 		final String host = responseToInitialCallForPut
 				.getTag(IRODSConstants.PortList_PI)
 				.getTag(IRODSConstants.hostAddr).getStringValue();
@@ -624,8 +705,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	@Override
 	public void getDataObjectFromIrodsGivingTransferOptions(
 			final IRODSFile irodsFileToGet, final File localFileToHoldData,
-			final TransferOptions transferOptions)
- throws OverwriteException,
+			final TransferOptions transferOptions) throws OverwriteException,
 			DataNotFoundException, JargonException {
 
 		if (localFileToHoldData == null) {
@@ -706,11 +786,12 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		/*
 		 * Handle potential overwrites, will consult the client if so configured
 		 */
-		boolean skip = checkForGetOverwrite(irodsFileToGet,
+		OverwriteResponse overwriteResponse = evaluateOverwrite(
+				(File) irodsFileToGet,
 				transferControlBlock, transferStatusCallbackListener,
 				thisFileTransferOptions, localFile);
 
-		if (skip) {
+		if (overwriteResponse == OverwriteResponse.SKIP) {
 			log.info("skipping due to overwrite status");
 			return;
 		}
@@ -744,30 +825,22 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 				operativeTransferControlBlock, transferStatusCallbackListener);
 	}
 
-	/**
-	 * @param irodsFileToGet
-	 * @param transferControlBlock
-	 * @param transferStatusCallbackListener
-	 * @param thisFileTransferOptions
-	 * @param localFile
-	 * @param skip
-	 * @return
-	 * @throws OverwriteException
-	 */
-	private boolean checkForGetOverwrite(
-			final IRODSFile irodsFileToGet,
+
+	private OverwriteResponse evaluateOverwrite(
+			final File sourceFile,
 			final TransferControlBlock transferControlBlock,
 			final TransferStatusCallbackListener transferStatusCallbackListener,
-			final TransferOptions thisFileTransferOptions, final File localFile)
+			final TransferOptions thisFileTransferOptions, final File targetFile)
 			throws OverwriteException {
-		boolean skip = false;
-		if (localFile.exists()) {
+		OverwriteResponse overwriteResponse = OverwriteResponse.PROCEED_WITH_NO_FORCE;
+		if (targetFile.exists()) {
 			log.info("local file exists, check if overwrite allowed");
 			if (thisFileTransferOptions.getForceOption() == ForceOption.NO_FORCE) {
 				throw new OverwriteException(
 						"attempt to get file, local file already exists and no force option specified");
 			} else if (thisFileTransferOptions.getForceOption() == ForceOption.USE_FORCE) {
 				log.info("force specified, do the overwrite");
+				overwriteResponse = OverwriteResponse.PROCEED_WITH_FORCE;
 			} else if (thisFileTransferOptions.getForceOption() == ForceOption.ASK_CALLBACK_LISTENER) {
 				if (transferStatusCallbackListener == null) {
 					throw new OverwriteException(
@@ -775,16 +848,17 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 				} else {
 					TransferStatusCallbackListener.CallbackResponse callbackResponse = transferStatusCallbackListener
 							.transferAsksWhetherToForceOperation(
-									irodsFileToGet.getAbsolutePath(), false);
+									sourceFile.getAbsolutePath(), false);
 					switch(callbackResponse) {
 					case CANCEL:
 						log.info("transfer cancelleld");
-						skip = true;
+						overwriteResponse = OverwriteResponse.SKIP;
 						break;
 					case YES_THIS_FILE:
+						overwriteResponse = OverwriteResponse.PROCEED_WITH_FORCE;
 						break;
 					case NO_THIS_FILE:
-						skip = true;
+						overwriteResponse = OverwriteResponse.SKIP;
 						break;
 					case YES_FOR_ALL:
 						if (transferControlBlock == null) {
@@ -792,14 +866,15 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 						} else {
 							transferControlBlock.getTransferOptions().setForceOption(ForceOption.USE_FORCE);
 						}
+						overwriteResponse = OverwriteResponse.PROCEED_WITH_FORCE;
 						break;
 					case NO_FOR_ALL:
 						if (transferControlBlock == null) {
 							log.warn("attempting to process a 'no for all' response, but no transfer control block to maintain this, it will be ignored for subsequent transfers");
-							skip=true;
+							overwriteResponse = OverwriteResponse.SKIP;
 						} else {
 							transferControlBlock.getTransferOptions().setForceOption(ForceOption.NO_FORCE);
-							skip = true;
+							overwriteResponse = OverwriteResponse.SKIP;
 						}
 						break;
 					default:
@@ -808,8 +883,9 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 				}
 			}
 		}
-		return skip;
+		return overwriteResponse;
 	}
+
 
 	/*
 	 * (non-Javadoc)
@@ -836,15 +912,15 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		/*
 		 * Handle potential overwrites, will consult the client if so configured
 		 */
-		boolean skip = checkForGetOverwrite(
-				irodsFileToGet,
+		OverwriteResponse overwriteResponse = evaluateOverwrite(
+				(File) irodsFileToGet,
 				null,
 				null,
 				this.buildDefaultTransferOptionsIfNotSpecified(transferOptions),
 				localFileToHoldData);
 
-		if (skip) {
-			log.info("skipping due to overwrite status");
+		if (overwriteResponse == OverwriteResponse.SKIP) {
+			log.info("skipping due to over-write status");
 			return;
 		}
 

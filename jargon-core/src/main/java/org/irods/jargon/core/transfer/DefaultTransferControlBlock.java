@@ -421,4 +421,34 @@ public class DefaultTransferControlBlock implements TransferControlBlock {
 		this.totalBytesToTransfer = totalBytesToTransfer;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.transfer.TransferControlBlock#getRestartAbsolutePath
+	 * ()
+	 */
+	@Override
+	public synchronized String getRestartAbsolutePath() {
+		return restartAbsolutePath;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.transfer.TransferControlBlock#setRestartAbsolutePath
+	 * (java.lang.String)
+	 */
+	@Override
+	public void setRestartAbsolutePath(String restartAbsolutePath) {
+		if (restartAbsolutePath == null) {
+			throw new IllegalArgumentException(
+					"null restartAbsolutePath, set to blank if not required");
+		}
+		synchronized (this) {
+		this.restartAbsolutePath = restartAbsolutePath;
+		}
+	}
+
 }

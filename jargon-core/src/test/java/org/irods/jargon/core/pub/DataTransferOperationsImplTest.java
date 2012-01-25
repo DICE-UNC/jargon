@@ -12,6 +12,7 @@ import org.irods.jargon.core.connection.JargonProperties;
 import org.irods.jargon.core.connection.SettableJargonProperties;
 import org.irods.jargon.core.exception.DuplicateDataException;
 import org.irods.jargon.core.exception.JargonFileOrCollAlreadyExistsException;
+import org.irods.jargon.core.packinstr.TransferOptions.ForceOption;
 import org.irods.jargon.core.pub.domain.Resource;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.pub.io.IRODSFileFactory;
@@ -746,13 +747,11 @@ public class DataTransferOperationsImplTest {
 						+ "/" + getToCollection), "", listener,
 				transferControlBlock);
 
-		IRODSFile irodsSourceFile = irodsFileSystem.getIRODSFileFactory(
-				irodsAccount).instanceIRODSFile(
-				irodsCollectionRootAbsolutePath + "/" + rootCollection);
-
-		// now restart with the 4th file
-		TransferControlBlock restartControlBlock = DefaultTransferControlBlock
-				.instance(irodsSourceFile.listFiles()[2].getAbsolutePath());
+		TransferControlBlock restartControlBlock = irodsFileSystem
+				.getIrodsSession()
+				.getDefaultTransferControlBlockBasedOnJargonProperties();
+		restartControlBlock.getTransferOptions().setForceOption(
+				ForceOption.USE_FORCE);
 		dataTransferOperationsAO
 				.getOperation(
 						destFile.getAbsolutePath() + "/" + rootCollection,
