@@ -87,7 +87,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 	private enum OverwriteResponse {
 		SKIP, PROCEED_WITH_NO_FORCE, PROCEED_WITH_FORCE
-	};
+	}
 
 	/**
 	 * Default constructor
@@ -286,8 +286,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		effectiveTransferControlBlock.getTransferOptions().setForceOption(
 				forceOption);
 		putLocalDataObjectToIRODS(localFile, irodsFileDestination,
-				effectiveTransferControlBlock,
-				transferStatusCallbackListener);
+				effectiveTransferControlBlock, transferStatusCallbackListener);
 
 	}
 
@@ -334,8 +333,8 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 					ForceOption.USE_FORCE);
 		}
 		putLocalDataObjectToIRODSCommonProcessing(localFile,
-				irodsFileDestination,
-				false, effectiveTransferControlBlock, null);
+				irodsFileDestination, false, effectiveTransferControlBlock,
+				null);
 
 	}
 
@@ -358,8 +357,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 		// no callback listener for client side operations, may add later
 		putLocalDataObjectToIRODSCommonProcessing(localFile,
-				irodsFileDestination,
-				true, effectiveTransferControlBlock, null);
+				irodsFileDestination, true, effectiveTransferControlBlock, null);
 
 	}
 
@@ -439,11 +437,11 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 						"transfer control block does not have a transfer options set");
 			}
 			/*
-			 * Handle potential overwrites, will consult the client if so configured
+			 * Handle potential overwrites, will consult the client if so
+			 * configured
 			 */
 			OverwriteResponse overwriteResponse = evaluateOverwrite(localFile,
-					transferControlBlock,
-					transferStatusCallbackListener,
+					transferControlBlock, transferStatusCallbackListener,
 					transferControlBlock.getTransferOptions(),
 					(File) targetFile);
 
@@ -454,8 +452,6 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 				force = true;
 			}
 		}
-
-
 
 		long localFileLength = localFile.length();
 		log.debug("localFileLength:{}", localFileLength);
@@ -513,8 +509,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	 *            <code>null</code>
 	 */
 	private void processAsAParallelPutOperationIfMoreThanZeroThreads(
-			final File localFile,
-			final IRODSFile targetFile,
+			final File localFile, final IRODSFile targetFile,
 			final boolean overwrite,
 			final TransferControlBlock transferControlBlock,
 			final TransferStatusCallbackListener transferStatusCallbackListener)
@@ -687,8 +682,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	@Override
 	public void getDataObjectFromIrods(final IRODSFile irodsFileToGet,
 			final File localFileToHoldData) throws OverwriteException,
-			DataNotFoundException,
-			JargonException {
+			DataNotFoundException, JargonException {
 
 		getDataObjectFromIrodsGivingTransferOptions(irodsFileToGet,
 				localFileToHoldData, null);
@@ -787,9 +781,9 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		 * Handle potential overwrites, will consult the client if so configured
 		 */
 		OverwriteResponse overwriteResponse = evaluateOverwrite(
-				(File) irodsFileToGet,
-				transferControlBlock, transferStatusCallbackListener,
-				thisFileTransferOptions, localFile);
+				(File) irodsFileToGet, transferControlBlock,
+				transferStatusCallbackListener, thisFileTransferOptions,
+				localFile);
 
 		if (overwriteResponse == OverwriteResponse.SKIP) {
 			log.info("skipping due to overwrite status");
@@ -825,7 +819,6 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 				operativeTransferControlBlock, transferStatusCallbackListener);
 	}
 
-
 	private OverwriteResponse evaluateOverwrite(
 			final File sourceFile,
 			final TransferControlBlock transferControlBlock,
@@ -849,7 +842,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 					TransferStatusCallbackListener.CallbackResponse callbackResponse = transferStatusCallbackListener
 							.transferAsksWhetherToForceOperation(
 									sourceFile.getAbsolutePath(), false);
-					switch(callbackResponse) {
+					switch (callbackResponse) {
 					case CANCEL:
 						log.info("transfer cancelleld");
 						overwriteResponse = OverwriteResponse.SKIP;
@@ -864,7 +857,8 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 						if (transferControlBlock == null) {
 							log.warn("attempting to process a 'yes for all' response, but no transfer control block to maintain this, it will be ignored for subsequent transfers");
 						} else {
-							transferControlBlock.getTransferOptions().setForceOption(ForceOption.USE_FORCE);
+							transferControlBlock.getTransferOptions()
+									.setForceOption(ForceOption.USE_FORCE);
 						}
 						overwriteResponse = OverwriteResponse.PROCEED_WITH_FORCE;
 						break;
@@ -873,19 +867,20 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 							log.warn("attempting to process a 'no for all' response, but no transfer control block to maintain this, it will be ignored for subsequent transfers");
 							overwriteResponse = OverwriteResponse.SKIP;
 						} else {
-							transferControlBlock.getTransferOptions().setForceOption(ForceOption.NO_FORCE);
+							transferControlBlock.getTransferOptions()
+									.setForceOption(ForceOption.NO_FORCE);
 							overwriteResponse = OverwriteResponse.SKIP;
 						}
 						break;
 					default:
-						log.error("unknown callback response:{}", callbackResponse);
+						log.error("unknown callback response:{}",
+								callbackResponse);
 					}
 				}
 			}
 		}
 		return overwriteResponse;
 	}
-
 
 	/*
 	 * (non-Javadoc)
@@ -1605,13 +1600,101 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	 * (non-Javadoc)
 	 * 
 	 * @see
+	 * org.irods.jargon.core.pub.DataObjectAO#copyIRODSDataObject(org.irods.
+	 * jargon.core.pub.io.IRODSFile, org.irods.jargon.core.pub.io.IRODSFile,
+	 * org.irods.jargon.core.transfer.TransferControlBlock,
+	 * org.irods.jargon.core.transfer.TransferStatusCallbackListener)
+	 */
+	@Override
+	public void copyIRODSDataObject(final IRODSFile irodsSourceFile,
+			final IRODSFile irodsTargetFile,
+			final TransferControlBlock transferControlBlock,
+			final TransferStatusCallbackListener transferStatusCallbackListener)
+			throws OverwriteException, DataNotFoundException, JargonException {
+
+		log.info("copyIRODSDataObject()");
+		if (irodsSourceFile == null) {
+			throw new IllegalArgumentException("null irodsSourceFile");
+		}
+
+		if (irodsTargetFile == null) {
+			throw new IllegalArgumentException("null irodsTargetFile");
+		}
+
+		log.info("sourceFile:{}", irodsSourceFile.getAbsolutePath());
+		log.info("targetFile:{}", irodsTargetFile.getAbsolutePath());
+		log.info("at resource: {}", irodsTargetFile.getResource());
+
+		if (!irodsSourceFile.exists()) {
+			throw new DataNotFoundException(
+					"the source file for the copy does not exist");
+		}
+
+		if (!irodsSourceFile.isFile()) {
+			throw new JargonException("the source file is not a data object");
+		}
+
+		IRODSFile myTargetFile = irodsTargetFile;
+
+		// checking for overwrite
+		if (myTargetFile.exists()) {
+			if (myTargetFile.isDirectory()) {
+				log.info("target is a directory, check if the file already exists");
+				myTargetFile = this.getIRODSFileFactory().instanceIRODSFile(
+						irodsTargetFile.getAbsolutePath(),
+						irodsSourceFile.getName());
+				log.info("target file normalized as a data object:{}",
+						irodsTargetFile.getAbsolutePath());
+			}
+		}
+
+		TransferControlBlock operativeTransferControlBlock = checkTransferControlBlockForOptionsAndSetDefaultsIfNotSpecified(transferControlBlock);
+
+		/*
+		 * Handle potential overwrites, will consult the client if so configured
+		 */
+		OverwriteResponse overwriteResponse = evaluateOverwrite(
+				(File) irodsSourceFile, transferControlBlock,
+				transferStatusCallbackListener,
+				operativeTransferControlBlock.getTransferOptions(),
+				(File) myTargetFile);
+
+		boolean force = false;
+
+		if (overwriteResponse == OverwriteResponse.SKIP) {
+			log.info("skipping due to overwrite status");
+			return;
+		} else if (overwriteResponse == OverwriteResponse.PROCEED_WITH_FORCE) {
+			force = true;
+		}
+
+		DataObjCopyInp dataObjCopyInp = DataObjCopyInp.instanceForCopy(
+				irodsSourceFile.getAbsolutePath(),
+				myTargetFile.getAbsolutePath(), irodsTargetFile.getResource(),
+				myTargetFile.length(), force);
+
+		try {
+			getIRODSProtocol().irodsFunction(dataObjCopyInp);
+		} catch (JargonException je) {
+			log.error("error copying irods file", je);
+			throw je;
+		}
+		log.info("copy complete");
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
 	 * org.irods.jargon.core.pub.DataObjectAO#copyIrodsDataObject(java.lang.
 	 * String, java.lang.String, java.lang.String)
 	 */
 	@Override
 	public void copyIrodsDataObject(final String irodsSourceFileAbsolutePath,
 			final String irodsTargetFileAbsolutePath,
-			final String targetResourceName) throws JargonException {
+			final String targetResourceName) throws OverwriteException,
+			DataNotFoundException, JargonException {
 
 		if (irodsSourceFileAbsolutePath == null
 				|| irodsSourceFileAbsolutePath.isEmpty()) {
@@ -1634,30 +1717,16 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		log.info("irodsTargetFileAbsolutePath:{}", irodsTargetFileAbsolutePath);
 		log.info("at resource: {}", targetResourceName);
 
-		// I need the length of the file
 		IRODSFile sourceFile = getIRODSFileFactory().instanceIRODSFile(
 				irodsSourceFileAbsolutePath);
-
-		if (!sourceFile.exists()) {
-			throw new JargonException(
-					"the source file for the copy does not exist");
-		}
-
-		if (!sourceFile.isFile()) {
-			throw new JargonException("the source file is not a data object");
-		}
-
-		DataObjCopyInp dataObjCopyInp = DataObjCopyInp.instanceForCopy(
-				irodsSourceFileAbsolutePath, irodsTargetFileAbsolutePath,
-				targetResourceName, sourceFile.length(), false);
-
-		try {
-			getIRODSProtocol().irodsFunction(dataObjCopyInp);
-		} catch (JargonException je) {
-			log.error("error copying irods file", je);
-			throw je;
-		}
-		log.info("copy complete");
+		IRODSFile targetFile = getIRODSFileFactory().instanceIRODSFile(
+				irodsTargetFileAbsolutePath);
+		targetFile.setResource(targetResourceName);
+		TransferControlBlock transferControlBlock = this
+				.buildDefaultTransferControlBlockBasedOnJargonProperties();
+		transferControlBlock.getTransferOptions().setForceOption(
+				ForceOption.NO_FORCE);
+		copyIRODSDataObject(sourceFile, targetFile, transferControlBlock, null);
 	}
 
 	/*
@@ -1671,7 +1740,8 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	public void copyIrodsDataObjectWithForce(
 			final String irodsSourceFileAbsolutePath,
 			final String irodsTargetFileAbsolutePath,
-			final String targetResourceName) throws JargonException {
+			final String targetResourceName) throws OverwriteException,
+			DataNotFoundException, JargonException {
 
 		if (irodsSourceFileAbsolutePath == null
 				|| irodsSourceFileAbsolutePath.isEmpty()) {
@@ -1696,29 +1766,17 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		log.info("irodsTargetFileAbsolutePath:{}", irodsTargetFileAbsolutePath);
 		log.info("at resource: {}", targetResourceName);
 
-		// I need the length of the file
 		IRODSFile sourceFile = getIRODSFileFactory().instanceIRODSFile(
 				irodsSourceFileAbsolutePath);
+		IRODSFile targetFile = getIRODSFileFactory().instanceIRODSFile(
+				irodsTargetFileAbsolutePath);
+		targetFile.setResource(targetResourceName);
 
-		if (!sourceFile.exists()) {
-			throw new JargonException(
-					"the source file for the copy does not exist");
-		}
-
-		if (!sourceFile.isFile()) {
-			throw new JargonException("the source file is not a data object");
-		}
-
-		DataObjCopyInp dataObjCopyInp = DataObjCopyInp.instanceForCopy(
-				irodsSourceFileAbsolutePath, irodsTargetFileAbsolutePath,
-				targetResourceName, sourceFile.length(), true);
-
-		try {
-			getIRODSProtocol().irodsFunction(dataObjCopyInp);
-		} catch (JargonException je) {
-			log.error("error copying irods file", je);
-			throw je;
-		}
+		TransferControlBlock transferControlBlock = this
+				.buildDefaultTransferControlBlockBasedOnJargonProperties();
+		transferControlBlock.getTransferOptions().setForceOption(
+				ForceOption.USE_FORCE);
+		copyIRODSDataObject(sourceFile, targetFile, transferControlBlock, null);
 		log.info("copy complete");
 	}
 
@@ -1908,30 +1966,6 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 				.getStringValue();
 		log.info("checksum is: {}", returnedChecksum);
 		return returnedChecksum;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.irods.jargon.core.pub.DataObjectAO#updateComment(java.lang.String,
-	 * java.lang.String)
-	 */
-	@Override
-	public void updateComment(final String comment,
-			final String dataObjectAbsolutePath) throws JargonException {
-
-		if (comment == null) {
-			throw new IllegalArgumentException(
-					"comment is null, set to blank to clear comment in iRODS");
-		}
-
-		if (dataObjectAbsolutePath == null || dataObjectAbsolutePath.isEmpty()) {
-			throw new IllegalArgumentException(
-					"dataObjectAbsolutePath is null or empty");
-		}
-
-		throw new UnsupportedOperationException("not yet implemented");
 	}
 
 	/*

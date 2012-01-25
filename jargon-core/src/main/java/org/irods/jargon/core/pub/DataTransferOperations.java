@@ -159,6 +159,11 @@ public interface DataTransferOperations extends IRODSAccessObject {
 	 *            used to control restarts, and provides a way for the
 	 *            requesting process to send a cancellation. This may be set to
 	 *            null if not required.
+	 * @throws OverwriteException
+	 *             if an overwrite is attempted and the force option has not
+	 *             been set
+	 * @throws DataNotFoundException
+	 *             if the source iRODS file does not exist
 	 * @throws JargonException
 	 */
 	void putOperation(
@@ -166,7 +171,7 @@ public interface DataTransferOperations extends IRODSAccessObject {
 			final IRODSFile targetIrodsFile,
 			final TransferStatusCallbackListener transferStatusCallbackListener,
 			final TransferControlBlock transferControlBlock)
-			throws JargonException;
+			throws DataNotFoundException, OverwriteException, JargonException;
 
 	/**
 	 * Get a file or collection from iRODS to the local file system. This method
@@ -193,6 +198,11 @@ public interface DataTransferOperations extends IRODSAccessObject {
 	 *            used to control restarts, and provides a way for the
 	 *            requesting process to send a cancellation. This may be set to
 	 *            null if not required.
+	 * @throws OverwriteException
+	 *             if an overwrite is attempted and the force option has not
+	 *             been set
+	 * @throws DataNotFoundException
+	 *             if the source iRODS file does not exist
 	 * @throws JargonException
 	 */
 	void getOperation(
@@ -200,7 +210,7 @@ public interface DataTransferOperations extends IRODSAccessObject {
 			final File targetLocalFile,
 			final TransferStatusCallbackListener transferStatusCallbackListener,
 			final TransferControlBlock transferControlBlock)
-			throws JargonException;
+			throws DataNotFoundException, OverwriteException, JargonException;
 
 	/**
 	 * Get a file or collection from iRODS to the local file system. This method
@@ -327,13 +337,21 @@ public interface DataTransferOperations extends IRODSAccessObject {
 	 *            used to control restarts, and provides a way for the
 	 *            requesting process to send a cancellation. This may be set to
 	 *            null if not required.
+	 * @throws OverwriteException
+	 *             if an overwrite is attempted and the force option has not
+	 *             been set
+	 * @throws DataNotFoundException
+	 *             if the source iRODS file does not exist
 	 * @throws JargonException
+	 * @deprecated use the signature without the force option, as this has moved
+	 *             into the <code>TransferControlBlock</code> for consistency
 	 */
+	@Deprecated
 	void copy(String irodsSourceFileAbsolutePath, String targetResource,
 			String irodsTargetFileAbsolutePath,
 			TransferStatusCallbackListener transferStatusCallbackListener,
 			boolean force, TransferControlBlock transferControlBlock)
-			throws JargonException;
+			throws OverwriteException, DataNotFoundException, JargonException;
 
 	/**
 	 * Transfer a file from the local file system to iRODS. This will be a
@@ -368,12 +386,18 @@ public interface DataTransferOperations extends IRODSAccessObject {
 	 *            used to control restarts, and provides a way for the
 	 *            requesting process to send a cancellation. This may be set to
 	 *            null if not required.
+	 * @throws OverwriteException
+	 *             if an overwrite is attempted and the force option has not
+	 *             been set
+	 * @throws DataNotFoundException
+	 *             if the source iRODS file does not exist
 	 * @throws JargonException
 	 */
 	void putOperation(String sourceFileAbsolutePath,
 			String targetIrodsFileAbsolutePath, String targetResourceName,
 			TransferStatusCallbackListener transferStatusCallbackListener,
-			TransferControlBlock transferControlBlock) throws JargonException;
+			TransferControlBlock transferControlBlock)
+			throws DataNotFoundException, OverwriteException, JargonException;
 
 	/**
 	 * Move a file or collection between two locations in iRODS. This method
@@ -431,4 +455,104 @@ public interface DataTransferOperations extends IRODSAccessObject {
 			String targetIrodsFileAbsolutePath, String targetResourceName,
 			TransferStatusCallbackListener transferStatusCallbackListener,
 			TransferControlBlock transferControlBlock) throws JargonException;
+
+	/**
+	 * Copy a file or collection from one iRODS location to another. This is the
+	 * preferred method signature for copy operations, with other forms now
+	 * deprecated. Note that the <code>transferControlBlock</code> and
+	 * <code>TransferStatusCallbackListener</code> objects are optional and may
+	 * be set to <code>null</code> if not required.
+	 * <p/>
+	 * Note that this operation can handle a single data object, or a
+	 * collection.
+	 * <p/>
+	 * If the <code>TransferOptions</code> specified in the
+	 * <code>TransferControlBlock</code> indicates no force, then an attempted
+	 * overwrite will throw the <code>OverwriteException</code>. If the transfer
+	 * option is set to ask the callback listener, then the
+	 * <code>TransferStatusCallbackListener</code> will receive a message asking
+	 * for the overwrite option for this transfer operation. This is the
+	 * appropriate mode when the client is interactive.
+	 * 
+	 * @param irodsSourceFileAbsolutePath
+	 *            <code>String</code> with the absolute path to the source file
+	 *            or collection in iRODS.
+	 * @param targetResource
+	 *            <code>String</code> (blank if not defined) with the target
+	 *            resource for the copy.
+	 * @param irodsTargetFileAbsolutePath
+	 *            <code>String</code> with the absolute path to the target file
+	 *            or collection in iRODS.
+	 * @param transferControlBlock
+	 *            {@link TransferControlBlock} that will control aspects of the
+	 *            data transfer. Note that the {@link TransferOptions} that are
+	 *            a member of the <code>TransferControlBlock</code> may be
+	 *            specified here to pass to the running transfer. If this is set
+	 *            to <code>null</code> a default block will be created, and the
+	 *            <code>TransferOptions</code> will be set to the defined
+	 *            default parameters
+	 * @param transferStatusCallbackListener
+	 *            {@link TransferStatusCallbackListener}, or <code>null</code>
+	 *            if not specified, that can receive call-backs on the status of
+	 *            the transfer operation
+	 * @throws OverwriteException
+	 *             if an overwrite is attempted and the force option has not
+	 *             been set
+	 * @throws DataNotFoundException
+	 *             if the source iRODS file does not exist
+	 * @throws JargonException
+	 */
+	void copy(String irodsSourceFileAbsolutePath, String targetResource,
+			String irodsTargetFileAbsolutePath,
+			TransferStatusCallbackListener transferStatusCallbackListener,
+			TransferControlBlock transferControlBlock)
+			throws OverwriteException, DataNotFoundException, JargonException;
+
+	/**
+	 * Copy a file or collection from one iRODS location to another. This is the
+	 * preferred method signature for copy operations, with other forms now
+	 * deprecated. Note that the <code>transferControlBlock</code> and
+	 * <code>TransferStatusCallbackListener</code> objects are optional and may
+	 * be set to <code>null</code> if not required.
+	 * <p/>
+	 * Note that this operation can handle a single data object, or a
+	 * collection.
+	 * <p/>
+	 * If the <code>TransferOptions</code> specified in the
+	 * <code>TransferControlBlock</code> indicates no force, then an attempted
+	 * overwrite will throw the <code>OverwriteException</code>. If the transfer
+	 * option is set to ask the callback listener, then the
+	 * <code>TransferStatusCallbackListener</code> will receive a message asking
+	 * for the overwrite option for this transfer operation. This is the
+	 * appropriate mode when the client is interactive.
+	 * 
+	 * @param irodsSourceFile
+	 *            {@link org.irods.jargon.core.pub.io.IRODSFile} that points to
+	 *            the file or collection to copy.
+	 * @param irodsTargetFile
+	 *            {@link org.irods.jargon.core.pub.io.IRODSFile} that points to
+	 *            the target of the copy operation.
+	 * @param transferControlBlock
+	 *            {@link TransferControlBlock} that will control aspects of the
+	 *            data transfer. Note that the {@link TransferOptions} that are
+	 *            a member of the <code>TransferControlBlock</code> may be
+	 *            specified here to pass to the running transfer. If this is set
+	 *            to <code>null</code> a default block will be created, and the
+	 *            <code>TransferOptions</code> will be set to the defined
+	 *            default parameters
+	 * @param transferStatusCallbackListener
+	 *            {@link TransferStatusCallbackListener}, or <code>null</code>
+	 *            if not specified, that can receive call-backs on the status of
+	 *            the transfer operation
+	 * @throws OverwriteException
+	 *             if an overwrite is attempted and the force option has not
+	 *             been set
+	 * @throws DataNotFoundException
+	 *             if the source iRODS file does not exist
+	 * @throws JargonException
+	 */
+	void copy(IRODSFile irodsSourceFile, IRODSFile irodsTargetFile,
+			TransferStatusCallbackListener transferStatusCallbackListener,
+			TransferControlBlock transferControlBlock)
+			throws OverwriteException, DataNotFoundException, JargonException;
 }

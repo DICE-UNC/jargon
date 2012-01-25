@@ -17,7 +17,6 @@ import org.irods.jargon.core.connection.IRODSSimpleProtocolManager;
 import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.DuplicateDataException;
 import org.irods.jargon.core.exception.JargonException;
-import org.irods.jargon.core.exception.JargonFileOrCollAlreadyExistsException;
 import org.irods.jargon.core.exception.OverwriteException;
 import org.irods.jargon.core.packinstr.TransferOptions;
 import org.irods.jargon.core.packinstr.TransferOptions.ForceOption;
@@ -2306,6 +2305,297 @@ public class DataObjectAOImplTest {
 
 	}
 
+	/**
+	 * Normal copy operation with tcb to noforce option, should just copy the
+	 * file
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public final void testCopyIRODSDataObjectToDataObjectNoForce()
+			throws Exception {
+
+		String testFileName = "testCopyIRODSDataObjectNoForce.txt";
+		String testCopyToFileName = "testCopyIRODSDataObjectNoForceCopyTo.txt";
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String fileNameOrig = FileGenerator.generateFileOfFixedLengthGivenName(
+				absPath, testFileName, 2);
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		DataObjectAO dataObjectAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
+		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetIrodsCollection);
+		dataObjectAO.putLocalDataObjectToIRODS(new File(fileNameOrig),
+				irodsFile, null, null);
+		IRODSFile irodsSourceFile = irodsFileSystem
+				.getIRODSFileFactory(irodsAccount).instanceIRODSFile(
+						targetIrodsCollection + "/" + testFileName);
+		IRODSFile irodsTargetFile = irodsFileSystem
+				.getIRODSFileFactory(irodsAccount).instanceIRODSFile(
+				targetIrodsCollection + "/" + testCopyToFileName);
+		TransferControlBlock tcb = irodsFileSystem
+				.getIRODSAccessObjectFactory()
+				.buildDefaultTransferControlBlockBasedOnJargonProperties();
+		tcb.getTransferOptions().setForceOption(ForceOption.NO_FORCE);
+		TransferStatusCallbackListenerTestingImplementation transferStatusCallbackListener = new TransferStatusCallbackListenerTestingImplementation();
+
+		dataObjectAO.copyIRODSDataObject(irodsSourceFile, irodsTargetFile, tcb,
+				transferStatusCallbackListener);
+
+		IRODSFile checkCopiedFile = irodsFileSystem.getIRODSFileFactory(
+				irodsAccount).instanceIRODSFile(
+				targetIrodsCollection + "/" + testCopyToFileName);
+		Assert.assertTrue("new file does not exist", checkCopiedFile.exists());
+
+	}
+
+	/**
+	 * Copy where the source file does not exist
+	 * 
+	 * @throws Exception
+	 */
+	@Test(expected = DataNotFoundException.class)
+	public final void testCopyIRODSDataObjectToDataObjectSourceNotExists()
+			throws Exception {
+
+		String testFileName = "testCopyIRODSDataObjectToDataObjectSourceNotExists.txt";
+		String testCopyToFileName = "testCopyIRODSDataObjectToDataObjectSourceNotExistsCopyTo.txt";
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		DataObjectAO dataObjectAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
+		IRODSFile irodsSourceFile = irodsFileSystem.getIRODSFileFactory(
+				irodsAccount).instanceIRODSFile(
+				targetIrodsCollection + "/" + testFileName);
+		IRODSFile irodsTargetFile = irodsFileSystem.getIRODSFileFactory(
+				irodsAccount).instanceIRODSFile(
+				targetIrodsCollection + "/" + testCopyToFileName);
+		TransferControlBlock tcb = irodsFileSystem
+				.getIRODSAccessObjectFactory()
+				.buildDefaultTransferControlBlockBasedOnJargonProperties();
+		tcb.getTransferOptions().setForceOption(ForceOption.NO_FORCE);
+		TransferStatusCallbackListenerTestingImplementation transferStatusCallbackListener = new TransferStatusCallbackListenerTestingImplementation();
+
+		dataObjectAO.copyIRODSDataObject(irodsSourceFile, irodsTargetFile, tcb,
+				transferStatusCallbackListener);
+
+	}
+
+	/**
+	 * Copy where the source file is a collection
+	 * 
+	 * @throws Exception
+	 */
+	@Test(expected = JargonException.class)
+	public final void testCopyIRODSDataObjectToDataObjectSourceIsCollection()
+			throws Exception {
+
+		String testCopyToFileName = "testCopyIRODSDataObjectToDataObjectSourceNotExistsCopyTo.txt";
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		DataObjectAO dataObjectAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
+		IRODSFile irodsSourceFile = irodsFileSystem.getIRODSFileFactory(
+				irodsAccount).instanceIRODSFile(targetIrodsCollection);
+		IRODSFile irodsTargetFile = irodsFileSystem.getIRODSFileFactory(
+				irodsAccount).instanceIRODSFile(
+				targetIrodsCollection + "/" + testCopyToFileName);
+		TransferControlBlock tcb = irodsFileSystem
+				.getIRODSAccessObjectFactory()
+				.buildDefaultTransferControlBlockBasedOnJargonProperties();
+		tcb.getTransferOptions().setForceOption(ForceOption.NO_FORCE);
+		TransferStatusCallbackListenerTestingImplementation transferStatusCallbackListener = new TransferStatusCallbackListenerTestingImplementation();
+
+		dataObjectAO.copyIRODSDataObject(irodsSourceFile, irodsTargetFile, tcb,
+				transferStatusCallbackListener);
+
+	}
+
+	/**
+	 * Copy where the source file is null
+	 * 
+	 * @throws Exception
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public final void testCopyIRODSDataObjectSourceFileNull()
+			throws Exception {
+
+		String testCopyToFileName = "testCopyIRODSDataObjectToDataObjectSourceNotExistsCopyTo.txt";
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		DataObjectAO dataObjectAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
+		IRODSFile irodsSourceFile = null;
+		IRODSFile irodsTargetFile = irodsFileSystem.getIRODSFileFactory(
+				irodsAccount).instanceIRODSFile(
+				targetIrodsCollection + "/" + testCopyToFileName);
+		TransferControlBlock tcb = irodsFileSystem
+				.getIRODSAccessObjectFactory()
+				.buildDefaultTransferControlBlockBasedOnJargonProperties();
+		tcb.getTransferOptions().setForceOption(ForceOption.NO_FORCE);
+		TransferStatusCallbackListenerTestingImplementation transferStatusCallbackListener = new TransferStatusCallbackListenerTestingImplementation();
+
+		dataObjectAO.copyIRODSDataObject(irodsSourceFile, irodsTargetFile, tcb,
+				transferStatusCallbackListener);
+
+	}
+
+	/**
+	 * Copy where the target file is null
+	 * 
+	 * @throws Exception
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public final void testCopyIRODSDataObjectTargetFileNull() throws Exception {
+
+		String testCopyToFileName = "testCopyIRODSDataObjectToDataObjectSourceNotExistsCopyTo.txt";
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		DataObjectAO dataObjectAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
+		IRODSFile irodsSourceFile = irodsFileSystem.getIRODSFileFactory(
+				irodsAccount).instanceIRODSFile(targetIrodsCollection);
+		IRODSFile irodsTargetFile = null;
+		TransferControlBlock tcb = irodsFileSystem
+				.getIRODSAccessObjectFactory()
+				.buildDefaultTransferControlBlockBasedOnJargonProperties();
+		tcb.getTransferOptions().setForceOption(ForceOption.NO_FORCE);
+		TransferStatusCallbackListenerTestingImplementation transferStatusCallbackListener = new TransferStatusCallbackListenerTestingImplementation();
+
+		dataObjectAO.copyIRODSDataObject(irodsSourceFile, irodsTargetFile, tcb,
+				transferStatusCallbackListener);
+
+	}
+
+	/**
+	 * Normal copy operation with tcb to noforce option, should just copy the
+	 * file
+	 * 
+	 * @throws Exception
+	 */
+	@Test(expected = OverwriteException.class)
+	public final void testCopyIRODSDataObjectToDataObjectNoForceWhenOverwrite()
+			throws Exception {
+
+		String testFileName = "testCopyIRODSDataObjectToDataObjectNoForceWhenOverwrite.txt";
+		String testCopyToFileName = "testCopyIRODSDataObjectToDataObjectNoForceWhenOverwriteCopyTo.txt";
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String fileNameOrig = FileGenerator.generateFileOfFixedLengthGivenName(
+				absPath, testFileName, 2);
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		DataObjectAO dataObjectAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
+		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetIrodsCollection);
+		dataObjectAO.putLocalDataObjectToIRODS(new File(fileNameOrig),
+				irodsFile, null, null);
+		IRODSFile irodsSourceFile = irodsFileSystem.getIRODSFileFactory(
+				irodsAccount).instanceIRODSFile(
+				targetIrodsCollection + "/" + testFileName);
+		IRODSFile irodsTargetFile = irodsFileSystem.getIRODSFileFactory(
+				irodsAccount).instanceIRODSFile(
+				targetIrodsCollection + "/" + testCopyToFileName);
+		TransferControlBlock tcb = irodsFileSystem
+				.getIRODSAccessObjectFactory()
+				.buildDefaultTransferControlBlockBasedOnJargonProperties();
+		tcb.getTransferOptions().setForceOption(ForceOption.NO_FORCE);
+		TransferStatusCallbackListenerTestingImplementation transferStatusCallbackListener = new TransferStatusCallbackListenerTestingImplementation();
+
+		dataObjectAO.copyIRODSDataObject(irodsSourceFile, irodsTargetFile, tcb,
+				transferStatusCallbackListener);
+
+		dataObjectAO.copyIRODSDataObject(irodsSourceFile, irodsTargetFile, tcb,
+				transferStatusCallbackListener);
+
+	}
+
+	/**
+	 * Normal copy operation with tcb to force option, should just copy the file
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public final void testCopyIRODSDataObjectToDataObjectForceWhenOverwrite()
+			throws Exception {
+
+		String testFileName = "testCopyIRODSDataObjectToDataObjectForceWhenOverwrite.txt";
+		String testCopyToFileName = "testCopyIRODSDataObjectToDataObjectForceWhenOverwriteCopyTo.txt";
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String fileNameOrig = FileGenerator.generateFileOfFixedLengthGivenName(
+				absPath, testFileName, 2);
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		DataObjectAO dataObjectAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
+		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetIrodsCollection);
+		dataObjectAO.putLocalDataObjectToIRODS(new File(fileNameOrig),
+				irodsFile, null, null);
+		IRODSFile irodsSourceFile = irodsFileSystem.getIRODSFileFactory(
+				irodsAccount).instanceIRODSFile(
+				targetIrodsCollection + "/" + testFileName);
+		IRODSFile irodsTargetFile = irodsFileSystem.getIRODSFileFactory(
+				irodsAccount).instanceIRODSFile(
+				targetIrodsCollection + "/" + testCopyToFileName);
+		TransferControlBlock tcb = irodsFileSystem
+				.getIRODSAccessObjectFactory()
+				.buildDefaultTransferControlBlockBasedOnJargonProperties();
+		tcb.getTransferOptions().setForceOption(ForceOption.USE_FORCE);
+		TransferStatusCallbackListenerTestingImplementation transferStatusCallbackListener = new TransferStatusCallbackListenerTestingImplementation();
+
+		dataObjectAO.copyIRODSDataObject(irodsSourceFile, irodsTargetFile, tcb,
+				transferStatusCallbackListener);
+
+		dataObjectAO.copyIRODSDataObject(irodsSourceFile, irodsTargetFile, tcb,
+				transferStatusCallbackListener);
+
+		IRODSFile checkCopiedFile = irodsFileSystem.getIRODSFileFactory(
+				irodsAccount).instanceIRODSFile(
+				targetIrodsCollection + "/" + testCopyToFileName);
+		Assert.assertTrue("new file does not exist", checkCopiedFile.exists());
+
+	}
+
 	@Test
 	public final void testCopyNoForce() throws Exception {
 
@@ -2339,7 +2629,7 @@ public class DataObjectAOImplTest {
 
 	}
 
-	@Test(expected = JargonFileOrCollAlreadyExistsException.class)
+	@Test(expected = OverwriteException.class)
 	public final void testCopyNoForceOverwriteSituation() throws Exception {
 
 		String testFileName = "testCopyNoForceOverwriteSituation.txt";
@@ -2698,7 +2988,7 @@ public class DataObjectAOImplTest {
 	@Test(expected = DuplicateDataException.class)
 	public void testAddAVUMetadataToDataObjectTwiceIncludeUnitsVal()
 			throws Exception {
-		String testFileName = "testAddAVUMetadataToDataObjectTwice.txt";
+		String testFileName = "testAddAVUMetadataToDataObjectTwiceIncludeUnitsVal.txt";
 		String expectedAttribName = "testAddAVUMetadataToDataObjectTwice";
 		String expectedValueName = "testval1";
 		String expectedUnitsVal = "testunits1";

@@ -11,7 +11,9 @@ import java.net.URLConnection;
 import org.irods.jargon.core.connection.ConnectionProgressStatusListener;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSSession;
+import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.exception.OverwriteException;
 import org.irods.jargon.core.pub.io.ByteCountingCallbackInputStreamWrapper;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.pub.io.IRODSFileImpl;
@@ -95,7 +97,7 @@ final class TransferOperationsHelper {
 			final File targetLocalFile,
 			final TransferStatusCallbackListener transferStatusCallbackListener,
 			final TransferControlBlock transferControlBlock)
-			throws JargonException {
+			throws OverwriteException, DataNotFoundException, JargonException {
 
 		log.info("recursively getting source file: {}",
 				irodsSourceFile.getAbsolutePath());
@@ -198,7 +200,7 @@ final class TransferOperationsHelper {
 			final File targetLocalFile,
 			final TransferStatusCallbackListener transferStatusCallbackListener,
 			final TransferControlBlock transferControlBlock)
-			throws JargonException {
+			throws OverwriteException, DataNotFoundException, JargonException {
 
 		log.info("get of single file...filtered?");
 
@@ -326,7 +328,7 @@ final class TransferOperationsHelper {
 			final IRODSFile targetIrodsCollection,
 			final TransferStatusCallbackListener transferStatusCallbackListener,
 			final TransferControlBlock transferControlBlock)
-			throws JargonException {
+			throws OverwriteException, DataNotFoundException, JargonException {
 
 		if (!sourceFile.isDirectory()) {
 			throw new JargonException(
@@ -417,76 +419,6 @@ final class TransferOperationsHelper {
 	}
 
 	/**
-	 * Put a single file to iRODS.
-	 * 
-	 * @param fileInSourceCollection
-	 * @param targetIrodsCollection
-	 * @param transferStatusCallbackListener
-	 * @param transferControlBlock
-	 * @throws JargonException
-	 */
-	/*
-	 * private void putASingleFile( final File fileInSourceCollection, final
-	 * IRODSFile targetIrodsCollection, final TransferStatusCallbackListener
-	 * transferStatusCallbackListener, final TransferControlBlock
-	 * transferControlBlock) throws JargonException {
-	 * 
-	 * log.info("put of single file");
-	 * 
-	 * if (fileInSourceCollection == null) { throw new
-	 * IllegalArgumentException("null fileInSourceCollection"); }
-	 * 
-	 * if (targetIrodsCollection == null) { throw new
-	 * IllegalArgumentException("null targetIrodsCollection"); }
-	 * 
-	 * if (transferControlBlock == null) { throw new
-	 * IllegalArgumentException("null transferControlBlock"); }
-	 * 
-	 * int totalFiles = 0; int totalFilesSoFar = 0;
-	 * 
-	 * totalFilesSoFar = transferControlBlock.incrementFilesTransferredSoFar();
-	 * totalFiles = transferControlBlock.getTotalFilesToTransfer();
-	 * 
-	 * // if I am restarting, see if I need to transfer this file
-	 * 
-	 * if (!transferControlBlock.filter(fileInSourceCollection
-	 * .getAbsolutePath())) { log.debug("file filtered and not transferred");
-	 * TransferStatus status = TransferStatus.instance(TransferType.PUT,
-	 * fileInSourceCollection.getAbsolutePath(),
-	 * targetIrodsCollection.getAbsolutePath(), "", 0, 0,
-	 * transferControlBlock.getTotalFilesTransferredSoFar(),
-	 * transferControlBlock.getTotalFilesToTransfer(), TransferState.RESTARTING,
-	 * dataObjectAO.getIRODSAccount() .getHost(), dataObjectAO.getIRODSAccount()
-	 * .getZone());
-	 * 
-	 * transferStatusCallbackListener.statusCallback(status); return; }
-	 * 
-	 * StringBuilder sb = new StringBuilder();
-	 * sb.append(targetIrodsCollection.getAbsolutePath()); sb.append('/');
-	 * sb.append(fileInSourceCollection.getName()); IRODSFile newIrodsFile =
-	 * dataObjectAO.instanceIRODSFileForPath(sb .toString());
-	 * newIrodsFile.setResource(targetIrodsCollection.getResource());
-	 * 
-	 * try { dataObjectAO.putLocalDataObjectToIRODS(fileInSourceCollection,
-	 * newIrodsFile, true, transferControlBlock,
-	 * transferStatusCallbackListener);
-	 * 
-	 * if (transferStatusCallbackListener != null) { TransferStatus status =
-	 * TransferStatus.instance( TransferType.PUT, fileInSourceCollection
-	 * .getAbsolutePath(), newIrodsFile .getAbsolutePath(), "",
-	 * fileInSourceCollection .length(), fileInSourceCollection.length(),
-	 * totalFilesSoFar, totalFiles, TransferState.SUCCESS,
-	 * dataObjectAO.getIRODSAccount().getHost(), dataObjectAO
-	 * .getIRODSAccount().getZone());
-	 * transferStatusCallbackListener.statusCallback(status); } } catch
-	 * (JargonException je) {
-	 * 
-	 * processRecursivePutException(fileInSourceCollection,
-	 * transferStatusCallbackListener, newIrodsFile, transferControlBlock, je);
-	 * } }
-	 */
-
-	/**
 	 * @param fileInSourceCollection
 	 * @param transferStatusCallbackListener
 	 * @param newIrodsFile
@@ -544,7 +476,8 @@ final class TransferOperationsHelper {
 			final IRODSFile targetIrodsCollection,
 			final TransferStatusCallbackListener transferStatusCallbackListener,
 			final TransferControlBlock transferControlBlock,
-			final File fileInSourceCollection) throws JargonException {
+			final File fileInSourceCollection) throws OverwriteException,
+			DataNotFoundException, JargonException {
 
 		// make a dir in the target collection
 		StringBuilder sb = new StringBuilder();
@@ -752,7 +685,7 @@ final class TransferOperationsHelper {
 			final IRODSFile targetIrodsFile,
 			final TransferStatusCallbackListener transferStatusCallbackListener,
 			final TransferControlBlock transferControlBlock)
-			throws JargonException {
+			throws OverwriteException, DataNotFoundException, JargonException {
 
 		log.info("put of single file");
 
@@ -809,7 +742,7 @@ final class TransferOperationsHelper {
 			}
 
 			dataObjectAO.putLocalDataObjectToIRODS(sourceFile, targetIrodsFile,
-					true, transferControlBlock, transferStatusCallbackListener);
+					transferControlBlock, transferStatusCallbackListener);
 
 			if (transferStatusCallbackListener != null) {
 
@@ -959,10 +892,9 @@ final class TransferOperationsHelper {
 			final IRODSFile irodsSourceFile,
 			final String targetResource,
 			final String targetIrodsFileAbsolutePath,
-			final boolean force,
 			final TransferStatusCallbackListener transferStatusCallbackListener,
 			final TransferControlBlock transferControlBlock)
-			throws JargonException {
+			throws OverwriteException, DataNotFoundException, JargonException {
 
 		if (!irodsSourceFile.isDirectory()) {
 			throw new JargonException(
@@ -1020,7 +952,7 @@ final class TransferOperationsHelper {
 				childTargetFile.mkdirs();
 
 				recursivelyCopy((IRODSFileImpl) fileInSourceCollection,
-						targetResource, targetCollection, force,
+						targetResource, targetCollection,
 						transferStatusCallbackListener, transferControlBlock);
 
 			} else {
@@ -1030,7 +962,7 @@ final class TransferOperationsHelper {
 				sb.append(fileInSourceCollection.getName());
 				processCopyOfSingleFile(
 						fileInSourceCollection.getAbsolutePath(),
-						targetResource, sb.toString(), force,
+						targetResource, sb.toString(),
 						transferStatusCallbackListener, transferControlBlock);
 			}
 		}
@@ -1049,9 +981,6 @@ final class TransferOperationsHelper {
 	 * @param irodsTargetFileAbsolutePath
 	 *            <code>String</code> with the absolute path to the iRODS target
 	 *            file or collection to which the single file will be copied.
-	 * @param force
-	 *            <code>boolean</code> that indicates whether an
-	 *            already-existing iRODS target file will be overwritten.
 	 * @param transferStatusCallbackListener
 	 *            {@link org.irods.jargon.core.transfer.TransferStatusCallbackListener}
 	 *            implementation that will receive callbacks of success/failure
@@ -1070,10 +999,9 @@ final class TransferOperationsHelper {
 			final String irodsSourceFileAbsolutePath,
 			final String targetResource,
 			final String irodsTargetFileAbsolutePath,
-			final boolean force,
 			final TransferStatusCallbackListener transferStatusCallbackListener,
 			final TransferControlBlock transferControlBlock)
-			throws JargonException {
+			throws OverwriteException, DataNotFoundException, JargonException {
 
 		log.info("copy single file");
 
@@ -1103,16 +1031,12 @@ final class TransferOperationsHelper {
 			}
 
 			log.info("filter passed, process...");
-
-			if (force) {
-				dataObjectAO.copyIrodsDataObjectWithForce(
-						irodsSourceFileAbsolutePath,
-						irodsTargetFileAbsolutePath, targetResource);
-			} else {
-				dataObjectAO.copyIrodsDataObject(irodsSourceFileAbsolutePath,
-						irodsTargetFileAbsolutePath, targetResource);
-			}
-
+			
+			IRODSFile irodsSourceFile = dataObjectAO.getIRODSFileFactory().instanceIRODSFile(irodsSourceFileAbsolutePath);
+			IRODSFile irodsTargetFile = dataObjectAO.getIRODSFileFactory().instanceIRODSFile(irodsTargetFileAbsolutePath);
+			irodsTargetFile.setResource(targetResource);
+			dataObjectAO.copyIRODSDataObject(irodsSourceFile, irodsTargetFile,
+					transferControlBlock, transferStatusCallbackListener);
 			log.info("copy successful for file: {}",
 					irodsSourceFileAbsolutePath);
 
@@ -1150,7 +1074,6 @@ final class TransferOperationsHelper {
 			} else {
 				log.warn("exception will be re-thrown, as there is no status callback listener");
 				throw e;
-
 			}
 		}
 	}

@@ -187,7 +187,13 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * @throws DataNotFoundException
 	 *             if the source iRODS file does not exist
 	 * @throws JargonException
+	 * @deprecated In order to align the related transfer methods in this API
+	 *             and accomodate future growth in transfer options, it is
+	 *             advised to switch to the method that allows provision of the
+	 *             <code>TransferControlBlock</code> and
+	 *             <code>TransferStatus</code> methods.
 	 */
+	@Deprecated
 	void getDataObjectFromIrodsGivingTransferOptions(IRODSFile irodsFileToGet,
 			File localFileToHoldData, TransferOptions transferOptions)
 			throws OverwriteException, DataNotFoundException, JargonException;
@@ -719,18 +725,6 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 			throws DataNotFoundException, JargonException;
 
 	/**
-	 * FIXME: not yet implemented Update the comment for the given data object.
-	 * 
-	 * @param comment
-	 *            <code>String</code> with desired comment value. Set to blank
-	 *            if comment is to be cleared.
-	 * @param dataObjectAbsolutePath
-	 *            <code>String</code>
-	 */
-	void updateComment(final String comment, final String dataObjectAbsolutePath)
-			throws JargonException;
-
-	/**
 	 * Set the permissions on a data object to read for the given user.
 	 * 
 	 * @param zone
@@ -821,12 +815,23 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 *            <code>String</code> with the absolute path to the target file.
 	 * @param targetResourceName
 	 *            <code>String</code> with the optional (blank if not specified)
-	 *            resource that will hold the target file
+	 *            resource that will hold the target file * @throws
+	 *            OverwriteException if an overwrite is attempted and the force
+	 *            option has not been set
+	 * @throws OverwriteException
+	 *             if an overwrite is attempted and the force option has not
+	 *             been set
+	 * @throws DataNotFoundException
+	 *             if the source iRODS file does not exist
 	 * @throws JargonException
+	 * @deprecated it is advised to switch to the copyIRODSDataObject() method
+	 *             that takes the optional <code>TransferControlBlock</code> and
+	 *             <code>TransferStatusCallbackListener</code> objects.
 	 */
+	@Deprecated
 	void copyIrodsDataObject(String irodsSourceFileAbsolutePath,
 			String irodsTargetFileAbsolutePath, String targetResourceName)
-			throws JargonException;
+			throws OverwriteException, DataNotFoundException, JargonException;
 
 	/**
 	 * Copy a file from one iRODS resource to another with a 'force' option that
@@ -839,11 +844,21 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * @param targetResourceName
 	 *            <code>String</code> with the optional (blank if not specified)
 	 *            resource that will hold the target file
+	 * @throws OverwriteException
+	 *             if an overwrite is attempted and the force option has not
+	 *             been set
+	 * @throws DataNotFoundException
+	 *             if the source iRODS file does not exist
 	 * @throws JargonException
+	 * @deprecated it is advised to switch to the copyIRODSDataObject() method
+	 *             that takes the optional <code>TransferControlBlock</code> and
+	 *             <code>TransferStatusCallbackListener</code> objects.
+	 * 
 	 */
+	@Deprecated
 	void copyIrodsDataObjectWithForce(String irodsSourceFileAbsolutePath,
 			String irodsTargetFileAbsolutePath, String targetResourceName)
-			throws JargonException;
+			throws OverwriteException, DataNotFoundException, JargonException;
 
 	/**
 	 * List the user permissions for the given iRODS data object.
@@ -1106,5 +1121,37 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 */
 	List<Resource> listFileResources(String irodsAbsolutePath)
 			throws JargonException;
+
+	/**
+	 * Copy a file from one iRODS location to another. This is the preferred
+	 * method signature for copy operations, with other forms now deprecated.
+	 * Note that the <code>transferControlBlock</code> and
+	 * <code>TransferStatusCallbackListener</code> objects are optional and may
+	 * be set to <code>null</code> if not required.
+	 * <p/>
+	 * Note that this operation is for a single data object, not for recursive
+	 * transfers of collections. See {@link DataTransferOperations} for
+	 * recursive data transfers.
+	 * <p/>
+	 * 
+	 * 
+	 * @param irodsSourceFile
+	 *            {@link org.irods.jargon.core.pub.io.IRODSFile} that is the
+	 *            source of the transfer
+	 * @param irodsTargetFile
+	 *            {@link org.irods.jargon.core.pub.io.IRODSFile} that is the
+	 *            collection or explicitly named target for the transfer
+	 * @throws OverwriteException
+	 *             if an overwrite is attempted and the force option has not
+	 *             been set
+	 * @throws DataNotFoundException
+	 *             if the source iRODS file does not exist
+	 * @throws JargonException
+	 */
+	void copyIRODSDataObject(IRODSFile irodsSourceFile,
+			IRODSFile irodsTargetFile,
+			TransferControlBlock transferControlBlock,
+			TransferStatusCallbackListener transferStatusCallbackListener)
+			throws OverwriteException, DataNotFoundException, JargonException;
 
 }
