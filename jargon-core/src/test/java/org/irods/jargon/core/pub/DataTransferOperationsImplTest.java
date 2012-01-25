@@ -749,7 +749,7 @@ public class DataTransferOperationsImplTest {
 
 		TransferControlBlock restartControlBlock = irodsFileSystem
 				.getIrodsSession()
-				.getDefaultTransferControlBlockBasedOnJargonProperties();
+				.buildDefaultTransferControlBlockBasedOnJargonProperties();
 		restartControlBlock.getTransferOptions().setForceOption(
 				ForceOption.USE_FORCE);
 		dataTransferOperationsAO

@@ -6,6 +6,7 @@ import org.irods.jargon.core.connection.JargonProperties;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.io.IRODSFileFactory;
 import org.irods.jargon.core.pub.io.IRODSFileFactoryImpl;
+import org.irods.jargon.core.transfer.TransferControlBlock;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -503,5 +504,19 @@ public final class IRODSAccessObjectFactoryImpl implements
 	public JargonProperties getJargonProperties() {
 		// irodsSession synchronizes access
 		return irodsSession.getJargonProperties();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.pub.IRODSAccessObjectFactory#
+	 * buildDefaultTransferControlBlockBasedOnJargonProperties()
+	 */
+	@Override
+	public TransferControlBlock buildDefaultTransferControlBlockBasedOnJargonProperties()
+			throws JargonException {
+		// irodsSession synchronizes access
+		return irodsSession
+				.buildDefaultTransferControlBlockBasedOnJargonProperties();
 	}
 }

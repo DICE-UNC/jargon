@@ -90,7 +90,7 @@ public class IRODSSession {
 	 *         {@link JargonProperties}
 	 * @throws JargonException
 	 */
-	public TransferControlBlock getDefaultTransferControlBlockBasedOnJargonProperties()
+	public TransferControlBlock buildDefaultTransferControlBlockBasedOnJargonProperties()
 			throws JargonException {
 		TransferControlBlock transferControlBlock = DefaultTransferControlBlock
 				.instance();

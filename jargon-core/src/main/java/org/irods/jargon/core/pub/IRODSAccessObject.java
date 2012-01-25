@@ -81,7 +81,7 @@ public interface IRODSAccessObject {
 	 *         {@link JargonProperties}
 	 * @throws JargonException
 	 */
-	TransferControlBlock getDefaultTransferControlBlock()
+	TransferControlBlock buildDefaultTransferControlBlockBasedOnJargonProperties()
 			throws JargonException;
 
 }

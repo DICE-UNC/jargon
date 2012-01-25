@@ -123,10 +123,10 @@ public abstract class IRODSGenericAO implements IRODSAccessObject {
 	 * ()
 	 */
 	@Override
-	public TransferControlBlock getDefaultTransferControlBlock()
+	public TransferControlBlock buildDefaultTransferControlBlockBasedOnJargonProperties()
 			throws JargonException {
 		return getIRODSSession()
-				.getDefaultTransferControlBlockBasedOnJargonProperties();
+				.buildDefaultTransferControlBlockBasedOnJargonProperties();
 	}
 
 	/*
