@@ -459,7 +459,10 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		if (localFileLength < ConnectionConstants.MAX_SZ_FOR_SINGLE_BUF) {
 
 			log.info("processing transfer as normal, length below max");
-
+			/**
+			 * TODO: add a retry here if an overwrite exception occurs even
+			 * though it passed the above check?
+			 */
 			try {
 				dataAOHelper.processNormalPutTransfer(localFile, force,
 						targetFile, this.getIRODSProtocol(),
@@ -827,17 +830,19 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			throws OverwriteException {
 		OverwriteResponse overwriteResponse = OverwriteResponse.PROCEED_WITH_NO_FORCE;
 		if (targetFile.exists()) {
-			log.info("local file exists, check if overwrite allowed");
+			log.info(
+					"target file exists, check if overwrite allowed, file is:{}",
+					targetFile.getAbsolutePath());
 			if (thisFileTransferOptions.getForceOption() == ForceOption.NO_FORCE) {
 				throw new OverwriteException(
-						"attempt to get file, local file already exists and no force option specified");
+						"attempt to overwrite file, target file already exists and no force option specified");
 			} else if (thisFileTransferOptions.getForceOption() == ForceOption.USE_FORCE) {
 				log.info("force specified, do the overwrite");
 				overwriteResponse = OverwriteResponse.PROCEED_WITH_FORCE;
 			} else if (thisFileTransferOptions.getForceOption() == ForceOption.ASK_CALLBACK_LISTENER) {
 				if (transferStatusCallbackListener == null) {
 					throw new OverwriteException(
-							"attempt to get file, local file already exists and no callback listener provided to ask");
+							"attempt to overwrite file, target file already exists and no callback listener provided to ask");
 				} else {
 					TransferStatusCallbackListener.CallbackResponse callbackResponse = transferStatusCallbackListener
 							.transferAsksWhetherToForceOperation(

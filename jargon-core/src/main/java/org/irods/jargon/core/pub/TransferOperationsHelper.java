@@ -703,12 +703,9 @@ final class TransferOperationsHelper {
 
 		try {
 
-			int totalFiles = 0;
-			int totalFilesSoFar = 0;
-
-			totalFilesSoFar = transferControlBlock
+			int totalFiles = transferControlBlock.getTotalFilesToTransfer();
+			int totalFilesSoFar = transferControlBlock
 					.incrementFilesTransferredSoFar();
-			totalFiles = transferControlBlock.getTotalFilesToTransfer();
 
 			// if I am restarting, see if I need to transfer this file
 

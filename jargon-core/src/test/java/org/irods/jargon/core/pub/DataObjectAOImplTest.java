@@ -1,4 +1,3 @@
-
 package org.irods.jargon.core.pub;
 
 import java.io.File;
@@ -7,7 +6,6 @@ import java.util.List;
 import java.util.Properties;
 
 import junit.framework.Assert;
-import junit.framework.TestCase;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSProtocolManager;
@@ -428,9 +426,9 @@ public class DataObjectAOImplTest {
 				transferStatusCallbackListener);
 
 		destFile.reset();
-		TestCase.assertEquals("should have skipped file and not overwritten",
+		Assert.assertEquals("should have skipped file and not overwritten",
 				firstLength, destFile.length());
-		TestCase.assertEquals(
+		Assert.assertEquals(
 				"transferControlBlock should not have been overwritten",
 				ForceOption.ASK_CALLBACK_LISTENER, tcb.getTransferOptions()
 						.getForceOption());
@@ -489,9 +487,9 @@ public class DataObjectAOImplTest {
 				transferStatusCallbackListener);
 
 		destFile.reset();
-		TestCase.assertEquals("should have skipped file and not overwritten",
+		Assert.assertEquals("should have skipped file and not overwritten",
 				firstLength, destFile.length());
-		TestCase.assertEquals(
+		Assert.assertEquals(
 				"transferControlBlock should have been overwritten",
 				ForceOption.NO_FORCE, tcb.getTransferOptions().getForceOption());
 
@@ -548,9 +546,9 @@ public class DataObjectAOImplTest {
 				transferStatusCallbackListener);
 
 		destFile.reset();
-		TestCase.assertEquals("should have overwritten file", secondLength,
+		Assert.assertEquals("should have overwritten file", secondLength,
 				destFile.length());
-		TestCase.assertEquals(
+		Assert.assertEquals(
 				"transferControlBlock should not have been overwritten",
 				ForceOption.ASK_CALLBACK_LISTENER, tcb.getTransferOptions()
 						.getForceOption());
@@ -608,9 +606,9 @@ public class DataObjectAOImplTest {
 				transferStatusCallbackListener);
 
 		destFile.reset();
-		TestCase.assertEquals("should have overwritten file", secondLength,
+		Assert.assertEquals("should have overwritten file", secondLength,
 				destFile.length());
-		TestCase.assertEquals(
+		Assert.assertEquals(
 				"transferControlBlock should have been overwritten",
 				ForceOption.USE_FORCE, tcb.getTransferOptions()
 						.getForceOption());
@@ -2334,11 +2332,11 @@ public class DataObjectAOImplTest {
 				.instanceIRODSFile(targetIrodsCollection);
 		dataObjectAO.putLocalDataObjectToIRODS(new File(fileNameOrig),
 				irodsFile, null, null);
-		IRODSFile irodsSourceFile = irodsFileSystem
-				.getIRODSFileFactory(irodsAccount).instanceIRODSFile(
-						targetIrodsCollection + "/" + testFileName);
-		IRODSFile irodsTargetFile = irodsFileSystem
-				.getIRODSFileFactory(irodsAccount).instanceIRODSFile(
+		IRODSFile irodsSourceFile = irodsFileSystem.getIRODSFileFactory(
+				irodsAccount).instanceIRODSFile(
+				targetIrodsCollection + "/" + testFileName);
+		IRODSFile irodsTargetFile = irodsFileSystem.getIRODSFileFactory(
+				irodsAccount).instanceIRODSFile(
 				targetIrodsCollection + "/" + testCopyToFileName);
 		TransferControlBlock tcb = irodsFileSystem
 				.getIRODSAccessObjectFactory()
@@ -2425,7 +2423,6 @@ public class DataObjectAOImplTest {
 
 		dataObjectAO.copyIRODSDataObject(irodsSourceFile, irodsTargetFile, tcb,
 				transferStatusCallbackListener);
-
 	}
 
 	/**
@@ -2434,8 +2431,7 @@ public class DataObjectAOImplTest {
 	 * @throws Exception
 	 */
 	@Test(expected = IllegalArgumentException.class)
-	public final void testCopyIRODSDataObjectSourceFileNull()
-			throws Exception {
+	public final void testCopyIRODSDataObjectSourceFileNull() throws Exception {
 
 		String testCopyToFileName = "testCopyIRODSDataObjectToDataObjectSourceNotExistsCopyTo.txt";
 
@@ -2459,7 +2455,6 @@ public class DataObjectAOImplTest {
 
 		dataObjectAO.copyIRODSDataObject(irodsSourceFile, irodsTargetFile, tcb,
 				transferStatusCallbackListener);
-
 	}
 
 	/**
@@ -2469,8 +2464,6 @@ public class DataObjectAOImplTest {
 	 */
 	@Test(expected = IllegalArgumentException.class)
 	public final void testCopyIRODSDataObjectTargetFileNull() throws Exception {
-
-		String testCopyToFileName = "testCopyIRODSDataObjectToDataObjectSourceNotExistsCopyTo.txt";
 
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
@@ -2593,7 +2586,6 @@ public class DataObjectAOImplTest {
 				irodsAccount).instanceIRODSFile(
 				targetIrodsCollection + "/" + testCopyToFileName);
 		Assert.assertTrue("new file does not exist", checkCopiedFile.exists());
-
 	}
 
 	@Test
@@ -4230,6 +4222,105 @@ public class DataObjectAOImplTest {
 		Assert.assertFalse("accumulated more bytes than file size",
 				transferStatusCallbackListener
 						.getBytesReportedIntraFileCallbacks() > testSize);
+	}
+
+	@Test
+	public void testPutToIRODSFileWithDifferentFileName() throws Exception {
+		// generate a local scratch file
+		String testFileName = "testPutToIRODSFileWithDifferentFileName.txt";
+		String testTargetFileName = "testPutToIRODSFileWithDifferentFileNameTarget.txt";
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String localFileName = FileGenerator
+				.generateFileOfFixedLengthGivenName(absPath, testFileName, 3);
+
+		String targetIrodsFile = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
+								+ testTargetFileName);
+		File localFile = new File(localFileName);
+
+		// now put the file
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
+		IRODSFileFactory irodsFileFactory = accessObjectFactory
+				.getIRODSFileFactory(irodsAccount);
+		DataObjectAO dataObjectAO = accessObjectFactory
+				.getDataObjectAO(irodsAccount);
+		IRODSFile destFile = irodsFileFactory
+				.instanceIRODSFile(targetIrodsFile);
+		TransferOptions transferOptions = new TransferOptions();
+		transferOptions.setComputeAndVerifyChecksumAfterTransfer(true);
+		TransferControlBlock transferControlBlock = DefaultTransferControlBlock
+				.instance();
+		transferControlBlock.setTransferOptions(transferOptions);
+
+		dataObjectAO.putLocalDataObjectToIRODS(localFile, destFile,
+				transferControlBlock, null);
+
+		assertionHelper.assertIrodsFileOrCollectionExists(targetIrodsFile);
+	}
+
+	/**
+	 * Create a source file in one collection, put to a target iRODS file with a
+	 * different collection not specifying the target file name.
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void testPutAFileGivingFileNameInOneCollectionToATargetCollectionGivingCollectionName()
+			throws Exception {
+
+		String testCollectionSubdir = "testPutAFileGivingFileNameInOneCollectionToATargetCollectionGivingCollectionName";
+		String testTargetCollectionSubdir = "testPutAFileGivingFileNameInOneCollectionToATargetCollectionGivingCollectionNameTarget";
+
+		String testFileName = "test.txt";
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
+								+ testTargetCollectionSubdir);
+		IRODSFile targetIrodsCollectionFile = irodsFileSystem
+				.getIRODSFileFactory(irodsAccount).instanceIRODSFile(
+						targetIrodsCollection);
+		targetIrodsCollectionFile.mkdirs();
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH
+						+ "/" + testCollectionSubdir);
+
+		FileGenerator.generateFileOfFixedLengthGivenName(absPath, testFileName,
+				3);
+
+		File localFile = new File(absPath, testFileName);
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+		DataObjectAO dataObjectAO = accessObjectFactory
+				.getDataObjectAO(irodsAccount);
+
+		TransferOptions transferOptions = new TransferOptions();
+		transferOptions.setComputeAndVerifyChecksumAfterTransfer(true);
+		TransferControlBlock transferControlBlock = DefaultTransferControlBlock
+				.instance();
+		transferControlBlock.setTransferOptions(transferOptions);
+
+		dataObjectAO.putLocalDataObjectToIRODS(localFile,
+				targetIrodsCollectionFile,
+				transferControlBlock, null);
+
+		targetIrodsCollectionFile = irodsFileSystem.getIRODSFileFactory(
+				irodsAccount).instanceIRODSFile(targetIrodsCollection,
+				testFileName);
+
+		assertionHelper
+				.assertIrodsFileOrCollectionExists(targetIrodsCollectionFile
+						.getAbsolutePath());
 	}
 
 	@Test
