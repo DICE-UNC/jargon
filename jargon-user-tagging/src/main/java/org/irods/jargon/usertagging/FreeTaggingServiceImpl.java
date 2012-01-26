@@ -148,11 +148,10 @@ public final class FreeTaggingServiceImpl extends AbstractIRODSTaggingService
 		if (userName == null || userName.isEmpty()) {
 			throw new IllegalArgumentException("null or empty userName");
 		}
-		
+
 		if (tags == null) {
 			throw new IllegalArgumentException("null tags");
 		}
-
 
 		log.info("updateTagsForUser, irodsAbsolutePath:{}", irodsAbsolutePath);
 		log.info("userName:{}", userName);

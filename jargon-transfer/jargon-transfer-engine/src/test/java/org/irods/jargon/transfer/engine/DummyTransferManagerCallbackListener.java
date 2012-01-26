@@ -8,7 +8,6 @@ import java.util.List;
 
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.packinstr.TransferOptions;
-import org.irods.jargon.core.packinstr.TransferOptions.ForceOption;
 import org.irods.jargon.core.transfer.TransferStatus;
 import org.irods.jargon.core.transfer.TransferStatus.TransferState;
 import org.irods.jargon.transfer.engine.TransferManager.ErrorStatus;
@@ -98,18 +97,18 @@ public class DummyTransferManagerCallbackListener implements
 		return overallStatusHistory;
 	}
 
-	@Override
-	public ForceOption transferAsksWhetherToOverwriteDuringOperation(
-			String irodsAbsolutePath, boolean isCollection) {
-		return forceOption;
-	}
-
 	public TransferOptions.ForceOption getForceOption() {
 		return forceOption;
 	}
 
 	public void setForceOption(TransferOptions.ForceOption forceOption) {
 		this.forceOption = forceOption;
+	}
+
+	@Override
+	public CallbackResponse transferAsksWhetherToForceOperation(
+			String irodsAbsolutePath, boolean isCollection) {
+		return CallbackResponse.YES_FOR_ALL;
 	}
 
 }

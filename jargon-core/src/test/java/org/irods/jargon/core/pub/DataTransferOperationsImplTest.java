@@ -2866,8 +2866,8 @@ public class DataTransferOperationsImplTest {
 	public void testCopyCollectionToTargetCollection() throws Exception {
 
 		// generate a local scratch file
-		String testOrigDirectory = "testCopyCollectionToTargetCollection";
-		String testTargetDirectory = "testCopyCollectionToTargetCollectionTarget";
+		String testOrigDirectory = "testCopyCollectionToTargetCollectionB";
+		String testTargetDirectory = "testCopyCollectionToTargetCollectionBTarget";
 
 		String localCollectionAbsolutePath = scratchFileUtils
 				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH
@@ -3093,8 +3093,8 @@ public class DataTransferOperationsImplTest {
 	public final void testCopyIRODSDataObjectToDataObjectNoForceNoOverwriteStringSignatures()
 			throws Exception {
 
-		String testFileName = "testCopyIRODSDataObjectToDataObjectForceWhenOverwrite.txt";
-		String testCopyToFileName = "testCopyIRODSDataObjectToDataObjectForceWhenOverwriteCopyTo.txt";
+		String testFileName = "testCopyIRODSDataObjectToDataObjectNoForceNoOverwriteStringSignatures.txt";
+		String testCopyToFileName = "testCopyIRODSDataObjectToDataObjectNoForceNoOverwriteStringSignaturesCopyTo.txt";
 		String absPath = scratchFileUtils
 				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
 		String fileNameOrig = FileGenerator.generateFileOfFixedLengthGivenName(

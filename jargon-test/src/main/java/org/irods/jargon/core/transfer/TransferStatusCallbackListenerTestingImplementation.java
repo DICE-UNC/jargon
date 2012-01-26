@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.irods.jargon.core.exception.JargonException;
-import org.irods.jargon.core.packinstr.TransferOptions;
-import org.irods.jargon.core.packinstr.TransferOptions.ForceOption;
 import org.irods.jargon.core.transfer.TransferStatus.TransferState;
 import org.irods.jargon.core.transfer.TransferStatus.TransferType;
 
@@ -30,7 +28,7 @@ public class TransferStatusCallbackListenerTestingImplementation implements
 	private int pauseAfter = 0;
 	private int cancelAfter = 0;
 	private TransferControlBlock transferControlBlock = null;
-	private TransferOptions.ForceOption forceOption = TransferOptions.ForceOption.NO_FORCE;
+	private TransferStatusCallbackListener.CallbackResponse forceOption = TransferStatusCallbackListener.CallbackResponse.NO_FOR_ALL;
 
 	private boolean cancelEncountered = false;
 	private boolean pauseEncountered = false;
@@ -86,13 +84,13 @@ public class TransferStatusCallbackListenerTestingImplementation implements
 		if (pauseAfter > 0 && totalCallback == pauseAfter) {
 			if (transferControlBlock != null) {
 				transferControlBlock.setPaused(true);
-	}
+			}
 		}
 
 		if (cancelAfter > 0 && totalCallback == cancelAfter) {
 			if (transferControlBlock != null) {
 				transferControlBlock.setCancelled(true);
-	}
+			}
 		}
 
 		statusCache.add(transferStatus);
@@ -171,16 +169,16 @@ public class TransferStatusCallbackListenerTestingImplementation implements
 	}
 
 	@Override
-	public ForceOption transferAsksWhetherToForceOperation(
+	public CallbackResponse transferAsksWhetherToForceOperation(
 			String irodsAbsolutePath, boolean isCollection) {
 		return forceOption;
 	}
 
-	public TransferOptions.ForceOption getForceOption() {
+	public CallbackResponse getForceOption() {
 		return forceOption;
 	}
 
-	public void setForceOption(TransferOptions.ForceOption forceOption) {
+	public void setForceOption(CallbackResponse forceOption) {
 		this.forceOption = forceOption;
 	}
 

@@ -403,9 +403,7 @@ public interface DataTransferOperations extends IRODSAccessObject {
 	 * Move a file or collection between two locations in iRODS. This method
 	 * will inspect the paths and create the appropriate command to iRODS
 	 * automatically. In this method, the target file is expressed as the actual
-	 * target location. There are other methods in this class that will take the
-	 * last part of the source path, and use that as the collection name in the
-	 * target.
+	 * target location.
 	 * <p/>
 	 * For this method, if the source is /coll1/coll2/coll3 and the target is
 	 * /coll4/coll5/coll6, the result will be /coll4/coll5/coll6/coll3.

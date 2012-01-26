@@ -4,8 +4,6 @@ import java.io.File;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.JargonException;
-import org.irods.jargon.core.packinstr.TransferOptions;
-import org.irods.jargon.core.packinstr.TransferOptions.ForceOption;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 import org.irods.jargon.core.transfer.TransferControlBlock;
 import org.irods.jargon.core.transfer.TransferStatus;
@@ -465,10 +463,10 @@ public class SynchronizeProcessorImpl implements SynchronizeProcessor,
 	 * transferAsksWhetherToOverwriteDuringOperation(java.lang.String, boolean)
 	 */
 	@Override
-	public ForceOption transferAsksWhetherToForceOperation(
+	public CallbackResponse transferAsksWhetherToForceOperation(
 			String irodsAbsolutePath, boolean isCollection) {
 		// currently will overwrite, this needs to be set in transfer options
-		return TransferOptions.ForceOption.USE_FORCE;
+		return CallbackResponse.YES_FOR_ALL; // temp code here
 
 	}
 

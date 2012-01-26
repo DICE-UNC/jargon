@@ -11,11 +11,13 @@ import junit.framework.Assert;
 import junit.framework.TestCase;
 
 import org.irods.jargon.core.connection.IRODSAccount;
+import org.irods.jargon.core.packinstr.TransferOptions.ForceOption;
 import org.irods.jargon.core.pub.DataTransferOperations;
 import org.irods.jargon.core.pub.IRODSFileSystem;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.pub.io.IRODSFileFactory;
 import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry;
+import org.irods.jargon.core.transfer.TransferControlBlock;
 import org.irods.jargon.datautils.tree.FileTreeDiffEntry.DiffType;
 import org.irods.jargon.testutils.IRODSTestSetupUtilities;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
@@ -854,8 +856,12 @@ public class FileTreeDiffUtilityTest {
 		// timestamp is updated
 		long cutoffTimestamp = System.currentTimeMillis();
 		Thread.sleep(5000);
+		TransferControlBlock tcb = irodsFileSystem
+				.getIRODSAccessObjectFactory()
+				.buildDefaultTransferControlBlockBasedOnJargonProperties();
+		tcb.getTransferOptions().setForceOption(ForceOption.USE_FORCE);
 		dataTransferOperationsAO.putOperation(new File(absFileName1),
-				irodsRootFile, null, null);
+				irodsRootFile, null, tcb);
 
 		FileTreeDiffUtility fileTreeDiffUtility = new FileTreeDiffUtilityImpl(
 				irodsAccount, irodsFileSystem.getIRODSAccessObjectFactory());
@@ -918,8 +924,12 @@ public class FileTreeDiffUtilityTest {
 		// timestamp is updated
 		long cutoffTimestamp = 0;
 		Thread.sleep(2000);
+		TransferControlBlock tcb = irodsFileSystem
+				.getIRODSAccessObjectFactory()
+				.buildDefaultTransferControlBlockBasedOnJargonProperties();
+		tcb.getTransferOptions().setForceOption(ForceOption.USE_FORCE);
 		dataTransferOperationsAO.putOperation(new File(absFileName1),
-				irodsRootFile, null, null);
+				irodsRootFile, null, tcb);
 
 		FileTreeDiffUtility fileTreeDiffUtility = new FileTreeDiffUtilityImpl(
 				irodsAccount, irodsFileSystem.getIRODSAccessObjectFactory());
