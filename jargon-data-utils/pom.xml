@@ -1,9 +1,10 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>org.irods</groupId>
 		<artifactId>jargon</artifactId>
-		<version>3.0.0.1</version>
+		<version>3.0.1-SNAPSHOT</version>
 	</parent>
 	<groupId>org.irods.jargon</groupId>
 	<artifactId>jargon-data-utils</artifactId>
@@ -83,8 +84,10 @@
 						<configuration>
 							<tasks>
 								<delete file="${basedir}/src/test/resources/testing.properties" />
-								<touch file="${basedir}/src/test/resources/testing.properties" mkdirs="true" />
-								<echo file="${basedir}/src/test/resources/testing.properties" append="true">
+								<touch file="${basedir}/src/test/resources/testing.properties"
+									mkdirs="true" />
+								<echo file="${basedir}/src/test/resources/testing.properties"
+									append="true">
 									test.confirm=${jargon.test.confirm}
 									test.data.directory=${jargon.test.data.directory}
 									test.irods.admin=${jargon.test.irods.admin}
@@ -150,7 +153,7 @@
 										</goals>
 									</pluginExecutionFilter>
 									<action>
-										<ignore />
+										<ignore></ignore>
 									</action>
 								</pluginExecution>
 							</pluginExecutions>
