@@ -17,6 +17,22 @@ import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry;
  * for both Swing and web GUI tree models, and basic search boxes for file or
  * collection names. More advanced searching based on metadata or other criteria
  * are available elsewhere in the API.
+ * <p/>
+ * <b>NOTE:</b> Within iRODS, Collections (directories) and Data Objects (files)
+ * are different parts of the iCAT. For this reason, the listings are generated
+ * separately, with the convention of collections first, and data objects
+ * second. In the various listing methods, you will see methods for combining
+ * queries on collections and data objects (such as listing the contents of a
+ * parent directory). This separation of iCAT types makes life a little
+ * complicated, in that these combined listing operations may end up with
+ * collections and data objects with different paging requirements (e.g. There
+ * are more collections to page, but no more data objects. This must be
+ * accounted for by client programs. The
+ * {@link CollectionAndDataObjectListingEntry} extends teh
+ * {@link IRODSDomainObject} superclass, this superclass provides methods to
+ * access whether there are more entries, and at what sequence in a result
+ * collection the 'has more' entry occurs, so that offset is available for
+ * re-query.
  * 
  * @author Mike Conway - DICE (www.irods.org)
  * 

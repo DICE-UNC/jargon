@@ -206,4 +206,22 @@ public interface TransferControlBlock {
 	 */
 	void resetTransferData();
 
+	/**
+	 * Get the (optional) restart location
+	 * 
+	 * @return <code>String</code> with an optional (blank if not provided)
+	 *         absolute path that was the last good path in a prior transfer.
+	 *         This is used to seek the restart point
+	 */
+	String getRestartAbsolutePath();
+
+	/**
+	 * Set the (optional) restart location. If not desired, set to blank.
+	 * 
+	 * @param restartAbsolutePath
+	 *            <code>String</code> with an optional restart path, this should
+	 *            be the last 'good' path in a prior transfer
+	 */
+	void setRestartAbsolutePath(String restartAbsolutePath);
+
 }

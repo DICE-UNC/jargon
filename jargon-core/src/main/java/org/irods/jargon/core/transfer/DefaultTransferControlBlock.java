@@ -1,6 +1,3 @@
-/**
- * 
- */
 package org.irods.jargon.core.transfer;
 
 import org.irods.jargon.core.exception.JargonException;
@@ -376,26 +373,82 @@ public class DefaultTransferControlBlock implements TransferControlBlock {
 		this.transferOptions = transferOptions;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.transfer.TransferControlBlock#
+	 * getTotalBytesTransferredSoFar()
+	 */
 	@Override
 	public synchronized long getTotalBytesTransferredSoFar() {
 		return this.totalBytesTransferredSoFar;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.transfer.TransferControlBlock#
+	 * incrementTotalBytesTransferredSoFar(long)
+	 */
 	@Override
 	public synchronized void incrementTotalBytesTransferredSoFar(
 			final long totalBytesTransferredSoFar) {
 		this.totalBytesTransferredSoFar += totalBytesTransferredSoFar;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.transfer.TransferControlBlock#getTotalBytesToTransfer
+	 * ()
+	 */
 	@Override
 	public synchronized long getTotalBytesToTransfer() {
 		return this.totalBytesToTransfer;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.transfer.TransferControlBlock#setTotalBytesToTransfer
+	 * (long)
+	 */
 	@Override
 	public synchronized void setTotalBytesToTransfer(
 			final long totalBytesToTransfer) {
 		this.totalBytesToTransfer = totalBytesToTransfer;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.transfer.TransferControlBlock#getRestartAbsolutePath
+	 * ()
+	 */
+	@Override
+	public synchronized String getRestartAbsolutePath() {
+		return restartAbsolutePath;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.transfer.TransferControlBlock#setRestartAbsolutePath
+	 * (java.lang.String)
+	 */
+	@Override
+	public void setRestartAbsolutePath(String restartAbsolutePath) {
+		if (restartAbsolutePath == null) {
+			throw new IllegalArgumentException(
+					"null restartAbsolutePath, set to blank if not required");
+		}
+		synchronized (this) {
+		this.restartAbsolutePath = restartAbsolutePath;
+		}
 	}
 
 }

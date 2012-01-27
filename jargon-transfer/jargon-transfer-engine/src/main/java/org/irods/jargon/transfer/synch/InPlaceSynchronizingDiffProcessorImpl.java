@@ -708,4 +708,18 @@ public class InPlaceSynchronizingDiffProcessorImpl implements
 
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.transfer.TransferStatusCallbackListener#
+	 * transferAsksWhetherToOverwriteDuringOperation(java.lang.String, boolean)
+	 */
+	@Override
+	public CallbackResponse transferAsksWhetherToForceOperation(
+			String irodsAbsolutePath, boolean isCollection) {
+		// currently will overwrite, this needs to be set in transfer options
+		return CallbackResponse.YES_FOR_ALL;
+
+	}
+
 }

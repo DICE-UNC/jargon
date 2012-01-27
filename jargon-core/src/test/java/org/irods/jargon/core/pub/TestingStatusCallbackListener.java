@@ -12,6 +12,7 @@ public class TestingStatusCallbackListener implements
 	private String lastSourcePath = "";
 	private String lastTargetPath = "";
 	private String lastResource = "";
+	private TransferStatusCallbackListener.CallbackResponse forceOption = TransferStatusCallbackListener.CallbackResponse.NO_FOR_ALL;
 
 	private long bytesReportedIntraFileCallbacks = 0L;
 	private int numberIntraFileCallbacks = 0;
@@ -90,6 +91,20 @@ public class TestingStatusCallbackListener implements
 	 */
 	public int getNumberIntraFileCallbacks() {
 		return numberIntraFileCallbacks;
+	}
+
+	@Override
+	public CallbackResponse transferAsksWhetherToForceOperation(
+			String irodsAbsolutePath, boolean isCollection) {
+		return forceOption;
+	}
+
+	public CallbackResponse getForceOption() {
+		return forceOption;
+	}
+
+	public void setForceOption(CallbackResponse forceOption) {
+		this.forceOption = forceOption;
 	}
 
 }

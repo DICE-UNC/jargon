@@ -1,6 +1,3 @@
-/**
- * 
- */
 package org.irods.jargon.core.pub;
 
 import java.io.BufferedInputStream;
@@ -325,6 +322,8 @@ public final class DataAOHelper extends AOHelper {
 	}
 
 	/**
+	 * Overwrites have already been checked
+	 * 
 	 * @param localFileToHoldData
 	 * @param length
 	 * @param transferOptions
@@ -635,6 +634,7 @@ public final class DataAOHelper extends AOHelper {
 		} else {
 
 			log.debug(">>>>>checking if destination file is a collection");
+
 			if (irodsFileDestination.isDirectory()) {
 				log.info(
 						"put specifying an irods collection, will use the local file name as the iRODS file name:{}",

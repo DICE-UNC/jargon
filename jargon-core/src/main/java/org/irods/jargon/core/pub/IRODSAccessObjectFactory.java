@@ -5,6 +5,7 @@ import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.connection.JargonProperties;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.io.IRODSFileFactory;
+import org.irods.jargon.core.transfer.TransferControlBlock;
 
 /**
  * Factory to produce IRODS access objects. This is the key object which can be
@@ -374,6 +375,17 @@ public interface IRODSAccessObjectFactory {
 	 * @throws JargonException
 	 */
 	CollectionAuditAO getCollectionAuditAO(IRODSAccount irodsAccount)
+			throws JargonException;
+
+	/**
+	 * Build a <code>TransferControlBlock</code> reflecting the default options
+	 * as configured in the <code>JargonProperties</code>.
+	 * 
+	 * @return {@link TransferControlBlock} reflecting default options and
+	 *         properties.
+	 * @throws JargonException
+	 */
+	TransferControlBlock buildDefaultTransferControlBlockBasedOnJargonProperties()
 			throws JargonException;
 
 }

@@ -528,7 +528,6 @@ final class IRODSConnection implements IRODSManagedConnection {
 							.connectionProgressStatusCallback(ConnectionProgressStatus
 									.instanceForSend(lenThisRead));
 				}
-
 			}
 
 			log.debug("final flush of data sent");

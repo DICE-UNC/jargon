@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.packinstr.TransferOptions.ForceOption;
 import org.irods.jargon.core.pub.IRODSFileSystem;
 import org.irods.jargon.core.transfer.DefaultTransferControlBlock;
 import org.irods.jargon.core.transfer.TransferControlBlock;
@@ -659,6 +660,10 @@ public final class TransferManagerImpl implements TransferManager {
 		TransferControlBlock transferControlBlock = DefaultTransferControlBlock
 				.instance(dequeued.getLastSuccessfulPath());
 		transferControlBlock.setTransferOptions(this.getIrodsFileSystem().getIrodsSession().buildTransferOptionsBasedOnJargonProperties());
+		// currently defaults to a force...will uprade this in another rev 
+		transferControlBlock.getTransferOptions().setForceOption(
+				ForceOption.USE_FORCE);
+		
 		log.info("options for dequeued transfer:{}", transferControlBlock.getTransferOptions());
 
 		// transfer options come from jargon default properties 

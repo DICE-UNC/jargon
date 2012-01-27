@@ -10,6 +10,7 @@ import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.connection.JargonProperties;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.io.IRODSFileFactory;
+import org.irods.jargon.core.transfer.TransferControlBlock;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -118,6 +119,20 @@ public abstract class IRODSGenericAO implements IRODSAccessObject {
 	 * (non-Javadoc)
 	 * 
 	 * @see
+	 * org.irods.jargon.core.pub.IRODSAccessObject#getDefaultTransferControlBlock
+	 * ()
+	 */
+	@Override
+	public TransferControlBlock buildDefaultTransferControlBlockBasedOnJargonProperties()
+			throws JargonException {
+		return getIRODSSession()
+				.buildDefaultTransferControlBlockBasedOnJargonProperties();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
 	 * org.irods.jargon.core.pub.IRODSAccessObject#getIRODSAccessObjectFactory()
 	 */
 	@Override
@@ -126,6 +141,11 @@ public abstract class IRODSGenericAO implements IRODSAccessObject {
 		return IRODSAccessObjectFactoryImpl.instance(irodsSession);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.pub.IRODSAccessObject#getIRODSFileFactory()
+	 */
 	@Override
 	public IRODSFileFactory getIRODSFileFactory() throws JargonException {
 		return IRODSAccessObjectFactoryImpl.instance(irodsSession)

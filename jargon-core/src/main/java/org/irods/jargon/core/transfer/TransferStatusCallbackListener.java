@@ -1,6 +1,3 @@
-/**
- * 
- */
 package org.irods.jargon.core.transfer;
 
 import org.irods.jargon.core.exception.JargonException;
@@ -12,6 +9,13 @@ import org.irods.jargon.core.exception.JargonException;
  * 
  */
 public interface TransferStatusCallbackListener {
+
+	/**
+	 * Valid callback responses for overwrite messages
+	 */
+	public enum CallbackResponse {
+		YES_THIS_FILE, NO_THIS_FILE, YES_FOR_ALL, NO_FOR_ALL, CANCEL
+	}
 
 	/**
 	 * Method that will receive a callback on the status of a transfer
@@ -26,7 +30,7 @@ public interface TransferStatusCallbackListener {
 	 *            information on the transfer.
 	 * @throws JargonException
 	 */
-	public void statusCallback(final TransferStatus transferStatus)
+	void statusCallback(final TransferStatus transferStatus)
 			throws JargonException;
 
 	/**
@@ -36,7 +40,24 @@ public interface TransferStatusCallbackListener {
 	 * 
 	 * @throws JargonException
 	 */
-	public void overallStatusCallback(final TransferStatus transferStatus)
+	void overallStatusCallback(final TransferStatus transferStatus)
 			throws JargonException;
 
+	/**
+	 * A callback from a running transfer will occur if a file exists during an
+	 * operation, and this method provides an opportunity for the client to
+	 * determine this behavior in real time by answering the call back.
+	 * 
+	 * @param irodsAbsolutePath
+	 *            <code>String</code> with the absolute path to the file or
+	 *            collection to be over-written.
+	 * @param isCollection
+	 *            <code>boolean</code> that hints that the path is a collection,
+	 *            versus a data object. This is mostly useful for creating a
+	 *            more specific dialog in the case of a user interface.
+	 * @return {@link CallbackResponse} enum value determining the behavior of
+	 *         overwrites for the given transfer.
+	 */
+	CallbackResponse transferAsksWhetherToForceOperation(
+			final String irodsAbsolutePath, final boolean isCollection);
 }
