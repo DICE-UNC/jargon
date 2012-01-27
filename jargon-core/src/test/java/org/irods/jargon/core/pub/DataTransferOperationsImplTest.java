@@ -1079,8 +1079,7 @@ public class DataTransferOperationsImplTest {
 		// generate a local scratch file
 		String testFileName = "testPutWithUrl.txt";
 		String testRetrievedFileName = "testPutWithUrlRetreived.txt";
-		String testUrl = "http://www.irods.org"; // TODO: make a parameter?
-
+		String testUrl = "http://qa5.iplantcollaborative.org/files/fastq/landsberg.fastq.txt";
 		String targetIrodsFile = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'

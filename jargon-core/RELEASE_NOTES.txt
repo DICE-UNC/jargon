@@ -1,8 +1,8 @@
 
 *'''Project''': Jargon-core - IRODS Java API
 *'''Date''': 1/26/2012
-*'''Release Version''': 3.0.0.1 Release
-*'''git tag''': jargon-3.0.0.1
+*'''Release Version''': 3.0.0.2 Snapshot (work in progress)
+*'''git tag''': xxx
 
 ==News==
 
@@ -41,32 +41,8 @@ Note that the following bug and feature requests are logged in GForge with relat
 
 ==Bug Fixes==
 
-[#494] looses localIRODSTransfer data on final update
-[#496] BAD_INPUT_DESC_INDEX errors are being sent to irods client
-[#502] bug in synch
-[#519] tolerate quote in data name for acl query
-[#547] error running old style rule via irods file
-[#548] user list all not ordered
-[#546] handle setting blank comment on data or collection, causing delete of comment AVU data
-[#565] copy of directories with empty child dirs leaves out empty directories
-[#566] handle duplicate comments on collections and data objects
-[#601] error in collection list and search get full object under root
+
 
 
 ==Features==
 
-[#483] pool to share single conn - initial implementation of commons-pool to share a single connection from multiple threads
-[#499] add thumbnail generation facility to Jargon data utls
-[#500] enhanced 3.0 rule parsing and load rule from resource
-[#515] add irods file factory support for uri file create without user info
-[#114] support for mounted collections, cross zone browsing, and soft links
- 	* Added support for obj stat, initial ObjStat domain object [work in progress]
- 	* Added cross zone query capability and tests
-[#533] consolidate and simplfy move methods in DataTransferOperations
-[#536] User group CRUD functionality and tests
-[#535] shopping cart capability in idrop web and idrop lite
-	*Added package to data utils for shopping cart maintenance, serialization, de-serialization
-[#578] Temp password as another user
-[#574] Added more capable Stream2Stream copy for input stream to target file, supporting iRODS file with jargon properties
-support and connection re-routing capability automatically.
-[#613] add method def for putOperationURL()
