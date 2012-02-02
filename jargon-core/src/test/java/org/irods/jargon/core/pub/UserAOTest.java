@@ -89,6 +89,8 @@ public class UserAOTest {
 	@Test
 	public void testFindWhere() throws Exception {
 
+		String testUserName = testingProperties
+		.getProperty(TestingPropertiesHelper.IRODS_USER_KEY);
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
 
@@ -98,7 +100,9 @@ public class UserAOTest {
 
 		StringBuilder sb = new StringBuilder();
 		sb.append(RodsGenQueryEnum.COL_USER_NAME.getName());
-		sb.append(" LIKE 't%'");
+		sb.append(" LIKE '");
+		sb.append(testUserName.charAt(0));
+		sb.append("%'");
 		List<User> users = userAO.findWhere(sb.toString());
 		Assert.assertTrue("no users returned", users.size() > 0);
 
