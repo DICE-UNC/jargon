@@ -41,6 +41,7 @@ Note that the following bug and feature requests are logged in GForge with relat
 
 ==Bug Fixes==
 
+ [#621] error reading file w/group permissions
 
 
 

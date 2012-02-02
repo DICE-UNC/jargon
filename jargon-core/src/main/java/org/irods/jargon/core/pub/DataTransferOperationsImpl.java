@@ -1935,6 +1935,14 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 		IRODSFile callbackTargetIrodsFile = this.getIRODSFileFactory()
 				.instanceIRODSFile(callbackTargetIrodsPath);
 		callbackTargetIrodsFile.setResource(targetIrodsFile.getResource());
+
+		/*
+		 * Note that the presence of the callback listener will cause errors to
+		 * flow back to the listener with a status of failure. No callback
+		 * listener will cause JargonException to filter back up, and these
+		 * would be propogated back to the caller from this method
+		 */
+
 		transferOperationsHelper.processPutOfURL(sourceURL,
 				callbackTargetIrodsFile, transferStatusCallbackListener,
 				operativeTransferControlBlock);

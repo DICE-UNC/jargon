@@ -43,6 +43,7 @@ public class DataTransferOperationsImplTest {
 	private static org.irods.jargon.testutils.AssertionHelper assertionHelper = null;
 	private static IRODSFileSystem irodsFileSystem = null;
 
+
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		irodsFileSystem = IRODSFileSystem.instance();
@@ -1474,7 +1475,7 @@ public class DataTransferOperationsImplTest {
 		// generate a local scratch file
 		String testFileName = "testPutWithUrl.txt";
 		String testRetrievedFileName = "testPutWithUrlRetreived.txt";
-		String testUrl = "http://www.irods.org";
+		String testUrl = "http://www.renci.org/~lisa/bigiPlantFile.txt";
 		String targetIrodsFile = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
@@ -2801,6 +2802,7 @@ public class DataTransferOperationsImplTest {
 		Assert.assertNotNull("null jargonProperties", jargonProperties);
 	}
 
+	@SuppressWarnings("deprecation")
 	@Test
 	public void testCopyCollectionToTarget() throws Exception {
 
@@ -3131,6 +3133,7 @@ public class DataTransferOperationsImplTest {
 
 	}
 
+	@SuppressWarnings("deprecation")
 	@Test
 	public void testCopyCollectionWithAnEmptyChildCollectionToTarget()
 			throws Exception {
@@ -3180,6 +3183,7 @@ public class DataTransferOperationsImplTest {
 
 	}
 
+	@SuppressWarnings("deprecation")
 	@Test(expected = DuplicateDataException.class)
 	public void testCopyCollectionToSelfParent() throws Exception {
 
@@ -3223,6 +3227,7 @@ public class DataTransferOperationsImplTest {
 
 	}
 
+	@SuppressWarnings("deprecation")
 	@Test(expected = DuplicateDataException.class)
 	public void testCopyCollectionToSelfParentWhenFile() throws Exception {
 
@@ -3252,6 +3257,7 @@ public class DataTransferOperationsImplTest {
 				false, null);
 	}
 
+	@SuppressWarnings("deprecation")
 	@Test
 	public void testCopyCollectionNoForceNoOverwriteTransferControlBlock()
 			throws Exception {
@@ -3308,6 +3314,7 @@ public class DataTransferOperationsImplTest {
 	}
 
 	// @Test
+	@SuppressWarnings("deprecation")
 	@Ignore
 	public void testCopyCollectionWithCancelThenRestart() throws Exception {
 

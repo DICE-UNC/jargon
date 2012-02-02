@@ -64,7 +64,8 @@ final class TransferOperationsHelper {
 
 		this.dataObjectAO = new DataObjectAOImpl(irodsSession, irodsAccount);
 		this.collectionAO = new CollectionAOImpl(irodsSession, irodsAccount);
-		this.stream2StreamAO = new Stream2StreamAOImpl(irodsSession, irodsAccount);
+		this.stream2StreamAO = new Stream2StreamAOImpl(irodsSession,
+				irodsAccount);
 
 	}
 
@@ -1028,9 +1029,11 @@ final class TransferOperationsHelper {
 			}
 
 			log.info("filter passed, process...");
-			
-			IRODSFile irodsSourceFile = dataObjectAO.getIRODSFileFactory().instanceIRODSFile(irodsSourceFileAbsolutePath);
-			IRODSFile irodsTargetFile = dataObjectAO.getIRODSFileFactory().instanceIRODSFile(irodsTargetFileAbsolutePath);
+
+			IRODSFile irodsSourceFile = dataObjectAO.getIRODSFileFactory()
+					.instanceIRODSFile(irodsSourceFileAbsolutePath);
+			IRODSFile irodsTargetFile = dataObjectAO.getIRODSFileFactory()
+					.instanceIRODSFile(irodsTargetFileAbsolutePath);
 			irodsTargetFile.setResource(targetResource);
 			dataObjectAO.copyIRODSDataObject(irodsSourceFile, irodsTargetFile,
 					transferControlBlock, transferStatusCallbackListener);
@@ -1075,91 +1078,91 @@ final class TransferOperationsHelper {
 		}
 	}
 
-//}
+	// }
 
-/**
- * Put a URL to iRODS.
- * 
- * @param sourceURL
- *            <code>String</code> of the URL that will be the
- *            source of the put.
- * @param targetIrodsFile
- *            {@link org.irods.jargon.core.pub.io.File} that is the remote
- *            file on iRODS which is the target of the put.
- * @param transferStatusCallbackListener
- *            {@link org.irods.jargon.core.transfer.TransferStatusCallbackListener}
- *            implementation that will receive callbacks of success/failure
- *            of each individual file transfer. This may be set to
- *            <code>null</code>, in which case, exceptions that are thrown
- *            will be rethrown by this method to the caller.
- * @param transferControlBlock
- *            {@link org.irods.jargon.core.transfer.TransferControlBlock}
- *            implementation that is the communications mechanism between
- *            the initiator of the transfer and the transfer process.
- * @throws JargonException
- */
-protected void processPutOfURL(
-		final String sourceURL,
-		final IRODSFile targetIrodsFile,
-		final TransferStatusCallbackListener transferStatusCallbackListener,
-		final TransferControlBlock transferControlBlock)
-		throws JargonException {
+	/**
+	 * Put a URL to iRODS.
+	 * 
+	 * @param sourceURL
+	 *            <code>String</code> of the URL that will be the source of the
+	 *            put.
+	 * @param targetIrodsFile
+	 *            {@link org.irods.jargon.core.pub.io.File} that is the remote
+	 *            file on iRODS which is the target of the put.
+	 * @param transferStatusCallbackListener
+	 *            {@link org.irods.jargon.core.transfer.TransferStatusCallbackListener}
+	 *            implementation that will receive callbacks of success/failure
+	 *            of each individual file transfer. This may be set to
+	 *            <code>null</code>, in which case, exceptions that are thrown
+	 *            will be rethrown by this method to the caller.
+	 * @param transferControlBlock
+	 *            {@link org.irods.jargon.core.transfer.TransferControlBlock}
+	 *            implementation that is the communications mechanism between
+	 *            the initiator of the transfer and the transfer process.
+	 * @throws JargonException
+	 */
+	protected void processPutOfURL(
+			final String sourceURL,
+			final IRODSFile targetIrodsFile,
+			final TransferStatusCallbackListener transferStatusCallbackListener,
+			final TransferControlBlock transferControlBlock)
+			throws JargonException {
 
-	log.info("put of an url");
+		log.info("put of an url");
 
-	if (sourceURL == null) {
-		throw new IllegalArgumentException("null sourceURL");
-	}
-
-	if (targetIrodsFile == null) {
-		throw new IllegalArgumentException("null targetIrodsFile");
-	}
-
-	if (transferControlBlock == null) {
-		throw new IllegalArgumentException("null transferControlBlock");
-	}
-	
-	URL url = null;
-	URLConnection connection = null;
-	InputStream inStream = null;
-	int urlSize = 0;
-	try {
-		url = new URL(sourceURL);
-		connection = url.openConnection();
-		urlSize = connection.getContentLength();
-			inStream = new BufferedInputStream(url.openStream());
-	} catch (MalformedURLException e) {
-		log.error("Cannot get size of specified URL: {}", sourceURL);
-		e.printStackTrace();
-		throw new IllegalArgumentException("invalid URL");
-	} catch (IOException e) {
-		log.error("Cannot get size of specified URL: {}", sourceURL);
-		e.printStackTrace();
-		throw new IllegalArgumentException("invalid URL");
-	}
-	
-
-	try {
-
-		int totalFiles = 0;
-		int totalFilesSoFar = 0;
-
-		totalFilesSoFar = transferControlBlock
-				.incrementFilesTransferredSoFar();
-		totalFiles = transferControlBlock.getTotalFilesToTransfer();
-
-		if (transferStatusCallbackListener != null) {
-
-			TransferStatus status = TransferStatus.instance(
-					TransferType.PUT, sourceURL,
-					targetIrodsFile.getAbsolutePath(), targetIrodsFile
-							.getResource(), urlSize, urlSize, totalFilesSoFar, totalFiles,
-					TransferState.IN_PROGRESS_START_FILE, dataObjectAO
-							.getIRODSAccount().getHost(), dataObjectAO
-							.getIRODSAccount().getZone());
-
-			transferStatusCallbackListener.statusCallback(status);
+		if (sourceURL == null) {
+			throw new IllegalArgumentException("null sourceURL");
 		}
+
+		if (targetIrodsFile == null) {
+			throw new IllegalArgumentException("null targetIrodsFile");
+		}
+
+		if (transferControlBlock == null) {
+			throw new IllegalArgumentException("null transferControlBlock");
+		}
+
+		URL url = null;
+		URLConnection connection = null;
+		InputStream inStream = null;
+		int urlSize = 0;
+		try {
+			url = new URL(sourceURL);
+			connection = url.openConnection();
+			urlSize = connection.getContentLength();
+			inStream = new BufferedInputStream(url.openStream());
+		} catch (MalformedURLException e) {
+			log.error("Cannot get size of specified URL: {}", sourceURL);
+			e.printStackTrace();
+			throw new IllegalArgumentException("invalid URL");
+		} catch (IOException e) {
+			log.error("Cannot get size of specified URL: {}", sourceURL);
+			e.printStackTrace();
+			throw new IllegalArgumentException("invalid URL");
+		}
+
+		try {
+
+			int totalFiles = 0;
+			int totalFilesSoFar = 0;
+
+			totalFilesSoFar = transferControlBlock
+					.incrementFilesTransferredSoFar();
+			totalFiles = transferControlBlock.getTotalFilesToTransfer();
+
+			if (transferStatusCallbackListener != null) {
+
+				TransferStatus status = TransferStatus.instance(
+						TransferType.PUT, sourceURL, targetIrodsFile
+								.getAbsolutePath(), targetIrodsFile
+								.getResource(), urlSize, urlSize,
+						totalFilesSoFar, totalFiles,
+						TransferState.IN_PROGRESS_START_FILE, dataObjectAO
+								.getIRODSAccount().getHost(), dataObjectAO
+								.getIRODSAccount().getZone());
+
+				transferStatusCallbackListener.statusCallback(status);
+			}
 
 			InputStream transferStream = inStream;
 			if (transferStatusCallbackListener != null) {
@@ -1173,58 +1176,59 @@ protected void processPutOfURL(
 			}
 
 			stream2StreamAO.transferStreamToFileUsingIOStreams(transferStream,
-					(File) targetIrodsFile,
-				urlSize, 0);
+					(File) targetIrodsFile, urlSize, 0);
 
-		if (transferStatusCallbackListener != null) {
+			if (transferStatusCallbackListener != null) {
 
-			TransferStatus status = TransferStatus.instance(
-					TransferType.PUT, sourceURL,
-					targetIrodsFile.getAbsolutePath(), targetIrodsFile
-							.getResource(), urlSize, urlSize, totalFilesSoFar, totalFiles,
-					TransferState.IN_PROGRESS_COMPLETE_FILE, dataObjectAO
-							.getIRODSAccount().getHost(), dataObjectAO
-							.getIRODSAccount().getZone());
+				TransferStatus status = TransferStatus.instance(
+						TransferType.PUT, sourceURL, targetIrodsFile
+								.getAbsolutePath(), targetIrodsFile
+								.getResource(), urlSize, urlSize,
+						totalFilesSoFar, totalFiles,
+						TransferState.IN_PROGRESS_COMPLETE_FILE, dataObjectAO
+								.getIRODSAccount().getHost(), dataObjectAO
+								.getIRODSAccount().getZone());
 
-			transferStatusCallbackListener.statusCallback(status);
+				transferStatusCallbackListener.statusCallback(status);
+			}
+
+		} catch (Exception je) {
+			// may rethrow or send back to the callback listener
+			log.error("exception in transfer", je);
+
+			int totalFiles = 0;
+			int totalFilesSoFar = 0;
+
+			if (transferControlBlock != null) {
+				transferControlBlock.reportErrorInTransfer();
+				totalFiles = transferControlBlock.getTotalFilesToTransfer();
+				totalFilesSoFar = transferControlBlock
+						.getTotalFilesTransferredSoFar();
+			}
+
+			if (transferStatusCallbackListener != null) {
+				log.error("exception will be passed back to existing callback listener");
+
+				TransferStatus status = TransferStatus.instanceForException(
+						TransferType.PUT, sourceURL,
+						targetIrodsFile.getAbsolutePath(),
+						targetIrodsFile.getResource(), urlSize,
+						targetIrodsFile.length(), totalFilesSoFar, totalFiles,
+						je, dataObjectAO.getIRODSAccount().getHost(),
+						dataObjectAO.getIRODSAccount().getZone());
+
+				transferStatusCallbackListener.statusCallback(status);
+
+			} else {
+				log.error("exception will be re-thrown, as there is no status callback listener");
+				throw new JargonException(
+						"exception thrown in transfer process, no callback listener supplied",
+						je);
+
+			}
+
 		}
-		
-	} catch (JargonException je) {
-		// may rethrow or send back to the callback listener
-		log.error("exception in transfer", je);
-
-		int totalFiles = 0;
-		int totalFilesSoFar = 0;
-
-		if (transferControlBlock != null) {
-			transferControlBlock.reportErrorInTransfer();
-			totalFiles = transferControlBlock.getTotalFilesToTransfer();
-			totalFilesSoFar = transferControlBlock
-					.getTotalFilesTransferredSoFar();
-		}
-
-		if (transferStatusCallbackListener != null) {
-			log.warn("exception will be passed back to existing callback listener");
-
-			TransferStatus status = TransferStatus.instanceForException(
-					TransferType.PUT, sourceURL,
-					targetIrodsFile.getAbsolutePath(),
-					targetIrodsFile.getResource(), urlSize,
-					targetIrodsFile.length(), totalFilesSoFar, totalFiles,
-					je, dataObjectAO.getIRODSAccount().getHost(),
-					dataObjectAO.getIRODSAccount().getZone());
-
-			transferStatusCallbackListener.statusCallback(status);
-
-		} else {
-			log.warn("exception will be re-thrown, as there is no status callback listener");
-			throw je;
-
-		}
-	
 	}
 }
-}
-
 
 // DataObjInp_PI><objPath>/test1/home/test1/jargon-scratch/TransferManagerTest/enqueueAGet/testSubdirlvl1nbr0/testFile0.txt</objPath>
