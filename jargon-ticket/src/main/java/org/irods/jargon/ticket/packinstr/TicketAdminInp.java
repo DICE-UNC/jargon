@@ -79,7 +79,7 @@ public class TicketAdminInp extends AbstractIRODSPackingInstruction {
 	public Tag getTagValue() throws JargonException {
 		Tag message = new Tag(PI_TAG, new Tag[] { new Tag(ARG1, arg1),
 				new Tag(ARG2, arg2), new Tag(ARG3, arg3), new Tag(ARG4, arg4),
-				new Tag(ARG4, arg4), new Tag(ARG5, arg5), new Tag(ARG6, arg6) });
+				new Tag(ARG5, arg5), new Tag(ARG6, arg6) });
 
 		return message;
 	}
