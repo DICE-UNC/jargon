@@ -30,6 +30,11 @@ public class TicketAdminInp extends AbstractIRODSPackingInstruction {
 	private static final String ARG6 = "arg6";
 	private static final String BLANK = "";
 	private static final Pattern MODE = Pattern.compile("read|write");
+	private static final Pattern MODIFY_ACTION = Pattern.compile("uses|expire|write-file|write-byte");
+	private static final Pattern MODIFY_ADD_REM_ACTION = Pattern.compile("add|remove");
+	private static final Pattern MODIFY_OBJECT_TYPE = Pattern.compile("user|group|host");
+	private static final Pattern MODIFY_DATE_FORMAT = Pattern.compile(
+			"^(20|21|22)\\d\\d[- /.](0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])[\\. /.]([01][0-9]||2[0123])[: /.]([0-5][0-9])[: /.]([0-5][0-9])$");
 
 	private String arg1 = "";
 	private String arg2 = "";
@@ -85,7 +90,76 @@ public class TicketAdminInp extends AbstractIRODSPackingInstruction {
 				BLANK, BLANK, BLANK, BLANK);
 	}
 	
-	// TODO: Add support for modify ticket
+	public static TicketAdminInp instanceForModify(final String ticketId, String action,
+			String objectTypeOrInt, String modObject) {
+		
+		String obj = BLANK;
+		Matcher matcher = null;
+		Integer theInt = 0;
+		
+		if (ticketId == null || ticketId.isEmpty()) {
+			throw new IllegalArgumentException("null or empty ticket id");
+		}
+		
+		// check and see if action is set
+		if (action == null || action.isEmpty()) {
+			throw new IllegalArgumentException("null or empty modify action");
+		}
+		
+		// see if this is an add or remove
+		if (MODIFY_ADD_REM_ACTION.matcher(action).matches()) {
+			
+			if (objectTypeOrInt == null || objectTypeOrInt.isEmpty()) {
+				throw new IllegalArgumentException("null or empty user, group, or host");
+			}
+			
+			if (!MODIFY_OBJECT_TYPE.matcher(objectTypeOrInt).matches()){
+				throw new IllegalArgumentException("must choose user, group, or host for ticket mod add/remove");
+			}
+			
+			if (modObject == null || modObject.isEmpty()) {
+				throw new IllegalArgumentException("null or empty user, group, or host");
+			}
+			obj = modObject;
+		}
+		
+		// else check for other type of actions
+		else
+		if (MODIFY_ACTION.matcher(action).matches()) {
+			
+			if (action.equals("expire")) {
+				// check to make sure objectTypeOrInt is set
+				if (objectTypeOrInt == null || objectTypeOrInt.isEmpty()) {
+					throw new IllegalArgumentException("null or empty expire date");
+				}
+				// check date format
+				if (!MODIFY_DATE_FORMAT.matcher(objectTypeOrInt).matches()) {
+					throw new IllegalArgumentException("illegal expire date");
+				}
+			}
+			// else this action is uses, write-file or write-byte
+			else {
+				try {
+					theInt = Integer.parseInt(objectTypeOrInt);
+				}
+				catch(NumberFormatException ex) {
+					throw new IllegalArgumentException("illegal integer for uses, write-file, or write-byte");
+				}
+				if (theInt < 0) {
+					throw new IllegalArgumentException("illegal integer for uses, write-file, or write-byte");
+				}
+			}
+		}
+		
+		// else this is an illegal action
+		else {
+			throw new IllegalArgumentException(
+					"illegal modify action - use add, remove, uses, expire, write-file, or write-byte");
+		}
+		
+		return new TicketAdminInp(TICKET_ADMIN_INP_API_NBR, "mod", action,
+				objectTypeOrInt, obj, BLANK, BLANK);
+	}
 
 	/**
 	 * Private constructor for TicketAdminInp, use the instance() methods to

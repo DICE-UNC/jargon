@@ -344,5 +344,14 @@ public class TicketAdminInpTest {
 	// end ticket LIST and LIST-ALL tests
 	
 	// TODO: Add tests for modify ticket
+	// ticket MODIFY tests
+	@Test
+	public void testModifyTicket() throws Exception {
+
+		TicketAdminInp pi = TicketAdminInp.instanceForModify(ticketId, "expire", "2012-05-07.23:00:00", null);
+
+		Assert.assertNotNull(pi);
+	}
+	// end ticket MODIFY tests
 
 }
