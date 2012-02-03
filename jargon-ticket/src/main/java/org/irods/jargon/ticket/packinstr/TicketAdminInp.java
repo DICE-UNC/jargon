@@ -3,6 +3,9 @@ package org.irods.jargon.ticket.packinstr;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.packinstr.AbstractIRODSPackingInstruction;
 import org.irods.jargon.core.packinstr.Tag;
+import org.irods.jargon.core.pub.io.IRODSFile;
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
 
 /**
  * Packing instruction for admin functions for the ticket subsystem in iRODS.
@@ -27,6 +30,7 @@ public class TicketAdminInp extends AbstractIRODSPackingInstruction {
 	private static final String ARG5 = "arg5";
 	private static final String ARG6 = "arg6";
 	private static final String BLANK = "";
+	private static final Pattern MODE = Pattern.compile("read|write");
 
 	private String arg1 = "";
 	private String arg2 = "";
@@ -41,6 +45,28 @@ public class TicketAdminInp extends AbstractIRODSPackingInstruction {
 		}
 		return new TicketAdminInp(TICKET_ADMIN_INP_API_NBR, "delete", ticketId,
 				BLANK, BLANK, BLANK, BLANK);
+	}
+	
+	public static TicketAdminInp instanceForCreate(final String mode, String fullPath, String key) {
+		if (mode == null || mode.isEmpty()) {
+			throw new IllegalArgumentException("null or empty permission mode");
+		}
+		Matcher matcher = MODE.matcher(mode);
+		if (!matcher.matches()) {
+			throw new IllegalArgumentException("illegal permission mode");
+		}
+		if (fullPath == null || (fullPath.isEmpty())) {
+			throw new IllegalArgumentException("null or empty full path name");
+		}
+		// key is optional?
+		if (key == null || key.isEmpty()) {
+			return new TicketAdminInp(TICKET_ADMIN_INP_API_NBR, "create", mode,
+					fullPath, BLANK, BLANK, BLANK);
+		}
+		else {
+			return new TicketAdminInp(TICKET_ADMIN_INP_API_NBR, "create", mode,
+					fullPath, key, BLANK, BLANK);
+		}
 	}
 
 	/**
