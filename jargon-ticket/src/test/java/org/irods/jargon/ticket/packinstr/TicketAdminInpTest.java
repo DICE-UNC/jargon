@@ -26,7 +26,7 @@ public class TicketAdminInpTest {
 	public static void tearDownAfterClass() throws Exception {
 	}
 	
-	// DELETE ticket tests
+	// ticket DELETE tests
 	@Test
 	public void testDeleteTicket() throws Exception {
 
@@ -51,8 +51,6 @@ public class TicketAdminInpTest {
 	@Test
 	public void testDeleteTicketCheckXML() throws Exception {
 
-		String ticketId = "ticket_key";
-
 		TicketAdminInp pi = TicketAdminInp.instanceForDelete(ticketId);
 		String tagOut = pi.getParsedTags();
 
@@ -68,9 +66,9 @@ public class TicketAdminInpTest {
 		Assert.assertEquals("unexpected XML protocol result", sb.toString(),
 				tagOut);
 	}
-	// end DELETE ticket tests
+	// end ticket DELETE tests
 	
-	// CREATE ticket tests
+	// ticket CREATE tests
 	@Test
 	public void testCreateTicketWithKey() throws Exception {
 		TicketAdminInp pi = TicketAdminInp.instanceForCreate(modeRead, afile, ticketId);
@@ -230,6 +228,121 @@ public class TicketAdminInpTest {
 		
 		TicketAdminInp.instanceForCreate(modeRead, "", ticketId);
 	}
-	// end CREATE ticket tests
+	// end ticket CREATE tests
+	
+	
+	// ticket LIST and LIST-ALL tests
+	@Test
+	public void testListTicket() throws Exception {
+
+		TicketAdminInp pi = TicketAdminInp.instanceForList(ticketId);
+
+		Assert.assertNotNull(pi);
+	}
+	
+	
+	@Test
+	public void testListTicketCheckXML() throws Exception {
+
+		TicketAdminInp pi = TicketAdminInp.instanceForList(ticketId);
+		String tagOut = pi.getParsedTags();
+
+		StringBuilder sb = new StringBuilder();
+		sb.append("<ticketAdminInp_PI><arg1>list</arg1>\n");
+		sb.append("<arg2>ticket_key</arg2>\n");
+		sb.append("<arg3></arg3>\n");
+		sb.append("<arg4></arg4>\n");
+		sb.append("<arg5></arg5>\n");
+		sb.append("<arg6></arg6>\n");
+		sb.append("</ticketAdminInp_PI>\n");
+
+		Assert.assertEquals("unexpected XML protocol result", sb.toString(),
+				tagOut);
+	}
+	
+	@Test
+	public void testListTicketWithNullId() throws Exception {
+
+		TicketAdminInp pi = TicketAdminInp.instanceForList(null);
+
+		Assert.assertNotNull(pi);
+	}
+	
+	@Test
+	public void testListTicketWithNullIdCheckXML() throws Exception {
+
+		TicketAdminInp pi = TicketAdminInp.instanceForList(null);
+		String tagOut = pi.getParsedTags();
+
+		StringBuilder sb = new StringBuilder();
+		sb.append("<ticketAdminInp_PI><arg1>list</arg1>\n");
+		sb.append("<arg2></arg2>\n");
+		sb.append("<arg3></arg3>\n");
+		sb.append("<arg4></arg4>\n");
+		sb.append("<arg5></arg5>\n");
+		sb.append("<arg6></arg6>\n");
+		sb.append("</ticketAdminInp_PI>\n");
+
+		Assert.assertEquals("unexpected XML protocol result", sb.toString(),
+				tagOut);
+	}
+	
+	@Test
+	public void testListTicketWithEmptyId() throws Exception {
+
+		TicketAdminInp pi = TicketAdminInp.instanceForList("");
+
+		Assert.assertNotNull(pi);
+	}
+	
+	@Test
+	public void testListTicketWithEmptyIdCheckXML() throws Exception {
+
+		TicketAdminInp pi = TicketAdminInp.instanceForList("");
+		String tagOut = pi.getParsedTags();
+
+		StringBuilder sb = new StringBuilder();
+		sb.append("<ticketAdminInp_PI><arg1>list</arg1>\n");
+		sb.append("<arg2></arg2>\n");
+		sb.append("<arg3></arg3>\n");
+		sb.append("<arg4></arg4>\n");
+		sb.append("<arg5></arg5>\n");
+		sb.append("<arg6></arg6>\n");
+		sb.append("</ticketAdminInp_PI>\n");
+
+		Assert.assertEquals("unexpected XML protocol result", sb.toString(),
+				tagOut);
+	}
+	
+	@Test
+	public void testListAllTicket() throws Exception {
+
+		TicketAdminInp pi = TicketAdminInp.instanceForListAll();
+
+		Assert.assertNotNull(pi);
+	}
+	
+	
+	@Test
+	public void testListAllTicketCheckXML() throws Exception {
+
+		TicketAdminInp pi = TicketAdminInp.instanceForListAll();
+		String tagOut = pi.getParsedTags();
+
+		StringBuilder sb = new StringBuilder();
+		sb.append("<ticketAdminInp_PI><arg1>list-all</arg1>\n");
+		sb.append("<arg2></arg2>\n");
+		sb.append("<arg3></arg3>\n");
+		sb.append("<arg4></arg4>\n");
+		sb.append("<arg5></arg5>\n");
+		sb.append("<arg6></arg6>\n");
+		sb.append("</ticketAdminInp_PI>\n");
+
+		Assert.assertEquals("unexpected XML protocol result", sb.toString(),
+				tagOut);
+	}
+	// end ticket LIST and LIST-ALL tests
+	
+	// TODO: Add tests for modify ticket
 
 }

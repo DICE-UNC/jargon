@@ -3,7 +3,6 @@ package org.irods.jargon.ticket.packinstr;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.packinstr.AbstractIRODSPackingInstruction;
 import org.irods.jargon.core.packinstr.Tag;
-import org.irods.jargon.core.pub.io.IRODSFile;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 
@@ -47,7 +46,9 @@ public class TicketAdminInp extends AbstractIRODSPackingInstruction {
 				BLANK, BLANK, BLANK, BLANK);
 	}
 	
-	public static TicketAdminInp instanceForCreate(final String mode, String fullPath, String key) {
+	public static TicketAdminInp instanceForCreate(final String mode, String fullPath, String ticketId) {
+		String id = BLANK;
+		
 		if (mode == null || mode.isEmpty()) {
 			throw new IllegalArgumentException("null or empty permission mode");
 		}
@@ -58,16 +59,33 @@ public class TicketAdminInp extends AbstractIRODSPackingInstruction {
 		if (fullPath == null || (fullPath.isEmpty())) {
 			throw new IllegalArgumentException("null or empty full path name");
 		}
-		// key is optional?
-		if (key == null || key.isEmpty()) {
-			return new TicketAdminInp(TICKET_ADMIN_INP_API_NBR, "create", mode,
-					fullPath, BLANK, BLANK, BLANK);
+		// ticketId is optional?
+		if ((ticketId != null) && (!ticketId.isEmpty())) {
+			id = ticketId;
 		}
-		else {
-			return new TicketAdminInp(TICKET_ADMIN_INP_API_NBR, "create", mode,
-					fullPath, key, BLANK, BLANK);
-		}
+		return new TicketAdminInp(TICKET_ADMIN_INP_API_NBR, "create", mode,
+				fullPath, id, BLANK, BLANK);
 	}
+	// TODO: create another method for create with no ticketId param? public static TicketAdminInp instanceForCreate(final String mode, String fullPath)
+	
+	public static TicketAdminInp instanceForList(final String ticketId) {
+		String id = BLANK;
+		//ticketId is optional??
+		if ((ticketId != null) && (!ticketId.isEmpty())) {
+			id = ticketId;
+		}
+		return new TicketAdminInp(TICKET_ADMIN_INP_API_NBR, "list", id,
+					BLANK, BLANK, BLANK, BLANK);
+	}
+	// TODO: create another method for list with no param? public static TicketAdminInp instanceForList()
+	
+	public static TicketAdminInp instanceForListAll() {
+
+		return new TicketAdminInp(TICKET_ADMIN_INP_API_NBR, "list-all", BLANK,
+				BLANK, BLANK, BLANK, BLANK);
+	}
+	
+	// TODO: Add support for modify ticket
 
 	/**
 	 * Private constructor for TicketAdminInp, use the instance() methods to
