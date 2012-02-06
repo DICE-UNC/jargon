@@ -4,6 +4,8 @@ import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.packinstr.AbstractIRODSPackingInstruction;
 import org.irods.jargon.core.packinstr.Tag;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
@@ -106,8 +108,8 @@ public class TicketAdminInp extends AbstractIRODSPackingInstruction {
 			throw new IllegalArgumentException("null or empty modify add - user, group, or host");
 		}
 		
-		return new TicketAdminInp(TICKET_ADMIN_INP_API_NBR, "mod", "add",
-				addTypeEnum.getTextValue(), modObject, BLANK, BLANK);
+		return new TicketAdminInp(TICKET_ADMIN_INP_API_NBR, "mod", ticketId,
+				"add", addTypeEnum.getTextValue(), modObject, BLANK);
 	}
 	
 	public static TicketAdminInp instanceForModifyRemoveAccess(final String ticketId, 
@@ -126,8 +128,8 @@ public class TicketAdminInp extends AbstractIRODSPackingInstruction {
 			throw new IllegalArgumentException("null or empty modify remove - user, group, or host");
 		}
 		
-		return new TicketAdminInp(TICKET_ADMIN_INP_API_NBR, "mod", "remove",
-				addTypeEnum.getTextValue(), modObject, BLANK, BLANK);
+		return new TicketAdminInp(TICKET_ADMIN_INP_API_NBR, "mod", ticketId,
+				"remove", addTypeEnum.getTextValue(), modObject, BLANK);
 	}
 	
 	public static TicketAdminInp instanceForModifyNumberOfUses(final String ticketId, Integer numberOfUses) {
@@ -198,9 +200,22 @@ public class TicketAdminInp extends AbstractIRODSPackingInstruction {
 		
 	}
 	
-	// TODO: write another expire data method that takes JAVA TIME instead?
-	//public static TicketAdminInp instanceForModifyExpiration(final String ticketId, Date expirationDate) {	
-	//}
+	public static TicketAdminInp instanceForModifyExpiration(final String ticketId, Date expirationDate) {
+		
+		if (ticketId == null || ticketId.isEmpty()) {
+			throw new IllegalArgumentException("null or empty ticket id");
+		}
+		
+		if (expirationDate == null) {
+			throw new IllegalArgumentException("null expiration date");
+		}
+		
+		DateFormat df = new SimpleDateFormat("yyyy-MM-dd.HH:mm:ss");
+		String formattedDate = df.format(expirationDate);
+		
+		return new TicketAdminInp(TICKET_ADMIN_INP_API_NBR, "mod", ticketId,
+				"expire", formattedDate, BLANK, BLANK);
+	}
 
 	/**
 	 * Private constructor for TicketAdminInp, use the instance() methods to
