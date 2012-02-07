@@ -468,6 +468,20 @@ public final class IRODSAccessObjectFactoryImpl implements
 	/*
 	 * (non-Javadoc)
 	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.IRODSAccessObjectFactory#getProtocolExtensionPoint
+	 * (org.irods.jargon.core.connection.IRODSAccount)
+	 */
+	@Override
+	public ProtocolExtensionPoint getProtocolExtensionPoint(
+			final IRODSAccount irodsAccount) throws JargonException {
+		checkIrodsSessionSet();
+		return new ProtocolExtensionPointImpl(irodsSession, irodsAccount);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.irods.jargon.core.pub.IRODSAccessObjectFactory#getIrodsSession()
 	 */
 	@Override

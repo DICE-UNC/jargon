@@ -15,6 +15,7 @@ import org.irods.jargon.core.pub.FederatedUserAOTest;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactoryImplTest;
 import org.irods.jargon.core.pub.IRODSFileSystemTest;
 import org.irods.jargon.core.pub.IRODSGenQueryExecutorImplTest;
+import org.irods.jargon.core.pub.ProtocolExtensionPointImplTest;
 import org.irods.jargon.core.pub.QuotaAOImplTest;
 import org.irods.jargon.core.pub.RemoteExecutionOfCommandsAOImplTest;
 import org.irods.jargon.core.pub.ResourceAOTest;
@@ -44,7 +45,8 @@ import org.junit.runners.Suite;
 		FederatedCollectionAndDataObjectListAndSearchAOImplTest.class,
 		FederatedIRODSGenQueryExecutorImplTest.class,
 		FederatedDataTransferOperationsImplTest.class, UserAOHelperTest.class,
-		FederatedUserAOTest.class, FederatedCollectionAOImplTest.class })
+		FederatedUserAOTest.class, FederatedCollectionAOImplTest.class,
+		ProtocolExtensionPointImplTest.class })
 /**
  * Suite to run Access Object tests in org.irods.jargon.pub.*
  * <p/>

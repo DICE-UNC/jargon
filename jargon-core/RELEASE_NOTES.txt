@@ -47,3 +47,5 @@ Note that the following bug and feature requests are logged in GForge with relat
 
 ==Features==
 
+[#542] Ticket system support
+- added a ProtocolExtensionPoint to the org.irods.jargon.core.pub access objects to allow higher level packages to handle packing instructions
