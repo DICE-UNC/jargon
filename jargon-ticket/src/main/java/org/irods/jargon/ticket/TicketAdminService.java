@@ -1,11 +1,10 @@
 package org.irods.jargon.ticket;
 
 import org.irods.jargon.core.exception.JargonException;
-import org.irods.jargon.core.pub.IRODSAccessObject;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.ticket.packinstr.TicketCreateModeEnum;
 
-public interface TicketAO extends IRODSAccessObject {
+public interface TicketAdminService {
 	
 	/**
 	 * Create a ticket for access to iRODS
