@@ -2,7 +2,9 @@ package org.irods.jargon.ticket;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.packinstr.Tag;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
+import org.irods.jargon.core.pub.ProtocolExtensionPoint;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.ticket.packinstr.TicketAdminInp;
 import org.irods.jargon.ticket.packinstr.TicketCreateModeEnum;
@@ -15,6 +17,18 @@ public final class TicketAdminServiceImpl implements TicketAdminService {
 	private IRODSAccessObjectFactory irodsAccessObjectFactory;
 	private IRODSAccount irodsAccount;
 
+	/**
+	 * Default constructor takes the objects necessary to communicate with iRODS
+	 * via Access Objects
+	 * 
+	 * @param irodsAccessObjectFactory
+	 *            {@link IRODSAccessObjectFactory} that can create various
+	 *            access objects
+	 * @param irodsAccount
+	 *            {@link IRODSAccount} with login information for the target
+	 *            grid
+	 * @throws JargonException
+	 */
 	public TicketAdminServiceImpl(
 			final IRODSAccessObjectFactory irodsAccessObjectFactory,
 			final IRODSAccount irodsAccount)
@@ -48,6 +62,12 @@ public final class TicketAdminServiceImpl implements TicketAdminService {
 		TicketAdminInp ticketPI = TicketAdminInp.instanceForCreate(mode, file.getAbsolutePath(), ticketId);
 		log.debug("executing ticket PI");
 		
+		ProtocolExtensionPoint pep = irodsAccessObjectFactory
+				.getProtocolExtensionPoint(irodsAccount);
+		Tag ticketOperationResponse = pep.irodsFunction(ticketPI);
+
+		log.debug("recieved response from ticket operation:{}",
+				ticketOperationResponse);
 
 		return null;
 	}
