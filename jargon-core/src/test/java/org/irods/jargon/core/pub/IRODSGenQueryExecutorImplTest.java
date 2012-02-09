@@ -20,10 +20,6 @@ import org.irods.jargon.testutils.IRODSTestSetupUtilities;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.irods.jargon.testutils.filemanip.FileGenerator;
 import org.irods.jargon.testutils.filemanip.ScratchFileUtils;
-import org.irods.jargon.testutils.icommandinvoke.IcommandInvoker;
-import org.irods.jargon.testutils.icommandinvoke.IrodsInvocationContext;
-import org.irods.jargon.testutils.icommandinvoke.icommands.ImkdirCommand;
-import org.irods.jargon.testutils.icommandinvoke.icommands.IputCommand;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -44,6 +40,7 @@ public class IRODSGenQueryExecutorImplTest {
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
+		irodsFileSystem = IRODSFileSystem.instance();
 		TestingPropertiesHelper testingPropertiesLoader = new TestingPropertiesHelper();
 		testingProperties = testingPropertiesLoader.getTestProperties();
 		scratchFileUtils = new ScratchFileUtils(testingProperties);
@@ -61,28 +58,23 @@ public class IRODSGenQueryExecutorImplTest {
 
 		FileGenerator.generateManyFilesInGivenDirectory(IRODS_TEST_SUBDIR_PATH
 				+ '/' + collDir, testFilePrefix, testFileSuffix, 2000, 5, 10);
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
 
-		IrodsInvocationContext invocationContext = testingPropertiesHelper
-				.buildIRODSInvocationContextFromTestProperties(testingProperties);
-		IcommandInvoker invoker = new IcommandInvoker(invocationContext);
-
-		// make the put subdir
-		String targetIrodsCollection = testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH);
-		ImkdirCommand iMkdirCommand = new ImkdirCommand();
-		iMkdirCommand.setCollectionName(targetIrodsCollection);
-		invoker.invokeCommandAndGetResultAsString(iMkdirCommand);
+		IRODSFile putDir = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(
+						testingPropertiesHelper
+								.buildIRODSCollectionAbsolutePathFromTestProperties(
+										testingProperties,
+										IRODS_TEST_SUBDIR_PATH));
+		putDir.mkdirs();
 
 		// put the files by putting the collection
-		IputCommand iputCommand = new IputCommand();
-		iputCommand.setForceOverride(true);
-		iputCommand.setIrodsFileName(targetIrodsCollection);
-		iputCommand.setLocalFileName(absPath + collDir);
-		iputCommand.setRecursive(true);
-		invoker.invokeCommandAndGetResultAsString(iputCommand);
-
-		irodsFileSystem = IRODSFileSystem.instance();
+		DataTransferOperations dto = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataTransferOperations(
+						irodsAccount);
+		dto.putOperation(absPath + "/" + collDir, putDir.getAbsolutePath(), "",
+				null, null);
 
 	}
 
