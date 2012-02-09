@@ -20,4 +20,7 @@ public interface TicketAdminService {
 	 */
 	String createTicket(TicketCreateModeEnum mode, IRODSFile file, String ticketId) throws JargonException;
 
+	String createTicket(TicketCreateModeEnum mode, String file, String ticketId)
+			throws JargonException;
+
 }

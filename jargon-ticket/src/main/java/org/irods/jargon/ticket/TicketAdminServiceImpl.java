@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
 
 public final class TicketAdminServiceImpl implements TicketAdminService {
 	
-	Logger log = LoggerFactory.getLogger(this.getClass());
+	public static final Logger log = LoggerFactory.getLogger(TicketAdminServiceImpl.class);
 	private IRODSAccessObjectFactory irodsAccessObjectFactory;
 	private IRODSAccount irodsAccount;
 
@@ -33,6 +33,8 @@ public final class TicketAdminServiceImpl implements TicketAdminService {
 			final IRODSAccessObjectFactory irodsAccessObjectFactory,
 			final IRODSAccount irodsAccount)
 			throws JargonException {
+		this.irodsAccessObjectFactory = irodsAccessObjectFactory;
+		this.irodsAccount = irodsAccount;
 	}
 	
 	/*
@@ -60,6 +62,35 @@ public final class TicketAdminServiceImpl implements TicketAdminService {
 		log.debug("ticket creation mode is:{}", mode);
 
 		TicketAdminInp ticketPI = TicketAdminInp.instanceForCreate(mode, file.getAbsolutePath(), ticketId);
+		log.debug("executing ticket PI");
+		
+		ProtocolExtensionPoint pep = irodsAccessObjectFactory
+				.getProtocolExtensionPoint(irodsAccount);
+		Tag ticketOperationResponse = pep.irodsFunction(ticketPI);
+
+		log.debug("recieved response from ticket operation:{}",
+				ticketOperationResponse);
+
+		return null;
+	}
+	
+	@Override
+	public String createTicket(TicketCreateModeEnum mode, String file, String ticketId) throws JargonException {
+
+		if (file == null) {
+			throw new IllegalArgumentException("cannot create ticket with null IRODS file/collection");
+		}
+		
+		if (log.isDebugEnabled()) {
+			log.debug("creating at ticket for :{}", file);
+		}
+		
+		if (mode == null) {
+			throw new IllegalArgumentException("cannot create ticket with null create mode - read or write access");
+		}
+		log.debug("ticket creation mode is:{}", mode);
+
+		TicketAdminInp ticketPI = TicketAdminInp.instanceForCreate(mode, file, ticketId);
 		log.debug("executing ticket PI");
 		
 		ProtocolExtensionPoint pep = irodsAccessObjectFactory

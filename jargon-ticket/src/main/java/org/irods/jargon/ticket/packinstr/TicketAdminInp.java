@@ -66,8 +66,10 @@ public class TicketAdminInp extends AbstractIRODSPackingInstruction {
 			id = ticketId;
 		}
 		
-		return new TicketAdminInp(TICKET_ADMIN_INP_API_NBR, "create", mode.getTextValue(),
-				fullPath, id, BLANK, BLANK);
+//		return new TicketAdminInp(TICKET_ADMIN_INP_API_NBR, "create", mode.getTextValue(),
+//				fullPath, id, BLANK, BLANK);
+		return new TicketAdminInp(TICKET_ADMIN_INP_API_NBR, "create", id,
+				mode.getTextValue(), fullPath, BLANK, BLANK);
 	}
 	// TODO: create another method for create with no ticketId param? public static TicketAdminInp instanceForCreate(final String mode, String fullPath)
 	
