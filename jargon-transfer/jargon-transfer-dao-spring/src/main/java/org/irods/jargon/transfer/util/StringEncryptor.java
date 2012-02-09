@@ -15,8 +15,9 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.DESKeySpec;
 import javax.crypto.spec.DESedeKeySpec;
 
+import org.irods.jargon.core.utils.Base64;
+
 import sun.misc.BASE64Decoder;
-import sun.misc.BASE64Encoder;
 
 /**
  * @author Mike Conway - DICE (www.irods.org)
@@ -98,9 +99,10 @@ public class StringEncryptor {
 			cipher.init(Cipher.ENCRYPT_MODE, key);
 			byte[] cleartext = unencryptedString.getBytes(UNICODE_FORMAT);
 			byte[] ciphertext = cipher.doFinal(cleartext);
-
-			BASE64Encoder base64encoder = new BASE64Encoder();
-			return base64encoder.encode(ciphertext);
+			/*
+			 * Go from an unencrypted byte array to an encrypted byte array
+			 */
+			return Base64.toString(ciphertext);
 		} catch (Exception e) {
 			throw new EncryptionException(e);
 		}
