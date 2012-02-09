@@ -6,7 +6,7 @@
 		<version>3.0.0.2-SNAPSHOT</version>
 	</parent>
 	<groupId>org.irods.jargon</groupId>
-	<artifactId>jargon-Ticket</artifactId>
+	<artifactId>jargon-ticket</artifactId>
 	<name>Jargon Ticket</name>
 	<description>Support for the maintenane and use of the ticket feature of iRODS post version 3.0</description>
 	<dependencies>

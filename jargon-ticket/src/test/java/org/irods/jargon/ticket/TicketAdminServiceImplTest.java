@@ -1,21 +1,14 @@
 package org.irods.jargon.ticket;
 
-import java.io.File;
 import java.util.Properties;
+
 import org.irods.jargon.core.connection.IRODSAccount;
-import org.irods.jargon.core.connection.IRODSProtocolManager;
-import org.irods.jargon.core.connection.IRODSSession;
-import org.irods.jargon.core.connection.IRODSSimpleProtocolManager;
-import org.irods.jargon.core.pub.DataObjectAO;
 import org.irods.jargon.core.pub.DataTransferOperations;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
-import org.irods.jargon.core.pub.IRODSAccessObjectFactoryImpl;
 import org.irods.jargon.core.pub.IRODSFileSystem;
 import org.irods.jargon.core.pub.io.IRODSFile;
-import org.irods.jargon.core.pub.io.IRODSFileFactory;
 import org.irods.jargon.testutils.IRODSTestSetupUtilities;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
-import org.irods.jargon.testutils.TestingUtilsException;
 import org.irods.jargon.testutils.filemanip.FileGenerator;
 import org.irods.jargon.testutils.filemanip.ScratchFileUtils;
 import org.irods.jargon.ticket.packinstr.TicketCreateModeEnum;
@@ -28,9 +21,9 @@ public class TicketAdminServiceImplTest {
 	private static Properties testingProperties = new Properties();
 	private static TestingPropertiesHelper testingPropertiesHelper = new TestingPropertiesHelper();
 	private static IRODSFileSystem irodsFileSystem;
-//	private static final String IRODS_TEST_SUBDIR_PATH = "ticketAdminServiceImplTest";
-//	private static ScratchFileUtils scratchFileUtils = null;
-//	private static IRODSTestSetupUtilities irodsTestSetupUtilities = null;
+	private static final String IRODS_TEST_SUBDIR_PATH = "ticketAdminServiceImplTest";
+	private static ScratchFileUtils scratchFileUtils = null;
+	private static IRODSTestSetupUtilities irodsTestSetupUtilities = null;
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -38,10 +31,11 @@ public class TicketAdminServiceImplTest {
 		testingProperties = testingPropertiesLoader.getTestProperties();
 		irodsFileSystem = IRODSFileSystem.instance();
 		
-//		scratchFileUtils = new ScratchFileUtils(testingProperties);
-//		irodsTestSetupUtilities = new IRODSTestSetupUtilities();
-//		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
-//		irodsTestSetupUtilities.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
+		scratchFileUtils = new ScratchFileUtils(testingProperties);
+		irodsTestSetupUtilities = new IRODSTestSetupUtilities();
+		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
+		irodsTestSetupUtilities
+				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
 	}
 	
 	@AfterClass
@@ -90,21 +84,41 @@ public class TicketAdminServiceImplTest {
 	
 	
 	@Test
-	public void testCreateTicket() throws Exception {
+	public void testCreateTicketForDataObjectExists() throws Exception {
 		
-		String testFileName = "testCreateTicket.txt";
-		String irodsFile = "/test1/home/test1/test-scratch-jargon-renci/ticketAdminServiceImplTest/testCreateTicket.txt";
+		String testFileName = "testCreateTicketForDataObjectExists.txt";
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String localFileName = FileGenerator
+				.generateFileOfFixedLengthGivenName(absPath, testFileName, 100);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
 		
-		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager.instance();
-		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSSession irodsSession = IRODSSession.instance(irodsConnectionManager);
-		IRODSAccessObjectFactory accessObjectFactory = IRODSAccessObjectFactoryImpl.instance(irodsSession);
-//		IRODSFile irodsFile = createFileByName(testFileName, irodsAccount, accessObjectFactory);
-		String zone = irodsAccount.getZone();
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		DataTransferOperations dataTransferOperations = accessObjectFactory
+				.getDataTransferOperations(irodsAccount);
+		dataTransferOperations
+				.putOperation(
+						localFileName,
+						targetIrodsCollection,
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
+						null, null);
 		
+		IRODSFile targetFile = irodsFileSystem
+				.getIRODSFileFactory(irodsAccount).instanceIRODSFile(
+						targetIrodsCollection + "/" + testFileName);
+
 		TicketAdminService ticketSvc = new TicketAdminServiceImpl(accessObjectFactory, irodsAccount);
 
-		ticketSvc.createTicket(TicketCreateModeEnum.TICKET_CREATE_READ, irodsFile, null);
+		ticketSvc.createTicket(TicketCreateModeEnum.TICKET_CREATE_READ,
+				targetFile, null);
 
 	}
 
