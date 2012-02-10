@@ -87,9 +87,9 @@ public class TicketAdminInpTest {
 
 		StringBuilder sb = new StringBuilder();
 		sb.append("<ticketAdminInp_PI><arg1>create</arg1>\n");
-		sb.append("<arg2>read</arg2>\n");
-		sb.append("<arg3>/test1/home/test1/anExistingFile</arg3>\n");
-		sb.append("<arg4>ticket_key</arg4>\n");
+		sb.append("<arg2>ticket_key</arg2>\n");
+		sb.append("<arg3>read</arg3>\n");
+		sb.append("<arg4>/test1/home/test1/anExistingFile</arg4>\n");
 		sb.append("<arg5></arg5>\n");
 		sb.append("<arg6></arg6>\n");
 		sb.append("</ticketAdminInp_PI>\n");
@@ -98,56 +98,16 @@ public class TicketAdminInpTest {
 				tagOut);
 	}
 	
-	@Test
+	@Test(expected = IllegalArgumentException.class)
 	public void testCreateTicketWithNullKey() throws Exception {
-		TicketAdminInp pi = TicketAdminInp.instanceForCreate(TicketCreateModeEnum.TICKET_CREATE_READ, afile, null);
 		
-		Assert.assertNotNull(pi);
+		TicketAdminInp.instanceForCreate(TicketCreateModeEnum.TICKET_CREATE_READ, afile, null);
 	}
 	
-	@Test
-	public void testCreateTicketWithNullKeyCheckXML() throws Exception {
-
-		TicketAdminInp pi = TicketAdminInp.instanceForCreate(TicketCreateModeEnum.TICKET_CREATE_READ, afile, null);
-		String tagOut = pi.getParsedTags();
-
-		StringBuilder sb = new StringBuilder();
-		sb.append("<ticketAdminInp_PI><arg1>create</arg1>\n");
-		sb.append("<arg2>read</arg2>\n");
-		sb.append("<arg3>/test1/home/test1/anExistingFile</arg3>\n");
-		sb.append("<arg4></arg4>\n");
-		sb.append("<arg5></arg5>\n");
-		sb.append("<arg6></arg6>\n");
-		sb.append("</ticketAdminInp_PI>\n");
-
-		Assert.assertEquals("unexpected XML protocol result", sb.toString(),
-				tagOut);
-	}
-	
-	@Test
+	@Test(expected = IllegalArgumentException.class)
 	public void testCreateTicketWithEmptyKey() throws Exception {
-		TicketAdminInp pi = TicketAdminInp.instanceForCreate(TicketCreateModeEnum.TICKET_CREATE_READ, afile, "");
 		
-		Assert.assertNotNull(pi);
-	}
-	
-	@Test
-	public void testCreateTicketWithEmptyKeyCheckXML() throws Exception {
-
-		TicketAdminInp pi = TicketAdminInp.instanceForCreate(TicketCreateModeEnum.TICKET_CREATE_READ, afile, "");
-		String tagOut = pi.getParsedTags();
-
-		StringBuilder sb = new StringBuilder();
-		sb.append("<ticketAdminInp_PI><arg1>create</arg1>\n");
-		sb.append("<arg2>read</arg2>\n");
-		sb.append("<arg3>/test1/home/test1/anExistingFile</arg3>\n");
-		sb.append("<arg4></arg4>\n");
-		sb.append("<arg5></arg5>\n");
-		sb.append("<arg6></arg6>\n");
-		sb.append("</ticketAdminInp_PI>\n");
-
-		Assert.assertEquals("unexpected XML protocol result", sb.toString(),
-				tagOut);
+		TicketAdminInp.instanceForCreate(TicketCreateModeEnum.TICKET_CREATE_READ, afile, "");
 	}
 	
 	@Test
@@ -165,9 +125,9 @@ public class TicketAdminInpTest {
 
 		StringBuilder sb = new StringBuilder();
 		sb.append("<ticketAdminInp_PI><arg1>create</arg1>\n");
-		sb.append("<arg2>read</arg2>\n");
-		sb.append("<arg3>/test1/home/test1/anExistingFile</arg3>\n");
-		sb.append("<arg4>ticket_key</arg4>\n");
+		sb.append("<arg2>ticket_key</arg2>\n");
+		sb.append("<arg3>read</arg3>\n");
+		sb.append("<arg4>/test1/home/test1/anExistingFile</arg4>\n");
 		sb.append("<arg5></arg5>\n");
 		sb.append("<arg6></arg6>\n");
 		sb.append("</ticketAdminInp_PI>\n");
@@ -191,9 +151,9 @@ public class TicketAdminInpTest {
 
 		StringBuilder sb = new StringBuilder();
 		sb.append("<ticketAdminInp_PI><arg1>create</arg1>\n");
-		sb.append("<arg2>write</arg2>\n");
-		sb.append("<arg3>/test1/home/test1/anExistingFile</arg3>\n");
-		sb.append("<arg4>ticket_key</arg4>\n");
+		sb.append("<arg2>ticket_key</arg2>\n");
+		sb.append("<arg3>write</arg3>\n");
+		sb.append("<arg4>/test1/home/test1/anExistingFile</arg4>\n");
 		sb.append("<arg5></arg5>\n");
 		sb.append("<arg6></arg6>\n");
 		sb.append("</ticketAdminInp_PI>\n");

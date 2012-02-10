@@ -8,6 +8,7 @@ import org.irods.jargon.core.pub.ProtocolExtensionPoint;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.ticket.packinstr.TicketAdminInp;
 import org.irods.jargon.ticket.packinstr.TicketCreateModeEnum;
+import org.irods.jargon.ticket.utils.TicketRandomString;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -52,55 +53,50 @@ public final class TicketAdminServiceImpl implements TicketAdminService {
 			throw new IllegalArgumentException("cannot create ticket with null IRODS file/collection");
 		}
 		
-		if (log.isDebugEnabled()) {
-			log.debug("creating at ticket for :{}", file.getPath());
-		}
+		log.info("creating at ticket for :{}", file.getPath());
 		
 		if (mode == null) {
 			throw new IllegalArgumentException("cannot create ticket with null create mode - read or write access");
 		}
-		log.debug("ticket creation mode is:{}", mode);
+		
+		if (ticketId == null || ticketId.isEmpty()) {
+			// create a new ticket string 15 chars in length
+			ticketId = new TicketRandomString(15).nextString();
+		}
+		log.info("ticket creation mode is:{}", mode);
 
 		TicketAdminInp ticketPI = TicketAdminInp.instanceForCreate(mode, file.getAbsolutePath(), ticketId);
-		log.debug("executing ticket PI");
+		log.info("executing ticket PI");
 		
 		ProtocolExtensionPoint pep = irodsAccessObjectFactory
 				.getProtocolExtensionPoint(irodsAccount);
 		Tag ticketOperationResponse = pep.irodsFunction(ticketPI);
 
-		log.debug("recieved response from ticket operation:{}",
+		log.info("received response from ticket operation:{}",
 				ticketOperationResponse);
 
-		return null;
+		return ticketId;
 	}
 	
 	@Override
-	public String createTicket(TicketCreateModeEnum mode, String file, String ticketId) throws JargonException {
+	public void deleteTicket(String ticketId) throws JargonException {
 
-		if (file == null) {
-			throw new IllegalArgumentException("cannot create ticket with null IRODS file/collection");
+		if ((ticketId == null) || (ticketId.isEmpty())) {
+			throw new IllegalArgumentException("cannot delete ticket with null or empty ticketId");
 		}
 		
-		if (log.isDebugEnabled()) {
-			log.debug("creating at ticket for :{}", file);
-		}
+		log.info("deleting ticket id/string:{}", ticketId);
 		
-		if (mode == null) {
-			throw new IllegalArgumentException("cannot create ticket with null create mode - read or write access");
-		}
-		log.debug("ticket creation mode is:{}", mode);
-
-		TicketAdminInp ticketPI = TicketAdminInp.instanceForCreate(mode, file, ticketId);
-		log.debug("executing ticket PI");
+		TicketAdminInp ticketPI = TicketAdminInp.instanceForDelete(ticketId);
+		log.info("executing ticket PI");
 		
 		ProtocolExtensionPoint pep = irodsAccessObjectFactory
 				.getProtocolExtensionPoint(irodsAccount);
 		Tag ticketOperationResponse = pep.irodsFunction(ticketPI);
 
-		log.debug("recieved response from ticket operation:{}",
+		log.info("received response from ticket operation:{}",
 				ticketOperationResponse);
-
-		return null;
+		
 	}
 
 	public IRODSAccessObjectFactory getIrodsAccessObjectFactory() {

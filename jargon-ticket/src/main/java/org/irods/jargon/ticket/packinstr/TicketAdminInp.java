@@ -53,7 +53,6 @@ public class TicketAdminInp extends AbstractIRODSPackingInstruction {
 	
 	
 	public static TicketAdminInp instanceForCreate(final TicketCreateModeEnum mode, String fullPath, String ticketId) {
-		String id = BLANK;
 		
 		if (mode == null) {
 			throw new IllegalArgumentException("null permission mode");
@@ -61,14 +60,12 @@ public class TicketAdminInp extends AbstractIRODSPackingInstruction {
 		if (fullPath == null || (fullPath.isEmpty())) {
 			throw new IllegalArgumentException("null or empty full path name");
 		}	
-		// ticketId is optional?
-		if ((ticketId != null) && (!ticketId.isEmpty())) {
-			id = ticketId;
+		// ticketId is not optional
+		if ((ticketId == null) || (ticketId.isEmpty())) {
+			throw new IllegalArgumentException("null or empty full path name");
 		}
 		
-//		return new TicketAdminInp(TICKET_ADMIN_INP_API_NBR, "create", mode.getTextValue(),
-//				fullPath, id, BLANK, BLANK);
-		return new TicketAdminInp(TICKET_ADMIN_INP_API_NBR, "create", id,
+		return new TicketAdminInp(TICKET_ADMIN_INP_API_NBR, "create", ticketId,
 				mode.getTextValue(), fullPath, BLANK, BLANK);
 	}
 	// TODO: create another method for create with no ticketId param? public static TicketAdminInp instanceForCreate(final String mode, String fullPath)
