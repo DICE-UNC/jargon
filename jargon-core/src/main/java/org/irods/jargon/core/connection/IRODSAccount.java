@@ -1,6 +1,3 @@
-/**
- *
- */
 package org.irods.jargon.core.connection;
 
 import java.io.Serializable;

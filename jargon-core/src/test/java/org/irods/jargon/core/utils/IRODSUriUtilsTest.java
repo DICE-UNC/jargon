@@ -4,10 +4,12 @@ import java.net.URI;
 import java.util.Properties;
 
 import junit.framework.Assert;
+import junit.framework.TestCase;
 
 import org.irods.jargon.core.connection.IRODSAccount;
+import org.irods.jargon.core.pub.IRODSFileSystem;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
-import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -15,15 +17,27 @@ public class IRODSUriUtilsTest {
 
 	private static Properties testingProperties = new Properties();
 	private static org.irods.jargon.testutils.TestingPropertiesHelper testingPropertiesHelper = new TestingPropertiesHelper();
+	private static org.irods.jargon.testutils.filemanip.ScratchFileUtils scratchFileUtils = null;
+	public static final String IRODS_TEST_SUBDIR_PATH = "IRODSUriUtilsTest";
+	private static org.irods.jargon.testutils.IRODSTestSetupUtilities irodsTestSetupUtilities = null;
+	private static IRODSFileSystem irodsFileSystem = null;
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		org.irods.jargon.testutils.TestingPropertiesHelper testingPropertiesLoader = new TestingPropertiesHelper();
 		testingProperties = testingPropertiesLoader.getTestProperties();
+		scratchFileUtils = new org.irods.jargon.testutils.filemanip.ScratchFileUtils(
+				testingProperties);
+		irodsTestSetupUtilities = new org.irods.jargon.testutils.IRODSTestSetupUtilities();
+		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
+		irodsTestSetupUtilities
+				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
+		irodsFileSystem = IRODSFileSystem.instance();
 	}
 
-	@After
-	public void tearDown() throws Exception {
+	@AfterClass
+	public static void tearDownAfterClass() throws Exception {
+		irodsFileSystem.closeAndEatExceptions();
 	}
 
 	@Test
@@ -112,7 +126,22 @@ public class IRODSUriUtilsTest {
 	}
 
 	@Test
-	public void testGetIRODSAccountFromURI() {
+	public void testGetURIFromAccountAndPath() throws Exception {
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		URI testURI = testingPropertiesHelper
+				.buildUriFromTestPropertiesForFileInUserDirNoPasswordOrZone(
+						testingProperties,
+						IRODS_TEST_SUBDIR_PATH);
+		TestCase.assertEquals(
+				"uri not computed correctly",
+				testURI.toString(),
+				IRODSUriUtils.buildURIForAnAccountAndPath(irodsAccount,
+						targetIrodsCollection).toString());
+
 	}
 
 }
