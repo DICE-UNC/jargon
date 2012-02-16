@@ -9,6 +9,7 @@ import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.ticket.packinstr.TicketAdminInp;
 import org.irods.jargon.ticket.packinstr.TicketCreateModeEnum;
 import org.irods.jargon.ticket.utils.TicketRandomString;
+import org.junit.Ignore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -78,7 +79,7 @@ public final class TicketAdminServiceImpl implements TicketAdminService {
 		return ticketId;
 	}
 	
-	@Override
+	@Ignore
 	public void deleteTicket(String ticketId) throws JargonException {
 
 		if ((ticketId == null) || (ticketId.isEmpty())) {

@@ -51,5 +51,6 @@ Note that the following bug and feature requests are logged in GForge with relat
 
 [#542] Ticket system support
 - added a ProtocolExtensionPoint to the org.irods.jargon.core.pub access objects to allow higher level packages to handle packing instructions
+- added jargon-ticket subproject for ticket admin support, along with unit testing of ticket system
 [#625] Akubra intitial development
 - additional URI utility methods for use in Akubra

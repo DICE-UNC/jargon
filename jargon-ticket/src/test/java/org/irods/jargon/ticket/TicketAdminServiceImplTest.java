@@ -26,68 +26,38 @@ public class TicketAdminServiceImplTest {
 	private static ScratchFileUtils scratchFileUtils = null;
 	private static IRODSTestSetupUtilities irodsTestSetupUtilities = null;
 	private String lastTicketId = null;
+	private static boolean testTicket = false;
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		TestingPropertiesHelper testingPropertiesLoader = new TestingPropertiesHelper();
 		testingProperties = testingPropertiesLoader.getTestProperties();
-		irodsFileSystem = IRODSFileSystem.instance();
-		
+		testTicket = testingPropertiesLoader
+				.isTestRemoteExecStream(testingProperties);
 		scratchFileUtils = new ScratchFileUtils(testingProperties);
 		irodsTestSetupUtilities = new IRODSTestSetupUtilities();
 		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
 		irodsTestSetupUtilities
 				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
+		irodsFileSystem = IRODSFileSystem.instance();
 	}
 	
 	@AfterClass
 	public static void tearDownAfterClass() throws Exception {
+		if (testTicket) {
 		irodsFileSystem.closeAndEatExceptions();
+		}
 	}
 	
-	
-//	private IRODSFile createFileByName(String fileName, IRODSAccount irodsAccount,
-//			IRODSAccessObjectFactory accessObjectFactory) throws Exception {
-//		
-//		IRODSFile irodsFile = null;
-//
-//		String absPath = scratchFileUtils
-//				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
-//		String localFileName = FileGenerator
-//					.generateFileOfFixedLengthGivenName(absPath, fileName, 10);
-
-//		String getFileName = "testGetResult.txt";
-//		String getResultLocalPath = scratchFileUtils
-//				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH + '/')
-//				+ getFileName;
-//		File localFile = new File(getResultLocalPath);
-//
-//		String targetIrodsCollection = testingPropertiesHelper
-//				.buildIRODSCollectionAbsolutePathFromTestProperties(
-//						testingProperties, IRODS_TEST_SUBDIR_PATH);
-//
-//		DataTransferOperations dataTransferOperations = accessObjectFactory
-//				.getDataTransferOperations(irodsAccount);
-//		dataTransferOperations
-//				.putOperation(
-//						localFileName,
-//						targetIrodsCollection,
-//						testingProperties
-//								.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
-//						null, null);
-//		
-//		DataObjectAO dataObjectAO = accessObjectFactory.getDataObjectAO(irodsAccount);
-//		irodsFile = dataObjectAO.instanceIRODSFileForPath(targetIrodsCollection + '/'+ fileName);
-//		
-//		irodsFileSystem.closeAndEatExceptions();
-//		
-//		return irodsFile;
-//	}
 	
 	
 	@Test
 	public void testCreateTicketForDataObjectExists() throws Exception {
 		
+		if (!testTicket) {
+			return;
+		}
+
 		String testFileName = "testCreateTicketForDataObjectExists.txt";
 		String absPath = scratchFileUtils
 				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
@@ -126,15 +96,13 @@ public class TicketAdminServiceImplTest {
 
 	}
 	
-	@Test
+	@Ignore
 	public void testDeleteTicketForDataObjectExists() throws Exception {
-		
-//		String testFileName = "testCreateTicketForDataObjectExists.txt";
-//		String absPath = scratchFileUtils
-//				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
-//		String localFileName = FileGenerator
-//				.generateFileOfFixedLengthGivenName(absPath, testFileName, 100);
-//
+
+		if (!testTicket) {
+			return;
+		}
+
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
 		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
