@@ -10,7 +10,6 @@ import org.irods.jargon.core.pub.DataTransferOperations;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 import org.irods.jargon.core.pub.IRODSFileSystem;
 import org.irods.jargon.core.pub.io.IRODSFile;
-import org.irods.jargon.core.query.IRODSQueryResultRow;
 import org.irods.jargon.core.query.IRODSQueryResultSetInterface;
 import org.irods.jargon.testutils.IRODSTestSetupUtilities;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
@@ -30,7 +29,6 @@ public class TicketAdminServiceImplTest {
 	private static final String IRODS_TEST_SUBDIR_PATH = "ticketAdminServiceImplTest";
 	private static ScratchFileUtils scratchFileUtils = null;
 	private static IRODSTestSetupUtilities irodsTestSetupUtilities = null;
-	private String lastTicketId = null;
 	private static boolean testTicket = false;
 
 	@BeforeClass
@@ -50,7 +48,7 @@ public class TicketAdminServiceImplTest {
 	@AfterClass
 	public static void tearDownAfterClass() throws Exception {
 		if (testTicket) {
-		irodsFileSystem.closeAndEatExceptions();
+			irodsFileSystem.closeAndEatExceptions();
 		}
 	}
 	
@@ -90,6 +88,10 @@ public class TicketAdminServiceImplTest {
 	@Test
 	public void testCreateTicketForDataObjectExists() throws Exception {
 		
+		if (!testTicket) {
+			return;
+		}
+		
 		String testFileName = "testCreateTicketForDataObjectExists.txt";
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
@@ -115,6 +117,10 @@ public class TicketAdminServiceImplTest {
 	
 	@Test(expected = DataNotFoundException.class)
 	public void testCreateTicketForDataObjectDoesNotExist() throws Exception {
+		
+		if (!testTicket) {
+			return;
+		}
 		
 		String testFileName = "testCreateTicketForDataObjectDoesNotExist";
 
@@ -145,6 +151,10 @@ public class TicketAdminServiceImplTest {
 	
 	@Test
 	public void testDeleteTicketForDataObjectExists() throws Exception {
+		
+		if (!testTicket) {
+			return;
+		}
 		
 		String testFileName = "testDeleteTicketForDataObjectExists.txt";
 		IRODSQueryResultSetInterface resultSet = null;
