@@ -199,7 +199,7 @@ public class IRODSUriUtils {
 		StringBuilder sb = new StringBuilder();
 		sb.append(PATH_SEPARATOR);
 		sb.append(uriUserParts.getZone());
-		sb.append(PATH_SEPARATOR);
+		sb.append("/home/");
 		sb.append(uriUserParts.getUserName());
 
 		return IRODSAccount.instance(irodsURI.getHost(), irodsURI.getPort(),

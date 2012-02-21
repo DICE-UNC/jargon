@@ -144,4 +144,21 @@ public class IRODSUriUtilsTest {
 
 	}
 
+	@Test
+	public void buildURIFromIRODSAccountAndThenBuildIRODSAccountFromThatURI()
+			throws Exception {
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		URI testURI = irodsAccount.toURI(true);
+		IRODSAccount newAccount = IRODSUriUtils.getIRODSAccountFromURI(testURI);
+		TestCase.assertNotNull("null iRODS account", newAccount);
+		TestCase.assertEquals(irodsAccount.getHost(), newAccount.getHost());
+		TestCase.assertEquals(irodsAccount.getPort(), newAccount.getPort());
+		TestCase.assertEquals(irodsAccount.getZone(), newAccount.getZone());
+		TestCase.assertEquals(irodsAccount.getUserName(),
+				newAccount.getUserName());
+		TestCase.assertEquals(irodsAccount.getPassword(),
+				newAccount.getPassword());
+	}
+
 }
