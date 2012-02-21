@@ -2,6 +2,8 @@ package org.irods.jargon.ticket;
 
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.io.IRODSFile;
+import org.irods.jargon.core.query.IRODSQueryResultSetInterface;
+import org.irods.jargon.core.query.JargonQueryException;
 import org.irods.jargon.ticket.packinstr.TicketCreateModeEnum;
 
 public interface TicketAdminService {
@@ -21,5 +23,7 @@ public interface TicketAdminService {
 	String createTicket(TicketCreateModeEnum mode, IRODSFile file, String ticketId) throws JargonException;
 	
 	void deleteTicket(String ticketId) throws JargonException;
+	
+	IRODSQueryResultSetInterface listTicketByTicketString(String ticketId) throws JargonException, JargonQueryException;
 
 }

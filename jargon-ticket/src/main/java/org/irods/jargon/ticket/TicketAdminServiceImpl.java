@@ -4,8 +4,14 @@ import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.packinstr.Tag;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
+import org.irods.jargon.core.pub.IRODSGenQueryExecutor;
 import org.irods.jargon.core.pub.ProtocolExtensionPoint;
 import org.irods.jargon.core.pub.io.IRODSFile;
+import org.irods.jargon.core.query.IRODSGenQuery;
+import org.irods.jargon.core.query.IRODSQueryResultSetInterface;
+import org.irods.jargon.core.query.JargonQueryException;
+import org.irods.jargon.core.query.RodsGenQueryEnum;
+import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.irods.jargon.ticket.packinstr.TicketAdminInp;
 import org.irods.jargon.ticket.packinstr.TicketCreateModeEnum;
 import org.irods.jargon.ticket.utils.TicketRandomString;
@@ -97,6 +103,67 @@ public final class TicketAdminServiceImpl implements TicketAdminService {
 		log.info("received response from ticket operation:{}",
 				ticketOperationResponse);
 		
+	}
+	
+	@Override
+	public IRODSQueryResultSetInterface listTicketByTicketString(String ticketId) throws JargonException, JargonQueryException {
+		
+		IRODSQueryResultSetInterface resultSet = null;
+		
+		String queryString = "select "
+			+ RodsGenQueryEnum.COL_TICKET_ID.getName()
+			+ ", "
+			+ RodsGenQueryEnum.COL_TICKET_STRING.getName()
+			+ ", "
+			+ RodsGenQueryEnum.COL_TICKET_TYPE.getName()
+			+ ", "
+			+ RodsGenQueryEnum.COL_TICKET_OBJECT_TYPE.getName()
+			+ ", "
+			+ RodsGenQueryEnum.COL_TICKET_OWNER_NAME.getName()
+			+ ", "
+			+ RodsGenQueryEnum.COL_TICKET_OWNER_ZONE.getName()
+			+ ", "
+			+ RodsGenQueryEnum.COL_TICKET_USES_COUNT.getName()
+			+ ", "
+			+ RodsGenQueryEnum.COL_TICKET_USES_LIMIT.getName()
+			+ ", "
+			+ RodsGenQueryEnum.COL_TICKET_WRITE_FILE_COUNT.getName()
+			+ ", "
+			+ RodsGenQueryEnum.COL_TICKET_WRITE_FILE_LIMIT.getName()
+			+ ", "
+			+ RodsGenQueryEnum.COL_TICKET_WRITE_BYTE_COUNT.getName()
+			+ ", "
+			+ RodsGenQueryEnum.COL_TICKET_WRITE_BYTE_LIMIT.getName()
+			+ ", "
+			+ RodsGenQueryEnum.COL_TICKET_EXPIRY_TS.getName()
+			+ ", "
+			+ RodsGenQueryEnum.COL_TICKET_DATA_NAME.getName()
+			+ ", "
+			+ RodsGenQueryEnum.COL_TICKET_DATA_COLL_NAME.getName()
+// TODO: not sure to ask for these
+//			+ ", "
+//			+ RodsGenQueryEnum.COL_TICKET_ALLOWED_USER_NAME.getName()
+//			+ ", "
+//			+ RodsGenQueryEnum.COL_TICKET_ALLOWED_GROUP_NAME.getName()
+//			+ ", "
+//			+ RodsGenQueryEnum.COL_TICKET_ALLOWED_HOST.getName()
+			+ " where "
+			+ RodsGenQueryEnum.COL_TICKET_STRING.getName()
+			+ " = "
+			+ "'"
+			+ ticketId
+			+ "'";
+
+		// TODO: how many results should ask for - 100?
+		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(queryString, 100);
+	
+		IRODSGenQueryExecutor irodsGenQueryExecutor = irodsAccessObjectFactory
+				.getIRODSGenQueryExecutor(irodsAccount);
+	
+		resultSet = irodsGenQueryExecutor.executeIRODSQuery(irodsQuery, 0);
+		// TODO: should do this instead? resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResult(irodsQuery, 0);
+		
+		return resultSet;
 	}
 
 	public IRODSAccessObjectFactory getIrodsAccessObjectFactory() {

@@ -2,11 +2,16 @@ package org.irods.jargon.ticket;
 
 import java.util.Properties;
 
+import junit.framework.Assert;
+
 import org.irods.jargon.core.connection.IRODSAccount;
+import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.pub.DataTransferOperations;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 import org.irods.jargon.core.pub.IRODSFileSystem;
 import org.irods.jargon.core.pub.io.IRODSFile;
+import org.irods.jargon.core.query.IRODSQueryResultRow;
+import org.irods.jargon.core.query.IRODSQueryResultSetInterface;
 import org.irods.jargon.testutils.IRODSTestSetupUtilities;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.irods.jargon.testutils.filemanip.FileGenerator;
@@ -25,7 +30,6 @@ public class TicketAdminServiceImplTest {
 	private static final String IRODS_TEST_SUBDIR_PATH = "ticketAdminServiceImplTest";
 	private static ScratchFileUtils scratchFileUtils = null;
 	private static IRODSTestSetupUtilities irodsTestSetupUtilities = null;
-	private String lastTicketId = null;
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -46,53 +50,68 @@ public class TicketAdminServiceImplTest {
 	}
 	
 	
-//	private IRODSFile createFileByName(String fileName, IRODSAccount irodsAccount,
-//			IRODSAccessObjectFactory accessObjectFactory) throws Exception {
-//		
-//		IRODSFile irodsFile = null;
-//
-//		String absPath = scratchFileUtils
-//				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
-//		String localFileName = FileGenerator
-//					.generateFileOfFixedLengthGivenName(absPath, fileName, 10);
+	private IRODSFile createFileByName(String fileName, IRODSAccount irodsAccount,
+			IRODSAccessObjectFactory accessObjectFactory) throws Exception {
+		
+		String absPath = scratchFileUtils
+			.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String localFileName = FileGenerator
+			.generateFileOfFixedLengthGivenName(absPath, fileName, 100);
 
-//		String getFileName = "testGetResult.txt";
-//		String getResultLocalPath = scratchFileUtils
-//				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH + '/')
-//				+ getFileName;
-//		File localFile = new File(getResultLocalPath);
-//
-//		String targetIrodsCollection = testingPropertiesHelper
-//				.buildIRODSCollectionAbsolutePathFromTestProperties(
-//						testingProperties, IRODS_TEST_SUBDIR_PATH);
-//
-//		DataTransferOperations dataTransferOperations = accessObjectFactory
-//				.getDataTransferOperations(irodsAccount);
-//		dataTransferOperations
-//				.putOperation(
-//						localFileName,
-//						targetIrodsCollection,
-//						testingProperties
-//								.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
-//						null, null);
-//		
-//		DataObjectAO dataObjectAO = accessObjectFactory.getDataObjectAO(irodsAccount);
-//		irodsFile = dataObjectAO.instanceIRODSFileForPath(targetIrodsCollection + '/'+ fileName);
-//		
-//		irodsFileSystem.closeAndEatExceptions();
-//		
-//		return irodsFile;
-//	}
+
+		String targetIrodsCollection = testingPropertiesHelper
+			.buildIRODSCollectionAbsolutePathFromTestProperties(
+					testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		DataTransferOperations dataTransferOperations = accessObjectFactory
+			.getDataTransferOperations(irodsAccount);
+		dataTransferOperations.putOperation(
+			localFileName,
+			targetIrodsCollection,
+			testingProperties
+					.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
+			null, null);
+
+		IRODSFile targetFile = irodsFileSystem
+			.getIRODSFileFactory(irodsAccount).instanceIRODSFile(
+					targetIrodsCollection + "/" + fileName);
+		
+		irodsFileSystem.closeAndEatExceptions();
+		
+		return targetFile;
+	}
 	
 	
 	@Test
 	public void testCreateTicketForDataObjectExists() throws Exception {
 		
 		String testFileName = "testCreateTicketForDataObjectExists.txt";
-		String absPath = scratchFileUtils
-				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
-		String localFileName = FileGenerator
-				.generateFileOfFixedLengthGivenName(absPath, testFileName, 100);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+		IRODSFile targetFile = createFileByName(testFileName, irodsAccount, accessObjectFactory);
+
+		TicketAdminService ticketSvc = new TicketAdminServiceImpl(accessObjectFactory, irodsAccount);
+
+		String ticketId = ticketSvc.createTicket(TicketCreateModeEnum.TICKET_CREATE_READ,
+				targetFile, null);
+		
+		IRODSQueryResultSetInterface resultSet = ticketSvc.listTicketByTicketString(ticketId);
+
+		Assert.assertEquals(1, resultSet.getResults().size());
+		
+		// delete ticket after done
+		ticketSvc.deleteTicket(ticketId);
+
+	}
+	
+	
+	@Test(expected = DataNotFoundException.class)
+	public void testCreateTicketForDataObjectDoesNotExist() throws Exception {
+		
+		String testFileName = "testCreateTicketForDataObjectDoesNotExist";
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
@@ -100,69 +119,50 @@ public class TicketAdminServiceImplTest {
 				.getIRODSAccessObjectFactory();
 		
 		String targetIrodsCollection = testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH);
-
-		DataTransferOperations dataTransferOperations = accessObjectFactory
-				.getDataTransferOperations(irodsAccount);
-		dataTransferOperations
-				.putOperation(
-						localFileName,
-						targetIrodsCollection,
-						testingProperties
-								.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
-						null, null);
-		
+		.buildIRODSCollectionAbsolutePathFromTestProperties(
+				testingProperties, IRODS_TEST_SUBDIR_PATH);
 		IRODSFile targetFile = irodsFileSystem
-				.getIRODSFileFactory(irodsAccount).instanceIRODSFile(
-						targetIrodsCollection + "/" + testFileName);
+		.getIRODSFileFactory(irodsAccount).instanceIRODSFile(
+				targetIrodsCollection + "/" + testFileName);
 
 		TicketAdminService ticketSvc = new TicketAdminServiceImpl(accessObjectFactory, irodsAccount);
 
-		lastTicketId = ticketSvc.createTicket(TicketCreateModeEnum.TICKET_CREATE_READ,
+		String ticketId = ticketSvc.createTicket(TicketCreateModeEnum.TICKET_CREATE_READ,
 				targetFile, null);
+
+		//Assert.assertEquals(0, resultSet.getResults().size());
 		
-		// TODO: delete ticket after done
+		// delete ticket after done
+		ticketSvc.deleteTicket(ticketId);
 
 	}
+	
 	
 	@Test
 	public void testDeleteTicketForDataObjectExists() throws Exception {
 		
-//		String testFileName = "testCreateTicketForDataObjectExists.txt";
-//		String absPath = scratchFileUtils
-//				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
-//		String localFileName = FileGenerator
-//				.generateFileOfFixedLengthGivenName(absPath, testFileName, 100);
-//
+		String testFileName = "testDeleteTicketForDataObjectExists.txt";
+		IRODSQueryResultSetInterface resultSet = null;
+		String ticketId = "deleteMe";
+
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
 		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
 				.getIRODSAccessObjectFactory();
 		
-		String targetIrodsCollection = testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH);
-
-//		DataTransferOperations dataTransferOperations = accessObjectFactory
-//				.getDataTransferOperations(irodsAccount);
-//		dataTransferOperations
-//				.putOperation(
-//						localFileName,
-//						targetIrodsCollection,
-//						testingProperties
-//								.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
-//						null, null);
-//		
-//		IRODSFile targetFile = irodsFileSystem
-//				.getIRODSFileFactory(irodsAccount).instanceIRODSFile(
-//						targetIrodsCollection + "/" + testFileName);
+		IRODSFile targetFile = createFileByName(testFileName, irodsAccount, accessObjectFactory);
+		
 
 		TicketAdminService ticketSvc = new TicketAdminServiceImpl(accessObjectFactory, irodsAccount);
-
-		ticketSvc.deleteTicket(lastTicketId);
 		
-		// TODO: delete ticket after done
+		String id = ticketSvc.createTicket(TicketCreateModeEnum.TICKET_CREATE_READ,
+				targetFile, ticketId);
+		resultSet = ticketSvc.listTicketByTicketString(ticketId);
+		Assert.assertEquals(1, resultSet.getResults().size());
+
+		ticketSvc.deleteTicket(ticketId);
+		resultSet = ticketSvc.listTicketByTicketString(ticketId);
+		Assert.assertEquals(0, resultSet.getResults().size());
 
 	}
 
