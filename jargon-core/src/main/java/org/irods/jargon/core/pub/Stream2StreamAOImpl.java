@@ -184,19 +184,19 @@ public class Stream2StreamAOImpl extends IRODSGenericAO implements
 			log.error("File not found exception copying buffers", e);
 			throw new JargonException(
 					"file not found exception copying buffers", e);
-		} catch (IOException e) {
-			log.error("IOException exception copying buffers", e);
-			throw new JargonException("IOException copying buffers", e);
+		} catch (Exception e) {
+			log.error("Exception exception copying buffers", e);
+			throw new JargonException("Exception copying buffers", e);
 		} finally {
 
 			try {
 				inputStream.close();
-			} catch (IOException e) {
+			} catch (Exception e) {
 			}
 
 			try {
 				fileOutputStream.close();
-			} catch (IOException e) {
+			} catch (Exception e) {
 			}
 
 		}

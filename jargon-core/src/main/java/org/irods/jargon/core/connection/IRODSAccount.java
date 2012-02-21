@@ -1,6 +1,3 @@
-/**
- *
- */
 package org.irods.jargon.core.connection;
 
 import java.io.Serializable;
@@ -366,11 +363,13 @@ public final class IRODSAccount implements Serializable {
 		URI uri = null;
 		try {
 			if (includePassword) {
-				uri = new URI("irods://" + getUserName() + ":" + getPassword()
+				uri = new URI("irods://" + getUserName() + "." + getZone()
+						+ ":" + getPassword()
 						+ "@" + getHost() + ":" + getPort()
 						+ getHomeDirectory());
 			} else {
-				uri = new URI("irods://" + getUserName() + "@" + getHost()
+				uri = new URI("irods://" + getUserName() + "." + getZone()
+						+ "@" + getHost()
 						+ ":" + getPort() + getHomeDirectory());
 			}
 		} catch (URISyntaxException e) {

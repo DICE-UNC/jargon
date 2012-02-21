@@ -1,6 +1,7 @@
 package org.irods.jargon.core.utils;
 
 import java.net.URI;
+import java.net.URISyntaxException;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.JargonException;
@@ -198,7 +199,7 @@ public class IRODSUriUtils {
 		StringBuilder sb = new StringBuilder();
 		sb.append(PATH_SEPARATOR);
 		sb.append(uriUserParts.getZone());
-		sb.append(PATH_SEPARATOR);
+		sb.append("/home/");
 		sb.append(uriUserParts.getUserName());
 
 		return IRODSAccount.instance(irodsURI.getHost(), irodsURI.getPort(),
@@ -225,6 +226,44 @@ public class IRODSUriUtils {
 		return isURI;
 	}
 
+	/**
+	 * Build a URI appropriate for a given iRODS account and absolute path
+	 * 
+	 * @param irodsAccount
+	 *            {@link IRODSAccount} containing connection information
+	 * @param isFile
+	 * @param irodsAbsolutePath
+	 * @return
+	 * @throws JargonException
+	 */
+	public static URI buildURIForAnAccountAndPath(
+			final IRODSAccount irodsAccount,
+			final String irodsAbsolutePath) throws JargonException {
+
+		if (irodsAccount == null) {
+			throw new IllegalArgumentException("null iRODSAccount");
+		}
+		
+		if (irodsAbsolutePath == null || irodsAbsolutePath.isEmpty()) {
+			throw new IllegalArgumentException("null or empty irodsAbsolutePath");
+		}
+	
+		URI uri = null;
+
+		try {
+			uri = new URI("irods", irodsAccount.getUserName(),
+						irodsAccount.getHost(), irodsAccount.getPort(),
+						irodsAbsolutePath, null,
+						null);
+
+		} catch (URISyntaxException e) {
+		
+			throw new JargonException(e);
+		}
+
+		return uri;
+	}
+	
 }
 
 /**

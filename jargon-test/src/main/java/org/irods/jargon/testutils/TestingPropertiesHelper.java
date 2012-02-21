@@ -37,6 +37,7 @@ public class TestingPropertiesHelper {
 	public static String IRODS_ADMIN_PASSWORD_KEY = "test.irods.admin.password";
 	public static String MAC_ICOMMANDS_PATH = "test.mac.icommand.path";
 	public static String IRODS_RESOURCE_GROUP_KEY = "test.resource.group";
+	public static String IRODS_TEST_TICKET_KEY = "test.option.exercise.ticket";
 
 	public static String IRODS_CONFIRM_TESTING_TRUE = "true";
 	public static String IRODS_CONFIRM_TESTING_FALSE = "false";
@@ -601,6 +602,21 @@ public class TestingPropertiesHelper {
 	public boolean isTestRemoteExecStream(final Properties testingProperties) {
 		String val = (String) testingProperties
 				.get("test.option.exercise.remoteexecstream");
+		if (val == null) {
+			return false;
+		} else {
+			return Boolean.parseBoolean(val);
+		}
+	}
+
+	/**
+	 * Are we testing tickets?
+	 * 
+	 * @param testingProperties
+	 * @return <code>true</code> if I should test tickets.
+	 */
+	public boolean isTestTickets(final Properties testingProperties) {
+		String val = (String) testingProperties.get(IRODS_TEST_TICKET_KEY);
 		if (val == null) {
 			return false;
 		} else {

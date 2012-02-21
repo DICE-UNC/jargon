@@ -30,23 +30,28 @@ public class TicketAdminServiceImplTest {
 	private static final String IRODS_TEST_SUBDIR_PATH = "ticketAdminServiceImplTest";
 	private static ScratchFileUtils scratchFileUtils = null;
 	private static IRODSTestSetupUtilities irodsTestSetupUtilities = null;
+	private String lastTicketId = null;
+	private static boolean testTicket = false;
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		TestingPropertiesHelper testingPropertiesLoader = new TestingPropertiesHelper();
 		testingProperties = testingPropertiesLoader.getTestProperties();
-		irodsFileSystem = IRODSFileSystem.instance();
-		
+		testTicket = testingPropertiesLoader
+				.isTestRemoteExecStream(testingProperties);
 		scratchFileUtils = new ScratchFileUtils(testingProperties);
 		irodsTestSetupUtilities = new IRODSTestSetupUtilities();
 		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
 		irodsTestSetupUtilities
 				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
+		irodsFileSystem = IRODSFileSystem.instance();
 	}
 	
 	@AfterClass
 	public static void tearDownAfterClass() throws Exception {
+		if (testTicket) {
 		irodsFileSystem.closeAndEatExceptions();
+		}
 	}
 	
 	
