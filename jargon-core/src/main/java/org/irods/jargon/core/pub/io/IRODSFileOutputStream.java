@@ -157,6 +157,12 @@ public class IRODSFileOutputStream extends OutputStream {
 	@Override
 	public void write(final byte[] b, final int off, final int len)
 			throws IOException {
+
+		if (b == null || b.length == 0) {
+			log.warn("nothing to write, ignore");
+			return;
+		}
+
 		checkIfOpen();
 		try {
 			this.fileIOOperations.write(getFileDescriptor(), b, off, len);
