@@ -248,17 +248,13 @@ public final class IRODSGenQueryExecutorImpl extends IRODSGenericAO implements
 					translatedIRODSQuery, partialStartIndex, zoneName);
 		}
 
-		Tag response;
+		Tag response = null;
+		List<IRODSQueryResultRow> result = null;
+		IRODSQueryResultSet resultSet = null;
 		try {
 			response = sendGenQueryAndReturnResponse(genQueryInp);
 
-		} catch (DataNotFoundException dnf) {
-			log.info("response from IRODS call indicates no rows found");
-			List<IRODSQueryResultRow> result = new ArrayList<IRODSQueryResultRow>();
-			IRODSQueryResultSet resultSet = IRODSQueryResultSet.instance(
-					translatedIRODSQuery, result, 0);
-			return resultSet;
-		}
+
 
 		int continuation = response.getTag(GenQueryOut.CONTINUE_INX)
 				.getIntValue();
@@ -273,10 +269,10 @@ public final class IRODSGenQueryExecutorImpl extends IRODSGenericAO implements
 			columnNames.add(selectField.getSelectFieldColumnName());
 		}
 
-		List<IRODSQueryResultRow> result = translateResponseIntoResultSet(
+			result = translateResponseIntoResultSet(
 				response, translatedIRODSQuery, columnNames, continuation);
 
-		IRODSQueryResultSet resultSet = IRODSQueryResultSet.instance(
+			resultSet = IRODSQueryResultSet.instance(
 				translatedIRODSQuery, result, continuation);
 
 		if (resultSet.isHasMoreRecords()
@@ -285,8 +281,20 @@ public final class IRODSGenQueryExecutorImpl extends IRODSGenericAO implements
 			this.closeResults(resultSet);
 		}
 
-		return resultSet;
-
+			return resultSet;
+		} catch (DataNotFoundException dnf) {
+			log.info("response from IRODS call indicates no rows found");
+			result = new ArrayList<IRODSQueryResultRow>();
+			resultSet = IRODSQueryResultSet.instance(translatedIRODSQuery,
+					result, 0);
+			return resultSet;
+		} finally {
+			if (resultSet != null // && resultSet.isHasMoreRecords()
+					&& queryCloseBehavior == QueryCloseBehavior.AUTO_CLOSE) {
+				log.info("auto closing result set");
+				this.closeResults(resultSet);
+			}
+		}
 	}
 
 	/**
