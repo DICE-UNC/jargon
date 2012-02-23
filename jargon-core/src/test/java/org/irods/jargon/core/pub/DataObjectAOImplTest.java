@@ -4585,4 +4585,31 @@ public class DataObjectAOImplTest {
 		
 	}
 
+	/**
+	 * Bug 629-malloc/resource error in irods when doing
+	 * findDomainByMetadataQuery
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void testFindDataObjectDomainDataByAVUQueryForBug629NoQueryElements()
+			throws Exception {
+
+		String testCollName = "testFindDataObjectDomainDataByAVUQueryForBug629NoQueryElements";
+		String testFilePrefix = "testFindDataObjectDomainDataByAVUQueryForBug629NoQueryElements-";
+		String testFileSuffix = ".txt";
+		String expectedAttribName = "testattrib1";
+		String expectedAttribValue = "testvalue1";
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+
+		DataObjectAO dAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getDataObjectAO(irodsAccount);
+
+		ArrayList<AVUQueryElement> avus = new ArrayList<AVUQueryElement>();
+
+		dAO.findDomainByMetadataQuery(avus);
+
+	}
+
 }

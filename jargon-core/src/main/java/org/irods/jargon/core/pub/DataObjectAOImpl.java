@@ -1521,6 +1521,15 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			final int partialStartIndex) throws JargonQueryException,
 			JargonException {
 
+		if (avuQueryElements == null || avuQueryElements.isEmpty()) {
+			throw new IllegalArgumentException("null or empty avuQueryElements");
+		}
+
+		if (partialStartIndex < 0) {
+			throw new IllegalArgumentException(
+					"partial start index must be 0 or greater");
+		}
+
 		log.info("building a metadata query for: {}", avuQueryElements);
 
 		final StringBuilder query = new StringBuilder();
