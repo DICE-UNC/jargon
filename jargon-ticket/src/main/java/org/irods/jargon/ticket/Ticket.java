@@ -1,12 +1,17 @@
 package org.irods.jargon.ticket;
 
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 
+import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.query.IRODSQueryResultRow;
+import org.irods.jargon.core.query.RodsGenQueryEnum;
 import org.irods.jargon.ticket.packinstr.TicketCreateModeEnum;
 
 public class Ticket {
-	
+
 	String ticketId;
 	String ticketString;
 	TicketCreateModeEnum type;
@@ -25,6 +30,49 @@ public class Ticket {
 	List<String> userRestrictions;
 	List<String> groupRestrictions;
 	List<String> hostRestrictions;
+	
+	public Ticket() {
+		this.expireTime = null;
+	}
+	
+	public Ticket(IRODSQueryResultRow row) throws JargonException {
+		DateFormat dateFormat = DateFormat.getInstance();
+		this.expireTime = null;
+		String date = "";
+
+		try {
+			setTicketId(row.getColumn(RodsGenQueryEnum.COL_TICKET_ID.getName()));
+			setTicketString(row.getColumn(RodsGenQueryEnum.COL_TICKET_STRING.getName()));
+			setType(TicketCreateModeEnum.findTypeByString(row.getColumn(RodsGenQueryEnum.COL_TICKET_TYPE.getName())));
+			setObjectType(row.getColumn(RodsGenQueryEnum.COL_TICKET_OBJECT_TYPE.getName()));
+			setOwnerName(row.getColumn(RodsGenQueryEnum.COL_TICKET_OWNER_NAME.getName()));
+			setOwnerZone(row.getColumn(RodsGenQueryEnum.COL_TICKET_OWNER_ZONE.getName()));
+			setUsesCount(Integer.valueOf(row.getColumn(RodsGenQueryEnum.COL_TICKET_USES_COUNT.getName())));
+			setUsesLimit(Integer.valueOf(row.getColumn(RodsGenQueryEnum.COL_TICKET_USES_LIMIT.getName())));
+			setWriteFileCount(Integer.valueOf(row.getColumn(RodsGenQueryEnum.COL_TICKET_WRITE_FILE_COUNT.getName())));
+			setWriteFileLimit(Integer.valueOf(row.getColumn(RodsGenQueryEnum.COL_TICKET_WRITE_FILE_LIMIT.getName())));
+			setWriteByteCount(Integer.valueOf(row.getColumn(RodsGenQueryEnum.COL_TICKET_WRITE_BYTE_COUNT.getName())));
+			setWriteByteLimit(Integer.valueOf(row.getColumn(RodsGenQueryEnum.COL_TICKET_WRITE_BYTE_LIMIT.getName())));
+			date = row.getColumn(RodsGenQueryEnum.COL_TICKET_EXPIRY_TS.getName());
+			if((date != null) && (!date.isEmpty())) {
+				setExpireTime(dateFormat.parse(row.getColumn(RodsGenQueryEnum.COL_TICKET_EXPIRY_TS.getName())));
+			}
+			setDataObjectName(row.getColumn(RodsGenQueryEnum.COL_TICKET_DATA_NAME.getName()));
+			setDataCollection(row.getColumn(RodsGenQueryEnum.COL_TICKET_DATA_COLL_NAME.getName()));
+//			+ RodsGenQueryEnum.COL_TICKET_DATA_NAME.getName()
+//			+ RodsGenQueryEnum.COL_TICKET_DATA_COLL_NAME.getName()
+// TODO: not sure to ask for these
+//			+ ", "
+//			+ RodsGenQueryEnum.COL_TICKET_ALLOWED_USER_NAME.getName()
+//			+ ", "
+//			+ RodsGenQueryEnum.COL_TICKET_ALLOWED_GROUP_NAME.getName()
+//			+ ", "
+//			+ RodsGenQueryEnum.COL_TICKET_ALLOWED_HOST.getName()
+
+		} catch (ParseException e) {
+			this.expireTime = null;
+		}
+	}
 	
 	public String getTicketId() {
 		return ticketId;
@@ -74,6 +122,54 @@ public class Ticket {
 		this.ownerZone = ownerZone;
 	}
 	
+	public Integer getUsesCount() {
+		return usesCount;
+	}
+
+	public void setUsesCount(Integer usesCount) {
+		this.usesCount = usesCount;
+	}
+
+	public Integer getUsesLimit() {
+		return usesLimit;
+	}
+
+	public void setUsesLimit(Integer usesLimit) {
+		this.usesLimit = usesLimit;
+	}
+
+	public Integer getWriteFileCount() {
+		return writeFileCount;
+	}
+
+	public void setWriteFileCount(Integer writeFileCount) {
+		this.writeFileCount = writeFileCount;
+	}
+
+	public Integer getWriteFileLimit() {
+		return writeFileLimit;
+	}
+
+	public void setWriteFileLimit(Integer writeFileLimit) {
+		this.writeFileLimit = writeFileLimit;
+	}
+
+	public Integer getWriteByteCount() {
+		return writeByteCount;
+	}
+
+	public void setWriteByteCount(Integer writeByteCount) {
+		this.writeByteCount = writeByteCount;
+	}
+
+	public Integer getWriteByteLimit() {
+		return writeByteLimit;
+	}
+
+	public void setWriteByteLimit(Integer writeByteLimit) {
+		this.writeByteLimit = writeByteLimit;
+	}
+	
 	public Date getExpireTime() {
 		return expireTime;
 	}
@@ -95,6 +191,14 @@ public class Ticket {
 	
 	public void setDataCollection(String dataCollection) {
 		this.dataObjectCollection = dataCollection;
+	}
+	
+	public List<String> getUserRestrictions() {
+		return userRestrictions;
+	}
+
+	public void setUserRestrictions(List<String> userRestrictions) {
+		this.userRestrictions = userRestrictions;
 	}
 	
 	public List<String> getGroupRestrictions() {
