@@ -85,7 +85,7 @@ public final class TicketAdminServiceImpl implements TicketAdminService {
 		return ticketId;
 	}
 	
-	@Ignore
+	@Override
 	public void deleteTicket(String ticketId) throws JargonException {
 
 		if ((ticketId == null) || (ticketId.isEmpty())) {
@@ -111,51 +111,63 @@ public final class TicketAdminServiceImpl implements TicketAdminService {
 		
 		IRODSQueryResultSetInterface resultSet = null;
 		
-		String queryString = "select "
-			+ RodsGenQueryEnum.COL_TICKET_ID.getName()
-			+ ", "
-			+ RodsGenQueryEnum.COL_TICKET_STRING.getName()
-			+ ", "
-			+ RodsGenQueryEnum.COL_TICKET_TYPE.getName()
-			+ ", "
-			+ RodsGenQueryEnum.COL_TICKET_OBJECT_TYPE.getName()
-			+ ", "
-			+ RodsGenQueryEnum.COL_TICKET_OWNER_NAME.getName()
-			+ ", "
-			+ RodsGenQueryEnum.COL_TICKET_OWNER_ZONE.getName()
-			+ ", "
-			+ RodsGenQueryEnum.COL_TICKET_USES_COUNT.getName()
-			+ ", "
-			+ RodsGenQueryEnum.COL_TICKET_USES_LIMIT.getName()
-			+ ", "
-			+ RodsGenQueryEnum.COL_TICKET_WRITE_FILE_COUNT.getName()
-			+ ", "
-			+ RodsGenQueryEnum.COL_TICKET_WRITE_FILE_LIMIT.getName()
-			+ ", "
-			+ RodsGenQueryEnum.COL_TICKET_WRITE_BYTE_COUNT.getName()
-			+ ", "
-			+ RodsGenQueryEnum.COL_TICKET_WRITE_BYTE_LIMIT.getName()
-			+ ", "
-			+ RodsGenQueryEnum.COL_TICKET_EXPIRY_TS.getName()
-			+ ", "
-			+ RodsGenQueryEnum.COL_TICKET_DATA_NAME.getName()
-			+ ", "
-			+ RodsGenQueryEnum.COL_TICKET_DATA_COLL_NAME.getName()
-// TODO: not sure to ask for these
-//			+ ", "
-//			+ RodsGenQueryEnum.COL_TICKET_ALLOWED_USER_NAME.getName()
-//			+ ", "
-//			+ RodsGenQueryEnum.COL_TICKET_ALLOWED_GROUP_NAME.getName()
-//			+ ", "
-//			+ RodsGenQueryEnum.COL_TICKET_ALLOWED_HOST.getName()
-			+ " where "
-			+ RodsGenQueryEnum.COL_TICKET_STRING.getName()
-			+ " = "
-			+ "'"
-			+ ticketId
-			+ "'";
-
+		String queryString = buildQueryStringForFullTicket(
+				RodsGenQueryEnum.COL_TICKET_STRING.getName(), ticketId);	
+		
 		// TODO: how many results should ask for - 100?
+		// also how offer opportunity to page through results?
+		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(queryString, 100);
+	
+		IRODSGenQueryExecutor irodsGenQueryExecutor = irodsAccessObjectFactory
+				.getIRODSGenQueryExecutor(irodsAccount);
+	
+		resultSet = irodsGenQueryExecutor.executeIRODSQuery(irodsQuery, 0);
+		// TODO: should do this instead? resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResult(irodsQuery, 0);
+		
+		return resultSet;
+	}
+	
+	@Override
+	public Ticket getTicketByTicketString(String ticketId) throws JargonException, JargonQueryException {
+		
+		Ticket ticket = null;
+		IRODSQueryResultSetInterface resultSet = null;
+		
+		resultSet = listTicketByTicketString(ticketId);
+		ticket = new Ticket(resultSet.getFirstResult());
+		
+		return ticket;
+	}
+	
+	@Override
+	public IRODSQueryResultSetInterface listTickets() throws JargonException, JargonQueryException {
+		
+		IRODSQueryResultSetInterface resultSet = null;
+		
+		String queryString = buildQueryStringForFullTicket(null, null);
+		
+		// TODO: how many results should ask for - 100?
+		// also how offer opportunity to page through results?
+		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(queryString, 100);
+	
+		IRODSGenQueryExecutor irodsGenQueryExecutor = irodsAccessObjectFactory
+				.getIRODSGenQueryExecutor(irodsAccount);
+	
+		resultSet = irodsGenQueryExecutor.executeIRODSQuery(irodsQuery, 0);
+		// TODO: should do this instead? resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResult(irodsQuery, 0);
+		
+		return resultSet;
+	}
+	
+	@Override
+	public IRODSQueryResultSetInterface listAllTickets() throws JargonException, JargonQueryException {
+		
+		IRODSQueryResultSetInterface resultSet = null;
+		
+		String queryString = buildQueryStringForBasicTicket(null, null);
+		
+		// TODO: how many results should ask for - 100?
+		// also how offer opportunity to page through results?
 		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(queryString, 100);
 	
 		IRODSGenQueryExecutor irodsGenQueryExecutor = irodsAccessObjectFactory
@@ -182,6 +194,116 @@ public final class TicketAdminServiceImpl implements TicketAdminService {
 
 	public void setIrodsAccount(IRODSAccount irodsAccount) {
 		this.irodsAccount = irodsAccount;
+	}
+	
+	private String buildQueryStringForFullTicket(String selectName, String selectVal) {
+		
+		StringBuilder queryString = new StringBuilder();
+		
+		queryString.append("select ");
+		queryString.append(RodsGenQueryEnum.COL_TICKET_ID.getName());
+		queryString.append(", ");
+		queryString.append(RodsGenQueryEnum.COL_TICKET_STRING.getName());
+		queryString.append(", ");
+		queryString.append(RodsGenQueryEnum.COL_TICKET_TYPE.getName());
+		queryString.append(", ");
+		queryString.append(RodsGenQueryEnum.COL_TICKET_OBJECT_TYPE.getName());
+		queryString.append(", ");
+		queryString.append(RodsGenQueryEnum.COL_TICKET_OWNER_NAME.getName());
+		queryString.append(", ");
+		queryString.append(RodsGenQueryEnum.COL_TICKET_OWNER_ZONE.getName());
+		queryString.append(", ");
+		queryString.append(RodsGenQueryEnum.COL_TICKET_USES_COUNT.getName());
+		queryString.append(", ");
+		queryString.append(RodsGenQueryEnum.COL_TICKET_USES_LIMIT.getName());
+		queryString.append(", ");
+		queryString.append(RodsGenQueryEnum.COL_TICKET_WRITE_FILE_COUNT.getName());
+		queryString.append(", ");
+		queryString.append(RodsGenQueryEnum.COL_TICKET_WRITE_FILE_LIMIT.getName());
+		queryString.append(", ");
+		queryString.append(RodsGenQueryEnum.COL_TICKET_WRITE_BYTE_COUNT.getName());
+		queryString.append(", ");
+		queryString.append(RodsGenQueryEnum.COL_TICKET_WRITE_BYTE_LIMIT.getName());
+		queryString.append(", ");
+		queryString.append(RodsGenQueryEnum.COL_TICKET_EXPIRY_TS.getName());
+		queryString.append(", ");
+		queryString.append(RodsGenQueryEnum.COL_TICKET_DATA_NAME.getName());
+		queryString.append(", ");
+		queryString.append(RodsGenQueryEnum.COL_TICKET_DATA_COLL_NAME.getName());
+//		queryString.append(", ");
+//		queryString.append(RodsGenQueryEnum.COL_TICKET_COLL_NAME.getName());
+// TODO: not sure to ask for these
+//			queryString.append(", ");
+//			queryString.append(RodsGenQueryEnum.COL_TICKET_ALLOWED_USER_NAME.getName());
+//			queryString.append(", ");
+//			queryString.append(RodsGenQueryEnum.COL_TICKET_ALLOWED_GROUP_NAME.getName());
+//			queryString.append(", ");
+//			queryString.append(RodsGenQueryEnum.COL_TICKET_ALLOWED_HOST.getName());
+		
+		if((selectName != null) && (!selectName.isEmpty()) && (selectVal != null) && (!selectVal.isEmpty())) {
+			queryString.append(" where ");
+			queryString.append(selectName);
+			queryString.append(" = ");
+			queryString.append("'");
+			queryString.append(selectVal);
+			queryString.append("'");
+		}
+		
+		return queryString.toString();
+		
+	}
+	
+	private String buildQueryStringForBasicTicket(String selectName, String selectVal) {
+		
+		StringBuilder queryString = new StringBuilder();
+		
+		queryString.append("select ");
+		queryString.append(RodsGenQueryEnum.COL_TICKET_ID.getName());
+		queryString.append(", ");
+		queryString.append(RodsGenQueryEnum.COL_TICKET_STRING.getName());
+		queryString.append(", ");
+		queryString.append(RodsGenQueryEnum.COL_TICKET_TYPE.getName());
+		queryString.append(", ");
+		queryString.append(RodsGenQueryEnum.COL_TICKET_OBJECT_TYPE.getName());
+		queryString.append(", ");
+		queryString.append(RodsGenQueryEnum.COL_TICKET_OWNER_NAME.getName());
+		queryString.append(", ");
+		queryString.append(RodsGenQueryEnum.COL_TICKET_OWNER_ZONE.getName());
+		queryString.append(", ");
+		queryString.append(RodsGenQueryEnum.COL_TICKET_USES_COUNT.getName());
+		queryString.append(", ");
+		queryString.append(RodsGenQueryEnum.COL_TICKET_USES_LIMIT.getName());
+		queryString.append(", ");
+		queryString.append(RodsGenQueryEnum.COL_TICKET_WRITE_FILE_COUNT.getName());
+		queryString.append(", ");
+		queryString.append(RodsGenQueryEnum.COL_TICKET_WRITE_FILE_LIMIT.getName());
+		queryString.append(", ");
+		queryString.append(RodsGenQueryEnum.COL_TICKET_WRITE_BYTE_COUNT.getName());
+		queryString.append(", ");
+		queryString.append(RodsGenQueryEnum.COL_TICKET_WRITE_BYTE_LIMIT.getName());
+		queryString.append(", ");
+		queryString.append(RodsGenQueryEnum.COL_TICKET_EXPIRY_TS.getName());
+		queryString.append(", ");
+		queryString.append(RodsGenQueryEnum.COL_TICKET_COLL_NAME.getName());
+// TODO: not sure to ask for these
+//			queryString.append(", ");
+//			queryString.append(RodsGenQueryEnum.COL_TICKET_ALLOWED_USER_NAME.getName());
+//			queryString.append(", ");
+//			queryString.append(RodsGenQueryEnum.COL_TICKET_ALLOWED_GROUP_NAME.getName());
+//			queryString.append(", ");
+//			queryString.append(RodsGenQueryEnum.COL_TICKET_ALLOWED_HOST.getName());
+		
+		if((selectName != null) && (!selectName.isEmpty()) && (selectVal != null) && (!selectVal.isEmpty())) {
+			queryString.append(" where ");
+			queryString.append(selectName);
+			queryString.append(" = ");
+			queryString.append("'");
+			queryString.append(selectVal);
+			queryString.append("'");
+		}
+		
+		return queryString.toString();
+		
 	}
 
 }
