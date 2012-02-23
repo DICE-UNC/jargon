@@ -43,7 +43,7 @@ Note that the following bug and feature requests are logged in GForge with relat
 
  [#621] error reading file w/group permissions
  [#627] Catch an NPE that might arise when transferring a file via streams when no resource in the iRODS file and iRODS has no default.  This was happening on a close() of the stream.
- 
+ [#629] malloc/resource error in irods when doing findDomainByMetadataQuery - added test for field-reported issue with metadata queries
 
 
 

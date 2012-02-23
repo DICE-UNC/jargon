@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Properties;
 
 import junit.framework.Assert;
+import junit.framework.TestCase;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSProtocolManager;
@@ -4501,6 +4502,113 @@ public class DataObjectAOImplTest {
 
 		assertionHelper.assertLocalFileExistsInScratch(IRODS_TEST_SUBDIR_PATH
 				+ '/' + getResultFileName);
+
+	}
+	
+	/**
+	 * Bug 629-malloc/resource error in irods when doing findDomainByMetadataQuery
+	 */
+	@Test
+	public void testFindDataObjectDomainDataByAVUQueryForBug629()
+			throws Exception {
+
+		String testCollName = "testFindDataObjectDomainDataByAVUQueryForBug629";
+		String testFilePrefix = "testFindDataObjectDomainDataByAVUQueryForBug629-";
+		String testFileSuffix = ".txt";
+		int count = 200;
+		String expectedAttribName = "testattrib1";
+		String expectedAttribValue = "testvalue1";
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + "/"
+								+ testCollName);
+
+		IRODSAccessObjectFactory aoFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
+		// generate some test files, first delete the test subdir
+
+		IRODSFile testSubdir = irodsFileSystem
+				.getIRODSFileFactory(irodsAccount).instanceIRODSFile(
+						targetIrodsCollection);
+		testSubdir.deleteWithForceOption();
+		testSubdir.mkdirs();
+		
+		DataObjectAO dAO = aoFactory.getDataObjectAO(irodsAccount);
+		DataTransferOperations dto = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataTransferOperations(
+						irodsAccount);
+
+		AvuData avuData = null;
+
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String sourceFileAbsolutePath = FileGenerator
+				.generateFileOfFixedLengthGivenName(absPath,
+						"testFileForAVU.txt", 1);
+		File sourceFile = new File(sourceFileAbsolutePath);
+
+		IRODSFile dataFile = null;
+		StringBuilder sb = null;
+		for (int i = 0; i < count; i++) {
+			sb = new StringBuilder();
+			sb.append(testFilePrefix);
+			sb.append(i);
+			sb.append(testFileSuffix);
+			dataFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+					.instanceIRODSFile(testSubdir.getAbsolutePath(),
+							sb.toString());
+			dto.putOperation(sourceFile, dataFile, null, null);
+			avuData = AvuData.instance(expectedAttribName, expectedAttribValue
+					+ i, "");
+			dAO.addAVUMetadata(dataFile.getAbsolutePath(), avuData);
+			
+		}
+
+		ArrayList<AVUQueryElement> avus = new ArrayList<AVUQueryElement>();
+		avus.add(AVUQueryElement.instanceForValueQuery(AVUQueryPart.ATTRIBUTE,
+				AVUQueryOperatorEnum.EQUAL, expectedAttribName));
+		avus.add(AVUQueryElement.instanceForValueQuery(AVUQueryPart.VALUE,
+				AVUQueryOperatorEnum.LIKE, expectedAttribValue + "%"));
+		
+
+		
+		List<DataObject> files = dAO.findDomainByMetadataQuery(avus);
+		TestCase.assertNotNull("null files returned", files);
+		TestCase.assertEquals("did not get all of the files", count,
+				files.size());
+		
+		
+	}
+
+	/**
+	 * Bug 629-malloc/resource error in irods when doing
+	 * findDomainByMetadataQuery
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void testFindDataObjectDomainDataByAVUQueryForBug629NoQueryElements()
+			throws Exception {
+
+		String testCollName = "testFindDataObjectDomainDataByAVUQueryForBug629NoQueryElements";
+		String testFilePrefix = "testFindDataObjectDomainDataByAVUQueryForBug629NoQueryElements-";
+		String testFileSuffix = ".txt";
+		String expectedAttribName = "testattrib1";
+		String expectedAttribValue = "testvalue1";
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+
+		DataObjectAO dAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getDataObjectAO(irodsAccount);
+
+		ArrayList<AVUQueryElement> avus = new ArrayList<AVUQueryElement>();
+
+		dAO.findDomainByMetadataQuery(avus);
 
 	}
 
