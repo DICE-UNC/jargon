@@ -1,12 +1,23 @@
 package org.irods.jargon.ticket;
 
 import org.irods.jargon.core.connection.IRODSAccount;
+import org.irods.jargon.core.connection.IRODSProtocolManager;
+import org.irods.jargon.core.connection.IRODSSession;
+import org.irods.jargon.core.connection.IRODSSimpleProtocolManager;
+import org.irods.jargon.core.exception.DataNotFoundException;
+import org.irods.jargon.core.exception.DuplicateDataException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.packinstr.Tag;
+import org.irods.jargon.core.protovalues.ErrorEnum;
+import org.irods.jargon.core.pub.CollectionAndDataObjectListAndSearchAO;
+import org.irods.jargon.core.pub.CollectionAndDataObjectListAndSearchAOImpl;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 import org.irods.jargon.core.pub.IRODSGenQueryExecutor;
 import org.irods.jargon.core.pub.ProtocolExtensionPoint;
+import org.irods.jargon.core.pub.domain.ObjStat;
 import org.irods.jargon.core.pub.io.IRODSFile;
+import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry;
+import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry.ObjectType;
 import org.irods.jargon.core.query.IRODSGenQuery;
 import org.irods.jargon.core.query.IRODSQueryResultSetInterface;
 import org.irods.jargon.core.query.JargonQueryException;
@@ -21,6 +32,8 @@ import org.slf4j.LoggerFactory;
 
 public final class TicketAdminServiceImpl implements TicketAdminService {
 	
+	private static final String ERROR_IN_TICKET_QUERY = "error in ticket query";
+	private static final String TICKET_NOT_FOUND = "IRODS ticket not found";
 	public static final Logger log = LoggerFactory.getLogger(TicketAdminServiceImpl.class);
 	private IRODSAccessObjectFactory irodsAccessObjectFactory;
 	private IRODSAccount irodsAccount;
@@ -54,8 +67,9 @@ public final class TicketAdminServiceImpl implements TicketAdminService {
 	 * org.irods.jargon.core.pub.io.IRODSFile, java.lang.String)
 	 */
 	@Override
-	public String createTicket(TicketCreateModeEnum mode, IRODSFile file, String ticketId) throws JargonException {
-
+	public String createTicket(TicketCreateModeEnum mode, IRODSFile file, String ticketId)
+			throws JargonException, DuplicateDataException {
+		
 		if (file == null) {
 			throw new IllegalArgumentException("cannot create ticket with null IRODS file/collection");
 		}
@@ -76,7 +90,7 @@ public final class TicketAdminServiceImpl implements TicketAdminService {
 		log.info("executing ticket PI");
 		
 		ProtocolExtensionPoint pep = irodsAccessObjectFactory
-				.getProtocolExtensionPoint(irodsAccount);
+				.getProtocolExtensionPoint(irodsAccount);	
 		Tag ticketOperationResponse = pep.irodsFunction(ticketPI);
 
 		log.info("received response from ticket operation:{}",
@@ -88,6 +102,8 @@ public final class TicketAdminServiceImpl implements TicketAdminService {
 	@Override
 	public void deleteTicket(String ticketId) throws JargonException {
 
+		Tag ticketOperationResponse = null;
+		
 		if ((ticketId == null) || (ticketId.isEmpty())) {
 			throw new IllegalArgumentException("cannot delete ticket with null or empty ticketId");
 		}
@@ -99,7 +115,13 @@ public final class TicketAdminServiceImpl implements TicketAdminService {
 		
 		ProtocolExtensionPoint pep = irodsAccessObjectFactory
 				.getProtocolExtensionPoint(irodsAccount);
-		Tag ticketOperationResponse = pep.irodsFunction(ticketPI);
+		try {
+			ticketOperationResponse = pep.irodsFunction(ticketPI);
+		} catch (JargonException e) {
+			if (e.getUnderlyingIRODSExceptionCode() == ErrorEnum.CAT_TICKET_INVALID.getInt()) {
+				throw new DataNotFoundException(TICKET_NOT_FOUND);
+			}
+		}
 
 		log.info("received response from ticket operation:{}",
 				ticketOperationResponse);
@@ -107,77 +129,129 @@ public final class TicketAdminServiceImpl implements TicketAdminService {
 	}
 	
 	@Override
-	public IRODSQueryResultSetInterface listTicketByTicketString(String ticketId) throws JargonException, JargonQueryException {
+	public IRODSQueryResultSetInterface getTicketQueryResultForSpecifiedTicketString(String ticketId)
+			throws JargonException {
 		
 		IRODSQueryResultSetInterface resultSet = null;
 		
-		String queryString = buildQueryStringForFullTicket(
-				RodsGenQueryEnum.COL_TICKET_STRING.getName(), ticketId);	
+		String objType = getTicketObjectType(ticketId);
 		
-		// TODO: how many results should ask for - 100?
-		// also how offer opportunity to page through results?
-		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(queryString, 100);
+		String queryString = buildQueryStringForTicketLS(
+				RodsGenQueryEnum.COL_TICKET_STRING.getName(), ticketId, objType);
+		
+		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(queryString, 2);
 	
 		IRODSGenQueryExecutor irodsGenQueryExecutor = irodsAccessObjectFactory
 				.getIRODSGenQueryExecutor(irodsAccount);
-	
-		resultSet = irodsGenQueryExecutor.executeIRODSQuery(irodsQuery, 0);
-		// TODO: should do this instead? resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResult(irodsQuery, 0);
+		try {
+			resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResult(irodsQuery, 0);
+		} catch (JargonQueryException e) {
+			log.error("query exception for ticket query: {}", irodsQuery, e);
+			throw new JargonException(ERROR_IN_TICKET_QUERY, e);
+		}
+		
+		if ((resultSet == null) || (resultSet.getResults().isEmpty())) {
+			throw new DataNotFoundException(TICKET_NOT_FOUND);
+		}
 		
 		return resultSet;
 	}
 	
-	@Override
-	public Ticket getTicketByTicketString(String ticketId) throws JargonException, JargonQueryException {
-		
-		Ticket ticket = null;
-		IRODSQueryResultSetInterface resultSet = null;
-		
-		resultSet = listTicketByTicketString(ticketId);
-		ticket = new Ticket(resultSet.getFirstResult());
-		
-		return ticket;
-	}
-	
-	@Override
-	public IRODSQueryResultSetInterface listTickets() throws JargonException, JargonQueryException {
-		
-		IRODSQueryResultSetInterface resultSet = null;
-		
-		String queryString = buildQueryStringForFullTicket(null, null);
-		
-		// TODO: how many results should ask for - 100?
-		// also how offer opportunity to page through results?
-		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(queryString, 100);
-	
-		IRODSGenQueryExecutor irodsGenQueryExecutor = irodsAccessObjectFactory
-				.getIRODSGenQueryExecutor(irodsAccount);
-	
-		resultSet = irodsGenQueryExecutor.executeIRODSQuery(irodsQuery, 0);
-		// TODO: should do this instead? resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResult(irodsQuery, 0);
-		
-		return resultSet;
-	}
-	
-	@Override
-	public IRODSQueryResultSetInterface listAllTickets() throws JargonException, JargonQueryException {
-		
-		IRODSQueryResultSetInterface resultSet = null;
-		
-		String queryString = buildQueryStringForBasicTicket(null, null);
-		
-		// TODO: how many results should ask for - 100?
-		// also how offer opportunity to page through results?
-		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(queryString, 100);
-	
-		IRODSGenQueryExecutor irodsGenQueryExecutor = irodsAccessObjectFactory
-				.getIRODSGenQueryExecutor(irodsAccount);
-	
-		resultSet = irodsGenQueryExecutor.executeIRODSQuery(irodsQuery, 0);
-		// TODO: should do this instead? resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResult(irodsQuery, 0);
-		
-		return resultSet;
-	}
+//	@Override
+//	public Ticket getTicketForSpecifiedTicketString(String ticketId) throws JargonException, JargonQueryException {
+//		
+//		Ticket ticket = null;
+//		IRODSQueryResultSetInterface resultSet = null;
+//		
+//		resultSet = getTicketQueryResultForSpecifiedTicketString(ticketId);
+//		ticket = new Ticket(resultSet.getFirstResult());
+//		
+//		return ticket;
+//	}
+//	
+//	@Override
+//	public IRODSQueryResultSetInterface getAllTickets(int continueIndex) throws JargonException, JargonQueryException {
+//		
+//		IRODSQueryResultSetInterface resultSet = null;
+//		
+//		String queryString = buildQueryStringForTicketLS_ALL(null, null);
+//		
+//		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(queryString, 100);
+//	
+//		IRODSGenQueryExecutor irodsGenQueryExecutor = irodsAccessObjectFactory
+//				.getIRODSGenQueryExecutor(irodsAccount);
+//	
+//		resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResult(irodsQuery, continueIndex);
+//		
+//		return resultSet;
+//	}
+//	
+//	@Override
+//	public IRODSQueryResultSetInterface getTicketAllowedUsersByTicketString(String ticketId, int continueIndex) throws JargonException, JargonQueryException {
+//		IRODSQueryResultSetInterface resultSet = null;
+//		
+//		StringBuilder queryString = new StringBuilder();
+//		
+//		queryString.append("select ");
+//		queryString.append(RodsGenQueryEnum.COL_TICKET_ALLOWED_USER_NAME.getName());
+//		queryString.append(" where ");
+//		queryString.append(RodsGenQueryEnum.COL_TICKET_STRING.getName());
+//		queryString.append(" = ");
+//		queryString.append("'");
+//		queryString.append(ticketId);
+//		queryString.append("'");
+//		
+//		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(queryString.toString(), 100);
+//		
+//		IRODSGenQueryExecutor irodsGenQueryExecutor = irodsAccessObjectFactory
+//				.getIRODSGenQueryExecutor(irodsAccount);
+//	
+//		resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResult(irodsQuery, continueIndex);
+//		
+//		return resultSet;
+//	}
+//	
+//	@Override
+//	public IRODSQueryResultSetInterface getTicketsForSpecifiedDataObjectPath(String path, int continueIndex) 
+//			throws JargonException, JargonQueryException {
+//		
+////// NEED to rewrite this - have to do query for both data object name and data object collection in the case of the data object type.
+//	
+//		IRODSQueryResultSetInterface resultSet = null;
+//		ObjectType objType = null;
+//		String type = null;
+//		String colName = null;
+//		
+//		CollectionAndDataObjectListAndSearchAO listAndSearch = irodsAccessObjectFactory
+//			.getCollectionAndDataObjectListAndSearchAO(irodsAccount);
+//		ObjStat objStat = listAndSearch.retrieveObjectStatForPath(path);
+//		objType = objStat.getObjectType();
+//		if (objType == ObjectType.COLLECTION) {
+//			type = "collection";
+//			colName = RodsGenQueryEnum.COL_TICKET_COLL_NAME.getName();
+//		}
+//		else
+//		if (objType == ObjectType.DATA_OBJECT) {
+//			type = "data";
+//			colName = RodsGenQueryEnum.COL_TICKET_DATA_COLL_NAME.getName();
+//		}
+//		else {
+//			throw new JargonException("illegal data object type");
+//		}
+//		
+//		String queryString = buildQueryStringForTicketLS(
+//				colName, path, type);
+//		
+//		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(queryString, 100);
+//		
+//		IRODSGenQueryExecutor irodsGenQueryExecutor = irodsAccessObjectFactory
+//				.getIRODSGenQueryExecutor(irodsAccount);
+//	
+//		resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResult(irodsQuery, continueIndex);
+//		
+//		return resultSet;
+//		
+//	}
 
 	public IRODSAccessObjectFactory getIrodsAccessObjectFactory() {
 		return irodsAccessObjectFactory;
@@ -196,8 +270,10 @@ public final class TicketAdminServiceImpl implements TicketAdminService {
 		this.irodsAccount = irodsAccount;
 	}
 	
-	private String buildQueryStringForFullTicket(String selectName, String selectVal) {
+	private String buildQueryStringForTicketLS(String selectName, String selectVal, String objType) {
 		
+		// first find out if this is a data object or collection
+	
 		StringBuilder queryString = new StringBuilder();
 		
 		queryString.append("select ");
@@ -226,12 +302,18 @@ public final class TicketAdminServiceImpl implements TicketAdminService {
 		queryString.append(RodsGenQueryEnum.COL_TICKET_WRITE_BYTE_LIMIT.getName());
 		queryString.append(", ");
 		queryString.append(RodsGenQueryEnum.COL_TICKET_EXPIRY_TS.getName());
-		queryString.append(", ");
-		queryString.append(RodsGenQueryEnum.COL_TICKET_DATA_NAME.getName());
-		queryString.append(", ");
-		queryString.append(RodsGenQueryEnum.COL_TICKET_DATA_COLL_NAME.getName());
-//		queryString.append(", ");
-//		queryString.append(RodsGenQueryEnum.COL_TICKET_COLL_NAME.getName());
+		
+		if (objType.equals("data")) {
+			queryString.append(", ");
+			queryString.append(RodsGenQueryEnum.COL_TICKET_DATA_NAME.getName());
+			queryString.append(", ");
+			queryString.append(RodsGenQueryEnum.COL_TICKET_DATA_COLL_NAME.getName());
+		}
+		else {
+			queryString.append(", ");
+			queryString.append(RodsGenQueryEnum.COL_TICKET_COLL_NAME.getName());
+		}
+
 // TODO: not sure to ask for these
 //			queryString.append(", ");
 //			queryString.append(RodsGenQueryEnum.COL_TICKET_ALLOWED_USER_NAME.getName());
@@ -240,7 +322,7 @@ public final class TicketAdminServiceImpl implements TicketAdminService {
 //			queryString.append(", ");
 //			queryString.append(RodsGenQueryEnum.COL_TICKET_ALLOWED_HOST.getName());
 		
-		if((selectName != null) && (!selectName.isEmpty()) && (selectVal != null) && (!selectVal.isEmpty())) {
+		if ((selectName != null) && (!selectName.isEmpty()) && (selectVal != null) && (!selectVal.isEmpty())) {
 			queryString.append(" where ");
 			queryString.append(selectName);
 			queryString.append(" = ");
@@ -253,7 +335,7 @@ public final class TicketAdminServiceImpl implements TicketAdminService {
 		
 	}
 	
-	private String buildQueryStringForBasicTicket(String selectName, String selectVal) {
+	private String buildQueryStringForTicketLS_ALL(String selectName, String selectVal) {
 		
 		StringBuilder queryString = new StringBuilder();
 		
@@ -283,8 +365,6 @@ public final class TicketAdminServiceImpl implements TicketAdminService {
 		queryString.append(RodsGenQueryEnum.COL_TICKET_WRITE_BYTE_LIMIT.getName());
 		queryString.append(", ");
 		queryString.append(RodsGenQueryEnum.COL_TICKET_EXPIRY_TS.getName());
-		queryString.append(", ");
-		queryString.append(RodsGenQueryEnum.COL_TICKET_COLL_NAME.getName());
 // TODO: not sure to ask for these
 //			queryString.append(", ");
 //			queryString.append(RodsGenQueryEnum.COL_TICKET_ALLOWED_USER_NAME.getName());
@@ -293,7 +373,7 @@ public final class TicketAdminServiceImpl implements TicketAdminService {
 //			queryString.append(", ");
 //			queryString.append(RodsGenQueryEnum.COL_TICKET_ALLOWED_HOST.getName());
 		
-		if((selectName != null) && (!selectName.isEmpty()) && (selectVal != null) && (!selectVal.isEmpty())) {
+		if ((selectName != null) && (!selectName.isEmpty()) && (selectVal != null) && (!selectVal.isEmpty())) {
 			queryString.append(" where ");
 			queryString.append(selectName);
 			queryString.append(" = ");
@@ -304,6 +384,48 @@ public final class TicketAdminServiceImpl implements TicketAdminService {
 		
 		return queryString.toString();
 		
+	}
+	
+	// need this function to determine whether the ticket being queried for is for a data object or collection
+	private String getTicketObjectType(String ticketId) throws JargonException {
+		
+		String objType = null;
+		IRODSQueryResultSetInterface resultSet = null;
+		
+		if ((ticketId == null) || (ticketId.isEmpty())) {
+			throw new IllegalArgumentException("illegal ticket id");
+		}
+		
+		StringBuilder queryString = new StringBuilder();
+		
+		queryString.append("select ");
+		queryString.append(RodsGenQueryEnum.COL_TICKET_OBJECT_TYPE.getName());
+		queryString.append(" where ");
+		queryString.append(RodsGenQueryEnum.COL_TICKET_STRING.getName());
+		queryString.append(" = ");
+		queryString.append("'");
+		queryString.append(ticketId);
+		queryString.append("'");
+		
+		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(queryString.toString(), 1);
+		
+		IRODSGenQueryExecutor irodsGenQueryExecutor = irodsAccessObjectFactory
+				.getIRODSGenQueryExecutor(irodsAccount);
+	
+		try {
+			resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResult(irodsQuery, 0);
+		} catch (JargonQueryException e) {
+			log.error("query exception for ticket query:{}", queryString, e);
+			throw new JargonException(ERROR_IN_TICKET_QUERY, e);
+		}
+		if ((resultSet != null) && (!resultSet.getResults().isEmpty())) {
+			objType = resultSet.getFirstResult().getQueryResultColumns().get(0);
+		}
+		else {
+			throw new DataNotFoundException(TICKET_NOT_FOUND);
+		}
+		
+		return objType;
 	}
 
 }
