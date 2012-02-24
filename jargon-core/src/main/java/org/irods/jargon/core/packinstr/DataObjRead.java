@@ -77,7 +77,7 @@ public class DataObjRead extends AbstractIRODSPackingInstruction {
 	 * 
 	 * 16237 [main] INFO edu.sdsc.grid.io.irods.IRODSConnection readMessage 632-
 	 * 2 millisecs 16237 [main] DEBUG edu.sdsc.grid.io.irods.IRODSCommands
-	 * irodsFunction 704- <dataObjReadInp_PI><l1descInx>3</l1descInx>
+	 * irodsFunction 704- <dataObjReadInp_PI><L1_DESC_INX>3</L1_DESC_INX>
 	 * <len>1</len> </dataObjReadInp_PI> (non-Javadoc)
 	 * 
 	 * @see

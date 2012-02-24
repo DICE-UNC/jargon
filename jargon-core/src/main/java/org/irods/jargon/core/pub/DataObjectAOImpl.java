@@ -338,18 +338,18 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 	}
 
+
 	/*
 	 * (non-Javadoc)
 	 * 
 	 * @see org.irods.jargon.core.pub.DataObjectAO#
 	 * putLocalDataObjectToIRODSForClientSideRuleOperation(java.io.File,
-	 * org.irods.jargon.core.pub.io.IRODSFile, boolean,
+	 * org.irods.jargon.core.pub.io.IRODSFile,
 	 * org.irods.jargon.core.transfer.TransferControlBlock)
 	 */
 	@Override
 	public void putLocalDataObjectToIRODSForClientSideRuleOperation(
 			final File localFile, final IRODSFile irodsFileDestination,
-			final boolean overwrite,
 			final TransferControlBlock transferControlBlock)
 			throws DataNotFoundException, OverwriteException, JargonException {
 
@@ -451,6 +451,12 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			} else if (overwriteResponse == OverwriteResponse.PROCEED_WITH_FORCE) {
 				force = true;
 			}
+		} else {
+			// ignore options set, so set force to true if use force is set in
+			// transfer options
+			if (transferControlBlock.getTransferOptions().getForceOption() == ForceOption.USE_FORCE) {
+				force = true;
+			}
 		}
 
 		long localFileLength = localFile.length();
@@ -459,10 +465,6 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		if (localFileLength < ConnectionConstants.MAX_SZ_FOR_SINGLE_BUF) {
 
 			log.info("processing transfer as normal, length below max");
-			/**
-			 * TODO: add a retry here if an overwrite exception occurs even
-			 * though it passed the above check?
-			 */
 			try {
 				dataAOHelper.processNormalPutTransfer(localFile, force,
 						targetFile, this.getIRODSProtocol(),
@@ -580,7 +582,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 					IRODSConstants.numThreads).getIntValue();
 
 			int fd = responseToInitialCallForPut.getTag(
-					IRODSConstants.l1descInx).getIntValue();
+					IRODSConstants.L1_DESC_INX).getIntValue();
 
 			log.debug("fd for file:{}", fd);
 
@@ -668,7 +670,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 		log.info("transfer process is complete");
 		int statusForComplete = responseToInitialCallForPut.getTag(
-				IRODSConstants.l1descInx).getIntValue();
+				IRODSConstants.L1_DESC_INX).getIntValue();
 		log.debug("status for complete:{}", statusForComplete);
 
 		log.info("sending operation complete at termination of parallel transfer");
@@ -814,12 +816,13 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		} else {
 			dataObjInp = DataObjInp.instanceForGetSpecifyingResource(
 					irodsFileToGet.getAbsolutePath(),
-					irodsFileToGet.getResource(), thisFileTransferOptions);
+					irodsFileToGet.getResource(), "", thisFileTransferOptions);
 		}
 
 		processGetAfterResourceDetermined(irodsFileToGet, localFile,
 				dataObjInp, thisFileTransferOptions, irodsFileLength,
-				operativeTransferControlBlock, transferStatusCallbackListener);
+				operativeTransferControlBlock, transferStatusCallbackListener,
+				false);
 	}
 
 	private OverwriteResponse evaluateOverwrite(
@@ -896,7 +899,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	 * org.irods.jargon.core.packinstr.TransferOptions)
 	 */
 	@Override
-	public void irodsDataObjectGetOperationForClientSideAction(
+	public int irodsDataObjectGetOperationForClientSideAction(
 			final IRODSFile irodsFileToGet, final File localFileToHoldData,
 			final TransferOptions transferOptions) throws OverwriteException,
 			DataNotFoundException, JargonException {
@@ -909,20 +912,12 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			throw new IllegalArgumentException("nulll destination file");
 		}
 
-		/*
-		 * Handle potential overwrites, will consult the client if so configured
-		 */
-		OverwriteResponse overwriteResponse = evaluateOverwrite(
+		evaluateOverwrite(
 				(File) irodsFileToGet,
 				null,
 				null,
 				this.buildDefaultTransferOptionsIfNotSpecified(transferOptions),
 				localFileToHoldData);
-
-		if (overwriteResponse == OverwriteResponse.SKIP) {
-			log.info("skipping due to over-write status");
-			return;
-		}
 
 		log.info("target local file: {}", localFileToHoldData.getAbsolutePath());
 		log.info("from source file: {}", irodsFileToGet.getAbsolutePath());
@@ -931,14 +926,20 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 		final DataObjInp dataObjInp = DataObjInp
 				.instanceForGetSpecifyingResource(
-						irodsFileToGet.getAbsolutePath(), "", myTransferOptions);
+						irodsFileToGet.getAbsolutePath(),
+						irodsFileToGet.getResource(),
+						localFileToHoldData.getAbsolutePath(),
+						myTransferOptions);
 
 		TransferControlBlock transferControlBlock = DefaultTransferControlBlock
 				.instance();
 		transferControlBlock.setTransferOptions(myTransferOptions);
 
-		processGetAfterResourceDetermined(irodsFileToGet, localFileToHoldData,
-				dataObjInp, myTransferOptions, 0, transferControlBlock, null);
+		return processGetAfterResourceDetermined(irodsFileToGet,
+				localFileToHoldData,
+ dataObjInp, myTransferOptions, 0,
+				transferControlBlock, null, true);
+
 	}
 
 	/**
@@ -974,17 +975,23 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	 *            file length. See the note above.
 	 * @param transferStatusCallbackListener
 	 * @param transferControlBlock
+	 * @param clientSideAction
+	 *            <code>boolean</code> that is <code>true</code> if this is a
+	 *            client-side action in rule processing
+	 * @return <code>int</code> that is the file handle (l1descInx) that iRODS
+	 *         uses for this file
 	 * @throws JargonException
 	 * @throws DataNotFoundException
 	 * @throws UnsupportedOperationException
 	 */
-	private void processGetAfterResourceDetermined(
+	private int processGetAfterResourceDetermined(
 			final IRODSFile irodsFileToGet, final File localFileToHoldData,
 			final DataObjInp dataObjInp,
 			final TransferOptions thisFileTransferOptions,
 			final long irodsFileLength,
 			final TransferControlBlock transferControlBlock,
-			final TransferStatusCallbackListener transferStatusCallbackListener)
+			final TransferStatusCallbackListener transferStatusCallbackListener,
+			boolean clientSideAction)
 			throws OverwriteException, JargonException, DataNotFoundException {
 
 		log.info("process get after resource determined");
@@ -1018,18 +1025,28 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		if (temp == null) {
 			// length is zero
 			log.info("create a new file, length is zero");
-			return;
+			return 0;
 		}
 
 		temp = temp.getTag(DataObjInp.BS_LEN);
 		if (temp == null) {
 			log.info("no size returned, return from get with no update done");
-			return;
+			return 0;
 		}
 
 		final long lengthFromIrodsResponse = temp.getLongValue();
 
 		log.info("transfer length is:", lengthFromIrodsResponse);
+
+		// get the L1_DESC_INX for the return value
+		temp = message.getTag(IRODSConstants.L1_DESC_INX);
+
+		int l1descInx = 0;
+		if (temp != null) {
+			l1descInx = temp.getIntValue();
+		}
+
+		log.debug("l1descInx value is:{}", l1descInx);
 
 		// if length == zero, check for multiple thread copy, may still process
 		// as a standard txfr if 0 threads specified
@@ -1039,7 +1056,8 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 						irodsFileToGet, localFileToHoldData,
 						thisFileTransferOptions, message,
 						lengthFromIrodsResponse, irodsFileLength,
-						transferControlBlock, transferStatusCallbackListener);
+						transferControlBlock, transferStatusCallbackListener,
+						clientSideAction);
 
 			} else {
 				dataAOHelper.processNormalGetTransfer(localFileToHoldData,
@@ -1076,6 +1094,8 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			log.error(ERROR_IN_PARALLEL_TRANSFER, e);
 			throw new JargonException(ERROR_IN_PARALLEL_TRANSFER, e);
 		}
+
+		return l1descInx;
 	}
 
 	/**
@@ -1099,7 +1119,8 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			final TransferOptions transferOptions, final Tag message,
 			final long length, final long irodsFileLength,
 			final TransferControlBlock transferControlBlock,
-			final TransferStatusCallbackListener transferStatusCallbackListener)
+			final TransferStatusCallbackListener transferStatusCallbackListener,
+			final boolean clientSideAction)
 			throws JargonException {
 		final String host = message.getTag(IRODSConstants.PortList_PI)
 				.getTag(IRODSConstants.hostAddr).getStringValue();
@@ -1114,7 +1135,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 		if (numberOfThreads == 0) {
 			log.info("number of threads is zero, possibly parallel transfers were turned off via rule, process as normal");
-			int fd = message.getTag(IRODSConstants.l1descInx).getIntValue();
+			int fd = message.getTag(IRODSConstants.L1_DESC_INX).getIntValue();
 			dataAOHelper.processGetTransferViaRead(irodsSourceFile,
 					localFileToHoldData, irodsFileLength, transferOptions, fd,
 					transferControlBlock, transferStatusCallbackListener);
@@ -1127,11 +1148,21 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 				log.info("callback listener was provided");
 			}
 
+			/*
+			 * Do not try and find the file length if this is a client side
+			 * action from a rule, this messes up the protocol
+			 */
+			long lengthToUse = 0;
+			if (!clientSideAction) {
+				lengthToUse = irodsSourceFile.length();
+			}
+
 			ParallelGetFileTransferStrategy parallelGetTransferStrategy = ParallelGetFileTransferStrategy
 					.instance(host, port, numberOfThreads, password,
 							localFileToHoldData,
 							this.getIRODSAccessObjectFactory(),
-							irodsSourceFile.length(), transferControlBlock,
+ lengthToUse,
+							transferControlBlock,
 							transferStatusCallbackListener);
 
 			parallelGetTransferStrategy.transfer();

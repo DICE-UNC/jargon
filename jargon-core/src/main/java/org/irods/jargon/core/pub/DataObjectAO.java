@@ -349,9 +349,11 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 *        specified. Note that the <code>TransferOptions</code> object will
 	 *        be cloned, and as such the passed-in parameter will not be
 	 *        altered.
+	 * @return <code>int</code> that represents the handle (l1descInx) for the
+	 *         opened file, to be used for sending operation complete messages
 	 * @throws JargonException
 	 */
-	void irodsDataObjectGetOperationForClientSideAction(
+	int irodsDataObjectGetOperationForClientSideAction(
 			final IRODSFile irodsFileToGet, final File localFileToHoldData,
 			final TransferOptions transferOptions)
 			throws DataNotFoundException, JargonException;
@@ -676,9 +678,6 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 *            file system
 	 * @param irodsFileDestination
 	 *            {@link IRODSFile} that is the target of the data transfer
-	 * @param overwrite
-	 *            <code>boolean</code> that indicates whether data should be
-	 *            overwritten at the target
 	 * @param transferControlBlock
 	 *            {@link TransferControlBlock} that will control aspects of the
 	 *            data transfer. Note that the {@link TransferOptions} that are
@@ -690,7 +689,7 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * @throws JargonException
 	 */
 	void putLocalDataObjectToIRODSForClientSideRuleOperation(File localFile,
-			IRODSFile irodsFileDestination, boolean overwrite,
+			IRODSFile irodsFileDestination,
 			TransferControlBlock transferControlBlock) throws JargonException;
 
 	/**

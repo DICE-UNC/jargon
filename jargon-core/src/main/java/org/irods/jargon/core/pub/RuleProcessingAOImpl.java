@@ -24,6 +24,8 @@ import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.packinstr.ExecMyRuleInp;
 import org.irods.jargon.core.packinstr.RuleExecDelInp;
 import org.irods.jargon.core.packinstr.Tag;
+import org.irods.jargon.core.packinstr.TransferOptions;
+import org.irods.jargon.core.packinstr.TransferOptions.ForceOption;
 import org.irods.jargon.core.pub.domain.DelayedRuleExecution;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.pub.io.IRODSFileReader;
@@ -38,6 +40,7 @@ import org.irods.jargon.core.rule.IRODSRuleExecResultOutputParameter;
 import org.irods.jargon.core.rule.IRODSRuleParameter;
 import org.irods.jargon.core.rule.IRODSRuleTranslator;
 import org.irods.jargon.core.rule.JargonRuleException;
+import org.irods.jargon.core.transfer.TransferControlBlock;
 import org.irods.jargon.core.utils.Base64;
 import org.irods.jargon.core.utils.IRODSConstants;
 import org.irods.jargon.core.utils.LocalFileUtils;
@@ -82,7 +85,7 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements
 	public static final String OBJ_PATH = "objPath";
 	public static final String RULE_EXEC_OUT = "ruleExecOut";
 
-	private static final Object DEST_RESC_NAME = "destRescName";
+	private static final Object DEST_RESC_NAME = "rescName";
 
 	/**
 	 * @param irodsSession
@@ -478,8 +481,7 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements
 		Object value;
 
 		Map<String, IRODSRuleExecResultOutputParameter> irodsRuleOutputParameters = new HashMap<String, IRODSRuleExecResultOutputParameter>();
-		boolean clientSideActionOccurred = false;
-		// IRODSRuleExecResultOutputParameter irodsRuleOutputParameter;
+
 		for (int i = 0; i < parametersLength; i++) {
 			Tag msParam = rulesTag.getTag(IRODSConstants.MsParam_PI, i);
 			label = msParam.getTag(LABEL).getStringValue();
@@ -494,24 +496,16 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements
 
 			if (label.equals(CL_PUT_ACTION) || label.equals("CL_GET_ACTION")) {
 				// for recording a client side action
-				clientSideActionOccurred = true;
 				irodsRuleOutputParameters.put(
 						label,
 						(processRuleResponseWithClientSideActionTag(label,
 								type, value, msParam)));
-				// operationComplete(0);
 			} else {
 				irodsRuleOutputParameters.put(label,
 						(processRuleResponseTag(label, type, value, msParam)));
 			}
 		}
 
-		// now read the rest of the rule response if there were params that were
-		// processed
-		if (clientSideActionOccurred) {
-			log.info("a client side action ocurred, I have an irods message to consume to end the rule processing");
-			// this.getIRODSProtocol().readMessage();
-		}
 
 		log.info("rule operation complete");
 		return irodsRuleOutputParameters;
@@ -660,15 +654,25 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements
 		if (resourceName == null) {
 			resourceName = "";
 		}
+		log.info("resourceName:{}", resourceName);
+
+		String forceValue = kvpMap.get("forceFlag");
+		boolean force = false;
+		if (forceValue != null) {
+			log.info("get will use force option");
+			force = true;
+		}
 
 		log.debug("getting reference to local file");
 
 		File localFile = new File(localPath);
 
 		if (label.equals(CL_GET_ACTION)) {
-			clientSideGetAction(irodsFileAbsolutePath, localFile);
+			clientSideGetAction(irodsFileAbsolutePath, localFile, resourceName,
+					force);
 		} else if (label.equals(CL_PUT_ACTION)) {
-			clientSidePutAction(irodsFileAbsolutePath, localFile, resourceName);
+			clientSidePutAction(irodsFileAbsolutePath, localFile, resourceName,
+					force);
 		}
 
 		StringBuilder putLabel = new StringBuilder();
@@ -684,13 +688,9 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements
 						localPath);
 	}
 
-	/**
-	 * @param irodsFileAbsolutePath
-	 * @param localFile
-	 * @throws JargonException
-	 */
+
 	private void clientSidePutAction(final String irodsFileAbsolutePath,
-			final File localFile, final String resourceName)
+			final File localFile, final String resourceName, final boolean force)
 			throws JargonException {
 		DataObjectAO dataObjectAO = new DataObjectAOImpl(getIRODSSession(),
 				getIRODSAccount());
@@ -698,19 +698,24 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements
 				.instanceIRODSFileForPath(irodsFileAbsolutePath);
 		irodsFile.setResource(resourceName);
 		log.debug("performing put of file");
+		TransferControlBlock transferControlBlock = this
+				.buildDefaultTransferControlBlockBasedOnJargonProperties();
+		if (force) {
+			transferControlBlock.getTransferOptions().setForceOption(
+					ForceOption.USE_FORCE);
+		} else {
+			transferControlBlock.getTransferOptions().setForceOption(
+					ForceOption.NO_FORCE);
+		}
 		dataObjectAO.putLocalDataObjectToIRODSForClientSideRuleOperation(
-				localFile, irodsFile, true, null);
+				localFile, irodsFile, transferControlBlock);
 		log.debug("client side put action was successful");
 	}
 
-	/**
-	 * @param irodsFileAbsolutePath
-	 * @param localFile
-	 * @throws JargonException
-	 * @throws DataNotFoundException
-	 */
+
 	private void clientSideGetAction(final String irodsFileAbsolutePath,
-			final File localFile) throws JargonException, DataNotFoundException {
+			final File localFile, final String resourceName, final boolean force)
+			throws JargonException, DataNotFoundException {
 
 		log.info("client-side get action");
 
@@ -718,9 +723,21 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements
 				getIRODSAccount());
 		IRODSFile irodsFile = dataObjectAO
 				.instanceIRODSFileForPath(irodsFileAbsolutePath);
+		irodsFile.setResource(resourceName);
 		log.info("performing get of file");
-		dataObjectAO.irodsDataObjectGetOperationForClientSideAction(irodsFile,
-				localFile, null);
+		TransferOptions transferOptions = this.buildTransferOptionsBasedOnJargonProperties();
+		if (force) {
+			transferOptions.setForceOption(ForceOption.USE_FORCE);
+		} else {
+			transferOptions.setForceOption(ForceOption.NO_FORCE);
+		}
+
+		int status = dataObjectAO
+				.irodsDataObjectGetOperationForClientSideAction(irodsFile,
+				localFile, transferOptions);
+
+		this.operationComplete(status);
+
 		log.debug("client side get action was successful");
 	}
 

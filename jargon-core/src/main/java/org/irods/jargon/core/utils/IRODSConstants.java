@@ -279,7 +279,7 @@ public final class IRODSConstants {
 	public static final String userName = "userName";
 	public static final String zone = "zone";
 	public static final String path = "path";
-	public static final String l1descInx = "l1descInx";
+	public static final String L1_DESC_INX = "l1descInx";
 	public static final String len = "len";
 	public static final String fileInx = "fileInx";
 	public static final String whence = "whence";
