@@ -263,5 +263,4 @@ public interface UserAO extends IRODSAccessObject {
 	 */
 	String retriveUserDNByUserId(String userId) throws JargonException;
 
-
 }

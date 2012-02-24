@@ -426,14 +426,13 @@ public interface DataTransferOperations extends IRODSAccessObject {
 	 */
 	void move(IRODSFile irodsSourceFile, IRODSFile irodsTargetFile)
 			throws JargonFileOrCollAlreadyExistsException, JargonException;
-	
-	
+
 	/**
 	 * Put a URL to iRODS.
 	 * 
 	 * @param sourceURL
-	 *            <code>String</code> of the URL that will be the
-	 *            source of the put.
+	 *            <code>String</code> of the URL that will be the source of the
+	 *            put.
 	 * @param targetIrodsFileAbsolutePath
 	 *            <code>String</code> with the absolute path of the iRODS
 	 *            collection that will be the target of the put
@@ -449,8 +448,8 @@ public interface DataTransferOperations extends IRODSAccessObject {
 	 *            the initiator of the transfer and the transfer process.
 	 * @throws JargonException
 	 */
-	void putOperationURL(String sourceURL,
-			String targetIrodsFileAbsolutePath, String targetResourceName,
+	void putOperationURL(String sourceURL, String targetIrodsFileAbsolutePath,
+			String targetResourceName,
 			TransferStatusCallbackListener transferStatusCallbackListener,
 			TransferControlBlock transferControlBlock) throws JargonException;
 

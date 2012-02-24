@@ -54,8 +54,7 @@ public class GetTempPasswordForOther extends AbstractIRODSPackingInstruction {
 	@Override
 	public Tag getTagValue() throws JargonException {
 		final Tag message = new Tag(PI_TAG,
-				new Tag[] {
- new Tag("targetUser", targetUserName.trim()),
+				new Tag[] { new Tag("targetUser", targetUserName.trim()),
 						new Tag("unused") });
 		return message;
 	}

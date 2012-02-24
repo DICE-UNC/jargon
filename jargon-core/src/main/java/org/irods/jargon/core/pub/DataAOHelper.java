@@ -47,7 +47,7 @@ import org.slf4j.LoggerFactory;
  * @author Mike Conway - DICE (www.irods.org)
  * 
  */
-public final class DataAOHelper extends AOHelper {
+final class DataAOHelper extends AOHelper {
 	public static final Logger log = LoggerFactory
 			.getLogger(DataAOHelper.class);
 
@@ -56,8 +56,7 @@ public final class DataAOHelper extends AOHelper {
 	private int streamBufferSize = 0;
 	private int putBufferSize = 0;
 
-	protected DataAOHelper(
-			final IRODSAccessObjectFactory irodsAccessObjectFactory,
+	DataAOHelper(final IRODSAccessObjectFactory irodsAccessObjectFactory,
 			final IRODSAccount irodsAccount) {
 		super();
 		if (irodsAccessObjectFactory == null) {
@@ -84,7 +83,7 @@ public final class DataAOHelper extends AOHelper {
 	 * 
 	 * @return <code>String</code> with select statements for the domain object.
 	 */
-	protected String buildSelects() {
+	String buildSelects() {
 		final StringBuilder query = new StringBuilder();
 		query.append("SELECT ");
 		query.append(RodsGenQueryEnum.COL_D_DATA_ID.getName());
@@ -142,8 +141,8 @@ public final class DataAOHelper extends AOHelper {
 	 *         the data in the row.
 	 * @throws JargonException
 	 */
-	protected DataObject buildDomainFromResultSetRow(
-			final IRODSQueryResultRow row) throws JargonException {
+	DataObject buildDomainFromResultSetRow(final IRODSQueryResultRow row)
+			throws JargonException {
 		DataObject dataObject = new DataObject();
 		dataObject.setId(Integer.parseInt(row.getColumn(0)));
 		dataObject.setCollectionId(Integer.parseInt(row.getColumn(1)));
@@ -190,7 +189,7 @@ public final class DataAOHelper extends AOHelper {
 	 * @return <code>String</code> with an iquest-like set of select values for
 	 *         the metadata AVU elements.
 	 */
-	public static String buildMetadataSelects() {
+	static String buildMetadataSelects() {
 		StringBuilder sb = new StringBuilder();
 		sb.append(RodsGenQueryEnum.COL_META_DATA_ATTR_NAME.getName());
 		sb.append(COMMA);
@@ -200,7 +199,7 @@ public final class DataAOHelper extends AOHelper {
 		return sb.toString();
 	}
 
-	protected List<DataObject> buildListFromResultSet(
+	List<DataObject> buildListFromResultSet(
 			final IRODSQueryResultSetInterface resultSet)
 			throws JargonException {
 
@@ -225,8 +224,7 @@ public final class DataAOHelper extends AOHelper {
 	 *            <codeStringBuilder</code> with the given AVU query in iquest
 	 *            query form.
 	 */
-	protected StringBuilder buildConditionPart(
-			final AVUQueryElement queryElement) {
+	StringBuilder buildConditionPart(final AVUQueryElement queryElement) {
 		StringBuilder queryCondition = new StringBuilder();
 		if (queryElement.getAvuQueryPart() == AVUQueryElement.AVUQueryPart.ATTRIBUTE) {
 			queryCondition.append(RodsGenQueryEnum.COL_META_DATA_ATTR_NAME
@@ -273,7 +271,7 @@ public final class DataAOHelper extends AOHelper {
 	 * @return
 	 * @throws JargonException
 	 */
-	public static List<MetaDataAndDomainData> buildMetaDataAndDomainDataListFromResultSet(
+	static List<MetaDataAndDomainData> buildMetaDataAndDomainDataListFromResultSet(
 			final IRODSQueryResultSetInterface irodsQueryResultSet)
 			throws JargonException {
 
@@ -297,7 +295,7 @@ public final class DataAOHelper extends AOHelper {
 	 * @return
 	 * @throws JargonException
 	 */
-	public static MetaDataAndDomainData buildMetaDataAndDomainDataFromResultSetRowForDataObject(
+	static MetaDataAndDomainData buildMetaDataAndDomainDataFromResultSetRowForDataObject(
 			final IRODSQueryResultRow row) throws JargonException {
 
 		String domainId = row.getColumn(0);
@@ -331,7 +329,7 @@ public final class DataAOHelper extends AOHelper {
 	 * @param transferControlBlock
 	 * @throws JargonException
 	 */
-	protected void processNormalGetTransfer(final File localFileToHoldData,
+	void processNormalGetTransfer(final File localFileToHoldData,
 			final long length, final IRODSCommands irodsProtocol,
 			final TransferOptions transferOptions,
 			final TransferControlBlock transferControlBlock,
@@ -429,7 +427,7 @@ public final class DataAOHelper extends AOHelper {
 	 * @throws JargonException
 	 * @throws FileNotFoundException
 	 */
-	protected void processNormalPutTransfer(final File localFile,
+	void processNormalPutTransfer(final File localFile,
 			final boolean overwrite, final IRODSFile targetFile,
 			final IRODSCommands irodsProtocol,
 			final TransferControlBlock transferControlBlock,
@@ -507,8 +505,8 @@ public final class DataAOHelper extends AOHelper {
 
 	}
 
-	protected void putReadWriteLoop(final File localFile,
-			final boolean overwrite, final IRODSFile targetFile, final int fd,
+	void putReadWriteLoop(final File localFile, final boolean overwrite,
+			final IRODSFile targetFile, final int fd,
 			final IRODSCommands irodsProtocol,
 			final TransferControlBlock transferControlBlock,
 			final ConnectionProgressStatusListener intraFileStatusListener)
@@ -590,7 +588,9 @@ public final class DataAOHelper extends AOHelper {
 			throw new JargonException(e);
 		} finally {
 			try {
-				fis.close();
+				if (fis != null) {
+					fis.close();
+				}
 			} catch (IOException e) {
 				// ignore
 			}
@@ -610,7 +610,7 @@ public final class DataAOHelper extends AOHelper {
 	 * @return
 	 * @throws JargonException
 	 */
-	protected IRODSFile checkTargetFileForPutOperation(final File localFile,
+	IRODSFile checkTargetFileForPutOperation(final File localFile,
 			final IRODSFile irodsFileDestination, final boolean ignoreChecks,
 			final IRODSFileFactory irodsFileFactory) throws JargonException {
 
@@ -655,7 +655,7 @@ public final class DataAOHelper extends AOHelper {
 	 * @param dataName
 	 * @return
 	 */
-	protected static String buildACLQueryForCollectionPathAndDataName(
+	static String buildACLQueryForCollectionPathAndDataName(
 			final String irodsCollectionAbsolutePath, final String dataName) {
 		StringBuilder query = new StringBuilder();
 		query.append("SELECT ");
@@ -693,7 +693,7 @@ public final class DataAOHelper extends AOHelper {
 	 * @param transferControlBlock
 	 * @throws JargonException
 	 */
-	protected void processGetTransferViaRead(final IRODSFile irodsFile,
+	void processGetTransferViaRead(final IRODSFile irodsFile,
 			final File localFileToHoldData, final long irodsFileLength,
 			final TransferOptions transferOptions, final int fd,
 			final TransferControlBlock transferControlBlock,

@@ -492,7 +492,7 @@ public class SettableJargonProperties implements JargonProperties {
 	 * @see org.irods.jargon.core.connection.JargonProperties#getPutBufferSize()
 	 */
 	@Override
-	public int getPutBufferSize() {
+	public synchronized int getPutBufferSize() {
 		return putBufferSize;
 	}
 
@@ -502,7 +502,7 @@ public class SettableJargonProperties implements JargonProperties {
 	 * @see org.irods.jargon.core.connection.JargonProperties#getGetBufferSize()
 	 */
 	@Override
-	public int getGetBufferSize() {
+	public synchronized int getGetBufferSize() {
 		return getBufferSize;
 	}
 

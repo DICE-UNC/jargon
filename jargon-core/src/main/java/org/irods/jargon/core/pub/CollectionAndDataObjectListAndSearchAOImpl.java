@@ -234,8 +234,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 
 		try {
 			resultSet = irodsGenQueryExecutor
-					.executeIRODSQueryAndCloseResultInZone(irodsQuery, 0,
- zone);
+					.executeIRODSQueryAndCloseResultInZone(irodsQuery, 0, zone);
 		} catch (JargonQueryException e) {
 			log.error(QUERY_EXCEPTION_FOR_QUERY + query.toString(), e);
 			throw new JargonException(e);

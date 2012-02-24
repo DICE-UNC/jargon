@@ -171,7 +171,7 @@ public abstract class IRODSGenericAO implements IRODSAccessObject {
 	 * @see org.irods.jargon.core.pub.IRODSAccessObject#operationComplete(int)
 	 */
 	@Override
-	public void operationComplete(int status) throws JargonException {
+	public void operationComplete(final int status) throws JargonException {
 		OperationComplete operationComplete = OperationComplete
 				.instance(status);
 		getIRODSProtocol().irodsFunction(operationComplete);

@@ -254,32 +254,30 @@ public final class IRODSGenQueryExecutorImpl extends IRODSGenericAO implements
 		try {
 			response = sendGenQueryAndReturnResponse(genQueryInp);
 
+			int continuation = response.getTag(GenQueryOut.CONTINUE_INX)
+					.getIntValue();
 
+			log.info("continuation value: {}", continuation);
 
-		int continuation = response.getTag(GenQueryOut.CONTINUE_INX)
-				.getIntValue();
+			// get a list of the column names
+			List<String> columnNames = new ArrayList<String>();
 
-		log.info("continuation value: {}", continuation);
+			for (GenQuerySelectField selectField : translatedIRODSQuery
+					.getSelectFields()) {
+				columnNames.add(selectField.getSelectFieldColumnName());
+			}
 
-		// get a list of the column names
-		List<String> columnNames = new ArrayList<String>();
+			result = translateResponseIntoResultSet(response,
+					translatedIRODSQuery, columnNames, continuation);
 
-		for (GenQuerySelectField selectField : translatedIRODSQuery
-				.getSelectFields()) {
-			columnNames.add(selectField.getSelectFieldColumnName());
-		}
+			resultSet = IRODSQueryResultSet.instance(translatedIRODSQuery,
+					result, continuation);
 
-			result = translateResponseIntoResultSet(
-				response, translatedIRODSQuery, columnNames, continuation);
-
-			resultSet = IRODSQueryResultSet.instance(
-				translatedIRODSQuery, result, continuation);
-
-		if (resultSet.isHasMoreRecords()
-				&& queryCloseBehavior == QueryCloseBehavior.AUTO_CLOSE) {
-			log.info("auto closing result set");
-			this.closeResults(resultSet);
-		}
+			if (resultSet.isHasMoreRecords()
+					&& queryCloseBehavior == QueryCloseBehavior.AUTO_CLOSE) {
+				log.info("auto closing result set");
+				this.closeResults(resultSet);
+			}
 
 			return resultSet;
 		} catch (DataNotFoundException dnf) {

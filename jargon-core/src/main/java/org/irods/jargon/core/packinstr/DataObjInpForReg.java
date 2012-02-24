@@ -29,8 +29,8 @@ public class DataObjInpForReg extends AbstractIRODSPackingInstruction {
 	 *         instruction
 	 * @throws JargonException
 	 */
-	public static final DataObjInpForReg instance(
-			final String fileAbsolutePath) throws JargonException {
+	public static final DataObjInpForReg instance(final String fileAbsolutePath)
+			throws JargonException {
 		return new DataObjInpForReg(fileAbsolutePath);
 	}
 

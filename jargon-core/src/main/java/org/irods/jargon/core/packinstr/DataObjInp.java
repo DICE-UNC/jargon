@@ -584,7 +584,7 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 	 */
 	public static final DataObjInp instanceForGetSpecifyingResource(
 			final String sourceAbsolutePath, final String resource,
-			String localPath, final TransferOptions transferOptions)
+			final String localPath, final TransferOptions transferOptions)
 			throws JargonException {
 
 		if (sourceAbsolutePath == null || sourceAbsolutePath.isEmpty()) {
@@ -921,7 +921,7 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 	 * @param localPath
 	 *            the localPath to set
 	 */
-	public void setLocalPath(String localPath) {
+	public void setLocalPath(final String localPath) {
 		this.localPath = localPath;
 	}
 

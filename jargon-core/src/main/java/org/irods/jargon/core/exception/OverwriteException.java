@@ -1,4 +1,3 @@
-
 package org.irods.jargon.core.exception;
 
 /**
@@ -32,6 +31,5 @@ public class OverwriteException extends JargonException {
 	public OverwriteException(final String message, final Throwable cause) {
 		super(message, cause);
 	}
-
 
 }

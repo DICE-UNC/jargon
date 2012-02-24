@@ -441,13 +441,13 @@ public class DefaultTransferControlBlock implements TransferControlBlock {
 	 * (java.lang.String)
 	 */
 	@Override
-	public void setRestartAbsolutePath(String restartAbsolutePath) {
+	public void setRestartAbsolutePath(final String restartAbsolutePath) {
 		if (restartAbsolutePath == null) {
 			throw new IllegalArgumentException(
 					"null restartAbsolutePath, set to blank if not required");
 		}
 		synchronized (this) {
-		this.restartAbsolutePath = restartAbsolutePath;
+			this.restartAbsolutePath = restartAbsolutePath;
 		}
 	}
 

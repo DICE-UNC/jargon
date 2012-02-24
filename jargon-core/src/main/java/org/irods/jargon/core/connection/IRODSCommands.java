@@ -1380,7 +1380,7 @@ public class IRODSCommands implements IRODSManagedConnection {
 	 */
 	@Override
 	public IRODSSession getIrodsSession() {
-		return getIrodsSession();
+		return irodsConnection.getIrodsSession();
 	}
 
 	/*

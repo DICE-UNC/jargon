@@ -277,6 +277,7 @@ public class TransferOptions {
 
 	/**
 	 * Get the prevailing force option for this transfer
+	 * 
 	 * @return {@link ForceOption} enum value that indicates the force mode to
 	 *         use
 	 */
@@ -290,7 +291,7 @@ public class TransferOptions {
 	 * @param forceOption
 	 *            {@link ForceOption} enum value
 	 */
-	public synchronized void setForceOption(ForceOption forceOption) {
+	public synchronized void setForceOption(final ForceOption forceOption) {
 		this.forceOption = forceOption;
 	}
 

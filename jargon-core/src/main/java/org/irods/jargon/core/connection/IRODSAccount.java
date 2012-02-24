@@ -364,13 +364,12 @@ public final class IRODSAccount implements Serializable {
 		try {
 			if (includePassword) {
 				uri = new URI("irods://" + getUserName() + "." + getZone()
-						+ ":" + getPassword()
-						+ "@" + getHost() + ":" + getPort()
-						+ getHomeDirectory());
+						+ ":" + getPassword() + "@" + getHost() + ":"
+						+ getPort() + getHomeDirectory());
 			} else {
 				uri = new URI("irods://" + getUserName() + "." + getZone()
-						+ "@" + getHost()
-						+ ":" + getPort() + getHomeDirectory());
+						+ "@" + getHost() + ":" + getPort()
+						+ getHomeDirectory());
 			}
 		} catch (URISyntaxException e) {
 			throw new JargonException("cannot convert this account into a URI:"

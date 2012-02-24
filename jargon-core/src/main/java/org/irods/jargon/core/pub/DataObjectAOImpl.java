@@ -338,7 +338,6 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 	}
 
-
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -936,8 +935,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		transferControlBlock.setTransferOptions(myTransferOptions);
 
 		return processGetAfterResourceDetermined(irodsFileToGet,
-				localFileToHoldData,
- dataObjInp, myTransferOptions, 0,
+				localFileToHoldData, dataObjInp, myTransferOptions, 0,
 				transferControlBlock, null, true);
 
 	}
@@ -985,14 +983,15 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	 * @throws UnsupportedOperationException
 	 */
 	private int processGetAfterResourceDetermined(
-			final IRODSFile irodsFileToGet, final File localFileToHoldData,
+			final IRODSFile irodsFileToGet,
+			final File localFileToHoldData,
 			final DataObjInp dataObjInp,
 			final TransferOptions thisFileTransferOptions,
 			final long irodsFileLength,
 			final TransferControlBlock transferControlBlock,
 			final TransferStatusCallbackListener transferStatusCallbackListener,
-			boolean clientSideAction)
-			throws OverwriteException, JargonException, DataNotFoundException {
+			final boolean clientSideAction) throws OverwriteException,
+			JargonException, DataNotFoundException {
 
 		log.info("process get after resource determined");
 
@@ -1115,13 +1114,15 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	 * @throws JargonException
 	 */
 	private void checkNbrThreadsAndProcessAsParallelIfMoreThanZeroThreads(
-			final IRODSFile irodsSourceFile, final File localFileToHoldData,
-			final TransferOptions transferOptions, final Tag message,
-			final long length, final long irodsFileLength,
+			final IRODSFile irodsSourceFile,
+			final File localFileToHoldData,
+			final TransferOptions transferOptions,
+			final Tag message,
+			final long length,
+			final long irodsFileLength,
 			final TransferControlBlock transferControlBlock,
 			final TransferStatusCallbackListener transferStatusCallbackListener,
-			final boolean clientSideAction)
-			throws JargonException {
+			final boolean clientSideAction) throws JargonException {
 		final String host = message.getTag(IRODSConstants.PortList_PI)
 				.getTag(IRODSConstants.hostAddr).getStringValue();
 		int port = message.getTag(IRODSConstants.PortList_PI)
@@ -1160,8 +1161,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			ParallelGetFileTransferStrategy parallelGetTransferStrategy = ParallelGetFileTransferStrategy
 					.instance(host, port, numberOfThreads, password,
 							localFileToHoldData,
-							this.getIRODSAccessObjectFactory(),
- lengthToUse,
+							this.getIRODSAccessObjectFactory(), lengthToUse,
 							transferControlBlock,
 							transferStatusCallbackListener);
 
