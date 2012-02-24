@@ -33,6 +33,7 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 	public static final String DATA_INCLUDED_KW = "dataIncluded";
 	public static final String RESC_NAME = "rescName";
 	public static final String MY_STR = "myStr";
+	public static final String LOCAL_PATH = "localPath";
 	public static final String ALL = "all";
 
 	public static final int CREATE_FILE_API_NBR = 601;
@@ -78,6 +79,7 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 	}
 
 	private String fileAbsolutePath = "";
+	private String localPath = "";
 	private int createMode = DEFAULT_CREATE_MODE;
 	private OpenFlags openFlags = null;
 	private long offset = 0L;
@@ -570,6 +572,8 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 	 * @param resource
 	 *            <code>String</code> with the resource that contains the file
 	 *            that should be retrieved
+	 * @param localPath
+	 *            <code>String</code> with the absolute path to the local file
 	 * @param transferOptions
 	 *            {@link TransferOptions} that configures details about the
 	 *            underlying technique used in the transfer. Can be set to null
@@ -580,7 +584,8 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 	 */
 	public static final DataObjInp instanceForGetSpecifyingResource(
 			final String sourceAbsolutePath, final String resource,
-			final TransferOptions transferOptions) throws JargonException {
+			String localPath, final TransferOptions transferOptions)
+			throws JargonException {
 
 		if (sourceAbsolutePath == null || sourceAbsolutePath.isEmpty()) {
 			throw new JargonException("null or empty sourceAbsolutePath");
@@ -590,10 +595,16 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 			throw new JargonException("null resource");
 		}
 
+		if (localPath == null) {
+			throw new IllegalArgumentException(
+					"localPath is null, set to spaces if not used");
+		}
+
 		DataObjInp dataObjInp = new DataObjInp(sourceAbsolutePath, 0,
 				OpenFlags.READ, 0L, 0L, resource, transferOptions);
 		dataObjInp.operationType = GET_OPERATION_TYPE;
 		dataObjInp.setApiNumber(GET_FILE_API_NBR);
+		dataObjInp.setLocalPath(localPath);
 
 		return dataObjInp;
 	}
@@ -738,6 +749,10 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 		if (this.getOperationType() == REPLICATE_OPERATION_TYPE
 				&& isReplicationToAll()) {
 			kvps.add(KeyValuePair.instance(ALL, ""));
+		}
+
+		if (!this.getLocalPath().isEmpty()) {
+			kvps.add(KeyValuePair.instance(LOCAL_PATH, getLocalPath()));
 		}
 
 		// add a keyword tag for resource if a resource was given to the packing
@@ -893,6 +908,21 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 	 */
 	public String getFileChecksumValue() {
 		return fileChecksumValue;
+	}
+
+	/**
+	 * @return the localPath
+	 */
+	public String getLocalPath() {
+		return localPath;
+	}
+
+	/**
+	 * @param localPath
+	 *            the localPath to set
+	 */
+	public void setLocalPath(String localPath) {
+		this.localPath = localPath;
 	}
 
 }

@@ -268,7 +268,7 @@ public class DataObjInpTest {
 		DataObjInp dataObjInp = DataObjInp
 				.instanceForGetSpecifyingResource(
 						"/test1/home/test1/test-scratch/IrodsCommandsGetTest/testGetSpecifyingResource.txt",
-						"test1-resc", null);
+						"test1-resc", "", null);
 
 		StringBuilder sb = new StringBuilder();
 		sb.append("<DataObjInp_PI><objPath>/test1/home/test1/test-scratch/IrodsCommandsGetTest/testGetSpecifyingResource.txt</objPath>\n");

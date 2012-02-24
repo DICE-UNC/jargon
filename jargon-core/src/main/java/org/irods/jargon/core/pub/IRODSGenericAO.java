@@ -9,6 +9,8 @@ import org.irods.jargon.core.connection.IRODSServerProperties;
 import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.connection.JargonProperties;
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.packinstr.OperationComplete;
+import org.irods.jargon.core.packinstr.TransferOptions;
 import org.irods.jargon.core.pub.io.IRODSFileFactory;
 import org.irods.jargon.core.transfer.TransferControlBlock;
 import org.slf4j.Logger;
@@ -24,8 +26,6 @@ public abstract class IRODSGenericAO implements IRODSAccessObject {
 
 	private final IRODSSession irodsSession;
 	private final IRODSAccount irodsAccount;
-
-	// FIXME: cache connection and don't call IRODSSession each time?
 
 	private static final Logger log = LoggerFactory
 			.getLogger(IRODSGenericAO.class);
@@ -150,6 +150,31 @@ public abstract class IRODSGenericAO implements IRODSAccessObject {
 	public IRODSFileFactory getIRODSFileFactory() throws JargonException {
 		return IRODSAccessObjectFactoryImpl.instance(irodsSession)
 				.getIRODSFileFactory(irodsAccount);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.pub.IRODSAccessObject#
+	 * buildTransferOptionsBasedOnJargonProperties()
+	 */
+	@Override
+	public TransferOptions buildTransferOptionsBasedOnJargonProperties()
+			throws JargonException {
+		return this.getIRODSAccessObjectFactory()
+				.buildTransferOptionsBasedOnJargonProperties();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.pub.IRODSAccessObject#operationComplete(int)
+	 */
+	@Override
+	public void operationComplete(int status) throws JargonException {
+		OperationComplete operationComplete = OperationComplete
+				.instance(status);
+		getIRODSProtocol().irodsFunction(operationComplete);
 	}
 
 }

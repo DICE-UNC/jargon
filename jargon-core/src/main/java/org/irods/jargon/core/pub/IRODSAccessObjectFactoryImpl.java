@@ -4,6 +4,7 @@ import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.connection.JargonProperties;
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.packinstr.TransferOptions;
 import org.irods.jargon.core.pub.io.IRODSFileFactory;
 import org.irods.jargon.core.pub.io.IRODSFileFactoryImpl;
 import org.irods.jargon.core.transfer.TransferControlBlock;
@@ -532,5 +533,11 @@ public final class IRODSAccessObjectFactoryImpl implements
 		// irodsSession synchronizes access
 		return irodsSession
 				.buildDefaultTransferControlBlockBasedOnJargonProperties();
+	}
+
+	@Override
+	public TransferOptions buildTransferOptionsBasedOnJargonProperties()
+			throws JargonException {
+		return irodsSession.buildTransferOptionsBasedOnJargonProperties();
 	}
 }
