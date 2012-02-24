@@ -205,6 +205,10 @@ final class TransferOperationsHelper {
 
 		log.info("get of single file...filtered?");
 
+		if (transferControlBlock == null) {
+			throw new IllegalArgumentException("null transferControlBlock");
+		}
+
 		int totalFiles = 0;
 		int totalFilesSoFar = 0;
 

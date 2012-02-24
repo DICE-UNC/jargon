@@ -183,7 +183,7 @@ public class UserFilePermission {
 		return userZone;
 	}
 
-	public void setUserZone(String userZone) {
+	public void setUserZone(final String userZone) {
 		this.userZone = userZone;
 	}
 

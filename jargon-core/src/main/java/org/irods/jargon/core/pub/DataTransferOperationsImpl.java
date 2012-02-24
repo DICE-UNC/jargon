@@ -441,6 +441,12 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 			final TransferStatusCallbackListener transferStatusCallbackListener,
 			final TransferControlBlock operativeTransferControlBlock,
 			final File targetLocalFileNameForCallbacks) throws JargonException {
+
+		if (operativeTransferControlBlock == null) {
+			throw new IllegalArgumentException(
+					"null operativeTransferControlBlock");
+		}
+
 		/*
 		 * Compute the count of files to be transferred. This is different
 		 * depending on whether this is a single file, or whether it's a

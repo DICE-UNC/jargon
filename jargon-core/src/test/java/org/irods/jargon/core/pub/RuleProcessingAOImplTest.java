@@ -459,12 +459,65 @@ public class RuleProcessingAOImplTest {
 	}
 
 	@Test
+	public void testExecuteRequestClientActionParallelPut() throws Exception {
+		// create a local file to put
+		// put a collection out to do a checksum on
+		String testFileName = "testExecuteRequestClientActionParallelPut.txt";
+		String testResultFileName = "testExecuteRequestClientActionParallelPutResult.txt";
+		long length = 32 * 1024 * 1024;
+
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String putFileName = FileGenerator.generateFileOfFixedLengthGivenName(
+				absPath, testFileName, length);
+
+		String targetIrodsFileName = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH)
+				+ "/" + testResultFileName;
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+		StringBuilder builder = new StringBuilder();
+		builder.append("testClientAction||msiDataObjPut(");
+		builder.append(targetIrodsFileName);
+		builder.append(",null,");
+		builder.append("\"localPath=");
+		builder.append(putFileName);
+		builder.append("\"");
+		builder.append(",*status)|nop\n");
+		builder.append("*A=null\n");
+		builder.append("*ruleExecOut");
+		RuleProcessingAO ruleProcessingAO = accessObjectFactory
+				.getRuleProcessingAO(irodsAccount);
+
+		IRODSRuleExecResult result = ruleProcessingAO.executeRule(builder
+				.toString());
+
+		IRODSFile putFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetIrodsFileName);
+
+		Assert.assertTrue("file does not exist", putFile.exists());
+		Assert.assertEquals("irods file does not have correct length", length,
+				putFile.length());
+
+		irodsFileSystem.close();
+
+		Assert.assertNotNull("did not get a response", result);
+		Assert.assertEquals("did not get results for client side operation", 1,
+				result.getOutputParameterResults().size());
+
+	}
+
+	@Test
 	public void testExecuteRequestClientActionPutWithOverwriteFileExists()
 			throws Exception {
 		// create a local file to put
 		// put a collection out to do a checksum on
 		String testFileName = "testExecuteRequestClientActionPutWithOverwriteFileExists.txt";
-		String testResultFileName = "testExecuteRequestClientActionPutWithOverwriteFileExistsResult.txt";
 
 		String absPath = scratchFileUtils
 				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
@@ -526,7 +579,6 @@ public class RuleProcessingAOImplTest {
 		// create a local file to put
 		// put a collection out to do a checksum on
 		String testFileName = "testExecuteRequestClientActionPutWithNoOverwriteFileExists.txt";
-		String testResultFileName = "testExecuteRequestClientActionPutWithNoOverwriteFileExistsResult.txt";
 
 		String absPath = scratchFileUtils
 				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);

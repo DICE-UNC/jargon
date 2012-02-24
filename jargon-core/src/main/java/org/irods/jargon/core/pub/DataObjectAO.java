@@ -142,8 +142,7 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 */
 	void getDataObjectFromIrods(final IRODSFile irodsFileToGet,
 			final File localFileToHoldData) throws OverwriteException,
-			DataNotFoundException,
-			JargonException;
+			DataNotFoundException, JargonException;
 
 	/**
 	 * Get operation for a single data object. This method allows specification

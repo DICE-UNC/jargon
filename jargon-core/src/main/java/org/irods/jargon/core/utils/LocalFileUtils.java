@@ -33,9 +33,6 @@ public class LocalFileUtils {
 	public static final Logger log = LoggerFactory
 			.getLogger(LocalFileUtils.class);
 
-	public static final DateFormat dateFormat = DateFormat
-			.getDateTimeInstance();
-
 	/**
 	 * private constructor, this is not meant to be an instantiated class.
 	 */
@@ -102,6 +99,7 @@ public class LocalFileUtils {
 		String extension = getFileExtension(fileName);
 		StringBuilder newName = new StringBuilder(namePart);
 		newName.append(".[backup from - ");
+		DateFormat dateFormat = DateFormat.getDateTimeInstance();
 		newName.append(dateFormat.format(new Date()));
 		newName.append("]");
 		newName.append(extension);
@@ -342,7 +340,9 @@ public class LocalFileUtils {
 		} finally {
 			try {
 				resourceReader.close();
-				writer.close();
+				if (writer != null) {
+					writer.close();
+				}
 			} catch (IOException e) {
 				// ignore
 			}

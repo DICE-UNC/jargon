@@ -166,7 +166,9 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements
 		} finally {
 			try {
 				irodsFileReader.close();
-				writer.close();
+				if (writer != null) {
+					writer.close();
+				}
 			} catch (IOException e) {
 				// ignore
 			}
@@ -506,7 +508,6 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements
 			}
 		}
 
-
 		log.info("rule operation complete");
 		return irodsRuleOutputParameters;
 
@@ -688,7 +689,6 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements
 						localPath);
 	}
 
-
 	private void clientSidePutAction(final String irodsFileAbsolutePath,
 			final File localFile, final String resourceName, final boolean force)
 			throws JargonException {
@@ -712,7 +712,6 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements
 		log.debug("client side put action was successful");
 	}
 
-
 	private void clientSideGetAction(final String irodsFileAbsolutePath,
 			final File localFile, final String resourceName, final boolean force)
 			throws JargonException, DataNotFoundException {
@@ -725,7 +724,8 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements
 				.instanceIRODSFileForPath(irodsFileAbsolutePath);
 		irodsFile.setResource(resourceName);
 		log.info("performing get of file");
-		TransferOptions transferOptions = this.buildTransferOptionsBasedOnJargonProperties();
+		TransferOptions transferOptions = this
+				.buildTransferOptionsBasedOnJargonProperties();
 		if (force) {
 			transferOptions.setForceOption(ForceOption.USE_FORCE);
 		} else {
@@ -734,7 +734,7 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements
 
 		int status = dataObjectAO
 				.irodsDataObjectGetOperationForClientSideAction(irodsFile,
-				localFile, transferOptions);
+						localFile, transferOptions);
 
 		this.operationComplete(status);
 

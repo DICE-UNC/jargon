@@ -451,7 +451,6 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 		log.debug("query for user permissions = {}",
 				filePermissionQuery.toString());
 
-
 		int highestPermissionValue = extractHighestPermission(
 				irodsGenQueryExecutor, filePermissionQuery,
 				MiscIRODSUtils.getZoneInPath(irodsFile.getAbsolutePath()));
@@ -644,8 +643,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 
 		try {
 			resultSet = irodsGenQueryExecutor.executeIRODSQueryInZone(
-					irodsQuery, 0,
- zone);
+					irodsQuery, 0, zone);
 			for (IRODSQueryResultRow row : resultSet.getResults()) {
 				processListDirsResultRowForCollection(subdirs, row);
 			}

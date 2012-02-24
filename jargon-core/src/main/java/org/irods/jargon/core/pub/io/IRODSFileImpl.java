@@ -697,11 +697,10 @@ public final class IRODSFileImpl extends File implements IRODSFile {
 				objStat = irodsFileSystemAO.getObjStat(this.getAbsolutePath());
 			}
 
-
-				if (getObjStat().getObjectType() == ObjectType.COLLECTION
-						|| getObjStat().getObjectType() == ObjectType.LOCAL_DIR) {
-					isDir = true;
-				}
+			if (getObjStat().getObjectType() == ObjectType.COLLECTION
+					|| getObjStat().getObjectType() == ObjectType.LOCAL_DIR) {
+				isDir = true;
+			}
 		} catch (FileNotFoundException fnf) {
 			log.info("file not found");
 		} catch (JargonException je) {

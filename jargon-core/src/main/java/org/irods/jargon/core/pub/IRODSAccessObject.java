@@ -103,7 +103,6 @@ public interface IRODSAccessObject {
 	 *            <code>int</code> with the operation complete status to send
 	 * @throws JargonException
 	 */
-	void operationComplete(int status)
-			throws JargonException;
+	void operationComplete(int status) throws JargonException;
 
 }

@@ -25,7 +25,6 @@ public interface ProtocolExtensionPoint {
 	 *         processed by the invoker
 	 * @throws JargonException
 	 */
-	Tag irodsFunction(final IRodsPI irodsPI)
-			throws JargonException;
+	Tag irodsFunction(final IRodsPI irodsPI) throws JargonException;
 
 }

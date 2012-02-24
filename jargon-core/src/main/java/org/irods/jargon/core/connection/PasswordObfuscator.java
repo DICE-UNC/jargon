@@ -92,7 +92,7 @@ public class PasswordObfuscator {
 
 	private File encodeStringToFileByInputString(final Object objectIn)
 			throws Throwable {
-		String stringVal;
+		String stringVal = "";
 		if (objectIn != null) {
 			stringVal = objectIn.toString();
 		} else {

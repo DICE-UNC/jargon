@@ -22,7 +22,8 @@ import org.slf4j.LoggerFactory;
  * @author Mike Conway - DICE (www.irods.org)
  * 
  */
-public class ProtocolExtensionPointImpl extends IRODSGenericAO implements ProtocolExtensionPoint {
+public class ProtocolExtensionPointImpl extends IRODSGenericAO implements
+		ProtocolExtensionPoint {
 
 	private static Logger log = LoggerFactory
 			.getLogger(ProtocolExtensionPointImpl.class);

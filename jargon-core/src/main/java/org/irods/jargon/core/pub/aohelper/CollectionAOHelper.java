@@ -368,7 +368,6 @@ public class CollectionAOHelper extends AOHelper {
 	 * 
 	 * @param irodsCollectionAbsolutePath
 	 */
-	
 
 	public static String buildACLQueryForCollectionName(
 			final String irodsCollectionAbsolutePath) {

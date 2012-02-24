@@ -238,15 +238,16 @@ public class IRODSUriUtils {
 	 * @throws JargonException
 	 */
 	public static URI buildURIForAnAccountAndPath(
-			final IRODSAccount irodsAccount,
-			final String irodsPath) throws JargonException {
+			final IRODSAccount irodsAccount, final String irodsPath)
+			throws JargonException {
 
 		if (irodsAccount == null) {
 			throw new IllegalArgumentException("null iRODSAccount");
 		}
-		
+
 		if (irodsPath == null || irodsPath.isEmpty()) {
-			throw new IllegalArgumentException("null or empty irodsAbsolutePath");
+			throw new IllegalArgumentException(
+					"null or empty irodsAbsolutePath");
 		}
 
 		String absPath = irodsPath;
@@ -259,24 +260,22 @@ public class IRODSUriUtils {
 			sb.append(irodsPath);
 			absPath = sb.toString();
 		}
-	
+
 		URI uri = null;
 
 		try {
 			uri = new URI("irods", irodsAccount.getUserName(),
-						irodsAccount.getHost(), irodsAccount.getPort(),
- absPath,
-					null,
-						null);
+					irodsAccount.getHost(), irodsAccount.getPort(), absPath,
+					null, null);
 
 		} catch (URISyntaxException e) {
-		
+
 			throw new JargonException(e);
 		}
 
 		return uri;
 	}
-	
+
 }
 
 /**
