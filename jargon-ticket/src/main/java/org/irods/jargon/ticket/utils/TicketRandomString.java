@@ -4,13 +4,15 @@ import java.util.Random;
 
 public class TicketRandomString {
 
-	private static final int[] symbols = new int[26+26+10];
+	private static final int ALPHA_SET_SIZE = 26;
+	private static final int NUMERIC_SET_SIZE = 10;
+	private static final int[] symbols = new int[ALPHA_SET_SIZE+ALPHA_SET_SIZE+NUMERIC_SET_SIZE];
 
 	static {
 		int j=0;
-		for (int i=0;i<26;i++) symbols[j++]=(int)'A' + i;
-		for (int i=0;i<26;i++) symbols[j++]=(int)'a' + i;
-		for (int i=0;i<10;i++) symbols[j++]=(int)'0' + i;
+		for (int i=0;i<ALPHA_SET_SIZE;i++) symbols[j++]=(int)'A' + i;
+		for (int i=0;i<ALPHA_SET_SIZE;i++) symbols[j++]=(int)'a' + i;
+		for (int i=0;i<NUMERIC_SET_SIZE;i++) symbols[j++]=(int)'0' + i;
 	}
 
 	private final Random random = new Random();

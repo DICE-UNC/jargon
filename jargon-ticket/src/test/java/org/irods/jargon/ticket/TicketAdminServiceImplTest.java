@@ -6,6 +6,7 @@ import junit.framework.Assert;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.DataNotFoundException;
+import org.irods.jargon.core.exception.DuplicateDataException;
 import org.irods.jargon.core.pub.CollectionAO;
 import org.irods.jargon.core.pub.DataTransferOperations;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
@@ -318,6 +319,38 @@ public class TicketAdminServiceImplTest {
 		
 		// delete ticket after done
 		ticketSvc.deleteTicket(ticketId);
+
+	}
+	
+	@Test(expected = DuplicateDataException.class)
+	public void testCreateTicketForDataObjectNonUniqueTicketString() throws Exception {
+		
+		if (!testTicket) {
+			return;
+		}
+		
+		String testFileName = "testCreateTicketForDataObjectNonUniqueTicketString";
+		String duplicateID = "duplicateid";
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+		IRODSFile targetFile = createDataObjectByName(testFileName,
+				testingProperties.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
+				irodsAccount, accessObjectFactory);
+
+		TicketAdminService ticketSvc = new TicketAdminServiceImpl(accessObjectFactory, irodsAccount);
+
+		String ticketId = ticketSvc.createTicket(TicketCreateModeEnum.TICKET_CREATE_READ,
+				targetFile, duplicateID);
+		
+		String duplicateTicketId = ticketSvc.createTicket(TicketCreateModeEnum.TICKET_CREATE_READ,
+				targetFile, duplicateID);
+		
+		// delete ticket after done
+		ticketSvc.deleteTicket(ticketId);
+		ticketSvc.deleteTicket(duplicateTicketId);
 
 	}
 	
