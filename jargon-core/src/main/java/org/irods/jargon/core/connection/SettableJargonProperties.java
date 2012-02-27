@@ -1,6 +1,3 @@
-/**
- * 
- */
 package org.irods.jargon.core.connection;
 
 import org.irods.jargon.core.exception.JargonException;
@@ -38,6 +35,7 @@ public class SettableJargonProperties implements JargonProperties {
 	private int internalCacheBufferSize = 65535;
 	private int sendInputStreamBufferSize = 0;
 	private int localFileOutputStreamBufferSize = 0;
+	private int localFileInputStreamBufferSize = 0;
 	private int putBufferSize = 4194304;
 	private int getBufferSize = 4194304;
 	private int inputToOutputCopyBufferByteSize = 8192;
@@ -103,6 +101,8 @@ public class SettableJargonProperties implements JargonProperties {
 				.getSendInputStreamBufferSize();
 		this.localFileOutputStreamBufferSize = jargonProperties
 				.getLocalFileOutputStreamBufferSize();
+		this.localFileInputStreamBufferSize = jargonProperties
+				.getLocalFileInputStreamBufferSize();
 		this.putBufferSize = jargonProperties.getPutBufferSize();
 		this.getBufferSize = jargonProperties.getGetBufferSize();
 		this.encoding = jargonProperties.getEncoding();
@@ -393,6 +393,11 @@ public class SettableJargonProperties implements JargonProperties {
 		return localFileOutputStreamBufferSize;
 	}
 
+	@Override
+	public synchronized int getLocalFileInputStreamBufferSize() {
+		return localFileInputStreamBufferSize;
+	}
+
 	/**
 	 * @param transferThreadPoolMaxSimultaneousTransfers
 	 *            the transferThreadPoolMaxSimultaneousTransfers to set
@@ -447,15 +452,13 @@ public class SettableJargonProperties implements JargonProperties {
 		this.localFileOutputStreamBufferSize = localFileOutputStreamBufferSize;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.irods.jargon.core.connection.JargonProperties#getIrodsSocketTimeout()
+	/**
+	 * @param localFileInputStremBufferSize
+	 *            the localFileInputStreamBufferSize to set
 	 */
-	@Override
-	public synchronized int getIrodsSocketTimeout() {
-		return irodsSocketTimeout;
+	public synchronized void setLocalFileInputStreamBufferSize(
+			final int localFileInputStreamBufferSize) {
+		this.localFileInputStreamBufferSize = localFileInputStreamBufferSize;
 	}
 
 	/**
@@ -464,17 +467,6 @@ public class SettableJargonProperties implements JargonProperties {
 	 */
 	public synchronized void setIrodsSocketTimeout(final int irodsSocketTimeout) {
 		this.irodsSocketTimeout = irodsSocketTimeout;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.irods.jargon.core.connection.JargonProperties#
-	 * getIrodsParallelSocketTimeout()
-	 */
-	@Override
-	public synchronized int getIrodsParallelSocketTimeout() {
-		return irodsParallelSocketTimeout;
 	}
 
 	/**

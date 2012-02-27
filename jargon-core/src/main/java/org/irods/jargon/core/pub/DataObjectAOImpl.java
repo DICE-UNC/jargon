@@ -534,10 +534,15 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		TransferOptions myTransferOptions = new TransferOptions(
 				transferControlBlock.getTransferOptions());
 
-		myTransferOptions.setMaxThreads(this.getJargonProperties()
-				.getMaxParallelThreads());
-		log.info("setting max threads cap to:{}",
-				myTransferOptions.getMaxThreads());
+		if (myTransferOptions.isUseParallelTransfer()) {
+			myTransferOptions.setMaxThreads(this.getJargonProperties()
+					.getMaxParallelThreads());
+			log.info("setting max threads cap to:{}",
+					myTransferOptions.getMaxThreads());
+		} else {
+			log.info("no parallel transfer set in transferOptions");
+			myTransferOptions.setMaxThreads(-1);
+		}
 
 		ConnectionProgressStatusListener intraFileStatusListener = null;
 
@@ -797,9 +802,15 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		long irodsFileLength = irodsFileToGet.length();
 		log.info("testing file length to set parallel transfer options");
 		if (irodsFileLength > ConnectionConstants.MAX_SZ_FOR_SINGLE_BUF) {
-			thisFileTransferOptions.setMaxThreads(getIRODSSession()
-					.getJargonProperties().getMaxParallelThreads());
-			log.info("length above threshold, send max threads cap");
+			if (thisFileTransferOptions.isUseParallelTransfer()) {
+				thisFileTransferOptions.setMaxThreads(this
+						.getJargonProperties().getMaxParallelThreads());
+				log.info("setting max threads cap to:{}",
+						thisFileTransferOptions.getMaxThreads());
+			} else {
+				log.info("no parallel transfer set in transferOptions");
+				thisFileTransferOptions.setMaxThreads(-1);
+			}
 		} else {
 			thisFileTransferOptions.setMaxThreads(0);
 		}

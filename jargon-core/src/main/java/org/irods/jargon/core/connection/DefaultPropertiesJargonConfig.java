@@ -318,28 +318,22 @@ public class DefaultPropertiesJargonConfig implements JargonProperties {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.irods.jargon.core.connection.JargonProperties#getIrodsSocketTimeout()
+	 * @see org.irods.jargon.core.connection.JargonProperties#getEncoding()
 	 */
 	@Override
-	public int getIrodsSocketTimeout() {
-		return verifyPropExistsAndGetAsInt("socket.timeout");
+	public String getEncoding() {
+		return verifyPropExistsAndGetAsString("encoding");
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
 	 * @see org.irods.jargon.core.connection.JargonProperties#
-	 * getIrodsParallelSocketTimeout()
+	 * getLocalFileInputStreamBufferSize()
 	 */
 	@Override
-	public int getIrodsParallelSocketTimeout() {
-		return verifyPropExistsAndGetAsInt("parallel.socket.timeout");
-	}
-
-	@Override
-	public String getEncoding() {
-		return verifyPropExistsAndGetAsString("encoding");
+	public int getLocalFileInputStreamBufferSize() {
+		return verifyPropExistsAndGetAsInt("jargon.io.local.input.stream.buffer.size");
 	}
 
 }

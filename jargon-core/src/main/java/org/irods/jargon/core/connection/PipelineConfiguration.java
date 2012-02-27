@@ -19,6 +19,7 @@ public class PipelineConfiguration {
 	private final int internalOutputStreamBufferSize;
 	private final int internalCacheBufferSize;
 	private final int sendInputStreamBufferSize;
+	private final int localFileInputStreamBufferSize;
 	private final int localFileOutputStreamBufferSize;
 	private final String defaultEncoding = "utf-8"; // FIXME: put into
 													// jargon.properties and
@@ -55,6 +56,8 @@ public class PipelineConfiguration {
 				.getInternalCacheBufferSize();
 		this.sendInputStreamBufferSize = jargonProperties
 				.getSendInputStreamBufferSize();
+		this.localFileInputStreamBufferSize = jargonProperties
+				.getLocalFileInputStreamBufferSize();
 		this.localFileOutputStreamBufferSize = jargonProperties
 				.getLocalFileOutputStreamBufferSize();
 		this.inputToOutputCopyBufferByteSize = jargonProperties
@@ -78,6 +81,8 @@ public class PipelineConfiguration {
 		sb.append(internalCacheBufferSize);
 		sb.append("\n  localFileOutputStreamBufferSize:");
 		sb.append(localFileOutputStreamBufferSize);
+		sb.append("\n  localFileInputStreamBufferSize:");
+		sb.append(localFileInputStreamBufferSize);
 		sb.append("\n   defaultEncoding:");
 		sb.append(defaultEncoding);
 		sb.append("\n   inputToOutputCopyBufferByteSize:");
@@ -146,6 +151,13 @@ public class PipelineConfiguration {
 	 */
 	public synchronized int getInputToOutputCopyBufferByteSize() {
 		return inputToOutputCopyBufferByteSize;
+	}
+
+	/**
+	 * @return the localFileInputStreamBufferSize
+	 */
+	public int getLocalFileInputStreamBufferSize() {
+		return localFileInputStreamBufferSize;
 	}
 
 }

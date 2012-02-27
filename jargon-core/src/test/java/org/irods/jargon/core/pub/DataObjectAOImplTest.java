@@ -1880,6 +1880,74 @@ public class DataObjectAOImplTest {
 	}
 
 	@Test
+	public final void testGetFileGTParallelMaxNoParallelInOptions()
+			throws Exception {
+
+		int testFileLen = 33 * 1024 * 1024;
+		// generate a local scratch file
+		String testFileName = "testGetFileGTParallelMaxNoParallelInOptions.doc";
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String localFileName = FileGenerator
+				.generateFileOfFixedLengthGivenName(absPath, testFileName,
+						testFileLen);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
+		String getFileName = "testGetParallelWithIntraFileCallbacksResult.doc";
+		String getResultLocalPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH + '/')
+				+ getFileName;
+		File localFile = new File(getResultLocalPath);
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		TestingStatusCallbackListener transferStatusCallbackListener = new TestingStatusCallbackListener();
+		TransferControlBlock transferControlBlock = irodsFileSystem
+				.getIrodsSession()
+				.buildDefaultTransferControlBlockBasedOnJargonProperties();
+		transferControlBlock.getTransferOptions().setUseParallelTransfer(false);
+
+		DataTransferOperations dataTransferOperations = accessObjectFactory
+				.getDataTransferOperations(irodsAccount);
+		dataTransferOperations
+				.putOperation(
+						localFileName,
+						targetIrodsCollection,
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
+						transferStatusCallbackListener, transferControlBlock);
+
+		DataObjectAO dataObjectAO = accessObjectFactory
+				.getDataObjectAO(irodsAccount);
+		IRODSFile irodsFile = dataObjectAO
+				.instanceIRODSFileForPath(targetIrodsCollection + '/'
+						+ testFileName);
+
+		transferControlBlock = irodsFileSystem.getIrodsSession()
+				.buildDefaultTransferControlBlockBasedOnJargonProperties();
+		transferControlBlock.getTransferOptions().setUseParallelTransfer(false);
+		transferControlBlock.getTransferOptions().setIntraFileStatusCallbacks(
+				true);
+
+		transferStatusCallbackListener = new TestingStatusCallbackListener();
+
+		dataObjectAO.getDataObjectFromIrods(irodsFile, localFile,
+				transferControlBlock, transferStatusCallbackListener);
+
+		assertionHelper.assertLocalFileExistsInScratch(IRODS_TEST_SUBDIR_PATH
+				+ '/' + getFileName);
+		assertionHelper.assertLocalScratchFileLengthEquals(
+				IRODS_TEST_SUBDIR_PATH + '/' + getFileName, testFileLen);
+
+	}
+
+	@Test
 	public final void testGetGiveLocalTargetAsCollection() throws Exception {
 
 		// generate a local scratch file
@@ -4312,8 +4380,7 @@ public class DataObjectAOImplTest {
 		transferControlBlock.setTransferOptions(transferOptions);
 
 		dataObjectAO.putLocalDataObjectToIRODS(localFile,
-				targetIrodsCollectionFile,
-				transferControlBlock, null);
+				targetIrodsCollectionFile, transferControlBlock, null);
 
 		targetIrodsCollectionFile = irodsFileSystem.getIRODSFileFactory(
 				irodsAccount).instanceIRODSFile(targetIrodsCollection,
@@ -4504,9 +4571,10 @@ public class DataObjectAOImplTest {
 				+ '/' + getResultFileName);
 
 	}
-	
+
 	/**
-	 * Bug 629-malloc/resource error in irods when doing findDomainByMetadataQuery
+	 * Bug 629-malloc/resource error in irods when doing
+	 * findDomainByMetadataQuery
 	 */
 	@Test
 	public void testFindDataObjectDomainDataByAVUQueryForBug629()
@@ -4537,7 +4605,7 @@ public class DataObjectAOImplTest {
 						targetIrodsCollection);
 		testSubdir.deleteWithForceOption();
 		testSubdir.mkdirs();
-		
+
 		DataObjectAO dAO = aoFactory.getDataObjectAO(irodsAccount);
 		DataTransferOperations dto = irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataTransferOperations(
@@ -4566,7 +4634,7 @@ public class DataObjectAOImplTest {
 			avuData = AvuData.instance(expectedAttribName, expectedAttribValue
 					+ i, "");
 			dAO.addAVUMetadata(dataFile.getAbsolutePath(), avuData);
-			
+
 		}
 
 		ArrayList<AVUQueryElement> avus = new ArrayList<AVUQueryElement>();
@@ -4574,15 +4642,12 @@ public class DataObjectAOImplTest {
 				AVUQueryOperatorEnum.EQUAL, expectedAttribName));
 		avus.add(AVUQueryElement.instanceForValueQuery(AVUQueryPart.VALUE,
 				AVUQueryOperatorEnum.LIKE, expectedAttribValue + "%"));
-		
 
-		
 		List<DataObject> files = dAO.findDomainByMetadataQuery(avus);
 		TestCase.assertNotNull("null files returned", files);
 		TestCase.assertEquals("did not get all of the files", count,
 				files.size());
-		
-		
+
 	}
 
 	/**
@@ -4601,7 +4666,6 @@ public class DataObjectAOImplTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-
 
 		DataObjectAO dAO = irodsFileSystem.getIRODSAccessObjectFactory()
 				.getDataObjectAO(irodsAccount);

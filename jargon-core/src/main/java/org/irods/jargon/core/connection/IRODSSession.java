@@ -12,7 +12,6 @@ import java.util.concurrent.TimeUnit;
 
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.packinstr.TransferOptions;
-import org.irods.jargon.core.packinstr.TransferOptions.TransferType;
 import org.irods.jargon.core.transfer.DefaultTransferControlBlock;
 import org.irods.jargon.core.transfer.TransferControlBlock;
 import org.slf4j.Logger;
@@ -131,13 +130,8 @@ public class IRODSSession {
 		synchronized (this) {
 			transferOptions.setMaxThreads(jargonProperties
 					.getMaxParallelThreads());
-
-			if (jargonProperties.isUseParallelTransfer()) {
-				transferOptions.setTransferType(TransferType.STANDARD);
-			} else {
-				transferOptions.setTransferType(TransferType.NO_PARALLEL);
-			}
-
+			transferOptions.setUseParallelTransfer(jargonProperties
+					.isUseParallelTransfer());
 			transferOptions.setAllowPutGetResourceRedirects(jargonProperties
 					.isAllowPutGetResourceRedirects());
 			transferOptions
