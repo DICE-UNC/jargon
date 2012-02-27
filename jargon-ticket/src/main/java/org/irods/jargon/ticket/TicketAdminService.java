@@ -1,9 +1,11 @@
 package org.irods.jargon.ticket;
 
+import java.util.List;
+
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.query.IRODSQueryResultSetInterface;
-import org.irods.jargon.core.query.JargonQueryException;
+import org.irods.jargon.ticket.Ticket.TicketObjectType;
 import org.irods.jargon.ticket.packinstr.TicketCreateModeEnum;
 
 public interface TicketAdminService {
@@ -32,19 +34,47 @@ public interface TicketAdminService {
 	 * 
 	 */
 	void deleteTicket(String ticketId) throws JargonException;
-	
-	
+
 	/**
-	 * List a ticket for access to iRODS
+	 * Temporarily here for testing...get rid of this after specific methods are
+	 * created - MCC
 	 * 
-	 * @param String ticketID
-	 * 			  used to specify ticket key to be listed
+	 * @param ticketId
+	 * @param objectType
+	 * @return
 	 * @throws JargonException
-	 * @throws JargonQueryException
-	 * 
 	 */
-	IRODSQueryResultSetInterface getTicketQueryResultForSpecifiedTicketString(String ticketId) throws JargonException, JargonQueryException;
-	
+	IRODSQueryResultSetInterface getTicketQueryResultForSpecifiedTicketString(
+			String ticketId, TicketObjectType objectType)
+			throws JargonException;
+
+	/**
+	 * Generate a list of all tickets for data objects (files). Note that, for a
+	 * regular user, this will be tickets for that user. For a rodsadmin, this
+	 * will be all tickets.
+	 * 
+	 * @param partialStartIndex
+	 *            <code>int</code> value >= 0 which provides an offset into
+	 *            results for paging
+	 * @return <code>List</code> of {@link Ticket} objects for data objects
+	 * @throws JargonException
+	 */
+	List<Ticket> listAllTicketsForDataObjects(int partialStartIndex)
+			throws JargonException;
+
+	/**
+	 * Generate a list of all tickets for collections (directories). Note that,
+	 * for a regular user, this will be tickets for that user. For a rodsadmin,
+	 * this will be all tickets.
+	 * 
+	 * @param partialStartIndex
+	 *            <code>int</code> value >= 0 which provides an offset into
+	 *            results for paging
+	 * @return <code>List</code> of {@link Ticket} objects for collections
+	 * @throws JargonException
+	 */
+	List<Ticket> listAllTicketsForCollections(int partialStartIndex)
+			throws JargonException;
 	
 	/**
 	 * List a ticket for access to iRODS
