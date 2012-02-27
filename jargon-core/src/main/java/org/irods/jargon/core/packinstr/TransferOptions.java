@@ -20,13 +20,6 @@ package org.irods.jargon.core.packinstr;
 public class TransferOptions {
 
 	/**
-	 * Desired transfer method (some impl still needed here)
-	 */
-	public enum TransferType {
-		STANDARD, NO_PARALLEL, UDP
-	}
-
-	/**
 	 * Behavior controlling overwrite (some impl still needed here)
 	 */
 	public enum ForceOption {
@@ -40,10 +33,10 @@ public class TransferOptions {
 	private int maxThreads = DEFAULT_MAX_PARALLEL_THREADS;
 	private int udpSendRate = DEFAULT_UDP_SEND_RATE;
 	private int udpPacketSize = DEFAULT_UDP_PACKET_SIZE;
-	private TransferType transferType = TransferType.STANDARD;
 	private boolean allowPutGetResourceRedirects = false;
 	private boolean intraFileStatusCallbacks = false;
 	private ForceOption forceOption = ForceOption.ASK_CALLBACK_LISTENER;
+	private boolean useParallelTransfer = true;
 
 	/**
 	 * Store a checksum of the file after it has been transferred. This will
@@ -65,8 +58,6 @@ public class TransferOptions {
 		sb.append("transferOptions:");
 		sb.append("\n   maxThreads:");
 		sb.append(maxThreads);
-		sb.append("\n  transferType:");
-		sb.append(transferType);
 		sb.append("\n   udpSendRate:");
 		sb.append(udpSendRate);
 		sb.append("\n udpPacketSize:");
@@ -81,6 +72,8 @@ public class TransferOptions {
 		sb.append(intraFileStatusCallbacks);
 		sb.append("\n   forceOption:");
 		sb.append(forceOption);
+		sb.append("\n  useParallelTransfer:");
+		sb.append(useParallelTransfer);
 		return sb.toString();
 	}
 
@@ -98,7 +91,6 @@ public class TransferOptions {
 
 			synchronized (this) {
 				setMaxThreads(transferOptions.getMaxThreads());
-				setTransferType(transferOptions.getTransferType());
 				setUdpPacketSize(transferOptions.getUdpPacketSize());
 				setUdpSendRate(transferOptions.getUdpSendRate());
 				setAllowPutGetResourceRedirects(transferOptions
@@ -109,6 +101,7 @@ public class TransferOptions {
 						.isComputeAndVerifyChecksumAfterTransfer());
 				setIntraFileStatusCallbacks(transferOptions.intraFileStatusCallbacks);
 				setForceOption(transferOptions.getForceOption());
+				setUseParallelTransfer(transferOptions.isUseParallelTransfer());
 			}
 		}
 	}
@@ -118,26 +111,6 @@ public class TransferOptions {
 	 */
 	public TransferOptions() {
 
-	}
-
-	/**
-	 * Get the desired mode of transport (parallel i/o, no parallel, etc) for
-	 * this transfer NOTE: work in progress, not currently effective
-	 * 
-	 * @return {@link TransferType} indicating current transfer mode
-	 */
-	public synchronized TransferType getTransferType() {
-		return transferType;
-	}
-
-	/**
-	 * Sets the desired mode of transport (prallel i/o, etc) for this transfer.
-	 * 
-	 * @param transferType
-	 *            {@link TransferType} indicating current transfer mode
-	 */
-	public synchronized void setTransferType(final TransferType transferType) {
-		this.transferType = transferType;
 	}
 
 	/**
@@ -293,6 +266,26 @@ public class TransferOptions {
 	 */
 	public synchronized void setForceOption(final ForceOption forceOption) {
 		this.forceOption = forceOption;
+	}
+
+	/**
+	 * Is parallel transfer allowed for this operation?
+	 * 
+	 * @return useParallelTransfer <code>boolean</code> which is
+	 *         <code>true</code> if parallel transfers can be usd
+	 */
+	public boolean isUseParallelTransfer() {
+		return useParallelTransfer;
+	}
+
+	/**
+	 * Set whether parallel transfers can be used
+	 * 
+	 * @param useParallelTransfer
+	 *            <code>boolean</code> with the useParallelTransfer option
+	 */
+	public void setUseParallelTransfer(boolean useParallelTransfer) {
+		this.useParallelTransfer = useParallelTransfer;
 	}
 
 }

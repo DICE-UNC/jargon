@@ -182,6 +182,29 @@ public class IRODSSessionTest {
 	}
 
 	@Test
+	public void testGetTransferOptionsWithUseParallelValFalse()
+			throws Exception {
+		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager
+				.instance();
+		testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSSession irodsSession = IRODSSession
+				.instance(irodsConnectionManager);
+		irodsSession.closeSession();
+
+		SettableJargonProperties overrideJargonProperties = new SettableJargonProperties();
+		overrideJargonProperties.setUseParallelTransfer(false);
+
+		irodsSession.setJargonProperties(overrideJargonProperties);
+		TransferOptions transferOptions = irodsSession
+				.buildTransferOptionsBasedOnJargonProperties();
+
+		Assert.assertEquals("did not set use parallel to false", false,
+				transferOptions.isUseParallelTransfer());
+
+	}
+
+	@Test
 	public void testGetTransferOptionsWithIntraFileCallbacksTrue()
 			throws Exception {
 		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager

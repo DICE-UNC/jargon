@@ -6,7 +6,6 @@ package org.irods.jargon.core.packinstr;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.irods.jargon.core.connection.ConnectionConstants;
 import org.irods.jargon.core.exception.JargonException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -722,10 +721,21 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 		int tagOpenFlags = translateOpenFlagsValue();
 		int transferOptionsNumThreads = 0;
 
-		if (transferOptions != null
-				&& getDataSize() > ConnectionConstants.MAX_SZ_FOR_SINGLE_BUF) {
-			transferOptionsNumThreads = transferOptions.getMaxThreads();
+		if (transferOptions != null) {
+			if (this.getApiNumber() == DataObjInp.PUT_FILE_API_NBR
+					|| this.getApiNumber() == DataObjInp.GET_FILE_API_NBR) {
+				transferOptionsNumThreads = transferOptions.getMaxThreads();
+			}
 		}
+
+		/*
+		 * if (this.getApiNumber() == DataObjInp.PUT_FILE_API_NBR ||
+		 * this.getApiNumber() == DataObjInp.GET_FILE_API_NBR) { if
+		 * (!transferOptions.isUseParallelTransfer()) { // no parallel transfer,
+		 * number threads set to -1 transferOptionsNumThreads = -1; } else { if
+		 * (getDataSize() > ConnectionConstants.MAX_SZ_FOR_SINGLE_BUF) {
+		 * transferOptionsNumThreads = transferOptions.getMaxThreads(); } } }
+		 */
 
 		Tag message = new Tag(PI_TAG, new Tag[] {
 				new Tag(OBJ_PATH, getFileAbsolutePath()),
