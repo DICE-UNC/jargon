@@ -512,6 +512,74 @@ public class RuleProcessingAOImplTest {
 
 	}
 
+	/**
+	 * File put by client action in rule, should be parallel, rule says no
+	 * parallel [#630] execute msiDataObjGet via Jargon
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void testExecuteRequestClientActionParallelPutNoThreading()
+			throws Exception {
+		// create a local file to put
+		// put a collection out to do a checksum on
+		String testFileName = "testExecuteRequestClientActionParallelPutNoThreading.txt";
+
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String putFileName = FileGenerator.generateFileOfFixedLengthGivenName(
+				absPath, testFileName, 33 * 1024 * 1024);
+
+		String targetIrodsFileName = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH)
+				+ "/" + testFileName;
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
+		IRODSFile targetFile = accessObjectFactory.getIRODSFileFactory(
+				irodsAccount).instanceIRODSFile(targetIrodsFileName);
+		File sourceFile = new File(putFileName);
+
+		// put the file first to set up the overwrite
+		DataTransferOperations dto = accessObjectFactory
+				.getDataTransferOperations(irodsAccount);
+		dto.putOperation(sourceFile, targetFile, null, null);
+
+		StringBuilder builder = new StringBuilder();
+		builder.append("testClientAction||msiDataObjPut(");
+		builder.append(targetIrodsFileName);
+		builder.append(",null,");
+		builder.append("\"localPath=");
+		builder.append(putFileName);
+		builder.append("++++numThreads=-1++++forceFlag=\"");
+		builder.append(",*status)|nop\n");
+		builder.append("*A=null\n");
+		builder.append("*ruleExecOut");
+		RuleProcessingAO ruleProcessingAO = accessObjectFactory
+				.getRuleProcessingAO(irodsAccount);
+
+		IRODSRuleExecResult result = ruleProcessingAO.executeRule(builder
+				.toString());
+
+		IRODSFile putFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetIrodsFileName);
+
+		Assert.assertTrue("file does not exist", putFile.exists());
+
+		irodsFileSystem.close();
+
+		Assert.assertNotNull("did not get a response", result);
+		Assert.assertEquals("did not get results for client side operation", 1,
+				result.getOutputParameterResults().size());
+
+	}
+
+
 	@Test
 	public void testExecuteRequestClientActionPutWithOverwriteFileExists()
 			throws Exception {
@@ -752,6 +820,71 @@ public class RuleProcessingAOImplTest {
 		builder.append('/');
 		builder.append(testFileName);
 		builder.append(",\"numThreads=0++++localPath=");
+		builder.append(absPath);
+		builder.append(testFileGetName);
+		builder.append("++++rescName=");
+		builder.append(irodsAccount.getDefaultStorageResource());
+		builder.append("++++forceFlag=\"");
+		builder.append(",*status)|nop\n");
+		builder.append("*A=null\n");
+		builder.append("*ruleExecOut");
+
+		RuleProcessingAO ruleProcessingAO = accessObjectFactory
+				.getRuleProcessingAO(irodsAccount);
+
+		ruleProcessingAO.executeRule(builder.toString());
+
+		assertionHelper.assertLocalFileExistsInScratch(IRODS_TEST_SUBDIR_PATH
+				+ '/' + testFileGetName);
+
+	}
+
+	/**
+	 * [#630] execute msiDataObjGet via Jargon Test a get operation with a file
+	 * above the parallel txfr max with -1 in num threads
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void testExecuteRequestClientActionGetFileParallelNoThreadsIndicated()
+			throws Exception {
+		irodsFileSystem.closeAndEatExceptions();
+		String testFileName = "testExecuteRequestClientActionGetFileParallelNoThreadsIndicated.txt";
+		String testFileGetName = "testExecuteRequestClientActionGetFileParallelNoThreadsIndicatedReturned.txt";
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String scratchFileAbsolutePath = FileGenerator
+				.generateFileOfFixedLengthGivenName(absPath, testFileName,
+						32 * 1024 * 1024);
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
+		// put the file
+
+		File sourceFile = new File(scratchFileAbsolutePath);
+		IRODSFile targetFile = accessObjectFactory.getIRODSFileFactory(
+				irodsAccount).instanceIRODSFile(targetIrodsCollection);
+
+		DataTransferOperations dto = accessObjectFactory
+				.getDataTransferOperations(irodsAccount);
+		dto.putOperation(sourceFile, targetFile, null, null);
+
+		StringBuilder builder = new StringBuilder();
+		builder.append("testClientAction||msiDataObjGet(");
+		builder.append(testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH));
+		builder.append('/');
+		builder.append(testFileName);
+		builder.append(",\"numThreads=-1++++localPath=");
 		builder.append(absPath);
 		builder.append(testFileGetName);
 		builder.append("++++rescName=");

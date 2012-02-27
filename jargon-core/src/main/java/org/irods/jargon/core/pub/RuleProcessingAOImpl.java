@@ -637,6 +637,11 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements
 				.getStringValue();
 		log.info("client side action - irods file absolute path: {}",
 				irodsFileAbsolutePath);
+		
+		int numThreads = fileAction.getTag("numThreads")
+				.getIntValue();
+		log.info("client side action - num threads: {}",
+				numThreads);
 
 		Tag kvp = fileAction.getTag(KEY_VAL_PAIR_PI);
 		Map<String, String> kvpMap = TagHandlingUtils
@@ -670,10 +675,10 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements
 
 		if (label.equals(CL_GET_ACTION)) {
 			clientSideGetAction(irodsFileAbsolutePath, localFile, resourceName,
-					force);
+					force, numThreads);
 		} else if (label.equals(CL_PUT_ACTION)) {
 			clientSidePutAction(irodsFileAbsolutePath, localFile, resourceName,
-					force);
+					force, numThreads);
 		}
 
 		StringBuilder putLabel = new StringBuilder();
@@ -690,7 +695,8 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements
 	}
 
 	private void clientSidePutAction(final String irodsFileAbsolutePath,
-			final File localFile, final String resourceName, final boolean force)
+			final File localFile, final String resourceName,
+			final boolean force, final int nbrThreads)
 			throws JargonException {
 		DataObjectAO dataObjectAO = new DataObjectAOImpl(getIRODSSession(),
 				getIRODSAccount());
@@ -707,13 +713,23 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements
 			transferControlBlock.getTransferOptions().setForceOption(
 					ForceOption.NO_FORCE);
 		}
+
+		if (nbrThreads == -1) {
+			log.debug("override to no parallel threads for this transfer");
+			transferControlBlock.getTransferOptions().setUseParallelTransfer(
+					false);
+		}
+
+		transferControlBlock.getTransferOptions().setMaxThreads(nbrThreads);
+
 		dataObjectAO.putLocalDataObjectToIRODSForClientSideRuleOperation(
 				localFile, irodsFile, transferControlBlock);
 		log.debug("client side put action was successful");
 	}
 
 	private void clientSideGetAction(final String irodsFileAbsolutePath,
-			final File localFile, final String resourceName, final boolean force)
+			final File localFile, final String resourceName,
+			final boolean force, final int nbrThreads)
 			throws JargonException, DataNotFoundException {
 
 		log.info("client-side get action");
@@ -731,6 +747,13 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements
 		} else {
 			transferOptions.setForceOption(ForceOption.NO_FORCE);
 		}
+
+		if (nbrThreads == -1) {
+			log.debug("override to no parallel threads for this transfer");
+			transferOptions.setUseParallelTransfer(false);
+		}
+
+		transferOptions.setMaxThreads(nbrThreads);
 
 		int status = dataObjectAO
 				.irodsDataObjectGetOperationForClientSideAction(irodsFile,
