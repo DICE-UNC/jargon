@@ -219,12 +219,10 @@ public interface JargonProperties {
 	 * Get the size of the file segment for each successive call in normal get
 	 * operations.
 	 * 
-	 * @return
+	 * @return <code>int</code> with buffer size
 	 */
 	int getGetBufferSize();
 
-	int getIrodsSocketTimeout();
 
-	int getIrodsParallelSocketTimeout();
 
 }

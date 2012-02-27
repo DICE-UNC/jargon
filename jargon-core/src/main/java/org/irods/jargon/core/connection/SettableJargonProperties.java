@@ -1,6 +1,3 @@
-/**
- * 
- */
 package org.irods.jargon.core.connection;
 
 import org.irods.jargon.core.exception.JargonException;
@@ -464,34 +461,12 @@ public class SettableJargonProperties implements JargonProperties {
 		this.localFileInputStreamBufferSize = localFileInputStreamBufferSize;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.irods.jargon.core.connection.JargonProperties#getIrodsSocketTimeout()
-	 */
-	@Override
-	public synchronized int getIrodsSocketTimeout() {
-		return irodsSocketTimeout;
-	}
-
 	/**
 	 * @param irodsSocketTimeout
 	 *            the irodsSocketTimeout to set
 	 */
 	public synchronized void setIrodsSocketTimeout(final int irodsSocketTimeout) {
 		this.irodsSocketTimeout = irodsSocketTimeout;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.irods.jargon.core.connection.JargonProperties#
-	 * getIrodsParallelSocketTimeout()
-	 */
-	@Override
-	public synchronized int getIrodsParallelSocketTimeout() {
-		return irodsParallelSocketTimeout;
 	}
 
 	/**
