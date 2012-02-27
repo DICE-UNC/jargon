@@ -53,7 +53,6 @@ final class DataAOHelper extends AOHelper {
 
 	private final IRODSAccessObjectFactory irodsAccessObjectFactory;
 	private final IRODSAccount irodsAccount;
-	private int streamBufferSize = 0;
 	private int putBufferSize = 0;
 
 	DataAOHelper(final IRODSAccessObjectFactory irodsAccessObjectFactory,
@@ -70,7 +69,7 @@ final class DataAOHelper extends AOHelper {
 		this.irodsAccessObjectFactory = irodsAccessObjectFactory;
 		this.irodsAccount = irodsAccount;
 
-		streamBufferSize = this.irodsAccessObjectFactory.getJargonProperties()
+		this.irodsAccessObjectFactory.getJargonProperties()
 				.getSendInputStreamBufferSize();
 		putBufferSize = this.irodsAccessObjectFactory.getJargonProperties()
 				.getPutBufferSize();
@@ -499,9 +498,22 @@ final class DataAOHelper extends AOHelper {
 							transferStatusCallbackListener, 100);
 		}
 
+		InputStream fileInputStream = new FileInputStream(localFile);
+		int inputStreamBuffSize = irodsAccessObjectFactory
+				.getJargonProperties().getLocalFileInputStreamBufferSize();
+		if (inputStreamBuffSize == 0) {
+			log.debug("local file input stream will use default buffering");
+			fileInputStream = new BufferedInputStream(fileInputStream);
+		} else if (inputStreamBuffSize > 0) {
+			log.debug(
+					"local file input stream will use specified buffering:{}",
+					inputStreamBuffSize);
+			fileInputStream = new BufferedInputStream(fileInputStream,
+					inputStreamBuffSize);
+		}
+
 		irodsProtocol.irodsFunctionIncludingAllDataInStream(dataObjInp,
-				localFile.length(), new FileInputStream(localFile),
-				intraFileStatusListener);
+				localFile.length(), fileInputStream, intraFileStatusListener);
 
 	}
 
@@ -536,19 +548,21 @@ final class DataAOHelper extends AOHelper {
 		 */
 
 		long lengthLeftToSend = localFile.length();
-		InputStream fis = null;
-		try {
-			fis = new FileInputStream(localFile);
-
+		InputStream fileInputStream = new FileInputStream(localFile);
+		int inputStreamBuffSize = irodsAccessObjectFactory
+				.getJargonProperties().getLocalFileInputStreamBufferSize();
+		if (inputStreamBuffSize == 0) {
+			log.debug("local file input stream will use default buffering");
+			fileInputStream = new BufferedInputStream(fileInputStream);
+		} else if (inputStreamBuffSize > 0) {
 			log.debug(
-					"stream buffer size for file input stream used to read local file:{}",
-					streamBufferSize);
+					"local file input stream will use specified buffering:{}",
+					inputStreamBuffSize);
+			fileInputStream = new BufferedInputStream(fileInputStream,
+					inputStreamBuffSize);
+		}
 
-			if (streamBufferSize == 0) {
-				fis = new BufferedInputStream(fis);
-			} else if (streamBufferSize > 0) {
-				fis = new BufferedInputStream(fis, streamBufferSize);
-			}
+		try {
 
 			log.info("starting read/write loop to send data to iRODS");
 			OpenedDataObjInp openedDataObjInp = null;
@@ -562,13 +576,12 @@ final class DataAOHelper extends AOHelper {
 				}
 
 				lengthThisSend = Math.min(putBufferSize, lengthLeftToSend);
-
 				openedDataObjInp = OpenedDataObjInp.instanceForFilePut(fd,
 						lengthThisSend);
 				lengthLeftToSend -= irodsProtocol
 						.irodsFunctionForStreamingToIRODSInFrames(
-								openedDataObjInp, (int) lengthThisSend, fis,
-								intraFileStatusListener);
+								openedDataObjInp, (int) lengthThisSend,
+								fileInputStream, intraFileStatusListener);
 
 				log.debug("length left:{}", lengthLeftToSend);
 
@@ -588,8 +601,8 @@ final class DataAOHelper extends AOHelper {
 			throw new JargonException(e);
 		} finally {
 			try {
-				if (fis != null) {
-					fis.close();
+				if (fileInputStream != null) {
+					fileInputStream.close();
 				}
 			} catch (IOException e) {
 				// ignore

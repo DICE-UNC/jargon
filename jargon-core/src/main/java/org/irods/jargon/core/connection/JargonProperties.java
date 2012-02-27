@@ -189,6 +189,17 @@ public interface JargonProperties {
 	int getLocalFileOutputStreamBufferSize();
 
 	/**
+	 * Get the size of the buffer used in a <code>BufferedInputStream</code>
+	 * that wraps the intput stream for the local file. This is used in
+	 * processing operations where the data is being read from the local file
+	 * system. (0 = use defaults, -1 = do not wrap with buffered output stream)
+	 * jargon.io.local.input.stream.buffer.size
+	 * 
+	 * @return <code>int</code> with the buffer size
+	 */
+	int getLocalFileInputStreamBufferSize();
+
+	/**
 	 * Get the time-out, in seconds, for the parallel transfer sockets. Will be
 	 * zero or less if not specified
 	 * 

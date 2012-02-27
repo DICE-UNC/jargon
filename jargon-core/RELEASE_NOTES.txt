@@ -54,3 +54,4 @@ Note that the following bug and feature requests are logged in GForge with relat
 - added jargon-ticket subproject for ticket admin support, along with unit testing of ticket system
 [#625] Akubra intitial development
 - additional URI utility methods for use in Akubra
+[#631] buffering missing in streaming from file - added a new jargon.io.local.input.stream.buffer.size jargon property, as well as programmatic support.  This adds missing buffering when IRODSCommands is streaming a local file to iRODS.  This should give a slight but noticable performance boost.

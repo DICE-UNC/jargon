@@ -38,6 +38,7 @@ public class SettableJargonProperties implements JargonProperties {
 	private int internalCacheBufferSize = 65535;
 	private int sendInputStreamBufferSize = 0;
 	private int localFileOutputStreamBufferSize = 0;
+	private int localFileInputStreamBufferSize = 0;
 	private int putBufferSize = 4194304;
 	private int getBufferSize = 4194304;
 	private int inputToOutputCopyBufferByteSize = 8192;
@@ -103,6 +104,8 @@ public class SettableJargonProperties implements JargonProperties {
 				.getSendInputStreamBufferSize();
 		this.localFileOutputStreamBufferSize = jargonProperties
 				.getLocalFileOutputStreamBufferSize();
+		this.localFileInputStreamBufferSize = jargonProperties
+				.getLocalFileInputStreamBufferSize();
 		this.putBufferSize = jargonProperties.getPutBufferSize();
 		this.getBufferSize = jargonProperties.getGetBufferSize();
 		this.encoding = jargonProperties.getEncoding();
@@ -393,6 +396,11 @@ public class SettableJargonProperties implements JargonProperties {
 		return localFileOutputStreamBufferSize;
 	}
 
+	@Override
+	public synchronized int getLocalFileInputStreamBufferSize() {
+		return localFileInputStreamBufferSize;
+	}
+
 	/**
 	 * @param transferThreadPoolMaxSimultaneousTransfers
 	 *            the transferThreadPoolMaxSimultaneousTransfers to set
@@ -445,6 +453,15 @@ public class SettableJargonProperties implements JargonProperties {
 	public synchronized void setLocalFileOutputStreamBufferSize(
 			final int localFileOutputStreamBufferSize) {
 		this.localFileOutputStreamBufferSize = localFileOutputStreamBufferSize;
+	}
+
+	/**
+	 * @param localFileInputStremBufferSize
+	 *            the localFileInputStreamBufferSize to set
+	 */
+	public synchronized void setLocalFileInputStreamBufferSize(
+			final int localFileInputStreamBufferSize) {
+		this.localFileInputStreamBufferSize = localFileInputStreamBufferSize;
 	}
 
 	/*
