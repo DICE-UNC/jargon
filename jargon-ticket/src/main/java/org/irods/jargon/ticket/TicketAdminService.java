@@ -44,9 +44,9 @@ public interface TicketAdminService {
 	 * @return
 	 * @throws JargonException
 	 */
-	IRODSQueryResultSetInterface getTicketQueryResultForSpecifiedTicketString(
-			String ticketId, TicketObjectType objectType)
-			throws JargonException;
+//	IRODSQueryResultSetInterface getTicketQueryResultForSpecifiedTicketString(
+//			String ticketId, TicketObjectType objectType)
+//			throws JargonException;
 	
 	/**
 	 * Generate a list of all tickets for data objects (files). Note that, for a
@@ -88,16 +88,6 @@ public interface TicketAdminService {
 	List<Ticket> listAllTicketsForCollections(int partialStartIndex)
 			throws JargonException;
 	
-	/**
-	 * List a ticket for access to iRODS
-	 * 
-	 * @param String ticketID
-	 * 			  used to specify ticket key to be listed
-	 * @throws JargonException
-	 * @throws JargonQueryException
-	 * 
-	 */
-	//Ticket getTicketForSpecifiedTicketString(String ticketId) throws JargonException, JargonQueryException;
 	
 	/**
 	 * List all tickets (for access to iRODS) for the current user
