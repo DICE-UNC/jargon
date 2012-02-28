@@ -72,9 +72,9 @@ public class TicketInp extends AbstractIRODSPackingInstruction {
 	 * @param arg5
 	 * @param arg6
 	 */
-	protected TicketInp(final int apiNbr, final String arg1,
-			final String arg2, final String arg3, final String arg4,
-			final String arg5, final String arg6) {
+	protected TicketInp(final int apiNbr, final String arg1, final String arg2,
+			final String arg3, final String arg4, final String arg5,
+			final String arg6) {
 
 		this.arg1 = arg1;
 		this.arg2 = arg2;
@@ -100,6 +100,5 @@ public class TicketInp extends AbstractIRODSPackingInstruction {
 
 		return message;
 	}
-
 
 }

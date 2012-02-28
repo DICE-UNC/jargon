@@ -33,14 +33,16 @@ public class TicketClientOperationsImpl implements TicketClientOperations {
 	private TicketClientSupport ticketClientSupport = null;
 
 	/**
-	 * Constructor initializes service for 
+	 * Constructor initializes service for
+	 * 
 	 * @param irodsAccessObjectFactory
 	 * @param irodsAccount
 	 * @throws JargonException
 	 */
-	public TicketClientOperationsImpl(final IRODSAccessObjectFactory irodsAccessObjectFactory,
+	public TicketClientOperationsImpl(
+			final IRODSAccessObjectFactory irodsAccessObjectFactory,
 			final IRODSAccount irodsAccount) throws JargonException {
-		
+
 		if (irodsAccessObjectFactory == null) {
 			throw new IllegalArgumentException("null irodsAccessObjectFactory");
 		}
@@ -51,9 +53,11 @@ public class TicketClientOperationsImpl implements TicketClientOperations {
 
 		this.irodsAccessObjectFactory = irodsAccessObjectFactory;
 		this.irodsAccount = irodsAccount;
-		
-		this.dataTransferOperations = irodsAccessObjectFactory.getDataTransferOperations(irodsAccount);
-		this.ticketClientSupport = new TicketClientSupport(irodsAccessObjectFactory,irodsAccount);
+
+		this.dataTransferOperations = irodsAccessObjectFactory
+				.getDataTransferOperations(irodsAccount);
+		this.ticketClientSupport = new TicketClientSupport(
+				irodsAccessObjectFactory, irodsAccount);
 	}
 
 	/*
@@ -101,10 +105,12 @@ public class TicketClientOperationsImpl implements TicketClientOperations {
 	 * org.irods.jargon.core.transfer.TransferControlBlock)
 	 */
 	@Override
-	public void getOperationFromIRODSUsingTicket(String ticketString,
-			IRODSFile irodsSourceFile, File targetLocalFile,
-			TransferStatusCallbackListener transferStatusCallbackListener,
-			TransferControlBlock transferControlBlock)
+	public void getOperationFromIRODSUsingTicket(
+			final String ticketString,
+			final IRODSFile irodsSourceFile,
+			final File targetLocalFile,
+			final TransferStatusCallbackListener transferStatusCallbackListener,
+			final TransferControlBlock transferControlBlock)
 			throws DataNotFoundException, OverwriteException, JargonException {
 
 		log.info("getFileFromIRODSUsingTicket()");

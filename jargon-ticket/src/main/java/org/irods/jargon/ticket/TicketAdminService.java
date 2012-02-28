@@ -4,27 +4,25 @@ import java.util.List;
 
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.io.IRODSFile;
-import org.irods.jargon.core.query.IRODSQueryResultSetInterface;
-import org.irods.jargon.ticket.Ticket.TicketObjectType;
 import org.irods.jargon.ticket.packinstr.TicketCreateModeEnum;
 
 public interface TicketAdminService {
-	
+
 	/**
 	 * Create a ticket for access to iRODS
 	 * 
-	 * @param TicketCreateModeEnum mode
-	 *            ticket create mode - read or write
-	 * @param IRODSFile file
-	 *            existing IRODS file or collection
-	 * @param String ticketID
-	 * 			  used to specify ticket key to be used for this ticket
+	 * @param TicketCreateModeEnum
+	 *            mode ticket create mode - read or write
+	 * @param IRODSFile
+	 *            file existing IRODS file or collection
+	 * @param String
+	 *            ticketID used to specify ticket key to be used for this ticket
 	 * @throws JargonException
 	 * 
 	 */
-	String createTicket(TicketCreateModeEnum mode, IRODSFile file, String ticketId) throws JargonException;
-	
-	
+	String createTicket(TicketCreateModeEnum mode, IRODSFile file,
+			String ticketId) throws JargonException;
+
 	/**
 	 * Delete a ticket for access to iRODS
 	 * 
@@ -48,16 +46,18 @@ public interface TicketAdminService {
 	 * @return
 	 * @throws JargonException
 	 */
-	IRODSQueryResultSetInterface getTicketQueryResultForSpecifiedTicketString(
-			String ticketId, TicketObjectType objectType)
-			throws JargonException;
-	
+	// IRODSQueryResultSetInterface
+	// getTicketQueryResultForSpecifiedTicketString(
+	// String ticketId, TicketObjectType objectType)
+	// throws JargonException;
+
 	/**
 	 * Generate a list of all tickets for data objects (files). Note that, for a
 	 * regular user, this will be tickets for that user. For a rodsadmin, this
 	 * will be all tickets.
 	 * 
-	 * @param ticketId - string used to identify the ticket
+	 * @param ticketId
+	 *            - string used to identify the ticket
 	 * @return {@link Ticket} object for specified ticket string identifier
 	 * @throws JargonException
 	 */
@@ -91,31 +91,24 @@ public interface TicketAdminService {
 	 */
 	List<Ticket> listAllTicketsForCollections(int partialStartIndex)
 			throws JargonException;
-	
-	/**
-	 * List a ticket for access to iRODS
-	 * 
-	 * @param String ticketID
-	 * 			  used to specify ticket key to be listed
-	 * @throws JargonException
-	 * @throws JargonQueryException
-	 * 
-	 */
-	//Ticket getTicketForSpecifiedTicketString(String ticketId) throws JargonException, JargonQueryException;
-	
+
 	/**
 	 * List all tickets (for access to iRODS) for the current user
 	 * 
-	 * @param String ticketID
-	 * 			  used to specify ticket key to be listed
+	 * @param String
+	 *            ticketID used to specify ticket key to be listed
 	 * @throws JargonException
 	 * @throws JargonQueryException
 	 * 
 	 */
-	//IRODSQueryResultSetInterface getAllTickets(int continueIndex) throws JargonException, JargonQueryException;
-	
-	//IRODSQueryResultSetInterface getTicketAllowedUsersByTicketString(String ticketId, int continueIndex) throws JargonException, JargonQueryException;
-	
-	//IRODSQueryResultSetInterface getTicketsForSpecifiedDataObjectPath(String path, int continueIndex) throws JargonException, JargonQueryException;
+	// IRODSQueryResultSetInterface getAllTickets(int continueIndex) throws
+	// JargonException, JargonQueryException;
+
+	// IRODSQueryResultSetInterface getTicketAllowedUsersByTicketString(String
+	// ticketId, int continueIndex) throws JargonException,
+	// JargonQueryException;
+
+	// IRODSQueryResultSetInterface getTicketsForSpecifiedDataObjectPath(String
+	// path, int continueIndex) throws JargonException, JargonQueryException;
 
 }

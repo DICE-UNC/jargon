@@ -4,8 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public enum TicketCreateModeEnum {
-	
-	TICKET_CREATE_READ("read"), TICKET_CREATE_WRITE("write"), TICKET_CREATE_UNKNOWN("unknown");
+
+	TICKET_CREATE_READ("read"), TICKET_CREATE_WRITE("write"), TICKET_CREATE_UNKNOWN(
+			"unknown");
 
 	private String textValue;
 
@@ -20,7 +21,8 @@ public enum TicketCreateModeEnum {
 	public static List<String> getTicketModifyAddOrRemoveTypeList() {
 
 		List<String> types = new ArrayList<String>();
-		for (TicketCreateModeEnum ticketCreateMode : TicketCreateModeEnum.values()) {
+		for (TicketCreateModeEnum ticketCreateMode : TicketCreateModeEnum
+				.values()) {
 			types.add(ticketCreateMode.textValue);
 		}
 		return types;

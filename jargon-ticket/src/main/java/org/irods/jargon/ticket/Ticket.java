@@ -31,13 +31,13 @@ public class Ticket extends IRODSDomainObject {
 	private long writeByteLimit;
 	private Date expireTime;
 	private String irodsAbsolutePath;
-	
+
 	/*
 	 * Default (no values) constructor
 	 */
 	public Ticket() {
 	}
-	
+
 	/*
 	 * public Ticket(IRODSQueryResultRow row) throws JargonException {
 	 * DateFormat dateFormat = DateFormat.getInstance(); this.expireTime = null;
@@ -90,7 +90,7 @@ public class Ticket extends IRODSDomainObject {
 
 	@Override
 	public String toString() {
-		
+
 		StringBuilder sb = new StringBuilder();
 		sb.append("Ticket:");
 		sb.append("\n   id:");
@@ -136,7 +136,7 @@ public class Ticket extends IRODSDomainObject {
 	 * @param ticketId
 	 *            the ticketId to set
 	 */
-	public void setTicketId(String ticketId) {
+	public void setTicketId(final String ticketId) {
 		this.ticketId = ticketId;
 	}
 
@@ -151,7 +151,7 @@ public class Ticket extends IRODSDomainObject {
 	 * @param ticketString
 	 *            the ticketString to set
 	 */
-	public void setTicketString(String ticketString) {
+	public void setTicketString(final String ticketString) {
 		this.ticketString = ticketString;
 	}
 
@@ -166,7 +166,7 @@ public class Ticket extends IRODSDomainObject {
 	 * @param type
 	 *            the type to set
 	 */
-	public void setType(TicketCreateModeEnum type) {
+	public void setType(final TicketCreateModeEnum type) {
 		this.type = type;
 	}
 
@@ -181,7 +181,7 @@ public class Ticket extends IRODSDomainObject {
 	 * @param objectType
 	 *            the objectType to set
 	 */
-	public void setObjectType(TicketObjectType objectType) {
+	public void setObjectType(final TicketObjectType objectType) {
 		this.objectType = objectType;
 	}
 
@@ -196,7 +196,7 @@ public class Ticket extends IRODSDomainObject {
 	 * @param ownerName
 	 *            the ownerName to set
 	 */
-	public void setOwnerName(String ownerName) {
+	public void setOwnerName(final String ownerName) {
 		this.ownerName = ownerName;
 	}
 
@@ -211,7 +211,7 @@ public class Ticket extends IRODSDomainObject {
 	 * @param ownerZone
 	 *            the ownerZone to set
 	 */
-	public void setOwnerZone(String ownerZone) {
+	public void setOwnerZone(final String ownerZone) {
 		this.ownerZone = ownerZone;
 	}
 
@@ -226,7 +226,7 @@ public class Ticket extends IRODSDomainObject {
 	 * @param usesCount
 	 *            the usesCount to set
 	 */
-	public void setUsesCount(int usesCount) {
+	public void setUsesCount(final int usesCount) {
 		this.usesCount = usesCount;
 	}
 
@@ -241,7 +241,7 @@ public class Ticket extends IRODSDomainObject {
 	 * @param usesLimit
 	 *            the usesLimit to set
 	 */
-	public void setUsesLimit(int usesLimit) {
+	public void setUsesLimit(final int usesLimit) {
 		this.usesLimit = usesLimit;
 	}
 
@@ -256,7 +256,7 @@ public class Ticket extends IRODSDomainObject {
 	 * @param writeFileCount
 	 *            the writeFileCount to set
 	 */
-	public void setWriteFileCount(int writeFileCount) {
+	public void setWriteFileCount(final int writeFileCount) {
 		this.writeFileCount = writeFileCount;
 	}
 
@@ -271,7 +271,7 @@ public class Ticket extends IRODSDomainObject {
 	 * @param writeFileLimit
 	 *            the writeFileLimit to set
 	 */
-	public void setWriteFileLimit(int writeFileLimit) {
+	public void setWriteFileLimit(final int writeFileLimit) {
 		this.writeFileLimit = writeFileLimit;
 	}
 
@@ -286,7 +286,7 @@ public class Ticket extends IRODSDomainObject {
 	 * @param writeByteCount
 	 *            the writeByteCount to set
 	 */
-	public void setWriteByteCount(long writeByteCount) {
+	public void setWriteByteCount(final long writeByteCount) {
 		this.writeByteCount = writeByteCount;
 	}
 
@@ -301,7 +301,7 @@ public class Ticket extends IRODSDomainObject {
 	 * @param writeByteLimit
 	 *            the writeByteLimit to set
 	 */
-	public void setWriteByteLimit(long writeByteLimit) {
+	public void setWriteByteLimit(final long writeByteLimit) {
 		this.writeByteLimit = writeByteLimit;
 	}
 
@@ -316,7 +316,7 @@ public class Ticket extends IRODSDomainObject {
 	 * @param expireTime
 	 *            the expireTime to set
 	 */
-	public void setExpireTime(Date expireTime) {
+	public void setExpireTime(final Date expireTime) {
 		this.expireTime = expireTime;
 	}
 
@@ -331,7 +331,7 @@ public class Ticket extends IRODSDomainObject {
 	 * @param irodsAbsolutePath
 	 *            the irodsAbsolutePath to set
 	 */
-	public void setIrodsAbsolutePath(String irodsAbsolutePath) {
+	public void setIrodsAbsolutePath(final String irodsAbsolutePath) {
 		this.irodsAbsolutePath = irodsAbsolutePath;
 	}
 }

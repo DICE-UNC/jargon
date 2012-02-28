@@ -3,7 +3,7 @@ package org.irods.jargon.ticket;
 import java.io.File;
 import java.util.Properties;
 
-import junit.framework.TestCase;
+import junit.framework.Assert;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.NoAccessException;
@@ -58,7 +58,7 @@ public class TicketClientOperationsImplTest {
 				.getIRODSAccessObjectFactory();
 		TicketClientOperations ticketClientOperations = new TicketClientOperationsImpl(
 				accessObjectFactory, irodsAccount);
-		TestCase.assertNotNull("null ticketClientOperations",
+		Assert.assertNotNull("null ticketClientOperations",
 				ticketClientOperations); // really just looking for no errors
 
 	}
@@ -124,8 +124,6 @@ public class TicketClientOperationsImplTest {
 				TicketCreateModeEnum.TICKET_CREATE_WRITE, targetFile,
 				testCollection);
 
-
-
 		TicketClientOperations ticketClientService = new TicketClientOperationsImpl(
 				accessObjectFactory, secondaryAccount);
 
@@ -135,7 +133,7 @@ public class TicketClientOperationsImplTest {
 		IRODSFile actualFile = irodsFileSystem
 				.getIRODSFileFactory(irodsAccount).instanceIRODSFile(
 						targetFile.getAbsolutePath(), testFileName);
-		TestCase.assertTrue("target file not written", actualFile.exists());
+		Assert.assertTrue("target file not written", actualFile.exists());
 		ticketSvc.deleteTicket(testCollection);
 
 	}
