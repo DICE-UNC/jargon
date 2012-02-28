@@ -4,8 +4,6 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import org.irods.jargon.core.packinstr.TicketInp;
-
 /**
  * Packing instruction for admin functions for the ticket subsystem in iRODS.
  * These functions mirror the packing instructions in the iticket icommand.
@@ -221,6 +219,5 @@ public class TicketAdminInp extends TicketInp {
 
 		super(apiNbr, arg1, arg2, arg3, arg4, arg5, arg6);
 	}
-
 
 }
