@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import junit.framework.Assert;
+
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
@@ -14,7 +15,6 @@ import org.junit.Test;
 public class TicketAdminInpTest {
 	
 	private String afile = "/test1/home/test1/anExistingFile";
-	private String acollection = "/tests1/home/test1";
 	private String ticketId = "ticket_key";
 	private String userName = "me";
 	private String groupName = "them";

@@ -3,11 +3,8 @@ package org.irods.jargon.ticket.packinstr;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.regex.Pattern;
 
-import org.irods.jargon.core.exception.JargonException;
-import org.irods.jargon.core.packinstr.AbstractIRODSPackingInstruction;
-import org.irods.jargon.core.packinstr.Tag;
+import org.irods.jargon.core.packinstr.TicketInp;
 
 /**
  * Packing instruction for admin functions for the ticket subsystem in iRODS.
@@ -16,31 +13,7 @@ import org.irods.jargon.core.packinstr.Tag;
  * @author Mike Conway - DICE (www.irods.org)
  * 
  */
-public class TicketAdminInp extends AbstractIRODSPackingInstruction {
-
-	private static final String PI_TAG = "ticketAdminInp_PI";
-
-	/**
-	 * Protocol API identifier for gen admin operations
-	 */
-	public static final int TICKET_ADMIN_INP_API_NBR = 723;
-
-	private static final String ARG1 = "arg1";
-	private static final String ARG2 = "arg2";
-	private static final String ARG3 = "arg3";
-	private static final String ARG4 = "arg4";
-	private static final String ARG5 = "arg5";
-	private static final String ARG6 = "arg6";
-	private static final String BLANK = "";
-	private static final Pattern MODIFY_DATE_FORMAT = Pattern
-			.compile("^(20|21|22)\\d\\d[- /.](0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])[\\. /.]([01][0-9]||2[0123])[: /.]([0-5][0-9])[: /.]([0-5][0-9])$");
-
-	private String arg1 = "";
-	private String arg2 = "";
-	private String arg3 = "";
-	private String arg4 = "";
-	private String arg5 = "";
-	private String arg6 = "";
+public class TicketAdminInp extends TicketInp {
 
 	public static TicketAdminInp instanceForDelete(final String ticketId) {
 		if (ticketId == null || ticketId.isEmpty()) {
@@ -246,29 +219,8 @@ public class TicketAdminInp extends AbstractIRODSPackingInstruction {
 			final String arg2, final String arg3, final String arg4,
 			final String arg5, final String arg6) {
 
-		this.arg1 = arg1;
-		this.arg2 = arg2;
-		this.arg3 = arg3;
-		this.arg4 = arg4;
-		this.arg5 = arg5;
-		this.arg6 = arg6;
-		this.setApiNumber(apiNbr);
+		super(apiNbr, arg1, arg2, arg3, arg4, arg5, arg6);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.irods.jargon.core.packinstr.AbstractIRODSPackingInstruction#getTagValue
-	 * ()
-	 */
-	@Override
-	public Tag getTagValue() throws JargonException {
-		Tag message = new Tag(PI_TAG, new Tag[] { new Tag(ARG1, arg1),
-				new Tag(ARG2, arg2), new Tag(ARG3, arg3), new Tag(ARG4, arg4),
-				new Tag(ARG5, arg5), new Tag(ARG6, arg6) });
-
-		return message;
-	}
 
 }

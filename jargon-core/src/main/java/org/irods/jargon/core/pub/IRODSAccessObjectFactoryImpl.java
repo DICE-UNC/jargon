@@ -535,6 +535,12 @@ public final class IRODSAccessObjectFactoryImpl implements
 				.buildDefaultTransferControlBlockBasedOnJargonProperties();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.pub.IRODSAccessObjectFactory#
+	 * buildTransferOptionsBasedOnJargonProperties()
+	 */
 	@Override
 	public TransferOptions buildTransferOptionsBasedOnJargonProperties()
 			throws JargonException {
