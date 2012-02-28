@@ -30,26 +30,12 @@ public interface TicketAdminService {
 	 *            ticketID used to specify ticket key to be deleted
 	 * @return <code>boolean</code> that will be <code>true</code> if the ticket
 	 *         was found to delete. <code>false</code> means that the delete was
-	 *         not successul, due to the ticket not being found. This can be
+	 *         not successful, due to the ticket not being found. This can be
 	 *         ignored.
 	 * @throws JargonException
 	 * 
 	 */
 	boolean deleteTicket(String ticketId) throws JargonException;
-
-	/**
-	 * Temporarily here for testing...get rid of this after specific methods are
-	 * created - MCC
-	 * 
-	 * @param ticketId
-	 * @param objectType
-	 * @return
-	 * @throws JargonException
-	 */
-	// IRODSQueryResultSetInterface
-	// getTicketQueryResultForSpecifiedTicketString(
-	// String ticketId, TicketObjectType objectType)
-	// throws JargonException;
 
 	/**
 	 * Generate a list of all tickets for data objects (files). Note that, for a
@@ -91,16 +77,85 @@ public interface TicketAdminService {
 	 */
 	List<Ticket> listAllTicketsForCollections(int partialStartIndex)
 			throws JargonException;
+	
+	/**
+	 * Generate a list of all tickets. Note that,
+	 * for a regular user, this will be tickets for that user. For a rodsadmin,
+	 * this will be all tickets. Also this will not return associated collections
+	 * or data aobjects
+	 * 
+	 * @param partialStartIndex
+	 *            <code>int</code> value >= 0 which provides an offset into
+	 *            results for paging
+	 * @return <code>List</code> of {@link Ticket} objects for collections
+	 * @throws JargonException
+	 */
+	List<Ticket> listAllTickets(int partialStartIndex)
+			throws JargonException;
 
 	/**
-	 * List all tickets (for access to iRODS) for the current user
+	 * Modify the uses limit of a ticket for access to iRODS
 	 * 
-	 * @param String
-	 *            ticketID used to specify ticket key to be listed
+	 * @param ticketId
+	 *            <code>String</code> used to specify ticket key to be modified
+	 * @param usesLimit
+	 *            <code>int</code> value >= 0 which specifies the uses limit for
+	 *            the specified ticket
+	 * @return <code>boolean</code> that will be <code>true</code> if the ticket
+	 *         was found to modify. <code>false</code> means that the modify was
+	 *         not successful, due to the ticket not being found. This can be
+	 *         ignored.
 	 * @throws JargonException
-	 * @throws JargonQueryException
 	 * 
 	 */
+	boolean setTicketUsesLimit(String ticketId, int usesLimit) throws JargonException;
+	
+	/**
+	 * Modify the file write limit of a ticket for access to iRODS
+	 * 
+	 * @param ticketId
+	 *            <code>String</code> used to specify ticket key to be modified
+	 * @param fileWriteLimit
+	 *            <code>int</code> value >= 0 which specifies the file write limit for
+	 *            the specified ticket
+	 * @return <code>boolean</code> that will be <code>true</code> if the ticket
+	 *         was found to modify. <code>false</code> means that the modify was
+	 *         not successful, due to the ticket not being found. This can be
+	 *         ignored.
+	 * @throws JargonException
+	 * 
+	 */
+	boolean setTicketFileWriteLimit(String ticketId, int fileWriteLimit) throws JargonException;
+	
+	/**
+	 * Modify the byte write of a ticket for access to iRODS
+	 * 
+	 * @param ticketId
+	 *            <code>String</code> used to specify ticket key to be modified
+	 * @param byteWriteLimit
+	 *            <code>int</code> value >= 0 which specifies the byte write limit for
+	 *            the specified ticket
+	 * @return <code>boolean</code> that will be <code>true</code> if the ticket
+	 *         was found to modify. <code>false</code> means that the modify was
+	 *         not successful, due to the ticket not being found. This can be
+	 *         ignored.
+	 * @throws JargonException
+	 * 
+	 */
+	boolean setTicketByteWriteLimit(String ticketId, int byteWriteLimit) throws JargonException;
+	
+	/**
+	 * delete all IRODS access tickets for this IRODSAccount user
+	 * 
+	 * @return <code>boolean</code> that will be <code>true</code> if the delete
+	 *         ticket operation was successful. <code>false</code> means that the delete was
+	 *         not successful, due to no tickets found. This can be ignored.
+	 * @throws JargonException
+	 * 
+	 */
+	boolean deleteAllTicketsForThisUser() throws JargonException;
+
+
 	// IRODSQueryResultSetInterface getAllTickets(int continueIndex) throws
 	// JargonException, JargonQueryException;
 

@@ -140,45 +140,6 @@ public final class TicketAdminServiceImpl implements TicketAdminService {
 
 	}
 
-	// @Override
-	// @Deprecated
-	/**
-	 * @deprecated - don't expose query stuff to public callers, shift to
-	 *             methods returning plain java objects (e.g. tickets)
-	 */
-	// public IRODSQueryResultSetInterface
-	// getTicketQueryResultForSpecifiedTicketString(
-	// final String ticketId, final Ticket.TicketObjectType objectType)
-	// throws JargonException {
-	//
-	// IRODSQueryResultSetInterface resultSet = null;
-	//
-	// getTicketObjectType(ticketId);
-	//
-	// String queryString = buildQueryStringForTicket(
-	// RodsGenQueryEnum.COL_TICKET_STRING.getName(), ticketId,
-	// objectType);
-	//
-	// IRODSGenQuery irodsQuery = IRODSGenQuery.instance(queryString, 2);
-	//
-	// IRODSGenQueryExecutor irodsGenQueryExecutor = irodsAccessObjectFactory
-	// .getIRODSGenQueryExecutor(irodsAccount);
-	// try {
-	// resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResult(
-	// irodsQuery, 0);
-	// } catch (JargonQueryException e) {
-	// log.error("query exception for ticket query: {}", irodsQuery, e);
-	// throw new JargonException(ERROR_IN_TICKET_QUERY, e);
-	// }
-	//
-	// if ((resultSet == null) || (resultSet.getResults().isEmpty())) {
-	// throw new DataNotFoundException(TICKET_NOT_FOUND);
-	// }
-	//
-	// return resultSet;
-	// }
-
-	@Deprecated
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -292,6 +253,59 @@ public final class TicketAdminServiceImpl implements TicketAdminService {
 		return tickets;
 
 	}
+	
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.ticket.TicketAdminService#listAllTicketsForCollections
+	 * (int)
+	 */
+	@Override
+	public List<Ticket> listAllTickets(final int partialStartIndex)
+			throws JargonException {
+
+		log.info("listAllTickets()");
+
+		if (partialStartIndex < 0) {
+			throw new IllegalArgumentException(
+					"partial start index must be >= 0");
+		}
+
+		List<Ticket> tickets = new ArrayList<Ticket>();
+
+		StringBuilder sb = new StringBuilder();
+		sb.append(this.buildQuerySelectForTicketsCommon());
+
+		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(sb.toString(),
+//				irodsAccessObjectFactory.getJargonProperties()
+//						.getMaxFilesAndDirsQueryMax());
+						1);
+
+		IRODSGenQueryExecutor irodsGenQueryExecutor = irodsAccessObjectFactory
+				.getIRODSGenQueryExecutor(irodsAccount);
+
+		IRODSQueryResultSet resultSet = null;
+
+		try {
+			resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResult(
+					irodsQuery, partialStartIndex);
+			Ticket ticket = null;
+			for (IRODSQueryResultRow row : resultSet.getResults()) {
+				ticket = new Ticket();
+				putResultDataIntoTicketCommonValues(ticket, row);
+				log.info("adding ticket to results:{}", ticket);
+				tickets.add(ticket);
+			}
+
+		} catch (JargonQueryException e) {
+			log.error("query exception for ticket query:{}", irodsQuery, e);
+			throw new JargonException(ERROR_IN_TICKET_QUERY, e);
+		}
+
+		return tickets;
+
+	}
 
 	/*
 	 * (non-Javadoc)
@@ -355,6 +369,164 @@ public final class TicketAdminServiceImpl implements TicketAdminService {
 		}
 
 		return ticket;
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.ticket.TicketAdminService#deleteTicket(java.lang.String)
+	 */
+	@Override
+	public boolean setTicketUsesLimit(final String ticketId, int usesLimit) throws JargonException {
+
+		Tag ticketOperationResponse = null;
+		boolean response = true;
+
+		if ((ticketId == null) || (ticketId.isEmpty())) {
+			throw new IllegalArgumentException(
+					"cannot modify ticket with null or empty ticketId");
+		}
+		
+		if (usesLimit < 0) {
+			throw new IllegalArgumentException(
+					"cannot modify a ticket with uses count less than 0");
+		}
+
+		log.info("modifying ticket id/string:{}", ticketId);
+
+		TicketAdminInp ticketPI = TicketAdminInp.instanceForModifyNumberOfUses(ticketId, usesLimit);
+		log.info("executing ticket PI");
+
+		ProtocolExtensionPoint pep = irodsAccessObjectFactory
+				.getProtocolExtensionPoint(irodsAccount);
+		try {
+			ticketOperationResponse = pep.irodsFunction(ticketPI);
+		} catch (JargonException e) {
+			if (e.getUnderlyingIRODSExceptionCode() == ErrorEnum.CAT_TICKET_INVALID
+					.getInt()) {
+				response = false;
+			}
+		}
+
+		log.info("received response from ticket operation:{}",
+				ticketOperationResponse);
+
+		return response;
+
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.ticket.TicketAdminService#deleteTicket(java.lang.String)
+	 */
+	@Override
+	public boolean setTicketFileWriteLimit(final String ticketId, int fileWriteLimit) throws JargonException {
+
+		Tag ticketOperationResponse = null;
+		boolean response = true;
+
+		if ((ticketId == null) || (ticketId.isEmpty())) {
+			throw new IllegalArgumentException(
+					"cannot modify ticket with null or empty ticketId");
+		}
+		
+		if (fileWriteLimit < 0) {
+			throw new IllegalArgumentException(
+					"cannot modify a ticket with file write less than 0");
+		}
+
+		log.info("modifying ticket id/string:{}", ticketId);
+
+		TicketAdminInp ticketPI = TicketAdminInp.instanceForModifyFileWriteNumber(ticketId, fileWriteLimit);
+		log.info("executing ticket PI");
+
+		ProtocolExtensionPoint pep = irodsAccessObjectFactory
+				.getProtocolExtensionPoint(irodsAccount);
+		try {
+			ticketOperationResponse = pep.irodsFunction(ticketPI);
+		} catch (JargonException e) {
+			if (e.getUnderlyingIRODSExceptionCode() == ErrorEnum.CAT_TICKET_INVALID
+					.getInt()) {
+				response = false;
+			}
+		}
+
+		log.info("received response from ticket operation:{}",
+				ticketOperationResponse);
+
+		return response;
+
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.ticket.TicketAdminService#deleteTicket(java.lang.String)
+	 */
+	@Override
+	public boolean setTicketByteWriteLimit(final String ticketId, int byteWriteLimit) throws JargonException {
+
+		Tag ticketOperationResponse = null;
+		boolean response = true;
+
+		if ((ticketId == null) || (ticketId.isEmpty())) {
+			throw new IllegalArgumentException(
+					"cannot modify ticket with null or empty ticketId");
+		}
+		
+		if (byteWriteLimit < 0) {
+			throw new IllegalArgumentException(
+					"cannot modify a ticket with byte write count less than 0");
+		}
+
+		log.info("modifying ticket id/string:{}", ticketId);
+
+		TicketAdminInp ticketPI = TicketAdminInp.instanceForModifyByteWriteNumber(ticketId, byteWriteLimit);
+		log.info("executing ticket PI");
+
+		ProtocolExtensionPoint pep = irodsAccessObjectFactory
+				.getProtocolExtensionPoint(irodsAccount);
+		try {
+			ticketOperationResponse = pep.irodsFunction(ticketPI);
+		} catch (JargonException e) {
+			if (e.getUnderlyingIRODSExceptionCode() == ErrorEnum.CAT_TICKET_INVALID
+					.getInt()) {
+				response = false;
+			}
+		}
+
+		log.info("received response from ticket operation:{}",
+				ticketOperationResponse);
+
+		return response;
+
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.ticket.TicketAdminService#deleteTicket(java.lang.String)
+	 */
+	@Override
+	public boolean deleteAllTicketsForThisUser() throws JargonException {
+		
+		boolean returnVal = false;
+		
+		List<Ticket> tickets = listAllTickets(0);
+		while (tickets.size() > 0 ) {
+			for (Ticket ticket : tickets) {
+				returnVal = true;
+				deleteTicket(ticket.getTicketString());
+				tickets = listAllTickets(tickets.size());
+			}
+		}
+		
+		return returnVal;
 	}
 
 	/**
@@ -569,128 +741,6 @@ public final class TicketAdminServiceImpl implements TicketAdminService {
 		queryString.append(RodsGenQueryEnum.COL_TICKET_EXPIRY_TS.getName());
 		return queryString.toString();
 	}
-
-	// private String buildQueryStringForTicket(final String selectName,
-	// final String selectVal, final Ticket.TicketObjectType objType) {
-	//
-	// // first find out if this is a data object or collection
-	//
-	// StringBuilder queryString = new StringBuilder();
-	//
-	// queryString.append("select ");
-	// queryString.append(RodsGenQueryEnum.COL_TICKET_ID.getName());
-	// queryString.append(COMMA_SPACE);
-	// queryString.append(RodsGenQueryEnum.COL_TICKET_STRING.getName());
-	// queryString.append(COMMA_SPACE);
-	// queryString.append(RodsGenQueryEnum.COL_TICKET_TYPE.getName());
-	// queryString.append(COMMA_SPACE);
-	// queryString.append(RodsGenQueryEnum.COL_TICKET_OBJECT_TYPE.getName());
-	// queryString.append(COMMA_SPACE);
-	// queryString.append(RodsGenQueryEnum.COL_TICKET_OWNER_NAME.getName());
-	// queryString.append(COMMA_SPACE);
-	// queryString.append(RodsGenQueryEnum.COL_TICKET_OWNER_ZONE.getName());
-	// queryString.append(COMMA_SPACE);
-	// queryString.append(RodsGenQueryEnum.COL_TICKET_USES_COUNT.getName());
-	// queryString.append(COMMA_SPACE);
-	// queryString.append(RodsGenQueryEnum.COL_TICKET_USES_LIMIT.getName());
-	// queryString.append(COMMA_SPACE);
-	// queryString.append(RodsGenQueryEnum.COL_TICKET_WRITE_FILE_COUNT
-	// .getName());
-	// queryString.append(COMMA_SPACE);
-	// queryString.append(RodsGenQueryEnum.COL_TICKET_WRITE_FILE_LIMIT
-	// .getName());
-	// queryString.append(COMMA_SPACE);
-	// queryString.append(RodsGenQueryEnum.COL_TICKET_WRITE_BYTE_COUNT
-	// .getName());
-	// queryString.append(COMMA_SPACE);
-	// queryString.append(RodsGenQueryEnum.COL_TICKET_WRITE_BYTE_LIMIT
-	// .getName());
-	// queryString.append(COMMA_SPACE);
-	// queryString.append(RodsGenQueryEnum.COL_TICKET_EXPIRY_TS.getName());
-	//
-	// if (objType == Ticket.TicketObjectType.DATA_OBJECT) {
-	// queryString.append(COMMA_SPACE);
-	// queryString.append(RodsGenQueryEnum.COL_TICKET_DATA_NAME.getName());
-	// queryString.append(COMMA_SPACE);
-	// queryString.append(RodsGenQueryEnum.COL_TICKET_DATA_COLL_NAME
-	// .getName());
-	// } else {
-	// queryString.append(COMMA_SPACE);
-	// queryString.append(RodsGenQueryEnum.COL_TICKET_COLL_NAME.getName());
-	// }
-
-	// TODO: not sure to ask for these
-	// queryString.append(", ");
-	// queryString.append(RodsGenQueryEnum.COL_TICKET_ALLOWED_USER_NAME.getName());
-	// queryString.append(", ");
-	// queryString.append(RodsGenQueryEnum.COL_TICKET_ALLOWED_GROUP_NAME.getName());
-	// queryString.append(", ");
-	// queryString.append(RodsGenQueryEnum.COL_TICKET_ALLOWED_HOST.getName());
-
-	// if ((selectName != null) && (!selectName.isEmpty())
-	// && (selectVal != null) && (!selectVal.isEmpty())) {
-	// queryString.append(" where ");
-	// queryString.append(selectName);
-	// queryString.append(" = ");
-	// queryString.append("'");
-	// queryString.append(selectVal);
-	// queryString.append("'");
-	// }
-	//
-	// return queryString.toString();
-	//
-	// }
-
-	/*
-	 * private String buildQueryStringForTicketLS_ALL(final String selectName,
-	 * final String selectVal) {
-	 * 
-	 * StringBuilder queryString = new StringBuilder();
-	 * 
-	 * queryString.append("select ");
-	 * queryString.append(RodsGenQueryEnum.COL_TICKET_ID.getName());
-	 * queryString.append(COMMA_SPACE);
-	 * queryString.append(RodsGenQueryEnum.COL_TICKET_STRING.getName());
-	 * queryString.append(COMMA_SPACE);
-	 * queryString.append(RodsGenQueryEnum.COL_TICKET_TYPE.getName());
-	 * queryString.append(COMMA_SPACE);
-	 * queryString.append(RodsGenQueryEnum.COL_TICKET_OBJECT_TYPE.getName());
-	 * queryString.append(COMMA_SPACE);
-	 * queryString.append(RodsGenQueryEnum.COL_TICKET_OWNER_NAME.getName());
-	 * queryString.append(COMMA_SPACE);
-	 * queryString.append(RodsGenQueryEnum.COL_TICKET_OWNER_ZONE.getName());
-	 * queryString.append(COMMA_SPACE);
-	 * queryString.append(RodsGenQueryEnum.COL_TICKET_USES_COUNT.getName());
-	 * queryString.append(COMMA_SPACE);
-	 * queryString.append(RodsGenQueryEnum.COL_TICKET_USES_LIMIT.getName());
-	 * queryString.append(COMMA_SPACE);
-	 * queryString.append(RodsGenQueryEnum.COL_TICKET_WRITE_FILE_COUNT
-	 * .getName()); queryString.append(COMMA_SPACE);
-	 * queryString.append(RodsGenQueryEnum.COL_TICKET_WRITE_FILE_LIMIT
-	 * .getName()); queryString.append(COMMA_SPACE);
-	 * queryString.append(RodsGenQueryEnum.COL_TICKET_WRITE_BYTE_COUNT
-	 * .getName()); queryString.append(COMMA_SPACE);
-	 * queryString.append(RodsGenQueryEnum.COL_TICKET_WRITE_BYTE_LIMIT
-	 * .getName()); queryString.append(COMMA_SPACE);
-	 * queryString.append(RodsGenQueryEnum.COL_TICKET_EXPIRY_TS.getName()); //
-	 * TODO: not sure to ask for these // queryString.append(", "); //
-	 * queryString
-	 * .append(RodsGenQueryEnum.COL_TICKET_ALLOWED_USER_NAME.getName()); //
-	 * queryString.append(", "); //
-	 * queryString.append(RodsGenQueryEnum.COL_TICKET_ALLOWED_GROUP_NAME
-	 * .getName()); // queryString.append(", "); //
-	 * queryString.append(RodsGenQueryEnum.COL_TICKET_ALLOWED_HOST.getName());
-	 * 
-	 * if ((selectName != null) && (!selectName.isEmpty()) && (selectVal !=
-	 * null) && (!selectVal.isEmpty())) { queryString.append(" where ");
-	 * queryString.append(selectName); queryString.append(" = ");
-	 * queryString.append("'"); queryString.append(selectVal);
-	 * queryString.append("'"); }
-	 * 
-	 * return queryString.toString();
-	 * 
-	 * }
-	 */
 
 	// need this function to determine whether the ticket being queried for is
 	// for a data object or collection
