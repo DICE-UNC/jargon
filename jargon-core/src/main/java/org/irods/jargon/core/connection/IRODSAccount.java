@@ -97,14 +97,42 @@ public final class IRODSAccount implements Serializable {
 			throw new JargonException(
 					"IRODSAccount values cannot be initialized with null");
 		} else if (host.length() == 0 || userName.length() == 0
-				|| password.length() == 0 || zone.length() == 0) {
+				|| zone.length() == 0) {
 			throw new JargonException(
 					"data cannot be blank when initializing with this method");
 		}
 		return new IRODSAccount(host, port, userName, password, homeDirectory,
 				zone, defaultStorageResource);
-
 	}
+
+	/**
+	 * Create an <code>IRODSAccount</code> suitable for anonymous access.
+	 * 
+	 * @param host
+	 *            <code>String</code> with the DNS name of the iRODS host
+	 * @param port
+	 *            <code>int</code> with the iRODS port number (typically 1247)
+	 * @param homeDirectory
+	 *            <code>String</code> with optional value for the starting home
+	 *            directory, this can be used to set initial views, etc by other
+	 *            code
+	 * @param zone
+	 *            <code>String</code> with the iRODS zone
+	 * @param defaultStorageResource
+	 *            <code>String</code> with optional value for the default
+	 *            storage resource. Note that iRODS may have defaults set by
+	 *            policy. In cases where no default policy exists, and none is
+	 *            specified here, an error can occur.
+	 * @return <code>IRODSAccount</code> suitable for anonymous access
+	 * @throws JargonException
+	 */
+	public static IRODSAccount instanceForAnonymous(final String host,
+			final int port, final String homeDirectory, final String zone,
+			final String defaultStorageResource) throws JargonException {
+		return instance(host, port, PUBLIC_USERNAME, "", "",
+				zone, defaultStorageResource);
+	}
+
 
 	/**
 	 * Create a re-routed iRODS account using an initial account, and a host

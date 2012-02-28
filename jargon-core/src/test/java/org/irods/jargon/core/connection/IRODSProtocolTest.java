@@ -71,6 +71,22 @@ public class IRODSProtocolTest {
 	}
 
 	@Test
+	public void testConnectAnonymous() throws Exception {
+		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager
+				.instance();
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildAnonymousIRODSAccountFromTestProperties(testingProperties);
+		IRODSCommands irodsProtocol = IRODSCommands.instance(irodsAccount,
+				irodsConnectionManager, irodsFileSystem.getIrodsSession()
+						.buildPipelineConfigurationBasedOnJargonProperties());
+		Assert.assertTrue("i should have connected",
+				irodsProtocol.isConnected());
+		irodsProtocol.disconnect();
+		Assert.assertFalse("i should have disconnected",
+				irodsProtocol.isConnected());
+	}
+
+	@Test
 	public void testDisconnectWithIOException() throws Exception {
 		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager
 				.instance();

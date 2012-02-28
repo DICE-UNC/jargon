@@ -8,6 +8,7 @@ import java.net.URISyntaxException;
 import java.util.Properties;
 
 import org.irods.jargon.core.connection.IRODSAccount;
+import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.testutils.icommandinvoke.IrodsInvocationContext;
 
 /**
@@ -419,6 +420,28 @@ public class TestingPropertiesHelper {
 						.toString(), testingProperties
 						.getProperty(IRODS_ZONE_KEY), testingProperties
 						.getProperty(IRODS_RESOURCE_KEY));
+
+		return account;
+	}
+
+	/**
+	 * @param testingProperties
+	 *            <code>Properties</code> file with the standard names defined
+	 *            in
+	 *            {@link org.TestingPropertiesHelper.jargon.test.utils.TestingPropertiesLoader}
+	 * @return @link{ edu.sdsc.grid.io.irods.IRODSAccount} for anonymous access
+	 * @throws URISyntaxException
+	 */
+	public IRODSAccount buildAnonymousIRODSAccountFromTestProperties(
+			final Properties testingProperties) throws JargonException {
+
+		IRODSAccount account = IRODSAccount
+				.instanceForAnonymous(testingProperties
+						.getProperty(IRODS_HOST_KEY),
+						Integer.parseInt(testingProperties
+								.getProperty(IRODS_PORT_KEY)), "",
+						testingProperties.getProperty(IRODS_ZONE_KEY),
+						testingProperties.getProperty(IRODS_RESOURCE_KEY));
 
 		return account;
 	}
