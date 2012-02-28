@@ -107,9 +107,10 @@ public final class TicketAdminServiceImpl implements TicketAdminService {
 	 * org.irods.jargon.ticket.TicketAdminService#deleteTicket(java.lang.String)
 	 */
 	@Override
-	public void deleteTicket(final String ticketId) throws JargonException {
+	public boolean deleteTicket(final String ticketId) throws JargonException {
 
 		Tag ticketOperationResponse = null;
+		boolean response = true;
 
 		if ((ticketId == null) || (ticketId.isEmpty())) {
 			throw new IllegalArgumentException(
@@ -128,12 +129,14 @@ public final class TicketAdminServiceImpl implements TicketAdminService {
 		} catch (JargonException e) {
 			if (e.getUnderlyingIRODSExceptionCode() == ErrorEnum.CAT_TICKET_INVALID
 					.getInt()) {
-				throw new DataNotFoundException(TICKET_NOT_FOUND);
+				response = false;
 			}
 		}
 
 		log.info("received response from ticket operation:{}",
 				ticketOperationResponse);
+		
+		return response;
 
 	}
 

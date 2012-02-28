@@ -14,6 +14,7 @@ import org.irods.jargon.core.exception.InvalidUserException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.exception.JargonFileOrCollAlreadyExistsException;
 import org.irods.jargon.core.exception.NoAPIPrivException;
+import org.irods.jargon.core.exception.NoAccessException;
 import org.irods.jargon.core.exception.RemoteScriptExecutionException;
 import org.irods.jargon.core.protovalues.ErrorEnum;
 
@@ -91,6 +92,8 @@ public class IRODSErrorScanner {
 			throw new FileNotFoundException("file not found", infoValue);
 		case CAT_INVALID_GROUP:
 			throw new InvalidGroupException("invalid iRODS group", infoValue);
+		case CAT_NO_ACCESS_PERMISSION:
+			throw new NoAccessException("No access to file or collection");
 		default:
 			throw new JargonException("error code recieved from iRODS:"
 					+ infoValue, infoValue);

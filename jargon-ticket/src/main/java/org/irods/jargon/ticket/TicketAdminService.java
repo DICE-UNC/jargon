@@ -28,12 +28,16 @@ public interface TicketAdminService {
 	/**
 	 * Delete a ticket for access to iRODS
 	 * 
-	 * @param String ticketID
-	 * 			  used to specify ticket key to be deleted
+	 * @param String
+	 *            ticketID used to specify ticket key to be deleted
+	 * @return <code>boolean</code> that will be <code>true</code> if the ticket
+	 *         was found to delete. <code>false</code> means that the delete was
+	 *         not successul, due to the ticket not being found. This can be
+	 *         ignored.
 	 * @throws JargonException
 	 * 
 	 */
-	void deleteTicket(String ticketId) throws JargonException;
+	boolean deleteTicket(String ticketId) throws JargonException;
 
 	/**
 	 * Temporarily here for testing...get rid of this after specific methods are
