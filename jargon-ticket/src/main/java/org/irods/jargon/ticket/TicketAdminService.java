@@ -47,6 +47,18 @@ public interface TicketAdminService {
 	IRODSQueryResultSetInterface getTicketQueryResultForSpecifiedTicketString(
 			String ticketId, TicketObjectType objectType)
 			throws JargonException;
+	
+	/**
+	 * Generate a list of all tickets for data objects (files). Note that, for a
+	 * regular user, this will be tickets for that user. For a rodsadmin, this
+	 * will be all tickets.
+	 * 
+	 * @param ticketId - string used to identify the ticket
+	 * @return {@link Ticket} object for specified ticket string identifier
+	 * @throws JargonException
+	 */
+	Ticket getTicketForSpecifiedTicketString(String ticketId)
+			throws JargonException;
 
 	/**
 	 * Generate a list of all tickets for data objects (files). Note that, for a

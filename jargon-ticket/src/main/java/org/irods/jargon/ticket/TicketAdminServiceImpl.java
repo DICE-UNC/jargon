@@ -286,6 +286,13 @@ public final class TicketAdminServiceImpl implements TicketAdminService {
 		return tickets;
 
 	}
+	
+	@Override
+	public Ticket getTicketForSpecifiedTicketString(String ticketId)
+			throws JargonException {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 	/**
 	 * Given a result row from a ticket query, put the values into the provided
