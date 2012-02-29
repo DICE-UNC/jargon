@@ -1,5 +1,7 @@
 package org.irods.jargon.ticket;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.irods.jargon.core.pub.domain.IRODSDomainObject;
@@ -310,6 +312,15 @@ public class Ticket extends IRODSDomainObject {
 	 */
 	public Date getExpireTime() {
 		return expireTime;
+	}
+	
+	/**
+	 * @return formatted date string - like one displayed with iticket
+	 */
+	public String getFormattedExpireTime() {
+		DateFormat df = new SimpleDateFormat("yyyy-MM-dd.HH:mm:ss");
+		String formattedDate = df.format(expireTime.getTime());
+		return formattedDate;
 	}
 
 	/**

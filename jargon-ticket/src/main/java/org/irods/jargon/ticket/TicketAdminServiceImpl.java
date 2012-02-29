@@ -1,6 +1,7 @@
 package org.irods.jargon.ticket;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.irods.jargon.core.connection.IRODSAccount;
@@ -22,6 +23,7 @@ import org.irods.jargon.core.query.RodsGenQueryEnum;
 import org.irods.jargon.core.utils.IRODSDataConversionUtil;
 import org.irods.jargon.ticket.packinstr.TicketAdminInp;
 import org.irods.jargon.ticket.packinstr.TicketCreateModeEnum;
+import org.irods.jargon.ticket.packinstr.TicketModifyAddOrRemoveTypeEnum;
 import org.irods.jargon.ticket.utils.TicketRandomString;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -278,9 +280,8 @@ public final class TicketAdminServiceImpl implements TicketAdminService {
 		sb.append(this.buildQuerySelectForTicketsCommon());
 
 		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(sb.toString(),
-//				irodsAccessObjectFactory.getJargonProperties()
-//						.getMaxFilesAndDirsQueryMax());
-						1);
+				irodsAccessObjectFactory.getJargonProperties()
+						.getMaxFilesAndDirsQueryMax());
 
 		IRODSGenQueryExecutor irodsGenQueryExecutor = irodsAccessObjectFactory
 				.getIRODSGenQueryExecutor(irodsAccount);
@@ -375,7 +376,49 @@ public final class TicketAdminServiceImpl implements TicketAdminService {
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * org.irods.jargon.ticket.TicketAdminService#deleteTicket(java.lang.String)
+	 * org.irods.jargon.ticket.TicketAdminService#listAllUserRestrictionsForSpecifiedTicket(java.lang.String)
+	 */
+	@Override
+	public List<String> listAllUserRestrictionsForSpecifiedTicket(String ticketId, int partialStartIndex)
+			 throws JargonException{
+		
+		return listRestrictionsForSpecifiedTicketCommon(ticketId,
+				RodsGenQueryEnum.COL_TICKET_ALLOWED_USER_NAME, partialStartIndex);
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.ticket.TicketAdminService#listAllGroupRestrictionsForSpecifiedTicket(java.lang.String)
+	 */
+	@Override
+	public List<String> listAllGroupRestrictionsForSpecifiedTicket(String ticketId, int partialStartIndex)
+			 throws JargonException{
+		
+		return listRestrictionsForSpecifiedTicketCommon(ticketId,
+				RodsGenQueryEnum.COL_TICKET_ALLOWED_GROUP_NAME, partialStartIndex);
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.ticket.TicketAdminService#listAllHostRestrictionsForSpecifiedTicket(java.lang.String)
+	 */
+	@Override
+	public List<String> listAllHostRestrictionsForSpecifiedTicket(String ticketId, int partialStartIndex)
+			 throws JargonException{
+		
+		return listRestrictionsForSpecifiedTicketCommon(ticketId,
+				RodsGenQueryEnum.COL_TICKET_ALLOWED_HOST, partialStartIndex);
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.ticket.TicketAdminService#setTicketUsesLimit(java.lang.String)
 	 */
 	@Override
 	public boolean setTicketUsesLimit(final String ticketId, int usesLimit) throws JargonException {
@@ -420,7 +463,7 @@ public final class TicketAdminServiceImpl implements TicketAdminService {
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * org.irods.jargon.ticket.TicketAdminService#deleteTicket(java.lang.String)
+	 * org.irods.jargon.ticket.TicketAdminService#setTicketFileWriteLimit(java.lang.String)
 	 */
 	@Override
 	public boolean setTicketFileWriteLimit(final String ticketId, int fileWriteLimit) throws JargonException {
@@ -465,7 +508,7 @@ public final class TicketAdminServiceImpl implements TicketAdminService {
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * org.irods.jargon.ticket.TicketAdminService#deleteTicket(java.lang.String)
+	 * org.irods.jargon.ticket.TicketAdminService#setTicketByteWriteLimit(java.lang.String)
 	 */
 	@Override
 	public boolean setTicketByteWriteLimit(final String ticketId, int byteWriteLimit) throws JargonException {
@@ -510,7 +553,190 @@ public final class TicketAdminServiceImpl implements TicketAdminService {
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * org.irods.jargon.ticket.TicketAdminService#deleteTicket(java.lang.String)
+	 * org.irods.jargon.ticket.TicketAdminService#setTicketExpiration(java.lang.String)
+	 */
+	@Override
+	public boolean setTicketExpiration(final String ticketId, Date expirationDate) throws JargonException {
+
+		Tag ticketOperationResponse = null;
+		boolean response = true;
+
+		if ((ticketId == null) || (ticketId.isEmpty())) {
+			throw new IllegalArgumentException(
+					"cannot modify ticket with null or empty ticketId");
+		}
+		
+		if ((expirationDate == null) || (expirationDate.getTime() <= 0)) {
+			throw new IllegalArgumentException(
+					"cannot modify a ticket with expiration date of less than or equal to 0");
+		}
+
+		log.info("modifying ticket id/string:{}", ticketId);
+
+		TicketAdminInp ticketPI = TicketAdminInp.instanceForModifyExpiration(ticketId, expirationDate);
+		log.info("executing ticket PI");
+
+		ProtocolExtensionPoint pep = irodsAccessObjectFactory
+				.getProtocolExtensionPoint(irodsAccount);
+		try {
+			ticketOperationResponse = pep.irodsFunction(ticketPI);
+		} catch (JargonException e) {
+			if (e.getUnderlyingIRODSExceptionCode() == ErrorEnum.CAT_TICKET_INVALID
+					.getInt()) {
+				response = false;
+			}
+		}
+
+		log.info("received response from ticket operation:{}",
+				ticketOperationResponse);
+
+		return response;
+
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.ticket.TicketAdminService#addTicketUserRestriction(java.lang.String)
+	 */
+	@Override
+	public boolean addTicketUserRestriction(final String ticketId, String userId) throws JargonException {
+
+		Tag ticketOperationResponse = null;
+		boolean response = true;
+
+		if ((ticketId == null) || (ticketId.isEmpty())) {
+			throw new IllegalArgumentException(
+					"cannot modify ticket with null or empty ticketId");
+		}
+		
+		if ((userId == null) || (userId.isEmpty())) {
+			throw new IllegalArgumentException(
+					"cannot modify ticket with null or empty userId");
+		}
+
+		log.info("modifying ticket id/string:{}", ticketId);
+
+		TicketAdminInp ticketPI = TicketAdminInp.instanceForModifyAddAccess(ticketId,
+				TicketModifyAddOrRemoveTypeEnum.TICKET_MODIFY_USER, userId);
+		log.info("executing ticket PI");
+
+		ProtocolExtensionPoint pep = irodsAccessObjectFactory
+				.getProtocolExtensionPoint(irodsAccount);
+		try {
+			ticketOperationResponse = pep.irodsFunction(ticketPI);
+		} catch (JargonException e) {
+			if (e.getUnderlyingIRODSExceptionCode() == ErrorEnum.CAT_TICKET_INVALID
+					.getInt()) {
+				response = false;
+			}
+		}
+
+		log.info("received response from ticket operation:{}",
+				ticketOperationResponse);
+
+		return response;
+
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.ticket.TicketAdminService#addTicketGroupRestriction(java.lang.String)
+	 */
+	@Override
+	public boolean addTicketGroupRestriction(final String ticketId, String groupId) throws JargonException {
+
+		Tag ticketOperationResponse = null;
+		boolean response = true;
+
+		if ((ticketId == null) || (ticketId.isEmpty())) {
+			throw new IllegalArgumentException(
+					"cannot modify ticket with null or empty ticketId");
+		}
+		
+		if ((groupId == null) || (groupId.isEmpty())) {
+			throw new IllegalArgumentException(
+					"cannot modify ticket with null or empty groupId");
+		}
+
+		log.info("modifying ticket id/string:{}", ticketId);
+
+		TicketAdminInp ticketPI = TicketAdminInp.instanceForModifyAddAccess(ticketId,
+				TicketModifyAddOrRemoveTypeEnum.TICKET_MODIFY_GROUP, groupId);
+		log.info("executing ticket PI");
+
+		ProtocolExtensionPoint pep = irodsAccessObjectFactory
+				.getProtocolExtensionPoint(irodsAccount);
+		try {
+			ticketOperationResponse = pep.irodsFunction(ticketPI);
+		} catch (JargonException e) {
+			if (e.getUnderlyingIRODSExceptionCode() == ErrorEnum.CAT_TICKET_INVALID
+					.getInt()) {
+				response = false;
+			}
+		}
+
+		log.info("received response from ticket operation:{}",
+				ticketOperationResponse);
+
+		return response;
+
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.ticket.TicketAdminService#addTicketHostRestriction(java.lang.String)
+	 */
+	@Override
+	public boolean addTicketHostRestriction(final String ticketId, String host) throws JargonException {
+
+		Tag ticketOperationResponse = null;
+		boolean response = true;
+
+		if ((ticketId == null) || (ticketId.isEmpty())) {
+			throw new IllegalArgumentException(
+					"cannot modify ticket with null or empty ticketId");
+		}
+		
+		if ((host == null) || (host.isEmpty())) {
+			throw new IllegalArgumentException(
+					"cannot modify ticket with null or empty host");
+		}
+
+		log.info("modifying ticket id/string:{}", ticketId);
+
+		TicketAdminInp ticketPI = TicketAdminInp.instanceForModifyAddAccess(ticketId,
+				TicketModifyAddOrRemoveTypeEnum.TICKET_MODIFY_HOST, host);
+		log.info("executing ticket PI");
+
+		ProtocolExtensionPoint pep = irodsAccessObjectFactory
+				.getProtocolExtensionPoint(irodsAccount);
+		try {
+			ticketOperationResponse = pep.irodsFunction(ticketPI);
+		} catch (JargonException e) {
+			if (e.getUnderlyingIRODSExceptionCode() == ErrorEnum.CAT_TICKET_INVALID
+					.getInt()) {
+				response = false;
+			}
+		}
+
+		log.info("received response from ticket operation:{}",
+				ticketOperationResponse);
+
+		return response;
+
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.ticket.TicketAdminService#deleteAllTicketsForThisUser(java.lang.String)
 	 */
 	@Override
 	public boolean deleteAllTicketsForThisUser() throws JargonException {
@@ -605,36 +831,6 @@ public final class TicketAdminServiceImpl implements TicketAdminService {
 		}
 	}
 
-	//
-	// @Override
-	// public IRODSQueryResultSetInterface
-	// getTicketAllowedUsersByTicketString(String ticketId, int continueIndex)
-	// throws JargonException, JargonQueryException {
-	// IRODSQueryResultSetInterface resultSet = null;
-	//
-	// StringBuilder queryString = new StringBuilder();
-	//
-	// queryString.append("select ");
-	// queryString.append(RodsGenQueryEnum.COL_TICKET_ALLOWED_USER_NAME.getName());
-	// queryString.append(" where ");
-	// queryString.append(RodsGenQueryEnum.COL_TICKET_STRING.getName());
-	// queryString.append(" = ");
-	// queryString.append("'");
-	// queryString.append(ticketId);
-	// queryString.append("'");
-	//
-	// IRODSGenQuery irodsQuery = IRODSGenQuery.instance(queryString.toString(),
-	// 100);
-	//
-	// IRODSGenQueryExecutor irodsGenQueryExecutor = irodsAccessObjectFactory
-	// .getIRODSGenQueryExecutor(irodsAccount);
-	//
-	// resultSet =
-	// irodsGenQueryExecutor.executeIRODSQueryAndCloseResult(irodsQuery,
-	// continueIndex);
-	//
-	// return resultSet;
-	// }
 	//
 	// @Override
 	// public IRODSQueryResultSetInterface
@@ -740,6 +936,43 @@ public final class TicketAdminServiceImpl implements TicketAdminService {
 		queryString.append(COMMA_SPACE);
 		queryString.append(RodsGenQueryEnum.COL_TICKET_EXPIRY_TS.getName());
 		return queryString.toString();
+	}
+	
+	private List<String> listRestrictionsForSpecifiedTicketCommon(String ticketId, 
+			RodsGenQueryEnum col, int partialStartIndex) throws JargonException{
+
+		IRODSGenQuery irodsQuery = null;
+		List<String> restrictions = new ArrayList<String>();
+
+		StringBuilder queryString = new StringBuilder();
+		queryString.append("SELECT ");
+		queryString.append(col.getName());
+		queryString.append(" WHERE ");
+		queryString.append(RodsGenQueryEnum.COL_TICKET_STRING.getName());
+		queryString.append(" = ");
+		queryString.append("'");
+		queryString.append(ticketId);
+		queryString.append("'");
+
+		try {
+			irodsQuery = IRODSGenQuery.instance(queryString.toString(),
+			irodsAccessObjectFactory.getJargonProperties()
+					.getMaxFilesAndDirsQueryMax());
+			IRODSGenQueryExecutor irodsGenQueryExecutor = irodsAccessObjectFactory
+				.getIRODSGenQueryExecutor(irodsAccount);
+		
+			IRODSQueryResultSet resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResult(
+					irodsQuery, partialStartIndex);
+			for (IRODSQueryResultRow row : resultSet.getResults()) {
+				restrictions.add(row.getColumn(0));
+			}
+		
+		} catch (JargonQueryException e) {
+			log.error("query exception for ticket query:{}", irodsQuery, e);
+			throw new JargonException(ERROR_IN_TICKET_QUERY, e);
+		}
+		
+		return restrictions;
 	}
 
 	// need this function to determine whether the ticket being queried for is
