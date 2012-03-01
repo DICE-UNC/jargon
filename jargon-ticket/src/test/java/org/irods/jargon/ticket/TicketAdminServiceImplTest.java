@@ -9,11 +9,13 @@ import junit.framework.Assert;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.DuplicateDataException;
+import org.irods.jargon.core.packinstr.TransferOptions.ForceOption;
 import org.irods.jargon.core.pub.CollectionAO;
 import org.irods.jargon.core.pub.DataTransferOperations;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 import org.irods.jargon.core.pub.IRODSFileSystem;
 import org.irods.jargon.core.pub.io.IRODSFile;
+import org.irods.jargon.core.transfer.TransferControlBlock;
 import org.irods.jargon.testutils.IRODSTestSetupUtilities;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.irods.jargon.testutils.filemanip.FileGenerator;
@@ -449,13 +451,17 @@ public class TicketAdminServiceImplTest {
 
 		DataTransferOperations dataTransferOperations = accessObjectFactory
 				.getDataTransferOperations(irodsAccount2);
+		TransferControlBlock tcb = irodsFileSystem
+				.getIRODSAccessObjectFactory()
+				.buildDefaultTransferControlBlockBasedOnJargonProperties();
+		tcb.getTransferOptions().setForceOption(ForceOption.USE_FORCE);
 		dataTransferOperations
 				.putOperation(
 						localFileName,
 						targetIrodsCollection,
 						testingProperties
 								.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_RESOURCE_KEY),
-						null, null);
+						null, tcb);
 
 		IRODSFile targetFile = irodsFileSystem
 				.getIRODSFileFactory(irodsAccount).instanceIRODSFile(

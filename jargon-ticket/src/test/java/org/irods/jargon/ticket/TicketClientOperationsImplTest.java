@@ -7,9 +7,12 @@ import junit.framework.Assert;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.NoAccessException;
+import org.irods.jargon.core.packinstr.TransferOptions.ForceOption;
+import org.irods.jargon.core.pub.DataTransferOperations;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 import org.irods.jargon.core.pub.IRODSFileSystem;
 import org.irods.jargon.core.pub.io.IRODSFile;
+import org.irods.jargon.core.transfer.TransferControlBlock;
 import org.irods.jargon.testutils.IRODSTestSetupUtilities;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.irods.jargon.testutils.filemanip.FileGenerator;
@@ -129,6 +132,77 @@ public class TicketClientOperationsImplTest {
 
 		ticketClientService.putFileToIRODSUsingTicket(ticketString, localFile,
 				targetFile, null, null);
+
+		IRODSFile actualFile = irodsFileSystem
+				.getIRODSFileFactory(irodsAccount).instanceIRODSFile(
+						targetFile.getAbsolutePath(), testFileName);
+		Assert.assertTrue("target file not written", actualFile.exists());
+		ticketSvc.deleteTicket(testCollection);
+
+	}
+
+	/**
+	 * Put a file to irods, then put to it as a secondary user with a ticket
+	 * using overwrite, giving that existing file name, and using a force option
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public final void testPutFileToIRODSUsingTicketExistingFileSpecifyFile()
+			throws Exception {
+
+		if (!testTicket) {
+			return;
+		}
+
+		String testCollection = "testPutFileToIRODSUsingTicketExistingFileSpecifyFile";
+		String testFileName = "testPutFileToIRODSUsingTicketExistingFileSpecifyFile.txt";
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String localFileName = FileGenerator
+				.generateFileOfFixedLengthGivenName(absPath, testFileName, 1);
+
+		File localFile = new File(localFileName);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
+								+ testCollection);
+		IRODSFile targetFile = accessObjectFactory.getIRODSFileFactory(
+				irodsAccount).instanceIRODSFile(targetIrodsCollection);
+		targetFile.mkdirs();
+		DataTransferOperations dataTransferOperations = accessObjectFactory
+				.getDataTransferOperations(irodsAccount);
+		dataTransferOperations.putOperation(localFile, targetFile, null, null);
+
+		IRODSAccount secondaryAccount = testingPropertiesHelper
+				.buildIRODSAccountFromSecondaryTestProperties(testingProperties);
+		TicketAdminService ticketSvc = new TicketAdminServiceImpl(
+				accessObjectFactory, irodsAccount);
+		ticketSvc.deleteTicket(testCollection);
+		IRODSFile targetFileToCleanUp = accessObjectFactory
+				.getIRODSFileFactory(secondaryAccount).instanceIRODSFile(
+						targetIrodsCollection + "/" + testFileName);
+		targetFileToCleanUp.deleteWithForceOption();
+
+		String ticketString = ticketSvc.createTicket(
+				TicketCreateModeEnum.TICKET_CREATE_WRITE, targetFile,
+				testCollection);
+
+		TicketClientOperations ticketClientService = new TicketClientOperationsImpl(
+				accessObjectFactory, secondaryAccount);
+
+		TransferControlBlock tcb = irodsFileSystem
+				.getIRODSAccessObjectFactory()
+				.buildDefaultTransferControlBlockBasedOnJargonProperties();
+		tcb.getTransferOptions().setForceOption(ForceOption.USE_FORCE);
+
+		ticketClientService.putFileToIRODSUsingTicket(ticketString, localFile,
+				targetFile, null, tcb);
 
 		IRODSFile actualFile = irodsFileSystem
 				.getIRODSFileFactory(irodsAccount).instanceIRODSFile(
