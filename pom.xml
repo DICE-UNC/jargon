@@ -421,5 +421,6 @@
 		<module>jargon-security</module>
 		<module>jargon-data-utils</module>
 		<module>jargon-ticket</module>
+		<module>jargon-httpstream</module>
   </modules>
 </project>
