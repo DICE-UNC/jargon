@@ -1,6 +1,7 @@
 package org.irods.jargon.core.pub;
 
 import org.irods.jargon.core.connection.IRODSAccount;
+import org.irods.jargon.core.connection.IRODSServerProperties;
 import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.connection.JargonProperties;
 import org.irods.jargon.core.exception.JargonException;
@@ -79,9 +80,7 @@ public final class IRODSAccessObjectFactoryImpl implements
 		if (irodsSession == null) {
 			throw new JargonException("null session");
 		}
-
 		irodsSession.closeSession();
-
 	}
 
 	/*
@@ -519,6 +518,23 @@ public final class IRODSAccessObjectFactoryImpl implements
 	public JargonProperties getJargonProperties() {
 		// irodsSession synchronizes access
 		return irodsSession.getJargonProperties();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.IRODSAccessObjectFactory#getIRODSServerProperties
+	 * (org.irods.jargon.core.connection.IRODSAccount)
+	 */
+	@Override
+	public final IRODSServerProperties getIRODSServerProperties(
+			final IRODSAccount irodsAccount) throws JargonException {
+		if (irodsAccount == null) {
+			throw new IllegalArgumentException("null irodsAccount");
+		}
+		return irodsSession.currentConnection(irodsAccount)
+				.getIRODSServerProperties();
 	}
 
 	/*
