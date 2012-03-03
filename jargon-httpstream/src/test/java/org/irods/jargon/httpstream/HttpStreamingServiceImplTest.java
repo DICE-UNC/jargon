@@ -53,12 +53,17 @@ public class HttpStreamingServiceImplTest {
 		// generate a local scratch file
 		String testFileName = "testPutWithUrl.txt";
 		String testRetrievedFileName = "testPutWithUrlRetreived.txt";
-		// String testUrl = "http://www.renci.org/~lisa/bigiPlantFile.txt";
-		String testUrl = "http://www.irods.org";
+		String testUrl = "http://www.renci.org/~lisa/bigiPlantFile.txt";
+		// String testUrl = "http://www.irods.org";
+		/*
+		 * String targetIrodsFile = testingPropertiesHelper
+		 * .buildIRODSCollectionAbsolutePathFromTestProperties(
+		 * testingProperties, IRODS_TEST_SUBDIR_PATH + '/' + testFileName);
+		 */
+
 		String targetIrodsFile = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ testFileName);
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
 
 		// now put the file
 

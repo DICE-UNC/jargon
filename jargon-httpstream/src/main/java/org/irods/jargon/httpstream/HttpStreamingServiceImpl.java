@@ -13,11 +13,8 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.irods.jargon.core.connection.ConnectionProgressStatusListener;
 import org.irods.jargon.core.connection.IRODSAccount;
-import org.irods.jargon.core.connection.IRODSServerProperties;
 import org.irods.jargon.core.exception.JargonException;
-import org.irods.jargon.core.pub.DataObjectAO;
 import org.irods.jargon.core.pub.DefaultIntraFileProgressCallbackListener;
-import org.irods.jargon.core.pub.FileCatalogObjectAOImpl;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 import org.irods.jargon.core.pub.Stream2StreamAO;
 import org.irods.jargon.core.pub.io.ByteCountingCallbackInputStreamWrapper;
@@ -97,33 +94,6 @@ public class HttpStreamingServiceImpl implements HttpStreamingService {
 		if (operativeTransferControlBlock == null) {
 			operativeTransferControlBlock = irodsAccessObjectFactory
 					.buildDefaultTransferControlBlockBasedOnJargonProperties();
-		}
-
-		IRODSAccount reroutedAccount = irodsAccount;// check for re-routing
-		IRODSServerProperties irodsServerProperties = irodsAccessObjectFactory
-				.getIRODSServerProperties(irodsAccount);
-		if (operativeTransferControlBlock.getTransferOptions()
-				.isAllowPutGetResourceRedirects()
-				&& irodsServerProperties.isSupportsConnectionRerouting()) {
-			log.info("redirects are available, check to see if I need to redirect to a resource server");
-
-			DataObjectAO dataObjectAO = irodsAccessObjectFactory
-					.getDataObjectAO(irodsAccount);
-
-			// make a call to see if I need to go to a different host
-
-			String detectedHost = dataObjectAO.getHostForPutOperation(
-					irodsTargetFile.getAbsolutePath(),
-					irodsTargetFile.getResource());
-			if (detectedHost == null
-					|| detectedHost
-							.equals(FileCatalogObjectAOImpl.USE_THIS_ADDRESS)) {
-				log.info("using given resource connection");
-			} else {
-				log.info("rerouting to host:{}", detectedHost);
-				reroutedAccount = IRODSAccount.instanceForReroutedHost(
-						irodsAccount, detectedHost);
-			}
 		}
 
 		HttpClient httpclient = new DefaultHttpClient();
@@ -229,10 +199,13 @@ public class HttpStreamingServiceImpl implements HttpStreamingService {
 				.getIRODSFileFactory(irodsAccount).instanceIRODSFile(
 						callbackTargetIrodsPath);
 		callbackTargetIrodsFile.setResource(irodsTargetFile.getResource());
+
+		log.info("callbackTargetIrodsFile:{}", callbackTargetIrodsFile);
+
 		if (transferStatusCallbackListener != null) {
 
 			TransferStatus status = TransferStatus.instance(TransferType.PUT,
-					sourceURL, irodsTargetFile.getAbsolutePath(),
+					sourceURL, callbackTargetIrodsFile.getAbsolutePath(),
 					irodsTargetFile.getResource(), urlSize, urlSize, 0, 1,
 					TransferState.IN_PROGRESS_START_FILE,
 					irodsAccount.getHost(), irodsAccount.getZone());
@@ -252,15 +225,15 @@ public class HttpStreamingServiceImpl implements HttpStreamingService {
 		try {
 			log.debug("getting stream2streamAO");
 			Stream2StreamAO stream2StreamAO = irodsAccessObjectFactory
-					.getStream2StreamAO(reroutedAccount);
+					.getStream2StreamAO(irodsAccount);
 			stream2StreamAO.transferStreamToFileUsingIOStreams(instream,
-					(File) irodsTargetFile, urlSize, 0);
+					(File) callbackTargetIrodsFile, urlSize, 0);
 
 			if (transferStatusCallbackListener != null) {
 
 				TransferStatus status = TransferStatus.instance(
 						TransferType.PUT, sourceURL,
-						irodsTargetFile.getAbsolutePath(),
+						callbackTargetIrodsFile.getAbsolutePath(),
 						irodsTargetFile.getResource(), urlSize, urlSize, 1, 1,
 						TransferState.IN_PROGRESS_COMPLETE_FILE,
 						irodsAccount.getHost(), irodsAccount.getZone());
@@ -286,8 +259,8 @@ public class HttpStreamingServiceImpl implements HttpStreamingService {
 
 				TransferStatus status = TransferStatus.instanceForException(
 						TransferType.PUT, sourceURL,
-						irodsTargetFile.getAbsolutePath(),
-						irodsTargetFile.getResource(), urlSize,
+						callbackTargetIrodsFile.getAbsolutePath(),
+						callbackTargetIrodsFile.getResource(), urlSize,
 						irodsTargetFile.length(), totalFilesSoFar, totalFiles,
 						je, irodsAccount.getHost(), irodsAccount.getZone());
 
