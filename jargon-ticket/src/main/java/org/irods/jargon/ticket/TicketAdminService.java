@@ -218,10 +218,26 @@ public interface TicketAdminService {
 	 *         was found to modify. <code>false</code> means that the modify was
 	 *         not successful, due to the ticket not being found. This can be
 	 *         ignored.
-	 * @throws JargonException
+	 * @throws JargonException (InvalidUserException)
 	 * 
 	 */
 	boolean addTicketUserRestriction(String ticketId, String userId) throws JargonException;
+	
+	/**
+	 * Modify the user access for an IRODS ticket
+	 * 
+	 * @param ticketId
+	 *            <code>String</code> used to specify ticket key to be modified
+	 * @param userId
+	 *            <code>String</code> that identifies a valid iRODS user
+	 * @return <code>boolean</code> that will be <code>true</code> if the ticket
+	 *         was found to modify. <code>false</code> means that the modify was
+	 *         not successful, due to the ticket not being found. This can be
+	 *         ignored.
+	 * @throws JargonException (InvalidUserException)
+	 * 
+	 */
+	boolean removeTicketUserRestriction(String ticketId, String userId) throws JargonException;
 	
 	/**
 	 * Modify the group access for an IRODS ticket
@@ -234,10 +250,26 @@ public interface TicketAdminService {
 	 *         was found to modify. <code>false</code> means that the modify was
 	 *         not successful, due to the ticket not being found. This can be
 	 *         ignored.
-	 * @throws JargonException
+	 * @throws JargonException (InvalidGroupException)
 	 * 
 	 */
 	boolean addTicketGroupRestriction(String ticketId, String userId) throws JargonException;
+	
+	/**
+	 * Modify the group access for an IRODS ticket
+	 * 
+	 * @param ticketId
+	 *            <code>String</code> used to specify ticket key to be modified
+	 * @param groupId
+	 *            <code>String</code> that identifies a valid iRODS group
+	 * @return <code>boolean</code> that will be <code>true</code> if the ticket
+	 *         was found to modify. <code>false</code> means that the modify was
+	 *         not successful, due to the ticket not being found. This can be
+	 *         ignored.
+	 * @throws JargonException (InvalidGroupException)
+	 * 
+	 */
+	boolean removeTicketGroupRestriction(String ticketId, String userId) throws JargonException;
 	
 	/**
 	 * Modify the host access for an IRODS ticket
@@ -250,10 +282,26 @@ public interface TicketAdminService {
 	 *         was found to modify. <code>false</code> means that the modify was
 	 *         not successful, due to the ticket not being found. This can be
 	 *         ignored.
-	 * @throws JargonException
+	 * @throws JargonException (InvalidHostException)
 	 * 
 	 */
 	boolean addTicketHostRestriction(String ticketId, String host) throws JargonException;
+	
+	/**
+	 * Modify the host access for an IRODS ticket
+	 * 
+	 * @param ticketId
+	 *            <code>String</code> used to specify ticket key to be modified
+	 * @param host
+	 *            <code>String</code> that identifies a valid host
+	 * @return <code>boolean</code> that will be <code>true</code> if the ticket
+	 *         was found to modify. <code>false</code> means that the modify was
+	 *         not successful, due to the ticket not being found. This can be
+	 *         ignored.
+	 * @throws JargonException (InvalidHostException)
+	 * 
+	 */
+	boolean removeTicketHostRestriction(String ticketId, String host) throws JargonException;
 	
 	/**
 	 * delete all IRODS access tickets for this user
@@ -263,7 +311,7 @@ public interface TicketAdminService {
 	 *         not successful, due to no tickets found. This can be ignored. NOTE: Use EXTREME
 	 *         caution with this method - for a regular user (rodsuser), this will delete tickets
 	 *         just for that user. However for a rodsadmin user this will delete ALL tickets.
-	 * @throws JargonException
+	 * @throws JargonException (InvalidHostException)
 	 * 
 	 */
 	boolean deleteAllTicketsForThisUser() throws JargonException;

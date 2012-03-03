@@ -631,6 +631,58 @@ public final class TicketAdminServiceImpl implements TicketAdminService {
 					.getInt()) {
 				response = false;
 			}
+			else {
+				throw e;
+			}
+		}
+
+		log.info("received response from ticket operation:{}",
+				ticketOperationResponse);
+
+		return response;
+
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.ticket.TicketAdminService#addTicketUserRestriction(java.lang.String)
+	 */
+	@Override
+	public boolean removeTicketUserRestriction(final String ticketId, String userId) throws JargonException {
+
+		Tag ticketOperationResponse = null;
+		boolean response = true;
+
+		if ((ticketId == null) || (ticketId.isEmpty())) {
+			throw new IllegalArgumentException(
+					"cannot modify ticket with null or empty ticketId");
+		}
+		
+		if ((userId == null) || (userId.isEmpty())) {
+			throw new IllegalArgumentException(
+					"cannot modify ticket with null or empty userId");
+		}
+
+		log.info("modifying ticket id/string:{}", ticketId);
+
+		TicketAdminInp ticketPI = TicketAdminInp.instanceForModifyRemoveAccess(ticketId,
+				TicketModifyAddOrRemoveTypeEnum.TICKET_MODIFY_USER, userId);
+		log.info("executing ticket PI");
+
+		ProtocolExtensionPoint pep = irodsAccessObjectFactory
+				.getProtocolExtensionPoint(irodsAccount);
+		try {
+			ticketOperationResponse = pep.irodsFunction(ticketPI);
+		} catch (JargonException e) {
+			if (e.getUnderlyingIRODSExceptionCode() == ErrorEnum.CAT_TICKET_INVALID
+					.getInt()) {
+				response = false;
+			}
+			else {
+				throw e;
+			}
 		}
 
 		log.info("received response from ticket operation:{}",
@@ -677,6 +729,58 @@ public final class TicketAdminServiceImpl implements TicketAdminService {
 					.getInt()) {
 				response = false;
 			}
+			else {
+				throw e;
+			}
+		}
+
+		log.info("received response from ticket operation:{}",
+				ticketOperationResponse);
+
+		return response;
+
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.ticket.TicketAdminService#addTicketGroupRestriction(java.lang.String)
+	 */
+	@Override
+	public boolean removeTicketGroupRestriction(final String ticketId, String groupId) throws JargonException {
+
+		Tag ticketOperationResponse = null;
+		boolean response = true;
+
+		if ((ticketId == null) || (ticketId.isEmpty())) {
+			throw new IllegalArgumentException(
+					"cannot modify ticket with null or empty ticketId");
+		}
+		
+		if ((groupId == null) || (groupId.isEmpty())) {
+			throw new IllegalArgumentException(
+					"cannot modify ticket with null or empty groupId");
+		}
+
+		log.info("modifying ticket id/string:{}", ticketId);
+
+		TicketAdminInp ticketPI = TicketAdminInp.instanceForModifyRemoveAccess(ticketId,
+				TicketModifyAddOrRemoveTypeEnum.TICKET_MODIFY_GROUP, groupId);
+		log.info("executing ticket PI");
+
+		ProtocolExtensionPoint pep = irodsAccessObjectFactory
+				.getProtocolExtensionPoint(irodsAccount);
+		try {
+			ticketOperationResponse = pep.irodsFunction(ticketPI);
+		} catch (JargonException e) {
+			if (e.getUnderlyingIRODSExceptionCode() == ErrorEnum.CAT_TICKET_INVALID
+					.getInt()) {
+				response = false;
+			}
+			else {
+				throw e;
+			}
 		}
 
 		log.info("received response from ticket operation:{}",
@@ -722,6 +826,56 @@ public final class TicketAdminServiceImpl implements TicketAdminService {
 			if (e.getUnderlyingIRODSExceptionCode() == ErrorEnum.CAT_TICKET_INVALID
 					.getInt()) {
 				response = false;
+			}else {
+				throw e;
+			}
+		}
+
+		log.info("received response from ticket operation:{}",
+				ticketOperationResponse);
+
+		return response;
+
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.ticket.TicketAdminService#addTicketHostRestriction(java.lang.String)
+	 */
+	@Override
+	public boolean removeTicketHostRestriction(final String ticketId, String host) throws JargonException {
+
+		Tag ticketOperationResponse = null;
+		boolean response = true;
+
+		if ((ticketId == null) || (ticketId.isEmpty())) {
+			throw new IllegalArgumentException(
+					"cannot modify ticket with null or empty ticketId");
+		}
+		
+		if ((host == null) || (host.isEmpty())) {
+			throw new IllegalArgumentException(
+					"cannot modify ticket with null or empty host");
+		}
+
+		log.info("modifying ticket id/string:{}", ticketId);
+
+		TicketAdminInp ticketPI = TicketAdminInp.instanceForModifyRemoveAccess(ticketId,
+				TicketModifyAddOrRemoveTypeEnum.TICKET_MODIFY_HOST, host);
+		log.info("executing ticket PI");
+
+		ProtocolExtensionPoint pep = irodsAccessObjectFactory
+				.getProtocolExtensionPoint(irodsAccount);
+		try {
+			ticketOperationResponse = pep.irodsFunction(ticketPI);
+		} catch (JargonException e) {
+			if (e.getUnderlyingIRODSExceptionCode() == ErrorEnum.CAT_TICKET_INVALID
+					.getInt()) {
+				response = false;
+			}else {
+				throw e;
 			}
 		}
 
