@@ -4,6 +4,7 @@
 package org.irods.jargon.core.connection;
 
 import org.irods.jargon.core.exception.AuthenticationException;
+import org.irods.jargon.core.exception.CatNoAccessException;
 import org.irods.jargon.core.exception.CollectionNotEmptyException;
 import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.DuplicateDataException;
@@ -91,6 +92,8 @@ public class IRODSErrorScanner {
 			throw new FileNotFoundException("file not found", infoValue);
 		case CAT_INVALID_GROUP:
 			throw new InvalidGroupException("invalid iRODS group", infoValue);
+		case CAT_NO_ACCESS_PERMISSION:
+			throw new CatNoAccessException("no access to item in catalog");
 		default:
 			throw new JargonException("error code recieved from iRODS:"
 					+ infoValue, infoValue);

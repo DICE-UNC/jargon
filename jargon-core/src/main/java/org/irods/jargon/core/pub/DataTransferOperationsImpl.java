@@ -1767,6 +1767,7 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 	 * org.irods.jargon.core.transfer.TransferControlBlock)
 	 */
 	@Override
+	@Deprecated
 	public void putOperationURL(
 			final String sourceURL,
 			final String targetIrodsFileAbsolutePath,

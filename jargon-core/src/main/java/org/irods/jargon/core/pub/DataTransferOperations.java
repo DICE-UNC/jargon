@@ -447,7 +447,10 @@ public interface DataTransferOperations extends IRODSAccessObject {
 	 *            implementation that is the communications mechanism between
 	 *            the initiator of the transfer and the transfer process.
 	 * @throws JargonException
+	 * @deprecated use the jargon-httpstream project code instead of this
+	 *             method, will remove prior to iRODS 3.0.1 release
 	 */
+	@Deprecated
 	void putOperationURL(String sourceURL, String targetIrodsFileAbsolutePath,
 			String targetResourceName,
 			TransferStatusCallbackListener transferStatusCallbackListener,
