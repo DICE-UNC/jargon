@@ -12,6 +12,7 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.irods.jargon.core.exception.CatNoAccessException;
 import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.DuplicateDataException;
 import org.irods.jargon.core.exception.FileNotFoundException;
@@ -935,6 +936,9 @@ public final class IRODSFileImpl extends File implements IRODSFile {
 		} catch (DuplicateDataException e) {
 			log.info("duplicate data exception, return false from mkdir", e);
 			return false;
+		} catch (CatNoAccessException e) {
+			log.error("no access to create the given collection, false will be returned from method");
+			return false;
 		} catch (JargonException e) {
 			// check if this means that it already exists, and call that a
 			// 'false' instead of an error
@@ -958,6 +962,9 @@ public final class IRODSFileImpl extends File implements IRODSFile {
 	public boolean mkdirs() {
 		try {
 			irodsFileSystemAO.mkdir(this, true);
+		} catch (CatNoAccessException e) {
+			log.error("no access to create the given collection, false will be returned from method");
+			return false;
 		} catch (DuplicateDataException e) {
 			log.info("duplicate data exception, return false from mkdir", e);
 			return false;

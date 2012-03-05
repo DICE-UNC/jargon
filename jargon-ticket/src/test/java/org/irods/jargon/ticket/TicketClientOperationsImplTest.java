@@ -6,7 +6,7 @@ import java.util.Properties;
 import junit.framework.Assert;
 
 import org.irods.jargon.core.connection.IRODSAccount;
-import org.irods.jargon.core.exception.NoAccessException;
+import org.irods.jargon.core.exception.CatNoAccessException;
 import org.irods.jargon.core.packinstr.TransferOptions.ForceOption;
 import org.irods.jargon.core.pub.DataTransferOperations;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
@@ -212,7 +212,7 @@ public class TicketClientOperationsImplTest {
 
 	}
 
-	@Test(expected = NoAccessException.class)
+	@Test(expected = CatNoAccessException.class)
 	public final void testPutFileToIRODSUsingInvalidTicket() throws Exception {
 
 		if (!testTicket) {

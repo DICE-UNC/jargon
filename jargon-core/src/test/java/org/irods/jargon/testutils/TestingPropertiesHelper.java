@@ -38,7 +38,7 @@ public class TestingPropertiesHelper {
 	public static String IRODS_ADMIN_PASSWORD_KEY = "test.irods.admin.password";
 	public static String MAC_ICOMMANDS_PATH = "test.mac.icommand.path";
 	public static String IRODS_RESOURCE_GROUP_KEY = "test.resource.group";
-
+	public static String IRODS_USER_GROUP_KEY = "test.user.group";
 	public static String IRODS_TEST_FEDERATED_ZONE_KEY = "test.option.federated.zone";
 	public static String IRODS_FEDERATED_HOST_KEY = "test.federated.irods.host";
 	public static String IRODS_FEDERATED_PORT_KEY = "test.federated.irods.port";

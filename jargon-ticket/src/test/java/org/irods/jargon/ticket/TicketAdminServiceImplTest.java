@@ -20,7 +20,6 @@ import org.irods.jargon.core.pub.CollectionAO;
 import org.irods.jargon.core.pub.DataTransferOperations;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 import org.irods.jargon.core.pub.IRODSFileSystem;
-import org.irods.jargon.core.pub.UserGroupAO;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.transfer.TransferControlBlock;
 import org.irods.jargon.testutils.IRODSTestSetupUtilities;
@@ -1676,9 +1675,9 @@ public class TicketAdminServiceImplTest {
 				testingProperties
 						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
 				irodsAccount, accessObjectFactory);
-		UserGroupAO userGroup = accessObjectFactory
-				.getUserGroupAO(irodsAccount);
-		String testGroupName = userGroup.findAll().get(1).getUserGroupName();
+		
+		String testGroupName = testingProperties
+				.getProperty(TestingPropertiesHelper.IRODS_USER_GROUP_KEY);
 
 		TicketAdminService ticketSvc = new TicketAdminServiceImpl(
 				accessObjectFactory, irodsAccount);
@@ -1716,9 +1715,9 @@ public class TicketAdminServiceImplTest {
 				testingProperties
 						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
 				irodsAccount, accessObjectFactory);
-		UserGroupAO userGroup = accessObjectFactory
-				.getUserGroupAO(irodsAccount);
-		String testGroupName = userGroup.findAll().get(1).getUserGroupName();
+
+		String testGroupName = testingProperties
+				.getProperty(TestingPropertiesHelper.IRODS_USER_GROUP_KEY);
 
 		TicketAdminService ticketSvc = new TicketAdminServiceImpl(
 				accessObjectFactory, irodsAccount);
@@ -1753,9 +1752,9 @@ public class TicketAdminServiceImplTest {
 				testingProperties
 						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
 				irodsAccount, accessObjectFactory);
-		UserGroupAO userGroup = accessObjectFactory
-				.getUserGroupAO(irodsAccount);
-		String testGroupName = userGroup.findAll().get(1).getUserGroupName();
+
+		String testGroupName = testingProperties
+				.getProperty(TestingPropertiesHelper.IRODS_USER_GROUP_KEY);
 
 		TicketAdminService ticketSvc = new TicketAdminServiceImpl(
 				accessObjectFactory, irodsAccount);
@@ -1856,10 +1855,9 @@ public class TicketAdminServiceImplTest {
 				testingProperties
 						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
 				irodsAccount, accessObjectFactory);
-		UserGroupAO userGroup = accessObjectFactory
-				.getUserGroupAO(irodsAccount);
-		String testGroupName = userGroup.findAll().get(1).getUserGroupName();
 
+		String testGroupName = testingProperties
+				.getProperty(TestingPropertiesHelper.IRODS_USER_GROUP_KEY);
 		TicketAdminService ticketSvc = new TicketAdminServiceImpl(
 				accessObjectFactory, irodsAccount);
 
@@ -1902,9 +1900,9 @@ public class TicketAdminServiceImplTest {
 				testingProperties
 						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
 				irodsAccount, accessObjectFactory);
-		UserGroupAO userGroup = accessObjectFactory
-				.getUserGroupAO(irodsAccount);
-		String testGroupName = userGroup.findAll().get(1).getUserGroupName();
+
+		String testGroupName = testingProperties
+				.getProperty(TestingPropertiesHelper.IRODS_USER_GROUP_KEY);
 
 		TicketAdminService ticketSvc = new TicketAdminServiceImpl(
 				accessObjectFactory, irodsAccount);
@@ -1945,10 +1943,9 @@ public class TicketAdminServiceImplTest {
 				testingProperties
 						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
 				irodsAccount, accessObjectFactory);
-		UserGroupAO userGroup = accessObjectFactory
-				.getUserGroupAO(irodsAccount);
-		String testGroupName = userGroup.findAll().get(1).getUserGroupName();
 
+		String testGroupName = testingProperties
+				.getProperty(TestingPropertiesHelper.IRODS_USER_GROUP_KEY);
 		TicketAdminService ticketSvc = new TicketAdminServiceImpl(
 				accessObjectFactory, irodsAccount);
 
@@ -1988,10 +1985,9 @@ public class TicketAdminServiceImplTest {
 						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
 				irodsAccount, accessObjectFactory);
 
-		UserGroupAO userGroup = accessObjectFactory
-				.getUserGroupAO(irodsAccount);
-		String testGroupName = userGroup.findAll().get(1).getUserGroupName();
 
+		String testGroupName = testingProperties
+				.getProperty(TestingPropertiesHelper.IRODS_USER_GROUP_KEY);
 		TicketAdminService ticketSvc = new TicketAdminServiceImpl(
 				accessObjectFactory, irodsAccount);
 
@@ -2032,10 +2028,8 @@ public class TicketAdminServiceImplTest {
 						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
 				irodsAccount, accessObjectFactory);
 
-		UserGroupAO userGroup = accessObjectFactory
-				.getUserGroupAO(irodsAccount);
-		String testGroupName = userGroup.findAll().get(1).getUserGroupName();
-
+		String testGroupName = testingProperties
+				.getProperty(TestingPropertiesHelper.IRODS_USER_GROUP_KEY);
 		TicketAdminService ticketSvc = new TicketAdminServiceImpl(
 				accessObjectFactory, irodsAccount);
 

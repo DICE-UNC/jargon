@@ -50,7 +50,7 @@ final class TransferOperationsHelper {
 	 * @return
 	 * @throws JargonException
 	 */
-	protected final static TransferOperationsHelper instance(
+	final static TransferOperationsHelper instance(
 			final IRODSSession irodsSession, final IRODSAccount irodsAccount)
 			throws JargonException {
 		return new TransferOperationsHelper(irodsSession, irodsAccount);
@@ -93,7 +93,7 @@ final class TransferOperationsHelper {
 	 *            requesting process to send a cancellation. This is required.
 	 * @throws JargonException
 	 */
-	protected void recursivelyGet(
+	void recursivelyGet(
 			final IRODSFile irodsSourceFile,
 			final File targetLocalFile,
 			final TransferStatusCallbackListener transferStatusCallbackListener,
@@ -196,7 +196,7 @@ final class TransferOperationsHelper {
 	 *            is required.
 	 * @throws JargonException
 	 */
-	protected void processGetOfSingleFile(
+	void processGetOfSingleFile(
 			final IRODSFile irodsSourceFile,
 			final File targetLocalFile,
 			final TransferStatusCallbackListener transferStatusCallbackListener,
@@ -328,7 +328,7 @@ final class TransferOperationsHelper {
 	 *            null if not required.
 	 * @throws JargonException
 	 */
-	protected void recursivelyPut(
+	void recursivelyPut(
 			final File sourceFile,
 			final IRODSFile targetIrodsCollection,
 			final TransferStatusCallbackListener transferStatusCallbackListener,
@@ -535,7 +535,7 @@ final class TransferOperationsHelper {
 	 *            null if not required.
 	 * @throws JargonException
 	 */
-	protected void recursivelyReplicate(
+	void recursivelyReplicate(
 			final IRODSFile sourceFile,
 			final String targetResource,
 			final TransferStatusCallbackListener transferStatusCallbackListener,
@@ -685,7 +685,7 @@ final class TransferOperationsHelper {
 	 *            the initiator of the transfer and the transfer process.
 	 * @throws JargonException
 	 */
-	protected void processPutOfSingleFile(
+	void processPutOfSingleFile(
 			final File sourceFile,
 			final IRODSFile targetIrodsFile,
 			final TransferStatusCallbackListener transferStatusCallbackListener,
@@ -813,7 +813,7 @@ final class TransferOperationsHelper {
 	 *            needed.
 	 * @throws JargonException
 	 */
-	protected void processReplicationOfSingleFile(
+	void processReplicationOfSingleFile(
 			final String irodsFileAbsolutePath,
 			final String targetResource,
 			final TransferStatusCallbackListener transferStatusCallbackListener,
@@ -890,7 +890,7 @@ final class TransferOperationsHelper {
 		}
 	}
 
-	protected void recursivelyCopy(
+	void recursivelyCopy(
 			final IRODSFile irodsSourceFile,
 			final String targetResource,
 			final String targetIrodsFileAbsolutePath,
@@ -997,7 +997,7 @@ final class TransferOperationsHelper {
 	 *            needed.
 	 * @throws JargonException
 	 */
-	protected void processCopyOfSingleFile(
+	void processCopyOfSingleFile(
 			final String irodsSourceFileAbsolutePath,
 			final String targetResource,
 			final String irodsTargetFileAbsolutePath,
@@ -1104,8 +1104,11 @@ final class TransferOperationsHelper {
 	 *            implementation that is the communications mechanism between
 	 *            the initiator of the transfer and the transfer process.
 	 * @throws JargonException
+	 * @deprecated will remove with DataTransferOperations put from url code in
+	 *             favor of the jargon-httputls project
 	 */
-	protected void processPutOfURL(
+	@Deprecated
+	void processPutOfURL(
 			final String sourceURL,
 			final IRODSFile targetIrodsFile,
 			final TransferStatusCallbackListener transferStatusCallbackListener,
@@ -1234,5 +1237,3 @@ final class TransferOperationsHelper {
 		}
 	}
 }
-
-// DataObjInp_PI><objPath>/test1/home/test1/jargon-scratch/TransferManagerTest/enqueueAGet/testSubdirlvl1nbr0/testFile0.txt</objPath>

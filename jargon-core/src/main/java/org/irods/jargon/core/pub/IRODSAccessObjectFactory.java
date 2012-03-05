@@ -1,6 +1,7 @@
 package org.irods.jargon.core.pub;
 
 import org.irods.jargon.core.connection.IRODSAccount;
+import org.irods.jargon.core.connection.IRODSServerProperties;
 import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.connection.JargonProperties;
 import org.irods.jargon.core.exception.JargonException;
@@ -406,6 +407,19 @@ public interface IRODSAccessObjectFactory {
 	 * @throws JargonException
 	 */
 	ProtocolExtensionPoint getProtocolExtensionPoint(IRODSAccount irodsAccount)
+			throws JargonException;
+
+	/**
+	 * Get the properties of the iRODS server described by the provided
+	 * <code>IRODSAccount</code>
+	 * 
+	 * @param irodsAccount
+	 *            {@link IRODSAccount} that describes the server for which
+	 *            properties will be derived
+	 * @return {@link IRODSServerProperties} for the server at the given account
+	 * @throws JargonException
+	 */
+	IRODSServerProperties getIRODSServerProperties(IRODSAccount irodsAccount)
 			throws JargonException;
 
 }

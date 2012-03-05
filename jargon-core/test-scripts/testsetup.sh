@@ -21,3 +21,9 @@ exec `iadmin atrg testResourceGroup test1-resc2`
 
 exec `iadmin mkuser anonymous rodsuser`
 
+exec `iadmin mkgroup jargonTestUg`
+
+exec `iadmin atg jargonTestUg test1`
+
+exec `iadmin atg jargonTestUg test3`
+
