@@ -8,7 +8,7 @@
 	<groupId>org.irods.jargon</groupId>
 	<artifactId>jargon-ticket</artifactId>
 	<name>Jargon Ticket</name>
-	<description>Support for the maintenane and use of the ticket feature of iRODS post version 3.0</description>
+	<description>Support for the maintenance and use of the ticket feature of iRODS post version 3.0</description>
 	<dependencies>
 		<dependency>
 			<groupId>junit</groupId>

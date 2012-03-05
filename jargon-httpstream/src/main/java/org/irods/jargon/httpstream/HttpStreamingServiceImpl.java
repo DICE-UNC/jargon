@@ -70,7 +70,7 @@ public class HttpStreamingServiceImpl implements HttpStreamingService {
 	 * org.irods.jargon.core.transfer.TransferControlBlock)
 	 */
 	@Override
-	public void streamHttpUrlContentsToIRODSFile(
+	public String streamHttpUrlContentsToIRODSFile(
 			final String sourceURL,
 			final IRODSFile irodsTargetFile,
 			final TransferStatusCallbackListener transferStatusCallbackListener,
@@ -108,7 +108,7 @@ public class HttpStreamingServiceImpl implements HttpStreamingService {
 		} catch (ClientProtocolException e) {
 			log.error("client protocol exception ocurred in streaming", e);
 			throw new HttpStreamingException(e);
-		} catch (IOException e) {
+		} catch (Exception e) {
 			log.error("IOException ocurred in streaming", e);
 			throw new HttpStreamingException(e);
 		}
@@ -285,6 +285,11 @@ public class HttpStreamingServiceImpl implements HttpStreamingService {
 			// immediate deallocation of all system resources
 			httpclient.getConnectionManager().shutdown();
 		}
+
+		log.info("contents streamed to:{}",
+				callbackTargetIrodsFile.getAbsolutePath());
+		return callbackTargetIrodsFile.getAbsolutePath();
+
 	}
 
 	/**

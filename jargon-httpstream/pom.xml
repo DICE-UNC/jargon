@@ -10,7 +10,7 @@
   <groupId>org.irods.jargon</groupId>
   <artifactId>jargon-httpstream</artifactId>
   <version>3.0.0.2-SNAPSHOT</version>
-  <name>jargon-httpstream</name>
+  <name>Jargon HttpStream</name>
   <url>http://maven.apache.org</url>
   <dependencies>
 	<dependency>
@@ -38,4 +38,5 @@
    <version>4.1.2</version>
 </dependency>
   </dependencies>
+  <description>Utilities to stream http/s data into iRODS files</description>
 </project>

@@ -29,12 +29,14 @@ public interface HttpStreamingService {
 	 * @param transferControlBlock
 	 *            {@link TransferControlBlock} that can control aspects of the
 	 *            running transfer
+	 * @return <code>String</code> with the iRODS absolute path to the file that
+	 *         holds the result of the operation
 	 * @throws JargonException
 	 *             for errors occurring within iRODS during the operation
 	 * @throws HttpStreamingException
 	 *             for errors occuring in the HTTP protocol operation
 	 */
-	public abstract void streamHttpUrlContentsToIRODSFile(
+	public abstract String streamHttpUrlContentsToIRODSFile(
 			final String sourceURL,
 			final IRODSFile irodsTargetFile,
 			final TransferStatusCallbackListener transferStatusCallbackListener,
