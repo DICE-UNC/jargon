@@ -7,11 +7,13 @@ import junit.framework.Assert;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.CatNoAccessException;
+import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.packinstr.TransferOptions.ForceOption;
 import org.irods.jargon.core.pub.DataTransferOperations;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 import org.irods.jargon.core.pub.IRODSFileSystem;
 import org.irods.jargon.core.pub.io.IRODSFile;
+import org.irods.jargon.core.pub.io.IRODSFileFactory;
 import org.irods.jargon.core.transfer.TransferControlBlock;
 import org.irods.jargon.testutils.IRODSTestSetupUtilities;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
@@ -31,6 +33,7 @@ public class TicketClientOperationsImplTest {
 	private static ScratchFileUtils scratchFileUtils = null;
 	private static IRODSTestSetupUtilities irodsTestSetupUtilities = null;
 	private static boolean testTicket = false;
+	private static org.irods.jargon.testutils.AssertionHelper assertionHelper = null;
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -44,6 +47,7 @@ public class TicketClientOperationsImplTest {
 		irodsTestSetupUtilities
 				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
 		irodsFileSystem = IRODSFileSystem.instance();
+		assertionHelper = new org.irods.jargon.testutils.AssertionHelper();
 	}
 
 	@AfterClass
@@ -250,6 +254,192 @@ public class TicketClientOperationsImplTest {
 
 		ticketClientService.putFileToIRODSUsingTicket(ticketString, localFile,
 				targetFile, null, null);
+
+	}
+
+	@Test
+	public final void testGetFileFromIRODSUsingTicketOnFile() throws Exception {
+
+		if (!testTicket) {
+			return;
+		}
+
+		// generate a local scratch file
+		String testFileName = "testGetFileFromIRODSUsingTicketOnFile.txt";
+		String testRetrievedFileName = "testGetFileFromIRODSUsingTicketOnFileRetrieved.txt";
+
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String localFileName = FileGenerator
+				.generateFileOfFixedLengthGivenName(absPath, testFileName, 1);
+
+		String targetIrodsFile = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
+								+ testFileName);
+		File localFile = new File(localFileName);
+
+		// now put the file
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSFileFactory irodsFileFactory = irodsFileSystem
+				.getIRODSFileFactory(irodsAccount);
+		IRODSFile destFile = irodsFileFactory
+				.instanceIRODSFile(targetIrodsFile);
+		DataTransferOperations dataTransferOperationsAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataTransferOperations(
+						irodsAccount);
+
+		dataTransferOperationsAO.putOperation(localFile, destFile, null, null);
+
+		// put a read ticket on the file
+
+		TicketAdminService ticketSvc = new TicketAdminServiceImpl(
+				irodsFileSystem.getIRODSAccessObjectFactory(), irodsAccount);
+		ticketSvc.deleteTicket(testFileName);
+		ticketSvc.createTicket(TicketCreateModeEnum.TICKET_CREATE_READ,
+				destFile, testFileName);
+
+		IRODSFile getIRODSFile = irodsFileFactory
+				.instanceIRODSFile(targetIrodsFile);
+		File getLocalFile = new File(absPath + "/" + testRetrievedFileName);
+		getLocalFile.delete();
+
+		// now get the file as secondary user with ticket
+
+		IRODSAccount secondaryAccount = testingPropertiesHelper
+				.buildIRODSAccountFromSecondaryTestProperties(testingProperties);
+
+		TicketClientOperations ticketClientService = new TicketClientOperationsImpl(
+				irodsFileSystem.getIRODSAccessObjectFactory(), secondaryAccount);
+
+		ticketClientService.getOperationFromIRODSUsingTicket(testFileName,
+				getIRODSFile, getLocalFile, null, null);
+
+		assertionHelper.assertIrodsFileMatchesLocalFileChecksum(
+				getIRODSFile.getAbsolutePath(), getLocalFile.getAbsolutePath());
+
+	}
+
+	@Test
+	public final void testGetFileFromIRODSUsingTicketOnFileAsAnonymous()
+			throws Exception {
+
+		if (!testTicket) {
+			return;
+		}
+
+		// generate a local scratch file
+		String testFileName = "testGetFileFromIRODSUsingTicketOnFileAsAnonymous.txt";
+		String testRetrievedFileName = "testGetFileFromIRODSUsingTicketOnFileAsAnonymousRetrieved.txt";
+
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String localFileName = FileGenerator
+				.generateFileOfFixedLengthGivenName(absPath, testFileName, 1);
+
+		String targetIrodsFile = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
+								+ testFileName);
+		File localFile = new File(localFileName);
+
+		// now put the file
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSFileFactory irodsFileFactory = irodsFileSystem
+				.getIRODSFileFactory(irodsAccount);
+		IRODSFile destFile = irodsFileFactory
+				.instanceIRODSFile(targetIrodsFile);
+		DataTransferOperations dataTransferOperationsAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataTransferOperations(
+						irodsAccount);
+
+		dataTransferOperationsAO.putOperation(localFile, destFile, null, null);
+
+		// put a read ticket on the file
+
+		TicketAdminService ticketSvc = new TicketAdminServiceImpl(
+				irodsFileSystem.getIRODSAccessObjectFactory(), irodsAccount);
+		ticketSvc.deleteTicket(testFileName);
+		ticketSvc.createTicket(TicketCreateModeEnum.TICKET_CREATE_READ,
+				destFile, testFileName);
+
+		IRODSFile getIRODSFile = irodsFileFactory
+				.instanceIRODSFile(targetIrodsFile);
+		File getLocalFile = new File(absPath + "/" + testRetrievedFileName);
+		getLocalFile.delete();
+
+		// now get the file as secondary user with ticket
+
+		IRODSAccount secondaryAccount = testingPropertiesHelper
+				.buildAnonymousIRODSAccountFromTestProperties(testingProperties);
+
+		TicketClientOperations ticketClientService = new TicketClientOperationsImpl(
+				irodsFileSystem.getIRODSAccessObjectFactory(), secondaryAccount);
+
+		ticketClientService.getOperationFromIRODSUsingTicket(testFileName,
+				getIRODSFile, getLocalFile, null, null);
+
+		assertionHelper.assertIrodsFileMatchesLocalFileChecksum(
+				getIRODSFile.getAbsolutePath(), getLocalFile.getAbsolutePath());
+
+	}
+
+	@Test(expected = DataNotFoundException.class)
+	public final void testGetFileFromIRODSUsingTicketOnFileAsAnonymousNoTicketAccess()
+			throws Exception {
+
+		if (!testTicket) {
+			return;
+		}
+
+		// generate a local scratch file
+		String testFileName = "testGetFileFromIRODSUsingTicketOnFileAsAnonymousNoTicketAccess.txt";
+		String testRetrievedFileName = "testGetFileFromIRODSUsingTicketOnFileAsAnonymousNoTicketAccessRetrieved.txt";
+
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String localFileName = FileGenerator
+				.generateFileOfFixedLengthGivenName(absPath, testFileName, 1);
+
+		String targetIrodsFile = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
+								+ testFileName);
+		File localFile = new File(localFileName);
+
+		// now put the file
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSFileFactory irodsFileFactory = irodsFileSystem
+				.getIRODSFileFactory(irodsAccount);
+		IRODSFile destFile = irodsFileFactory
+				.instanceIRODSFile(targetIrodsFile);
+		DataTransferOperations dataTransferOperationsAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataTransferOperations(
+						irodsAccount);
+
+		dataTransferOperationsAO.putOperation(localFile, destFile, null, null);
+
+		IRODSFile getIRODSFile = irodsFileFactory
+				.instanceIRODSFile(targetIrodsFile);
+		File getLocalFile = new File(absPath + "/" + testRetrievedFileName);
+		getLocalFile.delete();
+
+		// now get the file as secondary user with invalid ticket
+
+		IRODSAccount secondaryAccount = testingPropertiesHelper
+				.buildAnonymousIRODSAccountFromTestProperties(testingProperties);
+
+		TicketClientOperations ticketClientService = new TicketClientOperationsImpl(
+				irodsFileSystem.getIRODSAccessObjectFactory(), secondaryAccount);
+
+		ticketClientService.getOperationFromIRODSUsingTicket(testFileName,
+				getIRODSFile, getLocalFile, null, null);
 
 	}
 
