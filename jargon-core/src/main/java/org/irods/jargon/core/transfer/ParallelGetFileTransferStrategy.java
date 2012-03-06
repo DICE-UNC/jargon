@@ -7,6 +7,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.DefaultIntraFileProgressCallbackListener;
@@ -120,8 +121,10 @@ public final class ParallelGetFileTransferStrategy extends
 		ExecutorService executor = getIrodsAccessObjectFactory()
 				.getIrodsSession().getParallelTransferThreadPool();
 		if (executor == null) {
-			log.info("no pool available, transfer using standard Threads");
-			transferWithoutExecutor();
+			log.info("no pool available, transfer using single executor");
+			ExecutorService executorService = Executors
+					.newFixedThreadPool(numberOfThreads);
+			transferWithExecutor(executorService);
 		} else {
 			log.info("transfer via executor");
 			transferWithExecutor(executor);
@@ -146,64 +149,6 @@ public final class ParallelGetFileTransferStrategy extends
 		} catch (InterruptedException e) {
 			log.error("interrupted exception in thread", e);
 			throw new JargonException(e);
-		}
-	}
-
-	/**
-	 * @throws JargonException
-	 */
-	private void transferWithoutExecutor() throws JargonException {
-		final List<Thread> transferRunningThreads = new ArrayList<Thread>();
-		final List<ParallelGetTransferThread> parallelGetTransferThreads = new ArrayList<ParallelGetTransferThread>();
-
-		for (int i = 0; i < numberOfThreads; i++) {
-			final ParallelGetTransferThread parallelTransfer = ParallelGetTransferThread
-					.instance(this);
-			parallelGetTransferThreads.add(parallelTransfer);
-
-			Thread parallelTransferThread = new Thread(parallelTransfer);
-			log.info("created parallel transfer thread for thread: {}",
-					parallelTransferThread.getName());
-			transferRunningThreads.add(parallelTransferThread);
-		}
-
-		for (Thread parallelTransferThreadToStart : transferRunningThreads) {
-			parallelTransferThreadToStart.start();
-			log.info("started parallel transfer thread for thread: {}",
-					parallelTransferThreadToStart.getName());
-		}
-
-		for (Thread parallelTransferThreadToJoin : transferRunningThreads) {
-			if (parallelTransferThreadToJoin.isAlive()) {
-				try {
-					parallelTransferThreadToJoin.join();
-				} catch (InterruptedException e) {
-					log.error(
-							"parallel transfer thread {} was interrupted when attempting to join",
-							parallelTransferThreadToJoin.getName(), e);
-					throw new JargonException(
-							"parallel transfer thread interrupted when attempting to join");
-				}
-			}
-
-		}
-
-		log.info("closing threads...");
-
-		for (ParallelGetTransferThread parallelGetTransferThread : parallelGetTransferThreads) {
-			parallelGetTransferThread.close();
-		}
-
-		log.info("parallel transfer complete, checking for any errors in the threads...");
-
-		for (ParallelGetTransferThread parallelGetTransferThread : parallelGetTransferThreads) {
-			if (parallelGetTransferThread.getExceptionInTransfer() != null) {
-				log.error("exeption detected in file transfer thread:{}",
-						parallelGetTransferThread.getExceptionInTransfer());
-				throw new JargonException(
-						"exception caught in transfer thread",
-						parallelGetTransferThread.getExceptionInTransfer());
-			}
 		}
 	}
 

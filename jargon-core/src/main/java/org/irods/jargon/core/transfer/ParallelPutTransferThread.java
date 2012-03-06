@@ -24,7 +24,8 @@ import org.slf4j.LoggerFactory;
  * 
  */
 public final class ParallelPutTransferThread extends
-		AbstractParallelTransferThread implements Callable<Object>, Runnable {
+		AbstractParallelTransferThread implements
+		Callable<ParallelTransferResult> {
 
 	private final ParallelPutFileTransferStrategy parallelPutFileTransferStrategy;
 	private BufferedInputStream bis = null;
@@ -88,7 +89,7 @@ public final class ParallelPutTransferThread extends
 	}
 
 	@Override
-	public Object call() throws JargonException {
+	public ParallelTransferResult call() throws JargonException {
 
 		try {
 
@@ -127,7 +128,9 @@ public final class ParallelPutTransferThread extends
 			}
 		}
 
-		return "DONE"; // TODO: some sort of status object? counts, etc?
+		ParallelTransferResult result = new ParallelTransferResult();
+		result.transferException = this.getExceptionInTransfer();
+		return result;
 
 	}
 
@@ -316,16 +319,4 @@ public final class ParallelPutTransferThread extends
 					"transferLength and totalWritten do not agree");
 		}
 	}
-
-	@Override
-	public void run() {
-		try {
-			call();
-		} catch (JargonException e) {
-			this.setExceptionInTransfer(e);
-			log.error("exception set in transfer to be picked up by caller", e);
-		}
-
-	}
-
 }

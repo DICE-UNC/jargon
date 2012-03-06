@@ -28,7 +28,8 @@ import org.slf4j.LoggerFactory;
  * 
  */
 public final class ParallelGetTransferThread extends
-		AbstractParallelTransferThread implements Callable<Object>, Runnable {
+		AbstractParallelTransferThread implements
+		Callable<ParallelTransferResult> {
 
 	private final ParallelGetFileTransferStrategy parallelGetFileTransferStrategy;
 
@@ -66,7 +67,7 @@ public final class ParallelGetTransferThread extends
 	}
 
 	@Override
-	public Object call() throws JargonException {
+	public ParallelTransferResult call() throws JargonException {
 		try {
 			setS(new Socket(parallelGetFileTransferStrategy.getHost(),
 					parallelGetFileTransferStrategy.getPort()));
@@ -95,7 +96,10 @@ public final class ParallelGetTransferThread extends
 
 			get();
 			log.info("exiting get and returning the finish object");
-			return "DONE";
+			ParallelTransferResult result = new ParallelTransferResult();
+			result.transferException = this.getExceptionInTransfer();
+			return result;
+
 		} catch (UnknownHostException e) {
 			log.error("Unknown host: {}",
 					parallelGetFileTransferStrategy.getHost());
@@ -322,16 +326,4 @@ public final class ParallelGetTransferThread extends
 			}
 		}
 	}
-
-	@Override
-	public void run() {
-		try {
-			call();
-			log.info("exiting call() method");
-		} catch (Exception e) {
-			this.setExceptionInTransfer(e);
-			log.error("exception should have been preserved in the thread during the call()");
-		}
-	}
-
 }

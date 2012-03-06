@@ -2,6 +2,8 @@ package org.irods.jargon.core.packinstr;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.irods.jargon.core.exception.JargonRuntimeException;
 import org.irods.jargon.core.utils.EscapeTagChars;
@@ -27,8 +29,8 @@ public class Tag implements Cloneable {
 	/**
 	 * all the sub tags
 	 */
-	public Tag[] tags;
-
+	// public Tag[] tags;
+	public List<Tag> tags;
 	/**
 	 * probably a string...
 	 */
@@ -40,12 +42,12 @@ public class Tag implements Cloneable {
 
 	public Tag(final String tagName, final int value) {
 		this.tagName = tagName;
-		this.value = "" + value;
+		this.value = String.valueOf(value);
 	}
 
 	public Tag(final String tagName, final long value) {
 		this.tagName = tagName;
-		this.value = "" + value;
+		this.value = String.valueOf(value);
 	}
 
 	public Tag(final String tagName, final String value) {
@@ -54,12 +56,18 @@ public class Tag implements Cloneable {
 	}
 
 	public Tag(final String tagName, final Tag tag) {
-		this(tagName, new Tag[] { tag });
+		tags = new ArrayList<Tag>();
+		this.tagName = tagName;
+		tags = new ArrayList<Tag>();
+		tags.add(tag);
 	}
 
-	public Tag(final String tagName, final Tag[] tags) {
+	public Tag(final String tagName, final Tag[] inTags) {
 		this.tagName = tagName;
-		this.tags = tags;
+		tags = new ArrayList<Tag>();
+		for (Tag inTag : inTags) {
+			tags.add(inTag);
+		}
 	}
 
 	public void setTagName(final String tagName) {
@@ -67,11 +75,11 @@ public class Tag implements Cloneable {
 	}
 
 	public void setValue(final int value) {
-		this.value = "" + value;
+		this.value = String.valueOf(value);
 	}
 
 	public void setValue(final long value) {
-		this.value = "" + value;
+		this.value = String.valueOf(value);
 	}
 
 	public void setValue(String value, final boolean decode) {
@@ -92,7 +100,12 @@ public class Tag implements Cloneable {
 
 	public Object getValue() {
 		if (tags != null) {
-			return tags.clone();
+			Tag[] outTags = new Tag[tags.size()];
+			int i = 0;
+			for (Tag tag : tags) {
+				outTags[i++] = tag;
+			}
+			return outTags;
 		} else {
 			return value;
 		}
@@ -115,7 +128,7 @@ public class Tag implements Cloneable {
 	}
 
 	public int getLength() {
-		return tags.length;
+		return tags.size();
 	}
 
 	public Tag getTag(final String tagName) {
@@ -147,10 +160,10 @@ public class Tag implements Cloneable {
 
 		// see if tagName exists in first level
 		// if it isn't the toplevel, just leave it.
-		for (int i = 0, j = 0; i < tags.length; i++) {
-			if (tags[i].getName().equals(tagName)) {
+		for (int i = 0, j = 0; i < tags.size(); i++) {
+			if (tags.get(i).getName().equals(tagName)) {
 				if (index == j) {
-					return tags[i];
+					return tags.get(i);
 				} else {
 					j++;
 				}
@@ -162,7 +175,12 @@ public class Tag implements Cloneable {
 	public Tag[] getTags() {
 		// clone so it can't over write when set value is called?
 		if (tags != null) {
-			return tags;
+			Tag[] outTags = new Tag[tags.size()];
+			int i = 0;
+			for (Tag tag : tags) {
+				outTags[i++] = tag;
+			}
+			return outTags;
 		} else {
 			return null;
 		}
@@ -177,9 +195,9 @@ public class Tag implements Cloneable {
 			return null;
 		}
 
-		Object[] val = new Object[tags.length];
-		for (int i = 0; i < tags.length; i++) {
-			val[i] = tags[i].getValue();
+		Object[] val = new Object[tags.size()];
+		for (int i = 0; i < tags.size(); i++) {
+			val[i] = tags.get(i).getValue();
 		}
 		return val;
 	}
@@ -192,24 +210,19 @@ public class Tag implements Cloneable {
 	}
 
 	public void addTag(final Tag add) {
-		if (tags != null) {
-			Tag[] temp = tags;
-			tags = new Tag[temp.length + 1];
-			System.arraycopy(temp, 0, tags, 0, temp.length);
-			tags[temp.length] = add;
-		} else {
-			tags = new Tag[] { add };
+		if (tags == null) {
+			tags = new ArrayList<Tag>();
 		}
+		tags.add(add);
 	}
 
 	public void addTags(final Tag[] add) {
-		if (tags != null) {
-			Tag[] temp = tags;
-			tags = new Tag[temp.length + add.length];
-			System.arraycopy(temp, 0, tags, 0, temp.length);
-			System.arraycopy(add, 0, tags, temp.length, add.length);
-		} else {
-			tags = add;
+		if (tags == null) {
+			tags = new ArrayList<Tag>();
+		}
+
+		for (Tag addTag : add) {
+			tags.add(addTag);
 		}
 	}
 
@@ -224,9 +237,10 @@ public class Tag implements Cloneable {
 			Tag newTag = (Tag) obj;
 			if (newTag.getName().equals(tagName)) {
 				if (newTag.getValue().equals(value)) {
-					if (newTag.getTags() == tags) {
-						return true;
-					}
+					/*
+					 * if (newTag.getTags() == tags) { return true; }
+					 */
+					return true;
 				}
 			}
 		}
@@ -409,7 +423,7 @@ public class Tag implements Cloneable {
 		}
 
 		// just use index zero because they have to be in order...
-		pair.tags[0].setValue(ssLength);
+		pair.tags.get(0).setValue(ssLength);
 		if (i == 0) {
 			return pair;
 		}
