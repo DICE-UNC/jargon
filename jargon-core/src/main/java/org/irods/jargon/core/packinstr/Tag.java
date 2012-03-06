@@ -1,37 +1,11 @@
-//
-//  Copyright (c) 2008  San Diego Supercomputer Center (SDSC),
-//  University of California, San Diego (UCSD), San Diego, CA, USA.
-//
-//  Users and possessors of this source code are hereby granted a
-//  nonexclusive, royalty-free copyright and design patent license
-//  to use this code in individual software.  License is not granted
-//  for commercial resale, in whole or in part, without prior written
-//  permission from SDSC/UCSD.  This source is provided "AS IS"
-//  without express or implied warranty of any kind.
-//
-//
-//  FILE
-//  Rule.java  -  edu.sdsc.grid.io.irods.Rule
-//
-//  CLASS HIERARCHY
-//  java.lang.Object
-//      |
-//      +-edu.sdsc.grid.io.irods.Rule
-//
-//
-//  PRINCIPAL AUTHOR
-//  Lucas Gilbert, SDSC/UCSD
-//
-//
 package org.irods.jargon.core.packinstr;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
 import org.irods.jargon.core.exception.JargonRuntimeException;
+import org.irods.jargon.core.utils.EscapeTagChars;
 import org.irods.jargon.core.utils.IRODSConstants;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Represents the nested structure of the XML protocol for messages between
@@ -42,8 +16,8 @@ public class Tag implements Cloneable {
 	public static final char CLOSE_START_TAG = '>';
 	public static final String OPEN_END_TAG = "</";
 	public static final char CLOSE_END_TAG = '>';
-
-	private static Logger log = LoggerFactory.getLogger(Tag.class);
+	public static final String CLOSE_END_TAG_STR = ">";
+	public static final String CLOSE_END_TAG_WITH_CR = CLOSE_END_TAG_STR + '\n';
 
 	/**
 	 * iRODS name of the tag
@@ -272,8 +246,10 @@ public class Tag implements Cloneable {
 		// If something isn't a string and you try to send a
 		// non-printable character this way, it will get all messed up.
 		// so...not sure if should be converted to Base64
-		StringBuffer parsed = new StringBuffer(OPEN_START_TAG + tagName
-				+ CLOSE_START_TAG);
+		StringBuffer parsed = new StringBuffer();
+		parsed.append(OPEN_START_TAG);
+		parsed.append(tagName);
+		parsed.append(CLOSE_START_TAG);
 		if (tags != null) {
 			for (Tag tag : tags) {
 				parsed.append(tag.parseTag());
@@ -281,7 +257,10 @@ public class Tag implements Cloneable {
 		} else {
 			parsed.append(escapeChars(value));
 		}
-		parsed.append(OPEN_END_TAG + tagName + CLOSE_END_TAG + "\n");
+		parsed.append(OPEN_END_TAG);
+		parsed.append(tagName);
+		parsed.append(CLOSE_END_TAG);
+		parsed.append("\n");
 
 		return parsed.toString();
 	}
@@ -290,11 +269,7 @@ public class Tag implements Cloneable {
 		if (out == null) {
 			return null;
 		}
-		out = out.replaceAll("&", "&amp;");
-		out = out.replaceAll("<", "&lt;");
-		out = out.replaceAll(">", "&gt;");
-		out = out.replaceAll("\"", "&quot;");
-		return out.replaceAll("`", "&apos;");
+		return EscapeTagChars.forXML(out);
 	}
 
 	/**
@@ -327,13 +302,10 @@ public class Tag implements Cloneable {
 
 		String d = new String(data, encoding);
 
-		if (log.isTraceEnabled()) {
-			log.trace(d);
-		}
 		// remove the random '\n'
 		// had to find the end, sometimes '\n' is there, sometimes not.
-		d = d.replaceAll(CLOSE_END_TAG + "\n", "" + CLOSE_END_TAG);
-
+		// d = d.replaceAll(CLOSE_END_TAG + "\n", "" + CLOSE_END_TAG);
+		d = d.replaceAll(CLOSE_END_TAG_WITH_CR, CLOSE_END_TAG_STR);
 		int start = d.indexOf(OPEN_START_TAG), end = d.indexOf(CLOSE_START_TAG,
 				start);
 		int offset = 0;
@@ -342,7 +314,11 @@ public class Tag implements Cloneable {
 		}
 
 		String tagName = d.substring(start + 1, end);
-		end = d.lastIndexOf(OPEN_END_TAG + tagName + CLOSE_END_TAG);
+		StringBuilder sb = new StringBuilder();
+		sb.append(OPEN_END_TAG);
+		sb.append(tagName);
+		sb.append(CLOSE_END_TAG);
+		end = d.lastIndexOf(sb.toString());
 
 		Tag tag = new Tag(tagName);
 		offset = start + tagName.length() + 2;
@@ -374,7 +350,11 @@ public class Tag implements Cloneable {
 		}
 		int closeStart = data.indexOf(CLOSE_START_TAG, start);
 		String tagName = data.substring(start + 1, closeStart);
-		int end = data.indexOf(OPEN_END_TAG + tagName + CLOSE_END_TAG,
+		StringBuilder sb = new StringBuilder();
+		sb.append(OPEN_END_TAG);
+		sb.append(tagName);
+		sb.append(CLOSE_END_TAG);
+		int end = data.indexOf(sb.toString(),
 				closeStart);
 		int subTagStart = data.indexOf(OPEN_START_TAG, closeStart);
 
