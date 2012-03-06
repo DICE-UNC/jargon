@@ -315,16 +315,4 @@ public interface TicketAdminService {
 	 * 
 	 */
 	boolean deleteAllTicketsForThisUser() throws JargonException;
-
-
-	// IRODSQueryResultSetInterface getAllTickets(int continueIndex) throws
-	// JargonException, JargonQueryException;
-
-	// IRODSQueryResultSetInterface getTicketAllowedUsersByTicketString(String
-	// ticketId, int continueIndex) throws JargonException,
-	// JargonQueryException;
-
-	// IRODSQueryResultSetInterface getTicketsForSpecifiedDataObjectPath(String
-	// path, int continueIndex) throws JargonException, JargonQueryException;
-
 }

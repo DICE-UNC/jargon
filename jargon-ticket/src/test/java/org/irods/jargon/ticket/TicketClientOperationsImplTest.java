@@ -9,6 +9,7 @@ import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.CatNoAccessException;
 import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.packinstr.TransferOptions.ForceOption;
+import org.irods.jargon.core.pub.CollectionAO;
 import org.irods.jargon.core.pub.DataTransferOperations;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 import org.irods.jargon.core.pub.IRODSFileSystem;
@@ -22,6 +23,7 @@ import org.irods.jargon.testutils.filemanip.ScratchFileUtils;
 import org.irods.jargon.ticket.packinstr.TicketCreateModeEnum;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class TicketClientOperationsImplTest {
@@ -42,6 +44,8 @@ public class TicketClientOperationsImplTest {
 		testTicket = testingPropertiesLoader
 				.isTestRemoteExecStream(testingProperties);
 		scratchFileUtils = new ScratchFileUtils(testingProperties);
+		scratchFileUtils
+				.clearAndReinitializeScratchDirectory(IRODS_TEST_SUBDIR_PATH);
 		irodsTestSetupUtilities = new IRODSTestSetupUtilities();
 		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
 		irodsTestSetupUtilities
@@ -440,6 +444,182 @@ public class TicketClientOperationsImplTest {
 
 		ticketClientService.getOperationFromIRODSUsingTicket(testFileName,
 				getIRODSFile, getLocalFile, null, null);
+
+	}
+
+	/**
+	 * [#637] nested subdirs with ticket issued on parent up the tree - no
+	 * access?
+	 * 
+	 * @throws Exception
+	 */
+	@Ignore
+	public final void testGetCollectionFromIRODSUsingTicketOnCollectionAsAnonymous()
+			throws Exception {
+
+		if (!testTicket) {
+			return;
+		}
+
+		String testSubdir = "testSubdir-testGetCollectionFromIRODSUsingTicketOnCollectionAsAnonymous";
+		String rootCollectionAndTicketName = "testGetCollectionFromIRODSUsingTicketOnCollectionAsAnonymous";
+		String returnedLocalCollection = "testGetCollectionFromIRODSUsingTicketOnCollectionAsAnonymousReturnedLocalFiles";
+
+		String localCollectionAbsolutePath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH
+						+ '/' + rootCollectionAndTicketName);
+
+		String irodsCollectionRootAbsolutePath = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + "/"
+								+ testSubdir);
+
+		FileGenerator
+				.generateManyFilesAndCollectionsInParentCollectionByAbsolutePath(
+						localCollectionAbsolutePath,
+						"testGetCollectionWithTwoFilesNoCallbacks", 1, 1, 1,
+						"testFile", ".txt", 2, 2, 1, 2);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSFileFactory irodsFileFactory = irodsFileSystem
+				.getIRODSFileFactory(irodsAccount);
+		IRODSFile destFile = irodsFileFactory
+				.instanceIRODSFile(irodsCollectionRootAbsolutePath);
+		destFile.mkdirs();
+		TicketAdminService ticketSvc = new TicketAdminServiceImpl(
+				irodsFileSystem.getIRODSAccessObjectFactory(), irodsAccount);
+		CollectionAO collectionAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getCollectionAO(irodsAccount);
+
+		collectionAO.setAccessPermissionInherit("", destFile.getAbsolutePath(),
+				true);
+		ticketSvc.deleteTicket(rootCollectionAndTicketName);
+		ticketSvc.createTicket(TicketCreateModeEnum.TICKET_CREATE_READ,
+				destFile, rootCollectionAndTicketName);
+		DataTransferOperations dataTransferOperationsAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataTransferOperations(
+						irodsAccount);
+		File localFile = new File(localCollectionAbsolutePath);
+
+		dataTransferOperationsAO.putOperation(localFile, destFile, null, null);
+		destFile.reset();
+
+		localCollectionAbsolutePath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH
+						+ '/' + rootCollectionAndTicketName);
+		File getLocalFile = new File(localCollectionAbsolutePath + "/"
+				+ returnedLocalCollection);
+		getLocalFile.delete();
+		getLocalFile.mkdirs();
+
+		// now get the file as secondary user with ticket
+
+		IRODSAccount secondaryAccount = testingPropertiesHelper
+				.buildAnonymousIRODSAccountFromTestProperties(testingProperties);
+
+		TicketClientOperations ticketClientService = new TicketClientOperationsImpl(
+				irodsFileSystem.getIRODSAccessObjectFactory(), secondaryAccount);
+
+		ticketClientService
+				.getOperationFromIRODSUsingTicket(rootCollectionAndTicketName,
+						destFile, getLocalFile, null, null);
+
+		File transferredCollection = getLocalFile.listFiles()[0];
+
+		assertionHelper
+				.assertIrodsFileOrCollectionExists(returnedLocalCollection);
+		assertionHelper.assertTwoFilesAreEqualByRecursiveTreeComparison(
+				localFile, transferredCollection);
+
+	}
+
+	/**
+	 * [#637] nested subdirs with ticket issued on parent up the tree - no
+	 * access?
+	 * 
+	 * @throws Exception
+	 */
+	@Ignore
+	public final void testGetCollectionFromIRODSUsingTicketOnCollectionAsSecondaryUser()
+			throws Exception {
+
+		if (!testTicket) {
+			return;
+		}
+
+		String testSubdir = "testSubdir-testGetCollectionFromIRODSUsingTicketOnCollectionAsSecondaryUser";
+		String rootCollectionAndTicketName = "testGetCollectionFromIRODSUsingTicketOnCollectionAsSecondaryUser";
+		String returnedLocalCollection = "testGetCollectionFromIRODSUsingTicketOnCollectionAsSecondaryUserReturnedLocalFiles";
+
+		String localCollectionAbsolutePath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH
+						+ '/' + rootCollectionAndTicketName);
+
+		String irodsCollectionRootAbsolutePath = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + "/"
+								+ testSubdir);
+
+		FileGenerator
+				.generateManyFilesAndCollectionsInParentCollectionByAbsolutePath(
+						localCollectionAbsolutePath,
+						"testGetCollectionWithTwoFilesNoCallbacks", 1, 1, 1,
+						"testFile", ".txt", 2, 2, 1, 2);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSFileFactory irodsFileFactory = irodsFileSystem
+				.getIRODSFileFactory(irodsAccount);
+		IRODSFile destFile = irodsFileFactory
+				.instanceIRODSFile(irodsCollectionRootAbsolutePath);
+		destFile.mkdirs();
+		TicketAdminService ticketSvc = new TicketAdminServiceImpl(
+				irodsFileSystem.getIRODSAccessObjectFactory(), irodsAccount);
+		CollectionAO collectionAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getCollectionAO(irodsAccount);
+
+		collectionAO.setAccessPermissionInherit("", destFile.getAbsolutePath(),
+				true);
+		ticketSvc.deleteTicket(rootCollectionAndTicketName);
+		ticketSvc.createTicket(TicketCreateModeEnum.TICKET_CREATE_READ,
+				destFile, rootCollectionAndTicketName);
+		DataTransferOperations dataTransferOperationsAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataTransferOperations(
+						irodsAccount);
+		File localFile = new File(localCollectionAbsolutePath);
+
+		dataTransferOperationsAO.putOperation(localFile, destFile, null, null);
+		destFile.reset();
+
+		localCollectionAbsolutePath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH
+						+ '/' + rootCollectionAndTicketName);
+		File getLocalFile = new File(localCollectionAbsolutePath + "/"
+				+ returnedLocalCollection);
+		getLocalFile.delete();
+		getLocalFile.mkdirs();
+
+		// now get the file as secondary user with ticket
+
+		IRODSAccount secondaryAccount = testingPropertiesHelper
+				.buildIRODSAccountFromSecondaryTestProperties(testingProperties);
+
+		TicketClientOperations ticketClientService = new TicketClientOperationsImpl(
+				irodsFileSystem.getIRODSAccessObjectFactory(), secondaryAccount);
+
+		ticketClientService
+				.getOperationFromIRODSUsingTicket(rootCollectionAndTicketName,
+						destFile, getLocalFile, null, null);
+
+		File transferredCollection = getLocalFile.listFiles()[0];
+
+		assertionHelper
+				.assertIrodsFileOrCollectionExists(returnedLocalCollection);
+		assertionHelper.assertTwoFilesAreEqualByRecursiveTreeComparison(
+				localFile, transferredCollection);
 
 	}
 
