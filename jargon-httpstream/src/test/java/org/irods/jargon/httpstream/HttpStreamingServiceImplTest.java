@@ -141,7 +141,7 @@ public class HttpStreamingServiceImplTest {
 	public final void testStreamHttpUrlContentsToIRODSFileURLDoesNotExist()
 			throws Exception {
 
-		String testUrl = "http://www.thisisnotunc.eduandidontexistaneywhereontheworldwideinternets";
+		String testUrl = "http://127.0.0.1/idontexist";
 
 		String targetIrodsFile = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(

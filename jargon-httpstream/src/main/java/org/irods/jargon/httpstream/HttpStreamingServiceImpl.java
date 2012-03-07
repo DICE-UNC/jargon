@@ -7,6 +7,7 @@ import java.io.InputStream;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
+import org.apache.http.StatusLine;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
@@ -77,6 +78,7 @@ public class HttpStreamingServiceImpl implements HttpStreamingService {
 			final TransferControlBlock transferControlBlock)
 			throws JargonException, HttpStreamingException {
 
+
 		log.info("streamHttpUrlContentsToIRODSFile()");
 
 		if (sourceURL == null || sourceURL.isEmpty()) {
@@ -111,6 +113,17 @@ public class HttpStreamingServiceImpl implements HttpStreamingService {
 		} catch (Exception e) {
 			log.error("IOException ocurred in streaming", e);
 			throw new HttpStreamingException(e);
+		}
+
+		StatusLine statusLine = response.getStatusLine();
+		log.info("status from http operation:{}", statusLine);
+		if (statusLine.getStatusCode() == 404) {
+			throw new HttpStreamingException("404 not found for URL");
+		} else if (statusLine.getStatusCode() > 200) {
+			log.error("invalid status code:{}", statusLine.getStatusCode());
+			throw new HttpStreamingException(
+					"invalid status from HTTP operation:"
+							+ statusLine.getStatusCode());
 		}
 
 		// Get hold of the response entity
