@@ -13,6 +13,7 @@ import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.exception.CatalogAlreadyHasItemByThatNameException;
 import org.irods.jargon.core.exception.DataNotFoundException;
+import org.irods.jargon.core.exception.DuplicateDataException;
 import org.irods.jargon.core.exception.FileNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.exception.JargonFileOrCollAlreadyExistsException;
@@ -1311,10 +1312,15 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 
 		DataObjInp dataObjInp = DataObjInp
 				.instanceForDeleteWithNoForce(irodsFile.getAbsolutePath());
-		Tag response = getIRODSProtocol().irodsFunction(dataObjInp);
 
-		if (response != null) {
-			log.warn("unexpected response from irods, expected null message - logged and ignored ");
+		try {
+			Tag response = getIRODSProtocol().irodsFunction(dataObjInp);
+
+			if (response != null) {
+				log.warn("unexpected response from irods, expected null message - logged and ignored ");
+			}
+		} catch (DuplicateDataException dde) {
+			log.warn("duplicate data exception logged and ignored, see GForge: [#639] 809000 errors on delete operations when trash file already exists");
 		}
 
 	}
