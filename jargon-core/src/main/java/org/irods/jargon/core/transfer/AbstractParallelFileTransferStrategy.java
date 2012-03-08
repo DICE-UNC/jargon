@@ -3,6 +3,7 @@ package org.irods.jargon.core.transfer;
 import java.io.File;
 
 import org.irods.jargon.core.connection.ConnectionProgressStatusListener;
+import org.irods.jargon.core.connection.JargonProperties;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 
@@ -32,6 +33,7 @@ public abstract class AbstractParallelFileTransferStrategy {
 	private final TransferStatusCallbackListener transferStatusCallbackListener;
 	private ConnectionProgressStatusListener connectionProgressStatusListener = null;
 	private final int parallelSocketTimeoutInSecs;
+	private final JargonProperties jargonProperties;
 
 	/**
 	 * Constructor for a parallel file transfer runner. This runner will create
@@ -112,9 +114,10 @@ public abstract class AbstractParallelFileTransferStrategy {
 		this.transferControlBlock = transferControlBlock;
 		this.transferStatusCallbackListener = transferStatusCallbackListener;
 		this.transferLength = transferLength;
+		this.jargonProperties = irodsAccessObjectFactory.getIrodsSession()
+				.getJargonProperties();
 
-		this.parallelSocketTimeoutInSecs = irodsAccessObjectFactory
-				.getIrodsSession().getJargonProperties()
+		this.parallelSocketTimeoutInSecs = jargonProperties
 				.getIRODSParallelTransferSocketTimeout();
 
 	}
@@ -203,6 +206,13 @@ public abstract class AbstractParallelFileTransferStrategy {
 	 */
 	protected int getParallelSocketTimeoutInSecs() {
 		return parallelSocketTimeoutInSecs;
+	}
+
+	/**
+	 * @return the jargonProperties
+	 */
+	protected JargonProperties getJargonProperties() {
+		return jargonProperties;
 	}
 
 }

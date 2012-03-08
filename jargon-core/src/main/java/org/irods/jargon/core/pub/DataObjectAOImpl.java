@@ -47,7 +47,7 @@ import org.irods.jargon.core.query.MetaDataAndDomainData;
 import org.irods.jargon.core.query.RodsGenQueryEnum;
 import org.irods.jargon.core.transfer.DefaultTransferControlBlock;
 import org.irods.jargon.core.transfer.ParallelGetFileTransferStrategy;
-import org.irods.jargon.core.transfer.ParallelPutFileTransferStrategy;
+import org.irods.jargon.core.transfer.ParallelPutFileViaNIOTransferStrategy;
 import org.irods.jargon.core.transfer.TransferControlBlock;
 import org.irods.jargon.core.transfer.TransferStatus.TransferType;
 import org.irods.jargon.core.transfer.TransferStatusCallbackListener;
@@ -660,7 +660,16 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 				.getTag(IRODSConstants.PortList_PI)
 				.getTag(IRODSConstants.cookie).getIntValue();
 
-		final ParallelPutFileTransferStrategy parallelPutFileStrategy = ParallelPutFileTransferStrategy
+		/*
+		 * final ParallelPutFileTransferStrategy parallelPutFileStrategy =
+		 * ParallelPutFileTransferStrategy .instance(host, port,
+		 * numberOfThreads, pass, localFile, this.getIRODSAccessObjectFactory(),
+		 * transferLength, transferControlBlock,
+		 * transferStatusCallbackListener);
+		 */
+
+		log.info(">>>>>>using NIO for parallel put");
+		final ParallelPutFileViaNIOTransferStrategy parallelPutFileStrategy = ParallelPutFileViaNIOTransferStrategy
 				.instance(host, port, numberOfThreads, pass, localFile,
 						this.getIRODSAccessObjectFactory(), transferLength,
 						transferControlBlock, transferStatusCallbackListener);
