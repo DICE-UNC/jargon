@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.irods.jargon.core.exception.JargonRuntimeException;
-import org.irods.jargon.core.utils.EscapeTagChars;
 import org.irods.jargon.core.utils.IRODSConstants;
 
 /**
@@ -283,7 +282,12 @@ public class Tag implements Cloneable {
 		if (out == null) {
 			return null;
 		}
-		return EscapeTagChars.forXML(out);
+		// return EscapeTagChars.forXML(out);
+		out = out.replaceAll("&", "&amp;");
+		out = out.replaceAll("<", "&lt;");
+		out = out.replaceAll(">", "&gt;");
+		out = out.replaceAll("\"", "&quot;");
+		return out.replaceAll("`", "&apos;");
 	}
 
 	/**

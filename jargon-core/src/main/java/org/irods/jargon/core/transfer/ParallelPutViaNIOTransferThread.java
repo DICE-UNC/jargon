@@ -48,7 +48,8 @@ public final class ParallelPutViaNIOTransferThread extends
 	public static ParallelPutViaNIOTransferThread instance(
 			final ParallelPutFileViaNIOTransferStrategy parallelPutFileTransferStrategy)
 			throws JargonException {
-		return new ParallelPutViaNIOTransferThread(parallelPutFileTransferStrategy);
+		return new ParallelPutViaNIOTransferThread(
+				parallelPutFileTransferStrategy);
 	}
 
 	private ParallelPutViaNIOTransferThread(
@@ -85,7 +86,6 @@ public final class ParallelPutViaNIOTransferThread extends
 
 		try {
 
-
 			log.info("writing the cookie (password) for the output thread");
 
 			// write the cookie
@@ -115,7 +115,7 @@ public final class ParallelPutViaNIOTransferThread extends
 
 		ParallelTransferResult result = new ParallelTransferResult();
 		result.transferException = this.getExceptionInTransfer();
-		
+
 		return result;
 
 	}
@@ -133,9 +133,8 @@ public final class ParallelPutViaNIOTransferThread extends
 
 				// read the header
 				int operation = readInt();
-				if (log.isInfoEnabled()) {
-					log.info("   operation:" + operation);
-				}
+
+				log.info("   operation:{}", operation);
 
 				if (operation == AbstractParallelTransferThread.PUT_OPR) {
 					log.debug("put operation");
@@ -149,19 +148,13 @@ public final class ParallelPutViaNIOTransferThread extends
 
 				// read the flags
 				int flags = readInt();
-				if (log.isInfoEnabled()) {
-					log.info("   flags:" + flags);
-				}
+				log.info("   flags:{}", flags);
 				// Where to seek into the data
 				long offset = readLong();
-				if (log.isInfoEnabled()) {
-					log.info("   offset:" + offset);
-				}
+				log.info("   offset:{}", offset);
 				// How much to read/write
 				long length = readLong();
-				if (log.isInfoEnabled()) {
-					log.info("   length:" + length);
-				}
+				log.info("   length:{}", length);
 
 				log.info("copy buffer length for put is: {}", copyBuffSize);
 
@@ -189,29 +182,25 @@ public final class ParallelPutViaNIOTransferThread extends
 				.getJargonProperties().getInputToOutputCopyBufferByteSize();
 
 		try {
-				
+
 			log.debug("channel copy initiate between file and socket channel");
 
-			long bytesTransferred = 0;
-			long totalBytes = length;
+			long currentPosition = position;
+			long totalBytes = 0;
 
-			while (bytesTransferred < totalBytes) {
-				long bufferSize = copyBuffSize;
+			while (totalBytes < length) {
 
-				if (totalBytes - bytesTransferred < bufferSize) {
-					bufferSize = (int) (totalBytes - bytesTransferred);
-
-					if (bufferSize <= 0) {
-						bufferSize = (int) totalBytes;
-					}
+				if (length - totalBytes < copyBuffSize) {
+					copyBuffSize = (int) (length - totalBytes);
 				}
 
 				long bytesRead = parallelPutFileTransferStrategy
-						.getFileChannel().transferTo(bytesTransferred,
-								bufferSize, getS());
+						.getFileChannel().transferTo(currentPosition,
+								copyBuffSize, getS());
 
 				if (bytesRead > 0) {
-					bytesTransferred += bytesRead;
+					currentPosition += bytesRead;
+					totalBytes += bytesRead;
 					/*
 					 * Make an intra-file status call-back if a listener is
 					 * configured
@@ -230,7 +219,7 @@ public final class ParallelPutViaNIOTransferThread extends
 
 			log.debug("transferred:{}", totalBytes);
 
-					log.debug("wrote data to the buffer");
+			log.debug("wrote data to the buffer");
 
 		} catch (Exception e) {
 			log.error("error writing to iRODS parallel transfer socket", e);
