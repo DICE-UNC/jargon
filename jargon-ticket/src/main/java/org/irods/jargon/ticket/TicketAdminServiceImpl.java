@@ -10,6 +10,7 @@ import org.irods.jargon.core.exception.DuplicateDataException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.packinstr.Tag;
 import org.irods.jargon.core.protovalues.ErrorEnum;
+import org.irods.jargon.core.pub.CollectionAO;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 import org.irods.jargon.core.pub.IRODSGenQueryExecutor;
 import org.irods.jargon.core.pub.ProtocolExtensionPoint;
@@ -87,6 +88,23 @@ public final class TicketAdminServiceImpl implements TicketAdminService {
 			ticketId = new TicketRandomString(15).nextString();
 		}
 		log.info("ticket creation mode is:{}", mode);
+
+		/*
+		 * If a ticket is created on a collection, then inheritance is set.
+		 * Otherwise, others can add files to the colletion and the collection
+		 * owner may not be able to manage the files.
+		 */
+		if (file.isDirectory()) {
+			log.info(
+					"ticket is for a collection, set inherit to true on collection:{}",
+					file.getAbsolutePath());
+			CollectionAO collectionAO = this.getIrodsAccessObjectFactory()
+					.getCollectionAO(getIrodsAccount());
+			collectionAO.setAccessPermissionInherit(irodsAccount.getZone(),
+					file.getAbsolutePath(), true);
+			log.info("collection inheritance set");
+
+		}
 
 		TicketAdminInp ticketPI = TicketAdminInp.instanceForCreate(mode,
 				file.getAbsolutePath(), ticketId);

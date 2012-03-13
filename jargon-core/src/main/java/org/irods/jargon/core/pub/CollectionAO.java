@@ -122,6 +122,10 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	 * List the AVU metadata for a particular collection, as well as information
 	 * identifying the Collection associated with that metadata, based on a
 	 * metadata query.
+	 * <p/>
+	 * Note that this method will work across zones, so that if the given
+	 * collection path is in a federated zone, the query will be made against
+	 * that zone.
 	 * 
 	 * @param avuQuery
 	 *            <code>List</code> of

@@ -607,7 +607,7 @@ public class UserAOTest {
 		// set the first password
 		// adminUserAO.changeAUserPasswordByAnAdmin(testUser, password1);
 
-		// get an account as the given user, change password, re-LOG in several
+		// get an account as the given user, change password, re-log in several
 		// iterations
 
 		IRODSAccount userAccount = testingPropertiesHelper

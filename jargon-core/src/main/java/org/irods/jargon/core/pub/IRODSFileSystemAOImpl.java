@@ -1192,6 +1192,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 	@Override
 	public void mkdir(final IRODSFile irodsFile, final boolean recursiveOpr)
 			throws JargonException {
+
 		if (irodsFile == null) {
 			throw new JargonException("irodsFile is null");
 		}

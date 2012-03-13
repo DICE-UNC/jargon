@@ -41,6 +41,7 @@ import org.irods.jargon.core.query.MetaDataAndDomainData.MetadataDomain;
 import org.irods.jargon.core.query.RodsGenQueryEnum;
 import org.irods.jargon.core.utils.AccessObjectQueryProcessingUtils;
 import org.irods.jargon.core.utils.IRODSDataConversionUtil;
+import org.irods.jargon.core.utils.MiscIRODSUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -365,10 +366,17 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 				getIRODSSession().getJargonProperties()
 						.getMaxFilesAndDirsQueryMax());
 
+		/*
+		 * Check to see if this query should go to another zone based on the
+		 * collection path
+		 */
+
+		String zone = MiscIRODSUtils.getZoneInPath(collectionAbsolutePath);
+
 		IRODSQueryResultSetInterface resultSet;
 		try {
 			resultSet = irodsGenQueryExecutorImpl
-					.executeIRODSQueryAndCloseResult(irodsQuery, 0);
+					.executeIRODSQueryAndCloseResultInZone(irodsQuery, 0, zone);
 
 		} catch (JargonQueryException e) {
 			log.error(QUERY_EXCEPTION_FOR_QUERY + queryString, e);

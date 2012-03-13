@@ -4,9 +4,11 @@ import java.io.File;
 import java.util.Properties;
 
 import junit.framework.Assert;
+import junit.framework.TestCase;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.pub.DataTransferOperations;
+import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 import org.irods.jargon.core.pub.IRODSFileSystem;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.irods.jargon.testutils.filemanip.FileGenerator;
@@ -425,6 +427,44 @@ public class FederatedIRODSFileImplTest {
 				.instanceIRODSFile(destFile.getAbsolutePath(), testFileName);
 		Assert.assertFalse("should not be a file, does not exist",
 				target.isFile());
+	}
+
+	/**
+	 * Make subdirectories in another zone for which I have write access
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public final void testMkdirsInAnotherZone() throws Exception {
+
+		if (!testingPropertiesHelper.isTestFederatedZone(testingProperties)) {
+			return;
+		}
+
+		String testDir = "testMkdirsInAnotherZone/andanother";
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromFederatedZoneWriteTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
+								+ testDir);
+
+		IRODSFileFactory irodsFileFactory = accessObjectFactory
+				.getIRODSFileFactory(irodsAccount);
+		IRODSFile irodsFile = irodsFileFactory
+				.instanceIRODSFile(targetIrodsCollection);
+		boolean success = irodsFile.mkdirs();
+		irodsFile.reset();
+
+		TestCase.assertTrue("did not get success in the mkdirs command",
+				success);
+		assertionHelper
+.assertIrodsFileOrCollectionExists(irodsFile
+				.getAbsolutePath());
 	}
 
 }
