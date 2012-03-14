@@ -228,13 +228,16 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 				getIRODSSession().getJargonProperties()
 						.getMaxFilesAndDirsQueryMax());
 
-		IRODSQueryResultSetInterface resultSet;
+		String zone = MiscIRODSUtils.getZoneInPath(absolutePathOfParent);
 
+		IRODSQueryResultSetInterface resultSet;
 		try {
-			resultSet = irodsGenQueryExecutor.executeIRODSQueryWithPaging(
-					irodsQuery, partialStartIndex);
+			resultSet = irodsGenQueryExecutor
+					.executeIRODSQueryAndCloseResultInZone(irodsQuery,
+							partialStartIndex, zone);
+
 		} catch (JargonQueryException e) {
-			log.error("query exception for:" + queryString, e);
+			log.error(QUERY_EXCEPTION_FOR_QUERY + queryString, e);
 			throw new JargonException(ERROR_IN_COLECTION_QUERY);
 		}
 
@@ -270,8 +273,60 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 		IRODSQueryResultSetInterface resultSet;
 
 		try {
-			resultSet = irodsGenQueryExecutor.executeIRODSQueryWithPaging(
+			resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResult(
 					irodsQuery, partialStartIndex);
+		} catch (JargonQueryException e) {
+			log.error("query exception for:" + queryString, e);
+			throw new JargonException(ERROR_IN_COLECTION_QUERY);
+		}
+
+		return CollectionAOHelper.buildListFromResultSet(resultSet);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.CollectionAO#findWhereInZone(java.lang.String,
+	 * int, java.lang.String)
+	 */
+	@Override
+	public List<Collection> findWhereInZone(final String whereClause,
+			final int partialStartIndex, final String zone)
+			throws JargonException {
+
+		log.info("findWhereInZone()");
+
+		if (whereClause == null) {
+			throw new IllegalArgumentException("null where clause");
+		}
+
+		if (zone == null) {
+			throw new IllegalArgumentException(
+					"null zone, set to blank if not needed");
+		}
+
+		log.info("whereClause:{}", whereClause);
+		log.info("zone:{}", zone);
+
+		final StringBuilder query = new StringBuilder();
+		query.append(CollectionAOHelper.buildSelects());
+		query.append(" WHERE ");
+		query.append(whereClause);
+		final String queryString = query.toString();
+
+		log.info("coll query:{}", queryString);
+
+		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(queryString,
+				getIRODSSession().getJargonProperties()
+						.getMaxFilesAndDirsQueryMax());
+
+		IRODSQueryResultSetInterface resultSet;
+
+		try {
+			resultSet = irodsGenQueryExecutor
+					.executeIRODSQueryAndCloseResultInZone(irodsQuery,
+							partialStartIndex, zone);
 		} catch (JargonQueryException e) {
 			log.error("query exception for:" + queryString, e);
 			throw new JargonException(ERROR_IN_COLECTION_QUERY);
@@ -388,17 +443,18 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 						MetadataDomain.COLLECTION, resultSet);
 	}
 
-	// FIXME: add partial start version or add to this method
+
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @seeorg.irods.jargon.core.pub.CollectionAO#
+	 * @see org.irods.jargon.core.pub.CollectionAO#
 	 * findMetadataValuesByMetadataQueryWithAdditionalWhere(java.util.List,
-	 * java.lang.String)
+	 * java.lang.String, int)
 	 */
 	@Override
 	public List<MetaDataAndDomainData> findMetadataValuesByMetadataQueryWithAdditionalWhere(
-			final List<AVUQueryElement> avuQuery, final String additionalWhere)
+			final List<AVUQueryElement> avuQuery, final String additionalWhere,
+			final int partialStartIndex)
 			throws JargonQueryException, JargonException {
 
 		if (avuQuery == null || avuQuery.isEmpty()) {
@@ -408,6 +464,10 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 		if (additionalWhere == null) {
 			throw new IllegalArgumentException(
 					"null additional where clause, set to blank if unused");
+		}
+
+		if (partialStartIndex < 0) {
+			throw new IllegalArgumentException("partialStartIndex must be >= 0");
 		}
 
 		final IRODSGenQueryExecutor irodsGenQueryExecutorImpl = getIRODSAccessObjectFactory()
@@ -459,8 +519,10 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 
 		IRODSQueryResultSetInterface resultSet;
 		try {
+
 			resultSet = irodsGenQueryExecutorImpl
-					.executeIRODSQueryAndCloseResult(irodsQuery, 0);
+					.executeIRODSQueryAndCloseResult(irodsQuery,
+							partialStartIndex);
 
 		} catch (JargonQueryException e) {
 			log.error(QUERY_EXCEPTION_FOR_QUERY + queryString, e);
@@ -544,10 +606,13 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 				getIRODSSession().getJargonProperties()
 						.getMaxFilesAndDirsQueryMax());
 
+		String zone = MiscIRODSUtils.getZoneInPath(collectionAbsolutePath);
+
 		IRODSQueryResultSetInterface resultSet;
 		try {
 			resultSet = irodsGenQueryExecutorImpl
-					.executeIRODSQueryAndCloseResult(irodsQuery, 0);
+					.executeIRODSQueryAndCloseResultInZone(irodsQuery,
+							partialStartIndex, zone);
 
 		} catch (JargonQueryException e) {
 			log.error(QUERY_EXCEPTION_FOR_QUERY + queryString, e);

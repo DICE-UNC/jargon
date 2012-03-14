@@ -439,7 +439,7 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 		IRODSQueryResultSetInterface resultSet;
 		try {
 			resultSet = getGenQueryExecutor().executeIRODSQueryAndCloseResult(
-					irodsQuery, DEFAULT_REC_COUNT);
+					irodsQuery, 0);
 		} catch (JargonQueryException e) {
 			log.error("query exception for user query:{}", userQueryString, e);
 			throw new JargonException(ERROR_IN_USER_QUERY);
@@ -505,7 +505,7 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 		IRODSQueryResultSetInterface resultSet;
 		try {
 			resultSet = getGenQueryExecutor().executeIRODSQueryAndCloseResult(
-					irodsQuery, DEFAULT_REC_COUNT);
+					irodsQuery, 0);
 		} catch (JargonQueryException e) {
 			log.error("query exception for user query:{}",
 					userQuery.toString(), e);

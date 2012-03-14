@@ -94,9 +94,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 			throw new IllegalArgumentException("irods file is null");
 		}
 
-		if (log.isInfoEnabled()) {
-			log.info("checking read permissions on:" + irodsFile);
-		}
+		log.info("checking read permissions on:{}", irodsFile);
 
 		int filePermissions = 0;
 

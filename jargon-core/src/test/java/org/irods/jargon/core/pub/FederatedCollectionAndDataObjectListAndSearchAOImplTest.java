@@ -545,7 +545,6 @@ public class FederatedCollectionAndDataObjectListAndSearchAOImplTest {
 		String myTarget = "";
 
 		// add another acl for another user to this file
-
 		CollectionAO collectionAO = irodsFileSystem
 				.getIRODSAccessObjectFactory().getCollectionAO(irodsAccount);
 		DataObjectAO dataObjectAO = irodsFileSystem

@@ -1030,7 +1030,7 @@ public class CollectionAOImplTest {
 
 		List<MetaDataAndDomainData> queryResults = collectionAO
 				.findMetadataValuesByMetadataQueryWithAdditionalWhere(
-						queryElements, sb.toString());
+						queryElements, sb.toString(), 0);
 
 		Assert.assertFalse("no query result returned", queryResults.isEmpty());
 	}

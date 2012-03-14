@@ -103,9 +103,12 @@ public class MiscIRODSUtils {
 	 *         is not in the path (e.g. if the path is just '/')
 	 */
 	public static String getZoneInPath(final String irodsAbsolutePath) {
-		if (irodsAbsolutePath == null || irodsAbsolutePath.isEmpty()) {
-			throw new IllegalArgumentException(
-					"null or empty irodsAbsolutePath");
+		if (irodsAbsolutePath == null) {
+			throw new IllegalArgumentException("null  irodsAbsolutePath");
+		}
+
+		if (irodsAbsolutePath.isEmpty()) {
+			return "";
 		}
 
 		List<String> pathComponents = breakIRODSPathIntoComponents(irodsAbsolutePath);

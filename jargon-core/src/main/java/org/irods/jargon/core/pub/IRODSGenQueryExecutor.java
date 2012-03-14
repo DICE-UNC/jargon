@@ -125,6 +125,10 @@ public interface IRODSGenQueryExecutor extends IRODSAccessObject {
 	/**
 	 * Execute a requery meant to retrieve more results. The previous result set
 	 * contains information to requery iRODS.
+	 * <p/>
+	 * Note that the original query must not close the result set, so signatures
+	 * that allow specification of the <code>partialStartIndex</code> in the
+	 * original query will not work.
 	 * 
 	 * @param irodsQueryResultSet
 	 *            {@link org.irods.jargon.core.query.IRODSQueryResultSet} that
@@ -138,8 +142,8 @@ public interface IRODSGenQueryExecutor extends IRODSAccessObject {
 			throws JargonException, JargonQueryException;
 
 	/**
-	 * Execute a requery meant to retrieve more results. The previous result set
-	 * contains information to requery iRODS. This query is targeted at a
+	 * Execute a re-query meant to retrieve more results. The previous result
+	 * set contains information to re-query iRODS. This query is targeted at a
 	 * specific zone
 	 * 
 	 * @param irodsQueryResultSet
@@ -191,7 +195,7 @@ public interface IRODSGenQueryExecutor extends IRODSAccessObject {
 	 * @throws JargonQueryException
 	 */
 	IRODSQueryResultSet executeIRODSQueryAndCloseResult(
-			IRODSGenQuery irodsQuery, int continueIndex)
+			IRODSGenQuery irodsQuery, int partialStartIndex)
 			throws JargonException, JargonQueryException;
 
 	/**
@@ -223,7 +227,7 @@ public interface IRODSGenQueryExecutor extends IRODSAccessObject {
 	 * @throws JargonQueryException
 	 */
 	IRODSQueryResultSet executeIRODSQueryAndCloseResultInZone(
-			IRODSGenQuery irodsQuery, int continueIndex, String zoneName)
+			IRODSGenQuery irodsQuery, int partialStartIndex, String zoneName)
 			throws JargonException, JargonQueryException;
 
 }

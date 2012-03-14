@@ -111,7 +111,8 @@ public final class IRODSGenQueryExecutorImpl extends IRODSGenericAO implements
 				getIRODSServerProperties());
 		TranslatedIRODSGenQuery translatedIRODSQuery = irodsQueryTranslator
 				.getTranslatedQuery(irodsQuery);
-		return executeTranslatedIRODSQuery(translatedIRODSQuery, 0, 0,
+		return executeTranslatedIRODSQuery(translatedIRODSQuery, continueIndex,
+				0,
 				QueryCloseBehavior.MANUAL_CLOSE, zoneName);
 	}
 
@@ -124,11 +125,11 @@ public final class IRODSGenQueryExecutorImpl extends IRODSGenericAO implements
 	 */
 	@Override
 	public IRODSQueryResultSet executeIRODSQueryAndCloseResult(
-			final IRODSGenQuery irodsQuery, final int continueIndex)
+			final IRODSGenQuery irodsQuery, final int partialStartIndex)
 			throws JargonException, JargonQueryException {
 		log.info("executeIRODSQueryAndCloseResult()");
 
-		return executeIRODSQueryAndCloseResultInZone(irodsQuery, continueIndex,
+		return executeIRODSQueryAndCloseResultInZone(irodsQuery, partialStartIndex,
 				null);
 	}
 
@@ -141,7 +142,7 @@ public final class IRODSGenQueryExecutorImpl extends IRODSGenericAO implements
 	 */
 	@Override
 	public IRODSQueryResultSet executeIRODSQueryAndCloseResultInZone(
-			final IRODSGenQuery irodsQuery, final int continueIndex,
+			final IRODSGenQuery irodsQuery, final int partialStartIndex,
 			final String zoneName) throws JargonException, JargonQueryException {
 
 		log.info("executeIRODSQueryAndCloseResultInZone()");
@@ -150,7 +151,7 @@ public final class IRODSGenQueryExecutorImpl extends IRODSGenericAO implements
 			throw new IllegalArgumentException("null irodsQuery");
 		}
 
-		if (continueIndex < 0) {
+		if (partialStartIndex < 0) {
 			throw new IllegalArgumentException("continueIndex is < 0");
 		}
 
@@ -159,7 +160,8 @@ public final class IRODSGenQueryExecutorImpl extends IRODSGenericAO implements
 				getIRODSServerProperties());
 		TranslatedIRODSGenQuery translatedIRODSQuery = irodsQueryTranslator
 				.getTranslatedQuery(irodsQuery);
-		return executeTranslatedIRODSQuery(translatedIRODSQuery, 0, 0,
+		return executeTranslatedIRODSQuery(translatedIRODSQuery, 0,
+				partialStartIndex,
 				QueryCloseBehavior.AUTO_CLOSE, zoneName);
 	}
 
