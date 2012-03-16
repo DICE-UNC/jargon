@@ -42,11 +42,13 @@ public class IRODSAccountAuthenticationFilter extends
 			final HttpServletRequest request, final HttpServletResponse response)
 			throws AuthenticationException {
 
-		log.info("authentication filter invocation, url={}"
-				,request.getRequestURI());
+		log.info("authentication filter invocation, url={}",
+				request.getRequestURI());
 
-		log.info("requires auth value:{}"
-				,this.requiresAuthentication(request, response));
+		log.debug("request params:{}", request.getParameterMap());
+
+		log.info("requires auth value:{}",
+				this.requiresAuthentication(request, response));
 
 		if (getAuthenticationManager() == null) {
 			String msg = "null irodsAccountAuthenticationManager";
@@ -59,7 +61,7 @@ public class IRODSAccountAuthenticationFilter extends
 			log.error(msg);
 			throw new JargonRuntimeException(msg);
 		}
-		
+
 		// build IRODSAccount from data in request
 		String host = request.getParameter("host");
 		String portParm = request.getParameter("port");
@@ -77,13 +79,13 @@ public class IRODSAccountAuthenticationFilter extends
 
 		int port = 0;
 
-		if (host == null || host.length() == 0) {
+		if (host == null || host.isEmpty()) {
 			String msg = "host parameter is missing";
 			log.error(msg);
 			throw new BadCredentialsException(msg);
 		}
 
-		if (portParm == null || portParm.length() == 0) {
+		if (portParm == null || portParm.isEmpty()) {
 			String msg = "port parameter is missing";
 			log.error(msg);
 			throw new BadCredentialsException(msg);
@@ -97,25 +99,25 @@ public class IRODSAccountAuthenticationFilter extends
 			throw new BadCredentialsException(msg);
 		}
 
-		if (zone == null || zone.length() == 0) {
+		if (zone == null || zone.isEmpty()) {
 			String msg = "zone parameter is missing";
 			log.error(msg);
 			throw new BadCredentialsException(msg);
 		}
 
-		if (resource == null || resource.length() == 0) {
+		if (resource == null || resource.isEmpty()) {
 			String msg = "zone parameter is missing";
 			log.error(msg);
 			throw new BadCredentialsException(msg);
 		}
 
-		if (user == null || user.length() == 0) {
+		if (user == null || user.isEmpty()) {
 			String msg = "user parameter is missing";
 			log.error(msg);
 			throw new BadCredentialsException(msg);
 		}
 
-		if (password == null || password.length() == 0) {
+		if (password == null || password.isEmpty()) {
 			String msg = "password parameter is missing";
 			log.error(msg);
 			throw new BadCredentialsException(msg);
@@ -134,10 +136,7 @@ public class IRODSAccountAuthenticationFilter extends
 
 		Authentication token = this.getAuthenticationManager().authenticate(
 				new IRODSAuthenticationToken(loginIRODSAccount));
-
-		if (log.isInfoEnabled()) {
-			log.info("authentication successful for:{}", loginIRODSAccount);
-		}
+		log.info("authentication successful for:{}", loginIRODSAccount);
 
 		log.debug("setting login up in SecurityContextHolder");
 		SecurityContextHolder.getContext().setAuthentication(token);

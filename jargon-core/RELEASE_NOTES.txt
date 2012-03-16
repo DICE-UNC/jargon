@@ -22,6 +22,8 @@ Jargon-core consists of the following libraries
 * jargon-security - code for use with Spring security
 * jargon-user-tagging - code for using free tagging and other metadata metaphors on top of iRODS
 * jargon-transfer - transfer manager for managing and synchronizing data with iRODS
+* jargon-ticket - support for ticket processing
+* jargon-httpstream - stream http content into iRODS via Jargon
 
 Other libraries are planned, such as connection pooling, as well as administrative functions.
 
