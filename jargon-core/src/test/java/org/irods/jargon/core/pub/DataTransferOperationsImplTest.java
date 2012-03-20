@@ -1464,51 +1464,6 @@ public class DataTransferOperationsImplTest {
 				compareIrods.length());
 	}
 
-	/**
-	 * Put a file via valid URL and check the result
-	 * 
-	 * @throws Exception
-	 */
-	@Test
-	public void testPutWithUrl() throws Exception {
-		// generate a local scratch file
-		String testFileName = "testPutWithUrl.txt";
-		String testRetrievedFileName = "testPutWithUrlRetreived.txt";
-		// String testUrl = "http://www.renci.org/~lisa/bigiPlantFile.txt";
-		String testUrl = "http://www.irods.org";
-		String targetIrodsFile = testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ testFileName);
-
-		// now put the file
-
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-
-		IRODSFileFactory irodsFileFactory = irodsFileSystem
-				.getIRODSFileFactory(irodsAccount);
-		IRODSFile destFile = irodsFileFactory
-				.instanceIRODSFile(targetIrodsFile);
-		DataTransferOperations dataTransferOperationsAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getDataTransferOperations(
-						irodsAccount);
-
-		dataTransferOperationsAO.putOperationURL(testUrl,
-				destFile.getAbsolutePath(), "", null, null);
-
-		// now get
-		String absPath = scratchFileUtils
-				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
-		File retrievedLocalFile = new File(absPath + testRetrievedFileName);
-		dataTransferOperationsAO.getOperation(destFile, retrievedLocalFile,
-				null, null);
-		Assert.assertTrue("file could not be brought back from irods",
-				retrievedLocalFile.exists());
-		Assert.assertTrue("file has no data", retrievedLocalFile.length() > 0);
-
-	}
-
 	@Test
 	public void testPutThenGetMultipleCollectionsMultipleFiles()
 			throws Exception {

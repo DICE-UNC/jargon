@@ -2657,6 +2657,7 @@ public class DataObjectAOImplTest {
 		Assert.assertTrue("new file does not exist", checkCopiedFile.exists());
 	}
 
+	@SuppressWarnings("deprecation")
 	@Test
 	public final void testCopyNoForce() throws Exception {
 
@@ -2690,6 +2691,7 @@ public class DataObjectAOImplTest {
 
 	}
 
+	@SuppressWarnings("deprecation")
 	@Test(expected = OverwriteException.class)
 	public final void testCopyNoForceOverwriteSituation() throws Exception {
 
@@ -2722,6 +2724,7 @@ public class DataObjectAOImplTest {
 
 	}
 
+	@SuppressWarnings("deprecation")
 	@Test
 	public final void testCopyWithForceOverwriteSituation() throws Exception {
 
@@ -4471,6 +4474,7 @@ public class DataObjectAOImplTest {
 		assertionHelper.assertIrodsFileOrCollectionExists(targetIrodsFile);
 	}
 
+	@SuppressWarnings("deprecation")
 	@Test
 	public final void testGetWithChecksumVerification() throws Exception {
 
@@ -4522,6 +4526,7 @@ public class DataObjectAOImplTest {
 
 	}
 
+	@SuppressWarnings("deprecation")
 	@Test
 	public final void testParallelGetWithChecksumVerification()
 			throws Exception {
@@ -4657,12 +4662,6 @@ public class DataObjectAOImplTest {
 	@Test(expected = IllegalArgumentException.class)
 	public void testFindDataObjectDomainDataByAVUQueryForBug629NoQueryElements()
 			throws Exception {
-
-		String testCollName = "testFindDataObjectDomainDataByAVUQueryForBug629NoQueryElements";
-		String testFilePrefix = "testFindDataObjectDomainDataByAVUQueryForBug629NoQueryElements-";
-		String testFileSuffix = ".txt";
-		String expectedAttribName = "testattrib1";
-		String expectedAttribValue = "testvalue1";
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);

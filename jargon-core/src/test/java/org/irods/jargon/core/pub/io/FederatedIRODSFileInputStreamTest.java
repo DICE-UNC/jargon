@@ -27,7 +27,6 @@ public class FederatedIRODSFileInputStreamTest {
 	private static org.irods.jargon.testutils.filemanip.ScratchFileUtils scratchFileUtils = null;
 	public static final String IRODS_TEST_SUBDIR_PATH = "FederatedIRODSFileInputStreamTest";
 	private static org.irods.jargon.testutils.IRODSTestSetupUtilities irodsTestSetupUtilities = null;
-	private static org.irods.jargon.testutils.AssertionHelper assertionHelper = null;
 	private static IRODSFileSystem irodsFileSystem;
 
 	@BeforeClass
@@ -45,7 +44,7 @@ public class FederatedIRODSFileInputStreamTest {
 		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
 		irodsTestSetupUtilities
 				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
-		assertionHelper = new org.irods.jargon.testutils.AssertionHelper();
+		new org.irods.jargon.testutils.AssertionHelper();
 		irodsFileSystem = IRODSFileSystem.instance();
 	}
 

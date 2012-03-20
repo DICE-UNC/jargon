@@ -15,6 +15,11 @@ public class TestingUtilsException extends Exception {
 	/**
 	 * 
 	 */
+	private static final long serialVersionUID = 2124699560973645080L;
+
+	/**
+	 * 
+	 */
 	public TestingUtilsException() {
 		super();
 	}

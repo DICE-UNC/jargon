@@ -578,6 +578,7 @@ public class IRODSGenQueryExecutorImplTest {
 	 * [#126] every call to r.getColumn( X ) returns the name of the file as a
 	 * string
 	 */
+	@SuppressWarnings("deprecation")
 	@Test
 	public void testColQueryThenAccessColByName() throws Exception {
 		String testDirPath = testingPropertiesHelper
