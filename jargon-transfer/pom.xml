@@ -3,12 +3,12 @@
 	<parent>
 		<groupId>org.irods</groupId>
 		<artifactId>jargon</artifactId>
-		<version>3.0.0.2-SNAPSHOT</version>
+		<version>3.1.0-RELEASE</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.irods.jargon</groupId>
 	<artifactId>transfer</artifactId>
-	<version>3.0.0.2-SNAPSHOT</version>
+	<version>3.1.0-RELEASE</version>
 	<packaging>pom</packaging>
 	<modules>
 		<module>jargon-transfer-engine</module>
