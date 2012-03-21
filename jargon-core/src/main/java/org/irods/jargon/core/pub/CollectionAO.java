@@ -122,6 +122,10 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	 * List the AVU metadata for a particular collection, as well as information
 	 * identifying the Collection associated with that metadata, based on a
 	 * metadata query.
+	 * <p/>
+	 * Note that this method will work across zones, so that if the given
+	 * collection path is in a federated zone, the query will be made against
+	 * that zone.
 	 * 
 	 * @param avuQuery
 	 *            <code>List</code> of
@@ -142,6 +146,10 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	/**
 	 * Get a list of the metadata values for the given collection absolute path.
 	 * This method allows paging of results through a partial start index.
+	 * <p/>
+	 * Note that this method will work across zones, so that if the given
+	 * collection path is in a federated zone, the query will be made against
+	 * that zone.
 	 * 
 	 * @param collectionAbsolutePath
 	 *            <code>String</code> with the absolute path of a collection in
@@ -200,6 +208,8 @@ public interface CollectionAO extends FileCatalogObjectAO {
 
 	/**
 	 * Find all <code>Collection</code> objects under the given parent.
+	 * <p/>
+	 * Note that this method will work for a federated zone's contents
 	 * 
 	 * @param absolutePathOfParent
 	 *            <code>String</code> with the absolute path of the parent
@@ -217,6 +227,7 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	 * Find all <code>Collection</code> objects under the given parent. Note
 	 * that this method allows a partial start to be specified such that paging
 	 * can be done over large collections.
+	 * <p/>
 	 * 
 	 * @param absolutePathOfParent
 	 *            <code>String</code> with the absolute path of the parent
@@ -235,37 +246,29 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	/**
 	 * List the AVU metadata for a particular collection, as well as information
 	 * about the collection itself, based on a metadata query.
+	 * <p/>
+	 * Note that it is up to the caller to query the correct zone, this method
+	 * will not do this query across zones.
 	 * 
 	 * @param avuQuery
 	 *            <code>List</code> of
 	 *            {@link org.irods.jargon.core.query.AVUQueryElement} that
 	 *            defines the metadata query
-	 * @param <code>String</code> with additional conditions to further limit
-	 *        the query, set to blank if unused.
+	 * @param additionalWhere
+	 *            <code>String</code> with additional conditions to further
+	 *            limit the query, set to blank if unused.
+	 * @param partialStartIndex
+	 *            <code>int</code> with the starting point to return results. 0
+	 *            indicates no offset.
 	 * @return <code>List</code> of
 	 *         {@link org.irods.jargon.core.query.MetaDataAndDomainData}
 	 * @throws JargonQueryException
 	 * @throws JargonException
 	 */
 	List<MetaDataAndDomainData> findMetadataValuesByMetadataQueryWithAdditionalWhere(
-			final List<AVUQueryElement> avuQuery, final String additionalWhere)
+			final List<AVUQueryElement> avuQuery, final String additionalWhere,
+			final int partialStartIndex)
 			throws JargonQueryException, JargonException;
-
-	/**
-	 * Retrieve a list of <code>Collection</code> domain objects that match the
-	 * given query.
-	 * 
-	 * @param whereClause
-	 *            <code>String</code> with where clause in iquest format,
-	 *            without the WHERE prefix
-	 * @param partialStartIndex
-	 *            <code>int</code> with the starting point to return results. 0
-	 *            indicates no offset.
-	 * @return <code>List<Collection></code> with the query results.
-	 * @throws JargonException
-	 */
-	List<Collection> findWhere(final String whereClause,
-			final int partialStartIndex) throws JargonException;
 
 	/**
 	 * For the given absolute path, return the given collection.
@@ -628,5 +631,46 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	 */
 	void removeAccessPermissionForUserAsAdmin(String zone, String absolutePath,
 			String userName, boolean recursive) throws JargonException;
+
+	/**
+	 * Retrieve a list of <code>Collection</code> domain objects that match the
+	 * given query.
+	 * <p/>
+	 * Note that it is up to the caller to query the correct zone, this method
+	 * will not do this query across zones.
+	 * 
+	 * @param whereClause
+	 *            <code>String</code> with where clause in iquest format,
+	 *            without the WHERE prefix
+	 * @param partialStartIndex
+	 *            <code>int</code> with the starting point to return results. 0
+	 *            indicates no offset.
+	 * @return <code>List<Collection></code> with the query results.
+	 * @throws JargonException
+	 */
+	List<Collection> findWhere(final String whereClause,
+			final int partialStartIndex) throws JargonException;
+
+	/**
+	 * Retrieve a list of <code>Collection</code> domain objects that match the
+	 * given query.
+	 * <p/>
+	 * Note that that this method allows the caller to specify the correct zone,
+	 * this method will not do this query across zones.
+	 * 
+	 * @param whereClause
+	 *            <code>String</code> with where clause in iquest format,
+	 *            without the WHERE prefix
+	 * @param partialStartIndex
+	 *            <code>int</code> with the starting point to return results. 0
+	 *            indicates no offset.
+	 * @param zone
+	 *            <code>String</code> with the optional (blank if not used) zone
+	 *            for which the collections will be queried.
+	 * @return <code>List<Collection></code> with the query results.
+	 * @throws JargonException
+	 */
+	List<Collection> findWhereInZone(String whereClause, int partialStartIndex,
+			String zone) throws JargonException;
 
 }

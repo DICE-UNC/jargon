@@ -11,6 +11,10 @@ public interface TicketAdminService {
 
 	/**
 	 * Create a ticket for access to iRODS
+	 * <p/>
+	 * This operation may be done on files or collections. Note that, for
+	 * collections, the inheritance bit will be set, so that the ticket creator
+	 * may have permissions on any files that grantees create in the collection.
 	 * 
 	 * @param TicketCreateModeEnum
 	 *            mode ticket create mode - read or write

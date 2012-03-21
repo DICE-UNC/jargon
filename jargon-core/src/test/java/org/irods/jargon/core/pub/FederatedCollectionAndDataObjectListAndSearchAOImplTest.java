@@ -410,13 +410,20 @@ public class FederatedCollectionAndDataObjectListAndSearchAOImplTest {
 					resultEntry.getObjectType() == CollectionAndDataObjectListingEntry.ObjectType.DATA_OBJECT);
 			Assert.assertTrue("file name not correctly returned", resultEntry
 					.getPathOrName().indexOf(fileName) > -1);
+			Assert.assertEquals("did not set zone correctly",
+					irodsAccount.getZone(), resultEntry.getUserFilePermission()
+							.get(0).getUserZone());
+			Assert.assertEquals("did not set zone correctly",
+					irodsAccount.getZone(), resultEntry.getUserFilePermission()
+							.get(1).getUserZone());
+
 		}
 
 		// each entry has two permissions, will have extra for fed so tolerate
 		// that
 		for (CollectionAndDataObjectListingEntry actualEntry : entries) {
 			Assert.assertTrue("did not get both expected permissions",
-					actualEntry.getUserFilePermission().size() > 2);
+					actualEntry.getUserFilePermission().size() == 2);
 		}
 
 	}
@@ -499,6 +506,98 @@ public class FederatedCollectionAndDataObjectListAndSearchAOImplTest {
 		int ctr = actual
 				.countDataObjectsAndCollectionsUnderPath(targetIrodsCollection);
 		Assert.assertEquals(count * 2, ctr);
+
+	}
+
+	/**
+	 * put up a collection with some data in zone1, then list the collections
+	 * and data objects from the perspective of a user on zone2. The results
+	 * should be the data from zone1.
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void testListFilesAndCollectionsUnderPathWithAccessInfoInAnotherZone()
+			throws Exception {
+
+		if (!testingPropertiesHelper.isTestFederatedZone(testingProperties)) {
+			return;
+		}
+
+		String subdirPrefix = "testListFilesAndCollectionsUnderPathWithAccessInfoInAnotherZone";
+		String fileName = "testListFilesAndCollectionsUnderPathWithAccessInfoInAnotherZone.csv";
+
+		int count = 30;
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountForFederatedZoneFromTestProperties(testingProperties);
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromFederatedZoneReadTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + "/"
+								+ subdirPrefix);
+
+		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetIrodsCollection);
+		irodsFile.mkdir();
+		irodsFile.close();
+
+		String myTarget = "";
+
+		// add another acl for another user to this file
+		CollectionAO collectionAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getCollectionAO(irodsAccount);
+		DataObjectAO dataObjectAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
+
+		for (int i = 0; i < count; i++) {
+			myTarget = targetIrodsCollection + "/c" + (10000 + i)
+					+ subdirPrefix;
+			irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+					.instanceIRODSFile(myTarget);
+			irodsFile.mkdir();
+			irodsFile.close();
+			collectionAO
+					.setAccessPermissionWrite(
+							irodsAccount.getZone(),
+							irodsFile.getAbsolutePath(),
+							testingProperties
+									.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY),
+							false);
+		}
+
+		for (int i = 0; i < count; i++) {
+			myTarget = targetIrodsCollection + "/c" + (10000 + i) + fileName;
+			irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+					.instanceIRODSFile(myTarget);
+			irodsFile.createNewFile();
+			irodsFile.close();
+			dataObjectAO
+					.setAccessPermissionWrite(
+							irodsAccount.getZone(),
+							irodsFile.getAbsolutePath(),
+							testingProperties
+									.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY));
+		}
+
+		IRODSAccount zone1Account = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		CollectionAndDataObjectListAndSearchAO actual = irodsFileSystem
+				.getIRODSAccessObjectFactory()
+				.getCollectionAndDataObjectListAndSearchAO(zone1Account);
+		List<CollectionAndDataObjectListingEntry> entries = actual
+				.listDataObjectsAndCollectionsUnderPathWithPermissions(targetIrodsCollection);
+		Assert.assertNotNull(entries);
+		Assert.assertFalse(entries.isEmpty());
+		Assert.assertEquals(count * 2, entries.size());
+
+		// bounce thru entries, each has two permissions
+
+		for (CollectionAndDataObjectListingEntry entry : entries) {
+			Assert.assertEquals("did not have the two permissions", 2, entry
+					.getUserFilePermission().size());
+		}
 
 	}
 

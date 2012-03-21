@@ -14,8 +14,8 @@ exec `ichmod -r inherit /fedzone2/home/test1/fedread`
 
 exec `ichmod -r inherit /fedzone2/home/test1/fedwrite`
 
-exec `ichmod  read test1#test1 /fedzone2/home/test1/fedread`
+exec `ichmod  read test1#fedzone1 /fedzone2/home/test1/fedread`
 
-exec `ichmod  write test1#test1 /fedzone2/home/test1/fedwrite`	
+exec `ichmod  write test1#fedzone1 /fedzone2/home/test1/fedwrite`	
 
 

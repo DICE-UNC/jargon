@@ -10,8 +10,10 @@ import java.util.concurrent.Executors;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.SettableJargonProperties;
+import org.irods.jargon.core.packinstr.TransferOptions.ForceOption;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.pub.io.IRODSFileFactory;
+import org.irods.jargon.core.transfer.TransferControlBlock;
 import org.irods.jargon.testutils.AssertionHelper;
 import org.irods.jargon.testutils.IRODSTestSetupUtilities;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
@@ -179,8 +181,12 @@ public class ParallelTransferOperationsTest {
 
 		File retrievedLocalFile = new File(absPath + "/"
 				+ testRetrievedFileName);
+		TransferControlBlock tcb = irodsFileSystem
+				.getIRODSAccessObjectFactory()
+				.buildDefaultTransferControlBlockBasedOnJargonProperties();
+		tcb.getTransferOptions().setForceOption(ForceOption.USE_FORCE);
 		dataTransferOperationsAO.getOperation(destFile, retrievedLocalFile,
-				null, null);
+				null, tcb);
 
 		irodsFileSystem.close();
 		assertionHelper.assertLocalScratchFileLengthEquals(

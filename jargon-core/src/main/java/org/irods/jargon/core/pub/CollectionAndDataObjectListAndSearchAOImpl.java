@@ -576,7 +576,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 			final int partialStartIndex, final ObjStat objStat)
 			throws JargonException {
 
-		log.info("listCollectionsAndDataObjectsUnderPath for: {}",
+		log.info("queryForPathAndReturnResultSet for: {}",
 				irodsAbsolutePath);
 		IRODSGenQueryExecutor irodsGenQueryExecutor = new IRODSGenQueryExecutorImpl(
 				this.getIRODSSession(), this.getIRODSAccount());
@@ -641,23 +641,23 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 
 		log.info("listDataObjectsUnderPath for: {}", objStat);
 
-		IRODSGenQueryExecutor irodsGenQueryExecutor = new IRODSGenQueryExecutorImpl(
-				this.getIRODSSession(), this.getIRODSAccount());
+
 
 		StringBuilder query = new StringBuilder(
 				IRODSFileSystemAOHelper
 						.buildQueryListAllDataObjectsWithSizeAndDateInfo(objStat
 								.getAbsolutePath()));
-		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(query.toString(),
-				getIRODSSession().getJargonProperties()
-						.getMaxFilesAndDirsQueryMax());
 		IRODSQueryResultSetInterface resultSet;
 
+
 		try {
-			resultSet = irodsGenQueryExecutor.executeIRODSQueryWithPaging(
-					irodsQuery, partialStartIndex);
-		} catch (JargonQueryException e) {
-			log.error(QUERY_EXCEPTION_FOR_QUERY + query.toString(), e);
+			resultSet = queryForPathAndReturnResultSet(
+					objStat.getAbsolutePath(), query.toString(),
+					partialStartIndex,
+					objStat);
+		} catch (JargonException e) {
+			log.error("exception querying for data objects:{}",
+					query.toString(), e);
 			throw new JargonException("error in query", e);
 		}
 

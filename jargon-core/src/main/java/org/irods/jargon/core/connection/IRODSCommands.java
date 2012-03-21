@@ -131,7 +131,7 @@ public class IRODSCommands implements IRODSManagedConnection {
 			throws JargonException {
 		// send startup packet here
 		this.sendStartupPacket(irodsAccount);
-		// LOG in and augment/store IRODS Account
+		// log in and augment/store IRODS Account
 		if (irodsAccount.getAuthenticationScheme().equals(
 				IRODSAccount.GSI_PASSWORD)) {
 			sendGSIPassword(irodsAccount);

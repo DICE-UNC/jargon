@@ -252,6 +252,18 @@ public class HttpStreamingServiceImpl implements HttpStreamingService {
 						irodsAccount.getHost(), irodsAccount.getZone());
 
 				transferStatusCallbackListener.statusCallback(status);
+
+				TransferStatus ostatus = TransferStatus.instance(TransferType.PUT,
+						sourceURL, callbackTargetIrodsPath, "",
+						operativeTransferControlBlock.getTotalBytesToTransfer(),
+						operativeTransferControlBlock
+								.getTotalBytesTransferredSoFar(),
+						operativeTransferControlBlock
+								.getTotalFilesTransferredSoFar(),
+						operativeTransferControlBlock.getTotalFilesToTransfer(),
+						TransferState.OVERALL_COMPLETION, irodsAccount.getHost(),
+						irodsAccount.getZone());
+				transferStatusCallbackListener.overallStatusCallback(ostatus);
 			}
 
 		} catch (Exception je) {

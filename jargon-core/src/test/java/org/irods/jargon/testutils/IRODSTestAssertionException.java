@@ -12,6 +12,11 @@ package org.irods.jargon.testutils;
  */
 public class IRODSTestAssertionException extends Exception {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5512182235772432580L;
+
 	public IRODSTestAssertionException() {
 	}
 

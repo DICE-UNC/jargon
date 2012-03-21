@@ -1,5 +1,6 @@
 package org.irods.jargon.core.pub;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
@@ -7,8 +8,13 @@ import junit.framework.Assert;
 import junit.framework.TestCase;
 
 import org.irods.jargon.core.connection.IRODSAccount;
+import org.irods.jargon.core.pub.domain.AvuData;
+import org.irods.jargon.core.pub.domain.Collection;
 import org.irods.jargon.core.pub.domain.UserFilePermission;
 import org.irods.jargon.core.pub.io.IRODSFile;
+import org.irods.jargon.core.query.AVUQueryElement;
+import org.irods.jargon.core.query.AVUQueryOperatorEnum;
+import org.irods.jargon.core.query.MetaDataAndDomainData;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -174,5 +180,141 @@ public class FederatedCollectionAOImplTest {
 				foundCrossZone);
 
 	}
+
+	/**
+	 * Find the metadata values associated with a given collection where the
+	 * collection is in zone2, and I access it from federated zone 1
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public final void testFindMetadataValuesByMetadataQueryForCollectionInAnotherZone()
+			throws Exception {
+
+		if (!testingPropertiesHelper.isTestFederatedZone(testingProperties)) {
+			return;
+		}
+
+		String testSubdir = "testFindMetadataValuesByMetadataQueryForCollectionInAnotherZone";
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountForFederatedZoneFromTestProperties(testingProperties);
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromFederatedZoneReadTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + "/"
+								+ testSubdir);
+
+		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetIrodsCollection);
+		irodsFile.mkdirs();
+
+		// initialize the AVU data
+		String expectedAttribName = "testFindMetadataValuesByMetadataQueryForCollectionInAnotherZoneattrib1";
+		String expectedAttribValue = "testFindMetadataValuesByMetadataQueryForCollectionInAnotherZonevalue1";
+
+		CollectionAO collectionAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getCollectionAO(irodsAccount);
+
+		AvuData dataToAdd = AvuData.instance(expectedAttribName,
+				expectedAttribValue, "");
+		collectionAO.addAVUMetadata(targetIrodsCollection, dataToAdd);
+
+		IRODSAccount zone1Account = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+		collectionAO = accessObjectFactory.getCollectionAO(zone1Account);
+
+		List<AVUQueryElement> queryElements = new ArrayList<AVUQueryElement>();
+
+		queryElements.add(AVUQueryElement.instanceForValueQuery(
+				AVUQueryElement.AVUQueryPart.ATTRIBUTE,
+				AVUQueryOperatorEnum.EQUAL, expectedAttribName));
+
+		List<MetaDataAndDomainData> result = collectionAO
+				.findMetadataValuesByMetadataQueryForCollection(queryElements,
+						targetIrodsCollection);
+		Assert.assertFalse("no query result returned", result.isEmpty());
+	}
+
+	/**
+	 * List the contents of the federated zone2 from zone1, should at least see
+	 * the home dir
+	 */
+	@Test
+	public void testFindAllFromRootLookingForFederatedZone() throws Exception {
+
+		if (!testingPropertiesHelper.isTestFederatedZone(testingProperties)) {
+			return;
+		}
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+		CollectionAO collectionAO = accessObjectFactory
+				.getCollectionAO(irodsAccount);
+		List<Collection> collections = collectionAO
+				.findAll("/"
+						+ testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_ZONE_KEY));
+		Assert.assertNotNull(collections);
+		Assert.assertFalse(collections.isEmpty());
+
+	}
+
+	/**
+	 * Set up a collection in zone2, and then log in to zone1 and add metadata
+	 * to that collection
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void testAddAvuMetadataToAFederatedCollection() throws Exception {
+
+		if (!testingPropertiesHelper.isTestFederatedZone(testingProperties)) {
+			return;
+		}
+		String testDirName = "testAddAvuMetadataToAFederatedCollection";
+		String expectedAttribName = "testAddAvuMetadataToAFederatedCollection-testattrib1";
+		String expectedAttribValue = "testAddAvuMetadataToAFederatedCollection-testvalue1";
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountForFederatedZoneFromTestProperties(testingProperties);
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromFederatedZoneWriteTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + "/"
+								+ testDirName);
+
+		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetIrodsCollection);
+		irodsFile.mkdirs();
+
+		// collection in place, now log in to zone1 and add the metadata
+
+		IRODSAccount zone1Account = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+		CollectionAO collectionAO = accessObjectFactory
+				.getCollectionAO(zone1Account);
+
+		AvuData avuData = AvuData.instance(expectedAttribName,
+				expectedAttribValue, "");
+
+		collectionAO.addAVUMetadata(targetIrodsCollection, avuData);
+
+		// now list the metadata
+		List<MetaDataAndDomainData> metadata = collectionAO
+				.findMetadataValuesForCollection(targetIrodsCollection);
+		
+		TestCase.assertEquals("did not find one metadata value I just added",
+				1,
+				metadata.size());
+
+	}
+
 
 }

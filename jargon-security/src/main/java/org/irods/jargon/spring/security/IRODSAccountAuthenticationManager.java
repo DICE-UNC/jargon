@@ -1,6 +1,3 @@
-/**
- * 
- */
 package org.irods.jargon.spring.security;
 
 import java.net.UnknownHostException;
@@ -28,7 +25,7 @@ import org.springframework.security.core.AuthenticationException;
  */
 public class IRODSAccountAuthenticationManager implements AuthenticationManager {
 
-	private Logger LOG = LoggerFactory.getLogger(this.getClass());
+	private Logger log = LoggerFactory.getLogger(this.getClass());
 
 	private IRODSAccessObjectFactory irodsAccessObjectFactory = null;
 
@@ -45,18 +42,16 @@ public class IRODSAccountAuthenticationManager implements AuthenticationManager 
 	public Authentication authenticate(final Authentication authentication)
 			throws AuthenticationException {
 
-		if (LOG.isInfoEnabled()) {
-			LOG.info("authenticating:" + authentication);
-		}
+		log.info("authenticating:{}", authentication);
 
 		if (authentication == null) {
-			LOG.error("the authentication passed to the method is null");
+			log.error("the authentication passed to the method is null");
 			throw new BadCredentialsException("null authentication");
 		}
 
 		if (!(authentication instanceof IRODSAuthenticationToken)) {
 			String msg = "the authentication token passed in is not an instance of IRODSAuthenticationToken";
-			LOG.error(msg);
+			log.error(msg);
 			throw new BadCredentialsException(msg);
 		}
 
@@ -67,50 +62,50 @@ public class IRODSAccountAuthenticationManager implements AuthenticationManager 
 
 		IRODSAuthenticationToken irodsAuthToken = (IRODSAuthenticationToken) authentication;
 
-		LOG.debug("doing authentication call to irods for account: {}",
+		log.debug("doing authentication call to irods for account: {}",
 				irodsAuthToken.getIrodsAccount());
 
 		try {
 			irodsAccessObjectFactory
 					.getUserAO(irodsAuthToken.getIrodsAccount());
 		} catch (JargonException e) {
-			LOG.error("unable to authenticate, JargonException", e);
+			log.error("unable to authenticate, JargonException", e);
 			e.printStackTrace();
 
 			if (e.getCause() == null) {
 				if (e.getMessage().indexOf("-826000") > -1) {
-					LOG.warn("invalid user/password");
+					log.warn("invalid user/password");
 
 					throw new BadCredentialsException(
 							"Unknown user id/password", e);
 				} else {
-					LOG.error("authentication service exception", e);
+					log.error("authentication service exception", e);
 
 					throw new AuthenticationServiceException(
 							"unable to authenticate", e);
 				}
 			} else if (e.getCause() instanceof UnknownHostException) {
-				LOG.warn("cause is invalid host");
+				log.warn("cause is invalid host");
 
 				throw new BadCredentialsException("The host is unknown", e);
 			} else if (e.getCause().getMessage().indexOf("refused") > -1) {
-				LOG.error("cause is refused or invalid port");
+				log.error("cause is refused or invalid port");
 
 				throw new BadCredentialsException(
 						"The host/port is unknown or refusing connection", e);
 			} else {
-				LOG.error("authentication service exception", e);
+				log.error("authentication service exception", e);
 
 				throw new AuthenticationServiceException(
 						"unable to authenticate", e);
 			}
 		}
 
-		LOG.info("authenticated");
+		log.info("authenticated");
 		authentication.setAuthenticated(true);
 
 		// get roles
-		LOG.info("getting role information for {}", irodsAuthToken
+		log.info("getting role information for {}", irodsAuthToken
 				.getIrodsAccount().toString());
 		try {
 			UserGroupAO userGroupAO = irodsAccessObjectFactory
@@ -122,11 +117,11 @@ public class IRODSAccountAuthenticationManager implements AuthenticationManager 
 				authentication.getAuthorities().add(
 						IRODSUserGroupAuthority.instance(userGroup
 								.getUserGroupName()));
-				LOG.debug("added authority for {}",
+				log.debug("added authority for {}",
 						userGroup.getUserGroupName());
 			}
 		} catch (JargonException e) {
-			LOG.error("JargonException when getting user groups for user", e);
+			log.error("JargonException when getting user groups for user", e);
 			e.printStackTrace();
 			throw new AuthenticationServiceException(
 					"exception getting user groups for user", e);
@@ -134,13 +129,13 @@ public class IRODSAccountAuthenticationManager implements AuthenticationManager 
 			try {
 				irodsAccessObjectFactory.closeSession();
 			} catch (JargonException e) {
-				LOG.warn(
+				log.warn(
 						"exception closing session after auth, logged and bypassed",
 						e);
 			}
 		}
 
-		LOG.debug("authorities added");
+		log.debug("authorities added");
 
 		return authentication;
 

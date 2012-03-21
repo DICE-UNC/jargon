@@ -428,35 +428,6 @@ public interface DataTransferOperations extends IRODSAccessObject {
 			throws JargonFileOrCollAlreadyExistsException, JargonException;
 
 	/**
-	 * Put a URL to iRODS.
-	 * 
-	 * @param sourceURL
-	 *            <code>String</code> of the URL that will be the source of the
-	 *            put.
-	 * @param targetIrodsFileAbsolutePath
-	 *            <code>String</code> with the absolute path of the iRODS
-	 *            collection that will be the target of the put
-	 * @param transferStatusCallbackListener
-	 *            {@link org.irods.jargon.core.transfer.TransferStatusCallbackListener}
-	 *            implementation that will receive callbacks of success/failure
-	 *            of each individual file transfer. This may be set to
-	 *            <code>null</code>, in which case, exceptions that are thrown
-	 *            will be rethrown by this method to the caller.
-	 * @param transferControlBlock
-	 *            {@link org.irods.jargon.core.transfer.TransferControlBlock}
-	 *            implementation that is the communications mechanism between
-	 *            the initiator of the transfer and the transfer process.
-	 * @throws JargonException
-	 * @deprecated use the jargon-httpstream project code instead of this
-	 *             method, will remove prior to iRODS 3.0.1 release
-	 */
-	@Deprecated
-	void putOperationURL(String sourceURL, String targetIrodsFileAbsolutePath,
-			String targetResourceName,
-			TransferStatusCallbackListener transferStatusCallbackListener,
-			TransferControlBlock transferControlBlock) throws JargonException;
-
-	/**
 	 * Copy a file or collection from one iRODS location to another. This is the
 	 * preferred method signature for copy operations, with other forms now
 	 * deprecated. Note that the <code>transferControlBlock</code> and

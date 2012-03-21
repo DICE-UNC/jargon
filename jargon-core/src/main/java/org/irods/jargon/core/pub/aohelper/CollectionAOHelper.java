@@ -6,6 +6,7 @@ package org.irods.jargon.core.pub.aohelper;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.protovalues.FilePermissionEnum;
 import org.irods.jargon.core.protovalues.UserTypeEnum;
@@ -32,7 +33,7 @@ import org.slf4j.LoggerFactory;
  */
 public class CollectionAOHelper extends AOHelper {
 
-	public static final Logger LOG = LoggerFactory
+	public static final Logger log = LoggerFactory
 			.getLogger(CollectionAOHelper.class);
 
 	/**
@@ -119,9 +120,9 @@ public class CollectionAOHelper extends AOHelper {
 		collection.setCount(row.getRecordCount());
 		collection.setLastResult(row.isLastResult());
 
-		if (LOG.isInfoEnabled()) {
-			LOG.info("collection built \n");
-			LOG.info(collection.toString());
+		if (log.isInfoEnabled()) {
+			log.info("collection built \n");
+			log.info(collection.toString());
 		}
 
 		return collection;
@@ -224,9 +225,8 @@ public class CollectionAOHelper extends AOHelper {
 		entry.setCount(row.getRecordCount());
 		entry.setLastResult(row.isLastResult());
 
-		if (LOG.isDebugEnabled()) {
-			LOG.info("listing entry built {}", entry.toString());
-		}
+		log.debug("listing entry built {}", entry.toString());
+
 		return entry;
 	}
 
@@ -257,9 +257,8 @@ public class CollectionAOHelper extends AOHelper {
 		entry.setCount(row.getRecordCount());
 		entry.setLastResult(row.isLastResult());
 
-		if (LOG.isDebugEnabled()) {
-			LOG.info("listing entry built {}", entry.toString());
-		}
+		log.debug("listing entry built {}", entry.toString());
+
 		return entry;
 	}
 
@@ -333,15 +332,38 @@ public class CollectionAOHelper extends AOHelper {
 		 * get the user type
 		 */
 		UserFilePermission userFilePermission;
-		StringBuilder userAndZone = new StringBuilder(row.getColumn(9));
-		userAndZone.append('#');
-		userAndZone.append(row.getColumn(10));
-		User user = userAO.findByName(userAndZone.toString());
-		userFilePermission = new UserFilePermission(row.getColumn(9),
-				row.getColumn(8),
-				FilePermissionEnum.valueOf(IRODSDataConversionUtil
-						.getIntOrZeroFromIRODSValue(row.getColumn(7))),
-				user.getUserType(), row.getColumn(10));
+		String userName = row.getColumn(10);
+		String zone = row.getColumn(9);
+		StringBuilder userAndZone = new StringBuilder();
+
+		if (zone.equals(userAO.getIRODSAccount().getZone())) {
+			userAndZone.append(row.getColumn(10));
+		} else {
+			userAndZone.append(row.getColumn(9));
+			userAndZone.append('#');
+			userAndZone.append(row.getColumn(10));
+		}
+
+		/*
+		 * Gracefully ignore a not found for the user name and zone, just set
+		 * the type to unknown and return what I have.
+		 */
+		try {
+			User user = userAO.findByName(userAndZone.toString());
+			userFilePermission = new UserFilePermission(zone, row.getColumn(8),
+					FilePermissionEnum.valueOf(IRODSDataConversionUtil
+							.getIntOrZeroFromIRODSValue(row.getColumn(7))),
+					user.getUserType(), userName);
+
+		} catch (DataNotFoundException dnf) {
+			log.warn(
+					"user info not found for permission for user:{}, this permission will not be added",
+					userAndZone);
+			userFilePermission = new UserFilePermission(zone, row.getColumn(8),
+					FilePermissionEnum.valueOf(IRODSDataConversionUtil
+							.getIntOrZeroFromIRODSValue(row.getColumn(7))),
+					UserTypeEnum.RODS_UNKNOWN, userName);
+		}
 		userFilePermissions.add(userFilePermission);
 	}
 
@@ -358,7 +380,8 @@ public class CollectionAOHelper extends AOHelper {
 				row.getColumn(9),
 				FilePermissionEnum.valueOf(IRODSDataConversionUtil
 						.getIntOrZeroFromIRODSValue(row.getColumn(10))),
-				UserTypeEnum.findTypeByString(row.getColumn(11)));
+				UserTypeEnum.findTypeByString(row.getColumn(11)),
+				row.getColumn(12));
 		userFilePermissions.add(userFilePermission);
 	}
 

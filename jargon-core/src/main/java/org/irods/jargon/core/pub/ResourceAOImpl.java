@@ -89,7 +89,7 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 		try {
 			resultSet = irodsGenQueryExecutorImpl
 					.executeIRODSQueryAndCloseResult(irodsQuery,
-							DEFAULT_REC_COUNT);
+ 0);
 		} catch (JargonQueryException e) {
 			log.error("query exception for user query:{}", queryString, e);
 			throw new JargonException(ERROR_IN_RESOURCE_QUERY);
@@ -152,7 +152,7 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 		try {
 			resultSet = irodsGenQueryExecutorImpl
 					.executeIRODSQueryAndCloseResult(irodsQuery,
-							DEFAULT_REC_COUNT);
+ 0);
 		} catch (JargonQueryException e) {
 			log.error("query exception for user query:" + queryString, e);
 			throw new JargonException(ERROR_IN_RESOURCE_QUERY);

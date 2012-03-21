@@ -82,7 +82,7 @@ public class AbstractParallelTransferThread {
 
 				out.close();
 			} catch (IOException e) {
-				log.warn("IOException on close - LOG and ignore");
+				log.warn("IOException on close - log and ignore");
 			}
 			out = null;
 		}
@@ -90,7 +90,7 @@ public class AbstractParallelTransferThread {
 			try {
 				in.close();
 			} catch (IOException e) {
-				log.warn("IOException on close - LOG and ignore");
+				log.warn("IOException on close - log and ignore");
 			}
 			in = null;
 		}
@@ -98,7 +98,7 @@ public class AbstractParallelTransferThread {
 			try {
 				s.close();
 			} catch (IOException e) {
-				log.warn("IOException on close - LOG and ignore");
+				log.warn("IOException on close - log and ignore");
 			}
 			s = null;
 		}

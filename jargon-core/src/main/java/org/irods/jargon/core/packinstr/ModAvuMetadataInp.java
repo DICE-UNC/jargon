@@ -323,28 +323,21 @@ public class ModAvuMetadataInp extends AbstractIRODSPackingInstruction {
 
 		if (actionType == ActionType.MOD) {
 			StringBuilder sb = new StringBuilder();
-
-			if (!newAvuData.getAttribute().isEmpty()) {
-				sb.append("n:");
-				sb.append(newAvuData.getAttribute());
-				argList.add(sb.toString());
-			}
-
+			// attrib
+			sb.append("n:");
+			sb.append(newAvuData.getAttribute());
+			argList.add(sb.toString());
+			// value
 			sb = new StringBuilder();
-			if (!newAvuData.getValue().isEmpty()) {
-				sb.append("v:");
-				sb.append(newAvuData.getValue());
-				argList.add(sb.toString());
-
-			}
-
+			sb.append("v:");
+			sb.append(newAvuData.getValue());
+			argList.add(sb.toString());
+			// unit
 			sb = new StringBuilder();
-			if (!newAvuData.getUnit().isEmpty()) {
-				sb.append("u:");
-				sb.append(newAvuData.getUnit());
-				argList.add(sb.toString());
+			sb.append("u:");
+			sb.append(newAvuData.getUnit());
+			argList.add(sb.toString());
 
-			}
 		}
 
 		StringBuilder argBuilder;
