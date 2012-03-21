@@ -1,8 +1,8 @@
 
 *'''Project''': Jargon-core - IRODS Java API
 *'''Date''': 3/20/2012
-*'''Release Version''': 3.1.0 Release 
-*'''git tag''': 3.1.0-RELEASE
+*'''Release Version''': 3.1.1 work in progress
+*'''git tag''': 3.1.1-SNAPSHOT
 
 ==News==
 
@@ -43,28 +43,9 @@ Note that the following bug and feature requests are logged in GForge with relat
 
 ==Bug Fixes==
 
- *[#621] error reading file w/group permissions
- *[#627] Catch an NPE that might arise when transferring a file via streams when no resource in the iRODS file and iRODS has no default.  This was happening on a close() of the stream.
- *[#629] malloc/resource error in irods when doing findDomainByMetadataQuery - added test for field-reported issue with metadata queries
- *[#630] execute msiDataObjGet via Jargon - enhanced support for resource setting and overwrite options for client side get and put operations via rules, especially for parallel transfers resulting from client-side actions
- *[#639] 809000 errors on delete operations when trash file already exists
+* [#662] mod avu when setting a present units value to blank does not work - submitted as iRODS bug, added JUnit tests, will overhead if it becomes an issue
 
 ==Features==
 
-*[#542] Ticket system support
-**added a ProtocolExtensionPoint to the org.irods.jargon.core.pub access objects to allow higher level packages to handle packing instructions
-**added jargon-ticket subproject for ticket admin support, along with unit testing of ticket system
-*[#625] Akubra intitial development
-**additional URI utility methods for use in Akubra
-*[#631] buffering missing in streaming from file - added a new jargon.io.local.input.stream.buffer.size jargon property, as well as programmatic support.  This adds missing buffering when IRODSCommands is streaming a local file to iRODS.  This should give a slight but noticable performance boost.
-*[#245] add noParaOpr keyword for put/get - TransferOptions and jargon properties now support a no parallel transfer opti
-*[#632] add support for anonymous useron for get/put operations
-**added instance metods to IRODSAccount for anonymous user 
-**added to test setup script to create anonymous in the target server
-*[#635] add jargon module for http streaming, pull out of jargon core
-**new jargon-httpstream service module for streaming data from a url into iRODS (uses Apache HTTPClient libraries)
-*[#638] optimization pass
-**general profiling
-**improvement of parallel transfer
  
  

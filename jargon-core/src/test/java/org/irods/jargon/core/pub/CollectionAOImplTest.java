@@ -33,6 +33,7 @@ import org.irods.jargon.testutils.icommandinvoke.icommands.ImetaRemoveCommand;
 import org.irods.jargon.testutils.icommandinvoke.icommands.ImkdirCommand;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class CollectionAOImplTest {
@@ -759,6 +760,107 @@ public class CollectionAOImplTest {
 					metadataEntry.getAvuAttribute());
 			Assert.assertEquals("did not find attrib val", expectedNewValue,
 					metadataEntry.getAvuValue());
+		}
+
+	}
+
+	/**
+	 * [#662] mod avu when setting a present units value to blank does not work
+	 * 
+	 * Currently ignored, seeing if it will be fixed in iRODS - MCC
+	 * 
+	 * @throws Exception
+	 */
+	@Ignore
+	public void testOverwriteAvuMetadataWithABlankUnit() throws Exception {
+		String testDirName = "testOverwriteAvuMetadataWithABlankUnit";
+		String expectedAttribName = "testOverwriteAvuMetadataAttrib1";
+		String expectedAttribValue = "testOverwriteAvuMetadataValue1";
+		String expectedAttribUnit = "testOverwriteAvuMetadataUnit1";
+		String expectedNewUnit = "";
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
+								+ testDirName);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+		CollectionAO collectionAO = accessObjectFactory
+				.getCollectionAO(irodsAccount);
+		IRODSFile targetCollectionAsFile = irodsFileSystem.getIRODSFileFactory(
+				irodsAccount).instanceIRODSFile(targetIrodsCollection);
+		targetCollectionAsFile.mkdirs();
+
+		AvuData dataToAdd = AvuData.instance(expectedAttribName,
+				expectedAttribValue, expectedAttribUnit);
+		collectionAO.addAVUMetadata(targetIrodsCollection, dataToAdd);
+		AvuData overwriteAvuData = AvuData.instance(expectedAttribName,
+				expectedAttribValue, expectedNewUnit);
+
+		collectionAO.modifyAVUMetadata(targetIrodsCollection, dataToAdd,
+				overwriteAvuData);
+
+		List<MetaDataAndDomainData> metadata = collectionAO
+				.findMetadataValuesForCollection(targetIrodsCollection, 0);
+
+		Assert.assertEquals("should only be one avu entry", 1, metadata.size());
+
+		for (MetaDataAndDomainData metadataEntry : metadata) {
+			Assert.assertEquals("did not find attrib name", expectedAttribName,
+					metadataEntry.getAvuAttribute());
+			Assert.assertEquals("did not find new Unit", expectedNewUnit,
+					metadataEntry.getAvuUnit());
+		}
+
+	}
+
+	@Test
+	public void testOverwriteAvuMetadataWithADifferentUnit() throws Exception {
+		String testDirName = "testOverwriteAvuMetadataWithADifferentUnit";
+		String expectedAttribName = "testOverwriteAvuMetadataAttrib1";
+		String expectedAttribValue = "testOverwriteAvuMetadataValue1";
+		String expectedAttribUnit = "testOverwriteAvuMetadataUnit1";
+		String expectedNewUnit = "testOverwriteAvuMetadataDifferentUnit1";
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
+								+ testDirName);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+		CollectionAO collectionAO = accessObjectFactory
+				.getCollectionAO(irodsAccount);
+		IRODSFile targetCollectionAsFile = irodsFileSystem.getIRODSFileFactory(
+				irodsAccount).instanceIRODSFile(targetIrodsCollection);
+		targetCollectionAsFile.mkdirs();
+
+		AvuData dataToAdd = AvuData.instance(expectedAttribName,
+				expectedAttribValue, expectedAttribUnit);
+		collectionAO.addAVUMetadata(targetIrodsCollection, dataToAdd);
+		AvuData overwriteAvuData = AvuData.instance(expectedAttribName,
+				expectedAttribValue, expectedNewUnit);
+
+		collectionAO.modifyAVUMetadata(targetIrodsCollection, dataToAdd,
+				overwriteAvuData);
+
+		List<MetaDataAndDomainData> metadata = collectionAO
+				.findMetadataValuesForCollection(targetIrodsCollection, 0);
+
+		Assert.assertEquals("should only be one avu entry", 1, metadata.size());
+
+		for (MetaDataAndDomainData metadataEntry : metadata) {
+			Assert.assertEquals("did not find attrib name", expectedAttribName,
+					metadataEntry.getAvuAttribute());
+			Assert.assertEquals("did not find new Unit", expectedNewUnit,
+					metadataEntry.getAvuUnit());
 		}
 
 	}
