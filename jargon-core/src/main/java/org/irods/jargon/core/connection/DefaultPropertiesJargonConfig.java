@@ -336,4 +336,15 @@ public class DefaultPropertiesJargonConfig implements JargonProperties {
 		return verifyPropExistsAndGetAsInt("jargon.io.local.input.stream.buffer.size");
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.connection.JargonProperties#
+	 * isUseNIOForParallelTransfers()
+	 */
+	@Override
+	public boolean isUseNIOForParallelTransfers() {
+		return verifyPropExistsAndGetAsBoolean("transfer.use.nio.for.parallel");
+	}
+
 }

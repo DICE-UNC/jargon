@@ -19,6 +19,7 @@ import org.irods.jargon.core.exception.JargonException;
 public class SettableJargonProperties implements JargonProperties {
 
 	private boolean useParallelTransfer = true;
+	private boolean useNIOForParallelTransfers = false;
 	private int maxParallelThreads = 4;
 	private int maxFilesAndDirsQueryMax = 5000;
 	private boolean useTransferThreadsPool = false;
@@ -73,6 +74,8 @@ public class SettableJargonProperties implements JargonProperties {
 		}
 
 		this.useParallelTransfer = jargonProperties.isUseParallelTransfer();
+		this.useNIOForParallelTransfers = jargonProperties
+				.isUseNIOForParallelTransfers();
 		this.maxFilesAndDirsQueryMax = jargonProperties
 				.getMaxFilesAndDirsQueryMax();
 		this.allowPutGetResourceRedirects = jargonProperties
@@ -106,6 +109,8 @@ public class SettableJargonProperties implements JargonProperties {
 		this.putBufferSize = jargonProperties.getPutBufferSize();
 		this.getBufferSize = jargonProperties.getGetBufferSize();
 		this.encoding = jargonProperties.getEncoding();
+		this.inputToOutputCopyBufferByteSize = jargonProperties
+				.getInputToOutputCopyBufferByteSize();
 	}
 
 	/*
@@ -119,11 +124,27 @@ public class SettableJargonProperties implements JargonProperties {
 		return useParallelTransfer;
 	}
 
+	/**
+	 * Utilize parallel transfer algorithm for files above the transfer size
+	 * 
+	 * @param useParallelTransfer
+	 *            <code>boolean</code> of <code>true</code> if parallel
+	 *            transfers are allowed
+	 */
 	public synchronized void setUseParallelTransfer(
 			final boolean useParallelTransfer) {
 		this.useParallelTransfer = useParallelTransfer;
 	}
 
+	/**
+	 * Set the maximum number of threads allowed for parallel transfers. 0 means
+	 * use iRODS limit.
+	 * 
+	 * @param maxParallelThreads
+	 *            <code>int</code> with the maximum number of threads to use in
+	 *            a parallel transfer, with 0 meaning use the iRODS default set
+	 *            in rules.
+	 */
 	public synchronized void setMaxParallelThreads(final int maxParallelThreads) {
 		this.maxParallelThreads = maxParallelThreads;
 	}
@@ -539,6 +560,27 @@ public class SettableJargonProperties implements JargonProperties {
 		}
 
 		this.encoding = encoding;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.connection.JargonProperties#
+	 * isUseNIOForParallelTransfers()
+	 */
+	@Override
+	public synchronized boolean isUseNIOForParallelTransfers() {
+		return useNIOForParallelTransfers;
+	}
+
+	/**
+	 * @param useNIOForParallelTransfers
+	 *            <code>boolean</code> that is set to <code>true</code> if NIO
+	 *            should be used for parallel file transfers
+	 */
+	public synchronized void setUseNIOForParallelTransfers(
+			boolean useNIOForParallelTransfers) {
+		this.useNIOForParallelTransfers = useNIOForParallelTransfers;
 	}
 
 }

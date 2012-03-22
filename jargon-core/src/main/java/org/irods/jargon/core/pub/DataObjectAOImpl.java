@@ -47,6 +47,7 @@ import org.irods.jargon.core.query.MetaDataAndDomainData;
 import org.irods.jargon.core.query.RodsGenQueryEnum;
 import org.irods.jargon.core.transfer.DefaultTransferControlBlock;
 import org.irods.jargon.core.transfer.ParallelGetFileTransferStrategy;
+import org.irods.jargon.core.transfer.ParallelPutFileTransferStrategy;
 import org.irods.jargon.core.transfer.ParallelPutFileViaNIOTransferStrategy;
 import org.irods.jargon.core.transfer.TransferControlBlock;
 import org.irods.jargon.core.transfer.TransferStatus.TransferType;
@@ -660,26 +661,34 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 				.getTag(IRODSConstants.PortList_PI)
 				.getTag(IRODSConstants.cookie).getIntValue();
 
-		/*
-		 * final ParallelPutFileTransferStrategy parallelPutFileStrategy =
-		 * ParallelPutFileTransferStrategy .instance(host, port,
-		 * numberOfThreads, pass, localFile, this.getIRODSAccessObjectFactory(),
-		 * transferLength, transferControlBlock,
-		 * transferStatusCallbackListener);
+		/**
+		 * FIXME: refactor to common hierarchy for put transfers
 		 */
 
-		log.info(">>>>>>using NIO for parallel put");
-		final ParallelPutFileViaNIOTransferStrategy parallelPutFileStrategy = ParallelPutFileViaNIOTransferStrategy
-				.instance(host, port, numberOfThreads, pass, localFile,
-						this.getIRODSAccessObjectFactory(), transferLength,
-						transferControlBlock, transferStatusCallbackListener);
+		if (this.getJargonProperties().isUseNIOForParallelTransfers()) {
+			log.info(">>>>>>using NIO for parallel put");
+			ParallelPutFileViaNIOTransferStrategy parallelPutFileStrategy = ParallelPutFileViaNIOTransferStrategy
+					.instance(host, port, numberOfThreads, pass, localFile,
+							this.getIRODSAccessObjectFactory(), transferLength,
+							transferControlBlock,
+							transferStatusCallbackListener);
+			log.info(
+					"getting ready to initiate parallel file transfer strategy:{}",
+					parallelPutFileStrategy);
+			parallelPutFileStrategy.transfer();
+		} else {
+			log.info(">>>>>>using standard i/o for parallel put");
+			ParallelPutFileTransferStrategy parallelPutFileStrategy = ParallelPutFileTransferStrategy
+					.instance(host, port, numberOfThreads, pass, localFile,
+							this.getIRODSAccessObjectFactory(), transferLength,
+							transferControlBlock,
+							transferStatusCallbackListener);
+			log.info(
+					"getting ready to initiate parallel file transfer strategy:{}",
+					parallelPutFileStrategy);
 
-		log.info(
-				"getting ready to initiate parallel file transfer strategy:{}",
-				parallelPutFileStrategy);
-
-		parallelPutFileStrategy.transfer();
-		log.info("transfer is done, now terminate the keep alive process");
+			parallelPutFileStrategy.transfer();
+		}
 
 		log.info("transfer process is complete");
 		int statusForComplete = responseToInitialCallForPut.getTag(

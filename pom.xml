@@ -414,7 +414,6 @@
 		</plugins>
 	</build>
 	<modules>
-		<module>jargon-core</module>
 		<module>jargon-test</module>
 		<module>jargon-transfer</module>
 		<module>jargon-user-tagging</module>

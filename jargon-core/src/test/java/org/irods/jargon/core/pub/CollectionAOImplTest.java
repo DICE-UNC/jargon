@@ -765,6 +765,49 @@ public class CollectionAOImplTest {
 	}
 
 	/**
+	 * [#677] strip quotes, commas from tags
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void testAddAvuWithEmbedededQuoteInValue() throws Exception {
+		String testDirName = "testAddAvuWithEmbedededQuoteInValue";
+		String expectedAttribName = "testAddAvuWithEmbedededQuoteInValue1\"";
+		String expectedAttribValue = "testAddAvuWithEmbedededQuoteInValue1";
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
+								+ testDirName);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+		CollectionAO collectionAO = accessObjectFactory
+				.getCollectionAO(irodsAccount);
+		IRODSFile targetCollectionAsFile = irodsFileSystem.getIRODSFileFactory(
+				irodsAccount).instanceIRODSFile(targetIrodsCollection);
+		targetCollectionAsFile.mkdirs();
+
+		AvuData dataToAdd = AvuData.instance(expectedAttribName,
+				expectedAttribValue, "");
+		collectionAO.addAVUMetadata(targetIrodsCollection, dataToAdd);
+
+		List<MetaDataAndDomainData> metadata = collectionAO
+				.findMetadataValuesForCollection(targetIrodsCollection, 0);
+
+		Assert.assertEquals("should only be one avu entry", 1, metadata.size());
+
+		for (MetaDataAndDomainData metadataEntry : metadata) {
+			Assert.assertEquals("did not find attrib name", expectedAttribName,
+					metadataEntry.getAvuAttribute());
+		}
+
+	}
+
+	/**
 	 * [#662] mod avu when setting a present units value to blank does not work
 	 * 
 	 * Currently ignored, seeing if it will be fixed in iRODS - MCC
