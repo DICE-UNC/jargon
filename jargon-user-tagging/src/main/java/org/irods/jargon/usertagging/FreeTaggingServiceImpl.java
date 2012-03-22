@@ -198,6 +198,7 @@ public final class FreeTaggingServiceImpl extends AbstractIRODSTaggingService
 	private String cleanTags(final String tags) {
 		String cleanTags = tags.replaceAll("\"", "");
 		cleanTags = cleanTags.replaceAll(",", " ");
+		cleanTags = cleanTags.replaceAll("&quot;", "");
 		return cleanTags;
 	}
 
