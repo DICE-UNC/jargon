@@ -270,6 +270,9 @@ public interface CollectionAndDataObjectListAndSearchAO extends
 	 * WHERE DATA_NAME LIKE '%searchTerm%'
 	 * </pre>
 	 * 
+	 * <p/>
+	 * Note that this method will compensate if strict ACL's are in place
+	 * 
 	 * @param searchTerm
 	 *            <code>String</code> that is the path search term, note that
 	 *            the "%" is added in the method and should not be provided as a

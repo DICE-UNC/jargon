@@ -295,9 +295,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 	@Override
 	public List<CollectionAndDataObjectListingEntry> searchCollectionsBasedOnName(
 			final String searchTerm) throws JargonException {
-
 		return searchCollectionsBasedOnName(searchTerm, 0);
-
 	}
 
 	/*
@@ -885,7 +883,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		log.info("searchDataObjectsBasedOnName:{}", searchTerm);
 
 		StringBuilder sb = new StringBuilder();
-		sb.append("SELECT DISTINCT ");
+		sb.append("SELECT  DISTINCT ");
 		sb.append(RodsGenQueryEnum.COL_COLL_NAME.getName());
 		sb.append(COMMA);
 		sb.append(RodsGenQueryEnum.COL_DATA_NAME.getName());
@@ -893,8 +891,6 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		sb.append(RodsGenQueryEnum.COL_D_CREATE_TIME.getName());
 		sb.append(COMMA);
 		sb.append(RodsGenQueryEnum.COL_D_MODIFY_TIME.getName());
-		sb.append(COMMA);
-		sb.append(RodsGenQueryEnum.COL_D_DATA_ID.getName());
 		sb.append(COMMA);
 		sb.append(RodsGenQueryEnum.COL_DATA_SIZE.getName());
 
@@ -932,11 +928,11 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 					.getDateFromIRODSValue(row.getColumn(2)));
 			entry.setModifiedAt(IRODSDataConversionUtil
 					.getDateFromIRODSValue(row.getColumn(3)));
-			entry.setId(IRODSDataConversionUtil.getIntOrZeroFromIRODSValue(row
-					.getColumn(4)));
+			// entry.setId(IRODSDataConversionUtil.getIntOrZeroFromIRODSValue(row
+			// .getColumn(4)));
 			entry.setDataSize(IRODSDataConversionUtil
-					.getLongOrZeroFromIRODSValue(row.getColumn(5)));
-			entry.setOwnerName(row.getColumn(6));
+					.getLongOrZeroFromIRODSValue(row.getColumn(4)));
+			entry.setOwnerName(row.getColumn(5));
 			entry.setCount(row.getRecordCount());
 			entry.setLastResult(row.isLastResult());
 

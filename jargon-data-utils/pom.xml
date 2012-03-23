@@ -33,7 +33,7 @@
 				<groupId>commons-io</groupId>
 				<artifactId>commons-io</artifactId>
 				<scope>compile</scope>
-			</dependency>
+			</dependency> 
 		<dependency>
 			<groupId>commons-pool</groupId>
 			<artifactId>commons-pool</artifactId>
