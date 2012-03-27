@@ -1058,6 +1058,17 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 
 		log.debug("setting resource to account default:{}", defaultResource);
 
+		log.debug("checking if parent exists");
+		IRODSFile target = this.getIRODSFileFactory().instanceIRODSFile(
+				absolutePath);
+		IRODSFile parent = (IRODSFile) target.getParentFile();
+		if (!parent.exists()) {
+			log.warn(
+					"creating an output stream for parent:{} that does not exist, making parent dirs..",
+					parent.getAbsolutePath());
+			parent.mkdirs();
+		}
+
 		int fileId = 0;
 
 		try {

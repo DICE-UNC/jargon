@@ -49,4 +49,4 @@ Note that the following bug and feature requests are logged in GForge with relat
 ==Features==
 
  * [#664] parallel txfr optimization, including optional parallel via NIO
- 
+ * [#692] add ability to make parent dirs when creating a file for an IRODSFileOutputStream

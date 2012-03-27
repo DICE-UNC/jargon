@@ -470,6 +470,35 @@ public class IRODSFileImplTest {
 		irodsFileSystem.closeAndEatExceptions();
 	}
 
+	/**
+	 * Delete a file with spaces in the name, test for: [#690] error in mass
+	 * delete on ll
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public final void testDeleteACollectionWithSpacesInTheNameName()
+			throws Exception {
+		String testCollectionSubdir = "testDeleteACollectionWithSpacesInTheNameName and there are spaces here --- see the spaces?";
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + "/"
+								+ testCollectionSubdir);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
+
+		IRODSFile targetIRODSCollection = irodsFileSystem.getIRODSFileFactory(
+				irodsAccount).instanceIRODSFile(targetIrodsCollection);
+		targetIRODSCollection.mkdirs();
+		targetIRODSCollection.delete();
+		targetIRODSCollection.reset();
+		Assert.assertFalse("file should not still exist",
+				targetIRODSCollection.exists());
+	}
+
 	@Test
 	public final void testExistsQuotesInFileName() throws Exception {
 		String testFileName = "testExistsQuote'infilename.txt";

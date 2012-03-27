@@ -461,6 +461,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 		long localFileLength = localFile.length();
 		log.debug("localFileLength:{}", localFileLength);
+		long startTime = System.currentTimeMillis();
 
 		if (localFileLength < ConnectionConstants.MAX_SZ_FOR_SINGLE_BUF) {
 
@@ -484,7 +485,10 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 					targetFile, force, transferControlBlock,
 					transferStatusCallbackListener);
 		}
-		log.info("transfer complete");
+
+		long endTime = System.currentTimeMillis();
+		long duration = endTime - startTime;
+		log.info(">>>>>>>>>>>>>>transfer complete in:{} millis", duration);
 
 	}
 
