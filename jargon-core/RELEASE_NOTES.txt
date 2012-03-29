@@ -45,6 +45,7 @@ Note that the following bug and feature requests are logged in GForge with relat
 
 * [#662] mod avu when setting a present units value to blank does not work - submitted as iRODS bug, added JUnit tests, will overhead if it becomes an issue
 * [#677] strip quotes, commas from tags - user free tagging with quotes can cause pathological query behavior, standardize on space delimited, also parse out commas
+* [#697] IRODSFileOutputStream overwrite fix - handle overwrites to match behavior of java io FileOutputStream (replace bytes)
 
 ==Features==
 
