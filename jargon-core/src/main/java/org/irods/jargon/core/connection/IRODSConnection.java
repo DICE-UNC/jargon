@@ -30,7 +30,7 @@ import org.slf4j.LoggerFactory;
  * @author Mike Conway - DICE (www.irods.org)
  * 
  */
-final class IRODSConnection implements IRODSManagedConnection {
+public final class IRODSConnection implements IRODSManagedConnection {
 
 	private Logger log = LoggerFactory.getLogger(IRODSConnection.class);
 	private IRODSProtocolManager irodsProtocolManager;
@@ -332,7 +332,7 @@ final class IRODSConnection implements IRODSManagedConnection {
 	 * @throws IOException
 	 *             If an IOException occurs
 	 */
-	void send(final byte[] value) throws IOException {
+	public void send(final byte[] value) throws IOException {
 
 		try {
 			// packing instructions may be null, in which case nothing is sent
@@ -379,7 +379,7 @@ final class IRODSConnection implements IRODSManagedConnection {
 	 * @throws IOException
 	 *             If an IOException occurs
 	 */
-	void send(final byte[] value, final int offset, final int length)
+	public void send(final byte[] value, final int offset, final int length)
 			throws IOException {
 
 		if (value == null) {
@@ -430,7 +430,7 @@ final class IRODSConnection implements IRODSManagedConnection {
 	 * @throws IOException
 	 *             If an IOException occurs
 	 */
-	void send(final String value) throws IOException {
+	public void send(final String value) throws IOException {
 		if (value == null) {
 			log.debug("null input packing instruction, do not send");
 			return;
@@ -549,7 +549,7 @@ final class IRODSConnection implements IRODSManagedConnection {
 	 * @throws IOException
 	 *             If an IOException occurs
 	 */
-	void flush() throws IOException {
+	public void flush() throws IOException {
 		if (connection.isClosed()) {
 			// hopefully this isn't too slow to check.
 			throw new ClosedChannelException();

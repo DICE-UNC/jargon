@@ -1,30 +1,21 @@
-/**
- * 
- */
 package org.irods.jargon.core.connection;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InterruptedIOException;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.nio.channels.ClosedChannelException;
-import java.security.GeneralSecurityException;
-import java.security.MessageDigest;
 
-import org.irods.jargon.core.connection.IRODSAccount.AuthScheme;
+import org.irods.jargon.core.connection.auth.AuthMechanism;
+import org.irods.jargon.core.connection.auth.AuthResponse;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.packinstr.AbstractIRODSPackingInstruction;
-import org.irods.jargon.core.packinstr.AuthResponseInp;
 import org.irods.jargon.core.packinstr.IRodsPI;
 import org.irods.jargon.core.packinstr.RErrMsg;
-import org.irods.jargon.core.packinstr.StartupPack;
 import org.irods.jargon.core.packinstr.Tag;
 import org.irods.jargon.core.protovalues.ErrorEnum;
 import org.irods.jargon.core.protovalues.RequestTypes;
-import org.irods.jargon.core.protovalues.XmlProtApis;
-import org.irods.jargon.core.utils.Base64;
 import org.irods.jargon.core.utils.IRODSConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -92,6 +83,7 @@ public class IRODSCommands implements IRODSManagedConnection {
 	private IRODSServerProperties irodsServerProperties;
 	private IRODSProtocolManager irodsProtocolManager;
 	private final PipelineConfiguration pipelineConfiguration;
+	private final AuthMechanism authMechanism;
 
 	private String cachedChallengeValue = "";
 
@@ -103,10 +95,26 @@ public class IRODSCommands implements IRODSManagedConnection {
 	 */
 	private IRODSAccount irodsAccount;
 
+	/**
+	 * Constructor creates an IRODSCommands object
+	 * 
+	 * @param irodsAccount
+	 *            {@link IRODSAccount} defining the iRODS connection
+	 * @param irodsConnectionManager
+	 *            {IRODSProtocolManager} that creates new connections
+	 * @param pipelineConfiguration
+	 *            {@link PipelineConfiguration} that specifies detailed settings
+	 *            for the connection (e.g. buffer sizes)
+	 * @param authMechanism
+	 *            {@link AuthMechanism} that will authenticate with iRODS
+	 * @return instance of <code>IRODSCommands</code> connected and
+	 *         authenticated to an iRODS agent
+	 * @throws JargonException
+	 */
 	private IRODSCommands(final IRODSAccount irodsAccount,
 			final IRODSProtocolManager irodsConnectionManager,
-			final PipelineConfiguration pipelineConfiguration)
-			throws JargonException {
+			final PipelineConfiguration pipelineConfiguration,
+			final AuthMechanism authMechanism) throws JargonException {
 		/*
 		 * create the IRODSConnection object. The connection object encapsulates
 		 * an open socket to the host/port described by the irodsAccount.
@@ -124,55 +132,49 @@ public class IRODSCommands implements IRODSManagedConnection {
 				irodsConnectionManager, pipelineConfiguration);
 		this.irodsProtocolManager = irodsConnectionManager;
 		this.pipelineConfiguration = pipelineConfiguration;
+		this.authMechanism = authMechanism;
 		startupConnection(irodsAccount);
 
 	}
 
-	private void startupConnection(final IRODSAccount irodsAccount)
-			throws JargonException {
-		// send startup packet here
-		this.sendStartupPacket(irodsAccount);
+	private void startupConnection(final IRODSAccount irodsAccount) throws
+	  JargonException { // send startup packet here
 
-		// LOG in and augment/store IRODS Account
-		if (irodsAccount.getAuthenticationScheme() == AuthScheme.GSI) {
-			sendGSIPassword(irodsAccount);
-			this.irodsAccount = lookupAdditionalIRODSAccountInfoWhenGSI(irodsAccount);
-		} else {
-			sendStandardPassword(irodsAccount);
-			this.irodsAccount = irodsAccount;
-		}
-
-		// set the server properties
-
-		EnvironmentalInfoAccessor environmentalInfoAccessor = new EnvironmentalInfoAccessor(
-				this);
-		irodsServerProperties = environmentalInfoAccessor
-				.getIRODSServerProperties();
-		log.info(irodsServerProperties.toString());
-	}
-
-	private IRODSAccount lookupAdditionalIRODSAccountInfoWhenGSI(
-			final IRODSAccount irodsAccount2) {
-		// FIXME: implement with GSI
-		return null;
-	}
+		AuthResponse authResponse = authMechanism.authenticate(this,
+				irodsAccount);
+		this.irodsAccount = authResponse.getAuthenticatedIRODSAccount();
+		this.cachedChallengeValue = authResponse.getChallengeValue();
+	  
+	  // set the server properties
+	  
+	  EnvironmentalInfoAccessor environmentalInfoAccessor = new
+	  EnvironmentalInfoAccessor( this); irodsServerProperties =
+	  environmentalInfoAccessor .getIRODSServerProperties();
+	  log.info(irodsServerProperties.toString()); }
 
 	/**
 	 * Instance method used to create an IRODSCommands object
 	 * 
 	 * @param irodsAccount
+	 *            {@link IRODSAccount} defining the iRODS connection
 	 * @param irodsConnectionManager
+	 *            {IRODSProtocolManager} that creates new connections
 	 * @param pipelineConfiguration
-	 * @return
+	 *            {@link PipelineConfiguration} that specifies detailed settings
+	 *            for the connection (e.g. buffer sizes)
+	 * @param authMechanism
+	 *            {@link AuthMechanism} that will authenticate with iRODS
+	 * @return instance of <code>IRODSCommands</code> connected and
+	 *         authenticated to an iRODS agent
 	 * @throws JargonException
 	 */
 	static IRODSCommands instance(final IRODSAccount irodsAccount,
 			final IRODSProtocolManager irodsConnectionManager,
-			final PipelineConfiguration pipelineConfiguration)
-			throws JargonException {
+			final PipelineConfiguration pipelineConfiguration,
+			final AuthMechanism authMechanism) throws JargonException {
 
 		return new IRODSCommands(irodsAccount, irodsConnectionManager,
-				pipelineConfiguration);
+				pipelineConfiguration, authMechanism);
 	}
 
 	/**
@@ -616,7 +618,7 @@ public class IRODSCommands implements IRODSManagedConnection {
 	/**
 	 * Create the iRODS header packet
 	 */
-	private byte[] createHeader(final String type, final int messageLength,
+	public byte[] createHeader(final String type, final int messageLength,
 			final int errorLength, final long byteStringLength,
 			final int intInfo) throws JargonException {
 
@@ -1037,208 +1039,27 @@ public class IRODSCommands implements IRODSManagedConnection {
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.connection.IRODSManagedConnection#getConnectionUri
+	 * ()
+	 */
 	@Override
 	public String getConnectionUri() throws JargonException {
 		return irodsConnection.getConnectionUri();
 	}
 
-	public IRODSAccount getIRODSAccount() {
-		return irodsAccount;
-	}
-
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.connection.IRODSManagedConnection#isConnected()
+	 */
 	@Override
 	public synchronized boolean isConnected() {
 		return irodsConnection.isConnected();
-	}
-
-	/**
-	 * Handles sending the userinfo connection protocol. First, sends initial
-	 * handshake with IRODS.
-	 * <P>
-	 * 
-	 * @throws IOException
-	 *             if the host cannot be opened or created.
-	 */
-	protected Tag sendStartupPacket(final IRODSAccount irodsAccount)
-			throws JargonException {
-
-		StartupPack startupPack = new StartupPack(irodsAccount);
-		String startupPackData = startupPack.getParsedTags();
-		try {
-			irodsConnection.send(createHeader(
-					RequestTypes.RODS_CONNECT.getRequestType(),
-					startupPackData.length(), 0, 0, 0));
-			irodsConnection.send(startupPackData);
-			irodsConnection.flush();
-		} catch (ClosedChannelException e) {
-			log.error("closed channel", e);
-			e.printStackTrace();
-			throw new JargonException(e);
-		} catch (InterruptedIOException e) {
-			log.error("interrupted io", e);
-			e.printStackTrace();
-			throw new JargonException(e);
-		} catch (IOException e) {
-			log.error("io exception", e);
-			e.printStackTrace();
-			throw new JargonException(e);
-		}
-		Tag responseMessage = readMessage();
-		return responseMessage;
-	}
-
-	protected void sendStandardPassword(final IRODSAccount irodsAccount)
-			throws JargonException {
-		if (irodsAccount == null) {
-			throw new JargonException("irods account is null");
-		}
-		log.info("sending standard irods password");
-		try {
-			irodsConnection.send(createHeader(
-					RequestTypes.RODS_API_REQ.getRequestType(), 0, 0, 0,
-					XmlProtApis.AUTH_REQUEST_AN.getApiNumber()));
-			irodsConnection.flush();
-		} catch (ClosedChannelException e) {
-			log.error("closed channel", e);
-			e.printStackTrace();
-			throw new JargonException(e);
-		} catch (InterruptedIOException e) {
-			log.error("interrupted io", e);
-			e.printStackTrace();
-			throw new JargonException(e);
-		} catch (IOException e) {
-			log.error("io exception", e);
-			e.printStackTrace();
-			throw new JargonException(e);
-		}
-
-		Tag message = readMessage(false);
-
-		// Create and send the response
-		cachedChallengeValue = message.getTag(StartupPack.CHALLENGE)
-				.getStringValue();
-		log.debug("cached challenge response:{}", cachedChallengeValue);
-
-		String response = challengeResponse(
-				message.getTag(StartupPack.CHALLENGE).getStringValue(),
-				irodsAccount.getPassword());
-		AuthResponseInp authResponse_PI = new AuthResponseInp(
-				irodsAccount.getUserName(), response);
-
-		// should be a header with no body if successful
-		irodsFunction(RequestTypes.RODS_API_REQ.getRequestType(),
-				authResponse_PI.getParsedTags(),
-				XmlProtApis.AUTH_RESPONSE_AN.getApiNumber());
-	}
-
-	protected void sendGSIPassword(final IRODSAccount irodsAccount)
-			throws JargonException {
-
-		if (irodsAccount == null) {
-			throw new JargonException("irods account is null");
-		}
-
-		try {
-			irodsConnection.send(createHeader(
-					RequestTypes.RODS_API_REQ.getRequestType(), 0, 0, 0,
-					XmlProtApis.GSI_AUTH_REQUEST_AN.getApiNumber()));
-			irodsConnection.flush();
-		} catch (ClosedChannelException e) {
-			log.error("closed channel", e);
-			e.printStackTrace();
-			throw new JargonException(e);
-		} catch (InterruptedIOException e) {
-			log.error("interrupted io", e);
-			e.printStackTrace();
-			throw new JargonException(e);
-		} catch (IOException e) {
-			log.error("io exception", e);
-			e.printStackTrace();
-			throw new JargonException(e);
-		}
-
-		// FIXME: not yet implemented
-		/*
-		 * Create and send the response note that this is the one use of the get
-		 * methods for the socket and streams of the connection in Jargon. This
-		 * is not optimal, and will be refactored at a later time
-		 */
-
-		/*
-		 * String serverDn =
-		 * readMessage(false).getTag(AuthResponseInp_PI.SERVER_DN)
-		 * .getStringValue(); new GSIAuth(account,
-		 * irodsConnection.getConnection(), irodsConnection
-		 * .getIrodsOutputStream(), irodsConnection.getIrodsInputStream());
-		 */
-	}
-
-	/**
-	 * Add the password to the end of the challenge string, pad to the correct
-	 * length, and take the md5 of that.
-	 */
-	private String challengeResponse(final String challenge, String password)
-			throws JargonException {
-		// Convert base64 string to a byte array
-		byte[] chal = null;
-		byte[] temp = Base64.fromString(challenge);
-
-		getIRODSAccount();
-		if (IRODSAccount.isDefaultObfuscate()) {
-			try {
-				password = new PasswordObfuscator(new File(password))
-						.encodePassword();
-			} catch (Throwable e) {
-				log.error("error during account obfuscation", e);
-			}
-		}
-
-		if (password.length() < ConnectionConstants.MAX_PASSWORD_LENGTH) {
-			// pad the end with zeros to MAX_PASSWORD_LENGTH
-			chal = new byte[ConnectionConstants.CHALLENGE_LENGTH
-					+ ConnectionConstants.MAX_PASSWORD_LENGTH];
-		} else {
-			log.error("password is too long");
-			throw new IllegalArgumentException("Password is too long");
-		}
-
-		// add the password to the end
-		System.arraycopy(temp, 0, chal, 0, temp.length);
-		try {
-			temp = password
-					.getBytes(pipelineConfiguration.getDefaultEncoding());
-		} catch (UnsupportedEncodingException e1) {
-			log.error(
-					"unsupported encoding of:"
-							+ pipelineConfiguration.getDefaultEncoding(), e1);
-			throw new JargonException("unsupported encoding:"
-					+ pipelineConfiguration.getDefaultEncoding());
-		}
-		System.arraycopy(temp, 0, chal, ConnectionConstants.CHALLENGE_LENGTH,
-				temp.length);
-
-		// get the md5 of the challenge+password
-		try {
-			MessageDigest digest = MessageDigest.getInstance("MD5");
-			chal = digest.digest(chal);
-		} catch (GeneralSecurityException e) {
-			SecurityException se = new SecurityException();
-			se.initCause(e);
-			log.error(
-					"general security exception, initCause is:"
-							+ e.getMessage(), e);
-			throw se;
-		}
-
-		// after md5 turn any 0 into 1
-		for (int i = 0; i < chal.length; i++) {
-			if (chal[i] == 0) {
-				chal[i] = 1;
-			}
-		}
-
-		// return to Base64
-		return Base64.toString(chal);
 	}
 
 	/*
@@ -1413,6 +1234,20 @@ public class IRODSCommands implements IRODSManagedConnection {
 	public synchronized void setIrodsProtocolManager(
 			final IRODSProtocolManager irodsProtocolManager) {
 		this.irodsProtocolManager = irodsProtocolManager;
+	}
+
+	/**
+	 * @return the irodsConnection
+	 */
+	public IRODSConnection getIrodsConnection() {
+		return irodsConnection;
+	}
+
+	/**
+	 * @return the pipelineConfiguration
+	 */
+	public PipelineConfiguration getPipelineConfiguration() {
+		return pipelineConfiguration;
 	}
 
 }

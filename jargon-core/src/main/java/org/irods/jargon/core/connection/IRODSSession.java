@@ -165,7 +165,7 @@ public class IRODSSession {
 
 		for (IRODSCommands irodsCommands : irodsProtocols.values()) {
 			LOG.debug("found and am closing connection to : {}", irodsCommands
-					.getIRODSAccount().toString());
+					.getIrodsAccount().toString());
 			irodsCommands.disconnect();
 
 			// I don't remove from the map because the map is just going to be

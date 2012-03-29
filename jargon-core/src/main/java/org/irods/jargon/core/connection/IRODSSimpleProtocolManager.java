@@ -1,6 +1,3 @@
-/**
- *
- */
 package org.irods.jargon.core.connection;
 
 import org.irods.jargon.core.exception.JargonException;
@@ -52,8 +49,12 @@ public final class IRODSSimpleProtocolManager extends
 		log.debug("creating an IRODSSimpleConnection for account:{}",
 				irodsAccount);
 
-		return IRODSCommands
-				.instance(irodsAccount, this, pipelineConfiguration);
+		return IRODSCommands.instance(
+				irodsAccount,
+				this,
+				pipelineConfiguration,
+				this.getAuthenticationFactory().instanceAuthMechanism(
+						irodsAccount.getAuthenticationScheme().name()));
 	}
 
 	/**
@@ -89,6 +90,7 @@ public final class IRODSSimpleProtocolManager extends
 		if (irodsConnection != null) {
 			irodsConnection.obliterateConnectionAndDiscardErrors();
 			try {
+
 				irodsConnection.getIrodsSession().discardSessionForErrors(
 						irodsConnection.getIrodsAccount());
 			} catch (JargonException e) {
