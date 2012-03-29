@@ -183,8 +183,9 @@ public interface TransferControlBlock {
 	void setTotalBytesToTransfer(long totalBytesToTransfer);
 
 	/**
-	 * Set the options that will control the details of the transfer.  Note that this may be set to <code>null</code>, in which case, defaults will be computed
-	 * during the transfer.
+	 * Set the options that will control the details of the transfer. Note that
+	 * this may be set to <code>null</code>, in which case, defaults will be
+	 * computed during the transfer.
 	 * 
 	 * @param transferOptions
 	 *            {@link TransferOptions}
@@ -192,8 +193,8 @@ public interface TransferControlBlock {
 	void setTransferOptions(TransferOptions transferOptions);
 
 	/**
-	 * Get the options currently controlling the details of the transfer.  These may be <code>null</code> if they have not yet
-	 * been specified.
+	 * Get the options currently controlling the details of the transfer. These
+	 * may be <code>null</code> if they have not yet been specified.
 	 * 
 	 * @return {@link TransferOptions}
 	 */
@@ -204,5 +205,23 @@ public interface TransferControlBlock {
 	 * again with fresh statistics.
 	 */
 	void resetTransferData();
+
+	/**
+	 * Get the (optional) restart location
+	 * 
+	 * @return <code>String</code> with an optional (blank if not provided)
+	 *         absolute path that was the last good path in a prior transfer.
+	 *         This is used to seek the restart point
+	 */
+	String getRestartAbsolutePath();
+
+	/**
+	 * Set the (optional) restart location. If not desired, set to blank.
+	 * 
+	 * @param restartAbsolutePath
+	 *            <code>String</code> with an optional restart path, this should
+	 *            be the last 'good' path in a prior transfer
+	 */
+	void setRestartAbsolutePath(String restartAbsolutePath);
 
 }

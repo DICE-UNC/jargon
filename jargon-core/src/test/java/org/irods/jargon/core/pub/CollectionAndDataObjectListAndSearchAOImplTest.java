@@ -29,8 +29,7 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 	private static org.irods.jargon.testutils.filemanip.ScratchFileUtils scratchFileUtils = null;
 	public static final String IRODS_TEST_SUBDIR_PATH = "CollectionAndDataObjectListAndSearchAOImplTest";
 	private static org.irods.jargon.testutils.IRODSTestSetupUtilities irodsTestSetupUtilities = null;
-	@SuppressWarnings("unused")
-	private static org.irods.jargon.testutils.AssertionHelper assertionHelper = null;
+	private static IRODSFileSystem irodsFileSystem = null;
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -42,23 +41,23 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
 		irodsTestSetupUtilities
 				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
-		assertionHelper = new org.irods.jargon.testutils.AssertionHelper();
+		irodsFileSystem = IRODSFileSystem.instance();
 	}
 
 	@AfterClass
 	public static void tearDownAfterClass() throws Exception {
+		irodsFileSystem.closeAndEatExceptions();
+
 	}
 
 	@Test
 	public void testGetInstanceFromFactory() throws Exception {
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
 		CollectionAndDataObjectListAndSearchAO actual = irodsFileSystem
 				.getIRODSAccessObjectFactory()
 				.getCollectionAndDataObjectListAndSearchAO(irodsAccount);
 		Assert.assertNotNull(actual);
-		irodsFileSystem.close();
 
 	}
 
@@ -66,10 +65,8 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 	public void testGetInstanceFromFactoryCloseGivingAccount() throws Exception {
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
 		irodsFileSystem.getIRODSAccessObjectFactory()
 				.getCollectionAndDataObjectListAndSearchAO(irodsAccount);
-		irodsFileSystem.close(irodsAccount);
 		// no errors means test passes
 		Assert.assertTrue(true);
 
@@ -83,7 +80,6 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
 
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
@@ -111,7 +107,8 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 		List<CollectionAndDataObjectListingEntry> entries = actual
 				.listCollectionsUnderPath(targetIrodsCollection, 0);
 		Assert.assertNotNull("null result from query", entries);
-		Assert.assertFalse("should not have been and empty result list", entries.isEmpty());
+		Assert.assertFalse("should not have been and empty result list",
+				entries.isEmpty());
 		CollectionAndDataObjectListingEntry entry = entries
 				.get(entries.size() - 1);
 		Assert.assertEquals(entry.getCount(), entries.size());
@@ -125,13 +122,10 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 		Assert.assertEquals("i am not the owner", irodsAccount.getUserName(),
 				entry.getOwnerName());
 
-		irodsFileSystem.close();
-
 		Assert.assertTrue(entry.isLastResult());
-		// TestCase.assertTrue(entry.isLastResult());
 		Assert.assertEquals(entry.getCount(), entries.size());
 		Assert.assertEquals(500, entries.size());
-   
+
 	}
 
 	@Test
@@ -142,7 +136,6 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
 
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
@@ -184,8 +177,6 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 				CollectionAndDataObjectListingEntry.ObjectType.COLLECTION,
 				entry.getObjectType());
 
-		irodsFileSystem.close();
-
 		Assert.assertTrue(entry.isLastResult());
 		// TestCase.assertTrue(entry.isLastResult());
 		Assert.assertEquals(entry.getCount(), entries.size());
@@ -201,7 +192,6 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
 
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
@@ -245,7 +235,6 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 		List<CollectionAndDataObjectListingEntry> entries = actual
 				.listCollectionsUnderPathWithPermissions(targetIrodsCollection,
 						0);
-		irodsFileSystem.close();
 
 		Assert.assertNotNull(entries);
 		Assert.assertFalse("entries was empty", entries.isEmpty());
@@ -256,7 +245,7 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 
 		// each entry has two permissions
 		for (CollectionAndDataObjectListingEntry actualEntry : entries) {
-			TestCase.assertEquals("did not get both expected permissions", 2,
+			Assert.assertEquals("did not get both expected permissions", 2,
 					actualEntry.getUserFilePermission().size());
 		}
 
@@ -270,7 +259,6 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
 
 		String targetIrodsCollection = subdirPrefix;
 		CollectionAndDataObjectListAndSearchAO actual = irodsFileSystem
@@ -279,7 +267,8 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 		List<CollectionAndDataObjectListingEntry> entries = actual
 				.listCollectionsUnderPath(targetIrodsCollection, 0);
 		Assert.assertNotNull("null entries list returned", entries);
-		Assert.assertFalse("result entries should not be empty", entries.isEmpty());
+		Assert.assertFalse("result entries should not be empty",
+				entries.isEmpty());
 
 		// bounce thru the results and make sure a root entry is not returned as
 		// a child of the root entry
@@ -300,7 +289,6 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
 		IRODSFile irodsFile = null;
 
 		String targetIrodsCollection = testingPropertiesHelper
@@ -325,7 +313,6 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 		CollectionAndDataObjectListAndSearchAO actual = irodsFileSystem
 				.getIRODSAccessObjectFactory()
 				.getCollectionAndDataObjectListAndSearchAO(irodsAccount);
-		irodsFileSystem.close();
 		List<CollectionAndDataObjectListingEntry> entries = actual
 				.listDataObjectsUnderPath(targetIrodsCollection, 0);
 		Assert.assertNotNull(entries);
@@ -357,7 +344,6 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
 		IRODSFile irodsFile = null;
 
 		DataObjectAO dataObjectAO = irodsFileSystem
@@ -391,7 +377,6 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 		CollectionAndDataObjectListAndSearchAO actual = irodsFileSystem
 				.getIRODSAccessObjectFactory()
 				.getCollectionAndDataObjectListAndSearchAO(irodsAccount);
-		irodsFileSystem.close();
 		List<CollectionAndDataObjectListingEntry> entries = actual
 				.listDataObjectsUnderPathWithPermissions(targetIrodsCollection,
 						0);
@@ -424,7 +409,6 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
 		IRODSFile irodsFile = null;
 
 		DataObjectAO dataObjectAO = irodsFileSystem
@@ -463,7 +447,6 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 		List<CollectionAndDataObjectListingEntry> entries = actual
 				.listDataObjectsUnderPathWithPermissions(targetIrodsCollection,
 						0);
-		irodsFileSystem.close();
 		Assert.assertNotNull(entries);
 		Assert.assertFalse(entries.isEmpty());
 		CollectionAndDataObjectListingEntry entry = entries
@@ -493,7 +476,6 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
 		IRODSFile irodsFile = null;
 
 		DataObjectAO dataObjectAO = irodsFileSystem
@@ -540,7 +522,6 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 		CollectionAndDataObjectListAndSearchAO actual = irodsFileSystem
 				.getIRODSAccessObjectFactory()
 				.getCollectionAndDataObjectListAndSearchAO(irodsAccount);
-		irodsFileSystem.close();
 		List<CollectionAndDataObjectListingEntry> entries = actual
 				.listDataObjectsUnderPathWithPermissions(targetIrodsCollection,
 						0);
@@ -579,7 +560,6 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
 
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
@@ -614,7 +594,6 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 				.getCollectionAndDataObjectListAndSearchAO(irodsAccount);
 		List<CollectionAndDataObjectListingEntry> entries = actual
 				.listDataObjectsAndCollectionsUnderPath(targetIrodsCollection);
-		irodsFileSystem.close();
 		Assert.assertNotNull(entries);
 		Assert.assertFalse(entries.isEmpty());
 		Assert.assertEquals(count * 2, entries.size());
@@ -631,7 +610,6 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
 
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
@@ -686,7 +664,6 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 				.getCollectionAndDataObjectListAndSearchAO(irodsAccount);
 		List<CollectionAndDataObjectListingEntry> entries = actual
 				.listDataObjectsAndCollectionsUnderPathWithPermissions(targetIrodsCollection);
-		irodsFileSystem.close();
 		Assert.assertNotNull(entries);
 		Assert.assertFalse(entries.isEmpty());
 		Assert.assertEquals(count * 2, entries.size());
@@ -694,7 +671,7 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 		// bounce thru entries, each has two permissions
 
 		for (CollectionAndDataObjectListingEntry entry : entries) {
-			TestCase.assertEquals("did not have the two permissions", 2, entry
+			Assert.assertEquals("did not have the two permissions", 2, entry
 					.getUserFilePermission().size());
 		}
 
@@ -711,7 +688,6 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
 
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
@@ -768,7 +744,6 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 				.getCollectionAndDataObjectListAndSearchAO(tertiaryAccount);
 		List<CollectionAndDataObjectListingEntry> entries = actual
 				.listDataObjectsAndCollectionsUnderPathWithPermissions(targetIrodsCollection);
-		irodsFileSystem.close();
 		Assert.assertNotNull(entries);
 		Assert.assertFalse(entries.isEmpty());
 		Assert.assertEquals(count * 2, entries.size());
@@ -776,7 +751,7 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 		// bounce thru entries, each has two permissions
 
 		for (CollectionAndDataObjectListingEntry entry : entries) {
-			TestCase.assertEquals("did not have the two permissions", 2, entry
+			Assert.assertEquals("did not have the two permissions", 2, entry
 					.getUserFilePermission().size());
 		}
 
@@ -792,7 +767,6 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
 
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
@@ -827,7 +801,6 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 				.getCollectionAndDataObjectListAndSearchAO(irodsAccount);
 		int ctr = actual
 				.countDataObjectsAndCollectionsUnderPath(targetIrodsCollection);
-		irodsFileSystem.close();
 		Assert.assertEquals(count * 2, ctr);
 
 	}
@@ -841,7 +814,6 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
 
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
@@ -882,7 +854,6 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 		Assert.assertNotNull(entries);
 		Assert.assertEquals("did not find the two subdirs I added", 3,
 				entries.size());
-		irodsFileSystem.close();
 	}
 
 	@Test(expected = IllegalArgumentException.class)
@@ -890,7 +861,6 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
 
 		CollectionAndDataObjectListAndSearchAO actual = irodsFileSystem
 				.getIRODSAccessObjectFactory()
@@ -919,7 +889,6 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
 
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
@@ -955,13 +924,67 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 		CollectionAndDataObjectListAndSearchAO actual = irodsFileSystem
 				.getIRODSAccessObjectFactory()
 				.getCollectionAndDataObjectListAndSearchAO(irodsAccount);
-		irodsFileSystem.close();
 		List<CollectionAndDataObjectListingEntry> entries = actual
 				.searchDataObjectsBasedOnName(searchTerm, 0);
 		Assert.assertNotNull(entries);
 		Assert.assertEquals(2, entries.size());
 
-		irodsFileSystem.close();
+	}
+
+	@Test
+	public void testSearchDataObjectsReplicated() throws Exception {
+
+		String subdirPrefix = "testSearchDataObjectsOneReplicated";
+		String searchTerm = "testSearchDataObjectsOneReplicated";
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + "/"
+								+ subdirPrefix);
+		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetIrodsCollection);
+		irodsFile.mkdir();
+
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String localFileName = FileGenerator
+				.generateFileOfFixedLengthGivenName(absPath, searchTerm
+						+ "testv1.txt", 1);
+
+		irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetIrodsCollection);
+		irodsFile.mkdir();
+
+		File localFile = new File(localFileName);
+		DataObjectAO dataObjectAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
+
+		dataObjectAO.putLocalDataObjectToIRODS(localFile, irodsFile, true);
+		dataObjectAO
+				.replicateIrodsDataObject(
+						irodsFile.getAbsolutePath() + "/" + localFile.getName(),
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_RESOURCE_KEY));
+
+		// second file, slightly different prefix on name
+		localFileName = FileGenerator.generateFileOfFixedLengthGivenName(
+				absPath, "xxx" + searchTerm + "testv1.txt", 1);
+		localFile = new File(localFileName);
+		dataObjectAO.putLocalDataObjectToIRODS(localFile, irodsFile, true);
+
+		CollectionAndDataObjectListAndSearchAO actual = irodsFileSystem
+				.getIRODSAccessObjectFactory()
+				.getCollectionAndDataObjectListAndSearchAO(irodsAccount);
+		List<CollectionAndDataObjectListingEntry> entries = actual
+				.searchDataObjectsBasedOnName(searchTerm, 0);
+		Assert.assertNotNull(entries);
+		// seems to occasionally fail need to look at this, probably just a
+		// side-effect so accept >2 for now - mcc
+		Assert.assertTrue(entries.size() == 2);
+
 	}
 
 	@Test
@@ -972,7 +995,6 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
 
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
@@ -1023,7 +1045,6 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 		Assert.assertNotNull(entries);
 		Assert.assertEquals(4, entries.size());
 
-		irodsFileSystem.close();
 	}
 
 	@Test
@@ -1041,7 +1062,6 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
 		DataObjectAO dataObjectAO = irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
 		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
@@ -1055,15 +1075,15 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 		Object actual = listAndSearchAO
 				.getFullObjectForType(targetIrodsCollection + "/"
 						+ testFileName);
-		irodsFileSystem.close();
 		Assert.assertNotNull("object was null", actual);
 		boolean isDataObject = actual instanceof DataObject;
 		Assert.assertTrue("was not a data object", isDataObject);
 
 	}
-	
+
 	@Test
-	public void testGetFullObjectForTypeDataObjectEmbeddedPlusAndSpacesInDataName() throws Exception {
+	public void testGetFullObjectForTypeDataObjectEmbeddedPlusAndSpacesInDataName()
+			throws Exception {
 
 		String testCollName = "2003_01_26_02 + band";
 		String testFileName = "106-0653_IMG.JPG";
@@ -1074,11 +1094,11 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH + "/" + testCollName);
+						testingProperties, IRODS_TEST_SUBDIR_PATH + "/"
+								+ testCollName);
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
 		DataObjectAO dataObjectAO = irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
 		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
@@ -1091,12 +1111,30 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 				.getCollectionAndDataObjectListAndSearchAO(irodsAccount);
 
 		Object actual = listAndSearchAO
-				.getFullObjectForType(targetIrodsCollection 
-						+ "/" + testFileName);
-		irodsFileSystem.close();
+				.getFullObjectForType(targetIrodsCollection + "/"
+						+ testFileName);
 		Assert.assertNotNull("object was null", actual);
 		boolean isDataObject = actual instanceof DataObject;
 		Assert.assertTrue("was not a data object", isDataObject);
+
+	}
+
+	@Test
+	public void testGetFullObjectForRoot() throws Exception {
+
+		String targetIrodsCollection = "/";
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		CollectionAndDataObjectListAndSearchAO listAndSearchAO = irodsFileSystem
+				.getIRODSAccessObjectFactory()
+				.getCollectionAndDataObjectListAndSearchAO(irodsAccount);
+
+		Object actual = listAndSearchAO
+				.getFullObjectForType(targetIrodsCollection);
+		Assert.assertNotNull("object was null", actual);
+		boolean isCollection = actual instanceof Collection;
+		Assert.assertTrue("was not a collection", isCollection);
 
 	}
 
@@ -1109,7 +1147,6 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
 
 		CollectionAndDataObjectListAndSearchAO listAndSearchAO = irodsFileSystem
 				.getIRODSAccessObjectFactory()
@@ -1117,7 +1154,6 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 
 		Object actual = listAndSearchAO
 				.getFullObjectForType(targetIrodsCollection);
-		irodsFileSystem.close();
 		Assert.assertNotNull("object was null", actual);
 		boolean isCollection = actual instanceof Collection;
 		Assert.assertTrue("was not a collection", isCollection);
@@ -1134,7 +1170,6 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
 
 		CollectionAndDataObjectListAndSearchAO listAndSearchAO = irodsFileSystem
 				.getIRODSAccessObjectFactory()
@@ -1150,7 +1185,6 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
 
 		CollectionAndDataObjectListAndSearchAO listAndSearchAO = irodsFileSystem
 				.getIRODSAccessObjectFactory()
@@ -1165,7 +1199,6 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
 
 		CollectionAndDataObjectListAndSearchAO listAndSearchAO = irodsFileSystem
 				.getIRODSAccessObjectFactory()
@@ -1185,7 +1218,6 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
 
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
@@ -1235,16 +1267,154 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 									.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY));
 		}
 
-		CollectionAndDataObjectListAndSearchAO actual = irodsFileSystem
-				.getIRODSAccessObjectFactory()
+		irodsFileSystem.getIRODSAccessObjectFactory()
 				.getCollectionAndDataObjectListAndSearchAO(irodsAccount);
-		@SuppressWarnings("unused")
-		List<CollectionAndDataObjectListingEntry> entries = actual
-				.listDataObjectsSharedWithAGivenUser("/", "test2", 0);
-		irodsFileSystem.close();
+
+		/*
+		 * List<CollectionAndDataObjectListingEntry> entries = actual
+		 * .listDataObjectsSharedWithAGivenUser("/", "test2", 0);
+		 */
 
 	}
-	
+
+	@Test(expected = IllegalArgumentException.class)
+	/**
+	 * collectionAndDataObjectListingEntry for a null path should give exception
+	 */
+	public void testCollectionAndDataObjectListingEntryForNullPath()
+			throws Exception {
+
+		String targetIrodsCollection = null;
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		CollectionAndDataObjectListAndSearchAO listAndSearchAO = irodsFileSystem
+				.getIRODSAccessObjectFactory()
+				.getCollectionAndDataObjectListAndSearchAO(irodsAccount);
+
+		listAndSearchAO
+				.getCollectionAndDataObjectListingEntryAtGivenAbsolutePath(targetIrodsCollection);
+
+	}
+
+	@Test(expected = FileNotFoundException.class)
+	/**
+	 * collectionAndDataObjectListingEntry for a non existent path should give FileNotFoundException
+	 */
+	public void testCollectionAndDataObjectListingEntryForNonExistentCollection()
+			throws Exception {
+
+		String targetIrodsCollection = "/this/is/not/a/path";
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		CollectionAndDataObjectListAndSearchAO listAndSearchAO = irodsFileSystem
+				.getIRODSAccessObjectFactory()
+				.getCollectionAndDataObjectListAndSearchAO(irodsAccount);
+
+		listAndSearchAO
+				.getCollectionAndDataObjectListingEntryAtGivenAbsolutePath(targetIrodsCollection);
+
+	}
+
+	@Test
+	/**
+	 * collectionAndDataObjectListingEntry as a collection at the given irods absolute path
+	 */
+	public void testCollectionAndDataObjectListingEntryForCollection()
+			throws Exception {
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		CollectionAndDataObjectListAndSearchAO listAndSearchAO = irodsFileSystem
+				.getIRODSAccessObjectFactory()
+				.getCollectionAndDataObjectListAndSearchAO(irodsAccount);
+
+		CollectionAndDataObjectListingEntry entry = listAndSearchAO
+				.getCollectionAndDataObjectListingEntryAtGivenAbsolutePath(targetIrodsCollection);
+		TestCase.assertNotNull("did not find collection", entry);
+	}
+
+	@Test
+	/**
+	 * collectionAndDataObjectListingEntry as a collection at the given irods absolute path
+	 */
+	public void testCollectionAndDataObjectListingEntryForCollectionWhenRoot()
+			throws Exception {
+
+		String targetIrodsCollection = "/";
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		CollectionAndDataObjectListAndSearchAO listAndSearchAO = irodsFileSystem
+				.getIRODSAccessObjectFactory()
+				.getCollectionAndDataObjectListAndSearchAO(irodsAccount);
+
+		CollectionAndDataObjectListingEntry entry = listAndSearchAO
+				.getCollectionAndDataObjectListingEntryAtGivenAbsolutePath(targetIrodsCollection);
+		TestCase.assertNotNull("did not find collection", entry);
+	}
+
+	@Test
+	/**
+	 * Obtain an entry at the given valid abs path that is a data object
+	 * @throws Exception
+	 */
+	public void testCollectionAndDataObjectListingEntryForDataObject()
+			throws Exception {
+
+		String testFileName = "testCollectionAndDataObjectListingEntryForDataObject.txt";
+		long fileSize = 2;
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String fileNameOrig = FileGenerator.generateFileOfFixedLengthGivenName(
+				absPath, testFileName, fileSize);
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		DataObjectAO dataObjectAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
+		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetIrodsCollection);
+		dataObjectAO.putLocalDataObjectToIRODS(new File(fileNameOrig),
+				irodsFile, true);
+		CollectionAndDataObjectListAndSearchAO listAndSearchAO = irodsFileSystem
+				.getIRODSAccessObjectFactory()
+				.getCollectionAndDataObjectListAndSearchAO(irodsAccount);
+
+		ObjStat objStat = listAndSearchAO
+				.retrieveObjectStatForPath(targetIrodsCollection + "/"
+						+ testFileName);
+		Assert.assertNotNull("null objStat returned", objStat);
+		CollectionAndDataObjectListingEntry entry = listAndSearchAO
+				.getCollectionAndDataObjectListingEntryAtGivenAbsolutePath(targetIrodsCollection
+						+ "/" + testFileName);
+		Assert.assertEquals("wrong path", objStat.getAbsolutePath(),
+				entry.getFormattedAbsolutePath());
+		Assert.assertEquals("wrong length", objStat.getObjSize(),
+				entry.getDataSize());
+		Assert.assertEquals("wrong created", objStat.getCreatedAt(),
+				entry.getCreatedAt());
+		Assert.assertEquals("wrong modified", objStat.getModifiedAt(),
+				entry.getModifiedAt());
+		Assert.assertEquals("wrong objType",
+				CollectionAndDataObjectListingEntry.ObjectType.DATA_OBJECT,
+				entry.getObjectType());
+
+	}
+
 	@Test
 	/**
 	 * objStat for normal iRODS collection
@@ -1257,47 +1427,50 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
 
 		CollectionAndDataObjectListAndSearchAO listAndSearchAO = irodsFileSystem
 				.getIRODSAccessObjectFactory()
 				.getCollectionAndDataObjectListAndSearchAO(irodsAccount);
 
-		ObjStat objStat = listAndSearchAO.retrieveObjectStatForPath(targetIrodsCollection);
-		TestCase.assertNotNull("null objStat returned", objStat);
-		TestCase.assertEquals("did not get correct path", targetIrodsCollection, objStat.getAbsolutePath());
-		TestCase.assertEquals("not a collection", ObjectType.COLLECTION, objStat.getObjectType());
-		TestCase.assertEquals("not a normal spec col type",  SpecColType.NORMAL, objStat.getSpecColType());
-		TestCase.assertTrue("did not set object id", objStat.getDataId() > 0);
-		TestCase.assertFalse("no owner name", objStat.getOwnerName().isEmpty());
-		TestCase.assertFalse("no owner zone", objStat.getOwnerZone().isEmpty());
-		TestCase.assertTrue("should have 0 len for collection", objStat.getObjSize() == 0);
+		ObjStat objStat = listAndSearchAO
+				.retrieveObjectStatForPath(targetIrodsCollection);
+		Assert.assertNotNull("null objStat returned", objStat);
+		Assert.assertEquals("did not get correct path", targetIrodsCollection,
+				objStat.getAbsolutePath());
+		Assert.assertEquals("not a collection", ObjectType.COLLECTION,
+				objStat.getObjectType());
+		Assert.assertEquals("not a normal spec col type", SpecColType.NORMAL,
+				objStat.getSpecColType());
+		Assert.assertTrue("did not set object id", objStat.getDataId() > 0);
+		Assert.assertFalse("no owner name", objStat.getOwnerName().isEmpty());
+		Assert.assertFalse("no owner zone", objStat.getOwnerZone().isEmpty());
+		Assert.assertTrue("should have 0 len for collection",
+				objStat.getObjSize() == 0);
 	}
-	
-	@Test
+
+	@Test(expected = FileNotFoundException.class)
 	public void testObjectStatForPathNotExists() throws Exception {
 
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH + "/idontexistreallyidont");
+						testingProperties, IRODS_TEST_SUBDIR_PATH
+								+ "/idontexistreallyidont");
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
 
 		CollectionAndDataObjectListAndSearchAO listAndSearchAO = irodsFileSystem
 				.getIRODSAccessObjectFactory()
 				.getCollectionAndDataObjectListAndSearchAO(irodsAccount);
 
-		ObjStat objStat = listAndSearchAO.retrieveObjectStatForPath(targetIrodsCollection);
-		TestCase.assertNull("null objStat expected for non-existent path", objStat);
+		listAndSearchAO.retrieveObjectStatForPath(targetIrodsCollection);
+
 	}
-	
-	@Test(expected=IllegalArgumentException.class)
+
+	@Test(expected = IllegalArgumentException.class)
 	public void testObjectStatForNullPath() throws Exception {
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
 
 		CollectionAndDataObjectListAndSearchAO listAndSearchAO = irodsFileSystem
 				.getIRODSAccessObjectFactory()
@@ -1305,12 +1478,11 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 
 		listAndSearchAO.retrieveObjectStatForPath(null);
 	}
-	
-	@Test(expected=IllegalArgumentException.class)
+
+	@Test(expected = IllegalArgumentException.class)
 	public void testObjectStatForEmptyPath() throws Exception {
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
 
 		CollectionAndDataObjectListAndSearchAO listAndSearchAO = irodsFileSystem
 				.getIRODSAccessObjectFactory()
@@ -1318,13 +1490,12 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 
 		listAndSearchAO.retrieveObjectStatForPath("");
 	}
-	
-	@Test(expected=IllegalArgumentException.class)
+
+	@Test(expected = IllegalArgumentException.class)
 	public void testObjectStatNullPath() throws Exception {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
 
 		CollectionAndDataObjectListAndSearchAO listAndSearchAO = irodsFileSystem
 				.getIRODSAccessObjectFactory()
@@ -1333,13 +1504,12 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 		listAndSearchAO.retrieveObjectStatForPath(null);
 
 	}
-	
-	@Test(expected=IllegalArgumentException.class)
+
+	@Test(expected = IllegalArgumentException.class)
 	public void testObjectStatEmptyPath() throws Exception {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
 
 		CollectionAndDataObjectListAndSearchAO listAndSearchAO = irodsFileSystem
 				.getIRODSAccessObjectFactory()
@@ -1348,7 +1518,7 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 		listAndSearchAO.retrieveObjectStatForPath("");
 
 	}
-	
+
 	@Test
 	public void testObjStatForDataObject() throws Exception {
 
@@ -1365,7 +1535,6 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
 		DataObjectAO dataObjectAO = irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
 		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
@@ -1375,16 +1544,21 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 		CollectionAndDataObjectListAndSearchAO listAndSearchAO = irodsFileSystem
 				.getIRODSAccessObjectFactory()
 				.getCollectionAndDataObjectListAndSearchAO(irodsAccount);
-		
-		ObjStat objStat = listAndSearchAO.retrieveObjectStatForPath(targetIrodsCollection + "/" + testFileName);
-		TestCase.assertNotNull("null objStat returned", objStat);
-		TestCase.assertEquals("did not get correct path", targetIrodsCollection + "/" + testFileName, objStat.getAbsolutePath());
-		TestCase.assertEquals("not a collection", ObjectType.DATA_OBJECT, objStat.getObjectType());
-		TestCase.assertEquals("not a normal spec col type",  SpecColType.NORMAL, objStat.getSpecColType());
-		TestCase.assertTrue("did not set object id", objStat.getDataId() > 0);
-		TestCase.assertFalse("no owner name", objStat.getOwnerName().isEmpty());
-		TestCase.assertFalse("no owner zone", objStat.getOwnerZone().isEmpty());
-		TestCase.assertEquals("wrong file size", fileSize, objStat.getObjSize());
+
+		ObjStat objStat = listAndSearchAO
+				.retrieveObjectStatForPath(targetIrodsCollection + "/"
+						+ testFileName);
+		Assert.assertNotNull("null objStat returned", objStat);
+		Assert.assertEquals("did not get correct path", targetIrodsCollection
+				+ "/" + testFileName, objStat.getAbsolutePath());
+		Assert.assertEquals("not a collection", ObjectType.DATA_OBJECT,
+				objStat.getObjectType());
+		Assert.assertEquals("not a normal spec col type", SpecColType.NORMAL,
+				objStat.getSpecColType());
+		Assert.assertTrue("did not set object id", objStat.getDataId() > 0);
+		Assert.assertFalse("no owner name", objStat.getOwnerName().isEmpty());
+		Assert.assertFalse("no owner zone", objStat.getOwnerZone().isEmpty());
+		Assert.assertEquals("wrong file size", fileSize, objStat.getObjSize());
 	}
 
 }

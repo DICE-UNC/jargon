@@ -1,17 +1,41 @@
 package org.irods.jargon.core.connection;
 
+import org.irods.jargon.core.connection.auth.AuthenticationFactory;
 import org.irods.jargon.core.exception.JargonException;
 
 public interface IRODSProtocolManager {
 
 	/**
+	 * Get the factory object that will create various authentication methods on
+	 * demand
+	 * 
+	 * @return {@link AuthenticationFactory} that will create objects that can
+	 *         authenticate <code>iRODSAccount</code>s
+	 */
+	AuthenticationFactory getAuthenticationFactory();
+
+	/**
+	 * Inject a factory that will be used to authentication
+	 * <code>IRODSAccount</code>s when a new connection needs to be made
+	 * 
+	 * @param authenticationFactory
+	 *            {@link AuthenticationFactory} that will create objects that
+	 *            can authenticate <code>iRODSAccount</code>s
+	 */
+	void setAuthenticationFactory(
+			final AuthenticationFactory authenticationFactory);
+
+	/**
 	 * For an account provided by the caller, return an open IRODS connection.
 	 * This may be created new, cached from previous connection by the same
 	 * user, or from a pool.
-	 * @param pipelineConfiguration  {@link PipelineConfiguration} that tunes the i/o pipline and other connection options
+	 * 
+	 * @param pipelineConfiguration
+	 *            {@link PipelineConfiguration} that tunes the i/o pipeline and
+	 *            other connection options
 	 */
-	IRODSCommands getIRODSProtocol(
-			final IRODSAccount irodsAccount, PipelineConfiguration pipelineConfiguration) throws JargonException;
+	IRODSCommands getIRODSProtocol(final IRODSAccount irodsAccount,
+			PipelineConfiguration pipelineConfiguration) throws JargonException;
 
 	/**
 	 * This method is called by a client when the connection is no longer
@@ -21,8 +45,8 @@ public interface IRODSProtocolManager {
 	 *            an <code>IRODSConnection</code> that represents an open
 	 *            session with IRODS that is to be returned
 	 */
-	void returnIRODSConnection(
-			IRODSManagedConnection irodsConnection) throws JargonException;
+	void returnIRODSConnection(IRODSManagedConnection irodsConnection)
+			throws JargonException;
 
 	/**
 	 * A connection is returned to the connection manager with an IO Exception.

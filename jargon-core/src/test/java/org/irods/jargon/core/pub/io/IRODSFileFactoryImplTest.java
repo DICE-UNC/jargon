@@ -109,7 +109,7 @@ public class IRODSFileFactoryImplTest {
 		irodsSession.closeSession();
 		Assert.assertNotNull(irodsFile);
 	}
-	
+
 	@Test
 	public final void testCreateFileByUriNoUserInfo() throws Exception {
 		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager

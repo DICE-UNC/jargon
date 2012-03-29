@@ -24,10 +24,11 @@ public class TransferStatusCallbackListenerTestingImplementation implements
 	private int replicateCallbackCtr = 0;
 	private int overallCallbackCtr = 0;
 	private int intraFileCallbackCtr = 0;
-	
+
 	private int pauseAfter = 0;
 	private int cancelAfter = 0;
 	private TransferControlBlock transferControlBlock = null;
+	private TransferStatusCallbackListener.CallbackResponse forceOption = TransferStatusCallbackListener.CallbackResponse.NO_FOR_ALL;
 
 	private boolean cancelEncountered = false;
 	private boolean pauseEncountered = false;
@@ -48,14 +49,16 @@ public class TransferStatusCallbackListenerTestingImplementation implements
 	@Override
 	public synchronized void statusCallback(final TransferStatus transferStatus)
 			throws JargonException {
-		
+
 		if (transferStatus.isIntraFileStatusReport()) {
 			intraFileCallbackCtr++;
 		}
 
-		if (transferStatus.getTransferType() == TransferType.GET && transferStatus.getTransferState() == TransferState.IN_PROGRESS_COMPLETE_FILE) {
+		if (transferStatus.getTransferType() == TransferType.GET
+				&& transferStatus.getTransferState() == TransferState.IN_PROGRESS_COMPLETE_FILE) {
 			getCallbackCtr++;
-		} else if (transferStatus.getTransferType() == TransferType.PUT &&  transferStatus.getTransferState() == TransferState.IN_PROGRESS_COMPLETE_FILE) {
+		} else if (transferStatus.getTransferType() == TransferType.PUT
+				&& transferStatus.getTransferState() == TransferState.IN_PROGRESS_COMPLETE_FILE) {
 			putCallbackCtr++;
 		} else if (transferStatus.getTransferType() == TransferType.REPLICATE) {
 			replicateCallbackCtr++;
@@ -163,6 +166,20 @@ public class TransferStatusCallbackListenerTestingImplementation implements
 	 */
 	public int getIntraFileCallbackCtr() {
 		return intraFileCallbackCtr;
+	}
+
+	@Override
+	public CallbackResponse transferAsksWhetherToForceOperation(
+			String irodsAbsolutePath, boolean isCollection) {
+		return forceOption;
+	}
+
+	public CallbackResponse getForceOption() {
+		return forceOption;
+	}
+
+	public void setForceOption(CallbackResponse forceOption) {
+		this.forceOption = forceOption;
 	}
 
 }

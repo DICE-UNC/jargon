@@ -22,8 +22,6 @@ import org.slf4j.LoggerFactory;
 public class IRODSFileReader extends Reader {
 
 	private final transient IRODSFileInputStream irodsFileInputStream;
-	@SuppressWarnings("unused")
-	private final transient IRODSFileFactory irodsFileFactory;
 	public static Logger log = LoggerFactory.getLogger(IRODSFileReader.class);
 	private final String connectionEncoding;
 
@@ -61,7 +59,6 @@ public class IRODSFileReader extends Reader {
 					+ irodsFile.getAbsolutePath());
 		}
 
-		this.irodsFileFactory = irodsFileFactory;
 		this.connectionEncoding = irodsFileInputStream.getFileIOOperations()
 				.getIRODSSession()
 				.buildPipelineConfigurationBasedOnJargonProperties()

@@ -7,6 +7,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.DefaultIntraFileProgressCallbackListener;
@@ -47,12 +48,13 @@ public final class ParallelGetFileTransferStrategy extends
 	 * @param localFile
 	 *            <code>File</code> representing the local file
 	 * @param irodsAccessObjectFactory
-	 *            {@link IRODSAccessObjectFactory} for the session. 
-	 *
-	 * @param transferLength <code>long</code> with the total length of the transfer
-	 * @param
-	 *            transferControlBlock {@link TransferControlBlock} that
-	 *            controls and keeps track of the transfer operation, required.
+	 *            {@link IRODSAccessObjectFactory} for the session.
+	 * 
+	 * @param transferLength
+	 *            <code>long</code> with the total length of the transfer
+	 * @param transferControlBlock
+	 *            {@link TransferControlBlock} that controls and keeps track of
+	 *            the transfer operation, required.
 	 * @param transferStatusCallbackListener
 	 *            {@link TransferStatusCallbackListener} or <code>null</code> if
 	 *            not desired. This can receive call-backs on the status of the
@@ -76,7 +78,7 @@ public final class ParallelGetFileTransferStrategy extends
 	private ParallelGetFileTransferStrategy(final String host, final int port,
 			final int numberOfThreads, final int password,
 			final File localFile,
-			final IRODSAccessObjectFactory irodsAccessObjectFactory, 
+			final IRODSAccessObjectFactory irodsAccessObjectFactory,
 			final long transferLength,
 			final TransferControlBlock transferControlBlock,
 			final TransferStatusCallbackListener transferStatusCallbackListener)
@@ -85,17 +87,22 @@ public final class ParallelGetFileTransferStrategy extends
 		super(host, port, numberOfThreads, password, localFile,
 				irodsAccessObjectFactory, transferLength, transferControlBlock,
 				transferStatusCallbackListener);
-		
-		
-		log.info("transfer options in transfer control block:{}", transferControlBlock.getTransferOptions());
-		
+
+		log.info("transfer options in transfer control block:{}",
+				transferControlBlock.getTransferOptions());
+
 		if (transferStatusCallbackListener == null) {
 			log.info("null transferStatusCallbackListener");
 		}
-		
-		if (transferControlBlock.getTransferOptions().isIntraFileStatusCallbacks() && transferStatusCallbackListener != null) {
+
+		if (transferControlBlock.getTransferOptions()
+				.isIntraFileStatusCallbacks()
+				&& transferStatusCallbackListener != null) {
 			log.info("will do intra-file status callbacks from transfer");
-			this.setConnectionProgressStatusListener(DefaultIntraFileProgressCallbackListener.instance(TransferStatus.TransferType.GET, getTransferLength(), transferControlBlock, transferStatusCallbackListener));
+			this.setConnectionProgressStatusListener(DefaultIntraFileProgressCallbackListener
+					.instance(TransferStatus.TransferType.GET,
+							getTransferLength(), transferControlBlock,
+							transferStatusCallbackListener));
 		} else {
 			log.info("transfer status callbacks will not be processed");
 		}
@@ -114,8 +121,10 @@ public final class ParallelGetFileTransferStrategy extends
 		ExecutorService executor = getIrodsAccessObjectFactory()
 				.getIrodsSession().getParallelTransferThreadPool();
 		if (executor == null) {
-			log.info("no pool available, transfer using standard Threads");
-			transferWithoutExecutor();
+			log.info("no pool available, transfer using single executor");
+			ExecutorService executorService = Executors
+					.newFixedThreadPool(numberOfThreads);
+			transferWithExecutor(executorService);
 		} else {
 			log.info("transfer via executor");
 			transferWithExecutor(executor);
@@ -143,64 +152,6 @@ public final class ParallelGetFileTransferStrategy extends
 		}
 	}
 
-	/**
-	 * @throws JargonException
-	 */
-	private void transferWithoutExecutor() throws JargonException {
-		final List<Thread> transferRunningThreads = new ArrayList<Thread>();
-		final List<ParallelGetTransferThread> parallelGetTransferThreads = new ArrayList<ParallelGetTransferThread>();
-
-		for (int i = 0; i < numberOfThreads; i++) {
-			final ParallelGetTransferThread parallelTransfer = ParallelGetTransferThread
-					.instance(this);
-			parallelGetTransferThreads.add(parallelTransfer);
-
-			Thread parallelTransferThread = new Thread(parallelTransfer);
-			log.info("created parallel transfer thread for thread: {}",
-					parallelTransferThread.getName());
-			transferRunningThreads.add(parallelTransferThread);
-		}
-
-		for (Thread parallelTransferThreadToStart : transferRunningThreads) {
-			parallelTransferThreadToStart.start();
-			log.info("started parallel transfer thread for thread: {}",
-					parallelTransferThreadToStart.getName());
-		}
-
-		for (Thread parallelTransferThreadToJoin : transferRunningThreads) {
-			if (parallelTransferThreadToJoin.isAlive()) {
-				try {
-					parallelTransferThreadToJoin.join();
-				} catch (InterruptedException e) {
-					log.error(
-							"parallel transfer thread {} was interrupted when attempting to join",
-							parallelTransferThreadToJoin.getName(), e);
-					throw new JargonException(
-							"parallel transfer thread interrupted when attempting to join");
-				}
-			}
-
-		}
-
-		log.info("closing threads...");
-
-		for (ParallelGetTransferThread parallelGetTransferThread : parallelGetTransferThreads) {
-			parallelGetTransferThread.close();
-		}
-
-		log.info("parallel transfer complete, checking for any errors in the threads...");
-
-		for (ParallelGetTransferThread parallelGetTransferThread : parallelGetTransferThreads) {
-			if (parallelGetTransferThread.getExceptionInTransfer() != null) {
-				log.error("exeption detected in file transfer thread:{}",
-						parallelGetTransferThread.getExceptionInTransfer());
-				throw new JargonException(
-						"exception caught in transfer thread",
-						parallelGetTransferThread.getExceptionInTransfer());
-			}
-		}
-	}
-	
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
@@ -218,6 +169,5 @@ public final class ParallelGetFileTransferStrategy extends
 		return sb.toString();
 
 	}
-
 
 }

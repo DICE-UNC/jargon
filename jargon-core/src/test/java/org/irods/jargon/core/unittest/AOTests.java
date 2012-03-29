@@ -7,10 +7,15 @@ import org.irods.jargon.core.pub.DataObjectAOImplTest;
 import org.irods.jargon.core.pub.DataObjectAuditAOImplTest;
 import org.irods.jargon.core.pub.DataTransferOperationsImplTest;
 import org.irods.jargon.core.pub.EnvironmentalInfoAOTest;
+import org.irods.jargon.core.pub.FederatedCollectionAOImplTest;
 import org.irods.jargon.core.pub.FederatedCollectionAndDataObjectListAndSearchAOImplTest;
+import org.irods.jargon.core.pub.FederatedDataTransferOperationsImplTest;
+import org.irods.jargon.core.pub.FederatedIRODSGenQueryExecutorImplTest;
+import org.irods.jargon.core.pub.FederatedUserAOTest;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactoryImplTest;
 import org.irods.jargon.core.pub.IRODSFileSystemTest;
 import org.irods.jargon.core.pub.IRODSGenQueryExecutorImplTest;
+import org.irods.jargon.core.pub.ProtocolExtensionPointImplTest;
 import org.irods.jargon.core.pub.QuotaAOImplTest;
 import org.irods.jargon.core.pub.RemoteExecutionOfCommandsAOImplTest;
 import org.irods.jargon.core.pub.ResourceAOTest;
@@ -20,6 +25,7 @@ import org.irods.jargon.core.pub.Stream2StreamAOImplTest;
 import org.irods.jargon.core.pub.UserAOTest;
 import org.irods.jargon.core.pub.UserGroupAOImplTest;
 import org.irods.jargon.core.pub.ZoneAOTest;
+import org.irods.jargon.core.pub.aohelper.UserAOHelperTest;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
@@ -36,10 +42,17 @@ import org.junit.runners.Suite;
 		BulkFileOperationsAOImplTest.class,
 		SimpleQueryExecutorAOImplTest.class, Stream2StreamAOImplTest.class,
 		QuotaAOImplTest.class, DataObjectAuditAOImplTest.class,
-		FederatedCollectionAndDataObjectListAndSearchAOImplTest.class })
-		/**
-		 * Suite to run Access Object tests in org.irods.jargon.pub.*
-		 */
+		FederatedCollectionAndDataObjectListAndSearchAOImplTest.class,
+		FederatedIRODSGenQueryExecutorImplTest.class,
+		FederatedDataTransferOperationsImplTest.class, UserAOHelperTest.class,
+		FederatedUserAOTest.class, FederatedCollectionAOImplTest.class,
+		ProtocolExtensionPointImplTest.class })
+/**
+ * Suite to run Access Object tests in org.irods.jargon.pub.*
+ * <p/>
+ * Note that 'Federated*' tests will run, but a check prevents the test from actually doing anything unless the federated zone
+ * has been set up per the test-scripts/fedTestSetup.txt file
+ */
 public class AOTests {
 
 }

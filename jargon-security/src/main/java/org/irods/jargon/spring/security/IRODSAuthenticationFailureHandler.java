@@ -51,7 +51,7 @@ public class IRODSAuthenticationFailureHandler implements
 			throw new ServletException("null or missing redirect url");
 		}
 
-		request.setAttribute("login_error", "this was a login error");
+		request.setAttribute("login_error", exception.getMessage());
 
 		request.setAttribute("host", request.getParameter("host"));
 		request.setAttribute("port", request.getParameter("port"));

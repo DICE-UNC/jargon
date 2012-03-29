@@ -114,16 +114,16 @@ public class RemoteExecutionBinaryResultInputStream extends InputStream {
 				return -1;
 			}
 
-			int buffLength = message.getTag(IRODSConstants.MsgHeader_PI).getTag(IRODSConstants.bsLen)
-					.getIntValue();
+			int buffLength = message.getTag(IRODSConstants.MsgHeader_PI)
+					.getTag(IRODSConstants.bsLen).getIntValue();
 
 			// read the message byte stream for the length that the header
 			// indicates
 
 			int read = irodsCommands.read(b, off, buffLength);
 
-			if (read != message.getTag(IRODSConstants.MsgHeader_PI).getTag(IRODSConstants.intInfo)
-					.getIntValue()) {
+			if (read != message.getTag(IRODSConstants.MsgHeader_PI)
+					.getTag(IRODSConstants.intInfo).getIntValue()) {
 
 				log.error("did not read length equal to response length, expected"
 						+ buffLength + " bytes actually read:" + read);

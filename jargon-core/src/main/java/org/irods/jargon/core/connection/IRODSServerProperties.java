@@ -71,10 +71,12 @@ public class IRODSServerProperties {
 	public String getRodsZone() {
 		return rodsZone;
 	}
-	
+
 	/**
 	 * Does the server (based on version) support connection re-routing?
-	 * @return <code>boolean</code> of <code>true</code> if re-routing is supported.
+	 * 
+	 * @return <code>boolean</code> of <code>true</code> if re-routing is
+	 *         supported.
 	 */
 	public boolean isSupportsConnectionRerouting() {
 		boolean supports = false;

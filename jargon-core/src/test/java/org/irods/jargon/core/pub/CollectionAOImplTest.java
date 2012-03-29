@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Properties;
 
 import junit.framework.Assert;
-import junit.framework.TestCase;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSServerProperties;
@@ -34,6 +33,7 @@ import org.irods.jargon.testutils.icommandinvoke.icommands.ImetaRemoveCommand;
 import org.irods.jargon.testutils.icommandinvoke.icommands.ImkdirCommand;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class CollectionAOImplTest {
@@ -48,9 +48,6 @@ public class CollectionAOImplTest {
 
 	private static org.irods.jargon.testutils.IRODSTestSetupUtilities irodsTestSetupUtilities = null;
 
-	@SuppressWarnings("unused")
-	private static org.irods.jargon.testutils.AssertionHelper assertionHelper = null;
-
 	private static IRODSFileSystem irodsFileSystem = null;
 
 	@BeforeClass
@@ -63,7 +60,6 @@ public class CollectionAOImplTest {
 		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
 		irodsTestSetupUtilities
 				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
-		assertionHelper = new org.irods.jargon.testutils.AssertionHelper();
 		irodsFileSystem = IRODSFileSystem.instance();
 	}
 
@@ -679,7 +675,7 @@ public class CollectionAOImplTest {
 		List<MetaDataAndDomainData> actualMetadata = collectionAO
 				.findMetadataValuesForCollection(dirFile.getAbsolutePath());
 
-		TestCase.assertEquals("did not get back metadata", 1,
+		Assert.assertEquals("did not get back metadata", 1,
 				actualMetadata.size());
 
 	}
@@ -757,14 +753,157 @@ public class CollectionAOImplTest {
 		List<MetaDataAndDomainData> metadata = collectionAO
 				.findMetadataValuesForCollection(targetIrodsCollection, 0);
 
-		TestCase.assertEquals("should only be one avu entry", 1,
-				metadata.size());
+		Assert.assertEquals("should only be one avu entry", 1, metadata.size());
 
 		for (MetaDataAndDomainData metadataEntry : metadata) {
 			Assert.assertEquals("did not find attrib name", expectedAttribName,
 					metadataEntry.getAvuAttribute());
 			Assert.assertEquals("did not find attrib val", expectedNewValue,
 					metadataEntry.getAvuValue());
+		}
+
+	}
+
+	/**
+	 * [#677] strip quotes, commas from tags
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void testAddAvuWithEmbedededQuoteInValue() throws Exception {
+		String testDirName = "testAddAvuWithEmbedededQuoteInValue";
+		String expectedAttribName = "testAddAvuWithEmbedededQuoteInValue1\"";
+		String expectedAttribValue = "testAddAvuWithEmbedededQuoteInValue1";
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
+								+ testDirName);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+		CollectionAO collectionAO = accessObjectFactory
+				.getCollectionAO(irodsAccount);
+		IRODSFile targetCollectionAsFile = irodsFileSystem.getIRODSFileFactory(
+				irodsAccount).instanceIRODSFile(targetIrodsCollection);
+		targetCollectionAsFile.mkdirs();
+
+		AvuData dataToAdd = AvuData.instance(expectedAttribName,
+				expectedAttribValue, "");
+		collectionAO.addAVUMetadata(targetIrodsCollection, dataToAdd);
+
+		List<MetaDataAndDomainData> metadata = collectionAO
+				.findMetadataValuesForCollection(targetIrodsCollection, 0);
+
+		Assert.assertEquals("should only be one avu entry", 1, metadata.size());
+
+		for (MetaDataAndDomainData metadataEntry : metadata) {
+			Assert.assertEquals("did not find attrib name", expectedAttribName,
+					metadataEntry.getAvuAttribute());
+		}
+
+	}
+
+	/**
+	 * [#662] mod avu when setting a present units value to blank does not work
+	 * 
+	 * Currently ignored, seeing if it will be fixed in iRODS - MCC
+	 * 
+	 * @throws Exception
+	 */
+	@Ignore
+	public void testOverwriteAvuMetadataWithABlankUnit() throws Exception {
+		String testDirName = "testOverwriteAvuMetadataWithABlankUnit";
+		String expectedAttribName = "testOverwriteAvuMetadataAttrib1";
+		String expectedAttribValue = "testOverwriteAvuMetadataValue1";
+		String expectedAttribUnit = "testOverwriteAvuMetadataUnit1";
+		String expectedNewUnit = "";
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
+								+ testDirName);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+		CollectionAO collectionAO = accessObjectFactory
+				.getCollectionAO(irodsAccount);
+		IRODSFile targetCollectionAsFile = irodsFileSystem.getIRODSFileFactory(
+				irodsAccount).instanceIRODSFile(targetIrodsCollection);
+		targetCollectionAsFile.mkdirs();
+
+		AvuData dataToAdd = AvuData.instance(expectedAttribName,
+				expectedAttribValue, expectedAttribUnit);
+		collectionAO.addAVUMetadata(targetIrodsCollection, dataToAdd);
+		AvuData overwriteAvuData = AvuData.instance(expectedAttribName,
+				expectedAttribValue, expectedNewUnit);
+
+		collectionAO.modifyAVUMetadata(targetIrodsCollection, dataToAdd,
+				overwriteAvuData);
+
+		List<MetaDataAndDomainData> metadata = collectionAO
+				.findMetadataValuesForCollection(targetIrodsCollection, 0);
+
+		Assert.assertEquals("should only be one avu entry", 1, metadata.size());
+
+		for (MetaDataAndDomainData metadataEntry : metadata) {
+			Assert.assertEquals("did not find attrib name", expectedAttribName,
+					metadataEntry.getAvuAttribute());
+			Assert.assertEquals("did not find new Unit", expectedNewUnit,
+					metadataEntry.getAvuUnit());
+		}
+
+	}
+
+	@Test
+	public void testOverwriteAvuMetadataWithADifferentUnit() throws Exception {
+		String testDirName = "testOverwriteAvuMetadataWithADifferentUnit";
+		String expectedAttribName = "testOverwriteAvuMetadataAttrib1";
+		String expectedAttribValue = "testOverwriteAvuMetadataValue1";
+		String expectedAttribUnit = "testOverwriteAvuMetadataUnit1";
+		String expectedNewUnit = "testOverwriteAvuMetadataDifferentUnit1";
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
+								+ testDirName);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+		CollectionAO collectionAO = accessObjectFactory
+				.getCollectionAO(irodsAccount);
+		IRODSFile targetCollectionAsFile = irodsFileSystem.getIRODSFileFactory(
+				irodsAccount).instanceIRODSFile(targetIrodsCollection);
+		targetCollectionAsFile.mkdirs();
+
+		AvuData dataToAdd = AvuData.instance(expectedAttribName,
+				expectedAttribValue, expectedAttribUnit);
+		collectionAO.addAVUMetadata(targetIrodsCollection, dataToAdd);
+		AvuData overwriteAvuData = AvuData.instance(expectedAttribName,
+				expectedAttribValue, expectedNewUnit);
+
+		collectionAO.modifyAVUMetadata(targetIrodsCollection, dataToAdd,
+				overwriteAvuData);
+
+		List<MetaDataAndDomainData> metadata = collectionAO
+				.findMetadataValuesForCollection(targetIrodsCollection, 0);
+
+		Assert.assertEquals("should only be one avu entry", 1, metadata.size());
+
+		for (MetaDataAndDomainData metadataEntry : metadata) {
+			Assert.assertEquals("did not find attrib name", expectedAttribName,
+					metadataEntry.getAvuAttribute());
+			Assert.assertEquals("did not find new Unit", expectedNewUnit,
+					metadataEntry.getAvuUnit());
 		}
 
 	}
@@ -803,8 +942,7 @@ public class CollectionAOImplTest {
 		List<MetaDataAndDomainData> metadata = collectionAO
 				.findMetadataValuesForCollection(targetIrodsCollection, 0);
 
-		TestCase.assertEquals("should only be one avu entry", 1,
-				metadata.size());
+		Assert.assertEquals("should only be one avu entry", 1, metadata.size());
 
 		for (MetaDataAndDomainData metadataEntry : metadata) {
 			Assert.assertEquals("did not find attrib name", expectedAttribName,
@@ -1037,7 +1175,7 @@ public class CollectionAOImplTest {
 
 		List<MetaDataAndDomainData> queryResults = collectionAO
 				.findMetadataValuesByMetadataQueryWithAdditionalWhere(
-						queryElements, sb.toString());
+						queryElements, sb.toString(), 0);
 
 		Assert.assertFalse("no query result returned", queryResults.isEmpty());
 	}
@@ -1127,7 +1265,7 @@ public class CollectionAOImplTest {
 				.getCollectionAO(irodsAccount);
 		Collection collection = collectionAO
 				.findByAbsolutePath(targetIrodsCollection);
-		TestCase.assertNotNull("did not find the collection, was null",
+		Assert.assertNotNull("did not find the collection, was null",
 				collection);
 	}
 
@@ -1232,7 +1370,7 @@ public class CollectionAOImplTest {
 				.countAllFilesUnderneathTheGivenCollection(destFile
 						.getAbsolutePath());
 
-		TestCase.assertEquals("did not get expected file count", 2, count);
+		Assert.assertEquals("did not get expected file count", 2, count);
 
 	}
 
@@ -1345,7 +1483,7 @@ public class CollectionAOImplTest {
 		IRODSFile irodsFileForSecondaryUser = irodsFileSystem
 				.getIRODSFileFactory(secondaryAccount).instanceIRODSFile(
 						targetIrodsCollection);
-		TestCase.assertTrue(irodsFileForSecondaryUser.canRead());
+		Assert.assertTrue(irodsFileForSecondaryUser.canRead());
 
 	}
 
@@ -1390,7 +1528,7 @@ public class CollectionAOImplTest {
 		IRODSFile irodsFileForSecondaryUser = irodsFileSystem
 				.getIRODSFileFactory(secondaryAccount).instanceIRODSFile(
 						targetIrodsCollection);
-		TestCase.assertTrue(irodsFileForSecondaryUser.canRead());
+		Assert.assertTrue(irodsFileForSecondaryUser.canRead());
 
 	}
 
@@ -1435,7 +1573,7 @@ public class CollectionAOImplTest {
 		IRODSFile irodsFileForSecondaryUser = irodsFileSystem
 				.getIRODSFileFactory(secondaryAccount).instanceIRODSFile(
 						targetIrodsCollection);
-		TestCase.assertTrue("user should be able to write",
+		Assert.assertTrue("user should be able to write",
 				irodsFileForSecondaryUser.canWrite());
 
 	}
@@ -1481,7 +1619,7 @@ public class CollectionAOImplTest {
 		IRODSFile irodsFileForSecondaryUser = irodsFileSystem
 				.getIRODSFileFactory(secondaryAccount).instanceIRODSFile(
 						targetIrodsCollection);
-		TestCase.assertTrue("user should be ownder",
+		Assert.assertTrue("user should be ownder",
 				irodsFileForSecondaryUser.canWrite());
 
 	}
@@ -1530,7 +1668,7 @@ public class CollectionAOImplTest {
 				.getPermissionForCollection(targetIrodsCollection,
 						secondaryAccount.getUserName(), "");
 
-		TestCase.assertTrue("user should be owner",
+		Assert.assertTrue("user should be owner",
 				userAccessPermission == FilePermissionEnum.OWN);
 
 		collectionAORods
@@ -1542,7 +1680,7 @@ public class CollectionAOImplTest {
 						true);
 		userAccessPermission = collectionAO.getPermissionForCollection(
 				targetIrodsCollection, secondaryAccount.getUserName(), "");
-		TestCase.assertTrue("user should not be owner",
+		Assert.assertTrue("user should not be owner",
 				userAccessPermission == FilePermissionEnum.NONE);
 	}
 
@@ -1602,7 +1740,7 @@ public class CollectionAOImplTest {
 		IRODSFile irodsFileForSecondaryUser = irodsFileSystem
 				.getIRODSFileFactory(secondaryAccount).instanceIRODSFile(
 						targetIrodsCollection);
-		TestCase.assertTrue(irodsFileForSecondaryUser.canWrite());
+		Assert.assertTrue(irodsFileForSecondaryUser.canWrite());
 
 	}
 
@@ -1644,7 +1782,7 @@ public class CollectionAOImplTest {
 		int permissions = irodsFileSystemAO
 				.getDirectoryPermissions(irodsFileForSecondaryUser);
 
-		TestCase.assertTrue(permissions >= IRODSFile.OWN_PERMISSIONS);
+		Assert.assertTrue(permissions >= IRODSFile.OWN_PERMISSIONS);
 
 	}
 
@@ -1684,7 +1822,7 @@ public class CollectionAOImplTest {
 				.getPermissionForCollection(targetIrodsCollection,
 						secondaryAccount.getUserName(), "");
 
-		TestCase.assertEquals("should have found own permissions",
+		Assert.assertEquals("should have found own permissions",
 				FilePermissionEnum.OWN, enumVal);
 
 	}
@@ -1723,7 +1861,7 @@ public class CollectionAOImplTest {
 		FilePermissionEnum enumVal = collectionAO.getPermissionForCollection(
 				targetIrodsCollection, secondaryAccount.getUserName(), "");
 
-		TestCase.assertEquals("should have found read permissions",
+		Assert.assertEquals("should have found read permissions",
 				FilePermissionEnum.READ, enumVal);
 
 	}
@@ -1752,7 +1890,7 @@ public class CollectionAOImplTest {
 		boolean isInherit = collectionAO
 				.isCollectionSetForPermissionInheritance(targetIrodsCollection);
 
-		TestCase.assertTrue("collection should have inherit set", isInherit);
+		Assert.assertTrue("collection should have inherit set", isInherit);
 
 	}
 
@@ -1782,7 +1920,7 @@ public class CollectionAOImplTest {
 		boolean isInherit = collectionAO
 				.isCollectionSetForPermissionInheritance(targetIrodsCollection);
 
-		TestCase.assertFalse("collection should have inherit turned back off",
+		Assert.assertFalse("collection should have inherit turned back off",
 				isInherit);
 
 	}
@@ -1815,9 +1953,9 @@ public class CollectionAOImplTest {
 
 		List<UserFilePermission> userFilePermissions = collectionAO
 				.listPermissionsForCollection(targetIrodsCollection);
-		TestCase.assertNotNull("got a null userFilePermissions",
+		Assert.assertNotNull("got a null userFilePermissions",
 				userFilePermissions);
-		TestCase.assertEquals("did not find the two permissions", 2,
+		Assert.assertEquals("did not find the two permissions", 2,
 				userFilePermissions.size());
 	}
 
@@ -1852,9 +1990,9 @@ public class CollectionAOImplTest {
 						targetIrodsCollection,
 						testingProperties
 								.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY));
-		TestCase.assertNotNull("got a null userFilePermission",
+		Assert.assertNotNull("got a null userFilePermission",
 				userFilePermission);
-		TestCase.assertEquals(
+		Assert.assertEquals(
 				"userName did not match expected",
 				testingProperties
 						.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY),
@@ -1890,7 +2028,7 @@ public class CollectionAOImplTest {
 
 		UserFilePermission userFilePermission = collectionAO
 				.getPermissionForUserName(targetIrodsCollection, "notausername");
-		TestCase.assertNull(
+		Assert.assertNull(
 				"got a userFilePermission when should have been null",
 				userFilePermission);
 

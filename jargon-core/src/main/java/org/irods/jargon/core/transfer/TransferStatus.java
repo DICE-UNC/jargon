@@ -176,8 +176,8 @@ public final class TransferStatus {
 			final long bytesTransfered) throws JargonException {
 
 		return new TransferStatus(transferType, null, "", "", "", totalSize,
-				bytesTransfered, 0, 0, TransferState.IN_PROGRESS_START_FILE, null, true,
-				"", "");
+				bytesTransfered, 0, 0, TransferState.IN_PROGRESS_START_FILE,
+				null, true, "", "");
 	}
 
 	/**

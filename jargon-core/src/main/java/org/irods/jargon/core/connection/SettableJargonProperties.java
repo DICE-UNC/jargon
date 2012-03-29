@@ -1,6 +1,3 @@
-/**
- * 
- */
 package org.irods.jargon.core.connection;
 
 import org.irods.jargon.core.exception.JargonException;
@@ -22,6 +19,7 @@ import org.irods.jargon.core.exception.JargonException;
 public class SettableJargonProperties implements JargonProperties {
 
 	private boolean useParallelTransfer = true;
+	private boolean useNIOForParallelTransfers = false;
 	private int maxParallelThreads = 4;
 	private int maxFilesAndDirsQueryMax = 5000;
 	private boolean useTransferThreadsPool = false;
@@ -38,11 +36,11 @@ public class SettableJargonProperties implements JargonProperties {
 	private int internalCacheBufferSize = 65535;
 	private int sendInputStreamBufferSize = 0;
 	private int localFileOutputStreamBufferSize = 0;
-	private int putBufferSize=4194304;
-	private int getBufferSize=4194304;
-	private int inputToOutputCopyBufferByteSize = 8192;
+	private int localFileInputStreamBufferSize = 0;
+	private int putBufferSize = 4194304;
+	private int getBufferSize = 4194304;
+	private int inputToOutputCopyBufferByteSize = 65536;
 	private String encoding = "UTF-8";
-
 
 	/**
 	 * Construct a default properties set based on the provided initial set of
@@ -76,6 +74,8 @@ public class SettableJargonProperties implements JargonProperties {
 		}
 
 		this.useParallelTransfer = jargonProperties.isUseParallelTransfer();
+		this.useNIOForParallelTransfers = jargonProperties
+				.isUseNIOForParallelTransfers();
 		this.maxFilesAndDirsQueryMax = jargonProperties
 				.getMaxFilesAndDirsQueryMax();
 		this.allowPutGetResourceRedirects = jargonProperties
@@ -92,15 +92,25 @@ public class SettableJargonProperties implements JargonProperties {
 		this.maxParallelThreads = jargonProperties.getMaxParallelThreads();
 		this.transferThreadPoolTimeoutMillis = jargonProperties
 				.getTransferThreadPoolTimeoutMillis();
-		this.transferThreadPoolMaxSimultaneousTransfers = jargonProperties.getTransferThreadPoolMaxSimultaneousTransfers();
-		this.internalInputStreamBufferSize = jargonProperties.getInternalInputStreamBufferSize();
-		this.internalOutputStreamBufferSize = jargonProperties.getInternalOutputStreamBufferSize();
-		this.internalCacheBufferSize =jargonProperties.getInternalCacheBufferSize();
-		this.sendInputStreamBufferSize = jargonProperties.getSendInputStreamBufferSize();
-		this.localFileOutputStreamBufferSize = jargonProperties.getLocalFileOutputStreamBufferSize();
+		this.transferThreadPoolMaxSimultaneousTransfers = jargonProperties
+				.getTransferThreadPoolMaxSimultaneousTransfers();
+		this.internalInputStreamBufferSize = jargonProperties
+				.getInternalInputStreamBufferSize();
+		this.internalOutputStreamBufferSize = jargonProperties
+				.getInternalOutputStreamBufferSize();
+		this.internalCacheBufferSize = jargonProperties
+				.getInternalCacheBufferSize();
+		this.sendInputStreamBufferSize = jargonProperties
+				.getSendInputStreamBufferSize();
+		this.localFileOutputStreamBufferSize = jargonProperties
+				.getLocalFileOutputStreamBufferSize();
+		this.localFileInputStreamBufferSize = jargonProperties
+				.getLocalFileInputStreamBufferSize();
 		this.putBufferSize = jargonProperties.getPutBufferSize();
 		this.getBufferSize = jargonProperties.getGetBufferSize();
 		this.encoding = jargonProperties.getEncoding();
+		this.inputToOutputCopyBufferByteSize = jargonProperties
+				.getInputToOutputCopyBufferByteSize();
 	}
 
 	/*
@@ -114,11 +124,27 @@ public class SettableJargonProperties implements JargonProperties {
 		return useParallelTransfer;
 	}
 
+	/**
+	 * Utilize parallel transfer algorithm for files above the transfer size
+	 * 
+	 * @param useParallelTransfer
+	 *            <code>boolean</code> of <code>true</code> if parallel
+	 *            transfers are allowed
+	 */
 	public synchronized void setUseParallelTransfer(
 			final boolean useParallelTransfer) {
 		this.useParallelTransfer = useParallelTransfer;
 	}
 
+	/**
+	 * Set the maximum number of threads allowed for parallel transfers. 0 means
+	 * use iRODS limit.
+	 * 
+	 * @param maxParallelThreads
+	 *            <code>int</code> with the maximum number of threads to use in
+	 *            a parallel transfer, with 0 meaning use the iRODS default set
+	 *            in rules.
+	 */
 	public synchronized void setMaxParallelThreads(final int maxParallelThreads) {
 		this.maxParallelThreads = maxParallelThreads;
 	}
@@ -289,7 +315,7 @@ public class SettableJargonProperties implements JargonProperties {
 	public synchronized int getIRODSSocketTimeout() {
 		return irodsSocketTimeout;
 	}
-	
+
 	public synchronized void setIRODSSocketTimeout(final int irodsSocketTimeout) {
 		this.irodsSocketTimeout = irodsSocketTimeout;
 	}
@@ -304,11 +330,11 @@ public class SettableJargonProperties implements JargonProperties {
 	public synchronized int getIRODSParallelTransferSocketTimeout() {
 		return irodsParallelSocketTimeout;
 	}
-	
-	public synchronized void setIRODSParallelTransferSocketTimeout(int irodsParallelSocketTimeout) {
+
+	public synchronized void setIRODSParallelTransferSocketTimeout(
+			final int irodsParallelSocketTimeout) {
 		this.irodsParallelSocketTimeout = irodsParallelSocketTimeout;
 	}
-
 
 	/*
 	 * (non-Javadoc)
@@ -388,6 +414,11 @@ public class SettableJargonProperties implements JargonProperties {
 		return localFileOutputStreamBufferSize;
 	}
 
+	@Override
+	public synchronized int getLocalFileInputStreamBufferSize() {
+		return localFileInputStreamBufferSize;
+	}
+
 	/**
 	 * @param transferThreadPoolMaxSimultaneousTransfers
 	 *            the transferThreadPoolMaxSimultaneousTransfers to set
@@ -442,89 +473,114 @@ public class SettableJargonProperties implements JargonProperties {
 		this.localFileOutputStreamBufferSize = localFileOutputStreamBufferSize;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.connection.JargonProperties#getIrodsSocketTimeout()
+	/**
+	 * @param localFileInputStremBufferSize
+	 *            the localFileInputStreamBufferSize to set
 	 */
-	@Override
-	public synchronized int getIrodsSocketTimeout() {
-		return irodsSocketTimeout;
+	public synchronized void setLocalFileInputStreamBufferSize(
+			final int localFileInputStreamBufferSize) {
+		this.localFileInputStreamBufferSize = localFileInputStreamBufferSize;
 	}
 
 	/**
-	 * @param irodsSocketTimeout the irodsSocketTimeout to set
+	 * @param irodsSocketTimeout
+	 *            the irodsSocketTimeout to set
 	 */
-	public synchronized void setIrodsSocketTimeout(int irodsSocketTimeout) {
+	public synchronized void setIrodsSocketTimeout(final int irodsSocketTimeout) {
 		this.irodsSocketTimeout = irodsSocketTimeout;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.connection.JargonProperties#getIrodsParallelSocketTimeout()
-	 */
-	@Override
-	public synchronized int getIrodsParallelSocketTimeout() {
-		return irodsParallelSocketTimeout;
-	}
-
 	/**
-	 * @param irodsParallelSocketTimeout the irodsParallelSocketTimeout to set
+	 * @param irodsParallelSocketTimeout
+	 *            the irodsParallelSocketTimeout to set
 	 */
 	public synchronized void setIrodsParallelSocketTimeout(
-			int irodsParallelSocketTimeout) {
+			final int irodsParallelSocketTimeout) {
 		this.irodsParallelSocketTimeout = irodsParallelSocketTimeout;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.irods.jargon.core.connection.JargonProperties#getPutBufferSize()
 	 */
 	@Override
-	public int getPutBufferSize() {
+	public synchronized int getPutBufferSize() {
 		return putBufferSize;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.irods.jargon.core.connection.JargonProperties#getGetBufferSize()
 	 */
 	@Override
-	public int getGetBufferSize() {
+	public synchronized int getGetBufferSize() {
 		return getBufferSize;
 	}
 
 	/**
-	 * @param putBufferSize the putBufferSize to set
+	 * @param putBufferSize
+	 *            the putBufferSize to set
 	 */
-	public synchronized void setPutBufferSize(int putBufferSize) {
+	public synchronized void setPutBufferSize(final int putBufferSize) {
 		this.putBufferSize = putBufferSize;
 	}
 
 	/**
-	 * @param getBufferSize the getBufferSize to set
+	 * @param getBufferSize
+	 *            the getBufferSize to set
 	 */
-	public synchronized void setGetBufferSize(int getBufferSize) {
+	public synchronized void setGetBufferSize(final int getBufferSize) {
 		this.getBufferSize = getBufferSize;
 	}
 
 	/**
-	 * @param inputToOutputCopyBufferByteSize the inputToOutputCopyBufferByteSize to set
+	 * @param inputToOutputCopyBufferByteSize
+	 *            the inputToOutputCopyBufferByteSize to set
 	 */
 	public synchronized void setInputToOutputCopyBufferByteSize(
-			int inputToOutputCopyBufferByteSize) {
+			final int inputToOutputCopyBufferByteSize) {
 		this.inputToOutputCopyBufferByteSize = inputToOutputCopyBufferByteSize;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.irods.jargon.core.connection.JargonProperties#getEncoding()
 	 */
 	@Override
 	public synchronized String getEncoding() {
 		return encoding;
 	}
-	
+
 	public void setEncoding(final String encoding) {
 		if (encoding == null || encoding.isEmpty()) {
 			throw new IllegalArgumentException("encoding is null or empty");
-		} 
-		
+		}
+
 		this.encoding = encoding;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.connection.JargonProperties#
+	 * isUseNIOForParallelTransfers()
+	 */
+	@Override
+	public synchronized boolean isUseNIOForParallelTransfers() {
+		return useNIOForParallelTransfers;
+	}
+
+	/**
+	 * @param useNIOForParallelTransfers
+	 *            <code>boolean</code> that is set to <code>true</code> if NIO
+	 *            should be used for parallel file transfers
+	 */
+	public synchronized void setUseNIOForParallelTransfers(
+			boolean useNIOForParallelTransfers) {
+		this.useNIOForParallelTransfers = useNIOForParallelTransfers;
 	}
 
 }

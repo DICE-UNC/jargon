@@ -26,8 +26,6 @@ public class IRODSFileReaderTest {
 	private static org.irods.jargon.testutils.filemanip.ScratchFileUtils scratchFileUtils = null;
 	public static final String IRODS_TEST_SUBDIR_PATH = "IRODSFileReaderTest";
 	private static org.irods.jargon.testutils.IRODSTestSetupUtilities irodsTestSetupUtilities = null;
-	private static org.irods.jargon.testutils.AssertionHelper assertionHelper = null;
-
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		org.irods.jargon.testutils.TestingPropertiesHelper testingPropertiesLoader = new TestingPropertiesHelper();
@@ -38,7 +36,7 @@ public class IRODSFileReaderTest {
 		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
 		irodsTestSetupUtilities
 				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
-		assertionHelper = new org.irods.jargon.testutils.AssertionHelper();
+		new org.irods.jargon.testutils.AssertionHelper();
 	}
 
 	@Test(expected = JargonException.class)
@@ -167,12 +165,9 @@ public class IRODSFileReaderTest {
 
 		char[] readBuff = new char[buffLen];
 		int readCtr = 0;
-		int totalRead = 0;
-
 		StringBuilder outputStringBuilder = new StringBuilder();
 
 		while ((readCtr = reader.read(readBuff)) > -1) {
-			totalRead += readCtr;
 			outputStringBuilder.append(readBuff, 0, readCtr);
 		}
 

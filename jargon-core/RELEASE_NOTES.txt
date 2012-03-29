@@ -1,8 +1,8 @@
 
 *'''Project''': Jargon-core - IRODS Java API
-*'''Date''': 10/1/2011
-*'''Release Version''': 3.0.1 work in progress
-*'''git tag''': xxxx
+*'''Date''': 3/20/2012
+*'''Release Version''': 3.1.1 work in progress with globus, kerberos support
+*'''git tag''': 3.1.1-SNAPSHOT
 
 ==News==
 
@@ -22,13 +22,16 @@ Jargon-core consists of the following libraries
 * jargon-security - code for use with Spring security
 * jargon-user-tagging - code for using free tagging and other metadata metaphors on top of iRODS
 * jargon-transfer - transfer manager for managing and synchronizing data with iRODS
+* jargon-ticket - support for ticket processing
+* jargon-httpstream - stream http content into iRODS via Jargon
 
 Other libraries are planned, such as connection pooling, as well as administrative functions.
 
 ==Requirements==
 
--Jargon depends on Java 1.6+
--Jargon is built using Apache Maven2, see POM for dependencies
+*Jargon depends on Java 1.6+
+*Jargon is built using Apache Maven2, see POM for dependencies
+*Jargon supports iRODS 2.4 through iRODS 3.0, and is tested with the current (as of release time) development version of iRODS
 
 ==Libraries==
 
@@ -40,17 +43,11 @@ Note that the following bug and feature requests are logged in GForge with relat
 
 ==Bug Fixes==
 
- [#494] looses localIRODSTransfer data on final update
- [#496] BAD_INPUT_DESC_INDEX errors are being sent to irods client
-  [#502] bug in synch
-   [#519] tolerate quote in data name for acl query
+* [#662] mod avu when setting a present units value to blank does not work - submitted as iRODS bug, added JUnit tests, will overhead if it becomes an issue
+* [#677] strip quotes, commas from tags - user free tagging with quotes can cause pathological query behavior, standardize on space delimited, also parse out commas
 
 ==Features==
 
-[#483] pool to share single conn - initial implementation of commons-pool to share a single connection from multiple threads
-[#499] add thumbnail generation facility to Jargon data utls
-[#500] enhanced 3.0 rule parsing and load rule from resource
-[#515] add irods file factory support for uri file create without user info
- [#114] support for mounted collections, cross zone browsing, and soft links
- 	* Added support for obj stat, initial ObjStat domain object [work in progress]
- 	* Added cross zone query capability
+ * [#664] parallel txfr optimization, including optional parallel via NIO
+ * [#692] add ability to make parent dirs when creating a file for an IRODSFileOutputStream
+ * [#132] GSS and Kerberos Support in Jargon-core

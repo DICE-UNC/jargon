@@ -6,13 +6,13 @@ package org.irods.jargon.core.remoteexecute;
 import java.io.InputStream;
 import java.io.SequenceInputStream;
 
-import org.apache.commons.codec.binary.Base64;
 import org.irods.jargon.core.connection.IRODSCommands;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.packinstr.ExecCmd;
 import org.irods.jargon.core.packinstr.ExecCmd.PathHandlingMode;
 import org.irods.jargon.core.packinstr.Tag;
 import org.irods.jargon.core.pub.io.RemoteExecutionBinaryResultInputStream;
+import org.irods.jargon.core.utils.Base64;
 import org.irods.jargon.core.utils.IRODSConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -280,24 +280,24 @@ public class RemoteExecuteServiceImpl implements RemoteExecutionService {
 			throw new JargonException("null response from remote execution");
 		} else {
 			// message
-			int length = message.getTag(IRODSConstants.BinBytesBuf_PI, 0).getTag(IRODSConstants.buflen)
-					.getIntValue();
+			int length = message.getTag(IRODSConstants.BinBytesBuf_PI, 0)
+					.getTag(IRODSConstants.buflen).getIntValue();
 			if (length > 0) {
-				buffer.append(message.getTag(IRODSConstants.BinBytesBuf_PI, 0).getTag(IRODSConstants.buf)
-						.getStringValue());
+				buffer.append(message.getTag(IRODSConstants.BinBytesBuf_PI, 0)
+						.getTag(IRODSConstants.buf).getStringValue());
 			}
 
 			// error
-			length = message.getTag(IRODSConstants.BinBytesBuf_PI, 1).getTag(IRODSConstants.buflen)
-					.getIntValue();
+			length = message.getTag(IRODSConstants.BinBytesBuf_PI, 1)
+					.getTag(IRODSConstants.buflen).getIntValue();
 			if (length > 0) {
-				buffer.append(message.getTag(IRODSConstants.BinBytesBuf_PI, 1).getTag(IRODSConstants.buf)
-						.getStringValue());
+				buffer.append(message.getTag(IRODSConstants.BinBytesBuf_PI, 1)
+						.getTag(IRODSConstants.buf).getStringValue());
 			}
 
 		}
 
-		return new java.io.ByteArrayInputStream(Base64.decodeBase64(buffer
+		return new java.io.ByteArrayInputStream(Base64.fromString(buffer
 				.toString()));
 
 	}
@@ -345,18 +345,19 @@ public class RemoteExecuteServiceImpl implements RemoteExecutionService {
 		}
 
 		// message
-		int length = message.getTag(IRODSConstants.BinBytesBuf_PI, 0).getTag(IRODSConstants.buflen)
-				.getIntValue();
+		int length = message.getTag(IRODSConstants.BinBytesBuf_PI, 0)
+				.getTag(IRODSConstants.buflen).getIntValue();
 		if (length > 0) {
-			buffer.append(message.getTag(IRODSConstants.BinBytesBuf_PI, 0).getTag(IRODSConstants.buf)
-					.getStringValue());
+			buffer.append(message.getTag(IRODSConstants.BinBytesBuf_PI, 0)
+					.getTag(IRODSConstants.buf).getStringValue());
 		}
 
 		// error
-		length = message.getTag(IRODSConstants.BinBytesBuf_PI, 1).getTag(IRODSConstants.buflen).getIntValue();
+		length = message.getTag(IRODSConstants.BinBytesBuf_PI, 1)
+				.getTag(IRODSConstants.buflen).getIntValue();
 		if (length > 0) {
-			buffer.append(message.getTag(IRODSConstants.BinBytesBuf_PI, 1).getTag(IRODSConstants.buf)
-					.getStringValue());
+			buffer.append(message.getTag(IRODSConstants.BinBytesBuf_PI, 1)
+					.getTag(IRODSConstants.buf).getStringValue());
 		}
 
 		return buildAppropriateResultStream(message, buffer);
@@ -380,7 +381,7 @@ public class RemoteExecuteServiceImpl implements RemoteExecutionService {
 			log.info("additional data will be streamed, opening up will create concatenated stream");
 
 			InputStream piData = new java.io.ByteArrayInputStream(
-					Base64.decodeBase64(buffer.toString()));
+					Base64.fromString(buffer.toString()));
 
 			RemoteExecutionBinaryResultInputStream reStream = new RemoteExecutionBinaryResultInputStream(
 					this.getIrodsCommands(), status);
@@ -389,7 +390,7 @@ public class RemoteExecuteServiceImpl implements RemoteExecutionService {
 		} else {
 			log.info("no additional data to stream, will return simple stream from result buffer");
 			resultStream = new java.io.ByteArrayInputStream(
-					Base64.decodeBase64(buffer.toString()));
+					Base64.fromString(buffer.toString()));
 		}
 		return resultStream;
 	}

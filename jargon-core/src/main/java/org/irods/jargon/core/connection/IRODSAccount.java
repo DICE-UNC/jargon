@@ -1,6 +1,3 @@
-/**
- *
- */
 package org.irods.jargon.core.connection;
 
 import java.io.Serializable;
@@ -28,6 +25,7 @@ public final class IRODSAccount implements Serializable {
 	
 	public enum AuthScheme  {STANDARD, GSI, KERBEROS};
 	public static final boolean defaultObfuscate = false;
+	private static final String PUBLIC_USERNAME = "anonymous";
 	private AuthScheme authenticationScheme = AuthScheme.STANDARD;
 	
 	/**
@@ -84,14 +82,42 @@ public final class IRODSAccount implements Serializable {
 			throw new JargonException(
 					"IRODSAccount values cannot be initialized with null");
 		} else if (host.length() == 0 || userName.length() == 0
-				|| password.length() == 0 || zone.length() == 0) {
+				|| zone.length() == 0) {
 			throw new JargonException(
 					"data cannot be blank when initializing with this method");
 		}
 		return new IRODSAccount(host, port, userName, password, homeDirectory,
 				zone, defaultStorageResource);
-
 	}
+
+	/**
+	 * Create an <code>IRODSAccount</code> suitable for anonymous access.
+	 * 
+	 * @param host
+	 *            <code>String</code> with the DNS name of the iRODS host
+	 * @param port
+	 *            <code>int</code> with the iRODS port number (typically 1247)
+	 * @param homeDirectory
+	 *            <code>String</code> with optional value for the starting home
+	 *            directory, this can be used to set initial views, etc by other
+	 *            code
+	 * @param zone
+	 *            <code>String</code> with the iRODS zone
+	 * @param defaultStorageResource
+	 *            <code>String</code> with optional value for the default
+	 *            storage resource. Note that iRODS may have defaults set by
+	 *            policy. In cases where no default policy exists, and none is
+	 *            specified here, an error can occur.
+	 * @return <code>IRODSAccount</code> suitable for anonymous access
+	 * @throws JargonException
+	 */
+	public static IRODSAccount instanceForAnonymous(final String host,
+			final int port, final String homeDirectory, final String zone,
+			final String defaultStorageResource) throws JargonException {
+		return instance(host, port, PUBLIC_USERNAME, "", "",
+				zone, defaultStorageResource);
+	}
+
 
 	/**
 	 * Create a re-routed iRODS account using an initial account, and a host
@@ -189,6 +215,7 @@ public final class IRODSAccount implements Serializable {
 		this.certificateAuthority = "";
 	}
 
+	@SuppressWarnings("unused")
 	private IRODSAccount(final String host, final int port,
 			final GSSCredential gssCredential) {
 		this(host, port, gssCredential, "", "");
@@ -349,12 +376,13 @@ public final class IRODSAccount implements Serializable {
 		URI uri = null;
 		try {
 			if (includePassword) {
-				uri = new URI("irods://" + getUserName() + ":" + getPassword()
+				uri = new URI("irods://" + getUserName() + "." + getZone()
+						+ ":" + getPassword() + "@" + getHost() + ":"
+						+ getPort() + getHomeDirectory());
+			} else {
+				uri = new URI("irods://" + getUserName() + "." + getZone()
 						+ "@" + getHost() + ":" + getPort()
 						+ getHomeDirectory());
-			} else {
-				uri = new URI("irods://" + getUserName() + "@" + getHost()
-						+ ":" + getPort() + getHomeDirectory());
 			}
 		} catch (URISyntaxException e) {
 			throw new JargonException("cannot convert this account into a URI:"

@@ -1,15 +1,16 @@
 package org.irods.jargon.core.pub;
 
 import org.irods.jargon.core.connection.IRODSAccount;
+import org.irods.jargon.core.connection.IRODSServerProperties;
 import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.connection.JargonProperties;
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.packinstr.TransferOptions;
 import org.irods.jargon.core.pub.io.IRODSFileFactory;
 import org.irods.jargon.core.pub.io.IRODSFileFactoryImpl;
+import org.irods.jargon.core.transfer.TransferControlBlock;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-// FIXME: switch to allow IRODSSession to be injected, add a check with a meaningful warning message to the various instance creating methods if IRODSSession is missing
 
 /**
  * Factory to produce IRODS access objects. This is the key object which can be
@@ -77,9 +78,7 @@ public final class IRODSAccessObjectFactoryImpl implements
 		if (irodsSession == null) {
 			throw new JargonException("null session");
 		}
-
 		irodsSession.closeSession();
-
 	}
 
 	/*
@@ -210,17 +209,20 @@ public final class IRODSAccessObjectFactoryImpl implements
 		checkIrodsSessionSet();
 		return new EnvironmentalInfoAOImpl(irodsSession, irodsAccount);
 	}
-	
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.pub.IRODSAccessObjectFactory#getQuotaAO(org.irods.jargon.core.connection.IRODSAccount)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.IRODSAccessObjectFactory#getQuotaAO(org.irods
+	 * .jargon.core.connection.IRODSAccount)
 	 */
 	@Override
-	public QuotaAO getQuotaAO(
-			final IRODSAccount irodsAccount) throws JargonException {
+	public QuotaAO getQuotaAO(final IRODSAccount irodsAccount)
+			throws JargonException {
 		checkIrodsSessionSet();
 		return new QuotaAOImpl(irodsSession, irodsAccount);
 	}
-
 
 	/*
 	 * (non-Javadoc)
@@ -319,16 +321,34 @@ public final class IRODSAccessObjectFactoryImpl implements
 		return new DataObjectAOImpl(irodsSession, irodsAccount);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.pub.IRODSAccessObjectFactory#getDataObjectAuditAO(org.irods.jargon.core.connection.IRODSAccount)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.IRODSAccessObjectFactory#getDataObjectAuditAO
+	 * (org.irods.jargon.core.connection.IRODSAccount)
 	 */
 	@Override
-	public DataObjectAuditAO getDataObjectAuditAO(final IRODSAccount irodsAccount)
-			throws JargonException {
+	public DataObjectAuditAO getDataObjectAuditAO(
+			final IRODSAccount irodsAccount) throws JargonException {
 		checkIrodsSessionSet();
 		return new DataObjectAuditAOImpl(irodsSession, irodsAccount);
 	}
-	
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.IRODSAccessObjectFactory#getCollectionAuditAO
+	 * (org.irods.jargon.core.connection.IRODSAccount)
+	 */
+	@Override
+	public CollectionAuditAO getCollectionAuditAO(
+			final IRODSAccount irodsAccount) throws JargonException {
+		checkIrodsSessionSet();
+		return new CollectionAuditAOImpl(irodsSession, irodsAccount);
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -446,6 +466,20 @@ public final class IRODSAccessObjectFactoryImpl implements
 	/*
 	 * (non-Javadoc)
 	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.IRODSAccessObjectFactory#getProtocolExtensionPoint
+	 * (org.irods.jargon.core.connection.IRODSAccount)
+	 */
+	@Override
+	public ProtocolExtensionPoint getProtocolExtensionPoint(
+			final IRODSAccount irodsAccount) throws JargonException {
+		checkIrodsSessionSet();
+		return new ProtocolExtensionPointImpl(irodsSession, irodsAccount);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.irods.jargon.core.pub.IRODSAccessObjectFactory#getIrodsSession()
 	 */
 	@Override
@@ -472,12 +506,58 @@ public final class IRODSAccessObjectFactoryImpl implements
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.pub.IRODSAccessObjectFactory#getJargonProperties()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.IRODSAccessObjectFactory#getJargonProperties()
 	 */
 	@Override
 	public JargonProperties getJargonProperties() {
 		// irodsSession synchronizes access
 		return irodsSession.getJargonProperties();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.IRODSAccessObjectFactory#getIRODSServerProperties
+	 * (org.irods.jargon.core.connection.IRODSAccount)
+	 */
+	@Override
+	public final IRODSServerProperties getIRODSServerProperties(
+			final IRODSAccount irodsAccount) throws JargonException {
+		if (irodsAccount == null) {
+			throw new IllegalArgumentException("null irodsAccount");
+		}
+		return irodsSession.currentConnection(irodsAccount)
+				.getIRODSServerProperties();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.pub.IRODSAccessObjectFactory#
+	 * buildDefaultTransferControlBlockBasedOnJargonProperties()
+	 */
+	@Override
+	public TransferControlBlock buildDefaultTransferControlBlockBasedOnJargonProperties()
+			throws JargonException {
+		// irodsSession synchronizes access
+		return irodsSession
+				.buildDefaultTransferControlBlockBasedOnJargonProperties();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.pub.IRODSAccessObjectFactory#
+	 * buildTransferOptionsBasedOnJargonProperties()
+	 */
+	@Override
+	public TransferOptions buildTransferOptionsBasedOnJargonProperties()
+			throws JargonException {
+		return irodsSession.buildTransferOptionsBasedOnJargonProperties();
 	}
 }

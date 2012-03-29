@@ -52,7 +52,9 @@ public class IRODSTestSetupUtilities {
 			throw new TestingUtilsException("error clearing irods scratch dir",
 					e);
 		} finally {
-			irodsFileSystem.closeAndEatExceptions();
+			if (irodsFileSystem != null) {
+				irodsFileSystem.closeAndEatExceptions();
+			}
 		}
 	}
 
@@ -83,7 +85,9 @@ public class IRODSTestSetupUtilities {
 			throw new TestingUtilsException("error clearing irods scratch dir",
 					e);
 		} finally {
-			irodsFileSystem.closeAndEatExceptions();
+			if (irodsFileSystem != null) {
+				irodsFileSystem.closeAndEatExceptions();
+			}
 		}
 	}
 
@@ -123,7 +127,9 @@ public class IRODSTestSetupUtilities {
 			throw new TestingUtilsException("error clearing irods scratch dir",
 					e);
 		} finally {
-			irodsFileSystem.closeAndEatExceptions();
+			if (irodsFileSystem != null) {
+				irodsFileSystem.closeAndEatExceptions();
+			}
 		}
 	}
 }

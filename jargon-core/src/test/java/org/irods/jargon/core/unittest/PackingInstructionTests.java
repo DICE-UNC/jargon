@@ -14,6 +14,7 @@ import org.irods.jargon.core.packinstr.ExecMyRuleInp_PITest;
 import org.irods.jargon.core.packinstr.FileReadInpTest;
 import org.irods.jargon.core.packinstr.GenQueryInpTest;
 import org.irods.jargon.core.packinstr.GeneralAdminInpTest;
+import org.irods.jargon.core.packinstr.GetTempPasswordForOtherTest;
 import org.irods.jargon.core.packinstr.GetTempPasswordInTest;
 import org.irods.jargon.core.packinstr.ModAccessControlInpTest;
 import org.irods.jargon.core.packinstr.ModAvuMetadataInpTest;
@@ -36,7 +37,8 @@ import org.junit.runners.Suite;
 		FileReadInpTest.class, ExecCmdStreamCloseTest.class,
 		SimpleQueryInpTest.class, SimpleQueryInpTest.class,
 		ModAccessControlInpTest.class, GetTempPasswordInTest.class,
-		TransferOptionsTest.class, DataObjInpForObjStatTest.class })
+		TransferOptionsTest.class, DataObjInpForObjStatTest.class,
+		GetTempPasswordForOtherTest.class })
 public class PackingInstructionTests {
 
 }

@@ -17,6 +17,7 @@ import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.DuplicateDataException;
+import org.irods.jargon.core.exception.FileNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.packinstr.ModAccessControlInp;
 import org.irods.jargon.core.packinstr.ModAvuMetadataInp;
@@ -24,6 +25,7 @@ import org.irods.jargon.core.protovalues.FilePermissionEnum;
 import org.irods.jargon.core.pub.aohelper.CollectionAOHelper;
 import org.irods.jargon.core.pub.domain.AvuData;
 import org.irods.jargon.core.pub.domain.Collection;
+import org.irods.jargon.core.pub.domain.User;
 import org.irods.jargon.core.pub.domain.UserFilePermission;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.pub.io.IRODSFileFactory;
@@ -39,6 +41,7 @@ import org.irods.jargon.core.query.MetaDataAndDomainData.MetadataDomain;
 import org.irods.jargon.core.query.RodsGenQueryEnum;
 import org.irods.jargon.core.utils.AccessObjectQueryProcessingUtils;
 import org.irods.jargon.core.utils.IRODSDataConversionUtil;
+import org.irods.jargon.core.utils.MiscIRODSUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -225,13 +228,16 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 				getIRODSSession().getJargonProperties()
 						.getMaxFilesAndDirsQueryMax());
 
-		IRODSQueryResultSetInterface resultSet;
+		String zone = MiscIRODSUtils.getZoneInPath(absolutePathOfParent);
 
+		IRODSQueryResultSetInterface resultSet;
 		try {
-			resultSet = irodsGenQueryExecutor.executeIRODSQueryWithPaging(
-					irodsQuery, partialStartIndex);
+			resultSet = irodsGenQueryExecutor
+					.executeIRODSQueryAndCloseResultInZone(irodsQuery,
+							partialStartIndex, zone);
+
 		} catch (JargonQueryException e) {
-			log.error("query exception for:" + queryString, e);
+			log.error(QUERY_EXCEPTION_FOR_QUERY + queryString, e);
 			throw new JargonException(ERROR_IN_COLECTION_QUERY);
 		}
 
@@ -267,8 +273,60 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 		IRODSQueryResultSetInterface resultSet;
 
 		try {
-			resultSet = irodsGenQueryExecutor.executeIRODSQueryWithPaging(
+			resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResult(
 					irodsQuery, partialStartIndex);
+		} catch (JargonQueryException e) {
+			log.error("query exception for:" + queryString, e);
+			throw new JargonException(ERROR_IN_COLECTION_QUERY);
+		}
+
+		return CollectionAOHelper.buildListFromResultSet(resultSet);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.CollectionAO#findWhereInZone(java.lang.String,
+	 * int, java.lang.String)
+	 */
+	@Override
+	public List<Collection> findWhereInZone(final String whereClause,
+			final int partialStartIndex, final String zone)
+			throws JargonException {
+
+		log.info("findWhereInZone()");
+
+		if (whereClause == null) {
+			throw new IllegalArgumentException("null where clause");
+		}
+
+		if (zone == null) {
+			throw new IllegalArgumentException(
+					"null zone, set to blank if not needed");
+		}
+
+		log.info("whereClause:{}", whereClause);
+		log.info("zone:{}", zone);
+
+		final StringBuilder query = new StringBuilder();
+		query.append(CollectionAOHelper.buildSelects());
+		query.append(" WHERE ");
+		query.append(whereClause);
+		final String queryString = query.toString();
+
+		log.info("coll query:{}", queryString);
+
+		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(queryString,
+				getIRODSSession().getJargonProperties()
+						.getMaxFilesAndDirsQueryMax());
+
+		IRODSQueryResultSetInterface resultSet;
+
+		try {
+			resultSet = irodsGenQueryExecutor
+					.executeIRODSQueryAndCloseResultInZone(irodsQuery,
+							partialStartIndex, zone);
 		} catch (JargonQueryException e) {
 			log.error("query exception for:" + queryString, e);
 			throw new JargonException(ERROR_IN_COLECTION_QUERY);
@@ -328,8 +386,6 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 
 		query.append(WHERE);
 		boolean previousElement = false;
-		@SuppressWarnings("unused")
-		StringBuilder queryCondition;
 
 		for (AVUQueryElement queryElement : avuQuery) {
 
@@ -365,10 +421,17 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 				getIRODSSession().getJargonProperties()
 						.getMaxFilesAndDirsQueryMax());
 
+		/*
+		 * Check to see if this query should go to another zone based on the
+		 * collection path
+		 */
+
+		String zone = MiscIRODSUtils.getZoneInPath(collectionAbsolutePath);
+
 		IRODSQueryResultSetInterface resultSet;
 		try {
 			resultSet = irodsGenQueryExecutorImpl
-					.executeIRODSQueryAndCloseResult(irodsQuery, 0);
+					.executeIRODSQueryAndCloseResultInZone(irodsQuery, 0, zone);
 
 		} catch (JargonQueryException e) {
 			log.error(QUERY_EXCEPTION_FOR_QUERY + queryString, e);
@@ -380,17 +443,18 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 						MetadataDomain.COLLECTION, resultSet);
 	}
 
-	// FIXME: add partial start version or add to this method
+
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @seeorg.irods.jargon.core.pub.CollectionAO#
+	 * @see org.irods.jargon.core.pub.CollectionAO#
 	 * findMetadataValuesByMetadataQueryWithAdditionalWhere(java.util.List,
-	 * java.lang.String)
+	 * java.lang.String, int)
 	 */
 	@Override
 	public List<MetaDataAndDomainData> findMetadataValuesByMetadataQueryWithAdditionalWhere(
-			final List<AVUQueryElement> avuQuery, final String additionalWhere)
+			final List<AVUQueryElement> avuQuery, final String additionalWhere,
+			final int partialStartIndex)
 			throws JargonQueryException, JargonException {
 
 		if (avuQuery == null || avuQuery.isEmpty()) {
@@ -400,6 +464,10 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 		if (additionalWhere == null) {
 			throw new IllegalArgumentException(
 					"null additional where clause, set to blank if unused");
+		}
+
+		if (partialStartIndex < 0) {
+			throw new IllegalArgumentException("partialStartIndex must be >= 0");
 		}
 
 		final IRODSGenQueryExecutor irodsGenQueryExecutorImpl = getIRODSAccessObjectFactory()
@@ -418,8 +486,6 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 
 		query.append(WHERE);
 		boolean previousElement = false;
-		@SuppressWarnings("unused")
-		StringBuilder queryCondition = null;
 
 		for (AVUQueryElement queryElement : avuQuery) {
 
@@ -453,8 +519,10 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 
 		IRODSQueryResultSetInterface resultSet;
 		try {
+
 			resultSet = irodsGenQueryExecutorImpl
-					.executeIRODSQueryAndCloseResult(irodsQuery, 0);
+					.executeIRODSQueryAndCloseResult(irodsQuery,
+							partialStartIndex);
 
 		} catch (JargonQueryException e) {
 			log.error(QUERY_EXCEPTION_FOR_QUERY + queryString, e);
@@ -503,8 +571,6 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 
 		query.append(WHERE);
 		boolean previousElement = false;
-		@SuppressWarnings("unused")
-		StringBuilder queryCondition;
 
 		for (AVUQueryElement queryElement : avuQuery) {
 
@@ -540,10 +606,13 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 				getIRODSSession().getJargonProperties()
 						.getMaxFilesAndDirsQueryMax());
 
+		String zone = MiscIRODSUtils.getZoneInPath(collectionAbsolutePath);
+
 		IRODSQueryResultSetInterface resultSet;
 		try {
 			resultSet = irodsGenQueryExecutorImpl
-					.executeIRODSQueryAndCloseResult(irodsQuery, 0);
+					.executeIRODSQueryAndCloseResultInZone(irodsQuery,
+							partialStartIndex, zone);
 
 		} catch (JargonQueryException e) {
 			log.error(QUERY_EXCEPTION_FOR_QUERY + queryString, e);
@@ -1268,9 +1337,15 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 		}
 
 		boolean collNeedsRecursive = recursive;
+		CollectionAndDataObjectListAndSearchAO collectionAndDataObjectListAndSearchAO = this
+				.getIRODSAccessObjectFactory()
+				.getCollectionAndDataObjectListAndSearchAO(
+						this.getIRODSAccount());
+		int countFilesUnderParent = collectionAndDataObjectListAndSearchAO
+				.countDataObjectsAndCollectionsUnderPath(absolutePath);
 
 		if (recursive) {
-			if (collFile.list().length == 0) {
+			if (countFilesUnderParent == 0) {
 				log.info("overridding recursive flag, file has no children");
 				collNeedsRecursive = false;
 			}
@@ -1321,16 +1396,27 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(query.toString(),
 				this.getJargonProperties().getMaxFilesAndDirsQueryMax());
 		IRODSQueryResultSetInterface resultSet;
+		UserAO userAO = this.getIRODSAccessObjectFactory().getUserAO(
+				getIRODSAccount());
+		User user = null;
 
 		try {
 			resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResult(
 					irodsQuery, 0);
 			IRODSQueryResultRow row = resultSet.getFirstResult();
 
+			/**
+			 * Due to a gen query limitation getting user type with the user
+			 * permission, a separate query must be done
+			 */
+
+			user = userAO.findById(row.getColumn(1));
+
 			userFilePermission = new UserFilePermission(row.getColumn(0),
 					row.getColumn(1),
 					FilePermissionEnum.valueOf(IRODSDataConversionUtil
-							.getIntOrZeroFromIRODSValue(row.getColumn(2))));
+							.getIntOrZeroFromIRODSValue(row.getColumn(2))),
+					user.getUserType());
 			log.debug("loaded filePermission:{}", userFilePermission);
 
 		} catch (JargonQueryException e) {
@@ -1355,7 +1441,8 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 	 */
 	@Override
 	public List<UserFilePermission> listPermissionsForCollection(
-			final String irodsCollectionAbsolutePath) throws JargonException {
+			final String irodsCollectionAbsolutePath)
+			throws FileNotFoundException, JargonException {
 
 		if (irodsCollectionAbsolutePath == null
 				|| irodsCollectionAbsolutePath.isEmpty()) {
@@ -1363,6 +1450,15 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 					"null or empty collectionAbsolutePath");
 		}
 
+		/*
+		 * ObjStat objStat =
+		 * this.getObjectStatForAbsolutePath(irodsCollectionAbsolutePath);
+		 * log.info("objStat obtained:{}", objStat); // objStat will be more
+		 * important later on, when we deal with mounted // collections, etc
+		 * 
+		 * String zone =
+		 * MiscIRODSUtils.getZoneInPath(irodsCollectionAbsolutePath);
+		 */
 		log.info("listPermissionsForCollection: {}",
 				irodsCollectionAbsolutePath);
 		List<UserFilePermission> userFilePermissions = new ArrayList<UserFilePermission>();
@@ -1375,17 +1471,32 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(query.toString(),
 				this.getJargonProperties().getMaxFilesAndDirsQueryMax());
 		IRODSQueryResultSetInterface resultSet;
+		UserAO userAO = this.getIRODSAccessObjectFactory().getUserAO(
+				getIRODSAccount());
 
+		/*
+		 * There appears to be a gen query limitation on grabbing user type by a
+		 * straight query, so, unfortunately, we need to do another query per
+		 * user.
+		 */
+
+		User user = null;
 		try {
 			resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResult(
 					irodsQuery, 0);
 
 			UserFilePermission userFilePermission = null;
+			StringBuilder userAndZone = null;
 			for (IRODSQueryResultRow row : resultSet.getResults()) {
+				userAndZone = new StringBuilder(row.getColumn(0));
+				userAndZone.append('#');
+				userAndZone.append(row.getColumn(3));
+				user = userAO.findByName(userAndZone.toString());
 				userFilePermission = new UserFilePermission(row.getColumn(0),
 						row.getColumn(1),
 						FilePermissionEnum.valueOf(IRODSDataConversionUtil
-								.getIntOrZeroFromIRODSValue(row.getColumn(2))));
+								.getIntOrZeroFromIRODSValue(row.getColumn(2))),
+						user.getUserType(), row.getColumn(3));
 				log.debug("loaded filePermission:{}", userFilePermission);
 				userFilePermissions.add(userFilePermission);
 			}

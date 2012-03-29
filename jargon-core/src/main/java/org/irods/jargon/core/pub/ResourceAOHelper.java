@@ -25,31 +25,28 @@ import org.slf4j.LoggerFactory;
  * @author Mike Conway - DICE (www.irods.org)
  * 
  */
- class ResourceAOHelper extends AOHelper {
+class ResourceAOHelper extends AOHelper {
 
 	private Logger log = LoggerFactory.getLogger(this.getClass());
 	private Zone lastZone = null;
-	@SuppressWarnings("unused")
-	private final  IRODSAccount irodsAccount;
-	@SuppressWarnings("unused")
-	private final IRODSAccessObjectFactory irodsAccessObjectFactory;
-	private  final ZoneAO zoneAO;
+	private final ZoneAO zoneAO;
 
 	/**
 	 * Default constructor
-	 * @throws JargonException 
+	 * 
+	 * @throws JargonException
 	 */
-	protected ResourceAOHelper(final IRODSAccount irodsAccount, final IRODSAccessObjectFactory irodsAccessObjectFactory) throws JargonException {
+	protected ResourceAOHelper(final IRODSAccount irodsAccount,
+			final IRODSAccessObjectFactory irodsAccessObjectFactory)
+			throws JargonException {
 		if (irodsAccount == null) {
 			throw new IllegalArgumentException("null irodsAccount");
 		}
-		
+
 		if (irodsAccessObjectFactory == null) {
 			throw new IllegalArgumentException("null irodsAccessObjectFactory");
 		}
-		
-		this.irodsAccount = irodsAccount;
-		this.irodsAccessObjectFactory = irodsAccessObjectFactory;
+
 		zoneAO = irodsAccessObjectFactory.getZoneAO(irodsAccount);
 	}
 
@@ -94,12 +91,15 @@ import org.slf4j.LoggerFactory;
 
 	/**
 	 * From a query result row, build a <code>Resource</code> domain object
-	 * @param row {@link IRODSQueryResultRow} with the result of a gen query.  Each row represents resource data
+	 * 
+	 * @param row
+	 *            {@link IRODSQueryResultRow} with the result of a gen query.
+	 *            Each row represents resource data
 	 * @return {@link Resource} domain object
 	 * @throws JargonException
 	 */
-	protected Resource buildResourceFromResultSetRow(final IRODSQueryResultRow row)
-			throws JargonException {
+	protected Resource buildResourceFromResultSetRow(
+			final IRODSQueryResultRow row) throws JargonException {
 		Resource resource = new Resource();
 		resource.setId(row.getColumn(0));
 		resource.setName(row.getColumn(1));
@@ -151,9 +151,13 @@ import org.slf4j.LoggerFactory;
 	}
 
 	/**
-	 * From a result set for a resource query, build the <code>Resource</code> domain objects.
-	 * @param resultSet {@link IRODSQueryResultSetInterface} with a gen query result
-	 * @return <code>List</code> of {@link Resource}, which will be empty if no results
+	 * From a result set for a resource query, build the <code>Resource</code>
+	 * domain objects.
+	 * 
+	 * @param resultSet
+	 *            {@link IRODSQueryResultSetInterface} with a gen query result
+	 * @return <code>List</code> of {@link Resource}, which will be empty if no
+	 *         results
 	 * @throws JargonException
 	 */
 	protected List<Resource> buildResourceListFromResultSet(

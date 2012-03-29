@@ -59,36 +59,6 @@ public final class IRODSFileFactoryImpl extends IRODSGenericAO implements
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * org.irods.jargon.core.pub.io.IRODSFileFactory#instanceIRODSFileIndicatingType
-	 * (java.lang.String, boolean)
-	 */
-	@Override
-	public IRODSFile instanceIRODSFileIndicatingType(final String path,
-			final boolean isFile) throws JargonException {
-		IRODSFileSystemAO irodsFileSystem = new IRODSFileSystemAOImpl(
-				this.getIRODSSession(), this.getIRODSAccount());
-		return new IRODSFileImpl(path, irodsFileSystem, isFile);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.irods.jargon.core.pub.io.IRODSFileFactory#instanceIRODSFileIndicatingType
-	 * (java.lang.String, java.lang.String, boolean)
-	 */
-	@Override
-	public IRODSFile instanceIRODSFileIndicatingType(final String parent,
-			final String child, final boolean isFile) throws JargonException {
-		IRODSFileSystemAO irodsFileSystem = new IRODSFileSystemAOImpl(
-				this.getIRODSSession(), this.getIRODSAccount());
-		return new IRODSFileImpl(parent, child, irodsFileSystem, isFile);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
 	 * org.irods.jargon.core.pub.io.IRODSFileFactory#instanceIRODSFile(java.
 	 * net.URI)
 	 */

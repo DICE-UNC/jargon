@@ -40,7 +40,6 @@ public class ByteCountingCallbackInputStreamWrapperTest {
 				Matchers.isA(ConnectionProgressStatus.class));
 	}
 
-	
 	@Test
 	public void testReadByteAvailable() throws Exception {
 		int expectedLen = 100;
@@ -54,9 +53,9 @@ public class ByteCountingCallbackInputStreamWrapperTest {
 		int actualRead = byteCountingCallbackInputStream.available();
 		Assert.assertEquals("did not get expected available back", expectedLen,
 				actualRead);
-		
+
 	}
-	
+
 	@Test
 	public void testClose() throws Exception {
 		InputStream dummyInputStream = Mockito.mock(InputStream.class);
@@ -64,13 +63,12 @@ public class ByteCountingCallbackInputStreamWrapperTest {
 				.mock(ConnectionProgressStatusListener.class);
 		ByteCountingCallbackInputStreamWrapper byteCountingCallbackInputStream = new ByteCountingCallbackInputStreamWrapper(
 				listener, dummyInputStream);
-		
+
 		byteCountingCallbackInputStream.close();
 		Mockito.verify(dummyInputStream).close();
-		
+
 	}
-	
-	
+
 	@Test
 	public void testReadByteArrayIntInt() throws Exception {
 		int expectedLen = 100;

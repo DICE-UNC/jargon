@@ -1,37 +1,12 @@
-//
-//  Copyright (c) 2008  San Diego Supercomputer Center (SDSC),
-//  University of California, San Diego (UCSD), San Diego, CA, USA.
-//
-//  Users and possessors of this source code are hereby granted a
-//  nonexclusive, royalty-free copyright and design patent license
-//  to use this code in individual software.  License is not granted
-//  for commercial resale, in whole or in part, without prior written
-//  permission from SDSC/UCSD.  This source is provided "AS IS"
-//  without express or implied warranty of any kind.
-//
-//
-//  FILE
-//  Rule.java  -  edu.sdsc.grid.io.irods.Rule
-//
-//  CLASS HIERARCHY
-//  java.lang.Object
-//      |
-//      +-edu.sdsc.grid.io.irods.Rule
-//
-//
-//  PRINCIPAL AUTHOR
-//  Lucas Gilbert, SDSC/UCSD
-//
-//
 package org.irods.jargon.core.packinstr;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.irods.jargon.core.exception.JargonRuntimeException;
 import org.irods.jargon.core.utils.IRODSConstants;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Represents the nested structure of the XML protocol for messages between
@@ -42,8 +17,8 @@ public class Tag implements Cloneable {
 	public static final char CLOSE_START_TAG = '>';
 	public static final String OPEN_END_TAG = "</";
 	public static final char CLOSE_END_TAG = '>';
-
-	private static Logger log = LoggerFactory.getLogger(Tag.class);
+	public static final String CLOSE_END_TAG_STR = ">";
+	public static final String CLOSE_END_TAG_WITH_CR = CLOSE_END_TAG_STR + '\n';
 
 	/**
 	 * iRODS name of the tag
@@ -53,8 +28,8 @@ public class Tag implements Cloneable {
 	/**
 	 * all the sub tags
 	 */
-	public Tag[] tags;
-
+	// public Tag[] tags;
+	public List<Tag> tags;
 	/**
 	 * probably a string...
 	 */
@@ -66,12 +41,12 @@ public class Tag implements Cloneable {
 
 	public Tag(final String tagName, final int value) {
 		this.tagName = tagName;
-		this.value = "" + value;
+		this.value = String.valueOf(value);
 	}
 
 	public Tag(final String tagName, final long value) {
 		this.tagName = tagName;
-		this.value = "" + value;
+		this.value = String.valueOf(value);
 	}
 
 	public Tag(final String tagName, final String value) {
@@ -80,12 +55,18 @@ public class Tag implements Cloneable {
 	}
 
 	public Tag(final String tagName, final Tag tag) {
-		this(tagName, new Tag[] { tag });
+		tags = new ArrayList<Tag>();
+		this.tagName = tagName;
+		tags = new ArrayList<Tag>();
+		tags.add(tag);
 	}
 
-	public Tag(final String tagName, final Tag[] tags) {
+	public Tag(final String tagName, final Tag[] inTags) {
 		this.tagName = tagName;
-		this.tags = tags;
+		tags = new ArrayList<Tag>();
+		for (Tag inTag : inTags) {
+			tags.add(inTag);
+		}
 	}
 
 	public void setTagName(final String tagName) {
@@ -93,11 +74,11 @@ public class Tag implements Cloneable {
 	}
 
 	public void setValue(final int value) {
-		this.value = "" + value;
+		this.value = String.valueOf(value);
 	}
 
 	public void setValue(final long value) {
-		this.value = "" + value;
+		this.value = String.valueOf(value);
 	}
 
 	public void setValue(String value, final boolean decode) {
@@ -118,7 +99,12 @@ public class Tag implements Cloneable {
 
 	public Object getValue() {
 		if (tags != null) {
-			return tags.clone();
+			Tag[] outTags = new Tag[tags.size()];
+			int i = 0;
+			for (Tag tag : tags) {
+				outTags[i++] = tag;
+			}
+			return outTags;
 		} else {
 			return value;
 		}
@@ -141,7 +127,7 @@ public class Tag implements Cloneable {
 	}
 
 	public int getLength() {
-		return tags.length;
+		return tags.size();
 	}
 
 	public Tag getTag(final String tagName) {
@@ -173,10 +159,10 @@ public class Tag implements Cloneable {
 
 		// see if tagName exists in first level
 		// if it isn't the toplevel, just leave it.
-		for (int i = 0, j = 0; i < tags.length; i++) {
-			if (tags[i].getName().equals(tagName)) {
+		for (int i = 0, j = 0; i < tags.size(); i++) {
+			if (tags.get(i).getName().equals(tagName)) {
 				if (index == j) {
-					return tags[i];
+					return tags.get(i);
 				} else {
 					j++;
 				}
@@ -188,7 +174,12 @@ public class Tag implements Cloneable {
 	public Tag[] getTags() {
 		// clone so it can't over write when set value is called?
 		if (tags != null) {
-			return tags;
+			Tag[] outTags = new Tag[tags.size()];
+			int i = 0;
+			for (Tag tag : tags) {
+				outTags[i++] = tag;
+			}
+			return outTags;
 		} else {
 			return null;
 		}
@@ -203,9 +194,9 @@ public class Tag implements Cloneable {
 			return null;
 		}
 
-		Object[] val = new Object[tags.length];
-		for (int i = 0; i < tags.length; i++) {
-			val[i] = tags[i].getValue();
+		Object[] val = new Object[tags.size()];
+		for (int i = 0; i < tags.size(); i++) {
+			val[i] = tags.get(i).getValue();
 		}
 		return val;
 	}
@@ -218,24 +209,19 @@ public class Tag implements Cloneable {
 	}
 
 	public void addTag(final Tag add) {
-		if (tags != null) {
-			Tag[] temp = tags;
-			tags = new Tag[temp.length + 1];
-			System.arraycopy(temp, 0, tags, 0, temp.length);
-			tags[temp.length] = add;
-		} else {
-			tags = new Tag[] { add };
+		if (tags == null) {
+			tags = new ArrayList<Tag>();
 		}
+		tags.add(add);
 	}
 
 	public void addTags(final Tag[] add) {
-		if (tags != null) {
-			Tag[] temp = tags;
-			tags = new Tag[temp.length + add.length];
-			System.arraycopy(temp, 0, tags, 0, temp.length);
-			System.arraycopy(add, 0, tags, temp.length, add.length);
-		} else {
-			tags = add;
+		if (tags == null) {
+			tags = new ArrayList<Tag>();
+		}
+
+		for (Tag addTag : add) {
+			tags.add(addTag);
 		}
 	}
 
@@ -250,9 +236,10 @@ public class Tag implements Cloneable {
 			Tag newTag = (Tag) obj;
 			if (newTag.getName().equals(tagName)) {
 				if (newTag.getValue().equals(value)) {
-					if (newTag.getTags() == tags) {
-						return true;
-					}
+					/*
+					 * if (newTag.getTags() == tags) { return true; }
+					 */
+					return true;
 				}
 			}
 		}
@@ -272,8 +259,10 @@ public class Tag implements Cloneable {
 		// If something isn't a string and you try to send a
 		// non-printable character this way, it will get all messed up.
 		// so...not sure if should be converted to Base64
-		StringBuffer parsed = new StringBuffer(OPEN_START_TAG + tagName
-				+ CLOSE_START_TAG);
+		StringBuffer parsed = new StringBuffer();
+		parsed.append(OPEN_START_TAG);
+		parsed.append(tagName);
+		parsed.append(CLOSE_START_TAG);
 		if (tags != null) {
 			for (Tag tag : tags) {
 				parsed.append(tag.parseTag());
@@ -281,7 +270,10 @@ public class Tag implements Cloneable {
 		} else {
 			parsed.append(escapeChars(value));
 		}
-		parsed.append(OPEN_END_TAG + tagName + CLOSE_END_TAG + "\n");
+		parsed.append(OPEN_END_TAG);
+		parsed.append(tagName);
+		parsed.append(CLOSE_END_TAG);
+		parsed.append("\n");
 
 		return parsed.toString();
 	}
@@ -290,6 +282,7 @@ public class Tag implements Cloneable {
 		if (out == null) {
 			return null;
 		}
+		// return EscapeTagChars.forXML(out);
 		out = out.replaceAll("&", "&amp;");
 		out = out.replaceAll("<", "&lt;");
 		out = out.replaceAll(">", "&gt;");
@@ -327,13 +320,10 @@ public class Tag implements Cloneable {
 
 		String d = new String(data, encoding);
 
-		if (log.isTraceEnabled()) {
-			log.trace(d);
-		}
 		// remove the random '\n'
 		// had to find the end, sometimes '\n' is there, sometimes not.
-		d = d.replaceAll(CLOSE_END_TAG + "\n", "" + CLOSE_END_TAG);
-
+		// d = d.replaceAll(CLOSE_END_TAG + "\n", "" + CLOSE_END_TAG);
+		d = d.replaceAll(CLOSE_END_TAG_WITH_CR, CLOSE_END_TAG_STR);
 		int start = d.indexOf(OPEN_START_TAG), end = d.indexOf(CLOSE_START_TAG,
 				start);
 		int offset = 0;
@@ -342,7 +332,11 @@ public class Tag implements Cloneable {
 		}
 
 		String tagName = d.substring(start + 1, end);
-		end = d.lastIndexOf(OPEN_END_TAG + tagName + CLOSE_END_TAG);
+		StringBuilder sb = new StringBuilder();
+		sb.append(OPEN_END_TAG);
+		sb.append(tagName);
+		sb.append(CLOSE_END_TAG);
+		end = d.lastIndexOf(sb.toString());
 
 		Tag tag = new Tag(tagName);
 		offset = start + tagName.length() + 2;
@@ -374,7 +368,11 @@ public class Tag implements Cloneable {
 		}
 		int closeStart = data.indexOf(CLOSE_START_TAG, start);
 		String tagName = data.substring(start + 1, closeStart);
-		int end = data.indexOf(OPEN_END_TAG + tagName + CLOSE_END_TAG,
+		StringBuilder sb = new StringBuilder();
+		sb.append(OPEN_END_TAG);
+		sb.append(tagName);
+		sb.append(CLOSE_END_TAG);
+		int end = data.indexOf(sb.toString(),
 				closeStart);
 		int subTagStart = data.indexOf(OPEN_START_TAG, closeStart);
 
@@ -429,7 +427,7 @@ public class Tag implements Cloneable {
 		}
 
 		// just use index zero because they have to be in order...
-		pair.tags[0].setValue(ssLength);
+		pair.tags.get(0).setValue(ssLength);
 		if (i == 0) {
 			return pair;
 		}

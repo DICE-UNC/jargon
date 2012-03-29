@@ -1,13 +1,15 @@
 package org.irods.jargon.core.utils;
 
 import java.net.URI;
+import java.net.URISyntaxException;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.JargonException;
 
 /**
- * Helpful methods for parsing and dealing with IRODS URIs, also supports the creation of <code>IRODSAccount</code> based on
- * a given iRODS uri format (irods://).
+ * Helpful methods for parsing and dealing with IRODS URIs, also supports the
+ * creation of <code>IRODSAccount</code> based on a given iRODS uri format
+ * (irods://).
  * 
  * @author Mike Conway - DICE (www.irods.org)
  * 
@@ -34,6 +36,7 @@ public class IRODSUriUtils {
 
 	/**
 	 * Get the parsed user information from the URI
+	 * 
 	 * @param irodsURI
 	 * @return
 	 */
@@ -82,7 +85,7 @@ public class IRODSUriUtils {
 			if (!userInfo.isEmpty()) {
 				// zone is everything, or will be null
 				zone = userInfo;
-			} 
+			}
 		} else {
 			// if user name and ., then substr start is the pos of the dot
 			int substrStart = 0;
@@ -123,8 +126,8 @@ public class IRODSUriUtils {
 	 * 
 	 * @param irodsURI
 	 *            {@link URI} in the <code>irods://</code> format
-	 * @return <code>String</code> with the iRODS zone, or <code>null</code>
-	 *         if not available.
+	 * @return <code>String</code> with the iRODS zone, or <code>null</code> if
+	 *         not available.
 	 */
 	public static String getZoneFromURI(final URI irodsURI) {
 		URIUserParts uriUserParts = getURIUserPartsFromUserInfo(irodsURI);
@@ -136,8 +139,8 @@ public class IRODSUriUtils {
 	 * 
 	 * @param irodsURI
 	 *            {@link URI} in the <code>irods://</code> format
-	 * @return <code>String</code> with the iRODS host, or <code>null</code>
-	 *         if not available.
+	 * @return <code>String</code> with the iRODS host, or <code>null</code> if
+	 *         not available.
 	 */
 	public static String getHostFromURI(final URI irodsURI) {
 		return irodsURI.getHost();
@@ -166,32 +169,41 @@ public class IRODSUriUtils {
 	}
 
 	/**
-	 * Build an <code>IRODSAccount</code> from the <code>URI</code> in iRODS format.
+	 * Build an <code>IRODSAccount</code> from the <code>URI</code> in iRODS
+	 * format.
 	 * 
-	 * @param irodsURI {@link URI} in irods:// form
+	 * @param irodsURI
+	 *            {@link URI} in irods:// form
 	 * @return {@link IRODSAccount} based on the URI information
-	 * @throws JargonException if the account cannot be built from the information in the URI
+	 * @throws JargonException
+	 *             if the account cannot be built from the information in the
+	 *             URI
 	 */
-	public static IRODSAccount getIRODSAccountFromURI(final URI irodsURI) throws JargonException {
-		
+	public static IRODSAccount getIRODSAccountFromURI(final URI irodsURI)
+			throws JargonException {
+
 		if (!isIRODSURIScheme(irodsURI)) {
-			throw new JargonException("cannot derive IRODSAccount, not an iRODS uri");
+			throw new JargonException(
+					"cannot derive IRODSAccount, not an iRODS uri");
 		}
-		
+
 		URIUserParts uriUserParts = getURIUserPartsFromUserInfo(irodsURI);
-		
-		if (uriUserParts.getPassword() == null || uriUserParts.getUserName() == null || uriUserParts.getZone() == null) {
-			throw new JargonException("No user information in URI, cannot create iRODS account");
+
+		if (uriUserParts.getPassword() == null
+				|| uriUserParts.getUserName() == null
+				|| uriUserParts.getZone() == null) {
+			throw new JargonException(
+					"No user information in URI, cannot create iRODS account");
 		}
-		
+
 		StringBuilder sb = new StringBuilder();
 		sb.append(PATH_SEPARATOR);
 		sb.append(uriUserParts.getZone());
-		sb.append(PATH_SEPARATOR);
+		sb.append("/home/");
 		sb.append(uriUserParts.getUserName());
-		
-		return IRODSAccount.instance(
-				irodsURI.getHost(), irodsURI.getPort(), uriUserParts.getUserName(), uriUserParts.getPassword(),
+
+		return IRODSAccount.instance(irodsURI.getHost(), irodsURI.getPort(),
+				uriUserParts.getUserName(), uriUserParts.getPassword(),
 				sb.toString(), uriUserParts.getZone(), "");
 
 	}
@@ -212,6 +224,56 @@ public class IRODSUriUtils {
 			isURI = true;
 		}
 		return isURI;
+	}
+
+	/**
+	 * Build a URI appropriate for a given iRODS account and absolute path. Note
+	 * that if the
+	 * 
+	 * @param irodsAccount
+	 *            {@link IRODSAccount} containing connection information
+	 * @param isFile
+	 * @param irodsPath
+	 * @return
+	 * @throws JargonException
+	 */
+	public static URI buildURIForAnAccountAndPath(
+			final IRODSAccount irodsAccount, final String irodsPath)
+			throws JargonException {
+
+		if (irodsAccount == null) {
+			throw new IllegalArgumentException("null iRODSAccount");
+		}
+
+		if (irodsPath == null || irodsPath.isEmpty()) {
+			throw new IllegalArgumentException(
+					"null or empty irodsAbsolutePath");
+		}
+
+		String absPath = irodsPath;
+		// if this is a relative path, use the user home directory to fashion an
+		// absolute path
+		if (irodsPath.charAt(0) != '/') {
+			StringBuilder sb = new StringBuilder();
+			sb.append(irodsAccount.getHomeDirectory());
+			sb.append("/");
+			sb.append(irodsPath);
+			absPath = sb.toString();
+		}
+
+		URI uri = null;
+
+		try {
+			uri = new URI("irods", irodsAccount.getUserName(),
+					irodsAccount.getHost(), irodsAccount.getPort(), absPath,
+					null, null);
+
+		} catch (URISyntaxException e) {
+
+			throw new JargonException(e);
+		}
+
+		return uri;
 	}
 
 }
@@ -239,7 +301,7 @@ class URIUserParts {
 	 * @param userName
 	 *            the userName to set
 	 */
-	public void setUserName(String userName) {
+	public void setUserName(final String userName) {
 		this.userName = userName;
 	}
 
@@ -254,7 +316,7 @@ class URIUserParts {
 	 * @param password
 	 *            the password to set
 	 */
-	public void setPassword(String password) {
+	public void setPassword(final String password) {
 		this.password = password;
 	}
 
@@ -269,7 +331,7 @@ class URIUserParts {
 	 * @param zone
 	 *            the zone to set
 	 */
-	public void setZone(String zone) {
+	public void setZone(final String zone) {
 		this.zone = zone;
 	}
 }

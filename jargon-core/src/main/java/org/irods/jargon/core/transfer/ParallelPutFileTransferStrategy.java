@@ -7,6 +7,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 import org.irods.jargon.core.exception.JargonException;
@@ -44,7 +45,9 @@ public final class ParallelPutFileTransferStrategy extends
 	 *            <code>File</code> representing the local file
 	 * @param irodsAccessObjectFactory
 	 *            {@link IRODSAccessObjectFactory} for the session.
-	 * @param transferLength <code>long</code> with the length of the total file to transfer
+	 * @param transferLength
+	 *            <code>long</code> with the length of the total file to
+	 *            transfer
 	 * @param transferControlBlock
 	 *            {@link TransferControlBlock} that controls and keeps track of
 	 *            the transfer operation, required.
@@ -98,15 +101,24 @@ public final class ParallelPutFileTransferStrategy extends
 				irodsAccessObjectFactory, transferLength, transferControlBlock,
 				transferStatusCallbackListener);
 
-		if (transferControlBlock.getTransferOptions().isIntraFileStatusCallbacks() && transferStatusCallbackListener != null) {
+		if (transferControlBlock.getTransferOptions()
+				.isIntraFileStatusCallbacks()
+				&& transferStatusCallbackListener != null) {
 			log.info("will do intra-file status callbacks from transfer");
-			this.setConnectionProgressStatusListener(DefaultIntraFileProgressCallbackListener.instance(TransferStatus.TransferType.PUT, transferLength, transferControlBlock, transferStatusCallbackListener));
+			this.setConnectionProgressStatusListener(DefaultIntraFileProgressCallbackListener
+					.instance(TransferStatus.TransferType.PUT, transferLength,
+							transferControlBlock,
+							transferStatusCallbackListener));
 		}
 
 	}
 
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.transfer.AbstractParallelFileTransferStrategy#transfer()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.transfer.AbstractParallelFileTransferStrategy#transfer
+	 * ()
 	 */
 	@Override
 	public void transfer() throws JargonException {
@@ -114,8 +126,10 @@ public final class ParallelPutFileTransferStrategy extends
 		ExecutorService executor = getIrodsAccessObjectFactory()
 				.getIrodsSession().getParallelTransferThreadPool();
 		if (executor == null) {
-			log.info("no pool available, transfer using standard Threads");
-			transferWithoutExecutor();
+			log.info("no pool available, transfer using single executor");
+			ExecutorService executorService = Executors
+					.newFixedThreadPool(numberOfThreads);
+			transferWithExecutor(executorService);
 		} else {
 			log.info("transfer via executor");
 			transferWithExecutor(executor);
@@ -142,11 +156,11 @@ public final class ParallelPutFileTransferStrategy extends
 
 		try {
 			log.info("invoking executor threads for put");
-			List<Future<Object>> transferThreadStates = executor
+			List<Future<ParallelTransferResult>> transferThreadStates = executor
 					.invokeAll(parallelPutTransferThreads);
 
 			if (log.isInfoEnabled()) {
-				for (Future<Object> transferState : transferThreadStates) {
+				for (Future<ParallelTransferResult> transferState : transferThreadStates) {
 					log.info("transfer state:{}", transferState);
 				}
 			}
@@ -160,57 +174,4 @@ public final class ParallelPutFileTransferStrategy extends
 			throw new JargonException(e);
 		}
 	}
-
-	public void transferWithoutExecutor() throws JargonException {
-		log.info("initiating transfer for: {} without executor",
-				this.toString());
-		final List<Thread> transferRunningThreads = new ArrayList<Thread>();
-		final List<ParallelPutTransferThread> parallelPutTransferThreads = new ArrayList<ParallelPutTransferThread>();
-
-		for (int i = 0; i < numberOfThreads; i++) {
-
-			ParallelPutTransferThread parallelTransferThread = ParallelPutTransferThread
-					.instance(this);
-
-			transferRunningThreads.add(new Thread(parallelTransferThread));
-			parallelPutTransferThreads.add(parallelTransferThread);
-
-			log.info("creating transfer thread:{}", parallelTransferThread);
-
-		}
-
-		for (Thread parallelTransferThreadToStart : transferRunningThreads) {
-			parallelTransferThreadToStart.start();
-			log.info("started parallel transfer thread for thread: {}",
-					parallelTransferThreadToStart.getName());
-		}
-
-		for (Thread parallelTransferThreadToJoin : transferRunningThreads) {
-
-			try {
-				parallelTransferThreadToJoin.join();
-			} catch (InterruptedException e) {
-				log.error(
-						"parallel transfer thread {} was interrupted when attempting to join",
-						parallelTransferThreadToJoin.getName(), e);
-				throw new JargonException(
-						"parallel transfer thread interrupted when attempting to join");
-			}
-
-		}
-
-		log.info("parallel transfer complete...checking for any exceptions that occurred in each thread");
-
-		for (ParallelPutTransferThread parallelPutTransferThread : parallelPutTransferThreads) {
-			if (parallelPutTransferThread.getExceptionInTransfer() != null) {
-				log.error("exeption detected in file transfer thread:{}",
-						parallelPutTransferThread.getExceptionInTransfer());
-				throw new JargonException(
-						"exception caught in transfer thread",
-						parallelPutTransferThread.getExceptionInTransfer());
-			}
-		}
-
-	}
-
 }

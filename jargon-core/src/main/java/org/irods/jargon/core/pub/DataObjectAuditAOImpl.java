@@ -60,8 +60,9 @@ public class DataObjectAuditAOImpl extends IRODSGenericAO implements
 	 * .jargon.core.pub.io.IRODSFile, int)
 	 */
 	@Override
-	public List<AuditedAction> findAllAuditRecordsForDataObject(final IRODSFile irodsFile,
-			final int partialStart) throws JargonException {
+	public List<AuditedAction> findAllAuditRecordsForDataObject(
+			final IRODSFile irodsFile, final int partialStart)
+			throws JargonException {
 
 		log.info("findAllAuditRecords()");
 
@@ -105,7 +106,6 @@ public class DataObjectAuditAOImpl extends IRODSGenericAO implements
 		sb.append(IRODSDataConversionUtil.escapeSingleQuotes(irodsFile
 				.getName().trim()));
 		sb.append(QUOTE);
-		
 
 		final String query = sb.toString();
 		log.debug("query for audit object:{}", query);

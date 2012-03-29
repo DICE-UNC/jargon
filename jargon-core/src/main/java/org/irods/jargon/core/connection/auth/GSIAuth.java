@@ -6,6 +6,6 @@ package org.irods.jargon.core.connection.auth;
  * @author Mike Conway - DICE (www.irods.org)
  *
  */
-public class GSIAuth {
+public class GSIAuth extends AuthMechanism {
 
 }

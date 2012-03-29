@@ -39,7 +39,7 @@ public class FileNotFoundException extends JargonException {
 		super(message, cause);
 	}
 
-	public FileNotFoundException(String message, int infoValue) {
+	public FileNotFoundException(final String message, final int infoValue) {
 		super(message, infoValue);
 	}
 

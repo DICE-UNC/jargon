@@ -12,7 +12,8 @@ public class TestingStatusCallbackListener implements
 	private String lastSourcePath = "";
 	private String lastTargetPath = "";
 	private String lastResource = "";
-	
+	private TransferStatusCallbackListener.CallbackResponse forceOption = TransferStatusCallbackListener.CallbackResponse.NO_FOR_ALL;
+
 	private long bytesReportedIntraFileCallbacks = 0L;
 	private int numberIntraFileCallbacks = 0;
 
@@ -21,7 +22,8 @@ public class TestingStatusCallbackListener implements
 
 		if (transferStatus.isIntraFileStatusReport()) {
 			numberIntraFileCallbacks++;
-			bytesReportedIntraFileCallbacks = transferStatus.getBytesTransfered();
+			bytesReportedIntraFileCallbacks = transferStatus
+					.getBytesTransfered();
 		} else if (transferStatus.getTransferState() == TransferState.FAILURE) {
 			errorCallbackCount++;
 		} else if (transferStatus.getTransferState() == TransferState.IN_PROGRESS_START_FILE) {
@@ -33,7 +35,6 @@ public class TestingStatusCallbackListener implements
 			lastResource = transferStatus.getTargetResource();
 		}
 
-		
 	}
 
 	public int getSuccessCallbackCount() {
@@ -90,6 +91,20 @@ public class TestingStatusCallbackListener implements
 	 */
 	public int getNumberIntraFileCallbacks() {
 		return numberIntraFileCallbacks;
+	}
+
+	@Override
+	public CallbackResponse transferAsksWhetherToForceOperation(
+			String irodsAbsolutePath, boolean isCollection) {
+		return forceOption;
+	}
+
+	public CallbackResponse getForceOption() {
+		return forceOption;
+	}
+
+	public void setForceOption(CallbackResponse forceOption) {
+		this.forceOption = forceOption;
 	}
 
 }

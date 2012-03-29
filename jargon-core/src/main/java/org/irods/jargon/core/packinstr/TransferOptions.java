@@ -1,6 +1,3 @@
-/**
- * 
- */
 package org.irods.jargon.core.packinstr;
 
 /**
@@ -22,8 +19,11 @@ package org.irods.jargon.core.packinstr;
  */
 public class TransferOptions {
 
-	public enum TransferType {
-		STANDARD, NO_PARALLEL, UDP
+	/**
+	 * Behavior controlling overwrite (some impl still needed here)
+	 */
+	public enum ForceOption {
+		USE_FORCE, NO_FORCE, ASK_CALLBACK_LISTENER
 	}
 
 	public static final int DEFAULT_UDP_SEND_RATE = 600000;
@@ -33,11 +33,11 @@ public class TransferOptions {
 	private int maxThreads = DEFAULT_MAX_PARALLEL_THREADS;
 	private int udpSendRate = DEFAULT_UDP_SEND_RATE;
 	private int udpPacketSize = DEFAULT_UDP_PACKET_SIZE;
-	private TransferType transferType = TransferType.STANDARD;
 	private boolean allowPutGetResourceRedirects = false;
 	private boolean intraFileStatusCallbacks = false;
-	
-	
+	private ForceOption forceOption = ForceOption.ASK_CALLBACK_LISTENER;
+	private boolean useParallelTransfer = true;
+
 	/**
 	 * Store a checksum of the file after it has been transferred. This will
 	 * only take precedence over
@@ -58,8 +58,6 @@ public class TransferOptions {
 		sb.append("transferOptions:");
 		sb.append("\n   maxThreads:");
 		sb.append(maxThreads);
-		sb.append("\n  transferType:");
-		sb.append(transferType);
 		sb.append("\n   udpSendRate:");
 		sb.append(udpSendRate);
 		sb.append("\n udpPacketSize:");
@@ -72,7 +70,10 @@ public class TransferOptions {
 		sb.append(computeAndVerifyChecksumAfterTransfer);
 		sb.append("\n   intraFileStatusCallbacks:");
 		sb.append(intraFileStatusCallbacks);
-
+		sb.append("\n   forceOption:");
+		sb.append(forceOption);
+		sb.append("\n  useParallelTransfer:");
+		sb.append(useParallelTransfer);
 		return sb.toString();
 	}
 
@@ -89,9 +90,7 @@ public class TransferOptions {
 		if (transferOptions != null) {
 
 			synchronized (this) {
-
 				setMaxThreads(transferOptions.getMaxThreads());
-				setTransferType(transferOptions.getTransferType());
 				setUdpPacketSize(transferOptions.getUdpPacketSize());
 				setUdpSendRate(transferOptions.getUdpSendRate());
 				setAllowPutGetResourceRedirects(transferOptions
@@ -101,6 +100,8 @@ public class TransferOptions {
 				setComputeAndVerifyChecksumAfterTransfer(transferOptions
 						.isComputeAndVerifyChecksumAfterTransfer());
 				setIntraFileStatusCallbacks(transferOptions.intraFileStatusCallbacks);
+				setForceOption(transferOptions.getForceOption());
+				setUseParallelTransfer(transferOptions.isUseParallelTransfer());
 			}
 		}
 	}
@@ -112,34 +113,60 @@ public class TransferOptions {
 
 	}
 
-	public synchronized TransferType getTransferType() {
-		return transferType;
-	}
-
-	public synchronized void setTransferType(final TransferType transferType) {
-		this.transferType = transferType;
-	}
-
+	/**
+	 * Get the desired max threads value for paralell transfers
+	 * 
+	 * @return <code>int</code> with the desired max parallel transfer threads.
+	 *         0 means use default in iRODS.
+	 */
 	public synchronized int getMaxThreads() {
 		return maxThreads;
 	}
 
+	/**
+	 * Set the desired max threads value for parallel transfers.
+	 * 
+	 * @param maxThreads
+	 *            <code>int</code> with the maximum desired parallel transfer
+	 *            threads, 0 means use the default in iRODS.
+	 */
 	public synchronized void setMaxThreads(final int maxThreads) {
 		this.maxThreads = maxThreads;
 	}
 
+	/**
+	 * Get the UDP send rate if UDP transfers in use.
+	 * 
+	 * @return <code>int</code> with the UDP send rate
+	 */
 	public synchronized int getUdpSendRate() {
 		return udpSendRate;
 	}
 
+	/**
+	 * Set the UDP send rate if UDP transfers in use.
+	 * 
+	 * @param udpSendRate
+	 *            <code>int</code> with the desired UDP send rate.
+	 */
 	public synchronized void setUdpSendRate(final int udpSendRate) {
 		this.udpSendRate = udpSendRate;
 	}
 
+	/**
+	 * Get the desired UDP packet size if UDP transfers are in use.
+	 * 
+	 * @return <code>int</code> with desired UDP packet size.
+	 */
 	public synchronized int getUdpPacketSize() {
 		return udpPacketSize;
 	}
 
+	/**
+	 * Set the desired UDP packet size if UDP transfers are in use.
+	 * 
+	 * @param udpPacketSize
+	 */
 	public synchronized void setUdpPacketSize(final int udpPacketSize) {
 		this.udpPacketSize = udpPacketSize;
 	}
@@ -187,7 +214,7 @@ public class TransferOptions {
 	 * @param computeAndVerifyChecksumAfterTransfer
 	 *            the computeAndVerifyChecksumAfterTransfer to set
 	 */
-	public void setComputeAndVerifyChecksumAfterTransfer(
+	public synchronized void setComputeAndVerifyChecksumAfterTransfer(
 			final boolean computeAndVerifyChecksumAfterTransfer) {
 		this.computeAndVerifyChecksumAfterTransfer = computeAndVerifyChecksumAfterTransfer;
 	}
@@ -195,25 +222,70 @@ public class TransferOptions {
 	/**
 	 * @return the computeAndVerifyChecksumAfterTransfer
 	 */
-	public boolean isComputeAndVerifyChecksumAfterTransfer() {
+	public synchronized boolean isComputeAndVerifyChecksumAfterTransfer() {
 		return computeAndVerifyChecksumAfterTransfer;
 	}
 
 	/**
-	 * @return the intraFileStatusCallbacks value.  If <code>true</code>, then call-backs will
-	 * be sent on progress within-file, if a listener is present.
+	 * @return the intraFileStatusCallbacks value. If <code>true</code>, then
+	 *         call-backs will be sent on progress within-file, if a listener is
+	 *         present.
 	 */
-	public boolean isIntraFileStatusCallbacks() {
+	public synchronized boolean isIntraFileStatusCallbacks() {
 		return intraFileStatusCallbacks;
 	}
 
 	/**
-	 * @param intraFileStatusCallbacks <code>boolean</code> with the intraFileStatusCallbacks behavior desired.  If <code>true</code>
-	 * and a call-back listener is provided, then within-file status call-backs will be generated during transfers.  This has a
-	 * slight performance penalty.
+	 * @param intraFileStatusCallbacks
+	 *            <code>boolean</code> with the intraFileStatusCallbacks
+	 *            behavior desired. If <code>true</code> and a call-back
+	 *            listener is provided, then within-file status call-backs will
+	 *            be generated during transfers. This has a slight performance
+	 *            penalty.
 	 */
-	public void setIntraFileStatusCallbacks(boolean intraFileStatusCallbacks) {
+	public synchronized void setIntraFileStatusCallbacks(
+			final boolean intraFileStatusCallbacks) {
 		this.intraFileStatusCallbacks = intraFileStatusCallbacks;
 	}
-	
+
+	/**
+	 * Get the prevailing force option for this transfer
+	 * 
+	 * @return {@link ForceOption} enum value that indicates the force mode to
+	 *         use
+	 */
+	public synchronized ForceOption getForceOption() {
+		return forceOption;
+	}
+
+	/**
+	 * Set the prevailing force option for this transfer.
+	 * 
+	 * @param forceOption
+	 *            {@link ForceOption} enum value
+	 */
+	public synchronized void setForceOption(final ForceOption forceOption) {
+		this.forceOption = forceOption;
+	}
+
+	/**
+	 * Is parallel transfer allowed for this operation?
+	 * 
+	 * @return useParallelTransfer <code>boolean</code> which is
+	 *         <code>true</code> if parallel transfers can be usd
+	 */
+	public boolean isUseParallelTransfer() {
+		return useParallelTransfer;
+	}
+
+	/**
+	 * Set whether parallel transfers can be used
+	 * 
+	 * @param useParallelTransfer
+	 *            <code>boolean</code> with the useParallelTransfer option
+	 */
+	public void setUseParallelTransfer(boolean useParallelTransfer) {
+		this.useParallelTransfer = useParallelTransfer;
+	}
+
 }

@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Properties;
 
 import junit.framework.Assert;
-import junit.framework.TestCase;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.NoAPIPrivException;
@@ -78,8 +77,7 @@ public class QuotaAOImplTest {
 				quotaVal);
 
 		List<Quota> actual = quotaAO.listAllQuota();
-		TestCase.assertTrue("empty quota list result returned",
-				actual.size() > 0);
+		Assert.assertTrue("empty quota list result returned", actual.size() > 0);
 
 		boolean foundQuota = false;
 
@@ -89,18 +87,18 @@ public class QuotaAOImplTest {
 							.equals(testingProperties
 									.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_RESOURCE_KEY))) {
 				foundQuota = true;
-				TestCase.assertEquals(
+				Assert.assertEquals(
 						"did not properly set resource quota value", quotaVal,
 						quota.getQuotaLimit());
 			}
 		}
 
-		TestCase.assertTrue(
-				"did not find expected user/resource quota setting", foundQuota);
+		Assert.assertTrue("did not find expected user/resource quota setting",
+				foundQuota);
 
 	}
 
-	@Test(expected=NoAPIPrivException.class)
+	@Test(expected = NoAPIPrivException.class)
 	public void testListAllNotRodsadmin() throws Exception {
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTertiaryTestProperties(testingProperties);
@@ -128,8 +126,7 @@ public class QuotaAOImplTest {
 
 		List<Quota> actual = quotaAO.listQuotaForAUser(irodsAccount
 				.getUserName());
-		TestCase.assertTrue("empty quota list result returned",
-				actual.size() > 0);
+		Assert.assertTrue("empty quota list result returned", actual.size() > 0);
 
 		boolean foundQuota = false;
 
@@ -139,14 +136,14 @@ public class QuotaAOImplTest {
 							.equals(testingProperties
 									.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_RESOURCE_KEY))) {
 				foundQuota = true;
-				TestCase.assertEquals(
+				Assert.assertEquals(
 						"did not properly set resource quota value", quotaVal,
 						quota.getQuotaLimit());
 			}
 		}
 
-		TestCase.assertTrue(
-				"did not find expected user/resource quota setting", foundQuota);
+		Assert.assertTrue("did not find expected user/resource quota setting",
+				foundQuota);
 
 	}
 
@@ -165,14 +162,14 @@ public class QuotaAOImplTest {
 
 		Quota actual = adminQuotaAO.getGlobalQuotaForAUser(irodsAccount
 				.getUserName());
-		TestCase.assertNotNull("null quota list result returned", actual);
-		TestCase.assertEquals("invalid user name", irodsAccount.getUserName(),
+		Assert.assertNotNull("null quota list result returned", actual);
+		Assert.assertEquals("invalid user name", irodsAccount.getUserName(),
 				actual.getUserName());
-		TestCase.assertEquals("invalid zone", irodsAccount.getZone(),
+		Assert.assertEquals("invalid zone", irodsAccount.getZone(),
 				actual.getZoneName());
-		TestCase.assertEquals("invalid resource, should be 'total'", "total",
+		Assert.assertEquals("invalid resource, should be 'total'", "total",
 				actual.getResourceName());
-		TestCase.assertEquals("invalid quota value", quotaVal,
+		Assert.assertEquals("invalid quota value", quotaVal,
 				actual.getQuotaLimit());
 	}
 
@@ -190,8 +187,7 @@ public class QuotaAOImplTest {
 		adminQuotaAO.setUserQuotaTotal(irodsAccount.getUserName(), quotaVal);
 
 		List<Quota> actual = adminQuotaAO.listAllGlobalQuota();
-		TestCase.assertTrue("empty quota list result returned",
-				actual.size() > 0);
+		Assert.assertTrue("empty quota list result returned", actual.size() > 0);
 
 		boolean foundQuota = false;
 
@@ -199,13 +195,13 @@ public class QuotaAOImplTest {
 			if (quota.getUserName().equals(irodsAccount.getUserName())
 					&& quota.getResourceName().equals("total")) {
 				foundQuota = true;
-				TestCase.assertEquals(
+				Assert.assertEquals(
 						"did not properly set resource quota value", quotaVal,
 						quota.getQuotaLimit());
 			}
 		}
 
-		TestCase.assertTrue("did not find expected user global quota setting",
+		Assert.assertTrue("did not find expected user global quota setting",
 				foundQuota);
 	}
 

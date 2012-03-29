@@ -31,8 +31,6 @@ public class QuotaAOImpl extends IRODSGenericAO implements QuotaAO {
 	public static final String QUOTA_GLOBAL_FOR_USER_AND_ZONE_QUERY = "select user_name, R_USER_MAIN.zone_name, quota_limit, quota_over, R_QUOTA_MAIN.modify_ts from R_QUOTA_MAIN, R_USER_MAIN where R_USER_MAIN.user_id = R_QUOTA_MAIN.user_id and R_QUOTA_MAIN.resc_id = 0 and user_name=? and R_USER_MAIN.zone_name=?";
 	public static final String ALL_QUOTA_QUERY = "select user_name, R_USER_MAIN.zone_name, resc_name, quota_limit, quota_over, R_QUOTA_MAIN.modify_ts from R_QUOTA_MAIN, R_USER_MAIN, R_RESC_MAIN where R_USER_MAIN.user_id = R_QUOTA_MAIN.user_id and R_RESC_MAIN.resc_id = R_QUOTA_MAIN.resc_id";
 	public static final String QUOTA_FOR_USER_AND_ZONE_QUERY = "select user_name, R_USER_MAIN.zone_name, resc_name, quota_limit, quota_over, R_QUOTA_MAIN.modify_ts from R_QUOTA_MAIN, R_USER_MAIN, R_RESC_MAIN where R_USER_MAIN.user_id = R_QUOTA_MAIN.user_id and R_RESC_MAIN.resc_id = R_QUOTA_MAIN.resc_id and user_name=? and R_USER_MAIN.zone_name=?";
-	@SuppressWarnings("unused")
-	private static final char COMMA = ',';
 
 	/**
 	 * Default constructor (protected). Object is created via factory.
@@ -125,13 +123,17 @@ public class QuotaAOImpl extends IRODSGenericAO implements QuotaAO {
 		log.info("quota set");
 
 	}
-	
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.pub.QuotaAO#setUserGroupQuotaTotal(java.lang.String, long)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.QuotaAO#setUserGroupQuotaTotal(java.lang.String
+	 * , long)
 	 */
 	@Override
-	public void setUserGroupQuotaTotal(final String userGroupName, final long quotaValue)
-			throws JargonException {
+	public void setUserGroupQuotaTotal(final String userGroupName,
+			final long quotaValue) throws JargonException {
 
 		log.info("setUserGroupQuotaTotal()");
 
@@ -146,8 +148,8 @@ public class QuotaAOImpl extends IRODSGenericAO implements QuotaAO {
 		log.info("userGroupName:{}", userGroupName);
 		log.info("quotaValue:{}", quotaValue);
 
-		GeneralAdminInp adminPI = GeneralAdminInp.instanceForSetUserGroupQuotaTotal(
-				userGroupName, quotaValue);
+		GeneralAdminInp adminPI = GeneralAdminInp
+				.instanceForSetUserGroupQuotaTotal(userGroupName, quotaValue);
 		log.debug("executing admin PI");
 		getIRODSProtocol().irodsFunction(adminPI);
 		log.info("quota set");
@@ -192,17 +194,22 @@ public class QuotaAOImpl extends IRODSGenericAO implements QuotaAO {
 		log.info("quota set");
 
 	}
-	
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.pub.QuotaAO#setUserGroupQuotaForResource(java.lang.String, java.lang.String, long)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.QuotaAO#setUserGroupQuotaForResource(java.lang
+	 * .String, java.lang.String, long)
 	 */
 	@Override
 	public void setUserGroupQuotaForResource(final String userGroupName,
 			final String resourceName, final long quotaValue)
 			throws JargonException {
 
-		// TODO: add tests when user group crud in place per [#471] add user group CRUD
-		
+		// TODO: add tests when user group crud in place per [#471] add user
+		// group CRUD
+
 		log.info("setUserGroupQuotaForResource()");
 
 		if (userGroupName == null || userGroupName.isEmpty()) {
@@ -222,8 +229,8 @@ public class QuotaAOImpl extends IRODSGenericAO implements QuotaAO {
 		log.info("quotaValue:{}", quotaValue);
 
 		GeneralAdminInp adminPI = GeneralAdminInp
-				.instanceForSetUserGroupQuotaForResource(userGroupName, resourceName,
-						quotaValue);
+				.instanceForSetUserGroupQuotaForResource(userGroupName,
+						resourceName, quotaValue);
 		log.debug("executing admin PI");
 		getIRODSProtocol().irodsFunction(adminPI);
 		log.info("quota set");
@@ -302,14 +309,17 @@ public class QuotaAOImpl extends IRODSGenericAO implements QuotaAO {
 
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.irods.jargon.core.pub.QuotaAO#calculateQuotaUsage()
 	 */
 	@Override
 	public void calculateQuotaUsage() throws JargonException {
 
 		log.info("calculateQuotaUsage()");
-		GeneralAdminInp adminPI = GeneralAdminInp.instanceForCalculateQuotaUsage();	
+		GeneralAdminInp adminPI = GeneralAdminInp
+				.instanceForCalculateQuotaUsage();
 		log.debug("executing admin PI");
 		getIRODSProtocol().irodsFunction(adminPI);
 		log.info("quota usage calculated");

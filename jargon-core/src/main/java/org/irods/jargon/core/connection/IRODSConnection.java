@@ -472,8 +472,9 @@ final class IRODSConnection implements IRODSManagedConnection {
 	 * agent
 	 * 
 	 * @param source
-	 *            <code>InputStream</code> to the data to be written.  This stream will have been buffered by the caller, no buffering
-	 *            is done here.
+	 *            <code>InputStream</code> to the data to be written. This
+	 *            stream will have been buffered by the caller, no buffering is
+	 *            done here.
 	 * @param length
 	 *            <code>long</code> with the length of data to send
 	 * @param lengthLeftToSend
@@ -498,8 +499,9 @@ final class IRODSConnection implements IRODSManagedConnection {
 
 		try {
 			int lenThisRead = 0;
-			long lenOfTemp = Math.min((long) pipelineConfiguration
-					.getInputToOutputCopyBufferByteSize(), length);
+			long lenOfTemp = Math.min(
+					pipelineConfiguration.getInputToOutputCopyBufferByteSize(),
+					length);
 			long dataSent = 0;
 
 			byte[] temp = new byte[(int) lenOfTemp];
@@ -526,7 +528,6 @@ final class IRODSConnection implements IRODSManagedConnection {
 							.connectionProgressStatusCallback(ConnectionProgressStatus
 									.instanceForSend(lenThisRead));
 				}
-
 			}
 
 			log.debug("final flush of data sent");
@@ -597,7 +598,8 @@ final class IRODSConnection implements IRODSManagedConnection {
 	 * read length bytes from the server socket connection and write them to
 	 * destination
 	 */
-	void read(final OutputStream destination, long length) throws IOException {
+	void read(final OutputStream destination, final long length)
+			throws IOException {
 		read(destination, length, null);
 	}
 
@@ -617,8 +619,8 @@ final class IRODSConnection implements IRODSManagedConnection {
 	 *            progress on the streaming, or <code>null</code> for no such
 	 *            call-backs.
 	 */
-	public void read(OutputStream destination, long length,
-			ConnectionProgressStatusListener intraFileStatusListener)
+	public void read(final OutputStream destination, long length,
+			final ConnectionProgressStatusListener intraFileStatusListener)
 			throws IOException {
 
 		if (destination == null) {
@@ -767,7 +769,7 @@ final class IRODSConnection implements IRODSManagedConnection {
 	 *            the irodsSession that created this connection
 	 */
 	@Override
-	public void setIrodsSession(IRODSSession irodsSession) {
+	public void setIrodsSession(final IRODSSession irodsSession) {
 		this.irodsSession = irodsSession;
 	}
 
@@ -779,24 +781,28 @@ final class IRODSConnection implements IRODSManagedConnection {
 		return irodsAccount;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#finalize()
 	 */
 	@Override
 	protected void finalize() throws Throwable {
 		/*
-		 * Check if a still-connected agent connection is being finalized, and nag in the log, then try and disconnect
+		 * Check if a still-connected agent connection is being finalized, and
+		 * nag in the log, then try and disconnect
 		 */
-		
+
 		if (connected) {
 			log.error("**************************************************************************************");
 			log.error("********  WARNING: POTENTIAL CONNECTION LEAK  ******************");
 			log.error("********  finalizer has run and found a connection left opened, please check your code to ensure that all connections are closed");
-			log.error("********  connection is:{}, will attempt to disconnect", getConnectionUri());
+			log.error("********  connection is:{}, will attempt to disconnect",
+					getConnectionUri());
 			log.error("**************************************************************************************");
 			this.disconnect();
 		}
-		
+
 		super.finalize();
 	}
 
@@ -808,9 +814,11 @@ final class IRODSConnection implements IRODSManagedConnection {
 	}
 
 	/**
-	 * @param irodsProtocolManager the irodsProtocolManager to set
+	 * @param irodsProtocolManager
+	 *            the irodsProtocolManager to set
 	 */
-	public void setIrodsProtocolManager(IRODSProtocolManager irodsProtocolManager) {
+	public void setIrodsProtocolManager(
+			final IRODSProtocolManager irodsProtocolManager) {
 		this.irodsProtocolManager = irodsProtocolManager;
 	}
 

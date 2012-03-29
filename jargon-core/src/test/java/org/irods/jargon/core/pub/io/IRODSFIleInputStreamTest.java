@@ -9,7 +9,6 @@ import java.io.InputStream;
 import java.util.Properties;
 
 import junit.framework.Assert;
-import junit.framework.TestCase;
 
 import org.irods.jargon.core.connection.ConnectionProgressStatusListener;
 import org.irods.jargon.core.connection.IRODSAccount;
@@ -189,20 +188,16 @@ public class IRODSFIleInputStreamTest {
 				.instanceIRODSFileInputStreamWithRerouting(irodsFile
 						.getAbsolutePath());
 
-		int bytesRead = 0;
-		int readLength = 0;
 		byte[] readBytesBuffer = new byte[512];
-		while ((readLength = (fis.read(readBytesBuffer, 0,
-				readBytesBuffer.length))) > -1) {
+		while (((fis.read(readBytesBuffer, 0, readBytesBuffer.length))) > -1) {
 			actualFileContents.write(readBytesBuffer);
-			bytesRead += readLength;
 		}
 
 		fis.close();
 		irodsFileSystem.closeAndEatExceptions(irodsAccount);
-		TestCase.assertTrue("did not get instance of session closing stream",
+		Assert.assertTrue("did not get instance of session closing stream",
 				fis instanceof SessionClosingIRODSFileInputStream);
-		TestCase.assertNull("session from reroute leaking",
+		Assert.assertNull("session from reroute leaking",
 				irodsFileSystem.getConnectionMap());
 
 	}
@@ -248,20 +243,16 @@ public class IRODSFIleInputStreamTest {
 				.instanceIRODSFileInputStreamWithRerouting(irodsFile
 						.getAbsolutePath());
 
-		int bytesRead = 0;
-		int readLength = 0;
 		byte[] readBytesBuffer = new byte[512];
-		while ((readLength = (fis.read(readBytesBuffer, 0,
-				readBytesBuffer.length))) > -1) {
+		while (((fis.read(readBytesBuffer, 0, readBytesBuffer.length))) > -1) {
 			actualFileContents.write(readBytesBuffer);
-			bytesRead += readLength;
 		}
 
 		fis.close();
 		irodsFileSystem.closeAndEatExceptions(irodsAccount);
-		TestCase.assertFalse("did not get instance of session closing stream",
+		Assert.assertFalse("did not get instance of session closing stream",
 				fis instanceof SessionClosingIRODSFileInputStream);
-		TestCase.assertNull("session from reroute leaking",
+		Assert.assertNull("session from reroute leaking",
 				irodsFileSystem.getConnectionMap());
 
 	}

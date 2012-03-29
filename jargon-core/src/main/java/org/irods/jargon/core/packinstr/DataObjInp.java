@@ -6,7 +6,6 @@ package org.irods.jargon.core.packinstr;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.irods.jargon.core.connection.ConnectionConstants;
 import org.irods.jargon.core.exception.JargonException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,6 +32,7 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 	public static final String DATA_INCLUDED_KW = "dataIncluded";
 	public static final String RESC_NAME = "rescName";
 	public static final String MY_STR = "myStr";
+	public static final String LOCAL_PATH = "localPath";
 	public static final String ALL = "all";
 
 	public static final int CREATE_FILE_API_NBR = 601;
@@ -63,7 +63,7 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 
 	private static Logger log = LoggerFactory.getLogger(DataObjInp.class);
 
-	public static final int DEFAULT_CREATE_MODE = 33206;
+	public static final int DEFAULT_CREATE_MODE = 33188;
 	public static final int EXEC_CREATE_MODE = 33261;
 	public static final int ZERO_CREATE_MODE = 0;
 
@@ -78,6 +78,7 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 	}
 
 	private String fileAbsolutePath = "";
+	private String localPath = "";
 	private int createMode = DEFAULT_CREATE_MODE;
 	private OpenFlags openFlags = null;
 	private long offset = 0L;
@@ -570,6 +571,8 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 	 * @param resource
 	 *            <code>String</code> with the resource that contains the file
 	 *            that should be retrieved
+	 * @param localPath
+	 *            <code>String</code> with the absolute path to the local file
 	 * @param transferOptions
 	 *            {@link TransferOptions} that configures details about the
 	 *            underlying technique used in the transfer. Can be set to null
@@ -580,7 +583,8 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 	 */
 	public static final DataObjInp instanceForGetSpecifyingResource(
 			final String sourceAbsolutePath, final String resource,
-			final TransferOptions transferOptions) throws JargonException {
+			final String localPath, final TransferOptions transferOptions)
+			throws JargonException {
 
 		if (sourceAbsolutePath == null || sourceAbsolutePath.isEmpty()) {
 			throw new JargonException("null or empty sourceAbsolutePath");
@@ -590,10 +594,16 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 			throw new JargonException("null resource");
 		}
 
+		if (localPath == null) {
+			throw new IllegalArgumentException(
+					"localPath is null, set to spaces if not used");
+		}
+
 		DataObjInp dataObjInp = new DataObjInp(sourceAbsolutePath, 0,
 				OpenFlags.READ, 0L, 0L, resource, transferOptions);
 		dataObjInp.operationType = GET_OPERATION_TYPE;
 		dataObjInp.setApiNumber(GET_FILE_API_NBR);
+		dataObjInp.setLocalPath(localPath);
 
 		return dataObjInp;
 	}
@@ -711,10 +721,21 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 		int tagOpenFlags = translateOpenFlagsValue();
 		int transferOptionsNumThreads = 0;
 
-		if (transferOptions != null
-				&& getDataSize() > ConnectionConstants.MAX_SZ_FOR_SINGLE_BUF) {
-			transferOptionsNumThreads = transferOptions.getMaxThreads();
+		if (transferOptions != null) {
+			if (this.getApiNumber() == DataObjInp.PUT_FILE_API_NBR
+					|| this.getApiNumber() == DataObjInp.GET_FILE_API_NBR) {
+				transferOptionsNumThreads = transferOptions.getMaxThreads();
+			}
 		}
+
+		/*
+		 * if (this.getApiNumber() == DataObjInp.PUT_FILE_API_NBR ||
+		 * this.getApiNumber() == DataObjInp.GET_FILE_API_NBR) { if
+		 * (!transferOptions.isUseParallelTransfer()) { // no parallel transfer,
+		 * number threads set to -1 transferOptionsNumThreads = -1; } else { if
+		 * (getDataSize() > ConnectionConstants.MAX_SZ_FOR_SINGLE_BUF) {
+		 * transferOptionsNumThreads = transferOptions.getMaxThreads(); } } }
+		 */
 
 		Tag message = new Tag(PI_TAG, new Tag[] {
 				new Tag(OBJ_PATH, getFileAbsolutePath()),
@@ -740,6 +761,10 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 			kvps.add(KeyValuePair.instance(ALL, ""));
 		}
 
+		if (!this.getLocalPath().isEmpty()) {
+			kvps.add(KeyValuePair.instance(LOCAL_PATH, getLocalPath()));
+		}
+
 		// add a keyword tag for resource if a resource was given to the packing
 		// instruction.
 		if (getResource().length() > 0) {
@@ -750,8 +775,8 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 			} else {
 				kvps.add(KeyValuePair.instance(DEST_RESC_NAME, getResource()));
 			}
-		} 
-		
+		}
+
 		message.addTag(createKeyValueTag(kvps));
 		return message;
 	}
@@ -893,6 +918,21 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 	 */
 	public String getFileChecksumValue() {
 		return fileChecksumValue;
+	}
+
+	/**
+	 * @return the localPath
+	 */
+	public String getLocalPath() {
+		return localPath;
+	}
+
+	/**
+	 * @param localPath
+	 *            the localPath to set
+	 */
+	public void setLocalPath(final String localPath) {
+		this.localPath = localPath;
 	}
 
 }

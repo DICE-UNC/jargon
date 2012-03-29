@@ -1,7 +1,6 @@
 package org.irods.jargon.core.packinstr;
 
-
-import junit.framework.TestCase;
+import junit.framework.Assert;
 
 import org.junit.After;
 import org.junit.Before;
@@ -16,31 +15,29 @@ public class DataObjInpForObjStatTest {
 	@After
 	public void tearDown() throws Exception {
 	}
-	
+
 	@Test
-	public final void testInstanceForObjStat()
-			throws Exception {
-		DataObjInpForObjStat dataObjInp = DataObjInpForObjStat.instance("/a/file/path");
-		TestCase.assertNotNull("got a null dataObjInp", dataObjInp);
+	public final void testInstanceForObjStat() throws Exception {
+		DataObjInpForObjStat dataObjInp = DataObjInpForObjStat
+				.instance("/a/file/path");
+		Assert.assertNotNull("got a null dataObjInp", dataObjInp);
 	}
-	
-	@Test(expected=IllegalArgumentException.class)
-	public final void testInstanceForObjStatNullPath()
-			throws Exception {
+
+	@Test(expected = IllegalArgumentException.class)
+	public final void testInstanceForObjStatNullPath() throws Exception {
 		DataObjInpForObjStat.instance(null);
 	}
-	
-	@Test(expected=IllegalArgumentException.class)
-	public final void testInstanceForObjStatBlankPath()
-			throws Exception {
+
+	@Test(expected = IllegalArgumentException.class)
+	public final void testInstanceForObjStatBlankPath() throws Exception {
 		DataObjInpForObjStat.instance("");
 	}
-	
+
 	@Test
-	public final void testGetParsedTags()
-			throws Exception {
-	
-		DataObjInpForObjStat dataObjInp = DataObjInpForObjStat.instance("/a/file/path");
+	public final void testGetParsedTags() throws Exception {
+
+		DataObjInpForObjStat dataObjInp = DataObjInpForObjStat
+				.instance("/a/file/path");
 
 		StringBuilder sb = new StringBuilder();
 		sb.append("<DataObjInp_PI><objPath>/a/file/path</objPath>\n");
@@ -53,7 +50,7 @@ public class DataObjInpForObjStatTest {
 		sb.append("<KeyValPair_PI><ssLen>0</ssLen>\n");
 		sb.append("</KeyValPair_PI>\n");
 		sb.append("</DataObjInp_PI>\n");
-		TestCase.assertEquals("did not get expected packing instruction",
+		Assert.assertEquals("did not get expected packing instruction",
 				sb.toString(), dataObjInp.getParsedTags());
 	}
 }

@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.irods.jargon.core.exception.FileNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
-import org.irods.jargon.core.pub.domain.DataObject;
 import org.irods.jargon.core.pub.domain.ObjStat;
 import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry;
 
@@ -18,11 +17,28 @@ import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry;
  * for both Swing and web GUI tree models, and basic search boxes for file or
  * collection names. More advanced searching based on metadata or other criteria
  * are available elsewhere in the API.
+ * <p/>
+ * <b>NOTE:</b> Within iRODS, Collections (directories) and Data Objects (files)
+ * are different parts of the iCAT. For this reason, the listings are generated
+ * separately, with the convention of collections first, and data objects
+ * second. In the various listing methods, you will see methods for combining
+ * queries on collections and data objects (such as listing the contents of a
+ * parent directory). This separation of iCAT types makes life a little
+ * complicated, in that these combined listing operations may end up with
+ * collections and data objects with different paging requirements (e.g. There
+ * are more collections to page, but no more data objects. This must be
+ * accounted for by client programs. The
+ * {@link CollectionAndDataObjectListingEntry} extends teh
+ * {@link IRODSDomainObject} superclass, this superclass provides methods to
+ * access whether there are more entries, and at what sequence in a result
+ * collection the 'has more' entry occurs, so that offset is available for
+ * re-query.
  * 
  * @author Mike Conway - DICE (www.irods.org)
  * 
  */
-public interface CollectionAndDataObjectListAndSearchAO extends IRODSAccessObject {
+public interface CollectionAndDataObjectListAndSearchAO extends
+		IRODSAccessObject {
 
 	/**
 	 * This is a method that can support listing and paging of collections,
@@ -61,7 +77,8 @@ public interface CollectionAndDataObjectListAndSearchAO extends IRODSAccessObjec
 	 * method can inspect the returned results to determine the position of each
 	 * result and whether there are more records to display.
 	 * <p/>
-	 * This method is not a search method, it simply lists.
+	 * This method is not a search method, it simply lists the directories that
+	 * are direct children of the given path.
 	 * 
 	 * @param absolutePathToParent
 	 *            <code>String</code> with the absolute path to the parent. If
@@ -84,7 +101,8 @@ public interface CollectionAndDataObjectListAndSearchAO extends IRODSAccessObjec
 	 * This method is in support of applications and interfaces that need to
 	 * support listing and paging of collections. This method returns a simple
 	 * value object that contains information about paging for each object, such
-	 * as record count, and whether this is the last record.
+	 * as record count, and whether this is the last record. This method will
+	 * list objects that are direct children underneath the given parent.
 	 * <p/>
 	 * Note that this collection is composed of a collection of objects for
 	 * child collections, and a collection of objects for child data objects
@@ -119,7 +137,7 @@ public interface CollectionAndDataObjectListAndSearchAO extends IRODSAccessObjec
 	 * This method is in support of applications and interfaces that need to
 	 * support listing and paging of collections. This method returns a simple
 	 * count of the children (data objects and collections) underneath this
-	 * directory.
+	 * directory, and includes all children.
 	 * 
 	 * @param absolutePathToParent
 	 *            <code>String</code> with the absolute path to the parent. The
@@ -252,6 +270,9 @@ public interface CollectionAndDataObjectListAndSearchAO extends IRODSAccessObjec
 	 * WHERE DATA_NAME LIKE '%searchTerm%'
 	 * </pre>
 	 * 
+	 * <p/>
+	 * Note that this method will compensate if strict ACL's are in place
+	 * 
 	 * @param searchTerm
 	 *            <code>String</code> that is the path search term, note that
 	 *            the "%" is added in the method and should not be provided as a
@@ -348,6 +369,14 @@ public interface CollectionAndDataObjectListAndSearchAO extends IRODSAccessObjec
 	 * as record count, and whether this is the last record. This method adds
 	 * the user ACL information, which is derived from an extended query.
 	 * <p/>
+	 * Note that there is an issue with GenQuery that makes it impossible to
+	 * derive user zone in this query. This is something that may be addressed
+	 * by converting the GenQuery to 'specific SQL query' at a later time. If
+	 * zone information is desired, it is recommended that the
+	 * <code>listPermissionsForDataObject()</code> in {@link DataObjectAO} and
+	 * <code>listPermissionsForCollection</code> in {@link CollectionAO} be
+	 * consulted.
+	 * <p/>
 	 * This method is meant for listings, or building trees. As such, it does
 	 * not show any information about replicas, rather, it groups the data by
 	 * data object path for all replicas.
@@ -382,30 +411,38 @@ public interface CollectionAndDataObjectListAndSearchAO extends IRODSAccessObjec
 			JargonException;
 
 	/**
-	 * TODO: work in progress
-	 * 
-	 * @param absolutePathToParent
-	 * @param userName
-	 * @param partialStartIndex
-	 * @return
-	 * @throws JargonException
-	 */
-	List<CollectionAndDataObjectListingEntry> listDataObjectsSharedWithAGivenUser(
-			String absolutePathToParent, String userName, int partialStartIndex)
-			throws JargonException;
-
-	/**
 	 * Retrieve the <code>ObjStat</code> for a collection or data object at the
 	 * given absolute path in iRODS. This is the result of a call to rsObjStat.
 	 * 
 	 * @param irodsAbsolutePath
 	 *            <code>String</code> with the absolute path to an iRODS
 	 *            collection or data object.
-	 * @return {@link ObjStat} with object data, or <code>null</code> if no data
-	 *         is found.
+	 * @return {@link ObjStat} with object data. Note that a
+	 *         <code>FileNotFoundException<code> will occur if the objStat cannot
+	 * be found
+	 * @throws FileNotFoundException
+	 *             if the file is not found
 	 * @throws JargonException
 	 */
 	ObjStat retrieveObjectStatForPath(String irodsAbsolutePath)
-			throws JargonException;
+			throws FileNotFoundException, JargonException;
+
+	/**
+	 * Return the <code>CollectionAndDataObjectListingEntry</code> that is
+	 * associated with the given iRODS absolute path. This is equivalent to
+	 * doing an 'objStat' on the given path, and in fact, this is how the data
+	 * is retrieved from iRODS.
+	 * 
+	 * @param absolutePath
+	 *            <code>String</code> with the absolute path to an iRODS
+	 *            collection or data object.
+	 * @return {@link org.irods.jargon.core.query.CollectionAndDataObjectListingEntry}
+	 *         containing information on the given file or directory at the
+	 *         given absolute path.
+	 * @throws FileNotFoundException
+	 * @throws JargonException
+	 */
+	CollectionAndDataObjectListingEntry getCollectionAndDataObjectListingEntryAtGivenAbsolutePath(
+			String absolutePath) throws FileNotFoundException, JargonException;
 
 }

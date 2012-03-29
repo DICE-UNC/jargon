@@ -9,9 +9,6 @@ import java.util.Properties;
 import junit.framework.Assert;
 
 import org.irods.jargon.core.connection.IRODSAccount;
-import org.irods.jargon.core.connection.IRODSProtocolManager;
-import org.irods.jargon.core.connection.IRODSSession;
-import org.irods.jargon.core.connection.IRODSSimpleProtocolManager;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.pub.io.IRODSFileFactory;
 import org.irods.jargon.core.query.IRODSGenQuery;
@@ -23,10 +20,6 @@ import org.irods.jargon.testutils.IRODSTestSetupUtilities;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.irods.jargon.testutils.filemanip.FileGenerator;
 import org.irods.jargon.testutils.filemanip.ScratchFileUtils;
-import org.irods.jargon.testutils.icommandinvoke.IcommandInvoker;
-import org.irods.jargon.testutils.icommandinvoke.IrodsInvocationContext;
-import org.irods.jargon.testutils.icommandinvoke.icommands.ImkdirCommand;
-import org.irods.jargon.testutils.icommandinvoke.icommands.IputCommand;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -43,9 +36,11 @@ public class IRODSGenQueryExecutorImplTest {
 	public static final String IRODS_TEST_SUBDIR_PATH = "IrodsGenQueryExecutorImplTest";
 	private static IRODSTestSetupUtilities irodsTestSetupUtilities = null;
 	public static final String collDir = "coll";
+	private static IRODSFileSystem irodsFileSystem = null;
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
+		irodsFileSystem = IRODSFileSystem.instance();
 		TestingPropertiesHelper testingPropertiesLoader = new TestingPropertiesHelper();
 		testingProperties = testingPropertiesLoader.getTestProperties();
 		scratchFileUtils = new ScratchFileUtils(testingProperties);
@@ -63,26 +58,23 @@ public class IRODSGenQueryExecutorImplTest {
 
 		FileGenerator.generateManyFilesInGivenDirectory(IRODS_TEST_SUBDIR_PATH
 				+ '/' + collDir, testFilePrefix, testFileSuffix, 2000, 5, 10);
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
 
-		IrodsInvocationContext invocationContext = testingPropertiesHelper
-				.buildIRODSInvocationContextFromTestProperties(testingProperties);
-		IcommandInvoker invoker = new IcommandInvoker(invocationContext);
-
-		// make the put subdir
-		String targetIrodsCollection = testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH);
-		ImkdirCommand iMkdirCommand = new ImkdirCommand();
-		iMkdirCommand.setCollectionName(targetIrodsCollection);
-		invoker.invokeCommandAndGetResultAsString(iMkdirCommand);
+		IRODSFile putDir = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(
+						testingPropertiesHelper
+								.buildIRODSCollectionAbsolutePathFromTestProperties(
+										testingProperties,
+										IRODS_TEST_SUBDIR_PATH));
+		putDir.mkdirs();
 
 		// put the files by putting the collection
-		IputCommand iputCommand = new IputCommand();
-		iputCommand.setForceOverride(true);
-		iputCommand.setIrodsFileName(targetIrodsCollection);
-		iputCommand.setLocalFileName(absPath + collDir);
-		iputCommand.setRecursive(true);
-		invoker.invokeCommandAndGetResultAsString(iputCommand);
+		DataTransferOperations dto = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataTransferOperations(
+						irodsAccount);
+		dto.putOperation(absPath + "/" + collDir, putDir.getAbsolutePath(), "",
+				null, null);
 
 	}
 
@@ -91,22 +83,21 @@ public class IRODSGenQueryExecutorImplTest {
 	 */
 	@AfterClass
 	public static void tearDownAfterClass() throws Exception {
+		irodsFileSystem.close();
 	}
 
 	@Test
 	public final void testIRODSGenQueryExecutorImpl() throws Exception {
-		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager
-				.instance();
+
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSSession irodsSession = IRODSSession
-				.instance(irodsConnectionManager);
-		IRODSAccessObjectFactory accessObjectFactory = IRODSAccessObjectFactoryImpl
-				.instance(irodsSession);
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
 		IRODSGenQueryExecutor irodsGenQueryExecutor = accessObjectFactory
 				.getIRODSGenQueryExecutor(irodsAccount);
 		Assert.assertNotNull(irodsGenQueryExecutor);
-		irodsSession.closeSession();
 	}
 
 	@Test
@@ -125,20 +116,221 @@ public class IRODSGenQueryExecutorImplTest {
 				+ "'";
 
 		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(queryString, 100);
-		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager
-				.instance();
+
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSSession irodsSession = IRODSSession
-				.instance(irodsConnectionManager);
-		IRODSAccessObjectFactory accessObjectFactory = IRODSAccessObjectFactoryImpl
-				.instance(irodsSession);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
 		IRODSGenQueryExecutor irodsGenQueryExecutor = accessObjectFactory
 				.getIRODSGenQueryExecutor(irodsAccount);
 
 		IRODSQueryResultSetInterface resultSet = irodsGenQueryExecutor
 				.executeIRODSQuery(irodsQuery, 0);
-		irodsSession.closeSession();
+
+		Assert.assertNotNull(resultSet);
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public final void testExecuteIRODSQueryNullQuery() throws Exception {
+
+		IRODSGenQuery irodsQuery = null;
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+		IRODSGenQueryExecutor irodsGenQueryExecutor = accessObjectFactory
+				.getIRODSGenQueryExecutor(irodsAccount);
+
+		irodsGenQueryExecutor.executeIRODSQuery(irodsQuery, 0);
+
+	}
+
+	@Test
+	public final void testExecuteIRODSQueryWithPagingSupplySameZone()
+			throws Exception {
+
+		String queryString = "select "
+				+ RodsGenQueryEnum.COL_R_RESC_NAME.getName()
+				+ " ,"
+				+ RodsGenQueryEnum.COL_R_ZONE_NAME.getName()
+				+ " where "
+				+ RodsGenQueryEnum.COL_R_ZONE_NAME.getName()
+				+ " = "
+				+ "'"
+				+ testingProperties
+						.getProperty(TestingPropertiesHelper.IRODS_ZONE_KEY)
+				+ "'";
+
+		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(queryString, 100);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
+		IRODSGenQueryExecutor irodsGenQueryExecutor = accessObjectFactory
+				.getIRODSGenQueryExecutor(irodsAccount);
+
+		IRODSQueryResultSetInterface resultSet = irodsGenQueryExecutor
+				.executeIRODSQueryWithPagingInZone(
+						irodsQuery,
+						0,
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_ZONE_KEY));
+
+		Assert.assertNotNull(resultSet);
+	}
+
+	@Test
+	public final void testExecuteIRODSQuerySupplySameZone() throws Exception {
+
+		String queryString = "select "
+				+ RodsGenQueryEnum.COL_R_RESC_NAME.getName()
+				+ " ,"
+				+ RodsGenQueryEnum.COL_R_ZONE_NAME.getName()
+				+ " where "
+				+ RodsGenQueryEnum.COL_R_ZONE_NAME.getName()
+				+ " = "
+				+ "'"
+				+ testingProperties
+						.getProperty(TestingPropertiesHelper.IRODS_ZONE_KEY)
+				+ "'";
+
+		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(queryString, 100);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
+		IRODSGenQueryExecutor irodsGenQueryExecutor = accessObjectFactory
+				.getIRODSGenQueryExecutor(irodsAccount);
+
+		IRODSQueryResultSetInterface resultSet = irodsGenQueryExecutor
+				.executeIRODSQueryInZone(irodsQuery, 0, testingProperties
+						.getProperty(TestingPropertiesHelper.IRODS_ZONE_KEY));
+
+		Assert.assertNotNull(resultSet);
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public final void testExecuteIRODSQuerySupplySameZoneNegativeContinuation()
+			throws Exception {
+
+		String queryString = "select "
+				+ RodsGenQueryEnum.COL_R_RESC_NAME.getName()
+				+ " ,"
+				+ RodsGenQueryEnum.COL_R_ZONE_NAME.getName()
+				+ " where "
+				+ RodsGenQueryEnum.COL_R_ZONE_NAME.getName()
+				+ " = "
+				+ "'"
+				+ testingProperties
+						.getProperty(TestingPropertiesHelper.IRODS_ZONE_KEY)
+				+ "'";
+
+		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(queryString, 100);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
+		IRODSGenQueryExecutor irodsGenQueryExecutor = accessObjectFactory
+				.getIRODSGenQueryExecutor(irodsAccount);
+
+		irodsGenQueryExecutor.executeIRODSQueryInZone(irodsQuery, -1,
+				testingProperties
+						.getProperty(TestingPropertiesHelper.IRODS_ZONE_KEY));
+
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public final void testExecuteIRODSQueryAndCloseSupplySameZoneNegativeContinuation()
+			throws Exception {
+
+		String queryString = "select "
+				+ RodsGenQueryEnum.COL_R_RESC_NAME.getName()
+				+ " ,"
+				+ RodsGenQueryEnum.COL_R_ZONE_NAME.getName()
+				+ " where "
+				+ RodsGenQueryEnum.COL_R_ZONE_NAME.getName()
+				+ " = "
+				+ "'"
+				+ testingProperties
+						.getProperty(TestingPropertiesHelper.IRODS_ZONE_KEY)
+				+ "'";
+
+		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(queryString, 100);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
+		IRODSGenQueryExecutor irodsGenQueryExecutor = accessObjectFactory
+				.getIRODSGenQueryExecutor(irodsAccount);
+
+		irodsGenQueryExecutor.executeIRODSQueryAndCloseResultInZone(irodsQuery,
+				-1, testingProperties
+						.getProperty(TestingPropertiesHelper.IRODS_ZONE_KEY));
+
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public final void testExecuteIRODSQueryAndCloseSupplySameZoneNullQuery()
+			throws Exception {
+
+		IRODSGenQuery irodsQuery = null;
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
+		IRODSGenQueryExecutor irodsGenQueryExecutor = accessObjectFactory
+				.getIRODSGenQueryExecutor(irodsAccount);
+
+		irodsGenQueryExecutor.executeIRODSQueryAndCloseResultInZone(irodsQuery,
+				0, testingProperties
+						.getProperty(TestingPropertiesHelper.IRODS_ZONE_KEY));
+
+	}
+
+	@Test
+	public final void testExecuteIRODSQuerySupplyBlankZone() throws Exception {
+
+		String queryString = "select "
+				+ RodsGenQueryEnum.COL_R_RESC_NAME.getName()
+				+ " ,"
+				+ RodsGenQueryEnum.COL_R_ZONE_NAME.getName()
+				+ " where "
+				+ RodsGenQueryEnum.COL_R_ZONE_NAME.getName()
+				+ " = "
+				+ "'"
+				+ testingProperties
+						.getProperty(TestingPropertiesHelper.IRODS_ZONE_KEY)
+				+ "'";
+
+		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(queryString, 100);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
+		IRODSGenQueryExecutor irodsGenQueryExecutor = accessObjectFactory
+				.getIRODSGenQueryExecutor(irodsAccount);
+
+		IRODSQueryResultSetInterface resultSet = irodsGenQueryExecutor
+				.executeIRODSQueryInZone(irodsQuery, 0, "");
 
 		Assert.assertNotNull(resultSet);
 	}
@@ -160,14 +352,13 @@ public class IRODSGenQueryExecutorImplTest {
 				+ "'";
 
 		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(queryString, 100);
-		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager
-				.instance();
+
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSSession irodsSession = IRODSSession
-				.instance(irodsConnectionManager);
-		IRODSAccessObjectFactory accessObjectFactory = IRODSAccessObjectFactoryImpl
-				.instance(irodsSession);
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
 		IRODSGenQueryExecutor irodsGenQueryExecutor = accessObjectFactory
 				.getIRODSGenQueryExecutor(irodsAccount);
 
@@ -175,7 +366,6 @@ public class IRODSGenQueryExecutorImplTest {
 		for (int i = 0; i < count; i++) {
 			resultSet = irodsGenQueryExecutor.executeIRODSQuery(irodsQuery, 0);
 		}
-		irodsSession.closeSession();
 
 		Assert.assertNotNull(resultSet);
 	}
@@ -195,21 +385,16 @@ public class IRODSGenQueryExecutorImplTest {
 
 		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(queryString, 100);
 
-		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager
-				.instance();
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSSession irodsSession = IRODSSession
-				.instance(irodsConnectionManager);
-		IRODSAccessObjectFactory accessObjectFactory = IRODSAccessObjectFactoryImpl
-				.instance(irodsSession);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
 		IRODSGenQueryExecutor irodsGenQueryExecutor = accessObjectFactory
 				.getIRODSGenQueryExecutor(irodsAccount);
 
 		IRODSQueryResultSetInterface resultSet = irodsGenQueryExecutor
 				.executeIRODSQuery(irodsQuery, 0);
-
-		irodsSession.closeSession();
 
 		Assert.assertNotNull("null result set", resultSet);
 		Assert.assertFalse("empty result set", resultSet.getResults().isEmpty());
@@ -231,21 +416,16 @@ public class IRODSGenQueryExecutorImplTest {
 
 		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(queryString, 100);
 
-		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager
-				.instance();
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSSession irodsSession = IRODSSession
-				.instance(irodsConnectionManager);
-		IRODSAccessObjectFactory accessObjectFactory = IRODSAccessObjectFactoryImpl
-				.instance(irodsSession);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
 		IRODSGenQueryExecutor irodsGenQueryExecutor = accessObjectFactory
 				.getIRODSGenQueryExecutor(irodsAccount);
 
 		IRODSQueryResultSetInterface resultSet = irodsGenQueryExecutor
 				.executeIRODSQuery(irodsQuery, 0);
-
-		irodsSession.closeSession();
 
 		Assert.assertNotNull("null result set", resultSet);
 		Assert.assertFalse("empty result set", resultSet.getResults().isEmpty());
@@ -270,13 +450,9 @@ public class IRODSGenQueryExecutorImplTest {
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
 
-		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager
-				.instance();
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
 
-		IRODSSession irodsSession = IRODSSession
-				.instance(irodsConnectionManager);
-		IRODSAccessObjectFactory accessObjectFactory = IRODSAccessObjectFactoryImpl
-				.instance(irodsSession);
 		IRODSGenQueryExecutor irodsGenQueryExecutor = accessObjectFactory
 				.getIRODSGenQueryExecutor(irodsAccount);
 
@@ -290,7 +466,6 @@ public class IRODSGenQueryExecutorImplTest {
 
 		resultSet = irodsGenQueryExecutor.getMoreResults(resultSet);
 
-		irodsSession.closeSession();
 		Assert.assertNotNull("result set was null", resultSet);
 		Assert.assertTrue("did not get expected continuation",
 				resultSet.isHasMoreRecords());
@@ -318,7 +493,6 @@ public class IRODSGenQueryExecutorImplTest {
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
 
-		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
 		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
 				.getIRODSAccessObjectFactory();
 		IRODSGenQueryExecutor irodsGenQueryExecutor = accessObjectFactory
@@ -333,7 +507,6 @@ public class IRODSGenQueryExecutorImplTest {
 		// now close
 		irodsGenQueryExecutor.closeResults(resultSet);
 
-		irodsFileSystem.close();
 		// no error considered success
 		Assert.assertTrue(true);
 	}
@@ -348,7 +521,7 @@ public class IRODSGenQueryExecutorImplTest {
 						testingProperties, IRODS_TEST_SUBDIR_PATH);
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
+
 		IRODSFileFactory iff = irodsFileSystem
 				.getIRODSFileFactory(irodsAccount);
 
@@ -405,6 +578,7 @@ public class IRODSGenQueryExecutorImplTest {
 	 * [#126] every call to r.getColumn( X ) returns the name of the file as a
 	 * string
 	 */
+	@SuppressWarnings("deprecation")
 	@Test
 	public void testColQueryThenAccessColByName() throws Exception {
 		String testDirPath = testingPropertiesHelper
@@ -434,7 +608,8 @@ public class IRODSGenQueryExecutorImplTest {
 				.getDataObjectAO(irodsAccount);
 		IRODSFile destFile = irodsFileFactory
 				.instanceIRODSFile(targetIrodsFile);
-		dataObjectAO.putLocalDataObjectToIRODS(localFile, destFile, true, null, null);
+		dataObjectAO.putLocalDataObjectToIRODS(localFile, destFile, true, null,
+				null);
 
 		// build query
 		StringBuilder q = new StringBuilder();
@@ -469,7 +644,6 @@ public class IRODSGenQueryExecutorImplTest {
 		String size = r.getColumn(RodsGenQueryEnum.COL_DATA_SIZE.getName());
 		Integer.parseInt(size);
 		irodsGenQueryExecutor.closeResults(resultSet);
-		irodsFileSystem.close();
 
 		Assert.assertEquals("did not find modified where expected", modified,
 				r.getColumn(2));

@@ -2,7 +2,7 @@ package org.irods.jargon.core.query;
 
 import java.util.List;
 
-import junit.framework.TestCase;
+import junit.framework.Assert;
 
 import org.irods.jargon.core.connection.IRODSServerProperties;
 import org.irods.jargon.core.exception.JargonException;
@@ -45,9 +45,9 @@ public class IRODSGenQueryTranslatorTest {
 				"d", "zone");
 		IRODSGenQueryTranslator translator = new IRODSGenQueryTranslator(props);
 		List<String> selects = translator.parseSelectsIntoListOfNames(query);
-		TestCase.assertEquals(2, selects.size());
-		TestCase.assertEquals("BLAH", selects.get(0));
-		TestCase.assertEquals("YELP", selects.get(1));
+		Assert.assertEquals(2, selects.size());
+		Assert.assertEquals("BLAH", selects.get(0));
+		Assert.assertEquals("YELP", selects.get(1));
 	}
 
 	@Test(expected = JargonQueryException.class)
@@ -71,11 +71,11 @@ public class IRODSGenQueryTranslatorTest {
 		IRODSGenQueryTranslator translator = new IRODSGenQueryTranslator(props);
 		List<GenQueryCondition> conditions = translator
 				.parseConditionsIntoList(query);
-		TestCase.assertEquals(1, conditions.size());
+		Assert.assertEquals(1, conditions.size());
 		GenQueryCondition cond = conditions.get(0);
-		TestCase.assertEquals("a", cond.getFieldName());
-		TestCase.assertEquals("=", cond.getOperator());
-		TestCase.assertEquals("1", cond.getValue());
+		Assert.assertEquals("a", cond.getFieldName());
+		Assert.assertEquals("=", cond.getOperator());
+		Assert.assertEquals("1", cond.getValue());
 
 	}
 
@@ -88,11 +88,11 @@ public class IRODSGenQueryTranslatorTest {
 		IRODSGenQueryTranslator translator = new IRODSGenQueryTranslator(props);
 		List<GenQueryCondition> conditions = translator
 				.parseConditionsIntoList(query);
-		TestCase.assertEquals(1, conditions.size());
+		Assert.assertEquals(1, conditions.size());
 		GenQueryCondition cond = conditions.get(0);
-		TestCase.assertEquals("a", cond.getFieldName());
-		TestCase.assertEquals("=", cond.getOperator());
-		TestCase.assertEquals("1", cond.getValue());
+		Assert.assertEquals("a", cond.getFieldName());
+		Assert.assertEquals("=", cond.getOperator());
+		Assert.assertEquals("1", cond.getValue());
 
 	}
 
@@ -129,16 +129,16 @@ public class IRODSGenQueryTranslatorTest {
 		IRODSGenQueryTranslator translator = new IRODSGenQueryTranslator(props);
 		List<GenQueryCondition> conditions = translator
 				.parseConditionsIntoList(query);
-		TestCase.assertEquals(2, conditions.size());
+		Assert.assertEquals(2, conditions.size());
 		GenQueryCondition cond = conditions.get(0);
-		TestCase.assertEquals("a", cond.getFieldName());
-		TestCase.assertEquals("=", cond.getOperator());
-		TestCase.assertEquals("1", cond.getValue());
+		Assert.assertEquals("a", cond.getFieldName());
+		Assert.assertEquals("=", cond.getOperator());
+		Assert.assertEquals("1", cond.getValue());
 
 		cond = conditions.get(1);
-		TestCase.assertEquals("z", cond.getFieldName());
-		TestCase.assertEquals(">", cond.getOperator());
-		TestCase.assertEquals("1234", cond.getValue());
+		Assert.assertEquals("z", cond.getFieldName());
+		Assert.assertEquals(">", cond.getOperator());
+		Assert.assertEquals("1234", cond.getValue());
 
 	}
 
@@ -152,18 +152,17 @@ public class IRODSGenQueryTranslatorTest {
 		IRODSGenQueryTranslator translator = new IRODSGenQueryTranslator(props);
 		List<GenQueryCondition> conditions = translator
 				.parseConditionsIntoList(query);
-		TestCase.assertEquals(2, conditions.size());
+		Assert.assertEquals(2, conditions.size());
 		GenQueryCondition cond = conditions.get(0);
-		TestCase.assertEquals("COLL_NAME", cond.getFieldName());
-		TestCase.assertEquals("=", cond.getOperator());
-		TestCase.assertEquals("'/test1/home/test1/test-scratch/IRODSFileTest'",
+		Assert.assertEquals("COLL_NAME", cond.getFieldName());
+		Assert.assertEquals("=", cond.getOperator());
+		Assert.assertEquals("'/test1/home/test1/test-scratch/IRODSFileTest'",
 				cond.getValue());
 
 		cond = conditions.get(1);
-		TestCase.assertEquals("DATA_NAME", cond.getFieldName());
-		TestCase.assertEquals("=", cond.getOperator());
-		TestCase.assertEquals("'testExistsQuote'infilename.txt'",
-				cond.getValue());
+		Assert.assertEquals("DATA_NAME", cond.getFieldName());
+		Assert.assertEquals("=", cond.getOperator());
+		Assert.assertEquals("'testExistsQuote'infilename.txt'", cond.getValue());
 
 	}
 
@@ -176,7 +175,7 @@ public class IRODSGenQueryTranslatorTest {
 		IRODSGenQueryTranslator translator = new IRODSGenQueryTranslator(props);
 		List<GenQueryCondition> conditions = translator
 				.parseConditionsIntoList(query);
-		TestCase.assertEquals(0, conditions.size());
+		Assert.assertEquals(0, conditions.size());
 	}
 
 	@Test(expected = JargonQueryException.class)
@@ -215,13 +214,12 @@ public class IRODSGenQueryTranslatorTest {
 
 		TranslatedIRODSGenQuery translatedQuery = translator
 				.getTranslatedQuery(irodsQuery);
-		TestCase.assertEquals(2, translatedQuery.getSelectFields().size());
+		Assert.assertEquals(2, translatedQuery.getSelectFields().size());
 		GenQuerySelectField sel1 = translatedQuery.getSelectFields().get(0);
-		TestCase.assertEquals(
-				RodsGenQueryEnum.COL_DATA_ACCESS_DATA_ID.getName(),
+		Assert.assertEquals(RodsGenQueryEnum.COL_DATA_ACCESS_DATA_ID.getName(),
 				sel1.getSelectFieldColumnName());
 		GenQuerySelectField sel2 = translatedQuery.getSelectFields().get(1);
-		TestCase.assertEquals(RodsGenQueryEnum.COL_AUDIT_USER_ID.getName(),
+		Assert.assertEquals(RodsGenQueryEnum.COL_AUDIT_USER_ID.getName(),
 				sel2.getSelectFieldColumnName());
 	}
 
@@ -240,7 +238,7 @@ public class IRODSGenQueryTranslatorTest {
 
 		TranslatedIRODSGenQuery translatedQuery = translator
 				.getTranslatedQuery(irodsQuery);
-		TestCase.assertTrue("this should be classified as a distinct query",
+		Assert.assertTrue("this should be classified as a distinct query",
 				translatedQuery.isDistinct());
 
 	}
@@ -260,8 +258,7 @@ public class IRODSGenQueryTranslatorTest {
 
 		TranslatedIRODSGenQuery translatedQuery = translator
 				.getTranslatedQuery(irodsQuery);
-		TestCase.assertFalse(
-				"this should not be classified as a distinct query",
+		Assert.assertFalse("this should not be classified as a distinct query",
 				translatedQuery.isDistinct());
 
 	}
@@ -298,8 +295,7 @@ public class IRODSGenQueryTranslatorTest {
 
 		TranslatedIRODSGenQuery translatedQuery = translator
 				.getTranslatedQuery(irodsQuery);
-		TestCase.assertFalse(
-				"this should not be classified as a distinct query",
+		Assert.assertFalse("this should not be classified as a distinct query",
 				translatedQuery.isDistinct());
 
 	}
@@ -318,12 +314,12 @@ public class IRODSGenQueryTranslatorTest {
 
 		TranslatedIRODSGenQuery translatedQuery = translator
 				.getTranslatedQuery(irodsQuery);
-		TestCase.assertEquals(1, translatedQuery.getSelectFields().size());
+		Assert.assertEquals(1, translatedQuery.getSelectFields().size());
 		GenQuerySelectField sel1 = translatedQuery.getSelectFields().get(0);
-		TestCase.assertEquals("field not translated",
+		Assert.assertEquals("field not translated",
 				RodsGenQueryEnum.COL_DATA_ACCESS_DATA_ID.getName(),
 				sel1.getSelectFieldColumnName());
-		TestCase.assertEquals("did not classify as a count()",
+		Assert.assertEquals("did not classify as a count()",
 				GenQuerySelectField.SelectFieldTypes.COUNT,
 				sel1.getSelectFieldType());
 
@@ -343,12 +339,12 @@ public class IRODSGenQueryTranslatorTest {
 
 		TranslatedIRODSGenQuery translatedQuery = translator
 				.getTranslatedQuery(irodsQuery);
-		TestCase.assertEquals(1, translatedQuery.getSelectFields().size());
+		Assert.assertEquals(1, translatedQuery.getSelectFields().size());
 		GenQuerySelectField sel1 = translatedQuery.getSelectFields().get(0);
-		TestCase.assertEquals("field not translated",
+		Assert.assertEquals("field not translated",
 				RodsGenQueryEnum.COL_DATA_ACCESS_DATA_ID.getName(),
 				sel1.getSelectFieldColumnName());
-		TestCase.assertEquals("did not classify as a count()",
+		Assert.assertEquals("did not classify as a count()",
 				GenQuerySelectField.SelectFieldTypes.SUM,
 				sel1.getSelectFieldType());
 
@@ -368,12 +364,12 @@ public class IRODSGenQueryTranslatorTest {
 
 		TranslatedIRODSGenQuery translatedQuery = translator
 				.getTranslatedQuery(irodsQuery);
-		TestCase.assertEquals(1, translatedQuery.getSelectFields().size());
+		Assert.assertEquals(1, translatedQuery.getSelectFields().size());
 		GenQuerySelectField sel1 = translatedQuery.getSelectFields().get(0);
-		TestCase.assertEquals("field not translated",
+		Assert.assertEquals("field not translated",
 				RodsGenQueryEnum.COL_DATA_ACCESS_DATA_ID.getName(),
 				sel1.getSelectFieldColumnName());
-		TestCase.assertEquals("did not classify as a count()",
+		Assert.assertEquals("did not classify as a count()",
 				GenQuerySelectField.SelectFieldTypes.AVG,
 				sel1.getSelectFieldType());
 
@@ -393,12 +389,12 @@ public class IRODSGenQueryTranslatorTest {
 
 		TranslatedIRODSGenQuery translatedQuery = translator
 				.getTranslatedQuery(irodsQuery);
-		TestCase.assertEquals(1, translatedQuery.getSelectFields().size());
+		Assert.assertEquals(1, translatedQuery.getSelectFields().size());
 		GenQuerySelectField sel1 = translatedQuery.getSelectFields().get(0);
-		TestCase.assertEquals("field not translated",
+		Assert.assertEquals("field not translated",
 				RodsGenQueryEnum.COL_DATA_ACCESS_DATA_ID.getName(),
 				sel1.getSelectFieldColumnName());
-		TestCase.assertEquals("did not classify as a count()",
+		Assert.assertEquals("did not classify as a count()",
 				GenQuerySelectField.SelectFieldTypes.MIN,
 				sel1.getSelectFieldType());
 
@@ -418,12 +414,12 @@ public class IRODSGenQueryTranslatorTest {
 
 		TranslatedIRODSGenQuery translatedQuery = translator
 				.getTranslatedQuery(irodsQuery);
-		TestCase.assertEquals(1, translatedQuery.getSelectFields().size());
+		Assert.assertEquals(1, translatedQuery.getSelectFields().size());
 		GenQuerySelectField sel1 = translatedQuery.getSelectFields().get(0);
-		TestCase.assertEquals("field not translated",
+		Assert.assertEquals("field not translated",
 				RodsGenQueryEnum.COL_DATA_ACCESS_DATA_ID.getName(),
 				sel1.getSelectFieldColumnName());
-		TestCase.assertEquals("did not classify as a count()",
+		Assert.assertEquals("did not classify as a count()",
 				GenQuerySelectField.SelectFieldTypes.MAX,
 				sel1.getSelectFieldType());
 
@@ -494,9 +490,9 @@ public class IRODSGenQueryTranslatorTest {
 
 		TranslatedIRODSGenQuery translatedQuery = translator
 				.getTranslatedQuery(irodsQuery);
-		TestCase.assertEquals(1, translatedQuery.getSelectFields().size());
+		Assert.assertEquals(1, translatedQuery.getSelectFields().size());
 		GenQuerySelectField sel1 = translatedQuery.getSelectFields().get(0);
-		TestCase.assertNull("should have null indicating irods lookup failed",
+		Assert.assertNull("should have null indicating irods lookup failed",
 				sel1);
 
 	}
@@ -515,12 +511,12 @@ public class IRODSGenQueryTranslatorTest {
 
 		TranslatedIRODSGenQuery translatedQuery = translator
 				.getTranslatedQuery(irodsQuery);
-		TestCase.assertEquals(1, translatedQuery.getSelectFields().size());
+		Assert.assertEquals(1, translatedQuery.getSelectFields().size());
 		GenQuerySelectField sel1 = translatedQuery.getSelectFields().get(0);
-		TestCase.assertEquals("field not translated",
+		Assert.assertEquals("field not translated",
 				RodsGenQueryEnum.COL_DATA_ACCESS_DATA_ID.getName(),
 				sel1.getSelectFieldColumnName());
-		TestCase.assertEquals("did not classify as a count()",
+		Assert.assertEquals("did not classify as a count()",
 				GenQuerySelectField.SelectFieldTypes.SUM,
 				sel1.getSelectFieldType());
 
@@ -543,22 +539,21 @@ public class IRODSGenQueryTranslatorTest {
 
 		TranslatedIRODSGenQuery translatedQuery = translator
 				.getTranslatedQuery(irodsQuery);
-		TestCase.assertEquals(2, translatedQuery.getSelectFields().size());
+		Assert.assertEquals(2, translatedQuery.getSelectFields().size());
 		GenQuerySelectField sel1 = translatedQuery.getSelectFields().get(0);
-		TestCase.assertEquals(
-				RodsGenQueryEnum.COL_DATA_ACCESS_DATA_ID.getName(),
+		Assert.assertEquals(RodsGenQueryEnum.COL_DATA_ACCESS_DATA_ID.getName(),
 				sel1.getSelectFieldColumnName());
 		GenQuerySelectField sel2 = translatedQuery.getSelectFields().get(1);
-		TestCase.assertEquals(RodsGenQueryEnum.COL_AUDIT_USER_ID.getName(),
+		Assert.assertEquals(RodsGenQueryEnum.COL_AUDIT_USER_ID.getName(),
 				sel2.getSelectFieldColumnName());
-		TestCase.assertEquals(1, translatedQuery.getTranslatedQueryConditions()
+		Assert.assertEquals(1, translatedQuery.getTranslatedQueryConditions()
 				.size());
 		TranslatedGenQueryCondition testCondition = translatedQuery
 				.getTranslatedQueryConditions().get(0);
-		TestCase.assertEquals(RodsGenQueryEnum.COL_AUDIT_OBJ_ID.getName(),
+		Assert.assertEquals(RodsGenQueryEnum.COL_AUDIT_OBJ_ID.getName(),
 				testCondition.getColumnName());
-		TestCase.assertEquals("=", testCondition.getOperator());
-		TestCase.assertEquals("'123'", testCondition.getValue());
+		Assert.assertEquals("=", testCondition.getOperator());
+		Assert.assertEquals("'123'", testCondition.getValue());
 	}
 
 	@Test
@@ -579,11 +574,11 @@ public class IRODSGenQueryTranslatorTest {
 		TranslatedIRODSGenQuery translatedQuery = translator
 				.getTranslatedQuery(irodsQuery);
 
-		TestCase.assertEquals(1, translatedQuery.getTranslatedQueryConditions()
+		Assert.assertEquals(1, translatedQuery.getTranslatedQueryConditions()
 				.size());
 		TranslatedGenQueryCondition testCondition = translatedQuery
 				.getTranslatedQueryConditions().get(0);
-		TestCase.assertEquals("this should be an irods gen query field",
+		Assert.assertEquals("this should be an irods gen query field",
 				GenQuerySelectField.SelectFieldSource.DEFINED_QUERY_FIELD,
 				testCondition.getFieldSource());
 	}
@@ -653,11 +648,11 @@ public class IRODSGenQueryTranslatorTest {
 		TranslatedIRODSGenQuery translatedQuery = translator
 				.getTranslatedQuery(irodsQuery);
 
-		TestCase.assertEquals(1, translatedQuery.getTranslatedQueryConditions()
+		Assert.assertEquals(1, translatedQuery.getTranslatedQueryConditions()
 				.size());
 		TranslatedGenQueryCondition testCondition = translatedQuery
 				.getTranslatedQueryConditions().get(0);
-		TestCase.assertEquals(
+		Assert.assertEquals(
 				"this should be looked up and translated to irods code", String
 						.valueOf(RodsGenQueryEnum.COL_AUDIT_OBJ_ID
 								.getNumericValue()), testCondition
@@ -724,8 +719,8 @@ public class IRODSGenQueryTranslatorTest {
 		TranslatedIRODSGenQuery gq = translator.getTranslatedQuery(irodsQuery);
 		TranslatedGenQueryCondition qc = gq.getTranslatedQueryConditions().get(
 				0);
-		TestCase.assertNotNull("null condition set", qc);
-		TestCase.assertEquals("did not set not like in condition", "NOT LIKE",
+		Assert.assertNotNull("null condition set", qc);
+		Assert.assertEquals("did not set not like in condition", "NOT LIKE",
 				qc.getOperator());
 
 	}
@@ -753,9 +748,8 @@ public class IRODSGenQueryTranslatorTest {
 		List<String> orderByFields = translator
 				.parseOrderByFieldsIntoList(query);
 
-		TestCase.assertEquals("did not set the group by", 1,
-				orderByFields.size());
-		TestCase.assertEquals("did not find order by field",
+		Assert.assertEquals("did not set the group by", 1, orderByFields.size());
+		Assert.assertEquals("did not find order by field",
 				"META_COLL_ATTR_NAME", orderByFields.get(0));
 
 	}
@@ -771,11 +765,10 @@ public class IRODSGenQueryTranslatorTest {
 		List<String> orderByFields = translator
 				.parseOrderByFieldsIntoList(query);
 
-		TestCase.assertEquals("did not set the group by", 2,
-				orderByFields.size());
-		TestCase.assertEquals("did not find order by field",
+		Assert.assertEquals("did not set the group by", 2, orderByFields.size());
+		Assert.assertEquals("did not find order by field",
 				"META_COLL_ATTR_NAME", orderByFields.get(0));
-		TestCase.assertEquals("did not find order by field",
+		Assert.assertEquals("did not find order by field",
 				"META_COLL_ATTR_VALUE", orderByFields.get(1));
 
 	}

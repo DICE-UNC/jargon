@@ -33,8 +33,13 @@ public class IRODSSimpleConnectionTest {
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
 		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
-		IRODSManagedConnection connection = irodsFileSystem.getIrodsProtocolManager()
-				.getIRODSProtocol(irodsAccount, irodsFileSystem.getIrodsSession().buildPipelineConfigurationBasedOnJargonProperties());
+		IRODSManagedConnection connection = irodsFileSystem
+				.getIrodsProtocolManager()
+				.getIRODSProtocol(
+						irodsAccount,
+						irodsFileSystem
+								.getIrodsSession()
+								.buildPipelineConfigurationBasedOnJargonProperties());
 		connection.setIrodsSession(Mockito.mock(IRODSSession.class));
 		connection.disconnect();
 		Assert.assertFalse(connection.isConnected());

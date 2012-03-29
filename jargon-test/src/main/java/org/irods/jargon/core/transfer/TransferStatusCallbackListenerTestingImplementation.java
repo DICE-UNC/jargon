@@ -1,5 +1,8 @@
 package org.irods.jargon.core.transfer;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.transfer.TransferStatus.TransferState;
 import org.irods.jargon.core.transfer.TransferStatus.TransferType;
@@ -16,22 +19,46 @@ public class TransferStatusCallbackListenerTestingImplementation implements
 
 	private int putCallbackCtr = 0;
 	private int getCallbackCtr = 0;
+	private int copyCallbackCtr = 0;
 	private int exceptionCallbackCtr = 0;
 	private int replicateCallbackCtr = 0;
-	private int copyCallbackCtr = 0;
-	private int overallStatusCallbackCtr = 0;
+	private int overallCallbackCtr = 0;
+	private int intraFileCallbackCtr = 0;
+
+	private int pauseAfter = 0;
+	private int cancelAfter = 0;
+	private TransferControlBlock transferControlBlock = null;
+	private TransferStatusCallbackListener.CallbackResponse forceOption = TransferStatusCallbackListener.CallbackResponse.NO_FOR_ALL;
+
+	private boolean cancelEncountered = false;
+	private boolean pauseEncountered = false;
+	private List<TransferStatus> statusCache = new ArrayList<TransferStatus>();
 
 	public TransferStatusCallbackListenerTestingImplementation() {
 
 	}
 
+	public TransferStatusCallbackListenerTestingImplementation(
+			final TransferControlBlock transferControlBlock,
+			final int pauseAfter, final int cancelAfter) {
+		this.transferControlBlock = transferControlBlock;
+		this.pauseAfter = pauseAfter;
+		this.cancelAfter = cancelAfter;
+	}
+
 	@Override
-	public synchronized void statusCallback(TransferStatus transferStatus)
+	public synchronized void statusCallback(final TransferStatus transferStatus)
 			throws JargonException {
 
-		if (transferStatus.getTransferType() == TransferType.GET) {
+		if (transferStatus.isIntraFileStatusReport()) {
+			intraFileCallbackCtr++;
+		}
+
+		if (transferStatus.getTransferType() == TransferType.GET
+				&& transferStatus.getTransferState() == TransferState.IN_PROGRESS_COMPLETE_FILE) {
 			getCallbackCtr++;
-		} else if (transferStatus.getTransferType() == TransferType.PUT){
+		} else if (transferStatus.getTransferType() == TransferType.PUT
+				&& transferStatus.getTransferState() == TransferState.IN_PROGRESS_COMPLETE_FILE) {
 			putCallbackCtr++;
 		} else if (transferStatus.getTransferType() == TransferType.REPLICATE) {
 			replicateCallbackCtr++;
@@ -42,6 +69,32 @@ public class TransferStatusCallbackListenerTestingImplementation implements
 		if (transferStatus.getTransferState() == TransferState.FAILURE) {
 			exceptionCallbackCtr++;
 		}
+
+		if (transferStatus.getTransferState() == TransferState.CANCELLED) {
+			cancelEncountered = true;
+		}
+
+		if (transferStatus.getTransferState() == TransferState.PAUSED) {
+			pauseEncountered = true;
+		}
+
+		int totalCallback = getCallbackCtr + putCallbackCtr
+				+ exceptionCallbackCtr + replicateCallbackCtr + copyCallbackCtr;
+
+		if (pauseAfter > 0 && totalCallback == pauseAfter) {
+			if (transferControlBlock != null) {
+				transferControlBlock.setPaused(true);
+			}
+		}
+
+		if (cancelAfter > 0 && totalCallback == cancelAfter) {
+			if (transferControlBlock != null) {
+				transferControlBlock.setCancelled(true);
+			}
+		}
+
+		statusCache.add(transferStatus);
+
 	}
 
 	public synchronized final int getPutCallbackCtr() {
@@ -56,32 +109,78 @@ public class TransferStatusCallbackListenerTestingImplementation implements
 		return getCallbackCtr;
 	}
 
-	public int getReplicateCallbackCtr() {
+	public synchronized int getReplicateCallbackCtr() {
 		return replicateCallbackCtr;
 	}
 
-	public void setReplicateCallbackCtr(int replicateCallbackCtr) {
+	public synchronized void setReplicateCallbackCtr(
+			final int replicateCallbackCtr) {
 		this.replicateCallbackCtr = replicateCallbackCtr;
 	}
 
-	@Override
-	public void overallStatusCallback(TransferStatus transferStatus)
-			throws JargonException {
-		overallStatusCallbackCtr++;
+	public synchronized int getPauseAfter() {
+		return pauseAfter;
 	}
 
-	/**
-	 * @return the copyCallbackCtr
-	 */
-	protected int getCopyCallbackCtr() {
+	public synchronized int getCancelAfter() {
+		return cancelAfter;
+	}
+
+	public synchronized TransferControlBlock getTransferControlBlock() {
+		return transferControlBlock;
+	}
+
+	public synchronized boolean isCancelEncountered() {
+		return cancelEncountered;
+	}
+
+	public synchronized boolean isPauseEncountered() {
+		return pauseEncountered;
+	}
+
+	public synchronized int getCopyCallbackCtr() {
 		return copyCallbackCtr;
 	}
 
+	public synchronized List<TransferStatus> getStatusCache() {
+		return statusCache;
+	}
+
+	@Override
+	public void overallStatusCallback(final TransferStatus transferStatus)
+			throws JargonException {
+
+		overallCallbackCtr++;
+
+	}
+
 	/**
-	 * @return the overallStatusCallbackCtr
+	 * @return the overallCallbackCtr
 	 */
-	protected int getOverallStatusCallbackCtr() {
-		return overallStatusCallbackCtr;
+	public int getOverallCallbackCtr() {
+		return overallCallbackCtr;
+	}
+
+	/**
+	 * @return the intraFileCallbackCtr
+	 */
+	public int getIntraFileCallbackCtr() {
+		return intraFileCallbackCtr;
+	}
+
+	@Override
+	public CallbackResponse transferAsksWhetherToForceOperation(
+			String irodsAbsolutePath, boolean isCollection) {
+		return forceOption;
+	}
+
+	public CallbackResponse getForceOption() {
+		return forceOption;
+	}
+
+	public void setForceOption(CallbackResponse forceOption) {
+		this.forceOption = forceOption;
 	}
 
 }
+

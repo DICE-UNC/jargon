@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.packinstr.TransferOptions;
 import org.irods.jargon.core.transfer.TransferStatus;
 import org.irods.jargon.core.transfer.TransferStatus.TransferState;
 import org.irods.jargon.transfer.engine.TransferManager.ErrorStatus;
@@ -30,6 +31,8 @@ public class DummyTransferManagerCallbackListener implements
 	private boolean hasError = false;
 
 	private boolean isComplete = false;
+	private TransferOptions.ForceOption forceOption = TransferOptions.ForceOption.NO_FORCE;
+
 
 	private List<TransferStatus> transferStatusHistory = new ArrayList<TransferStatus>();
 	private List<TransferStatus> overallStatusHistory = new ArrayList<TransferStatus>();
@@ -92,6 +95,20 @@ public class DummyTransferManagerCallbackListener implements
 	 */
 	public List<TransferStatus> getOverallStatusHistory() {
 		return overallStatusHistory;
+	}
+
+	public TransferOptions.ForceOption getForceOption() {
+		return forceOption;
+	}
+
+	public void setForceOption(TransferOptions.ForceOption forceOption) {
+		this.forceOption = forceOption;
+	}
+
+	@Override
+	public CallbackResponse transferAsksWhetherToForceOperation(
+			String irodsAbsolutePath, boolean isCollection) {
+		return CallbackResponse.YES_FOR_ALL;
 	}
 
 }

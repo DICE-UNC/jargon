@@ -28,7 +28,7 @@ public class OpenedDataObjInp extends AbstractIRODSPackingInstruction {
 
 	public static final int SEEK_API_NBR = 674;
 	public static final int WRITE_API_NBR = 676;
-	
+
 	public static final int DEFAULT_OPERATION_TYPE = 0;
 
 	private final long offset;
@@ -56,17 +56,19 @@ public class OpenedDataObjInp extends AbstractIRODSPackingInstruction {
 	 * @throws JargonException
 	 */
 	public static final OpenedDataObjInp instanceForFileSeek(final long offset,
-			final int fileDescriptor, final int whence)  {
-		return new OpenedDataObjInp(SEEK_API_NBR, offset, fileDescriptor, whence, 0L);
-	}
-	
-	
-	public static final OpenedDataObjInp instanceForFilePut(final int fileDescriptor, final long length) {
-		return new OpenedDataObjInp(WRITE_API_NBR, 0L, fileDescriptor, 0, length);
+			final int fileDescriptor, final int whence) {
+		return new OpenedDataObjInp(SEEK_API_NBR, offset, fileDescriptor,
+				whence, 0L);
 	}
 
-	private OpenedDataObjInp(final int apiNumber, final long offset, final int fileDescriptor,
-			final int whence, final long length) {
+	public static final OpenedDataObjInp instanceForFilePut(
+			final int fileDescriptor, final long length) {
+		return new OpenedDataObjInp(WRITE_API_NBR, 0L, fileDescriptor, 0,
+				length);
+	}
+
+	private OpenedDataObjInp(final int apiNumber, final long offset,
+			final int fileDescriptor, final int whence, final long length) {
 		if (offset < 0) {
 			throw new IllegalArgumentException("offset is less than zero");
 		}
@@ -90,8 +92,9 @@ public class OpenedDataObjInp extends AbstractIRODSPackingInstruction {
 	public Tag getTagValue() throws JargonException {
 
 		Tag message = new Tag(PI_TAG, new Tag[] {
-				new Tag(L1_DESC_INX, getFileDescriptor()), new Tag(LEN, length),
-				new Tag(WHENCE, whence), new Tag(OPR_TYPE, getOperationType()),
+				new Tag(L1_DESC_INX, getFileDescriptor()),
+				new Tag(LEN, length), new Tag(WHENCE, whence),
+				new Tag(OPR_TYPE, getOperationType()),
 				new Tag(OFFSET, getOffset()), new Tag(BYTES_WRITTEN, 0) });
 
 		List<KeyValuePair> kvps = new ArrayList<KeyValuePair>();

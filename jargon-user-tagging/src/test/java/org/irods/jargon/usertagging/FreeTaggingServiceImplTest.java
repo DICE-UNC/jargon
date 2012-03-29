@@ -810,10 +810,6 @@ public class FreeTaggingServiceImplTest {
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
 		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
-		IRODSFile targetIrodsCollectionFile = irodsFileSystem
-				.getIRODSFileFactory(irodsAccount).instanceIRODSFile(
-						targetIrodsCollection);
-
 		FreeTaggingService freeTaggingService = FreeTaggingServiceImpl
 				.instance(irodsFileSystem.getIRODSAccessObjectFactory(),
 						irodsAccount);
@@ -899,6 +895,80 @@ public class FreeTaggingServiceImplTest {
 						irodsAccount);
 
 		freeTaggingService.updateTagsForUserForADataObjectOrCollection("file","user", null);
+	}
+
+	/**
+	 * [#677] strip quotes, commas from tags
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public final void testTagsWithQuotesAndCommas() throws Exception {
+
+		// multi-step integration type testing for data object free tagging
+
+		String testCollection = "testTagsWithQuotesAndCommas";
+		String testFileName = "testTagsWithQuotesAndCommas.txt";
+		String expectedTagName1 = "testTagsWithQuotesAndCommas";
+		String expectedTagName2 = "testTagsWithQuotesAndCommas2";
+		String expectedTagName3 = "testTagsWithQuotesAndCommas3";
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + "/"
+								+ testCollection);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
+		IRODSFile targetIrodsCollectionFile = irodsFileSystem
+				.getIRODSFileFactory(irodsAccount).instanceIRODSFile(
+						targetIrodsCollection);
+
+		targetIrodsCollectionFile.mkdirs();
+
+		String targetIrodsDataObject = targetIrodsCollection + "/"
+				+ testFileName;
+
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String fileNameOrig = FileGenerator.generateFileOfFixedLengthGivenName(
+				absPath, testFileName, 2);
+
+		IRODSFile targetIrodsFile = irodsFileSystem.getIRODSFileFactory(
+				irodsAccount).instanceIRODSFile(targetIrodsCollection);
+		DataTransferOperations dataTransferOperationsAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataTransferOperations(
+						irodsAccount);
+		dataTransferOperationsAO.putOperation(new File(fileNameOrig),
+				targetIrodsFile, null, null);
+
+		FreeTaggingService freeTaggingService = FreeTaggingServiceImpl
+				.instance(irodsFileSystem.getIRODSAccessObjectFactory(),
+						irodsAccount);
+
+		// add tags
+
+		String newFreeTagArea = expectedTagName1 + ", " + "\""
+				+ expectedTagName2 + "                         "
+				+ expectedTagName3 + "\"";
+
+		IRODSTagGrouping irodsTagGrouping = new IRODSTagGrouping(
+				MetadataDomain.DATA, targetIrodsDataObject, newFreeTagArea,
+				irodsAccount.getUserName());
+		freeTaggingService.updateTags(irodsTagGrouping);
+		IRODSTagGrouping actualIRODSTagGrouping = freeTaggingService
+				.getTagsForDataObjectInFreeTagForm(targetIrodsDataObject);
+
+		// check the tags
+
+		String tagsAsAdded = actualIRODSTagGrouping
+				.getSpaceDelimitedTagsForDomain();
+
+		TestCase.assertTrue(tagsAsAdded.indexOf(expectedTagName1) > -1);
+		TestCase.assertTrue(tagsAsAdded.indexOf(expectedTagName2) > -1);
+		TestCase.assertTrue(tagsAsAdded.indexOf(expectedTagName3) > -1);
+
 	}
 
 }

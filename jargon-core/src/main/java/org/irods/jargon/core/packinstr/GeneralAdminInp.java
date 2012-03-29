@@ -3,6 +3,7 @@ package org.irods.jargon.core.packinstr;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.protovalues.UserTypeEnum;
 import org.irods.jargon.core.pub.domain.User;
+import org.irods.jargon.core.pub.domain.UserGroup;
 
 /**
  * Represents a packing instruction for iRODS general admin functionality. These
@@ -13,20 +14,24 @@ import org.irods.jargon.core.pub.domain.User;
  */
 public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 
-	public static final String PI_TAG = "generalAdminInp_PI";
+	private static final String PI_TAG = "generalAdminInp_PI";
+
+	/**
+	 * Protocol API identifier for gen admin operations
+	 */
 	public static final int GEN_ADMIN_INP_API_NBR = 701;
 
-	public static final String ARG0 = "arg0";
-	public static final String ARG1 = "arg1";
-	public static final String ARG2 = "arg2";
-	public static final String ARG3 = "arg3";
-	public static final String ARG4 = "arg4";
-	public static final String ARG5 = "arg5";
-	public static final String ARG6 = "arg6";
-	public static final String ARG7 = "arg7";
-	public static final String ARG8 = "arg8";
-	public static final String ARG9 = "arg9";
-	public static final String BLANK = "";
+	private static final String ARG0 = "arg0";
+	private static final String ARG1 = "arg1";
+	private static final String ARG2 = "arg2";
+	private static final String ARG3 = "arg3";
+	private static final String ARG4 = "arg4";
+	private static final String ARG5 = "arg5";
+	private static final String ARG6 = "arg6";
+	private static final String ARG7 = "arg7";
+	private static final String ARG8 = "arg8";
+	private static final String ARG9 = "arg9";
+	private static final String BLANK = "";
 
 	private String arg0 = "";
 	private String arg1 = "";
@@ -46,7 +51,7 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 	 * @param user
 	 *            {@link org.irods.jargon.core.pub.domain.User} to be added to
 	 *            iRODS.
-	 * @return instance of <code>GeneralAdminInp</code> to send to iRODS.
+	 * @return {@link GeneralAdminInp}
 	 * @throws JargonException
 	 */
 	public static GeneralAdminInp instanceForAddUser(final User user)
@@ -77,7 +82,7 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 	 *            <code>String</code> with the iRODS user name.
 	 * @param comment
 	 *            <code>String<code> with the data to be stored in the user comment.
-	 * @return instance of <code>GeneralAdminInp</code> to send to iRODS.
+	 * @return {@link GeneralAdminInp}
 	 * @throws JargonException
 	 */
 	public static GeneralAdminInp instanceForModifyUserComment(
@@ -104,7 +109,7 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 	 *            <code>String</code> with the iRODS user name.
 	 * @param info
 	 *            <code>String<code> with the data to be stored in the user info.
-	 * @return instance of <code>GeneralAdminInp</code> to send to iRODS.
+	 * @return {@link GeneralAdminInp}
 	 * @throws JargonException
 	 */
 	public static GeneralAdminInp instanceForModifyUserInfo(
@@ -127,7 +132,7 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 	 * 
 	 * @param userName
 	 *            <code>String</code> with the iRODS user name to be removed.
-	 * @return instance of <code>GeneralAdminInp</code> to send to iRODS.
+	 * @return {@link GeneralAdminInp}
 	 * @throws JargonException
 	 */
 	public static GeneralAdminInp instanceForDeleteUser(final String userName)
@@ -140,113 +145,141 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 		return new GeneralAdminInp("rm", "user", userName, BLANK, BLANK, BLANK,
 				BLANK, BLANK, BLANK, BLANK, GEN_ADMIN_INP_API_NBR);
 	}
-	
+
 	/**
 	 * Create the packing instruction to set user quota total for a user
-	 * @param userName <code>String</code> with the user name
-	 * @param quotaValue <code>long</code> with the total (across resources) quota value
-	 * @return
+	 * 
+	 * @param userName
+	 *            <code>String</code> with the user name
+	 * @param quotaValue
+	 *            <code>long</code> with the total (across resources) quota
+	 *            value
+	 * @return {@link GeneralAdminInp}
 	 * @throws JargonException
 	 */
-	public static GeneralAdminInp instanceForSetUserQuotaTotal(final String userName, final long quotaValue) throws JargonException {
-		
+	public static GeneralAdminInp instanceForSetUserQuotaTotal(
+			final String userName, final long quotaValue)
+			throws JargonException {
+
 		if (userName == null || userName.isEmpty()) {
 			throw new IllegalArgumentException("null or empty userName");
 		}
-		
+
 		if (quotaValue <= 0) {
-			throw new IllegalArgumentException("quota value is less than or equal to zero");
+			throw new IllegalArgumentException(
+					"quota value is less than or equal to zero");
 		}
-		
-		return new GeneralAdminInp("set-quota", "user", userName, "total", String.valueOf(quotaValue),  BLANK,
-				BLANK, BLANK, BLANK, BLANK, GEN_ADMIN_INP_API_NBR);
+
+		return new GeneralAdminInp("set-quota", "user", userName, "total",
+				String.valueOf(quotaValue), BLANK, BLANK, BLANK, BLANK, BLANK,
+				GEN_ADMIN_INP_API_NBR);
 	}
-	
+
 	/**
 	 * Set the 'total' quota for a user group
-	 * @param userGroupName <code>String</code> with the user group name
-	 * @param quotaValue <code>long</code> with the quota value for the given resource
-	 * @return
+	 * 
+	 * @param userGroupName
+	 *            <code>String</code> with the user group name
+	 * @param quotaValue
+	 *            <code>long</code> with the quota value for the given resource
+	 * @return {@link GeneralAdminInp}
 	 * @throws JargonException
 	 */
 	public static GeneralAdminInp instanceForSetUserGroupQuotaTotal(
-			String userGroupName, long quotaValue) throws JargonException {
-		
+			final String userGroupName, final long quotaValue)
+			throws JargonException {
+
 		if (userGroupName == null || userGroupName.isEmpty()) {
 			throw new IllegalArgumentException("null or empty userGroupName");
 		}
-		
+
 		if (quotaValue <= 0) {
-			throw new IllegalArgumentException("quota value is less than or equal to zero");
+			throw new IllegalArgumentException(
+					"quota value is less than or equal to zero");
 		}
-		
-		return new GeneralAdminInp("set-quota", "group", userGroupName, "total", String.valueOf(quotaValue),  BLANK,
-				BLANK, BLANK, BLANK, BLANK, GEN_ADMIN_INP_API_NBR);
+
+		return new GeneralAdminInp("set-quota", "group", userGroupName,
+				"total", String.valueOf(quotaValue), BLANK, BLANK, BLANK,
+				BLANK, BLANK, GEN_ADMIN_INP_API_NBR);
 	}
 
-	
 	/**
 	 * Create the packing instruction to set the user quota for a given resource
-	* @param userName <code>String</code> with the user name
+	 * 
+	 * @param userName
+	 *            <code>String</code> with the user name
 	 * @param resourceName
-	 * @param quotaValue <code>long</code> with the quota value for the given resource
-	 * @return
+	 * @param quotaValue
+	 *            <code>long</code> with the quota value for the given resource
+	 * @return {@link GeneralAdminInp}
 	 * @throws JargonException
 	 */
 	public static GeneralAdminInp instanceForSetUserQuotaForResource(
-			String userName, String resourceName, long quotaValue)  throws JargonException {
-		
+			final String userName, final String resourceName,
+			final long quotaValue) throws JargonException {
+
 		if (userName == null || userName.isEmpty()) {
 			throw new IllegalArgumentException("null or empty userName");
 		}
-		
+
 		if (resourceName == null || resourceName.isEmpty()) {
 			throw new IllegalArgumentException("null or empty resourceName");
 		}
-		
+
 		if (quotaValue <= 0) {
-			throw new IllegalArgumentException("quota value is less than or equal to zero");
+			throw new IllegalArgumentException(
+					"quota value is less than or equal to zero");
 		}
-		
-		return new GeneralAdminInp("set-quota", "user", userName, resourceName, String.valueOf(quotaValue),  BLANK,
-				BLANK, BLANK, BLANK, BLANK, GEN_ADMIN_INP_API_NBR);
+
+		return new GeneralAdminInp("set-quota", "user", userName, resourceName,
+				String.valueOf(quotaValue), BLANK, BLANK, BLANK, BLANK, BLANK,
+				GEN_ADMIN_INP_API_NBR);
 	}
-	
+
 	/**
-	 * Create the packing instruction to set the user group quota for a given resource
-	* @param userGroupName <code>String</code> with the user group name
+	 * Create the packing instruction to set the user group quota for a given
+	 * resource
+	 * 
+	 * @param userGroupName
+	 *            <code>String</code> with the user group name
 	 * @param resourceName
-	 * @param quotaValue <code>long</code> with the quota value for the given resource
-	 * @return
+	 * @param quotaValue
+	 *            <code>long</code> with the quota value for the given resource
+	 * @return {@link GeneralAdminInp}
 	 * @throws JargonException
 	 */
 	public static GeneralAdminInp instanceForSetUserGroupQuotaForResource(
-			String userGroupName, String resourceName, long quotaValue) throws JargonException {
-		
+			final String userGroupName, final String resourceName,
+			final long quotaValue) throws JargonException {
+
 		if (userGroupName == null || userGroupName.isEmpty()) {
 			throw new IllegalArgumentException("null or empty userGroupName");
 		}
-		
+
 		if (resourceName == null || resourceName.isEmpty()) {
 			throw new IllegalArgumentException("null or empty resourceName");
 		}
-		
+
 		if (quotaValue <= 0) {
-			throw new IllegalArgumentException("quota value is less than or equal to zero");
+			throw new IllegalArgumentException(
+					"quota value is less than or equal to zero");
 		}
-		
-		return new GeneralAdminInp("set-quota", "group", userGroupName, resourceName, String.valueOf(quotaValue),  BLANK,
-				BLANK, BLANK, BLANK, BLANK, GEN_ADMIN_INP_API_NBR);
+
+		return new GeneralAdminInp("set-quota", "group", userGroupName,
+				resourceName, String.valueOf(quotaValue), BLANK, BLANK, BLANK,
+				BLANK, BLANK, GEN_ADMIN_INP_API_NBR);
 	}
-	
+
 	/**
 	 * Create the command to cause quota usage to be calculated
-	 * @return
+	 * 
+	 * @return {@link GeneralAdminInp}
 	 * @throws JargonException
 	 */
-	public static GeneralAdminInp instanceForCalculateQuotaUsage() throws JargonException {
-		return new GeneralAdminInp("calculate-usage",BLANK, BLANK, BLANK, BLANK,  BLANK,
-				BLANK, BLANK, BLANK, BLANK, GEN_ADMIN_INP_API_NBR);
+	public static GeneralAdminInp instanceForCalculateQuotaUsage()
+			throws JargonException {
+		return new GeneralAdminInp("calculate-usage", BLANK, BLANK, BLANK,
+				BLANK, BLANK, BLANK, BLANK, BLANK, BLANK, GEN_ADMIN_INP_API_NBR);
 	}
 
 	/**
@@ -257,7 +290,7 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 	 *            <code>String</code> with the iRODS user name.
 	 * @param zone
 	 *            <code>String<code> with the user's zone.
-	 * @return instance of <code>GeneralAdminInp</code> to send to iRODS.
+	 * @return {@link GeneralAdminInp}
 	 * @throws JargonException
 	 */
 	public static GeneralAdminInp instanceForModifyUserZone(
@@ -283,7 +316,7 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 	 *            <code>String</code> with the iRODS user name.
 	 * @param password
 	 *            <code>String<code> with the user's password.
-	 * @return instance of <code>GeneralAdminInp</code> to send to iRODS.
+	 * @return {@link GeneralAdminInp}
 	 * @throws JargonException
 	 */
 	public static GeneralAdminInp instanceForModifyUserPassword(
@@ -304,6 +337,121 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 	}
 
 	/**
+	 * Create a packing instruction to add the given iRODS user group to the
+	 * zone
+	 * 
+	 * @param userGroup
+	 *            {@link UserGroup} to add
+	 * @return {@link GeneralAdminInp}
+	 * @throws JargonException
+	 */
+	public static GeneralAdminInp instanceForAddUserGroup(
+			final UserGroup userGroup) throws JargonException {
+		if (userGroup == null) {
+			throw new IllegalArgumentException("null userGroup");
+		}
+		return new GeneralAdminInp("add", "user", userGroup.getUserGroupName(),
+				"rodsgroup", userGroup.getZone(), BLANK, BLANK, BLANK, BLANK,
+				BLANK, GEN_ADMIN_INP_API_NBR);
+	}
+
+	/**
+	 * Create the packing instruction to add a user to a given iRODS user group
+	 * 
+	 * @param userGroupName
+	 *            <code>String</code> with the user group name to which the user
+	 *            will be added
+	 * @param userName
+	 *            <code>String</code> user name to add to the group
+	 * @param zoneName
+	 *            <code>String</code> that is optional (set to blank or
+	 *            <code>null</code> if not applicable, that sets the zone for
+	 *            the user
+	 * @return {@link GeneralAdminInp}
+	 * @throws JargonException
+	 */
+	public static GeneralAdminInp instanceForAddUserToGroup(
+			final String userGroupName, final String userName,
+			final String zoneName) throws JargonException {
+
+		if (userGroupName == null || userGroupName.isEmpty()) {
+			throw new IllegalArgumentException("null or empty userGroupName");
+		}
+
+		if (userName == null || userName.isEmpty()) {
+			throw new IllegalArgumentException("null or empty userName");
+		}
+
+		StringBuilder userNameBuilder = new StringBuilder();
+		userNameBuilder.append(userName.trim());
+		if (zoneName != null && zoneName.length() > 0) {
+			userNameBuilder.append('#');
+			userNameBuilder.append(zoneName.trim());
+		}
+
+		return new GeneralAdminInp("modify", "group", userGroupName.trim(),
+				"add", userNameBuilder.toString(), BLANK, BLANK, BLANK, BLANK,
+				BLANK, GEN_ADMIN_INP_API_NBR);
+	}
+
+	/**
+	 * Create the packing instruction to remove a user from a group
+	 * 
+	 * @param userGroupName
+	 *            <code>String</code> with the user group name from which the
+	 *            user will be removed
+	 * @param userName
+	 *            <code>String</code> user name to remove
+	 * @param zoneName
+	 *            <code>String</code> that is optional (set to blank or
+	 *            <code>null</code> if not applicable, that sets the zone for
+	 *            the user
+	 * @return {@link GeneralAdminInp}
+	 * @throws JargonException
+	 */
+	public static GeneralAdminInp instanceForRemoveUserFromGroup(
+			final String userGroupName, final String userName,
+			final String zoneName) throws JargonException {
+
+		if (userGroupName == null || userGroupName.isEmpty()) {
+			throw new IllegalArgumentException("null or empty userGroupName");
+		}
+
+		if (userName == null || userName.isEmpty()) {
+			throw new IllegalArgumentException("null or empty userName");
+		}
+
+		StringBuilder userNameBuilder = new StringBuilder();
+		userNameBuilder.append(userName.trim());
+		if (zoneName != null && zoneName.length() > 0) {
+			userNameBuilder.append('#');
+			userNameBuilder.append(zoneName.trim());
+		}
+
+		return new GeneralAdminInp("modify", "group", userGroupName.trim(),
+				"remove", userNameBuilder.toString(), BLANK, BLANK, BLANK,
+				BLANK, BLANK, GEN_ADMIN_INP_API_NBR);
+	}
+
+	/**
+	 * Create a packing instruction to remove a given iRODS user group
+	 * 
+	 * @param userGroup
+	 *            {@link UserGroup} to remove
+	 * @return {@link GeneralAdminInp}
+	 * @throws JargonException
+	 */
+	public static GeneralAdminInp instanceForRemoveUserGroup(
+			final UserGroup userGroup) throws JargonException {
+		if (userGroup == null) {
+			throw new IllegalArgumentException("null userGroup");
+		}
+		return new GeneralAdminInp("rm", "user", userGroup.getUserGroupName(),
+				userGroup.getZone(), BLANK, BLANK, BLANK, BLANK, BLANK, BLANK,
+				GEN_ADMIN_INP_API_NBR);
+	}
+
+	/**
 	 * Generate the packing instruction suitable for modifying the type
 	 * associated with the given user.
 	 * 
@@ -312,7 +460,7 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 	 * @param userType
 	 *            {@link org.irods.jargon.core.protovalues.UserTypeEnum} value
 	 *            for the user.
-	 * @return instance of <code>GeneralAdminInp</code> to send to iRODS.
+	 * @return {@link GeneralAdminInp}
 	 * @throws JargonException
 	 */
 	public static GeneralAdminInp instanceForModifyUserType(
@@ -360,42 +508,92 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 		this.arg9 = arg9;
 	}
 
+	/**
+	 * Get the argument
+	 * 
+	 * @return <code>String</code> with the argument at this position
+	 */
 	public String getArg0() {
 		return arg0;
 	}
 
+	/**
+	 * Get the argument
+	 * 
+	 * @return <code>String</code> with the argument at this position
+	 */
 	public String getArg1() {
 		return arg1;
 	}
 
+	/**
+	 * Get the argument
+	 * 
+	 * @return <code>String</code> with the argument at this position
+	 */
 	public String getArg2() {
 		return arg2;
 	}
 
+	/**
+	 * Get the argument
+	 * 
+	 * @return <code>String</code> with the argument at this position
+	 */
 	public String getArg3() {
 		return arg3;
 	}
 
+	/**
+	 * Get the argument
+	 * 
+	 * @return <code>String</code> with the argument at this position
+	 */
 	public String getArg4() {
 		return arg4;
 	}
 
+	/**
+	 * Get the argument
+	 * 
+	 * @return <code>String</code> with the argument at this position
+	 */
 	public String getArg5() {
 		return arg5;
 	}
 
+	/**
+	 * Get the argument
+	 * 
+	 * @return <code>String</code> with the argument at this position
+	 */
 	public String getArg6() {
 		return arg6;
 	}
 
+	/**
+	 * Get the argument
+	 * 
+	 * @return <code>String</code> with the argument at this position
+	 */
 	public String getArg7() {
 		return arg7;
 	}
 
+	/**
+	 * Get the argument
+	 * 
+	 * @return <code>String</code> with the argument at this position
+	 */
 	public String getArg8() {
 		return arg8;
 	}
 
+	/**
+	 * Get the argument
+	 * 
+	 * @return <code>String</code> with the argument at this position
+	 */
 	public String getArg9() {
 		return arg9;
 	}

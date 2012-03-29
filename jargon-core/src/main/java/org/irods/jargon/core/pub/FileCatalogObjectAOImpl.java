@@ -7,9 +7,11 @@ import java.util.List;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSSession;
+import org.irods.jargon.core.exception.FileNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.packinstr.DataObjInp;
 import org.irods.jargon.core.packinstr.Tag;
+import org.irods.jargon.core.pub.domain.ObjStat;
 import org.irods.jargon.core.pub.domain.Resource;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.slf4j.Logger;
@@ -96,15 +98,16 @@ public abstract class FileCatalogObjectAOImpl extends IRODSGenericAO implements
 					String thisHostName = this.getIRODSAccount().getHost();
 					for (Resource resource : resources) {
 						if (resource.getLocation().equals(thisHostName)) {
-							log.info("file replica is on current host:{}", thisHostName);
+							log.info("file replica is on current host:{}",
+									thisHostName);
 							return null;
 						}
 					}
-					
+
 					// not on same host, find another
 					log.info("file is not on this host, so reroute to another host (first found)");
 					return resources.get(0).getLocation();
-					
+
 				}
 			}
 		}
@@ -183,6 +186,23 @@ public abstract class FileCatalogObjectAOImpl extends IRODSGenericAO implements
 		}
 
 		return hostResponse;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.FileCatalogObjectAO#getObjectStatForAbsolutePath
+	 * (java.lang.String)
+	 */
+	@Override
+	public ObjStat getObjectStatForAbsolutePath(final String irodsAbsolutePath)
+			throws FileNotFoundException, JargonException {
+		CollectionAndDataObjectListAndSearchAO collectionAndDataObjectListAndSearchAO = this
+				.getIRODSAccessObjectFactory()
+				.getCollectionAndDataObjectListAndSearchAO(getIRODSAccount());
+		return collectionAndDataObjectListAndSearchAO
+				.retrieveObjectStatForPath(irodsAbsolutePath);
 	}
 
 }

@@ -5,7 +5,6 @@ import java.util.Arrays;
 import java.util.Properties;
 
 import junit.framework.Assert;
-import junit.framework.TestCase;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSProtocolManager;
@@ -22,7 +21,6 @@ import org.irods.jargon.testutils.icommandinvoke.IrodsInvocationContext;
 import org.irods.jargon.testutils.icommandinvoke.icommands.IputCommand;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 public class IRODSFileOutputStreamTest {
@@ -93,7 +91,7 @@ public class IRODSFileOutputStreamTest {
 		irodsFileSystem.closeAndEatExceptions();
 
 	}
-	
+
 	@Test
 	public final void testWriteByteArray() throws Exception {
 		String testFileName = "testWriteByteArray.csv";
@@ -387,14 +385,14 @@ public class IRODSFileOutputStreamTest {
 
 	@Test
 	public final void testIRODSFileOutputStreamWithReroute() throws Exception {
-		
+
 		if (!testingPropertiesHelper
 				.isTestDistributedResources(testingProperties)) {
 			return;
 		}
-		
+
 		String testFileName = "testIRODSFileOutputStreamWithReroute.txt";
-		
+
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
 		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
@@ -408,7 +406,9 @@ public class IRODSFileOutputStreamTest {
 
 		IRODSFile irodsFile = irodsFileFactory
 				.instanceIRODSFile(targetIrodsCollection + '/' + testFileName);
-		irodsFile.setResource(testingProperties.getProperty(TestingPropertiesHelper.IRODS_TERTIARY_RESOURCE_KEY));
+		irodsFile
+				.setResource(testingProperties
+						.getProperty(TestingPropertiesHelper.IRODS_TERTIARY_RESOURCE_KEY));
 
 		IRODSFileOutputStream irodsFileOutputStream = irodsFileFactory
 				.instanceIRODSFileOutputStreamWithRerouting(irodsFile);
@@ -416,18 +416,21 @@ public class IRODSFileOutputStreamTest {
 		irodsFileOutputStream.write(writtenInt);
 		irodsFileOutputStream.close();
 		irodsFileSystem.closeAndEatExceptions(irodsAccount);
-		
-		TestCase.assertTrue("did not get session closing stream for re-route", irodsFileOutputStream instanceof SessionClosingIRODSFileOutputStream);
-		TestCase.assertNull("session from reroute leaking",
+
+		Assert.assertTrue(
+				"did not get session closing stream for re-route",
+				irodsFileOutputStream instanceof SessionClosingIRODSFileOutputStream);
+		Assert.assertNull("session from reroute leaking",
 				irodsFileSystem.getConnectionMap());
 
 	}
-	
+
 	@Test
-	public final void testIRODSFileOutputStreamWithRerouteNoReroute() throws Exception {
-		
+	public final void testIRODSFileOutputStreamWithRerouteNoReroute()
+			throws Exception {
+
 		String testFileName = "testIRODSFileOutputStreamWithRerouteNoReroute.txt";
-		
+
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
 		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
@@ -448,9 +451,10 @@ public class IRODSFileOutputStreamTest {
 		irodsFileOutputStream.write(writtenInt);
 		irodsFileOutputStream.close();
 		irodsFileSystem.closeAndEatExceptions(irodsAccount);
-		
-		TestCase.assertTrue("did not get normal stream for re-route", irodsFileOutputStream instanceof IRODSFileOutputStream);
-		TestCase.assertNull("session from reroute leaking",
+
+		Assert.assertTrue("did not get normal stream for re-route",
+				irodsFileOutputStream instanceof IRODSFileOutputStream);
+		Assert.assertNull("session from reroute leaking",
 				irodsFileSystem.getConnectionMap());
 
 	}

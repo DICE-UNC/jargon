@@ -12,13 +12,17 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.irods.jargon.core.exception.CatNoAccessException;
 import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.DuplicateDataException;
+import org.irods.jargon.core.exception.FileNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.exception.JargonFileOrCollAlreadyExistsException;
 import org.irods.jargon.core.exception.JargonRuntimeException;
 import org.irods.jargon.core.packinstr.DataObjInp;
 import org.irods.jargon.core.pub.IRODSFileSystemAO;
+import org.irods.jargon.core.pub.domain.ObjStat;
+import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry.ObjectType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,18 +42,20 @@ import org.slf4j.LoggerFactory;
  * 
  */
 
-public final class IRODSFileImpl extends File implements IRODSFile { // FIXME: why does this extend IRODSFile?  Should IRODSFile just have the particular non File methods?
-
+public final class IRODSFileImpl extends File implements IRODSFile {
 	static Logger log = LoggerFactory.getLogger(IRODSFileImpl.class);
 
-	IRODSFileSystemAO irodsFileSystemAO = null;
+	private IRODSFileSystemAO irodsFileSystemAO = null;
+	/**
+	 * ObjStat is a cached object (synchronized access) that is obtained from
+	 * iRODS to describe the file
+	 */
+	private transient ObjStat objStat = null;
 
 	private String fileName = "";
 	private String resource = "";
 	private int fileDescriptor = -1;
 	private List<String> directory = new ArrayList<String>();
-	private PathNameType pathNameType = PathNameType.UNKNOWN;
-	private long length = -1;
 
 	private static final long serialVersionUID = -6986662136294659059L;
 
@@ -59,9 +65,8 @@ public final class IRODSFileImpl extends File implements IRODSFile { // FIXME: w
 	 * @see org.irods.jargon.core.pub.io.IRODSFile#reset()
 	 */
 	@Override
-	public void reset() {
-		this.length = -1;
-		this.pathNameType = PathNameType.UNKNOWN;
+	public synchronized void reset() {
+		this.objStat = null;
 	}
 
 	protected IRODSFileImpl(final String pathName,
@@ -69,48 +74,6 @@ public final class IRODSFileImpl extends File implements IRODSFile { // FIXME: w
 		this("", pathName, irodsFileSystemAO);
 		if (pathName == null || pathName.isEmpty()) {
 			throw new JargonException("path name is null or empty");
-		}
-	}
-
-	/**
-	 * Constructor that can preset the file type, thus avoiding a GenQuery
-	 * lookup when <code>isFile</code> is subsequently called
-	 * 
-	 * @param pathName
-	 * @param irodsFileSystemAO
-	 * @param isFile
-	 * @throws JargonException
-	 */
-	protected IRODSFileImpl(final String pathName,
-			final IRODSFileSystemAO irodsFileSystemAO, final boolean isFile)
-			throws JargonException {
-		this("", pathName, irodsFileSystemAO);
-		if (isFile) {
-			pathNameType = PathNameType.FILE;
-		} else {
-			pathNameType = PathNameType.DIRECTORY;
-		}
-	}
-
-	/**
-	 * Constructor with parent and child name that can preset the file type,
-	 * thus avoiding a GenQuery lookup when <code>isFile</code> is subsequently
-	 * called.
-	 * 
-	 * @param parentName
-	 * @param childName
-	 * @param irodsFileSystemAO
-	 * @param isFile
-	 * @throws JargonException
-	 */
-	protected IRODSFileImpl(final String parentName, final String childName,
-			final IRODSFileSystemAO irodsFileSystemAO, final boolean isFile)
-			throws JargonException {
-		this(parentName, childName, irodsFileSystemAO);
-		if (isFile) {
-			pathNameType = PathNameType.FILE;
-		} else {
-			pathNameType = PathNameType.DIRECTORY;
 		}
 	}
 
@@ -360,15 +323,20 @@ public final class IRODSFileImpl extends File implements IRODSFile { // FIXME: w
 	 * @see org.irods.jargon.core.pub.io.IRODSFile#canRead()
 	 */
 	@Override
-	public boolean canRead() {
+	public synchronized boolean canRead() {
+		boolean canRead = false;
+
 		try {
-			return irodsFileSystemAO.isFileReadable(this);
+			initializeObjStatForFile();
+			canRead = irodsFileSystemAO.isFileReadable(this);
+		} catch (FileNotFoundException e) {
+			log.warn("file not found exception, return false", e);
 		} catch (JargonException e) {
-			String msg = "JargonException caught and rethrown as JargonRuntimeException:"
-					+ e.getMessage();
-			log.error(msg, e);
+			log.error("jargon exception, rethrow as unchecked", e);
 			throw new JargonRuntimeException(e);
 		}
+
+		return canRead;
 	}
 
 	/*
@@ -377,19 +345,19 @@ public final class IRODSFileImpl extends File implements IRODSFile { // FIXME: w
 	 * @see org.irods.jargon.core.pub.io.IRODSFile#canWrite()
 	 */
 	@Override
-	public boolean canWrite() {
+	public synchronized boolean canWrite() {
 		boolean canWrite = false;
-		try {
-			canWrite = irodsFileSystemAO.isFileWriteable(this);
-			log.info("checked if I could write this file, and got back:{}",
-					canWrite);
 
+		try {
+			initializeObjStatForFile();
+			canWrite = irodsFileSystemAO.isFileWriteable(this);
+		} catch (FileNotFoundException e) {
+			log.warn("file not found exception, return false", e);
 		} catch (JargonException e) {
-			String msg = "JargonException caught and rethrown as JargonRuntimeException:"
-					+ e.getMessage();
-			log.error(msg, e);
+			log.error("jargon exception, rethrow as unchecked", e);
 			throw new JargonRuntimeException(e);
 		}
+
 		return canWrite;
 	}
 
@@ -399,7 +367,7 @@ public final class IRODSFileImpl extends File implements IRODSFile { // FIXME: w
 	 * @see org.irods.jargon.core.pub.io.IRODSFile#createNewFile()
 	 */
 	@Override
-	public boolean createNewFile() throws IOException {
+	public synchronized boolean createNewFile() throws IOException {
 		try {
 			fileDescriptor = irodsFileSystemAO.createFile(
 					this.getAbsolutePath(), DataObjInp.OpenFlags.READ_WRITE,
@@ -429,7 +397,7 @@ public final class IRODSFileImpl extends File implements IRODSFile { // FIXME: w
 	 * @see org.irods.jargon.core.pub.io.IRODSFile#delete()
 	 */
 	@Override
-	public boolean delete() {
+	public synchronized boolean delete() {
 		boolean successful = true;
 		if (!exists()) {
 			successful = true;
@@ -440,7 +408,8 @@ public final class IRODSFileImpl extends File implements IRODSFile { // FIXME: w
 				} else if (this.isDirectory()) {
 					irodsFileSystemAO.directoryDeleteNoForce(this);
 				}
-			} catch (DataNotFoundException dnf) {
+			} catch (FileNotFoundException dnf) {
+				log.info("file not found, treat as unsuccessful");
 				successful = false;
 			} catch (JargonException e) {
 
@@ -452,15 +421,19 @@ public final class IRODSFileImpl extends File implements IRODSFile { // FIXME: w
 
 			}
 		}
+		objStat = null;
+		fileDescriptor = -1;
 		return successful;
 
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.irods.jargon.core.pub.io.IRODSFile#deleteWithForceOption()
 	 */
 	@Override
-	public boolean deleteWithForceOption() {
+	public synchronized boolean deleteWithForceOption() {
 		boolean successful = true;
 		try {
 			if (this.isFile()) {
@@ -468,12 +441,17 @@ public final class IRODSFileImpl extends File implements IRODSFile { // FIXME: w
 			} else if (this.isDirectory()) {
 				irodsFileSystemAO.directoryDeleteForce(this);
 			}
+		} catch (FileNotFoundException fnf) {
+			log.info("file not found, treat as unsuccessful");
+			successful = false;
 		} catch (JargonException e) {
 			String msg = "JargonException caught and logged on delete, method will return false and continue:"
 					+ e.getMessage();
 			log.error(msg, e);
 			successful = false;
 		}
+		objStat = null;
+		fileDescriptor = -1;
 		return successful;
 
 	}
@@ -511,15 +489,19 @@ public final class IRODSFileImpl extends File implements IRODSFile { // FIXME: w
 	 * @see org.irods.jargon.core.pub.io.IRODSFile#exists()
 	 */
 	@Override
-	public boolean exists() {
+	public synchronized boolean exists() {
+
+		boolean isExists = false;
+
 		try {
-			return irodsFileSystemAO.isFileExists(this);
+			isExists = irodsFileSystemAO.isFileExists(this);
+		} catch (FileNotFoundException e) {
+			log.warn("file not found exception, return false", e);
 		} catch (JargonException e) {
-			String msg = "JargonException caught and rethrown as JargonRuntimeException:"
-					+ e.getMessage();
-			log.error(msg, e);
+			log.error("jargon exception, rethrow as unchecked", e);
 			throw new JargonRuntimeException(e);
 		}
+		return isExists;
 	}
 
 	/*
@@ -707,42 +689,27 @@ public final class IRODSFileImpl extends File implements IRODSFile { // FIXME: w
 	 * @see org.irods.jargon.core.pub.io.IRODSFile#isDirectory()
 	 */
 	@Override
-	public boolean isDirectory() {
-		if (pathNameType == PathNameType.UNKNOWN) {
-			// do query
-		} else if (pathNameType == PathNameType.FILE) {
-			log.info("cached path says file");
-			return false;
-		} else if (pathNameType == PathNameType.DIRECTORY) {
-			log.info("cached path says dir");
-			return true;
-		}
-
-		boolean isDir;
-
+	public synchronized boolean isDirectory() {
+		log.info("isDirectory() for path:{}", this.getAbsolutePath());
+		boolean isDir = false;
 		try {
-			isDir = irodsFileSystemAO.isDirectory(this);
-			if (isDir) {
-				log.info("lookup via irodsFileSystemAO says this is a directory");
-				pathNameType = PathNameType.DIRECTORY;
-			} else {
-				log.info("lookup via irodsFileSystemAO says this is a file");
-				pathNameType = PathNameType.FILE;
+			if (objStat == null) {
+				log.info("looking up objStat, not cached in file");
+				objStat = irodsFileSystemAO.getObjStat(this.getAbsolutePath());
 			}
-		} catch (DataNotFoundException dnf) {
-			log.info("this is not a directory, calling unknown");
-			pathNameType = PathNameType.UNKNOWN;
 
+			if (getObjStat().getObjectType() == ObjectType.COLLECTION
+					|| getObjStat().getObjectType() == ObjectType.LOCAL_DIR) {
+				isDir = true;
+			}
+		} catch (FileNotFoundException fnf) {
+			log.info("file not found");
 		} catch (JargonException je) {
 			log.error("jargon exception, rethrow as unchecked", je);
 			throw new JargonRuntimeException(je);
 		}
 
-		if (log.isDebugEnabled()) {
-			log.debug("finally, pathNameType was:" + pathNameType);
-		}
-
-		return pathNameType == PathNameType.DIRECTORY;
+		return isDir;
 	}
 
 	/*
@@ -751,40 +718,30 @@ public final class IRODSFileImpl extends File implements IRODSFile { // FIXME: w
 	 * @see org.irods.jargon.core.pub.io.IRODSFile#isFile()
 	 */
 	@Override
-	public boolean isFile() {
+	public synchronized boolean isFile() {
 
-		if (pathNameType == PathNameType.UNKNOWN) {
-			// do query
-		} else if (pathNameType == PathNameType.FILE) {
-			return true;
-		} else if (pathNameType == PathNameType.DIRECTORY) {
-			return false;
-		}
-
-		if (!exists()) {
-			log.debug("does not exist, this is not a file");
-			return false;
-		}
-
-		boolean isDir;
+		log.info("isFile() for path:{}", this.getAbsolutePath());
+		boolean isFile = false;
 
 		try {
-			isDir = irodsFileSystemAO.isDirectory(this);
-			if (isDir) {
-				pathNameType = PathNameType.DIRECTORY;
-			} else {
-				pathNameType = PathNameType.FILE;
-			}
-		} catch (DataNotFoundException dnf) {
-			log.info("this is not a file, calling unknown");
-			pathNameType = PathNameType.UNKNOWN;
+			if (objStat == null) {
 
+				log.info("looking up objStat, not cached in file");
+				objStat = irodsFileSystemAO.getObjStat(this.getAbsolutePath());
+			}
+
+			if (getObjStat().getObjectType() == ObjectType.DATA_OBJECT
+					|| getObjStat().getObjectType() == ObjectType.LOCAL_FILE) {
+				isFile = true;
+			}
+		} catch (FileNotFoundException fnf) {
+			log.info("file not found");
 		} catch (JargonException je) {
 			log.error("jargon exception, rethrow as unchecked", je);
 			throw new JargonRuntimeException(je);
 		}
 
-		return pathNameType == PathNameType.FILE;
+		return isFile;
 	}
 
 	/*
@@ -813,16 +770,21 @@ public final class IRODSFileImpl extends File implements IRODSFile { // FIXME: w
 	 * @see org.irods.jargon.core.pub.io.IRODSFile#lastModified()
 	 */
 	@Override
-	public long lastModified() {
+	public synchronized long lastModified() {
+		log.info("lastModified() for path:{}", this.getAbsolutePath());
+		long lastMod = 0L;
+
 		try {
-			return irodsFileSystemAO.getModificationDate(this);
-		} catch (DataNotFoundException e) {
-			return 0;
+			initializeObjStatForFile();
+			lastMod = objStat.getModifiedAt().getTime();
+		} catch (FileNotFoundException e) {
+			log.warn("file not found exception, return 0L", e);
 		} catch (JargonException e) {
 			log.error("jargon exception, rethrow as unchecked", e);
 			throw new JargonRuntimeException(e);
-
 		}
+		return lastMod;
+
 	}
 
 	/*
@@ -831,22 +793,24 @@ public final class IRODSFileImpl extends File implements IRODSFile { // FIXME: w
 	 * @see org.irods.jargon.core.pub.io.IRODSFile#length()
 	 */
 	@Override
-	public long length() {
+	public synchronized long length() {
 
-		if (length == -1) {
-			log.info("caching new length val");
+		log.info("length() for path:{}", this.getAbsolutePath());
 
-			try {
-				length = irodsFileSystemAO.getLength(this);
-			} catch (DataNotFoundException e) {
-				length = 0;
-			} catch (JargonException e) {
-				log.error("jargon exception, rethrow as unchecked", e);
-				throw new JargonRuntimeException(e);
+		long length = 0L;
 
-			}
+		try {
+			initializeObjStatForFile();
+			length = objStat.getObjSize();
+		} catch (FileNotFoundException e) {
+			log.warn("file not found exception, return false", e);
+		} catch (JargonException e) {
+			log.error("jargon exception, rethrow as unchecked", e);
+			throw new JargonRuntimeException(e);
 		}
+
 		return length;
+
 	}
 
 	/*
@@ -855,10 +819,9 @@ public final class IRODSFileImpl extends File implements IRODSFile { // FIXME: w
 	 * @see org.irods.jargon.core.pub.io.IRODSFile#list()
 	 */
 	@Override
-	public String[] list() {
+	public synchronized String[] list() {
 		try {
 			List<String> result = irodsFileSystemAO.getListInDir(this);
-
 			String[] a = new String[result.size()];
 			return result.toArray(a);
 		} catch (DataNotFoundException e) {
@@ -875,7 +838,7 @@ public final class IRODSFileImpl extends File implements IRODSFile { // FIXME: w
 	 * @see org.irods.jargon.core.pub.io.IRODSFile#list(java.io.FilenameFilter)
 	 */
 	@Override
-	public String[] list(final FilenameFilter filter) {
+	public synchronized String[] list(final FilenameFilter filter) {
 		return super.list(filter);
 	}
 
@@ -885,7 +848,7 @@ public final class IRODSFileImpl extends File implements IRODSFile { // FIXME: w
 	 * @see org.irods.jargon.core.pub.io.IRODSFile#listFiles()
 	 */
 	@Override
-	public File[] listFiles() {
+	public synchronized File[] listFiles() {
 
 		try {
 			List<String> result = irodsFileSystemAO.getListInDir(this);
@@ -916,7 +879,7 @@ public final class IRODSFileImpl extends File implements IRODSFile { // FIXME: w
 	 * @see org.irods.jargon.core.pub.io.IRODSFile#listFiles(java.io.FileFilter)
 	 */
 	@Override
-	public File[] listFiles(final FileFilter filter) {
+	public synchronized File[] listFiles(final FileFilter filter) {
 		try {
 			List<File> result = irodsFileSystemAO.getListInDirWithFileFilter(
 					this, filter);
@@ -939,7 +902,7 @@ public final class IRODSFileImpl extends File implements IRODSFile { // FIXME: w
 	 * org.irods.jargon.core.pub.io.IRODSFile#listFiles(java.io.FilenameFilter)
 	 */
 	@Override
-	public File[] listFiles(final FilenameFilter filter) {
+	public synchronized File[] listFiles(final FilenameFilter filter) {
 		try {
 			List<String> result = irodsFileSystemAO.getListInDirWithFilter(
 					this, new IRODSAcceptAllFileNameFilter());
@@ -973,6 +936,9 @@ public final class IRODSFileImpl extends File implements IRODSFile { // FIXME: w
 		} catch (DuplicateDataException e) {
 			log.info("duplicate data exception, return false from mkdir", e);
 			return false;
+		} catch (CatNoAccessException e) {
+			log.error("no access to create the given collection, false will be returned from method");
+			return false;
 		} catch (JargonException e) {
 			// check if this means that it already exists, and call that a
 			// 'false' instead of an error
@@ -996,6 +962,9 @@ public final class IRODSFileImpl extends File implements IRODSFile { // FIXME: w
 	public boolean mkdirs() {
 		try {
 			irodsFileSystemAO.mkdir(this, true);
+		} catch (CatNoAccessException e) {
+			log.error("no access to create the given collection, false will be returned from method");
+			return false;
 		} catch (DuplicateDataException e) {
 			log.info("duplicate data exception, return false from mkdir", e);
 			return false;
@@ -1012,7 +981,7 @@ public final class IRODSFileImpl extends File implements IRODSFile { // FIXME: w
 	 * @see org.irods.jargon.core.pub.io.IRODSFile#renameTo(java.io.File)
 	 */
 	@Override
-	public boolean renameTo(final IRODSFile dest) {
+	public synchronized boolean renameTo(final IRODSFile dest) {
 		boolean success = false;
 		if (dest == null) {
 			String msg = "dest file is null";
@@ -1050,6 +1019,7 @@ public final class IRODSFileImpl extends File implements IRODSFile { // FIXME: w
 				throw new JargonRuntimeException(e);
 			}
 		}
+		objStat = null;
 		return success;
 	}
 
@@ -1243,7 +1213,7 @@ public final class IRODSFileImpl extends File implements IRODSFile { // FIXME: w
 	 * @see org.irods.jargon.core.pub.io.IRODSFile#getFileDescriptor()
 	 */
 	@Override
-	public int getFileDescriptor() {
+	public synchronized int getFileDescriptor() {
 		return fileDescriptor;
 	}
 
@@ -1253,18 +1223,17 @@ public final class IRODSFileImpl extends File implements IRODSFile { // FIXME: w
 	 * 
 	 * @param fileDescriptor
 	 */
-	protected void setFileDescriptor(final int fileDescriptor) {
+	protected synchronized void setFileDescriptor(final int fileDescriptor) {
 		this.fileDescriptor = fileDescriptor;
 	}
 
-	private int openWithMode(final DataObjInp.OpenFlags openFlags, boolean checkExists)
-			throws JargonException {
-		
+	private int openWithMode(final DataObjInp.OpenFlags openFlags,
+			final boolean checkExists) throws JargonException {
+
 		if (log.isInfoEnabled()) {
 			log.info("opening irodsFile:" + this.getAbsolutePath());
 		}
 
-	
 		if (checkExists && !this.exists()) {
 			throw new JargonException(
 					"this file does not exist, so it cannot be opened.  The file should be created first!");
@@ -1291,7 +1260,7 @@ public final class IRODSFileImpl extends File implements IRODSFile { // FIXME: w
 	 * @see org.irods.jargon.core.pub.io.IRODSFile#openReadOnly()
 	 */
 	@Override
-	public int openReadOnly() throws JargonException {
+	public synchronized int openReadOnly() throws JargonException {
 		return openWithMode(DataObjInp.OpenFlags.READ, true);
 	}
 
@@ -1301,17 +1270,18 @@ public final class IRODSFileImpl extends File implements IRODSFile { // FIXME: w
 	 * @see org.irods.jargon.core.pub.io.IRODSFile#open()
 	 */
 	@Override
-	public int open() throws JargonException {
+	public synchronized int open() throws JargonException {
 		return openWithMode(DataObjInp.OpenFlags.READ_WRITE, true);
 	}
-	
+
 	/**
-	 * Open the file without doing an <code>exists()</code> check, since I know it already does.  This saves
-	 * a bit of time
+	 * Open the file without doing an <code>exists()</code> check, since I know
+	 * it already does. This saves a bit of time
+	 * 
 	 * @return
 	 * @throws JargonException
 	 */
-	private int openKnowingExists() throws JargonException {
+	private synchronized int openKnowingExists() throws JargonException {
 		return openWithMode(DataObjInp.OpenFlags.READ_WRITE, false);
 	}
 
@@ -1321,11 +1291,11 @@ public final class IRODSFileImpl extends File implements IRODSFile { // FIXME: w
 	 * @see org.irods.jargon.core.pub.io.IRODSFile#close()
 	 */
 	@Override
-	public void close() throws JargonException {
+	public synchronized void close() throws JargonException {
 		if (log.isInfoEnabled()) {
 			log.info("closing irodsFile:{}", this.getAbsolutePath());
 		}
-		
+
 		this.reset();
 
 		if (this.getFileDescriptor() <= 0) {
@@ -1336,7 +1306,8 @@ public final class IRODSFileImpl extends File implements IRODSFile { // FIXME: w
 
 		this.irodsFileSystemAO.fileClose(this.getFileDescriptor());
 		this.setFileDescriptor(-1);
-		
+		this.objStat = null;
+
 	}
 
 	/*
@@ -1345,7 +1316,8 @@ public final class IRODSFileImpl extends File implements IRODSFile { // FIXME: w
 	 * @see org.irods.jargon.core.pub.io.IRODSFile#closeGivenDescriptor(int)
 	 */
 	@Override
-	public void closeGivenDescriptor(final int fd) throws JargonException {
+	public synchronized void closeGivenDescriptor(final int fd)
+			throws JargonException {
 		if (log.isInfoEnabled()) {
 			log.info("closing irodsFile given descriptor:" + fd);
 		}
@@ -1358,6 +1330,7 @@ public final class IRODSFileImpl extends File implements IRODSFile { // FIXME: w
 
 		this.irodsFileSystemAO.fileClose(fd);
 		this.setFileDescriptor(-1);
+		this.objStat = null;
 
 	}
 
@@ -1402,24 +1375,49 @@ public final class IRODSFileImpl extends File implements IRODSFile { // FIXME: w
 		}
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.pub.io.IRODSFile#initializeObjStatForFile()
+	 */
+	@Override
+	public synchronized ObjStat initializeObjStatForFile()
+			throws FileNotFoundException, JargonException {
+		if (objStat == null) {
+			objStat = irodsFileSystemAO.getObjStat(this.getAbsolutePath());
+		}
+		return objStat;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.io.File#canExecute()
 	 */
 	@Override
-	public boolean canExecute() {
-		boolean canExec = false;
+	public synchronized boolean canExecute() {
+
+		boolean canExecute = false;
 		try {
-			canExec = irodsFileSystemAO.isFileExecutable(this);
-			log.info("checked if I could exec this file, and got back:{}",
-					canExec);
+			initializeObjStatForFile();
+			canExecute = irodsFileSystemAO.isFileExecutable(this);
+
+		} catch (FileNotFoundException e) {
+			log.warn("file not found exception, return false", e);
 
 		} catch (JargonException e) {
-			String msg = "JargonException caught and rethrown as JargonRuntimeException:"
-					+ e.getMessage();
-			log.error(msg, e);
+			log.error("jargon exception, rethrow as unchecked", e);
 			throw new JargonRuntimeException(e);
 		}
-		return canExec;
+		return canExecute;
+	}
+
+	public synchronized ObjStat getObjStat() {
+		return objStat;
+	}
+
+	public synchronized void setObjStat(final ObjStat objStat) {
+		this.objStat = objStat;
 	}
 
 }

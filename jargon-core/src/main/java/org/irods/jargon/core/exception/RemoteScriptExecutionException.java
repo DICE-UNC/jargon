@@ -34,7 +34,8 @@ public class RemoteScriptExecutionException extends JargonException {
 	 * @param message
 	 * @param cause
 	 */
-	public RemoteScriptExecutionException(final String message, final Throwable cause) {
+	public RemoteScriptExecutionException(final String message,
+			final Throwable cause) {
 		super(message, cause);
 	}
 

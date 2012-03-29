@@ -20,6 +20,7 @@ import org.irods.jargon.core.pub.IRODSAccessObjectFactoryImpl;
 import org.irods.jargon.core.pub.IRODSFileSystem;
 import org.irods.jargon.core.pub.IRODSFileSystemAO;
 import org.irods.jargon.core.pub.IRODSFileSystemAOImpl;
+import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry.ObjectType;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.irods.jargon.testutils.filemanip.FileGenerator;
 import org.irods.jargon.testutils.icommandinvoke.IcommandInvoker;
@@ -39,11 +40,13 @@ public class IRODSFileSystemAOImplTest {
 	public static final String IRODS_TEST_SUBDIR_PATH = "IRODSFileSystemAOImplTest";
 	private static org.irods.jargon.testutils.IRODSTestSetupUtilities irodsTestSetupUtilities = null;
 	private static org.irods.jargon.testutils.AssertionHelper assertionHelper = null;
+	private static IRODSFileSystem irodsFileSystem = null;
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		org.irods.jargon.testutils.TestingPropertiesHelper testingPropertiesLoader = new TestingPropertiesHelper();
 		testingProperties = testingPropertiesLoader.getTestProperties();
+		irodsFileSystem = IRODSFileSystem.instance();
 		scratchFileUtils = new org.irods.jargon.testutils.filemanip.ScratchFileUtils(
 				testingProperties);
 		irodsTestSetupUtilities = new org.irods.jargon.testutils.IRODSTestSetupUtilities();
@@ -55,6 +58,7 @@ public class IRODSFileSystemAOImplTest {
 
 	@AfterClass
 	public static void tearDownAfterClass() throws Exception {
+		irodsFileSystem.closeAndEatExceptions();
 	}
 
 	@Test
@@ -648,143 +652,6 @@ public class IRODSFileSystemAOImplTest {
 	}
 
 	@Test
-	public final void testGetModificationDateFile() throws Exception {
-
-		// create a file and place on two resources
-		String testFileName = "testGetModificationDateFile.txt";
-		String absPath = scratchFileUtils
-				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
-		FileGenerator.generateFileOfFixedLengthGivenName(absPath, testFileName,
-				8);
-
-		// put scratch file into irods in the right place
-		IrodsInvocationContext invocationContext = testingPropertiesHelper
-				.buildIRODSInvocationContextFromTestProperties(testingProperties);
-		IputCommand iputCommand = new IputCommand();
-
-		String targetIrodsCollection = testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH);
-
-		StringBuilder fileNameAndPath = new StringBuilder();
-		fileNameAndPath.append(absPath);
-
-		fileNameAndPath.append(testFileName);
-
-		iputCommand.setLocalFileName(fileNameAndPath.toString());
-		iputCommand.setIrodsFileName(targetIrodsCollection);
-		iputCommand.setForceOverride(true);
-
-		IcommandInvoker invoker = new IcommandInvoker(invocationContext);
-		invoker.invokeCommandAndGetResultAsString(iputCommand);
-
-		// now get an irods file and see if it is readable, it should be
-
-		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager
-				.instance();
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSSession irodsSession = IRODSSession
-				.instance(irodsConnectionManager);
-		IRODSAccessObjectFactory accessObjectFactory = IRODSAccessObjectFactoryImpl
-				.instance(irodsSession);
-		IRODSFileFactory irodsFileFactory = accessObjectFactory
-				.getIRODSFileFactory(irodsAccount);
-
-		IRODSFile irodsFile = irodsFileFactory
-				.instanceIRODSFile(targetIrodsCollection + '/' + testFileName);
-		IRODSFileSystemAO fileSystemAO = accessObjectFactory
-				.getIRODSFileSystemAO(irodsAccount);
-
-		long modDate = fileSystemAO.getModificationDate(irodsFile);
-		irodsSession.closeSession();
-		Assert.assertTrue("should have mod date for this file", modDate > 0);
-	}
-
-	@Test
-	public final void testGetModificationDateCollection() throws Exception {
-		String targetIrodsCollection = testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH);
-
-		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager
-				.instance();
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSSession irodsSession = IRODSSession
-				.instance(irodsConnectionManager);
-		IRODSAccessObjectFactory accessObjectFactory = IRODSAccessObjectFactoryImpl
-				.instance(irodsSession);
-		IRODSFileFactory irodsFileFactory = accessObjectFactory
-				.getIRODSFileFactory(irodsAccount);
-
-		IRODSFile irodsFile = irodsFileFactory
-				.instanceIRODSFile(targetIrodsCollection);
-		IRODSFileSystemAO fileSystemAO = accessObjectFactory
-				.getIRODSFileSystemAO(irodsAccount);
-
-		long modDate = fileSystemAO.getModificationDate(irodsFile);
-		irodsSession.closeSession();
-		Assert.assertTrue("should have mod date for this collection",
-				modDate > 0);
-	}
-
-	@Test
-	public final void testGetLengthFile() throws Exception {
-
-		// create a file and place on two resources
-		String testFileName = "testGetLengthFile.txt";
-		long expectedLength = 8;
-		String absPath = scratchFileUtils
-				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
-		FileGenerator.generateFileOfFixedLengthGivenName(absPath, testFileName,
-				8);
-
-		// put scratch file into irods in the right place
-		IrodsInvocationContext invocationContext = testingPropertiesHelper
-				.buildIRODSInvocationContextFromTestProperties(testingProperties);
-		IputCommand iputCommand = new IputCommand();
-
-		String targetIrodsCollection = testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH);
-
-		StringBuilder fileNameAndPath = new StringBuilder();
-		fileNameAndPath.append(absPath);
-
-		fileNameAndPath.append(testFileName);
-
-		iputCommand.setLocalFileName(fileNameAndPath.toString());
-		iputCommand.setIrodsFileName(targetIrodsCollection);
-		iputCommand.setForceOverride(true);
-
-		IcommandInvoker invoker = new IcommandInvoker(invocationContext);
-		invoker.invokeCommandAndGetResultAsString(iputCommand);
-
-		// now get an irods file and see if it is readable, it should be
-		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager
-				.instance();
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSSession irodsSession = IRODSSession
-				.instance(irodsConnectionManager);
-		IRODSAccessObjectFactory accessObjectFactory = IRODSAccessObjectFactoryImpl
-				.instance(irodsSession);
-		IRODSFileFactory irodsFileFactory = accessObjectFactory
-				.getIRODSFileFactory(irodsAccount);
-
-		IRODSFile irodsFile = irodsFileFactory
-				.instanceIRODSFile(targetIrodsCollection + '/' + testFileName);
-		IRODSFileSystemAO fileSystemAO = accessObjectFactory
-				.getIRODSFileSystemAO(irodsAccount);
-
-		long length = fileSystemAO.getLength(irodsFile);
-		irodsSession.closeSession();
-
-		Assert.assertEquals("size does not match", expectedLength, length);
-	}
-
-	@Test
 	public final void testGetListInDir() throws Exception {
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
@@ -913,27 +780,26 @@ public class IRODSFileSystemAOImplTest {
 		String subdir1 = "subdir1";
 		String subdir2 = "subdir2";
 
-		IrodsInvocationContext invocationContext = testingPropertiesHelper
-				.buildIRODSInvocationContextFromTestProperties(testingProperties);
-		IcommandInvoker invoker = new IcommandInvoker(invocationContext);
-		// make a 'top level' dir for this
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+		IRODSFileFactory irodsFileFactory = accessObjectFactory
+				.getIRODSFileFactory(irodsAccount);
 
-		ImkdirCommand imkdirCommand = new ImkdirCommand();
-		imkdirCommand.setCollectionName(targetIrodsCollection + '/'
-				+ topLevelTestDir);
-		invoker.invokeCommandAndGetResultAsString(imkdirCommand);
+		IRODSFile topDir = irodsFileFactory.instanceIRODSFile(
+				targetIrodsCollection, topLevelTestDir);
+		topDir.mkdirs();
 
 		// + 2 subdirs
 
-		imkdirCommand = new ImkdirCommand();
-		imkdirCommand.setCollectionName(targetIrodsCollection + '/'
-				+ topLevelTestDir + '/' + subdir1);
-		invoker.invokeCommandAndGetResultAsString(imkdirCommand);
+		IRODSFile dir = irodsFileFactory.instanceIRODSFile(
+				targetIrodsCollection, topLevelTestDir + '/' + subdir1);
+		dir.mkdirs();
 
-		imkdirCommand = new ImkdirCommand();
-		imkdirCommand.setCollectionName(targetIrodsCollection + '/'
-				+ topLevelTestDir + '/' + subdir2);
-		invoker.invokeCommandAndGetResultAsString(imkdirCommand);
+		dir = irodsFileFactory.instanceIRODSFile(targetIrodsCollection,
+				topLevelTestDir + '/' + subdir2);
+		dir.mkdirs();
 
 		// +1 file
 		String testFileName = "testList.txt";
@@ -942,34 +808,11 @@ public class IRODSFileSystemAOImplTest {
 		FileGenerator.generateFileOfFixedLengthGivenName(absPath, testFileName,
 				8);
 
-		IputCommand iputCommand = new IputCommand();
+		File localFile = new File(absPath, testFileName);
 
-		targetIrodsCollection = testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ topLevelTestDir);
-
-		StringBuilder fileNameAndPath = new StringBuilder();
-		fileNameAndPath.append(absPath);
-
-		fileNameAndPath.append(testFileName);
-
-		iputCommand.setLocalFileName(fileNameAndPath.toString());
-		iputCommand.setIrodsFileName(targetIrodsCollection);
-		iputCommand.setForceOverride(true);
-
-		invoker.invokeCommandAndGetResultAsString(iputCommand);
-
-		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager
-				.instance();
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSSession irodsSession = IRODSSession
-				.instance(irodsConnectionManager);
-		IRODSAccessObjectFactory accessObjectFactory = IRODSAccessObjectFactoryImpl
-				.instance(irodsSession);
-		IRODSFileFactory irodsFileFactory = accessObjectFactory
-				.getIRODSFileFactory(irodsAccount);
+		DataTransferOperations dataTransferOperations = accessObjectFactory
+				.getDataTransferOperations(irodsAccount);
+		dataTransferOperations.putOperation(localFile, topDir, null, null);
 
 		IRODSFile irodsFile = irodsFileFactory
 				.instanceIRODSFile(targetIrodsCollection + '/'
@@ -977,7 +820,6 @@ public class IRODSFileSystemAOImplTest {
 		IRODSFileSystemAO fileSystemAO = accessObjectFactory
 				.getIRODSFileSystemAO(irodsAccount);
 		List<String> subdirs = fileSystemAO.getListInDir(irodsFile);
-		irodsSession.closeSession();
 		Assert.assertNotNull(subdirs);
 		Assert.assertTrue("no results", subdirs.size() == 3);
 	}
@@ -1107,12 +949,12 @@ public class IRODSFileSystemAOImplTest {
 		IRODSFileSystemAO fileSystemAO = accessObjectFactory
 				.getIRODSFileSystemAO(irodsAccount);
 
-		IRODSFileImpl.DataType dataType = fileSystemAO
+		ObjectType dataType = fileSystemAO
 				.getFileDataType(irodsFile);
 		irodsSession.closeSession();
 
 		Assert.assertEquals("did not get expected data type for a file",
-				IRODSFile.DataType.GENERIC, dataType);
+				ObjectType.DATA_OBJECT, dataType);
 	}
 
 	@Test
@@ -1139,12 +981,12 @@ public class IRODSFileSystemAOImplTest {
 		IRODSFileSystemAO fileSystemAO = accessObjectFactory
 				.getIRODSFileSystemAO(irodsAccount);
 
-		IRODSFileImpl.DataType dataType = fileSystemAO
+		ObjectType dataType = fileSystemAO
 				.getFileDataType(irodsFile);
 		irodsSession.closeSession();
 
 		Assert.assertEquals("did not get expected data type for a directory",
-				IRODSFile.DataType.DIRECTORY, dataType);
+				ObjectType.COLLECTION, dataType);
 	}
 
 	@Test

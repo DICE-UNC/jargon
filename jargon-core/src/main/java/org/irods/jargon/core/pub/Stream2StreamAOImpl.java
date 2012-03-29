@@ -11,7 +11,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.channels.Channels;
-import java.nio.channels.FileChannel;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.channels.WritableByteChannel;
 
@@ -93,70 +92,6 @@ public class Stream2StreamAOImpl extends IRODSGenericAO implements
 
 			}
 		}
-
-	}
-
-	@Override
-	public void transferStreamToFile(final InputStream inputStream,
-			final File targetFile, final long length, final long readBuffSize)
-			throws JargonException {
-
-		if (inputStream == null) {
-			throw new IllegalArgumentException("null or empty inputStream");
-		}
-
-		if (targetFile == null) {
-			throw new IllegalArgumentException("null targetFile");
-		}
-
-		log.info("transferStreamToFile(), inputStream:{}", inputStream);
-		log.info("targetFile:{}", targetFile);
-
-		ReadableByteChannel inputChannel = Channels.newChannel(inputStream);
-		FileChannel fileChannel = null;
-		try {
-			FileOutputStream fileOutputStream = new FileOutputStream(targetFile);
-			fileChannel = fileOutputStream.getChannel();
-
-			long fileSize = length;
-
-			long offs = 0, doneCnt = 0, copyCnt = Math
-					.min(readBuffSize, length);
-
-			do {
-
-				doneCnt = fileChannel.transferFrom(inputChannel, offs, copyCnt);
-
-				offs += doneCnt;
-
-				fileSize -= doneCnt;
-
-			}
-
-			while (fileSize > 0);
-
-		} catch (FileNotFoundException e) {
-			log.error("File not found exception copying buffers", e);
-			throw new JargonException(
-					"file not found exception copying buffers", e);
-		} catch (IOException e) {
-			log.error("IOException exception copying buffers", e);
-			throw new JargonException("IOException copying buffers", e);
-		} finally {
-
-			try {
-				inputChannel.close();
-			} catch (Exception e) {
-
-			}
-
-			try {
-				fileChannel.close();
-			} catch (Exception e) {
-
-			}
-		}
-
 	}
 
 	/*
@@ -188,32 +123,54 @@ public class Stream2StreamAOImpl extends IRODSGenericAO implements
 
 			int outputBufferSize = this.getJargonProperties()
 					.getLocalFileOutputStreamBufferSize();
+
+			if (targetFile instanceof IRODSFile) {
+				log.info("target file is an iRODS file");
+
+				fileOutputStream = this.getIRODSFileFactory()
+						.instanceIRODSFileOutputStreamWithRerouting(
+								(IRODSFile) targetFile);
+			} else {
+				log.info("target file is a normal file");
+				fileOutputStream = new FileOutputStream(targetFile);
+			}
+
 			log.debug("output buffer size for file output stream in copy:{}",
 					outputBufferSize);
 
 			if (outputBufferSize == -1) {
 				log.info("no buffer on file output stream to local file");
-				fileOutputStream = new FileOutputStream(targetFile);
+
 			} else if (outputBufferSize == 0) {
 				log.info("default buffered io to file output stream to local file");
-				fileOutputStream = new BufferedOutputStream(
-						new FileOutputStream(targetFile));
+				fileOutputStream = new BufferedOutputStream(fileOutputStream);
 			} else {
 				log.info(
 						"buffer io to file output stream to local file with size of: {}",
 						outputBufferSize);
-				fileOutputStream = new BufferedOutputStream(
-						new FileOutputStream(targetFile), outputBufferSize);
+				fileOutputStream = new BufferedOutputStream(fileOutputStream,
+						outputBufferSize);
 			}
 
-			// see [#470] optimization - look at buffer sizes for read/write in
-			// stream2stream copy - MC
+			int myBuffSize = readBuffSize;
+			if (myBuffSize <= 0) {
+				myBuffSize = this.getJargonProperties()
+						.getInputToOutputCopyBufferByteSize();
+			}
+
+			if (myBuffSize <= 0) {
+				throw new JargonException(
+						"invalid stream to stream copy buffer size of {}",
+						myBuffSize);
+			}
+
+			log.debug("using {} as copy buffer size", myBuffSize);
 
 			int doneCnt = -1;
 
-			byte buf[] = new byte[readBuffSize];
+			byte buf[] = new byte[myBuffSize];
 
-			while ((doneCnt = inputStream.read(buf, 0, readBuffSize)) >= 0) {
+			while ((doneCnt = inputStream.read(buf, 0, myBuffSize)) >= 0) {
 
 				if (doneCnt == 0) {
 					Thread.yield();
@@ -228,19 +185,19 @@ public class Stream2StreamAOImpl extends IRODSGenericAO implements
 			log.error("File not found exception copying buffers", e);
 			throw new JargonException(
 					"file not found exception copying buffers", e);
-		} catch (IOException e) {
-			log.error("IOException exception copying buffers", e);
-			throw new JargonException("IOException copying buffers", e);
+		} catch (Exception e) {
+			log.error("Exception exception copying buffers", e);
+			throw new JargonException("Exception copying buffers", e);
 		} finally {
 
 			try {
 				inputStream.close();
-			} catch (IOException e) {
+			} catch (Exception e) {
 			}
 
 			try {
 				fileOutputStream.close();
-			} catch (IOException e) {
+			} catch (Exception e) {
 			}
 
 		}
@@ -339,9 +296,12 @@ public class Stream2StreamAOImpl extends IRODSGenericAO implements
 
 	}
 
-	
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.pub.Stream2StreamAO#streamClasspathResourceToIRODSFile(java.lang.String, java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.Stream2StreamAO#streamClasspathResourceToIRODSFile
+	 * (java.lang.String, java.lang.String)
 	 */
 	@Override
 	public void streamClasspathResourceToIRODSFile(final String resourcePath,
@@ -355,8 +315,9 @@ public class Stream2StreamAOImpl extends IRODSGenericAO implements
 			throw new IllegalArgumentException(
 					"null or empty irodsFileAbsolutePath");
 		}
-		
-		IRODSFile irodsTarget = this.getIRODSFileFactory().instanceIRODSFile(irodsFileAbsolutePath);
+
+		IRODSFile irodsTarget = this.getIRODSFileFactory().instanceIRODSFile(
+				irodsFileAbsolutePath);
 		irodsTarget.getParentFile().mkdirs();
 		irodsTarget.delete();
 

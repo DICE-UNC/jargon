@@ -4526,4 +4526,4 @@ public final class BinaryDataFormat extends Object {
 		}
 		return offset;
 	}
-};
+}

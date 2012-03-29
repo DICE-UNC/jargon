@@ -157,14 +157,23 @@ public interface RuleProcessingAO extends IRODSAccessObject {
 	 * If the rule is internal, 10 is interpreted as a "value", so the value is
 	 * string "10".
 	 * 
-	 * @param irodsRuleAsString <code>String</code> with the rule body, as well as input and output parameters.
-	 * @param inputParameterOverrides <code>List</code> of {@link IRODSRuleParameter} that overrides the parameters
-	 * derived from the rule bodies.
-	 * @param ruleProcessingType {@link RuleProcessingAO.RuleProcessingType} enum value.  Note that it should be set to <code>CLASSIC</code>
-	 * for classic rules, and <code>EXTERNAL</code> or <code>INTERNAL</code> for new format rules.
-	 * @return {@link IRODSRuleExecResult} that represents the results of processing the rule.
-	 * @throws JargonRuleException if an exception occurred in rule translation.
-	 * @throws JargonException if iRODS processing resulted in an error.
+	 * @param irodsRuleAsString
+	 *            <code>String</code> with the rule body, as well as input and
+	 *            output parameters.
+	 * @param inputParameterOverrides
+	 *            <code>List</code> of {@link IRODSRuleParameter} that overrides
+	 *            the parameters derived from the rule bodies.
+	 * @param ruleProcessingType
+	 *            {@link RuleProcessingAO.RuleProcessingType} enum value. Note
+	 *            that it should be set to <code>CLASSIC</code> for classic
+	 *            rules, and <code>EXTERNAL</code> or <code>INTERNAL</code> for
+	 *            new format rules.
+	 * @return {@link IRODSRuleExecResult} that represents the results of
+	 *         processing the rule.
+	 * @throws JargonRuleException
+	 *             if an exception occurred in rule translation.
+	 * @throws JargonException
+	 *             if iRODS processing resulted in an error.
 	 */
 	IRODSRuleExecResult executeRule(String irodsRuleAsString,
 			List<IRODSRuleParameter> inputParameterOverrides,

@@ -47,7 +47,8 @@ public class SessionClosingIRODSFileInputStream extends IRODSFileInputStream {
 		super.close();
 		try {
 			// close the session in addition to the stream.
-			this.getFileIOOperations().getIRODSSession().closeSession(getFileIOOperations().getIRODSAccount());
+			this.getFileIOOperations().getIRODSSession()
+					.closeSession(getFileIOOperations().getIRODSAccount());
 		} catch (JargonException e) {
 			throw new IOException(
 					"error in close session returned as IOException for method contracts");

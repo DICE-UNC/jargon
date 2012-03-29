@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <artifactId>jargon</artifactId>
+    <groupId>org.irods</groupId>
+    <version>3.1.1-SNAPSHOT</version>
+  </parent>
+  <groupId>org.irods.jargon</groupId>
+  <artifactId>jargon-httpstream</artifactId>
+  <version>3.1.1-SNAPSHOT</version>
+  <name>Jargon HttpStream</name>
+  <url>http://maven.apache.org</url>
+  <dependencies>
+	<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.irods.jargon</groupId>
+			<artifactId>jargon-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.irods.jargon</groupId>
+			<artifactId>jargon-test</artifactId>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+   <groupId>org.apache.httpcomponents</groupId>
+   <artifactId>httpcore</artifactId>
+   <version>4.1.4</version>
+    </dependency>
+    <dependency>
+   <groupId>org.apache.httpcomponents</groupId>
+   <artifactId>httpclient</artifactId>
+   <version>4.1.2</version>
+</dependency>
+  </dependencies>
+  <description>Utilities to stream http/s data into iRODS files</description>
+</project>
+ 

@@ -1,7 +1,5 @@
 package org.irods.jargon.core.connection;
 
-import org.irods.jargon.core.exception.JargonException;
-
 /**
  * Represents a source of configuration metadata that will effect the behavior
  * of Jargon through a properties file or other configuration source.
@@ -15,7 +13,7 @@ import org.irods.jargon.core.exception.JargonException;
  * 
  */
 public interface JargonProperties {
-	
+
 	String getEncoding();
 
 	/**
@@ -32,6 +30,17 @@ public interface JargonProperties {
 	 * @return
 	 */
 	int getMaxParallelThreads();
+
+	/**
+	 * <h2>Experimental setting!!</h2>
+	 * <p/>
+	 * Use NIO to transfer between the local file system and iRODS for parallel
+	 * transfer operations
+	 * 
+	 * @return <code>boolean</code> of <code>true</code> if NIO should be used
+	 *         for parallel transfers
+	 */
+	boolean isUseNIOForParallelTransfers();
 
 	/**
 	 * The file length above which a numThreads will be sent to iRODS in
@@ -184,12 +193,22 @@ public interface JargonProperties {
 	 * that wraps the output stream for the local file. This is used in
 	 * processing get operations where the iRODS data is being saved to the
 	 * local file system. (0 = use defaults, -1 = do not wrap with buffered
-	 * output stream) 
-	 * jargon.io.local.output.stream.buffer.size
+	 * output stream) jargon.io.local.output.stream.buffer.size
 	 * 
 	 * @return <code>int</code> with the buffer size
 	 */
 	int getLocalFileOutputStreamBufferSize();
+
+	/**
+	 * Get the size of the buffer used in a <code>BufferedInputStream</code>
+	 * that wraps the intput stream for the local file. This is used in
+	 * processing operations where the data is being read from the local file
+	 * system. (0 = use defaults, -1 = do not wrap with buffered output stream)
+	 * jargon.io.local.input.stream.buffer.size
+	 * 
+	 * @return <code>int</code> with the buffer size
+	 */
+	int getLocalFileInputStreamBufferSize();
 
 	/**
 	 * Get the time-out, in seconds, for the parallel transfer sockets. Will be
@@ -198,21 +217,23 @@ public interface JargonProperties {
 	 * @return
 	 */
 	int getIRODSParallelTransferSocketTimeout();
-	
+
 	/**
-	 * Get the size of the file segment for each successive call in normal put operations.
+	 * Get the size of the file segment for each successive call in normal put
+	 * operations.
+	 * 
 	 * @return
 	 */
 	int getPutBufferSize();
-	
+
 	/**
-	 * Get the size of the file segment for each successive call in normal get operations.
-	 * @return
+	 * Get the size of the file segment for each successive call in normal get
+	 * operations.
+	 * 
+	 * @return <code>int</code> with buffer size
 	 */
 	int getGetBufferSize();
 
-	int getIrodsSocketTimeout();
 
-	int getIrodsParallelSocketTimeout();
 
 }

@@ -40,7 +40,8 @@ public interface UserAO extends IRODSAccessObject {
 
 	/**
 	 * Query users and return the <code>User</code> object with the given user
-	 * name
+	 * name. Note that user names may be given in user#zone format, and that
+	 * federated user registered on the current zone will be returned.
 	 * 
 	 * @param name
 	 *            <code>String</code> with the name of the user to query.
@@ -81,7 +82,7 @@ public interface UserAO extends IRODSAccessObject {
 	/**
 	 * Query the AVU metadata associated with the given user by user name.
 	 * 
-	 * @param userId
+	 * @param userName
 	 *            <code>String</code> with the user name for the user.
 	 * @return <code>List</code> of
 	 *         {@link org.irods.jargon.core.pub.domain.AvuData} with query
@@ -96,10 +97,12 @@ public interface UserAO extends IRODSAccessObject {
 	 * 
 	 * @param userName
 	 *            <code>String</code> with the iRODS user name to be removed.
-	 * @throws InvalidUserException if the user is not in iRODS
+	 * @throws InvalidUserException
+	 *             if the user is not in iRODS
 	 * @throws JargonException
 	 */
-	void deleteUser(String userName) throws InvalidUserException, JargonException;
+	void deleteUser(String userName) throws InvalidUserException,
+			JargonException;
 
 	/**
 	 * Update the user data. Note that this method only updates certain
@@ -213,17 +216,51 @@ public interface UserAO extends IRODSAccessObject {
 	 * query and add a '%' wild card to the provided term
 	 * 
 	 * @param userName
-	 * @return
+	 * @return <code>List<String></code> that are the user names that match the
+	 *         partial query
 	 * @throws JargonException
 	 */
 	List<String> findUserNameLike(String userName) throws JargonException;
 
 	/**
-	 * Generate a temporary password for the connected user
+	 * Generate a temporary password for the connected user. Password validity
+	 * times and number of connections will be set by the iRODS server.
 	 * 
 	 * @return <code>String</code> with the temporary password
 	 * @throws JargonException
 	 */
 	String getTemporaryPasswordForConnectedUser() throws JargonException;
+
+	/**
+	 * Generate a temporary password for another user. Password validity times
+	 * and number of connections will be set by the iRODS server.
+	 * <p/>
+	 * This is a rodsadmin only function, and was added post iRODS 3.0.
+	 * 
+	 * @param targetUserName
+	 *            <code>String</code> (required) with the user name for which
+	 *            the temporary password will be issued
+	 * @return <code>String</code> with the temporary password
+	 * @throws JargonException
+	 */
+	String getTemporaryPasswordForASpecifiedUser(String targetUserName)
+			throws JargonException;
+
+	/**
+	 * Given a unique numeric user ID, retrieve the user's distinguished name.
+	 * Note that the various list methods do not retrieve the DN by default, as
+	 * it causes unnecessary GenQueries to be issued per user. This method can
+	 * retrieve that data as needed.
+	 * <p/>
+	 * The methods that retrieve an individual user do retrieve the DN by
+	 * default.
+	 * 
+	 * @param userId
+	 *            <code>String</code> with the iRODS user id (not name)
+	 * @return <code>String</code> with the user DN, or <code>null</code> if the
+	 *         DN does not exist for the user
+	 * @throws JargonException
+	 */
+	String retriveUserDNByUserId(String userId) throws JargonException;
 
 }

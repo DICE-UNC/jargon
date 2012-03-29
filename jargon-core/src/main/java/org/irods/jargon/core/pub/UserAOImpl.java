@@ -13,11 +13,13 @@ import org.irods.jargon.core.exception.DuplicateDataException;
 import org.irods.jargon.core.exception.InvalidUserException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.packinstr.GeneralAdminInp;
+import org.irods.jargon.core.packinstr.GetTempPasswordForOther;
 import org.irods.jargon.core.packinstr.GetTempPasswordIn;
 import org.irods.jargon.core.packinstr.ModAvuMetadataInp;
 import org.irods.jargon.core.packinstr.Tag;
 import org.irods.jargon.core.packinstr.UserAdminInp;
 import org.irods.jargon.core.protovalues.UserTypeEnum;
+import org.irods.jargon.core.pub.aohelper.UserAOHelper;
 import org.irods.jargon.core.pub.domain.AvuData;
 import org.irods.jargon.core.pub.domain.User;
 import org.irods.jargon.core.query.IRODSGenQuery;
@@ -30,23 +32,28 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Class to access underlying user information in IRODS
+ * Class to access underlying user information in IRODS.
+ * <p/>
+ * Note that, currently, user DN information requires an additional GenQuery
+ * call per retrieved user, so this is off by default for list methods, and on
+ * by default when retrieving an individual user. There is a method to retrieve
+ * the user DN if required.
  * 
  * @author Mike Conway - DICE (www.irods.org)
  * 
  */
 public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 
-	public static final String ERROR_IN_USER_QUERY = "error in user query";
+	private static final String ERROR_IN_USER_QUERY = "error in user query";
 
-	public static final int DEFAULT_REC_COUNT = 500;
+	private static final int DEFAULT_REC_COUNT = 500;
 
 	Logger log = LoggerFactory.getLogger(this.getClass());
 	private static final char COMMA = ',';
 	private static final String AND = " AND ";
 	private static final String EQUALS = " = ";
-	public static final String GET_TEMP_PASSWORD_OUT_PI = "getTempPasswordOut_PI";
-	public static final String STRING_TO_HASH_WITH = "stringToHashWith";
+	private static final String STRING_TO_HASH_WITH = "stringToHashWith";
+	private IRODSGenQueryExecutor irodsGenQueryExecutor = null;
 
 	protected UserAOImpl(final IRODSSession irodsSession,
 			final IRODSAccount irodsAccount) throws JargonException {
@@ -84,14 +91,12 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 		log.debug("user avu list query: {}", sb.toString());
 		final IRODSGenQuery irodsQuery = IRODSGenQuery.instance(sb.toString(),
 				DEFAULT_REC_COUNT);
-		final IRODSGenQueryExecutorImpl irodsGenQueryExecutorImpl = new IRODSGenQueryExecutorImpl(
-				this.getIRODSSession(), this.getIRODSAccount());
 
 		IRODSQueryResultSetInterface resultSet;
 
 		try {
-			resultSet = irodsGenQueryExecutorImpl
-					.executeIRODSQueryAndCloseResult(irodsQuery, 0);
+			resultSet = getGenQueryExecutor().executeIRODSQueryAndCloseResult(
+					irodsQuery, 0);
 		} catch (JargonQueryException e) {
 			log.error("query exception for user query: " + sb.toString(), e);
 			throw new JargonException(ERROR_IN_USER_QUERY);
@@ -151,14 +156,12 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 		log.debug("user avu list query: {}", sb.toString());
 		final IRODSGenQuery irodsQuery = IRODSGenQuery.instance(sb.toString(),
 				DEFAULT_REC_COUNT);
-		final IRODSGenQueryExecutorImpl irodsGenQueryExecutorImpl = new IRODSGenQueryExecutorImpl(
-				this.getIRODSSession(), this.getIRODSAccount());
 
 		IRODSQueryResultSetInterface resultSet;
 
 		try {
-			resultSet = irodsGenQueryExecutorImpl
-					.executeIRODSQueryAndCloseResult(irodsQuery, 0);
+			resultSet = getGenQueryExecutor().executeIRODSQueryAndCloseResult(
+					irodsQuery, 0);
 		} catch (JargonQueryException e) {
 			log.error("query exception for user query:{} ", sb.toString(), e);
 			throw new JargonException(ERROR_IN_USER_QUERY);
@@ -240,10 +243,9 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 	 */
 	@Override
 	public List<User> findAll() throws JargonException {
-		final IRODSGenQueryExecutorImpl irodsGenQueryExecutorImpl = new IRODSGenQueryExecutorImpl(
-				this.getIRODSSession(), this.getIRODSAccount());
+
 		StringBuilder userQuery = new StringBuilder();
-		userQuery.append(buildUserSelects());
+		userQuery.append(UserAOHelper.buildUserSelects());
 
 		String userQueryString = userQuery.toString();
 		if (log.isInfoEnabled()) {
@@ -255,8 +257,8 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 
 		IRODSQueryResultSetInterface resultSet;
 		try {
-			resultSet = irodsGenQueryExecutorImpl
-					.executeIRODSQueryAndCloseResult(irodsQuery, 0);
+			resultSet = getGenQueryExecutor().executeIRODSQueryAndCloseResult(
+					irodsQuery, 0);
 		} catch (JargonQueryException e) {
 			log.error("query exception for user query:" + userQueryString, e);
 			throw new JargonException(ERROR_IN_USER_QUERY);
@@ -265,7 +267,8 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 		List<User> users = new ArrayList<User>();
 		User user;
 		for (IRODSQueryResultRow row : resultSet.getResults()) {
-			user = buildUserFromResultSet(row);
+			user = UserAOHelper.buildUserFromResultSet(row,
+					getGenQueryExecutor(), false);
 			users.add(user);
 		}
 
@@ -285,10 +288,8 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 			throw new IllegalArgumentException("null where statement");
 		}
 
-		final IRODSGenQueryExecutorImpl irodsGenQueryExecutorImpl = new IRODSGenQueryExecutorImpl(
-				this.getIRODSSession(), this.getIRODSAccount());
 		StringBuilder sb = new StringBuilder();
-		sb.append(buildUserSelects());
+		sb.append(UserAOHelper.buildUserSelects());
 
 		if (!whereStatement.isEmpty()) {
 			sb.append(" WHERE ");
@@ -307,8 +308,8 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 
 		IRODSQueryResultSetInterface resultSet;
 		try {
-			resultSet = irodsGenQueryExecutorImpl
-					.executeIRODSQueryAndCloseResult(irodsQuery, 0);
+			resultSet = getGenQueryExecutor().executeIRODSQueryAndCloseResult(
+					irodsQuery, 0);
 		} catch (JargonQueryException e) {
 			log.error("query exception for user query: {}", userQueryString, e);
 			throw new JargonException(ERROR_IN_USER_QUERY);
@@ -317,7 +318,8 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 		List<User> users = new ArrayList<User>();
 		User user;
 		for (IRODSQueryResultRow row : resultSet.getResults()) {
-			user = buildUserFromResultSet(row);
+			user = UserAOHelper.buildUserFromResultSet(row,
+					getGenQueryExecutor(), false);
 			users.add(user);
 		}
 
@@ -336,7 +338,7 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 				this.getIRODSSession(), this.getIRODSAccount());
 		StringBuilder userQuery = new StringBuilder();
 
-		userQuery.append(buildUserSelects());
+		userQuery.append(UserAOHelper.buildUserSelects());
 		userQuery.append(" where ");
 		userQuery.append(RodsGenQueryEnum.COL_USER_ID.getName());
 		userQuery.append(" = '");
@@ -386,28 +388,12 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 
 		// I know I have just one user
 
-		IRODSQueryResultRow row = resultSet.getResults().get(0);
-		User user = buildUserFromResultSet(row);
+		IRODSQueryResultRow row = resultSet.getFirstResult();
+		User user = UserAOHelper.buildUserFromResultSet(row,
+				getGenQueryExecutor(), true);
 
 		return user;
 
-	}
-
-	private User buildUserFromResultSet(final IRODSQueryResultRow row)
-			throws JargonException {
-		User user = new User();
-		user.setId(row.getColumn(0));
-		user.setName(row.getColumn(1));
-		user.setUserType(UserTypeEnum.findTypeByString(row.getColumn(2)));
-		user.setZone(row.getColumn(3));
-		user.setInfo(row.getColumn(4));
-		user.setComment(row.getColumn(5));
-		// FIXME: do dates
-		String userDn = findUserDnIfExists(user.getId());
-		if (userDn != null) {
-			user.setUserDN(userDn);
-		}
-		return user;
 	}
 
 	/*
@@ -419,21 +405,29 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 	public User findByName(final String userName) throws JargonException,
 			DataNotFoundException {
 
-		final IRODSGenQueryExecutorImpl irodsGenQueryExecutorImpl = new IRODSGenQueryExecutorImpl(
-				this.getIRODSSession(), this.getIRODSAccount());
+		/*
+		 * See if there is a zone component
+		 */
+
+		String theUser = UserAOHelper.getUserNameFromUserPoundZone(userName);
+		String theZone = UserAOHelper.getZoneFromUserPoundZone(userName);
+		if (theZone.isEmpty()) {
+			theZone = getIRODSAccount().getZone();
+		}
+
 		StringBuilder userQuery = new StringBuilder();
 
-		userQuery.append(buildUserSelects());
+		userQuery.append(UserAOHelper.buildUserSelects());
 		userQuery.append(" where ");
 		userQuery.append(RodsGenQueryEnum.COL_USER_NAME.getName());
 		userQuery.append(" = '");
-		userQuery.append(userName.trim());
+		userQuery.append(theUser);
 		userQuery.append("'");
 		userQuery.append(AND);
 		userQuery.append(RodsGenQueryEnum.COL_USER_ZONE.getName());
 		userQuery.append(EQUALS);
 		userQuery.append("'");
-		userQuery.append(this.getIRODSAccount().getZone());
+		userQuery.append(theZone);
 		userQuery.append("'");
 
 		String userQueryString = userQuery.toString();
@@ -444,9 +438,8 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 
 		IRODSQueryResultSetInterface resultSet;
 		try {
-			resultSet = irodsGenQueryExecutorImpl
-					.executeIRODSQueryAndCloseResult(irodsQuery,
-							DEFAULT_REC_COUNT);
+			resultSet = getGenQueryExecutor().executeIRODSQueryAndCloseResult(
+					irodsQuery, 0);
 		} catch (JargonQueryException e) {
 			log.error("query exception for user query:{}", userQueryString, e);
 			throw new JargonException(ERROR_IN_USER_QUERY);
@@ -473,7 +466,8 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 		// I know I have just one user
 
 		IRODSQueryResultRow row = resultSet.getResults().get(0);
-		User user = buildUserFromResultSet(row);
+		User user = UserAOHelper.buildUserFromResultSet(row,
+				getGenQueryExecutor(), true);
 
 		return user;
 	}
@@ -493,9 +487,6 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 
 		log.info("findUserNameLike userName{}", userName);
 
-		final IRODSGenQueryExecutorImpl irodsGenQueryExecutorImpl = new IRODSGenQueryExecutorImpl(
-				this.getIRODSSession(), this.getIRODSAccount());
-
 		List<String> results = new ArrayList<String>();
 		StringBuilder userQuery = new StringBuilder();
 		userQuery.append("select ");
@@ -513,9 +504,8 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 
 		IRODSQueryResultSetInterface resultSet;
 		try {
-			resultSet = irodsGenQueryExecutorImpl
-					.executeIRODSQueryAndCloseResult(irodsQuery,
-							DEFAULT_REC_COUNT);
+			resultSet = getGenQueryExecutor().executeIRODSQueryAndCloseResult(
+					irodsQuery, 0);
 		} catch (JargonQueryException e) {
 			log.error("query exception for user query:{}",
 					userQuery.toString(), e);
@@ -531,90 +521,16 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 
 	}
 
-	/**
-	 * Handy method will build the select portion of a gen query that accesses
-	 * user data.
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @return <code>String</code> with genquery select statement that obtains
-	 *         user data.
+	 * @see
+	 * org.irods.jargon.core.pub.UserAO#retriveUserDNByUserId(java.lang.String)
 	 */
-	public String buildUserSelects() {
-		StringBuilder userQuery = new StringBuilder();
-		userQuery.append("select ");
-		userQuery.append(RodsGenQueryEnum.COL_USER_ID.getName());
-		userQuery.append(COMMA);
-		userQuery.append(RodsGenQueryEnum.COL_USER_NAME.getName());
-		userQuery.append(COMMA);
-		userQuery.append(RodsGenQueryEnum.COL_USER_TYPE.getName());
-		userQuery.append(COMMA);
-		userQuery.append(RodsGenQueryEnum.COL_USER_ZONE.getName());
-		userQuery.append(COMMA);
-		userQuery.append(RodsGenQueryEnum.COL_USER_INFO.getName());
-		userQuery.append(COMMA);
-		userQuery.append(RodsGenQueryEnum.COL_USER_COMMENT.getName());
-		userQuery.append(COMMA);
-		userQuery.append(RodsGenQueryEnum.COL_USER_CREATE_TIME.getName());
-		userQuery.append(COMMA);
-		userQuery.append(RodsGenQueryEnum.COL_USER_MODIFY_TIME.getName());
-		return userQuery.toString();
-	}
-
-	private String findUserDnIfExists(final String userId)
+	@Override
+	public String retriveUserDNByUserId(final String userId)
 			throws JargonException {
-		String dn = null;
-		final IRODSGenQueryExecutorImpl irodsGenQueryExecutorImpl = new IRODSGenQueryExecutorImpl(
-				this.getIRODSSession(), this.getIRODSAccount());
-		StringBuilder userQuery = new StringBuilder();
-
-		userQuery.append("select ");
-		userQuery.append(RodsGenQueryEnum.COL_USER_ID.getName());
-		userQuery.append(COMMA);
-		userQuery.append(RodsGenQueryEnum.COL_USER_DN.getName());
-
-		userQuery.append(" where ");
-		userQuery.append(RodsGenQueryEnum.COL_USER_ID.getName());
-		userQuery.append(" = '");
-		userQuery.append(userId);
-		userQuery.append("'");
-
-		String userQueryString = userQuery.toString();
-		if (log.isInfoEnabled()) {
-			log.info("user dn query:{}", userQueryString);
-		}
-
-		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(userQueryString,
-				DEFAULT_REC_COUNT);
-
-		IRODSQueryResultSetInterface resultSet;
-		try {
-			resultSet = irodsGenQueryExecutorImpl
-					.executeIRODSQueryAndCloseResult(irodsQuery,
-							DEFAULT_REC_COUNT);
-		} catch (JargonQueryException e) {
-			log.error("query exception for user dn query:{}", userQueryString,
-					e);
-			throw new JargonException(ERROR_IN_USER_QUERY);
-		}
-
-		if (resultSet.getResults().size() == 0) {
-			return null;
-		}
-
-		if (resultSet.getResults().size() > 1) {
-			StringBuilder messageBuilder = new StringBuilder();
-			messageBuilder.append("more than one user dn found for id:");
-			messageBuilder.append(userId);
-			String message = messageBuilder.toString();
-			log.error(message);
-			throw new JargonException(message);
-		}
-
-		// I know I have just one user DN
-
-		IRODSQueryResultRow row = resultSet.getResults().get(0);
-		dn = row.getColumn(1);
-		return dn;
-
+		return UserAOHelper.findUserDnIfExists(userId, getGenQueryExecutor());
 	}
 
 	/*
@@ -623,7 +539,8 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 	 * @see org.irods.jargon.core.pub.UserAO#deleteUser(java.lang.String)
 	 */
 	@Override
-	public void deleteUser(final String userName) throws InvalidUserException, JargonException {
+	public void deleteUser(final String userName) throws InvalidUserException,
+			JargonException {
 		if (userName == null || userName.isEmpty()) {
 			throw new IllegalArgumentException("null or empty user name");
 		}
@@ -632,9 +549,7 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 		log.debug("executing admin PI");
 
 		try {
-
 			getIRODSProtocol().irodsFunction(adminPI);
-
 		} catch (JargonException je) {
 			log.info("jargon exception, check for delete of non-existent user");
 
@@ -756,6 +671,33 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 	 * (non-Javadoc)
 	 * 
 	 * @see
+	 * org.irods.jargon.core.pub.UserAO#getTemporaryPasswordForASpecifiedUser
+	 * (java.lang.String)
+	 */
+	@Override
+	public String getTemporaryPasswordForASpecifiedUser(
+			final String targetUserName) throws JargonException {
+		log.debug("getTemporaryPasswordForASpecifiedUser()");
+		// parm checks done in packing instruction
+		GetTempPasswordForOther getTempPasswordForOtherPI = GetTempPasswordForOther
+				.instance(targetUserName);
+		Tag response = getIRODSProtocol().irodsFunction(
+				getTempPasswordForOtherPI);
+
+		String responseHashCode = response.getTag(STRING_TO_HASH_WITH)
+				.getStringValue();
+		log.info("hash value:{}", responseHashCode);
+		String tempPassword = IRODSPasswordUtilities.getHashedPassword(
+				responseHashCode, this.getIRODSAccount());
+
+		return tempPassword;
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
 	 * org.irods.jargon.core.pub.UserAO#changeAUserPasswordByAnAdmin(java.lang
 	 * .String, java.lang.String)
 	 */
@@ -777,10 +719,8 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 		GeneralAdminInp adminPI = GeneralAdminInp
 				.instanceForModifyUserPassword(userName, newPassword);
 		getIRODSProtocol().irodsFunction(adminPI);
-		
-		// FIXME: finish implement
-		
-		
+
+		// FIXME: finish implementing
 	}
 
 	private void updatePreChecks(final User user) throws JargonException {
@@ -927,6 +867,16 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 		GeneralAdminInp adminPI = GeneralAdminInp.instanceForModifyUserInfo(
 				user.getName(), user.getInfo());
 		getIRODSProtocol().irodsFunction(adminPI);
+	}
+
+	private IRODSGenQueryExecutor getGenQueryExecutor() throws JargonException {
+		if (irodsGenQueryExecutor == null) {
+			irodsGenQueryExecutor = this.getIRODSAccessObjectFactory()
+					.getIRODSGenQueryExecutor(getIRODSAccount());
+		}
+
+		return irodsGenQueryExecutor;
+
 	}
 
 }

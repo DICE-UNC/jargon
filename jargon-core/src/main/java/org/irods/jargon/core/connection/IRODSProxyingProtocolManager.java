@@ -14,7 +14,7 @@ import org.irods.jargon.core.exception.JargonException;
  * @author Mike Conway - DICE (www.irods.org)
  * 
  */
-public class IRODSProxyingProtocolManager implements IRODSProtocolManager {
+public class IRODSProxyingProtocolManager extends AbstractIRODSProtocolManager {
 
 	@SuppressWarnings("unused")
 	private final List<ConnectionProxyDefinition> connectionProxyDefinitions;
@@ -56,7 +56,8 @@ public class IRODSProxyingProtocolManager implements IRODSProtocolManager {
 	 * (org.irods.jargon.core.connection.IRODSAccount)
 	 */
 	@Override
-	public IRODSCommands getIRODSProtocol(final IRODSAccount irodsAccount, final PipelineConfiguration pipelineConfiguration)
+	public IRODSCommands getIRODSProtocol(final IRODSAccount irodsAccount,
+			final PipelineConfiguration pipelineConfiguration)
 			throws JargonException {
 		return null;
 	}

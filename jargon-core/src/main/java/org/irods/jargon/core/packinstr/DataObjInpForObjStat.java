@@ -42,9 +42,10 @@ public class DataObjInpForObjStat extends AbstractIRODSPackingInstruction {
 
 		super();
 		if (fileAbsolutePath == null || fileAbsolutePath.length() == 0) {
-			throw new IllegalArgumentException("file absolute path is null or empty");
+			throw new IllegalArgumentException(
+					"file absolute path is null or empty");
 		}
-		
+
 		this.fileAbsolutePath = fileAbsolutePath;
 		this.setApiNumber(OBJ_STAT_API_NBR);
 	}

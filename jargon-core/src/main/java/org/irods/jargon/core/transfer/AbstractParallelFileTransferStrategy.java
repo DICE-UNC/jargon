@@ -3,6 +3,7 @@ package org.irods.jargon.core.transfer;
 import java.io.File;
 
 import org.irods.jargon.core.connection.ConnectionProgressStatusListener;
+import org.irods.jargon.core.connection.JargonProperties;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 
@@ -32,6 +33,7 @@ public abstract class AbstractParallelFileTransferStrategy {
 	private final TransferStatusCallbackListener transferStatusCallbackListener;
 	private ConnectionProgressStatusListener connectionProgressStatusListener = null;
 	private final int parallelSocketTimeoutInSecs;
+	private final JargonProperties jargonProperties;
 
 	/**
 	 * Constructor for a parallel file transfer runner. This runner will create
@@ -51,7 +53,9 @@ public abstract class AbstractParallelFileTransferStrategy {
 	 *            <code>File</code> that will transferrred.
 	 * @param irodsAccessObjectFactory
 	 *            {@link IRODSAccessObjectFactory} for the session.
-	 * @param transferLength <code>long</code> with the total length of the file to transfer
+	 * @param transferLength
+	 *            <code>long</code> with the total length of the file to
+	 *            transfer
 	 * @param transferControlBlock
 	 *            {@link TransferControlBlock} that controls and keeps track of
 	 *            the transfer operation, required.
@@ -65,7 +69,8 @@ public abstract class AbstractParallelFileTransferStrategy {
 	protected AbstractParallelFileTransferStrategy(final String host,
 			final int port, final int numberOfThreads, final int password,
 			final File localFile,
-			final IRODSAccessObjectFactory irodsAccessObjectFactory, final long transferLength,
+			final IRODSAccessObjectFactory irodsAccessObjectFactory,
+			final long transferLength,
 			final TransferControlBlock transferControlBlock,
 			final TransferStatusCallbackListener transferStatusCallbackListener)
 			throws JargonException {
@@ -109,9 +114,12 @@ public abstract class AbstractParallelFileTransferStrategy {
 		this.transferControlBlock = transferControlBlock;
 		this.transferStatusCallbackListener = transferStatusCallbackListener;
 		this.transferLength = transferLength;
-		
-		this.parallelSocketTimeoutInSecs = irodsAccessObjectFactory.getIrodsSession().getJargonProperties().getIRODSParallelTransferSocketTimeout();
-		
+		this.jargonProperties = irodsAccessObjectFactory.getIrodsSession()
+				.getJargonProperties();
+
+		this.parallelSocketTimeoutInSecs = jargonProperties
+				.getIRODSParallelTransferSocketTimeout();
+
 	}
 
 	@Override
@@ -198,6 +206,13 @@ public abstract class AbstractParallelFileTransferStrategy {
 	 */
 	protected int getParallelSocketTimeoutInSecs() {
 		return parallelSocketTimeoutInSecs;
+	}
+
+	/**
+	 * @return the jargonProperties
+	 */
+	protected JargonProperties getJargonProperties() {
+		return jargonProperties;
 	}
 
 }

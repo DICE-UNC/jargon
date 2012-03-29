@@ -19,7 +19,8 @@ import org.slf4j.LoggerFactory;
  * 
  * @author Mike Conway - DICE
  */
-public final class IRODSSimpleProtocolManager implements IRODSProtocolManager {
+public final class IRODSSimpleProtocolManager extends
+		AbstractIRODSProtocolManager {
 
 	private Logger log = LoggerFactory
 			.getLogger(IRODSSimpleProtocolManager.class);
@@ -45,18 +46,21 @@ public final class IRODSSimpleProtocolManager implements IRODSProtocolManager {
 	 * this method returns.
 	 */
 	@Override
-	public IRODSCommands getIRODSProtocol(final IRODSAccount irodsAccount, final PipelineConfiguration pipelineConfiguration)
+	public IRODSCommands getIRODSProtocol(final IRODSAccount irodsAccount,
+			final PipelineConfiguration pipelineConfiguration)
 			throws JargonException {
-		log.debug("creating an IRODSSimpleConnection for account:{}", irodsAccount);
+		log.debug("creating an IRODSSimpleConnection for account:{}",
+				irodsAccount);
 
-		return IRODSCommands.instance(irodsAccount, this, pipelineConfiguration);
+		return IRODSCommands
+				.instance(irodsAccount, this, pipelineConfiguration);
 	}
 
 	/**
 	 * A connection is returned to the connection manager. This implementation
-	 * of a connection manager will do a call-back to the {@link IRODSConnection
-	 * IRODSConnection} and the connection will be closed. Other implementations
-	 * may return the connection to a pool.
+	 * of a connection manager will do a call-back to the
+	 * {@link IRODSConnection IRODSConnection} and the connection will be
+	 * closed. Other implementations may return the connection to a pool.
 	 * <p/>
 	 * 
 	 * @see org.irods.jargon.core.connection.IRODSConnectionManager#returnIRODSConnection
@@ -85,13 +89,15 @@ public final class IRODSSimpleProtocolManager implements IRODSProtocolManager {
 		if (irodsConnection != null) {
 			irodsConnection.obliterateConnectionAndDiscardErrors();
 			try {
-				irodsConnection.getIrodsSession().discardSessionForErrors(irodsConnection.getIrodsAccount());
+				irodsConnection.getIrodsSession().discardSessionForErrors(
+						irodsConnection.getIrodsAccount());
 			} catch (JargonException e) {
 				log.error("unable to obliterate connection");
-				throw new JargonRuntimeException("unable to obliterate connection", e);
+				throw new JargonRuntimeException(
+						"unable to obliterate connection", e);
 			}
 		}
-		
+
 	}
 
 	/*

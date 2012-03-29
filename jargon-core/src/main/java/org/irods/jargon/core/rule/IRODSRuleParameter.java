@@ -76,7 +76,8 @@ public class IRODSRuleParameter {
 		this(name, value, STR_PI);
 	}
 
-	public IRODSRuleParameter(final String name, final Object value, final String type) {
+	public IRODSRuleParameter(final String name, final Object value,
+			final String type) {
 		if (value == null) {
 			setNullValue();
 		} else {
@@ -190,7 +191,7 @@ public class IRODSRuleParameter {
 	}
 
 	public Tag createMsParamArray() {
-		
+
 		Tag param = new Tag(IRODSConstants.MsParam_PI, new Tag[] {
 				new Tag(IRODSConstants.label, getUniqueName()),
 				new Tag(IRODSConstants.type, getType()), });
@@ -198,7 +199,7 @@ public class IRODSRuleParameter {
 		if (type.equals(INT_PI)) {
 			param.addTag(new Tag(INT_PI, new Tag[] {
 			// only one parameter, the int
-					new Tag(MY_INT, getIntValue()), }));
+			new Tag(MY_INT, getIntValue()), }));
 		} else if (type.equals(BUF_LEN_PI)) {
 			param.addTag(new Tag(BUF_LEN_PI, new Tag[] {
 					// send a byte buffer
@@ -209,7 +210,7 @@ public class IRODSRuleParameter {
 			param.addTag(new Tag(STR_PI, new Tag[] {
 			// only one parameter, the string
 			// if default, try sending the string value, might work...
-					new Tag(MY_STR, getStringValue()), }));
+			new Tag(MY_STR, getStringValue()), }));
 		}
 		return param;
 	}

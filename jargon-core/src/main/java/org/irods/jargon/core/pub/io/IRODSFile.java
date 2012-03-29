@@ -6,7 +6,9 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.net.URI;
 
+import org.irods.jargon.core.exception.FileNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.pub.domain.ObjStat;
 
 /**
  * Interface followed by {@link org.irods.jargon.core.pub.io.IRODSFileImpl}. The
@@ -31,14 +33,6 @@ import org.irods.jargon.core.exception.JargonException;
  */
 public interface IRODSFile {
 
-	public enum DataType {
-		GENERIC, DIRECTORY, UNKNOWN
-	};
-
-	public enum PathNameType {
-		UNKNOWN, FILE, DIRECTORY
-	}
-
 	public static final char PATH_SEPARATOR_CHAR = '/';
 	public static final String PATH_SEPARATOR = "/";
 	public static final int PATH_IS_UNKNOWN = 0;
@@ -52,7 +46,7 @@ public interface IRODSFile {
 	boolean canRead();
 
 	boolean canWrite();
-	
+
 	boolean canExecute();
 
 	boolean createNewFile() throws IOException;
@@ -233,5 +227,21 @@ public interface IRODSFile {
 	 * @throws JargonException
 	 */
 	void closeGivenDescriptor(int fd) throws JargonException;
+
+	/**
+	 * Initialize the cached <code>ObjStat</code> for this
+	 * <code>IRODSFile</code>. The cached stat describes the file information,
+	 * and is used in determining length, whether it is a collection, and other
+	 * file basics. It also establishes the zone for the file for use in
+	 * querying things like file permissions. Calling this method will set the
+	 * <code>objStat</code> instance variable, and as such, it is synchronized.
+	 * 
+	 * @return {@link ObjStat} describing the iRODS file
+	 * @throws FileNotFoundException
+	 *             if the file <code>ObjStat</code> cannot be found
+	 * @throws JargonException
+	 */
+	ObjStat initializeObjStatForFile() throws FileNotFoundException,
+			JargonException;
 
 }

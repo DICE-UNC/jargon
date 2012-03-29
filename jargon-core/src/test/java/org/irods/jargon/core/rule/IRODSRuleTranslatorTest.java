@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import junit.framework.Assert;
-import junit.framework.TestCase;
 
 import org.irods.jargon.core.connection.IRODSServerProperties;
 import org.irods.jargon.core.connection.IRODSServerProperties.IcatEnabled;
@@ -61,7 +60,7 @@ public class IRODSRuleTranslatorTest {
 		IRODSRule translatedRule = irodsRuleTranslator
 				.translatePlainTextRuleIntoIRODSRule(ruleString);
 		Assert.assertNotNull("null translated rule returned", translatedRule);
-		TestCase.assertEquals("should be no input params", 0, translatedRule
+		Assert.assertEquals("should be no input params", 0, translatedRule
 				.getIrodsRuleInputParameters().size());
 
 	}
@@ -276,10 +275,10 @@ public class IRODSRuleTranslatorTest {
 				irodsServerProperties);
 		List<IRODSRuleParameter> collated = translator
 				.collateOverridesIntoInputParameters(overrideParams, params);
-		TestCase.assertEquals("no collated found", 2, collated.size());
-		TestCase.assertEquals("name1 not found", name1, collated.get(0)
+		Assert.assertEquals("no collated found", 2, collated.size());
+		Assert.assertEquals("name1 not found", name1, collated.get(0)
 				.getUniqueName());
-		TestCase.assertEquals("name2 not found", name2, collated.get(1)
+		Assert.assertEquals("name2 not found", name2, collated.get(1)
 				.getUniqueName());
 
 	}
@@ -301,12 +300,12 @@ public class IRODSRuleTranslatorTest {
 				irodsServerProperties);
 		List<IRODSRuleParameter> collated = translator
 				.collateOverridesIntoInputParameters(overrideParams, params);
-		TestCase.assertEquals("no collated found", 2, collated.size());
-		TestCase.assertEquals("name1 not found", name1, collated.get(0)
+		Assert.assertEquals("no collated found", 2, collated.size());
+		Assert.assertEquals("name1 not found", name1, collated.get(0)
 				.getUniqueName());
-		TestCase.assertEquals("name2 not found", name2, collated.get(1)
+		Assert.assertEquals("name2 not found", name2, collated.get(1)
 				.getUniqueName());
-		TestCase.assertEquals("name2 not overridden", "val2", collated.get(1)
+		Assert.assertEquals("name2 not overridden", "val2", collated.get(1)
 				.getValue());
 
 	}
@@ -330,19 +329,19 @@ public class IRODSRuleTranslatorTest {
 				irodsServerProperties);
 		List<IRODSRuleParameter> collated = translator
 				.collateOverridesIntoInputParameters(overrideParams, params);
-		TestCase.assertEquals("no collated found", 3, collated.size());
-		TestCase.assertEquals("name1 not found", name1, collated.get(0)
+		Assert.assertEquals("no collated found", 3, collated.size());
+		Assert.assertEquals("name1 not found", name1, collated.get(0)
 				.getUniqueName());
-		TestCase.assertEquals("name2 not found", name2, collated.get(1)
+		Assert.assertEquals("name2 not found", name2, collated.get(1)
 				.getUniqueName());
-		TestCase.assertEquals("name2 not found", name3, collated.get(2)
+		Assert.assertEquals("name2 not found", name3, collated.get(2)
 				.getUniqueName());
-		TestCase.assertEquals("name2 not overridden", "val2", collated.get(1)
+		Assert.assertEquals("name2 not overridden", "val2", collated.get(1)
 				.getValue());
 
 	}
 
-	@Test(expected=IllegalArgumentException.class)
+	@Test(expected = IllegalArgumentException.class)
 	public final void testCollateOverrideInputParmsNuillOverrides()
 			throws Exception {
 

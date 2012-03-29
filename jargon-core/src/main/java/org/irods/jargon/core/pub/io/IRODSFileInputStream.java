@@ -69,34 +69,38 @@ public class IRODSFileInputStream extends InputStream {
 			throw new FileNotFoundException(msg);
 		}
 
-		if (!irodsFile.canRead()) {
-			final String msg = "cannot read the file:"
-					+ irodsFile.getAbsolutePath();
-			log.error(msg);
-			throw new FileNotFoundException(msg);
-		}
-
-		/* File is not opened until first read. 
-		 * This avoids situations, such as in Fedora repository, where the stream would otherwise be opened by one thread and 
-		 * read by another, causing an invalid fd (irods -345000 error).
+		/*
+		 * 
+		 * TODO: replace(?) when bug is resolved: [#621] error reading file
+		 * w/group permissions
+		 * 
+		 * if (!irodsFile.canRead()) { final String msg =
+		 * "cannot read the file:" + irodsFile.getAbsolutePath();
+		 * log.error(msg); throw new FileNotFoundException(msg); }
 		 */
-		
+		/*
+		 * File is not opened until first read. This avoids situations, such as
+		 * in Fedora repository, where the stream would otherwise be opened by
+		 * one thread and read by another, causing an invalid fd (irods -345000
+		 * error).
+		 */
+
 		this.irodsFile = irodsFile;
 		this.fileIOOperations = fileIOOperations;
-	
+
 	}
 
 	/**
 	 * 
 	 */
 	private void openFile() {
-		
+
 		if (fd == -1) {
 			log.debug("file will be opened on this operation");
 		} else {
 			return;
 		}
-		
+
 		try {
 			openIRODSFile();
 			this.fd = irodsFile.getFileDescriptor();
@@ -152,7 +156,7 @@ public class IRODSFileInputStream extends InputStream {
 	}
 
 	private int openIRODSFile() throws JargonException {
-
+		log.info("openIRODSFile()");
 		if (!irodsFile.exists()) {
 			log.warn("opening non-existant file for read: {}",
 					irodsFile.getAbsolutePath());

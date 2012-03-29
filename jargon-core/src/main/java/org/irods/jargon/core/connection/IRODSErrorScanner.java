@@ -4,11 +4,13 @@
 package org.irods.jargon.core.connection;
 
 import org.irods.jargon.core.exception.AuthenticationException;
+import org.irods.jargon.core.exception.CatNoAccessException;
 import org.irods.jargon.core.exception.CollectionNotEmptyException;
 import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.DuplicateDataException;
 import org.irods.jargon.core.exception.FileIntegrityException;
 import org.irods.jargon.core.exception.FileNotFoundException;
+import org.irods.jargon.core.exception.InvalidGroupException;
 import org.irods.jargon.core.exception.InvalidUserException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.exception.JargonFileOrCollAlreadyExistsException;
@@ -44,8 +46,8 @@ public class IRODSErrorScanner {
 			errorEnum = ErrorEnum.valueOf(infoValue);
 		} catch (IllegalArgumentException ie) {
 			throw new JargonException(
-					"error code received from iRODS, not in ErrorEnum translation table:" + infoValue,
-					infoValue);
+					"error code received from iRODS, not in ErrorEnum translation table:"
+							+ infoValue, infoValue);
 		}
 
 		// non-zero value, create appropriate exception
@@ -60,7 +62,8 @@ public class IRODSErrorScanner {
 		case CAT_INVALID_USER:
 			throw new InvalidUserException("InvalidUserException");
 		case SYS_NO_API_PRIV:
-			throw new NoAPIPrivException("User lacks privileges to invoke the given API");
+			throw new NoAPIPrivException(
+					"User lacks privileges to invoke the given API");
 		case CAT_NO_ROWS_FOUND:
 			throw new DataNotFoundException("no data found");
 		case CAT_NAME_EXISTS_AS_COLLECTION:
@@ -80,14 +83,20 @@ public class IRODSErrorScanner {
 		case CAT_UNKNOWN_COLLECTION:
 			throw new DataNotFoundException("unknown collection");
 		case CAT_COLLECTION_NOT_EMPTY:
-			throw new CollectionNotEmptyException("collection not empty", infoValue);
+			throw new CollectionNotEmptyException("collection not empty",
+					infoValue);
 		case EXEC_CMD_ERROR:
-			throw new RemoteScriptExecutionException("remote script execution error" + infoValue);
+			throw new RemoteScriptExecutionException(
+					"remote script execution error" + infoValue);
 		case USER_FILE_DOES_NOT_EXIST:
 			throw new FileNotFoundException("file not found", infoValue);
+		case CAT_INVALID_GROUP:
+			throw new InvalidGroupException("invalid iRODS group", infoValue);
+		case CAT_NO_ACCESS_PERMISSION:
+			throw new CatNoAccessException("no access to item in catalog");
 		default:
-			throw new JargonException("error code recieved from iRODS:" + infoValue,
-					infoValue);
+			throw new JargonException("error code recieved from iRODS:"
+					+ infoValue, infoValue);
 		}
 
 	}

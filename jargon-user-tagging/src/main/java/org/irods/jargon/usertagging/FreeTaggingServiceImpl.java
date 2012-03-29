@@ -148,15 +148,17 @@ public final class FreeTaggingServiceImpl extends AbstractIRODSTaggingService
 		if (userName == null || userName.isEmpty()) {
 			throw new IllegalArgumentException("null or empty userName");
 		}
-		
+
 		if (tags == null) {
 			throw new IllegalArgumentException("null tags");
 		}
 
-
 		log.info("updateTagsForUser, irodsAbsolutePath:{}", irodsAbsolutePath);
 		log.info("userName:{}", userName);
 		log.info("tags:{}", tags);
+		
+		String cleanTags = cleanTags(tags);
+		log.info("cleaned tags:{}", cleanTags);
 
 		// decide if file or collection
 
@@ -183,10 +185,21 @@ public final class FreeTaggingServiceImpl extends AbstractIRODSTaggingService
 		}
 
 		IRODSTagGrouping irodsTagGrouping = new IRODSTagGrouping(
-				metadataDomain, irodsAbsolutePath, tags, userName);
+				metadataDomain, irodsAbsolutePath, cleanTags, userName);
 		updateTags(irodsTagGrouping);
 		log.info("tags update");
 
+	}
+
+	/**
+	 * @param tags
+	 * @return
+	 */
+	private String cleanTags(final String tags) {
+		String cleanTags = tags.replaceAll("\"", "");
+		cleanTags = cleanTags.replaceAll(",", " ");
+		cleanTags = cleanTags.replaceAll("&quot;", "");
+		return cleanTags;
 	}
 
 	/*
@@ -346,7 +359,7 @@ public final class FreeTaggingServiceImpl extends AbstractIRODSTaggingService
 	private String[] extractIndividualTagsFromFreeTagString(
 			final String tagString) {
 
-		String[] userTags = PARSE_FREE_TAGS_PATTERN.split(tagString);
+		String[] userTags = PARSE_FREE_TAGS_PATTERN.split(cleanTags(tagString));
 		return userTags;
 	}
 

@@ -73,9 +73,11 @@ public class IRODSRuleExecResult {
 	}
 
 	/**
-	 * Return the standard output from the rule invocation, this is a short-cut to getting the ruleExecOut from the 
-	 * output parameters.
-	 * @return <code>String</code> with the rule exec out.  This will be a blank value (not null) if no output was found.
+	 * Return the standard output from the rule invocation, this is a short-cut
+	 * to getting the ruleExecOut from the output parameters.
+	 * 
+	 * @return <code>String</code> with the rule exec out. This will be a blank
+	 *         value (not null) if no output was found.
 	 */
 	public String getRuleExecOut() {
 		Object outputObject = getOutputParameterResults().get("ruleExecOut")

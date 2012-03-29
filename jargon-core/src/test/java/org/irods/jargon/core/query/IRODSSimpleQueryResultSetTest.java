@@ -13,7 +13,9 @@ public class IRODSSimpleQueryResultSetTest {
 	public void testGetNumberOfResultColumns() {
 		int colCount = 10;
 		SimpleQuery simpleQuery = Mockito.mock(SimpleQuery.class);
+		@SuppressWarnings("unchecked")
 		List<IRODSQueryResultRow> results = Mockito.mock(List.class);
+		@SuppressWarnings("unchecked")
 		List<String> columnNames = Mockito.mock(List.class);
 		Mockito.when(columnNames.size()).thenReturn(colCount);
 		IRODSSimpleQueryResultSet resultSet = IRODSSimpleQueryResultSet
@@ -25,7 +27,9 @@ public class IRODSSimpleQueryResultSetTest {
 	@Test(expected = IllegalArgumentException.class)
 	public void testInstanceNullSimpleQuery() {
 		SimpleQuery simpleQuery = null;
+		@SuppressWarnings("unchecked")
 		List<IRODSQueryResultRow> results = Mockito.mock(List.class);
+		@SuppressWarnings("unchecked")
 		List<String> columnNames = Mockito.mock(List.class);
 		IRODSSimpleQueryResultSet.instance(simpleQuery, results, columnNames,
 				false);
@@ -35,6 +39,7 @@ public class IRODSSimpleQueryResultSetTest {
 	public void testInstanceNullResults() {
 		SimpleQuery simpleQuery = Mockito.mock(SimpleQuery.class);
 		List<IRODSQueryResultRow> results = null;
+		@SuppressWarnings("unchecked")
 		List<String> columnNames = Mockito.mock(List.class);
 		IRODSSimpleQueryResultSet.instance(simpleQuery, results, columnNames,
 				false);
@@ -43,6 +48,7 @@ public class IRODSSimpleQueryResultSetTest {
 	@Test(expected = IllegalArgumentException.class)
 	public void testInstanceNullColumnNames() {
 		SimpleQuery simpleQuery = Mockito.mock(SimpleQuery.class);
+		@SuppressWarnings("unchecked")
 		List<IRODSQueryResultRow> results = Mockito.mock(List.class);
 		List<String> columnNames = null;
 		IRODSSimpleQueryResultSet.instance(simpleQuery, results, columnNames,
