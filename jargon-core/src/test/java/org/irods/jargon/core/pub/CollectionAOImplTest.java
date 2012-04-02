@@ -478,7 +478,7 @@ public class CollectionAOImplTest {
 		collectionAO.addAVUMetadata(targetIrodsCollection, dataToAdd);
 	}
 
-	@Test
+	@Test(expected = DuplicateDataException.class)
 	public void testAddDuplicateAvuMetadata() throws Exception {
 		String testDirName = "testAddDuplicateAvuMetadata";
 		String expectedAttribName = "testattrib1";

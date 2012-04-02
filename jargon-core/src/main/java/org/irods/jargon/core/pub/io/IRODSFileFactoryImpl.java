@@ -294,7 +294,6 @@ public final class IRODSFileFactoryImpl extends IRODSGenericAO implements
 				log.info("creating IRODSFileImpl for:" + name);
 			}
 			IRODSFile irodsFile = instanceIRODSFile(name);
-			irodsFile.createNewFile();
 			return new IRODSFileOutputStream(irodsFile, fileIOOperations);
 		} catch (FileNotFoundException e) {
 			log.error("FileNotFound creating output stream", e);

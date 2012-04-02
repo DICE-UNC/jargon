@@ -76,7 +76,9 @@ public class IRODSFileOutputStream extends OutputStream {
 
 	private int openIRODSFile() throws JargonException {
 		int fileDescriptor = -1;
+
 		if (irodsFile.exists()) {
+			log.info("deleting file, as this stream operation is overwriting");
 			irodsFile.delete();
 			irodsFile.reset();
 		}
