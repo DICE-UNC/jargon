@@ -33,7 +33,6 @@ import org.irods.jargon.testutils.icommandinvoke.icommands.ImetaRemoveCommand;
 import org.irods.jargon.testutils.icommandinvoke.icommands.ImkdirCommand;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 public class CollectionAOImplTest {
@@ -814,7 +813,7 @@ public class CollectionAOImplTest {
 	 * 
 	 * @throws Exception
 	 */
-	@Ignore
+	@Test
 	public void testOverwriteAvuMetadataWithABlankUnit() throws Exception {
 		String testDirName = "testOverwriteAvuMetadataWithABlankUnit";
 		String expectedAttribName = "testOverwriteAvuMetadataAttrib1";

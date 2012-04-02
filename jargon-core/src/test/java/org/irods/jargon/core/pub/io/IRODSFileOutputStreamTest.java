@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.Properties;
 
 import junit.framework.Assert;
+import junit.framework.TestCase;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSProtocolManager;
@@ -14,6 +15,7 @@ import org.irods.jargon.core.pub.DataTransferOperations;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactoryImpl;
 import org.irods.jargon.core.pub.IRODSFileSystem;
+import org.irods.jargon.core.utils.MiscIRODSUtils;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.irods.jargon.testutils.filemanip.FileGenerator;
 import org.irods.jargon.testutils.icommandinvoke.IcommandInvoker;
@@ -330,6 +332,41 @@ public class IRODSFileOutputStreamTest {
 
 	}
 
+	/**
+	 * Create an output stream where the parent directory does not really exist,
+	 * should create any intervening dirs
+	 * 
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public final void testIRODSFileOutputStreamIRODSFileShouldCreateEvenThoughParentDirDoesNotExist()
+			throws Exception {
+		String testFileName = "testFileShouldCreate.txt";
+		String testSubdir = "testsubdir";
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + "/"
+								+ testSubdir);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+		IRODSFileFactory irodsFileFactory = accessObjectFactory
+				.getIRODSFileFactory(irodsAccount);
+		IRODSFile irodsFile = irodsFileFactory
+				.instanceIRODSFile(targetIrodsCollection + '/' + testFileName);
+
+		irodsFile.createNewFile();
+		irodsFileSystem.closeAndEatExceptions();
+		assertionHelper.assertIrodsFileOrCollectionExists(targetIrodsCollection
+				+ "/" + testFileName);
+
+	}
+
 	@Test(expected = IllegalArgumentException.class)
 	public final void testIRODSFileOutputStreamEmptyStringFileName()
 			throws Exception {
@@ -380,6 +417,52 @@ public class IRODSFileOutputStreamTest {
 				+ '/' + testFileName);
 		Assert.assertTrue("no file descriptor assigned",
 				irodsFileOutputStream.getFileDescriptor() > -1);
+
+	}
+
+	@Test
+	public final void testIRODSFileOutputStreamOverwrite() throws Exception {
+		String testFileName = "testIRODSFileOutputStreamOverwrite.txt";
+		String string1 = "jfaijfjasidjfaisehfuaehfahfhudhfuashfuasfdhaisdfhaisdhfiaf";
+		String string2 = "nvmzncvzmvnzx,mcv";
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String localFilePath = FileGenerator
+				.generateFileOfFixedLengthGivenName(absPath, testFileName, 8);
+
+		File localFile = new File(localFilePath);
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+		IRODSFileFactory irodsFileFactory = accessObjectFactory
+				.getIRODSFileFactory(irodsAccount);
+		IRODSFile irodsFile = irodsFileFactory
+				.instanceIRODSFile(targetIrodsCollection + '/' + testFileName);
+
+		IRODSFileOutputStream irodsFileOutputStream = irodsFileFactory
+				.instanceIRODSFileOutputStream(irodsFile);
+
+		irodsFileOutputStream.write(string1.getBytes());
+		irodsFileOutputStream.close();
+		irodsFileOutputStream = irodsFileFactory
+				.instanceIRODSFileOutputStream(irodsFile);
+
+		irodsFileOutputStream.write(string2.getBytes());
+		irodsFileOutputStream.close();
+
+		IRODSFileInputStream irodsFileInputStream = irodsFileFactory
+				.instanceIRODSFileInputStream(irodsFile);
+		String actual = MiscIRODSUtils
+				.convertStreamToString(irodsFileInputStream);
+		irodsFileInputStream.close();
+
+		TestCase.assertEquals("should be second string", string2, actual);
 
 	}
 
@@ -558,5 +641,6 @@ public class IRODSFileOutputStreamTest {
 		irodsFileOutputStream.close();
 		irodsSession.closeSession();
 	}
+
 
 }

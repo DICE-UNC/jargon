@@ -1,6 +1,3 @@
-/**
- * 
- */
 package org.irods.jargon.core.pub.io;
 
 import java.io.FileNotFoundException;
@@ -37,6 +34,7 @@ public class IRODSFileOutputStream extends OutputStream {
 	 */
 	protected FileIOOperations getFileIOOperations() {
 		return fileIOOperations;
+
 	}
 
 	/**
@@ -78,37 +76,28 @@ public class IRODSFileOutputStream extends OutputStream {
 
 	private int openIRODSFile() throws JargonException {
 		int fileDescriptor = -1;
-		if (!irodsFile.exists()) {
-			try {
-				irodsFile.createNewFile();
+		if (irodsFile.exists()) {
+			irodsFile.delete();
+			irodsFile.reset();
+		}
 
-				if (irodsFile.getFileDescriptor() == -1) {
-					String msg = "no file descriptor returned from file creation";
-					log.error(msg);
-					throw new JargonException(msg);
-				}
-				fileDescriptor = irodsFile.getFileDescriptor();
+		try {
+			irodsFile.createNewFile();
 
-			} catch (IOException e) {
-				log.error("error creating file: {}", this, e);
-				throw new JargonException(
-						"IOException rethrown as Jargon exception when creating file:"
-								+ irodsFile, e);
+			if (irodsFile.getFileDescriptor() == -1) {
+				String msg = "no file descriptor returned from file creation";
+				log.error(msg);
+				throw new JargonException(msg);
 			}
-		} else {
-			log.info("opening the file");
-			// open the file
-			fileDescriptor = irodsFile.open();
+			fileDescriptor = irodsFile.getFileDescriptor();
+			return fileDescriptor;
+
+		} catch (IOException e) {
+			log.error("error creating file: {}", this, e);
+			throw new JargonException(
+					"IOException rethrown as Jargon exception when creating file:"
+							+ irodsFile, e);
 		}
-
-		if (log.isDebugEnabled()) {
-			log.debug("file descriptor from open/create operation = {}",
-					fileDescriptor);
-		}
-
-		irodsFile.reset();
-
-		return fileDescriptor;
 
 	}
 
