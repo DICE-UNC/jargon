@@ -1,5 +1,13 @@
 krb notes
 
+
+test/admin@irodskrb
+password = test
+
+edited /etc/krb5kdc/kadm5.acl to add admin rights 
+
+
+========= defunct =============
 for testing use realm IRODS.GSS
 
 test principals
