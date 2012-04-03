@@ -655,6 +655,7 @@ public class UserAOTest {
 				.getUserAO(irodsAccount);
 
 		AvuData avuData = AvuData.instance(testAttrib, testValue, testUnit);
+		userAO.deleteAVUMetadata(irodsAccount.getUserName(), avuData);
 
 		userAO.addAVUMetadata(irodsAccount.getUserName(), avuData);
 		List<AvuData> avuList = userAO.listUserMetadataForUserName(irodsAccount
@@ -808,7 +809,7 @@ public class UserAOTest {
 
 	}
 
-	@Test
+	@Test(expected = DuplicateDataException.class)
 	public void testAddUserMetadataTwice() throws Exception {
 
 		String testAttrib = "testAddUserMetadataTwiceAttrib";

@@ -3001,7 +3001,7 @@ public class DataObjectAOImplTest {
 		Assert.assertTrue(dataObjects.size() == 1);
 	}
 
-	@Test
+	@Test(expected = DuplicateDataException.class)
 	public void testAddAVUMetadataToDataObjectTwice() throws Exception {
 		String testFileName = "testAddAVUMetadataToDataObjectTwice.txt";
 		String expectedAttribName = "testAddAVUMetadataToDataObjectTwice";

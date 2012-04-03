@@ -955,6 +955,36 @@ public class IRODSFileImplTest {
 		Assert.assertTrue("file creation not successful", success);
 	}
 
+
+	@Test
+	public final void testCreateNewFileTwice() throws Exception {
+		String testFileName = "testCreateNewFileTwice.txt";
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager
+				.instance();
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSSession irodsSession = IRODSSession
+				.instance(irodsConnectionManager);
+		IRODSAccessObjectFactory accessObjectFactory = IRODSAccessObjectFactoryImpl
+				.instance(irodsSession);
+		IRODSFileFactory irodsFileFactory = accessObjectFactory
+				.getIRODSFileFactory(irodsAccount);
+		IRODSFile irodsFile = irodsFileFactory
+				.instanceIRODSFile(targetIrodsCollection + '/' + testFileName);
+
+		boolean success = irodsFile.createNewFile();
+		success = irodsFile.createNewFile();
+
+		irodsSession.closeSession();
+
+		Assert.assertFalse("file creation was successful", success);
+	}
+
 	@Test
 	public final void testCreateNewCollectionGivingParentAndChild()
 			throws Exception {

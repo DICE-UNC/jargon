@@ -1,8 +1,17 @@
 package org.irods.jargon.core.pub.io;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Properties;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import junit.framework.Assert;
 import junit.framework.TestCase;
@@ -11,6 +20,7 @@ import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSProtocolManager;
 import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.connection.IRODSSimpleProtocolManager;
+import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.DataTransferOperations;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactoryImpl;
@@ -430,7 +440,7 @@ public class IRODSFileOutputStreamTest {
 		String localFilePath = FileGenerator
 				.generateFileOfFixedLengthGivenName(absPath, testFileName, 8);
 
-		File localFile = new File(localFilePath);
+		new File(localFilePath);
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH);
@@ -462,7 +472,7 @@ public class IRODSFileOutputStreamTest {
 				.convertStreamToString(irodsFileInputStream);
 		irodsFileInputStream.close();
 
-		TestCase.assertEquals("should be second string", string2, actual);
+		Assert.assertEquals("should be second string", string2, actual);
 
 	}
 
@@ -592,6 +602,56 @@ public class IRODSFileOutputStreamTest {
 		// no error is success
 	}
 
+	/**
+	 * [#700] cdr errors multiple FITS processes writing to irods
+	 * 
+	 * @throws Exception
+	 */
+
+	@Test
+	public final void testIRODSFileOutputStreamMultipleWritesToParentDir()
+			throws Exception {
+		int numberWrites = 10;
+		String testFileNamePrefix = "testIRODSFileOutputStreamMultipleWritesToParentDir";
+		String testFileNameSuffix = ".txt";
+		String testSubdir = "testIRODSFileOutputStreamMultipleWritesToParentDir";
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		absPath = FileGenerator.generateFileOfFixedLengthGivenName(absPath, testFileNamePrefix + testFileNameSuffix,
+				10 * 1024 * 1024);
+
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + "/" + testSubdir);
+		
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		
+		IRODSFile parentDir = irodsFileSystem.getIRODSFileFactory(irodsAccount).instanceIRODSFile(targetIrodsCollection);
+		parentDir.mkdirs();
+
+		ExecutorService executorService = Executors
+				.newFixedThreadPool(numberWrites);
+		
+		final List<OutputStreamWriteTestWriter> writerThreads = new ArrayList<OutputStreamWriteTestWriter>();
+		
+		OutputStreamWriteTestWriter outputStreamWriter;
+
+		for (int i = 0; i < numberWrites; i++) {
+			outputStreamWriter = new OutputStreamWriteTestWriter(absPath, targetIrodsCollection + "/" + testFileNamePrefix + i + testFileNameSuffix, irodsFileSystem.getIRODSAccessObjectFactory(), irodsAccount);
+			writerThreads.add(outputStreamWriter);
+		}
+
+		List<Future<String>> transferThreadStates = executorService
+				.invokeAll(writerThreads);
+
+		for (OutputStreamWriteTestWriter writer : writerThreads) {
+			TestCase.assertNull("should not be an exception",
+					writer.getException());
+		}
+	}
+
 	@Test
 	public final void testIRODSFileOutputStreamIRODSFileCloseTwice()
 			throws Exception {
@@ -642,5 +702,81 @@ public class IRODSFileOutputStreamTest {
 		irodsSession.closeSession();
 	}
 
+}
+
+class OutputStreamWriteTestWriter implements Callable<String> {
+
+	final String localFileAbsolutePath;
+	final String targetIrodsFileName;
+	final IRODSAccessObjectFactory irodsAccessObjectFactory;
+	final IRODSAccount irodsAccount;
+	Exception exception = null;
+
+	OutputStreamWriteTestWriter(final String localFileAbsolutePath,
+			final String targetIrodsFileName,
+			final IRODSAccessObjectFactory irodsAccessObjectFactory,
+			final IRODSAccount irodsAccount) {
+		this.localFileAbsolutePath = localFileAbsolutePath;
+		this.targetIrodsFileName = targetIrodsFileName;
+		this.irodsAccessObjectFactory = irodsAccessObjectFactory;
+		this.irodsAccount = irodsAccount;
+	}
+
+	@Override
+	public String call() throws Exception {
+		File localFile = new File(localFileAbsolutePath);
+		InputStream inputStream = new FileInputStream(localFile);
+		IRODSFileOutputStream outputStream = irodsAccessObjectFactory
+				.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFileOutputStream(targetIrodsFileName);
+		try {
+
+			int myBuffSize = irodsAccessObjectFactory.getJargonProperties()
+					.getInputToOutputCopyBufferByteSize();
+
+			int doneCnt = -1;
+
+			byte buf[] = new byte[myBuffSize];
+
+			while ((doneCnt = inputStream.read(buf, 0, myBuffSize)) >= 0) {
+
+				if (doneCnt == 0) {
+					Thread.yield();
+				} else {
+					outputStream.write(buf, 0, doneCnt);
+				}
+			}
+
+			outputStream.flush();
+
+		} catch (FileNotFoundException e) {
+			exception = e;
+			throw new JargonException(
+					"file not found exception copying buffers", e);
+		} catch (Exception e) {
+			exception = e;
+			throw new JargonException("Exception copying buffers", e);
+		} finally {
+
+			try {
+				inputStream.close();
+			} catch (Exception e) {
+			}
+
+			try {
+				outputStream.close();
+			} catch (Exception e) {
+			}
+
+		}
+		return targetIrodsFileName;
+	}
+
+	/**
+	 * @return the exception
+	 */
+	public Exception getException() {
+		return exception;
+	}
 
 }
