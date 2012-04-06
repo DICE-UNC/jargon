@@ -885,11 +885,15 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 			final String irodsCollectionAbsolutePath)
 			throws DataNotFoundException, JargonException {
 
+		log.info("findByAbsolutePath()");
+
 		if (irodsCollectionAbsolutePath == null
 				|| irodsCollectionAbsolutePath.isEmpty()) {
 			throw new IllegalArgumentException(
 					"null or empty irodsCollectionAbsolutePath");
 		}
+
+		log.info("irodsCollectionAbsolutePath:{}", irodsCollectionAbsolutePath);
 
 		StringBuilder sb = new StringBuilder();
 		sb.append(RodsGenQueryEnum.COL_COLL_NAME.getName());

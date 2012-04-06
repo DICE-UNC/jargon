@@ -54,3 +54,5 @@ Note that the following bug and feature requests are logged in GForge with relat
  * [#692] add ability to make parent dirs when creating a file for an IRODSFileOutputStream
  * [#114] support for mounted collections, cross zone browsing, and soft links
  ** Added tests and support for ACL operations across federated zones to support idrop interface operations
+ *  [#714] add support for extended permissions set
+ ** added extended permission types to FilePermissionEnum (work in progress - add support for files/collection acl setting)
