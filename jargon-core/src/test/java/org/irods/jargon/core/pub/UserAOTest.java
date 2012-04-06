@@ -83,14 +83,13 @@ public class UserAOTest {
 		List<User> users = userAO.findAll();
 		irodsSession.closeSession();
 		Assert.assertTrue("no users returned", users.size() > 0);
-
 	}
 
 	@Test
 	public void testFindWhere() throws Exception {
 
 		String testUserName = testingProperties
-		.getProperty(TestingPropertiesHelper.IRODS_USER_KEY);
+				.getProperty(TestingPropertiesHelper.IRODS_USER_KEY);
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
 
@@ -132,7 +131,6 @@ public class UserAOTest {
 				.getIRODSAccessObjectFactory();
 
 		UserAO userAO = accessObjectFactory.getUserAO(irodsAccount);
-
 		userAO.findWhere(null);
 
 	}
@@ -785,7 +783,6 @@ public class UserAOTest {
 				.getUserAO(irodsAccount);
 
 		AvuData avuData = AvuData.instance(testAttrib, testValue, testUnit);
-
 		userAO.addAVUMetadata(testUser, avuData);
 
 	}
@@ -804,12 +801,11 @@ public class UserAOTest {
 				.getUserAO(irodsAccount);
 
 		AvuData avuData = AvuData.instance(testAttrib, testValue, testUnit);
-
 		userAO.deleteAVUMetadata(testUser, avuData);
 
 	}
 
-	@Test(expected = DuplicateDataException.class)
+	@Test
 	public void testAddUserMetadataTwice() throws Exception {
 
 		String testAttrib = "testAddUserMetadataTwiceAttrib";
@@ -823,23 +819,28 @@ public class UserAOTest {
 
 		AvuData avuData = AvuData.instance(testAttrib, testValue, testUnit);
 
-		userAO.addAVUMetadata(irodsAccount.getUserName(), avuData);
-		userAO.addAVUMetadata(irodsAccount.getUserName(), avuData);
+		try {
+			userAO.addAVUMetadata(irodsAccount.getUserName(), avuData);
+			userAO.addAVUMetadata(irodsAccount.getUserName(), avuData);
 
-		List<AvuData> avuList = userAO.listUserMetadataForUserName(irodsAccount
-				.getUserName());
+			List<AvuData> avuList = userAO
+					.listUserMetadataForUserName(irodsAccount.getUserName());
 
-		boolean avuFound = false;
+			boolean avuFound = false;
 
-		for (AvuData actualAvuData : avuList) {
-			if (actualAvuData.getAttribute().equals(testAttrib)
-					&& actualAvuData.getValue().equals(testValue)) {
-				avuFound = true;
-				break;
+			for (AvuData actualAvuData : avuList) {
+				if (actualAvuData.getAttribute().equals(testAttrib)
+						&& actualAvuData.getValue().equals(testValue)) {
+					avuFound = true;
+					break;
+				}
 			}
-		}
 
-		Assert.assertTrue("did not find the expected AVU", avuFound);
+			Assert.assertTrue("did not find the expected AVU", avuFound);
+		} catch (DuplicateDataException dde) {
+			// this is post 3.1, will get the dde and that's expected
+			return;
+		}
 
 	}
 
@@ -978,8 +979,7 @@ public class UserAOTest {
 		String tempUserName = testingProperties
 				.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY);
 
-		userAO
-				.getTemporaryPasswordForASpecifiedUser(tempUserName);
+		userAO.getTemporaryPasswordForASpecifiedUser(tempUserName);
 
 	}
 }

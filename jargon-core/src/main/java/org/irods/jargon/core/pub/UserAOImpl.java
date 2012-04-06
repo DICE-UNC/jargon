@@ -28,6 +28,7 @@ import org.irods.jargon.core.query.IRODSQueryResultSetInterface;
 import org.irods.jargon.core.query.JargonQueryException;
 import org.irods.jargon.core.query.RodsGenQueryEnum;
 import org.irods.jargon.core.security.IRODSPasswordUtilities;
+import org.irods.jargon.core.utils.FederationEnabled;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -242,15 +243,13 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 	 * @see org.irods.jargon.core.pub.UserAO#findAll()
 	 */
 	@Override
+	@FederationEnabled
 	public List<User> findAll() throws JargonException {
 
 		StringBuilder userQuery = new StringBuilder();
 		userQuery.append(UserAOHelper.buildUserSelects());
 
 		String userQueryString = userQuery.toString();
-		if (log.isInfoEnabled()) {
-			log.info("user query:" + userQueryString);
-		}
 
 		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(userQueryString,
 				DEFAULT_REC_COUNT);
@@ -332,8 +331,23 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 	 * @see org.irods.jargon.core.pub.UserAO#findById(java.lang.String)
 	 */
 	@Override
+	@FederationEnabled
 	public User findById(final String userId) throws JargonException,
 			DataNotFoundException {
+		return findByIdInZone(userId, this.getIRODSAccount().getZone());
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.pub.UserAO#findByIdInZone(java.lang.String,
+	 * java.lang.String)
+	 */
+	@Override
+	@FederationEnabled
+	public User findByIdInZone(final String userId, final String zone)
+			throws JargonException, DataNotFoundException {
 		final IRODSGenQueryExecutorImpl irodsGenQueryExecutorImpl = new IRODSGenQueryExecutorImpl(
 				this.getIRODSSession(), this.getIRODSAccount());
 		StringBuilder userQuery = new StringBuilder();
@@ -344,17 +358,8 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 		userQuery.append(" = '");
 		userQuery.append(userId);
 		userQuery.append("'");
-		userQuery.append(AND);
-		userQuery.append(RodsGenQueryEnum.COL_USER_ZONE.getName());
-		userQuery.append(EQUALS);
-		userQuery.append("'");
-		userQuery.append(this.getIRODSAccount().getZone());
-		userQuery.append("'");
 
 		String userQueryString = userQuery.toString();
-		if (log.isInfoEnabled()) {
-			log.info("user query:" + userQueryString);
-		}
 
 		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(userQueryString,
 				DEFAULT_REC_COUNT);
@@ -362,7 +367,7 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 		IRODSQueryResultSetInterface resultSet;
 		try {
 			resultSet = irodsGenQueryExecutorImpl
-					.executeIRODSQueryAndCloseResult(irodsQuery, 0);
+					.executeIRODSQueryAndCloseResultInZone(irodsQuery, 0, zone);
 		} catch (JargonQueryException e) {
 			log.error("query exception for user query:{}", userQueryString, e);
 			throw new JargonException(ERROR_IN_USER_QUERY);

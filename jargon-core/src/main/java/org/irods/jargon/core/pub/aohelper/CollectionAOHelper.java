@@ -21,6 +21,7 @@ import org.irods.jargon.core.query.IRODSQueryResultRow;
 import org.irods.jargon.core.query.IRODSQueryResultSetInterface;
 import org.irods.jargon.core.query.RodsGenQueryEnum;
 import org.irods.jargon.core.utils.IRODSDataConversionUtil;
+import org.irods.jargon.core.utils.MiscIRODSUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -324,47 +325,45 @@ public class CollectionAOHelper extends AOHelper {
 	 */
 	public static void buildUserFilePermissionForCollection(
 			final List<UserFilePermission> userFilePermissions,
-			final IRODSQueryResultRow row, final UserAO userAO)
+			final IRODSQueryResultRow row, final UserAO userAO,
+			final String irodsAbsolutePath) 
 			throws JargonException {
+		
+		
+		String collectionZone = MiscIRODSUtils
+				.getZoneInPath(irodsAbsolutePath);
 		/*
 		 * There appears to be a gen query issue with getting user type in the
 		 * permissions query, so, unfortunately, I need to do another query to
 		 * get the user type
 		 */
 		UserFilePermission userFilePermission;
-		String userName = row.getColumn(10);
-		String zone = row.getColumn(9);
-		StringBuilder userAndZone = new StringBuilder();
-
-		if (zone.equals(userAO.getIRODSAccount().getZone())) {
-			userAndZone.append(row.getColumn(10));
-		} else {
-			userAndZone.append(row.getColumn(9));
-			userAndZone.append('#');
-			userAndZone.append(row.getColumn(10));
-		}
-
+	
 		/*
 		 * Gracefully ignore a not found for the user name and zone, just set
 		 * the type to unknown and return what I have.
 		 */
 		try {
-			User user = userAO.findByName(userAndZone.toString());
-			userFilePermission = new UserFilePermission(zone, row.getColumn(8),
+			User user = userAO
+					.findByIdInZone(row.getColumn(10), collectionZone);
+
+			userFilePermission = new UserFilePermission(row.getColumn(7),
+					row.getColumn(10),
 					FilePermissionEnum.valueOf(IRODSDataConversionUtil
-							.getIntOrZeroFromIRODSValue(row.getColumn(7))),
-					user.getUserType(), userName);
+							.getIntOrZeroFromIRODSValue(row.getColumn(9))),
+					user.getUserType(), row.getColumn(8));
 
 		} catch (DataNotFoundException dnf) {
 			log.warn(
 					"user info not found for permission for user:{}, this permission will not be added",
-					userAndZone);
-			userFilePermission = new UserFilePermission(zone, row.getColumn(8),
+					row.getColumn(7));
+			userFilePermission = new UserFilePermission(row.getColumn(7),
+					row.getColumn(10),
 					FilePermissionEnum.valueOf(IRODSDataConversionUtil
-							.getIntOrZeroFromIRODSValue(row.getColumn(7))),
-					UserTypeEnum.RODS_UNKNOWN, userName);
+							.getIntOrZeroFromIRODSValue(row.getColumn(9))),
+					UserTypeEnum.RODS_UNKNOWN, row.getColumn(8));
 		}
-		userFilePermissions.add(userFilePermission);
+		userFilePermissions.add(userFilePermission); 
 	}
 
 	/**
@@ -374,8 +373,16 @@ public class CollectionAOHelper extends AOHelper {
 	 */
 	public static void buildUserFilePermissionForDataObject(
 			final List<UserFilePermission> userFilePermissions,
-			final IRODSQueryResultRow row) throws JargonException {
+			final IRODSQueryResultRow row, final String irodsAbsolutePath,
+			final String currentZone) throws JargonException {
+
+		/*
+		 * There appears to be a gen query issue with getting user type in the
+		 * permissions query, so, unfortunately, I need to do another query to
+		 * get the user type
+		 */
 		UserFilePermission userFilePermission;
+
 		userFilePermission = new UserFilePermission(row.getColumn(8),
 				row.getColumn(9),
 				FilePermissionEnum.valueOf(IRODSDataConversionUtil
@@ -398,11 +405,11 @@ public class CollectionAOHelper extends AOHelper {
 		query.append("SELECT ");
 		query.append(RodsGenQueryEnum.COL_COLL_ACCESS_USER_NAME.getName());
 		query.append(",");
+		query.append(RodsGenQueryEnum.COL_COLL_ACCESS_USER_ZONE.getName());
+		query.append(",");
 		query.append(RodsGenQueryEnum.COL_COLL_ACCESS_USER_ID.getName());
 		query.append(",");
 		query.append(RodsGenQueryEnum.COL_COLL_ACCESS_TYPE.getName());
-		query.append(",");
-		query.append(RodsGenQueryEnum.COL_COLL_ACCESS_USER_ZONE.getName());
 		query.append(" WHERE ");
 		query.append(RodsGenQueryEnum.COL_COLL_NAME.getName());
 		query.append(" = '");

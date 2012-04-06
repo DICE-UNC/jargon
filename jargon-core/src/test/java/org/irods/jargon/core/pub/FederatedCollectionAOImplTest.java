@@ -107,6 +107,73 @@ public class FederatedCollectionAOImplTest {
 	}
 
 	/**
+	 * Add a user from zone2 as a permission, then ask, via zone1 for that
+	 * user's info, giving the user name in user#zone format
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public final void testGetPermissionsForCollectionForUserWhoIsCrossZone()
+			throws Exception {
+
+		if (!testingPropertiesHelper.isTestFederatedZone(testingProperties)) {
+			return;
+		}
+
+		String testCollectionName = "testGetPermissionsForCollectionForUserWhoIsCrossZone";
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + "/"
+								+ testCollectionName);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		CollectionAO collectionAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getCollectionAO(irodsAccount);
+		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetIrodsCollection);
+		irodsFile.mkdirs();
+
+		collectionAO
+				.setAccessPermissionRead(
+						"",
+						targetIrodsCollection,
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY),
+						true);
+
+		collectionAO
+				.setAccessPermissionRead(
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_ZONE_KEY),
+						targetIrodsCollection,
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_USER_KEY),
+						true);
+
+		String concatenatedUserName = testingProperties
+				.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_USER_KEY)
+				+ "#"
+				+ testingProperties
+						.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_ZONE_KEY);
+
+		UserFilePermission userFilePermission = collectionAO
+				.getPermissionForUserName(targetIrodsCollection,
+						concatenatedUserName);
+		Assert.assertNotNull("got a null userFilePermission",
+				userFilePermission);
+
+		TestCase.assertEquals("did not get user name concatenated",
+				concatenatedUserName, userFilePermission.getUserName());
+		TestCase.assertEquals(
+				"did not get user zone",
+				String.valueOf(testingProperties
+						.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_ZONE_KEY)),
+				userFilePermission.getUserZone());
+	}
+
+	/**
 	 * Create a collection in the primary zone, add a permission to another user
 	 * from that same zone, then the primary user in the federated zone, then
 	 * check that list permissions shows all three
@@ -168,9 +235,12 @@ public class FederatedCollectionAOImplTest {
 					.equals(testingProperties
 							.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_ZONE_KEY))
 					&& userFilePermission
-							.getUserName()
+							.getNameWithZone()
 							.equals(testingProperties
-									.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_USER_KEY))) {
+									.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_USER_KEY)
+									+ '#'
+									+ testingProperties
+											.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_ZONE_KEY))) {
 				foundCrossZone = true;
 			}
 

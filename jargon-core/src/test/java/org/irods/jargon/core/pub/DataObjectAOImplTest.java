@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Properties;
 
 import junit.framework.Assert;
-import junit.framework.TestCase;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSProtocolManager;
@@ -3001,7 +3000,7 @@ public class DataObjectAOImplTest {
 		Assert.assertTrue(dataObjects.size() == 1);
 	}
 
-	@Test(expected = DuplicateDataException.class)
+	@Test
 	public void testAddAVUMetadataToDataObjectTwice() throws Exception {
 		String testFileName = "testAddAVUMetadataToDataObjectTwice.txt";
 		String expectedAttribName = "testAddAVUMetadataToDataObjectTwice";
@@ -3034,8 +3033,11 @@ public class DataObjectAOImplTest {
 		DataObjectAO dataObjectAO = irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
 		dataObjectAO.addAVUMetadata(targetIrodsDataObject, avuData);
-		dataObjectAO.addAVUMetadata(targetIrodsDataObject, avuData);
-
+		try {
+			dataObjectAO.addAVUMetadata(targetIrodsDataObject, avuData);
+		} catch (DuplicateDataException dde) {
+			// expected post 3.1
+		}
 		List<AVUQueryElement> avuQueryElements = new ArrayList<AVUQueryElement>();
 		avuQueryElements.add(AVUQueryElement.instanceForValueQuery(
 				AVUQueryPart.ATTRIBUTE, AVUQueryOperatorEnum.EQUAL,
@@ -4649,9 +4651,8 @@ public class DataObjectAOImplTest {
 				AVUQueryOperatorEnum.LIKE, expectedAttribValue + "%"));
 
 		List<DataObject> files = dAO.findDomainByMetadataQuery(avus);
-		TestCase.assertNotNull("null files returned", files);
-		TestCase.assertEquals("did not get all of the files", count,
-				files.size());
+		Assert.assertNotNull("null files returned", files);
+		Assert.assertEquals("did not get all of the files", count, files.size());
 
 	}
 

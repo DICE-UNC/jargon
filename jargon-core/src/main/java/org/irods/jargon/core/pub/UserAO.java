@@ -42,6 +42,13 @@ public interface UserAO extends IRODSAccessObject {
 	 * Query users and return the <code>User</code> object with the given user
 	 * name. Note that user names may be given in user#zone format, and that
 	 * federated user registered on the current zone will be returned.
+	 * <p/>
+	 * For example, if I have zone1 and zone2, and zone1 has registered
+	 * user1#zone2 as a user in zone1, then this method will get the information
+	 * that zone1 has on the user name user#zone2.
+	 * <p/>
+	 * This is distinct from going to zone2, and asking for information on the
+	 * user user1#zone2.
 	 * 
 	 * @param name
 	 *            <code>String</code> with the name of the user to query.
@@ -55,6 +62,7 @@ public interface UserAO extends IRODSAccessObject {
 
 	/**
 	 * Query users by the unique id assigned by iRODS (database unique key).
+	 * This will default to searching the current zone
 	 * 
 	 * @param userId
 	 *            <code>String</code> with the unique database key for the user.
@@ -64,6 +72,24 @@ public interface UserAO extends IRODSAccessObject {
 	 *             if the user does not exist
 	 */
 	User findById(final String userId) throws JargonException,
+			DataNotFoundException;
+
+	/**
+	 * Query users by the unique id assigned by iRODS (database unique key) in a
+	 * zone.
+	 * <p/>
+	 * This will, if the given zone is not the same as the current zone,
+	 * initiate a cross-zone query and retrieve the information from the given
+	 * zone name.
+	 * 
+	 * @param userId
+	 *            <code>String</code> with the unique database key for the user.
+	 * @return {@link org.irods.jargon.core.pub.domain.User}
+	 * @throws JargonException
+	 * @throws DataNotFoundException
+	 *             if the user does not exist
+	 */
+	User findByIdInZone(String userId, String zone) throws JargonException,
 			DataNotFoundException;
 
 	/**
@@ -262,5 +288,6 @@ public interface UserAO extends IRODSAccessObject {
 	 * @throws JargonException
 	 */
 	String retriveUserDNByUserId(String userId) throws JargonException;
+
 
 }

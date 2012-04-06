@@ -192,5 +192,112 @@ public class MiscIRODSUtilsTest {
 
 	}
 
+	/**
+	 * Break user out of user name when just a user
+	 */
+	@Test
+	public void testGetUserInUserNameJustUserName() {
+		String testUser = "justauser";
+		String actual = MiscIRODSUtils.getUserInUserName(testUser);
+		TestCase.assertEquals(testUser, actual);
+	}
+
+	/**
+	 * Break user out of user name when in user#zone
+	 */
+	@Test
+	public void testGetUserInUserNameWhenHasZone() {
+		String testUser = "justauser#zone";
+		String expected = "justauser";
+		String actual = MiscIRODSUtils.getUserInUserName(testUser);
+		TestCase.assertEquals(expected, actual);
+	}
+
+	/**
+	 * what about if it has a user# with no zone?
+	 */
+	@Test
+	public void testGetUserInUserNameWhenHasPoundNoZone() {
+		String testUser = "justauser#";
+		String expected = "justauser";
+		String actual = MiscIRODSUtils.getUserInUserName(testUser);
+		TestCase.assertEquals(expected, actual);
+	}
+
+	/**
+	 * how about #zone
+	 */
+	@Test
+	public void testGetUserInUserNameWhenHasPoundNoUser() {
+		String testUser = "#zone";
+		String expected = "";
+		String actual = MiscIRODSUtils.getUserInUserName(testUser);
+		TestCase.assertEquals(expected, actual);
+	}
+
+	/**
+	 * how about null
+	 */
+	@Test
+	public void testGetUserInUserNameWhenNull() {
+		String testUser = null;
+		String expected = "";
+		String actual = MiscIRODSUtils.getUserInUserName(testUser);
+		TestCase.assertEquals(expected, actual);
+	}
+
+	/**
+	 * Break user out of user name when just a user
+	 */
+	@Test
+	public void testGetZoneInUserNameJustUserName() {
+		String testUser = "justauser";
+		String actual = MiscIRODSUtils.getZoneInUserName(testUser);
+		TestCase.assertEquals("", actual);
+	}
+
+	/**
+	 * Break user out of zone name when in user#zone
+	 */
+	@Test
+	public void testGetZoneInUserNameWhenHasZone() {
+		String testUser = "justauser#zone";
+		String expected = "zone";
+		String actual = MiscIRODSUtils.getZoneInUserName(testUser);
+		TestCase.assertEquals(expected, actual);
+	}
+
+	/**
+	 * what about if it has a user# with no zone?
+	 */
+	@Test
+	public void testGetZoneInUserNameWhenHasPoundNoZone() {
+		String testUser = "justauser#";
+		String expected = "";
+		String actual = MiscIRODSUtils.getZoneInUserName(testUser);
+		TestCase.assertEquals(expected, actual);
+	}
+
+	/**
+	 * how about #zone
+	 */
+	@Test
+	public void testGetZoneInUserNameWhenHasPoundNoUser() {
+		String testUser = "#zone";
+		String expected = "zone";
+		String actual = MiscIRODSUtils.getZoneInUserName(testUser);
+		TestCase.assertEquals(expected, actual);
+	}
+
+	/**
+	 * how about null
+	 */
+	@Test
+	public void testGetZoneInUserNameWhenNull() {
+		String testUser = null;
+		String expected = "";
+		String actual = MiscIRODSUtils.getZoneInUserName(testUser);
+		TestCase.assertEquals(expected, actual);
+	}
 
 }

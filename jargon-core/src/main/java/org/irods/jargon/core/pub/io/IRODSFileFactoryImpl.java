@@ -298,9 +298,6 @@ public final class IRODSFileFactoryImpl extends IRODSGenericAO implements
 		} catch (FileNotFoundException e) {
 			log.error("FileNotFound creating output stream", e);
 			throw new JargonException(e);
-		} catch (IOException e) {
-			log.error("IOException creating output stream", e);
-			throw new JargonException(e);
 		}
 	}
 
