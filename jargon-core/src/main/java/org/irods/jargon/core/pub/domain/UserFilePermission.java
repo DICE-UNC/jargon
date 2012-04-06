@@ -18,30 +18,12 @@ public class UserFilePermission {
 	private UserTypeEnum userType = UserTypeEnum.RODS_UNKNOWN;
 	private FilePermissionEnum filePermissionEnum;
 
-	/**
-	 * Public values constructor.
-	 * 
-	 * @param userName
-	 *            <code>String</code> with the name of the user
-	 * @param userId
-	 *            <code>String</code> with the id of the user
-	 * @param filePermissionEnum
-	 *            {@link FilePermissionEnum} for the given user
-	 * @param userType
-	 *            {@link UserTypeEnum} value for user
-	 */
-	public UserFilePermission(final String userName, final String userId,
-			final FilePermissionEnum filePermissionEnum,
-			final UserTypeEnum userType) {
-
-		this(userName, userId, filePermissionEnum, userType, "");
-	}
 
 	/**
 	 * Public values constructor.
 	 * 
 	 * @param userName
-	 *            <code>String</code> with the name of the user
+	 *            <code>String</code> with the name of the user (no #zone)
 	 * @param userId
 	 *            <code>String</code> with the id of the user
 	 * @param filePermissionEnum
@@ -76,6 +58,11 @@ public class UserFilePermission {
 			throw new IllegalArgumentException("null userZone");
 		}
 
+		if (userId.indexOf('#') > -1) {
+			throw new IllegalArgumentException(
+					"this constructor does not take user#zone format, a separate parameter takes the zone");
+		}
+
 		this.userName = userName;
 		this.userId = userId;
 		this.filePermissionEnum = filePermissionEnum;
@@ -102,7 +89,7 @@ public class UserFilePermission {
 	}
 
 	/**
-	 * Get the name of the user
+	 * Get the name of the user in user#zone format
 	 * 
 	 * @return <code>String</code> with the user name
 	 */
@@ -118,6 +105,20 @@ public class UserFilePermission {
 	 */
 	public void setUserName(final String userName) {
 		this.userName = userName;
+	}
+
+	/**
+	 * Get the user name in the standard user#zone format. This is the standard
+	 * for displays of user names in iRODS user interfaces.
+	 * 
+	 * @return <code>String</code> with the extended zone
+	 */
+	public String getNameWithZone() {
+		StringBuilder sb = new StringBuilder();
+		sb.append(userName);
+		sb.append('#');
+		sb.append(userZone);
+		return sb.toString();
 	}
 
 	/**
@@ -185,34 +186,6 @@ public class UserFilePermission {
 
 	public void setUserZone(final String userZone) {
 		this.userZone = userZone;
-	}
-
-	/**
-	 * Get the user name in user#zone format if from another zone. An optional
-	 * <code>homeZoneName</code> parameter can be supplied so that users in the
-	 * home zone do not have the #zone appended. This is appropriate for display
-	 * in interfaces.
-	 * 
-	 * @param homeZoneName
-	 *            <code>String</code> with the home zone used to filter the
-	 *            formatted zone display. This may be <code>null</code> or
-	 *            blank, which results in all users having the #zone appended.
-	 * @return <code>String</code> with the format of user#zone
-	 */
-	public String getConcatenatedUserAndZone(final String homeZoneName) {
-		StringBuilder sb = new StringBuilder(userName);
-		if (!userZone.isEmpty()) {
-			if (homeZoneName == null || homeZoneName.isEmpty()) {
-				sb.append('#');
-				sb.append(userZone);
-			} else {
-				if (!homeZoneName.equals(userZone)) {
-					sb.append('#');
-					sb.append(userZone);
-				}
-			}
-		}
-		return sb.toString();
 	}
 
 }

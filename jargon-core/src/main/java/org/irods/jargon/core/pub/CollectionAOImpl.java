@@ -1,6 +1,3 @@
-/**
- * 
- */
 package org.irods.jargon.core.pub;
 
 import static org.irods.jargon.core.pub.aohelper.AOHelper.AND;
@@ -40,6 +37,7 @@ import org.irods.jargon.core.query.MetaDataAndDomainData;
 import org.irods.jargon.core.query.MetaDataAndDomainData.MetadataDomain;
 import org.irods.jargon.core.query.RodsGenQueryEnum;
 import org.irods.jargon.core.utils.AccessObjectQueryProcessingUtils;
+import org.irods.jargon.core.utils.FederationEnabled;
 import org.irods.jargon.core.utils.IRODSDataConversionUtil;
 import org.irods.jargon.core.utils.MiscIRODSUtils;
 import org.slf4j.Logger;
@@ -443,7 +441,6 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 						MetadataDomain.COLLECTION, resultSet);
 	}
 
-
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -454,8 +451,8 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 	@Override
 	public List<MetaDataAndDomainData> findMetadataValuesByMetadataQueryWithAdditionalWhere(
 			final List<AVUQueryElement> avuQuery, final String additionalWhere,
-			final int partialStartIndex)
-			throws JargonQueryException, JargonException {
+			final int partialStartIndex) throws JargonQueryException,
+			JargonException {
 
 		if (avuQuery == null || avuQuery.isEmpty()) {
 			throw new IllegalArgumentException("null or empty query");
@@ -1035,6 +1032,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 	 * .String, java.lang.String, java.lang.String, boolean)
 	 */
 	@Override
+	@FederationEnabled
 	public void setAccessPermissionRead(final String zone,
 			final String absolutePath, final String userName,
 			final boolean recursive) throws JargonException {
@@ -1361,6 +1359,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 	 * lang.String, java.lang.String)
 	 */
 	@Override
+	@FederationEnabled
 	public UserFilePermission getPermissionForUserName(
 			final String irodsCollectionAbsolutePath, final String userName)
 			throws JargonException {
@@ -1382,6 +1381,12 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 				irodsCollectionAbsolutePath);
 		log.info("   userName:{}", userName);
 
+		String theUser = MiscIRODSUtils.getUserInUserName(userName);
+		String theZone = MiscIRODSUtils.getZoneInUserName(userName);
+
+		String collectionZone = MiscIRODSUtils
+				.getZoneInPath(irodsCollectionAbsolutePath);
+
 		IRODSGenQueryExecutor irodsGenQueryExecutor = getIRODSAccessObjectFactory()
 				.getIRODSGenQueryExecutor(getIRODSAccount());
 
@@ -1391,8 +1396,17 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 		query.append(" AND ");
 		query.append(RodsGenQueryEnum.COL_COLL_ACCESS_USER_NAME.getName());
 		query.append(" = '");
-		query.append(userName);
+		query.append(theUser);
 		query.append("'");
+
+		if (!theZone.isEmpty()) {
+			query.append(" AND ");
+			query.append(RodsGenQueryEnum.COL_COLL_ACCESS_USER_ZONE.getName());
+			query.append(" = '");
+			query.append(theZone);
+			query.append("'");
+		}
+
 		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(query.toString(),
 				this.getJargonProperties().getMaxFilesAndDirsQueryMax());
 		IRODSQueryResultSetInterface resultSet;
@@ -1401,8 +1415,9 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 		User user = null;
 
 		try {
-			resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResult(
-					irodsQuery, 0);
+			resultSet = irodsGenQueryExecutor
+					.executeIRODSQueryAndCloseResultInZone(irodsQuery, 0,
+							collectionZone);
 			IRODSQueryResultRow row = resultSet.getFirstResult();
 
 			/**
@@ -1410,13 +1425,26 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 			 * permission, a separate query must be done
 			 */
 
-			user = userAO.findById(row.getColumn(1));
+			user = userAO.findByIdInZone(row.getColumn(2), this
+					.getIRODSAccount().getZone());
+			StringBuilder userAndZone = null;
+			String displayUserName = null;
 
-			userFilePermission = new UserFilePermission(row.getColumn(0),
-					row.getColumn(1),
+			userAndZone = new StringBuilder(row.getColumn(0));
+			userAndZone.append('#');
+			userAndZone.append(row.getColumn(1));
+
+			if (row.getColumn(1).equals(collectionZone)) {
+				displayUserName = row.getColumn(0);
+			} else {
+				displayUserName = userAndZone.toString();
+			}
+
+			userFilePermission = new UserFilePermission(displayUserName,
+					row.getColumn(2),
 					FilePermissionEnum.valueOf(IRODSDataConversionUtil
-							.getIntOrZeroFromIRODSValue(row.getColumn(2))),
-					user.getUserType());
+							.getIntOrZeroFromIRODSValue(row.getColumn(3))),
+					user.getUserType(), row.getColumn(1));
 			log.debug("loaded filePermission:{}", userFilePermission);
 
 		} catch (JargonQueryException e) {
@@ -1440,6 +1468,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 	 * .lang.String)
 	 */
 	@Override
+	@FederationEnabled
 	public List<UserFilePermission> listPermissionsForCollection(
 			final String irodsCollectionAbsolutePath)
 			throws FileNotFoundException, JargonException {
@@ -1450,17 +1479,12 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 					"null or empty collectionAbsolutePath");
 		}
 
-		/*
-		 * ObjStat objStat =
-		 * this.getObjectStatForAbsolutePath(irodsCollectionAbsolutePath);
-		 * log.info("objStat obtained:{}", objStat); // objStat will be more
-		 * important later on, when we deal with mounted // collections, etc
-		 * 
-		 * String zone =
-		 * MiscIRODSUtils.getZoneInPath(irodsCollectionAbsolutePath);
-		 */
 		log.info("listPermissionsForCollection: {}",
 				irodsCollectionAbsolutePath);
+
+		String collectionZone = MiscIRODSUtils
+				.getZoneInPath(irodsCollectionAbsolutePath);
+
 		List<UserFilePermission> userFilePermissions = new ArrayList<UserFilePermission>();
 
 		IRODSGenQueryExecutor irodsGenQueryExecutor = getIRODSAccessObjectFactory()
@@ -1486,17 +1510,16 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 					irodsQuery, 0);
 
 			UserFilePermission userFilePermission = null;
-			StringBuilder userAndZone = null;
+
 			for (IRODSQueryResultRow row : resultSet.getResults()) {
-				userAndZone = new StringBuilder(row.getColumn(0));
-				userAndZone.append('#');
-				userAndZone.append(row.getColumn(3));
-				user = userAO.findByName(userAndZone.toString());
+
+				user = userAO
+.findByIdInZone(row.getColumn(2), collectionZone);
 				userFilePermission = new UserFilePermission(row.getColumn(0),
-						row.getColumn(1),
+						row.getColumn(2),
 						FilePermissionEnum.valueOf(IRODSDataConversionUtil
-								.getIntOrZeroFromIRODSValue(row.getColumn(2))),
-						user.getUserType(), row.getColumn(3));
+								.getIntOrZeroFromIRODSValue(row.getColumn(3))),
+						user.getUserType(), row.getColumn(1));
 				log.debug("loaded filePermission:{}", userFilePermission);
 				userFilePermissions.add(userFilePermission);
 			}

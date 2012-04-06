@@ -25,6 +25,7 @@ import org.irods.jargon.core.query.IRODSQueryResultRow;
 import org.irods.jargon.core.query.IRODSQueryResultSetInterface;
 import org.irods.jargon.core.query.JargonQueryException;
 import org.irods.jargon.core.query.RodsGenQueryEnum;
+import org.irods.jargon.core.utils.FederationEnabled;
 import org.irods.jargon.core.utils.IRODSDataConversionUtil;
 import org.irods.jargon.core.utils.MiscIRODSUtils;
 import org.slf4j.Logger;
@@ -143,6 +144,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 	 * listDataObjectsAndCollectionsUnderPathWithPermissions(java.lang.String)
 	 */
 	@Override
+	@FederationEnabled
 	public List<CollectionAndDataObjectListingEntry> listDataObjectsAndCollectionsUnderPathWithPermissions(
 			final String absolutePathToParent) throws FileNotFoundException,
 			JargonException {
@@ -176,6 +178,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 	 * countDataObjectsAndCollectionsUnderPath(java.lang.String)
 	 */
 	@Override
+	@FederationEnabled
 	public int countDataObjectsAndCollectionsUnderPath(
 			final String absolutePathToParent) throws JargonException {
 
@@ -500,6 +503,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 
 		log.info("listCollectionsUnderPathWithPermissionsForUser for: {}", path);
 
+
 		String query = IRODSFileSystemAOHelper
 				.buildQueryListAllDirsWithUserAccessInfo(path);
 
@@ -523,7 +527,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 			if (thisPath.equals(lastPath)) {
 				// parse out the file permission and continue,
 				CollectionAOHelper.buildUserFilePermissionForCollection(
-						userFilePermissions, row, userAO);
+						userFilePermissions, row, userAO, path);
 				continue;
 			} else {
 				// is a break on path, put out the info for the last path if
@@ -541,7 +545,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 				lastPath = collectionAndDataObjectListingEntry.getPathOrName();
 				userFilePermissions = new ArrayList<UserFilePermission>();
 				CollectionAOHelper.buildUserFilePermissionForCollection(
-						userFilePermissions, row, userAO);
+						userFilePermissions, row, userAO, path);
 			}
 
 		}
@@ -605,6 +609,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 	 * listDataObjectsUnderPath(java.lang.String, int)
 	 */
 	@Override
+	@FederationEnabled
 	public List<CollectionAndDataObjectListingEntry> listDataObjectsUnderPath(
 			final String absolutePathToParent, final int partialStartIndex)
 			throws JargonException {
@@ -695,6 +700,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 	 * listDataObjectsUnderPathWithPermissions(java.lang.String, int)
 	 */
 	@Override
+	@FederationEnabled
 	public List<CollectionAndDataObjectListingEntry> listDataObjectsUnderPathWithPermissions(
 			final String absolutePathToParent, final int partialStartIndex)
 			throws FileNotFoundException, JargonException {
@@ -792,7 +798,8 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 				if (currentReplNumber.equals(lastReplNumber)) {
 					// accumulate a permissions entry
 					CollectionAOHelper.buildUserFilePermissionForDataObject(
-							userFilePermissions, row);
+							userFilePermissions, row, absolutePathToParent,
+							this.getIRODSAccount().getZone());
 				} else {
 					// ignore, is a replica
 				}
@@ -819,7 +826,8 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 			lastReplNumber = currentReplNumber;
 			userFilePermissions = new ArrayList<UserFilePermission>();
 			CollectionAOHelper.buildUserFilePermissionForDataObject(
-					userFilePermissions, row);
+					userFilePermissions, row, absolutePathToParent, this
+							.getIRODSAccount().getZone());
 
 		}
 
@@ -976,6 +984,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 	 * getFullObjectForType(java.lang.String)
 	 */
 	@Override
+	@FederationEnabled
 	public Object getFullObjectForType(final String objectAbsolutePath)
 			throws FileNotFoundException, JargonException {
 

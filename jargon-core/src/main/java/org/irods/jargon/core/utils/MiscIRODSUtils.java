@@ -234,4 +234,58 @@ public class MiscIRODSUtils {
 		return result;
 	}
 
+	/**
+	 * Pare off a user name if the given user name is in user#zone format,
+	 * there's a complementary method to just get the zone part.
+	 * 
+	 * @param userName
+	 *            <code>String</code> with a user name that can be just a name,
+	 *            or a user name in user#zone format.
+	 *            <p/>
+	 *            This will give you back the user name in any case, and will
+	 *            return blank if given blank or null.
+	 * @return <code>String</code> with the userName, with any zone info trimmed
+	 */
+	public static String getUserInUserName(final String userName) {
+
+		if (userName == null || userName.isEmpty()) {
+			return "";
+		}
+
+		int indexOfPound = userName.indexOf('#');
+
+		if (indexOfPound == -1) {
+			return userName;
+		} else {
+			return userName.substring(0, indexOfPound);
+		}
+	}
+
+	/**
+	 * Pare off a zone name if the given user name is in user#zone format,
+	 * there's a complementary method to just get the user part.
+	 * 
+	 * @param userName
+	 *            <code>String</code> with a user name that can be just a name,
+	 *            or a user name in user#zone format.
+	 *            <p/>
+	 *            This will give you back the zone name in any case, and will
+	 *            return blank if given blank or null.
+	 * @return <code>String</code> with the zone, with any user info trimmed
+	 */
+	public static String getZoneInUserName(final String userName) {
+
+		if (userName == null || userName.isEmpty()) {
+			return "";
+		}
+
+		int indexOfPound = userName.indexOf('#');
+
+		if (indexOfPound == -1) {
+			return "";
+		} else {
+			return userName.substring(indexOfPound + 1);
+		}
+	}
+
 }

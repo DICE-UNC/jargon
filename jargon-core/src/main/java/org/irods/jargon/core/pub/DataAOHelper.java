@@ -679,6 +679,8 @@ final class DataAOHelper extends AOHelper {
 		query.append(RodsGenQueryEnum.COL_DATA_ACCESS_TYPE.getName());
 		query.append(",");
 		query.append(RodsGenQueryEnum.COL_USER_TYPE.getName());
+		query.append(",");
+		query.append(RodsGenQueryEnum.COL_USER_ZONE.getName());
 		query.append(" WHERE ");
 		query.append(RodsGenQueryEnum.COL_COLL_NAME.getName());
 		query.append(EQUALS_AND_QUOTE);

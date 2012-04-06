@@ -15,7 +15,7 @@ public class UserFilePermissionTest {
 		String userId = "10";
 		FilePermissionEnum fpe = FilePermissionEnum.OWN;
 		UserFilePermission userFilePermission = new UserFilePermission(
-				userName, userId, fpe, UserTypeEnum.RODS_USER);
+				userName, userId, fpe, UserTypeEnum.RODS_USER, "zoom");
 		Assert.assertEquals("user name not valid", userName,
 				userFilePermission.getUserName());
 		Assert.assertEquals("user id not valid", userId,
@@ -29,7 +29,8 @@ public class UserFilePermissionTest {
 		String userName = null;
 		String userId = "10";
 		FilePermissionEnum fpe = FilePermissionEnum.OWN;
-		new UserFilePermission(userName, userId, fpe, UserTypeEnum.RODS_USER);
+		new UserFilePermission(userName, userId, fpe, UserTypeEnum.RODS_USER,
+				"zoom");
 	}
 
 	@Test(expected = IllegalArgumentException.class)
@@ -37,7 +38,8 @@ public class UserFilePermissionTest {
 		String userName = "";
 		String userId = "10";
 		FilePermissionEnum fpe = FilePermissionEnum.OWN;
-		new UserFilePermission(userName, userId, fpe, UserTypeEnum.RODS_USER);
+		new UserFilePermission(userName, userId, fpe, UserTypeEnum.RODS_USER,
+				"zoom");
 	}
 
 	@Test(expected = IllegalArgumentException.class)
@@ -45,7 +47,8 @@ public class UserFilePermissionTest {
 		String userName = "xxx";
 		String userId = null;
 		FilePermissionEnum fpe = FilePermissionEnum.OWN;
-		new UserFilePermission(userName, userId, fpe, UserTypeEnum.RODS_USER);
+		new UserFilePermission(userName, userId, fpe, UserTypeEnum.RODS_USER,
+				"zoom");
 	}
 
 	@Test(expected = IllegalArgumentException.class)
@@ -53,7 +56,8 @@ public class UserFilePermissionTest {
 		String userName = "";
 		String userId = null;
 		FilePermissionEnum fpe = FilePermissionEnum.OWN;
-		new UserFilePermission(userName, userId, fpe, UserTypeEnum.RODS_USER);
+		new UserFilePermission(userName, userId, fpe, UserTypeEnum.RODS_USER,
+				"zoom");
 	}
 
 	@Test(expected = IllegalArgumentException.class)
@@ -61,7 +65,8 @@ public class UserFilePermissionTest {
 		String userName = "xxx";
 		String userId = "xx";
 		FilePermissionEnum fpe = null;
-		new UserFilePermission(userName, userId, fpe, UserTypeEnum.RODS_USER);
+		new UserFilePermission(userName, userId, fpe, UserTypeEnum.RODS_USER,
+				"zoom");
 	}
 
 }

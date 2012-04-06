@@ -2296,7 +2296,8 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 				row.getColumn(1),
 				FilePermissionEnum.valueOf(IRODSDataConversionUtil
 						.getIntOrZeroFromIRODSValue(row.getColumn(2))),
-				UserTypeEnum.findTypeByString(row.getColumn(3)));
+				UserTypeEnum.findTypeByString(row.getColumn(3)),
+				row.getColumn(4));
 		return userFilePermission;
 	}
 

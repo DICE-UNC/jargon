@@ -71,28 +71,19 @@ public class UserAOHelper {
 	public static User buildUserFromResultSet(final IRODSQueryResultRow row,
 			final IRODSGenQueryExecutor irodsGenQueryExecutor,
 			final boolean retrieveDN) throws JargonException {
-		String homeZone = irodsGenQueryExecutor.getIRODSAccount().getZone();
 		User user = new User();
 		user.setId(row.getColumn(2));
 		user.setName(row.getColumn(1));
-		user.setUserType(UserTypeEnum.findTypeByString(row.getColumn(3)));
 		user.setZone(row.getColumn(0));
+
+		user.setUserType(UserTypeEnum.findTypeByString(row.getColumn(3)));
+		
 		user.setInfo(row.getColumn(4));
 		user.setComment(row.getColumn(5));
 		user.setCreateTime(IRODSDataConversionUtil.getDateFromIRODSValue(row
 				.getColumn(6)));
 		user.setModifyTime(IRODSDataConversionUtil.getDateFromIRODSValue(row
 				.getColumn(7)));
-
-		if (user.getZone().equals(homeZone)) {
-			user.setNameWithZone(user.getName());
-		} else {
-			StringBuilder sb = new StringBuilder();
-			sb.append(user.getName());
-			sb.append('#');
-			sb.append(user.getZone());
-			user.setNameWithZone(sb.toString());
-		}
 
 		// do add'l lookup of DN if requested
 		if (retrieveDN) {

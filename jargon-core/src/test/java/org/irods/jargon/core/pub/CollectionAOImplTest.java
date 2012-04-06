@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Properties;
 
 import junit.framework.Assert;
+import junit.framework.TestCase;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSServerProperties;
@@ -478,7 +479,7 @@ public class CollectionAOImplTest {
 		collectionAO.addAVUMetadata(targetIrodsCollection, dataToAdd);
 	}
 
-	@Test(expected = DuplicateDataException.class)
+	@Test
 	public void testAddDuplicateAvuMetadata() throws Exception {
 		String testDirName = "testAddDuplicateAvuMetadata";
 		String expectedAttribName = "testattrib1";
@@ -509,7 +510,11 @@ public class CollectionAOImplTest {
 		AvuData dataToAdd = AvuData.instance(expectedAttribName,
 				expectedAttribValue, "");
 		collectionAO.addAVUMetadata(targetIrodsCollection, dataToAdd);
+		try {
 		collectionAO.addAVUMetadata(targetIrodsCollection, dataToAdd);
+		} catch (DuplicateDataException dde) {
+			// expected post 3.1, not a great test anymore...
+		}
 
 	}
 
@@ -831,6 +836,18 @@ public class CollectionAOImplTest {
 
 		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
 				.getIRODSAccessObjectFactory();
+
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
+						irodsAccount);
+		IRODSServerProperties props = environmentalInfoAO
+				.getIRODSServerPropertiesFromIRODSServer();
+
+		if (!props.isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods3.2")) {
+			irodsFileSystem.closeAndEatExceptions();
+			return;
+		}
+
 		CollectionAO collectionAO = accessObjectFactory
 				.getCollectionAO(irodsAccount);
 		IRODSFile targetCollectionAsFile = irodsFileSystem.getIRODSFileFactory(
@@ -848,6 +865,7 @@ public class CollectionAOImplTest {
 
 		List<MetaDataAndDomainData> metadata = collectionAO
 				.findMetadataValuesForCollection(targetIrodsCollection, 0);
+
 
 		Assert.assertEquals("should only be one avu entry", 1, metadata.size());
 
@@ -1956,6 +1974,23 @@ public class CollectionAOImplTest {
 				userFilePermissions);
 		Assert.assertEquals("did not find the two permissions", 2,
 				userFilePermissions.size());
+
+		boolean secondaryUserFound = false;
+		for (UserFilePermission permission : userFilePermissions) {
+			if (permission.getUserName().equalsIgnoreCase(
+							testingProperties
+									.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY))) {
+				secondaryUserFound = true;
+				TestCase.assertEquals("should have normal zone",
+						irodsAccount.getZone(), permission.getUserZone());
+				TestCase.assertEquals("should have read permissions",
+						FilePermissionEnum.READ,
+						permission.getFilePermissionEnum());
+			}
+		}
+
+		TestCase.assertTrue("did not find secondary user", secondaryUserFound);
+
 	}
 
 	@Test
@@ -1996,6 +2031,8 @@ public class CollectionAOImplTest {
 				testingProperties
 						.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY),
 				userFilePermission.getUserName());
+		Assert.assertEquals("zone incorrect", irodsAccount.getZone(),
+				userFilePermission.getUserZone());
 	}
 
 	@Test
