@@ -22,7 +22,7 @@ import org.irods.jargon.core.exception.JargonException;
 public class TranslatedIRODSGenQuery {
 	private final List<GenQuerySelectField> selectFields;
 	private final List<TranslatedGenQueryCondition> translatedQueryConditions;
-	private final IRODSGenQuery irodsQuery;
+	private final AbstractIRODSGenQuery irodsQuery;
 	private final boolean distinct;
 
 	/**
@@ -50,7 +50,7 @@ public class TranslatedIRODSGenQuery {
 	public static TranslatedIRODSGenQuery instance(
 			final List<GenQuerySelectField> translatedSelectFields,
 			final List<TranslatedGenQueryCondition> translatedQueryConditions,
-			final IRODSGenQuery irodsQuery, final boolean distinct)
+			final AbstractIRODSGenQuery irodsQuery, final boolean distinct)
 			throws JargonException {
 		return new TranslatedIRODSGenQuery(translatedSelectFields,
 				translatedQueryConditions,
@@ -62,7 +62,7 @@ public class TranslatedIRODSGenQuery {
 			final List<GenQuerySelectField> translatedSelectFields,
 			final List<TranslatedGenQueryCondition> translatedQueryConditions,
 			final List<GenQuerySelectField> groupByFields,
-			final IRODSGenQuery irodsQuery, final boolean distinct)
+			final AbstractIRODSGenQuery irodsQuery, final boolean distinct)
 			throws JargonException {
 		return new TranslatedIRODSGenQuery(translatedSelectFields,
 				translatedQueryConditions, groupByFields, irodsQuery, distinct);
@@ -91,7 +91,7 @@ public class TranslatedIRODSGenQuery {
 	public static TranslatedIRODSGenQuery instance(
 			final List<GenQuerySelectField> translatedSelectFields,
 			final List<TranslatedGenQueryCondition> translatedQueryConditions,
-			final IRODSGenQuery irodsQuery) throws JargonException {
+			final AbstractIRODSGenQuery irodsQuery) throws JargonException {
 		return new TranslatedIRODSGenQuery(translatedSelectFields,
 				translatedQueryConditions,
 				new ArrayList<GenQuerySelectField>(), irodsQuery, true);
@@ -102,7 +102,7 @@ public class TranslatedIRODSGenQuery {
 			final List<GenQuerySelectField> selectFields,
 			final List<TranslatedGenQueryCondition> translatedQueryConditions,
 			final List<GenQuerySelectField> groupByFields,
-			final IRODSGenQuery irodsQuery, final boolean distinct)
+			final AbstractIRODSGenQuery irodsQuery, final boolean distinct)
 			throws JargonException {
 
 		if (translatedQueryConditions == null) {
@@ -155,7 +155,7 @@ public class TranslatedIRODSGenQuery {
 		return translatedQueryConditions;
 	}
 
-	public IRODSGenQuery getIrodsQuery() {
+	public AbstractIRODSGenQuery getIrodsQuery() {
 		return irodsQuery;
 	}
 

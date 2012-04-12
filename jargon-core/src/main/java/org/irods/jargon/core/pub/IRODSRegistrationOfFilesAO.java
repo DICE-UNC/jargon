@@ -169,44 +169,6 @@ public interface IRODSRegistrationOfFilesAO {
 			throws JargonException;
 
 	/**
-	 * Register a collection (directory) to iRODS as a replica of the collection
-	 * at the given absolute path. This is different from a put or a copy in the
-	 * sense that the file already exists on the resource server, and is not in
-	 * the iRODS vault. The file remains in place and is added to the iRODS
-	 * catalog. If this is a file (data object) instead of a collection, an
-	 * error will result.
-	 * 
-	 * @param physicalPath
-	 *            <code>String</code> with the absolute path to the physical
-	 *            file located on the iRODS resource server.
-	 * @param irodsAbsolutePath
-	 *            <code>String</code> with the absolute path to the desired
-	 *            iRODS location the file will be registered under.
-	 * 
-	 * @param destinationResource
-	 *            <code>String</code>, blank if the default should be used, that
-	 *            indicates the the resource to store to. This can also be
-	 *            specified in your environment or via a rule set up by the
-	 *            administrator.
-	 * @param resourceGroup
-	 *            <code>String</code> with a resource group for the resource.
-	 *            This may be set to blank, if not used. If this is specified, a
-	 *            <code>destinationResource</code> must also be specified.
-	 * @throws DataNotFoundException
-	 *             if the flle to register or the target collection does not
-	 *             exist
-	 * @throws DuplicateDataException
-	 *             if the file has already been registered, and force is not
-	 *             specified
-	 * @throws JargonException
-	 */
-	void registerPhysicalCollectionRecursivelyToIRODSAsAReplica(
-			final String physicalPath, final String irodsAbsolutePath,
-			final boolean force, final String destinationResource,
-			final String resourceGroup) throws DataNotFoundException,
-			DuplicateDataException, JargonException;
-
-	/**
 	 * Register a single file (data object) to iRODS as a replica of the given
 	 * iRODS data object. This can also, if the
 	 * <code>generateChecksumInIRODS</code> value is <code>true</code>, cause an
@@ -237,7 +199,8 @@ public interface IRODSRegistrationOfFilesAO {
 	 *            generate a checksum value and store it in the catalog.
 	 * @throws DataNotFoundException
 	 *             if the flle to register or the target collection does not
-	 *             exist
+	 *             exist. If this is the first version (instead of a replica)
+	 *             you will also get this exception.
 	 * @throws DuplicateDataException
 	 *             if the file has already been registered, and force is not
 	 *             specified
@@ -246,48 +209,6 @@ public interface IRODSRegistrationOfFilesAO {
 	void registerPhysicalDataFileToIRODSAsAReplica(final String physicalPath,
 			final String irodsAbsolutePath, final String destinationResource,
 			final String resourceGroup, final boolean generateChecksumInIRODS)
-			throws DataNotFoundException, DuplicateDataException,
-			JargonException;
-
-	/**
-	 * Register a single file (data object) to iRODS as a replica of the given
-	 * data object. This method will first generate a checksum value for the
-	 * local file, and then send this checksum to irods so that it can be
-	 * verified and stored.
-	 * <p/>
-	 * This method is for data objects, and will cause an error if the provided
-	 * paths are an iRODS collection.
-	 * 
-	 * @param physicalPath
-	 *            <code>String</code> with the absolute path to the physical
-	 *            file located on the iRODS resource server.
-	 * @param irodsAbsolutePath
-	 *            <code>String</code> with the absolute path to the desired
-	 *            iRODS location the file will be registered under.
-	 * @param destinationResource
-	 *            <code>String</code>, blank if the default should be used, that
-	 *            indicates the the resource to store to. This can also be
-	 *            specified in your environment or via a rule set up by the
-	 *            administrator.
-	 * @param resourceGroup
-	 *            <code>String</code> with a resource group for the resource.
-	 *            This may be set to blank, if not used. If this is specified, a
-	 *            <code>destinationResource</code> must also be specified.
-	 * @return <code>String</code> with the locally generated checksum value
-	 *         that was sent to iRODS.
-	 * @throws DataNotFoundException
-	 *             if the fle to register does not exist
-	 * @throws DataNotFoundException
-	 *             if the flle to register or the target collection does not
-	 *             exist
-	 * @throws DuplicateDataException
-	 *             if the file has already been registered, and force is not
-	 *             specified
-	 * @throws JargonException
-	 */
-	String registerPhysicalDataFileToIRODSWithVerifyLocalChecksumAsAReplica(
-			final String physicalPath, final String irodsAbsolutePath,
-			final String destinationResource, final String resourceGroup)
 			throws DataNotFoundException, DuplicateDataException,
 			JargonException;
 

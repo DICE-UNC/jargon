@@ -6,9 +6,11 @@ package org.irods.jargon.core.query;
 import org.irods.jargon.core.exception.JargonException;
 
 /**
- * @author Mike Conway - DICE (www.irods.org) A field in a GenQuery select in
- *         translated form, including the type of select (e.g. a field, versus a
- *         sum() or count() of a field. This is an immutable, thread-safe type
+ * @author Mike Conway - DICE (www.irods.org)
+ * 
+ *         A field in a GenQuery select in translated form, including the type
+ *         of select (e.g. a field, versus a sum() or count() of a field. This
+ *         is an immutable, thread-safe type
  */
 public class GenQuerySelectField {
 	public enum SelectFieldTypes {

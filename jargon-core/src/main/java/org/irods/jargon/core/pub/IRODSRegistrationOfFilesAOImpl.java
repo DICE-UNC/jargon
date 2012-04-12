@@ -179,6 +179,7 @@ public class IRODSRegistrationOfFilesAOImpl extends IRODSGenericAO implements
 			final String destinationResource, final String resourceGroup)
 			throws DataNotFoundException, DuplicateDataException,
 			JargonException {
+
 		log.info("registerPhysicalDataFileToIRODSWithVerifyLocalChecksum()");
 
 		if (physicalPath == null || physicalPath.isEmpty()) {
@@ -285,37 +286,56 @@ public class IRODSRegistrationOfFilesAOImpl extends IRODSGenericAO implements
 			throws DataNotFoundException, DuplicateDataException,
 			JargonException {
 
-	}
+		log.info("registerPhysicalDataFileToIRODSAsAReplica()");
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.irods.jargon.core.pub.IRODSRegistrationOfFilesAO#
-	 * registerPhysicalDataFileToIRODSWithVerifyLocalChecksumAsAReplica
-	 * (java.lang.String, java.lang.String, java.lang.String, java.lang.String)
-	 */
-	@Override
-	public String registerPhysicalDataFileToIRODSWithVerifyLocalChecksumAsAReplica(
-			final String physicalPath, final String irodsAbsolutePath,
-			final String destinationResource, final String resourceGroup)
-			throws DataNotFoundException, DuplicateDataException,
-			JargonException {
-		return null;
-	}
+		if (physicalPath == null || physicalPath.isEmpty()) {
+			throw new IllegalArgumentException("null or empty physical path");
+		}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.irods.jargon.core.pub.IRODSRegistrationOfFilesAO#
-	 * registerPhysicalCollectionRecursivelyToIRODSAsAReplica(java.lang.String,
-	 * java.lang.String, boolean, java.lang.String, java.lang.String)
-	 */
-	@Override
-	public void registerPhysicalCollectionRecursivelyToIRODSAsAReplica(
-			final String physicalPath, final String irodsAbsolutePath,
-			final boolean force, final String destinationResource,
-			final String resourceGroup) throws DataNotFoundException,
-			DuplicateDataException, JargonException {
+		if (irodsAbsolutePath == null || irodsAbsolutePath.isEmpty()) {
+			throw new IllegalArgumentException(
+					"null or empty irodsAbsolutePath");
+		}
+
+		if (destinationResource == null || destinationResource.isEmpty()) {
+			throw new IllegalArgumentException(
+					"null or empty destination resource");
+		}
+
+		if (resourceGroup == null) {
+			throw new IllegalArgumentException(
+					"null resourceGroup, set to blank if not used");
+		}
+
+		log.info("physicalPath:{}", physicalPath);
+		log.info("irodsAbsolutePath:{}", irodsAbsolutePath);
+		log.info("destinationResource:{}", destinationResource);
+		log.info("resourceGroup:{}", resourceGroup);
+		log.info("generateChecksumInIrods:{}", generateChecksumInIRODS);
+
+		File localFile = new File(physicalPath);
+		if (!localFile.exists()) {
+			log.error("cannot find local file");
+			throw new DataNotFoundException("file to register does not exist");
+		}
+
+		if (!localFile.isFile()) {
+			throw new JargonException(
+					"given file is a collection, not a data object");
+		}
+
+		ChecksumHandling checksumHandling;
+		if (generateChecksumInIRODS) {
+			checksumHandling = ChecksumHandling.REGISTER_CHECKSUM;
+		} else {
+			checksumHandling = ChecksumHandling.NONE;
+		}
+
+		DataObjInpForReg dataObjInp = DataObjInpForReg.instance(physicalPath,
+				irodsAbsolutePath, resourceGroup, destinationResource, false,
+				false, checksumHandling, true, "");
+
+		getIRODSProtocol().irodsFunction(dataObjInp);
 
 	}
 

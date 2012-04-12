@@ -31,7 +31,7 @@ public class TranslatedIRODSQueryTest {
 				GenQuerySelectField.SelectFieldSource.DEFINED_QUERY_FIELD);
 		selectFields.add(field);
 		List<TranslatedGenQueryCondition> queryConditions = new ArrayList<TranslatedGenQueryCondition>();
-		IRODSGenQuery query = IRODSGenQuery.instance("hello", 100);
+		AbstractIRODSGenQuery query = IRODSGenQuery.instance("hello", 100);
 		TranslatedIRODSGenQuery translatedQuery = TranslatedIRODSGenQuery
 				.instance(selectFields, queryConditions, query);
 		Assert.assertNotNull("translated query not created", translatedQuery);
@@ -40,7 +40,7 @@ public class TranslatedIRODSQueryTest {
 	@Test(expected = JargonException.class)
 	public final void testInstanceNullSelects() throws Exception {
 		List<TranslatedGenQueryCondition> queryConditions = new ArrayList<TranslatedGenQueryCondition>();
-		IRODSGenQuery query = IRODSGenQuery.instance("hello", 100);
+		AbstractIRODSGenQuery query = IRODSGenQuery.instance("hello", 100);
 		TranslatedIRODSGenQuery.instance(null, queryConditions, query);
 	}
 
@@ -54,7 +54,7 @@ public class TranslatedIRODSQueryTest {
 				GenQuerySelectField.SelectFieldTypes.FIELD,
 				GenQuerySelectField.SelectFieldSource.DEFINED_QUERY_FIELD);
 		selectFields.add(field);
-		IRODSGenQuery query = IRODSGenQuery.instance("hello", 100);
+		AbstractIRODSGenQuery query = IRODSGenQuery.instance("hello", 100);
 		TranslatedIRODSGenQuery.instance(selectFields, null, query);
 
 	}

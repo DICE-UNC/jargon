@@ -480,14 +480,93 @@ public class IRODSRegistrationOfFilesAOImplTest {
 		fail("Not yet implemented");
 	}
 
-	@Ignore
-	public final void testRegisterPhysicalDataFileToIRODSAsAReplica() {
-		fail("Not yet implemented");
+	/**
+	 * Put the file, then register again as a replica to a second resource
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public final void testRegisterPhysicalDataFileToIRODSAsAReplica()
+			throws Exception {
+
+		if (!testingPropertiesHelper.isTestRegistration(testingProperties)) {
+			return;
+		}
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSRegistrationOfFilesAO ao = irodsFileSystem
+				.getIRODSAccessObjectFactory().getIRODSRegistrationOfFilesAO(
+						irodsAccount);
+
+		String testFileName = "testRegisterPhysicalCollectionRecursivelyToIRODSAsAReplica.txt";
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String fileNameOrig = FileGenerator.generateFileOfFixedLengthGivenName(
+				absPath, testFileName, 2);
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		DataTransferOperations dataTransferOperations = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataTransferOperations(
+						irodsAccount);
+
+		dataTransferOperations.putOperation(fileNameOrig,
+				targetIrodsCollection,
+				irodsAccount.getDefaultStorageResource(), null, null);
+
+		ao.registerPhysicalDataFileToIRODSAsAReplica(
+				fileNameOrig,
+				targetIrodsCollection
+				+ "/" + testFileName, testingProperties
+						.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_RESOURCE_KEY),
+				"",
+				false);
+
+		assertionHelper.assertIrodsFileOrCollectionExists(targetIrodsCollection
+				+ "/" + testFileName);
 	}
 
-	@Ignore
-	public final void testRegisterPhysicalDataFileToIRODSWithVerifyLocalChecksumAsAReplica() {
-		fail("Not yet implemented");
+	/**
+	 * register a file as a replica when that file doesn't yet exist
+	 * 
+	 * @throws Exception
+	 */
+	@Test(expected = DataNotFoundException.class)
+	public final void testRegisterPhysicalDataFileToIRODSAsAReplicaWhenFileDoesNotYetExist()
+			throws Exception {
+
+		if (!testingPropertiesHelper.isTestRegistration(testingProperties)) {
+			return;
+		}
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSRegistrationOfFilesAO ao = irodsFileSystem
+				.getIRODSAccessObjectFactory().getIRODSRegistrationOfFilesAO(
+						irodsAccount);
+
+		String testFileName = "testRegisterPhysicalDataFileToIRODSAsAReplicaWhenFileDoesNotYetExist.txt";
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String fileNameOrig = FileGenerator.generateFileOfFixedLengthGivenName(
+				absPath, testFileName, 2);
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		ao.registerPhysicalDataFileToIRODSAsAReplica(
+				fileNameOrig,
+				targetIrodsCollection + "/" + testFileName,
+				testingProperties
+						.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_RESOURCE_KEY),
+				"", false);
+
+		assertionHelper.assertIrodsFileOrCollectionExists(targetIrodsCollection
+				+ "/" + testFileName);
 	}
 
 }

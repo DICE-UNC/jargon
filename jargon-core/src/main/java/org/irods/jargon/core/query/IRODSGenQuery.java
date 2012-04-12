@@ -11,15 +11,9 @@ import org.irods.jargon.core.exception.JargonException;
  * 
  * @author Mike Conway - DICE (www.irods.org)
  */
-public final class IRODSGenQuery {
+public final class IRODSGenQuery extends AbstractIRODSGenQuery {
 
 	private final String queryString;
-	private final int numberOfResultsDesired;
-
-	public enum RowCountOptions {
-		NO_ROW_COUNT, ROW_COUNT_FOR_THIS_RESULT, ROW_COUNT_INCLUDING_SKIPPED_ROWS
-	}
-
 	/**
 	 * Creates an immutable description of a general query to IRODS with
 	 * defaults.
@@ -64,6 +58,9 @@ public final class IRODSGenQuery {
 			final int numberOfResultsDesired,
 			final RowCountOptions rowCountOption, final int skip)
 			throws JargonException {
+
+		super(numberOfResultsDesired);
+
 		if (queryString == null || queryString.length() == 0) {
 			throw new JargonException("query string must be supplied");
 		}
@@ -82,7 +79,6 @@ public final class IRODSGenQuery {
 		}
 
 		this.queryString = queryString;
-		this.numberOfResultsDesired = numberOfResultsDesired;
 	}
 
 	private IRODSGenQuery(final String queryString,
@@ -93,10 +89,6 @@ public final class IRODSGenQuery {
 
 	public String getQueryString() {
 		return queryString;
-	}
-
-	public int getNumberOfResultsDesired() {
-		return numberOfResultsDesired;
 	}
 
 	@Override
