@@ -822,6 +822,22 @@ public class TestingPropertiesHelper {
 	}
 
 	/**
+	 * Check if optional registration functions are to be tested (tests must be
+	 * running on a resource server)
+	 * 
+	 * @param testingProperties
+	 * @return
+	 */
+	public boolean isTestRegistration(final Properties testingProperties) {
+		String val = (String) testingProperties.get("test.option.registration");
+		if (val == null) {
+			return false;
+		} else {
+			return Boolean.parseBoolean(val);
+		}
+	}
+
+	/**
 	 * Check if optional remote stream execution is to be tested
 	 * 
 	 * @param testingProperties

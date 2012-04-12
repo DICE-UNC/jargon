@@ -267,8 +267,8 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	 */
 	List<MetaDataAndDomainData> findMetadataValuesByMetadataQueryWithAdditionalWhere(
 			final List<AVUQueryElement> avuQuery, final String additionalWhere,
-			final int partialStartIndex)
-			throws JargonQueryException, JargonException;
+			final int partialStartIndex) throws JargonQueryException,
+			JargonException;
 
 	/**
 	 * For the given absolute path, return the given collection.

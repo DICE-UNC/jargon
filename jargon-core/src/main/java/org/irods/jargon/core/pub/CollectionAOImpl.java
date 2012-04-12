@@ -1517,8 +1517,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 
 			for (IRODSQueryResultRow row : resultSet.getResults()) {
 
-				user = userAO
-.findByIdInZone(row.getColumn(2), collectionZone);
+				user = userAO.findByIdInZone(row.getColumn(2), collectionZone);
 				userFilePermission = new UserFilePermission(row.getColumn(0),
 						row.getColumn(2),
 						FilePermissionEnum.valueOf(IRODSDataConversionUtil

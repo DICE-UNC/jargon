@@ -1754,5 +1754,4 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 				transferStatusCallbackListener, transferControlBlock);
 	}
 
-
 }
