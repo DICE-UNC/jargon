@@ -1,5 +1,11 @@
 package org.irods.jargon.core.query;
 
+/**
+ * Abstract class common to representations of an iRODS general query
+ * 
+ * @author Mike Conway - DICE (www.irods.org)
+ * 
+ */
 public class AbstractIRODSGenQuery {
 
 	protected final int numberOfResultsDesired;
