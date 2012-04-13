@@ -1,10 +1,17 @@
 
 *'''Project''': Jargon-core - IRODS Java API
 *'''Date''': 3/20/2012
+<<<<<<< HEAD
 *'''Release Version''': 3.1.1 work in progress with globus, kerberos support
 *'''git tag''': 3.1.1-SNAPSHOT
+=======
+*'''Release Version''': 3.1.2-SNAPSHOT	
+*'''git tag''': 3.1.2 - TBD
+>>>>>>> master
 
 ==News==
+
+WORK IN PROGRESS
 
 Jargon-core implements the iRODS protocol, and allows development of iRODS-enabled Java applications.  This API is especially useful for developing
 mid-tier applications and services, as well as desktop-clients (such as iDROP).  These libraries also provide a foundation for a new set of interfaces that will come with iRODS.
@@ -43,15 +50,18 @@ Note that the following bug and feature requests are logged in GForge with relat
 
 ==Bug Fixes==
 
-* [#662] mod avu when setting a present units value to blank does not work - submitted as iRODS bug, added JUnit tests, will overhead if it becomes an issue
-* [#677] strip quotes, commas from tags - user free tagging with quotes can cause pathological query behavior, standardize on space delimited, also parse out commas
-* [#697] IRODSFileOutputStream overwrite fix - handle overwrites to match behavior of java io FileOutputStream (replace bytes)
-* [#700] cdr errors multiple FITS processes writing to irods (added unit tests for multiple concurrent output stream writes..work in progress)
+
 
 ==Features==
 
+<<<<<<< HEAD
  * [#664] parallel txfr optimization, including optional parallel via NIO
  * [#692] add ability to make parent dirs when creating a file for an IRODSFileOutputStream
  * [#132] GSS and Kerberos Support in Jargon-core
  * [#114] support for mounted collections, cross zone browsing, and soft links
  ** Added tests and support for ACL operations across federated zones to support idrop interface operations
+=======
+ * [#5] GenQuery Enhancements
+ ** adding a new query builder model for more efficient and expressive gen query statements (work in progress)
+ 
+>>>>>>> master

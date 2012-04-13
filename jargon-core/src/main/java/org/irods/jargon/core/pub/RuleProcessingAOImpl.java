@@ -637,11 +637,9 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements
 				.getStringValue();
 		log.info("client side action - irods file absolute path: {}",
 				irodsFileAbsolutePath);
-		
-		int numThreads = fileAction.getTag("numThreads")
-				.getIntValue();
-		log.info("client side action - num threads: {}",
-				numThreads);
+
+		int numThreads = fileAction.getTag("numThreads").getIntValue();
+		log.info("client side action - num threads: {}", numThreads);
 
 		Tag kvp = fileAction.getTag(KEY_VAL_PAIR_PI);
 		Map<String, String> kvpMap = TagHandlingUtils
@@ -696,8 +694,7 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements
 
 	private void clientSidePutAction(final String irodsFileAbsolutePath,
 			final File localFile, final String resourceName,
-			final boolean force, final int nbrThreads)
-			throws JargonException {
+			final boolean force, final int nbrThreads) throws JargonException {
 		DataObjectAO dataObjectAO = new DataObjectAOImpl(getIRODSSession(),
 				getIRODSAccount());
 		IRODSFile irodsFile = dataObjectAO
@@ -729,8 +726,8 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements
 
 	private void clientSideGetAction(final String irodsFileAbsolutePath,
 			final File localFile, final String resourceName,
-			final boolean force, final int nbrThreads)
-			throws JargonException, DataNotFoundException {
+			final boolean force, final int nbrThreads) throws JargonException,
+			DataNotFoundException {
 
 		log.info("client-side get action");
 

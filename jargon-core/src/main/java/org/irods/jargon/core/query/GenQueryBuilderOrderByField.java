@@ -1,3 +1,6 @@
+/**
+ * 
+ */
 package org.irods.jargon.core.query;
 
 import org.irods.jargon.core.exception.JargonException;
@@ -9,7 +12,7 @@ import org.irods.jargon.core.exception.JargonException;
  *         of select (e.g. a field, versus a sum() or count() of a field. This
  *         is an immutable, thread-safe type
  */
-public class GenQuerySelectField {
+public class GenQueryBuilderOrderByField {
 	public enum SelectFieldTypes {
 		FIELD, SUM, MIN, MAX, AVG, COUNT, FILE_ACCESS
 	}
@@ -40,14 +43,14 @@ public class GenQuerySelectField {
 	 * @return <code>SelectField</code> describing details about this field.
 	 * @throws JargonException
 	 */
-	public static GenQuerySelectField instance(
+	public static GenQueryBuilderOrderByField instance(
 			final RodsGenQueryEnum selectField,
 			final SelectFieldTypes selectFieldType,
 			final SelectFieldSource selectFieldSource) throws JargonException {
 		if (selectField == null) {
 			throw new JargonException("select field was null");
 		}
-		return new GenQuerySelectField(selectField.getName(),
+		return new GenQueryBuilderOrderByField(selectField.getName(),
 				String.valueOf(selectField.getNumericValue()), selectFieldType,
 				selectFieldSource);
 	}
@@ -73,11 +76,11 @@ public class GenQuerySelectField {
 	 * @return <code>SelectField</code> describing details about this field.
 	 * @throws JargonException
 	 */
-	public static GenQuerySelectField instance(final String selectFieldName,
+	public static GenQueryBuilderOrderByField instance(final String selectFieldName,
 			final String selectFieldNumericTranslation,
 			final SelectFieldTypes selectFieldType,
 			final SelectFieldSource selectFieldSource) throws JargonException {
-		return new GenQuerySelectField(selectFieldName,
+		return new GenQueryBuilderOrderByField(selectFieldName,
 				selectFieldNumericTranslation, selectFieldType,
 				selectFieldSource);
 	}
@@ -97,7 +100,7 @@ public class GenQuerySelectField {
 		return sb.toString();
 	}
 
-	private GenQuerySelectField(final String selectFieldColumnName,
+	private GenQueryBuilderOrderByField(final String selectFieldColumnName,
 			final String selectFieldNumericTranslation,
 			final SelectFieldTypes selectFieldType,
 			final SelectFieldSource selectFieldSource) throws JargonException {

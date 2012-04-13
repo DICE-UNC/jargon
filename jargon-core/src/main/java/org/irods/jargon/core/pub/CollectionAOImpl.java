@@ -885,11 +885,15 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 			final String irodsCollectionAbsolutePath)
 			throws DataNotFoundException, JargonException {
 
+		log.info("findByAbsolutePath()");
+
 		if (irodsCollectionAbsolutePath == null
 				|| irodsCollectionAbsolutePath.isEmpty()) {
 			throw new IllegalArgumentException(
 					"null or empty irodsCollectionAbsolutePath");
 		}
+
+		log.info("irodsCollectionAbsolutePath:{}", irodsCollectionAbsolutePath);
 
 		StringBuilder sb = new StringBuilder();
 		sb.append(RodsGenQueryEnum.COL_COLL_NAME.getName());
@@ -1513,8 +1517,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 
 			for (IRODSQueryResultRow row : resultSet.getResults()) {
 
-				user = userAO
-.findByIdInZone(row.getColumn(2), collectionZone);
+				user = userAO.findByIdInZone(row.getColumn(2), collectionZone);
 				userFilePermission = new UserFilePermission(row.getColumn(0),
 						row.getColumn(2),
 						FilePermissionEnum.valueOf(IRODSDataConversionUtil

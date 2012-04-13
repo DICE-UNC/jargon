@@ -503,7 +503,6 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 
 		log.info("listCollectionsUnderPathWithPermissionsForUser for: {}", path);
 
-
 		String query = IRODSFileSystemAOHelper
 				.buildQueryListAllDirsWithUserAccessInfo(path);
 
@@ -578,8 +577,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 			final int partialStartIndex, final ObjStat objStat)
 			throws JargonException {
 
-		log.info("queryForPathAndReturnResultSet for: {}",
-				irodsAbsolutePath);
+		log.info("queryForPathAndReturnResultSet for: {}", irodsAbsolutePath);
 		IRODSGenQueryExecutor irodsGenQueryExecutor = new IRODSGenQueryExecutorImpl(
 				this.getIRODSSession(), this.getIRODSAccount());
 
@@ -644,20 +642,16 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 
 		log.info("listDataObjectsUnderPath for: {}", objStat);
 
-
-
 		StringBuilder query = new StringBuilder(
 				IRODSFileSystemAOHelper
 						.buildQueryListAllDataObjectsWithSizeAndDateInfo(objStat
 								.getAbsolutePath()));
 		IRODSQueryResultSetInterface resultSet;
 
-
 		try {
 			resultSet = queryForPathAndReturnResultSet(
 					objStat.getAbsolutePath(), query.toString(),
-					partialStartIndex,
-					objStat);
+					partialStartIndex, objStat);
 		} catch (JargonException e) {
 			log.error("exception querying for data objects:{}",
 					query.toString(), e);

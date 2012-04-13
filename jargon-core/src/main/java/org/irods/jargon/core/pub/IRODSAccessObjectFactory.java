@@ -374,6 +374,17 @@ public interface IRODSAccessObjectFactory {
 			throws JargonException;
 
 	/**
+	 * Get an AO that manages iRODS file registration and de-registration
+	 * 
+	 * @param irodsAccount
+	 *            {@link IRODSAccount} that describes the connection to iRODS.
+	 * @return {@link IRODSRegistrationOfFilesAO}
+	 * @throws JargonException
+	 */
+	IRODSRegistrationOfFilesAO getIRODSRegistrationOfFilesAO(
+			IRODSAccount irodsAccount) throws JargonException;
+
+	/**
 	 * Build a <code>TransferControlBlock</code> reflecting the default options
 	 * as configured in the <code>JargonProperties</code>.
 	 * 

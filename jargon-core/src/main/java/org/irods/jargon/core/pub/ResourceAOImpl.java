@@ -88,8 +88,7 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 		IRODSQueryResultSetInterface resultSet;
 		try {
 			resultSet = irodsGenQueryExecutorImpl
-					.executeIRODSQueryAndCloseResult(irodsQuery,
- 0);
+					.executeIRODSQueryAndCloseResult(irodsQuery, 0);
 		} catch (JargonQueryException e) {
 			log.error("query exception for user query:{}", queryString, e);
 			throw new JargonException(ERROR_IN_RESOURCE_QUERY);
@@ -151,8 +150,7 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 		IRODSQueryResultSetInterface resultSet;
 		try {
 			resultSet = irodsGenQueryExecutorImpl
-					.executeIRODSQueryAndCloseResult(irodsQuery,
- 0);
+					.executeIRODSQueryAndCloseResult(irodsQuery, 0);
 		} catch (JargonQueryException e) {
 			log.error("query exception for user query:" + queryString, e);
 			throw new JargonException(ERROR_IN_RESOURCE_QUERY);

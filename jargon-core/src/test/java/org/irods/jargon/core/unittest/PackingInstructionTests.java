@@ -5,6 +5,8 @@ import org.irods.jargon.core.packinstr.CollInpTest;
 import org.irods.jargon.core.packinstr.DataObjCloseInpTest;
 import org.irods.jargon.core.packinstr.DataObjCopyInpTest;
 import org.irods.jargon.core.packinstr.DataObjInpForObjStatTest;
+import org.irods.jargon.core.packinstr.DataObjInpForRegTest;
+import org.irods.jargon.core.packinstr.DataObjInpForUnregisterTest;
 import org.irods.jargon.core.packinstr.DataObjInpTest;
 import org.irods.jargon.core.packinstr.DataObjReadTest;
 import org.irods.jargon.core.packinstr.DataObjWriteInpTest;
@@ -38,7 +40,8 @@ import org.junit.runners.Suite;
 		SimpleQueryInpTest.class, SimpleQueryInpTest.class,
 		ModAccessControlInpTest.class, GetTempPasswordInTest.class,
 		TransferOptionsTest.class, DataObjInpForObjStatTest.class,
-		GetTempPasswordForOtherTest.class })
+		GetTempPasswordForOtherTest.class, DataObjInpForRegTest.class,
+		DataObjInpForUnregisterTest.class })
 public class PackingInstructionTests {
 
 }

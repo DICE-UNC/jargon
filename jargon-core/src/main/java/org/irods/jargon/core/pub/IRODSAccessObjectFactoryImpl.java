@@ -480,6 +480,20 @@ public final class IRODSAccessObjectFactoryImpl implements
 	/*
 	 * (non-Javadoc)
 	 * 
+	 * @see org.irods.jargon.core.pub.IRODSAccessObjectFactory#
+	 * getIRODSRegistrationOfFilesAO
+	 * (org.irods.jargon.core.connection.IRODSAccount)
+	 */
+	@Override
+	public IRODSRegistrationOfFilesAO getIRODSRegistrationOfFilesAO(
+			final IRODSAccount irodsAccount) throws JargonException {
+		checkIrodsSessionSet();
+		return new IRODSRegistrationOfFilesAOImpl(irodsSession, irodsAccount);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.irods.jargon.core.pub.IRODSAccessObjectFactory#getIrodsSession()
 	 */
 	@Override

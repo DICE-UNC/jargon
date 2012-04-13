@@ -728,15 +728,6 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 			}
 		}
 
-		/*
-		 * if (this.getApiNumber() == DataObjInp.PUT_FILE_API_NBR ||
-		 * this.getApiNumber() == DataObjInp.GET_FILE_API_NBR) { if
-		 * (!transferOptions.isUseParallelTransfer()) { // no parallel transfer,
-		 * number threads set to -1 transferOptionsNumThreads = -1; } else { if
-		 * (getDataSize() > ConnectionConstants.MAX_SZ_FOR_SINGLE_BUF) {
-		 * transferOptionsNumThreads = transferOptions.getMaxThreads(); } } }
-		 */
-
 		Tag message = new Tag(PI_TAG, new Tag[] {
 				new Tag(OBJ_PATH, getFileAbsolutePath()),
 				new Tag(CREATE_MODE, getCreateMode()),
