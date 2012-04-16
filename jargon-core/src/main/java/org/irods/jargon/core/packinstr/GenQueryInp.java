@@ -1,6 +1,7 @@
 package org.irods.jargon.core.packinstr;
 
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.query.GenQueryField;
 import org.irods.jargon.core.query.GenQuerySelectField;
 import org.irods.jargon.core.query.TranslatedGenQueryCondition;
 import org.irods.jargon.core.query.TranslatedIRODSGenQuery;
@@ -224,19 +225,19 @@ public class GenQueryInp extends AbstractIRODSPackingInstruction implements
 
 		for (GenQuerySelectField select : translatedIRODSQuery
 				.getSelectFields()) {
-			if (select.getSelectFieldType() == GenQuerySelectField.SelectFieldTypes.FIELD) {
+			if (select.getSelectFieldType() == GenQueryField.SelectFieldTypes.FIELD) {
 				subTags[j] = new Tag(IVALUE, 1);
-			} else if (select.getSelectFieldType() == GenQuerySelectField.SelectFieldTypes.AVG) {
+			} else if (select.getSelectFieldType() == GenQueryField.SelectFieldTypes.AVG) {
 				subTags[j] = new Tag(IVALUE, 5);
-			} else if (select.getSelectFieldType() == GenQuerySelectField.SelectFieldTypes.COUNT) {
+			} else if (select.getSelectFieldType() == GenQueryField.SelectFieldTypes.COUNT) {
 				subTags[j] = new Tag(IVALUE, 6);
-			} else if (select.getSelectFieldType() == GenQuerySelectField.SelectFieldTypes.MAX) {
+			} else if (select.getSelectFieldType() == GenQueryField.SelectFieldTypes.MAX) {
 				subTags[j] = new Tag(IVALUE, 3);
-			} else if (select.getSelectFieldType() == GenQuerySelectField.SelectFieldTypes.MIN) {
+			} else if (select.getSelectFieldType() == GenQueryField.SelectFieldTypes.MIN) {
 				subTags[j] = new Tag(IVALUE, 2);
-			} else if (select.getSelectFieldType() == GenQuerySelectField.SelectFieldTypes.SUM) {
+			} else if (select.getSelectFieldType() == GenQueryField.SelectFieldTypes.SUM) {
 				subTags[j] = new Tag(IVALUE, 4);
-			} else if (select.getSelectFieldType() == GenQuerySelectField.SelectFieldTypes.FILE_ACCESS) {
+			} else if (select.getSelectFieldType() == GenQueryField.SelectFieldTypes.FILE_ACCESS) {
 				subTags[j] = new Tag(IVALUE, 1024);
 			} else {
 				throw new JargonException(

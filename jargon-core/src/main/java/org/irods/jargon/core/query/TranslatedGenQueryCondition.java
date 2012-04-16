@@ -3,7 +3,7 @@
  */
 package org.irods.jargon.core.query;
 
-import org.irods.jargon.core.query.GenQuerySelectField.SelectFieldSource;
+import org.irods.jargon.core.query.GenQueryField.SelectFieldSource;
 
 /**
  * Represents the field name, operator, and value for a condition in an IRODS
@@ -16,7 +16,7 @@ import org.irods.jargon.core.query.GenQuerySelectField.SelectFieldSource;
  */
 public class TranslatedGenQueryCondition {
 	private final String columnName;
-	private final SelectFieldSource fieldSource;
+	private final org.irods.jargon.core.query.GenQueryField.SelectFieldSource fieldSource;
 	private final String columnNumericTranslation;
 	private final String operator;
 	private final String value;
@@ -58,6 +58,27 @@ public class TranslatedGenQueryCondition {
 	 * @throws JargonQueryException
 	 */
 	public static TranslatedGenQueryCondition instanceForExtensibleMetaData(
+			final String fieldName, final String operator, final String value,
+			final String columnNumericTranslation) throws JargonQueryException {
+		return new TranslatedGenQueryCondition(fieldName, operator, value,
+				columnNumericTranslation);
+	}
+
+	/**
+	 * Static initializer when the field is given as a string that is the
+	 * translated name of the field in a format that GenQuery will understand.
+	 * 
+	 * @param fieldName
+	 *            <code>String</code> with the translated value for the
+	 *            condition.
+	 * @param operator
+	 *            <code>String</code> with the operator.
+	 * @param value
+	 *            <code>String</code> with the value component of the condition.
+	 * @return <code>TranslatedQueryCondition</code> object.
+	 * @throws JargonQueryException
+	 */
+	public static TranslatedGenQueryCondition instanceWithFieldNameAndNumericTranslation(
 			final String fieldName, final String operator, final String value,
 			final String columnNumericTranslation) throws JargonQueryException {
 		return new TranslatedGenQueryCondition(fieldName, operator, value,

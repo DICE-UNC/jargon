@@ -2,7 +2,6 @@ package org.irods.jargon.core.query;
 
 import junit.framework.Assert;
 
-import org.irods.jargon.core.exception.JargonException;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -24,13 +23,13 @@ public class IRODSGenQueryTest {
 		Assert.assertEquals(1, query.getNumberOfResultsDesired());
 	}
 
-	@Test(expected = JargonException.class)
+	@Test(expected = IllegalArgumentException.class)
 	public final void testInstanceNullQuery() throws Exception {
 		IRODSGenQuery.instance(null, 0);
 
 	}
 
-	@Test(expected = JargonException.class)
+	@Test(expected = IllegalArgumentException.class)
 	public final void testInstanceZeroResults() throws Exception {
 		IRODSGenQuery.instance("test", 0);
 	}

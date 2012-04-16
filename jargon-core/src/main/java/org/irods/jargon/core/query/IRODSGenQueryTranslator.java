@@ -1,6 +1,3 @@
-/**
- * 
- */
 package org.irods.jargon.core.query;
 
 import java.util.ArrayList;
@@ -9,7 +6,7 @@ import java.util.StringTokenizer;
 
 import org.irods.jargon.core.connection.IRODSServerProperties;
 import org.irods.jargon.core.exception.JargonException;
-import org.irods.jargon.core.query.GenQuerySelectField.SelectFieldTypes;
+import org.irods.jargon.core.query.GenQueryField.SelectFieldTypes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

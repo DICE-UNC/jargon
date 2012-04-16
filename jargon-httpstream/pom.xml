@@ -7,7 +7,7 @@
     <version>3.1.2-SNAPSHOT</version>
   </parent>
   <groupId>org.irods.jargon</groupId>
-  <artifactId>jargon-httpstream</artifactId>
+  <artifactId>jargon-httpstream</artifactId> 
   <version>3.1.2-SNAPSHOT</version>
   <name>Jargon HttpStream</name>
   <url>http://maven.apache.org</url>
