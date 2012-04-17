@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Properties;
 
 import junit.framework.Assert;
+import junit.framework.TestCase;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.DataNotFoundException;
@@ -2429,6 +2430,70 @@ public class TicketAdminServiceImplTest {
 
 		// delete ticket after done
 		ticketSvc.deleteTicket(ticketId);
+
+	}
+
+	/**
+	 * create a ticket then make sure I can tell it's in use
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void testIsTicketInUseWhenExists() throws Exception {
+
+		if (!testTicket) {
+			return;
+		}
+
+		String testCollection = "testIsTicketInUseWhenExists";
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
+								+ testCollection);
+		IRODSFile targetFile = accessObjectFactory.getIRODSFileFactory(
+				irodsAccount).instanceIRODSFile(targetIrodsCollection);
+		targetFile.mkdirs();
+
+		TicketAdminService ticketSvc = new TicketAdminServiceImpl(
+				accessObjectFactory, irodsAccount);
+
+		String ticketId = ticketSvc.createTicket(
+				TicketCreateModeEnum.TICKET_CREATE_READ, targetFile, null);
+
+		boolean inUse = ticketSvc.isTicketInUse(ticketId);
+		TestCase.assertTrue("ticket should be in use", inUse);
+
+	}
+
+	/**
+	 * check that a ticket not in use does not exist
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void testIsTicketInUseWhenNotExists() throws Exception {
+
+		if (!testTicket) {
+			return;
+		}
+
+		String testCollection = "testIsTicketInUseWhenNotExists";
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
+		TicketAdminService ticketSvc = new TicketAdminServiceImpl(
+				accessObjectFactory, irodsAccount);
+
+		boolean inUse = ticketSvc.isTicketInUse(testCollection);
+		TestCase.assertFalse("ticket should not be in use", inUse);
 
 	}
 

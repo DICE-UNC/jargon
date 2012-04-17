@@ -140,15 +140,41 @@ public class IRODSGenQueryBuilder {
 		if (value == null || value.isEmpty()) {
 			throw new IllegalArgumentException("null or empty value");
 		}
-		
-		GenQueryBuilderCondition genQueryBuilderCondition = GenQueryBuilderCondition
-				.instance(rodsGenQueryEnumValue.getName(),
-						SelectFieldSource.DEFINED_QUERY_FIELD,
-						String.valueOf(rodsGenQueryEnumValue.getNumericValue()),
-						operator,
-						value);
 
-		conditions.add(genQueryBuilderCondition);
+		/*
+		 * Format the query based on the operator TODO: add handling for tables,
+		 * in, etc
+		 */
+		if (operator == QueryConditionOperators.NUMERIC_GREATER_THAN_OR_EQUAL_TO
+				|| operator == QueryConditionOperators.NUMERIC_GREATER_THAN
+				|| operator == QueryConditionOperators.NUMERIC_LESS_THAN_OR_EQUAL_TO
+				|| operator == QueryConditionOperators.NUMERIC_LESS_THAN
+				|| operator == QueryConditionOperators.NUMERIC_EQUAL) {
+			GenQueryBuilderCondition genQueryBuilderCondition = GenQueryBuilderCondition
+					.instance(rodsGenQueryEnumValue.getName(),
+							SelectFieldSource.DEFINED_QUERY_FIELD, String
+									.valueOf(rodsGenQueryEnumValue
+											.getNumericValue()), operator,
+							value);
+
+			conditions.add(genQueryBuilderCondition);
+
+		} else {
+			// add quotes when treating as string
+			StringBuilder sb = new StringBuilder();
+			sb.append("'");
+			sb.append(value.trim());
+			sb.append("'");
+			GenQueryBuilderCondition genQueryBuilderCondition = GenQueryBuilderCondition
+					.instance(rodsGenQueryEnumValue.getName(),
+							SelectFieldSource.DEFINED_QUERY_FIELD, String
+									.valueOf(rodsGenQueryEnumValue
+											.getNumericValue()), operator, sb
+									.toString());
+
+			conditions.add(genQueryBuilderCondition);
+		}
+
 
 		return this;
 
@@ -200,28 +226,15 @@ public class IRODSGenQueryBuilder {
 					"order by field is not represented in the select statements");
 		}
 
-		GenQueryOrderByField orderByField = GenQueryOrderByField
-				.instance(
-						rodsGenQueryEnumValue.getName(),
-						SelectFieldSource.DEFINED_QUERY_FIELD,
-						String.valueOf(rodsGenQueryEnumValue.getNumericValue()),
-						orderByType);
+		GenQueryOrderByField orderByField = GenQueryOrderByField.instance(
+				rodsGenQueryEnumValue.getName(),
+				SelectFieldSource.DEFINED_QUERY_FIELD,
+				String.valueOf(rodsGenQueryEnumValue.getNumericValue()),
+				orderByType);
 
 		orderByFields.add(orderByField);
 		return this;
 
-	}
-
-	/**
-	 * Creates an <code>IRODSGenQueryBuilderQueryData</code> based on the contents
-	 * of this query.
-	 * 
-	 * @return {@link IRODSGenQueryBuilderQueryData</code> that may be used to
-	 *         create the query protocol
-	 */
-	public IRODSGenQueryBuilderQueryData exportFromBuilder() {
-		return IRODSGenQueryBuilderQueryData.instance(selectFields, conditions,
-				orderByFields, distinct);
 	}
 
 	/**
@@ -261,5 +274,35 @@ public class IRODSGenQueryBuilder {
 	public boolean isDistinct() {
 		return distinct;
 	}
+
+	/**
+	 * Return a query that can be executed by the general query execution
+	 * service
+	 * 
+	 * @param numberOfResultsDesired
+	 *            <code>int</code> that is >= 1 indicating the number of desired
+	 *            results
+	 * @return {@link IRODSGenQueryFromBuilder} that can be executed by the
+	 *         general query executor service
+	 * @throws GenQueryBuilderException
+	 *             if hte query cannot be built
+	 */
+	public IRODSGenQueryFromBuilder exportIRODSQueryFromBuilder(
+			final int numberOfResultsDesired) throws GenQueryBuilderException {
+		if (numberOfResultsDesired <= 0) {
+			throw new IllegalArgumentException(
+					"numberOfResultsDesired must be >= 1");
+		}
+		IRODSGenQueryBuilderQueryData queryData = IRODSGenQueryBuilderQueryData.instance(selectFields, conditions, orderByFields, distinct);
+
+		if (!queryData.isQueryValid()) {
+			throw new GenQueryBuilderException(
+					"query is not valid, cannot export");
+		}
+
+		return IRODSGenQueryFromBuilder.instance(queryData,
+				numberOfResultsDesired);
+	}
+
 
 }

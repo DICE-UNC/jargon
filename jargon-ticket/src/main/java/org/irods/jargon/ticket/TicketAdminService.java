@@ -319,4 +319,14 @@ public interface TicketAdminService {
 	 * 
 	 */
 	boolean deleteAllTicketsForThisUser() throws JargonException;
+
+	/**
+	 * Is the given ticket string already in use?
+	 * 
+	 * @param ticketString
+	 *            <code>String</code> which is the generated key for the ticket
+	 * @return <code>boolean</code> of <code>true</code> if the ticket is in use
+	 * @throws JargonException
+	 */
+	boolean isTicketInUse(final String ticketString) throws JargonException;
 }

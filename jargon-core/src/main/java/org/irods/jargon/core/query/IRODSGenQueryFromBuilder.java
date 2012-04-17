@@ -20,6 +20,23 @@ public class IRODSGenQueryFromBuilder extends AbstractIRODSGenQuery {
 	private final IRODSGenQueryBuilderQueryData irodsGenQueryBuilderData;
 
 	/**
+	 * Creates a query that can be processed against iRODS.
+	 * 
+	 * @param irodsGenQueryBuilderData
+	 *            {@link IRODSGenQueryBuilderQueryData} that contains the actual
+	 *            query data
+	 * @param numberOfResultsDesired
+	 *            <code>int</code> with the number of results desired from the
+	 *            query
+	 */
+	public static IRODSGenQueryFromBuilder instance(
+			final IRODSGenQueryBuilderQueryData irodsGenQueryBuilderData,
+			final int numberOfResultsDesired) {
+		return new IRODSGenQueryFromBuilder(irodsGenQueryBuilderData,
+				numberOfResultsDesired);
+	}
+
+	/**
 	 * Constructor creates a query that can be processed against iRODS.
 	 * 
 	 * @param irodsGenQueryBuilderData

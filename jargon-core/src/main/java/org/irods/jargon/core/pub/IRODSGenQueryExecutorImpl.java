@@ -189,8 +189,6 @@ public final class IRODSGenQueryExecutorImpl extends IRODSGenericAO implements
 		}
 
 		log.info("query: {}", irodsQuery);
-		IRODSGenQueryTranslator irodsQueryTranslator = new IRODSGenQueryTranslator(
-				getIRODSServerProperties());
 		TranslatedIRODSGenQuery translatedIRODSQuery = translateProvidedQuery(irodsQuery);
 
 		return executeTranslatedIRODSQuery(translatedIRODSQuery, 0,
@@ -234,8 +232,6 @@ public final class IRODSGenQueryExecutorImpl extends IRODSGenericAO implements
 		}
 
 		log.info("query: {}", irodsQuery);
-		IRODSGenQueryTranslator irodsQueryTranslator = new IRODSGenQueryTranslator(
-				getIRODSServerProperties());
 		TranslatedIRODSGenQuery translatedIRODSQuery = translateProvidedQuery(irodsQuery);
 
 		return executeTranslatedIRODSQuery(translatedIRODSQuery, 0,

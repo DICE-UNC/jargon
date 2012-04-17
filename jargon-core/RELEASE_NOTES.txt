@@ -50,5 +50,7 @@ Note that the following bug and feature requests are logged in GForge with relat
 ==Features==
 
  * [#5] GenQuery Enhancements
- ** adding a new query builder model for more efficient and expressive gen query statements (work in progress)
+ ** new query builder model allows easier programmatic building of General Query
  
+ * [#713] additional query and data generation methods for tickets
+ ** added method to check if a ticket is in use

@@ -8,14 +8,14 @@ package org.irods.jargon.core.query;
  * 
  */
 public enum QueryConditionOperators {
-	
-	NOT_EQUAL("<>"), LESS_THAN_OR_EQUAL_TO("<="), GREATER_THAN_OR_EQUAL_TO(
-			">="), NOT_IN("not in"), NOT_BETWEEN(
-			"not between"), NOT_LIKE("not like"), SOUNDS_LIKE("sounds like"), SOUNDS_NOT_LIKE("sounds not like"),
-			TABLE("table"), NUMERIC_LESS_THAN("num<"), NUMERIC_LESS_THAN_OR_EQUAL_TO("NUM<="),
-			NUMERIC_GREATER_THAN_OR_EQUAL_TO("num>="),
-			EQUAL("="), LESS_THAN("<"), GREATER_THAN(">"),
-			IN("in"), BETWEEN("between"), LIKE("like");
+
+	NOT_EQUAL("<>"), LESS_THAN_OR_EQUAL_TO("<="), GREATER_THAN_OR_EQUAL_TO(">="), NOT_IN(
+			"not in"), NOT_BETWEEN("not between"), NOT_LIKE("not like"), SOUNDS_LIKE(
+			"sounds like"), SOUNDS_NOT_LIKE("sounds not like"), TABLE("table"), NUMERIC_LESS_THAN(
+			"num<"), NUMERIC_LESS_THAN_OR_EQUAL_TO("NUM<="), NUMERIC_GREATER_THAN_OR_EQUAL_TO(
+			"num>="), NUMERIC_GREATER_THAN("num>"), NUMERIC_EQUAL("num="), EQUAL(
+			"="), LESS_THAN("<"), GREATER_THAN(">"), IN("in"), BETWEEN(
+			"between"), LIKE("like");
 
 	private String operatorAsString;
 

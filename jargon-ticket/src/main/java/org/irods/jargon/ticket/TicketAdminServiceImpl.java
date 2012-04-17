@@ -15,11 +15,14 @@ import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 import org.irods.jargon.core.pub.IRODSGenQueryExecutor;
 import org.irods.jargon.core.pub.ProtocolExtensionPoint;
 import org.irods.jargon.core.pub.io.IRODSFile;
+import org.irods.jargon.core.query.GenQueryBuilderException;
 import org.irods.jargon.core.query.IRODSGenQuery;
+import org.irods.jargon.core.query.IRODSGenQueryBuilder;
 import org.irods.jargon.core.query.IRODSQueryResultRow;
 import org.irods.jargon.core.query.IRODSQueryResultSet;
 import org.irods.jargon.core.query.IRODSQueryResultSetInterface;
 import org.irods.jargon.core.query.JargonQueryException;
+import org.irods.jargon.core.query.QueryConditionOperators;
 import org.irods.jargon.core.query.RodsGenQueryEnum;
 import org.irods.jargon.core.utils.IRODSDataConversionUtil;
 import org.irods.jargon.ticket.packinstr.TicketAdminInp;
@@ -1232,6 +1235,54 @@ public final class TicketAdminServiceImpl implements TicketAdminService {
 		} else {
 			throw new DataNotFoundException(TICKET_NOT_FOUND);
 		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.ticket.TicketAdminService#isTicketInUse(java.lang.String
+	 * )
+	 */
+	@Override
+	public boolean isTicketInUse(final String ticketString)
+			throws JargonException {
+		log.info("isTicketInUse()");
+		if (ticketString == null || ticketString.isEmpty()) {
+			throw new IllegalArgumentException("null or empty ticketString");
+		}
+		log.info("ticketString:{}", ticketString);
+		
+		boolean ticketFound = false;
+		try {
+			IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, null);
+			builder
+					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_TICKET_STRING)
+					.addConditionAsGenQueryField(
+							RodsGenQueryEnum.COL_TICKET_STRING,
+							QueryConditionOperators.EQUAL, ticketString);
+			IRODSGenQueryExecutor irodsGenQueryExecutor = irodsAccessObjectFactory
+					.getIRODSGenQueryExecutor(irodsAccount);
+
+			IRODSQueryResultSetInterface resultSet = irodsGenQueryExecutor
+					.executeIRODSQueryAndCloseResult(
+							builder.exportIRODSQueryFromBuilder(1), 0);
+
+			if (!resultSet.getResults().isEmpty()) {
+				log.info("found the ticket");
+				ticketFound = true;
+			}
+			
+		} catch (GenQueryBuilderException e) {
+			log.error("GenQueryBuilderException in ticket query", e);
+			throw new JargonException(
+					"genQueryBuilderException building ticket query", e);
+		} catch (JargonQueryException e) {
+			log.error("jargonQueryException in ticket query", e);
+			throw new JargonException(
+					"jargonQueryException building ticket query", e);
+		}
+		return ticketFound;
 	}
 
 	public IRODSAccessObjectFactory getIrodsAccessObjectFactory() {

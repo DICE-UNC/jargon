@@ -13,7 +13,7 @@ import java.util.List;
  * @author Mike Conway - DICE (www.irods.org)
  * 
  */
-public class IRODSGenQueryBuilderQueryData {
+class IRODSGenQueryBuilderQueryData {
 
 	private final List<GenQuerySelectField> selectFields;
 	private final List<GenQueryBuilderCondition> conditions;
