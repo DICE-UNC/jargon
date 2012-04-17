@@ -1,5 +1,6 @@
 package org.irods.jargon.core.pub;
 
+import org.irods.jargon.core.exception.CollectionNotEmptyException;
 import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.DuplicateDataException;
 import org.irods.jargon.core.exception.JargonException;
@@ -165,7 +166,7 @@ public interface IRODSRegistrationOfFilesAO {
 	 *         <code>false</code>
 	 * @throws JargonException
 	 */
-	boolean unregisterButDoNotDeletePhysicalFile(final String irodsAbsolutePath)
+	boolean unregisterDataObject(final String irodsAbsolutePath)
 			throws JargonException;
 
 	/**
@@ -211,5 +212,29 @@ public interface IRODSRegistrationOfFilesAO {
 			final String resourceGroup, final boolean generateChecksumInIRODS)
 			throws DataNotFoundException, DuplicateDataException,
 			JargonException;
+
+	/**
+	 * Remove this registered collection from the iRODS catalog. Note that this
+	 * method does not delete the physical files, rather it removes them from
+	 * the catalog but leavess
+	 * <p/>
+	 * This method is analagous to calling the irm icommand with the -U flag.
+	 * Please see: https://www.irods.org/index.php/irm
+	 * 
+	 * @param irodsAbsolutePath
+	 *            <code>String</code> with the absolute path to the iRODS
+	 *            collection
+	 * @param recursive
+	 *            <code>boolean</code> that indicates that the unregister
+	 *            operation should descend child directories
+	 * @return <code>boolean</code> that will be <code>true</code> if the
+	 *         unregister operation was successful.
+	 * @throws CollectionNotEmptyException
+	 *             if the collection is not empty, and recursion is not
+	 *             specified
+	 * @throws JargonException
+	 */
+	boolean unregisterCollection(String irodsAbsolutePath, boolean recursive)
+			throws CollectionNotEmptyException, JargonException;
 
 }

@@ -4,9 +4,11 @@ import java.io.File;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSSession;
+import org.irods.jargon.core.exception.CollectionNotEmptyException;
 import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.DuplicateDataException;
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.packinstr.CollInp;
 import org.irods.jargon.core.packinstr.DataObjInpForReg;
 import org.irods.jargon.core.packinstr.DataObjInpForReg.ChecksumHandling;
 import org.irods.jargon.core.packinstr.DataObjInpForUnregister;
@@ -238,10 +240,10 @@ public class IRODSRegistrationOfFilesAOImpl extends IRODSGenericAO implements
 	 * (non-Javadoc)
 	 * 
 	 * @see org.irods.jargon.core.pub.IRODSRegistrationOfFilesAO#
-	 * unregisterButDoNotDeletePhysicalFile(java.lang.String)
+	 * unregisterDataObject(java.lang.String)
 	 */
 	@Override
-	public boolean unregisterButDoNotDeletePhysicalFile(
+	public boolean unregisterDataObject(
 			final String irodsAbsolutePath) throws JargonException {
 		log.info("unregisterButDoNotDeletePhysicalFile()");
 
@@ -257,6 +259,46 @@ public class IRODSRegistrationOfFilesAOImpl extends IRODSGenericAO implements
 
 		try {
 			Tag response = getIRODSProtocol().irodsFunction(dataObjInp);
+
+			if (response != null) {
+				log.warn("unexpected response from irods, expected null message - logged and ignored ");
+			}
+		} catch (DuplicateDataException dde) {
+			log.warn("duplicate data exception logged and ignored, see GForge: [#639] 809000 errors on delete operations when trash file already exists");
+		} catch (DataNotFoundException dnf) {
+			success = false;
+		}
+
+		return success;
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.IRODSRegistrationOfFilesAO#unregisterCollection
+	 * (java.lang.String, boolean)
+	 */
+	@Override
+	public boolean unregisterCollection(final String irodsAbsolutePath,
+			final boolean recursive) throws CollectionNotEmptyException,
+			JargonException {
+		log.info("unregisterCollection()");
+
+		boolean success = true;
+		if (irodsAbsolutePath == null || irodsAbsolutePath.isEmpty()) {
+			throw new IllegalArgumentException("null or empty absolutePath");
+		}
+
+		log.info("irodsAbsolutePath:{}", irodsAbsolutePath);
+
+		CollInp collInp = CollInp.instanceForUnregisterCollection(
+				irodsAbsolutePath, false, recursive);
+
+		try {
+			Tag response = getIRODSProtocol().irodsFunction(CollInp.PI_TAG,
+					collInp.getParsedTags(), CollInp.RMDIR_API_NBR);
 
 			if (response != null) {
 				log.warn("unexpected response from irods, expected null message - logged and ignored ");

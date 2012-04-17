@@ -9,6 +9,7 @@ import junit.framework.Assert;
 import junit.framework.TestCase;
 
 import org.irods.jargon.core.connection.IRODSAccount;
+import org.irods.jargon.core.exception.CollectionNotEmptyException;
 import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.DuplicateDataException;
 import org.irods.jargon.core.exception.JargonException;
@@ -433,7 +434,7 @@ public class IRODSRegistrationOfFilesAOImplTest {
 		assertionHelper.assertIrodsFileOrCollectionExists(targetIrodsCollection
 				+ "/" + testFileName);
 
-		ao.unregisterButDoNotDeletePhysicalFile(targetIrodsCollection + "/"
+		ao.unregisterDataObject(targetIrodsCollection + "/"
 				+ testFileName);
 		File localFile = new File(fileNameOrig);
 		Assert.assertTrue("local file is missing", localFile.exists());
@@ -468,7 +469,7 @@ public class IRODSRegistrationOfFilesAOImplTest {
 						testingProperties, IRODS_TEST_SUBDIR_PATH);
 
 		boolean status = ao
-				.unregisterButDoNotDeletePhysicalFile(targetIrodsCollection
+				.unregisterDataObject(targetIrodsCollection
 						+ "/" + testFileName);
 
 		Assert.assertFalse("should have gotten a false on this delete", status);
@@ -567,6 +568,102 @@ public class IRODSRegistrationOfFilesAOImplTest {
 
 		assertionHelper.assertIrodsFileOrCollectionExists(targetIrodsCollection
 				+ "/" + testFileName);
+	}
+
+	/**
+	 * Create a nested collection and then unregister it recursively
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public final void testUnregisterPhysicalCollectionRecursively()
+			throws Exception {
+		String rootCollection = "testUnregisterPhysicalCollectionRecursively";
+		String localCollectionAbsolutePath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH
+						+ '/' + rootCollection);
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		FileGenerator
+				.generateManyFilesAndCollectionsInParentCollectionByAbsolutePath(
+						localCollectionAbsolutePath,
+						"testPutCollectionWithTwoFiles", 1, 1, 1, "testFile",
+						".txt", 2, 2, 1, 2);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSRegistrationOfFilesAO ao = irodsFileSystem
+				.getIRODSAccessObjectFactory().getIRODSRegistrationOfFilesAO(
+						irodsAccount);
+
+		ao.registerPhysicalCollectionRecursivelyToIRODS(
+				localCollectionAbsolutePath,
+				targetIrodsCollection,
+				false,
+				testingProperties
+						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
+				"");
+
+		ao.unregisterCollection(targetIrodsCollection, true);
+
+		IRODSFile parentFile = irodsFileSystem
+				.getIRODSFileFactory(irodsAccount).instanceIRODSFile(
+						targetIrodsCollection
+								+ "/testPutCollectionWithTwoFileslvl1nbr0");
+		TestCase.assertFalse("irodsCollection should not exist",
+				parentFile.exists());
+
+	}
+
+	/**
+	 * Create a nested collection and then unregister it without recursion
+	 * 
+	 * @throws Exception
+	 */
+	@Test(expected = CollectionNotEmptyException.class)
+	public final void testUnregisterPhysicalCollectionNoRecursive()
+			throws Exception {
+		String rootCollection = "testUnregisterPhysicalCollectionNoRecursive";
+		String localCollectionAbsolutePath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH
+						+ '/' + rootCollection);
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		FileGenerator
+				.generateManyFilesAndCollectionsInParentCollectionByAbsolutePath(
+						localCollectionAbsolutePath,
+						"testPutCollectionWithTwoFiles", 1, 1, 1, "testFile",
+						".txt", 2, 2, 1, 2);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSRegistrationOfFilesAO ao = irodsFileSystem
+				.getIRODSAccessObjectFactory().getIRODSRegistrationOfFilesAO(
+						irodsAccount);
+
+		ao.registerPhysicalCollectionRecursivelyToIRODS(
+				localCollectionAbsolutePath,
+				targetIrodsCollection,
+				false,
+				testingProperties
+						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
+				"");
+
+		ao.unregisterCollection(targetIrodsCollection, false);
+
+		IRODSFile parentFile = irodsFileSystem
+				.getIRODSFileFactory(irodsAccount).instanceIRODSFile(
+						targetIrodsCollection
+								+ "/testPutCollectionWithTwoFileslvl1nbr0");
+		TestCase.assertFalse("irodsCollection should not exist",
+				parentFile.exists());
+
 	}
 
 }
