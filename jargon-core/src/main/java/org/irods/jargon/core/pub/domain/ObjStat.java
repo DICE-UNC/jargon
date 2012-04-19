@@ -3,6 +3,7 @@ package org.irods.jargon.core.pub.domain;
 import java.util.Date;
 
 import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry;
+import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry.ObjectType;
 
 /**
  * Represents an object stat value as returned from the iRODS rsObjStat. NOTE:
@@ -204,6 +205,17 @@ public class ObjStat {
 	 */
 	public void setSpecColType(final SpecColType specColType) {
 		this.specColType = specColType;
+	}
+
+	/**
+	 * Convenience methods determines if this is any type of collection, versus
+	 * a file or data object
+	 * 
+	 * @return <code>boolean</code> of <code>true</code> if this is any type of
+	 *         collection or directory;
+	 */
+	public boolean isSomeTypeOfCollection() {
+		return (objectType == ObjectType.COLLECTION || objectType == ObjectType.LOCAL_DIR);
 	}
 
 }

@@ -7,6 +7,7 @@ import java.util.List;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.DuplicateDataException;
+import org.irods.jargon.core.exception.FileNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.packinstr.Tag;
 import org.irods.jargon.core.protovalues.ErrorEnum;
@@ -14,6 +15,7 @@ import org.irods.jargon.core.pub.CollectionAO;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 import org.irods.jargon.core.pub.IRODSGenQueryExecutor;
 import org.irods.jargon.core.pub.ProtocolExtensionPoint;
+import org.irods.jargon.core.pub.domain.ObjStat;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.query.GenQueryBuilderException;
 import org.irods.jargon.core.query.IRODSGenQuery;
@@ -270,6 +272,184 @@ public final class TicketAdminServiceImpl implements TicketAdminService {
 
 		} catch (JargonQueryException e) {
 			log.error("query exception for ticket query:{}", irodsQuery, e);
+			throw new JargonException(ERROR_IN_TICKET_QUERY, e);
+		}
+
+		return tickets;
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.ticket.TicketAdminService#listAllTicketsForGivenCollection
+	 * (java.lang.String, int)
+	 */
+	@Override
+	public List<Ticket> listAllTicketsForGivenCollection(final String irodsAbsolutePath, final int partialStartIndex)
+			throws FileNotFoundException, JargonException {
+
+		log.info("listAllTicketsForGivenCollection()");
+		
+		if (irodsAbsolutePath == null || irodsAbsolutePath.isEmpty()) {
+			throw new IllegalArgumentException("null or empty irodsAbsolutePath");
+		}
+
+		if (partialStartIndex < 0) {
+			throw new IllegalArgumentException(
+					"partial start index must be >= 0");
+		}
+		
+		log.info("irodsAbsolutePath:{}", irodsAbsolutePath);
+		log.info("partialStartIndex:{}", partialStartIndex);
+		
+		log.info("getting objStat...");
+
+		ObjStat objStat = irodsAccessObjectFactory
+				.getCollectionAndDataObjectListAndSearchAO(getIrodsAccount())
+				.retrieveObjectStatForPath(irodsAbsolutePath);
+
+		if (!objStat.isSomeTypeOfCollection()) {
+			log.error(
+					"ObjStat indicates that this is not some type of collection:{}",
+					objStat);
+			throw new JargonException("path is not a collection");
+		}
+
+		List<Ticket> tickets = new ArrayList<Ticket>();
+
+		IRODSQueryResultSet resultSet = null;
+
+		try {
+			IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, null);
+			addSelectsForTicketsCommonToQueryBuilder(builder);
+			addQuerySelectsForListAllTicketsForCollections(builder);
+			builder.addConditionAsGenQueryField(
+					RodsGenQueryEnum.COL_TICKET_COLL_NAME,
+					QueryConditionOperators.EQUAL, irodsAbsolutePath);
+
+			IRODSGenQueryExecutor irodsGenQueryExecutor = irodsAccessObjectFactory
+					.getIRODSGenQueryExecutor(irodsAccount);
+
+			resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResult(
+							builder.exportIRODSQueryFromBuilder(this
+									.getIrodsAccessObjectFactory()
+									.getJargonProperties()
+									.getMaxFilesAndDirsQueryMax()),
+							partialStartIndex);
+			Ticket ticket = null;
+			for (IRODSQueryResultRow row : resultSet.getResults()) {
+				ticket = new Ticket();
+				putResultDataIntoTicketCommonValues(ticket, row);
+				ticket.setIrodsAbsolutePath(row.getColumn(13));
+				// add info to track position in records for possible requery
+				ticket.setLastResult(row.isLastResult());
+				ticket.setCount(row.getRecordCount());
+				log.info("adding ticket to results:{}", ticket);
+				tickets.add(ticket);
+			}
+
+		} catch (JargonQueryException e) {
+			log.error("query exception for ticket query", e);
+			throw new JargonException(ERROR_IN_TICKET_QUERY, e);
+		} catch (GenQueryBuilderException e) {
+			log.error("query exception for ticket query", e);
+			throw new JargonException(ERROR_IN_TICKET_QUERY, e);
+		}
+
+		return tickets;
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.ticket.TicketAdminService#listAllTicketsForGivenDataObject
+	 * (java.lang.String, int)
+	 */
+	@Override
+	public List<Ticket> listAllTicketsForGivenDataObject(
+			final String irodsAbsolutePath, final int partialStartIndex)
+			throws FileNotFoundException, JargonException {
+
+		log.info("listAllTicketsForGivenDataObject()");
+
+		if (irodsAbsolutePath == null || irodsAbsolutePath.isEmpty()) {
+			throw new IllegalArgumentException(
+					"null or empty irodsAbsolutePath");
+		}
+
+		if (partialStartIndex < 0) {
+			throw new IllegalArgumentException(
+					"partial start index must be >= 0");
+		}
+
+		log.info("irodsAbsolutePath:{}", irodsAbsolutePath);
+		log.info("partialStartIndex:{}", partialStartIndex);
+
+		log.info("getting objStat...");
+
+		ObjStat objStat = irodsAccessObjectFactory
+				.getCollectionAndDataObjectListAndSearchAO(getIrodsAccount())
+				.retrieveObjectStatForPath(irodsAbsolutePath);
+
+		if (objStat.isSomeTypeOfCollection()) {
+			log.error(
+					"ObjStat indicates that this is not some type of data object:{}",
+					objStat);
+			throw new JargonException("path is not a data object");
+		}
+
+		List<Ticket> tickets = new ArrayList<Ticket>();
+
+		IRODSQueryResultSet resultSet = null;
+		IRODSFile dataFile = irodsAccessObjectFactory.getIRODSFileFactory(
+				getIrodsAccount()).instanceIRODSFile(irodsAbsolutePath);
+
+		try {
+			IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, null);
+			addSelectsForTicketsCommonToQueryBuilder(builder);
+			addQuerySelectsForListAllTicketsForDataObjects(builder);
+			builder.addConditionAsGenQueryField(
+					RodsGenQueryEnum.COL_TICKET_DATA_NAME,
+					QueryConditionOperators.EQUAL, dataFile.getName())
+					.addConditionAsGenQueryField(
+							RodsGenQueryEnum.COL_TICKET_DATA_COLL_NAME,
+							QueryConditionOperators.EQUAL, dataFile.getParent());
+
+			IRODSGenQueryExecutor irodsGenQueryExecutor = irodsAccessObjectFactory
+					.getIRODSGenQueryExecutor(irodsAccount);
+
+			resultSet = irodsGenQueryExecutor
+					.executeIRODSQueryAndCloseResult(
+							builder.exportIRODSQueryFromBuilder(this
+									.getIrodsAccessObjectFactory()
+									.getJargonProperties()
+									.getMaxFilesAndDirsQueryMax()),
+							partialStartIndex);
+			Ticket ticket = null;
+			for (IRODSQueryResultRow row : resultSet.getResults()) {
+				ticket = new Ticket();
+				putResultDataIntoTicketCommonValues(ticket, row);
+				StringBuilder absPathBuilder = new StringBuilder();
+				absPathBuilder.append(row.getColumn(14));
+				absPathBuilder.append('/');
+				absPathBuilder.append(row.getColumn(13));
+				ticket.setIrodsAbsolutePath(absPathBuilder.toString());
+				// add info to track position in records for possible requery
+				ticket.setLastResult(row.isLastResult());
+				ticket.setCount(row.getRecordCount());
+				log.info("adding ticket to results:{}", ticket);
+				tickets.add(ticket);
+			}
+
+		} catch (JargonQueryException e) {
+			log.error("query exception for ticket query", e);
+			throw new JargonException(ERROR_IN_TICKET_QUERY, e);
+		} catch (GenQueryBuilderException e) {
+			log.error("query exception for ticket query", e);
 			throw new JargonException(ERROR_IN_TICKET_QUERY, e);
 		}
 
@@ -1023,6 +1203,22 @@ public final class TicketAdminServiceImpl implements TicketAdminService {
 	}
 
 	/**
+	 * Add the collection specific elements to a query
+	 * 
+	 * @param builder
+	 *            {@link IRODSGenQueryBuilder}
+	 * @throws GenQueryBuilderException
+	 */
+	private void addQuerySelectsForListAllTicketsForCollections(IRODSGenQueryBuilder builder)throws GenQueryBuilderException {
+
+		if (builder == null) {
+			throw new IllegalArgumentException("null builder");
+		}
+		
+		builder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_TICKET_COLL_NAME);
+	}
+
+	/**
 	 * Given a <code>String</code> representation of an object type for the
 	 * ticket in iRODS, return an emum equivalent value
 	 * 
@@ -1044,53 +1240,6 @@ public final class TicketAdminServiceImpl implements TicketAdminService {
 		}
 	}
 
-	//
-	// @Override
-	// public IRODSQueryResultSetInterface
-	// getTicketsForSpecifiedDataObjectPath(String path, int continueIndex)
-	// throws JargonException, JargonQueryException {
-	//
-	// //// NEED to rewrite this - have to do query for both data object name
-	// and data object collection in the case of the data object type.
-	//
-	// IRODSQueryResultSetInterface resultSet = null;
-	// ObjectType objType = null;
-	// String type = null;
-	// String colName = null;
-	//
-	// CollectionAndDataObjectListAndSearchAO listAndSearch =
-	// irodsAccessObjectFactory
-	// .getCollectionAndDataObjectListAndSearchAO(irodsAccount);
-	// ObjStat objStat = listAndSearch.retrieveObjectStatForPath(path);
-	// objType = objStat.getObjectType();
-	// if (objType == ObjectType.COLLECTION) {
-	// type = "collection";
-	// colName = RodsGenQueryEnum.COL_TICKET_COLL_NAME.getName();
-	// }
-	// else
-	// if (objType == ObjectType.DATA_OBJECT) {
-	// type = "data";
-	// colName = RodsGenQueryEnum.COL_TICKET_DATA_COLL_NAME.getName();
-	// }
-	// else {
-	// throw new JargonException("illegal data object type");
-	// }
-	//
-	// String queryString = buildQueryStringForTicketLS(
-	// colName, path, type);
-	//
-	// IRODSGenQuery irodsQuery = IRODSGenQuery.instance(queryString, 100);
-	//
-	// IRODSGenQueryExecutor irodsGenQueryExecutor = irodsAccessObjectFactory
-	// .getIRODSGenQueryExecutor(irodsAccount);
-	//
-	// resultSet =
-	// irodsGenQueryExecutor.executeIRODSQueryAndCloseResult(irodsQuery,
-	// continueIndex);
-	//
-	// return resultSet;
-	//
-	// }
 
 	/**
 	 * Build the select portion of the gen query when querying for tickets
@@ -1111,6 +1260,25 @@ public final class TicketAdminServiceImpl implements TicketAdminService {
 
 		return queryString.toString();
 
+	}
+
+	/**
+	 * Add the data object specific elements to a query
+	 * 
+	 * @param builder
+	 *            {@link IRODSGenQueryBuilder}
+	 * @throws GenQueryBuilderException
+	 */
+	private void addQuerySelectsForListAllTicketsForDataObjects(
+			IRODSGenQueryBuilder builder) throws GenQueryBuilderException {
+
+		if (builder == null) {
+			throw new IllegalArgumentException("null builder");
+		}
+
+		builder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_TICKET_DATA_NAME)
+				.addSelectAsGenQueryValue(
+						RodsGenQueryEnum.COL_TICKET_DATA_COLL_NAME);
 	}
 
 	/**
@@ -1149,6 +1317,44 @@ public final class TicketAdminServiceImpl implements TicketAdminService {
 		queryString.append(COMMA_SPACE);
 		queryString.append(RodsGenQueryEnum.COL_TICKET_EXPIRY_TS.getName());
 		return queryString.toString();
+	}
+
+	/**
+	 * Add selects (which will be in the established order of the passed in
+	 * builder) which are the basics for tickets to use in a gen query
+	 * 
+	 * @param builder
+	 *            {@link RIODSGenQueryBuilder} to which the fields will be added
+	 */
+	private void addSelectsForTicketsCommonToQueryBuilder(
+			final IRODSGenQueryBuilder builder) throws GenQueryBuilderException {
+
+		if (builder == null) {
+			throw new IllegalArgumentException("null builder");
+		}
+
+		builder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_TICKET_ID)
+				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_TICKET_STRING)
+				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_TICKET_TYPE)
+				.addSelectAsGenQueryValue(
+						RodsGenQueryEnum.COL_TICKET_OBJECT_TYPE)
+				.addSelectAsGenQueryValue(
+						RodsGenQueryEnum.COL_TICKET_OWNER_NAME)
+				.addSelectAsGenQueryValue(
+						RodsGenQueryEnum.COL_TICKET_OWNER_ZONE)
+				.addSelectAsGenQueryValue(
+						RodsGenQueryEnum.COL_TICKET_USES_COUNT)
+				.addSelectAsGenQueryValue(
+						RodsGenQueryEnum.COL_TICKET_USES_LIMIT)
+				.addSelectAsGenQueryValue(
+						RodsGenQueryEnum.COL_TICKET_WRITE_FILE_COUNT)
+				.addSelectAsGenQueryValue(
+						RodsGenQueryEnum.COL_TICKET_WRITE_FILE_LIMIT)
+				.addSelectAsGenQueryValue(
+						RodsGenQueryEnum.COL_TICKET_WRITE_BYTE_COUNT)
+				.addSelectAsGenQueryValue(
+						RodsGenQueryEnum.COL_TICKET_WRITE_BYTE_LIMIT)
+				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_TICKET_EXPIRY_TS);
 	}
 
 	private List<String> listRestrictionsForSpecifiedTicketCommon(

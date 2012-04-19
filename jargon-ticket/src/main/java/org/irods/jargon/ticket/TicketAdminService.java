@@ -3,6 +3,7 @@ package org.irods.jargon.ticket;
 import java.util.Date;
 import java.util.List;
 
+import org.irods.jargon.core.exception.FileNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.ticket.packinstr.TicketCreateModeEnum;
@@ -329,4 +330,39 @@ public interface TicketAdminService {
 	 * @throws JargonException
 	 */
 	boolean isTicketInUse(final String ticketString) throws JargonException;
+
+	/**
+	 * Create a listing of ticket objects in effect for a given collection at an
+	 * iRODS absolute path
+	 * 
+	 * @param irodsAbsolutePath
+	 *            <code>String</code> with an iRODS absolute path for a
+	 *            collection
+	 * @param partialStartIndex
+	 *            <code>int</code> that can be set to 0 if starting at the
+	 *            beginning. This specifies
+	 * @return <code>List</code> of {@link Ticket} objects for the collection at
+	 *         the given absolute path
+	 * @throws JargonException
+	 */
+	List<Ticket> listAllTicketsForGivenCollection(String irodsAbsolutePath,
+			int partialStartIndex) throws JargonException;
+
+	/**
+	 * Create a listing of ticket objects in effect for a given data object at
+	 * an iRODS absolute path
+	 * 
+	 * @param irodsAbsolutePath
+	 *            <code>String</code> with an iRODS absolute path for a
+	 *            collection
+	 * @param partialStartIndex
+	 *            <code>int</code> that can be set to 0 if starting at the
+	 *            beginning. This specifies
+	 * @return <code>List</code> of {@link Ticket} objects for the collection at
+	 *         the given absolute path
+	 * @throws JargonException
+	 */
+	List<Ticket> listAllTicketsForGivenDataObject(String irodsAbsolutePath,
+			int partialStartIndex) throws FileNotFoundException,
+			JargonException;
 }
