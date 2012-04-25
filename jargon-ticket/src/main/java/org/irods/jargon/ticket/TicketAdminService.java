@@ -3,6 +3,8 @@ package org.irods.jargon.ticket;
 import java.util.Date;
 import java.util.List;
 
+import org.irods.jargon.core.exception.DataNotFoundException;
+import org.irods.jargon.core.exception.DuplicateDataException;
 import org.irods.jargon.core.exception.FileNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.io.IRODSFile;
@@ -148,7 +150,7 @@ public interface TicketAdminService {
 	 * @throws JargonException
 	 * 
 	 */
-	boolean setTicketByteWriteLimit(String ticketId, int byteWriteLimit) throws JargonException;
+	boolean setTicketByteWriteLimit(String ticketId, long byteWriteLimit) throws JargonException;
 	
 	/**
 	 * Modify the expire time of a ticket for access to iRODS
@@ -364,5 +366,42 @@ public interface TicketAdminService {
 	 */
 	List<Ticket> listAllTicketsForGivenDataObject(String irodsAbsolutePath,
 			int partialStartIndex) throws FileNotFoundException,
+			JargonException;
+
+	/**
+	 * This is a 'meta' method that can manage the creation of iRODS tickets,
+	 * and the simultaneous setting of the various limits. This convenience
+	 * method removes the need to put this somewhat complicated sequence of code
+	 * into applications.
+	 * <p/>
+	 * It must be noted that iRODS protocol clients cannot frame this sort of
+	 * operation in a transaction, so there is a very small chance that the
+	 * operaton will not happen a atomically. This is not something that the
+	 * client can do anything about. However, this still isolates the operations
+	 * into a well tested unit.
+	 * 
+	 * @param ticket
+	 *            {@link Ticket} to be added. Note that the only data that
+	 *            really needs to be in the <code>Ticket</code> is the
+	 *            (optional) ticket string, the ticket type (READ or WRITE), and
+	 *            the absolute path. The rest of the data can either be left
+	 *            alone, or it can be specified, and this will be handled by the
+	 *            update process. For example, if you set a write byte limit in
+	 *            the provided ticket, a call will be made to establish that
+	 *            value.
+	 *            <p/>
+	 *            Note that the <code>ticketString</code> in the
+	 *            <code>Ticket</code> may either be specified, or it may be left
+	 *            blank. If left blank, a ticket id will be randomly generated.
+	 *            The <code>Ticket</code> object returned from this method will
+	 *            carry all of the values properly initialized.
+	 * @throws DuplicateDataException
+	 *             if the <code>Ticket.ticketString</code> is already in use
+	 * @throws DataNotFoundException
+	 *             if the iRODS file does not exist
+	 * @throws JargonException
+	 */
+	Ticket createTicketFromTicketObject(Ticket ticket)
+			throws DuplicateDataException, DataNotFoundException,
 			JargonException;
 }

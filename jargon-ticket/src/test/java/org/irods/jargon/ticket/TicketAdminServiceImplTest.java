@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Properties;
 
 import junit.framework.Assert;
+import junit.framework.TestCase;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.DataNotFoundException;
@@ -2735,6 +2736,235 @@ public class TicketAdminServiceImplTest {
 				accessObjectFactory, irodsAccount);
 
 		ticketSvc.listAllTicketsForGivenDataObject(targetIrodsCollection, 0);
+
+	}
+
+	/**
+	 * Create a valid ticket for a data object using the 'meta' method
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void createTicketFromTicketObjectForDataObject() throws Exception {
+
+		if (!testTicket) {
+			return;
+		}
+
+		String testFileName = "createTicketFromTicketObjectForDataObject.txt";
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+		IRODSFile targetFile = createDataObjectByName(
+				testFileName,
+				testingProperties
+						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
+				irodsAccount, accessObjectFactory);
+
+		TicketAdminService ticketSvc = new TicketAdminServiceImpl(
+				accessObjectFactory, irodsAccount);
+
+		Ticket ticket = new Ticket();
+		ticket.setTicketString(testFileName);
+		ticket.setIrodsAbsolutePath(targetFile.getAbsolutePath());
+		ticket.setType(TicketCreateModeEnum.TICKET_CREATE_READ);
+		Ticket returnedTicket = ticketSvc.createTicketFromTicketObject(ticket);
+
+
+		Ticket actual = ticketSvc
+				.getTicketForSpecifiedTicketString(returnedTicket
+						.getTicketString());
+
+		Assert.assertEquals(testFileName, actual.getTicketString());
+		Assert.assertEquals("should be set to data object type",
+				Ticket.TicketObjectType.DATA_OBJECT, actual.getObjectType());
+		Assert.assertEquals("wrong ticket type",
+				TicketCreateModeEnum.TICKET_CREATE_READ, actual.getType());
+
+		// delete ticket after done
+		ticketSvc.deleteTicket(testFileName);
+
+	}
+
+	@Test
+	public void createTicketFromTicketObjectForCollection() throws Exception {
+
+		if (!testTicket) {
+			return;
+		}
+
+		String collectionName = "createTicketFromTicketObjectForCollection";
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
+		IRODSFile collection = createCollectionByName(collectionName,
+				irodsAccount, accessObjectFactory);
+
+		TicketAdminService ticketSvc = new TicketAdminServiceImpl(
+				accessObjectFactory, irodsAccount);
+
+		Ticket ticket = new Ticket();
+		ticket.setIrodsAbsolutePath(collection.getAbsolutePath());
+		ticket.setType(TicketCreateModeEnum.TICKET_CREATE_READ);
+		Ticket returnedTicket = ticketSvc.createTicketFromTicketObject(ticket);
+		TestCase.assertNotNull("null ticket returned", returnedTicket);
+		TestCase.assertFalse("ticket string not set",
+				returnedTicket.getTicketString() == null
+						| returnedTicket.getTicketString().isEmpty());
+		TestCase.assertEquals("user name not set", irodsAccount.getUserName(),
+				returnedTicket.getOwnerName());
+		TestCase.assertEquals("zone not set", irodsAccount.getZone(),
+				returnedTicket.getOwnerZone());
+		TestCase.assertEquals("should be a collection object",
+				Ticket.TicketObjectType.COLLECTION,
+				returnedTicket.getObjectType());
+		// delete ticket after done
+		ticketSvc.deleteTicket(returnedTicket.getTicketString());
+
+	}
+
+	/**
+	 * create a ticket using the meta method when target does not exist
+	 * 
+	 * @throws Exception
+	 */
+	@Test(expected = DataNotFoundException.class)
+	public void createTicketFromTicketObjectForCollectionNotExists()
+			throws Exception {
+
+		if (!testTicket) {
+			return;
+		}
+
+		String collectionName = "createTicketFromTicketObjectForCollectionNotExists";
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + "/"
+								+ collectionName);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
+		TicketAdminService ticketSvc = new TicketAdminServiceImpl(
+				accessObjectFactory, irodsAccount);
+
+		Ticket ticket = new Ticket();
+		ticket.setIrodsAbsolutePath(targetIrodsCollection);
+		ticket.setType(TicketCreateModeEnum.TICKET_CREATE_READ);
+		ticketSvc.createTicketFromTicketObject(ticket);
+
+	}
+
+	/**
+	 * Create a ticket, forget to set the path
+	 * 
+	 * @throws Exception
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void createTicketFromTicketObjectForCollectionNoPath()
+			throws Exception {
+
+		if (!testTicket) {
+			return;
+		}
+
+		String collectionName = "";
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
+		IRODSFile collection = createCollectionByName(collectionName,
+				irodsAccount, accessObjectFactory);
+
+		TicketAdminService ticketSvc = new TicketAdminServiceImpl(
+				accessObjectFactory, irodsAccount);
+
+		Ticket ticket = new Ticket();
+		ticket.setType(TicketCreateModeEnum.TICKET_CREATE_READ);
+		ticketSvc.createTicketFromTicketObject(ticket);
+
+	}
+
+	/**
+	 * Create a 'write' ticket and set the counts, make sure they are correctly
+	 * picked up
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void createWriteTicketFromTicketObjectForCollectionSetCounts()
+			throws Exception {
+
+		if (!testTicket) {
+			return;
+		}
+
+		int usesLimit = 1;
+		int writeByteLimit = 2;
+		int writeFileLimit = 3;
+
+		String collectionName = "createTicketFromTicketObjectForCollection";
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
+		IRODSFile collection = createCollectionByName(collectionName,
+				irodsAccount, accessObjectFactory);
+
+		TicketAdminService ticketSvc = new TicketAdminServiceImpl(
+				accessObjectFactory, irodsAccount);
+
+		Ticket ticket = new Ticket();
+		ticket.setTicketString(collectionName);
+		ticket.setIrodsAbsolutePath(collection.getAbsolutePath());
+		ticket.setType(TicketCreateModeEnum.TICKET_CREATE_WRITE);
+		ticket.setUsesLimit(usesLimit);
+		ticket.setWriteByteLimit(writeByteLimit);
+		ticket.setWriteFileLimit(writeFileLimit);
+
+		Ticket returnedTicket = ticketSvc.createTicketFromTicketObject(ticket);
+		TestCase.assertNotNull("null ticket returned", returnedTicket);
+		TestCase.assertFalse("ticket string not set",
+				returnedTicket.getTicketString() == null
+						| returnedTicket.getTicketString().isEmpty());
+		TestCase.assertEquals("user name not set", irodsAccount.getUserName(),
+				returnedTicket.getOwnerName());
+		TestCase.assertEquals("zone not set", irodsAccount.getZone(),
+				returnedTicket.getOwnerZone());
+		TestCase.assertEquals("should be a collection object",
+				Ticket.TicketObjectType.COLLECTION,
+				returnedTicket.getObjectType());
+
+		// get the actual ticket
+
+		Ticket actual = ticketSvc
+				.getTicketForSpecifiedTicketString(collectionName);
+		TestCase.assertEquals("wrong path", ticket.getIrodsAbsolutePath(),
+				actual.getIrodsAbsolutePath());
+		TestCase.assertEquals("wrong type", ticket.getObjectType(),
+				actual.getObjectType());
+		TestCase.assertEquals("wrong ticket type", returnedTicket.getType(),
+				actual.getType());
+		TestCase.assertEquals("wrong usesLimit", returnedTicket.getUsesLimit(),
+				actual.getUsesLimit());
+		TestCase.assertEquals("wrong writeByteLimit",
+				returnedTicket.getWriteByteLimit(), actual.getWriteByteLimit());
+		TestCase.assertEquals("wrong writeFileLimit",
+				returnedTicket.getWriteFileLimit(), actual.getWriteFileLimit());
+
+		// delete ticket after done
+		ticketSvc.deleteTicket(returnedTicket.getTicketString());
 
 	}
 

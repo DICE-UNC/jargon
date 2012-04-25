@@ -87,6 +87,20 @@ public class IRODSServerProperties {
 	}
 
 	/**
+	 * Does the server (based on version) support tickets?
+	 * 
+	 * @return <code>boolean</code> of <code>true</code> if this version
+	 *         supports tickets
+	 */
+	public boolean isSupportsTickets() {
+		boolean supports = false;
+		if (isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods3.1")) {
+			supports = true;
+		}
+		return supports;
+	}
+
+	/**
 	 * Handy method compares the iRODS release version of the target server, and
 	 * will indicate that the iRODS version being connected to is at or above
 	 * the given version.
