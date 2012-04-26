@@ -69,7 +69,28 @@ public class TicketServiceFactoryImpl implements TicketServiceFactory {
 
 	}
 
-	private void checkDependencies() {
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.ticket.TicketServiceFactory#
+	 * instanceTicketDistributionService
+	 * (org.irods.jargon.core.connection.IRODSAccount,
+	 * org.irods.jargon.ticket.TicketDistributionContext)
+	 */
+	@Override
+	public TicketDistributionService instanceTicketDistributionService(
+			final IRODSAccount irodsAccount,
+			final TicketDistributionContext ticketDistributionContext)
+			throws JargonException {
+
+		checkDependencies();
+
+		return new TicketDistributionServiceImpl(irodsAccessObjectFactory,
+				irodsAccount, this, ticketDistributionContext);
+
+	}
+
+	void checkDependencies() {
 		if (irodsAccessObjectFactory == null) {
 			throw new IllegalArgumentException(
 					"the irodsAccessObjectFactory was not set for this instance");

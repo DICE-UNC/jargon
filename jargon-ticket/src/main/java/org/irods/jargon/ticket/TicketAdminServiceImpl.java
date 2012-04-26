@@ -35,16 +35,15 @@ import org.irods.jargon.ticket.utils.TicketRandomString;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public final class TicketAdminServiceImpl implements TicketAdminService {
+public final class TicketAdminServiceImpl extends AbstractTicketService implements TicketAdminService {
 
+	private static final String PARTIAL_START_INDEX_MUST_BE_0 = "partial start index must be >= 0";
+	private static final String EXECUTING_TICKET_PI = "executing ticket PI";
 	private static final String COMMA_SPACE = ", ";
 	private static final String ERROR_IN_TICKET_QUERY = "error in ticket query";
 	private static final String TICKET_NOT_FOUND = "IRODS ticket not found";
 	public static final Logger log = LoggerFactory
 			.getLogger(TicketAdminServiceImpl.class);
-	private IRODSAccessObjectFactory irodsAccessObjectFactory;
-	private IRODSAccount irodsAccount;
-
 	/**
 	 * Default constructor takes the objects necessary to communicate with iRODS
 	 * via Access Objects
@@ -57,7 +56,7 @@ public final class TicketAdminServiceImpl implements TicketAdminService {
 	 *            grid
 	 * @throws JargonException
 	 */
-	public TicketAdminServiceImpl(
+	TicketAdminServiceImpl(
 			final IRODSAccessObjectFactory irodsAccessObjectFactory,
 			final IRODSAccount irodsAccount) throws JargonException {
 		this.irodsAccessObjectFactory = irodsAccessObjectFactory;
@@ -163,9 +162,11 @@ public final class TicketAdminServiceImpl implements TicketAdminService {
 					"cannot create ticket with null create mode - read or write access");
 		}
 
-		if (ticketId == null || ticketId.isEmpty()) {
+		String myTicketId = ticketId;
+
+		if (myTicketId == null || myTicketId.isEmpty()) {
 			// create a new ticket string 15 chars in length
-			ticketId = new TicketRandomString(15).nextString();
+			myTicketId = new TicketRandomString(15).nextString();
 		}
 		log.info("ticket creation mode is:{}", mode);
 
@@ -187,8 +188,8 @@ public final class TicketAdminServiceImpl implements TicketAdminService {
 		}
 
 		TicketAdminInp ticketPI = TicketAdminInp.instanceForCreate(mode,
-				file.getAbsolutePath(), ticketId);
-		log.info("executing ticket PI");
+				file.getAbsolutePath(), myTicketId);
+		log.info(EXECUTING_TICKET_PI);
 
 		ProtocolExtensionPoint pep = irodsAccessObjectFactory
 				.getProtocolExtensionPoint(irodsAccount);
@@ -197,7 +198,7 @@ public final class TicketAdminServiceImpl implements TicketAdminService {
 		log.info("received response from ticket operation:{}",
 				ticketOperationResponse);
 
-		return ticketId;
+		return myTicketId;
 	}
 
 	/*
@@ -220,7 +221,7 @@ public final class TicketAdminServiceImpl implements TicketAdminService {
 		log.info("deleting ticket id/string:{}", ticketId);
 
 		TicketAdminInp ticketPI = TicketAdminInp.instanceForDelete(ticketId);
-		log.info("executing ticket PI");
+		log.info(EXECUTING_TICKET_PI);
 
 		ProtocolExtensionPoint pep = irodsAccessObjectFactory
 				.getProtocolExtensionPoint(irodsAccount);
@@ -255,7 +256,7 @@ public final class TicketAdminServiceImpl implements TicketAdminService {
 
 		if (partialStartIndex < 0) {
 			throw new IllegalArgumentException(
-					"partial start index must be >= 0");
+					PARTIAL_START_INDEX_MUST_BE_0);
 		}
 
 		List<Ticket> tickets = new ArrayList<Ticket>();
@@ -316,7 +317,7 @@ public final class TicketAdminServiceImpl implements TicketAdminService {
 
 		if (partialStartIndex < 0) {
 			throw new IllegalArgumentException(
-					"partial start index must be >= 0");
+					PARTIAL_START_INDEX_MUST_BE_0);
 		}
 
 		List<Ticket> tickets = new ArrayList<Ticket>();
@@ -375,7 +376,7 @@ public final class TicketAdminServiceImpl implements TicketAdminService {
 
 		if (partialStartIndex < 0) {
 			throw new IllegalArgumentException(
-					"partial start index must be >= 0");
+					PARTIAL_START_INDEX_MUST_BE_0);
 		}
 
 		log.info("irodsAbsolutePath:{}", irodsAbsolutePath);
@@ -461,7 +462,7 @@ public final class TicketAdminServiceImpl implements TicketAdminService {
 
 		if (partialStartIndex < 0) {
 			throw new IllegalArgumentException(
-					"partial start index must be >= 0");
+					PARTIAL_START_INDEX_MUST_BE_0);
 		}
 
 		log.info("irodsAbsolutePath:{}", irodsAbsolutePath);
@@ -550,7 +551,7 @@ public final class TicketAdminServiceImpl implements TicketAdminService {
 
 		if (partialStartIndex < 0) {
 			throw new IllegalArgumentException(
-					"partial start index must be >= 0");
+					PARTIAL_START_INDEX_MUST_BE_0);
 		}
 
 		List<Ticket> tickets = new ArrayList<Ticket>();
@@ -726,7 +727,7 @@ public final class TicketAdminServiceImpl implements TicketAdminService {
 
 		TicketAdminInp ticketPI = TicketAdminInp.instanceForModifyNumberOfUses(
 				ticketId, usesLimit);
-		log.info("executing ticket PI");
+		log.info(EXECUTING_TICKET_PI);
 
 		ProtocolExtensionPoint pep = irodsAccessObjectFactory
 				.getProtocolExtensionPoint(irodsAccount);
@@ -774,7 +775,7 @@ public final class TicketAdminServiceImpl implements TicketAdminService {
 
 		TicketAdminInp ticketPI = TicketAdminInp
 				.instanceForModifyFileWriteNumber(ticketId, fileWriteLimit);
-		log.info("executing ticket PI");
+		log.info(EXECUTING_TICKET_PI);
 
 		ProtocolExtensionPoint pep = irodsAccessObjectFactory
 				.getProtocolExtensionPoint(irodsAccount);
@@ -822,7 +823,7 @@ public final class TicketAdminServiceImpl implements TicketAdminService {
 
 		TicketAdminInp ticketPI = TicketAdminInp
 				.instanceForModifyByteWriteNumber(ticketId, byteWriteLimit);
-		log.info("executing ticket PI");
+		log.info(EXECUTING_TICKET_PI);
 
 		ProtocolExtensionPoint pep = irodsAccessObjectFactory
 				.getProtocolExtensionPoint(irodsAccount);
@@ -870,7 +871,7 @@ public final class TicketAdminServiceImpl implements TicketAdminService {
 
 		TicketAdminInp ticketPI = TicketAdminInp.instanceForModifyExpiration(
 				ticketId, expirationDate);
-		log.info("executing ticket PI");
+		log.info(EXECUTING_TICKET_PI);
 
 		ProtocolExtensionPoint pep = irodsAccessObjectFactory
 				.getProtocolExtensionPoint(irodsAccount);
@@ -919,7 +920,7 @@ public final class TicketAdminServiceImpl implements TicketAdminService {
 		TicketAdminInp ticketPI = TicketAdminInp.instanceForModifyAddAccess(
 				ticketId, TicketModifyAddOrRemoveTypeEnum.TICKET_MODIFY_USER,
 				userId);
-		log.info("executing ticket PI");
+		log.info(EXECUTING_TICKET_PI);
 
 		ProtocolExtensionPoint pep = irodsAccessObjectFactory
 				.getProtocolExtensionPoint(irodsAccount);
@@ -970,7 +971,7 @@ public final class TicketAdminServiceImpl implements TicketAdminService {
 		TicketAdminInp ticketPI = TicketAdminInp.instanceForModifyRemoveAccess(
 				ticketId, TicketModifyAddOrRemoveTypeEnum.TICKET_MODIFY_USER,
 				userId);
-		log.info("executing ticket PI");
+		log.info(EXECUTING_TICKET_PI);
 
 		ProtocolExtensionPoint pep = irodsAccessObjectFactory
 				.getProtocolExtensionPoint(irodsAccount);
@@ -1021,7 +1022,7 @@ public final class TicketAdminServiceImpl implements TicketAdminService {
 		TicketAdminInp ticketPI = TicketAdminInp.instanceForModifyAddAccess(
 				ticketId, TicketModifyAddOrRemoveTypeEnum.TICKET_MODIFY_GROUP,
 				groupId);
-		log.info("executing ticket PI");
+		log.info(EXECUTING_TICKET_PI);
 
 		ProtocolExtensionPoint pep = irodsAccessObjectFactory
 				.getProtocolExtensionPoint(irodsAccount);
@@ -1072,7 +1073,7 @@ public final class TicketAdminServiceImpl implements TicketAdminService {
 		TicketAdminInp ticketPI = TicketAdminInp.instanceForModifyRemoveAccess(
 				ticketId, TicketModifyAddOrRemoveTypeEnum.TICKET_MODIFY_GROUP,
 				groupId);
-		log.info("executing ticket PI");
+		log.info(EXECUTING_TICKET_PI);
 
 		ProtocolExtensionPoint pep = irodsAccessObjectFactory
 				.getProtocolExtensionPoint(irodsAccount);
@@ -1123,7 +1124,7 @@ public final class TicketAdminServiceImpl implements TicketAdminService {
 		TicketAdminInp ticketPI = TicketAdminInp.instanceForModifyAddAccess(
 				ticketId, TicketModifyAddOrRemoveTypeEnum.TICKET_MODIFY_HOST,
 				host);
-		log.info("executing ticket PI");
+		log.info(EXECUTING_TICKET_PI);
 
 		ProtocolExtensionPoint pep = irodsAccessObjectFactory
 				.getProtocolExtensionPoint(irodsAccount);
@@ -1174,7 +1175,7 @@ public final class TicketAdminServiceImpl implements TicketAdminService {
 		TicketAdminInp ticketPI = TicketAdminInp.instanceForModifyRemoveAccess(
 				ticketId, TicketModifyAddOrRemoveTypeEnum.TICKET_MODIFY_HOST,
 				host);
-		log.info("executing ticket PI");
+		log.info(EXECUTING_TICKET_PI);
 
 		ProtocolExtensionPoint pep = irodsAccessObjectFactory
 				.getProtocolExtensionPoint(irodsAccount);
@@ -1566,23 +1567,6 @@ public final class TicketAdminServiceImpl implements TicketAdminService {
 					"jargonQueryException building ticket query", e);
 		}
 		return ticketFound;
-	}
-
-	public IRODSAccessObjectFactory getIrodsAccessObjectFactory() {
-		return irodsAccessObjectFactory;
-	}
-
-	public void setIrodsAccessObjectFactory(
-			final IRODSAccessObjectFactory irodsAccessObjectFactory) {
-		this.irodsAccessObjectFactory = irodsAccessObjectFactory;
-	}
-
-	public IRODSAccount getIrodsAccount() {
-		return irodsAccount;
-	}
-
-	public void setIrodsAccount(final IRODSAccount irodsAccount) {
-		this.irodsAccount = irodsAccount;
 	}
 
 }

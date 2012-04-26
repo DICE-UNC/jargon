@@ -42,4 +42,23 @@ public interface TicketServiceFactory {
 	TicketClientOperations instanceTicketClientOperations(
 			IRODSAccount irodsAccount) throws JargonException;
 
+	/**
+	 * Create a new instance of the <code>TicketDistributionService</code> that
+	 * can distribute tickets via various channels
+	 * 
+	 * @param irodsAccount
+	 *            {@link IRODSAccount} that describes the server and connection
+	 *            info
+	 * @param ticketDistributionContext
+	 *            {@link TicketDistributionContext} with information on the
+	 *            particular available channels
+	 * @return {@link TicketDistributionService} object to interact with iRODS
+	 *         tickets
+	 * @throws JargonException
+	 */
+	TicketDistributionService instanceTicketDistributionService(
+			IRODSAccount irodsAccount,
+			TicketDistributionContext ticketDistributionContext)
+			throws JargonException;
+
 }

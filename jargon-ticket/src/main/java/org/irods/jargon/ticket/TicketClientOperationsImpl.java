@@ -21,14 +21,12 @@ import org.slf4j.LoggerFactory;
  * @author Mike Conway - DICE (www.irods.org)
  * 
  */
-public class TicketClientOperationsImpl implements TicketClientOperations {
+public class TicketClientOperationsImpl extends AbstractTicketService implements
+		TicketClientOperations {
 
 	public static final Logger log = LoggerFactory
 			.getLogger(TicketClientOperationsImpl.class);
-	@SuppressWarnings("unused")
-	private final IRODSAccessObjectFactory irodsAccessObjectFactory;
-	@SuppressWarnings("unused")
-	private final IRODSAccount irodsAccount;
+
 	private DataTransferOperations dataTransferOperations = null;
 	private TicketClientSupport ticketClientSupport = null;
 
@@ -39,7 +37,7 @@ public class TicketClientOperationsImpl implements TicketClientOperations {
 	 * @param irodsAccount
 	 * @throws JargonException
 	 */
-	public TicketClientOperationsImpl(
+	TicketClientOperationsImpl(
 			final IRODSAccessObjectFactory irodsAccessObjectFactory,
 			final IRODSAccount irodsAccount) throws JargonException {
 
