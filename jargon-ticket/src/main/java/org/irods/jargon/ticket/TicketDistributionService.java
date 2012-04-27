@@ -30,7 +30,7 @@ public interface TicketDistributionService {
 	 *         the given ticket
 	 * @throws JargonException
 	 */
-	TicketDistribution getTicketDistributionForTicket(
-			final Ticket ticket) throws JargonException;
+	TicketDistribution getTicketDistributionForTicket(final Ticket ticket)
+			throws JargonException;
 
 }

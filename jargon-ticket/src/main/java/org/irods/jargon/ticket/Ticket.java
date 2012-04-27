@@ -40,7 +40,6 @@ public class Ticket extends IRODSDomainObject {
 	public Ticket() {
 	}
 
-
 	@Override
 	public String toString() {
 
@@ -264,7 +263,7 @@ public class Ticket extends IRODSDomainObject {
 	public Date getExpireTime() {
 		return expireTime;
 	}
-	
+
 	/**
 	 * @return formatted date string - like one displayed with iticket
 	 */

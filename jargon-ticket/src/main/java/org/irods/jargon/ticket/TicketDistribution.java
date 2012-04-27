@@ -17,6 +17,7 @@ public class TicketDistribution {
 	private URL ticketURL;
 	private URI irodsAccessURI;
 
+	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("ticketDistribution:");
@@ -40,7 +41,7 @@ public class TicketDistribution {
 	 * @param ticket
 	 *            the ticket to set
 	 */
-	public void setTicket(Ticket ticket) {
+	public void setTicket(final Ticket ticket) {
 		this.ticket = ticket;
 	}
 
@@ -59,7 +60,7 @@ public class TicketDistribution {
 	 * @param ticketURL
 	 *            the ticketURL to set
 	 */
-	public void setTicketURL(URL ticketURL) {
+	public void setTicketURL(final URL ticketURL) {
 		this.ticketURL = ticketURL;
 	}
 
@@ -77,7 +78,7 @@ public class TicketDistribution {
 	 * @param irodsAccessURI
 	 *            the irodsAccessURI to set
 	 */
-	public void setIrodsAccessURI(URI irodsAccessURI) {
+	public void setIrodsAccessURI(final URI irodsAccessURI) {
 		this.irodsAccessURI = irodsAccessURI;
 	}
 

@@ -22,6 +22,7 @@ public class TicketDistributionContext {
 	private String context = "idrop-web/ticket/redeemTicket";
 	private Map<String, String> additionalParameters = new HashMap<String, String>();
 
+	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("ticketDistributionContext:");
@@ -47,7 +48,7 @@ public class TicketDistributionContext {
 	 * @param host
 	 *            the host to set
 	 */
-	public void setHost(String host) {
+	public void setHost(final String host) {
 		this.host = host;
 	}
 
@@ -62,7 +63,7 @@ public class TicketDistributionContext {
 	 * @param port
 	 *            the port to set
 	 */
-	public void setPort(int port) {
+	public void setPort(final int port) {
 		this.port = port;
 	}
 
@@ -77,7 +78,7 @@ public class TicketDistributionContext {
 	 * @param ssl
 	 *            the ssl to set
 	 */
-	public void setSsl(boolean ssl) {
+	public void setSsl(final boolean ssl) {
 		this.ssl = ssl;
 	}
 
@@ -96,7 +97,7 @@ public class TicketDistributionContext {
 	 * @param context
 	 *            the context to set
 	 */
-	public void setContext(String context) {
+	public void setContext(final String context) {
 		this.context = context;
 	}
 
@@ -113,7 +114,8 @@ public class TicketDistributionContext {
 	 * @param additionalParameters
 	 *            the additionalParameters to set
 	 */
-	public void setAdditionalParameters(Map<String, String> additionalParameters) {
+	public void setAdditionalParameters(
+			final Map<String, String> additionalParameters) {
 		this.additionalParameters = additionalParameters;
 	}
 

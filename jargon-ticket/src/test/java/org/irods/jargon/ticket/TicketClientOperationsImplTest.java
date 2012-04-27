@@ -8,6 +8,7 @@ import junit.framework.Assert;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.CatNoAccessException;
 import org.irods.jargon.core.exception.DataNotFoundException;
+import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.packinstr.TransferOptions.ForceOption;
 import org.irods.jargon.core.pub.CollectionAO;
 import org.irods.jargon.core.pub.DataTransferOperations;
@@ -20,6 +21,7 @@ import org.irods.jargon.testutils.IRODSTestSetupUtilities;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.irods.jargon.testutils.filemanip.FileGenerator;
 import org.irods.jargon.testutils.filemanip.ScratchFileUtils;
+import org.irods.jargon.ticket.io.FileStreamAndInfo;
 import org.irods.jargon.ticket.packinstr.TicketCreateModeEnum;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -620,6 +622,218 @@ public class TicketClientOperationsImplTest {
 				.assertIrodsFileOrCollectionExists(returnedLocalCollection);
 		assertionHelper.assertTwoFilesAreEqualByRecursiveTreeComparison(
 				localFile, transferredCollection);
+
+	}
+
+	/**
+	 * Get a ticket on a data object, then get the data back as a stream
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public final void redeemTicketGetDataObjectAndStreamBack() throws Exception {
+
+		if (!testTicket) {
+			return;
+		}
+
+		String retrievedSubdir = "redeemTicketGetDataObjectAndStreamBack";
+		long size = 3 * 1024;
+
+		// generate a local scratch file
+		String testFileName = "redeemTicketGetDataObjectAndStreamBack.txt";
+
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String localFileName = FileGenerator
+				.generateFileOfFixedLengthGivenName(absPath, testFileName, size);
+
+		String targetIrodsFile = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
+								+ testFileName);
+		File localFile = new File(localFileName);
+
+		// now put the file
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSFileFactory irodsFileFactory = irodsFileSystem
+				.getIRODSFileFactory(irodsAccount);
+		IRODSFile destFile = irodsFileFactory
+				.instanceIRODSFile(targetIrodsFile);
+		DataTransferOperations dataTransferOperationsAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataTransferOperations(
+						irodsAccount);
+
+		dataTransferOperationsAO.putOperation(localFile, destFile, null, null);
+
+		// put a read ticket on the file
+
+		TicketAdminService ticketSvc = new TicketAdminServiceImpl(
+				irodsFileSystem.getIRODSAccessObjectFactory(), irodsAccount);
+		ticketSvc.deleteTicket(testFileName);
+		ticketSvc.createTicket(TicketCreateModeEnum.TICKET_CREATE_READ,
+				destFile, testFileName);
+
+		IRODSFile getIRODSFile = irodsFileFactory
+				.instanceIRODSFile(targetIrodsFile);
+		File tempCacheFile = new File(absPath + "/" + retrievedSubdir
+				+ "/tempCache");
+		tempCacheFile.mkdirs();
+
+		// now get the file as secondary user with ticket
+
+		IRODSAccount secondaryAccount = testingPropertiesHelper
+				.buildIRODSAccountFromSecondaryTestProperties(testingProperties);
+
+		TicketClientOperations ticketClientService = new TicketClientOperationsImpl(
+				irodsFileSystem.getIRODSAccessObjectFactory(), secondaryAccount);
+
+		FileStreamAndInfo fileStreamAndInfo = ticketClientService
+				.redeemTicketGetDataObjectAndStreamBack(testFileName,
+						getIRODSFile, tempCacheFile);
+
+		int totalBytes = 0;
+		while ((fileStreamAndInfo.getInputStream().read()) > -1) {
+			totalBytes++;
+		}
+
+		fileStreamAndInfo.getInputStream().close();
+
+		Assert.assertEquals("all bytes not read", size, totalBytes);
+		Assert.assertTrue("should be no files in the temp cache",
+				tempCacheFile.listFiles().length == 0);
+		Assert.assertEquals(
+				"did not correctly set lenght in fileStreamAndInfo", size,
+				fileStreamAndInfo.getLength());
+
+	}
+
+	/**
+	 * Try to stream from a collection
+	 * 
+	 * @throws Exception
+	 */
+	@Test(expected = JargonException.class)
+	public final void redeemTicketGetDataObjectAndStreamBackIrodsFileIsCollection()
+			throws Exception {
+
+		if (!testTicket) {
+			return;
+		}
+
+		String testCollection = "redeemTicketGetDataObjectAndStreamBackIrodsFileIsCollection";
+
+		String targetIrodsFile = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
+								+ testCollection);
+
+		// now put the file
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSFileFactory irodsFileFactory = irodsFileSystem
+				.getIRODSFileFactory(irodsAccount);
+		IRODSFile destFile = irodsFileFactory
+				.instanceIRODSFile(targetIrodsFile);
+		destFile.mkdirs();
+
+		// put a read ticket on the file
+
+		TicketAdminService ticketSvc = new TicketAdminServiceImpl(
+				irodsFileSystem.getIRODSAccessObjectFactory(), irodsAccount);
+		ticketSvc.deleteTicket(testCollection);
+		ticketSvc.createTicket(TicketCreateModeEnum.TICKET_CREATE_READ,
+				destFile, testCollection);
+
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+
+		IRODSFile getIRODSFile = irodsFileFactory
+				.instanceIRODSFile(targetIrodsFile);
+		File tempCacheFile = new File(absPath + "/" + "/tempCache");
+		tempCacheFile.mkdirs();
+
+		// now get the file as secondary user with ticket
+
+		IRODSAccount secondaryAccount = testingPropertiesHelper
+				.buildIRODSAccountFromSecondaryTestProperties(testingProperties);
+
+		TicketClientOperations ticketClientService = new TicketClientOperationsImpl(
+				irodsFileSystem.getIRODSAccessObjectFactory(), secondaryAccount);
+
+		ticketClientService.redeemTicketGetDataObjectAndStreamBack(
+				testCollection, getIRODSFile, tempCacheFile);
+
+	}
+
+	/**
+	 * Get a ticket on a data object, but the root cache dir does not exist
+	 * 
+	 * @throws Exception
+	 */
+	@Test(expected = JargonException.class)
+	public final void redeemTicketGetDataObjectAndStreamBackCaceRootDirNotExists()
+			throws Exception {
+
+		if (!testTicket) {
+			return;
+		}
+
+		long size = 3 * 1024;
+
+		// generate a local scratch file
+		String testFileName = "redeemTicketGetDataObjectAndStreamBack.txt";
+
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String localFileName = FileGenerator
+				.generateFileOfFixedLengthGivenName(absPath, testFileName, size);
+
+		String targetIrodsFile = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
+								+ testFileName);
+		File localFile = new File(localFileName);
+
+		// now put the file
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSFileFactory irodsFileFactory = irodsFileSystem
+				.getIRODSFileFactory(irodsAccount);
+		IRODSFile destFile = irodsFileFactory
+				.instanceIRODSFile(targetIrodsFile);
+		DataTransferOperations dataTransferOperationsAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataTransferOperations(
+						irodsAccount);
+
+		dataTransferOperationsAO.putOperation(localFile, destFile, null, null);
+
+		// put a read ticket on the file
+
+		TicketAdminService ticketSvc = new TicketAdminServiceImpl(
+				irodsFileSystem.getIRODSAccessObjectFactory(), irodsAccount);
+		ticketSvc.deleteTicket(testFileName);
+		ticketSvc.createTicket(TicketCreateModeEnum.TICKET_CREATE_READ,
+				destFile, testFileName);
+
+		IRODSFile getIRODSFile = irodsFileFactory
+				.instanceIRODSFile(targetIrodsFile);
+		File tempCacheFile = new File("/i/dont/exist/at/all");
+
+		// now get the file as secondary user with ticket
+
+		IRODSAccount secondaryAccount = testingPropertiesHelper
+				.buildIRODSAccountFromSecondaryTestProperties(testingProperties);
+
+		TicketClientOperations ticketClientService = new TicketClientOperationsImpl(
+				irodsFileSystem.getIRODSAccessObjectFactory(), secondaryAccount);
+
+		ticketClientService.redeemTicketGetDataObjectAndStreamBack(
+				testFileName, getIRODSFile, tempCacheFile);
 
 	}
 

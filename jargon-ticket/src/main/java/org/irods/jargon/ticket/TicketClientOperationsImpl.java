@@ -1,6 +1,9 @@
 package org.irods.jargon.ticket;
 
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.DataNotFoundException;
@@ -11,6 +14,8 @@ import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.transfer.TransferControlBlock;
 import org.irods.jargon.core.transfer.TransferStatusCallbackListener;
+import org.irods.jargon.ticket.io.CleanUpWhenClosedInputStream;
+import org.irods.jargon.ticket.io.FileStreamAndInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -125,6 +130,75 @@ public class TicketClientOperationsImpl extends AbstractTicketService implements
 		log.info("session initialized, doing get operation");
 		dataTransferOperations.getOperation(irodsSourceFile, targetLocalFile,
 				transferStatusCallbackListener, transferControlBlock);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.ticket.TicketClientOperations#
+	 * redeemTicketGetDataObjectAndStreamBack(java.lang.String,
+	 * org.irods.jargon.core.pub.io.IRODSFile, java.io.File)
+	 */
+	@Override
+	public FileStreamAndInfo redeemTicketGetDataObjectAndStreamBack(
+			final String ticketString, final IRODSFile irodsSourceFile,
+			final File intermediateCacheRootDirectory)
+			throws DataNotFoundException, JargonException {
+
+		log.info("redeemTicketGetDataObjectAndStreamBack()");
+
+		if (ticketString == null || ticketString.isEmpty()) {
+			throw new IllegalArgumentException("null or empty ticketString");
+		}
+
+		if (intermediateCacheRootDirectory == null) {
+			throw new IllegalArgumentException(
+					"null intermediateCacheRootDirectory");
+		}
+
+		log.info("intermediate cache root dir:{}",
+				intermediateCacheRootDirectory.getAbsolutePath());
+
+		if (!intermediateCacheRootDirectory.exists()) {
+			throw new JargonException(
+					"cannot create intermediate cache, root dir does not exist");
+		}
+
+		// compute file name under cache dir as current time +
+		// irodsSourceFileName
+		StringBuilder sb = new StringBuilder();
+		sb.append(".tempTicketFileCache_");
+		sb.append(System.currentTimeMillis());
+		sb.append("_");
+		sb.append(irodsSourceFile.getName());
+		String tempFileName = sb.toString();
+
+		log.info("temp file name: {}", tempFileName);
+
+		File intermediateCacheFile = new File(intermediateCacheRootDirectory,
+				tempFileName);
+
+		// other param checks done in delegated methods
+
+		log.info("initializing session with ticket:{}", ticketString);
+		ticketClientSupport.initializeSessionWithTicket(ticketString);
+
+		log.info("session initialized, doing get operation");
+		dataTransferOperations.getOperation(irodsSourceFile,
+				intermediateCacheFile, null, null);
+		log.info("file obtained and in cache, now returning an input stream");
+		InputStream inputStream;
+		try {
+			inputStream = new BufferedInputStream(
+					new CleanUpWhenClosedInputStream(intermediateCacheFile));
+			return new FileStreamAndInfo(inputStream,
+					intermediateCacheFile.length());
+		} catch (FileNotFoundException e) {
+			log.error("cannot find temp cache file to stream back", e);
+			throw new JargonException(
+					"cannot find the temporary cache stream I had created");
+		}
 
 	}
+
 }

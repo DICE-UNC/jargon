@@ -85,12 +85,11 @@ public interface TicketAdminService {
 	 */
 	List<Ticket> listAllTicketsForCollections(int partialStartIndex)
 			throws JargonException;
-	
+
 	/**
-	 * Generate a list of all tickets. Note that,
-	 * for a regular user, this will be tickets for that user. For a rodsadmin,
-	 * this will be all tickets. Also this will not return associated collections
-	 * or data objects
+	 * Generate a list of all tickets. Note that, for a regular user, this will
+	 * be tickets for that user. For a rodsadmin, this will be all tickets. Also
+	 * this will not return associated collections or data objects
 	 * 
 	 * @param partialStartIndex
 	 *            <code>int</code> value >= 0 which provides an offset into
@@ -98,8 +97,7 @@ public interface TicketAdminService {
 	 * @return <code>List</code> of {@link Ticket} objects for collections
 	 * @throws JargonException
 	 */
-	List<Ticket> listAllTickets(int partialStartIndex)
-			throws JargonException;
+	List<Ticket> listAllTickets(int partialStartIndex) throws JargonException;
 
 	/**
 	 * Modify the uses limit of a ticket for access to iRODS
@@ -116,16 +114,17 @@ public interface TicketAdminService {
 	 * @throws JargonException
 	 * 
 	 */
-	boolean setTicketUsesLimit(String ticketId, int usesLimit) throws JargonException;
-	
+	boolean setTicketUsesLimit(String ticketId, int usesLimit)
+			throws JargonException;
+
 	/**
 	 * Modify the file write limit of a ticket for access to iRODS
 	 * 
 	 * @param ticketId
 	 *            <code>String</code> used to specify ticket key to be modified
 	 * @param fileWriteLimit
-	 *            <code>int</code> value >= 0 which specifies the file write limit for
-	 *            the specified ticket
+	 *            <code>int</code> value >= 0 which specifies the file write
+	 *            limit for the specified ticket
 	 * @return <code>boolean</code> that will be <code>true</code> if the ticket
 	 *         was found to modify. <code>false</code> means that the modify was
 	 *         not successful, due to the ticket not being found. This can be
@@ -133,16 +132,17 @@ public interface TicketAdminService {
 	 * @throws JargonException
 	 * 
 	 */
-	boolean setTicketFileWriteLimit(String ticketId, int fileWriteLimit) throws JargonException;
-	
+	boolean setTicketFileWriteLimit(String ticketId, int fileWriteLimit)
+			throws JargonException;
+
 	/**
 	 * Modify the byte write of a ticket for access to iRODS
 	 * 
 	 * @param ticketId
 	 *            <code>String</code> used to specify ticket key to be modified
 	 * @param byteWriteLimit
-	 *            <code>int</code> value >= 0 which specifies the byte write limit for
-	 *            the specified ticket
+	 *            <code>int</code> value >= 0 which specifies the byte write
+	 *            limit for the specified ticket
 	 * @return <code>boolean</code> that will be <code>true</code> if the ticket
 	 *         was found to modify. <code>false</code> means that the modify was
 	 *         not successful, due to the ticket not being found. This can be
@@ -150,8 +150,9 @@ public interface TicketAdminService {
 	 * @throws JargonException
 	 * 
 	 */
-	boolean setTicketByteWriteLimit(String ticketId, long byteWriteLimit) throws JargonException;
-	
+	boolean setTicketByteWriteLimit(String ticketId, long byteWriteLimit)
+			throws JargonException;
+
 	/**
 	 * Modify the expire time of a ticket for access to iRODS
 	 * 
@@ -167,8 +168,9 @@ public interface TicketAdminService {
 	 * @throws JargonException
 	 * 
 	 */
-	boolean setTicketExpiration(String ticketId, Date expirationTime) throws JargonException;
-	
+	boolean setTicketExpiration(String ticketId, Date expirationTime)
+			throws JargonException;
+
 	/**
 	 * Generate a list of all iRODS users that can use this ticket
 	 * 
@@ -181,9 +183,9 @@ public interface TicketAdminService {
 	 * @return <code>List</code> of iRODS user ids
 	 * @throws JargonException
 	 */
-	List<String> listAllUserRestrictionsForSpecifiedTicket(String ticketId, int partialStartIndex)
-			throws JargonException;
-	
+	List<String> listAllUserRestrictionsForSpecifiedTicket(String ticketId,
+			int partialStartIndex) throws JargonException;
+
 	/**
 	 * Generate a list of all iRODS groups that can use this ticket
 	 * 
@@ -196,10 +198,10 @@ public interface TicketAdminService {
 	 * @return <code>List</code> of iRODS group ids
 	 * @throws JargonException
 	 */
-	List<String> listAllGroupRestrictionsForSpecifiedTicket(String ticketId, int partialStartIndex)
-			throws JargonException;
-	 
-	 /**
+	List<String> listAllGroupRestrictionsForSpecifiedTicket(String ticketId,
+			int partialStartIndex) throws JargonException;
+
+	/**
 	 * Generate a list of all hosts that can use this ticket
 	 * 
 	 * @param ticketId
@@ -211,9 +213,27 @@ public interface TicketAdminService {
 	 * @return <code>List</code> of hosts
 	 * @throws JargonException
 	 */
-	List<String> listAllHostRestrictionsForSpecifiedTicket(String ticketId, int partialStartIndex)
+	List<String> listAllHostRestrictionsForSpecifiedTicket(String ticketId,
+			int partialStartIndex) throws JargonException;
+
+	/**
+	 * Modify the user access for an IRODS ticket
+	 * 
+	 * @param ticketId
+	 *            <code>String</code> used to specify ticket key to be modified
+	 * @param userId
+	 *            <code>String</code> that identifies a valid iRODS user
+	 * @return <code>boolean</code> that will be <code>true</code> if the ticket
+	 *         was found to modify. <code>false</code> means that the modify was
+	 *         not successful, due to the ticket not being found. This can be
+	 *         ignored.
+	 * @throws JargonException
+	 *             (InvalidUserException)
+	 * 
+	 */
+	boolean addTicketUserRestriction(String ticketId, String userId)
 			throws JargonException;
-	
+
 	/**
 	 * Modify the user access for an IRODS ticket
 	 * 
@@ -225,27 +245,13 @@ public interface TicketAdminService {
 	 *         was found to modify. <code>false</code> means that the modify was
 	 *         not successful, due to the ticket not being found. This can be
 	 *         ignored.
-	 * @throws JargonException (InvalidUserException)
+	 * @throws JargonException
+	 *             (InvalidUserException)
 	 * 
 	 */
-	boolean addTicketUserRestriction(String ticketId, String userId) throws JargonException;
-	
-	/**
-	 * Modify the user access for an IRODS ticket
-	 * 
-	 * @param ticketId
-	 *            <code>String</code> used to specify ticket key to be modified
-	 * @param userId
-	 *            <code>String</code> that identifies a valid iRODS user
-	 * @return <code>boolean</code> that will be <code>true</code> if the ticket
-	 *         was found to modify. <code>false</code> means that the modify was
-	 *         not successful, due to the ticket not being found. This can be
-	 *         ignored.
-	 * @throws JargonException (InvalidUserException)
-	 * 
-	 */
-	boolean removeTicketUserRestriction(String ticketId, String userId) throws JargonException;
-	
+	boolean removeTicketUserRestriction(String ticketId, String userId)
+			throws JargonException;
+
 	/**
 	 * Modify the group access for an IRODS ticket
 	 * 
@@ -257,11 +263,13 @@ public interface TicketAdminService {
 	 *         was found to modify. <code>false</code> means that the modify was
 	 *         not successful, due to the ticket not being found. This can be
 	 *         ignored.
-	 * @throws JargonException (InvalidGroupException)
+	 * @throws JargonException
+	 *             (InvalidGroupException)
 	 * 
 	 */
-	boolean addTicketGroupRestriction(String ticketId, String userId) throws JargonException;
-	
+	boolean addTicketGroupRestriction(String ticketId, String userId)
+			throws JargonException;
+
 	/**
 	 * Modify the group access for an IRODS ticket
 	 * 
@@ -273,11 +281,13 @@ public interface TicketAdminService {
 	 *         was found to modify. <code>false</code> means that the modify was
 	 *         not successful, due to the ticket not being found. This can be
 	 *         ignored.
-	 * @throws JargonException (InvalidGroupException)
+	 * @throws JargonException
+	 *             (InvalidGroupException)
 	 * 
 	 */
-	boolean removeTicketGroupRestriction(String ticketId, String userId) throws JargonException;
-	
+	boolean removeTicketGroupRestriction(String ticketId, String userId)
+			throws JargonException;
+
 	/**
 	 * Modify the host access for an IRODS ticket
 	 * 
@@ -289,11 +299,13 @@ public interface TicketAdminService {
 	 *         was found to modify. <code>false</code> means that the modify was
 	 *         not successful, due to the ticket not being found. This can be
 	 *         ignored.
-	 * @throws JargonException (InvalidHostException)
+	 * @throws JargonException
+	 *             (InvalidHostException)
 	 * 
 	 */
-	boolean addTicketHostRestriction(String ticketId, String host) throws JargonException;
-	
+	boolean addTicketHostRestriction(String ticketId, String host)
+			throws JargonException;
+
 	/**
 	 * Modify the host access for an IRODS ticket
 	 * 
@@ -305,20 +317,24 @@ public interface TicketAdminService {
 	 *         was found to modify. <code>false</code> means that the modify was
 	 *         not successful, due to the ticket not being found. This can be
 	 *         ignored.
-	 * @throws JargonException (InvalidHostException)
+	 * @throws JargonException
+	 *             (InvalidHostException)
 	 * 
 	 */
-	boolean removeTicketHostRestriction(String ticketId, String host) throws JargonException;
-	
+	boolean removeTicketHostRestriction(String ticketId, String host)
+			throws JargonException;
+
 	/**
 	 * delete all IRODS access tickets for this user
 	 * 
 	 * @return <code>boolean</code> that will be <code>true</code> if the delete
-	 *         ticket operation was successful. <code>false</code> means that the delete was
-	 *         not successful, due to no tickets found. This can be ignored. NOTE: Use EXTREME
-	 *         caution with this method - for a regular user (rodsuser), this will delete tickets
-	 *         just for that user. However for a rodsadmin user this will delete ALL tickets.
-	 * @throws JargonException (InvalidHostException)
+	 *         ticket operation was successful. <code>false</code> means that
+	 *         the delete was not successful, due to no tickets found. This can
+	 *         be ignored. NOTE: Use EXTREME caution with this method - for a
+	 *         regular user (rodsuser), this will delete tickets just for that
+	 *         user. However for a rodsadmin user this will delete ALL tickets.
+	 * @throws JargonException
+	 *             (InvalidHostException)
 	 * 
 	 */
 	boolean deleteAllTicketsForThisUser() throws JargonException;

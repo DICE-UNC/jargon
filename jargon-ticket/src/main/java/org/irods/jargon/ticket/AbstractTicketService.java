@@ -17,8 +17,9 @@ public class AbstractTicketService {
 	 * @param irodsAccessObjectFactory
 	 * @param irodsAccount
 	 */
-	AbstractTicketService(IRODSAccessObjectFactory irodsAccessObjectFactory,
-			IRODSAccount irodsAccount) {
+	AbstractTicketService(
+			final IRODSAccessObjectFactory irodsAccessObjectFactory,
+			final IRODSAccount irodsAccount) {
 
 		if (irodsAccessObjectFactory == null) {
 			throw new IllegalArgumentException("null irodsAccessObjectFactory");
@@ -35,7 +36,6 @@ public class AbstractTicketService {
 	protected IRODSAccessObjectFactory irodsAccessObjectFactory;
 	protected IRODSAccount irodsAccount;
 
-
 	public AbstractTicketService() {
 		super();
 	}
@@ -44,7 +44,8 @@ public class AbstractTicketService {
 		return irodsAccessObjectFactory;
 	}
 
-	public void setIrodsAccessObjectFactory(final IRODSAccessObjectFactory irodsAccessObjectFactory) {
+	public void setIrodsAccessObjectFactory(
+			final IRODSAccessObjectFactory irodsAccessObjectFactory) {
 		this.irodsAccessObjectFactory = irodsAccessObjectFactory;
 	}
 

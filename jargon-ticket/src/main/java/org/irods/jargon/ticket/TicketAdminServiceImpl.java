@@ -35,7 +35,8 @@ import org.irods.jargon.ticket.utils.TicketRandomString;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public final class TicketAdminServiceImpl extends AbstractTicketService implements TicketAdminService {
+public final class TicketAdminServiceImpl extends AbstractTicketService
+		implements TicketAdminService {
 
 	private static final String PARTIAL_START_INDEX_MUST_BE_0 = "partial start index must be >= 0";
 	private static final String EXECUTING_TICKET_PI = "executing ticket PI";
@@ -44,6 +45,7 @@ public final class TicketAdminServiceImpl extends AbstractTicketService implemen
 	private static final String TICKET_NOT_FOUND = "IRODS ticket not found";
 	public static final Logger log = LoggerFactory
 			.getLogger(TicketAdminServiceImpl.class);
+
 	/**
 	 * Default constructor takes the objects necessary to communicate with iRODS
 	 * via Access Objects
@@ -147,8 +149,8 @@ public final class TicketAdminServiceImpl extends AbstractTicketService implemen
 	 */
 	@Override
 	public String createTicket(final TicketCreateModeEnum mode,
-			final IRODSFile file, String ticketId) throws JargonException,
-			DuplicateDataException {
+			final IRODSFile file, final String ticketId)
+			throws JargonException, DuplicateDataException {
 
 		if (file == null) {
 			throw new IllegalArgumentException(
@@ -255,8 +257,7 @@ public final class TicketAdminServiceImpl extends AbstractTicketService implemen
 		log.info("listAllTicketsForDataObjects()");
 
 		if (partialStartIndex < 0) {
-			throw new IllegalArgumentException(
-					PARTIAL_START_INDEX_MUST_BE_0);
+			throw new IllegalArgumentException(PARTIAL_START_INDEX_MUST_BE_0);
 		}
 
 		List<Ticket> tickets = new ArrayList<Ticket>();
@@ -316,8 +317,7 @@ public final class TicketAdminServiceImpl extends AbstractTicketService implemen
 		log.info("listAllTicketsForCollections()");
 
 		if (partialStartIndex < 0) {
-			throw new IllegalArgumentException(
-					PARTIAL_START_INDEX_MUST_BE_0);
+			throw new IllegalArgumentException(PARTIAL_START_INDEX_MUST_BE_0);
 		}
 
 		List<Ticket> tickets = new ArrayList<Ticket>();
@@ -375,8 +375,7 @@ public final class TicketAdminServiceImpl extends AbstractTicketService implemen
 		}
 
 		if (partialStartIndex < 0) {
-			throw new IllegalArgumentException(
-					PARTIAL_START_INDEX_MUST_BE_0);
+			throw new IllegalArgumentException(PARTIAL_START_INDEX_MUST_BE_0);
 		}
 
 		log.info("irodsAbsolutePath:{}", irodsAbsolutePath);
@@ -461,8 +460,7 @@ public final class TicketAdminServiceImpl extends AbstractTicketService implemen
 		}
 
 		if (partialStartIndex < 0) {
-			throw new IllegalArgumentException(
-					PARTIAL_START_INDEX_MUST_BE_0);
+			throw new IllegalArgumentException(PARTIAL_START_INDEX_MUST_BE_0);
 		}
 
 		log.info("irodsAbsolutePath:{}", irodsAbsolutePath);
@@ -550,8 +548,7 @@ public final class TicketAdminServiceImpl extends AbstractTicketService implemen
 		log.info("listAllTickets()");
 
 		if (partialStartIndex < 0) {
-			throw new IllegalArgumentException(
-					PARTIAL_START_INDEX_MUST_BE_0);
+			throw new IllegalArgumentException(PARTIAL_START_INDEX_MUST_BE_0);
 		}
 
 		List<Ticket> tickets = new ArrayList<Ticket>();
