@@ -1,6 +1,6 @@
 package org.irods.jargon.core.query;
 
-import org.irods.jargon.core.query.GenQuerySelectField.SelectFieldSource;
+import org.irods.jargon.core.query.GenQueryField.SelectFieldSource;
 
 /**
  * Represents an immutable condition part of a gen query as produced by the gen
@@ -9,24 +9,57 @@ import org.irods.jargon.core.query.GenQuerySelectField.SelectFieldSource;
  * @author Mike Conway - DICE (www.irods.org)
  * 
  */
-public class GenQueryBuilderCondition {
+class GenQueryBuilderCondition {
 
 	private final String selectFieldColumnName;
 	private final SelectFieldSource selectFieldSource;
 	private final String selectFieldNumericTranslation;
-	private final String operator;
+	private final QueryConditionOperators operator;
 	private final String value;
 
 	/**
+	 * Create an immutable instance of an individual condition in a general
+	 * query
+	 * 
+	 * @param selectFieldColumnName
+	 *            <code>String</code> with the column name
+	 * @param selectFieldSource
+	 *            {@link SelectFieldSource} that reflects the type of field
+	 * @param selectFieldNumericTranslation
+	 *            <code>String</code> with the numeric iRODS gen query protocol
+	 *            value that maps to this field
+	 * @param operator
+	 *            {@linkQueryConditionOperators} value with the operation for
+	 *            the condition
+	 * @param value
+	 *            <code>String</code> with the right hand side of the query
+	 *            condition
+	 * @return
+	 */
+	static GenQueryBuilderCondition instance(
+			final String selectFieldColumnName,
+			final SelectFieldSource selectFieldSource,
+			final String selectFieldNumericTranslation,
+			final QueryConditionOperators operator, final String value) {
+
+		return new GenQueryBuilderCondition(selectFieldColumnName,
+				selectFieldSource, selectFieldNumericTranslation, operator,
+				value);
+	}
+
+	/**
+	 * 
 	 * @param selectFieldColumnName
 	 * @param selectFieldSource
 	 * @param selectFieldNumericTranslation
 	 * @param operator
 	 * @param value
 	 */
-	private GenQueryBuilderCondition(String selectFieldColumnName,
-			SelectFieldSource selectFieldSource,
-			String selectFieldNumericTranslation, String operator, String value) {
+	private GenQueryBuilderCondition(final String selectFieldColumnName,
+			final SelectFieldSource selectFieldSource,
+			final String selectFieldNumericTranslation,
+			final QueryConditionOperators operator,
+			final String value) {
 		this.selectFieldColumnName = selectFieldColumnName;
 		this.selectFieldSource = selectFieldSource;
 		this.selectFieldNumericTranslation = selectFieldNumericTranslation;
@@ -37,35 +70,35 @@ public class GenQueryBuilderCondition {
 	/**
 	 * @return the selectFieldColumnName
 	 */
-	public String getSelectFieldColumnName() {
+	String getSelectFieldColumnName() {
 		return selectFieldColumnName;
 	}
 
 	/**
 	 * @return the selectFieldSource
 	 */
-	public SelectFieldSource getSelectFieldSource() {
+	SelectFieldSource getSelectFieldSource() {
 		return selectFieldSource;
 	}
 
 	/**
 	 * @return the selectFieldNumericTranslation
 	 */
-	public String getSelectFieldNumericTranslation() {
+	String getSelectFieldNumericTranslation() {
 		return selectFieldNumericTranslation;
 	}
 
 	/**
 	 * @return the operator
 	 */
-	public String getOperator() {
+	QueryConditionOperators getOperator() {
 		return operator;
 	}
 
 	/**
 	 * @return the value
 	 */
-	public String getValue() {
+	String getValue() {
 		return value;
 	}
 

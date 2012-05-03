@@ -8,6 +8,7 @@ import org.irods.jargon.core.exception.OverwriteException;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.transfer.TransferControlBlock;
 import org.irods.jargon.core.transfer.TransferStatusCallbackListener;
+import org.irods.jargon.ticket.io.FileStreamAndInfo;
 
 public interface TicketClientOperations {
 
@@ -95,5 +96,45 @@ public interface TicketClientOperations {
 			final TransferStatusCallbackListener transferStatusCallbackListener,
 			final TransferControlBlock transferControlBlock)
 			throws DataNotFoundException, OverwriteException, JargonException;
+
+	/**
+	 * Given an iRODS ticket for a data object, return an object that has an
+	 * <code>InputStream</code> for that file, as well as the length of data to
+	 * be streamed. This method is oriented towards applications that need to
+	 * represent the data from iRODS as a stream.
+	 * <p/>
+	 * Note that currently only 'get' and 'put' are supported via tickets, so
+	 * mid-tier applications that wish to stream data back to the client need to
+	 * do an intermediate get to the mid-tier platform and then stream from this
+	 * location.
+	 * <p/>
+	 * Tickets are limited in what they can access, so various operations that
+	 * refer to the iCAT, such as obtaining the length, or differentiating
+	 * between a file and a collection, cannot be done in the typical way. As a
+	 * work-around, this object holds the lenght of the cached file so that it
+	 * may be sent in browser responses.
+	 * 
+	 * @param ticketString
+	 *            <code>String</code> with the unique string that represents the
+	 *            ticket
+	 * @param irodsSourceFile
+	 *            {@link IRODSFile} that represents the data to be streamed back
+	 *            to the caller
+	 * @param intermediateCacheRootDirectory
+	 *            {@link File} on the local file system that is the directory
+	 *            root where temporary files may be cached. Note that, upon
+	 *            close of the returned stream, this file will be cleaned up
+	 *            from that cache.
+	 * @return {@link FileStreamAndInfo} with a buffered stream that will delete
+	 *         the cached file upon close. This object also contains a length
+	 *         for the file.
+	 * @throws DataNotFoundException
+	 *             if the ticket data is not available
+	 * @throws JargonException
+	 */
+	FileStreamAndInfo redeemTicketGetDataObjectAndStreamBack(
+			String ticketString, IRODSFile irodsSourceFile,
+			File intermediateCacheRootDirectory) throws DataNotFoundException,
+			JargonException;
 
 }

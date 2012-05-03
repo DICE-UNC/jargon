@@ -11,7 +11,8 @@ import org.irods.jargon.core.exception.JargonException;
 /**
  * Represents a query translated into a format that can be processed into the
  * IRODS protocol. Essentially this is a bridge between a query stated as plain
- * text and the format of queries understood in a <code>Tag</code> format.
+ * text or via the builder, and the format of queries understood in a
+ * <code>Tag</code> format.
  * 
  * This object is immutable, and is safe to share between threads. This class is
  * not marked final to assist in testability.
@@ -22,6 +23,7 @@ import org.irods.jargon.core.exception.JargonException;
 public class TranslatedIRODSGenQuery {
 	private final List<GenQuerySelectField> selectFields;
 	private final List<TranslatedGenQueryCondition> translatedQueryConditions;
+	private final List<GenQueryOrderByField> orderByFields;
 	private final AbstractIRODSGenQuery irodsQuery;
 	private final boolean distinct;
 
@@ -53,19 +55,43 @@ public class TranslatedIRODSGenQuery {
 			final AbstractIRODSGenQuery irodsQuery, final boolean distinct)
 			throws JargonException {
 		return new TranslatedIRODSGenQuery(translatedSelectFields,
-				translatedQueryConditions,
-				new ArrayList<GenQuerySelectField>(), irodsQuery, distinct);
+				translatedQueryConditions, null, irodsQuery, distinct);
 
 	}
 
-	public static TranslatedIRODSGenQuery instanceWithGroupBy(
+	/**
+	 * Create an instance of the query translation, this contains information
+	 * about the original query, as well as information about the parsed and
+	 * translated query.
+	 * 
+	 * @param translatedSelectFields
+	 *            <code>List</code> of
+	 *            {@link org.irods.jargon.core.pub.GenQuerySelectField.SelectField}
+	 *            representing the selects.
+	 * @param translatedQueryConditions
+	 *            <code>List</code> of
+	 *            {@link org.irods.jargon.core.pub.TranslatedGenQueryCondition.TranslatedQueryCondition}
+	 *            representing the parsed conditions.
+	 * @param orderByFields
+	 *            <code>List</code> of {@link GenQueryOrderByField} that has
+	 *            order by data
+	 * @param irodsQuery
+	 *            {@link org.irods.jargon.core.query.IRODSGenQuery} that
+	 *            encapsulates the original user query.
+	 * @param distinct
+	 *            <code>boolean</code> indicating whether this is a distinct
+	 *            query.
+	 * @return <code>TranslatedIRODSQuery</code>
+	 * @throws JargonException
+	 */
+	public static TranslatedIRODSGenQuery instance(
 			final List<GenQuerySelectField> translatedSelectFields,
 			final List<TranslatedGenQueryCondition> translatedQueryConditions,
-			final List<GenQuerySelectField> groupByFields,
+			final List<GenQueryOrderByField> orderByFields,
 			final AbstractIRODSGenQuery irodsQuery, final boolean distinct)
 			throws JargonException {
 		return new TranslatedIRODSGenQuery(translatedSelectFields,
-				translatedQueryConditions, groupByFields, irodsQuery, distinct);
+				translatedQueryConditions, orderByFields, irodsQuery, distinct);
 
 	}
 
@@ -93,15 +119,14 @@ public class TranslatedIRODSGenQuery {
 			final List<TranslatedGenQueryCondition> translatedQueryConditions,
 			final AbstractIRODSGenQuery irodsQuery) throws JargonException {
 		return new TranslatedIRODSGenQuery(translatedSelectFields,
-				translatedQueryConditions,
-				new ArrayList<GenQuerySelectField>(), irodsQuery, true);
+				translatedQueryConditions, null, irodsQuery, true);
 
 	}
 
 	private TranslatedIRODSGenQuery(
 			final List<GenQuerySelectField> selectFields,
 			final List<TranslatedGenQueryCondition> translatedQueryConditions,
-			final List<GenQuerySelectField> groupByFields,
+			final List<GenQueryOrderByField> orderByFields,
 			final AbstractIRODSGenQuery irodsQuery, final boolean distinct)
 			throws JargonException {
 
@@ -113,8 +138,10 @@ public class TranslatedIRODSGenQuery {
 			throw new JargonException("no select column names");
 		}
 
-		if (groupByFields == null) {
-			throw new JargonException("null groupByFields");
+		if (orderByFields == null) {
+			this.orderByFields = new ArrayList<GenQueryOrderByField>();
+		} else {
+			this.orderByFields = orderByFields;
 		}
 
 		if (selectFields.isEmpty()) {
@@ -171,11 +198,20 @@ public class TranslatedIRODSGenQuery {
 		sb.append(selectFields);
 		sb.append("\n   translatedQueryConditions:");
 		sb.append(translatedQueryConditions);
+		sb.append("\n   orderByFields:");
+		sb.append(orderByFields);
 		sb.append("\n   irodsQuery:");
 		sb.append(irodsQuery);
 		sb.append("\n   distinct:");
 		sb.append(distinct);
 		return sb.toString();
+	}
+
+	/**
+	 * @return the orderByFields
+	 */
+	public List<GenQueryOrderByField> getOrderByFields() {
+		return orderByFields;
 	}
 
 }

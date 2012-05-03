@@ -12,9 +12,12 @@ import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.pub.io.IRODSFileFactory;
 import org.irods.jargon.core.query.IRODSGenQuery;
+import org.irods.jargon.core.query.IRODSGenQueryBuilder;
+import org.irods.jargon.core.query.IRODSGenQueryFromBuilder;
 import org.irods.jargon.core.query.IRODSQueryResultRow;
 import org.irods.jargon.core.query.IRODSQueryResultSet;
 import org.irods.jargon.core.query.IRODSQueryResultSetInterface;
+import org.irods.jargon.core.query.QueryConditionOperators;
 import org.irods.jargon.core.query.RodsGenQueryEnum;
 import org.irods.jargon.testutils.IRODSTestSetupUtilities;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
@@ -41,27 +44,30 @@ public class IRODSGenQueryExecutorImplTest {
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		irodsFileSystem = IRODSFileSystem.instance();
+
+		String testFilePrefix = "IRODSGenQueryExcecutorImplTest";
+		String testFileSuffix = ".txt";
+
 		TestingPropertiesHelper testingPropertiesLoader = new TestingPropertiesHelper();
 		testingProperties = testingPropertiesLoader.getTestProperties();
 		scratchFileUtils = new ScratchFileUtils(testingProperties);
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
 		scratchFileUtils
 				.clearAndReinitializeScratchDirectory(IRODS_TEST_SUBDIR_PATH);
 		irodsTestSetupUtilities = new IRODSTestSetupUtilities();
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
 		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
 		irodsTestSetupUtilities
 				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
 
-		String testFilePrefix = "IRODSGenQueryExcecutorImplTest";
-		String testFileSuffix = ".txt";
-		String absPath = scratchFileUtils
-				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
-
 		FileGenerator.generateManyFilesInGivenDirectory(IRODS_TEST_SUBDIR_PATH
 				+ '/' + collDir, testFilePrefix, testFileSuffix, 2000, 5, 10);
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
 
-		IRODSFile putDir = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+		IRODSFile putDir = irodsFileSystem
+				.getIRODSFileFactory(irodsAccount)
 				.instanceIRODSFile(
 						testingPropertiesHelper
 								.buildIRODSCollectionAbsolutePathFromTestProperties(
@@ -650,6 +656,40 @@ public class IRODSGenQueryExecutorImplTest {
 		Assert.assertEquals("did not find size where expected", size,
 				r.getColumn(3));
 
+	}
+
+	/**
+	 * A basic execution of a query via the builder with a simple condition.
+	 * We're looking for no errors and some result returned
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public final void testExecuteIRODSQueryBuilderQuery() throws Exception {
+
+		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, null);
+		builder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_R_RESC_NAME)
+				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_R_ZONE_NAME)
+				.addConditionAsGenQueryField(
+						RodsGenQueryEnum.COL_R_ZONE_NAME,
+						QueryConditionOperators.EQUAL,
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_ZONE_KEY));
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
+		IRODSGenQueryExecutor irodsGenQueryExecutor = accessObjectFactory
+				.getIRODSGenQueryExecutor(irodsAccount);
+		IRODSGenQueryFromBuilder query = builder
+				.exportIRODSQueryFromBuilder(50);
+
+		IRODSQueryResultSetInterface resultSet = irodsGenQueryExecutor
+				.executeIRODSQuery(query, 0);
+
+		Assert.assertNotNull(resultSet);
 	}
 
 }

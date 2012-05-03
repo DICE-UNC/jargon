@@ -146,19 +146,19 @@ public class TicketAdminInp extends TicketInp {
 	}
 
 	public static TicketAdminInp instanceForModifyByteWriteNumber(
-			final String ticketId, final Integer numberOfByteWrites) {
+			final String ticketId, final long byteWriteLimit) {
 
 		if (ticketId == null || ticketId.isEmpty()) {
 			throw new IllegalArgumentException("null or empty ticket id");
 		}
 
-		if (numberOfByteWrites < 0) {
+		if (byteWriteLimit < 0) {
 			throw new IllegalArgumentException(
 					"illegal integer for write-byte - must be 0 or greater");
 		}
 
 		return new TicketAdminInp(TICKET_ADMIN_INP_API_NBR, "mod", ticketId,
-				"write-byte", numberOfByteWrites.toString(), BLANK, BLANK);
+				"write-byte", String.valueOf(byteWriteLimit), BLANK, BLANK);
 
 	}
 

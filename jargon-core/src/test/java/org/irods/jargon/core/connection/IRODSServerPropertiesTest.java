@@ -40,4 +40,22 @@ public class IRODSServerPropertiesTest {
 		Assert.assertFalse("server should not be at version", isLater);
 	}
 
+	@Test
+	public void testSupportsTicketsWhenDoes() {
+		String serverVersion = "rods3.1";
+		IRODSServerProperties irodsServerProperties = IRODSServerProperties
+				.instance(IcatEnabled.ICAT_ENABLED, 100, serverVersion, "", "");
+		boolean isTickets = irodsServerProperties.isSupportsTickets();
+		Assert.assertTrue("server should supoort tickets", isTickets);
+	}
+
+	@Test
+	public void testSupportsTicketsWhenDoesnt() {
+		String serverVersion = "rods2.5";
+		IRODSServerProperties irodsServerProperties = IRODSServerProperties
+				.instance(IcatEnabled.ICAT_ENABLED, 100, serverVersion, "", "");
+		boolean isTickets = irodsServerProperties.isSupportsTickets();
+		Assert.assertFalse("server shouldnt supoort tickets", isTickets);
+	}
+
 }

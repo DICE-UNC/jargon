@@ -4,7 +4,7 @@
 package org.irods.jargon.core.pub;
 
 import org.irods.jargon.core.exception.JargonException;
-import org.irods.jargon.core.query.IRODSGenQuery;
+import org.irods.jargon.core.query.AbstractIRODSGenQuery;
 import org.irods.jargon.core.query.IRODSQueryResultSet;
 import org.irods.jargon.core.query.IRODSQueryResultSetInterface;
 import org.irods.jargon.core.query.JargonQueryException;
@@ -33,8 +33,8 @@ public interface IRODSGenQueryExecutor extends IRODSAccessObject {
 	 * employed.
 	 * 
 	 * @param irodsQuery
-	 *            {@link org.irods.jargon.core.query.IRODSGenQuery} that will
-	 *            wrap the given iquest-like query
+	 *            {@link org.irods.jargon.core.query.AbstractIRODSGenQuery} that
+	 *            will wrap the given iquest-like query
 	 * @param continueIndex
 	 *            <code>int</code> that indicates whether this is a requery when
 	 *            more resuts than the limit have been generated
@@ -43,7 +43,8 @@ public interface IRODSGenQueryExecutor extends IRODSAccessObject {
 	 * @throws JargonException
 	 * @throws JargonQueryException
 	 */
-	IRODSQueryResultSet executeIRODSQuery(final IRODSGenQuery irodsQuery,
+	IRODSQueryResultSet executeIRODSQuery(
+			final AbstractIRODSGenQuery irodsQuery,
 			final int continueIndex) throws JargonException,
 			JargonQueryException;
 
@@ -59,8 +60,8 @@ public interface IRODSGenQueryExecutor extends IRODSAccessObject {
 	 * employed.
 	 * 
 	 * @param irodsQuery
-	 *            {@link org.irods.jargon.core.query.IRODSGenQuery} that will
-	 *            wrap the given iquest-like query
+	 *            {@link org.irods.jargon.core.query.AbstractIRODSGenQuery} that
+	 *            will wrap the given iquest-like query
 	 * @param continueIndex
 	 *            <code>int</code> that indicates whether this is a requery when
 	 *            more resuts than the limit have been generated
@@ -72,7 +73,8 @@ public interface IRODSGenQueryExecutor extends IRODSAccessObject {
 	 * @throws JargonException
 	 * @throws JargonQueryException
 	 */
-	IRODSQueryResultSet executeIRODSQueryInZone(IRODSGenQuery irodsQuery,
+	IRODSQueryResultSet executeIRODSQueryInZone(
+			AbstractIRODSGenQuery irodsQuery,
 			int continueIndex, String zoneName) throws JargonException,
 			JargonQueryException;
 
@@ -82,8 +84,8 @@ public interface IRODSGenQueryExecutor extends IRODSAccessObject {
 	 * results
 	 * 
 	 * @param irodsQuery
-	 *            {@link org.irods.jargon.core.query.IRODSGenQuery} that will
-	 *            wrap the given iquest-like query
+	 *            {@link org.irods.jargon.core.query.AbstractIRODSGenQuery} that
+	 *            will wrap the given iquest-like query
 	 * @param partialStartIndex
 	 *            <code>int</code> that indicates an offset within the results
 	 *            from which to build the returned result set.
@@ -93,7 +95,7 @@ public interface IRODSGenQueryExecutor extends IRODSAccessObject {
 	 * @throws JargonQueryException
 	 */
 	IRODSQueryResultSetInterface executeIRODSQueryWithPaging(
-			final IRODSGenQuery irodsQuery, final int partialStartIndex)
+			final AbstractIRODSGenQuery irodsQuery, final int partialStartIndex)
 			throws JargonException, JargonQueryException;
 
 	/**
@@ -105,8 +107,8 @@ public interface IRODSGenQueryExecutor extends IRODSAccessObject {
 	 * run the query in.
 	 * 
 	 * @param irodsQuery
-	 *            {@link org.irods.jargon.core.query.IRODSGenQuery} that will
-	 *            wrap the given iquest-like query
+	 *            {@link org.irods.jargon.core.query.AbstractIRODSGenQuery} that
+	 *            will wrap the given iquest-like query
 	 * @param partialStartIndex
 	 *            <code>int</code> that indicates an offset within the results
 	 *            from which to build the returned result set.
@@ -119,7 +121,8 @@ public interface IRODSGenQueryExecutor extends IRODSAccessObject {
 	 * @throws JargonQueryException
 	 */
 	IRODSQueryResultSetInterface executeIRODSQueryWithPagingInZone(
-			IRODSGenQuery irodsQuery, int partialStartIndex, String zoneName)
+			AbstractIRODSGenQuery irodsQuery, int partialStartIndex,
+			String zoneName)
 			throws JargonException, JargonQueryException;
 
 	/**
@@ -184,8 +187,8 @@ public interface IRODSGenQueryExecutor extends IRODSAccessObject {
 	 * situations, query can be accomplished with an offset.
 	 * 
 	 * @param irodsQuery
-	 *            {@link org.irods.jargon.core.query.IRODSGenQuery} that will
-	 *            wrap the given iquest-like query
+	 *            {@link org.irods.jargon.core.query.AbstractIRODSGenQuery} that
+	 *            will wrap the given query
 	 * @param partialStartIndex
 	 *            <code>int</code> that indicates an offset within the results
 	 *            from which to build the returned result set.
@@ -195,7 +198,7 @@ public interface IRODSGenQueryExecutor extends IRODSAccessObject {
 	 * @throws JargonQueryException
 	 */
 	IRODSQueryResultSet executeIRODSQueryAndCloseResult(
-			IRODSGenQuery irodsQuery, int partialStartIndex)
+			AbstractIRODSGenQuery irodsQuery, int partialStartIndex)
 			throws JargonException, JargonQueryException;
 
 	/**
@@ -213,8 +216,8 @@ public interface IRODSGenQueryExecutor extends IRODSAccessObject {
 	 * situations, query can be accomplished with an offset.
 	 * 
 	 * @param irodsQuery
-	 *            {@link org.irods.jargon.core.query.IRODSGenQuery} that will
-	 *            wrap the given iquest-like query
+	 *            {@link org.irods.jargon.core.query.AbstractIRODSGenQuery} that
+	 *            will wrap the given query
 	 * @param partialStartIndex
 	 *            <code>int</code> that indicates an offset within the results
 	 *            from which to build the returned result set.
@@ -227,7 +230,8 @@ public interface IRODSGenQueryExecutor extends IRODSAccessObject {
 	 * @throws JargonQueryException
 	 */
 	IRODSQueryResultSet executeIRODSQueryAndCloseResultInZone(
-			IRODSGenQuery irodsQuery, int partialStartIndex, String zoneName)
+			AbstractIRODSGenQuery irodsQuery, int partialStartIndex,
+			String zoneName)
 			throws JargonException, JargonQueryException;
 
 }

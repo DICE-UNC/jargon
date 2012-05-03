@@ -9,19 +9,9 @@ import org.irods.jargon.core.exception.JargonException;
  *         of select (e.g. a field, versus a sum() or count() of a field. This
  *         is an immutable, thread-safe type
  */
-public class GenQuerySelectField {
-	public enum SelectFieldTypes {
-		FIELD, SUM, MIN, MAX, AVG, COUNT, FILE_ACCESS
-	}
+public class GenQuerySelectField extends GenQueryField {
 
-	public enum SelectFieldSource {
-		UNKNOWN, DEFINED_QUERY_FIELD, AVU, EXTENSIBLE_METADATA
-	}
-
-	private final String selectFieldColumnName;
 	private final SelectFieldTypes selectFieldType;
-	private final SelectFieldSource selectFieldSource;
-	private final String selectFieldNumericTranslation;
 
 	/**
 	 * Create an instance of a select field using a value from the enumeration
@@ -87,13 +77,13 @@ public class GenQuerySelectField {
 		StringBuilder sb = new StringBuilder();
 		sb.append("Select field");
 		sb.append("\n   selectFieldColumnName:");
-		sb.append(selectFieldColumnName);
+		sb.append(getSelectFieldColumnName());
 		sb.append("\n   selectFieldNumericTranslation:");
-		sb.append(selectFieldNumericTranslation);
+		sb.append(getSelectFieldNumericTranslation());
 		sb.append("\n   selectFieldType:");
-		sb.append(selectFieldType);
+		sb.append(getSelectFieldType());
 		sb.append("\n   selectFieldSource:");
-		sb.append(selectFieldSource);
+		sb.append(getSelectFieldSource());
 		return sb.toString();
 	}
 
@@ -102,45 +92,19 @@ public class GenQuerySelectField {
 			final SelectFieldTypes selectFieldType,
 			final SelectFieldSource selectFieldSource) throws JargonException {
 
-		if (selectFieldColumnName == null
-				|| selectFieldColumnName.length() == 0) {
-			throw new JargonException("select field was or missing");
-		}
+		super(selectFieldColumnName, selectFieldSource,
+				selectFieldNumericTranslation);
 
 		if (selectFieldType == null) {
 			throw new JargonException("field type was null");
 		}
 
-		if (selectFieldSource == null) {
-			throw new JargonException("field source was null");
-		}
-
-		if (selectFieldNumericTranslation == null
-				|| selectFieldNumericTranslation.length() == 0) {
-			throw new JargonException("field translation is null or blank");
-		}
-
-		this.selectFieldColumnName = selectFieldColumnName;
 		this.selectFieldType = selectFieldType;
-		this.selectFieldSource = selectFieldSource;
-		this.selectFieldNumericTranslation = selectFieldNumericTranslation;
 
-	}
-
-	public String getSelectFieldColumnName() {
-		return selectFieldColumnName;
 	}
 
 	public SelectFieldTypes getSelectFieldType() {
 		return selectFieldType;
-	}
-
-	public SelectFieldSource getSelectFieldSource() {
-		return selectFieldSource;
-	}
-
-	public String getSelectFieldNumericTranslation() {
-		return selectFieldNumericTranslation;
 	}
 
 }

@@ -227,8 +227,7 @@ public class IRODSUriUtils {
 	}
 
 	/**
-	 * Build a URI appropriate for a given iRODS account and absolute path. Note
-	 * that if the
+	 * Build a URI appropriate for a given iRODS account and absolute path.
 	 * 
 	 * @param irodsAccount
 	 *            {@link IRODSAccount} containing connection information
@@ -267,6 +266,54 @@ public class IRODSUriUtils {
 			uri = new URI("irods", irodsAccount.getUserName(),
 					irodsAccount.getHost(), irodsAccount.getPort(), absPath,
 					null, null);
+
+		} catch (URISyntaxException e) {
+
+			throw new JargonException(e);
+		}
+
+		return uri;
+	}
+
+	/**
+	 * Build a URI appropriate for a given iRODS account and absolute path.
+	 * 
+	 * @param irodsAccount
+	 *            {@link IRODSAccount} containing connection information
+	 * @param isFile
+	 * @param irodsPath
+	 * @return
+	 * @throws JargonException
+	 */
+	public static URI buildURIForAnAccountWithNoUserInformationIncluded(
+			final IRODSAccount irodsAccount, final String irodsPath)
+			throws JargonException {
+
+		if (irodsAccount == null) {
+			throw new IllegalArgumentException("null iRODSAccount");
+		}
+
+		if (irodsPath == null || irodsPath.isEmpty()) {
+			throw new IllegalArgumentException(
+					"null or empty irodsAbsolutePath");
+		}
+
+		String absPath = irodsPath;
+		// if this is a relative path, use the user home directory to fashion an
+		// absolute path
+		if (irodsPath.charAt(0) != '/') {
+			StringBuilder sb = new StringBuilder();
+			sb.append(irodsAccount.getHomeDirectory());
+			sb.append("/");
+			sb.append(irodsPath);
+			absPath = sb.toString();
+		}
+
+		URI uri = null;
+
+		try {
+			uri = new URI("irods", null, irodsAccount.getHost(),
+					irodsAccount.getPort(), absPath, null, null);
 
 		} catch (URISyntaxException e) {
 

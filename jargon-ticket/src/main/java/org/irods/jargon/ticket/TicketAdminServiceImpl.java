@@ -7,6 +7,7 @@ import java.util.List;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.DuplicateDataException;
+import org.irods.jargon.core.exception.FileNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.packinstr.Tag;
 import org.irods.jargon.core.protovalues.ErrorEnum;
@@ -14,14 +15,19 @@ import org.irods.jargon.core.pub.CollectionAO;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 import org.irods.jargon.core.pub.IRODSGenQueryExecutor;
 import org.irods.jargon.core.pub.ProtocolExtensionPoint;
+import org.irods.jargon.core.pub.domain.ObjStat;
 import org.irods.jargon.core.pub.io.IRODSFile;
+import org.irods.jargon.core.query.GenQueryBuilderException;
 import org.irods.jargon.core.query.IRODSGenQuery;
+import org.irods.jargon.core.query.IRODSGenQueryBuilder;
 import org.irods.jargon.core.query.IRODSQueryResultRow;
 import org.irods.jargon.core.query.IRODSQueryResultSet;
 import org.irods.jargon.core.query.IRODSQueryResultSetInterface;
 import org.irods.jargon.core.query.JargonQueryException;
+import org.irods.jargon.core.query.QueryConditionOperators;
 import org.irods.jargon.core.query.RodsGenQueryEnum;
 import org.irods.jargon.core.utils.IRODSDataConversionUtil;
+import org.irods.jargon.ticket.Ticket.TicketObjectType;
 import org.irods.jargon.ticket.packinstr.TicketAdminInp;
 import org.irods.jargon.ticket.packinstr.TicketCreateModeEnum;
 import org.irods.jargon.ticket.packinstr.TicketModifyAddOrRemoveTypeEnum;
@@ -29,15 +35,16 @@ import org.irods.jargon.ticket.utils.TicketRandomString;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public final class TicketAdminServiceImpl implements TicketAdminService {
+public final class TicketAdminServiceImpl extends AbstractTicketService
+		implements TicketAdminService {
 
+	private static final String PARTIAL_START_INDEX_MUST_BE_0 = "partial start index must be >= 0";
+	private static final String EXECUTING_TICKET_PI = "executing ticket PI";
 	private static final String COMMA_SPACE = ", ";
 	private static final String ERROR_IN_TICKET_QUERY = "error in ticket query";
 	private static final String TICKET_NOT_FOUND = "IRODS ticket not found";
 	public static final Logger log = LoggerFactory
 			.getLogger(TicketAdminServiceImpl.class);
-	private IRODSAccessObjectFactory irodsAccessObjectFactory;
-	private IRODSAccount irodsAccount;
 
 	/**
 	 * Default constructor takes the objects necessary to communicate with iRODS
@@ -51,11 +58,85 @@ public final class TicketAdminServiceImpl implements TicketAdminService {
 	 *            grid
 	 * @throws JargonException
 	 */
-	public TicketAdminServiceImpl(
+	TicketAdminServiceImpl(
 			final IRODSAccessObjectFactory irodsAccessObjectFactory,
 			final IRODSAccount irodsAccount) throws JargonException {
 		this.irodsAccessObjectFactory = irodsAccessObjectFactory;
 		this.irodsAccount = irodsAccount;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.ticket.TicketAdminService#createTicketFromTicketObject
+	 * (org.irods.jargon.ticket.Ticket)
+	 */
+	@Override
+	public Ticket createTicketFromTicketObject(final Ticket ticket)
+			throws DuplicateDataException, DataNotFoundException,
+			JargonException {
+
+		log.info("createTicketFromTicketObjectAndSetAnyGivenLimits");
+		if (ticket == null) {
+			throw new IllegalArgumentException("null ticket");
+		}
+
+		log.info("ticket to update:{}", ticket);
+
+		if (ticket.getType() == null) {
+			throw new IllegalArgumentException("null type in ticket");
+		}
+
+		if (ticket.getIrodsAbsolutePath() == null
+				|| ticket.getIrodsAbsolutePath().isEmpty()) {
+			throw new IllegalArgumentException(
+					"null or empty irodsAbsolutePath");
+		}
+
+		IRODSFile ticketFile = irodsAccessObjectFactory.getIRODSFileFactory(
+				getIrodsAccount()).instanceIRODSFile(
+				ticket.getIrodsAbsolutePath());
+		if (!ticketFile.exists()) {
+			log.error("file for ticket does not exist");
+		}
+
+		if (ticketFile.isDirectory()) {
+			ticket.setObjectType(TicketObjectType.COLLECTION);
+		} else {
+			ticket.setObjectType(TicketObjectType.DATA_OBJECT);
+		}
+
+		ticket.setOwnerName(this.getIrodsAccount().getUserName());
+		ticket.setOwnerZone(this.getIrodsAccount().getZone());
+
+		log.info("creating base ticket");
+		ticket.setTicketString(createTicket(ticket.getType(), ticketFile,
+				ticket.getTicketString()));
+		log.info("adding count values and limits");
+
+		if (ticket.getExpireTime() != null) {
+			this.setTicketExpiration(ticket.getTicketString(),
+					ticket.getExpireTime());
+		}
+
+		if (ticket.getUsesLimit() > 0) {
+			this.setTicketUsesLimit(ticket.getTicketString(),
+					ticket.getUsesLimit());
+		}
+
+		if (ticket.getWriteByteLimit() > 0) {
+			this.setTicketByteWriteLimit(ticket.getTicketString(),
+					ticket.getWriteByteLimit());
+		}
+
+		if (ticket.getWriteFileLimit() > 0) {
+			this.setTicketFileWriteLimit(ticket.getTicketString(),
+					ticket.getWriteFileLimit());
+		}
+
+		return ticket;
+
 	}
 
 	/*
@@ -68,8 +149,8 @@ public final class TicketAdminServiceImpl implements TicketAdminService {
 	 */
 	@Override
 	public String createTicket(final TicketCreateModeEnum mode,
-			final IRODSFile file, String ticketId) throws JargonException,
-			DuplicateDataException {
+			final IRODSFile file, final String ticketId)
+			throws JargonException, DuplicateDataException {
 
 		if (file == null) {
 			throw new IllegalArgumentException(
@@ -83,9 +164,11 @@ public final class TicketAdminServiceImpl implements TicketAdminService {
 					"cannot create ticket with null create mode - read or write access");
 		}
 
-		if (ticketId == null || ticketId.isEmpty()) {
+		String myTicketId = ticketId;
+
+		if (myTicketId == null || myTicketId.isEmpty()) {
 			// create a new ticket string 15 chars in length
-			ticketId = new TicketRandomString(15).nextString();
+			myTicketId = new TicketRandomString(15).nextString();
 		}
 		log.info("ticket creation mode is:{}", mode);
 
@@ -107,8 +190,8 @@ public final class TicketAdminServiceImpl implements TicketAdminService {
 		}
 
 		TicketAdminInp ticketPI = TicketAdminInp.instanceForCreate(mode,
-				file.getAbsolutePath(), ticketId);
-		log.info("executing ticket PI");
+				file.getAbsolutePath(), myTicketId);
+		log.info(EXECUTING_TICKET_PI);
 
 		ProtocolExtensionPoint pep = irodsAccessObjectFactory
 				.getProtocolExtensionPoint(irodsAccount);
@@ -117,7 +200,7 @@ public final class TicketAdminServiceImpl implements TicketAdminService {
 		log.info("received response from ticket operation:{}",
 				ticketOperationResponse);
 
-		return ticketId;
+		return myTicketId;
 	}
 
 	/*
@@ -140,7 +223,7 @@ public final class TicketAdminServiceImpl implements TicketAdminService {
 		log.info("deleting ticket id/string:{}", ticketId);
 
 		TicketAdminInp ticketPI = TicketAdminInp.instanceForDelete(ticketId);
-		log.info("executing ticket PI");
+		log.info(EXECUTING_TICKET_PI);
 
 		ProtocolExtensionPoint pep = irodsAccessObjectFactory
 				.getProtocolExtensionPoint(irodsAccount);
@@ -174,8 +257,7 @@ public final class TicketAdminServiceImpl implements TicketAdminService {
 		log.info("listAllTicketsForDataObjects()");
 
 		if (partialStartIndex < 0) {
-			throw new IllegalArgumentException(
-					"partial start index must be >= 0");
+			throw new IllegalArgumentException(PARTIAL_START_INDEX_MUST_BE_0);
 		}
 
 		List<Ticket> tickets = new ArrayList<Ticket>();
@@ -235,8 +317,7 @@ public final class TicketAdminServiceImpl implements TicketAdminService {
 		log.info("listAllTicketsForCollections()");
 
 		if (partialStartIndex < 0) {
-			throw new IllegalArgumentException(
-					"partial start index must be >= 0");
+			throw new IllegalArgumentException(PARTIAL_START_INDEX_MUST_BE_0);
 		}
 
 		List<Ticket> tickets = new ArrayList<Ticket>();
@@ -278,6 +359,185 @@ public final class TicketAdminServiceImpl implements TicketAdminService {
 	 * (non-Javadoc)
 	 * 
 	 * @see
+	 * org.irods.jargon.ticket.TicketAdminService#listAllTicketsForGivenCollection
+	 * (java.lang.String, int)
+	 */
+	@Override
+	public List<Ticket> listAllTicketsForGivenCollection(
+			final String irodsAbsolutePath, final int partialStartIndex)
+			throws FileNotFoundException, JargonException {
+
+		log.info("listAllTicketsForGivenCollection()");
+
+		if (irodsAbsolutePath == null || irodsAbsolutePath.isEmpty()) {
+			throw new IllegalArgumentException(
+					"null or empty irodsAbsolutePath");
+		}
+
+		if (partialStartIndex < 0) {
+			throw new IllegalArgumentException(PARTIAL_START_INDEX_MUST_BE_0);
+		}
+
+		log.info("irodsAbsolutePath:{}", irodsAbsolutePath);
+		log.info("partialStartIndex:{}", partialStartIndex);
+
+		log.info("getting objStat...");
+
+		ObjStat objStat = irodsAccessObjectFactory
+				.getCollectionAndDataObjectListAndSearchAO(getIrodsAccount())
+				.retrieveObjectStatForPath(irodsAbsolutePath);
+
+		if (!objStat.isSomeTypeOfCollection()) {
+			log.error(
+					"ObjStat indicates that this is not some type of collection:{}",
+					objStat);
+			throw new JargonException("path is not a collection");
+		}
+
+		List<Ticket> tickets = new ArrayList<Ticket>();
+
+		IRODSQueryResultSet resultSet = null;
+
+		try {
+			IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, null);
+			addSelectsForTicketsCommonToQueryBuilder(builder);
+			addQuerySelectsForListAllTicketsForCollections(builder);
+			builder.addConditionAsGenQueryField(
+					RodsGenQueryEnum.COL_TICKET_COLL_NAME,
+					QueryConditionOperators.EQUAL, irodsAbsolutePath);
+
+			IRODSGenQueryExecutor irodsGenQueryExecutor = irodsAccessObjectFactory
+					.getIRODSGenQueryExecutor(irodsAccount);
+
+			resultSet = irodsGenQueryExecutor
+					.executeIRODSQueryAndCloseResult(
+							builder.exportIRODSQueryFromBuilder(this
+									.getIrodsAccessObjectFactory()
+									.getJargonProperties()
+									.getMaxFilesAndDirsQueryMax()),
+							partialStartIndex);
+			Ticket ticket = null;
+			for (IRODSQueryResultRow row : resultSet.getResults()) {
+				ticket = new Ticket();
+				putResultDataIntoTicketCommonValues(ticket, row);
+				ticket.setIrodsAbsolutePath(row.getColumn(13));
+				// add info to track position in records for possible requery
+				ticket.setLastResult(row.isLastResult());
+				ticket.setCount(row.getRecordCount());
+				log.info("adding ticket to results:{}", ticket);
+				tickets.add(ticket);
+			}
+
+		} catch (JargonQueryException e) {
+			log.error("query exception for ticket query", e);
+			throw new JargonException(ERROR_IN_TICKET_QUERY, e);
+		} catch (GenQueryBuilderException e) {
+			log.error("query exception for ticket query", e);
+			throw new JargonException(ERROR_IN_TICKET_QUERY, e);
+		}
+
+		return tickets;
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.ticket.TicketAdminService#listAllTicketsForGivenDataObject
+	 * (java.lang.String, int)
+	 */
+	@Override
+	public List<Ticket> listAllTicketsForGivenDataObject(
+			final String irodsAbsolutePath, final int partialStartIndex)
+			throws FileNotFoundException, JargonException {
+
+		log.info("listAllTicketsForGivenDataObject()");
+
+		if (irodsAbsolutePath == null || irodsAbsolutePath.isEmpty()) {
+			throw new IllegalArgumentException(
+					"null or empty irodsAbsolutePath");
+		}
+
+		if (partialStartIndex < 0) {
+			throw new IllegalArgumentException(PARTIAL_START_INDEX_MUST_BE_0);
+		}
+
+		log.info("irodsAbsolutePath:{}", irodsAbsolutePath);
+		log.info("partialStartIndex:{}", partialStartIndex);
+
+		log.info("getting objStat...");
+
+		ObjStat objStat = irodsAccessObjectFactory
+				.getCollectionAndDataObjectListAndSearchAO(getIrodsAccount())
+				.retrieveObjectStatForPath(irodsAbsolutePath);
+
+		if (objStat.isSomeTypeOfCollection()) {
+			log.error(
+					"ObjStat indicates that this is not some type of data object:{}",
+					objStat);
+			throw new JargonException("path is not a data object");
+		}
+
+		List<Ticket> tickets = new ArrayList<Ticket>();
+
+		IRODSQueryResultSet resultSet = null;
+		IRODSFile dataFile = irodsAccessObjectFactory.getIRODSFileFactory(
+				getIrodsAccount()).instanceIRODSFile(irodsAbsolutePath);
+
+		try {
+			IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, null);
+			addSelectsForTicketsCommonToQueryBuilder(builder);
+			addQuerySelectsForListAllTicketsForDataObjects(builder);
+			builder.addConditionAsGenQueryField(
+					RodsGenQueryEnum.COL_TICKET_DATA_NAME,
+					QueryConditionOperators.EQUAL, dataFile.getName())
+					.addConditionAsGenQueryField(
+							RodsGenQueryEnum.COL_TICKET_DATA_COLL_NAME,
+							QueryConditionOperators.EQUAL, dataFile.getParent());
+
+			IRODSGenQueryExecutor irodsGenQueryExecutor = irodsAccessObjectFactory
+					.getIRODSGenQueryExecutor(irodsAccount);
+
+			resultSet = irodsGenQueryExecutor
+					.executeIRODSQueryAndCloseResult(
+							builder.exportIRODSQueryFromBuilder(this
+									.getIrodsAccessObjectFactory()
+									.getJargonProperties()
+									.getMaxFilesAndDirsQueryMax()),
+							partialStartIndex);
+			Ticket ticket = null;
+			for (IRODSQueryResultRow row : resultSet.getResults()) {
+				ticket = new Ticket();
+				putResultDataIntoTicketCommonValues(ticket, row);
+				StringBuilder absPathBuilder = new StringBuilder();
+				absPathBuilder.append(row.getColumn(14));
+				absPathBuilder.append('/');
+				absPathBuilder.append(row.getColumn(13));
+				ticket.setIrodsAbsolutePath(absPathBuilder.toString());
+				// add info to track position in records for possible requery
+				ticket.setLastResult(row.isLastResult());
+				ticket.setCount(row.getRecordCount());
+				log.info("adding ticket to results:{}", ticket);
+				tickets.add(ticket);
+			}
+
+		} catch (JargonQueryException e) {
+			log.error("query exception for ticket query", e);
+			throw new JargonException(ERROR_IN_TICKET_QUERY, e);
+		} catch (GenQueryBuilderException e) {
+			log.error("query exception for ticket query", e);
+			throw new JargonException(ERROR_IN_TICKET_QUERY, e);
+		}
+
+		return tickets;
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
 	 * org.irods.jargon.ticket.TicketAdminService#listAllTicketsForCollections
 	 * (int)
 	 */
@@ -288,8 +548,7 @@ public final class TicketAdminServiceImpl implements TicketAdminService {
 		log.info("listAllTickets()");
 
 		if (partialStartIndex < 0) {
-			throw new IllegalArgumentException(
-					"partial start index must be >= 0");
+			throw new IllegalArgumentException(PARTIAL_START_INDEX_MUST_BE_0);
 		}
 
 		List<Ticket> tickets = new ArrayList<Ticket>();
@@ -465,7 +724,7 @@ public final class TicketAdminServiceImpl implements TicketAdminService {
 
 		TicketAdminInp ticketPI = TicketAdminInp.instanceForModifyNumberOfUses(
 				ticketId, usesLimit);
-		log.info("executing ticket PI");
+		log.info(EXECUTING_TICKET_PI);
 
 		ProtocolExtensionPoint pep = irodsAccessObjectFactory
 				.getProtocolExtensionPoint(irodsAccount);
@@ -513,7 +772,7 @@ public final class TicketAdminServiceImpl implements TicketAdminService {
 
 		TicketAdminInp ticketPI = TicketAdminInp
 				.instanceForModifyFileWriteNumber(ticketId, fileWriteLimit);
-		log.info("executing ticket PI");
+		log.info(EXECUTING_TICKET_PI);
 
 		ProtocolExtensionPoint pep = irodsAccessObjectFactory
 				.getProtocolExtensionPoint(irodsAccount);
@@ -542,7 +801,7 @@ public final class TicketAdminServiceImpl implements TicketAdminService {
 	 */
 	@Override
 	public boolean setTicketByteWriteLimit(final String ticketId,
-			final int byteWriteLimit) throws JargonException {
+			final long byteWriteLimit) throws JargonException {
 
 		Tag ticketOperationResponse = null;
 		boolean response = true;
@@ -561,7 +820,7 @@ public final class TicketAdminServiceImpl implements TicketAdminService {
 
 		TicketAdminInp ticketPI = TicketAdminInp
 				.instanceForModifyByteWriteNumber(ticketId, byteWriteLimit);
-		log.info("executing ticket PI");
+		log.info(EXECUTING_TICKET_PI);
 
 		ProtocolExtensionPoint pep = irodsAccessObjectFactory
 				.getProtocolExtensionPoint(irodsAccount);
@@ -609,7 +868,7 @@ public final class TicketAdminServiceImpl implements TicketAdminService {
 
 		TicketAdminInp ticketPI = TicketAdminInp.instanceForModifyExpiration(
 				ticketId, expirationDate);
-		log.info("executing ticket PI");
+		log.info(EXECUTING_TICKET_PI);
 
 		ProtocolExtensionPoint pep = irodsAccessObjectFactory
 				.getProtocolExtensionPoint(irodsAccount);
@@ -658,7 +917,7 @@ public final class TicketAdminServiceImpl implements TicketAdminService {
 		TicketAdminInp ticketPI = TicketAdminInp.instanceForModifyAddAccess(
 				ticketId, TicketModifyAddOrRemoveTypeEnum.TICKET_MODIFY_USER,
 				userId);
-		log.info("executing ticket PI");
+		log.info(EXECUTING_TICKET_PI);
 
 		ProtocolExtensionPoint pep = irodsAccessObjectFactory
 				.getProtocolExtensionPoint(irodsAccount);
@@ -709,7 +968,7 @@ public final class TicketAdminServiceImpl implements TicketAdminService {
 		TicketAdminInp ticketPI = TicketAdminInp.instanceForModifyRemoveAccess(
 				ticketId, TicketModifyAddOrRemoveTypeEnum.TICKET_MODIFY_USER,
 				userId);
-		log.info("executing ticket PI");
+		log.info(EXECUTING_TICKET_PI);
 
 		ProtocolExtensionPoint pep = irodsAccessObjectFactory
 				.getProtocolExtensionPoint(irodsAccount);
@@ -760,7 +1019,7 @@ public final class TicketAdminServiceImpl implements TicketAdminService {
 		TicketAdminInp ticketPI = TicketAdminInp.instanceForModifyAddAccess(
 				ticketId, TicketModifyAddOrRemoveTypeEnum.TICKET_MODIFY_GROUP,
 				groupId);
-		log.info("executing ticket PI");
+		log.info(EXECUTING_TICKET_PI);
 
 		ProtocolExtensionPoint pep = irodsAccessObjectFactory
 				.getProtocolExtensionPoint(irodsAccount);
@@ -811,7 +1070,7 @@ public final class TicketAdminServiceImpl implements TicketAdminService {
 		TicketAdminInp ticketPI = TicketAdminInp.instanceForModifyRemoveAccess(
 				ticketId, TicketModifyAddOrRemoveTypeEnum.TICKET_MODIFY_GROUP,
 				groupId);
-		log.info("executing ticket PI");
+		log.info(EXECUTING_TICKET_PI);
 
 		ProtocolExtensionPoint pep = irodsAccessObjectFactory
 				.getProtocolExtensionPoint(irodsAccount);
@@ -862,7 +1121,7 @@ public final class TicketAdminServiceImpl implements TicketAdminService {
 		TicketAdminInp ticketPI = TicketAdminInp.instanceForModifyAddAccess(
 				ticketId, TicketModifyAddOrRemoveTypeEnum.TICKET_MODIFY_HOST,
 				host);
-		log.info("executing ticket PI");
+		log.info(EXECUTING_TICKET_PI);
 
 		ProtocolExtensionPoint pep = irodsAccessObjectFactory
 				.getProtocolExtensionPoint(irodsAccount);
@@ -913,7 +1172,7 @@ public final class TicketAdminServiceImpl implements TicketAdminService {
 		TicketAdminInp ticketPI = TicketAdminInp.instanceForModifyRemoveAccess(
 				ticketId, TicketModifyAddOrRemoveTypeEnum.TICKET_MODIFY_HOST,
 				host);
-		log.info("executing ticket PI");
+		log.info(EXECUTING_TICKET_PI);
 
 		ProtocolExtensionPoint pep = irodsAccessObjectFactory
 				.getProtocolExtensionPoint(irodsAccount);
@@ -1020,6 +1279,23 @@ public final class TicketAdminServiceImpl implements TicketAdminService {
 	}
 
 	/**
+	 * Add the collection specific elements to a query
+	 * 
+	 * @param builder
+	 *            {@link IRODSGenQueryBuilder}
+	 * @throws GenQueryBuilderException
+	 */
+	private void addQuerySelectsForListAllTicketsForCollections(
+			final IRODSGenQueryBuilder builder) throws GenQueryBuilderException {
+
+		if (builder == null) {
+			throw new IllegalArgumentException("null builder");
+		}
+
+		builder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_TICKET_COLL_NAME);
+	}
+
+	/**
 	 * Given a <code>String</code> representation of an object type for the
 	 * ticket in iRODS, return an emum equivalent value
 	 * 
@@ -1041,54 +1317,6 @@ public final class TicketAdminServiceImpl implements TicketAdminService {
 		}
 	}
 
-	//
-	// @Override
-	// public IRODSQueryResultSetInterface
-	// getTicketsForSpecifiedDataObjectPath(String path, int continueIndex)
-	// throws JargonException, JargonQueryException {
-	//
-	// //// NEED to rewrite this - have to do query for both data object name
-	// and data object collection in the case of the data object type.
-	//
-	// IRODSQueryResultSetInterface resultSet = null;
-	// ObjectType objType = null;
-	// String type = null;
-	// String colName = null;
-	//
-	// CollectionAndDataObjectListAndSearchAO listAndSearch =
-	// irodsAccessObjectFactory
-	// .getCollectionAndDataObjectListAndSearchAO(irodsAccount);
-	// ObjStat objStat = listAndSearch.retrieveObjectStatForPath(path);
-	// objType = objStat.getObjectType();
-	// if (objType == ObjectType.COLLECTION) {
-	// type = "collection";
-	// colName = RodsGenQueryEnum.COL_TICKET_COLL_NAME.getName();
-	// }
-	// else
-	// if (objType == ObjectType.DATA_OBJECT) {
-	// type = "data";
-	// colName = RodsGenQueryEnum.COL_TICKET_DATA_COLL_NAME.getName();
-	// }
-	// else {
-	// throw new JargonException("illegal data object type");
-	// }
-	//
-	// String queryString = buildQueryStringForTicketLS(
-	// colName, path, type);
-	//
-	// IRODSGenQuery irodsQuery = IRODSGenQuery.instance(queryString, 100);
-	//
-	// IRODSGenQueryExecutor irodsGenQueryExecutor = irodsAccessObjectFactory
-	// .getIRODSGenQueryExecutor(irodsAccount);
-	//
-	// resultSet =
-	// irodsGenQueryExecutor.executeIRODSQueryAndCloseResult(irodsQuery,
-	// continueIndex);
-	//
-	// return resultSet;
-	//
-	// }
-
 	/**
 	 * Build the select portion of the gen query when querying for tickets
 	 * associated with data objects in iRODS (Files)
@@ -1108,6 +1336,25 @@ public final class TicketAdminServiceImpl implements TicketAdminService {
 
 		return queryString.toString();
 
+	}
+
+	/**
+	 * Add the data object specific elements to a query
+	 * 
+	 * @param builder
+	 *            {@link IRODSGenQueryBuilder}
+	 * @throws GenQueryBuilderException
+	 */
+	private void addQuerySelectsForListAllTicketsForDataObjects(
+			final IRODSGenQueryBuilder builder) throws GenQueryBuilderException {
+
+		if (builder == null) {
+			throw new IllegalArgumentException("null builder");
+		}
+
+		builder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_TICKET_DATA_NAME)
+				.addSelectAsGenQueryValue(
+						RodsGenQueryEnum.COL_TICKET_DATA_COLL_NAME);
 	}
 
 	/**
@@ -1146,6 +1393,44 @@ public final class TicketAdminServiceImpl implements TicketAdminService {
 		queryString.append(COMMA_SPACE);
 		queryString.append(RodsGenQueryEnum.COL_TICKET_EXPIRY_TS.getName());
 		return queryString.toString();
+	}
+
+	/**
+	 * Add selects (which will be in the established order of the passed in
+	 * builder) which are the basics for tickets to use in a gen query
+	 * 
+	 * @param builder
+	 *            {@link RIODSGenQueryBuilder} to which the fields will be added
+	 */
+	private void addSelectsForTicketsCommonToQueryBuilder(
+			final IRODSGenQueryBuilder builder) throws GenQueryBuilderException {
+
+		if (builder == null) {
+			throw new IllegalArgumentException("null builder");
+		}
+
+		builder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_TICKET_ID)
+				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_TICKET_STRING)
+				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_TICKET_TYPE)
+				.addSelectAsGenQueryValue(
+						RodsGenQueryEnum.COL_TICKET_OBJECT_TYPE)
+				.addSelectAsGenQueryValue(
+						RodsGenQueryEnum.COL_TICKET_OWNER_NAME)
+				.addSelectAsGenQueryValue(
+						RodsGenQueryEnum.COL_TICKET_OWNER_ZONE)
+				.addSelectAsGenQueryValue(
+						RodsGenQueryEnum.COL_TICKET_USES_COUNT)
+				.addSelectAsGenQueryValue(
+						RodsGenQueryEnum.COL_TICKET_USES_LIMIT)
+				.addSelectAsGenQueryValue(
+						RodsGenQueryEnum.COL_TICKET_WRITE_FILE_COUNT)
+				.addSelectAsGenQueryValue(
+						RodsGenQueryEnum.COL_TICKET_WRITE_FILE_LIMIT)
+				.addSelectAsGenQueryValue(
+						RodsGenQueryEnum.COL_TICKET_WRITE_BYTE_COUNT)
+				.addSelectAsGenQueryValue(
+						RodsGenQueryEnum.COL_TICKET_WRITE_BYTE_LIMIT)
+				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_TICKET_EXPIRY_TS);
 	}
 
 	private List<String> listRestrictionsForSpecifiedTicketCommon(
@@ -1234,21 +1519,51 @@ public final class TicketAdminServiceImpl implements TicketAdminService {
 		}
 	}
 
-	public IRODSAccessObjectFactory getIrodsAccessObjectFactory() {
-		return irodsAccessObjectFactory;
-	}
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.ticket.TicketAdminService#isTicketInUse(java.lang.String
+	 * )
+	 */
+	@Override
+	public boolean isTicketInUse(final String ticketString)
+			throws JargonException {
+		log.info("isTicketInUse()");
+		if (ticketString == null || ticketString.isEmpty()) {
+			throw new IllegalArgumentException("null or empty ticketString");
+		}
+		log.info("ticketString:{}", ticketString);
 
-	public void setIrodsAccessObjectFactory(
-			final IRODSAccessObjectFactory irodsAccessObjectFactory) {
-		this.irodsAccessObjectFactory = irodsAccessObjectFactory;
-	}
+		boolean ticketFound = false;
+		try {
+			IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, null);
+			builder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_TICKET_STRING)
+					.addConditionAsGenQueryField(
+							RodsGenQueryEnum.COL_TICKET_STRING,
+							QueryConditionOperators.EQUAL, ticketString);
+			IRODSGenQueryExecutor irodsGenQueryExecutor = irodsAccessObjectFactory
+					.getIRODSGenQueryExecutor(irodsAccount);
 
-	public IRODSAccount getIrodsAccount() {
-		return irodsAccount;
-	}
+			IRODSQueryResultSetInterface resultSet = irodsGenQueryExecutor
+					.executeIRODSQueryAndCloseResult(
+							builder.exportIRODSQueryFromBuilder(1), 0);
 
-	public void setIrodsAccount(final IRODSAccount irodsAccount) {
-		this.irodsAccount = irodsAccount;
+			if (!resultSet.getResults().isEmpty()) {
+				log.info("found the ticket");
+				ticketFound = true;
+			}
+
+		} catch (GenQueryBuilderException e) {
+			log.error("GenQueryBuilderException in ticket query", e);
+			throw new JargonException(
+					"genQueryBuilderException building ticket query", e);
+		} catch (JargonQueryException e) {
+			log.error("jargonQueryException in ticket query", e);
+			throw new JargonException(
+					"jargonQueryException building ticket query", e);
+		}
+		return ticketFound;
 	}
 
 }

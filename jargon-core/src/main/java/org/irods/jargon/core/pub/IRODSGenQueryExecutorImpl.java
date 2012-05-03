@@ -10,8 +10,11 @@ import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.packinstr.GenQueryInp;
 import org.irods.jargon.core.packinstr.GenQueryOut;
 import org.irods.jargon.core.packinstr.Tag;
+import org.irods.jargon.core.query.AbstractIRODSGenQuery;
+import org.irods.jargon.core.query.GenQueryBuilderException;
 import org.irods.jargon.core.query.GenQuerySelectField;
 import org.irods.jargon.core.query.IRODSGenQuery;
+import org.irods.jargon.core.query.IRODSGenQueryFromBuilder;
 import org.irods.jargon.core.query.IRODSGenQueryTranslator;
 import org.irods.jargon.core.query.IRODSQueryResultRow;
 import org.irods.jargon.core.query.IRODSQueryResultSet;
@@ -77,7 +80,7 @@ public final class IRODSGenQueryExecutorImpl extends IRODSGenericAO implements
 	 */
 	@Override
 	public IRODSQueryResultSet executeIRODSQuery(
-			final IRODSGenQuery irodsQuery, final int continueIndex)
+			final AbstractIRODSGenQuery irodsQuery, final int continueIndex)
 			throws JargonException, JargonQueryException {
 		log.info("executeIRODSQuery()");
 
@@ -93,7 +96,7 @@ public final class IRODSGenQueryExecutorImpl extends IRODSGenericAO implements
 	 */
 	@Override
 	public IRODSQueryResultSet executeIRODSQueryInZone(
-			final IRODSGenQuery irodsQuery, final int continueIndex,
+			final AbstractIRODSGenQuery irodsQuery, final int continueIndex,
 			final String zoneName) throws JargonException, JargonQueryException {
 
 		log.info("executeIRODSQueryInZone()");
@@ -106,13 +109,43 @@ public final class IRODSGenQueryExecutorImpl extends IRODSGenericAO implements
 			throw new IllegalArgumentException("continue index must be > 0");
 		}
 
-		log.info("query: {}", irodsQuery.getQueryString());
-		IRODSGenQueryTranslator irodsQueryTranslator = new IRODSGenQueryTranslator(
-				getIRODSServerProperties());
-		TranslatedIRODSGenQuery translatedIRODSQuery = irodsQueryTranslator
-				.getTranslatedQuery(irodsQuery);
+		log.info("query: {}", irodsQuery);
+
+		
+		TranslatedIRODSGenQuery translatedIRODSQuery = translateProvidedQuery(irodsQuery);
+
 		return executeTranslatedIRODSQuery(translatedIRODSQuery, continueIndex,
 				0, QueryCloseBehavior.MANUAL_CLOSE, zoneName);
+	}
+
+	/**
+	 * @param irodsQuery
+	 * @return
+	 * @throws JargonException
+	 * @throws JargonQueryException
+	 */
+	private TranslatedIRODSGenQuery translateProvidedQuery(
+			final AbstractIRODSGenQuery irodsQuery) throws JargonException,
+			JargonQueryException {
+		TranslatedIRODSGenQuery translatedIRODSQuery = null;
+		
+		if (irodsQuery instanceof IRODSGenQuery) {
+			IRODSGenQueryTranslator irodsQueryTranslator = new IRODSGenQueryTranslator(
+					getIRODSServerProperties());
+			translatedIRODSQuery = irodsQueryTranslator
+				.getTranslatedQuery((IRODSGenQuery) irodsQuery);
+		
+		} else if (irodsQuery instanceof IRODSGenQueryFromBuilder) {
+			try {
+				translatedIRODSQuery = ((IRODSGenQueryFromBuilder) irodsQuery)
+						.convertToTranslatedIRODSGenQuery();
+			} catch (GenQueryBuilderException e) {
+				throw new JargonException("invalid builder query", e);
+			}
+		} else {
+			throw new JargonException("unknown type of irodsGenQuery");
+		}
+		return translatedIRODSQuery;
 	}
 
 	/*
@@ -124,7 +157,7 @@ public final class IRODSGenQueryExecutorImpl extends IRODSGenericAO implements
 	 */
 	@Override
 	public IRODSQueryResultSet executeIRODSQueryAndCloseResult(
-			final IRODSGenQuery irodsQuery, final int partialStartIndex)
+			final AbstractIRODSGenQuery irodsQuery, final int partialStartIndex)
 			throws JargonException, JargonQueryException {
 		log.info("executeIRODSQueryAndCloseResult()");
 
@@ -141,7 +174,8 @@ public final class IRODSGenQueryExecutorImpl extends IRODSGenericAO implements
 	 */
 	@Override
 	public IRODSQueryResultSet executeIRODSQueryAndCloseResultInZone(
-			final IRODSGenQuery irodsQuery, final int partialStartIndex,
+			final AbstractIRODSGenQuery irodsQuery,
+			final int partialStartIndex,
 			final String zoneName) throws JargonException, JargonQueryException {
 
 		log.info("executeIRODSQueryAndCloseResultInZone()");
@@ -154,11 +188,9 @@ public final class IRODSGenQueryExecutorImpl extends IRODSGenericAO implements
 			throw new IllegalArgumentException("continueIndex is < 0");
 		}
 
-		log.info("query: {}", irodsQuery.getQueryString());
-		IRODSGenQueryTranslator irodsQueryTranslator = new IRODSGenQueryTranslator(
-				getIRODSServerProperties());
-		TranslatedIRODSGenQuery translatedIRODSQuery = irodsQueryTranslator
-				.getTranslatedQuery(irodsQuery);
+		log.info("query: {}", irodsQuery);
+		TranslatedIRODSGenQuery translatedIRODSQuery = translateProvidedQuery(irodsQuery);
+
 		return executeTranslatedIRODSQuery(translatedIRODSQuery, 0,
 				partialStartIndex, QueryCloseBehavior.AUTO_CLOSE, zoneName);
 	}
@@ -172,7 +204,7 @@ public final class IRODSGenQueryExecutorImpl extends IRODSGenericAO implements
 	 */
 	@Override
 	public IRODSQueryResultSetInterface executeIRODSQueryWithPaging(
-			final IRODSGenQuery irodsQuery, final int partialStartIndex)
+			final AbstractIRODSGenQuery irodsQuery, final int partialStartIndex)
 			throws JargonException, JargonQueryException {
 
 		log.info("executeIRODSQueryWithPaging()");
@@ -189,7 +221,8 @@ public final class IRODSGenQueryExecutorImpl extends IRODSGenericAO implements
 	 */
 	@Override
 	public IRODSQueryResultSetInterface executeIRODSQueryWithPagingInZone(
-			final IRODSGenQuery irodsQuery, final int partialStartIndex,
+			final AbstractIRODSGenQuery irodsQuery,
+			final int partialStartIndex,
 			final String zoneName) throws JargonException, JargonQueryException {
 
 		log.info("executeIRODSQueryWithPagingInZone()");
@@ -198,11 +231,8 @@ public final class IRODSGenQueryExecutorImpl extends IRODSGenericAO implements
 			throw new IllegalArgumentException("null irodsQuery");
 		}
 
-		log.info("query: {}", irodsQuery.getQueryString());
-		IRODSGenQueryTranslator irodsQueryTranslator = new IRODSGenQueryTranslator(
-				getIRODSServerProperties());
-		TranslatedIRODSGenQuery translatedIRODSQuery = irodsQueryTranslator
-				.getTranslatedQuery(irodsQuery);
+		log.info("query: {}", irodsQuery);
+		TranslatedIRODSGenQuery translatedIRODSQuery = translateProvidedQuery(irodsQuery);
 
 		return executeTranslatedIRODSQuery(translatedIRODSQuery, 0,
 				partialStartIndex, QueryCloseBehavior.AUTO_CLOSE, zoneName);

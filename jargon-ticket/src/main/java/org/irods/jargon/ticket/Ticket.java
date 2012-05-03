@@ -40,56 +40,6 @@ public class Ticket extends IRODSDomainObject {
 	public Ticket() {
 	}
 
-	/*
-	 * public Ticket(IRODSQueryResultRow row) throws JargonException {
-	 * DateFormat dateFormat = DateFormat.getInstance(); this.expireTime = null;
-	 * String date = "";
-	 * 
-	 * try {
-	 * setTicketId(row.getColumn(RodsGenQueryEnum.COL_TICKET_ID.getName()));
-	 * setTicketString
-	 * (row.getColumn(RodsGenQueryEnum.COL_TICKET_STRING.getName()));
-	 * setType(TicketCreateModeEnum
-	 * .findTypeByString(row.getColumn(RodsGenQueryEnum
-	 * .COL_TICKET_TYPE.getName())));
-	 * setObjectType(row.getColumn(RodsGenQueryEnum
-	 * .COL_TICKET_OBJECT_TYPE.getName()));
-	 * setOwnerName(row.getColumn(RodsGenQueryEnum
-	 * .COL_TICKET_OWNER_NAME.getName()));
-	 * setOwnerZone(row.getColumn(RodsGenQueryEnum
-	 * .COL_TICKET_OWNER_ZONE.getName()));
-	 * setUsesCount(Integer.valueOf(row.getColumn
-	 * (RodsGenQueryEnum.COL_TICKET_USES_COUNT.getName())));
-	 * setUsesLimit(Integer
-	 * .valueOf(row.getColumn(RodsGenQueryEnum.COL_TICKET_USES_LIMIT
-	 * .getName())));
-	 * setWriteFileCount(Integer.valueOf(row.getColumn(RodsGenQueryEnum
-	 * .COL_TICKET_WRITE_FILE_COUNT.getName())));
-	 * setWriteFileLimit(Integer.valueOf
-	 * (row.getColumn(RodsGenQueryEnum.COL_TICKET_WRITE_FILE_LIMIT.getName())));
-	 * setWriteByteCount
-	 * (Integer.valueOf(row.getColumn(RodsGenQueryEnum.COL_TICKET_WRITE_BYTE_COUNT
-	 * .getName())));
-	 * setWriteByteLimit(Integer.valueOf(row.getColumn(RodsGenQueryEnum
-	 * .COL_TICKET_WRITE_BYTE_LIMIT.getName()))); date =
-	 * row.getColumn(RodsGenQueryEnum.COL_TICKET_EXPIRY_TS.getName()); if((date
-	 * != null) && (!date.isEmpty())) {
-	 * setExpireTime(dateFormat.parse(row.getColumn
-	 * (RodsGenQueryEnum.COL_TICKET_EXPIRY_TS.getName()))); }
-	 * setDataObjectName(row
-	 * .getColumn(RodsGenQueryEnum.COL_TICKET_DATA_NAME.getName()));
-	 * setDataCollection
-	 * (row.getColumn(RodsGenQueryEnum.COL_TICKET_DATA_COLL_NAME.getName())); //
-	 * + RodsGenQueryEnum.COL_TICKET_DATA_NAME.getName() // +
-	 * RodsGenQueryEnum.COL_TICKET_DATA_COLL_NAME.getName() // TODO: not sure to
-	 * ask for these // + ", " // +
-	 * RodsGenQueryEnum.COL_TICKET_ALLOWED_USER_NAME.getName() // + ", " // +
-	 * RodsGenQueryEnum.COL_TICKET_ALLOWED_GROUP_NAME.getName() // + ", " // +
-	 * RodsGenQueryEnum.COL_TICKET_ALLOWED_HOST.getName()
-	 * 
-	 * } catch (ParseException e) { this.expireTime = null; } }
-	 */
-
 	@Override
 	public String toString() {
 
@@ -313,7 +263,7 @@ public class Ticket extends IRODSDomainObject {
 	public Date getExpireTime() {
 		return expireTime;
 	}
-	
+
 	/**
 	 * @return formatted date string - like one displayed with iticket
 	 */

@@ -1108,11 +1108,13 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 
 		Tag response = getIRODSProtocol().irodsFunction(DataObjInp.PI_TAG,
 				dataObjInp.getParsedTags(), DataObjInp.OPEN_FILE_API_NBR);
+
 		if (response == null) {
 			String msg = "null response from IRODS call";
 			log.error(msg);
 			throw new JargonException(msg);
 		}
+
 		// parse out the response
 		int fileId = response.getTag(MsgHeader.PI_NAME)
 				.getTag(MsgHeader.INT_INFO).getIntValue();

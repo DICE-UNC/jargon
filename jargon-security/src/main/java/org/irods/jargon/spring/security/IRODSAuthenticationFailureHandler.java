@@ -51,6 +51,8 @@ public class IRODSAuthenticationFailureHandler implements
 			throw new ServletException("null or missing redirect url");
 		}
 
+		log.info("request param map:{}", request.getParameterMap());
+
 		request.setAttribute("login_error", exception.getMessage());
 
 		request.setAttribute("host", request.getParameter("host"));
@@ -61,7 +63,6 @@ public class IRODSAuthenticationFailureHandler implements
 		request.setAttribute("password", request.getParameter("password"));
 
 		log.debug("forward to error url: {}", defaultFailureUrl);
-
 		request.getRequestDispatcher(defaultFailureUrl).forward(request,
 				response);
 

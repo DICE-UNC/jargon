@@ -36,6 +36,7 @@ public class CollInp extends AbstractIRODSPackingInstruction {
 	private final String collectionName;
 	private final boolean recursiveOperation;
 	private final boolean forceOperation;
+	private final boolean unregister;
 
 	/**
 	 * Create the packing instruction to delete this collection from irods,
@@ -50,6 +51,26 @@ public class CollInp extends AbstractIRODSPackingInstruction {
 	public static final CollInp instanceForRecursiveDeleteCollectionNoForce(
 			final String collectionName) throws JargonException {
 		return new CollInp(collectionName, true, false);
+	}
+
+	/**
+	 * Create an instance for unregistering a collection regestered via ireg
+	 * 
+	 * @param collectionName
+	 *            <code>String</code> with the absolute path to the iRODS
+	 *            collection
+	 * @param force
+	 *            <code>boolean</code> indicates force option
+	 * @param recursive
+	 *            <code>boolean</code> that indicates whether to recursively
+	 *            unregister
+	 * @return
+	 * @throws JargonException
+	 */
+	public static final CollInp instanceForUnregisterCollection(
+			final String collectionName, final boolean force,
+			final boolean recursive) throws JargonException {
+		return new CollInp(collectionName, recursive, force, true);
 	}
 
 	/**
@@ -87,6 +108,7 @@ public class CollInp extends AbstractIRODSPackingInstruction {
 		this.collectionName = collectionName;
 		this.recursiveOperation = recursiveOperation;
 		this.forceOperation = false;
+		this.unregister = false;
 	}
 
 	private CollInp(final String collectionName,
@@ -99,6 +121,21 @@ public class CollInp extends AbstractIRODSPackingInstruction {
 		this.collectionName = collectionName;
 		this.recursiveOperation = recursiveOperation;
 		this.forceOperation = forceOperation;
+		this.unregister = false;
+
+	}
+
+	private CollInp(final String collectionName,
+			final boolean recursiveOperation, final boolean forceOperation,
+			final boolean unregister) throws JargonException {
+		super();
+		if (collectionName == null || collectionName.length() == 0) {
+			throw new JargonException("collection name is null or blank");
+		}
+		this.collectionName = collectionName;
+		this.recursiveOperation = recursiveOperation;
+		this.forceOperation = forceOperation;
+		this.unregister = unregister;
 
 	}
 
@@ -116,9 +153,15 @@ public class CollInp extends AbstractIRODSPackingInstruction {
 
 	@Override
 	public Tag getTagValue() throws JargonException {
+
+		int oprType = 0;
+		if (unregister) {
+			oprType = 26;
+		}
+
 		Tag message = new Tag(PI_TAG, new Tag[] {
 				new Tag(COLL_NAME, getCollectionName()), new Tag(FLAGS, 0),
-				new Tag(OPR_TYPE, 0) });
+				new Tag(OPR_TYPE, oprType) });
 
 		List<KeyValuePair> kvps = new ArrayList<KeyValuePair>();
 
@@ -132,6 +175,13 @@ public class CollInp extends AbstractIRODSPackingInstruction {
 
 		message.addTag(createKeyValueTag(kvps));
 		return message;
+	}
+
+	/**
+	 * @return the unregister
+	 */
+	public boolean isUnregister() {
+		return unregister;
 	}
 
 }
