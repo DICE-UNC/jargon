@@ -106,7 +106,7 @@ public class IRODSAccountAuthenticationFilter extends
 		}
 
 		if (resource == null || resource.isEmpty()) {
-			String msg = "zone parameter is missing";
+			String msg = "resource parameter is missing";
 			log.error(msg);
 			throw new BadCredentialsException(msg);
 		}
