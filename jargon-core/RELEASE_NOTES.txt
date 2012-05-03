@@ -66,5 +66,3 @@ Note that the following bug and feature requests are logged in GForge with relat
  * [#723] add ireg support in jargon 
  ** added methods to unregister a collection
  
- 
->>>>>>> master
