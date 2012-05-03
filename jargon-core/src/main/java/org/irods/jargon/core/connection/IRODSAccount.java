@@ -23,10 +23,13 @@ public final class IRODSAccount implements Serializable {
 	public static final String IRODS_JARGON_RELEASE_NUMBER = "rods3.0";
 	public static final String IRODS_API_VERSION = "d";
 	
-	public enum AuthScheme  {STANDARD, GSI, KERBEROS};
+	public enum AuthScheme {
+		STANDARD, GSI, KERBEROS
+	}
 	public static final boolean defaultObfuscate = false;
 	private static final String PUBLIC_USERNAME = "anonymous";
 	private AuthScheme authenticationScheme = AuthScheme.STANDARD;
+	private String serviceName = "";
 	
 	/**
 	 * The certificate authority (CA) list. By default, the CA definition comes
@@ -38,8 +41,6 @@ public final class IRODSAccount implements Serializable {
 	 * iRODS.
 	 */
 	private transient final GSSCredential gssCredential;
-
-	
 
 	private final String host;
 	private final int port;
@@ -425,6 +426,29 @@ public final class IRODSAccount implements Serializable {
 
 	protected void setAuthenticatedRoles(final List<String> authenticatedRoles) {
 		this.authenticatedRoles = authenticatedRoles;
+	}
+
+	/**
+	 * @return the serviceName
+	 */
+	public String getServiceName() {
+		return serviceName;
+	}
+
+	/**
+	 * @param serviceName
+	 *            the serviceName to set
+	 */
+	public void setServiceName(String serviceName) {
+		this.serviceName = serviceName;
+	}
+
+	/**
+	 * @param authenticationScheme
+	 *            the authenticationScheme to set
+	 */
+	public void setAuthenticationScheme(AuthScheme authenticationScheme) {
+		this.authenticationScheme = authenticationScheme;
 	}
 
 }

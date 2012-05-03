@@ -33,6 +33,7 @@ public class AuthResponse {
 	 * @param authType
 	 *            the <code>String</code> authType to set
 	 */
+	// FIXME: enum value?
 	public void setAuthType(String authType) {
 		this.authType = authType;
 	}

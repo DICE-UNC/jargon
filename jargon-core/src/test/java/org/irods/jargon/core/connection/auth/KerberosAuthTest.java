@@ -37,6 +37,8 @@ public class KerberosAuthTest {
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountForIRODSUserFromTestPropertiesForGivenUser(
 						testingProperties, "test1@IRODSKRB", "");
+		irodsAccount.setAuthenticationScheme(IRODSAccount.AuthScheme.KERBEROS);
+		irodsAccount.setServiceName("host/irodskrb@IRODSKRB");
 
 		authMechanism.authenticate(null, irodsAccount);
 

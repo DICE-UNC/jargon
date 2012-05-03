@@ -1,10 +1,8 @@
 package org.irods.jargon.core.connection.auth;
 
-import org.ietf.jgss.GSSCredential;
-import org.ietf.jgss.GSSException;
-import org.ietf.jgss.GSSManager;
-import org.ietf.jgss.GSSName;
-import org.ietf.jgss.Oid;
+import javax.security.auth.Subject;
+import javax.security.auth.login.LoginContext;
+
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSCommands;
 import org.irods.jargon.core.exception.AuthenticationException;
@@ -29,19 +27,11 @@ import org.slf4j.LoggerFactory;
  */
 public class KerberosAuth extends AuthMechanism {
 
-	private final GSSManager gssManager;
-	private final Oid krb5Mechanism;
 	public static final Logger log = LoggerFactory
 			.getLogger(KerberosAuth.class);
 
 	public KerberosAuth() {
-		gssManager = GSSManager.getInstance();
-		try {
-			krb5Mechanism = new Oid("1.2.840.113554.1.2.2");
-		} catch (GSSException e) {
-			log.error("exception creating kerberos mechanism", e);
-			throw new AuthRuntimeException("error creating Oid for Kerberos", e);
-		}
+
 	}
 
 	/*
@@ -70,25 +60,28 @@ public class KerberosAuth extends AuthMechanism {
 		
 		log.debug("..creating GSSContext");
 		
-		GSSName clientName;
+		LoginContext lc = null;
+
 		try {
-			clientName = gssManager.createName(irodsAccount.getUserName(),
-					GSSName.NT_USER_NAME);
-			log.debug("got gssClientName:{}", clientName);
-			GSSCredential clientCreds = gssManager.createCredential(clientName,
-					8 * 3600, krb5Mechanism, GSSCredential.DEFAULT_LIFETIME);
-			log.debug("got gssCredential:{}", clientCreds);
-		} catch (GSSException e) {
-			log.error("GSSException occurred", e);
+			lc = new LoginContext("JargonKrb");
+			// attempt authentication
+			lc.login();
+			Subject signedOnUserSubject = lc.getSubject();
+			log.info("subject:{}", signedOnUserSubject);
+
+			log.info("getting authResponse");
+			AuthResponse authResponse = (AuthResponse) Subject.doAs(
+					signedOnUserSubject, new ServiceTicketGenerator(
+							irodsAccount));
+			log.info("successfully got authResponse:{}", authResponse);
+
+		} catch (Exception e) {
+			log.error("LoginException occurred", e);
 			throw new AuthRuntimeException(e);
 		}
 
 		return new AuthResponse();
 
-		/*
-		 * GSSContext gssContext = gssManager.createContext(clientName, null,
-		 * myCred, GSSContext.DEFAULT_LIFETIME);
-		 */
 	}
 
 
