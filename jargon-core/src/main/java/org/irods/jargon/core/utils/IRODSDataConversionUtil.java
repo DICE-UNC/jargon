@@ -85,7 +85,8 @@ public class IRODSDataConversionUtil {
 	 * @param irodsValue
 	 *            <code>String</code> containing an IRODS date value as returned
 	 *            from a query to ICAT
-	 * @return <code>java.util.Date</code> reflecting the IRODS time
+	 * @return <code>java.util.Date</code> reflecting the IRODS time, or
+	 *         <code>null</code> if no date in the data
 	 */
 	public static Date getDateFromIRODSValue(final String irodsValue) {
 
@@ -94,7 +95,7 @@ public class IRODSDataConversionUtil {
 		}
 
 		if (irodsValue.isEmpty()) {
-			return new Date();
+			return null;
 		}
 
 		Integer dateInteger;
