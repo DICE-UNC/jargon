@@ -1,6 +1,5 @@
 package org.irods.jargon.core.connection;
 
-import org.irods.jargon.core.connection.auth.AuthenticationFactory;
 import org.irods.jargon.core.exception.JargonException;
 
 public interface IRODSProtocolManager {

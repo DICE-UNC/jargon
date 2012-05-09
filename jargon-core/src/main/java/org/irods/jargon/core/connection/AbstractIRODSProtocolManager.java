@@ -1,7 +1,5 @@
 package org.irods.jargon.core.connection;
 
-import org.irods.jargon.core.connection.auth.AuthenticationFactory;
-import org.irods.jargon.core.connection.auth.AuthenticationFactoryImpl;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.exception.JargonRuntimeException;
 import org.slf4j.Logger;

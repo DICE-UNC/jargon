@@ -1,4 +1,4 @@
-package org.irods.jargon.core.connection.auth;
+package org.irods.jargon.core.connection;
 
 import java.io.File;
 import java.io.IOException;
@@ -6,23 +6,22 @@ import java.io.InputStream;
 import java.io.InterruptedIOException;
 import java.io.OutputStream;
 import java.io.RandomAccessFile;
-import java.net.Socket;
 import java.nio.channels.ClosedChannelException;
 
 import org.globus.common.CoGProperties;
 import org.globus.gsi.gssapi.GlobusGSSCredentialImpl;
 import org.globus.gsi.gssapi.net.impl.GSIGssInputStream;
 import org.globus.gsi.gssapi.net.impl.GSIGssOutputStream;
-import org.globus.gsi.gssapi.net.impl.GSIGssSocket;
 import org.gridforum.jgss.ExtendedGSSCredential;
 import org.gridforum.jgss.ExtendedGSSManager;
 import org.ietf.jgss.GSSContext;
 import org.ietf.jgss.GSSCredential;
 import org.ietf.jgss.GSSException;
-import org.irods.jargon.core.connection.IRODSAccount;
-import org.irods.jargon.core.connection.IRODSCommands;
+import org.irods.jargon.core.connection.IRODSAccount.AuthScheme;
+import org.irods.jargon.core.connection.auth.AuthResponse;
 import org.irods.jargon.core.exception.AuthenticationException;
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.exception.JargonRuntimeException;
 import org.irods.jargon.core.protovalues.RequestTypes;
 import org.irods.jargon.core.protovalues.XmlProtApis;
 import org.slf4j.Logger;
@@ -34,7 +33,7 @@ import org.slf4j.LoggerFactory;
  * @author Mike Conway - DICE (www.irods.org)
  * 
  */
-public class GSIAuth extends AuthMechanism {
+class GSIAuth extends AuthMechanism {
 
 	public static final Logger log = LoggerFactory.getLogger(GSIAuth.class);
 
@@ -47,13 +46,21 @@ public class GSIAuth extends AuthMechanism {
 	 * org.irods.jargon.core.connection.IRODSAccount)
 	 */
 	@Override
-	public AuthResponse authenticate(final IRODSCommands irodsCommands,
+	 AuthResponse authenticate(final IRODSCommands irodsCommands,
 			final IRODSAccount irodsAccount) throws AuthenticationException,
 			JargonException {
-		return null;
+		try {
+		return sendGSIAuth(irodsAccount, irodsCommands.getIrodsConnection()
+				.getIrodsOutputStream(), irodsCommands.getIrodsConnection()
+				.getIrodsInputStream());
+		} catch (IOException ioe) {
+			log.error("IOException attempting authentication", ioe);
+			throw new JargonRuntimeException(
+					"io exception attempting authentication");
+		}
 	}
 
-	protected void sendGSIPassword(final IRODSAccount irodsAccount,
+	void sendGSIPassword(final IRODSAccount irodsAccount,
 			final IRODSCommands irodsCommands) throws JargonException {
 
 		if (irodsAccount == null) {
@@ -95,11 +102,11 @@ public class GSIAuth extends AuthMechanism {
 
 	}
 
-	private IRODSAccount lookupAdditionalIRODSAccountInfoWhenGSI(
-			final IRODSAccount irodsAccount2, final IRODSCommands irodsCommands) {
-		// FIXME: implement with GSI
-		return null;
-	}
+	/*
+	 * private IRODSAccount lookupAdditionalIRODSAccountInfoWhenGSI( final
+	 * IRODSAccount irodsAccount2, final IRODSCommands irodsCommands) { //
+	 * FIXME: implement with GSI return null; }
+	 */
 
 	/**
 	 * GSI authorization method. Makes a connection to the iRODS using the GSI
@@ -107,27 +114,26 @@ public class GSIAuth extends AuthMechanism {
 	 * 
 	 * @param account
 	 *            the iRODS connection information
-	 * @param connection
-	 *            The open socket to the iRODS.
 	 * @param out
 	 *            The output stream from that socket.
 	 * @param in
 	 *            The input stream from that socket.
+	 * @return {@link AuthResponse} with the result of the authentication
 	 * @throws IOException
 	 *             If the authentication to the iRODS fails.
 	 */
-	void sendGSIAuth(IRODSAccount account, Socket connection, OutputStream out,
+	AuthResponse sendGSIAuth(IRODSAccount irodsAccount, OutputStream out,
 			InputStream in) throws IOException {
 		CoGProperties cog = null;
 		String defaultCA = null;
 		GSSCredential credential = null;
-		String caLocations = account.getCertificateAuthority();
+		String caLocations = irodsAccount.getCertificateAuthority();
 
 		ExtendedGSSManager manager = (ExtendedGSSManager) ExtendedGSSManager
 				.getInstance();
 
 		try {
-			credential = getCredential(account);
+			credential = getCredential(irodsAccount);
 
 			if (caLocations != null) {
 				// there is no other way to do this.
@@ -147,7 +153,6 @@ public class GSIAuth extends AuthMechanism {
 			context.requestCredDeleg(false);
 			context.requestMutualAuth(true);
 
-			GSIGssSocket ggSocket = new GSIGssSocket(connection, context);
 			gssout = new GSIGssOutputStream(out, context);
 			gssin = new GSIGssInputStream(in, context);
 
@@ -165,6 +170,12 @@ public class GSIAuth extends AuthMechanism {
 					inToken = gssin.readHandshakeToken();
 				}
 			}
+
+			AuthResponse response = new AuthResponse();
+			response.setAuthenticatedIRODSAccount(irodsAccount);
+			response.setAuthType(AuthScheme.GSI);
+			return response;
+
 		} catch (GSSException e) {
 			SecurityException gsiException = null;
 			String message = e.getMessage();

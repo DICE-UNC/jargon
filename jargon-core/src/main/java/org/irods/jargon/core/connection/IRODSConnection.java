@@ -822,4 +822,19 @@ public final class IRODSConnection implements IRODSManagedConnection {
 		this.irodsProtocolManager = irodsProtocolManager;
 	}
 
+	/**
+	 * @return the irodsInputStream
+	 */
+	InputStream getIrodsInputStream() {
+		return irodsInputStream;
+	}
+
+	/**
+	 * @return the irodsOutputStream
+	 */
+	OutputStream getIrodsOutputStream() {
+		return irodsOutputStream;
+	}
+
+
 }

@@ -4,7 +4,7 @@
  */
 package org.irods.jargon.core.unittest;
 
-import org.irods.jargon.core.connection.auth.AuthenticationFactoryImplTest;
+import org.irods.jargon.core.connection.AuthenticationFactoryImplTest;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 

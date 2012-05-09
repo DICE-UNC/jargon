@@ -1,5 +1,6 @@
-package org.irods.jargon.core.connection.auth;
+package org.irods.jargon.core.connection;
 
+import org.irods.jargon.core.connection.auth.AuthUnavailableException;
 import org.irods.jargon.core.exception.JargonException;
 
 /**

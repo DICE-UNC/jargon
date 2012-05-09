@@ -4,8 +4,6 @@ import java.util.Properties;
 
 import junit.framework.Assert;
 
-import org.irods.jargon.core.connection.auth.AuthMechanism;
-import org.irods.jargon.core.connection.auth.StandardIRODSAuth;
 import org.irods.jargon.core.pub.IRODSFileSystem;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.junit.AfterClass;

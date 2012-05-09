@@ -40,6 +40,7 @@ public class TestingPropertiesHelper {
 	public static String IRODS_RESOURCE_GROUP_KEY = "test.resource.group";
 	public static String IRODS_USER_GROUP_KEY = "test.user.group";
 	public static String IRODS_TEST_FEDERATED_ZONE_KEY = "test.option.federated.zone";
+	public static String IRODS_TEST_OPTION_KERBEROS_KEY = "test.option.kerberos";
 	public static String IRODS_FEDERATED_HOST_KEY = "test.federated.irods.host";
 	public static String IRODS_FEDERATED_PORT_KEY = "test.federated.irods.port";
 	public static String IRODS_FEDERATED_ZONE_KEY = "test.federated.irods.zone";
@@ -48,7 +49,7 @@ public class TestingPropertiesHelper {
 	public static String IRODS_FEDERATED_PASSWORD_KEY = "test.federated.irods.password";
 	public static String IRODS_FEDERATED_ADMIN_USER_KEY = "test.federated.irods.admin";
 	public static String IRODS_FEDERATED_ADMIN_PASSWORD_KEY = "test.federated.irods.admin.password";
-
+	public static String IRODS_KERBEROS_USER_KEY = "jargon.test.kerberos.user";
 	public static String IRODS_CONFIRM_TESTING_TRUE = "true";
 	public static String IRODS_CONFIRM_TESTING_FALSE = "false";
 
@@ -814,6 +815,21 @@ public class TestingPropertiesHelper {
 	public boolean isTestDistributedResources(final Properties testingProperties) {
 		String val = (String) testingProperties
 				.get("test.option.distributed.resources");
+		if (val == null) {
+			return false;
+		} else {
+			return Boolean.parseBoolean(val);
+		}
+	}
+
+	/**
+	 * Check if optional kerberos testing to be done
+	 * 
+	 * @param testingProperties
+	 * @return
+	 */
+	public boolean isTestKerberos(final Properties testingProperties) {
+		String val = (String) testingProperties.get("test.option.kerberos");
 		if (val == null) {
 			return false;
 		} else {

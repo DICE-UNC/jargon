@@ -7,7 +7,6 @@ import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.nio.channels.ClosedChannelException;
 
-import org.irods.jargon.core.connection.auth.AuthMechanism;
 import org.irods.jargon.core.connection.auth.AuthResponse;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.packinstr.AbstractIRODSPackingInstruction;
@@ -107,6 +106,9 @@ public class IRODSCommands implements IRODSManagedConnection {
 	 *            for the connection (e.g. buffer sizes)
 	 * @param authMechanism
 	 *            {@link AuthMechanism} that will authenticate with iRODS
+	 * @param startUp
+	 *            <code>boolean</code> that indicates that authentication should
+	 *            be done to iRODS with the provided <code>authMechanism</code>
 	 * @return instance of <code>IRODSCommands</code> connected and
 	 *         authenticated to an iRODS agent
 	 * @throws JargonException
@@ -114,7 +116,8 @@ public class IRODSCommands implements IRODSManagedConnection {
 	private IRODSCommands(final IRODSAccount irodsAccount,
 			final IRODSProtocolManager irodsConnectionManager,
 			final PipelineConfiguration pipelineConfiguration,
-			final AuthMechanism authMechanism) throws JargonException {
+			final AuthMechanism authMechanism, final boolean startUp)
+			throws JargonException {
 		/*
 		 * create the IRODSConnection object. The connection object encapsulates
 		 * an open socket to the host/port described by the irodsAccount.
@@ -133,12 +136,14 @@ public class IRODSCommands implements IRODSManagedConnection {
 		this.irodsProtocolManager = irodsConnectionManager;
 		this.pipelineConfiguration = pipelineConfiguration;
 		this.authMechanism = authMechanism;
-		startupConnection(irodsAccount);
+		if (startUp) {
+			startupConnection(irodsAccount);
+		}
 
 	}
 
 	private void startupConnection(final IRODSAccount irodsAccount) throws
-	  JargonException { // send startup packet here
+	  JargonException {
 
 		AuthResponse authResponse = authMechanism.authenticate(this,
 				irodsAccount);
@@ -174,7 +179,36 @@ public class IRODSCommands implements IRODSManagedConnection {
 			final AuthMechanism authMechanism) throws JargonException {
 
 		return new IRODSCommands(irodsAccount, irodsConnectionManager,
-				pipelineConfiguration, authMechanism);
+				pipelineConfiguration, authMechanism, true);
+	}
+
+	/**
+	 * Instance method used to create an IRODSCommands object, note that this
+	 * method will not start up (send authentication request) to iRODS, and this
+	 * is only useful in specific situations where some sort of
+	 * pre-authentication interaction is required.
+	 * 
+	 * @param irodsAccount
+	 *            {@link IRODSAccount} defining the iRODS connection
+	 * @param irodsConnectionManager
+	 *            {IRODSProtocolManager} that creates new connections
+	 * @param pipelineConfiguration
+	 *            {@link PipelineConfiguration} that specifies detailed settings
+	 *            for the connection (e.g. buffer sizes)
+	 * @param authMechanism
+	 *            {@link AuthMechanism} that will authenticate with iRODS
+	 * @return instance of <code>IRODSCommands</code> connected and
+	 *         authenticated to an iRODS agent
+	 * @throws JargonException
+	 */
+	static IRODSCommands instanceWithoutStartup(
+			final IRODSAccount irodsAccount,
+			final IRODSProtocolManager irodsConnectionManager,
+			final PipelineConfiguration pipelineConfiguration,
+			final AuthMechanism authMechanism) throws JargonException {
+
+		return new IRODSCommands(irodsAccount, irodsConnectionManager,
+				pipelineConfiguration, authMechanism, false);
 	}
 
 	/**
@@ -989,7 +1023,7 @@ public class IRODSCommands implements IRODSManagedConnection {
 		}
 	}
 
-	private int readHeaderLength() throws JargonException {
+	int readHeaderLength() throws JargonException {
 		byte[] headerInt = new byte[ConnectionConstants.HEADER_INT_LENGTH];
 		try {
 			irodsConnection.read(headerInt, 0,

@@ -1,8 +1,14 @@
-package org.irods.jargon.core.connection.auth;
+package org.irods.jargon.core.connection;
 
 import junit.framework.TestCase;
 
+import org.irods.jargon.core.connection.AuthMechanism;
+import org.irods.jargon.core.connection.AuthenticationFactory;
+import org.irods.jargon.core.connection.AuthenticationFactoryImpl;
+import org.irods.jargon.core.connection.GSIAuth;
 import org.irods.jargon.core.connection.IRODSAccount;
+import org.irods.jargon.core.connection.KerberosAuth;
+import org.irods.jargon.core.connection.auth.AuthUnavailableException;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;

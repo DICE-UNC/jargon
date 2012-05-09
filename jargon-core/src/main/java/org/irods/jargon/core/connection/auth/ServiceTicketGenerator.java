@@ -14,11 +14,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * Given a user name and a target iRODS server name, acquire a GSS context
+ * 
  * @author Mike Conway - DICE (www.irods.org)
- *
+ * 
  */
 public class ServiceTicketGenerator implements
-		PrivilegedExceptionAction<AuthResponse> {
+		PrivilegedExceptionAction<byte[]> {
 
 	private final IRODSAccount irodsAccount;
 
@@ -28,7 +30,7 @@ public class ServiceTicketGenerator implements
 	/**
 	 * @param irodsAccount
 	 */
-	ServiceTicketGenerator(IRODSAccount irodsAccount) {
+	public ServiceTicketGenerator(IRODSAccount irodsAccount) {
 		if (irodsAccount == null) {
 			throw new IllegalArgumentException("null irodsAccount");
 		}
@@ -47,10 +49,8 @@ public class ServiceTicketGenerator implements
 		this.irodsAccount = irodsAccount;
 	}
 
-	public AuthResponse run() throws Exception {
-		AuthResponse response = new AuthResponse();
-		response.setAuthenticatedIRODSAccount(irodsAccount);
-		response.setAuthType("kerberos");
+	public byte[] run() throws Exception {
+
 		try {
 			// GSSAPI is generic, but if you give it the following Object ID,
 			// it will create Kerberos 5 service tickets
@@ -90,12 +90,11 @@ public class ServiceTicketGenerator implements
 			// this operation will cause a Kerberos request of Active Directory,
 			// to create a service ticket for the client to use the service
 			byte[] serviceTicket = gssContext.initSecContext(new byte[0], 0, 0);
-			response.getResponseProperties().put("subject", serviceTicket);
+
 			gssContext.dispose();
 
-			// return the Kerberos service ticket as an array of encrypted bytes
-			log.info("formulated authResponse:{}", response);
-			return response;
+			return serviceTicket;
+
 		} catch (Exception ex) {
 			throw new PrivilegedActionException(ex);
 		}

@@ -107,9 +107,7 @@ package org.irods.jargon.core.utils;
  * @author David R. Nadeau, San Diego Supercomputer Center
  */
 public final class Host extends Object {
-	// ----------------------------------------------------------------------
-	// Constants
-	// ----------------------------------------------------------------------
+
 	/**
 	 * A language primitive signed or unsigned char.
 	 * <P>

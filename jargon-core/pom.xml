@@ -64,6 +64,7 @@ test3.irods.resource=${jargon.test.irods.resource3}
 test.irods.host=${jargon.test.irods.host}
 test.irods.port=${jargon.test.irods.port}
 test.irods.zone=${jargon.test.irods.zone}
+jargon.test.kerberos.user=${jargon.test.kerberos.user}
 test.resource.group=${jargon.test.resource.group}
 test.irods.userDN=${jargon.test.irods.userDN}
 test.irods.scratch.subdir=${jargon.test.irods.scratch.subdir}
@@ -72,6 +73,7 @@ test.option.exercise.remoteexecstream=${jargon.test.option.exercise.remoteexecst
 test.option.distributed.resources=${test.option.distributed.resources}
 test.option.registration=${test.option.registration}
 test.option.federated.zone=${test.option.federated.zone}
+test.option.kerberos=${test.option.kerberos}
 test.federated.irods.admin=${jargon.test.federated.irods.admin}
 test.federated.irods.admin.password=${jargon.test.federated.irods.admin.password}
 test.federated.irods.user=${jargon.test.federated.irods.user}
@@ -80,8 +82,6 @@ test.federated.irods.resource=${jargon.test.federated.irods.resource}
 test.federated.irods.host=${jargon.test.federated.irods.host}
 test.federated.irods.port=${jargon.test.federated.irods.port}
 test.federated.irods.zone=${jargon.test.federated.irods.zone}
->>>>>>> master
-
 								</echo>
 							</tasks>
 						</configuration>

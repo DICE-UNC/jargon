@@ -1,4 +1,4 @@
-package org.irods.jargon.core.connection.auth;
+package org.irods.jargon.core.connection;
 
 import java.io.File;
 import java.io.IOException;
@@ -8,10 +8,8 @@ import java.nio.channels.ClosedChannelException;
 import java.security.GeneralSecurityException;
 import java.security.MessageDigest;
 
-import org.irods.jargon.core.connection.ConnectionConstants;
-import org.irods.jargon.core.connection.IRODSAccount;
-import org.irods.jargon.core.connection.IRODSCommands;
-import org.irods.jargon.core.connection.PasswordObfuscator;
+import org.irods.jargon.core.connection.IRODSAccount.AuthScheme;
+import org.irods.jargon.core.connection.auth.AuthResponse;
 import org.irods.jargon.core.exception.AuthenticationException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.packinstr.AuthResponseInp;
@@ -54,50 +52,13 @@ public class StandardIRODSAuth extends AuthMechanism {
 		log.info("auth was successful");
 		AuthResponse authResponse = new AuthResponse();
 		authResponse.setAuthenticatedIRODSAccount(irodsAccount);
-		authResponse.setAuthType(this.getClass().getName());
+		authResponse.setAuthType(AuthScheme.STANDARD);
 		authResponse.setChallengeValue(challengeValue);
 		authResponse.setSuccessful(true);
 		log.info("auth response was:{}", authResponse);
 		return authResponse;
 	}
 
-	/**
-	 * Handles sending the userinfo connection protocol. First, sends initial
-	 * handshake with IRODS.
-	 * <P>
-	 * 
-	 * @throws IOException
-	 *             if the host cannot be opened or created.
-	 */
-	private Tag sendStartupPacket(final IRODSAccount irodsAccount,
-			final IRODSCommands irodsCommands) throws JargonException {
-
-		StartupPack startupPack = new StartupPack(irodsAccount);
-		String startupPackData = startupPack.getParsedTags();
-		try {
-
-			irodsCommands.getIrodsConnection().send(
-					irodsCommands.createHeader(
-							RequestTypes.RODS_CONNECT.getRequestType(),
-							startupPackData.length(), 0, 0, 0));
-			irodsCommands.getIrodsConnection().send(startupPackData);
-			irodsCommands.getIrodsConnection().flush();
-		} catch (ClosedChannelException e) {
-			log.error("closed channel", e);
-			e.printStackTrace();
-			throw new JargonException(e);
-		} catch (InterruptedIOException e) {
-			log.error("interrupted io", e);
-			e.printStackTrace();
-			throw new JargonException(e);
-		} catch (IOException e) {
-			log.error("io exception", e);
-			e.printStackTrace();
-			throw new JargonException(e);
-		}
-		Tag responseMessage = irodsCommands.readMessage();
-		return responseMessage;
-	}
 
 	/**
 	 * Do the normal iRODS password challenge/response sequence

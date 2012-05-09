@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.irods.jargon.core.connection.IRODSAccount;
+import org.irods.jargon.core.connection.IRODSAccount.AuthScheme;
 
 /**
  * Represents information in response to an authentication attempt. This is
@@ -14,29 +15,12 @@ import org.irods.jargon.core.connection.IRODSAccount;
  */
 public class AuthResponse {
 
-	private String authType = "";
+	private AuthScheme authType = AuthScheme.STANDARD;
 	private String challengeValue = "";
 	private boolean successful = false;
+	private String authMessage = "";
 	private IRODSAccount authenticatedIRODSAccount = null;
 	private Map<String, Object> responseProperties = new HashMap<String, Object>();
-
-	/**
-	 * Get the value used to identify the authentication mechanism
-	 * 
-	 * @return the authType <code>String</code> authType value
-	 */
-	public String getAuthType() {
-		return authType;
-	}
-
-	/**
-	 * @param authType
-	 *            the <code>String</code> authType to set
-	 */
-	// FIXME: enum value?
-	public void setAuthType(String authType) {
-		this.authType = authType;
-	}
 
 	/**
 	 * Get the (optional) challenge value used in the iRODS exchange.
@@ -109,6 +93,35 @@ public class AuthResponse {
 	public void setAuthenticatedIRODSAccount(
 			IRODSAccount authenticatedIRODSAccount) {
 		this.authenticatedIRODSAccount = authenticatedIRODSAccount;
+	}
+
+	/**
+	 * @return the authMessage if any
+	 */
+	public String getAuthMessage() {
+		return authMessage;
+	}
+
+	/**
+	 * @param authMessage
+	 *            the authMessage to set
+	 */
+	public void setAuthMessage(String authMessage) {
+		this.authMessage = authMessage;
+	}
+
+	/**
+	 * @return the authType
+	 */
+	public AuthScheme getAuthType() {
+		return authType;
+	}
+
+	/**
+	 * @param authType the authType to set
+	 */
+	public void setAuthType(AuthScheme authType) {
+		this.authType = authType;
 	}
 
 }
