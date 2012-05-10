@@ -1414,4 +1414,44 @@ public class IRODSCommands implements IRODSManagedConnection {
 		this.irodsProtocolManager = irodsProtocolManager;
 	}
 
+	/**
+	 * Respond to client status messages for an operation until exhausted.
+	 * 
+	 * @param reply
+	 *            <code>Tag</code> containing status messages from IRODS
+	 * @throws IOException
+	 */
+	public void processClientStatusMessages(final Tag reply)
+			throws JargonException {
+
+		boolean done = false;
+		Tag ackResult = reply;
+
+		while (!done) {
+			if (ackResult.getLength() > 0) {
+				if (ackResult.getName().equals(IRODSConstants.CollOprStat_PI)) {
+					// formulate an answer status reply
+
+					// if the total file count is 0, then I will continue and
+					// send
+					// the coll stat reply, otherwise, just ignore and
+					// don't send the reply.
+
+					Tag fileCountTag = ackResult.getTag("filesCnt");
+					int fileCount = Integer.parseInt((String) fileCountTag
+							.getValue());
+
+					if (fileCount < IRODSConstants.SYS_CLI_TO_SVR_COLL_STAT_SIZE) {
+						done = true;
+					} else {
+						sendInNetworkOrder(
+								IRODSConstants.SYS_CLI_TO_SVR_COLL_STAT_REPLY);
+						ackResult = readMessage();
+					}
+				}
+			}
+		}
+
+	}
+
 }

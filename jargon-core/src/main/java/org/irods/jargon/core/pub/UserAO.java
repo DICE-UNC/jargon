@@ -23,11 +23,12 @@ public interface UserAO extends IRODSAccessObject {
 	 * @param user
 	 *            {@link org.irods.jargon.core.pub.domain.User} with information
 	 *            on the user to be added.
+	 * @return {@link User} that is the result for updates
 	 * @throws JargonException
 	 * @throws DuplicateDataException
 	 *             thrown if the user already exists.
 	 */
-	void addUser(User user) throws JargonException, DuplicateDataException;
+	User addUser(User user) throws JargonException, DuplicateDataException;
 
 	/**
 	 * List all users.

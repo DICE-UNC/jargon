@@ -46,6 +46,7 @@ Note that the following bug and feature requests are logged in GForge with relat
 ==Bug Fixes==
 
 [#756] IRODSDataConversionUtil date should be null if no data in query result
+[#761] unregister collection recursively causes error when multiple subfolders
 
 ==Features==
 

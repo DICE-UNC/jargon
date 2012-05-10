@@ -303,6 +303,10 @@ public class IRODSRegistrationOfFilesAOImpl extends IRODSGenericAO implements
 			if (response != null) {
 				log.warn("unexpected response from irods, expected null message - logged and ignored ");
 			}
+
+			log.debug("process any client status messages");
+			this.getIRODSProtocol().processClientStatusMessages(response);
+
 		} catch (DuplicateDataException dde) {
 			log.warn("duplicate data exception logged and ignored, see GForge: [#639] 809000 errors on delete operations when trash file already exists");
 		} catch (DataNotFoundException dnf) {

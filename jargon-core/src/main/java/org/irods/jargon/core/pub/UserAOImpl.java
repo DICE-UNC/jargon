@@ -191,7 +191,7 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 	 * .domain.User)
 	 */
 	@Override
-	public void addUser(final User user) throws JargonException,
+	public User addUser(final User user) throws JargonException,
 			DuplicateDataException {
 
 		if (log.isDebugEnabled()) {
@@ -234,6 +234,8 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 			log.debug("info has changed");
 			updateUserInfo(user);
 		}
+
+		return findByName(user.getName());
 
 	}
 

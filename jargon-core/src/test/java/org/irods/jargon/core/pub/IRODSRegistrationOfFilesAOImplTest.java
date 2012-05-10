@@ -590,7 +590,7 @@ public class IRODSRegistrationOfFilesAOImplTest {
 		FileGenerator
 				.generateManyFilesAndCollectionsInParentCollectionByAbsolutePath(
 						localCollectionAbsolutePath,
-						"testPutCollectionWithTwoFiles", 1, 1, 1, "testFile",
+						"testPutCollectionWithTwoFiles", 4, 7, 1, "testFile",
 						".txt", 2, 2, 1, 2);
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
