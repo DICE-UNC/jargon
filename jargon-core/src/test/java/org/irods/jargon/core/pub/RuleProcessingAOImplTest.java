@@ -111,6 +111,45 @@ public class RuleProcessingAOImplTest {
 
 	}
 
+	/**
+	 * [#768] -1202000 error executing rule via jargon
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void testExecuteRuleNewSyntaxWithWriteLine() throws Exception {
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
+						irodsAccount);
+		IRODSServerProperties props = environmentalInfoAO
+				.getIRODSServerPropertiesFromIRODSServer();
+
+		if (!props.isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods3.0")) {
+			return;
+		}
+
+		RuleProcessingAO ruleProcessingAO = accessObjectFactory
+				.getRuleProcessingAO(irodsAccount);
+		StringBuilder sb = new StringBuilder();
+		sb.append("myTestRule {\n");
+		sb.append(" writeString(*Where, *StringIn);\n");
+		sb.append("writeLine(*Where,\"cheese\");\n");
+		sb.append("}\n");
+		sb.append("INPUT *Where=\"stdout\", *StringIn=\"string\"\n");
+		sb.append("OUTPUT ruleExecOut");
+		String ruleString = sb.toString();
+
+		IRODSRuleExecResult result = ruleProcessingAO.executeRule(ruleString);
+		Assert.assertNotNull("null result from rule execution", result);
+
+	}
+
 	@Test
 	public void testExecuteRuleFromResourceFileNullParmOverrides()
 			throws Exception {
