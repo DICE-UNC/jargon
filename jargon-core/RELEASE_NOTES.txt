@@ -62,5 +62,48 @@ Note that the following bug and feature requests are logged in GForge with relat
  
  * [#723] add ireg support in jargon 
  ** added methods to unregister a collection
+ ===========================
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ received msg: 
+<authRequestOut_PI>
+<challenge>6v7NJE/3oVN0HDSmoLCHoQXUzR58MYQs9MCFCRGFeXBwM68nttux4A6WTRyenVSAwAwiO9hPGon7i/BhZJk61Q==</challenge>
+</authRequestOut_PI>
+0</cook
+218	   if (status) {
+(gdb) 
+223	   memset(md5Buf, 0, sizeof(md5Buf));
+(gdb) 
+224	   strncpy(md5Buf, authReqOut->challenge, CHALLENGE_LEN);
+(gdb) 
+225	   printf("Challenge:%s\n",md5Buf);
+(gdb) 
+Challenge:???$O??St4???????|1?,???	?ypp3?'?۱??M??T??
+                                                         ";?O????ad?:?
+226	   printf("char0:%c\n", md5Buf[0]);
+(gdb) 
+char0:?
+227	   printf("char0x:%2.2x\n", (unsigned char)md5Buf[0]);
+(gdb) 
+char0x:ea
+229	   printf("char1:%c\n", md5Buf[1]);
+(gdb) 
+char1:?
+230	   printf("char1x:%2.2x\n", (unsigned char)md5Buf[1]);
+(gdb) 
+char1x:fe
+250	   	     (unsigned char)md5Buf[15]);
+(gdb) 
+252	      printf("signiture from challenge:%s\n",prevChallengeSignitureClient);
+(gdb) 
+signiture from challenge:eafecd244ff7a153741c34a6a0b087a1
+258	   if (strncmp(ANONYMOUS_USER, Conn->proxyUser.userName, NAME_LEN) == 0) {
+(gdb) 
  
  

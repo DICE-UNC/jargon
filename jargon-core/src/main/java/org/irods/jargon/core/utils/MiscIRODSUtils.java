@@ -6,10 +6,13 @@ package org.irods.jargon.core.utils;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.List;
 
 import org.irods.jargon.core.connection.IRODSAccount;
+import org.irods.jargon.core.exception.JargonException;
 
 /**
  * Misc utils for dealing with iRODS
@@ -287,5 +290,61 @@ public class MiscIRODSUtils {
 			return userName.substring(indexOfPound + 1);
 		}
 	}
+
+	/**
+	 * Create an MD5 Hash of a string value
+	 * 
+	 * @param input
+	 *            <code>String</code> with the value to be converted to an MD5
+	 *            Hash
+	 * @return <code>String<code> which is the MD5 has of the string.
+	 */
+	public static String computeMD5HashOfAStringValue(final String input)
+			throws JargonException {
+
+		if (input == null || input.isEmpty()) {
+			throw new IllegalArgumentException("null or empty input");
+		}
+
+		try {
+			MessageDigest algorithm = MessageDigest.getInstance("MD5");
+			algorithm.reset();
+			algorithm.update(input.getBytes());
+			byte[] md5 = algorithm.digest();
+			return LocalFileUtils.md5ByteArrayToString(md5);
+		} catch (NoSuchAlgorithmException ex) {
+			throw new JargonException(
+					"exception creating MD5 Hash of the given string", ex);
+		}
+	
+	}
+
+	/*
+	 * Given a string in a format that represents hex (e.g. b1f0a2), compute an
+	 * md5 check sum that will also be in a format that represents the hex
+	 * values (e.g. b1f0a2).
+	 * 
+	 * @param input <code>String</code> representing hex digits
+	 * 
+	 * @return <code>String</code> representing the computed MD5 checksum in a
+	 * string representing hex values
+	 * 
+	 * @throws JargonException
+	 * 
+	 * public static String computeMD5HashOfAStringValueInHexFormat( final
+	 * String input) throws JargonException {
+	 * 
+	 * if (input == null || input.isEmpty()) { throw new
+	 * IllegalArgumentException("null or empty input"); }
+	 * 
+	 * try { MessageDigest algorithm = MessageDigest.getInstance("MD5");
+	 * algorithm.reset();
+	 * algorithm.update(LocalFileUtils.hexStringToByteArray(input)); byte[] md5
+	 * = algorithm.digest(); return LocalFileUtils.md5ByteArrayToString(md5); }
+	 * catch (NoSuchAlgorithmException ex) { throw new JargonException(
+	 * "exception creating MD5 Hash of the given string", ex); }
+	 * 
+	 * }
+	 */
 
 }

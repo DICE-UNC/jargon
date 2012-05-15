@@ -1071,15 +1071,12 @@ public class IRODSCommands implements IRODSManagedConnection {
 			irodsConnection.flush();
 		} catch (ClosedChannelException e) {
 			log.error("closed channel", e);
-			e.printStackTrace();
 			throw new JargonException(e);
 		} catch (InterruptedIOException e) {
 			log.error("interrupted io", e);
-			e.printStackTrace();
 			throw new JargonException(e);
 		} catch (IOException e) {
 			log.error("io exception", e);
-			e.printStackTrace();
 			throw new JargonException(e);
 		}
 		Tag responseMessage = readMessage();
@@ -1099,15 +1096,12 @@ public class IRODSCommands implements IRODSManagedConnection {
 			irodsConnection.flush();
 		} catch (ClosedChannelException e) {
 			log.error("closed channel", e);
-			e.printStackTrace();
 			throw new JargonException(e);
 		} catch (InterruptedIOException e) {
 			log.error("interrupted io", e);
-			e.printStackTrace();
 			throw new JargonException(e);
 		} catch (IOException e) {
 			log.error("io exception", e);
-			e.printStackTrace();
 			throw new JargonException(e);
 		}
 
@@ -1351,7 +1345,15 @@ public class IRODSCommands implements IRODSManagedConnection {
 				IRODSConstants.OPR_COMPLETE_AN);
 	}
 
-	protected String getCachedChallengeValue() {
+	/**
+	 * Get the challenge value sent by iRODS at connection startup. This is used
+	 * for various obfuscation routines, such as an administrative password
+	 * change
+	 * 
+	 * @return <code>String</code> with the cached challange string sent by
+	 *         iRODS at connection startup
+	 */
+	public String getCachedChallengeValue() {
 		return cachedChallengeValue;
 	}
 

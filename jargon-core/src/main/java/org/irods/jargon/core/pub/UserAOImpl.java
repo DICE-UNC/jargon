@@ -557,16 +557,8 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 
 		try {
 			getIRODSProtocol().irodsFunction(adminPI);
-		} catch (JargonException je) {
-			log.info("jargon exception, check for delete of non-existent user");
-
-			if (je.getMessage().indexOf("-1018000") > -1) {
-				log.debug("user does not exist, just behave as if deleted");
-			} else {
-				log.error("jargon exception on delete user", je);
-				throw je;
-			}
-
+		} catch (InvalidUserException iue) {
+			log.debug("user does not exist, just behave as if deleted");
 		}
 
 		log.info("user {} removed", userName);
@@ -617,40 +609,7 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.irods.jargon.core.pub.UserAO#changeUserPassword(java.lang.String,
-	 * java.lang.String, java.lang.String)
-	 */
-	@Override
-	public void changeAUserPasswordByThatUser(final String userName,
-			final String currentPassword, final String newPassword)
-			throws JargonException {
 
-		if (userName == null || userName.isEmpty()) {
-			throw new IllegalArgumentException("userName is null or missing");
-		}
-
-		if (currentPassword == null || currentPassword.isEmpty()) {
-			throw new IllegalArgumentException(
-					"currentPassword is null or missing");
-		}
-
-		if (newPassword == null || newPassword.isEmpty()) {
-			throw new IllegalArgumentException("newPassword is null or missing");
-		}
-
-		log.info("changeAUserPasswordByThatUser for user:{}", userName);
-
-		String obfuscatedPassword = IRODSPasswordUtilities
-				.obfuscateIRODSPassword(newPassword, currentPassword);
-		UserAdminInp userAdminIn = UserAdminInp.instanceForChangeUserPassword(
-				userName, obfuscatedPassword);
-		getIRODSProtocol().irodsFunction(userAdminIn);
-
-	}
 
 	/*
 	 * (non-Javadoc)
@@ -705,6 +664,41 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 	 * (non-Javadoc)
 	 * 
 	 * @see
+	 * org.irods.jargon.core.pub.UserAO#changeUserPassword(java.lang.String,
+	 * java.lang.String, java.lang.String)
+	 */
+	@Override
+	public void changeAUserPasswordByThatUser(final String userName,
+			final String currentPassword, final String newPassword)
+			throws JargonException {
+
+		if (userName == null || userName.isEmpty()) {
+			throw new IllegalArgumentException("userName is null or missing");
+		}
+
+		if (currentPassword == null || currentPassword.isEmpty()) {
+			throw new IllegalArgumentException(
+					"currentPassword is null or missing");
+		}
+
+		if (newPassword == null || newPassword.isEmpty()) {
+			throw new IllegalArgumentException("newPassword is null or missing");
+		}
+
+		log.info("changeAUserPasswordByThatUser for user:{}", userName);
+
+		String obfuscatedPassword = IRODSPasswordUtilities
+				.obfuscateIRODSPassword(newPassword, currentPassword);
+		UserAdminInp userAdminIn = UserAdminInp.instanceForChangeUserPassword(
+				userName, obfuscatedPassword);
+		getIRODSProtocol().irodsFunction(userAdminIn);
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
 	 * org.irods.jargon.core.pub.UserAO#changeAUserPasswordByAnAdmin(java.lang
 	 * .String, java.lang.String)
 	 */
@@ -721,13 +715,23 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 		if (newPassword == null || newPassword.isEmpty()) {
 			throw new IllegalArgumentException("newPassword is null or missing");
 		}
+		
+		String randPaddedNewPassword = IRODSPasswordUtilities
+				.padPasswordWithRandomStringData(newPassword);
 
+		String key2 = this.getIRODSProtocol().getCachedChallengeValue();
+		String derivedChallenge = IRODSPasswordUtilities
+				.deriveHexSubsetOfChallenge(key2);
+		String myKey2 = IRODSPasswordUtilities
+				.obfuscateIRODSPasswordForAdminPasswordChange(
+						randPaddedNewPassword, this.getIRODSAccount()
+								.getPassword(), derivedChallenge);
+		
 		log.info("changeAUserPasswordByAnAdmin for user:{}", userName);
 		GeneralAdminInp adminPI = GeneralAdminInp
-				.instanceForModifyUserPassword(userName, newPassword);
+				.instanceForModifyUserPassword(userName, myKey2);
 		getIRODSProtocol().irodsFunction(adminPI);
 
-		// FIXME: finish implementing
 	}
 
 	private void updatePreChecks(final User user) throws JargonException {
