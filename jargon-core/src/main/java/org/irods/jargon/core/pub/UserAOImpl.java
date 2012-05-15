@@ -706,8 +706,8 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 	public void changeAUserPasswordByAnAdmin(final String userName,
 			final String newPassword) throws JargonException {
 
-		// see clientLogin.c and iadmin.c(line 807) for details yet to be
-		// implemented
+		// see clientLogin.c and iadmin.c(line 807) for irods equivalent
+		// functions
 		if (userName == null || userName.isEmpty()) {
 			throw new IllegalArgumentException("userName is null or missing");
 		}
