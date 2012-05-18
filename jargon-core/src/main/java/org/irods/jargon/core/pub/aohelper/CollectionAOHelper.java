@@ -68,6 +68,8 @@ public class CollectionAOHelper extends AOHelper {
 		query.append(RodsGenQueryEnum.COL_COLL_INFO1.getName());
 		query.append(COMMA);
 		query.append(RodsGenQueryEnum.COL_COLL_INFO2.getName());
+		query.append(COMMA);
+		query.append(RodsGenQueryEnum.COL_COLL_TYPE.getName());
 		return query.toString();
 	}
 
@@ -117,8 +119,8 @@ public class CollectionAOHelper extends AOHelper {
 				.getDateFromIRODSValue(row.getColumn(9)));
 		collection.setInfo1(row.getColumn(10));
 		collection.setInfo2(row.getColumn(11));
-
-		collection.setCount(row.getRecordCount());
+		collection.setInfo2(row.getColumn(11));
+		collection.setCollectionType(row.getColumn(12));
 		collection.setLastResult(row.isLastResult());
 
 		if (log.isInfoEnabled()) {

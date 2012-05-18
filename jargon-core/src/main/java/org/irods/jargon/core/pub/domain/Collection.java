@@ -56,6 +56,18 @@ public class Collection extends IRODSDomainObject {
 		this.collectionName = collectionName;
 	}
 
+	public String getAbsolutePath() {
+		StringBuilder sb = new StringBuilder();
+		if (collectionParentName.length() > 1) {
+			sb.append(collectionParentName);
+		}
+
+		if (collectionName.length() > 1) {
+			sb.append(collectionName);
+		}
+		return sb.toString();
+	}
+
 	/**
 	 * Handy method to grab the last part of the path.
 	 * 
