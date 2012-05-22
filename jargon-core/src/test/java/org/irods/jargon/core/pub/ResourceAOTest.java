@@ -54,6 +54,43 @@ public class ResourceAOTest {
 	}
 
 	@Test
+	public final void testListResourceNames() throws Exception {
+		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager
+				.instance();
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSSession irodsSession = IRODSSession
+				.instance(irodsConnectionManager);
+		IRODSAccessObjectFactory accessObjectFactory = IRODSAccessObjectFactoryImpl
+				.instance(irodsSession);
+		ResourceAO resourceAO = accessObjectFactory.getResourceAO(irodsAccount);
+		List<Resource> resources = resourceAO.listResourcesInZone(irodsAccount
+				.getZone());
+		irodsSession.closeSession();
+		Assert.assertTrue("no resources returned", resources.size() > 0);
+	}
+
+	/**
+	 * Listing resource names, providing null zone name
+	 * 
+	 * @throws Exception
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public final void testListResourceNamesNullZone() throws Exception {
+		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager
+				.instance();
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSSession irodsSession = IRODSSession
+				.instance(irodsConnectionManager);
+		IRODSAccessObjectFactory accessObjectFactory = IRODSAccessObjectFactoryImpl
+				.instance(irodsSession);
+		ResourceAO resourceAO = accessObjectFactory.getResourceAO(irodsAccount);
+		resourceAO.listResourcesInZone(null);
+
+	}
+
+	@Test
 	public final void testListResources() throws Exception {
 		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager
 				.instance();

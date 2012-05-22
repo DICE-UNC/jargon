@@ -95,4 +95,19 @@ public interface ResourceAO extends IRODSAccessObject {
 	 */
 	List<AvuData> listResourceMetadata(String resourceName)
 			throws JargonException;
+
+	/**
+	 * Retrieve a list of plain <code>String</code> with the resoruce names in
+	 * the zone. These are sorted ascending.
+	 * <p/>
+	 * This is handy for generating resource lists in interfaces.
+	 * 
+	 * @param zoneName
+	 *            <code>String</code> with the zone name for which the resource
+	 *            list should be created.
+	 * @return <code>List<String></code> of resource names in the zone
+	 * @throws JargonException
+	 */
+	List<String> listResourceNamesInZone(final String zoneName)
+			throws JargonException;
 }

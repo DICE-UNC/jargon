@@ -23,6 +23,7 @@ import org.irods.jargon.core.pub.domain.Resource;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.query.AVUQueryElement;
 import org.irods.jargon.core.query.GenQueryBuilderException;
+import org.irods.jargon.core.query.GenQueryOrderByField.OrderByType;
 import org.irods.jargon.core.query.IRODSGenQuery;
 import org.irods.jargon.core.query.IRODSGenQueryBuilder;
 import org.irods.jargon.core.query.IRODSQueryResultRow;
@@ -288,6 +289,14 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.ResourceAO#listResourceNamesInZone(java.lang
+	 * .String)
+	 */
+	@Override
 	public List<String> listResourceNamesInZone(final String zoneName)
 			throws JargonException {
 
@@ -303,7 +312,9 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 			builder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_R_RESC_NAME)
 					.addConditionAsGenQueryField(
 							RodsGenQueryEnum.COL_ZONE_NAME,
-							QueryConditionOperators.EQUAL, zoneName.trim());
+							QueryConditionOperators.EQUAL, zoneName.trim())
+					.addOrderByGenQueryField(RodsGenQueryEnum.COL_R_RESC_NAME,
+							OrderByType.ASC);
 
 			IRODSGenQueryExecutor irodsGenQueryExecutor = this
 					.getIRODSAccessObjectFactory().getIRODSGenQueryExecutor(
