@@ -60,7 +60,7 @@ public final class IRODSAccount implements Serializable {
 	private final String zone;
 	private final String userName;
 	private final String password;
-	private final String defaultStorageResource;
+	private String defaultStorageResource;
 	private final String homeDirectory;
 	private static final String authenticationScheme = STANDARD_PASSWORD;
 	private final String serverDN;
@@ -453,6 +453,14 @@ public final class IRODSAccount implements Serializable {
 
 	protected void setAuthenticatedRoles(final List<String> authenticatedRoles) {
 		this.authenticatedRoles = authenticatedRoles;
+	}
+
+	/**
+	 * @param defaultStorageResource
+	 *            the defaultStorageResource to set
+	 */
+	public void setDefaultStorageResource(String defaultStorageResource) {
+		this.defaultStorageResource = defaultStorageResource;
 	}
 
 }
