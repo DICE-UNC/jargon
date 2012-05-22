@@ -319,6 +319,28 @@ public class MiscIRODSUtils {
 	
 	}
 
+	/**
+	 * Compute a home directory path in /zone/home/username format given an
+	 * <code>IRODSAccount</code>
+	 * 
+	 * @param irodsAccount
+	 *            {@link IRODSAccount}
+	 * @return <code>String</code> with a computed home directory path
+	 */
+	public static String computeHomeDirectoryForIRODSAccount(
+			final IRODSAccount irodsAccount) {
+		if (irodsAccount == null) {
+			throw new IllegalArgumentException("null irodsAccount");
+		}
+
+		StringBuilder sb = new StringBuilder();
+		sb.append("/");
+		sb.append(irodsAccount.getZone());
+		sb.append("/home/");
+		sb.append(irodsAccount.getUserName());
+		return sb.toString();
+	}
+
 	/*
 	 * Given a string in a format that represents hex (e.g. b1f0a2), compute an
 	 * md5 check sum that will also be in a format that represents the hex

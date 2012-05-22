@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Properties;
 
 import junit.framework.Assert;
-import junit.framework.TestCase;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
@@ -111,12 +110,12 @@ public class MiscIRODSUtilsTest {
 		String targetPath = "/a/path/in/irods/here";
 		List<String> pathComponents = MiscIRODSUtils
 				.breakIRODSPathIntoComponents(targetPath);
-		TestCase.assertEquals("did not break into right number of paths", 6,
+		Assert.assertEquals("did not break into right number of paths", 6,
 				pathComponents.size());
 		String actual = MiscIRODSUtils.buildPathFromComponentsUpToIndex(
 				pathComponents, -1);
-		TestCase.assertEquals("did not reconstitute path correctly",
-				targetPath, actual);
+		Assert.assertEquals("did not reconstitute path correctly", targetPath,
+				actual);
 
 	}
 
@@ -126,8 +125,7 @@ public class MiscIRODSUtilsTest {
 	 * @throws Exception
 	 */
 	@Test(expected = IllegalArgumentException.class)
-	public final void testBuildPathFromComponentsWhenNull()
-			throws Exception {
+	public final void testBuildPathFromComponentsWhenNull() throws Exception {
 		MiscIRODSUtils.buildPathFromComponentsUpToIndex(null, -1);
 
 	}
@@ -146,8 +144,8 @@ public class MiscIRODSUtilsTest {
 
 		String actual = MiscIRODSUtils.buildPathFromComponentsUpToIndex(
 				pathComponents, -1);
-		TestCase.assertEquals("did not reconstitute path correctly",
-				targetPath, actual);
+		Assert.assertEquals("did not reconstitute path correctly", targetPath,
+				actual);
 
 	}
 
@@ -163,15 +161,14 @@ public class MiscIRODSUtilsTest {
 		String targetPath = "/";
 		List<String> pathComponents = MiscIRODSUtils
 				.breakIRODSPathIntoComponents(targetPath);
-		TestCase.assertEquals("did not break into right number of paths", 0,
+		Assert.assertEquals("did not break into right number of paths", 0,
 				pathComponents.size());
 		String actual = MiscIRODSUtils.buildPathFromComponentsUpToIndex(
 				pathComponents, -1);
-		TestCase.assertEquals("did not reconstitute path correctly",
-				targetPath, actual);
+		Assert.assertEquals("did not reconstitute path correctly", targetPath,
+				actual);
 
 	}
-
 
 	/**
 	 * Break an iRODS abs path into components, then rebuild the path using the
@@ -187,7 +184,7 @@ public class MiscIRODSUtilsTest {
 				.breakIRODSPathIntoComponents(targetPath);
 		String actual = MiscIRODSUtils.buildPathFromComponentsUpToIndex(
 				pathComponents, 3);
-		TestCase.assertEquals("did not reconstitute path correctly",
+		Assert.assertEquals("did not reconstitute path correctly",
 				"/a/path/in", actual);
 
 	}
@@ -199,7 +196,7 @@ public class MiscIRODSUtilsTest {
 	public void testGetUserInUserNameJustUserName() {
 		String testUser = "justauser";
 		String actual = MiscIRODSUtils.getUserInUserName(testUser);
-		TestCase.assertEquals(testUser, actual);
+		Assert.assertEquals(testUser, actual);
 	}
 
 	/**
@@ -210,7 +207,7 @@ public class MiscIRODSUtilsTest {
 		String testUser = "justauser#zone";
 		String expected = "justauser";
 		String actual = MiscIRODSUtils.getUserInUserName(testUser);
-		TestCase.assertEquals(expected, actual);
+		Assert.assertEquals(expected, actual);
 	}
 
 	/**
@@ -221,7 +218,7 @@ public class MiscIRODSUtilsTest {
 		String testUser = "justauser#";
 		String expected = "justauser";
 		String actual = MiscIRODSUtils.getUserInUserName(testUser);
-		TestCase.assertEquals(expected, actual);
+		Assert.assertEquals(expected, actual);
 	}
 
 	/**
@@ -232,7 +229,7 @@ public class MiscIRODSUtilsTest {
 		String testUser = "#zone";
 		String expected = "";
 		String actual = MiscIRODSUtils.getUserInUserName(testUser);
-		TestCase.assertEquals(expected, actual);
+		Assert.assertEquals(expected, actual);
 	}
 
 	/**
@@ -243,7 +240,7 @@ public class MiscIRODSUtilsTest {
 		String testUser = null;
 		String expected = "";
 		String actual = MiscIRODSUtils.getUserInUserName(testUser);
-		TestCase.assertEquals(expected, actual);
+		Assert.assertEquals(expected, actual);
 	}
 
 	/**
@@ -253,7 +250,7 @@ public class MiscIRODSUtilsTest {
 	public void testGetZoneInUserNameJustUserName() {
 		String testUser = "justauser";
 		String actual = MiscIRODSUtils.getZoneInUserName(testUser);
-		TestCase.assertEquals("", actual);
+		Assert.assertEquals("", actual);
 	}
 
 	/**
@@ -264,7 +261,7 @@ public class MiscIRODSUtilsTest {
 		String testUser = "justauser#zone";
 		String expected = "zone";
 		String actual = MiscIRODSUtils.getZoneInUserName(testUser);
-		TestCase.assertEquals(expected, actual);
+		Assert.assertEquals(expected, actual);
 	}
 
 	/**
@@ -275,7 +272,7 @@ public class MiscIRODSUtilsTest {
 		String testUser = "justauser#";
 		String expected = "";
 		String actual = MiscIRODSUtils.getZoneInUserName(testUser);
-		TestCase.assertEquals(expected, actual);
+		Assert.assertEquals(expected, actual);
 	}
 
 	/**
@@ -286,7 +283,7 @@ public class MiscIRODSUtilsTest {
 		String testUser = "#zone";
 		String expected = "zone";
 		String actual = MiscIRODSUtils.getZoneInUserName(testUser);
-		TestCase.assertEquals(expected, actual);
+		Assert.assertEquals(expected, actual);
 	}
 
 	/**
@@ -297,8 +294,24 @@ public class MiscIRODSUtilsTest {
 		String testUser = null;
 		String expected = "";
 		String actual = MiscIRODSUtils.getZoneInUserName(testUser);
-		TestCase.assertEquals(expected, actual);
+		Assert.assertEquals(expected, actual);
 	}
 
+	@Test
+	public void testComputeHomeDirectoryForIRODSAccount() throws Exception {
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		String path = MiscIRODSUtils
+				.computeHomeDirectoryForIRODSAccount(irodsAccount);
+		String expected = "/" + irodsAccount.getZone() + "/home/"
+				+ irodsAccount.getUserName();
+		Assert.assertEquals("did not correctly compute path", expected, path);
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void testComputeHomeDirectoryForIRODSAccountNull() throws Exception {
+		MiscIRODSUtils.computeHomeDirectoryForIRODSAccount(null);
+
+	}
 
 }
