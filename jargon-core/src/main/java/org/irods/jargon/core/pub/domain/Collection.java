@@ -1,6 +1,3 @@
-/**
- * 
- */
 package org.irods.jargon.core.pub.domain;
 
 import java.util.Date;

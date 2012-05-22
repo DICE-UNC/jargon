@@ -11,6 +11,7 @@ import static org.irods.jargon.core.pub.aohelper.AOHelper.QUOTE;
 import static org.irods.jargon.core.pub.aohelper.AOHelper.SPACE;
 import static org.irods.jargon.core.pub.aohelper.AOHelper.WHERE;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.irods.jargon.core.connection.IRODSAccount;
@@ -21,12 +22,16 @@ import org.irods.jargon.core.pub.domain.AvuData;
 import org.irods.jargon.core.pub.domain.Resource;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.query.AVUQueryElement;
+import org.irods.jargon.core.query.GenQueryBuilderException;
 import org.irods.jargon.core.query.IRODSGenQuery;
+import org.irods.jargon.core.query.IRODSGenQueryBuilder;
 import org.irods.jargon.core.query.IRODSQueryResultRow;
+import org.irods.jargon.core.query.IRODSQueryResultSet;
 import org.irods.jargon.core.query.IRODSQueryResultSetInterface;
 import org.irods.jargon.core.query.JargonQueryException;
 import org.irods.jargon.core.query.MetaDataAndDomainData;
 import org.irods.jargon.core.query.MetaDataAndDomainData.MetadataDomain;
+import org.irods.jargon.core.query.QueryConditionOperators;
 import org.irods.jargon.core.query.RodsGenQueryEnum;
 import org.irods.jargon.core.utils.AccessObjectQueryProcessingUtils;
 import org.irods.jargon.core.utils.IRODSDataConversionUtil;
@@ -224,7 +229,7 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 	public Resource getFirstResourceForIRODSFile(final IRODSFile irodsFile)
 			throws JargonException, DataNotFoundException {
 		if (irodsFile == null) {
-			throw new JargonException("irods file is null");
+			throw new IllegalArgumentException("irods file is null");
 		}
 
 		StringBuilder query = new StringBuilder();
@@ -283,6 +288,51 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 
 	}
 
+	public List<String> listResourceNamesInZone(final String zoneName)
+			throws JargonException {
+
+		if (zoneName == null || zoneName.length() == 0) {
+			throw new IllegalArgumentException("zone name is null or blank");
+		}
+
+		List<String> resourceNames = new ArrayList<String>();
+
+		IRODSQueryResultSet resultSet = null;
+		try {
+			IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, null);
+			builder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_R_RESC_NAME)
+					.addConditionAsGenQueryField(
+							RodsGenQueryEnum.COL_ZONE_NAME,
+							QueryConditionOperators.EQUAL, zoneName.trim());
+
+			IRODSGenQueryExecutor irodsGenQueryExecutor = this
+					.getIRODSAccessObjectFactory().getIRODSGenQueryExecutor(
+							this.getIRODSAccount());
+
+			resultSet = irodsGenQueryExecutor
+					.executeIRODSQueryAndCloseResult(
+							builder.exportIRODSQueryFromBuilder(this
+									.getIRODSAccessObjectFactory()
+									.getJargonProperties()
+									.getMaxFilesAndDirsQueryMax()), 0);
+		} catch (JargonQueryException e) {
+			log.error("jargon query exception getting results", e);
+			throw new JargonException(e);
+		} catch (GenQueryBuilderException e) {
+			log.error("jargon query exception getting results", e);
+			throw new JargonException(e);
+		}
+
+		for (IRODSQueryResultRow row : resultSet.getResults()) {
+
+			resourceNames.add(row.getColumn(0));
+
+		}
+
+		return resourceNames;
+
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -295,7 +345,7 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 			throws JargonException {
 
 		if (zoneName == null || zoneName.length() == 0) {
-			throw new JargonException("zone name is null or blank");
+			throw new IllegalArgumentException("zone name is null or blank");
 		}
 
 		IRODSGenQueryExecutorImpl irodsGenQueryExecutorImpl = new IRODSGenQueryExecutorImpl(
@@ -338,7 +388,7 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 	public List<AvuData> listResourceMetadata(final String resourceName)
 			throws JargonException {
 		if (resourceName == null || resourceName.isEmpty()) {
-			throw new JargonException("null or empty resourceName");
+			throw new IllegalArgumentException("null or empty resourceName");
 		}
 		log.info("list resource metadata for {}", resourceName);
 
@@ -386,7 +436,7 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 		// FIXME: collapse other query methods onto this one method....
 
 		if (whereStatement == null) {
-			throw new JargonException("null where statement");
+			throw new IllegalArgumentException("null where statement");
 		}
 
 		final IRODSGenQueryExecutorImpl irodsGenQueryExecutorImpl = new IRODSGenQueryExecutorImpl(
@@ -448,7 +498,7 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 			final List<AVUQueryElement> avuQuery) throws JargonQueryException,
 			JargonException {
 		if (avuQuery == null || avuQuery.isEmpty()) {
-			throw new JargonException("null or empty query");
+			throw new IllegalArgumentException("null or empty query");
 		}
 
 		final IRODSGenQueryExecutorImpl irodsGenQueryExecutorImpl = new IRODSGenQueryExecutorImpl(

@@ -2,6 +2,8 @@ package org.irods.jargon.core.packinstr;
 
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.query.GenQueryField;
+import org.irods.jargon.core.query.GenQueryOrderByField;
+import org.irods.jargon.core.query.GenQueryOrderByField.OrderByType;
 import org.irods.jargon.core.query.GenQuerySelectField;
 import org.irods.jargon.core.query.TranslatedGenQueryCondition;
 import org.irods.jargon.core.query.TranslatedIRODSGenQuery;
@@ -34,8 +36,8 @@ public class GenQueryInp extends AbstractIRODSPackingInstruction implements
 	public static final String INX_IVAL_PAIR_PI = "InxIvalPair_PI";
 
 	// working on this....no order by yet
-	public static final int ORDER_BY = 0x400;
-	public static final int ORDER_BY_DESC = 0x800;
+	public static final int ORDER_BY = 1024;// 0x400;
+	public static final int ORDER_BY_DESC = 2048;// 0x800;
 
 	public static final int API_NBR = 702;
 
@@ -211,7 +213,10 @@ public class GenQueryInp extends AbstractIRODSPackingInstruction implements
 		}
 
 		Tag[] subTags = null;
+		int[] orderByFlags = new int[translatedIRODSQuery.getSelectFields()
+				.size()];
 		int j = 1;
+		int k = 0;
 
 		subTags = new Tag[translatedIRODSQuery.getSelectFields().size() * 2 + 1];
 		subTags[0] = new Tag(IILEN, translatedIRODSQuery.getSelectFields()
@@ -220,30 +225,55 @@ public class GenQueryInp extends AbstractIRODSPackingInstruction implements
 		for (GenQuerySelectField select : translatedIRODSQuery
 				.getSelectFields()) {
 			subTags[j] = new Tag(INX, select.getSelectFieldNumericTranslation());
+
+			// see if there is a matching order by field and twiddle the bits
+
+			int orderByFlag = 0;
+			for (GenQueryOrderByField orderBy : translatedIRODSQuery
+					.getOrderByFields()) {
+				if (orderBy.getSelectFieldNumericTranslation().equals(
+						select.getSelectFieldNumericTranslation())) {
+					if (orderBy.getOrderByType() == OrderByType.ASC) {
+						orderByFlag = ORDER_BY;
+					} else if (orderBy.getOrderByType() == OrderByType.DESC) {
+						orderByFlag = ORDER_BY_DESC;
+					}
+					break;
+				}
+
+			}
+			orderByFlags[k++] = orderByFlag;
 			j++;
 		}
 
+		k = 0;
 		for (GenQuerySelectField select : translatedIRODSQuery
 				.getSelectFields()) {
+			int val = 1;
 			if (select.getSelectFieldType() == GenQueryField.SelectFieldTypes.FIELD) {
-				subTags[j] = new Tag(IVALUE, 1);
+				val = orderByFlags[k++];
+				if (val == 0) {
+					val = 1;
+				}
 			} else if (select.getSelectFieldType() == GenQueryField.SelectFieldTypes.AVG) {
-				subTags[j] = new Tag(IVALUE, 5);
+				val = 5;
 			} else if (select.getSelectFieldType() == GenQueryField.SelectFieldTypes.COUNT) {
-				subTags[j] = new Tag(IVALUE, 6);
+				val = 6;
 			} else if (select.getSelectFieldType() == GenQueryField.SelectFieldTypes.MAX) {
-				subTags[j] = new Tag(IVALUE, 3);
+				val = 3;
 			} else if (select.getSelectFieldType() == GenQueryField.SelectFieldTypes.MIN) {
-				subTags[j] = new Tag(IVALUE, 2);
+				val = 2;
 			} else if (select.getSelectFieldType() == GenQueryField.SelectFieldTypes.SUM) {
-				subTags[j] = new Tag(IVALUE, 4);
+				val = 4;
 			} else if (select.getSelectFieldType() == GenQueryField.SelectFieldTypes.FILE_ACCESS) {
-				subTags[j] = new Tag(IVALUE, 1024);
+				val = 1024;
 			} else {
 				throw new JargonException(
 						"unknown select type, cannot translate to XML protocol:"
 								+ select.getSelectFieldType());
 			}
+
+			subTags[j] = new Tag(IVALUE, val);
 			j++;
 		}
 
