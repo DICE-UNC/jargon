@@ -32,7 +32,6 @@ import org.irods.jargon.core.query.IRODSQueryResultSetInterface;
 import org.irods.jargon.core.query.JargonQueryException;
 import org.irods.jargon.core.query.MetaDataAndDomainData;
 import org.irods.jargon.core.query.MetaDataAndDomainData.MetadataDomain;
-import org.irods.jargon.core.query.QueryConditionOperators;
 import org.irods.jargon.core.query.RodsGenQueryEnum;
 import org.irods.jargon.core.utils.AccessObjectQueryProcessingUtils;
 import org.irods.jargon.core.utils.IRODSDataConversionUtil;
@@ -289,20 +288,15 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 
 	}
 
+
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.irods.jargon.core.pub.ResourceAO#listResourceNamesInZone(java.lang
-	 * .String)
+	 * @see org.irods.jargon.core.pub.ResourceAO#listResourceNames()
 	 */
 	@Override
-	public List<String> listResourceNamesInZone(final String zoneName)
+	public List<String> listResourceNames()
 			throws JargonException {
-
-		if (zoneName == null || zoneName.length() == 0) {
-			throw new IllegalArgumentException("zone name is null or blank");
-		}
 
 		List<String> resourceNames = new ArrayList<String>();
 
@@ -310,9 +304,6 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 		try {
 			IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, null);
 			builder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_R_RESC_NAME)
-					.addConditionAsGenQueryField(
-							RodsGenQueryEnum.COL_ZONE_NAME,
-							QueryConditionOperators.EQUAL, zoneName.trim())
 					.addOrderByGenQueryField(RodsGenQueryEnum.COL_R_RESC_NAME,
 							OrderByType.ASC);
 

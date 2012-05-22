@@ -12,8 +12,29 @@ import org.irods.jargon.core.query.JargonQueryException;
 import org.irods.jargon.core.query.MetaDataAndDomainData;
 
 public interface ResourceAO extends IRODSAccessObject {
+
+	/**
+	 * List all of the <code>Resource</code> in the zone. This returns a list of
+	 * domain objects with detailed information.
+	 * 
+	 * @param zoneName
+	 *            <code>String</code> with the target zone name.
+	 * @return <code>List</code> of {@link Resource}
+	 * @throws JargonException
+	 */
 	List<Resource> listResourcesInZone(String zoneName) throws JargonException;
 
+	/**
+	 * Get the first <code>Resource</code> associated with an iRODS file. There
+	 * may be other iRODS resources associated with the given file
+	 * 
+	 * @param irodsFile
+	 *            {@link IRODSFile} representing the file in iRODS
+	 * @return {@link Resource} which is the first (of potentially many)
+	 *         resources associated with the given file
+	 * @throws JargonException
+	 * @throws DataNotFoundException
+	 */
 	Resource getFirstResourceForIRODSFile(IRODSFile irodsFile)
 			throws JargonException, DataNotFoundException;
 
@@ -97,17 +118,14 @@ public interface ResourceAO extends IRODSAccessObject {
 			throws JargonException;
 
 	/**
-	 * Retrieve a list of plain <code>String</code> with the resoruce names in
+	 * Retrieve a list of plain <code>String</code> with the resource names in
 	 * the zone. These are sorted ascending.
 	 * <p/>
 	 * This is handy for generating resource lists in interfaces.
 	 * 
-	 * @param zoneName
-	 *            <code>String</code> with the zone name for which the resource
-	 *            list should be created.
 	 * @return <code>List<String></code> of resource names in the zone
 	 * @throws JargonException
 	 */
-	List<String> listResourceNamesInZone(final String zoneName)
+	List<String> listResourceNames()
 			throws JargonException;
 }

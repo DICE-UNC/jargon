@@ -64,19 +64,18 @@ public class ResourceAOTest {
 		IRODSAccessObjectFactory accessObjectFactory = IRODSAccessObjectFactoryImpl
 				.instance(irodsSession);
 		ResourceAO resourceAO = accessObjectFactory.getResourceAO(irodsAccount);
-		List<Resource> resources = resourceAO.listResourcesInZone(irodsAccount
-				.getZone());
+		List<String> resources = resourceAO.listResourceNames();
 		irodsSession.closeSession();
 		Assert.assertTrue("no resources returned", resources.size() > 0);
 	}
 
 	/**
-	 * Listing resource names, providing null zone name
+	 * Listing resources, providing null zone name
 	 * 
 	 * @throws Exception
 	 */
 	@Test(expected = IllegalArgumentException.class)
-	public final void testListResourceNamesNullZone() throws Exception {
+	public final void testListResourcesNullZone() throws Exception {
 		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager
 				.instance();
 		IRODSAccount irodsAccount = testingPropertiesHelper
