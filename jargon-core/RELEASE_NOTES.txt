@@ -70,6 +70,12 @@ Note that the following bug and feature requests are logged in GForge with relat
  
  * [#775] iDrop 1.1.0 refactoring activities
  ** add method to list resource names in zone
+ 
+ * [#114] support for mounted collections, cross zone browsing, and soft links
+ ** added a MountedCollectionAO to administer mounted collections and soft links 
+ 
+ 
+ 
  ===========================
  
  
