@@ -2,6 +2,7 @@ package org.irods.jargon.core.unittest;
 
 import org.irods.jargon.core.pub.BulkFileOperationsAOImplTest;
 import org.irods.jargon.core.pub.CollectionAOImplTest;
+import org.irods.jargon.core.pub.CollectionAndDataObjectListAndSearchAOImplForSpecCollsTest;
 import org.irods.jargon.core.pub.CollectionAndDataObjectListAndSearchAOImplTest;
 import org.irods.jargon.core.pub.DataObjectAOImplTest;
 import org.irods.jargon.core.pub.DataObjectAuditAOImplTest;
@@ -50,7 +51,8 @@ import org.junit.runners.Suite;
 		FederatedUserAOTest.class, FederatedCollectionAOImplTest.class,
 		ProtocolExtensionPointImplTest.class,
 		IRODSRegistrationOfFilesAOImplTest.class,
-		MountedCollectionAOImplTest.class })
+		MountedCollectionAOImplTest.class,
+		CollectionAndDataObjectListAndSearchAOImplForSpecCollsTest.class })
 /**
  * Suite to run Access Object tests in org.irods.jargon.pub.*
  * <p/>

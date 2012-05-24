@@ -407,14 +407,25 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 			final ObjStat objStat, final int partialStartIndex)
 			throws FileNotFoundException, JargonException {
 
+		log.info("listCollectionsUnderPath()");
+
 		if (objStat == null) {
 			throw new IllegalArgumentException("objStat is null");
 		}
 
+		/*
+		 * Special collections are processed in different ways.
+		 * 
+		 * Listing for soft links substitutes the source path for the target
+		 * path in the query
+		 */
+
+		String effectiveAbsolutePath = determineAbsolutePathBasedOnCollTypeInObjectStat(objStat);
+
 		List<CollectionAndDataObjectListingEntry> subdirs = new ArrayList<CollectionAndDataObjectListingEntry>();
 
 		String query = IRODSFileSystemAOHelper
-				.buildQueryListAllCollections(objStat.getAbsolutePath());
+				.buildQueryListAllCollections(effectiveAbsolutePath);
 
 		IRODSQueryResultSetInterface resultSet = queryForPathAndReturnResultSet(
 				objStat.getAbsolutePath(), query, partialStartIndex, objStat);
@@ -424,6 +435,9 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		for (IRODSQueryResultRow row : resultSet.getResults()) {
 			collectionAndDataObjectListingEntry = CollectionAOHelper
 					.buildCollectionListEntryFromResultSetRowForCollectionQuery(row);
+
+			adjustEntryFromRowInCaseOfSpecialCollection(objStat,
+					effectiveAbsolutePath, collectionAndDataObjectListingEntry);
 
 			/*
 			 * for some reason, a query for collections with a parent of '/'
@@ -439,6 +453,55 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 
 		return subdirs;
 
+	}
+
+	/**
+	 * For a collection based on a row from a collection query, evaluate against
+	 * the provided objStat and decide whether to modify the resulting listing
+	 * entry to reflect special collection status
+	 * 
+	 * @param objStat
+	 * @param effectiveAbsolutePath
+	 * @param collectionAndDataObjectListingEntry
+	 */
+	private void adjustEntryFromRowInCaseOfSpecialCollection(
+			final ObjStat objStat,
+			final String effectiveAbsolutePath,
+			final CollectionAndDataObjectListingEntry collectionAndDataObjectListingEntry) {
+		if (objStat.getSpecColType() == SpecColType.LINKED_COLL) {
+			log.info("adjusting paths in entry to reflect linked collection info");
+			collectionAndDataObjectListingEntry
+					.setSpecialObjectPath(effectiveAbsolutePath);
+
+			StringBuilder sb = new StringBuilder();
+			sb.append(objStat.getCollectionPath());
+			sb.append('/');
+			sb.append(MiscIRODSUtils
+					.getLastPathComponentForCollectionName(collectionAndDataObjectListingEntry
+							.getPathOrName()));
+
+			collectionAndDataObjectListingEntry.setPathOrName(sb.toString());
+
+			collectionAndDataObjectListingEntry.setParentPath(objStat
+					.getCollectionPath());
+		}
+	}
+
+	/**
+	 * @param objStat
+	 * @return
+	 */
+	private String determineAbsolutePathBasedOnCollTypeInObjectStat(
+			final ObjStat objStat) {
+		String effectiveAbsolutePath = null;
+
+		if (objStat.getSpecColType() == SpecColType.LINKED_COLL) {
+			log.info("since this is a linked coll, use the source path");
+			effectiveAbsolutePath = objStat.getObjectPath();
+		} else {
+			effectiveAbsolutePath = objStat.getAbsolutePath();
+		}
+		return effectiveAbsolutePath;
 	}
 
 	/*
@@ -633,10 +696,16 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 			final ObjStat objStat, final int partialStartIndex)
 			throws JargonException {
 
+		log.info("listDataObjectsUnderPath(objStat, partialStartIndex)");
+
 		if (objStat == null) {
 			throw new IllegalArgumentException(
 					"collectionAndDataObjectListingEntry is null");
 		}
+
+		String effectiveAbsolutePath = determineAbsolutePathBasedOnCollTypeInObjectStat(objStat);
+		log.info("determined effectiveAbsolutePathToBe:{}",
+				effectiveAbsolutePath);
 
 		List<CollectionAndDataObjectListingEntry> files = new ArrayList<CollectionAndDataObjectListingEntry>();
 
@@ -644,14 +713,12 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 
 		StringBuilder query = new StringBuilder(
 				IRODSFileSystemAOHelper
-						.buildQueryListAllDataObjectsWithSizeAndDateInfo(objStat
-								.getAbsolutePath()));
+						.buildQueryListAllDataObjectsWithSizeAndDateInfo(effectiveAbsolutePath));
 		IRODSQueryResultSetInterface resultSet;
 
 		try {
-			resultSet = queryForPathAndReturnResultSet(
-					objStat.getAbsolutePath(), query.toString(),
-					partialStartIndex, objStat);
+			resultSet = queryForPathAndReturnResultSet(effectiveAbsolutePath,
+					query.toString(), partialStartIndex, objStat);
 		} catch (JargonException e) {
 			log.error("exception querying for data objects:{}",
 					query.toString(), e);
@@ -669,6 +736,22 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		for (IRODSQueryResultRow row : resultSet.getResults()) {
 			entry = CollectionAOHelper
 					.buildCollectionListEntryFromResultSetRowForDataObjectQuery(row);
+
+			if (objStat.getSpecColType() == SpecColType.LINKED_COLL) {
+				log.info("adjusting paths in entry to reflect linked collection info");
+				entry.setSpecialObjectPath(effectiveAbsolutePath);
+
+				StringBuilder sb = new StringBuilder();
+				sb.append(objStat.getCollectionPath());
+				sb.append('/');
+				sb.append(MiscIRODSUtils
+						.getLastPathComponentForCollectionName(entry
+								.getPathOrName()));
+
+				entry.setPathOrName(sb.toString());
+
+				entry.setParentPath(objStat.getCollectionPath());
+			}
 
 			StringBuilder sb = new StringBuilder();
 			sb.append(entry.getParentPath());
@@ -930,8 +1013,6 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 					.getDateFromIRODSValue(row.getColumn(2)));
 			entry.setModifiedAt(IRODSDataConversionUtil
 					.getDateFromIRODSValue(row.getColumn(3)));
-			// entry.setId(IRODSDataConversionUtil.getIntOrZeroFromIRODSValue(row
-			// .getColumn(4)));
 			entry.setDataSize(IRODSDataConversionUtil
 					.getLongOrZeroFromIRODSValue(row.getColumn(4)));
 			entry.setOwnerName(row.getColumn(5));
@@ -1053,11 +1134,14 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		objStat.setObjSize(response.getTag("objSize").getLongValue());
 		objStat.setOwnerName(response.getTag("ownerName").getStringValue());
 		objStat.setOwnerZone(response.getTag("ownerZone").getStringValue());
-		objStat.setSpecColType(SpecColType.NORMAL); // TODO: only normal for
-													// now
-
+		objStat.setSpecColType(SpecColType.NORMAL);
 		Tag specColl = response.getTag("SpecColl_PI");
 
+		/*
+		 * Look for the specColl tag (it is expected to be there) and see if
+		 * there are any special collection types (e.g. mounted or soft links)
+		 * to deal with
+		 */
 		if (specColl != null) {
 			Tag tag = specColl.getTag("collection");
 
@@ -1096,6 +1180,9 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 			default:
 				throw new JargonException("unknown special coll type:");
 			}
+
+			objStat.setObjectPath(specColl.getTag("phyPath").getStringValue());
+
 		}
 
 		String createdDate = response.getTag("createTime").getStringValue();

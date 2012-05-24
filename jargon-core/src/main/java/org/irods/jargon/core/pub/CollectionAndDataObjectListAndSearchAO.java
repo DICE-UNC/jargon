@@ -51,6 +51,9 @@ public interface CollectionAndDataObjectListAndSearchAO extends
 	 * This method is not recursive, it only lists the collections under the
 	 * given parent. The parent is an absolute path, this particular method does
 	 * not 'search', rather it just lists.
+	 * <p/>
+	 * Soft links are supported with this method. The listing entry returned
+	 * will indicate the actual parent collection of a given file or data object
 	 * 
 	 * @param absolutePathToParent
 	 *            <code>String</code> with the absolute path to the parent. If
@@ -79,6 +82,9 @@ public interface CollectionAndDataObjectListAndSearchAO extends
 	 * <p/>
 	 * This method is not a search method, it simply lists the directories that
 	 * are direct children of the given path.
+	 * <p/>
+	 * Soft links are supported with this method. The listing entry returned
+	 * will indicate the actual parent collection of a given file or data object
 	 * 
 	 * @param absolutePathToParent
 	 *            <code>String</code> with the absolute path to the parent. If
@@ -117,6 +123,9 @@ public interface CollectionAndDataObjectListAndSearchAO extends
 	 * <code>listCollectionsUnderPath</code> methods may be called separately
 	 * with a partial start index value as appropriate. It is up to the caller
 	 * to determine which types need paging.
+	 * <p/>
+	 * Soft links are supported with this method. The listing entry returned
+	 * will indicate the actual parent collection of a given file or data object
 	 * 
 	 * @param absolutePathToParent
 	 *            <code>String</code> with the absolute path to the parent. If

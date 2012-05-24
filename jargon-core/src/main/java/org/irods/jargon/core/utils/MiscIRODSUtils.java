@@ -341,6 +341,28 @@ public class MiscIRODSUtils {
 		return sb.toString();
 	}
 
+	/**
+	 * Utility method to get the last part of the collection path component.
+	 * Returns the last subdir that is the collection.
+	 * 
+	 * @return <code>String</code> with the last part of the collection path.
+	 */
+	public static String getLastPathComponentForCollectionName(
+			final String collectionPath) {
+
+		if (collectionPath == null || collectionPath.isEmpty()) {
+			throw new IllegalArgumentException("null or empty collection path");
+		}
+
+		String[] paths = collectionPath.split("/");
+		if (paths.length == 0) {
+			return "";
+		}
+
+		return paths[paths.length - 1];
+
+	}
+
 	/*
 	 * Given a string in a format that represents hex (e.g. b1f0a2), compute an
 	 * md5 check sum that will also be in a format that represents the hex

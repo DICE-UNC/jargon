@@ -15,6 +15,7 @@ import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry.ObjectTyp
 public class ObjStat {
 
 	private String absolutePath = "";
+	private String objectPath = "";
 	private CollectionAndDataObjectListingEntry.ObjectType objectType;
 	private int dataId = 0;
 	private String checksum = "";
@@ -47,6 +48,8 @@ public class ObjStat {
 		sb.append(objectType);
 		sb.append("\n   collectionPath:");
 		sb.append(collectionPath);
+		sb.append("\n   objectPath:");
+		sb.append(objectPath);
 		sb.append("\n   checksum:");
 		sb.append(checksum);
 		sb.append("\n   ownerName:");
@@ -290,6 +293,24 @@ public class ObjStat {
 	 */
 	public void setReplNumber(int replNumber) {
 		this.replNumber = replNumber;
+	}
+
+	/**
+	 * @return the objectPath <code>String</code> with either the physical path,
+	 *         for a normal file, or the source path for a soft link
+	 */
+	public String getObjectPath() {
+		return objectPath;
+	}
+
+	/**
+	 * @param objectPath
+	 *            the objectPath to set <code>String</code> with either the
+	 *            physical path, for a normal file, or the source path for a
+	 *            soft link
+	 */
+	public void setObjectPath(String objectPath) {
+		this.objectPath = objectPath;
 	}
 
 }
