@@ -2,9 +2,12 @@ package org.irods.jargon.core.pub;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSSession;
+import org.irods.jargon.core.exception.CollectionNotEmptyException;
+import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.FileNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.packinstr.DataObjInpForMcoll;
+import org.irods.jargon.core.packinstr.DataObjInpForUnmount;
 import org.irods.jargon.core.pub.domain.ObjStat;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry.ObjectType;
@@ -51,6 +54,65 @@ public class MountedCollectionAOImpl extends IRODSGenericAO implements
 	 * (non-Javadoc)
 	 * 
 	 * @see
+	 * org.irods.jargon.core.pub.MountedCollectionAO#unmountACollection(java
+	 * .lang.String, java.lang.String)
+	 */
+	@Override
+	public boolean unmountACollection(
+			final String absolutePathToCollectionToUnmount, final String resourceName)
+			throws JargonException {
+		log.info("unmountACollection()");
+
+		if (absolutePathToCollectionToUnmount == null
+				|| absolutePathToCollectionToUnmount.isEmpty()) {
+			throw new IllegalArgumentException(
+					"null or empty absolutePathToCollectionToUnmount");
+		}
+		
+		if (resourceName == null) {
+			throw new IllegalArgumentException(
+					"null resource name, set to blank if not specified");
+		}
+
+		boolean success = true;
+
+		log.info("absolutePathToCollectionToUnmount:{}",
+				absolutePathToCollectionToUnmount);
+		
+		log.info("resourceName:{}", resourceName);
+
+		DataObjInpForUnmount dataObjInp = DataObjInpForUnmount
+				.instanceForUnmount(absolutePathToCollectionToUnmount,
+						resourceName);
+
+		try {
+			getIRODSProtocol().irodsFunction(dataObjInp);
+		} catch (DataNotFoundException e) {
+			success = false;
+		}
+		log.debug("unmount complete, success?:{}", success);
+
+		/*
+		 * There seems to be an issue with un-mounting a collection and then
+		 * doing things with it. Even if the unmount is successful, a successive
+		 * mount command will return a -79000 error. This overhead of this
+		 * effect is meant to smooth over this effect. If you are reading this
+		 * intently then this close is messing something up for you! Post
+		 * something to IRODS Chat if this trips you up, it's meant to be a
+		 * sensible default.
+		 * 
+		 * The call to close below should not really be visible to the caller,
+		 * as subsequent operations will just open a new one!
+		 */
+		this.getIRODSAccessObjectFactory().closeSession(getIRODSAccount());
+		return success;
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
 	 * org.irods.jargon.core.pub.MountedCollectionAO#createASoftLink(java.lang
 	 * .String, java.lang.String)
 	 */
@@ -62,7 +124,8 @@ public class MountedCollectionAOImpl extends IRODSGenericAO implements
 	public void createASoftLink(
 			final String absolutePathToTheIRODSCollectionToBeMounted,
 			final String absolutePathToLinkedCollectionToBeCreated)
-			throws FileNotFoundException, JargonException {
+			throws FileNotFoundException, CollectionNotEmptyException,
+			JargonException {
 
 		log.info("createASoftLink()");
 

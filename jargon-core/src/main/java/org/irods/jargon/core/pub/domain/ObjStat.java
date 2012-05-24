@@ -24,9 +24,13 @@ public class ObjStat {
 	private Date createdAt = null;
 	private Date modifiedAt = null;
 	private SpecColType specColType = SpecColType.NORMAL;
+	private String collectionPath = "";
+	private String cacheDir = "";
+	private boolean cacheDirty = false;
+	private int replNumber = 0;
 
 	public enum SpecColType {
-		NORMAL
+		NORMAL, STRUCT_FILE_COLL, MOUNTED_COLL, LINKED_COLL
 	}
 
 	@Override
@@ -41,6 +45,8 @@ public class ObjStat {
 		sb.append(specColType);
 		sb.append("\n   objectType:");
 		sb.append(objectType);
+		sb.append("\n   collectionPath:");
+		sb.append(collectionPath);
 		sb.append("\n   checksum:");
 		sb.append(checksum);
 		sb.append("\n   ownerName:");
@@ -49,7 +55,13 @@ public class ObjStat {
 		sb.append(ownerZone);
 		sb.append("\n  objSize:");
 		sb.append(objSize);
+		sb.append("\n   cacheDir:");
+		sb.append(cacheDir);
+		sb.append("\n   cacheDirty:");
+		sb.append(cacheDirty);
 		sb.append("\n   createdAt:");
+		sb.append("replNumber:");
+		sb.append(replNumber);
 		sb.append(createdAt);
 		sb.append("\n   modifiedAt:");
 		sb.append(modifiedAt);
@@ -216,6 +228,68 @@ public class ObjStat {
 	 */
 	public boolean isSomeTypeOfCollection() {
 		return (objectType == ObjectType.COLLECTION || objectType == ObjectType.LOCAL_DIR);
+	}
+
+	/**
+	 * @return the collectionPath <code>String</code> that indicates that actual
+	 *         canonical path to the file
+	 */
+	public String getCollectionPath() {
+		return collectionPath;
+	}
+
+	/**
+	 * @param collectionPath
+	 *            the collectionPath to set <code>String</code> that indicates that
+	 *            actual canonical path to the file
+	 */
+	public void setCollectionPath(String collectionPath) {
+		this.collectionPath = collectionPath;
+	}
+
+	/**
+	 * @return the cacheDir
+	 */
+	public String getCacheDir() {
+		return cacheDir;
+	}
+
+	/**
+	 * @param cacheDir
+	 *            the cacheDir to set
+	 */
+	public void setCacheDir(String cacheDir) {
+		this.cacheDir = cacheDir;
+	}
+
+	/**
+	 * @return the cacheDirty
+	 */
+	public boolean isCacheDirty() {
+		return cacheDirty;
+	}
+
+	/**
+	 * @param cacheDirty
+	 *            the cacheDirty to set
+	 */
+	public void setCacheDirty(boolean cacheDirty) {
+		this.cacheDirty = cacheDirty;
+	}
+
+	/**
+	 * @return the replNumber
+	 */
+	public int getReplNumber() {
+		return replNumber;
+	}
+
+	/**
+	 * @param replNumber
+	 *            the replNumber to set
+	 */
+	public void setReplNumber(int replNumber) {
+		this.replNumber = replNumber;
 	}
 
 }

@@ -1,5 +1,6 @@
 package org.irods.jargon.core.pub;
 
+import org.irods.jargon.core.exception.CollectionNotEmptyException;
 import org.irods.jargon.core.exception.FileNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
 
@@ -41,11 +42,30 @@ public interface MountedCollectionAO {
 	 *             occurs if the
 	 *             <code>absolutePathToTheIRODSCollectionToBeMounted</code> does
 	 *             not exist
+	 * @throws CollectionNotEmptyException
+	 *             occurs if the collection for the created link is not empty
 	 * @throws JargonException
 	 */
 	void createASoftLink(
 			final String absolutePathToTheIRODSCollectionToBeMounted,
 			final String absolutePathToLinkedCollectionToBeCreated)
-			throws FileNotFoundException, JargonException;
+			throws FileNotFoundException, CollectionNotEmptyException,
+			JargonException;
+
+	/**
+	 * Unmount the collection at the given absolute path
+	 * 
+	 * @param absolutePathToCollectionToUnmount
+	 *            <code>String</code> with the absolute path to the collection
+	 *            to be unmounted
+	 * @param resourceName
+	 *            <code>String</code> with the optional (blank if not nused)
+	 *            resource name
+	 * @return <code>boolean</code> will return <code>true</code> if unmounted,
+	 *         <code>false</code> if the collection to unmount was not found
+	 * @throws JargonException
+	 */
+	boolean unmountACollection(String absolutePathToCollectionToUnmount,
+			String resourceName) throws JargonException;
 
 }

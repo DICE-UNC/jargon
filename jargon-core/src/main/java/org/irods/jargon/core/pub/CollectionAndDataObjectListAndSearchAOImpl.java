@@ -1056,6 +1056,48 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		objStat.setSpecColType(SpecColType.NORMAL); // TODO: only normal for
 													// now
 
+		Tag specColl = response.getTag("SpecColl_PI");
+
+		if (specColl != null) {
+			Tag tag = specColl.getTag("collection");
+
+			if (tag != null) {
+				objStat.setCollectionPath(tag.getStringValue());
+			}
+
+			tag = specColl.getTag("cacheDir");
+
+			if (tag != null) {
+				objStat.setCacheDir(tag.getStringValue());
+			}
+
+			tag = specColl.getTag("cacheDirty");
+
+			if (tag != null) {
+				objStat.setCacheDirty(tag.getStringValue().equals(1));
+			}
+
+			int collClass = specColl.getTag("collClass").getIntValue();
+			objStat.setReplNumber(specColl.getTag("replNum").getIntValue());
+
+			switch (collClass) {
+			case 0:
+				objStat.setSpecColType(SpecColType.NORMAL);
+				break;
+			case 1:
+				objStat.setSpecColType(SpecColType.STRUCT_FILE_COLL);
+				break;
+			case 2:
+				objStat.setSpecColType(SpecColType.MOUNTED_COLL);
+				break;
+			case 3:
+				objStat.setSpecColType(SpecColType.LINKED_COLL);
+				break;
+			default:
+				throw new JargonException("unknown special coll type:");
+			}
+		}
+
 		String createdDate = response.getTag("createTime").getStringValue();
 		String modifiedDate = response.getTag("modifyTime").getStringValue();
 		objStat.setCreatedAt(IRODSDataConversionUtil
