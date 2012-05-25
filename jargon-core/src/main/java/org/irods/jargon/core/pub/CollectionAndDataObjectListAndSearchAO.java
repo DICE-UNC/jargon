@@ -28,11 +28,18 @@ import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry;
  * collections and data objects with different paging requirements (e.g. There
  * are more collections to page, but no more data objects. This must be
  * accounted for by client programs. The
- * {@link CollectionAndDataObjectListingEntry} extends teh
+ * {@link CollectionAndDataObjectListingEntry} extends the
  * {@link IRODSDomainObject} superclass, this superclass provides methods to
  * access whether there are more entries, and at what sequence in a result
  * collection the 'has more' entry occurs, so that offset is available for
  * re-query.
+ * <p/>
+ * Note that this access object supports iRODS special collections ,note the
+ * comments on individual methods for details. The Information returned is meant
+ * to reflect the object or collection at the requested path, so if it is
+ * soft-linked, the object is returned from the perspective of the soft link,
+ * and the descriptive object will contain information on the canonical parent
+ * collection.
  * 
  * @author Mike Conway - DICE (www.irods.org)
  * 
@@ -53,7 +60,9 @@ public interface CollectionAndDataObjectListAndSearchAO extends
 	 * not 'search', rather it just lists.
 	 * <p/>
 	 * Soft links are supported with this method. The listing entry returned
-	 * will indicate the actual parent collection of a given file or data object
+	 * will indicate the request parent collection of a given file or data
+	 * object, and internally will hold the canonical directory that is the
+	 * parent, and reflect that it is a special collection.
 	 * 
 	 * @param absolutePathToParent
 	 *            <code>String</code> with the absolute path to the parent. If
@@ -84,7 +93,9 @@ public interface CollectionAndDataObjectListAndSearchAO extends
 	 * are direct children of the given path.
 	 * <p/>
 	 * Soft links are supported with this method. The listing entry returned
-	 * will indicate the actual parent collection of a given file or data object
+	 * will indicate the request parent collection of a given file or data
+	 * object, and internally will hold the canonical directory that is the
+	 * parent, and reflect that it is a special collection.
 	 * 
 	 * @param absolutePathToParent
 	 *            <code>String</code> with the absolute path to the parent. If
@@ -125,7 +136,9 @@ public interface CollectionAndDataObjectListAndSearchAO extends
 	 * to determine which types need paging.
 	 * <p/>
 	 * Soft links are supported with this method. The listing entry returned
-	 * will indicate the actual parent collection of a given file or data object
+	 * will indicate the request parent collection of a given file or data
+	 * object, and internally will hold the canonical directory that is the
+	 * parent, and reflect that it is a special collection.
 	 * 
 	 * @param absolutePathToParent
 	 *            <code>String</code> with the absolute path to the parent. If
@@ -147,6 +160,10 @@ public interface CollectionAndDataObjectListAndSearchAO extends
 	 * support listing and paging of collections. This method returns a simple
 	 * count of the children (data objects and collections) underneath this
 	 * directory, and includes all children.
+	 * <p/>
+	 * Soft links are supported with this method. The listing entry returned
+	 * will indicate the count by inspecting the canonical directory that is the
+	 * parent.
 	 * 
 	 * @param absolutePathToParent
 	 *            <code>String</code> with the absolute path to the parent. The
