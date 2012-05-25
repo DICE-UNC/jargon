@@ -34,6 +34,7 @@ import org.irods.jargon.core.protovalues.FilePermissionEnum;
 import org.irods.jargon.core.protovalues.UserTypeEnum;
 import org.irods.jargon.core.pub.domain.AvuData;
 import org.irods.jargon.core.pub.domain.DataObject;
+import org.irods.jargon.core.pub.domain.ObjStat;
 import org.irods.jargon.core.pub.domain.Resource;
 import org.irods.jargon.core.pub.domain.UserFilePermission;
 import org.irods.jargon.core.pub.io.IRODSFile;
@@ -52,9 +53,11 @@ import org.irods.jargon.core.transfer.ParallelPutFileViaNIOTransferStrategy;
 import org.irods.jargon.core.transfer.TransferControlBlock;
 import org.irods.jargon.core.transfer.TransferStatus.TransferType;
 import org.irods.jargon.core.transfer.TransferStatusCallbackListener;
+import org.irods.jargon.core.utils.CollectionAndPath;
 import org.irods.jargon.core.utils.IRODSConstants;
 import org.irods.jargon.core.utils.IRODSDataConversionUtil;
 import org.irods.jargon.core.utils.LocalFileUtils;
+import org.irods.jargon.core.utils.MiscIRODSUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -85,6 +88,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	private transient final DataAOHelper dataAOHelper = new DataAOHelper(
 			this.getIRODSAccessObjectFactory(), this.getIRODSAccount());
 	private transient final IRODSGenQueryExecutor irodsGenQueryExecutor;
+	private transient final CollectionAndDataObjectListAndSearchAO collectionAndDataObjectListAndSearchAO;
 
 	private enum OverwriteResponse {
 		SKIP, PROCEED_WITH_NO_FORCE, PROCEED_WITH_FORCE
@@ -107,6 +111,9 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		super(irodsSession, irodsAccount);
 		this.irodsGenQueryExecutor = this.getIRODSAccessObjectFactory()
 				.getIRODSGenQueryExecutor(irodsAccount);
+		this.collectionAndDataObjectListAndSearchAO = this
+				.getIRODSAccessObjectFactory()
+				.getCollectionAndDataObjectListAndSearchAO(irodsAccount);
 	}
 
 	/*
@@ -129,17 +136,37 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 		log.info("find by collection path: {}", collectionPath);
 		log.info(" data obj name: {}", dataName);
+		
+		String absPath = MiscIRODSUtils.buildAbsolutePathFromCollectionParentAndFileName(collectionPath, dataName);
+		ObjStat objStat = collectionAndDataObjectListAndSearchAO
+				.retrieveObjectStatForPath(absPath);
+		
+		if (objStat == null) {
+			log.error("no file found for path:{}", absPath);
+			throw new DataNotFoundException("no file found for given path");
+		}
+
+		/*
+		 * See if jargon supports the given object type
+		 */
+		MiscIRODSUtils.evaluateSpecCollSupport(objStat);
+		String effectiveAbsolutePath = MiscIRODSUtils
+				.determineAbsolutePathBasedOnCollTypeInObjectStat(objStat);
+		CollectionAndPath collectionAndPath = MiscIRODSUtils
+				.splitCollectionAndPathFromAbsolutepath(effectiveAbsolutePath);
 
 		final StringBuilder sb = new StringBuilder();
 		sb.append(dataAOHelper.buildSelects());
 		sb.append(WHERE);
 
-		if (collectionPath == null || collectionPath.isEmpty()) {
+		if (collectionAndPath.getCollectionParent() == null
+				|| collectionAndPath.getCollectionParent().isEmpty()) {
 			log.info("ignoring collection path in query");
 		} else {
 			sb.append(RodsGenQueryEnum.COL_COLL_NAME.getName());
 			sb.append(EQUALS_AND_QUOTE);
-			sb.append(IRODSDataConversionUtil.escapeSingleQuotes(collectionPath
+			sb.append(IRODSDataConversionUtil
+					.escapeSingleQuotes(collectionAndPath.getCollectionParent()
 					.trim()));
 			sb.append(QUOTE);
 			sb.append(AND);
@@ -147,7 +174,8 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 		sb.append(RodsGenQueryEnum.COL_DATA_NAME.getName());
 		sb.append(EQUALS_AND_QUOTE);
-		sb.append(IRODSDataConversionUtil.escapeSingleQuotes(dataName.trim()));
+		sb.append(IRODSDataConversionUtil.escapeSingleQuotes(collectionAndPath
+				.getChildName().trim()));
 		sb.append(QUOTE);
 
 		final String query = sb.toString();
@@ -170,6 +198,16 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		if (resultSet.getFirstResult() != null) {
 			dataObject = dataAOHelper.buildDomainFromResultSetRow(resultSet
 					.getFirstResult());
+
+			// use the ObjStat to twizzle the data object to reflect any special
+			// collection info
+			dataObject.setSpecColType(objStat.getSpecColType());
+			dataObject.setObjectPath(objStat.getObjectPath());
+			// if in a linked coll, still keep the same path and name as
+			// requested, objPath will have canonical parent
+			dataObject.setCollectionName(collectionPath);
+			dataObject.setDataName(dataName);
+
 			log.debug("returning: {}", dataObject.toString());
 		}
 
@@ -193,10 +231,10 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		}
 
 		log.info("findByAbsolutePath() with path:{}", absolutePath);
-		IRODSFile irodsFile = this.getIRODSFileFactory().instanceIRODSFile(
-				absolutePath);
-		return findByCollectionNameAndDataName(irodsFile.getParent(),
-				irodsFile.getName());
+		CollectionAndPath collectionAndPath = MiscIRODSUtils.splitCollectionAndPathFromAbsolutepath(absolutePath);
+		return findByCollectionNameAndDataName(
+				collectionAndPath.getCollectionParent(),
+				collectionAndPath.getChildName());
 
 	}
 
@@ -253,54 +291,51 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * Transfer a file or directory from the local file system to iRODS.
+	 * <p/>
+	 * Note that re-routing of connections to resources is not done from methods
+	 * in this class, but can be handled by using the methods in
+	 * {@link DataTransferOperations}.
+	 * <p/>
+	 * Note that this operation is for a single data object, not for recursive
+	 * transfers of collections. See {@link DataTransferOperations} for
+	 * recursive data transfers.
+	 * <p/>
+	 * If the <code>TransferOptions</code> specified in the
+	 * <code>TransferControlBlock</code> indicates no force, then an attempted
+	 * overwrite will throw the <code>OverwriteException</code>. If the tranfer
+	 * option is set to ask the callback listener, then the
+	 * <code>TransferStatusCallbackListener</code> will receive a message asking
+	 * for the overwrite option for this transfer operation. This is the
+	 * appropriate mode when the client is interactive.
 	 * 
-	 * @see
-	 * org.irods.jargon.core.pub.DataObjectAO#putLocalDataObjectToIRODS(java
-	 * .io.File, org.irods.jargon.core.pub.io.IRODSFile, boolean,
-	 * org.irods.jargon.core.transfer.TransferControlBlock,
-	 * org.irods.jargon.core.transfer.TransferStatusCallbackListener)
+	 * @param localFile
+	 *            <code>File</code> with a source file or directory in the local
+	 *            file system
+	 * @param irodsFileDestination
+	 *            {@link IRODSFile} that is the target of the data transfer
+	 * @param transferControlBlock
+	 *            {@link TransferControlBlock} that will control aspects of the
+	 *            data transfer. Note that the {@link TransferOptions} that are
+	 *            a member of the <code>TransferControlBlock</code> may be
+	 *            specified here to pass to the running transfer. If this is set
+	 *            to <code>null</code> a default block will be created, and the
+	 *            <code>TransferOptions</code> will be set to the defined
+	 *            default parameters
+	 * @param transferStatusCallbackListener
+	 *            {@link TransferStatusCallbackListener}, or <code>null</code>
+	 *            if not specified, that can receive callbacks on the status of
+	 *            the transfer operation
+	 * @throws OverwriteException
+	 *             if an overwrite is attempted and the force option has not
+	 *             been set and no callback listener can be consulted, or set to
+	 *             no overwrite,
+	 * @throws DataNotFoundException
+	 *             if the source local file does not exist or the target iRODS
+	 *             collection does not exist
+	 * @throws JargonException
 	 */
-	@Override
-	@Deprecated
-	public void putLocalDataObjectToIRODS(final File localFile,
-			final IRODSFile irodsFileDestination, final boolean overwrite,
-			final TransferControlBlock transferControlBlock,
-			final TransferStatusCallbackListener transferStatusCallbackListener)
-			throws JargonException {
-
-		TransferControlBlock effectiveTransferControlBlock = checkTransferControlBlockForOptionsAndSetDefaultsIfNotSpecified(transferControlBlock);
-		ForceOption forceOption;
-
-		if (overwrite) {
-			forceOption = ForceOption.USE_FORCE;
-		} else {
-			forceOption = ForceOption.NO_FORCE;
-		}
-
-		/*
-		 * The overwrite flag will override what is in the transfer control
-		 * block
-		 */
-
-		effectiveTransferControlBlock.getTransferOptions().setForceOption(
-				forceOption);
-		putLocalDataObjectToIRODS(localFile, irodsFileDestination,
-				effectiveTransferControlBlock, transferStatusCallbackListener);
-
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.irods.jargon.core.pub.DataObjectAO#putLocalDataObjectToIRODS(java
-	 * .io.File, org.irods.jargon.core.pub.io.IRODSFile,
-	 * org.irods.jargon.core.transfer.TransferControlBlock,
-	 * org.irods.jargon.core.transfer.TransferStatusCallbackListener)
-	 */
-	@Override
 	public void putLocalDataObjectToIRODS(final File localFile,
 			final IRODSFile irodsFileDestination,
 			final TransferControlBlock transferControlBlock,
@@ -315,15 +350,41 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * Method to put local data to iRODS taking default options, and not
+	 * specifying a call-back listener. Note that re-routing of connections to
+	 * resources is not done from methods in this class, but can be handled by
+	 * using the methods in {@link DataTransferOperations}. Note that this
+	 * operation is for a single data object, not for recursive transfers of
+	 * collections. See {@link DataTransferOperations} for recursive data
+	 * transfers.
+	 * <p/>
+	 * If the <code>TransferOptions</code> specified in the
+	 * <code>TransferControlBlock</code> indicates no force, then an attempted
+	 * overwrite will throw the <code>OverwriteException</code>. If the tranfer
+	 * option is set to ask the callback listener, then the
+	 * <code>TransferStatusCallbackListener</code> will receive a message asking
+	 * for the overwrite option for this transfer operation. This is the
+	 * appropriate mode when the client is interactive.
 	 * 
-	 * @see
-	 * org.irods.jargon.core.pub.DataObjectAO#putLocalDataObjectToIRODS(java
-	 * .io.File, org.irods.jargon.core.pub.io.IRODSFile, boolean)
+	 * @param localFile
+	 *            <code>File</code> with a source file or directory in the local
+	 *            file system
+	 * @param irodsFileDestination
+	 *            {@link IRODSFile} that is the target of the data transfer
+	 * @param overwrite
+	 *            <code>boolean</code> that indicates whether data should be
+	 *            overwritten at the target
+	 * @throws OverwriteException
+	 *             if an overwrite is attempted and the force option has not
+	 *             been set and no callback listener can be consulted, or set to
+	 *             no overwrite,
+	 * @throws DataNotFoundException
+	 *             if the source local file does not exist or the target iRODS
+	 *             collection does not exist
+	 * @throws JargonException
 	 */
-	@Override
-	public void putLocalDataObjectToIRODS(final File localFile,
+	void putLocalDataObjectToIRODS(final File localFile,
 			final IRODSFile irodsFileDestination, final boolean overwrite)
 			throws DataNotFoundException, OverwriteException, JargonException {
 
@@ -339,16 +400,43 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * Transfer a file or directory from the local file system to iRODS as
+	 * invoked by a client-side rule operation. This is used only for special
+	 * cases during rule invocation.
+	 * <p/>
+	 * Note that re-routing of connections to resources is not done from methods
+	 * in this class, but can be handled by using the methods in
+	 * {@link DataTransferOperations}.
+	 * <p/>
+	 * Note that this operation is for a single data object, not for recursive
+	 * transfers of collections. See {@link DataTransferOperations} for
+	 * recursive data transfers.
+	 * <p/>
+	 * If the <code>TransferOptions</code> specified in the
+	 * <code>TransferControlBlock</code> indicates no force, then an attempted
+	 * overwrite will throw the <code>OverwriteException</code>. If the tranfer
+	 * option is set to ask the callback listener, then the
+	 * <code>TransferStatusCallbackListener</code> will receive a message asking
+	 * for the overwrite option for this transfer operation. This is the
+	 * appropriate mode when the client is interactive.
 	 * 
-	 * @see org.irods.jargon.core.pub.DataObjectAO#
-	 * putLocalDataObjectToIRODSForClientSideRuleOperation(java.io.File,
-	 * org.irods.jargon.core.pub.io.IRODSFile,
-	 * org.irods.jargon.core.transfer.TransferControlBlock)
+	 * @param localFile
+	 *            <code>File</code> with a source file or directory in the local
+	 *            file system
+	 * @param irodsFileDestination
+	 *            {@link IRODSFile} that is the target of the data transfer
+	 * @param transferControlBlock
+	 *            {@link TransferControlBlock} that will control aspects of the
+	 *            data transfer. Note that the {@link TransferOptions} that are
+	 *            a member of the <code>TransferControlBlock</code> may be
+	 *            specified here to pass to the running transfer. If this is set
+	 *            to <code>null</code> a default block will be created, and the
+	 *            <code>TransferOptions</code> will be set to the defined
+	 *            default parameters
+	 * @throws JargonException
 	 */
-	@Override
-	public void putLocalDataObjectToIRODSForClientSideRuleOperation(
+	void putLocalDataObjectToIRODSForClientSideRuleOperation(
 			final File localFile, final IRODSFile irodsFileDestination,
 			final TransferControlBlock transferControlBlock)
 			throws DataNotFoundException, OverwriteException, JargonException {
@@ -715,44 +803,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			final File localFileToHoldData) throws OverwriteException,
 			DataNotFoundException, JargonException {
 
-		getDataObjectFromIrodsGivingTransferOptions(irodsFileToGet,
-				localFileToHoldData, null);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.irods.jargon.core.pub.DataObjectAO#
-	 * getDataObjectFromIrodsGivingTransferOptions
-	 * (org.irods.jargon.core.pub.io.IRODSFile, java.io.File,
-	 * org.irods.jargon.core.packinstr.TransferOptions)
-	 */
-	@Override
-	public void getDataObjectFromIrodsGivingTransferOptions(
-			final IRODSFile irodsFileToGet, final File localFileToHoldData,
-			final TransferOptions transferOptions) throws OverwriteException,
-			DataNotFoundException, JargonException {
-
-		if (localFileToHoldData == null) {
-			throw new IllegalArgumentException(NULL_LOCAL_FILE);
-		}
-
-		if (irodsFileToGet == null) {
-			throw new IllegalArgumentException("nulll destination file");
-		}
-
-		/*
-		 * Create a TransferControlBlock with the given options (which may be
-		 * null) and then process as usual. No status call-backs are requested.
-		 */
-
-		TransferOptions myTransferOptions = buildDefaultTransferOptionsIfNotSpecified(transferOptions);
-		TransferControlBlock transferControlBlock = DefaultTransferControlBlock
-				.instance();
-		transferControlBlock.setTransferOptions(myTransferOptions);
-
-		getDataObjectFromIrods(irodsFileToGet, localFileToHoldData,
-				transferControlBlock, null);
+		getDataObjectFromIrods(irodsFileToGet, localFileToHoldData, null, null);
 	}
 
 	/*

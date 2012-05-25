@@ -96,6 +96,11 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 			throw new FileNotFoundException("no file found for given path");
 		}
 
+		/*
+		 * See if jargon supports the given object type
+		 */
+		MiscIRODSUtils.evaluateSpecCollSupport(objStat);
+
 		IRODSFile entryFile = this.getIRODSFileFactory().instanceIRODSFile(
 				absolutePath);
 
@@ -148,6 +153,11 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 			throw new FileNotFoundException("no file found for given path");
 		}
 
+		/*
+		 * See if jargon supports the given object type
+		 */
+		MiscIRODSUtils.evaluateSpecCollSupport(objStat);
+
 		List<CollectionAndDataObjectListingEntry> entries = new ArrayList<CollectionAndDataObjectListingEntry>();
 
 		entries.addAll(listCollectionsUnderPath(objStat, 0));
@@ -184,6 +194,11 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 			throw new FileNotFoundException("no file found for given path");
 		}
 
+		/*
+		 * See if jargon supports the given object type
+		 */
+		MiscIRODSUtils.evaluateSpecCollSupport(objStat);
+
 		List<CollectionAndDataObjectListingEntry> entries = listCollectionsUnderPathWithPermissions(
 				absolutePathToParent, 0, objStat);
 		entries.addAll(listDataObjectsUnderPathWithPermissions(
@@ -218,7 +233,13 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 			throw new FileNotFoundException("no file found for given path");
 		}
 
-		String effectiveAbsolutePath = determineAbsolutePathBasedOnCollTypeInObjectStat(objStat);
+		/*
+		 * See if jargon supports the given object type
+		 */
+		MiscIRODSUtils.evaluateSpecCollSupport(objStat);
+
+		String effectiveAbsolutePath = MiscIRODSUtils
+				.determineAbsolutePathBasedOnCollTypeInObjectStat(objStat);
 		log.info("determined effectiveAbsolutePathToBe:{}",
 				effectiveAbsolutePath);
 
@@ -409,6 +430,11 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 			throw new FileNotFoundException("no file found for given path");
 		}
 
+		/*
+		 * See if jargon supports the given object type
+		 */
+		MiscIRODSUtils.evaluateSpecCollSupport(objStat);
+
 		return listCollectionsUnderPath(objStat, partialStartIndex);
 
 	}
@@ -439,13 +465,19 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		}
 
 		/*
+		 * See if jargon supports the given object type
+		 */
+		MiscIRODSUtils.evaluateSpecCollSupport(objStat);
+
+		/*
 		 * Special collections are processed in different ways.
 		 * 
 		 * Listing for soft links substitutes the source path for the target
 		 * path in the query
 		 */
 
-		String effectiveAbsolutePath = determineAbsolutePathBasedOnCollTypeInObjectStat(objStat);
+		String effectiveAbsolutePath = MiscIRODSUtils
+				.determineAbsolutePathBasedOnCollTypeInObjectStat(objStat);
 
 		List<CollectionAndDataObjectListingEntry> subdirs = new ArrayList<CollectionAndDataObjectListingEntry>();
 
@@ -503,6 +535,11 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 			throw new FileNotFoundException("no ObjStat found for collection");
 		}
 
+		/*
+		 * See if jargon supports the given object type
+		 */
+		MiscIRODSUtils.evaluateSpecCollSupport(objStat);
+
 		return listCollectionsUnderPathWithPermissions(absolutePathToParent,
 				partialStartIndex, objStat);
 
@@ -533,11 +570,17 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 			throw new IllegalArgumentException("null objStat");
 		}
 
+		/*
+		 * See if jargon supports the given object type
+		 */
+		MiscIRODSUtils.evaluateSpecCollSupport(objStat);
+
 		/**
 		 * This may be a soft link, in which case the canonical path is used for
 		 * the query
 		 */
-		String effectiveAbsolutePath = determineAbsolutePathBasedOnCollTypeInObjectStat(objStat);
+		String effectiveAbsolutePath = MiscIRODSUtils
+				.determineAbsolutePathBasedOnCollTypeInObjectStat(objStat);
 		log.info("determined effectiveAbsolutePathToBe:{}",
 				effectiveAbsolutePath);
 
@@ -690,7 +733,8 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 					"collectionAndDataObjectListingEntry is null");
 		}
 
-		String effectiveAbsolutePath = determineAbsolutePathBasedOnCollTypeInObjectStat(objStat);
+		String effectiveAbsolutePath = MiscIRODSUtils
+				.determineAbsolutePathBasedOnCollTypeInObjectStat(objStat);
 		log.info("determined effectiveAbsolutePathToBe:{}",
 				effectiveAbsolutePath);
 
@@ -767,7 +811,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 			sb.append(objStat.getCollectionPath());
 			sb.append('/');
 			sb.append(MiscIRODSUtils
-					.getLastPathComponentForCollectionName(entry
+					.getLastPathComponentForGiveAbsolutePath(entry
 							.getPathOrName()));
 
 			entry.setPathOrName(sb.toString());
@@ -841,7 +885,8 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		 * This may be a soft link, in which case the canonical path is used for
 		 * the query
 		 */
-		String effectiveAbsolutePath = determineAbsolutePathBasedOnCollTypeInObjectStat(objStat);
+		String effectiveAbsolutePath = MiscIRODSUtils
+				.determineAbsolutePathBasedOnCollTypeInObjectStat(objStat);
 		log.info("determined effectiveAbsolutePathToBe:{}",
 				effectiveAbsolutePath);
 
@@ -1088,6 +1133,22 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		}
 
 		log.info("getFullObjectForType for path:{}", objectAbsolutePath);
+		ObjStat objStat = retrieveObjectStatForPath(objectAbsolutePath);
+
+		if (objStat == null) {
+			log.error("no file found for path:{}", objectAbsolutePath);
+			throw new FileNotFoundException("no file found for given path");
+		}
+
+		String effectiveAbsolutePath = MiscIRODSUtils
+				.determineAbsolutePathBasedOnCollTypeInObjectStat(objStat);
+		log.info("determined effectiveAbsolutePathToBe:{}",
+				effectiveAbsolutePath);
+
+		/*
+		 * See if jargon supports the given object type
+		 */
+		MiscIRODSUtils.evaluateSpecCollSupport(objStat);
 
 		// see if file or coll
 		Object returnObject = null;
@@ -1124,6 +1185,8 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		// get appropriate domain object and return
 		return returnObject;
 	}
+
+
 
 	/*
 	 * (non-Javadoc)
@@ -1237,7 +1300,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 			sb.append(objStat.getCollectionPath());
 			sb.append('/');
 			sb.append(MiscIRODSUtils
-					.getLastPathComponentForCollectionName(collectionAndDataObjectListingEntry
+					.getLastPathComponentForGiveAbsolutePath(collectionAndDataObjectListingEntry
 							.getPathOrName()));
 
 			collectionAndDataObjectListingEntry.setPathOrName(sb.toString());
@@ -1247,21 +1310,6 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		}
 	}
 
-	/**
-	 * @param objStat
-	 * @return
-	 */
-	private String determineAbsolutePathBasedOnCollTypeInObjectStat(
-			final ObjStat objStat) {
-		String effectiveAbsolutePath = null;
 
-		if (objStat.getSpecColType() == SpecColType.LINKED_COLL) {
-			log.info("since this is a linked coll, use the source path");
-			effectiveAbsolutePath = objStat.getObjectPath();
-		} else {
-			effectiveAbsolutePath = objStat.getAbsolutePath();
-		}
-		return effectiveAbsolutePath;
-	}
 
 }

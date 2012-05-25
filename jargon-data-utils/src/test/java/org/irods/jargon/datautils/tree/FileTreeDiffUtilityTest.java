@@ -439,7 +439,7 @@ public class FileTreeDiffUtilityTest {
 
 		TestCase.assertEquals("unexpectedFileName", newChildDirName,
 				MiscIRODSUtils
-						.getLastPathComponentForCollectionName(diffEntriesFound
+						.getLastPathComponentForGiveAbsolutePath(diffEntriesFound
 								.get(0)
 								.getCollectionAndDataObjectListingEntry()
 								.getPathOrName()));
@@ -1260,7 +1260,7 @@ public class FileTreeDiffUtilityTest {
 				diffEntriesFound.get(0).getDiffType());
 		TestCase.assertEquals("unexpectedFileName", newChildFileName,
 				MiscIRODSUtils
-						.getLastPathComponentForCollectionName(diffEntriesFound
+						.getLastPathComponentForGiveAbsolutePath(diffEntriesFound
 								.get(0)
 								.getCollectionAndDataObjectListingEntry()
 								.getPathOrName()));
@@ -1347,7 +1347,7 @@ public class FileTreeDiffUtilityTest {
 
 		TestCase.assertEquals("unexpectedFileName", newChildFileName,
 				MiscIRODSUtils
-						.getLastPathComponentForCollectionName(diffEntriesFound
+						.getLastPathComponentForGiveAbsolutePath(diffEntriesFound
 								.get(0)
 								.getCollectionAndDataObjectListingEntry()
 								.getPathOrName()));

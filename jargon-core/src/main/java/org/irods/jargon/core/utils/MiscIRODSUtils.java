@@ -13,6 +13,8 @@ import java.util.List;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.pub.domain.ObjStat;
+import org.irods.jargon.core.pub.domain.ObjStat.SpecColType;
 
 /**
  * Misc utils for dealing with iRODS
@@ -316,7 +318,7 @@ public class MiscIRODSUtils {
 			throw new JargonException(
 					"exception creating MD5 Hash of the given string", ex);
 		}
-	
+
 	}
 
 	/**
@@ -342,12 +344,11 @@ public class MiscIRODSUtils {
 	}
 
 	/**
-	 * Utility method to get the last part of the collection path component.
-	 * Returns the last subdir that is the collection.
+	 * Utility method to get the last part of the given absolute path
 	 * 
-	 * @return <code>String</code> with the last part of the collection path.
+	 * @return <code>String</code> with the last component of the absolute path
 	 */
-	public static String getLastPathComponentForCollectionName(
+	public static String getLastPathComponentForGiveAbsolutePath(
 			final String collectionPath) {
 
 		if (collectionPath == null || collectionPath.isEmpty()) {
@@ -363,32 +364,126 @@ public class MiscIRODSUtils {
 
 	}
 
-	/*
-	 * Given a string in a format that represents hex (e.g. b1f0a2), compute an
-	 * md5 check sum that will also be in a format that represents the hex
-	 * values (e.g. b1f0a2).
+	/**
+	 * See if jargon supports the given status
 	 * 
-	 * @param input <code>String</code> representing hex digits
-	 * 
-	 * @return <code>String</code> representing the computed MD5 checksum in a
-	 * string representing hex values
-	 * 
+	 * @param objStat
 	 * @throws JargonException
-	 * 
-	 * public static String computeMD5HashOfAStringValueInHexFormat( final
-	 * String input) throws JargonException {
-	 * 
-	 * if (input == null || input.isEmpty()) { throw new
-	 * IllegalArgumentException("null or empty input"); }
-	 * 
-	 * try { MessageDigest algorithm = MessageDigest.getInstance("MD5");
-	 * algorithm.reset();
-	 * algorithm.update(LocalFileUtils.hexStringToByteArray(input)); byte[] md5
-	 * = algorithm.digest(); return LocalFileUtils.md5ByteArrayToString(md5); }
-	 * catch (NoSuchAlgorithmException ex) { throw new JargonException(
-	 * "exception creating MD5 Hash of the given string", ex); }
-	 * 
-	 * }
 	 */
+	public static void evaluateSpecCollSupport(final ObjStat objStat)
+			throws JargonException {
+		if (objStat.getSpecColType() == SpecColType.LINKED_COLL) {
+			// OK
+		} else if (objStat.getSpecColType() == SpecColType.NORMAL) {
+			// OK
+		} else {
+			throw new JargonException(
+					"unsupported object type, support not yet available for:"
+							+ objStat.getSpecColType());
+		}
+	}
 
+	/**
+	 * Build an absolute path combining the collection parent and the data name,
+	 * accounting for the presence or absence of a trailing slash in the
+	 * collection path.
+	 * 
+	 * @param collectionPath
+	 *            <code>String</code> with path of the parent collection
+	 * @param dataName
+	 *            <code>String</code> with file or collection child name
+	 * @return <code>String</code> with a properly concatenated file path
+	 */
+	public static String buildAbsolutePathFromCollectionParentAndFileName(
+			final String collectionPath, final String dataName) {
+
+		if (collectionPath == null || collectionPath.isEmpty()) {
+			throw new IllegalArgumentException("null or empty collectionPath");
+		}
+
+		if (dataName == null || dataName.isEmpty()) {
+			throw new IllegalArgumentException("null or empty dataName");
+		}
+
+		StringBuilder pathBuilder = new StringBuilder();
+		pathBuilder.append(collectionPath);
+		if (collectionPath.charAt(collectionPath.length() - 1) != '/') {
+			pathBuilder.append('/');
+		}
+		pathBuilder.append(dataName);
+		return pathBuilder.toString();
+	}
+
+	/**
+	 * Based on the collection type, determine the absolute path used to query
+	 * iRODS. This is meant to handle special collections, such as soft links,
+	 * where the iCAT data may be associated with the canonical path
+	 * 
+	 * @param objStat
+	 *            {@link ObjStat} with information on the given iRODS object
+	 * @return <code>String</code> with the canonical iRODS path
+	 */
+	public static String determineAbsolutePathBasedOnCollTypeInObjectStat(
+			final ObjStat objStat) {
+		String effectiveAbsolutePath = null;
+
+		if (objStat.getSpecColType() == SpecColType.LINKED_COLL) {
+			if (objStat.isSomeTypeOfCollection()) {
+			effectiveAbsolutePath = objStat.getObjectPath();
+			} else {
+				StringBuilder sb = new StringBuilder();
+				sb.append(objStat.getObjectPath());
+				sb.append("/");
+				sb.append(MiscIRODSUtils
+						.getLastPathComponentForGiveAbsolutePath(objStat
+								.getAbsolutePath()));
+				effectiveAbsolutePath = sb.toString();
+			}
+		} else {
+			effectiveAbsolutePath = objStat.getAbsolutePath();
+		}
+		return effectiveAbsolutePath;
+	}
+
+	/**
+	 * Given an absolue path, split it into a parent name and a child name
+	 * 
+	 * @param filePath
+	 *            <code>String</code> with an absolute iRODS path to a
+	 *            collection or data object
+	 * @return {@link CollectionAndPath} value object
+	 */
+	public static CollectionAndPath splitCollectionAndPathFromAbsolutepath(
+			String filePath) {
+
+		// used when parsing the filepath
+		int index;
+
+		if (filePath == null) {
+			throw new NullPointerException("The file name cannot be null");
+		}
+
+
+		String fileName = filePath;
+		String directory = "";
+
+		if (fileName.length() > 1) { // add to allow path = root "/"
+			index = fileName.lastIndexOf('/');
+			while ((index == fileName.length() - 1) && (index >= 0)) {
+				// remove '/' at end of filename, if exists
+				fileName = fileName.substring(0, index);
+				index = fileName.lastIndexOf('/');
+			}
+
+			// separate directory and file
+			if ((index >= 0) && ((fileName.substring(index + 1).length()) > 0)) {
+				// have to run setDirectory(...) again
+				// because they put filepath info in the filename
+				directory = fileName.substring(0, index);
+				fileName = fileName.substring(index + 1);
+			}
+		}
+
+		return new CollectionAndPath(directory, fileName);
+	}
 }

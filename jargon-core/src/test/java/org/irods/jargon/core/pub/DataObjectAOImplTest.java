@@ -125,7 +125,7 @@ public class DataObjectAOImplTest {
 				.getIRODSAccessObjectFactory();
 		IRODSFileFactory irodsFileFactory = accessObjectFactory
 				.getIRODSFileFactory(irodsAccount);
-		DataObjectAO dataObjectAO = accessObjectFactory
+		DataObjectAOImpl dataObjectAO = (DataObjectAOImpl) accessObjectFactory
 				.getDataObjectAO(irodsAccount);
 		IRODSFile destFile = irodsFileFactory
 				.instanceIRODSFile(targetIrodsFile);
@@ -159,7 +159,7 @@ public class DataObjectAOImplTest {
 
 		IRODSFileFactory irodsFileFactory = accessObjectFactory
 				.getIRODSFileFactory(irodsAccount);
-		DataObjectAO dataObjectAO = accessObjectFactory
+		DataObjectAOImpl dataObjectAO = (DataObjectAOImpl) accessObjectFactory
 				.getDataObjectAO(irodsAccount);
 		IRODSFile destFile = irodsFileFactory
 				.instanceIRODSFile(targetIrodsFile);
@@ -192,7 +192,7 @@ public class DataObjectAOImplTest {
 
 		IRODSFileFactory irodsFileFactory = accessObjectFactory
 				.getIRODSFileFactory(irodsAccount);
-		DataObjectAO dataObjectAO = accessObjectFactory
+		DataObjectAOImpl dataObjectAO = (DataObjectAOImpl) accessObjectFactory
 				.getDataObjectAO(irodsAccount);
 		IRODSFile destFile = irodsFileFactory
 				.instanceIRODSFile(targetIrodsFile);
@@ -223,7 +223,7 @@ public class DataObjectAOImplTest {
 
 		IRODSFileFactory irodsFileFactory = accessObjectFactory
 				.getIRODSFileFactory(irodsAccount);
-		DataObjectAO dataObjectAO = accessObjectFactory
+		DataObjectAOImpl dataObjectAO = (DataObjectAOImpl) accessObjectFactory
 				.getDataObjectAO(irodsAccount);
 		IRODSFile destFile = irodsFileFactory
 				.instanceIRODSFile(targetIrodsFile);
@@ -261,7 +261,7 @@ public class DataObjectAOImplTest {
 
 		IRODSFileFactory irodsFileFactory = accessObjectFactory
 				.getIRODSFileFactory(irodsAccount);
-		DataObjectAO dataObjectAO = accessObjectFactory
+		DataObjectAOImpl dataObjectAO = (DataObjectAOImpl) accessObjectFactory
 				.getDataObjectAO(irodsAccount);
 		IRODSFile destFile = irodsFileFactory
 				.instanceIRODSFile(targetIrodsFile);
@@ -290,7 +290,7 @@ public class DataObjectAOImplTest {
 
 		IRODSFileFactory irodsFileFactory = accessObjectFactory
 				.getIRODSFileFactory(irodsAccount);
-		DataObjectAO dataObjectAO = accessObjectFactory
+		DataObjectAOImpl dataObjectAO = (DataObjectAOImpl) accessObjectFactory
 				.getDataObjectAO(irodsAccount);
 		IRODSFile destFile = irodsFileFactory
 				.instanceIRODSFile(targetIrodsFile);
@@ -325,7 +325,7 @@ public class DataObjectAOImplTest {
 
 		IRODSFileFactory irodsFileFactory = accessObjectFactory
 				.getIRODSFileFactory(irodsAccount);
-		DataObjectAO dataObjectAO = accessObjectFactory
+		DataObjectAOImpl dataObjectAO = (DataObjectAOImpl) accessObjectFactory
 				.getDataObjectAO(irodsAccount);
 		IRODSFile destFile = irodsFileFactory
 				.instanceIRODSFile(targetIrodsFile);
@@ -362,7 +362,7 @@ public class DataObjectAOImplTest {
 
 		IRODSFileFactory irodsFileFactory = accessObjectFactory
 				.getIRODSFileFactory(irodsAccount);
-		DataObjectAO dataObjectAO = accessObjectFactory
+		DataObjectAOImpl dataObjectAO = (DataObjectAOImpl) accessObjectFactory
 				.getDataObjectAO(irodsAccount);
 		IRODSFile destFile = irodsFileFactory
 				.instanceIRODSFile(targetIrodsFile);
@@ -406,7 +406,7 @@ public class DataObjectAOImplTest {
 
 		IRODSFileFactory irodsFileFactory = accessObjectFactory
 				.getIRODSFileFactory(irodsAccount);
-		DataObjectAO dataObjectAO = accessObjectFactory
+		DataObjectAOImpl dataObjectAO = (DataObjectAOImpl) accessObjectFactory
 				.getDataObjectAO(irodsAccount);
 		IRODSFile destFile = irodsFileFactory
 				.instanceIRODSFile(targetIrodsFile);
@@ -467,7 +467,7 @@ public class DataObjectAOImplTest {
 
 		IRODSFileFactory irodsFileFactory = accessObjectFactory
 				.getIRODSFileFactory(irodsAccount);
-		DataObjectAO dataObjectAO = accessObjectFactory
+		DataObjectAOImpl dataObjectAO = (DataObjectAOImpl) accessObjectFactory
 				.getDataObjectAO(irodsAccount);
 		IRODSFile destFile = irodsFileFactory
 				.instanceIRODSFile(targetIrodsFile);
@@ -527,7 +527,7 @@ public class DataObjectAOImplTest {
 
 		IRODSFileFactory irodsFileFactory = accessObjectFactory
 				.getIRODSFileFactory(irodsAccount);
-		DataObjectAO dataObjectAO = accessObjectFactory
+		DataObjectAOImpl dataObjectAO = (DataObjectAOImpl) accessObjectFactory
 				.getDataObjectAO(irodsAccount);
 		IRODSFile destFile = irodsFileFactory
 				.instanceIRODSFile(targetIrodsFile);
@@ -587,7 +587,7 @@ public class DataObjectAOImplTest {
 
 		IRODSFileFactory irodsFileFactory = accessObjectFactory
 				.getIRODSFileFactory(irodsAccount);
-		DataObjectAO dataObjectAO = accessObjectFactory
+		DataObjectAOImpl dataObjectAO = (DataObjectAOImpl) accessObjectFactory
 				.getDataObjectAO(irodsAccount);
 		IRODSFile destFile = irodsFileFactory
 				.instanceIRODSFile(targetIrodsFile);
@@ -655,7 +655,7 @@ public class DataObjectAOImplTest {
 
 		IRODSFileFactory irodsFileFactory = accessObjectFactory
 				.getIRODSFileFactory(irodsAccount);
-		DataObjectAO dataObjectAO = accessObjectFactory
+		DataObjectAOImpl dataObjectAO = (DataObjectAOImpl) accessObjectFactory
 				.getDataObjectAO(irodsAccount);
 		IRODSFile destFile = irodsFileFactory
 				.instanceIRODSFile(targetIrodsFile);
@@ -672,37 +672,27 @@ public class DataObjectAOImplTest {
 		String localFileName = FileGenerator
 				.generateFileOfFixedLengthGivenName(absPath, testFileName, 10);
 
-		testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ testFileName);
-		new File(localFileName);
-
-		// put scratch file into irods in the right place
-		IrodsInvocationContext invocationContext = testingPropertiesHelper
-				.buildIRODSInvocationContextFromTestProperties(testingProperties);
-		IputCommand iputCommand = new IputCommand();
-
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH);
 
-		iputCommand.setLocalFileName(localFileName);
-		iputCommand.setIrodsFileName(targetIrodsCollection);
-		iputCommand.setForceOverride(true);
-
-		IcommandInvoker invoker = new IcommandInvoker(invocationContext);
-		invoker.invokeCommandAndGetResultAsString(iputCommand);
-
-		// now put the file
-
+		String targetIrodsFile = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
+								+ testFileName);
+		File sourceFile = new File(localFileName);
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSFileFactory irodsFileFactory = irodsFileSystem
+				.getIRODSFileFactory(irodsAccount);
 
-		accessObjectFactory.getIRODSFileFactory(irodsAccount);
-		DataObjectAO dataObjectAO = accessObjectFactory
+		DataTransferOperations dto = irodsFileSystem.getIRODSAccessObjectFactory().getDataTransferOperations(irodsAccount);
+		IRODSFile destFile = irodsFileFactory
+				.instanceIRODSFile(targetIrodsFile);
+		dto.putOperation(sourceFile, destFile, null, null);
+
+		DataObjectAO dataObjectAO = irodsFileSystem
+				.getIRODSAccessObjectFactory()
 				.getDataObjectAO(irodsAccount);
 
 		DataObject dataObject = dataObjectAO.findByCollectionNameAndDataName(
@@ -2353,7 +2343,7 @@ public class DataObjectAOImplTest {
 				.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY));
 		File localFile = new File(fileNameOrig);
 
-		DataObjectAO dataObjectAO = irodsFileSystem
+		DataObjectAOImpl dataObjectAO = (DataObjectAOImpl) irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
 
 		dataObjectAO.putLocalDataObjectToIRODS(localFile, irodsFile, true);
@@ -2394,7 +2384,7 @@ public class DataObjectAOImplTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		DataObjectAO dataObjectAO = irodsFileSystem
+		DataObjectAOImpl dataObjectAO = (DataObjectAOImpl) irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
 		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
 				.instanceIRODSFile(targetIrodsCollection);
@@ -2578,7 +2568,7 @@ public class DataObjectAOImplTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		DataObjectAO dataObjectAO = irodsFileSystem
+		DataObjectAOImpl dataObjectAO = (DataObjectAOImpl) irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
 		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
 				.instanceIRODSFile(targetIrodsCollection);
@@ -2626,7 +2616,7 @@ public class DataObjectAOImplTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		DataObjectAO dataObjectAO = irodsFileSystem
+		DataObjectAOImpl dataObjectAO = (DataObjectAOImpl) irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
 		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
 				.instanceIRODSFile(targetIrodsCollection);
@@ -2673,7 +2663,7 @@ public class DataObjectAOImplTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		DataObjectAO dataObjectAO = irodsFileSystem
+		DataObjectAOImpl dataObjectAO = (DataObjectAOImpl) irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
 		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
 				.instanceIRODSFile(targetIrodsCollection);
@@ -2707,7 +2697,7 @@ public class DataObjectAOImplTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		DataObjectAO dataObjectAO = irodsFileSystem
+		DataObjectAOImpl dataObjectAO = (DataObjectAOImpl) irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
 		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
 				.instanceIRODSFile(targetIrodsCollection);
@@ -2740,7 +2730,7 @@ public class DataObjectAOImplTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		DataObjectAO dataObjectAO = irodsFileSystem
+		DataObjectAOImpl dataObjectAO = (DataObjectAOImpl) irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
 		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
 				.instanceIRODSFile(targetIrodsCollection);
@@ -2812,7 +2802,7 @@ public class DataObjectAOImplTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		DataObjectAO dataObjectAO = irodsFileSystem
+		DataObjectAOImpl dataObjectAO = (DataObjectAOImpl) irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
 
 		dataObjectAO
@@ -3234,7 +3224,7 @@ public class DataObjectAOImplTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		DataObjectAO dataObjectAO = irodsFileSystem
+		DataObjectAOImpl dataObjectAO = (DataObjectAOImpl) irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
 		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
 				.instanceIRODSFile(targetIrodsCollection);
@@ -3279,7 +3269,7 @@ public class DataObjectAOImplTest {
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
 
-		DataObjectAO dataObjectAO = irodsFileSystem
+		DataObjectAOImpl dataObjectAO = (DataObjectAOImpl) irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
 		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
 				.instanceIRODSFile(targetIrodsCollection);
@@ -3331,7 +3321,7 @@ public class DataObjectAOImplTest {
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
 
-		DataObjectAO dataObjectAO = irodsFileSystem
+		DataObjectAOImpl dataObjectAO = (DataObjectAOImpl) irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
 		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
 				.instanceIRODSFile(targetIrodsCollection);
@@ -3383,7 +3373,7 @@ public class DataObjectAOImplTest {
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
 
-		DataObjectAO dataObjectAO = irodsFileSystem
+		DataObjectAOImpl dataObjectAO = (DataObjectAOImpl) irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
 		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
 				.instanceIRODSFile(targetIrodsCollection);
@@ -3436,7 +3426,7 @@ public class DataObjectAOImplTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		DataObjectAO dataObjectAO = irodsFileSystem
+		DataObjectAOImpl dataObjectAO = (DataObjectAOImpl) irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
 		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
 				.instanceIRODSFile(targetIrodsCollection);
@@ -3473,7 +3463,7 @@ public class DataObjectAOImplTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		DataObjectAO dataObjectAO = irodsFileSystem
+		DataObjectAOImpl dataObjectAO = (DataObjectAOImpl) irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
 		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
 				.instanceIRODSFile(targetIrodsCollection);
@@ -3518,7 +3508,7 @@ public class DataObjectAOImplTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		DataObjectAO dataObjectAO = irodsFileSystem
+		DataObjectAOImpl dataObjectAO = (DataObjectAOImpl) irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
 		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
 				.instanceIRODSFile(targetIrodsCollection);
@@ -3556,7 +3546,7 @@ public class DataObjectAOImplTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		DataObjectAO dataObjectAO = irodsFileSystem
+		DataObjectAOImpl dataObjectAO = (DataObjectAOImpl) irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
 		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
 				.instanceIRODSFile(targetIrodsCollection);
@@ -3603,7 +3593,7 @@ public class DataObjectAOImplTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		DataObjectAO dataObjectAO = irodsFileSystem
+		DataObjectAOImpl dataObjectAO = (DataObjectAOImpl) irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
 		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
 				.instanceIRODSFile(targetIrodsCollection);
@@ -3647,7 +3637,7 @@ public class DataObjectAOImplTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		DataObjectAO dataObjectAO = irodsFileSystem
+		DataObjectAOImpl dataObjectAO = (DataObjectAOImpl) irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
 		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
 				.instanceIRODSFile(targetIrodsCollection);
@@ -3696,7 +3686,7 @@ public class DataObjectAOImplTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		DataObjectAO dataObjectAO = irodsFileSystem
+		DataObjectAOImpl dataObjectAO = (DataObjectAOImpl) irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
 		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
 				.instanceIRODSFile(targetIrodsCollection);
@@ -3768,7 +3758,7 @@ public class DataObjectAOImplTest {
 		userGroupAO.addUserToGroup(testUserGroup, irodsAccount.getUserName(),
 				null);
 
-		DataObjectAO dataObjectAO = irodsFileSystem
+		DataObjectAOImpl dataObjectAO = (DataObjectAOImpl) irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
 		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
 				.instanceIRODSFile(targetIrodsCollection);
@@ -3817,7 +3807,7 @@ public class DataObjectAOImplTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		DataObjectAO dataObjectAO = irodsFileSystem
+		DataObjectAOImpl dataObjectAO = (DataObjectAOImpl) irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
 		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
 				.instanceIRODSFile(targetIrodsCollection);
@@ -3861,7 +3851,7 @@ public class DataObjectAOImplTest {
 				.buildIRODSAccountFromTestProperties(testingProperties);
 		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
 
-		DataObjectAO dataObjectAO = irodsFileSystem
+		DataObjectAOImpl dataObjectAO = (DataObjectAOImpl) irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
 		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
 				.instanceIRODSFile(targetIrodsCollection, testFileName);
@@ -3913,7 +3903,7 @@ public class DataObjectAOImplTest {
 				.buildIRODSAccountFromTestProperties(testingProperties);
 		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
 
-		DataObjectAO dataObjectAO = irodsFileSystem
+		DataObjectAOImpl dataObjectAO = (DataObjectAOImpl) irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
 		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
 				.instanceIRODSFile(targetIrodsCollection, testFileName);
@@ -3966,7 +3956,7 @@ public class DataObjectAOImplTest {
 				.buildIRODSAccountFromTestProperties(testingProperties);
 		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
 
-		DataObjectAO dataObjectAO = irodsFileSystem
+		DataObjectAOImpl dataObjectAO = (DataObjectAOImpl) irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
 		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
 				.instanceIRODSFile(targetIrodsCollection, testFileName);
@@ -4173,7 +4163,7 @@ public class DataObjectAOImplTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		DataObjectAO dataObjectAO = irodsFileSystem
+		DataObjectAOImpl dataObjectAO = (DataObjectAOImpl) irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
 		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
 				.instanceIRODSFile(targetIrodsCollection);
@@ -4217,7 +4207,7 @@ public class DataObjectAOImplTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		DataObjectAO dataObjectAO = irodsFileSystem
+		DataObjectAOImpl dataObjectAO = (DataObjectAOImpl) irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
 		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
 				.instanceIRODSFile(targetIrodsCollection);
@@ -4271,7 +4261,8 @@ public class DataObjectAOImplTest {
 
 		IRODSFileFactory irodsFileFactory = accessObjectFactory
 				.getIRODSFileFactory(irodsAccount);
-		DataObjectAO dataObjectAO = accessObjectFactory
+		DataObjectAOImpl dataObjectAO = (DataObjectAOImpl) irodsFileSystem
+				.getIRODSAccessObjectFactory()
 				.getDataObjectAO(irodsAccount);
 		IRODSFile destFile = irodsFileFactory
 				.instanceIRODSFile(targetIrodsFile);
@@ -4323,7 +4314,8 @@ public class DataObjectAOImplTest {
 
 		IRODSFileFactory irodsFileFactory = accessObjectFactory
 				.getIRODSFileFactory(irodsAccount);
-		DataObjectAO dataObjectAO = accessObjectFactory
+		DataObjectAOImpl dataObjectAO = (DataObjectAOImpl) irodsFileSystem
+				.getIRODSAccessObjectFactory()
 				.getDataObjectAO(irodsAccount);
 		IRODSFile destFile = irodsFileFactory
 				.instanceIRODSFile(targetIrodsFile);
@@ -4375,7 +4367,8 @@ public class DataObjectAOImplTest {
 
 		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
 				.getIRODSAccessObjectFactory();
-		DataObjectAO dataObjectAO = accessObjectFactory
+		DataObjectAOImpl dataObjectAO = (DataObjectAOImpl) irodsFileSystem
+				.getIRODSAccessObjectFactory()
 				.getDataObjectAO(irodsAccount);
 
 		TransferOptions transferOptions = new TransferOptions();
@@ -4420,7 +4413,8 @@ public class DataObjectAOImplTest {
 
 		IRODSFileFactory irodsFileFactory = accessObjectFactory
 				.getIRODSFileFactory(irodsAccount);
-		DataObjectAO dataObjectAO = accessObjectFactory
+		DataObjectAOImpl dataObjectAO = (DataObjectAOImpl) irodsFileSystem
+				.getIRODSAccessObjectFactory()
 				.getDataObjectAO(irodsAccount);
 		IRODSFile destFile = irodsFileFactory
 				.instanceIRODSFile(targetIrodsFile);
@@ -4461,7 +4455,8 @@ public class DataObjectAOImplTest {
 
 		IRODSFileFactory irodsFileFactory = accessObjectFactory
 				.getIRODSFileFactory(irodsAccount);
-		DataObjectAO dataObjectAO = accessObjectFactory
+		DataObjectAOImpl dataObjectAO = (DataObjectAOImpl) irodsFileSystem
+				.getIRODSAccessObjectFactory()
 				.getDataObjectAO(irodsAccount);
 		IRODSFile destFile = irodsFileFactory
 				.instanceIRODSFile(targetIrodsFile);
@@ -4476,7 +4471,6 @@ public class DataObjectAOImplTest {
 		assertionHelper.assertIrodsFileOrCollectionExists(targetIrodsFile);
 	}
 
-	@SuppressWarnings("deprecation")
 	@Test
 	public final void testGetWithChecksumVerification() throws Exception {
 
@@ -4515,11 +4509,12 @@ public class DataObjectAOImplTest {
 				.instanceIRODSFileForPath(targetIrodsCollection + '/'
 						+ testFileName);
 
-		TransferOptions transferOptions = new TransferOptions();
-		transferOptions.setComputeAndVerifyChecksumAfterTransfer(true);
+		TransferControlBlock tcb = irodsFileSystem
+				.getIRODSAccessObjectFactory()
+				.buildDefaultTransferControlBlockBasedOnJargonProperties();
+		tcb.getTransferOptions().setComputeAndVerifyChecksumAfterTransfer(true);
 
-		dataObjectAO.getDataObjectFromIrodsGivingTransferOptions(irodsFile,
-				localFile, transferOptions);
+		dataObjectAO.getDataObjectFromIrods(irodsFile, localFile, tcb, null);
 
 		assertionHelper.assertLocalFileExistsInScratch(IRODS_TEST_SUBDIR_PATH
 				+ '/' + getFileName);
@@ -4568,11 +4563,13 @@ public class DataObjectAOImplTest {
 				.instanceIRODSFileForPath(targetIrodsCollection + '/'
 						+ testFileName);
 
-		TransferOptions transferOptions = new TransferOptions();
-		transferOptions.setComputeAndVerifyChecksumAfterTransfer(true);
+		TransferControlBlock tcb = irodsFileSystem
+				.getIRODSAccessObjectFactory()
+				.buildDefaultTransferControlBlockBasedOnJargonProperties();
+		tcb.getTransferOptions().setComputeAndVerifyChecksumAfterTransfer(true);
 
-		dataObjectAO.getDataObjectFromIrodsGivingTransferOptions(irodsFile,
-				getResultLocalFile, transferOptions);
+		dataObjectAO.getDataObjectFromIrods(irodsFile, getResultLocalFile, tcb,
+				null);
 
 		assertionHelper.assertLocalFileExistsInScratch(IRODS_TEST_SUBDIR_PATH
 				+ '/' + getResultFileName);

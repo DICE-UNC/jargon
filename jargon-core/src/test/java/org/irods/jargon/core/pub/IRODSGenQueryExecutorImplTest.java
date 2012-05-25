@@ -611,12 +611,11 @@ public class IRODSGenQueryExecutorImplTest {
 				.getIRODSAccessObjectFactory();
 		IRODSFileFactory irodsFileFactory = accessObjectFactory
 				.getIRODSFileFactory(irodsAccount);
-		DataObjectAO dataObjectAO = accessObjectFactory
-				.getDataObjectAO(irodsAccount);
+		DataObjectAOImpl dataObjectAO = (DataObjectAOImpl) irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
 		IRODSFile destFile = irodsFileFactory
 				.instanceIRODSFile(targetIrodsFile);
-		dataObjectAO.putLocalDataObjectToIRODS(localFile, destFile, true, null,
-				null);
+		dataObjectAO.putLocalDataObjectToIRODS(localFile, destFile, true);
 
 		// build query
 		StringBuilder q = new StringBuilder();

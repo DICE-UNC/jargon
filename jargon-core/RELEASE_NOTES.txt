@@ -72,7 +72,11 @@ Note that the following bug and feature requests are logged in GForge with relat
  ** add method to list resource names in zone
  
  * [#114] support for mounted collections, cross zone browsing, and soft links
+ ** significant refactoring as support added, cleanup of deprecated methods, tightening package visibility
  ** added a MountedCollectionAO to administer mounted collections and soft links 
+ ** Refactoring of key classes for support
+ **** CollectionAndDataObjectListAndSearchAO
+ **** DataObjectAO
  
  
  
