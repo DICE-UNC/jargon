@@ -3,9 +3,11 @@ package org.irods.jargon.core.utils;
 import java.io.Serializable;
 
 /**
- * Simple value object for a file parent collection and child path or data object
+ * Simple value object for a file parent collection and child path or data
+ * object
+ * 
  * @author Mike Conway - DICE (www.irods.org)
- *
+ * 
  */
 public class CollectionAndPath implements Serializable {
 
@@ -28,18 +30,24 @@ public class CollectionAndPath implements Serializable {
 	 * @param collectionParent
 	 * @param childName
 	 */
-	public CollectionAndPath(String collectionParent, String childName) {
+	public CollectionAndPath(final String collectionParent,
+			final String childName) {
 
-		if (collectionParent == null || collectionParent.isEmpty()) {
-			throw new IllegalArgumentException("null or empty collectionParent");
+		if (collectionParent == null) {
+			throw new IllegalArgumentException("null  collectionParent");
 		}
 
-		if (childName == null || childName.isEmpty()) {
-			throw new IllegalArgumentException("null or empty childName");
+		if (childName == null) {
+			throw new IllegalArgumentException("null  childName");
 		}
 
-		this.collectionParent = collectionParent;
-		this.childName = childName;
+		if (collectionParent.isEmpty() && childName.isEmpty()) {
+			this.childName = "/";
+			this.collectionParent = "";
+		} else {
+			this.collectionParent = collectionParent;
+			this.childName = childName;
+		}
 	}
 
 	/**
@@ -55,6 +63,5 @@ public class CollectionAndPath implements Serializable {
 	public String getCollectionParent() {
 		return collectionParent;
 	}
-	
-	
+
 }

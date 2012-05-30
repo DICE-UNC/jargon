@@ -136,11 +136,13 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 		log.info("find by collection path: {}", collectionPath);
 		log.info(" data obj name: {}", dataName);
-		
-		String absPath = MiscIRODSUtils.buildAbsolutePathFromCollectionParentAndFileName(collectionPath, dataName);
+
+		String absPath = MiscIRODSUtils
+				.buildAbsolutePathFromCollectionParentAndFileName(
+						collectionPath, dataName);
 		ObjStat objStat = collectionAndDataObjectListAndSearchAO
 				.retrieveObjectStatForPath(absPath);
-		
+
 		if (objStat == null) {
 			log.error("no file found for path:{}", absPath);
 			throw new DataNotFoundException("no file found for given path");
@@ -167,7 +169,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			sb.append(EQUALS_AND_QUOTE);
 			sb.append(IRODSDataConversionUtil
 					.escapeSingleQuotes(collectionAndPath.getCollectionParent()
-					.trim()));
+							.trim()));
 			sb.append(QUOTE);
 			sb.append(AND);
 		}
@@ -231,7 +233,8 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		}
 
 		log.info("findByAbsolutePath() with path:{}", absolutePath);
-		CollectionAndPath collectionAndPath = MiscIRODSUtils.splitCollectionAndPathFromAbsolutepath(absolutePath);
+		CollectionAndPath collectionAndPath = MiscIRODSUtils
+				.splitCollectionAndPathFromAbsolutepath(absolutePath);
 		return findByCollectionNameAndDataName(
 				collectionAndPath.getCollectionParent(),
 				collectionAndPath.getChildName());
@@ -336,7 +339,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	 *             collection does not exist
 	 * @throws JargonException
 	 */
-	public void putLocalDataObjectToIRODS(final File localFile,
+	void putLocalDataObjectToIRODS(final File localFile,
 			final IRODSFile irodsFileDestination,
 			final TransferControlBlock transferControlBlock,
 			final TransferStatusCallbackListener transferStatusCallbackListener)
@@ -753,10 +756,6 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 				.getTag(IRODSConstants.PortList_PI)
 				.getTag(IRODSConstants.cookie).getIntValue();
 
-		/**
-		 * FIXME: refactor to common hierarchy for put transfers
-		 */
-
 		if (this.getJargonProperties().isUseNIOForParallelTransfers()) {
 			log.info(">>>>>>using NIO for parallel put");
 			ParallelPutFileViaNIOTransferStrategy parallelPutFileStrategy = ParallelPutFileViaNIOTransferStrategy
@@ -791,32 +790,91 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		this.getIRODSProtocol().operationComplete(statusForComplete);
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * Retrieve a file from iRODS and store it locally.
+	 * <p/>
+	 * Note that this operation is for a single data object, not for recursive
+	 * transfers of collections. See {@link DataTransferOperations} for
+	 * recursive data transfers. This get operation will use the default
+	 * settings for <code>TransferOptions</code>.
+	 * <p/>
+	 * A note about overwrites: This method call does not allow for
+	 * specification of transfer options or registration for a callback
+	 * listener, instead, it will look at the configured
+	 * <code>JargonProperties</code> for any global settings on overwrites.
+	 * Other method signatures for get operations allow specification of force
+	 * options, and also allow interaction between the caller and the
+	 * transferring process when an overwrite is detected.
 	 * 
-	 * @see
-	 * org.irods.jargon.core.pub.DataObjectAO#irodsDataObjectGetOperation(org
-	 * .irods.jargon.core.pub.io.IRODSFile, java.io.File)
+	 * @param irodsFileToGet
+	 *            {@link org.irods.jargon.core.pub.io.IRODSFile} that is the
+	 *            source of the transfer
+	 * @param localFileToHoldData
+	 *            <code>File</code> which is the target of the transfer. If the
+	 *            given target is a collection, the file name of the iRODS file
+	 *            is used as the file name of the local file.
+	 * @throws OverwriteException
+	 *             if an overwrite is attempted and the force option has not
+	 *             been set
+	 * @throws DataNotFoundException
+	 *             if the source iRODS file does not exist
+	 * @throws JargonException
 	 */
-	@Override
-	public void getDataObjectFromIrods(final IRODSFile irodsFileToGet,
+	void getDataObjectFromIrods(final IRODSFile irodsFileToGet,
 			final File localFileToHoldData) throws OverwriteException,
 			DataNotFoundException, JargonException {
 
 		getDataObjectFromIrods(irodsFileToGet, localFileToHoldData, null, null);
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * Get operation for a single data object. This method allows the the
+	 * definition of a <code>TransferControlBlock</code> object as well as a
+	 * <code>TransferStatusCallbackListener</code>.
+	 * <p/>
+	 * Note that this operation is for a single data object, not for recursive
+	 * transfers of collections. See {@link DataTransferOperations} for
+	 * recursive data transfers.
+	 * <p/>
+	 * If the <code>TransferOptions</code> specified in the
+	 * <code>TransferControlBlock</code> indicates no force, then an attempted
+	 * overwrite will throw the <code>OverwriteException</code>. If the tranfer
+	 * option is set to ask the callback listener, then the
+	 * <code>TransferStatusCallbackListener</code> will receive a message asking
+	 * for the overwrite option for this transfer operation. This is the
+	 * appropriate mode when the client is interactive.
 	 * 
-	 * @see
-	 * org.irods.jargon.core.pub.DataObjectAO#getDataObjectFromIrods(org.irods
-	 * .jargon.core.pub.io.IRODSFile, java.io.File,
-	 * org.irods.jargon.core.transfer.TransferControlBlock,
-	 * org.irods.jargon.core.transfer.TransferStatusCallbackListener)
+	 * @param irodsFileToGet
+	 *            {@link org.irods.jargon.core.pub.io.IRODSFile} that is the
+	 *            source of the transfer. Setting the resource name in the
+	 *            <code>irodsFileToGet</code> will specify that the file is
+	 *            retrieved from that particular resource.
+	 * 
+	 * @param localFileToHoldData
+	 *            <code>File</code> which is the target of the transfer. If the
+	 *            given target is a collection, the file name of the iRODS file
+	 *            is used as the file name of the local file.
+	 * @param transferControlBlock
+	 *            {@link TransferControlBlock} that will control aspects of the
+	 *            data transfer. Note that the {@link TransferOptions} that are
+	 *            a member of the <code>TransferControlBlock</code> may be
+	 *            specified here to pass to the running transfer. If this is set
+	 *            to <code>null</code> a default block will be created, and the
+	 *            <code>TransferOptions</code> will be set to the defined
+	 *            default parameters
+	 * @param transferStatusCallbackListener
+	 *            {@link TransferStatusCallbackListener}, or <code>null</code>
+	 *            if not specified, that can receive call-backs on the status of
+	 *            the transfer operation
+	 * @throws OverwriteException
+	 *             if an overwrite is attempted and the force option has not
+	 *             been set and no callback listener can be consulted, or set to
+	 *             no overwrite,
+	 * @throws DataNotFoundException
+	 *             if the source iRODS file does not exist
+	 * @throws JargonException
 	 */
-	@Override
-	public void getDataObjectFromIrods(final IRODSFile irodsFileToGet,
+	void getDataObjectFromIrods(final IRODSFile irodsFileToGet,
 			final File localFileToHoldData,
 			final TransferControlBlock transferControlBlock,
 			final TransferStatusCallbackListener transferStatusCallbackListener)
@@ -973,16 +1031,28 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		return overwriteResponse;
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * Retrieve a file from iRODS and store it locally. This method will assume
+	 * that the resource is not specified, which is useful for processing
+	 * client-side rule actions, or other occasions where the get operation
+	 * needs to be directly processed and there can be no other intervening XML
+	 * protocol operations.
 	 * 
-	 * @see org.irods.jargon.core.pub.DataObjectAO#
-	 * irodsDataObjectGetOperationForClientSideAction
-	 * (org.irods.jargon.core.pub.io.IRODSFile, java.io.File,
-	 * org.irods.jargon.core.packinstr.TransferOptions)
+	 * @param irodsFileToGet
+	 *            {@link org.irods.jargon.core.pub.io.IRODSFile} that is the
+	 *            source of the transfer. The resource of the
+	 *            <code>IRODSFile</code> is controlling.
+	 * @param localFileToHoldData
+	 *            <code>File</code> which is the target of the transfer
+	 * @param {@link TransferOptions} to control the transfer, or null if not
+	 *        specified. Note that the <code>TransferOptions</code> object will
+	 *        be cloned, and as such the passed-in parameter will not be
+	 *        altered.
+	 * @return <code>int</code> that represents the handle (l1descInx) for the
+	 *         opened file, to be used for sending operation complete messages
+	 * @throws JargonException
 	 */
-	@Override
-	public int irodsDataObjectGetOperationForClientSideAction(
+	int irodsDataObjectGetOperationForClientSideAction(
 			final IRODSFile irodsFileToGet, final File localFileToHoldData,
 			final TransferOptions transferOptions) throws OverwriteException,
 			DataNotFoundException, JargonException {
@@ -1282,6 +1352,9 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 					"null or empty dataObjectFileName");
 		}
 
+		String absPath = this
+				.resolveAbsolutePathViaObjStat(dataObjectCollectionAbsPath);
+
 		log.info("building a metadata query for: {}", avuQuery);
 
 		final StringBuilder query = new StringBuilder();
@@ -1317,8 +1390,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 		query.append(RodsGenQueryEnum.COL_COLL_NAME.getName());
 		query.append(EQUALS_AND_QUOTE);
-		query.append(IRODSDataConversionUtil
-				.escapeSingleQuotes(dataObjectCollectionAbsPath));
+		query.append(IRODSDataConversionUtil.escapeSingleQuotes(absPath));
 		query.append(QUOTE);
 		query.append(AND);
 		query.append(RodsGenQueryEnum.COL_DATA_NAME.getName());
@@ -1372,8 +1444,10 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 		IRODSFile irodsFile = getIRODSFileFactory().instanceIRODSFile(
 				dataObjectAbsolutePath);
-		return findMetadataValuesForDataObjectUsingAVUQuery(avuQuery,
-				irodsFile.getParent(), irodsFile.getName());
+		String absPath = this.resolveAbsolutePathViaObjStat(irodsFile
+				.getParent());
+		return findMetadataValuesForDataObjectUsingAVUQuery(avuQuery, absPath,
+				irodsFile.getName());
 
 	}
 
@@ -1417,8 +1491,21 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		log.info("adding avu metadata to data object: {}", avuData);
 		log.info("absolute path: {}", absolutePath);
 
+		/*
+		 * Handle soft links by munging the path
+		 */
+		CollectionAndPath collName = MiscIRODSUtils
+				.splitCollectionAndPathFromAbsolutepath(absolutePath);
+		String absPath = this.resolveAbsolutePathViaObjStat(collName
+				.getCollectionParent());
+
+		StringBuilder sb = new StringBuilder();
+		sb.append(absPath);
+		sb.append('/');
+		sb.append(collName.getChildName());
+
 		final ModAvuMetadataInp modifyAvuMetadataInp = ModAvuMetadataInp
-				.instanceForAddDataObjectMetadata(absolutePath, avuData);
+				.instanceForAddDataObjectMetadata(sb.toString(), avuData);
 
 		log.debug("sending avu request");
 
@@ -1475,7 +1562,14 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 				irodsCollectionAbsolutePath);
 		log.info("file name: {}", fileName);
 
-		StringBuilder sb = new StringBuilder(irodsCollectionAbsolutePath);
+		/*
+		 * Handle soft links by munging the path
+		 */
+
+		String absPath = this
+				.resolveAbsolutePathViaObjStat(irodsCollectionAbsolutePath);
+
+		StringBuilder sb = new StringBuilder(absPath);
 		sb.append("/");
 		sb.append(fileName);
 
@@ -1506,8 +1600,18 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		log.info("deleting avu metadata on dataObject: {}", avuData);
 		log.info("absolute path: {}", absolutePath);
 
+		CollectionAndPath collName = MiscIRODSUtils
+				.splitCollectionAndPathFromAbsolutepath(absolutePath);
+		String absPath = this.resolveAbsolutePathViaObjStat(collName
+				.getCollectionParent());
+
+		StringBuilder sb = new StringBuilder();
+		sb.append(absPath);
+		sb.append('/');
+		sb.append(collName.getChildName());
+
 		final ModAvuMetadataInp modifyAvuMetadataInp = ModAvuMetadataInp
-				.instanceForDeleteDataObjectMetadata(absolutePath, avuData);
+				.instanceForDeleteDataObjectMetadata(sb.toString(), avuData);
 
 		log.debug("sending avu request");
 
@@ -1725,17 +1829,33 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		log.info("replication complete");
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * Copy a file from one iRODS location to another. This is the preferred
+	 * method signature for copy operations, with other forms now deprecated.
+	 * Note that the <code>transferControlBlock</code> and
+	 * <code>TransferStatusCallbackListener</code> objects are optional and may
+	 * be set to <code>null</code> if not required.
+	 * <p/>
+	 * Note that this operation is for a single data object, not for recursive
+	 * transfers of collections. See {@link DataTransferOperations} for
+	 * recursive data transfers.
+	 * <p/>
 	 * 
-	 * @see
-	 * org.irods.jargon.core.pub.DataObjectAO#copyIRODSDataObject(org.irods.
-	 * jargon.core.pub.io.IRODSFile, org.irods.jargon.core.pub.io.IRODSFile,
-	 * org.irods.jargon.core.transfer.TransferControlBlock,
-	 * org.irods.jargon.core.transfer.TransferStatusCallbackListener)
+	 * 
+	 * @param irodsSourceFile
+	 *            {@link org.irods.jargon.core.pub.io.IRODSFile} that is the
+	 *            source of the transfer
+	 * @param irodsTargetFile
+	 *            {@link org.irods.jargon.core.pub.io.IRODSFile} that is the
+	 *            collection or explicitly named target for the transfer
+	 * @throws OverwriteException
+	 *             if an overwrite is attempted and the force option has not
+	 *             been set
+	 * @throws DataNotFoundException
+	 *             if the source iRODS file does not exist
+	 * @throws JargonException
 	 */
-	@Override
-	public void copyIRODSDataObject(final IRODSFile irodsSourceFile,
+	void copyIRODSDataObject(final IRODSFile irodsSourceFile,
 			final IRODSFile irodsTargetFile,
 			final TransferControlBlock transferControlBlock,
 			final TransferStatusCallbackListener transferStatusCallbackListener)
@@ -1815,103 +1935,6 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.irods.jargon.core.pub.DataObjectAO#copyIrodsDataObject(java.lang.
-	 * String, java.lang.String, java.lang.String)
-	 */
-	@Override
-	public void copyIrodsDataObject(final String irodsSourceFileAbsolutePath,
-			final String irodsTargetFileAbsolutePath,
-			final String targetResourceName) throws OverwriteException,
-			DataNotFoundException, JargonException {
-
-		if (irodsSourceFileAbsolutePath == null
-				|| irodsSourceFileAbsolutePath.isEmpty()) {
-			throw new IllegalArgumentException(
-					"null or empty irodsSourceFileAbsolutePath");
-		}
-
-		if (irodsTargetFileAbsolutePath == null
-				|| irodsTargetFileAbsolutePath.isEmpty()) {
-			throw new IllegalArgumentException(
-					"null or empty irodsTargetFileAbsolutePath");
-		}
-
-		if (targetResourceName == null) {
-			throw new IllegalArgumentException("null  targetResourceName");
-		}
-
-		log.info("copyIrodsDataObject, irodsSourceFileAbsolutePath: {}",
-				irodsSourceFileAbsolutePath);
-		log.info("irodsTargetFileAbsolutePath:{}", irodsTargetFileAbsolutePath);
-		log.info("at resource: {}", targetResourceName);
-
-		IRODSFile sourceFile = getIRODSFileFactory().instanceIRODSFile(
-				irodsSourceFileAbsolutePath);
-		IRODSFile targetFile = getIRODSFileFactory().instanceIRODSFile(
-				irodsTargetFileAbsolutePath);
-		targetFile.setResource(targetResourceName);
-		TransferControlBlock transferControlBlock = this
-				.buildDefaultTransferControlBlockBasedOnJargonProperties();
-		transferControlBlock.getTransferOptions().setForceOption(
-				ForceOption.NO_FORCE);
-		copyIRODSDataObject(sourceFile, targetFile, transferControlBlock, null);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.irods.jargon.core.pub.DataObjectAO#copyIrodsDataObjectWithForce(java
-	 * .lang.String, java.lang.String, java.lang.String)
-	 */
-	@Override
-	public void copyIrodsDataObjectWithForce(
-			final String irodsSourceFileAbsolutePath,
-			final String irodsTargetFileAbsolutePath,
-			final String targetResourceName) throws OverwriteException,
-			DataNotFoundException, JargonException {
-
-		if (irodsSourceFileAbsolutePath == null
-				|| irodsSourceFileAbsolutePath.isEmpty()) {
-			throw new IllegalArgumentException(
-					"null or empty irodsSourceFileAbsolutePath");
-		}
-
-		if (irodsTargetFileAbsolutePath == null
-				|| irodsTargetFileAbsolutePath.isEmpty()) {
-			throw new IllegalArgumentException(
-					"null or empty irodsTargetFileAbsolutePath");
-		}
-
-		if (targetResourceName == null) {
-			throw new IllegalArgumentException(
-					"null or empty targetResourceName");
-		}
-
-		log.info(
-				"copyIrodsDataObjectWithForce, irodsSourceFileAbsolutePath: {}",
-				irodsSourceFileAbsolutePath);
-		log.info("irodsTargetFileAbsolutePath:{}", irodsTargetFileAbsolutePath);
-		log.info("at resource: {}", targetResourceName);
-
-		IRODSFile sourceFile = getIRODSFileFactory().instanceIRODSFile(
-				irodsSourceFileAbsolutePath);
-		IRODSFile targetFile = getIRODSFileFactory().instanceIRODSFile(
-				irodsTargetFileAbsolutePath);
-		targetFile.setResource(targetResourceName);
-
-		TransferControlBlock transferControlBlock = this
-				.buildDefaultTransferControlBlockBasedOnJargonProperties();
-		transferControlBlock.getTransferOptions().setForceOption(
-				ForceOption.USE_FORCE);
-		copyIRODSDataObject(sourceFile, targetFile, transferControlBlock, null);
-		log.info("copy complete");
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
 	 * @seeorg.irods.jargon.core.pub.DataObjectAO#
 	 * replicateIrodsDataObjectToAllResourcesInResourceGroup(java.lang.String,
 	 * java.lang.String)
@@ -1961,12 +1984,14 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 		log.info("getting resources for path:{}", dataObjectPath);
 
+		String absPath = this.resolveAbsolutePathViaObjStat(dataObjectPath);
+
 		ResourceAO resourceAO = this.getIRODSAccessObjectFactory()
 				.getResourceAO(getIRODSAccount());
 		StringBuilder sb = new StringBuilder();
 		sb.append(RodsGenQueryEnum.COL_COLL_NAME.getName());
 		sb.append(EQUALS_AND_QUOTE);
-		sb.append(IRODSDataConversionUtil.escapeSingleQuotes(dataObjectPath));
+		sb.append(IRODSDataConversionUtil.escapeSingleQuotes(absPath));
 		sb.append(QUOTE);
 		sb.append(AND);
 		sb.append(RodsGenQueryEnum.COL_DATA_NAME.getName());
@@ -1992,14 +2017,15 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 		// contract checks in delegated method
 
+		String absPath = this
+				.resolveAbsolutePathViaObjStat(dataObjectCollectionAbsPath);
+
 		List<AVUQueryElement> queryElements = new ArrayList<AVUQueryElement>();
 		try {
 			return this.findMetadataValuesForDataObjectUsingAVUQuery(
-					queryElements, dataObjectCollectionAbsPath,
-					dataObjectFileName);
+					queryElements, absPath, dataObjectFileName);
 		} catch (JargonQueryException e) {
-			log.error("query exception looking up data object:{}",
-					dataObjectCollectionAbsPath, e);
+			log.error("query exception looking up data object:{}", absPath, e);
 			log.error("fileName: {}", dataObjectFileName);
 			throw new JargonException(e);
 		}
@@ -2023,13 +2049,15 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 		log.info("findMetadataValuesForDataObject: {}", dataObjectAbsolutePath);
 
-		IRODSFile irodsFile = getIRODSFileFactory().instanceIRODSFile(
-				dataObjectAbsolutePath);
+		CollectionAndPath collName = MiscIRODSUtils
+				.splitCollectionAndPathFromAbsolutepath(dataObjectAbsolutePath);
+		String absPath = this.resolveAbsolutePathViaObjStat(collName
+				.getCollectionParent());
 
 		List<AVUQueryElement> queryElements = new ArrayList<AVUQueryElement>();
 		try {
 			return this.findMetadataValuesForDataObjectUsingAVUQuery(
-					queryElements, irodsFile.getParent(), irodsFile.getName());
+					queryElements, absPath, collName.getChildName());
 		} catch (JargonQueryException e) {
 			log.error("query exception looking up data object:{}",
 					dataObjectAbsolutePath, e);
@@ -2052,10 +2080,13 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			throw new IllegalArgumentException("null irodsFile");
 		}
 
+		String absPath = this.resolveAbsolutePathViaObjStat(irodsFile
+				.getParent());
+
 		List<AVUQueryElement> queryElements = new ArrayList<AVUQueryElement>();
 		try {
 			return this.findMetadataValuesForDataObjectUsingAVUQuery(
-					queryElements, irodsFile.getParent(), irodsFile.getName());
+					queryElements, absPath, irodsFile.getName());
 		} catch (JargonQueryException e) {
 			log.error("query exception rethrown as Jargon Exception", e);
 			throw new JargonException(e);
@@ -2109,8 +2140,20 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			final String absolutePath, final String userName)
 			throws JargonException {
 		// pi tests parameters
+		/*
+		 * Handle soft links by munging the path
+		 */
+		CollectionAndPath collName = MiscIRODSUtils
+				.splitCollectionAndPathFromAbsolutepath(absolutePath);
+		String absPath = this.resolveAbsolutePathViaObjStat(collName
+				.getCollectionParent());
+
+		StringBuilder sb = new StringBuilder();
+		sb.append(absPath);
+		sb.append('/');
+		sb.append(collName.getChildName());
 		ModAccessControlInp modAccessControlInp = ModAccessControlInp
-				.instanceForSetPermission(false, zone, absolutePath, userName,
+				.instanceForSetPermission(false, zone, sb.toString(), userName,
 						ModAccessControlInp.READ_PERMISSION);
 		getIRODSProtocol().irodsFunction(modAccessControlInp);
 	}
@@ -2127,8 +2170,21 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			final String absolutePath, final String userName)
 			throws JargonException {
 		// pi tests parameters
+		/*
+		 * Handle soft links by munging the path
+		 */
+		CollectionAndPath collName = MiscIRODSUtils
+				.splitCollectionAndPathFromAbsolutepath(absolutePath);
+		String absPath = this.resolveAbsolutePathViaObjStat(collName
+				.getCollectionParent());
+
+		StringBuilder sb = new StringBuilder();
+		sb.append(absPath);
+		sb.append('/');
+		sb.append(collName.getChildName());
 		ModAccessControlInp modAccessControlInp = ModAccessControlInp
-				.instanceForSetPermissionInAdminMode(false, zone, absolutePath,
+				.instanceForSetPermissionInAdminMode(false, zone,
+						sb.toString(),
 						userName, ModAccessControlInp.READ_PERMISSION);
 		getIRODSProtocol().irodsFunction(modAccessControlInp);
 	}
@@ -2145,8 +2201,20 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			final String absolutePath, final String userName)
 			throws JargonException {
 		// pi tests parameters
+		/*
+		 * Handle soft links by munging the path
+		 */
+		CollectionAndPath collName = MiscIRODSUtils
+				.splitCollectionAndPathFromAbsolutepath(absolutePath);
+		String absPath = this.resolveAbsolutePathViaObjStat(collName
+				.getCollectionParent());
+
+		StringBuilder sb = new StringBuilder();
+		sb.append(absPath);
+		sb.append('/');
+		sb.append(collName.getChildName());
 		ModAccessControlInp modAccessControlInp = ModAccessControlInp
-				.instanceForSetPermission(false, zone, absolutePath, userName,
+				.instanceForSetPermission(false, zone, sb.toString(), userName,
 						ModAccessControlInp.WRITE_PERMISSION);
 		getIRODSProtocol().irodsFunction(modAccessControlInp);
 	}
@@ -2163,8 +2231,21 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			final String absolutePath, final String userName)
 			throws JargonException {
 		// pi tests parameters
+		/*
+		 * Handle soft links by munging the path
+		 */
+		CollectionAndPath collName = MiscIRODSUtils
+				.splitCollectionAndPathFromAbsolutepath(absolutePath);
+		String absPath = this.resolveAbsolutePathViaObjStat(collName
+				.getCollectionParent());
+
+		StringBuilder sb = new StringBuilder();
+		sb.append(absPath);
+		sb.append('/');
+		sb.append(collName.getChildName());
 		ModAccessControlInp modAccessControlInp = ModAccessControlInp
-				.instanceForSetPermissionInAdminMode(false, zone, absolutePath,
+				.instanceForSetPermissionInAdminMode(false, zone,
+						sb.toString(),
 						userName, ModAccessControlInp.WRITE_PERMISSION);
 		getIRODSProtocol().irodsFunction(modAccessControlInp);
 	}
@@ -2181,8 +2262,20 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			final String absolutePath, final String userName)
 			throws JargonException {
 		// pi tests parameters
+		/*
+		 * Handle soft links by munging the path
+		 */
+		CollectionAndPath collName = MiscIRODSUtils
+				.splitCollectionAndPathFromAbsolutepath(absolutePath);
+		String absPath = this.resolveAbsolutePathViaObjStat(collName
+				.getCollectionParent());
+
+		StringBuilder sb = new StringBuilder();
+		sb.append(absPath);
+		sb.append('/');
+		sb.append(collName.getChildName());
 		ModAccessControlInp modAccessControlInp = ModAccessControlInp
-				.instanceForSetPermission(false, zone, absolutePath, userName,
+				.instanceForSetPermission(false, zone, sb.toString(), userName,
 						ModAccessControlInp.OWN_PERMISSION);
 		getIRODSProtocol().irodsFunction(modAccessControlInp);
 	}
@@ -2199,8 +2292,22 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			final String absolutePath, final String userName)
 			throws JargonException {
 		// pi tests parameters
+		/*
+		 * Handle soft links by munging the path
+		 */
+		CollectionAndPath collName = MiscIRODSUtils
+				.splitCollectionAndPathFromAbsolutepath(absolutePath);
+		String absPath = this.resolveAbsolutePathViaObjStat(collName
+				.getCollectionParent());
+
+		StringBuilder sb = new StringBuilder();
+		sb.append(absPath);
+		sb.append('/');
+		sb.append(collName.getChildName());
+
 		ModAccessControlInp modAccessControlInp = ModAccessControlInp
-				.instanceForSetPermissionInAdminMode(false, zone, absolutePath,
+				.instanceForSetPermissionInAdminMode(false, zone,
+						sb.toString(),
 						userName, ModAccessControlInp.OWN_PERMISSION);
 		getIRODSProtocol().irodsFunction(modAccessControlInp);
 	}
@@ -2217,8 +2324,20 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			final String absolutePath, final String userName)
 			throws JargonException {
 		// pi tests parameters
+		/*
+		 * Handle soft links by munging the path
+		 */
+		CollectionAndPath collName = MiscIRODSUtils
+				.splitCollectionAndPathFromAbsolutepath(absolutePath);
+		String absPath = this.resolveAbsolutePathViaObjStat(collName
+				.getCollectionParent());
+
+		StringBuilder sb = new StringBuilder();
+		sb.append(absPath);
+		sb.append('/');
+		sb.append(collName.getChildName());
 		ModAccessControlInp modAccessControlInp = ModAccessControlInp
-				.instanceForSetPermission(false, zone, absolutePath, userName,
+				.instanceForSetPermission(false, zone, sb.toString(), userName,
 						ModAccessControlInp.NULL_PERMISSION);
 		getIRODSProtocol().irodsFunction(modAccessControlInp);
 	}
@@ -2235,8 +2354,21 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			final String absolutePath, final String userName)
 			throws JargonException {
 		// pi tests parameters
+		/*
+		 * Handle soft links by munging the path
+		 */
+		CollectionAndPath collName = MiscIRODSUtils
+				.splitCollectionAndPathFromAbsolutepath(absolutePath);
+		String absPath = this.resolveAbsolutePathViaObjStat(collName
+				.getCollectionParent());
+
+		StringBuilder sb = new StringBuilder();
+		sb.append(absPath);
+		sb.append('/');
+		sb.append(collName.getChildName());
 		ModAccessControlInp modAccessControlInp = ModAccessControlInp
-				.instanceForSetPermissionInAdminMode(false, zone, absolutePath,
+				.instanceForSetPermissionInAdminMode(false, zone,
+						sb.toString(),
 						userName, ModAccessControlInp.NULL_PERMISSION);
 		getIRODSProtocol().irodsFunction(modAccessControlInp);
 	}
@@ -2268,11 +2400,16 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		log.info("getPermissionForDataObject for absPath:{}", absolutePath);
 		log.info("userName:{}", userName);
 
+		CollectionAndPath collName = MiscIRODSUtils
+				.splitCollectionAndPathFromAbsolutepath(absolutePath);
+		String absPath = this.resolveAbsolutePathViaObjStat(collName
+				.getCollectionParent());
+
 		IRODSFileSystemAO irodsFileSystemAO = getIRODSAccessObjectFactory()
 				.getIRODSFileSystemAO(getIRODSAccount());
-		int permissionVal = irodsFileSystemAO
-				.getFilePermissionsForGivenUser(getIRODSFileFactory()
-						.instanceIRODSFile(absolutePath), userName);
+		int permissionVal = irodsFileSystemAO.getFilePermissionsForGivenUser(
+				getIRODSFileFactory().instanceIRODSFile(absPath,
+						collName.getChildName()), userName);
 		FilePermissionEnum filePermissionEnum = FilePermissionEnum
 				.valueOf(permissionVal);
 		return filePermissionEnum;
@@ -2305,11 +2442,14 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 				irodsCollectionAbsolutePath);
 		log.info("dataName: {}", irodsCollectionAbsolutePath);
 
+		String absPath = this
+				.resolveAbsolutePathViaObjStat(irodsCollectionAbsolutePath);
+
 		List<UserFilePermission> userFilePermissions = new ArrayList<UserFilePermission>();
 
 		StringBuilder query = new StringBuilder(
-				DataAOHelper.buildACLQueryForCollectionPathAndDataName(
-						irodsCollectionAbsolutePath, dataName));
+				DataAOHelper.buildACLQueryForCollectionPathAndDataName(absPath,
+						dataName));
 
 		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(query.toString(),
 				this.getJargonProperties().getMaxFilesAndDirsQueryMax());
@@ -2371,11 +2511,11 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 		log.info("listPermissionsForDataObject: {}",
 				irodsDataObjectAbsolutePath);
-		IRODSFile irodsFile = getIRODSFileFactory().instanceIRODSFile(
-				irodsDataObjectAbsolutePath);
-
-		return listPermissionsForDataObject(irodsFile.getParent(),
-				irodsFile.getName());
+		CollectionAndPath collName = MiscIRODSUtils
+				.splitCollectionAndPathFromAbsolutepath(irodsDataObjectAbsolutePath);
+		String absPath = this.resolveAbsolutePathViaObjStat(collName
+				.getCollectionParent());
+		return listPermissionsForDataObject(absPath, collName.getChildName());
 
 	}
 
@@ -2399,8 +2539,21 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		}
 
 		log.info("setting avu metadata value for dataObject");
-		log.info("with  avu metadata:{}", avuData);
+		log.info("with avu metadata:{}", avuData);
 		log.info("absolute path: {}", absolutePath);
+		
+		/*
+		 * Handle soft links by munging the path
+		 */
+		CollectionAndPath collName = MiscIRODSUtils
+				.splitCollectionAndPathFromAbsolutepath(absolutePath);
+		String absPath = this.resolveAbsolutePathViaObjStat(collName
+				.getCollectionParent());
+
+		StringBuilder sb = new StringBuilder();
+		sb.append(absPath);
+		sb.append('/');
+		sb.append(collName.getChildName());
 
 		// avu is distinct based on attrib and value, so do an attrib/unit
 		// query, can only be one result
@@ -2415,7 +2568,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 					AVUQueryElement.AVUQueryPart.UNITS,
 					AVUQueryOperatorEnum.EQUAL, avuData.getUnit()));
 			result = this.findMetadataValuesForDataObjectUsingAVUQuery(
-					queryElements, absolutePath);
+					queryElements, sb.toString());
 		} catch (JargonQueryException e) {
 			log.error("error querying data for avu", e);
 			throw new JargonException("error querying data for AVU");
@@ -2433,7 +2586,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 		AvuData modAvuData = new AvuData(result.get(0).getAvuAttribute(),
 				avuData.getValue(), result.get(0).getAvuUnit());
-		modifyAVUMetadata(absolutePath, currentAvuData, modAvuData);
+		modifyAVUMetadata(sb.toString(), currentAvuData, modAvuData);
 		log.info("metadata modified to:{}", modAvuData);
 	}
 
@@ -2466,9 +2619,22 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		log.info("overwrite avu metadata for data object: {}", currentAvuData);
 		log.info("with new avu metadata:{}", newAvuData);
 		log.info("absolute path: {}", dataObjectAbsolutePath);
+		
+		/*
+		 * Handle soft links by munging the path
+		 */
+		CollectionAndPath collName = MiscIRODSUtils
+				.splitCollectionAndPathFromAbsolutepath(dataObjectAbsolutePath);
+		String absPath = this.resolveAbsolutePathViaObjStat(collName
+				.getCollectionParent());
+
+		StringBuilder sb = new StringBuilder();
+		sb.append(absPath);
+		sb.append('/');
+		sb.append(collName.getChildName());
 
 		final ModAvuMetadataInp modifyAvuMetadataInp = ModAvuMetadataInp
-				.instanceForModifyDataObjectMetadata(dataObjectAbsolutePath,
+				.instanceForModifyDataObjectMetadata(sb.toString(),
 						currentAvuData, newAvuData);
 
 		log.debug("sending avu request");
@@ -2569,11 +2735,15 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		log.info("dataName: {}", irodsCollectionAbsolutePath);
 		log.info("userName:{}", userName);
 
+		String absPath = this
+				.resolveAbsolutePathViaObjStat(irodsCollectionAbsolutePath);
+
 		UserFilePermission userFilePermission = null;
 
 		StringBuilder query = new StringBuilder(
 				DataAOHelper.buildACLQueryForCollectionPathAndDataName(
-						irodsCollectionAbsolutePath, dataName));
+absPath,
+						dataName));
 		query.append(" AND ");
 		query.append(RodsGenQueryEnum.COL_USER_NAME.getName());
 		query.append(" = '");
@@ -2627,6 +2797,9 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		IRODSFile irodsFile = this.getIRODSFileFactory().instanceIRODSFile(
 				irodsAbsolutePath);
 
+		String absPath = this.resolveAbsolutePathViaObjStat(irodsFile
+				.getParent());
+
 		StringBuilder query = new StringBuilder();
 		query.append(resourceAOHelper.buildResourceSelects());
 		query.append(" where ");
@@ -2634,8 +2807,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		if (irodsFile.exists() && irodsFile.isFile()) {
 			query.append(RodsGenQueryEnum.COL_COLL_NAME.getName());
 			query.append(EQUALS_AND_QUOTE);
-			query.append(IRODSDataConversionUtil.escapeSingleQuotes(irodsFile
-					.getParent()));
+			query.append(IRODSDataConversionUtil.escapeSingleQuotes(absPath));
 			query.append("'");
 			query.append(AND);
 			query.append(RodsGenQueryEnum.COL_DATA_NAME.getName());
@@ -2708,11 +2880,12 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 				irodsAbsolutePath);
 		log.info("userName:{}", userName);
 
-		IRODSFile irodsFile = this.getIRODSFileFactory().instanceIRODSFile(
-				irodsAbsolutePath);
+		CollectionAndPath collName = MiscIRODSUtils
+				.splitCollectionAndPathFromAbsolutepath(irodsAbsolutePath);
 
-		return getPermissionForDataObjectForUserName(irodsFile.getParent(),
-				irodsFile.getName(), userName);
+		return getPermissionForDataObjectForUserName(
+				collName.getCollectionParent(), collName.getChildName(),
+				userName);
 
 	}
 
@@ -2762,6 +2935,38 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		}
 
 		return effectiveTransferControlBlock;
+	}
+
+	/**
+	 * Take a provided absolute path, and return back the canonical iRODS
+	 * absolute path accounting for soft links and special collection types.
+	 * FIXME: may promote to super class
+	 * <p/>
+	 * Note that this method will evaluate the special collection type to verify
+	 * that the collection type is supported. An exception is thrown if Jargon
+	 * cannot handle it.
+	 * 
+	 * @param irodsAbsolutePath
+	 *            <code>String</code> with the proposed iRODS absolute path
+	 * @return <code>String</code> with the canonical iRODS absolute path
+	 * @throws JargonException
+	 */
+	private String resolveAbsolutePathViaObjStat(final String irodsAbsolutePath)
+			throws JargonException {
+		ObjStat objStat = collectionAndDataObjectListAndSearchAO
+				.retrieveObjectStatForPath(irodsAbsolutePath);
+
+		if (objStat == null) {
+			log.error("no file found for path:{}", irodsAbsolutePath);
+			throw new DataNotFoundException("no file found for given path");
+		}
+
+		/*
+		 * See if jargon supports the given object type
+		 */
+		MiscIRODSUtils.evaluateSpecCollSupport(objStat);
+		return MiscIRODSUtils
+				.determineAbsolutePathBasedOnCollTypeInObjectStat(objStat);
 	}
 
 }

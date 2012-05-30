@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Properties;
 
 import junit.framework.Assert;
-import junit.framework.TestCase;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.pub.io.IRODSFile;
@@ -18,7 +17,6 @@ public class CollectionAndDataObjectListAndSearchAOImplForSoftLinksTest {
 
 	private static Properties testingProperties = new Properties();
 	private static org.irods.jargon.testutils.TestingPropertiesHelper testingPropertiesHelper = new TestingPropertiesHelper();
-	private static org.irods.jargon.testutils.filemanip.ScratchFileUtils scratchFileUtils = null;
 	public static final String IRODS_TEST_SUBDIR_PATH = "CollectionAndDataObjectListAndSearchAOImplForSoftLinksTest";
 	private static org.irods.jargon.testutils.IRODSTestSetupUtilities irodsTestSetupUtilities = null;
 	private static IRODSFileSystem irodsFileSystem = null;
@@ -27,8 +25,6 @@ public class CollectionAndDataObjectListAndSearchAOImplForSoftLinksTest {
 	public static void setUpBeforeClass() throws Exception {
 		org.irods.jargon.testutils.TestingPropertiesHelper testingPropertiesLoader = new TestingPropertiesHelper();
 		testingProperties = testingPropertiesLoader.getTestProperties();
-		scratchFileUtils = new org.irods.jargon.testutils.filemanip.ScratchFileUtils(
-				testingProperties);
 		irodsTestSetupUtilities = new org.irods.jargon.testutils.IRODSTestSetupUtilities();
 		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
 		irodsTestSetupUtilities
@@ -96,12 +92,11 @@ public class CollectionAndDataObjectListAndSearchAOImplForSoftLinksTest {
 		List<CollectionAndDataObjectListingEntry> listed = listAndSearchAO
 				.listCollectionsUnderPath(targetIrodsCollection, 0);
 
-		TestCase.assertFalse("list is empty", listed.isEmpty());
+		Assert.assertFalse("list is empty", listed.isEmpty());
 
 		CollectionAndDataObjectListingEntry entry = listed.get(0);
-		TestCase.assertEquals(targetIrodsCollection, entry.getParentPath());
-		TestCase.assertEquals(sourceIrodsCollection,
-				entry.getSpecialObjectPath());
+		Assert.assertEquals(targetIrodsCollection, entry.getParentPath());
+		Assert.assertEquals(sourceIrodsCollection, entry.getSpecialObjectPath());
 
 	}
 
@@ -171,13 +166,11 @@ public class CollectionAndDataObjectListAndSearchAOImplForSoftLinksTest {
 		List<CollectionAndDataObjectListingEntry> listed = listAndSearchAO
 				.listDataObjectsUnderPath(targetIrodsCollection, 0);
 
-		TestCase.assertEquals("should list 10 data objects", count,
-				listed.size());
+		Assert.assertEquals("should list 10 data objects", count, listed.size());
 
 		CollectionAndDataObjectListingEntry entry = listed.get(0);
-		TestCase.assertEquals(targetIrodsCollection, entry.getParentPath());
-		TestCase.assertEquals(sourceIrodsCollection,
-				entry.getSpecialObjectPath());
+		Assert.assertEquals(targetIrodsCollection, entry.getParentPath());
+		Assert.assertEquals(sourceIrodsCollection, entry.getSpecialObjectPath());
 
 	}
 
@@ -254,7 +247,7 @@ public class CollectionAndDataObjectListAndSearchAOImplForSoftLinksTest {
 
 		int countOfObjs = listAndSearchAO
 				.countDataObjectsAndCollectionsUnderPath(targetIrodsCollection);
-		TestCase.assertEquals("wrong count of colls", 12, countOfObjs);
+		Assert.assertEquals("wrong count of colls", 12, countOfObjs);
 
 	}
 
@@ -311,10 +304,9 @@ public class CollectionAndDataObjectListAndSearchAOImplForSoftLinksTest {
 		CollectionAndDataObjectListingEntry entry = listAndSearchAO
 				.getCollectionAndDataObjectListingEntryAtGivenAbsolutePath(targetIrodsCollection
 						+ "/" + subfileName);
-		TestCase.assertNotNull("null entry", entry);
-		TestCase.assertEquals(targetIrodsCollection, entry.getParentPath());
-		TestCase.assertEquals(sourceIrodsCollection,
-				entry.getSpecialObjectPath());
+		Assert.assertNotNull("null entry", entry);
+		Assert.assertEquals(targetIrodsCollection, entry.getParentPath());
+		Assert.assertEquals(sourceIrodsCollection, entry.getSpecialObjectPath());
 
 	}
 
@@ -403,8 +395,8 @@ public class CollectionAndDataObjectListAndSearchAOImplForSoftLinksTest {
 			Assert.assertTrue(
 					"this is not a data object",
 					resultEntry.getObjectType() == CollectionAndDataObjectListingEntry.ObjectType.DATA_OBJECT);
-			TestCase.assertEquals(targetIrodsCollection, entry.getParentPath());
-			TestCase.assertEquals(sourceIrodsCollection,
+			Assert.assertEquals(targetIrodsCollection, entry.getParentPath());
+			Assert.assertEquals(sourceIrodsCollection,
 					entry.getSpecialObjectPath());
 
 		}
@@ -473,12 +465,11 @@ public class CollectionAndDataObjectListAndSearchAOImplForSoftLinksTest {
 				.listCollectionsUnderPathWithPermissions(targetIrodsCollection,
 						0);
 
-		TestCase.assertFalse("list is empty", listed.isEmpty());
+		Assert.assertFalse("list is empty", listed.isEmpty());
 
 		CollectionAndDataObjectListingEntry entry = listed.get(0);
-		TestCase.assertEquals(targetIrodsCollection, entry.getParentPath());
-		TestCase.assertEquals(sourceIrodsCollection,
-				entry.getSpecialObjectPath());
+		Assert.assertEquals(targetIrodsCollection, entry.getParentPath());
+		Assert.assertEquals(sourceIrodsCollection, entry.getSpecialObjectPath());
 		Assert.assertEquals("did not get both expected permissions", 2, entry
 				.getUserFilePermission().size());
 

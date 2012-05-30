@@ -70,6 +70,7 @@ Note that the following bug and feature requests are logged in GForge with relat
  
  * [#775] iDrop 1.1.0 refactoring activities
  ** add method to list resource names in zone
+ ** clean up deprecated methods and fix visibility so DataTransferOperations is the public API for put/get/copy/move
  
  * [#114] support for mounted collections, cross zone browsing, and soft links
  ** significant refactoring as support added, cleanup of deprecated methods, tightening package visibility
@@ -77,6 +78,7 @@ Note that the following bug and feature requests are logged in GForge with relat
  ** Refactoring of key classes for support
  **** CollectionAndDataObjectListAndSearchAO
  **** DataObjectAO
+ **** DataTransferOperations
  
  
  

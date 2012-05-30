@@ -19,7 +19,7 @@ import java.util.List;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
-import org.irods.jargon.core.pub.DataObjectAO;
+import org.irods.jargon.core.pub.DataTransferOperations;
 import org.irods.jargon.core.pub.EnvironmentalInfoAO;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 import org.irods.jargon.core.pub.RuleProcessingAO;
@@ -319,10 +319,9 @@ public class ThumbnailServiceImpl extends AbstractDataUtilsServiceImpl
 		IRODSFile sourceAsFile = this.getIrodsAccessObjectFactory()
 				.getIRODSFileFactory(irodsAccount)
 				.instanceIRODSFile(irodsAbsolutePathToGenerateThumbnailFor);
-		DataObjectAO dataObjectAO = this.getIrodsAccessObjectFactory()
-				.getDataObjectAO(irodsAccount);
-
-		dataObjectAO.getDataObjectFromIrods(sourceAsFile, targetTempFile);
+		DataTransferOperations dto = this.irodsAccessObjectFactory
+				.getDataTransferOperations(getIrodsAccount());
+		dto.getOperation(sourceAsFile, targetTempFile, null, null);
 		log.info("image retrieved to: {}, make thumbnail...",
 				targetTempFile.getAbsolutePath());
 
@@ -412,10 +411,9 @@ public class ThumbnailServiceImpl extends AbstractDataUtilsServiceImpl
 		IRODSFile sourceAsFile = this.getIrodsAccessObjectFactory()
 				.getIRODSFileFactory(irodsAccount)
 				.instanceIRODSFile(irodsAbsolutePathToGenerateThumbnailFor);
-		DataObjectAO dataObjectAO = this.getIrodsAccessObjectFactory()
-				.getDataObjectAO(irodsAccount);
-
-		dataObjectAO.getDataObjectFromIrods(sourceAsFile, temp);
+		DataTransferOperations dto = this.irodsAccessObjectFactory
+				.getDataTransferOperations(getIrodsAccount());
+		dto.getOperation(sourceAsFile, temp, null, null);
 		log.info("image retrieved, create thumbnail image at:{}",
 				targetTempFile.getAbsolutePath());
 

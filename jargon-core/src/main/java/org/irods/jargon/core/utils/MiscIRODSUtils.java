@@ -397,20 +397,27 @@ public class MiscIRODSUtils {
 	public static String buildAbsolutePathFromCollectionParentAndFileName(
 			final String collectionPath, final String dataName) {
 
-		if (collectionPath == null || collectionPath.isEmpty()) {
+		if (collectionPath == null) {
 			throw new IllegalArgumentException("null or empty collectionPath");
 		}
 
-		if (dataName == null || dataName.isEmpty()) {
+		if (dataName == null) {
 			throw new IllegalArgumentException("null or empty dataName");
 		}
 
 		StringBuilder pathBuilder = new StringBuilder();
-		pathBuilder.append(collectionPath);
-		if (collectionPath.charAt(collectionPath.length() - 1) != '/') {
-			pathBuilder.append('/');
+
+		if (collectionPath.isEmpty() && dataName.isEmpty()) {
+			pathBuilder.append("/");
+		} else {
+			pathBuilder.append(collectionPath);
+			if (!collectionPath.isEmpty()
+					&& collectionPath.charAt(collectionPath.length() - 1) != '/') {
+				pathBuilder.append('/');
+			}
+			pathBuilder.append(dataName);
 		}
-		pathBuilder.append(dataName);
+
 		return pathBuilder.toString();
 	}
 
@@ -429,7 +436,7 @@ public class MiscIRODSUtils {
 
 		if (objStat.getSpecColType() == SpecColType.LINKED_COLL) {
 			if (objStat.isSomeTypeOfCollection()) {
-			effectiveAbsolutePath = objStat.getObjectPath();
+				effectiveAbsolutePath = objStat.getObjectPath();
 			} else {
 				StringBuilder sb = new StringBuilder();
 				sb.append(objStat.getObjectPath());
@@ -454,7 +461,7 @@ public class MiscIRODSUtils {
 	 * @return {@link CollectionAndPath} value object
 	 */
 	public static CollectionAndPath splitCollectionAndPathFromAbsolutepath(
-			String filePath) {
+			final String filePath) {
 
 		// used when parsing the filepath
 		int index;
@@ -462,7 +469,6 @@ public class MiscIRODSUtils {
 		if (filePath == null) {
 			throw new NullPointerException("The file name cannot be null");
 		}
-
 
 		String fileName = filePath;
 		String directory = "";
