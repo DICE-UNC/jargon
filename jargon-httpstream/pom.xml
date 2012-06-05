@@ -4,11 +4,11 @@
   <parent>
     <artifactId>jargon</artifactId>
     <groupId>org.irods</groupId>
-    <version>3.1.2-SNAPSHOT</version>
+    <version>3.1.2</version>
   </parent>
   <groupId>org.irods.jargon</groupId>
   <artifactId>jargon-httpstream</artifactId> 
-  <version>3.1.2-SNAPSHOT</version>
+  <version>3.1.2</version>
   <name>Jargon HttpStream</name>
   <url>http://maven.apache.org</url>
   <dependencies>
