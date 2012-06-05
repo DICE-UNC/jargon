@@ -467,6 +467,20 @@ public final class IRODSAccessObjectFactoryImpl implements
 	 * (non-Javadoc)
 	 * 
 	 * @see
+	 * org.irods.jargon.core.pub.IRODSAccessObjectFactory#getMountedCollectionAO
+	 * (org.irods.jargon.core.connection.IRODSAccount)
+	 */
+	@Override
+	public MountedCollectionAO getMountedCollectionAO(
+			final IRODSAccount irodsAccount) throws JargonException {
+		checkIrodsSessionSet();
+		return new MountedCollectionAOImpl(irodsSession, irodsAccount);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
 	 * org.irods.jargon.core.pub.IRODSAccessObjectFactory#getProtocolExtensionPoint
 	 * (org.irods.jargon.core.connection.IRODSAccount)
 	 */

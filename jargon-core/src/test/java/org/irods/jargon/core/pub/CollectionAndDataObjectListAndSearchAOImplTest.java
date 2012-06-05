@@ -909,7 +909,7 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 		irodsFile.mkdir();
 
 		File localFile = new File(localFileName);
-		DataObjectAO dataObjectAO = irodsFileSystem
+		DataObjectAOImpl dataObjectAO = (DataObjectAOImpl) irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
 
 		dataObjectAO.putLocalDataObjectToIRODS(localFile, irodsFile, true);
@@ -959,8 +959,9 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 		irodsFile.mkdir();
 
 		File localFile = new File(localFileName);
-		DataObjectAO dataObjectAO = irodsFileSystem
+		DataObjectAOImpl dataObjectAO = (DataObjectAOImpl) irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
+
 
 		dataObjectAO.putLocalDataObjectToIRODS(localFile, irodsFile, true);
 		dataObjectAO
@@ -1015,7 +1016,7 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 		irodsFile.mkdir();
 
 		File localFile = new File(localFileName);
-		DataObjectAO dataObjectAO = irodsFileSystem
+		DataObjectAOImpl dataObjectAO = (DataObjectAOImpl) irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
 
 		dataObjectAO.putLocalDataObjectToIRODS(localFile, irodsFile, true);
@@ -1062,7 +1063,7 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		DataObjectAO dataObjectAO = irodsFileSystem
+		DataObjectAOImpl dataObjectAO = (DataObjectAOImpl) irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
 		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
 				.instanceIRODSFile(targetIrodsCollection);
@@ -1099,8 +1100,9 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		DataObjectAO dataObjectAO = irodsFileSystem
+		DataObjectAOImpl dataObjectAO = (DataObjectAOImpl) irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
+
 		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
 				.instanceIRODSFile(targetIrodsCollection);
 		irodsFile.mkdirs();
@@ -1384,7 +1386,7 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		DataObjectAO dataObjectAO = irodsFileSystem
+		DataObjectAOImpl dataObjectAO = (DataObjectAOImpl) irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
 		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
 				.instanceIRODSFile(targetIrodsCollection);
@@ -1535,7 +1537,7 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		DataObjectAO dataObjectAO = irodsFileSystem
+		DataObjectAOImpl dataObjectAO = (DataObjectAOImpl) irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
 		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
 				.instanceIRODSFile(targetIrodsCollection);

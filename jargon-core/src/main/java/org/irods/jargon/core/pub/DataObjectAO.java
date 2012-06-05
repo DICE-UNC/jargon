@@ -1,13 +1,10 @@
 package org.irods.jargon.core.pub;
 
-import java.io.File;
 import java.util.List;
 
 import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.DuplicateDataException;
 import org.irods.jargon.core.exception.JargonException;
-import org.irods.jargon.core.exception.OverwriteException;
-import org.irods.jargon.core.packinstr.TransferOptions;
 import org.irods.jargon.core.protovalues.FilePermissionEnum;
 import org.irods.jargon.core.pub.domain.AvuData;
 import org.irods.jargon.core.pub.domain.DataObject;
@@ -17,8 +14,6 @@ import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.query.AVUQueryElement;
 import org.irods.jargon.core.query.JargonQueryException;
 import org.irods.jargon.core.query.MetaDataAndDomainData;
-import org.irods.jargon.core.transfer.TransferControlBlock;
-import org.irods.jargon.core.transfer.TransferStatusCallbackListener;
 
 /**
  * This is an access object that can be used to manipulate iRODS data objects
@@ -26,7 +21,7 @@ import org.irods.jargon.core.transfer.TransferStatusCallbackListener;
  * <code>java.io.File</code> object. For normal read and other familier
  * <code>java.io.*</code> operations, see
  * {@link org.irods.jargon.core.pub.io.IRODSFile}.
- * 
+ * <p/>
  * This interface has a default implementation within Jargon. The access object
  * should be obtained using a factory, either by creating from
  * {@link org.irods.jargon.core.pub.IRODSFileSystem}, or from an
@@ -35,9 +30,14 @@ import org.irods.jargon.core.transfer.TransferStatusCallbackListener;
  * associated with data objects (files), as well as performing common query
  * operations. This class also supports various iRODS file operations that are
  * not included in the standard <code>java.io.*</code> libraries.
- * 
+ * <p/>
  * For general data movement operations, also see
  * {@link org.irods.jargon.core.pub.DataTransferOperations}.
+ * <p/>
+ * <h2>Notes</h2>
+ * For soft links, AVU metadata attaches to the the specified path. A soft
+ * linked collection has a different path, so adding AVU to the canonical path
+ * does not make it appear at the linked path.
  * 
  * @author Mike Conway - DICE (www.irods.org)
  * 
@@ -47,7 +47,7 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	/**
 	 * Query method will return the first data object found with the given
 	 * collectionPath and dataName.
-	 * 
+	 * <p/>
 	 * Note that this method will return 'null' if the object is not found.
 	 * 
 	 * @param collectionPath
@@ -81,6 +81,8 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * data object. If the data exists, and is not a File, this method will
 	 * throw an exception. If the given file does not exist, then a File will be
 	 * returned.
+	 * <p/>
+	 * The given path may be a soft-linked path, and it will behave as normal.
 	 * 
 	 * @param fileAbsolutePath
 	 *            <code>String</code> with absolute path to the collection
@@ -92,6 +94,10 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 
 	/**
 	 * Add AVU metadata for this data object
+	 * <p/>
+	 * Note that, in the case of a soft-linked path, the metadata is associated
+	 * with that path, and is separate from metadata associated with the
+	 * canonical file path
 	 * 
 	 * @param absolutePath
 	 *            <code>String</code> with the absolute path to the target
@@ -111,149 +117,13 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 			JargonException;
 
 	/**
-	 * Retrieve a file from iRODS and store it locally.
-	 * <p/>
-	 * Note that this operation is for a single data object, not for recursive
-	 * transfers of collections. See {@link DataTransferOperations} for
-	 * recursive data transfers. This get operation will use the default
-	 * settings for <code>TransferOptions</code>.
-	 * <p/>
-	 * A note about overwrites: This method call does not allow for
-	 * specification of transfer options or registration for a callback
-	 * listener, instead, it will look at the configured
-	 * <code>JargonProperties</code> for any global settings on overwrites.
-	 * Other method signatures for get operations allow specification of force
-	 * options, and also allow interaction between the caller and the
-	 * transferring process when an overwrite is detected.
-	 * 
-	 * @param irodsFileToGet
-	 *            {@link org.irods.jargon.core.pub.io.IRODSFile} that is the
-	 *            source of the transfer
-	 * @param localFileToHoldData
-	 *            <code>File</code> which is the target of the transfer. If the
-	 *            given target is a collection, the file name of the iRODS file
-	 *            is used as the file name of the local file.
-	 * @throws OverwriteException
-	 *             if an overwrite is attempted and the force option has not
-	 *             been set
-	 * @throws DataNotFoundException
-	 *             if the source iRODS file does not exist
-	 * @throws JargonException
-	 */
-	void getDataObjectFromIrods(final IRODSFile irodsFileToGet,
-			final File localFileToHoldData) throws OverwriteException,
-			DataNotFoundException, JargonException;
-
-	/**
-	 * Get operation for a single data object. This method allows specification
-	 * of a <code>TransferOptions</code>, which will be cloned and used in this
-	 * individual transfer (the method may override the transferOptions based on
-	 * evaluation of the transfer).
-	 * <p/>
-	 * Note that this operation is for a single data object, not for recursive
-	 * transfers of collections. See {@link DataTransferOperations} for
-	 * recursive data transfers.
-	 * <p/>
-	 * Note that this is a shorthand method call that will create a default
-	 * <code>TransferControlBlock</code> and use the default
-	 * <code>TransferOptions</code> set on properties.
-	 * <p/>
-	 * Note that the <code>TransferOptions</code>, if provided, will indicate
-	 * whether to do a force operation. If force is turned off, then an
-	 * attempted overwrite will result in an <code>OverwriteException</code>. In
-	 * order to interactively set this option, use the method signature for get
-	 * that includes the <code>TransferStatusCallbackListener</code>.
-	 * 
-	 * @param irodsFileToGet
-	 *            {@link org.irods.jargon.core.pub.io.IRODSFile} that is the
-	 *            source of the transfer
-	 * 
-	 * @param localFileToHoldData
-	 *            <code>File</code> which is the target of the transfer. If the
-	 *            given target is a collection, the file name of the iRODS file
-	 *            is used as the file name of the local file.
-	 * @param transferOptions
-	 *            {@link TransferOptions} that will be cloned internally and
-	 *            used to control aspects of the transfer. This can be
-	 *            <code>null</code> if not needed, in which case the
-	 *            <code>JargonProperties</code> will be consulted to build a
-	 *            default set of options. Note that the
-	 *            <code>TransferOptions</code> object will be cloned, and as
-	 *            such the passed-in parameter will not be altered.
-	 * @throws OverwriteException
-	 *             if an overwrite is attempted and the force option has not
-	 *             been set
-	 * @throws DataNotFoundException
-	 *             if the source iRODS file does not exist
-	 * @throws JargonException
-	 * @deprecated In order to align the related transfer methods in this API
-	 *             and accomodate future growth in transfer options, it is
-	 *             advised to switch to the method that allows provision of the
-	 *             <code>TransferControlBlock</code> and
-	 *             <code>TransferStatus</code> methods.
-	 */
-	@Deprecated
-	void getDataObjectFromIrodsGivingTransferOptions(IRODSFile irodsFileToGet,
-			File localFileToHoldData, TransferOptions transferOptions)
-			throws OverwriteException, DataNotFoundException, JargonException;
-
-	/**
-	 * Get operation for a single data object. This method allows the the
-	 * definition of a <code>TransferControlBlock</code> object as well as a
-	 * <code>TransferStatusCallbackListener</code>.
-	 * <p/>
-	 * Note that this operation is for a single data object, not for recursive
-	 * transfers of collections. See {@link DataTransferOperations} for
-	 * recursive data transfers.
-	 * <p/>
-	 * If the <code>TransferOptions</code> specified in the
-	 * <code>TransferControlBlock</code> indicates no force, then an attempted
-	 * overwrite will throw the <code>OverwriteException</code>. If the tranfer
-	 * option is set to ask the callback listener, then the
-	 * <code>TransferStatusCallbackListener</code> will receive a message asking
-	 * for the overwrite option for this transfer operation. This is the
-	 * appropriate mode when the client is interactive.
-	 * 
-	 * @param irodsFileToGet
-	 *            {@link org.irods.jargon.core.pub.io.IRODSFile} that is the
-	 *            source of the transfer. Setting the resource name in the
-	 *            <code>irodsFileToGet</code> will specify that the file is
-	 *            retrieved from that particular resource.
-	 * 
-	 * @param localFileToHoldData
-	 *            <code>File</code> which is the target of the transfer. If the
-	 *            given target is a collection, the file name of the iRODS file
-	 *            is used as the file name of the local file.
-	 * @param transferControlBlock
-	 *            {@link TransferControlBlock} that will control aspects of the
-	 *            data transfer. Note that the {@link TransferOptions} that are
-	 *            a member of the <code>TransferControlBlock</code> may be
-	 *            specified here to pass to the running transfer. If this is set
-	 *            to <code>null</code> a default block will be created, and the
-	 *            <code>TransferOptions</code> will be set to the defined
-	 *            default parameters
-	 * @param transferStatusCallbackListener
-	 *            {@link TransferStatusCallbackListener}, or <code>null</code>
-	 *            if not specified, that can receive call-backs on the status of
-	 *            the transfer operation
-	 * @throws OverwriteException
-	 *             if an overwrite is attempted and the force option has not
-	 *             been set and no callback listener can be consulted, or set to
-	 *             no overwrite,
-	 * @throws DataNotFoundException
-	 *             if the source iRODS file does not exist
-	 * @throws JargonException
-	 */
-	void getDataObjectFromIrods(IRODSFile irodsFileToGet,
-			File localFileToHoldData,
-			TransferControlBlock transferControlBlock,
-			TransferStatusCallbackListener transferStatusCallbackListener)
-			throws OverwriteException, DataNotFoundException, JargonException;
-
-	/**
 	 * List the AVU metadata for a particular data object, as well as
 	 * identifying information about the data object itself, based on a metadata
 	 * query.
+	 * <p/>
+	 * Note that for soft links, metadata is associated with the given path, so
+	 * a soft link and a canonical path may each have different AVU metadata.
+	 * This method takes the path as given and finds that metadata.
 	 * 
 	 * @param avuQuery
 	 *            <code>List</code> of
@@ -278,6 +148,10 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * List the AVU metadata for a particular data object, as well as
 	 * identifying information about the data object itself, based on a metadata
 	 * query.
+	 * <p/>
+	 * Note that for soft links, metadata is associated with the given path, so
+	 * a soft link and a canonical path may each have different AVU metadata.
+	 * This method takes the path as given and finds that metadata.
 	 * 
 	 * @param avuQuery
 	 *            <code>List</code> of
@@ -299,6 +173,10 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * identifying information about the data object itself. Other methods are
 	 * available for this object to refine to query to include an AVU metadata
 	 * query. This method will get all of the metadata for a data object.
+	 * <p/>
+	 * Note that for soft links, metadata is associated with the given path, so
+	 * a soft link and a canonical path may each have different AVU metadata.
+	 * This method takes the path as given and finds that metadata.
 	 * 
 	 * @param dataObjectCollectionAbsPath
 	 *            <code>String with the absolute path of the collection for the dataObject of interest.
@@ -316,7 +194,7 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 			JargonException;
 
 	/**
-	 * List the data objects that answer the given AVU metadata query
+	 * List the data objects that answer the given AVU metadata query.
 	 * 
 	 * @param avuQuery
 	 *            <code>List</code> of
@@ -330,32 +208,6 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	List<MetaDataAndDomainData> findMetadataValuesByMetadataQuery(
 			final List<AVUQueryElement> avuQuery) throws JargonQueryException,
 			JargonException;
-
-	/**
-	 * Retrieve a file from iRODS and store it locally. This method will assume
-	 * that the resource is not specified, which is useful for processing
-	 * client-side rule actions, or other occasions where the get operation
-	 * needs to be directly processed and there can be no other intervening XML
-	 * protocol operations.
-	 * 
-	 * @param irodsFileToGet
-	 *            {@link org.irods.jargon.core.pub.io.IRODSFile} that is the
-	 *            source of the transfer. The resource of the
-	 *            <code>IRODSFile</code> is controlling.
-	 * @param localFileToHoldData
-	 *            <code>File</code> which is the target of the transfer
-	 * @param {@link TransferOptions} to control the transfer, or null if not
-	 *        specified. Note that the <code>TransferOptions</code> object will
-	 *        be cloned, and as such the passed-in parameter will not be
-	 *        altered.
-	 * @return <code>int</code> that represents the handle (l1descInx) for the
-	 *         opened file, to be used for sending operation complete messages
-	 * @throws JargonException
-	 */
-	int irodsDataObjectGetOperationForClientSideAction(
-			final IRODSFile irodsFileToGet, final File localFileToHoldData,
-			final TransferOptions transferOptions)
-			throws DataNotFoundException, JargonException;
 
 	/**
 	 * Handy query method will return DataObjects that match the given 'WHERE'
@@ -437,6 +289,8 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * {@link org.irods.jargon.core.pub.DataTransferOperations} access object
 	 * has more comprehensive methods for replication, including recursive
 	 * replication with the ability to process callbacks.
+	 * <p/>
+	 * This method will work if a soft linked name is provided as expected.
 	 * 
 	 * @param irodsFileAbsolutePath
 	 *            <code>String</code> containing the absolute path to the target
@@ -454,6 +308,8 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	/**
 	 * Get a list of <code>Resource</code> objects that contain this data
 	 * object.
+	 * <p/>
+	 * This method will work if a soft linked name is provided as expected.
 	 * 
 	 * @param dataObjectPath
 	 *            <code>String</code> containing the absolute path to the target
@@ -469,7 +325,9 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 			final String dataObjectName) throws JargonException;
 
 	/**
-	 * Compute a checksum on a File, iRODS uses MD5 by default
+	 * Compute a checksum on a File, iRODS uses MD5 by default.
+	 * <p/>
+	 * This method will work if a soft linked name is provided as expected.
 	 * 
 	 * @param irodsFile
 	 *            {@link org.irods.jargon.core.pub.io.IRODSFile} upon which the
@@ -484,10 +342,12 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * Replicate the data object given as an absolute path to all of the
 	 * resources defined in the <code>irodsResourceGroupName</code>. This is
 	 * equivilant to an irepl -a command.
-	 * 
+	 * <p/>
 	 * The {@link org.irods.jargon.core.pub.DataTransferOperations} access
 	 * object has more comprehensive methods for replication, including
 	 * recursive replication with the ability to process callbacks.
+	 * <p/>
+	 * This method will work if a soft linked name is provided as expected.
 	 * 
 	 * @param irodsFileAbsolutePath
 	 *            <code>String</code> containing the absolute path to the target
@@ -501,198 +361,14 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 			final String irodsFileAbsolutePath,
 			final String irodsResourceGroupName) throws JargonException;
 
-	/**
-	 * Method to put local data to iRODS taking default options, and not
-	 * specifying a call-back listener. Note that re-routing of connections to
-	 * resources is not done from methods in this class, but can be handled by
-	 * using the methods in {@link DataTransferOperations}. Note that this
-	 * operation is for a single data object, not for recursive transfers of
-	 * collections. See {@link DataTransferOperations} for recursive data
-	 * transfers.
-	 * <p/>
-	 * If the <code>TransferOptions</code> specified in the
-	 * <code>TransferControlBlock</code> indicates no force, then an attempted
-	 * overwrite will throw the <code>OverwriteException</code>. If the tranfer
-	 * option is set to ask the callback listener, then the
-	 * <code>TransferStatusCallbackListener</code> will receive a message asking
-	 * for the overwrite option for this transfer operation. This is the
-	 * appropriate mode when the client is interactive.
-	 * 
-	 * @param localFile
-	 *            <code>File</code> with a source file or directory in the local
-	 *            file system
-	 * @param irodsFileDestination
-	 *            {@link IRODSFile} that is the target of the data transfer
-	 * @param overwrite
-	 *            <code>boolean</code> that indicates whether data should be
-	 *            overwritten at the target
-	 * @throws OverwriteException
-	 *             if an overwrite is attempted and the force option has not
-	 *             been set and no callback listener can be consulted, or set to
-	 *             no overwrite,
-	 * @throws DataNotFoundException
-	 *             if the source local file does not exist or the target iRODS
-	 *             collection does not exist
-	 * @throws JargonException
-	 */
-	void putLocalDataObjectToIRODS(File localFile,
-			IRODSFile irodsFileDestination, boolean overwrite)
-			throws DataNotFoundException, OverwriteException, JargonException;
-
-	/**
-	 * Transfer a file or directory from the local file system to iRODS.
-	 * <p/>
-	 * Note that re-routing of connections to resources is not done from methods
-	 * in this class, but can be handled by using the methods in
-	 * {@link DataTransferOperations}.
-	 * <p/>
-	 * Note that this operation is for a single data object, not for recursive
-	 * transfers of collections. See {@link DataTransferOperations} for
-	 * recursive data transfers.
-	 * <p/>
-	 * If the <code>TransferOptions</code> specified in the
-	 * <code>TransferControlBlock</code> indicates no force, then an attempted
-	 * overwrite will throw the <code>OverwriteException</code>. If the tranfer
-	 * option is set to ask the callback listener, then the
-	 * <code>TransferStatusCallbackListener</code> will receive a message asking
-	 * for the overwrite option for this transfer operation. This is the
-	 * appropriate mode when the client is interactive.
-	 * 
-	 * @param localFile
-	 *            <code>File</code> with a source file or directory in the local
-	 *            file system
-	 * @param irodsFileDestination
-	 *            {@link IRODSFile} that is the target of the data transfer
-	 * @param overwrite
-	 *            <code>boolean</code> that indicates whether data should be
-	 *            overwritten at the target. This is used to over-ride the
-	 *            setting in the <code>TransferControlBlock</code>.
-	 * @param transferControlBlock
-	 *            {@link TransferControlBlock} that will control aspects of the
-	 *            data transfer. Note that the {@link TransferOptions} that are
-	 *            a member of the <code>TransferControlBlock</code> may be
-	 *            specified here to pass to the running transfer. If this is set
-	 *            to <code>null</code> a default block will be created, and the
-	 *            <code>TransferOptions</code> will be set to the defined
-	 *            default parameters
-	 * @param transferStatusCallbackListener
-	 *            {@link TransferStatusCallbackListener}, or <code>null</code>
-	 *            if not specified, that can receive callbacks on the status of
-	 *            the transfer operation
-	 * @throws OverwriteException
-	 *             if an overwrite is attempted and the force option has not
-	 *             been set and no callback listener can be consulted, or set to
-	 *             no overwrite,
-	 * @throws DataNotFoundException
-	 *             if the source local file does not exist or the target iRODS
-	 *             collection does not exist
-	 * @throws JargonException
-	 * @deprecated for consistency, the signature with both the transfer control
-	 *             block and the over-write flag will be removed, please use the
-	 *             method without <code>overwrite</code>, and specify the
-	 *             over-write behavior in the <code>transferControlBlock</code>
-	 *             along with other <code>TransferOptions</code> parameters
-	 */
-	@Deprecated
-	void putLocalDataObjectToIRODS(File localFile,
-			IRODSFile irodsFileDestination, boolean overwrite,
-			TransferControlBlock transferControlBlock,
-			TransferStatusCallbackListener transferStatusCallbackListener)
-			throws DataNotFoundException, OverwriteException, JargonException;
-
-	/**
-	 * Transfer a file or directory from the local file system to iRODS.
-	 * <p/>
-	 * Note that re-routing of connections to resources is not done from methods
-	 * in this class, but can be handled by using the methods in
-	 * {@link DataTransferOperations}.
-	 * <p/>
-	 * Note that this operation is for a single data object, not for recursive
-	 * transfers of collections. See {@link DataTransferOperations} for
-	 * recursive data transfers.
-	 * <p/>
-	 * If the <code>TransferOptions</code> specified in the
-	 * <code>TransferControlBlock</code> indicates no force, then an attempted
-	 * overwrite will throw the <code>OverwriteException</code>. If the tranfer
-	 * option is set to ask the callback listener, then the
-	 * <code>TransferStatusCallbackListener</code> will receive a message asking
-	 * for the overwrite option for this transfer operation. This is the
-	 * appropriate mode when the client is interactive.
-	 * 
-	 * @param localFile
-	 *            <code>File</code> with a source file or directory in the local
-	 *            file system
-	 * @param irodsFileDestination
-	 *            {@link IRODSFile} that is the target of the data transfer
-	 * @param transferControlBlock
-	 *            {@link TransferControlBlock} that will control aspects of the
-	 *            data transfer. Note that the {@link TransferOptions} that are
-	 *            a member of the <code>TransferControlBlock</code> may be
-	 *            specified here to pass to the running transfer. If this is set
-	 *            to <code>null</code> a default block will be created, and the
-	 *            <code>TransferOptions</code> will be set to the defined
-	 *            default parameters
-	 * @param transferStatusCallbackListener
-	 *            {@link TransferStatusCallbackListener}, or <code>null</code>
-	 *            if not specified, that can receive callbacks on the status of
-	 *            the transfer operation
-	 * @throws OverwriteException
-	 *             if an overwrite is attempted and the force option has not
-	 *             been set and no callback listener can be consulted, or set to
-	 *             no overwrite,
-	 * @throws DataNotFoundException
-	 *             if the source local file does not exist or the target iRODS
-	 *             collection does not exist
-	 * @throws JargonException
-	 */
-	void putLocalDataObjectToIRODS(File localFile,
-			IRODSFile irodsFileDestination,
-			TransferControlBlock transferControlBlock,
-			TransferStatusCallbackListener transferStatusCallbackListener)
-			throws DataNotFoundException, OverwriteException, JargonException;
-
-	/**
-	 * Transfer a file or directory from the local file system to iRODS as
-	 * invoked by a client-side rule operation. This is used only for special
-	 * cases during rule invocation.
-	 * <p/>
-	 * Note that re-routing of connections to resources is not done from methods
-	 * in this class, but can be handled by using the methods in
-	 * {@link DataTransferOperations}.
-	 * <p/>
-	 * Note that this operation is for a single data object, not for recursive
-	 * transfers of collections. See {@link DataTransferOperations} for
-	 * recursive data transfers.
-	 * <p/>
-	 * If the <code>TransferOptions</code> specified in the
-	 * <code>TransferControlBlock</code> indicates no force, then an attempted
-	 * overwrite will throw the <code>OverwriteException</code>. If the tranfer
-	 * option is set to ask the callback listener, then the
-	 * <code>TransferStatusCallbackListener</code> will receive a message asking
-	 * for the overwrite option for this transfer operation. This is the
-	 * appropriate mode when the client is interactive.
-	 * 
-	 * @param localFile
-	 *            <code>File</code> with a source file or directory in the local
-	 *            file system
-	 * @param irodsFileDestination
-	 *            {@link IRODSFile} that is the target of the data transfer
-	 * @param transferControlBlock
-	 *            {@link TransferControlBlock} that will control aspects of the
-	 *            data transfer. Note that the {@link TransferOptions} that are
-	 *            a member of the <code>TransferControlBlock</code> may be
-	 *            specified here to pass to the running transfer. If this is set
-	 *            to <code>null</code> a default block will be created, and the
-	 *            <code>TransferOptions</code> will be set to the defined
-	 *            default parameters
-	 * @throws JargonException
-	 */
-	void putLocalDataObjectToIRODSForClientSideRuleOperation(File localFile,
-			IRODSFile irodsFileDestination,
-			TransferControlBlock transferControlBlock) throws JargonException;
 
 	/**
 	 * Delete the given AVU from the data object identified by absolute path.
+	 * <p/>
+	 * Note that for soft links, metadata is associated with the given path, so
+	 * a soft link and a canonical path may each have different AVU metadata.
+	 * This method takes the path as given and finds that metadata.
+	 * 
 	 * 
 	 * @param absolutePath
 	 *            <code>String</code> with he absolute path to the data object
@@ -709,6 +385,9 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 
 	/**
 	 * Find the object representing the data object (file) in iRODS.
+	 * <p/>
+	 * This method will handle soft-linked paths and return the data object
+	 * representing the data at the given soft linked location.
 	 * 
 	 * @param absolutePath
 	 *            <code>String</code> with the full absolute path to the iRODS
@@ -724,6 +403,10 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 
 	/**
 	 * Set the permissions on a data object to read for the given user.
+	 * <p/>
+	 * Note that, unlike AVU metadata, permissions are kept by the canonical
+	 * path name. This method will find the canonical path if this is a soft
+	 * link and operate on that data object.
 	 * 
 	 * @param zone
 	 *            <code>String</code> with an optional zone for the file. Leave
@@ -740,6 +423,10 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 
 	/**
 	 * Set the permissions on a data object to write for the given user.
+	 * <p/>
+	 * Note that, unlike AVU metadata, permissions are kept by the canonical
+	 * path name. This method will find the canonical path if this is a soft
+	 * link and operate on that data object.
 	 * 
 	 * @param zone
 	 *            <code>String</code> with an optional zone for the file. Leave
@@ -756,6 +443,10 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 
 	/**
 	 * Set the permissions on a data object to own for the given user.
+	 * <p/>
+	 * Note that, unlike AVU metadata, permissions are kept by the canonical
+	 * path name. This method will find the canonical path if this is a soft
+	 * link and operate on that data object.
 	 * 
 	 * @param zone
 	 *            <code>String</code> with an optional zone for the file. Leave
@@ -772,6 +463,10 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 
 	/**
 	 * Removes the permissions on a data object to own for the given user.
+	 * <p/>
+	 * Note that, unlike AVU metadata, permissions are kept by the canonical
+	 * path name. This method will find the canonical path if this is a soft
+	 * link and operate on that data object.
 	 * 
 	 * @param zone
 	 *            <code>String</code> with an optional zone for the file. Leave
@@ -788,6 +483,10 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 
 	/**
 	 * Get the file permission pertaining to the given data object
+	 * <p/>
+	 * Note that, unlike AVU metadata, permissions are kept by the canonical
+	 * path name. This method will find the canonical path if this is a soft
+	 * link and operate on that data object.
 	 * 
 	 * @param absolutePath
 	 *            <code>String</code> with the absolute path to the data object.
@@ -804,62 +503,13 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	FilePermissionEnum getPermissionForDataObject(String absolutePath,
 			String userName, String zone) throws JargonException;
 
-	/**
-	 * Copy a file from one iRODS resource to another with a 'no force' option.
-	 * 
-	 * @param irodsSourceFileAbsolutePath
-	 *            <code>String</code> with the absolute path to the source file
-	 * @param irodsTargetFileAbsolutePath
-	 *            <code>String</code> with the absolute path to the target file.
-	 * @param targetResourceName
-	 *            <code>String</code> with the optional (blank if not specified)
-	 *            resource that will hold the target file * @throws
-	 *            OverwriteException if an overwrite is attempted and the force
-	 *            option has not been set
-	 * @throws OverwriteException
-	 *             if an overwrite is attempted and the force option has not
-	 *             been set
-	 * @throws DataNotFoundException
-	 *             if the source iRODS file does not exist
-	 * @throws JargonException
-	 * @deprecated it is advised to switch to the copyIRODSDataObject() method
-	 *             that takes the optional <code>TransferControlBlock</code> and
-	 *             <code>TransferStatusCallbackListener</code> objects.
-	 */
-	@Deprecated
-	void copyIrodsDataObject(String irodsSourceFileAbsolutePath,
-			String irodsTargetFileAbsolutePath, String targetResourceName)
-			throws OverwriteException, DataNotFoundException, JargonException;
-
-	/**
-	 * Copy a file from one iRODS resource to another with a 'force' option that
-	 * will overwrite another file.
-	 * 
-	 * @param irodsSourceFileAbsolutePath
-	 *            <code>String</code> with the absolute path to the source file
-	 * @param irodsTargetFileAbsolutePath
-	 *            <code>String</code> with the absolute path to the target file.
-	 * @param targetResourceName
-	 *            <code>String</code> with the optional (blank if not specified)
-	 *            resource that will hold the target file
-	 * @throws OverwriteException
-	 *             if an overwrite is attempted and the force option has not
-	 *             been set
-	 * @throws DataNotFoundException
-	 *             if the source iRODS file does not exist
-	 * @throws JargonException
-	 * @deprecated it is advised to switch to the copyIRODSDataObject() method
-	 *             that takes the optional <code>TransferControlBlock</code> and
-	 *             <code>TransferStatusCallbackListener</code> objects.
-	 * 
-	 */
-	@Deprecated
-	void copyIrodsDataObjectWithForce(String irodsSourceFileAbsolutePath,
-			String irodsTargetFileAbsolutePath, String targetResourceName)
-			throws OverwriteException, DataNotFoundException, JargonException;
 
 	/**
 	 * List the user permissions for the given iRODS data object.
+	 * <p/>
+	 * Note that, unlike AVU metadata, permissions are kept by the canonical
+	 * path name. This method will find the canonical path if this is a soft
+	 * link and operate on that data object.
 	 * 
 	 * @param irodsDataObjectAbsolutePath
 	 *            <code>String</code> with the absolute path to the iRODS data
@@ -873,6 +523,10 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 
 	/**
 	 * List the AVU metadata associated with this irods data object.
+	 * <p/>
+	 * Note that for soft links, metadata is associated with the given path, so
+	 * a soft link and a canonical path may each have different AVU metadata.
+	 * This method takes the path as given and finds that metadata.
 	 * 
 	 * @param irodsFile
 	 *            {@link IRODSfile} that points to the data object whose
@@ -886,6 +540,10 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 
 	/**
 	 * List the AVU metadata associated with this irods data object.
+	 * <p/>
+	 * Note that for soft links, metadata is associated with the given path, so
+	 * a soft link and a canonical path may each have different AVU metadata.
+	 * This method takes the path as given and finds that metadata.
 	 * 
 	 * @param dataObjectAbsolutePath
 	 *            <code>String</code> with the absolute path to the iRODS data
@@ -906,6 +564,10 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * value. The method will find the unique attribute by name and unit, and
 	 * overwrite the existing value with the value given in the
 	 * <code>AvuData</code> parameter.
+	 * <p/>
+	 * Note that for soft links, metadata is associated with the given path, so
+	 * a soft link and a canonical path may each have different AVU metadata.
+	 * This method takes the path as given and finds that metadata.
 	 * 
 	 * @param absolutePath
 	 * @param currentAvuData
@@ -921,6 +583,10 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	/**
 	 * Modify the AVU metadata for a data object, giving the absolute path to
 	 * the data object, as well as the current and desired AVU data.
+	 * <p/>
+	 * Note that for soft links, metadata is associated with the given path, so
+	 * a soft link and a canonical path may each have different AVU metadata.
+	 * This method takes the path as given and finds that metadata.
 	 * 
 	 * @param dataObjectAbsolutePath
 	 *            <code>String</code> with the absolute path to the data object
@@ -942,6 +608,10 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * Modify the AVU metadata for a data object, giving the absolute path to
 	 * the data object parent collection, and the data object file name, as well
 	 * as the current and desired AVU data.
+	 * <p/>
+	 * Note that for soft links, metadata is associated with the given path, so
+	 * a soft link and a canonical path may each have different AVU metadata.
+	 * This method takes the path as given and finds that metadata.
 	 * 
 	 * @param irodsCollectionAbsolutePath
 	 *            <code>String</code> with the absolute path to the data object
@@ -963,6 +633,10 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 
 	/**
 	 * Add the AVU Metadata for the given irods parent collection/data name
+	 * <p/>
+	 * Note that for soft links, metadata is associated with the given path, so
+	 * a soft link and a canonical path may each have different AVU metadata.
+	 * This method takes the path as given and finds that metadata.
 	 * 
 	 * @param irodsCollectionAbsolutePath
 	 *            <code>String</code> with the absolute path to the iRODS parent
@@ -984,6 +658,11 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 
 	/**
 	 * List the user permissions for the given iRODS data object.
+	 * <p/>
+	 * Note that this method will work if a soft-linked collection name is
+	 * supplied. Permissions are always associated with the canonical path name,
+	 * and a soft linked collection will have the same permissions as the
+	 * canonical collection
 	 * 
 	 * @param irodsCollectionAbsolutePath
 	 *            <code>String</code> with the absolute path to the iRODS data
@@ -1002,6 +681,11 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * List the user permissions for the given iRODS data object for a given
 	 * user. Note that <code>null</code> will be returned if no permissions are
 	 * available.
+	 * <p/>
+	 * Note that this method will work if a soft-linked collection name is
+	 * supplied. Permissions are always associated with the canonical path name,
+	 * and a soft linked collection will have the same permissions as the
+	 * canonical collection
 	 * 
 	 * @param irodsCollectionAbsolutePath
 	 *            <code>String</code> with the absolute path to the iRODS data
@@ -1022,6 +706,11 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * List the user permissions for the given iRODS data object for a given
 	 * user. Note that <code>null</code> will be returned if no permissions are
 	 * available.
+	 * <p/>
+	 * Note that this method will work if a soft-linked collection name is
+	 * supplied. Permissions are always associated with the canonical path name,
+	 * and a soft linked collection will have the same permissions as the
+	 * canonical collection
 	 * 
 	 * @param irodsAbsolutePath
 	 *            <code>String</code> with the absolute path to the iRODS data
@@ -1057,6 +746,11 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * Set the permissions on a data object to write for the given user as an
 	 * admin. This admin mode is equivalent to the -M switch of the ichmod
 	 * icommand.
+	 * <p/>
+	 * Note that this method will work if a soft-linked collection name is
+	 * supplied. Permissions are always associated with the canonical path name,
+	 * and a soft linked collection will have the same permissions as the
+	 * canonical collection
 	 * 
 	 * @param zone
 	 *            <code>String</code> with an optional zone for the file. Leave
@@ -1075,6 +769,11 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * Set the permissions on a data object to own for the given user as an
 	 * admin. This admin mode is equivalent to the -M switch of the ichmod
 	 * icommand.
+	 * <p/>
+	 * Note that this method will work if a soft-linked collection name is
+	 * supplied. Permissions are always associated with the canonical path name,
+	 * and a soft linked collection will have the same permissions as the
+	 * canonical collection
 	 * 
 	 * @param zone
 	 *            <code>String</code> with an optional zone for the file. Leave
@@ -1093,6 +792,11 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * Remove the permissions on a data object to own for the given user as an
 	 * admin. This admin mode is equivalent to the -M switch of the ichmod
 	 * icommand.
+	 * <p/>
+	 * Note that this method will work if a soft-linked collection name is
+	 * supplied. Permissions are always associated with the canonical path name,
+	 * and a soft linked collection will have the same permissions as the
+	 * canonical collection
 	 * 
 	 * @param zone
 	 *            <code>String</code> with an optional zone for the file. Leave
@@ -1109,6 +813,9 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 
 	/**
 	 * List the resources that have a copy of the given iRODS file
+	 * <p/>
+	 * Note that this method will follow a soft link and list the resources
+	 * based on the canonical path.
 	 * 
 	 * @param irodsAbsolutePath
 	 *            <code>String</code> with the absolute path to the iRODS file
@@ -1120,36 +827,5 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	List<Resource> listFileResources(String irodsAbsolutePath)
 			throws JargonException;
 
-	/**
-	 * Copy a file from one iRODS location to another. This is the preferred
-	 * method signature for copy operations, with other forms now deprecated.
-	 * Note that the <code>transferControlBlock</code> and
-	 * <code>TransferStatusCallbackListener</code> objects are optional and may
-	 * be set to <code>null</code> if not required.
-	 * <p/>
-	 * Note that this operation is for a single data object, not for recursive
-	 * transfers of collections. See {@link DataTransferOperations} for
-	 * recursive data transfers.
-	 * <p/>
-	 * 
-	 * 
-	 * @param irodsSourceFile
-	 *            {@link org.irods.jargon.core.pub.io.IRODSFile} that is the
-	 *            source of the transfer
-	 * @param irodsTargetFile
-	 *            {@link org.irods.jargon.core.pub.io.IRODSFile} that is the
-	 *            collection or explicitly named target for the transfer
-	 * @throws OverwriteException
-	 *             if an overwrite is attempted and the force option has not
-	 *             been set
-	 * @throws DataNotFoundException
-	 *             if the source iRODS file does not exist
-	 * @throws JargonException
-	 */
-	void copyIRODSDataObject(IRODSFile irodsSourceFile,
-			IRODSFile irodsTargetFile,
-			TransferControlBlock transferControlBlock,
-			TransferStatusCallbackListener transferStatusCallbackListener)
-			throws OverwriteException, DataNotFoundException, JargonException;
 
 }

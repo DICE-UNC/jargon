@@ -374,6 +374,17 @@ public interface IRODSAccessObjectFactory {
 			throws JargonException;
 
 	/**
+	 * Get an AO to administer mounted collections and soft links
+	 * 
+	 * @param irodsAccount
+	 *            {@link IRODSAccount} that describes the connection to iRODS.
+	 * @return {@link MountedCollectionAO}
+	 * @throws JargonException
+	 */
+	MountedCollectionAO getMountedCollectionAO(IRODSAccount irodsAccount)
+			throws JargonException;
+
+	/**
 	 * Get an AO that manages iRODS file registration and de-registration
 	 * 
 	 * @param irodsAccount
@@ -432,5 +443,6 @@ public interface IRODSAccessObjectFactory {
 	 */
 	IRODSServerProperties getIRODSServerProperties(IRODSAccount irodsAccount)
 			throws JargonException;
+
 
 }

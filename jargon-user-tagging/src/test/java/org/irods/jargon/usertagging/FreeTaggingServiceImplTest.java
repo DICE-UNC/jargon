@@ -640,9 +640,11 @@ public class FreeTaggingServiceImplTest {
 		}
 
 		IRODSFile targetIrodsFile = null;
+		DataTransferOperations dto = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataTransferOperations(
+						irodsAccount);
 		DataObjectAO dataObjectAO = irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
-
 		String fileNameOrig = null;
 		String absPath = null;
 
@@ -654,8 +656,9 @@ public class FreeTaggingServiceImplTest {
 
 			targetIrodsFile = irodsFileFactory
 					.instanceIRODSFile(targetIrodsCollection + fileNameBase + i);
-			dataObjectAO.putLocalDataObjectToIRODS(new File(fileNameOrig),
-					targetIrodsFile, true);
+			dto.putOperation(new File(fileNameOrig), targetIrodsFile, null,
+					null);
+
 			avuData = AvuData.instance(tag1, irodsAccount.getUserName(),
 					UserTaggingConstants.TAG_AVU_UNIT);
 			dataObjectAO.addAVUMetadata(targetIrodsFile.getAbsolutePath(),

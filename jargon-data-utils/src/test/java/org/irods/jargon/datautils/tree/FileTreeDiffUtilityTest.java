@@ -18,6 +18,7 @@ import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.pub.io.IRODSFileFactory;
 import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry;
 import org.irods.jargon.core.transfer.TransferControlBlock;
+import org.irods.jargon.core.utils.MiscIRODSUtils;
 import org.irods.jargon.datautils.tree.FileTreeDiffEntry.DiffType;
 import org.irods.jargon.testutils.IRODSTestSetupUtilities;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
@@ -435,10 +436,13 @@ public class FileTreeDiffUtilityTest {
 				diffEntriesFound.get(0)
 						.getCollectionAndDataObjectListingEntry()
 						.getObjectType());
+
 		TestCase.assertEquals("unexpectedFileName", newChildDirName,
-				diffEntriesFound.get(0)
-						.getCollectionAndDataObjectListingEntry()
-						.getLastPathComponentForCollectionName());
+				MiscIRODSUtils
+						.getLastPathComponentForGiveAbsolutePath(diffEntriesFound
+								.get(0)
+								.getCollectionAndDataObjectListingEntry()
+								.getPathOrName()));
 	}
 
 	@Ignore
@@ -1255,9 +1259,11 @@ public class FileTreeDiffUtilityTest {
 		TestCase.assertEquals("wrong diff type", DiffType.LEFT_HAND_PLUS,
 				diffEntriesFound.get(0).getDiffType());
 		TestCase.assertEquals("unexpectedFileName", newChildFileName,
-				diffEntriesFound.get(0)
-						.getCollectionAndDataObjectListingEntry()
-						.getLastPathComponentForCollectionName());
+				MiscIRODSUtils
+						.getLastPathComponentForGiveAbsolutePath(diffEntriesFound
+								.get(0)
+								.getCollectionAndDataObjectListingEntry()
+								.getPathOrName()));
 	}
 
 	@Test
@@ -1338,10 +1344,13 @@ public class FileTreeDiffUtilityTest {
 		TestCase.assertEquals("should have just 1 diff", 1, ctr);
 		TestCase.assertEquals("wrong diff type", DiffType.LEFT_HAND_PLUS,
 				diffEntriesFound.get(0).getDiffType());
+
 		TestCase.assertEquals("unexpectedFileName", newChildFileName,
-				diffEntriesFound.get(0)
-						.getCollectionAndDataObjectListingEntry()
-						.getLastPathComponentForCollectionName());
+				MiscIRODSUtils
+						.getLastPathComponentForGiveAbsolutePath(diffEntriesFound
+								.get(0)
+								.getCollectionAndDataObjectListingEntry()
+								.getPathOrName()));
 	}
 
 	@Ignore

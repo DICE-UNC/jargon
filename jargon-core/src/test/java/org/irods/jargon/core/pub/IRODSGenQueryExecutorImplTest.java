@@ -581,11 +581,10 @@ public class IRODSGenQueryExecutorImplTest {
 		}
 	}
 
-	/*
+	/**
 	 * [#126] every call to r.getColumn( X ) returns the name of the file as a
 	 * string
 	 */
-	@SuppressWarnings("deprecation")
 	@Test
 	public void testColQueryThenAccessColByName() throws Exception {
 		String testDirPath = testingPropertiesHelper
@@ -611,12 +610,11 @@ public class IRODSGenQueryExecutorImplTest {
 				.getIRODSAccessObjectFactory();
 		IRODSFileFactory irodsFileFactory = accessObjectFactory
 				.getIRODSFileFactory(irodsAccount);
-		DataObjectAO dataObjectAO = accessObjectFactory
-				.getDataObjectAO(irodsAccount);
+		DataObjectAOImpl dataObjectAO = (DataObjectAOImpl) irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
 		IRODSFile destFile = irodsFileFactory
 				.instanceIRODSFile(targetIrodsFile);
-		dataObjectAO.putLocalDataObjectToIRODS(localFile, destFile, true, null,
-				null);
+		dataObjectAO.putLocalDataObjectToIRODS(localFile, destFile, true);
 
 		// build query
 		StringBuilder q = new StringBuilder();

@@ -27,6 +27,9 @@ import org.irods.jargon.core.pub.domain.ObjStat;
  * <code>org.irods.jargon.core.pub.*</code> classes. There you will find
  * facilities to manipulate the metadata catalog entities, do AVU operations,
  * transfers of various sorts, queries, and other iRODS operations.
+ * <p/>
+ * This code handles soft linked files and collections as expected. You may
+ * operate on canoncial paths or soft-linked paths.
  * 
  * @author Mike Conway - DICE (www.irods.org)
  * 

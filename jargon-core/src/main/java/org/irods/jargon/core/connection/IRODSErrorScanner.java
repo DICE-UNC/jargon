@@ -94,6 +94,8 @@ public class IRODSErrorScanner {
 			throw new InvalidGroupException("invalid iRODS group", infoValue);
 		case CAT_NO_ACCESS_PERMISSION:
 			throw new CatNoAccessException("no access to item in catalog");
+		case COLLECTION_NOT_EMPTY:
+			throw new CollectionNotEmptyException("The collection is not empty");
 		default:
 			throw new JargonException("error code recieved from iRODS:"
 					+ infoValue, infoValue);

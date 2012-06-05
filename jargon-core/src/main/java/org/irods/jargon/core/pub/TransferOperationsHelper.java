@@ -36,7 +36,7 @@ import org.slf4j.LoggerFactory;
 final class TransferOperationsHelper {
 
 	static Logger log = LoggerFactory.getLogger(TransferOperationsHelper.class);
-	private final DataObjectAO dataObjectAO;
+	private final DataObjectAOImpl dataObjectAO;
 	private final CollectionAO collectionAO;
 	private final Stream2StreamAO stream2StreamAO;
 
