@@ -1,12 +1,14 @@
 
 *'''Project''': Jargon-core - IRODS Java API
-*'''Date''': 6/5/2012
-*'''Release Version''': 3.1.2-RELEASE	
-*'''git tag''': 3.1.2-RELEASE
+*'''Date''': X/X/X
+*'''Release Version''': 3.1.3-SNAPSHOT	
+*'''git tag''': 3.1.3 TBD
 
 ==News==
 
-WORK IN PROGRESS
+NOTE: This SNAPSHOT represents the first set of updates for mounted collections and soft link support.  Currently, this includes a beta version of 
+soft link support and accompanying unit tests.  Mounted collection and MSO support will be included with incremental commits to 3.1.3-SNAPSHOT
+
 
 Jargon-core implements the iRODS protocol, and allows development of iRODS-enabled Java applications.  This API is especially useful for developing
 mid-tier applications and services, as well as desktop-clients (such as iDROP).  These libraries also provide a foundation for a new set of interfaces that will come with iRODS.
@@ -37,39 +39,15 @@ Other libraries are planned, such as connection pooling, as well as administrati
 
 ==Libraries==
 
-
 Jargon-core uses Maven for dependency management.  See the pom.xml file for references to various dependencies.
 
 Note that the following bug and feature requests are logged in GForge with related commit information [[https://code.renci.org/gf/project/jargon/tracker/]]
 
-
 ==Bug Fixes==
-
-[#756] IRODSDataConversionUtil date should be null if no data in query result
-[#761] unregister collection recursively causes error when multiple sub-folders
-[#768] -1202000 error executing rule via jargon - added unit test to capture reported bug
 
 ==Features==
 
- * [#5] GenQuery Enhancements
- ** new query builder model allows easier programmatic building of General Query
- ** add order by semantics to builder queries
- 
- 
- * [#713] additional query and data generation methods for tickets
- ** added method to check if a ticket is in use
- ** additional listing methods for data objects and collections
- ** added method to IRODSServerProperties for isSupportTickets()
- ** added 'meta' methods to add and update tickets for cleaner mid-tier code
- 
- * [#723] add ireg support in jargon 
- ** added methods to unregister a collection
- 
- * [#530] password change for user as Admin User
- ** UserAOImpl now has password change method changeAUserPasswordByAnAdmin
- 
  * [#775] iDrop 1.1.0 refactoring activities
- ** add method to list resource names in zone
  ** clean up deprecated methods and fix visibility so DataTransferOperations is the public API for put/get/copy/move
  
  * [#114] support for mounted collections, cross zone browsing, and soft links
@@ -83,10 +61,6 @@ Note that the following bug and feature requests are logged in GForge with relat
  **** IRODSFile
  **** IRODSInputStream
  **** IRODSOutputStream
- 
- 
- 
- ===========================
  
  
  
