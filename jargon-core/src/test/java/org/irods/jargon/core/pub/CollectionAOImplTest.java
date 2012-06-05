@@ -12,6 +12,7 @@ import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSServerProperties;
 import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.DuplicateDataException;
+import org.irods.jargon.core.exception.FileNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.protovalues.FilePermissionEnum;
 import org.irods.jargon.core.pub.domain.AvuData;
@@ -39,15 +40,10 @@ import org.junit.Test;
 public class CollectionAOImplTest {
 
 	private static Properties testingProperties = new Properties();
-
 	private static org.irods.jargon.testutils.TestingPropertiesHelper testingPropertiesHelper = new TestingPropertiesHelper();
-
 	private static org.irods.jargon.testutils.filemanip.ScratchFileUtils scratchFileUtils = null;
-
 	public static final String IRODS_TEST_SUBDIR_PATH = "CollectionAOImplTest";
-
 	private static org.irods.jargon.testutils.IRODSTestSetupUtilities irodsTestSetupUtilities = null;
-
 	private static IRODSFileSystem irodsFileSystem = null;
 
 	@BeforeClass
@@ -118,59 +114,6 @@ public class CollectionAOImplTest {
 				.instanceIRODSFileForCollectionPath(targetIrodsCollection
 						+ "/idontexistshere");
 		Assert.assertFalse("this should not exist", irodsFile.exists());
-	}
-
-	@Test
-	public void testFindAll() throws Exception {
-
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
-		CollectionAO collectionAO = accessObjectFactory
-				.getCollectionAO(irodsAccount);
-		List<Collection> collections = collectionAO.findAll("/"
-				+ testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_ZONE_KEY)
-				+ "/home");
-		Assert.assertNotNull(collections);
-		Assert.assertFalse(collections.isEmpty());
-
-	}
-
-	@Test
-	public void testFindAllPartialStart() throws Exception {
-
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
-
-		CollectionAO collectionAO = accessObjectFactory
-				.getCollectionAO(irodsAccount);
-		List<Collection> collections = collectionAO.findAll("/"
-				+ testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_ZONE_KEY)
-				+ "/home");
-
-		// get count and partial start
-
-		int firstCount = collections.size();
-		int partialStart = firstCount / 2;
-
-		List<Collection> moreCollections = collectionAO
-				.findAll(
-						"/"
-								+ testingProperties
-										.getProperty(TestingPropertiesHelper.IRODS_ZONE_KEY)
-								+ "/home", partialStart);
-
-		Assert.assertEquals("did not find right collection at partial start",
-				collections.get(partialStart).getCollectionId(),
-				moreCollections.get(0).getCollectionId());
-		Assert.assertNotNull(collections);
-		Assert.assertFalse(collections.isEmpty());
-
 	}
 
 	@Test
@@ -1286,7 +1229,7 @@ public class CollectionAOImplTest {
 				collection);
 	}
 
-	@Test(expected = DataNotFoundException.class)
+	@Test(expected = FileNotFoundException.class)
 	public void findByAbsolutePathNotExists() throws Exception {
 		String testDirName = "findByAbsolutePathNotExists";
 
@@ -1676,7 +1619,7 @@ public class CollectionAOImplTest {
 								.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY),
 						true);
 
-		// log in as the secondary user and test read access
+		// log in as the secondary user
 		IRODSAccount secondaryAccount = testingPropertiesHelper
 				.buildIRODSAccountFromSecondaryTestProperties(testingProperties);
 		CollectionAO collectionAO = irodsFileSystem

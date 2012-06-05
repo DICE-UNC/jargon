@@ -33,6 +33,11 @@ import org.irods.jargon.core.query.MetaDataAndDomainData;
  * <p/>
  * For general data movement operations, also see
  * {@link org.irods.jargon.core.pub.DataTransferOperations}.
+ * <p/>
+ * <h2>Notes</h2>
+ * For soft links, AVU metadata attaches to the the specified path. A soft
+ * linked collection has a different path, so adding AVU to the canonical path
+ * does not make it appear at the linked path.
  * 
  * @author Mike Conway - DICE (www.irods.org)
  * 
@@ -42,6 +47,8 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	/**
 	 * For a given absolute path, get an <code>IRODSFileImpl</code> that is a
 	 * collection.
+	 * <p/>
+	 * Note that a soft-linked path will behave normally.
 	 * 
 	 * @param collectionPath
 	 *            <code>String</code> with absolute path to the collection
@@ -86,7 +93,11 @@ public interface CollectionAO extends FileCatalogObjectAO {
 			JargonException;
 
 	/**
-	 * Add AVU metadata for this collection
+	 * Add AVU metadata for this collection. *
+	 * <p/>
+	 * Note that, in the case of a soft-linked path, the metadata is associated
+	 * with that path, and is separate from metadata associated with the
+	 * canonical file path
 	 * 
 	 * @param absolutePath
 	 *            <code>String</code> with the absolute path to the target
@@ -106,7 +117,11 @@ public interface CollectionAO extends FileCatalogObjectAO {
 			JargonException;
 
 	/**
-	 * Remove AVU metadata from this collection
+	 * Remove AVU metadata from this collection.
+	 * <p/>
+	 * Note that, in the case of a soft-linked path, the metadata is associated
+	 * with that path, and is separate from metadata associated with the
+	 * canonical file path
 	 * 
 	 * @param absolutePath
 	 *            <code>String</code> with the absolute path to the target
@@ -126,6 +141,10 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	 * Note that this method will work across zones, so that if the given
 	 * collection path is in a federated zone, the query will be made against
 	 * that zone.
+	 * <p/>
+	 * Note that for soft links, metadata is associated with the given path, so
+	 * a soft link and a canonical path may each have different AVU metadata.
+	 * This method takes the path as given and finds that metadata.
 	 * 
 	 * @param avuQuery
 	 *            <code>List</code> of
@@ -150,6 +169,10 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	 * Note that this method will work across zones, so that if the given
 	 * collection path is in a federated zone, the query will be made against
 	 * that zone.
+	 * <p/>
+	 * Note that for soft links, metadata is associated with the given path, so
+	 * a soft link and a canonical path may each have different AVU metadata.
+	 * This method takes the path as given and finds that metadata.
 	 * 
 	 * @param collectionAbsolutePath
 	 *            <code>String</code> with the absolute path of a collection in
@@ -170,6 +193,10 @@ public interface CollectionAO extends FileCatalogObjectAO {
 
 	/**
 	 * Get a list of the metadata values for the given collection absolute path.
+	 * <p/>
+	 * Note that for soft links, metadata is associated with the given path, so
+	 * a soft link and a canonical path may each have different AVU metadata.
+	 * This method takes the path as given and finds that metadata.
 	 * 
 	 * @param collectionAbsolutePath
 	 *            <code>String</code> with the absolute path of a collection in
@@ -207,43 +234,6 @@ public interface CollectionAO extends FileCatalogObjectAO {
 			JargonException;
 
 	/**
-	 * Find all <code>Collection</code> objects under the given parent.
-	 * <p/>
-	 * Note that this method will work for a federated zone's contents
-	 * 
-	 * @param absolutePathOfParent
-	 *            <code>String</code> with the absolute path of the parent
-	 *            directory under which the search should happen. Note a space
-	 *            will be interpereted as the root directory by default.
-	 * @return a <code>List</code> of
-	 *         {@link org.irods.jargon.core.pub.domain.Resource};
-	 * @throws JargonException
-	 */
-
-	List<Collection> findAll(String absolutePathOfParent)
-			throws JargonException;
-
-	/**
-	 * Find all <code>Collection</code> objects under the given parent. Note
-	 * that this method allows a partial start to be specified such that paging
-	 * can be done over large collections.
-	 * <p/>
-	 * 
-	 * @param absolutePathOfParent
-	 *            <code>String</code> with the absolute path of the parent
-	 *            directory under which the search should happen. Note a space
-	 *            will be interpereted as the root directory by default.
-	 * @param partialStartIndex
-	 *            <code>int</code> with the offset into the result set from
-	 *            which results should be returned, for a paging behavior.
-	 * @return a <code>List</code> of
-	 *         {@link org.irods.jargon.core.pub.domain.Resource};
-	 * @throws JargonException
-	 */
-	List<Collection> findAll(String absolutePathOfParent, int partialStartIndex)
-			throws JargonException;
-
-	/**
 	 * List the AVU metadata for a particular collection, as well as information
 	 * about the collection itself, based on a metadata query.
 	 * <p/>
@@ -272,6 +262,9 @@ public interface CollectionAO extends FileCatalogObjectAO {
 
 	/**
 	 * For the given absolute path, return the given collection.
+	 * <p/>
+	 * Note that this method will work correctly with soft linked collection
+	 * names
 	 * 
 	 * @param irodsCollectionAbsolutePath
 	 *            <code>String</code> with the absolute path to the collection
@@ -286,7 +279,11 @@ public interface CollectionAO extends FileCatalogObjectAO {
 
 	/**
 	 * List the AVU metadata for a particular collection, as well as information
-	 * about the collection itself, based on a metadata query.
+	 * about the collection itself, based on a metadata query. *
+	 * <p/>
+	 * Note that, in the case of a soft-linked path, the metadata is associated
+	 * with that path, and is separate from metadata associated with the
+	 * canonical file path
 	 * 
 	 * @param avuQuery
 	 *            <code>List</code> of
@@ -308,6 +305,9 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	 * For a given iRODS collection, give a count of the total number of data
 	 * objects underneath that collection. This will include files in child
 	 * directories.
+	 * <p/>
+	 * Note that this method will work if a soft-linked collection name is
+	 * supplied
 	 * 
 	 * @param irodsCollectionAbsolutePath
 	 *            <code>String</code> with the absolute path to the iRODS
@@ -322,6 +322,11 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	/**
 	 * For a given iRODS collection, set the access permission to read. This can
 	 * optionally be recursively applied.
+	 * <p/>
+	 * Note that this method will work if a soft-linked collection name is
+	 * supplied. Permissions are always associated with the canonical path name,
+	 * and a soft linked collection will have the same permissions as the
+	 * canonical collection
 	 * 
 	 * @param zone
 	 *            <code>String</code> with an optional zone for the file. Leave
@@ -342,6 +347,11 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	/**
 	 * For a given iRODS collection, set the access permission to write. This
 	 * can optionally be recursively applied.
+	 * <p/>
+	 * Note that this method will work if a soft-linked collection name is
+	 * supplied. Permissions are always associated with the canonical path name,
+	 * and a soft linked collection will have the same permissions as the
+	 * canonical collection
 	 * 
 	 * @param zone
 	 *            <code>String</code> with an optional zone for the file. Leave
@@ -362,6 +372,11 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	/**
 	 * For a given iRODS collection, set the access permission to own. This can
 	 * optionally be recursively applied.
+	 * <p/>
+	 * Note that this method will work if a soft-linked collection name is
+	 * supplied. Permissions are always associated with the canonical path name,
+	 * and a soft linked collection will have the same permissions as the
+	 * canonical collection
 	 * 
 	 * @param zone
 	 *            <code>String</code> with an optional zone for the file. Leave
@@ -382,6 +397,11 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	/**
 	 * For a given iRODS collection, remove access permissions for a given user.
 	 * This can optionally be recursively applied.
+	 * <p/>
+	 * Note that this method will work if a soft-linked collection name is
+	 * supplied. Permissions are always associated with the canonical path name,
+	 * and a soft linked collection will have the same permissions as the
+	 * canonical collection
 	 * 
 	 * @param zone
 	 *            <code>String</code> with an optional zone for the file. Leave
@@ -402,6 +422,11 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	/**
 	 * For a given iRODS collection, set he default to inherit access
 	 * permissions
+	 * <p/>
+	 * Note that this method will work if a soft-linked collection name is
+	 * supplied. Permissions are always associated with the canonical path name,
+	 * and a soft linked collection will have the same permissions as the
+	 * canonical collection
 	 * 
 	 * @param zone
 	 *            <code>String</code> with an optional zone for the file. Leave
@@ -420,6 +445,11 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	 * Check the given collection (by absolute path) to see if the inheritance
 	 * flag is set. This indicates that access permissions are inherited by
 	 * children of the collection.
+	 * <p/>
+	 * Note that this method will work if a soft-linked collection name is
+	 * supplied. Permissions are always associated with the canonical path name,
+	 * and a soft linked collection will have the same permissions as the
+	 * canonical collection
 	 * 
 	 * @param absolutePath
 	 *            <code>String</code> with the absolute path to the collection.
@@ -432,6 +462,11 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	/**
 	 * For a given iRODS collection, set he default to not inherit access
 	 * permissions
+	 * <p/>
+	 * Note that this method will work if a soft-linked collection name is
+	 * supplied. Permissions are always associated with the canonical path name,
+	 * and a soft linked collection will have the same permissions as the
+	 * canonical collection
 	 * 
 	 * @param zone
 	 *            <code>String</code> with an optional zone for the file. Leave
@@ -449,6 +484,11 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	/**
 	 * Get the file permission value for the given absolute path for the given
 	 * user.
+	 * <p/>
+	 * Note that this method will work if a soft-linked collection name is
+	 * supplied. Permissions are always associated with the canonical path name,
+	 * and a soft linked collection will have the same permissions as the
+	 * canonical collection
 	 * 
 	 * @param absolutePath
 	 *            <code>String</code> with the absolute path to the collection.
@@ -467,6 +507,11 @@ public interface CollectionAO extends FileCatalogObjectAO {
 
 	/**
 	 * Get a list of all permissions for all users on the given collection
+	 * <p/>
+	 * Note that this method will work if a soft-linked collection name is
+	 * supplied. Permissions are always associated with the canonical path name,
+	 * and a soft linked collection will have the same permissions as the
+	 * canonical collection
 	 * 
 	 * @param irodsCollectionAbsolutePath
 	 *            <code>String</code> with the absolute path to the iRODS
@@ -481,7 +526,11 @@ public interface CollectionAO extends FileCatalogObjectAO {
 			JargonException;
 
 	/**
-	 * Overwrite AVU metadata for this collection
+	 * Overwrite AVU metadata for this collection *
+	 * <p/>
+	 * Note that, in the case of a soft-linked path, the metadata is associated
+	 * with that path, and is separate from metadata associated with the
+	 * canonical file path
 	 * 
 	 * @param absolutePath
 	 *            <code>String</code> with the absolute path to the target
@@ -507,7 +556,11 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	 * specification of an AVU with the known name and units, and an arbitrary
 	 * value. The method will find the unique attribute by name and unit, and
 	 * overwrite the existing value with the value given in the
-	 * <code>AvuData</code> parameter.
+	 * <code>AvuData</code> parameter. *
+	 * <p/>
+	 * Note that, in the case of a soft-linked path, the metadata is associated
+	 * with that path, and is separate from metadata associated with the
+	 * canonical file path
 	 * 
 	 * @param absolutePath
 	 *            <code>String</code> with the absolute path to the target
@@ -542,6 +595,11 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	/**
 	 * For a given iRODS collection, set the access permission to read as an
 	 * administrator. This can optionally be recursively applied.
+	 * <p/>
+	 * Note that this method will work if a soft-linked collection name is
+	 * supplied. Permissions are always associated with the canonical path name,
+	 * and a soft linked collection will have the same permissions as the
+	 * canonical collection
 	 * 
 	 * @param zone
 	 *            <code>String</code> with an optional zone for the file. Leave
@@ -565,6 +623,11 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	/**
 	 * For a given iRODS collection, set the access permission to write as an
 	 * administrator. This can optionally be recursively applied.
+	 * <p/>
+	 * Note that this method will work if a soft-linked collection name is
+	 * supplied. Permissions are always associated with the canonical path name,
+	 * and a soft linked collection will have the same permissions as the
+	 * canonical collection
 	 * 
 	 * @param zone
 	 *            <code>String</code> with an optional zone for the file. Leave
@@ -588,6 +651,11 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	/**
 	 * For a given iRODS collection, set the access permission to own as an
 	 * administrator. This can optionally be recursively applied.
+	 * <p/>
+	 * Note that this method will work if a soft-linked collection name is
+	 * supplied. Permissions are always associated with the canonical path name,
+	 * and a soft linked collection will have the same permissions as the
+	 * canonical collection
 	 * 
 	 * @param zone
 	 *            <code>String</code> with an optional zone for the file. Leave
@@ -611,6 +679,11 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	/**
 	 * For a given iRODS collection,remove the access permission for the user as
 	 * an administrator. This can optionally be recursively applied.
+	 * <p/>
+	 * Note that this method will work if a soft-linked collection name is
+	 * supplied. Permissions are always associated with the canonical path name,
+	 * and a soft linked collection will have the same permissions as the
+	 * canonical collection
 	 * 
 	 * @param zone
 	 *            <code>String</code> with an optional zone for the file. Leave

@@ -35,6 +35,7 @@ import org.irods.jargon.core.query.IRODSQueryResultSet;
 import org.irods.jargon.core.query.IRODSQueryResultSetInterface;
 import org.irods.jargon.core.query.JargonQueryException;
 import org.irods.jargon.core.query.RodsGenQueryEnum;
+import org.irods.jargon.core.utils.CollectionAndPath;
 import org.irods.jargon.core.utils.IRODSConstants;
 import org.irods.jargon.core.utils.IRODSDataConversionUtil;
 import org.irods.jargon.core.utils.MiscIRODSUtils;
@@ -280,25 +281,44 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 		log.info("checking permissions on:{}", irodsFile);
 		log.info("for userName:{}", userName);
 
-		String parent = irodsFile.getParent();
-		String fileName = irodsFile.getName();
-
 		log.debug("getting file permissions on file:{} ",
 				irodsFile.getAbsolutePath());
+
+		/*
+		 * See if this is a soft link
+		 */
+
+		ObjStat objStat = collectionAndDataObjectListAndSearchAO
+				.retrieveObjectStatForPath(irodsFile.getAbsolutePath());
+
+		if (objStat == null) {
+			log.error("no file found for path:{}", irodsFile.getAbsolutePath());
+			throw new DataNotFoundException("no file found for given path");
+		}
+
+		/*
+		 * See if jargon supports the given object type
+		 */
+		MiscIRODSUtils.evaluateSpecCollSupport(objStat);
+		String effectiveAbsolutePath = MiscIRODSUtils
+				.determineAbsolutePathBasedOnCollTypeInObjectStat(objStat);
+		CollectionAndPath collectionAndPath = MiscIRODSUtils
+				.splitCollectionAndPathFromAbsolutepath(effectiveAbsolutePath);
 
 		User user = userAO.findByName(userName);
 
 		log.debug("user name translated to id:{}", user.getId());
 
-		StringBuilder filePermissionQuery = buildPermisionsQueryFile(parent,
-				fileName, user.getId());
+		StringBuilder filePermissionQuery = buildPermisionsQueryFile(
+				collectionAndPath.getCollectionParent(),
+				collectionAndPath.getChildName(), user.getId());
 
 		log.debug("query for user permissions = {}",
 				filePermissionQuery.toString());
 
 		int highestPermissionValue = extractHighestPermission(
 				irodsGenQueryExecutor, filePermissionQuery,
-				MiscIRODSUtils.getZoneInPath(irodsFile.getAbsolutePath()));
+				MiscIRODSUtils.getZoneInPath(effectiveAbsolutePath));
 
 		log.debug("highest permission value:{}", highestPermissionValue);
 
@@ -434,7 +454,29 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 		log.info("checking directory permissions on:{}", irodsFile);
 		log.info("for userName:{}", userName);
 
-		String dir = irodsFile.getAbsolutePath();
+		ObjStat objStat = collectionAndDataObjectListAndSearchAO
+				.retrieveObjectStatForPath(irodsFile.getAbsolutePath());
+
+		if (objStat == null) {
+			log.error("no file found for path:{}", irodsFile.getAbsolutePath());
+			throw new DataNotFoundException("no file found for given path");
+		}
+
+		if (!objStat.isSomeTypeOfCollection()) {
+			log.error(
+					"cannot get directory permissions, this is not a colleciton:{}",
+					objStat);
+			throw new JargonException(
+					"given file is not a collection, cannot get directory permissions");
+		}
+
+		/*
+		 * See if jargon supports the given object type
+		 */
+		MiscIRODSUtils.evaluateSpecCollSupport(objStat);
+		String effectiveAbsolutePath = MiscIRODSUtils
+				.determineAbsolutePathBasedOnCollTypeInObjectStat(objStat);
+
 		String fileName = irodsFile.getName();
 
 		// get the id for the user name, GenQuery can't do this join
@@ -444,7 +486,8 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 		log.debug("getting directory permissions on:{} ", fileName);
 		log.debug("user name translated to id:{}", user.getId());
 
-		StringBuilder filePermissionQuery = buildPermissionsQueryDirectory(dir,
+		StringBuilder filePermissionQuery = buildPermissionsQueryDirectory(
+				effectiveAbsolutePath,
 				user.getId());
 
 		log.debug("query for user permissions = {}",
@@ -452,7 +495,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 
 		int highestPermissionValue = extractHighestPermission(
 				irodsGenQueryExecutor, filePermissionQuery,
-				MiscIRODSUtils.getZoneInPath(irodsFile.getAbsolutePath()));
+				MiscIRODSUtils.getZoneInPath(effectiveAbsolutePath));
 
 		return highestPermissionValue;
 	}
@@ -607,12 +650,21 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 	public List<String> getListInDir(final IRODSFile irodsFile)
 			throws FileNotFoundException, JargonException {
 
-		// FIXME: add close of these queries in zone
 		if (irodsFile == null) {
 			throw new JargonException("irods file is null");
 		}
 
-		// ObjStat objStat = this.getObjStat(irodsFile.getAbsolutePath());
+
+		ObjStat objStat = irodsFile.initializeObjStatForFile();
+		// no error means it exists
+		/*
+		 * See if jargon supports the given object type
+		 */
+		MiscIRODSUtils.evaluateSpecCollSupport(objStat);
+		String effectiveAbsolutePath = MiscIRODSUtils
+				.determineAbsolutePathBasedOnCollTypeInObjectStat(objStat);
+		CollectionAndPath collectionAndPath = MiscIRODSUtils
+				.splitCollectionAndPathFromAbsolutepath(effectiveAbsolutePath);
 
 		log.info("getListInDir for parent:{}", irodsFile.getAbsolutePath());
 
@@ -620,9 +672,9 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 		String path = "";
 
 		if (irodsFile.isDirectory()) {
-			path = irodsFile.getAbsolutePath();
+			path = effectiveAbsolutePath;
 		} else {
-			path = irodsFile.getParent();
+			path = collectionAndPath.getCollectionParent();
 		}
 
 		log.debug("path for query:{}", path);
@@ -638,7 +690,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 
 		irodsQuery = IRODSGenQuery.instance(query.toString(), this
 				.getJargonProperties().getMaxFilesAndDirsQueryMax());
-		String zone = MiscIRODSUtils.getZoneInPath(irodsFile.getAbsolutePath());
+		String zone = MiscIRODSUtils.getZoneInPath(effectiveAbsolutePath);
 
 		try {
 			resultSet = irodsGenQueryExecutor.executeIRODSQueryInZone(

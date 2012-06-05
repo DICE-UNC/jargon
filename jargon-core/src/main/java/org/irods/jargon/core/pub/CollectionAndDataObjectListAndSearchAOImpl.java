@@ -1204,7 +1204,14 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 
 		DataObjInpForObjStat dataObjInp = DataObjInpForObjStat
 				.instance(irodsAbsolutePath);
-		final Tag response = getIRODSProtocol().irodsFunction(dataObjInp);
+		Tag response;
+		try {
+			response = getIRODSProtocol().irodsFunction(dataObjInp);
+		} catch (DataNotFoundException e) {
+			log.info("rethrow DataNotFound as FileNotFound per contract");
+			throw new FileNotFoundException(e);
+		}
+
 		log.debug("response from objStat: {}", response.parseTag());
 
 		ObjStat objStat = new ObjStat();

@@ -88,7 +88,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	private transient final DataAOHelper dataAOHelper = new DataAOHelper(
 			this.getIRODSAccessObjectFactory(), this.getIRODSAccount());
 	private transient final IRODSGenQueryExecutor irodsGenQueryExecutor;
-	private transient final CollectionAndDataObjectListAndSearchAO collectionAndDataObjectListAndSearchAO;
+
 
 	private enum OverwriteResponse {
 		SKIP, PROCEED_WITH_NO_FORCE, PROCEED_WITH_FORCE
@@ -111,9 +111,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		super(irodsSession, irodsAccount);
 		this.irodsGenQueryExecutor = this.getIRODSAccessObjectFactory()
 				.getIRODSGenQueryExecutor(irodsAccount);
-		this.collectionAndDataObjectListAndSearchAO = this
-				.getIRODSAccessObjectFactory()
-				.getCollectionAndDataObjectListAndSearchAO(irodsAccount);
+
 	}
 
 	/*
@@ -966,6 +964,17 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 				false);
 	}
 
+	/**
+	 * Incorporate user responses in the case of a potential overwrite of data
+	 * 
+	 * @param sourceFile
+	 * @param transferControlBlock
+	 * @param transferStatusCallbackListener
+	 * @param thisFileTransferOptions
+	 * @param targetFile
+	 * @return
+	 * @throws OverwriteException
+	 */
 	private OverwriteResponse evaluateOverwrite(
 			final File sourceFile,
 			final TransferControlBlock transferControlBlock,
@@ -1464,7 +1473,6 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		log.info("returning a file for path: {}", fileAbsolutePath);
 		final IRODSFile irodsFile = getIRODSFileFactory().instanceIRODSFile(
 				fileAbsolutePath);
-
 		return irodsFile;
 	}
 
@@ -2080,13 +2088,10 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			throw new IllegalArgumentException("null irodsFile");
 		}
 
-		String absPath = this.resolveAbsolutePathViaObjStat(irodsFile
-				.getParent());
-
 		List<AVUQueryElement> queryElements = new ArrayList<AVUQueryElement>();
 		try {
 			return this.findMetadataValuesForDataObjectUsingAVUQuery(
-					queryElements, absPath, irodsFile.getName());
+					queryElements, irodsFile.getParent(), irodsFile.getName());
 		} catch (JargonQueryException e) {
 			log.error("query exception rethrown as Jargon Exception", e);
 			throw new JargonException(e);
@@ -2541,19 +2546,6 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		log.info("setting avu metadata value for dataObject");
 		log.info("with avu metadata:{}", avuData);
 		log.info("absolute path: {}", absolutePath);
-		
-		/*
-		 * Handle soft links by munging the path
-		 */
-		CollectionAndPath collName = MiscIRODSUtils
-				.splitCollectionAndPathFromAbsolutepath(absolutePath);
-		String absPath = this.resolveAbsolutePathViaObjStat(collName
-				.getCollectionParent());
-
-		StringBuilder sb = new StringBuilder();
-		sb.append(absPath);
-		sb.append('/');
-		sb.append(collName.getChildName());
 
 		// avu is distinct based on attrib and value, so do an attrib/unit
 		// query, can only be one result
@@ -2568,7 +2560,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 					AVUQueryElement.AVUQueryPart.UNITS,
 					AVUQueryOperatorEnum.EQUAL, avuData.getUnit()));
 			result = this.findMetadataValuesForDataObjectUsingAVUQuery(
-					queryElements, sb.toString());
+					queryElements, absolutePath);
 		} catch (JargonQueryException e) {
 			log.error("error querying data for avu", e);
 			throw new JargonException("error querying data for AVU");
@@ -2586,7 +2578,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 		AvuData modAvuData = new AvuData(result.get(0).getAvuAttribute(),
 				avuData.getValue(), result.get(0).getAvuUnit());
-		modifyAVUMetadata(sb.toString(), currentAvuData, modAvuData);
+		modifyAVUMetadata(absolutePath, currentAvuData, modAvuData);
 		log.info("metadata modified to:{}", modAvuData);
 	}
 
@@ -2620,21 +2612,8 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		log.info("with new avu metadata:{}", newAvuData);
 		log.info("absolute path: {}", dataObjectAbsolutePath);
 		
-		/*
-		 * Handle soft links by munging the path
-		 */
-		CollectionAndPath collName = MiscIRODSUtils
-				.splitCollectionAndPathFromAbsolutepath(dataObjectAbsolutePath);
-		String absPath = this.resolveAbsolutePathViaObjStat(collName
-				.getCollectionParent());
-
-		StringBuilder sb = new StringBuilder();
-		sb.append(absPath);
-		sb.append('/');
-		sb.append(collName.getChildName());
-
 		final ModAvuMetadataInp modifyAvuMetadataInp = ModAvuMetadataInp
-				.instanceForModifyDataObjectMetadata(sb.toString(),
+				.instanceForModifyDataObjectMetadata(dataObjectAbsolutePath,
 						currentAvuData, newAvuData);
 
 		log.debug("sending avu request");
@@ -2935,38 +2914,6 @@ absPath,
 		}
 
 		return effectiveTransferControlBlock;
-	}
-
-	/**
-	 * Take a provided absolute path, and return back the canonical iRODS
-	 * absolute path accounting for soft links and special collection types.
-	 * FIXME: may promote to super class
-	 * <p/>
-	 * Note that this method will evaluate the special collection type to verify
-	 * that the collection type is supported. An exception is thrown if Jargon
-	 * cannot handle it.
-	 * 
-	 * @param irodsAbsolutePath
-	 *            <code>String</code> with the proposed iRODS absolute path
-	 * @return <code>String</code> with the canonical iRODS absolute path
-	 * @throws JargonException
-	 */
-	private String resolveAbsolutePathViaObjStat(final String irodsAbsolutePath)
-			throws JargonException {
-		ObjStat objStat = collectionAndDataObjectListAndSearchAO
-				.retrieveObjectStatForPath(irodsAbsolutePath);
-
-		if (objStat == null) {
-			log.error("no file found for path:{}", irodsAbsolutePath);
-			throw new DataNotFoundException("no file found for given path");
-		}
-
-		/*
-		 * See if jargon supports the given object type
-		 */
-		MiscIRODSUtils.evaluateSpecCollSupport(objStat);
-		return MiscIRODSUtils
-				.determineAbsolutePathBasedOnCollTypeInObjectStat(objStat);
 	}
 
 }

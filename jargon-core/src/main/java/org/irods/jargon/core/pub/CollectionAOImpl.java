@@ -22,6 +22,8 @@ import org.irods.jargon.core.protovalues.FilePermissionEnum;
 import org.irods.jargon.core.pub.aohelper.CollectionAOHelper;
 import org.irods.jargon.core.pub.domain.AvuData;
 import org.irods.jargon.core.pub.domain.Collection;
+import org.irods.jargon.core.pub.domain.ObjStat;
+import org.irods.jargon.core.pub.domain.ObjStat.SpecColType;
 import org.irods.jargon.core.pub.domain.User;
 import org.irods.jargon.core.pub.domain.UserFilePermission;
 import org.irods.jargon.core.pub.io.IRODSFile;
@@ -92,15 +94,6 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 		log.info("returning a collection for path: {}", collectionPath);
 		final IRODSFile collection = irodsFileFactory
 				.instanceIRODSFile(collectionPath);
-
-		if (collection.exists() && !collection.isDirectory()) {
-			log.error(
-					"collection cannot be returned, the given path is not a collection: {}",
-					collectionPath);
-			throw new IllegalArgumentException(
-					"the given path is not a collection");
-		}
-
 		return collection;
 	}
 
@@ -170,72 +163,6 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 
 		} catch (JargonQueryException e) {
 			log.error(QUERY_EXCEPTION_FOR_QUERY, queryString, e);
-			throw new JargonException(ERROR_IN_COLECTION_QUERY);
-		}
-
-		return CollectionAOHelper.buildListFromResultSet(resultSet);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.irods.jargon.core.pub.CollectionAO#findAll(java.lang.String)
-	 */
-	@Override
-	public List<Collection> findAll(final String absolutePathOfParent)
-			throws JargonException {
-
-		return findAll(absolutePathOfParent, 0);
-
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.irods.jargon.core.pub.CollectionAO#findAll(java.lang.String,
-	 * int)
-	 */
-	@Override
-	public List<Collection> findAll(final String absolutePathOfParent,
-			final int partialStartIndex) throws JargonException {
-
-		if (absolutePathOfParent == null) {
-			throw new IllegalArgumentException("null absolutePathOfParent");
-		}
-
-		String parentPath = "/";
-		if (!absolutePathOfParent.isEmpty()) {
-			parentPath = absolutePathOfParent;
-		}
-
-		final StringBuilder query = new StringBuilder();
-		query.append(CollectionAOHelper.buildSelects());
-		query.append(" WHERE ");
-		query.append(RodsGenQueryEnum.COL_COLL_PARENT_NAME.getName());
-		query.append(" = '");
-		query.append(IRODSDataConversionUtil.escapeSingleQuotes(parentPath));
-		query.append("'");
-
-		final String queryString = query.toString();
-
-		if (log.isInfoEnabled()) {
-			log.info("coll query:" + queryString);
-		}
-
-		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(queryString,
-				getIRODSSession().getJargonProperties()
-						.getMaxFilesAndDirsQueryMax());
-
-		String zone = MiscIRODSUtils.getZoneInPath(absolutePathOfParent);
-
-		IRODSQueryResultSetInterface resultSet;
-		try {
-			resultSet = irodsGenQueryExecutor
-					.executeIRODSQueryAndCloseResultInZone(irodsQuery,
-							partialStartIndex, zone);
-
-		} catch (JargonQueryException e) {
-			log.error(QUERY_EXCEPTION_FOR_QUERY + queryString, e);
 			throw new JargonException(ERROR_IN_COLECTION_QUERY);
 		}
 
@@ -894,12 +821,13 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 		}
 
 		log.info("irodsCollectionAbsolutePath:{}", irodsCollectionAbsolutePath);
+		String absPath = this
+				.resolveAbsolutePathViaObjStat(irodsCollectionAbsolutePath);
 
 		StringBuilder sb = new StringBuilder();
 		sb.append(RodsGenQueryEnum.COL_COLL_NAME.getName());
 		sb.append(" = '");
-		sb.append(IRODSDataConversionUtil
-				.escapeSingleQuotes(irodsCollectionAbsolutePath));
+		sb.append(IRODSDataConversionUtil.escapeSingleQuotes(absPath));
 		sb.append("'");
 		List<Collection> collectionList = this.findWhere(sb.toString(), 0);
 
@@ -929,18 +857,29 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 
 		log.info("countAllFilesUnderneathTheGivenCollection: {}",
 				irodsCollectionAbsolutePath);
-		IRODSFile irodsFile = irodsFileFactory
-				.instanceIRODSFile(irodsCollectionAbsolutePath);
+
+		// not found exception will occur in retrieval of objStat, also checks
+		// if I can handle this coll type
+		ObjStat objStat = this.collectionAndDataObjectListAndSearchAO
+				.retrieveObjectStatForPath(irodsCollectionAbsolutePath);
+		MiscIRODSUtils.evaluateSpecCollSupport(objStat);
 
 		// I cannot get children if this is not a directory (a file has no
 		// children)
-		if (!irodsFile.isDirectory()) {
+		if (!objStat.isSomeTypeOfCollection()) {
 			log.error(
 					"this is a file, not a directory, and therefore I cannot get a count of the children: {}",
 					irodsCollectionAbsolutePath);
 			throw new JargonException(
 					"attempting to count children under a file at path:"
 							+ irodsCollectionAbsolutePath);
+		}
+
+		String absPath = null;
+		if (objStat.getSpecColType() == SpecColType.LINKED_COLL) {
+			absPath = objStat.getCollectionPath();
+		} else {
+			absPath = irodsCollectionAbsolutePath;
 		}
 
 		IRODSGenQueryExecutor irodsGenQueryExecutor = getIRODSAccessObjectFactory()
@@ -954,8 +893,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 		query.append(") WHERE ");
 		query.append(RodsGenQueryEnum.COL_COLL_NAME.getName());
 		query.append(" LIKE '");
-		query.append(IRODSDataConversionUtil
-				.escapeSingleQuotes(irodsCollectionAbsolutePath));
+		query.append(IRODSDataConversionUtil.escapeSingleQuotes(absPath));
 		query.append("%'");
 		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(query.toString(), 1);
 		IRODSQueryResultSetInterface resultSet;
@@ -994,12 +932,15 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 
 		// pi tests parameters
 		log.info("setAccessPermissionInherit on absPath:{}", absolutePath);
-		boolean collNeedsRecursive = adjustRecursiveOption(absolutePath,
+
+		String effectiveAbsPath = this
+				.resolveAbsolutePathViaObjStat(absolutePath);
+		boolean collNeedsRecursive = adjustRecursiveOption(effectiveAbsPath,
 				recursive);
 
 		ModAccessControlInp modAccessControlInp = ModAccessControlInp
 				.instanceForSetInheritOnACollection(collNeedsRecursive, zone,
-						absolutePath);
+						effectiveAbsPath);
 		getIRODSProtocol().irodsFunction(modAccessControlInp);
 
 	}
@@ -1018,12 +959,16 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 
 		// pi tests parameters
 		log.info("setAccessPermissionToNotInherit on absPath:{}", absolutePath);
-		boolean collNeedsRecursive = adjustRecursiveOption(absolutePath,
+
+		String effectiveAbsPath = this
+				.resolveAbsolutePathViaObjStat(absolutePath);
+
+		boolean collNeedsRecursive = adjustRecursiveOption(effectiveAbsPath,
 				recursive);
 
 		ModAccessControlInp modAccessControlInp = ModAccessControlInp
 				.instanceForSetNoInheritOnACollection(collNeedsRecursive, zone,
-						absolutePath);
+						effectiveAbsPath);
 		getIRODSProtocol().irodsFunction(modAccessControlInp);
 
 	}
@@ -1043,12 +988,16 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 
 		// pi tests parameters
 		log.info("setAccessPermissionRead on absPath:{}", absolutePath);
-		boolean collNeedsRecursive = adjustRecursiveOption(absolutePath,
+
+		String effectiveAbsPath = this
+				.resolveAbsolutePathViaObjStat(absolutePath);
+
+		boolean collNeedsRecursive = adjustRecursiveOption(effectiveAbsPath,
 				recursive);
 
 		ModAccessControlInp modAccessControlInp = ModAccessControlInp
 				.instanceForSetPermission(collNeedsRecursive, zone,
-						absolutePath, userName,
+						effectiveAbsPath, userName,
 						ModAccessControlInp.READ_PERMISSION);
 		getIRODSProtocol().irodsFunction(modAccessControlInp);
 
@@ -1068,12 +1017,16 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 
 		// pi tests parameters
 		log.info("setAccessPermissionReadAsAdmin on absPath:{}", absolutePath);
-		boolean collNeedsRecursive = adjustRecursiveOption(absolutePath,
+
+		String effectiveAbsPath = this
+				.resolveAbsolutePathViaObjStat(absolutePath);
+
+		boolean collNeedsRecursive = adjustRecursiveOption(effectiveAbsPath,
 				recursive);
 
 		ModAccessControlInp modAccessControlInp = ModAccessControlInp
 				.instanceForSetPermissionInAdminMode(collNeedsRecursive, zone,
-						absolutePath, userName,
+						effectiveAbsPath, userName,
 						ModAccessControlInp.READ_PERMISSION);
 		getIRODSProtocol().irodsFunction(modAccessControlInp);
 
@@ -1095,12 +1048,16 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 		log.info("setAccessPermissionWrite on absPath:{}", absolutePath);
 		// overhead iRODS behavior, if you set perm with recursive when no
 		// children, then won't take
-		boolean collNeedsRecursive = adjustRecursiveOption(absolutePath,
+
+		String effectiveAbsPath = this
+				.resolveAbsolutePathViaObjStat(absolutePath);
+
+		boolean collNeedsRecursive = adjustRecursiveOption(effectiveAbsPath,
 				recursive);
 
 		ModAccessControlInp modAccessControlInp = ModAccessControlInp
 				.instanceForSetPermission(collNeedsRecursive, zone,
-						absolutePath, userName,
+						effectiveAbsPath, userName,
 						ModAccessControlInp.WRITE_PERMISSION);
 		getIRODSProtocol().irodsFunction(modAccessControlInp);
 
@@ -1120,14 +1077,17 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 
 		// pi tests parameters
 		log.info("setAccessPermissionWriteAsAdmin on absPath:{}", absolutePath);
+		String effectiveAbsPath = this
+				.resolveAbsolutePathViaObjStat(absolutePath);
+
 		// overhead iRODS behavior, if you set perm with recursive when no
 		// children, then won't take
-		boolean collNeedsRecursive = adjustRecursiveOption(absolutePath,
+		boolean collNeedsRecursive = adjustRecursiveOption(effectiveAbsPath,
 				recursive);
 
 		ModAccessControlInp modAccessControlInp = ModAccessControlInp
 				.instanceForSetPermissionInAdminMode(collNeedsRecursive, zone,
-						absolutePath, userName,
+						effectiveAbsPath, userName,
 						ModAccessControlInp.WRITE_PERMISSION);
 		getIRODSProtocol().irodsFunction(modAccessControlInp);
 
@@ -1147,14 +1107,18 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 
 		// pi tests parameters
 		log.info("setAccessPermissionOwn on absPath:{}", absolutePath);
+
+		String effectiveAbsPath = this
+				.resolveAbsolutePathViaObjStat(absolutePath);
+
 		// overhead iRODS behavior, if you set perm with recursive when no
 		// children, then won't take
-		boolean collNeedsRecursive = adjustRecursiveOption(absolutePath,
+		boolean collNeedsRecursive = adjustRecursiveOption(effectiveAbsPath,
 				recursive);
 
 		ModAccessControlInp modAccessControlInp = ModAccessControlInp
 				.instanceForSetPermission(collNeedsRecursive, zone,
-						absolutePath, userName,
+						effectiveAbsPath, userName,
 						ModAccessControlInp.OWN_PERMISSION);
 		getIRODSProtocol().irodsFunction(modAccessControlInp);
 
@@ -1169,12 +1133,15 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 		log.info("setAccessPermissionOwnAsAdmin on absPath:{}", absolutePath);
 		// overhead iRODS behavior, if you set perm with recursive when no
 		// children, then won't take
-		boolean collNeedsRecursive = adjustRecursiveOption(absolutePath,
+		String effectiveAbsPath = this
+				.resolveAbsolutePathViaObjStat(absolutePath);
+
+		boolean collNeedsRecursive = adjustRecursiveOption(effectiveAbsPath,
 				recursive);
 
 		ModAccessControlInp modAccessControlInp = ModAccessControlInp
 				.instanceForSetPermissionInAdminMode(collNeedsRecursive, zone,
-						absolutePath, userName,
+						effectiveAbsPath, userName,
 						ModAccessControlInp.OWN_PERMISSION);
 		getIRODSProtocol().irodsFunction(modAccessControlInp);
 
@@ -1197,12 +1164,15 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 		log.info("for user:{}", userName);
 		// overhead iRODS behavior, if you set perm with recursive when no
 		// children, then won't take
-		boolean collNeedsRecursive = adjustRecursiveOption(absolutePath,
+		String effectiveAbsPath = this
+				.resolveAbsolutePathViaObjStat(absolutePath);
+
+		boolean collNeedsRecursive = adjustRecursiveOption(effectiveAbsPath,
 				recursive);
 
 		ModAccessControlInp modAccessControlInp = ModAccessControlInp
 				.instanceForSetPermission(collNeedsRecursive, zone,
-						absolutePath, userName,
+						effectiveAbsPath, userName,
 						ModAccessControlInp.NULL_PERMISSION);
 		getIRODSProtocol().irodsFunction(modAccessControlInp);
 
@@ -1225,12 +1195,15 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 		log.info("for user:{}", userName);
 		// overhead iRODS behavior, if you set perm with recursive when no
 		// children, then won't take
-		boolean collNeedsRecursive = adjustRecursiveOption(absolutePath,
+
+		String effectiveAbsPath = this
+				.resolveAbsolutePathViaObjStat(absolutePath);
+		boolean collNeedsRecursive = adjustRecursiveOption(effectiveAbsPath,
 				recursive);
 
 		ModAccessControlInp modAccessControlInp = ModAccessControlInp
 				.instanceForSetPermissionInAdminMode(collNeedsRecursive, zone,
-						absolutePath, userName,
+						effectiveAbsPath, userName,
 						ModAccessControlInp.NULL_PERMISSION);
 		getIRODSProtocol().irodsFunction(modAccessControlInp);
 
@@ -1251,12 +1224,13 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 					"null or empty absolutePathToCollection");
 		}
 
+		String absPath = this.resolveAbsolutePathViaObjStat(absolutePath);
+
 		IRODSGenQueryExecutor irodsGenQueryExecutor = getIRODSAccessObjectFactory()
 				.getIRODSGenQueryExecutor(getIRODSAccount());
 
 		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(CollectionAOHelper
-				.buildInheritanceQueryForCollectionAbsolutePath(absolutePath),
-				1);
+				.buildInheritanceQueryForCollectionAbsolutePath(absPath), 1);
 		IRODSQueryResultSetInterface resultSet;
 
 		try {
@@ -1338,6 +1312,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 					"irodsFile does not exist for given path, cannot set permissions on it");
 		}
 
+		// soft links accounted for in collectionAndDataObjectListAndSearchAO
 		boolean collNeedsRecursive = recursive;
 		CollectionAndDataObjectListAndSearchAO collectionAndDataObjectListAndSearchAO = this
 				.getIRODSAccessObjectFactory()
@@ -1385,18 +1360,19 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 				irodsCollectionAbsolutePath);
 		log.info("   userName:{}", userName);
 
+		String absPath = this
+				.resolveAbsolutePathViaObjStat(irodsCollectionAbsolutePath);
+
 		String theUser = MiscIRODSUtils.getUserInUserName(userName);
 		String theZone = MiscIRODSUtils.getZoneInUserName(userName);
 
-		String collectionZone = MiscIRODSUtils
-				.getZoneInPath(irodsCollectionAbsolutePath);
+		String collectionZone = MiscIRODSUtils.getZoneInPath(absPath);
 
 		IRODSGenQueryExecutor irodsGenQueryExecutor = getIRODSAccessObjectFactory()
 				.getIRODSGenQueryExecutor(getIRODSAccount());
 
 		StringBuilder query = new StringBuilder(
-				CollectionAOHelper
-						.buildACLQueryForCollectionName(irodsCollectionAbsolutePath));
+				CollectionAOHelper.buildACLQueryForCollectionName(absPath));
 		query.append(" AND ");
 		query.append(RodsGenQueryEnum.COL_COLL_ACCESS_USER_NAME.getName());
 		query.append(" = '");
@@ -1486,8 +1462,10 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 		log.info("listPermissionsForCollection: {}",
 				irodsCollectionAbsolutePath);
 
-		String collectionZone = MiscIRODSUtils
-				.getZoneInPath(irodsCollectionAbsolutePath);
+		String absPath = this
+				.resolveAbsolutePathViaObjStat(irodsCollectionAbsolutePath);
+
+		String collectionZone = MiscIRODSUtils.getZoneInPath(absPath);
 
 		List<UserFilePermission> userFilePermissions = new ArrayList<UserFilePermission>();
 
@@ -1495,7 +1473,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 				.getIRODSGenQueryExecutor(getIRODSAccount());
 
 		String query = CollectionAOHelper
-				.buildACLQueryForCollectionName(irodsCollectionAbsolutePath);
+				.buildACLQueryForCollectionName(absPath);
 		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(query.toString(),
 				this.getJargonProperties().getMaxFilesAndDirsQueryMax());
 		IRODSQueryResultSetInterface resultSet;

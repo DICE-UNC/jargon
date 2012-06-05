@@ -77,8 +77,7 @@ import org.irods.jargon.core.transfer.TransferStatusCallbackListener;
  * and then use the synchronized method to set those options in the
  * <code>TransferControlBlock</code>
  * <p/>
- * It is important to note that this arrangement is quite new, and subject to
- * refinement as testing proceeds!
+ * Note that soft links are supported as iRODS paths in these operations.
  * 
  * @author Mike Conway - DICE (www.irods.org)
  * 

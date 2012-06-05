@@ -42,6 +42,9 @@ import org.slf4j.LoggerFactory;
  * {@link org.irods.jargon.core.pub.CollectionAOImpl}. Those access objects can
  * retrieve domain objects that represent details about collections and data
  * objects.
+ * <p/>
+ * Note that this object handles soft linked files and collections, and will
+ * operate as expected whether a soft link or a canonical path is provided.
  * 
  * @author Mike Conway - DICE (www.irods.org)
  * 

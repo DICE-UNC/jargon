@@ -9,7 +9,6 @@ import junit.framework.TestCase;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.pub.domain.AvuData;
-import org.irods.jargon.core.pub.domain.Collection;
 import org.irods.jargon.core.pub.domain.UserFilePermission;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.query.AVUQueryElement;
@@ -306,32 +305,6 @@ public class FederatedCollectionAOImplTest {
 				.findMetadataValuesByMetadataQueryForCollection(queryElements,
 						targetIrodsCollection);
 		Assert.assertFalse("no query result returned", result.isEmpty());
-	}
-
-	/**
-	 * List the contents of the federated zone2 from zone1, should at least see
-	 * the home dir
-	 */
-	@Test
-	public void testFindAllFromRootLookingForFederatedZone() throws Exception {
-
-		if (!testingPropertiesHelper.isTestFederatedZone(testingProperties)) {
-			return;
-		}
-
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
-		CollectionAO collectionAO = accessObjectFactory
-				.getCollectionAO(irodsAccount);
-		List<Collection> collections = collectionAO
-				.findAll("/"
-						+ testingProperties
-								.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_ZONE_KEY));
-		Assert.assertNotNull(collections);
-		Assert.assertFalse(collections.isEmpty());
-
 	}
 
 	/**
