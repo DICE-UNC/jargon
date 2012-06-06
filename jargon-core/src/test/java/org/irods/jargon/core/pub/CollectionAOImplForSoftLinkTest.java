@@ -191,6 +191,89 @@ public class CollectionAOImplForSoftLinkTest {
 		Assert.assertEquals("no query result returned", 2, result.size());
 	}
 
+	/**
+	 * This method tests out the independence of AVU metadata between a
+	 * canonical path, and a soft linked path and shows that iRODS treats these
+	 * things as different objects
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public final void testFindDifferingMetadataValuesByMetadataQueryCompareSourceAndTarget()
+			throws Exception {
+		String sourceCollectionName = "testFindDifferingMetadataValuesByMetadataQueryCompareSourceAndTargetSource";
+		String targetCollectionName = "testFindDifferingMetadataValuesByMetadataQueryCompareSourceAndTargetTarget";
+
+		String sourceIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
+								+ sourceCollectionName);
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
+								+ targetCollectionName);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		// do an initial unmount
+		MountedCollectionAO mountedCollectionAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getMountedCollectionAO(
+						irodsAccount);
+
+		mountedCollectionAO.unmountACollection(targetIrodsCollection,
+				irodsAccount.getDefaultStorageResource());
+
+		// set up source collection
+		IRODSFile sourceFile = irodsFileSystem
+				.getIRODSFileFactory(irodsAccount).instanceIRODSFile(
+						sourceIrodsCollection);
+		sourceFile.mkdirs();
+
+		// create the soft link
+		mountedCollectionAO.createASoftLink(sourceIrodsCollection,
+				targetIrodsCollection);
+
+		// initialize the AVU data
+		String expectedAttribName = "testFindDifferingMetadataValuesByMetadataQueryCompareSourceAndTargetAttrib";
+		String expectedAttribValue = "testFindDifferingMetadataValuesByMetadataQueryCompareSourceAndTargetValue";
+		String expectedAttribUnits = "testFindDifferingMetadataValuesByMetadataQueryCompareSourceAndTargetUnit";
+		String sourcePrefix = "source-";
+		String targetPrefix = "target-";
+
+		CollectionAO collectionAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getCollectionAO(irodsAccount);
+		AvuData sourceAvuData = AvuData.instance(sourcePrefix
+				+ expectedAttribName, sourcePrefix + expectedAttribValue,
+				sourcePrefix + expectedAttribUnits);
+		AvuData targetAvuData = AvuData.instance(targetPrefix
+				+ expectedAttribName, targetPrefix + expectedAttribValue,
+				targetPrefix + expectedAttribUnits);
+
+		collectionAO.deleteAVUMetadata(sourceIrodsCollection, sourceAvuData);
+		collectionAO.deleteAVUMetadata(targetIrodsCollection, targetAvuData);
+
+		// add to target and source
+		collectionAO.addAVUMetadata(targetIrodsCollection, targetAvuData);
+		collectionAO.addAVUMetadata(sourceIrodsCollection, sourceAvuData);
+
+		List<AVUQueryElement> queryElements = new ArrayList<AVUQueryElement>();
+
+		queryElements.add(AVUQueryElement.instanceForValueQuery(
+				AVUQueryElement.AVUQueryPart.ATTRIBUTE,
+				AVUQueryOperatorEnum.EQUAL, expectedAttribName));
+
+		List<MetaDataAndDomainData> sourceMetadata = collectionAO
+				.findMetadataValuesForCollection(sourceIrodsCollection);
+		TestCase.assertFalse("did not find metadata", sourceMetadata.isEmpty());
+
+		List<MetaDataAndDomainData> targetMetadata = collectionAO
+				.findMetadataValuesForCollection(targetIrodsCollection);
+		TestCase.assertFalse("did not find metadata", targetMetadata.isEmpty());
+
+	}
+
 	@Test
 	public final void testSetReadForASoftLinkedCollection() throws Exception {
 
@@ -389,9 +472,6 @@ public class CollectionAOImplForSoftLinkTest {
 		// create the soft link
 		mountedCollectionAO.createASoftLink(sourceIrodsCollection,
 				targetIrodsCollection);
-
-		IRODSAccount secondaryAccount = testingPropertiesHelper
-				.buildIRODSAccountFromSecondaryTestProperties(testingProperties);
 
 		CollectionAO collectionAO = irodsFileSystem
 				.getIRODSAccessObjectFactory().getCollectionAO(irodsAccount);

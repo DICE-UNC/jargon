@@ -277,12 +277,10 @@ public class DataObjectAOImplForSoftLinkTest {
 		AvuData avuData = AvuData.instance(expectedAttribName,
 				expectedValueName, "");
 
-		String sourceIrodsDataObject = sourceIrodsCollection + "/"
-				+ testFileName;
 		String targetIrodsDataObject = targetIrodsCollection + "/"
 				+ testFileName;
 
-		dataObjectAO.addAVUMetadata(sourceIrodsDataObject, avuData);
+		dataObjectAO.addAVUMetadata(targetIrodsDataObject, avuData);
 
 		// now delete and query again, should be no data
 

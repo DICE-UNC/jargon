@@ -35,9 +35,12 @@ import org.irods.jargon.core.query.MetaDataAndDomainData;
  * {@link org.irods.jargon.core.pub.DataTransferOperations}.
  * <p/>
  * <h2>Notes</h2>
- * For soft links, AVU metadata attaches to the the specified path. A soft
- * linked collection has a different path, so adding AVU to the canonical path
- * does not make it appear at the linked path.
+ * For soft links, AVU metadata always attaches to the given path, which can be
+ * a soft link. This is somewhat different than metadata handling for data
+ * objects, where the AVU metadata always associates with the canonical path.
+ * For collections, AVU metadata can be different for the canonical and soft
+ * linked path, and this class will use these paths as explicitly provided by
+ * the caller of the metadata methods.
  * 
  * @author Mike Conway - DICE (www.irods.org)
  * 
