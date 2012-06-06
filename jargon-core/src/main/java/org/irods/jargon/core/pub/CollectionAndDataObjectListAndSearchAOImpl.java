@@ -611,7 +611,8 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 
 			if (thisPath.equals(lastPath)) {
 				// parse out the file permission and continue,
-				CollectionAOHelper.buildUserFilePermissionForCollection(
+				CollectionAOHelper
+						.buildUserFilePermissionForCollection(
 								userFilePermissions, row, userAO,
 								effectiveAbsolutePath);
 				continue;
@@ -633,7 +634,8 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 						.buildCollectionListEntryFromResultSetRowForCollectionQuery(row);
 				lastPath = collectionAndDataObjectListingEntry.getPathOrName();
 				userFilePermissions = new ArrayList<UserFilePermission>();
-				CollectionAOHelper.buildUserFilePermissionForCollection(
+				CollectionAOHelper
+						.buildUserFilePermissionForCollection(
 								userFilePermissions, row, userAO,
 								effectiveAbsolutePath);
 			}
@@ -801,20 +803,25 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 	 * @param entry
 	 */
 	private void augmentCollectionAndDataObjectListingEntryForSpecialCollections(
-			final ObjStat objStat, String effectiveAbsolutePath,
-			CollectionAndDataObjectListingEntry entry) {
+			final ObjStat objStat, final String effectiveAbsolutePath,
+			final CollectionAndDataObjectListingEntry entry) {
 		if (objStat.getSpecColType() == SpecColType.LINKED_COLL) {
 			log.info("adjusting paths in entry to reflect linked collection info");
 			entry.setSpecialObjectPath(effectiveAbsolutePath);
+			if (entry.isCollection()) {
+				StringBuilder sb = new StringBuilder();
+				sb.append(objStat.getCollectionPath());
+				// sb.append('/');
+				sb.append(MiscIRODSUtils
+						.getLastPathComponentForGiveAbsolutePath(entry
+								.getPathOrName()));
 
-			StringBuilder sb = new StringBuilder();
-			sb.append(objStat.getCollectionPath());
-			sb.append('/');
-			sb.append(MiscIRODSUtils
-					.getLastPathComponentForGiveAbsolutePath(entry
-							.getPathOrName()));
-
-			entry.setPathOrName(sb.toString());
+				entry.setPathOrName(sb.toString());
+			} else {
+				entry.setPathOrName(MiscIRODSUtils
+						.getLastPathComponentForGiveAbsolutePath(entry
+								.getPathOrName()));
+			}
 
 			entry.setParentPath(objStat.getCollectionPath());
 		}
@@ -1153,40 +1160,20 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		// see if file or coll
 		Object returnObject = null;
 
-		DataObjectAO dataObjectAO = new DataObjectAOImpl(getIRODSSession(),
-				getIRODSAccount());
-
-		log.debug("looking for as a data object");
-
-		try {
+		if (objStat.isSomeTypeOfCollection()) {
+			CollectionAO collectionAO = new CollectionAOImpl(getIRODSSession(),
+					getIRODSAccount());
+			returnObject = collectionAO.findByAbsolutePath(objectAbsolutePath);
+		} else {
+			DataObjectAO dataObjectAO = new DataObjectAOImpl(getIRODSSession(),
+					getIRODSAccount());
 			returnObject = dataObjectAO.findByAbsolutePath(objectAbsolutePath);
-		} catch (DataNotFoundException dnf) {
-			log.debug("not a data object, look as collection");
-
-		}
-
-		if (returnObject == null) {
-			try {
-				CollectionAO collectionAO = new CollectionAOImpl(
-						getIRODSSession(), getIRODSAccount());
-				returnObject = collectionAO
-						.findByAbsolutePath(objectAbsolutePath);
-			} catch (DataNotFoundException dnf) {
-				log.debug("not found as collection");
-			}
-		}
-
-		if (returnObject == null) {
-			log.debug("not found as a collection, data not found");
-			throw new FileNotFoundException(
-					"no object found for absolute path:" + objectAbsolutePath);
+			log.debug("looking for as a data object");
 		}
 
 		// get appropriate domain object and return
 		return returnObject;
 	}
-
-
 
 	/*
 	 * (non-Javadoc)
@@ -1316,7 +1303,5 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 					.getCollectionPath());
 		}
 	}
-
-
 
 }
