@@ -97,6 +97,8 @@ public class TicketDistributionServiceImplTest {
 		TestCase.assertEquals("bad url host", host, url.getHost());
 		TestCase.assertEquals("bad port", port, url.getPort());
 		TestCase.assertEquals("should be http", "http", url.getProtocol());
+		TestCase.assertNotNull("no ticket landing URL in ticket distribution",
+				ticketDistribution.getTicketURLWithLandingPage());
 
 	}
 

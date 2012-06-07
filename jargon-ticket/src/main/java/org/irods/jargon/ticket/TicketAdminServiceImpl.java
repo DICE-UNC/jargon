@@ -594,7 +594,7 @@ public final class TicketAdminServiceImpl extends AbstractTicketService
 	 */
 	@Override
 	public Ticket getTicketForSpecifiedTicketString(final String ticketId)
-			throws JargonException {
+			throws DataNotFoundException, JargonException {
 
 		Ticket ticket = null;
 		IRODSQueryResultSetInterface resultSet = null;
@@ -1564,6 +1564,107 @@ public final class TicketAdminServiceImpl extends AbstractTicketService
 					"jargonQueryException building ticket query", e);
 		}
 		return ticketFound;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.ticket.TicketAdminService#
+	 * compareGivenTicketToActualAndUpdateAsNeeded
+	 * (org.irods.jargon.ticket.Ticket)
+	 */
+	@Override
+	public Ticket compareGivenTicketToActualAndUpdateAsNeeded(
+			final Ticket ticketWithDesiredData) throws DataNotFoundException,
+			JargonException {
+
+		log.info("compareGivenTicketToActualAndUpdateAsNeeded()");
+		if (ticketWithDesiredData == null) {
+			throw new IllegalArgumentException("null ticketWithDesiredData");
+		}
+
+		// data not found will occur here if I cannot find the ticket
+		Ticket actualTicket = getTicketForSpecifiedTicketString(ticketWithDesiredData
+				.getTicketString());
+
+		/*
+		 * Compare things now and call appropriate updates. This is not within a
+		 * transaction, but that's the way it works...sorry
+		 */
+
+		// uses limit
+		if (ticketWithDesiredData.getUsesLimit() != actualTicket.getUsesLimit()) {
+			log.info("setting uses limit to:{}",
+					ticketWithDesiredData.getUsesLimit());
+			setTicketUsesLimit(actualTicket.getTicketString(),
+					ticketWithDesiredData.getUsesLimit());
+		}
+
+		// files limit
+		if (ticketWithDesiredData.getWriteFileLimit() != actualTicket
+				.getWriteFileLimit()) {
+			log.info("setting files write limit to:{}",
+					ticketWithDesiredData.getWriteFileLimit());
+			setTicketFileWriteLimit(actualTicket.getTicketString(),
+					ticketWithDesiredData.getWriteFileLimit());
+		}
+
+		// bytes write limit
+		if (ticketWithDesiredData.getWriteByteLimit() != actualTicket
+				.getWriteByteLimit()) {
+			log.info("setting bytes write limit to:{}",
+					ticketWithDesiredData.getWriteByteLimit());
+			setTicketByteWriteLimit(actualTicket.getTicketString(),
+					ticketWithDesiredData.getWriteByteLimit());
+		}
+
+		// expires (
+		if (!isDateSame(ticketWithDesiredData.getExpireTime(),
+				actualTicket.getExpireTime())) {
+			if (ticketWithDesiredData.getExpireTime() != null) {
+				log.info("updating expires limit");
+				setTicketExpiration(actualTicket.getTicketString(),
+						ticketWithDesiredData.getExpireTime());
+			}
+		}
+
+		log.info("ticket updated, read again to return to caller");
+		return getTicketForSpecifiedTicketString(ticketWithDesiredData
+				.getTicketString());
+
+	}
+
+	/**
+	 * compare two dates on their components, ignoring millis, as stuff goes to
+	 * irods as a serialized string in the protocol
+	 * 
+	 * @param date1
+	 * @param date2
+	 * @return
+	 */
+	@SuppressWarnings("deprecation")
+	private boolean isDateSame(final Date date1, final Date date2) {
+
+		boolean same = true;
+
+		if (date1 == null & date2 == null) {
+			same = true;
+		}
+
+		if (date1 == null) {
+			same = false;
+		} else if (date2 == null) {
+			same = false;
+		} else {
+
+			same = (date1.getHours() == date2.getHours()
+					&& date1.getMinutes() == date2.getMinutes()
+					&& date1.getSeconds() == date2.getSeconds()
+					&& date1.getYear() == date2.getYear()
+					&& date1.getDate() == date2.getDate() && date1.getMonth() == date2
+					.getMonth());
+		}
+		return same;
 	}
 
 }

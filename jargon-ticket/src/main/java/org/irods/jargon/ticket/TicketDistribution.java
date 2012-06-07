@@ -14,7 +14,11 @@ import java.net.URL;
 public class TicketDistribution {
 
 	private Ticket ticket;
+	/**
+	 * Direct URL for ticket
+	 */
 	private URL ticketURL;
+	private URL ticketURLWithLandingPage;
 	private URI irodsAccessURI;
 
 	@Override
@@ -25,6 +29,8 @@ public class TicketDistribution {
 		sb.append(ticket);
 		sb.append("\n   ticketURL:");
 		sb.append(ticketURL);
+		sb.append("\n   ticketURLWithLandingPage:");
+		sb.append(ticketURLWithLandingPage);
 		sb.append("\n   irodsAccessURI:");
 		sb.append(irodsAccessURI);
 		return sb.toString();
@@ -80,6 +86,25 @@ public class TicketDistribution {
 	 */
 	public void setIrodsAccessURI(final URI irodsAccessURI) {
 		this.irodsAccessURI = irodsAccessURI;
+	}
+
+	/**
+	 * @return the ticketURLWithLandingPage <code>URL</code> with parameters
+	 *         that denote that invoking that URL will return an intermediate
+	 *         web page appropriate to the given ticket
+	 */
+	public URL getTicketURLWithLandingPage() {
+		return ticketURLWithLandingPage;
+	}
+
+	/**
+	 * @param ticketURLWithLandingPage
+	 *            <code>URL</code> with parameters that denote that invoking
+	 *            that URL will return an intermediate web page appropriate to
+	 *            the given ticket
+	 */
+	public void setTicketURLWithLandingPage(URL ticketURLWithLandingPage) {
+		this.ticketURLWithLandingPage = ticketURLWithLandingPage;
 	}
 
 }

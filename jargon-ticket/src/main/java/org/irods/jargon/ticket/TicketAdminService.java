@@ -53,10 +53,12 @@ public interface TicketAdminService {
 	 * @param ticketId
 	 *            - string used to identify the ticket
 	 * @return {@link Ticket} object for specified ticket string identifier
+	 * @throws DataNotFoundException
+	 *             if ticket cannot be found
 	 * @throws JargonException
 	 */
 	Ticket getTicketForSpecifiedTicketString(String ticketId)
-			throws JargonException;
+			throws DataNotFoundException, JargonException;
 
 	/**
 	 * Generate a list of all tickets for data objects (files). Note that, for a
@@ -419,5 +421,31 @@ public interface TicketAdminService {
 	 */
 	Ticket createTicketFromTicketObject(Ticket ticket)
 			throws DuplicateDataException, DataNotFoundException,
+			JargonException;
+
+	/**
+	 * Service method takes a course-grained ticket (must already exist) and
+	 * compares this ticket, reflecting the desired values, and the current
+	 * data. The delta between the two, for fields that may be updated, is used
+	 * to call appropriate update methods.
+	 * <p/>
+	 * Note that this is not transactional, so there is some small chance that
+	 * not all changes will occur, this method will return a <code>Ticket</code>
+	 * object that reflects the final state of the data in iRODS.
+	 * <p/>
+	 * The current update-able fields are the various access and write limits,
+	 * as well as the expiration data, other fields will be ignored.
+	 * 
+	 * @param ticketWithDesiredData
+	 *            {@link Ticket} containing a valid ticket string, and
+	 *            reflecting the update-able fields in the state they should be
+	 *            in.
+	 * @return {@link Ticket} as it now exists in the iCAT
+	 * @throws DataNotFoundException
+	 *             if the ticket with the given ticket string is not found
+	 * @throws JargonException
+	 */
+	Ticket compareGivenTicketToActualAndUpdateAsNeeded(
+			Ticket ticketWithDesiredData) throws DataNotFoundException,
 			JargonException;
 }

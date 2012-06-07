@@ -62,5 +62,6 @@ Note that the following bug and feature requests are logged in GForge with relat
  **** IRODSInputStream
  **** IRODSOutputStream
  
- 
+ *  [#696] Add ticket support
+ ** added compareGivenTicketToActualAndUpdateAsNeeded() method to TicketAdminService, which allows for updating an entire ticket, computing deltas and updating fields as appropriate
  

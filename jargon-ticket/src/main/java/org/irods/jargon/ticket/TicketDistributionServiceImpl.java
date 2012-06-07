@@ -149,6 +149,24 @@ public class TicketDistributionServiceImpl extends AbstractTicketService
 			}
 			ticketDistribution.setTicketURL(accessURL);
 
+			/*
+			 * Tack on a ticket landing page for the url with landing page
+			 * information. This URL will request display of an intermediate
+			 * page if the ticket is redeemed, versus direct download of a file.
+			 * The processing of such a request is dependent on the client.
+			 */
+
+			sb.append("&landingPage=true");
+			URL landingPageURL;
+			try {
+				landingPageURL = new URL(sb.toString());
+				log.info("generated landing url:{}", accessURL);
+			} catch (MalformedURLException e) {
+				log.error("malformed url from:{}", sb.toString(), e);
+				throw new JargonException(
+						"malformed URL for ticketDistribution, probably a malformed ticketDistributionContext");
+			}
+			ticketDistribution.setTicketURLWithLandingPage(landingPageURL);
 		}
 
 		return ticketDistribution;

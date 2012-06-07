@@ -5,7 +5,7 @@ import java.util.List;
 
 public enum TicketCreateModeEnum {
 
-	TICKET_CREATE_READ("read"), TICKET_CREATE_WRITE("write"), TICKET_CREATE_UNKNOWN(
+	READ("read"), WRITE("write"), UNKNOWN(
 			"unknown");
 
 	private String textValue;
@@ -37,7 +37,7 @@ public enum TicketCreateModeEnum {
 			}
 		}
 		if (ticketCreateMode == null) {
-			ticketCreateMode = TicketCreateModeEnum.TICKET_CREATE_UNKNOWN;
+			ticketCreateMode = TicketCreateModeEnum.UNKNOWN;
 		}
 		return ticketCreateMode;
 
