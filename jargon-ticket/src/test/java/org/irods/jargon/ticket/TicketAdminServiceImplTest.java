@@ -34,6 +34,7 @@ import org.irods.jargon.testutils.icommandinvoke.icommands.ImkdirCommand;
 import org.irods.jargon.ticket.packinstr.TicketCreateModeEnum;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class TicketAdminServiceImplTest {
@@ -1252,7 +1253,7 @@ public class TicketAdminServiceImplTest {
 
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void testModifyTicketExpirationForTicketExistsNullExpiration()
 			throws Exception {
 
@@ -1280,6 +1281,10 @@ public class TicketAdminServiceImplTest {
 				TicketCreateModeEnum.WRITE, targetFile, null);
 
 		ticketSvc.setTicketExpiration(ticketId, expireSoon);
+
+		Ticket actual = ticketSvc.getTicketForSpecifiedTicketString(ticketId);
+		TestCase.assertNull("should have removed expire date",
+				actual.getExpireTime());
 
 		// delete ticket after done
 		ticketSvc.deleteTicket(ticketId);
@@ -2823,6 +2828,65 @@ public class TicketAdminServiceImplTest {
 		TestCase.assertEquals("should be a collection object",
 				Ticket.TicketObjectType.COLLECTION,
 				returnedTicket.getObjectType());
+
+		ticketSvc
+				.getTicketForSpecifiedTicketString(returnedTicket
+						.getTicketString());
+
+		// delete ticket after done
+		ticketSvc.deleteTicket(returnedTicket.getTicketString());
+
+	}
+
+	/**
+	 * Test for bug: [#827] created tickets have 10 file limit currently parked
+	 * as I think it's an iRODS error, note sent to Wayne (MC)
+	 * 
+	 * @throws Exception
+	 */
+	@Ignore
+	public void createTicketFromTicketObjectForCollectionTestFileLimit()
+			throws Exception {
+
+		if (!testTicket) {
+			return;
+		}
+
+		String collectionName = "createTicketFromTicketObjectForCollectionTestFileLimit";
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
+		IRODSFile collection = createCollectionByName(collectionName,
+				irodsAccount, accessObjectFactory);
+
+		TicketAdminService ticketSvc = new TicketAdminServiceImpl(
+				accessObjectFactory, irodsAccount);
+
+		Ticket ticket = new Ticket();
+		ticket.setIrodsAbsolutePath(collection.getAbsolutePath());
+		ticket.setType(TicketCreateModeEnum.READ);
+		Ticket returnedTicket = ticketSvc.createTicketFromTicketObject(ticket);
+		TestCase.assertNotNull("null ticket returned", returnedTicket);
+		TestCase.assertFalse("ticket string not set",
+				returnedTicket.getTicketString() == null
+						| returnedTicket.getTicketString().isEmpty());
+		TestCase.assertEquals("user name not set", irodsAccount.getUserName(),
+				returnedTicket.getOwnerName());
+		TestCase.assertEquals("zone not set", irodsAccount.getZone(),
+				returnedTicket.getOwnerZone());
+		TestCase.assertEquals("should be a collection object",
+				Ticket.TicketObjectType.COLLECTION,
+				returnedTicket.getObjectType());
+
+		Ticket actual = ticketSvc
+				.getTicketForSpecifiedTicketString(returnedTicket
+						.getTicketString());
+		TestCase.assertEquals("should not have set write file limit", 0,
+				actual.getWriteFileLimit());
+
 		// delete ticket after done
 		ticketSvc.deleteTicket(returnedTicket.getTicketString());
 
@@ -3210,6 +3274,63 @@ public class TicketAdminServiceImplTest {
 				ticket.getWriteByteLimit(),
 				actual.getWriteByteLimit());
 		Assert.assertNotNull("expire limit not altered", actual.getExpireTime());
+
+		// delete ticket after done
+		ticketSvc.deleteTicket(ticketId);
+
+	}
+
+	/**
+	 * Do a compare/update where expired is set then removed
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void testCompareGivenTicketToActualAndUpdateAsNeededRemovesExpired()
+			throws Exception {
+
+		if (!testTicket) {
+			return;
+		}
+
+		Date expired = new Date();
+		String testFileName = "testCompareGivenTicketToActualAndUpdateAsNeededRemovesExpired.txt";
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+		IRODSFile targetFile = createDataObjectByName(
+				testFileName,
+				testingProperties
+						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
+				irodsAccount, accessObjectFactory);
+
+		TicketAdminService ticketSvc = new TicketAdminServiceImpl(
+				accessObjectFactory, irodsAccount);
+
+		String ticketId = ticketSvc.createTicket(TicketCreateModeEnum.WRITE,
+				targetFile, null);
+
+		Ticket ticket = ticketSvc.getTicketForSpecifiedTicketString(ticketId);
+		ticket.setExpireTime(expired);
+		Ticket actual = ticketSvc
+				.compareGivenTicketToActualAndUpdateAsNeeded(ticket);
+
+		Assert.assertEquals("uses limit altered", ticket.getUsesLimit(),
+				actual.getUsesLimit());
+		Assert.assertEquals("files limit  altered", ticket.getWriteFileLimit(),
+				actual.getWriteFileLimit());
+		Assert.assertEquals("byte limit not altered",
+				ticket.getWriteByteLimit(), actual.getWriteByteLimit());
+		Assert.assertNotNull("expire limit not altered", actual.getExpireTime());
+
+		// remove expired
+
+		actual.setExpireTime(null);
+		actual = ticketSvc.compareGivenTicketToActualAndUpdateAsNeeded(actual);
+		Assert.assertNull("expire limit shold have been remvoed",
+				actual.getExpireTime());
 
 		// delete ticket after done
 		ticketSvc.deleteTicket(ticketId);

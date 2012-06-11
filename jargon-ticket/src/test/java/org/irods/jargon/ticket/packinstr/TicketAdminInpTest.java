@@ -1094,7 +1094,7 @@ public class TicketAdminInpTest {
 		Assert.assertNotNull(pi);
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void testModifyTicketExpireWitDateNullDate() throws Exception {
 
 		TicketAdminInp pi = TicketAdminInp.instanceForModifyExpiration(

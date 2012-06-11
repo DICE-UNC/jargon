@@ -859,11 +859,6 @@ public final class TicketAdminServiceImpl extends AbstractTicketService
 					"cannot modify ticket with null or empty ticketId");
 		}
 
-		if ((expirationDate == null) || (expirationDate.getTime() <= 0)) {
-			throw new IllegalArgumentException(
-					"cannot modify a ticket with expiration date of less than or equal to 0");
-		}
-
 		log.info("modifying ticket id/string:{}", ticketId);
 
 		TicketAdminInp ticketPI = TicketAdminInp.instanceForModifyExpiration(
@@ -1621,11 +1616,9 @@ public final class TicketAdminServiceImpl extends AbstractTicketService
 		// expires (
 		if (!isDateSame(ticketWithDesiredData.getExpireTime(),
 				actualTicket.getExpireTime())) {
-			if (ticketWithDesiredData.getExpireTime() != null) {
 				log.info("updating expires limit");
 				setTicketExpiration(actualTicket.getTicketString(),
 						ticketWithDesiredData.getExpireTime());
-			}
 		}
 
 		log.info("ticket updated, read again to return to caller");

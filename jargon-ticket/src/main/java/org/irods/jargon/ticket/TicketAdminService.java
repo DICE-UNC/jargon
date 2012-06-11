@@ -174,7 +174,9 @@ public interface TicketAdminService {
 			throws JargonException;
 
 	/**
-	 * Generate a list of all iRODS users that can use this ticket
+	 * Generate a list of all iRODS users that can use this ticket. Passing a
+	 * <code>null<code> expiration will cause
+	 * the expiration to be removed altogether.
 	 * 
 	 * @param ticketId
 	 *            <code>String</code> used to specify ticket key to use for

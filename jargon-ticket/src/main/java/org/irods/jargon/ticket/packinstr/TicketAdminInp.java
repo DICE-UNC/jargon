@@ -183,6 +183,16 @@ public class TicketAdminInp extends TicketInp {
 
 	}
 
+	/**
+	 * Create a packing instruction to modify the expiration date. Setting the
+	 * date to <code>null</code> removes the expiration
+	 * 
+	 * @param ticketId
+	 *            <code>String</code> with the unique ticket string
+	 * @param expirationDate
+	 *            <code>Date</code> or <code>null</code> to remove
+	 * @return
+	 */
 	public static TicketAdminInp instanceForModifyExpiration(
 			final String ticketId, final Date expirationDate) {
 
@@ -190,12 +200,12 @@ public class TicketAdminInp extends TicketInp {
 			throw new IllegalArgumentException("null or empty ticket id");
 		}
 
-		if (expirationDate == null) {
-			throw new IllegalArgumentException("null expiration date");
-		}
+		String formattedDate = "";
 
-		DateFormat df = new SimpleDateFormat("yyyy-MM-dd.HH:mm:ss");
-		String formattedDate = df.format(expirationDate);
+		if (expirationDate != null) {
+			DateFormat df = new SimpleDateFormat("yyyy-MM-dd.HH:mm:ss");
+			formattedDate = df.format(expirationDate);
+		}
 
 		return new TicketAdminInp(TICKET_ADMIN_INP_API_NBR, "mod", ticketId,
 				"expire", formattedDate, BLANK, BLANK);
