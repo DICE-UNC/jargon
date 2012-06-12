@@ -137,7 +137,7 @@ public class TicketDistributionServiceImpl extends AbstractTicketService
 			}
 
 			sb.append("&irodsURI=");
-			sb.append(ticketDistribution.getIrodsAccessURI());
+			sb.append(ticketDistribution.getIrodsAccessURI().toASCIIString());
 			URL accessURL;
 			try {
 				accessURL = new URL(sb.toString());

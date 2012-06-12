@@ -305,6 +305,7 @@ public class IRODSUriUtils {
 			StringBuilder sb = new StringBuilder();
 			sb.append(irodsAccount.getHomeDirectory());
 			sb.append("/");
+			// URLEncode the iRODS path
 			sb.append(irodsPath);
 			absPath = sb.toString();
 		}

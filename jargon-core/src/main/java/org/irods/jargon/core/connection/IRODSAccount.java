@@ -91,16 +91,30 @@ public final class IRODSAccount implements Serializable {
 			final String homeDirectory, final String zone,
 			final String defaultStorageResource) throws JargonException {
 
-		if (host == null || userName == null || password == null
-				|| homeDirectory == null || zone == null
-				|| defaultStorageResource == null) {
-			throw new JargonException(
-					"IRODSAccount values cannot be initialized with null");
-		} else if (host.length() == 0 || userName.length() == 0
-				|| zone.length() == 0) {
-			throw new JargonException(
-					"data cannot be blank when initializing with this method");
+		if (host == null || host.isEmpty()) {
+			throw new IllegalArgumentException("host is null or empty");
 		}
+
+		if (userName == null || userName.isEmpty()) {
+			throw new IllegalArgumentException("null or empty userName");
+		}
+
+		if (password == null) {
+			throw new IllegalArgumentException("password is null");
+		}
+
+		if (homeDirectory == null) {
+			throw new IllegalArgumentException("homeDirectory is null");
+		}
+
+		if (zone == null || zone.isEmpty()) {
+			throw new IllegalArgumentException("zone is null or empty");
+		}
+
+		if (defaultStorageResource == null) {
+			throw new IllegalArgumentException("defaultStorageResource is null");
+		}
+
 		return new IRODSAccount(host, port, userName, password, homeDirectory,
 				zone, defaultStorageResource);
 	}
