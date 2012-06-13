@@ -136,6 +136,11 @@ public class TicketDistributionServiceImpl extends AbstractTicketService
 				throw new JargonException("cannot encode ticketString", e);
 			}
 
+			sb.append("&objectType=");
+			sb.append(ticket.getObjectType());
+			sb.append("&ticketType=");
+			sb.append(ticket.getType());
+
 			sb.append("&irodsURI=");
 			sb.append(ticketDistribution.getIrodsAccessURI().toASCIIString());
 			URL accessURL;
@@ -157,6 +162,7 @@ public class TicketDistributionServiceImpl extends AbstractTicketService
 			 */
 
 			sb.append("&landingPage=true");
+
 			URL landingPageURL;
 			try {
 				landingPageURL = new URL(sb.toString());
