@@ -3,8 +3,10 @@ package org.irods.jargon.ticket;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 
+import org.apache.commons.io.FileUtils;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
@@ -130,6 +132,99 @@ public class TicketClientOperationsImpl extends AbstractTicketService implements
 		log.info("session initialized, doing get operation");
 		dataTransferOperations.getOperation(irodsSourceFile, targetLocalFile,
 				transferStatusCallbackListener, transferControlBlock);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.ticket.TicketClientOperations#
+	 * redeemTicketAndStreamToIRODSCollection(java.lang.String,
+	 * java.lang.String, java.lang.String, java.io.InputStream, java.io.File)
+	 */
+	@Override
+	public void redeemTicketAndStreamToIRODSCollection(
+			final String ticketString,
+			final String irodsCollectionAbsolutePath, final String fileName,
+			final InputStream inputStreamForFileData,
+			final File temporaryCacheDirectoryLocation)
+			throws DataNotFoundException, OverwriteException, JargonException {
+
+		log.info("redeemTicketAndStreamToIRODSCollection()");
+
+		if (ticketString == null || ticketString.isEmpty()) {
+			throw new IllegalArgumentException("null or empty ticketString");
+		}
+
+		if (fileName == null || fileName.isEmpty()) {
+			throw new IllegalArgumentException("null or empty fileName");
+		}
+
+		if (inputStreamForFileData == null) {
+			throw new IllegalArgumentException("null inputStreamForFileData");
+		}
+
+		if (temporaryCacheDirectoryLocation == null) {
+			throw new IllegalArgumentException(
+					"null temporaryCacheDirectoryLocation");
+		}
+
+		if (!temporaryCacheDirectoryLocation.exists()) {
+			throw new JargonException(
+					"temporaryCacheDirectoryLocation does not exist");
+		}
+
+		if (!temporaryCacheDirectoryLocation.isDirectory()) {
+			throw new JargonException(
+					"temporaryCacheDirectoryLocation is not a directory");
+		}
+
+		/*
+		 * Everything is in order I need to stream the input stream data to a
+		 * temporary file first
+		 */
+
+		StringBuffer sb = new StringBuffer();
+		sb.append("redeemTicketAndStreamToIRODSCollection_");
+		sb.append(System.currentTimeMillis());
+		sb.append("_");
+		sb.append(fileName);
+		String tempFileName = sb.toString();
+		log.info("temp file name:{}", tempFileName);
+		File tempFile = new File(temporaryCacheDirectoryLocation, tempFileName);
+
+		try {
+			FileUtils.copyInputStreamToFile(inputStreamForFileData, tempFile);
+		} catch (IOException e) {
+			log.error("io exception copying input stream to temp file", e);
+			throw new JargonException(
+					"error copying provided input stream to temporary cache");
+		}
+
+		IRODSFile targetIrodsFile = this.getIrodsAccessObjectFactory()
+				.getIRODSFileFactory(getIrodsAccount())
+				.instanceIRODSFile(irodsCollectionAbsolutePath, fileName);
+		log.info("target iRODS file:{}", targetIrodsFile);
+
+		log.info("data has been copied to temp file, now put to iRODS via ticket");
+		/*
+		 * Put file, try and clean up no matter what happens
+		 */
+		try {
+			putFileToIRODSUsingTicket(ticketString, tempFile, targetIrodsFile,
+					null, null);
+		} finally {
+			log.info("delete the temp file");
+			tempFile.delete();
+			log.info("close input stream");
+			try {
+				inputStreamForFileData.close();
+			} catch (IOException e) {
+			}
+		}
+
+
+		log.info("transfer complete");
+
 	}
 
 	/*

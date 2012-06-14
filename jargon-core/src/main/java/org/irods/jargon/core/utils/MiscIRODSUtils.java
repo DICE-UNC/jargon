@@ -6,8 +6,10 @@ package org.irods.jargon.core.utils;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.lang.reflect.Method;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -491,5 +493,30 @@ public class MiscIRODSUtils {
 		}
 
 		return new CollectionAndPath(directory, fileName);
+	}
+
+	/**
+	 * Get a <code>List</code> based on the values of the provided enum. Handy
+	 * for creating lists in interfaces and for other purposes
+	 * 
+	 * @param enumClass
+	 *            java <code>enum</code>
+	 * @return <code>List<String></code> of enum values
+	 * @throws JargonException
+	 */
+	public static <T extends Enum<T>> List<String> getDisplayValuesFromEnum(
+			Class<T> enumClass) throws JargonException {
+		try {
+			T[] items = enumClass.getEnumConstants();
+			Method accessor = enumClass.getMethod("toString");
+
+			ArrayList<String> names = new ArrayList<String>(items.length);
+			for (T item : items)
+				names.add(accessor.invoke(item).toString());
+
+			return names;
+		} catch (Exception ex) {
+			throw new JargonException("error getting enum vals", ex);
+		}
 	}
 }
