@@ -35,6 +35,7 @@ import org.irods.jargon.core.protovalues.UserTypeEnum;
 import org.irods.jargon.core.pub.domain.AvuData;
 import org.irods.jargon.core.pub.domain.DataObject;
 import org.irods.jargon.core.pub.domain.ObjStat;
+import org.irods.jargon.core.pub.domain.ObjStat.SpecColType;
 import org.irods.jargon.core.pub.domain.Resource;
 import org.irods.jargon.core.pub.domain.UserFilePermission;
 import org.irods.jargon.core.pub.io.IRODSFile;
@@ -126,8 +127,6 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			final String collectionPath, final String dataName)
 			throws DataNotFoundException, JargonException {
 
-		DataObject dataObject = null;
-
 		if (dataName == null || dataName.isEmpty()) {
 			throw new IllegalArgumentException("dataName is null or empty");
 		}
@@ -141,19 +140,75 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		ObjStat objStat = collectionAndDataObjectListAndSearchAO
 				.retrieveObjectStatForPath(absPath);
 
-		if (objStat == null) {
-			log.error("no file found for path:{}", absPath);
-			throw new DataNotFoundException("no file found for given path");
+		return findGivenObjStat(objStat);
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.DataObjectAO#findByAbsolutePath(java.lang.String
+	 * )
+	 */
+	@Override
+	public DataObject findByAbsolutePath(final String absolutePath)
+			throws DataNotFoundException, JargonException {
+
+		if (absolutePath == null || absolutePath.isEmpty()) {
+			throw new IllegalArgumentException(NULL_OR_EMPTY_ABSOLUTE_PATH);
 		}
 
-		/*
-		 * See if jargon supports the given object type
-		 */
-		MiscIRODSUtils.evaluateSpecCollSupport(objStat);
-		String effectiveAbsolutePath = MiscIRODSUtils
-				.determineAbsolutePathBasedOnCollTypeInObjectStat(objStat);
+		log.info("findByAbsolutePath() with path:{}", absolutePath);
 		CollectionAndPath collectionAndPath = MiscIRODSUtils
-				.splitCollectionAndPathFromAbsolutepath(effectiveAbsolutePath);
+				.splitCollectionAndPathFromAbsolutePath(absolutePath);
+		return findByCollectionNameAndDataName(
+				collectionAndPath.getCollectionParent(),
+				collectionAndPath.getChildName());
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.DataObjectAO#findGivenObjStat(org.irods.jargon
+	 * .core.pub.domain.ObjStat)
+	 */
+	@Override
+	public DataObject findGivenObjStat(final ObjStat objStat)
+			throws DataNotFoundException, JargonException {
+		log.info("findGivenObjStat()");
+
+		if (objStat == null) {
+			throw new IllegalArgumentException("null objStat");
+		}
+
+		log.info("objStat:{}", objStat);
+
+		if (objStat.isSomeTypeOfCollection()) {
+			log.error(
+					"objStat is not for a data object, wrong method called:{}",
+					objStat);
+			throw new JargonException(
+					"object is not a data object, it's a collection");
+		}
+
+		// make sure this special coll type has support
+		MiscIRODSUtils.evaluateSpecCollSupport(objStat);
+
+		// get the canonical path name as a collection parent and data name
+
+		// get absolute path to use for querying iCAT (could be a soft link)
+		String absPath = MiscIRODSUtils
+				.determineAbsolutePathBasedOnCollTypeInObjectStat(objStat);
+
+		log.info("absPath for querying iCAT:{}", absPath);
+
+		// split this as queries are by collection parent and data name
+		CollectionAndPath collectionAndPath = MiscIRODSUtils
+				.splitCollectionAndPathFromAbsolutePath(absPath);
+		log.info("collection and path for data object:{}", collectionAndPath);
 
 		final StringBuilder sb = new StringBuilder();
 		sb.append(dataAOHelper.buildSelects());
@@ -195,7 +250,13 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			throw new JargonException("error in query for data object", e);
 		}
 
-		if (resultSet.getFirstResult() != null) {
+		DataObject dataObject;
+
+		if (resultSet.getFirstResult() == null) {
+			log.error("no data object data found for objStat:{}", objStat);
+			throw new DataNotFoundException("no data object data found in iCAT for objStat");
+		} 
+
 			dataObject = dataAOHelper.buildDomainFromResultSetRow(resultSet
 					.getFirstResult());
 
@@ -205,37 +266,17 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			dataObject.setObjectPath(objStat.getObjectPath());
 			// if in a linked coll, still keep the same path and name as
 			// requested, objPath will have canonical parent
-			dataObject.setCollectionName(collectionPath);
-			dataObject.setDataName(dataName);
 
-			log.debug("returning: {}", dataObject.toString());
+		if (objStat.getSpecColType() == SpecColType.LINKED_COLL) {
+			CollectionAndPath requestedCollectionAndPath = MiscIRODSUtils
+					.splitCollectionAndPathFromAbsolutePath(objStat
+							.getAbsolutePath());
+			dataObject.setCollectionName(requestedCollectionAndPath
+					.getCollectionParent());
+			dataObject.setDataName(requestedCollectionAndPath.getChildName());
 		}
-
+		log.info("returning: {}", dataObject.toString());
 		return dataObject;
-
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.irods.jargon.core.pub.DataObjectAO#findByAbsolutePath(java.lang.String
-	 * )
-	 */
-	@Override
-	public DataObject findByAbsolutePath(final String absolutePath)
-			throws DataNotFoundException, JargonException {
-
-		if (absolutePath == null || absolutePath.isEmpty()) {
-			throw new IllegalArgumentException(NULL_OR_EMPTY_ABSOLUTE_PATH);
-		}
-
-		log.info("findByAbsolutePath() with path:{}", absolutePath);
-		CollectionAndPath collectionAndPath = MiscIRODSUtils
-				.splitCollectionAndPathFromAbsolutepath(absolutePath);
-		return findByCollectionNameAndDataName(
-				collectionAndPath.getCollectionParent(),
-				collectionAndPath.getChildName());
 
 	}
 
@@ -1503,7 +1544,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		 * Handle soft links by munging the path
 		 */
 		CollectionAndPath collName = MiscIRODSUtils
-				.splitCollectionAndPathFromAbsolutepath(absolutePath);
+				.splitCollectionAndPathFromAbsolutePath(absolutePath);
 		String absPath = this.resolveAbsolutePathViaObjStat(collName
 				.getCollectionParent());
 
@@ -1609,7 +1650,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		log.info("absolute path: {}", absolutePath);
 
 		CollectionAndPath collName = MiscIRODSUtils
-				.splitCollectionAndPathFromAbsolutepath(absolutePath);
+				.splitCollectionAndPathFromAbsolutePath(absolutePath);
 		String absPath = this.resolveAbsolutePathViaObjStat(collName
 				.getCollectionParent());
 
@@ -2058,7 +2099,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		log.info("findMetadataValuesForDataObject: {}", dataObjectAbsolutePath);
 
 		CollectionAndPath collName = MiscIRODSUtils
-				.splitCollectionAndPathFromAbsolutepath(dataObjectAbsolutePath);
+				.splitCollectionAndPathFromAbsolutePath(dataObjectAbsolutePath);
 		String absPath = this.resolveAbsolutePathViaObjStat(collName
 				.getCollectionParent());
 
@@ -2149,7 +2190,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		 * Handle soft links by munging the path
 		 */
 		CollectionAndPath collName = MiscIRODSUtils
-				.splitCollectionAndPathFromAbsolutepath(absolutePath);
+				.splitCollectionAndPathFromAbsolutePath(absolutePath);
 		String absPath = this.resolveAbsolutePathViaObjStat(collName
 				.getCollectionParent());
 
@@ -2179,7 +2220,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		 * Handle soft links by munging the path
 		 */
 		CollectionAndPath collName = MiscIRODSUtils
-				.splitCollectionAndPathFromAbsolutepath(absolutePath);
+				.splitCollectionAndPathFromAbsolutePath(absolutePath);
 		String absPath = this.resolveAbsolutePathViaObjStat(collName
 				.getCollectionParent());
 
@@ -2210,7 +2251,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		 * Handle soft links by munging the path
 		 */
 		CollectionAndPath collName = MiscIRODSUtils
-				.splitCollectionAndPathFromAbsolutepath(absolutePath);
+				.splitCollectionAndPathFromAbsolutePath(absolutePath);
 		String absPath = this.resolveAbsolutePathViaObjStat(collName
 				.getCollectionParent());
 
@@ -2240,7 +2281,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		 * Handle soft links by munging the path
 		 */
 		CollectionAndPath collName = MiscIRODSUtils
-				.splitCollectionAndPathFromAbsolutepath(absolutePath);
+				.splitCollectionAndPathFromAbsolutePath(absolutePath);
 		String absPath = this.resolveAbsolutePathViaObjStat(collName
 				.getCollectionParent());
 
@@ -2271,7 +2312,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		 * Handle soft links by munging the path
 		 */
 		CollectionAndPath collName = MiscIRODSUtils
-				.splitCollectionAndPathFromAbsolutepath(absolutePath);
+				.splitCollectionAndPathFromAbsolutePath(absolutePath);
 		String absPath = this.resolveAbsolutePathViaObjStat(collName
 				.getCollectionParent());
 
@@ -2301,7 +2342,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		 * Handle soft links by munging the path
 		 */
 		CollectionAndPath collName = MiscIRODSUtils
-				.splitCollectionAndPathFromAbsolutepath(absolutePath);
+				.splitCollectionAndPathFromAbsolutePath(absolutePath);
 		String absPath = this.resolveAbsolutePathViaObjStat(collName
 				.getCollectionParent());
 
@@ -2333,7 +2374,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		 * Handle soft links by munging the path
 		 */
 		CollectionAndPath collName = MiscIRODSUtils
-				.splitCollectionAndPathFromAbsolutepath(absolutePath);
+				.splitCollectionAndPathFromAbsolutePath(absolutePath);
 		String absPath = this.resolveAbsolutePathViaObjStat(collName
 				.getCollectionParent());
 
@@ -2363,7 +2404,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		 * Handle soft links by munging the path
 		 */
 		CollectionAndPath collName = MiscIRODSUtils
-				.splitCollectionAndPathFromAbsolutepath(absolutePath);
+				.splitCollectionAndPathFromAbsolutePath(absolutePath);
 		String absPath = this.resolveAbsolutePathViaObjStat(collName
 				.getCollectionParent());
 
@@ -2406,7 +2447,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		log.info("userName:{}", userName);
 
 		CollectionAndPath collName = MiscIRODSUtils
-				.splitCollectionAndPathFromAbsolutepath(absolutePath);
+				.splitCollectionAndPathFromAbsolutePath(absolutePath);
 		String absPath = this.resolveAbsolutePathViaObjStat(collName
 				.getCollectionParent());
 
@@ -2517,7 +2558,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		log.info("listPermissionsForDataObject: {}",
 				irodsDataObjectAbsolutePath);
 		CollectionAndPath collName = MiscIRODSUtils
-				.splitCollectionAndPathFromAbsolutepath(irodsDataObjectAbsolutePath);
+				.splitCollectionAndPathFromAbsolutePath(irodsDataObjectAbsolutePath);
 		String absPath = this.resolveAbsolutePathViaObjStat(collName
 				.getCollectionParent());
 		return listPermissionsForDataObject(absPath, collName.getChildName());
@@ -2860,7 +2901,7 @@ absPath,
 		log.info("userName:{}", userName);
 
 		CollectionAndPath collName = MiscIRODSUtils
-				.splitCollectionAndPathFromAbsolutepath(irodsAbsolutePath);
+				.splitCollectionAndPathFromAbsolutePath(irodsAbsolutePath);
 
 		return getPermissionForDataObjectForUserName(
 				collName.getCollectionParent(), collName.getChildName(),

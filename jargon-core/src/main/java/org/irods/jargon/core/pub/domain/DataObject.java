@@ -15,8 +15,6 @@ import org.irods.jargon.core.pub.domain.ObjStat.SpecColType;
  */
 public class DataObject extends IRODSDomainObject {
 
-	// FIXME: date as long? equals()? hash()?
-
 	private int id = 0;
 	private int collectionId = 0;
 	private String dataName = "";

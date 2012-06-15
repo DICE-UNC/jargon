@@ -212,16 +212,35 @@ public abstract class FileCatalogObjectAOImpl extends IRODSGenericAO implements
 				.retrieveObjectStatForPath(irodsAbsolutePath);
 	}
 
+	protected ObjStat retrieveObjStat(final String irodsAbsolutePath)
+			throws DataNotFoundException, JargonException {
+
+		log.info("retrieveObjStat()");
+
+		if (irodsAbsolutePath == null || irodsAbsolutePath.isEmpty()) {
+			throw new IllegalArgumentException(
+					"null or empty irodsAbsolutePath");
+		}
+
+		log.info("irodsAbsolutePath:{}", irodsAbsolutePath);
+
+		ObjStat objStat = collectionAndDataObjectListAndSearchAO
+				.retrieveObjectStatForPath(irodsAbsolutePath);
+
+		if (objStat == null) {
+			log.error("no file found for path:{}", irodsAbsolutePath);
+			throw new DataNotFoundException("no file found for given path");
+		}
+
+		return objStat;
+	}
+
 	protected String resolveAbsolutePathViaObjStat(final String irodsAbsolutePath)
 			throws JargonException {
-				ObjStat objStat = collectionAndDataObjectListAndSearchAO
-						.retrieveObjectStatForPath(irodsAbsolutePath);
+
+		log.info("resoveAbsolutePathViaObjStat()");
 			
-				if (objStat == null) {
-					log.error("no file found for path:{}", irodsAbsolutePath);
-					throw new DataNotFoundException("no file found for given path");
-				}
-			
+		ObjStat objStat = retrieveObjStat(irodsAbsolutePath);
 				/*
 				 * See if jargon supports the given object type
 				 */

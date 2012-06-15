@@ -2,6 +2,8 @@ package org.irods.jargon.core.pub.domain;
 
 import java.util.Date;
 
+import org.irods.jargon.core.pub.domain.ObjStat.SpecColType;
+
 /**
  * Represents a Collection in IRODS. This object represents the ICAT domain
  * object, and is distinct from considering a collection as a type of
@@ -25,17 +27,23 @@ public class Collection extends IRODSDomainObject {
 
 	private int collectionId = 0;
 	private String collectionName = "";
+	/**
+	 * The canonical absolute path for the object if this is a soft-linked
+	 * collection. If this object is retrieved by the canonical path, or it is
+	 * not a special collection, this will be blank
+	 */
+	private String objectPath = "";
 	private String collectionParentName = "";
 	private String collectionOwnerName = "";
 	private String collectionOwnerZone = "";
 	private String collectionMapId = "";
 	private String collectionInheritance = "";
 	private String comments = "";
-	private String collectionType = "";
 	private String info1 = "";
 	private String info2 = "";
 	private Date createdAt = new Date();
 	private Date modifiedAt = new Date();
+	private SpecColType specColType = SpecColType.NORMAL;
 
 	public int getCollectionId() {
 		return collectionId;
@@ -53,6 +61,12 @@ public class Collection extends IRODSDomainObject {
 		this.collectionName = collectionName;
 	}
 
+	/**
+	 * Get the full absolute path to the collection, this appends the parent
+	 * collection name to the sub collection name
+	 * 
+	 * @return
+	 */
 	public String getAbsolutePath() {
 		StringBuilder sb = new StringBuilder();
 		if (collectionParentName.length() > 1) {
@@ -126,15 +140,6 @@ public class Collection extends IRODSDomainObject {
 		this.comments = comments;
 	}
 
-	// FIXME: not used right now, queries do not work well with this data type
-	// check into iRODS
-	public String getCollectionType() {
-		return collectionType;
-	}
-
-	public void setCollectionType(final String collectionType) {
-		this.collectionType = collectionType;
-	}
 
 	public String getInfo1() {
 		return info1;
@@ -188,8 +193,10 @@ public class Collection extends IRODSDomainObject {
 		sb.append(collectionInheritance);
 		sb.append("\n   comments:");
 		sb.append(comments);
-		sb.append("\n   collectionType:");
-		sb.append(collectionType);
+		sb.append("\n   specialCollectionType:");
+		sb.append(specColType);
+		sb.append("\n   objectPath:");
+		sb.append(objectPath);
 		sb.append("\n   info1:");
 		sb.append(info1);
 		sb.append("\n   info2:");
@@ -199,6 +206,40 @@ public class Collection extends IRODSDomainObject {
 		sb.append("\n   modifiedAt:");
 		sb.append(modifiedAt);
 		return sb.toString();
+	}
+
+	/**
+	 * @return the objectPath <code>String</code> that will normally be blank,
+	 *         but if this is a soft link, this will reflect the canonical path
+	 *         to this collection
+	 */
+	public String getObjectPath() {
+		return objectPath;
+	}
+
+	/**
+	 * @param objectPath
+	 *            the objectPath to set <code>String</code> that will normally
+	 *            be blank, but if this is a soft link, this will reflect the
+	 *            canonical path to this collection
+	 */
+	public void setObjectPath(String objectPath) {
+		this.objectPath = objectPath;
+	}
+
+	/**
+	 * @return the specColType
+	 */
+	public SpecColType getSpecColType() {
+		return specColType;
+	}
+
+	/**
+	 * @param specColType
+	 *            the specColType to set
+	 */
+	public void setSpecColType(SpecColType specColType) {
+		this.specColType = specColType;
 	}
 
 }

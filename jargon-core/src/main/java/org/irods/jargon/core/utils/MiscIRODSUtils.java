@@ -462,7 +462,7 @@ public class MiscIRODSUtils {
 	 *            collection or data object
 	 * @return {@link CollectionAndPath} value object
 	 */
-	public static CollectionAndPath splitCollectionAndPathFromAbsolutepath(
+	public static CollectionAndPath splitCollectionAndPathFromAbsolutePath(
 			final String filePath) {
 
 		// used when parsing the filepath

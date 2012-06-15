@@ -39,6 +39,7 @@ import org.irods.jargon.core.query.MetaDataAndDomainData;
 import org.irods.jargon.core.query.MetaDataAndDomainData.MetadataDomain;
 import org.irods.jargon.core.query.RodsGenQueryEnum;
 import org.irods.jargon.core.utils.AccessObjectQueryProcessingUtils;
+import org.irods.jargon.core.utils.CollectionAndPath;
 import org.irods.jargon.core.utils.FederationEnabled;
 import org.irods.jargon.core.utils.IRODSDataConversionUtil;
 import org.irods.jargon.core.utils.MiscIRODSUtils;
@@ -804,6 +805,72 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 	 * (non-Javadoc)
 	 * 
 	 * @see
+	 * org.irods.jargon.core.pub.CollectionAO#findGivenObjStat(org.irods.jargon
+	 * .core.pub.domain.ObjStat)
+	 */
+	@Override
+	public Collection findGivenObjStat(final ObjStat objStat)
+			throws DataNotFoundException, JargonException {
+
+		log.info("findGivenObjStat()");
+
+		if (objStat == null) {
+			throw new IllegalArgumentException("null objStat");
+		}
+
+		log.info("objStat:{}", objStat);
+
+		if (!objStat.isSomeTypeOfCollection()) {
+			log.error(
+					"objStat is not for a collection, wrong method called:{}",
+					objStat);
+			throw new JargonException("object is not a collection");
+		}
+
+		// make sure this special coll type has support
+		MiscIRODSUtils.evaluateSpecCollSupport(objStat);
+
+		// get absolute path to use for querying iCAT (could be a soft link)
+		String absPath = MiscIRODSUtils
+				.determineAbsolutePathBasedOnCollTypeInObjectStat(objStat);
+
+		log.info("absPath for querying iCAT:{}", absPath);
+
+		StringBuilder sb = new StringBuilder();
+		sb.append(RodsGenQueryEnum.COL_COLL_NAME.getName());
+		sb.append(" = '");
+		sb.append(IRODSDataConversionUtil.escapeSingleQuotes(absPath));
+		sb.append("'");
+		List<Collection> collectionList = this.findWhere(sb.toString(), 0);
+
+		if (collectionList.size() == 0) {
+			log.error("No collection found for path:{}", absPath);
+			throw new DataNotFoundException("no collection found for path");
+		}
+
+		Collection collection = collectionList.get(0);
+		if (objStat.getSpecColType() == SpecColType.LINKED_COLL) {
+			log.info("this is a special collection,so update the paths and add an object path");
+		}
+
+		collection.setObjectPath(objStat.getObjectPath());
+		CollectionAndPath collectionAndPath = MiscIRODSUtils.splitCollectionAndPathFromAbsolutePath(objStat.getAbsolutePath());
+		sb = new StringBuilder();
+		sb.append(collectionAndPath
+				.getCollectionParent());
+		sb.append("/");
+		collection.setCollectionParentName(sb.toString());
+		collection.setCollectionName(collectionAndPath.getChildName());
+		collection.setSpecColType(objStat.getSpecColType());
+		
+		return collection;
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
 	 * org.irods.jargon.core.pub.CollectionAO#findByAbsolutePath(java.lang.String
 	 * )
 	 */
@@ -821,22 +888,9 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 		}
 
 		log.info("irodsCollectionAbsolutePath:{}", irodsCollectionAbsolutePath);
-		String absPath = this
-				.resolveAbsolutePathViaObjStat(irodsCollectionAbsolutePath);
 
-		StringBuilder sb = new StringBuilder();
-		sb.append(RodsGenQueryEnum.COL_COLL_NAME.getName());
-		sb.append(" = '");
-		sb.append(IRODSDataConversionUtil.escapeSingleQuotes(absPath));
-		sb.append("'");
-		List<Collection> collectionList = this.findWhere(sb.toString(), 0);
-
-		if (collectionList.size() == 0) {
-			throw new DataNotFoundException("no collection found for path:"
-					+ irodsCollectionAbsolutePath);
-		} else {
-			return collectionList.get(0);
-		}
+		ObjStat objStat = this.retrieveObjStat(irodsCollectionAbsolutePath);
+		return findGivenObjStat(objStat);
 
 	}
 

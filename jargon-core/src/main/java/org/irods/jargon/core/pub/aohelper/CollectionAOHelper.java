@@ -120,7 +120,7 @@ public class CollectionAOHelper extends AOHelper {
 		collection.setInfo1(row.getColumn(10));
 		collection.setInfo2(row.getColumn(11));
 		collection.setInfo2(row.getColumn(11));
-		collection.setCollectionType(row.getColumn(12));
+		// collection.setCollectionType(row.getColumn(12));
 		collection.setLastResult(row.isLastResult());
 
 		if (log.isInfoEnabled()) {

@@ -9,6 +9,7 @@ import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.protovalues.FilePermissionEnum;
 import org.irods.jargon.core.pub.domain.AvuData;
 import org.irods.jargon.core.pub.domain.Collection;
+import org.irods.jargon.core.pub.domain.ObjStat;
 import org.irods.jargon.core.pub.domain.UserFilePermission;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.query.AVUQueryElement;
@@ -748,5 +749,18 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	 */
 	List<Collection> findWhereInZone(String whereClause, int partialStartIndex,
 			String zone) throws JargonException;
+
+	/**
+	 * Given an <code>ObjStat</code> object, return a <code>Collection</code>
+	 * object representing the collection data in the iCAT
+	 * 
+	 * @param objStat
+	 *            {@link ObjStat} for the given collection
+	 * @return {@link Collection} representing the collection in iRODS
+	 * @throws DataNotFoundException
+	 * @throws JargonException
+	 */
+	Collection findGivenObjStat(ObjStat objStat) throws DataNotFoundException,
+			JargonException;
 
 }

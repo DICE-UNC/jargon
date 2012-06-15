@@ -746,7 +746,7 @@ public class DataObjectAOImplTest {
 
 	}
 
-	@Test(expected = DataNotFoundException.class)
+	@Test(expected = JargonException.class)
 	public void testFindByAbsolutePathWhenIsACollection() throws Exception {
 		// generate a local scratch file
 

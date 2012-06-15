@@ -8,6 +8,7 @@ import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.protovalues.FilePermissionEnum;
 import org.irods.jargon.core.pub.domain.AvuData;
 import org.irods.jargon.core.pub.domain.DataObject;
+import org.irods.jargon.core.pub.domain.ObjStat;
 import org.irods.jargon.core.pub.domain.Resource;
 import org.irods.jargon.core.pub.domain.UserFilePermission;
 import org.irods.jargon.core.pub.io.IRODSFile;
@@ -842,5 +843,21 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	List<Resource> listFileResources(String irodsAbsolutePath)
 			throws JargonException;
 
+	/**
+	 * Given a <code>ObjStat</code>, return a DataObject reflecting the
+	 * representation of that data object in the iRODS iCAT. this
+	 * <code>DataObject</code> takes special collection status into account, so
+	 * that if this is a soft link, it will carry information about the
+	 * canoncial path.
+	 * 
+	 * @param objStat
+	 *            {@link ObjStat} reflecting the iRODS data object
+	 * @return {@link DataObject} representing the iCAT data for the file in
+	 *         iRODS
+	 * @throws DataNotFoundException
+	 * @throws JargonException
+	 */
+	DataObject findGivenObjStat(ObjStat objStat) throws DataNotFoundException,
+			JargonException;
 
 }

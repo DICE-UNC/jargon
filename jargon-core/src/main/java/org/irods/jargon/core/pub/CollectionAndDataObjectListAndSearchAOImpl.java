@@ -1163,11 +1163,11 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		if (objStat.isSomeTypeOfCollection()) {
 			CollectionAO collectionAO = new CollectionAOImpl(getIRODSSession(),
 					getIRODSAccount());
-			returnObject = collectionAO.findByAbsolutePath(objectAbsolutePath);
+			returnObject = collectionAO.findGivenObjStat(objStat);
 		} else {
 			DataObjectAO dataObjectAO = new DataObjectAOImpl(getIRODSSession(),
 					getIRODSAccount());
-			returnObject = dataObjectAO.findByAbsolutePath(objectAbsolutePath);
+			returnObject = dataObjectAO.findGivenObjStat(objStat);
 			log.debug("looking for as a data object");
 		}
 

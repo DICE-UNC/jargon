@@ -4,8 +4,12 @@ import java.util.List;
 import java.util.Properties;
 
 import junit.framework.Assert;
+import junit.framework.TestCase;
 
 import org.irods.jargon.core.connection.IRODSAccount;
+import org.irods.jargon.core.pub.domain.Collection;
+import org.irods.jargon.core.pub.domain.DataObject;
+import org.irods.jargon.core.pub.domain.ObjStat.SpecColType;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
@@ -472,6 +476,128 @@ public class CollectionAndDataObjectListAndSearchAOImplForSoftLinksTest {
 		Assert.assertEquals(sourceIrodsCollection, entry.getSpecialObjectPath());
 		Assert.assertEquals("did not get both expected permissions", 2, entry
 				.getUserFilePermission().size());
+
+	}
+
+	/**
+	 * Get the full collection object when it's a soft link target collection
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void testGetFullObjectForCollectionWhenSoftLink() throws Exception {
+
+		String sourceCollectionName = "testGetFullObjectForCollectionWhenSoftLinkSource";
+		String targetCollectionName = "testGetFullObjectForCollectionWhenSoftLinkTarget";
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		String sourceIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
+								+ sourceCollectionName);
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
+								+ targetCollectionName);
+
+		// do an initial unmount
+		MountedCollectionAO mountedCollectionAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getMountedCollectionAO(
+						irodsAccount);
+
+		mountedCollectionAO.unmountACollection(targetIrodsCollection,
+				irodsAccount.getDefaultStorageResource());
+
+		// set up source collection
+		IRODSFile sourceFile = irodsFileSystem
+				.getIRODSFileFactory(irodsAccount).instanceIRODSFile(
+						sourceIrodsCollection);
+		sourceFile.mkdirs();
+
+
+		// create the soft link
+		mountedCollectionAO.createASoftLink(sourceIrodsCollection,
+				targetIrodsCollection);
+
+		CollectionAndDataObjectListAndSearchAO listAndSearchAO = irodsFileSystem
+				.getIRODSAccessObjectFactory()
+				.getCollectionAndDataObjectListAndSearchAO(irodsAccount);
+
+		Object actual = listAndSearchAO
+				.getFullObjectForType(targetIrodsCollection);
+		Assert.assertNotNull("object was null", actual);
+		boolean isCollection = actual instanceof Collection;
+		Assert.assertTrue("was not a collection", isCollection);
+		Collection collection = (Collection) actual;
+		TestCase.assertEquals("collection path should be soft link target path", targetIrodsCollection, collection.getAbsolutePath());
+		TestCase.assertEquals("collection should indicate actual source path",
+				sourceIrodsCollection, collection.getObjectPath());
+		TestCase.assertEquals("wrong spec col type", SpecColType.LINKED_COLL,
+				collection.getSpecColType());
+
+	}
+
+	@Test
+	public void testGetFullObjectForDataObjectWhenSoftLink() throws Exception {
+
+		String sourceCollectionName = "testFindByCollectionPathAndDataNameWhenSoftLinkSource";
+		String targetCollectionName = "testFindByCollectionPathAndDataNameWhenSoftLinkTarget";
+		String testFileName = "test.txt";
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		String sourceIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
+								+ sourceCollectionName);
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
+								+ targetCollectionName);
+
+		// do an initial unmount
+		MountedCollectionAO mountedCollectionAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getMountedCollectionAO(
+						irodsAccount);
+
+		mountedCollectionAO.unmountACollection(targetIrodsCollection,
+				irodsAccount.getDefaultStorageResource());
+
+		// set up source collection
+		IRODSFile sourceFile = irodsFileSystem
+				.getIRODSFileFactory(irodsAccount).instanceIRODSFile(
+						sourceIrodsCollection);
+		sourceFile.mkdirs();
+
+		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(sourceIrodsCollection, testFileName);
+		irodsFile.createNewFile();
+
+		// create the soft link
+		mountedCollectionAO.createASoftLink(sourceIrodsCollection,
+				targetIrodsCollection);
+
+		CollectionAndDataObjectListAndSearchAO listAndSearchAO = irodsFileSystem
+				.getIRODSAccessObjectFactory()
+				.getCollectionAndDataObjectListAndSearchAO(irodsAccount);
+
+		DataObject dataObject = (DataObject) listAndSearchAO
+				.getFullObjectForType(targetIrodsCollection + "/"
+						+ testFileName);
+
+		TestCase.assertNotNull("did not find data object by soft link name",
+				dataObject);
+		TestCase.assertEquals("should have the requested col name",
+				targetIrodsCollection, dataObject.getCollectionName());
+		TestCase.assertEquals("shold reflect the canonical col in objPath",
+				sourceIrodsCollection, dataObject.getObjectPath());
+		TestCase.assertEquals("should be a special coll",
+				SpecColType.LINKED_COLL, dataObject.getSpecColType());
 
 	}
 
