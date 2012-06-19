@@ -161,7 +161,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 		log.info("findByAbsolutePath() with path:{}", absolutePath);
 		CollectionAndPath collectionAndPath = MiscIRODSUtils
-				.splitCollectionAndPathFromAbsolutePath(absolutePath);
+				.separateCollectionAndPathFromGivenAbsolutePath(absolutePath);
 		return findByCollectionNameAndDataName(
 				collectionAndPath.getCollectionParent(),
 				collectionAndPath.getChildName());
@@ -207,7 +207,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 		// split this as queries are by collection parent and data name
 		CollectionAndPath collectionAndPath = MiscIRODSUtils
-				.splitCollectionAndPathFromAbsolutePath(absPath);
+				.separateCollectionAndPathFromGivenAbsolutePath(absPath);
 		log.info("collection and path for data object:{}", collectionAndPath);
 
 		final StringBuilder sb = new StringBuilder();
@@ -269,7 +269,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 		if (objStat.getSpecColType() == SpecColType.LINKED_COLL) {
 			CollectionAndPath requestedCollectionAndPath = MiscIRODSUtils
-					.splitCollectionAndPathFromAbsolutePath(objStat
+					.separateCollectionAndPathFromGivenAbsolutePath(objStat
 							.getAbsolutePath());
 			dataObject.setCollectionName(requestedCollectionAndPath
 					.getCollectionParent());
@@ -1544,7 +1544,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		 * Handle soft links by munging the path
 		 */
 		CollectionAndPath collName = MiscIRODSUtils
-				.splitCollectionAndPathFromAbsolutePath(absolutePath);
+				.separateCollectionAndPathFromGivenAbsolutePath(absolutePath);
 		String absPath = this.resolveAbsolutePathViaObjStat(collName
 				.getCollectionParent());
 
@@ -1650,7 +1650,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		log.info("absolute path: {}", absolutePath);
 
 		CollectionAndPath collName = MiscIRODSUtils
-				.splitCollectionAndPathFromAbsolutePath(absolutePath);
+				.separateCollectionAndPathFromGivenAbsolutePath(absolutePath);
 		String absPath = this.resolveAbsolutePathViaObjStat(collName
 				.getCollectionParent());
 
@@ -2099,7 +2099,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		log.info("findMetadataValuesForDataObject: {}", dataObjectAbsolutePath);
 
 		CollectionAndPath collName = MiscIRODSUtils
-				.splitCollectionAndPathFromAbsolutePath(dataObjectAbsolutePath);
+				.separateCollectionAndPathFromGivenAbsolutePath(dataObjectAbsolutePath);
 		String absPath = this.resolveAbsolutePathViaObjStat(collName
 				.getCollectionParent());
 
@@ -2190,7 +2190,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		 * Handle soft links by munging the path
 		 */
 		CollectionAndPath collName = MiscIRODSUtils
-				.splitCollectionAndPathFromAbsolutePath(absolutePath);
+				.separateCollectionAndPathFromGivenAbsolutePath(absolutePath);
 		String absPath = this.resolveAbsolutePathViaObjStat(collName
 				.getCollectionParent());
 
@@ -2220,7 +2220,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		 * Handle soft links by munging the path
 		 */
 		CollectionAndPath collName = MiscIRODSUtils
-				.splitCollectionAndPathFromAbsolutePath(absolutePath);
+				.separateCollectionAndPathFromGivenAbsolutePath(absolutePath);
 		String absPath = this.resolveAbsolutePathViaObjStat(collName
 				.getCollectionParent());
 
@@ -2251,7 +2251,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		 * Handle soft links by munging the path
 		 */
 		CollectionAndPath collName = MiscIRODSUtils
-				.splitCollectionAndPathFromAbsolutePath(absolutePath);
+				.separateCollectionAndPathFromGivenAbsolutePath(absolutePath);
 		String absPath = this.resolveAbsolutePathViaObjStat(collName
 				.getCollectionParent());
 
@@ -2281,7 +2281,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		 * Handle soft links by munging the path
 		 */
 		CollectionAndPath collName = MiscIRODSUtils
-				.splitCollectionAndPathFromAbsolutePath(absolutePath);
+				.separateCollectionAndPathFromGivenAbsolutePath(absolutePath);
 		String absPath = this.resolveAbsolutePathViaObjStat(collName
 				.getCollectionParent());
 
@@ -2312,7 +2312,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		 * Handle soft links by munging the path
 		 */
 		CollectionAndPath collName = MiscIRODSUtils
-				.splitCollectionAndPathFromAbsolutePath(absolutePath);
+				.separateCollectionAndPathFromGivenAbsolutePath(absolutePath);
 		String absPath = this.resolveAbsolutePathViaObjStat(collName
 				.getCollectionParent());
 
@@ -2342,7 +2342,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		 * Handle soft links by munging the path
 		 */
 		CollectionAndPath collName = MiscIRODSUtils
-				.splitCollectionAndPathFromAbsolutePath(absolutePath);
+				.separateCollectionAndPathFromGivenAbsolutePath(absolutePath);
 		String absPath = this.resolveAbsolutePathViaObjStat(collName
 				.getCollectionParent());
 
@@ -2374,7 +2374,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		 * Handle soft links by munging the path
 		 */
 		CollectionAndPath collName = MiscIRODSUtils
-				.splitCollectionAndPathFromAbsolutePath(absolutePath);
+				.separateCollectionAndPathFromGivenAbsolutePath(absolutePath);
 		String absPath = this.resolveAbsolutePathViaObjStat(collName
 				.getCollectionParent());
 
@@ -2404,7 +2404,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		 * Handle soft links by munging the path
 		 */
 		CollectionAndPath collName = MiscIRODSUtils
-				.splitCollectionAndPathFromAbsolutePath(absolutePath);
+				.separateCollectionAndPathFromGivenAbsolutePath(absolutePath);
 		String absPath = this.resolveAbsolutePathViaObjStat(collName
 				.getCollectionParent());
 
@@ -2447,7 +2447,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		log.info("userName:{}", userName);
 
 		CollectionAndPath collName = MiscIRODSUtils
-				.splitCollectionAndPathFromAbsolutePath(absolutePath);
+				.separateCollectionAndPathFromGivenAbsolutePath(absolutePath);
 		String absPath = this.resolveAbsolutePathViaObjStat(collName
 				.getCollectionParent());
 
@@ -2558,7 +2558,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		log.info("listPermissionsForDataObject: {}",
 				irodsDataObjectAbsolutePath);
 		CollectionAndPath collName = MiscIRODSUtils
-				.splitCollectionAndPathFromAbsolutePath(irodsDataObjectAbsolutePath);
+				.separateCollectionAndPathFromGivenAbsolutePath(irodsDataObjectAbsolutePath);
 		String absPath = this.resolveAbsolutePathViaObjStat(collName
 				.getCollectionParent());
 		return listPermissionsForDataObject(absPath, collName.getChildName());
@@ -2901,7 +2901,7 @@ absPath,
 		log.info("userName:{}", userName);
 
 		CollectionAndPath collName = MiscIRODSUtils
-				.splitCollectionAndPathFromAbsolutePath(irodsAbsolutePath);
+				.separateCollectionAndPathFromGivenAbsolutePath(irodsAbsolutePath);
 
 		return getPermissionForDataObjectForUserName(
 				collName.getCollectionParent(), collName.getChildName(),

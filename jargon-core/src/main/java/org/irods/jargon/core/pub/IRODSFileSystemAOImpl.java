@@ -303,7 +303,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 		String effectiveAbsolutePath = MiscIRODSUtils
 				.determineAbsolutePathBasedOnCollTypeInObjectStat(objStat);
 		CollectionAndPath collectionAndPath = MiscIRODSUtils
-				.splitCollectionAndPathFromAbsolutePath(effectiveAbsolutePath);
+				.separateCollectionAndPathFromGivenAbsolutePath(effectiveAbsolutePath);
 
 		User user = userAO.findByName(userName);
 
@@ -664,7 +664,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 		String effectiveAbsolutePath = MiscIRODSUtils
 				.determineAbsolutePathBasedOnCollTypeInObjectStat(objStat);
 		CollectionAndPath collectionAndPath = MiscIRODSUtils
-				.splitCollectionAndPathFromAbsolutePath(effectiveAbsolutePath);
+				.separateCollectionAndPathFromGivenAbsolutePath(effectiveAbsolutePath);
 
 		log.info("getListInDir for parent:{}", irodsFile.getAbsolutePath());
 

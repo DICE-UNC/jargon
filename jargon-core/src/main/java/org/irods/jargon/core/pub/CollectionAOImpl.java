@@ -854,13 +854,13 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 		}
 
 		collection.setObjectPath(objStat.getObjectPath());
-		CollectionAndPath collectionAndPath = MiscIRODSUtils.splitCollectionAndPathFromAbsolutePath(objStat.getAbsolutePath());
+		CollectionAndPath collectionAndPath = MiscIRODSUtils.separateCollectionAndPathFromGivenAbsolutePath(objStat.getAbsolutePath());
 		sb = new StringBuilder();
 		sb.append(collectionAndPath
 				.getCollectionParent());
 		sb.append("/");
 		collection.setCollectionParentName(sb.toString());
-		collection.setCollectionName(collectionAndPath.getChildName());
+		collection.setCollectionName(objStat.getAbsolutePath());
 		collection.setSpecColType(objStat.getSpecColType());
 		
 		return collection;
@@ -931,7 +931,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 
 		String absPath = null;
 		if (objStat.getSpecColType() == SpecColType.LINKED_COLL) {
-			absPath = objStat.getCollectionPath();
+			absPath = objStat.getObjectPath();
 		} else {
 			absPath = irodsCollectionAbsolutePath;
 		}

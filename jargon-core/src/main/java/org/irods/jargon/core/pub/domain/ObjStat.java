@@ -235,7 +235,8 @@ public class ObjStat {
 
 	/**
 	 * @return the collectionPath <code>String</code> that indicates that actual
-	 *         canonical path to the file
+	 *         canonical path to the soft linked collection for soft linked data
+	 *         objects
 	 */
 	public String getCollectionPath() {
 		return collectionPath;
@@ -243,8 +244,9 @@ public class ObjStat {
 
 	/**
 	 * @param collectionPath
-	 *            the collectionPath to set <code>String</code> that indicates that
-	 *            actual canonical path to the file
+	 *            the collectionPath to set <code>String</code> that indicates
+	 *            that actual canonical path to the soft linked collection for
+	 *            soft linked data objects
 	 */
 	public void setCollectionPath(String collectionPath) {
 		this.collectionPath = collectionPath;
@@ -297,7 +299,8 @@ public class ObjStat {
 
 	/**
 	 * @return the objectPath <code>String</code> with either the physical path,
-	 *         for a normal file, or the source path for a soft link
+	 *         for a normal file, or the canonical path for a soft linked
+	 *         collection
 	 */
 	public String getObjectPath() {
 		return objectPath;
@@ -306,8 +309,8 @@ public class ObjStat {
 	/**
 	 * @param objectPath
 	 *            the objectPath to set <code>String</code> with either the
-	 *            physical path, for a normal file, or the source path for a
-	 *            soft link
+	 *            physical path, for a normal file, or the canonical path for a
+	 *            soft linked collection
 	 */
 	public void setObjectPath(String objectPath) {
 		this.objectPath = objectPath;

@@ -437,17 +437,14 @@ public class MiscIRODSUtils {
 		String effectiveAbsolutePath = null;
 
 		if (objStat.getSpecColType() == SpecColType.LINKED_COLL) {
-			if (objStat.isSomeTypeOfCollection()) {
-				effectiveAbsolutePath = objStat.getObjectPath();
-			} else {
-				StringBuilder sb = new StringBuilder();
-				sb.append(objStat.getObjectPath());
-				sb.append("/");
-				sb.append(MiscIRODSUtils
-						.getLastPathComponentForGiveAbsolutePath(objStat
-								.getAbsolutePath()));
-				effectiveAbsolutePath = sb.toString();
-			}
+			/*
+			 * StringBuilder sb = new StringBuilder();
+			 * sb.append(objStat.getObjectPath()); sb.append("/");
+			 * sb.append(MiscIRODSUtils
+			 * .getLastPathComponentForGiveAbsolutePath(objStat
+			 * .getAbsolutePath())); effectiveAbsolutePath = sb.toString();
+			 */
+			effectiveAbsolutePath = objStat.getObjectPath();
 		} else {
 			effectiveAbsolutePath = objStat.getAbsolutePath();
 		}
@@ -462,7 +459,7 @@ public class MiscIRODSUtils {
 	 *            collection or data object
 	 * @return {@link CollectionAndPath} value object
 	 */
-	public static CollectionAndPath splitCollectionAndPathFromAbsolutePath(
+	public static CollectionAndPath separateCollectionAndPathFromGivenAbsolutePath(
 			final String filePath) {
 
 		// used when parsing the filepath

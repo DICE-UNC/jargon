@@ -427,7 +427,7 @@ public class DataObject extends IRODSDomainObject {
 	/**
 	 * @return the objectPath <code>String</code> with the canonical path of the
 	 *         object. if this is a soft link the object path is the canonical
-	 *         path to the parent.
+	 *         path to the data object, and will carry the full file name.
 	 */
 	public String getObjectPath() {
 		return objectPath;

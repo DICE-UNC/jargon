@@ -26,6 +26,12 @@ import org.irods.jargon.core.pub.domain.ObjStat.SpecColType;
 public class Collection extends IRODSDomainObject {
 
 	private int collectionId = 0;
+	/**
+	 * This will be the full absolute path of the collection, in the case of a
+	 * mounted collection, such as a soft link, this may be the linked name,
+	 * where the objectPath will contain the canonical path or actual physial
+	 * location
+	 */
 	private String collectionName = "";
 	/**
 	 * The canonical absolute path for the object if this is a soft-linked
@@ -33,6 +39,9 @@ public class Collection extends IRODSDomainObject {
 	 * not a special collection, this will be blank
 	 */
 	private String objectPath = "";
+	/**
+	 * This will be the full absolute path of the parent of the given collection
+	 */
 	private String collectionParentName = "";
 	private String collectionOwnerName = "";
 	private String collectionOwnerZone = "";
@@ -53,30 +62,22 @@ public class Collection extends IRODSDomainObject {
 		this.collectionId = collectionId;
 	}
 
+	/**
+	 * This will be the full absolute path to the collection. It may be a
+	 * special collection path, such as a soft link
+	 */
 	public String getCollectionName() {
 		return collectionName;
 	}
 
+	/**
+	 * This will be the full absolute path to the collection. It may be a
+	 * special collection path, such as a soft link
+	 * 
+	 * @param collectionName
+	 */
 	public void setCollectionName(final String collectionName) {
 		this.collectionName = collectionName;
-	}
-
-	/**
-	 * Get the full absolute path to the collection, this appends the parent
-	 * collection name to the sub collection name
-	 * 
-	 * @return
-	 */
-	public String getAbsolutePath() {
-		StringBuilder sb = new StringBuilder();
-		if (collectionParentName.length() > 1) {
-			sb.append(collectionParentName);
-		}
-
-		if (collectionName.length() > 1) {
-			sb.append(collectionName);
-		}
-		return sb.toString();
 	}
 
 	/**
@@ -92,10 +93,22 @@ public class Collection extends IRODSDomainObject {
 		return collectionName.substring(lastSlash + 1);
 	}
 
+	/**
+	 * This will be the absolute path to the parent collection of this
+	 * collection
+	 * 
+	 * @return
+	 */
 	public String getCollectionParentName() {
 		return collectionParentName;
 	}
 
+	/**
+	 * This will be the absolute path to the parent collection of this
+	 * collection
+	 * 
+	 * @param collectionParentName
+	 */
 	public void setCollectionParentName(final String collectionParentName) {
 		this.collectionParentName = collectionParentName;
 	}

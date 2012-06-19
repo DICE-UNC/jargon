@@ -112,7 +112,8 @@ public class DataObjectAOImplForSoftLinkTest {
 		TestCase.assertEquals("should have the requested col name",
 				targetIrodsCollection, dataObject.getCollectionName());
 		TestCase.assertEquals("shold reflect the canonical col in objPath",
-				sourceIrodsCollection, dataObject.getObjectPath());
+				sourceIrodsCollection + "/" + testFileName,
+				dataObject.getObjectPath());
 		TestCase.assertEquals("should be a special coll",
 				SpecColType.LINKED_COLL, dataObject.getSpecColType());
 

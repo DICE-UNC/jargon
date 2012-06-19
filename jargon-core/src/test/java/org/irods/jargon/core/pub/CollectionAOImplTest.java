@@ -17,6 +17,7 @@ import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.protovalues.FilePermissionEnum;
 import org.irods.jargon.core.pub.domain.AvuData;
 import org.irods.jargon.core.pub.domain.Collection;
+import org.irods.jargon.core.pub.domain.ObjStat.SpecColType;
 import org.irods.jargon.core.pub.domain.UserFilePermission;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.pub.io.IRODSFileFactory;
@@ -1225,8 +1226,16 @@ public class CollectionAOImplTest {
 				.getCollectionAO(irodsAccount);
 		Collection collection = collectionAO
 				.findByAbsolutePath(targetIrodsCollection);
+
 		Assert.assertNotNull("did not find the collection, was null",
 				collection);
+		TestCase.assertEquals("should be normal coll type", SpecColType.NORMAL,
+				collection.getSpecColType());
+		TestCase.assertEquals("absPath should be same as requested path",
+				targetIrodsCollection, collection.getCollectionName());
+		TestCase.assertEquals(
+				"collection Name should be same as requested path",
+				targetIrodsCollection, collection.getCollectionName());
 	}
 
 	@Test(expected = FileNotFoundException.class)

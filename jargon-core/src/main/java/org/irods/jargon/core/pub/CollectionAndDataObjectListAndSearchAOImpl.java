@@ -23,6 +23,7 @@ import org.irods.jargon.core.query.IRODSQueryResultRow;
 import org.irods.jargon.core.query.IRODSQueryResultSetInterface;
 import org.irods.jargon.core.query.JargonQueryException;
 import org.irods.jargon.core.query.RodsGenQueryEnum;
+import org.irods.jargon.core.utils.CollectionAndPath;
 import org.irods.jargon.core.utils.FederationEnabled;
 import org.irods.jargon.core.utils.IRODSDataConversionUtil;
 import org.irods.jargon.core.utils.MiscIRODSUtils;
@@ -570,11 +571,6 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 			throw new IllegalArgumentException("null objStat");
 		}
 
-		/*
-		 * See if jargon supports the given object type
-		 */
-		MiscIRODSUtils.evaluateSpecCollSupport(objStat);
-
 		/**
 		 * This may be a soft link, in which case the canonical path is used for
 		 * the query
@@ -623,7 +619,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 				if (collectionAndDataObjectListingEntry != null) {
 					collectionAndDataObjectListingEntry
 							.setUserFilePermission(userFilePermissions);
-					augmentCollectionAndDataObjectListingEntryForSpecialCollections(
+					augmentCollectionEntryForSpecialCollections(
 							objStat, effectiveAbsolutePath,
 							collectionAndDataObjectListingEntry);
 					subdirs.add(collectionAndDataObjectListingEntry);
@@ -654,7 +650,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 				log.debug("adding last entry");
 				collectionAndDataObjectListingEntry
 						.setUserFilePermission(userFilePermissions);
-				augmentCollectionAndDataObjectListingEntryForSpecialCollections(
+				augmentCollectionEntryForSpecialCollections(
 						objStat, effectiveAbsolutePath,
 						collectionAndDataObjectListingEntry);
 				subdirs.add(collectionAndDataObjectListingEntry);
@@ -774,7 +770,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 			 * Use the data in the objStat, in the case of special collections,
 			 * to augment the data returned
 			 */
-			augmentCollectionAndDataObjectListingEntryForSpecialCollections(
+			augmentCollectionEntryForSpecialCollections(
 					objStat, effectiveAbsolutePath, entry);
 
 			StringBuilder sb = new StringBuilder();
@@ -796,35 +792,48 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 
 	/**
 	 * Use the data in the objStat, in the case of special collections, to
-	 * augment the data returned
+	 * augment the entry for a collection
 	 * 
 	 * @param objStat
+	 *            {@link ObjStat} retreived for the parent directory
 	 * @param effectiveAbsolutePath
+	 *            <code>String</code> with the path used to query, this will be
+	 *            the canonical path for the parent collection, and should
+	 *            correspond to the absolute path information in the given
+	 *            <code>entry</code>.
 	 * @param entry
+	 *            {@link CollectionAndDataObjectListingEntry} which is the raw
+	 *            data returned from querying the iCat based on the
+	 *            <code>effectiveAbsolutePath</code>. This information is from
+	 *            the perspective of the canonical path, and the given method
+	 *            will reframe the <code>entry</code> from the perspective of
+	 *            the requested path This means that a query on children of a
+	 *            soft link carry the data from the perspective of the soft
+	 *            linked directory, even though the iCAT carries the information
+	 *            based on the 'source path' of the soft link. This gets pretty
+	 *            confusing otherwise.
 	 */
-	private void augmentCollectionAndDataObjectListingEntryForSpecialCollections(
+	private void augmentCollectionEntryForSpecialCollections(
 			final ObjStat objStat, final String effectiveAbsolutePath,
 			final CollectionAndDataObjectListingEntry entry) {
+
 		if (objStat.getSpecColType() == SpecColType.LINKED_COLL) {
 			log.info("adjusting paths in entry to reflect linked collection info");
-			entry.setSpecialObjectPath(effectiveAbsolutePath);
-			if (entry.isCollection()) {
-				StringBuilder sb = new StringBuilder();
-				sb.append(objStat.getCollectionPath());
-				// sb.append('/');
-				sb.append(MiscIRODSUtils
-						.getLastPathComponentForGiveAbsolutePath(entry
-								.getPathOrName()));
+			entry.setSpecialObjectPath(objStat.getObjectPath());
+			CollectionAndPath collectionAndPathForAbsPath = MiscIRODSUtils
+					.separateCollectionAndPathFromGivenAbsolutePath(entry
+							.getPathOrName());
 
-				entry.setPathOrName(sb.toString());
+			if (entry.isCollection()) {
+				entry.setPathOrName(objStat.getAbsolutePath() + "/"
+						+ collectionAndPathForAbsPath.getChildName());
+				entry.setParentPath(objStat.getAbsolutePath());
 			} else {
-				entry.setPathOrName(MiscIRODSUtils
-						.getLastPathComponentForGiveAbsolutePath(entry
-								.getPathOrName()));
+				entry.setParentPath(objStat.getAbsolutePath());
 			}
 
-			entry.setParentPath(objStat.getCollectionPath());
 		}
+
 	}
 
 	/*
@@ -960,7 +969,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 				// actual query result row that caused the break, used in
 				// requery to not reread the same data
 				entry.setCount(lastCount - 1);
-				augmentCollectionAndDataObjectListingEntryForSpecialCollections(
+				augmentCollectionEntryForSpecialCollections(
 						objStat, effectiveAbsolutePath, entry);
 				files.add(entry);
 			}
@@ -992,7 +1001,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 				// requery to not reread the same data
 				entry.setCount(lastCount);
 				entry.setLastResult(lastRecord);
-				augmentCollectionAndDataObjectListingEntryForSpecialCollections(
+				augmentCollectionEntryForSpecialCollections(
 						objStat, effectiveAbsolutePath, entry);
 				files.add(entry);
 			} else {
@@ -1201,6 +1210,10 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 
 		log.debug("response from objStat: {}", response.parseTag());
 
+		/**
+		 * For spec cols - soft link - phyPath = parent canonical dir -objPath =
+		 * canonical path
+		 */
 		ObjStat objStat = new ObjStat();
 		objStat.setAbsolutePath(irodsAbsolutePath);
 		objStat.setChecksum(response.getTag("chksum").getStringValue());
@@ -1219,6 +1232,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		 * to deal with
 		 */
 		if (specColl != null) {
+
 			Tag tag = specColl.getTag("collection");
 
 			if (tag != null) {
@@ -1243,6 +1257,8 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 			switch (collClass) {
 			case 0:
 				objStat.setSpecColType(SpecColType.NORMAL);
+				objStat.setObjectPath(specColl.getTag("phyPath")
+						.getStringValue());
 				break;
 			case 1:
 				objStat.setSpecColType(SpecColType.STRUCT_FILE_COLL);
@@ -1252,12 +1268,42 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 				break;
 			case 3:
 				objStat.setSpecColType(SpecColType.LINKED_COLL);
+
+				/*
+				 * physical path will hold the canonical source dir where it was
+				 * linked. The collection path will hold the top level of the
+				 * soft link target. This does not 'follow' by incrementing the
+				 * path as you descend into subdirs, so I use the collection
+				 * path to chop off the absolute path, and use the remainder
+				 * appended to the collection path to arrive at equivalent
+				 * canonical source path fo rthis soft linked directory. This is
+				 * all rather confusing, so instead of worrying about it, Jargon
+				 * has the headache, you can just trust the objStat objectPath
+				 * to point to the equivalent canonical source path to the soft
+				 * linked path.
+				 */
+				String canonicalSourceDirForSoftLink = specColl.getTag(
+						"phyPath").getStringValue();
+				String softLinkTargetDir = specColl.getTag("collection")
+						.getStringValue();
+				if (softLinkTargetDir.length() > objStat.getAbsolutePath()
+						.length()) {
+					throw new JargonException(
+							"cannot properly compute path for soft link");
+				}
+
+				String additionalPath = objStat.getAbsolutePath().substring(
+						softLinkTargetDir.length());
+				StringBuilder sb = new StringBuilder();
+				sb.append(canonicalSourceDirForSoftLink);
+				sb.append(additionalPath);
+				objStat.setObjectPath(sb.toString());
+
 				break;
 			default:
 				throw new JargonException("unknown special coll type:");
 			}
 
-			objStat.setObjectPath(specColl.getTag("phyPath").getStringValue());
 
 		}
 
@@ -1287,11 +1333,17 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 			final CollectionAndDataObjectListingEntry collectionAndDataObjectListingEntry) {
 		if (objStat.getSpecColType() == SpecColType.LINKED_COLL) {
 			log.info("adjusting paths in entry to reflect linked collection info");
-			collectionAndDataObjectListingEntry
-					.setSpecialObjectPath(effectiveAbsolutePath);
-
 			StringBuilder sb = new StringBuilder();
-			sb.append(objStat.getCollectionPath());
+			sb.append(objStat.getObjectPath());
+			sb.append('/');
+			sb.append(MiscIRODSUtils
+					.getLastPathComponentForGiveAbsolutePath(collectionAndDataObjectListingEntry
+							.getPathOrName()));
+			collectionAndDataObjectListingEntry.setSpecialObjectPath(sb
+					.toString());
+
+			sb = new StringBuilder();
+			sb.append(objStat.getAbsolutePath());
 			sb.append('/');
 			sb.append(MiscIRODSUtils
 					.getLastPathComponentForGiveAbsolutePath(collectionAndDataObjectListingEntry
@@ -1300,7 +1352,9 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 			collectionAndDataObjectListingEntry.setPathOrName(sb.toString());
 
 			collectionAndDataObjectListingEntry.setParentPath(objStat
-					.getCollectionPath());
+					.getAbsolutePath());
+			collectionAndDataObjectListingEntry
+					.setSpecColType(SpecColType.LINKED_COLL);
 		}
 	}
 

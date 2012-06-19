@@ -151,7 +151,12 @@ public class CollectionAndDataObjectListingEntry extends IRODSDomainObject
 
 	/**
 	 * Handy method that will compute the appropriate absolute path, whether a
-	 * data object or a collection.
+	 * data object or a collection. This will be the display path. In the case
+	 * of a soft-linked directory, this is the soft link target, rather then the
+	 * canonical source directory. This is appropriate as listings under a soft
+	 * linked directory should be in terms of the parent directory, but may not
+	 * give the intended result if used to query the iCAT for information about
+	 * the file or collection.
 	 * 
 	 * @return
 	 */

@@ -100,7 +100,8 @@ public class CollectionAndDataObjectListAndSearchAOImplForSoftLinksTest {
 
 		CollectionAndDataObjectListingEntry entry = listed.get(0);
 		Assert.assertEquals(targetIrodsCollection, entry.getParentPath());
-		Assert.assertEquals(sourceIrodsCollection, entry.getSpecialObjectPath());
+		Assert.assertEquals(sourceIrodsCollection + "/" + subfileName,
+				entry.getSpecialObjectPath());
 
 	}
 
@@ -310,7 +311,8 @@ public class CollectionAndDataObjectListAndSearchAOImplForSoftLinksTest {
 						+ "/" + subfileName);
 		Assert.assertNotNull("null entry", entry);
 		Assert.assertEquals(targetIrodsCollection, entry.getParentPath());
-		Assert.assertEquals(sourceIrodsCollection, entry.getSpecialObjectPath());
+		Assert.assertEquals(sourceIrodsCollection + "/" + subfileName,
+				entry.getSpecialObjectPath());
 
 	}
 
@@ -532,7 +534,9 @@ public class CollectionAndDataObjectListAndSearchAOImplForSoftLinksTest {
 		boolean isCollection = actual instanceof Collection;
 		Assert.assertTrue("was not a collection", isCollection);
 		Collection collection = (Collection) actual;
-		TestCase.assertEquals("collection path should be soft link target path", targetIrodsCollection, collection.getAbsolutePath());
+		TestCase.assertEquals(
+				"collection path should be soft link target path",
+				targetIrodsCollection, collection.getCollectionName());
 		TestCase.assertEquals("collection should indicate actual source path",
 				sourceIrodsCollection, collection.getObjectPath());
 		TestCase.assertEquals("wrong spec col type", SpecColType.LINKED_COLL,
@@ -594,10 +598,111 @@ public class CollectionAndDataObjectListAndSearchAOImplForSoftLinksTest {
 				dataObject);
 		TestCase.assertEquals("should have the requested col name",
 				targetIrodsCollection, dataObject.getCollectionName());
-		TestCase.assertEquals("shold reflect the canonical col in objPath",
-				sourceIrodsCollection, dataObject.getObjectPath());
+		TestCase.assertEquals("should reflect the canonical col in objPath",
+				sourceIrodsCollection + "/" + testFileName,
+				dataObject.getObjectPath());
 		TestCase.assertEquals("should be a special coll",
 				SpecColType.LINKED_COLL, dataObject.getSpecColType());
+
+	}
+
+	/**
+	 * Soft link a collection, add a subdir, and then add 10 data objects and
+	 * list them. This tests doing listings on subdirs beneath a soft linked
+	 * collection
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void testListDataObjectsUnderPathWhenIsALinkedCollNested()
+			throws Exception {
+
+		String sourceCollectionName = "testListDataObjectsUnderPathWhenIsALinkedCollNestedSource";
+		String targetCollectionName = "testListDataObjectsUnderPathWhenIsALinkedCollNestedTarget";
+		String nestedSubdirName = "nestedSubdir";
+		String subfileNameSuffix = ".txt";
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		String sourceIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
+								+ sourceCollectionName);
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
+								+ targetCollectionName);
+
+		// do an initial unmount
+		MountedCollectionAO mountedCollectionAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getMountedCollectionAO(
+						irodsAccount);
+
+		mountedCollectionAO.unmountACollection(targetIrodsCollection,
+				irodsAccount.getDefaultStorageResource());
+
+		// set up source collection
+		IRODSFile sourceFile = irodsFileSystem
+				.getIRODSFileFactory(irodsAccount).instanceIRODSFile(
+						sourceIrodsCollection);
+		sourceFile.mkdirs();
+		// now make the nested subdir
+		sourceFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(sourceIrodsCollection, nestedSubdirName);
+		sourceFile.mkdir();
+
+		int count = 10;
+
+		IRODSFile irodsFile = null;
+
+		String myTarget = "";
+
+		for (int i = 0; i < count; i++) {
+			myTarget = sourceFile.getAbsolutePath() + "/c" + (10000 + i)
+					+ subfileNameSuffix;
+			irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+					.instanceIRODSFile(myTarget);
+			irodsFile.createNewFile();
+			irodsFile.close();
+		}
+
+		// create the soft link
+		mountedCollectionAO.createASoftLink(sourceIrodsCollection,
+				targetIrodsCollection);
+
+		CollectionAndDataObjectListAndSearchAO listAndSearchAO = irodsFileSystem
+				.getIRODSAccessObjectFactory()
+				.getCollectionAndDataObjectListAndSearchAO(irodsAccount);
+
+		List<CollectionAndDataObjectListingEntry> listed = listAndSearchAO
+				.listCollectionsUnderPath(targetIrodsCollection, 0);
+
+		Assert.assertEquals("should see 1 nested subdir", 1, listed.size());
+		CollectionAndDataObjectListingEntry entry = listed.get(0);
+
+		Assert.assertEquals("should be a collection", SpecColType.LINKED_COLL,
+				entry.getSpecColType());
+		Assert.assertEquals(
+				"absPath  of nested subdir should be to soft link target abs path for subdir",
+				targetIrodsCollection + "/" + nestedSubdirName, entry.getFormattedAbsolutePath());
+		Assert.assertEquals("object path should be soft link source dir",
+				sourceIrodsCollection + "/" + nestedSubdirName,
+				entry.getSpecialObjectPath());
+
+		// get the listing underneath the nested subdir using the absPath of the
+		// subdir
+
+		listed = listAndSearchAO.listDataObjectsUnderPath(
+				entry.getFormattedAbsolutePath(), 0);
+		Assert.assertEquals("should list 10 data objects", count, listed.size());
+
+		entry = listed.get(0);
+		Assert.assertEquals(targetIrodsCollection + "/" + nestedSubdirName,
+				entry.getParentPath());
+		Assert.assertEquals(sourceIrodsCollection + "/" + nestedSubdirName,
+				entry.getSpecialObjectPath());
 
 	}
 
