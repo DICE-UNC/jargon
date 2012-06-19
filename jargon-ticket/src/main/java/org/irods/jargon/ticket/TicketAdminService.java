@@ -450,4 +450,47 @@ public interface TicketAdminService {
 	Ticket compareGivenTicketToActualAndUpdateAsNeeded(
 			Ticket ticketWithDesiredData) throws DataNotFoundException,
 			JargonException;
+
+	/**
+	 * This is a 'meta' method that can manage the creation of iRODS tickets,
+	 * and the simultaneous setting of the various limits. This convenience
+	 * method removes the need to put this somewhat complicated sequence of code
+	 * into applications.
+	 * <p/>
+	 * This variant uses a delegation technique so that a rodsAdmin can create a
+	 * ticket that another user will own. This is important in scenarios where a
+	 * proxy user may be interacting with iRODS on behalf of a user.
+	 * <p/>
+	 * It must be noted that iRODS protocol clients cannot frame this sort of
+	 * operation in a transaction, so there is a very small chance that the
+	 * operaton will not happen a atomically. This is not something that the
+	 * client can do anything about. However, this still isolates the operations
+	 * into a well tested unit.
+	 * 
+	 * @param ticket
+	 *            {@link Ticket} to be added. Note that the only data that
+	 *            really needs to be in the <code>Ticket</code> is the
+	 *            (optional) ticket string, the ticket type (READ or WRITE), and
+	 *            the absolute path. The rest of the data can either be left
+	 *            alone, or it can be specified, and this will be handled by the
+	 *            update process. For example, if you set a write byte limit in
+	 *            the provided ticket, a call will be made to establish that
+	 *            value.
+	 *            <p/>
+	 *            Note that the <code>ticketString</code> in the
+	 *            <code>Ticket</code> may either be specified, or it may be left
+	 *            blank. If left blank, a ticket id will be randomly generated.
+	 *            The <code>Ticket</code> object returned from this method will
+	 *            carry all of the values properly initialized.
+	 * @param userName
+	 *            <code>String</code>
+	 * @throws DuplicateDataException
+	 *             if the <code>Ticket.ticketString</code> is already in use
+	 * @throws DataNotFoundException
+	 *             if the iRODS file does not exist
+	 * @throws JargonException
+	 */
+	Ticket createTicketFromTicketObjectAsAdminForGivenUser(Ticket ticket,
+			String userName) throws DuplicateDataException,
+			DataNotFoundException, JargonException;
 }

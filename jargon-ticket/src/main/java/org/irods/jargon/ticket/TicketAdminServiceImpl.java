@@ -15,6 +15,7 @@ import org.irods.jargon.core.pub.CollectionAO;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 import org.irods.jargon.core.pub.IRODSGenQueryExecutor;
 import org.irods.jargon.core.pub.ProtocolExtensionPoint;
+import org.irods.jargon.core.pub.UserAO;
 import org.irods.jargon.core.pub.domain.ObjStat;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.query.GenQueryBuilderException;
@@ -63,6 +64,56 @@ public final class TicketAdminServiceImpl extends AbstractTicketService
 			final IRODSAccount irodsAccount) throws JargonException {
 		this.irodsAccessObjectFactory = irodsAccessObjectFactory;
 		this.irodsAccount = irodsAccount;
+	}
+
+	@Override
+	public Ticket createTicketFromTicketObjectAsAdminForGivenUser(
+			final Ticket ticket, final String userName)
+			throws DuplicateDataException, DataNotFoundException,
+			JargonException {
+		log.info("createTicketFromTicketObjectAsAdminForGivenUser()");
+
+		if (ticket == null) {
+			throw new IllegalArgumentException("null ticket");
+		}
+
+		if (userName == null || userName.isEmpty()) {
+			throw new IllegalArgumentException("null or empty userName");
+		}
+
+		log.info("ticket to update:{}", ticket);
+		log.info("userName:{}", userName);
+
+		log.info("create a temp password for the given user, if I am not rodsadmin this will fail");
+
+		// generate a temp password for the given user
+		UserAO userAO = this.getIrodsAccessObjectFactory().getUserAO(
+				irodsAccount);
+		String tempPassword = userAO
+				.getTemporaryPasswordForASpecifiedUser(userName);
+		IRODSAccount tempUserAccount = IRODSAccount.instance(this
+				.getIrodsAccount().getHost(), this.getIrodsAccount().getPort(),
+				userName, tempPassword, "", this.getIrodsAccount().getZone(),
+				this.getIrodsAccount().getDefaultStorageResource());
+
+		log.info("temp password created, delegate to a service for this user");
+		Ticket delegateTicket;
+
+		try {
+			TicketServiceFactory delegateServiceFactory = new TicketServiceFactoryImpl(
+					irodsAccessObjectFactory);
+			TicketAdminService delegateService = delegateServiceFactory
+					.instanceTicketAdminService(tempUserAccount);
+			log.info("delegating call to create ticket");
+			delegateTicket = delegateService
+					.createTicketFromTicketObject(ticket);
+			log.info("created ticket as user:${}", delegateTicket);
+		} finally {
+			this.getIrodsAccessObjectFactory().closeSession(tempUserAccount);
+		}
+
+		return delegateTicket;
+
 	}
 
 	/*
@@ -1616,9 +1667,9 @@ public final class TicketAdminServiceImpl extends AbstractTicketService
 		// expires (
 		if (!isDateSame(ticketWithDesiredData.getExpireTime(),
 				actualTicket.getExpireTime())) {
-				log.info("updating expires limit");
-				setTicketExpiration(actualTicket.getTicketString(),
-						ticketWithDesiredData.getExpireTime());
+			log.info("updating expires limit");
+			setTicketExpiration(actualTicket.getTicketString(),
+					ticketWithDesiredData.getExpireTime());
 		}
 
 		log.info("ticket updated, read again to return to caller");
