@@ -1,8 +1,8 @@
 
 *'''Project''': Jargon-core - IRODS Java API
 *'''Date''': X/X/X
-*'''Release Version''': 3.1.3-BETA1
-*'''git tag''': 3.1.3-BETA1 
+*'''Release Version''': 3.1.3-beta1
+*'''git tag''': 3.1.3-beta1 
 
 ==News==
 
