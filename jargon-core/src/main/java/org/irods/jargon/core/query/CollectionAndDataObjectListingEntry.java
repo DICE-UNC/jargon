@@ -64,7 +64,6 @@ public class CollectionAndDataObjectListingEntry extends IRODSDomainObject
 		this.parentPath = parentPath;
 	}
 
-
 	/**
 	 * Return the absolute path of the file or collection under the parent
 	 * 
