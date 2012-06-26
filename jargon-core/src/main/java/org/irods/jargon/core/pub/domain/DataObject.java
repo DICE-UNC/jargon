@@ -5,6 +5,7 @@ package org.irods.jargon.core.pub.domain;
 
 import java.util.Date;
 
+import org.apache.commons.io.FileUtils;
 import org.irods.jargon.core.pub.domain.ObjStat.SpecColType;
 
 /**
@@ -193,6 +194,16 @@ public class DataObject extends IRODSDomainObject {
 	 */
 	public long getDataSize() {
 		return dataSize;
+	}
+
+	/**
+	 * Handy method gets a displayable <code>String</code> with a unit (e.g. MB,
+	 * GB) appropriate to the file length
+	 * 
+	 * @return <code>String</code> with displayable file size
+	 */
+	public String getDisplayDataSize() {
+		return FileUtils.byteCountToDisplaySize(dataSize);
 	}
 
 	/**

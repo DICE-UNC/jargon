@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.io.FileUtils;
 import org.irods.jargon.core.pub.domain.IRODSDomainObject;
 import org.irods.jargon.core.pub.domain.ObjStat;
 import org.irods.jargon.core.pub.domain.ObjStat.SpecColType;
@@ -113,6 +114,16 @@ public class CollectionAndDataObjectListingEntry extends IRODSDomainObject
 
 	public void setDataSize(final long dataSize) {
 		this.dataSize = dataSize;
+	}
+
+	/**
+	 * Handy method gets a displayable <code>String</code> with a unit (e.g. MB,
+	 * GB) appropriate to the file length
+	 * 
+	 * @return <code>String</code> with displayable file size
+	 */
+	public String getDisplayDataSize() {
+		return FileUtils.byteCountToDisplaySize(dataSize);
 	}
 
 	public int getId() {

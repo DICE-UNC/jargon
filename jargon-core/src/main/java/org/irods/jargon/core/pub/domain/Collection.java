@@ -104,6 +104,16 @@ public class Collection extends IRODSDomainObject {
 	}
 
 	/**
+	 * Returns the absolute path for a collection, this is synonymous with the
+	 * <code>getCollectionName()</code>.
+	 * 
+	 * @return
+	 */
+	public String getAbsolutePath() {
+		return getCollectionName();
+	}
+
+	/**
 	 * This will be the absolute path to the parent collection of this
 	 * collection
 	 * 
