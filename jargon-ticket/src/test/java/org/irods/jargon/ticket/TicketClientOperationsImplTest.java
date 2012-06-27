@@ -43,8 +43,7 @@ public class TicketClientOperationsImplTest {
 	public static void setUpBeforeClass() throws Exception {
 		TestingPropertiesHelper testingPropertiesLoader = new TestingPropertiesHelper();
 		testingProperties = testingPropertiesLoader.getTestProperties();
-		testTicket = testingPropertiesLoader
-				.isTestRemoteExecStream(testingProperties);
+		testTicket = testingPropertiesLoader.isTestTickets(testingProperties);
 		scratchFileUtils = new ScratchFileUtils(testingProperties);
 		scratchFileUtils
 				.clearAndReinitializeScratchDirectory(IRODS_TEST_SUBDIR_PATH);
@@ -226,7 +225,7 @@ public class TicketClientOperationsImplTest {
 	public final void testPutFileToIRODSUsingInvalidTicket() throws Exception {
 
 		if (!testTicket) {
-			return;
+			throw new CatNoAccessException("expected");
 		}
 
 		String testCollection = "testPutFileToIRODSUsingInvalidTicket";
@@ -399,7 +398,7 @@ public class TicketClientOperationsImplTest {
 			throws Exception {
 
 		if (!testTicket) {
-			return;
+			throw new DataNotFoundException("expected");
 		}
 
 		// generate a local scratch file
@@ -720,7 +719,7 @@ public class TicketClientOperationsImplTest {
 			throws Exception {
 
 		if (!testTicket) {
-			return;
+			throw new JargonException("expected");
 		}
 
 		String testCollection = "redeemTicketGetDataObjectAndStreamBackIrodsFileIsCollection";
@@ -779,7 +778,7 @@ public class TicketClientOperationsImplTest {
 			throws Exception {
 
 		if (!testTicket) {
-			return;
+			throw new JargonException("expected");
 		}
 
 		long size = 3 * 1024;

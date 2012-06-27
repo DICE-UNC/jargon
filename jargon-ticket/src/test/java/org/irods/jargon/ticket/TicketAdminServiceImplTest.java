@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Properties;
 
 import junit.framework.Assert;
-import junit.framework.TestCase;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.DataNotFoundException;
@@ -51,8 +50,13 @@ public class TicketAdminServiceImplTest {
 	public static void setUpBeforeClass() throws Exception {
 		TestingPropertiesHelper testingPropertiesLoader = new TestingPropertiesHelper();
 		testingProperties = testingPropertiesLoader.getTestProperties();
-		testTicket = testingPropertiesLoader
-				.isTestRemoteExecStream(testingProperties);
+
+		testTicket = testingPropertiesLoader.isTestTickets(testingProperties);
+
+		if (!testTicket) {
+			return;
+		}
+
 		scratchFileUtils = new ScratchFileUtils(testingProperties);
 		irodsTestSetupUtilities = new IRODSTestSetupUtilities();
 		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
@@ -247,7 +251,7 @@ public class TicketAdminServiceImplTest {
 
 	}
 
-	@Test(expected = DataNotFoundException.class)
+	@Test
 	public void testCreateTicketForDataObjectDoesNotExist() throws Exception {
 
 		if (!testTicket) {
@@ -271,8 +275,17 @@ public class TicketAdminServiceImplTest {
 		TicketAdminService ticketSvc = new TicketAdminServiceImpl(
 				accessObjectFactory, irodsAccount);
 
-		String ticketId = ticketSvc.createTicket(
+		String ticketId = "";
+		boolean gotError = false;
+
+		try {
+			ticketId = ticketSvc.createTicket(
 				TicketCreateModeEnum.TICKET_CREATE_READ, targetFile, null);
+		} catch (DataNotFoundException dnf) {
+			gotError = true;
+		}
+
+		Assert.assertTrue("did not get data not found", gotError);
 
 		// delete ticket after done
 		ticketSvc.deleteTicket(ticketId);
@@ -283,7 +296,7 @@ public class TicketAdminServiceImplTest {
 	public void testCreateTicketForDataObjectNullFile() throws Exception {
 
 		if (!testTicket) {
-			return;
+			throw new IllegalArgumentException();
 		}
 
 		String testFileName = "testCreateTicketForDataObjectNullFile.txt";
@@ -313,7 +326,7 @@ public class TicketAdminServiceImplTest {
 	public void testCreateTicketForDataObjectNullMode() throws Exception {
 
 		if (!testTicket) {
-			return;
+			throw new IllegalArgumentException("expected");
 		}
 
 		String testFileName = "testCreateTicketForDataObjectNullMode.txt";
@@ -374,7 +387,7 @@ public class TicketAdminServiceImplTest {
 	public void testCreateTicketForCollectionDoesNotExist() throws Exception {
 
 		if (!testTicket) {
-			return;
+			throw new DataNotFoundException("expected");
 		}
 
 		String collectionName = "testCreateTicketForCollectionDoesNotExist";
@@ -445,7 +458,7 @@ public class TicketAdminServiceImplTest {
 			throws Exception {
 
 		if (!testTicket) {
-			return;
+			throw new DataNotFoundException("expected");
 		}
 
 		String testFileName = "testCreateTicketForDataObjectBelongingToDifferentUser.txt";
@@ -500,7 +513,7 @@ public class TicketAdminServiceImplTest {
 			throws Exception {
 
 		if (!testTicket) {
-			return;
+			throw new DuplicateDataException("expected");
 		}
 
 		String testFileName = "testCreateTicketForDataObjectNonUniqueTicketString.txt";
@@ -534,7 +547,7 @@ public class TicketAdminServiceImplTest {
 			throws Exception {
 
 		if (!testTicket) {
-			return;
+			throw new DuplicateDataException("expected");
 		}
 
 		// need to do this because -890000 error (in previous test) seems to
@@ -579,7 +592,7 @@ public class TicketAdminServiceImplTest {
 	public void testDeleteTicketForDataObjectExists() throws Exception {
 
 		if (!testTicket) {
-			return;
+			throw new DataNotFoundException("expected");
 		}
 
 		// need to do this because -890000 error (in previous test) seems to
@@ -626,7 +639,7 @@ public class TicketAdminServiceImplTest {
 	public void testDeleteTicketForDataObjectDoesNotExist() throws Exception {
 
 		if (!testTicket) {
-			return;
+			throw new DataNotFoundException("expected");
 		}
 
 		String testFileName = "testDeleteTicketForDataObjectDoesNotExist.txt";
@@ -692,7 +705,7 @@ public class TicketAdminServiceImplTest {
 	public void testDeleteTicketWithNullTicketString() throws Exception {
 
 		if (!testTicket) {
-			return;
+			throw new IllegalArgumentException("expected");
 		}
 
 		String testFileName = "testDeleteTicketWithNullTicketString.txt";
@@ -792,7 +805,7 @@ public class TicketAdminServiceImplTest {
 			throws Exception {
 
 		if (!testTicket) {
-			return;
+			throw new IllegalArgumentException("expected");
 		}
 
 		int numberOfUses = 22;
@@ -826,9 +839,8 @@ public class TicketAdminServiceImplTest {
 			throws Exception {
 
 		if (!testTicket) {
-			return;
+			throw new IllegalArgumentException("expected");
 		}
-
 		int numberOfUses = -1;
 		String testFileName = "testModifyTicketUsesLimitForTicketExistsUsesLessThan0.txt";
 
@@ -934,7 +946,7 @@ public class TicketAdminServiceImplTest {
 			throws Exception {
 
 		if (!testTicket) {
-			return;
+			throw new IllegalArgumentException("expected");
 		}
 
 		int numberFileWrites = 102;
@@ -968,7 +980,7 @@ public class TicketAdminServiceImplTest {
 			throws Exception {
 
 		if (!testTicket) {
-			return;
+			throw new IllegalArgumentException("expected");
 		}
 
 		int numberFileWrites = -1;
@@ -1076,7 +1088,7 @@ public class TicketAdminServiceImplTest {
 			throws Exception {
 
 		if (!testTicket) {
-			return;
+			throw new IllegalArgumentException("expected");
 		}
 
 		int numberByteWrites = 100993;
@@ -1110,7 +1122,7 @@ public class TicketAdminServiceImplTest {
 			throws Exception {
 
 		if (!testTicket) {
-			return;
+			throw new IllegalArgumentException("expected");
 		}
 
 		int numberByteWrites = -1;
@@ -1221,7 +1233,7 @@ public class TicketAdminServiceImplTest {
 			throws Exception {
 
 		if (!testTicket) {
-			return;
+			throw new IllegalArgumentException("expected");
 		}
 
 		Date expireSoon = new Date();
@@ -1257,7 +1269,7 @@ public class TicketAdminServiceImplTest {
 			throws Exception {
 
 		if (!testTicket) {
-			return;
+			throw new IllegalArgumentException("expected");
 		}
 
 		Date expireSoon = null;
@@ -1361,7 +1373,7 @@ public class TicketAdminServiceImplTest {
 			throws Exception {
 
 		if (!testTicket) {
-			return;
+			throw new IllegalArgumentException("expected");
 		}
 
 		String testFileName = "testAddTicketUserRestrictionForTicketExistsNullTicketId.txt";
@@ -1394,7 +1406,7 @@ public class TicketAdminServiceImplTest {
 			throws Exception {
 
 		if (!testTicket) {
-			return;
+			throw new IllegalArgumentException("expected");
 		}
 
 		String testFileName = "testAddTicketUserRestrictionForTicketExistsNullUserId.txt";
@@ -1427,7 +1439,7 @@ public class TicketAdminServiceImplTest {
 			throws Exception {
 
 		if (!testTicket) {
-			return;
+			throw new InvalidUserException("expected");
 		}
 
 		String invalidUser = "me";
@@ -1545,7 +1557,7 @@ public class TicketAdminServiceImplTest {
 			throws Exception {
 
 		if (!testTicket) {
-			return;
+			throw new IllegalArgumentException("expected");
 		}
 
 		String testFileName = "testRemoveTicketUserRestrictionForTicketExistsNullTicketId.txt";
@@ -1584,7 +1596,7 @@ public class TicketAdminServiceImplTest {
 			throws Exception {
 
 		if (!testTicket) {
-			return;
+			throw new IllegalArgumentException("expected");
 		}
 
 		String testFileName = "testRemoveTicketUserRestrictionForTicketExistsNullUserId.txt";
@@ -1623,7 +1635,7 @@ public class TicketAdminServiceImplTest {
 			throws Exception {
 
 		if (!testTicket) {
-			return;
+			throw new InvalidUserException("expected");
 		}
 
 		String invalidUser = "me";
@@ -1740,7 +1752,7 @@ public class TicketAdminServiceImplTest {
 			throws Exception {
 
 		if (!testTicket) {
-			return;
+			throw new IllegalArgumentException("expected");
 		}
 
 		String testFileName = "testAddTicketGroupRestrictionForTicketExistsNullTicketId.txt";
@@ -1776,7 +1788,7 @@ public class TicketAdminServiceImplTest {
 			throws Exception {
 
 		if (!testTicket) {
-			return;
+			throw new IllegalArgumentException("expected");
 		}
 
 		String testFileName = "testAddTicketGroupRestrictionForTicketExistsNullGroupId.txt";
@@ -1809,7 +1821,7 @@ public class TicketAdminServiceImplTest {
 			throws Exception {
 
 		if (!testTicket) {
-			return;
+			throw new InvalidGroupException("expected");
 		}
 
 		String testFileName = "testAddTicketGroupRestrictionForTicketExistsInvalidGroup.txt";
@@ -1931,7 +1943,7 @@ public class TicketAdminServiceImplTest {
 			throws Exception {
 
 		if (!testTicket) {
-			return;
+			throw new IllegalArgumentException("expected");
 		}
 
 		String testFileName = "testRemoveTicketGroupRestrictionForTicketExistsNullTicketId.txt";
@@ -1972,7 +1984,7 @@ public class TicketAdminServiceImplTest {
 			throws Exception {
 
 		if (!testTicket) {
-			return;
+			throw new IllegalArgumentException("expected");
 		}
 
 		String testFileName = "testRemoveTicketGroupRestrictionForTicketExistsNullGroupId.txt";
@@ -2013,7 +2025,7 @@ public class TicketAdminServiceImplTest {
 			throws Exception {
 
 		if (!testTicket) {
-			return;
+			throw new InvalidGroupException("expected");
 		}
 
 		String testFileName = "testRemoveTicketGroupRestrictionForTicketExistsInvalidGroup.txt";
@@ -2127,7 +2139,7 @@ public class TicketAdminServiceImplTest {
 			throws Exception {
 
 		if (!testTicket) {
-			return;
+			throw new IllegalArgumentException("expected");
 		}
 
 		String testFileName = "testAddTicketHostRestrictionForTicketExistsNullTicketId.txt";
@@ -2161,7 +2173,7 @@ public class TicketAdminServiceImplTest {
 			throws Exception {
 
 		if (!testTicket) {
-			return;
+			throw new IllegalArgumentException("expected");
 		}
 
 		String testFileName = "testAddTicketHostRestrictionForTicketExistsNullHost.txt";
@@ -2196,7 +2208,7 @@ public class TicketAdminServiceImplTest {
 			throws Exception {
 
 		if (!testTicket) {
-			return;
+			throw new JargonException("expected");
 		}
 
 		String testFileName = "testAddTicketHostRestrictionForTicketExistsInvalidHost.txt";
@@ -2315,7 +2327,7 @@ public class TicketAdminServiceImplTest {
 			throws Exception {
 
 		if (!testTicket) {
-			return;
+			throw new IllegalArgumentException("expected");
 		}
 
 		String testFileName = "testRemoveTicketHostRestrictionForTicketExistsNullTicketId.txt";
@@ -2355,7 +2367,7 @@ public class TicketAdminServiceImplTest {
 			throws Exception {
 
 		if (!testTicket) {
-			return;
+			throw new IllegalArgumentException("expected");
 		}
 
 		String testFileName = "testRemoveTicketHostRestrictionForTicketExistsNullHost.txt";
@@ -2397,8 +2409,9 @@ public class TicketAdminServiceImplTest {
 			throws Exception {
 
 		if (!testTicket) {
-			return;
+			throw new JargonException("expected");
 		}
+
 		String localHost = "127.0.0.1";
 		String invalidHost = "wrongipaddress";
 
@@ -2599,7 +2612,7 @@ public class TicketAdminServiceImplTest {
 			throws Exception {
 
 		if (!testTicket) {
-			return;
+			throw new FileNotFoundException("expected");
 		}
 
 		String testCollection = "listAllTicketsForGivenCollectionNonExistentPath";
@@ -2626,7 +2639,7 @@ public class TicketAdminServiceImplTest {
 	public void listAllTicketsForGivenCollectionNullPath() throws Exception {
 
 		if (!testTicket) {
-			return;
+			throw new IllegalArgumentException("expected");
 		}
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
@@ -2645,7 +2658,7 @@ public class TicketAdminServiceImplTest {
 	public void listAllTicketsForGivenCollectionStringPath() throws Exception {
 
 		if (!testTicket) {
-			return;
+			throw new IllegalArgumentException("expected");
 		}
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
@@ -2713,7 +2726,7 @@ public class TicketAdminServiceImplTest {
 			throws Exception {
 
 		if (!testTicket) {
-			return;
+			throw new JargonException("expected");
 		}
 
 		String testFileName = "listAllTicketsForGivenDataObject.txt";
@@ -2772,7 +2785,6 @@ public class TicketAdminServiceImplTest {
 		ticket.setType(TicketCreateModeEnum.TICKET_CREATE_READ);
 		Ticket returnedTicket = ticketSvc.createTicketFromTicketObject(ticket);
 
-
 		Ticket actual = ticketSvc
 				.getTicketForSpecifiedTicketString(returnedTicket
 						.getTicketString());
@@ -2812,15 +2824,15 @@ public class TicketAdminServiceImplTest {
 		ticket.setIrodsAbsolutePath(collection.getAbsolutePath());
 		ticket.setType(TicketCreateModeEnum.TICKET_CREATE_READ);
 		Ticket returnedTicket = ticketSvc.createTicketFromTicketObject(ticket);
-		TestCase.assertNotNull("null ticket returned", returnedTicket);
-		TestCase.assertFalse("ticket string not set",
+		Assert.assertNotNull("null ticket returned", returnedTicket);
+		Assert.assertFalse("ticket string not set",
 				returnedTicket.getTicketString() == null
 						| returnedTicket.getTicketString().isEmpty());
-		TestCase.assertEquals("user name not set", irodsAccount.getUserName(),
+		Assert.assertEquals("user name not set", irodsAccount.getUserName(),
 				returnedTicket.getOwnerName());
-		TestCase.assertEquals("zone not set", irodsAccount.getZone(),
+		Assert.assertEquals("zone not set", irodsAccount.getZone(),
 				returnedTicket.getOwnerZone());
-		TestCase.assertEquals("should be a collection object",
+		Assert.assertEquals("should be a collection object",
 				Ticket.TicketObjectType.COLLECTION,
 				returnedTicket.getObjectType());
 		// delete ticket after done
@@ -2838,7 +2850,7 @@ public class TicketAdminServiceImplTest {
 			throws Exception {
 
 		if (!testTicket) {
-			return;
+			throw new DataNotFoundException("expected");
 		}
 
 		String collectionName = "createTicketFromTicketObjectForCollectionNotExists";
@@ -2872,7 +2884,7 @@ public class TicketAdminServiceImplTest {
 			throws Exception {
 
 		if (!testTicket) {
-			return;
+			throw new IllegalArgumentException("expected");
 		}
 
 		String collectionName = "";
@@ -2882,8 +2894,8 @@ public class TicketAdminServiceImplTest {
 		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
 				.getIRODSAccessObjectFactory();
 
-		IRODSFile collection = createCollectionByName(collectionName,
-				irodsAccount, accessObjectFactory);
+		createCollectionByName(collectionName, irodsAccount,
+				accessObjectFactory);
 
 		TicketAdminService ticketSvc = new TicketAdminServiceImpl(
 				accessObjectFactory, irodsAccount);
@@ -2934,15 +2946,15 @@ public class TicketAdminServiceImplTest {
 		ticket.setWriteFileLimit(writeFileLimit);
 
 		Ticket returnedTicket = ticketSvc.createTicketFromTicketObject(ticket);
-		TestCase.assertNotNull("null ticket returned", returnedTicket);
-		TestCase.assertFalse("ticket string not set",
+		Assert.assertNotNull("null ticket returned", returnedTicket);
+		Assert.assertFalse("ticket string not set",
 				returnedTicket.getTicketString() == null
 						| returnedTicket.getTicketString().isEmpty());
-		TestCase.assertEquals("user name not set", irodsAccount.getUserName(),
+		Assert.assertEquals("user name not set", irodsAccount.getUserName(),
 				returnedTicket.getOwnerName());
-		TestCase.assertEquals("zone not set", irodsAccount.getZone(),
+		Assert.assertEquals("zone not set", irodsAccount.getZone(),
 				returnedTicket.getOwnerZone());
-		TestCase.assertEquals("should be a collection object",
+		Assert.assertEquals("should be a collection object",
 				Ticket.TicketObjectType.COLLECTION,
 				returnedTicket.getObjectType());
 
@@ -2950,17 +2962,17 @@ public class TicketAdminServiceImplTest {
 
 		Ticket actual = ticketSvc
 				.getTicketForSpecifiedTicketString(collectionName);
-		TestCase.assertEquals("wrong path", ticket.getIrodsAbsolutePath(),
+		Assert.assertEquals("wrong path", ticket.getIrodsAbsolutePath(),
 				actual.getIrodsAbsolutePath());
-		TestCase.assertEquals("wrong type", ticket.getObjectType(),
+		Assert.assertEquals("wrong type", ticket.getObjectType(),
 				actual.getObjectType());
-		TestCase.assertEquals("wrong ticket type", returnedTicket.getType(),
+		Assert.assertEquals("wrong ticket type", returnedTicket.getType(),
 				actual.getType());
-		TestCase.assertEquals("wrong usesLimit", returnedTicket.getUsesLimit(),
+		Assert.assertEquals("wrong usesLimit", returnedTicket.getUsesLimit(),
 				actual.getUsesLimit());
-		TestCase.assertEquals("wrong writeByteLimit",
+		Assert.assertEquals("wrong writeByteLimit",
 				returnedTicket.getWriteByteLimit(), actual.getWriteByteLimit());
-		TestCase.assertEquals("wrong writeFileLimit",
+		Assert.assertEquals("wrong writeFileLimit",
 				returnedTicket.getWriteFileLimit(), actual.getWriteFileLimit());
 
 		// delete ticket after done

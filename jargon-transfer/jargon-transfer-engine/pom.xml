@@ -2,7 +2,7 @@
   <parent>
     <groupId>org.irods.jargon</groupId>
     <artifactId>transfer</artifactId>
-    <version>3.1.2</version>
+    <version>3.1.2.1-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.irods.jargon.transfer</groupId>
@@ -18,14 +18,10 @@
       <groupId>org.irods.jargon</groupId>
       <artifactId>jargon-data-utils</artifactId>
     </dependency>
-    <dependency>
-      <groupId>org.irods.jargon</groupId>
-      <artifactId>jargon-test</artifactId>
-    </dependency>
       <dependency>
       <groupId>org.irods.jargon.transfer</groupId>
       <artifactId>jargon-transfer-dao-spring</artifactId>
-      <version>3.1.2</version>
+      <version>3.1.2.1-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>javassist</groupId>

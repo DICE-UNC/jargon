@@ -47,4 +47,8 @@ Note that the following bug and feature requests are logged in GForge with relat
 
  * [#864] 2.5 iRODS protocol errors
  
+ ==Features==
  
+ * [#865] factor helper classes into jargon core and remove
+ ** this is a general project cleanup and simplification task.  THe testing libraries have been consolidated and placed
+ into the jargon-core so that they me used by unit tests in jargon itself, as well as other projects.  This removes jargon-test as a project.

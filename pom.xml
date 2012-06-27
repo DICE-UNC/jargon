@@ -4,7 +4,7 @@
 	<groupId>org.irods</groupId>
 	<artifactId>jargon</artifactId>
 	<packaging>pom</packaging>
-	<version>3.1.2</version>
+	<version>3.1.2.1-SNAPSHOT</version>
 	<name>Jargon</name>
 	<description>Core Java API and related libraries for iRODS</description>
 	<url>https://code.renci.org/gf/project/jargon</url>
@@ -268,11 +268,6 @@
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>org.irods.jargon</groupId>
-				<artifactId>jargon-test</artifactId>
-				<version>${project.version}</version>
-			</dependency>
-			<dependency>
 				<groupId>org.mockito</groupId>
 				<artifactId>mockito-all</artifactId>
 				<version>1.8.1</version>
@@ -415,7 +410,6 @@
 	</build>
 	<modules>
 		<module>jargon-core</module>
-		<module>jargon-test</module>
 		<module>jargon-transfer</module>
 		<module>jargon-user-tagging</module>
 		<module>jargon-security</module>
