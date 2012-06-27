@@ -12,6 +12,7 @@ import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.DuplicateDataException;
 import org.irods.jargon.core.exception.InvalidUserException;
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.exception.NoMoreRulesException;
 import org.irods.jargon.core.packinstr.GeneralAdminInp;
 import org.irods.jargon.core.packinstr.GetTempPasswordForOther;
 import org.irods.jargon.core.packinstr.GetTempPasswordIn;
@@ -211,16 +212,14 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 
 			getIRODSProtocol().irodsFunction(adminPI);
 
-		} catch (JargonException je) {
-			log.info("jargon exception, check for duplicate condition");
-
-			if (je.getMessage().indexOf("-1018000") > -1) {
-				throw new DuplicateDataException("user already exists");
-			} else {
-				log.error("jargon exception on add user", je);
-				throw je;
-			}
-
+		} catch (DuplicateDataException dde) {
+			throw dde;
+		} catch (NoMoreRulesException nmr) {
+			log.warn(
+					"no more rules exception caught, will throw as duplicate data for backwards compatibility",
+					nmr);
+			throw new DuplicateDataException(
+					"no more rules interpereted as duplicate data exception for backwards compatibility");
 		}
 
 		log.debug("user added, now process other fields");
@@ -559,6 +558,8 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 			getIRODSProtocol().irodsFunction(adminPI);
 		} catch (InvalidUserException iue) {
 			log.debug("user does not exist, just behave as if deleted");
+		} catch (NoMoreRulesException nmr) {
+			log.debug("no more rules exception interpereted as user does not exist, just behave as if deleted");
 		}
 
 		log.info("user {} removed", userName);
@@ -643,7 +644,16 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 	@Override
 	public String getTemporaryPasswordForASpecifiedUser(
 			final String targetUserName) throws JargonException {
-		log.debug("getTemporaryPasswordForASpecifiedUser()");
+
+		log.info("getTemporaryPasswordForASpecifiedUser()");
+
+		// test is only valid for 3.1+
+		if (!this.getIRODSServerProperties()
+				.isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods3.1")) {
+			throw new UnsupportedOperationException(
+					"temp password generation implemented in iRODS 3.1+ only");
+		}
+
 		// parm checks done in packing instruction
 		GetTempPasswordForOther getTempPasswordForOtherPI = GetTempPasswordForOther
 				.instance(targetUserName);

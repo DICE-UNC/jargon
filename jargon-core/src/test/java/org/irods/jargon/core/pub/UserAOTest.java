@@ -969,7 +969,7 @@ public class UserAOTest {
 	 * 
 	 * @throws Exception
 	 */
-	@Test(expected = NoAPIPrivException.class)
+	@Test
 	public void testGenerateTempPasswordForAnotherUserWhenNotRodsAdmin()
 			throws Exception {
 
@@ -978,11 +978,24 @@ public class UserAOTest {
 		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
 				.getIRODSAccessObjectFactory();
 
+
 		UserAO userAO = accessObjectFactory.getUserAO(irodsAccount);
 		String tempUserName = testingProperties
 				.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY);
 
+		boolean gotException = false;
+
+		try {
 		userAO.getTemporaryPasswordForASpecifiedUser(tempUserName);
+		} catch (UnsupportedOperationException uoe) {
+			// being called on a version prior to 3.1
+			return;
+		} catch (NoAPIPrivException ne) {
+			gotException = true;
+		}
+
+		Assert.assertTrue("did not get expected API priv exception",
+				gotException);
 
 	}
 }

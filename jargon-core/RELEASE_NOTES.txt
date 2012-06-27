@@ -1,8 +1,8 @@
 
 *'''Project''': Jargon-core - IRODS Java API
 *'''Date''': 6/5/2012
-*'''Release Version''': 3.1.2-RELEASE	
-*'''git tag''': 3.1.2-RELEASE
+*'''Release Version''': 3.1.2.1-RELEASE	
+*'''git tag''': 3.1.2.1-RELEASE
 
 ==News==
 
@@ -45,32 +45,6 @@ Note that the following bug and feature requests are logged in GForge with relat
 
 ==Bug Fixes==
 
-[#756] IRODSDataConversionUtil date should be null if no data in query result
-[#761] unregister collection recursively causes error when multiple sub-folders
-[#768] -1202000 error executing rule via jargon - added unit test to capture reported bug
-
-==Features==
-
- * [#5] GenQuery Enhancements
- ** new query builder model allows easier programmatic building of General Query
- ** add order by semantics to builder queries
- 
- 
- * [#713] additional query and data generation methods for tickets
- ** added method to check if a ticket is in use
- ** additional listing methods for data objects and collections
- ** added method to IRODSServerProperties for isSupportTickets()
- ** added 'meta' methods to add and update tickets for cleaner mid-tier code
- 
- * [#723] add ireg support in jargon 
- ** added methods to unregister a collection
- 
- * [#530] password change for user as Admin User
- ** UserAOImpl now has password change method changeAUserPasswordByAnAdmin
- 
- * [#775] iDrop 1.1.0 refactoring activities
- ** add method to list resource names in zone
- ===========================
- 
+ * [#864] 2.5 iRODS protocol errors
  
  
