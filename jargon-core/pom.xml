@@ -139,6 +139,26 @@ test.federated.irods.zone=${jargon.test.federated.irods.zone}
     								<ignore />
     							</action>
     						</pluginExecution>
+    						<pluginExecution>
+    							<pluginExecutionFilter>
+    								<groupId>
+    									org.apache.maven.plugins
+    								</groupId>
+    								<artifactId>
+    									maven-compiler-plugin
+    								</artifactId>
+    								<versionRange>
+    									[2.3.2,)
+    								</versionRange>
+    								<goals>
+    									<goal>compile</goal>
+    									<goal>testCompile</goal>
+    								</goals>
+    							</pluginExecutionFilter>
+    							<action>
+    								<ignore></ignore>
+    							</action>
+    						</pluginExecution>
     					</pluginExecutions>
     				</lifecycleMappingMetadata>
     			</configuration>
