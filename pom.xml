@@ -268,11 +268,6 @@
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>org.irods.jargon</groupId>
-				<artifactId>jargon-test</artifactId>
-				<version>${project.version}</version>
-			</dependency>
-			<dependency>
 				<groupId>org.mockito</groupId>
 				<artifactId>mockito-all</artifactId>
 				<version>1.8.1</version>
@@ -415,7 +410,6 @@
 	</build>
 	<modules>
 		<module>jargon-core</module>
-		<module>jargon-test</module>
 		<module>jargon-transfer</module>
 		<module>jargon-user-tagging</module>
 		<module>jargon-security</module>

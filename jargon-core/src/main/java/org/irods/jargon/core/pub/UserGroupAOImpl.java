@@ -6,9 +6,11 @@ import java.util.List;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.exception.DataNotFoundException;
+import org.irods.jargon.core.exception.DuplicateDataException;
 import org.irods.jargon.core.exception.InvalidGroupException;
 import org.irods.jargon.core.exception.InvalidUserException;
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.exception.NoMoreRulesException;
 import org.irods.jargon.core.packinstr.GeneralAdminInp;
 import org.irods.jargon.core.pub.aohelper.UserAOHelper;
 import org.irods.jargon.core.pub.domain.User;
@@ -52,7 +54,8 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements
 	 * .pub.domain.UserGroup)
 	 */
 	@Override
-	public void addUserGroup(final UserGroup userGroup) throws JargonException {
+	public void addUserGroup(final UserGroup userGroup)
+			throws DuplicateDataException, JargonException {
 
 		log.info("addUserGroup()");
 
@@ -75,7 +78,14 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements
 				.instanceForAddUserGroup(userGroup);
 		log.debug("executing admin PI");
 
+		try {
 		getIRODSProtocol().irodsFunction(adminPI);
+		} catch (NoMoreRulesException nmr) {
+			log.warn("no more rules exception will be treated as duplicate user to normalize behavior for pre-2.5 iRODS servers");
+			throw new DuplicateDataException(
+					"no more rules exception interpreted as duplicate user",
+					nmr);
+		}
 
 	}
 
@@ -113,7 +123,10 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements
 			getIRODSProtocol().irodsFunction(adminPI);
 		} catch (InvalidUserException e) {
 			log.warn("user group {} does not exist, ignoring remove", userGroup);
+		} catch (NoMoreRulesException nmr) {
+			log.debug("no more rules exception interpereted as user does not exist, just behave as if deleted");
 		}
+
 
 	}
 

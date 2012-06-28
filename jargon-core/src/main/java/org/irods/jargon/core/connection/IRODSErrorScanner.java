@@ -15,6 +15,7 @@ import org.irods.jargon.core.exception.InvalidUserException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.exception.JargonFileOrCollAlreadyExistsException;
 import org.irods.jargon.core.exception.NoAPIPrivException;
+import org.irods.jargon.core.exception.NoMoreRulesException;
 import org.irods.jargon.core.exception.RemoteScriptExecutionException;
 import org.irods.jargon.core.protovalues.ErrorEnum;
 
@@ -96,6 +97,8 @@ public class IRODSErrorScanner {
 			throw new CatNoAccessException("no access to item in catalog");
 		case COLLECTION_NOT_EMPTY:
 			throw new CollectionNotEmptyException("The collection is not empty");
+		case NO_MORE_RULES_ERR:
+			throw new NoMoreRulesException("no more rules");
 		default:
 			throw new JargonException("error code recieved from iRODS:"
 					+ infoValue, infoValue);

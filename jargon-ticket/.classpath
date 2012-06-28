@@ -16,7 +16,6 @@
     </attributes>
   </classpathentry>
   <classpathentry kind="src" path="/jargon-core"/>
-  <classpathentry kind="src" path="/jargon-test"/>
   <classpathentry kind="var" path="M2_REPO/junit/junit/4.7/junit-4.7.jar" sourcepath="M2_REPO/junit/junit/4.7/junit-4.7-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/log4j/log4j/1.2.16/log4j-1.2.16.jar" sourcepath="M2_REPO/log4j/log4j/1.2.16/log4j-1.2.16-sources.jar">
     <attributes>

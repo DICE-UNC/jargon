@@ -18,10 +18,6 @@
       <groupId>org.irods.jargon</groupId>
       <artifactId>jargon-data-utils</artifactId>
     </dependency>
-    <dependency>
-      <groupId>org.irods.jargon</groupId>
-      <artifactId>jargon-test</artifactId>
-    </dependency>
       <dependency>
       <groupId>org.irods.jargon.transfer</groupId>
       <artifactId>jargon-transfer-dao-spring</artifactId>

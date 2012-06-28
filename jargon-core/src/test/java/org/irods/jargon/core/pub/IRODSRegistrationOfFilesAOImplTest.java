@@ -9,6 +9,7 @@ import junit.framework.Assert;
 import junit.framework.TestCase;
 
 import org.irods.jargon.core.connection.IRODSAccount;
+import org.irods.jargon.core.connection.IRODSServerProperties;
 import org.irods.jargon.core.exception.CollectionNotEmptyException;
 import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.DuplicateDataException;
@@ -330,6 +331,18 @@ public class IRODSRegistrationOfFilesAOImplTest {
 				.getIRODSAccessObjectFactory().getIRODSRegistrationOfFilesAO(
 						irodsAccount);
 
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
+						irodsAccount);
+		IRODSServerProperties props = environmentalInfoAO
+				.getIRODSServerPropertiesFromIRODSServer();
+
+		// test is only valid for 3.1
+		if (!props.isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods3.1")) {
+			irodsFileSystem.closeAndEatExceptions();
+			return;
+		}
+
 		String testFileName = "testRegisterPhysicalDataFileToIRODSRegisterChecksum.txt";
 		String absPath = scratchFileUtils
 				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
@@ -370,6 +383,18 @@ public class IRODSRegistrationOfFilesAOImplTest {
 		IRODSRegistrationOfFilesAO ao = irodsFileSystem
 				.getIRODSAccessObjectFactory().getIRODSRegistrationOfFilesAO(
 						irodsAccount);
+
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
+						irodsAccount);
+		IRODSServerProperties props = environmentalInfoAO
+				.getIRODSServerPropertiesFromIRODSServer();
+
+		// test is only valid for 3.1
+		if (!props.isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods3.1")) {
+			irodsFileSystem.closeAndEatExceptions();
+			return;
+		}
 
 		String testFileName = "testRegisterPhysicalDataFileToIRODSWithVerifyLocalChecksum.txt";
 		String absPath = scratchFileUtils

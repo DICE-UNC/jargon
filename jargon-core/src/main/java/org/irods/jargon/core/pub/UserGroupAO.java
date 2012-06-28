@@ -2,6 +2,7 @@ package org.irods.jargon.core.pub;
 
 import java.util.List;
 
+import org.irods.jargon.core.exception.DuplicateDataException;
 import org.irods.jargon.core.exception.InvalidGroupException;
 import org.irods.jargon.core.exception.InvalidUserException;
 import org.irods.jargon.core.exception.JargonException;
@@ -75,9 +76,12 @@ public interface UserGroupAO extends IRODSAccessObject {
 	 * 
 	 * @param userGroup
 	 *            {@link UserGroup} to add
+	 * @throws DuplicateDataException
+	 *             if user already exists
 	 * @throws JargonException
 	 */
-	void addUserGroup(UserGroup userGroup) throws JargonException;
+	void addUserGroup(UserGroup userGroup) throws DuplicateDataException,
+			JargonException;
 
 	/**
 	 * Remove the given user group from iRODS. Note that if the user group is

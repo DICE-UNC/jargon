@@ -79,10 +79,6 @@
 			<artifactId>dom4j</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.irods.jargon</groupId>
-			<artifactId>jargon-test</artifactId>
-		</dependency>
-		<dependency>
 			<groupId>commons-collections</groupId>
 			<artifactId>commons-collections</artifactId>
 		</dependency>

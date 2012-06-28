@@ -20,11 +20,6 @@
 			<artifactId>jargon-core</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.irods.jargon</groupId>
-			<artifactId>jargon-test</artifactId>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-exec</artifactId>
 			<scope>test</scope>
