@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Properties;
 
 import junit.framework.Assert;
+import junit.framework.TestCase;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSProtocolManager;
@@ -67,6 +68,41 @@ public class ResourceAOTest {
 		List<String> resources = resourceAO.listResourceNames();
 		irodsSession.closeSession();
 		Assert.assertTrue("no resources returned", resources.size() > 0);
+	}
+
+	/**
+	 * Test a listing that has the resource names and resource group name
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public final void testListResourceAndResourceGroupNames() throws Exception {
+		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager
+				.instance();
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSSession irodsSession = IRODSSession
+				.instance(irodsConnectionManager);
+		IRODSAccessObjectFactory accessObjectFactory = IRODSAccessObjectFactoryImpl
+				.instance(irodsSession);
+		ResourceAO resourceAO = accessObjectFactory.getResourceAO(irodsAccount);
+		List<String> resources = resourceAO.listResourceAndResourceGroupNames();
+		irodsSession.closeSession();
+		Assert.assertTrue("no resources returned", resources.size() > 0);
+		// look for the resource group name
+		String expected = testingProperties
+				.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_GROUP_KEY);
+
+		boolean found = false;
+		for (String actual : resources) {
+			if (actual.equals(expected)) {
+				found = true;
+				break;
+			}
+		}
+
+		TestCase.assertTrue("did not find the resource group in the results",
+				found);
 	}
 
 	/**

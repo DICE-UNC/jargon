@@ -51,7 +51,6 @@ Note that the following bug and feature requests are logged in GForge with relat
 
 ==Bug Fixes==
 
-<<<<<<< HEAD
 ==Features==
 
  * [#775] iDrop 1.1.0 refactoring activities
@@ -75,12 +74,16 @@ Note that the following bug and feature requests are logged in GForge with relat
  
  *  [#853] IP - add ticket by admin
  ** added ability to create a ticket for another user (given that the creator is rodsAdmin)
-=======
+
  * [#864] 2.5 iRODS protocol errors
+ ** update tests for 2.5 backwards compatability
+ ** overhead misc operations to normalize errors (especially DuplicateDataException and DataNotFoundException) which are indicated
+ by different iRODS error codes in 2.5 and prior.
  
- ==Features==
->>>>>>> 864-remote
  
  * [#865] factor helper classes into jargon core and remove
  ** this is a general project cleanup and simplification task.  THe testing libraries have been consolidated and placed
  into the jargon-core so that they me used by unit tests in jargon itself, as well as other projects.  This removes jargon-test as a project.
+ 
+ * [#866] Resource Group support
+ ** initial support for resource group admin and listing

@@ -269,6 +269,20 @@ public final class IRODSAccessObjectFactoryImpl implements
 	 * (non-Javadoc)
 	 * 
 	 * @see
+	 * org.irods.jargon.core.pub.IRODSAccessObjectFactory#getResourceGroupAO
+	 * (org.irods.jargon.core.connection.IRODSAccount)
+	 */
+	@Override
+	public ResourceGroupAO getResourceGroupAO(final IRODSAccount irodsAccount)
+			throws JargonException {
+		checkIrodsSessionSet();
+		return new ResourceGroupAOImpl(irodsSession, irodsAccount);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
 	 * org.irods.jargon.core.pub.IRODSAccessObjectFactory#getIRODSFileSystemAO
 	 * (org.irods.jargon.core.connection.IRODSAccount)
 	 */

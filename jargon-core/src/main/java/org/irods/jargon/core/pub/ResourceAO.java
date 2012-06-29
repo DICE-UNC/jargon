@@ -128,4 +128,16 @@ public interface ResourceAO extends IRODSAccessObject {
 	 */
 	List<String> listResourceNames()
 			throws JargonException;
+
+	/**
+	 * Retrieve a list of plain <code>String</code> with the resource names in
+	 * the zone, followed by resourceGroupNames in the zone. These are sorted
+	 * ascending.
+	 * <p/>
+	 * This is handy for generating resource lists in interfaces.
+	 * 
+	 * @return <code>List<String></code> of resource names in the zone
+	 * @throws JargonException
+	 */
+	List<String> listResourceAndResourceGroupNames() throws JargonException;
 }

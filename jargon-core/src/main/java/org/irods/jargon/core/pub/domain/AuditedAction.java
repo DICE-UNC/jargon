@@ -22,6 +22,29 @@ public class AuditedAction extends IRODSDomainObject {
 	private Date createdAt = new Date();
 	private Date updatedAt = new Date();
 
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("AuditedAction:");
+		sb.append("\n   objectId:");
+		sb.append(objectId);
+		sb.append("\n   domainObjectUniqueName:");
+		sb.append(domainObjectUniqueName);
+		sb.append("\n   userId:");
+		sb.append(userId);
+		sb.append("\n   userName:");
+		sb.append(userName);
+		sb.append("\n   comment:");
+		sb.append(comment);
+		sb.append("\n   auditActionEnum:");
+		sb.append(auditActionEnum);
+		sb.append("\n   createdAt:");
+		sb.append(createdAt);
+		sb.append("\n   updatedAt:");
+		sb.append(updatedAt);
+		return sb.toString();
+	}
+
 	/**
 	 * @return the objectId
 	 */

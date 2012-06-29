@@ -24,6 +24,7 @@ import org.irods.jargon.core.pub.ProtocolExtensionPointImplTest;
 import org.irods.jargon.core.pub.QuotaAOImplTest;
 import org.irods.jargon.core.pub.RemoteExecutionOfCommandsAOImplTest;
 import org.irods.jargon.core.pub.ResourceAOTest;
+import org.irods.jargon.core.pub.ResourceGroupAOImplTest;
 import org.irods.jargon.core.pub.RuleProcessingAOImplTest;
 import org.irods.jargon.core.pub.SimpleQueryExecutorAOImplTest;
 import org.irods.jargon.core.pub.Stream2StreamAOImplTest;
@@ -56,7 +57,8 @@ import org.junit.runners.Suite;
 		MountedCollectionAOImplTest.class,
 		CollectionAndDataObjectListAndSearchAOImplForSoftLinksTest.class,
 		DataObjectAOImplForSoftLinkTest.class,
-		DataTransferOperationsImplForSoftLinksTest.class })
+		DataTransferOperationsImplForSoftLinksTest.class,
+		ResourceGroupAOImplTest.class })
 /**
  * Suite to run Access Object tests in org.irods.jargon.pub.*
  * <p/>

@@ -1,6 +1,3 @@
-/**
- * 
- */
 package org.irods.jargon.core.pub;
 
 import static org.irods.jargon.core.pub.aohelper.AOHelper.AND;
@@ -54,7 +51,7 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 	public static final String ERROR_IN_RESOURCE_QUERY = "error in resource query";
 	private final transient ResourceAOHelper resourceAOHelper;
 
-	public ResourceAOImpl(final IRODSSession irodsSession,
+	protected ResourceAOImpl(final IRODSSession irodsSession,
 			final IRODSAccount irodsAccount) throws JargonException {
 		super(irodsSession, irodsAccount);
 		this.getIRODSAccessObjectFactory().getZoneAO(getIRODSAccount());
@@ -286,6 +283,19 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 
 		return resources.get(0);
 
+	}
+
+	@Override
+	public List<String> listResourceAndResourceGroupNames()
+			throws JargonException {
+
+		log.info("listResourceAndResourceGroupNames()..getting resource names");
+		List<String> combined = listResourceNames();
+		log.info("appending resource group names..");
+		ResourceGroupAO resourceGroupAO = this.getIRODSAccessObjectFactory()
+				.getResourceGroupAO(getIRODSAccount());
+		combined.addAll(resourceGroupAO.listResourceGroupNames());
+		return combined;
 	}
 
 

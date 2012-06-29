@@ -854,6 +854,22 @@ public class TestingPropertiesHelper {
 	}
 
 	/**
+	 * Check if optional audit system is to be tested
+	 * 
+	 * @param testingProperties
+	 * @return
+	 */
+	public boolean isTestAudit(final Properties testingProperties) {
+		String val = (String) testingProperties
+				.get("test.option.exercise.audit");
+		if (val == null) {
+			return false;
+		} else {
+			return Boolean.parseBoolean(val);
+		}
+	}
+
+	/**
 	 * Check if optional ticket system is to be tested
 	 * 
 	 * @param testingProperties

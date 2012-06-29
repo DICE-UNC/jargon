@@ -444,5 +444,17 @@ public interface IRODSAccessObjectFactory {
 	IRODSServerProperties getIRODSServerProperties(IRODSAccount irodsAccount)
 			throws JargonException;
 
+	/**
+	 * Return a <code>ResourceGroupAO</code> object that can handle the resource
+	 * groups in the iRODS icat
+	 * 
+	 * @param irodsAccount
+	 *            {@link IRODSAccount} that describes the connection to iRODS.
+	 * @return {@link ResourceGroupAO} that can interact with resource groups on
+	 *         the iCAT
+	 * @throws JargonException
+	 */
+	ResourceGroupAO getResourceGroupAO(IRODSAccount irodsAccount)
+			throws JargonException;
 
 }

@@ -65,6 +65,7 @@ test.irods.userDN=${jargon.test.irods.userDN}
 test.irods.scratch.subdir=${jargon.test.irods.scratch.subdir}
 test.mac.icommand.path=${jargon.test.mac.icommand.path}
 test.option.exercise.remoteexecstream=${jargon.test.option.exercise.remoteexecstream}
+test.option.exercise.audit=${jargon.test.option.exercise.audit}
 test.option.distributed.resources=${test.option.distributed.resources}
 test.option.registration=${test.option.registration}
 test.option.federated.zone=${test.option.federated.zone}

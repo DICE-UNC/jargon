@@ -1,23 +1,22 @@
 package org.irods.jargon.core.pub;
 
-import static org.irods.jargon.core.pub.aohelper.AOHelper.AND;
-import static org.irods.jargon.core.pub.aohelper.AOHelper.EQUALS_AND_QUOTE;
-import static org.irods.jargon.core.pub.aohelper.AOHelper.QUOTE;
-import static org.irods.jargon.core.pub.aohelper.AOHelper.WHERE;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSSession;
+import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.protovalues.AuditActionEnum;
 import org.irods.jargon.core.pub.domain.AuditedAction;
 import org.irods.jargon.core.pub.io.IRODSFile;
-import org.irods.jargon.core.query.IRODSGenQuery;
+import org.irods.jargon.core.query.GenQueryBuilderException;
+import org.irods.jargon.core.query.IRODSGenQueryBuilder;
+import org.irods.jargon.core.query.IRODSGenQueryFromBuilder;
 import org.irods.jargon.core.query.IRODSQueryResultRow;
 import org.irods.jargon.core.query.IRODSQueryResultSetInterface;
 import org.irods.jargon.core.query.JargonQueryException;
+import org.irods.jargon.core.query.QueryConditionOperators;
 import org.irods.jargon.core.query.RodsGenQueryEnum;
 import org.irods.jargon.core.utils.IRODSDataConversionUtil;
 import org.slf4j.Logger;
@@ -56,13 +55,77 @@ public class DataObjectAuditAOImpl extends IRODSGenericAO implements
 	 * (non-Javadoc)
 	 * 
 	 * @see
+	 * org.irods.jargon.core.pub.DataObjectAuditAO#getAuditedActionForDataObject
+	 * (org.irods.jargon.core.pub.io.IRODSFile, int)
+	 */
+	@Override
+	public AuditedAction getAuditedActionForDataObject(final IRODSFile irodsFile, final int id)
+			throws DataNotFoundException, JargonException {
+
+		log.info("getAuditedActionForDataObject()");
+		
+		if (irodsFile == null) {
+			throw new IllegalArgumentException("null or empty irodsFile");
+		}
+
+		if (id < 1) {
+			throw new IllegalArgumentException("id must be > 0");
+		}
+		
+		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, null);
+		IRODSQueryResultSetInterface resultSet;
+
+		try {
+			builder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_AUDIT_OBJ_ID)
+					.addSelectAsGenQueryValue(
+							RodsGenQueryEnum.COL_AUDIT_USER_ID)
+					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_NAME)
+					.addSelectAsGenQueryValue(
+							RodsGenQueryEnum.COL_AUDIT_ACTION_ID)
+					.addSelectAsGenQueryValue(
+							RodsGenQueryEnum.COL_AUDIT_COMMENT)
+					.addSelectAsGenQueryValue(
+							RodsGenQueryEnum.COL_AUDIT_CREATE_TIME)
+					.addSelectAsGenQueryValue(
+							RodsGenQueryEnum.COL_AUDIT_MODIFY_TIME)
+					.addConditionAsGenQueryField(
+							RodsGenQueryEnum.COL_AUDIT_OBJ_ID,
+							QueryConditionOperators.EQUAL, String.valueOf(id));
+				
+			// .addOrderByGenQueryField(RodsGenQueryEnum.COL_DATA_NAME,
+			// GenQueryOrderByField.OrderByType.ASC);
+			IRODSGenQueryFromBuilder irodsQuery = builder
+					.exportIRODSQueryFromBuilder(1);
+			resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResult(
+					irodsQuery, 0);
+		} catch (GenQueryBuilderException e) {
+			log.error("error building query", e);
+			throw new JargonException("error building query", e);
+		} catch (JargonQueryException jqe) {
+			log.error("error executing query", jqe);
+			throw new JargonException("error executing query", jqe);
+		}
+		
+		/*
+		 * DataNotFoundException will be thrown if there was no result row
+		 */
+		return buildAuditedActionForResultRow(irodsFile,
+				resultSet
+				.getFirstResult());
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
 	 * org.irods.jargon.core.pub.DataObjectAuditAO#findAllAuditRecords(org.irods
 	 * .jargon.core.pub.io.IRODSFile, int)
 	 */
 	@Override
 	public List<AuditedAction> findAllAuditRecordsForDataObject(
-			final IRODSFile irodsFile, final int partialStart)
-			throws JargonException {
+			final IRODSFile irodsFile, final int partialStart,
+			final int numberOfResultsDesired) throws JargonException {
 
 		log.info("findAllAuditRecords()");
 
@@ -74,79 +137,97 @@ public class DataObjectAuditAOImpl extends IRODSGenericAO implements
 			throw new IllegalArgumentException("partial start must be >= 0");
 		}
 
+		if (numberOfResultsDesired < 1) {
+			throw new IllegalArgumentException(
+					"numberOfResultsDesired must be >= 1");
+		}
+
 		log.info("irodsFile:{}", irodsFile);
 		log.info("partialStart:{}", partialStart);
 
 		List<AuditedAction> auditedActions = new ArrayList<AuditedAction>();
 
-		final StringBuilder sb = new StringBuilder();
-		sb.append("SELECT ");
-		sb.append(RodsGenQueryEnum.COL_AUDIT_OBJ_ID.getName());
-		sb.append(COMMA);
-		sb.append(RodsGenQueryEnum.COL_AUDIT_USER_ID.getName());
-		sb.append(COMMA);
-		sb.append(RodsGenQueryEnum.COL_USER_NAME.getName());
-		sb.append(COMMA);
-		sb.append(RodsGenQueryEnum.COL_AUDIT_ACTION_ID.getName());
-		sb.append(COMMA);
-		sb.append(RodsGenQueryEnum.COL_AUDIT_COMMENT.getName());
-		sb.append(COMMA);
-		sb.append(RodsGenQueryEnum.COL_AUDIT_CREATE_TIME.getName());
-		sb.append(COMMA);
-		sb.append(RodsGenQueryEnum.COL_AUDIT_MODIFY_TIME.getName());
-		sb.append(WHERE);
-		sb.append(RodsGenQueryEnum.COL_COLL_NAME.getName());
-		sb.append(EQUALS_AND_QUOTE);
-		sb.append(IRODSDataConversionUtil.escapeSingleQuotes(irodsFile
-				.getParent().trim()));
-		sb.append(QUOTE);
-		sb.append(AND);
-		sb.append(RodsGenQueryEnum.COL_DATA_NAME.getName());
-		sb.append(EQUALS_AND_QUOTE);
-		sb.append(IRODSDataConversionUtil.escapeSingleQuotes(irodsFile
-				.getName().trim()));
-		sb.append(QUOTE);
-
-		final String query = sb.toString();
-		log.debug("query for audit object:{}", query);
-
-		final IRODSGenQuery irodsQuery = IRODSGenQuery.instance(query,
-				getIRODSSession().getJargonProperties()
-						.getMaxFilesAndDirsQueryMax());
-
+		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, null);
 		IRODSQueryResultSetInterface resultSet;
+
 		try {
+			builder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_AUDIT_OBJ_ID)
+					.addSelectAsGenQueryValue(
+							RodsGenQueryEnum.COL_AUDIT_USER_ID)
+					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_NAME)
+					.addSelectAsGenQueryValue(
+							RodsGenQueryEnum.COL_AUDIT_ACTION_ID)
+					.addSelectAsGenQueryValue(
+							RodsGenQueryEnum.COL_AUDIT_COMMENT)
+					.addSelectAsGenQueryValue(
+							RodsGenQueryEnum.COL_AUDIT_CREATE_TIME)
+					.addSelectAsGenQueryValue(
+							RodsGenQueryEnum.COL_AUDIT_MODIFY_TIME)
+					.addConditionAsGenQueryField(
+							RodsGenQueryEnum.COL_COLL_NAME,
+							QueryConditionOperators.EQUAL,
+							IRODSDataConversionUtil
+									.escapeSingleQuotes(irodsFile.getParent()
+											.trim()))
+					.addConditionAsGenQueryField(
+							RodsGenQueryEnum.COL_DATA_NAME,
+							QueryConditionOperators.EQUAL,
+							IRODSDataConversionUtil
+									.escapeSingleQuotes(irodsFile.getName()
+											.trim()));
+			// .addOrderByGenQueryField(RodsGenQueryEnum.COL_DATA_NAME,
+			// GenQueryOrderByField.OrderByType.ASC);
+			IRODSGenQueryFromBuilder irodsQuery = builder
+					.exportIRODSQueryFromBuilder(numberOfResultsDesired);
 			resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResult(
 					irodsQuery, partialStart);
-		} catch (JargonQueryException e) {
-			log.error("query exception for query: {}", query, e);
-			throw new JargonException("error in query for data object", e);
+		} catch (GenQueryBuilderException e) {
+			log.error("error building query", e);
+			throw new JargonException("error building query", e);
+		} catch (JargonQueryException jqe) {
+			log.error("error executing query", jqe);
+			throw new JargonException("error executing query", jqe);
 		}
 
 		AuditedAction auditedAction;
 		for (IRODSQueryResultRow row : resultSet.getResults()) {
-			auditedAction = new AuditedAction();
-			auditedAction.setObjectId(Integer.parseInt(row.getColumn(0)));
-			auditedAction
-					.setDomainObjectUniqueName(irodsFile.getAbsolutePath());
-			auditedAction.setUserId(Integer.parseInt(row.getColumn(1)));
-			auditedAction.setUserName(row.getColumn(2));
-			auditedAction.setAuditActionEnum(AuditActionEnum.valueOf(Integer
-					.parseInt(row.getColumn(3))));
-			auditedAction.setComment(row.getColumn(4));
-			auditedAction.setCreatedAt(IRODSDataConversionUtil
-					.getDateFromIRODSValue(row.getColumn(5)));
-			auditedAction.setUpdatedAt(IRODSDataConversionUtil
-					.getDateFromIRODSValue(row.getColumn(6)));
-			auditedAction.setLastResult(row.isLastResult());
-			auditedAction.setCount(row.getRecordCount());
+			auditedAction = buildAuditedActionForResultRow(irodsFile, row);
 			auditedActions.add(auditedAction);
 			log.info("added audited action:{}", auditedAction);
-			// add info to track position in records for possible requery
 		}
 
 		return auditedActions;
 
+	}
+
+	/**
+	 * @param irodsFile
+	 * @param row
+	 * @return
+	 * @throws NumberFormatException
+	 * @throws JargonException
+	 */
+	private AuditedAction buildAuditedActionForResultRow(
+			final IRODSFile irodsFile, IRODSQueryResultRow row)
+			throws NumberFormatException, JargonException {
+		AuditedAction auditedAction;
+		auditedAction = new AuditedAction();
+		auditedAction.setObjectId(Integer.parseInt(row.getColumn(0)));
+		auditedAction.setDomainObjectUniqueName(irodsFile.getAbsolutePath());
+		auditedAction.setUserId(Integer.parseInt(row.getColumn(1)));
+		auditedAction.setUserName(row.getColumn(2));
+		auditedAction.setAuditActionEnum(AuditActionEnum.valueOf(Integer
+				.parseInt(row.getColumn(3))));
+		auditedAction.setComment(row.getColumn(4));
+		auditedAction.setCreatedAt(IRODSDataConversionUtil
+				.getDateFromIRODSValue(row.getColumn(5)));
+		auditedAction.setUpdatedAt(IRODSDataConversionUtil
+				.getDateFromIRODSValue(row.getColumn(6)));
+		auditedAction.setLastResult(row.isLastResult());
+		auditedAction.setCount(row.getRecordCount());
+		auditedAction.setCount(row.getRecordCount());
+		auditedAction.setLastResult(row.isLastResult());
+		return auditedAction;
 	}
 
 }
