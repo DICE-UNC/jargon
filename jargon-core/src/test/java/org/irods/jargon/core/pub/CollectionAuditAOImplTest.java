@@ -1,6 +1,5 @@
 package org.irods.jargon.core.pub;
 
-import java.io.File;
 import java.util.List;
 import java.util.Properties;
 
@@ -14,18 +13,17 @@ import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.pub.io.IRODSFileFactory;
 import org.irods.jargon.testutils.IRODSTestSetupUtilities;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
-import org.irods.jargon.testutils.filemanip.FileGenerator;
 import org.irods.jargon.testutils.filemanip.ScratchFileUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-public class DataObjectAuditAOImplTest {
+public class CollectionAuditAOImplTest {
 
 	private static Properties testingProperties = new Properties();
 	private static TestingPropertiesHelper testingPropertiesHelper = new TestingPropertiesHelper();
 	private static ScratchFileUtils scratchFileUtils = null;
-	public static final String IRODS_TEST_SUBDIR_PATH = "DataObjectAuditAOImplTest";
+	public static final String IRODS_TEST_SUBDIR_PATH = "CollectionAuditAOImplTest";
 	private static IRODSTestSetupUtilities irodsTestSetupUtilities = null;
 	private static IRODSFileSystem irodsFileSystem;
 
@@ -59,26 +57,19 @@ public class DataObjectAuditAOImplTest {
 	}
 
 	@Test
-	public void testFindAllAuditRecordsForDataObject() throws Exception {
+	public final void testFindAllAuditRecordsForCollection() throws Exception {
 
 		if (!testingPropertiesHelper.isTestAudit(testingProperties)) {
 			return;
 		}
 
 		String testFileName = System.currentTimeMillis()
-				+ "testFindAllAuditRecordsForDataObject.txt";
-		String absPath = scratchFileUtils
-				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
-		String localFileName = FileGenerator
-				.generateFileOfFixedLengthGivenName(absPath, testFileName, 300);
+				+ "testFindAllAuditRecordsForCollection";
 
 		String targetIrodsFile = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
 								+ testFileName);
-		File localFile = new File(localFileName);
-
-		// now put the file
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
@@ -87,18 +78,28 @@ public class DataObjectAuditAOImplTest {
 
 		IRODSFileFactory irodsFileFactory = accessObjectFactory
 				.getIRODSFileFactory(irodsAccount);
-		DataObjectAOImpl dataObjectAO = (DataObjectAOImpl) accessObjectFactory
-				.getDataObjectAO(irodsAccount);
 		IRODSFile destFile = irodsFileFactory
 				.instanceIRODSFile(targetIrodsFile);
-		dataObjectAO.putLocalDataObjectToIRODS(localFile, destFile, true);
+		destFile.mkdirs();
+
+		// be another user and access this collection
+		IRODSAccount secondaryAccount = testingPropertiesHelper
+				.buildIRODSAccountFromSecondaryTestProperties(testingProperties);
+		CollectionAO collectionAO = accessObjectFactory
+				.getCollectionAO(irodsAccount);
+
+		// force an auditable action
+
+		collectionAO.setAccessPermissionRead(irodsAccount.getZone(),
+				destFile.getAbsolutePath(), secondaryAccount.getUserName(),
+				true);
 
 		// get the audit data for this file
 
-		DataObjectAuditAO dataObjectAuditAO = accessObjectFactory
-				.getDataObjectAuditAO(irodsAccount);
-		List<AuditedAction> auditData = dataObjectAuditAO
-				.findAllAuditRecordsForDataObject(destFile, 0, 1000);
+		CollectionAuditAO collectionAuditAO = accessObjectFactory
+				.getCollectionAuditAO(irodsAccount);
+		List<AuditedAction> auditData = collectionAuditAO
+				.findAllAuditRecordsForCollection(destFile, 0, 1000);
 		Assert.assertFalse("empty audit data", auditData.isEmpty());
 
 		AuditedAction action = auditData.get(0);
@@ -111,7 +112,7 @@ public class DataObjectAuditAOImplTest {
 	}
 
 	@Test(expected = FileNotFoundException.class)
-	public void testFindAllAuditRecordsForDataObjectNotExists()
+	public final void testFindAllAuditRecordsForCollectionNotExists()
 			throws Exception {
 
 		if (!testingPropertiesHelper.isTestAudit(testingProperties)) {
@@ -119,7 +120,7 @@ public class DataObjectAuditAOImplTest {
 		}
 
 		String testFileName = System.currentTimeMillis()
-				+ "testFindAllAuditRecordsForDataObject.txt";
+				+ "testFindAllAuditRecordsForCollectionNotExists";
 
 		String targetIrodsFile = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
@@ -136,35 +137,26 @@ public class DataObjectAuditAOImplTest {
 		IRODSFile destFile = irodsFileFactory
 				.instanceIRODSFile(targetIrodsFile);
 
-		// get the audit data for this file
-
-		DataObjectAuditAO dataObjectAuditAO = accessObjectFactory
-				.getDataObjectAuditAO(irodsAccount);
-		dataObjectAuditAO.findAllAuditRecordsForDataObject(destFile, 0, 1000);
+		CollectionAuditAO collectionAuditAO = accessObjectFactory
+				.getCollectionAuditAO(irodsAccount);
+		collectionAuditAO.findAllAuditRecordsForCollection(destFile, 0, 1000);
 
 	}
 
 	@Test
-	public void testFindAuditRecordForDataObject() throws Exception {
+	public void testFindAuditRecordForCollection() throws Exception {
 
 		if (!testingPropertiesHelper.isTestAudit(testingProperties)) {
 			return;
 		}
 
 		String testFileName = System.currentTimeMillis()
-				+ "testFindAuditRecordForDataObject.txt";
-		String absPath = scratchFileUtils
-				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
-		String localFileName = FileGenerator
-				.generateFileOfFixedLengthGivenName(absPath, testFileName, 300);
+				+ "testFindAuditRecordForCollection";
 
 		String targetIrodsFile = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
 								+ testFileName);
-		File localFile = new File(localFileName);
-
-		// now put the file
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
@@ -173,25 +165,23 @@ public class DataObjectAuditAOImplTest {
 
 		IRODSFileFactory irodsFileFactory = accessObjectFactory
 				.getIRODSFileFactory(irodsAccount);
-		DataObjectAOImpl dataObjectAO = (DataObjectAOImpl) accessObjectFactory
-				.getDataObjectAO(irodsAccount);
 		IRODSFile destFile = irodsFileFactory
 				.instanceIRODSFile(targetIrodsFile);
-		dataObjectAO.putLocalDataObjectToIRODS(localFile, destFile, true);
+		destFile.mkdirs();
 
 		// get the audit data for this file
 
-		DataObjectAuditAO dataObjectAuditAO = accessObjectFactory
-				.getDataObjectAuditAO(irodsAccount);
-		List<AuditedAction> auditData = dataObjectAuditAO
-				.findAllAuditRecordsForDataObject(destFile, 0, 1000);
+		CollectionAuditAO collectionAuditAO = accessObjectFactory
+				.getCollectionAuditAO(irodsAccount);
+		List<AuditedAction> auditData = collectionAuditAO
+				.findAllAuditRecordsForCollection(destFile, 0, 1000);
 		TestCase.assertFalse("empty audit data", auditData.isEmpty());
 
 		AuditedAction expected = auditData.get(0);
 
 		// now find that audit record directly and match
 
-		AuditedAction actual = dataObjectAuditAO.getAuditedActionForDataObject(
+		AuditedAction actual = collectionAuditAO.getAuditedActionForCollection(
 				destFile,
 				String.valueOf(expected.getAuditActionEnum().getAuditCode()),
 				expected.getTimeStampInIRODSFormat());
@@ -201,14 +191,14 @@ public class DataObjectAuditAOImplTest {
 	}
 
 	@Test(expected = FileNotFoundException.class)
-	public void testFindAuditRecordForDataObjectNotExists() throws Exception {
+	public void testFindAuditRecordForCollectionNotExists() throws Exception {
 
 		if (!testingPropertiesHelper.isTestAudit(testingProperties)) {
 			return;
 		}
 
 		String testFileName = System.currentTimeMillis()
-				+ "testFindAuditRecordForDataObject.txt";
+				+ "testFindAuditRecordForCollection";
 
 		String targetIrodsFile = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
@@ -225,40 +215,11 @@ public class DataObjectAuditAOImplTest {
 
 		IRODSFile destFile = irodsFileFactory
 				.instanceIRODSFile(targetIrodsFile);
+		CollectionAuditAO collectionAuditAO = accessObjectFactory
+				.getCollectionAuditAO(irodsAccount);
 
-		// get the audit data for this file
-
-		DataObjectAuditAO dataObjectAuditAO = accessObjectFactory
-				.getDataObjectAuditAO(irodsAccount);
-
-		dataObjectAuditAO.getAuditedActionForDataObject(
-				destFile, "99999", "9999");
+		collectionAuditAO.getAuditedActionForCollection(
+				destFile, "999999", "99999");
 
 	}
-
-	@Test(expected = IllegalArgumentException.class)
-	public void testFindAuditRecordForDataObjectNullIrodsFile()
-			throws Exception {
-
-		if (!testingPropertiesHelper.isTestAudit(testingProperties)) {
-			return;
-		}
-
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
-
-		// get the audit data for this file
-
-		DataObjectAuditAO dataObjectAuditAO = accessObjectFactory
-				.getDataObjectAuditAO(irodsAccount);
-
-		// I don't know if I like this, picking max val to make sure there is no
-		// record..
-		dataObjectAuditAO.getAuditedActionForDataObject(null,
- "9", "9");
-
-	}
-
 }

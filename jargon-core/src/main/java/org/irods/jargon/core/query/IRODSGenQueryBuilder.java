@@ -120,8 +120,35 @@ public class IRODSGenQueryBuilder {
 	/**
 	 * Add a gen query condition to the builder query.
 	 * 
-	 * @param condition
-	 *            {@link GenQueryBuilderCondition}
+	 * @param rodsGenQueryEnumValue
+	 *            {@link RodsGenQueryEnumValue} for the condition
+	 * @param operator
+	 *            {@link QueryConditionOperators} enum value for the operator of
+	 *            the condition
+	 * @param value
+	 *            <code>int</code> with the value for the condition
+	 * @return a reference to this builder, so that builder statements may be
+	 *         chained
+	 */
+	public IRODSGenQueryBuilder addConditionAsGenQueryField(
+			final RodsGenQueryEnum rodsGenQueryEnumValue,
+			final QueryConditionOperators operator, final int value) {
+
+		return addConditionAsGenQueryField(rodsGenQueryEnumValue, operator,
+				String.valueOf(value));
+
+	}
+
+	/**
+	 * Add a gen query condition to the builder query.
+	 * 
+	 * @param rodsGenQueryEnumValue
+	 *            {@link RodsGenQueryEnumValue} for the condition
+	 * @param operator
+	 *            {@link QueryConditionOperators} enum value for the operator of
+	 *            the condition
+	 * @param value
+	 *            <code>String</code> with the value for the condition
 	 * @return a reference to this builder, so that builder statements may be
 	 *         chained
 	 */
@@ -303,6 +330,7 @@ public class IRODSGenQueryBuilder {
 		return IRODSGenQueryFromBuilder.instance(queryData,
 				numberOfResultsDesired);
 	}
+
 
 
 }

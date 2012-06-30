@@ -249,8 +249,8 @@ public interface IRODSAccessObjectFactory {
 	void closeSession(IRODSAccount irodsAccount) throws JargonException;
 
 	/**
-	 * For easy wiring via dependency injection, an acces object factory may be
-	 * created and injected with the <code>IRODSAccessObjectFactory</code>
+	 * For easy wiring via dependency injection, an access object factory may be
+	 * created and injected with the <code>IRODSSession</code>
 	 * 
 	 * @param irodsSession
 	 *            {@link IRODSSession} that will manage the connection to iRODS.
@@ -325,7 +325,8 @@ public interface IRODSAccessObjectFactory {
 	void closeSessionAndEatExceptions() throws JargonException;
 
 	/**
-	 * Close the underlying connection for the given IRODSAccount.
+	 * Close the underlying connection for the given IRODSAccount. Any resulting
+	 * exceptions are logged as a warning and ignored.
 	 * 
 	 * @param irodsAccount
 	 */
