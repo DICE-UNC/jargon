@@ -13,6 +13,7 @@ import org.irods.jargon.core.pub.domain.AuditedAction;
 import org.irods.jargon.core.pub.domain.ObjStat;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.query.GenQueryBuilderException;
+import org.irods.jargon.core.query.GenQueryOrderByField.OrderByType;
 import org.irods.jargon.core.query.IRODSGenQueryBuilder;
 import org.irods.jargon.core.query.IRODSGenQueryFromBuilder;
 import org.irods.jargon.core.query.IRODSQueryResultRow;
@@ -21,6 +22,7 @@ import org.irods.jargon.core.query.JargonQueryException;
 import org.irods.jargon.core.query.QueryConditionOperators;
 import org.irods.jargon.core.query.RodsGenQueryEnum;
 import org.irods.jargon.core.utils.IRODSDataConversionUtil;
+import org.irods.jargon.core.utils.MiscIRODSUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -103,6 +105,17 @@ public abstract class AbstractAuditAOImpl extends IRODSGenericAO {
 		ObjStat objStat = collectionAndDataObjectListAndSearchAO
 				.retrieveObjectStatForPath(irodsFile.getAbsolutePath());
 
+		// make sure this special coll type has support
+		MiscIRODSUtils.evaluateSpecCollSupport(objStat);
+
+		// get the canonical path name as a collection parent and data name
+
+		// get absolute path to use for querying iCAT (could be a soft link)
+		String absPath = MiscIRODSUtils
+				.determineAbsolutePathBasedOnCollTypeInObjectStat(objStat);
+
+		log.info("absPath for querying iCAT:{}", absPath);
+
 		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, null);
 		IRODSQueryResultSetInterface resultSet;
 
@@ -129,14 +142,20 @@ public abstract class AbstractAuditAOImpl extends IRODSGenericAO {
 					.addConditionAsGenQueryField(
 							RodsGenQueryEnum.COL_AUDIT_CREATE_TIME,
 							QueryConditionOperators.EQUAL,
-							String.valueOf(timeStampInIRODSFormat));
+							String.valueOf(timeStampInIRODSFormat))
+					.addOrderByGenQueryField(
+							RodsGenQueryEnum.COL_AUDIT_CREATE_TIME,
+							OrderByType.ASC);
 
 			// .addOrderByGenQueryField(RodsGenQueryEnum.COL_DATA_NAME,
 			// GenQueryOrderByField.OrderByType.ASC);
 			IRODSGenQueryFromBuilder irodsQuery = builder
 					.exportIRODSQueryFromBuilder(1);
-			resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResult(
-					irodsQuery, 0);
+			String zone = MiscIRODSUtils.getZoneInPath(objStat
+					.getAbsolutePath());
+			resultSet = irodsGenQueryExecutor
+					.executeIRODSQueryAndCloseResultInZone(irodsQuery,
+ 0, zone);
 		} catch (GenQueryBuilderException e) {
 			log.error("error building query", e);
 			throw new JargonException("error building query", e);
@@ -204,6 +223,9 @@ public abstract class AbstractAuditAOImpl extends IRODSGenericAO {
 		log.info("irodsFile:{}", irodsFile);
 		log.info("partialStart:{}", partialStart);
 
+		// make sure this special coll type has support
+		MiscIRODSUtils.evaluateSpecCollSupport(objStat);
+
 		List<AuditedAction> auditedActions = new ArrayList<AuditedAction>();
 
 		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, null);
@@ -229,8 +251,11 @@ public abstract class AbstractAuditAOImpl extends IRODSGenericAO {
 			// GenQueryOrderByField.OrderByType.ASC);
 			IRODSGenQueryFromBuilder irodsQuery = builder
 					.exportIRODSQueryFromBuilder(numberOfResultsDesired);
-			resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResult(
-					irodsQuery, partialStart);
+			String zone = MiscIRODSUtils.getZoneInPath(objStat
+					.getAbsolutePath());
+			resultSet = irodsGenQueryExecutor
+					.executeIRODSQueryAndCloseResultInZone(irodsQuery,
+							partialStart, zone);
 		} catch (GenQueryBuilderException e) {
 			log.error("error building query", e);
 			throw new JargonException("error building query", e);
