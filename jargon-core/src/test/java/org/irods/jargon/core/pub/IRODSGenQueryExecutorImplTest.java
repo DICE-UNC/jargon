@@ -11,6 +11,7 @@ import junit.framework.Assert;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.pub.io.IRODSFileFactory;
+import org.irods.jargon.core.query.GenQueryOrderByField;
 import org.irods.jargon.core.query.IRODSGenQuery;
 import org.irods.jargon.core.query.IRODSGenQueryBuilder;
 import org.irods.jargon.core.query.IRODSGenQueryFromBuilder;
@@ -580,11 +581,10 @@ public class IRODSGenQueryExecutorImplTest {
 		}
 	}
 
-	/*
+	/**
 	 * [#126] every call to r.getColumn( X ) returns the name of the file as a
 	 * string
 	 */
-	@SuppressWarnings("deprecation")
 	@Test
 	public void testColQueryThenAccessColByName() throws Exception {
 		String testDirPath = testingPropertiesHelper
@@ -610,12 +610,11 @@ public class IRODSGenQueryExecutorImplTest {
 				.getIRODSAccessObjectFactory();
 		IRODSFileFactory irodsFileFactory = accessObjectFactory
 				.getIRODSFileFactory(irodsAccount);
-		DataObjectAO dataObjectAO = accessObjectFactory
-				.getDataObjectAO(irodsAccount);
+		DataObjectAOImpl dataObjectAO = (DataObjectAOImpl) irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
 		IRODSFile destFile = irodsFileFactory
 				.instanceIRODSFile(targetIrodsFile);
-		dataObjectAO.putLocalDataObjectToIRODS(localFile, destFile, true, null,
-				null);
+		dataObjectAO.putLocalDataObjectToIRODS(localFile, destFile, true);
 
 		// build query
 		StringBuilder q = new StringBuilder();
@@ -690,6 +689,98 @@ public class IRODSGenQueryExecutorImplTest {
 				.executeIRODSQuery(query, 0);
 
 		Assert.assertNotNull(resultSet);
+	}
+
+	/**
+	 * A builder query with order-by semantics
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public final void testExecuteIRODSQueryBuilderQueryWithOrderByDesc()
+			throws Exception {
+
+		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, null);
+		builder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_R_RESC_NAME)
+				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_R_ZONE_NAME)
+				.addConditionAsGenQueryField(
+						RodsGenQueryEnum.COL_R_ZONE_NAME,
+						QueryConditionOperators.EQUAL,
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_ZONE_KEY))
+				.addOrderByGenQueryField(RodsGenQueryEnum.COL_R_RESC_NAME,
+						GenQueryOrderByField.OrderByType.DESC);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
+		IRODSGenQueryExecutor irodsGenQueryExecutor = accessObjectFactory
+				.getIRODSGenQueryExecutor(irodsAccount);
+		IRODSGenQueryFromBuilder query = builder
+				.exportIRODSQueryFromBuilder(50);
+
+		IRODSQueryResultSetInterface resultSet = irodsGenQueryExecutor
+				.executeIRODSQuery(query, 0);
+
+		Assert.assertNotNull(resultSet);
+		String last = "";
+		String current = "";
+		for (IRODSQueryResultRow row : resultSet.getResults()) {
+			current = row.getColumn(0);
+			if (!last.isEmpty()) {
+				int compare = current.compareTo(last);
+				Assert.assertTrue("out of order", compare < 0);
+			}
+			last = current;
+		}
+	}
+
+	/**
+	 * A builder query with order-by semantics
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public final void testExecuteIRODSQueryBuilderQueryWithOrderByAsc()
+			throws Exception {
+
+		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, null);
+		builder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_R_RESC_NAME)
+				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_R_ZONE_NAME)
+				.addConditionAsGenQueryField(
+						RodsGenQueryEnum.COL_R_ZONE_NAME,
+						QueryConditionOperators.EQUAL,
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_ZONE_KEY))
+				.addOrderByGenQueryField(RodsGenQueryEnum.COL_R_RESC_NAME,
+						GenQueryOrderByField.OrderByType.ASC);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
+		IRODSGenQueryExecutor irodsGenQueryExecutor = accessObjectFactory
+				.getIRODSGenQueryExecutor(irodsAccount);
+		IRODSGenQueryFromBuilder query = builder
+				.exportIRODSQueryFromBuilder(50);
+
+		IRODSQueryResultSetInterface resultSet = irodsGenQueryExecutor
+				.executeIRODSQuery(query, 0);
+
+		Assert.assertNotNull(resultSet);
+		String last = "";
+		String current = "";
+		for (IRODSQueryResultRow row : resultSet.getResults()) {
+			current = row.getColumn(0);
+			if (!last.isEmpty()) {
+				int compare = current.compareTo(last);
+				Assert.assertTrue("out of order", compare > 0);
+			}
+			last = current;
+		}
 	}
 
 }

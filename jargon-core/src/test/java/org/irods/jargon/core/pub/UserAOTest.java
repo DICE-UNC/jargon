@@ -12,9 +12,10 @@ import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSProtocolManager;
 import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.connection.IRODSSimpleProtocolManager;
+import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.DuplicateDataException;
-import org.irods.jargon.core.exception.InvalidUserException;
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.exception.NoAPIPrivException;
 import org.irods.jargon.core.protovalues.UserTypeEnum;
 import org.irods.jargon.core.pub.domain.AvuData;
 import org.irods.jargon.core.pub.domain.User;
@@ -445,10 +446,9 @@ public class UserAOTest {
 		Assert.assertFalse(
 				"i should not have found the user, it was supposed to be deleted",
 				found);
-
 	}
 
-	@Test(expected = InvalidUserException.class)
+	@Test(expected = DataNotFoundException.class)
 	public void testDeleteNonExistentUser() throws Exception {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
@@ -460,6 +460,10 @@ public class UserAOTest {
 
 		UserAO userAO = accessObjectFactory.getUserAO(irodsAccount);
 		userAO.deleteUser(testUser);
+
+		// look up should not be there and will return anticipated exception
+
+		userAO.findByName(testUser);
 	}
 
 	@Test(expected = DuplicateDataException.class)
@@ -575,10 +579,10 @@ public class UserAOTest {
 	// FIXME: see clientLogin.c and iadmin.c(line 807) for details yet to be
 	// implemented
 
-	@Ignore
+	@Test
 	public void testChangeUserPassword() throws Exception {
-		String testUser = "testChangeUserPassword";
-		String password1 = "password1";
+		String testUser = "testx";
+		String password1 = "test";
 		String password2 = "PaZz!word123";
 		String password3 = "p@ssw000000000000000000000000000000000rd3";
 		String password4 = "$paZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZw**&rd";
@@ -597,13 +601,13 @@ public class UserAOTest {
 				.getUserAO(irodsAccount);
 
 		// pre-clean, remove testing user if there
-		// adminUserAO.deleteUser(testUser);
+		adminUserAO.deleteUser(testUser);
 
 		// now add user
-		// adminUserAO.addUser(user);
+		adminUserAO.addUser(user);
 
 		// set the first password
-		// adminUserAO.changeAUserPasswordByAnAdmin(testUser, password1);
+		adminUserAO.changeAUserPasswordByAnAdmin(testUser, password1);
 
 		// get an account as the given user, change password, re-log in several
 		// iterations
@@ -965,8 +969,7 @@ public class UserAOTest {
 	 * 
 	 * @throws Exception
 	 */
-	@Ignore
-	// wait for next irods release (expected = NoAPIPrivException.class)
+	@Test
 	public void testGenerateTempPasswordForAnotherUserWhenNotRodsAdmin()
 			throws Exception {
 
@@ -975,11 +978,24 @@ public class UserAOTest {
 		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
 				.getIRODSAccessObjectFactory();
 
+
 		UserAO userAO = accessObjectFactory.getUserAO(irodsAccount);
 		String tempUserName = testingProperties
 				.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY);
 
+		boolean gotException = false;
+
+		try {
 		userAO.getTemporaryPasswordForASpecifiedUser(tempUserName);
+		} catch (UnsupportedOperationException uoe) {
+			// being called on a version prior to 3.1
+			return;
+		} catch (NoAPIPrivException ne) {
+			gotException = true;
+		}
+
+		Assert.assertTrue("did not get expected API priv exception",
+				gotException);
 
 	}
 }

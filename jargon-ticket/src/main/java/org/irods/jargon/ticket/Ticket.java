@@ -19,20 +19,20 @@ public class Ticket extends IRODSDomainObject {
 		DATA_OBJECT, COLLECTION
 	}
 
-	private String ticketId;
-	private String ticketString;
-	private TicketCreateModeEnum type;
-	private TicketObjectType objectType;
-	private String ownerName;
-	private String ownerZone;
-	private int usesCount;
-	private int usesLimit;
-	private int writeFileCount;
-	private int writeFileLimit;
-	private long writeByteCount;
-	private long writeByteLimit;
+	private String ticketId = "";
+	private String ticketString = "";
+	private TicketCreateModeEnum type = TicketCreateModeEnum.UNKNOWN;
+	private TicketObjectType objectType = TicketObjectType.COLLECTION;
+	private String ownerName = "";
+	private String ownerZone = "";
+	private int usesCount = 0;
+	private int usesLimit = 0;
+	private int writeFileCount = 0;
+	private int writeFileLimit = 0;
+	private long writeByteCount = 0L;
+	private long writeByteLimit = 0L;
 	private Date expireTime;
-	private String irodsAbsolutePath;
+	private String irodsAbsolutePath = "";
 
 	/*
 	 * Default (no values) constructor

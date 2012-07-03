@@ -6,13 +6,17 @@ package org.irods.jargon.core.utils;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.lang.reflect.Method;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.pub.domain.ObjStat;
+import org.irods.jargon.core.pub.domain.ObjStat.SpecColType;
 
 /**
  * Misc utils for dealing with iRODS
@@ -299,28 +303,217 @@ public class MiscIRODSUtils {
 	 *            Hash
 	 * @return <code>String<code> which is the MD5 has of the string.
 	 */
-	public static String computeMD5HashOfAStringValue(String input)
+
+	public static String computeMD5HashOfAStringValue(final String input)
 			throws JargonException {
-		String res = "";
+
+		if (input == null || input.isEmpty()) {
+			throw new IllegalArgumentException("null or empty input");
+		}
+
 		try {
 			MessageDigest algorithm = MessageDigest.getInstance("MD5");
 			algorithm.reset();
 			algorithm.update(input.getBytes());
 			byte[] md5 = algorithm.digest();
-			String tmp = "";
-			for (int i = 0; i < md5.length; i++) {
-				tmp = (Integer.toHexString(0xFF & md5[i]));
-				if (tmp.length() == 1) {
-					res += "0" + tmp;
-				} else {
-					res += tmp;
-				}
-			}
+			return LocalFileUtils.md5ByteArrayToString(md5);
 		} catch (NoSuchAlgorithmException ex) {
 			throw new JargonException(
 					"exception creating MD5 Hash of the given string", ex);
 		}
-		return res;
+}
+
+	/**
+	 * Compute a home directory path in /zone/home/username format given an
+	 * <code>IRODSAccount</code>
+	 * 
+	 * @param irodsAccount
+	 *            {@link IRODSAccount}
+	 * @return <code>String</code> with a computed home directory path
+	 */
+	public static String computeHomeDirectoryForIRODSAccount(
+			final IRODSAccount irodsAccount) {
+		if (irodsAccount == null) {
+			throw new IllegalArgumentException("null irodsAccount");
+		}
+
+		StringBuilder sb = new StringBuilder();
+		sb.append("/");
+		sb.append(irodsAccount.getZone());
+		sb.append("/home/");
+		sb.append(irodsAccount.getUserName());
+		return sb.toString();
 	}
 
+	/**
+	 * Utility method to get the last part of the given absolute path
+	 * 
+	 * @return <code>String</code> with the last component of the absolute path
+	 */
+	public static String getLastPathComponentForGiveAbsolutePath(
+			final String collectionPath) {
+
+		if (collectionPath == null || collectionPath.isEmpty()) {
+			throw new IllegalArgumentException("null or empty collection path");
+		}
+
+		String[] paths = collectionPath.split("/");
+		if (paths.length == 0) {
+			return "";
+		}
+
+		return paths[paths.length - 1];
+
+	}
+
+	/**
+	 * See if jargon supports the given status
+	 * 
+	 * @param objStat
+	 * @throws JargonException
+	 */
+	public static void evaluateSpecCollSupport(final ObjStat objStat)
+			throws JargonException {
+		if (objStat.getSpecColType() == SpecColType.LINKED_COLL) {
+			// OK
+		} else if (objStat.getSpecColType() == SpecColType.NORMAL) {
+			// OK
+		} else {
+			throw new JargonException(
+					"unsupported object type, support not yet available for:"
+							+ objStat.getSpecColType());
+		}
+	}
+
+	/**
+	 * Build an absolute path combining the collection parent and the data name,
+	 * accounting for the presence or absence of a trailing slash in the
+	 * collection path.
+	 * 
+	 * @param collectionPath
+	 *            <code>String</code> with path of the parent collection
+	 * @param dataName
+	 *            <code>String</code> with file or collection child name
+	 * @return <code>String</code> with a properly concatenated file path
+	 */
+	public static String buildAbsolutePathFromCollectionParentAndFileName(
+			final String collectionPath, final String dataName) {
+
+		if (collectionPath == null) {
+			throw new IllegalArgumentException("null or empty collectionPath");
+		}
+
+		if (dataName == null) {
+			throw new IllegalArgumentException("null or empty dataName");
+		}
+
+		StringBuilder pathBuilder = new StringBuilder();
+
+		if (collectionPath.isEmpty() && dataName.isEmpty()) {
+			pathBuilder.append("/");
+		} else {
+			pathBuilder.append(collectionPath);
+			if (!collectionPath.isEmpty()
+					&& collectionPath.charAt(collectionPath.length() - 1) != '/') {
+				pathBuilder.append('/');
+			}
+			pathBuilder.append(dataName);
+		}
+
+		return pathBuilder.toString();
+	}
+
+	/**
+	 * Based on the collection type, determine the absolute path used to query
+	 * iRODS. This is meant to handle special collections, such as soft links,
+	 * where the iCAT data may be associated with the canonical path
+	 * 
+	 * @param objStat
+	 *            {@link ObjStat} with information on the given iRODS object
+	 * @return <code>String</code> with the canonical iRODS path
+	 */
+	public static String determineAbsolutePathBasedOnCollTypeInObjectStat(
+			final ObjStat objStat) {
+		String effectiveAbsolutePath = null;
+
+		if (objStat.getSpecColType() == SpecColType.LINKED_COLL) {
+			/*
+			 * StringBuilder sb = new StringBuilder();
+			 * sb.append(objStat.getObjectPath()); sb.append("/");
+			 * sb.append(MiscIRODSUtils
+			 * .getLastPathComponentForGiveAbsolutePath(objStat
+			 * .getAbsolutePath())); effectiveAbsolutePath = sb.toString();
+			 */
+			effectiveAbsolutePath = objStat.getObjectPath();
+		} else {
+			effectiveAbsolutePath = objStat.getAbsolutePath();
+		}
+		return effectiveAbsolutePath;
+	}
+
+	/**
+	 * Given an absolue path, split it into a parent name and a child name
+	 * 
+	 * @param filePath
+	 *            <code>String</code> with an absolute iRODS path to a
+	 *            collection or data object
+	 * @return {@link CollectionAndPath} value object
+	 */
+	public static CollectionAndPath separateCollectionAndPathFromGivenAbsolutePath(
+			final String filePath) {
+
+		// used when parsing the filepath
+		int index;
+
+		if (filePath == null) {
+			throw new NullPointerException("The file name cannot be null");
+		}
+
+		String fileName = filePath;
+		String directory = "";
+
+		if (fileName.length() > 1) { // add to allow path = root "/"
+			index = fileName.lastIndexOf('/');
+			while ((index == fileName.length() - 1) && (index >= 0)) {
+				// remove '/' at end of filename, if exists
+				fileName = fileName.substring(0, index);
+				index = fileName.lastIndexOf('/');
+			}
+
+			// separate directory and file
+			if ((index >= 0) && ((fileName.substring(index + 1).length()) > 0)) {
+				// have to run setDirectory(...) again
+				// because they put filepath info in the filename
+				directory = fileName.substring(0, index);
+				fileName = fileName.substring(index + 1);
+			}
+		}
+
+		return new CollectionAndPath(directory, fileName);
+	}
+
+	/**
+	 * Get a <code>List</code> based on the values of the provided enum. Handy
+	 * for creating lists in interfaces and for other purposes
+	 * 
+	 * @param enumClass
+	 *            java <code>enum</code>
+	 * @return <code>List<String></code> of enum values
+	 * @throws JargonException
+	 */
+	public static <T extends Enum<T>> List<String> getDisplayValuesFromEnum(
+			Class<T> enumClass) throws JargonException {
+		try {
+			T[] items = enumClass.getEnumConstants();
+			Method accessor = enumClass.getMethod("toString");
+
+			ArrayList<String> names = new ArrayList<String>(items.length);
+			for (T item : items)
+				names.add(accessor.invoke(item).toString());
+
+			return names;
+		} catch (Exception ex) {
+			throw new JargonException("error getting enum vals", ex);
+		}
+	}
 }

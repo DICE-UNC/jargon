@@ -4,9 +4,12 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.irods.jargon.core.exception.JargonException;
+import org.apache.commons.io.FileUtils;
 import org.irods.jargon.core.pub.domain.IRODSDomainObject;
+import org.irods.jargon.core.pub.domain.ObjStat;
+import org.irods.jargon.core.pub.domain.ObjStat.SpecColType;
 import org.irods.jargon.core.pub.domain.UserFilePermission;
+import org.irods.jargon.core.utils.MiscIRODSUtils;
 
 /**
  * Value object that holds information on data objects and collections. This
@@ -36,6 +39,7 @@ public class CollectionAndDataObjectListingEntry extends IRODSDomainObject
 
 	private String parentPath = "";
 	private String pathOrName = "";
+	private String specialObjectPath = "";
 	private ObjectType objectType = null;
 	private Date createdAt = null;
 	private Date modifiedAt = null;
@@ -44,6 +48,7 @@ public class CollectionAndDataObjectListingEntry extends IRODSDomainObject
 	private String ownerZone = "";
 	private List<UserFilePermission> userFilePermission = new ArrayList<UserFilePermission>();
 	private int id;
+	private ObjStat.SpecColType specColType = SpecColType.NORMAL;
 
 	/**
 	 * Return the absolute path the the parent of the file or collection.
@@ -57,30 +62,6 @@ public class CollectionAndDataObjectListingEntry extends IRODSDomainObject
 
 	public void setParentPath(final String parentPath) {
 		this.parentPath = parentPath;
-	}
-
-	/**
-	 * Utility method to get the last part of the collection path component.
-	 * Returns the last subdir that is the collection.
-	 * 
-	 * @return <code>String</code> with the last part of the collection path.
-	 * @throws JargonException
-	 *             returned if this method is called on a data object.
-	 */
-	public String getLastPathComponentForCollectionName()
-			throws JargonException {
-		if (objectType != ObjectType.COLLECTION) {
-			throw new JargonException(
-					"this is not a collection, cannot get last component for collection name");
-		}
-
-		String[] paths = pathOrName.split("/");
-		if (paths.length == 0) {
-			return "";
-		}
-
-		return paths[paths.length - 1];
-
 	}
 
 	/**
@@ -134,6 +115,16 @@ public class CollectionAndDataObjectListingEntry extends IRODSDomainObject
 		this.dataSize = dataSize;
 	}
 
+	/**
+	 * Handy method gets a displayable <code>String</code> with a unit (e.g. MB,
+	 * GB) appropriate to the file length
+	 * 
+	 * @return <code>String</code> with displayable file size
+	 */
+	public String getDisplayDataSize() {
+		return FileUtils.byteCountToDisplaySize(dataSize);
+	}
+
 	public int getId() {
 		return id;
 	}
@@ -170,7 +161,12 @@ public class CollectionAndDataObjectListingEntry extends IRODSDomainObject
 
 	/**
 	 * Handy method that will compute the appropriate absolute path, whether a
-	 * data object or a collection.
+	 * data object or a collection. This will be the display path. In the case
+	 * of a soft-linked directory, this is the soft link target, rather then the
+	 * canonical source directory. This is appropriate as listings under a soft
+	 * linked directory should be in terms of the parent directory, but may not
+	 * give the intended result if used to query the iCAT for information about
+	 * the file or collection.
 	 * 
 	 * @return
 	 */
@@ -200,11 +196,9 @@ public class CollectionAndDataObjectListingEntry extends IRODSDomainObject
 	public String getNodeLabelDisplayValue() {
 		String nodeVal;
 		if (objectType == ObjectType.COLLECTION) {
-			try {
-				nodeVal = getLastPathComponentForCollectionName();
-			} catch (JargonException e) {
-				nodeVal = toString();
-			}
+				nodeVal = MiscIRODSUtils
+						.getLastPathComponentForGiveAbsolutePath(this
+								.getPathOrName());
 		} else {
 			nodeVal = pathOrName;
 		}
@@ -266,5 +260,40 @@ public class CollectionAndDataObjectListingEntry extends IRODSDomainObject
 	 */
 	public void setOwnerZone(final String ownerZone) {
 		this.ownerZone = ownerZone;
+	}
+
+	/**
+	 * @return the specColType {@link ObjStat.SpecColType} enum value that
+	 *         indicates if this is some type of special collection
+	 */
+	public ObjStat.SpecColType getSpecColType() {
+		return specColType;
+	}
+
+	/**
+	 * @param specColType
+	 *            the specColType to set {@link ObjStat.SpecColType} enum value
+	 *            that indicates if this is some type of special collection
+	 */
+	public void setSpecColType(ObjStat.SpecColType specColType) {
+		this.specColType = specColType;
+	}
+
+	/**
+	 * @return the specialObjectPath <code>String</code> with the underlyng
+	 *         special object path. If this is a soft link, this reflects the
+	 *         canonical iRODS path.
+	 */
+	public String getSpecialObjectPath() {
+		return specialObjectPath;
+	}
+
+	/**
+	 * @param specialObjectPath
+	 *            the specialObjectPath to set <code>String</code> with the
+	 *            underlyng special object path.
+	 */
+	public void setSpecialObjectPath(String specialObjectPath) {
+		this.specialObjectPath = specialObjectPath;
 	}
 }

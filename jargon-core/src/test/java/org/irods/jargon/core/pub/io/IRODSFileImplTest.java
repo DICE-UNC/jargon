@@ -1271,7 +1271,6 @@ public class IRODSFileImplTest {
 
 	@Test
 	public final void testDeleteFileWhenCollectionWithForce() throws Exception {
-		// TODO: add assertion to check file not in trash
 		String testDirName = "testDeleteFileWhenCollectionWithForce";
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
@@ -2263,7 +2262,6 @@ public class IRODSFileImplTest {
 	 */
 	@Test
 	public final void testToURI() throws Exception {
-		// TODO: replicate in older file tests
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH);
@@ -2294,7 +2292,6 @@ public class IRODSFileImplTest {
 
 	@Test
 	public final void testToString() throws Exception {
-		// TODO: replicate in older file tests
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH);

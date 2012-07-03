@@ -249,8 +249,8 @@ public interface IRODSAccessObjectFactory {
 	void closeSession(IRODSAccount irodsAccount) throws JargonException;
 
 	/**
-	 * For easy wiring via dependency injection, an acces object factory may be
-	 * created and injected with the <code>IRODSAccessObjectFactory</code>
+	 * For easy wiring via dependency injection, an access object factory may be
+	 * created and injected with the <code>IRODSSession</code>
 	 * 
 	 * @param irodsSession
 	 *            {@link IRODSSession} that will manage the connection to iRODS.
@@ -325,7 +325,8 @@ public interface IRODSAccessObjectFactory {
 	void closeSessionAndEatExceptions() throws JargonException;
 
 	/**
-	 * Close the underlying connection for the given IRODSAccount.
+	 * Close the underlying connection for the given IRODSAccount. Any resulting
+	 * exceptions are logged as a warning and ignored.
 	 * 
 	 * @param irodsAccount
 	 */
@@ -371,6 +372,17 @@ public interface IRODSAccessObjectFactory {
 	 * @throws JargonException
 	 */
 	CollectionAuditAO getCollectionAuditAO(IRODSAccount irodsAccount)
+			throws JargonException;
+
+	/**
+	 * Get an AO to administer mounted collections and soft links
+	 * 
+	 * @param irodsAccount
+	 *            {@link IRODSAccount} that describes the connection to iRODS.
+	 * @return {@link MountedCollectionAO}
+	 * @throws JargonException
+	 */
+	MountedCollectionAO getMountedCollectionAO(IRODSAccount irodsAccount)
 			throws JargonException;
 
 	/**
@@ -431,6 +443,19 @@ public interface IRODSAccessObjectFactory {
 	 * @throws JargonException
 	 */
 	IRODSServerProperties getIRODSServerProperties(IRODSAccount irodsAccount)
+			throws JargonException;
+
+	/**
+	 * Return a <code>ResourceGroupAO</code> object that can handle the resource
+	 * groups in the iRODS icat
+	 * 
+	 * @param irodsAccount
+	 *            {@link IRODSAccount} that describes the connection to iRODS.
+	 * @return {@link ResourceGroupAO} that can interact with resource groups on
+	 *         the iCAT
+	 * @throws JargonException
+	 */
+	ResourceGroupAO getResourceGroupAO(IRODSAccount irodsAccount)
 			throws JargonException;
 
 }

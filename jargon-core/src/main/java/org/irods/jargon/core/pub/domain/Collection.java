@@ -1,9 +1,8 @@
-/**
- * 
- */
 package org.irods.jargon.core.pub.domain;
 
 import java.util.Date;
+
+import org.irods.jargon.core.pub.domain.ObjStat.SpecColType;
 
 /**
  * Represents a Collection in IRODS. This object represents the ICAT domain
@@ -27,18 +26,33 @@ import java.util.Date;
 public class Collection extends IRODSDomainObject {
 
 	private int collectionId = 0;
+	/**
+	 * This will be the full absolute path of the collection, in the case of a
+	 * mounted collection, such as a soft link, this may be the linked name,
+	 * where the objectPath will contain the canonical path or actual physial
+	 * location
+	 */
 	private String collectionName = "";
+	/**
+	 * The canonical absolute path for the object if this is a soft-linked
+	 * collection. If this object is retrieved by the canonical path, or it is
+	 * not a special collection, this will be blank
+	 */
+	private String objectPath = "";
+	/**
+	 * This will be the full absolute path of the parent of the given collection
+	 */
 	private String collectionParentName = "";
 	private String collectionOwnerName = "";
 	private String collectionOwnerZone = "";
 	private String collectionMapId = "";
 	private String collectionInheritance = "";
 	private String comments = "";
-	private String collectionType = "";
 	private String info1 = "";
 	private String info2 = "";
 	private Date createdAt = new Date();
 	private Date modifiedAt = new Date();
+	private SpecColType specColType = SpecColType.NORMAL;
 
 	public int getCollectionId() {
 		return collectionId;
@@ -48,10 +62,20 @@ public class Collection extends IRODSDomainObject {
 		this.collectionId = collectionId;
 	}
 
+	/**
+	 * This will be the full absolute path to the collection. It may be a
+	 * special collection path, such as a soft link
+	 */
 	public String getCollectionName() {
 		return collectionName;
 	}
 
+	/**
+	 * This will be the full absolute path to the collection. It may be a
+	 * special collection path, such as a soft link
+	 * 
+	 * @param collectionName
+	 */
 	public void setCollectionName(final String collectionName) {
 		this.collectionName = collectionName;
 	}
@@ -69,10 +93,32 @@ public class Collection extends IRODSDomainObject {
 		return collectionName.substring(lastSlash + 1);
 	}
 
+	/**
+	 * This will be the absolute path to the parent collection of this
+	 * collection
+	 * 
+	 * @return
+	 */
 	public String getCollectionParentName() {
 		return collectionParentName;
 	}
 
+	/**
+	 * Returns the absolute path for a collection, this is synonymous with the
+	 * <code>getCollectionName()</code>.
+	 * 
+	 * @return
+	 */
+	public String getAbsolutePath() {
+		return getCollectionName();
+	}
+
+	/**
+	 * This will be the absolute path to the parent collection of this
+	 * collection
+	 * 
+	 * @param collectionParentName
+	 */
 	public void setCollectionParentName(final String collectionParentName) {
 		this.collectionParentName = collectionParentName;
 	}
@@ -117,15 +163,6 @@ public class Collection extends IRODSDomainObject {
 		this.comments = comments;
 	}
 
-	// FIXME: not used right now, queries do not work well with this data type
-	// check into iRODS
-	public String getCollectionType() {
-		return collectionType;
-	}
-
-	public void setCollectionType(final String collectionType) {
-		this.collectionType = collectionType;
-	}
 
 	public String getInfo1() {
 		return info1;
@@ -179,8 +216,10 @@ public class Collection extends IRODSDomainObject {
 		sb.append(collectionInheritance);
 		sb.append("\n   comments:");
 		sb.append(comments);
-		sb.append("\n   collectionType:");
-		sb.append(collectionType);
+		sb.append("\n   specialCollectionType:");
+		sb.append(specColType);
+		sb.append("\n   objectPath:");
+		sb.append(objectPath);
 		sb.append("\n   info1:");
 		sb.append(info1);
 		sb.append("\n   info2:");
@@ -190,6 +229,40 @@ public class Collection extends IRODSDomainObject {
 		sb.append("\n   modifiedAt:");
 		sb.append(modifiedAt);
 		return sb.toString();
+	}
+
+	/**
+	 * @return the objectPath <code>String</code> that will normally be blank,
+	 *         but if this is a soft link, this will reflect the canonical path
+	 *         to this collection
+	 */
+	public String getObjectPath() {
+		return objectPath;
+	}
+
+	/**
+	 * @param objectPath
+	 *            the objectPath to set <code>String</code> that will normally
+	 *            be blank, but if this is a soft link, this will reflect the
+	 *            canonical path to this collection
+	 */
+	public void setObjectPath(String objectPath) {
+		this.objectPath = objectPath;
+	}
+
+	/**
+	 * @return the specColType
+	 */
+	public SpecColType getSpecColType() {
+		return specColType;
+	}
+
+	/**
+	 * @param specColType
+	 *            the specColType to set
+	 */
+	public void setSpecColType(SpecColType specColType) {
+		this.specColType = specColType;
 	}
 
 }

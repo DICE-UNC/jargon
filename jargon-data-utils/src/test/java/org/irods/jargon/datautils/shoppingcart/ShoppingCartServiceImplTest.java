@@ -5,7 +5,9 @@ import java.util.Properties;
 import junit.framework.Assert;
 
 import org.irods.jargon.core.connection.IRODSAccount;
+import org.irods.jargon.core.connection.IRODSServerProperties;
 import org.irods.jargon.core.exception.JargonRuntimeException;
+import org.irods.jargon.core.pub.EnvironmentalInfoAO;
 import org.irods.jargon.core.pub.IRODSFileSystem;
 import org.irods.jargon.datautils.datacache.DataCacheServiceFactory;
 import org.irods.jargon.datautils.datacache.DataCacheServiceFactoryImpl;
@@ -132,7 +134,6 @@ public class ShoppingCartServiceImplTest {
 	 * @throws Exception
 	 */
 	@Test
-	// wait for next iRODS release
 	public final void testSerializeShoppingCartAsSpecifiedUserAsRodsadmin()
 			throws Exception {
 		String testUserName = testingProperties
@@ -141,6 +142,18 @@ public class ShoppingCartServiceImplTest {
 		String expectedPath = "/a/path";
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
+						irodsAccount);
+		IRODSServerProperties props = environmentalInfoAO
+				.getIRODSServerPropertiesFromIRODSServer();
+
+		// test is only valid for 3.1
+		if (!props.isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods3.1")) {
+			irodsFileSystem.closeAndEatExceptions();
+			return;
+		}
 
 		DataCacheServiceFactory dataCacheServiceFactory = new DataCacheServiceFactoryImpl(
 				irodsFileSystem.getIRODSAccessObjectFactory());

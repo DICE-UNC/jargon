@@ -74,7 +74,7 @@ public class TicketAdminInpTest {
 	@Test
 	public void testCreateTicketWithKey() throws Exception {
 		TicketAdminInp pi = TicketAdminInp.instanceForCreate(
-				TicketCreateModeEnum.TICKET_CREATE_READ, afile, ticketId);
+				TicketCreateModeEnum.READ, afile, ticketId);
 
 		Assert.assertNotNull(pi);
 	}
@@ -83,7 +83,7 @@ public class TicketAdminInpTest {
 	public void testCreateTicketWithKeyCheckXML() throws Exception {
 
 		TicketAdminInp pi = TicketAdminInp.instanceForCreate(
-				TicketCreateModeEnum.TICKET_CREATE_READ, afile, ticketId);
+				TicketCreateModeEnum.READ, afile, ticketId);
 		String tagOut = pi.getParsedTags();
 
 		StringBuilder sb = new StringBuilder();
@@ -103,20 +103,20 @@ public class TicketAdminInpTest {
 	public void testCreateTicketWithNullKey() throws Exception {
 
 		TicketAdminInp.instanceForCreate(
-				TicketCreateModeEnum.TICKET_CREATE_READ, afile, null);
+				TicketCreateModeEnum.READ, afile, null);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testCreateTicketWithEmptyKey() throws Exception {
 
 		TicketAdminInp.instanceForCreate(
-				TicketCreateModeEnum.TICKET_CREATE_READ, afile, "");
+				TicketCreateModeEnum.READ, afile, "");
 	}
 
 	@Test
 	public void testCreateTicketReadMode() throws Exception {
 		TicketAdminInp pi = TicketAdminInp.instanceForCreate(
-				TicketCreateModeEnum.TICKET_CREATE_READ, afile, ticketId);
+				TicketCreateModeEnum.READ, afile, ticketId);
 
 		Assert.assertNotNull(pi);
 	}
@@ -125,7 +125,7 @@ public class TicketAdminInpTest {
 	public void testCreatelTicketReadModeCheckXML() throws Exception {
 
 		TicketAdminInp pi = TicketAdminInp.instanceForCreate(
-				TicketCreateModeEnum.TICKET_CREATE_READ, afile, ticketId);
+				TicketCreateModeEnum.READ, afile, ticketId);
 		String tagOut = pi.getParsedTags();
 
 		StringBuilder sb = new StringBuilder();
@@ -144,7 +144,7 @@ public class TicketAdminInpTest {
 	@Test
 	public void testCreateTicketWriteMode() throws Exception {
 		TicketAdminInp pi = TicketAdminInp.instanceForCreate(
-				TicketCreateModeEnum.TICKET_CREATE_WRITE, afile, ticketId);
+				TicketCreateModeEnum.WRITE, afile, ticketId);
 
 		Assert.assertNotNull(pi);
 	}
@@ -153,7 +153,7 @@ public class TicketAdminInpTest {
 	public void testCreatelTicketWriteModeCheckXML() throws Exception {
 
 		TicketAdminInp pi = TicketAdminInp.instanceForCreate(
-				TicketCreateModeEnum.TICKET_CREATE_WRITE, afile, ticketId);
+				TicketCreateModeEnum.WRITE, afile, ticketId);
 		String tagOut = pi.getParsedTags();
 
 		StringBuilder sb = new StringBuilder();
@@ -179,14 +179,14 @@ public class TicketAdminInpTest {
 	public void testCreateTicketNullObjPath() throws Exception {
 
 		TicketAdminInp.instanceForCreate(
-				TicketCreateModeEnum.TICKET_CREATE_READ, null, ticketId);
+				TicketCreateModeEnum.READ, null, ticketId);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testCreateTicketEmptyObjPath() throws Exception {
 
 		TicketAdminInp.instanceForCreate(
-				TicketCreateModeEnum.TICKET_CREATE_READ, "", ticketId);
+				TicketCreateModeEnum.READ, "", ticketId);
 	}
 
 	// end ticket CREATE tests
@@ -1094,7 +1094,7 @@ public class TicketAdminInpTest {
 		Assert.assertNotNull(pi);
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void testModifyTicketExpireWitDateNullDate() throws Exception {
 
 		TicketAdminInp pi = TicketAdminInp.instanceForModifyExpiration(

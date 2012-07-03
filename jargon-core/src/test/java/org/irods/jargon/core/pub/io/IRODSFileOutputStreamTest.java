@@ -9,9 +9,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 
 import junit.framework.Assert;
 import junit.framework.TestCase;
@@ -631,7 +629,7 @@ public class IRODSFileOutputStreamTest {
 		IRODSFile parentDir = irodsFileSystem.getIRODSFileFactory(irodsAccount).instanceIRODSFile(targetIrodsCollection);
 		parentDir.mkdirs();
 
-		ExecutorService executorService = Executors
+		Executors
 				.newFixedThreadPool(numberWrites);
 		
 		final List<OutputStreamWriteTestWriter> writerThreads = new ArrayList<OutputStreamWriteTestWriter>();
@@ -642,9 +640,6 @@ public class IRODSFileOutputStreamTest {
 			outputStreamWriter = new OutputStreamWriteTestWriter(absPath, targetIrodsCollection + "/" + testFileNamePrefix + i + testFileNameSuffix, irodsFileSystem.getIRODSAccessObjectFactory(), irodsAccount);
 			writerThreads.add(outputStreamWriter);
 		}
-
-		List<Future<String>> transferThreadStates = executorService
-				.invokeAll(writerThreads);
 
 		for (OutputStreamWriteTestWriter writer : writerThreads) {
 			TestCase.assertNull("should not be an exception",

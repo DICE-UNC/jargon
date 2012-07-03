@@ -21,6 +21,32 @@ public class AuditedAction extends IRODSDomainObject {
 	private AuditActionEnum auditActionEnum;
 	private Date createdAt = new Date();
 	private Date updatedAt = new Date();
+	private String timeStampInIRODSFormat = "";
+
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("AuditedAction:");
+		sb.append("\n   objectId:");
+		sb.append(objectId);
+		sb.append("\n   domainObjectUniqueName:");
+		sb.append(domainObjectUniqueName);
+		sb.append("\n   userId:");
+		sb.append(userId);
+		sb.append("\n   userName:");
+		sb.append(userName);
+		sb.append("\n   comment:");
+		sb.append(comment);
+		sb.append("\n   auditActionEnum:");
+		sb.append(auditActionEnum);
+		sb.append("\n   createdAt:");
+		sb.append(createdAt);
+		sb.append("\n   updatedAt:");
+		sb.append(updatedAt);
+		sb.append("\n   timeStampInIRODSFormat:");
+		sb.append(timeStampInIRODSFormat);
+		return sb.toString();
+	}
 
 	/**
 	 * @return the objectId
@@ -140,6 +166,29 @@ public class AuditedAction extends IRODSDomainObject {
 	 */
 	public void setUpdatedAt(final Date updatedAt) {
 		this.updatedAt = updatedAt;
+	}
+
+	/**
+	 * The time stamp (createdDate) in iRODS format in the database. This can be
+	 * used to query for an individual audit event
+	 * 
+	 * @return the timeStampInIRODSFormat <code>String</code> with the time
+	 *         stamp of the audit event, used to create a 'key' thtat can find
+	 *         an audit event
+	 */
+	public String getTimeStampInIRODSFormat() {
+		return timeStampInIRODSFormat;
+	}
+
+	/**
+	 * The time stamp (createdDate) in iRODS format in the database. This can be
+	 * used to query for an individual audit event
+	 * 
+	 * @param timeStampInIRODSFormat
+	 *            the timeStampInIRODSFormat to set
+	 */
+	public void setTimeStampInIRODSFormat(String timeStampInIRODSFormat) {
+		this.timeStampInIRODSFormat = timeStampInIRODSFormat;
 	}
 
 }

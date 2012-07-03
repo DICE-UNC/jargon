@@ -17,7 +17,6 @@ public class IRODSUriUtilsTest {
 
 	private static Properties testingProperties = new Properties();
 	private static org.irods.jargon.testutils.TestingPropertiesHelper testingPropertiesHelper = new TestingPropertiesHelper();
-	private static org.irods.jargon.testutils.filemanip.ScratchFileUtils scratchFileUtils = null;
 	public static final String IRODS_TEST_SUBDIR_PATH = "IRODSUriUtilsTest";
 	private static org.irods.jargon.testutils.IRODSTestSetupUtilities irodsTestSetupUtilities = null;
 	private static IRODSFileSystem irodsFileSystem = null;
@@ -26,7 +25,7 @@ public class IRODSUriUtilsTest {
 	public static void setUpBeforeClass() throws Exception {
 		org.irods.jargon.testutils.TestingPropertiesHelper testingPropertiesLoader = new TestingPropertiesHelper();
 		testingProperties = testingPropertiesLoader.getTestProperties();
-		scratchFileUtils = new org.irods.jargon.testutils.filemanip.ScratchFileUtils(
+		new org.irods.jargon.testutils.filemanip.ScratchFileUtils(
 				testingProperties);
 		irodsTestSetupUtilities = new org.irods.jargon.testutils.IRODSTestSetupUtilities();
 		irodsTestSetupUtilities.initializeIrodsScratchDirectory();

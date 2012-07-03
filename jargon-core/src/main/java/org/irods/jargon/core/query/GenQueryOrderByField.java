@@ -7,7 +7,7 @@ package org.irods.jargon.core.query;
  * @author Mike Conway - DICE (www.irods.org)
  * 
  */
-class GenQueryOrderByField extends GenQueryField {
+public class GenQueryOrderByField extends GenQueryField {
 
 	public enum OrderByType {
 		NONE, ASC, DESC
@@ -60,7 +60,7 @@ class GenQueryOrderByField extends GenQueryField {
 	/**
 	 * @return the orderByType
 	 */
-	OrderByType getOrderByType() {
+	public OrderByType getOrderByType() {
 		return orderByType;
 	}
 

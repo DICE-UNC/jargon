@@ -695,8 +695,9 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements
 	private void clientSidePutAction(final String irodsFileAbsolutePath,
 			final File localFile, final String resourceName,
 			final boolean force, final int nbrThreads) throws JargonException {
-		DataObjectAO dataObjectAO = new DataObjectAOImpl(getIRODSSession(),
-				getIRODSAccount());
+		DataObjectAOImpl dataObjectAO = (DataObjectAOImpl) this
+				.getIRODSAccessObjectFactory()
+				.getDataObjectAO(this.getIRODSAccount());
 		IRODSFile irodsFile = dataObjectAO
 				.instanceIRODSFileForPath(irodsFileAbsolutePath);
 		irodsFile.setResource(resourceName);
@@ -731,8 +732,9 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements
 
 		log.info("client-side get action");
 
-		DataObjectAO dataObjectAO = new DataObjectAOImpl(getIRODSSession(),
-				getIRODSAccount());
+		DataObjectAOImpl dataObjectAO = (DataObjectAOImpl) this
+				.getIRODSAccessObjectFactory().getDataObjectAO(
+						getIRODSAccount());
 		IRODSFile irodsFile = dataObjectAO
 				.instanceIRODSFileForPath(irodsFileAbsolutePath);
 		irodsFile.setResource(resourceName);

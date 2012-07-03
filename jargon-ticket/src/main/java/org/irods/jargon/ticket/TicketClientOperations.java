@@ -1,6 +1,7 @@
 package org.irods.jargon.ticket;
 
 import java.io.File;
+import java.io.InputStream;
 
 import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
@@ -15,7 +16,9 @@ public interface TicketClientOperations {
 	/**
 	 * Wraps a put operation with ticket semantics.
 	 * <p/>
-	 * Put a file or collection to iRODS.
+	 * Put a file or collection to iRODS. Note that 'force' is not supported
+	 * with tickets at this time, so overwrites will return an
+	 * <code>OverwriteException</code>
 	 * 
 	 * @param ticketString
 	 *            <code>String</code> with the unique ticket string
@@ -136,5 +139,51 @@ public interface TicketClientOperations {
 			String ticketString, IRODSFile irodsSourceFile,
 			File intermediateCacheRootDirectory) throws DataNotFoundException,
 			JargonException;
+
+	/**
+	 * This method specifically addresses 'upload' scenarios, where data is
+	 * supplied via an <code>InputStream</code>, representing the contents that
+	 * should be placed in a target file with a given <code>fileName</code>
+	 * underneath a given target iRODS collection path in
+	 * <code>irodsCollectionAbsolutePath</code>. This method will take the
+	 * contents of the input stream, store in a temporary cache location as
+	 * described by the <code>intermediateCacheRootDirectory</code>, then put
+	 * that file to iRODS. Once the operation is complete, the temporary file
+	 * will be removed. This removal is done in a finally block, so that if the
+	 * put operation fails, it should minimize leakage of old files.
+	 * <p/>
+	 * The primary use case for this method is in mid-tier applications where a
+	 * file is being uploaded from a browser. Since the iRODS ticket system does
+	 * not support input or output streams, the upload needs to be wrapped to
+	 * emulate a direct streaming via a ticket.
+	 * 
+	 * @param ticketString
+	 *            <code>String</code> with the unique ticket id, which must have
+	 *            write privilages
+	 * @param irodsCollectionAbsolutePath
+	 *            <code>String</code> with the target iRODS parent collection
+	 *            absolute path. The file will be placed under this collection
+	 *            using the given <code>fileName</code>
+	 * @param fileName
+	 *            <code>String</code> with the name of the file being uploaded
+	 *            to iRODS
+	 * @param inputStreamForFileData
+	 *            <code>InputStream</code> which should be properly buffered by
+	 *            the caller. This could be the input stream resulting from an
+	 *            http upload operation
+	 * @param temporaryCacheDirectoryLocation
+	 *            {@link File} representing a temporary local file system
+	 *            directory where temporary files may be cached
+	 * @throws DataNotFoundException
+	 *             if the ticket information is not available
+	 * @throws OverwriteException
+	 *             if an overwrite would occur
+	 * @throws JargonException
+	 */
+	void redeemTicketAndStreamToIRODSCollection(String ticketString,
+			String irodsCollectionAbsolutePath, String fileName,
+			InputStream inputStreamForFileData,
+			File temporaryCacheDirectoryLocation)
+			throws DataNotFoundException, OverwriteException, JargonException;
 
 }

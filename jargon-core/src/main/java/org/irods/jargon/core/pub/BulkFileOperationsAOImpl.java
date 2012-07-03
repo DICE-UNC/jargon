@@ -29,7 +29,7 @@ public class BulkFileOperationsAOImpl extends IRODSGenericAO implements
 	 * @param irodsAccount
 	 * @throws JargonException
 	 */
-	protected BulkFileOperationsAOImpl(final IRODSSession irodsSession,
+	BulkFileOperationsAOImpl(final IRODSSession irodsSession,
 			final IRODSAccount irodsAccount) throws JargonException {
 		super(irodsSession, irodsAccount);
 	}

@@ -646,8 +646,6 @@ final class DataAOHelper extends AOHelper {
 			targetFile = irodsFileDestination;
 		} else {
 
-			log.debug(">>>>>checking if destination file is a collection");
-
 			if (irodsFileDestination.isDirectory()) {
 				log.info(
 						"put specifying an irods collection, will use the local file name as the iRODS file name:{}",

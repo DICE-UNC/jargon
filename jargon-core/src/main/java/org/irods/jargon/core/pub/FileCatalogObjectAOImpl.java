@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSSession;
+import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.FileNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.packinstr.DataObjInp;
@@ -14,6 +15,7 @@ import org.irods.jargon.core.packinstr.Tag;
 import org.irods.jargon.core.pub.domain.ObjStat;
 import org.irods.jargon.core.pub.domain.Resource;
 import org.irods.jargon.core.pub.io.IRODSFile;
+import org.irods.jargon.core.utils.MiscIRODSUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,6 +29,8 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class FileCatalogObjectAOImpl extends IRODSGenericAO implements
 		FileCatalogObjectAO {
+
+	protected transient final CollectionAndDataObjectListAndSearchAO collectionAndDataObjectListAndSearchAO;
 
 	public static final Logger log = LoggerFactory
 			.getLogger(FileCatalogObjectAOImpl.class);
@@ -47,6 +51,9 @@ public abstract class FileCatalogObjectAOImpl extends IRODSGenericAO implements
 	protected FileCatalogObjectAOImpl(final IRODSSession irodsSession,
 			final IRODSAccount irodsAccount) throws JargonException {
 		super(irodsSession, irodsAccount);
+		this.collectionAndDataObjectListAndSearchAO = this
+				.getIRODSAccessObjectFactory()
+				.getCollectionAndDataObjectListAndSearchAO(irodsAccount);
 	}
 
 	/*
@@ -204,5 +211,42 @@ public abstract class FileCatalogObjectAOImpl extends IRODSGenericAO implements
 		return collectionAndDataObjectListAndSearchAO
 				.retrieveObjectStatForPath(irodsAbsolutePath);
 	}
+
+	protected ObjStat retrieveObjStat(final String irodsAbsolutePath)
+			throws DataNotFoundException, JargonException {
+
+		log.info("retrieveObjStat()");
+
+		if (irodsAbsolutePath == null || irodsAbsolutePath.isEmpty()) {
+			throw new IllegalArgumentException(
+					"null or empty irodsAbsolutePath");
+		}
+
+		log.info("irodsAbsolutePath:{}", irodsAbsolutePath);
+
+		ObjStat objStat = collectionAndDataObjectListAndSearchAO
+				.retrieveObjectStatForPath(irodsAbsolutePath);
+
+		if (objStat == null) {
+			log.error("no file found for path:{}", irodsAbsolutePath);
+			throw new DataNotFoundException("no file found for given path");
+		}
+
+		return objStat;
+	}
+
+	protected String resolveAbsolutePathViaObjStat(final String irodsAbsolutePath)
+			throws JargonException {
+
+		log.info("resoveAbsolutePathViaObjStat()");
+			
+		ObjStat objStat = retrieveObjStat(irodsAbsolutePath);
+				/*
+				 * See if jargon supports the given object type
+				 */
+				MiscIRODSUtils.evaluateSpecCollSupport(objStat);
+				return MiscIRODSUtils
+						.determineAbsolutePathBasedOnCollTypeInObjectStat(objStat);
+			}
 
 }

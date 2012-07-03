@@ -5,6 +5,9 @@ package org.irods.jargon.core.pub.domain;
 
 import java.util.Date;
 
+import org.apache.commons.io.FileUtils;
+import org.irods.jargon.core.pub.domain.ObjStat.SpecColType;
+
 /**
  * Represents a DataObject (file) in iRODS
  * 
@@ -12,8 +15,6 @@ import java.util.Date;
  * 
  */
 public class DataObject extends IRODSDomainObject {
-
-	// FIXME: date as long? equals()? hash()?
 
 	private int id = 0;
 	private int collectionId = 0;
@@ -36,6 +37,8 @@ public class DataObject extends IRODSDomainObject {
 	private String comments = "";
 	private Date createdAt = new Date();
 	private Date updatedAt = new Date();
+	private SpecColType specColType = SpecColType.NORMAL;
+	private String objectPath = "";
 
 	@Override
 	public String toString() {
@@ -57,6 +60,10 @@ public class DataObject extends IRODSDomainObject {
 		sb.append(checksum);
 		sb.append("\n   dataSize:");
 		sb.append(dataSize);
+		sb.append("\n   specColType:");
+		sb.append(specColType);
+		sb.append("\n   objectPath:");
+		sb.append(objectPath);
 		return sb.toString();
 	}
 
@@ -187,6 +194,16 @@ public class DataObject extends IRODSDomainObject {
 	 */
 	public long getDataSize() {
 		return dataSize;
+	}
+
+	/**
+	 * Handy method gets a displayable <code>String</code> with a unit (e.g. MB,
+	 * GB) appropriate to the file length
+	 * 
+	 * @return <code>String</code> with displayable file size
+	 */
+	public String getDisplayDataSize() {
+		return FileUtils.byteCountToDisplaySize(dataSize);
 	}
 
 	/**
@@ -399,5 +416,39 @@ public class DataObject extends IRODSDomainObject {
 	 */
 	public String getCollectionName() {
 		return collectionName;
+	}
+
+	/**
+	 * @return the specColType {@link SpecColType} enum value that indicates the
+	 *         type of collection. If this is a special collection, such as a
+	 *         mounted collection or a soft link, it will be reflected here
+	 */
+	public SpecColType getSpecColType() {
+		return specColType;
+	}
+
+	/**
+	 * @param specColType
+	 *            the specColType to set
+	 */
+	public void setSpecColType(SpecColType specColType) {
+		this.specColType = specColType;
+	}
+
+	/**
+	 * @return the objectPath <code>String</code> with the canonical path of the
+	 *         object. if this is a soft link the object path is the canonical
+	 *         path to the data object, and will carry the full file name.
+	 */
+	public String getObjectPath() {
+		return objectPath;
+	}
+
+	/**
+	 * @param objectPath
+	 *            the objectPath to set
+	 */
+	public void setObjectPath(String objectPath) {
+		this.objectPath = objectPath;
 	}
 }

@@ -13,7 +13,10 @@ import org.slf4j.LoggerFactory;
  * IRODS specific implementation of the <code>java.io.FileInputStream</code>.
  * This object is created by the {@link
  * org.irods.jargon.core.public.io.IRODSFileFactory}, and once created can be
- * treated as usual.
+ * treated as usual. *
+ * <p/>
+ * This code handles soft linked files and collections as expected. You may
+ * operate on canoncial paths or soft-linked paths.
  * 
  * @author Mike Conway - DICE (www.irods.org)
  * 

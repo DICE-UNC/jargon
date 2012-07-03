@@ -12,6 +12,7 @@ import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.DuplicateDataException;
 import org.irods.jargon.core.exception.InvalidUserException;
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.exception.NoMoreRulesException;
 import org.irods.jargon.core.packinstr.GeneralAdminInp;
 import org.irods.jargon.core.packinstr.GetTempPasswordForOther;
 import org.irods.jargon.core.packinstr.GetTempPasswordIn;
@@ -191,7 +192,7 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 	 * .domain.User)
 	 */
 	@Override
-	public void addUser(final User user) throws JargonException,
+	public User addUser(final User user) throws JargonException,
 			DuplicateDataException {
 
 		if (log.isDebugEnabled()) {
@@ -211,16 +212,14 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 
 			getIRODSProtocol().irodsFunction(adminPI);
 
-		} catch (JargonException je) {
-			log.info("jargon exception, check for duplicate condition");
-
-			if (je.getMessage().indexOf("-1018000") > -1) {
-				throw new DuplicateDataException("user already exists");
-			} else {
-				log.error("jargon exception on add user", je);
-				throw je;
-			}
-
+		} catch (DuplicateDataException dde) {
+			throw dde;
+		} catch (NoMoreRulesException nmr) {
+			log.warn(
+					"no more rules exception caught, will throw as duplicate data for backwards compatibility",
+					nmr);
+			throw new DuplicateDataException(
+					"no more rules interpereted as duplicate data exception for backwards compatibility");
 		}
 
 		log.debug("user added, now process other fields");
@@ -234,6 +233,8 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 			log.debug("info has changed");
 			updateUserInfo(user);
 		}
+
+		return findByName(user.getName());
 
 	}
 
@@ -555,16 +556,10 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 
 		try {
 			getIRODSProtocol().irodsFunction(adminPI);
-		} catch (JargonException je) {
-			log.info("jargon exception, check for delete of non-existent user");
-
-			if (je.getMessage().indexOf("-1018000") > -1) {
-				log.debug("user does not exist, just behave as if deleted");
-			} else {
-				log.error("jargon exception on delete user", je);
-				throw je;
-			}
-
+		} catch (InvalidUserException iue) {
+			log.debug("user does not exist, just behave as if deleted");
+		} catch (NoMoreRulesException nmr) {
+			log.debug("no more rules exception interpereted as user does not exist, just behave as if deleted");
 		}
 
 		log.info("user {} removed", userName);
@@ -615,6 +610,66 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 		}
 	}
 
+
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.UserAO#getTemporaryPasswordForConnectedUser()
+	 */
+	@Override
+	public String getTemporaryPasswordForConnectedUser() throws JargonException {
+		GetTempPasswordIn getPasswordInPI = GetTempPasswordIn.instance();
+		log.debug("executing getPasswordInPI");
+
+		Tag response = getIRODSProtocol().irodsFunction(getPasswordInPI);
+
+		String responseHashCode = response.getTag(STRING_TO_HASH_WITH)
+				.getStringValue();
+		log.info("hash value:{}", responseHashCode);
+		String tempPassword = IRODSPasswordUtilities.getHashedPassword(
+				responseHashCode, this.getIRODSAccount());
+
+		return tempPassword;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.UserAO#getTemporaryPasswordForASpecifiedUser
+	 * (java.lang.String)
+	 */
+	@Override
+	public String getTemporaryPasswordForASpecifiedUser(
+			final String targetUserName) throws JargonException {
+
+		log.info("getTemporaryPasswordForASpecifiedUser()");
+
+		// test is only valid for 3.1+
+		if (!this.getIRODSServerProperties()
+				.isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods3.1")) {
+			throw new UnsupportedOperationException(
+					"temp password generation implemented in iRODS 3.1+ only");
+		}
+
+		// parm checks done in packing instruction
+		GetTempPasswordForOther getTempPasswordForOtherPI = GetTempPasswordForOther
+				.instance(targetUserName);
+		Tag response = getIRODSProtocol().irodsFunction(
+				getTempPasswordForOtherPI);
+
+		String responseHashCode = response.getTag(STRING_TO_HASH_WITH)
+				.getStringValue();
+		log.info("hash value:{}", responseHashCode);
+		String tempPassword = IRODSPasswordUtilities.getHashedPassword(
+				responseHashCode, this.getIRODSAccount());
+
+		return tempPassword;
+
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -654,55 +709,6 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * org.irods.jargon.core.pub.UserAO#getTemporaryPasswordForConnectedUser()
-	 */
-	@Override
-	public String getTemporaryPasswordForConnectedUser() throws JargonException {
-		GetTempPasswordIn getPasswordInPI = GetTempPasswordIn.instance();
-		log.debug("executing getPasswordInPI");
-
-		Tag response = getIRODSProtocol().irodsFunction(getPasswordInPI);
-
-		String responseHashCode = response.getTag(STRING_TO_HASH_WITH)
-				.getStringValue();
-		log.info("hash value:{}", responseHashCode);
-		String tempPassword = IRODSPasswordUtilities.getHashedPassword(
-				responseHashCode, this.getIRODSAccount());
-
-		return tempPassword;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.irods.jargon.core.pub.UserAO#getTemporaryPasswordForASpecifiedUser
-	 * (java.lang.String)
-	 */
-	@Override
-	public String getTemporaryPasswordForASpecifiedUser(
-			final String targetUserName) throws JargonException {
-		log.debug("getTemporaryPasswordForASpecifiedUser()");
-		// parm checks done in packing instruction
-		GetTempPasswordForOther getTempPasswordForOtherPI = GetTempPasswordForOther
-				.instance(targetUserName);
-		Tag response = getIRODSProtocol().irodsFunction(
-				getTempPasswordForOtherPI);
-
-		String responseHashCode = response.getTag(STRING_TO_HASH_WITH)
-				.getStringValue();
-		log.info("hash value:{}", responseHashCode);
-		String tempPassword = IRODSPasswordUtilities.getHashedPassword(
-				responseHashCode, this.getIRODSAccount());
-
-		return tempPassword;
-
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
 	 * org.irods.jargon.core.pub.UserAO#changeAUserPasswordByAnAdmin(java.lang
 	 * .String, java.lang.String)
 	 */
@@ -710,8 +716,8 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 	public void changeAUserPasswordByAnAdmin(final String userName,
 			final String newPassword) throws JargonException {
 
-		// see clientLogin.c and iadmin.c(line 807) for details yet to be
-		// implemented
+		// see clientLogin.c and iadmin.c(line 807) for irods equivalent
+		// functions
 		if (userName == null || userName.isEmpty()) {
 			throw new IllegalArgumentException("userName is null or missing");
 		}
@@ -719,13 +725,23 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 		if (newPassword == null || newPassword.isEmpty()) {
 			throw new IllegalArgumentException("newPassword is null or missing");
 		}
+		
+		String randPaddedNewPassword = IRODSPasswordUtilities
+				.padPasswordWithRandomStringData(newPassword);
 
+		String key2 = this.getIRODSProtocol().getCachedChallengeValue();
+		String derivedChallenge = IRODSPasswordUtilities
+				.deriveHexSubsetOfChallenge(key2);
+		String myKey2 = IRODSPasswordUtilities
+				.obfuscateIRODSPasswordForAdminPasswordChange(
+						randPaddedNewPassword, this.getIRODSAccount()
+								.getPassword(), derivedChallenge);
+		
 		log.info("changeAUserPasswordByAnAdmin for user:{}", userName);
 		GeneralAdminInp adminPI = GeneralAdminInp
-				.instanceForModifyUserPassword(userName, newPassword);
+				.instanceForModifyUserPassword(userName, myKey2);
 		getIRODSProtocol().irodsFunction(adminPI);
 
-		// FIXME: finish implementing
 	}
 
 	private void updatePreChecks(final User user) throws JargonException {

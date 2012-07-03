@@ -97,6 +97,62 @@ public class TicketDistributionServiceImplTest {
 		TestCase.assertEquals("bad url host", host, url.getHost());
 		TestCase.assertEquals("bad port", port, url.getPort());
 		TestCase.assertEquals("should be http", "http", url.getProtocol());
+		TestCase.assertNotNull("no ticket landing URL in ticket distribution",
+				ticketDistribution.getTicketURLWithLandingPage());
+
+	}
+
+	/**
+	 * Get a ticket distribution for a valid ticket and context where the ticket
+	 * abspath has embedded spaces. Make sure URL Encodes correctly
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public final void testGetTicketDistributionForTicketWithSpacesInAbsPath()
+			throws Exception {
+		if (!testTicket) {
+			return;
+		}
+
+		String host = "localhost";
+		int port = 8080;
+		boolean ssl = false;
+		String context = "/idrop-web/tickets/redeem Ticket";
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory irodsAccessObjectFactory = Mockito
+				.mock(IRODSAccessObjectFactory.class);
+		TicketServiceFactory ticketServiceFactory = new TicketServiceFactoryImpl(
+				irodsAccessObjectFactory);
+		TicketDistributionContext ticketDistributionContext = new TicketDistributionContext();
+		TicketDistributionService ticketDistributionService = ticketServiceFactory
+				.instanceTicketDistributionService(irodsAccount,
+						ticketDistributionContext);
+		ticketDistributionContext.setContext(context);
+		ticketDistributionContext.setHost(host);
+		ticketDistributionContext.setPort(port);
+		ticketDistributionContext.setSsl(ssl);
+		Ticket ticket = new Ticket();
+		ticket.setTicketString("xxx");
+		ticket.setIrodsAbsolutePath("/yyy");
+		TicketDistribution ticketDistribution = ticketDistributionService
+				.getTicketDistributionForTicket(ticket);
+		TestCase.assertNotNull("null ticket distribution returned",
+				ticketDistribution);
+		TestCase.assertNotNull("no ticket in ticketDistribution",
+				ticketDistribution.getTicket());
+		TestCase.assertNotNull("no irods uri in ticketDistribution",
+				ticketDistribution.getIrodsAccessURI());
+		TestCase.assertNotNull("no ticket URL in ticket distribution",
+				ticketDistribution.getTicketURL());
+		URL url = ticketDistribution.getTicketURL();
+		TestCase.assertEquals("bad url host", host, url.getHost());
+		TestCase.assertEquals("bad port", port, url.getPort());
+		TestCase.assertEquals("should be http", "http", url.getProtocol());
+		TestCase.assertNotNull("no ticket landing URL in ticket distribution",
+				ticketDistribution.getTicketURLWithLandingPage());
 
 	}
 

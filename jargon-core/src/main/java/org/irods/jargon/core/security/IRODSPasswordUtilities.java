@@ -1,15 +1,16 @@
-/**
- * 
- */
 package org.irods.jargon.core.security;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
 import java.util.List;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.utils.Base64;
+import org.irods.jargon.core.utils.MiscIRODSUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,6 +28,7 @@ public class IRODSPasswordUtilities {
 	public static final int VAL_BANG = '!';
 	public static final List<Integer> WHEEL;
 	public static final String RAND_STRING = "1gCBizHWbwIYyWLoysGzTe6SyzqFKMniZX05faZHWAwQKXf6Fs";
+	public static final String RAND_STRING_V2 = "A.ObfV2";
 	public static final int MAX_PWD_LENGTH = 50;
 
 	static final Logger log = LoggerFactory
@@ -57,8 +59,96 @@ public class IRODSPasswordUtilities {
 	}
 
 	/**
-	 * Obfuscate a new password using the old password, suitable for calls to
-	 * iRODS Admin to change a user password.
+	 * Obfuscate the irods password for a password change via an admin. This is
+	 * analogous to the obfEncodeByKeyV2 method in lib/core/src/obf.c
+	 * 
+	 * @param newPassword
+	 *            <code>String</code> with the password value to set
+	 * @param adminPassword
+	 *            <code>String</code> with the password of the administrator
+	 * @param challengeValue
+	 *            <code>String</code> with the challenge value used during the
+	 *            login process for the administrator making this change
+	 * @return <code>String</code> with an obfuscated value for the password
+	 * @throws JargonException
+	 */
+	public static String obfuscateIRODSPasswordForAdminPasswordChange(
+			final String newPassword, final String adminPassword,
+			final String challengeValue) throws JargonException {
+
+		log.info("obfuscateIRODSPasswordForAdminPasswordChange()");
+
+		if (newPassword == null || newPassword.isEmpty()) {
+			throw new IllegalArgumentException("null or empty newPassword");
+		}
+
+		if (adminPassword == null || adminPassword.isEmpty()) {
+			throw new IllegalArgumentException("null or empty adminPassword");
+		}
+
+		if (challengeValue == null || challengeValue.isEmpty()) {
+			throw new IllegalArgumentException("null or empty challengeValue");
+		}
+		
+		int secs = Calendar.getInstance().get(Calendar.MILLISECOND);
+		secs = secs & 0x1f;
+
+		StringBuilder myIn = new StringBuilder();
+		myIn.append(RAND_STRING_V2);
+		myIn.append(newPassword);
+
+		StringBuilder myKey = new StringBuilder();
+		myKey.append(adminPassword);
+		myKey.append(challengeValue);
+
+
+		String myKey2 = MiscIRODSUtils.computeMD5HashOfAStringValue(pad(myKey
+				.toString(), 100, '\0'));
+
+		// get a rand val based on current time
+		int firstCharOfMyIn = myIn.charAt(0);
+		firstCharOfMyIn += secs;
+		myIn.setCharAt(0, (char) firstCharOfMyIn);
+
+		String obfuscatedValue = obfuscateIRODSPasswordWithCypherChaining(
+				myIn.toString(), myKey2);
+		return obfuscatedValue;
+
+	}
+
+	/**
+	 * iRODS (see clientLogin.c) uses a subset of the challenge value in hex
+	 * form for its obfuscation purposes. This method takes the raw challenge
+	 * value and creates the same representation.
+	 * 
+	 * @param challengeValue
+	 *            <code>String</code> with the raw iRODS challenge value from
+	 *            the login process
+	 * @return <code>String</code> with a hex represnetation of a subset of the
+	 *         challenge, as in clientLogin.c
+	 */
+	public static String deriveHexSubsetOfChallenge(final String challengeValue) {
+		if (challengeValue == null || challengeValue.isEmpty()) {
+			throw new IllegalArgumentException(
+					"challengeValue is null or empty");
+		}
+
+		byte[] temp = Base64.fromString(challengeValue);
+		int subsetLength = 16;
+
+		if (temp.length < subsetLength) {
+			throw new IllegalArgumentException("challengeValue length is < 16");
+		}
+
+		byte[] subsetBytes = Arrays.copyOfRange(temp, 0, 16);
+
+		return getHexString(subsetBytes);
+
+	}
+
+	/**
+	 * Obfuscate a new password using the old password, suitable to change a
+	 * user password.
 	 * 
 	 * @param newPassword
 	 *            <code>String</code> with the desired new password
@@ -79,15 +169,12 @@ public class IRODSPasswordUtilities {
 			throw new JargonException("oldPassword is null or empty");
 		}
 
-		int lCopy = MAX_PWD_LENGTH - 10 - newPassword.length();
-		StringBuilder pwdBuf = new StringBuilder();
-		pwdBuf.append(newPassword);
-
-		if (lCopy > 15) {
-			pwdBuf.append(RAND_STRING.substring(0, lCopy));
-		}
-
-		String randPaddedNewPassword = pwdBuf.toString();
+		/**
+		 * If the password is already padded, this has no effect, so it's left
+		 * in without adding another signature or flag. If I am doing an admin
+		 * change the padding has already happened.
+		 */
+		String randPaddedNewPassword = padPasswordWithRandomStringData(newPassword);
 
 		MessageDigest messageDigest;
 		try {
@@ -242,6 +329,191 @@ public class IRODSPasswordUtilities {
 
 	}
 
+	public static String obfuscateIRODSPasswordWithCypherChaining(
+			final String newPassword, final String oldPassword)
+			throws JargonException {
+
+		if (newPassword == null || newPassword.isEmpty()) {
+			throw new JargonException("newPassword is null or empty");
+		}
+
+		if (oldPassword == null || oldPassword.isEmpty()) {
+			throw new JargonException("oldPassword is null or empty");
+		}
+
+		MessageDigest messageDigest;
+		try {
+			messageDigest = MessageDigest.getInstance("MD5");
+		} catch (NoSuchAlgorithmException e) {
+			throw new JargonException("error getting MD5 MessageDigest", e);
+		}
+
+		byte[] oldPwdBuffer = new byte[100];
+
+		// get MD5 hash of the old password
+		byte[] oldPwdAsBytes = oldPassword.getBytes();
+		for (int i = 0; i < oldPassword.length(); i++) {
+			oldPwdBuffer[i] = oldPwdAsBytes[i];
+		}
+
+		messageDigest.update(oldPwdBuffer);
+		byte[] digestRound1 = messageDigest.digest();
+
+		if (log.isDebugEnabled()) {
+			log.debug("digestRound1:{}", getHexString(digestRound1));
+		}
+
+		// get the MD5 hash of the first hash
+		messageDigest.reset();
+		messageDigest.update(digestRound1);
+		byte[] digestRound2 = messageDigest.digest();
+
+		if (log.isDebugEnabled()) {
+			log.debug("digestRound2:{}", getHexString(digestRound2));
+		}
+
+		// concatenate the first two hashes, and take the hash of that
+		byte[] concatRound1AndRound2 = new byte[digestRound1.length
+				+ digestRound2.length];
+		int concatI = 0;
+
+		for (byte element : digestRound1) {
+			concatRound1AndRound2[concatI++] = element;
+		}
+
+		for (byte element : digestRound2) {
+			concatRound1AndRound2[concatI++] = element;
+		}
+
+		messageDigest.reset();
+		messageDigest.update(concatRound1AndRound2);
+		byte[] digestRound3 = messageDigest.digest();
+		if (log.isDebugEnabled()) {
+			log.debug("digestRound3:{}", getHexString(digestRound3));
+		}
+
+		// concatenate the previous 3 rounds and take a fourth MD5 hash
+
+		byte[] concatRound1AndRound2AndRound3 = new byte[digestRound1.length
+				+ digestRound2.length + digestRound3.length];
+		concatI = 0;
+
+		for (byte element : digestRound1) {
+			concatRound1AndRound2AndRound3[concatI++] = element;
+		}
+
+		for (byte element : digestRound2) {
+			concatRound1AndRound2AndRound3[concatI++] = element;
+		}
+
+		for (byte element : digestRound3) {
+			concatRound1AndRound2AndRound3[concatI++] = element;
+		}
+
+		messageDigest.reset();
+		messageDigest.update(concatRound1AndRound2);
+		byte[] digestRound4 = messageDigest.digest();
+		if (log.isDebugEnabled()) {
+			log.debug("digestRound4:{}", getHexString(digestRound4));
+		}
+
+		// concatenate all four hash buffers
+		byte[] cpKeyArray = new byte[digestRound1.length + digestRound2.length
+				+ digestRound3.length + digestRound4.length];
+
+		concatI = 0;
+
+		for (byte element : digestRound1) {
+			cpKeyArray[concatI++] = element;
+		}
+
+		for (byte element : digestRound2) {
+			cpKeyArray[concatI++] = element;
+		}
+
+		for (byte element : digestRound3) {
+			cpKeyArray[concatI++] = element;
+		}
+
+		for (byte element : digestRound4) {
+			cpKeyArray[concatI++] = element;
+		}
+
+		if (log.isDebugEnabled()) {
+			log.debug("cpKeyArray:{}", getHexString(cpKeyArray));
+		}
+
+		// match the PHP code for obfuscation as closely as possible
+		int cpInIdx = 0;
+		int cpKeyArrayIdx = 0;
+		int cpInVal;
+		// in order to mimic the PHP code...
+		String cpInArray = newPassword;
+		int k = 0;
+		boolean found = false;
+		int wheelVal;
+		char wheelChr;
+		int prevChar = 0;
+		StringBuilder cpOut = new StringBuilder();
+
+		for (; cpInIdx < cpInArray.length(); cpInIdx++) {
+
+			k = 0;
+			found = false;
+			byte b = cpKeyArray[cpKeyArrayIdx++];
+			k = unsignedByteToInt(b);
+			if (cpKeyArrayIdx > 60) {
+				cpKeyArrayIdx = 0;
+			}
+
+			for (int i = 0; i < WHEEL_LENGTH; i++) {
+
+				cpInVal = unsignedByteToInt(cpInArray.getBytes()[cpInIdx]);
+				wheelVal = WHEEL.get(i);
+				if (cpInVal == wheelVal) {
+					int j = i + k + prevChar;
+					j = j % WHEEL_LENGTH;
+					wheelVal = WHEEL.get(j);
+					wheelChr = (char) wheelVal;
+					cpOut.append(wheelChr);
+					prevChar = wheelChr & 0xff;
+					found = true;
+					break;
+				}
+			}
+
+			if (!found) {
+				if (cpInIdx == cpInArray.length()) {
+					break;
+				} else {
+					cpOut.append(cpInArray.charAt(cpInIdx));
+				}
+			}
+
+		}
+
+		return cpOut.toString();
+
+	}
+
+	/**
+	 * @param newPassword
+	 * @return
+	 */
+	public static String padPasswordWithRandomStringData(
+			final String newPassword) {
+		int lCopy = MAX_PWD_LENGTH - 10 - newPassword.length();
+		StringBuilder pwdBuf = new StringBuilder();
+		pwdBuf.append(newPassword);
+
+		if (lCopy > 15) {
+			pwdBuf.append(RAND_STRING.substring(0, lCopy));
+		}
+
+		String randPaddedNewPassword = pwdBuf.toString();
+		return randPaddedNewPassword;
+	}
+
 	/**
 	 * Get a hex representation of a byte array suitable for printing logs and
 	 * debugging obfuscation routines.
@@ -254,8 +526,18 @@ public class IRODSPasswordUtilities {
 	public static String getHexString(final byte[] b) {
 		StringBuilder result = new StringBuilder();
 		for (byte element : b) {
+
 			result.append(Integer.toString((element & 0xff) + 0x100, 16)
 					.substring(1));
+		}
+		return result.toString();
+	}
+
+	public static String getHexString2(final byte[] b) {
+		StringBuilder result = new StringBuilder();
+		for (byte element : b) {
+			int asInt = unsignedByteToInt(element);
+			result.append(Integer.toHexString(asInt));
 		}
 		return result.toString();
 	}

@@ -2,9 +2,13 @@ package org.irods.jargon.core.unittest;
 
 import org.irods.jargon.core.pub.BulkFileOperationsAOImplTest;
 import org.irods.jargon.core.pub.CollectionAOImplTest;
+import org.irods.jargon.core.pub.CollectionAndDataObjectListAndSearchAOImplForSoftLinksTest;
 import org.irods.jargon.core.pub.CollectionAndDataObjectListAndSearchAOImplTest;
+import org.irods.jargon.core.pub.CollectionAuditAOImplTest;
+import org.irods.jargon.core.pub.DataObjectAOImplForSoftLinkTest;
 import org.irods.jargon.core.pub.DataObjectAOImplTest;
 import org.irods.jargon.core.pub.DataObjectAuditAOImplTest;
+import org.irods.jargon.core.pub.DataTransferOperationsImplForSoftLinksTest;
 import org.irods.jargon.core.pub.DataTransferOperationsImplTest;
 import org.irods.jargon.core.pub.EnvironmentalInfoAOTest;
 import org.irods.jargon.core.pub.FederatedCollectionAOImplTest;
@@ -16,10 +20,12 @@ import org.irods.jargon.core.pub.IRODSAccessObjectFactoryImplTest;
 import org.irods.jargon.core.pub.IRODSFileSystemTest;
 import org.irods.jargon.core.pub.IRODSGenQueryExecutorImplTest;
 import org.irods.jargon.core.pub.IRODSRegistrationOfFilesAOImplTest;
+import org.irods.jargon.core.pub.MountedCollectionAOImplTest;
 import org.irods.jargon.core.pub.ProtocolExtensionPointImplTest;
 import org.irods.jargon.core.pub.QuotaAOImplTest;
 import org.irods.jargon.core.pub.RemoteExecutionOfCommandsAOImplTest;
 import org.irods.jargon.core.pub.ResourceAOTest;
+import org.irods.jargon.core.pub.ResourceGroupAOImplTest;
 import org.irods.jargon.core.pub.RuleProcessingAOImplTest;
 import org.irods.jargon.core.pub.SimpleQueryExecutorAOImplTest;
 import org.irods.jargon.core.pub.Stream2StreamAOImplTest;
@@ -48,7 +54,12 @@ import org.junit.runners.Suite;
 		FederatedDataTransferOperationsImplTest.class, UserAOHelperTest.class,
 		FederatedUserAOTest.class, FederatedCollectionAOImplTest.class,
 		ProtocolExtensionPointImplTest.class,
-		IRODSRegistrationOfFilesAOImplTest.class })
+		IRODSRegistrationOfFilesAOImplTest.class,
+		MountedCollectionAOImplTest.class,
+		CollectionAndDataObjectListAndSearchAOImplForSoftLinksTest.class,
+		DataObjectAOImplForSoftLinkTest.class,
+		DataTransferOperationsImplForSoftLinksTest.class,
+		ResourceGroupAOImplTest.class, CollectionAuditAOImplTest.class })
 /**
  * Suite to run Access Object tests in org.irods.jargon.pub.*
  * <p/>

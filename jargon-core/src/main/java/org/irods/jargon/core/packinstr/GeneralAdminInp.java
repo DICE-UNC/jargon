@@ -319,6 +319,34 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 	 * @return {@link GeneralAdminInp}
 	 * @throws JargonException
 	 */
+	public static GeneralAdminInp instanceForModifyUserPasswordByAdmin(
+			final String userName, final String password)
+			throws JargonException {
+
+		if (userName == null || userName.isEmpty()) {
+			throw new JargonException("user name is null or empty");
+		}
+
+		if (password == null || password.isEmpty()) {
+			throw new JargonException("password is null or empty");
+		}
+
+		return new GeneralAdminInp("modify", "user", userName, "password",
+				password, BLANK, BLANK, BLANK, BLANK, BLANK,
+				GEN_ADMIN_INP_API_NBR);
+	}
+
+	/**
+	 * Generate the packing instruction suitable for modifying the password
+	 * associated with the given user.
+	 * 
+	 * @param userName
+	 *            <code>String</code> with the iRODS user name.
+	 * @param password
+	 *            <code>String<code> with the user's password.
+	 * @return {@link GeneralAdminInp}
+	 * @throws JargonException
+	 */
 	public static GeneralAdminInp instanceForModifyUserPassword(
 			final String userName, final String password)
 			throws JargonException {
