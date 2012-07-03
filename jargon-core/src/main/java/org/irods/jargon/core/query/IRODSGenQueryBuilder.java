@@ -126,6 +126,28 @@ public class IRODSGenQueryBuilder {
 	 *            {@link QueryConditionOperators} enum value for the operator of
 	 *            the condition
 	 * @param value
+	 *            <code>long</code> with the value for the condition
+	 * @return a reference to this builder, so that builder statements may be
+	 *         chained
+	 */
+	public IRODSGenQueryBuilder addConditionAsGenQueryField(
+			final RodsGenQueryEnum rodsGenQueryEnumValue,
+			final QueryConditionOperators operator, final long value) {
+
+		return addConditionAsGenQueryField(rodsGenQueryEnumValue, operator,
+				String.valueOf(value));
+
+	}
+
+	/**
+	 * Add a gen query condition to the builder query.
+	 * 
+	 * @param rodsGenQueryEnumValue
+	 *            {@link RodsGenQueryEnumValue} for the condition
+	 * @param operator
+	 *            {@link QueryConditionOperators} enum value for the operator of
+	 *            the condition
+	 * @param value
 	 *            <code>int</code> with the value for the condition
 	 * @return a reference to this builder, so that builder statements may be
 	 *         chained
@@ -172,26 +194,12 @@ public class IRODSGenQueryBuilder {
 		 * Format the query based on the operator TODO: add handling for tables,
 		 * in, etc
 		 */
-		if (operator == QueryConditionOperators.NUMERIC_GREATER_THAN_OR_EQUAL_TO
-				|| operator == QueryConditionOperators.NUMERIC_GREATER_THAN
-				|| operator == QueryConditionOperators.NUMERIC_LESS_THAN_OR_EQUAL_TO
-				|| operator == QueryConditionOperators.NUMERIC_LESS_THAN
-				|| operator == QueryConditionOperators.NUMERIC_EQUAL) {
-			GenQueryBuilderCondition genQueryBuilderCondition = GenQueryBuilderCondition
-					.instance(rodsGenQueryEnumValue.getName(),
-							SelectFieldSource.DEFINED_QUERY_FIELD, String
-									.valueOf(rodsGenQueryEnumValue
-											.getNumericValue()), operator,
-							value);
 
-			conditions.add(genQueryBuilderCondition);
-
-		} else {
-			// add quotes when treating as string
 			StringBuilder sb = new StringBuilder();
 			sb.append("'");
 			sb.append(value.trim());
 			sb.append("'");
+
 			GenQueryBuilderCondition genQueryBuilderCondition = GenQueryBuilderCondition
 					.instance(rodsGenQueryEnumValue.getName(),
 							SelectFieldSource.DEFINED_QUERY_FIELD, String
@@ -200,8 +208,6 @@ public class IRODSGenQueryBuilder {
 									.toString());
 
 			conditions.add(genQueryBuilderCondition);
-		}
-
 
 		return this;
 
@@ -320,7 +326,8 @@ public class IRODSGenQueryBuilder {
 			throw new IllegalArgumentException(
 					"numberOfResultsDesired must be >= 1");
 		}
-		IRODSGenQueryBuilderQueryData queryData = IRODSGenQueryBuilderQueryData.instance(selectFields, conditions, orderByFields, distinct);
+		IRODSGenQueryBuilderQueryData queryData = IRODSGenQueryBuilderQueryData
+				.instance(selectFields, conditions, orderByFields, distinct);
 
 		if (!queryData.isQueryValid()) {
 			throw new GenQueryBuilderException(
@@ -330,7 +337,5 @@ public class IRODSGenQueryBuilder {
 		return IRODSGenQueryFromBuilder.instance(queryData,
 				numberOfResultsDesired);
 	}
-
-
 
 }

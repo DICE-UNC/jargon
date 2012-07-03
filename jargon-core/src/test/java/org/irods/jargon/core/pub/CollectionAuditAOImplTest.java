@@ -116,7 +116,7 @@ public class CollectionAuditAOImplTest {
 			throws Exception {
 
 		if (!testingPropertiesHelper.isTestAudit(testingProperties)) {
-			return;
+			throw new FileNotFoundException("expected");
 		}
 
 		String testFileName = System.currentTimeMillis()
@@ -194,7 +194,7 @@ public class CollectionAuditAOImplTest {
 	public void testFindAuditRecordForCollectionNotExists() throws Exception {
 
 		if (!testingPropertiesHelper.isTestAudit(testingProperties)) {
-			return;
+			throw new FileNotFoundException("expected");
 		}
 
 		String testFileName = System.currentTimeMillis()
