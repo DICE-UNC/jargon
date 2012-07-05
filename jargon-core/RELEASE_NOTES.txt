@@ -83,3 +83,26 @@ Note that the following bug and feature requests are logged in GForge with relat
  
  * [#866] Resource Group support
  ** initial support for resource group admin and listing
+ 
+ *  [#869] connection restart in transfer
+ ** added reconnet to PipelineConfiguration and JargnProperties and added to StartupPack processing
+ 
+ * [#878] pipeline and transfer optimization round - 3.1.3
+ ** added instrument opton to PipelineConfiguration and JargonProperties to route detailed instrumentation to the DEBUG log
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Notes:  
+ 
+ -add reconn flag to startup pack in connection - see lib/core/src/sockComm.c  sendStartupPack()
+ 

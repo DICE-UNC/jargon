@@ -14,7 +14,17 @@ public class StartupPack extends AbstractIRODSPackingInstruction {
 
 	public StartupPack(final IRODSAccount irodsAccount) {
 		super();
+		if (irodsAccount == null) {
+			throw new IllegalArgumentException("null irodsAccount");
+		}
 		this.irodsAccount = irodsAccount;
+	}
+
+	public StartupPack(final IRODSAccount irodsAccount, final boolean reconnect) {
+		this(irodsAccount);
+		if (reconnect) {
+			reconnFlag = 1;
+		}
 	}
 
 	@Override

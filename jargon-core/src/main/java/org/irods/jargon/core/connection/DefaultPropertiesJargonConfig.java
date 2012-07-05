@@ -347,4 +347,24 @@ public class DefaultPropertiesJargonConfig implements JargonProperties {
 		return verifyPropExistsAndGetAsBoolean("transfer.use.nio.for.parallel");
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.connection.JargonProperties#isReconnect()
+	 */
+	@Override
+	public boolean isReconnect() {
+		return verifyPropExistsAndGetAsBoolean("jargon.reconnect");
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.connection.JargonProperties#isInstrument()
+	 */
+	@Override
+	public boolean isInstrument() {
+		return verifyPropExistsAndGetAsBoolean("jargon.instrument");
+	}
+
 }

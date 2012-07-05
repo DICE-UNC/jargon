@@ -571,7 +571,8 @@ public class IRODSCommands implements IRODSManagedConnection {
 	 *            progress with a small peformance penalty.
 	 * @throws JargonException
 	 */
-	public void read(final OutputStream destination, final long length,
+	public synchronized void read(final OutputStream destination,
+			final long length,
 			final ConnectionProgressStatusListener intraFileStatusListener)
 			throws JargonException {
 
@@ -1007,7 +1008,8 @@ public class IRODSCommands implements IRODSManagedConnection {
 		return org.irods.jargon.core.utils.Host.castToInt(headerInt);
 	}
 
-	private Tag readMessageBody(final int length, final boolean decode)
+	private synchronized Tag readMessageBody(final int length,
+			final boolean decode)
 			throws JargonException {
 		byte[] body = new byte[length];
 		try {
@@ -1058,10 +1060,15 @@ public class IRODSCommands implements IRODSManagedConnection {
 	 * @throws IOException
 	 *             if the host cannot be opened or created.
 	 */
-	protected Tag sendStartupPacket(final IRODSAccount irodsAccount)
+	protected synchronized Tag sendStartupPacket(final IRODSAccount irodsAccount)
 			throws JargonException {
 
-		StartupPack startupPack = new StartupPack(irodsAccount);
+		/*
+		 * Note that the jargon properties will decide whether the reconnect
+		 * option is enabled
+		 */
+		StartupPack startupPack = new StartupPack(irodsAccount,
+				this.pipelineConfiguration.isReconnect());
 		String startupPackData = startupPack.getParsedTags();
 		try {
 			irodsConnection.send(createHeader(
@@ -1083,7 +1090,8 @@ public class IRODSCommands implements IRODSManagedConnection {
 		return responseMessage;
 	}
 
-	protected void sendStandardPassword(final IRODSAccount irodsAccount)
+	protected synchronized void sendStandardPassword(
+			final IRODSAccount irodsAccount)
 			throws JargonException {
 		if (irodsAccount == null) {
 			throw new JargonException("irods account is null");
@@ -1124,7 +1132,7 @@ public class IRODSCommands implements IRODSManagedConnection {
 				XmlProtApis.AUTH_RESPONSE_AN.getApiNumber());
 	}
 
-	protected void sendGSIPassword(final IRODSAccount irodsAccount)
+	protected synchronized void sendGSIPassword(final IRODSAccount irodsAccount)
 			throws JargonException {
 
 		if (irodsAccount == null) {
@@ -1337,7 +1345,8 @@ public class IRODSCommands implements IRODSManagedConnection {
 	 * @param status
 	 * @throws IOException
 	 */
-	public void operationComplete(final int status) throws JargonException {
+	public synchronized void operationComplete(final int status)
+			throws JargonException {
 		Tag message = new Tag(AbstractIRODSPackingInstruction.INT_PI,
 				new Tag[] { new Tag(AbstractIRODSPackingInstruction.MY_INT,
 						status), });
@@ -1423,7 +1432,7 @@ public class IRODSCommands implements IRODSManagedConnection {
 	 *            <code>Tag</code> containing status messages from IRODS
 	 * @throws IOException
 	 */
-	public void processClientStatusMessages(final Tag reply)
+	public synchronized void processClientStatusMessages(final Tag reply)
 			throws JargonException {
 
 		boolean done = false;

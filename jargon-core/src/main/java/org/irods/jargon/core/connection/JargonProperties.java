@@ -234,6 +234,30 @@ public interface JargonProperties {
 	 */
 	int getGetBufferSize();
 
+	/**
+	 * <code>boolean</code> that indicates whether the connection should be
+	 * renewed every 10 minutes to get around certain firewall issues. This is
+	 * equvalent to the -T option in the iput and iget iCommands.
+	 * 
+	 * @return
+	 */
+	boolean isReconnect();
+
+	/**
+	 * <code>boolean</code> that indicates whether certain performance
+	 * statistics are gathered and reported to the DEBUG log. This will turn on
+	 * useful statistics for optimization and tuning, but will introduce a
+	 * certain amount of overhead, so this is typically unsuitable for
+	 * production deployment.
+	 * <p/>
+	 * Note that actual instrumentation will be an ongoing process, and will be
+	 * done as certain operations are tuned. Initially, this will represent the
+	 * infrastructure for such tuning information.
+	 * 
+	 * @return
+	 */
+	boolean isInstrument();
+
 
 
 }
