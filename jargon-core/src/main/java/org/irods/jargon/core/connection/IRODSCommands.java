@@ -14,6 +14,7 @@ import java.security.GeneralSecurityException;
 import java.security.MessageDigest;
 
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.exception.JargonRuntimeException;
 import org.irods.jargon.core.packinstr.AbstractIRODSPackingInstruction;
 import org.irods.jargon.core.packinstr.AuthResponseInp;
 import org.irods.jargon.core.packinstr.IRodsPI;
@@ -91,6 +92,7 @@ public class IRODSCommands implements IRODSManagedConnection {
 	private IRODSServerProperties irodsServerProperties;
 	private IRODSProtocolManager irodsProtocolManager;
 	private final PipelineConfiguration pipelineConfiguration;
+	private final StartupResponseData startupResponseData;
 
 	private String cachedChallengeValue = "";
 
@@ -123,14 +125,38 @@ public class IRODSCommands implements IRODSManagedConnection {
 				irodsConnectionManager, pipelineConfiguration);
 		this.irodsProtocolManager = irodsConnectionManager;
 		this.pipelineConfiguration = pipelineConfiguration;
-		startupConnection(irodsAccount);
+		this.startupResponseData = startupConnection(irodsAccount);
 
 	}
 
-	private void startupConnection(final IRODSAccount irodsAccount)
+	private StartupResponseData startupConnection(
+			final IRODSAccount irodsAccount)
 			throws JargonException {
 		// send startup packet here
-		this.sendStartupPacket(irodsAccount);
+		Tag versionPI = this.sendStartupPacket(irodsAccount);
+
+		if (versionPI == null) {
+			throw new JargonRuntimeException(
+					"no response to startup packet send");
+		}
+
+		/*
+		 * Tag versionPI = response.getTag("Version_PI");
+		 * 
+		 * if (versionPI == null) { throw new
+		 * JargonRuntimeException("null version_PI response"); }
+		 */
+
+		StartupResponseData startupResponseData = new StartupResponseData(
+				versionPI.getTag("status").getIntValue(), versionPI.getTag(
+						"relVersion").getStringValue(), versionPI.getTag(
+						"apiVersion").getStringValue(), versionPI.getTag(
+						"reconnPort").getIntValue(), versionPI.getTag(
+						"reconnAddr").getStringValue(), versionPI.getTag(
+						"cookie").getStringValue());
+
+		log.info("startup response:{}", startupResponseData);
+
 		// log in and augment/store IRODS Account
 		if (irodsAccount.getAuthenticationScheme().equals(
 				IRODSAccount.GSI_PASSWORD)) {
@@ -148,6 +174,7 @@ public class IRODSCommands implements IRODSManagedConnection {
 		irodsServerProperties = environmentalInfoAccessor
 				.getIRODSServerProperties();
 		log.info(irodsServerProperties.toString());
+		return startupResponseData;
 	}
 
 	private IRODSAccount lookupAdditionalIRODSAccountInfoWhenGSI(
@@ -1463,6 +1490,13 @@ public class IRODSCommands implements IRODSManagedConnection {
 			}
 		}
 
+	}
+
+	/**
+	 * @return the startupResponseData
+	 */
+	public synchronized StartupResponseData getStartupResponseData() {
+		return startupResponseData;
 	}
 
 }
