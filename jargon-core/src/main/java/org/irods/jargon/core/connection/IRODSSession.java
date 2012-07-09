@@ -158,6 +158,7 @@ public class IRODSSession {
 	public void closeSession() throws JargonException {
 		LOG.info("closing all irods sessions");
 		final Map<String, IRODSCommands> irodsProtocols = sessionMap.get();
+
 		if (irodsProtocols == null) {
 			LOG.warn("closing session that is already closed, silently ignore");
 			return;

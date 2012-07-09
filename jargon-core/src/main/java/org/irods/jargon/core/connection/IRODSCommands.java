@@ -12,6 +12,10 @@ import java.io.UnsupportedEncodingException;
 import java.nio.channels.ClosedChannelException;
 import java.security.GeneralSecurityException;
 import java.security.MessageDigest;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.exception.JargonRuntimeException;
@@ -19,6 +23,7 @@ import org.irods.jargon.core.packinstr.AbstractIRODSPackingInstruction;
 import org.irods.jargon.core.packinstr.AuthResponseInp;
 import org.irods.jargon.core.packinstr.IRodsPI;
 import org.irods.jargon.core.packinstr.RErrMsg;
+import org.irods.jargon.core.packinstr.ReconnMsg;
 import org.irods.jargon.core.packinstr.StartupPack;
 import org.irods.jargon.core.packinstr.Tag;
 import org.irods.jargon.core.protovalues.ErrorEnum;
@@ -88,11 +93,14 @@ import org.slf4j.LoggerFactory;
 public class IRODSCommands implements IRODSManagedConnection {
 
 	private Logger log = LoggerFactory.getLogger(IRODSCommands.class);
-	private final IRODSConnection irodsConnection;
+	private IRODSConnection irodsConnection;
 	private IRODSServerProperties irodsServerProperties;
 	private IRODSProtocolManager irodsProtocolManager;
 	private final PipelineConfiguration pipelineConfiguration;
-	private final StartupResponseData startupResponseData;
+	private StartupResponseData startupResponseData;
+	private ExecutorService reconnectService = null;
+	private ReconnectionManager reconnectionManager = null;
+	private Future<Void> reconnectionFuture = null;
 
 	private String cachedChallengeValue = "";
 
@@ -130,8 +138,7 @@ public class IRODSCommands implements IRODSManagedConnection {
 	}
 
 	private StartupResponseData startupConnection(
-			final IRODSAccount irodsAccount)
-			throws JargonException {
+			final IRODSAccount irodsAccount) throws JargonException {
 		// send startup packet here
 		Tag versionPI = this.sendStartupPacket(irodsAccount);
 
@@ -165,6 +172,17 @@ public class IRODSCommands implements IRODSManagedConnection {
 		} else {
 			sendStandardPassword(irodsAccount);
 			this.irodsAccount = irodsAccount;
+		}
+
+		// see if I need the reconnect process running in the background to
+		// renew the connection
+		// this is based on the reconnect property which is in the pipeline
+		// configuration
+		if (this.pipelineConfiguration.isReconnect()) {
+			log.info("starting up reconnect service...");
+			reconnectService = Executors.newSingleThreadExecutor();
+			reconnectionManager = ReconnectionManager.instance(this);
+			reconnectionFuture = reconnectService.submit(reconnectionManager);
 		}
 
 		// set the server properties
@@ -1036,8 +1054,7 @@ public class IRODSCommands implements IRODSManagedConnection {
 	}
 
 	private synchronized Tag readMessageBody(final int length,
-			final boolean decode)
-			throws JargonException {
+			final boolean decode) throws JargonException {
 		byte[] body = new byte[length];
 		try {
 			irodsConnection.read(body, 0, length);
@@ -1118,8 +1135,7 @@ public class IRODSCommands implements IRODSManagedConnection {
 	}
 
 	protected synchronized void sendStandardPassword(
-			final IRODSAccount irodsAccount)
-			throws JargonException {
+			final IRODSAccount irodsAccount) throws JargonException {
 		if (irodsAccount == null) {
 			throw new JargonException("irods account is null");
 		}
@@ -1277,8 +1293,9 @@ public class IRODSCommands implements IRODSManagedConnection {
 	 */
 	@Override
 	public synchronized void obliterateConnectionAndDiscardErrors() {
+		log.info("shutdown()...check if executor service is running for reconnect");
+		checkAndShutdownReconnectService();
 		irodsConnection.obliterateConnectionAndDiscardErrors();
-
 	}
 
 	/*
@@ -1288,8 +1305,14 @@ public class IRODSCommands implements IRODSManagedConnection {
 	 */
 	@Override
 	public synchronized void shutdown() throws JargonException {
+
+		log.info("shutdown()...check if executor service is running for reconnect");
+
+		checkAndShutdownReconnectService();
+
 		log.info("shutting down, need to send disconnect to irods");
 		if (isConnected()) {
+
 			log.info("sending disconnect message");
 			try {
 				irodsConnection.send(createHeader(
@@ -1313,6 +1336,43 @@ public class IRODSCommands implements IRODSManagedConnection {
 			log.warn("disconnect called, but isConnected() is false, this is an unexpected condition that is logged and ignored");
 		}
 
+	}
+
+	/**
+	 * Try and gracefully shut down the reconnect service
+	 */
+	private void checkAndShutdownReconnectService() {
+		if (reconnectService != null) {
+			log.info("shutting down executor for reconnect...");
+
+			// just a sanity check, having a reconnect service but no reference
+			// to the 'future' should never happen.
+			if (reconnectionFuture != null) {
+				reconnectionFuture.cancel(true);
+			} else {
+				log.error("I have a reconnect service but no reference to the Future?");
+				throw new JargonRuntimeException(
+						"invalid state of reconnect service, future task is missing but I have the reonnectService");
+			}
+
+			reconnectService.shutdown();
+			try {
+				// Wait a while for existing tasks to terminate
+				if (!reconnectService.awaitTermination(1, TimeUnit.SECONDS)) {
+					reconnectService.shutdownNow(); // Cancel currently
+													// executing tasks
+					// Wait a while for tasks to respond to being cancelled
+					if (!reconnectService.awaitTermination(1, TimeUnit.SECONDS)) {
+						log.error("Pool did not terminate");
+					}
+				}
+			} catch (InterruptedException ie) {
+				// (Re-)Cancel if current thread also interrupted
+				reconnectService.shutdownNow();
+				// Preserve interrupt status
+				Thread.currentThread().interrupt();
+			}
+		}
 	}
 
 	/*
@@ -1482,8 +1542,7 @@ public class IRODSCommands implements IRODSManagedConnection {
 					if (fileCount < IRODSConstants.SYS_CLI_TO_SVR_COLL_STAT_SIZE) {
 						done = true;
 					} else {
-						sendInNetworkOrder(
-								IRODSConstants.SYS_CLI_TO_SVR_COLL_STAT_REPLY);
+						sendInNetworkOrder(IRODSConstants.SYS_CLI_TO_SVR_COLL_STAT_REPLY);
 						ackResult = readMessage();
 					}
 				}
@@ -1497,6 +1556,91 @@ public class IRODSCommands implements IRODSManagedConnection {
 	 */
 	public synchronized StartupResponseData getStartupResponseData() {
 		return startupResponseData;
+	}
+
+	/**
+	 * Reconnect as would be called by the {@link ReconnectionManager}. This is
+	 * only valid if reconnect was set as an option when the startup packet was
+	 * sent to iRODS (by specifying restart in the jargon.properties).
+	 * <p/>
+	 * Note that the methods in <code>IRODSCommands</code> are synchronized,
+	 * such that this reconnect call will occur atomically, and only when other
+	 * operations are not underway.
+	 * 
+	 * @throws JargonException
+	 */
+	protected synchronized void reconnect() throws JargonException {
+		log.info("reconnect() was called");
+		if (this.getStartupResponseData().getReconnAddr().isEmpty()) {
+			log.error("reconnect was called, but was not specified in the startup pack.  This is some sort of logic error within Jargon!");
+			throw new JargonRuntimeException(
+					"cannot call reconnect if the connection was not started with reconnect option");
+		}
+
+		// log.info("calling shutdown on current connection...")
+		// this.irodsConnection.shutdown();
+		
+		
+		IRODSConnection reconnectedIRODSConnection = IRODSConnection
+				.instanceWithReconnectInfo(irodsAccount,
+						this.getIrodsProtocolManager(), pipelineConfiguration,
+						startupResponseData);
+		
+
+		// now reconnect with the provided reconnect information gathered at the
+		// startup pack send
+		ReconnMsg reconnMsg = new ReconnMsg(irodsAccount,
+				startupResponseData);
+		String reconnData = reconnMsg.getParsedTags();
+		try {
+			reconnectedIRODSConnection.send(createHeader(
+					RequestTypes.RODS_RECONNECT.getRequestType(),
+					reconnData.length(), 0, 0, 0));
+			reconnectedIRODSConnection.send(reconnData);
+			reconnectedIRODSConnection.flush();
+		} catch (ClosedChannelException e) {
+			log.error("closed channel", e);
+			throw new JargonException(e);
+		} catch (InterruptedIOException e) {
+			log.error("interrupted io", e);
+			throw new JargonException(e);
+		} catch (IOException e) {
+			log.error("io exception", e);
+			throw new JargonException(e);
+		}
+		// Tag responseMessage = readMessage();
+		// log.debug("response:{}", responseMessage);
+
+		log.info("disconnect current connection and switch with reconnected socket");
+		irodsConnection.disconnect();
+		irodsConnection = reconnectedIRODSConnection;
+		this.startupResponseData = startupConnection(irodsAccount);
+		log.info("reconnect operation complete... send startup pack data");
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#finalize()
+	 */
+	@Override
+	protected void finalize() throws Throwable {
+		/*
+		 * Check if a still-connected agent connection is being finalized, and
+		 * nag in the log, then try and disconnect
+		 */
+
+		if (irodsConnection.isConnected()) {
+			log.error("**************************************************************************************");
+			log.error("********  WARNING: POTENTIAL CONNECTION LEAK  ******************");
+			log.error("********  finalizer has run and found a connection left opened, please check your code to ensure that all connections are closed");
+			log.error(
+					"********  connection is:{}, will attempt to disconnect and shut down any restart thread",
+					getConnectionUri());
+			log.error("**************************************************************************************");
+			this.obliterateConnectionAndDiscardErrors();
+		}
+		super.finalize();
 	}
 
 }
