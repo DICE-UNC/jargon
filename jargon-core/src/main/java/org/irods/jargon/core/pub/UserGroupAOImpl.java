@@ -15,10 +15,14 @@ import org.irods.jargon.core.packinstr.GeneralAdminInp;
 import org.irods.jargon.core.pub.aohelper.UserAOHelper;
 import org.irods.jargon.core.pub.domain.User;
 import org.irods.jargon.core.pub.domain.UserGroup;
+import org.irods.jargon.core.query.GenQueryBuilderException;
 import org.irods.jargon.core.query.IRODSGenQuery;
+import org.irods.jargon.core.query.IRODSGenQueryBuilder;
 import org.irods.jargon.core.query.IRODSQueryResultRow;
+import org.irods.jargon.core.query.IRODSQueryResultSet;
 import org.irods.jargon.core.query.IRODSQueryResultSetInterface;
 import org.irods.jargon.core.query.JargonQueryException;
+import org.irods.jargon.core.query.QueryConditionOperators;
 import org.irods.jargon.core.query.RodsGenQueryEnum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -457,13 +461,80 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements
 	 * (non-Javadoc)
 	 * 
 	 * @see
+	 * org.irods.jargon.core.pub.UserGroupAO#isUserInGroup(java.lang.String,
+	 * java.lang.String)
+	 */
+	@Override
+	public boolean isUserInGroup(final String userName, final String groupName)
+			throws JargonException {
+
+		log.info("isUserinGroup()");
+
+		if (userName == null || userName.isEmpty()) {
+			throw new IllegalArgumentException("userName is null or empty");
+		}
+
+		if (groupName == null || groupName.isEmpty()) {
+			throw new IllegalArgumentException("groupName is null or empty");
+		}
+
+		log.info("userName:{}", userName);
+		log.info("groupName:{}", groupName);
+
+		boolean inGroup = false;
+
+		IRODSQueryResultSet resultSet = null;
+		try {
+			IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, null);
+			builder.addSelectAsGenQueryValue(
+					RodsGenQueryEnum.COL_USER_GROUP_NAME)
+					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_NAME)
+					.addConditionAsGenQueryField(
+							RodsGenQueryEnum.COL_USER_GROUP_NAME,
+							QueryConditionOperators.EQUAL, groupName)
+					.addConditionAsGenQueryField(
+							RodsGenQueryEnum.COL_USER_NAME,
+							QueryConditionOperators.EQUAL, userName);
+			IRODSGenQueryExecutor irodsGenQueryExecutor = this
+					.getIRODSAccessObjectFactory().getIRODSGenQueryExecutor(
+							this.getIRODSAccount());
+
+			resultSet = irodsGenQueryExecutor
+					.executeIRODSQueryAndCloseResult(
+							builder.exportIRODSQueryFromBuilder(this
+									.getIRODSAccessObjectFactory()
+									.getJargonProperties()
+									.getMaxFilesAndDirsQueryMax()), 0);
+
+			if (resultSet.getResults().isEmpty()) {
+				inGroup = false;
+			} else {
+				inGroup = true;
+			}
+
+			return inGroup;
+
+		} catch (JargonQueryException e) {
+			log.error("jargon query exception getting results", e);
+			throw new JargonException(e);
+		} catch (GenQueryBuilderException e) {
+			log.error("jargon query exception getting results", e);
+			throw new JargonException(e);
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
 	 * org.irods.jargon.core.pub.UserGroupAO#addUserToGroup(java.lang.String,
 	 * java.lang.String, java.lang.String)
 	 */
 	@Override
 	public void addUserToGroup(final String userGroupName,
 			final String userName, final String zoneName)
-			throws InvalidGroupException, InvalidUserException, JargonException {
+			throws DuplicateDataException, InvalidGroupException,
+			InvalidUserException, JargonException {
 
 		log.info("addUserToGroup()");
 

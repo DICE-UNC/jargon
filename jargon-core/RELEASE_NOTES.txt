@@ -91,7 +91,8 @@ Note that the following bug and feature requests are logged in GForge with relat
  ** added instrument opton to PipelineConfiguration and JargonProperties to route detailed instrumentation to the DEBUG log
  
  
- 
+ [#764] Java libraries and code to integrate idrop-web
+ ** added isUserInGroup method to UserGroupAO
  
  
  

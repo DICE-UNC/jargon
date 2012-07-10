@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Properties;
 
 import junit.framework.Assert;
+import junit.framework.TestCase;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSProtocolManager;
@@ -677,6 +678,98 @@ public class UserGroupAOImplTest {
 		userGroupAO.removeUserFromGroup(testUserGroup, testingProperties
 				.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY),
 				null);
+	}
+
+	/**
+	 * Check if an existing user is in an existing group
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public final void testIsUserInGroup() throws Exception {
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAdminAccountFromTestProperties(testingProperties);
+		String testUserGroup = "testIsUserInGroup";
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+		UserGroupAO userGroupAO = accessObjectFactory
+				.getUserGroupAO(irodsAccount);
+
+		UserGroup userGroup = new UserGroup();
+		userGroup.setUserGroupName(testUserGroup);
+		userGroup.setZone(irodsAccount.getZone());
+
+		userGroupAO.removeUserGroup(userGroup);
+		userGroupAO.addUserGroup(userGroup);
+
+		userGroupAO.addUserToGroup(testUserGroup, irodsAccount.getUserName(),
+				null);
+
+		boolean inGroup = userGroupAO.isUserInGroup(irodsAccount.getUserName(),
+				testUserGroup);
+		TestCase.assertTrue("user should be in group", inGroup);
+	}
+
+	/**
+	 * Check if an existing user is in an non-existent group
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public final void testIsUserInGroupNoGroup() throws Exception {
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAdminAccountFromTestProperties(testingProperties);
+		String testUserGroup = "testIsUserInGroupNoGroup";
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+		UserGroupAO userGroupAO = accessObjectFactory
+				.getUserGroupAO(irodsAccount);
+
+		boolean inGroup = userGroupAO.isUserInGroup(irodsAccount.getUserName(),
+				testUserGroup);
+		TestCase.assertFalse("user should not be in group", inGroup);
+	}
+
+	/**
+	 * check null handling user group
+	 * 
+	 * @throws Exception
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public final void testIsUserInGroupNullGroup() throws Exception {
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAdminAccountFromTestProperties(testingProperties);
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+		UserGroupAO userGroupAO = accessObjectFactory
+				.getUserGroupAO(irodsAccount);
+
+		userGroupAO.isUserInGroup(irodsAccount.getUserName(), null);
+	}
+
+	/**
+	 * check null handling user
+	 * 
+	 * @throws Exception
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public final void testIsUserInGroupNullUser() throws Exception {
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAdminAccountFromTestProperties(testingProperties);
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+		UserGroupAO userGroupAO = accessObjectFactory
+				.getUserGroupAO(irodsAccount);
+
+		userGroupAO.isUserInGroup(null, "test");
 	}
 
 }
