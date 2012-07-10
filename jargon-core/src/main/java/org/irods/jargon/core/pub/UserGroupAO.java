@@ -171,4 +171,15 @@ public interface UserGroupAO extends IRODSAccessObject {
 	boolean isUserInGroup(String userName, String groupName)
 			throws JargonException;
 
+	/**
+	 * Handy method to remove a user group in the current zone by simply giving
+	 * the user group name. This method will treat a non-existent group as if it
+	 * had been deleted, logging this situation and proceeding.
+	 * 
+	 * @param userGroupName
+	 *            <code>String</code> with the name of the user group to delete.
+	 * @throws JargonException
+	 */
+	void removeUserGroup(String userGroupName) throws JargonException;
+
 }

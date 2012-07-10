@@ -83,13 +83,39 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements
 		log.debug("executing admin PI");
 
 		try {
-		getIRODSProtocol().irodsFunction(adminPI);
+			getIRODSProtocol().irodsFunction(adminPI);
 		} catch (NoMoreRulesException nmr) {
 			log.warn("no more rules exception will be treated as duplicate user to normalize behavior for pre-2.5 iRODS servers");
 			throw new DuplicateDataException(
 					"no more rules exception interpreted as duplicate user",
 					nmr);
 		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.UserGroupAO#removeUserGroup(java.lang.String)
+	 */
+	@Override
+	public void removeUserGroup(final String userGroupName)
+			throws JargonException {
+
+		log.info("removeUserGroup()");
+		if (userGroupName == null || userGroupName.isEmpty()) {
+			throw new IllegalArgumentException("null or empty user group name");
+		}
+
+		log.info("userGroupName:{}", userGroupName);
+
+		UserGroup userGroup = this.findByName(userGroupName);
+		if (userGroup == null) {
+			log.info("userGroup not found, treat as deleted");
+			return;
+		}
+
+		removeUserGroup(userGroup);
 
 	}
 
@@ -114,7 +140,7 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements
 		}
 
 		if (userGroup.getZone() == null || userGroup.getZone().isEmpty()) {
-			throw new IllegalArgumentException("userGroup has no zone");
+			userGroup.setZone(this.getIRODSAccount().getZone());
 		}
 
 		log.info("user group:{}", userGroup);
@@ -250,48 +276,39 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements
 			throw new JargonException("null or missing userGroupName");
 		}
 
-		log.info("finding user group with name: {}", userGroupName);
-		IRODSGenQueryExecutor irodsGenQueryExecutor = getGenQueryExecutor();
-
-		StringBuilder query = new StringBuilder();
-
-		query.append(buildUserGroupSelects());
-		query.append(" where ");
-		query.append(RodsGenQueryEnum.COL_USER_GROUP_NAME.getName());
-		query.append(" = '");
-		query.append(userGroupName.trim());
-		query.append("'");
-
-		String queryString = query.toString();
-		log.info("query string: {}", queryString);
-
-		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(queryString, 500);
-
-		IRODSQueryResultSetInterface resultSet;
+		IRODSQueryResultSet resultSet = null;
 		try {
-			resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResult(
-					irodsQuery, 0);
-		} catch (JargonQueryException e) {
-			log.error("query exception for user query:" + queryString, e);
-			throw new JargonException("error in user group query");
-		}
+			IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, null);
+			builder.addSelectAsGenQueryValue(
+					RodsGenQueryEnum.COL_USER_GROUP_NAME)
+					.addSelectAsGenQueryValue(
+							RodsGenQueryEnum.COL_USER_GROUP_ID)
+						.addConditionAsGenQueryField(RodsGenQueryEnum.COL_USER_GROUP_NAME, QueryConditionOperators.EQUAL, userGroupName);
+					
+			IRODSGenQueryExecutor irodsGenQueryExecutor = this
+					.getIRODSAccessObjectFactory().getIRODSGenQueryExecutor(
+							this.getIRODSAccount());
 
+			resultSet = irodsGenQueryExecutor
+					.executeIRODSQueryAndCloseResult(
+							builder.exportIRODSQueryFromBuilder(this
+									.getIRODSAccessObjectFactory()
+									.getJargonProperties()
+									.getMaxFilesAndDirsQueryMax()), 0);
+		} catch (JargonQueryException e) {
+			log.error("jargon query exception getting results", e);
+			throw new JargonException(e);
+		} catch (GenQueryBuilderException e) {
+			log.error("jargon query exception getting results", e);
+			throw new JargonException(e);
+		}
+		
 		if (resultSet.getResults().size() == 0) {
 			log.info("no user group found");
 			return null;
 		}
 
-		if (resultSet.getResults().size() > 1) {
-			StringBuilder messageBuilder = new StringBuilder();
-			messageBuilder.append("more than one user group found for name:");
-			messageBuilder.append(userGroupName);
-			String message = messageBuilder.toString();
-			log.error(message);
-			throw new JargonException(message);
-		}
-
 		// I know I have just one user group
-
 		IRODSQueryResultRow row;
 		try {
 			row = resultSet.getFirstResult();

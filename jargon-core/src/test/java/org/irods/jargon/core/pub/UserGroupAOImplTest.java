@@ -19,6 +19,7 @@ import org.irods.jargon.core.query.RodsGenQueryEnum;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class UserGroupAOImplTest {
@@ -78,6 +79,31 @@ public class UserGroupAOImplTest {
 		Assert.assertEquals("unexpected user group",
 				expectedUserGroup.getUserGroupName(),
 				actualUserGroup.getUserGroupName());
+	}
+
+	/**
+	 * [#890] 806000 error UserGroupAO.find() when id is given as a string
+	 * 
+	 * need to fix -80600 error trying to find() with a string instead of an
+	 * int, see gforge
+	 * 
+	 * @throws Exception
+	 */
+	@Ignore
+	public final void testFindGivenString() throws Exception {
+		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager
+				.instance();
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSSession irodsSession = IRODSSession
+				.instance(irodsConnectionManager);
+		IRODSAccessObjectFactory accessObjectFactory = IRODSAccessObjectFactoryImpl
+				.instance(irodsSession);
+		UserGroupAO userGroupAO = accessObjectFactory
+				.getUserGroupAO(irodsAccount);
+
+		userGroupAO.find("xxx");
+
 	}
 
 	@Test
@@ -405,6 +431,57 @@ public class UserGroupAOImplTest {
 
 		UserGroup actual = userGroupAO.findByName(testUserGroup);
 		Assert.assertNull("user group returned", actual);
+	}
+
+	/**
+	 * Remove a user group by name that exists
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public final void testRemoveUserGroupByName() throws Exception {
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAdminAccountFromTestProperties(testingProperties);
+		String testUserGroup = "testRemoveUserGroupByName";
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+		UserGroupAO userGroupAO = accessObjectFactory
+				.getUserGroupAO(irodsAccount);
+
+		UserGroup userGroup = new UserGroup();
+		userGroup.setUserGroupName(testUserGroup);
+		userGroup.setZone(irodsAccount.getZone());
+
+		userGroupAO.removeUserGroup(userGroup);
+		userGroupAO.addUserGroup(userGroup);
+		userGroupAO.removeUserGroup(userGroup.getUserGroupName());
+
+		UserGroup actual = userGroupAO.findByName(testUserGroup);
+		Assert.assertNull("user group returned", actual);
+	}
+
+	/**
+	 * Remove a user group by name that does not exist, should just log and
+	 * continue as normal
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public final void testRemoveUserGroupByNameThatDoesNotExist()
+			throws Exception {
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAdminAccountFromTestProperties(testingProperties);
+		String testUserGroup = "testRemoveUserGroupByNameThatDoesNotExist";
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+		UserGroupAO userGroupAO = accessObjectFactory
+				.getUserGroupAO(irodsAccount);
+
+		userGroupAO.removeUserGroup(testUserGroup);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
