@@ -61,7 +61,8 @@ import org.junit.runners.Suite;
 		DataObjectAOImplForSoftLinkTest.class,
 		DataTransferOperationsImplForSoftLinksTest.class,
 		ResourceGroupAOImplTest.class, CollectionAuditAOImplTest.class,
-		IRODSGenQueryExecutorImplBuiilderQueriesTest.class })
+		IRODSGenQueryExecutorImplBuiilderQueriesTest.class,
+		CollectionAndDataObjectListAndSearchAOImplForSoftLinksTest.class })
 /**
  * Suite to run Access Object tests in org.irods.jargon.pub.*
  * <p/>

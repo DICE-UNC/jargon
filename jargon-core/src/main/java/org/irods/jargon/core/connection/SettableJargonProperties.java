@@ -43,6 +43,7 @@ public class SettableJargonProperties implements JargonProperties {
 	private String encoding = "UTF-8";
 	private boolean instrument = false;
 	private boolean reconnect = false;
+	private boolean defaultToPublicIfNothingUnderRootWhenListing = true;
 
 	/**
 	 * Construct a default properties set based on the provided initial set of
@@ -115,6 +116,8 @@ public class SettableJargonProperties implements JargonProperties {
 				.getInputToOutputCopyBufferByteSize();
 		this.setInstrument(jargonProperties.isInstrument());
 		this.setReconnect(jargonProperties.isReconnect());
+		this.setDefaultToPublicIfNothingUnderRootWhenListing(jargonProperties
+				.isDefaultToPublicIfNothingUnderRootWhenListing());
 	}
 
 	/*
@@ -640,6 +643,28 @@ public class SettableJargonProperties implements JargonProperties {
 	 */
 	public synchronized void setReconnect(boolean reconnect) {
 		this.reconnect = reconnect;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.connection.JargonProperties#
+	 * isDefaultToPublicIfNothingUnderRootWhenListing()
+	 */
+	@Override
+	public boolean isDefaultToPublicIfNothingUnderRootWhenListing() {
+		return this.defaultToPublicIfNothingUnderRootWhenListing;
+	}
+
+	/**
+	 * Set a property that will automatically look for /zone/home/public and
+	 * /zone/home/username directories in the process of listing.
+	 * 
+	 * @param defaultToPublicIfNothingUnderRootWhenListing
+	 */
+	public void setDefaultToPublicIfNothingUnderRootWhenListing(
+			final boolean defaultToPublicIfNothingUnderRootWhenListing) {
+		this.defaultToPublicIfNothingUnderRootWhenListing = defaultToPublicIfNothingUnderRootWhenListing;
 	}
 
 }

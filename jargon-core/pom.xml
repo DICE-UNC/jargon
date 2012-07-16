@@ -68,6 +68,7 @@ test.option.exercise.remoteexecstream=${jargon.test.option.exercise.remoteexecst
 test.option.exercise.audit=${jargon.test.option.exercise.audit}
 test.option.distributed.resources=${test.option.distributed.resources}
 test.option.registration=${test.option.registration}
+test.option.strictACL=${test.option.strictACL}
 test.option.federated.zone=${test.option.federated.zone}
 test.federated.irods.admin=${jargon.test.federated.irods.admin}
 test.federated.irods.admin.password=${jargon.test.federated.irods.admin.password}

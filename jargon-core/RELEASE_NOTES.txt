@@ -97,7 +97,10 @@ Note that the following bug and feature requests are logged in GForge with relat
  
  * [#891] UserGroupAO add better remove method
  
- 
+ * [#906] supress error messages for acls when anonymous in list and search operations
+ This change helps handle occasions where strict ACL's are on, and/or operations are being done as an anonymous user.  This change, adjusted by the default.to.public.if.nothing.under.root.when.listing
+ jargon property, will allow users without ACL list permissions to be able to drill down into /zone/home/ and look for a 'public' dir and their user dir, they would need to 
+ have list permissions to actually list files in these places, it essentially emulates being able to list into these paths.
  
  
  

@@ -485,4 +485,18 @@ public final class IRODSAccount implements Serializable {
 		this.homeDirectory = homeDirectory;
 	}
 
+	/**
+	 * Check if this is 'anonymous'
+	 * 
+	 * @return <code>boolean</code> that will be <code>true</code> if this is an
+	 *         anonymous iRODS account
+	 */
+	public boolean isAnonymousAccount() {
+		if (userName.equals(PUBLIC_USERNAME)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
 }
