@@ -19,6 +19,7 @@ import java.util.List;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.packinstr.TransferOptions.ForceOption;
 import org.irods.jargon.core.pub.DataTransferOperations;
 import org.irods.jargon.core.pub.EnvironmentalInfoAO;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
@@ -26,6 +27,7 @@ import org.irods.jargon.core.pub.RuleProcessingAO;
 import org.irods.jargon.core.pub.domain.RemoteCommandInformation;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.rule.IRODSRuleExecResult;
+import org.irods.jargon.core.transfer.TransferControlBlock;
 import org.irods.jargon.core.utils.Base64;
 import org.irods.jargon.core.utils.LocalFileUtils;
 import org.irods.jargon.datautils.AbstractDataUtilsServiceImpl;
@@ -413,7 +415,10 @@ public class ThumbnailServiceImpl extends AbstractDataUtilsServiceImpl
 				.instanceIRODSFile(irodsAbsolutePathToGenerateThumbnailFor);
 		DataTransferOperations dto = this.irodsAccessObjectFactory
 				.getDataTransferOperations(getIrodsAccount());
-		dto.getOperation(sourceAsFile, temp, null, null);
+		TransferControlBlock tcb = this.getIrodsAccessObjectFactory()
+				.buildDefaultTransferControlBlockBasedOnJargonProperties();
+		tcb.getTransferOptions().setForceOption(ForceOption.USE_FORCE);
+		dto.getOperation(sourceAsFile, temp, null, tcb);
 		log.info("image retrieved, create thumbnail image at:{}",
 				targetTempFile.getAbsolutePath());
 

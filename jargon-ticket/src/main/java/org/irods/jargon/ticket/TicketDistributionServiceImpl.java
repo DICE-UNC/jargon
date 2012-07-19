@@ -121,7 +121,7 @@ public class TicketDistributionServiceImpl extends AbstractTicketService
 
 			sb.append(ticketDistributionContext.getHost());
 
-			if (ticketDistributionContext.getPort() != 0) {
+			if (ticketDistributionContext.getPort() > 0) {
 				sb.append(':');
 				sb.append(ticketDistributionContext.getPort());
 			}
