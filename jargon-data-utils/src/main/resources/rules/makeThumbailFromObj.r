@@ -27,7 +27,7 @@ makeThumbnailFromObj
 	
 
 	### Invoke thumbnail generating script
-	msiExecCmd("makeThumbnail.py", "'*data_path'", *resc_loc, "null", "null", *CmdOut);
+	msiExecCmd("makeThumbnail.py", "``*data_path''", *resc_loc, "null", "null", *CmdOut);
 	msiGetStdoutInExecCmdOut(*CmdOut, *StdoutStr);
 
 	
