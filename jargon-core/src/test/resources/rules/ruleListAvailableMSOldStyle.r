@@ -1,4 +1,3 @@
-ListAvailableMS||msiListEnabledMS(*KVPairs)##writeKeyValPairs(stdout,*KVPairs,
-\": \")|nop
+ListAvailableMS||msiListEnabledMS(*KVPairs)##writeKeyValPairs(stdout,*KVPairs,\": \")|nop
 *A=hello
 ruleExecOut

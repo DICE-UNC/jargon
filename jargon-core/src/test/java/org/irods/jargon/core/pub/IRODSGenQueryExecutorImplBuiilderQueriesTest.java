@@ -7,11 +7,14 @@ import java.io.File;
 import java.util.Properties;
 
 import junit.framework.Assert;
+import junit.framework.TestCase;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.pub.io.IRODSFile;
+import org.irods.jargon.core.query.GenQueryField.SelectFieldTypes;
 import org.irods.jargon.core.query.IRODSGenQueryBuilder;
 import org.irods.jargon.core.query.IRODSGenQueryFromBuilder;
+import org.irods.jargon.core.query.IRODSQueryResultRow;
 import org.irods.jargon.core.query.IRODSQueryResultSetInterface;
 import org.irods.jargon.core.query.QueryConditionOperators;
 import org.irods.jargon.core.query.RodsGenQueryEnum;
@@ -56,6 +59,41 @@ public class IRODSGenQueryExecutorImplBuiilderQueriesTest {
 	@AfterClass
 	public static void tearDownAfterClass() throws Exception {
 		irodsFileSystem.close();
+	}
+
+	/**
+	 * Test of a query with count of collections with a given owner zone
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public final void testExecuteQueryWithCount() throws Exception {
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
+		IRODSGenQueryExecutor irodsGenQueryExecutor = accessObjectFactory
+				.getIRODSGenQueryExecutor(irodsAccount);
+
+		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, null);
+
+		builder.addSelectAsAgregateGenQueryValue(
+				RodsGenQueryEnum.COL_COLL_ID, SelectFieldTypes.COUNT)
+				.addConditionAsGenQueryField(RodsGenQueryEnum.COL_D_OWNER_ZONE,
+						QueryConditionOperators.EQUAL, irodsAccount.getZone());
+
+		IRODSGenQueryFromBuilder query = builder.exportIRODSQueryFromBuilder(1);
+
+		IRODSQueryResultSetInterface resultSet = irodsGenQueryExecutor
+				.executeIRODSQuery(query, 0);
+
+		IRODSQueryResultRow row = resultSet.getFirstResult();
+		int actualCount = Integer.valueOf(row.getColumn(0));
+		// not a great test as the count is indeterminate, really just looking
+		// for exec errors and that something is returned
+		TestCase.assertTrue("count not produced", actualCount > 0);
+
 	}
 
 	/**
