@@ -47,6 +47,7 @@ Note that the following bug and feature requests are logged in GForge with relat
 
 * [#872] numeric gen query with datasize gives errors in condition
 * [#914] rule error : could not find name and val separated by an '=' sign in input attribute
+* [#890] 806000 error UserGroupAO.find() when id is given as a string
 
 ==Features==
 

@@ -19,7 +19,6 @@ import org.irods.jargon.core.query.RodsGenQueryEnum;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 public class UserGroupAOImplTest {
@@ -84,12 +83,9 @@ public class UserGroupAOImplTest {
 	/**
 	 * [#890] 806000 error UserGroupAO.find() when id is given as a string
 	 * 
-	 * need to fix -80600 error trying to find() with a string instead of an
-	 * int, see gforge
-	 * 
 	 * @throws Exception
 	 */
-	@Ignore
+	@Test(expected = IllegalArgumentException.class)
 	public final void testFindGivenString() throws Exception {
 		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager
 				.instance();

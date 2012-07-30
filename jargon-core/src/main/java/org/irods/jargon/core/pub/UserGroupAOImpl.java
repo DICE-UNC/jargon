@@ -172,6 +172,15 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements
 			throw new JargonException("null or missing userGroupId");
 		}
 
+		// non numeric values cause an sql exception in iRODS, catch early and
+		// with better message
+		try {
+			Integer.parseInt(userGroupId);
+		} catch (NumberFormatException nfe) {
+			log.error("user group not an integer: {}", userGroupId);
+			throw new IllegalArgumentException("user group not numeric");
+		}
+
 		log.info("finding user group with id: {}", userGroupId);
 
 		IRODSGenQueryExecutor irodsGenQueryExecutor = getGenQueryExecutor();
