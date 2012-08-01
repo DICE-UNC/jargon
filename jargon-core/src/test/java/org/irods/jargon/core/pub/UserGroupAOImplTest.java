@@ -205,6 +205,12 @@ public class UserGroupAOImplTest {
 		Assert.assertTrue("no user group returned for query",
 				userGroup.size() > 0);
 
+		for (UserGroup actual : userGroup) {
+			TestCase.assertFalse("should not have user name in results",
+					irodsAccount.getUserName()
+							.equals(actual.getUserGroupName()));
+		}
+
 	}
 
 	@Test
@@ -262,8 +268,6 @@ public class UserGroupAOImplTest {
 				null);
 
 		List<User> users = userGroupAO.listUserGroupMembers(testUserGroup);
-		Assert.assertTrue("no users found", users.size() == 2); // one user will
-																// be rodsAdmin
 
 		boolean foundMine = false;
 		for (User user : users) {
@@ -377,8 +381,15 @@ public class UserGroupAOImplTest {
 		userGroupAO.removeUserGroup(userGroup);
 		userGroupAO.addUserGroup(userGroup);
 
+		userGroupAO.addUserToGroup(testUserGroup, irodsAccount.getUserName(),
+				null);
+
 		List<User> users = userGroupAO.listUserGroupMembers(testUserGroup);
-		Assert.assertTrue("no users found", users.size() > 0);
+		Assert.assertTrue("no users found", users.size() == 1);
+		// should be the added user
+		User user = users.get(0);
+		TestCase.assertEquals("did not find normal user",
+				irodsAccount.getUserName(), user.getName());
 
 		userGroupAO.removeUserGroup(userGroup);
 	}
@@ -399,6 +410,7 @@ public class UserGroupAOImplTest {
 				.getIRODSAccessObjectFactory();
 		UserGroupAO userGroupAO = accessObjectFactory
 				.getUserGroupAO(irodsAccount);
+
 
 		List<User> users = userGroupAO.listUserGroupMembers(testUserGroup);
 		Assert.assertTrue("no users should have been found", users.isEmpty());

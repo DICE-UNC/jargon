@@ -427,6 +427,9 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements
 
 		for (IRODSQueryResultRow row : resultSet.getResults()) {
 			// build user, do not retrieve the user DN (too expensive)
+			if (row.getColumn(1).equals(userGroupName)) {
+				continue;
+			}
 			users.add(UserAOHelper.buildUserFromResultSet(row,
 					irodsGenQueryExecutor, false));
 		}
@@ -477,6 +480,9 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements
 		List<UserGroup> userGroups = new ArrayList<UserGroup>();
 
 		for (IRODSQueryResultRow row : resultSet.getResults()) {
+			if (row.getColumn(0).equals(userName)) {
+				continue;
+			}
 			userGroups.add(buildUserGroupFromResultSet(row));
 		}
 
