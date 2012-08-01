@@ -904,6 +904,23 @@ public class TestingPropertiesHelper {
 	}
 
 	/**
+	 * Check if tests depending on strictACL's should be run. This requires the
+	 * configuration of the iRODS core.re for strictACL, as well as the
+	 * provisioning of a /zone/home/public directory with anonymous rights
+	 * 
+	 * @param testingProperties
+	 * @return <code>true</code> if strict ACL testing should occur
+	 */
+	public boolean isTestStrictACL(final Properties testingProperties) {
+		String val = (String) testingProperties.get("test.option.strictACL");
+		if (val == null) {
+			return false;
+		} else {
+			return Boolean.parseBoolean(val);
+		}
+	}
+
+	/**
 	 * Handy method to give, from the root IRODS collection, a full path to a
 	 * given collection in the IRODS test scratch area on IRODS on the
 	 * configured federated zone enabled for writing cross-zone.

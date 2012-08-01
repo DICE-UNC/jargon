@@ -120,7 +120,7 @@ test.option.distributed.resources=${test.option.distributed.resources}
     								</goals>
     							</pluginExecutionFilter>
     							<action>
-    								<ignore></ignore>
+    								<ignore />
     							</action>
     						</pluginExecution>
     					</pluginExecutions>

@@ -89,9 +89,13 @@ public class StringEncryptor {
 
 	public String encrypt(final String unencryptedString)
 			throws EncryptionException {
-		if (unencryptedString == null || unencryptedString.trim().length() == 0) {
-			throw new IllegalArgumentException(
-					"unencrypted string was null or empty");
+		if (unencryptedString == null) {
+			throw new IllegalArgumentException("unencrypted string was null ");
+		}
+
+		// if blank return blank
+		if (unencryptedString.isEmpty()) {
+			return "";
 		}
 
 		try {
@@ -110,9 +114,13 @@ public class StringEncryptor {
 
 	public String decrypt(final String encryptedString)
 			throws EncryptionException {
-		if (encryptedString == null || encryptedString.trim().length() <= 0) {
-			throw new IllegalArgumentException(
-					"encrypted string was null or empty");
+		if (encryptedString == null) {
+			throw new IllegalArgumentException("encrypted string was null ");
+		}
+
+		// if blank just return blank
+		if (encryptedString.isEmpty()) {
+			return "";
 		}
 
 		try {

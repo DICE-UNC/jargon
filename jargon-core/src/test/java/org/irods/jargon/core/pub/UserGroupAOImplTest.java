@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Properties;
 
 import junit.framework.Assert;
+import junit.framework.TestCase;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSProtocolManager;
@@ -77,6 +78,28 @@ public class UserGroupAOImplTest {
 		Assert.assertEquals("unexpected user group",
 				expectedUserGroup.getUserGroupName(),
 				actualUserGroup.getUserGroupName());
+	}
+
+	/**
+	 * [#890] 806000 error UserGroupAO.find() when id is given as a string
+	 * 
+	 * @throws Exception
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public final void testFindGivenString() throws Exception {
+		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager
+				.instance();
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSSession irodsSession = IRODSSession
+				.instance(irodsConnectionManager);
+		IRODSAccessObjectFactory accessObjectFactory = IRODSAccessObjectFactoryImpl
+				.instance(irodsSession);
+		UserGroupAO userGroupAO = accessObjectFactory
+				.getUserGroupAO(irodsAccount);
+
+		userGroupAO.find("xxx");
+
 	}
 
 	@Test
@@ -182,6 +205,12 @@ public class UserGroupAOImplTest {
 		Assert.assertTrue("no user group returned for query",
 				userGroup.size() > 0);
 
+		for (UserGroup actual : userGroup) {
+			TestCase.assertFalse("should not have user name in results",
+					irodsAccount.getUserName()
+							.equals(actual.getUserGroupName()));
+		}
+
 	}
 
 	@Test
@@ -239,8 +268,6 @@ public class UserGroupAOImplTest {
 				null);
 
 		List<User> users = userGroupAO.listUserGroupMembers(testUserGroup);
-		Assert.assertTrue("no users found", users.size() == 2); // one user will
-																// be rodsAdmin
 
 		boolean foundMine = false;
 		for (User user : users) {
@@ -354,8 +381,15 @@ public class UserGroupAOImplTest {
 		userGroupAO.removeUserGroup(userGroup);
 		userGroupAO.addUserGroup(userGroup);
 
+		userGroupAO.addUserToGroup(testUserGroup, irodsAccount.getUserName(),
+				null);
+
 		List<User> users = userGroupAO.listUserGroupMembers(testUserGroup);
-		Assert.assertTrue("no users found", users.size() > 0);
+		Assert.assertTrue("no users found", users.size() == 1);
+		// should be the added user
+		User user = users.get(0);
+		TestCase.assertEquals("did not find normal user",
+				irodsAccount.getUserName(), user.getName());
 
 		userGroupAO.removeUserGroup(userGroup);
 	}
@@ -376,6 +410,7 @@ public class UserGroupAOImplTest {
 				.getIRODSAccessObjectFactory();
 		UserGroupAO userGroupAO = accessObjectFactory
 				.getUserGroupAO(irodsAccount);
+
 
 		List<User> users = userGroupAO.listUserGroupMembers(testUserGroup);
 		Assert.assertTrue("no users should have been found", users.isEmpty());
@@ -404,6 +439,57 @@ public class UserGroupAOImplTest {
 
 		UserGroup actual = userGroupAO.findByName(testUserGroup);
 		Assert.assertNull("user group returned", actual);
+	}
+
+	/**
+	 * Remove a user group by name that exists
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public final void testRemoveUserGroupByName() throws Exception {
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAdminAccountFromTestProperties(testingProperties);
+		String testUserGroup = "testRemoveUserGroupByName";
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+		UserGroupAO userGroupAO = accessObjectFactory
+				.getUserGroupAO(irodsAccount);
+
+		UserGroup userGroup = new UserGroup();
+		userGroup.setUserGroupName(testUserGroup);
+		userGroup.setZone(irodsAccount.getZone());
+
+		userGroupAO.removeUserGroup(userGroup);
+		userGroupAO.addUserGroup(userGroup);
+		userGroupAO.removeUserGroup(userGroup.getUserGroupName());
+
+		UserGroup actual = userGroupAO.findByName(testUserGroup);
+		Assert.assertNull("user group returned", actual);
+	}
+
+	/**
+	 * Remove a user group by name that does not exist, should just log and
+	 * continue as normal
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public final void testRemoveUserGroupByNameThatDoesNotExist()
+			throws Exception {
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAdminAccountFromTestProperties(testingProperties);
+		String testUserGroup = "testRemoveUserGroupByNameThatDoesNotExist";
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+		UserGroupAO userGroupAO = accessObjectFactory
+				.getUserGroupAO(irodsAccount);
+
+		userGroupAO.removeUserGroup(testUserGroup);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
@@ -677,6 +763,98 @@ public class UserGroupAOImplTest {
 		userGroupAO.removeUserFromGroup(testUserGroup, testingProperties
 				.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY),
 				null);
+	}
+
+	/**
+	 * Check if an existing user is in an existing group
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public final void testIsUserInGroup() throws Exception {
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAdminAccountFromTestProperties(testingProperties);
+		String testUserGroup = "testIsUserInGroup";
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+		UserGroupAO userGroupAO = accessObjectFactory
+				.getUserGroupAO(irodsAccount);
+
+		UserGroup userGroup = new UserGroup();
+		userGroup.setUserGroupName(testUserGroup);
+		userGroup.setZone(irodsAccount.getZone());
+
+		userGroupAO.removeUserGroup(userGroup);
+		userGroupAO.addUserGroup(userGroup);
+
+		userGroupAO.addUserToGroup(testUserGroup, irodsAccount.getUserName(),
+				null);
+
+		boolean inGroup = userGroupAO.isUserInGroup(irodsAccount.getUserName(),
+				testUserGroup);
+		TestCase.assertTrue("user should be in group", inGroup);
+	}
+
+	/**
+	 * Check if an existing user is in an non-existent group
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public final void testIsUserInGroupNoGroup() throws Exception {
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAdminAccountFromTestProperties(testingProperties);
+		String testUserGroup = "testIsUserInGroupNoGroup";
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+		UserGroupAO userGroupAO = accessObjectFactory
+				.getUserGroupAO(irodsAccount);
+
+		boolean inGroup = userGroupAO.isUserInGroup(irodsAccount.getUserName(),
+				testUserGroup);
+		TestCase.assertFalse("user should not be in group", inGroup);
+	}
+
+	/**
+	 * check null handling user group
+	 * 
+	 * @throws Exception
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public final void testIsUserInGroupNullGroup() throws Exception {
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAdminAccountFromTestProperties(testingProperties);
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+		UserGroupAO userGroupAO = accessObjectFactory
+				.getUserGroupAO(irodsAccount);
+
+		userGroupAO.isUserInGroup(irodsAccount.getUserName(), null);
+	}
+
+	/**
+	 * check null handling user
+	 * 
+	 * @throws Exception
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public final void testIsUserInGroupNullUser() throws Exception {
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAdminAccountFromTestProperties(testingProperties);
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+		UserGroupAO userGroupAO = accessObjectFactory
+				.getUserGroupAO(irodsAccount);
+
+		userGroupAO.isUserInGroup(null, "test");
 	}
 
 }

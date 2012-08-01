@@ -119,6 +119,8 @@ public interface UserGroupAO extends IRODSAccessObject {
 	 *            <code>String</code> with the name of the iRODS zone for the
 	 *            user. This is optional and may be set to blank or
 	 *            <code>null</code> if not needed.
+	 * @throws DuplicateDataException
+	 *             if the user is already a group member
 	 * @throws InvalidGroupException
 	 * @throws InvalidUserException
 	 * @throws JargonException
@@ -154,5 +156,30 @@ public interface UserGroupAO extends IRODSAccessObject {
 	 * @throws JargonException
 	 */
 	List<UserGroup> findAll() throws JargonException;
+
+	/**
+	 * Query the ICAT and see if the given user is in the given group
+	 * 
+	 * @param userName
+	 *            <code>String</code> with the user name
+	 * @param groupName
+	 *            <code>String</code> with the group name
+	 * @return <code>boolean</code> which will be <code>true</code> if the user
+	 *         is in the given group
+	 * @throws JargonException
+	 */
+	boolean isUserInGroup(String userName, String groupName)
+			throws JargonException;
+
+	/**
+	 * Handy method to remove a user group in the current zone by simply giving
+	 * the user group name. This method will treat a non-existent group as if it
+	 * had been deleted, logging this situation and proceeding.
+	 * 
+	 * @param userGroupName
+	 *            <code>String</code> with the name of the user group to delete.
+	 * @throws JargonException
+	 */
+	void removeUserGroup(String userGroupName) throws JargonException;
 
 }

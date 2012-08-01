@@ -21,7 +21,10 @@ public final class AvuData extends IRODSDomainObject {
 	private String unit = "";
 
 	/**
-	 * Static initializer returns an <code>AvuData</code>
+	 * Static initializer returns an <code>AvuData</code>. Note that unused
+	 * values should be set to 'blank' rather then <code>null</code>. An
+	 * <code>IllegalArgumentException</code> will be thrown if something is
+	 * null.
 	 * 
 	 * @param attribute
 	 *            <code>String</code> with the AVU attribute.

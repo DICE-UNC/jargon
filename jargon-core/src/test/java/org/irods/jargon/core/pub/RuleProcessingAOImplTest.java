@@ -1224,4 +1224,33 @@ public class RuleProcessingAOImplTest {
 
 	}
 
+	/**
+	 * Bug [#914] rule error : could not find name and val separated by an '='
+	 * sign in input attribute
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void testExecuteRuleWithComplexInputArgBug914() throws Exception {
+
+		irodsFileSystem.close();
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
+		String ruleFile = "/rules/ruleBug914.r";
+
+		RuleProcessingAO ruleProcessingAO = accessObjectFactory
+				.getRuleProcessingAO(irodsAccount);
+
+		IRODSRuleExecResult result = ruleProcessingAO.executeRuleFromResource(
+				ruleFile, null, RuleProcessingType.CLASSIC);
+
+		String out = (String) result.getOutputParameterResults().get("*out")
+				.getResultObject();
+		Assert.assertNotNull("null out", out);
+
+	}
+
 }

@@ -175,7 +175,8 @@ public interface CollectionAndDataObjectListAndSearchAO extends
 	 * @throws JargonException
 	 */
 	int countDataObjectsAndCollectionsUnderPath(
-			final String absolutePathToParent) throws JargonException;
+			final String absolutePathToParent) throws FileNotFoundException,
+			JargonException;
 
 	/**
 	 * Provides a search capability to search for any collections that have a
@@ -439,6 +440,8 @@ public interface CollectionAndDataObjectListAndSearchAO extends
 	/**
 	 * Retrieve the <code>ObjStat</code> for a collection or data object at the
 	 * given absolute path in iRODS. This is the result of a call to rsObjStat.
+	 * Note that a <code>FileNotFoundException</code> results if the objStat
+	 * cannot be determined. This can occur based on issues with ACL's.
 	 * 
 	 * @param irodsAbsolutePath
 	 *            <code>String</code> with the absolute path to an iRODS

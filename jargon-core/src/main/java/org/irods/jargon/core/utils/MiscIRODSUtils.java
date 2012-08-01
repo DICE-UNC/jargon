@@ -346,6 +346,28 @@ public class MiscIRODSUtils {
 	}
 
 	/**
+	 * Helper method for the convention of having a '/zone/home/public'
+	 * directory, especially for use by 'anonymous' accounts. Compute a path to
+	 * that directory
+	 * 
+	 * @param irodsAccount
+	 *            {@link IRODSAccount} for the logged in user (probably
+	 *            anonymous)
+	 * @return <code>String</code> in '/zone/home/public' format
+	 */
+	public static String computePublicDirectory(final IRODSAccount irodsAccount) {
+		if (irodsAccount == null) {
+			throw new IllegalArgumentException("null irodsAccount");
+		}
+
+		StringBuilder sb = new StringBuilder();
+		sb.append("/");
+		sb.append(irodsAccount.getZone());
+		sb.append("/home/public");
+		return sb.toString();
+	}
+
+	/**
 	 * Utility method to get the last part of the given absolute path
 	 * 
 	 * @return <code>String</code> with the last component of the absolute path

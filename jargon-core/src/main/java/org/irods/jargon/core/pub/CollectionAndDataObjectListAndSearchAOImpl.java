@@ -92,11 +92,6 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 
 		ObjStat objStat = retrieveObjectStatForPath(absolutePath);
 
-		if (objStat == null) {
-			log.error("no file found for path:{}", absolutePath);
-			throw new FileNotFoundException("no file found for given path");
-		}
-
 		/*
 		 * See if jargon supports the given object type
 		 */
@@ -147,11 +142,13 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 					"absolutePathToParent is null or empty");
 		}
 
-		ObjStat objStat = retrieveObjectStatForPath(absolutePathToParent);
+		ObjStat objStat;
 
-		if (objStat == null) {
-			log.error("no file found for path:{}", absolutePathToParent);
-			throw new FileNotFoundException("no file found for given path");
+		try {
+			objStat = retrieveObjectStatForPath(absolutePathToParent);
+		} catch (FileNotFoundException fnf) {
+			log.info("didnt find an objStat for the path, account for cases where there are strict acls and give Jargon a chance to drill down to a place where the user has permissions");
+			return handleNoListingUnderRootOrHomeByLookingForPublicAndHome(absolutePathToParent);
 		}
 
 		/*
@@ -188,11 +185,13 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 			throw new IllegalArgumentException("absolutePathToParent is null");
 		}
 
-		ObjStat objStat = retrieveObjectStatForPath(absolutePathToParent);
+		ObjStat objStat;
 
-		if (objStat == null) {
-			log.error("no file found for path:{}", absolutePathToParent);
-			throw new FileNotFoundException("no file found for given path");
+		try {
+			objStat = retrieveObjectStatForPath(absolutePathToParent);
+		} catch (FileNotFoundException fnf) {
+			log.info("didnt find an objStat for the path, account for cases where there are strict acls and give Jargon a chance to drill down to a place where the user has permissions");
+			return handleNoListingUnderRootOrHomeByLookingForPublicAndHome(absolutePathToParent);
 		}
 
 		/*
@@ -218,7 +217,8 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 	@Override
 	@FederationEnabled
 	public int countDataObjectsAndCollectionsUnderPath(
-			final String absolutePathToParent) throws JargonException {
+			final String absolutePathToParent) throws FileNotFoundException,
+			JargonException {
 
 		if (absolutePathToParent == null) {
 			throw new IllegalArgumentException("absolutePathToParent is null");
@@ -228,11 +228,6 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 				absolutePathToParent);
 
 		ObjStat objStat = retrieveObjectStatForPath(absolutePathToParent);
-
-		if (objStat == null) {
-			log.error("no file found for path:{}", absolutePathToParent);
-			throw new FileNotFoundException("no file found for given path");
-		}
 
 		/*
 		 * See if jargon supports the given object type
@@ -424,20 +419,219 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 			path = absolutePathToParent;
 		}
 
-		ObjStat objStat = retrieveObjectStatForPath(path);
+		ObjStat objStat;
 
-		if (objStat == null) {
-			log.error("no file found for path:{}", absolutePathToParent);
-			throw new FileNotFoundException("no file found for given path");
+		try {
+			objStat = retrieveObjectStatForPath(path);
+		} catch (FileNotFoundException fnf) {
+			log.info("didnt find an objStat for the path, account for cases where there are strict acls and give Jargon a chance to drill down to a place where the user has permissions");
+			return handleNoListingUnderRootOrHomeByLookingForPublicAndHome(path);
 		}
 
 		/*
 		 * See if jargon supports the given object type
 		 */
 		MiscIRODSUtils.evaluateSpecCollSupport(objStat);
-
 		return listCollectionsUnderPath(objStat, partialStartIndex);
 
+	}
+
+	/**
+	 * This is a compensating method used to deal with the top of the tree when
+	 * permissions do not allow listing'into' the tree to get to things the user
+	 * actually has access to.
+	 * 
+	 * @param absolutePathToParent
+	 * @return
+	 * @throws JargonException
+	 */
+	private List<CollectionAndDataObjectListingEntry> handleNoListingUnderRootOrHomeByLookingForPublicAndHome(
+			final String absolutePathToParent) throws FileNotFoundException,
+			JargonException {
+
+		log.info("handleNoListingUnderRootOrHomeByLookingForPublicAndHome()");
+
+		String path = absolutePathToParent;
+		List<CollectionAndDataObjectListingEntry> collectionAndDataObjectListingEntries = new ArrayList<CollectionAndDataObjectListingEntry>();
+
+		/*
+		 * This is somewhat convoluted, note the return statements in the
+		 * various conditions
+		 */
+
+		if (!this.getJargonProperties()
+				.isDefaultToPublicIfNothingUnderRootWhenListing()) {
+			log.info("not configured in jargon.properties to look for public and user home, throw the FileNotFoundException");
+			throw new FileNotFoundException("the collection cannot be found");
+		}
+
+		// check if under '/' and infer that there is a '/zone' subdir to return
+		// this time
+
+		if (path.equals("/")) {
+			collectionAndDataObjectListingEntries
+					.add(createStandInForZoneDir());
+			return collectionAndDataObjectListingEntries;
+		}
+
+		// check if under '/zone' and if so infer that there is a home dir
+
+		StringBuilder sb = new StringBuilder();
+		sb.append("/");
+		sb.append(this.getIRODSAccount().getZone());
+
+		String comparePath = sb.toString();
+
+		if (path.equals(comparePath)) {
+			log.info("under zone, create stand-in home dir");
+			collectionAndDataObjectListingEntries
+					.add(createStandInForHomeDir());
+			return collectionAndDataObjectListingEntries;
+		}
+
+		/*
+		 * check if I am under /zone/home, look for public and user dir. In this
+		 * situation I should be able to list them via obj stat
+		 */
+
+		sb = new StringBuilder();
+		sb.append("/");
+		sb.append(this.getIRODSAccount().getZone());
+		sb.append("/home");
+
+		comparePath = sb.toString();
+
+		if (!path.equals(comparePath)) {
+			log.info("I am not unde /, /zone/, or /zohe/home/ so I cannot do anything but throw the original exception");
+			log.info("not configured in jargon.properties to look for public and user home, throw the FileNotFoundException");
+			throw new FileNotFoundException("the collection cannot be found");
+
+		}
+
+		log.info("under home, look for public and home dir");
+		sb.append("/public");
+		ObjStat statForPublic;
+		try {
+			statForPublic = this.retrieveObjectStatForPath(sb.toString());
+			collectionAndDataObjectListingEntries
+					.add(createStandInForPublicDir(statForPublic));
+		} catch (FileNotFoundException fnf) {
+			log.info("no public dir");
+		}
+
+		log.info("see if a user home dir applies");
+
+		if (this.getIRODSAccount().isAnonymousAccount()) {
+			log.info("is anonymous account, no home directory applies");
+		} else {
+			ObjStat statForUserHome;
+			try {
+				statForUserHome = this
+						.retrieveObjectStatForPath(MiscIRODSUtils
+								.computeHomeDirectoryForIRODSAccount(getIRODSAccount()));
+				collectionAndDataObjectListingEntries
+						.add(createStandInForUserDir(statForUserHome));
+			} catch (FileNotFoundException fnf) {
+				log.info("no home dir");
+			}
+		}
+
+		// I was under /zone/home/ looking for public and user dirs, return what
+		// I have, it could be empty
+		return collectionAndDataObjectListingEntries;
+
+	}
+
+	private CollectionAndDataObjectListingEntry createStandInForZoneDir() {
+		log.info("under root, put out zone as an entry");
+		CollectionAndDataObjectListingEntry entry = new CollectionAndDataObjectListingEntry();
+		entry.setCount(0);
+		entry.setLastResult(true);
+		entry.setObjectType(ObjectType.COLLECTION);
+		entry.setOwnerZone(this.getIRODSAccount().getZone());
+		StringBuilder sb = new StringBuilder();
+		sb.append("/");
+		entry.setParentPath(sb.toString());
+		sb.append(this.getIRODSAccount().getZone());
+		entry.setPathOrName(sb.toString());
+		entry.setSpecColType(SpecColType.NORMAL);
+		return entry;
+	}
+
+	/**
+	 * @param collectionAndDataObjectListingEntries
+	 */
+	private CollectionAndDataObjectListingEntry createStandInForHomeDir() {
+		log.info("under root, put out home as an entry");
+		CollectionAndDataObjectListingEntry entry = new CollectionAndDataObjectListingEntry();
+		entry.setCount(0);
+		entry.setLastResult(true);
+		entry.setObjectType(ObjectType.COLLECTION);
+		entry.setOwnerZone(this.getIRODSAccount().getZone());
+		entry.setParentPath("/");
+		StringBuilder sb = new StringBuilder();
+		sb.append("/");
+		sb.append(this.getIRODSAccount().getZone());
+		sb.append("/home");
+		entry.setPathOrName(sb.toString());
+		entry.setSpecColType(SpecColType.NORMAL);
+		return entry;
+	}
+
+	/**
+	 * Create a collection and listing entry for the home dir
+	 * 
+	 * @return
+	 */
+	private CollectionAndDataObjectListingEntry createStandInForPublicDir(
+			final ObjStat objStat) {
+		log.info("under root, put out home as an entry");
+		CollectionAndDataObjectListingEntry entry = new CollectionAndDataObjectListingEntry();
+		entry.setCount(0);
+		entry.setLastResult(true);
+		entry.setOwnerZone(this.getIRODSAccount().getZone());
+		entry.setOwnerName(objStat.getOwnerName());
+		StringBuilder sb = new StringBuilder();
+		sb.append("/");
+		sb.append(this.getIRODSAccount().getZone());
+		sb.append("/home");
+		entry.setParentPath(sb.toString());
+		sb.append("/public");
+		entry.setPathOrName(sb.toString());
+		entry.setSpecColType(objStat.getSpecColType());
+		entry.setCreatedAt(objStat.getCreatedAt());
+		entry.setId(objStat.getDataId());
+		entry.setObjectType(objStat.getObjectType());
+		return entry;
+	}
+
+	/**
+	 * Create a collection and listing entry for the home dir
+	 * 
+	 * @return
+	 */
+	private CollectionAndDataObjectListingEntry createStandInForUserDir(
+			final ObjStat objStat) {
+		log.info("put a user dir entry out there");
+		CollectionAndDataObjectListingEntry entry = new CollectionAndDataObjectListingEntry();
+		entry.setCount(0);
+		entry.setLastResult(true);
+		entry.setObjectType(ObjectType.COLLECTION);
+		entry.setOwnerZone(this.getIRODSAccount().getZone());
+		StringBuilder sb = new StringBuilder();
+		sb.append("/");
+		sb.append(this.getIRODSAccount().getZone());
+		sb.append("/home");
+		entry.setParentPath(sb.toString());
+		sb.append(this.getIRODSAccount().getUserName());
+		entry.setPathOrName(sb.toString());
+		entry.setSpecColType(objStat.getSpecColType());
+		entry.setCreatedAt(objStat.getCreatedAt());
+		entry.setId(objStat.getDataId());
+		entry.setObjectType(objStat.getObjectType());
+		entry.setOwnerZone(this.getIRODSAccount().getZone());
+		entry.setOwnerName(objStat.getOwnerName());
+		return entry;
 	}
 
 	/**
@@ -619,8 +813,8 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 				if (collectionAndDataObjectListingEntry != null) {
 					collectionAndDataObjectListingEntry
 							.setUserFilePermission(userFilePermissions);
-					augmentCollectionEntryForSpecialCollections(
-							objStat, effectiveAbsolutePath,
+					augmentCollectionEntryForSpecialCollections(objStat,
+							effectiveAbsolutePath,
 							collectionAndDataObjectListingEntry);
 					subdirs.add(collectionAndDataObjectListingEntry);
 				}
@@ -650,8 +844,8 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 				log.debug("adding last entry");
 				collectionAndDataObjectListingEntry
 						.setUserFilePermission(userFilePermissions);
-				augmentCollectionEntryForSpecialCollections(
-						objStat, effectiveAbsolutePath,
+				augmentCollectionEntryForSpecialCollections(objStat,
+						effectiveAbsolutePath,
 						collectionAndDataObjectListingEntry);
 				subdirs.add(collectionAndDataObjectListingEntry);
 			} else {
@@ -770,8 +964,8 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 			 * Use the data in the objStat, in the case of special collections,
 			 * to augment the data returned
 			 */
-			augmentCollectionEntryForSpecialCollections(
-					objStat, effectiveAbsolutePath, entry);
+			augmentCollectionEntryForSpecialCollections(objStat,
+					effectiveAbsolutePath, entry);
 
 			StringBuilder sb = new StringBuilder();
 			sb.append(entry.getParentPath());
@@ -969,8 +1163,8 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 				// actual query result row that caused the break, used in
 				// requery to not reread the same data
 				entry.setCount(lastCount - 1);
-				augmentCollectionEntryForSpecialCollections(
-						objStat, effectiveAbsolutePath, entry);
+				augmentCollectionEntryForSpecialCollections(objStat,
+						effectiveAbsolutePath, entry);
 				files.add(entry);
 			}
 
@@ -1001,8 +1195,8 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 				// requery to not reread the same data
 				entry.setCount(lastCount);
 				entry.setLastResult(lastRecord);
-				augmentCollectionEntryForSpecialCollections(
-						objStat, effectiveAbsolutePath, entry);
+				augmentCollectionEntryForSpecialCollections(objStat,
+						effectiveAbsolutePath, entry);
 				files.add(entry);
 			} else {
 				log.debug("skipping last entry as it may carry over to the next query page");
@@ -1151,11 +1345,6 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		log.info("getFullObjectForType for path:{}", objectAbsolutePath);
 		ObjStat objStat = retrieveObjectStatForPath(objectAbsolutePath);
 
-		if (objStat == null) {
-			log.error("no file found for path:{}", objectAbsolutePath);
-			throw new FileNotFoundException("no file found for given path");
-		}
-
 		String effectiveAbsolutePath = MiscIRODSUtils
 				.determineAbsolutePathBasedOnCollTypeInObjectStat(objStat);
 		log.info("determined effectiveAbsolutePathToBe:{}",
@@ -1303,7 +1492,6 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 			default:
 				throw new JargonException("unknown special coll type:");
 			}
-
 
 		}
 

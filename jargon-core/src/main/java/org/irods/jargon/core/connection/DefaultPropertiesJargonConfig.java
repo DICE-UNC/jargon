@@ -367,4 +367,15 @@ public class DefaultPropertiesJargonConfig implements JargonProperties {
 		return verifyPropExistsAndGetAsBoolean("jargon.instrument");
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.connection.JargonProperties#
+	 * isDefaultToPublicIfNothingUnderRootWhenListing()
+	 */
+	@Override
+	public boolean isDefaultToPublicIfNothingUnderRootWhenListing() {
+		return verifyPropExistsAndGetAsBoolean("default.to.public.if.nothing.under.root.when.listing");
+	}
+
 }

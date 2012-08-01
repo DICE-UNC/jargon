@@ -258,6 +258,27 @@ public interface JargonProperties {
 	 */
 	boolean isInstrument();
 
+	/**
+	 * This parameter tunes the behavior of the
+	 * {@link CollectionAndDataObjectListAndSearchAO}, and potentially other
+	 * parts of the API involved in listing directories under the root ('/')
+	 * directory. In certain situations, such as with strictACL's enabled, a
+	 * user may not have permissions to list collections under root. This can
+	 * prevent the viewing of directories that a user is actually enabled to see
+	 * because the higher level collections do not have the ACL's that enable
+	 * this.
+	 * <p/>
+	 * This property allows a behavior to support the convention that a path
+	 * underneath the root, specifically /zonename/home/public might exist, and
+	 * the various entry listing methods will attempt to find this path, even
+	 * when listing is not possible by calling iRODS.
+	 * 
+	 * @return <code>boolean</code> that will indicate whether to display the
+	 *         home directory, and the public directory underneath the home
+	 *         directory.
+	 */
+	boolean isDefaultToPublicIfNothingUnderRootWhenListing();
+
 
 
 }

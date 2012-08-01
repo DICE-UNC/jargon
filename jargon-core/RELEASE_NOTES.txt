@@ -1,8 +1,8 @@
 
-*'''Project''': <<<<<<< HEAD
-*'''Date''': X/X/X
-*'''Release Version''': 3.1.3-beta1
-*'''git tag''': 3.1.3 TBD
+*'''Project''': Jargon-core API
+*'''Date''': 07/26/2012
+*'''Release Version''': 3.1.3-beta2
+*'''git tag''': 3.1.3-beta2
 
 ==News==
 
@@ -46,6 +46,10 @@ Note that the following bug and feature requests are logged in GForge with relat
 ==Bug Fixes==
 
 * [#872] numeric gen query with datasize gives errors in condition
+* [#914] rule error : could not find name and val separated by an '=' sign in input attribute
+* [#890] 806000 error UserGroupAO.find() when id is given as a string
+* [#874] rule error processing gallery view LL - making thumbnails
+* [#918] Unexpected results with UserGroupAO methods
 
 ==Features==
 
@@ -91,16 +95,16 @@ Note that the following bug and feature requests are logged in GForge with relat
  ** added instrument opton to PipelineConfiguration and JargonProperties to route detailed instrumentation to the DEBUG log
  
  
+ * [#764] Java libraries and code to integrate idrop-web
+ ** added isUserInGroup method to UserGroupAO
  
  
+ * [#891] UserGroupAO add better remove method
  
- 
- 
- 
- 
- 
- 
- 
+ * [#906] supress error messages for acls when anonymous in list and search operations
+ This change helps handle occasions where strict ACL's are on, and/or operations are being done as an anonymous user.  This change, adjusted by the default.to.public.if.nothing.under.root.when.listing
+ jargon property, will allow users without ACL list permissions to be able to drill down into /zone/home/ and look for a 'public' dir and their user dir, they would need to 
+ have list permissions to actually list files in these places, it essentially emulates being able to list into these paths.
  
  Notes:  
  
