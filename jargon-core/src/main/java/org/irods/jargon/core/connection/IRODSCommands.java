@@ -137,6 +137,48 @@ public class IRODSCommands implements IRODSManagedConnection {
 
 	}
 
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("IRODSCommands");
+		sb.append("\n   underlying account:");
+		sb.append(irodsAccount);
+		sb.append("\n   underlying connection:");
+		sb.append(irodsConnection);
+		return sb.toString();
+	}
+
+	/**
+	 * Internally used constructor used during reconnect operation to pass an
+	 * already connected <code>IRODSConnection</code>
+	 * 
+	 * @param irodsAccount
+	 * @param irodsConnectionManager
+	 * @param pipelineConfiguration
+	 * @param irodsConnection
+	 * @throws JargonException
+	 */
+	private IRODSCommands(final IRODSAccount irodsAccount,
+			final IRODSProtocolManager irodsConnectionManager,
+			final PipelineConfiguration pipelineConfiguration,
+			final IRODSConnection irodsConnection) throws JargonException {
+
+		if (irodsConnectionManager == null) {
+			throw new IllegalArgumentException("irodsConnectionManager is null");
+		}
+
+		if (pipelineConfiguration == null) {
+			throw new IllegalArgumentException("null pipelineConfiguration");
+		}
+		if (irodsConnection == null) {
+			throw new IllegalArgumentException("null irodsConnection");
+		}
+
+		this.irodsConnection = irodsConnection;
+		this.irodsProtocolManager = irodsConnectionManager;
+		this.pipelineConfiguration = pipelineConfiguration;
+	}
+
 	private StartupResponseData startupConnection(
 			final IRODSAccount irodsAccount) throws JargonException {
 		// send startup packet here
@@ -1358,7 +1400,7 @@ public class IRODSCommands implements IRODSManagedConnection {
 			reconnectService.shutdown();
 			try {
 				// Wait a while for existing tasks to terminate
-				if (!reconnectService.awaitTermination(1, TimeUnit.SECONDS)) {
+				if (!reconnectService.awaitTermination(5, TimeUnit.SECONDS)) {
 					reconnectService.shutdownNow(); // Cancel currently
 													// executing tasks
 					// Wait a while for tasks to respond to being cancelled
@@ -1577,16 +1619,11 @@ public class IRODSCommands implements IRODSManagedConnection {
 					"cannot call reconnect if the connection was not started with reconnect option");
 		}
 
-		// log.info("calling shutdown on current connection...")
-		// this.irodsConnection.shutdown();
-		
-		
 		IRODSConnection reconnectedIRODSConnection = IRODSConnection
 				.instanceWithReconnectInfo(irodsAccount,
 						this.getIrodsProtocolManager(), pipelineConfiguration,
 						startupResponseData);
 		
-
 		// now reconnect with the provided reconnect information gathered at the
 		// startup pack send
 		ReconnMsg reconnMsg = new ReconnMsg(irodsAccount,
@@ -1608,14 +1645,21 @@ public class IRODSCommands implements IRODSManagedConnection {
 			log.error("io exception", e);
 			throw new JargonException(e);
 		}
-		// Tag responseMessage = readMessage();
-		// log.debug("response:{}", responseMessage);
+		
+		IRODSCommands restartedCommands = new IRODSCommands(irodsAccount,
+			 irodsProtocolManager,
+			pipelineConfiguration,
+				reconnectedIRODSConnection);
+		
+		Tag responseMessage = restartedCommands.readMessage();
+		log.debug("response:{}", responseMessage);
 
 		log.info("disconnect current connection and switch with reconnected socket");
-		irodsConnection.disconnect();
+		irodsConnection.shutdown();
 		irodsConnection = reconnectedIRODSConnection;
-		this.startupResponseData = startupConnection(irodsAccount);
-		log.info("reconnect operation complete... send startup pack data");
+
+		log.info("reconnect operation complete... new connection is:{}",
+				irodsConnection);
 	}
 
 	/*

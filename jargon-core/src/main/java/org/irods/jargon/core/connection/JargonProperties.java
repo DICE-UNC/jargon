@@ -244,6 +244,16 @@ public interface JargonProperties {
 	boolean isReconnect();
 
 	/**
+	 * Get the reconnect time expressed in milliseconds, used by the reconnect
+	 * thread that will be launched if the <code>isReconnect()</code> method
+	 * returns true. This value has no meaning if the reconnect option is not
+	 * selected.
+	 * 
+	 * @return <code>long</code> with the reconnect time in milliseconds.
+	 */
+	long getReconnectTimeInMillis();
+
+	/**
 	 * <code>boolean</code> that indicates whether certain performance
 	 * statistics are gathered and reported to the DEBUG log. This will turn on
 	 * useful statistics for optimization and tuning, but will introduce a

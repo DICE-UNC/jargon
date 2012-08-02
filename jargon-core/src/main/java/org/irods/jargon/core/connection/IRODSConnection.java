@@ -98,8 +98,10 @@ final class IRODSConnection implements IRODSManagedConnection {
 		IRODSConnection irodsSimpleConnection = new IRODSConnection(
 				irodsAccount, irodsConnectionManager, pipelineConfiguration,
 				startupResponseData);
+
 		irodsSimpleConnection.initializeConnection(irodsAccount,
 				startupResponseData);
+
 		return irodsSimpleConnection;
 	}
 

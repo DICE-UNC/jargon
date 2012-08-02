@@ -4,11 +4,11 @@ import org.irods.jargon.core.connection.ConnectionProgressStatusTest;
 import org.irods.jargon.core.connection.ConnectionProxyDefinitionTest;
 import org.irods.jargon.core.connection.DefaultPropertiesJargonConfigTest;
 import org.irods.jargon.core.connection.EnvironmentalInfoAccessorTest;
-import org.irods.jargon.core.connection.IRODSCommandsReconnectionTest;
 import org.irods.jargon.core.connection.IRODSServerPropertiesTest;
 import org.irods.jargon.core.connection.IRODSSessionTest;
 import org.irods.jargon.core.connection.IRODSSimpleConnectionTest;
 import org.irods.jargon.core.connection.IRODSSimpleProtocolManagerTest;
+import org.irods.jargon.core.connection.PipelineConfigurationTest;
 import org.irods.jargon.core.connection.ReconnectionManagerTest;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
@@ -21,7 +21,7 @@ import org.junit.runners.Suite;
 		IRODSServerPropertiesTest.class,
 		DefaultPropertiesJargonConfigTest.class,
 		ConnectionProgressStatusTest.class, ReconnectionManagerTest.class,
-		IRODSCommandsReconnectionTest.class })
+		PipelineConfigurationTest.class })
 public class ConnectionTests {
 
 }

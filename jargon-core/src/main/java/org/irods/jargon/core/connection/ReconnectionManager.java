@@ -24,6 +24,10 @@ public class ReconnectionManager implements Callable<Void> {
 	private static final long RECONNECT_PERIOD_MILLIS = 600000;
 	private static final long SLEEP_TIME = 10000;
 
+	public enum ConnectionStates {
+		PROCESSING_STATE, /* the process is not sending nor receiving */
+		RECEIVING_STATE, SENDING_STATE, CONN_WAIT_STATE
+	}
 	/**
 	 * Creates an instance of a manager thread (a runnable) that will start up
 	 * if reconnect behavior is indicated for an iRODS connection. This is done
@@ -88,11 +92,26 @@ public class ReconnectionManager implements Callable<Void> {
 			} else {
 				// time to reconnect
 				reconnect();
-				reconnectMillis = System.currentTimeMillis()
-						+ RECONNECT_PERIOD_MILLIS;
+				// reconnect once, then we're outta here
+				return null;
 			}
 		}
 		return null;
+	}
+
+	/**
+	 * @return the reconnectMillis
+	 */
+	public synchronized long getReconnectMillis() {
+		return reconnectMillis;
+	}
+
+	/**
+	 * @param reconnectMillis
+	 *            the reconnectMillis to set
+	 */
+	public synchronized void setReconnectMillis(long reconnectMillis) {
+		this.reconnectMillis = reconnectMillis;
 	}
 
 }
