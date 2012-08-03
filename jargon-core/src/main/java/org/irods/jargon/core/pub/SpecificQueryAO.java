@@ -50,14 +50,15 @@ public interface SpecificQueryAO extends IRODSAccessObject {
 	 
 	 /**
 	 * Remove a specific query from iRODS using SQL query as identifier
+	 * <p>
+	 * Please note that this method will remove all existing Specific Queries
+	 * that match the provided SQL query String
 	 * 
 	 * @param sqlQuery
 	 * 		<code>String</code> with the a valid SQL query
 	 * @throws IllegalArgumentException
 	 * @throws DuplicateDataException
 	 * 
-	 * Please note that this method will remove all existing Specific Queries
-	 * that match the provided SQL query String
 	 */
 	 void removeAllSpecificQueryBySQL(String sqlQuery) throws JargonException, DuplicateDataException;
 
