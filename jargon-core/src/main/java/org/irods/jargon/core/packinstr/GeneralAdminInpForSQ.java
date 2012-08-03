@@ -51,27 +51,43 @@ public class GeneralAdminInpForSQ extends
 	
 	/**
 	 * Generate the packing instruction suitable for removing a Specific Query
-	 * iadmin rsq
+	 * (iadmin rsq)
+	 * <p>
+	 * NOTE: This method has the same effect as removing the Specific Query by Alias.
+	 * The server api does not accept both arguments for remove, and if an SQL query
+	 * string is provided for remove, it may have the affect of removing more than this
+	 * Specific Query object.
+	 * <br>
+	 * Use GeneralAdminInpForSQ.instanceForRemoveAllSpecificQueryBySQL
+	 * for explicitly removing Specific Queries by SQL query.
 	 * 
 	 * @param specificQuery
-	 *            {@link org.irods.jargon.core.pub.domain.SpecificQuery} to be removed from
-	 *            iRODS.
-	 * @return {@link GeneralAdminInp}
+	 *            {@link org.irods.jargon.core.pub.domain.SpecificQuery} to be removed
+	 *            from iRODS.
+	 * @return {@link GeneralAdminInpForSQ}
 	 * @throws JargonException
-	 */
+	 * 
+	 **/
 	public static final GeneralAdminInpForSQ instanceForRemoveSpecificQuery(SpecificQuery specificQuery) 
 		throws JargonException {
 		
 		if (specificQuery == null) {
 			throw new IllegalArgumentException("null SpecificQuery object");
 		}
-		String query = specificQuery.getSqlQuery();
-		String alias = specificQuery.getAlias();
 		
-		GeneralAdminInpForSQ generalAdminInpForSQ = new GeneralAdminInpForSQ(query, alias, SQ_RM);
-		return generalAdminInpForSQ;
+		return instanceForRemoveSpecificQueryByAlias(specificQuery.getAlias());
 	}
 	
+	/**
+	 * Generate the packing instruction suitable for removing a Specific Query
+	 * (iadmin rsq)
+	 * 
+	 * @param alias
+	 *            <code>String</code> with the Specific Query alias identifier.
+	 * @return {@link GeneralAdminInpForSQ}
+	 * @throws JargonException
+	 * 
+	 **/
 	public static final GeneralAdminInpForSQ instanceForRemoveSpecificQueryByAlias(String alias) 
 	throws JargonException {
 	
@@ -83,6 +99,20 @@ public class GeneralAdminInpForSQ extends
 		return generalAdminInpForSQ;
 	}
 	
+	
+	/**
+	 * Generate the packing instruction suitable for removing a Specific Query
+	 * (iadmin rsq)
+	 * 
+	 * <p>
+	 * NOTE: This method will remove all Specific Queries whose SQL query strings match the one provided
+	 * 
+	 * @param query
+	 *            <code>String</code> with the Specific Query SQL query identifier.
+	 * @return {@link GeneralAdminInpForSQ}
+	 * @throws JargonException
+	 * 
+	 **/
 	public static final GeneralAdminInpForSQ instanceForRemoveAllSpecificQueryBySQL(String query) 
 	throws JargonException {
 	
