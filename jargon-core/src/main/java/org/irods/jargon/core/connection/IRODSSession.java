@@ -311,6 +311,7 @@ public class IRODSSession {
 		LOG.debug("put a reference to a new connection for account: {}",
 				irodsAccount.toString());
 		sessionMap.set(irodsProtocols);
+		LOG.debug("returned new connection:{}", irodsProtocol);
 		return irodsProtocol;
 	}
 

@@ -24,8 +24,10 @@ import org.slf4j.LoggerFactory;
  * rather, they use the {@link IRODSCommands IRODSProtocol} interface.
  * <p/>
  * The connection is confined to one thread, and as such the various methods do
- * not need to be synchronized. They do remain so for any possible edge cases
- * and as an extra layer of protection.
+ * not need to be synchronized. All operations pass through the
+ * <code>IRODScommands</code> object wrapping this connection, and
+ * <code>IRODSCommands</code> does maintain synchronized access to operations
+ * that read and write to this connection.
  * 
  * @author Mike Conway - DICE (www.irods.org)
  * 
@@ -81,11 +83,12 @@ final class IRODSConnection implements IRODSManagedConnection {
 
 	/**
 	 * Create an instance of a connection (underlying socket and streams) to
-	 * iRODS
+	 * iRODS during a reconnect operation.
 	 * 
 	 * @param irodsAccount
 	 * @param irodsConnectionManager
 	 * @param pipelineConfiguration
+	 * @param irodsSession
 	 * @return
 	 * @throws JargonException
 	 */
@@ -93,11 +96,20 @@ final class IRODSConnection implements IRODSManagedConnection {
 			final IRODSAccount irodsAccount,
 			final IRODSProtocolManager irodsConnectionManager,
 			final PipelineConfiguration pipelineConfiguration,
-			final StartupResponseData startupResponseData)
+			final StartupResponseData startupResponseData,
+			final IRODSSession irodsSession)
 			throws JargonException {
+
+		if (irodsSession == null) {
+			throw new IllegalArgumentException(
+					"must have reference to the IRODSSession, it is null");
+		}
+
 		IRODSConnection irodsSimpleConnection = new IRODSConnection(
 				irodsAccount, irodsConnectionManager, pipelineConfiguration,
 				startupResponseData);
+
+		irodsSimpleConnection.setIrodsSession(irodsSession);
 
 		irodsSimpleConnection.initializeConnection(irodsAccount,
 				startupResponseData);
@@ -174,45 +186,6 @@ final class IRODSConnection implements IRODSManagedConnection {
 
 	}
 
-	/**
-	 * Reconnect to an iRODS agent after an initial connection has been made,
-	 * where the original startup sequence had asked the agent for
-	 * 
-	 * @param irodsAccount
-	 * @param startupResponseData
-	 * @throws JargonException
-	 */
-	/*
-	 * protected void reconnect(final IRODSAccount irodsAccount, final
-	 * StartupResponseData startupResponseData) throws JargonException {
-	 * log.info("reconnect()"); if (irodsAccount == null) { throw new
-	 * IllegalArgumentException("null irodsAccount"); }
-	 * 
-	 * if (startupResponseData == null) { throw new
-	 * IllegalArgumentException("null startupResponseData"); }
-	 * 
-	 * // sanity checks if (startupResponseData.getReconnAddr().isEmpty()) {
-	 * throw new JargonRuntimeException(
-	 * "attempting to reconnect without valid reconnect data, agent not set up for this option"
-	 * ); }
-	 * 
-	 * if (connected) { log.error("doing reconnect when  connected"); throw new
-	 * JargonRuntimeException(
-	 * "attempt to reconnect when connected already, disconnect first"); }
-	 * 
-	 * log.info("connecting socket to agent using reconnect values"); try {
-	 * connection = new Socket(startupResponseData.getReconnAddr(),
-	 * startupResponseData.getReconnPort()); } catch (UnknownHostException e) {
-	 * log.error("exception opening socket to:{}", startupResponseData, e);
-	 * throw new JargonException(e); } catch (IOException ioe) {
-	 * log.error("io exception opening socket to:{}", startupResponseData, ioe);
-	 * throw new JargonException(ioe); }
-	 * 
-	 * setUpSocketAndStreamsAfterConnection(irodsAccount);
-	 * log.info("socket reconnected successfully");
-	 * 
-	 * }
-	 */
 
 	/**
 	 * Do an initial (first) connection to iRODS based on account and

@@ -103,6 +103,7 @@ public class IRODSCommands implements IRODSManagedConnection {
 	private Future<Void> reconnectionFuture = null;
 
 	private String cachedChallengeValue = "";
+	private boolean inRestartMode = false;
 
 	/**
 	 * note that this field is not final. This is due to the fact that it may be
@@ -1095,8 +1096,8 @@ public class IRODSCommands implements IRODSManagedConnection {
 		return org.irods.jargon.core.utils.Host.castToInt(headerInt);
 	}
 
-	private synchronized Tag readMessageBody(final int length,
-			final boolean decode) throws JargonException {
+	private Tag readMessageBody(final int length, final boolean decode)
+			throws JargonException {
 		byte[] body = new byte[length];
 		try {
 			irodsConnection.read(body, 0, length);
@@ -1125,11 +1126,11 @@ public class IRODSCommands implements IRODSManagedConnection {
 	}
 
 	@Override
-	public String getConnectionUri() throws JargonException {
+	public synchronized String getConnectionUri() throws JargonException {
 		return irodsConnection.getConnectionUri();
 	}
 
-	public IRODSAccount getIRODSAccount() {
+	public synchronized IRODSAccount getIRODSAccount() {
 		return irodsAccount;
 	}
 
@@ -1371,6 +1372,7 @@ public class IRODSCommands implements IRODSManagedConnection {
 				log.error("io exception", e);
 				throw new JargonException(e);
 			} finally {
+				log.debug("finally, shutdown is being called on the given connection");
 				irodsConnection.shutdown();
 			}
 
@@ -1384,7 +1386,7 @@ public class IRODSCommands implements IRODSManagedConnection {
 	 * Try and gracefully shut down the reconnect service
 	 */
 	private void checkAndShutdownReconnectService() {
-		if (reconnectService != null) {
+		if (reconnectionFuture != null) {
 			log.info("shutting down executor for reconnect...");
 
 			// just a sanity check, having a reconnect service but no reference
@@ -1397,24 +1399,22 @@ public class IRODSCommands implements IRODSManagedConnection {
 						"invalid state of reconnect service, future task is missing but I have the reonnectService");
 			}
 
-			reconnectService.shutdown();
+			// reconnectService.shutdownNow();
+
 			try {
-				// Wait a while for existing tasks to terminate
+
 				if (!reconnectService.awaitTermination(5, TimeUnit.SECONDS)) {
-					reconnectService.shutdownNow(); // Cancel currently
-													// executing tasks
-					// Wait a while for tasks to respond to being cancelled
+					reconnectService.shutdownNow();
 					if (!reconnectService.awaitTermination(1, TimeUnit.SECONDS)) {
 						log.error("Pool did not terminate");
 					}
 				}
 			} catch (InterruptedException ie) {
-				// (Re-)Cancel if current thread also interrupted
 				reconnectService.shutdownNow();
-				// Preserve interrupt status
 				Thread.currentThread().interrupt();
 			}
 		}
+
 	}
 
 	/*
@@ -1448,12 +1448,12 @@ public class IRODSCommands implements IRODSManagedConnection {
 	 * org.irods.jargon.core.connection.IRODSConnection#getIRODSServerProperties
 	 * ()
 	 */
-	public IRODSServerProperties getIRODSServerProperties() {
+	public synchronized IRODSServerProperties getIRODSServerProperties() {
 		return irodsServerProperties;
 	}
 
 	@Override
-	public IRODSAccount getIrodsAccount() {
+	public synchronized IRODSAccount getIrodsAccount() {
 		return irodsAccount;
 	}
 
@@ -1463,7 +1463,7 @@ public class IRODSCommands implements IRODSManagedConnection {
 	 * 
 	 * @return <code>String</code> with zone name.
 	 */
-	public String getZone() {
+	public synchronized String getZone() {
 		return irodsServerProperties.getRodsZone();
 	}
 
@@ -1491,7 +1491,7 @@ public class IRODSCommands implements IRODSManagedConnection {
 	 * @return <code>String</code> with the cached challange string sent by
 	 *         iRODS at connection startup
 	 */
-	public String getCachedChallengeValue() {
+	public synchronized String getCachedChallengeValue() {
 		return cachedChallengeValue;
 	}
 
@@ -1519,7 +1519,7 @@ public class IRODSCommands implements IRODSManagedConnection {
 	 * org.irods.jargon.core.connection.IRODSManagedConnection#getIrodsSession()
 	 */
 	@Override
-	public IRODSSession getIrodsSession() {
+	public synchronized IRODSSession getIrodsSession() {
 		return irodsConnection.getIrodsSession();
 	}
 
@@ -1531,7 +1531,7 @@ public class IRODSCommands implements IRODSManagedConnection {
 	 * (org.irods.jargon.core.connection.IRODSSession)
 	 */
 	@Override
-	public void setIrodsSession(final IRODSSession irodsSession) {
+	public synchronized void setIrodsSession(final IRODSSession irodsSession) {
 		if (irodsSession == null) {
 			throw new IllegalArgumentException("null irodsSession");
 		}
@@ -1608,58 +1608,134 @@ public class IRODSCommands implements IRODSManagedConnection {
 	 * Note that the methods in <code>IRODSCommands</code> are synchronized,
 	 * such that this reconnect call will occur atomically, and only when other
 	 * operations are not underway.
+	 * <p/>
+	 * Note that reconnects are managed by the {@link ReconnectionManager}, and
+	 * the <code>boolean</code> value returned here will be <code>true</code> if
+	 * the reconnect was made. A <code>false</code> return indicates that the
+	 * reconnect did not happen for 'normal' reasons that would indicate the
+	 * need to sleep and retry.
+	 * <p/>
+	 * See lib/core/src/sockComm.c ~ line 390 for the iRODS client analog to
+	 * this procedure
+	 * 
+	 * @return <code>boolean</code> that will be <code>true</code> if reconnect
+	 *         works, or <code>false</code> if the reconnect management thread
+	 *         should sleep and retry.
 	 * 
 	 * @throws JargonException
 	 */
-	protected synchronized void reconnect() throws JargonException {
+	protected synchronized boolean reconnect() throws JargonException {
 		log.info("reconnect() was called");
+
 		if (this.getStartupResponseData().getReconnAddr().isEmpty()) {
 			log.error("reconnect was called, but was not specified in the startup pack.  This is some sort of logic error within Jargon!");
 			throw new JargonRuntimeException(
 					"cannot call reconnect if the connection was not started with reconnect option");
 		}
 
-		IRODSConnection reconnectedIRODSConnection = IRODSConnection
-				.instanceWithReconnectInfo(irodsAccount,
-						this.getIrodsProtocolManager(), pipelineConfiguration,
-						startupResponseData);
-		
+		IRODSConnection reconnectedIRODSConnection;
+		try {
+			reconnectedIRODSConnection = IRODSConnection
+					.instanceWithReconnectInfo(irodsAccount,
+							this.getIrodsProtocolManager(),
+							pipelineConfiguration, startupResponseData,
+							this.getIrodsSession());
+		} catch (Exception e) {
+			log.debug(
+					"exception on open of reconnect socket, will sleep and try again:{}",
+					e.getMessage());
+			return false; // false indicates no success and should sleep and
+							// retry
+		}
+
 		// now reconnect with the provided reconnect information gathered at the
 		// startup pack send
-		ReconnMsg reconnMsg = new ReconnMsg(irodsAccount,
-				startupResponseData);
+		ReconnMsg reconnMsg = new ReconnMsg(irodsAccount, startupResponseData);
 		String reconnData = reconnMsg.getParsedTags();
 		try {
-			reconnectedIRODSConnection.send(createHeader(
-					RequestTypes.RODS_RECONNECT.getRequestType(),
-					reconnData.length(), 0, 0, 0));
-			reconnectedIRODSConnection.send(reconnData);
-			reconnectedIRODSConnection.flush();
-		} catch (ClosedChannelException e) {
-			log.error("closed channel", e);
-			throw new JargonException(e);
-		} catch (InterruptedIOException e) {
-			log.error("interrupted io", e);
-			throw new JargonException(e);
-		} catch (IOException e) {
-			log.error("io exception", e);
-			throw new JargonException(e);
+			sendReconnMessage(reconnectedIRODSConnection, reconnData);
+		} catch (Exception e) {
+			log.debug(
+					"exception on open of reconnect socket, will sleep and try again:{}",
+					e.getMessage());
+			reconnectedIRODSConnection.disconnectWithIOException();
+			return false;
 		}
-		
+
 		IRODSCommands restartedCommands = new IRODSCommands(irodsAccount,
-			 irodsProtocolManager,
-			pipelineConfiguration,
+				irodsProtocolManager, pipelineConfiguration,
 				reconnectedIRODSConnection);
-		
-		Tag responseMessage = restartedCommands.readMessage();
-		log.debug("response:{}", responseMessage);
+
+		try {
+
+			log.info("reading response from startup message..");
+
+			Tag responseMessage = restartedCommands.readMessage();
+
+			if (responseMessage == null) {
+				log.debug("null response from restart procedure, will sleep and try again");
+				reconnectedIRODSConnection.disconnectWithIOException();
+				return false;
+			}
+
+			log.debug("response:{}", responseMessage);
+
+			int agentStatus = responseMessage.getTag("procState").getIntValue();
+			log.debug("proc state for agent:{}", agentStatus);
+
+			if (agentStatus == ReconnectionManager.ProcessingState.RECEIVING_STATE
+					.ordinal()) {
+				/*
+				 * if you get a receiving state from the agent, resend the
+				 * message again, per lib/core/src/procApiRequest.c ~ line 155
+				 */
+				log.debug("agent in receiving state, resend the reconn message");
+				sendReconnMessage(reconnectedIRODSConnection, reconnData);
+			} else if (agentStatus != ReconnectionManager.ProcessingState.PROCESSING_STATE
+					.ordinal()) {
+				log.debug("agent is not in receiving state, so sleep and try again");
+				reconnectedIRODSConnection.disconnectWithIOException();
+				return false;
+			}
+
+		} catch (Exception e) {
+			log.debug(
+					"exception on read of reconnect message, will sleep and try again:{}",
+					e.getMessage());
+			reconnectedIRODSConnection.disconnectWithIOException();
+			return false;
+		}
 
 		log.info("disconnect current connection and switch with reconnected socket");
 		irodsConnection.shutdown();
 		irodsConnection = reconnectedIRODSConnection;
 
+		// do a little sleep to let the agent settle in
+		/*
+		 * try { Thread.sleep(2000); } catch (InterruptedException e) { //
+		 * ignore }
+		 */
+
 		log.info("reconnect operation complete... new connection is:{}",
 				irodsConnection);
+		return true;
+	}
+
+	/**
+	 * @param reconnectedIRODSConnection
+	 * @param reconnData
+	 * @throws IOException
+	 * @throws JargonException
+	 */
+	private void sendReconnMessage(
+			final IRODSConnection reconnectedIRODSConnection,
+			final String reconnData) throws IOException, JargonException {
+		log.info("sending reconnect message");
+		reconnectedIRODSConnection.send(createHeader(
+				RequestTypes.RODS_RECONNECT.getRequestType(),
+				reconnData.length(), 0, 0, 0));
+		reconnectedIRODSConnection.send(reconnData);
+		reconnectedIRODSConnection.flush();
 	}
 
 	/*
@@ -1678,6 +1754,7 @@ public class IRODSCommands implements IRODSManagedConnection {
 			log.error("**************************************************************************************");
 			log.error("********  WARNING: POTENTIAL CONNECTION LEAK  ******************");
 			log.error("********  finalizer has run and found a connection left opened, please check your code to ensure that all connections are closed");
+			log.error("********  IRODSCommands is:{}", this);
 			log.error(
 					"********  connection is:{}, will attempt to disconnect and shut down any restart thread",
 					getConnectionUri());
@@ -1685,6 +1762,41 @@ public class IRODSCommands implements IRODSManagedConnection {
 			this.obliterateConnectionAndDiscardErrors();
 		}
 		super.finalize();
+	}
+
+	/**
+	 * @return the pipelineConfiguration
+	 */
+	protected synchronized PipelineConfiguration getPipelineConfiguration() {
+		return pipelineConfiguration;
+	}
+
+	/**
+	 * Allows restart attempts to be made.
+	 * <p/>
+	 * Jargon can emulate the -T connection restart mode of certain iCommands.
+	 * Since Jargon holds a persistent connection the semantics may be slightly
+	 * different then the one-connection-per-operation icommands. For this
+	 * reason, <code>IRODSCommands</code> keeps an <code>inRestartMode</code>
+	 * flag. This method allows restarting to be 'turned on' or 'turned off', so
+	 * that the default behavior may be to not do connection restarts. Then, the
+	 * restart behavior can be turned on by bracketing the operation with the
+	 * restart mode.
+	 * 
+	 * @return the inRestartMode that is <code>true</code> if connection
+	 *         restarting is done
+	 */
+	public synchronized boolean isInRestartMode() {
+		return inRestartMode;
+	}
+
+	/**
+	 * @param inRestartMode
+	 *            the inRestartMode to set <code>true</code> if connection
+	 *            restarting is done
+	 */
+	public synchronized void setInRestartMode(final boolean inRestartMode) {
+		this.inRestartMode = inRestartMode;
 	}
 
 }

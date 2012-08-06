@@ -21,13 +21,12 @@ public class ReconnectionManager implements Callable<Void> {
 	private final IRODSCommands irodsCommands;
 	private Logger log = LoggerFactory.getLogger(ReconnectionManager.class);
 	private long reconnectMillis = 0;
-	private static final long RECONNECT_PERIOD_MILLIS = 600000;
-	private static final long SLEEP_TIME = 10000;
+	private static final long SLEEP_TIME = 1000;
 
-	public enum ConnectionStates {
-		PROCESSING_STATE, /* the process is not sending nor receiving */
-		RECEIVING_STATE, SENDING_STATE, CONN_WAIT_STATE
+	public enum ProcessingState {
+		PROCESSING_STATE, RECEIVING_STATE, SENDING_STATE, CONN_WAIT_STATE
 	}
+
 	/**
 	 * Creates an instance of a manager thread (a runnable) that will start up
 	 * if reconnect behavior is indicated for an iRODS connection. This is done
@@ -55,7 +54,11 @@ public class ReconnectionManager implements Callable<Void> {
 		}
 
 		this.irodsCommands = irodsCommands;
-		reconnectMillis = System.currentTimeMillis() + RECONNECT_PERIOD_MILLIS;
+		reconnectMillis = System.currentTimeMillis()
+				+ irodsCommands.getPipelineConfiguration()
+						.getReconnectTimeInMillis();
+		log.info("current time:{}", System.currentTimeMillis());
+		log.info("reconnect millis:{}", reconnectMillis);
 	}
 
 	/**
@@ -67,8 +70,24 @@ public class ReconnectionManager implements Callable<Void> {
 	 * while reconnect is happening
 	 */
 	private void reconnect() throws JargonException {
-		log.info("calling reconnect() on IRODSCommands");
-		irodsCommands.reconnect();
+		log.info("evaluating whether to call reconnect() on IRODSCommands: {}",
+				irodsCommands);
+
+		log.info("restart mode:{}", irodsCommands.isInRestartMode());
+		try {
+			if (irodsCommands.isInRestartMode() && irodsCommands.isConnected()) {
+				log.info("in restart mode...reconnect");
+				irodsCommands.reconnect();
+			} else {
+				log.info("not in reconnect mode...ignore");
+			}
+		} finally {
+			reconnectMillis = System.currentTimeMillis()
+					+ irodsCommands.getPipelineConfiguration()
+							.getReconnectTimeInMillis();
+			log.info("...reset reconnect time to:{}", reconnectMillis);
+		}
+
 	}
 
 	/**
@@ -81,21 +100,33 @@ public class ReconnectionManager implements Callable<Void> {
 	@Override
 	public Void call() throws JargonException {
 		log.info("reconn namanger run() ");
+
+		/*
+		 * Note that the check here on the while typically will not be
+		 * encountered, instead, the catch of the InterruptedException will
+		 * break out of the loop. Nevertheless it does not hurt anything and
+		 * looks better then while(true).
+		 */
 		while (!Thread.currentThread().isInterrupted()) {
 			long currentMillis = System.currentTimeMillis();
+			// log.debug("current millis now:{}", currentMillis);
+			// log.debug("reconnect time:{}", reconnectMillis);
 			if (currentMillis < reconnectMillis) {
 				try {
+					// log.debug("check and sleep reconn manager");
 					Thread.sleep(SLEEP_TIME);
 				} catch (InterruptedException e) {
-					// ignore
+					log.info("interrupted...will shut down");
+					break;
 				}
 			} else {
 				// time to reconnect
+				log.info("calling reconnect internally on irods commands: {}",
+						this.getIrodsCommands());
 				reconnect();
-				// reconnect once, then we're outta here
-				return null;
 			}
 		}
+
 		return null;
 	}
 
@@ -110,20 +141,8 @@ public class ReconnectionManager implements Callable<Void> {
 	 * @param reconnectMillis
 	 *            the reconnectMillis to set
 	 */
-	public synchronized void setReconnectMillis(long reconnectMillis) {
+	public synchronized void setReconnectMillis(final long reconnectMillis) {
 		this.reconnectMillis = reconnectMillis;
 	}
 
 }
-/*
- * //Build a task and an executor MyTask task = new MyTask(2, 0);
- * ExecutorService threadExecutor = Executors.newSingleThreadExecutor();
- * 
- * try { //Compute the task in a separate thread int result = (int)
- * threadExecutor.submit(task).get(); System.out.println("The result is " +
- * result); } catch (ExecutionException e) { //Handle the exception thrown by
- * the child thread if (e.getMessage().contains("cannot devide by zero"))
- * System.out.println("error in child thread caused by zero division"); } catch
- * (InterruptedException e) { //This exception is thrown if the child thread is
- * interrupted. e.printStackTrace(); }
- */
