@@ -1,14 +1,12 @@
 
 *'''Project''': Jargon-core API
-*'''Date''': 07/26/2012
-*'''Release Version''': 3.1.3-beta2
-*'''git tag''': 3.1.3-beta2
+*'''Date''': xx/xx/xxxx
+*'''Release Version''': 960-user-profile
+*'''git tag''': xxxxxx
 
 ==News==
 
-NOTE: This BETA represents the first set of updates for mounted collections and soft link support.  Currently, this includes a beta version of 
-soft link support and accompanying unit tests.  Mounted collection and MSO support will be included with incremental commits to 3.1.3-SNAPSHOT.  This
-beta release marks the first integration testing period with the iDrop suite of tools.
+Work in progress on user profile management: https://code.renci.org/gf/project/irodsidrop/tracker/?action=TrackerItemEdit&tracker_item_id=922&start=50
 
 Jargon-core implements the iRODS protocol, and allows development of iRODS-enabled Java applications.  This API is especially useful for developing
 mid-tier applications and services, as well as desktop-clients (such as iDROP).  These libraries also provide a foundation for a new set of interfaces that will come with iRODS.
