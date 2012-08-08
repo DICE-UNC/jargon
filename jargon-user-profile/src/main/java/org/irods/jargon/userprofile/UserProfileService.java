@@ -31,4 +31,30 @@ public interface UserProfileService {
 			throws UserProfileValidationException, DuplicateDataException,
 			JargonException;
 
+	/**
+	 * Get the configuration for the user profile service
+	 * 
+	 * @return {@link UserProfileServiceConfiguration}
+	 */
+	UserProfileServiceConfiguration getUserProfileServiceConfiguration();
+
+	/**
+	 * Set the configuration for the user profile service
+	 * 
+	 * @param userProfileServiceConfiguration
+	 *            {@link UserProfileServiceConfiguration}
+	 */
+	void setUserProfileServiceConfiguration(
+			UserProfileServiceConfiguration userProfileServiceConfiguration);
+
+	/**
+	 * Remove the public and protected user profile information
+	 * 
+	 * @param irodsUserName
+	 *            <code>String</code> with the name of the iRODS user in the
+	 *            given zone for which a profile will be removed
+	 * @throws JargonException
+	 */
+	void removeProfileInformation(String irodsUserName) throws JargonException;
+
 }
