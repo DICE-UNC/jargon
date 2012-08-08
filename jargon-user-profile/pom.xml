@@ -9,13 +9,13 @@
   </parent>
   <groupId>org.irods.jargon</groupId>
   <artifactId>jargon-user-profile</artifactId>
-  <name>jargon-user-profile</name>
+  <name>User Profile Service</name>
   <description>Utilities for working with iRODS data.  These are higher level utilities that complement the jargon-core libraries for working with trees, data objects, collections, and metadata in iRODS	</description>
 	<dependencies>
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<scope>compile</scope>
+			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.irods.jargon</groupId>

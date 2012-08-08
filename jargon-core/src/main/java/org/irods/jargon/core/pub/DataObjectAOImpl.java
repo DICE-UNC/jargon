@@ -197,8 +197,6 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		// make sure this special coll type has support
 		MiscIRODSUtils.evaluateSpecCollSupport(objStat);
 
-		// get the canonical path name as a collection parent and data name
-
 		// get absolute path to use for querying iCAT (could be a soft link)
 		String absPath = MiscIRODSUtils
 				.determineAbsolutePathBasedOnCollTypeInObjectStat(objStat);

@@ -346,6 +346,37 @@ public class MiscIRODSUtils {
 	}
 
 	/**
+	 * Compute a home directory path in /zone/home/username format given an
+	 * <code>IRODSAccount</code> that describes the zone, and a user name for
+	 * the target user.
+	 * <p/>
+	 * This variant is meant to allow the computation of a home directory for an
+	 * arbitrary user based on the zone I'm logged into.
+	 * 
+	 * @param irodsAccount
+	 *            {@link IRODSAccount}
+	 * @return <code>String</code> with a computed home directory path
+	 */
+	public static String computeHomeDirectoryForGivenUserInSameZoneAsIRODSAccount(
+			final IRODSAccount irodsAccount, final String irodsUserName) {
+
+		if (irodsAccount == null) {
+			throw new IllegalArgumentException("null irodsAccount");
+		}
+
+		if (irodsUserName == null || irodsUserName.isEmpty()) {
+			throw new IllegalArgumentException("null or empty irodsUserName");
+		}
+
+		StringBuilder sb = new StringBuilder();
+		sb.append("/");
+		sb.append(irodsAccount.getZone());
+		sb.append("/home/");
+		sb.append(irodsUserName);
+		return sb.toString();
+	}
+
+	/**
 	 * Helper method for the convention of having a '/zone/home/public'
 	 * directory, especially for use by 'anonymous' accounts. Compute a path to
 	 * that directory
