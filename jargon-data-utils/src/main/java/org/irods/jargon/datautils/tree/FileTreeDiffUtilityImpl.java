@@ -33,8 +33,8 @@ import org.slf4j.LoggerFactory;
  * @author Mike Conway - DICE (www.irods.org)
  * 
  */
-public class FileTreeDiffUtilityImpl extends AbstractDataUtilsServiceImpl implements
-		FileTreeDiffUtility {
+public class FileTreeDiffUtilityImpl extends AbstractDataUtilsServiceImpl
+		implements FileTreeDiffUtility {
 
 	private static Logger log = LoggerFactory
 			.getLogger(FileTreeDiffUtilityImpl.class);

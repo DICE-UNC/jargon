@@ -48,6 +48,7 @@ Note that the following bug and feature requests are logged in GForge with relat
 * [#890] 806000 error UserGroupAO.find() when id is given as a string
 * [#874] rule error processing gallery view LL - making thumbnails
 * [#918] Unexpected results with UserGroupAO methods
+* [#928] remove jai dependency
 
 ==Features==
 

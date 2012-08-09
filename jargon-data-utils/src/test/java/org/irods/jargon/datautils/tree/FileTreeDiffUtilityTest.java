@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Properties;
 
 import junit.framework.Assert;
-import junit.framework.TestCase;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.packinstr.TransferOptions.ForceOption;
@@ -248,12 +247,12 @@ public class FileTreeDiffUtilityTest {
 		List<FileTreeDiffEntry> diffEntriesFound = new ArrayList<FileTreeDiffEntry>();
 		int ctr = descendModelAndFindTheDiff(DiffType.RIGHT_HAND_PLUS,
 				fileTreeNode, diffEntriesFound);
-		TestCase.assertEquals("wrong number of cached diffs", 1,
+		Assert.assertEquals("wrong number of cached diffs", 1,
 				diffEntriesFound.size());
-		TestCase.assertEquals("should have just 1 diff", 1, ctr);
-		TestCase.assertEquals("wrong diff type", DiffType.RIGHT_HAND_PLUS,
+		Assert.assertEquals("should have just 1 diff", 1, ctr);
+		Assert.assertEquals("wrong diff type", DiffType.RIGHT_HAND_PLUS,
 				diffEntriesFound.get(0).getDiffType());
-		TestCase.assertEquals("unexpectedFileName", newChildFileName,
+		Assert.assertEquals("unexpectedFileName", newChildFileName,
 				diffEntriesFound.get(0)
 						.getCollectionAndDataObjectListingEntry()
 						.getPathOrName());
@@ -337,12 +336,12 @@ public class FileTreeDiffUtilityTest {
 
 		int ctr = descendModelAndFindTheDiff(DiffType.RIGHT_HAND_PLUS,
 				fileTreeNode, diffEntriesFound);
-		TestCase.assertEquals("wrong number of cached diffs", 1,
+		Assert.assertEquals("wrong number of cached diffs", 1,
 				diffEntriesFound.size());
-		TestCase.assertEquals("should have just 1 diff", 1, ctr);
-		TestCase.assertEquals("wrong diff type", DiffType.RIGHT_HAND_PLUS,
+		Assert.assertEquals("should have just 1 diff", 1, ctr);
+		Assert.assertEquals("wrong diff type", DiffType.RIGHT_HAND_PLUS,
 				diffEntriesFound.get(0).getDiffType());
-		TestCase.assertEquals("unexpectedFileName", newChildFileName,
+		Assert.assertEquals("unexpectedFileName", newChildFileName,
 				diffEntriesFound.get(0)
 						.getCollectionAndDataObjectListingEntry()
 						.getPathOrName());
@@ -426,18 +425,20 @@ public class FileTreeDiffUtilityTest {
 
 		int ctr = descendModelAndFindTheDiff(DiffType.RIGHT_HAND_PLUS,
 				fileTreeNode, diffEntriesFound);
-		TestCase.assertEquals("wrong number of cached diffs", 1,
+		Assert.assertEquals("wrong number of cached diffs", 1,
 				diffEntriesFound.size());
-		TestCase.assertEquals("should have just 1 diff", 1, ctr);
-		TestCase.assertEquals("wrong diff type", DiffType.RIGHT_HAND_PLUS,
+		Assert.assertEquals("should have just 1 diff", 1, ctr);
+		Assert.assertEquals("wrong diff type", DiffType.RIGHT_HAND_PLUS,
 				diffEntriesFound.get(0).getDiffType());
-		TestCase.assertEquals("diff should reflect a directory",
+		Assert.assertEquals("diff should reflect a directory",
 				CollectionAndDataObjectListingEntry.ObjectType.COLLECTION,
 				diffEntriesFound.get(0)
 						.getCollectionAndDataObjectListingEntry()
 						.getObjectType());
 
-		TestCase.assertEquals("unexpectedFileName", newChildDirName,
+		Assert.assertEquals(
+				"unexpectedFileName",
+				newChildDirName,
 				MiscIRODSUtils
 						.getLastPathComponentForGiveAbsolutePath(diffEntriesFound
 								.get(0)
@@ -521,9 +522,9 @@ public class FileTreeDiffUtilityTest {
 
 		int ctr = descendModelAndFindTheDiff(DiffType.RIGHT_HAND_PLUS,
 				fileTreeNode, diffEntriesFound);
-		TestCase.assertEquals("wrong number of cached diffs", 0,
+		Assert.assertEquals("wrong number of cached diffs", 0,
 				diffEntriesFound.size());
-		TestCase.assertEquals(
+		Assert.assertEquals(
 				"should have no diff, as irods dir added before last synch", 0,
 				ctr);
 
@@ -604,9 +605,9 @@ public class FileTreeDiffUtilityTest {
 
 		int ctr = descendModelAndFindTheDiff(DiffType.RIGHT_HAND_PLUS,
 				fileTreeNode, diffEntriesFound);
-		TestCase.assertEquals("wrong number of cached diffs", 0,
+		Assert.assertEquals("wrong number of cached diffs", 0,
 				diffEntriesFound.size());
-		TestCase.assertEquals(
+		Assert.assertEquals(
 				"should have no diff, since the mod was before the last synch",
 				0, ctr);
 	}
@@ -739,10 +740,10 @@ public class FileTreeDiffUtilityTest {
 
 		descendModelAndFindTheDiff(DiffType.RIGHT_HAND_PLUS,
 				(FileTreeNode) diffModel.getRoot(), diffEntriesFound);
-		TestCase.assertEquals("wrong number of cached diffs", 1,
+		Assert.assertEquals("wrong number of cached diffs", 1,
 				diffEntriesFound.size());
 		FileTreeDiffEntry diffEntry = diffEntriesFound.get(0);
-		TestCase.assertEquals("did not find the right hand plus", lastFileName,
+		Assert.assertEquals("did not find the right hand plus", lastFileName,
 				diffEntry.getCollectionAndDataObjectListingEntry()
 						.getPathOrName());
 
@@ -807,7 +808,7 @@ public class FileTreeDiffUtilityTest {
 
 		descendModelAndFindTheDiff(DiffType.RIGHT_HAND_PLUS,
 				(FileTreeNode) diffModel.getRoot(), diffEntriesFound);
-		TestCase.assertEquals("wrong number of cached diffs", 1,
+		Assert.assertEquals("wrong number of cached diffs", 1,
 				diffEntriesFound.size());
 
 	}
@@ -1002,13 +1003,12 @@ public class FileTreeDiffUtilityTest {
 		return diffsFound;
 
 	}
-	
-	private int descendModelAndFindAnyDiff(
-			final FileTreeNode node) {
+
+	private int descendModelAndFindAnyDiff(final FileTreeNode node) {
 
 		int diffsFound = 0;
 		FileTreeDiffEntry diffEntry = (FileTreeDiffEntry) node.getUserObject();
-		
+
 		if (diffEntry.getDiffType() != DiffType.DIRECTORY_NO_DIFF) {
 			diffsFound++;
 		}
@@ -1017,14 +1017,13 @@ public class FileTreeDiffUtilityTest {
 		Enumeration children = node.children();
 
 		while (children.hasMoreElements()) {
-			diffsFound += descendModelAndFindAnyDiff(
-					(FileTreeNode) children.nextElement());
+			diffsFound += descendModelAndFindAnyDiff((FileTreeNode) children
+					.nextElement());
 		}
 
 		return diffsFound;
 
 	}
-
 
 	private void compareFileTreeToNodesForDirMatchesAndExpectADiff(
 			final File[] files, final Enumeration<?> nodes,
@@ -1131,12 +1130,12 @@ public class FileTreeDiffUtilityTest {
 
 		int ctr = descendModelAndFindTheDiff(DiffType.LEFT_HAND_PLUS,
 				fileTreeNode, diffEntriesFound);
-		TestCase.assertEquals("wrong number of cached diffs", 1,
+		Assert.assertEquals("wrong number of cached diffs", 1,
 				diffEntriesFound.size());
-		TestCase.assertEquals("should have just 1 diff", 1, ctr);
-		TestCase.assertEquals("wrong diff type", DiffType.LEFT_HAND_PLUS,
+		Assert.assertEquals("should have just 1 diff", 1, ctr);
+		Assert.assertEquals("wrong diff type", DiffType.LEFT_HAND_PLUS,
 				diffEntriesFound.get(0).getDiffType());
-		TestCase.assertEquals("unexpectedFileName", newChildFileName,
+		Assert.assertEquals("unexpectedFileName", newChildFileName,
 				diffEntriesFound.get(0)
 						.getCollectionAndDataObjectListingEntry()
 						.getPathOrName());
@@ -1192,12 +1191,12 @@ public class FileTreeDiffUtilityTest {
 
 		int ctr = descendModelAndFindTheDiff(DiffType.LEFT_HAND_PLUS,
 				fileTreeNode, diffEntriesFound);
-		TestCase.assertEquals("wrong number of cached diffs", 1,
+		Assert.assertEquals("wrong number of cached diffs", 1,
 				diffEntriesFound.size());
-		TestCase.assertEquals("should have just 1 diff", 1, ctr);
-		TestCase.assertEquals("wrong diff type", DiffType.LEFT_HAND_PLUS,
+		Assert.assertEquals("should have just 1 diff", 1, ctr);
+		Assert.assertEquals("wrong diff type", DiffType.LEFT_HAND_PLUS,
 				diffEntriesFound.get(0).getDiffType());
-		TestCase.assertEquals("unexpectedFileName", newChildFileName,
+		Assert.assertEquals("unexpectedFileName", newChildFileName,
 				diffEntriesFound.get(0)
 						.getCollectionAndDataObjectListingEntry()
 						.getPathOrName());
@@ -1253,12 +1252,14 @@ public class FileTreeDiffUtilityTest {
 
 		int ctr = descendModelAndFindTheDiff(DiffType.LEFT_HAND_PLUS,
 				fileTreeNode, diffEntriesFound);
-		TestCase.assertEquals("wrong number of cached diffs", 1,
+		Assert.assertEquals("wrong number of cached diffs", 1,
 				diffEntriesFound.size());
-		TestCase.assertEquals("should have just 1 diff", 1, ctr);
-		TestCase.assertEquals("wrong diff type", DiffType.LEFT_HAND_PLUS,
+		Assert.assertEquals("should have just 1 diff", 1, ctr);
+		Assert.assertEquals("wrong diff type", DiffType.LEFT_HAND_PLUS,
 				diffEntriesFound.get(0).getDiffType());
-		TestCase.assertEquals("unexpectedFileName", newChildFileName,
+		Assert.assertEquals(
+				"unexpectedFileName",
+				newChildFileName,
 				MiscIRODSUtils
 						.getLastPathComponentForGiveAbsolutePath(diffEntriesFound
 								.get(0)
@@ -1339,13 +1340,15 @@ public class FileTreeDiffUtilityTest {
 
 		int ctr = descendModelAndFindTheDiff(DiffType.LEFT_HAND_PLUS,
 				fileTreeNode, diffEntriesFound);
-		TestCase.assertEquals("wrong number of cached diffs", 1,
+		Assert.assertEquals("wrong number of cached diffs", 1,
 				diffEntriesFound.size());
-		TestCase.assertEquals("should have just 1 diff", 1, ctr);
-		TestCase.assertEquals("wrong diff type", DiffType.LEFT_HAND_PLUS,
+		Assert.assertEquals("should have just 1 diff", 1, ctr);
+		Assert.assertEquals("wrong diff type", DiffType.LEFT_HAND_PLUS,
 				diffEntriesFound.get(0).getDiffType());
 
-		TestCase.assertEquals("unexpectedFileName", newChildFileName,
+		Assert.assertEquals(
+				"unexpectedFileName",
+				newChildFileName,
 				MiscIRODSUtils
 						.getLastPathComponentForGiveAbsolutePath(diffEntriesFound
 								.get(0)
@@ -1424,7 +1427,7 @@ public class FileTreeDiffUtilityTest {
 
 		descendModelAndFindTheDiff(DiffType.LEFT_HAND_PLUS, fileTreeNode,
 				diffEntriesFound);
-		TestCase.assertEquals("should have no cached diffs", 0,
+		Assert.assertEquals("should have no cached diffs", 0,
 				diffEntriesFound.size());
 
 	}
@@ -1500,21 +1503,20 @@ public class FileTreeDiffUtilityTest {
 
 		descendModelAndFindTheDiff(DiffType.LEFT_HAND_PLUS, fileTreeNode,
 				diffEntriesFound);
-		TestCase.assertEquals("should have no cached diffs", 0,
+		Assert.assertEquals("should have no cached diffs", 0,
 				diffEntriesFound.size());
 
 	}
-	
+
 	@Test
-	public void testFileTreeDiffLocalLocalFileLengthChanged()
-			throws Exception {
+	public void testFileTreeDiffLocalLocalFileLengthChanged() throws Exception {
 
 		String rootCollection = "testFileTreeDiffLocalLocalFileLengthChanged";
 		String newChildFileName = "testFileTreeDiffLocalLocalFileLengthChangedChild.txt";
 
 		int origLength = 100;
 		int newLength = 200;
-		
+
 		String localCollectionAbsolutePath = scratchFileUtils
 				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH
 						+ '/' + rootCollection);
@@ -1525,12 +1527,12 @@ public class FileTreeDiffUtilityTest {
 
 		FileGenerator
 				.generateManyFilesAndCollectionsInParentCollectionByAbsolutePath(
-						localCollectionAbsolutePath,
-						rootCollection,
-						2, 3, 2, "testFile", ".txt", 3, 2, 1, 2);
-		
-		FileGenerator.generateFileOfFixedLengthGivenName(localCollectionAbsolutePath, newChildFileName, origLength);
-		
+						localCollectionAbsolutePath, rootCollection, 2, 3, 2,
+						"testFile", ".txt", 3, 2, 1, 2);
+
+		FileGenerator.generateFileOfFixedLengthGivenName(
+				localCollectionAbsolutePath, newChildFileName, origLength);
+
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
 
@@ -1554,13 +1556,12 @@ public class FileTreeDiffUtilityTest {
 		// files now put, overwrite local file
 		FileTreeDiffUtility fileTreeDiffUtility = new FileTreeDiffUtilityImpl(
 				irodsAccount, irodsFileSystem.getIRODSAccessObjectFactory());
-		
-		FileGenerator.generateFileOfFixedLengthGivenName(localCollectionAbsolutePath, newChildFileName, newLength);
 
+		FileGenerator.generateFileOfFixedLengthGivenName(
+				localCollectionAbsolutePath, newChildFileName, newLength);
 
 		FileTreeModel diffModel = fileTreeDiffUtility.generateDiffLocalToIRODS(
-				localFileRoot, targetIrodsAbsolutePath, 0,
-				0);
+				localFileRoot, targetIrodsAbsolutePath, 0, 0);
 		irodsFileSystem.close();
 		Assert.assertNotNull("null diffModel", diffModel);
 		FileTreeNode fileTreeNode = (FileTreeNode) diffModel.getRoot();
@@ -1568,11 +1569,11 @@ public class FileTreeDiffUtilityTest {
 
 		descendModelAndFindTheDiff(DiffType.FILE_OUT_OF_SYNCH, fileTreeNode,
 				diffEntriesFound);
-		TestCase.assertEquals("should have 1 cached diff", 1,
+		Assert.assertEquals("should have 1 cached diff", 1,
 				diffEntriesFound.size());
 
 	}
-	
+
 	@Test
 	public void testFileTreeDiffLocalLocalFileLengthSameLocalChecksumUpdated()
 			throws Exception {
@@ -1582,7 +1583,7 @@ public class FileTreeDiffUtilityTest {
 
 		int origLength = 1000;
 		int newLength = 1000;
-		
+
 		String localCollectionAbsolutePath = scratchFileUtils
 				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH
 						+ '/' + rootCollection);
@@ -1593,12 +1594,12 @@ public class FileTreeDiffUtilityTest {
 
 		FileGenerator
 				.generateManyFilesAndCollectionsInParentCollectionByAbsolutePath(
-						localCollectionAbsolutePath,
-						rootCollection,
-						2, 3, 2, "testFile", ".txt", 3, 2, 1, 2);
-		
-		FileGenerator.generateFileOfFixedLengthGivenName(localCollectionAbsolutePath, newChildFileName, origLength);
-		
+						localCollectionAbsolutePath, rootCollection, 2, 3, 2,
+						"testFile", ".txt", 3, 2, 1, 2);
+
+		FileGenerator.generateFileOfFixedLengthGivenName(
+				localCollectionAbsolutePath, newChildFileName, origLength);
+
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
 
@@ -1622,13 +1623,12 @@ public class FileTreeDiffUtilityTest {
 		// files now put, overwrite local file
 		FileTreeDiffUtility fileTreeDiffUtility = new FileTreeDiffUtilityImpl(
 				irodsAccount, irodsFileSystem.getIRODSAccessObjectFactory());
-		
-		FileGenerator.generateFileOfFixedLengthGivenName(localCollectionAbsolutePath, newChildFileName, newLength);
 
+		FileGenerator.generateFileOfFixedLengthGivenName(
+				localCollectionAbsolutePath, newChildFileName, newLength);
 
 		FileTreeModel diffModel = fileTreeDiffUtility.generateDiffLocalToIRODS(
-				localFileRoot, targetIrodsAbsolutePath, 0,
-				0);
+				localFileRoot, targetIrodsAbsolutePath, 0, 0);
 		irodsFileSystem.close();
 		Assert.assertNotNull("null diffModel", diffModel);
 		FileTreeNode fileTreeNode = (FileTreeNode) diffModel.getRoot();
@@ -1636,7 +1636,7 @@ public class FileTreeDiffUtilityTest {
 
 		descendModelAndFindTheDiff(DiffType.FILE_OUT_OF_SYNCH, fileTreeNode,
 				diffEntriesFound);
-		TestCase.assertEquals("should have 1 cached diff", 1,
+		Assert.assertEquals("should have 1 cached diff", 1,
 				diffEntriesFound.size());
 
 	}
@@ -1733,7 +1733,7 @@ public class FileTreeDiffUtilityTest {
 		Enumeration<?> nodes = fileTreeNode.children();
 		compareFileTreeToNodesForDirMatchesAndNoDiffs(childrenOfLocal, nodes);
 	}
-	
+
 	/*
 	 * [#502] bug in synch
 	 */
@@ -1766,20 +1766,20 @@ public class FileTreeDiffUtilityTest {
 						irodsAccount);
 
 		File localFile = new File(localCollectionAbsolutePath);
-	
+
 		File file2 = new File(localFile, file2Name);
 		file2.createNewFile();
 		File file1 = new File(localFile, file1Name);
 		file1.createNewFile();
 		File file3 = new File(localFile, file3Name);
 		file3.createNewFile();
-		
+
 		File localFileRoot = new File(localCollectionAbsolutePath);
 		String targetIrodsAbsolutePath = irodsCollectionRootAbsolutePath + "/"
 				+ rootCollection;
-		
+
 		dataTransferOperationsAO.putOperation(localFile, destFile, null, null);
-		
+
 		// files now put, set up and call for the diff
 		FileTreeDiffUtility fileTreeDiffUtility = new FileTreeDiffUtilityImpl(
 				irodsAccount, irodsFileSystem.getIRODSAccessObjectFactory());
@@ -1794,7 +1794,8 @@ public class FileTreeDiffUtilityTest {
 				FileTreeDiffEntry.DiffType.DIRECTORY_NO_DIFF,
 				fileTreeDiffEntry.getDiffType());
 
-		TestCase.assertTrue("found diffs, not expected", descendModelAndFindAnyDiff(fileTreeNode) == 0);
+		Assert.assertTrue("found diffs, not expected",
+				descendModelAndFindAnyDiff(fileTreeNode) == 0);
 	}
 
 }

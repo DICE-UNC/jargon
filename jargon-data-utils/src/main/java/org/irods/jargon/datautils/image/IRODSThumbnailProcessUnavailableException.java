@@ -3,10 +3,11 @@ package org.irods.jargon.datautils.image;
 import org.irods.jargon.core.exception.JargonException;
 
 /**
- * Indicates that rule-driven thumbnail services are not available on the given iRODS server.
+ * Indicates that rule-driven thumbnail services are not available on the given
+ * iRODS server.
  * 
  * @author Mike Conway - DICE (www.irods.org)
- *
+ * 
  */
 public class IRODSThumbnailProcessUnavailableException extends JargonException {
 
@@ -18,7 +19,7 @@ public class IRODSThumbnailProcessUnavailableException extends JargonException {
 	/**
 	 * @param message
 	 */
-	public IRODSThumbnailProcessUnavailableException(String message) {
+	public IRODSThumbnailProcessUnavailableException(final String message) {
 		super(message);
 	}
 
@@ -26,15 +27,15 @@ public class IRODSThumbnailProcessUnavailableException extends JargonException {
 	 * @param message
 	 * @param cause
 	 */
-	public IRODSThumbnailProcessUnavailableException(String message,
-			Throwable cause) {
+	public IRODSThumbnailProcessUnavailableException(final String message,
+			final Throwable cause) {
 		super(message, cause);
 	}
 
 	/**
 	 * @param cause
 	 */
-	public IRODSThumbnailProcessUnavailableException(Throwable cause) {
+	public IRODSThumbnailProcessUnavailableException(final Throwable cause) {
 		super(cause);
 	}
 
@@ -43,8 +44,8 @@ public class IRODSThumbnailProcessUnavailableException extends JargonException {
 	 * @param cause
 	 * @param underlyingIRODSExceptionCode
 	 */
-	public IRODSThumbnailProcessUnavailableException(String message,
-			Throwable cause, int underlyingIRODSExceptionCode) {
+	public IRODSThumbnailProcessUnavailableException(final String message,
+			final Throwable cause, final int underlyingIRODSExceptionCode) {
 		super(message, cause, underlyingIRODSExceptionCode);
 	}
 
@@ -52,8 +53,8 @@ public class IRODSThumbnailProcessUnavailableException extends JargonException {
 	 * @param cause
 	 * @param underlyingIRODSExceptionCode
 	 */
-	public IRODSThumbnailProcessUnavailableException(Throwable cause,
-			int underlyingIRODSExceptionCode) {
+	public IRODSThumbnailProcessUnavailableException(final Throwable cause,
+			final int underlyingIRODSExceptionCode) {
 		super(cause, underlyingIRODSExceptionCode);
 	}
 
@@ -61,8 +62,8 @@ public class IRODSThumbnailProcessUnavailableException extends JargonException {
 	 * @param message
 	 * @param underlyingIRODSExceptionCode
 	 */
-	public IRODSThumbnailProcessUnavailableException(String message,
-			int underlyingIRODSExceptionCode) {
+	public IRODSThumbnailProcessUnavailableException(final String message,
+			final int underlyingIRODSExceptionCode) {
 		super(message, underlyingIRODSExceptionCode);
 	}
 

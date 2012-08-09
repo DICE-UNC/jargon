@@ -29,7 +29,7 @@ public class FileShoppingCart implements Serializable {
 	public static FileShoppingCart instance() {
 		return new FileShoppingCart();
 	}
-	
+
 	/**
 	 * Serialize the contents of the shopping cart as a <code>String</code>
 	 * where each file in the cart is one line, followed by a carriage return
@@ -91,16 +91,18 @@ public class FileShoppingCart implements Serializable {
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("FileShoppingCart");
-		for (Entry<String, ShoppingCartEntry> entry : shoppingCartEntries.entrySet()) {
+		for (Entry<String, ShoppingCartEntry> entry : shoppingCartEntries
+				.entrySet()) {
 			sb.append("\n");
 			sb.append(entry.getValue());
 		}
-		
+
 		return sb.toString();
 	}
-	
+
 	/**
 	 * Handy method to check if cart has any entries.
+	 * 
 	 * @return <code>boolean</code> of <code>true</code> if cart has entries
 	 */
 	public boolean hasItems() {
@@ -112,48 +114,57 @@ public class FileShoppingCart implements Serializable {
 	}
 
 	/**
-	 * Place an item in the shopping cart.  The cart will overwrite an existing entry, thus preventing duplicates.	
-	 * @param shoppingCartEntry {@link ShoppingCartEntry} to add to the cart
+	 * Place an item in the shopping cart. The cart will overwrite an existing
+	 * entry, thus preventing duplicates.
+	 * 
+	 * @param shoppingCartEntry
+	 *            {@link ShoppingCartEntry} to add to the cart
 	 */
 	public void addAnItem(final ShoppingCartEntry shoppingCartEntry) {
-		
+
 		if (shoppingCartEntry == null) {
 			throw new IllegalArgumentException("null shoppingCartEntry");
 		}
-		
-		shoppingCartEntries.put(shoppingCartEntry.getFileName(), shoppingCartEntry);
+
+		shoppingCartEntries.put(shoppingCartEntry.getFileName(),
+				shoppingCartEntry);
 	}
-	
+
 	/**
-	 * Remove a file from the shopping cart.  Silently ignore if the item is not there
-	 * @param fileName <code>String</code> with the absolute file path to the item to be removed from the cart
+	 * Remove a file from the shopping cart. Silently ignore if the item is not
+	 * there
+	 * 
+	 * @param fileName
+	 *            <code>String</code> with the absolute file path to the item to
+	 *            be removed from the cart
 	 */
 	public void removeAnItem(final String fileName) {
 		if (fileName == null || fileName.isEmpty()) {
 			throw new IllegalArgumentException("null or empty fileName");
 		}
-		
+
 		shoppingCartEntries.remove(fileName);
-	
+
 	}
-	
+
 	/**
 	 * Get a <code>List<String></code> of the file names in the shopping cart
+	 * 
 	 * @return <code>List<String></code> with the files in the shopping cart
 	 */
 	public List<String> getShoppingCartFileList() {
 		List<String> fileNames = new ArrayList<String>();
-		for(ShoppingCartEntry shoppingCartEntry : shoppingCartEntries.values()) {
+		for (ShoppingCartEntry shoppingCartEntry : shoppingCartEntries.values()) {
 			fileNames.add(shoppingCartEntry.getFileName());
 		}
 		return fileNames;
 	}
-	
+
 	/**
 	 * Clear the contents of the shopping cart
 	 */
 	public void clearCart() {
 		shoppingCartEntries.clear();
 	}
-	
+
 }

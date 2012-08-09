@@ -22,6 +22,7 @@ import org.irods.jargon.core.query.MetaDataAndDomainData;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.mockito.Matchers;
 import org.mockito.Mockito;
 
 public class SynchPropertiesServiceImplTest {
@@ -578,16 +579,19 @@ public class SynchPropertiesServiceImplTest {
 				.thenReturn(environmentalInfoAO);
 		Mockito.when(environmentalInfoAO.getIRODSServerCurrentTime())
 				.thenReturn(expectedIrodsTimestamp);
-		
+
 		SynchPropertiesServiceImpl synchPropertiesService = new SynchPropertiesServiceImpl();
 		synchPropertiesService
 				.setIrodsAccessObjectFactory(irodsAccessObjectFactory);
 		synchPropertiesService.setIrodsAccount(irodsAccount);
-		synchPropertiesService.updateTimestampsToCurrent(testUserName, testDeviceName, testIrodsPath);
-		Mockito.verify(collectionAO).modifyAvuValueBasedOnGivenAttributeAndUnit(Mockito.eq(testIrodsPath), Mockito.any(AvuData.class));
+		synchPropertiesService.updateTimestampsToCurrent(testUserName,
+				testDeviceName, testIrodsPath);
+		Mockito.verify(collectionAO)
+				.modifyAvuValueBasedOnGivenAttributeAndUnit(
+						Matchers.eq(testIrodsPath), Matchers.any(AvuData.class));
 
 	}
-	
+
 	@Test
 	public void testGetUserSynchTargets() throws Exception {
 
@@ -620,8 +624,8 @@ public class SynchPropertiesServiceImplTest {
 						SynchPropertiesService.USER_SYNCH_DIR_TAG);
 		avuQuery.add(avuQueryElement);
 		avuQueryElement = AVUQueryElement.instanceForValueQuery(
-				AVUQueryPart.ATTRIBUTE, AVUQueryOperatorEnum.LIKE,
-				testUserName + ":%");
+				AVUQueryPart.ATTRIBUTE, AVUQueryOperatorEnum.LIKE, testUserName
+						+ ":%");
 		avuQuery.add(avuQueryElement);
 
 		StringBuilder anticipatedAvuValue = new StringBuilder();
@@ -638,18 +642,19 @@ public class SynchPropertiesServiceImplTest {
 				anticipatedAvuValue.toString(),
 				SynchPropertiesService.USER_SYNCH_DIR_TAG);
 		queryResults.add(testResult);
-		Mockito.when(
-				collectionAO.findMetadataValuesByMetadataQuery(
-						avuQuery)).thenReturn(queryResults);
+		Mockito.when(collectionAO.findMetadataValuesByMetadataQuery(avuQuery))
+				.thenReturn(queryResults);
 
 		SynchPropertiesServiceImpl synchPropertiesService = new SynchPropertiesServiceImpl();
 		synchPropertiesService
 				.setIrodsAccessObjectFactory(irodsAccessObjectFactory);
 		synchPropertiesService.setIrodsAccount(irodsAccount);
-		List<UserSynchTarget> userSynchTargets = synchPropertiesService.getUserSynchTargets(testUserName);
-				
+		List<UserSynchTarget> userSynchTargets = synchPropertiesService
+				.getUserSynchTargets(testUserName);
+
 		Assert.assertNotNull("null userSynchTarget returned", userSynchTargets);
-		Assert.assertEquals("should be one synch target", 1, userSynchTargets.size());
+		Assert.assertEquals("should be one synch target", 1,
+				userSynchTargets.size());
 		UserSynchTarget userSynchTarget = userSynchTargets.get(0);
 		Assert.assertEquals("invalid user", testUserName,
 				userSynchTarget.getUserName());

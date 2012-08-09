@@ -22,21 +22,27 @@ public class AbstractDataUtilsServiceImpl implements DataUtilsService {
 
 	/**
 	 * Constructor with required dependencies
-	 * @param irodsAccessObjectFactory {@link IRODSAccessObjectFactory} that can create necessary objects
-	 * @param irodsAccount {@link IRODSAccount} that contains the login information
+	 * 
+	 * @param irodsAccessObjectFactory
+	 *            {@link IRODSAccessObjectFactory} that can create necessary
+	 *            objects
+	 * @param irodsAccount
+	 *            {@link IRODSAccount} that contains the login information
 	 */
-	public AbstractDataUtilsServiceImpl(IRODSAccessObjectFactory irodsAccessObjectFactory, IRODSAccount irodsAccount) {
+	public AbstractDataUtilsServiceImpl(
+			final IRODSAccessObjectFactory irodsAccessObjectFactory,
+			final IRODSAccount irodsAccount) {
 		if (irodsAccessObjectFactory == null) {
 			throw new IllegalArgumentException("null irodsAccessObjectFactory");
 		}
-		
+
 		if (irodsAccount == null) {
 			throw new IllegalArgumentException("null irodsAccount");
 		}
-		
+
 		this.irodsAccessObjectFactory = irodsAccessObjectFactory;
 		this.irodsAccount = irodsAccount;
-		
+
 	}
 
 	/**
@@ -52,21 +58,21 @@ public class AbstractDataUtilsServiceImpl implements DataUtilsService {
 		if (irodsAccessObjectFactory == null) {
 			throw new JargonRuntimeException("missing irodsAccessObjectFactory");
 		}
-	
+
 		if (irodsAccount == null) {
 			throw new JargonRuntimeException("irodsAccount is null");
 		}
-	
+
 	}
 
-	
 	@Override
 	public IRODSAccessObjectFactory getIrodsAccessObjectFactory() {
 		return irodsAccessObjectFactory;
 	}
 
 	@Override
-	public void setIrodsAccessObjectFactory(final IRODSAccessObjectFactory irodsAccessObjectFactory) {
+	public void setIrodsAccessObjectFactory(
+			final IRODSAccessObjectFactory irodsAccessObjectFactory) {
 		this.irodsAccessObjectFactory = irodsAccessObjectFactory;
 	}
 
