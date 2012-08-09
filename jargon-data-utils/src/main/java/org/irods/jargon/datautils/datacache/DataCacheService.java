@@ -5,24 +5,32 @@ import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 
 /**
- * Interface to a service that can encrypt and cache information in temporary iRODS files.  This cache can hold serialized objects or strings, or other types of data as defined in the interface.
- * A {@link CacheServiceConfiguration} controls the behavior of the cache.
+ * Interface to a service that can encrypt and cache information in temporary
+ * iRODS files. This cache can hold serialized objects or strings, or other
+ * types of data as defined in the interface. A
+ * {@link CacheServiceConfiguration} controls the behavior of the cache.
+ * 
  * @author mikeconway
- *
+ * 
  */
 public interface DataCacheService {
 
 	/**
-	 * Given a <code>String</code> value, and a key value, encrypt the value by the key, and store the data in the appropriate iRODS file.  This will be determined
-	 * by the given {@link CacheServiceConfiguration}.
+	 * Given a <code>String</code> value, and a key value, encrypt the value by
+	 * the key, and store the data in the appropriate iRODS file. This will be
+	 * determined by the given {@link CacheServiceConfiguration}.
 	 * 
-	 * @param stringToCache <code>String</code> with the data to be cached
-	 * @param key <code>String</code> with the key that will be used to encrypt the data
-	 * @return <code>String</code> with the absolute path to the iRODS file that will hold the encrypted data cache
+	 * @param stringToCache
+	 *            <code>String</code> with the data to be cached
+	 * @param key
+	 *            <code>String</code> with the key that will be used to encrypt
+	 *            the data
+	 * @return <code>String</code> with the absolute path to the iRODS file that
+	 *         will hold the encrypted data cache
 	 * @throws JargonException
 	 */
-	String putStringValueIntoCache(final String stringToCache,
-			final String key) throws JargonException;
+	String putStringValueIntoCache(final String stringToCache, final String key)
+			throws JargonException;
 
 	/**
 	 * Put the given object into a special place in the users home directory.
@@ -54,8 +62,8 @@ public interface DataCacheService {
 	 * @return <code>Object</code> that was serialized
 	 * @throws JargonException
 	 */
-	Object retrieveObjectFromCache(final String userName,
-			final String key) throws JargonException;
+	Object retrieveObjectFromCache(final String userName, final String key)
+			throws JargonException;
 
 	/**
 	 * Purge accounts (per the configured {@link CacheServiceConfiguration}
@@ -99,11 +107,16 @@ public interface DataCacheService {
 	 */
 	CacheServiceConfiguration getCacheServiceConfiguration();
 
-	
 	/**
-	 * For a given user and key, retrieve the value that was stored in the cache as an encrypted <code>String</code>
-	 * @param userName <code>String</code> with the user name for which the data was stored
-	 * @param key <code>String</code> with the key used to encrypt and store the data
+	 * For a given user and key, retrieve the value that was stored in the cache
+	 * as an encrypted <code>String</code>
+	 * 
+	 * @param userName
+	 *            <code>String</code> with the user name for which the data was
+	 *            stored
+	 * @param key
+	 *            <code>String</code> with the key used to encrypt and store the
+	 *            data
 	 * @return <code>String</code> with the decrypted value from the cache
 	 * @throws JargonException
 	 */

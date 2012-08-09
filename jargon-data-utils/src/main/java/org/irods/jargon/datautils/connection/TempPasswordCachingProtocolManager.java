@@ -55,7 +55,7 @@ public class TempPasswordCachingProtocolManager extends
 			final PipelineConfiguration pipelineConfiguration)
 			throws JargonException {
 		try {
-			IRODSCommands command =  (IRODSCommands) objectPool.borrowObject();
+			IRODSCommands command = (IRODSCommands) objectPool.borrowObject();
 			command.setIrodsProtocolManager(this);
 			return command;
 		} catch (Exception e) {

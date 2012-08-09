@@ -61,9 +61,8 @@ public class MediaHandlingUtils {
 				.toUpperCase();
 
 		if (extension.equals(".JPG") || extension.equals(".GIF")
-				|| extension.equals(".JPEG")
-				|| extension.equals(".PNG") || extension.equals(".TIFF")
-				|| extension.equals(".TIF")) {
+				|| extension.equals(".JPEG") || extension.equals(".PNG")
+				|| extension.equals(".TIFF") || extension.equals(".TIF")) {
 
 			isImage = true;
 		}
