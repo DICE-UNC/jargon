@@ -3,7 +3,6 @@ package org.irods.jargon.datautils.shoppingcart;
 import java.util.List;
 
 import junit.framework.Assert;
-import junit.framework.TestCase;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -116,16 +115,16 @@ public class FileShoppingCartTest {
 		fileShoppingCart.addAnItem(entry);
 		String serialized = fileShoppingCart
 				.serializeShoppingCartContentsToStringOneItemPerLine();
-		TestCase.assertFalse("null or empty serialized", serialized == null
+		Assert.assertFalse("null or empty serialized", serialized == null
 				|| serialized.isEmpty());
 		FileShoppingCart actual = FileShoppingCart
 				.instanceFromSerializedStringRepresentation(serialized);
-		TestCase.assertEquals("should be 2 files in cart", 2, actual
+		Assert.assertEquals("should be 2 files in cart", 2, actual
 				.getShoppingCartFileList().size());
 
-		TestCase.assertEquals("first file not found", file1, actual
+		Assert.assertEquals("first file not found", file1, actual
 				.getShoppingCartFileList().get(0));
-		TestCase.assertEquals("second file not found", file2, actual
+		Assert.assertEquals("second file not found", file2, actual
 				.getShoppingCartFileList().get(1));
 
 	}
@@ -139,7 +138,7 @@ public class FileShoppingCartTest {
 
 		FileShoppingCart actual = FileShoppingCart
 				.instanceFromSerializedStringRepresentation(serialized);
-		TestCase.assertFalse("should be empty cart", actual.hasItems());
+		Assert.assertFalse("should be empty cart", actual.hasItems());
 
 	}
 

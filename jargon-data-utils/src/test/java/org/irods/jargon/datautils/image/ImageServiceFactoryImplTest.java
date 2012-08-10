@@ -36,15 +36,14 @@ public class ImageServiceFactoryImplTest {
 						.buildIRODSAccountFromTestProperties(testingProperties));
 		Assert.assertNotNull("no service returned", service);
 	}
-	
-	@Test(expected=IllegalArgumentException.class)
+
+	@Test(expected = IllegalArgumentException.class)
 	public void testInstanceThumbnailServiceNullAccount() {
 		IRODSAccessObjectFactory irodsAccessObjectFactory = Mockito
 				.mock(IRODSAccessObjectFactory.class);
 		ImageServiceFactory factory = new ImageServiceFactoryImpl(
 				irodsAccessObjectFactory);
-		factory
-				.instanceThumbnailService(null);
+		factory.instanceThumbnailService(null);
 	}
 
 }
