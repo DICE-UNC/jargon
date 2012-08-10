@@ -2,6 +2,8 @@ package org.irods.jargon.userprofile;
 
 import java.util.Properties;
 
+import junit.framework.TestCase;
+
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.protovalues.UserTypeEnum;
@@ -9,6 +11,8 @@ import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 import org.irods.jargon.core.pub.IRODSFileSystem;
 import org.irods.jargon.core.pub.UserAO;
 import org.irods.jargon.core.pub.domain.User;
+import org.irods.jargon.core.pub.io.IRODSFile;
+import org.irods.jargon.core.utils.MiscIRODSUtils;
 import org.irods.jargon.testutils.IRODSTestSetupUtilities;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.irods.jargon.testutils.filemanip.ScratchFileUtils;
@@ -21,7 +25,7 @@ public class UserProfileServiceImplTest {
 	private static Properties testingProperties = new Properties();
 	private static TestingPropertiesHelper testingPropertiesHelper = new TestingPropertiesHelper();
 	private static IRODSFileSystem irodsFileSystem;
-	private static final String IRODS_TEST_SUBDIR_PATH = "UserProfileServiceImplTest";
+	private static final String IRODS_TEST_SUBDIR_PATH = "UserProfileServiceTest";
 	private static ScratchFileUtils scratchFileUtils = null;
 	private static IRODSTestSetupUtilities irodsTestSetupUtilities = null;
 
@@ -79,7 +83,7 @@ public class UserProfileServiceImplTest {
 				.buildIRODSAccountFromTestProperties(testingProperties);
 		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
 				.getIRODSAccessObjectFactory();
-		String testUser = "testAddProfileForUser";
+		String testUser = "testAddProfileForUserx";
 
 		UserAO userAO = accessObjectFactory.getUserAO(irodsAccount);
 
@@ -100,6 +104,7 @@ public class UserProfileServiceImplTest {
 
 		UserProfileService userProfileService = new UserProfileServiceImpl(
 				accessObjectFactory, testUserAccount);
+
 		userProfileService.removeProfileInformation(testUser);
 
 		UserProfile userProfile = new UserProfile();
@@ -112,6 +117,30 @@ public class UserProfileServiceImplTest {
 				.setProtectedProfileReadWriteGroup(irodsAccount.getUserName());
 
 		userProfileService.addProfileForUser(testUser, userProfile);
+
+		// make the files are there with the necessary permissions
+
+		String userHomeDir = MiscIRODSUtils
+				.computeHomeDirectoryForGivenUserInSameZoneAsIRODSAccount(
+						irodsAccount, testUser);
+
+		IRODSFile userProfileFile = accessObjectFactory.getIRODSFileFactory(
+				testUserAccount).instanceIRODSFile(
+				userHomeDir,
+				userProfileService.getUserProfileServiceConfiguration()
+						.getPublicProfileFileName());
+
+		TestCase.assertTrue("public user profile not created",
+				userProfileFile.exists());
+
+		IRODSFile protectedProfileFile = accessObjectFactory
+				.getIRODSFileFactory(testUserAccount).instanceIRODSFile(
+						userHomeDir,
+						userProfileService.getUserProfileServiceConfiguration()
+								.getProtectedProfileFileName());
+
+		TestCase.assertTrue("protected user profile not created",
+				protectedProfileFile.exists());
 
 	}
 

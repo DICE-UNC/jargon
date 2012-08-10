@@ -165,11 +165,6 @@ public class UserProfileServiceImpl extends AbstractJargonService implements
 				log.info("Jargon query exeception querying for AVU metadata", e);
 				throw new JargonException(e);
 			}
-			
-			
-			log.info("delete user profile file:{}",
-					userProfileFile.getAbsolutePath());
-
 		}
 	}
 

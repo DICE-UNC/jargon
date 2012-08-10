@@ -1379,7 +1379,6 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 
 		try {
 			Tag response = getIRODSProtocol().irodsFunction(dataObjInp);
-
 			if (response != null) {
 				log.warn("unexpected response from irods, expected null message - logged and ignored ");
 			}
