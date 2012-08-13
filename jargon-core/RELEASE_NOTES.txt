@@ -43,65 +43,10 @@ Note that the following bug and feature requests are logged in GForge with relat
 
 ==Bug Fixes==
 
-* [#872] numeric gen query with datasize gives errors in condition
-* [#914] rule error : could not find name and val separated by an '=' sign in input attribute
-* [#890] 806000 error UserGroupAO.find() when id is given as a string
-* [#874] rule error processing gallery view LL - making thumbnails
-* [#918] Unexpected results with UserGroupAO methods
-* [#928] remove jai dependency
+* [#930] [iROD-Chat:8451] Does Jargon limit the number of items returned in a collection contents list?
+** Correctly compute last index when listing collections with permissions
+** Take out user type query and set to unknown to help performance.  This was causing a subquery for every row.  The user type defaults to UNKNOWN for now, and that information will not be available in the current iteration.  Note that specific/sql query will be used to impove the available information in this query as a separate feature request.
 
 ==Features==
 
- * [#775] iDrop 1.1.0 refactoring activities
- ** clean up deprecated methods and fix visibility so DataTransferOperations is the public API for put/get/copy/move
  
- * [#114] support for mounted collections, cross zone browsing, and soft links
- ** significant refactoring as support added, cleanup of deprecated methods, tightening package visibility
- ** added a MountedCollectionAO to administer mounted collections and soft links 
- ** Refactoring of key classes for support
- **** CollectionAndDataObjectListAndSearchAO
- **** DataObjectAO
- **** DataTransferOperations
- **** CollectionAO
- **** IRODSFile
- **** IRODSInputStream
- **** IRODSOutputStream
- 
- *  [#696] Add ticket support
- ** added compareGivenTicketToActualAndUpdateAsNeeded() method to TicketAdminService, which allows for updating an entire ticket, computing deltas and updating fields as appropriate
- ** added support to stream data via an output stream to an iRODS collection with a ticket
- 
- *  [#853] IP - add ticket by admin
- ** added ability to create a ticket for another user (given that the creator is rodsAdmin)
-
- * [#864] 2.5 iRODS protocol errors
- ** update tests for 2.5 backwards compatability
- ** overhead misc operations to normalize errors (especially DuplicateDataException and DataNotFoundException) which are indicated
- by different iRODS error codes in 2.5 and prior.
- 
- * [#865] factor helper classes into jargon core and remove
- ** this is a general project cleanup and simplification task.  THe testing libraries have been consolidated and placed
- into the jargon-core so that they me used by unit tests in jargon itself, as well as other projects.  This removes jargon-test as a project.
- 
- * [#866] Resource Group support
- ** initial support for resource group admin and listing
- 
- *  [#869] connection restart in transfer
- ** added reconnet to PipelineConfiguration and JargnProperties and added to StartupPack processing
- 
- * [#878] pipeline and transfer optimization round - 3.1.3
- ** added instrument opton to PipelineConfiguration and JargonProperties to route detailed instrumentation to the DEBUG log
- 
- * [#764] Java libraries and code to integrate idrop-web
- ** added isUserInGroup method to UserGroupAO
- 
- * [#891] UserGroupAO add better remove method
- 
- * [#906] supress error messages for acls when anonymous in list and search operations
- This change helps handle occasions where strict ACL's are on, and/or operations are being done as an anonymous user.  This change, adjusted by the default.to.public.if.nothing.under.root.when.listing
- jargon property, will allow users without ACL list permissions to be able to drill down into /zone/home/ and look for a 'public' dir and their user dir, they would need to 
- have list permissions to actually list files in these places, it essentially emulates being able to list into these paths.
- 
- *  [#927] 3.1.3 final release activities
- ** update pom's in project for spring/hibernate versions, get rid of some nag messages about plug-in versions, general pom clean up for maven
- ** removal of JAI dependency in jargon-data-utils to simplify build.  This removes the fall-back local generation of thumbnail features, but was causing build problems in the community
