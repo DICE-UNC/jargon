@@ -290,4 +290,19 @@ public interface UserAO extends IRODSAccessObject {
 	 */
 	String retriveUserDNByUserId(String userId) throws JargonException;
 
+	/**
+	 * Update the user info field for the user as a discrete operation.
+	 * 
+	 * @param userName
+	 *            <code>String</code> with the name of the user
+	 * @param userInfo
+	 *            <code>String</code> with the info to set, it can be blank, but
+	 *            not <code>null</code>
+	 * @throws DataNotFoundException
+	 *             if the user is not found
+	 * @throws JargonException
+	 */
+	void updateUserInfo(String userName, String userInfo)
+			throws DataNotFoundException, JargonException;
+
 }

@@ -49,4 +49,5 @@ Note that the following bug and feature requests are logged in GForge with relat
 
 ==Features==
 
- 
+ * [#764] Java libraries and code to integrate idrop-web
+ ** added updateUserInfo() to UserAO
