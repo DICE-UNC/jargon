@@ -698,7 +698,7 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 		log.info("changeAUserPasswordByThatUser for user:{}", userName);
 
 		String obfuscatedPassword = IRODSPasswordUtilities
-				.obfuscateIRODSPassword(newPassword, currentPassword);
+				.obfEncodeByKey(newPassword, currentPassword, true);
 		UserAdminInp userAdminIn = UserAdminInp.instanceForChangeUserPassword(
 				userName, obfuscatedPassword);
 		getIRODSProtocol().irodsFunction(userAdminIn);
