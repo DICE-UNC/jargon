@@ -47,6 +47,7 @@ Note that the following bug and feature requests are logged in GForge with relat
 ** Correctly compute last index when listing collections with permissions
 ** Take out user type query and set to unknown to help performance.  This was causing a subquery for every row.  The user type defaults to UNKNOWN for now, and that information will not be available in the current iteration.  Note that specific/sql query will be used to impove the available information in this query as a separate feature request.
 ** fix record counts in gen query results to account for paging offset when adding counts to returned rows
+** added IRODSThousandCollectionsTest and augmented IRODSThousandFilesTest to test out this operation
 
 ==Features==
 
