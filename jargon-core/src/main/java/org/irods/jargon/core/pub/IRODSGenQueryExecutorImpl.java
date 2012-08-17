@@ -298,7 +298,8 @@ public final class IRODSGenQueryExecutorImpl extends IRODSGenericAO implements
 			}
 
 			result = translateResponseIntoResultSet(response,
-					translatedIRODSQuery, columnNames, continuation);
+					translatedIRODSQuery, columnNames, continuation,
+					partialStartIndex);
 
 			resultSet = IRODSQueryResultSet.instance(translatedIRODSQuery,
 					result, continuation);
@@ -354,6 +355,11 @@ public final class IRODSGenQueryExecutorImpl extends IRODSGenericAO implements
 	 *            response
 	 * @param continuation
 	 *            <code>int</code>
+	 * @param partialStartIndex
+	 *            <code>int</code> with the offset into the query results for
+	 *            the query generating this response, this is so the record
+	 *            count begins at the point in the overall results where the
+	 *            offset points to.
 	 * @return <code>List</code> of
 	 *         {@link org.irods.jargon.core.query.IRODSQueryResultRow} for each
 	 *         row in the GenQuery result
@@ -362,12 +368,19 @@ public final class IRODSGenQueryExecutorImpl extends IRODSGenericAO implements
 	private List<IRODSQueryResultRow> translateResponseIntoResultSet(
 			final Tag queryResponse,
 			final TranslatedIRODSGenQuery translatedIRODSQuery,
-			final List<String> columnNames, final int continuation)
+			final List<String> columnNames, final int continuation, int partialStartIndex)
 			throws JargonException {
 
 		List<IRODSQueryResultRow> resultSet = new ArrayList<IRODSQueryResultRow>();
 		List<String> row;
-		int recordCount = 1;
+
+		int recordCount;
+		if (partialStartIndex == 0) {
+			recordCount = 1;
+		} else {
+			recordCount = partialStartIndex + 1;
+		 }
+
 		boolean lastRecord = (continuation == 0);
 		log.debug("are there more records? {}", lastRecord);
 

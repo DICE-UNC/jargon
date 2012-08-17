@@ -48,7 +48,6 @@ public class UserProfileServiceImpl extends AbstractJargonService implements
 
 	private UserProfileServiceConfiguration userProfileServiceConfiguration = new UserProfileServiceConfiguration();
 	private final DataObjectAO dataObjectAO;
-	private final String AVU_UNIT_NAMESPACE = "irods:UserProfileServicePublicAttribute";
 
 	/**
 	 * Constructs a user profile service with references to objects necessary to
@@ -69,6 +68,53 @@ public class UserProfileServiceImpl extends AbstractJargonService implements
 			throw new JargonRuntimeException(
 					"error creating DataObjectAO reference", e);
 		}
+	}
+
+	public UserProfile retrieveUserProfile(final String userName)
+			throws DataNotFoundException,
+			JargonException {
+
+		log.info("retrieveUserProfile()");
+
+		if (userName == null || userName.isEmpty()) {
+			throw new IllegalArgumentException("null or empty userName");
+		}
+
+		log.info("userName:{}", userName);
+
+		UserProfile userProfile;
+
+		log.info("retreiving the public profile");
+
+		IRODSFile publicProfileFile = retrieveUserPublicProfileFile(userName);
+		
+		if (!publicProfileFile.exists()) {
+			log.warn("no public profile found at:{}",
+					publicProfileFile.getAbsolutePath());
+			throw new DataNotFoundException("no public profile found");
+		}
+
+		log.info("getting profile AVUs...");
+
+		List<AVUQueryElement> query = new ArrayList<AVUQueryElement>();
+
+		try {
+			query.add(AVUQueryElement.instanceForValueQuery(AVUQueryPart.UNITS,
+					AVUQueryOperatorEnum.EQUAL,
+					UserProfileService.AVU_UNIT_NAMESPACE));
+		} catch (JargonQueryException e) {
+			log.error("error building AVU query", e);
+			throw new JargonException("error querying for AVUs", e);
+		}
+
+		List<MetaDataAndDomainData> metadata = dataObjectAO
+				.findMetadataValuesForDataObject(publicProfileFile
+						.getAbsolutePath());
+
+		log.info("profile AVUs:{}", metadata);
+
+		return null;
+
 	}
 
 	/**
@@ -120,7 +166,7 @@ public class UserProfileServiceImpl extends AbstractJargonService implements
 		log.info("deleting the protected profile file:{}",
 				protectedProfileFile.getAbsolutePath());
 
-		protectedProfileFile.delete();
+		protectedProfileFile.deleteWithForceOption();
 		log.info("delete completed");
 
 	}
@@ -132,7 +178,7 @@ public class UserProfileServiceImpl extends AbstractJargonService implements
 	 * @throws DataNotFoundException
 	 */
 	private void deletePublicProfile(final String irodsUserName,
-			IRODSFile userProfileFile) throws JargonException,
+			final IRODSFile userProfileFile) throws JargonException,
 			DataNotFoundException {
 		if (!userProfileFile.exists()) {
 			log.info(
@@ -149,18 +195,19 @@ public class UserProfileServiceImpl extends AbstractJargonService implements
 				List<MetaDataAndDomainData> metadataList = dataObjectAO
 						.findMetadataValuesByMetadataQuery(queryList);
 				AvuData avuData;
-				
+
 				for (MetaDataAndDomainData metadataAndDomainData : metadataList) {
 					avuData = AvuData.instance(
 							metadataAndDomainData.getAvuAttribute(),
 							metadataAndDomainData.getAvuValue(),
 							metadataAndDomainData.getAvuUnit());
-				dataObjectAO.deleteAVUMetadata(userProfileFile.getAbsolutePath(), avuData);
+					dataObjectAO.deleteAVUMetadata(
+							userProfileFile.getAbsolutePath(), avuData);
 				}
-				
+
 				log.info("avus were deleted..now delete the public profile file");
 				userProfileFile.deleteWithForceOption();
-				
+
 			} catch (JargonQueryException e) {
 				log.info("Jargon query exeception querying for AVU metadata", e);
 				throw new JargonException(e);
@@ -288,9 +335,69 @@ public class UserProfileServiceImpl extends AbstractJargonService implements
 		} else {
 			log.info("adding WRITE acl to protected profile");
 			dataObjectAO.setAccessPermissionWrite(irodsAccount.getZone(),
-					protectedProfileFile.getAbsolutePath(), irodsUserName);
+					protectedProfileFile.getAbsolutePath(),
+					userProfileServiceConfiguration
+							.getProtectedProfileReadWriteGroup());
 		}
 
+		// provision the public profile with the given profile information by
+		// hanging AVU off of the file
+
+		UserProfilePublicFields userProfilePublicFields = userProfile
+				.getUserProfilePublicFields();
+
+		addAVUIfDataPresent(userProfileFile.getAbsolutePath(),
+				UserProfileConstants.ZONE, userProfile.getZone());
+
+		addAVUIfDataPresent(userProfileFile.getAbsolutePath(),
+				UserProfileConstants.USER_NAME,
+ userProfile.getUserName());
+
+		addAVUIfDataPresent(userProfileFile.getAbsolutePath(),
+				UserProfileConstants.DESCRIPTION,
+				userProfilePublicFields.getDescription());
+
+		addAVUIfDataPresent(userProfileFile.getAbsolutePath(),
+				UserProfileConstants.NICK_NAME,
+				userProfilePublicFields.getNickName());
+
+	}
+
+	/**
+	 * Add the AVU data based on the provided parameters. Note that if the value
+	 * of the AVU is blank, it won't be added. Only set fields are preserved
+	 * 
+	 * @param irodsDataObjectAbsolutePath
+	 * @param proposedAttribute
+	 * @param proposedValue
+	 * @throws JargonException
+	 */
+	private void addAVUIfDataPresent(final String irodsDataObjectAbsolutePath,
+			final String proposedAttribute, final String proposedValue)
+			throws JargonException {
+
+		log.info("addAVUIfDataPresent()");
+
+		if (proposedAttribute == null || proposedAttribute.isEmpty()) {
+			throw new IllegalArgumentException(
+					"null or empty proposedAttribute");
+		}
+
+		if (proposedValue == null) {
+			throw new IllegalArgumentException("null proposedValue");
+		}
+
+		if (proposedValue.isEmpty()) {
+			log.info("ignore avu, value is blank");
+			return;
+		}
+
+		// valid data if I got here, add the AVU
+
+		AvuData avuData;
+		avuData = AvuData.instance(proposedAttribute, proposedValue,
+				AVU_UNIT_NAMESPACE);
+		dataObjectAO.addAVUMetadata(irodsDataObjectAbsolutePath, avuData);
 	}
 
 	/**
@@ -309,6 +416,31 @@ public class UserProfileServiceImpl extends AbstractJargonService implements
 	public void setUserProfileServiceConfiguration(
 			final UserProfileServiceConfiguration userProfileServiceConfiguration) {
 		this.userProfileServiceConfiguration = userProfileServiceConfiguration;
+	}
+
+	/**
+	 * Get the file that corresponds to the expected public profile. Note that
+	 * this method does not evaluate whether the file actually exists
+	 * 
+	 * @param userName
+	 * @return
+	 * @throws JargonException
+	 */
+	private IRODSFile retrieveUserPublicProfileFile(final String userName)
+			throws JargonException {
+		String userHomeDir = MiscIRODSUtils
+				.computeHomeDirectoryForGivenUserInSameZoneAsIRODSAccount(
+						getIrodsAccount(), userName);
+
+		log.info("user home dir:{}", userHomeDir);
+
+		return this
+				.getIrodsAccessObjectFactory()
+				.getIRODSFileFactory(getIrodsAccount())
+				.instanceIRODSFile(
+						userHomeDir,
+						userProfileServiceConfiguration
+								.getPublicProfileFileName());
 	}
 
 }

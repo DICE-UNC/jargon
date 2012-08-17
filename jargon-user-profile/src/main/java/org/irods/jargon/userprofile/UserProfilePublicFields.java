@@ -14,10 +14,6 @@ package org.irods.jargon.userprofile;
  */
 public class UserProfilePublicFields {
 
-	/**
-	 * iRODS User Name
-	 */
-	private String userName = "";
 
 	/**
 	 * Open-ended; whatever the person or the directory manager puts here.
@@ -123,20 +119,6 @@ public class UserProfilePublicFields {
 	 */
 	private String telephoneNumber = "";
 
-	/**
-	 * @return the userName
-	 */
-	public String getUserName() {
-		return userName;
-	}
-
-	/**
-	 * @param userName
-	 *            the userName to set
-	 */
-	public void setUserName(String userName) {
-		this.userName = userName;
-	}
 
 	/**
 	 * @return the description
@@ -367,8 +349,6 @@ public class UserProfilePublicFields {
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("UserProfilePublicFields");
-		sb.append("\n   userName:");
-		sb.append(userName);
 		sb.append("\n    description:");
 		sb.append(description);
 		sb.append("\n   nickName:");
@@ -395,8 +375,6 @@ public class UserProfilePublicFields {
 		sb.append(telephoneNumber);
 		sb.append("\n    title:");
 		sb.append(title);
-		sb.append("\n    userName:");
-		sb.append(userName);
 		return sb.toString();
 	}
 

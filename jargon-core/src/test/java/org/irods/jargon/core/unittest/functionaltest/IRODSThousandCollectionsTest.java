@@ -1,7 +1,5 @@
 package org.irods.jargon.core.unittest.functionaltest;
 
-import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
@@ -12,21 +10,13 @@ import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.protovalues.UserTypeEnum;
 import org.irods.jargon.core.pub.CollectionAO;
 import org.irods.jargon.core.pub.CollectionAndDataObjectListAndSearchAO;
-import org.irods.jargon.core.pub.DataObjectAO;
-import org.irods.jargon.core.pub.DataTransferOperations;
 import org.irods.jargon.core.pub.IRODSFileSystem;
 import org.irods.jargon.core.pub.UserAO;
-import org.irods.jargon.core.pub.domain.AvuData;
 import org.irods.jargon.core.pub.domain.User;
 import org.irods.jargon.core.pub.io.IRODSFile;
-import org.irods.jargon.core.query.AVUQueryElement;
-import org.irods.jargon.core.query.AVUQueryElement.AVUQueryPart;
-import org.irods.jargon.core.query.AVUQueryOperatorEnum;
 import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry;
-import org.irods.jargon.core.query.MetaDataAndDomainData;
 import org.irods.jargon.testutils.IRODSTestSetupUtilities;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
-import org.irods.jargon.testutils.filemanip.FileGenerator;
 import org.irods.jargon.testutils.filemanip.ScratchFileUtils;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -34,18 +24,17 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-public class IRODSThousandFilesTest {
+public class IRODSThousandCollectionsTest {
 	private static Properties testingProperties = new Properties();
 	private static TestingPropertiesHelper testingPropertiesHelper = new TestingPropertiesHelper();
 	private static ScratchFileUtils scratchFileUtils = null;
-	public static final String IRODS_TEST_SUBDIR_PATH = "IrodsThousandFilesTestParent";
+	public static final String IRODS_TEST_SUBDIR_PATH = "IRODSThousandCollectionsTestParent";
 	private static IRODSTestSetupUtilities irodsTestSetupUtilities = null;
 	public static final String collDir = "coll";
-	public static final String funcTestUserPrefix = "IRODSThousandFilesTest";
+	public static final String funcTestUserPrefix = "IRODSThousandCollectionsTest";
 	public static final int usersCount = 100;
 	private static IRODSFileSystem irodsFileSystem;
-	private static final String testFilePrefix = "thousandFileTest";
-	private static final String testFileSuffix = ".txt";
+	private static final String testFilePrefix = "IRODSThousandCollectionsTest";
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		TestingPropertiesHelper testingPropertiesLoader = new TestingPropertiesHelper();
@@ -62,20 +51,7 @@ public class IRODSThousandFilesTest {
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
 
-		// put in the thousand files
-
-		String absPath = scratchFileUtils
-				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
-
-		FileGenerator.generateManyFilesInGivenDirectory(IRODS_TEST_SUBDIR_PATH
-				+ '/' + collDir, testFilePrefix, testFileSuffix, 1000, 20, 500);
-
-		DataTransferOperations dto = irodsFileSystem
-				.getIRODSAccessObjectFactory().getDataTransferOperations(
-						irodsAccount);
-
-
-		// make the put subdir
+		// make the parent subdir
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH);
@@ -106,12 +82,15 @@ public class IRODSThousandFilesTest {
 					targetIrodsCollection, userName, true);
 		}
 
-		File sourceFile = new File(absPath + collDir);
+		// now make 1000 subcolls
 
-		dto.putOperation(sourceFile, parentDir, null, null);
-
-		// now add avu's to each
-		addAVUsToEachFile();
+		IRODSFile subColl;
+		for (int i = 0; i < 1000; i++) {
+			subColl = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+					.instanceIRODSFile(targetIrodsCollection,
+							testFilePrefix + i);
+			subColl.mkdirs();
+		}
 
 	}
 
@@ -128,67 +107,6 @@ public class IRODSThousandFilesTest {
 		irodsFileSystem.closeAndEatExceptions();
 	}
 
-	public static final void addAVUsToEachFile() throws Exception {
-
-		String avu1Attrib = "avu1";
-		String avu1Value = "avu1value";
-		String avu2Attrib = "avu2";
-
-		IRODSAccount account = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-
-		IRODSFile irodsFile = irodsFileSystem
-				.getIRODSFileFactory(account)
-				.instanceIRODSFile(
-						testingPropertiesHelper
-								.buildIRODSCollectionAbsolutePathFromTestProperties(
-										testingProperties,
-										IRODS_TEST_SUBDIR_PATH + '/' + collDir));
-
-		// get a list of files underneath the top-level directory, and add some
-		// avu's to each one
-
-		String[] fileList = irodsFile.list();
-		IRODSFile subFile = null;
-		DataObjectAO dataObjectAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getDataObjectAO(account);
-
-		for (String element : fileList) {
-			subFile = irodsFileSystem.getIRODSFileFactory(account)
-					.instanceIRODSFile(
-							irodsFile.getAbsolutePath() + '/' + element);
-
-			dataObjectAO.addAVUMetadata(subFile.getAbsolutePath(),
-					AvuData.instance(avu1Attrib, avu1Value, ""));
-			dataObjectAO.addAVUMetadata(subFile.getAbsolutePath(),
-					AvuData.instance(avu2Attrib, avu1Value, ""));
-
-		}
-
-		irodsFileSystem.close();
-	}
-
-	@Test
-	public void testSearchForAvuFiles() throws Exception {
-		String avu1Attrib = "avu1";
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		DataObjectAO dataObjectAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
-		List<AVUQueryElement> avuQueryElements = new ArrayList<AVUQueryElement>();
-		avuQueryElements
-				.add(AVUQueryElement.instanceForValueQuery(
-						AVUQueryPart.ATTRIBUTE, AVUQueryOperatorEnum.EQUAL,
-						avu1Attrib));
-
-		List<MetaDataAndDomainData> metadataElements = dataObjectAO
-				.findMetadataValuesByMetadataQuery(avuQueryElements);
-
-		// should have 1000 in this batch
-		Assert.assertEquals("did not get back the  rows I requested", 1000,
-				metadataElements.size());
-	}
-
 	@Test
 	public void testListFilesAndCollectionsUnderPathWithAccessInfo()
 			throws Exception {
@@ -198,7 +116,7 @@ public class IRODSThousandFilesTest {
 
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH + "/coll");
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
 
 		CollectionAndDataObjectListAndSearchAO actual = irodsFileSystem
 				.getIRODSAccessObjectFactory()
@@ -239,20 +157,18 @@ public class IRODSThousandFilesTest {
 
 		System.out.println("last path:" + lastPathFromInputData);
 
-		String fileName = entries.get(entries.size() - 1).getPathOrName();
+		String fileName = entries.get(entries.size() - 1)
+				.getNodeLabelDisplayValue();
 
-		// file name like thousandFileTest141.txt
-
-		String nbrPart = fileName.substring(testFilePrefix.length(),
-				fileName.indexOf('.'));
+		String nbrPart = fileName.substring(testFilePrefix.length());
 		System.out.println("nbrPart");
 		int nextNbr = Integer.parseInt(nbrPart) + 1;
 		
-		String expectedNextPath = testFilePrefix + nextNbr + testFileSuffix;
+		String expectedNextPath = testFilePrefix + nextNbr;
 
 		// now query again
 
-		entries = actual.listDataObjectsUnderPathWithPermissions(
+		entries = actual.listCollectionsUnderPathWithPermissions(
 				targetIrodsCollection, entries.get(entries.size() - 1)
 						.getCount());
 
@@ -264,33 +180,25 @@ public class IRODSThousandFilesTest {
 				.get(0);
 		TestCase.assertEquals(
 				"did not get the expected first record form the second page of entries",
-				expectedNextPath, firstEntryOfSecondQuery.getPathOrName());
+				expectedNextPath,
+				firstEntryOfSecondQuery.getNodeLabelDisplayValue());
 
 		CollectionAndDataObjectListingEntry lastEntryOfSecondQuery = entries
 				.get(entries.size() - 1);
 
-		expectedNextPath = testFilePrefix + 186 + testFileSuffix;
-
-		TestCase.assertEquals(
-				"did not get the expected last record form the second page of entries",
-				expectedNextPath, lastEntryOfSecondQuery.getPathOrName());
-
 		TestCase.assertFalse("should not be last record",
 				lastEntryOfSecondQuery.isLastResult());
 
-		fileName = entries.get(entries.size() - 1).getPathOrName();
+		fileName = entries.get(entries.size() - 1).getNodeLabelDisplayValue();
 
-		// file name like thousandFileTest141.txt
-
-		nbrPart = fileName.substring(testFilePrefix.length(),
-				fileName.indexOf('.'));
+		nbrPart = fileName.substring(testFilePrefix.length());
 		nextNbr = Integer.parseInt(nbrPart) + 1;
 
-		expectedNextPath = testFilePrefix + nextNbr + testFileSuffix;
+		expectedNextPath = testFilePrefix + nextNbr;
 
 		// now query again
 
-		entries = actual.listDataObjectsUnderPathWithPermissions(
+		entries = actual.listCollectionsUnderPathWithPermissions(
 				targetIrodsCollection, entries.get(entries.size() - 1)
 						.getCount());
 
@@ -302,7 +210,8 @@ public class IRODSThousandFilesTest {
 
 		TestCase.assertEquals(
 				"did not get the expected first record form the third page of entries",
-				expectedNextPath, firstEntryOfThirdQuery.getPathOrName());
+				expectedNextPath,
+				firstEntryOfThirdQuery.getNodeLabelDisplayValue());
 
 		// should be one more page of results
 
@@ -314,7 +223,7 @@ public class IRODSThousandFilesTest {
 
 		// now query again
 
-		entries = actual.listDataObjectsUnderPathWithPermissions(
+		entries = actual.listCollectionsUnderPathWithPermissions(
 				targetIrodsCollection, entries.get(entries.size() - 1)
 						.getCount());
 
@@ -328,15 +237,14 @@ public class IRODSThousandFilesTest {
 		TestCase.assertFalse("should be a fifth page of results",
 				lastEntryOfFourthQuery.isLastResult());
 
-		fileName = lastEntryOfFourthQuery.getPathOrName();
+		fileName = lastEntryOfFourthQuery.getNodeLabelDisplayValue();
 
-		nbrPart = fileName.substring(testFilePrefix.length(),
-				fileName.indexOf('.'));
+		nbrPart = fileName.substring(testFilePrefix.length());
 		nextNbr = Integer.parseInt(nbrPart) + 1;
 
-		expectedNextPath = testFilePrefix + nextNbr + testFileSuffix;
+		expectedNextPath = testFilePrefix + nextNbr;
 
-		entries = actual.listDataObjectsUnderPathWithPermissions(
+		entries = actual.listCollectionsUnderPathWithPermissions(
 				targetIrodsCollection, entries.get(entries.size() - 1)
 						.getCount());
 
@@ -348,12 +256,13 @@ public class IRODSThousandFilesTest {
 
 		TestCase.assertEquals(
 				"did not get the expected first record form the third page of entries",
-				expectedNextPath, firstEntryOfFifthQuery.getPathOrName());
+				expectedNextPath,
+				firstEntryOfFifthQuery.getNodeLabelDisplayValue());
 
 		// now just page through till last page
 
 		while (true) {
-			entries = actual.listDataObjectsUnderPathWithPermissions(
+			entries = actual.listCollectionsUnderPathWithPermissions(
 					targetIrodsCollection, entries.get(entries.size() - 1)
 							.getCount());
 			CollectionAndDataObjectListingEntry lastEntryOfLoopedQuery = entries

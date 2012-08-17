@@ -279,6 +279,102 @@ public class UserAOTest {
 	}
 
 	@Test
+	public void testUpdateUserInfo() throws Exception {
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		String testUser = "testUpdateUserInfo";
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+		UserAO userAO = accessObjectFactory.getUserAO(irodsAccount);
+
+		// setup, delete user if it exists
+
+		try {
+			userAO.deleteUser(testUser);
+		} catch (Exception e) {
+			// ignore exception, user may not exist
+		}
+
+		User addedUser = new User();
+		addedUser.setName(testUser);
+		addedUser.setUserType(UserTypeEnum.RODS_USER);
+		userAO.addUser(addedUser);
+
+		userAO.updateUserInfo(testUser, testUser);
+
+		User updatedUser = userAO.findByName(addedUser.getName());
+
+		Assert.assertEquals("should have updated info", testUser,
+				updatedUser.getInfo());
+	}
+
+	@Test
+	public void testUpdateUserInfoBlank() throws Exception {
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		String testUser = "testUpdateUserInfoBlank";
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+		UserAO userAO = accessObjectFactory.getUserAO(irodsAccount);
+
+		// setup, delete user if it exists
+
+		try {
+			userAO.deleteUser(testUser);
+		} catch (Exception e) {
+			// ignore exception, user may not exist
+		}
+
+		User addedUser = new User();
+		addedUser.setName(testUser);
+		addedUser.setUserType(UserTypeEnum.RODS_USER);
+		userAO.addUser(addedUser);
+
+		userAO.updateUserInfo(testUser, "");
+
+		User updatedUser = userAO.findByName(addedUser.getName());
+
+		Assert.assertEquals("should have updated info", "",
+				updatedUser.getInfo());
+	}
+
+	@Test(expected = DataNotFoundException.class)
+	public void testUpdateUserInfoNotFound() throws Exception {
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		String testUser = "testUpdateUserInfoNotFound";
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+		UserAO userAO = accessObjectFactory.getUserAO(irodsAccount);
+
+		userAO.updateUserInfo(testUser, testUser);
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void testUpdateUserInfoNullUser() throws Exception {
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		String testUser = null;
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+		UserAO userAO = accessObjectFactory.getUserAO(irodsAccount);
+
+		userAO.updateUserInfo(testUser, testUser);
+	}
+
+	@Test
 	public void testUpdateUserUpdateZone() throws Exception {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper

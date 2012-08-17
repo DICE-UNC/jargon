@@ -11,6 +11,8 @@ import org.irods.jargon.core.exception.JargonException;
  */
 public interface UserProfileService {
 
+	public static final String AVU_UNIT_NAMESPACE = "irods:UserProfileServicePublicAttribute";
+
 	/**
 	 * Add a profile for the given user.
 	 * 

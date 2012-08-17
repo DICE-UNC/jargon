@@ -28,6 +28,8 @@ public class UserProfileServiceConfiguration {
 		sb.append(publicProfileFileName);
 		sb.append("\n    protectedProfileReadWriteGroup:");
 		sb.append(protectedProfileReadWriteGroup);
+		sb.append("\n    protectedProfileGroupHasWriteAccessToPublic:");
+		sb.append(protectedProfileGroupHasWriteAccessToPublic);
 		return sb.toString();
 	}
 
@@ -100,5 +102,4 @@ public class UserProfileServiceConfiguration {
 			boolean protectedProfileGroupHasWriteAccessToPublic) {
 		this.protectedProfileGroupHasWriteAccessToPublic = protectedProfileGroupHasWriteAccessToPublic;
 	}
-
 }
