@@ -49,6 +49,9 @@ Note that the following bug and feature requests are logged in GForge with relat
 ** fix record counts in gen query results to account for paging offset when adding counts to returned rows
 ** added IRODSThousandCollectionsTest and augmented IRODSThousandFilesTest to test out this operation
 
+* [#936] delete with folder containing files fails silently
+** add thrown JargonRuntimeException for unanticipated delete errors. 
+
 ==Features==
 
  * [#764] Java libraries and code to integrate idrop-web
