@@ -54,21 +54,13 @@ Note that the following bug and feature requests are logged in GForge with relat
 ** fix record counts in gen query results to account for paging offset when adding counts to returned rows
 ** added IRODSThousandCollectionsTest and augmented IRODSThousandFilesTest to test out this operation
 
+* [#937] irm -rf when a collection contains soft links results in collection not empty error - info value:-821000
+** overhead unit test cleanup methods to do a delete of the scratch area instead of deleteWithForceOption
+
 ==Features==
 
  * [#764] Java libraries and code to integrate idrop-web
  ** added isUserInGroup method to UserGroupAO
- 
- 
- * [#891] UserGroupAO add better remove method
- 
- * [#906] supress error messages for acls when anonymous in list and search operations
- This change helps handle occasions where strict ACL's are on, and/or operations are being done as an anonymous user.  This change, adjusted by the default.to.public.if.nothing.under.root.when.listing
- jargon property, will allow users without ACL list permissions to be able to drill down into /zone/home/ and look for a 'public' dir and their user dir, they would need to 
- have list permissions to actually list files in these places, it essentially emulates being able to list into these paths.
- 
- *  [#927] 3.1.3 final release activities
- ** update pom's in project for spring/hibernate versions, get rid of some nag messages about plug-in versions, general pom clean up for maven
  
  * [#922] User Profile Management
  ** added jargon-user-profile subproject to manage user profile information in a consistent way

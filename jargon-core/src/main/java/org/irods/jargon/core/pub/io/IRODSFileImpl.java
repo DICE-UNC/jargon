@@ -445,10 +445,10 @@ public final class IRODSFileImpl extends File implements IRODSFile {
 			log.info("file not found, treat as unsuccessful");
 			successful = false;
 		} catch (JargonException e) {
-			String msg = "JargonException caught and logged on delete, method will return false and continue:"
+			String msg = "JargonException caught and logged on delete:"
 					+ e.getMessage();
 			log.error(msg, e);
-			successful = false;
+			throw new JargonRuntimeException(msg, e);
 		}
 		objStat = null;
 		fileDescriptor = -1;
