@@ -20,7 +20,6 @@ import org.irods.jargon.core.query.AVUQueryElement;
 import org.irods.jargon.core.query.AVUQueryElement.AVUQueryPart;
 import org.irods.jargon.core.query.AVUQueryOperatorEnum;
 import org.irods.jargon.core.query.MetaDataAndDomainData;
-import org.irods.jargon.core.utils.MiscIRODSUtils;
 import org.irods.jargon.testutils.IRODSTestSetupUtilities;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.irods.jargon.testutils.filemanip.ScratchFileUtils;
@@ -137,9 +136,7 @@ public class UserProfileServiceImplTest {
 
 		// make the files are there with the necessary permissions
 
-		String userHomeDir = MiscIRODSUtils
-				.computeHomeDirectoryForGivenUserInSameZoneAsIRODSAccount(
-						irodsAccount, testUser);
+			String userHomeDir = userProfileService.getUserProfileDir(testUser);
 
 		IRODSFile userProfileFile = accessObjectFactory.getIRODSFileFactory(
 				testUserAccount).instanceIRODSFile(
@@ -212,9 +209,7 @@ public class UserProfileServiceImplTest {
 
 		// make the files are there with the necessary permissions
 
-		String userHomeDir = MiscIRODSUtils
-				.computeHomeDirectoryForGivenUserInSameZoneAsIRODSAccount(
-						irodsAccount, testUser);
+		String userHomeDir = userProfileService.getUserProfileDir(testUser);
 
 		IRODSFile userProfileFile = accessObjectFactory.getIRODSFileFactory(
 				testUserAccount).instanceIRODSFile(
@@ -260,7 +255,7 @@ public class UserProfileServiceImplTest {
 
 		// check for metadata, other unit tests will look at the details field
 		// by field
-		TestCase.assertTrue("no metadata found", metadata.isEmpty());
+		TestCase.assertFalse("no metadata found", metadata.isEmpty());
 
 		IRODSFile protectedProfileFile = accessObjectFactory
 				.getIRODSFileFactory(testUserAccount).instanceIRODSFile(

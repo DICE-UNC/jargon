@@ -413,11 +413,16 @@ public final class IRODSFileImpl extends File implements IRODSFile {
 				successful = false;
 			} catch (JargonException e) {
 
-				log.error(
-						"irods error occurred on delete, this was not a data not found exception, rethrow as unchecked",
-						e);
-				throw new JargonRuntimeException(
-						"exception occurred on delete", e);
+				if (e.getUnderlyingIRODSExceptionCode() == -528002) {
+					log.warn("underlying rename error logged and ignored on delete");
+				} else {
+
+					log.error(
+							"irods error occurred on delete, this was not a data not found exception, rethrow as unchecked",
+							e);
+					throw new JargonRuntimeException(
+							"exception occurred on delete", e);
+				}
 
 			}
 		}

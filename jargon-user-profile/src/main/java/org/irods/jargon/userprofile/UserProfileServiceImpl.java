@@ -70,6 +70,14 @@ public class UserProfileServiceImpl extends AbstractJargonService implements
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.userprofile.UserProfileService#retrieveUserProfile(java
+	 * .lang.String)
+	 */
+	@Override
 	public UserProfile retrieveUserProfile(final String userName)
 			throws DataNotFoundException,
 			JargonException {
@@ -117,15 +125,12 @@ public class UserProfileServiceImpl extends AbstractJargonService implements
 
 	}
 
-	/**
-	 * Delete the public and private user profile information. If the profile
-	 * information is not stored for the given user, this will be treated like a
-	 * normal delete.
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @param irodsUserName
-	 *            <code>String</code> with the user name for whom the profile
-	 *            will be removed
-	 * @throws JargonException
+	 * @see
+	 * org.irods.jargon.userprofile.UserProfileService#removeProfileInformation
+	 * (java.lang.String)
 	 */
 	@Override
 	public void removeProfileInformation(final String irodsUserName)
@@ -138,9 +143,7 @@ public class UserProfileServiceImpl extends AbstractJargonService implements
 
 		log.info("irodsUserName:{}", irodsUserName);
 
-		String userHomeDir = MiscIRODSUtils
-				.computeHomeDirectoryForGivenUserInSameZoneAsIRODSAccount(
-						getIrodsAccount(), irodsUserName);
+		String userHomeDir = getUserProfileDir(irodsUserName);
 
 		log.info("user home dir:{}", userHomeDir);
 
@@ -242,9 +245,7 @@ public class UserProfileServiceImpl extends AbstractJargonService implements
 		log.info("UserProfile:{}", userProfile);
 
 		// see if a user profile already exists for this user
-		String userHomeDir = MiscIRODSUtils
-				.computeHomeDirectoryForGivenUserInSameZoneAsIRODSAccount(
-						getIrodsAccount(), irodsUserName);
+		String userHomeDir = getUserProfileDir(irodsUserName);
 		log.info("looking for profile in userHomeDir:{}", userHomeDir);
 
 		IRODSFile userProfileFile = this
@@ -400,22 +401,57 @@ public class UserProfileServiceImpl extends AbstractJargonService implements
 		dataObjectAO.addAVUMetadata(irodsDataObjectAbsolutePath, avuData);
 	}
 
-	/**
-	 * @return the userProfileServiceConfiguration
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.userprofile.UserProfileService#
+	 * getUserProfileServiceConfiguration()
 	 */
 	@Override
 	public UserProfileServiceConfiguration getUserProfileServiceConfiguration() {
 		return userProfileServiceConfiguration;
 	}
 
-	/**
-	 * @param userProfileServiceConfiguration
-	 *            the userProfileServiceConfiguration to set
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.userprofile.UserProfileService#
+	 * setUserProfileServiceConfiguration
+	 * (org.irods.jargon.userprofile.UserProfileServiceConfiguration)
 	 */
 	@Override
 	public void setUserProfileServiceConfiguration(
 			final UserProfileServiceConfiguration userProfileServiceConfiguration) {
 		this.userProfileServiceConfiguration = userProfileServiceConfiguration;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.userprofile.UserProfileService#getUserProfileDir(java
+	 * .lang.String)
+	 */
+	@Override
+	public String getUserProfileDir(final String userName) {
+		if (userName == null || userName.isEmpty()) {
+			throw new IllegalArgumentException("null or empty userName");
+		}
+		String userHomeDir = MiscIRODSUtils
+				.computeHomeDirectoryForGivenUserInSameZoneAsIRODSAccount(
+						getIrodsAccount(), userName);
+
+		log.info("user home dir:{}", userHomeDir);
+
+		if (!userProfileServiceConfiguration.getProfileSubdirName().isEmpty()) {
+			StringBuilder sb = new StringBuilder();
+			sb.append(userHomeDir);
+			sb.append("/");
+			sb.append(userProfileServiceConfiguration.getProfileSubdirName());
+			userHomeDir = sb.toString();
+		}
+
+		return userHomeDir;
 	}
 
 	/**
@@ -428,11 +464,8 @@ public class UserProfileServiceImpl extends AbstractJargonService implements
 	 */
 	private IRODSFile retrieveUserPublicProfileFile(final String userName)
 			throws JargonException {
-		String userHomeDir = MiscIRODSUtils
-				.computeHomeDirectoryForGivenUserInSameZoneAsIRODSAccount(
-						getIrodsAccount(), userName);
 
-		log.info("user home dir:{}", userHomeDir);
+		String userHomeDir = getUserProfileDir(userName);
 
 		return this
 				.getIrodsAccessObjectFactory()

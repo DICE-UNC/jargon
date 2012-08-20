@@ -1,5 +1,6 @@
 package org.irods.jargon.userprofile;
 
+import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.DuplicateDataException;
 import org.irods.jargon.core.exception.JargonException;
 
@@ -58,5 +59,31 @@ public interface UserProfileService {
 	 * @throws JargonException
 	 */
 	void removeProfileInformation(String irodsUserName) throws JargonException;
+
+	/**
+	 * Given an iRODS user name, retrive the user profile if it exists
+	 * 
+	 * @param userName
+	 *            <code>String</code> with the iRODS user name
+	 * @return {@link UserProfile} with available information (may depend on
+	 *         ACL's)
+	 * @throws DataNotFoundException
+	 *             if the user profile information does not exist
+	 * @throws JargonException
+	 */
+	UserProfile retrieveUserProfile(String userName)
+			throws DataNotFoundException, JargonException;
+
+	/**
+	 * Return the calculated path to the user profile directory based on the
+	 * user name and the {@link UserProfileServiceConfiguration} information.
+	 * 
+	 * @param userName
+	 *            <code>String</code> with the iRODS user name for which the
+	 *            profile information is kept
+	 * @return <code>String</code> with the absolute path to the iRODS
+	 *         collection where user profile information is kept.
+	 */
+	String getUserProfileDir(String userName);
 
 }

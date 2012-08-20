@@ -57,6 +57,9 @@ Note that the following bug and feature requests are logged in GForge with relat
 * [#937] irm -rf when a collection contains soft links results in collection not empty error - info value:-821000
 ** overhead unit test cleanup methods to do a delete of the scratch area instead of deleteWithForceOption
 
+* [#936] delete with folder containing files fails silently
+** add thrown JargonRuntimeException for unanticipated delete errors. 
+
 ==Features==
 
  * [#764] Java libraries and code to integrate idrop-web
