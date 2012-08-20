@@ -268,4 +268,71 @@ public class UserProfileServiceImplTest {
 
 	}
 
+	@Test
+	public final void testRetrieveProfileForUser() throws Exception {
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAdminAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+		String testUser = "testRetrieveProfileForUser";
+
+		UserAO userAO = accessObjectFactory.getUserAO(irodsAccount);
+
+		try {
+			userAO.findByName(testUser);
+		} catch (DataNotFoundException dnf) {
+			User newUser = new User();
+			newUser.setName(testUser);
+			newUser.setUserType(UserTypeEnum.RODS_USER);
+
+			userAO.addUser(newUser);
+			userAO.changeAUserPasswordByAnAdmin(testUser, testUser);
+		}
+
+		IRODSAccount testUserAccount = testingPropertiesHelper
+				.buildIRODSAccountForIRODSUserFromTestPropertiesForGivenUser(
+						testingProperties, testUser, testUser);
+
+		UserProfileService userProfileService = new UserProfileServiceImpl(
+				accessObjectFactory, testUserAccount);
+
+		userProfileService.removeProfileInformation(testUser);
+
+		UserProfile userProfile = new UserProfile();
+		userProfile.setUserName(testUser);
+		userProfile.setZone(irodsAccount.getZone());
+
+		String actualNickName = "nickName";
+		String actualDescription = "description";
+		String actualZone = "zone";
+		String actualEmail = "emal@something.com";
+
+		userProfile.getUserProfilePublicFields().setDescription(
+				actualDescription);
+		userProfile.getUserProfilePublicFields().setNickName(actualNickName);
+		userProfile.getUserProfileProtectedFields().setMail(actualEmail);
+
+		// access person
+		userProfileService.getUserProfileServiceConfiguration()
+				.setProtectedProfileReadWriteGroup(irodsAccount.getUserName());
+
+		userProfileService.addProfileForUser(testUser, userProfile);
+
+		// now retrive
+		UserProfile actual = userProfileService.retrieveUserProfile(testUser);
+		TestCase.assertEquals("user name not set", userProfile.getUserName(),
+				actual.getUserName());
+		TestCase.assertEquals("zone not set", userProfile.getZone(),
+				actual.getZone());
+		TestCase.assertEquals("nick name not set", userProfile
+				.getUserProfilePublicFields().getNickName(), actual
+				.getUserProfilePublicFields().getNickName());
+		TestCase.assertEquals("description not set", userProfile
+				.getUserProfilePublicFields().getDescription(), actual
+				.getUserProfilePublicFields().getDescription());
+
+
+	}
+
 }

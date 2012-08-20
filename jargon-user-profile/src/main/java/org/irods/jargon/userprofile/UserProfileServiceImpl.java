@@ -90,7 +90,9 @@ public class UserProfileServiceImpl extends AbstractJargonService implements
 
 		log.info("userName:{}", userName);
 
-		UserProfile userProfile;
+		UserProfile userProfile = new UserProfile();
+		userProfile.setUserName(userName);
+		userProfile.setZone(irodsAccount.getZone());
 
 		log.info("retreiving the public profile");
 
@@ -115,13 +117,34 @@ public class UserProfileServiceImpl extends AbstractJargonService implements
 			throw new JargonException("error querying for AVUs", e);
 		}
 
-		List<MetaDataAndDomainData> metadata = dataObjectAO
+		List<MetaDataAndDomainData> metadataValues = dataObjectAO
 				.findMetadataValuesForDataObject(publicProfileFile
 						.getAbsolutePath());
 
-		log.info("profile AVUs:{}", metadata);
+		for (MetaDataAndDomainData metadata : metadataValues) {
+			log.info("metadata value:{}", metadata);
+			
+			if (metadata.getAvuAttribute().equals(UserProfileConstants.DESCRIPTION)) {
+				userProfile.getUserProfilePublicFields().setDescription(metadata.getAvuValue());
+				continue;
+			}
+			
+			if (metadata.getAvuAttribute().equals(
+					UserProfileConstants.NICK_NAME)) {
+				userProfile.getUserProfilePublicFields().setNickName(metadata.getAvuValue());
+				continue;
+			}
+			
+			/*
+			 * right now, quietly log and ignore property tha tis not
+			 * anticipated
+			 */
+			log.warn("property not recognized: {}", metadata);
+			
+		}
 
-		return null;
+		log.info("completed user profile:{}", userProfile);
+		return userProfile;
 
 	}
 
