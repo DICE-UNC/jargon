@@ -3,9 +3,14 @@
  */
 package org.irods.jargon.userprofile;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.DataNotFoundException;
@@ -135,14 +140,62 @@ public class UserProfileServiceImpl extends AbstractJargonService implements
 				continue;
 			}
 			
+			if (metadata.getAvuAttribute().equals(UserProfileConstants.ZONE)) {
+				userProfile.setZone(metadata.getAvuValue());
+				continue;
+			}
+
 			/*
-			 * right now, quietly log and ignore property tha tis not
+			 * right now, quietly log and ignore property that is not
 			 * anticipated
 			 */
 			log.warn("property not recognized: {}", metadata);
 			
 		}
 
+		log.info("look for protected profile file info...");
+		String userHomeDir = getUserProfileDir(userName);
+
+		IRODSFile protectedProfileFile = this
+				.getIrodsAccessObjectFactory()
+				.getIRODSFileFactory(getIrodsAccount())
+				.instanceIRODSFile(
+						userHomeDir,
+						userProfileServiceConfiguration
+								.getProtectedProfileFileName());
+
+		// tolerate no protected profile info
+		if (!protectedProfileFile.exists()) {
+			log.warn(
+					"no protected profile info, ignore and return public info:{}",
+					userProfile);
+			return userProfile;
+		}
+
+		InputStream userProfileInputStream = new BufferedInputStream(this
+				.getIrodsAccessObjectFactory()
+				.getIRODSFileFactory(getIrodsAccount())
+				.instanceIRODSFileInputStream(protectedProfileFile));
+		Properties protectedProperties = new Properties();
+		try {
+			protectedProperties.load(userProfileInputStream);
+		} catch (IOException e) {
+			log.error("error loading protected properties from stream:{}",
+					userProfileInputStream, e);
+			throw new JargonException("error loading protected properties", e);
+		} finally {
+			try {
+				userProfileInputStream.close();
+			} catch (Exception e) {
+			}
+		}
+		
+		if (protectedProperties.get(UserProfileConstants.EMAIL) != null) {
+			userProfile.getUserProfileProtectedFields().setMail(
+					(String) protectedProperties
+							.get(UserProfileConstants.EMAIL));
+		}
+		
 		log.info("completed user profile:{}", userProfile);
 		return userProfile;
 
@@ -384,6 +437,39 @@ public class UserProfileServiceImpl extends AbstractJargonService implements
 		addAVUIfDataPresent(userProfileFile.getAbsolutePath(),
 				UserProfileConstants.NICK_NAME,
 				userProfilePublicFields.getNickName());
+
+		// provision the protected profile information, first make into a
+		// Properties object
+
+		Properties protectedProperties = new Properties();
+		if (!userProfile.getUserProfileProtectedFields().getMail().isEmpty()) {
+			protectedProperties.put(UserProfileConstants.EMAIL, userProfile
+					.getUserProfileProtectedFields().getMail());
+
+		}
+
+		log.info("protected properties before serialization:{}",
+				protectedProperties);
+
+		OutputStream protectedPropertiesOutputStream = new BufferedOutputStream(
+				this
+				.getIrodsAccessObjectFactory()
+				.getIRODSFileFactory(getIrodsAccount())
+						.instanceIRODSFileOutputStream(protectedProfileFile));
+
+		log.info("output stream created, store to properties file");
+
+		try {
+			protectedProperties.store(protectedPropertiesOutputStream,
+					"saved protected properties");
+			protectedPropertiesOutputStream.close();
+			log.info("properties stored and stream closed");
+		} catch (IOException e) {
+			log.error("io exeption storing properties file", e);
+			throw new JargonException(
+					"error serializing protected properties to output stream",
+					e);
+		}
 
 	}
 

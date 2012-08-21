@@ -16,6 +16,8 @@ public class UserProfileConstants {
 	public static final String DESCRIPTION = "description";
 	public static final String NICK_NAME = "nickName";
 
+	public static final String EMAIL = "email";
+
 	/**
 	 * Prevent construction
 	 */

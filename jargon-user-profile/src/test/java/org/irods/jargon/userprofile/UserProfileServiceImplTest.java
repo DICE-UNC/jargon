@@ -22,7 +22,6 @@ import org.irods.jargon.core.query.AVUQueryOperatorEnum;
 import org.irods.jargon.core.query.MetaDataAndDomainData;
 import org.irods.jargon.testutils.IRODSTestSetupUtilities;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
-import org.irods.jargon.testutils.filemanip.ScratchFileUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -33,15 +32,12 @@ public class UserProfileServiceImplTest {
 	private static TestingPropertiesHelper testingPropertiesHelper = new TestingPropertiesHelper();
 	private static IRODSFileSystem irodsFileSystem;
 	private static final String IRODS_TEST_SUBDIR_PATH = "UserProfileServiceTest";
-	private static ScratchFileUtils scratchFileUtils = null;
 	private static IRODSTestSetupUtilities irodsTestSetupUtilities = null;
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		TestingPropertiesHelper testingPropertiesLoader = new TestingPropertiesHelper();
 		testingProperties = testingPropertiesLoader.getTestProperties();
-
-		scratchFileUtils = new ScratchFileUtils(testingProperties);
 		irodsTestSetupUtilities = new IRODSTestSetupUtilities();
 		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
 		irodsTestSetupUtilities
@@ -196,7 +192,6 @@ public class UserProfileServiceImplTest {
 
 		String actualNickName = "nickName";
 		String actualDescription = "description";
-		String actualZone = "zone";
 
 		userProfile.getUserProfilePublicFields().setDescription(
 				actualDescription);
@@ -305,7 +300,6 @@ public class UserProfileServiceImplTest {
 
 		String actualNickName = "nickName";
 		String actualDescription = "description";
-		String actualZone = "zone";
 		String actualEmail = "emal@something.com";
 
 		userProfile.getUserProfilePublicFields().setDescription(
@@ -331,8 +325,9 @@ public class UserProfileServiceImplTest {
 		TestCase.assertEquals("description not set", userProfile
 				.getUserProfilePublicFields().getDescription(), actual
 				.getUserProfilePublicFields().getDescription());
-
-
+		TestCase.assertEquals("mail not set", userProfile
+				.getUserProfileProtectedFields().getMail(), actual
+				.getUserProfileProtectedFields().getMail());
 	}
 
 }
