@@ -86,4 +86,14 @@ public interface UserProfileService {
 	 */
 	String getUserProfileDir(String userName);
 
+	/**
+	 * Update the user profile information for the given user
+	 * 
+	 * @param userProfile
+	 *            {@link UserProfile} containing the desired state of the user's
+	 *            information
+	 * @throws JargonException
+	 */
+	void updateUserProfile(UserProfile userProfile) throws JargonException;
+
 }

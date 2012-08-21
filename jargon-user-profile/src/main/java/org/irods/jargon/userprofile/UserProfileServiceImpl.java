@@ -79,6 +79,32 @@ public class UserProfileServiceImpl extends AbstractJargonService implements
 	 * (non-Javadoc)
 	 * 
 	 * @see
+	 * org.irods.jargon.userprofile.UserProfileService#updateUserProfile(org
+	 * .irods.jargon.userprofile.UserProfile)
+	 */
+	@Override
+	public void updateUserProfile(final UserProfile userProfile)
+			throws JargonException {
+
+		log.info("updateUserProfile()");
+		if (userProfile == null) {
+			throw new IllegalArgumentException("null userProfile");
+		}
+		log.info("user profile:{}", userProfile);
+
+		// TODO do some sort of versioned back-up
+		log.info("remove old...");
+		this.removeProfileInformation(userProfile.getUserName());
+		log.info("add new...");
+		this.addProfileForUser(userProfile.getUserName(), userProfile);
+		log.info("profile updated");
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
 	 * org.irods.jargon.userprofile.UserProfileService#retrieveUserProfile(java
 	 * .lang.String)
 	 */
