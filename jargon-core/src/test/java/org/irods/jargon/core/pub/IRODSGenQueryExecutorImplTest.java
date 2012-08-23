@@ -83,6 +83,8 @@ public class IRODSGenQueryExecutorImplTest {
 		dto.putOperation(absPath + "/" + collDir, putDir.getAbsolutePath(), "",
 				null, null);
 
+		irodsFileSystem.closeAndEatExceptions();
+
 	}
 
 	/**

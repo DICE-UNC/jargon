@@ -2,40 +2,43 @@ package org.irods.jargon.datautils.datacache;
 
 /**
  * Configuration value object for cache service
+ * 
  * @author Mike Conway - DICE (www.irods.org)
- *
+ * 
  */
 public class CacheServiceConfiguration {
-	
+
 	/**
-	 * Clean up old cache files during each request (might create a slight response delay for large caches.
+	 * Clean up old cache files during each request (might create a slight
+	 * response delay for large caches.
 	 */
 	private boolean doCleanupDuringRequests = true;
-	
+
 	/**
 	 * Cache is created per user home dir
 	 */
 	private boolean cacheInHomeDir = true;
-	
+
 	/**
 	 * Lifetime of cached data for determining purge
 	 */
 	private int lifetimeInMinutes = 10;
-	
+
 	public int getLifetimeInMinutes() {
 		return lifetimeInMinutes;
 	}
 
-	public void setLifetimeInMinutes(int lifetimeInMinutes) {
+	public void setLifetimeInMinutes(final int lifetimeInMinutes) {
 		this.lifetimeInMinutes = lifetimeInMinutes;
 	}
 
 	/**
-	 * Directory path for cache files.  If caching in home directory, this is a relative path under home.  If cacheInHomeDir is <code>false</code>, then
+	 * Directory path for cache files. If caching in home directory, this is a
+	 * relative path under home. If cacheInHomeDir is <code>false</code>, then
 	 * path is an absolute path to the desired cache dir.
 	 */
 	private String cacheDirPath = "cacheServiceTempDir";
-	
+
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
@@ -48,8 +51,8 @@ public class CacheServiceConfiguration {
 		sb.append(cacheDirPath);
 		return sb.toString();
 	}
-	
-	public void setDoCleanupDuringRequests(boolean doCleanupDuringRequests) {
+
+	public void setDoCleanupDuringRequests(final boolean doCleanupDuringRequests) {
 		this.doCleanupDuringRequests = doCleanupDuringRequests;
 	}
 
@@ -65,9 +68,10 @@ public class CacheServiceConfiguration {
 	}
 
 	/**
-	 * @param cacheInHomeDir the cacheInHomeDir to set
+	 * @param cacheInHomeDir
+	 *            the cacheInHomeDir to set
 	 */
-	public void setCacheInHomeDir(boolean cacheInHomeDir) {
+	public void setCacheInHomeDir(final boolean cacheInHomeDir) {
 		this.cacheInHomeDir = cacheInHomeDir;
 	}
 
@@ -79,14 +83,11 @@ public class CacheServiceConfiguration {
 	}
 
 	/**
-	 * @param cacheDirPath the cacheDirPath to set
+	 * @param cacheDirPath
+	 *            the cacheDirPath to set
 	 */
-	public void setCacheDirPath(String cacheDirPath) {
+	public void setCacheDirPath(final String cacheDirPath) {
 		this.cacheDirPath = cacheDirPath;
 	}
-	
-	
-	
-	
 
 }

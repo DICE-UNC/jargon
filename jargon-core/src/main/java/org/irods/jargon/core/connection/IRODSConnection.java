@@ -24,8 +24,10 @@ import org.slf4j.LoggerFactory;
  * rather, they use the {@link IRODSCommands IRODSProtocol} interface.
  * <p/>
  * The connection is confined to one thread, and as such the various methods do
- * not need to be synchronized. They do remain so for any possible edge cases
- * and as an extra layer of protection.
+ * not need to be synchronized. All operations pass through the
+ * <code>IRODScommands</code> object wrapping this connection, and
+ * <code>IRODSCommands</code> does maintain synchronized access to operations
+ * that read and write to this connection.
  * 
  * @author Mike Conway - DICE (www.irods.org)
  * 
@@ -58,17 +60,65 @@ final class IRODSConnection implements IRODSManagedConnection {
 	 */
 	private int outputOffset = 0;
 
+	/**
+	 * Create an instance of a connection (underlying socket and streams) to
+	 * iRODS
+	 * 
+	 * @param irodsAccount
+	 * @param irodsConnectionManager
+	 * @param pipelineConfiguration
+	 * @return
+	 * @throws JargonException
+	 */
 	static IRODSConnection instance(final IRODSAccount irodsAccount,
 			final IRODSProtocolManager irodsConnectionManager,
 			final PipelineConfiguration pipelineConfiguration)
 			throws JargonException {
 		IRODSConnection irodsSimpleConnection = new IRODSConnection(
-				irodsAccount, irodsConnectionManager, pipelineConfiguration);
-		irodsSimpleConnection.initializeConnection(irodsAccount);
+				irodsAccount, irodsConnectionManager, pipelineConfiguration,
+				null);
+		irodsSimpleConnection.initializeConnection(irodsAccount, null);
 		return irodsSimpleConnection;
 	}
 
-	private void initializeConnection(final IRODSAccount irodsAccount)
+	/**
+	 * Create an instance of a connection (underlying socket and streams) to
+	 * iRODS during a reconnect operation.
+	 * 
+	 * @param irodsAccount
+	 * @param irodsConnectionManager
+	 * @param pipelineConfiguration
+	 * @param irodsSession
+	 * @return
+	 * @throws JargonException
+	 */
+	static IRODSConnection instanceWithReconnectInfo(
+			final IRODSAccount irodsAccount,
+			final IRODSProtocolManager irodsConnectionManager,
+			final PipelineConfiguration pipelineConfiguration,
+			final StartupResponseData startupResponseData,
+			final IRODSSession irodsSession)
+			throws JargonException {
+
+		if (irodsSession == null) {
+			throw new IllegalArgumentException(
+					"must have reference to the IRODSSession, it is null");
+		}
+
+		IRODSConnection irodsSimpleConnection = new IRODSConnection(
+				irodsAccount, irodsConnectionManager, pipelineConfiguration,
+				startupResponseData);
+
+		irodsSimpleConnection.setIrodsSession(irodsSession);
+
+		irodsSimpleConnection.initializeConnection(irodsAccount,
+				startupResponseData);
+
+		return irodsSimpleConnection;
+	}
+
+	private void initializeConnection(final IRODSAccount irodsAccount,
+			final StartupResponseData startupResponseData)
 			throws JargonException {
 		// connect to irods, do handshake
 		// save the irods startup information to the IRODSServerProperties
@@ -89,7 +139,7 @@ final class IRODSConnection implements IRODSManagedConnection {
 
 		log.info("opening irods socket");
 
-		connect(irodsAccount);
+		connect(irodsAccount, startupResponseData);
 
 		// build an identifier for this connection, at least for now
 		StringBuilder connectionInternalIdentifierBuilder = new StringBuilder();
@@ -105,7 +155,8 @@ final class IRODSConnection implements IRODSManagedConnection {
 
 	private IRODSConnection(final IRODSAccount irodsAccount,
 			final IRODSProtocolManager irodsConnectionManager,
-			final PipelineConfiguration pipelineConfiguration)
+			final PipelineConfiguration pipelineConfiguration,
+			final StartupResponseData startupResponseData)
 			throws JargonException {
 
 		if (irodsConnectionManager == null) {
@@ -135,19 +186,98 @@ final class IRODSConnection implements IRODSManagedConnection {
 
 	}
 
-	private void connect(final IRODSAccount irodsAccount)
+
+	/**
+	 * Do an initial (first) connection to iRODS based on account and
+	 * properties. This is differentiated from the <code>reconnect()</code>
+	 * method which is used to periodically renew a socket
+	 * 
+	 * @param irodsAccount
+	 * @param startupResponseData
+	 *            {@link StartupResponseData} that would carry necessary info to
+	 *            divert the socket to a reconnect host/port. Otherwise, this is
+	 *            set to <code>null</code> and ignored.
+	 * @throws JargonException
+	 */
+	private void connect(final IRODSAccount irodsAccount,
+			final StartupResponseData startupResponseData)
 			throws JargonException {
-		log.info("connecting socket...");
+		log.info("connect()");
+
+		if (irodsAccount == null) {
+			throw new IllegalArgumentException("null irodsAccount");
+		}
 
 		if (connected) {
 			log.warn("doing connect when already connected!, will bypass connect and proceed");
 			return;
 		}
 
-		try {
+		int attemptCount = 3;
+
+		for (int i = 0; i < attemptCount; i++) {
 			log.info("connecting socket to agent");
-			connection = new Socket(irodsAccount.getHost(),
-					irodsAccount.getPort());
+			try {
+				if (startupResponseData == null) {
+					log.info("normal iRODS connection");
+					connection = new Socket(irodsAccount.getHost(),
+							irodsAccount.getPort());
+				} else {
+					log.info("restart iRODS connection");
+					log.info("reconnect host:{}",
+							startupResponseData.getReconnAddr());
+					log.info("reconnection port:{}",
+							startupResponseData.getReconnPort());
+					connection = new Socket(
+							startupResponseData.getReconnAddr(),
+							startupResponseData.getReconnPort());
+				}
+
+				// success, so break out of reconnect loop
+				log.info("connection to socket made...");
+				break;
+
+			} catch (UnknownHostException e) {
+				log.error(
+						"exception opening socket to:" + irodsAccount.getHost()
+								+ " port:" + irodsAccount.getPort(), e);
+				throw new JargonException(e);
+			} catch (IOException ioe) {
+
+				if (i < attemptCount - 1) {
+					log.info("IOExeption, sleep and attempt a reconnect");
+					try {
+						Thread.sleep(3000);
+					} catch (InterruptedException e) {
+						// ignore
+					}
+
+				} else {
+
+					log.error(
+							"io exception opening socket to:"
+									+ irodsAccount.getHost() + " port:"
+									+ irodsAccount.getPort(), ioe);
+					throw new JargonException(ioe);
+				}
+			}
+
+		}
+
+		setUpSocketAndStreamsAfterConnection(irodsAccount);
+
+		connected = true;
+
+		log.info("socket opened successfully");
+	}
+
+	/**
+	 * @param irodsAccount
+	 * @throws JargonException
+	 */
+	private void setUpSocketAndStreamsAfterConnection(
+			final IRODSAccount irodsAccount) throws JargonException {
+		try {
 
 			int socketTimeout = pipelineConfiguration.getIrodsSocketTimeout();
 			if (socketTimeout > 0) {
@@ -205,10 +335,6 @@ final class IRODSConnection implements IRODSManagedConnection {
 							+ " port:" + irodsAccount.getPort(), ioe);
 			throw new JargonException(ioe);
 		}
-
-		connected = true;
-
-		log.info("socket opened successfully");
 	}
 
 	/*

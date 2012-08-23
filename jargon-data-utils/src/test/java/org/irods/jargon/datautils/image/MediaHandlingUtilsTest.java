@@ -1,6 +1,6 @@
 package org.irods.jargon.datautils.image;
 
-import junit.framework.TestCase;
+import junit.framework.Assert;
 
 import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry;
 import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry.ObjectType;
@@ -25,7 +25,7 @@ public class MediaHandlingUtilsTest {
 		entry.setPathOrName("image.jpg");
 		entry.setObjectType(ObjectType.DATA_OBJECT);
 		boolean actual = MediaHandlingUtils.isImageFile(entry);
-		TestCase.assertTrue("did not identify as image", actual);
+		Assert.assertTrue("did not identify as image", actual);
 	}
 
 	@Test
@@ -34,7 +34,7 @@ public class MediaHandlingUtilsTest {
 		entry.setPathOrName("image.doc");
 		entry.setObjectType(ObjectType.DATA_OBJECT);
 		boolean actual = MediaHandlingUtils.isImageFile(entry);
-		TestCase.assertFalse("should not identify as image", actual);
+		Assert.assertFalse("should not identify as image", actual);
 	}
 
 	@Test
@@ -43,14 +43,14 @@ public class MediaHandlingUtilsTest {
 		entry.setPathOrName("image.doc");
 		entry.setObjectType(ObjectType.COLLECTION);
 		boolean actual = MediaHandlingUtils.isImageFile(entry);
-		TestCase.assertFalse("should not identify collection as image", actual);
+		Assert.assertFalse("should not identify collection as image", actual);
 	}
 
 	@Test
 	public final void testIsImageFileWhenNull() {
 		CollectionAndDataObjectListingEntry entry = null;
 		boolean actual = MediaHandlingUtils.isImageFile(entry);
-		TestCase.assertFalse("should not identify collection as image", actual);
+		Assert.assertFalse("should not identify collection as image", actual);
 	}
 
 	@Test
@@ -59,7 +59,7 @@ public class MediaHandlingUtilsTest {
 		entry.setPathOrName("image.doc");
 		entry.setObjectType(ObjectType.DATA_OBJECT);
 		boolean actual = MediaHandlingUtils.isMediaFile(entry);
-		TestCase.assertFalse("should not identify as media", actual);
+		Assert.assertFalse("should not identify as media", actual);
 	}
 
 	@Test
@@ -68,7 +68,7 @@ public class MediaHandlingUtilsTest {
 		entry.setPathOrName("image.mp4");
 		entry.setObjectType(ObjectType.DATA_OBJECT);
 		boolean actual = MediaHandlingUtils.isMediaFile(entry);
-		TestCase.assertTrue("did not identify as media", actual);
+		Assert.assertTrue("did not identify as media", actual);
 	}
 
 	@Test
@@ -77,7 +77,7 @@ public class MediaHandlingUtilsTest {
 		entry.setPathOrName("image.mp3");
 		entry.setObjectType(ObjectType.DATA_OBJECT);
 		boolean actual = MediaHandlingUtils.isMediaFile(entry);
-		TestCase.assertTrue("did not identify as media", actual);
+		Assert.assertTrue("did not identify as media", actual);
 	}
 
 	@Test
@@ -86,7 +86,7 @@ public class MediaHandlingUtilsTest {
 		entry.setPathOrName("image.avi");
 		entry.setObjectType(ObjectType.DATA_OBJECT);
 		boolean actual = MediaHandlingUtils.isMediaFile(entry);
-		TestCase.assertTrue("did not identify as media", actual);
+		Assert.assertTrue("did not identify as media", actual);
 	}
 
 	@Ignore
@@ -96,7 +96,7 @@ public class MediaHandlingUtilsTest {
 		entry.setPathOrName("image.pdf");
 		entry.setObjectType(ObjectType.DATA_OBJECT);
 		boolean actual = MediaHandlingUtils.isMediaFile(entry);
-		TestCase.assertTrue("did not identify as media", actual);
+		Assert.assertTrue("did not identify as media", actual);
 	}
 
 }

@@ -23,7 +23,7 @@ public class StartupPack extends AbstractIRODSPackingInstruction {
 	public StartupPack(final IRODSAccount irodsAccount, final boolean reconnect) {
 		this(irodsAccount);
 		if (reconnect) {
-			reconnFlag = 1;
+			reconnFlag = 200;
 		}
 	}
 

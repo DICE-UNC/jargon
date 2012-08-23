@@ -4,23 +4,15 @@
 	<groupId>org.irods</groupId>
 	<artifactId>jargon</artifactId>
 	<packaging>pom</packaging>
-	<version>3.1.3-SNAPSHOT</version>
+	<version>3.2.0-SNAPSHOT</version>
 	<name>Jargon</name>
 	<description>Core Java API and related libraries for iRODS</description>
 	<url>https://code.renci.org/gf/project/jargon</url>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<spring.aop.version>3.0.5.RELEASE</spring.aop.version>
-		<spring.beans.version>3.0.5.RELEASE</spring.beans.version>
-		<spring.context.version>3.0.5.RELEASE</spring.context.version>
-		<spring.hibernate3.version>2.0.8</spring.hibernate3.version>
-		<spring.jdbc.version>3.0.5.RELEASE</spring.jdbc.version>
 		<spring.webmvc.version>3.0.5.RELEASE</spring.webmvc.version>
-		<spring.core.version>3.0.5.RELEASE</spring.core.version>
-		<spring.security.core.version>3.0.5.RELEASE</spring.security.core.version>
-		<spring.security.web.version>3.0.5.RELEASE</spring.security.web.version>
-		<spring.web.version>3.0.5.RELEASE</spring.web.version>
-		<hibernate.version>3.3.1.GA</hibernate.version>
+		<spring.core.version>3.1.0.RELEASE</spring.core.version>
+		<hibernate.version>3.3.2.GA</hibernate.version>
 	</properties>
 	<issueManagement>
 		<system>gForge</system>
@@ -92,6 +84,11 @@
 				<checksumPolicy>fail</checksumPolicy>
 			</snapshots>
 		</repository>
+		<repository>
+			<id>osgeo</id>
+			<name>Open Source Geospatial Foundation Repository</name>
+			<url>http://download.osgeo.org/webdav/geotools/</url>
+		</repository>
 	</repositories>
 	<distributionManagement>
 		<repository>
@@ -115,18 +112,22 @@
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>taglist-maven-plugin</artifactId>
+				<version>2.4</version>
 			</plugin>
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>jxr-maven-plugin</artifactId>
+				<version>2.0-beta-1</version>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-report-plugin</artifactId>
+				<version>2.9</version>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>1.9</version>
 				<configuration>
 					<links>
 						<link>http://download.oracle.com/javase/6/docs/api/</link>
@@ -142,12 +143,13 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-changelog-plugin</artifactId>
+				<version>1.9.2</version>
 			</plugin>
 
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-release-plugin</artifactId>
-				<version>2.2</version>
+				<version>1.4.1</version>
 				<configuration>
 					<!-- <tagBase>https://svn.apache.org/repos/asf/maven/components/releases</tagBase> -->
 				</configuration>
@@ -205,12 +207,12 @@
 			<dependency>
 				<groupId>org.hibernate</groupId>
 				<artifactId>hibernate-annotations</artifactId>
-				<version>${hibernate.version}</version>
+				<version>3.2.0.ga</version>
 			</dependency>
 			<dependency>
 				<groupId>javax.persistence</groupId>
-				<artifactId>ejb</artifactId>
-				<version>3.0-public_review</version>
+				<artifactId>persistence-api</artifactId>
+				<version>1.0</version>
 			</dependency>
 			<dependency>
 				<groupId>javax.transaction</groupId>
@@ -285,22 +287,32 @@
 			<dependency>
 				<groupId>org.springframework</groupId>
 				<artifactId>spring-aop</artifactId>
-				<version>${spring.aop.version}</version>
+				<version>${spring.core.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-test</artifactId>
+				<version>${spring.core.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.springframework</groupId>
 				<artifactId>spring-beans</artifactId>
-				<version>${spring.beans.version}</version>
+				<version>3.1.0.RELEASE</version>
 			</dependency>
 			<dependency>
 				<groupId>org.springframework</groupId>
 				<artifactId>spring-context</artifactId>
-				<version>${spring.context.version}</version>
+				<version>3.1.0.RELEASE</version>
 			</dependency>
 			<dependency>
 				<groupId>org.springframework</groupId>
 				<artifactId>spring-jdbc</artifactId>
-				<version>${spring.jdbc.version}</version>
+				<version>${spring.core.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-orm</artifactId>
+				<version>3.1.0.RELEASE</version>
 			</dependency>
 			<dependency>
 				<groupId>org.springframework</groupId>
@@ -320,12 +332,12 @@
 			<dependency>
 				<groupId>org.springframework.security</groupId>
 				<artifactId>spring-security-core</artifactId>
-				<version>${spring.security.core.version}</version>
+				<version>${spring.webmvc.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.springframework.security</groupId>
 				<artifactId>spring-security-web</artifactId>
-				<version>${spring.security.web.version}</version>
+				<version>${spring.webmvc.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>javassist</groupId>
@@ -335,7 +347,7 @@
 			<dependency>
 				<groupId>org.springframework</groupId>
 				<artifactId>spring-web</artifactId>
-				<version>${spring.web.version}</version>
+				<version>${spring.webmvc.version}</version>
 				<type>pom</type>
 			</dependency>
 		</dependencies>
@@ -406,6 +418,19 @@
 					</descriptorRefs>
 				</configuration>
 			</plugin>
+			<plugin>
+				<artifactId>maven-jar-plugin</artifactId>
+
+				<executions>
+					<execution>
+						<id>default-jar</id>
+						<phase>package</phase>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 	</build>
 	<modules>
@@ -416,5 +441,5 @@
 		<module>jargon-data-utils</module>
 		<module>jargon-ticket</module>
 		<module>jargon-httpstream</module>
-  </modules>
+	</modules>
 </project>

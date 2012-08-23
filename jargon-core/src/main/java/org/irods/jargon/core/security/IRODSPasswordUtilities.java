@@ -147,25 +147,27 @@ public class IRODSPasswordUtilities {
 	}
 
 	/**
-	 * Obfuscate a new password using the old password, suitable to change a
-	 * user password.
+	 * Obfuscate a given value using a key, suitable to change a user password.
 	 * 
-	 * @param newPassword
-	 *            <code>String</code> with the desired new password
-	 * @param oldPassword
-	 *            <code>String</code> with the current password
+	 * @param sourceData
+	 *            <code>String</code> with the desired value to encrypt
+	 * @param key
+	 *            <code>String</code> with the encrtyption key
+	 * @param pad
+	 *            <code>boolean</code> indicating whether value source value
+	 *            should be padded
 	 * @return <code>String</code> with the obfuscated password to send to iRODS
 	 *         via the iRODS admin protocol.
 	 * @throws JargonException
 	 */
-	public static String obfuscateIRODSPassword(final String newPassword,
-			final String oldPassword) throws JargonException {
+	public static String obfEncodeByKey(final String sourceData,
+			final String key, final boolean pad) throws JargonException {
 
-		if (newPassword == null || newPassword.isEmpty()) {
+		if (sourceData == null || sourceData.isEmpty()) {
 			throw new JargonException("newPassword is null or empty");
 		}
 
-		if (oldPassword == null || oldPassword.isEmpty()) {
+		if (key == null || key.isEmpty()) {
 			throw new JargonException("oldPassword is null or empty");
 		}
 
@@ -174,7 +176,12 @@ public class IRODSPasswordUtilities {
 		 * in without adding another signature or flag. If I am doing an admin
 		 * change the padding has already happened.
 		 */
-		String randPaddedNewPassword = padPasswordWithRandomStringData(newPassword);
+		String randPaddedNewPassword;
+		if (pad) {
+			randPaddedNewPassword = padPasswordWithRandomStringData(sourceData);
+		} else {
+			randPaddedNewPassword = sourceData;
+		}
 
 		MessageDigest messageDigest;
 		try {
@@ -186,8 +193,8 @@ public class IRODSPasswordUtilities {
 		byte[] oldPwdBuffer = new byte[100];
 
 		// get MD5 hash of the old password
-		byte[] oldPwdAsBytes = oldPassword.getBytes();
-		for (int i = 0; i < oldPassword.length(); i++) {
+		byte[] oldPwdAsBytes = key.getBytes();
+		for (int i = 0; i < key.length(); i++) {
 			oldPwdBuffer[i] = oldPwdAsBytes[i];
 		}
 

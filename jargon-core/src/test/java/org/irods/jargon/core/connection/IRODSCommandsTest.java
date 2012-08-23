@@ -10,7 +10,7 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-public class IRODSProtocolTest {
+public class IRODSCommandsTest {
 
 	private static Properties testingProperties = new Properties();
 	private static TestingPropertiesHelper testingPropertiesHelper = new TestingPropertiesHelper();
@@ -54,6 +54,87 @@ public class IRODSProtocolTest {
 		Assert.assertTrue("i should have been connected", irodsProtocol
 				.getCachedChallengeValue().length() > 0);
 		irodsProtocol.disconnect();
+	}
+
+	/**
+	 * test starting a connection and sending a startup pack when connection
+	 * restarting is off
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void testStartupPackNoReconn() throws Exception {
+
+		SettableJargonProperties jargonProperties = new SettableJargonProperties();
+		jargonProperties.setReconnect(false);
+		IRODSFileSystem testFS = IRODSFileSystem.instance();
+		testFS.getIrodsSession().setJargonProperties(jargonProperties);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		/*
+		 * EnvironmentalInfoAO environmentalInfoAO = testFS
+		 * .getIRODSAccessObjectFactory().getEnvironmentalInfoAO( irodsAccount);
+		 * IRODSServerProperties irodsServerProperties = environmentalInfoAO
+		 * .getIRODSServerProperties();
+		 */
+
+		IRODSCommands irodsCommands = testFS.getIRODSAccessObjectFactory()
+				.getIrodsSession().currentConnection(irodsAccount);
+		StartupResponseData startupResponseData = irodsCommands
+				.getStartupResponseData();
+
+		testFS.closeAndEatExceptions();
+		Assert.assertNotNull("null startup response data", startupResponseData);
+		Assert.assertFalse("no api version", startupResponseData
+				.getApiVersion().isEmpty());
+		Assert.assertFalse("no rel version", startupResponseData
+				.getRelVersion().isEmpty());
+
+	}
+
+	/**
+	 * test starting a connection and sending a startup pack when connection
+	 * restarting is o
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void testStartupPackWithReconn() throws Exception {
+
+		SettableJargonProperties jargonProperties = new SettableJargonProperties();
+		jargonProperties.setReconnect(true);
+		IRODSFileSystem testFS = IRODSFileSystem.instance();
+		testFS.getIrodsSession().setJargonProperties(jargonProperties);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		/*
+		 * EnvironmentalInfoAO environmentalInfoAO = testFS
+		 * .getIRODSAccessObjectFactory().getEnvironmentalInfoAO( irodsAccount);
+		 * IRODSServerProperties irodsServerProperties = environmentalInfoAO
+		 * .getIRODSServerProperties();
+		 */
+
+		IRODSCommands irodsCommands = testFS.getIRODSAccessObjectFactory()
+				.getIrodsSession().currentConnection(irodsAccount);
+		StartupResponseData startupResponseData = irodsCommands
+				.getStartupResponseData();
+
+		testFS.closeAndEatExceptions();
+		Assert.assertNotNull("null startup response data", startupResponseData);
+		Assert.assertFalse("no api version", startupResponseData
+				.getApiVersion().isEmpty());
+		Assert.assertFalse("no rel version", startupResponseData
+				.getRelVersion().isEmpty());
+		Assert.assertTrue("no port", startupResponseData.getReconnPort() > 0);
+		Assert.assertFalse("no restart host", startupResponseData
+				.getReconnAddr().isEmpty());
+		Assert.assertFalse("no restart cookie", startupResponseData.getCookie()
+				.isEmpty());
+
 	}
 
 	@Test
