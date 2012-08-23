@@ -122,8 +122,10 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 		Assert.assertEquals("i am not the owner", irodsAccount.getUserName(),
 				entry.getOwnerName());
 
-		Assert.assertTrue(entry.isLastResult());
-		Assert.assertEquals(entry.getCount(), entries.size());
+		Assert.assertTrue("should be last result", entry.isLastResult());
+		Assert.assertEquals(
+				"last record count should equal number of expected total records",
+				count, entry.getCount());
 		Assert.assertEquals(500, entries.size());
 
 	}
@@ -176,11 +178,6 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 		Assert.assertEquals(
 				CollectionAndDataObjectListingEntry.ObjectType.COLLECTION,
 				entry.getObjectType());
-
-		Assert.assertTrue(entry.isLastResult());
-		// TestCase.assertTrue(entry.isLastResult());
-		Assert.assertEquals(entry.getCount(), entries.size());
-		Assert.assertEquals(500, entries.size());
 
 	}
 

@@ -46,3 +46,12 @@ Note that the following bug and feature requests are logged in GForge with relat
  
  *  [#869] connection restart in transfer
 ** initial implementation of connection restart manager for put and get operations
+* [#930] [iROD-Chat:8451] Does Jargon limit the number of items returned in a collection contents list?
+** Correctly compute last index when listing collections with permissions
+** Take out user type query and set to unknown to help performance.  This was causing a subquery for every row.  The user type defaults to UNKNOWN for now, and that information will not be available in the current iteration.  Note that specific/sql query will be used to impove the available information in this query as a separate feature request.
+** fix record counts in gen query results to account for paging offset when adding counts to returned rows
+** added IRODSThousandCollectionsTest and augmented IRODSThousandFilesTest to test out this operation
+
+* [#936] delete with folder containing files fails silently
+** add thrown JargonRuntimeException for unanticipated delete errors. 
+

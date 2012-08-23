@@ -12,7 +12,6 @@ import org.irods.jargon.core.protovalues.FilePermissionEnum;
 import org.irods.jargon.core.protovalues.UserTypeEnum;
 import org.irods.jargon.core.pub.UserAO;
 import org.irods.jargon.core.pub.domain.Collection;
-import org.irods.jargon.core.pub.domain.User;
 import org.irods.jargon.core.pub.domain.UserFilePermission;
 import org.irods.jargon.core.query.AVUQueryElement;
 import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry;
@@ -346,14 +345,16 @@ public class CollectionAOHelper extends AOHelper {
 		 * the type to unknown and return what I have.
 		 */
 		try {
-			User user = userAO
-					.findByIdInZone(row.getColumn(10), collectionZone);
+			/*
+			 * User user = userAO .findByIdInZone(row.getColumn(10),
+			 * collectionZone);
+			 */
 
 			userFilePermission = new UserFilePermission(row.getColumn(7),
 					row.getColumn(10),
 					FilePermissionEnum.valueOf(IRODSDataConversionUtil
 							.getIntOrZeroFromIRODSValue(row.getColumn(9))),
-					user.getUserType(), row.getColumn(8));
+					UserTypeEnum.RODS_UNKNOWN, row.getColumn(8));
 
 		} catch (DataNotFoundException dnf) {
 			log.warn(

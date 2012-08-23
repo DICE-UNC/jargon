@@ -21,8 +21,8 @@ public class IRODSPasswordUtilitiesTest {
 	public void testObfuscate() throws Exception {
 		String password = "hello";
 		String newPassword = "argybargy";
-		String obfuscated = IRODSPasswordUtilities.obfuscateIRODSPassword(
-				newPassword, password);
+		String obfuscated = IRODSPasswordUtilities.obfEncodeByKey(
+				newPassword, password, true);
 		Assert.assertEquals("o(yrwoSMzIqkTFzPV\"\"3V12(a00U*f+YRQ*N#MQJ",
 				obfuscated);
 

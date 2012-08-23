@@ -816,6 +816,8 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 					augmentCollectionEntryForSpecialCollections(objStat,
 							effectiveAbsolutePath,
 							collectionAndDataObjectListingEntry);
+					collectionAndDataObjectListingEntry.setCount(row
+							.getRecordCount() - 1);
 					subdirs.add(collectionAndDataObjectListingEntry);
 				}
 
@@ -844,6 +846,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 				log.debug("adding last entry");
 				collectionAndDataObjectListingEntry
 						.setUserFilePermission(userFilePermissions);
+				collectionAndDataObjectListingEntry.setLastResult(true);
 				augmentCollectionEntryForSpecialCollections(objStat,
 						effectiveAbsolutePath,
 						collectionAndDataObjectListingEntry);
