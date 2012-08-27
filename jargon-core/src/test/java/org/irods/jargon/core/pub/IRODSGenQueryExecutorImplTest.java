@@ -11,6 +11,7 @@ import junit.framework.Assert;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.pub.io.IRODSFileFactory;
+import org.irods.jargon.core.query.AbstractIRODSQueryResultSet;
 import org.irods.jargon.core.query.GenQueryOrderByField;
 import org.irods.jargon.core.query.IRODSGenQuery;
 import org.irods.jargon.core.query.IRODSGenQueryBuilder;
@@ -507,7 +508,7 @@ public class IRODSGenQueryExecutorImplTest {
 		IRODSGenQueryExecutor irodsGenQueryExecutor = accessObjectFactory
 				.getIRODSGenQueryExecutor(irodsAccount);
 
-		IRODSQueryResultSet resultSet = irodsGenQueryExecutor
+		AbstractIRODSQueryResultSet resultSet = irodsGenQueryExecutor
 				.executeIRODSQuery(irodsQuery, 0);
 
 		Assert.assertTrue("did not get expected continuation",
@@ -568,7 +569,7 @@ public class IRODSGenQueryExecutorImplTest {
 				// execute query
 				IRODSGenQueryExecutor irodsGenQueryExecutor = aof
 						.getIRODSGenQueryExecutor(irodsAccount);
-				IRODSQueryResultSet resultSet = irodsGenQueryExecutor
+				AbstractIRODSQueryResultSet resultSet = irodsGenQueryExecutor
 						.executeIRODSQueryAndCloseResult(irodsQuery, 0);
 
 				// set the file info object from the query result
@@ -640,7 +641,7 @@ public class IRODSGenQueryExecutorImplTest {
 		// execute query
 		IRODSGenQueryExecutor irodsGenQueryExecutor = accessObjectFactory
 				.getIRODSGenQueryExecutor(irodsAccount);
-		IRODSQueryResultSet resultSet = irodsGenQueryExecutor
+		AbstractIRODSQueryResultSet resultSet = irodsGenQueryExecutor
 				.executeIRODSQuery(irodsQuery, 0);
 
 		// set the file info object from the query result

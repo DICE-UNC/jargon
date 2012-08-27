@@ -141,6 +141,22 @@ public class EnvironmentalInfoAOImpl extends IRODSGenericAO implements
 	 * (non-Javadoc)
 	 * 
 	 * @see
+	 * org.irods.jargon.core.pub.EnvironmentalInfoAO#isAbleToRunSpecificQuery()
+	 */
+	@Override
+	public boolean isAbleToRunSpecificQuery() throws JargonException {
+		if (this.getIRODSServerProperties()
+				.isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods3.1")) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
 	 * org.irods.jargon.core.pub.EnvironmentalInfoAO#listAvailableRemoteCommands
 	 * ()
 	 */

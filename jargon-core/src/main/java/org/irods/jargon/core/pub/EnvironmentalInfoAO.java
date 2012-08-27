@@ -78,4 +78,13 @@ public interface EnvironmentalInfoAO extends IRODSAccessObject {
 	 */
 	List<String> listAvailableMicroservices() throws JargonException;
 
+	/**
+	 * Check (by version) whether this server can run specific (SQL) query
+	 * 
+	 * @return <code>boolean</code> that will be <code>true</code> if I can run
+	 *         specific query
+	 * @throws JargonException
+	 */
+	boolean isAbleToRunSpecificQuery() throws JargonException;
+
 }

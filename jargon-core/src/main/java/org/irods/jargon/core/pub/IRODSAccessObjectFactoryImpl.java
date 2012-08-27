@@ -467,20 +467,6 @@ public final class IRODSAccessObjectFactoryImpl implements
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * org.irods.jargon.core.pub.IRODSAccessObjectFactory#getSpecificQueryExecutorAO
-	 * (org.irods.jargon.core.connection.IRODSAccount)
-	 */
-	@Override
-	public SpecificQueryExcecutorAO getSpecificQueryExecutorAO(
-			final IRODSAccount irodsAccount) throws JargonException {
-		checkIrodsSessionSet();
-		return new SpecificQueryExecutorAOImpl(irodsSession, irodsAccount);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
 	 * org.irods.jargon.core.pub.IRODSAccessObjectFactory#getMountedCollectionAO
 	 * (org.irods.jargon.core.connection.IRODSAccount)
 	 */

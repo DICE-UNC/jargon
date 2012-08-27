@@ -302,21 +302,6 @@ public interface IRODSAccessObjectFactory {
 			throws JargonException;
 
 	/**
-	 * Returns a <code>SpecificQueryExecutorAO</code> that manages the iRODS
-	 * specific query facility. This was new in iRODS2.5, and allows
-	 * administrators to define specific SQL to be run against the iCAT in
-	 * retrieval only mode when GenQuery is not expressive enough.
-	 * 
-	 * @param irodsAccount
-	 *            {@link IRODSAccount} that describes the connection to iRODS.
-	 * @return {@link SpecificQueryExcecutorAO} to send and process results of a
-	 *         simple query.
-	 * @throws JargonException
-	 */
-	SpecificQueryExcecutorAO getSpecificQueryExecutorAO(
-			IRODSAccount irodsAccount) throws JargonException;
-
-	/**
 	 * Close all connections for this session. Any resulting exceptions are
 	 * logged as a warning and ignored.
 	 * 

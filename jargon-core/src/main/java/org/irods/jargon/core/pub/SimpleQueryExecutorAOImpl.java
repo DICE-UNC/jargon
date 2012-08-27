@@ -12,10 +12,10 @@ import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.packinstr.SimpleQueryInp;
 import org.irods.jargon.core.packinstr.Tag;
+import org.irods.jargon.core.query.AbstractAliasedQuery;
 import org.irods.jargon.core.query.IRODSQueryResultRow;
 import org.irods.jargon.core.query.IRODSQueryResultSetInterface;
 import org.irods.jargon.core.query.IRODSSimpleQueryResultSet;
-import org.irods.jargon.core.query.SimpleQuery;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,7 +27,7 @@ import org.slf4j.LoggerFactory;
  * <p/>
  * Simple Query allows the the execution of queries as parameterized SQL. These
  * SQL statements are pre-loaded in iRODS and validated before being allowed to
- * run. Other techniques, such as GenQuery, and the new SpecificQuery facility,
+ * run. Other techniques, such as GenQuery, and the new SpecificQueryDefinition facility,
  * allow other methods of querying system and user metadata from the iCAT.
  * 
  * @author Mike Conway - DICE (www.irods.org)
@@ -55,7 +55,7 @@ public class SimpleQueryExecutorAOImpl extends IRODSGenericAO implements
 
 	@Override
 	public IRODSQueryResultSetInterface executeSimpleQuery(
-			final SimpleQuery simpleQuery) throws JargonException {
+			final AbstractAliasedQuery simpleQuery) throws JargonException {
 
 		if (simpleQuery == null) {
 			throw new IllegalArgumentException("null simpleQuery");

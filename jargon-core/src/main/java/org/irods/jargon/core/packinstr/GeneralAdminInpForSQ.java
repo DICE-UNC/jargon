@@ -1,7 +1,7 @@
 package org.irods.jargon.core.packinstr;
 
 import org.irods.jargon.core.exception.JargonException;
-import org.irods.jargon.core.pub.domain.SpecificQuery;
+import org.irods.jargon.core.pub.domain.SpecificQueryDefinition;
 
 public class GeneralAdminInpForSQ extends
 		AbstractIRODSPackingInstruction {
@@ -31,18 +31,18 @@ public class GeneralAdminInpForSQ extends
 	 * iadmin asq
 	 * 
 	 * @param specificQuery
-	 *            {@link org.irods.jargon.core.pub.domain.SpecificQuery} to be added to
+	 *            {@link org.irods.jargon.core.pub.domain.SpecificQueryDefinition} to be added to
 	 *            iRODS.
 	 * @return {@link GeneralAdminInp}
 	 * @throws JargonException
 	 */
-	public static final GeneralAdminInpForSQ instanceForAddSpecificQuery(SpecificQuery specificQuery) 
+	public static final GeneralAdminInpForSQ instanceForAddSpecificQuery(SpecificQueryDefinition specificQuery) 
 		throws JargonException {
 		
 		if (specificQuery == null) {
-			throw new IllegalArgumentException("null SpecificQuery object");
+			throw new IllegalArgumentException("null SpecificQueryDefinition object");
 		}
-		String query = specificQuery.getSqlQuery();
+		String query = specificQuery.getSql();
 		String alias = specificQuery.getAlias();
 		
 		GeneralAdminInpForSQ generalAdminInpForSQ = new GeneralAdminInpForSQ(query, alias, SQ_ADD);
@@ -62,17 +62,17 @@ public class GeneralAdminInpForSQ extends
 	 * for explicitly removing Specific Queries by SQL query.
 	 * 
 	 * @param specificQuery
-	 *            {@link org.irods.jargon.core.pub.domain.SpecificQuery} to be removed
+	 *            {@link org.irods.jargon.core.pub.domain.SpecificQueryDefinition} to be removed
 	 *            from iRODS.
 	 * @return {@link GeneralAdminInpForSQ}
 	 * @throws JargonException
 	 * 
 	 **/
-	public static final GeneralAdminInpForSQ instanceForRemoveSpecificQuery(SpecificQuery specificQuery) 
+	public static final GeneralAdminInpForSQ instanceForRemoveSpecificQuery(SpecificQueryDefinition specificQuery) 
 		throws JargonException {
 		
 		if (specificQuery == null) {
-			throw new IllegalArgumentException("null SpecificQuery object");
+			throw new IllegalArgumentException("null SpecificQueryDefinition object");
 		}
 		
 		return instanceForRemoveSpecificQueryByAlias(specificQuery.getAlias());

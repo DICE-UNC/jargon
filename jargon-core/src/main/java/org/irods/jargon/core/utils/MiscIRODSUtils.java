@@ -538,4 +538,30 @@ public class MiscIRODSUtils {
 			throw new JargonException("error getting enum vals", ex);
 		}
 	}
+
+	/**
+	 * Count occurrances of a character in a string
+	 * 
+	 * @param stringToCountOccurrancesIn
+	 *            <code>String</code> to count occurrances in
+	 * @param characterToCount
+	 *            <code>char</code> whose occurrances will be counted
+	 * @return <code>int</code> with the count of the given character
+	 */
+	public static int countCharsInString(final String stringToCountOccurrancesIn,
+			final char characterToCount) {
+
+		if (stringToCountOccurrancesIn == null) {
+			throw new IllegalArgumentException("null s");
+		}
+
+		final char[] chars = stringToCountOccurrancesIn.toCharArray();
+		int count = 0;
+		for (int i = 0; i < chars.length; i++) {
+			if (chars[i] == characterToCount) {
+				count++;
+			}
+		}
+		return count;
+	}
 }

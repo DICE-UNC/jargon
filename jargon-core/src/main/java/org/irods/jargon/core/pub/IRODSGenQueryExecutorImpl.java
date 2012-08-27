@@ -8,9 +8,9 @@ import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.packinstr.GenQueryInp;
-import org.irods.jargon.core.packinstr.GenQueryOut;
 import org.irods.jargon.core.packinstr.Tag;
 import org.irods.jargon.core.query.AbstractIRODSGenQuery;
+import org.irods.jargon.core.query.AbstractIRODSQueryResultSet;
 import org.irods.jargon.core.query.GenQueryBuilderException;
 import org.irods.jargon.core.query.GenQuerySelectField;
 import org.irods.jargon.core.query.IRODSGenQuery;
@@ -20,6 +20,7 @@ import org.irods.jargon.core.query.IRODSQueryResultRow;
 import org.irods.jargon.core.query.IRODSQueryResultSet;
 import org.irods.jargon.core.query.IRODSQueryResultSetInterface;
 import org.irods.jargon.core.query.JargonQueryException;
+import org.irods.jargon.core.query.QueryResultProcessingUtils;
 import org.irods.jargon.core.query.TranslatedIRODSGenQuery;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -156,7 +157,7 @@ public final class IRODSGenQueryExecutorImpl extends IRODSGenericAO implements
 	 * (org.irods.jargon.core.query.IRODSGenQuery, int)
 	 */
 	@Override
-	public IRODSQueryResultSet executeIRODSQueryAndCloseResult(
+	public AbstractIRODSQueryResultSet executeIRODSQueryAndCloseResult(
 			final AbstractIRODSGenQuery irodsQuery, final int partialStartIndex)
 			throws JargonException, JargonQueryException {
 		log.info("executeIRODSQueryAndCloseResult()");
@@ -173,7 +174,7 @@ public final class IRODSGenQueryExecutorImpl extends IRODSGenericAO implements
 	 * (org.irods.jargon.core.query.IRODSGenQuery, int, java.lang.String)
 	 */
 	@Override
-	public IRODSQueryResultSet executeIRODSQueryAndCloseResultInZone(
+	public AbstractIRODSQueryResultSet executeIRODSQueryAndCloseResultInZone(
 			final AbstractIRODSGenQuery irodsQuery,
 			final int partialStartIndex,
 			final String zoneName) throws JargonException, JargonQueryException {
@@ -284,8 +285,8 @@ public final class IRODSGenQueryExecutorImpl extends IRODSGenericAO implements
 		try {
 			response = sendGenQueryAndReturnResponse(genQueryInp);
 
-			int continuation = response.getTag(GenQueryOut.CONTINUE_INX)
-					.getIntValue();
+			int continuation = QueryResultProcessingUtils
+					.getContinuationValue(response);
 
 			log.info("continuation value: {}", continuation);
 
@@ -297,8 +298,9 @@ public final class IRODSGenQueryExecutorImpl extends IRODSGenericAO implements
 				columnNames.add(selectField.getSelectFieldColumnName());
 			}
 
-			result = translateResponseIntoResultSet(response,
-					translatedIRODSQuery, columnNames, continuation,
+			result = QueryResultProcessingUtils.translateResponseIntoResultSet(
+					response,
+ columnNames, continuation,
 					partialStartIndex);
 
 			resultSet = IRODSQueryResultSet.instance(translatedIRODSQuery,
@@ -342,77 +344,7 @@ public final class IRODSGenQueryExecutorImpl extends IRODSGenericAO implements
 		return response;
 	}
 
-	/**
-	 * Given the raw response from iRODS, translate into a list of result rows
-	 * for easier processing.
-	 * 
-	 * @param queryResponse
-	 *            <code>Tag</code> set with the raw GenQuery response from
-	 *            iRODS.
-	 * @param translatedIRODSQuery
-	 *            {@link org.irods.jargon.core.query.TranslatedIRODSGenQuery}
-	 *            that has information about the query used to obtain the given
-	 *            response
-	 * @param continuation
-	 *            <code>int</code>
-	 * @param partialStartIndex
-	 *            <code>int</code> with the offset into the query results for
-	 *            the query generating this response, this is so the record
-	 *            count begins at the point in the overall results where the
-	 *            offset points to.
-	 * @return <code>List</code> of
-	 *         {@link org.irods.jargon.core.query.IRODSQueryResultRow} for each
-	 *         row in the GenQuery result
-	 * @throws JargonException
-	 */
-	private List<IRODSQueryResultRow> translateResponseIntoResultSet(
-			final Tag queryResponse,
-			final TranslatedIRODSGenQuery translatedIRODSQuery,
-			final List<String> columnNames, final int continuation, int partialStartIndex)
-			throws JargonException {
 
-		List<IRODSQueryResultRow> resultSet = new ArrayList<IRODSQueryResultRow>();
-		List<String> row;
-
-		int recordCount;
-		if (partialStartIndex == 0) {
-			recordCount = 1;
-		} else {
-			recordCount = partialStartIndex + 1;
-		 }
-
-		boolean lastRecord = (continuation == 0);
-		log.debug("are there more records? {}", lastRecord);
-
-		if (queryResponse == null) {
-			// no response, create an empty result set, and never return null
-			log.info("empty result set from query, returning as an empty result set ( no rows found)");
-			return resultSet;
-		}
-
-		int rows = queryResponse.getTag(GenQueryOut.ROW_CNT).getIntValue();
-		log.info("rows returned from iRODS for GenQuery: {}", rows);
-
-		int attributes = queryResponse.getTag(GenQueryOut.ATTRIB_CNT)
-				.getIntValue();
-
-		for (int i = 0; i < rows; i++) {
-			// new row
-			row = new ArrayList<String>();
-			for (int j = 0; j < attributes; j++) {
-
-				row.add(queryResponse.getTags()[4 + j].getTags()[2 + i]
-						.getStringValue());
-			}
-
-			resultSet.add(IRODSQueryResultRow.instance(row, columnNames,
-					recordCount++, lastRecord));
-
-		}
-
-		return resultSet;
-
-	}
 
 	/*
 	 * (non-Javadoc)

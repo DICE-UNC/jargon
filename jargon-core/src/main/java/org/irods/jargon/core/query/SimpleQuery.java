@@ -4,7 +4,6 @@
 package org.irods.jargon.core.query;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -17,11 +16,7 @@ import java.util.List;
  * @author Mike Conway - DICE (www.irods.org)
  * 
  */
-public class SimpleQuery {
-
-	private final String queryString;
-	private final List<String> arguments;
-	private final int continuationValue;
+public class SimpleQuery extends AbstractAliasedQuery {
 
 	/**
 	 * Creates a new instance of a <code>SimpleQuery</code> object.
@@ -122,55 +117,16 @@ public class SimpleQuery {
 
 	}
 
+	/**
+	 * Private constructor, use instance methods to create
+	 * 
+	 * @param queryString
+	 * @param arguments
+	 * @param continuationValue
+	 */
 	private SimpleQuery(final String queryString, final List<String> arguments,
 			final int continuationValue) {
-
-		if (queryString == null || queryString.isEmpty()) {
-			throw new IllegalArgumentException("empty or null queryString");
-		}
-
-		if (continuationValue < 0) {
-			throw new IllegalArgumentException(
-					"continuation value is less than zero");
-		}
-
-		this.queryString = queryString;
-		this.continuationValue = continuationValue;
-
-		if (arguments == null) {
-			this.arguments = Collections
-					.unmodifiableList(new ArrayList<String>());
-		} else {
-			if (arguments.size() > 4) {
-				throw new IllegalArgumentException("limit of 4 arguments");
-			}
-			this.arguments = Collections.unmodifiableList(arguments);
-		}
-	}
-
-	public String getQueryString() {
-		return queryString;
-	}
-
-	@Override
-	public String toString() {
-		StringBuilder sb = new StringBuilder();
-		sb.append("simpleQuery:");
-		sb.append("\n   queryString:");
-		sb.append(queryString);
-		sb.append("\n   arguments:");
-		sb.append(arguments);
-		sb.append("\n  continuationValue:");
-		sb.append(continuationValue);
-		return sb.toString();
-	}
-
-	public int getContinuationValue() {
-		return continuationValue;
-	}
-
-	public List<String> getArguments() {
-		return arguments;
+		super(queryString, arguments, continuationValue);
 	}
 
 }

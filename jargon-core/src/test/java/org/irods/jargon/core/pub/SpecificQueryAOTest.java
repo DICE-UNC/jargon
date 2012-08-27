@@ -1,14 +1,18 @@
 package org.irods.jargon.core.pub;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 import junit.framework.Assert;
+import junit.framework.TestCase;
 
 import org.irods.jargon.core.connection.IRODSAccount;
-import org.irods.jargon.core.connection.IRODSProtocolManager;
-import org.irods.jargon.core.connection.IRODSSession;
-import org.irods.jargon.core.connection.IRODSSimpleProtocolManager;
-import org.irods.jargon.core.pub.domain.SpecificQuery;
+import org.irods.jargon.core.exception.DataNotFoundException;
+import org.irods.jargon.core.pub.domain.SpecificQueryDefinition;
+import org.irods.jargon.core.query.SpecificQuery;
+import org.irods.jargon.core.query.SpecificQueryResultSet;
+import org.irods.jargon.core.utils.MiscIRODSUtils;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -36,15 +40,18 @@ public class SpecificQueryAOTest {
 	
 	@Test
 	public void testGetSpecficQueryAO() throws Exception {
-		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager
-				.instance();
+
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSSession irodsSession = IRODSSession
-				.instance(irodsConnectionManager);
-		IRODSAccessObjectFactory accessObjectFactory = IRODSAccessObjectFactoryImpl
-				.instance(irodsSession);
-		SpecificQueryAO queryAO = accessObjectFactory.getSpecificQueryAO(irodsAccount);
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
+						irodsAccount);
+		if (!environmentalInfoAO.isAbleToRunSpecificQuery()) {
+			return;
+		}
+
+		SpecificQueryAO queryAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getSpecificQueryAO(irodsAccount);
 		Assert.assertNotNull("queryAO is null", queryAO);
 	}
 	
@@ -52,13 +59,18 @@ public class SpecificQueryAOTest {
 	public void testAddSpecificQuery() throws Exception {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
-			.buildIRODSAccountFromTestProperties(testingProperties);
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
+						irodsAccount);
+		if (!environmentalInfoAO.isAbleToRunSpecificQuery()) {
+			return;
+		}
 		
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-			.getIRODSAccessObjectFactory();
+		SpecificQueryDefinition specificQuery = new SpecificQueryDefinition(this.query, this.alias);
 		
-		SpecificQuery specificQuery = new SpecificQuery(this.query, this.alias);
-		SpecificQueryAO queryAO = accessObjectFactory.getSpecificQueryAO(irodsAccount);
+		SpecificQueryAO queryAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getSpecificQueryAO(irodsAccount);
 		queryAO.addSpecificQuery(specificQuery);
 		
 		// just make sure we got here for now
@@ -67,19 +79,331 @@ public class SpecificQueryAOTest {
 	
 	@Test
 	public void testRemoveSpecificQuery() throws Exception {
-
 		IRODSAccount irodsAccount = testingPropertiesHelper
-			.buildIRODSAccountFromTestProperties(testingProperties);
-		
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-			.getIRODSAccessObjectFactory();
-		
-		SpecificQuery specificQuery = new SpecificQuery(this.query, this.alias);
-		SpecificQueryAO queryAO = accessObjectFactory.getSpecificQueryAO(irodsAccount);
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
+						irodsAccount);
+		if (!environmentalInfoAO.isAbleToRunSpecificQuery()) {
+			return;
+		}
+		SpecificQueryDefinition specificQuery = new SpecificQueryDefinition(this.query, this.alias);
+
+		SpecificQueryAO queryAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getSpecificQueryAO(irodsAccount);
 		queryAO.removeSpecificQuery(specificQuery);
 		
 		// just make sure we got here for now
 		Assert.assertTrue(true);
 	}
+
+	@Test
+	public void testExecuteSpecificQueryLS() throws Exception {
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
+						irodsAccount);
+		if (!environmentalInfoAO.isAbleToRunSpecificQuery()) {
+			return;
+		}
+
+		SpecificQueryAO queryAO = accessObjectFactory
+				.getSpecificQueryAO(irodsAccount);
+		SpecificQuery specificQuery = SpecificQuery.instanceWithNoArguments(
+				"ls", 0);
+
+		SpecificQueryResultSet specificQueryResultSet = queryAO
+				.executeSpecificQueryUsingAlias(specificQuery, accessObjectFactory
+						.getJargonProperties().getMaxFilesAndDirsQueryMax());
+		TestCase.assertNotNull("null result set", specificQueryResultSet);
+		TestCase.assertFalse(
+				"no results returned, expected at least ls and lsl",
+				specificQueryResultSet.getResults().isEmpty());
+
+	}
+	
+	@Test
+	public void testListLikeLS() throws Exception {
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
+						irodsAccount);
+		if (!environmentalInfoAO.isAbleToRunSpecificQuery()) {
+			return;
+		}
+
+		SpecificQueryAO queryAO = accessObjectFactory
+				.getSpecificQueryAO(irodsAccount);
+		List<SpecificQueryDefinition> actual = queryAO
+				.listSpecificQueryByAliasLike("ls");
+		TestCase.assertFalse("did not get results from query", actual.isEmpty());
+		for (SpecificQueryDefinition definition : actual) {
+			TestCase.assertFalse("no alias", definition.getAlias().isEmpty());
+			TestCase.assertFalse("no query", definition.getSql().isEmpty());
+		}
+	}
+
+	@Test
+	public void testCountArgumentsInQuery() throws Exception {
+		String query = "select R_USER_MAIN.user_name ,R_USER_MAIN.zone_name,"
+				+ "R_TOKN_MAIN.token_name from R_USER_MAIN , R_TOKN_MAIN, R_OBJT_ACCESS, R_COLL_MAIN where "
+				+ "R_OBJT_ACCESS.object_id = R_COLL_MAIN.coll_id AND r_COLL_MAIN.coll_name = ? AND "
+				+ "R_TOKN_MAIN.token_namespace = 'access_type' AND R_USER_MAIN.user_id = 'R_OBJT_ACCESS.user_id AND R_OBJT_ACCESS.access_type_id = R_TOKN_MAIN.token_id";
+
+		int count = SpecificQueryAOImpl.countArgumentsInQuery(query);
+		TestCase.assertEquals("incorrect count from query", 1, count);
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void testCountArgumentsInNullQuery() throws Exception {
+		SpecificQueryAOImpl.countArgumentsInQuery(null);
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void testCountArgumentsInBlankQuery() throws Exception {
+		SpecificQueryAOImpl.countArgumentsInQuery("");
+	}
+
+	@Test
+	public void parseColumnNamesFromQuery() throws Exception {
+		String query = "select R_USER_MAIN.user_name ,R_USER_MAIN.zone_name,"
+				+ "R_TOKN_MAIN.token_name from R_USER_MAIN , R_TOKN_MAIN, R_OBJT_ACCESS, R_COLL_MAIN where "
+				+ "R_OBJT_ACCESS.object_id = R_COLL_MAIN.coll_id AND r_COLL_MAIN.coll_name = ? AND "
+				+ "R_TOKN_MAIN.token_namespace = 'access_type' AND R_USER_MAIN.user_id = 'R_OBJT_ACCESS.user_id AND R_OBJT_ACCESS.access_type_id = R_TOKN_MAIN.token_id";
+
+		List<String> colNames = SpecificQueryAOImpl
+				.parseColumnNamesFromQuery(query);
+		TestCase.assertFalse("no column names found", colNames.isEmpty());
+		TestCase.assertEquals("R_USER_MAIN.user_name", colNames.get(0));
+		TestCase.assertEquals("R_USER_MAIN.zone_name", colNames.get(1));
+		TestCase.assertEquals("R_TOKN_MAIN.token_name", colNames.get(2));
+
+	}
+
+	@Test
+	public void parseColumnNamesFromQueryWithDistinct() throws Exception {
+		String query = "select distinct R_USER_MAIN.user_name ,R_USER_MAIN.zone_name,"
+				+ "R_TOKN_MAIN.token_name from R_USER_MAIN , R_TOKN_MAIN, R_OBJT_ACCESS, R_COLL_MAIN where "
+				+ "R_OBJT_ACCESS.object_id = R_COLL_MAIN.coll_id AND r_COLL_MAIN.coll_name = ? AND "
+				+ "R_TOKN_MAIN.token_namespace = 'access_type' AND R_USER_MAIN.user_id = 'R_OBJT_ACCESS.user_id AND R_OBJT_ACCESS.access_type_id = R_TOKN_MAIN.token_id";
+
+		List<String> colNames = SpecificQueryAOImpl
+				.parseColumnNamesFromQuery(query);
+		TestCase.assertFalse("no column names found", colNames.isEmpty());
+		TestCase.assertEquals("R_USER_MAIN.user_name", colNames.get(0));
+		TestCase.assertEquals("R_USER_MAIN.zone_name", colNames.get(1));
+		TestCase.assertEquals("R_TOKN_MAIN.token_name", colNames.get(2));
+
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void parseColumnNamesFromQueryNullQuery() throws Exception {
+		String query = null;
+		SpecificQueryAOImpl.parseColumnNamesFromQuery(query);
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void parseColumnNamesFromQueryBlankQuery() throws Exception {
+		String query = "";
+		SpecificQueryAOImpl.parseColumnNamesFromQuery(query);
+	}
+
+	@Test
+	public void lookUpShowCollAcls() throws Exception {
+		String collAclQueryAlias = "ShowCollAcls";
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
+						irodsAccount);
+		if (!environmentalInfoAO.isAbleToRunSpecificQuery()) {
+			return;
+		}
+
+		SpecificQueryAO queryAO = accessObjectFactory
+				.getSpecificQueryAO(irodsAccount);
+
+		String userHome = MiscIRODSUtils
+				.computeHomeDirectoryForIRODSAccount(irodsAccount);
+		List<String> arguments = new ArrayList<String>();
+		arguments.add(userHome);
+
+		List<SpecificQueryDefinition> actual = queryAO
+				.listSpecificQueryByAliasLike(collAclQueryAlias);
+		TestCase.assertFalse(
+				"did not get results from query, the showCollAcl specific query may not be registered, please run jargon-specquery.sh to provision standard jargon specific queries",
+				actual.isEmpty());
+
+		SpecificQuery specificQuery = SpecificQuery.instanceArguments(
+				collAclQueryAlias, arguments, 0);
+		SpecificQueryResultSet specificQueryResultSet = queryAO
+				.executeSpecificQueryUsingAlias(specificQuery, accessObjectFactory
+						.getJargonProperties().getMaxFilesAndDirsQueryMax());
+		TestCase.assertNotNull("null result set", specificQueryResultSet);
+		TestCase.assertFalse(
+				"no results returned, expected at least ls and lsl",
+				specificQueryResultSet.getResults().isEmpty());
+
+	}
+
+	@Test
+	public void testFindSpecificQueryByAliasLike() throws Exception {
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
+						irodsAccount);
+		if (!environmentalInfoAO.isAbleToRunSpecificQuery()) {
+			return;
+		}
+
+		SpecificQueryAO queryAO = accessObjectFactory
+				.getSpecificQueryAO(irodsAccount);
+		List<SpecificQueryDefinition> actual = queryAO
+				.listSpecificQueryByAliasLike("ShowCollAcls");
+		TestCase.assertFalse("did not get results from query", actual.isEmpty());
+		for (SpecificQueryDefinition definition : actual) {
+			TestCase.assertFalse("no alias", definition.getAlias().isEmpty());
+			TestCase.assertFalse("no query", definition.getSql().isEmpty());
+		}
+	}
+
+	@Test(expected = DataNotFoundException.class)
+	public void testFindSpecificQueryByAliasLikeWhenNoResults()
+			throws Exception {
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
+						irodsAccount);
+		if (!environmentalInfoAO.isAbleToRunSpecificQuery()) {
+			return;
+		}
+
+		SpecificQueryAO queryAO = accessObjectFactory
+				.getSpecificQueryAO(irodsAccount);
+		queryAO
+				.listSpecificQueryByAliasLike("thisaliasshouldntbeinirodsatallblahblahhennngh");
+
+	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void testFindSpecificQueryByAliasNullAlias()
+			throws Exception {
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
+						irodsAccount);
+		if (!environmentalInfoAO.isAbleToRunSpecificQuery()) {
+			return;
+		}
+
+		SpecificQueryAO queryAO = accessObjectFactory
+				.getSpecificQueryAO(irodsAccount);
+		queryAO
+				.listSpecificQueryByAliasLike(null);
+
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void testFindSpecificQueryByAliasBlankAlias() throws Exception {
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
+						irodsAccount);
+		if (!environmentalInfoAO.isAbleToRunSpecificQuery()) {
+			return;
+		}
+
+		SpecificQueryAO queryAO = accessObjectFactory
+				.getSpecificQueryAO(irodsAccount);
+		queryAO.listSpecificQueryByAliasLike("");
+
+	}
+
+	@Test
+	public void testFindSpecificQueryByAlias() throws Exception {
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
+						irodsAccount);
+		if (!environmentalInfoAO.isAbleToRunSpecificQuery()) {
+			return;
+		}
+
+		SpecificQueryAO queryAO = accessObjectFactory
+				.getSpecificQueryAO(irodsAccount);
+		SpecificQueryDefinition actual = queryAO
+				.findSpecificQueryByAlias("ShowCollAcls");
+		TestCase.assertEquals("did not find correct query", "ShowCollAcls",
+				actual.getAlias());
+
+	}
+
+	@Test(expected = DataNotFoundException.class)
+	public void testFindSpecificQueryByAliasNotFound() throws Exception {
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
+						irodsAccount);
+		if (!environmentalInfoAO.isAbleToRunSpecificQuery()) {
+			return;
+		}
+
+		SpecificQueryAO queryAO = accessObjectFactory
+				.getSpecificQueryAO(irodsAccount);
+		queryAO.findSpecificQueryByAlias("ShowCollAclsButThisNameIsNotFoundItsNot");
+	}
+
 
 }

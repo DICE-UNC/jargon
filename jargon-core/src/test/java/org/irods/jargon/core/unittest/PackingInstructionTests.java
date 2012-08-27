@@ -25,6 +25,7 @@ import org.irods.jargon.core.packinstr.ModAvuMetadataInpTest;
 import org.irods.jargon.core.packinstr.OpenedDataObjInpTest;
 import org.irods.jargon.core.packinstr.ReconnMsgTest;
 import org.irods.jargon.core.packinstr.SimpleQueryInpTest;
+import org.irods.jargon.core.packinstr.SpecificQueryInpTest;
 import org.irods.jargon.core.packinstr.StructFileExtAndRegInpTest;
 import org.irods.jargon.core.packinstr.TransferOptionsTest;
 import org.irods.jargon.core.packinstr.UserAdminInpTest;
@@ -45,7 +46,8 @@ import org.junit.runners.Suite;
 		TransferOptionsTest.class, DataObjInpForObjStatTest.class,
 		GetTempPasswordForOtherTest.class, DataObjInpForRegTest.class,
 		DataObjInpForUnregisterTest.class, DataObjInpForMcollTest.class,
-		DataObjInpForUnmountTest.class, ReconnMsgTest.class })
+		DataObjInpForUnmountTest.class, ReconnMsgTest.class,
+		SpecificQueryInpTest.class })
 public class PackingInstructionTests {
 
 }

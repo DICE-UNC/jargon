@@ -1,8 +1,14 @@
 package org.irods.jargon.core.pub;
 
+import java.util.List;
+
+import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.DuplicateDataException;
 import org.irods.jargon.core.exception.JargonException;
-import org.irods.jargon.core.pub.domain.SpecificQuery;
+import org.irods.jargon.core.pub.domain.SpecificQueryDefinition;
+import org.irods.jargon.core.query.JargonQueryException;
+import org.irods.jargon.core.query.SpecificQuery;
+import org.irods.jargon.core.query.SpecificQueryResultSet;
 
 /**
 * Interface for an object to interact with specific query in IRODS.
@@ -23,18 +29,18 @@ public interface SpecificQueryAO extends IRODSAccessObject {
 	 * @throws IllegalArgumentException
 	 * @throws DuplicateDataException
 	 */
-	 void addSpecificQuery(SpecificQuery specificQuery) throws JargonException, DuplicateDataException;
+	 void addSpecificQuery(SpecificQueryDefinition specificQuery) throws JargonException, DuplicateDataException;
 	 
 	 
 	 /**
 	 * Remove a specific query from iRODS
 	 * 
 	 * @param specificQuery
-	 *		{@link org.irods.jargon.core.pub.domain.SpecificQuery} to be added to iRODS.
+	 *		{@link org.irods.jargon.core.pub.domain.SpecificQueryDefinition} to be added to iRODS.
 	 * @throws IllegalArgumentException
 	 * @throws DuplicateDataException
 	 */
-	 void removeSpecificQuery(SpecificQuery specificQuery) throws JargonException;
+	 void removeSpecificQuery(SpecificQueryDefinition specificQuery) throws JargonException;
 	 
 	 
 	 /**
@@ -61,5 +67,103 @@ public interface SpecificQueryAO extends IRODSAccessObject {
 	 * 
 	 */
 	 void removeAllSpecificQueryBySQL(String sqlQuery) throws JargonException, DuplicateDataException;
+
+
+	/**
+	 * Execute a specific query by providing the alias that the sql had been
+	 * registered under. These queries contain an sql statement that can include
+	 * bind parameters. This method allows the optional specification of those
+	 * parameters. Note that this variant of the query will not close the query
+	 * out, instead, it supports paging by the specification of the
+	 * <code>continueIndex</code> that may have been returned in a previous
+	 * query paging call.
+	 * <p/>
+	 * Note that a <code>DataNotFoundException</code> will occur if the query
+	 * alias is not found.
+	 * 
+	 * @param specificQuery
+	 *            {@link SpecificQuery} that defines the query alias or sql, and
+	 *            any associated parameters to use
+	 * @param maxRows
+	 *            <code>int</code> with the maximum number of rows to return.
+	 *            Note that setting this to 0 causes the query to close
+	 *            automatically.
+	 * @return {@link IRODSQueryResultSet} implementation with the result rows
+	 *         and other information from the invocation of the query
+	 * @throws DataNotFoundException
+	 *             if the alias cannot be located
+	 * @throws JargonException
+	 *             general exception
+	 * @throws JargonQueryException
+	 *             exception in the forumulation of the query
+	 */
+	SpecificQueryResultSet executeSpecificQueryUsingAlias(
+			SpecificQuery specificQuery, int maxRows)
+			throws DataNotFoundException, JargonException,
+			JargonQueryException;
+
+	/**
+	 * Execute a specific query by providing the exact sql that was registered
+	 * in iRODS. These queries contain an sql statement that can include bind
+	 * parameters. This method allows the optional specification of those
+	 * parameters. Note that this variant of the query will not close the query
+	 * out, instead, it supports paging by the specification of the
+	 * <code>continueIndex</code> that may have been returned in a previous
+	 * query paging call.
+	 * 
+	 * @param specificQuery
+	 *            {@link SpecificQuery} that defines the query alias or sql, and
+	 *            any associated parameters to use
+	 * @param maxRows
+	 *            <code>int</code> with the maximum number of rows to return.
+	 *            Note that setting this to 0 causes the query to close
+	 *            automatically.
+	 * @return {@link IRODSQueryResultSet} implementation with the result rows
+	 *         and other information from the invocation of the query
+	 * @throws DataNotFoundException
+	 *             if the alias cannot be located
+	 * @throws JargonException
+	 *             general exception
+	 * @throws JargonQueryException
+	 *             exception in the forumulation of the query
+	 */
+	SpecificQueryResultSet executeSpecificQueryUsingSql(
+			SpecificQuery specificQuery, int maxRows)
+			throws DataNotFoundException, JargonException, JargonQueryException;
+
+
+	// void closeSpecificQuery() throws JargonException;
+
+	/**
+	 * Given a portion of a query alias, find matching specific queries as
+	 * stored in iRODS.
+	 * 
+	 * @param specificQueryAlias
+	 *            <code>String</code> with a part of a query alias to search
+	 *            for.
+	 * @return <code>List</code> of {@link SpecificQueryDefinition}
+	 * @throws DataNotFoundException
+	 *             if no queries found with a matching alias
+	 * @throws JargonException
+	 */
+	List<SpecificQueryDefinition> listSpecificQueryByAliasLike(
+			String specificQueryAlias) throws DataNotFoundException,
+			JargonException;
+
+	/**
+	 * Given a specific query alias name, return the associated specific query
+	 * definition information.
+	 * 
+	 * @param specificQueryAlias
+	 *            <code>String</code> with the given alias for the query
+	 * @return {@list SpecificQueryDefinition} with details about the given
+	 *         query
+	 * @throws DataNotFoundException
+	 *             if the query with the given alias cannot be found
+	 * @throws JargonException
+	 */
+	SpecificQueryDefinition findSpecificQueryByAlias(String specificQueryAlias)
+			throws DataNotFoundException, JargonException;
+
 
 }
