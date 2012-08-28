@@ -15,7 +15,7 @@ import java.util.List;
  */
 public class IRODSSimpleQueryResultSet extends AbstractIRODSQueryResultSet {
 
-	private final SimpleQuery simpleQuery;
+	private final AbstractAliasedQuery simpleQuery;
 	private final List<String> columnNames;
 
 	/**
@@ -36,7 +36,7 @@ public class IRODSSimpleQueryResultSet extends AbstractIRODSQueryResultSet {
 	 * @return
 	 */
 	public static IRODSSimpleQueryResultSet instance(
-			final SimpleQuery simpleQuery,
+			final AbstractAliasedQuery simpleQuery,
 			final List<IRODSQueryResultRow> results,
 			final List<String> columnNames, final boolean hasMoreRecords) {
 		return new IRODSSimpleQueryResultSet(simpleQuery, results, columnNames,
@@ -51,10 +51,10 @@ public class IRODSSimpleQueryResultSet extends AbstractIRODSQueryResultSet {
 	 * @param columnNames
 	 * @param hasMoreRecords
 	 */
-	private IRODSSimpleQueryResultSet(final SimpleQuery simpleQuery,
+	private IRODSSimpleQueryResultSet(final AbstractAliasedQuery simpleQuery,
 			final List<IRODSQueryResultRow> results,
 			final List<String> columnNames, final boolean hasMoreRecords) {
-		super(results, columnNames, hasMoreRecords);
+		super(results, columnNames, hasMoreRecords, 0);
 
 		if (simpleQuery == null) {
 			throw new IllegalArgumentException("null simpleQuery");
@@ -94,7 +94,7 @@ public class IRODSSimpleQueryResultSet extends AbstractIRODSQueryResultSet {
 		return columnNames;
 	}
 
-	public SimpleQuery getSimpleQuery() {
+	public AbstractAliasedQuery getSimpleQuery() {
 		return simpleQuery;
 	}
 

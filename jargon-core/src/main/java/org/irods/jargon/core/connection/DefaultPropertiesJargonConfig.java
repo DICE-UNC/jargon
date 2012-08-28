@@ -131,7 +131,6 @@ public class DefaultPropertiesJargonConfig implements JargonProperties {
 
 	}
 
-	@SuppressWarnings("unused")
 	private long verifyPropExistsAndGetAsLong(final String propKey) {
 
 		String propVal = verifyPropExistsAndGetAsString(propKey);
@@ -376,6 +375,18 @@ public class DefaultPropertiesJargonConfig implements JargonProperties {
 	@Override
 	public boolean isDefaultToPublicIfNothingUnderRootWhenListing() {
 		return verifyPropExistsAndGetAsBoolean("default.to.public.if.nothing.under.root.when.listing");
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.connection.JargonProperties#getReconnectTimeInMillis
+	 * ()
+	 */
+	@Override
+	public long getReconnectTimeInMillis() {
+		return verifyPropExistsAndGetAsLong("jargon.reconnect.time.in.millis");
 	}
 
 }

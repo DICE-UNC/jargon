@@ -9,6 +9,7 @@ import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.packinstr.GeneralAdminInp;
 import org.irods.jargon.core.pub.domain.Quota;
+import org.irods.jargon.core.query.AbstractAliasedQuery;
 import org.irods.jargon.core.query.IRODSQueryResultRow;
 import org.irods.jargon.core.query.IRODSQueryResultSetInterface;
 import org.irods.jargon.core.query.SimpleQuery;
@@ -53,7 +54,7 @@ public class QuotaAOImpl extends IRODSGenericAO implements QuotaAO {
 	public List<Quota> listAllQuota() throws JargonException {
 		log.info("listAllQuota()");
 		List<Quota> quota = new ArrayList<Quota>();
-		SimpleQuery simpleQuery = SimpleQuery.instanceWithNoArguments(
+		AbstractAliasedQuery simpleQuery = SimpleQuery.instanceWithNoArguments(
 				ALL_QUOTA_QUERY, 0);
 		log.info("exec simple query to get quota values");
 		IRODSQueryResultSetInterface resultSet = getSimpleQueryExecutorAO()
@@ -78,7 +79,7 @@ public class QuotaAOImpl extends IRODSGenericAO implements QuotaAO {
 	public List<Quota> listAllGlobalQuota() throws JargonException {
 		log.info("listAllGlobalQuota()");
 		List<Quota> quota = new ArrayList<Quota>();
-		SimpleQuery simpleQuery = SimpleQuery.instanceWithNoArguments(
+		AbstractAliasedQuery simpleQuery = SimpleQuery.instanceWithNoArguments(
 				ALL_QUOTA_GLOBAL_QUERY, 0);
 		log.info("exec simple query to get quota values");
 		IRODSQueryResultSetInterface resultSet = getSimpleQueryExecutorAO()
@@ -256,7 +257,7 @@ public class QuotaAOImpl extends IRODSGenericAO implements QuotaAO {
 
 		List<Quota> quota = new ArrayList<Quota>();
 
-		SimpleQuery simpleQuery = SimpleQuery.instanceWithTwoArguments(
+		AbstractAliasedQuery simpleQuery = SimpleQuery.instanceWithTwoArguments(
 				QUOTA_FOR_USER_AND_ZONE_QUERY, userName, this.getIRODSAccount()
 						.getZone(), 0);
 		IRODSQueryResultSetInterface resultSet = getSimpleQueryExecutorAO()
@@ -291,7 +292,7 @@ public class QuotaAOImpl extends IRODSGenericAO implements QuotaAO {
 
 		Quota quota = null;
 
-		SimpleQuery simpleQuery = SimpleQuery.instanceWithTwoArguments(
+		AbstractAliasedQuery simpleQuery = SimpleQuery.instanceWithTwoArguments(
 				QUOTA_GLOBAL_FOR_USER_AND_ZONE_QUERY, userName, this
 						.getIRODSAccount().getZone(), 0);
 		IRODSQueryResultSetInterface resultSet = getSimpleQueryExecutorAO()

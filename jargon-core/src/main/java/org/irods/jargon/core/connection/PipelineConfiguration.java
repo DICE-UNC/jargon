@@ -30,6 +30,7 @@ public class PipelineConfiguration {
 													// propogate
 	private final int inputToOutputCopyBufferByteSize;
 	private final boolean reconnect;
+	private final long reconnectTimeInMillis;
 	private final boolean instrument;
 
 	/**
@@ -70,7 +71,8 @@ public class PipelineConfiguration {
 				.getInputToOutputCopyBufferByteSize();
 		this.instrument = jargonProperties.isInstrument();
 		this.reconnect = jargonProperties.isReconnect();
-
+		this.reconnectTimeInMillis = jargonProperties
+				.getReconnectTimeInMillis();
 	}
 
 	@Override
@@ -99,6 +101,8 @@ public class PipelineConfiguration {
 		sb.append(instrument);
 		sb.append("\n   reconnect:");
 		sb.append(reconnect);
+		sb.append("\n   reconnect time in millis:");
+		sb.append(reconnectTimeInMillis);
 		return sb.toString();
 	}
 
@@ -189,6 +193,13 @@ public class PipelineConfiguration {
 	 */
 	public boolean isInstrument() {
 		return instrument;
+	}
+
+	/**
+	 * @return the reconnectTimeInMillis
+	 */
+	public synchronized long getReconnectTimeInMillis() {
+		return reconnectTimeInMillis;
 	}
 
 }

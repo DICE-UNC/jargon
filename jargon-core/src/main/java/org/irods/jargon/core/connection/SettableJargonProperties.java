@@ -44,6 +44,7 @@ public class SettableJargonProperties implements JargonProperties {
 	private boolean instrument = false;
 	private boolean reconnect = false;
 	private boolean defaultToPublicIfNothingUnderRootWhenListing = true;
+	private long reconnectTimeInMillis = 600000L;
 
 	/**
 	 * Construct a default properties set based on the provided initial set of
@@ -665,6 +666,24 @@ public class SettableJargonProperties implements JargonProperties {
 	public void setDefaultToPublicIfNothingUnderRootWhenListing(
 			final boolean defaultToPublicIfNothingUnderRootWhenListing) {
 		this.defaultToPublicIfNothingUnderRootWhenListing = defaultToPublicIfNothingUnderRootWhenListing;
+	}
+
+	/**
+	 * @return the reconnectTimeInMillis <code>long</code> indicating the time
+	 *         to wait for reconnect. This is only used if
+	 *         <code>isReconnect()</code> is <code>true</code>
+	 */
+	@Override
+	public synchronized long getReconnectTimeInMillis() {
+		return reconnectTimeInMillis;
+	}
+
+	/**
+	 * @param reconnectTimeInMillis
+	 *            the reconnectTimeInMillis to set
+	 */
+	public synchronized void setReconnectTimeInMillis(long reconnectTimeInMillis) {
+		this.reconnectTimeInMillis = reconnectTimeInMillis;
 	}
 
 }

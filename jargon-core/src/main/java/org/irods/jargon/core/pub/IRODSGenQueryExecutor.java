@@ -5,6 +5,7 @@ package org.irods.jargon.core.pub;
 
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.query.AbstractIRODSGenQuery;
+import org.irods.jargon.core.query.AbstractIRODSQueryResultSet;
 import org.irods.jargon.core.query.IRODSQueryResultSet;
 import org.irods.jargon.core.query.IRODSQueryResultSetInterface;
 import org.irods.jargon.core.query.JargonQueryException;
@@ -197,7 +198,7 @@ public interface IRODSGenQueryExecutor extends IRODSAccessObject {
 	 * @throws JargonException
 	 * @throws JargonQueryException
 	 */
-	IRODSQueryResultSet executeIRODSQueryAndCloseResult(
+	AbstractIRODSQueryResultSet executeIRODSQueryAndCloseResult(
 			AbstractIRODSGenQuery irodsQuery, int partialStartIndex)
 			throws JargonException, JargonQueryException;
 
@@ -229,7 +230,7 @@ public interface IRODSGenQueryExecutor extends IRODSAccessObject {
 	 * @throws JargonException
 	 * @throws JargonQueryException
 	 */
-	IRODSQueryResultSet executeIRODSQueryAndCloseResultInZone(
+	AbstractIRODSQueryResultSet executeIRODSQueryAndCloseResultInZone(
 			AbstractIRODSGenQuery irodsQuery, int partialStartIndex,
 			String zoneName)
 			throws JargonException, JargonQueryException;

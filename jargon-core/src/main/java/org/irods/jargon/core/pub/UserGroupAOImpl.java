@@ -15,11 +15,11 @@ import org.irods.jargon.core.packinstr.GeneralAdminInp;
 import org.irods.jargon.core.pub.aohelper.UserAOHelper;
 import org.irods.jargon.core.pub.domain.User;
 import org.irods.jargon.core.pub.domain.UserGroup;
+import org.irods.jargon.core.query.AbstractIRODSQueryResultSet;
 import org.irods.jargon.core.query.GenQueryBuilderException;
 import org.irods.jargon.core.query.IRODSGenQuery;
 import org.irods.jargon.core.query.IRODSGenQueryBuilder;
 import org.irods.jargon.core.query.IRODSQueryResultRow;
-import org.irods.jargon.core.query.IRODSQueryResultSet;
 import org.irods.jargon.core.query.IRODSQueryResultSetInterface;
 import org.irods.jargon.core.query.JargonQueryException;
 import org.irods.jargon.core.query.QueryConditionOperators;
@@ -285,7 +285,7 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements
 			throw new JargonException("null or missing userGroupName");
 		}
 
-		IRODSQueryResultSet resultSet = null;
+		AbstractIRODSQueryResultSet resultSet = null;
 		try {
 			IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, null);
 			builder.addSelectAsGenQueryValue(
@@ -515,7 +515,7 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements
 
 		boolean inGroup = false;
 
-		IRODSQueryResultSet resultSet = null;
+		AbstractIRODSQueryResultSet resultSet = null;
 		try {
 			IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, null);
 			builder.addSelectAsGenQueryValue(

@@ -530,6 +530,48 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		log.info("put operation, localFile: {}", localFile.getAbsolutePath());
 		log.info("to irodsFile: {}", irodsFileDestination.getAbsolutePath());
 
+		/*
+		 * Restart of connections may or may not be on, it's set in
+		 * jargon.properties, this wrapping of the put operation signals that,
+		 * if restarting is on, it should be done for this operation.
+		 */
+		try {
+			this.getIRODSProtocol().setInRestartMode(true);
+			log.info(">>>>>>>>>>>>>>>>>in reconnect mode if configured in jargon.properties");
+			putCommonProcessingWrappedInConnectionRestart(localFile,
+				irodsFileDestination, ignoreChecks, transferControlBlock,
+				transferStatusCallbackListener);
+		} finally {
+			this.getIRODSProtocol().setInRestartMode(false);
+			log.info("<<<<<<<<<<<<<<<< out of reconnect mode if configured in jargon.properties");
+
+		}
+
+	}
+
+	/**
+	 * @param localFile
+	 * @param irodsFileDestination
+	 * @param ignoreChecks
+	 * @param transferControlBlock
+	 * @param transferStatusCallbackListener
+	 * @throws DataNotFoundException
+	 * @throws JargonException
+	 * @throws JargonRuntimeException
+	 * @throws OverwriteException
+	 */
+	private void putCommonProcessingWrappedInConnectionRestart(
+			final File localFile, final IRODSFile irodsFileDestination,
+			final boolean ignoreChecks,
+			final TransferControlBlock transferControlBlock,
+			final TransferStatusCallbackListener transferStatusCallbackListener)
+			throws DataNotFoundException, JargonException,
+			JargonRuntimeException, OverwriteException {
+
+		log.info(
+				"putCommonProcessingWrappedInConnectionRestart.. restart value:{}",
+				this.getIRODSProtocol().isInRestartMode());
+
 		if (!localFile.exists()) {
 			log.error("put error, local file does not exist: {}",
 					localFile.getAbsolutePath());
@@ -617,7 +659,6 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		long endTime = System.currentTimeMillis();
 		long duration = endTime - startTime;
 		log.info(">>>>>>>>>>>>>>transfer complete in:{} millis", duration);
-
 	}
 
 	/**
@@ -1252,6 +1293,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		// if length == zero, check for multiple thread copy, may still process
 		// as a standard txfr if 0 threads specified
 		try {
+			this.getIRODSProtocol().setInRestartMode(true);
 			if (lengthFromIrodsResponse == 0) {
 				checkNbrThreadsAndProcessAsParallelIfMoreThanZeroThreads(
 						irodsFileToGet, localFileToHoldData,
@@ -1294,6 +1336,8 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		} catch (Exception e) {
 			log.error(ERROR_IN_PARALLEL_TRANSFER, e);
 			throw new JargonException(ERROR_IN_PARALLEL_TRANSFER, e);
+		} finally {
+			this.getIRODSProtocol().setInRestartMode(false);
 		}
 
 		return l1descInx;

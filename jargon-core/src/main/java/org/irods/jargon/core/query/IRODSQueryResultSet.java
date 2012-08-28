@@ -16,13 +16,7 @@ import org.irods.jargon.core.exception.JargonException;
  */
 public class IRODSQueryResultSet extends AbstractIRODSQueryResultSet {
 
-	private final TranslatedIRODSGenQuery translatedIRODSQuery;
-	/**
-	 * Used internally by gen query to signal a continuation of a query when
-	 * sending a re-query
-	 */
-	private final int continuationIndex;
-
+	final TranslatedIRODSGenQuery translatedIRODSQuery;
 	/**
 	 * Creates an instance of a result set based on data coming back from iRODS
 	 * GenQuery response data.
@@ -65,16 +59,16 @@ public class IRODSQueryResultSet extends AbstractIRODSQueryResultSet {
 			throws JargonException {
 
 		super(results, Collections.unmodifiableList(columnNames),
-				continuationIndex > 0);
+				continuationIndex > 0, continuationIndex);
 
 		if (translatedIRODSQuery == null) {
 			throw new JargonException("translated IRODS query is null");
 		}
 
 		this.translatedIRODSQuery = translatedIRODSQuery;
-		this.continuationIndex = continuationIndex;
 
 	}
+
 
 	/**
 	 * Return the query that generated the result set
@@ -85,21 +79,6 @@ public class IRODSQueryResultSet extends AbstractIRODSQueryResultSet {
 	 */
 	public TranslatedIRODSGenQuery getTranslatedIRODSQuery() {
 		return translatedIRODSQuery;
-	}
-
-	/**
-	 * Convenience method to get the number of result columns, based on the
-	 * number of selects.
-	 * 
-	 * @return <code>int</code> with count of result columns.
-	 */
-	@Override
-	public int getNumberOfResultColumns() {
-		return translatedIRODSQuery.getSelectFields().size();
-	}
-
-	public int getContinuationIndex() {
-		return continuationIndex;
 	}
 
 }

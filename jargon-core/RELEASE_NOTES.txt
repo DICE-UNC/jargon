@@ -7,8 +7,6 @@
 
 Work in progress on user profile management: https://code.renci.org/gf/project/irodsidrop/tracker/?action=TrackerItemEdit&tracker_item_id=922&start=50
 
-==News==
-
 NOTE: This RELEASE represents the first set of updates for mounted collections and soft link support.  Currently, this includes
 soft link support and accompanying unit tests.  Mounted collection and MSO support will be included in follow-on releases.  
 
@@ -48,22 +46,9 @@ Note that the following bug and feature requests are logged in GForge with relat
 
 ==Bug Fixes==
 
-* [#930] [iROD-Chat:8451] Does Jargon limit the number of items returned in a collection contents list?
-** Correctly compute last index when listing collections with permissions
-** Take out user type query and set to unknown to help performance.  This was causing a subquery for every row.  The user type defaults to UNKNOWN for now, and that information will not be available in the current iteration.  Note that specific/sql query will be used to impove the available information in this query as a separate feature request.
-** fix record counts in gen query results to account for paging offset when adding counts to returned rows
-** added IRODSThousandCollectionsTest and augmented IRODSThousandFilesTest to test out this operation
-
-* [#937] irm -rf when a collection contains soft links results in collection not empty error - info value:-821000
-** overhead unit test cleanup methods to do a delete of the scratch area instead of deleteWithForceOption
-
-* [#936] delete with folder containing files fails silently
-** add thrown JargonRuntimeException for unanticipated delete errors. 
 
 ==Features==
 
- * [#764] Java libraries and code to integrate idrop-web
- ** added isUserInGroup method to UserGroupAO
  
  * [#922] User Profile Management
  ** added jargon-user-profile subproject to manage user profile information in a consistent way

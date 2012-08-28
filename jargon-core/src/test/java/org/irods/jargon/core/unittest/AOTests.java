@@ -29,6 +29,7 @@ import org.irods.jargon.core.pub.ResourceAOTest;
 import org.irods.jargon.core.pub.ResourceGroupAOImplTest;
 import org.irods.jargon.core.pub.RuleProcessingAOImplTest;
 import org.irods.jargon.core.pub.SimpleQueryExecutorAOImplTest;
+import org.irods.jargon.core.pub.SpecificQueryAOTest;
 import org.irods.jargon.core.pub.Stream2StreamAOImplTest;
 import org.irods.jargon.core.pub.UserAOTest;
 import org.irods.jargon.core.pub.UserGroupAOImplTest;
@@ -62,7 +63,8 @@ import org.junit.runners.Suite;
 		DataTransferOperationsImplForSoftLinksTest.class,
 		ResourceGroupAOImplTest.class, CollectionAuditAOImplTest.class,
 		IRODSGenQueryExecutorImplBuiilderQueriesTest.class,
-		CollectionAndDataObjectListAndSearchAOImplForSoftLinksTest.class })
+		CollectionAndDataObjectListAndSearchAOImplForSoftLinksTest.class,
+		SpecificQueryAOTest.class })
 /**
  * Suite to run Access Object tests in org.irods.jargon.pub.*
  * <p/>

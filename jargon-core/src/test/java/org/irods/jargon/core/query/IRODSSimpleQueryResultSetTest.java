@@ -12,7 +12,7 @@ public class IRODSSimpleQueryResultSetTest {
 	@Test
 	public void testGetNumberOfResultColumns() {
 		int colCount = 10;
-		SimpleQuery simpleQuery = Mockito.mock(SimpleQuery.class);
+		AbstractAliasedQuery simpleQuery = Mockito.mock(SimpleQuery.class);
 		@SuppressWarnings("unchecked")
 		List<IRODSQueryResultRow> results = Mockito.mock(List.class);
 		@SuppressWarnings("unchecked")
@@ -26,7 +26,7 @@ public class IRODSSimpleQueryResultSetTest {
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testInstanceNullSimpleQuery() {
-		SimpleQuery simpleQuery = null;
+		AbstractAliasedQuery simpleQuery = null;
 		@SuppressWarnings("unchecked")
 		List<IRODSQueryResultRow> results = Mockito.mock(List.class);
 		@SuppressWarnings("unchecked")
@@ -37,7 +37,7 @@ public class IRODSSimpleQueryResultSetTest {
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testInstanceNullResults() {
-		SimpleQuery simpleQuery = Mockito.mock(SimpleQuery.class);
+		AbstractAliasedQuery simpleQuery = Mockito.mock(SimpleQuery.class);
 		List<IRODSQueryResultRow> results = null;
 		@SuppressWarnings("unchecked")
 		List<String> columnNames = Mockito.mock(List.class);
@@ -47,7 +47,7 @@ public class IRODSSimpleQueryResultSetTest {
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testInstanceNullColumnNames() {
-		SimpleQuery simpleQuery = Mockito.mock(SimpleQuery.class);
+		AbstractAliasedQuery simpleQuery = Mockito.mock(SimpleQuery.class);
 		@SuppressWarnings("unchecked")
 		List<IRODSQueryResultRow> results = Mockito.mock(List.class);
 		List<String> columnNames = null;

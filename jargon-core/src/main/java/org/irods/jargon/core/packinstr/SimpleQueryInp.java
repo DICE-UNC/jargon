@@ -1,7 +1,7 @@
 package org.irods.jargon.core.packinstr;
 
 import org.irods.jargon.core.exception.JargonException;
-import org.irods.jargon.core.query.SimpleQuery;
+import org.irods.jargon.core.query.AbstractAliasedQuery;
 
 /**
  * Packing instruction to execute a simple query on iRODS. Simple query is a
@@ -33,7 +33,7 @@ import org.irods.jargon.core.query.SimpleQuery;
  */
 public class SimpleQueryInp extends AbstractIRODSPackingInstruction {
 
-	private final SimpleQuery simpleQuery;
+	private final AbstractAliasedQuery simpleQuery;
 	private static final int maxBuffSize = 1024;
 
 	public static final String PI_TAG = "simpleQueryInp_PI";
@@ -55,11 +55,11 @@ public class SimpleQueryInp extends AbstractIRODSPackingInstruction {
 	 *            {@link SimpleQuery} that contains the query to send to iRODS.
 	 * @return <code>SimpleQueryInp</code> packing instruction.
 	 */
-	public static SimpleQueryInp instance(final SimpleQuery simpleQuery) {
+	public static SimpleQueryInp instance(final AbstractAliasedQuery simpleQuery) {
 		return new SimpleQueryInp(SIMPLE_QUERY_API_NBR, simpleQuery);
 	}
 
-	public SimpleQuery getSimpleQuery() {
+	public AbstractAliasedQuery getSimpleQuery() {
 		return simpleQuery;
 	}
 
@@ -67,7 +67,7 @@ public class SimpleQueryInp extends AbstractIRODSPackingInstruction {
 		return maxBuffSize;
 	}
 
-	private SimpleQueryInp(final int apiNbr, final SimpleQuery simpleQuery) {
+	private SimpleQueryInp(final int apiNbr, final AbstractAliasedQuery simpleQuery) {
 		super();
 
 		if (apiNbr <= 0) {
