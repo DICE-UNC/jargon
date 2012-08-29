@@ -59,7 +59,7 @@ public final class IRODSAccount implements Serializable {
 	private final int port;
 	private final String zone;
 	private final String userName;
-	private final String password;
+	private String password;
 	private String defaultStorageResource;
 	private String homeDirectory;
 	private static final String authenticationScheme = STANDARD_PASSWORD;
@@ -497,6 +497,14 @@ public final class IRODSAccount implements Serializable {
 		} else {
 			return false;
 		}
+	}
+
+	/**
+	 * @param password
+	 *            the password to set
+	 */
+	public void setPassword(String password) {
+		this.password = password;
 	}
 
 }
