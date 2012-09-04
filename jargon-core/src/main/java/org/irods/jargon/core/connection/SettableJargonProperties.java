@@ -41,6 +41,10 @@ public class SettableJargonProperties implements JargonProperties {
 	private int getBufferSize = 4194304;
 	private int inputToOutputCopyBufferByteSize = 65536;
 	private String encoding = "UTF-8";
+	private boolean instrument = false;
+	private boolean reconnect = false;
+	private boolean defaultToPublicIfNothingUnderRootWhenListing = true;
+	private long reconnectTimeInMillis = 600000L;
 
 	/**
 	 * Construct a default properties set based on the provided initial set of
@@ -111,6 +115,10 @@ public class SettableJargonProperties implements JargonProperties {
 		this.encoding = jargonProperties.getEncoding();
 		this.inputToOutputCopyBufferByteSize = jargonProperties
 				.getInputToOutputCopyBufferByteSize();
+		this.setInstrument(jargonProperties.isInstrument());
+		this.setReconnect(jargonProperties.isReconnect());
+		this.setDefaultToPublicIfNothingUnderRootWhenListing(jargonProperties
+				.isDefaultToPublicIfNothingUnderRootWhenListing());
 	}
 
 	/*
@@ -554,7 +562,7 @@ public class SettableJargonProperties implements JargonProperties {
 		return encoding;
 	}
 
-	public void setEncoding(final String encoding) {
+	public synchronized void setEncoding(final String encoding) {
 		if (encoding == null || encoding.isEmpty()) {
 			throw new IllegalArgumentException("encoding is null or empty");
 		}
@@ -581,6 +589,101 @@ public class SettableJargonProperties implements JargonProperties {
 	public synchronized void setUseNIOForParallelTransfers(
 			boolean useNIOForParallelTransfers) {
 		this.useNIOForParallelTransfers = useNIOForParallelTransfers;
+	}
+
+	/**
+	 * @return <code>boolean</code> that indicates whether a reconnect of long
+	 *         running connections is done. This is equvalent to the -T icommand
+	 *         option
+	 */
+	@Override
+	public synchronized boolean isReconnect() {
+		return reconnect;
+	}
+
+	/**
+	 * Return <code>boolean</code> that indicates whether detailed performance
+	 * information is gathered and reported to the DEBUG log. This may introduce
+	 * overhead to operations.
+	 * <p/>
+	 * Note that the implementation of such instrumentation will be an ongoing
+	 * process.
+	 * 
+	 * @return
+	 */
+	@Override
+	public synchronized boolean isInstrument() {
+		return instrument;
+	}
+
+	/**
+	 * @return the irodsSocketTimeout
+	 */
+	public synchronized int getIrodsSocketTimeout() {
+		return irodsSocketTimeout;
+	}
+
+	/**
+	 * @return the irodsParallelSocketTimeout
+	 */
+	public synchronized int getIrodsParallelSocketTimeout() {
+		return irodsParallelSocketTimeout;
+	}
+
+	/**
+	 * @param instrument
+	 *            the instrument to set
+	 */
+	public synchronized void setInstrument(boolean instrument) {
+		this.instrument = instrument;
+	}
+
+	/**
+	 * @param reconnect
+	 *            the reconnect to set
+	 */
+	public synchronized void setReconnect(boolean reconnect) {
+		this.reconnect = reconnect;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.connection.JargonProperties#
+	 * isDefaultToPublicIfNothingUnderRootWhenListing()
+	 */
+	@Override
+	public boolean isDefaultToPublicIfNothingUnderRootWhenListing() {
+		return this.defaultToPublicIfNothingUnderRootWhenListing;
+	}
+
+	/**
+	 * Set a property that will automatically look for /zone/home/public and
+	 * /zone/home/username directories in the process of listing.
+	 * 
+	 * @param defaultToPublicIfNothingUnderRootWhenListing
+	 */
+	public void setDefaultToPublicIfNothingUnderRootWhenListing(
+			final boolean defaultToPublicIfNothingUnderRootWhenListing) {
+		this.defaultToPublicIfNothingUnderRootWhenListing = defaultToPublicIfNothingUnderRootWhenListing;
+	}
+
+	/**
+	 * @return the reconnectTimeInMillis <code>long</code> indicating the time
+	 *         to wait for reconnect. This is only used if
+	 *         <code>isReconnect()</code> is <code>true</code>
+	 */
+	@Override
+	public synchronized long getReconnectTimeInMillis() {
+		return reconnectTimeInMillis;
+	}
+
+	/**
+	 * @param reconnectTimeInMillis
+	 *            the reconnectTimeInMillis to set
+	 */
+	public synchronized void setReconnectTimeInMillis(long reconnectTimeInMillis) {
+		this.reconnectTimeInMillis = reconnectTimeInMillis;
 	}
 
 }

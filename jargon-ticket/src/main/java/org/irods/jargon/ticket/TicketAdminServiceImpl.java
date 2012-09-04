@@ -18,11 +18,11 @@ import org.irods.jargon.core.pub.ProtocolExtensionPoint;
 import org.irods.jargon.core.pub.UserAO;
 import org.irods.jargon.core.pub.domain.ObjStat;
 import org.irods.jargon.core.pub.io.IRODSFile;
+import org.irods.jargon.core.query.AbstractIRODSQueryResultSet;
 import org.irods.jargon.core.query.GenQueryBuilderException;
 import org.irods.jargon.core.query.IRODSGenQuery;
 import org.irods.jargon.core.query.IRODSGenQueryBuilder;
 import org.irods.jargon.core.query.IRODSQueryResultRow;
-import org.irods.jargon.core.query.IRODSQueryResultSet;
 import org.irods.jargon.core.query.IRODSQueryResultSetInterface;
 import org.irods.jargon.core.query.JargonQueryException;
 import org.irods.jargon.core.query.QueryConditionOperators;
@@ -66,6 +66,13 @@ public final class TicketAdminServiceImpl extends AbstractTicketService
 		this.irodsAccount = irodsAccount;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.ticket.TicketAdminService#
+	 * createTicketFromTicketObjectAsAdminForGivenUser
+	 * (org.irods.jargon.ticket.Ticket, java.lang.String)
+	 */
 	@Override
 	public Ticket createTicketFromTicketObjectAsAdminForGivenUser(
 			final Ticket ticket, final String userName)
@@ -323,7 +330,7 @@ public final class TicketAdminServiceImpl extends AbstractTicketService
 		IRODSGenQueryExecutor irodsGenQueryExecutor = irodsAccessObjectFactory
 				.getIRODSGenQueryExecutor(irodsAccount);
 
-		IRODSQueryResultSet resultSet = null;
+		AbstractIRODSQueryResultSet resultSet = null;
 
 		try {
 			resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResult(
@@ -383,7 +390,7 @@ public final class TicketAdminServiceImpl extends AbstractTicketService
 		IRODSGenQueryExecutor irodsGenQueryExecutor = irodsAccessObjectFactory
 				.getIRODSGenQueryExecutor(irodsAccount);
 
-		IRODSQueryResultSet resultSet = null;
+		AbstractIRODSQueryResultSet resultSet = null;
 
 		try {
 			resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResult(
@@ -447,7 +454,7 @@ public final class TicketAdminServiceImpl extends AbstractTicketService
 
 		List<Ticket> tickets = new ArrayList<Ticket>();
 
-		IRODSQueryResultSet resultSet = null;
+		AbstractIRODSQueryResultSet resultSet = null;
 
 		try {
 			IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, null);
@@ -532,7 +539,7 @@ public final class TicketAdminServiceImpl extends AbstractTicketService
 
 		List<Ticket> tickets = new ArrayList<Ticket>();
 
-		IRODSQueryResultSet resultSet = null;
+		AbstractIRODSQueryResultSet resultSet = null;
 		IRODSFile dataFile = irodsAccessObjectFactory.getIRODSFileFactory(
 				getIrodsAccount()).instanceIRODSFile(irodsAbsolutePath);
 
@@ -614,7 +621,7 @@ public final class TicketAdminServiceImpl extends AbstractTicketService
 		IRODSGenQueryExecutor irodsGenQueryExecutor = irodsAccessObjectFactory
 				.getIRODSGenQueryExecutor(irodsAccount);
 
-		IRODSQueryResultSet resultSet = null;
+		AbstractIRODSQueryResultSet resultSet = null;
 
 		try {
 			resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResult(
@@ -1503,7 +1510,7 @@ public final class TicketAdminServiceImpl extends AbstractTicketService
 			IRODSGenQueryExecutor irodsGenQueryExecutor = irodsAccessObjectFactory
 					.getIRODSGenQueryExecutor(irodsAccount);
 
-			IRODSQueryResultSet resultSet = irodsGenQueryExecutor
+			AbstractIRODSQueryResultSet resultSet = irodsGenQueryExecutor
 					.executeIRODSQueryAndCloseResult(irodsQuery,
 							partialStartIndex);
 			for (IRODSQueryResultRow row : resultSet.getResults()) {

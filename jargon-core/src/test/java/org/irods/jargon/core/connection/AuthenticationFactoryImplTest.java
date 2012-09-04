@@ -2,12 +2,6 @@ package org.irods.jargon.core.connection;
 
 import junit.framework.TestCase;
 
-import org.irods.jargon.core.connection.AuthMechanism;
-import org.irods.jargon.core.connection.AuthenticationFactory;
-import org.irods.jargon.core.connection.AuthenticationFactoryImpl;
-import org.irods.jargon.core.connection.GSIAuth;
-import org.irods.jargon.core.connection.IRODSAccount;
-import org.irods.jargon.core.connection.KerberosAuth;
 import org.irods.jargon.core.connection.auth.AuthUnavailableException;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -21,23 +15,6 @@ public class AuthenticationFactoryImplTest {
 
 	@AfterClass
 	public static void tearDownAfterClass() throws Exception {
-	}
-
-	/**
-	 * Ask for and get the kerberos auth mech
-	 * 
-	 * @throws Exception
-	 */
-	@Test
-	public final void testInstanceAuthMechanismKerberos() throws Exception {
-		AuthenticationFactory authenticationFactory = new AuthenticationFactoryImpl();
-		AuthMechanism authMechanism = authenticationFactory
-				.instanceAuthMechanism(IRODSAccount.AuthScheme.KERBEROS.name());
-		TestCase.assertNotNull(
-				"null auth mechanism returned, should be Kerberos",
-				authMechanism);
-		boolean isRightType = authMechanism instanceof KerberosAuth;
-		TestCase.assertTrue("Not kerberos auth", isRightType);
 	}
 
 	/**

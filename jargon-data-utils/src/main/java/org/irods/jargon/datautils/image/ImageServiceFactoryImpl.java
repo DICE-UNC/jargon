@@ -24,16 +24,20 @@ public class ImageServiceFactoryImpl implements ImageServiceFactory {
 
 	}
 
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.datautils.image.ImageServiceFactory#instanceThumbnailService(org.irods.jargon.core.connection.IRODSAccount)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.datautils.image.ImageServiceFactory#instanceThumbnailService
+	 * (org.irods.jargon.core.connection.IRODSAccount)
 	 */
 	@Override
-	public ThumbnailService instanceThumbnailService(IRODSAccount irodsAccount) {
+	public ThumbnailService instanceThumbnailService(
+			final IRODSAccount irodsAccount) {
 		if (irodsAccount == null) {
 			throw new IllegalArgumentException("null irodsAccount");
 		}
 		return new ThumbnailServiceImpl(irodsAccessObjectFactory, irodsAccount);
 	}
-	
 
 }

@@ -37,29 +37,6 @@ class GSIAuth extends AuthMechanism {
 
 	public static final Logger log = LoggerFactory.getLogger(GSIAuth.class);
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.irods.jargon.core.connection.auth.AuthMechanism#authenticate(org.
-	 * irods.jargon.core.connection.IRODSCommands,
-	 * org.irods.jargon.core.connection.IRODSAccount)
-	 */
-	@Override
-	 AuthResponse authenticate(final IRODSCommands irodsCommands,
-			final IRODSAccount irodsAccount) throws AuthenticationException,
-			JargonException {
-		try {
-		return sendGSIAuth(irodsAccount, irodsCommands.getIrodsConnection()
-				.getIrodsOutputStream(), irodsCommands.getIrodsConnection()
-				.getIrodsInputStream());
-		} catch (IOException ioe) {
-			log.error("IOException attempting authentication", ioe);
-			throw new JargonRuntimeException(
-					"io exception attempting authentication");
-		}
-	}
-
 	void sendGSIPassword(final IRODSAccount irodsAccount,
 			final IRODSCommands irodsCommands) throws JargonException {
 
@@ -102,12 +79,6 @@ class GSIAuth extends AuthMechanism {
 
 	}
 
-	/*
-	 * private IRODSAccount lookupAdditionalIRODSAccountInfoWhenGSI( final
-	 * IRODSAccount irodsAccount2, final IRODSCommands irodsCommands) { //
-	 * FIXME: implement with GSI return null; }
-	 */
-
 	/**
 	 * GSI authorization method. Makes a connection to the iRODS using the GSI
 	 * authorization scheme.
@@ -122,8 +93,8 @@ class GSIAuth extends AuthMechanism {
 	 * @throws IOException
 	 *             If the authentication to the iRODS fails.
 	 */
-	AuthResponse sendGSIAuth(IRODSAccount irodsAccount, OutputStream out,
-			InputStream in) throws IOException {
+	AuthResponse sendGSIAuth(final IRODSAccount irodsAccount,
+			final OutputStream out, final InputStream in) throws IOException {
 		CoGProperties cog = null;
 		String defaultCA = null;
 		GSSCredential credential = null;
@@ -206,7 +177,7 @@ class GSIAuth extends AuthMechanism {
 		}
 	}
 
-	static String getDN(IRODSAccount account) throws IOException {
+	static String getDN(final IRODSAccount account) throws IOException {
 		StringBuffer dn = null;
 		int index = -1, index2 = -1;
 		try {
@@ -241,13 +212,14 @@ class GSIAuth extends AuthMechanism {
 		}
 	}
 
-	static GSSCredential getCredential(IRODSAccount account)
+	static GSSCredential getCredential(final IRODSAccount account)
 			throws GSSException, IOException {
 		byte[] data = null;
 		GSSCredential credential = account.getGSSCredential();
 		if (credential != null) {
-			if (credential.getRemainingLifetime() <= 0)
+			if (credential.getRemainingLifetime() <= 0) {
 				throw new GSSException(GSSException.CREDENTIALS_EXPIRED);
+			}
 
 			return credential;
 		}
@@ -284,10 +256,34 @@ class GSIAuth extends AuthMechanism {
 					GSSCredential.INITIATE_AND_ACCEPT);
 		}
 
-		if (credential.getRemainingLifetime() <= 0)
+		if (credential.getRemainingLifetime() <= 0) {
 			throw new GSSException(GSSException.CREDENTIALS_EXPIRED);
+		}
 
 		return credential;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.connection.AuthMechanism#
+	 * processAuthenticationAfterStartup
+	 * (org.irods.jargon.core.connection.IRODSAccount,
+	 * org.irods.jargon.core.connection.IRODSCommands)
+	 */
+	@Override
+	protected AuthResponse processAuthenticationAfterStartup(
+			final IRODSAccount irodsAccount, final IRODSCommands irodsCommands)
+			throws AuthenticationException, JargonException {
+		try {
+			return sendGSIAuth(irodsAccount, irodsCommands.getIrodsConnection()
+					.getIrodsOutputStream(), irodsCommands.getIrodsConnection()
+					.getIrodsInputStream());
+		} catch (IOException ioe) {
+			log.error("IOException attempting authentication", ioe);
+			throw new JargonRuntimeException(
+					"io exception attempting authentication");
+		}
 	}
 
 }

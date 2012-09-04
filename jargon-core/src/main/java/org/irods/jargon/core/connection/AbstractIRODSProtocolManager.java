@@ -1,5 +1,6 @@
 package org.irods.jargon.core.connection;
 
+import org.irods.jargon.core.connection.auth.AuthUnavailableException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.exception.JargonRuntimeException;
 import org.slf4j.Logger;
@@ -145,6 +146,17 @@ public abstract class AbstractIRODSProtocolManager implements
 	public synchronized void setAuthenticationFactory(
 			AuthenticationFactory authenticationFactory) {
 		this.authenticationFactory = authenticationFactory;
+	}
+
+	protected synchronized AuthMechanism getAuthMechanismForIRODSAccount(
+			final IRODSAccount irodsAccount) throws AuthUnavailableException,
+			JargonException {
+		if (irodsAccount == null) {
+			throw new IllegalArgumentException("null irodsAccount");
+		}
+
+		return authenticationFactory.instanceAuthMechanism(irodsAccount
+				.getAuthenticationScheme().name());
 	}
 
 }

@@ -115,7 +115,7 @@ public class DataObjectAuditAOImplTest {
 			throws Exception {
 
 		if (!testingPropertiesHelper.isTestAudit(testingProperties)) {
-			return;
+			throw new FileNotFoundException("expected");
 		}
 
 		String testFileName = System.currentTimeMillis()
@@ -204,7 +204,7 @@ public class DataObjectAuditAOImplTest {
 	public void testFindAuditRecordForDataObjectNotExists() throws Exception {
 
 		if (!testingPropertiesHelper.isTestAudit(testingProperties)) {
-			return;
+			throw new FileNotFoundException("expected");
 		}
 
 		String testFileName = System.currentTimeMillis()
@@ -241,7 +241,7 @@ public class DataObjectAuditAOImplTest {
 			throws Exception {
 
 		if (!testingPropertiesHelper.isTestAudit(testingProperties)) {
-			return;
+			throw new IllegalArgumentException("expected");
 		}
 
 		IRODSAccount irodsAccount = testingPropertiesHelper

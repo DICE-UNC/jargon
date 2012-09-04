@@ -60,8 +60,8 @@ public final class IRODSSimpleProtocolManager extends
 	/**
 	 * A connection is returned to the connection manager. This implementation
 	 * of a connection manager will do a call-back to the
-	 * {@link IRODSConnection IRODSConnection} and the connection will be
-	 * closed. Other implementations may return the connection to a pool.
+	 * {@link IRODSManagedConnection } and the connection will be closed. Other
+	 * implementations may return the connection to a pool.
 	 * <p/>
 	 * 
 	 * @see org.irods.jargon.core.connection.IRODSConnectionManager#returnIRODSConnection

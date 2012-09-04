@@ -346,6 +346,59 @@ public class MiscIRODSUtils {
 	}
 
 	/**
+	 * Compute a home directory path in /zone/home/username format given an
+	 * <code>IRODSAccount</code> that describes the zone, and a user name for
+	 * the target user.
+	 * <p/>
+	 * This variant is meant to allow the computation of a home directory for an
+	 * arbitrary user based on the zone I'm logged into.
+	 * 
+	 * @param irodsAccount
+	 *            {@link IRODSAccount}
+	 * @return <code>String</code> with a computed home directory path
+	 */
+	public static String computeHomeDirectoryForGivenUserInSameZoneAsIRODSAccount(
+			final IRODSAccount irodsAccount, final String irodsUserName) {
+
+		if (irodsAccount == null) {
+			throw new IllegalArgumentException("null irodsAccount");
+		}
+
+		if (irodsUserName == null || irodsUserName.isEmpty()) {
+			throw new IllegalArgumentException("null or empty irodsUserName");
+		}
+
+		StringBuilder sb = new StringBuilder();
+		sb.append("/");
+		sb.append(irodsAccount.getZone());
+		sb.append("/home/");
+		sb.append(irodsUserName);
+		return sb.toString();
+	}
+
+	/**
+	 * Helper method for the convention of having a '/zone/home/public'
+	 * directory, especially for use by 'anonymous' accounts. Compute a path to
+	 * that directory
+	 * 
+	 * @param irodsAccount
+	 *            {@link IRODSAccount} for the logged in user (probably
+	 *            anonymous)
+	 * @return <code>String</code> in '/zone/home/public' format
+	 */
+	public static String computePublicDirectory(final IRODSAccount irodsAccount) {
+		if (irodsAccount == null) {
+			throw new IllegalArgumentException("null irodsAccount");
+		}
+
+		StringBuilder sb = new StringBuilder();
+		sb.append("/");
+		sb.append(irodsAccount.getZone());
+		sb.append("/home/public");
+		return sb.toString();
+	}
+
+	/**
 	 * Utility method to get the last part of the given absolute path
 	 * 
 	 * @return <code>String</code> with the last component of the absolute path
@@ -515,5 +568,31 @@ public class MiscIRODSUtils {
 		} catch (Exception ex) {
 			throw new JargonException("error getting enum vals", ex);
 		}
+	}
+
+	/**
+	 * Count occurrances of a character in a string
+	 * 
+	 * @param stringToCountOccurrancesIn
+	 *            <code>String</code> to count occurrances in
+	 * @param characterToCount
+	 *            <code>char</code> whose occurrances will be counted
+	 * @return <code>int</code> with the count of the given character
+	 */
+	public static int countCharsInString(final String stringToCountOccurrancesIn,
+			final char characterToCount) {
+
+		if (stringToCountOccurrancesIn == null) {
+			throw new IllegalArgumentException("null s");
+		}
+
+		final char[] chars = stringToCountOccurrancesIn.toCharArray();
+		int count = 0;
+		for (int i = 0; i < chars.length; i++) {
+			if (chars[i] == characterToCount) {
+				count++;
+			}
+		}
+		return count;
 	}
 }

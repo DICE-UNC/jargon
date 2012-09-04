@@ -6,6 +6,7 @@ import junit.framework.Assert;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSServerProperties;
+import org.irods.jargon.core.query.AbstractAliasedQuery;
 import org.irods.jargon.core.query.IRODSQueryResultRow;
 import org.irods.jargon.core.query.IRODSQueryResultSetInterface;
 import org.irods.jargon.core.query.SimpleQuery;
@@ -68,7 +69,7 @@ public class SimpleQueryExecutorAOImplTest {
 				.getIRODSAccessObjectFactory().getSimpleQueryExecutorAO(
 						irodsAccount);
 
-		SimpleQuery simpleQuery = SimpleQuery.instanceWithNoArguments(querySQL,
+		AbstractAliasedQuery simpleQuery = SimpleQuery.instanceWithNoArguments(querySQL,
 				0);
 		IRODSQueryResultSetInterface resultSet = simpleQueryExecutorAO
 				.executeSimpleQuery(simpleQuery);
@@ -99,7 +100,7 @@ public class SimpleQueryExecutorAOImplTest {
 				.getIRODSAccessObjectFactory().getSimpleQueryExecutorAO(
 						irodsAccount);
 
-		SimpleQuery simpleQuery = SimpleQuery.instanceWithOneArgument(querySQL,
+		AbstractAliasedQuery simpleQuery = SimpleQuery.instanceWithOneArgument(querySQL,
 				resourceGroup, 0);
 		IRODSQueryResultSetInterface resultSet = simpleQueryExecutorAO
 				.executeSimpleQuery(simpleQuery);

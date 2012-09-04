@@ -308,6 +308,53 @@ public class MiscIRODSUtilsTest {
 		Assert.assertEquals("did not correctly compute path", expected, path);
 	}
 
+	@Test
+	public void testComputeHomeDirectoryForGivenUserInSameZoneAsIRODSAccount()
+			throws Exception {
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		String userName = "blah";
+		String path = MiscIRODSUtils
+				.computeHomeDirectoryForGivenUserInSameZoneAsIRODSAccount(
+						irodsAccount, userName);
+
+		String expected = "/" + irodsAccount.getZone() + "/home/"
+ + userName;
+		Assert.assertEquals("did not correctly compute path", expected, path);
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void testComputeHomeDirectoryForGivenUserInSameZoneAsIRODSAccountNullAccount()
+			throws Exception {
+		IRODSAccount irodsAccount = null;
+		String userName = "blah";
+		MiscIRODSUtils
+				.computeHomeDirectoryForGivenUserInSameZoneAsIRODSAccount(
+						irodsAccount, userName);
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void testComputeHomeDirectoryForGivenUserInSameZoneAsIRODSAccountNullUserName()
+			throws Exception {
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		String userName = null;
+		MiscIRODSUtils
+				.computeHomeDirectoryForGivenUserInSameZoneAsIRODSAccount(
+						irodsAccount, userName);
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void testComputeHomeDirectoryForGivenUserInSameZoneAsIRODSAccountBlankUserName()
+			throws Exception {
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		String userName = "";
+		MiscIRODSUtils
+				.computeHomeDirectoryForGivenUserInSameZoneAsIRODSAccount(
+						irodsAccount, userName);
+	}
+
 	@Test(expected = IllegalArgumentException.class)
 	public void testComputeHomeDirectoryForIRODSAccountNull() throws Exception {
 		MiscIRODSUtils.computeHomeDirectoryForIRODSAccount(null);

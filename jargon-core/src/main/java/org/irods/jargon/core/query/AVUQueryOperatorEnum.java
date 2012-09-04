@@ -4,8 +4,11 @@
 package org.irods.jargon.core.query;
 
 /**
- * Describes a metadata query operator. This will need more work for a full
- * implementation....
+ * Describes a metadata query operator.
+ * <p/>
+ * Note that this is used by the older 'string' query technique, which uses
+ * iquest like queries, and is not used in the recommended
+ * <code>IRODSGenQueryBuilder</code> query technique.
  * 
  * @author Mike Conway - DICE (www.irods.org)
  */

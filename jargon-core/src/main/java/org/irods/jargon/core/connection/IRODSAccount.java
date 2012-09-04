@@ -46,7 +46,7 @@ public final class IRODSAccount implements Serializable {
 	private final int port;
 	private final String zone;
 	private final String userName;
-	private final String password;
+	private String password;
 	private String defaultStorageResource;
 	private String homeDirectory;
 
@@ -479,6 +479,28 @@ public final class IRODSAccount implements Serializable {
 	 */
 	public void setHomeDirectory(String homeDirectory) {
 		this.homeDirectory = homeDirectory;
+	}
+
+	/**
+	 * Check if this is 'anonymous'
+	 * 
+	 * @return <code>boolean</code> that will be <code>true</code> if this is an
+	 *         anonymous iRODS account
+	 */
+	public boolean isAnonymousAccount() {
+		if (userName.equals(PUBLIC_USERNAME)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	/**
+	 * @param password
+	 *            the password to set
+	 */
+	public void setPassword(String password) {
+		this.password = password;
 	}
 
 }

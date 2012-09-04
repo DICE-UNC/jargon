@@ -234,6 +234,61 @@ public interface JargonProperties {
 	 */
 	int getGetBufferSize();
 
+	/**
+	 * <code>boolean</code> that indicates whether the connection should be
+	 * renewed every 10 minutes to get around certain firewall issues. This is
+	 * equvalent to the -T option in the iput and iget iCommands.
+	 * 
+	 * @return
+	 */
+	boolean isReconnect();
+
+	/**
+	 * Get the reconnect time expressed in milliseconds, used by the reconnect
+	 * thread that will be launched if the <code>isReconnect()</code> method
+	 * returns true. This value has no meaning if the reconnect option is not
+	 * selected.
+	 * 
+	 * @return <code>long</code> with the reconnect time in milliseconds.
+	 */
+	long getReconnectTimeInMillis();
+
+	/**
+	 * <code>boolean</code> that indicates whether certain performance
+	 * statistics are gathered and reported to the DEBUG log. This will turn on
+	 * useful statistics for optimization and tuning, but will introduce a
+	 * certain amount of overhead, so this is typically unsuitable for
+	 * production deployment.
+	 * <p/>
+	 * Note that actual instrumentation will be an ongoing process, and will be
+	 * done as certain operations are tuned. Initially, this will represent the
+	 * infrastructure for such tuning information.
+	 * 
+	 * @return
+	 */
+	boolean isInstrument();
+
+	/**
+	 * This parameter tunes the behavior of the
+	 * {@link CollectionAndDataObjectListAndSearchAO}, and potentially other
+	 * parts of the API involved in listing directories under the root ('/')
+	 * directory. In certain situations, such as with strictACL's enabled, a
+	 * user may not have permissions to list collections under root. This can
+	 * prevent the viewing of directories that a user is actually enabled to see
+	 * because the higher level collections do not have the ACL's that enable
+	 * this.
+	 * <p/>
+	 * This property allows a behavior to support the convention that a path
+	 * underneath the root, specifically /zonename/home/public might exist, and
+	 * the various entry listing methods will attempt to find this path, even
+	 * when listing is not possible by calling iRODS.
+	 * 
+	 * @return <code>boolean</code> that will indicate whether to display the
+	 *         home directory, and the public directory underneath the home
+	 *         directory.
+	 */
+	boolean isDefaultToPublicIfNothingUnderRootWhenListing();
+
 
 
 }

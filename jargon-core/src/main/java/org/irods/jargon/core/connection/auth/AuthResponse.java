@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSAccount.AuthScheme;
+import org.irods.jargon.core.connection.StartupResponseData;
 
 /**
  * Represents information in response to an authentication attempt. This is
@@ -21,6 +22,11 @@ public class AuthResponse {
 	private String authMessage = "";
 	private IRODSAccount authenticatedIRODSAccount = null;
 	private Map<String, Object> responseProperties = new HashMap<String, Object>();
+	/**
+	 * response from the initial send of the startup packet, especially
+	 * important if connection restarting is specified
+	 */
+	private StartupResponseData startupResponse;
 
 	/**
 	 * Get the (optional) challenge value used in the iRODS exchange.
@@ -122,6 +128,21 @@ public class AuthResponse {
 	 */
 	public void setAuthType(AuthScheme authType) {
 		this.authType = authType;
+	}
+
+	/**
+	 * @return the startupResponse
+	 */
+	public StartupResponseData getStartupResponse() {
+		return startupResponse;
+	}
+
+	/**
+	 * @param startupResponse
+	 *            the startupResponse to set
+	 */
+	public void setStartupResponse(StartupResponseData startupResponse) {
+		this.startupResponse = startupResponse;
 	}
 
 }

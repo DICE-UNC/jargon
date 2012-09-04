@@ -1,12 +1,5 @@
 package org.irods.jargon.datautils.image;
 
-import java.awt.Container;
-import java.awt.Graphics2D;
-import java.awt.Image;
-import java.awt.MediaTracker;
-import java.awt.RenderingHints;
-import java.awt.Toolkit;
-import java.awt.image.BufferedImage;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -19,22 +12,15 @@ import java.util.List;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
-import org.irods.jargon.core.pub.DataTransferOperations;
 import org.irods.jargon.core.pub.EnvironmentalInfoAO;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 import org.irods.jargon.core.pub.RuleProcessingAO;
 import org.irods.jargon.core.pub.domain.RemoteCommandInformation;
-import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.rule.IRODSRuleExecResult;
 import org.irods.jargon.core.utils.Base64;
-import org.irods.jargon.core.utils.LocalFileUtils;
 import org.irods.jargon.datautils.AbstractDataUtilsServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.sun.image.codec.jpeg.JPEGCodec;
-import com.sun.image.codec.jpeg.JPEGEncodeParam;
-import com.sun.image.codec.jpeg.JPEGImageEncoder;
 
 /**
  * Manage the creation and maintenance of thumb-nail images for image files
@@ -43,7 +29,6 @@ import com.sun.image.codec.jpeg.JPEGImageEncoder;
  * @author Mike Conway - DICE (www.irods.org)
  * 
  */
-@SuppressWarnings("restriction")
 public class ThumbnailServiceImpl extends AbstractDataUtilsServiceImpl
 		implements ThumbnailService {
 
@@ -265,178 +250,6 @@ public class ThumbnailServiceImpl extends AbstractDataUtilsServiceImpl
 				Base64.fromString(execOut));
 		return is;
 
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.irods.jargon.datautils.image.ThumbnailService#createThumbnailLocally
-	 * (java.io.File, java.lang.String, int, int)
-	 */
-	@Override
-	public File createThumbnailLocally(final File workingDirectory,
-			final String irodsAbsolutePathToGenerateThumbnailFor,
-			int thumbWidth, int thumbHeight) throws Exception {
-
-		log.info("createThumbnailLocally()");
-
-		if (workingDirectory == null) {
-			throw new IllegalArgumentException("null workingDirectory");
-		}
-
-		if (irodsAbsolutePathToGenerateThumbnailFor == null
-				|| irodsAbsolutePathToGenerateThumbnailFor.isEmpty()) {
-			throw new IllegalArgumentException(
-					"nul irodsAbsolutePathToGenerateThumbnailFor");
-		}
-
-		log.info("workingDirectory:{}", workingDirectory.getAbsolutePath());
-		log.info("irodsAbsolutePathToGenerateThumbnailFor:{}",
-				irodsAbsolutePathToGenerateThumbnailFor);
-
-		File temp = new File(workingDirectory,
-				irodsAbsolutePathToGenerateThumbnailFor);
-
-		StringBuilder targetTempBuilder = new StringBuilder(
-				LocalFileUtils.getFileNameUpToExtension(temp.getName()));
-		targetTempBuilder
-				.append("###-jargon-data-utils-generated-thumbnail-image-###");
-		targetTempBuilder.append(System.currentTimeMillis());
-		targetTempBuilder.append(".jpg");
-
-		File targetTempFile = createWorkingDirectoryImageFile(
-				temp.getParentFile(), targetTempBuilder.toString());
-
-		log.info(">>>targetTempFile:{}", targetTempFile);
-
-		/*
-		 * Bring the image file down to the local file system to be the
-		 * thumbnail source
-		 */
-
-		log.info("bringing down image to generate thumbnail");
-		IRODSFile sourceAsFile = this.getIrodsAccessObjectFactory()
-				.getIRODSFileFactory(irodsAccount)
-				.instanceIRODSFile(irodsAbsolutePathToGenerateThumbnailFor);
-		DataTransferOperations dto = this.irodsAccessObjectFactory
-				.getDataTransferOperations(getIrodsAccount());
-		dto.getOperation(sourceAsFile, targetTempFile, null, null);
-		log.info("image retrieved to: {}, make thumbnail...",
-				targetTempFile.getAbsolutePath());
-
-		Image image = Toolkit.getDefaultToolkit().getImage(
-				targetTempFile.getAbsolutePath());
-		MediaTracker mediaTracker = new MediaTracker(new Container());
-		mediaTracker.addImage(image, 0);
-		mediaTracker.waitForID(0);
-		double thumbRatio = (double) thumbWidth / (double) thumbHeight;
-		int imageWidth = image.getWidth(null);
-		int imageHeight = image.getHeight(null);
-		double imageRatio = (double) imageWidth / (double) imageHeight;
-		if (thumbRatio < imageRatio) {
-			thumbHeight = (int) (thumbWidth / imageRatio);
-		} else {
-			thumbWidth = (int) (thumbHeight * imageRatio);
-		}
-		BufferedImage thumbImage = new BufferedImage(thumbWidth, thumbHeight,
-				BufferedImage.TYPE_INT_RGB);
-		Graphics2D graphics2D = thumbImage.createGraphics();
-		graphics2D.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
-				RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-		graphics2D.drawImage(image, 0, 0, thumbWidth, thumbHeight, null);
-		log.info("creating a (buffered) output stream to temp file:{}",
-				targetTempFile.getAbsolutePath());
-		BufferedOutputStream out = new BufferedOutputStream(
-				new FileOutputStream(targetTempFile.getAbsolutePath()));
-		JPEGImageEncoder encoder = JPEGCodec.createJPEGEncoder(out);
-		JPEGEncodeParam param = encoder.getDefaultJPEGEncodeParam(thumbImage);
-		int quality = 100;
-		param.setQuality(quality / 100.0f, false);
-		encoder.setJPEGEncodeParam(param);
-		encoder.encode(thumbImage);
-		out.close();
-
-		return targetTempFile;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.irods.jargon.datautils.image.ThumbnailService#
-	 * createThumbnailLocallyViaJAI(java.io.File, java.lang.String, int)
-	 */
-	@Override
-	public File createThumbnailLocallyViaJAI(final File workingDirectory,
-			final String irodsAbsolutePathToGenerateThumbnailFor,
-			final int maxEdge) throws Exception {
-
-		log.info("createThumbnailLocallyViaJAI()");
-
-		if (workingDirectory == null) {
-			throw new IllegalArgumentException("null workingDirectory");
-		}
-
-		if (irodsAbsolutePathToGenerateThumbnailFor == null
-				|| irodsAbsolutePathToGenerateThumbnailFor.isEmpty()) {
-			throw new IllegalArgumentException(
-					"nul irodsAbsolutePathToGenerateThumbnailFor");
-		}
-
-		if (maxEdge <= 0) {
-			throw new IllegalArgumentException("maxEdge must be > 0");
-		}
-
-		// build a temporary path for the thumbnail file that differentiates the
-		// irods file from the thumbnail
-		File temp = new File(workingDirectory,
-				irodsAbsolutePathToGenerateThumbnailFor);
-
-		StringBuilder targetTempBuilder = new StringBuilder(
-				LocalFileUtils.getFileNameUpToExtension(temp.getName()));
-		targetTempBuilder
-				.append("###-jargon-data-utils-generated-thumbnail-image-###");
-		targetTempBuilder.append(System.currentTimeMillis());
-		targetTempBuilder.append(".png");
-
-		File targetTempFile = createWorkingDirectoryImageFile(
-				temp.getParentFile(), targetTempBuilder.toString());
-
-		/*
-		 * Bring the image file down to the local file system to be the
-		 * thumbnail source
-		 */
-
-		log.info("bringing down image to generate thumbnail");
-		IRODSFile sourceAsFile = this.getIrodsAccessObjectFactory()
-				.getIRODSFileFactory(irodsAccount)
-				.instanceIRODSFile(irodsAbsolutePathToGenerateThumbnailFor);
-		DataTransferOperations dto = this.irodsAccessObjectFactory
-				.getDataTransferOperations(getIrodsAccount());
-		dto.getOperation(sourceAsFile, temp, null, null);
-		log.info("image retrieved, create thumbnail image at:{}",
-				targetTempFile.getAbsolutePath());
-
-		try {
-
-			ImageTool imageTool = new ImageTool();
-			imageTool.load(temp.getAbsolutePath());
-			imageTool.thumbnail(maxEdge);
-			imageTool.writeResult(targetTempFile.getAbsolutePath(), "PNG");
-			if (!targetTempFile.exists()) {
-				throw new JargonException(
-						"image file was not created for some reason by JAI");
-			}
-		} catch (Exception e) {
-			log.error("exception occurred during thumbnail processing via JAI",
-					e);
-			throw new JargonException(
-					"Error during thumbnail creation via JAI", e);
-		}
-
-		log.info("clean up base image, thumbnail image to be deleted by caller");
-		temp.delete();
-		return targetTempFile;
 	}
 
 }

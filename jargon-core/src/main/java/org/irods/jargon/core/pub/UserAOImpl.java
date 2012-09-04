@@ -698,7 +698,7 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 		log.info("changeAUserPasswordByThatUser for user:{}", userName);
 
 		String obfuscatedPassword = IRODSPasswordUtilities
-				.obfuscateIRODSPassword(newPassword, currentPassword);
+				.obfEncodeByKey(newPassword, currentPassword, true);
 		UserAdminInp userAdminIn = UserAdminInp.instanceForChangeUserPassword(
 				userName, obfuscatedPassword);
 		getIRODSProtocol().irodsFunction(userAdminIn);
@@ -729,7 +729,8 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 		String randPaddedNewPassword = IRODSPasswordUtilities
 				.padPasswordWithRandomStringData(newPassword);
 
-		String key2 = this.getIRODSProtocol().getCachedChallengeValue();
+		String key2 = this.getIRODSProtocol().getAuthResponse()
+				.getChallengeValue();
 		String derivedChallenge = IRODSPasswordUtilities
 				.deriveHexSubsetOfChallenge(key2);
 		String myKey2 = IRODSPasswordUtilities
@@ -864,6 +865,30 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 		}
 		log.debug("metadata deleted");
 
+	}
+
+	@Override
+	public void updateUserInfo(final String userName, final String userInfo)
+			throws DataNotFoundException, JargonException {
+		log.info("updateUserInfo()");
+
+		if (userName == null || userName.isEmpty()) {
+			throw new IllegalArgumentException("null or empty userName");
+		}
+
+		if (userInfo == null) {
+			throw new IllegalArgumentException("null userInfo");
+		}
+
+		log.info("userName:{}", userName);
+		log.info("userInfo:{}", userInfo);
+
+		User user = this.findByName(userName);
+
+		log.info("looked up user:{}", user);
+		user.setInfo(userInfo);
+		this.updateUserInfo(user);
+		log.info("updated info");
 	}
 
 	private void updateUserType(final User user) throws JargonException {

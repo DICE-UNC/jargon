@@ -35,7 +35,8 @@ public class DataCacheServiceFactoryImpl implements DataCacheServiceFactory {
 	 * (org.irods.jargon.core.connection.IRODSAccount)
 	 */
 	@Override
-	public DataCacheService instanceDataCacheService(IRODSAccount irodsAccount) {
+	public DataCacheService instanceDataCacheService(
+			final IRODSAccount irodsAccount) {
 		if (irodsAccount == null) {
 			throw new IllegalArgumentException("null irodsAccount");
 		}

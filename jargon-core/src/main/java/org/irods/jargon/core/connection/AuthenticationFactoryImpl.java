@@ -38,9 +38,6 @@ public class AuthenticationFactoryImpl implements AuthenticationFactory {
 		if (authScheme == AuthScheme.GSI.name()) {
 			log.info("generating GSI Auth");
 			return new GSIAuth();
-		} else if (authScheme == AuthScheme.KERBEROS.name()) {
-			log.info("generating Kerberos auth");
-			return new KerberosAuth();
 		} else if (authScheme == AuthScheme.STANDARD.name()) {
 			log.info("using standard auth");
 			return new StandardIRODSAuth();

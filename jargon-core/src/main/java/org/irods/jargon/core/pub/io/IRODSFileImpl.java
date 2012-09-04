@@ -413,11 +413,16 @@ public final class IRODSFileImpl extends File implements IRODSFile {
 				successful = false;
 			} catch (JargonException e) {
 
-				log.error(
-						"irods error occurred on delete, this was not a data not found exception, rethrow as unchecked",
-						e);
-				throw new JargonRuntimeException(
-						"exception occurred on delete", e);
+				if (e.getUnderlyingIRODSExceptionCode() == -528002) {
+					log.warn("underlying rename error logged and ignored on delete");
+				} else {
+
+					log.error(
+							"irods error occurred on delete, this was not a data not found exception, rethrow as unchecked",
+							e);
+					throw new JargonRuntimeException(
+							"exception occurred on delete", e);
+				}
 
 			}
 		}
@@ -445,10 +450,10 @@ public final class IRODSFileImpl extends File implements IRODSFile {
 			log.info("file not found, treat as unsuccessful");
 			successful = false;
 		} catch (JargonException e) {
-			String msg = "JargonException caught and logged on delete, method will return false and continue:"
+			String msg = "JargonException caught and logged on delete:"
 					+ e.getMessage();
 			log.error(msg, e);
-			successful = false;
+			throw new JargonRuntimeException(msg, e);
 		}
 		objStat = null;
 		fileDescriptor = -1;

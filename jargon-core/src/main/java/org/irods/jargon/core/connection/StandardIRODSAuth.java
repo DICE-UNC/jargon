@@ -8,7 +8,6 @@ import java.nio.channels.ClosedChannelException;
 import java.security.GeneralSecurityException;
 import java.security.MessageDigest;
 
-import org.irods.jargon.core.connection.IRODSAccount.AuthScheme;
 import org.irods.jargon.core.connection.auth.AuthResponse;
 import org.irods.jargon.core.exception.AuthenticationException;
 import org.irods.jargon.core.exception.JargonException;
@@ -31,34 +30,6 @@ public class StandardIRODSAuth extends AuthMechanism {
 
 	public static final Logger log = LoggerFactory
 			.getLogger(StandardIRODSAuth.class);
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.irods.jargon.core.connection.auth.AuthMechanism#authenticate(org.
-	 * irods.jargon.core.connection.IRODSCommands,
-	 * org.irods.jargon.core.connection.IRODSAccount)
-	 */
-	@Override
-	public AuthResponse authenticate(final IRODSCommands irodsCommands,
-			final IRODSAccount irodsAccount) throws AuthenticationException,
-			JargonException {
-
-		log.info("authenticate");
-		sendStartupPacket(irodsAccount, irodsCommands);
-		String challengeValue = sendStandardPassword(irodsAccount,
-				irodsCommands);
-		log.info("auth was successful");
-		AuthResponse authResponse = new AuthResponse();
-		authResponse.setAuthenticatedIRODSAccount(irodsAccount);
-		authResponse.setAuthType(AuthScheme.STANDARD);
-		authResponse.setChallengeValue(challengeValue);
-		authResponse.setSuccessful(true);
-		log.info("auth response was:{}", authResponse);
-		return authResponse;
-	}
-
 
 	/**
 	 * Do the normal iRODS password challenge/response sequence
@@ -182,5 +153,31 @@ public class StandardIRODSAuth extends AuthMechanism {
 		// return to Base64
 		return Base64.toString(chal);
 	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.connection.AuthMechanism#
+	 * processAuthenticationAfterStartup
+	 * (org.irods.jargon.core.connection.IRODSAccount,
+	 * org.irods.jargon.core.connection.IRODSCommands)
+	 */
+	@Override
+	protected AuthResponse processAuthenticationAfterStartup(
+			IRODSAccount irodsAccount, IRODSCommands irodsCommands)
+			throws AuthenticationException, JargonException {
+		log.info("authenticate");
+		String challengeValue = sendStandardPassword(irodsAccount,
+				irodsCommands);
+		log.info("auth was successful");
+		AuthResponse authResponse = new AuthResponse();
+		authResponse.setAuthenticatedIRODSAccount(irodsAccount);
+		authResponse.setAuthType(IRODSAccount.AuthScheme.STANDARD);
+		authResponse.setChallengeValue(challengeValue);
+		authResponse.setSuccessful(true);
+		log.info("auth response was:{}", authResponse);
+		return authResponse;
+	}
+
 
 }

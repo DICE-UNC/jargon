@@ -9,7 +9,11 @@ import java.util.List;
  * Describes an element of an AVU query (e.g. attribute = some value, units like
  * some value). These are then used in groups to define a particular metadata
  * query.
- * 
+ * <p/>
+ * Note that this is used by the older 'string' query technique, which uses
+ * iquest like queries, and is not used in the recommended
+ * <code>IRODSGenQueryBuilder</code> query technique.
+ * <p/>
  * This is a partial implementation of the code, and currently is limited in
  * usage.
  * 

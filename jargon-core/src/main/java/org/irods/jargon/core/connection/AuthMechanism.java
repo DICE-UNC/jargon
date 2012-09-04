@@ -35,8 +35,27 @@ abstract class AuthMechanism {
 	 *             if the authentication proceeded abnormally, not caused by
 	 *             simply being authorized
 	 */
-	abstract AuthResponse authenticate(
-			final IRODSCommands irodsCommands, final IRODSAccount irodsAccount)
+	protected AuthResponse authenticate(final IRODSCommands irodsCommands,
+			final IRODSAccount irodsAccount) throws AuthenticationException,
+			JargonException {
+		StartupResponseData startupResponseData = sendStartupPacket(
+				irodsAccount, irodsCommands);
+		AuthResponse authResponse = processAuthenticationAfterStartup(
+				irodsAccount, irodsCommands);
+		authResponse.setStartupResponse(startupResponseData);
+		return authResponse;
+	}
+
+	/**
+	 * This method is called by the authentication process after the startup
+	 * pack has been sent, and represents the point where custom authentication
+	 * takes place
+	 * 
+	 * @param irodsAccount
+	 * @param irodsCommands
+	 */
+	protected abstract AuthResponse processAuthenticationAfterStartup(
+			IRODSAccount irodsAccount, IRODSCommands irodsCommands)
 			throws AuthenticationException, JargonException;
 
 	/**
@@ -47,10 +66,12 @@ abstract class AuthMechanism {
 	 * @throws IOException
 	 *             if the host cannot be opened or created.
 	 */
-	protected Tag sendStartupPacket(final IRODSAccount irodsAccount,
-			final IRODSCommands irodsCommands) throws JargonException {
+	protected StartupResponseData sendStartupPacket(
+			final IRODSAccount irodsAccount, final IRODSCommands irodsCommands)
+			throws JargonException {
 
-		StartupPack startupPack = new StartupPack(irodsAccount);
+		StartupPack startupPack = new StartupPack(irodsAccount, irodsCommands
+				.getPipelineConfiguration().isReconnect());
 		String startupPackData = startupPack.getParsedTags();
 		try {
 
@@ -73,8 +94,18 @@ abstract class AuthMechanism {
 			e.printStackTrace();
 			throw new JargonException(e);
 		}
-		Tag responseMessage = irodsCommands.readMessage();
-		return responseMessage;
+		Tag versionPI = irodsCommands.readMessage();
+		StartupResponseData startupResponseData = new StartupResponseData(
+				versionPI.getTag("status").getIntValue(), versionPI.getTag(
+						"relVersion").getStringValue(), versionPI.getTag(
+						"apiVersion").getStringValue(), versionPI.getTag(
+						"reconnPort").getIntValue(), versionPI.getTag(
+						"reconnAddr").getStringValue(), versionPI.getTag(
+						"cookie").getStringValue());
+
+		log.info("startup response:{}", startupResponseData);
+
+		return startupResponseData;
 	}
 
 }

@@ -8,6 +8,7 @@ import static org.irods.jargon.testutils.TestingPropertiesHelper.IRODS_SCRATCH_D
 import java.util.Properties;
 
 import org.irods.jargon.core.connection.IRODSAccount;
+import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.IRODSFileSystem;
 import org.irods.jargon.core.pub.io.IRODSFile;
 
@@ -21,10 +22,16 @@ import org.irods.jargon.core.pub.io.IRODSFile;
 public class IRODSTestSetupUtilities {
 	private TestingPropertiesHelper testingPropertiesHelper;
 	private Properties testingProperties;
+	private IRODSFileSystem irodsFileSystem;
 
 	public IRODSTestSetupUtilities() throws TestingUtilsException {
 		testingPropertiesHelper = new TestingPropertiesHelper();
 		testingProperties = testingPropertiesHelper.getTestProperties();
+		try {
+			irodsFileSystem = IRODSFileSystem.instance();
+		} catch (JargonException e) {
+			throw new TestingUtilsException("cannot create IRODSFileSystem", e);
+		}
 	}
 
 	/**
@@ -35,9 +42,7 @@ public class IRODSTestSetupUtilities {
 	 */
 	public void clearIrodsScratchDirectory() throws TestingUtilsException {
 
-		IRODSFileSystem irodsFileSystem = null;
 		try {
-			irodsFileSystem = IRODSFileSystem.instance();
 			IRODSAccount irodsAccount = testingPropertiesHelper
 					.buildIRODSAccountFromTestProperties(testingProperties);
 
@@ -47,7 +52,7 @@ public class IRODSTestSetupUtilities {
 			IRODSFile testScratchFile = irodsFileSystem.getIRODSFileFactory(
 					irodsAccount).instanceIRODSFile(targetIrodsCollection);
 
-			testScratchFile.deleteWithForceOption();
+			testScratchFile.delete();
 		} catch (Exception e) {
 			throw new TestingUtilsException("error clearing irods scratch dir",
 					e);
@@ -67,9 +72,7 @@ public class IRODSTestSetupUtilities {
 	public void initializeIrodsScratchDirectory() throws TestingUtilsException {
 		clearIrodsScratchDirectory();
 
-		IRODSFileSystem irodsFileSystem = null;
 		try {
-			irodsFileSystem = IRODSFileSystem.instance();
 			IRODSAccount irodsAccount = testingPropertiesHelper
 					.buildIRODSAccountFromTestProperties(testingProperties);
 
@@ -80,7 +83,7 @@ public class IRODSTestSetupUtilities {
 			IRODSFile testScratchFile = irodsFileSystem.getIRODSFileFactory(
 					irodsAccount).instanceIRODSFile(targetIrodsCollection);
 
-			testScratchFile.deleteWithForceOption();
+			testScratchFile.delete();
 		} catch (Exception e) {
 			throw new TestingUtilsException("error clearing irods scratch dir",
 					e);
@@ -109,9 +112,7 @@ public class IRODSTestSetupUtilities {
 		scratchDir.append('/');
 		scratchDir.append(testingDirectory);
 
-		IRODSFileSystem irodsFileSystem = null;
 		try {
-			irodsFileSystem = IRODSFileSystem.instance();
 			IRODSAccount irodsAccount = testingPropertiesHelper
 					.buildIRODSAccountFromTestProperties(testingProperties);
 

@@ -7,6 +7,10 @@ package org.irods.jargon.core.connection;
  * Immutable object represents the options controlling the behavior of the io
  * pipeline. Typically, these options are built based on the current state of
  * the {@link JargonProperties} at the time a connection is created.
+ * <p/>
+ * Note that this object does not have synchronization. Through typical usage,
+ * this configuration is initialized at connection startup, and a connection is
+ * confined to one thread, so this should be just fine.
  * 
  * @author Mike Conway - DICE (www.irods.org)
  * 
@@ -25,6 +29,9 @@ public class PipelineConfiguration {
 													// jargon.properties and
 													// propogate
 	private final int inputToOutputCopyBufferByteSize;
+	private final boolean reconnect;
+	private final long reconnectTimeInMillis;
+	private final boolean instrument;
 
 	/**
 	 * Static initializer method will derive an immutable
@@ -62,7 +69,10 @@ public class PipelineConfiguration {
 				.getLocalFileOutputStreamBufferSize();
 		this.inputToOutputCopyBufferByteSize = jargonProperties
 				.getInputToOutputCopyBufferByteSize();
-
+		this.instrument = jargonProperties.isInstrument();
+		this.reconnect = jargonProperties.isReconnect();
+		this.reconnectTimeInMillis = jargonProperties
+				.getReconnectTimeInMillis();
 	}
 
 	@Override
@@ -87,6 +97,12 @@ public class PipelineConfiguration {
 		sb.append(defaultEncoding);
 		sb.append("\n   inputToOutputCopyBufferByteSize:");
 		sb.append(inputToOutputCopyBufferByteSize);
+		sb.append("\n  instrument:");
+		sb.append(instrument);
+		sb.append("\n   reconnect:");
+		sb.append(reconnect);
+		sb.append("\n   reconnect time in millis:");
+		sb.append(reconnectTimeInMillis);
 		return sb.toString();
 	}
 
@@ -142,14 +158,14 @@ public class PipelineConfiguration {
 	/**
 	 * @return the defaultEncoding
 	 */
-	public synchronized String getDefaultEncoding() {
+	public String getDefaultEncoding() {
 		return defaultEncoding;
 	}
 
 	/**
 	 * @return the inputToOutputCopyBufferByteSize
 	 */
-	public synchronized int getInputToOutputCopyBufferByteSize() {
+	public int getInputToOutputCopyBufferByteSize() {
 		return inputToOutputCopyBufferByteSize;
 	}
 
@@ -158,6 +174,32 @@ public class PipelineConfiguration {
 	 */
 	public int getLocalFileInputStreamBufferSize() {
 		return localFileInputStreamBufferSize;
+	}
+
+	/**
+	 * @return <code>boolean</code> indicates whether to reconnect to avoid some
+	 *         firewall issues. This is equivalent to the -T option on the
+	 *         put/get operations in iCommands
+	 */
+	public boolean isReconnect() {
+		return reconnect;
+	}
+
+	/**
+	 * @return <code>boolean</code> indicates whether to incorporate detailed
+	 *         statistics in the DEBUG log regarding performance metrics, useful
+	 *         for tuning and optimization, with the potential to add overhead,
+	 *         so typically not suitable for production
+	 */
+	public boolean isInstrument() {
+		return instrument;
+	}
+
+	/**
+	 * @return the reconnectTimeInMillis
+	 */
+	public synchronized long getReconnectTimeInMillis() {
+		return reconnectTimeInMillis;
 	}
 
 }

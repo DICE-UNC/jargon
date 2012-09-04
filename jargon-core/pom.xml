@@ -2,7 +2,7 @@
   <parent>
     <groupId>org.irods</groupId>
     <artifactId>jargon</artifactId>
-    <version>3.1.3-SNAPSHOT</version>
+    <version>3.2.0-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.irods.jargon</groupId>
@@ -73,6 +73,7 @@ test.option.exercise.remoteexecstream=${jargon.test.option.exercise.remoteexecst
 test.option.exercise.audit=${jargon.test.option.exercise.audit}
 test.option.distributed.resources=${test.option.distributed.resources}
 test.option.registration=${test.option.registration}
+test.option.strictACL=${test.option.strictACL}
 test.option.federated.zone=${test.option.federated.zone}
 test.option.kerberos=${test.option.kerberos}
 test.federated.irods.admin=${jargon.test.federated.irods.admin}
@@ -162,7 +163,7 @@ test.federated.irods.zone=${jargon.test.federated.irods.zone}
     								</goals>
     							</pluginExecutionFilter>
     							<action>
-    								<ignore></ignore>
+    								<ignore />
     							</action>
     						</pluginExecution>
     					</pluginExecutions>

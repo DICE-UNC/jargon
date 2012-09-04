@@ -1269,6 +1269,7 @@ public class IRODSFileImplTest {
 				.getAbsolutePath());
 	}
 
+
 	@Test
 	public final void testDeleteFileWhenCollectionWithForce() throws Exception {
 		String testDirName = "testDeleteFileWhenCollectionWithForce";

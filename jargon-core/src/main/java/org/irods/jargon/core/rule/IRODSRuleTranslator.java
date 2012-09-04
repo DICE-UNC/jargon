@@ -392,56 +392,28 @@ public class IRODSRuleTranslator {
 					"embedded 'null' in input attributes, must be the only value if null");
 		}
 
-		// split on required '=' sign. I can have a simple equality or a
-		// condition where the value is a condition with embedded = sign
-		StringTokenizer nameValTokenizer = new StringTokenizer(nextToken, "=");
+		RuleInputParameter param = RuleParsingUtils
+				.parseInputParameterForNameAndValue(nextToken);
 
-		if (nameValTokenizer.countTokens() == 2
-				|| nameValTokenizer.countTokens() == 3) {
-			// this is OK
-		} else {
-			throw new JargonRuleException(
-					"could not find name and val separated by an '=' sign in input attribute: "
-							+ nextToken);
-		}
-
-		String parmName = nameValTokenizer.nextToken();
-		String val = nameValTokenizer.nextToken();
-
-		if (parmName.indexOf(SPLAT) == -1) {
+		if (param.getParamName().indexOf(SPLAT) == -1) {
 			throw new JargonRuleException(
 					"missing * in first character of input parameter:"
-							+ parmName);
-		} else if (parmName.indexOf(SPLAT) > 0) {
+							+ param.getParamName());
+		} else if (param.getParamName().indexOf(SPLAT) > 0) {
 			throw new JargonRuleException(
 					"* must be the first character of input parameter:"
-							+ parmName);
+							+ param.getParamName());
 		}
 
-		if (parmName.indexOf(SPLAT, 1) > -1) {
+		if (param.getParamName().indexOf(SPLAT, 1) > -1) {
 			throw new JargonRuleException("duplicate '*' character in parm:"
-					+ parmName);
+					+ param.getParamName());
 		}
 
-		if (val.isEmpty()) {
-			throw new JargonRuleException(
-					"value is null for input rule attribute:" + parmName);
-		}
+		log.debug("returning inputParm: {}", param);
 
-		if (nameValTokenizer.hasMoreTokens()) {
-			StringBuilder newVal = new StringBuilder();
-			// remember the tokenizer is split on =, so this is the right hand
-			// side of a condition that is the value of the attribute
-			newVal.append(val);
-			newVal.append('=');
-			newVal.append(nameValTokenizer.nextToken());
-			val = newVal.toString();
-		}
-
-		log.debug("returning inputParm: {}", parmName);
-		log.debug("parm value: {}", val);
-
-		return new IRODSRuleParameter(parmName, val);
+		return new IRODSRuleParameter(param.getParamName(),
+				param.getParamValue());
 	}
 
 	/**

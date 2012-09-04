@@ -25,7 +25,8 @@ import org.slf4j.LoggerFactory;
  * 
  */
 public class SharedFilesAndCollectionsSearchAndListServiceImpl extends
-		AbstractDataUtilsServiceImpl implements SharedFilesAndCollectionsSearchAndListService {
+		AbstractDataUtilsServiceImpl implements
+		SharedFilesAndCollectionsSearchAndListService {
 
 	private static final char COMMA = ',';
 
@@ -46,7 +47,6 @@ public class SharedFilesAndCollectionsSearchAndListServiceImpl extends
 			final IRODSAccount irodsAccount) {
 		super(irodsAccessObjectFactory, irodsAccount);
 	}
-
 
 	/*
 	 * (non-Javadoc)

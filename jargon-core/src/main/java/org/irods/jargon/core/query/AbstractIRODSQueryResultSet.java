@@ -25,10 +25,12 @@ public abstract class AbstractIRODSQueryResultSet implements
 	protected final List<IRODSQueryResultRow> results;
 	protected final boolean hasMoreRecords;
 	protected final List<String> columnNames;
+	protected final int continuationIndex;
 
 	protected AbstractIRODSQueryResultSet(
 			final List<IRODSQueryResultRow> results,
-			final List<String> columnNames, final boolean hasMoreRecords) {
+			final List<String> columnNames, final boolean hasMoreRecords,
+			final int continuationIndex) {
 
 		if (results == null) {
 			throw new IllegalArgumentException("results was null");
@@ -41,6 +43,7 @@ public abstract class AbstractIRODSQueryResultSet implements
 		this.results = Collections.unmodifiableList(results);
 		this.hasMoreRecords = hasMoreRecords;
 		this.columnNames = columnNames;
+		this.continuationIndex = continuationIndex;
 	}
 
 	/*
@@ -87,7 +90,9 @@ public abstract class AbstractIRODSQueryResultSet implements
 	 * getNumberOfResultColumns()
 	 */
 	@Override
-	public abstract int getNumberOfResultColumns();
+	public int getNumberOfResultColumns() {
+		return columnNames.size();
+	}
 
 	/*
 	 * (non-Javadoc)
@@ -98,5 +103,10 @@ public abstract class AbstractIRODSQueryResultSet implements
 	@Override
 	public List<String> getColumnNames() {
 		return columnNames;
+	}
+
+
+	public int getContinuationIndex() {
+		return continuationIndex;
 	}
 }
