@@ -53,3 +53,5 @@ Note that the following bug and feature requests are logged in GForge with relat
  ** merge in plug-able authentication refactoring
  
  
+ * [#870] jargon support for PAM
+ ** Support for PAM authentication (per Chris Smith's updates to iRODS) as a pluggable auth module in Jargon

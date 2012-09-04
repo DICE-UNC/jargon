@@ -128,7 +128,7 @@ public class IRODSCommands implements IRODSManagedConnection {
 	private IRODSCommands(final IRODSAccount irodsAccount,
 			final IRODSProtocolManager irodsConnectionManager,
 			final PipelineConfiguration pipelineConfiguration,
-			final AuthMechanism authMechanism, final boolean startUp)
+			final AuthMechanism authMechanism)
 			throws JargonException {
 		/*
 		 * create the IRODSConnection object. The connection object encapsulates
@@ -148,9 +148,7 @@ public class IRODSCommands implements IRODSManagedConnection {
 		this.irodsProtocolManager = irodsConnectionManager;
 		this.pipelineConfiguration = pipelineConfiguration;
 		this.authMechanism = authMechanism;
-		if (startUp) {
 			startupConnection(irodsAccount);
-		}
 	}
 
 	/**
@@ -234,36 +232,7 @@ public class IRODSCommands implements IRODSManagedConnection {
 			final AuthMechanism authMechanism) throws JargonException {
 
 		return new IRODSCommands(irodsAccount, irodsConnectionManager,
-				pipelineConfiguration, authMechanism, true);
-	}
-
-	/**
-	 * Instance method used to create an IRODSCommands object, note that this
-	 * method will not start up (send authentication request) to iRODS, and this
-	 * is only useful in specific situations where some sort of
-	 * pre-authentication interaction is required.
-	 * 
-	 * @param irodsAccount
-	 *            {@link IRODSAccount} defining the iRODS connection
-	 * @param irodsConnectionManager
-	 *            {IRODSProtocolManager} that creates new connections
-	 * @param pipelineConfiguration
-	 *            {@link PipelineConfiguration} that specifies detailed settings
-	 *            for the connection (e.g. buffer sizes)
-	 * @param authMechanism
-	 *            {@link AuthMechanism} that will authenticate with iRODS
-	 * @return instance of <code>IRODSCommands</code> connected and
-	 *         authenticated to an iRODS agent
-	 * @throws JargonException
-	 */
-	static IRODSCommands instanceWithoutStartup(
-			final IRODSAccount irodsAccount,
-			final IRODSProtocolManager irodsConnectionManager,
-			final PipelineConfiguration pipelineConfiguration,
-			final AuthMechanism authMechanism) throws JargonException {
-
-		return new IRODSCommands(irodsAccount, irodsConnectionManager,
-				pipelineConfiguration, authMechanism, false);
+				pipelineConfiguration, authMechanism);
 	}
 
 	/**
