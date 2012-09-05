@@ -41,6 +41,9 @@ public class AuthenticationFactoryImpl implements AuthenticationFactory {
 		} else if (authScheme == AuthScheme.STANDARD.name()) {
 			log.info("using standard auth");
 			return new StandardIRODSAuth();
+		} else if (authScheme == AuthScheme.PAM.name()) {
+			log.info("using PAM auth");
+			return new PAMAuth();
 		} else {
 			throw new AuthUnavailableException("auth method not avaialble for:"
 					+ authScheme);

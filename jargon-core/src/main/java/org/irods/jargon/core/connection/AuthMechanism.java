@@ -19,6 +19,26 @@ abstract class AuthMechanism {
 			.getLogger(AuthMechanism.class);
 
 	/**
+	 * Optional method that will be called before any startup pack is sent
+	 * 
+	 * @throws JargonException
+	 */
+	protected void preConnectionStartup() throws JargonException {
+
+	}
+
+	/**
+	 * Optional method that will be called after the startup pack is sent but
+	 * before the actual authentication attempt
+	 * 
+	 * @throws JargonException
+	 */
+	protected void postConnectionStartupPreAuthentication()
+			throws JargonException {
+
+	}
+
+	/**
 	 * Take the given account, and perform the authentication step using the
 	 * connection in the given <code>irodsCommands</code>
 	 * 
@@ -38,8 +58,10 @@ abstract class AuthMechanism {
 	protected AuthResponse authenticate(final IRODSCommands irodsCommands,
 			final IRODSAccount irodsAccount) throws AuthenticationException,
 			JargonException {
+		preConnectionStartup();
 		StartupResponseData startupResponseData = sendStartupPacket(
 				irodsAccount, irodsCommands);
+		postConnectionStartupPreAuthentication();
 		AuthResponse authResponse = processAuthenticationAfterStartup(
 				irodsAccount, irodsCommands);
 		authResponse.setStartupResponse(startupResponseData);

@@ -183,9 +183,7 @@ public final class IRODSConnection implements IRODSManagedConnection {
 			outputBuffer = new byte[pipelineConfiguration
 					.getInternalCacheBufferSize()];
 		}
-
 	}
-
 
 	/**
 	 * Do an initial (first) connection to iRODS based on account and
@@ -265,9 +263,7 @@ public final class IRODSConnection implements IRODSManagedConnection {
 		}
 
 		setUpSocketAndStreamsAfterConnection(irodsAccount);
-
 		connected = true;
-
 		log.info("socket opened successfully");
 	}
 
@@ -534,8 +530,6 @@ public final class IRODSConnection implements IRODSManagedConnection {
 			throw new IllegalArgumentException(err);
 		}
 
-		// FIXME: if offset = 0 and length == byte length, don't do array copy
-
 		byte temp[] = new byte[length];
 
 		System.arraycopy(value, offset, temp, 0, length);
@@ -710,6 +704,13 @@ public final class IRODSConnection implements IRODSManagedConnection {
 		}
 	}
 
+	/**
+	 * Reads an int from the server
+	 * 
+	 * @param value
+	 * @return
+	 * @throws JargonException
+	 */
 	int read(final byte[] value) throws JargonException {
 		try {
 			return read(value, 0, value.length);

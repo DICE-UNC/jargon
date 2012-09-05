@@ -128,8 +128,7 @@ public class IRODSCommands implements IRODSManagedConnection {
 	private IRODSCommands(final IRODSAccount irodsAccount,
 			final IRODSProtocolManager irodsConnectionManager,
 			final PipelineConfiguration pipelineConfiguration,
-			final AuthMechanism authMechanism)
-			throws JargonException {
+			final AuthMechanism authMechanism) throws JargonException {
 		/*
 		 * create the IRODSConnection object. The connection object encapsulates
 		 * an open socket to the host/port described by the irodsAccount.
@@ -148,7 +147,7 @@ public class IRODSCommands implements IRODSManagedConnection {
 		this.irodsProtocolManager = irodsConnectionManager;
 		this.pipelineConfiguration = pipelineConfiguration;
 		this.authMechanism = authMechanism;
-			startupConnection(irodsAccount);
+		startupConnection(irodsAccount);
 	}
 
 	/**
@@ -161,11 +160,11 @@ public class IRODSCommands implements IRODSManagedConnection {
 	 * @param authMechanism
 	 * @param reconnectedIRODSConnection
 	 */
-	private IRODSCommands(IRODSAccount irodsAccount,
-			IRODSProtocolManager irodsProtocolManager,
-			PipelineConfiguration pipelineConfiguration,
-			AuthResponse authResponse, AuthMechanism authMechanism,
-			IRODSConnection reconnectedIRODSConnection) {
+	private IRODSCommands(final IRODSAccount irodsAccount,
+			final IRODSProtocolManager irodsProtocolManager,
+			final PipelineConfiguration pipelineConfiguration,
+			final AuthResponse authResponse, final AuthMechanism authMechanism,
+			final IRODSConnection reconnectedIRODSConnection) {
 		this.irodsConnection = reconnectedIRODSConnection;
 		this.irodsProtocolManager = irodsProtocolManager;
 		this.pipelineConfiguration = pipelineConfiguration;
@@ -1441,8 +1440,7 @@ public class IRODSCommands implements IRODSManagedConnection {
 
 		IRODSCommands restartedCommands = new IRODSCommands(irodsAccount,
 				irodsProtocolManager, pipelineConfiguration, authResponse,
-				authMechanism,
-				reconnectedIRODSConnection);
+				authMechanism, reconnectedIRODSConnection);
 
 		try {
 
