@@ -198,10 +198,6 @@ public class TicketClientOperationsImplTest {
 		TicketAdminService ticketSvc = new TicketAdminServiceImpl(
 				accessObjectFactory, irodsAccount);
 		ticketSvc.deleteTicket(testCollection);
-		IRODSFile targetFileToCleanUp = accessObjectFactory
-				.getIRODSFileFactory(secondaryAccount).instanceIRODSFile(
-						targetIrodsCollection + "/" + testFileName);
-		targetFileToCleanUp.deleteWithForceOption();
 
 		String ticketString = ticketSvc.createTicket(
 				TicketCreateModeEnum.WRITE, targetFile,
