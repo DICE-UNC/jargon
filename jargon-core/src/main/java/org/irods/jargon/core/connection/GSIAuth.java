@@ -86,14 +86,14 @@ class GSIAuth extends AuthMechanism {
 	 * @param account
 	 *            the iRODS connection information
 	 * @param out
-	 *            The output stream from that socket.
+	 *            The output stream from that socket. 
 	 * @param in
 	 *            The input stream from that socket.
 	 * @return {@link AuthResponse} with the result of the authentication
 	 * @throws IOException
 	 *             If the authentication to the iRODS fails.
 	 */
-	AuthResponse sendGSIAuth(final IRODSAccount irodsAccount,
+	AuthResponse sendGSIAuth(final IRODSAccount irodsAccount,  
 			final OutputStream out, final InputStream in) throws IOException {
 		CoGProperties cog = null;
 		String defaultCA = null;
@@ -101,7 +101,7 @@ class GSIAuth extends AuthMechanism {
 		String caLocations = irodsAccount.getCertificateAuthority();
 
 		ExtendedGSSManager manager = (ExtendedGSSManager) ExtendedGSSManager
-				.getInstance();
+				.getInstance(); 
 
 		try {
 			credential = getCredential(irodsAccount);
