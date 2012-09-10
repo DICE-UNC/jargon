@@ -15,7 +15,7 @@ import org.irods.jargon.core.exception.JargonException;
 public class PamAuthRequestInp extends AbstractIRODSPackingInstruction {
 
 	public static final String PI_TAG = "pamAuthRequestInp_PI";
-	public static final int RULE_PURGE_API_NBR = 725;
+	public static final int PAM_API_NBR = 725;
 
 	private final String userName;
 	private final String password;
@@ -53,6 +53,7 @@ public class PamAuthRequestInp extends AbstractIRODSPackingInstruction {
 
 		this.userName = userName;
 		this.password = password;
+		this.setApiNumber(PAM_API_NBR);
 
 	}
 

@@ -13,6 +13,9 @@ import org.irods.jargon.core.exception.JargonException;
  * 
  * @author Mike Conway - DICE (www.irods.org)
  * 
+ *         see lib/core/src/cientLogin.c for main driver program
+ * 
+ *         see lib/core/src/ sslSockCom.c
  */
 public class PAMAuth extends AuthMechanism {
 
@@ -24,6 +27,10 @@ public class PAMAuth extends AuthMechanism {
 	protected AuthResponse processAuthenticationAfterStartup(
 			IRODSAccount irodsAccount, IRODSCommands irodsCommands)
 			throws AuthenticationException, JargonException {
+
+		// start ssl
+
+		// send pam auth request
 		return null;
 	}
 
