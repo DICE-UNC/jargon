@@ -32,7 +32,7 @@ import org.slf4j.LoggerFactory;
  * @author Mike Conway - DICE (www.irods.org)
  * 
  */
-public final class IRODSConnection implements IRODSManagedConnection {
+public class IRODSConnection implements IRODSManagedConnection {
 
 	private Logger log = LoggerFactory.getLogger(IRODSConnection.class);
 	private IRODSProtocolManager irodsProtocolManager;
@@ -153,7 +153,16 @@ public final class IRODSConnection implements IRODSManagedConnection {
 				.toString();
 	}
 
-	private IRODSConnection(final IRODSAccount irodsAccount,
+	/**
+	 * Protected constructor
+	 * 
+	 * @param irodsAccount
+	 * @param irodsConnectionManager
+	 * @param pipelineConfiguration
+	 * @param startupResponseData
+	 * @throws JargonException
+	 */
+	protected IRODSConnection(final IRODSAccount irodsAccount,
 			final IRODSProtocolManager irodsConnectionManager,
 			final PipelineConfiguration pipelineConfiguration,
 			final StartupResponseData startupResponseData)
@@ -176,6 +185,65 @@ public final class IRODSConnection implements IRODSManagedConnection {
 		this.pipelineConfiguration = pipelineConfiguration;
 
 		log.info("pipeline configuration:{}", pipelineConfiguration);
+
+		if (pipelineConfiguration.getInternalCacheBufferSize() > 0) {
+			log.info("using internal cache buffer of size:{}",
+					pipelineConfiguration.getInternalCacheBufferSize());
+			outputBuffer = new byte[pipelineConfiguration
+					.getInternalCacheBufferSize()];
+		}
+	}
+
+	/**
+	 * Protected constructor allows specification of a <code>Socket</code> which
+	 * will be utilized, and for which input and output streams will be created.
+	 * <p/>
+	 * In particular, this implementation is utilized to handle operations
+	 * against an SSL enabled socket for secure exchange of credentials. In this
+	 * case the owner of the provided socket will be responsible for enabling
+	 * and disabling SSL, this class will simply take the socket as given.
+	 * 
+	 * @param irodsAccount
+	 * @param irodsConnectionManager
+	 * @param pipelineConfiguration
+	 * @param startupResponseData
+	 * @param providedSocket
+	 * @param sslEnabled
+	 *            <code>boolean</code> that indicates whether this is an SSL
+	 *            enabled socket. This is currently really used to disambiguate
+	 *            the constructor signatures.
+	 * @throws JargonException
+	 */
+	protected IRODSConnection(final IRODSAccount irodsAccount,
+			final IRODSProtocolManager irodsConnectionManager,
+			final PipelineConfiguration pipelineConfiguration,
+			final Socket providedSocket, final boolean sslEnabled)
+			throws JargonException {
+
+		if (irodsConnectionManager == null) {
+			throw new IllegalArgumentException("null irodsConnectionManager");
+		}
+
+		if (irodsAccount == null) {
+			throw new IllegalArgumentException("null irodsAccount");
+		}
+
+		if (pipelineConfiguration == null) {
+			throw new IllegalArgumentException("null pipelineConfiguration");
+		}
+
+		if (providedSocket == null) {
+			throw new IllegalArgumentException("null providedSocket");
+		}
+
+		this.irodsProtocolManager = irodsConnectionManager;
+		this.irodsAccount = irodsAccount;
+		this.pipelineConfiguration = pipelineConfiguration;
+
+		log.info("pipeline configuration:{}", pipelineConfiguration);
+		this.connection = providedSocket;
+		this.connected = true;
+		setUpSocketAndStreamsAfterConnection(irodsAccount);
 
 		if (pipelineConfiguration.getInternalCacheBufferSize() > 0) {
 			log.info("using internal cache buffer of size:{}",
@@ -963,5 +1031,18 @@ public final class IRODSConnection implements IRODSManagedConnection {
 		return irodsOutputStream;
 	}
 
+	/**
+	 * @return the pipelineConfiguration
+	 */
+	protected PipelineConfiguration getPipelineConfiguration() {
+		return pipelineConfiguration;
+	}
+
+	/**
+	 * @return the connection
+	 */
+	protected Socket getConnection() {
+		return connection;
+	}
 
 }
