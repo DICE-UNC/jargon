@@ -27,7 +27,7 @@ public final class IRODSAccount implements Serializable {
 		STANDARD, GSI, KERBEROS
 	}
 	public static final boolean defaultObfuscate = false;
-	private static final String PUBLIC_USERNAME = "anonymous";
+	public static final String PUBLIC_USERNAME = "anonymous";
 	private AuthScheme authenticationScheme = AuthScheme.STANDARD;
 	private String serviceName = "";
 	

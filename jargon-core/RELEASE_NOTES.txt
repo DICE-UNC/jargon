@@ -55,3 +55,7 @@ Note that the following bug and feature requests are logged in GForge with relat
  
  * [#870] jargon support for PAM
  ** Support for PAM authentication (per Chris Smith's updates to iRODS) as a pluggable auth module in Jargon
+ 
+  [#974] anonymous link support
+ ** added isUserHasPermission methods for collections and data objects that indicate that a user has at least read permission on a file or data object
+ ** added AnonymousAccessService in data utils to help manage permissions for the anonymous user

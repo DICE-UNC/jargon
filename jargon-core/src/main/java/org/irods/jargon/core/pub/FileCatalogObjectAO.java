@@ -73,4 +73,19 @@ public interface FileCatalogObjectAO extends IRODSAccessObject {
 	ObjStat getObjectStatForAbsolutePath(String irodsAbsolutePath)
 			throws FileNotFoundException, JargonException;
 
+	/**
+	 * Check if the given user at least read access to the given iRODS absolute
+	 * path
+	 * 
+	 * @param irodsAbsolutePath
+	 *            <code>String</code> with the absolute path to the iRODS file
+	 * @param userName
+	 *            <code>String</code> with the iRODS user name to check for
+	 *            access
+	 * @return <code>boolean</code> of <code>true</code> if access is available
+	 * @throws JargonException
+	 */
+	boolean isUserHasAccess(String irodsAbsolutePath, String userName)
+			throws JargonException;
+
 }

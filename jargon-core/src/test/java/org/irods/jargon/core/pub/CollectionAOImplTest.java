@@ -2022,4 +2022,112 @@ public class CollectionAOImplTest {
 
 	}
 
+	@Test
+	public final void testIsAccessForCollectionForUserWhenRead()
+			throws Exception {
+
+		String testCollectionName = "testIsAccessForCollectionForUserWhenRead";
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + "/"
+								+ testCollectionName);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		CollectionAO collectionAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getCollectionAO(irodsAccount);
+		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetIrodsCollection);
+		irodsFile.mkdirs();
+
+		collectionAO
+				.setAccessPermissionRead(
+						"",
+						targetIrodsCollection,
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY),
+						true);
+
+		boolean hasPermission = collectionAO
+				.isUserHasAccess(
+						targetIrodsCollection,
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY));
+		TestCase.assertTrue("did not get expected permission", hasPermission);
+
+	}
+
+	@Test
+	public final void testIsAccessForCollectionForUserWhenNoPermission()
+			throws Exception {
+
+		String testCollectionName = "testIsAccessForCollectionForUserWhenNoPermission";
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + "/"
+								+ testCollectionName);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		CollectionAO collectionAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getCollectionAO(irodsAccount);
+		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetIrodsCollection);
+		irodsFile.mkdirs();
+
+		boolean hasPermission = collectionAO
+				.isUserHasAccess(
+						targetIrodsCollection,
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY));
+		TestCase.assertFalse("should not have permission", hasPermission);
+
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public final void testIsUserHasAccessNullFileName() throws Exception {
+		// generate a local scratch file
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		CollectionAO collectionAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getCollectionAO(irodsAccount);
+		collectionAO.isUserHasAccess(null, "hello");
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public final void testIsUserHasAccessBlankFileName() throws Exception {
+		// generate a local scratch file
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		CollectionAO collectionAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getCollectionAO(irodsAccount);
+		collectionAO.isUserHasAccess("", "hello");
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public final void testIsUserHasAccessNullUserName() throws Exception {
+		// generate a local scratch file
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		CollectionAO collectionAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getCollectionAO(irodsAccount);
+		collectionAO.isUserHasAccess("file", null);
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public final void testIsUserHasAccessBlankUserName() throws Exception {
+		// generate a local scratch file
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		CollectionAO collectionAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getCollectionAO(irodsAccount);
+
+		collectionAO.isUserHasAccess("file", "");
+	}
 }
