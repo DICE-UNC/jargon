@@ -6,6 +6,7 @@ import org.irods.jargon.datautils.datacache.DataCacheServiceImplTest;
 import org.irods.jargon.datautils.image.ImageServiceFactoryImplTest;
 import org.irods.jargon.datautils.image.MediaHandlingUtilsTest;
 import org.irods.jargon.datautils.image.ThumbnailServiceImplTest;
+import org.irods.jargon.datautils.sharing.AnonymousAccessServiceImplTest;
 import org.irods.jargon.datautils.shoppingcart.FileShoppingCartTest;
 import org.irods.jargon.datautils.shoppingcart.ShoppingCartEntryTest;
 import org.irods.jargon.datautils.shoppingcart.ShoppingCartServiceImplTest;
@@ -24,7 +25,8 @@ import org.junit.runners.Suite;
 		TempPasswordCachingProtocolManagerTest.class,
 		ThumbnailServiceImplTest.class, ImageServiceFactoryImplTest.class,
 		ShoppingCartEntryTest.class, FileShoppingCartTest.class,
-		MediaHandlingUtilsTest.class, ShoppingCartServiceImplTest.class })
+		MediaHandlingUtilsTest.class, ShoppingCartServiceImplTest.class,
+		AnonymousAccessServiceImplTest.class })
 public class AllTests {
 
 }

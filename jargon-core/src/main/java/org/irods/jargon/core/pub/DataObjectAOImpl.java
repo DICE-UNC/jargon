@@ -2999,4 +2999,41 @@ absPath,
 		return effectiveTransferControlBlock;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.FileCatalogObjectAOImpl#isUserHasAccess(java
+	 * .lang.String, java.lang.String)
+	 */
+	@Override
+	public boolean isUserHasAccess(String irodsAbsolutePath, String userName)
+			throws JargonException {
+
+		log.info("isUserHasAccess()");
+		if (irodsAbsolutePath == null || irodsAbsolutePath.isEmpty()) {
+			throw new IllegalArgumentException(
+					"null or empty irodsAbsolutePath");
+		}
+
+		if (userName == null || userName.isEmpty()) {
+			throw new IllegalArgumentException("null or empty userName");
+		}
+
+		log.info("irodsAbsolutePath:{}", irodsAbsolutePath);
+		log.info("userName:{}", userName);
+
+		UserFilePermission derivedPermission = this
+				.getPermissionForDataObjectForUserName(irodsAbsolutePath,
+						userName);
+		boolean hasPermission = false;
+		if (derivedPermission != null) {
+			hasPermission = true;
+		}
+
+		log.info("has permision? {}", hasPermission);
+		return hasPermission;
+
+	}
+
 }

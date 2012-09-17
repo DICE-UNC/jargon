@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Properties;
 
 import junit.framework.Assert;
+import junit.framework.TestCase;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSProtocolManager;
@@ -4568,4 +4569,127 @@ public class DataObjectAOImplTest {
 
 	}
 
+	@Test
+	public final void testIsUserHasAccessWhenUserWhoHasRead() throws Exception {
+		// generate a local scratch file
+
+		String testFileName = "testIsUserHasAccessWhenUserWhoHasRead.txt";
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String fileNameOrig = FileGenerator.generateFileOfFixedLengthGivenName(
+				absPath, testFileName, 2);
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		DataObjectAOImpl dataObjectAO = (DataObjectAOImpl) irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
+		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetIrodsCollection);
+		dataObjectAO.putLocalDataObjectToIRODS(new File(fileNameOrig),
+				irodsFile, true);
+
+		dataObjectAO.setAccessPermissionRead("", targetIrodsCollection + "/"
+				+ testFileName, testingProperties
+				.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY));
+
+		// log in as the secondary user and test read access
+		IRODSAccount secondaryAccount = testingPropertiesHelper
+				.buildIRODSAccountFromSecondaryTestProperties(testingProperties);
+		IRODSFile irodsFileForSecondaryUser = irodsFileSystem
+				.getIRODSFileFactory(secondaryAccount).instanceIRODSFile(
+						targetIrodsCollection + "/" + testFileName);
+
+		boolean hasAccess = dataObjectAO.isUserHasAccess(
+				irodsFileForSecondaryUser.getAbsolutePath(),
+				secondaryAccount.getUserName());
+		TestCase.assertTrue("did not have expected access", hasAccess);
+	}
+
+	@Test
+	public final void testIsUserHasAccessWhenUserHasNoAccess() throws Exception {
+		// generate a local scratch file
+
+		String testFileName = "testIsUserHasAccessWhenUserHasNoAccess.txt";
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String fileNameOrig = FileGenerator.generateFileOfFixedLengthGivenName(
+				absPath, testFileName, 2);
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		DataObjectAOImpl dataObjectAO = (DataObjectAOImpl) irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
+		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetIrodsCollection);
+		dataObjectAO.putLocalDataObjectToIRODS(new File(fileNameOrig),
+				irodsFile, true);
+
+		// log in as the secondary user and test read access
+		IRODSAccount secondaryAccount = testingPropertiesHelper
+				.buildIRODSAccountFromSecondaryTestProperties(testingProperties);
+		IRODSFile irodsFileForSecondaryUser = irodsFileSystem
+				.getIRODSFileFactory(secondaryAccount).instanceIRODSFile(
+						targetIrodsCollection + "/" + testFileName);
+
+		boolean hasAccess = dataObjectAO.isUserHasAccess(
+				irodsFileForSecondaryUser.getAbsolutePath(),
+				secondaryAccount.getUserName());
+		TestCase.assertFalse("should not have expected access", hasAccess);
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public final void testIsUserHasAccessNullFileName() throws Exception {
+		// generate a local scratch file
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		DataObjectAOImpl dataObjectAO = (DataObjectAOImpl) irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
+
+		dataObjectAO.isUserHasAccess(null, "hello");
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public final void testIsUserHasAccessBlankFileName() throws Exception {
+		// generate a local scratch file
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		DataObjectAOImpl dataObjectAO = (DataObjectAOImpl) irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
+
+		dataObjectAO.isUserHasAccess("", "hello");
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public final void testIsUserHasAccessNullUserName() throws Exception {
+		// generate a local scratch file
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		DataObjectAOImpl dataObjectAO = (DataObjectAOImpl) irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
+
+		dataObjectAO.isUserHasAccess("file", null);
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public final void testIsUserHasAccessBlankUserName() throws Exception {
+		// generate a local scratch file
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		DataObjectAOImpl dataObjectAO = (DataObjectAOImpl) irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
+
+		dataObjectAO.isUserHasAccess("file", "");
+	}
 }

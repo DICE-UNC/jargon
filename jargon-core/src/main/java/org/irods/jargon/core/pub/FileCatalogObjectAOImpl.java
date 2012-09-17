@@ -249,4 +249,8 @@ public abstract class FileCatalogObjectAOImpl extends IRODSGenericAO implements
 						.determineAbsolutePathBasedOnCollTypeInObjectStat(objStat);
 			}
 
+	@Override
+	public abstract boolean isUserHasAccess(final String irodsAbsolutePath,
+			final String userName) throws JargonException;
+
 }
