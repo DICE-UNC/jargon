@@ -20,10 +20,10 @@ public class SpecificQueryInpTest {
 		sb.append("<continueInx>0</continueInx>\n");
 		sb.append("<rowOffset>0</rowOffset>\n");
 		sb.append("<options>0</options>\n");
-		/*
-		 * sb.append("<KeyValPair_PI><ssLen>0</ssLen>\n");
-		 * sb.append("</KeyValPair_PI>\n");
-		 */
+
+		sb.append("<KeyValPair_PI><ssLen>0</ssLen>\n");
+		sb.append("</KeyValPair_PI>\n");
+
 		sb.append("</specificQueryInp_PI>\n");
 		
 		Assert.assertEquals("did not get expected tag value", sb.toString(),
@@ -40,6 +40,8 @@ public class SpecificQueryInpTest {
 		sb.append("<continueInx>0</continueInx>\n");
 		sb.append("<rowOffset>0</rowOffset>\n");
 		sb.append("<options>0</options>\n");
+		sb.append("<KeyValPair_PI><ssLen>0</ssLen>\n");
+		sb.append("</KeyValPair_PI>\n");
 		sb.append("</specificQueryInp_PI>\n");
 
 		Assert.assertEquals("did not get expected tag value", sb.toString(),
@@ -80,6 +82,8 @@ public class SpecificQueryInpTest {
 		sb.append("<continueInx>0</continueInx>\n");
 		sb.append("<rowOffset>0</rowOffset>\n");
 		sb.append("<options>0</options>\n");
+		sb.append("<KeyValPair_PI><ssLen>0</ssLen>\n");
+		sb.append("</KeyValPair_PI>\n");
 		sb.append("</specificQueryInp_PI>\n");
 
 		Assert.assertEquals("did not get expected tag value", sb.toString(),
