@@ -4,22 +4,35 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.irods.jargon.core.connection.IRODSAccount;
-import org.irods.jargon.core.connection.IRODSAccount.AuthScheme;
 import org.irods.jargon.core.connection.StartupResponseData;
 
 /**
  * Represents information in response to an authentication attempt. This is
  * meant to hold generic responses to an authorization attempt.
+ * <p/>
+ * Note that the authentication process may alter the iRODS account information,
+ * and as such, the response contains both the <code>IRODSAccount</code> as
+ * presented for login, and the account after the login process completes. For
+ * example, when using PAM, the original account is presented as a PAM login,
+ * but the PAM process creates a temporary account and then uses this account in
+ * a standard iRODS login.
  * 
  * @author Mike Conway - DICE (www.irods.org)
  * 
  */
 public class AuthResponse {
 
-	private AuthScheme authType = AuthScheme.STANDARD;
 	private String challengeValue = "";
 	private boolean successful = false;
 	private String authMessage = "";
+	/**
+	 * IRODSAccount as presented for authentication
+	 */
+	private IRODSAccount authenticatingIRODSAccount = null;
+	/**
+	 * IRODSAccount as finally authenticated, may be a different user, auth
+	 * mechanism, etc
+	 */
 	private IRODSAccount authenticatedIRODSAccount = null;
 	private Map<String, Object> responseProperties = new HashMap<String, Object>();
 	/**
@@ -86,7 +99,10 @@ public class AuthResponse {
 	}
 
 	/**
-	 * @return the authenticatedIRODSAccount
+	 * @return the authenticatedIRODSAccount {@link IRODSAccount} as a result of
+	 *         the authentication process, including any augmented data. This
+	 *         may be different than the account presented for authentication
+	 *         originally
 	 */
 	public IRODSAccount getAuthenticatedIRODSAccount() {
 		return authenticatedIRODSAccount;
@@ -94,7 +110,8 @@ public class AuthResponse {
 
 	/**
 	 * @param authenticatedIRODSAccount
-	 *            the authenticatedIRODSAccount to set
+	 *            {@link IRODSAccount} as a result of the authentication
+	 *            process, including any augmented data
 	 */
 	public void setAuthenticatedIRODSAccount(
 			IRODSAccount authenticatedIRODSAccount) {
@@ -117,20 +134,6 @@ public class AuthResponse {
 	}
 
 	/**
-	 * @return the authType
-	 */
-	public AuthScheme getAuthType() {
-		return authType;
-	}
-
-	/**
-	 * @param authType the authType to set
-	 */
-	public void setAuthType(AuthScheme authType) {
-		this.authType = authType;
-	}
-
-	/**
 	 * @return the startupResponse
 	 */
 	public StartupResponseData getStartupResponse() {
@@ -143,6 +146,23 @@ public class AuthResponse {
 	 */
 	public void setStartupResponse(StartupResponseData startupResponse) {
 		this.startupResponse = startupResponse;
+	}
+
+	/**
+	 * @return the authenticatingIRODSAccount {@link IRODSAccount} as originally
+	 *         presented for authentication
+	 */
+	public IRODSAccount getAuthenticatingIRODSAccount() {
+		return authenticatingIRODSAccount;
+	}
+
+	/**
+	 * @param authenticatingIRODSAccount
+	 *            {@link IRODSAccount} as originally presented for
+	 *            authentication
+	 */
+	public void setAuthenticatingIRODSAccount(IRODSAccount authenticatingIRODSAccount) {
+		this.authenticatingIRODSAccount = authenticatingIRODSAccount;
 	}
 
 }

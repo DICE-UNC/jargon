@@ -11,7 +11,7 @@ import org.irods.jargon.core.exception.JargonException;
  */
 public class SSLEndInp extends AbstractIRODSPackingInstruction {
 
-	public static final String PI_TAG = "sslEndtInp_PI";
+	public static final String PI_TAG = "sslEndInp_PI";
 	public static final int SSL_END_API_NBR = 1101;
 
 	/**

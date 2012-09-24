@@ -313,13 +313,17 @@ public class IRODSCommands implements IRODSManagedConnection {
 			irodsConnection.send(createHeader(IRODSConstants.RODS_API_REQ,
 					messageLength, errorLength, byteStringLength, intInfo));
 
+			// flush is needed between header and message when SSL processing
+			irodsConnection.flush();
+
 			irodsConnection.send(message);
+
+			irodsConnection.flush();
 
 			if (byteStringLength > 0) {
 				irodsConnection.send(bytes, byteOffset, byteStringLength);
+				irodsConnection.flush();
 			}
-
-			irodsConnection.flush();
 
 		} catch (UnsupportedEncodingException e) {
 			log.error("unsupported encoding", e);
