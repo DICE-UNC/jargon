@@ -35,13 +35,13 @@ public class AuthenticationFactoryImpl implements AuthenticationFactory {
 
 		log.info("authScheme:{}", authScheme);
 
-		if (authScheme == AuthScheme.GSI.name()) {
+		if (authScheme.equals(AuthScheme.GSI.name())) {
 			log.info("generating GSI Auth");
 			return new GSIAuth();
-		} else if (authScheme == AuthScheme.STANDARD.name()) {
+		} else if (authScheme.equals(AuthScheme.STANDARD.name())) {
 			log.info("using standard auth");
 			return new StandardIRODSAuth();
-		} else if (authScheme == AuthScheme.PAM.name()) {
+		} else if (authScheme.equals(AuthScheme.PAM.name())) {
 			log.info("using PAM auth");
 			return new PAMAuth();
 		} else {

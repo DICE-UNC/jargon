@@ -49,6 +49,8 @@ public final class IRODSSimpleProtocolManager extends
 		log.debug("creating an IRODSSimpleConnection for account:{}",
 				irodsAccount);
 
+		log.debug("authscheme:{}", irodsAccount.getAuthenticationScheme());
+
 		return IRODSCommands.instance(
 				irodsAccount,
 				this,
