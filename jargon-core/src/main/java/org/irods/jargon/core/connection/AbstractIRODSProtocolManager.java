@@ -155,8 +155,7 @@ public abstract class AbstractIRODSProtocolManager implements
 			throw new IllegalArgumentException("null irodsAccount");
 		}
 
-		return authenticationFactory.instanceAuthMechanism(irodsAccount
-				.getAuthenticationScheme().name());
+		return authenticationFactory.instanceAuthMechanism(irodsAccount);
 	}
 
 }

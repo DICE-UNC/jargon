@@ -30,6 +30,18 @@ public class PAMAuthTest {
 	public static void tearDownAfterClass() throws Exception {
 		irodsFileSystem.closeAndEatExceptions();
 	}
+
+	@Test
+	public final void testPAMAuthWithAnonUsesStandardAuth() throws Exception {
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildAnonymousIRODSAccountFromTestProperties(testingProperties);
+		irodsAccount.setAuthenticationScheme(AuthScheme.PAM);
+		AuthenticationFactory authFactory = new AuthenticationFactoryImpl();
+		AuthMechanism authMechanism = authFactory.instanceAuthMechanism(irodsAccount);
+		boolean isStd = authMechanism instanceof StandardIRODSAuth;
+		TestCase.assertTrue("did not revert to standard auth for anonymous",
+				isStd);
+	}
+
 	@Test
 	public final void testPAMAuthValid() throws Exception {
 		if (!testingPropertiesHelper.isTestPAM(testingProperties)) {

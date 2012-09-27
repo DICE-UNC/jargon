@@ -17,31 +17,36 @@ public class AuthenticationFactoryImpl implements AuthenticationFactory {
 	private Logger log = LoggerFactory
 			.getLogger(AuthenticationFactoryImpl.class);
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.irods.jargon.core.connection.auth.AuthenticationFactory#
-	 * instanceAuthMechanism(java.lang.String)
-	 */
+
 	@Override
-	public AuthMechanism instanceAuthMechanism(final String authScheme)
+	public AuthMechanism instanceAuthMechanism(final IRODSAccount irodsAccount)
 			throws AuthUnavailableException, JargonException {
 
 		log.info("instanceAuthMechanism()");
-
-		if (authScheme == null || authScheme.isEmpty()) {
-			throw new IllegalArgumentException("null or blank authScheme");
+		
+		if (irodsAccount == null) {
+			throw new IllegalArgumentException("null or blank irodsAccount");
 		}
+
+		AuthScheme authScheme ;
+		
+		if (irodsAccount.getUserName().equals(IRODSAccount.PUBLIC_USERNAME)) {
+			log.info("account is anonymous, use default auth scheme");
+			authScheme = AuthScheme.STANDARD;
+		} else {
+			authScheme = irodsAccount.getAuthenticationScheme();
+		}
+		
 
 		log.info("authScheme:{}", authScheme);
 
 		if (authScheme.equals(AuthScheme.GSI.name())) {
 			log.info("generating GSI Auth");
 			return new GSIAuth();
-		} else if (authScheme.equals(AuthScheme.STANDARD.name())) {
+		} else if (authScheme.equals(AuthScheme.STANDARD)) {
 			log.info("using standard auth");
 			return new StandardIRODSAuth();
-		} else if (authScheme.equals(AuthScheme.PAM.name())) {
+		} else if (authScheme.equals(AuthScheme.PAM)) {
 			log.info("using PAM auth");
 			return new PAMAuth();
 		} else {

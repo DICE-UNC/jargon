@@ -56,7 +56,7 @@ public final class IRODSSimpleProtocolManager extends
 				this,
 				pipelineConfiguration,
 				this.getAuthenticationFactory().instanceAuthMechanism(
-						irodsAccount.getAuthenticationScheme().name()));
+irodsAccount));
 	}
 
 	/**

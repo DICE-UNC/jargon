@@ -132,7 +132,7 @@ public class PAMAuth extends AuthMechanism {
 		secureIRODSCommands.irodsFunction(sslEndInp);
 
 		try {
-			sslSocket.close();
+			secureIRODSCommands.closeOutSocketAndSetAsDisconnected();
 		} catch (IOException e) {
 			log.error("error closing ssl socket", e);
 			throw new JargonException("error closing ssl socket", e);

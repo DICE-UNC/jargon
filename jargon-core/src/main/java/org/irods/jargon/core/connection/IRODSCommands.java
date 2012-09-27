@@ -1596,4 +1596,9 @@ public class IRODSCommands implements IRODSManagedConnection {
 		return authMechanism;
 	}
 
+	synchronized void closeOutSocketAndSetAsDisconnected() throws IOException {
+		this.getIrodsConnection().getConnection().close();
+		this.getIrodsConnection().setConnected(false);
+	}
+
 }
