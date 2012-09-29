@@ -724,7 +724,7 @@ public class IRODSTaggingServiceTest {
 	@Test
 	public final void testGetTagsFromLiveCollectionNotExists() throws Exception {
 
-		String testCollection = "testRemoveTagFromLiveCollectionNotExists";
+		String testCollection = "testGetTagsFromLiveCollectionNotExists";
 
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(

@@ -19,6 +19,7 @@ class IRODSGenQueryBuilderQueryData {
 	private final List<GenQueryBuilderCondition> conditions;
 	private final List<GenQueryOrderByField> orderByFields;
 	private final boolean distinct;
+	private final boolean upperCase;
 
 	/**
 	 * Instance to create an immutable representation of the query
@@ -35,15 +36,16 @@ class IRODSGenQueryBuilderQueryData {
 	 * @param distinct
 	 *            <code>boolean</code> that indicates whether the query is a
 	 *            select distinct
-	 * @return immutable instancxe of <code>IRODSGenBuilderQuery</code>
+	 * @param upperCase <code>boolean</code> indicates whether the query uses case-insensitive conditions
+	 * @return immutable instance of <code>IRODSGenBuilderQuery</code>
 	 */
 	public static IRODSGenQueryBuilderQueryData instance(
 			final List<GenQuerySelectField> selectFields,
 			final List<GenQueryBuilderCondition> conditions,
 			final List<GenQueryOrderByField> orderByFields,
-			final boolean distinct) {
+			final boolean distinct, final boolean upperCase) {
 		return new IRODSGenQueryBuilderQueryData(selectFields, conditions,
-				orderByFields, distinct);
+				orderByFields, distinct, upperCase);
 	}
 
 	/**
@@ -61,12 +63,13 @@ class IRODSGenQueryBuilderQueryData {
 	 * @param distinct
 	 *            <code>boolean</code> that indicates whether the query is a
 	 *            select distinct
+	 * @param upperCase <code>boolean</code> indicates whether the query uses case-insensitive conditions
 	 */
 	private IRODSGenQueryBuilderQueryData(
 			final List<GenQuerySelectField> selectFields,
 			final List<GenQueryBuilderCondition> conditions,
 			final List<GenQueryOrderByField> orderByFields,
-			final boolean distinct) {
+			final boolean distinct, final boolean upperCase) {
 
 		if (selectFields == null || selectFields.isEmpty()) {
 			throw new IllegalArgumentException("null or empty selectFields");
@@ -89,6 +92,7 @@ class IRODSGenQueryBuilderQueryData {
 		}
 
 		this.distinct = distinct;
+		this.upperCase = upperCase;
 
 	}
 
@@ -130,10 +134,17 @@ class IRODSGenQueryBuilderQueryData {
 	}
 
 	/**
-	 * @return the distinct
+	 * @return  distinct <code>boolean</code> indicates whether the query specifies distinct
 	 */
 	public boolean isDistinct() {
 		return distinct;
+	}
+
+	/**
+	 * @return the upperCase <code>boolean</code> indicates whether the query uses case-insensitive conditions
+	 */
+	public boolean isUpperCase() {
+		return upperCase;
 	}
 
 }

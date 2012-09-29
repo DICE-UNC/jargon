@@ -16,6 +16,26 @@ class GenQueryBuilderCondition {
 	private final String selectFieldNumericTranslation;
 	private final QueryConditionOperators operator;
 	private final String value;
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("GenQueryBuilderCondition");
+		sb.append("\n\t selectFieldSource:");
+		sb.append(selectFieldSource);
+		sb.append("\n\t selectFieldNumericTranslation:");
+		sb.append(selectFieldNumericTranslation);
+		sb.append("\n\t selectFieldColumnName:");
+		sb.append(selectFieldColumnName);
+		sb.append("\n\t operator:");
+		sb.append(operator);
+		sb.append("\n\t value:");
+		sb.append(value);
+		return sb.toString();
+	}
 
 	/**
 	 * Create an immutable instance of an individual condition in a general

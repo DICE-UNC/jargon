@@ -238,33 +238,6 @@ public interface CollectionAO extends FileCatalogObjectAO {
 			JargonException;
 
 	/**
-	 * List the AVU metadata for a particular collection, as well as information
-	 * about the collection itself, based on a metadata query.
-	 * <p/>
-	 * Note that it is up to the caller to query the correct zone, this method
-	 * will not do this query across zones.
-	 * 
-	 * @param avuQuery
-	 *            <code>List</code> of
-	 *            {@link org.irods.jargon.core.query.AVUQueryElement} that
-	 *            defines the metadata query
-	 * @param additionalWhere
-	 *            <code>String</code> with additional conditions to further
-	 *            limit the query, set to blank if unused.
-	 * @param partialStartIndex
-	 *            <code>int</code> with the starting point to return results. 0
-	 *            indicates no offset.
-	 * @return <code>List</code> of
-	 *         {@link org.irods.jargon.core.query.MetaDataAndDomainData}
-	 * @throws JargonQueryException
-	 * @throws JargonException
-	 */
-	List<MetaDataAndDomainData> findMetadataValuesByMetadataQueryWithAdditionalWhere(
-			final List<AVUQueryElement> avuQuery, final String additionalWhere,
-			final int partialStartIndex) throws JargonQueryException,
-			JargonException;
-
-	/**
 	 * For the given absolute path, return the given collection.
 	 * <p/>
 	 * Note that this method will work correctly with soft linked collection

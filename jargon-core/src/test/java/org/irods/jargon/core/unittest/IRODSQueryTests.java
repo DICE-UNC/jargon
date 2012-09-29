@@ -5,6 +5,7 @@ package org.irods.jargon.core.unittest;
 
 import org.irods.jargon.core.query.AVUQueryElementTest;
 import org.irods.jargon.core.query.GenQuerySelectFieldTest;
+import org.irods.jargon.core.query.IRODSGenQueryBuilderTest;
 import org.irods.jargon.core.query.IRODSGenQueryTranslatorTest;
 import org.irods.jargon.core.query.IRODSSimpleQueryResultSetTest;
 import org.irods.jargon.core.query.SimpleQueryTest;
@@ -17,7 +18,7 @@ import org.junit.runners.Suite;
 @Suite.SuiteClasses({ IRODSGenQueryTranslatorTest.class,
 		GenQuerySelectFieldTest.class, TranslatedIRODSQueryTest.class,
 		AVUQueryElementTest.class, SimpleQueryTest.class,
-		IRODSSimpleQueryResultSetTest.class, UserFilePermissionTest.class })
+		IRODSSimpleQueryResultSetTest.class, UserFilePermissionTest.class, IRODSGenQueryBuilderTest.class })
 public class IRODSQueryTests {
 
 }

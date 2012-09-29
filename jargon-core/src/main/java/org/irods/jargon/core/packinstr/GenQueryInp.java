@@ -35,9 +35,9 @@ public class GenQueryInp extends AbstractIRODSPackingInstruction implements
 	public static final String INX_VAL_PAIR_PI = "InxValPair_PI";
 	public static final String INX_IVAL_PAIR_PI = "InxIvalPair_PI";
 
-	// working on this....no order by yet
 	public static final int ORDER_BY = 1024;// 0x400;
 	public static final int ORDER_BY_DESC = 2048;// 0x800;
+	public static final int UPPER_CASE_WHERE = 512; // 0x200;
 
 	public static final int API_NBR = 702;
 
