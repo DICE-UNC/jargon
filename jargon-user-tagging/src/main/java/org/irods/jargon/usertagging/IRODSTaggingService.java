@@ -43,8 +43,7 @@ public interface IRODSTaggingService {
 	 * @throws JargonException
 	 */
 	public void addTagToDataObject(final String dataObjectAbsolutePath,
-			final IRODSTagValue irodsTagValue) throws JargonException,
-			DataNotFoundException;
+			final IRODSTagValue irodsTagValue) throws DataNotFoundException, JargonException;
 
 	/**
 	 * Remove the given tag from the data object.

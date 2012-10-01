@@ -1320,7 +1320,7 @@ public class IRODSTaggingServiceTest {
 
 	}
 
-	@Test
+	@Test(expected=DataNotFoundException.class)
 	public final void testRemoveDescriptionFromMissingDataObject()
 			throws Exception {
 		String testFileName = "testRemoveDescriptionFromMissingDataObject.txt";
