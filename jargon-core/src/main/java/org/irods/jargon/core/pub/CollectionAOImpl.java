@@ -332,8 +332,8 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 			MiscIRODSUtils.evaluateSpecCollSupport(objStat);
 
 			// get absolute path to use for querying iCAT (could be a soft link)
-			absPath = MiscIRODSUtils
-					.determineAbsolutePathBasedOnCollTypeInObjectStat(objStat);
+			absPath = IRODSDataConversionUtil.escapeSingleQuotes(MiscIRODSUtils
+					.determineAbsolutePathBasedOnCollTypeInObjectStat(objStat));
 		}
 
 		log.info("absPath for querying iCAT:{}", absPath);
@@ -639,8 +639,8 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 			MiscIRODSUtils.evaluateSpecCollSupport(objStat);
 
 			// get absolute path to use for querying iCAT (could be a soft link)
-			absPath = MiscIRODSUtils
-					.determineAbsolutePathBasedOnCollTypeInObjectStat(objStat);
+			absPath = IRODSDataConversionUtil.escapeSingleQuotes(MiscIRODSUtils
+					.determineAbsolutePathBasedOnCollTypeInObjectStat(objStat));
 		}
 
 		log.info("absPath for querying iCAT:{}", absPath);

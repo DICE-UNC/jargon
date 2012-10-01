@@ -234,8 +234,8 @@ public class IRODSGenQueryBuilder {
 			throw new IllegalArgumentException("null operator");
 		}
 
-		if (value == null || value.isEmpty()) {
-			throw new IllegalArgumentException("null or empty value");
+		if (value == null) {
+			throw new IllegalArgumentException("null unit value");
 		}
 
 		/*

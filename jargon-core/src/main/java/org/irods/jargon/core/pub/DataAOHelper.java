@@ -25,9 +25,12 @@ import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.pub.io.IRODSFileFactory;
 import org.irods.jargon.core.pub.io.IRODSFileInputStream;
 import org.irods.jargon.core.query.AVUQueryElement;
+import org.irods.jargon.core.query.IRODSGenQueryBuilder;
 import org.irods.jargon.core.query.IRODSQueryResultRow;
 import org.irods.jargon.core.query.IRODSQueryResultSetInterface;
+import org.irods.jargon.core.query.JargonQueryException;
 import org.irods.jargon.core.query.MetaDataAndDomainData;
+import org.irods.jargon.core.query.QueryConditionOperators;
 import org.irods.jargon.core.query.MetaDataAndDomainData.MetadataDomain;
 import org.irods.jargon.core.query.RodsGenQueryEnum;
 import org.irods.jargon.core.transfer.TransferControlBlock;
@@ -769,4 +772,26 @@ final class DataAOHelper extends AOHelper {
 
 	}
 
+	/**
+	 * Append the appropriately formed query condition to the provided builder for a collection metadata query
+	 * @param queryElement {@link AVUQueryElement} to be added as a condition
+	 * @param builder {@link IRODSGenQueryBuilder} that will have the derived condition appended
+	 * @throws JargonQueryException if the query cannot be built
+	 */
+	public static void appendConditionPartToBuilderQuery(
+			final AVUQueryElement queryElement, final IRODSGenQueryBuilder builder) throws JargonQueryException {
+		
+		if (queryElement.getAvuQueryPart() == AVUQueryElement.AVUQueryPart.ATTRIBUTE) {
+			builder.addConditionAsGenQueryField(RodsGenQueryEnum.COL_META_DATA_ATTR_NAME, QueryConditionOperators.EQUAL, queryElement.getValue());
+			
+		} else if (queryElement.getAvuQueryPart() == AVUQueryElement.AVUQueryPart.VALUE) {
+			builder.addConditionAsGenQueryField(RodsGenQueryEnum.COL_META_DATA_ATTR_VALUE, QueryConditionOperators.EQUAL, queryElement.getValue());
+
+		} else if (queryElement.getAvuQueryPart() == AVUQueryElement.AVUQueryPart.UNITS) {
+			builder.addConditionAsGenQueryField(RodsGenQueryEnum.COL_META_DATA_ATTR_UNITS, QueryConditionOperators.EQUAL, queryElement.getValue());
+		} else {
+			throw new JargonQueryException("unable to resolve AVU Query part");
+		}
+
+	}
 }
