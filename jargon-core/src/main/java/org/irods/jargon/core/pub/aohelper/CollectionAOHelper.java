@@ -14,6 +14,7 @@ import org.irods.jargon.core.pub.UserAO;
 import org.irods.jargon.core.pub.domain.Collection;
 import org.irods.jargon.core.pub.domain.UserFilePermission;
 import org.irods.jargon.core.query.AVUQueryElement;
+import org.irods.jargon.core.query.BuilderQueryUtils;
 import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry;
 import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry.ObjectType;
 import org.irods.jargon.core.query.GenQueryBuilderException;
@@ -21,7 +22,6 @@ import org.irods.jargon.core.query.IRODSGenQueryBuilder;
 import org.irods.jargon.core.query.IRODSQueryResultRow;
 import org.irods.jargon.core.query.IRODSQueryResultSetInterface;
 import org.irods.jargon.core.query.JargonQueryException;
-import org.irods.jargon.core.query.QueryConditionOperators;
 import org.irods.jargon.core.query.RodsGenQueryEnum;
 import org.irods.jargon.core.utils.IRODSDataConversionUtil;
 import org.slf4j.Logger;
@@ -74,26 +74,31 @@ public class CollectionAOHelper extends AOHelper {
 		query.append(RodsGenQueryEnum.COL_COLL_TYPE.getName());
 		return query.toString();
 	}
-	
+
 	/**
-	 * Add appropriate select statements to the provided builder to query the collection data in the iCAT
-	 * @param builder {@link IRODSGenQueryBuilder} to which the selects will be added
+	 * Add appropriate select statements to the provided builder to query the
+	 * collection data in the iCAT
+	 * 
+	 * @param builder
+	 *            {@link IRODSGenQueryBuilder} to which the selects will be
+	 *            added
 	 * @throws GenQueryBuilderException
 	 */
-	public static void buildSelectsByAppendingToBuilder(final IRODSGenQueryBuilder builder) throws GenQueryBuilderException {
+	public static void buildSelectsByAppendingToBuilder(
+			final IRODSGenQueryBuilder builder) throws GenQueryBuilderException {
 		builder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_ID)
-		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_NAME)
-		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_PARENT_NAME)
-		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_OWNER_NAME)
-		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_OWNER_ZONE)
-		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_MAP_ID)
-		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_INHERITANCE)
-		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_COMMENTS)
-		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_CREATE_TIME)
-		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_MODIFY_TIME)
-		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_INFO1)
-		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_INFO2)
-		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_TYPE);
+				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_NAME)
+				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_PARENT_NAME)
+				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_OWNER_NAME)
+				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_OWNER_ZONE)
+				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_MAP_ID)
+				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_INHERITANCE)
+				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_COMMENTS)
+				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_CREATE_TIME)
+				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_MODIFY_TIME)
+				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_INFO1)
+				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_INFO2)
+				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_TYPE);
 	}
 
 	/**
@@ -207,25 +212,43 @@ public class CollectionAOHelper extends AOHelper {
 
 		return queryCondition;
 	}
-	
-	
+
 	/**
-	 * Append the appropriately formed query condition to the provided builder for a collection metadata query
-	 * @param queryElement {@link AVUQueryElement} to be added as a condition
-	 * @param builder {@link IRODSGenQueryBuilder} that will have the derived condition appended
-	 * @throws JargonQueryException if the query cannot be built
+	 * Append the appropriately formed query condition to the provided builder
+	 * for a collection metadata query
+	 * 
+	 * @param queryElement
+	 *            {@link AVUQueryElement} to be added as a condition
+	 * @param builder
+	 *            {@link IRODSGenQueryBuilder} that will have the derived
+	 *            condition appended
+	 * @throws JargonQueryException
+	 *             if the query cannot be built
 	 */
 	public static void appendConditionPartToBuilderQuery(
-			final AVUQueryElement queryElement, final IRODSGenQueryBuilder builder) throws JargonQueryException {
-		
+			final AVUQueryElement queryElement,
+			final IRODSGenQueryBuilder builder) throws JargonQueryException {
+
 		if (queryElement.getAvuQueryPart() == AVUQueryElement.AVUQueryPart.ATTRIBUTE) {
-			builder.addConditionAsGenQueryField(RodsGenQueryEnum.COL_META_COLL_ATTR_NAME, QueryConditionOperators.EQUAL, queryElement.getValue());
-			
+			builder.addConditionAsGenQueryField(
+					RodsGenQueryEnum.COL_META_COLL_ATTR_NAME,
+					BuilderQueryUtils
+							.translateAVUQueryElementOperatorToBuilderQueryCondition(queryElement),
+					queryElement.getValue());
+
 		} else if (queryElement.getAvuQueryPart() == AVUQueryElement.AVUQueryPart.VALUE) {
-			builder.addConditionAsGenQueryField(RodsGenQueryEnum.COL_META_COLL_ATTR_VALUE, QueryConditionOperators.EQUAL, queryElement.getValue());
+			builder.addConditionAsGenQueryField(
+					RodsGenQueryEnum.COL_META_COLL_ATTR_VALUE,
+					BuilderQueryUtils
+							.translateAVUQueryElementOperatorToBuilderQueryCondition(queryElement),
+					queryElement.getValue());
 
 		} else if (queryElement.getAvuQueryPart() == AVUQueryElement.AVUQueryPart.UNITS) {
-			builder.addConditionAsGenQueryField(RodsGenQueryEnum.COL_META_COLL_ATTR_UNITS, QueryConditionOperators.EQUAL, queryElement.getValue());
+			builder.addConditionAsGenQueryField(
+					RodsGenQueryEnum.COL_META_COLL_ATTR_UNITS,
+					BuilderQueryUtils
+							.translateAVUQueryElementOperatorToBuilderQueryCondition(queryElement),
+					queryElement.getValue());
 		} else {
 			throw new JargonQueryException("unable to resolve AVU Query part");
 		}
@@ -234,6 +257,7 @@ public class CollectionAOHelper extends AOHelper {
 
 	/**
 	 * Build a list of collection results based on the result of a query
+	 * 
 	 * @param resultSet
 	 * @return
 	 * @throws JargonException
@@ -381,16 +405,15 @@ public class CollectionAOHelper extends AOHelper {
 	public static void buildUserFilePermissionForCollection(
 			final List<UserFilePermission> userFilePermissions,
 			final IRODSQueryResultRow row, final UserAO userAO,
-			final String irodsAbsolutePath) 
-			throws JargonException {
-		
+			final String irodsAbsolutePath) throws JargonException {
+
 		/*
 		 * There appears to be a gen query issue with getting user type in the
 		 * permissions query, so, unfortunately, I need to do another query to
 		 * get the user type
 		 */
 		UserFilePermission userFilePermission;
-	
+
 		/*
 		 * Gracefully ignore a not found for the user name and zone, just set
 		 * the type to unknown and return what I have.
@@ -417,7 +440,7 @@ public class CollectionAOHelper extends AOHelper {
 							.getIntOrZeroFromIRODSValue(row.getColumn(9))),
 					UserTypeEnum.RODS_UNKNOWN, row.getColumn(8));
 		}
-		userFilePermissions.add(userFilePermission); 
+		userFilePermissions.add(userFilePermission);
 	}
 
 	/**

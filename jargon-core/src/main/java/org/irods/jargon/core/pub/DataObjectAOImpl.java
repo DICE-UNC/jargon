@@ -1,7 +1,6 @@
 package org.irods.jargon.core.pub;
 
 import static org.irods.jargon.core.pub.aohelper.AOHelper.AND;
-import static org.irods.jargon.core.pub.aohelper.AOHelper.COMMA;
 import static org.irods.jargon.core.pub.aohelper.AOHelper.EQUALS_AND_QUOTE;
 import static org.irods.jargon.core.pub.aohelper.AOHelper.QUOTE;
 import static org.irods.jargon.core.pub.aohelper.AOHelper.WHERE;
@@ -1738,9 +1737,8 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 					.exportIRODSQueryFromBuilder(this.getJargonProperties()
 							.getMaxFilesAndDirsQueryMax());
 
-		
-			resultSet = irodsGenQueryExecutor
-					.executeIRODSQueryAndCloseResult(irodsQuery, partialStartIndex);
+			resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResult(
+					irodsQuery, partialStartIndex);
 
 		} catch (GenQueryBuilderException e) {
 			log.error("error building query", e);
@@ -1793,45 +1791,36 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 					"partial start index must be 0 or greater");
 		}
 
-		log.info("building a metadata query for: {}", avuQueryElements);
-
-		final StringBuilder query = new StringBuilder();
-		query.append(dataAOHelper.buildSelects());
-		query.append(COMMA);
-		query.append(RodsGenQueryEnum.COL_META_DATA_ATTR_NAME.getName());
-		query.append(COMMA);
-		query.append(RodsGenQueryEnum.COL_META_DATA_ATTR_VALUE.getName());
-		query.append(COMMA);
-		query.append(RodsGenQueryEnum.COL_META_DATA_ATTR_UNITS.getName());
-
-		query.append(WHERE);
-		boolean previousElement = false;
-
-		for (AVUQueryElement queryElement : avuQueryElements) {
-
-			if (previousElement) {
-				query.append(AND);
-			}
-			previousElement = true;
-			query.append(dataAOHelper.buildConditionPart(queryElement));
-		}
-
-		final String queryString = query.toString();
-		log.debug("query string for AVU query: {}", queryString);
-
-		final IRODSGenQuery irodsQuery = IRODSGenQuery.instance(queryString,
-				getIRODSSession().getJargonProperties()
-						.getMaxFilesAndDirsQueryMax());
-
+		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, null);
 		IRODSQueryResultSetInterface resultSet;
+
 		try {
-			resultSet = irodsGenQueryExecutor.executeIRODSQueryWithPaging(
+			DataAOHelper.addDataObjectSelectsToBuilder(builder);
+			builder.addSelectAsGenQueryValue(
+					RodsGenQueryEnum.COL_META_DATA_ATTR_NAME)
+					.addSelectAsGenQueryValue(
+							RodsGenQueryEnum.COL_META_DATA_ATTR_VALUE)
+					.addSelectAsGenQueryValue(
+							RodsGenQueryEnum.COL_META_DATA_ATTR_UNITS);
+
+			for (AVUQueryElement queryElement : avuQueryElements) {
+				DataAOHelper.appendConditionPartToBuilderQuery(queryElement,
+						builder);
+			}
+
+			IRODSGenQueryFromBuilder irodsQuery = builder
+					.exportIRODSQueryFromBuilder(this.getJargonProperties()
+							.getMaxFilesAndDirsQueryMax());
+
+			resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResult(
 					irodsQuery, partialStartIndex);
 
-		} catch (JargonQueryException e) {
-			log.error("query exception for query:" + queryString, e);
-			throw new JargonException(
-					"error in query for data objects query by metadata");
+		} catch (GenQueryBuilderException e) {
+			log.error("error building query", e);
+			throw new JargonException("error building query", e);
+		} catch (JargonQueryException jqe) {
+			log.error("error executing query", jqe);
+			throw new JargonException("error executing query", jqe);
 		}
 
 		return dataAOHelper.buildListFromResultSet(resultSet);
