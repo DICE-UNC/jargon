@@ -119,6 +119,7 @@ public class TranslatedIRODSGenQuery {
 	 * @param distinct
 	 *            <code>boolean</code> indicating whether this is a distinct
 	 *            query.
+	 *  @param caseInsensitive <code>boolean</code> indicating that the query will be case-insensitive for condition values
 	 * @return <code>TranslatedIRODSQuery</code>
 	 * @throws JargonException
 	 */
@@ -126,10 +127,10 @@ public class TranslatedIRODSGenQuery {
 			final List<GenQuerySelectField> translatedSelectFields,
 			final List<TranslatedGenQueryCondition> translatedQueryConditions,
 			final List<GenQueryOrderByField> orderByFields,
-			final AbstractIRODSGenQuery irodsQuery, final boolean distinct)
+			final AbstractIRODSGenQuery irodsQuery, final boolean distinct, final boolean caseInsensitive)
 			throws JargonException {
 		return new TranslatedIRODSGenQuery(translatedSelectFields,
-				translatedQueryConditions, orderByFields, irodsQuery, distinct, false);
+				translatedQueryConditions, orderByFields, irodsQuery, distinct, caseInsensitive);
 
 	}
 
@@ -253,6 +254,15 @@ public class TranslatedIRODSGenQuery {
 	 */
 	public List<GenQueryOrderByField> getOrderByFields() {
 		return orderByFields;
+	}
+
+
+	/**
+	 * Indicates that 
+	 * @return
+	 */
+	public boolean isUpperCase() {
+		return upperCase;
 	}
 
 }

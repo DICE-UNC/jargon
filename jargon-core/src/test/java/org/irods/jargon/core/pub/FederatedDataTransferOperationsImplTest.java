@@ -179,7 +179,6 @@ public class FederatedDataTransferOperationsImplTest {
 						+ '/' + returnedLocalCollection);
 		File returnLocalFile = new File(returnLocalCollectionAbsolutePath);
 
-
 		dataTransferOperationsAO.getOperation(getIrodsFile, returnLocalFile,
 				null, null);
 

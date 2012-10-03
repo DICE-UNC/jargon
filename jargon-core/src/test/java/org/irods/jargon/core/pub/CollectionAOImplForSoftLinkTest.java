@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Properties;
 
 import junit.framework.Assert;
-import junit.framework.TestCase;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.pub.domain.AvuData;
@@ -188,7 +187,7 @@ public class CollectionAOImplForSoftLinkTest {
 		// make sure data is there, ask by source
 		List<MetaDataAndDomainData> result = collectionAO
 				.findMetadataValuesByMetadataQuery(queryElements);
-		Assert.assertEquals("no query result returned", 2, result.size());
+		Assert.assertTrue("no query result returned", result.size() >= 2);
 	}
 
 	/**
@@ -266,11 +265,11 @@ public class CollectionAOImplForSoftLinkTest {
 
 		List<MetaDataAndDomainData> sourceMetadata = collectionAO
 				.findMetadataValuesForCollection(sourceIrodsCollection);
-		TestCase.assertFalse("did not find metadata", sourceMetadata.isEmpty());
+		Assert.assertFalse("did not find metadata", sourceMetadata.isEmpty());
 
 		List<MetaDataAndDomainData> targetMetadata = collectionAO
 				.findMetadataValuesForCollection(targetIrodsCollection);
-		TestCase.assertFalse("did not find metadata", targetMetadata.isEmpty());
+		Assert.assertFalse("did not find metadata", targetMetadata.isEmpty());
 
 	}
 
@@ -481,11 +480,11 @@ public class CollectionAOImplForSoftLinkTest {
 
 		collectionAO
 				.setAccessPermissionInherit("", targetIrodsCollection, true);
-		TestCase.assertTrue(
+		Assert.assertTrue(
 				"should return inherit asking via source collection",
 				collectionAO
 						.isCollectionSetForPermissionInheritance(sourceIrodsCollection));
-		TestCase.assertTrue(
+		Assert.assertTrue(
 				"should return inherit asking via target collection",
 				collectionAO
 						.isCollectionSetForPermissionInheritance(targetIrodsCollection));

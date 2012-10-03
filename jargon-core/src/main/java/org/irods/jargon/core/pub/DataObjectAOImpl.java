@@ -1374,6 +1374,8 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			parallelGetTransferStrategy.transfer();
 		}
 	}
+	
+	
 
 	/*
 	 * (non-Javadoc)
@@ -1387,6 +1389,16 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			final List<AVUQueryElement> avuQuery,
 			final String dataObjectCollectionAbsPath,
 			final String dataObjectFileName) throws JargonQueryException,
+			JargonException {
+
+		return findMetadataValuesForDataObjectUsingAVUQuery(avuQuery, dataObjectCollectionAbsPath, dataObjectFileName, false);
+	}
+	
+	@Override
+	public List<MetaDataAndDomainData> findMetadataValuesForDataObjectUsingAVUQuery(
+			final List<AVUQueryElement> avuQuery,
+			final String dataObjectCollectionAbsPath,
+			final String dataObjectFileName, final boolean caseInsensitive) throws JargonQueryException,
 			JargonException {
 
 		if (avuQuery == null) {
@@ -1403,6 +1415,12 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			throw new IllegalArgumentException(
 					"null or empty dataObjectFileName");
 		}
+		
+		if (caseInsensitive) {
+			if (!this.getIRODSServerProperties().isSupportsCaseInsensitiveQueries()) {
+				throw new JargonException("case insensitive queries not supported on this iRODS version");
+			}
+		}
 
 		CollectionAndDataObjectListAndSearchAO collectionAndDataObjectListAndSearchAO = this
 				.getIRODSAccessObjectFactory()
@@ -1418,7 +1436,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		IRODSFile dataObjectFile = this.getIRODSFileFactory()
 				.instanceIRODSFile(objStat.getAbsolutePath());
 
-		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, null);
+		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, caseInsensitive, null);
 		IRODSQueryResultSetInterface resultSet;
 
 		try {
@@ -1708,13 +1726,31 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			final List<AVUQueryElement> avuQuery, final int partialStartIndex)
 			throws JargonQueryException, JargonException {
 
+		return findMetadataValuesByMetadataQuery(avuQuery, partialStartIndex, false);
+
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.core.pub.DataObjectAO#findMetadataValuesByMetadataQuery(java.util.List, int, boolean)
+	 */
+	@Override
+	public List<MetaDataAndDomainData> findMetadataValuesByMetadataQuery(
+			final List<AVUQueryElement> avuQuery, final int partialStartIndex, final boolean caseInsensitive)
+			throws JargonQueryException, JargonException {
+
 		if (avuQuery == null || avuQuery.isEmpty()) {
 			throw new IllegalArgumentException("null or empty query");
+		}
+		
+		if (caseInsensitive) {
+			if (!this.getIRODSServerProperties().isSupportsCaseInsensitiveQueries()) {
+				throw new JargonException("case insensitive queries not supported on this iRODS version");
+			}
 		}
 
 		log.info("building a metadata query for: {}", avuQuery);
 
-		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, null);
+		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, caseInsensitive, null);
 		IRODSQueryResultSetInterface resultSet;
 
 		try {
@@ -1753,6 +1789,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 	}
 
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -1782,6 +1819,18 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			final int partialStartIndex) throws JargonQueryException,
 			JargonException {
 
+		return findDomainByMetadataQuery(avuQueryElements, partialStartIndex, false);
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.core.pub.DataObjectAO#findDomainByMetadataQuery(java.util.List, int, boolean)
+	 */
+	@Override
+	public List<DataObject> findDomainByMetadataQuery(
+			final List<AVUQueryElement> avuQueryElements,
+			final int partialStartIndex, final boolean caseInsensitive) throws JargonQueryException,
+			JargonException {
+
 		if (avuQueryElements == null || avuQueryElements.isEmpty()) {
 			throw new IllegalArgumentException("null or empty avuQueryElements");
 		}
@@ -1790,8 +1839,14 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			throw new IllegalArgumentException(
 					"partial start index must be 0 or greater");
 		}
+		
+		if (caseInsensitive) {
+			if (!this.getIRODSServerProperties().isSupportsCaseInsensitiveQueries()) {
+				throw new JargonException("case insensitive queries not supported on this iRODS version");
+			}
+		}
 
-		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, null);
+		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, caseInsensitive, null);
 		IRODSQueryResultSetInterface resultSet;
 
 		try {
@@ -1825,7 +1880,8 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 		return dataAOHelper.buildListFromResultSet(resultSet);
 	}
-
+	
+	
 	/*
 	 * (non-Javadoc)
 	 * 

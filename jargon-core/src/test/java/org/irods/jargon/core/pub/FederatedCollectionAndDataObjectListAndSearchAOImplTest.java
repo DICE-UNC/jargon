@@ -81,8 +81,6 @@ public class FederatedCollectionAndDataObjectListAndSearchAOImplTest {
 			return;
 		}
 
-
-
 		String fileName = "testListCollectionWithOneDataObject.txt";
 		String testSubdir = "testListCollectionWithOneDataObject";
 
@@ -522,14 +520,13 @@ public class FederatedCollectionAndDataObjectListAndSearchAOImplTest {
 
 			Assert.assertNotNull("did not get owner entry", ownerEntry);
 			Assert.assertNotNull("did not get crossZone entry", crossZoneEntry);
-			
+
 			Assert.assertEquals("did not set crossZone zone correctly",
 					zone1Account.getZone(), crossZoneEntry.getUserZone());
 			Assert.assertEquals("did not set owner zone correctly",
 					irodsAccount.getZone(), ownerEntry.getUserZone());
 			ownerEntry = null;
 			crossZoneEntry = null;
-			
 
 		}
 

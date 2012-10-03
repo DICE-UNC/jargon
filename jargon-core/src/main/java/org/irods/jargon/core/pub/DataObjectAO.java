@@ -153,6 +153,37 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 			final String dataObjectCollectionAbsPath,
 			final String dataObjectFileName) throws JargonQueryException,
 			JargonException;
+	
+	/**
+	 * List the AVU metadata for a particular data object, as well as
+	 * identifying information about the data object itself, based on a metadata
+	 * query.
+	 * <p/>
+	 * Note that, in the case of a soft-linked path, the metadata is associated
+	 * with the canonical file path, and AVU metadata associated with the
+	 * canonical file path will be reflected if querying the soft link target
+	 * path.
+	 * <p/>
+	 * This version of the method will compare AVU values using case-insensitive queries
+	 * @param avuQuery
+	 *            <code>List</code> of
+	 *            {@link org.irods.jargon.core.query.AVUQueryElement} that
+	 *            defines the metadata query
+	 * @param dataObjectCollectionAbsPath
+	 *            <code>String with the absolute path of the collection for the dataObject of interest.
+	 * @param dataObjectFileName
+	 *            <code>String with the name of the dataObject of interest.
+	 *  @param caseInsensitive <code>boolean</code> where <code>true</code> indicates to treat avu queries as case-insensitive
+	 * @return <code>List</code> of
+	 *         {@link org.irods.jargon.core.query.MetaDataAndDomainData}
+	 * @throws JargonQueryException
+	 * @throws JargonException
+	 */
+	List<MetaDataAndDomainData> findMetadataValuesForDataObjectUsingAVUQuery(
+			List<AVUQueryElement> avuQuery, String dataObjectCollectionAbsPath,
+			String dataObjectFileName, boolean caseInsensitive)
+			throws JargonQueryException, JargonException;
+
 
 	/**
 	 * List the AVU metadata for a particular data object, as well as
@@ -220,7 +251,8 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	List<MetaDataAndDomainData> findMetadataValuesByMetadataQuery(
 			final List<AVUQueryElement> avuQuery) throws JargonQueryException,
 			JargonException;
-
+	
+	
 	/**
 	 * Handy query method will return DataObjects that match the given 'WHERE'
 	 * clause. This appends the default selects such that they can be converted
@@ -257,6 +289,30 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	List<MetaDataAndDomainData> findMetadataValuesByMetadataQuery(
 			final List<AVUQueryElement> avuQuery, final int partialStartIndex)
 			throws JargonQueryException, JargonException;
+	
+	
+	/**
+	 * List the data objects that answer the given AVU metadata query with the
+	 * ability to page through a partial start index.
+	 * <p/>
+	 * This version supports case-insensitive metadata queries
+	 * 
+	 * @param avuQuery
+	 *            <code>List</code> of
+	 *            {@link org.irods.jargon.core.query.AVUQueryElement} that
+	 *            defines the metadata query
+	 * @param partialStartIndex
+	 *            <code>int</code> with a partial start value for paging
+	 *  @param caseInsensitive <code>boolean</code> indicates that the queries should be case-insensitive
+	 * @return <code>List</code> of
+	 *         {@link org.irods.jargon.core.query.MetaDataAndDomainData}\
+	 * @throws JargonQueryException
+	 * @throws JargonException
+	 */
+	List<MetaDataAndDomainData> findMetadataValuesByMetadataQuery(
+			List<AVUQueryElement> avuQuery, int partialStartIndex,
+			boolean caseInsensitive) throws JargonQueryException,
+			JargonException;
 
 	/**
 	 * Given a set of metadata query parameters, return a list of IRODS Data
@@ -293,6 +349,30 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	List<DataObject> findDomainByMetadataQuery(
 			final List<AVUQueryElement> avuQueryElements,
 			final int partialStartIndex) throws JargonQueryException,
+			JargonException;
+	
+	/**
+	 * Given a set of metadata query parameters, return a list of IRODS Data
+	 * Objects that match the metadata query. This query method allows a partial
+	 * start as an offset into the result set to get paging behaviors.
+	 * <p/>
+	 * This method allows the specification of case-insensitive queries on the AVU values.  This is an iRODS3.2+ capability
+	 * 
+	 * @param avuQueryElements
+	 *            <code>List</code> of
+	 *            {@link org.irods.jargon.core.query.AVUQueryElements} with the
+	 *            query specification
+	 * @param partialStartIndex
+	 *            <code>int</code> that has the partial start offset into the
+	 *            result set
+	 *  @param caseInsensitive <code>boolean</code> that indicates that the AVU query should be processed as case-insensitive
+	 * @return
+	 * @throws JargonQueryException
+	 * @throws JargonException
+	 */
+	List<DataObject> findDomainByMetadataQuery(
+			List<AVUQueryElement> avuQueryElements, int partialStartIndex,
+			boolean caseInsensitive) throws JargonQueryException,
 			JargonException;
 
 	/**
@@ -860,4 +940,5 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	DataObject findGivenObjStat(ObjStat objStat) throws DataNotFoundException,
 			JargonException;
 
+	
 }

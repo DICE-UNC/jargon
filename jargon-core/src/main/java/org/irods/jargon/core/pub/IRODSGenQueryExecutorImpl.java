@@ -124,7 +124,7 @@ public final class IRODSGenQueryExecutorImpl extends IRODSGenericAO implements
 	 * @throws JargonException
 	 * @throws JargonQueryException
 	 */
-	private TranslatedIRODSGenQuery translateProvidedQuery(
+	 TranslatedIRODSGenQuery translateProvidedQuery(
 			final AbstractIRODSGenQuery irodsQuery) throws JargonException,
 			JargonQueryException {
 		TranslatedIRODSGenQuery translatedIRODSQuery = null;

@@ -122,16 +122,35 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 			final int partialStartIndex) throws JargonQueryException,
 			JargonException {
 
+		return findDomainByMetadataQuery(avuQueryElements, partialStartIndex, false);
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.core.pub.CollectionAO#findDomainByMetadataQuery(java.util.List, int, boolean)
+	 */
+	@Override
+	public List<Collection> findDomainByMetadataQuery(
+			final List<AVUQueryElement> avuQueryElements,
+			final int partialStartIndex, final boolean caseInsensitive) throws JargonQueryException,
+			JargonException {
+
 		log.info("findDomainByMetadataQuery()");
 
 		if (avuQueryElements == null || avuQueryElements.isEmpty()) {
 			throw new IllegalArgumentException("null or empty avuQueryElements");
 		}
+		
+		if (caseInsensitive) {
+			if (!this.getIRODSServerProperties().isSupportsCaseInsensitiveQueries()) {
+				throw new JargonException("case insensitive queries not supported on this iRODS version");
+			}
+		}
 
 		log.info("avuQueryElements:{}", avuQueryElements);
 		log.info("partialStartIndex:}{}", partialStartIndex);
+		log.info("caseInsensitive:{}",caseInsensitive);
 
-		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, null);
+		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, caseInsensitive, null);
 		IRODSQueryResultSetInterface resultSet;
 
 		try {
@@ -269,6 +288,13 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 			JargonException {
 		return findMetadataValuesByMetadataQueryForCollection(avuQuery, "");
 	}
+	
+	@Override
+	public List<MetaDataAndDomainData> findMetadataValuesByMetadataQuery(
+			final List<AVUQueryElement> avuQuery, final boolean caseInsensitive) throws JargonQueryException,
+			JargonException {
+		return findMetadataValuesByMetadataQueryForCollection(avuQuery, "", 0, caseInsensitive);
+	}
 
 	/*
 	 * (non-Javadoc)
@@ -300,6 +326,18 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 			final String collectionAbsolutePath, final int partialStartIndex)
 			throws JargonQueryException, JargonException {
 
+		return findMetadataValuesByMetadataQueryForCollection(avuQuery, collectionAbsolutePath, partialStartIndex, false);
+	}
+
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.core.pub.CollectionAO#findMetadataValuesByMetadataQueryForCollection(java.util.List, java.lang.String, int, boolean)
+	 */
+	@Override
+	public List<MetaDataAndDomainData> findMetadataValuesByMetadataQueryForCollection(
+			final List<AVUQueryElement> avuQuery,
+			final String collectionAbsolutePath, final int partialStartIndex, final boolean caseInsensitive)
+			throws JargonQueryException, JargonException {
+
 		if (avuQuery == null || avuQuery.isEmpty()) {
 			throw new IllegalArgumentException("null or empty query");
 		}
@@ -308,39 +346,27 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 			throw new IllegalArgumentException(
 					"Null absolutePath for collection");
 		}
+		
+		if (caseInsensitive) {
+			if (!this.getIRODSServerProperties().isSupportsCaseInsensitiveQueries()) {
+				throw new JargonException("case insensitive queries not supported on this iRODS version");
+			}
+		}
 
 		String absPath;
-		ObjStat objStat = null;
 
 		if (collectionAbsolutePath.isEmpty()) {
 			absPath = "";
 		} else {
 			log.info("looking up collection id via objStat");
-			CollectionAndDataObjectListAndSearchAO collectionAndDataObjectListAndSearchAO = this
-					.getIRODSAccessObjectFactory()
-					.getCollectionAndDataObjectListAndSearchAO(
-							getIRODSAccount());
-			try {
-				objStat = collectionAndDataObjectListAndSearchAO
-						.retrieveObjectStatForPath(collectionAbsolutePath);
-			} catch (FileNotFoundException fnf) {
-				log.warn("file not found when querying for collection, treat as normal and return empty values");
-				return new ArrayList<MetaDataAndDomainData>();
-			}
-
-			// make sure this special coll type has support
-			MiscIRODSUtils.evaluateSpecCollSupport(objStat);
-
-			// get absolute path to use for querying iCAT (could be a soft link)
-			absPath = IRODSDataConversionUtil.escapeSingleQuotes(MiscIRODSUtils
-					.determineAbsolutePathBasedOnCollTypeInObjectStat(objStat));
+			absPath = IRODSDataConversionUtil.escapeSingleQuotes(collectionAbsolutePath);
 		}
 
 		log.info("absPath for querying iCAT:{}", absPath);
 
 		log.info("building a metadata query for: {}", avuQuery);
 
-		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, null);
+		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, caseInsensitive, null);
 		IRODSQueryResultSetInterface resultSet;
 
 		try {
@@ -372,8 +398,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 						.executeIRODSQueryAndCloseResult(irodsQuery,
 								partialStartIndex);
 			} else {
-				String zone = MiscIRODSUtils.getZoneInPath(objStat
-						.getAbsolutePath());
+				String zone = MiscIRODSUtils.getZoneInPath(absPath);
 				resultSet = irodsGenQueryExecutor
 						.executeIRODSQueryAndCloseResultInZone(irodsQuery,
 								partialStartIndex, zone);
@@ -390,7 +415,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 				.buildMetaDataAndDomainDatalistFromResultSet(
 						MetadataDomain.COLLECTION, resultSet);
 	}
-
+	
 	/*
 	 * (non-Javadoc)
 	 * 

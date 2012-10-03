@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Properties;
 
 import junit.framework.Assert;
-import junit.framework.TestCase;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSProtocolManager;
@@ -101,7 +100,7 @@ public class ResourceAOTest {
 			}
 		}
 
-		TestCase.assertTrue("did not find the resource group in the results",
+		Assert.assertTrue("did not find the resource group in the results",
 				found);
 	}
 

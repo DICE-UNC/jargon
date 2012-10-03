@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Properties;
 
 import junit.framework.Assert;
-import junit.framework.TestCase;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.FileNotFoundException;
@@ -185,7 +184,7 @@ public class DataObjectAuditAOImplTest {
 				.getDataObjectAuditAO(irodsAccount);
 		List<AuditedAction> auditData = dataObjectAuditAO
 				.findAllAuditRecordsForDataObject(destFile, 0, 1000);
-		TestCase.assertFalse("empty audit data", auditData.isEmpty());
+		Assert.assertFalse("empty audit data", auditData.isEmpty());
 
 		AuditedAction expected = auditData.get(0);
 
@@ -196,7 +195,7 @@ public class DataObjectAuditAOImplTest {
 				String.valueOf(expected.getAuditActionEnum().getAuditCode()),
 				expected.getTimeStampInIRODSFormat());
 		// really if no data not found exception we're good
-		TestCase.assertNotNull("did not get audit object", actual);
+		Assert.assertNotNull("did not get audit object", actual);
 
 	}
 
@@ -231,8 +230,8 @@ public class DataObjectAuditAOImplTest {
 		DataObjectAuditAO dataObjectAuditAO = accessObjectFactory
 				.getDataObjectAuditAO(irodsAccount);
 
-		dataObjectAuditAO.getAuditedActionForDataObject(
-				destFile, "99999", "9999");
+		dataObjectAuditAO.getAuditedActionForDataObject(destFile, "99999",
+				"9999");
 
 	}
 
@@ -256,8 +255,7 @@ public class DataObjectAuditAOImplTest {
 
 		// I don't know if I like this, picking max val to make sure there is no
 		// record..
-		dataObjectAuditAO.getAuditedActionForDataObject(null,
- "9", "9");
+		dataObjectAuditAO.getAuditedActionForDataObject(null, "9", "9");
 
 	}
 

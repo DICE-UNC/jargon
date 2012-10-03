@@ -193,12 +193,17 @@ public class GenQueryInp extends AbstractIRODSPackingInstruction implements
 				new Tag(CONTINUE_INX, continueIndex), // new query
 				new Tag(PARTIAL_START_INDEX, partialStartIndex) });
 
-		// set distinct;
-		if (this.getTranslatedIRODSQuery().isDistinct()) {
-			message.addTag(new Tag(IRODSConstants.options, 0));
-		} else {
-			message.addTag(new Tag(IRODSConstants.options, 1));
+		int optionVal = 0;
+
+		if (!this.getTranslatedIRODSQuery().isDistinct()) {
+			optionVal += 1;
 		}
+
+		if (this.getTranslatedIRODSQuery().isUpperCase()) {
+			optionVal += UPPER_CASE_WHERE;
+		}
+
+		message.addTag(new Tag(IRODSConstants.options, optionVal));
 
 		/*
 		 * If a zoneName is specified, this means the query is for another

@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Properties;
 
 import junit.framework.Assert;
-import junit.framework.TestCase;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.pub.domain.Collection;
@@ -519,7 +518,6 @@ public class CollectionAndDataObjectListAndSearchAOImplForSoftLinksTest {
 						sourceIrodsCollection);
 		sourceFile.mkdirs();
 
-
 		// create the soft link
 		mountedCollectionAO.createASoftLink(sourceIrodsCollection,
 				targetIrodsCollection);
@@ -534,12 +532,11 @@ public class CollectionAndDataObjectListAndSearchAOImplForSoftLinksTest {
 		boolean isCollection = actual instanceof Collection;
 		Assert.assertTrue("was not a collection", isCollection);
 		Collection collection = (Collection) actual;
-		TestCase.assertEquals(
-				"collection path should be soft link target path",
+		Assert.assertEquals("collection path should be soft link target path",
 				targetIrodsCollection, collection.getCollectionName());
-		TestCase.assertEquals("collection should indicate actual source path",
+		Assert.assertEquals("collection should indicate actual source path",
 				sourceIrodsCollection, collection.getObjectPath());
-		TestCase.assertEquals("wrong spec col type", SpecColType.LINKED_COLL,
+		Assert.assertEquals("wrong spec col type", SpecColType.LINKED_COLL,
 				collection.getSpecColType());
 
 	}
@@ -594,14 +591,14 @@ public class CollectionAndDataObjectListAndSearchAOImplForSoftLinksTest {
 				.getFullObjectForType(targetIrodsCollection + "/"
 						+ testFileName);
 
-		TestCase.assertNotNull("did not find data object by soft link name",
+		Assert.assertNotNull("did not find data object by soft link name",
 				dataObject);
-		TestCase.assertEquals("should have the requested col name",
+		Assert.assertEquals("should have the requested col name",
 				targetIrodsCollection, dataObject.getCollectionName());
-		TestCase.assertEquals("should reflect the canonical col in objPath",
+		Assert.assertEquals("should reflect the canonical col in objPath",
 				sourceIrodsCollection + "/" + testFileName,
 				dataObject.getObjectPath());
-		TestCase.assertEquals("should be a special coll",
+		Assert.assertEquals("should be a special coll",
 				SpecColType.LINKED_COLL, dataObject.getSpecColType());
 
 	}
@@ -686,7 +683,8 @@ public class CollectionAndDataObjectListAndSearchAOImplForSoftLinksTest {
 				entry.getSpecColType());
 		Assert.assertEquals(
 				"absPath  of nested subdir should be to soft link target abs path for subdir",
-				targetIrodsCollection + "/" + nestedSubdirName, entry.getFormattedAbsolutePath());
+				targetIrodsCollection + "/" + nestedSubdirName,
+				entry.getFormattedAbsolutePath());
 		Assert.assertEquals("object path should be soft link source dir",
 				sourceIrodsCollection + "/" + nestedSubdirName,
 				entry.getSpecialObjectPath());

@@ -1,6 +1,6 @@
 package org.irods.jargon.core.rule;
 
-import junit.framework.TestCase;
+import junit.framework.Assert;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -21,8 +21,8 @@ public class RuleParsingUtilsTest {
 		String parameter = "*name=value";
 		RuleInputParameter rip = RuleParsingUtils
 				.parseInputParameterForNameAndValue(parameter);
-		TestCase.assertEquals("no name given", "*name", rip.getParamName());
-		TestCase.assertEquals("no value given", "value", rip.getParamValue());
+		Assert.assertEquals("no name given", "*name", rip.getParamName());
+		Assert.assertEquals("no value given", "value", rip.getParamValue());
 	}
 
 	@Test
@@ -30,15 +30,14 @@ public class RuleParsingUtilsTest {
 		String parameter = "*name=";
 		RuleInputParameter rip = RuleParsingUtils
 				.parseInputParameterForNameAndValue(parameter);
-		TestCase.assertEquals("no name given", "*name", rip.getParamName());
-		TestCase.assertEquals("no value given", "", rip.getParamValue());
+		Assert.assertEquals("no name given", "*name", rip.getParamName());
+		Assert.assertEquals("no value given", "", rip.getParamValue());
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public final void testParseInputParameterForNameAndNoEquals() {
 		String parameter = "*name";
-		RuleParsingUtils
-				.parseInputParameterForNameAndValue(parameter);
+		RuleParsingUtils.parseInputParameterForNameAndValue(parameter);
 
 	}
 

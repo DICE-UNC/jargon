@@ -4,7 +4,6 @@ import java.net.URI;
 import java.util.Properties;
 
 import junit.framework.Assert;
-import junit.framework.TestCase;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.pub.IRODSFileSystem;
@@ -133,9 +132,8 @@ public class IRODSUriUtilsTest {
 				.buildIRODSAccountFromTestProperties(testingProperties);
 		URI testURI = testingPropertiesHelper
 				.buildUriFromTestPropertiesForFileInUserDirNoPasswordOrZone(
-						testingProperties,
-						IRODS_TEST_SUBDIR_PATH);
-		TestCase.assertEquals(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+		Assert.assertEquals(
 				"uri not computed correctly",
 				testURI.toString(),
 				IRODSUriUtils.buildURIForAnAccountAndPath(irodsAccount,
@@ -150,13 +148,13 @@ public class IRODSUriUtilsTest {
 				.buildIRODSAccountFromTestProperties(testingProperties);
 		URI testURI = irodsAccount.toURI(true);
 		IRODSAccount newAccount = IRODSUriUtils.getIRODSAccountFromURI(testURI);
-		TestCase.assertNotNull("null iRODS account", newAccount);
-		TestCase.assertEquals(irodsAccount.getHost(), newAccount.getHost());
-		TestCase.assertEquals(irodsAccount.getPort(), newAccount.getPort());
-		TestCase.assertEquals(irodsAccount.getZone(), newAccount.getZone());
-		TestCase.assertEquals(irodsAccount.getUserName(),
+		Assert.assertNotNull("null iRODS account", newAccount);
+		Assert.assertEquals(irodsAccount.getHost(), newAccount.getHost());
+		Assert.assertEquals(irodsAccount.getPort(), newAccount.getPort());
+		Assert.assertEquals(irodsAccount.getZone(), newAccount.getZone());
+		Assert.assertEquals(irodsAccount.getUserName(),
 				newAccount.getUserName());
-		TestCase.assertEquals(irodsAccount.getPassword(),
+		Assert.assertEquals(irodsAccount.getPassword(),
 				newAccount.getPassword());
 	}
 

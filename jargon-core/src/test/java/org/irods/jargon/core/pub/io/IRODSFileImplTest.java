@@ -875,7 +875,6 @@ public class IRODSFileImplTest {
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH);
 
-
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
 
@@ -954,7 +953,6 @@ public class IRODSFileImplTest {
 
 		Assert.assertTrue("file creation not successful", success);
 	}
-
 
 	@Test
 	public final void testCreateNewFileTwice() throws Exception {
