@@ -3,7 +3,7 @@ package org.irods.jargon.core.pub;
 import java.util.List;
 import java.util.Properties;
 
-import junit.framework.TestCase;
+import junit.framework.Assert;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.SettableJargonProperties;
@@ -25,6 +25,7 @@ public class CollectionAndDataObjectListAndSearchAOImpForStrictACLTest {
 	private static IRODSFileSystem irodsFileSystem = null;
 	private static IRODSAccount anonymousAccount = null;
 	private static IRODSAccount irodsAccount = null;
+
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		org.irods.jargon.testutils.TestingPropertiesHelper testingPropertiesLoader = new TestingPropertiesHelper();
@@ -77,13 +78,14 @@ public class CollectionAndDataObjectListAndSearchAOImpForStrictACLTest {
 		SettableJargonProperties newProps = new SettableJargonProperties();
 		newProps.setDefaultToPublicIfNothingUnderRootWhenListing(true);
 		irodsFileSystem.getIrodsSession().setJargonProperties(newProps);
-		CollectionAndDataObjectListAndSearchAO listAndSearch = irodsFileSystem.getIRODSAccessObjectFactory().getCollectionAndDataObjectListAndSearchAO(anonymousAccount);
+		CollectionAndDataObjectListAndSearchAO listAndSearch = irodsFileSystem
+				.getIRODSAccessObjectFactory()
+				.getCollectionAndDataObjectListAndSearchAO(anonymousAccount);
 		List<CollectionAndDataObjectListingEntry> entries = listAndSearch
 				.listDataObjectsAndCollectionsUnderPath("/");
-		TestCase.assertFalse("no entries available under root",
-				entries.isEmpty());
+		Assert.assertFalse("no entries available under root", entries.isEmpty());
 		CollectionAndDataObjectListingEntry entry = entries.get(0);
-		TestCase.assertEquals("did not return the /zone",
+		Assert.assertEquals("did not return the /zone",
 				"/" + irodsAccount.getZone(), entry.getFormattedAbsolutePath());
 
 	}
@@ -105,11 +107,11 @@ public class CollectionAndDataObjectListAndSearchAOImpForStrictACLTest {
 				.getCollectionAndDataObjectListAndSearchAO(anonymousAccount);
 		List<CollectionAndDataObjectListingEntry> entries = listAndSearch
 				.listDataObjectsAndCollectionsUnderPath(rootAndZone);
-		TestCase.assertFalse("no entries available under /zone",
+		Assert.assertFalse("no entries available under /zone",
 				entries.isEmpty());
 		CollectionAndDataObjectListingEntry entry = entries.get(0);
-		TestCase.assertEquals("did not return the /zone/home", "/"
-				+ irodsAccount.getZone() + "/home",
+		Assert.assertEquals("did not return the /zone/home",
+				"/" + irodsAccount.getZone() + "/home",
 				entry.getFormattedAbsolutePath());
 
 	}
@@ -132,10 +134,10 @@ public class CollectionAndDataObjectListAndSearchAOImpForStrictACLTest {
 				.getCollectionAndDataObjectListAndSearchAO(anonymousAccount);
 		List<CollectionAndDataObjectListingEntry> entries = listAndSearch
 				.listDataObjectsAndCollectionsUnderPath(workingDir);
-		TestCase.assertFalse("no entries available under /zone/home",
+		Assert.assertFalse("no entries available under /zone/home",
 				entries.isEmpty());
 		CollectionAndDataObjectListingEntry entry = entries.get(0);
-		TestCase.assertEquals("did not return the /zone/home/public", "/"
+		Assert.assertEquals("did not return the /zone/home/public", "/"
 				+ irodsAccount.getZone() + "/home/public",
 				entry.getFormattedAbsolutePath());
 
@@ -157,8 +159,7 @@ public class CollectionAndDataObjectListAndSearchAOImpForStrictACLTest {
 		CollectionAndDataObjectListAndSearchAO listAndSearch = irodsFileSystem
 				.getIRODSAccessObjectFactory()
 				.getCollectionAndDataObjectListAndSearchAO(anonymousAccount);
-		listAndSearch
-				.listDataObjectsAndCollectionsUnderPath(workingDir);
+		listAndSearch.listDataObjectsAndCollectionsUnderPath(workingDir);
 
 	}
 }

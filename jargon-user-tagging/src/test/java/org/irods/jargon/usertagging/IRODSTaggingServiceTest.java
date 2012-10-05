@@ -724,7 +724,7 @@ public class IRODSTaggingServiceTest {
 	@Test
 	public final void testGetTagsFromLiveCollectionNotExists() throws Exception {
 
-		String testCollection = "testRemoveTagFromLiveCollectionNotExists";
+		String testCollection = "testGetTagsFromLiveCollectionNotExists";
 
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
@@ -1320,7 +1320,7 @@ public class IRODSTaggingServiceTest {
 
 	}
 
-	@Test
+	@Test(expected=DataNotFoundException.class)
 	public final void testRemoveDescriptionFromMissingDataObject()
 			throws Exception {
 		String testFileName = "testRemoveDescriptionFromMissingDataObject.txt";

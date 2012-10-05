@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Properties;
 
 import junit.framework.Assert;
-import junit.framework.TestCase;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.pub.domain.AvuData;
@@ -163,9 +162,9 @@ public class FederatedCollectionAOImplTest {
 		Assert.assertNotNull("got a null userFilePermission",
 				userFilePermission);
 
-		TestCase.assertEquals("did not get user name concatenated",
+		Assert.assertEquals("did not get user name concatenated",
 				concatenatedUserName, userFilePermission.getUserName());
-		TestCase.assertEquals(
+		Assert.assertEquals(
 				"did not get user zone",
 				String.valueOf(testingProperties
 						.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_ZONE_KEY)),
@@ -245,7 +244,7 @@ public class FederatedCollectionAOImplTest {
 
 		}
 
-		TestCase.assertTrue("did not find cross zone user with zone info",
+		Assert.assertTrue("did not find cross zone user with zone info",
 				foundCrossZone);
 
 	}
@@ -352,12 +351,10 @@ public class FederatedCollectionAOImplTest {
 		// now list the metadata
 		List<MetaDataAndDomainData> metadata = collectionAO
 				.findMetadataValuesForCollection(targetIrodsCollection);
-		
-		TestCase.assertEquals("did not find one metadata value I just added",
-				1,
+
+		Assert.assertEquals("did not find one metadata value I just added", 1,
 				metadata.size());
 
 	}
-
 
 }

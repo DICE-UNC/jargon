@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Properties;
 
 import junit.framework.Assert;
-import junit.framework.TestCase;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.FileNotFoundException;
@@ -961,7 +960,6 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 		DataObjectAOImpl dataObjectAO = (DataObjectAOImpl) irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
 
-
 		dataObjectAO.putLocalDataObjectToIRODS(localFile, irodsFile, true);
 		dataObjectAO
 				.replicateIrodsDataObject(
@@ -1340,7 +1338,7 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 
 		CollectionAndDataObjectListingEntry entry = listAndSearchAO
 				.getCollectionAndDataObjectListingEntryAtGivenAbsolutePath(targetIrodsCollection);
-		TestCase.assertNotNull("did not find collection", entry);
+		Assert.assertNotNull("did not find collection", entry);
 	}
 
 	@Test
@@ -1361,7 +1359,7 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 
 		CollectionAndDataObjectListingEntry entry = listAndSearchAO
 				.getCollectionAndDataObjectListingEntryAtGivenAbsolutePath(targetIrodsCollection);
-		TestCase.assertNotNull("did not find collection", entry);
+		Assert.assertNotNull("did not find collection", entry);
 	}
 
 	@Test

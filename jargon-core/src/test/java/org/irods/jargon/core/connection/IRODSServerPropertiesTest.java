@@ -58,4 +58,25 @@ public class IRODSServerPropertiesTest {
 		Assert.assertFalse("server shouldnt supoort tickets", isTickets);
 	}
 
+	@Test
+	public void testSupportsCaseInsensitiveWhenDoesnt() {
+		String serverVersion = "rods2.5";
+		IRODSServerProperties irodsServerProperties = IRODSServerProperties
+				.instance(IcatEnabled.ICAT_ENABLED, 100, serverVersion, "", "");
+		boolean isSupport = irodsServerProperties
+				.isSupportsCaseInsensitiveQueries();
+		Assert.assertFalse("server shouldnt supoort case-insensitive",
+				isSupport);
+	}
+
+	@Test
+	public void testSupportsCaseInsensitiveWhenDoes() {
+		String serverVersion = "rods3.2";
+		IRODSServerProperties irodsServerProperties = IRODSServerProperties
+				.instance(IcatEnabled.ICAT_ENABLED, 100, serverVersion, "", "");
+		boolean isSupport = irodsServerProperties
+				.isSupportsCaseInsensitiveQueries();
+		Assert.assertTrue("server should supoort case-insensitive", isSupport);
+	}
+
 }

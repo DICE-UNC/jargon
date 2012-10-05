@@ -1,6 +1,6 @@
 package org.irods.jargon.core.packinstr;
 
-import junit.framework.TestCase;
+import junit.framework.Assert;
 
 import org.irods.jargon.core.exception.ProtocolFormException;
 import org.irods.jargon.core.packinstr.DataObjInpForReg.ChecksumHandling;
@@ -106,7 +106,7 @@ public class DataObjInpForRegTest {
 						ChecksumHandling.NONE, false, "");
 
 		String tagValue = dataObjInput.getParsedTags();
-		TestCase.assertNotNull("null tags returned", tagValue);
+		Assert.assertNotNull("null tags returned", tagValue);
 
 		StringBuilder sb = new StringBuilder();
 		sb.append("<DataObjInp_PI><objPath>irods</objPath>\n");
@@ -127,8 +127,7 @@ public class DataObjInpForRegTest {
 		sb.append("</DataObjInp_PI>");
 
 		String expected = sb.toString().trim();
-		TestCase.assertEquals("invalid tag generated", expected,
-				tagValue.trim());
+		Assert.assertEquals("invalid tag generated", expected, tagValue.trim());
 
 	}
 

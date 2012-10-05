@@ -6,7 +6,6 @@ import java.io.File;
 import java.util.Properties;
 
 import junit.framework.Assert;
-import junit.framework.TestCase;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSServerProperties;
@@ -99,8 +98,7 @@ public class IRODSRegistrationOfFilesAOImplTest {
 				.getIRODSFileFactory(irodsAccount).instanceIRODSFile(
 						targetIrodsCollection
 								+ "/testPutCollectionWithTwoFileslvl1nbr0");
-		TestCase.assertTrue("irodsCollection does not exist",
-				parentFile.exists());
+		Assert.assertTrue("irodsCollection does not exist", parentFile.exists());
 
 	}
 
@@ -175,8 +173,6 @@ public class IRODSRegistrationOfFilesAOImplTest {
 				.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY), "",
 				false);
 	}
-
-
 
 	/**
 	 * Call a method to register a file when the local file is a collection
@@ -459,8 +455,7 @@ public class IRODSRegistrationOfFilesAOImplTest {
 		assertionHelper.assertIrodsFileOrCollectionExists(targetIrodsCollection
 				+ "/" + testFileName);
 
-		ao.unregisterDataObject(targetIrodsCollection + "/"
-				+ testFileName);
+		ao.unregisterDataObject(targetIrodsCollection + "/" + testFileName);
 		File localFile = new File(fileNameOrig);
 		Assert.assertTrue("local file is missing", localFile.exists());
 		IRODSFile targetFile = irodsFileSystem
@@ -493,9 +488,8 @@ public class IRODSRegistrationOfFilesAOImplTest {
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH);
 
-		boolean status = ao
-				.unregisterDataObject(targetIrodsCollection
-						+ "/" + testFileName);
+		boolean status = ao.unregisterDataObject(targetIrodsCollection + "/"
+				+ testFileName);
 
 		Assert.assertFalse("should have gotten a false on this delete", status);
 
@@ -545,11 +539,10 @@ public class IRODSRegistrationOfFilesAOImplTest {
 
 		ao.registerPhysicalDataFileToIRODSAsAReplica(
 				fileNameOrig,
-				targetIrodsCollection
-				+ "/" + testFileName, testingProperties
+				targetIrodsCollection + "/" + testFileName,
+				testingProperties
 						.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_RESOURCE_KEY),
-				"",
-				false);
+				"", false);
 
 		assertionHelper.assertIrodsFileOrCollectionExists(targetIrodsCollection
 				+ "/" + testFileName);
@@ -638,7 +631,7 @@ public class IRODSRegistrationOfFilesAOImplTest {
 				.getIRODSFileFactory(irodsAccount).instanceIRODSFile(
 						targetIrodsCollection
 								+ "/testPutCollectionWithTwoFileslvl1nbr0");
-		TestCase.assertFalse("irodsCollection should not exist",
+		Assert.assertFalse("irodsCollection should not exist",
 				parentFile.exists());
 
 	}
@@ -686,7 +679,7 @@ public class IRODSRegistrationOfFilesAOImplTest {
 				.getIRODSFileFactory(irodsAccount).instanceIRODSFile(
 						targetIrodsCollection
 								+ "/testPutCollectionWithTwoFileslvl1nbr0");
-		TestCase.assertFalse("irodsCollection should not exist",
+		Assert.assertFalse("irodsCollection should not exist",
 				parentFile.exists());
 
 	}

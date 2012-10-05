@@ -669,7 +669,6 @@ public class RuleProcessingAOImplTest {
 
 	}
 
-
 	@Test
 	public void testExecuteRequestClientActionPutWithOverwriteFileExists()
 			throws Exception {
@@ -776,8 +775,7 @@ public class RuleProcessingAOImplTest {
 		RuleProcessingAO ruleProcessingAO = accessObjectFactory
 				.getRuleProcessingAO(irodsAccount);
 
-		ruleProcessingAO.executeRule(builder
-				.toString());
+		ruleProcessingAO.executeRule(builder.toString());
 
 	}
 

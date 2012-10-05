@@ -4,7 +4,6 @@ import java.io.File;
 import java.util.Properties;
 
 import junit.framework.Assert;
-import junit.framework.TestCase;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.pub.domain.ObjStat;
@@ -267,8 +266,8 @@ public class DataTransferOperationsImplForSoftLinksTest {
 		ObjStat actual = listAndSearchAO
 				.retrieveObjectStatForPath(copyToIrodsCollection + "/"
 						+ targetCollectionName);
-		TestCase.assertEquals("should now be a normal coll",
-				SpecColType.NORMAL, actual.getSpecColType());
+		Assert.assertEquals("should now be a normal coll", SpecColType.NORMAL,
+				actual.getSpecColType());
 
 	}
 

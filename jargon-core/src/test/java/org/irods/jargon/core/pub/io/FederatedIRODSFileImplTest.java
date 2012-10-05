@@ -4,7 +4,6 @@ import java.io.File;
 import java.util.Properties;
 
 import junit.framework.Assert;
-import junit.framework.TestCase;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.pub.DataTransferOperations;
@@ -156,7 +155,7 @@ public class FederatedIRODSFileImplTest {
 				.instanceIRODSFile(destFile.getAbsolutePath(), testFileName);
 		Assert.assertFalse("file should not exist", target.exists());
 	}
-	
+
 	@Test
 	public final void testIsDirAcrossZone() throws Exception {
 
@@ -182,7 +181,6 @@ public class FederatedIRODSFileImplTest {
 		// delete to clean up
 		destFile.deleteWithForceOption();
 		destFile.mkdirs();
-
 
 		/*
 		 * setup done, now connect from the first zone and try to list the coll
@@ -460,10 +458,8 @@ public class FederatedIRODSFileImplTest {
 		boolean success = irodsFile.mkdirs();
 		irodsFile.reset();
 
-		TestCase.assertTrue("did not get success in the mkdirs command",
-				success);
-		assertionHelper
-.assertIrodsFileOrCollectionExists(irodsFile
+		Assert.assertTrue("did not get success in the mkdirs command", success);
+		assertionHelper.assertIrodsFileOrCollectionExists(irodsFile
 				.getAbsolutePath());
 	}
 
