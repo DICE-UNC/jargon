@@ -50,6 +50,9 @@ public class TestingPropertiesHelper {
 	public static String IRODS_FEDERATED_ADMIN_USER_KEY = "test.federated.irods.admin";
 	public static String IRODS_FEDERATED_ADMIN_PASSWORD_KEY = "test.federated.irods.admin.password";
 	public static String IRODS_KERBEROS_USER_KEY = "jargon.test.kerberos.user";
+	public static String IRODS_TEST_OPTION_PAM_KEY = "test.option.pam";
+	public static String IRODS_PAM_USER_KEY = "jargon.test.pam.user";
+	public static String IRODS_PAM_PASSWORD_KEY = "jargon.test.pam.password";
 	public static String IRODS_CONFIRM_TESTING_TRUE = "true";
 	public static String IRODS_CONFIRM_TESTING_FALSE = "false";
 
@@ -894,6 +897,21 @@ public class TestingPropertiesHelper {
 	public boolean isTestTickets(final Properties testingProperties) {
 		String val = (String) testingProperties
 				.get("test.option.exercise.ticket");
+		if (val == null) {
+			return false;
+		} else {
+			return Boolean.parseBoolean(val);
+		}
+	}
+
+	/**
+	 * Check if optional pam auth system is to be tested
+	 * 
+	 * @param testingProperties
+	 * @return
+	 */
+	public boolean isTestPAM(final Properties testingProperties) {
+		String val = (String) testingProperties.get("test.option.pam");
 		if (val == null) {
 			return false;
 		} else {

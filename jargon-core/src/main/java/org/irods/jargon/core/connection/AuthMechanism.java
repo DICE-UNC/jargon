@@ -63,7 +63,7 @@ abstract class AuthMechanism {
 				irodsAccount, irodsCommands);
 		postConnectionStartupPreAuthentication();
 		AuthResponse authResponse = processAuthenticationAfterStartup(
-				irodsAccount, irodsCommands);
+				irodsAccount, irodsCommands, startupResponseData);
 		authResponse.setStartupResponse(startupResponseData);
 		return authResponse;
 	}
@@ -75,9 +75,13 @@ abstract class AuthMechanism {
 	 * 
 	 * @param irodsAccount
 	 * @param irodsCommands
+	 * @param startupResponseData
+	 *            {@link StartupResponseData} with iRODS response to startup
+	 *            pack info
 	 */
 	protected abstract AuthResponse processAuthenticationAfterStartup(
-			IRODSAccount irodsAccount, IRODSCommands irodsCommands)
+			IRODSAccount irodsAccount, IRODSCommands irodsCommands,
+			final StartupResponseData startupResponseData)
 			throws AuthenticationException, JargonException;
 
 	/**

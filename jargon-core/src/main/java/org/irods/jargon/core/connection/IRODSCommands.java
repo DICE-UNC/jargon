@@ -150,8 +150,11 @@ public class IRODSCommands implements IRODSManagedConnection {
 		startupConnection(irodsAccount);
 	}
 
+
 	/**
-	 * Internal constructor used when reconnecting
+	 * Internal constructor used when reconnecting, or when operating with an
+	 * SSL wrapped connection when securely exchanging credentials (such as in
+	 * PAM)
 	 * 
 	 * @param irodsAccount
 	 * @param irodsProtocolManager
@@ -160,7 +163,7 @@ public class IRODSCommands implements IRODSManagedConnection {
 	 * @param authMechanism
 	 * @param reconnectedIRODSConnection
 	 */
-	private IRODSCommands(final IRODSAccount irodsAccount,
+	IRODSCommands(final IRODSAccount irodsAccount,
 			final IRODSProtocolManager irodsProtocolManager,
 			final PipelineConfiguration pipelineConfiguration,
 			final AuthResponse authResponse, final AuthMechanism authMechanism,
@@ -310,13 +313,17 @@ public class IRODSCommands implements IRODSManagedConnection {
 			irodsConnection.send(createHeader(IRODSConstants.RODS_API_REQ,
 					messageLength, errorLength, byteStringLength, intInfo));
 
+			// flush is needed between header and message when SSL processing
+			irodsConnection.flush();
+
 			irodsConnection.send(message);
+
+			irodsConnection.flush();
 
 			if (byteStringLength > 0) {
 				irodsConnection.send(bytes, byteOffset, byteStringLength);
+				irodsConnection.flush();
 			}
-
-			irodsConnection.flush();
 
 		} catch (UnsupportedEncodingException e) {
 			log.error("unsupported encoding", e);
@@ -672,7 +679,7 @@ public class IRODSCommands implements IRODSManagedConnection {
 		return irodsFunction(IRODSConstants.RODS_API_REQ,
 				irodsPI.getParsedTags(), irodsPI.getApiNumber());
 	}
-
+	
 	/**
 	 * Create the iRODS header packet
 	 */
@@ -1580,6 +1587,13 @@ public class IRODSCommands implements IRODSManagedConnection {
 	 */
 	public AuthResponse getAuthResponse() {
 		return authResponse;
+	}
+
+	/**
+	 * @return the authMechanism
+	 */
+	protected synchronized AuthMechanism getAuthMechanism() {
+		return authMechanism;
 	}
 
 }

@@ -181,7 +181,7 @@ public class SpecificQueryInp extends AbstractIRODSPackingInstruction {
 		}
 
 
-		// List<KeyValuePair> kvps = new ArrayList<KeyValuePair>();
+		List<KeyValuePair> kvps = new ArrayList<KeyValuePair>();
 		Tag message = new Tag(PI_TAG);
 		
 		message.addTag(new Tag(SQL, queryOrAlias));
@@ -231,7 +231,7 @@ public class SpecificQueryInp extends AbstractIRODSPackingInstruction {
 		message.addTag(new Tag(ROW_OFFSET, 0));
 		message.addTag(new Tag(OPTIONS, 0));
 
-		// message.addTag(createKeyValueTag(kvps));
+		message.addTag(createKeyValueTag(kvps));
 
 		return message;
 	}

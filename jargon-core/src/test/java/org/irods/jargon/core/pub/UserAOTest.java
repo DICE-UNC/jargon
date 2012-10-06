@@ -672,9 +672,6 @@ public class UserAOTest {
 		Assert.assertFalse("no avus returned", avuList.isEmpty());
 	}
 
-	// FIXME: see clientLogin.c and iadmin.c(line 807) for details yet to be
-	// implemented
-
 	@Test
 	public void testChangeUserPassword() throws Exception {
 		String testUser = "testx";

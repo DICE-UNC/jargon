@@ -595,4 +595,31 @@ public class MiscIRODSUtils {
 		}
 		return count;
 	}
+
+	/**
+	 * Pad a given string to the right with spaces to a given length
+	 * 
+	 * @param s
+	 *            <code>String</code> to pad
+	 * @param n
+	 *            <code>int</code> with the amount to pad
+	 * @return <code>String</code> padded to specification
+	 */
+	public static String padRight(String s, int n) {
+		return String.format("%1$-" + n + "s", s);
+	}
+
+	/**
+	 * Pad a given string to the left with spaces to a given length
+	 * 
+	 * @param s
+	 *            <code>String</code> to pad
+	 * @param n
+	 *            <code>int</code> with the amount to pad
+	 * @return <code>String</code> padded to specification
+	 */
+	public static String padLeft(String s, int n) {
+		return String.format("%1$" + n + "s", s);
+	}
+
 }

@@ -17,7 +17,6 @@ import org.gridforum.jgss.ExtendedGSSManager;
 import org.ietf.jgss.GSSContext;
 import org.ietf.jgss.GSSCredential;
 import org.ietf.jgss.GSSException;
-import org.irods.jargon.core.connection.IRODSAccount.AuthScheme;
 import org.irods.jargon.core.connection.auth.AuthResponse;
 import org.irods.jargon.core.exception.AuthenticationException;
 import org.irods.jargon.core.exception.JargonException;
@@ -144,7 +143,7 @@ class GSIAuth extends AuthMechanism {
 
 			AuthResponse response = new AuthResponse();
 			response.setAuthenticatedIRODSAccount(irodsAccount);
-			response.setAuthType(AuthScheme.GSI);
+			response.setAuthenticatingIRODSAccount(irodsAccount);
 			return response;
 
 		} catch (GSSException e) {
@@ -269,11 +268,13 @@ class GSIAuth extends AuthMechanism {
 	 * @see org.irods.jargon.core.connection.AuthMechanism#
 	 * processAuthenticationAfterStartup
 	 * (org.irods.jargon.core.connection.IRODSAccount,
-	 * org.irods.jargon.core.connection.IRODSCommands)
+	 * org.irods.jargon.core.connection.IRODSCommands,
+	 * org.irods.jargon.core.connection.StartupResponseData)
 	 */
 	@Override
 	protected AuthResponse processAuthenticationAfterStartup(
-			final IRODSAccount irodsAccount, final IRODSCommands irodsCommands)
+			final IRODSAccount irodsAccount, final IRODSCommands irodsCommands,
+			final StartupResponseData startupResponseData)
 			throws AuthenticationException, JargonException {
 		try {
 			return sendGSIAuth(irodsAccount, irodsCommands.getIrodsConnection()

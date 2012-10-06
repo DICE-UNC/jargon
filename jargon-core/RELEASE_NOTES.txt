@@ -46,6 +46,8 @@ Note that the following bug and feature requests are logged in GForge with relat
 
 ==Bug Fixes==
 
+* [#977] -15000 errors in specific query
+** added KVP to packing instruction, which seems to be required in later revs of the HEAD that will be iRODS 3.2
 
 ==Features==
 
@@ -55,3 +57,7 @@ Note that the following bug and feature requests are logged in GForge with relat
  
  * [#870] jargon support for PAM
  ** Support for PAM authentication (per Chris Smith's updates to iRODS) as a pluggable auth module in Jargon
+ 
+  [#974] anonymous link support
+ ** added isUserHasPermission methods for collections and data objects that indicate that a user has at least read permission on a file or data object
+ ** added AnonymousAccessService in data utils to help manage permissions for the anonymous user

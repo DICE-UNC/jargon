@@ -90,16 +90,18 @@ public final class IRODSSimpleProtocolManager extends
 		if (irodsConnection != null) {
 			irodsConnection.obliterateConnectionAndDiscardErrors();
 			try {
-
-				irodsConnection.getIrodsSession().discardSessionForErrors(
-						irodsConnection.getIrodsAccount());
+				if (irodsConnection.getIrodsSession() == null) {
+					log.info("returning connection, no session, so do not discard in session, this can be a normal case in authentication processing, or in areas where a connection is manually done outside of the normal access object factory scheme, otherwise, it might signify a logic error");
+				} else {
+					irodsConnection.getIrodsSession().discardSessionForErrors(
+							irodsConnection.getIrodsAccount());
+				}
 			} catch (JargonException e) {
 				log.error("unable to obliterate connection");
 				throw new JargonRuntimeException(
 						"unable to obliterate connection", e);
 			}
 		}
-
 	}
 
 	/*
