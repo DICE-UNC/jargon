@@ -122,35 +122,43 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 			final int partialStartIndex) throws JargonQueryException,
 			JargonException {
 
-		return findDomainByMetadataQuery(avuQueryElements, partialStartIndex, false);
+		return findDomainByMetadataQuery(avuQueryElements, partialStartIndex,
+				false);
 	}
-	
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.pub.CollectionAO#findDomainByMetadataQuery(java.util.List, int, boolean)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.CollectionAO#findDomainByMetadataQuery(java
+	 * .util.List, int, boolean)
 	 */
 	@Override
 	public List<Collection> findDomainByMetadataQuery(
 			final List<AVUQueryElement> avuQueryElements,
-			final int partialStartIndex, final boolean caseInsensitive) throws JargonQueryException,
-			JargonException {
+			final int partialStartIndex, final boolean caseInsensitive)
+			throws JargonQueryException, JargonException {
 
 		log.info("findDomainByMetadataQuery()");
 
 		if (avuQueryElements == null || avuQueryElements.isEmpty()) {
 			throw new IllegalArgumentException("null or empty avuQueryElements");
 		}
-		
+
 		if (caseInsensitive) {
-			if (!this.getIRODSServerProperties().isSupportsCaseInsensitiveQueries()) {
-				throw new JargonException("case insensitive queries not supported on this iRODS version");
+			if (!this.getIRODSServerProperties()
+					.isSupportsCaseInsensitiveQueries()) {
+				throw new JargonException(
+						"case insensitive queries not supported on this iRODS version");
 			}
 		}
 
 		log.info("avuQueryElements:{}", avuQueryElements);
 		log.info("partialStartIndex:}{}", partialStartIndex);
-		log.info("caseInsensitive:{}",caseInsensitive);
+		log.info("caseInsensitive:{}", caseInsensitive);
 
-		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, caseInsensitive, null);
+		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true,
+				caseInsensitive, null);
 		IRODSQueryResultSetInterface resultSet;
 
 		try {
@@ -288,12 +296,13 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 			JargonException {
 		return findMetadataValuesByMetadataQueryForCollection(avuQuery, "");
 	}
-	
+
 	@Override
 	public List<MetaDataAndDomainData> findMetadataValuesByMetadataQuery(
-			final List<AVUQueryElement> avuQuery, final boolean caseInsensitive) throws JargonQueryException,
-			JargonException {
-		return findMetadataValuesByMetadataQueryForCollection(avuQuery, "", 0, caseInsensitive);
+			final List<AVUQueryElement> avuQuery, final boolean caseInsensitive)
+			throws JargonQueryException, JargonException {
+		return findMetadataValuesByMetadataQueryForCollection(avuQuery, "", 0,
+				caseInsensitive);
 	}
 
 	/*
@@ -326,17 +335,23 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 			final String collectionAbsolutePath, final int partialStartIndex)
 			throws JargonQueryException, JargonException {
 
-		return findMetadataValuesByMetadataQueryForCollection(avuQuery, collectionAbsolutePath, partialStartIndex, false);
+		return findMetadataValuesByMetadataQueryForCollection(avuQuery,
+				collectionAbsolutePath, partialStartIndex, false);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.pub.CollectionAO#findMetadataValuesByMetadataQueryForCollection(java.util.List, java.lang.String, int, boolean)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.pub.CollectionAO#
+	 * findMetadataValuesByMetadataQueryForCollection(java.util.List,
+	 * java.lang.String, int, boolean)
 	 */
 	@Override
 	public List<MetaDataAndDomainData> findMetadataValuesByMetadataQueryForCollection(
 			final List<AVUQueryElement> avuQuery,
-			final String collectionAbsolutePath, final int partialStartIndex, final boolean caseInsensitive)
-			throws JargonQueryException, JargonException {
+			final String collectionAbsolutePath, final int partialStartIndex,
+			final boolean caseInsensitive) throws FileNotFoundException, JargonQueryException,
+			JargonException {
 
 		if (avuQuery == null || avuQuery.isEmpty()) {
 			throw new IllegalArgumentException("null or empty query");
@@ -346,27 +361,21 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 			throw new IllegalArgumentException(
 					"Null absolutePath for collection");
 		}
-		
+
 		if (caseInsensitive) {
-			if (!this.getIRODSServerProperties().isSupportsCaseInsensitiveQueries()) {
-				throw new JargonException("case insensitive queries not supported on this iRODS version");
+			if (!this.getIRODSServerProperties()
+					.isSupportsCaseInsensitiveQueries()) {
+				throw new JargonException(
+						"case insensitive queries not supported on this iRODS version");
 			}
 		}
-
-		String absPath;
-
-		if (collectionAbsolutePath.isEmpty()) {
-			absPath = "";
-		} else {
-			log.info("looking up collection id via objStat");
-			absPath = IRODSDataConversionUtil.escapeSingleQuotes(collectionAbsolutePath);
-		}
-
-		log.info("absPath for querying iCAT:{}", absPath);
+		
+		log.info("absPath for querying iCAT:{}", collectionAbsolutePath);
 
 		log.info("building a metadata query for: {}", avuQuery);
 
-		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, caseInsensitive, null);
+		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true,
+				caseInsensitive, null);
 		IRODSQueryResultSetInterface resultSet;
 
 		try {
@@ -378,9 +387,11 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 							RodsGenQueryEnum.COL_META_COLL_ATTR_VALUE)
 					.addSelectAsGenQueryValue(
 							RodsGenQueryEnum.COL_META_COLL_ATTR_UNITS);
-			
-			if (!absPath.isEmpty()) {
-				builder.addConditionAsGenQueryField(RodsGenQueryEnum.COL_COLL_NAME, QueryConditionOperators.EQUAL, absPath);
+
+			if (!collectionAbsolutePath.isEmpty()) {
+				builder.addConditionAsGenQueryField(
+						RodsGenQueryEnum.COL_COLL_NAME,
+						QueryConditionOperators.EQUAL, collectionAbsolutePath);
 			}
 
 			for (AVUQueryElement queryElement : avuQuery) {
@@ -392,16 +403,17 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 					.exportIRODSQueryFromBuilder(this.getJargonProperties()
 							.getMaxFilesAndDirsQueryMax());
 
-			if (absPath.isEmpty()) {
+			if (collectionAbsolutePath.isEmpty()) {
 
 				resultSet = irodsGenQueryExecutor
 						.executeIRODSQueryAndCloseResult(irodsQuery,
 								partialStartIndex);
 			} else {
-				String zone = MiscIRODSUtils.getZoneInPath(absPath);
+
+				ObjStat objStat = this.getObjectStatForAbsolutePath(collectionAbsolutePath);
 				resultSet = irodsGenQueryExecutor
 						.executeIRODSQueryAndCloseResultInZone(irodsQuery,
-								partialStartIndex, zone);
+								partialStartIndex, objStat.getOwnerZone());
 			}
 		} catch (GenQueryBuilderException e) {
 			log.error("error building query", e);
@@ -415,7 +427,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 				.buildMetaDataAndDomainDatalistFromResultSet(
 						MetadataDomain.COLLECTION, resultSet);
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -520,6 +532,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 	public void modifyAvuValueBasedOnGivenAttributeAndUnit(
 			final String absolutePath, final AvuData avuData)
 			throws DataNotFoundException, JargonException {
+		
 		if (absolutePath == null || absolutePath.isEmpty()) {
 			throw new IllegalArgumentException("null or empty absolutePath");
 		}
@@ -630,7 +643,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 	@Override
 	public List<MetaDataAndDomainData> findMetadataValuesForCollection(
 			final String collectionAbsolutePath, final int partialStartIndex)
-			throws JargonException, JargonQueryException {
+			throws FileNotFoundException, JargonException, JargonQueryException {
 
 		if (collectionAbsolutePath == null || collectionAbsolutePath.isEmpty()) {
 			throw new IllegalArgumentException(
@@ -645,23 +658,14 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 		log.info("find metadata values for collection:{}",
 				collectionAbsolutePath);
 		log.info("with partial start of:{}", partialStartIndex);
-		
+
 		String absPath;
 		ObjStat objStat = null;
 
 		if (collectionAbsolutePath.isEmpty()) {
 			absPath = "";
 		} else {
-			log.info("looking up collection id via objStat");
-			CollectionAndDataObjectListAndSearchAO collectionAndDataObjectListAndSearchAO = this
-					.getIRODSAccessObjectFactory()
-					.getCollectionAndDataObjectListAndSearchAO(
-							getIRODSAccount());
-			objStat = collectionAndDataObjectListAndSearchAO
-					.retrieveObjectStatForPath(collectionAbsolutePath);
-
-			// make sure this special coll type has support
-			MiscIRODSUtils.evaluateSpecCollSupport(objStat);
+			objStat = getObjectStatForAbsolutePath(collectionAbsolutePath);
 
 			// get absolute path to use for querying iCAT (could be a soft link)
 			absPath = IRODSDataConversionUtil.escapeSingleQuotes(MiscIRODSUtils
@@ -669,7 +673,6 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 		}
 
 		log.info("absPath for querying iCAT:{}", absPath);
-
 
 		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, null);
 		IRODSQueryResultSetInterface resultSet;
@@ -683,19 +686,18 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 							RodsGenQueryEnum.COL_META_COLL_ATTR_VALUE)
 					.addSelectAsGenQueryValue(
 							RodsGenQueryEnum.COL_META_COLL_ATTR_UNITS)
-					.addConditionAsGenQueryField(RodsGenQueryEnum.COL_COLL_NAME, QueryConditionOperators.EQUAL, absPath);
+					.addConditionAsGenQueryField(
+							RodsGenQueryEnum.COL_COLL_NAME,
+							QueryConditionOperators.EQUAL, absPath);
 
 			IRODSGenQueryFromBuilder irodsQuery = builder
 					.exportIRODSQueryFromBuilder(this.getJargonProperties()
 							.getMaxFilesAndDirsQueryMax());
 
-			
-				String zone = MiscIRODSUtils.getZoneInPath(objStat
-						.getAbsolutePath());
-				resultSet = irodsGenQueryExecutor
-						.executeIRODSQueryAndCloseResultInZone(irodsQuery,
-								partialStartIndex, zone);
-			
+			resultSet = irodsGenQueryExecutor
+					.executeIRODSQueryAndCloseResultInZone(irodsQuery,
+							partialStartIndex, objStat.getOwnerZone());
+
 		} catch (GenQueryBuilderException e) {
 			log.error("error building query", e);
 			throw new JargonException("error building query", e);
@@ -828,7 +830,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 	 */
 	@Override
 	public int countAllFilesUnderneathTheGivenCollection(
-			final String irodsCollectionAbsolutePath) throws JargonException {
+			final String irodsCollectionAbsolutePath) throws FileNotFoundException, JargonException {
 
 		if (irodsCollectionAbsolutePath == null) {
 			throw new IllegalArgumentException(
@@ -840,9 +842,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 
 		// not found exception will occur in retrieval of objStat, also checks
 		// if I can handle this coll type
-		ObjStat objStat = this.collectionAndDataObjectListAndSearchAO
-				.retrieveObjectStatForPath(irodsCollectionAbsolutePath);
-		MiscIRODSUtils.evaluateSpecCollSupport(objStat);
+		ObjStat objStat =getObjectStatForAbsolutePath(irodsCollectionAbsolutePath);
 
 		// I cannot get children if this is not a directory (a file has no
 		// children)
@@ -879,8 +879,8 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 		IRODSQueryResultSetInterface resultSet;
 
 		try {
-			resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResult(
-					irodsQuery, 0);
+			resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResultInZone(
+					irodsQuery, 0, objStat.getOwnerZone());
 		} catch (JargonQueryException e) {
 			log.error("query exception for  query:" + query.toString(), e);
 			throw new JargonException("error in exists query");
@@ -1197,14 +1197,15 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 	 */
 	@Override
 	public boolean isCollectionSetForPermissionInheritance(
-			final String absolutePath) throws JargonException {
+			final String absolutePath) throws FileNotFoundException, JargonException {
 
 		if (absolutePath == null || absolutePath.isEmpty()) {
 			throw new IllegalArgumentException(
 					"null or empty absolutePathToCollection");
 		}
 
-		String absPath = this.resolveAbsolutePathViaObjStat(absolutePath);
+		ObjStat objStat = this.getObjectStatForAbsolutePath(absolutePath);
+		String absPath = this.resolveAbsolutePathGivenObjStat(objStat);
 
 		IRODSGenQueryExecutor irodsGenQueryExecutor = getIRODSAccessObjectFactory()
 				.getIRODSGenQueryExecutor(getIRODSAccount());
@@ -1214,8 +1215,8 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 		IRODSQueryResultSetInterface resultSet;
 
 		try {
-			resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResult(
-					irodsQuery, 0);
+			resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResultInZone(
+					irodsQuery, 0, objStat.getOwnerZone());
 		} catch (JargonQueryException e) {
 			throw new JargonException("error querying for inheritance flag", e);
 		}
@@ -1241,7 +1242,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 	@Override
 	public FilePermissionEnum getPermissionForCollection(
 			final String irodsAbsolutePath, final String userName,
-			final String zone) throws JargonException {
+			final String zone) throws FileNotFoundException, JargonException {
 
 		if (irodsAbsolutePath == null || irodsAbsolutePath.isEmpty()) {
 			throw new IllegalArgumentException(
@@ -1258,7 +1259,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 
 		log.info("getPermissionForCollection for absPath:{}", irodsAbsolutePath);
 		log.info("userName:{}", userName);
-
+		
 		IRODSFileSystemAO irodsFileSystemAO = getIRODSAccessObjectFactory()
 				.getIRODSFileSystemAO(getIRODSAccount());
 		IRODSFileFactory irodsFileFactory = this.getIRODSFileFactory();
@@ -1279,10 +1280,11 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 	 * @param absolutePath
 	 * @param recursive
 	 * @return
+	 * @throws FileNotFoundException if the underlying file is not found by the absolute path
 	 * @throws JargonException
 	 */
 	private boolean adjustRecursiveOption(final String absolutePath,
-			final boolean recursive) throws JargonException {
+			final boolean recursive) throws  FileNotFoundException, JargonException {
 
 		IRODSFile collFile = this.getIRODSFileFactory().instanceIRODSFile(
 				absolutePath);
@@ -1321,7 +1323,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 	@FederationEnabled
 	public UserFilePermission getPermissionForUserName(
 			final String irodsCollectionAbsolutePath, final String userName)
-			throws JargonException {
+			throws FileNotFoundException, JargonException {
 
 		UserFilePermission userFilePermission = null;
 
@@ -1340,14 +1342,11 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 				irodsCollectionAbsolutePath);
 		log.info("   userName:{}", userName);
 
-		String absPath = this
-				.resolveAbsolutePathViaObjStat(irodsCollectionAbsolutePath);
+		ObjStat objStat = this.getObjectStatForAbsolutePath(irodsCollectionAbsolutePath);
+		String absPath = this.resolveAbsolutePathGivenObjStat(objStat);
 
 		String theUser = MiscIRODSUtils.getUserInUserName(userName);
 		String theZone = MiscIRODSUtils.getZoneInUserName(userName);
-
-		String collectionZone = MiscIRODSUtils.getZoneInPath(absPath);
-
 		IRODSGenQueryExecutor irodsGenQueryExecutor = getIRODSAccessObjectFactory()
 				.getIRODSGenQueryExecutor(getIRODSAccount());
 
@@ -1377,7 +1376,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 		try {
 			resultSet = irodsGenQueryExecutor
 					.executeIRODSQueryAndCloseResultInZone(irodsQuery, 0,
-							collectionZone);
+							objStat.getOwnerZone());
 			IRODSQueryResultRow row = resultSet.getFirstResult();
 
 			/**
@@ -1394,7 +1393,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 			userAndZone.append('#');
 			userAndZone.append(row.getColumn(1));
 
-			if (row.getColumn(1).equals(collectionZone)) {
+			if (row.getColumn(1).equals(objStat.getOwnerZone())) {
 				displayUserName = row.getColumn(0);
 			} else {
 				displayUserName = userAndZone.toString();
@@ -1442,10 +1441,9 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 		log.info("listPermissionsForCollection: {}",
 				irodsCollectionAbsolutePath);
 
-		String absPath = this
-				.resolveAbsolutePathViaObjStat(irodsCollectionAbsolutePath);
 
-		String collectionZone = MiscIRODSUtils.getZoneInPath(absPath);
+		ObjStat objStat = this.getObjectStatForAbsolutePath(irodsCollectionAbsolutePath);
+		String absPath = this.resolveAbsolutePathGivenObjStat(objStat);
 
 		List<UserFilePermission> userFilePermissions = new ArrayList<UserFilePermission>();
 
@@ -1468,14 +1466,14 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 
 		User user = null;
 		try {
-			resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResult(
-					irodsQuery, 0);
+			resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResultInZone(
+					irodsQuery, 0, objStat.getOwnerZone());
 
 			UserFilePermission userFilePermission = null;
 
 			for (IRODSQueryResultRow row : resultSet.getResults()) {
 
-				user = userAO.findByIdInZone(row.getColumn(2), collectionZone);
+				user = userAO.findByIdInZone(row.getColumn(2), objStat.getOwnerZone());
 				userFilePermission = new UserFilePermission(row.getColumn(0),
 						row.getColumn(2),
 						FilePermissionEnum.valueOf(IRODSDataConversionUtil

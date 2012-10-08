@@ -758,7 +758,8 @@ public final class IRODSTaggingServiceImpl extends AbstractIRODSTaggingService
 					.findMetadataValuesByMetadataQueryForCollection(
 							avuQueryElements, irodsAbsolutePath);
 		} catch (FileNotFoundException fnf) {
-			throw new DataNotFoundException("did not find data object in query", fnf);
+			log.error("did not find data object in query, will return empty list");
+			 return new ArrayList<IRODSTagValue>();
 		} catch (JargonQueryException e) {
 			log.error("error on metadata query, rethrow as JargonException", e);
 			throw new JargonException(e);
