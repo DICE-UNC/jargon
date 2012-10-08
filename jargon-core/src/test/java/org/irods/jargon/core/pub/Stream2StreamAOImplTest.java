@@ -226,4 +226,58 @@ public class Stream2StreamAOImplTest {
 				irodsFile.length(), actual.length);
 
 	}
+	
+	/**
+	 * [#1004] irods output stream errors writing to a file not under /zone/home
+	 * @throws Exception
+	 */
+	@Test
+	public void testStreamToIRODSFileUsingStreamIOAsRodsUnderRoot() throws Exception {
+		String dirUnderRoot = "testStreamToIRODSFileUsingStreamIOAsRodsUnderRoot";
+		String testFileName = "testStreamToIRODSFileUsingStreamIO.txt";
+		String targetIrodsCollection = "/" + dirUnderRoot;
+		
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAdminAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory irodsAccessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+		
+		IRODSFile collFile = irodsFileSystem.getIRODSFileFactory(irodsAccount).instanceIRODSFile(targetIrodsCollection);
+		collFile.deleteWithForceOption();
+		collFile.reset();
+		collFile.mkdirs();
+		
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String localFilePath = FileGenerator
+				.generateFileOfFixedLengthGivenName(absPath, testFileName, 8);
+		File localFile = new File(localFilePath);
+		BufferedInputStream inputStream = new BufferedInputStream(
+				new FileInputStream(localFile));
+		
+		IRODSFile targetIrodsFile = irodsAccessObjectFactory
+				.getIRODSFileFactory(irodsAccount).instanceIRODSFile(
+						targetIrodsCollection + "/" + testFileName);
+		targetIrodsFile.delete();
+		targetIrodsFile.reset();
+
+		Stream2StreamAO stream2StreamAO = irodsAccessObjectFactory
+				.getStream2StreamAO(irodsAccount);
+		stream2StreamAO.transferStreamToFileUsingIOStreams(inputStream,
+				(File) targetIrodsFile, localFile.length(), 0);
+
+		Assert.assertTrue("file does not exist", targetIrodsFile.exists());
+		Assert.assertTrue("no data in target file",
+				targetIrodsFile.length() > 0);
+
+	}
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }
