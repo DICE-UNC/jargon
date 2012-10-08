@@ -8,6 +8,14 @@
 
 Work in progress for iRODS 3.X release including support for pluggable authentication methods, this includes support for PAM
 
+
+==News==
+=======
+
+NOTE: This RELEASE is a maintenance release to coincide with the release of iRODS 3.2.  This originates from the GIT release branch, and represents the latest bug fixes and small features.  It is planned to simultaneously release a Jargon 3.2.0.1 beta that will include refactoring and more features.  Please consult the Jargon page at GForge for news and release details
+
+https://code.renci.org/gf/project/jargon/
+
 Jargon-core implements the iRODS protocol, and allows development of iRODS-enabled Java applications.  This API is especially useful for developing
 mid-tier applications and services, as well as desktop-clients (such as iDROP).  These libraries also provide a foundation for a new set of interfaces that will come with iRODS.
 
