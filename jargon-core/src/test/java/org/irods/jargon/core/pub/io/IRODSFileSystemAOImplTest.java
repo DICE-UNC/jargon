@@ -949,8 +949,7 @@ public class IRODSFileSystemAOImplTest {
 		IRODSFileSystemAO fileSystemAO = accessObjectFactory
 				.getIRODSFileSystemAO(irodsAccount);
 
-		ObjectType dataType = fileSystemAO
-				.getFileDataType(irodsFile);
+		ObjectType dataType = fileSystemAO.getFileDataType(irodsFile);
 		irodsSession.closeSession();
 
 		Assert.assertEquals("did not get expected data type for a file",
@@ -981,8 +980,7 @@ public class IRODSFileSystemAOImplTest {
 		IRODSFileSystemAO fileSystemAO = accessObjectFactory
 				.getIRODSFileSystemAO(irodsAccount);
 
-		ObjectType dataType = fileSystemAO
-				.getFileDataType(irodsFile);
+		ObjectType dataType = fileSystemAO.getFileDataType(irodsFile);
 		irodsSession.closeSession();
 
 		Assert.assertEquals("did not get expected data type for a directory",

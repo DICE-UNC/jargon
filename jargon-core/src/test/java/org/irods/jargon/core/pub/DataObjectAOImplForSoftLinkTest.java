@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Properties;
 
 import junit.framework.Assert;
-import junit.framework.TestCase;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.protovalues.UserTypeEnum;
@@ -100,21 +99,20 @@ public class DataObjectAOImplForSoftLinkTest {
 				targetIrodsCollection);
 
 		DataObjectAO dataObjectAO = irodsFileSystem
-				.getIRODSAccessObjectFactory()
-				.getDataObjectAO(irodsAccount);
+				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
 
 		// find by the soft link path
 
 		DataObject dataObject = dataObjectAO.findByCollectionNameAndDataName(
 				targetIrodsCollection, testFileName);
-		TestCase.assertNotNull("did not find data object by soft link name",
+		Assert.assertNotNull("did not find data object by soft link name",
 				dataObject);
-		TestCase.assertEquals("should have the requested col name",
+		Assert.assertEquals("should have the requested col name",
 				targetIrodsCollection, dataObject.getCollectionName());
-		TestCase.assertEquals("shold reflect the canonical col in objPath",
+		Assert.assertEquals("shold reflect the canonical col in objPath",
 				sourceIrodsCollection + "/" + testFileName,
 				dataObject.getObjectPath());
-		TestCase.assertEquals("should be a special coll",
+		Assert.assertEquals("should be a special coll",
 				SpecColType.LINKED_COLL, dataObject.getSpecColType());
 
 	}
@@ -466,7 +464,6 @@ public class DataObjectAOImplForSoftLinkTest {
 		AvuData avuData = AvuData.instance(expectedAttribName,
 				expectedValueName, "");
 
-
 		String targetIrodsDataObject = targetIrodsCollection + "/"
 				+ testFileName;
 
@@ -781,18 +778,18 @@ public class DataObjectAOImplForSoftLinkTest {
 						irodsAccount);
 
 		dataTransferOperationsAO.putOperation(localFile, destFile, null, null);
-		
+
 		destFile.reset();
-		
+
 		IRODSFile newFileLocation = irodsFileSystem.getIRODSFileFactory(
 				irodsAccount).instanceIRODSFile(destFile.getParentFile(),
 				testNewFileName);
-		
+
 		destFile.renameTo(newFileLocation);
-		TestCase.assertTrue("new file should exist", newFileLocation.exists());
+		Assert.assertTrue("new file should exist", newFileLocation.exists());
 		destFile.reset();
-		TestCase.assertFalse("old file should not exist", destFile.exists());
-		
+		Assert.assertFalse("old file should not exist", destFile.exists());
+
 	}
 
 }

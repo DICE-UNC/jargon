@@ -1,6 +1,7 @@
 package org.irods.jargon.core.unittest;
 
 import org.irods.jargon.core.pub.BulkFileOperationsAOImplTest;
+import org.irods.jargon.core.pub.CollectionAOImplForSoftLinkTest;
 import org.irods.jargon.core.pub.CollectionAOImplTest;
 import org.irods.jargon.core.pub.CollectionAndDataObjectListAndSearchAOImplForSoftLinksTest;
 import org.irods.jargon.core.pub.CollectionAndDataObjectListAndSearchAOImplTest;
@@ -60,6 +61,7 @@ import org.junit.runners.Suite;
 		MountedCollectionAOImplTest.class,
 		CollectionAndDataObjectListAndSearchAOImplForSoftLinksTest.class,
 		DataObjectAOImplForSoftLinkTest.class,
+		CollectionAOImplForSoftLinkTest.class,
 		DataTransferOperationsImplForSoftLinksTest.class,
 		ResourceGroupAOImplTest.class, CollectionAuditAOImplTest.class,
 		IRODSGenQueryExecutorImplBuiilderQueriesTest.class,

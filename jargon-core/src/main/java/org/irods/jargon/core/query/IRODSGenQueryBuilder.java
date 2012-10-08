@@ -29,9 +29,55 @@ public class IRODSGenQueryBuilder {
 	private final List<GenQueryBuilderCondition> conditions = new ArrayList<GenQueryBuilderCondition>();
 	private final List<GenQueryOrderByField> orderByFields = new ArrayList<GenQueryOrderByField>();
 	private final boolean distinct;
+	private final boolean upperCase;
+
+
 	@SuppressWarnings("unused")
 	private final ExtensibleMetaDataMapping extensibleMetadataMapping;
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("\n\t distinct? ");
+		sb.append(distinct);
+		sb.append("\n\t  upperCase? ");
+		sb.append(upperCase);
+		sb.append("IRODSGenQueryBuilder");
+		sb.append("\n\t  selects:");
+		sb.append(selectFields);
+		sb.append("\n\t conditions:");
+		sb.append(conditions);
+		sb.append("\n\t  orderByFields:");
+		sb.append(orderByFields);
+		return sb.toString();
+	}
 
+	/**
+	 * Constructor takes an optional <code>ExtensibleMetadataMapping</code> if
+	 * extensible metadata is to be used in the query processing.
+	 * <p/>
+	 * This version allows the specification of case insensitive queries
+	 * 
+	 * @param distinct
+	 *            <code>boolean</code> that indicates whether the select is
+	 *            distinct
+	 * @param upperCase
+	 * 			  <code>boolean</code> which indicates that upper case should be used in the where (case-insensitive queries)
+	 * @param extensibleMetadataMapping
+	 *            {@link ExtensibleMetadataMapping} that may be used in queries.
+	 *            This can be <code>null</code> if not required
+	 */
+	public IRODSGenQueryBuilder(final boolean distinct, final boolean upperCase,
+			final ExtensibleMetaDataMapping extensibleMetadataMapping) {
+		this.extensibleMetadataMapping = extensibleMetadataMapping;
+		this.distinct = distinct;
+		this.upperCase = upperCase;
+
+	}
+	
 	/**
 	 * Constructor takes an optional <code>ExtensibleMetadataMapping</code> if
 	 * extensible metadata is to be used in the query processing.
@@ -47,8 +93,10 @@ public class IRODSGenQueryBuilder {
 			final ExtensibleMetaDataMapping extensibleMetadataMapping) {
 		this.extensibleMetadataMapping = extensibleMetadataMapping;
 		this.distinct = distinct;
+		this.upperCase = false;
 
 	}
+
 
 	/**
 	 * Add a select represented by a value in <code>RodsGenQueryEnum</code>.
@@ -186,8 +234,8 @@ public class IRODSGenQueryBuilder {
 			throw new IllegalArgumentException("null operator");
 		}
 
-		if (value == null || value.isEmpty()) {
-			throw new IllegalArgumentException("null or empty value");
+		if (value == null) {
+			throw new IllegalArgumentException("null unit value");
 		}
 
 		/*
@@ -327,7 +375,7 @@ public class IRODSGenQueryBuilder {
 					"numberOfResultsDesired must be >= 1");
 		}
 		IRODSGenQueryBuilderQueryData queryData = IRODSGenQueryBuilderQueryData
-				.instance(selectFields, conditions, orderByFields, distinct);
+				.instance(selectFields, conditions, orderByFields, distinct, upperCase);
 
 		if (!queryData.isQueryValid()) {
 			throw new GenQueryBuilderException(
@@ -336,6 +384,14 @@ public class IRODSGenQueryBuilder {
 
 		return IRODSGenQueryFromBuilder.instance(queryData,
 				numberOfResultsDesired);
+	}
+	
+	/**
+	 * Is this a case-insensitive query?  (supported in iRODS 3.2 and higher)
+	 * @return
+	 */
+	public boolean isUpperCase() {
+		return upperCase;
 	}
 
 }

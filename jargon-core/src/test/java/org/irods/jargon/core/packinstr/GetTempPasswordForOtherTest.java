@@ -1,7 +1,6 @@
 package org.irods.jargon.core.packinstr;
 
 import junit.framework.Assert;
-import junit.framework.TestCase;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -29,8 +28,8 @@ public class GetTempPasswordForOtherTest {
 		sb.append("</getTempPasswordForOtherInp_PI>\n");
 
 		String tagValue = instance.getParsedTags();
-		TestCase.assertNotNull("no tag value returned", tagValue);
-		TestCase.assertEquals("did not get expected tags", sb.toString(),
+		Assert.assertNotNull("no tag value returned", tagValue);
+		Assert.assertEquals("did not get expected tags", sb.toString(),
 				tagValue);
 
 	}

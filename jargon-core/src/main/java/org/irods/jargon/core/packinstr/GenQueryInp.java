@@ -35,9 +35,9 @@ public class GenQueryInp extends AbstractIRODSPackingInstruction implements
 	public static final String INX_VAL_PAIR_PI = "InxValPair_PI";
 	public static final String INX_IVAL_PAIR_PI = "InxIvalPair_PI";
 
-	// working on this....no order by yet
 	public static final int ORDER_BY = 1024;// 0x400;
 	public static final int ORDER_BY_DESC = 2048;// 0x800;
+	public static final int UPPER_CASE_WHERE = 512; // 0x200;
 
 	public static final int API_NBR = 702;
 
@@ -193,12 +193,17 @@ public class GenQueryInp extends AbstractIRODSPackingInstruction implements
 				new Tag(CONTINUE_INX, continueIndex), // new query
 				new Tag(PARTIAL_START_INDEX, partialStartIndex) });
 
-		// set distinct;
-		if (this.getTranslatedIRODSQuery().isDistinct()) {
-			message.addTag(new Tag(IRODSConstants.options, 0));
-		} else {
-			message.addTag(new Tag(IRODSConstants.options, 1));
+		int optionVal = 0;
+
+		if (!this.getTranslatedIRODSQuery().isDistinct()) {
+			optionVal += 1;
 		}
+
+		if (this.getTranslatedIRODSQuery().isUpperCase()) {
+			optionVal += UPPER_CASE_WHERE;
+		}
+
+		message.addTag(new Tag(IRODSConstants.options, optionVal));
 
 		/*
 		 * If a zoneName is specified, this means the query is for another

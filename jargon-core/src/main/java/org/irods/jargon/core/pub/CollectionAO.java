@@ -78,6 +78,29 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	List<Collection> findDomainByMetadataQuery(
 			List<AVUQueryElement> avuQueryElements)
 			throws JargonQueryException, JargonException;
+	
+	/**
+	 * Given a set of metadata query parameters, return a list of IRODS
+	 * Collections that match the metadata query.
+	 * <p/>
+	 * This version of the method allows specification of a case-insensitive AVU query
+	 * 
+	 * @param avuQueryElements
+	 *            <code>List</code> of
+	 *            {@link org.irods.jargon.core.query.AVUQueryElements} with the
+	 *            query specification
+	 *  @param caseInsensitive <code>boolean</code> that will cause the AVU query to be case-insensitive
+	 * @return <code>List</code> of org.irods.jargon.core.pub.domain.Collection}
+	 *         with domain objects that satisfy the query.
+	 * @throws JargonQueryException
+	 * @throws JargonException
+	 */
+	List<Collection> findDomainByMetadataQuery(
+			List<AVUQueryElement> avuQueryElements, int partialStartIndex,
+			boolean caseInsensitive) throws JargonQueryException,
+			JargonException;
+	
+	
 
 	/**
 	 * Get a summary list of collections and data objects and AVU metadata based
@@ -95,6 +118,27 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	List<MetaDataAndDomainData> findMetadataValuesByMetadataQuery(
 			List<AVUQueryElement> avuQuery) throws JargonQueryException,
 			JargonException;
+	
+	/**
+	 * Get a summary list of collections and data objects and AVU metadata based
+	 * on a meta-data query
+	 * <p/> 
+	 * 
+	 * 
+	 * @param avuQuery
+	 *            <code>List</code> of
+	 *            {@link org.irods.jargon.core.query.AVUQueryElements} with the
+	 *            query specification
+	 *   @param caseInsensitive <code>boolean</code> that, when <code>true</code> will do case insensitive avu queries
+	 * @return <code>List</code> of
+	 *         {@link org.irods.jargon.core.query.MetaDataAndDomainData}
+	 * @throws JargonQueryException
+	 * @throws JargonException
+	 */
+	List<MetaDataAndDomainData> findMetadataValuesByMetadataQuery(
+			List<AVUQueryElement> avuQuery, boolean caseInsensitive)
+			throws JargonQueryException, JargonException;
+
 
 	/**
 	 * Add AVU metadata for this collection. *
@@ -165,6 +209,37 @@ public interface CollectionAO extends FileCatalogObjectAO {
 			final List<AVUQueryElement> avuQuery,
 			final String collectionAbsolutePath) throws JargonQueryException,
 			JargonException;
+	
+	/**
+	 * List the AVU metadata for a particular collection, as well as information
+	 * identifying the Collection associated with that metadata, based on a
+	 * metadata query.
+	 * <p/>
+	 * Note that this method will work across zones, so that if the given
+	 * collection path is in a federated zone, the query will be made against
+	 * that zone.
+	 * <p/>
+	 * Note that for soft links, metadata is associated with the given path, so
+	 * a soft link and a canonical path may each have different AVU metadata.
+	 * This method takes the path as given and finds that metadata.
+	 * <p/>
+	 * This method allows request for case-insensitive AVU queries
+	 * 
+	 * @param avuQuery
+	 *            <code>List</code> of
+	 *            {@link org.irods.jargon.core.query.AVUQueryElement} that
+	 *            defines the metadata query
+	 * @param <code>String with the absolute path of the collection of interest.  If this path
+	 * is left blank, then the query will not add absolute path to the 'where' clause.
+	 * @param <code>boolean</code> indicates that this is a case-insensitive query.
+	 * @return <code>List</code> of
+	 *         {@link org.irods.jargon.core.query.MetaDataAndDomainData}
+	 * @throws JargonQueryException
+	 * @throws JargonException
+	 */
+	List<MetaDataAndDomainData> findMetadataValuesByMetadataQueryForCollection(
+			List<AVUQueryElement> avuQuery, String collectionAbsolutePath,
+			int partialStartIndex, boolean caseInsensitive) 	throws JargonQueryException, JargonException;
 
 	/**
 	 * Get a list of the metadata values for the given collection absolute path.
@@ -234,33 +309,6 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	 */
 	List<Collection> findDomainByMetadataQuery(
 			final List<AVUQueryElement> avuQueryElements,
-			final int partialStartIndex) throws JargonQueryException,
-			JargonException;
-
-	/**
-	 * List the AVU metadata for a particular collection, as well as information
-	 * about the collection itself, based on a metadata query.
-	 * <p/>
-	 * Note that it is up to the caller to query the correct zone, this method
-	 * will not do this query across zones.
-	 * 
-	 * @param avuQuery
-	 *            <code>List</code> of
-	 *            {@link org.irods.jargon.core.query.AVUQueryElement} that
-	 *            defines the metadata query
-	 * @param additionalWhere
-	 *            <code>String</code> with additional conditions to further
-	 *            limit the query, set to blank if unused.
-	 * @param partialStartIndex
-	 *            <code>int</code> with the starting point to return results. 0
-	 *            indicates no offset.
-	 * @return <code>List</code> of
-	 *         {@link org.irods.jargon.core.query.MetaDataAndDomainData}
-	 * @throws JargonQueryException
-	 * @throws JargonException
-	 */
-	List<MetaDataAndDomainData> findMetadataValuesByMetadataQueryWithAdditionalWhere(
-			final List<AVUQueryElement> avuQuery, final String additionalWhere,
 			final int partialStartIndex) throws JargonQueryException,
 			JargonException;
 
@@ -762,5 +810,6 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	 */
 	Collection findGivenObjStat(ObjStat objStat) throws DataNotFoundException,
 			JargonException;
+
 
 }

@@ -3,7 +3,6 @@ package org.irods.jargon.core.pub;
 import java.util.Properties;
 
 import junit.framework.Assert;
-import junit.framework.TestCase;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.CollectionNotEmptyException;
@@ -46,7 +45,7 @@ public class MountedCollectionAOImplTest {
 	public static void tearDownAfterClass() throws Exception {
 		irodsFileSystem.closeAndEatExceptions();
 	}
-	
+
 	/**
 	 * Unmount a soft link that does not exist
 	 * 
@@ -70,8 +69,8 @@ public class MountedCollectionAOImplTest {
 						irodsAccount);
 		boolean success = mountedCollectionAO.unmountACollection(
 				targetIrodsCollection, "");
-		TestCase.assertFalse("should get no success", success);
-		
+		Assert.assertFalse("should get no success", success);
+
 	}
 
 	/**
@@ -139,13 +138,13 @@ public class MountedCollectionAOImplTest {
 		ObjStat statForSoftLinkedFile = listAndSearchAO
 				.retrieveObjectStatForPath(softLinkedSourceFileName);
 
-		TestCase.assertEquals("did not set the objPath", targetIrodsCollection,
+		Assert.assertEquals("did not set the objPath", targetIrodsCollection,
 				statForSoftLinkedFile.getCollectionPath());
-		TestCase.assertEquals("did not identify as a linked coll",
+		Assert.assertEquals("did not identify as a linked coll",
 				ObjStat.SpecColType.LINKED_COLL,
 				statForSoftLinkedFile.getSpecColType());
 
-		TestCase.assertTrue("did not get the soft linked file",
+		Assert.assertTrue("did not get the soft linked file",
 				statForSoftLinkedFile.getObjectType() == ObjectType.DATA_OBJECT);
 
 	}
@@ -217,7 +216,7 @@ public class MountedCollectionAOImplTest {
 		ObjStat statForSoftLinkedFile = listAndSearchAO
 				.retrieveObjectStatForPath(softLinkedSourceFileName);
 
-		TestCase.assertTrue("did not get the soft linked file",
+		Assert.assertTrue("did not get the soft linked file",
 				statForSoftLinkedFile.getObjectType() == ObjectType.DATA_OBJECT);
 
 	}

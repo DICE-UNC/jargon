@@ -1071,7 +1071,6 @@ public class UserAOTest {
 		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
 				.getIRODSAccessObjectFactory();
 
-
 		UserAO userAO = accessObjectFactory.getUserAO(irodsAccount);
 		String tempUserName = testingProperties
 				.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY);
@@ -1079,7 +1078,7 @@ public class UserAOTest {
 		boolean gotException = false;
 
 		try {
-		userAO.getTemporaryPasswordForASpecifiedUser(tempUserName);
+			userAO.getTemporaryPasswordForASpecifiedUser(tempUserName);
 		} catch (UnsupportedOperationException uoe) {
 			// being called on a version prior to 3.1
 			return;

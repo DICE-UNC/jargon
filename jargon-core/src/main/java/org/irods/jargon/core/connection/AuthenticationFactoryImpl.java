@@ -40,10 +40,7 @@ public class AuthenticationFactoryImpl implements AuthenticationFactory {
 
 		log.info("authScheme:{}", authScheme);
 
-		if (authScheme.equals(AuthScheme.GSI.name())) {
-			log.info("generating GSI Auth");
-			return new GSIAuth();
-		} else if (authScheme.equals(AuthScheme.STANDARD)) {
+		 if (authScheme.equals(AuthScheme.STANDARD)) {
 			log.info("using standard auth");
 			return new StandardIRODSAuth();
 		} else if (authScheme.equals(AuthScheme.PAM)) {

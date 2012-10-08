@@ -7,7 +7,6 @@ import java.io.File;
 import java.util.Properties;
 
 import junit.framework.Assert;
-import junit.framework.TestCase;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.pub.io.IRODSFile;
@@ -78,10 +77,10 @@ public class IRODSGenQueryExecutorImplBuiilderQueriesTest {
 
 		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, null);
 
-		builder.addSelectAsAgregateGenQueryValue(
-				RodsGenQueryEnum.COL_COLL_ID, SelectFieldTypes.COUNT)
-				.addConditionAsGenQueryField(RodsGenQueryEnum.COL_D_OWNER_ZONE,
-						QueryConditionOperators.EQUAL, irodsAccount.getZone());
+		builder.addSelectAsAgregateGenQueryValue(RodsGenQueryEnum.COL_COLL_ID,
+				SelectFieldTypes.COUNT).addConditionAsGenQueryField(
+				RodsGenQueryEnum.COL_D_OWNER_ZONE,
+				QueryConditionOperators.EQUAL, irodsAccount.getZone());
 
 		IRODSGenQueryFromBuilder query = builder.exportIRODSQueryFromBuilder(1);
 
@@ -92,7 +91,7 @@ public class IRODSGenQueryExecutorImplBuiilderQueriesTest {
 		int actualCount = Integer.valueOf(row.getColumn(0));
 		// not a great test as the count is indeterminate, really just looking
 		// for exec errors and that something is returned
-		TestCase.assertTrue("count not produced", actualCount > 0);
+		Assert.assertTrue("count not produced", actualCount > 0);
 
 	}
 
@@ -170,12 +169,15 @@ public class IRODSGenQueryExecutorImplBuiilderQueriesTest {
 		dto.putOperation(localFile, targetSubdir, null, null);
 
 		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, null);
-		
+
 		builder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_NAME)
-		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_NAME)
-		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_SIZE)
-		.addConditionAsGenQueryField(RodsGenQueryEnum.COL_COLL_NAME, QueryConditionOperators.EQUAL, targetSubdir.getAbsolutePath())
-				.addConditionAsGenQueryField(RodsGenQueryEnum.COL_DATA_SIZE,
+				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_NAME)
+				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_SIZE)
+				.addConditionAsGenQueryField(RodsGenQueryEnum.COL_COLL_NAME,
+						QueryConditionOperators.EQUAL,
+						targetSubdir.getAbsolutePath())
+				.addConditionAsGenQueryField(
+						RodsGenQueryEnum.COL_DATA_SIZE,
 						QueryConditionOperators.NUMERIC_GREATER_THAN_OR_EQUAL_TO,
 						smallSize)
 				.addConditionAsGenQueryField(RodsGenQueryEnum.COL_DATA_SIZE,

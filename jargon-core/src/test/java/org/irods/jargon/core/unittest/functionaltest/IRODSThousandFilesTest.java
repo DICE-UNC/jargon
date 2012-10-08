@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Properties;
 
 import junit.framework.Assert;
-import junit.framework.TestCase;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.protovalues.UserTypeEnum;
@@ -46,6 +45,7 @@ public class IRODSThousandFilesTest {
 	private static IRODSFileSystem irodsFileSystem;
 	private static final String testFilePrefix = "thousandFileTest";
 	private static final String testFileSuffix = ".txt";
+
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		TestingPropertiesHelper testingPropertiesLoader = new TestingPropertiesHelper();
@@ -73,7 +73,6 @@ public class IRODSThousandFilesTest {
 		DataTransferOperations dto = irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataTransferOperations(
 						irodsAccount);
-
 
 		// make the put subdir
 		String targetIrodsCollection = testingPropertiesHelper
@@ -247,7 +246,7 @@ public class IRODSThousandFilesTest {
 				fileName.indexOf('.'));
 		System.out.println("nbrPart");
 		int nextNbr = Integer.parseInt(nbrPart) + 1;
-		
+
 		String expectedNextPath = testFilePrefix + nextNbr + testFileSuffix;
 
 		// now query again
@@ -262,7 +261,7 @@ public class IRODSThousandFilesTest {
 		// first entry should be for the expected next file
 		CollectionAndDataObjectListingEntry firstEntryOfSecondQuery = entries
 				.get(0);
-		TestCase.assertEquals(
+		Assert.assertEquals(
 				"did not get the expected first record form the second page of entries",
 				expectedNextPath, firstEntryOfSecondQuery.getPathOrName());
 
@@ -271,11 +270,11 @@ public class IRODSThousandFilesTest {
 
 		expectedNextPath = testFilePrefix + 186 + testFileSuffix;
 
-		TestCase.assertEquals(
+		Assert.assertEquals(
 				"did not get the expected last record form the second page of entries",
 				expectedNextPath, lastEntryOfSecondQuery.getPathOrName());
 
-		TestCase.assertFalse("should not be last record",
+		Assert.assertFalse("should not be last record",
 				lastEntryOfSecondQuery.isLastResult());
 
 		fileName = entries.get(entries.size() - 1).getPathOrName();
@@ -300,7 +299,7 @@ public class IRODSThousandFilesTest {
 		CollectionAndDataObjectListingEntry firstEntryOfThirdQuery = entries
 				.get(0);
 
-		TestCase.assertEquals(
+		Assert.assertEquals(
 				"did not get the expected first record form the third page of entries",
 				expectedNextPath, firstEntryOfThirdQuery.getPathOrName());
 
@@ -309,7 +308,7 @@ public class IRODSThousandFilesTest {
 		CollectionAndDataObjectListingEntry lastEntryOfThirdQuery = entries
 				.get(entries.size() - 1);
 
-		TestCase.assertFalse("should be a fouth page of results",
+		Assert.assertFalse("should be a fouth page of results",
 				lastEntryOfThirdQuery.isLastResult());
 
 		// now query again
@@ -325,7 +324,7 @@ public class IRODSThousandFilesTest {
 		CollectionAndDataObjectListingEntry lastEntryOfFourthQuery = entries
 				.get(entries.size() - 1);
 
-		TestCase.assertFalse("should be a fifth page of results",
+		Assert.assertFalse("should be a fifth page of results",
 				lastEntryOfFourthQuery.isLastResult());
 
 		fileName = lastEntryOfFourthQuery.getPathOrName();
@@ -346,7 +345,7 @@ public class IRODSThousandFilesTest {
 		CollectionAndDataObjectListingEntry firstEntryOfFifthQuery = entries
 				.get(0);
 
-		TestCase.assertEquals(
+		Assert.assertEquals(
 				"did not get the expected first record form the third page of entries",
 				expectedNextPath, firstEntryOfFifthQuery.getPathOrName());
 

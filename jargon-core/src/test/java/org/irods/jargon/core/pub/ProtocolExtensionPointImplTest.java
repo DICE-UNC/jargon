@@ -2,7 +2,7 @@ package org.irods.jargon.core.pub;
 
 import java.util.Properties;
 
-import junit.framework.TestCase;
+import junit.framework.Assert;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
@@ -32,7 +32,6 @@ public class ProtocolExtensionPointImplTest {
 		irodsFileSystem.closeAndEatExceptions();
 	}
 
-
 	@Test
 	public final void testProtocolExtensionPointImpl() throws Exception {
 		IRODSAccount irodsAccount = testingPropertiesHelper
@@ -41,7 +40,7 @@ public class ProtocolExtensionPointImplTest {
 				.getIRODSAccessObjectFactory();
 		ProtocolExtensionPoint pep = accessObjectFactory
 				.getProtocolExtensionPoint(irodsAccount);
-		TestCase.assertNotNull("did not get protocolExtensionPoint", pep);
+		Assert.assertNotNull("did not get protocolExtensionPoint", pep);
 	}
 
 }

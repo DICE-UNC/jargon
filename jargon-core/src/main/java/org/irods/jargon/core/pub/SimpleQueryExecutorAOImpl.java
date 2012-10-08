@@ -4,6 +4,7 @@
 package org.irods.jargon.core.pub;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.irods.jargon.core.connection.IRODSAccount;
@@ -16,6 +17,7 @@ import org.irods.jargon.core.query.AbstractAliasedQuery;
 import org.irods.jargon.core.query.IRODSQueryResultRow;
 import org.irods.jargon.core.query.IRODSQueryResultSetInterface;
 import org.irods.jargon.core.query.IRODSSimpleQueryResultSet;
+import org.irods.jargon.core.query.SimpleQuery;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -53,98 +55,182 @@ public class SimpleQueryExecutorAOImpl extends IRODSGenericAO implements
 		super(irodsSession, irodsAccount);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.core.pub.SimpleQueryExecutorAO#executeSimpleQuery(org.irods.jargon.core.query.SimpleQuery)
+	 */
 	@Override
 	public IRODSQueryResultSetInterface executeSimpleQuery(
 			final AbstractAliasedQuery simpleQuery) throws JargonException {
 
+		List<IRODSQueryResultRow> result;
+		List<String> colNames;
+		IRODSQueryResultSetInterface resultSet;
+		
 		if (simpleQuery == null) {
 			throw new IllegalArgumentException("null simpleQuery");
 		}
 
 		log.info("executeSimpleQuery:{}", simpleQuery);
 
-		SimpleQueryInp simpleQueryInp = SimpleQueryInp.instance(simpleQuery);
+		Tag response = getResponse((SimpleQuery) simpleQuery);
 
+		if (response == null) {
+			log.info("response from IRODS call indicates no rows found");
+
+			resultSet = IRODSSimpleQueryResultSet.instance(
+					simpleQuery, 
+					new ArrayList<IRODSQueryResultRow>(), 
+					new ArrayList<String>(), 
+					false
+			);
+			
+			return resultSet;
+		}
+
+		List<String> rows = extractRows(response);
+		colNames = parseColumnNames(rows);
+		result = generateResultRows(rows, colNames);
+
+		resultSet = IRODSSimpleQueryResultSet.instance(
+				simpleQuery, 
+				result, 
+				colNames, 
+				true
+		);
+		
+		return resultSet;
+	}
+
+	/**
+	 * Passes simpleQuery to the connected iRODS instances and returns a 
+	 * response in the form of a Tag. Returns null if something goes wrong.
+	 * 
+	 * @param  simpleQuery  a SimpleQuery to be run on the server.
+	 * @return  the response as a Tag instance.
+	 */
+	private Tag getResponse(final SimpleQuery simpleQuery) 
+			throws JargonException {
+		SimpleQueryInp simpleQueryInp = SimpleQueryInp.instance(simpleQuery);
 		Tag response = null;
+		
 		try {
 			response = getIRODSProtocol().irodsFunction(simpleQueryInp);
 		} catch (DataNotFoundException dnf) {
 			log.info("no data found");
 		}
+		
+		return response;
+	}
 
-		if (response == null) {
-			log.info("response from IRODS call indicates no rows found");
-			List<IRODSQueryResultRow> result = new ArrayList<IRODSQueryResultRow>();
-
-			IRODSQueryResultSetInterface resultSet = IRODSSimpleQueryResultSet
-					.instance(simpleQuery, result, new ArrayList<String>(),
-							false);
-			return resultSet;
-		}
-
+	/**
+	 * Takes a Tag and turns to into a List<String>. It does this by turning
+	 * the tag into a string and splitting it on newlines.
+	 * 
+	 * @param  response  A Tag, probably the reponse returned by getResponse().
+	 * @return	A List<String> created by splitting the raw tag on newlines.
+	 */
+	private List<String> extractRows(Tag response) {
 		String rawResponse = response.getTag(OUT_BUF).getStringValue();
-		List<IRODSQueryResultRow> result = new ArrayList<IRODSQueryResultRow>();
-		IRODSQueryResultRow irodsQueryResultRow;
-
-		String[] rows = rawResponse.split("\n");
-
+		List<String> rows = Arrays.asList(rawResponse.split("\n"));
+		
+		return rows;
+	}
+	
+	/**
+	 * Divides the rows returned by extractRows() into grouped result rows. This
+	 * is accomplished by looking for the blank rows between result rows. We end
+	 * up with an ArrayList<ArrayList<String>>, where each inner ArrayList<String>
+	 * represents one row in the result set returned by iRODS.
+	 * 
+	 * @param  rows  The rows returned by extractRows().
+	 * @return  The rows divided into groups representing result rows.
+	 */
+	private ArrayList<ArrayList<String>> divideRows(List<String> rows) {
+		ArrayList<ArrayList<String>> outerList = new ArrayList<ArrayList<String>>();
+		ArrayList<String> innerList = new ArrayList<String>();
+		
+		for (String r : rows) {
+			if (!r.trim().isEmpty()) {
+				innerList.add(r);
+			} else {
+				outerList.add(innerList);
+				innerList = new ArrayList<String>();
+			}
+		}
+		
+		outerList.add(innerList);
+		return outerList;
+	}
+	
+	/**
+	 * Takes in one of the grouped result rows created by divideRows() and turns
+	 * it into an IRODSQueryResultRow.
+	 * 
+	 * @param  rowList  A grouped result row created by extractRows().
+	 * @param  columnNames  A list of column names created by parseColumnNames().
+	 * @return  an IRODSQueryResultRow. 
+	 */
+	private IRODSQueryResultRow convertRowToResultRow(
+			List<String> rowList, 
+			List<String> columnNames) throws JargonException {
+		char delimiter = ':';
+		List<String> columnValues = new ArrayList<String>();
+		
+		for (String row : rowList) {
+			columnValues.add(row.substring(row.indexOf(delimiter) + 1).trim());
+		}
+		
+		return IRODSQueryResultRow.instance(columnValues, columnNames);
+	}
+	
+	/**
+	 * Iterates over the grouped result rows generated by divideRows() and turns
+	 * them each into an IRODSQueryResultRow by calling convertRowToResultRow()
+	 * on them. Returns a List of IRODSQueryResultRows.
+	 * 
+	 * @param  rows  a list of rows created by extractRows().
+	 * @param  columnNames  a list of columnNames created by parseColumnNames().
+	 * @return  A list o f IRODSQueryResultRows.
+	 */
+	private List<IRODSQueryResultRow> generateResultRows(
+			List<String> rows, 
+			List<String> columnNames)  throws JargonException {
+		List<IRODSQueryResultRow> results = new ArrayList<IRODSQueryResultRow>();
+		
+		for (List<String> row : divideRows(rows)) {
+			results.add(convertRowToResultRow(row, columnNames));
+		}
+		
+		return results;
+	}
+	
+	/**
+	 * Parses the column names for the result set from the first row
+	 * in the response. This allows us to avoid parsing out the column
+	 * names for each row in the result.
+	 * 
+	 * @param  rows  The rows created by extractRows().
+	 * @return  the list of column names.
+	 */
+	private List<String> parseColumnNames(List<String> rows) {
 		List<String> colNames = new ArrayList<String>();
-		List<String> colValues = new ArrayList<String>();
-
-		// get the column names, they come in a colName : colValue format, and I
-		// need to just grab them once
-
-		if (rows.length >= 0) {
+		
+		if (rows.size() >= 0) {
 			String thisCol;
-			int idx = rows[0].indexOf(':');
-			String firstColName = rows[0].substring(0, idx);
+			int idx = rows.get(0).indexOf(':');
+			String firstColName = rows.get(0).substring(0, idx);
 			colNames.add(firstColName.trim());
 
-			for (int i = 1; i < rows.length; i++) {
-				idx = rows[i].indexOf(':');
-				thisCol = rows[i].substring(0, idx).trim();
+			for (int i = 1; i < rows.size(); i++) {
+				idx = rows.get(i).indexOf(':');
+				thisCol = rows.get(i).substring(0, idx).trim();
 				if (thisCol.equals(firstColName)) {
 					break;
 				}
 				colNames.add(thisCol.trim());
 			}
 		}
-
-		// now grab the rows
-		if (rows.length >= 0) {
-			String thisCol;
-			int idx = rows[0].indexOf(':');
-			String firstColName = rows[0].substring(idx + 1).trim();
-			colValues.add(rows[0].substring(idx + 1).trim());
-
-			for (int i = 1; i < rows.length; i++) {
-				idx = rows[i].indexOf(':');
-				thisCol = rows[i].substring(0, idx).trim();
-				if (thisCol.equals(firstColName)) {
-					// new row, put out the last one if data
-					if (colValues.size() > 0) {
-						irodsQueryResultRow = IRODSQueryResultRow.instance(
-								colValues, colNames);
-						result.add(irodsQueryResultRow);
-						irodsQueryResultRow = null;
-						colValues = new ArrayList<String>();
-					}
-				}
-				colValues.add(rows[i].substring(idx + 1).trim());
-			}
-		}
-
-		// get last set of values, if present
-		if (!colValues.isEmpty()) {
-			irodsQueryResultRow = IRODSQueryResultRow.instance(colValues,
-					colNames);
-			result.add(irodsQueryResultRow);
-		}
-
-		IRODSQueryResultSetInterface resultSet = IRODSSimpleQueryResultSet
-				.instance(simpleQuery, result, colNames, false);
-		return resultSet;
-
+		return colNames;
 	}
-
+	
 }
