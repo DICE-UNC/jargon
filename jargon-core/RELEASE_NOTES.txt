@@ -59,6 +59,7 @@ Note that the following bug and feature requests are logged in GForge with relat
 
 *[#1004] irods output stream errors writing to a file not under /zone/home
 ** Fix bug that creates an IRODSOutputStream on open twice when resource re-routing is turned on
+** Tighten up cross-zone query determination via objStat for data objects and collections
 
 ==Features==
 
