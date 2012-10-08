@@ -22,6 +22,7 @@ public interface IRODSFileSystemAO extends IRODSAccessObject {
 	 * @param irodsFile
 	 *            <code>IRODSFile</code> that will have permissions checked.
 	 * @return <code>boolean</code> that will be true if the file can be read.
+	 * @throws FileNotFoundException if the path cannot be found
 	 * @throws JargonException
 	 */
 	boolean isFileReadable(IRODSFile irodsFile) throws JargonException;
@@ -33,9 +34,10 @@ public interface IRODSFileSystemAO extends IRODSAccessObject {
 	 *            <code>IRODSFile</code> that will have permissions checked.
 	 * @return <code>boolean</code> that is <code>true</code> if the file can be
 	 *         written.
+	 * @throws FileNotFoundException if the path cannot be found
 	 * @throws JargonException
 	 */
-	boolean isFileWriteable(IRODSFile irodsFile) throws JargonException;
+	boolean isFileWriteable(IRODSFile irodsFile) throws FileNotFoundException, JargonException;
 
 	/**
 	 * Check if the given file exists in iRODS.
@@ -106,10 +108,11 @@ public interface IRODSFileSystemAO extends IRODSAccessObject {
 	 * @param irodsFile
 	 * @return {@link ObjStat.ObjectType} enum value that is the file type in
 	 *         the iRODS catalog.
+	 *  @throws FileNotFoundException if the iRODS file is not found
 	 * @throws JargonException
 	 */
 	ObjectType getFileDataType(final IRODSFile irodsFile)
-			throws JargonException;
+			throws FileNotFoundException, JargonException;
 
 	int createFile(String absolutePath, DataObjInp.OpenFlags openFlags,
 			int createMode) throws JargonException,
@@ -293,7 +296,7 @@ public interface IRODSFileSystemAO extends IRODSAccessObject {
 	 * @throws JargonException
 	 */
 	int getDirectoryPermissionsForGivenUser(IRODSFile irodsFile, String userName)
-			throws JargonException;
+			throws FileNotFoundException ,JargonException;
 
 	/**
 	 * Retrive the permission value for the given user name

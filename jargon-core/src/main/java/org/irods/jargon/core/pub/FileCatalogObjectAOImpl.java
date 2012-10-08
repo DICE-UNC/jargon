@@ -7,7 +7,6 @@ import java.util.List;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSSession;
-import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.FileNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.packinstr.DataObjInp;
@@ -212,8 +211,15 @@ public abstract class FileCatalogObjectAOImpl extends IRODSGenericAO implements
 				.retrieveObjectStatForPath(irodsAbsolutePath);
 	}
 
+	/**
+	 * Given an iRODS absolute path, retrieve the <code>ObjStat</code> 
+	 * @param irodsAbsolutePath <code>String</code> with the iRODS absolute path 
+	 * @return {@link ObjStat} with the file data from iRODS
+	 * @throws FileNotFoundException
+	 * @throws JargonException
+	 */
 	protected ObjStat retrieveObjStat(final String irodsAbsolutePath)
-			throws DataNotFoundException, JargonException {
+			throws FileNotFoundException, JargonException {
 
 		log.info("retrieveObjStat()");
 
@@ -227,26 +233,60 @@ public abstract class FileCatalogObjectAOImpl extends IRODSGenericAO implements
 		ObjStat objStat = collectionAndDataObjectListAndSearchAO
 				.retrieveObjectStatForPath(irodsAbsolutePath);
 
-		if (objStat == null) {
-			log.error("no file found for path:{}", irodsAbsolutePath);
-			throw new DataNotFoundException("no file found for given path");
-		}
-
+		// make sure this special coll type has support
+		MiscIRODSUtils.evaluateSpecCollSupport(objStat);
 		return objStat;
+
+	}
+	
+	/**
+	 *  Given an iRODS parent and child path, retrieve the <code>ObjStat</code> 
+	 * @param parentPath <code>String</code> with the parent path to the file
+	 * @param fileName <code>String</code> with the child file name
+	 * @return{@link ObjStat} with the file data from iRODS
+	 * @throws FileNotFoundException
+	 * @throws JargonException
+	 */
+	protected ObjStat retrieveObjStat(final String parentPath, final String fileName) throws FileNotFoundException, JargonException {
+		if (parentPath == null || parentPath.isEmpty()) {
+			throw new IllegalArgumentException("null or empty parentPath");
+		}
+		
+		if (fileName == null || fileName.isEmpty()) {
+			throw new IllegalArgumentException("null or empty fileName");
+		}
+		
+		IRODSFile irodsFile = this.getIRODSFileFactory().instanceIRODSFile(parentPath, fileName);
+		return retrieveObjStat(irodsFile.getAbsolutePath());
+	}
+	
+	/**
+	 * Given an <code>ObjStat</code> return the absolute path to use considering things like soft links.
+	 * @param objStat {@link ObjStat} that has been previously retrieved
+	 * @return <code>String</code> with the absolute path to use to get to the actual file
+	 * @throws JargonException
+	 */
+	protected String resolveAbsolutePathGivenObjStat(final ObjStat objStat) throws JargonException {
+		
+		if (objStat == null) {
+			throw new IllegalArgumentException("null objStat");
+		}
+		/*
+		 * See if jargon supports the given object type
+		 */
+		MiscIRODSUtils.evaluateSpecCollSupport(objStat);
+		return MiscIRODSUtils
+				.determineAbsolutePathBasedOnCollTypeInObjectStat(objStat);
 	}
 
-	protected String resolveAbsolutePathViaObjStat(final String irodsAbsolutePath)
-			throws JargonException {
+	protected String resolveAbsolutePathViaObjStat(
+			final String irodsAbsolutePath) throws JargonException {
 
 		log.info("resoveAbsolutePathViaObjStat()");
-			
+
 		ObjStat objStat = retrieveObjStat(irodsAbsolutePath);
-				/*
-				 * See if jargon supports the given object type
-				 */
-				MiscIRODSUtils.evaluateSpecCollSupport(objStat);
-				return MiscIRODSUtils
-						.determineAbsolutePathBasedOnCollTypeInObjectStat(objStat);
-			}
+		return resolveAbsolutePathGivenObjStat(objStat);
+	
+	}
 
 }

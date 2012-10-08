@@ -234,12 +234,13 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	 * @param <code>boolean</code> indicates that this is a case-insensitive query.
 	 * @return <code>List</code> of
 	 *         {@link org.irods.jargon.core.query.MetaDataAndDomainData}
+	 *  @throws FileNotFoundExcepton if the collection cannot be found
 	 * @throws JargonQueryException
 	 * @throws JargonException
 	 */
 	List<MetaDataAndDomainData> findMetadataValuesByMetadataQueryForCollection(
 			List<AVUQueryElement> avuQuery, String collectionAbsolutePath,
-			int partialStartIndex, boolean caseInsensitive) 	throws JargonQueryException, JargonException;
+			int partialStartIndex, boolean caseInsensitive) 	throws FileNotFoundException, JargonQueryException, JargonException;
 
 	/**
 	 * Get a list of the metadata values for the given collection absolute path.
@@ -263,12 +264,13 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	 *         {@link org.irods.jargon.core.query.MetaDataAndDomainData} with
 	 *         AVU values and other values that identify the collection the AVU
 	 *         applies to.
+	 *  @throws FileNotFoundException if the collection could not be found
 	 * @throws JargonException
 	 * @throws JargonQueryException
 	 */
 	List<MetaDataAndDomainData> findMetadataValuesForCollection(
 			final String collectionAbsolutePath, final int partialStartIndex)
-			throws JargonException, JargonQueryException;
+			throws FileNotFoundException, JargonException, JargonQueryException;
 
 	/**
 	 * Get a list of the metadata values for the given collection absolute path.
@@ -366,10 +368,11 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	 *            collection to count
 	 * @return <code>int</code> with the total count of files, recursively
 	 *         counted.
+	 *  @throws FileNotFoundException if the collection absolute path is not found in iRODS
 	 * @throws JargonException
 	 */
 	int countAllFilesUnderneathTheGivenCollection(
-			final String irodsCollectionAbsolutePath) throws JargonException;
+			final String irodsCollectionAbsolutePath) throws FileNotFoundException, JargonException;
 
 	/**
 	 * For a given iRODS collection, set the access permission to read. This can
@@ -506,10 +509,11 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	 * @param absolutePath
 	 *            <code>String</code> with the absolute path to the collection.
 	 * @return
+	 * @throws FileNotFoundException if the collection does not exist
 	 * @throws JargonException
 	 */
 	boolean isCollectionSetForPermissionInheritance(String absolutePath)
-			throws JargonException;
+			throws FileNotFoundException, JargonException;
 
 	/**
 	 * For a given iRODS collection, set he default to not inherit access
@@ -552,10 +556,11 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	 *            blank if not used, it is not required.
 	 * @return {@link FilePermissionEnum} value with the permission level for
 	 *         the given user.
+	 * @throws FileNotFoundException if the collection path is not found
 	 * @throws JargonException
 	 */
 	FilePermissionEnum getPermissionForCollection(String irodsAbsolutePath,
-			String userName, String zone) throws JargonException;
+			String userName, String zone) throws FileNotFoundException, JargonException;
 
 	/**
 	 * Get a list of all permissions for all users on the given collection

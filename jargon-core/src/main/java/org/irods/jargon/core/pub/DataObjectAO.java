@@ -1,5 +1,6 @@
 package org.irods.jargon.core.pub;
 
+import java.io.FileNotFoundException;
 import java.util.List;
 
 import org.irods.jargon.core.exception.DataNotFoundException;
@@ -66,9 +67,10 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * @throws DataNotFoundException
 	 *             is thrown if the data object does not exist
 	 * @throws JargonException
+	 * @throws FileNotFoundException 
 	 */
 	DataObject findByCollectionNameAndDataName(final String collectionPath,
-			final String dataName) throws JargonException;
+			final String dataName) throws JargonException, FileNotFoundException;
 
 	/**
 	 * Handy query method will return DataObjects that match the given 'WHERE'
@@ -486,12 +488,11 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 *            data object.
 	 * @return {@link org.irods.jargon.core.pub.domain.DataObject} with catalog
 	 *         information for the given data object
-	 * @throws DataNotFoundException
-	 *             if data object is not found
 	 * @throws JargonException
+	 * @throws FileNotFoundException 
 	 */
 	DataObject findByAbsolutePath(final String absolutePath)
-			throws DataNotFoundException, JargonException;
+			throws  JargonException, FileNotFoundException;
 
 	/**
 	 * Set the permissions on a data object to read for the given user.

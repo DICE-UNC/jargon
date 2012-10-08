@@ -441,7 +441,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 	 */
 	@Override
 	public int getDirectoryPermissionsForGivenUser(final IRODSFile irodsFile,
-			final String userName) throws JargonException {
+			final String userName) throws FileNotFoundException, JargonException {
 
 		if (irodsFile == null) {
 			throw new IllegalArgumentException("irods file is null");
@@ -495,7 +495,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 
 		int highestPermissionValue = extractHighestPermission(
 				irodsGenQueryExecutor, filePermissionQuery,
-				MiscIRODSUtils.getZoneInPath(effectiveAbsolutePath));
+				objStat.getOwnerZone());
 
 		return highestPermissionValue;
 	}
@@ -690,11 +690,10 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 
 		irodsQuery = IRODSGenQuery.instance(query.toString(), this
 				.getJargonProperties().getMaxFilesAndDirsQueryMax());
-		String zone = MiscIRODSUtils.getZoneInPath(effectiveAbsolutePath);
 
 		try {
 			resultSet = irodsGenQueryExecutor.executeIRODSQueryInZone(
-					irodsQuery, 0, zone);
+					irodsQuery, 0, objStat.getOwnerZone());
 			for (IRODSQueryResultRow row : resultSet.getResults()) {
 				processListDirsResultRowForCollection(subdirs, row);
 			}
@@ -702,7 +701,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 			while (resultSet.isHasMoreRecords()) {
 				log.debug("more results to get for listing collections, requerying");
 				resultSet = irodsGenQueryExecutor.getMoreResultsInZone(
-						resultSet, zone);
+						resultSet, objStat.getOwnerZone());
 				for (IRODSQueryResultRow row : resultSet.getResults()) {
 					processListDirsResultRowForCollection(subdirs, row);
 				}
@@ -728,7 +727,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 
 		try {
 			resultSet = irodsGenQueryExecutor.executeIRODSQueryInZone(
-					irodsQuery, 0, zone);
+					irodsQuery, 0, objStat.getOwnerZone());
 
 			for (IRODSQueryResultRow row : resultSet.getResults()) {
 				subdirs.add(row.getColumn(1));
@@ -737,7 +736,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 			while (resultSet.isHasMoreRecords()) {
 				log.debug("more results to get for listing files, requerying");
 				resultSet = irodsGenQueryExecutor.getMoreResultsInZone(
-						resultSet, zone);
+						resultSet, objStat.getOwnerZone());
 				for (IRODSQueryResultRow row : resultSet.getResults()) {
 					subdirs.add(row.getColumn(1));
 				}
@@ -1080,7 +1079,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 	 */
 	@Override
 	public ObjectType getFileDataType(final IRODSFile irodsFile)
-			throws JargonException {
+			throws FileNotFoundException, JargonException {
 
 		if (irodsFile == null) {
 			throw new JargonException("irods file is null");

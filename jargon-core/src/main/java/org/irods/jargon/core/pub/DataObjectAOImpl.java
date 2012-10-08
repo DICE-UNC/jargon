@@ -126,7 +126,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	@Override
 	public DataObject findByCollectionNameAndDataName(
 			final String collectionPath, final String dataName)
-			throws DataNotFoundException, JargonException {
+			throws FileNotFoundException, JargonException {
 
 		if (dataName == null || dataName.isEmpty()) {
 			throw new IllegalArgumentException("dataName is null or empty");
@@ -154,7 +154,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	 */
 	@Override
 	public DataObject findByAbsolutePath(final String absolutePath)
-			throws DataNotFoundException, JargonException {
+			throws FileNotFoundException, JargonException {
 
 		if (absolutePath == null || absolutePath.isEmpty()) {
 			throw new IllegalArgumentException(NULL_OR_EMPTY_ABSOLUTE_PATH);
@@ -243,8 +243,8 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 		IRODSQueryResultSetInterface resultSet;
 		try {
-			resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResult(
-					irodsQuery, 0);
+			resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResultInZone(
+					irodsQuery, 0, objStat.getOwnerZone());
 
 		} catch (JargonQueryException e) {
 			log.error("query exception for query: {}", query, e);
@@ -1394,6 +1394,9 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		return findMetadataValuesForDataObjectUsingAVUQuery(avuQuery, dataObjectCollectionAbsPath, dataObjectFileName, false);
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.core.pub.DataObjectAO#findMetadataValuesForDataObjectUsingAVUQuery(java.util.List, java.lang.String, java.lang.String, boolean)
+	 */
 	@Override
 	public List<MetaDataAndDomainData> findMetadataValuesForDataObjectUsingAVUQuery(
 			final List<AVUQueryElement> avuQuery,
@@ -1422,19 +1425,12 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			}
 		}
 
-		CollectionAndDataObjectListAndSearchAO collectionAndDataObjectListAndSearchAO = this
-				.getIRODSAccessObjectFactory()
-				.getCollectionAndDataObjectListAndSearchAO(getIRODSAccount());
-		ObjStat objStat = collectionAndDataObjectListAndSearchAO
-				.retrieveObjectStatForPathAndDataObjectName(
-						dataObjectCollectionAbsPath, dataObjectFileName);
-
-		// make sure this special coll type has support
-		MiscIRODSUtils.evaluateSpecCollSupport(objStat);
-
+		ObjStat objStat = this.retrieveObjStat(dataObjectCollectionAbsPath, dataObjectFileName);
+		String absPath = this.resolveAbsolutePathGivenObjStat(objStat);
+		
 		// need to break up the path for the query
 		IRODSFile dataObjectFile = this.getIRODSFileFactory()
-				.instanceIRODSFile(objStat.getAbsolutePath());
+				.instanceIRODSFile(absPath);
 
 		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, caseInsensitive, null);
 		IRODSQueryResultSetInterface resultSet;
@@ -1471,10 +1467,8 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 					.exportIRODSQueryFromBuilder(this.getJargonProperties()
 							.getMaxFilesAndDirsQueryMax());
 
-			String zone = MiscIRODSUtils.getZoneInPath(objStat
-					.getAbsolutePath());
 			resultSet = irodsGenQueryExecutor
-					.executeIRODSQueryAndCloseResultInZone(irodsQuery, 0, zone);
+					.executeIRODSQueryAndCloseResultInZone(irodsQuery, 0, objStat.getOwnerZone());
 
 		} catch (GenQueryBuilderException e) {
 			log.error("error building query", e);
@@ -1512,9 +1506,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 		IRODSFile irodsFile = getIRODSFileFactory().instanceIRODSFile(
 				dataObjectAbsolutePath);
-		String absPath = this.resolveAbsolutePathViaObjStat(irodsFile
-				.getParent());
-		return findMetadataValuesForDataObjectUsingAVUQuery(avuQuery, absPath,
+		return findMetadataValuesForDataObjectUsingAVUQuery(avuQuery, irodsFile.getParent(),
 				irodsFile.getName());
 
 	}
@@ -2106,15 +2098,12 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 		// contract checks in delegated method
 
-		String absPath = this
-				.resolveAbsolutePathViaObjStat(dataObjectCollectionAbsPath);
-
 		List<AVUQueryElement> queryElements = new ArrayList<AVUQueryElement>();
 		try {
 			return this.findMetadataValuesForDataObjectUsingAVUQuery(
-					queryElements, absPath, dataObjectFileName);
+					queryElements, dataObjectCollectionAbsPath, dataObjectFileName);
 		} catch (JargonQueryException e) {
-			log.error("query exception looking up data object:{}", absPath, e);
+			log.error("query exception looking up data object:{}", dataObjectCollectionAbsPath + "/" + dataObjectFileName, e);
 			log.error("fileName: {}", dataObjectFileName);
 			throw new JargonException(e);
 		}
@@ -2140,13 +2129,11 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 		CollectionAndPath collName = MiscIRODSUtils
 				.separateCollectionAndPathFromGivenAbsolutePath(dataObjectAbsolutePath);
-		String absPath = this.resolveAbsolutePathViaObjStat(collName
-				.getCollectionParent());
 
 		List<AVUQueryElement> queryElements = new ArrayList<AVUQueryElement>();
 		try {
 			return this.findMetadataValuesForDataObjectUsingAVUQuery(
-					queryElements, absPath, collName.getChildName());
+					queryElements, collName.getCollectionParent(), collName.getChildName());
 		} catch (JargonQueryException e) {
 			log.error("query exception looking up data object:{}",
 					dataObjectAbsolutePath, e);
@@ -2488,13 +2475,11 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 		CollectionAndPath collName = MiscIRODSUtils
 				.separateCollectionAndPathFromGivenAbsolutePath(absolutePath);
-		String absPath = this.resolveAbsolutePathViaObjStat(collName
-				.getCollectionParent());
-
+		
 		IRODSFileSystemAO irodsFileSystemAO = getIRODSAccessObjectFactory()
 				.getIRODSFileSystemAO(getIRODSAccount());
 		int permissionVal = irodsFileSystemAO.getFilePermissionsForGivenUser(
-				getIRODSFileFactory().instanceIRODSFile(absPath,
+				getIRODSFileFactory().instanceIRODSFile(collName.getCollectionParent(),
 						collName.getChildName()), userName);
 		FilePermissionEnum filePermissionEnum = FilePermissionEnum
 				.valueOf(permissionVal);
@@ -2528,8 +2513,8 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 				irodsCollectionAbsolutePath);
 		log.info("dataName: {}", irodsCollectionAbsolutePath);
 
-		String absPath = this
-				.resolveAbsolutePathViaObjStat(irodsCollectionAbsolutePath);
+		ObjStat objStat = this.getObjectStatForAbsolutePath(irodsCollectionAbsolutePath);
+		String absPath = this.resolveAbsolutePathGivenObjStat(objStat);
 
 		List<UserFilePermission> userFilePermissions = new ArrayList<UserFilePermission>();
 
@@ -2542,8 +2527,8 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		IRODSQueryResultSetInterface resultSet;
 
 		try {
-			resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResult(
-					irodsQuery, 0);
+			resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResultInZone(
+					irodsQuery, 0, objStat.getOwnerZone());
 
 			for (IRODSQueryResultRow row : resultSet.getResults()) {
 				userFilePermissions
@@ -2599,9 +2584,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 				irodsDataObjectAbsolutePath);
 		CollectionAndPath collName = MiscIRODSUtils
 				.separateCollectionAndPathFromGivenAbsolutePath(irodsDataObjectAbsolutePath);
-		String absPath = this.resolveAbsolutePathViaObjStat(collName
-				.getCollectionParent());
-		return listPermissionsForDataObject(absPath, collName.getChildName());
+		return listPermissionsForDataObject(collName.getCollectionParent(), collName.getChildName());
 
 	}
 
@@ -2796,8 +2779,8 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		log.info("dataName: {}", irodsCollectionAbsolutePath);
 		log.info("userName:{}", userName);
 
-		String absPath = this
-				.resolveAbsolutePathViaObjStat(irodsCollectionAbsolutePath);
+		ObjStat objStat = this.getObjectStatForAbsolutePath(irodsCollectionAbsolutePath);
+		String absPath = this.resolveAbsolutePathGivenObjStat(objStat);
 
 		UserFilePermission userFilePermission = null;
 
@@ -2815,8 +2798,8 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		IRODSQueryResultSetInterface resultSet;
 
 		try {
-			resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResult(
-					irodsQuery, 0);
+			resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResultInZone(
+					irodsQuery, 0, objStat.getOwnerZone());
 			IRODSQueryResultRow row = resultSet.getFirstResult();
 			userFilePermission = buildUserFilePermissionFromResultRow(row);
 			log.debug("loaded filePermission:{}", userFilePermission);
@@ -2857,9 +2840,10 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		IRODSFile irodsFile = this.getIRODSFileFactory().instanceIRODSFile(
 				irodsAbsolutePath);
 
-		String absPath = this.resolveAbsolutePathViaObjStat(irodsFile
-				.getParent());
-
+		ObjStat objStat = this.getObjectStatForAbsolutePath(irodsAbsolutePath);
+		String absPath = this.resolveAbsolutePathGivenObjStat(objStat);
+		CollectionAndPath collName = MiscIRODSUtils
+				.separateCollectionAndPathFromGivenAbsolutePath(absPath);
 		StringBuilder query = new StringBuilder();
 		query.append(resourceAOHelper.buildResourceSelects());
 		query.append(" where ");
@@ -2867,7 +2851,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		if (irodsFile.exists() && irodsFile.isFile()) {
 			query.append(RodsGenQueryEnum.COL_COLL_NAME.getName());
 			query.append(EQUALS_AND_QUOTE);
-			query.append(IRODSDataConversionUtil.escapeSingleQuotes(absPath));
+			query.append(IRODSDataConversionUtil.escapeSingleQuotes(collName.getCollectionParent()));
 			query.append("'");
 			query.append(AND);
 			query.append(RodsGenQueryEnum.COL_DATA_NAME.getName());
@@ -2896,7 +2880,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		IRODSQueryResultSetInterface resultSet;
 		try {
 			resultSet = irodsGenQueryExecutorImpl
-					.executeIRODSQueryAndCloseResult(irodsQuery, 0);
+					.executeIRODSQueryAndCloseResultInZone(irodsQuery, 0, objStat.getOwnerZone());
 		} catch (JargonQueryException e) {
 			log.error("query exception for:{}", queryString, e);
 			throw new JargonException("error in query");
