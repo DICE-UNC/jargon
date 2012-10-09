@@ -1,10 +1,9 @@
 *'''Project''': Jargon-core API
 *'''Date''': 08/28/2012
-*'''Release Version''': 3.1.4
-*'''git tag''': 3.1.4
+*'''Release Version''': 3.2.0 
+*'''git tag''': 3.2.0
 
 ==News==
-
 
 NOTE: This RELEASE is a maintenance release to coincide with the release of iRODS 3.2.  This originates from the GIT release branch, and represents the latest bug fixes and small features.  It is planned to simultaneously release a Jargon 3.2.0.1 beta that will include refactoring and more features.  Please consult the Jargon page at GForge for news and release details
 
@@ -45,23 +44,27 @@ Note that the following bug and feature requests are logged in GForge with relat
 
 ==Bug Fixes==
 
-* [#930] [iROD-Chat:8451] Does Jargon limit the number of items returned in a collection contents list?
-** Correctly compute last index when listing collections with permissions
-** Take out user type query and set to unknown to help performance.  This was causing a subquery for every row.  The user type defaults to UNKNOWN for now, and that information will not be available in the current iteration.  Note that specific/sql query will be used to impove the available information in this query as a separate feature request.
-** fix record counts in gen query results to account for paging offset when adding counts to returned rows
-** added IRODSThousandCollectionsTest and augmented IRODSThousandFilesTest to test out this operation
+*[#930] [iROD-Chat:8451] Does Jargon limit the number of items returned in a collection contents list?
+**Correctly compute last index when listing collections with permissions
+**Take out user type query and set to unknown to help performance.  This was causing a subquery for every row.  The user type defaults to UNKNOWN for now, and that information will not be available in the current iteration.  Note that specific/sql query will be used to impove the available information in this query as a separate feature request.
+**fix record counts in gen query results to account for paging offset when adding counts to returned rows
+**added IRODSThousandCollectionsTest and augmented IRODSThousandFilesTest to test out this operation
 
 * [#936] delete with folder containing files fails silently
-** add thrown JargonRuntimeException for unanticipated delete errors. 
+**add thrown JargonRuntimeException for unanticipated delete errors. 
 
 *[#993] fix special query parsing to account for blank rows
-** bug identified and patched by John Wregglesworth of iPlant
+**bug identified and patched by John Wregglesworth of iPlant
 
 *[#1004] irods output stream errors writing to a file not under /zone/home
-** Fix bug that creates an IRODSOutputStream on open twice when resource re-routing is turned on
-** Tighten up cross-zone query determination via objStat for data objects and collections
+**Fix bug that creates an IRODSOutputStream on open twice when resource re-routing is turned on
+**Tighten up cross-zone query determination via objStat for data objects and collections
+**Stream2SteamAO transfer using I/o streams was not respecting the redirect flag and always trying to re-route
 
 ==Features==
+
+*[#994] case insensitive AVU queries
+**Added case-insensitive AVU methods for Collections and Data Objects
 
  * [#764] Java libraries and code to integrate idrop-web
  ** added updateUserInfo() to UserAO

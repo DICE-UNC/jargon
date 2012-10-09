@@ -126,10 +126,17 @@ public class Stream2StreamAOImpl extends IRODSGenericAO implements
 
 			if (targetFile instanceof IRODSFile) {
 				log.info("target file is an iRODS file");
-
+				
+				if (this.getJargonProperties().isAllowPutGetResourceRedirects()) {
+					log.info("using transfer redirects, so check for stream re-routing");
 				fileOutputStream = this.getIRODSFileFactory()
 						.instanceIRODSFileOutputStreamWithRerouting(
 								(IRODSFile) targetFile);
+				} else {
+					log.info("not using transfer redirects, so do not do any stream re-routing");
+					fileOutputStream = this.getIRODSFileFactory().instanceIRODSFileOutputStream((IRODSFile) targetFile);
+				}
+				
 			} else {
 				log.info("target file is a normal file");
 				fileOutputStream = new FileOutputStream(targetFile);
