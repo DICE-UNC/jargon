@@ -212,8 +212,10 @@ public abstract class FileCatalogObjectAOImpl extends IRODSGenericAO implements
 	}
 
 	/**
-	 * Given an iRODS absolute path, retrieve the <code>ObjStat</code> 
-	 * @param irodsAbsolutePath <code>String</code> with the iRODS absolute path 
+	 * Given an iRODS absolute path, retrieve the <code>ObjStat</code>
+	 * 
+	 * @param irodsAbsolutePath
+	 *            <code>String</code> with the iRODS absolute path
 	 * @return {@link ObjStat} with the file data from iRODS
 	 * @throws FileNotFoundException
 	 * @throws JargonException
@@ -238,36 +240,47 @@ public abstract class FileCatalogObjectAOImpl extends IRODSGenericAO implements
 		return objStat;
 
 	}
-	
+
 	/**
-	 *  Given an iRODS parent and child path, retrieve the <code>ObjStat</code> 
-	 * @param parentPath <code>String</code> with the parent path to the file
-	 * @param fileName <code>String</code> with the child file name
+	 * Given an iRODS parent and child path, retrieve the <code>ObjStat</code>
+	 * 
+	 * @param parentPath
+	 *            <code>String</code> with the parent path to the file
+	 * @param fileName
+	 *            <code>String</code> with the child file name
 	 * @return{@link ObjStat} with the file data from iRODS
 	 * @throws FileNotFoundException
 	 * @throws JargonException
 	 */
-	protected ObjStat retrieveObjStat(final String parentPath, final String fileName) throws FileNotFoundException, JargonException {
+	protected ObjStat retrieveObjStat(final String parentPath,
+			final String fileName) throws FileNotFoundException,
+			JargonException {
 		if (parentPath == null || parentPath.isEmpty()) {
 			throw new IllegalArgumentException("null or empty parentPath");
 		}
-		
+
 		if (fileName == null || fileName.isEmpty()) {
 			throw new IllegalArgumentException("null or empty fileName");
 		}
-		
-		IRODSFile irodsFile = this.getIRODSFileFactory().instanceIRODSFile(parentPath, fileName);
+
+		IRODSFile irodsFile = this.getIRODSFileFactory().instanceIRODSFile(
+				parentPath, fileName);
 		return retrieveObjStat(irodsFile.getAbsolutePath());
 	}
-	
+
 	/**
-	 * Given an <code>ObjStat</code> return the absolute path to use considering things like soft links.
-	 * @param objStat {@link ObjStat} that has been previously retrieved
-	 * @return <code>String</code> with the absolute path to use to get to the actual file
+	 * Given an <code>ObjStat</code> return the absolute path to use considering
+	 * things like soft links.
+	 * 
+	 * @param objStat
+	 *            {@link ObjStat} that has been previously retrieved
+	 * @return <code>String</code> with the absolute path to use to get to the
+	 *         actual file
 	 * @throws JargonException
 	 */
-	protected String resolveAbsolutePathGivenObjStat(final ObjStat objStat) throws JargonException {
-		
+	protected String resolveAbsolutePathGivenObjStat(final ObjStat objStat)
+			throws JargonException {
+
 		if (objStat == null) {
 			throw new IllegalArgumentException("null objStat");
 		}
@@ -286,7 +299,7 @@ public abstract class FileCatalogObjectAOImpl extends IRODSGenericAO implements
 
 		ObjStat objStat = retrieveObjStat(irodsAbsolutePath);
 		return resolveAbsolutePathGivenObjStat(objStat);
-	
+
 	}
 
 	@Override

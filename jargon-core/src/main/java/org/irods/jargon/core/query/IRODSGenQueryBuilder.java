@@ -31,11 +31,12 @@ public class IRODSGenQueryBuilder {
 	private final boolean distinct;
 	private final boolean upperCase;
 
-
 	@SuppressWarnings("unused")
 	private final ExtensibleMetaDataMapping extensibleMetadataMapping;
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
@@ -65,19 +66,21 @@ public class IRODSGenQueryBuilder {
 	 *            <code>boolean</code> that indicates whether the select is
 	 *            distinct
 	 * @param upperCase
-	 * 			  <code>boolean</code> which indicates that upper case should be used in the where (case-insensitive queries)
+	 *            <code>boolean</code> which indicates that upper case should be
+	 *            used in the where (case-insensitive queries)
 	 * @param extensibleMetadataMapping
 	 *            {@link ExtensibleMetadataMapping} that may be used in queries.
 	 *            This can be <code>null</code> if not required
 	 */
-	public IRODSGenQueryBuilder(final boolean distinct, final boolean upperCase,
+	public IRODSGenQueryBuilder(final boolean distinct,
+			final boolean upperCase,
 			final ExtensibleMetaDataMapping extensibleMetadataMapping) {
 		this.extensibleMetadataMapping = extensibleMetadataMapping;
 		this.distinct = distinct;
 		this.upperCase = upperCase;
 
 	}
-	
+
 	/**
 	 * Constructor takes an optional <code>ExtensibleMetadataMapping</code> if
 	 * extensible metadata is to be used in the query processing.
@@ -96,7 +99,6 @@ public class IRODSGenQueryBuilder {
 		this.upperCase = false;
 
 	}
-
 
 	/**
 	 * Add a select represented by a value in <code>RodsGenQueryEnum</code>.
@@ -243,19 +245,19 @@ public class IRODSGenQueryBuilder {
 		 * in, etc
 		 */
 
-			StringBuilder sb = new StringBuilder();
-			sb.append("'");
-			sb.append(value.trim());
-			sb.append("'");
+		StringBuilder sb = new StringBuilder();
+		sb.append("'");
+		sb.append(value.trim());
+		sb.append("'");
 
-			GenQueryBuilderCondition genQueryBuilderCondition = GenQueryBuilderCondition
-					.instance(rodsGenQueryEnumValue.getName(),
-							SelectFieldSource.DEFINED_QUERY_FIELD, String
-									.valueOf(rodsGenQueryEnumValue
-											.getNumericValue()), operator, sb
-									.toString());
+		GenQueryBuilderCondition genQueryBuilderCondition = GenQueryBuilderCondition
+				.instance(
+						rodsGenQueryEnumValue.getName(),
+						SelectFieldSource.DEFINED_QUERY_FIELD,
+						String.valueOf(rodsGenQueryEnumValue.getNumericValue()),
+						operator, sb.toString());
 
-			conditions.add(genQueryBuilderCondition);
+		conditions.add(genQueryBuilderCondition);
 
 		return this;
 
@@ -375,7 +377,8 @@ public class IRODSGenQueryBuilder {
 					"numberOfResultsDesired must be >= 1");
 		}
 		IRODSGenQueryBuilderQueryData queryData = IRODSGenQueryBuilderQueryData
-				.instance(selectFields, conditions, orderByFields, distinct, upperCase);
+				.instance(selectFields, conditions, orderByFields, distinct,
+						upperCase);
 
 		if (!queryData.isQueryValid()) {
 			throw new GenQueryBuilderException(
@@ -385,9 +388,10 @@ public class IRODSGenQueryBuilder {
 		return IRODSGenQueryFromBuilder.instance(queryData,
 				numberOfResultsDesired);
 	}
-	
+
 	/**
-	 * Is this a case-insensitive query?  (supported in iRODS 3.2 and higher)
+	 * Is this a case-insensitive query? (supported in iRODS 3.2 and higher)
+	 * 
 	 * @return
 	 */
 	public boolean isUpperCase() {

@@ -1,10 +1,8 @@
 package org.irods.jargon.core.query;
 
-
-
 /**
  * @author Mike Conway - DICE (www.irods.org)
- *
+ * 
  */
 public abstract class GenQueryField {
 
@@ -25,9 +23,9 @@ public abstract class GenQueryField {
 	 * @param selectFieldSource
 	 * @param selectFieldNumericTranslation
 	 */
-	public GenQueryField(String selectFieldColumnName,
-			SelectFieldSource selectFieldSource,
-			String selectFieldNumericTranslation) {
+	public GenQueryField(final String selectFieldColumnName,
+			final SelectFieldSource selectFieldSource,
+			final String selectFieldNumericTranslation) {
 
 		if (selectFieldColumnName == null
 				|| selectFieldColumnName.length() == 0) {

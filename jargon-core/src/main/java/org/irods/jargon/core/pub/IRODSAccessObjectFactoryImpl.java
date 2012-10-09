@@ -588,13 +588,13 @@ public final class IRODSAccessObjectFactoryImpl implements
 			throws JargonException {
 		return irodsSession.buildTransferOptionsBasedOnJargonProperties();
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * org.irods.jargon.core.pub.IRODSAccessObjectFactory#getSpecificQueryAO(org.irods
-	 * .jargon.core.connection.IRODSAccount)
+	 * org.irods.jargon.core.pub.IRODSAccessObjectFactory#getSpecificQueryAO
+	 * (org.irods .jargon.core.connection.IRODSAccount)
 	 */
 	@Override
 	public SpecificQueryAO getSpecificQueryAO(final IRODSAccount irodsAccount)

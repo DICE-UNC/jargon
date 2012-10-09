@@ -6,6 +6,7 @@ package org.irods.jargon.core.pub;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FilenameFilter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -441,7 +442,8 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 	 */
 	@Override
 	public int getDirectoryPermissionsForGivenUser(final IRODSFile irodsFile,
-			final String userName) throws FileNotFoundException, JargonException {
+			final String userName) throws FileNotFoundException,
+			JargonException {
 
 		if (irodsFile == null) {
 			throw new IllegalArgumentException("irods file is null");
@@ -487,8 +489,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 		log.debug("user name translated to id:{}", user.getId());
 
 		StringBuilder filePermissionQuery = buildPermissionsQueryDirectory(
-				effectiveAbsolutePath,
-				user.getId());
+				effectiveAbsolutePath, user.getId());
 
 		log.debug("query for user permissions = {}",
 				filePermissionQuery.toString());
@@ -653,7 +654,6 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 		if (irodsFile == null) {
 			throw new JargonException("irods file is null");
 		}
-
 
 		ObjStat objStat = irodsFile.initializeObjStatForFile();
 		// no error means it exists

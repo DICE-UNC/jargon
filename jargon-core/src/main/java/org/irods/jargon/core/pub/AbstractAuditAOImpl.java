@@ -41,7 +41,8 @@ import org.slf4j.LoggerFactory;
 public abstract class AbstractAuditAOImpl extends IRODSGenericAO {
 
 	protected final transient IRODSGenQueryExecutor irodsGenQueryExecutor;
-	public static final Logger log = LoggerFactory.getLogger(AbstractAuditAOImpl.class);
+	public static final Logger log = LoggerFactory
+			.getLogger(AbstractAuditAOImpl.class);
 
 	/**
 	 * Default constructor as invoked by {@link IRODSAccessObjectFactory}
@@ -50,8 +51,8 @@ public abstract class AbstractAuditAOImpl extends IRODSGenericAO {
 	 * @param irodsAccount
 	 * @throws JargonException
 	 */
-	public AbstractAuditAOImpl(IRODSSession irodsSession, IRODSAccount irodsAccount)
-			throws JargonException {
+	public AbstractAuditAOImpl(final IRODSSession irodsSession,
+			final IRODSAccount irodsAccount) throws JargonException {
 		super(irodsSession, irodsAccount);
 		this.irodsGenQueryExecutor = this.getIRODSAccessObjectFactory()
 				.getIRODSGenQueryExecutor(irodsAccount);
@@ -154,8 +155,7 @@ public abstract class AbstractAuditAOImpl extends IRODSGenericAO {
 			String zone = MiscIRODSUtils.getZoneInPath(objStat
 					.getAbsolutePath());
 			resultSet = irodsGenQueryExecutor
-					.executeIRODSQueryAndCloseResultInZone(irodsQuery,
- 0, zone);
+					.executeIRODSQueryAndCloseResultInZone(irodsQuery, 0, zone);
 		} catch (GenQueryBuilderException e) {
 			log.error("error building query", e);
 			throw new JargonException("error building query", e);
@@ -275,27 +275,28 @@ public abstract class AbstractAuditAOImpl extends IRODSGenericAO {
 
 	}
 
-	protected AuditedAction buildAuditedActionForResultRow(final IRODSFile irodsFile, IRODSQueryResultRow row)
+	protected AuditedAction buildAuditedActionForResultRow(
+			final IRODSFile irodsFile, final IRODSQueryResultRow row)
 			throws NumberFormatException, JargonException {
-				AuditedAction auditedAction;
-				auditedAction = new AuditedAction();
-				auditedAction.setObjectId(Integer.parseInt(row.getColumn(0)));
-				auditedAction.setDomainObjectUniqueName(irodsFile.getAbsolutePath());
-				auditedAction.setUserId(Integer.parseInt(row.getColumn(1)));
-				auditedAction.setUserName(row.getColumn(2));
-				auditedAction.setAuditActionEnum(AuditActionEnum.valueOf(Integer
-						.parseInt(row.getColumn(3))));
-				auditedAction.setComment(row.getColumn(4));
-				auditedAction.setCreatedAt(IRODSDataConversionUtil
-						.getDateFromIRODSValue(row.getColumn(5)));
-				auditedAction.setTimeStampInIRODSFormat(row.getColumn(5));
-				auditedAction.setUpdatedAt(IRODSDataConversionUtil
-						.getDateFromIRODSValue(row.getColumn(6)));
-				auditedAction.setLastResult(row.isLastResult());
-				auditedAction.setCount(row.getRecordCount());
-				auditedAction.setCount(row.getRecordCount());
-				auditedAction.setLastResult(row.isLastResult());
-				return auditedAction;
-			}
+		AuditedAction auditedAction;
+		auditedAction = new AuditedAction();
+		auditedAction.setObjectId(Integer.parseInt(row.getColumn(0)));
+		auditedAction.setDomainObjectUniqueName(irodsFile.getAbsolutePath());
+		auditedAction.setUserId(Integer.parseInt(row.getColumn(1)));
+		auditedAction.setUserName(row.getColumn(2));
+		auditedAction.setAuditActionEnum(AuditActionEnum.valueOf(Integer
+				.parseInt(row.getColumn(3))));
+		auditedAction.setComment(row.getColumn(4));
+		auditedAction.setCreatedAt(IRODSDataConversionUtil
+				.getDateFromIRODSValue(row.getColumn(5)));
+		auditedAction.setTimeStampInIRODSFormat(row.getColumn(5));
+		auditedAction.setUpdatedAt(IRODSDataConversionUtil
+				.getDateFromIRODSValue(row.getColumn(6)));
+		auditedAction.setLastResult(row.isLastResult());
+		auditedAction.setCount(row.getRecordCount());
+		auditedAction.setCount(row.getRecordCount());
+		auditedAction.setLastResult(row.isLastResult());
+		return auditedAction;
+	}
 
 }

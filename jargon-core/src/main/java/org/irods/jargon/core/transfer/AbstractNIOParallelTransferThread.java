@@ -33,7 +33,8 @@ public class AbstractNIOParallelTransferThread {
 		super();
 	}
 
-	private ByteBuffer readLenFromSocket(int length) throws JargonException {
+	private ByteBuffer readLenFromSocket(final int length)
+			throws JargonException {
 		final ByteBuffer b = ByteBuffer.allocate(length);
 
 		int read;

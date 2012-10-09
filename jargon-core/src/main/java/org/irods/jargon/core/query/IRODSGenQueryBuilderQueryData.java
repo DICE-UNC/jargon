@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-
 /**
  * Represents an immutable iRODS gen query built using the gen query builder
  * tool. This is an improvement over the original 'iquest'-like string allowing
@@ -36,7 +35,9 @@ class IRODSGenQueryBuilderQueryData {
 	 * @param distinct
 	 *            <code>boolean</code> that indicates whether the query is a
 	 *            select distinct
-	 * @param upperCase <code>boolean</code> indicates whether the query uses case-insensitive conditions
+	 * @param upperCase
+	 *            <code>boolean</code> indicates whether the query uses
+	 *            case-insensitive conditions
 	 * @return immutable instance of <code>IRODSGenBuilderQuery</code>
 	 */
 	public static IRODSGenQueryBuilderQueryData instance(
@@ -63,7 +64,9 @@ class IRODSGenQueryBuilderQueryData {
 	 * @param distinct
 	 *            <code>boolean</code> that indicates whether the query is a
 	 *            select distinct
-	 * @param upperCase <code>boolean</code> indicates whether the query uses case-insensitive conditions
+	 * @param upperCase
+	 *            <code>boolean</code> indicates whether the query uses
+	 *            case-insensitive conditions
 	 */
 	private IRODSGenQueryBuilderQueryData(
 			final List<GenQuerySelectField> selectFields,
@@ -134,14 +137,16 @@ class IRODSGenQueryBuilderQueryData {
 	}
 
 	/**
-	 * @return  distinct <code>boolean</code> indicates whether the query specifies distinct
+	 * @return distinct <code>boolean</code> indicates whether the query
+	 *         specifies distinct
 	 */
 	public boolean isDistinct() {
 		return distinct;
 	}
 
 	/**
-	 * @return the upperCase <code>boolean</code> indicates whether the query uses case-insensitive conditions
+	 * @return the upperCase <code>boolean</code> indicates whether the query
+	 *         uses case-insensitive conditions
 	 */
 	public boolean isUpperCase() {
 		return upperCase;

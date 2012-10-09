@@ -187,7 +187,7 @@ public class AuditedAction extends IRODSDomainObject {
 	 * @param timeStampInIRODSFormat
 	 *            the timeStampInIRODSFormat to set
 	 */
-	public void setTimeStampInIRODSFormat(String timeStampInIRODSFormat) {
+	public void setTimeStampInIRODSFormat(final String timeStampInIRODSFormat) {
 		this.timeStampInIRODSFormat = timeStampInIRODSFormat;
 	}
 

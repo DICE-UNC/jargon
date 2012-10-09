@@ -52,7 +52,7 @@ public class PAMAuth extends AuthMechanism {
 		log.info("startSSL for PAM auth");
 		SSLStartInp sslStartInp = SSLStartInp.instance();
 		irodsCommands.irodsFunction(sslStartInp);
-		
+
 		// if all went well (no exceptions) then the server is ready for the
 		// credential exchange, first grab an SSL enabled connection
 		log.debug("getting ssl socket factory");
@@ -75,17 +75,19 @@ public class PAMAuth extends AuthMechanism {
 		 * register a callback for handshaking completion event
 		 */
 		if (log.isDebugEnabled()) {
-		sslSocket
-				.addHandshakeCompletedListener(new HandshakeCompletedListener() {
-					public void handshakeCompleted(HandshakeCompletedEvent event) {
-						log.debug("Handshake finished!");
+			sslSocket
+					.addHandshakeCompletedListener(new HandshakeCompletedListener() {
+						@Override
+						public void handshakeCompleted(
+								final HandshakeCompletedEvent event) {
+							log.debug("Handshake finished!");
 							log.debug("\t CipherSuite:{}",
 									event.getCipherSuite());
 							log.debug("\t SessionId {}", event.getSession());
 							log.debug("\t PeerHost {}", event.getSession()
 									.getPeerHost());
-					}
-				});
+						}
+					});
 		}
 
 		log.debug("starting SSL handshake");
@@ -125,7 +127,6 @@ public class PAMAuth extends AuthMechanism {
 			throw new AuthenticationException(
 					"unable to retrive the temp password resulting from the pam auth response");
 		}
-
 
 		log.info("have the temporary password to use to log in via pam\nsending sslEnd...");
 		SSLEndInp sslEndInp = SSLEndInp.instance();

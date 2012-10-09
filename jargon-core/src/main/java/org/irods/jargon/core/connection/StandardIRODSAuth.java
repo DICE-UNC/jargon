@@ -154,7 +154,6 @@ public class StandardIRODSAuth extends AuthMechanism {
 		return Base64.toString(chal);
 	}
 
-
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -166,7 +165,7 @@ public class StandardIRODSAuth extends AuthMechanism {
 	 */
 	@Override
 	protected AuthResponse processAuthenticationAfterStartup(
-			IRODSAccount irodsAccount, IRODSCommands irodsCommands,
+			final IRODSAccount irodsAccount, final IRODSCommands irodsCommands,
 			final StartupResponseData startupResponseData)
 			throws AuthenticationException, JargonException {
 		log.info("authenticate");
@@ -182,6 +181,5 @@ public class StandardIRODSAuth extends AuthMechanism {
 		log.info("auth response was:{}", authResponse);
 		return authResponse;
 	}
-
 
 }

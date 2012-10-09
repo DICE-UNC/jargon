@@ -16,8 +16,10 @@ class GenQueryBuilderCondition {
 	private final String selectFieldNumericTranslation;
 	private final QueryConditionOperators operator;
 	private final String value;
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
@@ -78,8 +80,7 @@ class GenQueryBuilderCondition {
 	private GenQueryBuilderCondition(final String selectFieldColumnName,
 			final SelectFieldSource selectFieldSource,
 			final String selectFieldNumericTranslation,
-			final QueryConditionOperators operator,
-			final String value) {
+			final QueryConditionOperators operator, final String value) {
 		this.selectFieldColumnName = selectFieldColumnName;
 		this.selectFieldSource = selectFieldSource;
 		this.selectFieldNumericTranslation = selectFieldNumericTranslation;

@@ -105,7 +105,6 @@ public abstract class AbstractIRODSQueryResultSet implements
 		return columnNames;
 	}
 
-
 	public int getContinuationIndex() {
 		return continuationIndex;
 	}

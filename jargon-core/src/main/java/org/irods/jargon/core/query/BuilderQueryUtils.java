@@ -3,7 +3,6 @@
  */
 package org.irods.jargon.core.query;
 
-
 /**
  * @author mikeconway
  * 

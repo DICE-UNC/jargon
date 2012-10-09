@@ -67,10 +67,11 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * @throws DataNotFoundException
 	 *             is thrown if the data object does not exist
 	 * @throws JargonException
-	 * @throws FileNotFoundException 
+	 * @throws FileNotFoundException
 	 */
 	DataObject findByCollectionNameAndDataName(final String collectionPath,
-			final String dataName) throws JargonException, FileNotFoundException;
+			final String dataName) throws JargonException,
+			FileNotFoundException;
 
 	/**
 	 * Handy query method will return DataObjects that match the given 'WHERE'
@@ -155,7 +156,7 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 			final String dataObjectCollectionAbsPath,
 			final String dataObjectFileName) throws JargonQueryException,
 			JargonException;
-	
+
 	/**
 	 * List the AVU metadata for a particular data object, as well as
 	 * identifying information about the data object itself, based on a metadata
@@ -166,7 +167,9 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * canonical file path will be reflected if querying the soft link target
 	 * path.
 	 * <p/>
-	 * This version of the method will compare AVU values using case-insensitive queries
+	 * This version of the method will compare AVU values using case-insensitive
+	 * queries
+	 * 
 	 * @param avuQuery
 	 *            <code>List</code> of
 	 *            {@link org.irods.jargon.core.query.AVUQueryElement} that
@@ -175,7 +178,9 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 *            <code>String with the absolute path of the collection for the dataObject of interest.
 	 * @param dataObjectFileName
 	 *            <code>String with the name of the dataObject of interest.
-	 *  @param caseInsensitive <code>boolean</code> where <code>true</code> indicates to treat avu queries as case-insensitive
+	 * @param caseInsensitive
+	 *            <code>boolean</code> where <code>true</code> indicates to
+	 *            treat avu queries as case-insensitive
 	 * @return <code>List</code> of
 	 *         {@link org.irods.jargon.core.query.MetaDataAndDomainData}
 	 * @throws JargonQueryException
@@ -185,7 +190,6 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 			List<AVUQueryElement> avuQuery, String dataObjectCollectionAbsPath,
 			String dataObjectFileName, boolean caseInsensitive)
 			throws JargonQueryException, JargonException;
-
 
 	/**
 	 * List the AVU metadata for a particular data object, as well as
@@ -253,8 +257,7 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	List<MetaDataAndDomainData> findMetadataValuesByMetadataQuery(
 			final List<AVUQueryElement> avuQuery) throws JargonQueryException,
 			JargonException;
-	
-	
+
 	/**
 	 * Handy query method will return DataObjects that match the given 'WHERE'
 	 * clause. This appends the default selects such that they can be converted
@@ -291,8 +294,7 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	List<MetaDataAndDomainData> findMetadataValuesByMetadataQuery(
 			final List<AVUQueryElement> avuQuery, final int partialStartIndex)
 			throws JargonQueryException, JargonException;
-	
-	
+
 	/**
 	 * List the data objects that answer the given AVU metadata query with the
 	 * ability to page through a partial start index.
@@ -305,7 +307,9 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 *            defines the metadata query
 	 * @param partialStartIndex
 	 *            <code>int</code> with a partial start value for paging
-	 *  @param caseInsensitive <code>boolean</code> indicates that the queries should be case-insensitive
+	 * @param caseInsensitive
+	 *            <code>boolean</code> indicates that the queries should be
+	 *            case-insensitive
 	 * @return <code>List</code> of
 	 *         {@link org.irods.jargon.core.query.MetaDataAndDomainData}\
 	 * @throws JargonQueryException
@@ -352,13 +356,14 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 			final List<AVUQueryElement> avuQueryElements,
 			final int partialStartIndex) throws JargonQueryException,
 			JargonException;
-	
+
 	/**
 	 * Given a set of metadata query parameters, return a list of IRODS Data
 	 * Objects that match the metadata query. This query method allows a partial
 	 * start as an offset into the result set to get paging behaviors.
 	 * <p/>
-	 * This method allows the specification of case-insensitive queries on the AVU values.  This is an iRODS3.2+ capability
+	 * This method allows the specification of case-insensitive queries on the
+	 * AVU values. This is an iRODS3.2+ capability
 	 * 
 	 * @param avuQueryElements
 	 *            <code>List</code> of
@@ -367,7 +372,9 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * @param partialStartIndex
 	 *            <code>int</code> that has the partial start offset into the
 	 *            result set
-	 *  @param caseInsensitive <code>boolean</code> that indicates that the AVU query should be processed as case-insensitive
+	 * @param caseInsensitive
+	 *            <code>boolean</code> that indicates that the AVU query should
+	 *            be processed as case-insensitive
 	 * @return
 	 * @throws JargonQueryException
 	 * @throws JargonException
@@ -455,7 +462,6 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 			final String irodsFileAbsolutePath,
 			final String irodsResourceGroupName) throws JargonException;
 
-
 	/**
 	 * Delete the given AVU from the data object identified by absolute path.
 	 * <p/>
@@ -489,10 +495,10 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * @return {@link org.irods.jargon.core.pub.domain.DataObject} with catalog
 	 *         information for the given data object
 	 * @throws JargonException
-	 * @throws FileNotFoundException 
+	 * @throws FileNotFoundException
 	 */
 	DataObject findByAbsolutePath(final String absolutePath)
-			throws  JargonException, FileNotFoundException;
+			throws JargonException, FileNotFoundException;
 
 	/**
 	 * Set the permissions on a data object to read for the given user.
@@ -595,7 +601,6 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 */
 	FilePermissionEnum getPermissionForDataObject(String absolutePath,
 			String userName, String zone) throws JargonException;
-
 
 	/**
 	 * List the user permissions for the given iRODS data object.
@@ -941,5 +946,4 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	DataObject findGivenObjStat(ObjStat objStat) throws DataNotFoundException,
 			JargonException;
 
-	
 }

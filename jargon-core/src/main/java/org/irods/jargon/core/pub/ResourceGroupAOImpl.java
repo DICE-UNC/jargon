@@ -26,7 +26,8 @@ import org.slf4j.LoggerFactory;
  * @author Mike Conway - DICE (www.irods.org)
  * 
  */
-public class ResourceGroupAOImpl extends IRODSGenericAO implements ResourceGroupAO {
+public class ResourceGroupAOImpl extends IRODSGenericAO implements
+		ResourceGroupAO {
 
 	private static Logger log = LoggerFactory
 			.getLogger(ResourceGroupAOImpl.class);
@@ -36,8 +37,8 @@ public class ResourceGroupAOImpl extends IRODSGenericAO implements ResourceGroup
 	 * @param irodsAccount
 	 * @throws JargonException
 	 */
-	protected ResourceGroupAOImpl(IRODSSession irodsSession,
-			IRODSAccount irodsAccount) throws JargonException {
+	protected ResourceGroupAOImpl(final IRODSSession irodsSession,
+			final IRODSAccount irodsAccount) throws JargonException {
 		super(irodsSession, irodsAccount);
 	}
 

@@ -55,7 +55,7 @@ public class AuthResponse {
 	 * @param challengeValue
 	 *            the challengeValue to set
 	 */
-	public void setChallengeValue(String challengeValue) {
+	public void setChallengeValue(final String challengeValue) {
 		this.challengeValue = challengeValue;
 	}
 
@@ -75,7 +75,8 @@ public class AuthResponse {
 	 * @param responseProperties
 	 *            the responseProperties to set
 	 */
-	public void setResponseProperties(Map<String, Object> responseProperties) {
+	public void setResponseProperties(
+			final Map<String, Object> responseProperties) {
 		this.responseProperties = responseProperties;
 	}
 
@@ -94,7 +95,7 @@ public class AuthResponse {
 	 *            <code>boolean</code> that will be true if the authentication
 	 *            process did not succeed
 	 */
-	public void setSuccessful(boolean successful) {
+	public void setSuccessful(final boolean successful) {
 		this.successful = successful;
 	}
 
@@ -114,7 +115,7 @@ public class AuthResponse {
 	 *            process, including any augmented data
 	 */
 	public void setAuthenticatedIRODSAccount(
-			IRODSAccount authenticatedIRODSAccount) {
+			final IRODSAccount authenticatedIRODSAccount) {
 		this.authenticatedIRODSAccount = authenticatedIRODSAccount;
 	}
 
@@ -129,7 +130,7 @@ public class AuthResponse {
 	 * @param authMessage
 	 *            the authMessage to set
 	 */
-	public void setAuthMessage(String authMessage) {
+	public void setAuthMessage(final String authMessage) {
 		this.authMessage = authMessage;
 	}
 
@@ -144,7 +145,7 @@ public class AuthResponse {
 	 * @param startupResponse
 	 *            the startupResponse to set
 	 */
-	public void setStartupResponse(StartupResponseData startupResponse) {
+	public void setStartupResponse(final StartupResponseData startupResponse) {
 		this.startupResponse = startupResponse;
 	}
 
@@ -161,7 +162,8 @@ public class AuthResponse {
 	 *            {@link IRODSAccount} as originally presented for
 	 *            authentication
 	 */
-	public void setAuthenticatingIRODSAccount(IRODSAccount authenticatingIRODSAccount) {
+	public void setAuthenticatingIRODSAccount(
+			final IRODSAccount authenticatingIRODSAccount) {
 		this.authenticatingIRODSAccount = authenticatingIRODSAccount;
 	}
 

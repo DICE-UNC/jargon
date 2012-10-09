@@ -248,7 +248,7 @@ public class ObjStat {
 	 *            that actual canonical path to the soft linked collection for
 	 *            soft linked data objects
 	 */
-	public void setCollectionPath(String collectionPath) {
+	public void setCollectionPath(final String collectionPath) {
 		this.collectionPath = collectionPath;
 	}
 
@@ -263,7 +263,7 @@ public class ObjStat {
 	 * @param cacheDir
 	 *            the cacheDir to set
 	 */
-	public void setCacheDir(String cacheDir) {
+	public void setCacheDir(final String cacheDir) {
 		this.cacheDir = cacheDir;
 	}
 
@@ -278,7 +278,7 @@ public class ObjStat {
 	 * @param cacheDirty
 	 *            the cacheDirty to set
 	 */
-	public void setCacheDirty(boolean cacheDirty) {
+	public void setCacheDirty(final boolean cacheDirty) {
 		this.cacheDirty = cacheDirty;
 	}
 
@@ -293,7 +293,7 @@ public class ObjStat {
 	 * @param replNumber
 	 *            the replNumber to set
 	 */
-	public void setReplNumber(int replNumber) {
+	public void setReplNumber(final int replNumber) {
 		this.replNumber = replNumber;
 	}
 
@@ -312,7 +312,7 @@ public class ObjStat {
 	 *            physical path, for a normal file, or the canonical path for a
 	 *            soft linked collection
 	 */
-	public void setObjectPath(String objectPath) {
+	public void setObjectPath(final String objectPath) {
 		this.objectPath = objectPath;
 	}
 

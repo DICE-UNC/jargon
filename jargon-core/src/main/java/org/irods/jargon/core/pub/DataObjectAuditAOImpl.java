@@ -47,9 +47,9 @@ public class DataObjectAuditAOImpl extends AbstractAuditAOImpl implements
 	 */
 	@Override
 	public AuditedAction getAuditedActionForDataObject(
-			final IRODSFile irodsFile,
-			final String auditActionCode, final String timeStampInIRODSFormat)
-			throws DataNotFoundException, JargonException {
+			final IRODSFile irodsFile, final String auditActionCode,
+			final String timeStampInIRODSFormat) throws DataNotFoundException,
+			JargonException {
 
 		log.info("getAuditedActionForDataObject()");
 

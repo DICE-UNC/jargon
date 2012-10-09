@@ -45,9 +45,8 @@ public interface IRODSGenQueryExecutor extends IRODSAccessObject {
 	 * @throws JargonQueryException
 	 */
 	IRODSQueryResultSet executeIRODSQuery(
-			final AbstractIRODSGenQuery irodsQuery,
-			final int continueIndex) throws JargonException,
-			JargonQueryException;
+			final AbstractIRODSGenQuery irodsQuery, final int continueIndex)
+			throws JargonException, JargonQueryException;
 
 	/**
 	 * Execute an iquest-like query and return results in a convenient POJO
@@ -75,9 +74,8 @@ public interface IRODSGenQueryExecutor extends IRODSAccessObject {
 	 * @throws JargonQueryException
 	 */
 	IRODSQueryResultSet executeIRODSQueryInZone(
-			AbstractIRODSGenQuery irodsQuery,
-			int continueIndex, String zoneName) throws JargonException,
-			JargonQueryException;
+			AbstractIRODSGenQuery irodsQuery, int continueIndex, String zoneName)
+			throws JargonException, JargonQueryException;
 
 	/**
 	 * Execute an iquest-like query and return results in a convenient POJO
@@ -123,8 +121,7 @@ public interface IRODSGenQueryExecutor extends IRODSAccessObject {
 	 */
 	IRODSQueryResultSetInterface executeIRODSQueryWithPagingInZone(
 			AbstractIRODSGenQuery irodsQuery, int partialStartIndex,
-			String zoneName)
-			throws JargonException, JargonQueryException;
+			String zoneName) throws JargonException, JargonQueryException;
 
 	/**
 	 * Execute a requery meant to retrieve more results. The previous result set
@@ -232,7 +229,6 @@ public interface IRODSGenQueryExecutor extends IRODSAccessObject {
 	 */
 	AbstractIRODSQueryResultSet executeIRODSQueryAndCloseResultInZone(
 			AbstractIRODSGenQuery irodsQuery, int partialStartIndex,
-			String zoneName)
-			throws JargonException, JargonQueryException;
+			String zoneName) throws JargonException, JargonQueryException;
 
 }

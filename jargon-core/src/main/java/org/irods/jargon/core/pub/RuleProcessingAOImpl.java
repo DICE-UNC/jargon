@@ -696,8 +696,8 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements
 			final File localFile, final String resourceName,
 			final boolean force, final int nbrThreads) throws JargonException {
 		DataObjectAOImpl dataObjectAO = (DataObjectAOImpl) this
-				.getIRODSAccessObjectFactory()
-				.getDataObjectAO(this.getIRODSAccount());
+				.getIRODSAccessObjectFactory().getDataObjectAO(
+						this.getIRODSAccount());
 		IRODSFile irodsFile = dataObjectAO
 				.instanceIRODSFileForPath(irodsFileAbsolutePath);
 		irodsFile.setResource(resourceName);

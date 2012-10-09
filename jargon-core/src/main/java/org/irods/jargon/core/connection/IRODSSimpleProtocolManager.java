@@ -51,12 +51,9 @@ public final class IRODSSimpleProtocolManager extends
 
 		log.debug("authscheme:{}", irodsAccount.getAuthenticationScheme());
 
-		return IRODSCommands.instance(
-				irodsAccount,
-				this,
-				pipelineConfiguration,
-				this.getAuthenticationFactory().instanceAuthMechanism(
-irodsAccount));
+		return IRODSCommands.instance(irodsAccount, this,
+				pipelineConfiguration, this.getAuthenticationFactory()
+						.instanceAuthMechanism(irodsAccount));
 	}
 
 	/**

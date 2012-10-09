@@ -36,8 +36,7 @@ public class ReconnMsg extends AbstractIRODSPackingInstruction {
 
 	@Override
 	public Tag getTagValue() throws JargonException {
-		Tag startupPacket = new Tag(PI_TAG,
-				new Tag[] {
+		Tag startupPacket = new Tag(PI_TAG, new Tag[] {
 				new Tag("status", startupResponseData.getStatus()),
 				new Tag("cookie", startupResponseData.getCookie()),
 				new Tag("procState", "0"), new Tag("flag", "0") });

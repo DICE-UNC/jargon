@@ -69,8 +69,8 @@ public class SpecificQueryAOImpl extends IRODSGenericAO implements
 		SpecificQueryResultSet resultSet;
 		try {
 			resultSet = this.executeSpecificQueryUsingAliasWithoutAliasLookup(
-					specificQuery, this
-					.getJargonProperties().getMaxFilesAndDirsQueryMax());
+					specificQuery, this.getJargonProperties()
+							.getMaxFilesAndDirsQueryMax());
 		} catch (JargonQueryException e) {
 			log.error("query exception for specific query:{}", specificQuery, e);
 			throw new JargonException(
@@ -128,8 +128,8 @@ public class SpecificQueryAOImpl extends IRODSGenericAO implements
 		SpecificQueryResultSet resultSet;
 		try {
 			resultSet = this.executeSpecificQueryUsingAliasWithoutAliasLookup(
-					specificQuery, this
-					.getJargonProperties().getMaxFilesAndDirsQueryMax());
+					specificQuery, this.getJargonProperties()
+							.getMaxFilesAndDirsQueryMax());
 		} catch (JargonQueryException e) {
 			log.error("query exception for specific query:{}", specificQuery, e);
 			throw new JargonException(
@@ -379,17 +379,16 @@ public class SpecificQueryAOImpl extends IRODSGenericAO implements
 		 */
 
 		SpecificQueryDefinition specificQueryDefinition = this
-					.findSpecificQueryByAlias(specificQuery.getQueryString());
+				.findSpecificQueryByAlias(specificQuery.getQueryString());
 
-			log.info("found specific query definition by alias");
+		log.info("found specific query definition by alias");
 
-			if (specificQuery.getArguments().size() != specificQueryDefinition
-					.getArgumentCount()) {
-				log.error("number of parameters in query does not match number of parameters provided");
-				throw new JargonQueryException(
-						"mismatch between query parameters and number of argumetns provided");
-			}
-
+		if (specificQuery.getArguments().size() != specificQueryDefinition
+				.getArgumentCount()) {
+			log.error("number of parameters in query does not match number of parameters provided");
+			throw new JargonQueryException(
+					"mismatch between query parameters and number of argumetns provided");
+		}
 
 		return queryOnAliasGivenDefinition(specificQuery, maxRows,
 				specificQueryDefinition);
@@ -404,7 +403,7 @@ public class SpecificQueryAOImpl extends IRODSGenericAO implements
 	 */
 	private SpecificQueryResultSet queryOnAliasGivenDefinition(
 			final SpecificQuery specificQuery, final int maxRows,
-			SpecificQueryDefinition specificQueryDefinition)
+			final SpecificQueryDefinition specificQueryDefinition)
 			throws JargonException {
 		SpecificQueryInp specificQueryInp = SpecificQueryInp.instance(
 				specificQuery.getArguments(), specificQuery.getQueryString(),

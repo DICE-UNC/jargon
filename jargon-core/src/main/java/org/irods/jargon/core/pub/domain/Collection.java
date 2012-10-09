@@ -163,7 +163,6 @@ public class Collection extends IRODSDomainObject {
 		this.comments = comments;
 	}
 
-
 	public String getInfo1() {
 		return info1;
 	}
@@ -246,7 +245,7 @@ public class Collection extends IRODSDomainObject {
 	 *            be blank, but if this is a soft link, this will reflect the
 	 *            canonical path to this collection
 	 */
-	public void setObjectPath(String objectPath) {
+	public void setObjectPath(final String objectPath) {
 		this.objectPath = objectPath;
 	}
 
@@ -261,7 +260,7 @@ public class Collection extends IRODSDomainObject {
 	 * @param specColType
 	 *            the specColType to set
 	 */
-	public void setSpecColType(SpecColType specColType) {
+	public void setSpecColType(final SpecColType specColType) {
 		this.specColType = specColType;
 	}
 

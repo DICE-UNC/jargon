@@ -32,10 +32,19 @@ public class AVUQueryElement {
 	private final List<Object> valuesTable;
 
 	/**
-	 * Create an instance of an <code>AVUQueryElement</code> that represents a component of a larger AVU query, specifiying the part (attrib, value, or unit), the operator, and the value to test agains
-	 * @param avuQueryPart {@link AVUQueryPart} discriminating between an attribute, value, or unit
-	 * @param operator {@link AVUQueryOperatorEnum} that represents the operator in the query condition
-	 * @param value <code>String</code> representing the actual value to test against the operator for the given part of the query.
+	 * Create an instance of an <code>AVUQueryElement</code> that represents a
+	 * component of a larger AVU query, specifiying the part (attrib, value, or
+	 * unit), the operator, and the value to test agains
+	 * 
+	 * @param avuQueryPart
+	 *            {@link AVUQueryPart} discriminating between an attribute,
+	 *            value, or unit
+	 * @param operator
+	 *            {@link AVUQueryOperatorEnum} that represents the operator in
+	 *            the query condition
+	 * @param value
+	 *            <code>String</code> representing the actual value to test
+	 *            against the operator for the given part of the query.
 	 * @return
 	 * @throws JargonQueryException
 	 */
@@ -45,7 +54,7 @@ public class AVUQueryElement {
 			throws JargonQueryException {
 		return new AVUQueryElement(avuQueryPart, operator, value, null, null);
 	}
-	
+
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();

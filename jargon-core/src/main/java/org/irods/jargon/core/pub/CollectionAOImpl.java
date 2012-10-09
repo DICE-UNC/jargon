@@ -350,8 +350,8 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 	public List<MetaDataAndDomainData> findMetadataValuesByMetadataQueryForCollection(
 			final List<AVUQueryElement> avuQuery,
 			final String collectionAbsolutePath, final int partialStartIndex,
-			final boolean caseInsensitive) throws FileNotFoundException, JargonQueryException,
-			JargonException {
+			final boolean caseInsensitive) throws FileNotFoundException,
+			JargonQueryException, JargonException {
 
 		if (avuQuery == null || avuQuery.isEmpty()) {
 			throw new IllegalArgumentException("null or empty query");
@@ -369,7 +369,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 						"case insensitive queries not supported on this iRODS version");
 			}
 		}
-		
+
 		log.info("absPath for querying iCAT:{}", collectionAbsolutePath);
 
 		log.info("building a metadata query for: {}", avuQuery);
@@ -410,7 +410,8 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 								partialStartIndex);
 			} else {
 
-				ObjStat objStat = this.getObjectStatForAbsolutePath(collectionAbsolutePath);
+				ObjStat objStat = this
+						.getObjectStatForAbsolutePath(collectionAbsolutePath);
 				resultSet = irodsGenQueryExecutor
 						.executeIRODSQueryAndCloseResultInZone(irodsQuery,
 								partialStartIndex, objStat.getOwnerZone());
@@ -532,7 +533,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 	public void modifyAvuValueBasedOnGivenAttributeAndUnit(
 			final String absolutePath, final AvuData avuData)
 			throws DataNotFoundException, JargonException {
-		
+
 		if (absolutePath == null || absolutePath.isEmpty()) {
 			throw new IllegalArgumentException("null or empty absolutePath");
 		}
@@ -830,7 +831,8 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 	 */
 	@Override
 	public int countAllFilesUnderneathTheGivenCollection(
-			final String irodsCollectionAbsolutePath) throws FileNotFoundException, JargonException {
+			final String irodsCollectionAbsolutePath)
+			throws FileNotFoundException, JargonException {
 
 		if (irodsCollectionAbsolutePath == null) {
 			throw new IllegalArgumentException(
@@ -842,7 +844,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 
 		// not found exception will occur in retrieval of objStat, also checks
 		// if I can handle this coll type
-		ObjStat objStat =getObjectStatForAbsolutePath(irodsCollectionAbsolutePath);
+		ObjStat objStat = getObjectStatForAbsolutePath(irodsCollectionAbsolutePath);
 
 		// I cannot get children if this is not a directory (a file has no
 		// children)
@@ -879,8 +881,9 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 		IRODSQueryResultSetInterface resultSet;
 
 		try {
-			resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResultInZone(
-					irodsQuery, 0, objStat.getOwnerZone());
+			resultSet = irodsGenQueryExecutor
+					.executeIRODSQueryAndCloseResultInZone(irodsQuery, 0,
+							objStat.getOwnerZone());
 		} catch (JargonQueryException e) {
 			log.error("query exception for  query:" + query.toString(), e);
 			throw new JargonException("error in exists query");
@@ -1197,7 +1200,8 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 	 */
 	@Override
 	public boolean isCollectionSetForPermissionInheritance(
-			final String absolutePath) throws FileNotFoundException, JargonException {
+			final String absolutePath) throws FileNotFoundException,
+			JargonException {
 
 		if (absolutePath == null || absolutePath.isEmpty()) {
 			throw new IllegalArgumentException(
@@ -1215,8 +1219,9 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 		IRODSQueryResultSetInterface resultSet;
 
 		try {
-			resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResultInZone(
-					irodsQuery, 0, objStat.getOwnerZone());
+			resultSet = irodsGenQueryExecutor
+					.executeIRODSQueryAndCloseResultInZone(irodsQuery, 0,
+							objStat.getOwnerZone());
 		} catch (JargonQueryException e) {
 			throw new JargonException("error querying for inheritance flag", e);
 		}
@@ -1259,7 +1264,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 
 		log.info("getPermissionForCollection for absPath:{}", irodsAbsolutePath);
 		log.info("userName:{}", userName);
-		
+
 		IRODSFileSystemAO irodsFileSystemAO = getIRODSAccessObjectFactory()
 				.getIRODSFileSystemAO(getIRODSAccount());
 		IRODSFileFactory irodsFileFactory = this.getIRODSFileFactory();
@@ -1280,11 +1285,13 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 	 * @param absolutePath
 	 * @param recursive
 	 * @return
-	 * @throws FileNotFoundException if the underlying file is not found by the absolute path
+	 * @throws FileNotFoundException
+	 *             if the underlying file is not found by the absolute path
 	 * @throws JargonException
 	 */
 	private boolean adjustRecursiveOption(final String absolutePath,
-			final boolean recursive) throws  FileNotFoundException, JargonException {
+			final boolean recursive) throws FileNotFoundException,
+			JargonException {
 
 		IRODSFile collFile = this.getIRODSFileFactory().instanceIRODSFile(
 				absolutePath);
@@ -1342,7 +1349,8 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 				irodsCollectionAbsolutePath);
 		log.info("   userName:{}", userName);
 
-		ObjStat objStat = this.getObjectStatForAbsolutePath(irodsCollectionAbsolutePath);
+		ObjStat objStat = this
+				.getObjectStatForAbsolutePath(irodsCollectionAbsolutePath);
 		String absPath = this.resolveAbsolutePathGivenObjStat(objStat);
 
 		String theUser = MiscIRODSUtils.getUserInUserName(userName);
@@ -1441,8 +1449,8 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 		log.info("listPermissionsForCollection: {}",
 				irodsCollectionAbsolutePath);
 
-
-		ObjStat objStat = this.getObjectStatForAbsolutePath(irodsCollectionAbsolutePath);
+		ObjStat objStat = this
+				.getObjectStatForAbsolutePath(irodsCollectionAbsolutePath);
 		String absPath = this.resolveAbsolutePathGivenObjStat(objStat);
 
 		List<UserFilePermission> userFilePermissions = new ArrayList<UserFilePermission>();
@@ -1466,14 +1474,16 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 
 		User user = null;
 		try {
-			resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResultInZone(
-					irodsQuery, 0, objStat.getOwnerZone());
+			resultSet = irodsGenQueryExecutor
+					.executeIRODSQueryAndCloseResultInZone(irodsQuery, 0,
+							objStat.getOwnerZone());
 
 			UserFilePermission userFilePermission = null;
 
 			for (IRODSQueryResultRow row : resultSet.getResults()) {
 
-				user = userAO.findByIdInZone(row.getColumn(2), objStat.getOwnerZone());
+				user = userAO.findByIdInZone(row.getColumn(2),
+						objStat.getOwnerZone());
 				userFilePermission = new UserFilePermission(row.getColumn(0),
 						row.getColumn(2),
 						FilePermissionEnum.valueOf(IRODSDataConversionUtil
@@ -1502,8 +1512,8 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 	 * .lang.String, java.lang.String)
 	 */
 	@Override
-	public boolean isUserHasAccess(String irodsAbsolutePath, String userName)
-			throws JargonException {
+	public boolean isUserHasAccess(final String irodsAbsolutePath,
+			final String userName) throws JargonException {
 		log.info("isUserHasAccess()");
 		if (irodsAbsolutePath == null || irodsAbsolutePath.isEmpty()) {
 			throw new IllegalArgumentException(
@@ -1517,10 +1527,8 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 		log.info("irodsAbsolutePath:{}", irodsAbsolutePath);
 		log.info("userName:{}", userName);
 
-		UserFilePermission derivedPermission = this
-.getPermissionForUserName(
-				irodsAbsolutePath,
-						userName);
+		UserFilePermission derivedPermission = this.getPermissionForUserName(
+				irodsAbsolutePath, userName);
 		boolean hasPermission = false;
 		if (derivedPermission != null) {
 			hasPermission = true;

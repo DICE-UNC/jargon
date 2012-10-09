@@ -150,7 +150,6 @@ public class IRODSCommands implements IRODSManagedConnection {
 		startupConnection(irodsAccount);
 	}
 
-
 	/**
 	 * Internal constructor used when reconnecting, or when operating with an
 	 * SSL wrapped connection when securely exchanging credentials (such as in
@@ -679,7 +678,7 @@ public class IRODSCommands implements IRODSManagedConnection {
 		return irodsFunction(IRODSConstants.RODS_API_REQ,
 				irodsPI.getParsedTags(), irodsPI.getApiNumber());
 	}
-	
+
 	/**
 	 * Create the iRODS header packet
 	 */

@@ -17,7 +17,6 @@ import org.slf4j.LoggerFactory;
 public abstract class AbstractIRODSProtocolManager implements
 		IRODSProtocolManager {
 
-
 	private Logger log = LoggerFactory
 			.getLogger(AbstractIRODSProtocolManager.class);
 
@@ -144,7 +143,7 @@ public abstract class AbstractIRODSProtocolManager implements
 	 */
 	@Override
 	public synchronized void setAuthenticationFactory(
-			AuthenticationFactory authenticationFactory) {
+			final AuthenticationFactory authenticationFactory) {
 		this.authenticationFactory = authenticationFactory;
 	}
 

@@ -321,7 +321,7 @@ public class MiscIRODSUtils {
 			throw new JargonException(
 					"exception creating MD5 Hash of the given string", ex);
 		}
-}
+	}
 
 	/**
 	 * Compute a home directory path in /zone/home/username format given an
@@ -555,14 +555,15 @@ public class MiscIRODSUtils {
 	 * @throws JargonException
 	 */
 	public static <T extends Enum<T>> List<String> getDisplayValuesFromEnum(
-			Class<T> enumClass) throws JargonException {
+			final Class<T> enumClass) throws JargonException {
 		try {
 			T[] items = enumClass.getEnumConstants();
 			Method accessor = enumClass.getMethod("toString");
 
 			ArrayList<String> names = new ArrayList<String>(items.length);
-			for (T item : items)
+			for (T item : items) {
 				names.add(accessor.invoke(item).toString());
+			}
 
 			return names;
 		} catch (Exception ex) {
@@ -579,8 +580,8 @@ public class MiscIRODSUtils {
 	 *            <code>char</code> whose occurrances will be counted
 	 * @return <code>int</code> with the count of the given character
 	 */
-	public static int countCharsInString(final String stringToCountOccurrancesIn,
-			final char characterToCount) {
+	public static int countCharsInString(
+			final String stringToCountOccurrancesIn, final char characterToCount) {
 
 		if (stringToCountOccurrancesIn == null) {
 			throw new IllegalArgumentException("null s");
@@ -588,8 +589,8 @@ public class MiscIRODSUtils {
 
 		final char[] chars = stringToCountOccurrancesIn.toCharArray();
 		int count = 0;
-		for (int i = 0; i < chars.length; i++) {
-			if (chars[i] == characterToCount) {
+		for (char c : chars) {
+			if (c == characterToCount) {
 				count++;
 			}
 		}
@@ -605,7 +606,7 @@ public class MiscIRODSUtils {
 	 *            <code>int</code> with the amount to pad
 	 * @return <code>String</code> padded to specification
 	 */
-	public static String padRight(String s, int n) {
+	public static String padRight(final String s, final int n) {
 		return String.format("%1$-" + n + "s", s);
 	}
 
@@ -618,7 +619,7 @@ public class MiscIRODSUtils {
 	 *            <code>int</code> with the amount to pad
 	 * @return <code>String</code> padded to specification
 	 */
-	public static String padLeft(String s, int n) {
+	public static String padLeft(final String s, final int n) {
 		return String.format("%1$" + n + "s", s);
 	}
 

@@ -11,7 +11,7 @@ import java.util.List;
  * 
  */
 public class SpecificQuery extends AbstractAliasedQuery {
-	
+
 	/**
 	 * Create an instance of a specific (SQL) query with no arguments
 	 * 
@@ -47,7 +47,7 @@ public class SpecificQuery extends AbstractAliasedQuery {
 	 *         iRODS catalog
 	 */
 	public static SpecificQuery instanceArguments(final String queryString,
-			List<String> arguments, final int continuationValue) {
+			final List<String> arguments, final int continuationValue) {
 		return new SpecificQuery(queryString, arguments, continuationValue);
 	}
 
@@ -58,8 +58,8 @@ public class SpecificQuery extends AbstractAliasedQuery {
 	 * @param arguments
 	 * @param continuationValue
 	 */
-	private SpecificQuery(String queryString, List<String> arguments,
-			int continuationValue) {
+	private SpecificQuery(final String queryString,
+			final List<String> arguments, final int continuationValue) {
 		super(queryString, arguments, continuationValue);
 	}
 

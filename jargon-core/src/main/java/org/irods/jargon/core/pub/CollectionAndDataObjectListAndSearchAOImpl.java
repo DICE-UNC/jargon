@@ -1375,14 +1375,19 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		// get appropriate domain object and return
 		return returnObject;
 	}
-	
-	
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.pub.CollectionAndDataObjectListAndSearchAO#retrieveObjectStatForPathAndDataObjectName(java.lang.String, java.lang.String)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.pub.CollectionAndDataObjectListAndSearchAO#
+	 * retrieveObjectStatForPathAndDataObjectName(java.lang.String,
+	 * java.lang.String)
 	 */
 	@Override
-	public ObjStat retrieveObjectStatForPathAndDataObjectName(final String parentPath, final String fileName) throws FileNotFoundException, JargonException {
-		
+	public ObjStat retrieveObjectStatForPathAndDataObjectName(
+			final String parentPath, final String fileName)
+			throws FileNotFoundException, JargonException {
+
 		log.info("retrieveObjectStatForPathAndDataObjectName()");
 		if (parentPath == null || parentPath.isEmpty()) {
 			throw new IllegalArgumentException("null or empty parentPath");
@@ -1395,7 +1400,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		sb.append('/');
 		sb.append(fileName);
 		return retrieveObjectStatForPath(sb.toString());
-		
+
 	}
 
 	/*

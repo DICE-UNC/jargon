@@ -6,68 +6,71 @@ import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.DuplicateDataException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.domain.SpecificQueryDefinition;
+import org.irods.jargon.core.query.IRODSQueryResultSet;
 import org.irods.jargon.core.query.JargonQueryException;
 import org.irods.jargon.core.query.SpecificQuery;
 import org.irods.jargon.core.query.SpecificQueryResultSet;
 
 /**
-* Interface for an object to interact with specific query in IRODS.
-* 
-* @author Lisa Stillwell RENCI (www.renci.org)
-* 
-**/
+ * Interface for an object to interact with specific query in IRODS.
+ * 
+ * @author Lisa Stillwell RENCI (www.renci.org)
+ * 
+ **/
 
 public interface SpecificQueryAO extends IRODSAccessObject {
-	
+
 	/**
 	 * Add a specific query to iRODS
 	 * 
 	 * @param sqlQuery
-	 * 		<code>String</code> with the a valid SQL query
+	 *            <code>String</code> with the a valid SQL query
 	 * @param alias
-	 * 		<code>String</code> with a unique alias name for this SQL query
+	 *            <code>String</code> with a unique alias name for this SQL
+	 *            query
 	 * @throws IllegalArgumentException
 	 * @throws DuplicateDataException
 	 */
-	 void addSpecificQuery(SpecificQueryDefinition specificQuery) throws JargonException, DuplicateDataException;
-	 
-	 
-	 /**
+	void addSpecificQuery(SpecificQueryDefinition specificQuery)
+			throws JargonException, DuplicateDataException;
+
+	/**
 	 * Remove a specific query from iRODS
 	 * 
 	 * @param specificQuery
-	 *		{@link org.irods.jargon.core.pub.domain.SpecificQueryDefinition} to be added to iRODS.
+	 *            {@link org.irods.jargon.core.pub.domain.SpecificQueryDefinition}
+	 *            to be added to iRODS.
 	 * @throws IllegalArgumentException
 	 * @throws DuplicateDataException
 	 */
-	 void removeSpecificQuery(SpecificQueryDefinition specificQuery) throws JargonException;
-	 
-	 
-	 /**
+	void removeSpecificQuery(SpecificQueryDefinition specificQuery)
+			throws JargonException;
+
+	/**
 	 * Remove a specific query from iRODS using alias name as identifier
 	 * 
 	 * @param alias
-	 * 		<code>String</code> with a unique alias name for this SQL query
+	 *            <code>String</code> with a unique alias name for this SQL
+	 *            query
 	 * @throws IllegalArgumentException
 	 * @throws DuplicateDataException
 	 */
-	 void removeSpecificQueryByAlias(String alias) throws JargonException;
-		
-	 
-	 /**
+	void removeSpecificQueryByAlias(String alias) throws JargonException;
+
+	/**
 	 * Remove a specific query from iRODS using SQL query as identifier
 	 * <p>
 	 * Please note that this method will remove all existing Specific Queries
 	 * that match the provided SQL query String
 	 * 
 	 * @param sqlQuery
-	 * 		<code>String</code> with the a valid SQL query
+	 *            <code>String</code> with the a valid SQL query
 	 * @throws IllegalArgumentException
 	 * @throws DuplicateDataException
 	 * 
 	 */
-	 void removeAllSpecificQueryBySQL(String sqlQuery) throws JargonException, DuplicateDataException;
-
+	void removeAllSpecificQueryBySQL(String sqlQuery) throws JargonException,
+			DuplicateDataException;
 
 	/**
 	 * Execute a specific query by providing the alias that the sql had been
@@ -99,8 +102,7 @@ public interface SpecificQueryAO extends IRODSAccessObject {
 	 */
 	SpecificQueryResultSet executeSpecificQueryUsingAlias(
 			SpecificQuery specificQuery, int maxRows)
-			throws DataNotFoundException, JargonException,
-			JargonQueryException;
+			throws DataNotFoundException, JargonException, JargonQueryException;
 
 	/**
 	 * Execute a specific query by providing the exact sql that was registered
@@ -130,7 +132,6 @@ public interface SpecificQueryAO extends IRODSAccessObject {
 	SpecificQueryResultSet executeSpecificQueryUsingSql(
 			SpecificQuery specificQuery, int maxRows)
 			throws DataNotFoundException, JargonException, JargonQueryException;
-
 
 	// void closeSpecificQuery() throws JargonException;
 
@@ -164,6 +165,5 @@ public interface SpecificQueryAO extends IRODSAccessObject {
 	 */
 	SpecificQueryDefinition findSpecificQueryByAlias(String specificQueryAlias)
 			throws DataNotFoundException, JargonException;
-
 
 }
