@@ -1,18 +1,11 @@
-
 *'''Project''': Jargon-core API
 *'''Date''': xx/xx/xxxx
-*'''Release Version''': 3.2.0-SNAPSHOT
+*'''Release Version''': 3.2.0.1-SNAPSHOT
 *'''git tag''': xxxxxx
 
 ==News==
 
-Work in progress for iRODS 3.X release including support for pluggable authentication methods, this includes support for PAM
-
-
-==News==
-=======
-
-NOTE: This RELEASE is a maintenance release to coincide with the release of iRODS 3.2.  This originates from the GIT release branch, and represents the latest bug fixes and small features.  It is planned to simultaneously release a Jargon 3.2.0.1 beta that will include refactoring and more features.  Please consult the Jargon page at GForge for news and release details
+Work in progress for iRODS 3.2.1 release including support for pluggable authentication methods, this includes support for PAM
 
 https://code.renci.org/gf/project/jargon/
 
@@ -51,21 +44,10 @@ Note that the following bug and feature requests are logged in GForge with relat
 
 ==Bug Fixes==
 
-* [#977] -15000 errors in specific query
-** added KVP to packing instruction, which seems to be required in later revs of the HEAD that will be iRODS 3.2
-
-*[#993] fix special query parsing to account for blank rows
-** bug identified and patched by John Wregglesworth of iPlant
-
-*[#1004] irods output stream errors writing to a file not under /zone/home
-** Fix bug that creates an IRODSOutputStream on open twice when resource re-routing is turned on
-** Tighten up cross-zone query determination via objStat for data objects and collections
-
 ==Features==
 
  * [#132] GSS and Kerberos Support in Jargon-core
  ** merge in plug-able authentication refactoring
- 
  
  * [#870] jargon support for PAM
  ** Support for PAM authentication (per Chris Smith's updates to iRODS) as a pluggable auth module in Jargon
