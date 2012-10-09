@@ -99,21 +99,21 @@ public class IRODSServerProperties {
 		}
 		return supports;
 	}
-	
+
 	/**
-	 * Does the server (based on version) support case-insensitive gen query conditions
+	 * Does the server (based on version) support case-insensitive gen query
+	 * conditions
 	 * 
 	 * @return <code>boolean</code> of <code>true</code> if this version
 	 *         supports case-insensitive gen query conditions
 	 */
 	public boolean isSupportsCaseInsensitiveQueries() {
 		boolean supports = false;
-		if (isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods3.2")) { 
+		if (isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods3.2")) {
 			supports = true;
 		}
 		return supports;
 	}
-
 
 	/**
 	 * Handy method compares the iRODS release version of the target server, and

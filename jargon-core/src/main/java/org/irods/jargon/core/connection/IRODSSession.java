@@ -12,6 +12,7 @@ import java.util.concurrent.TimeUnit;
 
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.packinstr.TransferOptions;
+import org.irods.jargon.core.pub.IRODSFileSystem;
 import org.irods.jargon.core.transfer.DefaultTransferControlBlock;
 import org.irods.jargon.core.transfer.TransferControlBlock;
 import org.slf4j.Logger;

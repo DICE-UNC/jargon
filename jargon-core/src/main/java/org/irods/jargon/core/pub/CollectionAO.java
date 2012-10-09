@@ -78,18 +78,21 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	List<Collection> findDomainByMetadataQuery(
 			List<AVUQueryElement> avuQueryElements)
 			throws JargonQueryException, JargonException;
-	
+
 	/**
 	 * Given a set of metadata query parameters, return a list of IRODS
 	 * Collections that match the metadata query.
 	 * <p/>
-	 * This version of the method allows specification of a case-insensitive AVU query
+	 * This version of the method allows specification of a case-insensitive AVU
+	 * query
 	 * 
 	 * @param avuQueryElements
 	 *            <code>List</code> of
 	 *            {@link org.irods.jargon.core.query.AVUQueryElements} with the
 	 *            query specification
-	 *  @param caseInsensitive <code>boolean</code> that will cause the AVU query to be case-insensitive
+	 * @param caseInsensitive
+	 *            <code>boolean</code> that will cause the AVU query to be
+	 *            case-insensitive
 	 * @return <code>List</code> of org.irods.jargon.core.pub.domain.Collection}
 	 *         with domain objects that satisfy the query.
 	 * @throws JargonQueryException
@@ -99,8 +102,6 @@ public interface CollectionAO extends FileCatalogObjectAO {
 			List<AVUQueryElement> avuQueryElements, int partialStartIndex,
 			boolean caseInsensitive) throws JargonQueryException,
 			JargonException;
-	
-	
 
 	/**
 	 * Get a summary list of collections and data objects and AVU metadata based
@@ -118,18 +119,20 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	List<MetaDataAndDomainData> findMetadataValuesByMetadataQuery(
 			List<AVUQueryElement> avuQuery) throws JargonQueryException,
 			JargonException;
-	
+
 	/**
 	 * Get a summary list of collections and data objects and AVU metadata based
 	 * on a meta-data query
-	 * <p/> 
+	 * <p/>
 	 * 
 	 * 
 	 * @param avuQuery
 	 *            <code>List</code> of
 	 *            {@link org.irods.jargon.core.query.AVUQueryElements} with the
 	 *            query specification
-	 *   @param caseInsensitive <code>boolean</code> that, when <code>true</code> will do case insensitive avu queries
+	 * @param caseInsensitive
+	 *            <code>boolean</code> that, when <code>true</code> will do case
+	 *            insensitive avu queries
 	 * @return <code>List</code> of
 	 *         {@link org.irods.jargon.core.query.MetaDataAndDomainData}
 	 * @throws JargonQueryException
@@ -138,7 +141,6 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	List<MetaDataAndDomainData> findMetadataValuesByMetadataQuery(
 			List<AVUQueryElement> avuQuery, boolean caseInsensitive)
 			throws JargonQueryException, JargonException;
-
 
 	/**
 	 * Add AVU metadata for this collection. *
@@ -209,7 +211,7 @@ public interface CollectionAO extends FileCatalogObjectAO {
 			final List<AVUQueryElement> avuQuery,
 			final String collectionAbsolutePath) throws JargonQueryException,
 			JargonException;
-	
+
 	/**
 	 * List the AVU metadata for a particular collection, as well as information
 	 * identifying the Collection associated with that metadata, based on a
@@ -231,15 +233,19 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	 *            defines the metadata query
 	 * @param <code>String with the absolute path of the collection of interest.  If this path
 	 * is left blank, then the query will not add absolute path to the 'where' clause.
-	 * @param <code>boolean</code> indicates that this is a case-insensitive query.
+	 * @param <code>boolean</code> indicates that this is a case-insensitive
+	 *        query.
 	 * @return <code>List</code> of
 	 *         {@link org.irods.jargon.core.query.MetaDataAndDomainData}
+	 * @throws FileNotFoundExcepton
+	 *             if the collection cannot be found
 	 * @throws JargonQueryException
 	 * @throws JargonException
 	 */
 	List<MetaDataAndDomainData> findMetadataValuesByMetadataQueryForCollection(
 			List<AVUQueryElement> avuQuery, String collectionAbsolutePath,
-			int partialStartIndex, boolean caseInsensitive) 	throws JargonQueryException, JargonException;
+			int partialStartIndex, boolean caseInsensitive)
+			throws FileNotFoundException, JargonQueryException, JargonException;
 
 	/**
 	 * Get a list of the metadata values for the given collection absolute path.
@@ -263,12 +269,14 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	 *         {@link org.irods.jargon.core.query.MetaDataAndDomainData} with
 	 *         AVU values and other values that identify the collection the AVU
 	 *         applies to.
+	 * @throws FileNotFoundException
+	 *             if the collection could not be found
 	 * @throws JargonException
 	 * @throws JargonQueryException
 	 */
 	List<MetaDataAndDomainData> findMetadataValuesForCollection(
 			final String collectionAbsolutePath, final int partialStartIndex)
-			throws JargonException, JargonQueryException;
+			throws FileNotFoundException, JargonException, JargonQueryException;
 
 	/**
 	 * Get a list of the metadata values for the given collection absolute path.
@@ -366,10 +374,13 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	 *            collection to count
 	 * @return <code>int</code> with the total count of files, recursively
 	 *         counted.
+	 * @throws FileNotFoundException
+	 *             if the collection absolute path is not found in iRODS
 	 * @throws JargonException
 	 */
 	int countAllFilesUnderneathTheGivenCollection(
-			final String irodsCollectionAbsolutePath) throws JargonException;
+			final String irodsCollectionAbsolutePath)
+			throws FileNotFoundException, JargonException;
 
 	/**
 	 * For a given iRODS collection, set the access permission to read. This can
@@ -506,10 +517,12 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	 * @param absolutePath
 	 *            <code>String</code> with the absolute path to the collection.
 	 * @return
+	 * @throws FileNotFoundException
+	 *             if the collection does not exist
 	 * @throws JargonException
 	 */
 	boolean isCollectionSetForPermissionInheritance(String absolutePath)
-			throws JargonException;
+			throws FileNotFoundException, JargonException;
 
 	/**
 	 * For a given iRODS collection, set he default to not inherit access
@@ -552,10 +565,13 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	 *            blank if not used, it is not required.
 	 * @return {@link FilePermissionEnum} value with the permission level for
 	 *         the given user.
+	 * @throws FileNotFoundException
+	 *             if the collection path is not found
 	 * @throws JargonException
 	 */
 	FilePermissionEnum getPermissionForCollection(String irodsAbsolutePath,
-			String userName, String zone) throws JargonException;
+			String userName, String zone) throws FileNotFoundException,
+			JargonException;
 
 	/**
 	 * Get a list of all permissions for all users on the given collection
@@ -810,6 +826,5 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	 */
 	Collection findGivenObjStat(ObjStat objStat) throws DataNotFoundException,
 			JargonException;
-
 
 }

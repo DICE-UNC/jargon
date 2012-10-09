@@ -444,17 +444,18 @@ public interface IRODSAccessObjectFactory {
 	 */
 	ResourceGroupAO getResourceGroupAO(IRODSAccount irodsAccount)
 			throws JargonException;
-	
+
 	/**
-	 * Create an instance of a <code>SpecificQueryAO</code> access object to interact
-	 * with iRODS Specific Queries.
+	 * Create an instance of a <code>SpecificQueryAO</code> access object to
+	 * interact with iRODS Specific Queries.
 	 * 
 	 * @param irodsAccount
 	 *            {@link IRODSAccount} that describes the connection to iRODS.
 	 * @return {@link org.irods.jargon.core.pub.SpecificQueryAO}
 	 * @throws JargonException
 	 */
-	SpecificQueryAO getSpecificQueryAO(final IRODSAccount irodsAccount) throws JargonException;
+	SpecificQueryAO getSpecificQueryAO(final IRODSAccount irodsAccount)
+			throws JargonException;
 
 	/**
 	 * Cause an <code>IRODSAccount</code> to be authenticated, and return and

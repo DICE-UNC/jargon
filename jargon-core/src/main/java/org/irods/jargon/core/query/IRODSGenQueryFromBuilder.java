@@ -89,9 +89,10 @@ public class IRODSGenQueryFromBuilder extends AbstractIRODSGenQuery {
 
 		for (GenQueryBuilderCondition builderCondition : irodsGenQueryBuilderData
 				.getConditions()) {
-			
+
 			/*
-			 * For case insensitive gen queries, iRODS really does 'upper' on the database field, so make the condition upper too
+			 * For case insensitive gen queries, iRODS really does 'upper' on
+			 * the database field, so make the condition upper too
 			 */
 			String value;
 			if (irodsGenQueryBuilderData.isUpperCase()) {
@@ -99,14 +100,14 @@ public class IRODSGenQueryFromBuilder extends AbstractIRODSGenQuery {
 			} else {
 				value = builderCondition.getValue();
 			}
-			
+
 			try {
 				conditions.add(TranslatedGenQueryCondition
 						.instanceWithFieldNameAndNumericTranslation(
 								builderCondition.getSelectFieldColumnName(),
 								builderCondition.getOperator()
-										.getOperatorAsString(),
-								value, builderCondition
+										.getOperatorAsString(), value,
+								builderCondition
 										.getSelectFieldNumericTranslation()));
 			} catch (JargonQueryException e) {
 				throw new GenQueryBuilderException(
@@ -115,9 +116,13 @@ public class IRODSGenQueryFromBuilder extends AbstractIRODSGenQuery {
 		}
 
 		try {
-			
-			return TranslatedIRODSGenQuery.instance(irodsGenQueryBuilderData.getSelectFields(), conditions, irodsGenQueryBuilderData.getOrderByFields(), this, irodsGenQueryBuilderData.isDistinct(), irodsGenQueryBuilderData.isUpperCase());
-		
+
+			return TranslatedIRODSGenQuery.instance(
+					irodsGenQueryBuilderData.getSelectFields(), conditions,
+					irodsGenQueryBuilderData.getOrderByFields(), this,
+					irodsGenQueryBuilderData.isDistinct(),
+					irodsGenQueryBuilderData.isUpperCase());
+
 		} catch (JargonException e) {
 			throw new GenQueryBuilderException(
 					"exception building a translated query from this builder query",

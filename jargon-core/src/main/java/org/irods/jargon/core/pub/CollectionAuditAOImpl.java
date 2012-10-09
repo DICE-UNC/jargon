@@ -25,7 +25,6 @@ public class CollectionAuditAOImpl extends AbstractAuditAOImpl implements
 			.getLogger(CollectionAuditAOImpl.class);
 	public static final char COMMA = ',';
 
-
 	/**
 	 * Default constructor as invoked by {@link IRODSAccessObjectFactory}
 	 * 

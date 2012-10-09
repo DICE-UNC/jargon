@@ -1,6 +1,5 @@
 package org.irods.jargon.core.query;
 
-
 /**
  * Represents an order by element of a builder query.
  * 
@@ -29,10 +28,10 @@ public class GenQueryOrderByField extends GenQueryField {
 	 *            {@link OrderByType} that indicates the order by type.
 	 * @return
 	 */
-	static GenQueryOrderByField instance(
-			String selectFieldColumnName,
-			SelectFieldSource selectFieldSource,
-			String selectFieldNumericTranslation, OrderByType orderByType) {
+	static GenQueryOrderByField instance(final String selectFieldColumnName,
+			final SelectFieldSource selectFieldSource,
+			final String selectFieldNumericTranslation,
+			final OrderByType orderByType) {
 		return new GenQueryOrderByField(selectFieldColumnName,
 				selectFieldSource, selectFieldNumericTranslation, orderByType);
 	}
@@ -43,9 +42,10 @@ public class GenQueryOrderByField extends GenQueryField {
 	 * @param selectFieldNumericTranslation
 	 * @param orderByType
 	 */
-	private GenQueryOrderByField(String selectFieldColumnName,
-			SelectFieldSource selectFieldSource,
-			String selectFieldNumericTranslation, OrderByType orderByType) {
+	private GenQueryOrderByField(final String selectFieldColumnName,
+			final SelectFieldSource selectFieldSource,
+			final String selectFieldNumericTranslation,
+			final OrderByType orderByType) {
 
 		super(selectFieldColumnName, selectFieldSource,
 				selectFieldNumericTranslation);
@@ -63,6 +63,5 @@ public class GenQueryOrderByField extends GenQueryField {
 	public OrderByType getOrderByType() {
 		return orderByType;
 	}
-
 
 }

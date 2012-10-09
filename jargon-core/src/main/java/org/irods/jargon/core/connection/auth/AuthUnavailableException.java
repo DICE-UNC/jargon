@@ -1,4 +1,3 @@
-
 package org.irods.jargon.core.connection.auth;
 
 import org.irods.jargon.core.exception.JargonException;
@@ -16,7 +15,7 @@ public class AuthUnavailableException extends JargonException {
 	/**
 	 * @param message
 	 */
-	public AuthUnavailableException(String message) {
+	public AuthUnavailableException(final String message) {
 		super(message);
 	}
 
@@ -24,14 +23,14 @@ public class AuthUnavailableException extends JargonException {
 	 * @param message
 	 * @param cause
 	 */
-	public AuthUnavailableException(String message, Throwable cause) {
+	public AuthUnavailableException(final String message, final Throwable cause) {
 		super(message, cause);
 	}
 
 	/**
 	 * @param cause
 	 */
-	public AuthUnavailableException(Throwable cause) {
+	public AuthUnavailableException(final Throwable cause) {
 		super(cause);
 	}
 
@@ -40,8 +39,8 @@ public class AuthUnavailableException extends JargonException {
 	 * @param cause
 	 * @param underlyingIRODSExceptionCode
 	 */
-	public AuthUnavailableException(String message, Throwable cause,
-			int underlyingIRODSExceptionCode) {
+	public AuthUnavailableException(final String message,
+			final Throwable cause, final int underlyingIRODSExceptionCode) {
 		super(message, cause, underlyingIRODSExceptionCode);
 	}
 
@@ -49,8 +48,8 @@ public class AuthUnavailableException extends JargonException {
 	 * @param cause
 	 * @param underlyingIRODSExceptionCode
 	 */
-	public AuthUnavailableException(Throwable cause,
-			int underlyingIRODSExceptionCode) {
+	public AuthUnavailableException(final Throwable cause,
+			final int underlyingIRODSExceptionCode) {
 		super(cause, underlyingIRODSExceptionCode);
 	}
 
@@ -58,8 +57,8 @@ public class AuthUnavailableException extends JargonException {
 	 * @param message
 	 * @param underlyingIRODSExceptionCode
 	 */
-	public AuthUnavailableException(String message,
-			int underlyingIRODSExceptionCode) {
+	public AuthUnavailableException(final String message,
+			final int underlyingIRODSExceptionCode) {
 		super(message, underlyingIRODSExceptionCode);
 	}
 

@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.irods.jargon.core.exception.FileNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.pub.domain.DataObject;
+import org.irods.jargon.core.pub.domain.IRODSDomainObject;
 import org.irods.jargon.core.pub.domain.ObjStat;
 import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry;
 
@@ -483,7 +485,9 @@ public interface CollectionAndDataObjectListAndSearchAO extends
 	 * @param parentPath
 	 *            <code>String</code> with the absolute path to an iRODS
 	 *            collection
-	 * @param fileName <code>String</code> with the data object name for which the <code>ObjStat</code> will be returned.
+	 * @param fileName
+	 *            <code>String</code> with the data object name for which the
+	 *            <code>ObjStat</code> will be returned.
 	 * @return {@link ObjStat} with object data. Note that a
 	 *         <code>FileNotFoundException<code> will occur if the objStat cannot
 	 * be found

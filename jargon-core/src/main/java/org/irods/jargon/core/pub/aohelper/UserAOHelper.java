@@ -77,7 +77,7 @@ public class UserAOHelper {
 		user.setZone(row.getColumn(0));
 
 		user.setUserType(UserTypeEnum.findTypeByString(row.getColumn(3)));
-		
+
 		user.setInfo(row.getColumn(4));
 		user.setComment(row.getColumn(5));
 		user.setCreateTime(IRODSDataConversionUtil.getDateFromIRODSValue(row

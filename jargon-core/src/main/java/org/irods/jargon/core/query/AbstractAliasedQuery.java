@@ -24,8 +24,8 @@ public class AbstractAliasedQuery {
 	 *            previous query result. Used for paging, set to zero if no
 	 *            paging is done, or is initial query
 	 */
-	protected AbstractAliasedQuery(String queryString, List<String> arguments,
-			int continuationValue) {
+	protected AbstractAliasedQuery(final String queryString,
+			final List<String> arguments, final int continuationValue) {
 
 		if (queryString == null || queryString.isEmpty()) {
 			throw new IllegalArgumentException("null or empty queryString");

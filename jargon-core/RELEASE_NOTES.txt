@@ -1,7 +1,6 @@
-
 *'''Project''': Jargon-core API
 *'''Date''': xx/xx/xxxx
-*'''Release Version''': 3.2.0-SNAPSHOT
+*'''Release Version''': 3.2.0.1-SNAPSHOT
 *'''git tag''': xxxxxx
 
 ==News==
@@ -45,18 +44,13 @@ Note that the following bug and feature requests are logged in GForge with relat
 
 ==Bug Fixes==
 
-* [#977] -15000 errors in specific query
-** added KVP to packing instruction, which seems to be required in later revs of the HEAD that will be iRODS 3.2
-
-*[#993] fix special query parsing to account for blank rows
-** bug identified and patched by John Wregglesworth of iPlant
-
 ==Features==
 
  *[#132] GSS and Kerberos Support in Jargon-core
  ** merge in plug-able authentication refactoring
  
  *[#870] jargon support for PAM
+
  ** Support for PAM authentication (per Chris Smith's updates to iRODS) as a pluggable auth module in Jargon
  ** [#992] don't let public irods account trigger auth other then standard
  

@@ -9,7 +9,6 @@ import java.util.List;
  * @author Mike Conway - DICE (www.irods.org)
  */
 public enum FilePermissionEnum {
-	
 
 	NONE(-1), NULL(1000), EXECUTE(1010), READ_ANNOTATION(1020), READ_SYSTEM_METADATA(
 			1030), READ_METADATA(1040), READ(1050), WRITE_ANNOTATION(1060), CREATE_METADATA(
@@ -98,7 +97,7 @@ public enum FilePermissionEnum {
 	 *            <code>int</code> with the permissionNumericValue that is the
 	 *            iRODS protocol representation
 	 */
-	public void setPermissionNumericValue(int permissionNumericValue) {
+	public void setPermissionNumericValue(final int permissionNumericValue) {
 		this.permissionNumericValue = permissionNumericValue;
 	}
 }

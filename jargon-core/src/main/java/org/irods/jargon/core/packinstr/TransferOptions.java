@@ -284,7 +284,7 @@ public class TransferOptions {
 	 * @param useParallelTransfer
 	 *            <code>boolean</code> with the useParallelTransfer option
 	 */
-	public void setUseParallelTransfer(boolean useParallelTransfer) {
+	public void setUseParallelTransfer(final boolean useParallelTransfer) {
 		this.useParallelTransfer = useParallelTransfer;
 	}
 

@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Properties;
 import java.util.Random;
 
+import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.irods.jargon.testutils.TestingUtilsException;
 import org.slf4j.Logger;

@@ -157,7 +157,6 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements
 			log.debug("no more rules exception interpereted as user does not exist, just behave as if deleted");
 		}
 
-
 	}
 
 	/*
@@ -292,8 +291,10 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements
 					RodsGenQueryEnum.COL_USER_GROUP_NAME)
 					.addSelectAsGenQueryValue(
 							RodsGenQueryEnum.COL_USER_GROUP_ID)
-						.addConditionAsGenQueryField(RodsGenQueryEnum.COL_USER_GROUP_NAME, QueryConditionOperators.EQUAL, userGroupName);
-					
+					.addConditionAsGenQueryField(
+							RodsGenQueryEnum.COL_USER_GROUP_NAME,
+							QueryConditionOperators.EQUAL, userGroupName);
+
 			IRODSGenQueryExecutor irodsGenQueryExecutor = this
 					.getIRODSAccessObjectFactory().getIRODSGenQueryExecutor(
 							this.getIRODSAccount());
@@ -311,7 +312,7 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements
 			log.error("jargon query exception getting results", e);
 			throw new JargonException(e);
 		}
-		
+
 		if (resultSet.getResults().size() == 0) {
 			log.info("no user group found");
 			return null;

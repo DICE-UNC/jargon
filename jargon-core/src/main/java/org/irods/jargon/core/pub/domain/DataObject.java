@@ -431,7 +431,7 @@ public class DataObject extends IRODSDomainObject {
 	 * @param specColType
 	 *            the specColType to set
 	 */
-	public void setSpecColType(SpecColType specColType) {
+	public void setSpecColType(final SpecColType specColType) {
 		this.specColType = specColType;
 	}
 
@@ -448,7 +448,7 @@ public class DataObject extends IRODSDomainObject {
 	 * @param objectPath
 	 *            the objectPath to set
 	 */
-	public void setObjectPath(String objectPath) {
+	public void setObjectPath(final String objectPath) {
 		this.objectPath = objectPath;
 	}
 }

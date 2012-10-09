@@ -243,8 +243,8 @@ public class IRODSRegistrationOfFilesAOImpl extends IRODSGenericAO implements
 	 * unregisterDataObject(java.lang.String)
 	 */
 	@Override
-	public boolean unregisterDataObject(
-			final String irodsAbsolutePath) throws JargonException {
+	public boolean unregisterDataObject(final String irodsAbsolutePath)
+			throws JargonException {
 		log.info("unregisterButDoNotDeletePhysicalFile()");
 
 		boolean success = true;

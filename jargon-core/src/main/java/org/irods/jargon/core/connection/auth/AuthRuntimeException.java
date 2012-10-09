@@ -20,14 +20,14 @@ public class AuthRuntimeException extends JargonRuntimeException {
 	/**
 	 * @param message
 	 */
-	public AuthRuntimeException(String message) {
+	public AuthRuntimeException(final String message) {
 		super(message);
 	}
 
 	/**
 	 * @param cause
 	 */
-	public AuthRuntimeException(Throwable cause) {
+	public AuthRuntimeException(final Throwable cause) {
 		super(cause);
 	}
 
@@ -35,7 +35,7 @@ public class AuthRuntimeException extends JargonRuntimeException {
 	 * @param message
 	 * @param cause
 	 */
-	public AuthRuntimeException(String message, Throwable cause) {
+	public AuthRuntimeException(final String message, final Throwable cause) {
 		super(message, cause);
 	}
 

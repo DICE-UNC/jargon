@@ -97,8 +97,7 @@ public class IRODSConnection implements IRODSManagedConnection {
 			final IRODSProtocolManager irodsConnectionManager,
 			final PipelineConfiguration pipelineConfiguration,
 			final StartupResponseData startupResponseData,
-			final IRODSSession irodsSession)
-			throws JargonException {
+			final IRODSSession irodsSession) throws JargonException {
 
 		if (irodsSession == null) {
 			throw new IllegalArgumentException(
@@ -1056,7 +1055,7 @@ public class IRODSConnection implements IRODSManagedConnection {
 	 * @param connected
 	 *            the connected to set
 	 */
-	void setConnected(boolean connected) {
+	void setConnected(final boolean connected) {
 		this.connected = connected;
 	}
 

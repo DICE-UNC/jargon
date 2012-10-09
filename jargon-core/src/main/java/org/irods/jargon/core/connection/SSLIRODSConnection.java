@@ -18,12 +18,11 @@ import org.slf4j.LoggerFactory;
  */
 final class SSLIRODSConnection extends IRODSConnection {
 
-
 	private Logger log = LoggerFactory.getLogger(SSLIRODSConnection.class);
 
-	protected SSLIRODSConnection(IRODSConnection underlyingIRODSConnection,
-			Socket underlyingSocket)
-			throws JargonException {
+	protected SSLIRODSConnection(
+			final IRODSConnection underlyingIRODSConnection,
+			final Socket underlyingSocket) throws JargonException {
 		super(underlyingIRODSConnection.getIrodsAccount(),
 				underlyingIRODSConnection.getIrodsProtocolManager(),
 				underlyingIRODSConnection.getPipelineConfiguration(),

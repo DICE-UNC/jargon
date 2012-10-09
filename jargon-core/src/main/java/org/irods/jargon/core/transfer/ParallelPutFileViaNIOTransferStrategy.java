@@ -64,17 +64,18 @@ public final class ParallelPutFileViaNIOTransferStrategy extends
 	 * @return
 	 * @throws JargonException
 	 */
-	public static ParallelPutFileViaNIOTransferStrategy instance(final String host,
-			final int port, final int numberOfThreads, final int password,
-			final File localFile,
+	public static ParallelPutFileViaNIOTransferStrategy instance(
+			final String host, final int port, final int numberOfThreads,
+			final int password, final File localFile,
 			final IRODSAccessObjectFactory irodsAccessObjectFactory,
 			final long transferLength,
 			final TransferControlBlock transferControlBlock,
 			final TransferStatusCallbackListener transferStatusCallbackListener)
 			throws JargonException {
-		return new ParallelPutFileViaNIOTransferStrategy(host, port, numberOfThreads,
-				password, localFile, irodsAccessObjectFactory, transferLength,
-				transferControlBlock, transferStatusCallbackListener);
+		return new ParallelPutFileViaNIOTransferStrategy(host, port,
+				numberOfThreads, password, localFile, irodsAccessObjectFactory,
+				transferLength, transferControlBlock,
+				transferStatusCallbackListener);
 	}
 
 	@Override
@@ -95,8 +96,8 @@ public final class ParallelPutFileViaNIOTransferStrategy extends
 
 	}
 
-	private ParallelPutFileViaNIOTransferStrategy(final String host, final int port,
-			final int numberOfThreads, final int password,
+	private ParallelPutFileViaNIOTransferStrategy(final String host,
+			final int port, final int numberOfThreads, final int password,
 			final File localFile,
 			final IRODSAccessObjectFactory irodsAccessObjectFactory,
 			final long transferLength,

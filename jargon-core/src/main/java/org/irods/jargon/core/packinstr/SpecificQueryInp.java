@@ -180,52 +180,51 @@ public class SpecificQueryInp extends AbstractIRODSPackingInstruction {
 			arg10 = args.get(9);
 		}
 
-
 		List<KeyValuePair> kvps = new ArrayList<KeyValuePair>();
 		Tag message = new Tag(PI_TAG);
-		
+
 		message.addTag(new Tag(SQL, queryOrAlias));
 
 		if (!arg1.isEmpty()) {
 			message.addTag(new Tag(ARG1, arg1));
 		}
-		
+
 		if (!arg2.isEmpty()) {
 			message.addTag(new Tag(ARG2, arg2));
 		}
-		
+
 		if (!arg3.isEmpty()) {
 			message.addTag(new Tag(ARG3, arg3));
 		}
-		
+
 		if (!arg4.isEmpty()) {
 			message.addTag(new Tag(ARG4, arg4));
 		}
-		
+
 		if (!arg5.isEmpty()) {
 			message.addTag(new Tag(ARG5, arg5));
 		}
-		
+
 		if (!arg6.isEmpty()) {
 			message.addTag(new Tag(ARG6, arg6));
 		}
-		
+
 		if (!arg7.isEmpty()) {
 			message.addTag(new Tag(ARG7, arg7));
 		}
-		
+
 		if (!arg8.isEmpty()) {
 			message.addTag(new Tag(ARG8, arg8));
 		}
-		
+
 		if (!arg9.isEmpty()) {
 			message.addTag(new Tag(ARG9, arg9));
 		}
-		
+
 		if (!arg10.isEmpty()) {
 			message.addTag(new Tag(ARG10, arg10));
 		}
-		
+
 		message.addTag(new Tag(MAX_ROWS, maxRows));
 		message.addTag(new Tag(CONTINUE, continueIndex));
 		message.addTag(new Tag(ROW_OFFSET, 0));

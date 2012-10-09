@@ -17,6 +17,7 @@ import org.irods.jargon.core.exception.JargonException;
 public class IRODSQueryResultSet extends AbstractIRODSQueryResultSet {
 
 	final TranslatedIRODSGenQuery translatedIRODSQuery;
+
 	/**
 	 * Creates an instance of a result set based on data coming back from iRODS
 	 * GenQuery response data.
@@ -68,7 +69,6 @@ public class IRODSQueryResultSet extends AbstractIRODSQueryResultSet {
 		this.translatedIRODSQuery = translatedIRODSQuery;
 
 	}
-
 
 	/**
 	 * Return the query that generated the result set

@@ -1,5 +1,7 @@
 package org.irods.jargon.core.pub.domain;
 
+import org.irods.jargon.core.pub.RemoteExecutionOfCommandsAO;
+
 /**
  * Represents information about remote commands in the iRODS server/cmd/bin
  * directory. These commands are executable by the

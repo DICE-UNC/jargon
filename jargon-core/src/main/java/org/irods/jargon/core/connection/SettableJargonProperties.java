@@ -587,7 +587,7 @@ public class SettableJargonProperties implements JargonProperties {
 	 *            should be used for parallel file transfers
 	 */
 	public synchronized void setUseNIOForParallelTransfers(
-			boolean useNIOForParallelTransfers) {
+			final boolean useNIOForParallelTransfers) {
 		this.useNIOForParallelTransfers = useNIOForParallelTransfers;
 	}
 
@@ -634,7 +634,7 @@ public class SettableJargonProperties implements JargonProperties {
 	 * @param instrument
 	 *            the instrument to set
 	 */
-	public synchronized void setInstrument(boolean instrument) {
+	public synchronized void setInstrument(final boolean instrument) {
 		this.instrument = instrument;
 	}
 
@@ -642,7 +642,7 @@ public class SettableJargonProperties implements JargonProperties {
 	 * @param reconnect
 	 *            the reconnect to set
 	 */
-	public synchronized void setReconnect(boolean reconnect) {
+	public synchronized void setReconnect(final boolean reconnect) {
 		this.reconnect = reconnect;
 	}
 
@@ -682,7 +682,8 @@ public class SettableJargonProperties implements JargonProperties {
 	 * @param reconnectTimeInMillis
 	 *            the reconnectTimeInMillis to set
 	 */
-	public synchronized void setReconnectTimeInMillis(long reconnectTimeInMillis) {
+	public synchronized void setReconnectTimeInMillis(
+			final long reconnectTimeInMillis) {
 		this.reconnectTimeInMillis = reconnectTimeInMillis;
 	}
 

@@ -20,7 +20,6 @@ public interface ResourceGroupAO {
 	 * @return <code>List<String></code> of resoruce group names
 	 * @throws JargonException
 	 */
-	List<String> listResourceGroupNames()
-			throws JargonException;
+	List<String> listResourceGroupNames() throws JargonException;
 
 }

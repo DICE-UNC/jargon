@@ -14,6 +14,7 @@ import org.irods.jargon.core.exception.JargonException;
 public final class IRODSGenQuery extends AbstractIRODSGenQuery {
 
 	private final String queryString;
+
 	/**
 	 * Creates an immutable description of a general query to IRODS with
 	 * defaults.

@@ -18,7 +18,6 @@ public class UserFilePermission {
 	private UserTypeEnum userType = UserTypeEnum.RODS_UNKNOWN;
 	private FilePermissionEnum filePermissionEnum;
 
-
 	/**
 	 * Public values constructor.
 	 * 
