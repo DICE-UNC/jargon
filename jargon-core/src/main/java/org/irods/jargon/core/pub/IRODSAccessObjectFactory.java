@@ -4,6 +4,8 @@ import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSServerProperties;
 import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.connection.JargonProperties;
+import org.irods.jargon.core.connection.auth.AuthResponse;
+import org.irods.jargon.core.exception.AuthenticationException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.packinstr.TransferOptions;
 import org.irods.jargon.core.pub.io.IRODSFileFactory;
@@ -453,5 +455,30 @@ public interface IRODSAccessObjectFactory {
 	 * @throws JargonException
 	 */
 	SpecificQueryAO getSpecificQueryAO(final IRODSAccount irodsAccount) throws JargonException;
+
+	/**
+	 * Cause an <code>IRODSAccount</code> to be authenticated, and return and
+	 * <code>AuthResponse</code> augmented with information about the principal.
+	 * <p/>
+	 * Note that the account information is actually cached in a thread local by
+	 * the <code>IRODSSession</code>, so this method will return the cached
+	 * response if already authenticated. If not cached, this method causes an
+	 * authentication process.
+	 * 
+	 * @param irodsAccount
+	 *            {@IRODSAccount} with the authenticating
+	 *            principal
+	 * @return {@link AuthResponse} containing information about the
+	 *         authenticated principal. Note that the authentication process may
+	 *         cause the authenticating <code>IRODSAccount</code> to be altered
+	 *         or augmented. The resulting account that can be cached and
+	 *         re-used by applications will be in the authenticated account.
+	 * @throws AuthenticationException
+	 *             If the principal cannot be authenticated. This will be thrown
+	 *             on initial authentication
+	 * @throws JargonException
+	 */
+	AuthResponse authenticateIRODSAccount(IRODSAccount irodsAccount)
+			throws AuthenticationException, JargonException;
 
 }
