@@ -48,7 +48,7 @@ import org.slf4j.LoggerFactory;
  * This class is usable as API, but methods are more properly called from
  * IRODSFile, which wraps these operations with the <code>java.io.File</code>
  * methods. Methods that back operations not defined in
- * <code>java.io.file</code> are not implemented in this particular access
+ * <code>java.io.File</code> are not implemented in this particular access
  * object.
  * 
  * 
@@ -774,7 +774,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 		 */
 
 		if (!(row.getColumn(1).equals("/"))) {
-			subdirs.add(row.getColumn(1).substring(idxLastSlash));
+			subdirs.add(row.getColumn(1).substring(idxLastSlash + 1));
 		}
 	}
 

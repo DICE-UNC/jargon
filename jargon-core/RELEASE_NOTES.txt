@@ -1,11 +1,11 @@
 *'''Project''': Jargon-core API
 *'''Date''': xx/xx/xxxx
-*'''Release Version''': 3.2.0.1-SNAPSHOT
+*'''Release Version''': 3.2.1-SNAPSHOT
 *'''git tag''': xxxxxx
 
 ==News==
 
-Work in progress for iRODS 3.X release including support for pluggable authentication methods, this includes support for PAM
+Work in progress for iRODS 3.2.1 release including support for plug-able authentication methods, this includes support for PAM
 
 https://code.renci.org/gf/project/jargon/
 
@@ -34,7 +34,8 @@ Other libraries are planned, such as connection pooling, as well as administrati
 
 *Jargon depends on Java 1.6+
 *Jargon is built using Apache Maven2, see POM for dependencies
-*Jargon supports iRODS 2.4 through iRODS 3.2, and is tested with the current (as of release time) development version of iRODS
+
+*Jargon supports iRODS 2.5 through iRODS 3.2
 
 ==Libraries==
 

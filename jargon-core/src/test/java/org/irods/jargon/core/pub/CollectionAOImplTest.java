@@ -219,12 +219,18 @@ public class CollectionAOImplTest {
 		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
 				.getIRODSAccessObjectFactory();
 
+		
+		
 		IRODSFile irodsFile = accessObjectFactory.getIRODSFileFactory(
 				irodsAccount).instanceIRODSFile(targetIrodsCollection);
 		irodsFile.mkdirs();
 
 		CollectionAO collectionAO = accessObjectFactory
 				.getCollectionAO(irodsAccount);
+		
+		if (!collectionAO.getIRODSServerProperties().isSupportsCaseInsensitiveQueries()) {
+			return;
+		}
 
 		// initialize the AVU data
 		String expectedAttribName = "testmdattrib1".toUpperCase();
@@ -318,6 +324,10 @@ public class CollectionAOImplTest {
 
 		CollectionAO collectionAO = accessObjectFactory
 				.getCollectionAO(irodsAccount);
+		
+		if (!collectionAO.getIRODSServerProperties().isSupportsCaseInsensitiveQueries()) {
+			return;
+		}
 
 		AvuData avuData = AvuData.instance(expectedAttribName,
 				expectedAttribValue, expectedAttribUnits);
