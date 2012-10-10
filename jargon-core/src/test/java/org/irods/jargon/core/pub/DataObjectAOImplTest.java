@@ -2267,6 +2267,11 @@ public class DataObjectAOImplTest {
 		DataTransferOperations dto = irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataTransferOperations(
 						irodsAccount);
+		
+		if (!dto.getIRODSServerProperties().isSupportsCaseInsensitiveQueries()) {
+			return;
+		}
+		
 		dto.putOperation(localFileName, targetIrodsCollection,
 				irodsAccount.getDefaultStorageResource(), null, null);
 
@@ -2384,6 +2389,11 @@ public class DataObjectAOImplTest {
 		DataTransferOperations dto = irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataTransferOperations(
 						irodsAccount);
+		
+		if (!dto.getIRODSServerProperties().isSupportsCaseInsensitiveQueries()) {
+			return;
+		}
+		
 		dto.putOperation(localFileName, targetIrodsCollection,
 				irodsAccount.getDefaultStorageResource(), null, null);
 

@@ -1,11 +1,12 @@
 *'''Project''': Jargon-core API
-*'''Date''': 08/28/2012
+*'''Date''': 10/10/2012
 *'''Release Version''': 3.2.0 
 *'''git tag''': 3.2.0
 
 ==News==
 
-NOTE: This RELEASE is a maintenance release to coincide with the release of iRODS 3.2.  This originates from the GIT release branch, and represents the latest bug fixes and small features.  It is planned to simultaneously release a Jargon 3.2.0.1 beta that will include refactoring and more features.  Please consult the Jargon page at GForge for news and release details
+NOTE: This RELEASE is a maintenance release to coincide with the release of iRODS 3.2.  This release and represents the latest bug fixes and small features.  It is 
+planned to simultaneously release a Jargon 3.2.1 beta that will include extensive re-factoring and significant features.  Please consult the Jargon page at GForge for news and release details
 
 https://code.renci.org/gf/project/jargon/
 
@@ -34,7 +35,7 @@ Other libraries are planned, such as connection pooling, as well as administrati
 
 *Jargon depends on Java 1.6+
 *Jargon is built using Apache Maven2, see POM for dependencies
-*Jargon supports iRODS 2.4 through iRODS 3.0, and is tested with the current (as of release time) development version of iRODS
+*Jargon supports iRODS 2.5 through iRODS 3.2
 
 ==Libraries==
 
