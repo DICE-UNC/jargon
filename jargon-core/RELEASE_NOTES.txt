@@ -65,3 +65,6 @@ Note that the following bug and feature requests are logged in GForge with relat
  ** support for a user profile service to maintain public and protected profile information for users in the user home directory.  Suitable for user profiles and configuration for applications built on iRODS.  This is
  used in the iDrop suite.
  
+ *[#1023] add Version class in jargon-core
+ ** Add support in the pom.xml file to generate a JargonVersion to org.irods.jargon.core.utils.  This is updated with the current build number.
+ 

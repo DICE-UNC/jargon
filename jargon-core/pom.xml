@@ -37,6 +37,27 @@
         <artifactId>maven-antrun-plugin</artifactId>
         <executions>
           <execution>
+        	    	<goals>
+          		    <goal>run</goal>
+        	        </goals>
+        	    	<phase>generate-sources</phase>
+        	    	<configuration>
+          	    	    <tasks>
+			    	<property name="src.dir" value="${project.build.sourceDirectory}" />
+            	            	<property name="package.dir" value="org/irods/jargon/core/utils" />
+            	            	<property name="package.name" value="org.irods.jargon.core.utils" />
+            	            	<property name="buildtime" value="${maven.build.timestamp}" />
+	    
+            	            	<echo file="${src.dir}/${package.dir}/JargonVersion.java" message="package ${package.name};${line.separator}" />
+            	            	<echo file="${src.dir}/${package.dir}/JargonVersion.java" append="true" message="public final class JargonVersion {${line.separator}" />
+            	            	<echo file="${src.dir}/${package.dir}/JargonVersion.java" append="true" message=" public static String VERSION=&quot;${pom.version}&quot;;${line.separator}" />
+            	            	<echo file="${src.dir}/${package.dir}/JargonVersion.java" append="true" message=" public static String BUILD_TIME=&quot;${buildtime}&quot;;${line.separator}" />
+            	            	<echo file="${src.dir}/${package.dir}/JargonVersion.java" append="true" message="}${line.separator}" />
+            	            	<echo message="BUILD ${buildtime}" />
+          	    	    </tasks>
+        	    	</configuration>
+      		    </execution>
+          <execution>
             <id>0</id>
             <phase>validate</phase>
 	    <configuration>
