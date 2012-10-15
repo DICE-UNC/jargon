@@ -1,13 +1,13 @@
 *'''Project''': Jargon-core API
-*'''Date''': 10/10/2012
-*'''Release Version''': 3.2.1-beta2
-*'''git tag''': 3.2.1-beta2
+*'''Date''': xx/xx/xx
+*'''Release Version''': xx/xx/xx
+*'''git tag''': xx/xx/xx
 
 ==News==
 
-Work in progress for iRODS 3.2.1 release including support for plug-able authentication methods, this includes support for PAM
+Work in progress for 964-grid-memory
 
-https://code.renci.org/gf/project/jargon/
+https://code.renci.org/gf/project/irodsidrop/tracker/?action=TrackerItemEdit&tracker_item_id=964&start=50
 
 Jargon-core implements the iRODS protocol, and allows development of iRODS-enabled Java applications.  This API is especially useful for developing
 mid-tier applications and services, as well as desktop-clients (such as iDROP).  These libraries also provide a foundation for a new set of interfaces that will come with iRODS.
@@ -47,24 +47,5 @@ Note that the following bug and feature requests are logged in GForge with relat
 
 ==Features==
 
- *[#132] GSS and Kerberos Support in Jargon-core
- ** merge in plug-able authentication refactoring
- 
- *[#870] jargon support for PAM
-
- ** Support for PAM authentication (per Chris Smith's updates to iRODS) as a pluggable auth module in Jargon
- ** [#992] don't let public irods account trigger auth other then standard
- 
- *[#974] anonymous link support
- ** added isUserHasPermission methods for collections and data objects that indicate that a user has at least read permission on a file or data object
- ** added AnonymousAccessService in data utils to help manage permissions for the anonymous user
- 
- *[#1011] add a dedicated doAuthentication method ot irodsAccessObjectFactory
- 
- *[#922] User Profile Management
- ** support for a user profile service to maintain public and protected profile information for users in the user home directory.  Suitable for user profiles and configuration for applications built on iRODS.  This is
- used in the iDrop suite.
- 
- *[#1023] add Version class in jargon-core
- ** Add support in the pom.xml file to generate a JargonVersion to org.irods.jargon.core.utils.  This is updated with the current build number.
- 
+*[#964] grid memory and presets
+**refactor of database to include grid memory
