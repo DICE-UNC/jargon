@@ -2,7 +2,6 @@ package org.irods.jargon.core.packinstr;
 
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.query.AbstractAliasedQuery;
-import org.irods.jargon.core.query.SimpleQuery;
 
 /**
  * Packing instruction to execute a simple query on iRODS. Simple query is a

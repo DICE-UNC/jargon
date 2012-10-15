@@ -1,7 +1,5 @@
 package org.irods.jargon.core.connection;
 
-import org.irods.jargon.core.exception.JargonException;
-import org.irods.jargon.core.pub.CollectionAndDataObjectListAndSearchAO;
 
 /**
  * Represents a source of configuration metadata that will effect the behavior

@@ -62,19 +62,22 @@ public final class IRODSAccessObjectFactoryImpl implements
 	public AuthResponse authenticateIRODSAccount(final IRODSAccount irodsAccount)
 			throws AuthenticationException, JargonException {
 		log.info("authenticateIRODSAccount()");
-		
+
 		if (irodsAccount == null) {
 			throw new IllegalArgumentException("null irodsAccount");
 		}
-		
+
 		/*
-		 * Note that this works if the account is already authenticated by simply returning the cached response.  If the account is not authenticated, it
-		 * will cause the authentication process and cache the response.
+		 * Note that this works if the account is already authenticated by
+		 * simply returning the cached response. If the account is not
+		 * authenticated, it will cause the authentication process and cache the
+		 * response.
 		 */
-		AuthResponse authResponse = this.irodsSession.currentConnection(irodsAccount).getAuthResponse();
+		AuthResponse authResponse = this.irodsSession.currentConnection(
+				irodsAccount).getAuthResponse();
 		log.info("authResponse:{}", authResponse);
 		return authResponse;
-		
+
 	}
 
 	/**
@@ -569,7 +572,8 @@ public final class IRODSAccessObjectFactoryImpl implements
 	 * org.irods.jargon.core.pub.IRODSAccessObjectFactory#getJargonProperties()
 	 */
 	@Override
-	public JargonProperties getJargonProperties() {
+	public JargonProperties getJargonProperties() throws JargonException {
+		checkIrodsSessionSet();
 		// irodsSession synchronizes access
 		return irodsSession.getJargonProperties();
 	}
@@ -600,6 +604,7 @@ public final class IRODSAccessObjectFactoryImpl implements
 	@Override
 	public TransferControlBlock buildDefaultTransferControlBlockBasedOnJargonProperties()
 			throws JargonException {
+		checkIrodsSessionSet();
 		// irodsSession synchronizes access
 		return irodsSession
 				.buildDefaultTransferControlBlockBasedOnJargonProperties();
@@ -614,6 +619,7 @@ public final class IRODSAccessObjectFactoryImpl implements
 	@Override
 	public TransferOptions buildTransferOptionsBasedOnJargonProperties()
 			throws JargonException {
+		checkIrodsSessionSet();
 		return irodsSession.buildTransferOptionsBasedOnJargonProperties();
 	}
 

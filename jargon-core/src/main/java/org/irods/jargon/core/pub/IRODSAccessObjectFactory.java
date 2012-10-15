@@ -337,7 +337,7 @@ public interface IRODSAccessObjectFactory {
 	 * 
 	 * @return {@link JargonProperties}
 	 */
-	JargonProperties getJargonProperties();
+	JargonProperties getJargonProperties() throws JargonException;
 
 	/**
 	 * Get an AO to query audit trail info for a data object

@@ -15,7 +15,6 @@ import java.util.concurrent.Callable;
 import org.irods.jargon.core.connection.ConnectionConstants;
 import org.irods.jargon.core.connection.ConnectionProgressStatus;
 import org.irods.jargon.core.exception.JargonException;
-import org.irods.jargon.core.exception.JargonRuntimeException;
 import org.irods.jargon.core.utils.Host;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

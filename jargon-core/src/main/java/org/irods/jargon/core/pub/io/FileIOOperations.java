@@ -3,7 +3,6 @@
  */
 package org.irods.jargon.core.pub.io;
 
-import java.io.IOException;
 import java.io.OutputStream;
 
 import org.irods.jargon.core.exception.JargonException;

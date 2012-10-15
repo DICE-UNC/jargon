@@ -21,7 +21,7 @@ import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.RuleProcessingAOImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-  
+
 /**
  * Utilities for working with the local file system.
  * 

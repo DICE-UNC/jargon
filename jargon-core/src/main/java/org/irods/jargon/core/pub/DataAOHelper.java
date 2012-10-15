@@ -60,7 +60,7 @@ final class DataAOHelper extends AOHelper {
 	private int putBufferSize = 0;
 
 	DataAOHelper(final IRODSAccessObjectFactory irodsAccessObjectFactory,
-			final IRODSAccount irodsAccount) {
+			final IRODSAccount irodsAccount) throws JargonException {
 		super();
 		if (irodsAccessObjectFactory == null) {
 			throw new IllegalArgumentException("null irodsAccessObjectFactory");
