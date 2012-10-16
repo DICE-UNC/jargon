@@ -23,10 +23,6 @@ public final class IRODSAccount implements Serializable {
 	public static final String IRODS_JARGON_RELEASE_NUMBER = "rods3.0";
 	public static final String IRODS_API_VERSION = "d";
 
-	public enum AuthScheme {
-		STANDARD, GSI, KERBEROS, PAM
-	}
-
 	public static final boolean defaultObfuscate = false;
 	public static final String PUBLIC_USERNAME = "anonymous";
 	private AuthScheme authenticationScheme = AuthScheme.STANDARD;

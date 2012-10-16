@@ -8,6 +8,7 @@ import org.ietf.jgss.GSSCredential;
 import org.ietf.jgss.GSSManager;
 import org.ietf.jgss.GSSName;
 import org.ietf.jgss.Oid;
+import org.irods.jargon.core.connection.AuthScheme;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,7 +35,7 @@ public class ServiceTicketGenerator implements
 			throw new IllegalArgumentException("null irodsAccount");
 		}
 
-		if (irodsAccount.getAuthenticationScheme() != IRODSAccount.AuthScheme.KERBEROS) {
+		if (irodsAccount.getAuthenticationScheme() != AuthScheme.KERBEROS) {
 			throw new IllegalArgumentException(
 					"irodsAccount does not indicate Kerberos");
 		}

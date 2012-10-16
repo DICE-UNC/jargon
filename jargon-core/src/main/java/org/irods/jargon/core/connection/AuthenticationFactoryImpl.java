@@ -1,6 +1,5 @@
 package org.irods.jargon.core.connection;
 
-import org.irods.jargon.core.connection.IRODSAccount.AuthScheme;
 import org.irods.jargon.core.connection.auth.AuthUnavailableException;
 import org.irods.jargon.core.exception.JargonException;
 import org.slf4j.Logger;
