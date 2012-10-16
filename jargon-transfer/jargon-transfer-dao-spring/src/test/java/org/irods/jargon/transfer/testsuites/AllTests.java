@@ -2,6 +2,7 @@ package org.irods.jargon.transfer.testsuites;
 
 import org.irods.jargon.transfer.TransferServiceFactoryImplTest;
 import org.irods.jargon.transfer.dao.ConfigurationPropertyDAOTest;
+import org.irods.jargon.transfer.dao.GridAccountDAOImplTest;
 import org.irods.jargon.transfer.dao.LocalIRODSTransferDAOTest;
 import org.irods.jargon.transfer.dao.SynchronizationDAOTest;
 import org.irods.jargon.transfer.engine.ConfigurationServiceImplTest;
@@ -13,7 +14,7 @@ import org.junit.runners.Suite;
 @Suite.SuiteClasses({ ConfigurationPropertyDAOTest.class,
 		LocalIRODSTransferDAOTest.class, SynchronizationDAOTest.class,
 		ConfigurationServiceImplTest.class, SynchManagerServiceImplTest.class,
-		TransferServiceFactoryImplTest.class })
+		TransferServiceFactoryImplTest.class, GridAccountDAOImplTest.class })
 public class AllTests {
 
 }

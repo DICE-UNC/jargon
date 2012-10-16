@@ -8,5 +8,6 @@
 		<mapping class="org.irods.jargon.transfer.dao.domain.LocalIRODSTransferItem" />
 		<mapping class="org.irods.jargon.transfer.dao.domain.Synchronization" />
 		<mapping class="org.irods.jargon.transfer.dao.domain.ConfigurationProperty" />
+		<mapping class="org.irods.jargon.transfer.dao.domain.GridAccount" />
 	</session-factory>
 </hibernate-configuration>

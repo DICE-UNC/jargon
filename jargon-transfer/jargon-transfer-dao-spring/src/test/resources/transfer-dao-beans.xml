@@ -13,7 +13,7 @@
   <!-- ========================= RESOURCE DEFINITIONS ========================= -->
   <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
     <property name="driverClassName" value="org.apache.derby.jdbc.EmbeddedDriver" />
-    <property name="url" value="jdbc:derby:${user.home}/.idrop/target/database/transfer;create=true" />
+    <property name="url" value="jdbc:derby:${user.home}/.idrop/test/target/database/transfer;create=true" />
     <property name="username" value="transfer" />
     <property name="password" value="transfer" />
   </bean>
@@ -56,7 +56,10 @@
   <bean id="localIRODSTransferItemDAO" class="org.irods.jargon.transfer.dao.spring.LocalIRODSTransferItemDAOImpl">
     <property name="sessionFactory" ref="sessionFactory" />
   </bean>
-
+  
+  <bean id="gridAccountDAO" class="org.irods.jargon.transfer.dao.spring.GridAccountDAOImpl">
+    <property name="sessionFactory" ref="sessionFactory" />
+  </bean>
 
   <bean id="synchronizationDAO" class="org.irods.jargon.transfer.dao.spring.SynchronizationDAOImpl">
     <property name="sessionFactory" ref="sessionFactory" />

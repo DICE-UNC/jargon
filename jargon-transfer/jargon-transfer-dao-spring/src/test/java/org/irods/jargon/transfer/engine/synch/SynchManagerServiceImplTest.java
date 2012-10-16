@@ -2,19 +2,24 @@ package org.irods.jargon.transfer.engine.synch;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Properties;
 
 import junit.framework.Assert;
 
+import org.irods.jargon.core.connection.IRODSAccount;
+import org.irods.jargon.testutils.TestingPropertiesHelper;
+import org.irods.jargon.transfer.dao.GridAccountDAO;
 import org.irods.jargon.transfer.dao.domain.FrequencyType;
+import org.irods.jargon.transfer.dao.domain.GridAccount;
 import org.irods.jargon.transfer.dao.domain.LocalIRODSTransfer;
 import org.irods.jargon.transfer.dao.domain.Synchronization;
 import org.irods.jargon.transfer.dao.domain.SynchronizationType;
 import org.irods.jargon.transfer.dao.domain.TransferState;
 import org.irods.jargon.transfer.dao.domain.TransferStatus;
 import org.irods.jargon.transfer.engine.TransferQueueService;
-import org.irods.jargon.transfer.util.HibernateUtil;
-import org.junit.After;
-import org.junit.Before;
+import org.irods.jargon.transfer.util.DomainUtils;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,31 +36,40 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class SynchManagerServiceImplTest {
 
+	private static Properties testingProperties = new Properties();
+	private static TestingPropertiesHelper testingPropertiesHelper = new TestingPropertiesHelper();
+
 	@Autowired
 	private SynchManagerService synchManagerService;
 
 	@Autowired
 	private TransferQueueService transferQueueService;
 
-	@Before
-	public void setUp() throws Exception {
+	@Autowired
+	private GridAccountDAO gridAccountDAO;
+
+	@BeforeClass
+	public static void setUpBeforeClass() throws Exception {
+		TestingPropertiesHelper testingPropertiesLoader = new TestingPropertiesHelper();
+		testingProperties = testingPropertiesLoader.getTestProperties();
 	}
 
-	@After
-	public void tearDown() throws Exception {
+	@AfterClass
+	public static void tearDownAfterClass() throws Exception {
 	}
 
 	@Test
 	public void testCreateNewSynchConfiguration() throws Exception {
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		GridAccount gridAccount = DomainUtils
+				.gridAccountFromIRODSAccount(irodsAccount);
+
+		gridAccountDAO.save(gridAccount);
 		Synchronization synchConfiguration = new Synchronization();
 		synchConfiguration.setCreatedAt(new Date());
-		synchConfiguration.setDefaultResourceName("test");
-		synchConfiguration.setIrodsHostName("host");
-		synchConfiguration.setIrodsPassword("xxx");
-		synchConfiguration.setIrodsPort(1247);
+		synchConfiguration.setGridAccount(gridAccount);
 		synchConfiguration.setIrodsSynchDirectory("/synchdir");
-		synchConfiguration.setIrodsUserName("userName");
-		synchConfiguration.setIrodsZone("zone");
 		synchConfiguration.setFrequencyType(FrequencyType.EVERY_DAY);
 
 		synchConfiguration.setLastSynchronizationStatus(TransferStatus.OK);
@@ -68,15 +82,17 @@ public class SynchManagerServiceImplTest {
 
 	@Test(expected = ConflictingSynchException.class)
 	public void testCreateNewSynchConfigurationDuplicateName() throws Exception {
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		GridAccount gridAccount = DomainUtils
+				.gridAccountFromIRODSAccount(irodsAccount);
+
+		gridAccountDAO.save(gridAccount);
 		Synchronization synchConfiguration = new Synchronization();
 		synchConfiguration.setCreatedAt(new Date());
-		synchConfiguration.setDefaultResourceName("test");
-		synchConfiguration.setIrodsHostName("host");
-		synchConfiguration.setIrodsPassword("xxx");
-		synchConfiguration.setIrodsPort(1247);
+		synchConfiguration.setGridAccount(gridAccount);
 		synchConfiguration.setIrodsSynchDirectory("/synchdir");
-		synchConfiguration.setIrodsUserName("userName");
-		synchConfiguration.setIrodsZone("zone");
 		synchConfiguration.setLastSynchronizationStatus(TransferStatus.OK);
 		synchConfiguration.setLocalSynchDirectory("/localdir");
 		synchConfiguration.setFrequencyType(FrequencyType.EVERY_DAY);
@@ -87,13 +103,8 @@ public class SynchManagerServiceImplTest {
 		synchManagerService.createNewSynchConfiguration(synchConfiguration);
 		synchConfiguration = new Synchronization();
 		synchConfiguration.setCreatedAt(new Date());
-		synchConfiguration.setDefaultResourceName("test");
-		synchConfiguration.setIrodsHostName("host");
-		synchConfiguration.setIrodsPassword("xxx");
-		synchConfiguration.setIrodsPort(1247);
+		synchConfiguration.setGridAccount(gridAccount);
 		synchConfiguration.setIrodsSynchDirectory("/synchdir2");
-		synchConfiguration.setIrodsUserName("userName");
-		synchConfiguration.setIrodsZone("zone");
 		synchConfiguration.setLastSynchronizationStatus(TransferStatus.OK);
 		synchConfiguration.setFrequencyType(FrequencyType.EVERY_DAY);
 
@@ -107,15 +118,18 @@ public class SynchManagerServiceImplTest {
 	@Test(expected = ConflictingSynchException.class)
 	public void testCreateNewSynchConfigurationDuplicateLocal()
 			throws Exception {
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		GridAccount gridAccount = DomainUtils
+				.gridAccountFromIRODSAccount(irodsAccount);
+
+		gridAccountDAO.save(gridAccount);
 		Synchronization synchConfiguration = new Synchronization();
 		synchConfiguration.setCreatedAt(new Date());
-		synchConfiguration.setDefaultResourceName("test");
-		synchConfiguration.setIrodsHostName("host");
-		synchConfiguration.setIrodsPassword("xxx");
-		synchConfiguration.setIrodsPort(1247);
+		synchConfiguration.setGridAccount(gridAccount);
 		synchConfiguration.setIrodsSynchDirectory("/synchdir");
-		synchConfiguration.setIrodsUserName("userName");
-		synchConfiguration.setIrodsZone("zone");
+		;
 		synchConfiguration.setLastSynchronizationStatus(TransferStatus.OK);
 		synchConfiguration.setLocalSynchDirectory("/localdir");
 		synchConfiguration.setFrequencyType(FrequencyType.EVERY_DAY);
@@ -127,13 +141,8 @@ public class SynchManagerServiceImplTest {
 		synchManagerService.createNewSynchConfiguration(synchConfiguration);
 		synchConfiguration = new Synchronization();
 		synchConfiguration.setCreatedAt(new Date());
-		synchConfiguration.setDefaultResourceName("test");
-		synchConfiguration.setIrodsHostName("host");
-		synchConfiguration.setIrodsPassword("xxx");
-		synchConfiguration.setIrodsPort(1247);
+		synchConfiguration.setGridAccount(gridAccount);
 		synchConfiguration.setIrodsSynchDirectory("/synchdir2");
-		synchConfiguration.setIrodsUserName("userName");
-		synchConfiguration.setIrodsZone("zone");
 		synchConfiguration.setFrequencyType(FrequencyType.EVERY_DAY);
 
 		synchConfiguration.setLastSynchronizationStatus(TransferStatus.OK);
@@ -148,15 +157,17 @@ public class SynchManagerServiceImplTest {
 	@Test(expected = ConflictingSynchException.class)
 	public void testCreateNewSynchConfigurationDuplicateIrods()
 			throws Exception {
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		GridAccount gridAccount = DomainUtils
+				.gridAccountFromIRODSAccount(irodsAccount);
+
+		gridAccountDAO.save(gridAccount);
 		Synchronization synchConfiguration = new Synchronization();
 		synchConfiguration.setCreatedAt(new Date());
-		synchConfiguration.setDefaultResourceName("test");
-		synchConfiguration.setIrodsHostName("host");
-		synchConfiguration.setIrodsPassword("xxx");
-		synchConfiguration.setIrodsPort(1247);
+		synchConfiguration.setGridAccount(gridAccount);
 		synchConfiguration.setIrodsSynchDirectory("/synchdir");
-		synchConfiguration.setIrodsUserName("userName");
-		synchConfiguration.setIrodsZone("zone");
 		synchConfiguration.setLastSynchronizationStatus(TransferStatus.OK);
 		synchConfiguration.setLocalSynchDirectory("/localdir");
 		synchConfiguration
@@ -168,13 +179,8 @@ public class SynchManagerServiceImplTest {
 		synchManagerService.createNewSynchConfiguration(synchConfiguration);
 		synchConfiguration = new Synchronization();
 		synchConfiguration.setCreatedAt(new Date());
-		synchConfiguration.setDefaultResourceName("test");
-		synchConfiguration.setIrodsHostName("host");
-		synchConfiguration.setIrodsPassword("xxx");
-		synchConfiguration.setIrodsPort(1247);
+		synchConfiguration.setGridAccount(gridAccount);
 		synchConfiguration.setIrodsSynchDirectory("/synchdir");
-		synchConfiguration.setIrodsUserName("userName");
-		synchConfiguration.setIrodsZone("zone");
 		synchConfiguration.setLastSynchronizationStatus(TransferStatus.OK);
 		synchConfiguration.setLocalSynchDirectory("/localdir2");
 		synchConfiguration
@@ -187,58 +193,18 @@ public class SynchManagerServiceImplTest {
 	}
 
 	@Test
-	public void testCreateNewSynchConfigurationDuplicateIrodsDiffZone()
-			throws Exception {
-		Synchronization synchConfiguration = new Synchronization();
-		synchConfiguration.setCreatedAt(new Date());
-		synchConfiguration.setDefaultResourceName("test");
-		synchConfiguration.setIrodsHostName("host");
-		synchConfiguration.setIrodsPassword("xxx");
-		synchConfiguration.setIrodsPort(1247);
-		synchConfiguration.setIrodsSynchDirectory("/synchdir");
-		synchConfiguration.setIrodsUserName("userName");
-		synchConfiguration.setIrodsZone("zone");
-		synchConfiguration.setLastSynchronizationStatus(TransferStatus.OK);
-		synchConfiguration.setLocalSynchDirectory("/localdir");
-		synchConfiguration
-				.setSynchronizationMode(SynchronizationType.ONE_WAY_LOCAL_TO_IRODS);
-		synchConfiguration
-				.setName("testCreateNewSynchConfigurationDuplicateIrodsDiffZone");
-		synchConfiguration.setFrequencyType(FrequencyType.EVERY_DAY);
-
-		synchManagerService.createNewSynchConfiguration(synchConfiguration);
-		synchConfiguration = new Synchronization();
-		synchConfiguration.setCreatedAt(new Date());
-		synchConfiguration.setDefaultResourceName("test");
-		synchConfiguration.setIrodsHostName("host");
-		synchConfiguration.setIrodsPassword("xxx");
-		synchConfiguration.setIrodsPort(1247);
-		synchConfiguration.setIrodsSynchDirectory("/synchdir");
-		synchConfiguration.setIrodsUserName("userName");
-		synchConfiguration.setIrodsZone("zone2");
-		synchConfiguration.setLastSynchronizationStatus(TransferStatus.OK);
-		synchConfiguration.setLocalSynchDirectory("/localdir2");
-		synchConfiguration
-				.setSynchronizationMode(SynchronizationType.ONE_WAY_LOCAL_TO_IRODS);
-		synchConfiguration.setFrequencyType(FrequencyType.EVERY_DAY);
-
-		synchConfiguration
-				.setName("testCreateNewSynchConfigurationDuplicateIrodsDiffZone2");
-		synchManagerService.createNewSynchConfiguration(synchConfiguration);
-		Assert.assertTrue(true);
-	}
-
-	@Test
 	public void testListAllSynchConfiguration() throws Exception {
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		GridAccount gridAccount = DomainUtils
+				.gridAccountFromIRODSAccount(irodsAccount);
+
+		gridAccountDAO.save(gridAccount);
 		Synchronization synchConfiguration = new Synchronization();
 		synchConfiguration.setCreatedAt(new Date());
-		synchConfiguration.setDefaultResourceName("test");
-		synchConfiguration.setIrodsHostName("host");
-		synchConfiguration.setIrodsPassword("xxx");
-		synchConfiguration.setIrodsPort(1247);
+		synchConfiguration.setGridAccount(gridAccount);
 		synchConfiguration.setIrodsSynchDirectory("/synchdir");
-		synchConfiguration.setIrodsUserName("userName");
-		synchConfiguration.setIrodsZone("zone");
 		synchConfiguration.setLastSynchronizationStatus(TransferStatus.OK);
 		synchConfiguration.setLocalSynchDirectory("/localdir");
 		synchConfiguration
@@ -255,15 +221,17 @@ public class SynchManagerServiceImplTest {
 
 	@Test
 	public void testFindById() throws Exception {
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		GridAccount gridAccount = DomainUtils
+				.gridAccountFromIRODSAccount(irodsAccount);
+
+		gridAccountDAO.save(gridAccount);
 		Synchronization synchConfiguration = new Synchronization();
 		synchConfiguration.setCreatedAt(new Date());
-		synchConfiguration.setDefaultResourceName("test");
-		synchConfiguration.setIrodsHostName("host");
-		synchConfiguration.setIrodsPassword("xxx");
-		synchConfiguration.setIrodsPort(1247);
+		synchConfiguration.setGridAccount(gridAccount);
 		synchConfiguration.setIrodsSynchDirectory("/synchdir");
-		synchConfiguration.setIrodsUserName("userName");
-		synchConfiguration.setIrodsZone("zone");
 		synchConfiguration.setLastSynchronizationStatus(TransferStatus.OK);
 		synchConfiguration.setLocalSynchDirectory("/localdir");
 
@@ -283,16 +251,19 @@ public class SynchManagerServiceImplTest {
 
 	@Test
 	public void testFindByName() throws Exception {
+
 		String testName = "testFindByName";
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		GridAccount gridAccount = DomainUtils
+				.gridAccountFromIRODSAccount(irodsAccount);
+
+		gridAccountDAO.save(gridAccount);
 		Synchronization synchConfiguration = new Synchronization();
 		synchConfiguration.setCreatedAt(new Date());
-		synchConfiguration.setDefaultResourceName("test");
-		synchConfiguration.setIrodsHostName("host");
-		synchConfiguration.setIrodsPassword("xxx");
-		synchConfiguration.setIrodsPort(1247);
+		synchConfiguration.setGridAccount(gridAccount);
 		synchConfiguration.setIrodsSynchDirectory("/synchdir");
-		synchConfiguration.setIrodsUserName("userName");
-		synchConfiguration.setIrodsZone("zone");
 		synchConfiguration.setLastSynchronizationStatus(TransferStatus.OK);
 		synchConfiguration.setLocalSynchDirectory("/localdir");
 		synchConfiguration
@@ -310,15 +281,18 @@ public class SynchManagerServiceImplTest {
 
 	@Test
 	public void testUpdateSynchConfiguration() throws Exception {
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		GridAccount gridAccount = DomainUtils
+				.gridAccountFromIRODSAccount(irodsAccount);
+
+		gridAccountDAO.save(gridAccount);
+
 		Synchronization synchConfiguration = new Synchronization();
 		synchConfiguration.setCreatedAt(new Date());
-		synchConfiguration.setDefaultResourceName("test");
-		synchConfiguration.setIrodsHostName("host");
-		synchConfiguration.setIrodsPassword("xxx");
-		synchConfiguration.setIrodsPort(1247);
+		synchConfiguration.setGridAccount(gridAccount);
 		synchConfiguration.setIrodsSynchDirectory("/synchdir");
-		synchConfiguration.setIrodsUserName("userName");
-		synchConfiguration.setIrodsZone("zone");
 		synchConfiguration.setLastSynchronizationStatus(TransferStatus.OK);
 		synchConfiguration.setLocalSynchDirectory("/localdir");
 		synchConfiguration
@@ -350,15 +324,17 @@ public class SynchManagerServiceImplTest {
 	@Test(expected = ConflictingSynchException.class)
 	public void testUpdateSynchConfigurationDuplicateName() throws Exception {
 		String testName = "testUpdateSynchConfigurationDuplicateName";
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		GridAccount gridAccount = DomainUtils
+				.gridAccountFromIRODSAccount(irodsAccount);
+
+		gridAccountDAO.save(gridAccount);
 		Synchronization synchConfiguration = new Synchronization();
 		synchConfiguration.setCreatedAt(new Date());
-		synchConfiguration.setDefaultResourceName("test");
-		synchConfiguration.setIrodsHostName("host");
-		synchConfiguration.setIrodsPassword("xxx");
-		synchConfiguration.setIrodsPort(1247);
+		synchConfiguration.setGridAccount(gridAccount);
 		synchConfiguration.setIrodsSynchDirectory("/synchdir");
-		synchConfiguration.setIrodsUserName("userName");
-		synchConfiguration.setIrodsZone("zone");
 		synchConfiguration.setLastSynchronizationStatus(TransferStatus.OK);
 		synchConfiguration.setLocalSynchDirectory("/localdir");
 		synchConfiguration
@@ -370,13 +346,8 @@ public class SynchManagerServiceImplTest {
 
 		Synchronization synchConfiguration2 = new Synchronization();
 		synchConfiguration2.setCreatedAt(new Date());
-		synchConfiguration2.setDefaultResourceName("test");
-		synchConfiguration2.setIrodsHostName("host");
-		synchConfiguration2.setIrodsPassword("xxx");
-		synchConfiguration2.setIrodsPort(1247);
+		synchConfiguration2.setGridAccount(gridAccount);
 		synchConfiguration2.setIrodsSynchDirectory("/synchdirx");
-		synchConfiguration2.setIrodsUserName("userName");
-		synchConfiguration2.setIrodsZone("zone");
 		synchConfiguration2.setLastSynchronizationStatus(TransferStatus.OK);
 		synchConfiguration2.setLocalSynchDirectory("/localdir2");
 		synchConfiguration2
@@ -395,16 +366,19 @@ public class SynchManagerServiceImplTest {
 	@Test(expected = ConflictingSynchException.class)
 	public void testUpdateSynchConfigurationDuplicateIrodsPath()
 			throws Exception {
+
 		String testName = "testUpdateSynchConfigurationDuplicateIrodsPath";
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		GridAccount gridAccount = DomainUtils
+				.gridAccountFromIRODSAccount(irodsAccount);
+
+		gridAccountDAO.save(gridAccount);
+
 		Synchronization synchConfiguration = new Synchronization();
 		synchConfiguration.setCreatedAt(new Date());
-		synchConfiguration.setDefaultResourceName("test");
-		synchConfiguration.setIrodsHostName("host");
-		synchConfiguration.setIrodsPassword("xxx");
-		synchConfiguration.setIrodsPort(1247);
+		synchConfiguration.setGridAccount(gridAccount);
 		synchConfiguration.setIrodsSynchDirectory(testName);
-		synchConfiguration.setIrodsUserName("userName");
-		synchConfiguration.setIrodsZone("zone");
 		synchConfiguration.setLastSynchronizationStatus(TransferStatus.OK);
 		synchConfiguration.setLocalSynchDirectory("/localdir");
 		synchConfiguration
@@ -416,13 +390,8 @@ public class SynchManagerServiceImplTest {
 
 		Synchronization synchConfiguration2 = new Synchronization();
 		synchConfiguration2.setCreatedAt(new Date());
-		synchConfiguration2.setDefaultResourceName("test");
-		synchConfiguration2.setIrodsHostName("host");
-		synchConfiguration2.setIrodsPassword("xxx");
-		synchConfiguration2.setIrodsPort(1247);
+		synchConfiguration2.setGridAccount(gridAccount);
 		synchConfiguration2.setIrodsSynchDirectory(testName + "second");
-		synchConfiguration2.setIrodsUserName("userName");
-		synchConfiguration2.setIrodsZone("zone");
 		synchConfiguration2.setLastSynchronizationStatus(TransferStatus.OK);
 		synchConfiguration2.setLocalSynchDirectory("/localdir2");
 		synchConfiguration2
@@ -441,16 +410,20 @@ public class SynchManagerServiceImplTest {
 	@Test(expected = ConflictingSynchException.class)
 	public void testUpdateSynchConfigurationDuplicateLocalPath()
 			throws Exception {
+
 		String testName = "testUpdateSynchConfigurationDuplicateLocalPath";
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		GridAccount gridAccount = DomainUtils
+				.gridAccountFromIRODSAccount(irodsAccount);
+
+		gridAccountDAO.save(gridAccount);
+
 		Synchronization synchConfiguration = new Synchronization();
 		synchConfiguration.setCreatedAt(new Date());
-		synchConfiguration.setDefaultResourceName("test");
-		synchConfiguration.setIrodsHostName("host");
-		synchConfiguration.setIrodsPassword("xxx");
-		synchConfiguration.setIrodsPort(1247);
+		synchConfiguration.setGridAccount(gridAccount);
 		synchConfiguration.setIrodsSynchDirectory(testName + "first");
-		synchConfiguration.setIrodsUserName("userName");
-		synchConfiguration.setIrodsZone("zone");
 		synchConfiguration.setLastSynchronizationStatus(TransferStatus.OK);
 		synchConfiguration.setLocalSynchDirectory(testName);
 		synchConfiguration
@@ -462,13 +435,8 @@ public class SynchManagerServiceImplTest {
 
 		Synchronization synchConfiguration2 = new Synchronization();
 		synchConfiguration2.setCreatedAt(new Date());
-		synchConfiguration2.setDefaultResourceName("test");
-		synchConfiguration2.setIrodsHostName("host");
-		synchConfiguration2.setIrodsPassword("xxx");
-		synchConfiguration2.setIrodsPort(1247);
+		synchConfiguration2.setGridAccount(gridAccount);
 		synchConfiguration2.setIrodsSynchDirectory(testName + "second");
-		synchConfiguration2.setIrodsUserName("userName");
-		synchConfiguration2.setIrodsZone("zone");
 		synchConfiguration2.setLastSynchronizationStatus(TransferStatus.OK);
 		synchConfiguration2.setLocalSynchDirectory(testName);
 		synchConfiguration2
@@ -477,25 +445,26 @@ public class SynchManagerServiceImplTest {
 		synchConfiguration2.setFrequencyType(FrequencyType.EVERY_DAY);
 
 		synchManagerService.createNewSynchConfiguration(synchConfiguration2);
-
 		synchConfiguration2.setIrodsSynchDirectory(testName);
-
 		synchManagerService.updateSynchConfiguration(synchConfiguration2);
 
 	}
 
 	@Test
 	public void testDeleteSynchronizationNoTxfrsInQueue() throws Exception {
+
 		String testName = "testDeleteSynchronizationNoTxfrsInQueue";
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		GridAccount gridAccount = DomainUtils
+				.gridAccountFromIRODSAccount(irodsAccount);
+
+		gridAccountDAO.save(gridAccount);
+
 		Synchronization synchConfiguration = new Synchronization();
 		synchConfiguration.setCreatedAt(new Date());
-		synchConfiguration.setDefaultResourceName("test");
-		synchConfiguration.setIrodsHostName("host");
-		synchConfiguration.setIrodsPassword("xxx");
-		synchConfiguration.setIrodsPort(1247);
+		synchConfiguration.setGridAccount(gridAccount);
 		synchConfiguration.setIrodsSynchDirectory("/synchdir");
-		synchConfiguration.setIrodsUserName("userName");
-		synchConfiguration.setIrodsZone("zone");
 		synchConfiguration.setLastSynchronizationStatus(TransferStatus.OK);
 		synchConfiguration.setLocalSynchDirectory("/localdir");
 		synchConfiguration
@@ -514,18 +483,20 @@ public class SynchManagerServiceImplTest {
 	@Test
 	public void testDeleteSynchronizationCompletedTxfrsInQueue()
 			throws Exception {
+
 		transferQueueService.purgeQueue();
 		String testName = "testDeleteSynchronizationCompletedTxfrsInQueue";
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		GridAccount gridAccount = DomainUtils
+				.gridAccountFromIRODSAccount(irodsAccount);
+
+		gridAccountDAO.save(gridAccount);
+
 		Synchronization synchConfiguration = new Synchronization();
 		synchConfiguration.setCreatedAt(new Date());
-		synchConfiguration.setDefaultResourceName("test");
-		synchConfiguration.setIrodsHostName("host");
-		synchConfiguration
-				.setIrodsPassword(HibernateUtil.obfuscate("jjjjfjfj"));
-		synchConfiguration.setIrodsPort(1247);
+		synchConfiguration.setGridAccount(gridAccount);
 		synchConfiguration.setIrodsSynchDirectory(testName);
-		synchConfiguration.setIrodsUserName("userName");
-		synchConfiguration.setIrodsZone("zone");
 		synchConfiguration.setLastSynchronizationStatus(TransferStatus.OK);
 		synchConfiguration.setLocalSynchDirectory("/localdir");
 		synchConfiguration
@@ -536,8 +507,7 @@ public class SynchManagerServiceImplTest {
 		synchManagerService.createNewSynchConfiguration(synchConfiguration);
 
 		Synchronization actual = synchManagerService.findByName(testName);
-		transferQueueService.enqueueSynchTransfer(actual,
-				actual.buildIRODSAccountFromSynchronizationData());
+		transferQueueService.enqueueSynchTransfer(actual, gridAccount);
 		// tweak txfr to complete
 
 		for (LocalIRODSTransfer localIRODSTransfer : actual
@@ -550,28 +520,31 @@ public class SynchManagerServiceImplTest {
 		actual = synchManagerService.findByName(testName);
 		Assert.assertNull("synch should be deleted", actual);
 		List<LocalIRODSTransfer> queue = transferQueueService.getRecentQueue();
-		
+
 		for (LocalIRODSTransfer transfer : queue) {
-			Assert.assertFalse("should be no txfrs related to synch in queue", transfer.getIrodsAbsolutePath().equals(testName));
+			Assert.assertFalse("should be no txfrs related to synch in queue",
+					transfer.getIrodsAbsolutePath().equals(testName));
 		}
-		
-		
+
 	}
 
 	@Test(expected = ConflictingSynchException.class)
 	public void testDeleteSynchronizationEnqueuedTxfrsInQueue()
 			throws Exception {
+
 		String testName = "testDeleteSynchronizationEnqueuedTxfrsInQueue";
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		GridAccount gridAccount = DomainUtils
+				.gridAccountFromIRODSAccount(irodsAccount);
+
+		gridAccountDAO.save(gridAccount);
+
 		Synchronization synchConfiguration = new Synchronization();
 		synchConfiguration.setCreatedAt(new Date());
-		synchConfiguration.setDefaultResourceName("test");
-		synchConfiguration.setIrodsHostName("host");
-		synchConfiguration
-				.setIrodsPassword(HibernateUtil.obfuscate("jjjjfjfj"));
-		synchConfiguration.setIrodsPort(1247);
+		synchConfiguration.setGridAccount(gridAccount);
 		synchConfiguration.setIrodsSynchDirectory("/synchdir");
-		synchConfiguration.setIrodsUserName("userName");
-		synchConfiguration.setIrodsZone("zone");
 		synchConfiguration.setLastSynchronizationStatus(TransferStatus.OK);
 		synchConfiguration.setLocalSynchDirectory("/localdir");
 		synchConfiguration
@@ -582,8 +555,7 @@ public class SynchManagerServiceImplTest {
 		synchManagerService.createNewSynchConfiguration(synchConfiguration);
 
 		Synchronization actual = synchManagerService.findByName(testName);
-		transferQueueService.enqueueSynchTransfer(actual,
-				actual.buildIRODSAccountFromSynchronizationData());
+		transferQueueService.enqueueSynchTransfer(actual, gridAccount);
 		synchManagerService.deleteSynchronization(actual);
 
 	}

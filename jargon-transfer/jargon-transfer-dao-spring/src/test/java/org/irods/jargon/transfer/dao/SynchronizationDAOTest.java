@@ -2,16 +2,23 @@ package org.irods.jargon.transfer.dao;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Properties;
 
 import junit.framework.Assert;
 
+import org.irods.jargon.core.connection.IRODSAccount;
+import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.irods.jargon.transfer.dao.domain.FrequencyType;
+import org.irods.jargon.transfer.dao.domain.GridAccount;
 import org.irods.jargon.transfer.dao.domain.LocalIRODSTransfer;
 import org.irods.jargon.transfer.dao.domain.Synchronization;
 import org.irods.jargon.transfer.dao.domain.SynchronizationType;
 import org.irods.jargon.transfer.dao.domain.TransferState;
 import org.irods.jargon.transfer.dao.domain.TransferStatus;
 import org.irods.jargon.transfer.dao.domain.TransferType;
+import org.irods.jargon.transfer.util.DomainUtils;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,11 +35,27 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class SynchronizationDAOTest {
 
+	private static Properties testingProperties = new Properties();
+	private static TestingPropertiesHelper testingPropertiesHelper = new TestingPropertiesHelper();
+
 	@Autowired
 	private SynchronizationDAO synchronizationDAO;
 
 	@Autowired
 	private LocalIRODSTransferDAO localIrodsTransferDAO;
+
+	@Autowired
+	private GridAccountDAO gridAccountDAO;
+
+	@BeforeClass
+	public static void setUpBeforeClass() throws Exception {
+		TestingPropertiesHelper testingPropertiesLoader = new TestingPropertiesHelper();
+		testingProperties = testingPropertiesLoader.getTestProperties();
+	}
+
+	@AfterClass
+	public static void tearDownAfterClass() throws Exception {
+	}
 
 	public LocalIRODSTransferDAO getLocalIrodsTransferDAO() {
 		return localIrodsTransferDAO;
@@ -48,18 +71,23 @@ public class SynchronizationDAOTest {
 		this.synchronizationDAO = synchronizationDAO;
 	}
 
+	public void setGridAccountDAO(final GridAccountDAO gridAccountDAO) {
+		this.gridAccountDAO = gridAccountDAO;
+	}
+
 	@Test
 	public void testSave() throws Exception {
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		GridAccount gridAccount = DomainUtils
+				.gridAccountFromIRODSAccount(irodsAccount);
+
+		gridAccountDAO.save(gridAccount);
 		Synchronization synchronization = new Synchronization();
 		synchronization.setCreatedAt(new Date());
-		synchronization.setDefaultResourceName("test");
 		synchronization.setFrequencyType(FrequencyType.EVERY_HOUR);
-		synchronization.setIrodsHostName("host");
-		synchronization.setIrodsPassword("password");
-		synchronization.setIrodsPort(1247);
+		synchronization.setGridAccount(gridAccount);
 		synchronization.setIrodsSynchDirectory("irods/dir");
-		synchronization.setIrodsUserName("user");
-		synchronization.setIrodsZone("zone");
 		synchronization.setLocalSynchDirectory("local/synch");
 		synchronization.setName("test");
 		synchronization
@@ -71,16 +99,16 @@ public class SynchronizationDAOTest {
 
 	@Test
 	public void testFindById() throws Exception {
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		GridAccount gridAccount = DomainUtils
+				.gridAccountFromIRODSAccount(irodsAccount);
+		gridAccountDAO.save(gridAccount);
 		Synchronization synchronization = new Synchronization();
 		synchronization.setCreatedAt(new Date());
-		synchronization.setDefaultResourceName("test");
+		synchronization.setGridAccount(gridAccount);
 		synchronization.setFrequencyType(FrequencyType.EVERY_HOUR);
-		synchronization.setIrodsHostName("host");
-		synchronization.setIrodsPassword("password");
-		synchronization.setIrodsPort(1247);
 		synchronization.setIrodsSynchDirectory("irods/dir");
-		synchronization.setIrodsUserName("user");
-		synchronization.setIrodsZone("zone");
 		synchronization.setLocalSynchDirectory("local/synch");
 		synchronization.setName("test");
 		synchronization
@@ -96,16 +124,16 @@ public class SynchronizationDAOTest {
 	@Test
 	public void testFindByName() throws Exception {
 		String testName = "testFindByName";
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		GridAccount gridAccount = DomainUtils
+				.gridAccountFromIRODSAccount(irodsAccount);
+		gridAccountDAO.save(gridAccount);
 		Synchronization synchronization = new Synchronization();
 		synchronization.setCreatedAt(new Date());
-		synchronization.setDefaultResourceName("test");
+		synchronization.setGridAccount(gridAccount);
 		synchronization.setFrequencyType(FrequencyType.EVERY_HOUR);
-		synchronization.setIrodsHostName("host");
-		synchronization.setIrodsPassword("password");
-		synchronization.setIrodsPort(1247);
 		synchronization.setIrodsSynchDirectory("irods/dir");
-		synchronization.setIrodsUserName("user");
-		synchronization.setIrodsZone("zone");
 		synchronization.setLocalSynchDirectory("local/synch");
 		synchronization.setName(testName);
 		synchronization
@@ -118,16 +146,16 @@ public class SynchronizationDAOTest {
 
 	@Test
 	public void testFindAll() throws Exception {
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		GridAccount gridAccount = DomainUtils
+				.gridAccountFromIRODSAccount(irodsAccount);
+		gridAccountDAO.save(gridAccount);
 		Synchronization synchronization = new Synchronization();
 		synchronization.setCreatedAt(new Date());
-		synchronization.setDefaultResourceName("test");
+		synchronization.setGridAccount(gridAccount);
 		synchronization.setFrequencyType(FrequencyType.EVERY_HOUR);
-		synchronization.setIrodsHostName("host");
-		synchronization.setIrodsPassword("password");
-		synchronization.setIrodsPort(1247);
 		synchronization.setIrodsSynchDirectory("irods/dir");
-		synchronization.setIrodsUserName("user");
-		synchronization.setIrodsZone("zone");
 		synchronization.setLocalSynchDirectory("local/synch");
 		synchronization.setName("test");
 		synchronization
@@ -136,14 +164,9 @@ public class SynchronizationDAOTest {
 
 		synchronization = new Synchronization();
 		synchronization.setCreatedAt(new Date());
-		synchronization.setDefaultResourceName("test");
+		synchronization.setGridAccount(gridAccount);
 		synchronization.setFrequencyType(FrequencyType.EVERY_HOUR);
-		synchronization.setIrodsHostName("host");
-		synchronization.setIrodsPassword("password");
-		synchronization.setIrodsPort(1247);
 		synchronization.setIrodsSynchDirectory("irods/dirs");
-		synchronization.setIrodsUserName("user");
-		synchronization.setIrodsZone("zone");
 		synchronization.setLocalSynchDirectory("local/sync2");
 		synchronization.setName("test2");
 		synchronization
@@ -159,16 +182,16 @@ public class SynchronizationDAOTest {
 	@Test
 	public void testDelete() throws Exception {
 		String testName = "testDelete";
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		GridAccount gridAccount = DomainUtils
+				.gridAccountFromIRODSAccount(irodsAccount);
+		gridAccountDAO.save(gridAccount);
 		Synchronization synchronization = new Synchronization();
 		synchronization.setCreatedAt(new Date());
-		synchronization.setDefaultResourceName("test");
+		synchronization.setGridAccount(gridAccount);
 		synchronization.setFrequencyType(FrequencyType.EVERY_HOUR);
-		synchronization.setIrodsHostName("host");
-		synchronization.setIrodsPassword("password");
-		synchronization.setIrodsPort(1247);
 		synchronization.setIrodsSynchDirectory("irods/dir");
-		synchronization.setIrodsUserName("user");
-		synchronization.setIrodsZone("zone");
 		synchronization.setLocalSynchDirectory("local/synch");
 		synchronization.setName(testName);
 		synchronization
@@ -185,16 +208,16 @@ public class SynchronizationDAOTest {
 
 	@Test
 	public void testSaveWithLocalIRODSTransfer() throws Exception {
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		GridAccount gridAccount = DomainUtils
+				.gridAccountFromIRODSAccount(irodsAccount);
+		gridAccountDAO.save(gridAccount);
 		Synchronization synchronization = new Synchronization();
 		synchronization.setCreatedAt(new Date());
-		synchronization.setDefaultResourceName("test");
+		synchronization.setGridAccount(gridAccount);
 		synchronization.setFrequencyType(FrequencyType.EVERY_HOUR);
-		synchronization.setIrodsHostName("host");
-		synchronization.setIrodsPassword("password");
-		synchronization.setIrodsPort(1247);
 		synchronization.setIrodsSynchDirectory("irods/dir");
-		synchronization.setIrodsUserName("user");
-		synchronization.setIrodsZone("zone");
 		synchronization.setLocalSynchDirectory("local/synch");
 		synchronization.setName("testSaveWithLocalIRODSTransfer");
 		synchronization
@@ -206,15 +229,10 @@ public class SynchronizationDAOTest {
 		localIRODSTransfer.setIrodsAbsolutePath("/irods/path");
 		localIRODSTransfer.setLocalAbsolutePath("/local/path");
 		localIRODSTransfer.setSynchronization(synchronization);
-		localIRODSTransfer.setTransferHost("host");
-		localIRODSTransfer.setTransferPort(1247);
-		localIRODSTransfer.setTransferPassword("password");
-		localIRODSTransfer.setTransferResource("xxx");
+		localIRODSTransfer.setGridAccount(gridAccount);
 		localIRODSTransfer.setTransferState(TransferState.ENQUEUED);
 		localIRODSTransfer.setTransferStatus(TransferStatus.OK);
 		localIRODSTransfer.setTransferType(TransferType.SYNCH);
-		localIRODSTransfer.setTransferUserName("user");
-		localIRODSTransfer.setTransferZone("zone");
 		synchronization.getLocalIRODSTransfers().add(localIRODSTransfer);
 
 		Assert.assertTrue("did not set id", synchronization.getId() > 0);
@@ -232,16 +250,16 @@ public class SynchronizationDAOTest {
 			throws Exception {
 
 		String testName = "testSaveWithLocalIRODSTransferThenFindAllTransfers";
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		GridAccount gridAccount = DomainUtils
+				.gridAccountFromIRODSAccount(irodsAccount);
+		gridAccountDAO.save(gridAccount);
 		Synchronization synchronization = new Synchronization();
 		synchronization.setCreatedAt(new Date());
-		synchronization.setDefaultResourceName("test");
+		synchronization.setGridAccount(gridAccount);
 		synchronization.setFrequencyType(FrequencyType.EVERY_HOUR);
-		synchronization.setIrodsHostName("host");
-		synchronization.setIrodsPassword("password");
-		synchronization.setIrodsPort(1247);
 		synchronization.setIrodsSynchDirectory(testName);
-		synchronization.setIrodsUserName("user");
-		synchronization.setIrodsZone("zone");
 		synchronization.setLocalSynchDirectory("local/synch");
 		synchronization.setName(testName);
 		synchronization
@@ -253,15 +271,10 @@ public class SynchronizationDAOTest {
 		localIRODSTransfer.setIrodsAbsolutePath(testName);
 		localIRODSTransfer.setLocalAbsolutePath("/local/path");
 		localIRODSTransfer.setSynchronization(synchronization);
-		localIRODSTransfer.setTransferHost("host");
-		localIRODSTransfer.setTransferPort(1247);
-		localIRODSTransfer.setTransferPassword("password");
-		localIRODSTransfer.setTransferResource("xxx");
+		localIRODSTransfer.setGridAccount(gridAccount);
 		localIRODSTransfer.setTransferState(TransferState.ENQUEUED);
 		localIRODSTransfer.setTransferStatus(TransferStatus.OK);
 		localIRODSTransfer.setTransferType(TransferType.SYNCH);
-		localIRODSTransfer.setTransferUserName("user");
-		localIRODSTransfer.setTransferZone("zone");
 		synchronization.getLocalIRODSTransfers().add(localIRODSTransfer);
 
 		List<LocalIRODSTransfer> allTransfers = localIrodsTransferDAO.findAll();

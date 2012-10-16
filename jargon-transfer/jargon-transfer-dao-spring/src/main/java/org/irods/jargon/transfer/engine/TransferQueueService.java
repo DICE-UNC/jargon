@@ -2,12 +2,11 @@ package org.irods.jargon.transfer.engine;
 
 import java.util.List;
 
-import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.transfer.dao.domain.GridAccount;
 import org.irods.jargon.transfer.dao.domain.LocalIRODSTransfer;
 import org.irods.jargon.transfer.dao.domain.LocalIRODSTransferItem;
 import org.irods.jargon.transfer.dao.domain.Synchronization;
-import org.irods.jargon.transfer.exception.CannotUpdateTransferInProgressException;
 
 public interface TransferQueueService {
 
@@ -23,26 +22,26 @@ public interface TransferQueueService {
 	 * @param localSourceAbsolutePath
 	 * @param targetIRODSAbsolutePath
 	 * @param targetResource
-	 * @param irodsAccount
+	 * @param gridAccount
 	 * @return
 	 * @throws JargonException
 	 */
 	LocalIRODSTransfer enqueuePutTransfer(final String localSourceAbsolutePath,
 			final String targetIRODSAbsolutePath, final String targetResource,
-			final IRODSAccount irodsAccount) throws JargonException;
+			final GridAccount gridAccount) throws JargonException;
 
 	/**
 	 * 
 	 * @param irodsSourceAbsolutePath
 	 * @param targetLocalAbsolutePath
 	 * @param sourceResource
-	 * @param irodsAccount
+	 * @param gridAccount
 	 * @return
 	 * @throws JargonException
 	 */
 	LocalIRODSTransfer enqueueGetTransfer(final String irodsSourceAbsolutePath,
 			final String targetLocalAbsolutePath, final String sourceResource,
-			final IRODSAccount irodsAccount) throws JargonException;
+			final GridAccount gridAccount) throws JargonException;
 
 	/**
 	 * 
@@ -167,12 +166,12 @@ public interface TransferQueueService {
 	 * 
 	 * @param irodsAbsolutePath
 	 * @param targetResource
-	 * @param irodsAccount
+	 * @param gridAccount
 	 * @return
 	 * @throws JargonException
 	 */
 	LocalIRODSTransfer enqueueReplicateTransfer(final String irodsAbsolutePath,
-			final String targetResource, final IRODSAccount irodsAccount)
+			final String targetResource, final GridAccount gridAccount)
 			throws JargonException;
 
 	/**
@@ -238,15 +237,15 @@ public interface TransferQueueService {
 	 * @param irodsTargetAbsolutePath
 	 *            <code>String</code> with the target absolute path for the copy
 	 *            operation
-	 * @param irodsAccount
-	 *            {@link IRODSAccount} that describes the host and user
+	 * @param gridAccount
+	 *            {@link GridAccount} that describes the host and user
 	 *            information
 	 * @return {@link LocalIRODSTransfer} that represents the enqueued operation
 	 * @throws JargonException
 	 */
 	LocalIRODSTransfer enqueueCopyTransfer(String irodsSourceAbsolutePath,
 			String targetResource, String irodsTargetAbsolutePath,
-			IRODSAccount irodsAccount) throws JargonException;
+			GridAccount gridAccount) throws JargonException;
 
 	/**
 	 * Enqueue a synchronization operation between a local and an iRODS folder
@@ -254,25 +253,14 @@ public interface TransferQueueService {
 	 * @param synchronization
 	 *            {@link Synchronization} that specifies the folder synch
 	 *            relationship
-	 * @param irodsAccount
-	 *            {@link IRODSAccount} that specifies the connection information
+	 * @param gridAccount
+	 *            {@link GridAccount} that describes the host and user
+	 *            information
 	 * @return
 	 * @throws JargonException
 	 */
 	LocalIRODSTransfer enqueueSynchTransfer(Synchronization synchronization,
-			IRODSAccount irodsAccount) throws JargonException;
-
-	/**
-	 * Signal that a password should be changed for a given account.  This will update anything that's in the queue, and any relevant synchronizations.  Note that
-	 * an exception will be thrown if the change cannot occur, due to an enqueued or running transfer or synchronization activity.
-	 * @param irodsAccount {@link IRODSAccount} that describes the user and iRODS server for the password change
-	 * @param newPasswordValue <code>String</code> with the new password value.
-	 * @throws CannotUpdateTransferInProgressException thrown if a password change cannot be done, due to an enqueued or processing synchronization or transfer activity
-	 * @throws JargonException
-	 */
-	void updateUserPasswordInTransferManagerData(IRODSAccount irodsAccount,
-			String newPasswordValue)
-			throws CannotUpdateTransferInProgressException, JargonException;
+			GridAccount gridAccount) throws JargonException;
 
 	/**
 	 * Delete the entire contents of the transfser queue, regardless of status

@@ -24,7 +24,7 @@ import org.irods.jargon.transfer.engine.synch.ConflictingSynchException;
 import org.irods.jargon.transfer.engine.synch.SynchException;
 import org.irods.jargon.transfer.synch.InPlaceSynchronizingDiffProcessorImpl;
 import org.irods.jargon.transfer.synch.SynchronizeProcessorImpl;
-import org.irods.jargon.transfer.util.HibernateUtil;
+import org.irods.jargon.transfer.util.DomainUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -142,13 +142,9 @@ final class IRODSLocalTransferEngine implements TransferStatusCallbackListener {
 		setCurrentTransfer(localIrodsTransfer);
 		transferManager.notifyProcessing();
 
-		final IRODSAccount irodsAccount = IRODSAccount.instance(
-				localIrodsTransfer.getTransferHost(), localIrodsTransfer
-						.getTransferPort(), localIrodsTransfer
-						.getTransferUserName(), HibernateUtil
-						.retrieve(localIrodsTransfer.getTransferPassword()),
-				"/", localIrodsTransfer.getTransferZone(), localIrodsTransfer
-						.getTransferResource());
+		IRODSAccount irodsAccount = DomainUtils
+				.irodsAccountFromGridAccount(localIrodsTransfer
+						.getGridAccount());
 
 		// initiate the operation and process call-backs
 

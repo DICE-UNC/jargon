@@ -6,20 +6,18 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.transfer.dao.LocalIRODSTransferDAO;
 import org.irods.jargon.transfer.dao.LocalIRODSTransferItemDAO;
 import org.irods.jargon.transfer.dao.SynchronizationDAO;
 import org.irods.jargon.transfer.dao.TransferDAOException;
+import org.irods.jargon.transfer.dao.domain.GridAccount;
 import org.irods.jargon.transfer.dao.domain.LocalIRODSTransfer;
 import org.irods.jargon.transfer.dao.domain.LocalIRODSTransferItem;
 import org.irods.jargon.transfer.dao.domain.Synchronization;
 import org.irods.jargon.transfer.dao.domain.TransferState;
 import org.irods.jargon.transfer.dao.domain.TransferStatus;
 import org.irods.jargon.transfer.dao.domain.TransferType;
-import org.irods.jargon.transfer.exception.CannotUpdateTransferInProgressException;
-import org.irods.jargon.transfer.util.HibernateUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
@@ -67,7 +65,6 @@ public class TransferQueueServiceImpl implements TransferQueueService {
 	 * org.irods.jargon.transfer.engine.TransferQueueService#dequeueTransfer()
 	 */
 	@Override
-	// @Transactional
 	public LocalIRODSTransfer dequeueTransfer() throws JargonException {
 		log.debug("entering dequeueTransfer()");
 		LocalIRODSTransfer transfer = null;
@@ -112,7 +109,7 @@ public class TransferQueueServiceImpl implements TransferQueueService {
 	public LocalIRODSTransfer enqueuePutTransfer(
 			final String localSourceAbsolutePath,
 			final String targetIRODSAbsolutePath, final String targetResource,
-			final IRODSAccount irodsAccount) throws JargonException {
+			final GridAccount gridAccount) throws JargonException {
 		log.debug("entering enqueuePutTransfer()");
 
 		if (localSourceAbsolutePath == null
@@ -132,8 +129,8 @@ public class TransferQueueServiceImpl implements TransferQueueService {
 					"targetResource is null, set as blank if not used");
 		}
 
-		if (irodsAccount == null) {
-			throw new JargonException("null irodsAccount");
+		if (gridAccount == null) {
+			throw new JargonException("null gridAccount");
 		}
 
 		log.info("enqueue put transfer from local source: {}",
@@ -145,15 +142,10 @@ public class TransferQueueServiceImpl implements TransferQueueService {
 		enqueuedTransfer.setCreatedAt(new Date());
 		enqueuedTransfer.setIrodsAbsolutePath(targetIRODSAbsolutePath);
 		enqueuedTransfer.setLocalAbsolutePath(localSourceAbsolutePath);
-		enqueuedTransfer.setTransferHost(irodsAccount.getHost());
-		enqueuedTransfer.setTransferPort(irodsAccount.getPort());
-		enqueuedTransfer.setTransferResource(targetResource);
-		enqueuedTransfer.setTransferZone(irodsAccount.getZone());
+
+		enqueuedTransfer.setGridAccount(gridAccount);
 		enqueuedTransfer.setTransferStart(new Date());
 		enqueuedTransfer.setTransferType(TransferType.PUT);
-		enqueuedTransfer.setTransferUserName(irodsAccount.getUserName());
-		enqueuedTransfer.setTransferPassword(HibernateUtil
-				.obfuscate(irodsAccount.getPassword()));
 		enqueuedTransfer.setTransferState(TransferState.ENQUEUED);
 		enqueuedTransfer.setTransferStatus(TransferStatus.OK);
 
@@ -164,18 +156,12 @@ public class TransferQueueServiceImpl implements TransferQueueService {
 
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.irods.jargon.transfer.engine.TransferQueueService#enqueueSynchTransfer
-	 * (org.irods.jargon.transfer.dao.domain.Synchronization,
-	 * org.irods.jargon.core.connection.IRODSAccount)
-	 */
+
 	@Override
 	public LocalIRODSTransfer enqueueSynchTransfer(
 			final Synchronization synchronization,
-			final IRODSAccount irodsAccount) throws JargonException {
+ final GridAccount gridAccount)
+			throws JargonException {
 
 		log.info("enqueue a synchronization");
 
@@ -183,12 +169,12 @@ public class TransferQueueServiceImpl implements TransferQueueService {
 			throw new IllegalArgumentException("null synchronization");
 		}
 
-		if (irodsAccount == null) {
-			throw new IllegalArgumentException("null irodsAccount");
+		if (gridAccount == null) {
+			throw new IllegalArgumentException("null gridAccount");
 		}
 
 		log.info("synchronization:{}", synchronization);
-		log.info("irodsAccount:{}", irodsAccount);
+		log.info("gridAccount:{}", gridAccount);
 
 		if (synchronization.getId() == null) {
 			throw new JargonException(
@@ -201,18 +187,9 @@ public class TransferQueueServiceImpl implements TransferQueueService {
 				.getIrodsSynchDirectory());
 		enqueuedTransfer.setLocalAbsolutePath(synchronization
 				.getLocalSynchDirectory());
-		enqueuedTransfer.setTransferHost(synchronization.getIrodsHostName());
-		enqueuedTransfer.setTransferPort(synchronization.getIrodsPort());
-		enqueuedTransfer.setTransferResource(synchronization
-				.getDefaultResourceName());
-		enqueuedTransfer.setTransferZone(synchronization.getIrodsZone());
+		enqueuedTransfer.setGridAccount(gridAccount);
 		enqueuedTransfer.setTransferStart(new Date());
 		enqueuedTransfer.setTransferType(TransferType.SYNCH);
-		enqueuedTransfer
-				.setTransferUserName(synchronization.getIrodsUserName());
-		// password passed along as encrypted
-		enqueuedTransfer
-				.setTransferPassword(synchronization.getIrodsPassword());
 		enqueuedTransfer.setTransferState(TransferState.ENQUEUED);
 		enqueuedTransfer.setTransferStatus(TransferStatus.OK);
 		enqueuedTransfer.setSynchronization(synchronization);
@@ -223,19 +200,11 @@ public class TransferQueueServiceImpl implements TransferQueueService {
 
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.irods.jargon.transfer.engine.TransferQueueService#enqueueGetTransfer
-	 * (java.lang.String, java.lang.String, java.lang.String,
-	 * org.irods.jargon.core.connection.IRODSAccount)
-	 */
 	@Override
 	public LocalIRODSTransfer enqueueGetTransfer(
 			final String irodsSourceAbsolutePath,
 			final String targetLocalAbsolutePath, final String sourceResource,
-			final IRODSAccount irodsAccount) throws JargonException {
+			final GridAccount gridAccount) throws JargonException {
 		log.debug("entering enqueueGetTransfer()");
 
 		if (irodsSourceAbsolutePath == null
@@ -255,8 +224,8 @@ public class TransferQueueServiceImpl implements TransferQueueService {
 					"sourceResource is null, set as blank if not used");
 		}
 
-		if (irodsAccount == null) {
-			throw new JargonException("null irodsAccount");
+		if (gridAccount == null) {
+			throw new JargonException("null gridAccount");
 		}
 
 		log.info("enqueue get transfer from irods source: {}",
@@ -268,20 +237,13 @@ public class TransferQueueServiceImpl implements TransferQueueService {
 		enqueuedTransfer.setCreatedAt(new Date());
 		enqueuedTransfer.setIrodsAbsolutePath(irodsSourceAbsolutePath);
 		enqueuedTransfer.setLocalAbsolutePath(targetLocalAbsolutePath);
-		enqueuedTransfer.setTransferHost(irodsAccount.getHost());
-		enqueuedTransfer.setTransferPort(irodsAccount.getPort());
-		enqueuedTransfer.setTransferResource(sourceResource);
-		enqueuedTransfer.setTransferZone(irodsAccount.getZone());
+		enqueuedTransfer.setGridAccount(gridAccount);
 		enqueuedTransfer.setTransferStart(new Date());
 		enqueuedTransfer.setTransferType(TransferType.GET);
-		enqueuedTransfer.setTransferUserName(irodsAccount.getUserName());
-		enqueuedTransfer.setTransferPassword(HibernateUtil
-				.obfuscate(irodsAccount.getPassword()));
 		enqueuedTransfer.setTransferState(TransferState.ENQUEUED);
 		enqueuedTransfer.setTransferStatus(TransferStatus.OK);
 
 		try {
-
 			log.info("saving...{}", enqueuedTransfer);
 			localIRODSTransferDAO.save(enqueuedTransfer);
 		} catch (TransferDAOException e) {
@@ -631,17 +593,10 @@ public class TransferQueueServiceImpl implements TransferQueueService {
 
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.irods.jargon.transfer.engine.TransferQueueService#
-	 * enqueueReplicateTransfer(java.lang.String, java.lang.String,
-	 * org.irods.jargon.core.connection.IRODSAccount)
-	 */
 	@Override
 	public LocalIRODSTransfer enqueueReplicateTransfer(
 			final String irodsAbsolutePath, final String targetResource,
-			final IRODSAccount irodsAccount) throws JargonException {
+			final GridAccount gridAccount) throws JargonException {
 
 		if (irodsAbsolutePath == null || irodsAbsolutePath.isEmpty()) {
 			throw new JargonException("irodsAbsolutePath is null or empty");
@@ -652,7 +607,7 @@ public class TransferQueueServiceImpl implements TransferQueueService {
 					"targetResource is null, set as blank if not used");
 		}
 
-		if (irodsAccount == null) {
+		if (gridAccount == null) {
 			throw new JargonException("null irodsAccount");
 		}
 
@@ -663,20 +618,13 @@ public class TransferQueueServiceImpl implements TransferQueueService {
 		enqueuedTransfer.setCreatedAt(new Date());
 		enqueuedTransfer.setIrodsAbsolutePath(irodsAbsolutePath);
 		enqueuedTransfer.setLocalAbsolutePath("");
-		enqueuedTransfer.setTransferHost(irodsAccount.getHost());
-		enqueuedTransfer.setTransferPort(irodsAccount.getPort());
-		enqueuedTransfer.setTransferResource(targetResource);
-		enqueuedTransfer.setTransferZone(irodsAccount.getZone());
+		enqueuedTransfer.setGridAccount(gridAccount);
 		enqueuedTransfer.setTransferStart(new Date());
 		enqueuedTransfer.setTransferType(TransferType.REPLICATE);
-		enqueuedTransfer.setTransferUserName(irodsAccount.getUserName());
-		enqueuedTransfer.setTransferPassword(HibernateUtil
-				.obfuscate(irodsAccount.getPassword()));
 		enqueuedTransfer.setTransferState(TransferState.ENQUEUED);
 		enqueuedTransfer.setTransferStatus(TransferStatus.OK);
 
 		try {
-
 			localIRODSTransferDAO.save(enqueuedTransfer);
 		} catch (TransferDAOException e) {
 			log.error("error in transaction", e);
@@ -688,19 +636,12 @@ public class TransferQueueServiceImpl implements TransferQueueService {
 
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.irods.jargon.transfer.engine.TransferQueueService#enqueueCopyTransfer
-	 * (java.lang.String, java.lang.String, java.lang.String,
-	 * org.irods.jargon.core.connection.IRODSAccount)
-	 */
 	@Override
 	public LocalIRODSTransfer enqueueCopyTransfer(
 			final String irodsSourceAbsolutePath, final String targetResource,
 			final String irodsTargetAbsolutePath,
-			final IRODSAccount irodsAccount) throws JargonException {
+ final GridAccount gridAccount)
+			throws JargonException {
 
 		if (irodsSourceAbsolutePath == null
 				|| irodsSourceAbsolutePath.isEmpty()) {
@@ -719,8 +660,8 @@ public class TransferQueueServiceImpl implements TransferQueueService {
 					"irodsTargetAbsolutePath is null or empty");
 		}
 
-		if (irodsAccount == null) {
-			throw new JargonException("null irodsAccount");
+		if (gridAccount == null) {
+			throw new JargonException("null gridAccount");
 		}
 
 		log.info("enqueue copy transfer from iRODS: {}",
@@ -732,15 +673,9 @@ public class TransferQueueServiceImpl implements TransferQueueService {
 		enqueuedTransfer.setCreatedAt(new Date());
 		enqueuedTransfer.setLocalAbsolutePath(irodsSourceAbsolutePath);
 		enqueuedTransfer.setIrodsAbsolutePath(irodsTargetAbsolutePath);
-		enqueuedTransfer.setTransferHost(irodsAccount.getHost());
-		enqueuedTransfer.setTransferPort(irodsAccount.getPort());
-		enqueuedTransfer.setTransferResource(targetResource);
-		enqueuedTransfer.setTransferZone(irodsAccount.getZone());
+		enqueuedTransfer.setGridAccount(gridAccount);
 		enqueuedTransfer.setTransferStart(new Date());
 		enqueuedTransfer.setTransferType(TransferType.COPY);
-		enqueuedTransfer.setTransferUserName(irodsAccount.getUserName());
-		enqueuedTransfer.setTransferPassword(HibernateUtil
-				.obfuscate(irodsAccount.getPassword()));
 		enqueuedTransfer.setTransferState(TransferState.ENQUEUED);
 		enqueuedTransfer.setTransferStatus(TransferStatus.OK);
 
@@ -948,92 +883,66 @@ public class TransferQueueServiceImpl implements TransferQueueService {
 	}
 
 	/*
-	 * (non-Javadoc)
+	 * @Override public void updateUserPasswordInTransferManagerData( final
+	 * GridAccount gridAccount, final String newPasswordValue) throws
+	 * CannotUpdateTransferInProgressException, JargonException {
 	 * 
-	 * @see org.irods.jargon.transfer.engine.TransferQueueService#
-	 * updateUserPasswordInTransferManagerData
-	 * (org.irods.jargon.core.connection.IRODSAccount, java.lang.String)
+	 * 
+	 * log.info("updateUserPasswordInTransferManagerData()");
+	 * 
+	 * if (gridAccount == null) { throw new
+	 * IllegalArgumentException("null gridAccount"); }
+	 * 
+	 * if (newPasswordValue == null || newPasswordValue.isEmpty()) { throw new
+	 * IllegalArgumentException("null or empty newPasswordValue"); }
+	 * 
+	 * log.info("irods account for change:{}", gridAccount); String
+	 * encryptedPassword = HibernateUtil.obfuscate(newPasswordValue);
+	 * 
+	 * 
+	 * List<LocalIRODSTransfer> currentQueue = this.getRecentQueue(); for
+	 * (LocalIRODSTransfer transfer : currentQueue) { if
+	 * (transfer.getTransferState() == TransferState.ENQUEUED ||
+	 * transfer.getTransferState() == TransferState.PROCESSING) { if
+	 * (transfer.getTransferHost().equals(irodsAccount.getHost()) &&
+	 * transfer.getTransferZone().equals( irodsAccount.getZone()) &&
+	 * transfer.getTransferUserName().equals( irodsAccount.getUserName())) {
+	 * log.warn(
+	 * "cannot update, as an enquened or processing transfer exists for the given user:{}"
+	 * , transfer); throw new CannotUpdateTransferInProgressException(
+	 * "cannot update password at this time, transfers are enqueued or running"
+	 * ); } } }
+	 * 
+	 * 
+	 * for (LocalIRODSTransfer transfer : currentQueue) {
+	 * 
+	 * if (transfer.getTransferHost().equals(irodsAccount.getHost()) &&
+	 * transfer.getTransferZone() .equals(irodsAccount.getZone()) &&
+	 * transfer.getTransferUserName().equals( irodsAccount.getUserName())) {
+	 * 
+	 * transfer.setTransferPassword(encryptedPassword);
+	 * localIRODSTransferDAO.save(transfer); log.info("updated transfer:{}",
+	 * transfer);
+	 * 
+	 * } }
+	 * 
+	 * 
+	 * 
+	 * log.info("processing synchronizations");
+	 * 
+	 * List<Synchronization> synchronizations = synchronizationDAO.findAll();
+	 * for (Synchronization synchronization : synchronizations) { if
+	 * (synchronization.getIrodsHostName().equals(irodsAccount.getHost()) &&
+	 * synchronization.getIrodsZone().equals(irodsAccount.getZone()) &&
+	 * synchronization .getIrodsUserName().equals(irodsAccount.getUserName())) {
+	 * log.info("synchronization needs new password:{}", synchronization);
+	 * synchronization.setIrodsPassword(encryptedPassword);
+	 * synchronizationDAO.save(synchronization); } }
+	 * 
+	 * log.info("password updates successful");
+	 * 
+	 * 
+	 * }
 	 */
-	@Override
-	public void updateUserPasswordInTransferManagerData(
-			final IRODSAccount irodsAccount, final String newPasswordValue)
-			throws CannotUpdateTransferInProgressException, JargonException {
-
-		log.info("updateUserPasswordInTransferManagerData()");
-
-		if (irodsAccount == null) {
-			throw new IllegalArgumentException("null irodsAccount");
-		}
-
-		if (newPasswordValue == null || newPasswordValue.isEmpty()) {
-			throw new IllegalArgumentException("null or empty newPasswordValue");
-		}
-
-		log.info("irods account for change:{}", irodsAccount);
-		String encryptedPassword = HibernateUtil.obfuscate(newPasswordValue);
-
-		/**
-		 * See if any transfers are running or enqueued, in which case an
-		 * exception will be thrown.
-		 */
-		List<LocalIRODSTransfer> currentQueue = this.getRecentQueue();
-		for (LocalIRODSTransfer transfer : currentQueue) {
-			if (transfer.getTransferState() == TransferState.ENQUEUED
-					|| transfer.getTransferState() == TransferState.PROCESSING) {
-				if (transfer.getTransferHost().equals(irodsAccount.getHost())
-						&& transfer.getTransferZone().equals(
-								irodsAccount.getZone())
-						&& transfer.getTransferUserName().equals(
-								irodsAccount.getUserName())) {
-					log.warn(
-							"cannot update, as an enquened or processing transfer exists for the given user:{}",
-							transfer);
-					throw new CannotUpdateTransferInProgressException(
-							"cannot update password at this time, transfers are enqueued or running");
-				}
-			}
-		}
-
-		/*
-		 * Update the password info (this could be done better through an
-		 * update, can do this later
-		 */
-
-		for (LocalIRODSTransfer transfer : currentQueue) {
-
-			if (transfer.getTransferHost().equals(irodsAccount.getHost())
-					&& transfer.getTransferZone()
-							.equals(irodsAccount.getZone())
-					&& transfer.getTransferUserName().equals(
-							irodsAccount.getUserName())) {
-				
-				transfer.setTransferPassword(encryptedPassword);
-				localIRODSTransferDAO.save(transfer);
-				log.info("updated transfer:{}", transfer);
-
-			}
-		}
-		
-		
-		/**
-		 * transfers done, now do synchronizations
-		 */
-		
-		log.info("processing synchronizations");
-		
-		List<Synchronization> synchronizations = synchronizationDAO.findAll();
-		for (Synchronization synchronization : synchronizations) {
-			if (synchronization.getIrodsHostName().equals(irodsAccount.getHost()) &&
-					synchronization.getIrodsZone().equals(irodsAccount.getZone()) &&
-					synchronization.getIrodsUserName().equals(irodsAccount.getUserName())) {
-				log.info("synchronization needs new password:{}", synchronization);
-				synchronization.setIrodsPassword(encryptedPassword);
-				synchronizationDAO.save(synchronization);
-			}
- 		}
-		
-		log.info("password updates successful");
-
-	}
 
 }

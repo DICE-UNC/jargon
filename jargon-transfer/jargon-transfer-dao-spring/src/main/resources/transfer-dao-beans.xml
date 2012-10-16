@@ -56,7 +56,10 @@
   <bean id="localIRODSTransferItemDAO" class="org.irods.jargon.transfer.dao.spring.LocalIRODSTransferItemDAOImpl">
     <property name="sessionFactory" ref="sessionFactory" />
   </bean>
-
+  
+  <bean id="gridAccountDAO" class="org.irods.jargon.transfer.dao.spring.GridAccountDAOImpl">
+    <property name="sessionFactory" ref="sessionFactory" />
+  </bean>
 
   <bean id="synchronizationDAO" class="org.irods.jargon.transfer.dao.spring.SynchronizationDAOImpl">
     <property name="sessionFactory" ref="sessionFactory" />

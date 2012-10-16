@@ -61,24 +61,6 @@ public class LocalIRODSTransfer implements Serializable {
 	@JoinColumn(name = "synchronization_id", nullable = true)
 	private Synchronization synchronization;
 
-	@Column(name = "host")
-	private String transferHost = "";
-
-	@Column(name = "port")
-	private int transferPort = 0;
-
-	@Column(name = "zone")
-	private String transferZone = "";
-
-	@Column(name = "resource")
-	private String transferResource = "";
-
-	@Column(name = "user_name")
-	private String transferUserName = "";
-
-	@Column(name = "password")
-	private String transferPassword = "";
-
 	@Column(name = "tranfer_start")
 	private Date transferStart;
 
@@ -117,6 +99,13 @@ public class LocalIRODSTransfer implements Serializable {
 	@Column(name = "total_files_transferred_so_far")
 	private int totalFilesTransferredSoFar = 0;
 
+	/**
+	 * Join to table that contain the grid login information
+	 */
+	@ManyToOne(targetEntity = GridAccount.class, fetch = FetchType.LAZY)
+	@JoinColumn(name = "grid_account_id", nullable = false)
+	private GridAccount gridAccount;
+
 	public LocalIRODSTransfer() {
 		super();
 	}
@@ -135,46 +124,6 @@ public class LocalIRODSTransfer implements Serializable {
 
 	public void setTransferType(final TransferType transferType) {
 		this.transferType = transferType;
-	}
-
-	public String getTransferHost() {
-		return transferHost;
-	}
-
-	public void setTransferHost(final String transferHost) {
-		this.transferHost = transferHost;
-	}
-
-	public int getTransferPort() {
-		return transferPort;
-	}
-
-	public void setTransferPort(final int transferPort) {
-		this.transferPort = transferPort;
-	}
-
-	public String getTransferZone() {
-		return transferZone;
-	}
-
-	public void setTransferZone(final String transferZone) {
-		this.transferZone = transferZone;
-	}
-
-	public String getTransferResource() {
-		return transferResource;
-	}
-
-	public void setTransferResource(final String transferResource) {
-		this.transferResource = transferResource;
-	}
-
-	public String getTransferUserName() {
-		return transferUserName;
-	}
-
-	public void setTransferUserName(final String transferUserName) {
-		this.transferUserName = transferUserName;
 	}
 
 	public Date getTransferStart() {
@@ -250,14 +199,6 @@ public class LocalIRODSTransfer implements Serializable {
 		this.localIRODSTransferItems = localIRODSTransferItems;
 	}
 
-	public String getTransferPassword() {
-		return transferPassword;
-	}
-
-	public void setTransferPassword(final String transferPassword) {
-		this.transferPassword = transferPassword;
-	}
-
 	public String getGlobalException() {
 		return globalException;
 	}
@@ -330,12 +271,6 @@ public class LocalIRODSTransfer implements Serializable {
 		sb.append(totalFilesTransferredSoFar);
 		sb.append("\n   transferType:");
 		sb.append(transferType);
-		sb.append("\n   transferHost:");
-		sb.append(transferHost);
-		sb.append("\n   transferResource:");
-		sb.append(transferResource);
-		sb.append("\n   transferUserName:");
-		sb.append(transferUserName);
 		sb.append("\n   transferStart:");
 		sb.append(transferStart);
 		sb.append("\n   transferEnd:");
@@ -349,6 +284,21 @@ public class LocalIRODSTransfer implements Serializable {
 		sb.append("\n   updatedAt:");
 		sb.append(updatedAt);
 		return sb.toString();
+	}
+
+	/**
+	 * @return the gridAccount
+	 */
+	public GridAccount getGridAccount() {
+		return gridAccount;
+	}
+
+	/**
+	 * @param gridAccount
+	 *            the gridAccount to set
+	 */
+	public void setGridAccount(GridAccount gridAccount) {
+		this.gridAccount = gridAccount;
 	}
 
 }

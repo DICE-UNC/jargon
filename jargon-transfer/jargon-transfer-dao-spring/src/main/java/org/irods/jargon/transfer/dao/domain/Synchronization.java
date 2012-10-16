@@ -13,13 +13,11 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
-
-import org.irods.jargon.core.connection.IRODSAccount;
-import org.irods.jargon.core.exception.JargonException;
-import org.irods.jargon.transfer.util.HibernateUtil;
 
 /**
  * Represents the specification of a synchronization relationship between a
@@ -57,42 +55,11 @@ public class Synchronization {
 	private String irodsSynchDirectory;
 
 	/**
-	 * Host name of the iRODS server that synchronizes with this directory
+	 * Join to table that contain the grid login information
 	 */
-	@Column(name = "irods_host_name", nullable = false)
-	private String irodsHostName;
-
-	/**
-	 * Port for the iRODS server that synchronizes with this directory
-	 */
-	@Column(name = "irods_port", nullable = false)
-	private int irodsPort;
-
-	/**
-	 * User name that will be used for this synchronization
-	 */
-	@Column(name = "irods_user_name", nullable = false)
-	private String irodsUserName;
-
-	/**
-	 * Password that will be used for this synchronization (this is encrypted
-	 * when stored)
-	 */
-	@Column(name = "irods_password", nullable = false)
-	private String irodsPassword;
-
-	/**
-	 * iRODS zone name for synchronization
-	 */
-	@Column(name = "irods_zone", nullable = false)
-	private String irodsZone;
-
-	/**
-	 * Default resource name for synchronization (can be left blank if default
-	 * resources are selected via a policy
-	 */
-	@Column(name = "default_resource_name")
-	private String defaultResourceName;
+	@ManyToOne(targetEntity = GridAccount.class, fetch = FetchType.LAZY)
+	@JoinColumn(name = "grid_account_id", nullable = false)
+	private GridAccount gridAccount;
 
 	@OneToMany(mappedBy = "synchronization", targetEntity = LocalIRODSTransfer.class, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@org.hibernate.annotations.Cascade({
@@ -198,96 +165,6 @@ public class Synchronization {
 	 */
 	public void setIrodsSynchDirectory(final String irodsSynchDirectory) {
 		this.irodsSynchDirectory = irodsSynchDirectory;
-	}
-
-	/**
-	 * @return the irodsHostName
-	 */
-	public String getIrodsHostName() {
-		return irodsHostName;
-	}
-
-	/**
-	 * @param irodsHostName
-	 *            the irodsHostName to set
-	 */
-	public void setIrodsHostName(final String irodsHostName) {
-		this.irodsHostName = irodsHostName;
-	}
-
-	/**
-	 * @return the irodsPort
-	 */
-	public int getIrodsPort() {
-		return irodsPort;
-	}
-
-	/**
-	 * @param irodsPort
-	 *            the irodsPort to set
-	 */
-	public void setIrodsPort(final int irodsPort) {
-		this.irodsPort = irodsPort;
-	}
-
-	/**
-	 * @return the irodsUserName
-	 */
-	public String getIrodsUserName() {
-		return irodsUserName;
-	}
-
-	/**
-	 * @param irodsUserName
-	 *            the irodsUserName to set
-	 */
-	public void setIrodsUserName(final String irodsUserName) {
-		this.irodsUserName = irodsUserName;
-	}
-
-	/**
-	 * @return the irodsPassword
-	 */
-	public String getIrodsPassword() {
-		return irodsPassword;
-	}
-
-	/**
-	 * @param irodsPassword
-	 *            the irodsPassword to set
-	 */
-	public void setIrodsPassword(final String irodsPassword) {
-		this.irodsPassword = irodsPassword;
-	}
-
-	/**
-	 * @return the irodsZone
-	 */
-	public String getIrodsZone() {
-		return irodsZone;
-	}
-
-	/**
-	 * @param irodsZone
-	 *            the irodsZone to set
-	 */
-	public void setIrodsZone(final String irodsZone) {
-		this.irodsZone = irodsZone;
-	}
-
-	/**
-	 * @return the defaultResourceName
-	 */
-	public String getDefaultResourceName() {
-		return defaultResourceName;
-	}
-
-	/**
-	 * @param defaultResourceName
-	 *            the defaultResourceName to set
-	 */
-	public void setDefaultResourceName(final String defaultResourceName) {
-		this.defaultResourceName = defaultResourceName;
 	}
 
 	/**
@@ -414,23 +291,6 @@ public class Synchronization {
 		return localIRODSTransfers;
 	}
 
-	/**
-	 * Handy method to build an <code>IRODSAccount</code> from data in the
-	 * <code>Synchronization</code>.
-	 * 
-	 * @return {@link IRODSAccount} built from synch data
-	 * @throws JargonException
-	 */
-	public IRODSAccount buildIRODSAccountFromSynchronizationData()
-			throws JargonException {
-
-		IRODSAccount irodsAccount = new IRODSAccount(this.irodsHostName,
-				this.irodsPort, this.irodsUserName,
-				HibernateUtil.retrieve(this.irodsPassword), "", this.irodsZone,
-				this.defaultResourceName);
-		return irodsAccount;
-	}
-
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
@@ -448,6 +308,21 @@ public class Synchronization {
 		sb.append("\n   synchronizationMode:");
 		sb.append(synchronizationMode);
 		return sb.toString();
+	}
+
+	/**
+	 * @return the gridAccount
+	 */
+	public GridAccount getGridAccount() {
+		return gridAccount;
+	}
+
+	/**
+	 * @param gridAccount
+	 *            the gridAccount to set
+	 */
+	public void setGridAccount(GridAccount gridAccount) {
+		this.gridAccount = gridAccount;
 	}
 
 }

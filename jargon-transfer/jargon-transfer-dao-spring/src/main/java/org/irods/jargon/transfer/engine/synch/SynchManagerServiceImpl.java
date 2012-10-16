@@ -315,37 +315,10 @@ public class SynchManagerServiceImpl implements SynchManagerService {
 
 		log.info("synch:{}", synchConfiguration);
 
-		if (synchConfiguration.getDefaultResourceName() == null) {
-			throw new SynchException("null defaultResourceName");
-		}
-
-		if (synchConfiguration.getFrequencyType() == null) {
-			throw new SynchException("null frequency type");
-		}
-
-		if (synchConfiguration.getIrodsHostName() == null
-				|| synchConfiguration.getIrodsHostName().isEmpty()) {
-			throw new SynchException("null or empty irodsHostName");
-		}
-
-		if (synchConfiguration.getIrodsPassword() == null
-				|| synchConfiguration.getIrodsPassword().isEmpty()) {
-			throw new SynchException("null or empty irodsPassword");
-		}
 
 		if (synchConfiguration.getIrodsSynchDirectory() == null
 				|| synchConfiguration.getIrodsSynchDirectory().isEmpty()) {
 			throw new SynchException("null or empty irodsSynchDirectory");
-		}
-
-		if (synchConfiguration.getIrodsUserName() == null
-				|| synchConfiguration.getIrodsUserName().isEmpty()) {
-			throw new SynchException("null or empty irodsUserName");
-		}
-
-		if (synchConfiguration.getIrodsZone() == null
-				|| synchConfiguration.getIrodsZone().isEmpty()) {
-			throw new SynchException("null or empty irodsZone");
 		}
 
 		if (synchConfiguration.getLocalSynchDirectory() == null
@@ -388,11 +361,9 @@ public class SynchManagerServiceImpl implements SynchManagerService {
 						"a synchronization already exists with the same name");
 			}
 
-			if (synchConfiguration.getIrodsHostName().equals(
-					existingSynchronization.getIrodsHostName())
-					&& synchConfiguration.getIrodsZone().equals(
-							existingSynchronization.getIrodsZone())) {
-				log.debug("host/zone match");
+			if (synchConfiguration.getGridAccount().equals(
+					existingSynchronization.getGridAccount())) {
+				log.debug("grid account match");
 			} else {
 				log.debug("this config is not for the same host/zone, so through evaluating");
 				continue;
