@@ -24,7 +24,6 @@ import org.irods.jargon.core.pub.io.IRODSFileFactory;
 import org.irods.jargon.core.query.AVUQueryElement;
 import org.irods.jargon.core.query.AVUQueryOperatorEnum;
 import org.irods.jargon.core.query.MetaDataAndDomainData;
-import org.irods.jargon.core.query.RodsGenQueryEnum;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.irods.jargon.testutils.filemanip.FileGenerator;
 import org.irods.jargon.testutils.icommandinvoke.IcommandInvoker;
@@ -126,35 +125,10 @@ public class CollectionAOImplTest {
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
 								+ testDirName);
 
-		// put scratch collection into irods in the right place
-		IrodsInvocationContext invocationContext = testingPropertiesHelper
-				.buildIRODSInvocationContextFromTestProperties(testingProperties);
-		ImkdirCommand imkdirCommand = new ImkdirCommand();
-		imkdirCommand.setCollectionName(targetIrodsCollection);
-
-		IcommandInvoker invoker = new IcommandInvoker(invocationContext);
-		invoker.invokeCommandAndGetResultAsString(imkdirCommand);
-
 		// initialize the AVU data
 		String expectedAttribName = "testattrib1";
 		String expectedAttribValue = "testvalue1";
 		String expectedAttribUnits = "test1units";
-
-		ImetaRemoveCommand imetaRemoveCommand = new ImetaRemoveCommand();
-		imetaRemoveCommand.setAttribName(expectedAttribName);
-		imetaRemoveCommand.setAttribValue(expectedAttribValue);
-		imetaRemoveCommand.setAttribUnits(expectedAttribUnits);
-		imetaRemoveCommand.setMetaObjectType(MetaObjectType.COLLECTION_META);
-		imetaRemoveCommand.setObjectPath(targetIrodsCollection);
-		invoker.invokeCommandAndGetResultAsString(imetaRemoveCommand);
-
-		ImetaAddCommand imetaAddCommand = new ImetaAddCommand();
-		imetaAddCommand.setMetaObjectType(MetaObjectType.COLLECTION_META);
-		imetaAddCommand.setAttribName(expectedAttribName);
-		imetaAddCommand.setAttribValue(expectedAttribValue);
-		imetaAddCommand.setAttribUnits(expectedAttribUnits);
-		imetaAddCommand.setObjectPath(targetIrodsCollection);
-		invoker.invokeCommandAndGetResultAsString(imetaAddCommand);
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
@@ -162,6 +136,19 @@ public class CollectionAOImplTest {
 				.getIRODSAccessObjectFactory();
 		CollectionAO collectionAO = accessObjectFactory
 				.getCollectionAO(irodsAccount);
+
+		IRODSFile testFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetIrodsCollection);
+		testFile.deleteWithForceOption();
+		testFile.mkdirs();
+
+		AvuData avuData = AvuData.instance(expectedAttribName,
+				expectedAttribValue, expectedAttribUnits);
+
+		collectionAO.deleteAVUMetadata(targetIrodsCollection, avuData);
+		collectionAO.addAVUMetadata(targetIrodsCollection, avuData);
+
+		expectedAttribValue = expectedAttribValue.toUpperCase();
 
 		List<AVUQueryElement> queryElements = new ArrayList<AVUQueryElement>();
 
@@ -184,43 +171,28 @@ public class CollectionAOImplTest {
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
 								+ testDirName);
 
-		// put scratch collection into irods in the right place
-		IrodsInvocationContext invocationContext = testingPropertiesHelper
-				.buildIRODSInvocationContextFromTestProperties(testingProperties);
-		ImkdirCommand imkdirCommand = new ImkdirCommand();
-		imkdirCommand.setCollectionName(targetIrodsCollection);
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
 
-		IcommandInvoker invoker = new IcommandInvoker(invocationContext);
-		invoker.invokeCommandAndGetResultAsString(imkdirCommand);
+		IRODSFile irodsFile = accessObjectFactory.getIRODSFileFactory(
+				irodsAccount).instanceIRODSFile(targetIrodsCollection);
+		irodsFile.mkdirs();
+
+		CollectionAO collectionAO = accessObjectFactory
+				.getCollectionAO(irodsAccount);
 
 		// initialize the AVU data
 		String expectedAttribName = "testmdattrib1";
 		String expectedAttribValue = "testmdvalue1";
 		String expectedAttribUnits = "test1mdunits";
 
-		ImetaRemoveCommand imetaRemoveCommand = new ImetaRemoveCommand();
-		imetaRemoveCommand.setAttribName(expectedAttribName);
-		imetaRemoveCommand.setAttribValue(expectedAttribValue);
-		imetaRemoveCommand.setAttribUnits(expectedAttribUnits);
-		imetaRemoveCommand.setMetaObjectType(MetaObjectType.COLLECTION_META);
-		imetaRemoveCommand.setObjectPath(targetIrodsCollection);
-		invoker.invokeCommandAndGetResultAsString(imetaRemoveCommand);
+		AvuData avuData = AvuData.instance(expectedAttribName,
+				expectedAttribValue, expectedAttribUnits);
+		collectionAO.deleteAVUMetadata(targetIrodsCollection, avuData);
 
-		ImetaAddCommand imetaAddCommand = new ImetaAddCommand();
-		imetaAddCommand.setMetaObjectType(MetaObjectType.COLLECTION_META);
-		imetaAddCommand.setAttribName(expectedAttribName);
-		imetaAddCommand.setAttribValue(expectedAttribValue);
-		imetaAddCommand.setAttribUnits(expectedAttribUnits);
-		imetaAddCommand.setObjectPath(targetIrodsCollection);
-		invoker.invokeCommandAndGetResultAsString(imetaAddCommand);
-
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
-
-		CollectionAO collectionAO = accessObjectFactory
-				.getCollectionAO(irodsAccount);
+		collectionAO.addAVUMetadata(targetIrodsCollection, avuData);
 
 		List<AVUQueryElement> queryElements = new ArrayList<AVUQueryElement>();
 
@@ -234,6 +206,55 @@ public class CollectionAOImplTest {
 	}
 
 	@Test
+	public final void testFindMetadataValuesByMetadataQueryCaseInsensitive()
+			throws Exception {
+		String testDirName = "testFindMetadataValuesByMetadataQuery";
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
+								+ testDirName);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
+		
+		
+		IRODSFile irodsFile = accessObjectFactory.getIRODSFileFactory(
+				irodsAccount).instanceIRODSFile(targetIrodsCollection);
+		irodsFile.mkdirs();
+
+		CollectionAO collectionAO = accessObjectFactory
+				.getCollectionAO(irodsAccount);
+		
+		if (!collectionAO.getIRODSServerProperties().isSupportsCaseInsensitiveQueries()) {
+			return;
+		}
+
+		// initialize the AVU data
+		String expectedAttribName = "testmdattrib1".toUpperCase();
+		String expectedAttribValue = "testmdvalue1";
+		String expectedAttribUnits = "test1mdunits";
+
+		AvuData avuData = AvuData.instance(expectedAttribName,
+				expectedAttribValue, expectedAttribUnits);
+		collectionAO.deleteAVUMetadata(targetIrodsCollection, avuData);
+
+		collectionAO.addAVUMetadata(targetIrodsCollection, avuData);
+
+		List<AVUQueryElement> queryElements = new ArrayList<AVUQueryElement>();
+
+		queryElements.add(AVUQueryElement.instanceForValueQuery(
+				AVUQueryElement.AVUQueryPart.ATTRIBUTE,
+				AVUQueryOperatorEnum.EQUAL, expectedAttribName.toLowerCase()));
+
+		List<MetaDataAndDomainData> result = collectionAO
+				.findMetadataValuesByMetadataQuery(queryElements, true);
+		Assert.assertFalse("no query result returned", result.isEmpty());
+	}
+
+	@Test
 	public final void testFindMetadataValuesByMetadataQueryForCollection()
 			throws Exception {
 		String testDirName = "testFindMetadataValuesByMetadataQueryForCollection";
@@ -242,42 +263,28 @@ public class CollectionAOImplTest {
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
 								+ testDirName);
 
-		// put scratch collection into irods in the right place
-		IrodsInvocationContext invocationContext = testingPropertiesHelper
-				.buildIRODSInvocationContextFromTestProperties(testingProperties);
-		ImkdirCommand imkdirCommand = new ImkdirCommand();
-		imkdirCommand.setCollectionName(targetIrodsCollection);
-
-		IcommandInvoker invoker = new IcommandInvoker(invocationContext);
-		invoker.invokeCommandAndGetResultAsString(imkdirCommand);
-
 		// initialize the AVU data
-		String expectedAttribName = "testmdattrib1";
+		String expectedAttribName = "testmdattrib1".toUpperCase();
 		String expectedAttribValue = "testmdvalue1";
 		String expectedAttribUnits = "test1mdunits";
-
-		ImetaRemoveCommand imetaRemoveCommand = new ImetaRemoveCommand();
-		imetaRemoveCommand.setAttribName(expectedAttribName);
-		imetaRemoveCommand.setAttribValue(expectedAttribValue);
-		imetaRemoveCommand.setAttribUnits(expectedAttribUnits);
-		imetaRemoveCommand.setMetaObjectType(MetaObjectType.COLLECTION_META);
-		imetaRemoveCommand.setObjectPath(targetIrodsCollection);
-		invoker.invokeCommandAndGetResultAsString(imetaRemoveCommand);
-
-		ImetaAddCommand imetaAddCommand = new ImetaAddCommand();
-		imetaAddCommand.setMetaObjectType(MetaObjectType.COLLECTION_META);
-		imetaAddCommand.setAttribName(expectedAttribName);
-		imetaAddCommand.setAttribValue(expectedAttribValue);
-		imetaAddCommand.setAttribUnits(expectedAttribUnits);
-		imetaAddCommand.setObjectPath(targetIrodsCollection);
-		invoker.invokeCommandAndGetResultAsString(imetaAddCommand);
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
 		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
 				.getIRODSAccessObjectFactory();
+
+		IRODSFile irodsFile = accessObjectFactory.getIRODSFileFactory(
+				irodsAccount).instanceIRODSFile(targetIrodsCollection);
+		irodsFile.mkdirs();
+
 		CollectionAO collectionAO = accessObjectFactory
 				.getCollectionAO(irodsAccount);
+
+		AvuData avuData = AvuData.instance(expectedAttribName,
+				expectedAttribValue, expectedAttribUnits);
+		collectionAO.deleteAVUMetadata(targetIrodsCollection, avuData);
+
+		collectionAO.addAVUMetadata(targetIrodsCollection, avuData);
 
 		List<AVUQueryElement> queryElements = new ArrayList<AVUQueryElement>();
 
@@ -290,6 +297,56 @@ public class CollectionAOImplTest {
 						targetIrodsCollection);
 		Assert.assertFalse("no query result returned", result.isEmpty());
 	}
+	
+	
+	@Test
+	public final void testFindMetadataValuesByMetadataQueryForCollectionCaseInsensitive()
+			throws Exception {
+		String testDirName = "testFindMetadataValuesByMetadataQueryForCollectionCaseInsensitive";
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
+								+ testDirName);
+
+		// initialize the AVU data
+		String expectedAttribName = "testFindMetadataValuesByMetadataQueryForCollectionCaseInsensitive".toUpperCase();
+		String expectedAttribValue = "testFindMetadataValuesByMetadataQueryForCollectionCaseInsensitive";
+		String expectedAttribUnits = "testFindMetadataValuesByMetadataQueryForCollectionCaseInsensitive";
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
+		IRODSFile irodsFile = accessObjectFactory.getIRODSFileFactory(
+				irodsAccount).instanceIRODSFile(targetIrodsCollection);
+		irodsFile.mkdirs();
+
+		CollectionAO collectionAO = accessObjectFactory
+				.getCollectionAO(irodsAccount);
+		
+		if (!collectionAO.getIRODSServerProperties().isSupportsCaseInsensitiveQueries()) {
+			return;
+		}
+
+		AvuData avuData = AvuData.instance(expectedAttribName,
+				expectedAttribValue, expectedAttribUnits);
+		collectionAO.deleteAVUMetadata(targetIrodsCollection, avuData);
+
+		collectionAO.addAVUMetadata(targetIrodsCollection, avuData);
+
+		List<AVUQueryElement> queryElements = new ArrayList<AVUQueryElement>();
+
+		queryElements.add(AVUQueryElement.instanceForValueQuery(
+				AVUQueryElement.AVUQueryPart.ATTRIBUTE,
+				AVUQueryOperatorEnum.EQUAL, expectedAttribName.toLowerCase()));
+
+		List<MetaDataAndDomainData> result = collectionAO
+				.findMetadataValuesByMetadataQueryForCollection(queryElements,
+						targetIrodsCollection, 0, true);
+		Assert.assertFalse("no query result returned", result.isEmpty());
+	}
+
 
 	@Test
 	public final void testFindMetadataValuesByMetadataQueryTwoConditions()
@@ -455,7 +512,7 @@ public class CollectionAOImplTest {
 				expectedAttribValue, "");
 		collectionAO.addAVUMetadata(targetIrodsCollection, dataToAdd);
 		try {
-		collectionAO.addAVUMetadata(targetIrodsCollection, dataToAdd);
+			collectionAO.addAVUMetadata(targetIrodsCollection, dataToAdd);
 		} catch (DuplicateDataException dde) {
 			// expected post 3.1, not a great test anymore...
 		}
@@ -663,7 +720,6 @@ public class CollectionAOImplTest {
 			Assert.assertFalse("did not expect attrib name", metadataEntry
 					.getAvuAttribute().equals(expectedAttribName));
 		}
-
 	}
 
 	@Test
@@ -810,7 +866,6 @@ public class CollectionAOImplTest {
 		List<MetaDataAndDomainData> metadata = collectionAO
 				.findMetadataValuesForCollection(targetIrodsCollection, 0);
 
-
 		Assert.assertEquals("should only be one avu entry", 1, metadata.size());
 
 		for (MetaDataAndDomainData metadataEntry : metadata) {
@@ -895,6 +950,7 @@ public class CollectionAOImplTest {
 
 		AvuData dataToAdd = AvuData.instance(expectedAttribName,
 				expectedAttribValue, expectedAttribUnit);
+		collectionAO.deleteAVUMetadata(targetIrodsCollection, dataToAdd);
 		collectionAO.addAVUMetadata(targetIrodsCollection, dataToAdd);
 		AvuData overwriteAvuData = AvuData.instance(expectedAttribName,
 				expectedNewValue, expectedAttribUnit);
@@ -1056,92 +1112,6 @@ public class CollectionAOImplTest {
 	}
 
 	@Test
-	public final void findMetadataValuesByMetadataQueryWithAdditionalWhereCollectionLike()
-			throws Exception {
-		String testDirName = "testCollectionMetadataQueryWithLike";
-		String testSubdir1 = "subdir1";
-		String testSubdir2 = "subdir2";
-		String targetIrodsCollection = testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ testDirName);
-
-		// put scratch collection into irods in the right place
-		IrodsInvocationContext invocationContext = testingPropertiesHelper
-				.buildIRODSInvocationContextFromTestProperties(testingProperties);
-		ImkdirCommand imkdirCommand = new ImkdirCommand();
-		imkdirCommand.setCollectionName(targetIrodsCollection);
-
-		IcommandInvoker invoker = new IcommandInvoker(invocationContext);
-		invoker.invokeCommandAndGetResultAsString(imkdirCommand);
-
-		imkdirCommand = new ImkdirCommand();
-		imkdirCommand.setCollectionName(targetIrodsCollection + "/"
-				+ testSubdir1);
-		invoker.invokeCommandAndGetResultAsString(imkdirCommand);
-
-		imkdirCommand = new ImkdirCommand();
-		imkdirCommand.setCollectionName(targetIrodsCollection + "/"
-				+ testSubdir2);
-		invoker.invokeCommandAndGetResultAsString(imkdirCommand);
-
-		// initialize the AVU data
-		String expectedAttribName = "testmdattrib1";
-		String expectedAttribValue = "testmdvalue1";
-		String expectedAttribUnits = "test1mdunits";
-
-		ImetaRemoveCommand imetaRemoveCommand = new ImetaRemoveCommand();
-		imetaRemoveCommand.setAttribName(expectedAttribName);
-		imetaRemoveCommand.setAttribValue(expectedAttribValue);
-		imetaRemoveCommand.setAttribUnits(expectedAttribUnits);
-		imetaRemoveCommand.setMetaObjectType(MetaObjectType.COLLECTION_META);
-		imetaRemoveCommand.setObjectPath(targetIrodsCollection + "/"
-				+ testSubdir1);
-		invoker.invokeCommandAndGetResultAsString(imetaRemoveCommand);
-		imetaRemoveCommand.setObjectPath(targetIrodsCollection + "/"
-				+ testSubdir2);
-		invoker.invokeCommandAndGetResultAsString(imetaRemoveCommand);
-
-		ImetaAddCommand imetaAddCommand = new ImetaAddCommand();
-		imetaAddCommand.setMetaObjectType(MetaObjectType.COLLECTION_META);
-		imetaAddCommand.setAttribName(expectedAttribName);
-		imetaAddCommand.setAttribValue(expectedAttribValue);
-		imetaAddCommand.setAttribUnits(expectedAttribUnits);
-		imetaAddCommand
-				.setObjectPath(targetIrodsCollection + "/" + testSubdir1);
-		invoker.invokeCommandAndGetResultAsString(imetaAddCommand);
-		imetaAddCommand
-				.setObjectPath(targetIrodsCollection + "/" + testSubdir2);
-		invoker.invokeCommandAndGetResultAsString(imetaAddCommand);
-
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-
-		CollectionAO collectionAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getCollectionAO(irodsAccount);
-
-		List<AVUQueryElement> queryElements = new ArrayList<AVUQueryElement>();
-
-		queryElements.add(AVUQueryElement.instanceForValueQuery(
-				AVUQueryElement.AVUQueryPart.ATTRIBUTE,
-				AVUQueryOperatorEnum.EQUAL, expectedAttribName));
-
-		StringBuilder sb = new StringBuilder();
-		sb.append(RodsGenQueryEnum.COL_COLL_NAME.getName());
-		sb.append(" LIKE ");
-		sb.append("'");
-		sb.append(targetIrodsCollection);
-		sb.append("%");
-		sb.append("'");
-
-		List<MetaDataAndDomainData> queryResults = collectionAO
-				.findMetadataValuesByMetadataQueryWithAdditionalWhere(
-						queryElements, sb.toString(), 0);
-
-		Assert.assertFalse("no query result returned", queryResults.isEmpty());
-	}
-
-	@Test
 	public final void findMetadataValuesForCollection() throws Exception {
 		String testDirName = "findMetadataValuesForCollection";
 		String testSubdir1 = "subdir1";
@@ -1229,12 +1199,11 @@ public class CollectionAOImplTest {
 
 		Assert.assertNotNull("did not find the collection, was null",
 				collection);
-		TestCase.assertEquals("should be normal coll type", SpecColType.NORMAL,
+		Assert.assertEquals("should be normal coll type", SpecColType.NORMAL,
 				collection.getSpecColType());
-		TestCase.assertEquals("absPath should be same as requested path",
+		Assert.assertEquals("absPath should be same as requested path",
 				targetIrodsCollection, collection.getCollectionName());
-		TestCase.assertEquals(
-				"collection Name should be same as requested path",
+		Assert.assertEquals("collection Name should be same as requested path",
 				targetIrodsCollection, collection.getCollectionName());
 	}
 
@@ -1929,19 +1898,21 @@ public class CollectionAOImplTest {
 
 		boolean secondaryUserFound = false;
 		for (UserFilePermission permission : userFilePermissions) {
-			if (permission.getUserName().equalsIgnoreCase(
+			if (permission
+					.getUserName()
+					.equalsIgnoreCase(
 							testingProperties
 									.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY))) {
 				secondaryUserFound = true;
-				TestCase.assertEquals("should have normal zone",
+				Assert.assertEquals("should have normal zone",
 						irodsAccount.getZone(), permission.getUserZone());
-				TestCase.assertEquals("should have read permissions",
+				Assert.assertEquals("should have read permissions",
 						FilePermissionEnum.READ,
 						permission.getFilePermissionEnum());
 			}
 		}
 
-		TestCase.assertTrue("did not find secondary user", secondaryUserFound);
+		Assert.assertTrue("did not find secondary user", secondaryUserFound);
 
 	}
 

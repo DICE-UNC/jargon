@@ -383,6 +383,8 @@ public class RemoteExecuteServiceImpl implements RemoteExecutionService {
 			InputStream piData = new java.io.ByteArrayInputStream(
 					Base64.fromString(buffer.toString()));
 
+			@SuppressWarnings("resource")
+			// this will be closed by the caller
 			RemoteExecutionBinaryResultInputStream reStream = new RemoteExecutionBinaryResultInputStream(
 					this.getIrodsCommands(), status);
 

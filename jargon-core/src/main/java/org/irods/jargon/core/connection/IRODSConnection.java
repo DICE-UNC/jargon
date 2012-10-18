@@ -97,8 +97,7 @@ public class IRODSConnection implements IRODSManagedConnection {
 			final IRODSProtocolManager irodsConnectionManager,
 			final PipelineConfiguration pipelineConfiguration,
 			final StartupResponseData startupResponseData,
-			final IRODSSession irodsSession)
-			throws JargonException {
+			final IRODSSession irodsSession) throws JargonException {
 
 		if (irodsSession == null) {
 			throw new IllegalArgumentException(
@@ -1043,6 +1042,21 @@ public class IRODSConnection implements IRODSManagedConnection {
 	 */
 	protected Socket getConnection() {
 		return connection;
+	}
+
+	/**
+	 * Set the status to disconnected. This is only used in special
+	 * circumstances, such as when wrapping a socket in an SSL connection when
+	 * doing PAM authentication. These are special occasions where an
+	 * <code>IRODSConnection</code> is created outside of the normal factory.
+	 * <p/>
+	 * For general usage, this method should not called.
+	 * 
+	 * @param connected
+	 *            the connected to set
+	 */
+	void setConnected(final boolean connected) {
+		this.connected = connected;
 	}
 
 }

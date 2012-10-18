@@ -189,8 +189,7 @@ public class DataObjInpForReg extends AbstractIRODSPackingInstruction {
 		if (checksumHandling == ChecksumHandling.REGISTER_CHECKSUM) {
 			kvps.add(KeyValuePair.instance("verifyChksum", ""));
 		} else if (checksumHandling == ChecksumHandling.VERFIY_CHECKSUM) {
-			kvps.add(KeyValuePair.instance("regChksum",
-					localFileChecksumValue));
+			kvps.add(KeyValuePair.instance("regChksum", localFileChecksumValue));
 		}
 
 		message.addTag(createKeyValueTag(kvps));

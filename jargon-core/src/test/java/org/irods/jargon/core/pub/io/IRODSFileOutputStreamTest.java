@@ -12,7 +12,6 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
 
 import junit.framework.Assert;
-import junit.framework.TestCase;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSProtocolManager;
@@ -615,34 +614,37 @@ public class IRODSFileOutputStreamTest {
 		String testSubdir = "testIRODSFileOutputStreamMultipleWritesToParentDir";
 		String absPath = scratchFileUtils
 				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
-		absPath = FileGenerator.generateFileOfFixedLengthGivenName(absPath, testFileNamePrefix + testFileNameSuffix,
-				10 * 1024 * 1024);
-
+		absPath = FileGenerator.generateFileOfFixedLengthGivenName(absPath,
+				testFileNamePrefix + testFileNameSuffix, 10 * 1024 * 1024);
 
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH + "/" + testSubdir);
-		
+						testingProperties, IRODS_TEST_SUBDIR_PATH + "/"
+								+ testSubdir);
+
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		
-		IRODSFile parentDir = irodsFileSystem.getIRODSFileFactory(irodsAccount).instanceIRODSFile(targetIrodsCollection);
+
+		IRODSFile parentDir = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetIrodsCollection);
 		parentDir.mkdirs();
 
-		Executors
-				.newFixedThreadPool(numberWrites);
-		
+		Executors.newFixedThreadPool(numberWrites);
+
 		final List<OutputStreamWriteTestWriter> writerThreads = new ArrayList<OutputStreamWriteTestWriter>();
-		
+
 		OutputStreamWriteTestWriter outputStreamWriter;
 
 		for (int i = 0; i < numberWrites; i++) {
-			outputStreamWriter = new OutputStreamWriteTestWriter(absPath, targetIrodsCollection + "/" + testFileNamePrefix + i + testFileNameSuffix, irodsFileSystem.getIRODSAccessObjectFactory(), irodsAccount);
+			outputStreamWriter = new OutputStreamWriteTestWriter(absPath,
+					targetIrodsCollection + "/" + testFileNamePrefix + i
+							+ testFileNameSuffix,
+					irodsFileSystem.getIRODSAccessObjectFactory(), irodsAccount);
 			writerThreads.add(outputStreamWriter);
 		}
 
 		for (OutputStreamWriteTestWriter writer : writerThreads) {
-			TestCase.assertNull("should not be an exception",
+			Assert.assertNull("should not be an exception",
 					writer.getException());
 		}
 	}
@@ -697,6 +699,52 @@ public class IRODSFileOutputStreamTest {
 		irodsSession.closeSession();
 	}
 
+	/**
+	 * Write to an output stream that is underneath the root
+	 * @throws Exception
+	 */
+	@Test
+	public final void testWriteToOutputStreamInSubdirUnderRoot() throws Exception {
+		String testCollName = "testWriteToOutputStreamInSubdirUnderRoot";
+		String testFileName = "testWriteToOutputStreamInSubdirUnderRoot.csv";
+
+		String targetIrodsCollection =  "/" + testCollName;
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAdminAccountFromTestProperties(testingProperties);
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+		IRODSFileFactory irodsFileFactory = accessObjectFactory
+				.getIRODSFileFactory(irodsAccount);
+		
+		IRODSFile targetCollection  = irodsFileSystem.getIRODSFileFactory(irodsAccount).instanceIRODSFile(targetIrodsCollection);
+		targetCollection.deleteWithForceOption();
+		targetCollection.mkdirs();
+
+		IRODSFile irodsFile = irodsFileFactory
+				.instanceIRODSFile(targetIrodsCollection + '/' + testFileName);
+		IRODSFileOutputStream irodsFileOutputStream = irodsFileFactory
+				.instanceIRODSFileOutputStream(irodsFile);
+
+		// get a simple byte array
+		String myBytes = "ajjjjjjjjjjjjjjjjjjjjjjjjfeiiiiiiiiiiiiiii54454545";
+		byte[] myBytesArray = myBytes.getBytes();
+
+		irodsFileOutputStream.write(myBytesArray);
+		irodsFileOutputStream.write(myBytesArray);
+
+		irodsFile.close();
+
+		irodsFile = irodsFileFactory.instanceIRODSFile(targetIrodsCollection
+				+ '/' + testFileName);
+
+		long length = irodsFile.length();
+
+		Assert.assertEquals("file length does not match bytes written",
+				myBytesArray.length * 2, length);
+
+		irodsFileSystem.closeAndEatExceptions();
+	}
+	
 }
 
 class OutputStreamWriteTestWriter implements Callable<String> {
@@ -766,7 +814,8 @@ class OutputStreamWriteTestWriter implements Callable<String> {
 		}
 		return targetIrodsFileName;
 	}
-
+	
+	
 	/**
 	 * @return the exception
 	 */

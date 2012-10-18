@@ -170,7 +170,7 @@ public class TransferStatusCallbackListenerTestingImplementation implements
 
 	@Override
 	public CallbackResponse transferAsksWhetherToForceOperation(
-			String irodsAbsolutePath, boolean isCollection) {
+			final String irodsAbsolutePath, final boolean isCollection) {
 		return forceOption;
 	}
 
@@ -178,7 +178,7 @@ public class TransferStatusCallbackListenerTestingImplementation implements
 		return forceOption;
 	}
 
-	public void setForceOption(CallbackResponse forceOption) {
+	public void setForceOption(final CallbackResponse forceOption) {
 		this.forceOption = forceOption;
 	}
 

@@ -298,15 +298,13 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 		return combined;
 	}
 
-
 	/*
 	 * (non-Javadoc)
 	 * 
 	 * @see org.irods.jargon.core.pub.ResourceAO#listResourceNames()
 	 */
 	@Override
-	public List<String> listResourceNames()
-			throws JargonException {
+	public List<String> listResourceNames() throws JargonException {
 
 		List<String> resourceNames = new ArrayList<String>();
 

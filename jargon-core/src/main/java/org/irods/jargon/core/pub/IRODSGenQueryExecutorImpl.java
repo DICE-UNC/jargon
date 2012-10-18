@@ -112,7 +112,6 @@ public final class IRODSGenQueryExecutorImpl extends IRODSGenericAO implements
 
 		log.info("query: {}", irodsQuery);
 
-		
 		TranslatedIRODSGenQuery translatedIRODSQuery = translateProvidedQuery(irodsQuery);
 
 		return executeTranslatedIRODSQuery(translatedIRODSQuery, continueIndex,
@@ -125,17 +124,17 @@ public final class IRODSGenQueryExecutorImpl extends IRODSGenericAO implements
 	 * @throws JargonException
 	 * @throws JargonQueryException
 	 */
-	private TranslatedIRODSGenQuery translateProvidedQuery(
+	TranslatedIRODSGenQuery translateProvidedQuery(
 			final AbstractIRODSGenQuery irodsQuery) throws JargonException,
 			JargonQueryException {
 		TranslatedIRODSGenQuery translatedIRODSQuery = null;
-		
+
 		if (irodsQuery instanceof IRODSGenQuery) {
 			IRODSGenQueryTranslator irodsQueryTranslator = new IRODSGenQueryTranslator(
 					getIRODSServerProperties());
 			translatedIRODSQuery = irodsQueryTranslator
-				.getTranslatedQuery((IRODSGenQuery) irodsQuery);
-		
+					.getTranslatedQuery((IRODSGenQuery) irodsQuery);
+
 		} else if (irodsQuery instanceof IRODSGenQueryFromBuilder) {
 			try {
 				translatedIRODSQuery = ((IRODSGenQueryFromBuilder) irodsQuery)
@@ -176,8 +175,8 @@ public final class IRODSGenQueryExecutorImpl extends IRODSGenericAO implements
 	@Override
 	public AbstractIRODSQueryResultSet executeIRODSQueryAndCloseResultInZone(
 			final AbstractIRODSGenQuery irodsQuery,
-			final int partialStartIndex,
-			final String zoneName) throws JargonException, JargonQueryException {
+			final int partialStartIndex, final String zoneName)
+			throws JargonException, JargonQueryException {
 
 		log.info("executeIRODSQueryAndCloseResultInZone()");
 
@@ -223,8 +222,8 @@ public final class IRODSGenQueryExecutorImpl extends IRODSGenericAO implements
 	@Override
 	public IRODSQueryResultSetInterface executeIRODSQueryWithPagingInZone(
 			final AbstractIRODSGenQuery irodsQuery,
-			final int partialStartIndex,
-			final String zoneName) throws JargonException, JargonQueryException {
+			final int partialStartIndex, final String zoneName)
+			throws JargonException, JargonQueryException {
 
 		log.info("executeIRODSQueryWithPagingInZone()");
 
@@ -299,9 +298,7 @@ public final class IRODSGenQueryExecutorImpl extends IRODSGenericAO implements
 			}
 
 			result = QueryResultProcessingUtils.translateResponseIntoResultSet(
-					response,
- columnNames, continuation,
-					partialStartIndex);
+					response, columnNames, continuation, partialStartIndex);
 
 			resultSet = IRODSQueryResultSet.instance(translatedIRODSQuery,
 					result, continuation);
@@ -343,8 +340,6 @@ public final class IRODSGenQueryExecutorImpl extends IRODSGenericAO implements
 
 		return response;
 	}
-
-
 
 	/*
 	 * (non-Javadoc)

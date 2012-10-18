@@ -126,8 +126,7 @@ public interface ResourceAO extends IRODSAccessObject {
 	 * @return <code>List<String></code> of resource names in the zone
 	 * @throws JargonException
 	 */
-	List<String> listResourceNames()
-			throws JargonException;
+	List<String> listResourceNames() throws JargonException;
 
 	/**
 	 * Retrieve a list of plain <code>String</code> with the resource names in

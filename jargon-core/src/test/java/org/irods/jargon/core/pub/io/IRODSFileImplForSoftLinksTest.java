@@ -7,7 +7,6 @@ import java.io.File;
 import java.util.Properties;
 
 import junit.framework.Assert;
-import junit.framework.TestCase;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.pub.DataObjectAO;
@@ -242,8 +241,8 @@ public class IRODSFileImplForSoftLinksTest {
 		irodsFile.mkdirs();
 		irodsFile.reset();
 
-		TestCase.assertTrue("file does not exist", irodsFile.exists());
-		TestCase.assertTrue("file should be a dir", irodsFile.isDirectory());
+		Assert.assertTrue("file does not exist", irodsFile.exists());
+		Assert.assertTrue("file should be a dir", irodsFile.isDirectory());
 
 	}
 
@@ -295,8 +294,8 @@ public class IRODSFileImplForSoftLinksTest {
 		irodsFile.mkdirs();
 		irodsFile.reset();
 
-		TestCase.assertTrue("file does not exist", irodsFile.exists());
-		TestCase.assertTrue("file should be a dir", irodsFile.isDirectory());
+		Assert.assertTrue("file does not exist", irodsFile.exists());
+		Assert.assertTrue("file should be a dir", irodsFile.isDirectory());
 
 	}
 
@@ -350,12 +349,11 @@ public class IRODSFileImplForSoftLinksTest {
 		irodsFile.createNewFile();
 
 		irodsFile.reset();
-		TestCase.assertTrue("file does not exist", irodsFile.exists());
-		TestCase.assertTrue("file should be a file", irodsFile.isFile());
+		Assert.assertTrue("file does not exist", irodsFile.exists());
+		Assert.assertTrue("file should be a file", irodsFile.isFile());
 
 		File[] fileList = irodsFile.getParentFile().listFiles();
-		TestCase.assertTrue("file list should not be empty",
-				fileList.length == 1);
+		Assert.assertTrue("file list should not be empty", fileList.length == 1);
 
 	}
 
@@ -409,8 +407,7 @@ public class IRODSFileImplForSoftLinksTest {
 		irodsFile.reset();
 
 		File[] fileList = irodsFile.getParentFile().listFiles();
-		TestCase.assertTrue("file list should not be empty",
-				fileList.length == 1);
+		Assert.assertTrue("file list should not be empty", fileList.length == 1);
 
 	}
 

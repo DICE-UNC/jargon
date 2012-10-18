@@ -49,12 +49,11 @@ public final class IRODSSimpleProtocolManager extends
 		log.debug("creating an IRODSSimpleConnection for account:{}",
 				irodsAccount);
 
-		return IRODSCommands.instance(
-				irodsAccount,
-				this,
-				pipelineConfiguration,
-				this.getAuthenticationFactory().instanceAuthMechanism(
-						irodsAccount.getAuthenticationScheme().name()));
+		log.debug("authscheme:{}", irodsAccount.getAuthenticationScheme());
+
+		return IRODSCommands.instance(irodsAccount, this,
+				pipelineConfiguration, this.getAuthenticationFactory()
+						.instanceAuthMechanism(irodsAccount));
 	}
 
 	/**

@@ -1,4 +1,3 @@
-
 package org.irods.jargon.core.connection.auth;
 
 import java.security.PrivilegedActionException;
@@ -30,7 +29,7 @@ public class ServiceTicketGenerator implements
 	/**
 	 * @param irodsAccount
 	 */
-	public ServiceTicketGenerator(IRODSAccount irodsAccount) {
+	public ServiceTicketGenerator(final IRODSAccount irodsAccount) {
 		if (irodsAccount == null) {
 			throw new IllegalArgumentException("null irodsAccount");
 		}
@@ -49,6 +48,7 @@ public class ServiceTicketGenerator implements
 		this.irodsAccount = irodsAccount;
 	}
 
+	@Override
 	public byte[] run() throws Exception {
 
 		try {
@@ -63,8 +63,7 @@ public class ServiceTicketGenerator implements
 			// tell the GSSManager the Kerberos name of the client and service
 			// (substitute your appropriate names here)
 			GSSName clientName = gssManager.createName(
-					irodsAccount.getUserName(),
-					GSSName.NT_USER_NAME);
+					irodsAccount.getUserName(), GSSName.NT_USER_NAME);
 			log.info("clientName:{}", clientName);
 			GSSName serviceName = gssManager.createName(
 					irodsAccount.getServiceName(), null);

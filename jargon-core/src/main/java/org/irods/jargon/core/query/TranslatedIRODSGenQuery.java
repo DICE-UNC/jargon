@@ -26,6 +26,45 @@ public class TranslatedIRODSGenQuery {
 	private final List<GenQueryOrderByField> orderByFields;
 	private final AbstractIRODSGenQuery irodsQuery;
 	private final boolean distinct;
+	private final boolean upperCase;
+
+	/**
+	 * Create an instance of the query translation, this contains information
+	 * about the original iquest-like query, as well as information about the
+	 * parsed and translated query.
+	 * <p/>
+	 * This version allows specification of 'upperCase'
+	 * 
+	 * @param translatedSelectFields
+	 *            <code>List</code> of
+	 *            {@link org.irods.jargon.core.pub.GenQuerySelectField.SelectField}
+	 *            representing the selects.
+	 * @param translatedQueryConditions
+	 *            <code>List</code> of
+	 *            {@link org.irods.jargon.core.pub.TranslatedGenQueryCondition.TranslatedQueryCondition}
+	 *            representing the parsed conditions.
+	 * @param irodsQuery
+	 *            {@link org.irods.jargon.core.query.IRODSGenQuery} that
+	 *            encapsulates the original user query.
+	 * @param distinct
+	 *            <code>boolean</code> indicating whether this is a distinct
+	 *            query.
+	 * @param upperCase
+	 *            <code>boolean</code> which indicates that upper case should be
+	 *            used in the where (case-insensitive queries)
+	 * @return <code>TranslatedIRODSQuery</code>
+	 * @throws JargonException
+	 */
+	public static TranslatedIRODSGenQuery instance(
+			final List<GenQuerySelectField> translatedSelectFields,
+			final List<TranslatedGenQueryCondition> translatedQueryConditions,
+			final AbstractIRODSGenQuery irodsQuery, final boolean distinct,
+			final boolean upperCase) throws JargonException {
+		return new TranslatedIRODSGenQuery(translatedSelectFields,
+				translatedQueryConditions, null, irodsQuery, distinct,
+				upperCase);
+
+	}
 
 	/**
 	 * Create an instance of the query translation, this contains information
@@ -55,7 +94,7 @@ public class TranslatedIRODSGenQuery {
 			final AbstractIRODSGenQuery irodsQuery, final boolean distinct)
 			throws JargonException {
 		return new TranslatedIRODSGenQuery(translatedSelectFields,
-				translatedQueryConditions, null, irodsQuery, distinct);
+				translatedQueryConditions, null, irodsQuery, distinct, false);
 
 	}
 
@@ -81,6 +120,9 @@ public class TranslatedIRODSGenQuery {
 	 * @param distinct
 	 *            <code>boolean</code> indicating whether this is a distinct
 	 *            query.
+	 * @param caseInsensitive
+	 *            <code>boolean</code> indicating that the query will be
+	 *            case-insensitive for condition values
 	 * @return <code>TranslatedIRODSQuery</code>
 	 * @throws JargonException
 	 */
@@ -88,10 +130,11 @@ public class TranslatedIRODSGenQuery {
 			final List<GenQuerySelectField> translatedSelectFields,
 			final List<TranslatedGenQueryCondition> translatedQueryConditions,
 			final List<GenQueryOrderByField> orderByFields,
-			final AbstractIRODSGenQuery irodsQuery, final boolean distinct)
-			throws JargonException {
+			final AbstractIRODSGenQuery irodsQuery, final boolean distinct,
+			final boolean caseInsensitive) throws JargonException {
 		return new TranslatedIRODSGenQuery(translatedSelectFields,
-				translatedQueryConditions, orderByFields, irodsQuery, distinct);
+				translatedQueryConditions, orderByFields, irodsQuery, distinct,
+				caseInsensitive);
 
 	}
 
@@ -119,7 +162,7 @@ public class TranslatedIRODSGenQuery {
 			final List<TranslatedGenQueryCondition> translatedQueryConditions,
 			final AbstractIRODSGenQuery irodsQuery) throws JargonException {
 		return new TranslatedIRODSGenQuery(translatedSelectFields,
-				translatedQueryConditions, null, irodsQuery, true);
+				translatedQueryConditions, null, irodsQuery, true, false);
 
 	}
 
@@ -127,8 +170,8 @@ public class TranslatedIRODSGenQuery {
 			final List<GenQuerySelectField> selectFields,
 			final List<TranslatedGenQueryCondition> translatedQueryConditions,
 			final List<GenQueryOrderByField> orderByFields,
-			final AbstractIRODSGenQuery irodsQuery, final boolean distinct)
-			throws JargonException {
+			final AbstractIRODSGenQuery irodsQuery, final boolean distinct,
+			final boolean upperCase) throws JargonException {
 
 		if (translatedQueryConditions == null) {
 			throw new JargonException("conditions are null");
@@ -156,6 +199,7 @@ public class TranslatedIRODSGenQuery {
 		this.selectFields = selectFields;
 		this.irodsQuery = irodsQuery;
 		this.distinct = distinct;
+		this.upperCase = upperCase;
 
 	}
 
@@ -204,6 +248,8 @@ public class TranslatedIRODSGenQuery {
 		sb.append(irodsQuery);
 		sb.append("\n   distinct:");
 		sb.append(distinct);
+		sb.append("\n   upperCase:");
+		sb.append(upperCase);
 		return sb.toString();
 	}
 
@@ -212,6 +258,15 @@ public class TranslatedIRODSGenQuery {
 	 */
 	public List<GenQueryOrderByField> getOrderByFields() {
 		return orderByFields;
+	}
+
+	/**
+	 * Indicates that
+	 * 
+	 * @return
+	 */
+	public boolean isUpperCase() {
+		return upperCase;
 	}
 
 }

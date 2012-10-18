@@ -372,8 +372,7 @@ public class Tag implements Cloneable {
 		sb.append(OPEN_END_TAG);
 		sb.append(tagName);
 		sb.append(CLOSE_END_TAG);
-		int end = data.indexOf(sb.toString(),
-				closeStart);
+		int end = data.indexOf(sb.toString(), closeStart);
 		int subTagStart = data.indexOf(OPEN_START_TAG, closeStart);
 
 		Tag subTag = new Tag(tagName);

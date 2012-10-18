@@ -67,7 +67,8 @@ public class SimpleQueryInp extends AbstractIRODSPackingInstruction {
 		return maxBuffSize;
 	}
 
-	private SimpleQueryInp(final int apiNbr, final AbstractAliasedQuery simpleQuery) {
+	private SimpleQueryInp(final int apiNbr,
+			final AbstractAliasedQuery simpleQuery) {
 		super();
 
 		if (apiNbr <= 0) {

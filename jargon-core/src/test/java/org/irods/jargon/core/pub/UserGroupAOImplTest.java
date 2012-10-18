@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Properties;
 
 import junit.framework.Assert;
-import junit.framework.TestCase;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSProtocolManager;
@@ -206,7 +205,7 @@ public class UserGroupAOImplTest {
 				userGroup.size() > 0);
 
 		for (UserGroup actual : userGroup) {
-			TestCase.assertFalse("should not have user name in results",
+			Assert.assertFalse("should not have user name in results",
 					irodsAccount.getUserName()
 							.equals(actual.getUserGroupName()));
 		}
@@ -388,7 +387,7 @@ public class UserGroupAOImplTest {
 		Assert.assertTrue("no users found", users.size() == 1);
 		// should be the added user
 		User user = users.get(0);
-		TestCase.assertEquals("did not find normal user",
+		Assert.assertEquals("did not find normal user",
 				irodsAccount.getUserName(), user.getName());
 
 		userGroupAO.removeUserGroup(userGroup);
@@ -410,7 +409,6 @@ public class UserGroupAOImplTest {
 				.getIRODSAccessObjectFactory();
 		UserGroupAO userGroupAO = accessObjectFactory
 				.getUserGroupAO(irodsAccount);
-
 
 		List<User> users = userGroupAO.listUserGroupMembers(testUserGroup);
 		Assert.assertTrue("no users should have been found", users.isEmpty());
@@ -794,7 +792,7 @@ public class UserGroupAOImplTest {
 
 		boolean inGroup = userGroupAO.isUserInGroup(irodsAccount.getUserName(),
 				testUserGroup);
-		TestCase.assertTrue("user should be in group", inGroup);
+		Assert.assertTrue("user should be in group", inGroup);
 	}
 
 	/**
@@ -816,7 +814,7 @@ public class UserGroupAOImplTest {
 
 		boolean inGroup = userGroupAO.isUserInGroup(irodsAccount.getUserName(),
 				testUserGroup);
-		TestCase.assertFalse("user should not be in group", inGroup);
+		Assert.assertFalse("user should not be in group", inGroup);
 	}
 
 	/**

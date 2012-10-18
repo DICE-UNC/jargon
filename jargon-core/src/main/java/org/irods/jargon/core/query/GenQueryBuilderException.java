@@ -25,14 +25,14 @@ public class GenQueryBuilderException extends Exception {
 	/**
 	 * @param arg0
 	 */
-	public GenQueryBuilderException(String arg0) {
+	public GenQueryBuilderException(final String arg0) {
 		super(arg0);
 	}
 
 	/**
 	 * @param arg0
 	 */
-	public GenQueryBuilderException(Throwable arg0) {
+	public GenQueryBuilderException(final Throwable arg0) {
 		super(arg0);
 	}
 
@@ -40,7 +40,7 @@ public class GenQueryBuilderException extends Exception {
 	 * @param arg0
 	 * @param arg1
 	 */
-	public GenQueryBuilderException(String arg0, Throwable arg1) {
+	public GenQueryBuilderException(final String arg0, final Throwable arg1) {
 		super(arg0, arg1);
 	}
 

@@ -1,5 +1,6 @@
 package org.irods.jargon.core.connection;
 
+
 /**
  * Represents a source of configuration metadata that will effect the behavior
  * of Jargon through a properties file or other configuration source.
@@ -288,7 +289,5 @@ public interface JargonProperties {
 	 *         directory.
 	 */
 	boolean isDefaultToPublicIfNothingUnderRootWhenListing();
-
-
 
 }

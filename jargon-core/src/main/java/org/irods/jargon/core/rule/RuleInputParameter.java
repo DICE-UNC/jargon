@@ -17,7 +17,7 @@ class RuleInputParameter {
 	 * @param paramName
 	 * @param paramValue
 	 */
-	RuleInputParameter(String paramName, String paramValue) {
+	RuleInputParameter(final String paramName, final String paramValue) {
 		this.paramName = paramName;
 		this.paramValue = paramValue;
 	}
@@ -44,7 +44,7 @@ class RuleInputParameter {
 	 * @param paramName
 	 *            the paramName to set
 	 */
-	void setParamName(String paramName) {
+	void setParamName(final String paramName) {
 		this.paramName = paramName;
 	}
 
@@ -59,7 +59,7 @@ class RuleInputParameter {
 	 * @param paramValue
 	 *            the paramValue to set
 	 */
-	void setParamValue(String paramValue) {
+	void setParamValue(final String paramValue) {
 		this.paramValue = paramValue;
 	}
 

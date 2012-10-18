@@ -196,9 +196,9 @@ public class CollectionAndDataObjectListingEntry extends IRODSDomainObject
 	public String getNodeLabelDisplayValue() {
 		String nodeVal;
 		if (objectType == ObjectType.COLLECTION) {
-				nodeVal = MiscIRODSUtils
-						.getLastPathComponentForGiveAbsolutePath(this
-								.getPathOrName());
+			nodeVal = MiscIRODSUtils
+					.getLastPathComponentForGiveAbsolutePath(this
+							.getPathOrName());
 		} else {
 			nodeVal = pathOrName;
 		}
@@ -275,7 +275,7 @@ public class CollectionAndDataObjectListingEntry extends IRODSDomainObject
 	 *            the specColType to set {@link ObjStat.SpecColType} enum value
 	 *            that indicates if this is some type of special collection
 	 */
-	public void setSpecColType(ObjStat.SpecColType specColType) {
+	public void setSpecColType(final ObjStat.SpecColType specColType) {
 		this.specColType = specColType;
 	}
 
@@ -293,7 +293,7 @@ public class CollectionAndDataObjectListingEntry extends IRODSDomainObject
 	 *            the specialObjectPath to set <code>String</code> with the
 	 *            underlyng special object path.
 	 */
-	public void setSpecialObjectPath(String specialObjectPath) {
+	public void setSpecialObjectPath(final String specialObjectPath) {
 		this.specialObjectPath = specialObjectPath;
 	}
 }

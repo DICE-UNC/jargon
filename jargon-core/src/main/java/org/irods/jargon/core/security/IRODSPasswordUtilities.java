@@ -89,7 +89,7 @@ public class IRODSPasswordUtilities {
 		if (challengeValue == null || challengeValue.isEmpty()) {
 			throw new IllegalArgumentException("null or empty challengeValue");
 		}
-		
+
 		int secs = Calendar.getInstance().get(Calendar.MILLISECOND);
 		secs = secs & 0x1f;
 
@@ -101,9 +101,8 @@ public class IRODSPasswordUtilities {
 		myKey.append(adminPassword);
 		myKey.append(challengeValue);
 
-
-		String myKey2 = MiscIRODSUtils.computeMD5HashOfAStringValue(pad(myKey
-				.toString(), 100, '\0'));
+		String myKey2 = MiscIRODSUtils.computeMD5HashOfAStringValue(pad(
+				myKey.toString(), 100, '\0'));
 
 		// get a rand val based on current time
 		int firstCharOfMyIn = myIn.charAt(0);

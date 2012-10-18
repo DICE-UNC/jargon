@@ -25,8 +25,12 @@ import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.pub.io.IRODSFileFactory;
 import org.irods.jargon.core.pub.io.IRODSFileInputStream;
 import org.irods.jargon.core.query.AVUQueryElement;
+import org.irods.jargon.core.query.BuilderQueryUtils;
+import org.irods.jargon.core.query.GenQueryBuilderException;
+import org.irods.jargon.core.query.IRODSGenQueryBuilder;
 import org.irods.jargon.core.query.IRODSQueryResultRow;
 import org.irods.jargon.core.query.IRODSQueryResultSetInterface;
+import org.irods.jargon.core.query.JargonQueryException;
 import org.irods.jargon.core.query.MetaDataAndDomainData;
 import org.irods.jargon.core.query.MetaDataAndDomainData.MetadataDomain;
 import org.irods.jargon.core.query.RodsGenQueryEnum;
@@ -56,7 +60,7 @@ final class DataAOHelper extends AOHelper {
 	private int putBufferSize = 0;
 
 	DataAOHelper(final IRODSAccessObjectFactory irodsAccessObjectFactory,
-			final IRODSAccount irodsAccount) {
+			final IRODSAccount irodsAccount) throws JargonException {
 		super();
 		if (irodsAccessObjectFactory == null) {
 			throw new IllegalArgumentException("null irodsAccessObjectFactory");
@@ -769,4 +773,92 @@ final class DataAOHelper extends AOHelper {
 
 	}
 
+	/**
+	 * Append the appropriately formed query condition to the provided builder
+	 * for a collection metadata query
+	 * 
+	 * @param queryElement
+	 *            {@link AVUQueryElement} to be added as a condition
+	 * @param builder
+	 *            {@link IRODSGenQueryBuilder} that will have the derived
+	 *            condition appended
+	 * @throws JargonQueryException
+	 *             if the query cannot be built
+	 */
+	public static void appendConditionPartToBuilderQuery(
+			final AVUQueryElement queryElement,
+			final IRODSGenQueryBuilder builder) throws JargonQueryException {
+
+		if (queryElement.getAvuQueryPart() == AVUQueryElement.AVUQueryPart.ATTRIBUTE) {
+			builder.addConditionAsGenQueryField(
+					RodsGenQueryEnum.COL_META_DATA_ATTR_NAME,
+					BuilderQueryUtils
+							.translateAVUQueryElementOperatorToBuilderQueryCondition(queryElement),
+					queryElement.getValue());
+
+		} else if (queryElement.getAvuQueryPart() == AVUQueryElement.AVUQueryPart.VALUE) {
+			builder.addConditionAsGenQueryField(
+					RodsGenQueryEnum.COL_META_DATA_ATTR_VALUE,
+					BuilderQueryUtils
+							.translateAVUQueryElementOperatorToBuilderQueryCondition(queryElement),
+					queryElement.getValue());
+
+		} else if (queryElement.getAvuQueryPart() == AVUQueryElement.AVUQueryPart.UNITS) {
+			builder.addConditionAsGenQueryField(
+					RodsGenQueryEnum.COL_META_DATA_ATTR_UNITS,
+					BuilderQueryUtils
+							.translateAVUQueryElementOperatorToBuilderQueryCondition(queryElement),
+					queryElement.getValue());
+		} else {
+			throw new JargonQueryException("unable to resolve AVU Query part");
+		}
+
+	}
+
+	public static void translateAVUQueryElementOperatorToBuilderQueryCondition(
+			final AVUQueryElement avuQueryElement) {
+
+	}
+
+	/**
+	 * Given the provide builder, add the selects for the iCAT data object.
+	 * These will be appended to the provided <code>IRODSGenQueryBuilder</code>
+	 * object
+	 * 
+	 * @param builder
+	 *            {@link IRODSGenQueryBuilder} that will have the selects
+	 *            appended to it
+	 * @throws GenQueryBuilderException
+	 */
+	public static void addDataObjectSelectsToBuilder(
+			final IRODSGenQueryBuilder builder) throws GenQueryBuilderException {
+
+		if (builder == null) {
+			throw new IllegalArgumentException("null builder");
+		}
+
+		builder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_DATA_ID)
+				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_COLL_ID)
+				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_NAME)
+				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_NAME)
+				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_REPL_NUM)
+				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_VERSION)
+				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_TYPE_NAME)
+				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_SIZE)
+				.addSelectAsGenQueryValue(
+						RodsGenQueryEnum.COL_D_RESC_GROUP_NAME)
+				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_RESC_NAME)
+				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_DATA_PATH)
+				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_OWNER_NAME)
+				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_OWNER_ZONE)
+				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_REPL_STATUS)
+				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_DATA_STATUS)
+				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_DATA_CHECKSUM)
+				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_EXPIRY)
+				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_MAP_ID)
+				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_COMMENTS)
+				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_CREATE_TIME)
+				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_MODIFY_TIME);
+
+	}
 }

@@ -1,6 +1,6 @@
 package org.irods.jargon.core.packinstr;
 
-import junit.framework.TestCase;
+import junit.framework.Assert;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -20,7 +20,7 @@ public class DataObjInpForUnmountTest {
 	public final void testInstanceForUnmount() {
 		DataObjInpForUnmount actual = DataObjInpForUnmount.instanceForUnmount(
 				"source", "");
-		TestCase.assertEquals("wrong api number", DataObjInpForMcoll.MCOLL_AN,
+		Assert.assertEquals("wrong api number", DataObjInpForMcoll.MCOLL_AN,
 				actual.getApiNumber());
 	}
 

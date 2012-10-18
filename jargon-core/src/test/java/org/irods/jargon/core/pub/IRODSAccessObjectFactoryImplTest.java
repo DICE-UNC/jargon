@@ -8,6 +8,8 @@ import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSProtocolManager;
 import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.connection.IRODSSimpleProtocolManager;
+import org.irods.jargon.core.connection.auth.AuthResponse;
+import org.irods.jargon.core.exception.AuthenticationException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.junit.BeforeClass;
@@ -55,6 +57,36 @@ public class IRODSAccessObjectFactoryImplTest {
 				.buildIRODSAccountFromTestProperties(testingProperties);
 		IRODSAccessObjectFactoryImpl irodsAccessObjectFactory = new IRODSAccessObjectFactoryImpl();
 		irodsAccessObjectFactory.getUserAO(irodsAccount);
+	}
+
+	@Test
+	public final void authenticateWithValid() throws Exception {
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
+
+		IRODSAccessObjectFactory irodsAccessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+		AuthResponse authResponse = irodsAccessObjectFactory
+				.authenticateIRODSAccount(irodsAccount);
+		Assert.assertNotNull("no auth response", authResponse);
+		// get again from cache
+		authResponse = irodsAccessObjectFactory
+				.authenticateIRODSAccount(irodsAccount);
+		Assert.assertNotNull("no auth response", authResponse);
+		irodsFileSystem.closeAndEatExceptions();
+	}
+
+	@Test(expected = AuthenticationException.class)
+	public final void authenticateWithInalid() throws Exception {
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		irodsAccount.setPassword("bogus");
+		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
+
+		IRODSAccessObjectFactory irodsAccessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+		irodsAccessObjectFactory.authenticateIRODSAccount(irodsAccount);
 	}
 
 }

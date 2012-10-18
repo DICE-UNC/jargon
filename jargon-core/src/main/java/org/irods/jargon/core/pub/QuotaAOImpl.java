@@ -257,9 +257,9 @@ public class QuotaAOImpl extends IRODSGenericAO implements QuotaAO {
 
 		List<Quota> quota = new ArrayList<Quota>();
 
-		AbstractAliasedQuery simpleQuery = SimpleQuery.instanceWithTwoArguments(
-				QUOTA_FOR_USER_AND_ZONE_QUERY, userName, this.getIRODSAccount()
-						.getZone(), 0);
+		AbstractAliasedQuery simpleQuery = SimpleQuery
+				.instanceWithTwoArguments(QUOTA_FOR_USER_AND_ZONE_QUERY,
+						userName, this.getIRODSAccount().getZone(), 0);
 		IRODSQueryResultSetInterface resultSet = getSimpleQueryExecutorAO()
 				.executeSimpleQuery(simpleQuery);
 
@@ -292,9 +292,9 @@ public class QuotaAOImpl extends IRODSGenericAO implements QuotaAO {
 
 		Quota quota = null;
 
-		AbstractAliasedQuery simpleQuery = SimpleQuery.instanceWithTwoArguments(
-				QUOTA_GLOBAL_FOR_USER_AND_ZONE_QUERY, userName, this
-						.getIRODSAccount().getZone(), 0);
+		AbstractAliasedQuery simpleQuery = SimpleQuery
+				.instanceWithTwoArguments(QUOTA_GLOBAL_FOR_USER_AND_ZONE_QUERY,
+						userName, this.getIRODSAccount().getZone(), 0);
 		IRODSQueryResultSetInterface resultSet = getSimpleQueryExecutorAO()
 				.executeSimpleQuery(simpleQuery);
 

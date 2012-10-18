@@ -60,11 +60,9 @@ public class DataObjInpForMcoll extends AbstractIRODSPackingInstruction {
 	 *            <code>String</code>, blank if unused, that describes the
 	 *            destination resource name
 	 */
-	private DataObjInpForMcoll(
-			final String sourceFileAbsolutePath,
+	private DataObjInpForMcoll(final String sourceFileAbsolutePath,
 			final String targetFileAbsolutePath, final String collectionType,
-			final String destRescName)
- {
+			final String destRescName) {
 
 		super();
 		if (sourceFileAbsolutePath == null || sourceFileAbsolutePath.isEmpty()) {

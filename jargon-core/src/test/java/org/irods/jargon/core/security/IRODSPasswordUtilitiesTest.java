@@ -1,7 +1,6 @@
 package org.irods.jargon.core.security;
 
 import junit.framework.Assert;
-import junit.framework.TestCase;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -21,8 +20,8 @@ public class IRODSPasswordUtilitiesTest {
 	public void testObfuscate() throws Exception {
 		String password = "hello";
 		String newPassword = "argybargy";
-		String obfuscated = IRODSPasswordUtilities.obfEncodeByKey(
-				newPassword, password, true);
+		String obfuscated = IRODSPasswordUtilities.obfEncodeByKey(newPassword,
+				password, true);
 		Assert.assertEquals("o(yrwoSMzIqkTFzPV\"\"3V12(a00U*f+YRQ*N#MQJ",
 				obfuscated);
 
@@ -35,7 +34,7 @@ public class IRODSPasswordUtilitiesTest {
 
 		String actual = IRODSPasswordUtilities
 				.deriveHexSubsetOfChallenge(challenge);
-		TestCase.assertEquals("did not correctly derive challenge value",
+		Assert.assertEquals("did not correctly derive challenge value",
 				expected, actual);
 
 	}

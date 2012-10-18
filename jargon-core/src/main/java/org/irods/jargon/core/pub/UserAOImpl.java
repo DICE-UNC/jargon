@@ -610,8 +610,6 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 		}
 	}
 
-
-
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -697,8 +695,8 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 
 		log.info("changeAUserPasswordByThatUser for user:{}", userName);
 
-		String obfuscatedPassword = IRODSPasswordUtilities
-				.obfEncodeByKey(newPassword, currentPassword, true);
+		String obfuscatedPassword = IRODSPasswordUtilities.obfEncodeByKey(
+				newPassword, currentPassword, true);
 		UserAdminInp userAdminIn = UserAdminInp.instanceForChangeUserPassword(
 				userName, obfuscatedPassword);
 		getIRODSProtocol().irodsFunction(userAdminIn);
@@ -725,7 +723,7 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 		if (newPassword == null || newPassword.isEmpty()) {
 			throw new IllegalArgumentException("newPassword is null or missing");
 		}
-		
+
 		String randPaddedNewPassword = IRODSPasswordUtilities
 				.padPasswordWithRandomStringData(newPassword);
 
@@ -737,7 +735,7 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 				.obfuscateIRODSPasswordForAdminPasswordChange(
 						randPaddedNewPassword, this.getIRODSAccount()
 								.getPassword(), derivedChallenge);
-		
+
 		log.info("changeAUserPasswordByAnAdmin for user:{}", userName);
 		GeneralAdminInp adminPI = GeneralAdminInp
 				.instanceForModifyUserPassword(userName, myKey2);

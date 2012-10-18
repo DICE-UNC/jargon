@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Properties;
 
 import junit.framework.Assert;
-import junit.framework.TestCase;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.FileNotFoundException;
@@ -175,7 +174,7 @@ public class CollectionAuditAOImplTest {
 				.getCollectionAuditAO(irodsAccount);
 		List<AuditedAction> auditData = collectionAuditAO
 				.findAllAuditRecordsForCollection(destFile, 0, 1000);
-		TestCase.assertFalse("empty audit data", auditData.isEmpty());
+		Assert.assertFalse("empty audit data", auditData.isEmpty());
 
 		AuditedAction expected = auditData.get(0);
 
@@ -186,7 +185,7 @@ public class CollectionAuditAOImplTest {
 				String.valueOf(expected.getAuditActionEnum().getAuditCode()),
 				expected.getTimeStampInIRODSFormat());
 		// really if no data not found exception we're good
-		TestCase.assertNotNull("did not get audit object", actual);
+		Assert.assertNotNull("did not get audit object", actual);
 
 	}
 
@@ -218,8 +217,8 @@ public class CollectionAuditAOImplTest {
 		CollectionAuditAO collectionAuditAO = accessObjectFactory
 				.getCollectionAuditAO(irodsAccount);
 
-		collectionAuditAO.getAuditedActionForCollection(
-				destFile, "999999", "99999");
+		collectionAuditAO.getAuditedActionForCollection(destFile, "999999",
+				"99999");
 
 	}
 }

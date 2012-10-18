@@ -1380,6 +1380,33 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 	 * (non-Javadoc)
 	 * 
 	 * @see org.irods.jargon.core.pub.CollectionAndDataObjectListAndSearchAO#
+	 * retrieveObjectStatForPathAndDataObjectName(java.lang.String,
+	 * java.lang.String)
+	 */
+	@Override
+	public ObjStat retrieveObjectStatForPathAndDataObjectName(
+			final String parentPath, final String fileName)
+			throws FileNotFoundException, JargonException {
+
+		log.info("retrieveObjectStatForPathAndDataObjectName()");
+		if (parentPath == null || parentPath.isEmpty()) {
+			throw new IllegalArgumentException("null or empty parentPath");
+		}
+		if (fileName == null || fileName.isEmpty()) {
+			throw new IllegalArgumentException("null or empty fileName");
+		}
+		StringBuilder sb = new StringBuilder();
+		sb.append(parentPath);
+		sb.append('/');
+		sb.append(fileName);
+		return retrieveObjectStatForPath(sb.toString());
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.pub.CollectionAndDataObjectListAndSearchAO#
 	 * retrieveObjectStatForPath(java.lang.String)
 	 */
 	@Override

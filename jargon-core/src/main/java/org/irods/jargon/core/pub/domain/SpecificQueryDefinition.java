@@ -4,15 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Represents a specific query - advanced query for storage in iRODS and use with
- * iquest or SpecificQueryExecutorAO.
+ * Represents a specific query - advanced query for storage in iRODS and use
+ * with iquest or SpecificQueryExecutorAO.
  * 
  * @author Lisa Stillwell (RENCI)
  * 
  */
 
 public class SpecificQueryDefinition extends IRODSDomainObject {
-	
+
 	private String alias = "";
 	private String sql = "";
 	private int argumentCount = 0;
@@ -78,10 +78,10 @@ public class SpecificQueryDefinition extends IRODSDomainObject {
 	 * @param argumentCount
 	 *            the argumentCount to set
 	 */
-	public void setArgumentCount(int argumentCount) {
+	public void setArgumentCount(final int argumentCount) {
 		this.argumentCount = argumentCount;
 	}
-	
+
 	/**
 	 * Gets the column names by parsing the SQL query. Note that this is only
 	 * available when querying the object from iRODS.
@@ -92,12 +92,12 @@ public class SpecificQueryDefinition extends IRODSDomainObject {
 	public List<String> getColumnNames() {
 		return columnNames;
 	}
-	
+
 	/**
 	 * @param columnNames
 	 *            the columnNames to set
 	 */
-	public void setColumnNames(List<String> columnNames) {
+	public void setColumnNames(final List<String> columnNames) {
 		this.columnNames = columnNames;
 	}
 
@@ -112,7 +112,7 @@ public class SpecificQueryDefinition extends IRODSDomainObject {
 	 * @param alias
 	 *            the alias to set
 	 */
-	public void setAlias(String alias) {
+	public void setAlias(final String alias) {
 		this.alias = alias;
 	}
 
@@ -127,7 +127,7 @@ public class SpecificQueryDefinition extends IRODSDomainObject {
 	 * @param sql
 	 *            the sql to set
 	 */
-	public void setSql(String sql) {
+	public void setSql(final String sql) {
 		this.sql = sql;
 	}
 }

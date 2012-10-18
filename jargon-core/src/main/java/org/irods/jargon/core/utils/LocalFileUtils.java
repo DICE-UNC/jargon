@@ -222,20 +222,13 @@ public class LocalFileUtils {
 
 		}
 
+		MessageDigest complete;
+		int numRead;
 		BufferedInputStream in = new BufferedInputStream(file);
 		byte[] buffer = new byte[4096];
-		MessageDigest complete;
 
 		try {
 			complete = MessageDigest.getInstance("MD5");
-		} catch (NoSuchAlgorithmException e) {
-			throw new JargonException("no such algorithm exception for MD5");
-		}
-
-		int numRead;
-
-		try {
-
 			do {
 				numRead = in.read(buffer);
 				if (numRead > 0) {
@@ -244,12 +237,18 @@ public class LocalFileUtils {
 			} while (numRead != -1);
 
 			return complete.digest();
-
+		} catch (NoSuchAlgorithmException e) {
+			throw new JargonException("no such algorithm exception for MD5");
 		} catch (Exception e) {
 			throw new JargonException("Error computing MD5 checksum", e);
 		} finally {
 			try {
 				in.close();
+			} catch (IOException e) {
+				// ignore
+			}
+			try {
+				file.close();
 			} catch (IOException e) {
 				// ignore
 			}

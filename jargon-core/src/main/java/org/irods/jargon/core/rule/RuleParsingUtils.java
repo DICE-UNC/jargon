@@ -41,10 +41,11 @@ class RuleParsingUtils {
 
 		// have parms to process..split at equal sign
 		int idx = parameter.indexOf('=');
-		if (idx==-1) {
-			throw new IllegalArgumentException("missing equal sign in given input parameter"); 
+		if (idx == -1) {
+			throw new IllegalArgumentException(
+					"missing equal sign in given input parameter");
 		}
-		
+
 		if (idx + 1 == parameter.length()) {
 			// have parm name but no value, this is ok, it may be overridden
 			// later in code
@@ -52,9 +53,8 @@ class RuleParsingUtils {
 			new RuleInputParameter(parameter.substring(0, idx), "");
 		}
 
-		return new RuleInputParameter(
-				parameter.substring(0, idx), parameter.substring(idx + 1));
+		return new RuleInputParameter(parameter.substring(0, idx),
+				parameter.substring(idx + 1));
 	}
 
 }
-

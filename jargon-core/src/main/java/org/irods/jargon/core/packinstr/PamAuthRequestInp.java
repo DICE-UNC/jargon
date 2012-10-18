@@ -57,8 +57,12 @@ public class PamAuthRequestInp extends AbstractIRODSPackingInstruction {
 
 	}
 
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.packinstr.AbstractIRODSPackingInstruction#getTagValue()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.packinstr.AbstractIRODSPackingInstruction#getTagValue
+	 * ()
 	 */
 	@Override
 	public Tag getTagValue() throws JargonException {

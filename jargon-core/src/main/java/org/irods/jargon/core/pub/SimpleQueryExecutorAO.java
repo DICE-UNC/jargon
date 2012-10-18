@@ -33,7 +33,7 @@ public interface SimpleQueryExecutorAO extends IRODSAccessObject {
 	 *         the query.
 	 * @throws JargonException
 	 */
-	IRODSQueryResultSetInterface executeSimpleQuery(AbstractAliasedQuery simpleQuery)
-			throws JargonException;
+	IRODSQueryResultSetInterface executeSimpleQuery(
+			AbstractAliasedQuery simpleQuery) throws JargonException;
 
 }

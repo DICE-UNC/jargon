@@ -1,15 +1,14 @@
 package org.irods.jargon.core.exception;
 
 /**
- * The data being sent for the protocol operation is inconsistent, this is amplified by
- * the detail error message.
+ * The data being sent for the protocol operation is inconsistent, this is
+ * amplified by the detail error message.
  * 
  * @author Mike Conway - DICE (www.irods.org)
  * 
  */
 public class ProtocolFormException extends JargonException {
 
-	
 	/**
 	 * 
 	 */

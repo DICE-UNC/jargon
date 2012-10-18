@@ -4,6 +4,8 @@ import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSServerProperties;
 import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.connection.JargonProperties;
+import org.irods.jargon.core.connection.auth.AuthResponse;
+import org.irods.jargon.core.exception.AuthenticationException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.packinstr.TransferOptions;
 import org.irods.jargon.core.pub.io.IRODSFileFactory;
@@ -44,10 +46,39 @@ import org.slf4j.LoggerFactory;
 public final class IRODSAccessObjectFactoryImpl implements
 		IRODSAccessObjectFactory {
 
-	private static final Logger LOG = LoggerFactory
+	private static final Logger log = LoggerFactory
 			.getLogger(IRODSAccessObjectFactoryImpl.class);
 
 	private IRODSSession irodsSession;
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.IRODSAccessObjectFactory#authenticateIRODSAccount
+	 * (org.irods.jargon.core.connection.IRODSAccount)
+	 */
+	@Override
+	public AuthResponse authenticateIRODSAccount(final IRODSAccount irodsAccount)
+			throws AuthenticationException, JargonException {
+		log.info("authenticateIRODSAccount()");
+
+		if (irodsAccount == null) {
+			throw new IllegalArgumentException("null irodsAccount");
+		}
+
+		/*
+		 * Note that this works if the account is already authenticated by
+		 * simply returning the cached response. If the account is not
+		 * authenticated, it will cause the authentication process and cache the
+		 * response.
+		 */
+		AuthResponse authResponse = this.irodsSession.currentConnection(
+				irodsAccount).getAuthResponse();
+		log.info("authResponse:{}", authResponse);
+		return authResponse;
+
+	}
 
 	/**
 	 * Construct an instance with the given <code>IRODSSession<code>
@@ -97,7 +128,7 @@ public final class IRODSAccessObjectFactoryImpl implements
 		try {
 			irodsSession.closeSession();
 		} catch (Exception e) {
-			LOG.warn("error encountered closing session, ignored", e);
+			log.warn("error encountered closing session, ignored", e);
 		}
 
 	}
@@ -144,7 +175,7 @@ public final class IRODSAccessObjectFactoryImpl implements
 		try {
 			irodsSession.closeSession(irodsAccount);
 		} catch (Exception e) {
-			LOG.warn("error encountered closing session, ignored", e);
+			log.warn("error encountered closing session, ignored", e);
 		}
 
 	}
@@ -161,10 +192,10 @@ public final class IRODSAccessObjectFactoryImpl implements
 	public static IRODSAccessObjectFactory instance(
 			final IRODSSession irodsSession) throws JargonException {
 		if (irodsSession == null) {
-			LOG.error("null irods session");
+			log.error("null irods session");
 			throw new IllegalArgumentException("IRODSSession cannot be null");
 		}
-		LOG.debug("creating access object factory");
+		log.debug("creating access object factory");
 		return new IRODSAccessObjectFactoryImpl(irodsSession);
 	}
 
@@ -541,7 +572,8 @@ public final class IRODSAccessObjectFactoryImpl implements
 	 * org.irods.jargon.core.pub.IRODSAccessObjectFactory#getJargonProperties()
 	 */
 	@Override
-	public JargonProperties getJargonProperties() {
+	public JargonProperties getJargonProperties() throws JargonException {
+		checkIrodsSessionSet();
 		// irodsSession synchronizes access
 		return irodsSession.getJargonProperties();
 	}
@@ -572,6 +604,7 @@ public final class IRODSAccessObjectFactoryImpl implements
 	@Override
 	public TransferControlBlock buildDefaultTransferControlBlockBasedOnJargonProperties()
 			throws JargonException {
+		checkIrodsSessionSet();
 		// irodsSession synchronizes access
 		return irodsSession
 				.buildDefaultTransferControlBlockBasedOnJargonProperties();
@@ -586,15 +619,16 @@ public final class IRODSAccessObjectFactoryImpl implements
 	@Override
 	public TransferOptions buildTransferOptionsBasedOnJargonProperties()
 			throws JargonException {
+		checkIrodsSessionSet();
 		return irodsSession.buildTransferOptionsBasedOnJargonProperties();
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * org.irods.jargon.core.pub.IRODSAccessObjectFactory#getSpecificQueryAO(org.irods
-	 * .jargon.core.connection.IRODSAccount)
+	 * org.irods.jargon.core.pub.IRODSAccessObjectFactory#getSpecificQueryAO
+	 * (org.irods .jargon.core.connection.IRODSAccount)
 	 */
 	@Override
 	public SpecificQueryAO getSpecificQueryAO(final IRODSAccount irodsAccount)

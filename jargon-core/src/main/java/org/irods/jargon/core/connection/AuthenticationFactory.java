@@ -17,23 +17,26 @@ public interface AuthenticationFactory {
 	 * <code>String</code> to determine the proper <code>AuthMechanism</code>
 	 * implementation to return.
 	 * <p/>
-	 * In the default representation, the mechanism is the
-	 * {@link IRODSAccount.AuthScheme} enum value as returned by the
+	 * In the default representation, the mechanism is the {@link IRODSAccount}
+	 * enum value contained in the <code>IRODSAccount</code> as returned by the
 	 * <code>getName()</code> method. Custom implementations of this factory may
 	 * use other schemes.
+	 * <p/>
+	 * Note that this factory will defaut to a standard iRODS auth when the
+	 * public (anonymous) account is supplied.
 	 * 
 	 * @param authScheme
 	 *            <code>String</code> with the desired auth mechanism. This
 	 *            value is dependent on the particular implementation of this
 	 *            interface.
 	 * @return {@link AuthMechanism} that is created based on the
-	 *         <code>authScheme</code>
+	 *         <code>authScheme</code> in the given <code>IRODSAccount</code>
 	 * @throws AuthUnavailableException
 	 *             if the given <code>authScheme</code> is not supported by the
 	 *             factory implementation.
 	 * @throws JargonException
 	 */
-	AuthMechanism instanceAuthMechanism(String authScheme)
+	AuthMechanism instanceAuthMechanism(IRODSAccount irodsAccount)
 			throws AuthUnavailableException, JargonException;
 
 }

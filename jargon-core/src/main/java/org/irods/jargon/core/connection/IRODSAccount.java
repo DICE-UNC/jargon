@@ -22,15 +22,16 @@ public final class IRODSAccount implements Serializable {
 	private static final long serialVersionUID = 8627989693793656697L;
 	public static final String IRODS_JARGON_RELEASE_NUMBER = "rods3.0";
 	public static final String IRODS_API_VERSION = "d";
-	
+
 	public enum AuthScheme {
 		STANDARD, GSI, KERBEROS, PAM
 	}
+
 	public static final boolean defaultObfuscate = false;
 	public static final String PUBLIC_USERNAME = "anonymous";
 	private AuthScheme authenticationScheme = AuthScheme.STANDARD;
 	private String serviceName = "";
-	
+
 	/**
 	 * The certificate authority (CA) list. By default, the CA definition comes
 	 * from the user's cog.properties file.
@@ -130,10 +131,9 @@ public final class IRODSAccount implements Serializable {
 	public static IRODSAccount instanceForAnonymous(final String host,
 			final int port, final String homeDirectory, final String zone,
 			final String defaultStorageResource) throws JargonException {
-		return instance(host, port, PUBLIC_USERNAME, "", "",
-				zone, defaultStorageResource);
+		return instance(host, port, PUBLIC_USERNAME, "", "", zone,
+				defaultStorageResource);
 	}
-
 
 	/**
 	 * Create a re-routed iRODS account using an initial account, and a host
@@ -283,6 +283,7 @@ public final class IRODSAccount implements Serializable {
 
 	/**
 	 * Get the authentication scheme used for login to iRODS
+	 * 
 	 * @return {@link AuthScheme} enum value
 	 */
 	public AuthScheme getAuthenticationScheme() {
@@ -454,7 +455,7 @@ public final class IRODSAccount implements Serializable {
 	 * @param serviceName
 	 *            the serviceName to set
 	 */
-	public void setServiceName(String serviceName) {
+	public void setServiceName(final String serviceName) {
 		this.serviceName = serviceName;
 	}
 
@@ -462,14 +463,14 @@ public final class IRODSAccount implements Serializable {
 	 * @param authenticationScheme
 	 *            the authenticationScheme to set
 	 */
-	public void setAuthenticationScheme(AuthScheme authenticationScheme) {
+	public void setAuthenticationScheme(final AuthScheme authenticationScheme) {
 		this.authenticationScheme = authenticationScheme;
 	}
 
 	/*
 	 * @param defaultStorageResource the defaultStorageResource to set
 	 */
-	public void setDefaultStorageResource(String defaultStorageResource) {
+	public void setDefaultStorageResource(final String defaultStorageResource) {
 		this.defaultStorageResource = defaultStorageResource;
 	}
 
@@ -477,7 +478,7 @@ public final class IRODSAccount implements Serializable {
 	 * @param homeDirectory
 	 *            the homeDirectory to set
 	 */
-	public void setHomeDirectory(String homeDirectory) {
+	public void setHomeDirectory(final String homeDirectory) {
 		this.homeDirectory = homeDirectory;
 	}
 
@@ -499,7 +500,7 @@ public final class IRODSAccount implements Serializable {
 	 * @param password
 	 *            the password to set
 	 */
-	public void setPassword(String password) {
+	public void setPassword(final String password) {
 		this.password = password;
 	}
 

@@ -12,7 +12,7 @@ import java.util.regex.Pattern;
 
 /**
  * @author Mike Conway - DICE (www.irods.org)
- *
+ * 
  */
 public final class EscapeTagChars {
 
@@ -20,7 +20,7 @@ public final class EscapeTagChars {
 	 * Escape characters for text appearing in Tag markup.
 	 * 
 	 */
-	public static String forHTML(String aText) {
+	public static String forHTML(final String aText) {
 		final StringBuilder result = new StringBuilder();
 		final StringCharacterIterator iterator = new StringCharacterIterator(
 				aText);
@@ -102,7 +102,7 @@ public final class EscapeTagChars {
 		return result.toString();
 	}
 
-	  /**
+	/**
 	 * Escape all ampersand characters in a URL.
 	 * 
 	 * <P>
@@ -122,7 +122,7 @@ public final class EscapeTagChars {
 	 * ampersand character. This is a nuisance when multiple query parameters
 	 * appear in the URL, since it requires a little extra work.
 	 */
-	public static String forHrefAmpersand(String aURL) {
+	public static String forHrefAmpersand(final String aURL) {
 		return aURL.replace("&", "&amp;");
 	}
 
@@ -139,7 +139,7 @@ public final class EscapeTagChars {
 	 * string is valid HTTP (it is URL-encoded), and ensuring it is valid HTML
 	 * (ensuring the ampersand is escaped).
 	 */
-	public static String forURL(String aURLFragment) {
+	public static String forURL(final String aURLFragment) {
 		String result = null;
 		try {
 			result = URLEncoder.encode(aURLFragment, "UTF-8");
@@ -188,7 +188,7 @@ public final class EscapeTagChars {
 	 * for escaping to produce valid XML, but not for producing safe
 	 * HTML.</span>
 	 */
-	public static String forXML(String aText) {
+	public static String forXML(final String aText) {
 		final StringBuilder result = new StringBuilder();
 		final StringCharacterIterator iterator = new StringCharacterIterator(
 				aText);
@@ -264,11 +264,11 @@ public final class EscapeTagChars {
 	 * See <a href='http://www.ietf.org/rfc/rfc4627.txt'>RFC 4627</a> for more
 	 * information.
 	 */
-	public static String forJSON(String aText) {
+	public static String forJSON(final String aText) {
 		final StringBuilder result = new StringBuilder();
 		StringCharacterIterator iterator = new StringCharacterIterator(aText);
 		char character = iterator.current();
-		while (character != StringCharacterIterator.DONE) {
+		while (character != CharacterIterator.DONE) {
 			if (character == '\"') {
 				result.append("\\\"");
 			} else if (character == '\\') {
@@ -299,7 +299,7 @@ public final class EscapeTagChars {
 	   Return <tt>aText</tt> with all <tt>'<'</tt> and <tt>'>'</tt> characters
 	   replaced by their escaped equivalents.
 	  */
-	public static String toDisableTags(String aText) {
+	public static String toDisableTags(final String aText) {
 		final StringBuilder result = new StringBuilder();
 		final StringCharacterIterator iterator = new StringCharacterIterator(
 				aText);
@@ -319,7 +319,7 @@ public final class EscapeTagChars {
 		return result.toString();
 	}
 
-	  /**
+	/**
 	 * Replace characters having special meaning in regular expressions with
 	 * their escaped equivalents, preceded by a '\' character.
 	 * 
@@ -337,7 +337,7 @@ public final class EscapeTagChars {
 	 * <li>^ and $
 	 * </ul>
 	 */
-	public static String forRegex(String aRegexFragment) {
+	public static String forRegex(final String aRegexFragment) {
 		final StringBuilder result = new StringBuilder();
 
 		final StringCharacterIterator iterator = new StringCharacterIterator(
@@ -407,7 +407,7 @@ public final class EscapeTagChars {
 	 * usually need to escape that text, to ensure special characters are
 	 * interpreted literally.
 	 */
-	public static String forReplacementString(String aInput) {
+	public static String forReplacementString(final String aInput) {
 		return Matcher.quoteReplacement(aInput);
 	}
 
@@ -417,7 +417,7 @@ public final class EscapeTagChars {
 	 * <P>
 	 * Insensitive to case.
 	 */
-	public static String forScriptTagsOnly(String aText) {
+	public static String forScriptTagsOnly(final String aText) {
 		String result = null;
 		Matcher matcher = SCRIPT.matcher(aText);
 		result = matcher.replaceAll("&lt;SCRIPT>");
@@ -435,7 +435,8 @@ public final class EscapeTagChars {
 	private static final Pattern SCRIPT_END = Pattern.compile("</SCRIPT>",
 			Pattern.CASE_INSENSITIVE);
 
-	private static void addCharEntity(Integer aIdx, StringBuilder aBuilder) {
+	private static void addCharEntity(final Integer aIdx,
+			final StringBuilder aBuilder) {
 		String padding = "";
 		if (aIdx <= 9) {
 			padding = "00";

@@ -30,8 +30,12 @@ public class SSLEndInp extends AbstractIRODSPackingInstruction {
 		this.setApiNumber(SSL_END_API_NBR);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.packinstr.AbstractIRODSPackingInstruction#getTagValue()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.packinstr.AbstractIRODSPackingInstruction#getTagValue
+	 * ()
 	 */
 	@Override
 	public Tag getTagValue() throws JargonException {

@@ -48,9 +48,9 @@ public class QueryResultProcessingUtils {
 	 * @throws JargonException
 	 */
 	public static List<IRODSQueryResultRow> translateResponseIntoResultSet(
-			final Tag queryResponse,
-			final List<String> columnNames, final int continuation,
-			int partialStartIndex) throws JargonException {
+			final Tag queryResponse, final List<String> columnNames,
+			final int continuation, final int partialStartIndex)
+			throws JargonException {
 
 		List<IRODSQueryResultRow> resultSet = new ArrayList<IRODSQueryResultRow>();
 		List<String> row;

@@ -181,8 +181,7 @@ public final class IRODSFileFactoryImpl extends IRODSGenericAO implements
 
 		try {
 			if (!file.exists()) {
-				log.info("file does not exist, creating a new file");
-				file.createNewFile();
+				log.info("file does not exist, a new one will be created");
 			} else if (!file.canWrite()) {
 				log.info("this file is not writeable by the current user {}",
 						file.getAbsolutePath());
@@ -230,9 +229,6 @@ public final class IRODSFileFactoryImpl extends IRODSGenericAO implements
 		} catch (FileNotFoundException e) {
 			log.error("FileNotFound creating output stream", e);
 			throw new JargonException(e);
-		} catch (IOException ioException) {
-			log.error("IOException creating output stream", ioException);
-			throw new JargonException(ioException);
 		}
 	}
 

@@ -59,8 +59,8 @@ public class MountedCollectionAOImpl extends IRODSGenericAO implements
 	 */
 	@Override
 	public boolean unmountACollection(
-			final String absolutePathToCollectionToUnmount, final String resourceName)
-			throws JargonException {
+			final String absolutePathToCollectionToUnmount,
+			final String resourceName) throws JargonException {
 		log.info("unmountACollection()");
 
 		if (absolutePathToCollectionToUnmount == null
@@ -68,7 +68,7 @@ public class MountedCollectionAOImpl extends IRODSGenericAO implements
 			throw new IllegalArgumentException(
 					"null or empty absolutePathToCollectionToUnmount");
 		}
-		
+
 		if (resourceName == null) {
 			throw new IllegalArgumentException(
 					"null resource name, set to blank if not specified");
@@ -78,7 +78,7 @@ public class MountedCollectionAOImpl extends IRODSGenericAO implements
 
 		log.info("absolutePathToCollectionToUnmount:{}",
 				absolutePathToCollectionToUnmount);
-		
+
 		log.info("resourceName:{}", resourceName);
 
 		DataObjInpForUnmount dataObjInp = DataObjInpForUnmount
