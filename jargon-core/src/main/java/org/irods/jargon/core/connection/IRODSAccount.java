@@ -231,12 +231,6 @@ public final class IRODSAccount implements Serializable {
 		this.certificateAuthority = "";
 	}
 
-	@SuppressWarnings("unused")
-	private IRODSAccount(final String host, final int port,
-			final GSSCredential gssCredential) {
-		this(host, port, gssCredential, "", "");
-	}
-
 	/**
 	 * Creates an object to hold iRODS account information. Uses the
 	 * GSSCredential to discover the connection information.
