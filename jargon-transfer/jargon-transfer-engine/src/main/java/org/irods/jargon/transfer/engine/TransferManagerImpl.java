@@ -9,11 +9,13 @@ import org.irods.jargon.core.pub.IRODSFileSystem;
 import org.irods.jargon.core.transfer.DefaultTransferControlBlock;
 import org.irods.jargon.core.transfer.TransferControlBlock;
 import org.irods.jargon.core.transfer.TransferStatus;
+import org.irods.jargon.transfer.TransferEngineException;
 import org.irods.jargon.transfer.TransferServiceFactoryImpl;
 import org.irods.jargon.transfer.dao.domain.LocalIRODSTransfer;
 import org.irods.jargon.transfer.dao.domain.LocalIRODSTransferItem;
 import org.irods.jargon.transfer.dao.domain.Synchronization;
 import org.irods.jargon.transfer.exception.CannotUpdateTransferInProgressException;
+import org.irods.jargon.transfer.exception.PassPhraseInvalidException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,7 +46,15 @@ public final class TransferManagerImpl implements TransferManager {
 
 	private final TransferServiceFactoryImpl transferServiceFactory = new TransferServiceFactoryImpl();
 
+	/**
+	 * Required dependency to be injected
+	 */
 	private TransferQueueService transferQueueService;
+
+	/**
+	 * Required dependency to be injected
+	 */
+	private GridAccountService gridAccountService;
 
 	private ErrorStatus errorStatus;
 
@@ -118,13 +128,18 @@ public final class TransferManagerImpl implements TransferManager {
 	 *            {@link org.irods.jargon.transfer.engine.TransferManagerCallbackListener}
 	 *            class that can receive callbacks from the running transfer
 	 *            process.
+	 * @param passPhrase
+	 *            <code>String</code> with the pass phrase used to encrypt grid
+	 *            login data.
 	 * @return instance of <code>TransferManager</code>
-	 * @throws JargonException
+	 * @throws PassPhraseInvalidException
+	 *             , TransferEngineException
 	 */
 	public TransferManagerImpl(
 			final IRODSFileSystem irodsFileSystem,
-			final TransferManagerCallbackListener transferManagerCallbackListener)
-			throws JargonException {
+			final TransferManagerCallbackListener transferManagerCallbackListener,
+			final String passPhrase) throws PassPhraseInvalidException,
+			TransferEngineException {
 
 		if (irodsFileSystem == null) {
 			throw new IllegalArgumentException("null irodsFileSystem");
@@ -136,7 +151,7 @@ public final class TransferManagerImpl implements TransferManager {
 		try {
 			init();
 		} catch (Exception e) {
-			throw new JargonException("Failed to init TransferManager");
+			throw new TransferEngineException("Failed to init TransferManager");
 		}
 	}
 
@@ -156,14 +171,21 @@ public final class TransferManagerImpl implements TransferManager {
 	 *            {@link transferEngineConfigurationProperties} that controls
 	 *            behavior of transfers, or <code>null</code> if default
 	 *            behaviors are desired
+	 *   @param passPhrase
+	 *            <code>String</code> with the pass phrase used to encrypt grid
+	 *            login data.
 	 * 
 	 * @return instance of <code>TransferManager</code>
 	 * @throws JargonException
 	 */
+	
+	here
+	
 	public TransferManagerImpl(
 			final IRODSFileSystem irodsFileSystem,
 			final TransferManagerCallbackListener transferManagerCallbackListener,
-			final TransferEngineConfigurationProperties transferEngineConfigurationProperties)
+			final TransferEngineConfigurationProperties transferEngineConfigurationProperties,
+			final String passPhrase)
 			throws JargonException {
 
 		if (irodsFileSystem == null) {
@@ -893,7 +915,7 @@ public final class TransferManagerImpl implements TransferManager {
 	 * ()
 	 */
 	@Override
-	public TransferQueueService getTransferQueueService() {
+	public synchronized TransferQueueService getTransferQueueService() {
 		return transferQueueService;
 	}
 
@@ -904,8 +926,33 @@ public final class TransferManagerImpl implements TransferManager {
 	 * org.irods.jargon.transfer.engine.TransferManager#getIrodsFileSystem()
 	 */
 	@Override
-	public IRODSFileSystem getIrodsFileSystem() {
+	public synchronized IRODSFileSystem getIrodsFileSystem() {
 		return irodsFileSystem;
 	}
+
+	/**
+	 * @return the gridAccountService
+	 */
+	public synchronized GridAccountService getGridAccountService() {
+		return gridAccountService;
+	}
+
+	/**
+	 * @param gridAccountService the gridAccountService to set
+	 */
+	public synchronized void setGridAccountService(GridAccountService gridAccountService) {
+		this.gridAccountService = gridAccountService;
+	}
+	
+	@Override
+	public synchronized void validatePassPhrase(final String passPhrase)
+			throws PassPhraseInvalidException, TransferEngineException {
+
+		/*
+		 * All parm checks delegated to validatePassPhrase
+		 */
+		gridAccountService.validatePassPhrase(passPhrase);
+	}
+
 
 }

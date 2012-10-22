@@ -68,6 +68,10 @@
   <bean id="configurationPropertyDAO" class="org.irods.jargon.transfer.dao.spring.ConfigurationPropertyDAOImpl">
     <property name="sessionFactory" ref="sessionFactory" />
   </bean>
+  
+  <bean id="keyStoreDAO" class="org.irods.jargon.transfer.dao.spring.KeyStoreDAOImpl">
+    <property name="sessionFactory" ref="sessionFactory" />
+  </bean>
 
   <bean id="synchManagerService" class="org.irods.jargon.transfer.engine.synch.SynchManagerServiceImpl">
     <property name="synchronizationDAO" ref="synchronizationDAO" />
@@ -77,6 +81,11 @@
     <property name="localIRODSTransferDAO" ref="localIRODSTransferDAO" />
     <property name="localIRODSTransferItemDAO" ref="localIRODSTransferItemDAO" />
     <property name="synchronizationDAO" ref="synchronizationDAO" />
+  </bean>
+  
+   <bean id="gridAccountService" class="org.irods.jargon.transfer.engine.GridAccountServiceImpl">
+    <property name="gridAccountDAO" ref="gridAccountDAO" />
+    <property name="keyStoreDAO" ref="keyStoreDAO" />
   </bean>
 
   <bean id="configurationService" class="org.irods.jargon.transfer.engine.ConfigurationServiceImpl">

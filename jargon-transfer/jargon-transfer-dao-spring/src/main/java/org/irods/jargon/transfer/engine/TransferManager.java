@@ -5,11 +5,13 @@ import java.util.List;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.IRODSFileSystem;
+import org.irods.jargon.transfer.TransferEngineException;
 import org.irods.jargon.transfer.TransferServiceFactoryImpl;
 import org.irods.jargon.transfer.dao.domain.LocalIRODSTransfer;
 import org.irods.jargon.transfer.dao.domain.LocalIRODSTransferItem;
 import org.irods.jargon.transfer.dao.domain.Synchronization;
 import org.irods.jargon.transfer.exception.CannotUpdateTransferInProgressException;
+import org.irods.jargon.transfer.exception.PassPhraseInvalidException;
 
 /**
  * Interface for a simple queue manager that can manage transfers to iRODS
@@ -305,5 +307,16 @@ public interface TransferManager {
 	 */
 	void updatePassword(IRODSAccount irodsAccount, String newPassword)
 			throws CannotUpdateTransferInProgressException, JargonException;
+
+	/**
+	 * Validate the pass phrase used to decrypt cached iRODS grid account
+	 * information.
+	 * 
+	 * @param passPhrase
+	 * @throws PassPhraseInvalidException
+	 * @throws TransferEngineException
+	 */
+	void validatePassPhrase(String passPhrase)
+			throws PassPhraseInvalidException, TransferEngineException;
 
 }
