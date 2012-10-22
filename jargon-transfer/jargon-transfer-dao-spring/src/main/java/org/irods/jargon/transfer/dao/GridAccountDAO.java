@@ -1,5 +1,7 @@
 package org.irods.jargon.transfer.dao;
 
+import java.util.List;
+
 import org.irods.jargon.transfer.dao.domain.GridAccount;
 
 /**
@@ -25,5 +27,48 @@ public interface GridAccountDAO {
 	 * @throws TransferDAOException
 	 */
 	void save(GridAccount gridAccount) throws TransferDAOException;
+
+	/**
+	 * List all grid accounts
+	 * 
+	 * @return <code>List</code> of {@link GridAccount} in the database
+	 * @throws TransferDAOException
+	 */
+	List<GridAccount> findAll() throws TransferDAOException;
+
+	/**
+	 * Find a <code>GridAccount</code> based on its primary key (id)
+	 * 
+	 * @param id
+	 *            <code>Long</code> with the primary key
+	 * @return {@link GridAccount} or <code>null</code> if record not found
+	 * @throws TransferDAOException
+	 */
+	GridAccount findById(Long id) throws TransferDAOException;
+
+	/**
+	 * Find the unique <code>GridAccount</code> based on the unique
+	 * host/zone/user
+	 * 
+	 * @param host
+	 *            <code>String</code> with the host name
+	 * @param zone
+	 *            <code>String</code> with the zone name
+	 * @param userName
+	 *            <code>String</code> with the user name
+	 * @return {@link GridAccount} or <code>null</code> if not found
+	 * @throws TransferDAOException
+	 */
+	GridAccount findByHostZoneAndUserName(String host, String zone,
+			String userName) throws TransferDAOException;
+
+	/**
+	 * Delete the given grid account
+	 * 
+	 * @param gridAccount
+	 *            {@link GridAccount} that will be deleted
+	 * @throws TransferDAOException
+	 */
+	void delete(GridAccount gridAccount) throws TransferDAOException;
 
 }

@@ -1,6 +1,12 @@
 
 package org.irods.jargon.transfer.dao.spring;
 
+import java.util.List;
+
+import org.hibernate.Criteria;
+import org.hibernate.Session;
+import org.hibernate.criterion.CriteriaSpecification;
+import org.hibernate.criterion.Restrictions;
 import org.irods.jargon.transfer.dao.GridAccountDAO;
 import org.irods.jargon.transfer.dao.TransferDAOException;
 import org.irods.jargon.transfer.dao.domain.GridAccount;
@@ -42,5 +48,119 @@ public class GridAccountDAOImpl extends HibernateDaoSupport implements GridAccou
 
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.transfer.dao.GridAccountDAO#findAll()
+	 */
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<GridAccount> findAll() throws TransferDAOException {
+		logger.debug("entering findAll()");
+		List<GridAccount> ret = null;
+		Session session = this.getSessionFactory().getCurrentSession();
+		try {
+			Criteria criteria = session.createCriteria(GridAccount.class);
+			criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
+			ret = (List<GridAccount>) criteria.list();
+		} catch (Exception e) {
+			logger.error("error in findAll()", e);
+			throw new TransferDAOException("Failed findAll()", e);
+		}
+
+		return ret;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.transfer.dao.GridAccountDAO#findById(java.lang.Long)
+	 */
+	@Override
+	public GridAccount findById(final Long id) throws TransferDAOException {
+		logger.debug("entering findById(Long)");
+
+		if (id == null) {
+			throw new IllegalArgumentException("null id");
+		}
+
+		GridAccount ret = null;
+		Session session = this.getSessionFactory().getCurrentSession();
+		try {
+			Criteria criteria = session.createCriteria(GridAccount.class);
+			criteria.add(Restrictions.eq("id", id));
+			ret = (GridAccount) criteria.uniqueResult();
+		} catch (Exception e) {
+			logger.error("error in findById(Long)", e);
+			throw new TransferDAOException("Failed findById(Long)", e);
+		}
+
+		return ret;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.transfer.dao.GridAccountDAO#findByHostZoneAndUserName
+	 * (java.lang.String, java.lang.String, java.lang.String)
+	 */
+	@Override
+	public GridAccount findByHostZoneAndUserName(final String host,
+			final String zone, final String userName)
+			throws TransferDAOException {
+		logger.info("findByHostZoneAndUserName()");
+
+		if (host == null || host.isEmpty()) {
+			throw new IllegalArgumentException("host is null or empty");
+		}
+
+		if (zone == null || zone.isEmpty()) {
+			throw new IllegalArgumentException("zone is null or empty");
+		}
+
+		if (userName == null || userName.isEmpty()) {
+			throw new IllegalArgumentException("userName is null or empty");
+		}
+
+		GridAccount ret = null;
+		Session session = this.getSessionFactory().getCurrentSession();
+		try {
+			Criteria criteria = session.createCriteria(GridAccount.class);
+			criteria.add(Restrictions.eq("host", host))
+					.add(Restrictions.eq("zone", zone))
+					.add(Restrictions.eq("userName", userName));
+			ret = (GridAccount) criteria.uniqueResult();
+		} catch (Exception e) {
+			logger.error("error in query", e);
+			throw new TransferDAOException("error in find query", e);
+		}
+
+		return ret;
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.transfer.dao.GridAccountDAO#delete(org.irods.jargon.
+	 * transfer.dao.domain.GridAccount)
+	 */
+	@Override
+	public void delete(final GridAccount gridAccount)
+			throws TransferDAOException {
+		
+		logger.debug("delete()");
+
+		try {
+			this.getSessionFactory().getCurrentSession()
+					.delete(gridAccount);
+		} catch (Exception e) {
+			logger.error("error in delete()", e);
+			throw new TransferDAOException("Failed delete()", e);
+		}
+	}
 
 }
