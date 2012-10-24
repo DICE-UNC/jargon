@@ -2,11 +2,11 @@ package org.irods.jargon.transfer.engine;
 
 import java.util.List;
 
-import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.IRODSFileSystem;
 import org.irods.jargon.transfer.TransferEngineException;
 import org.irods.jargon.transfer.TransferServiceFactoryImpl;
+import org.irods.jargon.transfer.dao.domain.GridAccount;
 import org.irods.jargon.transfer.dao.domain.LocalIRODSTransfer;
 import org.irods.jargon.transfer.dao.domain.LocalIRODSTransferItem;
 import org.irods.jargon.transfer.dao.domain.Synchronization;
@@ -91,14 +91,13 @@ public interface TransferManager {
 	 * @param resource
 	 *            <code>String</code> with the optional resource to specifiy as
 	 *            the transfer target
-	 * @param irodsAccount
-	 *            <code>IRODSAccount</code> that describes the target iRODS and
-	 *            user identity
+	 * @param gridAccount
+	 *            {@link GridAccount} defining the login and host information
 	 * @throws JargonException
 	 */
 	void enqueueAPut(final String sourceAbsolutePath,
 			final String targetAbsolutePath, final String resource,
-			final IRODSAccount irodsAccount) throws JargonException;
+			final GridAccount gridAccount) throws JargonException;
 
 	/**
 	 * Get a file from iRODS
@@ -112,14 +111,13 @@ public interface TransferManager {
 	 * @param resource
 	 *            <code>String</code> with the optional resource to specifiy as
 	 *            the transfer target
-	 * @param irodsAccount
-	 *            <code>IRODSAccount</code> that describes the target iRODS and
-	 *            user identity
+	 * @param gridAccount
+	 *            {@link GridAccount} defining the login and host information
 	 * @throws JargonException
 	 */
 	void enqueueAGet(final String irodsSourceAbsolutePath,
 			final String targetLocalAbsolutePath, final String resource,
-			final IRODSAccount irodsAccount) throws JargonException;
+			final GridAccount gridAccount) throws JargonException;
 
 	/**
 	 * Replicate iRODS files
@@ -130,12 +128,12 @@ public interface TransferManager {
 	 * @param targetResource
 	 *            <code>String</code> with the resource to which the file will
 	 *            replicat
-	 * @param irodsAccount
-	 *            <code>IRODSAccount</code> describing the user and zone
+	 * @param gridAccount
+	 *            {@link GridAccount} defining the login and host information
 	 * @throws JargonException
 	 */
 	void enqueueAReplicate(final String irodsAbsolutePath,
-			final String targetResource, final IRODSAccount irodsAccount)
+			final String targetResource, final GridAccount gridAccount)
 			throws JargonException;
 
 	/**
@@ -257,13 +255,12 @@ public interface TransferManager {
 	 * @param irodsTargetAbsolutePath
 	 *            <code>String</code> with the absolute path to the target of
 	 *            the copy
-	 * @param irodsAccount
-	 *            {@link IRODSAccount} with the connection information for the
-	 *            given zone
+	 * @param gridAccount
+	 *            {@link GridAccount} defining the login and host information
 	 * @throws JargonException
 	 */
 	void enqueueACopy(String irodsSourceAbsolutePath, String targetResource,
-			String irodsTargetAbsolutePath, IRODSAccount irodsAccount)
+			String irodsTargetAbsolutePath, GridAccount gridAccount)
 			throws JargonException;
 
 	/**
@@ -286,7 +283,7 @@ public interface TransferManager {
 	 * @throws JargonException
 	 */
 	void enqueueASynch(Synchronization synchronization,
-			IRODSAccount irodsAccount) throws JargonException;
+			GridAccount gridAccount) throws JargonException;
 
 	/**
 	 * Get the configuration information that controls the behavior of the
@@ -298,14 +295,22 @@ public interface TransferManager {
 	TransferEngineConfigurationProperties getTransferEngineConfigurationProperties();
 
 	/**
-	 * Method to orchestrate password updates within the transfer engine.  This method coordinates updates when transfers are running by preventing update while a transfer
-	 * is running.  This method does not update the actual iRODS password, but will update anything relevent in the transfer queue.
-	 * @param irodsAccount {@link IRODSAccount} with the iRODS host/zone/user information
-	 * @param newPassword <code>String</code> with the new password value
-	 * @throws CannotUpdateTransferInProgressException thrown if a password update is not possible due to running or enqueued transfers
+	 * Method to orchestrate password updates within the transfer engine. This
+	 * method coordinates updates when transfers are running by preventing
+	 * update while a transfer is running. This method does not update the
+	 * actual iRODS password, but will update anything relevent in the transfer
+	 * queue.
+	 * 
+	 * @param gridAccount
+	 *            {@link GridAccount} defining the login and host information
+	 * @param newPassword
+	 *            <code>String</code> with the new password value
+	 * @throws CannotUpdateTransferInProgressException
+	 *             thrown if a password update is not possible due to running or
+	 *             enqueued transfers
 	 * @throws JargonException
 	 */
-	void updatePassword(IRODSAccount irodsAccount, String newPassword)
+	void updatePassword(GridAccount gridAccount, String newPassword)
 			throws CannotUpdateTransferInProgressException, JargonException;
 
 	/**

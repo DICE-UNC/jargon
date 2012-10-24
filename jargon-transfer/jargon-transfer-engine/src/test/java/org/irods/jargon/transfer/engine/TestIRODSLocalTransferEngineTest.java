@@ -61,10 +61,13 @@ public class TestIRODSLocalTransferEngineTest {
 		irodsTestSetupUtilities
 				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
 		assertionHelper = new org.irods.jargon.testutils.AssertionHelper();
-		String databaseUrl = "jdbc:derby:" + System.getProperty("user.home")
-				+ "/.idrop/target/database/transfer";
+		scratchFileUtils
+				.clearAndReinitializeScratchDirectory(IRODS_TEST_SUBDIR_PATH);
+		String testDatabase = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(".idrop/derby/target/database/transfer");
+		String databaseUrl = "jdbc:derby:" + testDatabase;
 		DatabasePreparationUtils.clearAllDatabaseForTesting(databaseUrl,
-				"transfer", "transfer"); // TODO: make a prop
+				"transfer", "transfer");
 
 	}
 

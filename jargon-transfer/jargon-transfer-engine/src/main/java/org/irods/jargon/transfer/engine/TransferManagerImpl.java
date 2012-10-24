@@ -2,7 +2,6 @@ package org.irods.jargon.transfer.engine;
 
 import java.util.List;
 
-import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.packinstr.TransferOptions.ForceOption;
 import org.irods.jargon.core.pub.IRODSFileSystem;
@@ -11,6 +10,7 @@ import org.irods.jargon.core.transfer.TransferControlBlock;
 import org.irods.jargon.core.transfer.TransferStatus;
 import org.irods.jargon.transfer.TransferEngineException;
 import org.irods.jargon.transfer.TransferServiceFactoryImpl;
+import org.irods.jargon.transfer.dao.domain.GridAccount;
 import org.irods.jargon.transfer.dao.domain.LocalIRODSTransfer;
 import org.irods.jargon.transfer.dao.domain.LocalIRODSTransferItem;
 import org.irods.jargon.transfer.dao.domain.Synchronization;
@@ -103,19 +103,38 @@ public final class TransferManagerImpl implements TransferManager {
 		return transferServiceFactory;
 	}
 
-	public TransferManagerImpl(final IRODSFileSystem irodsFileSystem)
-			throws JargonException {
+	/**
+	 * Create an instance of the transfer manager implementation
+	 * 
+	 * @param irodsFileSystem
+	 *            {@link IRODSFileSystem} that provides the iRODS connection and
+	 *            service framework from jargon
+	 * @param passPhrase
+	 *            <code>String</code> with the password to decrypt cached
+	 *            account information
+	 * @throws PassPhraseInvalidException
+	 *             if the pass phrase is invalid
+	 * @throws TransferEngineException
+	 */
+	public TransferManagerImpl(final IRODSFileSystem irodsFileSystem,final String passPhrase) throws PassPhraseInvalidException,
+	TransferEngineException {
 
 		if (irodsFileSystem == null) {
 			throw new IllegalArgumentException("null irodsFileSystem");
 		}
+		
+		if (passPhrase == null || passPhrase.isEmpty()) {
+			throw new IllegalArgumentException("null or empty passPhrase");
+		}
 
 		this.irodsFileSystem = irodsFileSystem;
+		gridAccountService.validatePassPhrase(passPhrase);
+		
 		try {
 			init();
 		} catch (Exception e) {
 			log.error("error initing tranfer manager", e);
-			throw new JargonException("Failed to init TransferManager");
+			throw new TransferEngineException("Failed to init TransferManager");
 		}
 	}
 
@@ -144,6 +163,12 @@ public final class TransferManagerImpl implements TransferManager {
 		if (irodsFileSystem == null) {
 			throw new IllegalArgumentException("null irodsFileSystem");
 		}
+		
+		if (passPhrase == null || passPhrase.isEmpty()) {
+			throw new IllegalArgumentException("null or empty passPhrase");
+		}
+
+		gridAccountService.validatePassPhrase(passPhrase);
 
 		this.irodsFileSystem = irodsFileSystem;
 		this.transferManagerCallbackListener = transferManagerCallbackListener;
@@ -178,9 +203,7 @@ public final class TransferManagerImpl implements TransferManager {
 	 * @return instance of <code>TransferManager</code>
 	 * @throws JargonException
 	 */
-	
-	here
-	
+
 	public TransferManagerImpl(
 			final IRODSFileSystem irodsFileSystem,
 			final TransferManagerCallbackListener transferManagerCallbackListener,
@@ -191,6 +214,12 @@ public final class TransferManagerImpl implements TransferManager {
 		if (irodsFileSystem == null) {
 			throw new IllegalArgumentException("null irodsFileSystem");
 		}
+		
+		if (passPhrase == null || passPhrase.isEmpty()) {
+			throw new IllegalArgumentException("null or empty passPhrase");
+		}
+
+		gridAccountService.validatePassPhrase(passPhrase);
 
 		this.irodsFileSystem = irodsFileSystem;
 		this.transferManagerCallbackListener = transferManagerCallbackListener;
@@ -402,18 +431,11 @@ public final class TransferManagerImpl implements TransferManager {
 		resetStatus();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.irods.jargon.transfer.engine.TransferManager#enqueueAPut(java.lang
-	 * .String, java.lang.String, java.lang.String,
-	 * org.irods.jargon.core.connection.IRODSAccount)
-	 */
+
 	@Override
 	public void enqueueAPut(final String sourceAbsolutePath,
 			final String targetAbsolutePath, final String resource,
-			final IRODSAccount irodsAccount) throws JargonException {
+			final GridAccount gridAccount) throws JargonException {
 
 		if (sourceAbsolutePath == null || sourceAbsolutePath.isEmpty()) {
 			throw new JargonException("sourceAbsolutePath is null or empty");
@@ -428,20 +450,20 @@ public final class TransferManagerImpl implements TransferManager {
 					"resource is null, set to blank if default is desired");
 		}
 
-		if (irodsAccount == null) {
-			throw new JargonException("irodsAccount is null");
+		if (gridAccount == null) {
+			throw new JargonException("gridAccount is null");
 		}
 
 		log.info("enquing a put transfer");
 		log.info("   sourceAbsolutePath: {}", sourceAbsolutePath);
 		log.info("   targetAbsolutePath: {}", targetAbsolutePath);
 		log.info("   resource: {}", resource);
-		log.info("   irodsAccount: {}", irodsAccount);
+		log.info("   gridAccount: {}", gridAccount);
 
 		synchronized (this) {
 
 			transferQueueService.enqueuePutTransfer(sourceAbsolutePath,
-					targetAbsolutePath, resource, irodsAccount);
+					targetAbsolutePath, resource, gridAccount);
 
 			log.info("enqueue of put, current running status: {}",
 					runningStatus);
@@ -452,18 +474,11 @@ public final class TransferManagerImpl implements TransferManager {
 
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.irods.jargon.transfer.engine.TransferManager#enqueueAGet(java.lang
-	 * .String, java.lang.String, java.lang.String,
-	 * org.irods.jargon.core.connection.IRODSAccount)
-	 */
+
 	@Override
 	public void enqueueAGet(final String irodsSourceAbsolutePath,
 			final String targetLocalAbsolutePath, final String resource,
-			final IRODSAccount irodsAccount) throws JargonException {
+			final GridAccount gridAccount) throws JargonException {
 
 		if (irodsSourceAbsolutePath == null
 				|| irodsSourceAbsolutePath.isEmpty()) {
@@ -482,7 +497,7 @@ public final class TransferManagerImpl implements TransferManager {
 					"resource is null, set to blank if default is desired");
 		}
 
-		if (irodsAccount == null) {
+		if (gridAccount == null) {
 			throw new JargonException("irodsAccount is null");
 		}
 
@@ -490,12 +505,13 @@ public final class TransferManagerImpl implements TransferManager {
 		log.info("   irodsSourceAbsolutePath: {}", irodsSourceAbsolutePath);
 		log.info("   targetLocalAbsolutePath: {}", targetLocalAbsolutePath);
 		log.info("   resource: {}", resource);
-		log.info("   irodsAccount: {}", irodsAccount);
+		log.info("   gridAccount: {}", gridAccount);
 
 		synchronized (this) {
 
+
 			transferQueueService.enqueueGetTransfer(irodsSourceAbsolutePath,
-					targetLocalAbsolutePath, resource, irodsAccount);
+					targetLocalAbsolutePath, resource, gridAccount);
 
 			log.info("enqueue of get, current running status: {}",
 					runningStatus);
@@ -506,17 +522,10 @@ public final class TransferManagerImpl implements TransferManager {
 
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.irods.jargon.transfer.engine.TransferManager#enqueueAReplicate(java
-	 * .lang.String, java.lang.String,
-	 * org.irods.jargon.core.connection.IRODSAccount)
-	 */
+
 	@Override
 	public void enqueueAReplicate(final String irodsAbsolutePath,
-			final String targetResource, final IRODSAccount irodsAccount)
+			final String targetResource, final GridAccount gridAccount)
 			throws JargonException {
 
 		if (irodsAbsolutePath == null || irodsAbsolutePath.isEmpty()) {
@@ -528,37 +537,30 @@ public final class TransferManagerImpl implements TransferManager {
 					"targetResource is null, set to blank if default is desired");
 		}
 
-		if (irodsAccount == null) {
-			throw new JargonException("irodsAccount is null");
+		if (gridAccount == null) {
+			throw new JargonException("gridAccount is null");
 		}
 
 		log.info("enquing a replicate transfer");
 		log.info("   irodsAbsolutePath: {}", irodsAbsolutePath);
 		log.info("   targetResource: {}", targetResource);
-		log.info("   irodsAccount: {}", irodsAccount);
+		log.info("   gridAccount: {}", gridAccount);
 
 		synchronized (this) {
 
 			transferQueueService.enqueueReplicateTransfer(irodsAbsolutePath,
-					targetResource, irodsAccount);
+					targetResource, gridAccount);
 
 			processNextInQueueIfIdle();
 		}
 
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.irods.jargon.transfer.engine.TransferManager#enqueueACopy(java.lang
-	 * .String, java.lang.String, java.lang.String,
-	 * org.irods.jargon.core.connection.IRODSAccount)
-	 */
+
 	@Override
 	public void enqueueACopy(final String irodsSourceAbsolutePath,
 			final String targetResource, final String irodsTargetAbsolutePath,
-			final IRODSAccount irodsAccount) throws JargonException {
+			final GridAccount gridAccount) throws JargonException {
 
 		if (irodsSourceAbsolutePath == null
 				|| irodsSourceAbsolutePath.isEmpty()) {
@@ -577,37 +579,30 @@ public final class TransferManagerImpl implements TransferManager {
 					"irodsTargetAbsolutePath is null or empty");
 		}
 
-		if (irodsAccount == null) {
-			throw new JargonException("irodsAccount is null");
+		if (gridAccount == null) {
+			throw new JargonException("gridAccount is null");
 		}
 
 		log.info("enquing a copy transfer");
 		log.info("   irodsSourceAbsolutePath: {}", irodsSourceAbsolutePath);
 		log.info("   targetResource: {}", targetResource);
 		log.info("   irodsTargetAbsolutePath: {}", irodsTargetAbsolutePath);
-		log.info("   irodsAccount: {}", irodsAccount);
+		log.info("   gridAccount: {}", gridAccount);
 
 		synchronized (this) {
 
 			transferQueueService.enqueueCopyTransfer(irodsSourceAbsolutePath,
-					targetResource, irodsTargetAbsolutePath, irodsAccount);
+					targetResource, irodsTargetAbsolutePath, gridAccount);
 
 			processNextInQueueIfIdle();
 		}
 
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.irods.jargon.transfer.engine.TransferManager#enqueueASynch(org.irods
-	 * .jargon.transfer.dao.domain.Synchronization,
-	 * org.irods.jargon.core.connection.IRODSAccount)
-	 */
+
 	@Override
 	public void enqueueASynch(final Synchronization synchronization,
-			final IRODSAccount irodsAccount) throws JargonException {
+			final GridAccount gridAccount) throws JargonException {
 
 		log.info("enqueueASynch()");
 
@@ -615,12 +610,12 @@ public final class TransferManagerImpl implements TransferManager {
 			throw new IllegalArgumentException("null synchronization");
 		}
 
-		if (irodsAccount == null) {
-			throw new IllegalArgumentException("null irodsAccount");
+		if (gridAccount == null) {
+			throw new IllegalArgumentException("null gridAccount");
 		}
 
 		log.info("synchronization:{}", synchronization);
-		log.info("irodsAccount:{}", irodsAccount);
+		log.info("gridAccount:{}", gridAccount);
 
 		if (synchronization.getId() <= 0) {
 			throw new JargonException(
@@ -630,7 +625,7 @@ public final class TransferManagerImpl implements TransferManager {
 		log.info("enqueuing synch");
 		synchronized (this) {
 			transferQueueService.enqueueSynchTransfer(synchronization,
-					irodsAccount);
+					gridAccount);
 			processNextInQueueIfIdle();
 
 		}
@@ -875,12 +870,10 @@ public final class TransferManagerImpl implements TransferManager {
 
 	}
 	
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.transfer.engine.TransferManager#updatePassword(org.irods.jargon.core.connection.IRODSAccount, java.lang.String)
-	 */
 	@Override
-	public synchronized void updatePassword(final IRODSAccount irodsAccount, final String newPassword)  throws CannotUpdateTransferInProgressException, JargonException {
-		transferQueueService.updateUserPasswordInTransferManagerData(irodsAccount, newPassword);
+	public synchronized void updatePassword(final GridAccount gridAccount, final String newPassword)  throws CannotUpdateTransferInProgressException, JargonException {
+		// transferQueueService.updateUserPasswordInTransferManagerData(gridAccount,
+		// newPassword);
 		
 	}
 
@@ -933,7 +926,7 @@ public final class TransferManagerImpl implements TransferManager {
 	/**
 	 * @return the gridAccountService
 	 */
-	public synchronized GridAccountService getGridAccountService() {
+   synchronized GridAccountService getGridAccountService() {
 		return gridAccountService;
 	}
 

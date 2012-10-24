@@ -344,7 +344,7 @@ final class IRODSLocalTransferEngine implements TransferStatusCallbackListener {
 			log.info("transferTypeCopy");
 			dataTransferOperations.copy(
 					localIrodsTransfer.getLocalAbsolutePath(),
-					localIrodsTransfer.getTransferResource(),
+					localIrodsTransfer.getGridAccount().getDefaultResource(),
 					localIrodsTransfer.getIrodsAbsolutePath(), this, true,
 					transferControlBlock);
 		} catch (JargonException je) {
@@ -378,7 +378,8 @@ final class IRODSLocalTransferEngine implements TransferStatusCallbackListener {
 
 		final IRODSFile targetFile = irodsFileFactory
 				.instanceIRODSFile(localIrodsTransfer.getIrodsAbsolutePath());
-		targetFile.setResource(localIrodsTransfer.getTransferResource());
+		targetFile.setResource(localIrodsTransfer.getGridAccount()
+				.getDefaultResource());
 		final File localFile = new File(
 				localIrodsTransfer.getLocalAbsolutePath());
 
@@ -411,7 +412,8 @@ final class IRODSLocalTransferEngine implements TransferStatusCallbackListener {
 
 		final IRODSFile sourceFile = irodsFileFactory
 				.instanceIRODSFile(localIrodsTransfer.getIrodsAbsolutePath());
-		sourceFile.setResource(localIrodsTransfer.getTransferResource());
+		sourceFile.setResource(localIrodsTransfer.getGridAccount()
+				.getDefaultResource());
 		final File localFile = new File(
 				localIrodsTransfer.getLocalAbsolutePath());
 
@@ -440,13 +442,15 @@ final class IRODSLocalTransferEngine implements TransferStatusCallbackListener {
 			final IRODSFileFactory irodsFileFactory) throws JargonException {
 		final IRODSFile targetFile = irodsFileFactory
 				.instanceIRODSFile(localIrodsTransfer.getIrodsAbsolutePath());
-		targetFile.setResource(localIrodsTransfer.getTransferResource());
+		targetFile.setResource(localIrodsTransfer.getGridAccount()
+				.getDefaultResource());
 		JargonException transferException = null;
 
 		try {
 			dataTransferOperations.replicate(
 					localIrodsTransfer.getIrodsAbsolutePath(),
-					localIrodsTransfer.getTransferResource(), this,
+					localIrodsTransfer.getGridAccount().getDefaultResource(),
+					this,
 					transferControlBlock);
 		} catch (JargonException je) {
 			log.error("exception in transfer will be marked as a global exception, ending the transfer operation");

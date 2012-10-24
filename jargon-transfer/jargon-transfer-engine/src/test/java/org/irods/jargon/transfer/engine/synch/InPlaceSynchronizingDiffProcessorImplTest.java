@@ -62,6 +62,9 @@ public class InPlaceSynchronizingDiffProcessorImplTest {
 				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
 		scratchFileUtils
 				.clearAndReinitializeScratchDirectory(IRODS_TEST_SUBDIR_PATH);
+		String testDatabase = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(".idrop/derby/target/database/transfer");
+		String databaseUrl = "jdbc:derby:" + testDatabase;
 		irodsFileSystem = IRODSFileSystem.instance();
 
 	}

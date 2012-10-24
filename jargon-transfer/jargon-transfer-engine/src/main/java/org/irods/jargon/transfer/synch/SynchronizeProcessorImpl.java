@@ -105,8 +105,8 @@ public class SynchronizeProcessorImpl implements SynchronizeProcessor,
 					TransferType.SYNCH, localIRODSTransfer.getSynchronization()
 							.getLocalSynchDirectory(), localIRODSTransfer
 							.getSynchronization().getIrodsSynchDirectory(),
-					localIRODSTransfer.getSynchronization()
-							.getDefaultResourceName(), 0L, 0L, 0, 0,
+					localIRODSTransfer.getSynchronization().getGridAccount()
+							.getDefaultResource(), 0L, 0L, 0, 0,
 					TransferState.SYNCH_COMPLETION, irodsAccount.getHost(),
 					irodsAccount.getZone());
 			callbackListener.overallStatusCallback(overallSynchStartStatus);
@@ -182,7 +182,9 @@ public class SynchronizeProcessorImpl implements SynchronizeProcessor,
 					TransferType.SYNCH,
 					synchronization.getLocalSynchDirectory(),
 					synchronization.getIrodsSynchDirectory(),
-					synchronization.getDefaultResourceName(), 0L, 0L, 0, 0,
+ synchronization
+							.getGridAccount().getDefaultResource(), 0L, 0L, 0,
+					0,
 					TransferState.SYNCH_INITIALIZATION, irodsAccount.getHost(),
 					irodsAccount.getZone());
 			callbackListener.overallStatusCallback(overallSynchStartStatus);
@@ -195,7 +197,9 @@ public class SynchronizeProcessorImpl implements SynchronizeProcessor,
 					TransferType.SYNCH,
 					synchronization.getLocalSynchDirectory(),
 					synchronization.getIrodsSynchDirectory(),
-					synchronization.getDefaultResourceName(), 0L, 0L, 0, 0,
+ synchronization
+							.getGridAccount().getDefaultResource(), 0L, 0L, 0,
+					0,
 					TransferState.SYNCH_DIFF_GENERATION,
 					irodsAccount.getHost(), irodsAccount.getZone());
 			callbackListener.overallStatusCallback(overallSynchStartStatus);
@@ -221,7 +225,9 @@ public class SynchronizeProcessorImpl implements SynchronizeProcessor,
 					TransferType.SYNCH,
 					synchronization.getLocalSynchDirectory(),
 					synchronization.getIrodsSynchDirectory(),
-					synchronization.getDefaultResourceName(), 0L, 0L, 0, 0,
+ synchronization
+							.getGridAccount().getDefaultResource(), 0L, 0L, 0,
+					0,
 					TransferState.SYNCH_DIFF_STEP, irodsAccount.getHost(),
 					irodsAccount.getZone());
 			callbackListener.overallStatusCallback(overallSynchStartStatus);

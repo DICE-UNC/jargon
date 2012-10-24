@@ -119,7 +119,7 @@ public class SynchPeriodicScheduler extends TimerTask {
 		log.info("no conflicting synch in queue, go ahead and schedule");
 		try {
 			transferManager.enqueueASynch(synchronization,
-					synchronization.buildIRODSAccountFromSynchronizationData());
+					synchronization.getGridAccount());
 		} catch (JargonException e) {
 			log.error("error enqueuing a synch process for synch:{}",
 					synchronization, e);

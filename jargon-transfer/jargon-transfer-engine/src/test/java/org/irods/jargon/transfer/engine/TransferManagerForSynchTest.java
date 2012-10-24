@@ -49,10 +49,13 @@ public class TransferManagerForSynchTest {
 		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
 		irodsTestSetupUtilities
 				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
-		String databaseUrl = "jdbc:derby:" + System.getProperty("user.home")
-				+ "/.idrop/target/database/transfer";
+		scratchFileUtils
+				.clearAndReinitializeScratchDirectory(IRODS_TEST_SUBDIR_PATH);
+		String testDatabase = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(".idrop/derby/target/database/transfer");
+		String databaseUrl = "jdbc:derby:" + testDatabase;
 		DatabasePreparationUtils.clearAllDatabaseForTesting(databaseUrl,
-				"transfer", "transfer"); // TODO: make a prop
+				"transfer", "transfer");
 		irodsFileSystem = IRODSFileSystem.instance();
 
 	}

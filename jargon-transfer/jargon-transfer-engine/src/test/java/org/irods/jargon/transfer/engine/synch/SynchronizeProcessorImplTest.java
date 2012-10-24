@@ -58,6 +58,9 @@ public class SynchronizeProcessorImplTest {
 				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
 		scratchFileUtils
 				.clearAndReinitializeScratchDirectory(IRODS_TEST_SUBDIR_PATH);
+		String testDatabase = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(".idrop/derby/target/database/transfer");
+		String databaseUrl = "jdbc:derby:" + testDatabase;
 
 	}
 
