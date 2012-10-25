@@ -108,6 +108,12 @@ test.federated.irods.resource=${jargon.test.federated.irods.resource}
 test.federated.irods.host=${jargon.test.federated.irods.host}
 test.federated.irods.port=${jargon.test.federated.irods.port}
 test.federated.irods.zone=${jargon.test.federated.irods.zone}
+test.option.gsi=${test.option.gsi}
+test.option.gsi.host=${test.option.gsi.host}
+test.option.gsi.port=${test.option.gsi.port}
+test.option.gsi.zone=${test.option.gsi.zone}
+test.option.gsi.dn=${test.option.gsi.dn}
+test.option.gsi.user=${test.option.gsi.user}
 		</echo>
 	      </tasks>
 	    </configuration>
