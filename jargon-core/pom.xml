@@ -24,15 +24,15 @@
     <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-exec</artifactId>
-      <scope>compile</scope>
+      <scope>compile</scope> 
     </dependency>
     <dependency>
       <groupId>commons-codec</groupId>
       <artifactId>commons-codec</artifactId>
     </dependency>
      <dependency>
-        <groupId>org.jglobus</groupId>
-        <artifactId>JGlobus-Core</artifactId>
+        <groupId>org.globus.jglobus</groupId>
+        <artifactId>cog-jglobus</artifactId> 
       </dependency>
   </dependencies>
   <build>

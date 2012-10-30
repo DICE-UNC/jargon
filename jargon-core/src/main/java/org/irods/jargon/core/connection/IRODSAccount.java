@@ -6,7 +6,6 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.ietf.jgss.GSSCredential;
 import org.irods.jargon.core.exception.JargonException;
 
 /**
@@ -17,10 +16,10 @@ import org.irods.jargon.core.exception.JargonException;
  * @author Mike Conway - DICE (www.irods.org)
  * 
  */
-public final class IRODSAccount implements Serializable {
+public class IRODSAccount implements Serializable {
 
 	private static final long serialVersionUID = 8627989693793656697L;
-	public static final String IRODS_JARGON_RELEASE_NUMBER = "rods3.0";
+	public static final String IRODS_JARGON_RELEASE_NUMBER = "rods3.2";
 	public static final String IRODS_API_VERSION = "d";
 
 	public enum AuthScheme {
@@ -30,18 +29,6 @@ public final class IRODSAccount implements Serializable {
 	public static final boolean defaultObfuscate = false;
 	public static final String PUBLIC_USERNAME = "anonymous";
 	private AuthScheme authenticationScheme = AuthScheme.STANDARD;
-	private String serviceName = "";
-
-	/**
-	 * The certificate authority (CA) list. By default, the CA definition comes
-	 * from the user's cog.properties file.
-	 */
-	private final String certificateAuthority;
-	/**
-	 * Stores the org.ietf.jgss.GSSCredential, used in GSI connections to the
-	 * iRODS.
-	 */
-	private transient final GSSCredential gssCredential;
 
 	private final String host;
 	private final int port;
@@ -51,7 +38,6 @@ public final class IRODSAccount implements Serializable {
 	private String defaultStorageResource;
 	private String homeDirectory;
 
-	private final String serverDN;
 	private List<String> authenticatedRoles = new ArrayList<String>();
 
 	/**
@@ -166,54 +152,6 @@ public final class IRODSAccount implements Serializable {
 
 	}
 
-	/**
-	 * Creates an object to hold iRODS account information. Uses the
-	 * GSSCredential to discover the connection information. Sets the
-	 * authentication option to GSI_AUTH.
-	 * 
-	 * @param host
-	 *            the iRODS server domain name
-	 * @param port
-	 *            the port on the iRODS server
-	 * @param gssCredential
-	 *            the org.ietf.jgss.GSSCredential object
-	 */
-	public static IRODSAccount instance(final String host, final int port,
-			final GSSCredential gssCredential) {
-		return new IRODSAccount(host, port, gssCredential, "", "");
-	}
-
-	/**
-	 * Creates an object to hold iRODS account information. Uses the
-	 * GSSCredential to discover the connection information.
-	 * 
-	 * @param host
-	 *            the iRODS server domain name
-	 * @param port
-	 *            the port on the iRODS server
-	 * @param userName
-	 *            the user name
-	 * @param gssCredential
-	 *            the org.ietf.jgss.GSSCredential object
-	 * @param homeDirectory
-	 *            home directory on the iRODS
-	 * @param zone
-	 *            the IRODS zone
-	 * @param defaultStorageResource
-	 *            default storage resource
-	 */
-	public static IRODSAccount instance(final String host, final int port,
-			final GSSCredential gssCredential, final String homeDirectory,
-			final String defaultStorageResource) throws JargonException {
-		if (host == null || gssCredential == null || homeDirectory == null
-				|| defaultStorageResource == null) {
-			throw new JargonException(
-					"IRODSAccount initialized with null values");
-		}
-
-		return new IRODSAccount(host, port, gssCredential, homeDirectory,
-				defaultStorageResource);
-	}
 
 	public IRODSAccount(final String host, final int port,
 			final String userName, final String password,
@@ -226,45 +164,8 @@ public final class IRODSAccount implements Serializable {
 		this.homeDirectory = homeDirectory;
 		this.zone = zone;
 		this.defaultStorageResource = defaultStorageResource;
-		this.serverDN = "";
-		this.gssCredential = null;
-		this.certificateAuthority = "";
 	}
 
-	/**
-	 * Creates an object to hold iRODS account information. Uses the
-	 * GSSCredential to discover the connection information.
-	 * 
-	 * @param host
-	 *            the iRODS server domain name
-	 * @param port
-	 *            the port on the iRODS server
-	 * @param userName
-	 *            the user name
-	 * @param gssCredential
-	 *            the org.ietf.jgss.GSSCredential object
-	 * @param homeDirectory
-	 *            home directory on the iRODS
-	 * @param zone
-	 *            the IRODS zone
-	 * @param defaultStorageResource
-	 *            default storage resource
-	 */
-	private IRODSAccount(final String host, final int port,
-			final GSSCredential gssCredential, final String homeDirectory,
-			final String defaultStorageResource) {
-
-		this.host = host;
-		this.port = port;
-		this.userName = "";
-		this.password = "";
-		this.homeDirectory = homeDirectory;
-		this.zone = "";
-		this.defaultStorageResource = defaultStorageResource;
-		this.serverDN = "";
-		this.certificateAuthority = "";
-		this.gssCredential = gssCredential;
-	}
 
 	/**
 	 * Gets the default storage resource.
@@ -285,33 +186,10 @@ public final class IRODSAccount implements Serializable {
 	}
 
 	/**
-	 * @return the Server DN string used by the client.
-	 */
-	public String getServerDN() {
-		return serverDN;
-	}
-
-	/**
 	 * @return the iRODS zone.
 	 */
 	public String getZone() {
 		return zone;
-	}
-
-	// for GSI
-	/**
-	 * Gets the locations of the GSI Certificate Authority (CA). By default, the
-	 * CA definition comes from the user's cog.properties file.
-	 */
-	public String getCertificateAuthority() {
-		return certificateAuthority;
-	}
-
-	/**
-	 * If one exists, gets the GSSCredential used to make a GSI authentication.
-	 */
-	public GSSCredential getGSSCredential() {
-		return gssCredential;
 	}
 
 	/**
@@ -418,10 +296,6 @@ public final class IRODSAccount implements Serializable {
 		return password;
 	}
 
-	public GSSCredential getGssCredential() {
-		return gssCredential;
-	}
-
 	public static boolean isDefaultObfuscate() {
 		return defaultObfuscate;
 	}
@@ -436,21 +310,6 @@ public final class IRODSAccount implements Serializable {
 
 	protected void setAuthenticatedRoles(final List<String> authenticatedRoles) {
 		this.authenticatedRoles = authenticatedRoles;
-	}
-
-	/**
-	 * @return the serviceName
-	 */
-	public String getServiceName() {
-		return serviceName;
-	}
-
-	/**
-	 * @param serviceName
-	 *            the serviceName to set
-	 */
-	public void setServiceName(final String serviceName) {
-		this.serviceName = serviceName;
 	}
 
 	/**

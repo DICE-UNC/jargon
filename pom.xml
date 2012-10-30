@@ -12,7 +12,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<spring.webmvc.version>3.0.5.RELEASE</spring.webmvc.version>
 		<hibernate.version>3.3.1.GA</hibernate.version>
-		<globus.version>2.0.4</globus.version>
+		<globus.version>1.8.0</globus.version>
 		<spring.core.version>3.1.0.RELEASE</spring.core.version>
 		<hibernate.version>3.3.2.GA</hibernate.version>
 	</properties>
@@ -161,8 +161,8 @@
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
-					<groupId>org.jglobus</groupId>
-					<artifactId>JGlobus-Core</artifactId>
+					<groupId>org.globus.jglobus</groupId>
+					<artifactId>cog-jglobus</artifactId>
 					<version>${globus.version}</version>
 					
 					 <exclusions>
@@ -364,8 +364,8 @@
 				<type>pom</type>
 			</dependency>
 			<dependency>
-                <groupId>org.jglobus</groupId>
-                <artifactId>JGlobus-Core</artifactId>
+                <groupId>org.globus</groupId>
+                <artifactId>cog-jglobus</artifactId>
                 <version>${globus.version}</version>
             </dependency>
 		</dependencies>
@@ -459,6 +459,6 @@
 		<module>jargon-data-utils</module>
 		<module>jargon-ticket</module>
 		<module>jargon-httpstream</module>
-	        <module>jargon-user-profile</module>
+	    <module>jargon-user-profile</module>
   </modules>
 </project>

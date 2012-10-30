@@ -20,6 +20,8 @@ import org.irods.jargon.testutils.icommandinvoke.IrodsInvocationContext;
 public class TestingPropertiesHelper {
 	public static final String IRODS_GSI_HOST_KEY = "test.option.gsi.host";
 	public static final String IRODS_GSI_PORT_KEY = "test.option.gsi.port";
+	public static final String IRODS_GSI_ZONE_KEY = "test.option.gsi.zone";
+	public static final String IRODS_GSI_DN_KEY = "test.option.gsi.dn";
 	public static String GENERATED_FILE_DIRECTORY_KEY = "test.data.directory";
 	public static String IRODS_USER_KEY = "test.irods.user";
 	public static String IRODS_PASSWORD_KEY = "test.irods.password";

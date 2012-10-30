@@ -1,18 +1,14 @@
 package org.irods.jargon.core.connection;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InterruptedIOException;
 import java.io.OutputStream;
-import java.io.RandomAccessFile;
 import java.nio.channels.ClosedChannelException;
 
 import org.globus.common.CoGProperties;
-import org.globus.gsi.gssapi.GlobusGSSCredentialImpl;
 import org.globus.gsi.gssapi.net.impl.GSIGssInputStream;
 import org.globus.gsi.gssapi.net.impl.GSIGssOutputStream;
-import org.gridforum.jgss.ExtendedGSSCredential;
 import org.gridforum.jgss.ExtendedGSSManager;
 import org.ietf.jgss.GSSContext;
 import org.ietf.jgss.GSSCredential;
@@ -20,7 +16,6 @@ import org.ietf.jgss.GSSException;
 import org.irods.jargon.core.connection.auth.AuthResponse;
 import org.irods.jargon.core.exception.AuthenticationException;
 import org.irods.jargon.core.exception.JargonException;
-import org.irods.jargon.core.exception.JargonRuntimeException;
 import org.irods.jargon.core.protovalues.RequestTypes;
 import org.irods.jargon.core.protovalues.XmlProtApis;
 import org.slf4j.Logger;
@@ -92,12 +87,27 @@ class GSIAuth extends AuthMechanism {
 	 * @throws IOException
 	 *             If the authentication to the iRODS fails.
 	 */
-	AuthResponse sendGSIAuth(final IRODSAccount irodsAccount,
-			final OutputStream out, final InputStream in) throws IOException {
+	AuthResponse sendGSIAuth(final GSIIRODSAccount irodsAccount,
+			final OutputStream out, final InputStream in)
+			throws AuthenticationException, JargonException {
+
+		if (irodsAccount == null) {
+			throw new IllegalArgumentException("null irodsAccount");
+		}
+
+		// go ahead and verfiy there is a gssCredential in the irodsAccount
+
+		if (irodsAccount.getGSSCredential() == null) {
+			throw new IllegalArgumentException("null gssCredential");
+		}
+
 		CoGProperties cog = null;
 		String defaultCA = null;
-		GSSCredential credential = null;
-		String caLocations = irodsAccount.getCertificateAuthority();
+		GSSCredential credential = irodsAccount.getGSSCredential();
+
+		String userDN = getDN(irodsAccount);
+
+		// String caLocations = irodsAccount.getCertificateAuthority();
 
 		ExtendedGSSManager manager = (ExtendedGSSManager) ExtendedGSSManager
 				.getInstance();
@@ -106,16 +116,14 @@ class GSIAuth extends AuthMechanism {
 		GSIGssInputStream gssin = null;
 
 		try {
-			credential = getCredential(irodsAccount);
-
-			if (caLocations != null) {
-				// there is no other way to do this.
-				// so I'm overwriting the default then changing it back.
-				cog = CoGProperties.getDefault();
-				defaultCA = cog.getCaCertLocations();
-				cog.setCaCertLocations(caLocations);
-			}
-
+			/*
+			 * credential = getCredential(irodsAccount);
+			 * 
+			 * if (caLocations != null) { // there is no other way to do this.
+			 * // so I'm overwriting the default then changing it back. cog =
+			 * CoGProperties.getDefault(); defaultCA = cog.getCaCertLocations();
+			 * cog.setCaCertLocations(caLocations); }
+			 */
 			GSSContext context = null;
 
 			context = manager.createContext(null, null, credential,
@@ -148,19 +156,18 @@ class GSIAuth extends AuthMechanism {
 			return response;
 
 		} catch (GSSException e) {
-			SecurityException gsiException = null;
+			AuthenticationException gsiException = null;
 			String message = e.getMessage();
 			if (message.indexOf("Invalid buffer") >= 0) {
-				gsiException = new SecurityException(
+				gsiException = new AuthenticationException(
 						"GSI Authentication Failed - Invalid Proxy File");
 				gsiException.initCause(e);
 			} else if (message.indexOf("Unknown CA") >= 0) {
-				gsiException = new SecurityException(
-						"GSI Authentication Failed - Cannot find "
-								+ "Certificate Authority (CA)");
+				gsiException = new AuthenticationException(
+						"GSI Authentication Failed - Cannot find Certificate Authority (CA)");
 				gsiException.initCause(e);
 			} else {
-				gsiException = new SecurityException(
+				gsiException = new AuthenticationException(
 						"GSI Authentication Failed");
 				gsiException.initCause(e);
 			}
@@ -172,8 +179,17 @@ class GSIAuth extends AuthMechanism {
 			throw exception;
 		} finally {
 
-			gssin.close();
-			gssout.close();
+			try {
+				gssin.close();
+			} catch (IOException e) {
+				// ignore
+			}
+
+			try {
+				gssout.close();
+			} catch (IOException e) {
+				// ignore
+			}
 
 			if (defaultCA != null) {
 				cog.setCaCertLocations(defaultCA);
@@ -182,16 +198,11 @@ class GSIAuth extends AuthMechanism {
 		}
 	}
 
-	static String getDN(final IRODSAccount account) throws IOException {
+	static String getDN(final GSIIRODSAccount account) throws JargonException {
 		StringBuffer dn = null;
 		int index = -1, index2 = -1;
-		try {
-			GlobusGSSCredentialImpl credential = ((GlobusGSSCredentialImpl) getCredential(account));
-			dn = new StringBuffer(credential.getName().toString());
-		} catch (GSSException e) {
-			throw new IllegalArgumentException("Invalid or missing credentials");// ,
-																					// e);
-		}
+
+		dn = new StringBuffer(account.getDistinguishedName());
 
 		// remove the extra /CN if exists
 		index = dn.indexOf("UID");
@@ -217,71 +228,53 @@ class GSIAuth extends AuthMechanism {
 		}
 	}
 
-	static GSSCredential getCredential(final IRODSAccount account)
-			throws GSSException, IOException {
-		byte[] data = null;
-		GSSCredential credential = account.getGSSCredential();
-		if (credential != null) {
-			if (credential.getRemainingLifetime() <= 0) {
-				throw new GSSException(GSSException.CREDENTIALS_EXPIRED);
-			}
-
-			return credential;
-		}
-
-		String password = account.getPassword();
-		ExtendedGSSManager manager = (ExtendedGSSManager) ExtendedGSSManager
-				.getInstance();
-
-		if (password == null) {
-			throw new IllegalArgumentException(
-					"Password/Proxyfile and GSSCredential cannot be null.");
-		} else if (password.startsWith("-----BEGIN CERTIFICATE-----")) {
-			data = password.getBytes();
-
-			credential = manager.createCredential(data,
-					ExtendedGSSCredential.IMPEXP_OPAQUE,
-					GSSCredential.DEFAULT_LIFETIME, null,
-					GSSCredential.INITIATE_AND_ACCEPT);
-		} else {
-			File f = new File(password);
-			if (f.exists()) {
-				RandomAccessFile inputFile = new RandomAccessFile(f, "r");
-				data = new byte[(int) f.length()];
-				// read in the credential data
-				inputFile.read(data);
-				inputFile.close();
-			} else {
-				throw new IOException("Proxy file path invalid");
-			}
-
-			credential = manager.createCredential(data,
-					ExtendedGSSCredential.IMPEXP_OPAQUE,
-					GSSCredential.DEFAULT_LIFETIME, null,
-					GSSCredential.INITIATE_AND_ACCEPT);
-		}
-
-		if (credential.getRemainingLifetime() <= 0) {
-			throw new GSSException(GSSException.CREDENTIALS_EXPIRED);
-		}
-
-		return credential;
-	}
-
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.connection.AuthMechanism#
+	 * processAuthenticationAfterStartup
+	 * (org.irods.jargon.core.connection.IRODSAccount,
+	 * org.irods.jargon.core.connection.IRODSCommands,
+	 * org.irods.jargon.core.connection.StartupResponseData)
+	 */
 	@Override
 	protected AuthResponse processAuthenticationAfterStartup(
 			final IRODSAccount irodsAccount, final IRODSCommands irodsCommands,
 			final StartupResponseData startupResponseData)
 			throws AuthenticationException, JargonException {
-		try {
-			return sendGSIAuth(irodsAccount, irodsCommands.getIrodsConnection()
-					.getIrodsOutputStream(), irodsCommands.getIrodsConnection()
-					.getIrodsInputStream());
-		} catch (IOException ioe) {
-			log.error("IOException attempting authentication", ioe);
-			throw new JargonRuntimeException(
-					"io exception attempting authentication");
+
+		if (irodsAccount == null) {
+			throw new IllegalArgumentException("null irodsAccount");
 		}
+
+		log.info("processAuthenticationAfterStartup()..checking if GSIIRODSAccount and validating credential");
+
+		GSIIRODSAccount gsiIRODSAccount;
+
+		if (irodsAccount instanceof GSIIRODSAccount) {
+			gsiIRODSAccount = (GSIIRODSAccount) irodsAccount;
+		} else {
+			throw new IllegalArgumentException(
+					"irodsAccount should be an instance of GSIIRODSAccount");
+		}
+
+		log.info("have credential, check if valid...");
+
+		try {
+			if (gsiIRODSAccount.getGSSCredential().getRemainingLifetime() <= 0) {
+				throw new AuthenticationException("gss credentials are expired");
+			}
+		} catch (GSSException e) {
+			log.error("GSSException processing credential");
+			throw new JargonException("gss exception processing credential", e);
+		}
+
+		log.info("all valid...send GSI auth to iRODS...");
+
+		return sendGSIAuth(gsiIRODSAccount, irodsCommands.getIrodsConnection()
+				.getIrodsOutputStream(), irodsCommands.getIrodsConnection()
+				.getIrodsInputStream());
+
 	}
 
 }
