@@ -46,6 +46,12 @@ Note that the following bug and feature requests are logged in GForge with relat
 
 ==Bug Fixes==
 
+*[#1041] [iROD-Chat:8903] Jargon-core: query builder / SQL operators
+** added test, have not yet replicated...work in progress
+
+* [#1039] invalid auth potentially leaving open connection/agent
+** work in progress
+
 ==Features==
 
  *[#132] GSS and Kerberos Support in Jargon-core

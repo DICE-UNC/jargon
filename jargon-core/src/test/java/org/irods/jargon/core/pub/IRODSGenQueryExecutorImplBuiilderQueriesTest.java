@@ -233,4 +233,101 @@ public class IRODSGenQueryExecutorImplBuiilderQueriesTest {
 				.size());
 
 	}
+	
+	/**
+	 *  Bug:  [#1041] [iROD-Chat:8903] Jargon-core: query builder / SQL operators
+	 * @throws Exception
+	 */
+	@Test
+	public final void testExecuteIRODSQueryBuilderQueryWithNumericGreaterThanOrEquaToBug1041()
+			throws Exception {
+
+		// create 4 data objects with varying sizes so I can query on data size
+
+		long smallSize = 50;
+		long largeSize = 200;
+
+		String file1 = "testExecuteIRODSQueryBuilderQueryWithNumericGreaterThanOrEquaToBug1041.txt";
+		String file2 = "testExecuteIRODSQueryBuilderQueryWithNumericGreaterThanOrEquaToBug1041b.txt";
+		String file3 = "testExecuteIRODSQueryBuilderQueryWithNumericGreaterThanOrEquaToBug1041c.txt";
+		String file4 = "testExecuteIRODSQueryBuilderQueryWithNumericGreaterThanOrEquaToBug10412.txt";
+
+		String subdir = "testExecuteIRODSQueryBuilderQueryWithNumericGreaterThanOrEquaToBug1041";
+
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH
+						+ "/" + subdir);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
+		String targetIrodsFile = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
+								+ subdir);
+
+		IRODSFile targetSubdir = accessObjectFactory.getIRODSFileFactory(
+				irodsAccount).instanceIRODSFile(targetIrodsFile);
+		targetSubdir.mkdirs();
+
+		IRODSGenQueryExecutor irodsGenQueryExecutor = accessObjectFactory
+				.getIRODSGenQueryExecutor(irodsAccount);
+		DataTransferOperations dto = accessObjectFactory
+				.getDataTransferOperations(irodsAccount);
+
+		// file1 small
+		String localFileName = FileGenerator
+				.generateFileOfFixedLengthGivenName(absPath, file1, smallSize);
+
+		File localFile = new File(localFileName);
+		dto.putOperation(localFile, targetSubdir, null, null);
+
+		// file2 small
+		localFileName = FileGenerator.generateFileOfFixedLengthGivenName(
+				absPath, file2, smallSize);
+
+		localFile = new File(localFileName);
+		dto.putOperation(localFile, targetSubdir, null, null);
+
+		// file3 large
+		localFileName = FileGenerator.generateFileOfFixedLengthGivenName(
+				absPath, file3, largeSize);
+
+		localFile = new File(localFileName);
+		dto.putOperation(localFile, targetSubdir, null, null);
+
+		// file4 large
+		localFileName = FileGenerator.generateFileOfFixedLengthGivenName(
+				absPath, file4, largeSize);
+
+		localFile = new File(localFileName);
+		dto.putOperation(localFile, targetSubdir, null, null);
+
+		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, null);
+
+		builder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_NAME)
+				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_NAME)
+				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_SIZE)
+				.addConditionAsGenQueryField(RodsGenQueryEnum.COL_COLL_NAME,
+						QueryConditionOperators.EQUAL,
+						targetSubdir.getAbsolutePath())
+				.addConditionAsGenQueryField(
+						RodsGenQueryEnum.COL_DATA_SIZE,
+						QueryConditionOperators.NUMERIC_GREATER_THAN_OR_EQUAL_TO,
+						smallSize);
+		
+		IRODSGenQueryFromBuilder query = builder
+				.exportIRODSQueryFromBuilder(50);
+
+		IRODSQueryResultSetInterface resultSet = irodsGenQueryExecutor
+				.executeIRODSQuery(query, 0);
+
+		Assert.assertEquals("should get all 4 files", 4, resultSet.getResults()
+				.size());
+
+		
+	}
+	
 }

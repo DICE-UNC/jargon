@@ -12,6 +12,7 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 import org.irods.jargon.core.connection.auth.AuthResponse;
+import org.irods.jargon.core.exception.AuthenticationException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.exception.JargonRuntimeException;
 import org.irods.jargon.core.packinstr.AbstractIRODSPackingInstruction;
@@ -186,9 +187,23 @@ public class IRODSCommands implements IRODSManagedConnection {
 	}
 
 	private void startupConnection(final IRODSAccount irodsAccount)
-			throws JargonException {
+			throws AuthenticationException, JargonException {
 
-		authResponse = authMechanism.authenticate(this, irodsAccount);
+		/*
+		 * Per  [#1039] invalid auth potentially leaving open connection/agent, clean up the connection on authentication exception
+		 */
+		try {
+			authResponse = authMechanism.authenticate(this, irodsAccount);
+		} catch (AuthenticationException e) {
+			log.error(
+					"authentication exception, will close iRODS sockets and streams and re-throw",
+					e);
+			this.disconnectWithIOException();
+			throw e;
+		}
+		
+		// authenticated.....
+		
 		this.irodsAccount = authResponse.getAuthenticatedIRODSAccount();
 
 		// set the server properties
