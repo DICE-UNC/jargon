@@ -168,8 +168,19 @@ public interface IRODSFile {
 
 	URI toURI();
 
+	/**
+	 * Get the resource (if set by the user) associated with the file.  Note that this does not inquire to the iCAT for the resource for this particular file, instead, this
+	 * is used by any Jargon methods that have <code>IRODSFile</code> as a paramenter to tell iRODS what resoruce to operate with.
+	 * @return
+	 * @throws JargonException
+	 */
 	String getResource() throws JargonException;
 
+	/**
+	 * 	Set the resource (if set by the user) associated with the file.  Note that this does not inquire to the iCAT for the resource for this particular file, instead, this
+	 * is used by any Jargon methods that have <code>IRODSFile</code> as a paramenter to tell iRODS what resoruce to operate with.
+	 * @param resource
+	 */
 	void setResource(String resource);
 
 	String getName();
