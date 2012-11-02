@@ -138,6 +138,10 @@ public abstract class AbstractIRODSQueryResultSet implements
 	}
 
 	
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.core.query.IRODSQueryResultSetInterface#getTotalRecords()
+	 */
+	@Override
 	public int getTotalRecords() {
 		return totalRecords;
 	}

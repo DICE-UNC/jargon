@@ -48,4 +48,10 @@ public interface IRODSQueryResultSetInterface {
 	 */
 	List<String> getColumnNames();
 
+	/**
+	 * If it is supported, and has been requested, based on the the query type, this method returns the total count of records that were the result of this query
+	 * @return <code>int</code> with the total records that match this query.
+	 */
+	int getTotalRecords();
+
 }
