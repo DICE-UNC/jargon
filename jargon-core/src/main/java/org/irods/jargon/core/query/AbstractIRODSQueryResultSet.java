@@ -26,11 +26,34 @@ public abstract class AbstractIRODSQueryResultSet implements
 	protected final boolean hasMoreRecords;
 	protected final List<String> columnNames;
 	protected final int continuationIndex;
-
+	protected final int totalRecords;
+	
+	/**
+	 * Constructor for a result set without supplying total records
+	 * @param results
+	 * @param columnNames
+	 * @param hasMoreRecords
+	 * @param continuationIndex
+	 */
 	protected AbstractIRODSQueryResultSet(
 			final List<IRODSQueryResultRow> results,
 			final List<String> columnNames, final boolean hasMoreRecords,
 			final int continuationIndex) {
+		this(results, columnNames, hasMoreRecords, continuationIndex, 0);
+	}
+
+	/**
+	 * Constructor for a result set
+	 * @param results
+	 * @param columnNames
+	 * @param hasMoreRecords
+	 * @param continuationIndex
+	 * @param totalRecords
+	 */
+	protected AbstractIRODSQueryResultSet(
+			final List<IRODSQueryResultRow> results,
+			final List<String> columnNames, final boolean hasMoreRecords,
+			final int continuationIndex, final int totalRecords) {
 
 		if (results == null) {
 			throw new IllegalArgumentException("results was null");
@@ -40,10 +63,15 @@ public abstract class AbstractIRODSQueryResultSet implements
 			throw new IllegalArgumentException("columnNames is null");
 		}
 
+		if (totalRecords < 0) {
+			throw new IllegalArgumentException("totalRecords < 0");
+		}
+		
 		this.results = Collections.unmodifiableList(results);
 		this.hasMoreRecords = hasMoreRecords;
 		this.columnNames = columnNames;
 		this.continuationIndex = continuationIndex;
+		this.totalRecords = totalRecords;
 	}
 
 	/*
@@ -107,5 +135,10 @@ public abstract class AbstractIRODSQueryResultSet implements
 
 	public int getContinuationIndex() {
 		return continuationIndex;
+	}
+
+	
+	public int getTotalRecords() {
+		return totalRecords;
 	}
 }

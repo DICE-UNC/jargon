@@ -30,6 +30,10 @@ public class IRODSGenQueryBuilder {
 	private final List<GenQueryOrderByField> orderByFields = new ArrayList<GenQueryOrderByField>();
 	private final boolean distinct;
 	private final boolean upperCase;
+	/**
+	 * Indicates whether a total row count should be included by iRODS
+	 */
+	private final boolean computeTotalRowCount;
 
 	@SuppressWarnings("unused")
 	private final ExtensibleMetaDataMapping extensibleMetadataMapping;
@@ -46,6 +50,8 @@ public class IRODSGenQueryBuilder {
 		sb.append(distinct);
 		sb.append("\n\t  upperCase? ");
 		sb.append(upperCase);
+		sb.append("\n\t computeTotalRowCount? ");
+		sb.append(computeTotalRowCount);
 		sb.append("IRODSGenQueryBuilder");
 		sb.append("\n\t  selects:");
 		sb.append(selectFields);
@@ -78,8 +84,38 @@ public class IRODSGenQueryBuilder {
 		this.extensibleMetadataMapping = extensibleMetadataMapping;
 		this.distinct = distinct;
 		this.upperCase = upperCase;
+		this.computeTotalRowCount = false;
 
 	}
+	
+	/**
+	 * Constructor takes an optional <code>ExtensibleMetadataMapping</code> if
+	 * extensible metadata is to be used in the query processing.
+	 * <p/>
+	 * This version allows the specification of case insensitive queries
+	 * 
+	 * @param distinct
+	 *            <code>boolean</code> that indicates whether the select is
+	 *            distinct
+	 * @param upperCase
+	 *            <code>boolean</code> which indicates that upper case should be
+	 *            used in the where (case-insensitive queries)
+	 *  @param computeTotalRowCount <code>boolean</code> with a value of <code>true</code> indicating that a total
+	 *  row count should be computed by iRODS from this query.  This may introduce overhead in the ICAT database processing on the iRODS server
+	 * @param extensibleMetadataMapping
+	 *            {@link ExtensibleMetadataMapping} that may be used in queries.
+	 *            This can be <code>null</code> if not required
+	 */
+	public IRODSGenQueryBuilder(final boolean distinct,
+			final boolean upperCase, final boolean computeTotalRowCount,
+			final ExtensibleMetaDataMapping extensibleMetadataMapping) {
+		this.extensibleMetadataMapping = extensibleMetadataMapping;
+		this.distinct = distinct;
+		this.upperCase = upperCase;
+		this.computeTotalRowCount = computeTotalRowCount;
+
+	}
+
 
 	/**
 	 * Constructor takes an optional <code>ExtensibleMetadataMapping</code> if
@@ -97,6 +133,7 @@ public class IRODSGenQueryBuilder {
 		this.extensibleMetadataMapping = extensibleMetadataMapping;
 		this.distinct = distinct;
 		this.upperCase = false;
+		this.computeTotalRowCount = false;
 
 	}
 
@@ -378,7 +415,7 @@ public class IRODSGenQueryBuilder {
 		}
 		IRODSGenQueryBuilderQueryData queryData = IRODSGenQueryBuilderQueryData
 				.instance(selectFields, conditions, orderByFields, distinct,
-						upperCase);
+						upperCase, this.computeTotalRowCount);
 
 		if (!queryData.isQueryValid()) {
 			throw new GenQueryBuilderException(
@@ -396,6 +433,13 @@ public class IRODSGenQueryBuilder {
 	 */
 	public boolean isUpperCase() {
 		return upperCase;
+	}
+
+	/**
+	 * @return the computeTotalRowCount
+	 */
+	public boolean isComputeTotalRowCount() {
+		return computeTotalRowCount;
 	}
 
 }

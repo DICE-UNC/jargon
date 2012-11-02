@@ -23,6 +23,7 @@ public class GenQueryInp extends AbstractIRODSPackingInstruction implements
 	private final int continueIndex;
 	private final int partialStartIndex;
 	private final int maxRowCount;
+	
 	public static final String PI_TAG = "GenQueryInp_PI";
 	public static final String MAX_ROWS = "maxRows";
 	public static final String CONTINUE_INX = "continueInx";
@@ -38,6 +39,7 @@ public class GenQueryInp extends AbstractIRODSPackingInstruction implements
 	public static final int ORDER_BY = 1024;// 0x400;
 	public static final int ORDER_BY_DESC = 2048;// 0x800;
 	public static final int UPPER_CASE_WHERE = 512; // 0x200;
+	public static final int RETURN_TOTAL_ROW_COUNT = 32; // 0x20
 
 	public static final int API_NBR = 702;
 
@@ -201,6 +203,10 @@ public class GenQueryInp extends AbstractIRODSPackingInstruction implements
 
 		if (this.getTranslatedIRODSQuery().isUpperCase()) {
 			optionVal += UPPER_CASE_WHERE;
+		}
+		
+		if (this.getTranslatedIRODSQuery().isComputeTotalRowCount()) {
+			optionVal += RETURN_TOTAL_ROW_COUNT;
 		}
 
 		message.addTag(new Tag(IRODSConstants.options, optionVal));
