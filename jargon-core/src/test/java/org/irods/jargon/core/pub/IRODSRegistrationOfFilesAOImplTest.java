@@ -597,6 +597,8 @@ public class IRODSRegistrationOfFilesAOImplTest {
 	public final void testUnregisterPhysicalCollectionRecursively()
 			throws Exception {
 		String rootCollection = "testUnregisterPhysicalCollectionRecursively";
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
 		String localCollectionAbsolutePath = scratchFileUtils
 				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH
 						+ '/' + rootCollection);
@@ -605,14 +607,17 @@ public class IRODSRegistrationOfFilesAOImplTest {
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH);
 
+		
+		IRODSFile targetIrodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount).instanceIRODSFile(targetIrodsCollection);
+		targetIrodsFile.deleteWithForceOption();
+		
 		FileGenerator
 				.generateManyFilesAndCollectionsInParentCollectionByAbsolutePath(
 						localCollectionAbsolutePath,
 						"testPutCollectionWithTwoFiles", 4, 7, 1, "testFile",
 						".txt", 2, 2, 1, 2);
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		
 		IRODSRegistrationOfFilesAO ao = irodsFileSystem
 				.getIRODSAccessObjectFactory().getIRODSRegistrationOfFilesAO(
 						irodsAccount);
@@ -649,9 +654,15 @@ public class IRODSRegistrationOfFilesAOImplTest {
 				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH
 						+ '/' + rootCollection);
 
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH);
+		
+		IRODSFile targetIrodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount).instanceIRODSFile(targetIrodsCollection);
+		targetIrodsFile.deleteWithForceOption();
 
 		FileGenerator
 				.generateManyFilesAndCollectionsInParentCollectionByAbsolutePath(
@@ -659,8 +670,7 @@ public class IRODSRegistrationOfFilesAOImplTest {
 						"testPutCollectionWithTwoFiles", 1, 1, 1, "testFile",
 						".txt", 2, 2, 1, 2);
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+	
 		IRODSRegistrationOfFilesAO ao = irodsFileSystem
 				.getIRODSAccessObjectFactory().getIRODSRegistrationOfFilesAO(
 						irodsAccount);

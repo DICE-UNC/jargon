@@ -23,6 +23,7 @@ import org.irods.jargon.core.packinstr.DataObjInp;
 import org.irods.jargon.core.pub.IRODSFileSystemAO;
 import org.irods.jargon.core.pub.domain.ObjStat;
 import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry.ObjectType;
+import org.irods.jargon.core.utils.MiscIRODSUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -75,6 +76,8 @@ public final class IRODSFileImpl extends File implements IRODSFile {
 		if (pathName == null || pathName.isEmpty()) {
 			throw new JargonException("path name is null or empty");
 		}
+		
+		MiscIRODSUtils.checkPathSizeForMax(pathName);
 	}
 
 	protected IRODSFileImpl(final String parent, final String child,
@@ -98,6 +101,8 @@ public final class IRODSFileImpl extends File implements IRODSFile {
 			throw new IllegalArgumentException(
 					"both parent and child names are empty");
 		}
+		
+		MiscIRODSUtils.checkPathSizeForMax(parent, child);
 
 		this.irodsFileSystemAO = irodsFileSystemAO;
 		setDirectory(parent);

@@ -127,11 +127,17 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	public DataObject findByCollectionNameAndDataName(
 			final String collectionPath, final String dataName)
 			throws FileNotFoundException, JargonException {
+		
+		if (collectionPath == null) {
+			throw new IllegalArgumentException("null collectionPath");
+		}
 
 		if (dataName == null || dataName.isEmpty()) {
 			throw new IllegalArgumentException("dataName is null or empty");
 		}
 
+		MiscIRODSUtils.checkPathSizeForMax(collectionPath, dataName);
+		
 		log.info("find by collection path: {}", collectionPath);
 		log.info(" data obj name: {}", dataName);
 
@@ -159,6 +165,8 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		if (absolutePath == null || absolutePath.isEmpty()) {
 			throw new IllegalArgumentException(NULL_OR_EMPTY_ABSOLUTE_PATH);
 		}
+		
+		MiscIRODSUtils.checkPathSizeForMax(absolutePath);
 
 		log.info("findByAbsolutePath() with path:{}", absolutePath);
 		CollectionAndPath collectionAndPath = MiscIRODSUtils
@@ -1464,6 +1472,8 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			throw new IllegalArgumentException(
 					"null or empty dataObjectFileName");
 		}
+		
+		MiscIRODSUtils.checkPathSizeForMax(dataObjectCollectionAbsPath, dataObjectFileName);
 
 		if (caseInsensitive) {
 			if (!this.getIRODSServerProperties()
@@ -1597,6 +1607,9 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		if (avuData == null) {
 			throw new IllegalArgumentException("null AVU data");
 		}
+		
+		MiscIRODSUtils.checkPathSizeForMax(absolutePath);
+
 
 		log.info("adding avu metadata to data object: {}", avuData);
 		log.info("absolute path: {}", absolutePath);
@@ -1666,7 +1679,9 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		if (avuData == null) {
 			throw new IllegalArgumentException("null AVU data");
 		}
-
+		
+		MiscIRODSUtils.checkPathSizeForMax(irodsCollectionAbsolutePath, fileName);
+		
 		log.info("adding avu metadata to data object: {}", avuData);
 		log.info("parent collection absolute path: {}",
 				irodsCollectionAbsolutePath);
@@ -1706,6 +1721,8 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		if (avuData == null) {
 			throw new IllegalArgumentException("null AVU data");
 		}
+		
+		MiscIRODSUtils.checkPathSizeForMax(absolutePath);
 
 		log.info("deleting avu metadata on dataObject: {}", avuData);
 		log.info("absolute path: {}", absolutePath);
@@ -1959,6 +1976,8 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		if (targetResource == null || targetResource.isEmpty()) {
 			throw new IllegalArgumentException("null or empty targetResource");
 		}
+		
+		MiscIRODSUtils.checkPathSizeForMax(irodsFileAbsolutePath);
 
 		log.info("replicate operation, irodsFileAbsolutePath: {}",
 				irodsFileAbsolutePath);
@@ -2099,6 +2118,8 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		if (irodsResourceGroupName == null || irodsResourceGroupName.isEmpty()) {
 			throw new IllegalArgumentException("null or empty targetResource");
 		}
+		
+		MiscIRODSUtils.checkPathSizeForMax(irodsFileAbsolutePath);
 
 		log.info("replicate operation, irodsFileAbsolutePath: {}",
 				irodsFileAbsolutePath);
@@ -2128,6 +2149,16 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	public List<Resource> getResourcesForDataObject(
 			final String dataObjectPath, final String dataObjectName)
 			throws JargonException {
+		
+		if (dataObjectPath == null || dataObjectPath.isEmpty()) {
+			throw new IllegalArgumentException("null or empty dataObjectPath");
+		}
+		
+		if (dataObjectName == null || dataObjectName.isEmpty()) {
+			throw new IllegalArgumentException("null or empty dataObjectName");
+		}
+		
+		MiscIRODSUtils.checkPathSizeForMax(dataObjectPath, dataObjectName);
 
 		log.info("getting resources for path:{}", dataObjectPath);
 
@@ -2161,6 +2192,16 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	public List<MetaDataAndDomainData> findMetadataValuesForDataObject(
 			final String dataObjectCollectionAbsPath,
 			final String dataObjectFileName) throws JargonException {
+		
+		if (dataObjectCollectionAbsPath == null || dataObjectCollectionAbsPath.isEmpty()) {
+			throw new IllegalArgumentException("null or empty dataObjectCollectionAbsPath");
+		}
+		
+		if (dataObjectFileName == null || dataObjectFileName.isEmpty()) {
+			throw new IllegalArgumentException("null or empty dataObjectFileName");
+		}
+		
+		MiscIRODSUtils.checkPathSizeForMax(dataObjectCollectionAbsPath, dataObjectFileName);
 
 		// contract checks in delegated method
 
@@ -2192,6 +2233,8 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			throw new IllegalArgumentException(
 					"null or empty dataObjectAbsolutePath");
 		}
+		
+		MiscIRODSUtils.checkPathSizeForMax(dataObjectAbsolutePath);
 
 		log.info("findMetadataValuesForDataObject: {}", dataObjectAbsolutePath);
 
@@ -2281,7 +2324,21 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	public void setAccessPermissionRead(final String zone,
 			final String absolutePath, final String userName)
 			throws JargonException {
-		// pi tests parameters
+	
+		if (zone == null) {
+			throw new IllegalArgumentException("null zone");
+		}
+		
+		if (absolutePath == null || absolutePath.isEmpty()) {
+			throw new IllegalArgumentException("null or empty absolutePath");
+		}
+		
+		MiscIRODSUtils.checkPathSizeForMax(absolutePath);
+		
+		if (userName == null || userName.isEmpty()) {
+			throw new IllegalArgumentException("null or empty userName");
+		}
+		
 		/*
 		 * Handle soft links by munging the path
 		 */
@@ -2311,7 +2368,21 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	public void setAccessPermissionReadInAdminMode(final String zone,
 			final String absolutePath, final String userName)
 			throws JargonException {
-		// pi tests parameters
+		
+		if (zone == null) {
+			throw new IllegalArgumentException("null zone");
+		}
+		
+		if (absolutePath == null || absolutePath.isEmpty()) {
+			throw new IllegalArgumentException("null or empty absolutePath");
+		}
+		
+		MiscIRODSUtils.checkPathSizeForMax(absolutePath);
+		
+		if (userName == null || userName.isEmpty()) {
+			throw new IllegalArgumentException("null or empty userName");
+		}
+		
 		/*
 		 * Handle soft links by munging the path
 		 */
@@ -2342,7 +2413,21 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	public void setAccessPermissionWrite(final String zone,
 			final String absolutePath, final String userName)
 			throws JargonException {
-		// pi tests parameters
+	
+		if (zone == null) {
+			throw new IllegalArgumentException("null zone");
+		}
+		
+		if (absolutePath == null || absolutePath.isEmpty()) {
+			throw new IllegalArgumentException("null or empty absolutePath");
+		}
+		
+		MiscIRODSUtils.checkPathSizeForMax(absolutePath);
+		
+		if (userName == null || userName.isEmpty()) {
+			throw new IllegalArgumentException("null or empty userName");
+		}
+		
 		/*
 		 * Handle soft links by munging the path
 		 */
@@ -2372,7 +2457,21 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	public void setAccessPermissionWriteInAdminMode(final String zone,
 			final String absolutePath, final String userName)
 			throws JargonException {
-		// pi tests parameters
+		
+		if (zone == null) {
+			throw new IllegalArgumentException("null zone");
+		}
+		
+		if (absolutePath == null || absolutePath.isEmpty()) {
+			throw new IllegalArgumentException("null or empty absolutePath");
+		}
+		
+		MiscIRODSUtils.checkPathSizeForMax(absolutePath);
+		
+		if (userName == null || userName.isEmpty()) {
+			throw new IllegalArgumentException("null or empty userName");
+		}
+		
 		/*
 		 * Handle soft links by munging the path
 		 */
@@ -2403,7 +2502,21 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	public void setAccessPermissionOwn(final String zone,
 			final String absolutePath, final String userName)
 			throws JargonException {
-		// pi tests parameters
+		
+		if (zone == null) {
+			throw new IllegalArgumentException("null zone");
+		}
+		
+		if (absolutePath == null || absolutePath.isEmpty()) {
+			throw new IllegalArgumentException("null or empty absolutePath");
+		}
+		
+		MiscIRODSUtils.checkPathSizeForMax(absolutePath);
+		
+		if (userName == null || userName.isEmpty()) {
+			throw new IllegalArgumentException("null or empty userName");
+		}
+		
 		/*
 		 * Handle soft links by munging the path
 		 */
@@ -2433,7 +2546,21 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	public void setAccessPermissionOwnInAdminMode(final String zone,
 			final String absolutePath, final String userName)
 			throws JargonException {
-		// pi tests parameters
+		
+		if (zone == null) {
+			throw new IllegalArgumentException("null zone");
+		}
+		
+		if (absolutePath == null || absolutePath.isEmpty()) {
+			throw new IllegalArgumentException("null or empty absolutePath");
+		}
+		
+		if (userName == null || userName.isEmpty()) {
+			throw new IllegalArgumentException("null or empty userName");
+		}
+		
+		MiscIRODSUtils.checkPathSizeForMax(absolutePath);
+	
 		/*
 		 * Handle soft links by munging the path
 		 */
@@ -2465,7 +2592,21 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	public void removeAccessPermissionsForUser(final String zone,
 			final String absolutePath, final String userName)
 			throws JargonException {
-		// pi tests parameters
+		
+		if (zone == null) {
+			throw new IllegalArgumentException("null zone");
+		}
+		
+		if (absolutePath == null || absolutePath.isEmpty()) {
+			throw new IllegalArgumentException("null or empty absolutePath");
+		}
+		
+		if (userName == null || userName.isEmpty()) {
+			throw new IllegalArgumentException("null or empty userName");
+		}
+		
+		MiscIRODSUtils.checkPathSizeForMax(absolutePath);
+	
 		/*
 		 * Handle soft links by munging the path
 		 */
@@ -2495,7 +2636,21 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	public void removeAccessPermissionsForUserInAdminMode(final String zone,
 			final String absolutePath, final String userName)
 			throws JargonException {
-		// pi tests parameters
+		
+		if (zone == null) {
+			throw new IllegalArgumentException("null zone");
+		}
+		
+		if (absolutePath == null || absolutePath.isEmpty()) {
+			throw new IllegalArgumentException("null or empty absolutePath");
+		}
+		
+		if (userName == null || userName.isEmpty()) {
+			throw new IllegalArgumentException("null or empty userName");
+		}
+		
+		MiscIRODSUtils.checkPathSizeForMax(absolutePath);
+	
 		/*
 		 * Handle soft links by munging the path
 		 */
@@ -2538,6 +2693,8 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		if (zone == null) {
 			throw new IllegalArgumentException("null zone");
 		}
+		
+		MiscIRODSUtils.checkPathSizeForMax(absolutePath);
 
 		log.info("getPermissionForDataObject for absPath:{}", absolutePath);
 		log.info("userName:{}", userName);
@@ -2578,6 +2735,8 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		if (dataName == null || dataName.isEmpty()) {
 			throw new IllegalArgumentException("null or empty dataName");
 		}
+
+		MiscIRODSUtils.checkPathSizeForMax(irodsCollectionAbsolutePath, dataName);
 
 		log.info("listPermissionsForDataObject path: {}",
 				irodsCollectionAbsolutePath);
@@ -2625,6 +2784,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	 */
 	private UserFilePermission buildUserFilePermissionFromResultRow(
 			final IRODSQueryResultRow row) throws JargonException {
+		
 		UserFilePermission userFilePermission;
 		userFilePermission = new UserFilePermission(row.getColumn(0),
 				row.getColumn(1),
@@ -2651,6 +2811,8 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			throw new IllegalArgumentException(
 					"null or empty irodsDataObjectAbsolutePath");
 		}
+		
+		MiscIRODSUtils.checkPathSizeForMax(irodsDataObjectAbsolutePath);
 
 		log.info("listPermissionsForDataObject: {}",
 				irodsDataObjectAbsolutePath);
@@ -2680,6 +2842,8 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		if (avuData == null) {
 			throw new IllegalArgumentException("null avuData");
 		}
+		
+		MiscIRODSUtils.checkPathSizeForMax(absolutePath);
 
 		log.info("setting avu metadata value for dataObject");
 		log.info("with avu metadata:{}", avuData);
@@ -2745,6 +2909,8 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		if (newAvuData == null) {
 			throw new IllegalArgumentException("null newAvuData");
 		}
+		
+		MiscIRODSUtils.checkPathSizeForMax(dataObjectAbsolutePath);
 
 		log.info("overwrite avu metadata for data object: {}", currentAvuData);
 		log.info("with new avu metadata:{}", newAvuData);
@@ -2806,6 +2972,8 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		if (newAvuData == null) {
 			throw new IllegalArgumentException("null newAvuData");
 		}
+		
+		MiscIRODSUtils.checkPathSizeForMax(irodsCollectionAbsolutePath);
 
 		log.info("overwrite avu metadata for collection: {}", currentAvuData);
 		log.info("with new avu metadata:{}", newAvuData);
@@ -2846,6 +3014,8 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		if (userName == null || userName.isEmpty()) {
 			throw new IllegalArgumentException("null or empty userName");
 		}
+		
+		MiscIRODSUtils.checkPathSizeForMax(irodsCollectionAbsolutePath);
 
 		log.info("listPermissionsForDataObjectForUserName path: {}",
 				irodsCollectionAbsolutePath);
@@ -2907,6 +3077,8 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			throw new IllegalArgumentException(
 					"null or empty irodsAbsolutePath");
 		}
+		
+		MiscIRODSUtils.checkPathSizeForMax(irodsAbsolutePath);
 
 		log.info("listFileResources() for path:{}", irodsAbsolutePath);
 
@@ -2997,6 +3169,8 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			throw new IllegalArgumentException("null or empty userName");
 		}
 
+		MiscIRODSUtils.checkPathSizeForMax(irodsAbsolutePath);
+
 		log.info("listPermissionsForDataObjectForUserName path: {}",
 				irodsAbsolutePath);
 		log.info("userName:{}", userName);
@@ -3079,6 +3253,8 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			throw new IllegalArgumentException("null or empty userName");
 		}
 
+		MiscIRODSUtils.checkPathSizeForMax(irodsAbsolutePath);
+		
 		log.info("irodsAbsolutePath:{}", irodsAbsolutePath);
 		log.info("userName:{}", userName);
 
