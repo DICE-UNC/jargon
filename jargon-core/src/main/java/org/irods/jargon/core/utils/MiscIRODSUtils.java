@@ -13,8 +13,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.irods.jargon.core.connection.ConnectionConstants;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.exception.PathTooLongException;
 import org.irods.jargon.core.pub.domain.ObjStat;
 import org.irods.jargon.core.pub.domain.ObjStat.SpecColType;
 
@@ -621,6 +623,43 @@ public class MiscIRODSUtils {
 	 */
 	public static String padLeft(final String s, final int n) {
 		return String.format("%1$" + n + "s", s);
+	}
+	
+	/**
+	 * Checks the given path for a length violation
+	 * @param path <code>String</code> with an iRODS path to check
+	 * @throws PathTooLongException thrown if the path is too long
+	 */
+	public static void checkPathSizeForMax(final String path) throws PathTooLongException {
+		if (path == null) {
+			throw new IllegalArgumentException("null path");
+		}
+		
+		if (path.length() > ConnectionConstants.MAX_PATH_SIZE) {
+			throw new PathTooLongException("Path is too long");
+		}
+		
+	}
+	
+	/**
+	 * Checks the given parent and child path for a length violation
+	 * @param parentPath <code>String</code> with a parent path
+	 * @param childPath <code>String</code> with a child path
+	 * @throws PathTooLongException if the combined path is too long
+	 */
+	public static void checkPathSizeForMax(final String parentPath, final String childPath) throws PathTooLongException {
+		if (parentPath == null) {
+			throw new IllegalArgumentException("null parentPath");
+		}
+		
+		if (childPath == null) {
+			throw new IllegalArgumentException("null childPath");
+		}
+		
+		if (childPath.length()+ childPath.length() > ConnectionConstants.MAX_PATH_SIZE) {
+			throw new PathTooLongException("Path is too long");
+		}
+		
 	}
 
 }

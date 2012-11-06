@@ -48,7 +48,26 @@ Note that the following bug and feature requests are logged in GForge with relat
 * [#1044] Jargon allows the creating of folders that exceed the USER_PATH_EXCEEDS_MAX and cannot delete them
 ** work in progress
 
+*[#1044] Jargon allows the creating of folders that exceed the USER_PATH_EXCEEDS_MAX and cannot delete them
+**Added a new PathTooLongException and methods to check path lengths in MiscIRODSUtils, used these checks in the various path methods, especially
+the IRODSFile and DataObject and Collection access objects
+
 ==Features==
+
+
+ *[#132] GSS and Kerberos Support in Jargon-core
+ ** merge in plug-able authentication refactoring
+ 
+ *[#870] jargon support for PAM
+
+ ** Support for PAM authentication (per Chris Smith's updates to iRODS) as a pluggable auth module in Jargon
+ ** [#992] don't let public irods account trigger auth other then standard
+ 
+ *[#974] anonymous link support
+ ** added isUserHasPermission methods for collections and data objects that indicate that a user has at least read permission on a file or data object
+ ** added AnonymousAccessService in data utils to help manage permissions for the anonymous user
+ 
+ *[#1011] add a dedicated doAuthentication method ot irodsAccessObjectFactory
 
 * [#1046] Add total row count to gen query out
 ** When creating gen queries from the IRODSGenQueryBuilder, one may now specify that total row counts (reflecting the total results in the database) be requested from iRODS.  This row
