@@ -18,12 +18,6 @@ public final class ConnectionConstants {
 	public static final int TRANSFER_THREAD_SIZE = 6000000;
 
 	/**
-	 * Default buffer size used for communicating with the remote filesystem and
-	 * the various copyTo and copyFrom transfers.
-	 */
-	public static final int DEFAULT_BUFFER_SIZE = 65535;
-
-	/**
 	 * value used to detect and respond to delete status messages
 	 */
 	public static final int SYS_CLI_TO_SVR_COLL_STAT_REPLY = 99999997;
@@ -62,13 +56,7 @@ public final class ConnectionConstants {
 
 	/**
 	 * Size of the socket send buffer
-	 */
-
-	// FIXME: temp
-
-	// public static int OUTPUT_BUFFER_LENGTH = GeneralFileSystem
-	// .getWriteBufferSize();
-
+	 */	
 	public static int OUTPUT_BUFFER_LENGTH = 32768;
 
 	/**
@@ -86,6 +74,11 @@ public final class ConnectionConstants {
 	public static final int CHALLENGE_LENGTH = 64;
 
 	public static final long MAX_SZ_FOR_SINGLE_BUF = (32 * 1024 * 1024);
+	
+	/**
+	 * Maximum size of an iRODS absolute path
+	 */
+	public static final int MAX_PATH_SIZE = 1024;
 
 	private ConnectionConstants() {
 	}

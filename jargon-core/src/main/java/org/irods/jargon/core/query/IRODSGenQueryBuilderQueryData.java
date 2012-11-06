@@ -19,7 +19,40 @@ class IRODSGenQueryBuilderQueryData {
 	private final List<GenQueryOrderByField> orderByFields;
 	private final boolean distinct;
 	private final boolean upperCase;
+	/**
+	 * Indicates whether to ask iRODS to provide a total row count in the query results
+	 */
+	private final boolean computeTotalRowCount;
 
+	/**
+	 * Instance to create an immutable representation of the query
+	 * 
+	 * @param selectFields
+	 *            {@link GenQuerySelectField} that describes a select fields for
+	 *            the query, of which there must be at least one
+	 * @param conditions
+	 *            {@link GenQueryBuilderCondition} that describes optional
+	 *            conditions for the query, may be set to <code>null</code>
+	 * @param orderByFields
+	 *            {@link GenQueryOrderByField} that describes optional order by
+	 *            values for the query, may be set to <code>null</code>
+	 * @param distinct
+	 *            <code>boolean</code> that indicates whether the query is a
+	 *            select distinct
+	 * @param upperCase
+	 *            <code>boolean</code> indicates whether the query uses
+	 *            case-insensitive conditions
+	 * @return immutable instance of <code>IRODSGenBuilderQuery</code>
+	 */
+	public static IRODSGenQueryBuilderQueryData instance(
+			final List<GenQuerySelectField> selectFields,
+			final List<GenQueryBuilderCondition> conditions,
+			final List<GenQueryOrderByField> orderByFields,
+			final boolean distinct, final boolean upperCase, final boolean computeTotalRowCount) {
+		return new IRODSGenQueryBuilderQueryData(selectFields, conditions,
+				orderByFields, distinct, upperCase, computeTotalRowCount);
+	}
+	
 	/**
 	 * Instance to create an immutable representation of the query
 	 * 
@@ -46,7 +79,7 @@ class IRODSGenQueryBuilderQueryData {
 			final List<GenQueryOrderByField> orderByFields,
 			final boolean distinct, final boolean upperCase) {
 		return new IRODSGenQueryBuilderQueryData(selectFields, conditions,
-				orderByFields, distinct, upperCase);
+				orderByFields, distinct, upperCase, false);
 	}
 
 	/**
@@ -67,12 +100,14 @@ class IRODSGenQueryBuilderQueryData {
 	 * @param upperCase
 	 *            <code>boolean</code> indicates whether the query uses
 	 *            case-insensitive conditions
+	 *  @param computeTotalRowCount <code>boolean</code> that indicates that the total row count should be returned, this might carry a performance penalty.  If this is <code>true</code> the 
+	 *  eventual result set will contain the iRODS response from the query with the total rows to be returned
 	 */
 	private IRODSGenQueryBuilderQueryData(
 			final List<GenQuerySelectField> selectFields,
 			final List<GenQueryBuilderCondition> conditions,
 			final List<GenQueryOrderByField> orderByFields,
-			final boolean distinct, final boolean upperCase) {
+			final boolean distinct, final boolean upperCase, final boolean computeTotalRowCount) {
 
 		if (selectFields == null || selectFields.isEmpty()) {
 			throw new IllegalArgumentException("null or empty selectFields");
@@ -96,6 +131,7 @@ class IRODSGenQueryBuilderQueryData {
 
 		this.distinct = distinct;
 		this.upperCase = upperCase;
+		this.computeTotalRowCount = computeTotalRowCount;
 
 	}
 
@@ -150,6 +186,10 @@ class IRODSGenQueryBuilderQueryData {
 	 */
 	public boolean isUpperCase() {
 		return upperCase;
+	}
+
+	public boolean isComputeTotalRowCount() {
+		return computeTotalRowCount;
 	}
 
 }

@@ -121,7 +121,7 @@ public class IRODSGenQueryFromBuilder extends AbstractIRODSGenQuery {
 					irodsGenQueryBuilderData.getSelectFields(), conditions,
 					irodsGenQueryBuilderData.getOrderByFields(), this,
 					irodsGenQueryBuilderData.isDistinct(),
-					irodsGenQueryBuilderData.isUpperCase());
+					irodsGenQueryBuilderData.isUpperCase(), irodsGenQueryBuilderData.isComputeTotalRowCount());
 
 		} catch (JargonException e) {
 			throw new GenQueryBuilderException(

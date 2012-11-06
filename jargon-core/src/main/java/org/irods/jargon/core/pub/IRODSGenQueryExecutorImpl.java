@@ -299,9 +299,12 @@ public final class IRODSGenQueryExecutorImpl extends IRODSGenericAO implements
 
 			result = QueryResultProcessingUtils.translateResponseIntoResultSet(
 					response, columnNames, continuation, partialStartIndex);
+			
+			int totalRecords = response.getTag("totalRowCount").getIntValue();
+			log.info("total records:{}", totalRecords);
 
 			resultSet = IRODSQueryResultSet.instance(translatedIRODSQuery,
-					result, continuation);
+					result, continuation, totalRecords);
 
 			if (resultSet.isHasMoreRecords()
 					&& queryCloseBehavior == QueryCloseBehavior.AUTO_CLOSE) {
@@ -314,7 +317,7 @@ public final class IRODSGenQueryExecutorImpl extends IRODSGenericAO implements
 			log.info("response from IRODS call indicates no rows found");
 			result = new ArrayList<IRODSQueryResultRow>();
 			resultSet = IRODSQueryResultSet.instance(translatedIRODSQuery,
-					result, 0);
+					result, 0, 0);
 			return resultSet;
 		} finally {
 			if (resultSet != null // && resultSet.isHasMoreRecords()
