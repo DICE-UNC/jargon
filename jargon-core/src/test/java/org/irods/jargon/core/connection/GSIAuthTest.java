@@ -42,15 +42,13 @@ public class GSIAuthTest {
 				.getProperty(TestingPropertiesHelper.IRODS_GSI_HOST_KEY);
 		int gsiPort = testingPropertiesHelper.getPropertyValueAsInt(
 				testingProperties, TestingPropertiesHelper.IRODS_GSI_PORT_KEY);
-		String gsiZone =  testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_GSI_ZONE_KEY);
 		String userDN = testingProperties
 				.getProperty(TestingPropertiesHelper.IRODS_GSI_DN_KEY);
 		GSSCredential gssCredential = Mockito.mock(GSSCredential.class);
 		Mockito.when(gssCredential.getRemainingLifetime()).thenReturn(100);
 
 		GSIIRODSAccount irodsAccount = GSIIRODSAccount.instance(gsiHost,
-				gsiPort, gsiZone, userDN, gssCredential, "", "");
+				gsiPort, userDN, gssCredential);
 
 		AuthResponse authResponse = irodsFileSystem
 				.getIRODSAccessObjectFactory().authenticateIRODSAccount(

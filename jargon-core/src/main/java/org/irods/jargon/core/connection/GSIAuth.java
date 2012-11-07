@@ -282,41 +282,4 @@ class GSIAuth extends AuthMechanism {
 		return sendGSIAuth(gsiIRODSAccount, irodsCommands);
 
 	}
-
-	/*
-	 * private GSIIRODSAccount lookupUserIfGSI(final GSIIRODSAccount
-	 * irodsAccount) {
-	 * 
-	 * log.info("lookupUserIfGSI()");
-	 * 
-	 * 
-	 * 
-	 * 
-	 * if (irodsAccount.getUserName() == null ||
-	 * irodsAccount.getUserName().equals("")) {
-	 * log.info("user logged in with GSI credential"); MetaDataRecordList[] rl =
-	 * null; try { rl = query( new MetaDataCondition[] {
-	 * buildMetaDataConditionForGSIUser(irodsAccount) }, new MetaDataSelect[] {
-	 * MetaDataSet .newSelection(UserMetaData.USER_NAME), MetaDataSet
-	 * .newSelection(UserMetaData.USER_ZONE) }, 10); } catch (Exception e) {
-	 * IOException x = new IOException(); x.initCause(e);
-	 * log.warn("IO Exception logged and ignored", x); }
-	 * 
-	 * if (rl != null && rl.length > 0) { if (log.isDebugEnabled()) { try {
-	 * log.debug("setting irods account for GSI user:" +
-	 * irodsAccount.getGSSCredential().getName().toString()); } catch (Exception
-	 * e) { // ignore } } irodsAccount.setUserName(rl[0].getStringValue(0));
-	 * irodsAccount.setZone(rl[0].getStringValue(1));
-	 * irodsAccount.setHomeDirectory("/" + irodsAccount.getZone() + "/home/" +
-	 * irodsAccount.getUserName());
-	 * commands.getIrodsAccount().setUserName(rl[0].getStringValue(0));
-	 * commands.getIrodsAccount().setZone(rl[0].getStringValue(1));
-	 * commands.getIrodsAccount().setHomeDirectory("/" + irodsAccount.getZone()
-	 * + "/home/" + irodsAccount.getUserName()); } }
-	 * 
-	 * if (log.isDebugEnabled()) { log.debug("account after GSI checks:" +
-	 * irodsAccount.toString()); }
-	 * 
-	 * return irodsAccount; }
-	 */
 }
