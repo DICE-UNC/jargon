@@ -1,9 +1,7 @@
 package org.irods.jargon.core.connection;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InterruptedIOException;
-import java.io.OutputStream;
 import java.nio.channels.ClosedChannelException;
 
 import org.globus.common.CoGProperties;
@@ -11,7 +9,6 @@ import org.globus.gsi.gssapi.net.impl.GSIGssInputStream;
 import org.globus.gsi.gssapi.net.impl.GSIGssOutputStream;
 import org.gridforum.jgss.ExtendedGSSManager;
 import org.ietf.jgss.GSSContext;
-import org.ietf.jgss.GSSCredential;
 import org.ietf.jgss.GSSException;
 import org.irods.jargon.core.connection.auth.AuthResponse;
 import org.irods.jargon.core.exception.AuthenticationException;
@@ -31,12 +28,31 @@ class GSIAuth extends AuthMechanism {
 
 	public static final Logger log = LoggerFactory.getLogger(GSIAuth.class);
 
-	void sendGSIPassword(final IRODSAccount irodsAccount,
+	/**
+	 * Sends the GSI auth request to iRODS and obtains the server DN. The server
+	 * DN is augmented in the irodsAccount
+	 * 
+	 * @param irodsAccount
+	 *            {@link GSIIRODSAccount} that will be used to log in to iRODS.
+	 *            Note that this account information will be augmented during
+	 *            the authentication process
+	 * @param irodsCommands
+	 * @throws JargonException
+	 */
+	void sendGSIPassword(final GSIIRODSAccount irodsAccount,
 			final IRODSCommands irodsCommands) throws JargonException {
+
+		log.info("sendGSIPassword()");
 
 		if (irodsAccount == null) {
 			throw new JargonException("irods account is null");
 		}
+
+		if (irodsCommands == null) {
+			throw new IllegalArgumentException("null irodsCommands");
+		}
+
+		log.debug("sending gsi auth request after startup...");
 
 		try {
 			irodsCommands.getIrodsConnection().send(
@@ -58,21 +74,17 @@ class GSIAuth extends AuthMechanism {
 			throw new JargonException(e);
 		}
 
-		/*
-		 * Create and send the response note that this is the one use of the get
-		 * methods for the socket and streams of the connection in Jargon. This
-		 * is not optimal, and will be refactored at a later time
-		 */
-		/*
-		 * String serverDn = irodsCommands.readMessage(false).getTag(
-		 * AuthResponseInp_PI.SERVER_DN).getStringValue(); new
-		 * GSIAuth(irodsAccount, irodsCommands. getConnection(),
-		 * irodsConnection.getIrodsOutputStream(),
-		 * irodsConnection.getIrodsInputStream());
-		 */
+		log.debug("reading iRODS response to gsi auth request, extracting server DN...");
+
+		String serverDn = irodsCommands.readMessage(false).getTag("ServerDN")
+				.getStringValue();
+
+		log.debug("serverDN:{}", serverDn);
+		irodsAccount.setServerDistinguishedName(serverDn);
 
 	}
 
+	@SuppressWarnings("resource")
 	/**
 	 * GSI authorization method. Makes a connection to the iRODS using the GSI
 	 * authorization scheme.
@@ -88,8 +100,12 @@ class GSIAuth extends AuthMechanism {
 	 *             If the authentication to the iRODS fails.
 	 */
 	AuthResponse sendGSIAuth(final GSIIRODSAccount irodsAccount,
-			final OutputStream out, final InputStream in)
-			throws AuthenticationException, JargonException {
+			final IRODSCommands irodsCommands) throws AuthenticationException,
+			JargonException {
+
+		log.info("sendGSIAuth()");
+
+		IRODSAccount originalIrodsAccount = irodsAccount;
 
 		if (irodsAccount == null) {
 			throw new IllegalArgumentException("null irodsAccount");
@@ -101,13 +117,16 @@ class GSIAuth extends AuthMechanism {
 			throw new IllegalArgumentException("null gssCredential");
 		}
 
+		if (irodsCommands == null) {
+			throw new IllegalArgumentException("null irodsCommands");
+		}
+
+		sendGSIPassword(irodsAccount, irodsCommands);
+
 		CoGProperties cog = null;
 		String defaultCA = null;
-		GSSCredential credential = irodsAccount.getGSSCredential();
 
-		String userDN = getDN(irodsAccount);
-
-		// String caLocations = irodsAccount.getCertificateAuthority();
+		String caLocations = irodsAccount.getCertificateAuthority();
 
 		ExtendedGSSManager manager = (ExtendedGSSManager) ExtendedGSSManager
 				.getInstance();
@@ -116,24 +135,26 @@ class GSIAuth extends AuthMechanism {
 		GSIGssInputStream gssin = null;
 
 		try {
-			/*
-			 * credential = getCredential(irodsAccount);
-			 * 
-			 * if (caLocations != null) { // there is no other way to do this.
-			 * // so I'm overwriting the default then changing it back. cog =
-			 * CoGProperties.getDefault(); defaultCA = cog.getCaCertLocations();
-			 * cog.setCaCertLocations(caLocations); }
-			 */
+
+			if (caLocations != null) {
+				cog = CoGProperties.getDefault();
+				defaultCA = cog.getCaCertLocations();
+				cog.setCaCertLocations(caLocations);
+			}
+
 			GSSContext context = null;
 
-			context = manager.createContext(null, null, credential,
+			context = manager.createContext(null, null,
+					irodsAccount.getGSSCredential(),
 					GSSContext.DEFAULT_LIFETIME);
 
 			context.requestCredDeleg(false);
 			context.requestMutualAuth(true);
 
-			gssout = new GSIGssOutputStream(out, context);
-			gssin = new GSIGssInputStream(in, context);
+			gssout = new GSIGssOutputStream(irodsCommands.getIrodsConnection()
+					.getIrodsOutputStream(), context);
+			gssin = new GSIGssInputStream(irodsCommands.getIrodsConnection()
+					.getIrodsInputStream(), context);
 
 			byte[] inToken = new byte[0];
 			byte[] outToken = null;
@@ -151,7 +172,7 @@ class GSIAuth extends AuthMechanism {
 			}
 
 			AuthResponse response = new AuthResponse();
-			response.setAuthenticatingIRODSAccount(irodsAccount);
+			response.setAuthenticatingIRODSAccount(originalIrodsAccount);
 			response.setAuthenticatedIRODSAccount(irodsAccount);
 			return response;
 
@@ -178,19 +199,6 @@ class GSIAuth extends AuthMechanism {
 			exception.initCause(e);
 			throw exception;
 		} finally {
-
-			try {
-				gssin.close();
-			} catch (IOException e) {
-				// ignore
-			}
-
-			try {
-				gssout.close();
-			} catch (IOException e) {
-				// ignore
-			}
-
 			if (defaultCA != null) {
 				cog.setCaCertLocations(defaultCA);
 			}
@@ -271,10 +279,44 @@ class GSIAuth extends AuthMechanism {
 
 		log.info("all valid...send GSI auth to iRODS...");
 
-		return sendGSIAuth(gsiIRODSAccount, irodsCommands.getIrodsConnection()
-				.getIrodsOutputStream(), irodsCommands.getIrodsConnection()
-				.getIrodsInputStream());
+		return sendGSIAuth(gsiIRODSAccount, irodsCommands);
 
 	}
 
+	/*
+	 * private GSIIRODSAccount lookupUserIfGSI(final GSIIRODSAccount
+	 * irodsAccount) {
+	 * 
+	 * log.info("lookupUserIfGSI()");
+	 * 
+	 * 
+	 * 
+	 * 
+	 * if (irodsAccount.getUserName() == null ||
+	 * irodsAccount.getUserName().equals("")) {
+	 * log.info("user logged in with GSI credential"); MetaDataRecordList[] rl =
+	 * null; try { rl = query( new MetaDataCondition[] {
+	 * buildMetaDataConditionForGSIUser(irodsAccount) }, new MetaDataSelect[] {
+	 * MetaDataSet .newSelection(UserMetaData.USER_NAME), MetaDataSet
+	 * .newSelection(UserMetaData.USER_ZONE) }, 10); } catch (Exception e) {
+	 * IOException x = new IOException(); x.initCause(e);
+	 * log.warn("IO Exception logged and ignored", x); }
+	 * 
+	 * if (rl != null && rl.length > 0) { if (log.isDebugEnabled()) { try {
+	 * log.debug("setting irods account for GSI user:" +
+	 * irodsAccount.getGSSCredential().getName().toString()); } catch (Exception
+	 * e) { // ignore } } irodsAccount.setUserName(rl[0].getStringValue(0));
+	 * irodsAccount.setZone(rl[0].getStringValue(1));
+	 * irodsAccount.setHomeDirectory("/" + irodsAccount.getZone() + "/home/" +
+	 * irodsAccount.getUserName());
+	 * commands.getIrodsAccount().setUserName(rl[0].getStringValue(0));
+	 * commands.getIrodsAccount().setZone(rl[0].getStringValue(1));
+	 * commands.getIrodsAccount().setHomeDirectory("/" + irodsAccount.getZone()
+	 * + "/home/" + irodsAccount.getUserName()); } }
+	 * 
+	 * if (log.isDebugEnabled()) { log.debug("account after GSI checks:" +
+	 * irodsAccount.toString()); }
+	 * 
+	 * return irodsAccount; }
+	 */
 }

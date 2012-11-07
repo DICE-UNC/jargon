@@ -25,6 +25,16 @@ public class GSIIRODSAccount extends IRODSAccount {
 	private final String distinguishedName;
 
 	/**
+	 * Server DN
+	 */
+	private String serverDistinguishedName = "";
+
+	/**
+	 * Certificate authority
+	 */
+	private String certificateAuthority = "";
+
+	/**
 	 * Static initializer method
 	 * 
 	 * @param host
@@ -106,17 +116,87 @@ public class GSIIRODSAccount extends IRODSAccount {
 	}
 
 	/**
-	 * @return the gssCredential
-	 */
-	public GSSCredential getGssCredential() {
-		return gssCredential;
-	}
-
-	/**
 	 * @return the distinguishedName
 	 */
 	public String getDistinguishedName() {
 		return distinguishedName;
+	}
+
+	/**
+	 * @return the serverDistinguishedName provided by iRODS upon GSI
+	 *         authentication
+	 */
+	public String getServerDistinguishedName() {
+		return serverDistinguishedName;
+	}
+
+	/**
+	 * Set the distinguished name of the iRODS server (this is done by the
+	 * GSIAuth handler)
+	 * 
+	 * @param serverDistinguishedName
+	 */
+	void setServerDistinguishedName(final String serverDistinguishedName) {
+		this.serverDistinguishedName = serverDistinguishedName;
+	}
+
+	/**
+	 * @return the certificateAuthority
+	 */
+	public String getCertificateAuthority() {
+		return certificateAuthority;
+	}
+
+	/**
+	 * @param certificateAuthority
+	 *            the certificateAuthority to set
+	 */
+	public void setCertificateAuthority(final String certificateAuthority) {
+		this.certificateAuthority = certificateAuthority;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.connection.IRODSAccount#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		try {
+			if (obj == null) {
+				return false;
+			}
+
+			GSIIRODSAccount temp = (GSIIRODSAccount) obj;
+
+			if (!getHost().equals(temp.getHost())) {
+				return false;
+			}
+			if (getPort() != temp.getPort()) {
+				return false;
+			}
+
+			if (!this.getDistinguishedName()
+					.equals(temp.getDistinguishedName())) {
+				return false;
+			}
+
+			return true;
+		} catch (ClassCastException e) {
+			return false;
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.connection.IRODSAccount#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		return getHost().hashCode() + getPort()
+				+ getDistinguishedName().hashCode();
 	}
 
 }

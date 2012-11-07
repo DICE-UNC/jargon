@@ -32,8 +32,8 @@ public class IRODSAccount implements Serializable {
 
 	private final String host;
 	private final int port;
-	private final String zone;
-	private final String userName;
+	private String zone;
+	private String userName;
 	private String password;
 	private String defaultStorageResource;
 	private String homeDirectory;
@@ -355,6 +355,22 @@ public class IRODSAccount implements Serializable {
 	 */
 	public void setPassword(final String password) {
 		this.password = password;
+	}
+
+	/**
+	 * @param zone
+	 *            the zone to set
+	 */
+	public void setZone(String zone) {
+		this.zone = zone;
+	}
+
+	/**
+	 * @param userName
+	 *            the userName to set
+	 */
+	public void setUserName(String userName) {
+		this.userName = userName;
 	}
 
 }

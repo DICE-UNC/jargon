@@ -10,8 +10,20 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+import org.irods.jargon.core.connection.IRODSAccount.AuthScheme;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.packinstr.TransferOptions;
+import org.irods.jargon.core.pub.IRODSGenQueryExecutorImpl.QueryCloseBehavior;
+import org.irods.jargon.core.query.GenQueryBuilderException;
+import org.irods.jargon.core.query.GenQueryProcessor;
+import org.irods.jargon.core.query.IRODSGenQueryBuilder;
+import org.irods.jargon.core.query.IRODSGenQueryFromBuilder;
+import org.irods.jargon.core.query.IRODSQueryResultRow;
+import org.irods.jargon.core.query.IRODSQueryResultSetInterface;
+import org.irods.jargon.core.query.JargonQueryException;
+import org.irods.jargon.core.query.QueryConditionOperators;
+import org.irods.jargon.core.query.RodsGenQueryEnum;
+import org.irods.jargon.core.query.TranslatedIRODSGenQuery;
 import org.irods.jargon.core.transfer.DefaultTransferControlBlock;
 import org.irods.jargon.core.transfer.TransferControlBlock;
 import org.slf4j.Logger;
@@ -41,9 +53,6 @@ import org.slf4j.LoggerFactory;
  */
 public class IRODSSession {
 
-	public static final Logger log = LoggerFactory
-			.getLogger(IRODSSession.class);
-
 	/**
 	 * <code>ThreadLocal</code> to cache connections to iRODS. This is a
 	 * <code>Map</code> that is keyed by the {@link IRODSAccount}, so that each
@@ -61,7 +70,7 @@ public class IRODSSession {
 	 */
 	private ExecutorService parallelTransferThreadPool = null;
 	private IRODSProtocolManager irodsProtocolManager;
-	private static final Logger LOG = LoggerFactory
+	private static final Logger log = LoggerFactory
 			.getLogger(IRODSSession.class);
 	private JargonProperties jargonProperties;
 
@@ -156,16 +165,16 @@ public class IRODSSession {
 	 * @throws JargonException
 	 */
 	public void closeSession() throws JargonException {
-		LOG.info("closing all irods sessions");
+		log.info("closing all irods sessions");
 		final Map<String, IRODSCommands> irodsProtocols = sessionMap.get();
 
 		if (irodsProtocols == null) {
-			LOG.warn("closing session that is already closed, silently ignore");
+			log.warn("closing session that is already closed, silently ignore");
 			return;
 		}
 
 		for (IRODSCommands irodsCommands : irodsProtocols.values()) {
-			LOG.debug("found and am closing connection to : {}", irodsCommands
+			log.debug("found and am closing connection to : {}", irodsCommands
 					.getIrodsAccount().toString());
 			irodsCommands.disconnect();
 
@@ -173,16 +182,16 @@ public class IRODSSession {
 			// set to null in the ThreadLocal below
 		}
 
-		LOG.debug("all sessions closed for this Thread");
+		log.debug("all sessions closed for this Thread");
 		sessionMap.set(null);
 	}
 
 	public IRODSSession() {
-		LOG.info("IRODS Session creation, loading default properties, these may be overridden...");
+		log.info("IRODS Session creation, loading default properties, these may be overridden...");
 		try {
 			jargonProperties = new DefaultPropertiesJargonConfig();
 		} catch (Exception e) {
-			LOG.warn("unable to load default jargon properties");
+			log.warn("unable to load default jargon properties");
 		}
 	}
 
@@ -240,13 +249,13 @@ public class IRODSSession {
 			throws JargonException {
 
 		if (irodsProtocolManager == null) {
-			LOG.error("no irods connection manager provided");
+			log.error("no irods connection manager provided");
 			throw new JargonException(
 					"IRODSSession improperly initialized, requires the IRODSConnectionManager to be initialized");
 		}
 
 		if (irodsAccount == null) {
-			LOG.error("irodsAccount is null in connection");
+			log.error("irodsAccount is null in connection");
 			throw new JargonException("irodsAccount is null");
 		}
 
@@ -255,11 +264,11 @@ public class IRODSSession {
 		Map<String, IRODSCommands> irodsProtocols = sessionMap.get();
 
 		if (irodsProtocols == null) {
-			LOG.debug("no connections are cached, so create a new cache map");
+			log.debug("no connections are cached, so create a new cache map");
 			irodsProtocols = new HashMap<String, IRODSCommands>();
 			irodsProtocol = connectAndAddToProtocolsMap(irodsAccount,
 					irodsProtocols);
-			LOG.debug("put a reference to a new connection for account: {}",
+			log.debug("put a reference to a new connection for account: {}",
 					irodsAccount.toString());
 			sessionMap.set(irodsProtocols);
 			return irodsProtocol;
@@ -270,14 +279,14 @@ public class IRODSSession {
 		irodsProtocol = irodsProtocols.get(irodsAccount.toString());
 
 		if (irodsProtocol == null) {
-			LOG.debug("null connection in thread local, using IRODSConnectionManager to create a new connection");
+			log.debug("null connection in thread local, using IRODSConnectionManager to create a new connection");
 			irodsProtocol = connectAndAddToProtocolsMap(irodsAccount,
 					irodsProtocols);
 		} else if (irodsProtocol.isConnected()) {
-			LOG.debug("session using previously established connection:{}",
+			log.debug("session using previously established connection:{}",
 					irodsProtocol);
 		} else {
-			LOG.warn(
+			log.warn(
 					"***************** session has a connection marked closed, create a new one and put back into the cache:{}",
 					irodsProtocol);
 			irodsProtocol = connectAndAddToProtocolsMap(irodsAccount,
@@ -301,18 +310,78 @@ public class IRODSSession {
 		irodsProtocol = irodsProtocolManager.getIRODSProtocol(irodsAccount,
 				this.buildPipelineConfigurationBasedOnJargonProperties());
 		if (irodsProtocol == null) {
-			LOG.error("no connection returned from connection manager");
+			log.error("no connection returned from connection manager");
 			throw new JargonException(
 					"null connection returned from connection manager");
 		}
 
 		irodsProtocol.setIrodsSession(this);
 		irodsProtocols.put(irodsAccount.toString(), irodsProtocol);
-		LOG.debug("put a reference to a new connection for account: {}",
+
+		/*
+		 * check for GSI and add user info, consider factoring out to a 'post
+		 * processor' MC
+		 */
+		if (irodsAccount.getAuthenticationScheme() == AuthScheme.GSI) {
+			log.debug("adding user information to iRODS account for GSI");
+			addUserInfoForGSIAccount(irodsAccount, irodsProtocol);
+		}
+
+		log.debug("put a reference to a new connection for account: {}",
 				irodsAccount.toString());
 		sessionMap.set(irodsProtocols);
-		LOG.debug("returned new connection:{}", irodsProtocol);
+		log.debug("returned new connection:{}", irodsProtocol);
 		return irodsProtocol;
+	}
+
+	private void addUserInfoForGSIAccount(final IRODSAccount irodsAccount,
+			final IRODSCommands irodsCommands) throws JargonException {
+		log.info("addUserInfoForGSIAccount()");
+
+		if (irodsAccount == null) {
+			throw new IllegalArgumentException("null irodsAccount");
+		}
+
+		if (!(irodsAccount instanceof GSIIRODSAccount)) {
+			throw new IllegalArgumentException(
+					"irodsAccount parameter is not a GSIIRODSAccount");
+		}
+
+		GSIIRODSAccount gsiIRODSAccount = (GSIIRODSAccount) irodsAccount;
+
+		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, null);
+		try {
+			builder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_NAME)
+					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_ZONE)
+					.addConditionAsGenQueryField(RodsGenQueryEnum.COL_USER_DN,
+							QueryConditionOperators.EQUAL,
+							gsiIRODSAccount.getDistinguishedName());
+			GenQueryProcessor genQueryProcessor = new GenQueryProcessor(
+					irodsCommands);
+
+			IRODSGenQueryFromBuilder query = builder
+					.exportIRODSQueryFromBuilder(1);
+
+			TranslatedIRODSGenQuery translatedIRODSQuery = genQueryProcessor
+					.translateProvidedQuery(query);
+
+			IRODSQueryResultSetInterface resultSet = genQueryProcessor
+					.executeTranslatedIRODSQuery(translatedIRODSQuery, 0, 0,
+							QueryCloseBehavior.AUTO_CLOSE, "");
+
+			IRODSQueryResultRow row = resultSet.getFirstResult();
+			gsiIRODSAccount.setUserName(row.getColumn(0));
+			gsiIRODSAccount.setZone(row.getColumn(1));
+
+		} catch (GenQueryBuilderException e) {
+			log.error("error building query for user DN", e);
+			throw new JargonException(
+					"query builder exception building user DN query", e);
+		} catch (JargonQueryException e) {
+			log.error("error building query for user DN", e);
+			throw new JargonException(
+					"jargon query  exception building user DN query", e);
+		}
 	}
 
 	/**
@@ -344,10 +413,10 @@ public class IRODSSession {
 	public void closeSession(final IRODSAccount irodsAccount)
 			throws JargonException {
 
-		LOG.debug("closing irods session for: {}", irodsAccount.toString());
+		log.debug("closing irods session for: {}", irodsAccount.toString());
 		final Map<String, IRODSCommands> irodsProtocols = sessionMap.get();
 		if (irodsProtocols == null) {
-			LOG.warn("closing session that is already closed, silently ignore");
+			log.warn("closing session that is already closed, silently ignore");
 			return;
 		}
 
@@ -355,18 +424,18 @@ public class IRODSSession {
 				.toString());
 
 		if (irodsProtocol == null) {
-			LOG.warn("closing a connection that is not held, silently ignore");
+			log.warn("closing a connection that is not held, silently ignore");
 			return;
 
 		}
-		LOG.debug("found and am closing connection to : {}",
+		log.debug("found and am closing connection to : {}",
 				irodsAccount.toString());
 
 		irodsProtocol.disconnect();
 
 		irodsProtocols.remove(irodsAccount.toString());
 		if (irodsProtocols.isEmpty()) {
-			LOG.debug("no more connections, so clear cache from ThreadLocal");
+			log.debug("no more connections, so clear cache from ThreadLocal");
 			sessionMap.set(null);
 		}
 
@@ -384,17 +453,17 @@ public class IRODSSession {
 	public void discardSessionForErrors(final IRODSAccount irodsAccount)
 			throws JargonException {
 
-		LOG.warn("discarding irods session for: {}", irodsAccount.toString());
+		log.warn("discarding irods session for: {}", irodsAccount.toString());
 		final Map<String, IRODSCommands> irodsProtocols = sessionMap.get();
 		if (irodsProtocols == null) {
-			LOG.warn("discarding session that is already closed, silently ignore");
+			log.warn("discarding session that is already closed, silently ignore");
 			return;
 		}
 
 		irodsProtocols.remove(irodsAccount.toString());
 
 		if (irodsProtocols.isEmpty()) {
-			LOG.debug("no more connections, so clear cache from ThreadLocal");
+			log.debug("no more connections, so clear cache from ThreadLocal");
 			sessionMap.set(null);
 		}
 
