@@ -793,7 +793,7 @@ public class IRODSCommands implements IRODSManagedConnection {
 			// squelch genqueryout data for nicer logs
 			if (log.isDebugEnabled()) {
 				String messageAsString = message.parseTag();
-				if (message.parseTag().indexOf("GenQueryOut") == -1) {
+				if (message.parseTag().indexOf("GenQueryOut") == -1 || ConnectionConstants.DUMP_GEN_QUERY_OUT) {
 					log.debug("message from IRODS read back:{}",
 							messageAsString);
 				}
