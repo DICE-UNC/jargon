@@ -142,9 +142,7 @@ class GSIAuth extends AuthMechanism {
 				cog.setCaCertLocations(caLocations);
 			}
 
-			GSSContext context = null;
-
-			context = manager.createContext(null, null,
+			GSSContext context = manager.createContext(null, null,
 					irodsAccount.getGSSCredential(),
 					GSSContext.DEFAULT_LIFETIME);
 

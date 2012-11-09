@@ -1,17 +1,17 @@
 package org.irods.jargon.core.connection;
 
+import java.io.File;
 import java.util.Properties;
 
 import junit.framework.TestCase;
 
-import org.ietf.jgss.GSSCredential;
 import org.irods.jargon.core.connection.auth.AuthResponse;
+import org.irods.jargon.core.connection.auth.GSIUtilities;
 import org.irods.jargon.core.pub.IRODSFileSystem;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.mockito.Mockito;
 
 public class GSIAuthTest {
 	private static Properties testingProperties = new Properties();
@@ -37,19 +37,19 @@ public class GSIAuthTest {
 			return;
 		}
 
-
-		String gsiHost = testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_GSI_HOST_KEY);
-		int gsiPort = testingPropertiesHelper.getPropertyValueAsInt(
-				testingProperties, TestingPropertiesHelper.IRODS_GSI_PORT_KEY);
-		String userDN = testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_GSI_DN_KEY);
-		GSSCredential gssCredential = Mockito.mock(GSSCredential.class);
-		Mockito.when(gssCredential.getRemainingLifetime()).thenReturn(100);
-
-		GSIIRODSAccount irodsAccount = GSIIRODSAccount.instance(gsiHost,
-				gsiPort, userDN, gssCredential);
-
+		File credentialFile =new File((String) testingProperties.get(TestingPropertiesHelper.IRODS_GSI_CERT_PATH));
+		
+		GSIIRODSAccount irodsAccount = GSIUtilities
+				.createGSIIRODSAccountFromCredential(
+						credentialFile,
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_GSI_HOST_KEY),
+						testingPropertiesHelper.getPropertyValueAsInt(
+								testingProperties,
+								TestingPropertiesHelper.IRODS_GSI_PORT_KEY),
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_GSI_DN_KEY));
+		
 		AuthResponse authResponse = irodsFileSystem
 				.getIRODSAccessObjectFactory().authenticateIRODSAccount(
 						irodsAccount);

@@ -178,4 +178,24 @@ public class GSIIRODSAccount extends IRODSAccount {
 				+ getDistinguishedName().hashCode();
 	}
 
+	/**
+	 * Returns a string representation of this file system object. The string is
+	 * formated according to the iRODS URI model. Note: the user password will
+	 * not be included in the URI.
+	 * <p/>
+	 * This version using the user DN as the user name. This may change in the
+	 * future.
+	 */
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("irods://");
+		sb.append(getDistinguishedName());
+		sb.append("@");
+		sb.append(getHost());
+		sb.append(":");
+		sb.append(getPort());
+		return sb.toString();
+	}
+
 }

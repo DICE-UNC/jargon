@@ -114,6 +114,7 @@ test.option.gsi.port=${test.option.gsi.port}
 test.option.gsi.zone=${test.option.gsi.zone}
 test.option.gsi.dn=${test.option.gsi.dn}
 test.option.gsi.user=${test.option.gsi.user}
+test.option.gsi.file=${test.option.gsi.file}
 		</echo>
 	      </tasks>
 	    </configuration>
