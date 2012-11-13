@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.exception.NoResourceDefinedException;
 import org.irods.jargon.core.pub.io.IRODSFile;
 
 /**
@@ -51,10 +52,11 @@ public interface Stream2StreamAO extends IRODSAccessObject {
 	 *            <code>InputStream</code> to stream from
 	 * @param outputStream
 	 *            <code>OutputStream</code> to stream to
+	 *  @throws NoResourceDefinedException if no storage resource is defined, and iRODS does not have a default resource selection rule       
 	 * @throws JargonException
 	 */
 	void streamToStreamCopy(InputStream inputStream, OutputStream outputStream)
-			throws JargonException;
+			throws NoResourceDefinedException, JargonException;
 
 	/**
 	 * Transfer the contents of a stream to a given file. Note that this method

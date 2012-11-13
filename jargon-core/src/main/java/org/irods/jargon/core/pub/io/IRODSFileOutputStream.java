@@ -6,6 +6,7 @@ import java.io.OutputStream;
 
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.exception.JargonRuntimeException;
+import org.irods.jargon.core.exception.NoResourceDefinedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -50,6 +51,9 @@ public class IRODSFileOutputStream extends OutputStream {
 	 * 
 	 * @param name
 	 *            the system-dependent file name.
+	 * @exception NoResourceDefinedException
+	 *                if no storage resource is defined, and iRODS has not
+	 *                default resource rule
 	 * @exception FileNotFoundException
 	 *                when file is not found in iRODS
 	 * @exception JargonException
@@ -57,7 +61,8 @@ public class IRODSFileOutputStream extends OutputStream {
 	 */
 	protected IRODSFileOutputStream(final IRODSFile irodsFile,
 			final FileIOOperations fileIOOperations)
-			throws FileNotFoundException, JargonException {
+			throws NoResourceDefinedException, FileNotFoundException,
+			JargonException {
 		super();
 		checkFileParameter(irodsFile);
 		if (fileIOOperations == null) {
@@ -74,7 +79,8 @@ public class IRODSFileOutputStream extends OutputStream {
 
 	}
 
-	private int openIRODSFile() throws JargonException {
+	private int openIRODSFile() throws NoResourceDefinedException,
+			JargonException {
 		int fileDescriptor = -1;
 
 		if (irodsFile.exists()) {
@@ -83,23 +89,15 @@ public class IRODSFileOutputStream extends OutputStream {
 			irodsFile.reset();
 		}
 
-		try {
-			irodsFile.createNewFile();
+		irodsFile.createNewFileCheckNoResourceFound();
 
-			if (irodsFile.getFileDescriptor() == -1) {
-				String msg = "no file descriptor returned from file creation";
-				log.error(msg);
-				throw new JargonException(msg);
-			}
-			fileDescriptor = irodsFile.getFileDescriptor();
-			return fileDescriptor;
-
-		} catch (IOException e) {
-			log.error("error creating file: {}", this, e);
-			throw new JargonException(
-					"IOException rethrown as Jargon exception when creating file:"
-							+ irodsFile, e);
+		if (irodsFile.getFileDescriptor() == -1) {
+			String msg = "no file descriptor returned from file creation";
+			log.error(msg);
+			throw new JargonException(msg);
 		}
+		fileDescriptor = irodsFile.getFileDescriptor();
+		return fileDescriptor;
 
 	}
 

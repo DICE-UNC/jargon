@@ -79,6 +79,11 @@ public final class ConnectionConstants {
 	 * Maximum size of an iRODS absolute path
 	 */
 	public static final int MAX_PATH_SIZE = 1024;
+	
+	/**
+	 * Set to true to add gen query out xml protocol messages to debug log
+	 */
+	public static final boolean DUMP_GEN_QUERY_OUT = true;
 
 	private ConnectionConstants() {
 	}
