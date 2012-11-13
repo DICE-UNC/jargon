@@ -11,6 +11,7 @@ import java.net.URI;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.exception.NoResourceDefinedException;
 import org.irods.jargon.core.pub.DataObjectAO;
 import org.irods.jargon.core.pub.FileCatalogObjectAOImpl;
 import org.irods.jargon.core.pub.IRODSFileSystemAO;
@@ -156,7 +157,8 @@ public final class IRODSFileFactoryImpl extends IRODSGenericAO implements
 	 */
 	@Override
 	public IRODSFileOutputStream instanceIRODSFileOutputStream(
-			final IRODSFile file) throws JargonException {
+			final IRODSFile file) throws NoResourceDefinedException,
+			JargonException {
 
 		FileIOOperations fileIOOperations = new FileIOOperationsAOImpl(
 				this.getIRODSSession(), this.getIRODSAccount());
@@ -177,7 +179,8 @@ public final class IRODSFileFactoryImpl extends IRODSGenericAO implements
 	 */
 	@Override
 	public IRODSFileOutputStream instanceIRODSFileOutputStreamWithRerouting(
-			final IRODSFile file) throws JargonException {
+			final IRODSFile file) throws NoResourceDefinedException,
+			JargonException {
 
 		try {
 			if (!file.exists()) {
@@ -241,7 +244,8 @@ public final class IRODSFileFactoryImpl extends IRODSGenericAO implements
 	 */
 	@Override
 	public SessionClosingIRODSFileOutputStream instanceSessionClosingIRODSFileOutputStream(
-			final IRODSFile file) throws JargonException {
+			final IRODSFile file) throws NoResourceDefinedException,
+			JargonException {
 
 		log.info("instanceSessionClosingIRODSFileOutputStream");
 		if (file == null) {
@@ -253,7 +257,7 @@ public final class IRODSFileFactoryImpl extends IRODSGenericAO implements
 		try {
 			if (!file.exists()) {
 				log.info("file does not exist, creating a new file");
-				file.createNewFile();
+				file.createNewFileCheckNoResourceFound();
 			} else if (!file.canWrite()) {
 				log.info("this file is not writeable by the current user {}",
 						file.getAbsolutePath());
@@ -281,7 +285,7 @@ public final class IRODSFileFactoryImpl extends IRODSGenericAO implements
 	 */
 	@Override
 	public IRODSFileOutputStream instanceIRODSFileOutputStream(final String name)
-			throws JargonException {
+			throws NoResourceDefinedException, JargonException {
 
 		FileIOOperations fileIOOperations = new FileIOOperationsAOImpl(
 				this.getIRODSSession(), this.getIRODSAccount());
@@ -306,14 +310,14 @@ public final class IRODSFileFactoryImpl extends IRODSGenericAO implements
 	 */
 	@Override
 	public IRODSFileWriter instanceIRODSFileWriter(final String name)
-			throws JargonException {
+			throws NoResourceDefinedException, JargonException {
 
 		try {
 			if (log.isInfoEnabled()) {
 				log.info("creating IRODSFileWriter for:" + name);
 			}
 			IRODSFile irodsFile = instanceIRODSFile(name);
-			irodsFile.createNewFile();
+			irodsFile.createNewFileCheckNoResourceFound();
 			return new IRODSFileWriter(irodsFile, this);
 		} catch (FileNotFoundException e) {
 			log.error("FileNotFound creating FileWriter", e);
@@ -413,7 +417,8 @@ public final class IRODSFileFactoryImpl extends IRODSGenericAO implements
 	 */
 	@Override
 	public SessionClosingIRODSFileInputStream instanceSessionClosingIRODSFileInputStream(
-			final String name) throws JargonException {
+			final String name) throws NoResourceDefinedException,
+			JargonException {
 
 		FileIOOperations fileIOOperations = new FileIOOperationsAOImpl(
 				this.getIRODSSession(), this.getIRODSAccount());
@@ -544,7 +549,7 @@ public final class IRODSFileFactoryImpl extends IRODSGenericAO implements
 	 */
 	@Override
 	public IRODSRandomAccessFile instanceIRODSRandomAccessFile(final String name)
-			throws JargonException {
+			throws NoResourceDefinedException, JargonException {
 		FileIOOperations fileIOOperations = new FileIOOperationsAOImpl(
 				this.getIRODSSession(), this.getIRODSAccount());
 		log.info("opening IRODSFileImpl for: {}", name);
@@ -552,14 +557,8 @@ public final class IRODSFileFactoryImpl extends IRODSGenericAO implements
 
 		if (!irodsFile.exists()) {
 			log.info("requested file does not exist, will be created");
-			try {
-				irodsFile.createNewFile();
-			} catch (IOException e) {
-				log.error(
-						"IOException creating file for IRODSRandomAccessFile will be rethrown as JargonException",
-						e);
-				throw new JargonException(e);
-			}
+
+			irodsFile.createNewFileCheckNoResourceFound();
 		}
 
 		// open the file if it is not opened
@@ -577,21 +576,16 @@ public final class IRODSFileFactoryImpl extends IRODSGenericAO implements
 	 */
 	@Override
 	public IRODSRandomAccessFile instanceIRODSRandomAccessFile(
-			final IRODSFile irodsFile) throws JargonException {
+			final IRODSFile irodsFile) throws NoResourceDefinedException,
+			JargonException {
 		FileIOOperations fileIOOperations = new FileIOOperationsAOImpl(
 				this.getIRODSSession(), this.getIRODSAccount());
 		log.info("opening IRODSFileImpl for: {}", irodsFile.getAbsoluteFile());
 
 		if (!irodsFile.exists()) {
 			log.info("requested file does not exist, will be created");
-			try {
-				irodsFile.createNewFile();
-			} catch (IOException e) {
-				log.error(
-						"IOException creating file for IRODSRandomAccessFile will be rethrown as JargonException",
-						e);
-				throw new JargonException(e);
-			}
+
+			irodsFile.createNewFileCheckNoResourceFound();
 		}
 
 		// open the file if it is not opened

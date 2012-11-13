@@ -45,9 +45,6 @@ Note that the following bug and feature requests are logged in GForge with relat
 
 ==Bug Fixes==
 
-* [#1044] Jargon allows the creating of folders that exceed the USER_PATH_EXCEEDS_MAX and cannot delete them
-** work in progress
-
 *[#1044] Jargon allows the creating of folders that exceed the USER_PATH_EXCEEDS_MAX and cannot delete them
 **Added a new PathTooLongException and methods to check path lengths in MiscIRODSUtils, used these checks in the various path methods, especially
 the IRODSFile and DataObject and Collection access objects
@@ -75,3 +72,8 @@ the IRODSFile and DataObject and Collection access objects
 * [#1046] Add total row count to gen query out
 ** When creating gen queries from the IRODSGenQueryBuilder, one may now specify that total row counts (reflecting the total results in the database) be requested from iRODS.  This row
 count will be provided in the IRODSQueryResultSet object when using the general query executor service.
+
+
+*[#1055] -321000 messages on upload need better message
+**Added a NoResourceDefinedException for jargon io operations to handle occasions where no default storage resource is set, and no iRODS resource rule is defined.  This 
+helps clients better handle -321000 exceptions.  iDrop uses this to indicate that the user should select a default storage resource.

@@ -4,6 +4,7 @@ import java.io.File;
 import java.net.URI;
 
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.exception.NoResourceDefinedException;
 
 /**
  * Defines the interface to a factory that can produce connected versions of
@@ -57,10 +58,13 @@ public interface IRODSFileFactory {
 	 *            stream.
 	 * @return {@link IRODSFileOutputStream} implementation of a
 	 *         <code>java.io.OutputStream</code>
+	 * @throws NoResourceDefinedException
+	 *             if no storage resource is defined and no default rule is set
+	 *             up on iRODS
 	 * @throws JargonException
 	 */
 	IRODSFileOutputStream instanceIRODSFileOutputStream(IRODSFile irodsFile)
-			throws JargonException;
+			throws NoResourceDefinedException, JargonException;
 
 	/**
 	 * Creates an iRODS output stream such that data can be written to the given
@@ -71,10 +75,13 @@ public interface IRODSFileFactory {
 	 *            will be written to via the given stream.
 	 * @return {@link IRODSFileOutputStream} implementation of a
 	 *         <code>java.io.OutputStream</code>
+	 * @throws NoResourceDefinedException
+	 *             if no storage resource is defined and no default rule is set
+	 *             up on iRODS
 	 * @throws JargonException
 	 */
 	IRODSFileOutputStream instanceIRODSFileOutputStream(String name)
-			throws JargonException;
+			throws NoResourceDefinedException, JargonException;
 
 	/**
 	 * Creates an iRODS output stream such that data can be written to the given
@@ -88,10 +95,14 @@ public interface IRODSFileFactory {
 	 *            {@link IRODSFile} that is the target of the stream.
 	 * @return {@link IRODSFileOutputStream} that will write to the target
 	 *         <code>irodsFile</code>
+	 * @throws NoResourceDefinedException
+	 *             if no storage resource is defined and no default rule is set
+	 *             up on iRODS
 	 * @throws JargonException
 	 */
 	IRODSFileOutputStream instanceIRODSFileOutputStreamWithRerouting(
-			IRODSFile irodsFile) throws JargonException;
+			IRODSFile irodsFile) throws NoResourceDefinedException,
+			JargonException;
 
 	/**
 	 * Creates an iRODS version of an input stream such that data can be read
@@ -149,10 +160,13 @@ public interface IRODSFileFactory {
 	 *            {@link org.irods.jargon.core.pub.io.IRODSFileImpl} that
 	 *            encapsulates the underlying IRODS File
 	 * @return
+	 * @throws NoResourceDefinedException
+	 *             if no storage resource is defined and no default rule is set
+	 *             up on iRODS
 	 * @throws JargonException
 	 */
 	IRODSRandomAccessFile instanceIRODSRandomAccessFile(IRODSFile irodsFile)
-			throws JargonException;
+			throws NoResourceDefinedException, JargonException;
 
 	/**
 	 * Create an IRODSRandomAccessFile given the absolutePath. Note that this
@@ -162,10 +176,13 @@ public interface IRODSFileFactory {
 	 * @param name
 	 *            <code>String</code> with the absolute path to the file.
 	 * @return
+	 * @throws NoResourceDefinedException
+	 *             if no storage resource is defined and no default rule is set
+	 *             up on iRODS
 	 * @throws JargonException
 	 */
 	IRODSRandomAccessFile instanceIRODSRandomAccessFile(String name)
-			throws JargonException;
+			throws NoResourceDefinedException, JargonException;
 
 	/**
 	 * Create a writer that will write to the iRODS file with the given absolute
@@ -176,9 +193,13 @@ public interface IRODSFileFactory {
 	 *            that will be witten to.
 	 * @return {@link IRODSFileWriter} that is an iRODS specific implmementation
 	 *         of a <code>FileWriter</code>
+	 * @throws NoResourceDefinedException
+	 *             if no storage resource is defined and no default rule is set
+	 *             up on iRODS
 	 * @throws JargonException
 	 */
-	IRODSFileWriter instanceIRODSFileWriter(String name) throws JargonException;
+	IRODSFileWriter instanceIRODSFileWriter(String name)
+			throws NoResourceDefinedException, JargonException;
 
 	/**
 	 * Return an instance of an
@@ -276,9 +297,12 @@ public interface IRODSFileFactory {
 	 * @return{@link 
 	 *               org.irods.jargon.core.pub.io.SessionClosingIRODSFileInputStream
 	 *               }
+	 * @throws NoResourceDefinedException
+	 *             if no storage resource is defined and no default rule is set
+	 *             up on iRODS
 	 * @throws JargonException
 	 */
 	SessionClosingIRODSFileOutputStream instanceSessionClosingIRODSFileOutputStream(
-			IRODSFile file) throws JargonException;
+			IRODSFile file) throws NoResourceDefinedException, JargonException;
 
 }
