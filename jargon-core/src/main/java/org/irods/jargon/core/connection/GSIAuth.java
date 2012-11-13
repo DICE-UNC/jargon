@@ -204,35 +204,6 @@ class GSIAuth extends AuthMechanism {
 		}
 	}
 
-	static String getDN(final GSIIRODSAccount account) throws JargonException {
-		StringBuffer dn = null;
-		int index = -1, index2 = -1;
-
-		dn = new StringBuffer(account.getDistinguishedName());
-
-		// remove the extra /CN if exists
-		index = dn.indexOf("UID");
-		if (index >= 0) {
-			index2 = dn.lastIndexOf("CN");
-			if (index2 > index) {
-				dn = dn.delete(index2 - 1, dn.length());
-			}
-		}
-
-		// The DN gets returned with commas.
-		index = dn.indexOf(",");
-		while (index >= 0) {
-			dn = dn.replace(index, index + 1, "/");
-			index = dn.indexOf(",");
-		}
-
-		// add / to front if necessary
-		if (dn.indexOf("/") != 0) {
-			return "/" + dn;
-		} else {
-			return dn.toString();
-		}
-	}
 
 	/*
 	 * (non-Javadoc)

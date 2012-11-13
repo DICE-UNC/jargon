@@ -4,6 +4,8 @@
 package org.irods.jargon.core.connection;
 
 import org.ietf.jgss.GSSCredential;
+import org.ietf.jgss.GSSException;
+import org.irods.jargon.core.exception.JargonException;
 
 /**
  * @author Mike Conway - DICE (www.irods.org)
@@ -20,7 +22,7 @@ public class GSIIRODSAccount extends IRODSAccount {
 	private transient final GSSCredential gssCredential;
 
 	/**
-	 * Client DN
+	 * Client DN, this is derived from the cert
 	 */
 	private final String distinguishedName;
 
@@ -41,16 +43,20 @@ public class GSIIRODSAccount extends IRODSAccount {
 	 *            <code>String</code> with the iRODS host name
 	 * @param port
 	 *            <code>int</code> with the iRODS server port
-	 * @param distinguishedName
-	 *            <code>String</code> with the user's DN associated with the GSS
-	 *            certificate
 	 * @param gssCredential
 	 *            {@link GSSCredential} for the user login
+	 * @param defaultStorageResource
+	 *            <code>String</code> with an optional (blank if not specified)
+	 *            default storage resource
 	 * @return {@link GSIIRODSAccount} for GSS login
+	 * @throws JargonException
+	 *             if there was an error creating the account
 	 */
 	public static GSIIRODSAccount instance(final String host, final int port,
-			final String distinguishedName, final GSSCredential gssCredential) {
-		return new GSIIRODSAccount(host, port, distinguishedName, gssCredential);
+			final GSSCredential gssCredential,
+			final String defaultStorageResource) throws JargonException {
+		return new GSIIRODSAccount(host, port, gssCredential,
+				defaultStorageResource);
 	}
 
 	/**
@@ -61,28 +67,28 @@ public class GSIIRODSAccount extends IRODSAccount {
 	 *            <code>String</code> with the iRODS host name
 	 * @param port
 	 *            <code>int</code> with the iRODS server port
-	 * @param distinguishedName
-	 *            <code>String</code> with the user's DN associated with the GSS
-	 *            certificate
 	 * @param gssCredential
 	 *            {@link GSSCredential} for the user login
+	 * @throws JargonException
+	 *             if there was an error creating the account
 	 */
 	private GSIIRODSAccount(final String host, final int port,
-			 final String distinguishedName,
- final GSSCredential gssCredential) {
+			final GSSCredential gssCredential,
+			final String defaultStorageResource) throws JargonException {
 
-		super(host, port, "", "", "", "", "");
+		super(host, port, "", "", "", "", defaultStorageResource);
 
 		if (gssCredential == null) {
 			throw new IllegalArgumentException("null gssCredential");
 		}
 
-		if (distinguishedName == null || distinguishedName.isEmpty()) {
-			throw new IllegalArgumentException("null distinguishedName");
-		}
-
 		this.gssCredential = gssCredential;
-		this.distinguishedName = distinguishedName;
+		try {
+			this.distinguishedName = gssCredential.getName().toString();
+		} catch (GSSException e) {
+			throw new JargonException(
+					"GSSException getting distinguished name", e);
+		}
 		this.setAuthenticationScheme(AuthScheme.GSI);
 
 	}

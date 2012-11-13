@@ -9,6 +9,7 @@ import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.FileNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.exception.JargonFileOrCollAlreadyExistsException;
+import org.irods.jargon.core.exception.NoResourceDefinedException;
 import org.irods.jargon.core.packinstr.DataObjInp;
 import org.irods.jargon.core.pub.domain.ObjStat;
 import org.irods.jargon.core.pub.io.IRODSFile;
@@ -113,15 +114,36 @@ public interface IRODSFileSystemAO extends IRODSAccessObject {
 	 *         the iRODS catalog.
 	 * @throws FileNotFoundException
 	 *             if the iRODS file is not found
+	 *  @throws JargonFileOrCollAlreadyExistsException if the file already exists and cannot be created
+	 *  @throws NoResourceDefinedException if no resource is specified, and this iRODS grid does not have a default resource rule defined
 	 * @throws JargonException
 	 */
 	ObjectType getFileDataType(final IRODSFile irodsFile)
 			throws FileNotFoundException, JargonException;
 
+	/**
+	 * 
+	 * @param absolutePath
+	 * @param openFlags
+	 * @param createMode
+	 * @return
+	 * @throws JargonFileOrCollAlreadyExistsException
+	 * @throws NoResourceDefinedException
+	 * @throws JargonException
+	 */
 	int createFile(String absolutePath, DataObjInp.OpenFlags openFlags,
-			int createMode) throws JargonException,
-			JargonFileOrCollAlreadyExistsException;
+			int createMode) throws JargonFileOrCollAlreadyExistsException, NoResourceDefinedException, JargonException;
 
+	/**
+	 * 
+	 * @param absolutePath
+	 * @param openFlags
+	 * @param createMode
+	 * @param resource
+	 * @return
+	 * @throws JargonException
+	 * @throws JargonFileOrCollAlreadyExistsException
+	 */
 	int createFileInResource(String absolutePath,
 			DataObjInp.OpenFlags openFlags, int createMode, String resource)
 			throws JargonException, JargonFileOrCollAlreadyExistsException;

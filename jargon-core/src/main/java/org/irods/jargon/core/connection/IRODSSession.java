@@ -26,6 +26,7 @@ import org.irods.jargon.core.query.RodsGenQueryEnum;
 import org.irods.jargon.core.query.TranslatedIRODSGenQuery;
 import org.irods.jargon.core.transfer.DefaultTransferControlBlock;
 import org.irods.jargon.core.transfer.TransferControlBlock;
+import org.irods.jargon.core.utils.MiscIRODSUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -372,6 +373,8 @@ public class IRODSSession {
 			IRODSQueryResultRow row = resultSet.getFirstResult();
 			gsiIRODSAccount.setUserName(row.getColumn(0));
 			gsiIRODSAccount.setZone(row.getColumn(1));
+			gsiIRODSAccount.setHomeDirectory(MiscIRODSUtils
+					.computeHomeDirectoryForIRODSAccount(gsiIRODSAccount));
 
 		} catch (GenQueryBuilderException e) {
 			log.error("error building query for user DN", e);

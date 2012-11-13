@@ -17,6 +17,7 @@ import org.irods.jargon.core.exception.DuplicateDataException;
 import org.irods.jargon.core.exception.FileNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.exception.JargonFileOrCollAlreadyExistsException;
+import org.irods.jargon.core.exception.NoResourceDefinedException;
 import org.irods.jargon.core.packinstr.CollInp;
 import org.irods.jargon.core.packinstr.DataObjCloseInp;
 import org.irods.jargon.core.packinstr.DataObjCopyInp;
@@ -287,7 +288,6 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 		/*
 		 * See if this is a soft link
 		 */
-
 		ObjStat objStat = collectionAndDataObjectListAndSearchAO
 				.retrieveObjectStatForPath(irodsFile.getAbsolutePath());
 
@@ -1099,7 +1099,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 	@Override
 	public int createFile(final String absolutePath,
 			final DataObjInp.OpenFlags openFlags, final int createMode)
-			throws JargonException, JargonFileOrCollAlreadyExistsException {
+			throws NoResourceDefinedException, JargonFileOrCollAlreadyExistsException, JargonException {
 
 		// find the correct resource and call the method with the resource
 		// signature
@@ -1184,8 +1184,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 	@Override
 	public int createFileInResource(final String absolutePath,
 			final DataObjInp.OpenFlags openFlags, final int createMode,
-			final String resource) throws JargonException,
-			JargonFileOrCollAlreadyExistsException {
+			final String resource) throws  NoResourceDefinedException, JargonFileOrCollAlreadyExistsException, JargonException {
 
 		if (absolutePath == null || absolutePath.length() == 0) {
 			throw new JargonException("absolute path is null or empty");
@@ -1212,7 +1211,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 
 		int responseFileNbr = 0;
 
-		try {
+	
 			DataObjInp dataObjInp = DataObjInp
 					.instance(absolutePath, createMode, openFlags, offset,
 							dataSize, thisResource, null);
@@ -1227,16 +1226,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 			responseFileNbr = response.getTag(MsgHeader.PI_NAME)
 					.getTag(MsgHeader.INT_INFO).getIntValue();
 
-		} catch (JargonException e) {
-			// differentiate between an attempt to add a duplicate file and a
-			// general exception
-			if (e.getMessage().indexOf("-312000") > -1) {
-				throw new JargonFileOrCollAlreadyExistsException(e.getMessage());
-			} else {
-				log.error("jargon exception trying to create new file", e);
-				throw e;
-			}
-		}
+	
 		log.debug("response file nbr:{}", responseFileNbr);
 
 		return responseFileNbr;

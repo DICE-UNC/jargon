@@ -19,6 +19,7 @@ import org.irods.jargon.core.exception.FileNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.exception.JargonFileOrCollAlreadyExistsException;
 import org.irods.jargon.core.exception.JargonRuntimeException;
+import org.irods.jargon.core.exception.NoResourceDefinedException;
 import org.irods.jargon.core.packinstr.DataObjInp;
 import org.irods.jargon.core.pub.IRODSFileSystemAO;
 import org.irods.jargon.core.pub.domain.ObjStat;
@@ -76,7 +77,7 @@ public final class IRODSFileImpl extends File implements IRODSFile {
 		if (pathName == null || pathName.isEmpty()) {
 			throw new JargonException("path name is null or empty");
 		}
-		
+
 		MiscIRODSUtils.checkPathSizeForMax(pathName);
 	}
 
@@ -101,7 +102,7 @@ public final class IRODSFileImpl extends File implements IRODSFile {
 			throw new IllegalArgumentException(
 					"both parent and child names are empty");
 		}
-		
+
 		MiscIRODSUtils.checkPathSizeForMax(parent, child);
 
 		this.irodsFileSystemAO = irodsFileSystemAO;
@@ -387,11 +388,33 @@ public final class IRODSFileImpl extends File implements IRODSFile {
 			log.debug("file now closed");
 		} catch (JargonFileOrCollAlreadyExistsException e) {
 			return false;
+
 		} catch (JargonException e) {
 			String msg = "JargonException caught and rethrown as IOException:"
 					+ e.getMessage();
 			log.error(msg, e);
 			throw new IOException(e);
+		}
+		return true;
+	}
+
+	@Override
+	public synchronized boolean createNewFileCheckNoResourceFound()
+			throws NoResourceDefinedException, JargonException {
+		try {
+			fileDescriptor = irodsFileSystemAO.createFile(
+					this.getAbsolutePath(), DataObjInp.OpenFlags.READ_WRITE,
+					DataObjInp.DEFAULT_CREATE_MODE);
+
+			log.debug("file descriptor from new file create: {}",
+					fileDescriptor);
+			// in irods the file must be closed, then opened when doing a create
+			// new
+			this.close();
+			this.openKnowingExists();
+			log.debug("file now closed");
+		} catch (JargonFileOrCollAlreadyExistsException e) {
+			return false;
 		}
 		return true;
 	}

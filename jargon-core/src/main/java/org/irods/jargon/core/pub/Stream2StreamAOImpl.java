@@ -17,6 +17,7 @@ import java.nio.channels.WritableByteChannel;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.exception.NoResourceDefinedException;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.pub.io.IRODSFileOutputStream;
 import org.irods.jargon.core.utils.ChannelTools;
@@ -104,7 +105,7 @@ public class Stream2StreamAOImpl extends IRODSGenericAO implements
 	@Override
 	public void transferStreamToFileUsingIOStreams(
 			final InputStream inputStream, final File targetFile,
-			final long length, final int readBuffSize) throws JargonException {
+			final long length, final int readBuffSize) throws  NoResourceDefinedException ,JargonException {
 
 		if (inputStream == null) {
 			throw new IllegalArgumentException("null or empty inputStream");
@@ -194,9 +195,10 @@ public class Stream2StreamAOImpl extends IRODSGenericAO implements
 			log.error("File not found exception copying buffers", e);
 			throw new JargonException(
 					"file not found exception copying buffers", e);
-		} catch (Exception e) {
-			log.error("Exception exception copying buffers", e);
-			throw new JargonException("Exception copying buffers", e);
+		} catch (IOException e) {
+			log.error("io exception copying buffers", e);
+			throw new JargonException(
+					"io exception copying buffers", e);
 		} finally {
 
 			try {
