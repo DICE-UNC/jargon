@@ -6,6 +6,7 @@ import java.util.Properties;
 import junit.framework.Assert;
 
 import org.irods.jargon.core.connection.auth.GSIUtilities;
+import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.IRODSFileSystem;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.junit.AfterClass;
@@ -91,7 +92,7 @@ public class GSIAuthTest {
 			throws Exception {
 
 		if (!testingPropertiesHelper.isTestGSI(testingProperties)) {
-			return;
+			throw new IllegalArgumentException("this is what i am expecting");
 		}
 
 		String testResc = "resc";
@@ -114,7 +115,7 @@ public class GSIAuthTest {
 	public final void testGSIAccountCreateWithNullCertFile() throws Exception {
 
 		if (!testingPropertiesHelper.isTestGSI(testingProperties)) {
-			return;
+			throw new IllegalArgumentException("this is what i am expecting");
 		}
 
 		String testResc = "resc";
