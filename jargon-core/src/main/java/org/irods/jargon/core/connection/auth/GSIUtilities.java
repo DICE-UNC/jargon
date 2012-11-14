@@ -5,6 +5,8 @@ package org.irods.jargon.core.connection.auth;
 
 import java.io.File;
 import java.io.IOException;
+import org.gridforum.jgss.ExtendedGSSCredential;
+import org.gridforum.jgss.ExtendedGSSManager;
 
 import org.ietf.jgss.GSSCredential;
 import org.ietf.jgss.GSSException;
