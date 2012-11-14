@@ -2,7 +2,7 @@
   <parent>
     <groupId>org.irods</groupId>
     <artifactId>jargon</artifactId>
-    <version>3.2.1-b964-SNAPSHOT</version>
+	<version>3.2.2-b964-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.irods.jargon</groupId>
@@ -24,12 +24,16 @@
     <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-exec</artifactId>
-      <scope>compile</scope>
+      <scope>compile</scope> 
     </dependency>
     <dependency>
       <groupId>commons-codec</groupId>
       <artifactId>commons-codec</artifactId>
     </dependency>
+     <dependency>
+        <groupId>org.globus.jglobus</groupId>
+        <artifactId>cog-jglobus</artifactId> 
+      </dependency>
   </dependencies>
   <build>
     <plugins>
@@ -104,6 +108,13 @@ test.federated.irods.resource=${jargon.test.federated.irods.resource}
 test.federated.irods.host=${jargon.test.federated.irods.host}
 test.federated.irods.port=${jargon.test.federated.irods.port}
 test.federated.irods.zone=${jargon.test.federated.irods.zone}
+test.option.gsi=${test.option.gsi}
+test.option.gsi.host=${test.option.gsi.host}
+test.option.gsi.port=${test.option.gsi.port}
+test.option.gsi.zone=${test.option.gsi.zone}
+test.option.gsi.dn=${test.option.gsi.dn}
+test.option.gsi.user=${test.option.gsi.user}
+test.option.gsi.file=${test.option.gsi.file}
 		</echo>
 	      </tasks>
 	    </configuration>

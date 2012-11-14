@@ -239,6 +239,8 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 			throw new IllegalArgumentException(
 					"targetFileAbsolutePath is empty");
 		}
+		
+		MiscIRODSUtils.checkPathSizeForMax(targetFileAbsolutePath);
 
 		log.info("moveAFileOrCollection() from {}", sourceFileAbsolutePath);
 		log.info("to {}", targetFileAbsolutePath);
@@ -594,6 +596,8 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 		if (sourceResourceName == null) {
 			throw new IllegalArgumentException("sourceResourceName is null");
 		}
+		
+		MiscIRODSUtils.checkPathSizeForMax(irodsSourceFileAbsolutePath);
 
 		log.info("get operation, irods source file is: {}",
 				irodsSourceFileAbsolutePath);
@@ -1044,6 +1048,8 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 		if (targetResourceName.isEmpty()) {
 			targetResourceName = getIRODSAccount().getDefaultStorageResource();
 		}
+		
+		MiscIRODSUtils.checkPathSizeForMax(targetIrodsFileAbsolutePath);
 
 		log.info("put operation for source: {}", sourceFileAbsolutePath);
 		log.info(" to target: {}", targetIrodsFileAbsolutePath);
@@ -1258,6 +1264,8 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 		if (targetResource == null || targetResource.isEmpty()) {
 			throw new JargonException("target resource is null or empty");
 		}
+		
+		MiscIRODSUtils.checkPathSizeForMax(irodsFileAbsolutePath);
 
 		log.info("replicate operation for source: {}", irodsFileAbsolutePath);
 		log.info(" to target resource: {}", targetResource);
@@ -1403,6 +1411,9 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 			throw new IllegalArgumentException(
 					"target resource is null or empty");
 		}
+		
+		MiscIRODSUtils.checkPathSizeForMax(irodsSourceFileAbsolutePath);
+		MiscIRODSUtils.checkPathSizeForMax(irodsTargetFileAbsolutePath);
 
 		log.info("copy operation for source: {}", irodsSourceFileAbsolutePath);
 		log.info("to target file:{}", irodsTargetFileAbsolutePath);
@@ -1479,6 +1490,9 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 			throw new IllegalArgumentException(
 					"target resource is null or empty");
 		}
+		
+		MiscIRODSUtils.checkPathSizeForMax(irodsSourceFileAbsolutePath);
+		MiscIRODSUtils.checkPathSizeForMax(irodsTargetFileAbsolutePath);
 
 		log.info("copy operation for source: {}", irodsSourceFileAbsolutePath);
 		log.info("to target file:{}", irodsTargetFileAbsolutePath);

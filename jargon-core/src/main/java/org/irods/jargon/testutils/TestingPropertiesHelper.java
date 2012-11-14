@@ -18,6 +18,11 @@ import org.irods.jargon.testutils.icommandinvoke.IrodsInvocationContext;
  * @since 10/18/2009
  */
 public class TestingPropertiesHelper {
+	public static final String IRODS_GSI_HOST_KEY = "test.option.gsi.host";
+	public static final String IRODS_GSI_PORT_KEY = "test.option.gsi.port";
+	public static final String IRODS_GSI_ZONE_KEY = "test.option.gsi.zone";
+	public static final String IRODS_GSI_DN_KEY = "test.option.gsi.dn";
+	public static final String IRODS_GSI_CERT_PATH = "test.option.gsi.file";
 	public static String GENERATED_FILE_DIRECTORY_KEY = "test.data.directory";
 	public static String IRODS_USER_KEY = "test.irods.user";
 	public static String IRODS_PASSWORD_KEY = "test.irods.password";
@@ -56,26 +61,47 @@ public class TestingPropertiesHelper {
 	public static String IRODS_CONFIRM_TESTING_TRUE = "true";
 	public static String IRODS_CONFIRM_TESTING_FALSE = "false";
 
-	public int getPortAsInt(final Properties testingProperties)
-			throws TestingUtilsException {
-		String portString = (String) testingProperties.get(IRODS_PORT_KEY);
+	/**
+	 * Return the given property (by key) as an int
+	 * 
+	 * @param testingProperties
+	 * @param key
+	 * @return
+	 * @throws TestingUtilsException
+	 */
+	public int getPropertyValueAsInt(final Properties testingProperties,
+			final String key) throws TestingUtilsException {
+		String propVal = (String) testingProperties.get(key);
 
-		if (portString == null || portString.length() == 0) {
+		if (propVal == null || propVal.length() == 0) {
 			throw new TestingUtilsException(
-					"missing or invalid test.irods.port in testing.properties");
+					"missing or invalid value in testing.properties");
 		}
 
 		int retVal = 0;
 
 		try {
-			retVal = Integer.parseInt(portString);
+			retVal = Integer.parseInt(propVal);
 		} catch (NumberFormatException nfe) {
 			throw new TestingUtilsException(
-					"port is in valid format to convert to int:" + portString,
+					"port is in valid format to convert to int:" + propVal,
 					nfe);
 		}
 
 		return retVal;
+	}
+
+	/**
+	 * Get the standard iRODS test server port from the testing properties
+	 * 
+	 * @param testingProperties
+	 * @return
+	 * @throws TestingUtilsException
+	 */
+	public int getPortAsInt(final Properties testingProperties)
+			throws TestingUtilsException {
+		return this.getPropertyValueAsInt(testingProperties,
+				TestingPropertiesHelper.IRODS_PORT_KEY);
 	}
 
 	/**
@@ -897,6 +923,21 @@ public class TestingPropertiesHelper {
 	public boolean isTestTickets(final Properties testingProperties) {
 		String val = (String) testingProperties
 				.get("test.option.exercise.ticket");
+		if (val == null) {
+			return false;
+		} else {
+			return Boolean.parseBoolean(val);
+		}
+	}
+
+	/**
+	 * Check if optional gsi auth system is to be tested
+	 * 
+	 * @param testingProperties
+	 * @return
+	 */
+	public boolean isTestGSI(final Properties testingProperties) {
+		String val = (String) testingProperties.get("test.option.gsi");
 		if (val == null) {
 			return false;
 		} else {

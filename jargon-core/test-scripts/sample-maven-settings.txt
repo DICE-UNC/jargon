@@ -1,0 +1,56 @@
+<!-- what follows is an example maven settings.xml profile for jargon testing.  This is picked up by the jargon pom file and used to generate a testing.properties file in the
+java test resources directory -->
+<profile>
+			<profile>
+			<id>jargonTestPAM</id>
+			<properties>
+				<jargon.test.confirm>true</jargon.test.confirm>
+				<jargon.test.data.directory>/Users/mikeconway/temp/irodsscratch/</jargon.test.data.directory>
+				<jargon.test.irods.admin>rods</jargon.test.irods.admin>
+				<jargon.test.irods.admin.password>test</jargon.test.irods.admin.password>
+				<jargon.test.irods.user>test1</jargon.test.irods.user>
+				<jargon.test.irods.password>test</jargon.test.irods.password>
+				<jargon.test.irods.resource>test1-resc</jargon.test.irods.resource>
+				<jargon.test.irods.user2>test2</jargon.test.irods.user2>
+				<jargon.test.irods.password2>test</jargon.test.irods.password2>
+				<jargon.test.irods.resource2>test1-resc2</jargon.test.irods.resource2>
+				<jargon.test.irods.user3>test3</jargon.test.irods.user3>
+				<jargon.test.irods.password3>test</jargon.test.irods.password3>
+				<jargon.test.kerberos.user></jargon.test.kerberos.user>
+				<jargon.test.irods.resource3>test1-resc2</jargon.test.irods.resource3>
+				<jargon.test.irods.host>localhost</jargon.test.irods.host>
+				<jargon.test.irods.port>1247</jargon.test.irods.port>
+				<jargon.test.irods.zone>test1</jargon.test.irods.zone>
+				<jargon.test.resource.group>testResourceGroup</jargon.test.resource.group>
+				<jargon.test.user.group>jargonTestUg</jargon.test.user.group>
+				<jargon.test.irods.userDN>test1DN</jargon.test.irods.userDN>
+				<jargon.test.irods.scratch.subdir>jargon-scratch</jargon.test.irods.scratch.subdir>
+				<jargon.test.mac.icommand.path>/opt/iRODS/iRODS_SSL_3.2/trunk/iRODS/clients/icommands/bin/</jargon.test.mac.icommand.path>
+				<jargon.test.option.exercise.remoteexecstream>true</jargon.test.option.exercise.remoteexecstream>
+ 				<jargon.test.option.exercise.ticket>true</jargon.test.option.exercise.ticket>
+ 				<jargon.test.option.exercise.audit>false</jargon.test.option.exercise.audit>
+				<test.option.distributed.resources>false</test.option.distributed.resources>
+				<test.option.registration>true</test.option.registration>
+				<test.option.federated.zone>false</test.option.federated.zone>
+				<test.option.kerberos>false</test.option.kerberos>
+				<test.option.pam>true</test.option.pam>
+				<jargon.test.pam.user>pam</jargon.test.pam.user>
+				<jargon.test.pam.password>pam</jargon.test.pam.password>
+				<test.option.strictACL>false</test.option.strictACL>
+				<jargon.test.federated.irods.admin>rods</jargon.test.federated.irods.admin>
+				<jargon.test.federated.irods.admin.password>test</jargon.test.federated.irods.admin.password>
+				<jargon.test.federated.irods.user>test1</jargon.test.federated.irods.user>
+				<jargon.test.federated.irods.password>test</jargon.test.federated.irods.password>
+				<jargon.test.federated.irods.resource>test1-resc</jargon.test.federated.irods.resource>
+				<jargon.test.federated.irods.host>fedzone2</jargon.test.federated.irods.host>
+				<jargon.test.federated.irods.port>1247</jargon.test.federated.irods.port>
+				<jargon.test.federated.irods.zone>fedzone2</jargon.test.federated.irods.zone>
+				<test.option.gsi>true</test.option.gsi>
+				<test.option.gsi.host>localhost</test.option.gsi.host>
+				<test.option.gsi.port>1247</test.option.gsi.port>
+				<test.option.gsi.zone>tempZone</test.option.gsi.zone>
+				<test.option.gsi.dn>/DC=org/DC=cilogon/C=US/O=University of North Carolina at Chapel Hill/CN=Michael Conway A1660</test.option.gsi.dn>
+				<test.option.gsi.user>mikec</test.option.gsi.user>
+			</properties>
+		</profile>
+		

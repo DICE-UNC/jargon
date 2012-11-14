@@ -8,6 +8,7 @@ import java.net.URI;
 
 import org.irods.jargon.core.exception.FileNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.exception.NoResourceDefinedException;
 import org.irods.jargon.core.pub.domain.ObjStat;
 
 /**
@@ -168,8 +169,27 @@ public interface IRODSFile {
 
 	URI toURI();
 
+	/**
+	 * Get the resource (if set by the user) associated with the file. Note that
+	 * this does not inquire to the iCAT for the resource for this particular
+	 * file, instead, this is used by any Jargon methods that have
+	 * <code>IRODSFile</code> as a paramenter to tell iRODS what resoruce to
+	 * operate with.
+	 * 
+	 * @return
+	 * @throws JargonException
+	 */
 	String getResource() throws JargonException;
 
+	/**
+	 * Set the resource (if set by the user) associated with the file. Note that
+	 * this does not inquire to the iCAT for the resource for this particular
+	 * file, instead, this is used by any Jargon methods that have
+	 * <code>IRODSFile</code> as a paramenter to tell iRODS what resoruce to
+	 * operate with.
+	 * 
+	 * @param resource
+	 */
 	void setResource(String resource);
 
 	String getName();
@@ -246,5 +266,21 @@ public interface IRODSFile {
 	 */
 	ObjStat initializeObjStatForFile() throws FileNotFoundException,
 			JargonException;
+
+	/**
+	 * Create a new file, and detect errors where no default storage resource is
+	 * available. This is an iRODS oriented variation on the
+	 * <code>java.io.File createNewFile()</code> method to handle cases where no
+	 * defautl storage resource is found
+	 * 
+	 * @return <code>boolean</code> of <code>true</code> if the file could be
+	 *         created
+	 * @throws NoResourceDefinedException
+	 *             if no default storage resource is defined, and no default
+	 *             rule is installed in iRODS
+	 * @throws JargonException
+	 */
+	boolean createNewFileCheckNoResourceFound()
+			throws NoResourceDefinedException, JargonException;
 
 }

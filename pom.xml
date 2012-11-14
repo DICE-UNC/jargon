@@ -4,17 +4,16 @@
 	<groupId>org.irods</groupId>
 	<artifactId>jargon</artifactId>
 	<packaging>pom</packaging>
-	<version>3.2.1-b964-SNAPSHOT</version>
+	<version>3.2.2-b964-SNAPSHOT</version>
 	<name>Jargon</name>
 	<description>Core Java API and related libraries for iRODS</description>
 	<url>https://code.renci.org/gf/project/jargon</url>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<spring.webmvc.version>3.0.5.RELEASE</spring.webmvc.version>
-		<hibernate.version>3.3.1.GA</hibernate.version>
-		<globus.version>2.0.4</globus.version>
 		<spring.core.version>3.1.0.RELEASE</spring.core.version>
 		<hibernate.version>3.3.2.GA</hibernate.version>
+		<globus.version>1.8.0</globus.version>
 	</properties>
 	<issueManagement>
 		<system>gForge</system>
@@ -161,8 +160,8 @@
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
-					<groupId>org.jglobus</groupId>
-					<artifactId>JGlobus-Core</artifactId>
+					<groupId>org.globus.jglobus</groupId>
+					<artifactId>cog-jglobus</artifactId>
 					<version>${globus.version}</version>
 					
 					 <exclusions>
@@ -220,7 +219,7 @@
 			<dependency>
 				<groupId>org.hibernate</groupId>
 				<artifactId>hibernate-annotations</artifactId>
-				<version>3.2.0.ga</version>
+				<version>3.2.1.ga</version>
 			</dependency>
 			<dependency>
 				<groupId>javax.persistence</groupId>
@@ -363,7 +362,6 @@
 				<version>${spring.webmvc.version}</version>
 				<type>pom</type>
 			</dependency>
-			
 		</dependencies>
 	</dependencyManagement>
 	<dependencies>
@@ -455,6 +453,6 @@
 		<module>jargon-data-utils</module>
 		<module>jargon-ticket</module>
 		<module>jargon-httpstream</module>
-	        <module>jargon-user-profile</module>
+	    <module>jargon-user-profile</module>
   </modules>
 </project>

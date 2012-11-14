@@ -1058,5 +1058,4 @@ public class IRODSConnection implements IRODSManagedConnection {
 	void setConnected(final boolean connected) {
 		this.connected = connected;
 	}
-
 }
