@@ -56,7 +56,7 @@ public final class ConnectionConstants {
 
 	/**
 	 * Size of the socket send buffer
-	 */	
+	 */
 	public static int OUTPUT_BUFFER_LENGTH = 32768;
 
 	/**
@@ -74,12 +74,12 @@ public final class ConnectionConstants {
 	public static final int CHALLENGE_LENGTH = 64;
 
 	public static final long MAX_SZ_FOR_SINGLE_BUF = (32 * 1024 * 1024);
-	
+
 	/**
 	 * Maximum size of an iRODS absolute path
 	 */
 	public static final int MAX_PATH_SIZE = 1024;
-	
+
 	/**
 	 * Set to true to add gen query out xml protocol messages to debug log
 	 */

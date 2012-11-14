@@ -33,13 +33,15 @@ public class IRODSQueryResultSet extends AbstractIRODSQueryResultSet {
 	 *            iRODS. This indicates more data available, and the
 	 *            continuation index will be sent with the request to get more
 	 *            results.
-	 *  @totalRecords <code>int</code> with the total records, corresponding to totalRowCount in the genQueryOut_t structure
+	 * @totalRecords <code>int</code> with the total records, corresponding to
+	 *               totalRowCount in the genQueryOut_t structure
 	 * @return
 	 * @throws JargonException
 	 */
 	public static IRODSQueryResultSet instance(
 			final TranslatedIRODSGenQuery translatedIRODSQuery,
-			final List<IRODSQueryResultRow> results, final int continuationIndex, final int totalRecords)
+			final List<IRODSQueryResultRow> results,
+			final int continuationIndex, final int totalRecords)
 			throws JargonException {
 
 		// get a list of the column names
@@ -57,8 +59,8 @@ public class IRODSQueryResultSet extends AbstractIRODSQueryResultSet {
 	private IRODSQueryResultSet(
 			final TranslatedIRODSGenQuery translatedIRODSQuery,
 			final List<IRODSQueryResultRow> results,
-			final List<String> columnNames, final int continuationIndex, final int totalRecords)
-			throws JargonException {
+			final List<String> columnNames, final int continuationIndex,
+			final int totalRecords) throws JargonException {
 
 		super(results, Collections.unmodifiableList(columnNames),
 				continuationIndex > 0, continuationIndex, totalRecords);

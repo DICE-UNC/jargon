@@ -371,7 +371,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 		}
 
 		MiscIRODSUtils.checkPathSizeForMax(collectionAbsolutePath);
-		
+
 		log.info("absPath for querying iCAT:{}", collectionAbsolutePath);
 
 		log.info("building a metadata query for: {}", avuQuery);
@@ -453,7 +453,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 
 		log.info("adding avu metadata to collection: {}", avuData);
 		log.info("absolute path: {}", absolutePath);
-		
+
 		MiscIRODSUtils.checkPathSizeForMax(absolutePath);
 
 		final ModAvuMetadataInp modifyAvuMetadataInp = ModAvuMetadataInp
@@ -504,7 +504,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 
 		log.info("deleting avu metadata from collection: {}", avuData);
 		log.info("absolute path: {}", absolutePath);
-		
+
 		MiscIRODSUtils.checkPathSizeForMax(absolutePath);
 
 		final ModAvuMetadataInp modifyAvuMetadataInp = ModAvuMetadataInp
@@ -551,7 +551,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 		log.info("setting avu metadata value for collection");
 		log.info("with  avu metadata:{}", avuData);
 		log.info("absolute path: {}", absolutePath);
-		
+
 		MiscIRODSUtils.checkPathSizeForMax(absolutePath);
 
 		// avu is distinct based on attrib and value, so do an attrib/unit
@@ -617,7 +617,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 		log.info("overwrite avu metadata for collection: {}", currentAvuData);
 		log.info("with new avu metadata:{}", newAvuData);
 		log.info("absolute path: {}", absolutePath);
-		
+
 		MiscIRODSUtils.checkPathSizeForMax(absolutePath);
 
 		final ModAvuMetadataInp modifyAvuMetadataInp = ModAvuMetadataInp
@@ -669,7 +669,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 		log.info("find metadata values for collection:{}",
 				collectionAbsolutePath);
 		log.info("with partial start of:{}", partialStartIndex);
-		
+
 		MiscIRODSUtils.checkPathSizeForMax(collectionAbsolutePath);
 
 		String absPath;
@@ -853,9 +853,8 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 					"irodsCollectionAbsolutePath is null");
 		}
 
-		
 		MiscIRODSUtils.checkPathSizeForMax(irodsCollectionAbsolutePath);
-		
+
 		log.info("countAllFilesUnderneathTheGivenCollection: {}",
 				irodsCollectionAbsolutePath);
 
@@ -930,17 +929,16 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 			final String absolutePath, final boolean recursive)
 			throws JargonException {
 
-		
 		if (zone == null) {
 			throw new IllegalArgumentException("null zone");
 		}
-		
+
 		if (absolutePath == null || absolutePath.isEmpty()) {
 			throw new IllegalArgumentException("null or empty absolutePath");
 		}
-		
+
 		MiscIRODSUtils.checkPathSizeForMax(absolutePath);
-		
+
 		// pi tests parameters
 		log.info("setAccessPermissionInherit on absPath:{}", absolutePath);
 
@@ -967,15 +965,15 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 	public void setAccessPermissionToNotInherit(final String zone,
 			final String absolutePath, final boolean recursive)
 			throws JargonException {
-		
+
 		if (zone == null) {
 			throw new IllegalArgumentException("null zone");
 		}
-		
+
 		if (absolutePath == null || absolutePath.isEmpty()) {
 			throw new IllegalArgumentException("null or empty absolutePath");
 		}
-		
+
 		MiscIRODSUtils.checkPathSizeForMax(absolutePath);
 
 		// pi tests parameters
@@ -1006,15 +1004,15 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 	public void setAccessPermissionRead(final String zone,
 			final String absolutePath, final String userName,
 			final boolean recursive) throws JargonException {
-		
+
 		if (zone == null) {
 			throw new IllegalArgumentException("null zone");
 		}
-		
+
 		if (absolutePath == null || absolutePath.isEmpty()) {
 			throw new IllegalArgumentException("null or empty absolutePath");
 		}
-		
+
 		MiscIRODSUtils.checkPathSizeForMax(absolutePath);
 
 		// pi tests parameters
@@ -1045,19 +1043,19 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 	public void setAccessPermissionReadAsAdmin(final String zone,
 			final String absolutePath, final String userName,
 			final boolean recursive) throws JargonException {
-		
+
 		if (zone == null) {
 			throw new IllegalArgumentException("null zone");
 		}
-		
+
 		if (absolutePath == null || absolutePath.isEmpty()) {
 			throw new IllegalArgumentException("null or empty absolutePath");
 		}
-		
+
 		if (userName == null || userName.isEmpty()) {
 			throw new IllegalArgumentException("null or empty userName");
 		}
-		
+
 		MiscIRODSUtils.checkPathSizeForMax(absolutePath);
 
 		// pi tests parameters
@@ -1088,19 +1086,19 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 	public void setAccessPermissionWrite(final String zone,
 			final String absolutePath, final String userName,
 			final boolean recursive) throws JargonException {
-		
+
 		if (zone == null) {
 			throw new IllegalArgumentException("null zone");
 		}
-		
+
 		if (absolutePath == null || absolutePath.isEmpty()) {
 			throw new IllegalArgumentException("null or empty absolutePath");
 		}
-		
+
 		if (userName == null || userName.isEmpty()) {
 			throw new IllegalArgumentException("null or empty userName");
 		}
-		
+
 		MiscIRODSUtils.checkPathSizeForMax(absolutePath);
 
 		// pi tests parameters
@@ -1133,19 +1131,19 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 	public void setAccessPermissionWriteAsAdmin(final String zone,
 			final String absolutePath, final String userName,
 			final boolean recursive) throws JargonException {
-		
+
 		if (zone == null) {
 			throw new IllegalArgumentException("null zone");
 		}
-		
+
 		if (absolutePath == null || absolutePath.isEmpty()) {
 			throw new IllegalArgumentException("null or empty absolutePath");
 		}
-		
+
 		if (userName == null || userName.isEmpty()) {
 			throw new IllegalArgumentException("null or empty userName");
 		}
-		
+
 		MiscIRODSUtils.checkPathSizeForMax(absolutePath);
 
 		// pi tests parameters
@@ -1177,19 +1175,19 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 	public void setAccessPermissionOwn(final String zone,
 			final String absolutePath, final String userName,
 			final boolean recursive) throws JargonException {
-		
+
 		if (zone == null) {
 			throw new IllegalArgumentException("null zone");
 		}
-		
+
 		if (absolutePath == null || absolutePath.isEmpty()) {
 			throw new IllegalArgumentException("null or empty absolutePath");
 		}
-		
+
 		if (userName == null || userName.isEmpty()) {
 			throw new IllegalArgumentException("null or empty userName");
 		}
-		
+
 		MiscIRODSUtils.checkPathSizeForMax(absolutePath);
 
 		// pi tests parameters
@@ -1215,19 +1213,19 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 	public void setAccessPermissionOwnAsAdmin(final String zone,
 			final String absolutePath, final String userName,
 			final boolean recursive) throws JargonException {
-		
+
 		if (zone == null) {
 			throw new IllegalArgumentException("null zone");
 		}
-		
+
 		if (absolutePath == null || absolutePath.isEmpty()) {
 			throw new IllegalArgumentException("null or empty absolutePath");
 		}
-		
+
 		if (userName == null || userName.isEmpty()) {
 			throw new IllegalArgumentException("null or empty userName");
 		}
-		
+
 		MiscIRODSUtils.checkPathSizeForMax(absolutePath);
 
 		// pi tests parameters
@@ -1263,15 +1261,15 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 		if (zone == null) {
 			throw new IllegalArgumentException("null zone");
 		}
-		
+
 		if (absolutePath == null || absolutePath.isEmpty()) {
 			throw new IllegalArgumentException("null or empty absolutePath");
 		}
-		
+
 		if (userName == null || userName.isEmpty()) {
 			throw new IllegalArgumentException("null or empty userName");
 		}
-		
+
 		MiscIRODSUtils.checkPathSizeForMax(absolutePath);
 		// pi tests parameters
 		log.info("removeAccessPermission on absPath:{}", absolutePath);
@@ -1307,15 +1305,15 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 		if (zone == null) {
 			throw new IllegalArgumentException("null zone");
 		}
-		
+
 		if (absolutePath == null || absolutePath.isEmpty()) {
 			throw new IllegalArgumentException("null or empty absolutePath");
 		}
-		
+
 		if (userName == null || userName.isEmpty()) {
 			throw new IllegalArgumentException("null or empty userName");
 		}
-		
+
 		MiscIRODSUtils.checkPathSizeForMax(absolutePath);
 		// pi tests parameters
 		log.info("removeAccessPermissionAsAdmin on absPath:{}", absolutePath);
@@ -1351,7 +1349,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 			throw new IllegalArgumentException(
 					"null or empty absolutePathToCollection");
 		}
-		
+
 		MiscIRODSUtils.checkPathSizeForMax(absolutePath);
 
 		ObjStat objStat = this.getObjectStatForAbsolutePath(absolutePath);
@@ -1410,7 +1408,6 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 
 		MiscIRODSUtils.checkPathSizeForMax(irodsAbsolutePath);
 
-		
 		log.info("getPermissionForCollection for absPath:{}", irodsAbsolutePath);
 		log.info("userName:{}", userName);
 
@@ -1441,12 +1438,11 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 	private boolean adjustRecursiveOption(final String absolutePath,
 			final boolean recursive) throws FileNotFoundException,
 			JargonException {
-		
+
 		if (absolutePath == null || absolutePath.isEmpty()) {
-			throw new IllegalArgumentException(
-					"null or empty absolutePath");
+			throw new IllegalArgumentException("null or empty absolutePath");
 		}
-		
+
 		MiscIRODSUtils.checkPathSizeForMax(absolutePath);
 
 		IRODSFile collFile = this.getIRODSFileFactory().instanceIRODSFile(
@@ -1499,9 +1495,9 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 		if (userName == null || userName.isEmpty()) {
 			throw new IllegalArgumentException("null or empty userName");
 		}
-		
+
 		MiscIRODSUtils.checkPathSizeForMax(irodsCollectionAbsolutePath);
-		
+
 		log.info(
 				"getPermissionForUserName with irodsCollectionAbsolutePath: {}",
 				irodsCollectionAbsolutePath);
@@ -1603,7 +1599,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 			throw new IllegalArgumentException(
 					"null or empty collectionAbsolutePath");
 		}
-		
+
 		MiscIRODSUtils.checkPathSizeForMax(irodsCollectionAbsolutePath);
 
 		log.info("listPermissionsForCollection: {}",
@@ -1683,8 +1679,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 		if (userName == null || userName.isEmpty()) {
 			throw new IllegalArgumentException("null or empty userName");
 		}
-		
-		
+
 		MiscIRODSUtils.checkPathSizeForMax(irodsAbsolutePath);
 
 		log.info("irodsAbsolutePath:{}", irodsAbsolutePath);

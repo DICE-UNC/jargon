@@ -121,10 +121,15 @@ public final class ParallelGetFileTransferStrategy extends
 		ExecutorService executor = getIrodsAccessObjectFactory()
 				.getIrodsSession().getParallelTransferThreadPool();
 		if (executor == null) {
-			log.info("no pool available, transfer using single executor");
-			ExecutorService executorService = Executors
-					.newFixedThreadPool(numberOfThreads);
-			transferWithExecutor(executorService);
+			ExecutorService executorService = null;
+			try {
+				log.info("no pool available, transfer using single executor");
+				executorService = Executors.newFixedThreadPool(numberOfThreads);
+				transferWithExecutor(executorService);
+			} finally {
+				executorService.shutdown();
+			}
+
 		} else {
 			log.info("transfer via executor");
 			transferWithExecutor(executor);

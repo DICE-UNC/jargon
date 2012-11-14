@@ -152,7 +152,6 @@ public class IRODSAccount implements Serializable {
 
 	}
 
-
 	public IRODSAccount(final String host, final int port,
 			final String userName, final String password,
 			final String homeDirectory, final String zone,
@@ -165,7 +164,6 @@ public class IRODSAccount implements Serializable {
 		this.zone = zone;
 		this.defaultStorageResource = defaultStorageResource;
 	}
-
 
 	/**
 	 * Gets the default storage resource.
@@ -361,7 +359,7 @@ public class IRODSAccount implements Serializable {
 	 * @param zone
 	 *            the zone to set
 	 */
-	public void setZone(String zone) {
+	public void setZone(final String zone) {
 		this.zone = zone;
 	}
 
@@ -369,7 +367,7 @@ public class IRODSAccount implements Serializable {
 	 * @param userName
 	 *            the userName to set
 	 */
-	public void setUserName(String userName) {
+	public void setUserName(final String userName) {
 		this.userName = userName;
 	}
 

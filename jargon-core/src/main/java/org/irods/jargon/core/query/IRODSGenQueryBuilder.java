@@ -87,7 +87,7 @@ public class IRODSGenQueryBuilder {
 		this.computeTotalRowCount = false;
 
 	}
-	
+
 	/**
 	 * Constructor takes an optional <code>ExtensibleMetadataMapping</code> if
 	 * extensible metadata is to be used in the query processing.
@@ -100,8 +100,11 @@ public class IRODSGenQueryBuilder {
 	 * @param upperCase
 	 *            <code>boolean</code> which indicates that upper case should be
 	 *            used in the where (case-insensitive queries)
-	 *  @param computeTotalRowCount <code>boolean</code> with a value of <code>true</code> indicating that a total
-	 *  row count should be computed by iRODS from this query.  This may introduce overhead in the ICAT database processing on the iRODS server
+	 * @param computeTotalRowCount
+	 *            <code>boolean</code> with a value of <code>true</code>
+	 *            indicating that a total row count should be computed by iRODS
+	 *            from this query. This may introduce overhead in the ICAT
+	 *            database processing on the iRODS server
 	 * @param extensibleMetadataMapping
 	 *            {@link ExtensibleMetadataMapping} that may be used in queries.
 	 *            This can be <code>null</code> if not required
@@ -115,7 +118,6 @@ public class IRODSGenQueryBuilder {
 		this.computeTotalRowCount = computeTotalRowCount;
 
 	}
-
 
 	/**
 	 * Constructor takes an optional <code>ExtensibleMetadataMapping</code> if

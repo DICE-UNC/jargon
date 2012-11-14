@@ -4,10 +4,6 @@ import java.io.IOException;
 import java.io.InterruptedIOException;
 import java.nio.channels.ClosedChannelException;
 
-import org.globus.common.CoGProperties;
-import org.globus.gsi.gssapi.net.impl.GSIGssInputStream;
-import org.globus.gsi.gssapi.net.impl.GSIGssOutputStream;
-import org.gridforum.jgss.ExtendedGSSManager;
 import org.ietf.jgss.GSSContext;
 import org.ietf.jgss.GSSException;
 import org.irods.jargon.core.connection.auth.AuthResponse;
@@ -203,7 +199,6 @@ class GSIAuth extends AuthMechanism {
 
 		}
 	}
-
 
 	/*
 	 * (non-Javadoc)

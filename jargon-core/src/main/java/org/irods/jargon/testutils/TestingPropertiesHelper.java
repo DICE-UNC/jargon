@@ -84,8 +84,7 @@ public class TestingPropertiesHelper {
 			retVal = Integer.parseInt(propVal);
 		} catch (NumberFormatException nfe) {
 			throw new TestingUtilsException(
-					"port is in valid format to convert to int:" + propVal,
-					nfe);
+					"port is in valid format to convert to int:" + propVal, nfe);
 		}
 
 		return retVal;

@@ -20,7 +20,8 @@ class IRODSGenQueryBuilderQueryData {
 	private final boolean distinct;
 	private final boolean upperCase;
 	/**
-	 * Indicates whether to ask iRODS to provide a total row count in the query results
+	 * Indicates whether to ask iRODS to provide a total row count in the query
+	 * results
 	 */
 	private final boolean computeTotalRowCount;
 
@@ -48,11 +49,12 @@ class IRODSGenQueryBuilderQueryData {
 			final List<GenQuerySelectField> selectFields,
 			final List<GenQueryBuilderCondition> conditions,
 			final List<GenQueryOrderByField> orderByFields,
-			final boolean distinct, final boolean upperCase, final boolean computeTotalRowCount) {
+			final boolean distinct, final boolean upperCase,
+			final boolean computeTotalRowCount) {
 		return new IRODSGenQueryBuilderQueryData(selectFields, conditions,
 				orderByFields, distinct, upperCase, computeTotalRowCount);
 	}
-	
+
 	/**
 	 * Instance to create an immutable representation of the query
 	 * 
@@ -100,14 +102,19 @@ class IRODSGenQueryBuilderQueryData {
 	 * @param upperCase
 	 *            <code>boolean</code> indicates whether the query uses
 	 *            case-insensitive conditions
-	 *  @param computeTotalRowCount <code>boolean</code> that indicates that the total row count should be returned, this might carry a performance penalty.  If this is <code>true</code> the 
-	 *  eventual result set will contain the iRODS response from the query with the total rows to be returned
+	 * @param computeTotalRowCount
+	 *            <code>boolean</code> that indicates that the total row count
+	 *            should be returned, this might carry a performance penalty. If
+	 *            this is <code>true</code> the eventual result set will contain
+	 *            the iRODS response from the query with the total rows to be
+	 *            returned
 	 */
 	private IRODSGenQueryBuilderQueryData(
 			final List<GenQuerySelectField> selectFields,
 			final List<GenQueryBuilderCondition> conditions,
 			final List<GenQueryOrderByField> orderByFields,
-			final boolean distinct, final boolean upperCase, final boolean computeTotalRowCount) {
+			final boolean distinct, final boolean upperCase,
+			final boolean computeTotalRowCount) {
 
 		if (selectFields == null || selectFields.isEmpty()) {
 			throw new IllegalArgumentException("null or empty selectFields");

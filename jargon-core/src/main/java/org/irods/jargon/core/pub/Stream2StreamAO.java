@@ -52,7 +52,9 @@ public interface Stream2StreamAO extends IRODSAccessObject {
 	 *            <code>InputStream</code> to stream from
 	 * @param outputStream
 	 *            <code>OutputStream</code> to stream to
-	 *  @throws NoResourceDefinedException if no storage resource is defined, and iRODS does not have a default resource selection rule       
+	 * @throws NoResourceDefinedException
+	 *             if no storage resource is defined, and iRODS does not have a
+	 *             default resource selection rule
 	 * @throws JargonException
 	 */
 	void streamToStreamCopy(InputStream inputStream, OutputStream outputStream)

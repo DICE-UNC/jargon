@@ -239,7 +239,7 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 			throw new IllegalArgumentException(
 					"targetFileAbsolutePath is empty");
 		}
-		
+
 		MiscIRODSUtils.checkPathSizeForMax(targetFileAbsolutePath);
 
 		log.info("moveAFileOrCollection() from {}", sourceFileAbsolutePath);
@@ -596,7 +596,7 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 		if (sourceResourceName == null) {
 			throw new IllegalArgumentException("sourceResourceName is null");
 		}
-		
+
 		MiscIRODSUtils.checkPathSizeForMax(irodsSourceFileAbsolutePath);
 
 		log.info("get operation, irods source file is: {}",
@@ -1048,7 +1048,7 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 		if (targetResourceName.isEmpty()) {
 			targetResourceName = getIRODSAccount().getDefaultStorageResource();
 		}
-		
+
 		MiscIRODSUtils.checkPathSizeForMax(targetIrodsFileAbsolutePath);
 
 		log.info("put operation for source: {}", sourceFileAbsolutePath);
@@ -1264,7 +1264,7 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 		if (targetResource == null || targetResource.isEmpty()) {
 			throw new JargonException("target resource is null or empty");
 		}
-		
+
 		MiscIRODSUtils.checkPathSizeForMax(irodsFileAbsolutePath);
 
 		log.info("replicate operation for source: {}", irodsFileAbsolutePath);
@@ -1411,7 +1411,7 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 			throw new IllegalArgumentException(
 					"target resource is null or empty");
 		}
-		
+
 		MiscIRODSUtils.checkPathSizeForMax(irodsSourceFileAbsolutePath);
 		MiscIRODSUtils.checkPathSizeForMax(irodsTargetFileAbsolutePath);
 
@@ -1490,7 +1490,7 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 			throw new IllegalArgumentException(
 					"target resource is null or empty");
 		}
-		
+
 		MiscIRODSUtils.checkPathSizeForMax(irodsSourceFileAbsolutePath);
 		MiscIRODSUtils.checkPathSizeForMax(irodsTargetFileAbsolutePath);
 

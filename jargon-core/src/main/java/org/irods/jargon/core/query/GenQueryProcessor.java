@@ -181,13 +181,13 @@ public class GenQueryProcessor {
 			final AbstractIRODSGenQuery irodsQuery) throws JargonException,
 			JargonQueryException {
 		TranslatedIRODSGenQuery translatedIRODSQuery = null;
-	
+
 		if (irodsQuery instanceof IRODSGenQuery) {
 			IRODSGenQueryTranslator irodsQueryTranslator = new IRODSGenQueryTranslator(
 					this.irodsCommands.getIRODSServerProperties());
 			translatedIRODSQuery = irodsQueryTranslator
 					.getTranslatedQuery((IRODSGenQuery) irodsQuery);
-	
+
 		} else if (irodsQuery instanceof IRODSGenQueryFromBuilder) {
 			try {
 				translatedIRODSQuery = ((IRODSGenQueryFromBuilder) irodsQuery)

@@ -127,9 +127,13 @@ public final class ParallelPutFileTransferStrategy extends
 				.getIrodsSession().getParallelTransferThreadPool();
 		if (executor == null) {
 			log.info("no pool available, transfer using single executor");
-			ExecutorService executorService = Executors
-					.newFixedThreadPool(numberOfThreads);
-			transferWithExecutor(executorService);
+			ExecutorService executorService = null;
+			try {
+				executorService = Executors.newFixedThreadPool(numberOfThreads);
+				transferWithExecutor(executorService);
+			} finally {
+				executorService.shutdown();
+			}
 		} else {
 			log.info("transfer via executor");
 			transferWithExecutor(executor);

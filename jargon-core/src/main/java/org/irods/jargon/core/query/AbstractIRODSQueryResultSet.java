@@ -27,9 +27,10 @@ public abstract class AbstractIRODSQueryResultSet implements
 	protected final List<String> columnNames;
 	protected final int continuationIndex;
 	protected final int totalRecords;
-	
+
 	/**
 	 * Constructor for a result set without supplying total records
+	 * 
 	 * @param results
 	 * @param columnNames
 	 * @param hasMoreRecords
@@ -44,6 +45,7 @@ public abstract class AbstractIRODSQueryResultSet implements
 
 	/**
 	 * Constructor for a result set
+	 * 
 	 * @param results
 	 * @param columnNames
 	 * @param hasMoreRecords
@@ -66,7 +68,7 @@ public abstract class AbstractIRODSQueryResultSet implements
 		if (totalRecords < 0) {
 			throw new IllegalArgumentException("totalRecords < 0");
 		}
-		
+
 		this.results = Collections.unmodifiableList(results);
 		this.hasMoreRecords = hasMoreRecords;
 		this.columnNames = columnNames;
@@ -137,9 +139,12 @@ public abstract class AbstractIRODSQueryResultSet implements
 		return continuationIndex;
 	}
 
-	
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.query.IRODSQueryResultSetInterface#getTotalRecords()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.query.IRODSQueryResultSetInterface#getTotalRecords
+	 * ()
 	 */
 	@Override
 	public int getTotalRecords() {
