@@ -190,7 +190,8 @@ public class IRODSCommands implements IRODSManagedConnection {
 			throws AuthenticationException, JargonException {
 
 		/*
-		 * Per  [#1039] invalid auth potentially leaving open connection/agent, clean up the connection on authentication exception
+		 * Per [#1039] invalid auth potentially leaving open connection/agent,
+		 * clean up the connection on authentication exception
 		 */
 		try {
 			authResponse = authMechanism.authenticate(this, irodsAccount);
@@ -201,9 +202,9 @@ public class IRODSCommands implements IRODSManagedConnection {
 			this.disconnectWithIOException();
 			throw e;
 		}
-		
+
 		// authenticated.....
-		
+
 		this.irodsAccount = authResponse.getAuthenticatedIRODSAccount();
 
 		// set the server properties
@@ -793,7 +794,8 @@ public class IRODSCommands implements IRODSManagedConnection {
 			// squelch genqueryout data for nicer logs
 			if (log.isDebugEnabled()) {
 				String messageAsString = message.parseTag();
-				if (message.parseTag().indexOf("GenQueryOut") == -1 || ConnectionConstants.DUMP_GEN_QUERY_OUT) {
+				if (message.parseTag().indexOf("GenQueryOut") == -1
+						|| ConnectionConstants.DUMP_GEN_QUERY_OUT) {
 					log.debug("message from IRODS read back:{}",
 							messageAsString);
 				}

@@ -1,5 +1,6 @@
 **/.classpath
 */.DS_Store
+**/nb-configuration.xml
 .project
 .metadata
 .DS_Store

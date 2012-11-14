@@ -108,8 +108,8 @@ public final class IRODSGenQueryExecutorImpl extends IRODSGenericAO implements
 				.translateProvidedQuery(irodsQuery);
 
 		return genQueryProcessor.executeTranslatedIRODSQuery(
-				translatedIRODSQuery, continueIndex,
-				0, QueryCloseBehavior.MANUAL_CLOSE, zoneName);
+				translatedIRODSQuery, continueIndex, 0,
+				QueryCloseBehavior.MANUAL_CLOSE, zoneName);
 	}
 
 	/*
@@ -157,8 +157,8 @@ public final class IRODSGenQueryExecutorImpl extends IRODSGenericAO implements
 				.translateProvidedQuery(irodsQuery);
 
 		return genQueryProcessor.executeTranslatedIRODSQuery(
-				translatedIRODSQuery, 0,
-				partialStartIndex, QueryCloseBehavior.AUTO_CLOSE, zoneName);
+				translatedIRODSQuery, 0, partialStartIndex,
+				QueryCloseBehavior.AUTO_CLOSE, zoneName);
 	}
 
 	/*
@@ -202,8 +202,8 @@ public final class IRODSGenQueryExecutorImpl extends IRODSGenericAO implements
 				.translateProvidedQuery(irodsQuery);
 
 		return genQueryProcessor.executeTranslatedIRODSQuery(
-				translatedIRODSQuery, 0,
-				partialStartIndex, QueryCloseBehavior.AUTO_CLOSE, zoneName);
+				translatedIRODSQuery, 0, partialStartIndex,
+				QueryCloseBehavior.AUTO_CLOSE, zoneName);
 	}
 
 	/*

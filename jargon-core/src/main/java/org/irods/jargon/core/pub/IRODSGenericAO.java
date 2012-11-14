@@ -176,5 +176,4 @@ public abstract class IRODSGenericAO implements IRODSAccessObject {
 				.instance(status);
 		getIRODSProtocol().irodsFunction(operationComplete);
 	}
-
 }

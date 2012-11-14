@@ -359,7 +359,7 @@ public class LocalFileUtils {
 	 * @return
 	 * @throws IOException
 	 */
-	public static byte[] getBytesFromFile(File file) throws IOException {
+	public static byte[] getBytesFromFile(final File file) throws IOException {
 		InputStream is = new FileInputStream(file);
 		byte[] bytes;
 

@@ -3,9 +3,8 @@
 *'''Release Version''': 3.2.2-SNAPSHOT for grid memory
 *'''git tag''': 964-grid-memory
 
+
 ==News==
-
-
 
 Jargon-core implements the iRODS protocol, and allows development of iRODS-enabled Java applications.  This API is especially useful for developing
 mid-tier applications and services, as well as desktop-clients (such as iDROP).  These libraries also provide a foundation for a new set of interfaces that will come with iRODS.

@@ -6,6 +6,7 @@ package org.irods.jargon.core.pub;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FilenameFilter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -1099,7 +1100,8 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 	@Override
 	public int createFile(final String absolutePath,
 			final DataObjInp.OpenFlags openFlags, final int createMode)
-			throws NoResourceDefinedException, JargonFileOrCollAlreadyExistsException, JargonException {
+			throws NoResourceDefinedException,
+			JargonFileOrCollAlreadyExistsException, JargonException {
 
 		// find the correct resource and call the method with the resource
 		// signature
@@ -1184,7 +1186,8 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 	@Override
 	public int createFileInResource(final String absolutePath,
 			final DataObjInp.OpenFlags openFlags, final int createMode,
-			final String resource) throws  NoResourceDefinedException, JargonFileOrCollAlreadyExistsException, JargonException {
+			final String resource) throws NoResourceDefinedException,
+			JargonFileOrCollAlreadyExistsException, JargonException {
 
 		if (absolutePath == null || absolutePath.length() == 0) {
 			throw new JargonException("absolute path is null or empty");
@@ -1211,22 +1214,19 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 
 		int responseFileNbr = 0;
 
-	
-			DataObjInp dataObjInp = DataObjInp
-					.instance(absolutePath, createMode, openFlags, offset,
-							dataSize, thisResource, null);
-			Tag response = getIRODSProtocol().irodsFunction(DataObjInp.PI_TAG,
-					dataObjInp.getParsedTags(), DataObjInp.CREATE_FILE_API_NBR);
-			if (response == null) {
-				String msg = "null response from IRODS call";
-				log.error(msg);
-				throw new JargonException(msg);
-			}
-			// parse out the response
-			responseFileNbr = response.getTag(MsgHeader.PI_NAME)
-					.getTag(MsgHeader.INT_INFO).getIntValue();
+		DataObjInp dataObjInp = DataObjInp.instance(absolutePath, createMode,
+				openFlags, offset, dataSize, thisResource, null);
+		Tag response = getIRODSProtocol().irodsFunction(DataObjInp.PI_TAG,
+				dataObjInp.getParsedTags(), DataObjInp.CREATE_FILE_API_NBR);
+		if (response == null) {
+			String msg = "null response from IRODS call";
+			log.error(msg);
+			throw new JargonException(msg);
+		}
+		// parse out the response
+		responseFileNbr = response.getTag(MsgHeader.PI_NAME)
+				.getTag(MsgHeader.INT_INFO).getIntValue();
 
-	
 		log.debug("response file nbr:{}", responseFileNbr);
 
 		return responseFileNbr;

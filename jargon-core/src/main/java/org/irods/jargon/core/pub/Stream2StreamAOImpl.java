@@ -105,7 +105,8 @@ public class Stream2StreamAOImpl extends IRODSGenericAO implements
 	@Override
 	public void transferStreamToFileUsingIOStreams(
 			final InputStream inputStream, final File targetFile,
-			final long length, final int readBuffSize) throws  NoResourceDefinedException ,JargonException {
+			final long length, final int readBuffSize)
+			throws NoResourceDefinedException, JargonException {
 
 		if (inputStream == null) {
 			throw new IllegalArgumentException("null or empty inputStream");
@@ -197,8 +198,7 @@ public class Stream2StreamAOImpl extends IRODSGenericAO implements
 					"file not found exception copying buffers", e);
 		} catch (IOException e) {
 			log.error("io exception copying buffers", e);
-			throw new JargonException(
-					"io exception copying buffers", e);
+			throw new JargonException("io exception copying buffers", e);
 		} finally {
 
 			try {

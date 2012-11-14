@@ -31,7 +31,7 @@ public class TranslatedIRODSGenQuery {
 	 * Indicates whether a total row count should be included by iRODS
 	 */
 	private final boolean computeTotalRowCount;
-	
+
 	/**
 	 * Create an instance of the query translation, this contains information
 	 * about the original iquest-like query, as well as information about the
@@ -98,7 +98,8 @@ public class TranslatedIRODSGenQuery {
 			final AbstractIRODSGenQuery irodsQuery, final boolean distinct)
 			throws JargonException {
 		return new TranslatedIRODSGenQuery(translatedSelectFields,
-				translatedQueryConditions, null, irodsQuery, distinct, false, false);
+				translatedQueryConditions, null, irodsQuery, distinct, false,
+				false);
 
 	}
 
@@ -141,7 +142,7 @@ public class TranslatedIRODSGenQuery {
 				caseInsensitive, false);
 
 	}
-	
+
 	/**
 	 * Create an instance of the query translation, this contains information
 	 * about the original query, as well as information about the parsed and
@@ -167,8 +168,12 @@ public class TranslatedIRODSGenQuery {
 	 * @param caseInsensitive
 	 *            <code>boolean</code> indicating that the query will be
 	 *            case-insensitive for condition values
-	 *  @param computeTotalRowCount <code>boolean</code> that indicates that the total row count should be returned, this might carry a performance penalty.  If this is <code>true</code> the 
-	 *  eventual result set will contain the iRODS response from the query with the total rows to be returned
+	 * @param computeTotalRowCount
+	 *            <code>boolean</code> that indicates that the total row count
+	 *            should be returned, this might carry a performance penalty. If
+	 *            this is <code>true</code> the eventual result set will contain
+	 *            the iRODS response from the query with the total rows to be
+	 *            returned
 	 * @return <code>TranslatedIRODSQuery</code>
 	 * @throws JargonException
 	 */
@@ -177,13 +182,13 @@ public class TranslatedIRODSGenQuery {
 			final List<TranslatedGenQueryCondition> translatedQueryConditions,
 			final List<GenQueryOrderByField> orderByFields,
 			final AbstractIRODSGenQuery irodsQuery, final boolean distinct,
-			final boolean caseInsensitive, final boolean computeTotalRowCount) throws JargonException {
+			final boolean caseInsensitive, final boolean computeTotalRowCount)
+			throws JargonException {
 		return new TranslatedIRODSGenQuery(translatedSelectFields,
 				translatedQueryConditions, orderByFields, irodsQuery, distinct,
 				caseInsensitive, computeTotalRowCount);
 
 	}
-
 
 	/**
 	 * Create an instance of the query translation, this contains information
@@ -218,7 +223,8 @@ public class TranslatedIRODSGenQuery {
 			final List<TranslatedGenQueryCondition> translatedQueryConditions,
 			final List<GenQueryOrderByField> orderByFields,
 			final AbstractIRODSGenQuery irodsQuery, final boolean distinct,
-			final boolean upperCase, final boolean computeTotalRowCount) throws JargonException {
+			final boolean upperCase, final boolean computeTotalRowCount)
+			throws JargonException {
 
 		if (translatedQueryConditions == null) {
 			throw new JargonException("conditions are null");

@@ -147,7 +147,7 @@ public class GSIIRODSAccount extends IRODSAccount {
 	 * org.irods.jargon.core.connection.IRODSAccount#equals(java.lang.Object)
 	 */
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		try {
 			if (obj == null) {
 				return false;

@@ -6,6 +6,7 @@ package org.irods.jargon.core.pub;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.query.AbstractAliasedQuery;
 import org.irods.jargon.core.query.IRODSQueryResultSetInterface;
+import org.irods.jargon.core.query.SimpleQuery;
 
 /**
  * Access object to execute queries using the iRODS Simple Query facility. This

@@ -4,9 +4,11 @@
 package org.irods.jargon.core.exception;
 
 /**
- * Represents an exception caused by an iRODS file path exceeding the maximum length
+ * Represents an exception caused by an iRODS file path exceeding the maximum
+ * length
+ * 
  * @author Mike Conway - DICE (www.irods.org)
- *
+ * 
  */
 public class PathTooLongException extends JargonException {
 
@@ -18,7 +20,7 @@ public class PathTooLongException extends JargonException {
 	/**
 	 * @param message
 	 */
-	public PathTooLongException(String message) {
+	public PathTooLongException(final String message) {
 		super(message);
 	}
 
@@ -26,14 +28,14 @@ public class PathTooLongException extends JargonException {
 	 * @param message
 	 * @param cause
 	 */
-	public PathTooLongException(String message, Throwable cause) {
+	public PathTooLongException(final String message, final Throwable cause) {
 		super(message, cause);
 	}
 
 	/**
 	 * @param cause
 	 */
-	public PathTooLongException(Throwable cause) {
+	public PathTooLongException(final Throwable cause) {
 		super(cause);
 	}
 
@@ -42,8 +44,8 @@ public class PathTooLongException extends JargonException {
 	 * @param cause
 	 * @param underlyingIRODSExceptionCode
 	 */
-	public PathTooLongException(String message, Throwable cause,
-			int underlyingIRODSExceptionCode) {
+	public PathTooLongException(final String message, final Throwable cause,
+			final int underlyingIRODSExceptionCode) {
 		super(message, cause, underlyingIRODSExceptionCode);
 	}
 
@@ -51,8 +53,8 @@ public class PathTooLongException extends JargonException {
 	 * @param cause
 	 * @param underlyingIRODSExceptionCode
 	 */
-	public PathTooLongException(Throwable cause,
-			int underlyingIRODSExceptionCode) {
+	public PathTooLongException(final Throwable cause,
+			final int underlyingIRODSExceptionCode) {
 		super(cause, underlyingIRODSExceptionCode);
 	}
 
@@ -60,7 +62,8 @@ public class PathTooLongException extends JargonException {
 	 * @param message
 	 * @param underlyingIRODSExceptionCode
 	 */
-	public PathTooLongException(String message, int underlyingIRODSExceptionCode) {
+	public PathTooLongException(final String message,
+			final int underlyingIRODSExceptionCode) {
 		super(message, underlyingIRODSExceptionCode);
 	}
 
