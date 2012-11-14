@@ -1,7 +1,7 @@
 *'''Project''': Jargon-core API
 *'''Date''': 10/10/2012
-*'''Release Version''': 3.2.1-SNAPSHOT 
-*'''git tag''': master
+*'''Release Version''': 3.2.1
+*'''git tag''': 3.2.1
 
 ==News==
 
