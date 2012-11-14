@@ -1,6 +1,7 @@
 package org.irods.jargon.transfer;
 
 import org.irods.jargon.transfer.engine.ConfigurationService;
+import org.irods.jargon.transfer.engine.GridAccountService;
 import org.irods.jargon.transfer.engine.TransferQueueService;
 import org.irods.jargon.transfer.engine.synch.SynchManagerService;
 import org.slf4j.Logger;
@@ -14,7 +15,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
  * @author Mike Conway - DICE (www.irods.org)
  * 
  */
-public class TransferServiceFactoryImpl {
+public class TransferServiceFactoryImpl implements TransferServiceFactory {
 
 	private BeanFactory beanFactory;
 
@@ -34,15 +35,51 @@ public class TransferServiceFactoryImpl {
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.transfer.TransferServiceFactory#instanceTransferQueueService
+	 * ()
+	 */
+	@Override
 	public TransferQueueService instanceTransferQueueService() {
 		return (TransferQueueService) beanFactory
 				.getBean("transferQueueService");
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.transfer.TransferServiceFactory#instanceSynchManagerService
+	 * ()
+	 */
+	@Override
 	public SynchManagerService instanceSynchManagerService() {
 		return (SynchManagerService) beanFactory.getBean("synchManagerService");
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.transfer.TransferServiceFactory#instanceGridAccountService
+	 * ()
+	 */
+	@Override
+	public GridAccountService instanceGridAccountService() {
+		return (GridAccountService) beanFactory.getBean("gridAccountService");
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.transfer.TransferServiceFactory#instanceConfigurationService
+	 * ()
+	 */
+	@Override
 	public ConfigurationService instanceConfigurationService() {
 		return (ConfigurationService) beanFactory
 				.getBean("configurationService");

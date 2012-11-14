@@ -9,6 +9,7 @@ import org.irods.jargon.core.transfer.DefaultTransferControlBlock;
 import org.irods.jargon.core.transfer.TransferControlBlock;
 import org.irods.jargon.core.transfer.TransferStatus;
 import org.irods.jargon.transfer.TransferEngineException;
+import org.irods.jargon.transfer.TransferServiceFactory;
 import org.irods.jargon.transfer.TransferServiceFactoryImpl;
 import org.irods.jargon.transfer.dao.domain.GridAccount;
 import org.irods.jargon.transfer.dao.domain.LocalIRODSTransfer;
@@ -44,7 +45,7 @@ public final class TransferManagerImpl implements TransferManager {
 
 	private TransferManagerCallbackListener transferManagerCallbackListener = null;
 
-	private final TransferServiceFactoryImpl transferServiceFactory = new TransferServiceFactoryImpl();
+	private final TransferServiceFactory transferServiceFactory = new TransferServiceFactoryImpl();
 
 	/**
 	 * Required dependency to be injected
@@ -99,7 +100,7 @@ public final class TransferManagerImpl implements TransferManager {
 	 * ()
 	 */
 	@Override
-	public TransferServiceFactoryImpl getTransferServiceFactory() {
+	public TransferServiceFactory getTransferServiceFactory() {
 		return transferServiceFactory;
 	}
 
@@ -128,14 +129,16 @@ public final class TransferManagerImpl implements TransferManager {
 		}
 
 		this.irodsFileSystem = irodsFileSystem;
-		gridAccountService.validatePassPhrase(passPhrase);
-		
+
 		try {
 			init();
 		} catch (Exception e) {
 			log.error("error initing tranfer manager", e);
 			throw new TransferEngineException("Failed to init TransferManager");
 		}
+
+		gridAccountService.validatePassPhrase(passPhrase);
+
 	}
 
 	/**
@@ -168,7 +171,6 @@ public final class TransferManagerImpl implements TransferManager {
 			throw new IllegalArgumentException("null or empty passPhrase");
 		}
 
-		gridAccountService.validatePassPhrase(passPhrase);
 
 		this.irodsFileSystem = irodsFileSystem;
 		this.transferManagerCallbackListener = transferManagerCallbackListener;
@@ -178,6 +180,9 @@ public final class TransferManagerImpl implements TransferManager {
 		} catch (Exception e) {
 			throw new TransferEngineException("Failed to init TransferManager");
 		}
+
+		gridAccountService.validatePassPhrase(passPhrase);
+
 	}
 
 	/**
@@ -219,8 +224,6 @@ public final class TransferManagerImpl implements TransferManager {
 			throw new IllegalArgumentException("null or empty passPhrase");
 		}
 
-		gridAccountService.validatePassPhrase(passPhrase);
-
 		this.irodsFileSystem = irodsFileSystem;
 		this.transferManagerCallbackListener = transferManagerCallbackListener;
 		this.transferEngineConfigurationProperties = transferEngineConfigurationProperties;
@@ -230,6 +233,8 @@ public final class TransferManagerImpl implements TransferManager {
 			log.error("error in init of TransferManagerImpl", e);
 			throw new JargonException("Failed to init TransferManager", e);
 		}
+
+		gridAccountService.validatePassPhrase(passPhrase);
 	}
 
 	private void init() throws JargonException {
@@ -243,6 +248,8 @@ public final class TransferManagerImpl implements TransferManager {
 		this.runningStatus = RunningStatus.IDLE;
 		this.transferQueueService = transferServiceFactory
 				.instanceTransferQueueService();
+		this.gridAccountService = transferServiceFactory
+				.instanceGridAccountService();
 		log.info("processing queue at startup");
 		transferQueueService.processQueueAtStartup();
 	}

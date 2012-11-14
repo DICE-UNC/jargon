@@ -28,7 +28,7 @@ public class TransferServiceFactoryImplTest {
 
 	@Test
 	public void testInstanceTransferQueueService() throws Exception {
-		TransferServiceFactoryImpl transferServiceFactory = new TransferServiceFactoryImpl();
+		TransferServiceFactory transferServiceFactory = new TransferServiceFactoryImpl();
 		TransferQueueService transferQueueService = transferServiceFactory
 				.instanceTransferQueueService();
 		Assert.assertNotNull("null transfer queue service returned",
@@ -38,7 +38,7 @@ public class TransferServiceFactoryImplTest {
 
 	@Test
 	public void testInstanceSynchManagerService() throws Exception {
-		TransferServiceFactoryImpl transferServiceFactory = new TransferServiceFactoryImpl();
+		TransferServiceFactory transferServiceFactory = new TransferServiceFactoryImpl();
 		SynchManagerService synchManagerService = transferServiceFactory
 				.instanceSynchManagerService();
 		Assert.assertNotNull("null synchManagerServcie returned",
@@ -47,7 +47,7 @@ public class TransferServiceFactoryImplTest {
 
 	@Test
 	public void testInstanceConfigurationService() throws Exception {
-		TransferServiceFactoryImpl transferServiceFactory = new TransferServiceFactoryImpl();
+		TransferServiceFactory transferServiceFactory = new TransferServiceFactoryImpl();
 		ConfigurationService configurationService = transferServiceFactory
 				.instanceConfigurationService();
 		Assert.assertNotNull("null configurationService returned",

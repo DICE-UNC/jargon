@@ -85,6 +85,13 @@ public class GridAccountServiceImpl implements GridAccountService {
 		this.keyStoreDAO = keyStoreDAO;
 	}
 	
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.transfer.engine.GridAccountService#storePassPhrase(java
+	 * .lang.String)
+	 */
 	@Override
 	public synchronized KeyStore storePassPhrase(final String passPhrase)
 			throws PassPhraseInvalidException, TransferEngineException {
@@ -115,7 +122,6 @@ public class GridAccountServiceImpl implements GridAccountService {
 			throw new TransferEngineException(
 					"error creating hash of pass phrase to store", e);
 		}
-
 
 		log.info("update or add the KeyStore");
 		if (keyStore == null) {
@@ -203,7 +209,6 @@ public class GridAccountServiceImpl implements GridAccountService {
 		}
 		log.info("hash of supplied pass phrase:{}", hashOfPassPhrase);
 		
-
 		if (!hashOfPassPhrase.equals(keyStore.getValue())) {
 			log.error("invalid pass phrase supplied");
 			throw new PassPhraseInvalidException("invalid pass phrase supplied");
@@ -247,7 +252,6 @@ public class GridAccountServiceImpl implements GridAccountService {
 	public synchronized void purgeRememberedGrids()
 			throws TransferEngineException {
 		log.info("purgeRememberedGrids()");
-
 	}
 
 }

@@ -5,7 +5,7 @@ import java.util.List;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.IRODSFileSystem;
 import org.irods.jargon.transfer.TransferEngineException;
-import org.irods.jargon.transfer.TransferServiceFactoryImpl;
+import org.irods.jargon.transfer.TransferServiceFactory;
 import org.irods.jargon.transfer.dao.domain.GridAccount;
 import org.irods.jargon.transfer.dao.domain.LocalIRODSTransfer;
 import org.irods.jargon.transfer.dao.domain.LocalIRODSTransferItem;
@@ -267,9 +267,9 @@ public interface TransferManager {
 	 * Get a reference to the factory object that can create various services
 	 * for transfers, configuration management, and synchronization management
 	 * 
-	 * @return {@link TransferServiceFactoryImpl}
+	 * @return {@link TransferServiceFactory}
 	 */
-	TransferServiceFactoryImpl getTransferServiceFactory();
+	TransferServiceFactory getTransferServiceFactory();
 
 	/**
 	 * Enqueue a synchronization process. This process is scheduled and run

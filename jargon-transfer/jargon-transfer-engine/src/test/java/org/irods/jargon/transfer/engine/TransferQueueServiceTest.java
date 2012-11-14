@@ -11,6 +11,7 @@ import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.IRODSFileSystem;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
+import org.irods.jargon.transfer.TransferServiceFactory;
 import org.irods.jargon.transfer.TransferServiceFactoryImpl;
 import org.irods.jargon.transfer.dao.domain.LocalIRODSTransfer;
 import org.irods.jargon.transfer.dao.domain.LocalIRODSTransferItem;
@@ -74,7 +75,7 @@ public class TransferQueueServiceTest {
 		String irodsCollectionRootAbsolutePath = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH);
-		TransferServiceFactoryImpl transferServiceFactory = new TransferServiceFactoryImpl();
+		TransferServiceFactory transferServiceFactory = new TransferServiceFactoryImpl();
 
 		TransferQueueService transferQueueService = transferServiceFactory
 				.instanceTransferQueueService();
@@ -127,7 +128,7 @@ public class TransferQueueServiceTest {
 		enqueuedTransfer.setTransferPassword(irodsAccount.getPassword());
 		enqueuedTransfer.setTransferState(TransferState.PROCESSING);
 		enqueuedTransfer.setTransferStatus(TransferStatus.ERROR);
-		TransferServiceFactoryImpl transferServiceFactory = new TransferServiceFactoryImpl();
+		TransferServiceFactory transferServiceFactory = new TransferServiceFactoryImpl();
 
 		TransferQueueService transferQueueService = transferServiceFactory
 				.instanceTransferQueueService();
@@ -175,7 +176,7 @@ public class TransferQueueServiceTest {
 		String irodsCollectionRootAbsolutePath = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH);
-		TransferServiceFactoryImpl transferServiceFactory = new TransferServiceFactoryImpl();
+		TransferServiceFactory transferServiceFactory = new TransferServiceFactoryImpl();
 
 		TransferQueueService transferQueueService = transferServiceFactory
 				.instanceTransferQueueService();
@@ -246,7 +247,7 @@ public class TransferQueueServiceTest {
 		String irodsCollectionRootAbsolutePath = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH);
-		TransferServiceFactoryImpl transferServiceFactory = new TransferServiceFactoryImpl();
+		TransferServiceFactory transferServiceFactory = new TransferServiceFactoryImpl();
 
 		TransferQueueService transferQueueService = transferServiceFactory
 				.instanceTransferQueueService();
@@ -311,7 +312,7 @@ public class TransferQueueServiceTest {
 	public void testRestartATransfer() throws Exception {
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		TransferServiceFactoryImpl transferServiceFactory = new TransferServiceFactoryImpl();
+		TransferServiceFactory transferServiceFactory = new TransferServiceFactoryImpl();
 
 		TransferQueueService transferQueueService = transferServiceFactory
 				.instanceTransferQueueService();
@@ -391,7 +392,7 @@ public class TransferQueueServiceTest {
 						+ '/' + rootCollection);
 
 		String irodsCollectionRootAbsolutePath = rootCollection;
-		TransferServiceFactoryImpl transferServiceFactory = new TransferServiceFactoryImpl();
+		TransferServiceFactory transferServiceFactory = new TransferServiceFactoryImpl();
 
 		TransferQueueService transferQueueService = transferServiceFactory
 				.instanceTransferQueueService();
@@ -443,7 +444,7 @@ public class TransferQueueServiceTest {
 		String irodsCollectionRootAbsolutePath = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH);
-		TransferServiceFactoryImpl transferServiceFactory = new TransferServiceFactoryImpl();
+		TransferServiceFactory transferServiceFactory = new TransferServiceFactoryImpl();
 
 		TransferQueueService transferQueueService = transferServiceFactory
 				.instanceTransferQueueService();
@@ -512,7 +513,7 @@ public class TransferQueueServiceTest {
 		String irodsCollectionRootAbsolutePath = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH);
-		TransferServiceFactoryImpl transferServiceFactory = new TransferServiceFactoryImpl();
+		TransferServiceFactory transferServiceFactory = new TransferServiceFactoryImpl();
 
 		TransferQueueService transferQueueService = transferServiceFactory
 				.instanceTransferQueueService();
@@ -579,7 +580,7 @@ public class TransferQueueServiceTest {
 		String irodsCollectionRootAbsolutePath = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH);
-		TransferServiceFactoryImpl transferServiceFactory = new TransferServiceFactoryImpl();
+		TransferServiceFactory transferServiceFactory = new TransferServiceFactoryImpl();
 
 		TransferQueueService transferQueueService = transferServiceFactory
 				.instanceTransferQueueService();
@@ -637,7 +638,7 @@ public class TransferQueueServiceTest {
 	public void testEnqueueReplicate() throws Exception {
 
 		String testName = "testEnqueueReplicate";
-		TransferServiceFactoryImpl transferServiceFactory = new TransferServiceFactoryImpl();
+		TransferServiceFactory transferServiceFactory = new TransferServiceFactoryImpl();
 
 		TransferQueueService transferQueueService = transferServiceFactory
 				.instanceTransferQueueService();
@@ -672,7 +673,7 @@ public class TransferQueueServiceTest {
 	@Test
 	public void testEnqueueCopy() throws Exception {
 		String testName = "testEnqueueCopy";
-		TransferServiceFactoryImpl transferServiceFactory = new TransferServiceFactoryImpl();
+		TransferServiceFactory transferServiceFactory = new TransferServiceFactoryImpl();
 
 		TransferQueueService transferQueueService = transferServiceFactory
 				.instanceTransferQueueService();
@@ -706,7 +707,7 @@ public class TransferQueueServiceTest {
 
 	@Test
 	public void testEnqueueGet() throws Exception {
-		TransferServiceFactoryImpl transferServiceFactory = new TransferServiceFactoryImpl();
+		TransferServiceFactory transferServiceFactory = new TransferServiceFactoryImpl();
 
 		String testName = "testEnqueueGet";
 
@@ -741,7 +742,7 @@ public class TransferQueueServiceTest {
 	@Test
 	public void testEnqueueGetBigFileName() throws Exception {
 
-		TransferServiceFactoryImpl transferServiceFactory = new TransferServiceFactoryImpl();
+		TransferServiceFactory transferServiceFactory = new TransferServiceFactoryImpl();
 
 		TransferQueueService transferQueueService = transferServiceFactory
 				.instanceTransferQueueService();
@@ -861,7 +862,7 @@ public class TransferQueueServiceTest {
 	public void testPurgeAll() throws Exception {
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		TransferServiceFactoryImpl transferServiceFactory = new TransferServiceFactoryImpl();
+		TransferServiceFactory transferServiceFactory = new TransferServiceFactoryImpl();
 
 		TransferQueueService transferQueueService = transferServiceFactory
 				.instanceTransferQueueService();
@@ -944,7 +945,7 @@ public class TransferQueueServiceTest {
 	public void testPurgeComplete() throws Exception {
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		TransferServiceFactoryImpl transferServiceFactory = new TransferServiceFactoryImpl();
+		TransferServiceFactory transferServiceFactory = new TransferServiceFactoryImpl();
 
 		TransferQueueService transferQueueService = transferServiceFactory
 				.instanceTransferQueueService();
@@ -1028,7 +1029,7 @@ public class TransferQueueServiceTest {
 	public void testResubmitATransfer() throws Exception {
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		TransferServiceFactoryImpl transferServiceFactory = new TransferServiceFactoryImpl();
+		TransferServiceFactory transferServiceFactory = new TransferServiceFactoryImpl();
 
 		TransferQueueService transferQueueService = transferServiceFactory
 				.instanceTransferQueueService();
@@ -1094,7 +1095,7 @@ public class TransferQueueServiceTest {
 	public void testCancelATransfer() throws Exception {
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		TransferServiceFactoryImpl transferServiceFactory = new TransferServiceFactoryImpl();
+		TransferServiceFactory transferServiceFactory = new TransferServiceFactoryImpl();
 
 		TransferQueueService transferQueueService = transferServiceFactory
 				.instanceTransferQueueService();
@@ -1133,7 +1134,7 @@ public class TransferQueueServiceTest {
 	public void testCancelACompletedTransfer() throws Exception {
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		TransferServiceFactoryImpl transferServiceFactory = new TransferServiceFactoryImpl();
+		TransferServiceFactory transferServiceFactory = new TransferServiceFactoryImpl();
 
 		TransferQueueService transferQueueService = transferServiceFactory
 				.instanceTransferQueueService();
@@ -1182,7 +1183,7 @@ public class TransferQueueServiceTest {
 		String irodsCollectionRootAbsolutePath = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH);
-		TransferServiceFactoryImpl transferServiceFactory = new TransferServiceFactoryImpl();
+		TransferServiceFactory transferServiceFactory = new TransferServiceFactoryImpl();
 
 		TransferQueueService transferQueueService = transferServiceFactory
 				.instanceTransferQueueService();
@@ -1220,7 +1221,7 @@ public class TransferQueueServiceTest {
 	public void testCreateQueueServiceInUserHomeDirectory() throws Exception {
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		TransferServiceFactoryImpl transferServiceFactory = new TransferServiceFactoryImpl();
+		TransferServiceFactory transferServiceFactory = new TransferServiceFactoryImpl();
 
 		TransferQueueService transferQueueService = transferServiceFactory
 				.instanceTransferQueueService();
@@ -1255,7 +1256,7 @@ public class TransferQueueServiceTest {
 	public void testRestartClearsErrorAndStackTrace() throws Exception {
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		TransferServiceFactoryImpl transferServiceFactory = new TransferServiceFactoryImpl();
+		TransferServiceFactory transferServiceFactory = new TransferServiceFactoryImpl();
 
 		TransferQueueService transferQueueService = transferServiceFactory
 				.instanceTransferQueueService();
@@ -1297,7 +1298,7 @@ public class TransferQueueServiceTest {
 	public void testRestartPreservesLastGoodPath() throws Exception {
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		TransferServiceFactoryImpl transferServiceFactory = new TransferServiceFactoryImpl();
+		TransferServiceFactory transferServiceFactory = new TransferServiceFactoryImpl();
 
 		TransferQueueService transferQueueService = transferServiceFactory
 				.instanceTransferQueueService();
@@ -1337,7 +1338,7 @@ public class TransferQueueServiceTest {
 	public void testResubmitClearsLastGoodPath() throws Exception {
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		TransferServiceFactoryImpl transferServiceFactory = new TransferServiceFactoryImpl();
+		TransferServiceFactory transferServiceFactory = new TransferServiceFactoryImpl();
 
 		TransferQueueService transferQueueService = transferServiceFactory
 				.instanceTransferQueueService();
@@ -1379,7 +1380,7 @@ public class TransferQueueServiceTest {
 				.buildIRODSAccountFromTestProperties(testingProperties);
 		
 		String newPassword = "password";
-		TransferServiceFactoryImpl transferServiceFactory = new TransferServiceFactoryImpl();
+		TransferServiceFactory transferServiceFactory = new TransferServiceFactoryImpl();
 
 		TransferQueueService transferQueueService = transferServiceFactory
 				.instanceTransferQueueService();
@@ -1399,7 +1400,7 @@ public class TransferQueueServiceTest {
 		
 		String newPassword = "password";
 		String encryptedNewPassword = HibernateUtil.obfuscate(newPassword);
-		TransferServiceFactoryImpl transferServiceFactory = new TransferServiceFactoryImpl();
+		TransferServiceFactory transferServiceFactory = new TransferServiceFactoryImpl();
 
 		TransferQueueService transferQueueService = transferServiceFactory
 				.instanceTransferQueueService();
@@ -1438,7 +1439,7 @@ public class TransferQueueServiceTest {
 		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTertiaryTestProperties(testingProperties);
 		
 		String newPassword = "password";
-		TransferServiceFactoryImpl transferServiceFactory = new TransferServiceFactoryImpl();
+		TransferServiceFactory transferServiceFactory = new TransferServiceFactoryImpl();
 
 		TransferQueueService transferQueueService = transferServiceFactory
 				.instanceTransferQueueService();

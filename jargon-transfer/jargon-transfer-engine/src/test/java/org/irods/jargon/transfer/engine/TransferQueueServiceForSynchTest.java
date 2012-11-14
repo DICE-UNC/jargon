@@ -8,6 +8,7 @@ import junit.framework.Assert;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
+import org.irods.jargon.transfer.TransferServiceFactory;
 import org.irods.jargon.transfer.TransferServiceFactoryImpl;
 import org.irods.jargon.transfer.dao.domain.FrequencyType;
 import org.irods.jargon.transfer.dao.domain.LocalIRODSTransfer;
@@ -60,7 +61,7 @@ public class TransferQueueServiceForSynchTest {
 	public void testEnqueueSynchNullSynchronization() throws Exception {
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		TransferServiceFactoryImpl transferServiceFactory = new TransferServiceFactoryImpl();
+		TransferServiceFactory transferServiceFactory = new TransferServiceFactoryImpl();
 
 		TransferQueueService transferQueueService = transferServiceFactory
 				.instanceTransferQueueService();
@@ -71,7 +72,7 @@ public class TransferQueueServiceForSynchTest {
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testEnqueueSynchNullIrodsAccount() throws Exception {
-		TransferServiceFactoryImpl transferServiceFactory = new TransferServiceFactoryImpl();
+		TransferServiceFactory transferServiceFactory = new TransferServiceFactoryImpl();
 
 		TransferQueueService transferQueueService = transferServiceFactory
 				.instanceTransferQueueService();
@@ -84,7 +85,7 @@ public class TransferQueueServiceForSynchTest {
 	public void testEnqueueSynch() throws Exception {
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		TransferServiceFactoryImpl transferServiceFactory = new TransferServiceFactoryImpl();
+		TransferServiceFactory transferServiceFactory = new TransferServiceFactoryImpl();
 
 		TransferQueueService transferQueueService = transferServiceFactory
 				.instanceTransferQueueService();
@@ -123,7 +124,7 @@ public class TransferQueueServiceForSynchTest {
 	public void testEnqueueSynchSynchNotPersisted() throws Exception {
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		TransferServiceFactoryImpl transferServiceFactory = new TransferServiceFactoryImpl();
+		TransferServiceFactory transferServiceFactory = new TransferServiceFactoryImpl();
 
 		TransferQueueService transferQueueService = transferServiceFactory
 				.instanceTransferQueueService();

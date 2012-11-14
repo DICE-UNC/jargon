@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import org.irods.jargon.core.exception.JargonRuntimeException;
+import org.irods.jargon.transfer.TransferServiceFactory;
 import org.irods.jargon.transfer.TransferServiceFactoryImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,7 +17,7 @@ public class DatabasePreparationUtils {
 			.getLogger(DatabasePreparationUtils.class);
 
 	public static final void makeSureDatabaseIsInitialized() throws Exception {
-		TransferServiceFactoryImpl transferServiceFactory = new TransferServiceFactoryImpl();
+		TransferServiceFactory transferServiceFactory = new TransferServiceFactoryImpl();
 		TransferQueueService transferQueueService = transferServiceFactory
 				.instanceTransferQueueService();
 		transferQueueService.getCurrentQueue();
