@@ -1,5 +1,5 @@
 *'''Project''': Jargon-core API
-*'''Date''': 10/10/2012
+*'''Date''': 11/15/2012
 *'''Release Version''': 3.2.1
 *'''git tag''': 3.2.1
 
@@ -48,7 +48,7 @@ Note that the following bug and feature requests are logged in GForge with relat
 **Added a new PathTooLongException and methods to check path lengths in MiscIRODSUtils, used these checks in the various path methods, especially
 the IRODSFile and DataObject and Collection access objects
 
-*[#1042] Chinese char set displayes invalid characters 
+*[#1042] Chinese char set displays invalid characters 
 **added new ConnectionConstants.DUMP_GEN_QUERY_OUT for optional dumping of gen query out XML messages when in log.debug mode
 
 *[#1041] [iROD-Chat:8903] Jargon-core: query builder / SQL operators
