@@ -1,14 +1,13 @@
 *'''Project''': Jargon-core API
 *'''Date''': xx/xx/xx
-*'''Release Version''': 3.2.2
+*'''Release Version''': 3.2.3-SNAPSHOT
 *'''git tag''': development
+
 
 ==News==
 
 Jargon-core implements the iRODS protocol, and allows development of iRODS-enabled Java applications.  This API is especially useful for developing
 mid-tier applications and services, as well as desktop-clients (such as iDROP).  These libraries also provide a foundation for a new set of interfaces that will come with iRODS.
-
-Note that this release supports iRODS built-in authorization.  Adding GSI and general GSS support (including Kerberos) will come in a follow-on release planned shortly.
 
 Note that this API represents a fundamental shift, and is meant to make development of applications easier and faster.
 
