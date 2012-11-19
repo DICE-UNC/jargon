@@ -40,3 +40,6 @@ Note that the following bug and feature requests are logged in GForge with relat
 ==Bug Fixes==
 
 ==Features==
+
+*[#984] iDrop web '2.0' redesign effort
+**Added additional fields to the user profile, such as eduPerson attributes
