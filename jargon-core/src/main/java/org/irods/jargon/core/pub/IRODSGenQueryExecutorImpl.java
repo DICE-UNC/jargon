@@ -39,8 +39,6 @@ public final class IRODSGenQueryExecutorImpl extends IRODSGenericAO implements
 		AUTO_CLOSE, MANUAL_CLOSE
 	}
 
-	private final GenQueryProcessor genQueryProcessor;
-
 	/**
 	 * Constructor for implementation class, called by
 	 * {@link org.irods.jargon.core.pub.IRODSAccessObjectFactoryImpl}, this is
@@ -60,8 +58,6 @@ public final class IRODSGenQueryExecutorImpl extends IRODSGenericAO implements
 	public IRODSGenQueryExecutorImpl(final IRODSSession irodsSession,
 			final IRODSAccount irodsAccount) throws JargonException {
 		super(irodsSession, irodsAccount);
-		this.genQueryProcessor = new GenQueryProcessor(
-				irodsSession.currentConnection(irodsAccount));
 	}
 
 	/*
@@ -103,10 +99,12 @@ public final class IRODSGenQueryExecutorImpl extends IRODSGenericAO implements
 		}
 
 		log.info("query: {}", irodsQuery);
+		
+		GenQueryProcessor  genQueryProcessor = new GenQueryProcessor(this.getIRODSProtocol());
 
 		TranslatedIRODSGenQuery translatedIRODSQuery = genQueryProcessor
 				.translateProvidedQuery(irodsQuery);
-
+		
 		return genQueryProcessor.executeTranslatedIRODSQuery(
 				translatedIRODSQuery, continueIndex, 0,
 				QueryCloseBehavior.MANUAL_CLOSE, zoneName);
@@ -153,6 +151,10 @@ public final class IRODSGenQueryExecutorImpl extends IRODSGenericAO implements
 		}
 
 		log.info("query: {}", irodsQuery);
+		
+		GenQueryProcessor  genQueryProcessor = new GenQueryProcessor(
+				this.getIRODSProtocol());
+		
 		TranslatedIRODSGenQuery translatedIRODSQuery = genQueryProcessor
 				.translateProvidedQuery(irodsQuery);
 
@@ -198,6 +200,8 @@ public final class IRODSGenQueryExecutorImpl extends IRODSGenericAO implements
 		}
 
 		log.info("query: {}", irodsQuery);
+		GenQueryProcessor  genQueryProcessor = new GenQueryProcessor(
+				this.getIRODSProtocol());
 		TranslatedIRODSGenQuery translatedIRODSQuery = genQueryProcessor
 				.translateProvidedQuery(irodsQuery);
 
@@ -226,6 +230,9 @@ public final class IRODSGenQueryExecutorImpl extends IRODSGenericAO implements
 		if (!irodsQueryResultSet.isHasMoreRecords()) {
 			throw new JargonQueryException("no more results");
 		}
+		
+		GenQueryProcessor  genQueryProcessor = new GenQueryProcessor(
+				this.getIRODSProtocol());
 
 		return genQueryProcessor.executeTranslatedIRODSQuery(
 				irodsQueryResultSet.getTranslatedIRODSQuery(),
@@ -253,6 +260,9 @@ public final class IRODSGenQueryExecutorImpl extends IRODSGenericAO implements
 		if (!irodsQueryResultSet.isHasMoreRecords()) {
 			throw new JargonQueryException("no more results");
 		}
+		
+		GenQueryProcessor  genQueryProcessor = new GenQueryProcessor(
+				this.getIRODSProtocol());
 
 		return genQueryProcessor.executeTranslatedIRODSQuery(
 				irodsQueryResultSet.getTranslatedIRODSQuery(),
@@ -273,6 +283,8 @@ public final class IRODSGenQueryExecutorImpl extends IRODSGenericAO implements
 			throws JargonException {
 
 		log.info("closeResults()");
+		GenQueryProcessor  genQueryProcessor = new GenQueryProcessor(
+				this.getIRODSProtocol());
 		genQueryProcessor.closeResults(irodsQueryResultSet);
 	}
 

@@ -1,12 +1,11 @@
 *'''Project''': Jargon-core API
 *'''Date''': 11/15/2012
-*'''Release Version''': 3.2.1
-*'''git tag''': 3.2.1
+*'''Release Version''': 3.2.1.1
+*'''git tag''': 3.2.1.1
 
 ==News==
 
-This release includes important new features, notably, an expansion of available authentication modes.  This release also includes important bug fixes.  Jargon 3.2.1 is a recommended release
-for all versions of iRODS.
+This is a patch to the 3.2.1 release that addresses an error that was encountered sharing an access object 
 
 Jargon-core implements the iRODS protocol, and allows development of iRODS-enabled Java applications.  This API is especially useful for developing
 mid-tier applications and services, as well as desktop-clients (such as iDROP).  These libraries also provide a foundation for a new set of interfaces that will come with iRODS.
@@ -44,39 +43,7 @@ Note that the following bug and feature requests are logged in GForge with relat
 
 ==Bug Fixes==
 
-*[#1044] Jargon allows the creating of folders that exceed the USER_PATH_EXCEEDS_MAX and cannot delete them
-**Added a new PathTooLongException and methods to check path lengths in MiscIRODSUtils, used these checks in the various path methods, especially
-the IRODSFile and DataObject and Collection access objects
-
-*[#1042] Chinese char set displays invalid characters 
-**added new ConnectionConstants.DUMP_GEN_QUERY_OUT for optional dumping of gen query out XML messages when in log.debug mode
-
-*[#1041] [iROD-Chat:8903] Jargon-core: query builder / SQL operators
-**Fix issue with case insensitive queries (this included an iRODS patch post 3.2)
-
-*[#1059] Re: [iROD-Chat:9011] Jargon-Core ParallelGetTransferThreads accumulating rapidly
-**Added cleanup of threads when running using executor, added a finally with a shutdown() call 
+ *[#1065] [iROD-Chat:9047] Java ClosedChannelException in Jargon 3.2.1
+ **Fix bug in gen query handling where gen query executor had an instance level refernence to the query processor, causing errors when sharing the gen query executor object between threads.
 
 ==Features==
-
- *[#132] GSS and Kerberos Support in Jargon-core
- **added GSI to authentication methods
- 
- *[#870] jargon support for PAM
-
- ** Support for PAM authentication (per Chris Smith's updates to iRODS) as a pluggable auth module in Jargon
- ** [#992] don't let public irods account trigger auth other then standard
- 
- *[#974] anonymous link support
- **added isUserHasPermission methods for collections and data objects that indicate that a user has at least read permission on a file or data object
- **added AnonymousAccessService in data utils to help manage permissions for the anonymous user
- 
- *[#1011] add a dedicated doAuthentication method ot irodsAccessObjectFactory
-
-* [#1046] Add total row count to gen query out
-**When creating gen queries from the IRODSGenQueryBuilder, one may now specify that total row counts (reflecting the total results in the database) be requested from iRODS.  This row
-count will be provided in the IRODSQueryResultSet object when using the general query executor service.
-
-*[#1055] -321000 messages on upload need better message
-**Added a NoResourceDefinedException for jargon io operations to handle occasions where no default storage resource is set, and no iRODS resource rule is defined.  This 
-helps clients better handle -321000 exceptions.  iDrop uses this to indicate that the user should select a default storage resource.
