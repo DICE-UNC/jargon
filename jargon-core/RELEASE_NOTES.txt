@@ -1,5 +1,5 @@
 *'''Project''': Jargon-core API
-*'''Date''': 11/15/2012
+*'''Date''': 11/20/2012
 *'''Release Version''': 3.2.1.1
 *'''git tag''': 3.2.1.1
 

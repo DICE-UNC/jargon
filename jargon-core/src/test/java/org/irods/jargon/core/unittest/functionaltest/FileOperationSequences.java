@@ -18,13 +18,16 @@ import org.irods.jargon.core.pub.DataObjectAO;
 import org.irods.jargon.core.pub.DataTransferOperations;
 import org.irods.jargon.core.pub.IRODSFileSystem;
 import org.irods.jargon.core.pub.domain.DataObject;
+import org.irods.jargon.core.pub.io.FileIOOperations.SeekWhenceType;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.pub.io.IRODSFileFactory;
+import org.irods.jargon.core.pub.io.IRODSRandomAccessFile;
 import org.irods.jargon.core.transfer.TransferControlBlock;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.irods.jargon.testutils.filemanip.FileGenerator;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -132,7 +135,85 @@ public class FileOperationSequences {
 		}
 
 	}
+	
+	/**
+	 * Share an IRODSRandomAccess file between threads.  Currently ignored, as the originating use case may be suspect.
+	 * Bug [#1066] Auth Exception on seek
+	 * @throws Exception
+	 */
+	@Ignore
+	public void testShareIRODSRandomAccessFileBetweenThreadsBug1066() throws Exception {
+		String testFileName = "testShareIRODSRandomAccessFileBetweenThreadsBug1066.txt";
 
+		int nbrThreads = 4;
+	
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String localFileName = FileGenerator
+				.generateFileOfFixedLengthGivenName(absPath, testFileName, 300);
+
+		String targetIrodsFile = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
+								+ testFileName);
+		File localFile = new File(localFileName);
+
+		// now put the file
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSFileFactory irodsFileFactory = irodsFileSystem
+				.getIRODSFileFactory(irodsAccount);
+		IRODSFile destFile = irodsFileFactory
+				.instanceIRODSFile(targetIrodsFile);
+		DataTransferOperations dataTransferOperationsAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataTransferOperations(
+						irodsAccount);
+
+		dataTransferOperationsAO.putOperation(localFile, destFile, null, null);
+		
+		ExecutorService exec = Executors.newFixedThreadPool(nbrThreads);
+
+		List<Future<Object>> futures = new ArrayList<Future<Object>>(
+				nbrThreads);
+	
+		IRODSRandomAccessFile randomAccessFile = irodsFileSystem.getIRODSFileFactory(irodsAccount).instanceIRODSRandomAccessFile(destFile);
+
+		for (int i = 0; i < nbrThreads; i++) {
+			futures.add(exec.submit(new ShareIRODSRandomAccessFileBetweenThreadsBug1066(randomAccessFile, irodsFileSystem)));
+		}
+
+		for (Future<Object> future : futures) {
+			future.get();
+		}
+
+		exec.shutdown();
+		
+
+	}
+
+}
+
+class ShareIRODSRandomAccessFileBetweenThreadsBug1066 implements Callable<Object> {
+
+	IRODSRandomAccessFile randomAccessFile;
+	IRODSFileSystem irodsFileSystem;
+	
+	 ShareIRODSRandomAccessFileBetweenThreadsBug1066(
+			IRODSRandomAccessFile randomAccessFile, IRODSFileSystem irodsFileSystem) {
+		super();
+		this.randomAccessFile = randomAccessFile;
+		this.irodsFileSystem = irodsFileSystem;
+	}
+
+
+	@Override
+	public Object call() throws Exception {
+		randomAccessFile.seek(40, SeekWhenceType.SEEK_CURRENT);
+		irodsFileSystem.closeAndEatExceptions();
+		return null;
+	}
+	
 }
 
 class MultiThreadSharingOfDataAOBug1065 implements Callable<DataObject> {
