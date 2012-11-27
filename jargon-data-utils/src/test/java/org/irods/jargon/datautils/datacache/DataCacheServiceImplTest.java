@@ -56,7 +56,7 @@ public class DataCacheServiceImplTest {
 		accountCacheService.setIrodsAccount(testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties));
 		accountCacheService.putSerializedEncryptedObjectIntoCache("obj", "key");
-	}
+	} 
 
 	@Test
 	public void testPutStringIntoCacheUsingDefaultsUserHomeDirCache()

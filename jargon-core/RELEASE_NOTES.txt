@@ -1,11 +1,11 @@
 *'''Project''': Jargon-core API
 *'''Date''': 11/20/2012
-*'''Release Version''': 3.2.1.1
-*'''git tag''': 3.2.1.1
+*'''Release Version''': 3.2.1.2
+*'''git tag''': 3.2.1.2
 
 ==News==
 
-This is a patch to the 3.2.1 release that addresses an error that was encountered sharing an access object 
+This is a patch to the 3.2.1 release that refactors globus dependencies on an old version of JCE
 
 Jargon-core implements the iRODS protocol, and allows development of iRODS-enabled Java applications.  This API is especially useful for developing
 mid-tier applications and services, as well as desktop-clients (such as iDROP).  These libraries also provide a foundation for a new set of interfaces that will come with iRODS.
@@ -43,7 +43,6 @@ Note that the following bug and feature requests are logged in GForge with relat
 
 ==Bug Fixes==
 
- *[#1065] [iROD-Chat:9047] Java ClosedChannelException in Jargon 3.2.1
- **Fix bug in gen query handling where gen query executor had an instance level refernence to the query processor, causing errors when sharing the gen query executor object between threads.
-
+ *[#1073] errors with JCE and shopping cart resolution after globus
+ **Removed POM dependency on globus and refer to globus jar, explicitly specifying bouncycastle dependency and avoiding jce 1.3 reference
 ==Features==
