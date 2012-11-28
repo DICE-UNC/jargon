@@ -1,9 +1,8 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<parent>
 		<groupId>org.irods</groupId>
 		<artifactId>jargon</artifactId>
-		<version>3.2.1.2-SNAPSHOT</version>
+		<version>3.2.1.2</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.irods.jargon</groupId>
@@ -65,18 +64,11 @@
 								<property name="package.name" value="org.irods.jargon.core.utils" />
 								<property name="buildtime" value="${maven.build.timestamp}" />
 
-								<echo file="${src.dir}/${package.dir}/JargonVersion.java"
-									message="package ${package.name};${line.separator}" />
-								<echo file="${src.dir}/${package.dir}/JargonVersion.java"
-									append="true" message="public final class JargonVersion {${line.separator}" />
-								<echo file="${src.dir}/${package.dir}/JargonVersion.java"
-									append="true"
-									message=" public static String VERSION=&quot;${pom.version}&quot;;${line.separator}" />
-								<echo file="${src.dir}/${package.dir}/JargonVersion.java"
-									append="true"
-									message=" public static String BUILD_TIME=&quot;${buildtime}&quot;;${line.separator}" />
-								<echo file="${src.dir}/${package.dir}/JargonVersion.java"
-									append="true" message="}${line.separator}" />
+								<echo file="${src.dir}/${package.dir}/JargonVersion.java" message="package ${package.name};${line.separator}" />
+								<echo file="${src.dir}/${package.dir}/JargonVersion.java" append="true" message="public final class JargonVersion {${line.separator}" />
+								<echo file="${src.dir}/${package.dir}/JargonVersion.java" append="true" message=" public static String VERSION=&quot;${pom.version}&quot;;${line.separator}" />
+								<echo file="${src.dir}/${package.dir}/JargonVersion.java" append="true" message=" public static String BUILD_TIME=&quot;${buildtime}&quot;;${line.separator}" />
+								<echo file="${src.dir}/${package.dir}/JargonVersion.java" append="true" message="}${line.separator}" />
 								<echo message="BUILD ${buildtime}" />
 							</tasks>
 						</configuration>
@@ -87,10 +79,8 @@
 						<configuration>
 							<tasks>
 								<delete file="${basedir}/src/test/resources/testing.properties" />
-								<touch file="${basedir}/src/test/resources/testing.properties"
-									mkdirs="true" />
-								<echo file="${basedir}/src/test/resources/testing.properties"
-									append="true">
+								<touch file="${basedir}/src/test/resources/testing.properties" mkdirs="true" />
+								<echo file="${basedir}/src/test/resources/testing.properties" append="true">
 									test.confirm=${jargon.test.confirm}
 									test.data.directory=${jargon.test.data.directory}
 									test.irods.admin=${jargon.test.irods.admin}
