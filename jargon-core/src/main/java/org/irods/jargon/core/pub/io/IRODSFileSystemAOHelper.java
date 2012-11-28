@@ -44,7 +44,7 @@ public class IRODSFileSystemAOHelper extends AOHelper {
 		query.append(" WHERE ");
 		query.append(RodsGenQueryEnum.COL_COLL_PARENT_NAME.getName());
 		query.append(" = '");
-		query.append(IRODSDataConversionUtil.escapeSingleQuotes(path));
+		query.append(path);
 		query.append("'");
 
 		if (log.isDebugEnabled()) {
@@ -72,7 +72,7 @@ public class IRODSFileSystemAOHelper extends AOHelper {
 		query.append(" WHERE ");
 		query.append(RodsGenQueryEnum.COL_COLL_NAME.getName());
 		query.append(" = '");
-		query.append(IRODSDataConversionUtil.escapeSingleQuotes(path));
+		query.append(path);
 		query.append("'");
 
 		if (log.isDebugEnabled()) {
@@ -110,7 +110,7 @@ public class IRODSFileSystemAOHelper extends AOHelper {
 		query.append(" WHERE ");
 		query.append(RodsGenQueryEnum.COL_COLL_NAME.getName());
 		query.append(" = '");
-		query.append(IRODSDataConversionUtil.escapeSingleQuotes(path));
+		query.append(path);
 		query.append("'");
 
 		if (log.isDebugEnabled()) {
@@ -172,7 +172,7 @@ public class IRODSFileSystemAOHelper extends AOHelper {
 		query.append(" WHERE ");
 		query.append(RodsGenQueryEnum.COL_COLL_NAME.getName());
 		query.append(" = '");
-		query.append(IRODSDataConversionUtil.escapeSingleQuotes(path));
+		query.append(path);
 		query.append("'");
 
 		log.debug("query for files:{}", query.toString());
@@ -209,7 +209,7 @@ public class IRODSFileSystemAOHelper extends AOHelper {
 		query.append(" WHERE ");
 		query.append(RodsGenQueryEnum.COL_COLL_PARENT_NAME.getName());
 		query.append(" = '");
-		query.append(IRODSDataConversionUtil.escapeSingleQuotes(path));
+		query.append(path);
 		query.append("'");
 
 		log.debug("query for dirs:{}", query.toString());

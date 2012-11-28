@@ -686,8 +686,7 @@ final class DataAOHelper extends AOHelper {
 		query.append(" WHERE ");
 		query.append(RodsGenQueryEnum.COL_COLL_NAME.getName());
 		query.append(EQUALS_AND_QUOTE);
-		query.append(IRODSDataConversionUtil
-				.escapeSingleQuotes(irodsCollectionAbsolutePath));
+		query.append(irodsCollectionAbsolutePath);
 		query.append(QUOTE);
 		query.append(AND);
 		query.append(RodsGenQueryEnum.COL_DATA_NAME.getName());

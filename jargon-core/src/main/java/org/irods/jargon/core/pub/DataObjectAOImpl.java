@@ -227,17 +227,16 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		} else {
 			sb.append(RodsGenQueryEnum.COL_COLL_NAME.getName());
 			sb.append(EQUALS_AND_QUOTE);
-			sb.append(IRODSDataConversionUtil
-					.escapeSingleQuotes(collectionAndPath.getCollectionParent()
-							.trim()));
+			sb.append(collectionAndPath.getCollectionParent()
+							.trim());
 			sb.append(QUOTE);
 			sb.append(AND);
 		}
 
 		sb.append(RodsGenQueryEnum.COL_DATA_NAME.getName());
 		sb.append(EQUALS_AND_QUOTE);
-		sb.append(IRODSDataConversionUtil.escapeSingleQuotes(collectionAndPath
-				.getChildName().trim()));
+		sb.append(collectionAndPath
+				.getChildName().trim());
 		sb.append(QUOTE);
 
 		final String query = sb.toString();
@@ -1509,15 +1508,13 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 					.addConditionAsGenQueryField(
 							RodsGenQueryEnum.COL_COLL_NAME,
 							QueryConditionOperators.EQUAL,
-							IRODSDataConversionUtil
-									.escapeSingleQuotes(dataObjectFile
-											.getParent()))
+							dataObjectFile
+											.getParent())
 					.addConditionAsGenQueryField(
 							RodsGenQueryEnum.COL_DATA_NAME,
 							QueryConditionOperators.EQUAL,
-							IRODSDataConversionUtil
-									.escapeSingleQuotes(dataObjectFile
-											.getName()));
+						dataObjectFile
+											.getName());
 
 			for (AVUQueryElement queryElement : avuQuery) {
 				DataAOHelper.appendConditionPartToBuilderQuery(queryElement,
@@ -2170,12 +2167,12 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		StringBuilder sb = new StringBuilder();
 		sb.append(RodsGenQueryEnum.COL_COLL_NAME.getName());
 		sb.append(EQUALS_AND_QUOTE);
-		sb.append(IRODSDataConversionUtil.escapeSingleQuotes(absPath));
+		sb.append(absPath);
 		sb.append(QUOTE);
 		sb.append(AND);
 		sb.append(RodsGenQueryEnum.COL_DATA_NAME.getName());
 		sb.append(EQUALS_AND_QUOTE);
-		sb.append(IRODSDataConversionUtil.escapeSingleQuotes(dataObjectName));
+		sb.append(dataObjectName);
 		sb.append(QUOTE);
 
 		return resourceAO.findWhere(sb.toString());
@@ -3104,14 +3101,14 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		if (irodsFile.exists() && irodsFile.isFile()) {
 			query.append(RodsGenQueryEnum.COL_COLL_NAME.getName());
 			query.append(EQUALS_AND_QUOTE);
-			query.append(IRODSDataConversionUtil.escapeSingleQuotes(collName
-					.getCollectionParent()));
+			query.append(collName
+					.getCollectionParent());
 			query.append("'");
 			query.append(AND);
 			query.append(RodsGenQueryEnum.COL_DATA_NAME.getName());
 			query.append(EQUALS_AND_QUOTE);
-			query.append(IRODSDataConversionUtil.escapeSingleQuotes(irodsFile
-					.getName()));
+			query.append(irodsFile
+					.getName());
 			query.append("'");
 
 		} else {

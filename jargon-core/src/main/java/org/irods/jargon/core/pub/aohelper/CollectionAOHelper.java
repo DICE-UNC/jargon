@@ -390,8 +390,7 @@ public class CollectionAOHelper extends AOHelper {
 		query.append(" WHERE  ");
 		query.append(RodsGenQueryEnum.COL_COLL_NAME.getName());
 		query.append(" = '");
-		query.append(IRODSDataConversionUtil
-				.escapeSingleQuotes(absolutePathToCollection));
+		query.append(absolutePathToCollection);
 		query.append("'");
 		return query.toString();
 	}
@@ -490,8 +489,7 @@ public class CollectionAOHelper extends AOHelper {
 		query.append(" WHERE ");
 		query.append(RodsGenQueryEnum.COL_COLL_NAME.getName());
 		query.append(" = '");
-		query.append(IRODSDataConversionUtil
-				.escapeSingleQuotes(irodsCollectionAbsolutePath));
+		query.append(irodsCollectionAbsolutePath);
 		query.append("'");
 		return query.toString();
 	}

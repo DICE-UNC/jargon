@@ -1,11 +1,12 @@
 *'''Project''': Jargon-core API
-*'''Date''': 11/20/2012
+*'''Date''': 11/28/2012
 *'''Release Version''': 3.2.1.2
 *'''git tag''': 3.2.1.2
 
 ==News==
 
-This is a patch to the 3.2.1 release that refactors globus dependencies on an old version of JCE
+This is a patch to the 3.2.1 release that refactors globus dependencies on an old version of JCE.  This minor release also patches
+some small issues in testing for iDrop 1.0.2.  This release is recommened for patching any of the flagged issues below.
 
 Jargon-core implements the iRODS protocol, and allows development of iRODS-enabled Java applications.  This API is especially useful for developing
 mid-tier applications and services, as well as desktop-clients (such as iDROP).  These libraries also provide a foundation for a new set of interfaces that will come with iRODS.
@@ -48,5 +49,9 @@ Note that the following bug and feature requests are logged in GForge with relat
  
  *[#1077] copy not supplying default storage resource
  **DataTransferOperations.copy() method using absolute paths and resource strings was not propogating default resource that was the copy target
+ 
+ *[#1080] metadata edit seems to fail with file with ' in name
+ **Removed escaping of single quotes, which looks like an old overhead in the query methods
+ 
  
 ==Features==

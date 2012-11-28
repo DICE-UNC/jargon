@@ -263,8 +263,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		query.append(") WHERE ");
 		query.append(RodsGenQueryEnum.COL_COLL_NAME.getName());
 		query.append(" = '");
-		query.append(IRODSDataConversionUtil
-				.escapeSingleQuotes(effectiveAbsolutePath));
+		query.append(effectiveAbsolutePath);
 		query.append("'");
 
 		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(query.toString(), 1);
@@ -297,8 +296,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		query.append(") WHERE ");
 		query.append(RodsGenQueryEnum.COL_COLL_PARENT_NAME.getName());
 		query.append(" = '");
-		query.append(IRODSDataConversionUtil
-				.escapeSingleQuotes(effectiveAbsolutePath));
+		query.append(effectiveAbsolutePath);
 		query.append("'");
 
 		irodsQuery = IRODSGenQuery.instance(query.toString(), 1);

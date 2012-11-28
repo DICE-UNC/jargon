@@ -166,15 +166,13 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 		filePermissionQuery.append(" WHERE ");
 		filePermissionQuery.append(RodsGenQueryEnum.COL_COLL_NAME.getName());
 		filePermissionQuery.append(" = '");
-		filePermissionQuery.append(IRODSDataConversionUtil
-				.escapeSingleQuotes(irodsFile.getParent()));
+		filePermissionQuery.append(irodsFile.getParent());
 		filePermissionQuery.append("'");
 		filePermissionQuery.append(AND_VALUE);
 
 		filePermissionQuery.append(RodsGenQueryEnum.COL_DATA_NAME.getName());
 		filePermissionQuery.append(" = '");
-		filePermissionQuery.append(IRODSDataConversionUtil
-				.escapeSingleQuotes(irodsFile.getName()));
+		filePermissionQuery.append(irodsFile.getName());
 		filePermissionQuery.append("'");
 
 		log.debug("data oject exec query:{}", filePermissionQuery);
@@ -396,8 +394,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 
 		filePermissionQuery.append(RodsGenQueryEnum.COL_COLL_NAME.getName());
 		filePermissionQuery.append(" = '");
-		filePermissionQuery.append(IRODSDataConversionUtil
-				.escapeSingleQuotes(parent));
+		filePermissionQuery.append(parent);
 		filePermissionQuery.append("'");
 		filePermissionQuery.append(AND_VALUE);
 
@@ -518,8 +515,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 
 		filePermissionQuery.append(RodsGenQueryEnum.COL_COLL_NAME.getName());
 		filePermissionQuery.append(" = '");
-		filePermissionQuery.append(IRODSDataConversionUtil
-				.escapeSingleQuotes(dir));
+		filePermissionQuery.append(dir);
 		filePermissionQuery.append("'");
 		filePermissionQuery.append(AND_VALUE);
 

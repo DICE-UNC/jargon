@@ -683,8 +683,11 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 			objStat = getObjectStatForAbsolutePath(collectionAbsolutePath);
 			zone = objStat.getOwnerZone();
 			// get absolute path to use for querying iCAT (could be a soft link)
-			absPath = IRODSDataConversionUtil.escapeSingleQuotes(MiscIRODSUtils
-					.determineAbsolutePathBasedOnCollTypeInObjectStat(objStat));
+			//absPath = IRODSDataConversionUtil.escapeSingleQuotes(MiscIRODSUtils
+			//		.determineAbsolutePathBasedOnCollTypeInObjectStat(objStat));
+			
+			absPath = MiscIRODSUtils
+					.determineAbsolutePathBasedOnCollTypeInObjectStat(objStat);
 		}
 
 		log.info("absPath for querying iCAT:{}", absPath);
@@ -781,7 +784,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 		StringBuilder sb = new StringBuilder();
 		sb.append(RodsGenQueryEnum.COL_COLL_NAME.getName());
 		sb.append(" = '");
-		sb.append(IRODSDataConversionUtil.escapeSingleQuotes(absPath));
+		sb.append(absPath);
 		sb.append("'");
 		List<Collection> collectionList = this.findWhere(sb.toString(), 0);
 
@@ -891,7 +894,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 		query.append(") WHERE ");
 		query.append(RodsGenQueryEnum.COL_COLL_NAME.getName());
 		query.append(" LIKE '");
-		query.append(IRODSDataConversionUtil.escapeSingleQuotes(absPath));
+		query.append(absPath);
 		query.append("%'");
 		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(query.toString(), 1);
 		IRODSQueryResultSetInterface resultSet;
