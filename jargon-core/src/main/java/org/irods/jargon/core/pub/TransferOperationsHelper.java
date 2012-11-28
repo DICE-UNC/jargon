@@ -1005,7 +1005,10 @@ final class TransferOperationsHelper {
 			final TransferControlBlock transferControlBlock)
 			throws OverwriteException, DataNotFoundException, JargonException {
 
-		log.info("copy single file");
+		log.info("processCopyOfSingleFile()");
+		log.info("irodsSourceFileAbsolutePath:{}",irodsSourceFileAbsolutePath);
+		log.info("targetResource:{}",targetResource);
+		log.info("irodsTargetFileAbsolutePath:{}",irodsTargetFileAbsolutePath);
 
 		int totalFiles = 0;
 		int totalFilesSoFar = 0;
