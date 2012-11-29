@@ -341,6 +341,26 @@ public class CollectionAOHelper extends AOHelper {
 
 		return entry;
 	}
+	
+	/**
+	 * Append selects to the provided builder for collection queries
+	 * @param builder
+	 * @throws GenQueryBuilderException
+	 */
+	public static void buildSelectsNeededForCollectionsInCollectionsAndDataObjectsListingEntry(final IRODSGenQueryBuilder builder) throws GenQueryBuilderException {
+		if (builder == null) {
+			throw new IllegalArgumentException("null builder");
+		}
+		
+		builder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_PARENT_NAME)
+		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_NAME)
+		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_CREATE_TIME)
+		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_MODIFY_TIME)
+		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_ID)
+		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_OWNER_NAME)
+		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_OWNER_ZONE);
+		
+	}
 
 	/**
 	 * Shortcut to build selects used in creating
