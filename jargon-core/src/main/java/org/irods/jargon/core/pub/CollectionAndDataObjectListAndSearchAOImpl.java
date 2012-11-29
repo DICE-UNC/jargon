@@ -231,7 +231,8 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 
 		log.info("countDataObjectsAndCollectionsUnder: {}",
 				absolutePathToParent);
-
+		
+		MiscIRODSUtils.checkPathSizeForMax(absolutePathToParent);
 		ObjStat objStat = retrieveObjectStatForPath(absolutePathToParent);
 
 		/*
@@ -1450,10 +1451,13 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 	@Override
 	public ObjStat retrieveObjectStatForPath(final String irodsAbsolutePath)
 			throws FileNotFoundException, JargonException {
+		
 		if (irodsAbsolutePath == null || irodsAbsolutePath.isEmpty()) {
 			throw new IllegalArgumentException(
 					"irodsAbsolutePath is null or empty");
 		}
+		
+		MiscIRODSUtils.checkPathSizeForMax(irodsAbsolutePath);
 
 		DataObjInpForObjStat dataObjInp = DataObjInpForObjStat
 				.instance(irodsAbsolutePath);
