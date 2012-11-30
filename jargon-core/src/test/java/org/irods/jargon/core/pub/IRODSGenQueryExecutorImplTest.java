@@ -508,7 +508,7 @@ public class IRODSGenQueryExecutorImplTest {
 		IRODSGenQueryExecutor irodsGenQueryExecutor = accessObjectFactory
 				.getIRODSGenQueryExecutor(irodsAccount);
 
-		AbstractIRODSQueryResultSet resultSet = irodsGenQueryExecutor
+		IRODSQueryResultSet resultSet = irodsGenQueryExecutor
 				.executeIRODSQuery(irodsQuery, 0);
 
 		Assert.assertTrue("did not get expected continuation",
@@ -641,7 +641,7 @@ public class IRODSGenQueryExecutorImplTest {
 		// execute query
 		IRODSGenQueryExecutor irodsGenQueryExecutor = accessObjectFactory
 				.getIRODSGenQueryExecutor(irodsAccount);
-		AbstractIRODSQueryResultSet resultSet = irodsGenQueryExecutor
+		IRODSQueryResultSet resultSet = irodsGenQueryExecutor
 				.executeIRODSQuery(irodsQuery, 0);
 
 		// set the file info object from the query result

@@ -7,8 +7,10 @@ import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 import org.irods.jargon.core.pub.io.IRODSFileSystemAOHelper;
 import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry;
+import org.irods.jargon.core.query.GenQueryBuilderException;
+import org.irods.jargon.core.query.IRODSGenQueryBuilder;
+import org.irods.jargon.core.query.QueryConditionOperators;
 import org.irods.jargon.core.query.RodsGenQueryEnum;
-import org.irods.jargon.core.utils.IRODSDataConversionUtil;
 import org.irods.jargon.datautils.AbstractDataUtilsServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,8 +29,6 @@ import org.slf4j.LoggerFactory;
 public class SharedFilesAndCollectionsSearchAndListServiceImpl extends
 		AbstractDataUtilsServiceImpl implements
 		SharedFilesAndCollectionsSearchAndListService {
-
-	private static final char COMMA = ',';
 
 	public static final Logger log = LoggerFactory
 			.getLogger(SharedFilesAndCollectionsSearchAndListServiceImpl.class);
@@ -101,66 +101,46 @@ public class SharedFilesAndCollectionsSearchAndListServiceImpl extends
 					"search specified neither owner or shared-with user");
 		}
 
-		StringBuilder sb = new StringBuilder(
-				buildSelectsForListAllDataObjectsSharedWithAGivenUser());
-		sb.append(" WHERE ");
+		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, null);
+		buildSelectsForListAllDataObjectsSharedWithAGivenUser(builder);
 
 		// add owner to query
 
 		if (isOwnerInSearch) {
-			sb.append(RodsGenQueryEnum.COL_D_OWNER_NAME.getName());
-			sb.append(" = '");
-			sb.append(ownerName.trim());
-			sb.append("' ");
-		}
-
-		if (isOwnerInSearch && isUserInSearch) {
-			sb.append(" AND ");
+			builder.addConditionAsGenQueryField(
+					RodsGenQueryEnum.COL_D_OWNER_NAME,
+					QueryConditionOperators.EQUAL, ownerName);
 		}
 
 		if (isUserInSearch) {
-			sb.append(RodsGenQueryEnum.COL_DATA_ACCESS_USER_ID.getName());
-			sb.append(" = '");
-			sb.append(sharedWithName.trim());
-			sb.append("' ");
+			builder.addConditionAsGenQueryField(
+					RodsGenQueryEnum.COL_DATA_ACCESS_USER_ID,
+					QueryConditionOperators.EQUAL, sharedWithName);
 		}
 
-		sb.append(" AND ");
-
-		sb.append(RodsGenQueryEnum.COL_COLL_NAME.getName());
-		sb.append(" LIKE '");
-		sb.append(IRODSDataConversionUtil
-				.escapeSingleQuotes(searchStartAbsolutePath.trim()));
-		sb.append("%'");
-
+		builder.addConditionAsGenQueryField(RodsGenQueryEnum.COL_COLL_NAME,
+				QueryConditionOperators.LIKE, searchStartAbsolutePath + "%");
 		return null;
 
 	}
 
-	public static String buildSelectsForListAllDataObjectsSharedWithAGivenUser()
-			throws JargonException {
+	public static void buildSelectsForListAllDataObjectsSharedWithAGivenUser(
+			final IRODSGenQueryBuilder builder) throws JargonException {
 
-		StringBuilder query = new StringBuilder();
-		query.append("SELECT DISTINCT ");
-		query.append(IRODSFileSystemAOHelper.buildDataObjectQuerySelects());
-		query.append(COMMA);
-		query.append(RodsGenQueryEnum.COL_USER_NAME.getName());
-		query.append(COMMA);
-		query.append(RodsGenQueryEnum.COL_DATA_ACCESS_USER_ID.getName());
-		query.append(COMMA);
-		query.append(RodsGenQueryEnum.COL_DATA_ACCESS_TYPE.getName());
+		if (builder == null) {
+			throw new IllegalArgumentException("null builder");
+		}
 
-		/*
-		 * query.append(" WHERE ");
-		 * query.append(RodsGenQueryEnum.COL_COLL_NAME.getName());
-		 * query.append(" LIKE '");
-		 * query.append(IRODSDataConversionUtil.escapeSingleQuotes
-		 * (path.trim())); query.append('%'); query.append("' AND ");
-		 * query.append(RodsGenQueryEnum.COL_COLL_ACCESS_USER_NAME.getName());
-		 * query.append(" = '"); query.append(userName.trim());
-		 * query.append("'");
-		 */
-		return query.toString();
+		try {
+			IRODSFileSystemAOHelper.buildDataObjectQuerySelects(builder);
+			builder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_NAME)
+					.addSelectAsGenQueryValue(
+							RodsGenQueryEnum.COL_DATA_ACCESS_USER_ID)
+					.addSelectAsGenQueryValue(
+							RodsGenQueryEnum.COL_DATA_ACCESS_TYPE);
+		} catch (GenQueryBuilderException e) {
+			throw new JargonException(e);
+		}
 
 	}
 

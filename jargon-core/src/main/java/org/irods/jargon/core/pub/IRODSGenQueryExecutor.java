@@ -5,9 +5,7 @@ package org.irods.jargon.core.pub;
 
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.query.AbstractIRODSGenQuery;
-import org.irods.jargon.core.query.AbstractIRODSQueryResultSet;
 import org.irods.jargon.core.query.IRODSQueryResultSet;
-import org.irods.jargon.core.query.IRODSQueryResultSetInterface;
 import org.irods.jargon.core.query.JargonQueryException;
 
 /**
@@ -93,7 +91,7 @@ public interface IRODSGenQueryExecutor extends IRODSAccessObject {
 	 * @throws JargonException
 	 * @throws JargonQueryException
 	 */
-	IRODSQueryResultSetInterface executeIRODSQueryWithPaging(
+	IRODSQueryResultSet executeIRODSQueryWithPaging(
 			final AbstractIRODSGenQuery irodsQuery, final int partialStartIndex)
 			throws JargonException, JargonQueryException;
 
@@ -119,28 +117,9 @@ public interface IRODSGenQueryExecutor extends IRODSAccessObject {
 	 * @throws JargonException
 	 * @throws JargonQueryException
 	 */
-	IRODSQueryResultSetInterface executeIRODSQueryWithPagingInZone(
+	IRODSQueryResultSet executeIRODSQueryWithPagingInZone(
 			AbstractIRODSGenQuery irodsQuery, int partialStartIndex,
 			String zoneName) throws JargonException, JargonQueryException;
-
-	/**
-	 * Execute a requery meant to retrieve more results. The previous result set
-	 * contains information to requery iRODS.
-	 * <p/>
-	 * Note that the original query must not close the result set, so signatures
-	 * that allow specification of the <code>partialStartIndex</code> in the
-	 * original query will not work.
-	 * 
-	 * @param irodsQueryResultSet
-	 *            {@link org.irods.jargon.core.query.IRODSQueryResultSet} that
-	 *            contains the results of the previous query.
-	 * @return <code>IRODSQueryResultSet</code> containing the previous batch of
-	 *         query results.
-	 * @throws JargonException
-	 * @throws JargonQueryException
-	 */
-	IRODSQueryResultSet getMoreResults(IRODSQueryResultSet irodsQueryResultSet)
-			throws JargonException, JargonQueryException;
 
 	/**
 	 * Execute a re-query meant to retrieve more results. The previous result
@@ -165,12 +144,11 @@ public interface IRODSGenQueryExecutor extends IRODSAccessObject {
 	 * Close the result set that had been continued
 	 * 
 	 * @param resultSet
-	 *            {@link org.irods.jargon.core.query.IRODSQueryResultSetInterface}
-	 *            that contains the results of the previous query.
+	 *            {@link org.irods.jargon.core.query.IRODSQueryResultSet} that
+	 *            contains the results of the previous query.
 	 * @throws JargonException
 	 */
-	void closeResults(IRODSQueryResultSetInterface resultSet)
-			throws JargonException;
+	void closeResults(IRODSQueryResultSet resultSet) throws JargonException;
 
 	/**
 	 * Execute an iquest-like query and return results in a convenient POJO
@@ -195,7 +173,7 @@ public interface IRODSGenQueryExecutor extends IRODSAccessObject {
 	 * @throws JargonException
 	 * @throws JargonQueryException
 	 */
-	AbstractIRODSQueryResultSet executeIRODSQueryAndCloseResult(
+	IRODSQueryResultSet executeIRODSQueryAndCloseResult(
 			AbstractIRODSGenQuery irodsQuery, int partialStartIndex)
 			throws JargonException, JargonQueryException;
 
@@ -227,8 +205,11 @@ public interface IRODSGenQueryExecutor extends IRODSAccessObject {
 	 * @throws JargonException
 	 * @throws JargonQueryException
 	 */
-	AbstractIRODSQueryResultSet executeIRODSQueryAndCloseResultInZone(
+	IRODSQueryResultSet executeIRODSQueryAndCloseResultInZone(
 			AbstractIRODSGenQuery irodsQuery, int partialStartIndex,
 			String zoneName) throws JargonException, JargonQueryException;
+
+	IRODSQueryResultSet getMoreResults(IRODSQueryResultSet irodsQueryResultSet)
+			throws JargonException, JargonQueryException;
 
 }

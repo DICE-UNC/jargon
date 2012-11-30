@@ -11,11 +11,11 @@ import junit.framework.TestCase;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.pub.io.IRODSFile;
+import org.irods.jargon.core.query.AbstractIRODSQueryResultSet;
 import org.irods.jargon.core.query.GenQueryField.SelectFieldTypes;
 import org.irods.jargon.core.query.IRODSGenQueryBuilder;
 import org.irods.jargon.core.query.IRODSGenQueryFromBuilder;
 import org.irods.jargon.core.query.IRODSQueryResultRow;
-import org.irods.jargon.core.query.IRODSQueryResultSet;
 import org.irods.jargon.core.query.IRODSQueryResultSetInterface;
 import org.irods.jargon.core.query.QueryConditionOperators;
 import org.irods.jargon.core.query.RodsGenQueryEnum;
@@ -123,7 +123,7 @@ public class IRODSGenQueryExecutorImplBuiilderQueriesTest {
 
 		IRODSGenQueryFromBuilder query = builder.exportIRODSQueryFromBuilder(1);
 
-		IRODSQueryResultSet resultSet = irodsGenQueryExecutor
+		AbstractIRODSQueryResultSet resultSet = irodsGenQueryExecutor
 				.executeIRODSQuery(query, 0);
 
 		TestCase.assertTrue("did not get row count", resultSet.getTotalRecords() > 0);

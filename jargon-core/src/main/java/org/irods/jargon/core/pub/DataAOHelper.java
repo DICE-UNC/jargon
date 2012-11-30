@@ -33,6 +33,7 @@ import org.irods.jargon.core.query.IRODSQueryResultSetInterface;
 import org.irods.jargon.core.query.JargonQueryException;
 import org.irods.jargon.core.query.MetaDataAndDomainData;
 import org.irods.jargon.core.query.MetaDataAndDomainData.MetadataDomain;
+import org.irods.jargon.core.query.QueryConditionOperators;
 import org.irods.jargon.core.query.RodsGenQueryEnum;
 import org.irods.jargon.core.transfer.TransferControlBlock;
 import org.irods.jargon.core.transfer.TransferStatus.TransferType;
@@ -51,7 +52,7 @@ import org.slf4j.LoggerFactory;
  * @author Mike Conway - DICE (www.irods.org)
  * 
  */
-final class DataAOHelper extends AOHelper {
+public final class DataAOHelper extends AOHelper {
 	public static final Logger log = LoggerFactory
 			.getLogger(DataAOHelper.class);
 
@@ -81,56 +82,43 @@ final class DataAOHelper extends AOHelper {
 	}
 
 	/**
-	 * Create a set of selects for a data object, used in general query. Note
-	 * that the 'SELECT' token is appended as the first token in the query.
+	 * Create a set of selects for a data object, used in general query.
+	 * @param builder {@link IRODSGenQueryBuilder} that will be appended with the selects
 	 * 
 	 * @return <code>String</code> with select statements for the domain object.
 	 */
-	String buildSelects() {
-		final StringBuilder query = new StringBuilder();
-		query.append("SELECT ");
-		query.append(RodsGenQueryEnum.COL_D_DATA_ID.getName());
-		query.append(COMMA);
-		query.append(RodsGenQueryEnum.COL_D_COLL_ID.getName());
-		query.append(COMMA);
-		query.append(RodsGenQueryEnum.COL_COLL_NAME.getName());
-		query.append(COMMA);
-		query.append(RodsGenQueryEnum.COL_DATA_NAME.getName());
-		query.append(COMMA);
-		query.append(RodsGenQueryEnum.COL_DATA_REPL_NUM.getName());
-		query.append(COMMA);
-		query.append(RodsGenQueryEnum.COL_DATA_VERSION.getName());
-		query.append(COMMA);
-		query.append(RodsGenQueryEnum.COL_DATA_TYPE_NAME.getName());
-		query.append(COMMA);
-		query.append(RodsGenQueryEnum.COL_DATA_SIZE.getName());
-		query.append(COMMA);
-		query.append(RodsGenQueryEnum.COL_D_RESC_GROUP_NAME.getName());
-		query.append(COMMA);
-		query.append(RodsGenQueryEnum.COL_D_RESC_NAME.getName());
-		query.append(COMMA);
-		query.append(RodsGenQueryEnum.COL_D_DATA_PATH.getName());
-		query.append(COMMA);
-		query.append(RodsGenQueryEnum.COL_D_OWNER_NAME.getName());
-		query.append(COMMA);
-		query.append(RodsGenQueryEnum.COL_D_OWNER_ZONE.getName());
-		query.append(COMMA);
-		query.append(RodsGenQueryEnum.COL_D_REPL_STATUS.getName());
-		query.append(COMMA);
-		query.append(RodsGenQueryEnum.COL_D_DATA_STATUS.getName());
-		query.append(COMMA);
-		query.append(RodsGenQueryEnum.COL_D_DATA_CHECKSUM.getName());
-		query.append(COMMA);
-		query.append(RodsGenQueryEnum.COL_D_EXPIRY.getName());
-		query.append(COMMA);
-		query.append(RodsGenQueryEnum.COL_D_MAP_ID.getName());
-		query.append(COMMA);
-		query.append(RodsGenQueryEnum.COL_D_COMMENTS.getName());
-		query.append(COMMA);
-		query.append(RodsGenQueryEnum.COL_D_CREATE_TIME.getName());
-		query.append(COMMA);
-		query.append(RodsGenQueryEnum.COL_D_MODIFY_TIME.getName());
-		return query.toString();
+	void buildSelects(IRODSGenQueryBuilder builder) throws JargonException {
+		
+		if (builder == null) {
+			throw new IllegalArgumentException("null builder");
+		}
+		
+		try {
+			builder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_DATA_ID)
+			.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_COLL_ID)
+			.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_NAME)
+			.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_NAME)
+			.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_REPL_NUM)
+			.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_VERSION)
+			.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_TYPE_NAME)
+			.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_SIZE)
+			.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_RESC_GROUP_NAME)
+			.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_RESC_NAME)
+			.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_DATA_PATH)
+			.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_OWNER_NAME)
+			.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_OWNER_ZONE)
+			.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_REPL_STATUS)
+			.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_DATA_STATUS)
+			.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_DATA_CHECKSUM)
+			.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_EXPIRY)
+			.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_MAP_ID)
+			.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_COMMENTS)
+			.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_CREATE_TIME)
+			.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_MODIFY_TIME);
+		} catch (GenQueryBuilderException e) {
+			throw new JargonException(e);
+		}
+	
 	}
 
 	/**
@@ -144,7 +132,7 @@ final class DataAOHelper extends AOHelper {
 	 *         the data in the row.
 	 * @throws JargonException
 	 */
-	DataObject buildDomainFromResultSetRow(final IRODSQueryResultRow row)
+	public static DataObject buildDomainFromResultSetRow(final IRODSQueryResultRow row)
 			throws JargonException {
 		DataObject dataObject = new DataObject();
 		dataObject.setId(Integer.parseInt(row.getColumn(0)));
@@ -202,7 +190,7 @@ final class DataAOHelper extends AOHelper {
 		return sb.toString();
 	}
 
-	List<DataObject> buildListFromResultSet(
+	public static List<DataObject> buildListFromResultSet(
 			final IRODSQueryResultSetInterface resultSet)
 			throws JargonException {
 
@@ -668,32 +656,23 @@ final class DataAOHelper extends AOHelper {
 	/**
 	 * @param irodsCollectionAbsolutePath
 	 * @param dataName
+	 * @param builder 
 	 * @return
 	 */
-	static String buildACLQueryForCollectionPathAndDataName(
-			final String irodsCollectionAbsolutePath, final String dataName) {
-		StringBuilder query = new StringBuilder();
-		query.append("SELECT ");
-		query.append(RodsGenQueryEnum.COL_USER_NAME.getName());
-		query.append(",");
-		query.append(RodsGenQueryEnum.COL_DATA_ACCESS_USER_ID.getName());
-		query.append(",");
-		query.append(RodsGenQueryEnum.COL_DATA_ACCESS_TYPE.getName());
-		query.append(",");
-		query.append(RodsGenQueryEnum.COL_USER_TYPE.getName());
-		query.append(",");
-		query.append(RodsGenQueryEnum.COL_USER_ZONE.getName());
-		query.append(" WHERE ");
-		query.append(RodsGenQueryEnum.COL_COLL_NAME.getName());
-		query.append(EQUALS_AND_QUOTE);
-		query.append(irodsCollectionAbsolutePath);
-		query.append(QUOTE);
-		query.append(AND);
-		query.append(RodsGenQueryEnum.COL_DATA_NAME.getName());
-		query.append(EQUALS_AND_QUOTE);
-		query.append(IRODSDataConversionUtil.escapeSingleQuotes(dataName));
-		query.append(QUOTE);
-		return query.toString();
+	static void buildACLQueryForCollectionPathAndDataName(
+			final String irodsCollectionAbsolutePath, final String dataName, IRODSGenQueryBuilder builder) throws JargonException {
+		
+		try {
+			builder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_NAME)
+			.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_ACCESS_USER_ID)
+			.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_ACCESS_TYPE)
+			.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_TYPE)
+			.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_ZONE)
+			.addConditionAsGenQueryField(RodsGenQueryEnum.COL_COLL_NAME, QueryConditionOperators.EQUAL, irodsCollectionAbsolutePath)
+			.addConditionAsGenQueryField(RodsGenQueryEnum.COL_DATA_NAME, QueryConditionOperators.EQUAL, dataName);
+		} catch (GenQueryBuilderException e) {
+			throw new JargonException(e);
+		}
 	}
 
 	/**

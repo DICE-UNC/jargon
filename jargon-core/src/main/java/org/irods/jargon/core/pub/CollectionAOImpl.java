@@ -25,14 +25,15 @@ import org.irods.jargon.core.pub.io.IRODSFileFactoryImpl;
 import org.irods.jargon.core.query.AVUQueryElement;
 import org.irods.jargon.core.query.AVUQueryOperatorEnum;
 import org.irods.jargon.core.query.GenQueryBuilderException;
+import org.irods.jargon.core.query.GenQueryField.SelectFieldTypes;
 import org.irods.jargon.core.query.IRODSGenQuery;
 import org.irods.jargon.core.query.IRODSGenQueryBuilder;
 import org.irods.jargon.core.query.IRODSGenQueryFromBuilder;
 import org.irods.jargon.core.query.IRODSQueryResultRow;
+import org.irods.jargon.core.query.IRODSQueryResultSet;
 import org.irods.jargon.core.query.IRODSQueryResultSetInterface;
 import org.irods.jargon.core.query.JargonQueryException;
 import org.irods.jargon.core.query.MetaDataAndDomainData;
-import org.irods.jargon.core.query.GenQueryField.SelectFieldTypes;
 import org.irods.jargon.core.query.MetaDataAndDomainData.MetadataDomain;
 import org.irods.jargon.core.query.QueryConditionOperators;
 import org.irods.jargon.core.query.RodsGenQueryEnum;
@@ -684,9 +685,10 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 			objStat = getObjectStatForAbsolutePath(collectionAbsolutePath);
 			zone = objStat.getOwnerZone();
 			// get absolute path to use for querying iCAT (could be a soft link)
-			//absPath = IRODSDataConversionUtil.escapeSingleQuotes(MiscIRODSUtils
-			//		.determineAbsolutePathBasedOnCollTypeInObjectStat(objStat));
-			
+			// absPath =
+			// IRODSDataConversionUtil.escapeSingleQuotes(MiscIRODSUtils
+			// .determineAbsolutePathBasedOnCollTypeInObjectStat(objStat));
+
 			absPath = MiscIRODSUtils
 					.determineAbsolutePathBasedOnCollTypeInObjectStat(objStat);
 		}
@@ -781,16 +783,17 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 				.determineAbsolutePathBasedOnCollTypeInObjectStat(objStat);
 
 		log.info("absPath for querying iCAT:{}", absPath);
-		
+
 		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, null);
 		IRODSQueryResultSetInterface resultSet;
-		
+
 		try {
 			CollectionAOHelper.buildSelectsByAppendingToBuilder(builder);
-			builder.addConditionAsGenQueryField(RodsGenQueryEnum.COL_COLL_NAME, QueryConditionOperators.EQUAL, absPath);
+			builder.addConditionAsGenQueryField(RodsGenQueryEnum.COL_COLL_NAME,
+					QueryConditionOperators.EQUAL, absPath);
 			IRODSGenQueryFromBuilder irodsQuery = builder
 					.exportIRODSQueryFromBuilder(1);
-		
+
 			resultSet = irodsGenQueryExecutor
 					.executeIRODSQueryAndCloseResultInZone(irodsQuery, 0,
 							objStat.getOwnerZone());
@@ -801,8 +804,9 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 			log.error(" exception in query", e);
 			throw new JargonException("error in query", e);
 		}
-		
-		List<Collection> collectionList = CollectionAOHelper.buildListFromResultSet(resultSet);
+
+		List<Collection> collectionList = CollectionAOHelper
+				.buildListFromResultSet(resultSet);
 
 		if (collectionList.size() == 0) {
 			log.error("No collection found for path:{}", absPath);
@@ -818,7 +822,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 		CollectionAndPath collectionAndPath = MiscIRODSUtils
 				.separateCollectionAndPathFromGivenAbsolutePath(objStat
 						.getAbsolutePath());
-		
+
 		StringBuilder sb = new StringBuilder();
 		sb.append(collectionAndPath.getCollectionParent());
 		sb.append("/");
@@ -872,9 +876,10 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 			throw new IllegalArgumentException(
 					"irodsCollectionAbsolutePath is null");
 		}
-		
+
 		MiscIRODSUtils.checkPathSizeForMax(irodsCollectionAbsolutePath);
-		ObjStat objStat = collectionAndDataObjectListAndSearchAO.retrieveObjectStatForPath(irodsCollectionAbsolutePath);
+		ObjStat objStat = collectionAndDataObjectListAndSearchAO
+				.retrieveObjectStatForPath(irodsCollectionAbsolutePath);
 
 		/*
 		 * See if jargon supports the given object type
@@ -1380,15 +1385,22 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 		IRODSGenQueryExecutor irodsGenQueryExecutor = getIRODSAccessObjectFactory()
 				.getIRODSGenQueryExecutor(getIRODSAccount());
 
-		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(CollectionAOHelper
-				.buildInheritanceQueryForCollectionAbsolutePath(absPath), 1);
-		IRODSQueryResultSetInterface resultSet;
+		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, null);
+		CollectionAOHelper.buildInheritanceQueryForCollectionAbsolutePath(
+				absPath, builder);
+
+		IRODSQueryResultSet resultSet;
 
 		try {
+			
+			IRODSGenQueryFromBuilder irodsQuery = builder
+					.exportIRODSQueryFromBuilder(1);
 			resultSet = irodsGenQueryExecutor
 					.executeIRODSQueryAndCloseResultInZone(irodsQuery, 0,
 							objStat.getOwnerZone());
 		} catch (JargonQueryException e) {
+			throw new JargonException("error querying for inheritance flag", e);
+		} catch (GenQueryBuilderException e) {
 			throw new JargonException("error querying for inheritance flag", e);
 		}
 
@@ -1534,30 +1546,27 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 		IRODSGenQueryExecutor irodsGenQueryExecutor = getIRODSAccessObjectFactory()
 				.getIRODSGenQueryExecutor(getIRODSAccount());
 
-		StringBuilder query = new StringBuilder(
-				CollectionAOHelper.buildACLQueryForCollectionName(absPath));
-		query.append(" AND ");
-		query.append(RodsGenQueryEnum.COL_COLL_ACCESS_USER_NAME.getName());
-		query.append(" = '");
-		query.append(theUser);
-		query.append("'");
+		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, null);
+		CollectionAOHelper.buildACLQueryForCollectionName(absPath, builder);
+		builder.addConditionAsGenQueryField(
+				RodsGenQueryEnum.COL_COLL_ACCESS_USER_NAME,
+				QueryConditionOperators.EQUAL, theUser);
 
 		if (!theZone.isEmpty()) {
-			query.append(" AND ");
-			query.append(RodsGenQueryEnum.COL_COLL_ACCESS_USER_ZONE.getName());
-			query.append(" = '");
-			query.append(theZone);
-			query.append("'");
+			builder.addConditionAsGenQueryField(
+					RodsGenQueryEnum.COL_COLL_ACCESS_USER_ZONE,
+					QueryConditionOperators.EQUAL, theZone);
 		}
 
-		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(query.toString(),
-				this.getJargonProperties().getMaxFilesAndDirsQueryMax());
-		IRODSQueryResultSetInterface resultSet;
+		IRODSQueryResultSet resultSet;
 		UserAO userAO = this.getIRODSAccessObjectFactory().getUserAO(
 				getIRODSAccount());
 		User user = null;
 
 		try {
+			IRODSGenQueryFromBuilder irodsQuery = builder
+					.exportIRODSQueryFromBuilder(this.getJargonProperties()
+							.getMaxFilesAndDirsQueryMax());
 			resultSet = irodsGenQueryExecutor
 					.executeIRODSQueryAndCloseResultInZone(irodsQuery, 0,
 							objStat.getOwnerZone());
@@ -1591,12 +1600,17 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 			log.debug("loaded filePermission:{}", userFilePermission);
 
 		} catch (JargonQueryException e) {
-			log.error("query exception for  query:{}", query.toString(), e);
+			log.error("query exception for  query", e);
 			throw new JargonException(
 					"error in query loading user file permissions for collection",
 					e);
 		} catch (DataNotFoundException dnf) {
 			log.info("no data found for user ACL");
+		} catch (GenQueryBuilderException e) {
+			log.error("query exception for  query", e);
+			throw new JargonException(
+					"error in query loading user file permissions for collection",
+					e);
 		}
 
 		return userFilePermission;
@@ -1635,12 +1649,11 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 
 		IRODSGenQueryExecutor irodsGenQueryExecutor = getIRODSAccessObjectFactory()
 				.getIRODSGenQueryExecutor(getIRODSAccount());
+		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, null);
 
-		String query = CollectionAOHelper
-				.buildACLQueryForCollectionName(absPath);
-		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(query.toString(),
-				this.getJargonProperties().getMaxFilesAndDirsQueryMax());
-		IRODSQueryResultSetInterface resultSet;
+		CollectionAOHelper.buildACLQueryForCollectionName(absPath, builder);
+
+		IRODSQueryResultSet resultSet;
 		UserAO userAO = this.getIRODSAccessObjectFactory().getUserAO(
 				getIRODSAccount());
 
@@ -1652,6 +1665,10 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 
 		User user = null;
 		try {
+			IRODSGenQueryFromBuilder irodsQuery = builder
+					.exportIRODSQueryFromBuilder(this.getJargonProperties()
+							.getMaxFilesAndDirsQueryMax());
+
 			resultSet = irodsGenQueryExecutor
 					.executeIRODSQueryAndCloseResultInZone(irodsQuery, 0,
 							objStat.getOwnerZone());
@@ -1672,7 +1689,12 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 			}
 
 		} catch (JargonQueryException e) {
-			log.error("query exception for  query:{}", query.toString(), e);
+			log.error("query exception for  query", e);
+			throw new JargonException(
+					"error in query loading user file permissions for collection",
+					e);
+		} catch (GenQueryBuilderException e) {
+			log.error("query exception for  query", e);
 			throw new JargonException(
 					"error in query loading user file permissions for collection",
 					e);

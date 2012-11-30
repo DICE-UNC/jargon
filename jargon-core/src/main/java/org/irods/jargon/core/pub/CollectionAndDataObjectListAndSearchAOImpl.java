@@ -20,11 +20,10 @@ import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry;
 import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry.ObjectType;
 import org.irods.jargon.core.query.GenQueryBuilderException;
 import org.irods.jargon.core.query.GenQueryField.SelectFieldTypes;
-import org.irods.jargon.core.query.IRODSGenQuery;
 import org.irods.jargon.core.query.IRODSGenQueryBuilder;
 import org.irods.jargon.core.query.IRODSGenQueryFromBuilder;
 import org.irods.jargon.core.query.IRODSQueryResultRow;
-import org.irods.jargon.core.query.IRODSQueryResultSetInterface;
+import org.irods.jargon.core.query.IRODSQueryResultSet;
 import org.irods.jargon.core.query.JargonQueryException;
 import org.irods.jargon.core.query.QueryConditionOperators;
 import org.irods.jargon.core.query.RodsGenQueryEnum;
@@ -59,7 +58,6 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 	private static final String QUERY_EXCEPTION_FOR_QUERY = "query exception for  query:";
 	public static final Logger log = LoggerFactory
 			.getLogger(CollectionAndDataObjectListAndSearchAOImpl.class);
-	private static final char COMMA = ',';
 
 	/**
 	 * Constructor to be called by the {@link IRODSAccessObjectFactory}
@@ -231,7 +229,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 
 		log.info("countDataObjectsAndCollectionsUnder: {}",
 				absolutePathToParent);
-		
+
 		MiscIRODSUtils.checkPathSizeForMax(absolutePathToParent);
 		ObjStat objStat = retrieveObjectStatForPath(absolutePathToParent);
 
@@ -260,7 +258,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 				this.getIRODSSession(), this.getIRODSAccount());
 
 		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, null);
-		IRODSQueryResultSetInterface resultSet;
+		IRODSQueryResultSet resultSet;
 
 		try {
 			builder.addSelectAsAgregateGenQueryValue(
@@ -371,7 +369,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 				this.getIRODSSession(), this.getIRODSAccount());
 
 		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, null);
-		IRODSQueryResultSetInterface resultSet;
+		IRODSQueryResultSet resultSet;
 
 		try {
 			CollectionAOHelper
@@ -692,7 +690,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 			throw new JargonException("error building query", e);
 		}
 
-		IRODSQueryResultSetInterface resultSet = queryForPathAndReturnResultSet(
+		IRODSQueryResultSet resultSet = queryForPathAndReturnResultSet(
 				objStat.getAbsolutePath(), builder, partialStartIndex, objStat);
 
 		CollectionAndDataObjectListingEntry collectionAndDataObjectListingEntry = null;
@@ -720,7 +718,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 
 	}
 
-	private IRODSQueryResultSetInterface queryForPathAndReturnResultSet(
+	private IRODSQueryResultSet queryForPathAndReturnResultSet(
 			final String absolutePath, final IRODSGenQueryBuilder builder,
 			final int partialStartIndex, final ObjStat objStat)
 			throws JargonException {
@@ -730,7 +728,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 				this.getIRODSSession(), this.getIRODSAccount());
 
 		IRODSGenQueryFromBuilder irodsQuery;
-		IRODSQueryResultSetInterface resultSet;
+		IRODSQueryResultSet resultSet;
 
 		try {
 			irodsQuery = builder.exportIRODSQueryFromBuilder(this
@@ -830,7 +828,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 			throw new JargonException("error building query", e);
 		}
 
-		IRODSQueryResultSetInterface resultSet = queryForPathAndReturnResultSet(
+		IRODSQueryResultSet resultSet = queryForPathAndReturnResultSet(
 				effectiveAbsolutePath, builder, partialStartIndex, objStat);
 
 		CollectionAndDataObjectListingEntry collectionAndDataObjectListingEntry = null;
@@ -908,33 +906,6 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 
 	}
 
-	private IRODSQueryResultSetInterface queryForPathAndReturnResultSet(
-			final String irodsAbsolutePath, final String queryString,
-			final int partialStartIndex, final ObjStat objStat)
-			throws JargonException {
-
-		log.info("queryForPathAndReturnResultSet for: {}", irodsAbsolutePath);
-		IRODSGenQueryExecutor irodsGenQueryExecutor = new IRODSGenQueryExecutorImpl(
-				this.getIRODSSession(), this.getIRODSAccount());
-
-		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(queryString,
-				getIRODSSession().getJargonProperties()
-						.getMaxFilesAndDirsQueryMax());
-		IRODSQueryResultSetInterface resultSet;
-
-		try {
-			resultSet = irodsGenQueryExecutor
-					.executeIRODSQueryWithPagingInZone(irodsQuery,
-							partialStartIndex, objStat.getOwnerZone());
-		} catch (JargonQueryException e) {
-			log.error(QUERY_EXCEPTION_FOR_QUERY + queryString, e);
-			throw new JargonException(e);
-		}
-
-		return resultSet;
-
-	}
-
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -989,7 +960,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		IRODSFileSystemAOHelper
 				.buildQueryListAllDataObjectsWithSizeAndDateInfo(
 						effectiveAbsolutePath, builder);
-		IRODSQueryResultSetInterface resultSet;
+		IRODSQueryResultSet resultSet;
 
 		try {
 			resultSet = queryForPathAndReturnResultSet(effectiveAbsolutePath,
@@ -1157,9 +1128,8 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 
 		IRODSFileSystemAOHelper.buildQueryListAllDataObjectsWithUserAccessInfo(
 				effectiveAbsolutePath, builder);
-		IRODSQueryResultSetInterface resultSet = this
-				.queryForPathAndReturnResultSet(effectiveAbsolutePath, builder,
-						partialStartIndex, objStat);
+		IRODSQueryResultSet resultSet = this.queryForPathAndReturnResultSet(
+				effectiveAbsolutePath, builder, partialStartIndex, objStat);
 		log.debug("got result set:{}}, resultSet");
 
 		/*
@@ -1291,24 +1261,31 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		if (partialStartIndex < 0) {
 			throw new IllegalArgumentException("partialStartIndex is < 0");
 		}
-		
+
 		log.info("searchDataObjectsBasedOnName:{}", searchTerm);
-				
+
 		IRODSGenQueryExecutor irodsGenQueryExecutor = new IRODSGenQueryExecutorImpl(
 				this.getIRODSSession(), this.getIRODSAccount());
 
-		IRODSQueryResultSetInterface resultSet;
+		IRODSQueryResultSet resultSet;
 
 		try {
 			IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, null);
 			builder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_NAME)
-			.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_NAME)
-			.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_CREATE_TIME)
-			.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_MODIFY_TIME)
-			.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_SIZE)
-			.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_OWNER_NAME)
-			.addConditionAsGenQueryField(RodsGenQueryEnum.COL_DATA_NAME, QueryConditionOperators.LIKE, "%" +  searchTerm.trim() + "%");
-			IRODSGenQueryFromBuilder irodsQuery = builder.exportIRODSQueryFromBuilder(this.getJargonProperties().getMaxFilesAndDirsQueryMax());
+					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_NAME)
+					.addSelectAsGenQueryValue(
+							RodsGenQueryEnum.COL_D_CREATE_TIME)
+					.addSelectAsGenQueryValue(
+							RodsGenQueryEnum.COL_D_MODIFY_TIME)
+					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_SIZE)
+					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_OWNER_NAME)
+					.addConditionAsGenQueryField(
+							RodsGenQueryEnum.COL_DATA_NAME,
+							QueryConditionOperators.LIKE,
+							"%" + searchTerm.trim() + "%");
+			IRODSGenQueryFromBuilder irodsQuery = builder
+					.exportIRODSQueryFromBuilder(this.getJargonProperties()
+							.getMaxFilesAndDirsQueryMax());
 			resultSet = irodsGenQueryExecutor.executeIRODSQueryWithPaging(
 					irodsQuery, partialStartIndex);
 		} catch (JargonQueryException e) {
@@ -1451,12 +1428,12 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 	@Override
 	public ObjStat retrieveObjectStatForPath(final String irodsAbsolutePath)
 			throws FileNotFoundException, JargonException {
-		
+
 		if (irodsAbsolutePath == null || irodsAbsolutePath.isEmpty()) {
 			throw new IllegalArgumentException(
 					"irodsAbsolutePath is null or empty");
 		}
-		
+
 		MiscIRODSUtils.checkPathSizeForMax(irodsAbsolutePath);
 
 		DataObjInpForObjStat dataObjInp = DataObjInpForObjStat

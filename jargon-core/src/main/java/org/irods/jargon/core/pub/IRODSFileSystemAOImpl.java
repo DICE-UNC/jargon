@@ -31,15 +31,16 @@ import org.irods.jargon.core.pub.domain.User;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.pub.io.IRODSFileSystemAOHelper;
 import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry.ObjectType;
-import org.irods.jargon.core.query.IRODSGenQuery;
+import org.irods.jargon.core.query.GenQueryBuilderException;
+import org.irods.jargon.core.query.IRODSGenQueryBuilder;
+import org.irods.jargon.core.query.IRODSGenQueryFromBuilder;
 import org.irods.jargon.core.query.IRODSQueryResultRow;
 import org.irods.jargon.core.query.IRODSQueryResultSet;
-import org.irods.jargon.core.query.IRODSQueryResultSetInterface;
 import org.irods.jargon.core.query.JargonQueryException;
+import org.irods.jargon.core.query.QueryConditionOperators;
 import org.irods.jargon.core.query.RodsGenQueryEnum;
 import org.irods.jargon.core.utils.CollectionAndPath;
 import org.irods.jargon.core.utils.IRODSConstants;
-import org.irods.jargon.core.utils.IRODSDataConversionUtil;
 import org.irods.jargon.core.utils.MiscIRODSUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,8 +60,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 		IRODSFileSystemAO {
 
 	static Logger log = LoggerFactory.getLogger(IRODSFileSystemAOImpl.class);
-	public final char COMMA = ',';
-	public final String AND_VALUE = " AND ";
+	
 	private final IRODSGenQueryExecutor irodsGenQueryExecutor;
 	private final UserAO userAO;
 	private final CollectionAndDataObjectListAndSearchAO collectionAndDataObjectListAndSearchAO;
@@ -159,34 +159,31 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 	 */
 	private boolean checkIfDataObjectExecutable(final IRODSFile irodsFile)
 			throws JargonException {
-		StringBuilder filePermissionQuery = new StringBuilder();
-		filePermissionQuery.append("SELECT ");
-		filePermissionQuery.append(RodsGenQueryEnum.COL_D_DATA_MODE.getName());
 
-		filePermissionQuery.append(" WHERE ");
-		filePermissionQuery.append(RodsGenQueryEnum.COL_COLL_NAME.getName());
-		filePermissionQuery.append(" = '");
-		filePermissionQuery.append(irodsFile.getParent());
-		filePermissionQuery.append("'");
-		filePermissionQuery.append(AND_VALUE);
+		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, null);
 
-		filePermissionQuery.append(RodsGenQueryEnum.COL_DATA_NAME.getName());
-		filePermissionQuery.append(" = '");
-		filePermissionQuery.append(irodsFile.getName());
-		filePermissionQuery.append("'");
-
-		log.debug("data oject exec query:{}", filePermissionQuery);
-
-		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(
-				filePermissionQuery.toString(), 100);
-
-		IRODSQueryResultSetInterface resultSet;
+		IRODSQueryResultSet resultSet;
 		try {
+			builder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_DATA_MODE)
+					.addConditionAsGenQueryField(
+							RodsGenQueryEnum.COL_COLL_NAME,
+							QueryConditionOperators.EQUAL,
+							irodsFile.getParent())
+					.addConditionAsGenQueryField(
+							RodsGenQueryEnum.COL_DATA_NAME,
+							QueryConditionOperators.EQUAL, irodsFile.getName());
+			CollectionAndDataObjectListAndSearchAO listAndSearchAO = this
+					.getIRODSAccessObjectFactory()
+					.getCollectionAndDataObjectListAndSearchAO(
+							getIRODSAccount());
+			ObjStat objStat = listAndSearchAO
+					.retrieveObjectStatForPath(irodsFile.getAbsolutePath());
+			IRODSGenQueryFromBuilder irodsQuery = builder
+					.exportIRODSQueryFromBuilder(100);
 			boolean executable = false;
 			resultSet = irodsGenQueryExecutor
 					.executeIRODSQueryAndCloseResultInZone(irodsQuery, 0,
-							MiscIRODSUtils.getZoneInPath(irodsFile
-									.getAbsolutePath()));
+							objStat.getOwnerZone());
 			IRODSQueryResultRow resultRow = resultSet.getFirstResult();
 			if (resultRow.getColumn(0).equals("33261")) {
 				executable = true;
@@ -196,8 +193,10 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 			log.info("no result found");
 			return false;
 		} catch (JargonQueryException e) {
-			log.error("query exception for  query:{}",
-					filePermissionQuery.toString(), e);
+			log.error("query exception for  query", e);
+			throw new JargonException("error in file permissions query");
+		} catch (GenQueryBuilderException e) {
+			log.error("query exception for  query", e);
 			throw new JargonException("error in file permissions query");
 		}
 
@@ -308,16 +307,13 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 
 		log.debug("user name translated to id:{}", user.getId());
 
-		StringBuilder filePermissionQuery = buildPermisionsQueryFile(
-				collectionAndPath.getCollectionParent(),
-				collectionAndPath.getChildName(), user.getId());
+		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, null);
 
-		log.debug("query for user permissions = {}",
-				filePermissionQuery.toString());
+		buildPermisionsQueryFile(collectionAndPath.getCollectionParent(),
+				collectionAndPath.getChildName(), user.getId(), builder);
 
 		int highestPermissionValue = extractHighestPermission(
-				irodsGenQueryExecutor, filePermissionQuery,
-				MiscIRODSUtils.getZoneInPath(effectiveAbsolutePath));
+				irodsGenQueryExecutor, builder, objStat.getOwnerZone());
 
 		log.debug("highest permission value:{}", highestPermissionValue);
 
@@ -326,14 +322,14 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 
 	/**
 	 * @param irodsGenQueryExecutor
-	 * @param filePermissionQuery
+	 * @param builder
 	 * @param zone
 	 * @return
 	 * @throws JargonException
 	 */
 	private int extractHighestPermission(
 			final IRODSGenQueryExecutor irodsGenQueryExecutor,
-			final StringBuilder filePermissionQuery, final String zone)
+			final IRODSGenQueryBuilder builder, final String zone)
 			throws JargonException {
 
 		log.info("extractHighestPermission()");
@@ -344,16 +340,20 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 
 		log.info("for zone:{}", zone);
 
-		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(
-				filePermissionQuery.toString(), 500);
+		IRODSGenQueryFromBuilder irodsQuery;
+		try {
+			irodsQuery = builder.exportIRODSQueryFromBuilder(this
+					.getJargonProperties().getMaxFilesAndDirsQueryMax());
+		} catch (GenQueryBuilderException e) {
+			throw new JargonException("query builder error", e);
+		}
 
-		IRODSQueryResultSetInterface resultSet;
+		IRODSQueryResultSet resultSet;
 		try {
 			resultSet = irodsGenQueryExecutor
 					.executeIRODSQueryAndCloseResultInZone(irodsQuery, 0, zone);
 		} catch (JargonQueryException e) {
-			log.error("query exception for  query:{}",
-					filePermissionQuery.toString(), e);
+			log.error("query exception for  query:{}", builder.toString(), e);
 			throw new JargonException("error in file permissions query");
 		}
 
@@ -381,38 +381,28 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 	 * @param parent
 	 * @param fileName
 	 * @param userId
+	 * @param builder
 	 * @return
 	 */
-	private StringBuilder buildPermisionsQueryFile(final String parent,
-			final String fileName, final String userId) throws JargonException {
-		StringBuilder filePermissionQuery = new StringBuilder();
-		filePermissionQuery.append("SELECT ");
-		filePermissionQuery.append(RodsGenQueryEnum.COL_DATA_ACCESS_TYPE
-				.getName());
+	private void buildPermisionsQueryFile(final String parent,
+			final String fileName, final String userId,
+			final IRODSGenQueryBuilder builder) throws JargonException {
 
-		filePermissionQuery.append(" WHERE ");
-
-		filePermissionQuery.append(RodsGenQueryEnum.COL_COLL_NAME.getName());
-		filePermissionQuery.append(" = '");
-		filePermissionQuery.append(parent);
-		filePermissionQuery.append("'");
-		filePermissionQuery.append(AND_VALUE);
-
-		filePermissionQuery.append(RodsGenQueryEnum.COL_DATA_NAME.getName());
-		filePermissionQuery.append(" = '");
-		filePermissionQuery.append(IRODSDataConversionUtil
-				.escapeSingleQuotes(fileName));
-		filePermissionQuery.append("'");
-
-		filePermissionQuery.append(AND_VALUE);
-
-		filePermissionQuery.append(RodsGenQueryEnum.COL_DATA_ACCESS_USER_ID
-				.getName());
-		filePermissionQuery.append(" = '");
-		filePermissionQuery.append(userId);
-		filePermissionQuery.append("'");
-
-		return filePermissionQuery;
+		try {
+			builder.addSelectAsGenQueryValue(
+					RodsGenQueryEnum.COL_DATA_ACCESS_TYPE)
+					.addConditionAsGenQueryField(
+							RodsGenQueryEnum.COL_COLL_NAME,
+							QueryConditionOperators.EQUAL, parent)
+					.addConditionAsGenQueryField(
+							RodsGenQueryEnum.COL_DATA_NAME,
+							QueryConditionOperators.EQUAL, fileName)
+					.addConditionAsGenQueryField(
+							RodsGenQueryEnum.COL_DATA_ACCESS_USER_ID,
+							QueryConditionOperators.EQUAL, userId);
+		} catch (GenQueryBuilderException e) {
+			throw new JargonException(e);
+		}
 	}
 
 	/*
@@ -485,47 +475,56 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 		log.debug("getting directory permissions on:{} ", fileName);
 		log.debug("user name translated to id:{}", user.getId());
 
-		StringBuilder filePermissionQuery = buildPermissionsQueryDirectory(
-				effectiveAbsolutePath, user.getId());
-
-		log.debug("query for user permissions = {}",
-				filePermissionQuery.toString());
+		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, null);
+		buildPermissionsQueryDirectory(effectiveAbsolutePath, user.getId(),
+				builder);
 
 		int highestPermissionValue = extractHighestPermission(
-				irodsGenQueryExecutor, filePermissionQuery,
-				objStat.getOwnerZone());
+				irodsGenQueryExecutor, builder, objStat.getOwnerZone());
 
 		return highestPermissionValue;
 	}
 
 	/**
-	 * @param zone
+	 * Build a query to get the permissions for a directory
+	 * 
 	 * @param dir
-	 * @param userName
-	 * @return
+	 *            <code>String</code> with absolute path to the iRODS directory
+	 * @param userId
+	 *            <code>String</code> with an iRODS access user ID (not name)
+	 * @param builder
+	 *            {@link IRODSGenQueryBuilder}
+	 * @throws JargonException
 	 */
-	private StringBuilder buildPermissionsQueryDirectory(final String dir,
-			final String userId) throws JargonException {
-		StringBuilder filePermissionQuery = new StringBuilder();
-		filePermissionQuery.append("SELECT ");
-		filePermissionQuery.append(RodsGenQueryEnum.COL_COLL_ACCESS_TYPE
-				.getName());
+	private void buildPermissionsQueryDirectory(final String dir,
+			final String userId, final IRODSGenQueryBuilder builder)
+			throws JargonException {
 
-		filePermissionQuery.append(" WHERE ");
+		if (dir == null || dir.isEmpty()) {
+			throw new IllegalArgumentException("null or empty dir");
+		}
 
-		filePermissionQuery.append(RodsGenQueryEnum.COL_COLL_NAME.getName());
-		filePermissionQuery.append(" = '");
-		filePermissionQuery.append(dir);
-		filePermissionQuery.append("'");
-		filePermissionQuery.append(AND_VALUE);
+		if (userId == null || userId.isEmpty()) {
+			throw new IllegalArgumentException("null or empty userId");
+		}
 
-		filePermissionQuery.append(RodsGenQueryEnum.COL_COLL_ACCESS_USER_ID
-				.getName());
-		filePermissionQuery.append(" = '");
-		filePermissionQuery.append(userId);
-		filePermissionQuery.append("'");
+		if (builder == null) {
+			throw new IllegalArgumentException("null builder");
+		}
 
-		return filePermissionQuery;
+		try {
+			builder.addSelectAsGenQueryValue(
+					RodsGenQueryEnum.COL_COLL_ACCESS_TYPE)
+					.addConditionAsGenQueryField(
+							RodsGenQueryEnum.COL_COLL_NAME,
+							QueryConditionOperators.EQUAL, dir)
+					.addConditionAsGenQueryField(
+							RodsGenQueryEnum.COL_COLL_ACCESS_USER_ID,
+							QueryConditionOperators.EQUAL, userId);
+		} catch (GenQueryBuilderException e) {
+			throw new JargonException("error building permissions query", e);
+		}
+
 	}
 
 	/*
@@ -675,19 +674,22 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 
 		log.debug("path for query:{}", path);
 
-		StringBuilder query;
-		IRODSGenQuery irodsQuery;
 		IRODSQueryResultSet resultSet = null;
 
 		// get all the subdirs
 
-		query = new StringBuilder();
-		query.append(IRODSFileSystemAOHelper.buildQueryListAllCollections(path));
-
-		irodsQuery = IRODSGenQuery.instance(query.toString(), this
-				.getJargonProperties().getMaxFilesAndDirsQueryMax());
+		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, null);
 
 		try {
+			IRODSFileSystemAOHelper.buildQueryListAllCollections(path, builder);
+			IRODSGenQueryFromBuilder irodsQuery = builder
+					.exportIRODSQueryFromBuilder(this.getJargonProperties()
+							.getMaxFilesAndDirsQueryMax());
+
+			/*
+			 * Note that query does not close result set, and will use paging to
+			 * get more results with an eventual close below
+			 */
 			resultSet = irodsGenQueryExecutor.executeIRODSQueryInZone(
 					irodsQuery, 0, objStat.getOwnerZone());
 			for (IRODSQueryResultRow row : resultSet.getResults()) {
@@ -704,7 +706,10 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 
 			}
 		} catch (JargonQueryException e) {
-			log.error("query exception for  query:{}", query.toString(), e);
+			log.error("query exception for  query:", e);
+			throw new JargonException("error in exists query");
+		} catch (GenQueryBuilderException e) {
+			log.error("query exception for  query:", e);
 			throw new JargonException("error in exists query");
 		} finally {
 			if (resultSet != null) {
@@ -715,13 +720,14 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 		resultSet = null;
 
 		// get all files
-		query = new StringBuilder();
-		query.append(IRODSFileSystemAOHelper.buildQueryListAllFiles(path));
-
-		irodsQuery = IRODSGenQuery.instance(query.toString(), this
-				.getJargonProperties().getMaxFilesAndDirsQueryMax());
+		builder = new IRODSGenQueryBuilder(true, null);
+		IRODSFileSystemAOHelper.buildQueryListAllFiles(path, builder);
 
 		try {
+			IRODSGenQueryFromBuilder irodsQuery = builder
+					.exportIRODSQueryFromBuilder(this.getJargonProperties()
+							.getMaxFilesAndDirsQueryMax());
+
 			resultSet = irodsGenQueryExecutor.executeIRODSQueryInZone(
 					irodsQuery, 0, objStat.getOwnerZone());
 
@@ -739,8 +745,11 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 			}
 
 		} catch (JargonQueryException e) {
-			log.error("query exception for  query:{}", query.toString(), e);
-			throw new JargonException("error in exists query");
+			log.error("query exception for  query:", e);
+			throw new JargonException("error in exists query", e);
+		} catch (GenQueryBuilderException e) {
+			log.error("query exception for  query:", e);
+			throw new JargonException("error in exists query", e);
 		} finally {
 			if (resultSet != null) {
 				irodsGenQueryExecutor.closeResults(resultSet);
@@ -803,20 +812,19 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 			path = irodsFile.getParent();
 		}
 
-		StringBuilder query;
-		IRODSGenQuery irodsQuery;
-		IRODSQueryResultSet resultSet = null;
-
 		log.debug("path for query:{}", path);
 
 		// get all the sub-directories
 
-		query = new StringBuilder();
-		query.append(IRODSFileSystemAOHelper.buildQueryListAllCollections(path));
-		irodsQuery = IRODSGenQuery.instance(query.toString(), this
-				.getJargonProperties().getMaxFilesAndDirsQueryMax());
+		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, null);
+
+		IRODSQueryResultSet resultSet = null;
 
 		try {
+			IRODSFileSystemAOHelper.buildQueryListAllCollections(path, builder);
+			IRODSGenQueryFromBuilder irodsQuery = builder
+					.exportIRODSQueryFromBuilder(this.getJargonProperties()
+							.getMaxFilesAndDirsQueryMax());
 			resultSet = irodsGenQueryExecutor.executeIRODSQuery(irodsQuery, 0);
 			for (IRODSQueryResultRow row : resultSet.getResults()) {
 				// this is a dir, does it pass the file name filter?
@@ -836,7 +844,10 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 			}
 
 		} catch (JargonQueryException e) {
-			log.error("query exception for  query:{}", query.toString(), e);
+			log.error("query exception for  query", e);
+			throw new JargonException("error in exists query");
+		} catch (GenQueryBuilderException e) {
+			log.error("query exception for  query", e);
 			throw new JargonException("error in exists query");
 		} finally {
 			if (resultSet != null) {
@@ -848,13 +859,13 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 
 		// get all the files
 
-		query = new StringBuilder(
-				IRODSFileSystemAOHelper.buildQueryListAllFiles(path));
-
-		irodsQuery = IRODSGenQuery.instance(query.toString(), this
-				.getJargonProperties().getMaxFilesAndDirsQueryMax());
+		builder = new IRODSGenQueryBuilder(true, null);
+		IRODSFileSystemAOHelper.buildQueryListAllFiles(path, builder);
 
 		try {
+			IRODSGenQueryFromBuilder irodsQuery = builder
+					.exportIRODSQueryFromBuilder(this.getJargonProperties()
+							.getMaxFilesAndDirsQueryMax());
 			resultSet = irodsGenQueryExecutor.executeIRODSQuery(irodsQuery, 0);
 
 			for (IRODSQueryResultRow row : resultSet.getResults()) {
@@ -872,7 +883,10 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 				}
 			}
 		} catch (JargonQueryException e) {
-			log.error("query exception for  query:{}", query.toString(), e);
+			log.error("query exception for  query", e);
+			throw new JargonException("error in exists query");
+		} catch (GenQueryBuilderException e) {
+			log.error("query exception for  query", e);
 			throw new JargonException("error in exists query");
 		} finally {
 			if (resultSet != null) {
@@ -948,19 +962,16 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 			path = irodsFile.getParent();
 		}
 
-		StringBuilder query;
-		IRODSGenQuery irodsQuery;
+		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, null);
 		IRODSQueryResultSet resultSet = null;
 
 		// get all the sub-directories
 
-		query = new StringBuilder();
-		query.append(IRODSFileSystemAOHelper.buildQueryListAllCollections(path));
-
-		irodsQuery = IRODSGenQuery.instance(query.toString(), this
-				.getJargonProperties().getMaxFilesAndDirsQueryMax());
-
 		try {
+			IRODSFileSystemAOHelper.buildQueryListAllCollections(path, builder);
+			IRODSGenQueryFromBuilder irodsQuery = builder
+					.exportIRODSQueryFromBuilder(this.getJargonProperties()
+							.getMaxFilesAndDirsQueryMax());
 			resultSet = irodsGenQueryExecutor.executeIRODSQuery(irodsQuery, 0);
 			for (IRODSQueryResultRow row : resultSet.getResults()) {
 				processSubdirRowWhenListFilesWithFileFilter(fileFilter,
@@ -979,7 +990,10 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 			}
 
 		} catch (JargonQueryException e) {
-			log.error("query exception for  query:{}", query.toString(), e);
+			log.error("query exception for  query", e);
+			throw new JargonException("error in exists query");
+		} catch (GenQueryBuilderException e) {
+			log.error("query exception for  query", e);
 			throw new JargonException("error in exists query");
 		} finally {
 			if (resultSet != null) {
@@ -990,15 +1004,14 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 		resultSet = null;
 
 		log.debug("path for query:{}", path);
+		builder = new IRODSGenQueryBuilder(true, null);
 
-		query = new StringBuilder(
-				IRODSFileSystemAOHelper.buildQueryListAllFiles(path));
-
-		irodsQuery = IRODSGenQuery.instance(query.toString(), this
-				.getJargonProperties().getMaxFilesAndDirsQueryMax());
+		IRODSFileSystemAOHelper.buildQueryListAllFiles(path, builder);
 
 		try {
-
+			IRODSGenQueryFromBuilder irodsQuery = builder
+					.exportIRODSQueryFromBuilder(this.getJargonProperties()
+							.getMaxFilesAndDirsQueryMax());
 			resultSet = irodsGenQueryExecutor.executeIRODSQuery(irodsQuery, 0);
 			for (IRODSQueryResultRow row : resultSet.getResults()) {
 				processFileRowWhenListFilesWithFileFilter(fileFilter, subdirs,
@@ -1017,7 +1030,10 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 			}
 
 		} catch (JargonQueryException e) {
-			log.error("query exception for  query:{}", query.toString(), e);
+			log.error("query exception for  query}", e);
+			throw new JargonException("error in exists query");
+		} catch (GenQueryBuilderException e) {
+			log.error("query exception for  query}", e);
 			throw new JargonException("error in exists query");
 		} finally {
 			if (resultSet != null) {
