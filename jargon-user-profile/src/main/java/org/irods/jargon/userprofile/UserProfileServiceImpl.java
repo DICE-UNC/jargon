@@ -166,6 +166,86 @@ public class UserProfileServiceImpl extends AbstractJargonService implements
 				continue;
 			}
 			
+			if (metadata.getAvuAttribute().equals(
+					UserProfileConstants.CN)) {
+				userProfile.getUserProfilePublicFields().setCn(metadata.getAvuValue());
+				continue;
+			}
+			
+			if (metadata.getAvuAttribute().equals(
+					UserProfileConstants.GIVEN_NAME)) {
+				userProfile.getUserProfilePublicFields().setGivenName(metadata.getAvuValue());
+				continue;
+			}
+			
+			if (metadata.getAvuAttribute().equals(
+					UserProfileConstants.SN)) {
+				userProfile.getUserProfilePublicFields().setSn(metadata.getAvuValue());
+				continue;
+			}
+			
+			if (metadata.getAvuAttribute().equals(
+					UserProfileConstants.POSTAL_CODE)) {
+				userProfile.getUserProfilePublicFields().setPostalCode(metadata.getAvuValue());
+				continue;
+			}
+			
+			
+			if (metadata.getAvuAttribute().equals(
+					UserProfileConstants.POSTAL_ADDRESS)) {
+				userProfile.getUserProfilePublicFields().setPostalAddress(metadata.getAvuValue());
+				continue;
+			}
+			
+			if (metadata.getAvuAttribute().equals(
+					UserProfileConstants.POST_OFFICE_BOX)) {
+				userProfile.getUserProfilePublicFields().setPostOfficeBox(metadata.getAvuValue());
+				continue;
+			}
+			
+			if (metadata.getAvuAttribute().equals(
+					UserProfileConstants.LOCALITY_NAME)) {
+				userProfile.getUserProfilePublicFields().setLocalityName(metadata.getAvuValue());
+				continue;
+			}
+			
+			if (metadata.getAvuAttribute().equals(
+					UserProfileConstants.STREET)) {
+				userProfile.getUserProfilePublicFields().setStreet(metadata.getAvuValue());
+				continue;
+			}
+			
+			if (metadata.getAvuAttribute().equals(
+					UserProfileConstants.STATE)) {
+				userProfile.getUserProfilePublicFields().setSt(metadata.getAvuValue());
+				continue;
+			}
+			
+			if (metadata.getAvuAttribute().equals(
+					UserProfileConstants.JPEG_PHOTO)) {
+				userProfile.getUserProfilePublicFields().setJpegPhoto(metadata.getAvuValue());
+				continue;
+			}
+			
+			if (metadata.getAvuAttribute().equals(
+					UserProfileConstants.LABELED_URL)) {
+				userProfile.getUserProfilePublicFields().setLabeledURL(metadata.getAvuValue());
+				continue;
+			}
+			
+			if (metadata.getAvuAttribute().equals(
+					UserProfileConstants.TELEPHONE_NUMBER)) {
+				userProfile.getUserProfilePublicFields().setTelephoneNumber(metadata.getAvuValue());
+				continue;
+			}
+			
+			if (metadata.getAvuAttribute().equals(
+					UserProfileConstants.TITLE)) {
+				userProfile.getUserProfilePublicFields().setTitle(metadata.getAvuValue());
+				continue;
+			}
+			
+			
 			if (metadata.getAvuAttribute().equals(UserProfileConstants.ZONE)) {
 				userProfile.setZone(metadata.getAvuValue());
 				continue;
@@ -463,6 +543,61 @@ public class UserProfileServiceImpl extends AbstractJargonService implements
 		addAVUIfDataPresent(userProfileFile.getAbsolutePath(),
 				UserProfileConstants.NICK_NAME,
 				userProfilePublicFields.getNickName());
+		
+		addAVUIfDataPresent(userProfileFile.getAbsolutePath(),
+				UserProfileConstants.CN,
+				userProfilePublicFields.getCn());
+		
+		addAVUIfDataPresent(userProfileFile.getAbsolutePath(),
+				UserProfileConstants.GIVEN_NAME,
+				userProfilePublicFields.getGivenName());
+		
+		addAVUIfDataPresent(userProfileFile.getAbsolutePath(),
+				UserProfileConstants.SN,
+				userProfilePublicFields.getSn());
+		
+		
+		addAVUIfDataPresent(userProfileFile.getAbsolutePath(),
+				UserProfileConstants.POSTAL_CODE,
+				userProfilePublicFields.getPostalCode());
+		
+		addAVUIfDataPresent(userProfileFile.getAbsolutePath(),
+				UserProfileConstants.POSTAL_ADDRESS,
+				userProfilePublicFields.getPostalAddress());
+		
+		addAVUIfDataPresent(userProfileFile.getAbsolutePath(),
+				UserProfileConstants.POST_OFFICE_BOX,
+				userProfilePublicFields.getPostOfficeBox());
+		
+		
+		addAVUIfDataPresent(userProfileFile.getAbsolutePath(),
+				UserProfileConstants.LOCALITY_NAME,
+				userProfilePublicFields.getLocalityName());
+		
+		addAVUIfDataPresent(userProfileFile.getAbsolutePath(),
+				UserProfileConstants.STREET,
+				userProfilePublicFields.getStreet());
+		
+		addAVUIfDataPresent(userProfileFile.getAbsolutePath(),
+				UserProfileConstants.JPEG_PHOTO,
+				userProfilePublicFields.getJpegPhoto());
+		
+		addAVUIfDataPresent(userProfileFile.getAbsolutePath(),
+				UserProfileConstants.LABELED_URL,
+				userProfilePublicFields.getLabeledURL());
+		
+		addAVUIfDataPresent(userProfileFile.getAbsolutePath(),
+				UserProfileConstants.STATE,
+				userProfilePublicFields.getSt());
+		
+		addAVUIfDataPresent(userProfileFile.getAbsolutePath(),
+				UserProfileConstants.TITLE,
+				userProfilePublicFields.getTitle());
+		
+		addAVUIfDataPresent(userProfileFile.getAbsolutePath(),
+				UserProfileConstants.TELEPHONE_NUMBER,
+				userProfilePublicFields.getTelephoneNumber());
+		
 
 		// provision the protected profile information, first make into a
 		// Properties object

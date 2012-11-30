@@ -150,7 +150,7 @@ public class GenQueryProcessor {
 	 * @throws JargonException
 	 */
 	public void closeResults(
-			final IRODSQueryResultSetInterface irodsQueryResultSet)
+			final IRODSQueryResultSet irodsQueryResultSet)
 			throws JargonException {
 
 		log.info("getting more results for query");
@@ -163,10 +163,9 @@ public class GenQueryProcessor {
 			return;
 		}
 
-		IRODSQueryResultSet genQueryResult = (IRODSQueryResultSet) irodsQueryResultSet;
 		GenQueryInp genQueryInp = GenQueryInp.instanceForCloseQuery(
-				genQueryResult.getTranslatedIRODSQuery(),
-				genQueryResult.getContinuationIndex());
+				irodsQueryResultSet.getTranslatedIRODSQuery(),
+				irodsQueryResultSet.getContinuationIndex());
 		sendGenQueryAndReturnResponse(genQueryInp);
 
 	}

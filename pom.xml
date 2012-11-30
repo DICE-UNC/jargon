@@ -4,7 +4,7 @@
 	<groupId>org.irods</groupId>
 	<artifactId>jargon</artifactId>
 	<packaging>pom</packaging>
-	<version>3.2.3-b964-SNAPSHOT</version>
+	<version>3.3.0-b964-SNAPSHOT</version>
 	<name>Jargon</name>
 	<description>Core Java API and related libraries for iRODS</description>
 	<url>https://code.renci.org/gf/project/jargon</url>
@@ -154,23 +154,24 @@
 					<!-- <tagBase>https://svn.apache.org/repos/asf/maven/components/releases</tagBase> -->
 				</configuration>
 			</plugin>
-
 		</plugins>
 	</reporting>
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
-					<groupId>org.globus.jglobus</groupId>
-					<artifactId>cog-jglobus</artifactId>
-					<version>${globus.version}</version>
-					
-					 <exclusions>
-	     				<exclusion>
-					       <groupId>org.springframework</groupId>
-					       <artifactId>spring-core</artifactId>
-					     </exclusion>
-	   				</exclusions>
-				</dependency>
+				<groupId>com.claymoresystems</groupId>
+				<artifactId>puretls</artifactId>
+				<version>1.1</version>
+				<scope>runtime</scope>
+				<type>jar</type>
+			</dependency>
+			<dependency>
+				<groupId>org.globus.jglobus</groupId>
+				<artifactId>cog-jglobus</artifactId>
+				<scope>compile</scope>
+				<version>${globus.version}</version>
+				<type>jar</type>
+			</dependency>
 			<dependency>
 				<groupId>antlr</groupId>
 				<artifactId>antlr</artifactId>
@@ -453,6 +454,6 @@
 		<module>jargon-data-utils</module>
 		<module>jargon-ticket</module>
 		<module>jargon-httpstream</module>
-	    <module>jargon-user-profile</module>
-  </modules>
+		<module>jargon-user-profile</module>
+	</modules>
 </project>

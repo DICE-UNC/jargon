@@ -1,6 +1,6 @@
 *'''Project''': Jargon-core API
 *'''Date''': xx/xx/xx
-*'''Release Version''': 3.2.3-SNAPSHOT for grid memory
+*'''Release Version''': 3.3.0-SNAPSHOT for grid memory
 *'''git tag''': 964-grid-memory
 
 ==News==
@@ -44,3 +44,4 @@ Note that the following bug and feature requests are logged in GForge with relat
 
 *[#964] grid memory and presets
 **refactor of database to include grid memory
+

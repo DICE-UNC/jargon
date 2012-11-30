@@ -236,14 +236,14 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 		if (irodsFile.isFile()) {
 			query.append(RodsGenQueryEnum.COL_COLL_NAME.getName());
 			query.append(EQUALS_AND_QUOTE);
-			query.append(IRODSDataConversionUtil.escapeSingleQuotes(irodsFile
-					.getParent()));
+			query.append(irodsFile
+					.getParent());
 			query.append("'");
 			query.append(AND);
 			query.append(RodsGenQueryEnum.COL_DATA_NAME.getName());
 			query.append(EQUALS_AND_QUOTE);
-			query.append(IRODSDataConversionUtil.escapeSingleQuotes(irodsFile
-					.getName()));
+			query.append(irodsFile
+					.getName());
 			query.append("'");
 
 		} else {

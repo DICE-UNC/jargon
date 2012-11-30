@@ -2101,4 +2101,59 @@ public class CollectionAOImplTest {
 
 		collectionAO.isUserHasAccess("file", "");
 	}
+	
+	/**
+	 * Bug  [#1080] metadata edit seems to fail with file with ' in name
+	 * @throws Exception
+	 */
+	@Test
+	public void testQueryAVUWithApostropheInFileNameBug1080() throws Exception {
+		String testDirName = "testAddAvuMetadataWith ' InVals";
+		String expectedAttribName = "testQueryAVUWithApostropheInFileNameBug1080 attrib";
+		String expectedAttribValue = "testQueryAVUWithApostropheInFileNameBug1080 value";
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
+								+ testDirName);
+		
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+		
+		
+		IRODSFile targetIRODSFile = accessObjectFactory.getIRODSFileFactory(irodsAccount).instanceIRODSFile(targetIrodsCollection);
+		targetIRODSFile.mkdirs();
+		
+		CollectionAO collectionAO = accessObjectFactory
+				.getCollectionAO(irodsAccount);
+
+		AvuData dataToAdd = AvuData.instance(expectedAttribName,
+				expectedAttribValue, "");
+		collectionAO.addAVUMetadata(targetIrodsCollection, dataToAdd);
+		
+		List<MetaDataAndDomainData> metadata = collectionAO.findMetadataValuesForCollection(targetIrodsCollection, 0);
+		TestCase.assertFalse("metadata not retrieved", metadata.isEmpty());
+
+
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }

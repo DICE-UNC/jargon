@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Properties;
 
 import junit.framework.Assert;
-import junit.framework.TestCase;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSProtocolManager;
@@ -32,7 +31,6 @@ import org.irods.jargon.core.query.AVUQueryElement;
 import org.irods.jargon.core.query.AVUQueryElement.AVUQueryPart;
 import org.irods.jargon.core.query.AVUQueryOperatorEnum;
 import org.irods.jargon.core.query.MetaDataAndDomainData;
-import org.irods.jargon.core.query.RodsGenQueryEnum;
 import org.irods.jargon.core.remoteexecute.RemoteExecuteServiceImpl;
 import org.irods.jargon.core.transfer.DefaultTransferControlBlock;
 import org.irods.jargon.core.transfer.TransferControlBlock;
@@ -797,58 +795,6 @@ public class DataObjectAOImplTest {
 
 		dataObjectAO.findByAbsolutePath(testFileName);
 
-	}
-
-	@Test
-	public void testFindWhere() throws Exception {
-		// generate a local scratch file
-		String testFileName = "testFindWhere.dat";
-		String absPath = scratchFileUtils
-				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
-		String localFileName = FileGenerator
-				.generateFileOfFixedLengthGivenName(absPath, testFileName, 10);
-
-		testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ testFileName);
-		new File(localFileName);
-
-		// put scratch file into irods in the right place
-		IrodsInvocationContext invocationContext = testingPropertiesHelper
-				.buildIRODSInvocationContextFromTestProperties(testingProperties);
-		IputCommand iputCommand = new IputCommand();
-
-		String targetIrodsCollection = testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH);
-
-		iputCommand.setLocalFileName(localFileName);
-		iputCommand.setIrodsFileName(targetIrodsCollection);
-		iputCommand.setForceOverride(true);
-
-		IcommandInvoker invoker = new IcommandInvoker(invocationContext);
-		invoker.invokeCommandAndGetResultAsString(iputCommand);
-
-		// now put the file
-
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
-
-		accessObjectFactory.getIRODSFileFactory(irodsAccount);
-		DataObjectAO dataObjectAO = accessObjectFactory
-				.getDataObjectAO(irodsAccount);
-
-		String query = RodsGenQueryEnum.COL_DATA_SIZE.getName() + " >  '0'";
-
-		List<DataObject> dataObjects = dataObjectAO.findWhere(query);
-		Assert.assertNotNull(
-				"null list returned, should be empty list if no data",
-				dataObjects);
-		Assert.assertTrue("no results returned, expected at least one",
-				dataObjects.size() > 0);
 	}
 
 	@Test
@@ -2268,11 +2214,11 @@ public class DataObjectAOImplTest {
 		DataTransferOperations dto = irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataTransferOperations(
 						irodsAccount);
-		
+
 		if (!dto.getIRODSServerProperties().isSupportsCaseInsensitiveQueries()) {
 			return;
 		}
-		
+
 		dto.putOperation(localFileName, targetIrodsCollection,
 				irodsAccount.getDefaultStorageResource(), null, null);
 
@@ -2307,7 +2253,7 @@ public class DataObjectAOImplTest {
 		List<MetaDataAndDomainData> result = dataObjectAO
 				.findMetadataValuesByMetadataQuery(queryElements, 0, true);
 		Assert.assertFalse("no query result returned", result.isEmpty());
-		//Assert.assertTrue("should be 2 or more results", result.size() > 2);
+		// Assert.assertTrue("should be 2 or more results", result.size() > 2);
 	}
 
 	@Test
@@ -2390,11 +2336,11 @@ public class DataObjectAOImplTest {
 		DataTransferOperations dto = irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataTransferOperations(
 						irodsAccount);
-		
+
 		if (!dto.getIRODSServerProperties().isSupportsCaseInsensitiveQueries()) {
 			return;
 		}
-		
+
 		dto.putOperation(localFileName, targetIrodsCollection,
 				irodsAccount.getDefaultStorageResource(), null, null);
 
@@ -4710,7 +4656,7 @@ public class DataObjectAOImplTest {
 		boolean hasAccess = dataObjectAO.isUserHasAccess(
 				irodsFileForSecondaryUser.getAbsolutePath(),
 				secondaryAccount.getUserName());
-		TestCase.assertTrue("did not have expected access", hasAccess);
+		Assert.assertTrue("did not have expected access", hasAccess);
 	}
 
 	@Test
@@ -4746,7 +4692,7 @@ public class DataObjectAOImplTest {
 		boolean hasAccess = dataObjectAO.isUserHasAccess(
 				irodsFileForSecondaryUser.getAbsolutePath(),
 				secondaryAccount.getUserName());
-		TestCase.assertFalse("should not have expected access", hasAccess);
+		Assert.assertFalse("should not have expected access", hasAccess);
 	}
 
 	@Test(expected = IllegalArgumentException.class)

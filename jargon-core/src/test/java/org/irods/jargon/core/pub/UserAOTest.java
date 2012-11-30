@@ -8,6 +8,7 @@ import java.util.Properties;
 
 import junit.framework.Assert;
 
+import org.irods.jargon.core.connection.AuthScheme;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSProtocolManager;
 import org.irods.jargon.core.connection.IRODSSession;
@@ -1002,6 +1003,50 @@ public class UserAOTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
+		UserAO userAO = accessObjectFactory.getUserAO(irodsAccount);
+
+		String tempPassword = userAO.getTemporaryPasswordForConnectedUser();
+		Assert.assertNotNull("null temp password", tempPassword);
+
+		IRODSAccount account = testingPropertiesHelper
+				.buildIRODSAccountForIRODSUserFromTestPropertiesForGivenUser(
+						testingProperties, irodsAccount.getUserName(),
+						tempPassword);
+		irodsFileSystem.closeAndEatExceptions();
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(account);
+		Assert.assertNotNull("did not connect and get environmental info",
+				environmentalInfoAO.getIRODSServerProperties());
+
+	}
+
+	/**
+	 * Bug [#1070] [iROD-Chat:9099] iDropLiteApplet AuthenticationException
+	 * 
+	 * @throws Exception
+	 *             This looks like an iRODS bug, reported, ignored for now....
+	 */
+	@Ignore
+	public void testGenerateTempPasswordWhenPAMAuthenticatedBug1070()
+			throws Exception {
+
+		if (!testingPropertiesHelper.isTestPAM(testingProperties)) {
+			return;
+		}
+
+		String pamUser = testingProperties
+				.getProperty(TestingPropertiesHelper.IRODS_PAM_USER_KEY);
+		String pamPassword = testingProperties
+				.getProperty(TestingPropertiesHelper.IRODS_PAM_PASSWORD_KEY);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountForIRODSUserFromTestPropertiesForGivenUser(
+						testingProperties, pamUser, pamPassword);
+
+		irodsAccount.setAuthenticationScheme(AuthScheme.PAM);
 		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
 				.getIRODSAccessObjectFactory();
 
