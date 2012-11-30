@@ -1,12 +1,12 @@
 *'''Project''': Jargon-core API
 *'''Date''': 11/28/2012
-*'''Release Version''': 3.2.1.2
-*'''git tag''': 3.2.1.2
+*'''Release Version''': 3.2.1.3
+*'''git tag''': 3.2.1.3
 
 ==News==
 
-This is a patch to the 3.2.1 release that refactors globus dependencies on an old version of JCE.  This minor release also patches
-some small issues in testing for iDrop 1.0.2.  This release is recommened for patching any of the flagged issues below.
+This patch release upgrades internal gen query processing to the builder model over the old parser model.  This is a minor performance boost and is more tolerant of special characters in 
+file names.
 
 Jargon-core implements the iRODS protocol, and allows development of iRODS-enabled Java applications.  This API is especially useful for developing
 mid-tier applications and services, as well as desktop-clients (such as iDROP).  These libraries also provide a foundation for a new set of interfaces that will come with iRODS.
@@ -44,14 +44,10 @@ Note that the following bug and feature requests are logged in GForge with relat
 
 ==Bug Fixes==
 
- *[#1073] errors with JCE and shopping cart resolution after globus
- **Removed POM dependency on globus and refer to globus jar, explicitly specifying bouncycastle dependency and avoiding jce 1.3 reference
- 
- *[#1077] copy not supplying default storage resource
- **DataTransferOperations.copy() method using absolute paths and resource strings was not propogating default resource that was the copy target
- 
  *[#1080] metadata edit seems to fail with file with ' in name
  **Removed escaping of single quotes, which looks like an old overhead in the query methods
+ **Switched a significant number of internal queries to the builder model and cleaned up some of the IRODSQueryResultSet references
+ **Got rid of the findWhere methods in places, this is an API change.  These methods made little sense.
  
  
 ==Features==
