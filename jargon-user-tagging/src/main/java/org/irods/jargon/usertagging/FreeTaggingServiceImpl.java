@@ -5,17 +5,25 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 import org.irods.jargon.core.connection.IRODSAccount;
+import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
-import org.irods.jargon.core.pub.CollectionAO;
-import org.irods.jargon.core.pub.DataObjectAO;
+import org.irods.jargon.core.pub.DataAOHelper;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
+import org.irods.jargon.core.pub.IRODSGenQueryExecutor;
+import org.irods.jargon.core.pub.aohelper.CollectionAOHelper;
 import org.irods.jargon.core.pub.domain.Collection;
 import org.irods.jargon.core.pub.domain.DataObject;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.pub.io.IRODSFileFactory;
 import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry;
 import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry.ObjectType;
+import org.irods.jargon.core.query.GenQueryBuilderException;
+import org.irods.jargon.core.query.IRODSGenQueryBuilder;
+import org.irods.jargon.core.query.IRODSGenQueryFromBuilder;
+import org.irods.jargon.core.query.IRODSQueryResultSetInterface;
+import org.irods.jargon.core.query.JargonQueryException;
 import org.irods.jargon.core.query.MetaDataAndDomainData.MetadataDomain;
+import org.irods.jargon.core.query.QueryConditionOperators;
 import org.irods.jargon.core.query.RodsGenQueryEnum;
 import org.irods.jargon.usertagging.domain.IRODSTagGrouping;
 import org.irods.jargon.usertagging.domain.IRODSTagValue;
@@ -156,7 +164,7 @@ public final class FreeTaggingServiceImpl extends AbstractIRODSTaggingService
 		log.info("updateTagsForUser, irodsAbsolutePath:{}", irodsAbsolutePath);
 		log.info("userName:{}", userName);
 		log.info("tags:{}", tags);
-		
+
 		String cleanTags = cleanTags(tags);
 		log.info("cleaned tags:{}", cleanTags);
 
@@ -459,32 +467,53 @@ public final class FreeTaggingServiceImpl extends AbstractIRODSTaggingService
 
 		List<CollectionAndDataObjectListingEntry> resultEntries = new ArrayList<CollectionAndDataObjectListingEntry>();
 
-		DataObjectAO dataObjectAO = getIrodsAccessObjectFactory()
-				.getDataObjectAO(getIrodsAccount());
+		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, null);
+		try {
+			DataAOHelper.addDataObjectSelectsToBuilder(builder);
+		} catch (GenQueryBuilderException e) {
+			throw new JargonException(e);
+		}
 
 		// do data objects first
 
-		StringBuilder wherePart = new StringBuilder();
-
-		wherePart.append(RodsGenQueryEnum.COL_META_DATA_ATTR_UNITS.getName());
-		wherePart.append(EQUALS_QUOTE);
-		wherePart.append(UserTaggingConstants.TAG_AVU_UNIT);
-		wherePart.append(QUOTE);
+		builder.addConditionAsGenQueryField(
+				RodsGenQueryEnum.COL_META_DATA_ATTR_UNITS,
+				QueryConditionOperators.EQUAL,
+				UserTaggingConstants.TAG_AVU_UNIT);
 
 		for (String searchTag : searchTagValues) {
 			log.debug("searchTag to add to query:{}", searchTag);
-			wherePart.append(AND_VALUE);
-			wherePart
-					.append(RodsGenQueryEnum.COL_META_DATA_ATTR_NAME.getName());
-			wherePart.append(EQUALS_QUOTE);
-			wherePart.append(searchTag);
-			wherePart.append(QUOTE);
+
+			builder.addConditionAsGenQueryField(
+					RodsGenQueryEnum.COL_META_DATA_ATTR_NAME,
+					QueryConditionOperators.EQUAL, searchTag);
 		}
 
-		log.debug("where part of data object query = {}", wherePart);
-
-		List<DataObject> dataObjects = dataObjectAO.findWhere(wherePart
-				.toString());
+		IRODSQueryResultSetInterface resultSet;
+		IRODSGenQueryExecutor irodsGenQueryExecutor = irodsAccessObjectFactory
+				.getIRODSGenQueryExecutor(getIrodsAccount());
+		List<DataObject> dataObjects = new ArrayList<DataObject>();
+		try {
+			IRODSGenQueryFromBuilder irodsQuery = builder
+					.exportIRODSQueryFromBuilder(this
+							.getIrodsAccessObjectFactory()
+							.getJargonProperties().getMaxFilesAndDirsQueryMax());
+			resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResult(
+					irodsQuery, 0);
+			dataObjects = DataAOHelper.buildListFromResultSet(resultSet);
+		} catch (JargonQueryException e) {
+			log.error("query exception for  query", e);
+			throw new JargonException(
+					"error in query loading user file permissions for data object",
+					e);
+		} catch (DataNotFoundException dnf) {
+			log.info("no data found for user ACL");
+		} catch (GenQueryBuilderException e) {
+			log.error("query exception for  query", e);
+			throw new JargonException(
+					"error in query loading user file permissions for data object",
+					e);
+		}
 
 		log.info(
 				"retrieved {} data objects based on query, converting to query result entries",
@@ -515,30 +544,47 @@ public final class FreeTaggingServiceImpl extends AbstractIRODSTaggingService
 
 		// now find collections
 
-		CollectionAO collectionAO = getIrodsAccessObjectFactory()
-				.getCollectionAO(getIrodsAccount());
+		builder = new IRODSGenQueryBuilder(true, null);
+		try {
+			CollectionAOHelper.buildSelectsByAppendingToBuilder(builder);
+		} catch (GenQueryBuilderException e) {
+			throw new JargonException(e);
+		}
 
-		wherePart = new StringBuilder();
-
-		wherePart.append(RodsGenQueryEnum.COL_META_COLL_ATTR_UNITS.getName());
-		wherePart.append(EQUALS_QUOTE);
-		wherePart.append(UserTaggingConstants.TAG_AVU_UNIT);
-		wherePart.append(QUOTE);
+		builder.addConditionAsGenQueryField(
+				RodsGenQueryEnum.COL_META_COLL_ATTR_UNITS,
+				QueryConditionOperators.EQUAL,
+				UserTaggingConstants.TAG_AVU_UNIT);
 
 		for (String searchTag : searchTagValues) {
 			log.debug("searchTag to add to query:{}", searchTag);
-			wherePart.append(AND_VALUE);
-			wherePart
-					.append(RodsGenQueryEnum.COL_META_COLL_ATTR_NAME.getName());
-			wherePart.append(EQUALS_QUOTE);
-			wherePart.append(searchTag);
-			wherePart.append(QUOTE);
+			builder.addConditionAsGenQueryField(
+					RodsGenQueryEnum.COL_META_COLL_ATTR_NAME,
+					QueryConditionOperators.EQUAL, searchTag);
 		}
 
-		log.debug("where part of collection query = {}", wherePart);
-
-		List<Collection> collections = collectionAO.findWhere(
-				wherePart.toString(), 0);
+		List<Collection> collections = new ArrayList<Collection>();
+		try {
+			IRODSGenQueryFromBuilder irodsQuery = builder
+					.exportIRODSQueryFromBuilder(this
+							.getIrodsAccessObjectFactory()
+							.getJargonProperties().getMaxFilesAndDirsQueryMax());
+			resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResult(
+					irodsQuery, 0);
+			collections = CollectionAOHelper.buildListFromResultSet(resultSet);
+		} catch (JargonQueryException e) {
+			log.error("query exception for  query", e);
+			throw new JargonException(
+					"error in query loading user file permissions for data object",
+					e);
+		} catch (DataNotFoundException dnf) {
+			log.info("no data found for user ACL");
+		} catch (GenQueryBuilderException e) {
+			log.error("query exception for  query", e);
+			throw new JargonException(
+					"error in query loading user file permissions for data object",
+					e);
+		}
 
 		for (Collection collection : collections) {
 			collectionAndDataObjectListingEntry = new CollectionAndDataObjectListingEntry();

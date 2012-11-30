@@ -73,19 +73,6 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 			final String dataName) throws JargonException,
 			FileNotFoundException;
 
-	/**
-	 * Handy query method will return DataObjects that match the given 'WHERE'
-	 * clause. This appends the default selects such that they can be converted
-	 * into domain objects.
-	 * 
-	 * @param where
-	 *            <code>String</code> with the iquest form query condition,
-	 *            omitting the WHERE clause
-	 * @return a <code>List</code> of
-	 *         {@link org.irods.jargon.core.pub.DataObject}
-	 * @throws JargonException
-	 */
-	List<DataObject> findWhere(final String where) throws JargonException;
 
 	/**
 	 * For a given absolute path, get an <code>IRODSFileImpl</code> that is a
@@ -257,24 +244,6 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	List<MetaDataAndDomainData> findMetadataValuesByMetadataQuery(
 			final List<AVUQueryElement> avuQuery) throws JargonQueryException,
 			JargonException;
-
-	/**
-	 * Handy query method will return DataObjects that match the given 'WHERE'
-	 * clause. This appends the default selects such that they can be converted
-	 * into domain objects.
-	 * 
-	 * @param where
-	 *            <code>String</code> with the iquest form query condition,
-	 *            omitting the WHERE clause
-	 * @param partialStart
-	 *            <code>int</code> with the partial start index when paging
-	 *            through large queries
-	 * @return a <code>List</code> of
-	 *         {@link org.irods.jargon.core.pub.DataObject}
-	 * @throws JargonException
-	 */
-	List<DataObject> findWhere(final String where, final int partialStart)
-			throws JargonException;
 
 	/**
 	 * List the data objects that answer the given AVU metadata query with the

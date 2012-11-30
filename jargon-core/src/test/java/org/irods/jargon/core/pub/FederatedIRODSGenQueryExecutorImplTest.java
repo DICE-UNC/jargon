@@ -12,6 +12,7 @@ import org.irods.jargon.core.packinstr.TransferOptions.ForceOption;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.pub.io.IRODSFileFactory;
 import org.irods.jargon.core.query.IRODSGenQuery;
+import org.irods.jargon.core.query.IRODSQueryResultSet;
 import org.irods.jargon.core.query.IRODSQueryResultSetInterface;
 import org.irods.jargon.core.query.RodsGenQueryEnum;
 import org.irods.jargon.core.transfer.TransferControlBlock;
@@ -162,7 +163,7 @@ public class FederatedIRODSGenQueryExecutorImplTest {
 		IRODSGenQueryExecutor irodsGenQueryExecutor = accessObjectFactory
 				.getIRODSGenQueryExecutor(irodsAccount);
 
-		IRODSQueryResultSetInterface resultSet = irodsGenQueryExecutor
+		IRODSQueryResultSet resultSet = irodsGenQueryExecutor
 				.executeIRODSQueryInZone(
 						irodsQuery,
 						0,

@@ -73,13 +73,6 @@ public class IRODSQueryResultSet extends AbstractIRODSQueryResultSet {
 
 	}
 
-	/**
-	 * Return the query that generated the result set
-	 * 
-	 * @return {@link org.irods.jargon.TranslatedIRODSGenQuery.TranslatedIRODSQuery
-	 *         TranslatedIRODSQuery} this is an immutable object that is
-	 *         thread-safe
-	 */
 	public TranslatedIRODSGenQuery getTranslatedIRODSQuery() {
 		return translatedIRODSQuery;
 	}

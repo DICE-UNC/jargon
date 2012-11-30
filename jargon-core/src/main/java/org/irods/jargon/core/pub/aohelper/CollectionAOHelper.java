@@ -22,6 +22,7 @@ import org.irods.jargon.core.query.IRODSGenQueryBuilder;
 import org.irods.jargon.core.query.IRODSQueryResultRow;
 import org.irods.jargon.core.query.IRODSQueryResultSetInterface;
 import org.irods.jargon.core.query.JargonQueryException;
+import org.irods.jargon.core.query.QueryConditionOperators;
 import org.irods.jargon.core.query.RodsGenQueryEnum;
 import org.irods.jargon.core.utils.IRODSDataConversionUtil;
 import org.slf4j.Logger;
@@ -341,59 +342,52 @@ public class CollectionAOHelper extends AOHelper {
 
 		return entry;
 	}
-
+	
 	/**
-	 * Shortcut to build selects used in creating
-	 * <code>CollectionAndDataObjectListingEntry</code> items for collections.
-	 * Does not include the 'SELECT', just the field names.
-	 * 
-	 * @return
+	 * Append selects to the provided builder for collection queries
+	 * @param builder
+	 * @throws GenQueryBuilderException
 	 */
-	public static String buildSelectsNeededForCollectionsInCollectionsAndDataObjectsListingEntry() {
-		StringBuilder query = new StringBuilder();
-		query.append(RodsGenQueryEnum.COL_COLL_PARENT_NAME.getName());
-		query.append(COMMA);
-		query.append(RodsGenQueryEnum.COL_COLL_NAME.getName());
-		query.append(COMMA);
-		query.append(RodsGenQueryEnum.COL_COLL_CREATE_TIME.getName());
-		query.append(COMMA);
-		query.append(RodsGenQueryEnum.COL_COLL_MODIFY_TIME.getName());
-		query.append(COMMA);
-		query.append(RodsGenQueryEnum.COL_COLL_ID.getName());
-		query.append(COMMA);
-		query.append(RodsGenQueryEnum.COL_COLL_OWNER_NAME.getName());
-		query.append(COMMA);
-		query.append(RodsGenQueryEnum.COL_COLL_OWNER_ZONE.getName());
-		return query.toString();
+	public static void buildSelectsNeededForCollectionsInCollectionsAndDataObjectsListingEntry(final IRODSGenQueryBuilder builder) throws GenQueryBuilderException {
+		if (builder == null) {
+			throw new IllegalArgumentException("null builder");
+		}
+		
+		builder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_PARENT_NAME)
+		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_NAME)
+		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_CREATE_TIME)
+		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_MODIFY_TIME)
+		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_ID)
+		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_OWNER_NAME)
+		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_OWNER_ZONE);
+		
 	}
 
 	/**
-	 * Build a GenQuery string that will get the inheritance flag for a given
-	 * collection.
-	 * 
-	 * @param absolutePathToCollection
-	 *            <code>String</code> with the absolute path to the collection.
-	 * @return <code>String</code> with the inheritance bit (1 or blank).
+	 * Build an inheritance query for the collection by appending the selects and conditions to the <code>IRODSGenQueryBuilder</code> provided
+	 * @param absolutePathToCollection <code>String</code> with the absolute path to the iRODS collection for which the permission bit will be queried
+	 * @param builder {@link IRODSGenQueryBuilder}
+	 * @throws JargonException
 	 */
-	public static String buildInheritanceQueryForCollectionAbsolutePath(
-			final String absolutePathToCollection) {
-
+	public static void  buildInheritanceQueryForCollectionAbsolutePath(
+			final String absolutePathToCollection, final IRODSGenQueryBuilder builder) throws JargonException {
+		
 		if (absolutePathToCollection == null
 				|| absolutePathToCollection.isEmpty()) {
 			throw new IllegalArgumentException(
 					"null or empty absolutePathToCollection");
 		}
-
-		StringBuilder query = new StringBuilder();
-		query.append("SELECT ");
-		query.append(RodsGenQueryEnum.COL_COLL_INHERITANCE.getName());
-		query.append(" WHERE  ");
-		query.append(RodsGenQueryEnum.COL_COLL_NAME.getName());
-		query.append(" = '");
-		query.append(IRODSDataConversionUtil
-				.escapeSingleQuotes(absolutePathToCollection));
-		query.append("'");
-		return query.toString();
+		
+		if (builder == null) {
+			throw new IllegalArgumentException("null builder");
+		}
+		
+		try {
+			builder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_INHERITANCE)
+			.addConditionAsGenQueryField(RodsGenQueryEnum.COL_COLL_NAME, QueryConditionOperators.EQUAL, absolutePathToCollection);
+		} catch (GenQueryBuilderException e) {
+			throw new JargonException("error building inheritance query", e);
+		}
 	}
 
 	/**
@@ -474,26 +468,26 @@ public class CollectionAOHelper extends AOHelper {
 	 * path
 	 * 
 	 * @param irodsCollectionAbsolutePath
+	 * @param builder 
 	 */
 
-	public static String buildACLQueryForCollectionName(
-			final String irodsCollectionAbsolutePath) {
-		StringBuilder query = new StringBuilder();
-		query.append("SELECT ");
-		query.append(RodsGenQueryEnum.COL_COLL_ACCESS_USER_NAME.getName());
-		query.append(",");
-		query.append(RodsGenQueryEnum.COL_COLL_ACCESS_USER_ZONE.getName());
-		query.append(",");
-		query.append(RodsGenQueryEnum.COL_COLL_ACCESS_USER_ID.getName());
-		query.append(",");
-		query.append(RodsGenQueryEnum.COL_COLL_ACCESS_TYPE.getName());
-		query.append(" WHERE ");
-		query.append(RodsGenQueryEnum.COL_COLL_NAME.getName());
-		query.append(" = '");
-		query.append(IRODSDataConversionUtil
-				.escapeSingleQuotes(irodsCollectionAbsolutePath));
-		query.append("'");
-		return query.toString();
+	public static void buildACLQueryForCollectionName(
+			final String irodsCollectionAbsolutePath, IRODSGenQueryBuilder builder) throws JargonException {
+		
+		if (irodsCollectionAbsolutePath == null || irodsCollectionAbsolutePath.isEmpty()) {
+			throw new IllegalArgumentException("null or empty irodsCollectionAbsolutePath");
+		}
+		
+		try {
+			builder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_ACCESS_USER_NAME)
+			.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_ACCESS_USER_ZONE)
+			.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_ACCESS_USER_ID)
+			.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_ACCESS_TYPE)
+			.addConditionAsGenQueryField(RodsGenQueryEnum.COL_COLL_NAME, QueryConditionOperators.EQUAL, irodsCollectionAbsolutePath);
+		} catch (GenQueryBuilderException e) {
+			throw new JargonException(e);
+		}
+		
 	}
 
 }
