@@ -15,12 +15,12 @@ import org.irods.jargon.datautils.tree.FileTreeDiffUtilityImpl;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.irods.jargon.testutils.filemanip.FileGenerator;
 import org.irods.jargon.transfer.dao.domain.FrequencyType;
+import org.irods.jargon.transfer.dao.domain.GridAccount;
 import org.irods.jargon.transfer.dao.domain.LocalIRODSTransfer;
 import org.irods.jargon.transfer.dao.domain.Synchronization;
 import org.irods.jargon.transfer.dao.domain.SynchronizationType;
 import org.irods.jargon.transfer.dao.domain.TransferState;
 import org.irods.jargon.transfer.engine.synch.SynchManagerService;
-import org.irods.jargon.transfer.util.HibernateUtil;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -39,6 +39,8 @@ public class TransferManagerForSynchTest {
 
 	private static org.irods.jargon.testutils.IRODSTestSetupUtilities irodsTestSetupUtilities = null;
 
+	private static IRODSAccount testingIRODSAccount = null;
+
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		org.irods.jargon.testutils.TestingPropertiesHelper testingPropertiesLoader = new TestingPropertiesHelper();
@@ -51,12 +53,21 @@ public class TransferManagerForSynchTest {
 				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
 		scratchFileUtils
 				.clearAndReinitializeScratchDirectory(IRODS_TEST_SUBDIR_PATH);
-		String testDatabase = scratchFileUtils
-				.createAndReturnAbsoluteScratchPath(".idrop/derby/target/database/transfer");
-		String databaseUrl = "jdbc:derby:" + testDatabase;
-		DatabasePreparationUtils.clearAllDatabaseForTesting(databaseUrl,
-				"transfer", "transfer");
 		irodsFileSystem = IRODSFileSystem.instance();
+		testingIRODSAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		/**
+		 * String testDatabase = scratchFileUtils
+		 * .createAndReturnAbsoluteScratchPath
+		 * (".idrop/derby/target/database/transfer"); String databaseUrl =
+		 * "jdbc:derby:" + testDatabase;
+		 * DatabasePreparationUtils.clearAllDatabaseForTesting(databaseUrl,
+		 * "transfer", "transfer"); irodsFileSystem =
+		 * IRODSFileSystem.instance(); testingIRODSAccount =
+		 * testingPropertiesHelper
+		 * .buildIRODSAccountFromTestProperties(testingProperties);
+		 */
 
 	}
 
@@ -71,10 +82,7 @@ public class TransferManagerForSynchTest {
 	@Test
 	public void testEnqueueSynch() throws Exception {
 		TransferManager transferManager = new TransferManagerImpl(
-				IRODSFileSystem.instance());
-
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+				IRODSFileSystem.instance(), IRODS_TEST_SUBDIR_PATH);
 
 		String rootCollection = "testEnqueueSynch";
 		String localCollectionAbsolutePath = scratchFileUtils
@@ -86,7 +94,7 @@ public class TransferManagerForSynchTest {
 						testingProperties, IRODS_TEST_SUBDIR_PATH + "/"
 								+ rootCollection);
 		IRODSFile irodsSynchFile = irodsFileSystem.getIRODSFileFactory(
-				irodsAccount)
+				testingIRODSAccount)
 				.instanceIRODSFile(irodsCollectionRootAbsolutePath);
 		irodsSynchFile.mkdirs();
 
@@ -95,31 +103,29 @@ public class TransferManagerForSynchTest {
 						localCollectionAbsolutePath, "testSubdir", 1, 2, 1,
 						"testFile", ".txt", 3, 2, 2, 5);
 
+		GridAccount gridAccount = transferManager.getGridAccountService()
+				.addOrUpdateGridAccountBasedOnIRODSAccount(testingIRODSAccount);
+
+		SynchManagerService synchManagerService = transferManager
+				.getTransferServiceFactory().instanceSynchManagerService();
+
+		synchManagerService.purgeAllSynchronizations();
+
 		Synchronization synchronization = new Synchronization();
 		synchronization
 				.setSynchronizationMode(SynchronizationType.ONE_WAY_LOCAL_TO_IRODS);
 		synchronization.setName(rootCollection);
 		synchronization.setCreatedAt(new Date());
-		synchronization.setDefaultResourceName(irodsAccount
-				.getDefaultStorageResource());
 		synchronization.setFrequencyType(FrequencyType.EVERY_HOUR);
-		synchronization.setIrodsHostName(irodsAccount.getHost());
-		synchronization.setIrodsPassword(HibernateUtil.obfuscate(irodsAccount
-				.getPassword()));
-		synchronization.setIrodsPort(irodsAccount.getPort());
 		synchronization.setIrodsSynchDirectory(irodsCollectionRootAbsolutePath);
-		synchronization.setIrodsUserName(irodsAccount.getUserName());
-		synchronization.setIrodsZone(irodsAccount.getZone());
 		synchronization.setLocalSynchDirectory(localCollectionAbsolutePath);
-		SynchManagerService synchManagerService = transferManager
-				.getTransferServiceFactory().instanceSynchManagerService();
+		synchronization.setGridAccount(gridAccount);
+
 		synchManagerService.createNewSynchConfiguration(synchronization);
 
 		synchronization = synchManagerService.findByName(rootCollection);
-
 		transferManager.purgeAllTransfers();
-
-		transferManager.enqueueASynch(synchronization, irodsAccount);
+		transferManager.enqueueASynch(synchronization, gridAccount);
 
 		// let synch run
 
@@ -140,7 +146,8 @@ public class TransferManagerForSynchTest {
 				TransferManager.ErrorStatus.OK,
 				transferManager.getErrorStatus());
 		FileTreeDiffUtility fileTreeDiffUtility = new FileTreeDiffUtilityImpl(
-				irodsAccount, irodsFileSystem.getIRODSAccessObjectFactory());
+				testingIRODSAccount,
+				irodsFileSystem.getIRODSAccessObjectFactory());
 		boolean noDiffs = fileTreeDiffUtility.verifyLocalAndIRODSTreesMatch(
 				new File(localCollectionAbsolutePath),
 				irodsCollectionRootAbsolutePath, 0L, 0L);
@@ -159,10 +166,7 @@ public class TransferManagerForSynchTest {
 	@Test
 	public void testEnqueueSynchTwice() throws Exception {
 		TransferManager transferManager = new TransferManagerImpl(
-				IRODSFileSystem.instance());
-
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+				IRODSFileSystem.instance(), IRODS_TEST_SUBDIR_PATH);
 
 		String rootCollection = "testEnqueueSynchTwice";
 		String localCollectionAbsolutePath = scratchFileUtils
@@ -174,7 +178,7 @@ public class TransferManagerForSynchTest {
 						testingProperties, IRODS_TEST_SUBDIR_PATH + "/"
 								+ rootCollection);
 		IRODSFile irodsSynchFile = irodsFileSystem.getIRODSFileFactory(
-				irodsAccount)
+				testingIRODSAccount)
 				.instanceIRODSFile(irodsCollectionRootAbsolutePath);
 		irodsSynchFile.mkdirs();
 
@@ -183,32 +187,26 @@ public class TransferManagerForSynchTest {
 						localCollectionAbsolutePath, "testSubdir", 1, 2, 1,
 						"testFile", ".txt", 3, 2, 2, 5);
 
+		GridAccount gridAccount = transferManager.getGridAccountService()
+				.addOrUpdateGridAccountBasedOnIRODSAccount(testingIRODSAccount);
+
 		Synchronization synchronization = new Synchronization();
 		synchronization
 				.setSynchronizationMode(SynchronizationType.ONE_WAY_LOCAL_TO_IRODS);
 		synchronization.setName(rootCollection);
 		synchronization.setCreatedAt(new Date());
-		synchronization.setDefaultResourceName(irodsAccount
-				.getDefaultStorageResource());
 		synchronization.setFrequencyType(FrequencyType.EVERY_HOUR);
-		synchronization.setIrodsHostName(irodsAccount.getHost());
-		synchronization.setIrodsPassword(HibernateUtil.obfuscate(irodsAccount
-				.getPassword()));
-		synchronization.setIrodsPort(irodsAccount.getPort());
 		synchronization.setIrodsSynchDirectory(irodsCollectionRootAbsolutePath);
-		synchronization.setIrodsUserName(irodsAccount.getUserName());
-		synchronization.setIrodsZone(irodsAccount.getZone());
+		synchronization.setGridAccount(gridAccount);
 		synchronization.setLocalSynchDirectory(localCollectionAbsolutePath);
 		SynchManagerService synchManagerService = transferManager
 				.getTransferServiceFactory().instanceSynchManagerService();
 		synchManagerService.createNewSynchConfiguration(synchronization);
-
 		synchronization = synchManagerService.findByName(rootCollection);
 
 		transferManager.purgeAllTransfers();
-
-		transferManager.enqueueASynch(synchronization, irodsAccount);
-		transferManager.enqueueASynch(synchronization, irodsAccount);
+		transferManager.enqueueASynch(synchronization, gridAccount);
+		transferManager.enqueueASynch(synchronization, gridAccount);
 
 		// let synch run
 
@@ -230,7 +228,8 @@ public class TransferManagerForSynchTest {
 		 * TransferManager.ErrorStatus.OK, transferManager.getErrorStatus());
 		 */
 		FileTreeDiffUtility fileTreeDiffUtility = new FileTreeDiffUtilityImpl(
-				irodsAccount, irodsFileSystem.getIRODSAccessObjectFactory());
+				testingIRODSAccount,
+				irodsFileSystem.getIRODSAccessObjectFactory());
 		boolean noDiffs = fileTreeDiffUtility.verifyLocalAndIRODSTreesMatch(
 				new File(localCollectionAbsolutePath),
 				irodsCollectionRootAbsolutePath, 0L, 0L);
@@ -257,19 +256,19 @@ public class TransferManagerForSynchTest {
 	@Test(expected = IllegalArgumentException.class)
 	public void testEnqueueSynchNullSynch() throws Exception {
 		TransferManager transferManager = new TransferManagerImpl(
-				IRODSFileSystem.instance());
+				IRODSFileSystem.instance(), IRODS_TEST_SUBDIR_PATH);
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		GridAccount gridAccount = transferManager.getGridAccountService()
+				.addOrUpdateGridAccountBasedOnIRODSAccount(testingIRODSAccount);
 
-		transferManager.enqueueASynch(null, irodsAccount);
+		transferManager.enqueueASynch(null, gridAccount);
 
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testEnqueueSynchNullAccount() throws Exception {
 		TransferManager transferManager = new TransferManagerImpl(
-				IRODSFileSystem.instance());
+				IRODSFileSystem.instance(), IRODS_TEST_SUBDIR_PATH);
 
 		transferManager.enqueueASynch(new Synchronization(), null);
 

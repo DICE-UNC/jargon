@@ -10,8 +10,7 @@ import org.irods.jargon.core.exception.JargonException;
 
 /**
  * Representation of an identity on IRODS. Contains info similar to that
- * contained in the .irodsEnv file. The main account attributes are immutable,
- * but certain elements are mutable as they may be updated during processing.
+ * contained in the .irodsEnv file.
  * 
  * @author Mike Conway - DICE (www.irods.org)
  * 
@@ -26,13 +25,13 @@ public class IRODSAccount implements Serializable {
 	public static final String PUBLIC_USERNAME = "anonymous";
 	private AuthScheme authenticationScheme = AuthScheme.STANDARD;
 
-	private final String host;
-	private final int port;
-	private String zone;
-	private String userName;
-	private String password;
-	private String defaultStorageResource;
-	private String homeDirectory;
+	private String host = "";
+	private int port = 0;
+	private String zone = "";
+	private String userName = "";
+	private String password = "";
+	private String defaultStorageResource = "";
+	private String homeDirectory = "";
 
 	private List<String> authenticatedRoles = new ArrayList<String>();
 

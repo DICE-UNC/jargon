@@ -81,7 +81,8 @@ public class TransferQueueServiceImpl implements TransferQueueService {
 					& localIRODSTransferList.size() > 0) {
 				transfer = localIRODSTransferList.get(0);
 				log.debug("dequeue transfer:{}", transfer);
-
+				// trigger lazy loading of the grid account
+				transfer.getGridAccount().getHost();
 				transfer.setTransferStart(new Date());
 				transfer.setTransferState(TransferState.PROCESSING);
 				transfer.setTransferStatus(TransferStatus.OK);

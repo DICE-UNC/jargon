@@ -49,4 +49,11 @@ public interface SynchronizationDAO {
 	 */
 	public void delete(Synchronization ea) throws TransferDAOException;
 
+	/**
+	 * Delete all synchronizations and associated transfers from the database
+	 * 
+	 * @throws TransferDAOException
+	 */
+	public abstract void purgeSynchronizations() throws TransferDAOException;
+
 }

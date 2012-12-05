@@ -3,12 +3,15 @@
  */
 package org.irods.jargon.transfer.engine;
 
+import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.utils.MiscIRODSUtils;
+import org.irods.jargon.datautils.datacache.CacheEncryptor;
 import org.irods.jargon.transfer.TransferEngineException;
 import org.irods.jargon.transfer.dao.GridAccountDAO;
 import org.irods.jargon.transfer.dao.KeyStoreDAO;
 import org.irods.jargon.transfer.dao.TransferDAOException;
+import org.irods.jargon.transfer.dao.domain.GridAccount;
 import org.irods.jargon.transfer.dao.domain.KeyStore;
 import org.irods.jargon.transfer.exception.PassPhraseInvalidException;
 import org.slf4j.Logger;
@@ -41,6 +44,8 @@ public class GridAccountServiceImpl implements GridAccountService {
 	 */
 	private String cachedPassPhrase = "";
 
+	private CacheEncryptor cacheEncryptor = null;
+
 	private final Logger log = LoggerFactory
 			.getLogger(GridAccountServiceImpl.class);
 
@@ -54,7 +59,7 @@ public class GridAccountServiceImpl implements GridAccountService {
 	/**
 	 * @return the gridAccountDAO
 	 */
-	@Override
+
 	public GridAccountDAO getGridAccountDAO() {
 		return gridAccountDAO;
 	}
@@ -158,6 +163,69 @@ public class GridAccountServiceImpl implements GridAccountService {
 	/*
 	 * (non-Javadoc)
 	 * 
+	 * @see org.irods.jargon.transfer.engine.GridAccountService#
+	 * addOrUpdateGridAccountBasedOnIRODSAccount
+	 * (org.irods.jargon.core.connection.IRODSAccount)
+	 */
+	@Override
+	public synchronized GridAccount addOrUpdateGridAccountBasedOnIRODSAccount(
+			final IRODSAccount irodsAccount) throws PassPhraseInvalidException,
+			TransferEngineException {
+
+		log.info("addOrUpdateGridAccountBasedOnIRODSAccount");
+
+		if (irodsAccount == null) {
+			throw new IllegalArgumentException("null irodsAccount");
+		}
+
+		log.info("irodsAccount:{}", irodsAccount);
+
+		if (this.cachedPassPhrase == null || this.cachedPassPhrase.isEmpty()) {
+			throw new PassPhraseInvalidException("invalid pass phrase");
+		}
+
+		log.info("checking if the grid account exists");
+		GridAccount gridAccount = null;
+		try {
+			gridAccount = gridAccountDAO.findByHostZoneAndUserName(
+					irodsAccount.getHost(), irodsAccount.getZone(),
+					irodsAccount.getUserName());
+		} catch (TransferDAOException e) {
+			log.error("exception accessing grid account data", e);
+			throw new TransferEngineException("error getting grid account", e);
+		}
+		
+		if (cacheEncryptor == null) {
+			cacheEncryptor = new CacheEncryptor(this.getCachedPassPhrase());
+		}
+
+		if (gridAccount == null) {
+			log.info("no grid account, create a new one");
+			log.info("creating grid account and enrypting password");
+			gridAccount = new GridAccount(irodsAccount);
+		}
+		
+		try {
+			gridAccount.setPassword(new String(cacheEncryptor
+					.encrypt(irodsAccount.getPassword())));
+		} catch (JargonException e) {
+			log.error("error encrypting password with pass phrase", e);
+			throw new TransferEngineException(e);
+		}
+
+		try {
+			gridAccountDAO.save(gridAccount);
+		} catch (TransferDAOException e) {
+			log.error("error saving grid account:{}", gridAccount, e);
+			throw new TransferEngineException("error saving grid account", e);
+		}
+		log.info("grid account saved:{}", gridAccount);
+		return gridAccount;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see
 	 * org.irods.jargon.transfer.engine.GridAccountService#validatePassPhrase
 	 * (java.lang.String)
@@ -235,8 +303,10 @@ public class GridAccountServiceImpl implements GridAccountService {
 	}
 
 	/**
-	 * @return the cachedPassPhrase
+	 * @return the cachedPassPhrase which is a <code>String</code> that is used
+	 *         to encrypt the passwords stored in the transfer queue.
 	 */
+	@Override
 	public synchronized String getCachedPassPhrase() {
 		return cachedPassPhrase;
 	}

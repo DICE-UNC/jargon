@@ -12,6 +12,7 @@ import org.irods.jargon.core.pub.io.IRODSFileFactory;
 import org.irods.jargon.core.transfer.TransferControlBlock;
 import org.irods.jargon.core.transfer.TransferStatus;
 import org.irods.jargon.core.transfer.TransferStatusCallbackListener;
+import org.irods.jargon.datautils.datacache.CacheEncryptor;
 import org.irods.jargon.datautils.synchproperties.SynchPropertiesService;
 import org.irods.jargon.datautils.synchproperties.SynchPropertiesServiceImpl;
 import org.irods.jargon.datautils.tree.FileTreeDiffUtility;
@@ -145,6 +146,13 @@ final class IRODSLocalTransferEngine implements TransferStatusCallbackListener {
 		IRODSAccount irodsAccount = DomainUtils
 				.irodsAccountFromGridAccount(localIrodsTransfer
 						.getGridAccount());
+		
+		log.info("decrypting stored pass phrase to create the irodsAccount used for login");
+		// decode the password, which is encrypted by the pass phrase in the transfer manager
+		CacheEncryptor cacheEncryptor = new CacheEncryptor(transferManager
+				.getGridAccountService().getCachedPassPhrase());
+		irodsAccount.setPassword(cacheEncryptor.decrypt(irodsAccount
+				.getPassword()));
 
 		// initiate the operation and process call-backs
 

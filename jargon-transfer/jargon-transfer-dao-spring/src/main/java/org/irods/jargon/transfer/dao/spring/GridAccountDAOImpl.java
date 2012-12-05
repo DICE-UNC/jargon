@@ -4,12 +4,16 @@ package org.irods.jargon.transfer.dao.spring;
 import java.util.List;
 
 import org.hibernate.Criteria;
+import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.Restrictions;
 import org.irods.jargon.transfer.dao.GridAccountDAO;
 import org.irods.jargon.transfer.dao.TransferDAOException;
 import org.irods.jargon.transfer.dao.domain.GridAccount;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.orm.hibernate3.HibernateTemplate;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 
@@ -27,6 +31,9 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
  * 
  */
 public class GridAccountDAOImpl extends HibernateDaoSupport implements GridAccountDAO {
+
+	private static final Logger log = LoggerFactory
+			.getLogger(GridAccountDAOImpl.class);
 
 	/*
 	 * (non-Javadoc)
@@ -139,6 +146,34 @@ public class GridAccountDAOImpl extends HibernateDaoSupport implements GridAccou
 
 		return ret;
 
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.transfer.dao.GridAccountDAO#deleteAll()
+	 */
+	@Override
+	public void deleteAll() throws TransferDAOException {
+		try {
+
+			StringBuilder sb = new StringBuilder();
+			sb.append("delete from GridAccount");
+
+			log.debug("delete grid account sql:{}", sb.toString());
+
+			HibernateTemplate hibernateTemplate = super.getHibernateTemplate();
+
+			int rows = hibernateTemplate.bulkUpdate(sb.toString());
+			log.debug("deleted grid accounts count of: {}", rows);
+
+		} catch (HibernateException e) {
+			log.error("HibernateException", e);
+			throw new TransferDAOException(e);
+		} catch (Exception e) {
+			log.error("error in deleteAll()", e);
+			throw new TransferDAOException("Failed deleteAll()", e);
+		}
 	}
 
 	/*

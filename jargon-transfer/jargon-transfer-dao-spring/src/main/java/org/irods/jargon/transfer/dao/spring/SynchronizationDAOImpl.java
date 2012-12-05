@@ -12,6 +12,7 @@ import org.irods.jargon.transfer.dao.TransferDAOException;
 import org.irods.jargon.transfer.dao.domain.Synchronization;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.orm.hibernate3.HibernateTemplate;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 /**
@@ -27,6 +28,35 @@ public class SynchronizationDAOImpl extends HibernateDaoSupport implements
 
 	public SynchronizationDAOImpl() {
 		super();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.transfer.dao.SynchronizationDAO#purgeSynchronizations()
+	 */
+	@Override
+	public void purgeSynchronizations() throws TransferDAOException {
+		try {
+
+			StringBuilder sb = new StringBuilder();
+			sb.append("delete from Synchronization");
+
+			log.debug("delete synchronization sql:{}", sb.toString());
+
+			HibernateTemplate hibernateTemplate = super.getHibernateTemplate();
+
+			int rows = hibernateTemplate.bulkUpdate(sb.toString());
+			log.debug("deleted synchs count of: {}", rows);
+
+		} catch (HibernateException e) {
+			log.error("HibernateException", e);
+			throw new TransferDAOException(e);
+		} catch (Exception e) {
+			log.error("error in purgeSynchronizations()", e);
+			throw new TransferDAOException("Failed purgeSynchronizations()", e);
+		}
 	}
 
 	/*

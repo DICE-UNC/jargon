@@ -4,7 +4,7 @@
   <parent>
     <artifactId>jargon</artifactId>
     <groupId>org.irods</groupId>
-	<version>3.3.0-b964-SNAPSHOT</version>
+	<version>b964-SNAPSHOT</version>
   </parent>
   <groupId>org.irods.jargon</groupId>
   <artifactId>jargon-user-profile</artifactId>

@@ -324,4 +324,11 @@ public interface TransferManager {
 	void validatePassPhrase(String passPhrase)
 			throws PassPhraseInvalidException, TransferEngineException;
 
+	/**
+	 * Get the service that manages grid accounts
+	 * 
+	 * @return
+	 */
+	GridAccountService getGridAccountService();
+
 }

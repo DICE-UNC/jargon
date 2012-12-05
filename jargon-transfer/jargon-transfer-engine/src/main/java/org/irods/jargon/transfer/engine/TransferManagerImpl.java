@@ -171,7 +171,6 @@ public final class TransferManagerImpl implements TransferManager {
 			throw new IllegalArgumentException("null or empty passPhrase");
 		}
 
-
 		this.irodsFileSystem = irodsFileSystem;
 		this.transferManagerCallbackListener = transferManagerCallbackListener;
 
@@ -227,6 +226,7 @@ public final class TransferManagerImpl implements TransferManager {
 		this.irodsFileSystem = irodsFileSystem;
 		this.transferManagerCallbackListener = transferManagerCallbackListener;
 		this.transferEngineConfigurationProperties = transferEngineConfigurationProperties;
+
 		try {
 			init();
 		} catch (Exception e) {
@@ -668,6 +668,7 @@ public final class TransferManagerImpl implements TransferManager {
 
 		LocalIRODSTransfer dequeued = transferQueueService.dequeueTransfer();
 
+
 		if (dequeued == null) {
 			log.info("queue is empty");
 			runningStatus = RunningStatus.IDLE;
@@ -933,7 +934,8 @@ public final class TransferManagerImpl implements TransferManager {
 	/**
 	 * @return the gridAccountService
 	 */
-   synchronized GridAccountService getGridAccountService() {
+	@Override
+	public GridAccountService getGridAccountService() {
 		return gridAccountService;
 	}
 

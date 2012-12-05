@@ -285,7 +285,7 @@ public class TransferQueueServiceTest {
 						testingProperties, IRODS_TEST_SUBDIR_PATH);
 
 		TransferManager transferManager = new TransferManagerImpl(
-				IRODSFileSystem.instance());
+				IRODSFileSystem.instance(), IRODS_TEST_SUBDIR_PATH);
 
 		transferManager.getTransferQueueService().enqueuePutTransfer(
 				localCollectionAbsolutePath, irodsCollectionRootAbsolutePath,
@@ -404,7 +404,7 @@ public class TransferQueueServiceTest {
 
 		LocalIRODSTransfer transferToMark = transferQueue.get(0);
 		TransferManager transferManager = new TransferManagerImpl(
-				IRODSFileSystem.instance());
+				IRODSFileSystem.instance(), IRODS_TEST_SUBDIR_PATH);
 		transferQueueService.markTransferAsErrorAndTerminate(transferToMark,
 				new JargonException("hello a jargon exception"),
 				transferManager);

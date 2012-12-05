@@ -21,6 +21,7 @@ import javax.persistence.Table;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 import org.irods.jargon.core.connection.AuthScheme;
+import org.irods.jargon.core.connection.IRODSAccount;
 
 /**
  * Entity implementation class for Entity: GridAccount
@@ -34,6 +35,13 @@ import org.irods.jargon.core.connection.AuthScheme;
  * pass-phrase that must be supplied by the user. Clients of the transfer engine
  * must obtain and verify the pass phrase and use it to derive the account
  * passwords.
+ * <p/>
+ * When dealing with <code>GridAccount</code>, the transfer manager will always
+ * expect grid accounts presented for storage or update to have clear text
+ * passwords, and the manager will encrypt the password on storage by the pass
+ * phrase. By the same token, any <code>GridAccount</code> returned by the
+ * transfer manager will have the password encoded. Internally, the transfer
+ * manager code will properly decypt the account information as needed.
  * 
  */
 @Entity
@@ -51,38 +59,38 @@ public class GridAccount implements Serializable {
 	 * iRODS host name
 	 */
 	@Column(name = "host", nullable = false)
-	private String host;
+	private String host = "";
 
 	/**
 	 * iRODS port number
 	 */
 	@Column(name = "port", nullable = false)
-	private int port;
+	private int port = 0;
 
 	/**
 	 * iRODS zone name
 	 */
 	@Column(name = "zone", nullable = false)
-	private String zone;
+	private String zone = "";
 
 	/**
 	 * iRODS user name
 	 */
 	@Column(name = "user_name", nullable = false)
-	private String userName;
+	private String userName = "";
 
 	/**
 	 * iRODS password (note that this is encrypted in the database by a
 	 * user-provided pass-phrase
 	 */
 	@Column(name = "password", nullable = false)
-	private String password;
+	private String password = "";
 
 	/**
 	 * optional default storage resource
 	 */
 	@Column(name = "default_resource")
-	private String defaultResource;
+	private String defaultResource = "";
 
 	/**
 	 * Authentication scheme used for the grid account
@@ -96,13 +104,13 @@ public class GridAccount implements Serializable {
 	 * the root of a displayed tree
 	 */
 	@Column(name = "default_path", length = 32672)
-	private String defaultPath;
+	private String defaultPath = "";
 
 	/**
 	 * Optional free-form comment
 	 */
 	@Column(name = "comment")
-	private String comment;
+	private String comment = "";
 
 	@Column(name = "created_at", nullable = false)
 	private Date createdAt;
@@ -154,6 +162,32 @@ public class GridAccount implements Serializable {
 
 	public GridAccount() {
 		super();
+	}
+
+	/**
+	 * Create a <code>GridAccount</code> based on the values in a given
+	 * <code>IRODSAccount</code>
+	 * 
+	 * @param irodsAccount
+	 *            {@link IRODSAccount}
+	 */
+	public GridAccount(final IRODSAccount irodsAccount) {
+
+		if (irodsAccount == null) {
+			throw new IllegalArgumentException("null irodsAccount");
+		}
+
+		this.authScheme = irodsAccount.getAuthenticationScheme();
+		this.defaultResource = irodsAccount.getDefaultStorageResource();
+		this.createdAt = new Date();
+		this.host = irodsAccount.getHost();
+		this.password = irodsAccount.getPassword();
+		this.port = irodsAccount.getPort();
+		this.updatedAt = this.createdAt;
+		this.userName = irodsAccount.getUserName();
+		this.zone = irodsAccount.getZone();
+		this.defaultPath = irodsAccount.getHomeDirectory();
+
 	}
 
 	public Long getId() {

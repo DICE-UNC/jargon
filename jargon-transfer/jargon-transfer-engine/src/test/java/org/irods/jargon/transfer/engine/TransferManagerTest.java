@@ -13,11 +13,11 @@ import org.irods.jargon.core.pub.IRODSFileSystem;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.irods.jargon.testutils.filemanip.FileGenerator;
+import org.irods.jargon.transfer.dao.domain.GridAccount;
 import org.irods.jargon.transfer.dao.domain.LocalIRODSTransfer;
 import org.irods.jargon.transfer.dao.domain.TransferState;
 import org.irods.jargon.transfer.dao.domain.TransferStatus;
 import org.irods.jargon.transfer.dao.domain.TransferType;
-import org.irods.jargon.transfer.util.HibernateUtil;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -34,6 +34,8 @@ public class TransferManagerTest {
 
 	private static org.irods.jargon.testutils.IRODSTestSetupUtilities irodsTestSetupUtilities = null;
 
+	private static IRODSAccount testingIRODSAccount = null;
+
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		org.irods.jargon.testutils.TestingPropertiesHelper testingPropertiesLoader = new TestingPropertiesHelper();
@@ -46,11 +48,9 @@ public class TransferManagerTest {
 				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
 		scratchFileUtils
 				.clearAndReinitializeScratchDirectory(IRODS_TEST_SUBDIR_PATH);
-		String testDatabase = scratchFileUtils
-				.createAndReturnAbsoluteScratchPath(".idrop/derby/target/database/transfer");
-		String databaseUrl = "jdbc:derby:" + testDatabase;
-		DatabasePreparationUtils.clearAllDatabaseForTesting(databaseUrl,
-				"transfer", "transfer"); // TODO: make a prop
+		testingIRODSAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
 
 	}
 
@@ -58,7 +58,7 @@ public class TransferManagerTest {
 	public void testInstance() throws Exception {
 
 		TransferManager transferManager = new TransferManagerImpl(
-				IRODSFileSystem.instance());
+				IRODSFileSystem.instance(), IRODS_TEST_SUBDIR_PATH);
 		Assert.assertNotNull("null transferManager from instance()",
 				transferManager);
 	}
@@ -74,7 +74,7 @@ public class TransferManagerTest {
 	@Test
 	public void testPause() throws Exception {
 		TransferManager transferManager = new TransferManagerImpl(
-				IRODSFileSystem.instance());
+				IRODSFileSystem.instance(), IRODS_TEST_SUBDIR_PATH);
 		transferManager.pause();
 		Assert.assertTrue(transferManager.isPaused());
 	}
@@ -82,7 +82,7 @@ public class TransferManagerTest {
 	@Test
 	public void testResumeNotPaused() throws Exception {
 		TransferManager transferManager = new TransferManagerImpl(
-				IRODSFileSystem.instance());
+				IRODSFileSystem.instance(), IRODS_TEST_SUBDIR_PATH);
 		transferManager.resume();
 		Assert.assertFalse(transferManager.getRunningStatus() == TransferManager.RunningStatus.PAUSED);
 	}
@@ -90,7 +90,7 @@ public class TransferManagerTest {
 	@Test
 	public void testResumeWhenPaused() throws Exception {
 		TransferManager transferManager = new TransferManagerImpl(
-				IRODSFileSystem.instance());
+				IRODSFileSystem.instance(), IRODS_TEST_SUBDIR_PATH);
 		transferManager.pause();
 		transferManager.resume();
 		Assert.assertFalse(
@@ -101,7 +101,7 @@ public class TransferManagerTest {
 	@Test
 	public void testNotifyWarningCondition() throws Exception {
 		TransferManagerImpl transferManager = new TransferManagerImpl(
-				IRODSFileSystem.instance());
+				IRODSFileSystem.instance(), IRODS_TEST_SUBDIR_PATH);
 		transferManager.notifyWarningCondition();
 		Assert.assertEquals("transferManager should be in a warning state",
 				TransferManager.ErrorStatus.WARNING,
@@ -111,7 +111,7 @@ public class TransferManagerTest {
 	@Test
 	public void testNotifyProcessingCondition() throws Exception {
 		TransferManagerImpl transferManager = new TransferManagerImpl(
-				IRODSFileSystem.instance());
+				IRODSFileSystem.instance(), IRODS_TEST_SUBDIR_PATH);
 		transferManager.notifyProcessing();
 		Assert.assertEquals("transferManager should be in a processing state",
 				TransferManager.RunningStatus.PROCESSING,
@@ -121,7 +121,7 @@ public class TransferManagerTest {
 	@Test
 	public void testNotifyWarningConditionWhenAlreadyError() throws Exception {
 		TransferManagerImpl transferManager = new TransferManagerImpl(
-				IRODSFileSystem.instance());
+				IRODSFileSystem.instance(), IRODS_TEST_SUBDIR_PATH);
 		transferManager.notifyErrorCondition();
 		transferManager.notifyWarningCondition();
 		Assert.assertEquals(
@@ -133,7 +133,7 @@ public class TransferManagerTest {
 	@Test
 	public void testNotifyErrorCondition() throws Exception {
 		TransferManagerImpl transferManager = new TransferManagerImpl(
-				IRODSFileSystem.instance());
+				IRODSFileSystem.instance(), IRODS_TEST_SUBDIR_PATH);
 		transferManager.notifyErrorCondition();
 		Assert.assertEquals("transferManager should be in an error state",
 				TransferManager.ErrorStatus.ERROR,
@@ -142,9 +142,6 @@ public class TransferManagerTest {
 
 	@Test
 	public void enqueueAPutWhenIdleBlankResource() throws Exception {
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-
 		String rootCollection = "testGetTransferOneInQueue";
 		String localCollectionAbsolutePath = scratchFileUtils
 				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH
@@ -160,11 +157,14 @@ public class TransferManagerTest {
 						"testFile", ".txt", 9, 8, 2, 21);
 
 		TransferManager transferManager = new TransferManagerImpl(
-				IRODSFileSystem.instance());
+				IRODSFileSystem.instance(), IRODS_TEST_SUBDIR_PATH);
 		transferManager.pause();
+		
+		GridAccount gridAccount = transferManager.getGridAccountService()
+				.addOrUpdateGridAccountBasedOnIRODSAccount(testingIRODSAccount);
 
 		transferManager.enqueueAPut(localCollectionAbsolutePath,
-				irodsCollectionRootAbsolutePath, "", irodsAccount);
+				irodsCollectionRootAbsolutePath, "", gridAccount);
 
 		Assert.assertEquals("should have been no errors",
 				TransferManager.ErrorStatus.OK,
@@ -173,9 +173,6 @@ public class TransferManagerTest {
 
 	@Test
 	public void testEnqueueAPutWhenPaused() throws Exception {
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-
 		String rootCollection = "enqueueAPutWhenPaused";
 		String localCollectionAbsolutePath = scratchFileUtils
 				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH
@@ -191,11 +188,14 @@ public class TransferManagerTest {
 						"testFile", ".txt", 9, 8, 2, 21);
 
 		TransferManager transferManager = new TransferManagerImpl(
-				IRODSFileSystem.instance());
+				IRODSFileSystem.instance(), IRODS_TEST_SUBDIR_PATH);
 		transferManager.pause();
 
+		GridAccount gridAccount = transferManager.getGridAccountService()
+				.addOrUpdateGridAccountBasedOnIRODSAccount(testingIRODSAccount);
+
 		transferManager.enqueueAPut(localCollectionAbsolutePath,
-				irodsCollectionRootAbsolutePath, "", irodsAccount);
+				irodsCollectionRootAbsolutePath, "", gridAccount);
 
 		Assert.assertEquals("should be finished and idle",
 				TransferManager.RunningStatus.PAUSED,
@@ -256,22 +256,18 @@ public class TransferManagerTest {
 		String lastFileName = localFiles[2].getAbsolutePath();
 
 		TransferManager transferManager = new TransferManagerImpl(
-				IRODSFileSystem.instance());
+				IRODSFileSystem.instance(), IRODS_TEST_SUBDIR_PATH);
+
+		GridAccount gridAccount = transferManager.getGridAccountService()
+				.addOrUpdateGridAccountBasedOnIRODSAccount(testingIRODSAccount);
 
 		LocalIRODSTransfer enqueuedTransfer = new LocalIRODSTransfer();
 		enqueuedTransfer.setCreatedAt(new Date());
 		enqueuedTransfer.setIrodsAbsolutePath(irodsCollectionRootAbsolutePath);
 		enqueuedTransfer.setLocalAbsolutePath(localCollectionAbsolutePath);
-		enqueuedTransfer.setTransferHost(irodsAccount.getHost());
-		enqueuedTransfer.setTransferPort(irodsAccount.getPort());
-		enqueuedTransfer.setTransferResource(irodsAccount
-				.getDefaultStorageResource());
-		enqueuedTransfer.setTransferZone(irodsAccount.getZone());
+		enqueuedTransfer.setGridAccount(gridAccount);
 		enqueuedTransfer.setTransferStart(new Date());
 		enqueuedTransfer.setTransferType(TransferType.PUT);
-		enqueuedTransfer.setTransferUserName(irodsAccount.getUserName());
-		enqueuedTransfer.setTransferPassword(HibernateUtil
-				.obfuscate(irodsAccount.getPassword()));
 		enqueuedTransfer.setTransferState(TransferState.ENQUEUED);
 		enqueuedTransfer.setTransferStatus(TransferStatus.OK);
 		enqueuedTransfer.setLastSuccessfulPath(lastFileName);
@@ -328,9 +324,6 @@ public class TransferManagerTest {
 
 	@Test
 	public void testEnqueueAPutTwice() throws Exception {
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-
 		String rootCollection = "testEnqueueAPutTwice";
 		String localCollectionAbsolutePath = scratchFileUtils
 				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH
@@ -346,13 +339,16 @@ public class TransferManagerTest {
 						"testFile", ".txt", 9, 8, 2, 21);
 
 		TransferManager transferManager = new TransferManagerImpl(
-				IRODSFileSystem.instance());
+				IRODSFileSystem.instance(), IRODS_TEST_SUBDIR_PATH);
 		transferManager.pause();
 
+		GridAccount gridAccount = transferManager.getGridAccountService()
+				.addOrUpdateGridAccountBasedOnIRODSAccount(testingIRODSAccount);
+
 		transferManager.enqueueAPut(localCollectionAbsolutePath,
-				irodsCollectionRootAbsolutePath, "", irodsAccount);
+				irodsCollectionRootAbsolutePath, "", gridAccount);
 		transferManager.enqueueAPut(localCollectionAbsolutePath,
-				irodsCollectionRootAbsolutePath, "", irodsAccount);
+				irodsCollectionRootAbsolutePath, "", gridAccount);
 
 		List<LocalIRODSTransfer> transferQueue = transferManager
 				.getCurrentQueue();
@@ -362,9 +358,6 @@ public class TransferManagerTest {
 
 	@Test
 	public void enqueueAReplicate() throws Exception {
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-
 		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
 		String rootCollection = "enqueueAReplicate";
 		String localCollectionAbsolutePath = scratchFileUtils
@@ -381,11 +374,13 @@ public class TransferManagerTest {
 						"testFile", ".txt", 9, 8, 2, 21);
 
 		TransferManager transferManager = new TransferManagerImpl(
-				irodsFileSystem);
-		// transferManager.pause();
+				IRODSFileSystem.instance(), IRODS_TEST_SUBDIR_PATH);
+
+		GridAccount gridAccount = transferManager.getGridAccountService()
+				.addOrUpdateGridAccountBasedOnIRODSAccount(testingIRODSAccount);
 
 		transferManager.enqueueAPut(localCollectionAbsolutePath,
-				irodsCollectionRootAbsolutePath, "", irodsAccount);
+				irodsCollectionRootAbsolutePath, "", gridAccount);
 
 		// let put run
 
@@ -406,6 +401,7 @@ public class TransferManagerTest {
 				TransferManager.ErrorStatus.OK,
 				transferManager.getErrorStatus());
 
+
 		// put is done, now replicate
 
 		transferManager
@@ -413,7 +409,7 @@ public class TransferManagerTest {
 						irodsCollectionRootAbsolutePath + "/" + rootCollection,
 						testingProperties
 								.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_RESOURCE_KEY),
-						irodsAccount);
+						gridAccount);
 
 		waitCtr = 0;
 
@@ -471,11 +467,14 @@ public class TransferManagerTest {
 				irodsCollectionRootAbsolutePath, "", null, null);
 
 		TransferManager transferManager = new TransferManagerImpl(
-				irodsFileSystem);
+				IRODSFileSystem.instance(), IRODS_TEST_SUBDIR_PATH);
+
+		GridAccount gridAccount = transferManager.getGridAccountService()
+				.addOrUpdateGridAccountBasedOnIRODSAccount(testingIRODSAccount);
 
 		transferManager.enqueueACopy(irodsCollectionRootAbsolutePath + "/"
 				+ rootCollection, "", irodsTargetCollectionRootAbsolutePath,
-				irodsAccount);
+				gridAccount);
 
 		// let put run
 
@@ -507,9 +506,6 @@ public class TransferManagerTest {
 	@Test
 	public void enqueueAGet() throws Exception {
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-
 		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
 		String rootCollection = "enqueueAGet";
 		String returnedCollection = "enqueueAGeReturned";
@@ -528,11 +524,12 @@ public class TransferManagerTest {
 						"testFile", ".txt", 9, 8, 2, 21);
 
 		TransferManager transferManager = new TransferManagerImpl(
-				irodsFileSystem);
-		// transferManager.pause();
+				IRODSFileSystem.instance(), IRODS_TEST_SUBDIR_PATH);
+		GridAccount gridAccount = transferManager.getGridAccountService()
+				.addOrUpdateGridAccountBasedOnIRODSAccount(testingIRODSAccount);
 
 		transferManager.enqueueAPut(localCollectionAbsolutePath,
-				irodsCollectionRootAbsolutePath, "", irodsAccount);
+				irodsCollectionRootAbsolutePath, "", gridAccount);
 
 		// let put run
 
@@ -563,7 +560,7 @@ public class TransferManagerTest {
 		transferManager.enqueueAGet(irodsCollectionRootAbsolutePath + "/"
 				+ rootCollection, localReturnedAbsolutePath, testingProperties
 				.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
-				irodsAccount);
+				gridAccount);
 
 		waitCtr = 0;
 
@@ -589,10 +586,6 @@ public class TransferManagerTest {
 	@Test
 	public void testProcessQueueAtStartupWithAProcessingTransferHanging()
 			throws Exception {
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
-
 		String rootCollection = "testGetErrorQueue";
 		String localCollectionAbsolutePath = scratchFileUtils
 				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH
@@ -602,29 +595,29 @@ public class TransferManagerTest {
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH);
 
+		TransferManager transferManager = new TransferManagerImpl(
+				IRODSFileSystem.instance(), IRODS_TEST_SUBDIR_PATH);
+
+		GridAccount gridAccount = transferManager.getGridAccountService()
+				.addOrUpdateGridAccountBasedOnIRODSAccount(testingIRODSAccount);
+
 		LocalIRODSTransfer enqueuedTransfer = new LocalIRODSTransfer();
 		enqueuedTransfer.setCreatedAt(new Date());
 		enqueuedTransfer.setIrodsAbsolutePath(irodsCollectionRootAbsolutePath);
 		enqueuedTransfer.setLocalAbsolutePath(localCollectionAbsolutePath);
-		enqueuedTransfer.setTransferHost(irodsAccount.getHost());
-		enqueuedTransfer.setTransferPort(irodsAccount.getPort());
-		enqueuedTransfer.setTransferResource(irodsAccount
-				.getDefaultStorageResource());
-		enqueuedTransfer.setTransferZone(irodsAccount.getZone());
+		enqueuedTransfer.setGridAccount(gridAccount);
 		enqueuedTransfer.setTransferStart(new Date());
 		enqueuedTransfer.setTransferType(TransferType.PUT);
-		enqueuedTransfer.setTransferUserName(irodsAccount.getUserName());
-		enqueuedTransfer.setTransferPassword(irodsAccount.getPassword());
 		enqueuedTransfer.setTransferState(TransferState.PROCESSING);
 		enqueuedTransfer.setTransferStatus(TransferStatus.ERROR);
 
-		TransferManager transferManager = new TransferManagerImpl(
-				irodsFileSystem);
+
 		transferManager.getTransferQueueService().updateLocalIRODSTransfer(
 				enqueuedTransfer);
 		// reinit, simulating restart, so that the init() method in
 		// transferManagerImpl will fire
-		transferManager = new TransferManagerImpl(irodsFileSystem);
+		transferManager = new TransferManagerImpl(
+				IRODSFileSystem.instance(), IRODS_TEST_SUBDIR_PATH);
 
 		// now get the queue
 		List<LocalIRODSTransfer> transferQueue = transferManager
@@ -636,6 +629,5 @@ public class TransferManagerTest {
 				TransferState.ENQUEUED, transfer.getTransferState());
 
 	}
-	
 	
 }

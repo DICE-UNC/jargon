@@ -98,4 +98,11 @@ public interface SynchManagerService {
 	boolean isSynchRunning(Synchronization synchronization)
 			throws SynchException;
 
+	/**
+	 * Purge all syncronizations and associated data from the database
+	 * 
+	 * @throws SynchException
+	 */
+	void purgeAllSynchronizations() throws SynchException;
+
 }

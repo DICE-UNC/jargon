@@ -37,6 +37,11 @@ public class ConfigurationPropertyDAOImpl extends HibernateDaoSupport implements
 	public void saveOrUpdate(final ConfigurationProperty configurationProperty)
 			throws TransferDAOException {
 		log.info("entering save(ConfigurationProperty)");
+		if (configurationProperty == null) {
+			throw new IllegalArgumentException("null configurationProperty");
+		}
+
+		log.info("configurationProperty:{}", configurationProperty);
 
 		this.getSessionFactory().getCurrentSession()
 				.saveOrUpdate(configurationProperty);

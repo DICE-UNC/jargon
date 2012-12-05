@@ -44,7 +44,7 @@ public class DatabasePreparationUtils {
 			delete = st.executeUpdate(sql);
 			log.info("deleted:{}", delete);
 
-			log.info("delete local_irods_transfer");
+			log.info("delete synchronization");
 			sql = "DELETE FROM synchronization";
 			delete = st.executeUpdate(sql);
 			log.info("deleted:{}", delete);

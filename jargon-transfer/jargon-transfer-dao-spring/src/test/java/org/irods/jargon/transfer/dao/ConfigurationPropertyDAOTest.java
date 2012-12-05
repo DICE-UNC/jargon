@@ -127,6 +127,9 @@ public class ConfigurationPropertyDAOTest {
 		String testKey1 = "testFindAll1";
 		String testKey2 = "testFindAll2";
 
+		List<ConfigurationProperty> configProperties = configurationPropertyDAO
+				.findAll();
+
 		String testValue = "testFindAllValue";
 		ConfigurationProperty configProperty = new ConfigurationProperty();
 		configProperty.setPropertyKey(testKey1);
@@ -140,7 +143,7 @@ public class ConfigurationPropertyDAOTest {
 		configProperty.setCreatedAt(new Date());
 		configurationPropertyDAO.saveOrUpdate(configProperty);
 
-		List<ConfigurationProperty> configProperties = configurationPropertyDAO
+		configProperties = configurationPropertyDAO
 				.findAll();
 		Assert.assertNotNull("did not find confg properties, was null",
 				configProperties);

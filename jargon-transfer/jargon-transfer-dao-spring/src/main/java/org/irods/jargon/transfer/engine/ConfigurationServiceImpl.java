@@ -134,11 +134,6 @@ public class ConfigurationServiceImpl implements ConfigurationService {
 			throw new IllegalArgumentException("null configurationProperty");
 		}
 
-		if (configurationProperty.getId() != 0) {
-			throw new IllegalArgumentException(
-					"attempting to add a configurationProperty that already is in the database");
-		}
-
 		log.info("addConfigurationProperty(ConfigurationProperty) with: {}",
 				configurationProperty);
 

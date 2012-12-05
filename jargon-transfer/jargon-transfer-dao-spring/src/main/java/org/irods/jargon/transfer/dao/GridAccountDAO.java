@@ -71,4 +71,11 @@ public interface GridAccountDAO {
 	 */
 	void delete(GridAccount gridAccount) throws TransferDAOException;
 
+	/**
+	 * Delete all grid accounts in the database
+	 * 
+	 * @throws TransferDAOException
+	 */
+	void deleteAll() throws TransferDAOException;
+
 }

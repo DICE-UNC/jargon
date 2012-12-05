@@ -1,8 +1,10 @@
 package org.irods.jargon.transfer.engine;
 
+import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.transfer.TransferEngineException;
 import org.irods.jargon.transfer.dao.GridAccountDAO;
 import org.irods.jargon.transfer.dao.KeyStoreDAO;
+import org.irods.jargon.transfer.dao.domain.GridAccount;
 import org.irods.jargon.transfer.dao.domain.KeyStore;
 import org.irods.jargon.transfer.exception.PassPhraseInvalidException;
 
@@ -70,5 +72,35 @@ public interface GridAccountService {
 	 */
 	KeyStore storePassPhrase(String passPhrase)
 			throws PassPhraseInvalidException, TransferEngineException;
+
+	/**
+	 * Given an <code>IRODSAccount</code>, add a new <code>GridAccount</code>,
+	 * or update the underlying <code>GridAccount</code> with the information
+	 * from the <code>IRODSAccount</code>. (default storage resource, default
+	 * path, password).
+	 * <p/>
+	 * Note that the grid account is unique by host, zone, and user name.
+	 * 
+	 * @param irodsAccount
+	 *            {@link IRODSAccount} that will be used to create or update the
+	 *            <code>GridAccount</code>
+	 * @return {@link GridAccount} that is equivalent to the
+	 *         <code>IRODSAccount</code>. Note that the password in the returned
+	 *         <code>GridAccount</code> is encrypted by the pass phrase set in
+	 *         the <code>TransferManager</code>
+	 * @throws PassPhraseInvalidException
+	 * @throws TransferEngineException
+	 */
+	GridAccount addOrUpdateGridAccountBasedOnIRODSAccount(
+			final IRODSAccount irodsAccount) throws PassPhraseInvalidException,
+			TransferEngineException;
+
+	/**
+	 * Return the pass phrase used to encrypt/decrypt the password information
+	 * cached in the transfer database
+	 * 
+	 * @return
+	 */
+	String getCachedPassPhrase();
 
 }

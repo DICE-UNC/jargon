@@ -105,10 +105,11 @@ public class GridAccountDAOImplTest {
 	public void testFindByHostZoneUserNameExists() throws Exception {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+				.buildIRODSAccountForIRODSUserFromTestPropertiesForGivenUser(
+						testingProperties, "testFindByHostZoneUserNameExists",
+						"testFindByHostZoneUserNameExists");
 		GridAccount gridAccount = DomainUtils
 				.gridAccountFromIRODSAccount(irodsAccount);
-
 		gridAccountDAO.save(gridAccount);
 		GridAccount actual = gridAccountDAO.findByHostZoneAndUserName(
 				irodsAccount.getHost(), irodsAccount.getZone(),
@@ -122,6 +123,7 @@ public class GridAccountDAOImplTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
+		irodsAccount.setUserName("testFindByHostZoneUserNameNotExists");
 
 		GridAccount actual = gridAccountDAO.findByHostZoneAndUserName(
 				irodsAccount.getHost(), irodsAccount.getZone(),

@@ -34,6 +34,19 @@ public class SynchManagerServiceImpl implements SynchManagerService {
 		return synchronizationDAO;
 	}
 
+	@Override
+	@Transactional
+	public synchronized void purgeAllSynchronizations() throws SynchException {
+		log.info("purgeAllSynchronizations()");
+
+		try {
+			synchronizationDAO.purgeSynchronizations();
+		} catch (TransferDAOException e) {
+			log.error("error purging synchronizations", e);
+			throw new SynchException(e);
+		}
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -61,7 +74,8 @@ public class SynchManagerServiceImpl implements SynchManagerService {
 	 */
 	@Override
 	@Transactional
-	public boolean isSynchRunning(final Synchronization synchronization)
+	public synchronized boolean isSynchRunning(
+			final Synchronization synchronization)
 			throws SynchException {
 
 		log.info("is SynchRunning()");
@@ -210,7 +224,8 @@ public class SynchManagerServiceImpl implements SynchManagerService {
 	 */
 	@Override
 	@Transactional
-	public void updateSynchConfiguration(final Synchronization synchronization)
+	public synchronized void updateSynchConfiguration(
+			final Synchronization synchronization)
 			throws ConflictingSynchException, SynchException {
 		if (synchronization == null) {
 			throw new IllegalArgumentException("null synchConfiguration");
@@ -259,7 +274,8 @@ public class SynchManagerServiceImpl implements SynchManagerService {
 	 */
 	@Override
 	@Transactional
-	public void deleteSynchronization(Synchronization synchronization)
+	public synchronized void deleteSynchronization(
+			Synchronization synchronization)
 			throws SynchException {
 		log.info("delete synchronization()");
 
