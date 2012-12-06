@@ -173,6 +173,7 @@ public class IRODSCommands implements IRODSManagedConnection {
 		this.pipelineConfiguration = pipelineConfiguration;
 		this.authResponse = authResponse;
 		this.authMechanism = authMechanism;
+		this.irodsAccount = irodsAccount;
 	}
 
 	@Override
@@ -1508,12 +1509,6 @@ public class IRODSCommands implements IRODSManagedConnection {
 		log.info("disconnect current connection and switch with reconnected socket");
 		irodsConnection.shutdown();
 		irodsConnection = reconnectedIRODSConnection;
-
-		// do a little sleep to let the agent settle in
-		/*
-		 * try { Thread.sleep(2000); } catch (InterruptedException e) { //
-		 * ignore }
-		 */
 
 		log.info("reconnect operation complete... new connection is:{}",
 				irodsConnection);

@@ -393,7 +393,7 @@ final class IRODSLocalTransferEngine implements TransferStatusCallbackListener {
 			dataTransferOperations.putOperation(localFile, targetFile, this,
 					transferControlBlock);
 		} catch (JargonException je) {
-			log.error("exception in transfer will be marked as a global exception, ending the transfer operation");
+			log.error("exception in transfer will be marked as a global exception, ending the transfer operation", je);
 			transferException = je;
 		}
 		return transferException;
@@ -514,6 +514,7 @@ final class IRODSLocalTransferEngine implements TransferStatusCallbackListener {
 	private void markTransferException(
 			final LocalIRODSTransfer localIrodsTransfer,
 			final JargonException transferException) throws JargonException {
+		log.info("mark transfer exception:{}", localIrodsTransfer);
 		localIrodsTransfer
 				.setTransferStatus(org.irods.jargon.transfer.dao.domain.TransferStatus.ERROR);
 		localIrodsTransfer.setTransferState(TransferState.COMPLETE);
