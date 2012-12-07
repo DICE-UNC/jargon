@@ -8,14 +8,17 @@
 
   <bean id="systemPropertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
     <property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE" />
+      <property name="locations" value="classpath:transfer.properties"/>
   </bean>
 
   <!-- ========================= RESOURCE DEFINITIONS ========================= -->
+  
+  
   <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
     <property name="driverClassName" value="org.apache.derby.jdbc.EmbeddedDriver" />
-    <property name="url" value="jdbc:derby:${user.home}/.idrop/test/database/transfer;create=true" />
-    <property name="username" value="transfer" />
-    <property name="password" value="transfer" />
+    <property name="url" value="${jdbc.url}" />
+    <property name="username" value="${jdbc.user}" />
+    <property name="password" value="${jdbc.password}" />
   </bean>
 
   <bean id="sessionFactory" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">

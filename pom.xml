@@ -455,5 +455,6 @@
 		<module>jargon-ticket</module>
 		<module>jargon-httpstream</module>
 		<module>jargon-user-profile</module>
-	</modules>
+    		<module>jargon-conveyor</module>
+  </modules>
 </project>
