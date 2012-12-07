@@ -45,6 +45,8 @@ Note that the following bug and feature requests are logged in GForge with relat
 
 * [#1092] add reconnect option to iDrop
 **Add irodsAccount info to IRODSCommands during reconnect
+**Add new constructor and initializer for IRODSCommands that avoids calling the finalizer on a connection when the IRODSCommands was created in 'stand-alone' mode.  This fixes a bug where
+the conection finalizer could be called and the connection closed at an inappropriate time when in connection restart mode
  
  *[#1093] Broken pipe error did not propogate in parallel transfer
  **Small clean-ups in transfer processing and error callbacks

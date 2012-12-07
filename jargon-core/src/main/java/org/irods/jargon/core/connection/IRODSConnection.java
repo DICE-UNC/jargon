@@ -34,7 +34,8 @@ import org.slf4j.LoggerFactory;
  */
 public class IRODSConnection implements IRODSManagedConnection {
 
-	private Logger log = LoggerFactory.getLogger(IRODSConnection.class);
+	private static final Logger log = LoggerFactory
+			.getLogger(IRODSConnection.class);
 	private IRODSProtocolManager irodsProtocolManager;
 	private String connectionInternalIdentifier;
 	private boolean connected = false;
@@ -112,6 +113,9 @@ public class IRODSConnection implements IRODSManagedConnection {
 
 		irodsSimpleConnection.initializeConnection(irodsAccount,
 				startupResponseData);
+
+		log.info("created instance with reconnect info, connect status is:{}",
+				irodsSimpleConnection.connected);
 
 		return irodsSimpleConnection;
 	}
@@ -459,27 +463,15 @@ public class IRODSConnection implements IRODSManagedConnection {
 	private void closeDownSocketAndEatAnyExceptions() {
 		if (this.isConnected()) {
 
-			log.info("closing underlying iRODS socket connections, errors will be discarded");
-			try {
-				connection.shutdownInput();
-			} catch (Exception e) {
-				// ignore
-			}
-
-			try {
-				connection.shutdownOutput();
-			} catch (Exception e) {
-				// ignore
-			}
-
+			log.info("is connected for : {}", this.toString());
 			try {
 				connection.close();
 
 			} catch (Exception e) {
 				// ignore
 			}
-
 			connected = false;
+			log.info("now disconnected");
 		}
 	}
 

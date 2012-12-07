@@ -74,8 +74,9 @@ public class ReconnectionManager implements Callable<Void> {
 				irodsCommands);
 
 		log.info("restart mode:{}", irodsCommands.isInRestartMode());
-		try {
-			if (irodsCommands.isInRestartMode() && irodsCommands.isConnected()) {
+		try { // FIXME: add a method to irods commands that is synched without 2
+				// checks
+			if (irodsCommands.isReconnectShouldBeCalled()) {
 				log.info("in restart mode...reconnect");
 				irodsCommands.reconnect();
 			} else {
