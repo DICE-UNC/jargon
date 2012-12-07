@@ -174,7 +174,7 @@ public final class ParallelPutFileTransferStrategy extends
 			log.error("interrupted exception in thread", e);
 			throw new JargonException(e);
 		} catch (Exception e) {
-			log.error("an error occurred in a parallel get", e);
+			log.error("an error occurred in a parallel put", e);
 			throw new JargonException(e);
 		}
 	}

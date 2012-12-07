@@ -1,7 +1,7 @@
 *'''Project''': Jargon-core API
 *'''Date''': xx/xx/xx
-*'''Release Version''': 3.3.0-SNAPSHOT for grid memory
-*'''git tag''': 964-grid-memory
+*'''Release Version''': x.x.x transfer engine upgrade
+*'''git tag''': b1096-transfer-engine
 
 ==News==
 
@@ -39,9 +39,8 @@ Note that the following bug and feature requests are logged in GForge with relat
 
 ==Bug Fixes==
 
-
 ==Features==
 
 *[#964] grid memory and presets
 **refactor of database to include grid memory
-
+**conveyor framework

@@ -94,6 +94,7 @@ public class IRODSCommands implements IRODSManagedConnection {
 	private ReconnectionManager reconnectionManager = null;
 	private Future<Void> reconnectionFuture = null;
 	private boolean inRestartMode = false;
+	private boolean closeConnectionOnFinalizer = true;
 	/**
 	 * authResponse contains
 	 */
@@ -173,6 +174,42 @@ public class IRODSCommands implements IRODSManagedConnection {
 		this.pipelineConfiguration = pipelineConfiguration;
 		this.authResponse = authResponse;
 		this.authMechanism = authMechanism;
+		this.irodsAccount = irodsAccount;
+	}
+
+	/**
+	 * Internal constructor used when reconnecting, or when creating a 'stand
+	 * alone' <code>IRODSCommands</code> This is a special case used in
+	 * situations where a connection is not issued from the
+	 * <code>IRODSSession</code>. Such temporary connections are used during the
+	 * reconnect process.
+	 * <p/>
+	 * See the <code>reconnect()</code> method in this class for an example of
+	 * this use case.
+	 * 
+	 * @param irodsAccount
+	 * @param irodsProtocolManager
+	 * @param pipelineConfiguration
+	 * @param authResponse
+	 * @param authMechanism
+	 * @param reconnectedIRODSConnection
+	 * @param closeConnectionOnFinalizer
+	 *            <code>boolean</code> that indicates that the finalizer for
+	 *            this object should clean up connections that are still open
+	 */
+	IRODSCommands(final IRODSAccount irodsAccount,
+			final IRODSProtocolManager irodsProtocolManager,
+			final PipelineConfiguration pipelineConfiguration,
+			final AuthResponse authResponse, final AuthMechanism authMechanism,
+			final IRODSConnection reconnectedIRODSConnection,
+			final boolean closeConnectionOnFinalizer) {
+		this.irodsConnection = reconnectedIRODSConnection;
+		this.irodsProtocolManager = irodsProtocolManager;
+		this.pipelineConfiguration = pipelineConfiguration;
+		this.authResponse = authResponse;
+		this.authMechanism = authMechanism;
+		this.irodsAccount = irodsAccount;
+		this.closeConnectionOnFinalizer = false;
 	}
 
 	@Override
@@ -1463,7 +1500,7 @@ public class IRODSCommands implements IRODSManagedConnection {
 
 		IRODSCommands restartedCommands = new IRODSCommands(irodsAccount,
 				irodsProtocolManager, pipelineConfiguration, authResponse,
-				authMechanism, reconnectedIRODSConnection);
+				authMechanism, reconnectedIRODSConnection, false);
 
 		try {
 
@@ -1509,14 +1546,8 @@ public class IRODSCommands implements IRODSManagedConnection {
 		irodsConnection.shutdown();
 		irodsConnection = reconnectedIRODSConnection;
 
-		// do a little sleep to let the agent settle in
-		/*
-		 * try { Thread.sleep(2000); } catch (InterruptedException e) { //
-		 * ignore }
-		 */
-
 		log.info("reconnect operation complete... new connection is:{}",
-				irodsConnection);
+				reconnectedIRODSConnection);
 		return true;
 	}
 
@@ -1548,8 +1579,7 @@ public class IRODSCommands implements IRODSManagedConnection {
 		 * Check if a still-connected agent connection is being finalized, and
 		 * nag in the log, then try and disconnect
 		 */
-
-		if (irodsConnection.isConnected()) {
+		if (irodsConnection.isConnected() && closeConnectionOnFinalizer) {
 			log.error("**************************************************************************************");
 			log.error("********  WARNING: POTENTIAL CONNECTION LEAK  ******************");
 			log.error("********  finalizer has run and found a connection left opened, please check your code to ensure that all connections are closed");
@@ -1596,6 +1626,15 @@ public class IRODSCommands implements IRODSManagedConnection {
 	 */
 	public synchronized void setInRestartMode(final boolean inRestartMode) {
 		this.inRestartMode = inRestartMode;
+	}
+	
+	/**
+	 * Checks used by <code>ReconnectionManager</code> together in one protected block
+	 * @return <code>boolean</code> of <code>true</code> if the <code>ReconnectionManager</code> should call
+	 * <code>reconnect()</code> on this connection.  Further checks will be made in the actual <code>reconnect()</code> method.
+	 */
+	synchronized boolean isReconnectShouldBeCalled() {
+		return isInRestartMode() && isConnected();
 	}
 
 	/**

@@ -810,6 +810,7 @@ public class TransferQueueServiceImpl implements TransferQueueService {
 		try {
 			localIRODSTransferDAO.save(localIrodsTransfer);
 		} catch (TransferDAOException e) {
+			log.error("transferDAOException when updating the localIrodsTransfer:{}",localIrodsTransfer, e);
 			throw new JargonException(e);
 		}
 
