@@ -52,7 +52,7 @@ public class BasicConveyorBootstrapperImpl implements ConveyorBootstrapper {
 		
 		conveyorService.setConveyorExecutorService(conveyorExecutorService);
 		
-		next...Pass phrase and add grid account manager and queue manager, bring in dao's
+		//next...Pass phrase and add grid account manager and queue manager, bring in dao's
 		
 		log.info("bootstrap complete...");
 		return conveyorService;
