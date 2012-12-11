@@ -1,7 +1,6 @@
 package org.irods.jargon.usertagging;
 
 import org.irods.jargon.core.connection.IRODSAccount;
-import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 
 public abstract class AbstractIRODSTaggingService {

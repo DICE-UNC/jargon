@@ -36,7 +36,7 @@ public class IRODSTagGroupingTest {
 		
 	}
 	
-	@Test(expected=JargonException.class)
+	@Test(expected=IllegalArgumentException.class)
 	public void createInstanceBlankUserTest() throws Exception {
 		
 		String expectedUser = "";
@@ -48,7 +48,7 @@ public class IRODSTagGroupingTest {
 		
 	}
 	
-	@Test(expected=JargonException.class)
+	@Test(expected=IllegalArgumentException.class)
 	public void createInstanceNullUserTest() throws Exception {
 		
 		String expectedUser = null;
@@ -60,7 +60,7 @@ public class IRODSTagGroupingTest {
 		
 	}
 	
-	@Test(expected=JargonException.class)
+	@Test(expected=IllegalArgumentException.class)
 	public void createInstanceBlankDomainTest() throws Exception {
 		
 		String expectedUser = "user";
@@ -72,7 +72,7 @@ public class IRODSTagGroupingTest {
 		
 	}
 	
-	@Test(expected=JargonException.class)
+	@Test(expected=IllegalArgumentException.class)
 	public void createInstanceNullDomainTest() throws Exception {
 		
 		String expectedUser = "user";

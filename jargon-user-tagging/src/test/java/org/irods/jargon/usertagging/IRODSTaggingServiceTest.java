@@ -20,6 +20,8 @@ import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.irods.jargon.testutils.filemanip.FileGenerator;
 import org.irods.jargon.testutils.filemanip.ScratchFileUtils;
 import org.irods.jargon.usertagging.domain.IRODSTagValue;
+import org.irods.jargon.usertagging.tags.IRODSTaggingService;
+import org.irods.jargon.usertagging.tags.IRODSTaggingServiceImpl;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;

@@ -1,4 +1,4 @@
-package org.irods.jargon.usertagging;
+package org.irods.jargon.usertagging.tags;
 
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.usertagging.domain.IRODSTagGrouping;

@@ -68,8 +68,8 @@ public final class IRODSTagValue implements Serializable, Comparable<Object> {
 			throw new JargonException("no user supplied");
 		}
 
-		this.tagData = metadataAndDomainData.getAvuAttribute();
-		this.tagUser = metadataAndDomainData.getAvuValue();
+		tagData = metadataAndDomainData.getAvuAttribute();
+		tagUser = metadataAndDomainData.getAvuValue();
 
 	}
 
@@ -118,7 +118,7 @@ public final class IRODSTagValue implements Serializable, Comparable<Object> {
 		}
 
 		IRODSTagValue otherValue = (IRODSTagValue) o;
-		return this.getTagData().compareTo(otherValue.getTagData());
+		return getTagData().compareTo(otherValue.getTagData());
 
 	}
 

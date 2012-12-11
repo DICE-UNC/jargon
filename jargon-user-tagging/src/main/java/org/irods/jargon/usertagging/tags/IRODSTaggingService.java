@@ -1,4 +1,4 @@
-package org.irods.jargon.usertagging;
+package org.irods.jargon.usertagging.tags;
 
 import java.util.List;
 
@@ -38,12 +38,15 @@ public interface IRODSTaggingService {
 	 * @param irodsTagValue
 	 *            {@link orgirods.jargon.usertagging.domain.IRODSTagValue} with
 	 *            the tag information to be added, including user name.
-	 * @throws DataNotFoundException if the target data object is not found
-	 * @throws DuplicateDataException if the tag already exists
+	 * @throws DataNotFoundException
+	 *             if the target data object is not found
+	 * @throws DuplicateDataException
+	 *             if the tag already exists
 	 * @throws JargonException
 	 */
 	public void addTagToDataObject(final String dataObjectAbsolutePath,
-			final IRODSTagValue irodsTagValue) throws DataNotFoundException, JargonException;
+			final IRODSTagValue irodsTagValue) throws DataNotFoundException,
+			JargonException;
 
 	/**
 	 * Remove the given tag from the data object.
@@ -59,6 +62,7 @@ public interface IRODSTaggingService {
 	public void deleteTagFromDataObject(final String dataObjectAbsolutePath,
 			final IRODSTagValue irodsTagValue) throws JargonException,
 			DataNotFoundException, DuplicateDataException;
+
 	/**
 	 * For a given data object, retrieve the tag values for the logged in user.
 	 * 
@@ -83,8 +87,10 @@ public interface IRODSTaggingService {
 	 * @param irodsTagValue
 	 *            {@link orgirods.jargon.usertagging.domain.IRODSTagValue} with
 	 *            the tag information to be added.
-	 * @throws DataNotFoundException if the target data object is not found
-	 * @throws DuplicateDataException if the tag already exists
+	 * @throws DataNotFoundException
+	 *             if the target data object is not found
+	 * @throws DuplicateDataException
+	 *             if the tag already exists
 	 * @throws JargonException
 	 */
 	public void addTagToCollection(String collectionAbsolutePath,
@@ -102,7 +108,8 @@ public interface IRODSTaggingService {
 	 * @return <code>List</code> of
 	 *         {@link orgirods.jargon.usertagging.domain.IRODSTagValue} with the
 	 *         tag information for the collection.
-	 *  @throws DataNotFoundException if no collection found
+	 * @throws DataNotFoundException
+	 *             if no collection found
 	 * @throws JargonException
 	 */
 	public List<IRODSTagValue> getTagsOnCollection(String irodsAbsolutePath)
@@ -115,13 +122,14 @@ public interface IRODSTaggingService {
 	 *            <code>String</code> with iRODS absolute path.
 	 * @param irodsTagValue
 	 *            {@link orgirods.jargon.usertagging.domain.IRODSTagValue} with
-	 *            the tag information to be deleted, including the user name.
-	 *            	 * @throws DataNotFoundException if the target data object is missing
-
+	 *            the tag information to be deleted, including the user name. * @throws
+	 *            DataNotFoundException if the target data object is missing
+	 * 
 	 * @throws JargonException
 	 */
 	public void deleteTagFromCollection(String irodsAbsolutePath,
-			IRODSTagValue irodsTagValue) throws DataNotFoundException, JargonException;
+			IRODSTagValue irodsTagValue) throws DataNotFoundException,
+			JargonException;
 
 	/**
 	 * List tags for the object identified by the given unique name (e.g.
@@ -158,13 +166,16 @@ public interface IRODSTaggingService {
 	 * @param domainUniqueName
 	 *            <code>String</code> with the unique name for the domain
 	 *            object, such as absolute path for a collection or data object.
-	 * @throws DataNotFoundException if the target data object is not found
-	 * @throws DuplicateDataException if the tag already exists
+	 * @throws DataNotFoundException
+	 *             if the target data object is not found
+	 * @throws DuplicateDataException
+	 *             if the tag already exists
 	 * @throws JargonException
 	 */
 	public void addTagToGivenDomain(IRODSTagValue irodsTagValue,
 			MetadataDomain metadataDomain, String domainUniqueName)
-			throws JargonException, DuplicateDataException, DataNotFoundException;
+			throws JargonException, DuplicateDataException,
+			DataNotFoundException;
 
 	/**
 	 * Remove the tag from the given domain, using the user supplied in the
@@ -179,7 +190,8 @@ public interface IRODSTaggingService {
 	 * @param domainUniqueName
 	 *            <code>String</code> with the unique name for the domain
 	 *            object, such as absolute path for a collection or data object.
-	 * @throws DataNotFoundException if the target collection or data object is missing
+	 * @throws DataNotFoundException
+	 *             if the target collection or data object is missing
 	 * @throws JargonException
 	 *             if any iRODS error, or if the tag domain is not supported.
 	 */
@@ -206,7 +218,7 @@ public interface IRODSTaggingService {
 	 * 
 	 */
 	void addDescriptionToDataObject(String dataObjectAbsolutePath,
-			IRODSTagValue irodsDescriptionValue) throws  JargonException,
+			IRODSTagValue irodsDescriptionValue) throws JargonException,
 			DataNotFoundException;
 
 	/**
@@ -219,13 +231,14 @@ public interface IRODSTaggingService {
 	 * @param irodsDescriptionValue
 	 *            {@link IRODSTagValue} with the text value of a description
 	 *            that will be removed from a data object for the specified user
-	 * @throws DataNotFoundException if the target data object is missing
+	 * @throws DataNotFoundException
+	 *             if the target data object is missing
 	 * @throws JargonException
 	 */
 	void deleteDescriptionFromDataObject(String dataObjectAbsolutePath,
-			IRODSTagValue irodsDescriptionValue) throws DataNotFoundException, JargonException;
+			IRODSTagValue irodsDescriptionValue) throws DataNotFoundException,
+			JargonException;
 
-	
 	/**
 	 * Remove a description from a collection, using the user supplied in the
 	 * <code>IRODSTagValue</code>
@@ -236,14 +249,14 @@ public interface IRODSTaggingService {
 	 * @param irodsDescriptionValue
 	 *            {@link IRODSTagValue} with the text value of a description
 	 *            that will be removed from a collection for the specified user
-	 * @throws DataNotFoundException if the target data object is missing
+	 * @throws DataNotFoundException
+	 *             if the target data object is missing
 	 * @throws JargonException
 	 */
 	void deleteDescriptionFromCollection(String collectionAbsolutePath,
 			IRODSTagValue irodsDescriptionValue) throws DataNotFoundException,
 			JargonException;
-	
-	
+
 	/**
 	 * Retrieve the description value for a data object, using the logged-in
 	 * user. Note that this method returns null if no description is found.
@@ -283,19 +296,27 @@ public interface IRODSTaggingService {
 			DataNotFoundException, DuplicateDataException;
 
 	/**
-	 * Get the description for the collection as specified by the logged-in user.  This method will return a <code>null</code> if no 
-	 * description is provided.
-	 * @param collectionAbsolutePath <code>String</code> with the absolute path to the collection
-	 * @return {@link IRODSTagValue} containing the description for the given collection, or <code>null</code> if no AVU data found
+	 * Get the description for the collection as specified by the logged-in
+	 * user. This method will return a <code>null</code> if no description is
+	 * provided.
+	 * 
+	 * @param collectionAbsolutePath
+	 *            <code>String</code> with the absolute path to the collection
+	 * @return {@link IRODSTagValue} containing the description for the given
+	 *         collection, or <code>null</code> if no AVU data found
 	 * @throws JargonException
-	 * @throws DataNotFoundException if the collection is not found
+	 * @throws DataNotFoundException
+	 *             if the collection is not found
 	 */
 	IRODSTagValue getDescriptionOnCollectionForLoggedInUser(
-			String collectionAbsolutePath) throws DataNotFoundException, JargonException;
+			String collectionAbsolutePath) throws DataNotFoundException,
+			JargonException;
 
 	/**
-	 * Method wil return a description for the Collection or Data Object for the logged in user.  This method will return <code>null</code> if
-	 * no description was found.
+	 * Method wil return a description for the Collection or Data Object for the
+	 * logged in user. This method will return <code>null</code> if no
+	 * description was found.
+	 * 
 	 * @param metadataDomain
 	 *            <code>MetaDataAndDomainData.MetadataDomain</code> enum value
 	 *            that describes the iRODS domain being tagged.
@@ -313,8 +334,11 @@ public interface IRODSTaggingService {
 			throws DataNotFoundException, JargonException;
 
 	/**
-	 * Method that takes the currently stored description data and compares it to the desired data.  Any necessary updates are handled by looking at the difference, e.g. it will
-	 * delete if description removed, add if not currently present, etc.
+	 * Method that takes the currently stored description data and compares it
+	 * to the desired data. Any necessary updates are handled by looking at the
+	 * difference, e.g. it will delete if description removed, add if not
+	 * currently present, etc.
+	 * 
 	 * @param dataObjectAbsolutePath
 	 *            <code>String</code> with the absolute path to a data object
 	 *            that will have the specified description removed for the user
@@ -328,8 +352,11 @@ public interface IRODSTaggingService {
 			IRODSTagValue irodsDescriptionValue) throws JargonException;
 
 	/**
-	 * Method that takes the currently stored description data and compares it to the desired data.  Any necessary updates are handled by looking at the difference, e.g. it will
-	 * delete if description removed, add if not currently present, etc.
+	 * Method that takes the currently stored description data and compares it
+	 * to the desired data. Any necessary updates are handled by looking at the
+	 * difference, e.g. it will delete if description removed, add if not
+	 * currently present, etc.
+	 * 
 	 * @param collectionAbsolutePath
 	 *            <code>String</code> with the absolute path to a data object
 	 *            that will have the specified description removed for the user
@@ -342,5 +369,4 @@ public interface IRODSTaggingService {
 	void checkAndUpdateDescriptionOnCollection(String collectionAbsolutePath,
 			IRODSTagValue irodsDescriptionValue) throws JargonException;
 
-	
 }
