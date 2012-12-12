@@ -4,6 +4,7 @@
 package org.irods.jargon.usertagging.starring;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.irods.jargon.core.connection.IRODSAccount;
@@ -109,6 +110,17 @@ public class IRODSStarringServiceImpl extends AbstractIRODSTaggingService
 		log.info("irodsAbsolutePath:{}", irodsAbsolutePath);
 		log.info("description:{}", description);
 		log.info("for user:{}", irodsAccount.getUserName());
+		
+		String myDescr;
+		if (description.isEmpty()) {
+			StringBuilder sb = new StringBuilder();
+			sb.append("Starred at:");
+			sb.append(new Date());
+			myDescr = sb.toString();
+		} else {
+			myDescr = description;
+		}
+		
 
 		log.info("deciding whether a file or collection...");
 		ObjStat objStat = getObjStatForAbsolutePath(irodsAbsolutePath);
@@ -121,7 +133,7 @@ public class IRODSStarringServiceImpl extends AbstractIRODSTaggingService
 				irodsAbsolutePath, objStat);
 
 		log.info("no starring already, so add...");
-		AvuData avuData = AvuData.instance(description, getIrodsAccount()
+		AvuData avuData = AvuData.instance(myDescr, getIrodsAccount()
 				.getUserName(), UserTaggingConstants.STAR_AVU_UNIT);
 
 		if (irodsStarredFileOrCollection == null) {
@@ -130,7 +142,7 @@ public class IRODSStarringServiceImpl extends AbstractIRODSTaggingService
 		} else {
 			log.info("starred data found, so update description");
 			modifyMetadataForStarringGivenCurrent(irodsStarredFileOrCollection,
-					irodsAbsolutePath, objStat, description);
+					irodsAbsolutePath, objStat, myDescr);
 		}
 
 		log.info("updated");
