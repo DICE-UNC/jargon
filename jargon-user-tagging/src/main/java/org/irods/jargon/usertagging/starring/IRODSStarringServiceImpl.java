@@ -110,7 +110,7 @@ public class IRODSStarringServiceImpl extends AbstractIRODSTaggingService
 		log.info("irodsAbsolutePath:{}", irodsAbsolutePath);
 		log.info("description:{}", description);
 		log.info("for user:{}", irodsAccount.getUserName());
-		
+
 		String myDescr;
 		if (description.isEmpty()) {
 			StringBuilder sb = new StringBuilder();
@@ -120,7 +120,6 @@ public class IRODSStarringServiceImpl extends AbstractIRODSTaggingService
 		} else {
 			myDescr = description;
 		}
-		
 
 		log.info("deciding whether a file or collection...");
 		ObjStat objStat = getObjStatForAbsolutePath(irodsAbsolutePath);
@@ -201,6 +200,95 @@ public class IRODSStarringServiceImpl extends AbstractIRODSTaggingService
 
 		log.info("unstarred");
 
+	}
+
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.usertagging.starring.IRODSStarringService#listStarredCollections(int)
+	 */
+	@Override
+	public List<IRODSStarredFileOrCollection> listStarredCollections(
+			final int pagingOffset) throws JargonException {
+
+		log.info("listStarredCollections()");
+
+		List<AVUQueryElement> avuQueryElements = buildAVUQueryForStarred();
+
+		List<IRODSStarredFileOrCollection>  irodsStarredFiles = new ArrayList<IRODSStarredFileOrCollection>();
+		
+		// Do collections, then do files
+
+		log.info("querying metadata as a collection to look for starred");
+		CollectionAO collectionAO = getIrodsAccessObjectFactory()
+				.getCollectionAO(getIrodsAccount());
+		try {
+			List<MetaDataAndDomainData> metadata = collectionAO.findMetadataValuesByMetadataQuery(avuQueryElements);
+			
+			for(MetaDataAndDomainData metadataAndDomainData : metadata) {
+				log.debug("adding starred file:{}", metadataAndDomainData);
+				irodsStarredFiles.add(this.transformMetadataValueToStarValue(metadataAndDomainData));
+			}
+			
+		} catch (JargonQueryException e) {
+			throw new JargonException("error querying for metadata", e);
+		}
+
+		return irodsStarredFiles;
+
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.usertagging.starring.IRODSStarringService#listStarredDataObjects(int)
+	 */
+	@Override
+	public List<IRODSStarredFileOrCollection> listStarredDataObjects(
+			final int pagingOffset) throws JargonException {
+
+		log.info("listStarredDataObjects()");
+
+		List<AVUQueryElement> avuQueryElements = buildAVUQueryForStarred();
+
+		List<IRODSStarredFileOrCollection>  irodsStarredFiles = new ArrayList<IRODSStarredFileOrCollection>();
+		
+		// Do collections, then do files
+
+		log.info("querying metadata as a data object to look for starred");
+		DataObjectAO dataObjectAO = getIrodsAccessObjectFactory()
+				.getDataObjectAO(getIrodsAccount());
+		try {
+			List<MetaDataAndDomainData> metadata = dataObjectAO.findMetadataValuesByMetadataQuery(avuQueryElements);
+			
+			for(MetaDataAndDomainData metadataAndDomainData : metadata) {
+				log.debug("adding starred file:{}", metadataAndDomainData);
+				irodsStarredFiles.add(this.transformMetadataValueToStarValue(metadataAndDomainData));
+			}
+			
+		} catch (JargonQueryException e) {
+			throw new JargonException("error querying for metadata", e);
+		}
+
+		return irodsStarredFiles;
+
+	}
+
+	/**
+	 * @return
+	 * @throws JargonException
+	 */
+	private List<AVUQueryElement> buildAVUQueryForStarred()
+			throws JargonException {
+		List<AVUQueryElement> avuQueryElements = new ArrayList<AVUQueryElement>();
+		try {
+			avuQueryElements.add(AVUQueryElement.instanceForValueQuery(
+					AVUQueryPart.UNITS, AVUQueryOperatorEnum.EQUAL,
+					UserTaggingConstants.STAR_AVU_UNIT));
+			avuQueryElements.add(AVUQueryElement.instanceForValueQuery(
+					AVUQueryPart.VALUE, AVUQueryOperatorEnum.EQUAL,
+					getIrodsAccount().getUserName()));
+		} catch (JargonQueryException e) {
+			log.error("error on metadata query, rethrow as JargonException", e);
+			throw new JargonException(e);
+		}
+		return avuQueryElements;
 	}
 
 	/**
@@ -312,11 +400,15 @@ public class IRODSStarringServiceImpl extends AbstractIRODSTaggingService
 			throw new IllegalArgumentException("metadata is not a starred item");
 		}
 
-		return new IRODSStarredFileOrCollection(
+		IRODSStarredFileOrCollection irodsStarredFileOrCollection =  new IRODSStarredFileOrCollection(
 				metadataAndDomainData.getMetadataDomain(),
 				metadataAndDomainData.getDomainObjectUniqueName(),
 				metadataAndDomainData.getAvuAttribute(),
 				metadataAndDomainData.getAvuValue());
+		
+		irodsStarredFileOrCollection.setCount(metadataAndDomainData.getCount());
+		irodsStarredFileOrCollection.setLastResult(metadataAndDomainData.isLastResult());
+		return irodsStarredFileOrCollection;
 
 	}
 
@@ -334,18 +426,7 @@ public class IRODSStarringServiceImpl extends AbstractIRODSTaggingService
 
 		List<MetaDataAndDomainData> queryResults;
 
-		List<AVUQueryElement> avuQueryElements = new ArrayList<AVUQueryElement>();
-		try {
-			avuQueryElements.add(AVUQueryElement.instanceForValueQuery(
-					AVUQueryPart.UNITS, AVUQueryOperatorEnum.EQUAL,
-					UserTaggingConstants.STAR_AVU_UNIT));
-			avuQueryElements.add(AVUQueryElement.instanceForValueQuery(
-					AVUQueryPart.VALUE, AVUQueryOperatorEnum.EQUAL,
-					getIrodsAccount().getUserName()));
-		} catch (JargonQueryException e) {
-			log.error("error on metadata query, rethrow as JargonException", e);
-			throw new JargonException(e);
-		}
+		List<AVUQueryElement> avuQueryElements = buildAVUQueryForStarred();
 
 		if (objStat.isSomeTypeOfCollection()) {
 			log.info("querying metadata as a collection to look for starred");

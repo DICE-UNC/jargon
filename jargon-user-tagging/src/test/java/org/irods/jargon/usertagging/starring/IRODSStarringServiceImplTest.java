@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Properties;
 
 import junit.framework.Assert;
+import junit.framework.TestCase;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.FileNotFoundException;
@@ -580,6 +581,88 @@ public class IRODSStarringServiceImplTest {
 		AvuData avuData = AvuData.instance(description,
 				irodsAccount.getUserName(), UserTaggingConstants.STAR_AVU_UNIT);
 		Mockito.verify(collectionAO).deleteAVUMetadata(absolutePath, avuData);
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Test
+	public void testListStarredCollections() throws Exception {
+		String absolutePath = "/absolute/path/to/coll";
+		String description = "description";
+		IRODSAccessObjectFactory irodsAccessObjectFactory = Mockito
+				.mock(IRODSAccessObjectFactory.class);
+
+		CollectionAndDataObjectListAndSearchAO collectionAndDataObjectListAndSearchAO = Mockito
+				.mock(CollectionAndDataObjectListAndSearchAO.class);
+		DataObjectAO dataObjectAO = Mockito.mock(DataObjectAO.class);
+		CollectionAO collectionAO = Mockito.mock(CollectionAO.class);
+		
+		MetaDataAndDomainData metadataAndDomainData = MetaDataAndDomainData
+				.instance(MetadataDomain.COLLECTION, "1", absolutePath,
+						description, irodsAccount.getUserName(),
+						UserTaggingConstants.STAR_AVU_UNIT);
+		List<MetaDataAndDomainData> metadataList = new ArrayList<MetaDataAndDomainData>();
+		metadataList.add(metadataAndDomainData);
+
+		Mockito.when(
+				collectionAO.findMetadataValuesByMetadataQuery(
+						Matchers.anyList())).thenReturn(
+				metadataList);
+
+		Mockito.when(
+				irodsAccessObjectFactory
+						.getCollectionAndDataObjectListAndSearchAO(irodsAccount))
+				.thenReturn(collectionAndDataObjectListAndSearchAO);
+		Mockito.when(irodsAccessObjectFactory.getCollectionAO(irodsAccount))
+				.thenReturn(collectionAO);
+		Mockito.when(irodsAccessObjectFactory.getDataObjectAO(irodsAccount))
+				.thenReturn(dataObjectAO);
+		IRODSStarringService irodsStarringService = new IRODSStarringServiceImpl(
+				irodsAccessObjectFactory, irodsAccount);
+		List<IRODSStarredFileOrCollection> collections = irodsStarringService.listStarredCollections(0);
+		TestCase.assertEquals("did not find the one metadata value", 1, collections.size());
+		
+		
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Test
+	public void testListStarredDataObjects() throws Exception {
+		String absolutePath = "/absolute/path/to/dataobj.txt";
+		String description = "description";
+		IRODSAccessObjectFactory irodsAccessObjectFactory = Mockito
+				.mock(IRODSAccessObjectFactory.class);
+
+		CollectionAndDataObjectListAndSearchAO collectionAndDataObjectListAndSearchAO = Mockito
+				.mock(CollectionAndDataObjectListAndSearchAO.class);
+		DataObjectAO dataObjectAO = Mockito.mock(DataObjectAO.class);
+		CollectionAO collectionAO = Mockito.mock(CollectionAO.class);
+		
+		MetaDataAndDomainData metadataAndDomainData = MetaDataAndDomainData
+				.instance(MetadataDomain.DATA, "1", absolutePath,
+						description, irodsAccount.getUserName(),
+						UserTaggingConstants.STAR_AVU_UNIT);
+		List<MetaDataAndDomainData> metadataList = new ArrayList<MetaDataAndDomainData>();
+		metadataList.add(metadataAndDomainData);
+
+		Mockito.when(
+				dataObjectAO.findMetadataValuesByMetadataQuery(
+						Matchers.anyList())).thenReturn(
+				metadataList);
+
+		Mockito.when(
+				irodsAccessObjectFactory
+						.getCollectionAndDataObjectListAndSearchAO(irodsAccount))
+				.thenReturn(collectionAndDataObjectListAndSearchAO);
+		Mockito.when(irodsAccessObjectFactory.getCollectionAO(irodsAccount))
+				.thenReturn(collectionAO);
+		Mockito.when(irodsAccessObjectFactory.getDataObjectAO(irodsAccount))
+				.thenReturn(dataObjectAO);
+		IRODSStarringService irodsStarringService = new IRODSStarringServiceImpl(
+				irodsAccessObjectFactory, irodsAccount);
+		List<IRODSStarredFileOrCollection> collections = irodsStarringService.listStarredDataObjects(0);
+		TestCase.assertEquals("did not find the one metadata value", 1, collections.size());
+		
+		
 	}
 
 }

@@ -246,44 +246,25 @@ public class FileTreeDiffUtilityImpl extends AbstractDataUtilsServiceImpl
 			log.debug("lhs < rhs");
 			log.debug("lhs timestamp:{}", leftHandSide.lastModified());
 			log.debug("lhs cutoff:{}", timestampforLastSynchLeftHandSide);
-			if (timestampforLastSynchLeftHandSide == NO_TIMESTAMP_CHECKS || true) { // FIXME:
-				// mode
-				// leftHandSide.lastModified()
-				// >
-				// timestampforLastSynchLeftHandSide)
-				// {
-				FileTreeDiffEntry entry = buildFileTreeDiffEntryForFile(
-						leftHandSide, DiffType.LEFT_HAND_PLUS, 0, 0);
-				currentFileTreeNode.add(new FileTreeNode(entry));
-				log.info("left hand plus generated:{}", entry);
-			} else {
-				// the lhs file is plus, but the mod date is before the last
-				// synch. This is an indeterminate state. This could be treated
-				// as an iRODS delete?
-				log.debug(
-						"lhs file is seen as new, but modified time is before last synch, iRODS delete?, currently no deletes done:{}",
-						leftHandSide.getAbsolutePath());
-			}
+			// mode
+			// leftHandSide.lastModified()
+			// >
+			// timestampforLastSynchLeftHandSide)
+			// {
+			FileTreeDiffEntry entry = buildFileTreeDiffEntryForFile(
+					leftHandSide, DiffType.LEFT_HAND_PLUS, 0, 0);
+			currentFileTreeNode.add(new FileTreeNode(entry));
+			log.info("left hand plus generated:{}", entry);
 			fileMatchIndex = 1;
 		} else if (compValue > 0) {
 			log.debug("lhs > rhs");
-			if (timestampForLastSynchRightHandSide == NO_TIMESTAMP_CHECKS || true) { // rightHandSide.lastModified()
-																						// >
-																						// timestampForLastSynchRightHandSide)
-																						// {
-				FileTreeDiffEntry entry = buildFileTreeDiffEntryForFile(
-						rightHandSide, DiffType.RIGHT_HAND_PLUS, 0, 0);
-				log.info("right hand plus generated:{}", entry);
-				currentFileTreeNode.add(new FileTreeNode(entry));
-			} else {
-				// the rhs file is plus, but the mod date is before the last
-				// synch. This is an indeterminate state. This coul dbe treated
-				// as a local delete?
-				log.debug("rhs file last mod:{}", rightHandSide.lastModified());
-				log.debug(
-						"rhs file is seen as new, but modified time is before last synch, local delete? currently no deletes done:{}",
-						rightHandSide.getAbsolutePath());
-			}
+			// >
+			// timestampForLastSynchRightHandSide)
+			// {
+FileTreeDiffEntry entry = buildFileTreeDiffEntryForFile(
+rightHandSide, DiffType.RIGHT_HAND_PLUS, 0, 0);
+log.info("right hand plus generated:{}", entry);
+currentFileTreeNode.add(new FileTreeNode(entry));
 			fileMatchIndex = -1;
 		} else {
 			log.debug("file name match");
@@ -618,54 +599,6 @@ public class FileTreeDiffUtilityImpl extends AbstractDataUtilsServiceImpl
 				currentFileTreeNode.add(new FileTreeNode(entry));
 			}
 		}
-	}
-
-	/**
-	 * Two files are different. Each side has been updated since the last
-	 * synchronization.
-	 * 
-	 * @param currentFileTreeNode
-	 * @param leftHandSide
-	 * @param rightHandSide
-	 * @param timestampForLastSynchLeftHandSide
-	 * @param timestampForLastSynchRightHandSide
-	 */
-	private void twoFilesDifferAndBothArePostLastSynch(
-			final FileTreeNode currentFileTreeNode, final File leftHandSide,
-			final File rightHandSide,
-			final long timestampForLastSynchLeftHandSide,
-			final long timestampForLastSynchRightHandSide) {
-
-		log.debug("twoFilesDifferAndBothArePostLastSynch");
-
-		if (leftHandSide.length() == rightHandSide.length()) {
-			log.debug("lengths are same, don't treat as diff");
-			return;
-		}
-
-		// lengths are different, pick a file.
-
-		log.debug("both files after cutoff, will pick most recent file");
-
-		if (leftHandSide.lastModified() > rightHandSide.lastModified()) {
-			log.debug("left hand side is newer");
-			FileTreeDiffEntry entry = buildFileTreeDiffEntryForFile(
-					leftHandSide, DiffType.LEFT_HAND_NEWER,
-					rightHandSide.length(), rightHandSide.lastModified());
-			currentFileTreeNode.add(new FileTreeNode(entry));
-		} else if (rightHandSide.lastModified() > leftHandSide.lastModified()) {
-			log.debug("left hand side is newer");
-			FileTreeDiffEntry entry = buildFileTreeDiffEntryForFile(
-					rightHandSide, DiffType.RIGHT_HAND_NEWER,
-					rightHandSide.length(), rightHandSide.lastModified());
-			currentFileTreeNode.add(new FileTreeNode(entry));
-		} else {
-			log.warn(
-					"unable to determine any differences between two files when lhs is:{}",
-					leftHandSide.getAbsolutePath());
-			log.warn("   and rhs is:{}", rightHandSide.getAbsolutePath());
-		}
-
 	}
 
 	/**

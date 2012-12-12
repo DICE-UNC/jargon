@@ -1,5 +1,7 @@
 package org.irods.jargon.usertagging.starring;
 
+import java.util.List;
+
 import org.irods.jargon.core.exception.FileNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.usertagging.domain.IRODSStarredFileOrCollection;
@@ -57,5 +59,35 @@ public interface IRODSStarringService {
 	 */
 	void unstarFileOrCollection(final String irodsAbsolutePath)
 			throws FileNotFoundException, JargonException;
+
+	/**
+	 * List those collections marked as 'starred'.  Note that this method allows paging by providing an offset.
+	 * <p/>
+	 * Note that the returned <code>IRODSStarredFileOrCollection</code> objects are subclasses of {@link IRODSDomainObject</code> and
+	 * as such they contain count and 'last record' information to assist clients of this API that need to do paging for subsequent
+	 * results.
+	 *
+	 * @param pagingOffset <code>int</code> with an offset into the result sets, for paging purposes.  To start at the beginning 
+	 * provide a value of 0
+	 * @return <code>List</code> of {@link IRODSStarredFileOrCollection} 
+	 * @throws JargonException
+	 */
+	List<IRODSStarredFileOrCollection> listStarredCollections(final int pagingOffset)
+			throws JargonException;
+
+	/**
+	 * List those data objects marked as 'starred'.  Note that this method allows paging by providing an offset.
+	 * <p/>
+	 * Note that the returned <code>IRODSStarredFileOrCollection</code> objects are subclasses of {@link IRODSDomainObject</code> and
+	 * as such they contain count and 'last record' information to assist clients of this API that need to do paging for subsequent
+	 * results.
+	 *
+	 * @param pagingOffset <code>int</code> with an offset into the result sets, for paging purposes.  To start at the beginning 
+	 * provide a value of 0
+	 * @return <code>List</code> of {@link IRODSStarredFileOrCollection} 
+	 * @throws JargonException
+	 */
+	List<IRODSStarredFileOrCollection> listStarredDataObjects(final int pagingOffset)
+			throws JargonException;
 
 }
