@@ -14,6 +14,7 @@ import org.irods.jargon.datautils.synchproperties.SynchPropertiesServiceImplTest
 import org.irods.jargon.datautils.tree.FileTreeDiffEntryTest;
 import org.irods.jargon.datautils.tree.FileTreeDiffUtilityTest;
 import org.irods.jargon.datautils.tree.FileTreeNodeTest;
+import org.irods.jargon.datautils.uploads.UploadsServiceImplTest;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
@@ -26,7 +27,7 @@ import org.junit.runners.Suite;
 		ThumbnailServiceImplTest.class, ImageServiceFactoryImplTest.class,
 		ShoppingCartEntryTest.class, FileShoppingCartTest.class,
 		MediaHandlingUtilsTest.class, ShoppingCartServiceImplTest.class,
-		AnonymousAccessServiceImplTest.class })
+		AnonymousAccessServiceImplTest.class, UploadsServiceImplTest.class })
 public class AllTests {
 
 }

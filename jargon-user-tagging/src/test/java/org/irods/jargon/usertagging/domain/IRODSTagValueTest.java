@@ -6,7 +6,7 @@ import junit.framework.TestCase;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.query.MetaDataAndDomainData;
 import org.irods.jargon.core.query.MetaDataAndDomainData.MetadataDomain;
-import org.irods.jargon.usertagging.UserTaggingConstants;
+import org.irods.jargon.usertagging.tags.UserTaggingConstants;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;

@@ -28,6 +28,11 @@ import org.irods.jargon.testutils.filemanip.ScratchFileUtils;
 import org.irods.jargon.usertagging.domain.IRODSTagGrouping;
 import org.irods.jargon.usertagging.domain.IRODSTagValue;
 import org.irods.jargon.usertagging.domain.TagQuerySearchResult;
+import org.irods.jargon.usertagging.tags.FreeTaggingService;
+import org.irods.jargon.usertagging.tags.FreeTaggingServiceImpl;
+import org.irods.jargon.usertagging.tags.IRODSTaggingService;
+import org.irods.jargon.usertagging.tags.IRODSTaggingServiceImpl;
+import org.irods.jargon.usertagging.tags.UserTaggingConstants;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -675,17 +680,11 @@ public class FreeTaggingServiceImplTest {
 		//TestCase.assertEquals("did not find the same number of files and collections as I tagged", dataObjectCount + collCount, tagQuerySearchResult.getQueryResultEntries().size());
 		TestCase.assertEquals("did not preserve the given tags in the result object", tag1, tagQuerySearchResult.getSearchTags());
 		
-		// spot check data tags
-		int countActualDataObjects = 0;
-		int countActualCollections = 0;
-		
 		for (CollectionAndDataObjectListingEntry entry : tagQuerySearchResult.getQueryResultEntries()) {
 			if (entry.getObjectType().equals(ObjectType.DATA_OBJECT)) {
-				countActualDataObjects++;
 				TestCase.assertTrue("this is not the right data object", entry.getPathOrName().indexOf(fileNameBase) > -1);
 				TestCase.assertTrue("did not set the data object parent", entry.getParentPath().indexOf(IRODS_TEST_SUBDIR_PATH) > -1);
 			} else {
-				countActualCollections++;
 				TestCase.assertTrue("this is not the right data object", entry.getPathOrName().indexOf(collectionNameBase) > -1);
 			}
 			

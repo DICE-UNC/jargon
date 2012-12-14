@@ -8,49 +8,61 @@ import java.io.Serializable;
 import org.irods.jargon.core.exception.JargonException;
 
 /**
- * An entry that decribes a tag in a user tag cloud.  This object identifies the tag by name and can
- * hold counts of occurrences for data objects and for collections.
+ * An entry that decribes a tag in a user tag cloud. This object identifies the
+ * tag by name and can hold counts of occurrences for data objects and for
+ * collections.
  * 
  * @author Mike Conway - DICE (www.irods.org)
- *
+ * 
  */
 public final class TagCloudEntry implements Serializable {
-	
+
 	private static final long serialVersionUID = 3201265141915523181L;
 	private final IRODSTagValue irodsTagValue;
 	private int countOfFiles = 0;
-	private int countOfCollections = 0;	
-	
+	private int countOfCollections = 0;
+
 	/**
 	 * Private constructor.
-	 * @param irodsTagValue {@link org.irods.jargon.usertagging.IRODSTagValue} with information on the tag
-	 * @param countOfFiles <code>int</code> with a count of the number of occurrences of the tag for the given domain in files
-	 * @param countOfCollections <code>int</code> with a count of the number of occurrences of the tag for the given domain in collections
+	 * 
+	 * @param irodsTagValue
+	 *            {@link org.irods.jargon.usertagging.IRODSTagValue} with
+	 *            information on the tag
+	 * @param countOfFiles
+	 *            <code>int</code> with a count of the number of occurrences of
+	 *            the tag for the given domain in files
+	 * @param countOfCollections
+	 *            <code>int</code> with a count of the number of occurrences of
+	 *            the tag for the given domain in collections
 	 * @throws JargonException
 	 */
-	public TagCloudEntry(final IRODSTagValue irodsTagValue, final int countOfFiles, final int countOfCollections) throws JargonException {
-		
+	public TagCloudEntry(final IRODSTagValue irodsTagValue,
+			final int countOfFiles, final int countOfCollections)
+			throws JargonException {
+
 		if (irodsTagValue == null) {
 			throw new JargonException("null irodsTagValue");
 		}
-		
+
 		if (countOfFiles < 0) {
 			throw new JargonException("count of files cannot be less than zero");
 		}
-		
+
 		if (countOfCollections < 0) {
 			throw new JargonException("count of files cannot be less than zero");
 		}
-	
+
 		this.irodsTagValue = irodsTagValue;
 		this.countOfFiles = countOfFiles;
 		this.countOfCollections = countOfCollections;
-		
+
 	}
 
 	/**
 	 * Get the value of the iRODS tag for this entry
-	 * @return {@link org.irods.jargon.usertagging.domain.IRODSTagValue} for the given cloud entry.
+	 * 
+	 * @return {@link org.irods.jargon.usertagging.domain.IRODSTagValue} for the
+	 *         given cloud entry.
 	 */
 	public IRODSTagValue getIrodsTagValue() {
 		return irodsTagValue;
@@ -58,21 +70,22 @@ public final class TagCloudEntry implements Serializable {
 
 	/**
 	 * Get the count of tag occurrences for files (data objects)
+	 * 
 	 * @return
 	 */
 	public int getCountOfFiles() {
 		return countOfFiles;
 	}
-	
+
 	/**
 	 * Get the count of tag occurrences for collections (directories)
+	 * 
 	 * @return
 	 */
 	public int getCountOfCollections() {
 		return countOfCollections;
 	}
 
-	
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
@@ -87,13 +100,13 @@ public final class TagCloudEntry implements Serializable {
 	}
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (!(obj instanceof TagCloudEntry)) {
 			return false;
 		}
-		
+
 		TagCloudEntry other = (TagCloudEntry) obj;
-		return(other.getIrodsTagValue() == this.getIrodsTagValue());
+		return (other.getIrodsTagValue() == getIrodsTagValue());
 
 	}
 
@@ -102,14 +115,12 @@ public final class TagCloudEntry implements Serializable {
 		return getIrodsTagValue().hashCode();
 	}
 
-	public void setCountOfFiles(int countOfFiles) {
+	public void setCountOfFiles(final int countOfFiles) {
 		this.countOfFiles = countOfFiles;
 	}
 
-	public void setCountOfCollections(int countOfCollections) {
+	public void setCountOfCollections(final int countOfCollections) {
 		this.countOfCollections = countOfCollections;
 	}
-	
-	
-	
+
 }

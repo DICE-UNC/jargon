@@ -21,6 +21,11 @@ import org.irods.jargon.usertagging.domain.IRODSTagGrouping;
 import org.irods.jargon.usertagging.domain.IRODSTagValue;
 import org.irods.jargon.usertagging.domain.TagCloudEntry;
 import org.irods.jargon.usertagging.domain.UserTagCloudView;
+import org.irods.jargon.usertagging.tags.FreeTaggingService;
+import org.irods.jargon.usertagging.tags.FreeTaggingServiceImpl;
+import org.irods.jargon.usertagging.tags.IRODSTaggingServiceImpl;
+import org.irods.jargon.usertagging.tags.UserTagCloudService;
+import org.irods.jargon.usertagging.tags.UserTagCloudServiceImpl;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -148,13 +153,10 @@ public class UserTagCloudServiceImplTest {
 		Assert.assertEquals(irodsAccount.getUserName(), view.getUserName());
 		Collection<TagCloudEntry> tagCloudEntries = view.getTagCloudEntries()
 				.values();
-		boolean foundSharedWithCorrectCount = false;
-
 		for (TagCloudEntry entry : tagCloudEntries) {
 			if (entry.getIrodsTagValue().getTagData()
 					.equals(expectedTagNameShared)
 					&& entry.getCountOfFiles() == 2) {
-				foundSharedWithCorrectCount = true;
 			}
 		}
 
@@ -215,18 +217,12 @@ public class UserTagCloudServiceImplTest {
 
 		Collection<TagCloudEntry> tagCloudEntries = view.getTagCloudEntries()
 				.values();
-		boolean foundSharedWithCorrectCount = false;
-
 		for (TagCloudEntry entry : tagCloudEntries) {
 			if (entry.getIrodsTagValue().getTagData()
 					.equals(expectedTagNameSharedBase)
 					&& entry.getCountOfCollections() == collCount) {
-				foundSharedWithCorrectCount = true;
 			}
 		}
-
-	//	Assert.assertTrue("did not find shared tag with correct count",
-		//		foundSharedWithCorrectCount);
 	}
 
 	@Test
@@ -443,11 +439,8 @@ public class UserTagCloudServiceImplTest {
 		// find the tag1 entry, which should have 1 file and 1 collection
 		IRODSTagValue tagValue = new IRODSTagValue(expectedTagName2,
 				irodsAccount.getUserName());
-		TagCloudEntry actualEntry = userTagCloudView.getTagCloudEntries().get(
-				tagValue);
 		Assert.assertNotNull(tagValue);
-		//Assert.assertEquals(2, actualEntry.getCountOfCollections());
-		//Assert.assertEquals(1, actualEntry.getCountOfFiles());
+		
 
 		irodsFileSystem.close();
 
