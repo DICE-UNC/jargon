@@ -3,15 +3,16 @@
  */
 package org.irods.jargon.conveyor.basic;
 
-import org.apache.log4j.lf5.PassingLogRecordFilter;
 import org.irods.jargon.conveyor.core.BootstrapperException;
 import org.irods.jargon.conveyor.core.ConveyorBootstrapper;
 import org.irods.jargon.conveyor.core.ConveyorExecutorService;
 import org.irods.jargon.conveyor.core.ConveyorExecutorServiceImpl;
 import org.irods.jargon.conveyor.core.ConveyorService;
+import org.irods.jargon.transfer.TransferEngineException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanFactory;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 /**
  * Initial bootstrapper process that can later be factored into a more sophisticated processor.  This class will wire together a basic
@@ -22,13 +23,13 @@ import org.springframework.beans.factory.BeanFactory;
  */
 public class BasicConveyorBootstrapperImpl implements ConveyorBootstrapper {
 	
-	private final Logger log = LoggerFactory
+	private final Logger log = LoggerFactory 
 			.getLogger(BasicConveyorBootstrapperImpl.class);
 	
 	
 	private final ConveyorBootstrapConfiguration conveyorBootstrapConfiguration;
 	
-	private BeanFactory beanFactory;
+	private BeanFactory beanFactory; 
 	
 	public BasicConveyorBootstrapperImpl(final ConveyorBootstrapConfiguration conveyorBootstrapConfiguration) {
 		if (conveyorBootstrapConfiguration == null) {
@@ -46,14 +47,16 @@ public class BasicConveyorBootstrapperImpl implements ConveyorBootstrapper {
 	public ConveyorService bootstrap() throws BootstrapperException {
 		log.info("bootstrapping...");
 		
-		ConveyorService conveyorService = new BasicConveyorService();
-		log.info("creating executor queue...");
-		ConveyorExecutorService conveyorExecutorService = new ConveyorExecutorServiceImpl();
-		
-		conveyorService.setConveyorExecutorService(conveyorExecutorService);
-		
-		//next...Pass phrase and add grid account manager and queue manager, bring in dao's
-		
+		try {
+			ClassPathXmlApplicationContext appContext = new ClassPathXmlApplicationContext(
+					new String[] { "classpath:transfer-dao-beans.xml",
+							"classpath:transfer-dao-hibernate-spring.cfg.xml" });
+			// of course, an ApplicationContext is just a BeanFactory
+			beanFactory = appContext;
+		} catch (Exception e) {
+			log.error("error starting app context", e);
+			throw new BootstrapperException(e.getMessage());
+		}
 		log.info("bootstrap complete...");
 		return conveyorService;
 	}
