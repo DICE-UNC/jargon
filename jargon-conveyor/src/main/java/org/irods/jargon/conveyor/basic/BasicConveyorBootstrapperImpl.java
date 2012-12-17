@@ -5,8 +5,6 @@ package org.irods.jargon.conveyor.basic;
 
 import org.irods.jargon.conveyor.core.BootstrapperException;
 import org.irods.jargon.conveyor.core.ConveyorBootstrapper;
-import org.irods.jargon.conveyor.core.ConveyorExecutorService;
-import org.irods.jargon.conveyor.core.ConveyorExecutorServiceImpl;
 import org.irods.jargon.conveyor.core.ConveyorService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,7 +55,8 @@ public class BasicConveyorBootstrapperImpl implements ConveyorBootstrapper {
 			throw new BootstrapperException(e.getMessage());
 		}
 		log.info("bootstrap complete...");
-		return conveyorService;
+		 return (ConveyorService) beanFactory
+				.getBean("conveyorService");
 	}
 
 }

@@ -78,7 +78,7 @@
   
   
   <bean id="conveyorService" class="org.irods.jargon.conveyor.basic.BasicConveyorService">
-  	<property name=""
+  
   </bean>
 
 	<!--  

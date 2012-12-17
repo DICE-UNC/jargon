@@ -25,7 +25,6 @@ public class ConveyorExecutorServiceImplTest {
 	@Test(expected=IllegalArgumentException.class)
 	public void testExecWhenNull() throws Exception {
 		conveyorExecutorService.executeConveyorCallable(null);
-		
 	}
 	
 	@Test
@@ -42,9 +41,19 @@ public class ConveyorExecutorServiceImplTest {
 		AbstractConveyorCallable callable = Mockito.mock(AbstractConveyorCallable.class);
 		Mockito.when(callable.call()).thenThrow(new Exception("exception"));
 		conveyorExecutorService.executeConveyorCallable(callable);
-		
 	}
 	
-	
+	/**
+	 * Test a valid lock/unlock sequence
+	 * @throws Exception
+	 */
+	@Test
+	public void testLockQueue() throws Exception {
+		ConveyorExecutorService testService = new ConveyorExecutorServiceImpl();
+		testService.lockQueue();
+		testService.unlockQueue();
+		testService.lockQueue();
+		testService.unlockQueue();
+	}
 
 }

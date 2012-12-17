@@ -90,10 +90,9 @@ public class AbstractConveryorService implements ConveyorService {
 	 */
 	@Override
 	public void shutdown() {
-		if (conveyorExecutorService == null) {
-			throw new IllegalStateException("cannot shut down, no executorService set");
+		if (conveyorExecutorService != null) {
+			conveyorExecutorService.shutdown();
 		}
-		conveyorExecutorService.shutdown();
 	}
 	
 
