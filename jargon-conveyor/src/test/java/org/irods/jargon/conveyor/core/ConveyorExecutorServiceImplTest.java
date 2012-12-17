@@ -1,5 +1,7 @@
 package org.irods.jargon.conveyor.core;
 
+import java.util.Properties;
+
 import junit.framework.Assert;
 
 import org.junit.AfterClass;
@@ -24,15 +26,19 @@ public class ConveyorExecutorServiceImplTest {
 	
 	@Test(expected=IllegalArgumentException.class)
 	public void testExecWhenNull() throws Exception {
-		conveyorExecutorService.executeConveyorCallable(null);
+		conveyorExecutorService.executeConveyorCallable(null, false);
 	}
 	
 	@Test
 	public void testMockCallable() throws Exception {
+		Properties conveyorProperties = new Properties();
+		conveyorProperties.setProperty(ConveyorExecutorService.TRY_LOCK_TIMEOUT, "1");
+		ConveyorExecutorService testService = new ConveyorExecutorServiceImpl();
+		testService.setExecutorServiceProperties(conveyorProperties);
 		AbstractConveyorCallable callable = Mockito.mock(AbstractConveyorCallable.class);
 		ConveyorExecutionFuture future = new ConveyorExecutionFuture();
 		Mockito.when(callable.call()).thenReturn(future);
-		ConveyorExecutionFuture actual = conveyorExecutorService.executeConveyorCallable(callable);
+		ConveyorExecutionFuture actual = testService.executeConveyorCallable(callable, false);
 		Assert.assertNotNull("did not get future back", actual);
 	}
 	
@@ -40,7 +46,16 @@ public class ConveyorExecutorServiceImplTest {
 	public void testMockCallableThrowsException() throws Exception {
 		AbstractConveyorCallable callable = Mockito.mock(AbstractConveyorCallable.class);
 		Mockito.when(callable.call()).thenThrow(new Exception("exception"));
-		conveyorExecutorService.executeConveyorCallable(callable);
+		Properties conveyorProperties = new Properties();
+		conveyorProperties.setProperty(ConveyorExecutorService.TRY_LOCK_TIMEOUT, "1");
+		conveyorExecutorService.executeConveyorCallable(callable, true);
+	}
+	
+	@Test(expected=ConveyorExecutionException.class)
+	public void testMockCallableThrowsExceptionNullProperties() throws Exception {
+		AbstractConveyorCallable callable = Mockito.mock(AbstractConveyorCallable.class);
+		ConveyorExecutorService testService = new ConveyorExecutorServiceImpl();
+		testService.executeConveyorCallable(callable, true);
 	}
 	
 	/**
@@ -55,5 +70,33 @@ public class ConveyorExecutorServiceImplTest {
 		testService.lockQueue();
 		testService.unlockQueue();
 	}
+	
+	@Test(expected=ConveyorExecutionTimeoutException.class)
+	public void testExecuteConveyorCallableWhenTimeoutExpected() throws Exception {
+		Properties conveyorProperties = new Properties();
+		conveyorProperties.setProperty(ConveyorExecutorService.TRY_LOCK_TIMEOUT, "1");
+		ConveyorExecutorService testService = new ConveyorExecutorServiceImpl();
+		testService.setExecutorServiceProperties(conveyorProperties);
+		testService.lockQueue();
+
+		// queue locked, now try to run transfer, which should time out
+		AbstractConveyorCallable callable = Mockito.mock(AbstractConveyorCallable.class);
+		testService.executeConveyorCallable(callable, true);
+		
+	}
+	
+	@Test(expected=ConveyorExecutionException.class)
+	public void testExecuteConveyorCallableWhenPropsPresentButTimeoutMissing() throws Exception {
+		Properties conveyorProperties = new Properties();
+		ConveyorExecutorService testService = new ConveyorExecutorServiceImpl();
+		testService.setExecutorServiceProperties(conveyorProperties);
+		testService.lockQueue();
+
+		// queue locked, now try to run transfer, which should time out
+		AbstractConveyorCallable callable = Mockito.mock(AbstractConveyorCallable.class);
+		testService.executeConveyorCallable(callable, true);
+		
+	}
+
 
 }

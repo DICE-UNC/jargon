@@ -113,13 +113,10 @@ public class DefaultPropertiesJargonConfig implements JargonProperties {
 	}
 
 	private boolean verifyPropExistsAndGetAsBoolean(final String propKey) {
-
 		return PropertyUtils.verifyPropExistsAndGetAsBoolean(jargonProperties, propKey);
-
 	}
 
 	private long verifyPropExistsAndGetAsLong(final String propKey) {
-
 		return PropertyUtils.verifyPropExistsAndGetAsLong(jargonProperties, propKey);
 	}
 
