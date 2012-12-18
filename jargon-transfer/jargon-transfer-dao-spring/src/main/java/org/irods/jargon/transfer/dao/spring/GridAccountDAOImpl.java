@@ -69,7 +69,7 @@ public class GridAccountDAOImpl extends HibernateDaoSupport implements GridAccou
 		try {
 			Criteria criteria = session.createCriteria(GridAccount.class);
 			criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
-			ret = (List<GridAccount>) criteria.list();
+			ret = criteria.list();
 		} catch (Exception e) {
 			logger.error("error in findAll()", e);
 			throw new TransferDAOException("Failed findAll()", e);
@@ -147,6 +147,34 @@ public class GridAccountDAOImpl extends HibernateDaoSupport implements GridAccou
 		return ret;
 
 	}
+	
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.transfer.dao.GridAccountDAO#deleteGridAccount(org.irods.jargon.transfer.dao.domain.GridAccount)
+	 */
+	@Override
+	public void deleteGridAccount(final GridAccount gridAccount) throws TransferDAOException {
+		log.debug("entering deleteGridAccount()");
+
+		if (gridAccount == null) {
+			throw new IllegalArgumentException("null gridAccount");
+		}
+		
+		log.info("gridAccount:{}", gridAccount);
+		
+		try {
+			Session session = this.getSessionFactory().getCurrentSession();
+			GridAccount toDelete = (GridAccount) session.merge(gridAccount);
+			session.delete(toDelete);
+			log.info("deleted");
+		} catch (HibernateException e) {
+			log.error("HibernateException", e);
+			throw new TransferDAOException(e);
+		} catch (Exception e) {
+			log.error("error in purgeQueue()", e);
+			throw new TransferDAOException("Failed purgeQueue()", e);
+		}
+	}
+	
 
 	/*
 	 * (non-Javadoc)

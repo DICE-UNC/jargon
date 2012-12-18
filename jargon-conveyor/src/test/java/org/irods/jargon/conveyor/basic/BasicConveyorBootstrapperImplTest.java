@@ -40,6 +40,8 @@ public class BasicConveyorBootstrapperImplTest {
 		ConveyorService service = conveyorBootstrapper.bootstrap();
 		service.shutdown();
 		TestCase.assertNotNull("no executor in service after bootstrap", service.getConveyorExecutorService());
+		TestCase.assertNotNull("no gridAccountService after bootstrap", service.getGridAccountService());
+		TestCase.assertNotNull("gridAccountService does not have reference to executor after bootstrap", ((GridAccountServiceImpl) service.getGridAccountService()).getConveyorExecutorService());
 	}
 
 }

@@ -10,7 +10,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
-import org.irods.jargon.core.exception.JargonRuntimeException;
 import org.irods.jargon.core.utils.PropertyUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,7 +44,8 @@ public class ConveyorExecutorServiceImpl implements ConveyorExecutorService {
 	}
 
 	@Override
-	public void setExecutorServiceProperties(Properties executorServiceProperties) {
+	public void setExecutorServiceProperties(
+			final Properties executorServiceProperties) {
 		this.executorServiceProperties = executorServiceProperties;
 	}
 
@@ -53,15 +53,28 @@ public class ConveyorExecutorServiceImpl implements ConveyorExecutorService {
 			.getLogger(ConveyorExecutorServiceImpl.class);
 
 	@Override
-	public void lockQueue() throws InterruptedException {
-		executorLock.acquire();
+	public void lockQueue() throws ConveyorExecutionException {
+		try {
+			executorLock.acquire();
+		} catch (InterruptedException e) {
+			log.error("interruptedException", e);
+			throw new ConveyorExecutionException(e);
+		}
 	}
-	
+
 	@Override
-	public boolean lockQueueWithTimeout() throws InterruptedException, ConveyorExecutionException {
+	public void lockQueueWithTimeout() throws 
+			ConveyorExecutionTimeoutException , ConveyorExecutionException {
 		isHasProperties();
 		int timeout = getTimeoutFromProperties();
-		return executorLock.tryAcquire(timeout, TimeUnit.SECONDS);
+		try {
+			 boolean acquired = executorLock.tryAcquire(timeout, TimeUnit.SECONDS);
+			 if (!acquired) {
+				 throw new ConveyorExecutionTimeoutException("timed out getting lock");
+			 }
+		} catch (InterruptedException e) {
+			throw new ConveyorExecutionException("error in locking queue");
+		}
 	}
 
 	@Override
@@ -78,27 +91,24 @@ public class ConveyorExecutorServiceImpl implements ConveyorExecutorService {
 	 */
 	@Override
 	public ConveyorExecutionFuture executeConveyorCallable(
-			final AbstractConveyorCallable conveyorCallable, final boolean withTimeout)
-			throws ConveyorExecutionTimeoutException, ConveyorExecutionException, InterruptedException {
+			final AbstractConveyorCallable conveyorCallable,
+			final boolean withTimeout)
+			throws ConveyorExecutionTimeoutException,
+			ConveyorExecutionException {
 
 		log.info("executeConveyorCallable");
 
 		if (conveyorCallable == null) {
 			throw new IllegalArgumentException("null conveyorCallable");
 		}
-		
+
 		isHasProperties();
 
 		log.info("submitting callable:{}", conveyorCallable);
-		
+
 		if (withTimeout) {
 			log.info("obtain lock with a timeout");
-			boolean gotLock = lockQueueWithTimeout();
-			if (!gotLock) {
-				log.error("I did not acquire a lock, so throw an exception");
-				throw new ConveyorExecutionTimeoutException("operation timed out");
-			}
-			
+			 lockQueueWithTimeout();
 		} else {
 			log.info("obtain lock without a timeout");
 			lockQueue();
@@ -132,21 +142,23 @@ public class ConveyorExecutorServiceImpl implements ConveyorExecutorService {
 	public synchronized void shutdown() {
 		pool.shutdownNow();
 	}
-	
+
 	private void isHasProperties() throws ConveyorExecutionException {
 		if (this.executorServiceProperties == null) {
 			throw new ConveyorExecutionException("null executor properties");
 		}
 	}
-	
+
 	private int getTimeoutFromProperties() throws ConveyorExecutionException {
 		isHasProperties();
 		try {
-			return PropertyUtils.verifyPropExistsAndGetAsInt(executorServiceProperties, ConveyorExecutorService.TRY_LOCK_TIMEOUT);
+			return PropertyUtils.verifyPropExistsAndGetAsInt(
+					executorServiceProperties,
+					ConveyorExecutorService.TRY_LOCK_TIMEOUT);
 		} catch (NullPointerException npe) {
 			throw new ConveyorExecutionException("no timeout property set");
 		}
-		
+
 	}
 
 }

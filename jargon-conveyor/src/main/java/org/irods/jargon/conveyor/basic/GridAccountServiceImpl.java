@@ -1,0 +1,413 @@
+/**
+ * 
+ */
+package org.irods.jargon.conveyor.basic;
+
+import java.util.List;
+
+import org.irods.jargon.conveyor.core.ConveyorExecutionException;
+import org.irods.jargon.conveyor.core.ConveyorExecutorService;
+import org.irods.jargon.conveyor.core.GridAccountService;
+import org.irods.jargon.core.connection.IRODSAccount;
+import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.utils.MiscIRODSUtils;
+import org.irods.jargon.datautils.datacache.CacheEncryptor;
+import org.irods.jargon.transfer.dao.GridAccountDAO;
+import org.irods.jargon.transfer.dao.KeyStoreDAO;
+import org.irods.jargon.transfer.dao.TransferDAOException;
+import org.irods.jargon.transfer.dao.domain.GridAccount;
+import org.irods.jargon.transfer.dao.domain.KeyStore;
+import org.irods.jargon.transfer.exception.PassPhraseInvalidException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+/**
+ * Manages the underlying grid accounts (user identity) for the transfer manager
+ * <p/>
+ * Note that methods that rely on encryption of the password based on the cached pass phrase are synchronized.  In addition, any methods
+ * that could potentially impact a running transfer (e.g. changing the password on an account that may be referenced by a running transfer) 
+ * are guarded by a lock on the transfer execution queue.  This lock has a time-out value so that operations may fail, and notice may be given 
+ * to retry when transfers are not running.
+ * 
+ * @author Mike Conway - DICE (www.irods.org)
+ * 
+ */
+public class GridAccountServiceImpl implements GridAccountService {
+
+	/**
+	 * Injected dependency on {@link KeyStoreDAO}
+	 */
+	private KeyStoreDAO keyStoreDAO;
+
+	/**
+	 * Injected reference to the {@link ConveyorExecutorService} that serves to
+	 * lock the queue for operations that
+	 */
+	private ConveyorExecutorService conveyorExecutorService;
+
+	/**
+	 * Stored pass phrase, this is accessed in a thread-safe manner.
+	 */
+	private String cachedPassPhrase = "";
+
+	private CacheEncryptor cacheEncryptor = null;
+
+	private static final Logger log = LoggerFactory
+			.getLogger(GridAccountServiceImpl.class);
+
+	/**
+	 * Injected dependency on {@link GridAccountDAO}
+	 */
+	private GridAccountDAO gridAccountDAO;
+
+	public GridAccountDAO getGridAccountDAO() {
+		return gridAccountDAO;
+	}
+
+	public void setGridAccountDAO(final GridAccountDAO gridAccountDAO) {
+		this.gridAccountDAO = gridAccountDAO;
+	}
+
+	public KeyStoreDAO getKeyStoreDAO() {
+		return keyStoreDAO;
+	}
+
+	public void setKeyStoreDAO(final KeyStoreDAO keyStoreDAO) {
+		this.keyStoreDAO = keyStoreDAO;
+	}
+
+	public ConveyorExecutorService getConveyorExecutorService() {
+		return conveyorExecutorService;
+	}
+
+	public void setConveyorExecutorService(
+			final ConveyorExecutorService conveyorExecutorService) {
+		this.conveyorExecutorService = conveyorExecutorService;
+	}
+
+	/**
+	 * 
+	 */
+	public GridAccountServiceImpl() {
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.conveyor.core.GridAccountService#storePassPhrase(java
+	 * .lang.String)
+	 */
+	@Override
+	public synchronized KeyStore storePassPhrase(final String passPhrase)
+			throws PassPhraseInvalidException, ConveyorExecutionException {
+		// FIXME: add code to update stored grids
+
+		log.info("storePassPhrase()");
+		if (passPhrase == null || passPhrase.isEmpty()) {
+			throw new IllegalArgumentException("null passPhrase");
+		}
+
+		try {
+			this.conveyorExecutorService.lockQueueWithTimeout();
+			return doStorePassPhrase(passPhrase);
+		} finally {
+			this.conveyorExecutorService.unlockQueue();
+		}
+
+	}
+
+	/**
+	 * Do the actual storage of the pass phrase, which is wrapped in semantics
+	 * to lock and unlock the queue
+	 * 
+	 * @param passPhrase
+	 * @return
+	 * @throws ConveyorExecutionException
+	 * @throws PassPhraseInvalidException
+	 */
+	private KeyStore doStorePassPhrase(final String passPhrase)
+			throws ConveyorExecutionException, PassPhraseInvalidException {
+		log.info("looking up keyStore..");
+
+		KeyStore keyStore;
+		try {
+			keyStore = keyStoreDAO.findById(KeyStore.KEY_STORE_PASS_PHRASE);
+		} catch (TransferDAOException e) {
+			log.error("unable to look up prior key store", e);
+			throw new ConveyorExecutionException(
+					"error looking up prior key store", e);
+		}
+
+		String hashOfPassPhrase;
+		try {
+			hashOfPassPhrase = MiscIRODSUtils
+					.computeMD5HashOfAStringValue(passPhrase);
+		} catch (JargonException e) {
+			log.error("unable to create hash of pass phrase", e);
+			throw new ConveyorExecutionException(
+					"error creating hash of pass phrase to store", e);
+		}
+
+		log.info("update or add the KeyStore");
+		if (keyStore == null) {
+			log.debug("no keyStore found, create a new one");
+			keyStore = new KeyStore();
+			keyStore.setId(KeyStore.KEY_STORE_PASS_PHRASE);
+			keyStore.setValue(hashOfPassPhrase);
+		} else {
+			// keystore already present, see if I had validated first
+			if (!isValidated()) {
+				log.error("cannot store, the pass phrase was never validated");
+				throw new PassPhraseInvalidException(
+						"cannot store pass phrase, need to validate first");
+			}
+			log.info("updating key store with new pass phrase");
+			keyStore.setValue(hashOfPassPhrase);
+		}
+
+		try {
+			keyStoreDAO.save(keyStore);
+		} catch (TransferDAOException e) {
+			log.error("unable to look up prior key store", e);
+			throw new ConveyorExecutionException(
+					"error looking up prior key store", e);
+		}
+
+		log.info("key store saved");
+		log.info("new key store, consider it validated and cache it");
+		this.cachedPassPhrase = passPhrase;
+		return keyStore;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.conveyor.core.GridAccountService#
+	 * addOrUpdateGridAccountBasedOnIRODSAccount
+	 * (org.irods.jargon.core.connection.IRODSAccount)
+	 */
+	@Override
+	public synchronized GridAccount addOrUpdateGridAccountBasedOnIRODSAccount(
+			final IRODSAccount irodsAccount) throws PassPhraseInvalidException,
+			ConveyorExecutionException {
+
+		log.info("addOrUpdateGridAccountBasedOnIRODSAccount");
+
+		if (irodsAccount == null) {
+			throw new IllegalArgumentException("null irodsAccount");
+		}
+
+		log.info("irodsAccount:{}", irodsAccount);
+
+		if (this.cachedPassPhrase == null || this.cachedPassPhrase.isEmpty()) {
+			throw new PassPhraseInvalidException("invalid pass phrase");
+		}
+
+		log.info("checking if the grid account exists");
+		GridAccount gridAccount = null;
+		try {
+			gridAccount = gridAccountDAO.findByHostZoneAndUserName(
+					irodsAccount.getHost(), irodsAccount.getZone(),
+					irodsAccount.getUserName());
+		} catch (TransferDAOException e) {
+			log.error("exception accessing grid account data", e);
+			throw new ConveyorExecutionException("error getting grid account",
+					e);
+		}
+
+		if (cacheEncryptor == null) {
+			cacheEncryptor = new CacheEncryptor(this.getCachedPassPhrase());
+		}
+
+		if (gridAccount == null) {
+			log.info("no grid account, create a new one");
+			log.info("creating grid account and enrypting password");
+			gridAccount = new GridAccount(irodsAccount);
+		}
+
+		try {
+			gridAccount.setPassword(new String(cacheEncryptor
+					.encrypt(irodsAccount.getPassword())));
+			gridAccount.setDefaultResource(irodsAccount
+					.getDefaultStorageResource());
+			gridAccount.setDefaultPath(irodsAccount.getHomeDirectory());
+		} catch (JargonException e) {
+			log.error("error encrypting password with pass phrase", e);
+			throw new ConveyorExecutionException(e);
+		}
+
+		log.info("locking queue to update the gridAccount password");
+
+		try {
+			this.conveyorExecutorService.lockQueueWithTimeout();
+			gridAccountDAO.save(gridAccount);
+		} catch (TransferDAOException e) {
+			log.error("error saving grid account:{}", gridAccount, e);
+			throw new ConveyorExecutionException("error saving grid account", e);
+		} finally {
+			this.conveyorExecutorService.unlockQueue();
+		}
+		log.info("grid account saved:{}", gridAccount);
+		return gridAccount;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.conveyor.core.GridAccountService#validatePassPhrase(
+	 * java.lang.String)
+	 */
+	@Override
+	public synchronized void validatePassPhrase(final String passPhrase)
+			throws PassPhraseInvalidException, ConveyorExecutionException {
+
+		log.info("validatePassPhrase()");
+
+		if (passPhrase == null || passPhrase.isEmpty()) {
+			throw new IllegalArgumentException("null or empty passPhrase");
+		}
+
+		// look up the existing pass phrase, if no pass phrase is found, this is
+		// treated as an exception
+		log.info("looking up existing pass phrase");
+		KeyStore keyStore;
+		try {
+			keyStore = keyStoreDAO.findById(KeyStore.KEY_STORE_PASS_PHRASE);
+			log.info("keyStore found...");
+		} catch (TransferDAOException e) {
+			log.error("error finding pass phrase in key store", e);
+			throw new ConveyorExecutionException(
+					"unable to find pass phrase in key store");
+		}
+
+		/*
+		 * If there is no KeyStore value, just use the current pass phrase and
+		 * store it in the database
+		 */
+
+		if (keyStore == null) {
+			log.info("pass phrase is note stored, go ahead and just store it.  The called method will cache it");
+			this.storePassPhrase(passPhrase);
+			return;
+		}
+
+		// have the key store, verify the pass phrase by generating a hash and
+		// comparing to stored
+
+		String hashOfPassPhrase;
+		try {
+			hashOfPassPhrase = MiscIRODSUtils
+					.computeMD5HashOfAStringValue(passPhrase);
+		} catch (JargonException e) {
+			log.error("error computing hash of supplied passPhrase", e);
+			throw new ConveyorExecutionException("error computing pass phrase",
+					e);
+		}
+		log.info("hash of supplied pass phrase:{}", hashOfPassPhrase);
+
+		if (!hashOfPassPhrase.equals(keyStore.getValue())) {
+			log.error("invalid pass phrase supplied");
+			throw new PassPhraseInvalidException("invalid pass phrase supplied");
+		}
+
+		log.info("pass phrase valid, save it");
+		this.cachedPassPhrase = passPhrase;
+
+	}
+
+	/**
+	 * Basic check that determines if the pass phrase used to encrypt cached
+	 * passwords is saved
+	 * 
+	 * @return <code>boolean</code> that will be <code>true</code> if the pass
+	 *         phrase is validated
+	 */
+	private synchronized boolean isValidated() {
+		if (cachedPassPhrase == null || cachedPassPhrase.isEmpty()) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+
+	/**
+	 * @return the cachedPassPhrase which is a <code>String</code> that is used
+	 *         to encrypt the passwords stored in the transfer queue.
+	 */
+	@Override
+	public synchronized String getCachedPassPhrase() {
+		return cachedPassPhrase;
+	}
+
+	/**
+	 * @param cachedPassPhrase
+	 *            the cachedPassPhrase to set
+	 */
+	public synchronized void setCachedPassPhrase(final String cachedPassPhrase) {
+		this.cachedPassPhrase = cachedPassPhrase;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.conveyor.core.GridAccountService#findGridAccountByIRODSAccount(org.irods.jargon.core.connection.IRODSAccount)
+	 */
+	@Override
+	public GridAccount findGridAccountByIRODSAccount(
+			final IRODSAccount irodsAccount) throws ConveyorExecutionException {
+		log.info("findGridAccountByIRODSAccount()");
+		if (irodsAccount == null) {
+			throw new IllegalArgumentException("null irodsAccount");
+		}
+		log.info("irodsAccount:{}", irodsAccount);
+		try {
+			return gridAccountDAO.findByHostZoneAndUserName(
+					irodsAccount.getHost(), irodsAccount.getZone(),
+					irodsAccount.getUserName());
+		} catch (TransferDAOException e) {
+			log.error("exception finding", e);
+			throw new ConveyorExecutionException("error finding account", e);
+		}
+	}
+
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.conveyor.core.GridAccountService#deleteGridAccount(org.irods.jargon.transfer.dao.domain.GridAccount)
+	 */
+	@Override
+	public synchronized void deleteGridAccount(final GridAccount gridAccount)
+			throws ConveyorExecutionException {
+		log.info("deleteGridAccount()");
+
+		if (gridAccount == null) {
+			throw new IllegalArgumentException("null gridAccount");
+		}
+
+		log.info("gridAccount:{}", gridAccount);
+
+		// lock queue so as not to delete an account involved with a running transfer
+		try {
+			this.conveyorExecutorService.lockQueueWithTimeout();
+			gridAccountDAO.delete(gridAccount);
+		} catch (TransferDAOException e) {
+			log.error("exception deleting", e);
+			throw new ConveyorExecutionException("error deleting account", e);
+		} finally {
+			this.conveyorExecutorService.unlockQueue();
+		}
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.conveyor.core.GridAccountService#findAll()
+	 */
+	@Override
+	public List<GridAccount> findAll() throws ConveyorExecutionException {
+		log.info("findAll()");
+		try {
+			return gridAccountDAO.findAll();
+		} catch (TransferDAOException e) {
+			log.error("exception deleting", e);
+			throw new ConveyorExecutionException("error deleting account", e);
+		}
+	}
+
+}

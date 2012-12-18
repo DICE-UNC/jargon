@@ -74,13 +74,24 @@
   </bean>
   
   <bean id="conveyorExecutorService" class="org.irods.jargon.conveyor.core.ConveyorExecutorServiceImpl">
+  	<property name="executorServiceProperties">
+      <props>
+        <prop key="try.lock.timeout.seconds">1</prop>
+      </props>
+    </property>
   </bean>
   
+  <bean id="gridAccountService" class="org.irods.jargon.conveyor.basic.GridAccountServiceImpl">
+    <property name="gridAccountDAO" ref="gridAccountDAO" />
+    <property name="keyStoreDAO" ref="keyStoreDAO" />
+    <property name="conveyorExecutorService" ref="conveyorExecutorService"/>
+  </bean>
   
   <bean id="conveyorService" class="org.irods.jargon.conveyor.basic.BasicConveyorService">
-  
+  	<property name="conveyorExecutorService" ref="conveyorExecutorService"/>
+  	<property name="gridAccountService" ref="gridAccountService"/>
   </bean>
-
+  
 	<!--  
   <bean id="synchManagerService" class="org.irods.jargon.transfer.engine.synch.SynchManagerServiceImpl">
     <property name="synchronizationDAO" ref="synchronizationDAO" />
