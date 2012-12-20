@@ -47,3 +47,7 @@ Note that the following bug and feature requests are logged in GForge with relat
 **Added additional fields to the user profile, such as eduPerson attributes
 **Added 'starring' support to the jargon-user-tagging package, managing the starring of files and collections
 **Added UploadsService to jargon-data-utils to help manage an 'uploads' directory convention.  This provides a standard place to receive uploads from various clients.
+
+ [#1107] support for large collection paging
+ **Added totalRecords to IRODSDomainObject so that returned objects from queries can carry the total number of results
+ **CollectionAndDataObjectListAndSearchAO results now include total record counts when available

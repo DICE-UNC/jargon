@@ -46,7 +46,7 @@ import org.slf4j.LoggerFactory;
  * general development.
  * <p/>
  * Note the comments in individual methods for details on behavior of these
- * methods across federations, and with special collections (e.g. soft links,
+ * methods across s federation, and with special collections (e.g. soft links,
  * mounted collections) supported.
  * 
  * @author Mike Conway - DICE (www.irods.org)
@@ -392,7 +392,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		List<CollectionAndDataObjectListingEntry> entries = new ArrayList<CollectionAndDataObjectListingEntry>();
 		for (IRODSQueryResultRow row : resultSet.getResults()) {
 			entries.add(CollectionAOHelper
-					.buildCollectionListEntryFromResultSetRowForCollectionQuery(row));
+					.buildCollectionListEntryFromResultSetRowForCollectionQuery(row, resultSet.getTotalRecords()));
 		}
 
 		return entries;
@@ -697,7 +697,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 
 		for (IRODSQueryResultRow row : resultSet.getResults()) {
 			collectionAndDataObjectListingEntry = CollectionAOHelper
-					.buildCollectionListEntryFromResultSetRowForCollectionQuery(row);
+					.buildCollectionListEntryFromResultSetRowForCollectionQuery(row, resultSet.getTotalRecords());
 
 			adjustEntryFromRowInCaseOfSpecialCollection(objStat,
 					effectiveAbsolutePath, collectionAndDataObjectListingEntry);
@@ -869,7 +869,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 
 				// on break in path, initialize the data for a new entry
 				collectionAndDataObjectListingEntry = CollectionAOHelper
-						.buildCollectionListEntryFromResultSetRowForCollectionQuery(row);
+						.buildCollectionListEntryFromResultSetRowForCollectionQuery(row, resultSet.getTotalRecords());
 				lastPath = collectionAndDataObjectListingEntry.getPathOrName();
 				userFilePermissions = new ArrayList<UserFilePermission>();
 				CollectionAOHelper
@@ -980,7 +980,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		CollectionAndDataObjectListingEntry entry;
 		for (IRODSQueryResultRow row : resultSet.getResults()) {
 			entry = CollectionAOHelper
-					.buildCollectionListEntryFromResultSetRowForDataObjectQuery(row);
+					.buildCollectionListEntryFromResultSetRowForDataObjectQuery(row, resultSet.getTotalRecords());
 
 			/**
 			 * Use the data in the objStat, in the case of special collections,
@@ -1193,7 +1193,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 
 			// clear and reinitialize for new entry set
 			entry = CollectionAOHelper
-					.buildCollectionListEntryFromResultSetRowForDataObjectQuery(row);
+					.buildCollectionListEntryFromResultSetRowForDataObjectQuery(row, resultSet.getTotalRecords());
 			lastPath = currentPath;
 			lastReplNumber = currentReplNumber;
 			userFilePermissions = new ArrayList<UserFilePermission>();
