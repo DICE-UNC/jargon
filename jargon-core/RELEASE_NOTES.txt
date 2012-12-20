@@ -50,4 +50,4 @@ Note that the following bug and feature requests are logged in GForge with relat
 
  [#1107] support for large collection paging
  **Added totalRecords to IRODSDomainObject so that returned objects from queries can carry the total number of results
- **CollectionAndDataObjectListAndSearchAO results now include total record counts when available
+ **CollectionAndDataObjectListAndSearchAO results now include total record counts when available  
