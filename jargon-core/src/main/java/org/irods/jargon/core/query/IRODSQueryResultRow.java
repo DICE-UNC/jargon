@@ -11,14 +11,15 @@ import org.irods.jargon.core.exception.JargonException;
  * Represents a row in a query response, with convenience methods to access
  * attributes
  * 
- * FIXME: get of column name needs to be factored out
- * 
  * @author Mike Conway - DICE (www.irods.org)
  * 
  */
 public class IRODSQueryResultRow {
 
 	private final List<String> queryResultColumns;
+	/**
+	 * index of this record in the results
+	 */
 	private final int recordCount;
 	private final boolean lastResult;
 	private final List<String> columnNames;
@@ -46,9 +47,15 @@ public class IRODSQueryResultRow {
 	 * record to assist in re-query operations
 	 * 
 	 * @param queryResultColumns
+	 *            <code>List<String</code> with the values for each column of
+	 *            the query
 	 * @param translatedIRODSQuery
+	 *            {@link TranslatedIRODSQuery} that produced this result
 	 * @param recordCount
+	 *            <code>int</code> with the index of the current record
 	 * @param lastResult
+	 *            <code>boolean</code> of <code>true</code> if there are more
+	 *            records to page
 	 * @return
 	 * @throws JargonException
 	 */
@@ -60,9 +67,52 @@ public class IRODSQueryResultRow {
 				recordCount, lastResult);
 	}
 
+	/**
+	 * Build a result row from a column of results produced by an IRODS
+	 * GenQuery. This initializer will add information about the position of the
+	 * record to assist in re-query operations
+	 * 
+	 * @param queryResultColumns
+	 *            <code>List<String</code> with the values for each column of
+	 *            the query
+	 * @param translatedIRODSQuery
+	 *            {@link TranslatedIRODSQuery} that produced this result
+	 * @param recordCount
+	 *            <code>int</code> with the index of the current record
+	 * @param lastResult
+	 *            <code>boolean</code> of <code>true</code> if there are more
+	 *            records to page
+	 * @return
+	 * @throws JargonException
+	 */
+	public static IRODSQueryResultRow instance(
+			final List<String> queryResultColumns,
+			final List<String> columnNames, final int recordCount,
+			final boolean lastResult, final int totalRecords)
+			throws JargonException {
+		return new IRODSQueryResultRow(queryResultColumns, columnNames,
+				recordCount, lastResult);
+	}
+
+	/**
+	 * Private constructor
+	 * 
+	 * @param queryResultColumns
+	 *            <code>List<String</code> with the values for each column of
+	 *            the query
+	 * @param translatedIRODSQuery
+	 *            {@link TranslatedIRODSQuery} that produced this result
+	 * @param recordCount
+	 *            <code>int</code> with the index of the current record
+	 * @param lastResult
+	 *            <code>boolean</code> of <code>true</code> if there are more
+	 *            records to page
+	 * @throws JargonException
+	 */
 	private IRODSQueryResultRow(final List<String> queryResultColumns,
 			final List<String> columnNames, final int recordCount,
-			final boolean lastResult) throws JargonException {
+			final boolean lastResult)
+			throws JargonException {
 
 		if (queryResultColumns == null) {
 			throw new JargonException("queryResultColumns is null");

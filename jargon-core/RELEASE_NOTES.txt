@@ -39,6 +39,17 @@ Note that the following bug and feature requests are logged in GForge with relat
 
 ==Bug Fixes==
 
+* [#1092] add reconnect option to iDrop
+**Add irodsAccount info to IRODSCommands during reconnect
+**Add new constructor and initializer for IRODSCommands that avoids calling the finalizer on a connection when the IRODSCommands was created in 'stand-alone' mode.  This fixes a bug where
+the conection finalizer could be called and the connection closed at an inappropriate time when in connection restart mode
+ 
+ *[#1093] Broken pipe error did not propogate in parallel transfer
+ **Small clean-ups in transfer processing and error callbacks
+ 
+ *[#1109] specific query no data found results in exception
+ **Specific query was returning a DataNotFoundException when no results returned, fixed to return an empty result set
+ 
 ==Features==
 
 *[#964] grid memory and presets
@@ -49,3 +60,8 @@ Note that the following bug and feature requests are logged in GForge with relat
 **Added additional fields to the user profile, such as eduPerson attributes
 **Added 'starring' support to the jargon-user-tagging package, managing the starring of files and collections
 **Added UploadsService to jargon-data-utils to help manage an 'uploads' directory convention.  This provides a standard place to receive uploads from various clients.
+
+ [#1107] support for large collection paging
+ **Added totalRecords to IRODSDomainObject so that returned objects from queries can carry the total number of results
+ **CollectionAndDataObjectListAndSearchAO results now include total record counts when available  
+

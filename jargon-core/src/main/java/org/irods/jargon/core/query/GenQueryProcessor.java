@@ -95,12 +95,13 @@ public class GenQueryProcessor {
 					.getSelectFields()) {
 				columnNames.add(selectField.getSelectFieldColumnName());
 			}
-
-			result = QueryResultProcessingUtils.translateResponseIntoResultSet(
-					response, columnNames, continuation, partialStartIndex);
+			
 
 			int totalRecords = response.getTag("totalRowCount").getIntValue();
 			log.info("total records:{}", totalRecords);
+
+			result = QueryResultProcessingUtils.translateResponseIntoResultSet(
+					response, columnNames, continuation, partialStartIndex);
 
 			resultSet = IRODSQueryResultSet.instance(translatedIRODSQuery,
 					result, continuation, totalRecords);

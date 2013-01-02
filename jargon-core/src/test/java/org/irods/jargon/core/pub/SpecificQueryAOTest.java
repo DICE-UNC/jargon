@@ -261,6 +261,44 @@ public class SpecificQueryAOTest {
 				specificQueryResultSet.getResults().isEmpty());
 
 	}
+	
+	/**
+	 * Bug [#1109] specific query no data found results in exception
+	 * @throws Exception
+	 */
+	@Test
+	public void lookUpShowCollAclsNoResultsExpected() throws Exception {
+		String collAclQueryAlias = "ShowCollAcls";
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
+						irodsAccount);
+		if (!environmentalInfoAO.isAbleToRunSpecificQuery()) {
+			return;
+		}
+
+		SpecificQueryAO queryAO = accessObjectFactory
+				.getSpecificQueryAO(irodsAccount);
+
+		String userHome = "/a/non/existent/collection";
+		List<String> arguments = new ArrayList<String>();
+		arguments.add(userHome);
+		SpecificQuery specificQuery = SpecificQuery.instanceArguments(
+				collAclQueryAlias, arguments, 0);
+		SpecificQueryResultSet specificQueryResultSet = queryAO
+				.executeSpecificQueryUsingAlias(specificQuery, accessObjectFactory
+						.getJargonProperties().getMaxFilesAndDirsQueryMax());
+		TestCase.assertNotNull("null result set", specificQueryResultSet);
+		TestCase.assertTrue(
+				"expected no results",
+				specificQueryResultSet.getResults().isEmpty());
+
+	}
 
 	@Test
 	public void testFindSpecificQueryByAliasLike() throws Exception {
@@ -289,7 +327,7 @@ public class SpecificQueryAOTest {
 		}
 	}
 
-	@Test(expected = DataNotFoundException.class)
+	@Test
 	public void testFindSpecificQueryByAliasLikeWhenNoResults()
 			throws Exception {
 
