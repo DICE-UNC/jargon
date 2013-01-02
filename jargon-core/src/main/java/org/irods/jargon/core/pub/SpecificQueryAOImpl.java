@@ -411,7 +411,19 @@ public class SpecificQueryAOImpl extends IRODSGenericAO implements
 
 		Tag response = null;
 
-		response = this.getIRODSProtocol().irodsFunction(specificQueryInp);
+		/*
+		 * iRODS will throw an -808000 exception if no results (note the alias has already been looked up in iRODS, so
+		 * I won't co-mingle this with an actual query missing error).  Treat this as an empty result set
+		 */
+		try {
+			response = this.getIRODSProtocol().irodsFunction(specificQueryInp);
+		} catch (DataNotFoundException e) {
+			log.info("no reults from iRODS, return as an empty result set");
+			return new SpecificQueryResultSet(specificQuery, 
+					specificQueryDefinition.getColumnNames());
+		}
+		
+		// result set is not empty
 
 		int continuation = QueryResultProcessingUtils
 				.getContinuationValue(response);
