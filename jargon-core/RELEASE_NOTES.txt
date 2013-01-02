@@ -51,4 +51,7 @@ the conection finalizer could be called and the connection closed at an inapprop
  *[#1093] Broken pipe error did not propogate in parallel transfer
  **Small clean-ups in transfer processing and error callbacks
  
+ *[#1109] specific query no data found results in exception
+ **Specific query was returning a DataNotFoundException when no results returned, fixed to return an empty result set
+ 
 ==Features==
