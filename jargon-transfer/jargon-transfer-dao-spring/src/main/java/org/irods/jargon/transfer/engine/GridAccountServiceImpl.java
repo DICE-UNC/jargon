@@ -3,6 +3,8 @@
  */
 package org.irods.jargon.transfer.engine;
 
+import java.util.List;
+
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.utils.MiscIRODSUtils;
@@ -106,6 +108,8 @@ public class GridAccountServiceImpl implements GridAccountService {
 		if (passPhrase == null || passPhrase.isEmpty()) {
 			throw new IllegalArgumentException("null passPhrase");
 		}
+		
+		String oldPassPhrase = this.getCachedPassPhrase();
 
 		log.info("looking up keyStore..");
 
@@ -156,8 +160,63 @@ public class GridAccountServiceImpl implements GridAccountService {
 		log.info("key store saved");
 		log.info("new key store, consider it validated and cache it");
 		this.cachedPassPhrase = passPhrase;
+		
+		log.info("refreshing cacheEncryptor with the new pass phrase...");
+		cacheEncryptor = new CacheEncryptor(this.getCachedPassPhrase());
+		
+		log.info("updating stored grid accounts with new pass phrase...");
+		updateStoredGridAccountsForNewPassPhrase(oldPassPhrase, passPhrase);
+		log.info("stored grid accounts updated");
+		
 		return keyStore;
 
+	}
+
+	/**
+	 * This method will take a changed pass phrase and re-encrypt the stored password information 
+	 * @param previousPassPhrase
+	 * @param passPhrase
+	 * @throws TransferEngineException
+	 */
+	private void updateStoredGridAccountsForNewPassPhrase(String previousPassPhrase, String passPhrase) throws TransferEngineException {
+		log.info("updateStoredGridAccountsForNewPassPhrase");
+		try {
+			List<GridAccount> gridAccounts = gridAccountDAO.findAll();
+			
+			if (!gridAccounts.isEmpty()) {
+				if (previousPassPhrase == null || previousPassPhrase.isEmpty()) {
+					throw new TransferEngineException("no cached pass phrase, and accounts already exist");
+				}
+			}
+			
+			/*
+			 * Create an deryptor using the 'old' cached pass phrase, the stored passwords are decrypted and then
+			 * re-enrypted using the new pass phrase.
+			 * 
+			 * Note that the instance level cacheEncryptor should be set to the new pass phrase before this method is 
+			 * called.
+			 * 
+			 * The methods in this class are syncronized, so we shouldn't have issues with multiple simultaneous operations.
+			 */
+			CacheEncryptor decryptingCacheEncryptor = new CacheEncryptor(previousPassPhrase);
+		
+			for (GridAccount gridAccount : gridAccounts) {
+				log.info("updating:{}", gridAccount);
+				String unencryptedPassword = decryptingCacheEncryptor.decrypt(gridAccount.getPassword());
+				gridAccount.setPassword(cacheEncryptor.encrypt(unencryptedPassword));
+				gridAccountDAO.save(gridAccount);
+				log.info("password re-encrypted and saved");
+			}
+			
+		} catch (TransferDAOException e) {
+			log.error("error updating stored grid accounts with pass phrase", e);
+			throw new TransferEngineException("error updated stored accounts", e);
+		} catch (JargonException e) {
+			log.error("error updating stored grid accounts with pass phrase", e);
+			throw new TransferEngineException("error updated stored accounts", e);
+		}
+		
+		
 	}
 
 	/*

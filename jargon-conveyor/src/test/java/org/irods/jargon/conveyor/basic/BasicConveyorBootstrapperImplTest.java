@@ -5,6 +5,7 @@ import junit.framework.TestCase;
 
 import org.irods.jargon.conveyor.core.ConveyorBootstrapper;
 import org.irods.jargon.conveyor.core.ConveyorService;
+import org.irods.jargon.conveyor.core.GridAccountService;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -41,7 +42,7 @@ public class BasicConveyorBootstrapperImplTest {
 		service.shutdown();
 		TestCase.assertNotNull("no executor in service after bootstrap", service.getConveyorExecutorService());
 		TestCase.assertNotNull("no gridAccountService after bootstrap", service.getGridAccountService());
-		TestCase.assertNotNull("gridAccountService does not have reference to executor after bootstrap", ((GridAccountServiceImpl) service.getGridAccountService()).getConveyorExecutorService());
+		TestCase.assertNotNull("gridAccountService does not have reference to executor after bootstrap", ((GridAccountService) service.getGridAccountService()).getConveyorExecutorService());
 	}
 
 }

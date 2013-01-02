@@ -87,6 +87,67 @@ public class IRODSAccount implements Serializable {
 		return new IRODSAccount(host, port, userName, password, homeDirectory,
 				zone, defaultStorageResource);
 	}
+	
+	/**
+	 * Creates an object to hold iRODS account information. All parameters need
+	 * to be initialized to use this initializer.  Note that this instance method will set the auth scheme
+	 * 
+	 * @param host
+	 *            the iRODS server domain name
+	 * @param port
+	 *            the port on the iRODS server
+	 * @param userName
+	 *            the user name
+	 * @param password
+	 *            the password
+	 * @param homeDirectory
+	 *            home directory on the iRODS
+	 * @param zone
+	 *            the IRODS zone
+	 * @param defaultStorageResource
+	 *            default storage resource
+	 * @param authenticationScheme
+	 * 				authenticationScheme to use
+	 */
+	public static IRODSAccount instance(final String host, final int port,
+			final String userName, final String password,
+			final String homeDirectory, final String zone,
+			final String defaultStorageResource, final AuthScheme authenticationScheme) throws JargonException {
+
+		if (host == null || host.isEmpty()) {
+			throw new IllegalArgumentException("host is null or empty");
+		}
+
+		if (userName == null || userName.isEmpty()) {
+			throw new IllegalArgumentException("null or empty userName");
+		}
+
+		if (password == null) {
+			throw new IllegalArgumentException("password is null");
+		}
+
+		if (homeDirectory == null) {
+			throw new IllegalArgumentException("homeDirectory is null");
+		}
+
+		if (zone == null || zone.isEmpty()) {
+			throw new IllegalArgumentException("zone is null or empty");
+		}
+
+		if (defaultStorageResource == null) {
+			throw new IllegalArgumentException("defaultStorageResource is null");
+		}
+
+		IRODSAccount irodsAccount =  new IRODSAccount(host, port, userName, password, homeDirectory,
+				zone, defaultStorageResource);
+		
+		if (authenticationScheme == null) {
+			throw new IllegalArgumentException("null authenticationScheme");
+		}
+		
+		irodsAccount.setAuthenticationScheme(authenticationScheme);
+		return irodsAccount;
+	}
 
 	/**
 	 * Create an <code>IRODSAccount</code> suitable for anonymous access.

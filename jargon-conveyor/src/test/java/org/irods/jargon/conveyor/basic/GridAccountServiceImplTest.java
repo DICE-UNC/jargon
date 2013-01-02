@@ -200,5 +200,33 @@ public class GridAccountServiceImplTest {
 		Assert.assertEquals("did not get two accounts", 2, actual.size());
 		
 	}
+	
+	@Test
+	public final void testStorePassPhraseWithAlreadyCachedGridAccounts()
+			throws Exception {
+		String testUserName = "user1";
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountForIRODSUserFromTestPropertiesForGivenUser(
+						testingProperties, testUserName, testUserName);
+		String passPhrase = "ooogabooga";
+		gridAccountService.validatePassPhrase(passPhrase);
+		gridAccountService.deleteAllGridAccounts();
+		
+		gridAccountService
+				.addOrUpdateGridAccountBasedOnIRODSAccount(irodsAccount);
+
+		/* account added and encrypted, now store a new pass phrase and make sure I still can 
+		 * properly decrypt it
+		 */
+		passPhrase = "boogaoooga";
+		gridAccountService.storePassPhrase(passPhrase);
+		
+		List<GridAccount> gridAccounts = gridAccountService.findAll();
+		Assert.assertEquals("should be one account", 1, gridAccounts.size());
+		IRODSAccount actual = gridAccountService.irodsAccountForGridAccount(gridAccounts.get(0));
+		Assert.assertEquals("did not properly decrypt password using new pass phrase", actual.getPassword(), irodsAccount.getPassword());
+		
+	}
+
 
 }

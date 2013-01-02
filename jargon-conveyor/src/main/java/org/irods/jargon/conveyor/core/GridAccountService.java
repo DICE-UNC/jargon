@@ -109,5 +109,25 @@ public interface GridAccountService {
 	 * @throws ConveyorExecutionException
 	 */
 	List<GridAccount> findAll() throws ConveyorExecutionException;
+	
+	/**
+	 * Given a <code>GridAccount</code> return the corresponding iRODS account with the password decrypted
+	 * @param gridAccount {@link GridAccount} containing cached account info
+	 * @return {@link IRODSAccount} based on the <code>GridAccount</code>
+	 * @throws ConveyorExecutionException
+	 */
+	IRODSAccount irodsAccountForGridAccount(final GridAccount gridAccount) throws ConveyorExecutionException;
 
+	/**
+	 * Purge all grid accounts and related information from the store
+	 * @throws ConveyorExecutionException
+	 */
+	void deleteAllGridAccounts() throws ConveyorExecutionException;
+
+	/**
+	 * Get a reference to the conveyor executor service that actually runs the underlying transfer operations
+	 * @return
+	 */
+	ConveyorExecutorService getConveyorExecutorService();
+		
 }

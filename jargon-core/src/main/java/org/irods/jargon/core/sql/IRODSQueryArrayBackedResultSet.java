@@ -72,7 +72,6 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 	 */
 	@Override
 	public int findColumn(final String arg0) throws SQLException {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 
@@ -83,7 +82,6 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 	 */
 	@Override
 	public boolean first() throws SQLException {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
@@ -94,7 +92,6 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 	 */
 	@Override
 	public Array getArray(final int arg0) throws SQLException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -107,7 +104,6 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 	 */
 	@Override
 	public Array getArray(final String arg0) throws SQLException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -119,7 +115,6 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 	 */
 	@Override
 	public InputStream getAsciiStream(final int arg0) throws SQLException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -132,7 +127,6 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 	 */
 	@Override
 	public InputStream getAsciiStream(final String arg0) throws SQLException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -144,7 +138,6 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 	 */
 	@Override
 	public BigDecimal getBigDecimal(final int arg0) throws SQLException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -157,7 +150,6 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 	 */
 	@Override
 	public BigDecimal getBigDecimal(final String arg0) throws SQLException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -171,7 +163,6 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 	@Override
 	public BigDecimal getBigDecimal(final int arg0, final int arg1)
 			throws SQLException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -185,7 +176,6 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 	@Override
 	public BigDecimal getBigDecimal(final String arg0, final int arg1)
 			throws SQLException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -198,7 +188,6 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 	 */
 	@Override
 	public InputStream getBinaryStream(final int arg0) throws SQLException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -211,7 +200,6 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 	 */
 	@Override
 	public InputStream getBinaryStream(final String arg0) throws SQLException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -222,7 +210,6 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 	 */
 	@Override
 	public Blob getBlob(final int arg0) throws SQLException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -235,7 +222,6 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 	 */
 	@Override
 	public Blob getBlob(final String arg0) throws SQLException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -247,7 +233,6 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 	 */
 	@Override
 	public boolean getBoolean(final int arg0) throws SQLException {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
@@ -260,7 +245,6 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 	 */
 	@Override
 	public boolean getBoolean(final String arg0) throws SQLException {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
@@ -271,7 +255,6 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 	 */
 	@Override
 	public byte getByte(final int arg0) throws SQLException {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 
@@ -284,7 +267,6 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 	 */
 	@Override
 	public byte getByte(final String arg0) throws SQLException {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 
@@ -295,7 +277,6 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 	 */
 	@Override
 	public byte[] getBytes(final int arg0) throws SQLException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -308,7 +289,6 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 	 */
 	@Override
 	public byte[] getBytes(final String arg0) throws SQLException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -321,7 +301,6 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 	 */
 	@Override
 	public Reader getCharacterStream(final int arg0) throws SQLException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -334,7 +313,6 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 	 */
 	@Override
 	public Reader getCharacterStream(final String arg0) throws SQLException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -345,7 +323,6 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 	 */
 	@Override
 	public Clob getClob(final int arg0) throws SQLException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -358,7 +335,6 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 	 */
 	@Override
 	public Clob getClob(final String arg0) throws SQLException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -369,7 +345,6 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 	 */
 	@Override
 	public Date getDate(final int arg0) throws SQLException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -382,7 +357,6 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 	 */
 	@Override
 	public Date getDate(final String arg0) throws SQLException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -395,7 +369,6 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 	@Override
 	public Date getDate(final int arg0, final Calendar arg1)
 			throws SQLException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -409,7 +382,6 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 	@Override
 	public Date getDate(final String arg0, final Calendar arg1)
 			throws SQLException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -420,7 +392,6 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 	 */
 	@Override
 	public double getDouble(final int arg0) throws SQLException {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 
@@ -433,7 +404,6 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 	 */
 	@Override
 	public double getDouble(final String arg0) throws SQLException {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 
@@ -444,7 +414,6 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 	 */
 	@Override
 	public float getFloat(final int arg0) throws SQLException {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 
@@ -457,7 +426,6 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 	 */
 	@Override
 	public float getFloat(final String arg0) throws SQLException {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 
@@ -468,7 +436,6 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 	 */
 	@Override
 	public int getInt(final int arg0) throws SQLException {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 
@@ -481,7 +448,6 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 	 */
 	@Override
 	public int getInt(final String arg0) throws SQLException {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 
@@ -492,7 +458,6 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 	 */
 	@Override
 	public long getLong(final int arg0) throws SQLException {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 
@@ -505,7 +470,6 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 	 */
 	@Override
 	public long getLong(final String arg0) throws SQLException {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 
@@ -518,7 +482,6 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 	 */
 	@Override
 	public Reader getNCharacterStream(final int arg0) throws SQLException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -531,7 +494,6 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 	 */
 	@Override
 	public Reader getNCharacterStream(final String arg0) throws SQLException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -542,7 +504,6 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 	 */
 	@Override
 	public NClob getNClob(final int arg0) throws SQLException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -555,7 +516,6 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 	 */
 	@Override
 	public NClob getNClob(final String arg0) throws SQLException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -567,7 +527,6 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 	 */
 	@Override
 	public String getNString(final int arg0) throws SQLException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -580,7 +539,6 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 	 */
 	@Override
 	public String getNString(final String arg0) throws SQLException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -591,7 +549,6 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 	 */
 	@Override
 	public Object getObject(final int arg0) throws SQLException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -604,7 +561,6 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 	 */
 	@Override
 	public Object getObject(final String arg0) throws SQLException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -617,7 +573,6 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 	@Override
 	public Object getObject(final int arg0, final Map<String, Class<?>> arg1)
 			throws SQLException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -631,7 +586,6 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 	@Override
 	public Object getObject(final String arg0, final Map<String, Class<?>> arg1)
 			throws SQLException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -642,7 +596,6 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 	 */
 	@Override
 	public int getRow() throws SQLException {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 
@@ -653,7 +606,6 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 	 */
 	@Override
 	public SQLXML getSQLXML(final int arg0) throws SQLException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -666,7 +618,6 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 	 */
 	@Override
 	public SQLXML getSQLXML(final String arg0) throws SQLException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -677,7 +628,6 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 	 */
 	@Override
 	public short getShort(final int arg0) throws SQLException {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 
@@ -690,7 +640,6 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 	 */
 	@Override
 	public short getShort(final String arg0) throws SQLException {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 
@@ -701,7 +650,6 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 	 */
 	@Override
 	public Statement getStatement() throws SQLException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -712,7 +660,6 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 	 */
 	@Override
 	public String getString(final int arg0) throws SQLException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -725,7 +672,6 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 	 */
 	@Override
 	public String getString(final String arg0) throws SQLException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -736,7 +682,6 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 	 */
 	@Override
 	public Time getTime(final int arg0) throws SQLException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -749,7 +694,6 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 	 */
 	@Override
 	public Time getTime(final String arg0) throws SQLException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -762,7 +706,6 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 	@Override
 	public Time getTime(final int arg0, final Calendar arg1)
 			throws SQLException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -776,7 +719,6 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 	@Override
 	public Time getTime(final String arg0, final Calendar arg1)
 			throws SQLException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -788,7 +730,6 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 	 */
 	@Override
 	public Timestamp getTimestamp(final int arg0) throws SQLException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -801,7 +742,6 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 	 */
 	@Override
 	public Timestamp getTimestamp(final String arg0) throws SQLException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -815,7 +755,6 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 	@Override
 	public Timestamp getTimestamp(final int arg0, final Calendar arg1)
 			throws SQLException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -829,7 +768,6 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 	@Override
 	public Timestamp getTimestamp(final String arg0, final Calendar arg1)
 			throws SQLException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -840,7 +778,6 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 	 */
 	@Override
 	public URL getURL(final int arg0) throws SQLException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -853,7 +790,6 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 	 */
 	@Override
 	public URL getURL(final String arg0) throws SQLException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -866,7 +802,6 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 	 */
 	@Override
 	public InputStream getUnicodeStream(final int arg0) throws SQLException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -879,7 +814,6 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 	 */
 	@Override
 	public InputStream getUnicodeStream(final String arg0) throws SQLException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -890,7 +824,6 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 	 */
 	@Override
 	public boolean isAfterLast() throws SQLException {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
@@ -902,7 +835,6 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 	 */
 	@Override
 	public boolean isBeforeFirst() throws SQLException {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
@@ -913,7 +845,6 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 	 */
 	@Override
 	public boolean isClosed() throws SQLException {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
@@ -924,7 +855,6 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 	 */
 	@Override
 	public boolean isFirst() throws SQLException {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
@@ -935,7 +865,6 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 	 */
 	@Override
 	public boolean isLast() throws SQLException {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
@@ -946,7 +875,6 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 	 */
 	@Override
 	public boolean last() throws SQLException {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
@@ -957,7 +885,6 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 	 */
 	@Override
 	public boolean next() throws SQLException {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
@@ -968,7 +895,6 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 	 */
 	@Override
 	public boolean previous() throws SQLException {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
@@ -979,7 +905,6 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 	 */
 	@Override
 	public boolean relative(final int arg0) throws SQLException {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
@@ -990,7 +915,6 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 	 */
 	@Override
 	public boolean wasNull() throws SQLException {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
