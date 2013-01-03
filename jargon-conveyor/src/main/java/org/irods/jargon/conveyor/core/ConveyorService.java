@@ -1,5 +1,7 @@
 package org.irods.jargon.conveyor.core;
 
+import org.irods.jargon.transfer.exception.PassPhraseInvalidException;
+
 /**
  * Core of conveyor framework, manages client interactions and access to conveyor services.
  * 
@@ -7,30 +9,63 @@ package org.irods.jargon.conveyor.core;
  *
  */
 public interface ConveyorService {
+	
+	/**
+	 * Required initialization method that must be called before the <code>ConveyorService</code> can be used.
+	 * This method validates (or initially sets) a pass phrase that unlocks the underlying cache of accounts.
+	 * 
+	 * @param passPhrase <code>String</code> with the pass phrase used to initialize the underlying data store
+	 * @throws PassPhraseInvalidException thrown if the pass phrase is not valid
+	 * @throws ConveyorExecutionException
+	 */
+	void validatePassPhrase(String passPhrase) throws PassPhraseInvalidException, ConveyorExecutionException;
 
-	public abstract void setConveyorExecutorService(ConveyorExecutorService conveyorExecutorService);
+	/**
+	 * Method to blow away the conveyor store, can be used if the pass phrase is forgotten.  This clears all information
+	 * from the memory, equivalent to clearing all underlying data tables.
+	 * 
+	 * @throws ConveyorExecutionException
+	 */
+	void resetConveyorService() throws ConveyorExecutionException;
+	
+	void setConveyorExecutorService(ConveyorExecutorService conveyorExecutorService);
 
-	public abstract ConveyorExecutorService getConveyorExecutorService();
+	ConveyorExecutorService getConveyorExecutorService();
 
-	public abstract void setGridAccountService(GridAccountService gridAccountService);
+	void setGridAccountService(GridAccountService gridAccountService);
 
-	public abstract GridAccountService getGridAccountService();
+	GridAccountService getGridAccountService();
 
-	public abstract void setSynchronizationManagerService(SynchronizationManagerService synchronizationManagerService);
+	void setSynchronizationManagerService(SynchronizationManagerService synchronizationManagerService);
 
-	public abstract SynchronizationManagerService getSynchronizationManagerService();
+	SynchronizationManagerService getSynchronizationManagerService();
 
-	public abstract void setFlowManagerService(FlowManagerService flowManagerService);
+	void setFlowManagerService(FlowManagerService flowManagerService);
 
-	public abstract FlowManagerService getFlowManagerService();
+	FlowManagerService getFlowManagerService();
 
-	public abstract void setQueueMangerService(QueueManagerService queueMangerService);
+	void setQueueMangerService(QueueManagerService queueMangerService);
 
-	public abstract QueueManagerService getQueueMangerService();
+	QueueManagerService getQueueMangerService();
 
 	/**
 	 * Clean up and shut down the service
 	 */
 	void shutdown();
+
+	/**
+	 * Get the {@link ConfigurationService} that is a required dependency, and manages the storage of
+	 * arbitrary properties for configuration.
+	 * 
+	 * @return {@link ConfigurationService}
+	 */
+	ConfigurationService getConfigurationService();
+
+	/**
+	 * Setter for required dependency to manage configuration properties
+	 * 
+	 * @param configurationService
+	 */
+	void setConfigurationService(ConfigurationService configurationService);
 	
 }

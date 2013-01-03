@@ -1,12 +1,15 @@
 package org.irods.jargon.conveyor.core;
 
+import org.irods.jargon.transfer.exception.PassPhraseInvalidException;
+
 /**
  * Abstract implementation of the <code>ConveyorService</code> interface.
  * 
  * @author Mike Conway - DICE (www.irods.org)
  *
  */
-public class AbstractConveryorService implements ConveyorService {
+
+public class AbstractConveyorService implements ConveyorService {
 	
 	/**
 	 * required dependency 
@@ -33,6 +36,22 @@ public class AbstractConveryorService implements ConveyorService {
 	 */
 	private ConveyorExecutorService conveyorExecutorService;
 	
+	/**
+	 * required dependency on the {@link ConfigurationService} that manages name/value pairs that
+	 * reflect service configuration
+	 */
+	private ConfigurationService configurationService;
+	
+	@Override
+	public ConfigurationService getConfigurationService() {
+		return configurationService;
+	}
+
+	@Override
+	public void setConfigurationService(ConfigurationService configurationService) {
+		this.configurationService = configurationService;
+	}
+
 	@Override
 	public QueueManagerService getQueueMangerService() {
 		return queueMangerService;
@@ -94,6 +113,27 @@ public class AbstractConveryorService implements ConveyorService {
 			conveyorExecutorService.shutdown();
 		}
 	}
+
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.conveyor.core.ConveyorService#validatePassPhrase(java.lang.String)
+	 */
+	@Override
+	public void validatePassPhrase(String passPhrase)
+			throws PassPhraseInvalidException, ConveyorExecutionException {
+		gridAccountService.validatePassPhrase(passPhrase);
+		
+	}
+
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.conveyor.core.ConveyorService#resetConveyorService()
+	 */
+	@Override
+	public void resetConveyorService() throws ConveyorExecutionException {
+		gridAccountService.resetPassPhraseAndAccounts();
+		
+	}
+	
+	
 	
 
 }

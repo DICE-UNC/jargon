@@ -98,6 +98,9 @@ public class GridAccount implements Serializable {
 	@Enumerated(EnumType.STRING)
 	@Column(name = "auth_scheme", nullable = false)
 	private AuthScheme authScheme;
+	
+	@Column(name = "preset")
+	private boolean preset;
 
 	/**
 	 * Optional default path on the iRODS grid to use for things like setting
@@ -141,6 +144,8 @@ public class GridAccount implements Serializable {
 		sb.append(port);
 		sb.append("\n\tauthScheme:");
 		sb.append(authScheme);
+		sb.append("\n\tpreset:");
+		sb.append(preset);
 		sb.append("\n\tcomment:");
 		sb.append(comment);
 		sb.append("\n\tzone:");
@@ -327,6 +332,20 @@ public class GridAccount implements Serializable {
 				+ this.getZone().hashCode() + this.getUserName().hashCode()
 				+ this.getPassword().hashCode()
 				+ this.getAuthScheme().hashCode();
+	}
+
+	/**
+	 * @return the preset
+	 */
+	public boolean isPreset() {
+		return preset;
+	}
+
+	/**
+	 * @param preset the preset to set
+	 */
+	public void setPreset(boolean preset) {
+		this.preset = preset;
 	}
 
 }

@@ -3,14 +3,14 @@
  */
 package org.irods.jargon.conveyor.basic;
 
-import org.irods.jargon.conveyor.core.AbstractConveryorService;
+import org.irods.jargon.conveyor.core.AbstractConveyorService;
 
 /**
  * Default conveyor service, based on the standard internal Derby database.
  * @author Mike Conway - DICE (www.irods.org)
  *
  */
-public class BasicConveyorService extends AbstractConveryorService {
+public class BasicConveyorService extends AbstractConveyorService {
 
 	public BasicConveyorService() {
 		

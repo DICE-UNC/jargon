@@ -129,5 +129,12 @@ public interface GridAccountService {
 	 * @return
 	 */
 	ConveyorExecutorService getConveyorExecutorService();
+
+	/**
+	 * Get rid of all accounts, and clear the pass phrase.  This allows a client using this library
+	 * to 'forget' the key and reset the entire application
+	 * @throws ConveyorExecutionException
+	 */
+	void resetPassPhraseAndAccounts() throws ConveyorExecutionException;
 		
 }
