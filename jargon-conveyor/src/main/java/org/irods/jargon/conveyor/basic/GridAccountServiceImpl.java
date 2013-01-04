@@ -5,6 +5,7 @@ package org.irods.jargon.conveyor.basic;
 
 import java.util.List;
 
+import org.irods.jargon.conveyor.core.ConveyorBusyException;
 import org.irods.jargon.conveyor.core.ConveyorExecutionException;
 import org.irods.jargon.conveyor.core.ConveyorExecutorService;
 import org.irods.jargon.conveyor.core.GridAccountService;
@@ -30,8 +31,10 @@ import org.springframework.transaction.annotation.Transactional;
  * pass phrase are synchronized. In addition, any methods that could potentially
  * impact a running transfer (e.g. changing the password on an account that may
  * be referenced by a running transfer) are guarded by a lock on the transfer
- * execution queue. This lock has a time-out value so that operations may fail,
- * and notice may be given to retry when transfers are not running.
+ * execution queue. Such operations will return a
+ * <code>ConveyorBusyException</code> as noted in the method signatures when
+ * operations cannot be completed due to queue status. These operations may be
+ * retried when the queue is idle.
  * 
  * @author Mike Conway - DICE (www.irods.org)
  * 
@@ -105,35 +108,44 @@ public class GridAccountServiceImpl implements GridAccountService {
 	 * .lang.String)
 	 */
 	@Override
-	public synchronized KeyStore storePassPhrase(final String passPhrase)
-			throws PassPhraseInvalidException, ConveyorExecutionException {
-
-		// FIXME: add code to update stored grids
+	public KeyStore changePassPhraseWhenAlreadyValidated(final String passPhrase)
+			throws ConveyorBusyException, PassPhraseInvalidException,
+			ConveyorExecutionException {
 
 		log.info("storePassPhrase()");
 		if (passPhrase == null || passPhrase.isEmpty()) {
 			throw new IllegalArgumentException("null passPhrase");
 		}
 
-		try {
-			this.conveyorExecutorService.lockQueueWithTimeout();
-			return doStorePassPhrase(passPhrase);
-		} finally {
-			this.conveyorExecutorService.unlockQueue();
+		synchronized (this) {
+
+			if (!isValidated()) {
+				throw new PassPhraseInvalidException(
+						"The current pass phrase is not validated, cannot replace");
+			}
+
+			try {
+				this.conveyorExecutorService.setBusyForAnOperation();
+				return replacePassPhrase(passPhrase);
+			} finally {
+				this.conveyorExecutorService.setOperationCompleted();
+			}
 		}
 
 	}
 
 	/**
-	 * Do the actual storage of the pass phrase, which is wrapped in semantics
-	 * to lock and unlock the queue
+	 * Replace the current pass phrase with a new one, including resetting all
+	 * stored grid accounts to the new phrase. Note that the queue should be
+	 * locked (set to busy) before calling this operation, and unlocked
+	 * afterwards.
 	 * 
 	 * @param passPhrase
 	 * @return
 	 * @throws ConveyorExecutionException
 	 * @throws PassPhraseInvalidException
 	 */
-	private KeyStore doStorePassPhrase(final String passPhrase)
+	private KeyStore replacePassPhrase(final String passPhrase)
 			throws ConveyorExecutionException, PassPhraseInvalidException {
 		log.info("looking up keyStore..");
 
@@ -144,6 +156,29 @@ public class GridAccountServiceImpl implements GridAccountService {
 
 		String oldPassPhrase = this.getCachedPassPhrase();
 
+		KeyStore keyStore = storeGivenPassPhraseInKeyStoreAndSetAsCached(passPhrase);
+
+		log.info("refreshing cacheEncryptor with the new pass phrase...");
+		cacheEncryptor = new CacheEncryptor(this.getCachedPassPhrase());
+
+		log.info("updating stored grid accounts with new pass phrase...");
+		updateStoredGridAccountsForNewPassPhrase(oldPassPhrase, passPhrase);
+		log.info("stored grid accounts updated");
+
+		return keyStore;
+	}
+
+	/**
+	 * Make the given pass phrase the current one, and
+	 * 
+	 * @param passPhrase
+	 * @return
+	 * @throws ConveyorExecutionException
+	 * @throws PassPhraseInvalidException
+	 */
+	private KeyStore storeGivenPassPhraseInKeyStoreAndSetAsCached(
+			final String passPhrase) throws ConveyorExecutionException,
+			PassPhraseInvalidException {
 		log.info("looking up keyStore..");
 
 		KeyStore keyStore;
@@ -193,14 +228,6 @@ public class GridAccountServiceImpl implements GridAccountService {
 		log.info("key store saved");
 		log.info("new key store, consider it validated and cache it");
 		this.cachedPassPhrase = passPhrase;
-
-		log.info("refreshing cacheEncryptor with the new pass phrase...");
-		cacheEncryptor = new CacheEncryptor(this.getCachedPassPhrase());
-
-		log.info("updating stored grid accounts with new pass phrase...");
-		updateStoredGridAccountsForNewPassPhrase(oldPassPhrase, passPhrase);
-		log.info("stored grid accounts updated");
-
 		return keyStore;
 	}
 
@@ -212,7 +239,7 @@ public class GridAccountServiceImpl implements GridAccountService {
 	 * (org.irods.jargon.core.connection.IRODSAccount)
 	 */
 	@Override
-	public synchronized GridAccount addOrUpdateGridAccountBasedOnIRODSAccount(
+	public GridAccount addOrUpdateGridAccountBasedOnIRODSAccount(
 			final IRODSAccount irodsAccount) throws PassPhraseInvalidException,
 			ConveyorExecutionException {
 
@@ -263,17 +290,13 @@ public class GridAccountServiceImpl implements GridAccountService {
 			throw new ConveyorExecutionException(e);
 		}
 
-		log.info("locking queue to update the gridAccount password");
-
 		try {
-			this.conveyorExecutorService.lockQueueWithTimeout();
 			gridAccountDAO.save(gridAccount);
 		} catch (TransferDAOException e) {
 			log.error("error saving grid account:{}", gridAccount, e);
 			throw new ConveyorExecutionException("error saving grid account", e);
-		} finally {
-			this.conveyorExecutorService.unlockQueue();
 		}
+
 		log.info("grid account saved:{}", gridAccount);
 		return gridAccount;
 	}
@@ -286,41 +309,15 @@ public class GridAccountServiceImpl implements GridAccountService {
 	 * java.lang.String)
 	 */
 	@Override
-	public synchronized void validatePassPhrase(final String passPhrase)
-			throws PassPhraseInvalidException, ConveyorExecutionException {
+	public void validatePassPhrase(final String passPhrase)
+			throws ConveyorBusyException, PassPhraseInvalidException,
+			ConveyorExecutionException {
 
 		log.info("validatePassPhrase()");
 
 		if (passPhrase == null || passPhrase.isEmpty()) {
 			throw new IllegalArgumentException("null or empty passPhrase");
 		}
-
-		// look up the existing pass phrase, if no pass phrase is found, this is
-		// treated as an exception
-		log.info("looking up existing pass phrase");
-		KeyStore keyStore;
-		try {
-			keyStore = keyStoreDAO.findById(KeyStore.KEY_STORE_PASS_PHRASE);
-			log.info("keyStore found...");
-		} catch (TransferDAOException e) {
-			log.error("error finding pass phrase in key store", e);
-			throw new ConveyorExecutionException(
-					"unable to find pass phrase in key store");
-		}
-
-		/*
-		 * If there is no KeyStore value, just use the current pass phrase and
-		 * store it in the database
-		 */
-
-		if (keyStore == null) {
-			log.info("pass phrase is note stored, go ahead and just store it.  The called method will cache it");
-			this.storePassPhrase(passPhrase);
-			return;
-		}
-
-		// have the key store, verify the pass phrase by generating a hash and
-		// comparing to stored
 
 		String hashOfPassPhrase;
 		try {
@@ -333,13 +330,44 @@ public class GridAccountServiceImpl implements GridAccountService {
 		}
 		log.info("hash of supplied pass phrase:{}", hashOfPassPhrase);
 
-		if (!hashOfPassPhrase.equals(keyStore.getValue())) {
-			log.error("invalid pass phrase supplied");
-			throw new PassPhraseInvalidException("invalid pass phrase supplied");
-		}
+		/*
+		 * look up the existing pass phrase, if no pass phrase is found, the new
+		 * pass phrase is used and all accounts are cleared. You should not have
+		 * accounts stored and no key store, but why not just gracefully handle
+		 * a weird situation.
+		 * 
+		 * This method requires the queue to be idle and will set it to busy
+		 * while the operation completes. This may be overkill, but seems neater
+		 * conceptually.
+		 */
 
-		log.info("pass phrase valid, save it");
-		this.cachedPassPhrase = passPhrase;
+		synchronized (this) {
+			try {
+				this.conveyorExecutorService.setBusyForAnOperation();
+				log.info("looking up existing pass phrase");
+				KeyStore keyStore = keyStoreDAO
+						.findById(KeyStore.KEY_STORE_PASS_PHRASE);
+				if (keyStore == null) {
+					log.info("no keystore found, save the pass phrase");
+					keyStore = storeGivenPassPhraseInKeyStoreAndSetAsCached(passPhrase);
+				} else {
+					log.info("keyStore found...");
+					if (!keyStore.getValue().equals(hashOfPassPhrase)) {
+						log.error("pass phrase is invalid");
+						this.cachedPassPhrase = "";
+						throw new PassPhraseInvalidException(
+								"invalid pass phrase");
+					}
+				}
+
+			} catch (TransferDAOException e) {
+				log.error("error finding pass phrase in key store", e);
+				throw new ConveyorExecutionException(
+						"unable to find pass phrase in key store");
+			} finally {
+				this.conveyorExecutorService.setOperationCompleted();
+			}
+		}
 
 	}
 
@@ -373,8 +401,9 @@ public class GridAccountServiceImpl implements GridAccountService {
 			 * Note that the instance level cacheEncryptor should be set to the
 			 * new pass phrase before this method is called.
 			 * 
-			 * The methods in this class are syncronized, so we shouldn't have
-			 * issues with multiple simultaneous operations.
+			 * The methods in this class are synchronized, so we shouldn't have
+			 * issues with multiple simultaneous operations on the cache
+			 * encryptor or stored pass phrase.
 			 */
 			CacheEncryptor decryptingCacheEncryptor = new CacheEncryptor(
 					previousPassPhrase);
@@ -425,14 +454,6 @@ public class GridAccountServiceImpl implements GridAccountService {
 		return cachedPassPhrase;
 	}
 
-	/**
-	 * @param cachedPassPhrase
-	 *            the cachedPassPhrase to set
-	 */
-	public synchronized void setCachedPassPhrase(final String cachedPassPhrase) {
-		this.cachedPassPhrase = cachedPassPhrase;
-	}
-
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -472,8 +493,8 @@ public class GridAccountServiceImpl implements GridAccountService {
 	 * .irods.jargon.transfer.dao.domain.GridAccount)
 	 */
 	@Override
-	public synchronized void deleteGridAccount(final GridAccount gridAccount)
-			throws ConveyorExecutionException {
+	public void deleteGridAccount(final GridAccount gridAccount)
+			throws ConveyorBusyException, ConveyorExecutionException {
 		log.info("deleteGridAccount()");
 
 		if (gridAccount == null) {
@@ -483,15 +504,15 @@ public class GridAccountServiceImpl implements GridAccountService {
 		log.info("gridAccount:{}", gridAccount);
 
 		// lock queue so as not to delete an account involved with a running
-		// transfer
+		// transfer, deleting the account would delete the transfer data
 		try {
-			this.conveyorExecutorService.lockQueueWithTimeout();
+			this.conveyorExecutorService.setBusyForAnOperation();
 			gridAccountDAO.delete(gridAccount);
 		} catch (TransferDAOException e) {
 			log.error("exception deleting", e);
 			throw new ConveyorExecutionException("error deleting account", e);
 		} finally {
-			this.conveyorExecutorService.unlockQueue();
+			this.conveyorExecutorService.setOperationCompleted();
 		}
 	}
 
@@ -519,8 +540,12 @@ public class GridAccountServiceImpl implements GridAccountService {
 	 * (org.irods.jargon.transfer.dao.domain.GridAccount)
 	 */
 	@Override
-	public IRODSAccount irodsAccountForGridAccount(final GridAccount gridAccount)
-			throws ConveyorExecutionException {
+	public synchronized IRODSAccount irodsAccountForGridAccount(
+			final GridAccount gridAccount) throws ConveyorExecutionException {
+
+		/*
+		 * This method is synchronized as it depends on the cache encryptor
+		 */
 
 		log.info("irodsAccountForGridAccount()");
 		if (gridAccount == null) {
@@ -555,40 +580,65 @@ public class GridAccountServiceImpl implements GridAccountService {
 	 * org.irods.jargon.conveyor.core.GridAccountService#deleteAllGridAccounts()
 	 */
 	@Override
-	public void deleteAllGridAccounts() throws ConveyorExecutionException {
+	public void deleteAllGridAccounts() throws ConveyorBusyException,
+			ConveyorExecutionException {
 		log.info("deleteAllGridAccounts()");
+
 		try {
+			this.conveyorExecutorService.setBusyForAnOperation();
 			gridAccountDAO.deleteAll();
 		} catch (TransferDAOException e) {
 			log.error("exception deleting", e);
 			throw new ConveyorExecutionException("error decrypting account", e);
+		} finally {
+			this.conveyorExecutorService.setOperationCompleted();
 		}
 
 	}
 
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.conveyor.core.GridAccountService#resetPassPhraseAndAccounts()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.conveyor.core.GridAccountService#resetPassPhraseAndAccounts
+	 * ()
 	 */
 	@Override
-	public void resetPassPhraseAndAccounts() throws ConveyorExecutionException {
+	public synchronized void resetPassPhraseAndAccounts()
+			throws ConveyorBusyException, ConveyorExecutionException {
 		log.info("resetPassPhraseAndAccounts()");
 
+		/*
+		 * This method alters the cached pass phrase and cache encryptor
+		 */
 		try {
-			gridAccountDAO.deleteAll();
-			KeyStore keyStore = keyStoreDAO
-					.findById(KeyStore.KEY_STORE_PASS_PHRASE);
-			if (keyStore != null) {
-				log.info("deleting keystore entry for pass phrase");
-				keyStoreDAO.delete(keyStore);
-			}
-			// deleted account and other info, clear the pass phrase, it will need to be reset
-			this.cachedPassPhrase = "";
+			this.conveyorExecutorService.setBusyForAnOperation();
+			doDeleteAllWithQueueLocked();
 		} catch (TransferDAOException e) {
 			log.error("exception resetting key store and accounts", e);
 			throw new ConveyorExecutionException("error resetting", e);
+		} finally {
+			this.conveyorExecutorService.setOperationCompleted();
 		}
-		
 
 	}
 
+	/**
+	 * With the queue already locked, delete all grid accounts
+	 * 
+	 * @throws TransferDAOException
+	 */
+	private void doDeleteAllWithQueueLocked() throws TransferDAOException {
+		gridAccountDAO.deleteAll();
+		KeyStore keyStore = keyStoreDAO
+				.findById(KeyStore.KEY_STORE_PASS_PHRASE);
+		if (keyStore != null) {
+			log.info("deleting keystore entry for pass phrase");
+			keyStoreDAO.delete(keyStore);
+		}
+		// deleted account and other info, clear the pass phrase, it will
+		// need to be reset
+		this.cachedPassPhrase = "";
+		this.cacheEncryptor = null;
+	}
 }

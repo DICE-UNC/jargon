@@ -8,15 +8,19 @@ import java.util.Properties;
 
 import junit.framework.Assert;
 
+import org.irods.jargon.conveyor.core.ConveyorExecutionException;
+import org.irods.jargon.conveyor.core.ConveyorExecutorService;
 import org.irods.jargon.conveyor.core.GridAccountService;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
+import org.irods.jargon.transfer.dao.GridAccountDAO;
 import org.irods.jargon.transfer.dao.domain.GridAccount;
 import org.irods.jargon.transfer.exception.PassPhraseInvalidException;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -79,6 +83,23 @@ public class GridAccountServiceImplTest {
 		String passPhrase = "ooogabooga";
 		gridAccountService.validatePassPhrase(passPhrase);
 		gridAccountService
+				.addOrUpdateGridAccountBasedOnIRODSAccount(irodsAccount);
+	}
+
+	@Test(expected = ConveyorExecutionException.class)
+	public final void testAddOrUpdateGridAccountBasedOnIRODSAccountNotValidated()
+			throws Exception {
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountForIRODSUserFromTestPropertiesForGivenUser(
+						testingProperties, "test", "test");
+		GridAccountServiceImpl gridAccountServiceTest = new GridAccountServiceImpl();
+		GridAccountDAO gridAccountDAO = Mockito.mock(GridAccountDAO.class);
+		gridAccountServiceTest.setGridAccountDAO(gridAccountDAO);
+		ConveyorExecutorService conveyorExecutorService = Mockito
+				.mock(ConveyorExecutorService.class);
+		gridAccountServiceTest
+				.setConveyorExecutorService(conveyorExecutorService);
+		gridAccountServiceTest
 				.addOrUpdateGridAccountBasedOnIRODSAccount(irodsAccount);
 	}
 
@@ -153,12 +174,12 @@ public class GridAccountServiceImplTest {
 
 	@Test(expected = IllegalArgumentException.class)
 	public final void testStorePassPhraseNull() throws Exception {
-		gridAccountService.storePassPhrase(null);
+		gridAccountService.changePassPhraseWhenAlreadyValidated(null);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public final void testStorePassPhraseBlank() throws Exception {
-		gridAccountService.storePassPhrase("");
+		gridAccountService.changePassPhraseWhenAlreadyValidated("");
 	}
 
 	@Test(expected = IllegalArgumentException.class)
@@ -178,7 +199,7 @@ public class GridAccountServiceImplTest {
 		gridAccountService.findGridAccountByIRODSAccount(irodsAccount);
 
 	}
-	
+
 	@Test
 	public final void testFindAll() throws Exception {
 		String testUserName = "user1";
@@ -195,12 +216,12 @@ public class GridAccountServiceImplTest {
 				.addOrUpdateGridAccountBasedOnIRODSAccount(irodsAccount);
 		gridAccountService
 				.addOrUpdateGridAccountBasedOnIRODSAccount(irodsAccount2);
-		
+
 		List<GridAccount> actual = gridAccountService.findAll();
 		Assert.assertEquals("did not get two accounts", 2, actual.size());
-		
+
 	}
-	
+
 	@Test
 	public final void testStorePassPhraseWithAlreadyCachedGridAccounts()
 			throws Exception {
@@ -211,22 +232,112 @@ public class GridAccountServiceImplTest {
 		String passPhrase = "ooogabooga";
 		gridAccountService.validatePassPhrase(passPhrase);
 		gridAccountService.deleteAllGridAccounts();
-		
+
 		gridAccountService
 				.addOrUpdateGridAccountBasedOnIRODSAccount(irodsAccount);
 
-		/* account added and encrypted, now store a new pass phrase and make sure I still can 
-		 * properly decrypt it
+		/*
+		 * account added and encrypted, now store a new pass phrase and make
+		 * sure I still can properly decrypt it
 		 */
 		passPhrase = "boogaoooga";
-		gridAccountService.storePassPhrase(passPhrase);
-		
+		gridAccountService.changePassPhraseWhenAlreadyValidated(passPhrase);
+
 		List<GridAccount> gridAccounts = gridAccountService.findAll();
 		Assert.assertEquals("should be one account", 1, gridAccounts.size());
-		IRODSAccount actual = gridAccountService.irodsAccountForGridAccount(gridAccounts.get(0));
-		Assert.assertEquals("did not properly decrypt password using new pass phrase", actual.getPassword(), irodsAccount.getPassword());
-		
+		IRODSAccount actual = gridAccountService
+				.irodsAccountForGridAccount(gridAccounts.get(0));
+		Assert.assertEquals(
+				"did not properly decrypt password using new pass phrase",
+				actual.getPassword(), irodsAccount.getPassword());
+
 	}
 
+	@Test(expected = PassPhraseInvalidException.class)
+	public final void testChangePassPhraseWhenNotAlreadyValidated()
+			throws Exception {
+		String passPhrase = "ooogabooga";
+		GridAccountServiceImpl gridAccountServiceTest = new GridAccountServiceImpl();
+		GridAccountDAO gridAccountDAO = Mockito.mock(GridAccountDAO.class);
+		gridAccountServiceTest.setGridAccountDAO(gridAccountDAO);
+		ConveyorExecutorService conveyorExecutorService = Mockito
+				.mock(ConveyorExecutorService.class);
+		gridAccountServiceTest
+				.setConveyorExecutorService(conveyorExecutorService);
+		gridAccountServiceTest.deleteAllGridAccounts();
+
+		gridAccountServiceTest.changePassPhraseWhenAlreadyValidated(passPhrase);
+
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public final void testValidateNullPassPhrase() throws Exception {
+		GridAccountService gridAccountServiceTest = new GridAccountServiceImpl();
+		gridAccountServiceTest.validatePassPhrase(null);
+
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public final void testValidateBlankPassPhrase() throws Exception {
+
+		gridAccountService.validatePassPhrase("");
+
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public final void testReplacePassPhraseNull() throws Exception {
+		GridAccountServiceImpl gridAccountServiceTest = new GridAccountServiceImpl();
+		gridAccountServiceTest.changePassPhraseWhenAlreadyValidated(null);
+	}
+
+	@Test
+	public final void testFindGridAccountForIRODSAccountNotValidated()
+			throws Exception {
+		GridAccountServiceImpl gridAccountServiceTest = new GridAccountServiceImpl();
+		GridAccountDAO gridAccountDAO = Mockito.mock(GridAccountDAO.class);
+		gridAccountServiceTest.setGridAccountDAO(gridAccountDAO);
+		ConveyorExecutorService conveyorExecutorService = Mockito
+				.mock(ConveyorExecutorService.class);
+		gridAccountServiceTest
+				.setConveyorExecutorService(conveyorExecutorService);
+		String testUserName = "user1";
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountForIRODSUserFromTestPropertiesForGivenUser(
+						testingProperties, testUserName, testUserName);
+		gridAccountService.findGridAccountByIRODSAccount(irodsAccount);
+
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public final void testFindGridAccountForIRODSAccountNullAccount()
+			throws Exception {
+		GridAccountServiceImpl gridAccountServiceTest = new GridAccountServiceImpl();
+		GridAccountDAO gridAccountDAO = Mockito.mock(GridAccountDAO.class);
+		gridAccountServiceTest.setGridAccountDAO(gridAccountDAO);
+		ConveyorExecutorService conveyorExecutorService = Mockito
+				.mock(ConveyorExecutorService.class);
+		gridAccountServiceTest
+				.setConveyorExecutorService(conveyorExecutorService);
+		gridAccountService.findGridAccountByIRODSAccount(null);
+
+	}
+
+	@Test
+	public final void testReset() throws Exception {
+		String testUserName = "user1";
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountForIRODSUserFromTestPropertiesForGivenUser(
+						testingProperties, testUserName, testUserName);
+		String passPhrase = "ooogabooga";
+		gridAccountService.validatePassPhrase(passPhrase);
+		gridAccountService.deleteAllGridAccounts();
+
+		gridAccountService
+				.addOrUpdateGridAccountBasedOnIRODSAccount(irodsAccount);
+
+		gridAccountService.resetPassPhraseAndAccounts();
+		gridAccountService.findAll();
+
+	}
 
 }

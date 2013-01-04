@@ -2,6 +2,7 @@ package org.irods.jargon.transfer.engine;
 
 import java.util.List;
 
+import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.IRODSFileSystem;
 import org.irods.jargon.transfer.TransferEngineException;
@@ -26,7 +27,7 @@ public interface TransferManager {
 	}
 
 	public enum RunningStatus {
-		IDLE, PROCESSING, PAUSED
+		IDLE, PROCESSING, PAUSED, BUSY
 	}
 
 	/**
@@ -282,8 +283,8 @@ public interface TransferManager {
 	 *            {@link IRODSAccount} pointing to the correct iRODS server
 	 * @throws JargonException
 	 */
-	void enqueueASynch(Synchronization synchronization,
-			GridAccount gridAccount) throws JargonException;
+	void enqueueASynch(Synchronization synchronization, GridAccount gridAccount)
+			throws JargonException;
 
 	/**
 	 * Get the configuration information that controls the behavior of the

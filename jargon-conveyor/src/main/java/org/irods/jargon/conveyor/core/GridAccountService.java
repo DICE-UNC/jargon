@@ -11,12 +11,18 @@ import org.irods.jargon.transfer.dao.domain.KeyStore;
 import org.irods.jargon.transfer.exception.PassPhraseInvalidException;
 
 /**
- * Manager of <code>GridAccount</code> which represents the cache of identitiies
+ * Manager of <code>GridAccount</code> which represents the cache of identities
  * used in the system.
  * <p/>
- * The underlying implemmentation should properly synchronize access to the data, and furthermore, should
- * properly maintain locks on the underlying transfer queue so as not to process updates that could effect a
- * running transfer.
+ * The underlying implementation should properly synchronize access to the data,
+ * and furthermore, should properly maintain locks on the underlying transfer
+ * queue so as not to process updates that could effect a running transfer.
+ * <p/>
+ * In order to protect currently running transfers, this locking is done by
+ * checking the running status of the queue, and throwing a
+ * <code>ConveyorBusy</code> exception if the queue is currently not in an idle
+ * or paused state. Clients should check for these exceptions and forward advice
+ * to users to retry the operation when the queue is not busy.
  * 
  * @author Mike Conway - DICE (www.irods.org)
  * 
@@ -40,13 +46,17 @@ public interface GridAccountService {
 	 * 
 	 * @param passPhrase
 	 * @return
+	 * @throws ConveyorBusyException
+	 *             if the operation cannot currently be done, with the queue
+	 *             data currently processing. The operation may be retried after
+	 *             the queue is paused or idle
 	 * @throws PassPhraseinvalidException
 	 *             if the existing pass phrase was not properly validated before
 	 *             setting a new one.
 	 * @throws ConveyorExecutionException
 	 */
-	KeyStore storePassPhrase(String passPhrase)
-			throws PassPhraseInvalidException, ConveyorExecutionException;
+	KeyStore changePassPhraseWhenAlreadyValidated(String passPhrase) throws ConveyorBusyException,
+			PassPhraseInvalidException, ConveyorExecutionException;
 
 	/**
 	 * Given an <code>IRODSAccount</code>, add a new <code>GridAccount</code>,
@@ -79,25 +89,40 @@ public interface GridAccountService {
 	 * @param passPhrase
 	 *            <code>String</code> with the pass phrase to be validated, in
 	 *            clear text
+	 * @throws ConveyorBusyException
+	 *             if the operation cannot currently be done, with the queue
+	 *             data currently processing. The operation may be retried after
+	 *             the queue is paused or idle
 	 * @throws PassPhraseInvalidException
 	 *             if the pass phrase is not validated
 	 * @throws ConveyorExecutionException
 	 */
-	void validatePassPhrase(String passPhrase)
-			throws PassPhraseInvalidException, ConveyorExecutionException;
+	void validatePassPhrase(String passPhrase) throws ConveyorBusyException,
+			PassPhraseInvalidException, ConveyorExecutionException;
 
 	/**
-	 * Delete the given <code>GridAccount</code>, including all child transfers and synchronizations
-	 * @param gridAccount {@link GridAccount} to delete
+	 * Delete the given <code>GridAccount</code>, including all child transfers
+	 * and synchronizations
+	 * 
+	 * @param gridAccount
+	 *            {@link GridAccount} to delete
+	 * @throws ConveyorBusyException
+	 *             if the operation cannot currently be done, with the queue
+	 *             data currently processing. The operation may be retried after
+	 *             the queue is paused or idle
 	 * @throws ConveyorExecutionException
 	 */
 	void deleteGridAccount(GridAccount gridAccount)
-			throws ConveyorExecutionException;
+			throws ConveyorBusyException, ConveyorExecutionException;
 
 	/**
-	 * Find the <code>GridAccount</code> corresponding to the given iRODS account
-	 * @param irodsAccount {@link IRODSAccount}
-	 * @return {@link GridAccount} that corresponds to the iRODS account, or <code>null</code> if no result is available
+	 * Find the <code>GridAccount</code> corresponding to the given iRODS
+	 * account
+	 * 
+	 * @param irodsAccount
+	 *            {@link IRODSAccount}
+	 * @return {@link GridAccount} that corresponds to the iRODS account, or
+	 *         <code>null</code> if no result is available
 	 * @throws ConveyorExecutionException
 	 */
 	GridAccount findGridAccountByIRODSAccount(IRODSAccount irodsAccount)
@@ -105,36 +130,55 @@ public interface GridAccountService {
 
 	/**
 	 * Return a list of grid accounts in host/zone/userName order
-	 * @return <code>List</code> of {@link GridAccount} 
+	 * 
+	 * @return <code>List</code> of {@link GridAccount}
 	 * @throws ConveyorExecutionException
 	 */
 	List<GridAccount> findAll() throws ConveyorExecutionException;
-	
+
 	/**
-	 * Given a <code>GridAccount</code> return the corresponding iRODS account with the password decrypted
-	 * @param gridAccount {@link GridAccount} containing cached account info
+	 * Given a <code>GridAccount</code> return the corresponding iRODS account
+	 * with the password decrypted
+	 * 
+	 * @param gridAccount
+	 *            {@link GridAccount} containing cached account info
 	 * @return {@link IRODSAccount} based on the <code>GridAccount</code>
 	 * @throws ConveyorExecutionException
 	 */
-	IRODSAccount irodsAccountForGridAccount(final GridAccount gridAccount) throws ConveyorExecutionException;
+	IRODSAccount irodsAccountForGridAccount(final GridAccount gridAccount)
+			throws ConveyorExecutionException;
 
 	/**
 	 * Purge all grid accounts and related information from the store
+	 * 
+	 * @throws ConveyorBusyException
+	 *             if the operation cannot currently be done, with the queue
+	 *             data currently processing. The operation may be retried after
+	 *             the queue is paused or idle
 	 * @throws ConveyorExecutionException
 	 */
-	void deleteAllGridAccounts() throws ConveyorExecutionException;
+	void deleteAllGridAccounts() throws ConveyorBusyException,
+			ConveyorExecutionException;
 
 	/**
-	 * Get a reference to the conveyor executor service that actually runs the underlying transfer operations
+	 * Get a reference to the conveyor executor service that actually runs the
+	 * underlying transfer operations
+	 * 
 	 * @return
 	 */
 	ConveyorExecutorService getConveyorExecutorService();
 
 	/**
-	 * Get rid of all accounts, and clear the pass phrase.  This allows a client using this library
-	 * to 'forget' the key and reset the entire application
+	 * Get rid of all accounts, and clear the pass phrase. This allows a client
+	 * using this library to 'forget' the key and reset the entire application
+	 * 
+	 * @throws ConveyorBusyException
+	 *             if the operation cannot currently be done, with the queue
+	 *             data currently processing. The operation may be retried after
+	 *             the queue is paused or idle
 	 * @throws ConveyorExecutionException
 	 */
-	void resetPassPhraseAndAccounts() throws ConveyorExecutionException;
-		
+	void resetPassPhraseAndAccounts() throws ConveyorBusyException,
+			ConveyorExecutionException;
+
 }

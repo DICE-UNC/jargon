@@ -19,6 +19,14 @@ public interface ConveyorExecutorService {
 	public static final int MAX_AVAILABLE = 1;
 	public static final String TRY_LOCK_TIMEOUT = "try.lock.timeout.seconds";
 
+	public enum ErrorStatus {
+		OK, WARNING, ERROR
+	}
+
+	public enum RunningStatus {
+		IDLE, PROCESSING, PAUSED, BUSY, PAUSED_BUSY
+	}
+
 	/**
 	 * Execute the given conveyor process and return a processing result. This
 	 * method will block until the process terminates.
@@ -51,8 +59,8 @@ public interface ConveyorExecutorService {
 	 */
 	ConveyorExecutionFuture executeConveyorCallable(
 			final AbstractConveyorCallable conveyorCallable,
-			final boolean withTimeout) throws 
-			ConveyorExecutionTimeoutException, ConveyorExecutionException;
+			final boolean withTimeout) throws ConveyorBusyException,
+			ConveyorExecutionException;
 
 	/**
 	 * Shut down the underlying pool (will attempt to do so in an orderly
@@ -64,23 +72,27 @@ public interface ConveyorExecutorService {
 	/**
 	 * Release a lock on the queue
 	 */
-	void unlockQueue();
+	// void unlockQueue();
 
 	/**
 	 * Try an immediate lock on the queue
 	 * 
-	 * @throws ConveyorExecutionException 
+	 * @throws ConveyorExecutionException
 	 */
-	void lockQueue() throws ConveyorExecutionException;
+	// void lockQueue() throws ConveyorExecutionException;
 
 	/**
 	 * Try and obtain a lock on the queue, with a timeout defined in the
 	 * provided properties defined by the key "try.lock.timeout.seconds"
-	 * @throws ConveyorExecutionTimeoutException if a time-out occurs obtaining the lock
+	 * 
+	 * @throws ConveyorBusyException
+	 *             if a time-out occurs obtaining the lock
 	 * @throws ConveyorExecutionException
 	 */
-	void lockQueueWithTimeout() throws ConveyorExecutionTimeoutException,
-			ConveyorExecutionException;
+	/*
+	 * void lockQueueWithTimeout() throws ConveyorBusyException,
+	 * ConveyorExecutionException;
+	 */
 
 	/**
 	 * Inject <code>Properties</code> that can control aspects of this service
@@ -88,5 +100,45 @@ public interface ConveyorExecutorService {
 	 * @param executorServiceProperties
 	 */
 	void setExecutorServiceProperties(Properties executorServiceProperties);
+
+	/**
+	 * See if the system is in a state where I can perform an operation that may
+	 * affect a running operation. If I am in a state to do such an operation,
+	 * the transfer queue status will be set to BUSY or will remain PAUSED.
+	 * <p/>
+	 * Note that it is incumbent on an operation that grabs the queue and sets
+	 * it to busy to return it to a paused or idle status by calling
+	 * <code>setOperationCompleted()</code>. This sequence is meant for
+	 * operations that should occur when the queue is not running (e.g. purging
+	 * the queue, changing the pass phrase).
+	 * <p/>
+	 * Note that this operation will return a <code>ConveyorBusyException</code>
+	 * if the queue is busy when the operation is requested. This can be
+	 * presented to the caller as an instruction to complete such operations
+	 * when the queue is paused or idle.
+	 * 
+	 * @throws ConveyorBusyException
+	 *             if the queue is busy
+	 */
+	public abstract void setBusyForAnOperation() throws ConveyorBusyException;
+
+	/**
+	 * This method releases the queue from a busy or 'busy and paused' status
+	 * back to idle or paused, and is meant to finish an operation that should
+	 * block the queue running, as set by the <code>setBusyForOperation()</code>
+	 * method.
+	 * <p/>
+	 * Clients that call the <code>setBusyForOperation()</code> are required to
+	 * finish by calling this method.
+	 */
+	void setOperationCompleted();
+
+	void setRunningStatus(final RunningStatus runningStatus);
+
+	RunningStatus getRunningStatus();
+
+	void setErrorStatus(final ErrorStatus errorStatus);
+
+	ErrorStatus getErrorStatus();
 
 }
