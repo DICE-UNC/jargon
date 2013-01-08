@@ -679,9 +679,9 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		String effectiveAbsolutePath = MiscIRODSUtils
 				.determineAbsolutePathBasedOnCollTypeInObjectStat(objStat);
 
-		List<CollectionAndDataObjectListingEntry> subdirs = new ArrayList<CollectionAndDataObjectListingEntry>();
+		
 
-		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, null);
+		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, false, true, null);
 		try {
 			IRODSFileSystemAOHelper.buildQueryListAllCollections(
 					effectiveAbsolutePath, builder);
@@ -693,6 +693,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		IRODSQueryResultSet resultSet = queryForPathAndReturnResultSet(
 				objStat.getAbsolutePath(), builder, partialStartIndex, objStat);
 
+		List<CollectionAndDataObjectListingEntry> subdirs = new ArrayList<CollectionAndDataObjectListingEntry>(resultSet.getResults().size());
 		CollectionAndDataObjectListingEntry collectionAndDataObjectListingEntry = null;
 
 		for (IRODSQueryResultRow row : resultSet.getResults()) {
@@ -951,11 +952,10 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		log.info("determined effectiveAbsolutePathToBe:{}",
 				effectiveAbsolutePath);
 
-		List<CollectionAndDataObjectListingEntry> files = new ArrayList<CollectionAndDataObjectListingEntry>();
 
 		log.info("listDataObjectsUnderPath for: {}", objStat);
 
-		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, null);
+		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, false, true, null);
 
 		IRODSFileSystemAOHelper
 				.buildQueryListAllDataObjectsWithSizeAndDateInfo(
@@ -970,6 +970,8 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 			throw new JargonException("error in query", e);
 		}
 
+		List<CollectionAndDataObjectListingEntry> files = new ArrayList<CollectionAndDataObjectListingEntry>(resultSet.getResults().size());
+		
 		/*
 		 * the query that gives the necessary data will cause duplication when
 		 * there are replicas, so discard duplicates. This is the nature of
