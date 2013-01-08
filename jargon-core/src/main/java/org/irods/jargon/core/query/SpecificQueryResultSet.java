@@ -3,6 +3,7 @@
  */
 package org.irods.jargon.core.query;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -42,6 +43,28 @@ public class SpecificQueryResultSet extends AbstractIRODSQueryResultSet {
 		}
 		this.specificQuery = specificQuery;
 	}
+	
+	/**
+	 * Constructor for an empty result set
+	 * @param specificQuery
+	 *            {@link SpecificQuery} that was used to generate the result set
+	 * @param results
+	 *            <code>List</code> of {@link IRODSQueryResultRow} with each row
+	 *            of the query results
+	 * @param columnNames
+	 *            <code>List<String></code> of columns in the results
+	 */
+	public SpecificQueryResultSet(final SpecificQuery specificQuery,
+			final List<String> columnNames) {
+		super(new ArrayList<IRODSQueryResultRow>(), columnNames, false, 0);
+		if (specificQuery == null) {
+			throw new IllegalArgumentException("null specificQuery");
+		}
+		this.specificQuery = specificQuery;
+	}
+	
+	
+	
 
 	/**
 	 * @return the specificQuery
