@@ -259,20 +259,43 @@ public class PagingAnalyserTest {
 	}
 	
 	
-	/*
-	 * bug when no paging (from root in idrop web)
-	 * 2013-01-09 19:40:41,329 [http-bio-8080-exec-4] DEBUG controller.BrowseController  - pagingActions:PagingActions
-	 minValue:0
-	 maxValue:36
-	 pageSize:5000[PagingIndexEntry:
-	 indexType:FIRST
-	 representation:<<
-	 index:0
-	 current:false, PagingIndexEntry:
-	 indexType:PREV
-	 representation:<
-	 index:0
-	 current:false]
+	/**
+	 * be on a 1 page set, no pagination, no indexes should be there
 	 */
+	@Test
+	public void testBuildPagingWhenNoPaging() {
+		List<IRODSDomainObject> irodsDomainObjects = new ArrayList<IRODSDomainObject>();
+		IRODSDomainObject first = new IRODSDomainObject();
+		first.setCount(1);
+		first.setLastResult(true);
+		first.setTotalRecords(500);
+		irodsDomainObjects.add(first);
 
+		PagingActions pagingActions = PagingAnalyser
+				.buildPagingActionsFromListOfIRODSDomainObjects(
+						irodsDomainObjects, 5000);
+		Assert.assertNotNull("null pagingActions", pagingActions);
+		Assert.assertEquals("should be no indexes here", 0, pagingActions.getPagingIndexEntries().size());
+	}
+	
+	@Test
+	public void testGetCurrentWhenOnPage4() {
+		List<IRODSDomainObject> irodsDomainObjects = new ArrayList<IRODSDomainObject>();
+		IRODSDomainObject first = new IRODSDomainObject();
+		first.setCount(1500);
+		first.setLastResult(false);
+		first.setTotalRecords(3000);
+		irodsDomainObjects.add(first);
+
+		IRODSDomainObject last = new IRODSDomainObject();
+		last.setCount(2000);
+		last.setLastResult(false);
+		last.setTotalRecords(3000);
+		irodsDomainObjects.add(last);
+		PagingActions pagingActions = PagingAnalyser
+				.buildPagingActionsFromListOfIRODSDomainObjects(
+						irodsDomainObjects, 500);
+		PagingIndexEntry current = pagingActions.getCurrentIndexEntry();
+		Assert.assertNotNull("no current entry found", current);
+	}
 }

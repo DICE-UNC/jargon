@@ -13,7 +13,7 @@ import java.util.List;
  * can be configured.
  * <p/>
  * This involves representations for whether next and previous actions, as well as intermediate index actions, are
- * available.  It also handles insertion of 'elipses' or place holders where too many indexes would be required 
+ * available.  It also handles insertion of 'ellipses' or place holders where too many indexes would be required 
  * to traverse the pages represented by the <code>PagingStatus</code>.
  * <p/>
  * The goal is to support 'pagination' button sets, as well as 'slider' type continuous interface components, but this
@@ -90,6 +90,29 @@ public class PagingActions {
 		this.minValue = minValue;
 		this.maxValue = maxValue;
 		this.pageSize = pageSize;
+	}
+	
+	/**
+	 * From the (if available) computed indexes, return the index that is 'current'.  This may not be available, as we might not
+	 * have a total record count to figure this out.  If I don't have a current, this will return <code>null</code>
+	 * @return
+	 */
+	public PagingIndexEntry getCurrentIndexEntry() {
+		
+		if (!isPaging()) {
+			return null;
+		}
+		
+		PagingIndexEntry foundPagingIndexEntry = null;
+		
+		for (PagingIndexEntry pagingIndexEntry:pagingIndexEntries) {
+			if(pagingIndexEntry.isCurrent()) {
+				foundPagingIndexEntry = pagingIndexEntry;
+				break;
+			}
+		}
+		
+		return foundPagingIndexEntry;
 	}
 
 
