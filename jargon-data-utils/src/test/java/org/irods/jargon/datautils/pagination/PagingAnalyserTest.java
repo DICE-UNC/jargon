@@ -17,10 +17,110 @@ public class PagingAnalyserTest {
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 	}
+	
+	/**
+	 * 
+	 * 10000 files, 5000 page size, on first page
+	 * 
+	 */
+	
+	@Test
+	public void testBuild10000RowsFirstPage5000PageSize() {
+		List<IRODSDomainObject> irodsDomainObjects = new ArrayList<IRODSDomainObject>();
+		IRODSDomainObject first = new IRODSDomainObject();
+		first.setCount(1);
+		first.setLastResult(false);
+		first.setTotalRecords(10000);
+		irodsDomainObjects.add(first);
+
+		IRODSDomainObject last = new IRODSDomainObject();
+		last.setCount(5000);
+		last.setLastResult(false);
+		last.setTotalRecords(10000);
+		irodsDomainObjects.add(last);
+		PagingActions pagingActions = PagingAnalyser
+				.buildPagingActionsFromListOfIRODSDomainObjects(
+						irodsDomainObjects, 5000);
+		Assert.assertNotNull("null pagingActions", pagingActions);
+
+		/*
+		 * PagingActions
+	 minValue:0
+	 maxValue:10000
+	 pageSize:5000[PagingIndexEntry:
+	 indexType:INDEX
+	 representation:1
+	 index:0
+	 current:true, PagingIndexEntry:
+	 indexType:INDEX
+	 representation:2
+	 index:5000
+	 current:false, PagingIndexEntry:
+	 indexType:NEXT
+	 representation:>
+	 index:5000
+	 current:false, PagingIndexEntry:
+	 indexType:LAST
+	 representation:>>
+	 index:5000
+	 current:false]
+		 */
+		
+		Assert.assertNotNull("null pagingActions", pagingActions);
+
+		Assert.assertEquals("did not get the expected 4 pages", 4,
+				pagingActions.getPagingIndexEntries().size());
+
+
+		// index 1
+		Assert.assertEquals("expected index of 1 should be an index type",
+				PagingIndexEntry.IndexType.INDEX, pagingActions
+						.getPagingIndexEntries().get(0).getIndexType());
+		Assert.assertEquals("expected index of 1 in representation", "1",
+				pagingActions.getPagingIndexEntries().get(0)
+						.getRepresentation());
+		Assert.assertEquals("expected index of 1 should start at 0", 0,
+				pagingActions.getPagingIndexEntries().get(0).getIndex());
+		Assert.assertTrue("1 should be current", pagingActions
+				.getPagingIndexEntries().get(0).isCurrent());
+		// index 2
+		Assert.assertEquals("expected index of 2 should be an index type",
+				PagingIndexEntry.IndexType.INDEX, pagingActions
+						.getPagingIndexEntries().get(1).getIndexType());
+		Assert.assertEquals("expected index of 2 in representation", "2",
+				pagingActions.getPagingIndexEntries().get(1)
+						.getRepresentation());
+		Assert.assertEquals("expected index of 2 should start at 5000", 5000,
+				pagingActions.getPagingIndexEntries().get(1).getIndex());
+		Assert.assertFalse("should not be current", pagingActions
+				.getPagingIndexEntries().get(1).isCurrent());
+		
+		// next should point to index 2 values
+		Assert.assertEquals("prev type expected",
+				PagingIndexEntry.IndexType.NEXT, pagingActions
+						.getPagingIndexEntries().get(2).getIndexType());
+		Assert.assertEquals("expected > in representation", ">", pagingActions
+				.getPagingIndexEntries().get(2).getRepresentation());
+		Assert.assertEquals("expected index of next should start at 5000",
+				5000, pagingActions.getPagingIndexEntries().get(2).getIndex());
+		// last should have index 2 values
+		Assert.assertEquals("expected index of last should be last type",
+				PagingIndexEntry.IndexType.LAST, pagingActions
+						.getPagingIndexEntries().get(3).getIndexType());
+		Assert.assertEquals("expected index of >> in representation", ">>",
+				pagingActions.getPagingIndexEntries().get(3)
+						.getRepresentation());
+		Assert.assertEquals("expected index of last should start at 5000",
+				5000, pagingActions.getPagingIndexEntries().get(3).getIndex());
+	
+	}
+	
+	
+	
 
 	/**
 	 * be on 4th page of a 3000 record set with page size of 500 page1 = 0-499
-	 * page2 = 500-999 page3 = 1000-1499 page4 = 1500-1999
+	 * page2 = 500-999 page3 = 1000-1499 page4 = 1500-1999 page5=2000-2499 page6=2500-3000
 	 */
 	@Test
 	public void testBuildPagingActionsFromListOfIRODSDomainObjects() {
@@ -157,5 +257,22 @@ public class PagingAnalyserTest {
 						irodsDomainObjects, 5500);
 		Assert.assertNotNull("null pagingActions", pagingActions);
 	}
+	
+	
+	/*
+	 * bug when no paging (from root in idrop web)
+	 * 2013-01-09 19:40:41,329 [http-bio-8080-exec-4] DEBUG controller.BrowseController  - pagingActions:PagingActions
+	 minValue:0
+	 maxValue:36
+	 pageSize:5000[PagingIndexEntry:
+	 indexType:FIRST
+	 representation:<<
+	 index:0
+	 current:false, PagingIndexEntry:
+	 indexType:PREV
+	 representation:<
+	 index:0
+	 current:false]
+	 */
 
 }

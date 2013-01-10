@@ -8,8 +8,11 @@ import java.util.Collection;
 import java.util.List;
 
 
+import org.irods.jargon.core.pub.IRODSGenQueryExecutorImpl;
 import org.irods.jargon.core.pub.domain.IRODSDomainObject;
 import org.irods.jargon.datautils.pagination.PagingIndexEntry.IndexType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Service that looks at a 'pagable' object in Jargon, such as a set of {@link IRODSDomainObject} containing paging
@@ -25,6 +28,9 @@ public class PagingAnalyser {
 	 * max number of index entries to show
 	 */
 	public static final int TOTAL_INDEXES = 10;
+	
+	private static final Logger log = LoggerFactory
+			.getLogger(PagingAnalyser.class);
 
 	/**
 	 * Given a list of <code>IRODSDomainObjects</code> which contain count and index information, create a model
@@ -50,6 +56,7 @@ public class PagingAnalyser {
 		boolean lastEntry = irodsDomainObjects.get(irodsDomainObjects.size() -1).isLastResult();
 		
 		PagingStatus pagingStatus = new PagingStatus(firstIndex, lastIndex, lastEntry, totalRecordCount, pageSize);
+		log.info("pagingStatus:{}", pagingStatus);
 		return getPagingActionsFromPagingStatus(pagingStatus);
 	
 	}
@@ -97,8 +104,10 @@ public class PagingAnalyser {
 		
 		
 		
-		return new PagingActions(pagingIndexEntries, 0, pagingStatus.getTotalEntries(), pagingStatus.getPageSize());
-	
+		PagingActions pagingActions = new PagingActions(pagingIndexEntries, 0, pagingStatus.getTotalEntries(), pagingStatus.getPageSize());
+		log.info("pagingActions:{}", pagingActions);
+		return pagingActions;
+		
 	}
 
 	/**
@@ -145,7 +154,7 @@ public class PagingAnalyser {
 		 * most buttons in the index section
 		 */
 		
-		if (nextIndexes > pagingStatus.computeExpectedNumberOfPages()) {
+		if (currentPage + nextIndexes > pagingStatus.computeExpectedNumberOfPages()) {
 			nextIndexes = pagingStatus.computeExpectedNumberOfPages() - currentPage;
 			excessNext = pagesInDirection - nextIndexes;
 		}
@@ -163,7 +172,7 @@ public class PagingAnalyser {
 		
 		// add the excess to the other side up to the limits
 		nextIndexes += excessPrevious;
-		if (nextIndexes > pagingStatus.computeExpectedNumberOfPages()) {
+		if (nextIndexes + currentPage > pagingStatus.computeExpectedNumberOfPages()) {
 			nextIndexes = pagingStatus.computeExpectedNumberOfPages() - currentPage;
 		}
 		
@@ -179,7 +188,7 @@ public class PagingAnalyser {
 		
 		List<PagingIndexEntry> indexEntries = new ArrayList<PagingIndexEntry>();
 		
-		int totalIndexes = previousIndexes + nextIndexes;
+		int totalIndexes = previousIndexes + nextIndexes + 1; // plus one for current page
 		for (int i = 0; i < totalIndexes; i ++ ) {
 			
 			boolean isCurrent = false;
