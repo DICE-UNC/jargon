@@ -63,3 +63,11 @@ the conection finalizer could be called and the connection closed at an inapprop
  **Added totalRecords to IRODSDomainObject so that returned objects from queries can carry the total number of results
  **CollectionAndDataObjectListAndSearchAO results now include total record counts when available  
  **Adding pagination package to jargon-data-utils, providing a model that can be used to build smart paging controls into interfaces
+ **Added a listDataObjectsAndCollectionsUnderPathProducingPagingAwareCollectionListing to CollectionAndDataObjectListAndSearchAO, which
+ lists child data objects and collections, and provides addtional information on the paging status of the independent collections and data objects.
+ 
+ 
+ 
+ 
+ 
+ 

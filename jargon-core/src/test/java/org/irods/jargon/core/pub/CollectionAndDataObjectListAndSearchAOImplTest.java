@@ -15,6 +15,7 @@ import org.irods.jargon.core.pub.domain.ObjStat.SpecColType;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry;
 import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry.ObjectType;
+import org.irods.jargon.core.query.PagingAwareCollectionListing;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.irods.jargon.testutils.filemanip.FileGenerator;
 import org.junit.AfterClass;
@@ -128,6 +129,52 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 		Assert.assertEquals(500, entries.size());
 
 	}
+	
+	@Test
+	public void testListCollectionsUnderPathGivingPagingAwareCollectionListing() throws Exception {
+
+		String subdirPrefix = "testListCollectionsUnderPathGivingPagingAwareCollectionListing";
+		int count = 50;
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + "/"
+								+ subdirPrefix);
+		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetIrodsCollection);
+		irodsFile.mkdir();
+		irodsFile.close();
+
+		String myTarget = "";
+
+		for (int i = 0; i < count; i++) {
+			myTarget = targetIrodsCollection + "/c" + (10000 + i)
+					+ subdirPrefix;
+			irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+					.instanceIRODSFile(myTarget);
+			irodsFile.mkdir();
+			irodsFile.close();
+		}
+
+		CollectionAndDataObjectListAndSearchAO actual = irodsFileSystem
+				.getIRODSAccessObjectFactory()
+				.getCollectionAndDataObjectListAndSearchAO(irodsAccount);
+		PagingAwareCollectionListing pagingAwareCollectionListing = actual.listDataObjectsAndCollectionsUnderPathProducingPagingAwareCollectionListing(targetIrodsCollection);
+		Assert.assertEquals(count, pagingAwareCollectionListing.getCollectionsCount());
+		Assert.assertEquals(count, pagingAwareCollectionListing.getCollectionsTotalRecords());
+		Assert.assertEquals(0, pagingAwareCollectionListing.getCollectionsOffset());
+		Assert.assertTrue(pagingAwareCollectionListing.isCollectionsComplete());
+		Assert.assertEquals(irodsFileSystem.getJargonProperties().getMaxFilesAndDirsQueryMax(), pagingAwareCollectionListing.getPageSizeUtilized());
+		Assert.assertEquals(0, pagingAwareCollectionListing.getDataObjectsCount());
+		Assert.assertEquals(0, pagingAwareCollectionListing.getDataObjectsTotalRecords());
+		Assert.assertEquals(0, pagingAwareCollectionListing.getDataObjectsOffset());
+		Assert.assertTrue(pagingAwareCollectionListing.isDataObjectsComplete());
+		Assert.assertEquals(count, pagingAwareCollectionListing.getCollectionAndDataObjectListingEntries().size());
+	}
+
 
 	@Test
 	public void testListCollectionsUnderPathDiffUser() throws Exception {
@@ -328,8 +375,56 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 			Assert.assertTrue("file name not correctly returned", resultEntry
 					.getPathOrName().indexOf(fileName) > -1);
 		}
+	}
+	
+	@Test
+	public void testListDataObjectsUnderPathGivingPagingAwareCollectionListing() throws Exception {
+
+		String fileName = "testListDataObjectsUnderPathGivingPagingAwareCollectionListing.txt";
+		String testSubdir = "testListDataObjectsUnderPathGivingPagingAwareCollectionListing";
+		int count = 200;
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSFile irodsFile = null;
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + "/"
+								+ testSubdir);
+		irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetIrodsCollection);
+		irodsFile.mkdir();
+		irodsFile.close();
+
+		String myTarget = "";
+
+		for (int i = 0; i < count; i++) {
+			myTarget = targetIrodsCollection + "/c" + (10000 + i) + fileName;
+			irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+					.instanceIRODSFile(myTarget);
+			irodsFile.createNewFile();
+			irodsFile.close();
+		}
+
+		CollectionAndDataObjectListAndSearchAO actual = irodsFileSystem
+				.getIRODSAccessObjectFactory()
+				.getCollectionAndDataObjectListAndSearchAO(irodsAccount);
+		
+		PagingAwareCollectionListing pagingAwareCollectionListing = actual.listDataObjectsAndCollectionsUnderPathProducingPagingAwareCollectionListing(targetIrodsCollection);
+		Assert.assertEquals(0, pagingAwareCollectionListing.getCollectionsCount());
+		Assert.assertEquals(0, pagingAwareCollectionListing.getCollectionsTotalRecords());
+		Assert.assertEquals(0, pagingAwareCollectionListing.getCollectionsOffset());
+		Assert.assertTrue(pagingAwareCollectionListing.isCollectionsComplete());
+		Assert.assertEquals(irodsFileSystem.getJargonProperties().getMaxFilesAndDirsQueryMax(), pagingAwareCollectionListing.getPageSizeUtilized());
+		Assert.assertEquals(count, pagingAwareCollectionListing.getDataObjectsCount());
+		Assert.assertEquals(count, pagingAwareCollectionListing.getDataObjectsTotalRecords());
+		Assert.assertEquals(0, pagingAwareCollectionListing.getDataObjectsOffset());
+		Assert.assertTrue(pagingAwareCollectionListing.isDataObjectsComplete());
+		Assert.assertEquals(count, pagingAwareCollectionListing.getCollectionAndDataObjectListingEntries().size());
 
 	}
+
 
 	@Test
 	public void testListDataObjectsUnderPathWithAccessInfo() throws Exception {
