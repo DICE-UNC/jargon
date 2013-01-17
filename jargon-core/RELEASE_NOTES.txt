@@ -69,8 +69,5 @@ the conection finalizer could be called and the connection closed at an inapprop
  **Added a listDataObjectsAndCollectionsUnderPathProducingPagingAwareCollectionListing to CollectionAndDataObjectListAndSearchAO, which
  lists child data objects and collections, and provides addtional information on the paging status of the independent collections and data objects.
  
- 
- 
- 
- 
- 
+*[#1140] user listing methods not sorted
+**Added sorts to user find* methods and switched to builder queries
