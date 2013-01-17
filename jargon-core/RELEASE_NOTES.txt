@@ -54,4 +54,7 @@ the conection finalizer could be called and the connection closed at an inapprop
  *[#1109] specific query no data found results in exception
  **Specific query was returning a DataNotFoundException when no results returned, fixed to return an empty result set
  
+ *[#1139] Spaces at the begin or end of a data object name will cause an exception
+ **added trim to DataObjectAO, FileFactory, CollectionAO, and CollectionAndDataObjectListAndSearchAO methods that take a path
+ 
 ==Features==

@@ -700,6 +700,47 @@ public class DataObjectAOImplTest {
 		Assert.assertNotNull("null data object, was not found", dataObject);
 
 	}
+	
+	/**
+	 * Bug [#1139] Spaces at the begin or end of a data object name will cause an exception
+	 * @throws Exception
+	 */
+	@Test
+	public void testFindByAbsolutePathSpacesInProvidedPath() throws Exception {
+		// generate a local scratch file
+		String testFileName = "testFindByAbsolutePathSpacesInProvidedPath.dat";
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String localFileName = FileGenerator
+				.generateFileOfFixedLengthGivenName(absPath, testFileName, 10);
+
+		String targetIrodsFile = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
+								+ testFileName);
+		File sourceFile = new File(localFileName);
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSFileFactory irodsFileFactory = irodsFileSystem
+				.getIRODSFileFactory(irodsAccount);
+
+		DataTransferOperations dto = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataTransferOperations(
+						irodsAccount);
+		IRODSFile destFile = irodsFileFactory
+				.instanceIRODSFile(targetIrodsFile);
+		dto.putOperation(sourceFile, destFile, null, null);
+
+		DataObjectAO dataObjectAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
+
+		String targetIrodsFileQueryName = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + " / "	+ testFileName + "   ");
+		DataObject dataObject = dataObjectAO.findByAbsolutePath(targetIrodsFileQueryName);
+		Assert.assertNotNull("null data object, was not found", dataObject);
+
+	}
 
 	@Test
 	public void testFindByAbsolutePath() throws Exception {

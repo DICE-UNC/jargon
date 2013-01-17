@@ -138,7 +138,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 		String absPath = MiscIRODSUtils
 				.buildAbsolutePathFromCollectionParentAndFileName(
-						collectionPath, dataName);
+						collectionPath.trim(), dataName.trim());
 		ObjStat objStat = collectionAndDataObjectListAndSearchAO
 				.retrieveObjectStatForPath(absPath);
 
@@ -2847,7 +2847,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		log.info("absolute path: {}", dataObjectAbsolutePath);
 
 		final ModAvuMetadataInp modifyAvuMetadataInp = ModAvuMetadataInp
-				.instanceForModifyDataObjectMetadata(dataObjectAbsolutePath,
+				.instanceForModifyDataObjectMetadata(dataObjectAbsolutePath.trim(),
 						currentAvuData, newAvuData);
 
 		log.debug("sending avu request");
@@ -2911,9 +2911,9 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		log.info(" data object name: {}", dataObjectName);
 
 		StringBuilder sb = new StringBuilder();
-		sb.append(irodsCollectionAbsolutePath);
+		sb.append(irodsCollectionAbsolutePath.trim());
 		sb.append("/");
-		sb.append(dataObjectName);
+		sb.append(dataObjectName.trim());
 
 		modifyAVUMetadata(sb.toString(), currentAvuData, newAvuData);
 
