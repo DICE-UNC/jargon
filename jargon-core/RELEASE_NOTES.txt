@@ -58,3 +58,6 @@ the conection finalizer could be called and the connection closed at an inapprop
  **added trim to DataObjectAO, FileFactory, CollectionAO, and CollectionAndDataObjectListAndSearchAO methods that take a path
  
 ==Features==
+
+*[#1140] user listing methods not sorted
+**Added sorts to user find* methods and switched to builder queries
