@@ -94,7 +94,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 			throw new IllegalArgumentException("absolutePath is null or empty");
 		}
 
-		ObjStat objStat = retrieveObjectStatForPath(absolutePath);
+		ObjStat objStat = retrieveObjectStatForPath(absolutePath.trim());
 
 		/*
 		 * See if jargon supports the given object type
@@ -422,7 +422,10 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 	@Override
 	public List<CollectionAndDataObjectListingEntry> searchCollectionsBasedOnName(
 			final String searchTerm) throws JargonException {
-		return searchCollectionsBasedOnName(searchTerm, 0);
+		if (searchTerm == null) {
+			throw new IllegalArgumentException("null searchTerm");
+		}
+		return searchCollectionsBasedOnName(searchTerm.trim(), 0);
 	}
 
 	/*
@@ -1526,7 +1529,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		MiscIRODSUtils.checkPathSizeForMax(irodsAbsolutePath);
 
 		DataObjInpForObjStat dataObjInp = DataObjInpForObjStat
-				.instance(irodsAbsolutePath);
+				.instance(irodsAbsolutePath.trim());
 		Tag response;
 		try {
 			response = getIRODSProtocol().irodsFunction(dataObjInp);

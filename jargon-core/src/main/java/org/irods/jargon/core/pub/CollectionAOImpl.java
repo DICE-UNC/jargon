@@ -395,7 +395,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 			if (!collectionAbsolutePath.isEmpty()) {
 				builder.addConditionAsGenQueryField(
 						RodsGenQueryEnum.COL_COLL_NAME,
-						QueryConditionOperators.EQUAL, collectionAbsolutePath);
+						QueryConditionOperators.EQUAL, collectionAbsolutePath.trim());
 			}
 
 			for (AVUQueryElement queryElement : avuQuery) {
@@ -459,7 +459,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 		MiscIRODSUtils.checkPathSizeForMax(absolutePath);
 
 		final ModAvuMetadataInp modifyAvuMetadataInp = ModAvuMetadataInp
-				.instanceForAddCollectionMetadata(absolutePath, avuData);
+				.instanceForAddCollectionMetadata(absolutePath.trim(), avuData);
 
 		log.debug("sending avu request");
 
@@ -510,7 +510,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 		MiscIRODSUtils.checkPathSizeForMax(absolutePath);
 
 		final ModAvuMetadataInp modifyAvuMetadataInp = ModAvuMetadataInp
-				.instanceForDeleteCollectionMetadata(absolutePath, avuData);
+				.instanceForDeleteCollectionMetadata(absolutePath.trim(), avuData);
 
 		log.debug("sending avu request");
 
@@ -569,7 +569,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 					AVUQueryElement.AVUQueryPart.UNITS,
 					AVUQueryOperatorEnum.EQUAL, avuData.getUnit()));
 			result = this.findMetadataValuesByMetadataQueryForCollection(
-					queryElements, absolutePath);
+					queryElements, absolutePath.trim());
 		} catch (JargonQueryException e) {
 			log.error("error querying data for avu", e);
 			throw new JargonException("error querying data for AVU");
@@ -623,7 +623,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 		MiscIRODSUtils.checkPathSizeForMax(absolutePath);
 
 		final ModAvuMetadataInp modifyAvuMetadataInp = ModAvuMetadataInp
-				.instanceForModifyCollectionMetadata(absolutePath,
+				.instanceForModifyCollectionMetadata(absolutePath.trim(),
 						currentAvuData, newAvuData);
 
 		log.debug("sending avu request");
