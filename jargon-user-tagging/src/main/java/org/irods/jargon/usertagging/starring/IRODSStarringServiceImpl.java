@@ -332,23 +332,7 @@ public class IRODSStarringServiceImpl extends AbstractIRODSTaggingService
 		log.info("modified");
 	}
 
-	/**
-	 * @param irodsAbsolutePath
-	 * @return
-	 * @throws JargonException
-	 * @throws FileNotFoundException
-	 */
-	private ObjStat getObjStatForAbsolutePath(final String irodsAbsolutePath)
-			throws JargonException, FileNotFoundException {
-		CollectionAndDataObjectListAndSearchAO collectionAndDataObjectListAndSearchAO = getIrodsAccessObjectFactory()
-				.getCollectionAndDataObjectListAndSearchAO(getIrodsAccount());
-
-		ObjStat objStat = collectionAndDataObjectListAndSearchAO
-				.retrieveObjectStatForPath(irodsAbsolutePath);
-
-		MiscIRODSUtils.evaluateSpecCollSupport(objStat);
-		return objStat;
-	}
+	
 
 	/**
 	 * @param irodsAbsolutePath

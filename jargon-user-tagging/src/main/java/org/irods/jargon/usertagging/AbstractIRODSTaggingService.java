@@ -1,7 +1,12 @@
 package org.irods.jargon.usertagging;
 
 import org.irods.jargon.core.connection.IRODSAccount;
+import org.irods.jargon.core.exception.FileNotFoundException;
+import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.pub.CollectionAndDataObjectListAndSearchAO;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
+import org.irods.jargon.core.pub.domain.ObjStat;
+import org.irods.jargon.core.utils.MiscIRODSUtils;
 
 public abstract class AbstractIRODSTaggingService {
 
@@ -42,6 +47,24 @@ public abstract class AbstractIRODSTaggingService {
 
 	protected IRODSAccount getIrodsAccount() {
 		return irodsAccount;
+	}
+	
+	/**
+	 * @param irodsAbsolutePath
+	 * @return
+	 * @throws JargonException
+	 * @throws FileNotFoundException
+	 */
+	protected ObjStat getObjStatForAbsolutePath(final String irodsAbsolutePath)
+			throws JargonException, FileNotFoundException {
+		CollectionAndDataObjectListAndSearchAO collectionAndDataObjectListAndSearchAO = getIrodsAccessObjectFactory()
+				.getCollectionAndDataObjectListAndSearchAO(getIrodsAccount());
+
+		ObjStat objStat = collectionAndDataObjectListAndSearchAO
+				.retrieveObjectStatForPath(irodsAbsolutePath);
+
+		MiscIRODSUtils.evaluateSpecCollSupport(objStat);
+		return objStat;
 	}
 
 }
