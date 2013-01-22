@@ -71,3 +71,8 @@ the conection finalizer could be called and the connection closed at an inapprop
  
 *[#1140] user listing methods not sorted
 **Added sorts to user find* methods and switched to builder queries
+
+* [#511] add list shared data objs and permissions in coll and data obj list entry
+**Added IRODSSharingService and related code in the jargon-user-tagging project.  The org.irods.jargon.usertagging.sharing
+contains code to make shares a first-class object in Jargon, and works similar to the starred folder.  The top level
+of a share is marked with a special AVU, and the service includes code to manage and query shares in various ways.
