@@ -178,8 +178,9 @@ public class SpecificQueryAOImpl extends IRODSGenericAO implements
 		}
 
 		String colNames = sql.substring(posSelect + 6, posFrom);
-		posSelect = colNames.indexOf("distinct");
 
+		// check for distinct
+		posSelect = colNames.indexOf("distinct");
 		if (posSelect > -1) {
 			// trim off distinct
 			colNames = colNames.substring(posSelect + 8);
@@ -189,6 +190,22 @@ public class SpecificQueryAOImpl extends IRODSGenericAO implements
 
 		List<String> listToReturn = new ArrayList<String>();
 		for (String name : colList) {
+			// check for aggregates
+			// look for closed paren first because open paren may have been removed
+			// if distinct keyword was previously trimmed
+			int posCloseParen = name.indexOf(")");
+			if (posCloseParen > -1) {
+				// trim off parens 
+				int posOpenParen = colNames.indexOf("(");
+				if (posOpenParen > -1) {
+					name = name.substring(posOpenParen + 1, posCloseParen);
+				}
+				else {
+					name = name.substring(0, posCloseParen);
+				}
+				
+			}
+			
 			listToReturn.add(name.trim());
 		}
 
