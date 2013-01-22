@@ -65,6 +65,54 @@ public class IRODSSharingServiceImpl extends AbstractIRODSTaggingService
 			final IRODSAccount irodsAccount) {
 		super(irodsAccessObjectFactory, irodsAccount);
 	}
+	
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.usertagging.sharing.IRODSSharingService#removeShare(java.lang.String)
+	 */
+	@Override
+	public void removeShare(final String irodsAbsolutePath) throws FileNotFoundException, JargonException {
+		log.info("removeShare()");
+		
+		if(irodsAbsolutePath == null || irodsAbsolutePath.isEmpty()) {
+			throw new IllegalArgumentException("null or empty irodsAbsolutePath");
+		}
+	
+		log.info("irodsAbsolutePath:[]", irodsAbsolutePath);
+
+		/*
+		 * Find objStat (will get file not found exception if abs path does not exist.
+		 * 
+		 * Look for an already existing share, if null, no delete is required
+		 */
+		ObjStat objStat = getObjStatForAbsolutePath(irodsAbsolutePath);
+
+		IRODSSharedFileOrCollection irodsSharedFileOrCollection = this.findSharedGivenObjStat(irodsAbsolutePath, objStat);
+		
+		if (irodsSharedFileOrCollection == null) {
+			log.warn("no share exists, delete action ignored...");
+			return;
+		}
+		
+		/*
+		 * share exists, do the delete
+		 */
+		
+		// TODO: should I remove acls, etc?  right now just delete the AVU
+		
+		AvuData avuData = buildAVUBasedOnShare(irodsSharedFileOrCollection);
+
+		if (objStat.isSomeTypeOfCollection()) {
+			log.info("calling delete on a Collection");
+			CollectionAO collectionAO = this.getIrodsAccessObjectFactory().getCollectionAO(getIrodsAccount());
+			collectionAO.deleteAVUMetadata(irodsSharedFileOrCollection.getDomainUniqueName(), avuData);
+		} else {
+			DataObjectAO dataObjectAO = this.getIrodsAccessObjectFactory().getDataObjectAO(getIrodsAccount());
+			dataObjectAO.deleteAVUMetadata(irodsSharedFileOrCollection.getDomainUniqueName(), avuData);
+		}
+		
+		log.info("delete action successful");
+
+	}
 
 	/*
 	 * (non-Javadoc)
@@ -76,7 +124,7 @@ public class IRODSSharingServiceImpl extends AbstractIRODSTaggingService
 	@Override
 	public void createShare(
 			final IRODSSharedFileOrCollection irodsSharedFileOrCollection)
-			throws FileNotFoundException, JargonException {
+			throws ShareAlreadyExistsException, FileNotFoundException, JargonException {
 
 		log.info("createShare()");
 
@@ -91,19 +139,18 @@ public class IRODSSharingServiceImpl extends AbstractIRODSTaggingService
 		ObjStat objStat = getObjStatForAbsolutePath(irodsSharedFileOrCollection
 				.getDomainUniqueName());
 
-		// find share? TODO: add a find if already shared
-
-		// owner can only create share if not exists, OWN can add users to a
-		// share
-
+		log.info("seeing if share already present..");
+		IRODSSharedFileOrCollection currentSharedFile = this.findSharedGivenObjStat(irodsSharedFileOrCollection.getDomainUniqueName(), objStat);
+		if (currentSharedFile != null) {
+			throw new ShareAlreadyExistsException("share already exists");
+		}
+		
 		/*
 		 * OK, I can tag this as a share
 		 */
 
 		log.info("adding share tag");
-		AvuData avuData = AvuData.instance(irodsSharedFileOrCollection
-				.getShareName(), getIrodsAccount().getUserName(),
-				UserTaggingConstants.SHARE_AVU_UNIT);
+		AvuData avuData = buildAVUBasedOnShare(irodsSharedFileOrCollection);
 
 		log.info("setting inheritance and ACL");
 
@@ -119,12 +166,26 @@ public class IRODSSharingServiceImpl extends AbstractIRODSTaggingService
 		log.info("share created");
 	}
 
+	/**
+	 * @param irodsSharedFileOrCollection
+	 * @return
+	 * @throws JargonException
+	 */
+	private AvuData buildAVUBasedOnShare(
+			final IRODSSharedFileOrCollection irodsSharedFileOrCollection)
+			throws JargonException {
+		AvuData avuData = AvuData.instance(irodsSharedFileOrCollection
+				.getShareName(), getIrodsAccount().getUserName(),
+				UserTaggingConstants.SHARE_AVU_UNIT);
+		return avuData;
+	}
+
 	/* (non-Javadoc)
 	 * @see org.irods.jargon.usertagging.sharing.IRODSSharingService#findShareByAbsolutePath(java.lang.String)
 	 */
 	@Override
 	public IRODSSharedFileOrCollection findShareByAbsolutePath(
-			final String irodsAbsolutePath) throws FileNotFoundException,
+			final String irodsAbsolutePath) throws ShareAlreadyExistsException, FileNotFoundException,
 			JargonException {
 
 		log.info("findShareByAbsolutePath()");
@@ -149,6 +210,8 @@ public class IRODSSharingServiceImpl extends AbstractIRODSTaggingService
 		return findSharedGivenObjStat(irodsAbsolutePath, objStat);
 
 	}
+	
+	
 
 	/**
 	 * Given an objStat, look for the share AVU marker and create the
