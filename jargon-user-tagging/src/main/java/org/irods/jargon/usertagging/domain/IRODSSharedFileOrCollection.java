@@ -54,6 +54,8 @@ public class IRODSSharedFileOrCollection extends UserAnnotatedCatalogItem
 		sb.append(shareName); 
 		sb.append("\n\tmetadataDomain:");
 		sb.append(this.getMetadataDomain()); 
+		sb.append("\n\tpath:");
+		sb.append(this.getDomainUniqueName());
 		sb.append("\n\tshareOwner:");
 		sb.append(shareOwner); 
 		sb.append("\n\tshareZone:");

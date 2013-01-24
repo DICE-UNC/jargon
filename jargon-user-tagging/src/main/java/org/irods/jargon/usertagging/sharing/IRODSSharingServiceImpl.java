@@ -11,10 +11,12 @@ import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.DuplicateDataException;
 import org.irods.jargon.core.exception.FileNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.exception.OperationNotSupportedByIRODSVersionException;
 import org.irods.jargon.core.pub.CollectionAO;
 import org.irods.jargon.core.pub.CollectionAndDataObjectListAndSearchAO;
 import org.irods.jargon.core.pub.DataObjectAO;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
+import org.irods.jargon.core.pub.SpecificQueryAO;
 import org.irods.jargon.core.pub.domain.AvuData;
 import org.irods.jargon.core.pub.domain.ObjStat;
 import org.irods.jargon.core.pub.domain.UserFilePermission;
@@ -22,8 +24,11 @@ import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.query.AVUQueryElement;
 import org.irods.jargon.core.query.AVUQueryElement.AVUQueryPart;
 import org.irods.jargon.core.query.AVUQueryOperatorEnum;
+import org.irods.jargon.core.query.IRODSQueryResultRow;
 import org.irods.jargon.core.query.JargonQueryException;
 import org.irods.jargon.core.query.MetaDataAndDomainData;
+import org.irods.jargon.core.query.SpecificQuery;
+import org.irods.jargon.core.query.SpecificQueryResultSet;
 import org.irods.jargon.core.query.MetaDataAndDomainData.MetadataDomain;
 import org.irods.jargon.core.utils.MiscIRODSUtils;
 import org.irods.jargon.usertagging.AbstractIRODSTaggingService;
@@ -403,6 +408,118 @@ public class IRODSSharingServiceImpl extends AbstractIRODSTaggingService
 			dataObjectAO.setAccessPermission(shareUser.getZone(),
 					irodsSharedFileOrCollection.getDomainUniqueName(),
 					shareUser.getUserName(), shareUser.getFilePermission());
+		}
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.usertagging.sharing.IRODSSharingService#listSharedCollectionsOwnedByAUser(java.lang.String, java.lang.String)
+	 */
+	@Override
+	public List<IRODSSharedFileOrCollection> listSharedCollectionsOwnedByAUser(final String userName, final String userZone) throws JargonException {
+		log.info("listSharedCollectionsByAUser()");
+		
+		if (userName == null | userName.isEmpty()) {
+			throw new IllegalArgumentException("null or empty userName");
+		}
+		
+		if (userZone == null) {
+			throw new IllegalArgumentException("null userZone");
+		}
+		
+		log.info("userName:{}", userName);
+		
+		/*
+		 * Use current zone if one not set
+		 */
+		
+		String myZone;
+		if (userZone.isEmpty()) {
+			myZone = this.getIrodsAccount().getZone();
+		} else {
+			myZone = userZone;
+		}
+		
+		log.info("zone used:{}", myZone);
+		
+		
+		/*
+		 * Runs the listSharedCollectionsOwnedByUser specific query, which must be loaded on the the iRODS server
+		 * arguments are userName and userZone
+		 */
+		List<String> arguments = new ArrayList<String>();
+		arguments.add(userName);
+		arguments.add(userZone);
+		
+		SpecificQuery specificQuery = SpecificQuery.instanceArguments("listSharedCollectionsOwnedByUser", arguments, 0);
+		SpecificQueryResultSet specificQueryResultSet = runSpecificQuery(specificQuery);
+		
+		List<IRODSSharedFileOrCollection> irodsSharedFileOrCollections = new ArrayList<IRODSSharedFileOrCollection>();
+		IRODSSharedFileOrCollection irodsSharedFileOrCollection;
+		StringBuilder sb;
+		
+		for (IRODSQueryResultRow row : specificQueryResultSet.getResults()) {
+			sb = new StringBuilder();
+			sb.append(row.getColumn(1));
+			sb.append(row.getColumn(2));
+			irodsSharedFileOrCollection = new IRODSSharedFileOrCollection(MetadataDomain.COLLECTION, 
+					sb.toString(), row.getColumn(7), row.getColumn(3), 
+					row.getColumn(4), new ArrayList<ShareUser>());
+			augmentRowWithCountData(specificQueryResultSet,
+					irodsSharedFileOrCollection, row);
+			irodsSharedFileOrCollections.add(irodsSharedFileOrCollection);	
+		}
+		
+		return irodsSharedFileOrCollections;
+
+	}
+
+	/**
+	 * @param specificQueryResultSet
+	 * @param irodsSharedFileOrCollection
+	 * @param row
+	 */
+	private void augmentRowWithCountData(
+			SpecificQueryResultSet specificQueryResultSet,
+			IRODSSharedFileOrCollection irodsSharedFileOrCollection,
+			IRODSQueryResultRow row) {
+		// add count info
+		irodsSharedFileOrCollection.setCount(row.getRecordCount());
+		irodsSharedFileOrCollection.setLastResult(row.isLastResult());
+		irodsSharedFileOrCollection.setTotalRecords(specificQueryResultSet.getTotalRecords());
+	}
+
+	/**
+	 * @param specificQuery
+	 * @throws JargonException
+	 * @throws DataNotFoundException
+	 */
+	private SpecificQueryResultSet runSpecificQuery(SpecificQuery specificQuery)
+			throws JargonException, DataNotFoundException {
+		
+		checkSpecificQuerySupport();
+		try {
+			SpecificQueryAO queryAO = this.getIrodsAccessObjectFactory()
+					.getSpecificQueryAO(this.getIrodsAccount());
+			
+			
+			return queryAO
+					.executeSpecificQueryUsingAlias(specificQuery, this.getIrodsAccessObjectFactory()
+							.getJargonProperties().getMaxFilesAndDirsQueryMax());
+		} catch (JargonQueryException e) {
+			log.error("error in specific query", e);
+			throw new JargonException("error in specific query", e);
+		}
+	}
+
+	/**
+	 * @throws JargonException
+	 * @throws OperationNotSupportedByIRODSVersionException
+	 */
+	private void checkSpecificQuerySupport() throws JargonException,
+			OperationNotSupportedByIRODSVersionException {
+		if (!this.getIrodsAccessObjectFactory().getIRODSServerProperties(getIrodsAccount()).isSupportsSpecificQuery()) {
+			log.error("specific query is not supported by this iRODS server:{}", this.getIrodsAccessObjectFactory().getIRODSServerProperties(getIrodsAccount()));
+			throw new OperationNotSupportedByIRODSVersionException("specific query not supported");
 		}
 	}
 
