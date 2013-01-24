@@ -5,6 +5,7 @@ import java.util.List;
 import org.irods.jargon.core.exception.FileNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.usertagging.domain.IRODSSharedFileOrCollection;
+import org.irods.jargon.usertagging.domain.ShareUser;
 
 /**
  * Service interface to create and manage shares. Like the star and tagging
@@ -94,5 +95,36 @@ public interface IRODSSharingService {
 	 */
 	List<IRODSSharedFileOrCollection> listSharedCollectionsOwnedByAUser(
 			String userName, String userZone) throws JargonException;
+
+	/**
+	 * Retrieve a list of collections shared with a given user by another user, as determined by the owner of that collection.
+	 * <p/>
+	 * Note here that, for efficiency, the list of users (via theACLs) is not returned in this variant.  It is intended that obtaining
+	 * the listing would be done as a separate request.  A variant may be added later that does do this extra processing
+	 * @param userName <code>String</code> with the name of the user who is doing the sharing, based on the owner of the collection.
+	 * @param userZone <code>String</code> with the zone for the user.  This may be set to blank, in which case the zone of the 
+	 * logged in user will be used
+	 * <p/>
+	 * Note that this method uses Specific Query, and the listSharedCollectionsSharedWithUser query alias must be provided.  This can 
+	 * be initialized by running a script in the jargon-user-tagging project to set up all required specific queries.  See project documentation.
+	 * This method requires and iRODS server that supports Specific Query (iRODS 3.1+)
+	 * @return <code>List<code> of {@link IRODSSharedFileOrCollection} that is shared by a party with the user
+	 * @throws JargonException
+	 */
+	List<IRODSSharedFileOrCollection> listSharedCollectionsSharedWithUser(
+			String userName, String userZone) throws JargonException;
+
+	/**
+	 * Handy method to retrieve ACL share details for a share at the given absolute path.  Note that if
+	 * there is no share, an empty list is returned.  This seems to convey the message with the least amount of surprise.
+	 * 
+	 * @param <code>String</code> with a valid iRODS absolute path to a file
+	 *            or collection
+	 * @return <code>List</code> of {@link ShareUser}
+	 * @throws FileNotFoundException if the path cannot be found
+	 * @throws JargonException
+	 */
+	List<ShareUser> listUsersForShare(String irodsAbsolutePath)
+			throws FileNotFoundException, JargonException;
 
 }

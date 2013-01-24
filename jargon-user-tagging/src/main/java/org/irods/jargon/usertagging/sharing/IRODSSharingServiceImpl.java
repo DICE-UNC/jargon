@@ -473,6 +473,87 @@ public class IRODSSharingServiceImpl extends AbstractIRODSTaggingService
 
 	}
 
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.usertagging.sharing.IRODSSharingService#listSharedCollectionsSharedWithUser(java.lang.String, java.lang.String)
+	 */
+	@Override
+	public List<IRODSSharedFileOrCollection> listSharedCollectionsSharedWithUser(final String userName, final String userZone) throws JargonException {
+		log.info("listSharedCollectionsSharedWithUser()");
+		
+		if (userName == null | userName.isEmpty()) {
+			throw new IllegalArgumentException("null or empty userName");
+		}
+		
+		if (userZone == null) {
+			throw new IllegalArgumentException("null userZone");
+		}
+		
+		log.info("userName:{}", userName);
+		
+		/*
+		 * Use current zone if one not set
+		 */
+		
+		String myZone;
+		if (userZone.isEmpty()) {
+			myZone = this.getIrodsAccount().getZone();
+		} else {
+			myZone = userZone;
+		}
+		
+		log.info("zone used:{}", myZone);
+		
+		
+		/*
+		 * Runs the listSharedCollectionsSharedWithUser specific query, which must be loaded on the the iRODS server
+		 * arguments are userName and userZone
+		 */
+		List<String> arguments = new ArrayList<String>();
+		arguments.add(userName);
+		arguments.add(userZone);
+		
+		SpecificQuery specificQuery = SpecificQuery.instanceArguments("listSharedCollectionsSharedWithUser", arguments, 0);
+		SpecificQueryResultSet specificQueryResultSet = runSpecificQuery(specificQuery);
+		
+		List<IRODSSharedFileOrCollection> irodsSharedFileOrCollections = new ArrayList<IRODSSharedFileOrCollection>();
+		IRODSSharedFileOrCollection irodsSharedFileOrCollection;
+		StringBuilder sb;
+		
+		for (IRODSQueryResultRow row : specificQueryResultSet.getResults()) {
+			sb = new StringBuilder();
+			sb.append(row.getColumn(1));
+			sb.append(row.getColumn(2));
+			irodsSharedFileOrCollection = new IRODSSharedFileOrCollection(MetadataDomain.COLLECTION, 
+					sb.toString(), row.getColumn(7), row.getColumn(3), 
+					row.getColumn(4), new ArrayList<ShareUser>());
+			augmentRowWithCountData(specificQueryResultSet,
+					irodsSharedFileOrCollection, row);
+			irodsSharedFileOrCollections.add(irodsSharedFileOrCollection);	
+		}
+		
+		return irodsSharedFileOrCollections;
+
+	}
+
+	@Override
+	public List<ShareUser> listUsersForShare(final String irodsAbsolutePath) throws FileNotFoundException, JargonException {
+		log.info("listUsersForShare()");
+		IRODSSharedFileOrCollection share = this.findShareByAbsolutePath(irodsAbsolutePath);
+	
+		List<ShareUser> shareUsers;
+		if (share == null) {
+			log.info("no share, return empty list");
+			shareUsers = new ArrayList<ShareUser>();
+		} else {
+			shareUsers = share.getShareUsers();
+		}
+		
+		return shareUsers;
+	
+	}
+	
+	
+	
 	/**
 	 * @param specificQueryResultSet
 	 * @param irodsSharedFileOrCollection
