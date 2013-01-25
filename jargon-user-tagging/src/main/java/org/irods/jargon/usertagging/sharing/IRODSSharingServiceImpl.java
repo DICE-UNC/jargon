@@ -516,19 +516,10 @@ public class IRODSSharingServiceImpl extends AbstractIRODSTaggingService
 		SpecificQueryResultSet specificQueryResultSet = runSpecificQuery(specificQuery);
 		
 		List<IRODSSharedFileOrCollection> irodsSharedFileOrCollections = new ArrayList<IRODSSharedFileOrCollection>();
-		IRODSSharedFileOrCollection irodsSharedFileOrCollection;
-		StringBuilder sb;
 		
 		for (IRODSQueryResultRow row : specificQueryResultSet.getResults()) {
-			sb = new StringBuilder();
-			sb.append(row.getColumn(1));
-			sb.append(row.getColumn(2));
-			irodsSharedFileOrCollection = new IRODSSharedFileOrCollection(MetadataDomain.COLLECTION, 
-					sb.toString(), row.getColumn(7), row.getColumn(3), 
-					row.getColumn(4), new ArrayList<ShareUser>());
-			augmentRowWithCountData(specificQueryResultSet,
-					irodsSharedFileOrCollection, row);
-			irodsSharedFileOrCollections.add(irodsSharedFileOrCollection);	
+			addSharedFileOrCollectionToListFromRow(specificQueryResultSet,
+					irodsSharedFileOrCollections, row);	
 		}
 		
 		return irodsSharedFileOrCollections;
@@ -573,28 +564,39 @@ public class IRODSSharingServiceImpl extends AbstractIRODSTaggingService
 		List<String> arguments = new ArrayList<String>();
 		arguments.add(userName);
 		arguments.add(userZone);
+		arguments.add(userName);
 		
 		SpecificQuery specificQuery = SpecificQuery.instanceArguments("listSharedCollectionsSharedWithUser", arguments, 0);
 		SpecificQueryResultSet specificQueryResultSet = runSpecificQuery(specificQuery);
 		
 		List<IRODSSharedFileOrCollection> irodsSharedFileOrCollections = new ArrayList<IRODSSharedFileOrCollection>();
-		IRODSSharedFileOrCollection irodsSharedFileOrCollection;
-		StringBuilder sb;
 		
 		for (IRODSQueryResultRow row : specificQueryResultSet.getResults()) {
-			sb = new StringBuilder();
-			sb.append(row.getColumn(1));
-			sb.append(row.getColumn(2));
-			irodsSharedFileOrCollection = new IRODSSharedFileOrCollection(MetadataDomain.COLLECTION, 
-					sb.toString(), row.getColumn(7), row.getColumn(3), 
-					row.getColumn(4), new ArrayList<ShareUser>());
-			augmentRowWithCountData(specificQueryResultSet,
-					irodsSharedFileOrCollection, row);
-			irodsSharedFileOrCollections.add(irodsSharedFileOrCollection);	
+			addSharedFileOrCollectionToListFromRow(specificQueryResultSet,
+					irodsSharedFileOrCollections, row);	
 		}
 		
 		return irodsSharedFileOrCollections;
 
+	}
+
+	/**
+	 * @param specificQueryResultSet
+	 * @param irodsSharedFileOrCollections
+	 * @param row
+	 * @throws JargonException
+	 */
+	private void addSharedFileOrCollectionToListFromRow(
+			SpecificQueryResultSet specificQueryResultSet,
+			List<IRODSSharedFileOrCollection> irodsSharedFileOrCollections,
+			IRODSQueryResultRow row) throws JargonException {
+		IRODSSharedFileOrCollection irodsSharedFileOrCollection;
+		irodsSharedFileOrCollection = new IRODSSharedFileOrCollection(MetadataDomain.COLLECTION, 
+				row.getColumn(2), row.getColumn(7), row.getColumn(3), 
+				row.getColumn(4), new ArrayList<ShareUser>());
+		augmentRowWithCountData(specificQueryResultSet,
+				irodsSharedFileOrCollection, row);
+		irodsSharedFileOrCollections.add(irodsSharedFileOrCollection);
 	}
 
 	/* (non-Javadoc)
