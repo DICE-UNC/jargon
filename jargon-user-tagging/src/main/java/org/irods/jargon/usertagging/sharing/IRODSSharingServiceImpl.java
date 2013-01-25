@@ -49,6 +49,17 @@ import org.slf4j.LoggerFactory;
  * every file or collection in a deeply nested shared collection as 'shared', as
  * it would be based purely on the ACL settings. As a first class object, a
  * share can have an alias name, and is considered one unit.
+ * <p/>
+ * Note that shares are just using metadata to make a shared collection or data object a 'first class' object,
+ * differentiated from all of the child collections and data objects.  The members who can view a share are simply
+ * based on their ACLs. This makes sharing a very thin layer, with little brittleness that would result from
+ * playing tricks with the ACLs.  It also means that adjusting the 'members' of a share, or the exact access
+ * right for any user in the share, is just a matter of manipulating the ACLs using the normal methods in the 
+ * jargon-core {@link DataObjectAO} and {@link CollectionAO} services.  Look there if you need to tweak members of
+ * a share.
+ * <p/>
+ * This means that anytiome you create a share, that any ACL manipulation in that share will invite people to see that
+ * as a share. 
  * 
  * @author Mike Conway - DICE (www.irods.org)
  * 
@@ -102,8 +113,6 @@ public class IRODSSharingServiceImpl extends AbstractIRODSTaggingService
 		 * share exists, do the delete
 		 */
 		
-		// TODO: should I remove acls, etc?  right now just delete the AVU
-		
 		AvuData avuData = buildAVUBasedOnShare(irodsSharedFileOrCollection);
 
 		if (objStat.isSomeTypeOfCollection()) {
@@ -117,6 +126,59 @@ public class IRODSSharingServiceImpl extends AbstractIRODSTaggingService
 		
 		log.info("delete action successful");
 
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.usertagging.sharing.IRODSSharingService#updateShareName(java.lang.String, java.lang.String)
+	 */
+	@Override
+	public void updateShareName(final String irodsAbsolutePath, final String newShareName) throws FileNotFoundException, DataNotFoundException, JargonException {
+		log.info("updateShareName()");
+		
+		if(irodsAbsolutePath == null || irodsAbsolutePath.isEmpty()) {
+			throw new IllegalArgumentException("null or empty irodsAbsolutePath");
+		}
+		
+		if (newShareName == null || newShareName.isEmpty()) {
+			throw new IllegalArgumentException("null or empty newShareName");
+		}
+	
+		log.info("irodsAbsolutePath:[]", irodsAbsolutePath);
+		log.info("newShareName:{}", newShareName);
+
+		/*
+		 * Find objStat (will get file not found exception if abs path does not exist.
+		 * 
+		 * Look for an already existing share, if null, no delete is required
+		 */
+		ObjStat objStat = getObjStatForAbsolutePath(irodsAbsolutePath);
+
+		IRODSSharedFileOrCollection irodsSharedFileOrCollection = this.findSharedGivenObjStat(irodsAbsolutePath, objStat);
+		if (irodsSharedFileOrCollection == null) {
+			log.error("no share exists, cannot update for path:{}", irodsAbsolutePath);
+			throw new DataNotFoundException("no share exists at path");
+		}
+		
+		log.info("current share:{}", irodsSharedFileOrCollection);
+		
+		// do a metadata update
+		
+		if (objStat.isSomeTypeOfCollection()) {
+			log.info("updating collection AVU for share...");
+			CollectionAO collectionAO = this.getIrodsAccessObjectFactory().getCollectionAO(getIrodsAccount());
+			AvuData currentData = AvuData.instance(irodsSharedFileOrCollection.getShareName(), irodsSharedFileOrCollection.getShareOwner(), UserTaggingConstants.SHARE_AVU_UNIT);
+			AvuData newData = AvuData.instance(newShareName, irodsSharedFileOrCollection.getShareOwner(), UserTaggingConstants.SHARE_AVU_UNIT);
+			collectionAO.modifyAVUMetadata(irodsAbsolutePath, currentData, newData);
+		} else {
+			log.info("updating data object AVU for share...");
+			DataObjectAO dataObjectAO = this.getIrodsAccessObjectFactory().getDataObjectAO(getIrodsAccount());
+			AvuData currentData = AvuData.instance(irodsSharedFileOrCollection.getShareName(), irodsSharedFileOrCollection.getShareOwner(), UserTaggingConstants.SHARE_AVU_UNIT);
+			AvuData newData = AvuData.instance(newShareName, irodsSharedFileOrCollection.getShareOwner(), UserTaggingConstants.SHARE_AVU_UNIT);
+			dataObjectAO.modifyAVUMetadata(irodsAbsolutePath, currentData, newData);
+		}
+		
+		log.info("share name modified successfully");
+		
 	}
 
 	/*
@@ -535,6 +597,9 @@ public class IRODSSharingServiceImpl extends AbstractIRODSTaggingService
 
 	}
 
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.usertagging.sharing.IRODSSharingService#listUsersForShare(java.lang.String)
+	 */
 	@Override
 	public List<ShareUser> listUsersForShare(final String irodsAbsolutePath) throws FileNotFoundException, JargonException {
 		log.info("listUsersForShare()");
@@ -551,8 +616,6 @@ public class IRODSSharingServiceImpl extends AbstractIRODSTaggingService
 		return shareUsers;
 	
 	}
-	
-	
 	
 	/**
 	 * @param specificQueryResultSet

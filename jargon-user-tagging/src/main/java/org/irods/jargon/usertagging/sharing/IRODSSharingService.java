@@ -2,6 +2,7 @@ package org.irods.jargon.usertagging.sharing;
 
 import java.util.List;
 
+import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.FileNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.usertagging.domain.IRODSSharedFileOrCollection;
@@ -126,5 +127,18 @@ public interface IRODSSharingService {
 	 */
 	List<ShareUser> listUsersForShare(String irodsAbsolutePath)
 			throws FileNotFoundException, JargonException;
+
+	/**
+	 * Update the name of the share at the given path
+	 * @param irodsAbsolutePath <code>String</code> with a valid iRODS absolute path to a file
+	 *            or collection
+	 * @param newShareName <code>String</code> with the desired name of the share
+	 * @throws FileNotFoundException if the iRODS file or collection is missing
+	 * @throws DataNotFoundException if a current share is not found
+	 * @throws JargonException
+	 */
+	void updateShareName(String irodsAbsolutePath, String newShareName)
+			throws FileNotFoundException, DataNotFoundException,
+			JargonException;
 
 }

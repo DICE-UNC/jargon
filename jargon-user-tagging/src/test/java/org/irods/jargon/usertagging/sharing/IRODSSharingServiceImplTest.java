@@ -8,6 +8,7 @@ import java.util.Properties;
 import junit.framework.Assert;
 
 import org.irods.jargon.core.connection.IRODSAccount;
+import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.FileNotFoundException;
 import org.irods.jargon.core.protovalues.FilePermissionEnum;
 import org.irods.jargon.core.pub.DataTransferOperations;
@@ -114,6 +115,140 @@ public class IRODSSharingServiceImplTest {
 		Assert.assertTrue("did not find write permission for secondary user",
 				writeACLFound);
 
+	}
+	
+	@Test
+	public void testCreateShareCollectionAndShareWithSameNameInAnotherCollection() throws Exception {
+		
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+		IRODSSharingService irodsSharingService = new IRODSSharingServiceImpl(
+				accessObjectFactory, irodsAccount);
+
+		IRODSAccount secondaryAccount = testingPropertiesHelper
+				.buildIRODSAccountFromSecondaryTestProperties(testingProperties);
+		
+		List<ShareUser> shareUsers = new ArrayList<ShareUser>();
+		shareUsers.add(new ShareUser(secondaryAccount.getUserName(),
+				secondaryAccount.getZone(), FilePermissionEnum.WRITE));
+
+		// coll1
+		
+		String testDirName = "testCreateShareCollectionAndShareWithSameNameInAnotherCollection";
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
+								+ testDirName);
+
+		IRODSFile irodsFile = accessObjectFactory.getIRODSFileFactory(
+				irodsAccount).instanceIRODSFile(targetIrodsCollection);
+		irodsFile.mkdirs();
+
+		IRODSSharedFileOrCollection irodsSharedFile = new IRODSSharedFileOrCollection(
+				MetadataDomain.COLLECTION, irodsFile.getAbsolutePath(),
+				testDirName, irodsAccount.getUserName(),
+				irodsAccount.getZone(), shareUsers);
+		irodsSharingService.createShare(irodsSharedFile);
+		
+		// coll2
+		
+		 String testDirName2 = "testCreateShareCollectionAndShareWithSameNameInAnotherCollection2";
+		 targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
+								+ testDirName2);
+
+		 irodsFile = accessObjectFactory.getIRODSFileFactory(
+				irodsAccount).instanceIRODSFile(targetIrodsCollection);
+		irodsFile.mkdirs();
+
+		// note testDirName is the same as the first share, but in a diff collection
+		 irodsSharedFile = new IRODSSharedFileOrCollection(
+				MetadataDomain.COLLECTION, irodsFile.getAbsolutePath(),
+				testDirName, irodsAccount.getUserName(),
+				irodsAccount.getZone(), shareUsers);
+		irodsSharingService.createShare(irodsSharedFile);
+		
+	}
+	
+	
+	@Test(expected=ShareAlreadyExistsException.class)
+	public void testCreateDuplicateShareCollection() throws Exception {
+		String testDirName = "testCreateDuplicateShareCollection";
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
+								+ testDirName);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
+		IRODSFile irodsFile = accessObjectFactory.getIRODSFileFactory(
+				irodsAccount).instanceIRODSFile(targetIrodsCollection);
+		irodsFile.mkdirs();
+
+		IRODSSharingService irodsSharingService = new IRODSSharingServiceImpl(
+				accessObjectFactory, irodsAccount);
+
+		IRODSAccount secondaryAccount = testingPropertiesHelper
+				.buildIRODSAccountFromSecondaryTestProperties(testingProperties);
+
+		List<ShareUser> shareUsers = new ArrayList<ShareUser>();
+		shareUsers.add(new ShareUser(secondaryAccount.getUserName(),
+				secondaryAccount.getZone(), FilePermissionEnum.WRITE));
+		IRODSSharedFileOrCollection irodsSharedFile = new IRODSSharedFileOrCollection(
+				MetadataDomain.COLLECTION, irodsFile.getAbsolutePath(),
+				testDirName, irodsAccount.getUserName(),
+				irodsAccount.getZone(), shareUsers);
+		irodsSharingService.createShare(irodsSharedFile);
+		irodsSharingService.createShare(irodsSharedFile);
+		
+	}
+	
+	@Test
+	public void testUpdateShareNameCollection() throws Exception {
+		String testDirName = "testUpdateShareNameCollection";
+		String newShareName = "testUpdateShareNameCollectionNewName";
+		
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
+								+ testDirName);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
+		IRODSFile irodsFile = accessObjectFactory.getIRODSFileFactory(
+				irodsAccount).instanceIRODSFile(targetIrodsCollection);
+		irodsFile.mkdirs();
+
+		IRODSSharingService irodsSharingService = new IRODSSharingServiceImpl(
+				accessObjectFactory, irodsAccount);
+
+		IRODSAccount secondaryAccount = testingPropertiesHelper
+				.buildIRODSAccountFromSecondaryTestProperties(testingProperties);
+
+		List<ShareUser> shareUsers = new ArrayList<ShareUser>();
+		shareUsers.add(new ShareUser(secondaryAccount.getUserName(),
+				secondaryAccount.getZone(), FilePermissionEnum.WRITE));
+		IRODSSharedFileOrCollection irodsSharedFile = new IRODSSharedFileOrCollection(
+				MetadataDomain.COLLECTION, irodsFile.getAbsolutePath(),
+				testDirName, irodsAccount.getUserName(),
+				irodsAccount.getZone(), shareUsers);
+		irodsSharingService.createShare(irodsSharedFile);
+		irodsSharingService.updateShareName(targetIrodsCollection, newShareName);
+		
+		// get the share again and check the name
+		IRODSSharedFileOrCollection actual = irodsSharingService.findShareByAbsolutePath(targetIrodsCollection);
+		Assert.assertEquals("did not update the share name",newShareName, actual.getShareName());
+		
 	}
 	
 	@Test
@@ -536,6 +671,138 @@ public class IRODSSharingServiceImplTest {
 				.findShareByAbsolutePath(targetIrodsDataObject);
 		Assert.assertNull("should be no share", actual);
 		
+	}
+	
+	@Test
+	public void testUpdateShareNameFile() throws Exception {
+		String testFileName = "testUpdateShareName.txt";
+		String newShareName = "testUpdateShareNameNew";
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		String targetIrodsDataObject = targetIrodsCollection + "/"
+				+ testFileName;
+
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String fileNameOrig = FileGenerator.generateFileOfFixedLengthGivenName(
+				absPath, testFileName, 2);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
+		IRODSFile targetIrodsFile = irodsFileSystem.getIRODSFileFactory(
+				irodsAccount).instanceIRODSFile(targetIrodsCollection);
+		targetIrodsFile.deleteWithForceOption();
+		targetIrodsFile.mkdirs();
+		DataTransferOperations dataTransferOperationsAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataTransferOperations(
+						irodsAccount);
+		dataTransferOperationsAO.putOperation(new File(fileNameOrig),
+				targetIrodsFile, null, null);
+
+		IRODSSharingService irodsSharingService = new IRODSSharingServiceImpl(
+				accessObjectFactory, irodsAccount);
+
+		IRODSAccount secondaryAccount = testingPropertiesHelper
+				.buildIRODSAccountFromSecondaryTestProperties(testingProperties);
+
+		List<ShareUser> shareUsers = new ArrayList<ShareUser>();
+		shareUsers.add(new ShareUser(secondaryAccount.getUserName(),
+				secondaryAccount.getZone(), FilePermissionEnum.WRITE));
+		IRODSSharedFileOrCollection irodsSharedFile = new IRODSSharedFileOrCollection(
+				MetadataDomain.DATA, targetIrodsDataObject, testFileName,
+				irodsAccount.getUserName(), irodsAccount.getZone(), shareUsers);
+		irodsSharingService.createShare(irodsSharedFile);
+	
+		irodsSharingService.updateShareName(irodsSharedFile.getDomainUniqueName(), newShareName);
+		
+		
+		
+		// need a test here to verify the share and access
+		IRODSSharedFileOrCollection actual = irodsSharingService
+				.findShareByAbsolutePath(targetIrodsDataObject);
+		Assert.assertEquals("did not update the share name", newShareName, actual.getShareName());
+		
+	}
+	
+	@Test(expected=DataNotFoundException.class)
+	public void testUpdateShareNameFileNoShare() throws Exception {
+		String testFileName = "testUpdateShareNameFileNoShare.txt";
+		String newShareName = "testUpdateShareNameNew";
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		String targetIrodsDataObject = targetIrodsCollection + "/"
+				+ testFileName;
+
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String fileNameOrig = FileGenerator.generateFileOfFixedLengthGivenName(
+				absPath, testFileName, 2);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
+		IRODSFile targetIrodsFile = irodsFileSystem.getIRODSFileFactory(
+				irodsAccount).instanceIRODSFile(targetIrodsCollection);
+		targetIrodsFile.deleteWithForceOption();
+		targetIrodsFile.mkdirs();
+		DataTransferOperations dataTransferOperationsAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataTransferOperations(
+						irodsAccount);
+		dataTransferOperationsAO.putOperation(new File(fileNameOrig),
+				targetIrodsFile, null, null);
+
+		IRODSSharingService irodsSharingService = new IRODSSharingServiceImpl(
+				accessObjectFactory, irodsAccount);
+
+	
+		irodsSharingService.updateShareName(targetIrodsDataObject, newShareName);
+	
+	}
+	
+	@Test(expected=FileNotFoundException.class)
+	public void testUpdateShareNameFileNotExists() throws Exception {
+		String testFileName = "testUpdateShareNameFileNotExists.txt";
+		String newShareName = "testUpdateShareNameNew";
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		String targetIrodsDataObject = targetIrodsCollection + "/"
+				+ testFileName;
+
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+		
+		IRODSSharingService irodsSharingService = new IRODSSharingServiceImpl(
+				accessObjectFactory, irodsAccount);
+
+		IRODSAccount secondaryAccount = testingPropertiesHelper
+				.buildIRODSAccountFromSecondaryTestProperties(testingProperties);
+
+		List<ShareUser> shareUsers = new ArrayList<ShareUser>();
+		shareUsers.add(new ShareUser(secondaryAccount.getUserName(),
+				secondaryAccount.getZone(), FilePermissionEnum.WRITE));
+		IRODSSharedFileOrCollection irodsSharedFile = new IRODSSharedFileOrCollection(
+				MetadataDomain.DATA, targetIrodsDataObject, testFileName,
+				irodsAccount.getUserName(), irodsAccount.getZone(), shareUsers);
+		
+		irodsSharingService.updateShareName(irodsSharedFile.getDomainUniqueName(), newShareName);
+
 	}
 	
 	@Test
