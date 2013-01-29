@@ -68,8 +68,11 @@
     <property name="sessionFactory" ref="sessionFactory" />
   </bean>
 
-  
   <bean id="keyStoreDAO" class="org.irods.jargon.transfer.dao.spring.KeyStoreDAOImpl">
+    <property name="sessionFactory" ref="sessionFactory" />
+  </bean>
+  
+  <bean id="configurationPropertyDAO" class="org.irods.jargon.transfer.dao.spring.ConfigurationPropertyDAOImpl">
     <property name="sessionFactory" ref="sessionFactory" />
   </bean>
   
@@ -90,6 +93,11 @@
   <bean id="conveyorService" class="org.irods.jargon.conveyor.basic.BasicConveyorService">
   	<property name="conveyorExecutorService" ref="conveyorExecutorService"/>
   	<property name="gridAccountService" ref="gridAccountService"/>
+  	<property name="configurationService" ref="configurationService"/>
+  </bean>
+  
+   <bean id="configurationService" class="org.irods.jargon.conveyor.basic.ConfigurationServiceImpl">
+    <property name="configurationPropertyDAO" ref="configurationPropertyDAO" />
   </bean>
   
 	<!--  
@@ -103,10 +111,7 @@
     <property name="synchronizationDAO" ref="synchronizationDAO" />
   </bean>
   
-   <bean id="gridAccountService" class="org.irods.jargon.transfer.engine.GridAccountServiceImpl">
-    <property name="gridAccountDAO" ref="gridAccountDAO" />
-    <property name="keyStoreDAO" ref="keyStoreDAO" />
-  </bean>
+ 
 
   <bean id="configurationService" class="org.irods.jargon.transfer.engine.ConfigurationServiceImpl">
     <property name="configurationPropertyDAO" ref="configurationPropertyDAO" />

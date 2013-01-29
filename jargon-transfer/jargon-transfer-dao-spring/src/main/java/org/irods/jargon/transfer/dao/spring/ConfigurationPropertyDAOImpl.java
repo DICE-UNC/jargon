@@ -43,9 +43,14 @@ public class ConfigurationPropertyDAOImpl extends HibernateDaoSupport implements
 
 		log.info("configurationProperty:{}", configurationProperty);
 
+		if (configurationProperty.getPropertyKey() == null
+				|| configurationProperty.getPropertyKey().isEmpty()) {
+			throw new IllegalArgumentException(
+					"null or empty configuration property key");
+		}
+
 		this.getSessionFactory().getCurrentSession()
 				.saveOrUpdate(configurationProperty);
-
 	}
 
 	/*
