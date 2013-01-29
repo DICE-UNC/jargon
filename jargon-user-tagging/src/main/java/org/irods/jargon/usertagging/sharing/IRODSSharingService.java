@@ -5,6 +5,7 @@ import java.util.List;
 import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.FileNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.exception.OperationNotSupportedByThisServerException;
 import org.irods.jargon.usertagging.domain.IRODSSharedFileOrCollection;
 import org.irods.jargon.usertagging.domain.ShareUser;
 
@@ -23,6 +24,9 @@ import org.irods.jargon.usertagging.domain.ShareUser;
  * 
  */
 public interface IRODSSharingService {
+	
+	public String SHARING_ENABLED_PROPERTY = "sharingEnabled";
+	public String SHARING_DISABLED_PROPERTY = "sharingDisabled";
 
 	/**
 	 * Create a new share. This will tag the top level as a shared collection
@@ -92,10 +96,11 @@ public interface IRODSSharingService {
 	 * be initialized by running a script in the jargon-user-tagging project to set up all required specific queries.  See project documentation.
 	 * This method requires and iRODS server that supports Specific Query (iRODS 3.1+)
 	 * @return <code>List<code> of {@link IRODSSharedFileOrCollection} that is shared by the user
+	 * @throws OperationNotSupportedByThisServerException if specific query support is not enabled
 	 * @throws JargonException
 	 */
 	List<IRODSSharedFileOrCollection> listSharedCollectionsOwnedByAUser(
-			String userName, String userZone) throws JargonException;
+			String userName, String userZone) throws OperationNotSupportedByThisServerException, JargonException;
 
 	/**
 	 * Retrieve a list of collections shared with a given user by another user, as determined by the owner of that collection.
@@ -110,10 +115,11 @@ public interface IRODSSharingService {
 	 * be initialized by running a script in the jargon-user-tagging project to set up all required specific queries.  See project documentation.
 	 * This method requires and iRODS server that supports Specific Query (iRODS 3.1+)
 	 * @return <code>List<code> of {@link IRODSSharedFileOrCollection} that is shared by a party with the user
+	 * @throws OperationNotSupportedByThisServerException if specific query support is not enabled
 	 * @throws JargonException
 	 */
 	List<IRODSSharedFileOrCollection> listSharedCollectionsSharedWithUser(
-			String userName, String userZone) throws JargonException;
+			String userName, String userZone) throws OperationNotSupportedByThisServerException, JargonException;
 
 	/**
 	 * Handy method to retrieve ACL share details for a share at the given absolute path.  Note that if
@@ -123,6 +129,7 @@ public interface IRODSSharingService {
 	 *            or collection
 	 * @return <code>List</code> of {@link ShareUser}
 	 * @throws FileNotFoundException if the path cannot be found
+	 * @throws OperationNotSupportedByThisServerException if specific query support is not enabled
 	 * @throws JargonException
 	 */
 	List<ShareUser> listUsersForShare(String irodsAbsolutePath)

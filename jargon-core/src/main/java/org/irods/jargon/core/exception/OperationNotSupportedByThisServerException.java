@@ -8,7 +8,7 @@ package org.irods.jargon.core.exception;
  * @author Mike Conway - DICE (www.irods.org)
  *
  */
-public class OperationNotSupportedByIRODSVersionException extends
+public class OperationNotSupportedByThisServerException extends
 		JargonException {
 
 	/**
@@ -19,7 +19,7 @@ public class OperationNotSupportedByIRODSVersionException extends
 	/**
 	 * @param message
 	 */
-	public OperationNotSupportedByIRODSVersionException(String message) {
+	public OperationNotSupportedByThisServerException(String message) {
 		super(message);
 	}
 
@@ -27,7 +27,7 @@ public class OperationNotSupportedByIRODSVersionException extends
 	 * @param message
 	 * @param cause
 	 */
-	public OperationNotSupportedByIRODSVersionException(String message,
+	public OperationNotSupportedByThisServerException(String message,
 			Throwable cause) {
 		super(message, cause);
 	}
@@ -35,7 +35,7 @@ public class OperationNotSupportedByIRODSVersionException extends
 	/**
 	 * @param cause
 	 */
-	public OperationNotSupportedByIRODSVersionException(Throwable cause) {
+	public OperationNotSupportedByThisServerException(Throwable cause) {
 		super(cause);
 	}
 
@@ -44,7 +44,7 @@ public class OperationNotSupportedByIRODSVersionException extends
 	 * @param cause
 	 * @param underlyingIRODSExceptionCode
 	 */
-	public OperationNotSupportedByIRODSVersionException(String message,
+	public OperationNotSupportedByThisServerException(String message,
 			Throwable cause, int underlyingIRODSExceptionCode) {
 		super(message, cause, underlyingIRODSExceptionCode);
 	}
@@ -53,7 +53,7 @@ public class OperationNotSupportedByIRODSVersionException extends
 	 * @param cause
 	 * @param underlyingIRODSExceptionCode
 	 */
-	public OperationNotSupportedByIRODSVersionException(Throwable cause,
+	public OperationNotSupportedByThisServerException(Throwable cause,
 			int underlyingIRODSExceptionCode) {
 		super(cause, underlyingIRODSExceptionCode);
 	}
@@ -62,7 +62,7 @@ public class OperationNotSupportedByIRODSVersionException extends
 	 * @param message
 	 * @param underlyingIRODSExceptionCode
 	 */
-	public OperationNotSupportedByIRODSVersionException(String message,
+	public OperationNotSupportedByThisServerException(String message,
 			int underlyingIRODSExceptionCode) {
 		super(message, underlyingIRODSExceptionCode);
 	}

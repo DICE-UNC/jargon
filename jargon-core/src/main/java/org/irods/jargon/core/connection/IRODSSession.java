@@ -77,6 +77,21 @@ public class IRODSSession {
 	private JargonProperties jargonProperties;
 
 	/**
+	 * Simple cache (tolerating concurrent access) for name/value props. This
+	 * cache is meant to hold user-definable properties about a connected server
+	 * (by host and zone name). This is meant as an efficient way to record
+	 * properties of a connected iRODS server that are discovered by interacting
+	 * with the server. This is especially useful for operations that may or may
+	 * not be configured, such that repeated failed attempts at an operation are
+	 * not made.
+	 * <p/>
+	 * A good example would be if required specific queries, rules,
+	 * micro-services, or remote command scripts are not available to do an
+	 * operation.
+	 */
+	private final DiscoveredServerPropertiesCache discoveredServerPropertiesCache = new DiscoveredServerPropertiesCache();
+
+	/**
 	 * Get the <code>JargonProperties</code> that contains metadata to tune the
 	 * behavior of Jargon. This will either be the default, loaded from the
 	 * <code>jargon.properties</code> file, or a custom source that can be
@@ -214,7 +229,7 @@ public class IRODSSession {
 			throw new JargonException("irods connection manager cannot be null");
 		}
 
-		this.irodsProtocolManager = irodsConnectionManager;
+		irodsProtocolManager = irodsConnectionManager;
 	}
 
 	/**
@@ -310,7 +325,7 @@ public class IRODSSession {
 			throws JargonException {
 		IRODSCommands irodsProtocol;
 		irodsProtocol = irodsProtocolManager.getIRODSProtocol(irodsAccount,
-				this.buildPipelineConfigurationBasedOnJargonProperties());
+				buildPipelineConfigurationBasedOnJargonProperties());
 		if (irodsProtocol == null) {
 			log.error("no connection returned from connection manager");
 			throw new JargonException(
@@ -401,7 +416,7 @@ public class IRODSSession {
 	 */
 	public void setIrodsConnectionManager(
 			final IRODSProtocolManager irodsConnectionManager) {
-		this.irodsProtocolManager = irodsConnectionManager;
+		irodsProtocolManager = irodsConnectionManager;
 	}
 
 	/**
@@ -554,6 +569,36 @@ public class IRODSSession {
 		synchronized (this) {
 			this.jargonProperties = jargonProperties;
 		}
+	}
+
+	/**
+	 * 
+	 * Simple cache (tolerating concurrent access) for name/value props. This
+	 * cache is meant to hold user-definable properties about a connected server
+	 * (by host and zone name). This is meant as an efficient way to record
+	 * properties of a connected iRODS server that are discovered by interacting
+	 * with the server. This is especially useful for operations that may or may
+	 * not be configured, such that repeated failed attempts at an operation are
+	 * not made.
+	 * <p/>
+	 * A good example would be if required specific queries, rules,
+	 * micro-services, or remote command scripts are not available to do an
+	 * operation.
+	 * 
+	 * @return
+	 */
+	public DiscoveredServerPropertiesCache getDiscoveredServerPropertiesCache() {
+		return discoveredServerPropertiesCache;
+	}
+	
+	/**
+	 * Handy method to see if we're using the dynamic server properties cache.  This is set
+	 * in the jargon properties.
+	 * @return
+	 */
+	public boolean isUsingDynamicServerPropertiesCache() {
+		// getjargonProperties is already sync'd
+		return getJargonProperties().isUsingDiscoveredServerPropertiesCache();
 	}
 
 }

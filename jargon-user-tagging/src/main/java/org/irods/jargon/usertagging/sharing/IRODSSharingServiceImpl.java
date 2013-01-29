@@ -11,7 +11,7 @@ import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.DuplicateDataException;
 import org.irods.jargon.core.exception.FileNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
-import org.irods.jargon.core.exception.OperationNotSupportedByIRODSVersionException;
+import org.irods.jargon.core.exception.OperationNotSupportedByThisServerException;
 import org.irods.jargon.core.pub.CollectionAO;
 import org.irods.jargon.core.pub.CollectionAndDataObjectListAndSearchAO;
 import org.irods.jargon.core.pub.DataObjectAO;
@@ -477,7 +477,7 @@ public class IRODSSharingServiceImpl extends AbstractIRODSTaggingService
 	 * @see org.irods.jargon.usertagging.sharing.IRODSSharingService#listSharedCollectionsOwnedByAUser(java.lang.String, java.lang.String)
 	 */
 	@Override
-	public List<IRODSSharedFileOrCollection> listSharedCollectionsOwnedByAUser(final String userName, final String userZone) throws JargonException {
+	public List<IRODSSharedFileOrCollection> listSharedCollectionsOwnedByAUser(final String userName, final String userZone) throws OperationNotSupportedByThisServerException, JargonException {
 		log.info("listSharedCollectionsByAUser()");
 		
 		if (userName == null | userName.isEmpty()) {
@@ -530,7 +530,7 @@ public class IRODSSharingServiceImpl extends AbstractIRODSTaggingService
 	 * @see org.irods.jargon.usertagging.sharing.IRODSSharingService#listSharedCollectionsSharedWithUser(java.lang.String, java.lang.String)
 	 */
 	@Override
-	public List<IRODSSharedFileOrCollection> listSharedCollectionsSharedWithUser(final String userName, final String userZone) throws JargonException {
+	public List<IRODSSharedFileOrCollection> listSharedCollectionsSharedWithUser(final String userName, final String userZone) throws OperationNotSupportedByThisServerException, JargonException {
 		log.info("listSharedCollectionsSharedWithUser()");
 		
 		if (userName == null | userName.isEmpty()) {
@@ -640,7 +640,7 @@ public class IRODSSharingServiceImpl extends AbstractIRODSTaggingService
 	 * @throws DataNotFoundException
 	 */
 	private SpecificQueryResultSet runSpecificQuery(SpecificQuery specificQuery)
-			throws JargonException, DataNotFoundException {
+			throws OperationNotSupportedByThisServerException, JargonException  {
 		
 		checkSpecificQuerySupport();
 		try {
@@ -651,6 +651,13 @@ public class IRODSSharingServiceImpl extends AbstractIRODSTaggingService
 			return queryAO
 					.executeSpecificQueryUsingAlias(specificQuery, this.getIrodsAccessObjectFactory()
 							.getJargonProperties().getMaxFilesAndDirsQueryMax());
+			
+			
+			
+		} catch (DataNotFoundException dnf) {
+			log.error("data not found error in specific query", dnf);
+			indicateSharingSupport(false);
+			throw new OperationNotSupportedByThisServerException("either the server does not support specific query, or the specific queries need to determine shares are not loaded");
 		} catch (JargonQueryException e) {
 			log.error("error in specific query", e);
 			throw new JargonException("error in specific query", e);
@@ -659,13 +666,62 @@ public class IRODSSharingServiceImpl extends AbstractIRODSTaggingService
 
 	/**
 	 * @throws JargonException
-	 * @throws OperationNotSupportedByIRODSVersionException
+	 * @throws OperationNotSupportedByThisServerException
 	 */
 	private void checkSpecificQuerySupport() throws JargonException,
-			OperationNotSupportedByIRODSVersionException {
+			OperationNotSupportedByThisServerException {
+		
 		if (!this.getIrodsAccessObjectFactory().getIRODSServerProperties(getIrodsAccount()).isSupportsSpecificQuery()) {
 			log.error("specific query is not supported by this iRODS server:{}", this.getIrodsAccessObjectFactory().getIRODSServerProperties(getIrodsAccount()));
-			throw new OperationNotSupportedByIRODSVersionException("specific query not supported");
+			throw new OperationNotSupportedByThisServerException("specific query not supported by this iRODS version");
+		}
+		
+		if (isDeterminedThatSharingQueriesNotSupported()) {
+			throw new OperationNotSupportedByThisServerException("specific queries needed for sharing are not supported");
+		}
+	
+	}
+	
+	
+	/**
+	 * Cache a determination that sharing is or is not supported
+	 * @param isSupported
+	 */
+	private void indicateSharingSupport(final boolean isSupported) {
+		// do I even need to bother?
+		
+		if (!this.getIrodsAccessObjectFactory().isUsingDynamicServerPropertiesCache()) {
+			return;
+		}
+		
+		String propToSet;
+		if (isSupported) {
+			propToSet = IRODSSharingService.SHARING_ENABLED_PROPERTY;
+		} else {
+			propToSet = IRODSSharingService.SHARING_DISABLED_PROPERTY;
+		}
+		
+		this.getIrodsAccessObjectFactory().getDiscoveredServerPropertiesCache().cacheAProperty(
+				irodsAccount.getHost(), irodsAccount.getZone(), propToSet, "");
+		
+	}
+	
+	/**
+	 * Will return <code>true</code> if I have already checked, and know that the sharing specific queries are not set up on 
+	 * iRODS.
+	 * @return
+	 */
+	private boolean isDeterminedThatSharingQueriesNotSupported() {
+		if (this.getIrodsAccessObjectFactory().isUsingDynamicServerPropertiesCache()) {
+			String notSupported = this.getIrodsAccessObjectFactory().getDiscoveredServerPropertiesCache()
+					.retrieveValue(this.getIrodsAccount().getHost(), this.getIrodsAccount().getZone(), IRODSSharingService.SHARING_DISABLED_PROPERTY);
+			if (notSupported == null) {
+				return false;
+			} else {
+				return true;
+			}
+		} else {
+			return false;
 		}
 	}
 
