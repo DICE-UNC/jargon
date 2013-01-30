@@ -118,6 +118,44 @@ public class IRODSSharingServiceImplTest {
 	}
 	
 	@Test
+	public void testCreateShareCollectionByShareName() throws Exception {
+		String testDirName = "testCreateShareCollectionByShareName";
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
+								+ testDirName);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
+		IRODSFile irodsFile = accessObjectFactory.getIRODSFileFactory(
+				irodsAccount).instanceIRODSFile(targetIrodsCollection);
+		irodsFile.mkdirs();
+
+		IRODSSharingService irodsSharingService = new IRODSSharingServiceImpl(
+				accessObjectFactory, irodsAccount);
+
+		irodsSharingService.createShare(targetIrodsCollection, testDirName);
+		// need a test here to verify the share and access
+		IRODSSharedFileOrCollection actual = irodsSharingService
+				.findShareByAbsolutePath(targetIrodsCollection);
+		Assert.assertNotNull("no sharing found that I just added", actual);
+		Assert.assertEquals("wrong share name", testDirName,
+				actual.getShareName());
+		Assert.assertEquals("wrong path", targetIrodsCollection,
+				actual.getDomainUniqueName());
+		Assert.assertEquals("wrong metadataDomain", MetadataDomain.COLLECTION,
+				actual.getMetadataDomain());
+		Assert.assertEquals("wrong owner name", irodsAccount.getUserName(),
+				actual.getShareOwner());
+		Assert.assertEquals("wrong zone", irodsAccount.getZone(),
+				actual.getShareOwnerZone());
+	}
+	
+	
+	@Test
 	public void testCreateShareCollectionAndShareWithSameNameInAnotherCollection() throws Exception {
 		
 

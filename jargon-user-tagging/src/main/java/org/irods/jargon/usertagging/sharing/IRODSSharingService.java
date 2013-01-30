@@ -148,4 +148,17 @@ public interface IRODSSharingService {
 			throws FileNotFoundException, DataNotFoundException,
 			JargonException;
 
+	/**
+	 * Short-cut method to create a share with minimum information.  This method does not attempt to set users
+	 * @param irodsAbsolutePath <code>String</code> with a valid iRODS absolute path to a file
+	 *            or collection
+	 * @param shareName <code>String</code> with an alias for the share
+	 * @throws ShareAlreadyExistsException
+	 * @throws FileNotFoundException
+	 * @throws JargonException
+	 */
+	void createShare(String irodsAbsolutePath, String shareName)
+			throws ShareAlreadyExistsException, FileNotFoundException,
+			JargonException;
+
 }

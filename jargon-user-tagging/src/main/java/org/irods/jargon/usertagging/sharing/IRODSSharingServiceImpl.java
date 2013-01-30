@@ -232,6 +232,67 @@ public class IRODSSharingServiceImpl extends AbstractIRODSTaggingService
 
 		log.info("share created");
 	}
+	
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.usertagging.sharing.IRODSSharingService#createShare(java.lang.String, java.lang.String)
+	 */
+	@Override
+	public void createShare(
+			final String irodsAbsolutePath, String shareName)
+			throws ShareAlreadyExistsException, FileNotFoundException, JargonException {
+
+		log.info("createShare()");
+
+		if (irodsAbsolutePath == null || irodsAbsolutePath.isEmpty()) {
+			throw new IllegalArgumentException("null or empty iRODSAbsolutePath");
+		}
+		
+		if (shareName == null || shareName.isEmpty()) {
+			throw new IllegalArgumentException("null or empty iRODSAbsolutePath");
+		}
+
+		log.info("irodsAbsolutePath:{}", irodsAbsolutePath);
+
+		log.info("deciding whether a file or collection...");
+		ObjStat objStat = getObjStatForAbsolutePath(irodsAbsolutePath);
+
+		log.info("seeing if share already present..");
+		IRODSSharedFileOrCollection currentSharedFile = this.findSharedGivenObjStat(irodsAbsolutePath, objStat);
+		if (currentSharedFile != null) {
+			throw new ShareAlreadyExistsException("share already exists");
+		}
+		
+		MetadataDomain metadataDomain;
+		
+		if (objStat.isSomeTypeOfCollection()) {
+			metadataDomain = MetadataDomain.COLLECTION;
+		} else {
+			metadataDomain = MetadataDomain.DATA;
+		}
+		
+		IRODSSharedFileOrCollection irodsSharedFileOrCollection = new IRODSSharedFileOrCollection(metadataDomain, irodsAbsolutePath, shareName, irodsAccount.getUserName(), irodsAccount.getZone(), new ArrayList<ShareUser>());
+		
+		/*
+		 * OK, I can tag this as a share
+		 */
+
+		log.info("adding share tag");
+		AvuData avuData = buildAVUBasedOnShare(irodsSharedFileOrCollection);
+
+		log.info("setting inheritance and ACL");
+
+		if (objStat.isSomeTypeOfCollection()) {
+			setPermissionsForCollection(irodsSharedFileOrCollection, objStat,
+					avuData);
+
+		} else {
+			setPermissionsForDataObject(irodsSharedFileOrCollection, objStat,
+					avuData);
+		}
+
+		log.info("share created");
+	}
+
 
 	/**
 	 * @param irodsSharedFileOrCollection
