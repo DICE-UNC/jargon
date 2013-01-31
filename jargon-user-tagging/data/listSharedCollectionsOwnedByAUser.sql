@@ -1,6 +1,6 @@
 SELECT DISTINCT "r_coll_main"."coll_id", "r_coll_main"."parent_coll_name",
   "r_coll_main"."coll_name", "r_coll_main"."coll_owner_name",
-  "r_coll_main"."coll_owner_zone", "r_meta_main"."meta_id", "r_meta_main"."meta_namespace",
+  "r_coll_main"."coll_owner_zone",
   "r_meta_main"."meta_attr_name", "r_meta_main"."meta_attr_value",
   "r_meta_main"."meta_attr_unit"
   FROM

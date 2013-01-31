@@ -653,7 +653,7 @@ public class IRODSSharingServiceImpl extends AbstractIRODSTaggingService
 			IRODSQueryResultRow row) throws JargonException {
 		IRODSSharedFileOrCollection irodsSharedFileOrCollection;
 		irodsSharedFileOrCollection = new IRODSSharedFileOrCollection(MetadataDomain.COLLECTION, 
-				row.getColumn(2), row.getColumn(7), row.getColumn(3), 
+				row.getColumn(2), row.getColumn(5), row.getColumn(3), 
 				row.getColumn(4), new ArrayList<ShareUser>());
 		augmentRowWithCountData(specificQueryResultSet,
 				irodsSharedFileOrCollection, row);
