@@ -55,6 +55,9 @@ the conection finalizer could be called and the connection closed at an inapprop
  *[#1139] Spaces at the begin or end of a data object name will cause an exception
  **added trim to DataObjectAO, FileFactory, CollectionAO, and CollectionAndDataObjectListAndSearchAO methods that take a path
  
+ *[#1177] thumbnail support for soft linked photos
+ **added soft link path resolution to thumbnail service in jargon-data-utils
+ 
 ==Features==
 
 *[#984] iDrop web '2.0' redesign effort
