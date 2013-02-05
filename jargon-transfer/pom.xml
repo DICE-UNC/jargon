@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>org.irods</groupId>
 		<artifactId>jargon</artifactId>
-		<version>3.3.0-SNAPSHOT</version>
+		<version>b1182-workflow</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.irods.jargon</groupId>
