@@ -1,18 +1,14 @@
 *'''Project''': Jargon-core API
-*'''Date''': XX/XX/XX
-*'''Release Version''': 3.2.X.X
-*'''git tag''': 3.2.X.X
+*'''Date''': 02/07/13
+*'''Release Version''': 3.2.1.4
+*'''git tag''': 3.2.1.4
 
 ==News==
 
-work in progress post 3.2.1.3 
+Maintenance release of Jargon
 
 Jargon-core implements the iRODS protocol, and allows development of iRODS-enabled Java applications.  This API is especially useful for developing
 mid-tier applications and services, as well as desktop-clients (such as iDROP).  These libraries also provide a foundation for a new set of interfaces that will come with iRODS.
-
-Note that this release supports iRODS built-in authorization.  Adding GSI and general GSS support (including Kerberos) will come in a follow-on release planned shortly.
-
-Note that this API represents a fundamental shift, and is meant to make development of applications easier and faster.
 
 Please go to [[https://code.renci.org/gf/project/jargon/]] for the latest news and info.
 
@@ -26,13 +22,11 @@ Jargon-core consists of the following libraries
 * jargon-ticket - support for ticket processing
 * jargon-httpstream - stream http content into iRODS via Jargon
 
-Other libraries are planned, such as connection pooling, as well as administrative functions.
 
 ==Requirements==
 
 *Jargon depends on Java 1.6+
 *Jargon is built using Apache Maven2, see POM for dependencies
-
 *Jargon supports iRODS 2.5 through iRODS 3.2
 
 ==Libraries==
@@ -43,19 +37,19 @@ Note that the following bug and feature requests are logged in GForge with relat
 
 ==Bug Fixes==
 
-* [#1092] add reconnect option to iDrop
+*[#1092] add reconnect option to iDrop
 **Add irodsAccount info to IRODSCommands during reconnect
 **Add new constructor and initializer for IRODSCommands that avoids calling the finalizer on a connection when the IRODSCommands was created in 'stand-alone' mode.  This fixes a bug where
-the conection finalizer could be called and the connection closed at an inappropriate time when in connection restart mode
+the connection finalizer could be called and the connection closed at an inappropriate time when in connection restart mode
  
- *[#1093] Broken pipe error did not propogate in parallel transfer
- **Small clean-ups in transfer processing and error callbacks
+*[#1093] Broken pipe error did not propagate in parallel transfer
+**Small clean-ups in transfer processing and error call-backs
  
- *[#1109] specific query no data found results in exception
- **Specific query was returning a DataNotFoundException when no results returned, fixed to return an empty result set
+*[#1109] specific query no data found results in exception
+**Specific query was returning a DataNotFoundException when no results returned, fixed to return an empty result set
  
- *[#1139] Spaces at the begin or end of a data object name will cause an exception
- **added trim to DataObjectAO, FileFactory, CollectionAO, and CollectionAndDataObjectListAndSearchAO methods that take a path
+*[#1139] Spaces at the begin or end of a data object name will cause an exception
+**added trim to DataObjectAO, FileFactory, CollectionAO, and CollectionAndDataObjectListAndSearchAO methods that take a path
  
 ==Features==
 
