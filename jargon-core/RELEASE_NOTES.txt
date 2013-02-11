@@ -1,11 +1,11 @@
 *'''Project''': Jargon-core API
-*'''Date''': XX/XX/XX
-*'''Release Version''': 3.2.X.X
-*'''git tag''': 3.2.X.X
+*'''Date''': 02/11/2013
+*'''Release Version''': 3.3.0-beta1
+*'''git tag''': 3.3.0-beta1
 
 ==News==
 
-work in progress post 3.2.1.3 
+Beta release of Jargon 3.3.0 feature development.  This accompanies a beta of iDrop version 2.0.0
 
 Jargon-core implements the iRODS protocol, and allows development of iRODS-enabled Java applications.  This API is especially useful for developing
 mid-tier applications and services, as well as desktop-clients (such as iDROP).  These libraries also provide a foundation for a new set of interfaces that will come with iRODS.
