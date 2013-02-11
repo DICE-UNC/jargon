@@ -48,9 +48,6 @@ public class Stream2StreamAOImpl extends IRODSGenericAO implements
 	}
 
 	/*
-	 * TODO: might depracate Potentially deprecated....experimental
-	 */
-	/*
 	 * (non-Javadoc)
 	 * 
 	 * @see

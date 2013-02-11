@@ -3,6 +3,7 @@ package org.irods.jargon.core.pub;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.exception.CollectionNotEmptyException;
+import org.irods.jargon.core.exception.CollectionNotMountedException;
 import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.FileNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
@@ -89,7 +90,10 @@ public class MountedCollectionAOImpl extends IRODSGenericAO implements
 			getIRODSProtocol().irodsFunction(dataObjInp);
 		} catch (DataNotFoundException e) {
 			success = false;
+		} catch (CollectionNotMountedException e) {
+			success = false;
 		}
+		
 		log.debug("unmount complete, success?:{}", success);
 
 		/*
@@ -115,10 +119,6 @@ public class MountedCollectionAOImpl extends IRODSGenericAO implements
 	 * @see
 	 * org.irods.jargon.core.pub.MountedCollectionAO#createASoftLink(java.lang
 	 * .String, java.lang.String)
-	 */
-
-	/*
-	 * todo: should I specify a resource in the parms or take the default?
 	 */
 	@Override
 	public void createASoftLink(
@@ -196,7 +196,6 @@ public class MountedCollectionAOImpl extends IRODSGenericAO implements
 		}
 
 		log.info("all is well, make the call to mount the soft link...");
-
 		DataObjInpForMcoll dataObjInp = DataObjInpForMcoll
 				.instanceForSoftLinkMount(
 						absolutePathToTheIRODSCollectionToBeMounted,
@@ -204,8 +203,78 @@ public class MountedCollectionAOImpl extends IRODSGenericAO implements
 								.getIRODSAccount().getDefaultStorageResource());
 
 		getIRODSProtocol().irodsFunction(dataObjInp);
-
 		log.debug("soft link creation successful");
+
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.core.pub.MountedCollectionAO#createAnMSSOMount(java.lang.String, java.lang.String)
+	 */
+	@Override
+	public void createAnMSSOMount(
+			final String absolutePathToTheMSSOToBeMounted,
+			final String absolutePathToMountedCollection)
+			throws FileNotFoundException, 
+			JargonException {
+
+		log.info("createAnMSSOMount()");
+
+		if (absolutePathToTheMSSOToBeMounted == null
+				|| absolutePathToTheMSSOToBeMounted.isEmpty()) {
+			throw new IllegalArgumentException(
+					"null or empty absolutePathToTheMSSOToBeMounted");
+		}
+
+		if (absolutePathToMountedCollection == null
+				|| absolutePathToMountedCollection.isEmpty()) {
+			throw new IllegalArgumentException(
+					"null or empty absolutePathToMountedCollection");
+		}
+
+		log.info("absolutePathToTheMSSOToBeMounted:{}",
+				absolutePathToTheMSSOToBeMounted);
+		log.info("absolutePathToMountedCollection:{}",
+				absolutePathToMountedCollection);
+
+		CollectionAndDataObjectListAndSearchAO listAndSearchAO = this
+				.getIRODSAccessObjectFactory()
+				.getCollectionAndDataObjectListAndSearchAO(getIRODSAccount());
+
+		log.info("getting objstat for collection to be mounted...");
+
+		ObjStat statForMSSOToBeMounted = listAndSearchAO
+				.retrieveObjectStatForPath(absolutePathToTheMSSOToBeMounted);
+
+		// a file not found exception will have occurred if the source was not
+		// there
+
+		log.info("statForMSSOToBeMounted:{}",
+				statForMSSOToBeMounted);
+
+		// is this an irods file?
+
+		if (statForMSSOToBeMounted.getObjectType() != ObjectType.DATA_OBJECT) {
+			log.error(
+					"object to be mounted is not an iRODS dataObject, is type:{}",
+					statForMSSOToBeMounted.getObjectType());
+			throw new JargonException(
+					"object to be mounted is not an iRODS data object, mount failed");
+		}
+		
+		log.info("making the directory for the mount if not exists...");
+		IRODSFile mountColl = this.getIRODSFileFactory().instanceIRODSFile(absolutePathToMountedCollection);
+		mountColl.mkdirs();
+		log.info("...dirs made");
+
+		log.info("all is well, make the call to mount the soft link...");
+		DataObjInpForMcoll dataObjInp = DataObjInpForMcoll
+				.instanceForMSSOMount(
+						absolutePathToTheMSSOToBeMounted,
+						absolutePathToMountedCollection, this
+								.getIRODSAccount().getDefaultStorageResource());
+
+		getIRODSProtocol().irodsFunction(dataObjInp);
+		log.debug("MSSO creation successful");
 
 	}
 

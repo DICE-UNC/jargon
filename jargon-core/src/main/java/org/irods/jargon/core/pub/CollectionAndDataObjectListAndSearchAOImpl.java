@@ -9,6 +9,7 @@ import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.FileNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.packinstr.DataObjInpForObjStat;
+import org.irods.jargon.core.packinstr.DataObjInpForQuerySpecColl;
 import org.irods.jargon.core.packinstr.Tag;
 import org.irods.jargon.core.pub.aohelper.CollectionAOHelper;
 import org.irods.jargon.core.pub.domain.ObjStat;
@@ -27,6 +28,7 @@ import org.irods.jargon.core.query.IRODSQueryResultSet;
 import org.irods.jargon.core.query.JargonQueryException;
 import org.irods.jargon.core.query.PagingAwareCollectionListing;
 import org.irods.jargon.core.query.QueryConditionOperators;
+import org.irods.jargon.core.query.QueryResultProcessingUtils;
 import org.irods.jargon.core.query.RodsGenQueryEnum;
 import org.irods.jargon.core.utils.CollectionAndPath;
 import org.irods.jargon.core.utils.FederationEnabled;
@@ -762,7 +764,99 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 
 		String effectiveAbsolutePath = MiscIRODSUtils
 				.determineAbsolutePathBasedOnCollTypeInObjectStat(objStat);
+		
+		if (objStat.getSpecColType() == SpecColType.STRUCT_FILE_COLL || objStat.getSpecColType() == SpecColType.MOUNTED_COLL) {
+			//return listCollectionsUnderPathWhenSpecColl(objStat, partialStartIndex, effectiveAbsolutePath);
+			return new ArrayList<CollectionAndDataObjectListingEntry>();
+		} else {
+			return listCollectionsUnderPathViaGenQuery(
+					objStat, partialStartIndex, effectiveAbsolutePath);
+		}
+		
 
+	}
+
+	private List<CollectionAndDataObjectListingEntry> listDataObjectsUnderPathWhenSpecColl(
+			ObjStat objStat, int partialStartIndex, String effectiveAbsolutePath) throws JargonException {
+		
+		log.info("listCollectionsUnderPathWhenSpecColl()");
+		
+		DataObjInpForQuerySpecColl dataObjInp = DataObjInpForQuerySpecColl.instance(effectiveAbsolutePath);
+		Tag response;
+			response = getIRODSProtocol().irodsFunction(dataObjInp);
+
+		log.debug("response from function: {}", response.parseTag());
+		
+		int totalRecords = response.getTag("totalRowCount").getIntValue();
+		log.info("total records:{}", totalRecords);
+
+		List<IRODSQueryResultRow> results = QueryResultProcessingUtils.translateResponseIntoResultSet(
+				response, new ArrayList<String>(), 0, partialStartIndex);
+
+		List<CollectionAndDataObjectListingEntry> entries = new ArrayList<CollectionAndDataObjectListingEntry>();
+		CollectionAndDataObjectListingEntry listingEntry;
+		
+		for (IRODSQueryResultRow row : results) {
+			listingEntry = new CollectionAndDataObjectListingEntry();
+			listingEntry.setCreatedAt(IRODSDataConversionUtil.getDateFromIRODSValue(row.getColumn(2)));
+			listingEntry.setDataSize(IRODSDataConversionUtil.getLongOrZeroFromIRODSValue(row.getColumn(4)));
+			listingEntry.setModifiedAt(IRODSDataConversionUtil.getDateFromIRODSValue(row.getColumn(3)));
+			String dataName = row.getColumn(1);
+			if (dataName.isEmpty()) {
+				listingEntry.setObjectType(ObjectType.COLLECTION);
+			} else {
+				listingEntry.setObjectType(ObjectType.DATA_OBJECT);
+			}
+			
+			listingEntry.setOwnerName(objStat.getOwnerName());
+			listingEntry.setOwnerZone(objStat.getOwnerZone());
+			listingEntry.setParentPath(row.getColumn(0));
+			listingEntry.setPathOrName(row.getColumn(1));
+			listingEntry.setSpecColType(objStat.getSpecColType());
+			entries.add(listingEntry);
+		}
+		
+		return entries;
+		
+		
+		/*
+		 myGenQueryOut->sqlResult[0].attriInx = COL_COLL_NAME;
+    myGenQueryOut->sqlResult[0].len = MAX_NAME_LEN;    
+    myGenQueryOut->sqlResult[0].value = 
+      (char*)malloc (MAX_NAME_LEN * MAX_SPEC_COLL_ROW);
+    memset (myGenQueryOut->sqlResult[0].value, 0, 
+      MAX_NAME_LEN * MAX_SPEC_COLL_ROW);
+    myGenQueryOut->sqlResult[1].attriInx = COL_DATA_NAME;
+    myGenQueryOut->sqlResult[1].len = MAX_NAME_LEN; 
+    myGenQueryOut->sqlResult[1].value = 
+      (char*)malloc (MAX_NAME_LEN * MAX_SPEC_COLL_ROW);
+    memset (myGenQueryOut->sqlResult[1].value, 0, 
+      MAX_NAME_LEN * MAX_SPEC_COLL_ROW);
+    myGenQueryOut->sqlResult[2].attriInx = COL_D_CREATE_TIME;
+    myGenQueryOut->sqlResult[2].len = NAME_LEN;
+    myGenQueryOut->sqlResult[2].value =
+      (char*)malloc (NAME_LEN * MAX_SPEC_COLL_ROW);
+    memset (myGenQueryOut->sqlResult[2].value, 0,
+      NAME_LEN * MAX_SPEC_COLL_ROW); 
+    myGenQueryOut->sqlResult[3].attriInx = COL_D_MODIFY_TIME;
+    myGenQueryOut->sqlResult[3].len = NAME_LEN;
+    myGenQueryOut->sqlResult[3].value =
+      (char*)malloc (NAME_LEN * MAX_SPEC_COLL_ROW);
+    memset (myGenQueryOut->sqlResult[3].value, 0,
+      NAME_LEN * MAX_SPEC_COLL_ROW);     
+    myGenQueryOut->sqlResult[4].attriInx = COL_DATA_SIZE;
+    myGenQueryOut->sqlResult[4].len = NAME_LEN;
+    myGenQueryOut->sqlResult[4].value =
+      (char*)malloc (NAME_LEN * MAX_SPEC_COLL_ROW);
+    memset (myGenQueryOut->sqlResult[4].value, 0,
+      NAME_LEN * MAX_SPEC_COLL_ROW);
+		 */
+		
+	}
+
+	private List<CollectionAndDataObjectListingEntry> listCollectionsUnderPathViaGenQuery(
+			final ObjStat objStat, final int partialStartIndex,
+			String effectiveAbsolutePath) throws JargonException {
 		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, false,
 				true, null);
 		try {
@@ -799,9 +893,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 				subdirs.add(collectionAndDataObjectListingEntry);
 			}
 		}
-
 		return subdirs;
-
 	}
 
 	private IRODSQueryResultSet queryForPathAndReturnResultSet(
@@ -1041,6 +1133,23 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 
 		log.info("listDataObjectsUnderPath for: {}", objStat);
 
+		List<CollectionAndDataObjectListingEntry> files;
+		if (objStat.getSpecColType() == SpecColType.STRUCT_FILE_COLL || objStat.getSpecColType() == SpecColType.MOUNTED_COLL) {
+			
+			files = listDataObjectsUnderPathWhenSpecColl(objStat,0, effectiveAbsolutePath);
+		} else {
+			
+			files = listDataObjectsUnderPathViaGenQuery(
+					objStat, partialStartIndex, effectiveAbsolutePath);
+		}
+
+		return files;
+
+	}
+
+	private List<CollectionAndDataObjectListingEntry> listDataObjectsUnderPathViaGenQuery(
+			final ObjStat objStat, final int partialStartIndex,
+			String effectiveAbsolutePath) throws JargonException {
 		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, false,
 				true, null);
 
@@ -1092,9 +1201,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 			lastPath = currentPath;
 			files.add(entry);
 		}
-
 		return files;
-
 	}
 
 	/**

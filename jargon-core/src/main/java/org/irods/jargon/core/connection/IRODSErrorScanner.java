@@ -6,6 +6,7 @@ package org.irods.jargon.core.connection;
 import org.irods.jargon.core.exception.AuthenticationException;
 import org.irods.jargon.core.exception.CatNoAccessException;
 import org.irods.jargon.core.exception.CollectionNotEmptyException;
+import org.irods.jargon.core.exception.CollectionNotMountedException;
 import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.DuplicateDataException;
 import org.irods.jargon.core.exception.FileIntegrityException;
@@ -102,6 +103,8 @@ public class IRODSErrorScanner {
 			throw new NoResourceDefinedException("no resource defined");
 		case NO_MORE_RULES_ERR:
 			throw new NoMoreRulesException("no more rules");
+		case COLLECTION_NOT_MOUNTED:
+			throw new CollectionNotMountedException("collection not mounted");
 		default:
 			throw new JargonException("error code recieved from iRODS:"
 					+ infoValue, infoValue);

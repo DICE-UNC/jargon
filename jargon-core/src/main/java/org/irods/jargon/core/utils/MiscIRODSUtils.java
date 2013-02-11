@@ -433,6 +433,7 @@ public class MiscIRODSUtils {
 			// OK
 		} else if (objStat.getSpecColType() == SpecColType.NORMAL) {
 			// OK
+		} else if (objStat.getSpecColType() == SpecColType.STRUCT_FILE_COLL) {
 		} else {
 			throw new JargonException(
 					"unsupported object type, support not yet available for:"

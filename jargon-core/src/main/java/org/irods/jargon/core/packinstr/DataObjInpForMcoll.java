@@ -16,6 +16,7 @@ public class DataObjInpForMcoll extends AbstractIRODSPackingInstruction {
 
 	public static final int MCOLL_AN = 630;
 	public static final String COLL_TYPE_LINK = "linkPoint";
+	public static final String COLL_TYPE_MSSO = "mssoStructFile";
 
 	private final String sourceFileAbsolutePath;
 	private final String targetFileAbsolutePath;
@@ -23,6 +24,26 @@ public class DataObjInpForMcoll extends AbstractIRODSPackingInstruction {
 	private final String destResourceName;
 	private int operationType = 0;
 
+	/**
+	 * Create a packing instruction to mount a MSSO (microservice object)
+	 * 
+	 * @param microServiceSourceFile
+	 *            <code>String</code> with the microservice source file
+	 * @param targetFileAbsolutePath
+	 *            <code>String</code> target path for the mounted collection
+	 * @param destRescName
+	 *            <code>String</code>, blank if unused, that describes the
+	 *            destination resource name
+	 * @return
+	 */
+	public static DataObjInpForMcoll instanceForMSSOMount(
+			final String microServiceSourceFile,
+			final String targetFileAbsolutePath, final String destRescName) {
+
+		return new DataObjInpForMcoll(microServiceSourceFile,
+				targetFileAbsolutePath, COLL_TYPE_MSSO, destRescName);
+	}
+	
 	/**
 	 * Create a packing instruction to mount a soft link
 	 * 
@@ -107,6 +128,11 @@ public class DataObjInpForMcoll extends AbstractIRODSPackingInstruction {
 
 		List<KeyValuePair> kvps = new ArrayList<KeyValuePair>();
 		kvps.add(KeyValuePair.instance("collectionType", collectionType));
+		
+		if (this.collectionType.equals(COLL_TYPE_MSSO)) {
+			kvps.add(KeyValuePair.instance("dataType", "msso file"));
+		}
+		
 		kvps.add(KeyValuePair.instance("destRescName", destResourceName));
 		kvps.add(KeyValuePair.instance("filePath", sourceFileAbsolutePath));
 
@@ -116,15 +142,30 @@ public class DataObjInpForMcoll extends AbstractIRODSPackingInstruction {
 
 	/*
 	 * 
-	 * 
-	 * <DataObjInp_PI> <objPath>/test1/home/test1/linked</objPath>
-	 * <createMode>0</createMode> <openFlags>0</openFlags> <offset>0</offset>
-	 * <dataSize>0</dataSize> <numThreads>0</numThreads> <oprType>0</oprType>
-	 * <KeyValPair_PI> <ssLen>3</ssLen> <keyWord>collectionType</keyWord>
-	 * <keyWord>destRescName</keyWord> <keyWord>filePath</keyWord>
-	 * <svalue>linkPoint</svalue> <svalue>test1-resc</svalue>
-	 * <svalue>/test1/home/test1/scratch</svalue> </KeyValPair_PI>
-	 * </DataObjInp_PI>
+	 
+sending msg: 
+<DataObjInp_PI>
+<objPath>/test1/home/test1/jargon-scratch/MountedCollectionAOImplForMSSOTest/testMountMSSOWorkflow/mounted</objPath>
+<createMode>0</createMode>
+<openFlags>0</openFlags>
+<offset>0</offset>
+<dataSize>0</dataSize>
+<numThreads>0</numThreads>
+<oprType>0</oprType>
+<KeyValPair_PI>
+<ssLen>4</ssLen>
+<keyWord>collectionType</keyWord>
+<keyWord>dataType</keyWord>
+<keyWord>destRescName</keyWord>
+<keyWord>filePath</keyWord>
+<svalue>mssoStructFile</svalue>
+<svalue>msso file</svalue>
+<svalue>test1-resc</svalue>
+<svalue>/test1/home/test1/jargon-scratch/MountedCollectionAOImplForMSSOTest/testMountMSSOWorkflow/eCWkflow.mss</svalue>
+</KeyValPair_PI>
+</DataObjInp_PI>
+
+
 	 */
 
 }

@@ -1,7 +1,7 @@
 *'''Project''': Jargon-core API
 *'''Date''': XX/XX/XX
-*'''Release Version''': 3.2.X.X
-*'''git tag''': 3.2.X.X
+*'''Release Version''': 1182-workflow
+*'''git tag''': 1182-workflow
 
 ==News==
 
@@ -85,4 +85,7 @@ knowable by attempting an operation.  For example, if Jargon attmpts a specific 
 in jargon-specquery.sh are not defined on the server, this can be remembered, so that jargon does not make repeated failed attampts at an opertion.
 This is new and somewhat experimental, but should be a nice optimization for the future.  Well add a jargon.properties value that 
 can be used to shut this capability off.
+
+*[#1182] add support for workflows
+
 

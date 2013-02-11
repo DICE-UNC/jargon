@@ -299,7 +299,7 @@ public class LocalFileUtils {
 
 		return sb.toString();
 	}
-
+	
 	/**
 	 * Given a path to a classpath resource, return that resource data as a
 	 * string

@@ -13,9 +13,9 @@ exec `iadmin mkuser test3 rodsuser`
 
 exec `iadmin moduser test3 password test`
 
-exec `iadmin mkresc test1-resc "unix file system" cache localhost "/opt/iRODS/iRODSTrunk/trunk/Vault1"`
+exec `iadmin mkresc test1-resc "unix file system" cache localhost "/opt/iRODS/iRODS_3X/iRODS/Vault1"`
 
-exec `iadmin mkresc test1-resc2 "unix file system" cache localhost "/opt/iRODS/iRODSTrunk/trunk/Vault2"`
+exec `iadmin mkresc test1-resc2 "unix file system" cache localhost "/opt/iRODS/iRODS_3X/iRODS/Vault2"`
 
 exec `iadmin atrg testResourceGroup test1-resc2`
 

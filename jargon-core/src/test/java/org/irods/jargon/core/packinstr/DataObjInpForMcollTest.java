@@ -23,6 +23,14 @@ public class DataObjInpForMcollTest {
 		Assert.assertEquals("wrong api number", DataObjInpForMcoll.MCOLL_AN,
 				actual.getApiNumber());
 	}
+	
+	@Test
+	public final void testInstanceForMSSOMount() {
+		DataObjInpForMcoll actual = DataObjInpForMcoll
+				.instanceForMSSOMount("source", "target", "resc");
+		Assert.assertEquals("wrong api number", DataObjInpForMcoll.MCOLL_AN,
+				actual.getApiNumber());
+	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public final void testInstanceForSoftLinkMountNullSource() {

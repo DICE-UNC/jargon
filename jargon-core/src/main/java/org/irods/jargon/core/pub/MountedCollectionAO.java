@@ -68,4 +68,17 @@ public interface MountedCollectionAO {
 	boolean unmountACollection(String absolutePathToCollectionToUnmount,
 			String resourceName) throws JargonException;
 
+	/**
+	 * Create an MSSO mount using the given MSSO file, mounting the result to the provided collection path
+	 * @param absolutePathToTheMSSOToBeMounted   <code>String</code> with the absolute path to msso structured object to mount
+	 * @param absolutePathToMountedCollection <code>String</code> with the absolute path to the iRODS
+	 *            collection that will be created based on the MSSO service
+	 * @throws FileNotFoundException
+	 * @throws JargonException
+	 */
+	void createAnMSSOMount(String absolutePathToTheMSSOToBeMounted,
+			String absolutePathToMountedCollection)
+			throws FileNotFoundException,
+			JargonException;
+
 }
