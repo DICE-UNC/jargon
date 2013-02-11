@@ -12,6 +12,7 @@ import org.irods.jargon.core.packinstr.DataObjInpForObjStat;
 import org.irods.jargon.core.packinstr.DataObjInpForQuerySpecColl;
 import org.irods.jargon.core.packinstr.Tag;
 import org.irods.jargon.core.pub.aohelper.CollectionAOHelper;
+import org.irods.jargon.core.pub.domain.DataObject;
 import org.irods.jargon.core.pub.domain.ObjStat;
 import org.irods.jargon.core.pub.domain.ObjStat.SpecColType;
 import org.irods.jargon.core.pub.domain.UserFilePermission;
@@ -1576,18 +1577,67 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		// see if file or coll
 		Object returnObject = null;
 
+		/*
+		 * objStat:
+  absolutePath:/test1/home/test1/jargon-scratch/CollectionAndDataObjectListAndSearchAOImplForMSSOTest/testGetFullObjectForTypeInTestWorkflow/testGetFullObjectForTypeInTestWorkflowMounted/eCWkflow.run
+   dataId:10043
+   specColType:STRUCT_FILE_COLL
+   objectType:DATA_OBJECT
+   collectionPath:/test1/home/test1/jargon-scratch/CollectionAndDataObjectListAndSearchAOImplForMSSOTest/testGetFullObjectForTypeInTestWorkflow/testGetFullObjectForTypeInTestWorkflowMounted
+   objectPath:
+   checksum:
+   ownerName:test1
+   ownerZone:test1
+  objSize:33554412
+   cacheDir:/opt/iRODS/iRODS3.2/Vault1/home/test1/jargon-scratch/CollectionAndDataObjectListAndSearchAOImplForMSSOTest/testGetFullObjectForTypeInTestWorkflow/eCWkflow.mss.cacheDir0
+   cacheDirty:false
+   createdAt:replNumber:0Mon Feb 11 17:32:17 EST 2013
+   modifiedAt:Mon Feb 11 17:32:17 EST 2013
+		 */
+		
 		if (objStat.isSomeTypeOfCollection()) {
 			CollectionAO collectionAO = new CollectionAOImpl(getIRODSSession(),
 					getIRODSAccount());
 			returnObject = collectionAO.findGivenObjStat(objStat);
 		} else {
-			DataObjectAO dataObjectAO = new DataObjectAOImpl(getIRODSSession(),
-					getIRODSAccount());
-			returnObject = dataObjectAO.findGivenObjStat(objStat);
-			log.debug("looking for as a data object");
+			
+			if (objStat.getSpecColType() == SpecColType.STRUCT_FILE_COLL) {
+				returnObject = buildDataObjectFromObjStatIfStructuredCollection(objStat);
+			} else {
+			
+			returnObject = buildDataObjectFromICAT(objStat);
+			}
 		}
 
 		// get appropriate domain object and return
+		return returnObject;
+	}
+
+	private Object buildDataObjectFromICAT(ObjStat objStat)
+			throws JargonException, DataNotFoundException {
+		Object returnObject;
+		DataObjectAO dataObjectAO = new DataObjectAOImpl(getIRODSSession(),
+				getIRODSAccount());
+		returnObject = dataObjectAO.findGivenObjStat(objStat);
+		return returnObject;
+	}
+
+	private Object buildDataObjectFromObjStatIfStructuredCollection(
+			ObjStat objStat) {
+		Object returnObject;
+		DataObject dataObject = new DataObject();
+		dataObject.setChecksum(objStat.getChecksum());
+		dataObject.setCollectionName(objStat.getCollectionPath());
+		dataObject.setCreatedAt(objStat.getCreatedAt());
+		dataObject.setDataName(MiscIRODSUtils.getLastPathComponentForGiveAbsolutePath(objStat.getAbsolutePath()));
+		dataObject.setDataOwnerName(objStat.getOwnerName());
+		dataObject.setDataOwnerZone(objStat.getOwnerZone());
+		dataObject.setDataPath(objStat.getObjectPath());
+		dataObject.setDataReplicationNumber(objStat.getReplNumber());
+		dataObject.setDataSize(objStat.getObjSize());
+		dataObject.setSpecColType(objStat.getSpecColType());
+		dataObject.setUpdatedAt(objStat.getModifiedAt());
+		returnObject = dataObject;
 		return returnObject;
 	}
 
