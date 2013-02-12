@@ -131,8 +131,12 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 
 	}
 
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.pub.CollectionAndDataObjectListAndSearchAO#listDataObjectsAndCollectionsUnderPathProducingPagingAwareCollectionListing(java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.pub.CollectionAndDataObjectListAndSearchAO#
+	 * listDataObjectsAndCollectionsUnderPathProducingPagingAwareCollectionListing
+	 * (java.lang.String)
 	 */
 	@Override
 	public PagingAwareCollectionListing listDataObjectsAndCollectionsUnderPathProducingPagingAwareCollectionListing(
@@ -148,7 +152,8 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		log.info("absolutePath:{}", absolutePathToParent);
 
 		PagingAwareCollectionListing pagingAwareCollectionListing = new PagingAwareCollectionListing();
-		pagingAwareCollectionListing.setPageSizeUtilized(this.getJargonProperties().getMaxFilesAndDirsQueryMax());
+		pagingAwareCollectionListing.setPageSizeUtilized(getJargonProperties()
+				.getMaxFilesAndDirsQueryMax());
 		List<CollectionAndDataObjectListingEntry> entries = null;
 		ObjStat objStat = null;
 
@@ -157,21 +162,24 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		} catch (FileNotFoundException fnf) {
 			log.info("didnt find an objStat for the path, account for cases where there are strict acls and give Jargon a chance to drill down to a place where the user has permissions");
 			entries = handleNoListingUnderRootOrHomeByLookingForPublicAndHome(absolutePathToParent);
-			pagingAwareCollectionListing.setCollectionAndDataObjectListingEntries(entries);
+			pagingAwareCollectionListing
+					.setCollectionAndDataObjectListingEntries(entries);
 			pagingAwareCollectionListing.setCollectionsComplete(true);
 			pagingAwareCollectionListing.setCollectionsCount(entries.size());
 			return pagingAwareCollectionListing;
 		}
-		
-		// I can actually get the objStat and do a real listing...otherwise would have returned
+
+		// I can actually get the objStat and do a real listing...otherwise
+		// would have returned
 
 		/*
 		 * See if jargon supports the given object type
 		 */
 		MiscIRODSUtils.evaluateSpecCollSupport(objStat);
-		
-		List<CollectionAndDataObjectListingEntry> queriedEntries = listCollectionsUnderPath(objStat, 0);
-		
+
+		List<CollectionAndDataObjectListingEntry> queriedEntries = listCollectionsUnderPath(
+				objStat, 0);
+
 		/*
 		 * characterize the collections listing by looking at the returned data
 		 */
@@ -182,14 +190,20 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 			pagingAwareCollectionListing.setCollectionsOffset(0);
 		} else {
 			log.info("adding child collections");
-			pagingAwareCollectionListing.setCollectionsComplete(queriedEntries.get(queriedEntries.size() -1).isLastResult());
-			pagingAwareCollectionListing.setCollectionsCount(queriedEntries.get(queriedEntries.size() - 1).getCount());
-			pagingAwareCollectionListing.setCollectionsTotalRecords(queriedEntries.get(0).getTotalRecords());
-			pagingAwareCollectionListing.getCollectionAndDataObjectListingEntries().addAll(queriedEntries);
+			pagingAwareCollectionListing.setCollectionsComplete(queriedEntries
+					.get(queriedEntries.size() - 1).isLastResult());
+			pagingAwareCollectionListing.setCollectionsCount(queriedEntries
+					.get(queriedEntries.size() - 1).getCount());
+			pagingAwareCollectionListing
+					.setCollectionsTotalRecords(queriedEntries.get(0)
+							.getTotalRecords());
+			pagingAwareCollectionListing
+					.getCollectionAndDataObjectListingEntries().addAll(
+							queriedEntries);
 		}
-		
+
 		queriedEntries = listDataObjectsUnderPath(objStat, 0);
-		
+
 		/*
 		 * characterize the data objects listing
 		 */
@@ -200,13 +214,20 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 			pagingAwareCollectionListing.setDataObjectsOffset(0);
 		} else {
 			log.info("adding child data objects");
-			pagingAwareCollectionListing.setDataObjectsComplete(queriedEntries.get(queriedEntries.size() -1).isLastResult());
-			pagingAwareCollectionListing.setDataObjectsCount(queriedEntries.get(queriedEntries.size() - 1).getCount());
-			pagingAwareCollectionListing.setDataObjectsTotalRecords(queriedEntries.get(0).getTotalRecords());
-			pagingAwareCollectionListing.getCollectionAndDataObjectListingEntries().addAll(queriedEntries);
+			pagingAwareCollectionListing.setDataObjectsComplete(queriedEntries
+					.get(queriedEntries.size() - 1).isLastResult());
+			pagingAwareCollectionListing.setDataObjectsCount(queriedEntries
+					.get(queriedEntries.size() - 1).getCount());
+			pagingAwareCollectionListing
+					.setDataObjectsTotalRecords(queriedEntries.get(0)
+							.getTotalRecords());
+			pagingAwareCollectionListing
+					.getCollectionAndDataObjectListingEntries().addAll(
+							queriedEntries);
 		}
-		
-		log.info("pagingAwareCollectionListing:{}", pagingAwareCollectionListing);
+
+		log.info("pagingAwareCollectionListing:{}",
+				pagingAwareCollectionListing);
 		return pagingAwareCollectionListing;
 
 	}
@@ -765,50 +786,57 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 
 		String effectiveAbsolutePath = MiscIRODSUtils
 				.determineAbsolutePathBasedOnCollTypeInObjectStat(objStat);
-		
-		if (objStat.getSpecColType() == SpecColType.STRUCT_FILE_COLL || objStat.getSpecColType() == SpecColType.MOUNTED_COLL) {
-			//return listCollectionsUnderPathWhenSpecColl(objStat, partialStartIndex, effectiveAbsolutePath);
+
+		if (objStat.getSpecColType() == SpecColType.STRUCT_FILE_COLL
+				|| objStat.getSpecColType() == SpecColType.MOUNTED_COLL) {
+			// return listCollectionsUnderPathWhenSpecColl(objStat,
+			// partialStartIndex, effectiveAbsolutePath);
 			return new ArrayList<CollectionAndDataObjectListingEntry>();
 		} else {
-			return listCollectionsUnderPathViaGenQuery(
-					objStat, partialStartIndex, effectiveAbsolutePath);
+			return listCollectionsUnderPathViaGenQuery(objStat,
+					partialStartIndex, effectiveAbsolutePath);
 		}
-		
 
 	}
 
 	private List<CollectionAndDataObjectListingEntry> listDataObjectsUnderPathWhenSpecColl(
-			ObjStat objStat, int partialStartIndex, String effectiveAbsolutePath) throws JargonException {
-		
+			final ObjStat objStat, final int partialStartIndex,
+			final String effectiveAbsolutePath) throws JargonException {
+
 		log.info("listCollectionsUnderPathWhenSpecColl()");
-		
-		DataObjInpForQuerySpecColl dataObjInp = DataObjInpForQuerySpecColl.instance(effectiveAbsolutePath);
+
+		DataObjInpForQuerySpecColl dataObjInp = DataObjInpForQuerySpecColl
+				.instance(effectiveAbsolutePath);
 		Tag response;
-			response = getIRODSProtocol().irodsFunction(dataObjInp);
+		response = getIRODSProtocol().irodsFunction(dataObjInp);
 
 		log.debug("response from function: {}", response.parseTag());
-		
+
 		int totalRecords = response.getTag("totalRowCount").getIntValue();
 		log.info("total records:{}", totalRecords);
 
-		List<IRODSQueryResultRow> results = QueryResultProcessingUtils.translateResponseIntoResultSet(
-				response, new ArrayList<String>(), 0, partialStartIndex);
+		List<IRODSQueryResultRow> results = QueryResultProcessingUtils
+				.translateResponseIntoResultSet(response,
+						new ArrayList<String>(), 0, partialStartIndex);
 
 		List<CollectionAndDataObjectListingEntry> entries = new ArrayList<CollectionAndDataObjectListingEntry>();
 		CollectionAndDataObjectListingEntry listingEntry;
-		
+
 		for (IRODSQueryResultRow row : results) {
 			listingEntry = new CollectionAndDataObjectListingEntry();
-			listingEntry.setCreatedAt(IRODSDataConversionUtil.getDateFromIRODSValue(row.getColumn(2)));
-			listingEntry.setDataSize(IRODSDataConversionUtil.getLongOrZeroFromIRODSValue(row.getColumn(4)));
-			listingEntry.setModifiedAt(IRODSDataConversionUtil.getDateFromIRODSValue(row.getColumn(3)));
+			listingEntry.setCreatedAt(IRODSDataConversionUtil
+					.getDateFromIRODSValue(row.getColumn(2)));
+			listingEntry.setDataSize(IRODSDataConversionUtil
+					.getLongOrZeroFromIRODSValue(row.getColumn(4)));
+			listingEntry.setModifiedAt(IRODSDataConversionUtil
+					.getDateFromIRODSValue(row.getColumn(3)));
 			String dataName = row.getColumn(1);
 			if (dataName.isEmpty()) {
 				listingEntry.setObjectType(ObjectType.COLLECTION);
 			} else {
 				listingEntry.setObjectType(ObjectType.DATA_OBJECT);
 			}
-			
+
 			listingEntry.setOwnerName(objStat.getOwnerName());
 			listingEntry.setOwnerZone(objStat.getOwnerZone());
 			listingEntry.setParentPath(row.getColumn(0));
@@ -816,48 +844,40 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 			listingEntry.setSpecColType(objStat.getSpecColType());
 			entries.add(listingEntry);
 		}
-		
+
 		return entries;
-		
-		
+
 		/*
-		 myGenQueryOut->sqlResult[0].attriInx = COL_COLL_NAME;
-    myGenQueryOut->sqlResult[0].len = MAX_NAME_LEN;    
-    myGenQueryOut->sqlResult[0].value = 
-      (char*)malloc (MAX_NAME_LEN * MAX_SPEC_COLL_ROW);
-    memset (myGenQueryOut->sqlResult[0].value, 0, 
-      MAX_NAME_LEN * MAX_SPEC_COLL_ROW);
-    myGenQueryOut->sqlResult[1].attriInx = COL_DATA_NAME;
-    myGenQueryOut->sqlResult[1].len = MAX_NAME_LEN; 
-    myGenQueryOut->sqlResult[1].value = 
-      (char*)malloc (MAX_NAME_LEN * MAX_SPEC_COLL_ROW);
-    memset (myGenQueryOut->sqlResult[1].value, 0, 
-      MAX_NAME_LEN * MAX_SPEC_COLL_ROW);
-    myGenQueryOut->sqlResult[2].attriInx = COL_D_CREATE_TIME;
-    myGenQueryOut->sqlResult[2].len = NAME_LEN;
-    myGenQueryOut->sqlResult[2].value =
-      (char*)malloc (NAME_LEN * MAX_SPEC_COLL_ROW);
-    memset (myGenQueryOut->sqlResult[2].value, 0,
-      NAME_LEN * MAX_SPEC_COLL_ROW); 
-    myGenQueryOut->sqlResult[3].attriInx = COL_D_MODIFY_TIME;
-    myGenQueryOut->sqlResult[3].len = NAME_LEN;
-    myGenQueryOut->sqlResult[3].value =
-      (char*)malloc (NAME_LEN * MAX_SPEC_COLL_ROW);
-    memset (myGenQueryOut->sqlResult[3].value, 0,
-      NAME_LEN * MAX_SPEC_COLL_ROW);     
-    myGenQueryOut->sqlResult[4].attriInx = COL_DATA_SIZE;
-    myGenQueryOut->sqlResult[4].len = NAME_LEN;
-    myGenQueryOut->sqlResult[4].value =
-      (char*)malloc (NAME_LEN * MAX_SPEC_COLL_ROW);
-    memset (myGenQueryOut->sqlResult[4].value, 0,
-      NAME_LEN * MAX_SPEC_COLL_ROW);
+		 * myGenQueryOut->sqlResult[0].attriInx = COL_COLL_NAME;
+		 * myGenQueryOut->sqlResult[0].len = MAX_NAME_LEN;
+		 * myGenQueryOut->sqlResult[0].value = (char*)malloc (MAX_NAME_LEN *
+		 * MAX_SPEC_COLL_ROW); memset (myGenQueryOut->sqlResult[0].value, 0,
+		 * MAX_NAME_LEN * MAX_SPEC_COLL_ROW);
+		 * myGenQueryOut->sqlResult[1].attriInx = COL_DATA_NAME;
+		 * myGenQueryOut->sqlResult[1].len = MAX_NAME_LEN;
+		 * myGenQueryOut->sqlResult[1].value = (char*)malloc (MAX_NAME_LEN *
+		 * MAX_SPEC_COLL_ROW); memset (myGenQueryOut->sqlResult[1].value, 0,
+		 * MAX_NAME_LEN * MAX_SPEC_COLL_ROW);
+		 * myGenQueryOut->sqlResult[2].attriInx = COL_D_CREATE_TIME;
+		 * myGenQueryOut->sqlResult[2].len = NAME_LEN;
+		 * myGenQueryOut->sqlResult[2].value = (char*)malloc (NAME_LEN *
+		 * MAX_SPEC_COLL_ROW); memset (myGenQueryOut->sqlResult[2].value, 0,
+		 * NAME_LEN * MAX_SPEC_COLL_ROW); myGenQueryOut->sqlResult[3].attriInx =
+		 * COL_D_MODIFY_TIME; myGenQueryOut->sqlResult[3].len = NAME_LEN;
+		 * myGenQueryOut->sqlResult[3].value = (char*)malloc (NAME_LEN *
+		 * MAX_SPEC_COLL_ROW); memset (myGenQueryOut->sqlResult[3].value, 0,
+		 * NAME_LEN * MAX_SPEC_COLL_ROW); myGenQueryOut->sqlResult[4].attriInx =
+		 * COL_DATA_SIZE; myGenQueryOut->sqlResult[4].len = NAME_LEN;
+		 * myGenQueryOut->sqlResult[4].value = (char*)malloc (NAME_LEN *
+		 * MAX_SPEC_COLL_ROW); memset (myGenQueryOut->sqlResult[4].value, 0,
+		 * NAME_LEN * MAX_SPEC_COLL_ROW);
 		 */
-		
+
 	}
 
 	private List<CollectionAndDataObjectListingEntry> listCollectionsUnderPathViaGenQuery(
 			final ObjStat objStat, final int partialStartIndex,
-			String effectiveAbsolutePath) throws JargonException {
+			final String effectiveAbsolutePath) throws JargonException {
 		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, false,
 				true, null);
 		try {
@@ -1135,13 +1155,15 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		log.info("listDataObjectsUnderPath for: {}", objStat);
 
 		List<CollectionAndDataObjectListingEntry> files;
-		if (objStat.getSpecColType() == SpecColType.STRUCT_FILE_COLL || objStat.getSpecColType() == SpecColType.MOUNTED_COLL) {
-			
-			files = listDataObjectsUnderPathWhenSpecColl(objStat,0, effectiveAbsolutePath);
+		if (objStat.getSpecColType() == SpecColType.STRUCT_FILE_COLL
+				|| objStat.getSpecColType() == SpecColType.MOUNTED_COLL) {
+
+			files = listDataObjectsUnderPathWhenSpecColl(objStat, 0,
+					effectiveAbsolutePath);
 		} else {
-			
-			files = listDataObjectsUnderPathViaGenQuery(
-					objStat, partialStartIndex, effectiveAbsolutePath);
+
+			files = listDataObjectsUnderPathViaGenQuery(objStat,
+					partialStartIndex, effectiveAbsolutePath);
 		}
 
 		return files;
@@ -1150,7 +1172,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 
 	private List<CollectionAndDataObjectListingEntry> listDataObjectsUnderPathViaGenQuery(
 			final ObjStat objStat, final int partialStartIndex,
-			String effectiveAbsolutePath) throws JargonException {
+			final String effectiveAbsolutePath) throws JargonException {
 		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, false,
 				true, null);
 
@@ -1578,34 +1600,34 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		Object returnObject = null;
 
 		/*
-		 * objStat:
-  absolutePath:/test1/home/test1/jargon-scratch/CollectionAndDataObjectListAndSearchAOImplForMSSOTest/testGetFullObjectForTypeInTestWorkflow/testGetFullObjectForTypeInTestWorkflowMounted/eCWkflow.run
-   dataId:10043
-   specColType:STRUCT_FILE_COLL
-   objectType:DATA_OBJECT
-   collectionPath:/test1/home/test1/jargon-scratch/CollectionAndDataObjectListAndSearchAOImplForMSSOTest/testGetFullObjectForTypeInTestWorkflow/testGetFullObjectForTypeInTestWorkflowMounted
-   objectPath:
-   checksum:
-   ownerName:test1
-   ownerZone:test1
-  objSize:33554412
-   cacheDir:/opt/iRODS/iRODS3.2/Vault1/home/test1/jargon-scratch/CollectionAndDataObjectListAndSearchAOImplForMSSOTest/testGetFullObjectForTypeInTestWorkflow/eCWkflow.mss.cacheDir0
-   cacheDirty:false
-   createdAt:replNumber:0Mon Feb 11 17:32:17 EST 2013
-   modifiedAt:Mon Feb 11 17:32:17 EST 2013
+		 * objStat: absolutePath:/test1/home/test1/jargon-scratch/
+		 * CollectionAndDataObjectListAndSearchAOImplForMSSOTest
+		 * /testGetFullObjectForTypeInTestWorkflow
+		 * /testGetFullObjectForTypeInTestWorkflowMounted/eCWkflow.run
+		 * dataId:10043 specColType:STRUCT_FILE_COLL objectType:DATA_OBJECT
+		 * collectionPath:/test1/home/test1/jargon-scratch/
+		 * CollectionAndDataObjectListAndSearchAOImplForMSSOTest
+		 * /testGetFullObjectForTypeInTestWorkflow
+		 * /testGetFullObjectForTypeInTestWorkflowMounted objectPath: checksum:
+		 * ownerName:test1 ownerZone:test1 objSize:33554412
+		 * cacheDir:/opt/iRODS/iRODS3.2/Vault1/home/test1/jargon-scratch/
+		 * CollectionAndDataObjectListAndSearchAOImplForMSSOTest
+		 * /testGetFullObjectForTypeInTestWorkflow/eCWkflow.mss.cacheDir0
+		 * cacheDirty:false createdAt:replNumber:0Mon Feb 11 17:32:17 EST 2013
+		 * modifiedAt:Mon Feb 11 17:32:17 EST 2013
 		 */
-		
+
 		if (objStat.isSomeTypeOfCollection()) {
 			CollectionAO collectionAO = new CollectionAOImpl(getIRODSSession(),
 					getIRODSAccount());
 			returnObject = collectionAO.findGivenObjStat(objStat);
 		} else {
-			
+
 			if (objStat.getSpecColType() == SpecColType.STRUCT_FILE_COLL) {
 				returnObject = buildDataObjectFromObjStatIfStructuredCollection(objStat);
 			} else {
-			
-			returnObject = buildDataObjectFromICAT(objStat);
+
+				returnObject = buildDataObjectFromICAT(objStat);
 			}
 		}
 
@@ -1613,7 +1635,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		return returnObject;
 	}
 
-	private Object buildDataObjectFromICAT(ObjStat objStat)
+	private Object buildDataObjectFromICAT(final ObjStat objStat)
 			throws JargonException, DataNotFoundException {
 		Object returnObject;
 		DataObjectAO dataObjectAO = new DataObjectAOImpl(getIRODSSession(),
@@ -1623,13 +1645,15 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 	}
 
 	private Object buildDataObjectFromObjStatIfStructuredCollection(
-			ObjStat objStat) {
+			final ObjStat objStat) {
 		Object returnObject;
 		DataObject dataObject = new DataObject();
 		dataObject.setChecksum(objStat.getChecksum());
 		dataObject.setCollectionName(objStat.getCollectionPath());
 		dataObject.setCreatedAt(objStat.getCreatedAt());
-		dataObject.setDataName(MiscIRODSUtils.getLastPathComponentForGiveAbsolutePath(objStat.getAbsolutePath()));
+		dataObject.setDataName(MiscIRODSUtils
+				.getLastPathComponentForGiveAbsolutePath(objStat
+						.getAbsolutePath()));
 		dataObject.setDataOwnerName(objStat.getOwnerName());
 		dataObject.setDataOwnerZone(objStat.getOwnerZone());
 		dataObject.setDataPath(objStat.getObjectPath());

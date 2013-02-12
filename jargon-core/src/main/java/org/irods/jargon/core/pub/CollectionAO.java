@@ -335,7 +335,7 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	 * @throws JargonException
 	 */
 	Collection findByAbsolutePath(final String irodsCollectionAbsolutePath)
-			throws JargonException;
+			throws DataNotFoundException, JargonException;
 
 	/**
 	 * List the AVU metadata for a particular collection, as well as information
@@ -828,21 +828,33 @@ public interface CollectionAO extends FileCatalogObjectAO {
 			JargonException;
 
 	/**
-	 * Method to set access permission to the desired state, this variant makes it less necessary to 
-	 * stack 'if' tests in permission setting code.
+	 * Method to set access permission to the desired state, this variant makes
+	 * it less necessary to stack 'if' tests in permission setting code.
 	 * <p/>
-	 * Note that <code>FilePermissionEnum</code> has more permission states defined then are currently supported
-	 * by this method.  This may require more iRODS core server updates to make this range of permissions meaningful. 
+	 * Note that <code>FilePermissionEnum</code> has more permission states
+	 * defined then are currently supported by this method. This may require
+	 * more iRODS core server updates to make this range of permissions
+	 * meaningful.
 	 * <p/>
-	 * For the current variant of this method, only READ, WRITE, and OWN are supported, Other permission values will
-	 * cause a <code>JargonException</code>.  This may be relaxed in the future.  Also note that NONE is supported, and actually causes
-	 * the access permission to be removed.
+	 * For the current variant of this method, only READ, WRITE, and OWN are
+	 * supported, Other permission values will cause a
+	 * <code>JargonException</code>. This may be relaxed in the future. Also
+	 * note that NONE is supported, and actually causes the access permission to
+	 * be removed.
 	 * 
-	 * @param zone <code>String</code> with the zone for the user.  This method will work cross-zone if appropriate permissions are in place
-	 * @param absolutePath <code>String</code> with the absolute path for the collection
-	 * @param userName <code>userName</code> (just the name, no name#zone format) for the user
-	 * @param recursive <code>boolean</code> to indicate that the permission must be recursively applied to subdirectories
-	 * @param filePermission {@link FilePermissionEnum} 
+	 * @param zone
+	 *            <code>String</code> with the zone for the user. This method
+	 *            will work cross-zone if appropriate permissions are in place
+	 * @param absolutePath
+	 *            <code>String</code> with the absolute path for the collection
+	 * @param userName
+	 *            <code>userName</code> (just the name, no name#zone format) for
+	 *            the user
+	 * @param recursive
+	 *            <code>boolean</code> to indicate that the permission must be
+	 *            recursively applied to subdirectories
+	 * @param filePermission
+	 *            {@link FilePermissionEnum}
 	 * @throws JargonException
 	 */
 	void setAccessPermission(String zone, String absolutePath, String userName,
