@@ -9,6 +9,7 @@ import org.irods.jargon.core.exception.CollectionNotEmptyException;
 import org.irods.jargon.core.exception.CollectionNotMountedException;
 import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.DuplicateDataException;
+import org.irods.jargon.core.exception.FileDriverError;
 import org.irods.jargon.core.exception.FileIntegrityException;
 import org.irods.jargon.core.exception.FileNotFoundException;
 import org.irods.jargon.core.exception.InvalidGroupException;
@@ -105,6 +106,8 @@ public class IRODSErrorScanner {
 			throw new NoMoreRulesException("no more rules");
 		case COLLECTION_NOT_MOUNTED:
 			throw new CollectionNotMountedException("collection not mounted");
+		case UNIX_FILE_OPENDIR_ERR:
+			throw new FileDriverError("file driver error", infoValue);
 		default:
 			throw new JargonException("error code recieved from iRODS:"
 					+ infoValue, infoValue);

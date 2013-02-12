@@ -21,9 +21,12 @@ public class DataObjInpForQuerySpecColl extends AbstractIRODSPackingInstruction 
 	private String fileAbsolutePath = "";
 	private long offset = 0L;
 	private int operationType = 0;
+	private String selObjType = null;
+	private SpecColInfo specColInfo;
 
 	/**
-	 * Create the DataObjInp packing instruction to query special collections
+	 * Create the DataObjInp packing instruction to query data objects in
+	 * special collections
 	 * 
 	 * @param fileAbsolutePath
 	 *            <code>String</code> with the file absolute path.
@@ -31,12 +34,34 @@ public class DataObjInpForQuerySpecColl extends AbstractIRODSPackingInstruction 
 	 *         instruction
 	 * @throws JargonException
 	 */
-	public static final DataObjInpForQuerySpecColl instance(
+	public static final DataObjInpForQuerySpecColl instanceQueryDataObj(
 			final String fileAbsolutePath) throws JargonException {
-		return new DataObjInpForQuerySpecColl(fileAbsolutePath);
+		return new DataObjInpForQuerySpecColl(fileAbsolutePath, "dataObj", null);
 	}
 
-	private DataObjInpForQuerySpecColl(final String fileAbsolutePath)
+	/**
+	 * Create the DataObjInp packing instruction to query collections in special
+	 * collections
+	 * 
+	 * @param fileAbsolutePath
+	 *            <code>String</code> with the file absolute path.
+	 * @return <code>DataObjInp</code> containing the necessary packing
+	 *         instruction
+	 * @throws JargonException
+	 */
+	public static final DataObjInpForQuerySpecColl instanceQueryCollections(
+			final String fileAbsolutePath, final SpecColInfo specColInfo)
+			throws JargonException {
+		if (specColInfo == null) {
+			throw new IllegalArgumentException("null specColInfo");
+		}
+
+		return new DataObjInpForQuerySpecColl(fileAbsolutePath, "collection",
+				specColInfo);
+	}
+
+	private DataObjInpForQuerySpecColl(final String fileAbsolutePath,
+			final String selObjType, final SpecColInfo specColInfo)
 			throws JargonException {
 
 		super();
@@ -45,7 +70,13 @@ public class DataObjInpForQuerySpecColl extends AbstractIRODSPackingInstruction 
 					"file absolute path is null or empty");
 		}
 
+		if (selObjType == null || selObjType.length() == 0) {
+			throw new IllegalArgumentException("selObjType is null or empty");
+		}
+
 		this.fileAbsolutePath = fileAbsolutePath;
+		this.selObjType = selObjType;
+		this.specColInfo = specColInfo;
 		this.setApiNumber(QUERY_SPEC_COLL_API_NBR);
 	}
 
@@ -61,8 +92,12 @@ public class DataObjInpForQuerySpecColl extends AbstractIRODSPackingInstruction 
 				new Tag(DataObjInp.NUM_THREADS, 0),
 				new Tag(DataObjInp.OPR_TYPE, operationType) });
 
+		if (specColInfo != null) {
+			message.addTag(this.createSpecCollTag(specColInfo));
+		}
+
 		List<KeyValuePair> kvps = new ArrayList<KeyValuePair>();
-		kvps.add(KeyValuePair.instance("selObjType", "dataObj"));
+		kvps.add(KeyValuePair.instance("selObjType", selObjType));
 		message.addTag(createKeyValueTag(kvps));
 		return message;
 	}

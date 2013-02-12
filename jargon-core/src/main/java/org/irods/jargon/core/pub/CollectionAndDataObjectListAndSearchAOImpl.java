@@ -6,10 +6,12 @@ import java.util.List;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.exception.DataNotFoundException;
+import org.irods.jargon.core.exception.FileDriverError;
 import org.irods.jargon.core.exception.FileNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.packinstr.DataObjInpForObjStat;
 import org.irods.jargon.core.packinstr.DataObjInpForQuerySpecColl;
+import org.irods.jargon.core.packinstr.SpecColInfo;
 import org.irods.jargon.core.packinstr.Tag;
 import org.irods.jargon.core.pub.aohelper.CollectionAOHelper;
 import org.irods.jargon.core.pub.domain.DataObject;
@@ -789,9 +791,9 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 
 		if (objStat.getSpecColType() == SpecColType.STRUCT_FILE_COLL
 				|| objStat.getSpecColType() == SpecColType.MOUNTED_COLL) {
-			// return listCollectionsUnderPathWhenSpecColl(objStat,
-			// partialStartIndex, effectiveAbsolutePath);
-			return new ArrayList<CollectionAndDataObjectListingEntry>();
+			return listCollectionsUnderPathWhenSpecColl(objStat, 0,
+					effectiveAbsolutePath);
+			// return new ArrayList<CollectionAndDataObjectListingEntry>();
 		} else {
 			return listCollectionsUnderPathViaGenQuery(objStat,
 					partialStartIndex, effectiveAbsolutePath);
@@ -806,9 +808,15 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		log.info("listCollectionsUnderPathWhenSpecColl()");
 
 		DataObjInpForQuerySpecColl dataObjInp = DataObjInpForQuerySpecColl
-				.instance(effectiveAbsolutePath);
+				.instanceQueryDataObj(effectiveAbsolutePath);
 		Tag response;
-		response = getIRODSProtocol().irodsFunction(dataObjInp);
+
+		try {
+			response = getIRODSProtocol().irodsFunction(dataObjInp);
+		} catch (FileDriverError fde) {
+			log.warn("file driver error listing empty spec coll is ignored, just act as no data found");
+			return new ArrayList<CollectionAndDataObjectListingEntry>();
+		}
 
 		log.debug("response from function: {}", response.parseTag());
 
@@ -830,17 +838,117 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 					.getLongOrZeroFromIRODSValue(row.getColumn(4)));
 			listingEntry.setModifiedAt(IRODSDataConversionUtil
 					.getDateFromIRODSValue(row.getColumn(3)));
-			String dataName = row.getColumn(1);
-			if (dataName.isEmpty()) {
-				listingEntry.setObjectType(ObjectType.COLLECTION);
-			} else {
-				listingEntry.setObjectType(ObjectType.DATA_OBJECT);
-			}
+			row.getColumn(1);
+
+			listingEntry.setObjectType(ObjectType.COLLECTION);
 
 			listingEntry.setOwnerName(objStat.getOwnerName());
 			listingEntry.setOwnerZone(objStat.getOwnerZone());
 			listingEntry.setParentPath(row.getColumn(0));
 			listingEntry.setPathOrName(row.getColumn(1));
+			listingEntry.setSpecColType(objStat.getSpecColType());
+			entries.add(listingEntry);
+		}
+
+		return entries;
+
+		/*
+		 * myGenQueryOut->sqlResult[0].attriInx = COL_COLL_NAME;
+		 * myGenQueryOut->sqlResult[0].len = MAX_NAME_LEN;
+		 * myGenQueryOut->sqlResult[0].value = (char*)malloc (MAX_NAME_LEN *
+		 * MAX_SPEC_COLL_ROW); memset (myGenQueryOut->sqlResult[0].value, 0,
+		 * MAX_NAME_LEN * MAX_SPEC_COLL_ROW);
+		 * myGenQueryOut->sqlResult[1].attriInx = COL_DATA_NAME;
+		 * myGenQueryOut->sqlResult[1].len = MAX_NAME_LEN;
+		 * myGenQueryOut->sqlResult[1].value = (char*)malloc (MAX_NAME_LEN *
+		 * MAX_SPEC_COLL_ROW); memset (myGenQueryOut->sqlResult[1].value, 0,
+		 * MAX_NAME_LEN * MAX_SPEC_COLL_ROW);
+		 * myGenQueryOut->sqlResult[2].attriInx = COL_D_CREATE_TIME;
+		 * myGenQueryOut->sqlResult[2].len = NAME_LEN;
+		 * myGenQueryOut->sqlResult[2].value = (char*)malloc (NAME_LEN *
+		 * MAX_SPEC_COLL_ROW); memset (myGenQueryOut->sqlResult[2].value, 0,
+		 * NAME_LEN * MAX_SPEC_COLL_ROW); myGenQueryOut->sqlResult[3].attriInx =
+		 * COL_D_MODIFY_TIME; myGenQueryOut->sqlResult[3].len = NAME_LEN;
+		 * myGenQueryOut->sqlResult[3].value = (char*)malloc (NAME_LEN *
+		 * MAX_SPEC_COLL_ROW); memset (myGenQueryOut->sqlResult[3].value, 0,
+		 * NAME_LEN * MAX_SPEC_COLL_ROW); myGenQueryOut->sqlResult[4].attriInx =
+		 * COL_DATA_SIZE; myGenQueryOut->sqlResult[4].len = NAME_LEN;
+		 * myGenQueryOut->sqlResult[4].value = (char*)malloc (NAME_LEN *
+		 * MAX_SPEC_COLL_ROW); memset (myGenQueryOut->sqlResult[4].value, 0,
+		 * NAME_LEN * MAX_SPEC_COLL_ROW);
+		 */
+
+	}
+
+	// FIXME: refactor with data objects version, duplicate code
+	private List<CollectionAndDataObjectListingEntry> listCollectionsUnderPathWhenSpecColl(
+			final ObjStat objStat, final int partialStartIndex,
+			final String effectiveAbsolutePath) throws JargonException {
+
+		log.info("listCollectionsUnderPathWhenSpecColl()");
+
+		SpecColInfo specColInfo = new SpecColInfo();
+		specColInfo.setCacheDir(objStat.getCacheDir());
+
+		if (objStat.isCacheDirty()) {
+			specColInfo.setCacheDirty(1);
+		}
+
+		specColInfo.setCollClass(1); // FIXME: ??? what is collClass?
+		specColInfo.setCollection(objStat.getCollectionPath());
+		specColInfo.setObjPath(objStat.getObjectPath());
+		specColInfo.setPhyPath(objStat.getObjectPath());
+		specColInfo.setReplNum(objStat.getReplNumber());
+		specColInfo.setType(2); // FIXME: ?? what is type
+		// FIXME: what should reource be?
+
+		DataObjInpForQuerySpecColl dataObjInp = DataObjInpForQuerySpecColl
+				.instanceQueryCollections(effectiveAbsolutePath, specColInfo);
+		Tag response;
+
+		try {
+			response = getIRODSProtocol().irodsFunction(dataObjInp);
+		} catch (FileDriverError fde) {
+			log.warn("file driver error listing empty spec coll is ignored, just act as no data found");
+			return new ArrayList<CollectionAndDataObjectListingEntry>();
+		} catch (DataNotFoundException dnf) {
+			log.warn("data not found listing empty spec coll is ignored, just act as no data found");
+			return new ArrayList<CollectionAndDataObjectListingEntry>();
+		}
+
+		log.debug("response from function: {}", response.parseTag());
+
+		int totalRecords = response.getTag("totalRowCount").getIntValue();
+		log.info("total records:{}", totalRecords);
+
+		List<IRODSQueryResultRow> results = QueryResultProcessingUtils
+				.translateResponseIntoResultSet(response,
+						new ArrayList<String>(), 0, partialStartIndex);
+
+		List<CollectionAndDataObjectListingEntry> entries = new ArrayList<CollectionAndDataObjectListingEntry>();
+		CollectionAndDataObjectListingEntry listingEntry;
+		CollectionAndPath collectionAndPath;
+
+		for (IRODSQueryResultRow row : results) {
+			listingEntry = new CollectionAndDataObjectListingEntry();
+			listingEntry.setCreatedAt(IRODSDataConversionUtil
+					.getDateFromIRODSValue(row.getColumn(2)));
+			listingEntry.setDataSize(IRODSDataConversionUtil
+					.getLongOrZeroFromIRODSValue(row.getColumn(4)));
+			listingEntry.setModifiedAt(IRODSDataConversionUtil
+					.getDateFromIRODSValue(row.getColumn(3)));
+			row.getColumn(1);
+
+			listingEntry.setObjectType(ObjectType.COLLECTION);
+
+			listingEntry.setOwnerName(objStat.getOwnerName());
+			listingEntry.setOwnerZone(objStat.getOwnerZone());
+
+			collectionAndPath = MiscIRODSUtils
+					.separateCollectionAndPathFromGivenAbsolutePath(row
+							.getColumn(0));
+			listingEntry.setParentPath(collectionAndPath.getCollectionParent());
+			listingEntry.setPathOrName(row.getColumn(0));
 			listingEntry.setSpecColType(objStat.getSpecColType());
 			entries.add(listingEntry);
 		}
