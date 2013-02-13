@@ -148,8 +148,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 		}
 
 		if (caseInsensitive) {
-			if (!this.getIRODSServerProperties()
-					.isSupportsCaseInsensitiveQueries()) {
+			if (!getIRODSServerProperties().isSupportsCaseInsensitiveQueries()) {
 				throw new JargonException(
 						"case insensitive queries not supported on this iRODS version");
 			}
@@ -178,7 +177,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 			}
 
 			IRODSGenQueryFromBuilder irodsQuery = builder
-					.exportIRODSQueryFromBuilder(this.getJargonProperties()
+					.exportIRODSQueryFromBuilder(getJargonProperties()
 							.getMaxFilesAndDirsQueryMax());
 
 			resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResult(
@@ -365,8 +364,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 		}
 
 		if (caseInsensitive) {
-			if (!this.getIRODSServerProperties()
-					.isSupportsCaseInsensitiveQueries()) {
+			if (!getIRODSServerProperties().isSupportsCaseInsensitiveQueries()) {
 				throw new JargonException(
 						"case insensitive queries not supported on this iRODS version");
 			}
@@ -395,7 +393,8 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 			if (!collectionAbsolutePath.isEmpty()) {
 				builder.addConditionAsGenQueryField(
 						RodsGenQueryEnum.COL_COLL_NAME,
-						QueryConditionOperators.EQUAL, collectionAbsolutePath);
+						QueryConditionOperators.EQUAL,
+						collectionAbsolutePath.trim());
 			}
 
 			for (AVUQueryElement queryElement : avuQuery) {
@@ -404,7 +403,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 			}
 
 			IRODSGenQueryFromBuilder irodsQuery = builder
-					.exportIRODSQueryFromBuilder(this.getJargonProperties()
+					.exportIRODSQueryFromBuilder(getJargonProperties()
 							.getMaxFilesAndDirsQueryMax());
 
 			if (collectionAbsolutePath.isEmpty()) {
@@ -414,8 +413,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 								partialStartIndex);
 			} else {
 
-				ObjStat objStat = this
-						.getObjectStatForAbsolutePath(collectionAbsolutePath);
+				ObjStat objStat = getObjectStatForAbsolutePath(collectionAbsolutePath);
 				resultSet = irodsGenQueryExecutor
 						.executeIRODSQueryAndCloseResultInZone(irodsQuery,
 								partialStartIndex, objStat.getOwnerZone());
@@ -459,7 +457,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 		MiscIRODSUtils.checkPathSizeForMax(absolutePath);
 
 		final ModAvuMetadataInp modifyAvuMetadataInp = ModAvuMetadataInp
-				.instanceForAddCollectionMetadata(absolutePath, avuData);
+				.instanceForAddCollectionMetadata(absolutePath.trim(), avuData);
 
 		log.debug("sending avu request");
 
@@ -510,7 +508,8 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 		MiscIRODSUtils.checkPathSizeForMax(absolutePath);
 
 		final ModAvuMetadataInp modifyAvuMetadataInp = ModAvuMetadataInp
-				.instanceForDeleteCollectionMetadata(absolutePath, avuData);
+				.instanceForDeleteCollectionMetadata(absolutePath.trim(),
+						avuData);
 
 		log.debug("sending avu request");
 
@@ -569,7 +568,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 					AVUQueryElement.AVUQueryPart.UNITS,
 					AVUQueryOperatorEnum.EQUAL, avuData.getUnit()));
 			result = this.findMetadataValuesByMetadataQueryForCollection(
-					queryElements, absolutePath);
+					queryElements, absolutePath.trim());
 		} catch (JargonQueryException e) {
 			log.error("error querying data for avu", e);
 			throw new JargonException("error querying data for AVU");
@@ -623,7 +622,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 		MiscIRODSUtils.checkPathSizeForMax(absolutePath);
 
 		final ModAvuMetadataInp modifyAvuMetadataInp = ModAvuMetadataInp
-				.instanceForModifyCollectionMetadata(absolutePath,
+				.instanceForModifyCollectionMetadata(absolutePath.trim(),
 						currentAvuData, newAvuData);
 
 		log.debug("sending avu request");
@@ -712,7 +711,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 							QueryConditionOperators.EQUAL, absPath);
 
 			IRODSGenQueryFromBuilder irodsQuery = builder
-					.exportIRODSQueryFromBuilder(this.getJargonProperties()
+					.exportIRODSQueryFromBuilder(getJargonProperties()
 							.getMaxFilesAndDirsQueryMax());
 
 			resultSet = irodsGenQueryExecutor
@@ -903,7 +902,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 		}
 
 		IRODSGenQueryExecutor irodsGenQueryExecutor = new IRODSGenQueryExecutorImpl(
-				this.getIRODSSession(), this.getIRODSAccount());
+				getIRODSSession(), getIRODSAccount());
 
 		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, null);
 		IRODSQueryResultSetInterface resultSet;
@@ -969,8 +968,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 		// pi tests parameters
 		log.info("setAccessPermissionInherit on absPath:{}", absolutePath);
 
-		String effectiveAbsPath = this
-				.resolveAbsolutePathViaObjStat(absolutePath);
+		String effectiveAbsPath = resolveAbsolutePathViaObjStat(absolutePath);
 		boolean collNeedsRecursive = adjustRecursiveOption(effectiveAbsPath,
 				recursive);
 
@@ -1006,8 +1004,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 		// pi tests parameters
 		log.info("setAccessPermissionToNotInherit on absPath:{}", absolutePath);
 
-		String effectiveAbsPath = this
-				.resolveAbsolutePathViaObjStat(absolutePath);
+		String effectiveAbsPath = resolveAbsolutePathViaObjStat(absolutePath);
 
 		boolean collNeedsRecursive = adjustRecursiveOption(effectiveAbsPath,
 				recursive);
@@ -1045,8 +1042,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 		// pi tests parameters
 		log.info("setAccessPermissionRead on absPath:{}", absolutePath);
 
-		String effectiveAbsPath = this
-				.resolveAbsolutePathViaObjStat(absolutePath);
+		String effectiveAbsPath = resolveAbsolutePathViaObjStat(absolutePath);
 
 		boolean collNeedsRecursive = adjustRecursiveOption(effectiveAbsPath,
 				recursive);
@@ -1088,8 +1084,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 		// pi tests parameters
 		log.info("setAccessPermissionReadAsAdmin on absPath:{}", absolutePath);
 
-		String effectiveAbsPath = this
-				.resolveAbsolutePathViaObjStat(absolutePath);
+		String effectiveAbsPath = resolveAbsolutePathViaObjStat(absolutePath);
 
 		boolean collNeedsRecursive = adjustRecursiveOption(effectiveAbsPath,
 				recursive);
@@ -1099,6 +1094,47 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 						effectiveAbsPath, userName,
 						ModAccessControlInp.READ_PERMISSION);
 		getIRODSProtocol().irodsFunction(modAccessControlInp);
+
+	}
+
+	
+	@Override
+	public void setAccessPermission(final String zone,
+			final String absolutePath, final String userName,
+			final boolean recursive, final FilePermissionEnum filePermission)
+			throws JargonException {
+
+		if (zone == null) {
+			throw new IllegalArgumentException("null zone");
+		}
+
+		if (absolutePath == null || absolutePath.isEmpty()) {
+			throw new IllegalArgumentException("null or empty absolutePath");
+		}
+
+		if (userName == null || userName.isEmpty()) {
+			throw new IllegalArgumentException("null or empty userName");
+		}
+
+		if (filePermission == null) {
+			throw new IllegalArgumentException("null filePermission");
+		}
+
+		// right now, own, read, write are only permission I can set
+
+		if (filePermission == FilePermissionEnum.OWN) {
+			setAccessPermissionOwn(zone, absolutePath, userName, recursive);
+		} else if (filePermission == FilePermissionEnum.READ) {
+			setAccessPermissionRead(zone, absolutePath, userName, recursive);
+		} else if (filePermission == FilePermissionEnum.WRITE) {
+			setAccessPermissionWrite(zone, absolutePath, userName, recursive);
+		} else if (filePermission == FilePermissionEnum.NONE) {
+			removeAccessPermissionForUser(zone, absolutePath, userName,
+					recursive);
+		} else {
+			throw new JargonException(
+					"Cannot update permission, currently only READ, WRITE, and OWN, and NONE are supported");
+		}
 
 	}
 
@@ -1133,8 +1169,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 		// overhead iRODS behavior, if you set perm with recursive when no
 		// children, then won't take
 
-		String effectiveAbsPath = this
-				.resolveAbsolutePathViaObjStat(absolutePath);
+		String effectiveAbsPath = resolveAbsolutePathViaObjStat(absolutePath);
 
 		boolean collNeedsRecursive = adjustRecursiveOption(effectiveAbsPath,
 				recursive);
@@ -1175,8 +1210,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 
 		// pi tests parameters
 		log.info("setAccessPermissionWriteAsAdmin on absPath:{}", absolutePath);
-		String effectiveAbsPath = this
-				.resolveAbsolutePathViaObjStat(absolutePath);
+		String effectiveAbsPath = resolveAbsolutePathViaObjStat(absolutePath);
 
 		// overhead iRODS behavior, if you set perm with recursive when no
 		// children, then won't take
@@ -1220,8 +1254,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 		// pi tests parameters
 		log.info("setAccessPermissionOwn on absPath:{}", absolutePath);
 
-		String effectiveAbsPath = this
-				.resolveAbsolutePathViaObjStat(absolutePath);
+		String effectiveAbsPath = resolveAbsolutePathViaObjStat(absolutePath);
 
 		// overhead iRODS behavior, if you set perm with recursive when no
 		// children, then won't take
@@ -1259,8 +1292,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 		log.info("setAccessPermissionOwnAsAdmin on absPath:{}", absolutePath);
 		// overhead iRODS behavior, if you set perm with recursive when no
 		// children, then won't take
-		String effectiveAbsPath = this
-				.resolveAbsolutePathViaObjStat(absolutePath);
+		String effectiveAbsPath = resolveAbsolutePathViaObjStat(absolutePath);
 
 		boolean collNeedsRecursive = adjustRecursiveOption(effectiveAbsPath,
 				recursive);
@@ -1303,8 +1335,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 		log.info("for user:{}", userName);
 		// overhead iRODS behavior, if you set perm with recursive when no
 		// children, then won't take
-		String effectiveAbsPath = this
-				.resolveAbsolutePathViaObjStat(absolutePath);
+		String effectiveAbsPath = resolveAbsolutePathViaObjStat(absolutePath);
 
 		boolean collNeedsRecursive = adjustRecursiveOption(effectiveAbsPath,
 				recursive);
@@ -1348,8 +1379,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 		// overhead iRODS behavior, if you set perm with recursive when no
 		// children, then won't take
 
-		String effectiveAbsPath = this
-				.resolveAbsolutePathViaObjStat(absolutePath);
+		String effectiveAbsPath = resolveAbsolutePathViaObjStat(absolutePath);
 		boolean collNeedsRecursive = adjustRecursiveOption(effectiveAbsPath,
 				recursive);
 
@@ -1379,8 +1409,8 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 
 		MiscIRODSUtils.checkPathSizeForMax(absolutePath);
 
-		ObjStat objStat = this.getObjectStatForAbsolutePath(absolutePath);
-		String absPath = this.resolveAbsolutePathGivenObjStat(objStat);
+		ObjStat objStat = getObjectStatForAbsolutePath(absolutePath);
+		String absPath = resolveAbsolutePathGivenObjStat(objStat);
 
 		IRODSGenQueryExecutor irodsGenQueryExecutor = getIRODSAccessObjectFactory()
 				.getIRODSGenQueryExecutor(getIRODSAccount());
@@ -1392,7 +1422,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 		IRODSQueryResultSet resultSet;
 
 		try {
-			
+
 			IRODSGenQueryFromBuilder irodsQuery = builder
 					.exportIRODSQueryFromBuilder(1);
 			resultSet = irodsGenQueryExecutor
@@ -1447,7 +1477,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 
 		IRODSFileSystemAO irodsFileSystemAO = getIRODSAccessObjectFactory()
 				.getIRODSFileSystemAO(getIRODSAccount());
-		IRODSFileFactory irodsFileFactory = this.getIRODSFileFactory();
+		IRODSFileFactory irodsFileFactory = getIRODSFileFactory();
 		int permissionVal = irodsFileSystemAO
 				.getDirectoryPermissionsForGivenUser(
 						irodsFileFactory.instanceIRODSFile(irodsAbsolutePath),
@@ -1479,7 +1509,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 
 		MiscIRODSUtils.checkPathSizeForMax(absolutePath);
 
-		IRODSFile collFile = this.getIRODSFileFactory().instanceIRODSFile(
+		IRODSFile collFile = getIRODSFileFactory().instanceIRODSFile(
 				absolutePath);
 
 		if (!collFile.exists()) {
@@ -1489,10 +1519,8 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 
 		// soft links accounted for in collectionAndDataObjectListAndSearchAO
 		boolean collNeedsRecursive = recursive;
-		CollectionAndDataObjectListAndSearchAO collectionAndDataObjectListAndSearchAO = this
-				.getIRODSAccessObjectFactory()
-				.getCollectionAndDataObjectListAndSearchAO(
-						this.getIRODSAccount());
+		CollectionAndDataObjectListAndSearchAO collectionAndDataObjectListAndSearchAO = getIRODSAccessObjectFactory()
+				.getCollectionAndDataObjectListAndSearchAO(getIRODSAccount());
 		int countFilesUnderParent = collectionAndDataObjectListAndSearchAO
 				.countDataObjectsAndCollectionsUnderPath(absolutePath);
 
@@ -1537,9 +1565,8 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 				irodsCollectionAbsolutePath);
 		log.info("   userName:{}", userName);
 
-		ObjStat objStat = this
-				.getObjectStatForAbsolutePath(irodsCollectionAbsolutePath);
-		String absPath = this.resolveAbsolutePathGivenObjStat(objStat);
+		ObjStat objStat = getObjectStatForAbsolutePath(irodsCollectionAbsolutePath);
+		String absPath = resolveAbsolutePathGivenObjStat(objStat);
 
 		String theUser = MiscIRODSUtils.getUserInUserName(userName);
 		String theZone = MiscIRODSUtils.getZoneInUserName(userName);
@@ -1559,13 +1586,13 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 		}
 
 		IRODSQueryResultSet resultSet;
-		UserAO userAO = this.getIRODSAccessObjectFactory().getUserAO(
+		UserAO userAO = getIRODSAccessObjectFactory().getUserAO(
 				getIRODSAccount());
 		User user = null;
 
 		try {
 			IRODSGenQueryFromBuilder irodsQuery = builder
-					.exportIRODSQueryFromBuilder(this.getJargonProperties()
+					.exportIRODSQueryFromBuilder(getJargonProperties()
 							.getMaxFilesAndDirsQueryMax());
 			resultSet = irodsGenQueryExecutor
 					.executeIRODSQueryAndCloseResultInZone(irodsQuery, 0,
@@ -1577,8 +1604,8 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 			 * permission, a separate query must be done
 			 */
 
-			user = userAO.findByIdInZone(row.getColumn(2), this
-					.getIRODSAccount().getZone());
+			user = userAO.findByIdInZone(row.getColumn(2), getIRODSAccount()
+					.getZone());
 			StringBuilder userAndZone = null;
 			String displayUserName = null;
 
@@ -1641,9 +1668,8 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 		log.info("listPermissionsForCollection: {}",
 				irodsCollectionAbsolutePath);
 
-		ObjStat objStat = this
-				.getObjectStatForAbsolutePath(irodsCollectionAbsolutePath);
-		String absPath = this.resolveAbsolutePathGivenObjStat(objStat);
+		ObjStat objStat = getObjectStatForAbsolutePath(irodsCollectionAbsolutePath);
+		String absPath = resolveAbsolutePathGivenObjStat(objStat);
 
 		List<UserFilePermission> userFilePermissions = new ArrayList<UserFilePermission>();
 
@@ -1654,7 +1680,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 		CollectionAOHelper.buildACLQueryForCollectionName(absPath, builder);
 
 		IRODSQueryResultSet resultSet;
-		UserAO userAO = this.getIRODSAccessObjectFactory().getUserAO(
+		UserAO userAO = getIRODSAccessObjectFactory().getUserAO(
 				getIRODSAccount());
 
 		/*
@@ -1666,7 +1692,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 		User user = null;
 		try {
 			IRODSGenQueryFromBuilder irodsQuery = builder
-					.exportIRODSQueryFromBuilder(this.getJargonProperties()
+					.exportIRODSQueryFromBuilder(getJargonProperties()
 							.getMaxFilesAndDirsQueryMax());
 
 			resultSet = irodsGenQueryExecutor
@@ -1729,7 +1755,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 		log.info("irodsAbsolutePath:{}", irodsAbsolutePath);
 		log.info("userName:{}", userName);
 
-		UserFilePermission derivedPermission = this.getPermissionForUserName(
+		UserFilePermission derivedPermission = getPermissionForUserName(
 				irodsAbsolutePath, userName);
 		boolean hasPermission = false;
 		if (derivedPermission != null) {

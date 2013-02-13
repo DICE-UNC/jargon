@@ -1,11 +1,11 @@
 *'''Project''': Jargon-core API
-*'''Date''': XX/XX/XX
-*'''Release Version''': 3.2.X.X
-*'''git tag''': 3.2.X.X
+*'''Date''': 02/11/2013
+*'''Release Version''': 3.3.0-beta1
+*'''git tag''': 3.3.0-beta1
 
 ==News==
 
-work in progress post 3.2.1.3 
+Beta release of Jargon 3.3.0 feature development.  This accompanies a beta of iDrop version 2.0.0
 
 Jargon-core implements the iRODS protocol, and allows development of iRODS-enabled Java applications.  This API is especially useful for developing
 mid-tier applications and services, as well as desktop-clients (such as iDROP).  These libraries also provide a foundation for a new set of interfaces that will come with iRODS.
@@ -41,7 +41,48 @@ Note that the following bug and feature requests are logged in GForge with relat
 
 ==Bug Fixes==
 
+* [#1092] add reconnect option to iDrop
+**Add irodsAccount info to IRODSCommands during reconnect
+**Add new constructor and initializer for IRODSCommands that avoids calling the finalizer on a connection when the IRODSCommands was created in 'stand-alone' mode.  This fixes a bug where
+the conection finalizer could be called and the connection closed at an inappropriate time when in connection restart mode
+ 
+ *[#1093] Broken pipe error did not propogate in parallel transfer
+ **Small clean-ups in transfer processing and error callbacks
+ 
+ *[#1109] specific query no data found results in exception
+ **Specific query was returning a DataNotFoundException when no results returned, fixed to return an empty result set
+ 
+ *[#1139] Spaces at the begin or end of a data object name will cause an exception
+ **added trim to DataObjectAO, FileFactory, CollectionAO, and CollectionAndDataObjectListAndSearchAO methods that take a path
+ 
+ *[#1177] thumbnail support for soft linked photos
+ **added soft link path resolution to thumbnail service in jargon-data-utils
+ 
 ==Features==
 
 *[#984] iDrop web '2.0' redesign effort
 **Added additional fields to the user profile, such as eduPerson attributes
+**Added 'starring' support to the jargon-user-tagging package, managing the starring of files and collections
+**Added UploadsService to jargon-data-utils to help manage an 'uploads' directory convention.  This provides a standard place to receive uploads from various clients.
+
+ [#1107] support for large collection paging
+ **Added totalRecords to IRODSDomainObject so that returned objects from queries can carry the total number of results
+ **CollectionAndDataObjectListAndSearchAO results now include total record counts when available  
+ **Adding pagination package to jargon-data-utils, providing a model that can be used to build smart paging controls into interfaces
+ **Added a listDataObjectsAndCollectionsUnderPathProducingPagingAwareCollectionListing to CollectionAndDataObjectListAndSearchAO, which
+ lists child data objects and collections, and provides addtional information on the paging status of the independent collections and data objects.
+ 
+*[#1140] user listing methods not sorted
+**Added sorts to user find* methods and switched to builder queries
+
+* [#511] add list shared data objs and permissions in coll and data obj list entry
+**Added IRODSSharingService and related code in the jargon-user-tagging project.  The org.irods.jargon.usertagging.sharing
+contains code to make shares a first-class object in Jargon, and works similar to the starred folder.  The top level
+of a share is marked with a special AVU, and the service includes code to manage and query shares in various ways.
+**Added a new DiscoveredServerPropertiesCache to the org.irods.jargon.core.connection package.  This is a dynamic cache of 
+discovered properties of a connected iRODS server.  This helps address the challenge of discovering aspects of iRODS that are only
+knowable by attempting an operation.  For example, if Jargon attmpts a specific query operation, and the required specific queries defined
+in jargon-specquery.sh are not defined on the server, this can be remembered, so that jargon does not make repeated failed attampts at an opertion.
+This is new and somewhat experimental, but should be a nice optimization for the future.  Well add a jargon.properties value that 
+can be used to shut this capability off.
+

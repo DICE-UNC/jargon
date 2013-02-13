@@ -113,5 +113,4 @@ public class SimpleQueryExecutorAOImplTest {
 		testResultRow.getQueryResultColumns().size();
 
 	}
-
 }

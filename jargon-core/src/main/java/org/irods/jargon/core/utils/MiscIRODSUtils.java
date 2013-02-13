@@ -524,7 +524,7 @@ public class MiscIRODSUtils {
 			throw new NullPointerException("The file name cannot be null");
 		}
 
-		String fileName = filePath;
+		String fileName = filePath.trim();
 		String directory = "";
 
 		if (fileName.length() > 1) { // add to allow path = root "/"
@@ -544,7 +544,7 @@ public class MiscIRODSUtils {
 			}
 		}
 
-		return new CollectionAndPath(directory, fileName);
+		return new CollectionAndPath(directory.trim(), fileName.trim());
 	}
 
 	/**

@@ -7,7 +7,9 @@ import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.protovalues.UserTypeEnum;
 import org.irods.jargon.core.pub.IRODSGenQueryExecutor;
 import org.irods.jargon.core.pub.domain.User;
+import org.irods.jargon.core.query.GenQueryBuilderException;
 import org.irods.jargon.core.query.IRODSGenQuery;
+import org.irods.jargon.core.query.IRODSGenQueryBuilder;
 import org.irods.jargon.core.query.IRODSQueryResultRow;
 import org.irods.jargon.core.query.IRODSQueryResultSetInterface;
 import org.irods.jargon.core.query.JargonQueryException;
@@ -51,6 +53,27 @@ public class UserAOHelper {
 		userQuery.append(RodsGenQueryEnum.COL_USER_MODIFY_TIME.getName());
 		return userQuery.toString();
 	}
+	
+	/**
+	 * Build the selects appropriate for a user query by appending them to the provided builder
+	 * @param builder
+	 * @throws GenQueryBuilderException
+	 */
+	public static void addUserSelectsToBuilder(final IRODSGenQueryBuilder builder ) throws  GenQueryBuilderException {
+		
+		if (builder == null) {
+			throw new IllegalArgumentException("null builder");
+		}
+		
+		builder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_ZONE)
+		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_NAME)
+		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_ID)
+		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_TYPE)
+		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_INFO)
+		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_COMMENT)
+		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_CREATE_TIME)
+		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_MODIFY_TIME);
+	}
 
 	/**
 	 * Given a query build from the <code>buildUserSelects</code>, create a user
@@ -72,6 +95,8 @@ public class UserAOHelper {
 			final IRODSGenQueryExecutor irodsGenQueryExecutor,
 			final boolean retrieveDN) throws JargonException {
 		User user = new User();
+		user.setCount(row.getRecordCount());
+		user.setLastResult(row.isLastResult());
 		user.setId(row.getColumn(2));
 		user.setName(row.getColumn(1));
 		user.setZone(row.getColumn(0));

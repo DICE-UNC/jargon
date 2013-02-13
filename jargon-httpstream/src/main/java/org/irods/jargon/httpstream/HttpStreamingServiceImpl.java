@@ -70,6 +70,7 @@ public class HttpStreamingServiceImpl implements HttpStreamingService {
 	 * org.irods.jargon.core.transfer.TransferStatusCallbackListener,
 	 * org.irods.jargon.core.transfer.TransferControlBlock)
 	 */
+	@SuppressWarnings("resource")
 	@Override
 	public String streamHttpUrlContentsToIRODSFile(
 			final String sourceURL,

@@ -1,4 +1,4 @@
-package org.irods.jargon.usertagging;
+package org.irods.jargon.usertagging.tags;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,9 +25,11 @@ import org.irods.jargon.core.query.JargonQueryException;
 import org.irods.jargon.core.query.MetaDataAndDomainData.MetadataDomain;
 import org.irods.jargon.core.query.QueryConditionOperators;
 import org.irods.jargon.core.query.RodsGenQueryEnum;
+import org.irods.jargon.usertagging.AbstractIRODSTaggingService;
 import org.irods.jargon.usertagging.domain.IRODSTagGrouping;
 import org.irods.jargon.usertagging.domain.IRODSTagValue;
 import org.irods.jargon.usertagging.domain.TagQuerySearchResult;
+import org.irods.jargon.usertagging.domain.UserAnnotatedCatalogItem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -89,7 +91,7 @@ public final class FreeTaggingServiceImpl extends AbstractIRODSTaggingService
 	 *            <code>IRODSAccount</code> that describes the target server and
 	 *            credentials.
 	 * @param irodsTaggingService
-	 *            {@link org.irods.jargon.usertagging.IRODSTaggingService}
+	 *            {@link org.irods.jargon.usertagging.tags.IRODSTaggingService}
 	 *            implementation that will handle CRUD operations on the
 	 *            underlying tags as AVU's in iRODS.
 	 * @return <code>FreeTaggingService</code> implementation instance.
@@ -115,7 +117,7 @@ public final class FreeTaggingServiceImpl extends AbstractIRODSTaggingService
 	 *            <code>IRODSAccount</code> that describes the target server and
 	 *            credentials.
 	 * @param irodsTaggingService
-	 *            {@link org.irods.jargon.usertagging.IRODSTaggingService}
+	 *            {@link org.irods.jargon.usertagging.tags.IRODSTaggingService}
 	 *            implementation that will provide CRUD operations to iRODS
 	 *            tags. This may be left as null, and a default service will be
 	 *            initialized.
@@ -381,7 +383,8 @@ public final class FreeTaggingServiceImpl extends AbstractIRODSTaggingService
 	 */
 	private void processCurrentTagAgainstDesiredTags(
 			final IRODSTagValue currentTag, final String[] userTags,
-			final IRODSTagGrouping irodsTagGrouping) throws JargonException {
+			final UserAnnotatedCatalogItem irodsTagGrouping)
+			throws JargonException {
 
 		log.info("looking to see if iRODS tag still desired:{}", currentTag);
 
@@ -415,7 +418,8 @@ public final class FreeTaggingServiceImpl extends AbstractIRODSTaggingService
 	 */
 	private void processSuppliedTagAgainstCurrentTags(final String desiredTag,
 			final List<IRODSTagValue> currentTags,
-			final IRODSTagGrouping irodsTagGrouping) throws JargonException {
+			final UserAnnotatedCatalogItem irodsTagGrouping)
+			throws JargonException {
 
 		// process adds by comparing desired to current, add desired not in
 		// current
@@ -495,8 +499,7 @@ public final class FreeTaggingServiceImpl extends AbstractIRODSTaggingService
 		List<DataObject> dataObjects = new ArrayList<DataObject>();
 		try {
 			IRODSGenQueryFromBuilder irodsQuery = builder
-					.exportIRODSQueryFromBuilder(this
-							.getIrodsAccessObjectFactory()
+					.exportIRODSQueryFromBuilder(getIrodsAccessObjectFactory()
 							.getJargonProperties().getMaxFilesAndDirsQueryMax());
 			resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResult(
 					irodsQuery, 0);
@@ -566,8 +569,7 @@ public final class FreeTaggingServiceImpl extends AbstractIRODSTaggingService
 		List<Collection> collections = new ArrayList<Collection>();
 		try {
 			IRODSGenQueryFromBuilder irodsQuery = builder
-					.exportIRODSQueryFromBuilder(this
-							.getIrodsAccessObjectFactory()
+					.exportIRODSQueryFromBuilder(getIrodsAccessObjectFactory()
 							.getJargonProperties().getMaxFilesAndDirsQueryMax());
 			resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResult(
 					irodsQuery, 0);

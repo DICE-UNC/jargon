@@ -43,7 +43,7 @@ public class IRODSAccessObjectFactoryImplTest {
 				.instance();
 		IRODSSession irodsSession = IRODSSession
 				.instance(irodsConnectionManager);
-		IRODSAccessObjectFactoryImpl irodsAccessObjectFactory = new IRODSAccessObjectFactoryImpl();
+		IRODSAccessObjectFactory irodsAccessObjectFactory = new IRODSAccessObjectFactoryImpl();
 		irodsAccessObjectFactory.setIrodsSession(irodsSession);
 		UserAO userAO = irodsAccessObjectFactory.getUserAO(irodsAccount);
 		Assert.assertNotNull("userAO was null", userAO);
@@ -55,7 +55,7 @@ public class IRODSAccessObjectFactoryImplTest {
 			throws Exception {
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactoryImpl irodsAccessObjectFactory = new IRODSAccessObjectFactoryImpl();
+		IRODSAccessObjectFactory irodsAccessObjectFactory = new IRODSAccessObjectFactoryImpl();
 		irodsAccessObjectFactory.getUserAO(irodsAccount);
 	}
 

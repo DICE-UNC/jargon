@@ -138,7 +138,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 		String absPath = MiscIRODSUtils
 				.buildAbsolutePathFromCollectionParentAndFileName(
-						collectionPath, dataName);
+						collectionPath.trim(), dataName.trim());
 		ObjStat objStat = collectionAndDataObjectListAndSearchAO
 				.retrieveObjectStatForPath(absPath);
 
@@ -2369,6 +2369,51 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 						ModAccessControlInp.WRITE_PERMISSION);
 		getIRODSProtocol().irodsFunction(modAccessControlInp);
 	}
+	
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.core.pub.DataObjectAO#setAccessPermission(java.lang.String, java.lang.String, java.lang.String, org.irods.jargon.core.protovalues.FilePermissionEnum)
+	 */
+	@Override
+	public void setAccessPermission(final String zone,
+			final String absolutePath, final String userName,
+			final FilePermissionEnum filePermission)
+			throws JargonException {
+		
+		log.info("setAccessPermission()");
+
+		if (zone == null) {
+			throw new IllegalArgumentException("null zone");
+		}
+
+		if (absolutePath == null || absolutePath.isEmpty()) {
+			throw new IllegalArgumentException("null or empty absolutePath");
+		}
+
+		if (userName == null || userName.isEmpty()) {
+			throw new IllegalArgumentException("null or empty userName");
+		}
+
+		if (filePermission == null) {
+			throw new IllegalArgumentException("null filePermission");
+		}
+
+		// right now, own, read, write are only permission I can set
+
+		if (filePermission == FilePermissionEnum.OWN) {
+			setAccessPermissionOwn(zone, absolutePath, userName);
+		} else if (filePermission == FilePermissionEnum.READ) {
+			setAccessPermissionRead(zone, absolutePath, userName);
+		} else if (filePermission == FilePermissionEnum.WRITE) {
+			setAccessPermissionWrite(zone, absolutePath, userName);
+		} else if (filePermission == FilePermissionEnum.NONE) {
+			removeAccessPermissionsForUser(zone, absolutePath, userName);
+		} else {
+			throw new JargonException(
+					"Cannot update permission, currently only READ, WRITE, and OWN, and NONE are supported");
+		}
+
+	}
+
 
 	/*
 	 * (non-Javadoc)
@@ -2847,7 +2892,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		log.info("absolute path: {}", dataObjectAbsolutePath);
 
 		final ModAvuMetadataInp modifyAvuMetadataInp = ModAvuMetadataInp
-				.instanceForModifyDataObjectMetadata(dataObjectAbsolutePath,
+				.instanceForModifyDataObjectMetadata(dataObjectAbsolutePath.trim(),
 						currentAvuData, newAvuData);
 
 		log.debug("sending avu request");
@@ -2911,9 +2956,9 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		log.info(" data object name: {}", dataObjectName);
 
 		StringBuilder sb = new StringBuilder();
-		sb.append(irodsCollectionAbsolutePath);
+		sb.append(irodsCollectionAbsolutePath.trim());
 		sb.append("/");
-		sb.append(dataObjectName);
+		sb.append(dataObjectName.trim());
 
 		modifyAVUMetadata(sb.toString(), currentAvuData, newAvuData);
 

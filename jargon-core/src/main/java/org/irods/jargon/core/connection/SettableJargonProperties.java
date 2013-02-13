@@ -45,6 +45,7 @@ public class SettableJargonProperties implements JargonProperties {
 	private boolean reconnect = false;
 	private boolean defaultToPublicIfNothingUnderRootWhenListing = true;
 	private long reconnectTimeInMillis = 600000L;
+	private boolean usingDiscoveredServerPropertiesCache = true;
 
 	/**
 	 * Construct a default properties set based on the provided initial set of
@@ -685,6 +686,14 @@ public class SettableJargonProperties implements JargonProperties {
 	public synchronized void setReconnectTimeInMillis(
 			final long reconnectTimeInMillis) {
 		this.reconnectTimeInMillis = reconnectTimeInMillis;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.core.connection.JargonProperties#isUsingDiscoveredServerPropertiesCache()
+	 */
+	@Override
+	public boolean isUsingDiscoveredServerPropertiesCache() {
+		return usingDiscoveredServerPropertiesCache;
 	}
 
 }

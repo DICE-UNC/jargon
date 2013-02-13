@@ -10,7 +10,7 @@ import java.util.Map;
  * redeemed ticket can go to the right place.
  * <p/>
  * This object is utilized by the {@link TicketDistributionService} to ask for
- * usable licket URL links and other information. s
+ * usable Ticket URL links and other information. 
  * 
  * @author Mike Conway - DICE (www.irods.org)
  * 
