@@ -5,8 +5,6 @@ import java.util.List;
 import java.util.Properties;
 
 import junit.framework.Assert;
-import junit.framework.TestCase;
-
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.FileNotFoundException;
 import org.irods.jargon.core.pub.CollectionAO;
@@ -619,7 +617,7 @@ public class IRODSStarringServiceImplTest {
 		IRODSStarringService irodsStarringService = new IRODSStarringServiceImpl(
 				irodsAccessObjectFactory, irodsAccount);
 		List<IRODSStarredFileOrCollection> collections = irodsStarringService.listStarredCollections(0);
-		TestCase.assertEquals("did not find the one metadata value", 1, collections.size());
+		Assert.assertEquals("did not find the one metadata value", 1, collections.size());
 		
 		
 	}
@@ -660,7 +658,7 @@ public class IRODSStarringServiceImplTest {
 		IRODSStarringService irodsStarringService = new IRODSStarringServiceImpl(
 				irodsAccessObjectFactory, irodsAccount);
 		List<IRODSStarredFileOrCollection> collections = irodsStarringService.listStarredDataObjects(0);
-		TestCase.assertEquals("did not find the one metadata value", 1, collections.size());
+		Assert.assertEquals("did not find the one metadata value", 1, collections.size());
 		
 		
 	}
