@@ -5,6 +5,7 @@ package org.irods.jargon.core.connection;
 
 import org.irods.jargon.core.exception.AuthenticationException;
 import org.irods.jargon.core.exception.CatNoAccessException;
+import org.irods.jargon.core.exception.CatalogSQLException;
 import org.irods.jargon.core.exception.CollectionNotEmptyException;
 import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.DuplicateDataException;
@@ -102,6 +103,8 @@ public class IRODSErrorScanner {
 			throw new NoResourceDefinedException("no resource defined");
 		case NO_MORE_RULES_ERR:
 			throw new NoMoreRulesException("no more rules");
+		case CAT_SQL_ERR:
+			throw new CatalogSQLException("catalog sql error");
 		default:
 			throw new JargonException("error code recieved from iRODS:"
 					+ infoValue, infoValue);
