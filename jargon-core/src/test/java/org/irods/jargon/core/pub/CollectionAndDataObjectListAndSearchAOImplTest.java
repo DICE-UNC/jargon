@@ -15,6 +15,7 @@ import org.irods.jargon.core.pub.domain.ObjStat.SpecColType;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry;
 import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry.ObjectType;
+import org.irods.jargon.core.utils.LocalFileUtils;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.irods.jargon.testutils.filemanip.FileGenerator;
 import org.junit.AfterClass;
@@ -330,6 +331,90 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 		}
 
 	}
+	
+	/**
+	 * Bug [#1211] Re: [iROD-Chat:9536] jargon mangling UTF-8 characters
+	 * @throws Exception
+	 */
+	@Test
+	public void testListDataObjectsUnderPathBug1211() throws Exception {
+
+		String fileName;
+		String testSubdir = "testListDataObjectsUnderPathBug1211";
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSFile irodsFile = null;
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + "/"
+								+ testSubdir);
+		irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetIrodsCollection);
+		irodsFile.mkdir();
+
+		// make funny file name by hex string
+		byte[] funnyFileNameBytes = LocalFileUtils.hexStringToByteArray("c39937c38f39415156c2b2c39612c397c2847cc3915e33c39e");
+		String utf8DecodedFunnyFileName = new String(funnyFileNameBytes, "UTF-8");
+		Assert.assertNotNull(utf8DecodedFunnyFileName);
+		
+		IRODSFile funnyFile = irodsFileSystem.getIRODSFileFactory(irodsAccount).instanceIRODSFile(targetIrodsCollection, utf8DecodedFunnyFileName);
+		funnyFile.createNewFile();
+	
+		CollectionAndDataObjectListAndSearchAO actual = irodsFileSystem
+				.getIRODSAccessObjectFactory()
+				.getCollectionAndDataObjectListAndSearchAO(irodsAccount);
+		List<CollectionAndDataObjectListingEntry> entries = actual
+				.listDataObjectsUnderPath(targetIrodsCollection, 0);
+		Assert.assertNotNull(entries);
+		Assert.assertFalse(entries.isEmpty());
+		CollectionAndDataObjectListingEntry entry = entries
+				.get(entries.size() - 1);
+		Assert.assertEquals("did not properly decode file name", utf8DecodedFunnyFileName, entry.getPathOrName());
+
+	}
+	
+	/**
+	 * Bug [#1211] Re: [iROD-Chat:9536] jargon mangling UTF-8 characters
+	 * @throws Exception
+	 */
+	@Test
+	public void testListDataObjectsUnderPathBug1211UseEncodedUTF8() throws Exception {
+
+		String fileName = "Ù7Ï9AQV²Ö\\x12×\\u0084|Ñ^3Þ";
+		String testSubdir = "testListDataObjectsUnderPathBug1211UseEncodedUTF8";
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSFile irodsFile = null;
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + "/"
+								+ testSubdir);
+		irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetIrodsCollection);
+		irodsFile.mkdir();
+
+		// make funny file name by hex string
+		
+		IRODSFile funnyFile = irodsFileSystem.getIRODSFileFactory(irodsAccount).instanceIRODSFile(targetIrodsCollection, fileName);
+		funnyFile.createNewFile();
+	
+		CollectionAndDataObjectListAndSearchAO actual = irodsFileSystem
+				.getIRODSAccessObjectFactory()
+				.getCollectionAndDataObjectListAndSearchAO(irodsAccount);
+		List<CollectionAndDataObjectListingEntry> entries = actual
+				.listDataObjectsUnderPath(targetIrodsCollection, 0);
+		Assert.assertNotNull(entries);
+		Assert.assertFalse(entries.isEmpty());
+		CollectionAndDataObjectListingEntry entry = entries
+				.get(entries.size() - 1);
+		Assert.assertEquals("did not properly decode file name", fileName, entry.getPathOrName());
+
+	}
+
 
 	@Test
 	public void testListDataObjectsUnderPathWithAccessInfo() throws Exception {

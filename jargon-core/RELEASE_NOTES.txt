@@ -50,6 +50,9 @@ the connection finalizer could be called and the connection closed at an inappro
  
 *[#1139] Spaces at the begin or end of a data object name will cause an exception
 **added trim to DataObjectAO, FileFactory, CollectionAO, and CollectionAndDataObjectListAndSearchAO methods that take a path
+
+* [#1211] Re: [iROD-Chat:9536] jargon mangling UTF-8 characters
+
  
 ==Features==
 
