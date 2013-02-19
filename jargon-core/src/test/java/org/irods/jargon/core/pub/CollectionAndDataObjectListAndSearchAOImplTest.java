@@ -339,7 +339,6 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 	@Test
 	public void testListDataObjectsUnderPathBug1211() throws Exception {
 
-		String fileName;
 		String testSubdir = "testListDataObjectsUnderPathBug1211";
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
@@ -358,6 +357,9 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 		byte[] funnyFileNameBytes = LocalFileUtils.hexStringToByteArray("c39937c38f39415156c2b2c39612c397c2847cc3915e33c39e");
 		String utf8DecodedFunnyFileName = new String(funnyFileNameBytes, "UTF-8");
 		Assert.assertNotNull(utf8DecodedFunnyFileName);
+		
+		
+	//	[-61, -103, 55, -61, -113, 57, 65, 81, 86, -62, -78, -61, -106, 92, 120, 49, 50, -61, -105, 92, 117, 48, 48, 56, 52, 124, -61, -111, 94, 51, -61, -98]
 		
 		IRODSFile funnyFile = irodsFileSystem.getIRODSFileFactory(irodsAccount).instanceIRODSFile(targetIrodsCollection, utf8DecodedFunnyFileName);
 		funnyFile.createNewFile();
@@ -382,9 +384,12 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 	@Test
 	public void testListDataObjectsUnderPathBug1211UseEncodedUTF8() throws Exception {
 
-		String fileName = "Ù7Ï9AQV²Ö\\x12×\\u0084|Ñ^3Þ";
+		String fileName = "\u00d9\u0037\u00cf\u0039\u0041\u0051\u0056\u00b2\u00d6\u0012\u00d7\u0084\u007c\u00d1\u005e\u0033\u00de";
 		String testSubdir = "testListDataObjectsUnderPathBug1211UseEncodedUTF8";
-
+		
+		byte[] bytes = fileName.getBytes();
+		Assert.assertNotNull(bytes);
+		
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
 		IRODSFile irodsFile = null;
