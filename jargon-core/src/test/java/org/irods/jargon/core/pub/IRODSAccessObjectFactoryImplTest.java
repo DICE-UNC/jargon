@@ -58,6 +58,26 @@ public class IRODSAccessObjectFactoryImplTest {
 		IRODSAccessObjectFactory irodsAccessObjectFactory = new IRODSAccessObjectFactoryImpl();
 		irodsAccessObjectFactory.getUserAO(irodsAccount);
 	}
+	
+	@Test(expected=AuthenticationException.class)
+	public final void authenticateWithValidThenInvalid() throws Exception {
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
+
+		IRODSAccessObjectFactory irodsAccessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+		AuthResponse authResponse = irodsAccessObjectFactory
+				.authenticateIRODSAccount(irodsAccount);
+		Assert.assertNotNull("no auth response", authResponse);
+		irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		irodsAccount.setPassword("bogus");
+		authResponse = irodsAccessObjectFactory
+				.authenticateIRODSAccount(irodsAccount);
+		irodsFileSystem.closeAndEatExceptions();
+	}
+
 
 	@Test
 	public final void authenticateWithValid() throws Exception {

@@ -47,6 +47,9 @@ Note that the following bug and feature requests are logged in GForge with relat
  *[#1205] error accessing tickets (-80600) on srbbrick15
  **Added CatalogSQLException handling in error scanner to better trap this error as a specific Jargon exception
  
+ *[#956] error logging in with guest account, attempts to create profile
+ **Added code to not show profile tab when a guest account, and to better handle profile errors
+ 
 ==Features==
 
 *[#984] iDrop web '2.0' redesign effort
