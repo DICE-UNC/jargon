@@ -50,6 +50,9 @@ Note that the following bug and feature requests are logged in GForge with relat
  *[#956] error logging in with guest account, attempts to create profile
  **Added code to not show profile tab when a guest account, and to better handle profile errors
  
+ *[#1220] shares in home page on servers w/o specific query still show errors
+ **Added SpecificQueryException for -853000 errors, indicating that specific query support is missing 
+ 
 ==Features==
 
 *[#984] iDrop web '2.0' redesign effort
