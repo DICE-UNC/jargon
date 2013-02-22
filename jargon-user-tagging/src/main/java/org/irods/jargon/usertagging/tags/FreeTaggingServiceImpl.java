@@ -11,15 +11,13 @@ import org.irods.jargon.core.pub.DataAOHelper;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 import org.irods.jargon.core.pub.IRODSGenQueryExecutor;
 import org.irods.jargon.core.pub.aohelper.CollectionAOHelper;
-import org.irods.jargon.core.pub.domain.Collection;
-import org.irods.jargon.core.pub.domain.DataObject;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.pub.io.IRODSFileFactory;
 import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry;
-import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry.ObjectType;
 import org.irods.jargon.core.query.GenQueryBuilderException;
 import org.irods.jargon.core.query.IRODSGenQueryBuilder;
 import org.irods.jargon.core.query.IRODSGenQueryFromBuilder;
+import org.irods.jargon.core.query.IRODSQueryResultRow;
 import org.irods.jargon.core.query.IRODSQueryResultSetInterface;
 import org.irods.jargon.core.query.JargonQueryException;
 import org.irods.jargon.core.query.MetaDataAndDomainData.MetadataDomain;
@@ -471,14 +469,15 @@ public final class FreeTaggingServiceImpl extends AbstractIRODSTaggingService
 
 		List<CollectionAndDataObjectListingEntry> resultEntries = new ArrayList<CollectionAndDataObjectListingEntry>();
 
-		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, null);
+		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, true, null);
 		try {
-			DataAOHelper.addDataObjectSelectsToBuilder(builder);
+			DataAOHelper.buildDataObjectQuerySelectsNoReplicationInfo(builder);
 		} catch (GenQueryBuilderException e) {
 			throw new JargonException(e);
 		}
 
-		// do data objects first
+		// do data objects first, no replicas
+		//builder.addConditionAsGenQueryField(RodsGenQueryEnum.COL_DATA_REPL_NUM, QueryConditionOperators.NUMERIC_EQUAL, 0);
 
 		builder.addConditionAsGenQueryField(
 				RodsGenQueryEnum.COL_META_DATA_ATTR_UNITS,
@@ -496,14 +495,32 @@ public final class FreeTaggingServiceImpl extends AbstractIRODSTaggingService
 		IRODSQueryResultSetInterface resultSet;
 		IRODSGenQueryExecutor irodsGenQueryExecutor = irodsAccessObjectFactory
 				.getIRODSGenQueryExecutor(getIrodsAccount());
-		List<DataObject> dataObjects = new ArrayList<DataObject>();
+		
 		try {
 			IRODSGenQueryFromBuilder irodsQuery = builder
 					.exportIRODSQueryFromBuilder(getIrodsAccessObjectFactory()
 							.getJargonProperties().getMaxFilesAndDirsQueryMax());
 			resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResult(
 					irodsQuery, 0);
-			dataObjects = DataAOHelper.buildListFromResultSet(resultSet);
+			List<CollectionAndDataObjectListingEntry> files = new ArrayList<CollectionAndDataObjectListingEntry>(
+					resultSet.getResults().size());
+
+			/*
+			 * the query that gives the necessary data will cause duplication when
+			 * there are replicas, so discard duplicates. This is the nature of
+			 * GenQuery.
+			 */
+		
+			for (IRODSQueryResultRow row : resultSet.getResults()) {
+				resultEntries.add(DataAOHelper
+						.buildCollectionListEntryFromResultSetRowForDataObjectQueryNoReplicationInfo(
+								row, resultSet.getTotalRecords()));
+			}
+			
+			log.info(
+					"retrieved {} data objects based on query, converting to query result entries",
+					files.size());
+			
 		} catch (JargonQueryException e) {
 			log.error("query exception for  query", e);
 			throw new JargonException(
@@ -518,38 +535,13 @@ public final class FreeTaggingServiceImpl extends AbstractIRODSTaggingService
 					e);
 		}
 
-		log.info(
-				"retrieved {} data objects based on query, converting to query result entries",
-				dataObjects.size());
+	
 
-		CollectionAndDataObjectListingEntry collectionAndDataObjectListingEntry = null;
+		// now find collections  buildCollectionListEntryFromResultSetRowForCollectionQuery
 
-		for (DataObject dataObject : dataObjects) {
-			collectionAndDataObjectListingEntry = new CollectionAndDataObjectListingEntry();
-			collectionAndDataObjectListingEntry.setCount(dataObject.getCount());
-			collectionAndDataObjectListingEntry.setCreatedAt(dataObject
-					.getCreatedAt());
-			collectionAndDataObjectListingEntry.setDataSize(dataObject
-					.getDataSize());
-			collectionAndDataObjectListingEntry.setId(dataObject.getId());
-			collectionAndDataObjectListingEntry.setLastResult(dataObject
-					.isLastResult());
-			collectionAndDataObjectListingEntry.setModifiedAt(dataObject
-					.getUpdatedAt());
-			collectionAndDataObjectListingEntry
-					.setObjectType(ObjectType.DATA_OBJECT);
-			collectionAndDataObjectListingEntry.setParentPath(dataObject
-					.getCollectionName());
-			collectionAndDataObjectListingEntry.setPathOrName(dataObject
-					.getDataName());
-			resultEntries.add(collectionAndDataObjectListingEntry);
-		}
-
-		// now find collections
-
-		builder = new IRODSGenQueryBuilder(true, null);
+		builder = new IRODSGenQueryBuilder(true, true, null);
 		try {
-			CollectionAOHelper.buildSelectsByAppendingToBuilder(builder);
+			CollectionAOHelper.buildSelectsNeededForCollectionsInCollectionsAndDataObjectsListingEntry(builder);
 		} catch (GenQueryBuilderException e) {
 			throw new JargonException(e);
 		}
@@ -566,14 +558,18 @@ public final class FreeTaggingServiceImpl extends AbstractIRODSTaggingService
 					QueryConditionOperators.EQUAL, searchTag);
 		}
 
-		List<Collection> collections = new ArrayList<Collection>();
 		try {
 			IRODSGenQueryFromBuilder irodsQuery = builder
 					.exportIRODSQueryFromBuilder(getIrodsAccessObjectFactory()
 							.getJargonProperties().getMaxFilesAndDirsQueryMax());
 			resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResult(
 					irodsQuery, 0);
-			collections = CollectionAOHelper.buildListFromResultSet(resultSet);
+			for (IRODSQueryResultRow row : resultSet.getResults()) {
+				resultEntries.add(CollectionAOHelper
+						.buildCollectionListEntryFromResultSetRowForCollectionQuery(
+								row, resultSet.getTotalRecords()));
+			}
+			
 		} catch (JargonQueryException e) {
 			log.error("query exception for  query", e);
 			throw new JargonException(
@@ -587,31 +583,6 @@ public final class FreeTaggingServiceImpl extends AbstractIRODSTaggingService
 					"error in query loading user file permissions for data object",
 					e);
 		}
-
-		for (Collection collection : collections) {
-			collectionAndDataObjectListingEntry = new CollectionAndDataObjectListingEntry();
-			collectionAndDataObjectListingEntry.setCount(collection.getCount());
-			collectionAndDataObjectListingEntry.setCreatedAt(collection
-					.getCreatedAt());
-			collectionAndDataObjectListingEntry.setDataSize(0);
-			collectionAndDataObjectListingEntry.setId(collection
-					.getCollectionId());
-			collectionAndDataObjectListingEntry.setLastResult(collection
-					.isLastResult());
-			collectionAndDataObjectListingEntry.setModifiedAt(collection
-					.getModifiedAt());
-			collectionAndDataObjectListingEntry
-					.setObjectType(ObjectType.COLLECTION);
-			collectionAndDataObjectListingEntry.setParentPath(collection
-					.getCollectionParentName());
-			collectionAndDataObjectListingEntry.setPathOrName(collection
-					.getCollectionName());
-			resultEntries.add(collectionAndDataObjectListingEntry);
-		}
-
-		log.info(
-				"retrieved {} collections based on query, converting to query result entries",
-				collections.size());
 
 		return TagQuerySearchResult.instance(searchTags, resultEntries);
 

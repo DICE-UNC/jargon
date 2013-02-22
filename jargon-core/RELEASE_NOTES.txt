@@ -78,3 +78,4 @@ in jargon-specquery.sh are not defined on the server, this can be remembered, so
 This is new and somewhat experimental, but should be a nice optimization for the future.  Well add a jargon.properties value that 
 can be used to shut this capability off.
 
+* [#1001] add case-insensitive tag queries

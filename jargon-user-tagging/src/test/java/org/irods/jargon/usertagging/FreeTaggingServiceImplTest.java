@@ -695,6 +695,87 @@ public class FreeTaggingServiceImplTest {
 	}
 	
 	@Test
+	public void testCaseInsensitiveSearch()
+			throws Exception {
+		int collCount = 3;
+		int dataObjectCount = 3;
+		String collectionNameBase = "testCaseInsensitiveSearch";
+		String fileNameBase = "testCaseInsensitiveSearch.csv";
+		String tag1 = "ABCDEEE";
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
+		IRODSFileFactory irodsFileFactory = irodsFileSystem
+				.getIRODSFileFactory(irodsAccount);
+		CollectionAO collectionAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getCollectionAO(irodsAccount);
+		IRODSFile collectionFile = null;
+		String targetIrodsCollection = null;
+		AvuData avuData = null;
+
+		for (int i = 0; i < collCount; i++) {
+			targetIrodsCollection = testingPropertiesHelper
+					.buildIRODSCollectionAbsolutePathFromTestProperties(
+							testingProperties, IRODS_TEST_SUBDIR_PATH + "/"
+									+ collectionNameBase + i);
+			collectionFile = irodsFileFactory
+					.instanceIRODSFile(targetIrodsCollection);
+			collectionFile.mkdirs();
+			avuData = AvuData.instance(tag1, irodsAccount.getUserName(),
+					UserTaggingConstants.TAG_AVU_UNIT);
+			collectionAO.addAVUMetadata(collectionFile.getAbsolutePath(),
+					avuData);
+		}
+
+		IRODSFile targetIrodsFile = null;
+		DataTransferOperations dto = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataTransferOperations(
+						irodsAccount);
+		DataObjectAO dataObjectAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
+		String fileNameOrig = null;
+		String absPath = null;
+
+		for (int i = 0; i < dataObjectCount; i++) {
+			absPath = scratchFileUtils
+					.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+			fileNameOrig = FileGenerator.generateFileOfFixedLengthGivenName(
+					absPath, fileNameBase + i, 1);
+
+			targetIrodsFile = irodsFileFactory
+					.instanceIRODSFile(targetIrodsCollection + fileNameBase + i);
+			dto.putOperation(new File(fileNameOrig), targetIrodsFile, null,
+					null);
+
+			avuData = AvuData.instance(tag1, irodsAccount.getUserName(),
+					UserTaggingConstants.TAG_AVU_UNIT);
+			dataObjectAO.addAVUMetadata(targetIrodsFile.getAbsolutePath(),
+					avuData);
+		}
+		
+		FreeTaggingService freeTaggingService = FreeTaggingServiceImpl
+		.instance(irodsFileSystem.getIRODSAccessObjectFactory(),
+				irodsAccount);
+		
+		TagQuerySearchResult tagQuerySearchResult = freeTaggingService.searchUsingFreeTagString(tag1);
+		irodsFileSystem.close();
+		
+		//TestCase.assertEquals("did not find the same number of files and collections as I tagged", dataObjectCount + collCount, tagQuerySearchResult.getQueryResultEntries().size());
+		Assert.assertEquals("did not preserve the given tags in the result object", tag1, tagQuerySearchResult.getSearchTags());
+		
+		for (CollectionAndDataObjectListingEntry entry : tagQuerySearchResult.getQueryResultEntries()) {
+			if (entry.getObjectType().equals(ObjectType.DATA_OBJECT)) {
+				Assert.assertTrue("this is not the right data object", entry.getPathOrName().indexOf(fileNameBase) > -1);
+				Assert.assertTrue("did not set the data object parent", entry.getParentPath().indexOf(IRODS_TEST_SUBDIR_PATH) > -1);
+			} else {
+				Assert.assertTrue("this is not the right data object", entry.getPathOrName().indexOf(collectionNameBase) > -1);
+			}	
+		}
+	}
+	
+	
+	@Test
 	public final void updateTagsWhenCollection()
 			throws Exception {
 

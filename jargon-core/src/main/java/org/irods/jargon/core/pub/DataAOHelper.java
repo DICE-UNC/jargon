@@ -26,12 +26,14 @@ import org.irods.jargon.core.pub.io.IRODSFileFactory;
 import org.irods.jargon.core.pub.io.IRODSFileInputStream;
 import org.irods.jargon.core.query.AVUQueryElement;
 import org.irods.jargon.core.query.BuilderQueryUtils;
+import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry;
 import org.irods.jargon.core.query.GenQueryBuilderException;
 import org.irods.jargon.core.query.IRODSGenQueryBuilder;
 import org.irods.jargon.core.query.IRODSQueryResultRow;
 import org.irods.jargon.core.query.IRODSQueryResultSetInterface;
 import org.irods.jargon.core.query.JargonQueryException;
 import org.irods.jargon.core.query.MetaDataAndDomainData;
+import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry.ObjectType;
 import org.irods.jargon.core.query.MetaDataAndDomainData.MetadataDomain;
 import org.irods.jargon.core.query.QueryConditionOperators;
 import org.irods.jargon.core.query.RodsGenQueryEnum;
@@ -839,4 +841,67 @@ public final class DataAOHelper extends AOHelper {
 				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_MODIFY_TIME);
 
 	}
+	
+
+	/**
+	 * Build the necessary GenQuery selects to query data objects for
+	 * information. Used in many common queries for listing data objects, as in
+	 * an ils-like command.  This version does not ask for any replication information.
+	 * 
+	 * @param builder
+	 *            {@link IRODSGenQueryBuilder} that will be augmented with the
+	 *            necessary selects
+	 * 
+	 */
+	public static void buildDataObjectQuerySelectsNoReplicationInfo(
+			final IRODSGenQueryBuilder builder) throws GenQueryBuilderException {
+
+		if (builder == null) {
+			throw new IllegalArgumentException("null builder");
+		}
+
+		builder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_NAME)
+				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_NAME)
+				//.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_CREATE_TIME)
+				//.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_MODIFY_TIME)
+				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_DATA_ID)
+				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_SIZE)
+				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_OWNER_NAME);
+
+	}
+	
+	/**
+	 * Given a result set from the <code>buildDataObjectQuerySelectsNoReplicationInfo()</code> method, return 
+	 * a result set of <code>CollectionAndDataObjectListingEntry</code>
+	 * @param row  {@link IRODSQueryResultRow} entry from query
+	 * @param totalRecords <code>int</code> with total records in the result set
+	 * @return <code>List</code> of {@link CollectionAndDataObjectListingEntry}
+	 * @throws JargonException 
+	 */
+	public static CollectionAndDataObjectListingEntry buildCollectionListEntryFromResultSetRowForDataObjectQueryNoReplicationInfo(
+			IRODSQueryResultRow row, int totalRecords) throws JargonException {
+		
+		CollectionAndDataObjectListingEntry entry = new CollectionAndDataObjectListingEntry();
+		entry.setParentPath(row.getColumn(0));
+		entry.setObjectType(ObjectType.DATA_OBJECT);
+		entry.setPathOrName(row.getColumn(1));
+		//entry.setCreatedAt(IRODSDataConversionUtil.getDateFromIRODSValue(row
+		//		.getColumn(2)));
+		//entry.setModifiedAt(IRODSDataConversionUtil.getDateFromIRODSValue(row
+		//		.getColumn(3)));
+		entry.setId(IRODSDataConversionUtil.getIntOrZeroFromIRODSValue(row
+				.getColumn(2)));
+		entry.setDataSize(IRODSDataConversionUtil
+				.getLongOrZeroFromIRODSValue(row.getColumn(3)));
+		entry.setOwnerName(row.getColumn(4));
+		entry.setCount(row.getRecordCount());
+		entry.setLastResult(row.isLastResult());
+		entry.setTotalRecords(totalRecords);
+
+		log.debug("listing entry built {}", entry.toString());
+
+		return entry;
+		
+	}
+
 }
