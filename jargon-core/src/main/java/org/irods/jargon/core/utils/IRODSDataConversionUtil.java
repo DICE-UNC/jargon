@@ -3,10 +3,14 @@
  */
 package org.irods.jargon.core.utils;
 
+import static org.irods.jargon.core.packinstr.DataObjInpForMcoll.*;
+
 import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
+
+import org.irods.jargon.core.pub.domain.ObjStat.SpecColType;
 
 /**
  * Handle iRODS representations of data from GenQuery and translation into
@@ -119,6 +123,40 @@ public class IRODSDataConversionUtil {
 		return computedDate;
 	}
 
+	/**
+	 * Utility to determine the collection type contained in an iRODS value. 
+	 * Null and empty values are mapped to the normal type.
+	 * 
+	 * @param irodsValue
+	 *            <code>String</code> containing an IRODS collection type value 
+	 *            as returned from a query to ICAT.  May be null.
+	 *            
+	 * @return the collection type
+	 */
+	public static SpecColType getCollectionTypeFromIRODSValue(
+			final String irodsValue) {
+		
+		if (irodsValue == null || irodsValue.isEmpty()) {
+			return SpecColType.NORMAL;
+		}
+		
+		if (irodsValue.equals(COLL_TYPE_LINK)) {
+			return SpecColType.LINKED_COLL;
+		}
+		
+		if (irodsValue.equals(COLL_TYPE_MOUNT)) {
+			return SpecColType.MOUNTED_COLL;
+		}
+		
+		if (irodsValue.equals(COLL_TYPE_HAAW) 
+				|| irodsValue.equals(COLL_TYPE_TAR)) {
+			return SpecColType.STRUCT_FILE_COLL;
+		}
+		
+		throw new IllegalArgumentException(
+				"unknown iRODS collection type: " + irodsValue);
+	}
+	
 	public static String escapeSingleQuotes(final String inputString) {
 		if (inputString == null) {
 			throw new IllegalArgumentException("null inputString");

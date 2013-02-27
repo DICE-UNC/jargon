@@ -12,6 +12,7 @@ import org.irods.jargon.core.protovalues.FilePermissionEnum;
 import org.irods.jargon.core.protovalues.UserTypeEnum;
 import org.irods.jargon.core.pub.UserAO;
 import org.irods.jargon.core.pub.domain.Collection;
+import org.irods.jargon.core.pub.domain.ObjStat;
 import org.irods.jargon.core.pub.domain.UserFilePermission;
 import org.irods.jargon.core.query.AVUQueryElement;
 import org.irods.jargon.core.query.BuilderQueryUtils;
@@ -302,7 +303,9 @@ public class CollectionAOHelper extends AOHelper {
 				.getColumn(4)));
 		entry.setOwnerName(row.getColumn(5));
 		entry.setOwnerZone(row.getColumn(6));
-
+		entry.setSpecColType(IRODSDataConversionUtil
+				.getCollectionTypeFromIRODSValue(row.getColumn(7)));
+		
 		entry.setCount(row.getRecordCount());
 		entry.setTotalRecords(totalRecords);
 		entry.setLastResult(row.isLastResult());
@@ -364,8 +367,8 @@ public class CollectionAOHelper extends AOHelper {
 		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_MODIFY_TIME)
 		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_ID)
 		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_OWNER_NAME)
-		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_OWNER_ZONE);
-		
+		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_OWNER_ZONE)
+		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_TYPE);
 	}
 
 	/**
