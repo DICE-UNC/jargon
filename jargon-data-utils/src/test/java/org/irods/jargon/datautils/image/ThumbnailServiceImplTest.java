@@ -14,11 +14,14 @@ import junit.framework.Assert;
 
 import org.apache.commons.codec.binary.Base64InputStream;
 import org.irods.jargon.core.connection.IRODSAccount;
+import org.irods.jargon.core.pub.CollectionAndDataObjectListAndSearchAO;
 import org.irods.jargon.core.pub.EnvironmentalInfoAO;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 import org.irods.jargon.core.pub.IRODSFileSystem;
 import org.irods.jargon.core.pub.RuleProcessingAO;
+import org.irods.jargon.core.pub.domain.ObjStat;
 import org.irods.jargon.core.pub.domain.RemoteCommandInformation;
+import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry.ObjectType;
 import org.irods.jargon.core.rule.IRODSRule;
 import org.irods.jargon.core.rule.IRODSRuleExecResult;
 import org.irods.jargon.core.rule.IRODSRuleExecResultOutputParameter;
@@ -131,6 +134,22 @@ public class ThumbnailServiceImplTest {
 				.thenReturn(result);
 		Mockito.when(irodsAccessObjectFactory.getRuleProcessingAO(irodsAccount))
 				.thenReturn(ruleProcessingAO);
+
+		CollectionAndDataObjectListAndSearchAO collectionAndDataObjectListAndSearchAO = Mockito
+				.mock(CollectionAndDataObjectListAndSearchAO.class);
+		Mockito.when(
+				irodsAccessObjectFactory
+						.getCollectionAndDataObjectListAndSearchAO(irodsAccount))
+				.thenReturn(collectionAndDataObjectListAndSearchAO);
+
+		ObjStat objStat = new ObjStat();
+		objStat.setAbsolutePath(sourceIRODSPath);
+		objStat.setObjectType(ObjectType.DATA_OBJECT);
+		objStat.setCollectionPath(sourceIRODSPath);
+		Mockito.when(
+				collectionAndDataObjectListAndSearchAO
+						.retrieveObjectStatForPath(sourceIRODSPath))
+				.thenReturn(objStat);
 
 		ThumbnailService thumbnailService = new ThumbnailServiceImpl(
 				irodsAccessObjectFactory, irodsAccount);
@@ -261,6 +280,21 @@ public class ThumbnailServiceImplTest {
 				.thenReturn(result);
 		Mockito.when(irodsAccessObjectFactory.getRuleProcessingAO(irodsAccount))
 				.thenReturn(ruleProcessingAO);
+		CollectionAndDataObjectListAndSearchAO collectionAndDataObjectListAndSearchAO = Mockito
+				.mock(CollectionAndDataObjectListAndSearchAO.class);
+		Mockito.when(
+				irodsAccessObjectFactory
+						.getCollectionAndDataObjectListAndSearchAO(irodsAccount))
+				.thenReturn(collectionAndDataObjectListAndSearchAO);
+
+		ObjStat objStat = new ObjStat();
+		objStat.setAbsolutePath(sourceIRODSPath);
+		objStat.setObjectType(ObjectType.DATA_OBJECT);
+		objStat.setCollectionPath(sourceIRODSPath);
+		Mockito.when(
+				collectionAndDataObjectListAndSearchAO
+						.retrieveObjectStatForPath(sourceIRODSPath))
+				.thenReturn(objStat);
 
 		ThumbnailService thumbnailService = new ThumbnailServiceImpl(
 				irodsAccessObjectFactory, irodsAccount);
@@ -338,6 +372,22 @@ public class ThumbnailServiceImplTest {
 				.thenReturn(result);
 		Mockito.when(irodsAccessObjectFactory.getRuleProcessingAO(irodsAccount))
 				.thenReturn(ruleProcessingAO);
+
+		CollectionAndDataObjectListAndSearchAO collectionAndDataObjectListAndSearchAO = Mockito
+				.mock(CollectionAndDataObjectListAndSearchAO.class);
+		Mockito.when(
+				irodsAccessObjectFactory
+						.getCollectionAndDataObjectListAndSearchAO(irodsAccount))
+				.thenReturn(collectionAndDataObjectListAndSearchAO);
+
+		ObjStat objStat = new ObjStat();
+		objStat.setAbsolutePath(sourceIRODSPath);
+		objStat.setObjectType(ObjectType.DATA_OBJECT);
+		objStat.setCollectionPath(sourceIRODSPath);
+		Mockito.when(
+				collectionAndDataObjectListAndSearchAO
+						.retrieveObjectStatForPath(sourceIRODSPath))
+				.thenReturn(objStat);
 
 		ThumbnailService thumbnailService = new ThumbnailServiceImpl(
 				irodsAccessObjectFactory, irodsAccount);
