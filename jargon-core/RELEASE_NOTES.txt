@@ -1,11 +1,11 @@
 *'''Project''': Jargon-core API
-*'''Date''': 02/11/2013
-*'''Release Version''': 3.3.0-beta1
-*'''git tag''': 3.3.0-beta1
+*'''Date''': 02/27/2013
+*'''Release Version''': 3.3.0
+*'''git tag''': 3.3.0
 
 ==News==
 
-Beta release of Jargon 3.3.0 feature development.  This accompanies a beta of iDrop version 2.0.0
+Jargon 3.3.0 feature development.  This accompanies a release of iDrop version 2.0.0
 
 ==News==
 
