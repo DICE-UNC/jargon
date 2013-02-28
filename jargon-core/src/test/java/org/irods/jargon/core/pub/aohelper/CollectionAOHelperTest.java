@@ -32,7 +32,8 @@ public final class CollectionAOHelperTest {
 		final IRODSQueryResultRow row = IRODSQueryResultRow
 				.instance(asList(columnValues), asList(columnNames));
 		final CollectionAndDataObjectListingEntry entry = 
-				buildCollectionListEntryFromResultSetRowForCollectionQuery(row);
+				buildCollectionListEntryFromResultSetRowForCollectionQuery(row, 
+						0);
 		assertEquals("set incorrect collection type", SpecColType.LINKED_COLL, 
 				entry.getSpecColType());
 	}
