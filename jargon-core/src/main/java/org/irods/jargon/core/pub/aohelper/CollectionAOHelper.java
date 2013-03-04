@@ -12,6 +12,7 @@ import org.irods.jargon.core.protovalues.FilePermissionEnum;
 import org.irods.jargon.core.protovalues.UserTypeEnum;
 import org.irods.jargon.core.pub.UserAO;
 import org.irods.jargon.core.pub.domain.Collection;
+import org.irods.jargon.core.pub.domain.ObjStat;
 import org.irods.jargon.core.pub.domain.UserFilePermission;
 import org.irods.jargon.core.query.AVUQueryElement;
 import org.irods.jargon.core.query.BuilderQueryUtils;
@@ -304,7 +305,9 @@ public class CollectionAOHelper extends AOHelper {
 				.getColumn(4)));
 		entry.setOwnerName(row.getColumn(5));
 		entry.setOwnerZone(row.getColumn(6));
-
+		entry.setSpecColType(IRODSDataConversionUtil
+				.getCollectionTypeFromIRODSValue(row.getColumn(7)));
+		
 		entry.setCount(row.getRecordCount());
 		entry.setTotalRecords(totalRecords);
 		entry.setLastResult(row.isLastResult());
@@ -365,6 +368,7 @@ public class CollectionAOHelper extends AOHelper {
 		}
 
 		builder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_PARENT_NAME)
+<<<<<<< HEAD
 				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_NAME)
 				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_CREATE_TIME)
 				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_MODIFY_TIME)
@@ -372,6 +376,15 @@ public class CollectionAOHelper extends AOHelper {
 				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_OWNER_NAME)
 				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_OWNER_ZONE);
 
+=======
+		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_NAME)
+		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_CREATE_TIME)
+		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_MODIFY_TIME)
+		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_ID)
+		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_OWNER_NAME)
+		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_OWNER_ZONE)
+		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_TYPE);
+>>>>>>> development
 	}
 
 	/**
@@ -439,21 +452,21 @@ public class CollectionAOHelper extends AOHelper {
 			 * collectionZone);
 			 */
 
-			userFilePermission = new UserFilePermission(row.getColumn(7),
-					row.getColumn(10),
+			userFilePermission = new UserFilePermission(row.getColumn(8),
+					row.getColumn(11),
 					FilePermissionEnum.valueOf(IRODSDataConversionUtil
-							.getIntOrZeroFromIRODSValue(row.getColumn(9))),
-					UserTypeEnum.RODS_UNKNOWN, row.getColumn(8));
+							.getIntOrZeroFromIRODSValue(row.getColumn(10))),
+					UserTypeEnum.RODS_UNKNOWN, row.getColumn(9));
 
 		} catch (DataNotFoundException dnf) {
 			log.warn(
 					"user info not found for permission for user:{}, this permission will not be added",
-					row.getColumn(7));
-			userFilePermission = new UserFilePermission(row.getColumn(7),
-					row.getColumn(10),
+					row.getColumn(8));
+			userFilePermission = new UserFilePermission(row.getColumn(8),
+					row.getColumn(11),
 					FilePermissionEnum.valueOf(IRODSDataConversionUtil
-							.getIntOrZeroFromIRODSValue(row.getColumn(9))),
-					UserTypeEnum.RODS_UNKNOWN, row.getColumn(8));
+							.getIntOrZeroFromIRODSValue(row.getColumn(10))),
+					UserTypeEnum.RODS_UNKNOWN, row.getColumn(9));
 		}
 		userFilePermissions.add(userFilePermission);
 	}
