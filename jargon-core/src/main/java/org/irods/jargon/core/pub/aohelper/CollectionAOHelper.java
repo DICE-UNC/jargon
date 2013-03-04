@@ -426,21 +426,21 @@ public class CollectionAOHelper extends AOHelper {
 			 * collectionZone);
 			 */
 
-			userFilePermission = new UserFilePermission(row.getColumn(7),
-					row.getColumn(10),
+			userFilePermission = new UserFilePermission(row.getColumn(8),
+					row.getColumn(11),
 					FilePermissionEnum.valueOf(IRODSDataConversionUtil
-							.getIntOrZeroFromIRODSValue(row.getColumn(9))),
-					UserTypeEnum.RODS_UNKNOWN, row.getColumn(8));
+							.getIntOrZeroFromIRODSValue(row.getColumn(10))),
+					UserTypeEnum.RODS_UNKNOWN, row.getColumn(9));
 
 		} catch (DataNotFoundException dnf) {
 			log.warn(
 					"user info not found for permission for user:{}, this permission will not be added",
-					row.getColumn(7));
-			userFilePermission = new UserFilePermission(row.getColumn(7),
-					row.getColumn(10),
+					row.getColumn(8));
+			userFilePermission = new UserFilePermission(row.getColumn(8),
+					row.getColumn(11),
 					FilePermissionEnum.valueOf(IRODSDataConversionUtil
-							.getIntOrZeroFromIRODSValue(row.getColumn(9))),
-					UserTypeEnum.RODS_UNKNOWN, row.getColumn(8));
+							.getIntOrZeroFromIRODSValue(row.getColumn(10))),
+					UserTypeEnum.RODS_UNKNOWN, row.getColumn(9));
 		}
 		userFilePermissions.add(userFilePermission);
 	}

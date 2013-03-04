@@ -53,6 +53,9 @@ Note that the following bug and feature requests are logged in GForge with relat
  *[#1220] shares in home page on servers w/o specific query still show errors
  **Added SpecificQueryException for -853000 errors, indicating that specific query support is missing 
  
+ *[#1248] collection listing not setting correct type
+ **Added additional handling for collection types in CollectionAndDataObjectListAndSearchAO (contributed by iPlant)
+ 
 ==Features==
 
 *[#984] iDrop web '2.0' redesign effort
