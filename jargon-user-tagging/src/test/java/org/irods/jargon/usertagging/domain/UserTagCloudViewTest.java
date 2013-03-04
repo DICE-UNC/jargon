@@ -6,9 +6,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeMap;
 
-import junit.framework.TestCase;
-
-import org.irods.jargon.core.query.MetaDataAndDomainData.MetadataDomain;
+import junit.framework.Assert;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -33,8 +31,8 @@ public class UserTagCloudViewTest {
 
 		UserTagCloudView view = UserTagCloudView.instance("user",
 				tagCloudEntries);
-		TestCase.assertEquals("user", view.getUserName());
-		TestCase.assertEquals(1, tagCloudEntries.keySet().size());
+		Assert.assertEquals("user", view.getUserName());
+		Assert.assertEquals(1, tagCloudEntries.keySet().size());
 	}
 
 	@Test
@@ -60,8 +58,8 @@ public class UserTagCloudViewTest {
 
 		UserTagCloudView userTagCloudView = UserTagCloudView.instance("user",
 				fileTags, collTags);
-		TestCase.assertEquals("user", userTagCloudView.getUserName());
-		TestCase.assertEquals(2, userTagCloudView.getTagCloudEntries().keySet()
+		Assert.assertEquals("user", userTagCloudView.getUserName());
+		Assert.assertEquals(2, userTagCloudView.getTagCloudEntries().keySet()
 				.size());
 
 	}
@@ -86,8 +84,8 @@ public class UserTagCloudViewTest {
 
 		UserTagCloudView userTagCloudView = UserTagCloudView.instance("user",
 				fileTags, collTags);
-		TestCase.assertEquals("user", userTagCloudView.getUserName());
-		TestCase.assertEquals(3, userTagCloudView.getTagCloudEntries().keySet()
+		Assert.assertEquals("user", userTagCloudView.getUserName());
+		Assert.assertEquals(3, userTagCloudView.getTagCloudEntries().keySet()
 				.size());
 
 		// test sorting by getting 3 tags in turn
@@ -99,9 +97,9 @@ public class UserTagCloudViewTest {
 		IRODSTagValue actual2 = testIter.next();
 		IRODSTagValue actual3 = testIter.next();
 
-		TestCase.assertEquals(irodsTagValue, actual1);
-		TestCase.assertEquals(irodsTagValue2, actual2);
-		TestCase.assertEquals(irodsTagValue3, actual3);
+		Assert.assertEquals(irodsTagValue, actual1);
+		Assert.assertEquals(irodsTagValue2, actual2);
+		Assert.assertEquals(irodsTagValue3, actual3);
 	}
 
 }

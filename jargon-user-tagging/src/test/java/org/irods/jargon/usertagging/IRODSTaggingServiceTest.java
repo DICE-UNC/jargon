@@ -5,8 +5,6 @@ import java.util.List;
 import java.util.Properties;
 
 import junit.framework.Assert;
-import junit.framework.TestCase;
-
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
@@ -20,6 +18,8 @@ import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.irods.jargon.testutils.filemanip.FileGenerator;
 import org.irods.jargon.testutils.filemanip.ScratchFileUtils;
 import org.irods.jargon.usertagging.domain.IRODSTagValue;
+import org.irods.jargon.usertagging.tags.IRODSTaggingService;
+import org.irods.jargon.usertagging.tags.IRODSTaggingServiceImpl;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -823,7 +823,7 @@ public class IRODSTaggingServiceTest {
 				irodsTagValue);
 		IRODSTagValue actual = irodsTaggingService
 				.getDescriptionOnDataObjectForLoggedInUser(targetIrodsDataObject);
-		TestCase.assertNotNull("did not find data object", actual);
+		Assert.assertNotNull("did not find data object", actual);
 
 	}
 

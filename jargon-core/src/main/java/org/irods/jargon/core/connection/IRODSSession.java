@@ -77,6 +77,21 @@ public class IRODSSession {
 	private JargonProperties jargonProperties;
 
 	/**
+	 * Simple cache (tolerating concurrent access) for name/value props. This
+	 * cache is meant to hold user-definable properties about a connected server
+	 * (by host and zone name). This is meant as an efficient way to record
+	 * properties of a connected iRODS server that are discovered by interacting
+	 * with the server. This is especially useful for operations that may or may
+	 * not be configured, such that repeated failed attempts at an operation are
+	 * not made.
+	 * <p/>
+	 * A good example would be if required specific queries, rules,
+	 * micro-services, or remote command scripts are not available to do an
+	 * operation.
+	 */
+	private final DiscoveredServerPropertiesCache discoveredServerPropertiesCache = new DiscoveredServerPropertiesCache();
+
+	/**
 	 * Get the <code>JargonProperties</code> that contains metadata to tune the
 	 * behavior of Jargon. This will either be the default, loaded from the
 	 * <code>jargon.properties</code> file, or a custom source that can be
@@ -214,7 +229,7 @@ public class IRODSSession {
 			throw new JargonException("irods connection manager cannot be null");
 		}
 
-		this.irodsProtocolManager = irodsConnectionManager;
+		irodsProtocolManager = irodsConnectionManager;
 	}
 
 	/**
@@ -285,6 +300,7 @@ public class IRODSSession {
 			irodsProtocol = connectAndAddToProtocolsMap(irodsAccount,
 					irodsProtocols);
 		} else if (irodsProtocol.isConnected()) {
+			
 			log.debug("session using previously established connection:{}",
 					irodsProtocol);
 		} else {
@@ -310,7 +326,7 @@ public class IRODSSession {
 			throws JargonException {
 		IRODSCommands irodsProtocol;
 		irodsProtocol = irodsProtocolManager.getIRODSProtocol(irodsAccount,
-				this.buildPipelineConfigurationBasedOnJargonProperties());
+				buildPipelineConfigurationBasedOnJargonProperties());
 		if (irodsProtocol == null) {
 			log.error("no connection returned from connection manager");
 			throw new JargonException(
@@ -401,7 +417,7 @@ public class IRODSSession {
 	 */
 	public void setIrodsConnectionManager(
 			final IRODSProtocolManager irodsConnectionManager) {
-		this.irodsProtocolManager = irodsConnectionManager;
+		irodsProtocolManager = irodsConnectionManager;
 	}
 
 	/**
@@ -417,6 +433,10 @@ public class IRODSSession {
 	public void closeSession(final IRODSAccount irodsAccount)
 			throws JargonException {
 
+		if (irodsAccount == null) {
+			throw new IllegalArgumentException("null irodsAccount");
+		}
+		
 		log.debug("closing irods session for: {}", irodsAccount.toString());
 		final Map<String, IRODSCommands> irodsProtocols = sessionMap.get();
 		if (irodsProtocols == null) {
@@ -438,6 +458,46 @@ public class IRODSSession {
 		irodsProtocol.disconnect();
 
 		irodsProtocols.remove(irodsAccount.toString());
+		if (irodsProtocols.isEmpty()) {
+			log.debug("no more connections, so clear cache from ThreadLocal");
+			sessionMap.set(null);
+		}
+
+	}
+	
+	/**
+	 * Signal to the <code>IRODSSession</code> that a connection should be terminated to re-authenticate
+	 * 
+	 * @param irodsAccount
+	 *            {@link IRODSAccount} that maps the connection
+	 * @throws JargonException
+	 */
+	public void discardSessionForReauthenticate(final IRODSAccount irodsAccount)
+			throws JargonException {
+
+		if (irodsAccount == null) {
+			throw new IllegalArgumentException("null irodsAccount");
+		}
+		
+		log.warn("discardSessionForReauthenticate for: {}", irodsAccount.toString());
+		final Map<String, IRODSCommands> irodsProtocols = sessionMap.get();
+		if (irodsProtocols == null) {
+			log.warn("discarding session that is already closed, silently ignore");
+			return;
+		}
+		
+		IRODSCommands command = irodsProtocols.get(irodsAccount.toString());
+		if (command == null) {
+			log.info("no connection found, ignore");
+			return;
+		}
+		
+		log.info("disconnecting:{}", command);
+		command.shutdown();
+		log.info("disconnected...");
+
+		irodsProtocols.remove(irodsAccount.toString());
+
 		if (irodsProtocols.isEmpty()) {
 			log.debug("no more connections, so clear cache from ThreadLocal");
 			sessionMap.set(null);
@@ -554,6 +614,36 @@ public class IRODSSession {
 		synchronized (this) {
 			this.jargonProperties = jargonProperties;
 		}
+	}
+
+	/**
+	 * 
+	 * Simple cache (tolerating concurrent access) for name/value props. This
+	 * cache is meant to hold user-definable properties about a connected server
+	 * (by host and zone name). This is meant as an efficient way to record
+	 * properties of a connected iRODS server that are discovered by interacting
+	 * with the server. This is especially useful for operations that may or may
+	 * not be configured, such that repeated failed attempts at an operation are
+	 * not made.
+	 * <p/>
+	 * A good example would be if required specific queries, rules,
+	 * micro-services, or remote command scripts are not available to do an
+	 * operation.
+	 * 
+	 * @return
+	 */
+	public DiscoveredServerPropertiesCache getDiscoveredServerPropertiesCache() {
+		return discoveredServerPropertiesCache;
+	}
+	
+	/**
+	 * Handy method to see if we're using the dynamic server properties cache.  This is set
+	 * in the jargon properties.
+	 * @return
+	 */
+	public boolean isUsingDynamicServerPropertiesCache() {
+		// getjargonProperties is already sync'd
+		return getJargonProperties().isUsingDiscoveredServerPropertiesCache();
 	}
 
 }

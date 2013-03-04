@@ -31,7 +31,6 @@ import org.irods.jargon.core.query.MetaDataAndDomainData;
 import org.irods.jargon.core.query.MetaDataAndDomainData.MetadataDomain;
 import org.irods.jargon.core.query.RodsGenQueryEnum;
 import org.irods.jargon.core.utils.AccessObjectQueryProcessingUtils;
-import org.irods.jargon.core.utils.IRODSDataConversionUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -54,7 +53,7 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 	protected ResourceAOImpl(final IRODSSession irodsSession,
 			final IRODSAccount irodsAccount) throws JargonException {
 		super(irodsSession, irodsAccount);
-		this.getIRODSAccessObjectFactory().getZoneAO(getIRODSAccount());
+		getIRODSAccessObjectFactory().getZoneAO(getIRODSAccount());
 		resourceAOHelper = new ResourceAOHelper(getIRODSAccount(),
 				getIRODSAccessObjectFactory());
 	}
@@ -68,7 +67,7 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 	public Resource findByName(final String resourceName)
 			throws JargonException, DataNotFoundException {
 		final IRODSGenQueryExecutorImpl irodsGenQueryExecutorImpl = new IRODSGenQueryExecutorImpl(
-				this.getIRODSSession(), this.getIRODSAccount());
+				getIRODSSession(), getIRODSAccount());
 
 		final StringBuilder sb = new StringBuilder();
 
@@ -131,7 +130,7 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 	public Resource findById(final String resourceId) throws JargonException,
 			DataNotFoundException {
 		final IRODSGenQueryExecutorImpl irodsGenQueryExecutorImpl = new IRODSGenQueryExecutorImpl(
-				this.getIRODSSession(), this.getIRODSAccount());
+				getIRODSSession(), getIRODSAccount());
 		final StringBuilder sb = new StringBuilder();
 
 		sb.append(resourceAOHelper.buildResourceSelects());
@@ -191,7 +190,7 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 	@Override
 	public List<Resource> findAll() throws JargonException {
 		final IRODSGenQueryExecutorImpl irodsGenQueryExecutorImpl = new IRODSGenQueryExecutorImpl(
-				this.getIRODSSession(), this.getIRODSAccount());
+				getIRODSSession(), getIRODSAccount());
 		StringBuilder userQuery = new StringBuilder();
 		userQuery.append(resourceAOHelper.buildResourceSelects());
 
@@ -236,14 +235,12 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 		if (irodsFile.isFile()) {
 			query.append(RodsGenQueryEnum.COL_COLL_NAME.getName());
 			query.append(EQUALS_AND_QUOTE);
-			query.append(irodsFile
-					.getParent());
+			query.append(irodsFile.getParent());
 			query.append("'");
 			query.append(AND);
 			query.append(RodsGenQueryEnum.COL_DATA_NAME.getName());
 			query.append(EQUALS_AND_QUOTE);
-			query.append(irodsFile
-					.getName());
+			query.append(irodsFile.getName());
 			query.append("'");
 
 		} else {
@@ -254,7 +251,7 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 		}
 
 		IRODSGenQueryExecutorImpl irodsGenQueryExecutorImpl = new IRODSGenQueryExecutorImpl(
-				this.getIRODSSession(), this.getIRODSAccount());
+				getIRODSSession(), getIRODSAccount());
 
 		String queryString = query.toString();
 		if (log.isInfoEnabled()) {
@@ -292,7 +289,7 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 		log.info("listResourceAndResourceGroupNames()..getting resource names");
 		List<String> combined = listResourceNames();
 		log.info("appending resource group names..");
-		ResourceGroupAO resourceGroupAO = this.getIRODSAccessObjectFactory()
+		ResourceGroupAO resourceGroupAO = getIRODSAccessObjectFactory()
 				.getResourceGroupAO(getIRODSAccount());
 		combined.addAll(resourceGroupAO.listResourceGroupNames());
 		return combined;
@@ -315,14 +312,12 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 					.addOrderByGenQueryField(RodsGenQueryEnum.COL_R_RESC_NAME,
 							OrderByType.ASC);
 
-			IRODSGenQueryExecutor irodsGenQueryExecutor = this
-					.getIRODSAccessObjectFactory().getIRODSGenQueryExecutor(
-							this.getIRODSAccount());
+			IRODSGenQueryExecutor irodsGenQueryExecutor = getIRODSAccessObjectFactory()
+					.getIRODSGenQueryExecutor(getIRODSAccount());
 
 			resultSet = irodsGenQueryExecutor
 					.executeIRODSQueryAndCloseResult(
-							builder.exportIRODSQueryFromBuilder(this
-									.getIRODSAccessObjectFactory()
+							builder.exportIRODSQueryFromBuilder(getIRODSAccessObjectFactory()
 									.getJargonProperties()
 									.getMaxFilesAndDirsQueryMax()), 0);
 		} catch (JargonQueryException e) {
@@ -359,7 +354,7 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 		}
 
 		IRODSGenQueryExecutorImpl irodsGenQueryExecutorImpl = new IRODSGenQueryExecutorImpl(
-				this.getIRODSSession(), this.getIRODSAccount());
+				getIRODSSession(), getIRODSAccount());
 		StringBuilder query = new StringBuilder();
 
 		query.append(resourceAOHelper.buildResourceSelects());
@@ -418,7 +413,7 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 		final IRODSGenQuery irodsQuery = IRODSGenQuery.instance(sb.toString(),
 				DEFAULT_REC_COUNT);
 		final IRODSGenQueryExecutorImpl irodsGenQueryExecutorImpl = new IRODSGenQueryExecutorImpl(
-				this.getIRODSSession(), this.getIRODSAccount());
+				getIRODSSession(), getIRODSAccount());
 
 		IRODSQueryResultSetInterface resultSet;
 
@@ -450,7 +445,7 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 		}
 
 		final IRODSGenQueryExecutorImpl irodsGenQueryExecutorImpl = new IRODSGenQueryExecutorImpl(
-				this.getIRODSSession(), this.getIRODSAccount());
+				getIRODSSession(), getIRODSAccount());
 
 		final StringBuilder sb = new StringBuilder();
 		sb.append(resourceAOHelper.buildResourceSelects());
@@ -512,7 +507,7 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 		}
 
 		final IRODSGenQueryExecutorImpl irodsGenQueryExecutorImpl = new IRODSGenQueryExecutorImpl(
-				this.getIRODSSession(), this.getIRODSAccount());
+				getIRODSSession(), getIRODSAccount());
 
 		// TODO: ripe for factoring out as applied to other domain objects
 

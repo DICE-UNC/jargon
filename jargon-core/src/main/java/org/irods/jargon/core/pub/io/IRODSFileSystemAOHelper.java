@@ -121,6 +121,7 @@ public class IRODSFileSystemAOHelper extends AOHelper {
 		}
 	}
 
+	
 	/**
 	 * Build the necessary GenQuery selects to query data objects for
 	 * information. Used in many common queries for listing data objects, as in
@@ -214,4 +215,5 @@ public class IRODSFileSystemAOHelper extends AOHelper {
 						QueryConditionOperators.EQUAL, path);
 	}
 
+	
 }

@@ -278,6 +278,7 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 		for (IRODSQueryResultRow row : resultSet.getResults()) {
 			user = UserAOHelper.buildUserFromResultSet(row,
 					getGenQueryExecutor(), false);
+			user.setTotalRecords(resultSet.getTotalRecords());
 			users.add(user);
 		}
 
@@ -329,8 +330,7 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 		for (IRODSQueryResultRow row : resultSet.getResults()) {
 			user = UserAOHelper.buildUserFromResultSet(row,
 					getGenQueryExecutor(), false);
-			user.setCount(row.getRecordCount());
-			user.setLastResult(row.isLastResult());
+			user.setTotalRecords(resultSet.getTotalRecords());
 			users.add(user);
 		}
 

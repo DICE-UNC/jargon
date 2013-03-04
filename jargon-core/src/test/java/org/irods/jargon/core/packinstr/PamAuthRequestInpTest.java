@@ -1,5 +1,6 @@
 package org.irods.jargon.core.packinstr;
 
+import junit.framework.Assert;
 import junit.framework.TestCase;
 
 import org.junit.AfterClass;
@@ -27,7 +28,7 @@ public class PamAuthRequestInpTest {
 		sb.append("<pamPassword>password</pamPassword>\n");
 		sb.append("</pamAuthRequestInp_PI>\n");
 		
-		TestCase.assertEquals("did not get correct tag format", sb.toString(),
+		Assert.assertEquals("did not get correct tag format", sb.toString(),
 				tagVal);
 	}
 

@@ -271,7 +271,7 @@ public class IRODSSimpleProtocolManagerTest {
 	public void testCreatesDefaultAuthenticationFactoryImpl() throws Exception {
 		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager
 				.instance();
-		TestCase.assertNotNull(irodsConnectionManager
+		Assert.assertNotNull(irodsConnectionManager
 				.getAuthenticationFactory());
 	}
 

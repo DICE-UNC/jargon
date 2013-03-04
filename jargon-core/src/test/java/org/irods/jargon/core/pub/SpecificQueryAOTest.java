@@ -121,8 +121,8 @@ public class SpecificQueryAOTest {
 		SpecificQueryResultSet specificQueryResultSet = queryAO
 				.executeSpecificQueryUsingAlias(specificQuery, accessObjectFactory
 						.getJargonProperties().getMaxFilesAndDirsQueryMax());
-		TestCase.assertNotNull("null result set", specificQueryResultSet);
-		TestCase.assertFalse(
+		Assert.assertNotNull("null result set", specificQueryResultSet);
+		Assert.assertFalse(
 				"no results returned, expected at least ls and lsl",
 				specificQueryResultSet.getResults().isEmpty());
 
@@ -148,10 +148,10 @@ public class SpecificQueryAOTest {
 				.getSpecificQueryAO(irodsAccount);
 		List<SpecificQueryDefinition> actual = queryAO
 				.listSpecificQueryByAliasLike("ls");
-		TestCase.assertFalse("did not get results from query", actual.isEmpty());
+		Assert.assertFalse("did not get results from query", actual.isEmpty());
 		for (SpecificQueryDefinition definition : actual) {
-			TestCase.assertFalse("no alias", definition.getAlias().isEmpty());
-			TestCase.assertFalse("no query", definition.getSql().isEmpty());
+			Assert.assertFalse("no alias", definition.getAlias().isEmpty());
+			Assert.assertFalse("no query", definition.getSql().isEmpty());
 		}
 	}
 
@@ -163,7 +163,7 @@ public class SpecificQueryAOTest {
 				+ "R_TOKN_MAIN.token_namespace = 'access_type' AND R_USER_MAIN.user_id = 'R_OBJT_ACCESS.user_id AND R_OBJT_ACCESS.access_type_id = R_TOKN_MAIN.token_id";
 
 		int count = SpecificQueryAOImpl.countArgumentsInQuery(query);
-		TestCase.assertEquals("incorrect count from query", 1, count);
+		Assert.assertEquals("incorrect count from query", 1, count);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
@@ -185,10 +185,10 @@ public class SpecificQueryAOTest {
 
 		List<String> colNames = SpecificQueryAOImpl
 				.parseColumnNamesFromQuery(query);
-		TestCase.assertFalse("no column names found", colNames.isEmpty());
-		TestCase.assertEquals("R_USER_MAIN.user_name", colNames.get(0));
-		TestCase.assertEquals("R_USER_MAIN.zone_name", colNames.get(1));
-		TestCase.assertEquals("R_TOKN_MAIN.token_name", colNames.get(2));
+		Assert.assertFalse("no column names found", colNames.isEmpty());
+		Assert.assertEquals("R_USER_MAIN.user_name", colNames.get(0));
+		Assert.assertEquals("R_USER_MAIN.zone_name", colNames.get(1));
+		Assert.assertEquals("R_TOKN_MAIN.token_name", colNames.get(2));
 
 	}
 
@@ -201,10 +201,10 @@ public class SpecificQueryAOTest {
 
 		List<String> colNames = SpecificQueryAOImpl
 				.parseColumnNamesFromQuery(query);
-		TestCase.assertFalse("no column names found", colNames.isEmpty());
-		TestCase.assertEquals("R_USER_MAIN.user_name", colNames.get(0));
-		TestCase.assertEquals("R_USER_MAIN.zone_name", colNames.get(1));
-		TestCase.assertEquals("R_TOKN_MAIN.token_name", colNames.get(2));
+		Assert.assertFalse("no column names found", colNames.isEmpty());
+		Assert.assertEquals("R_USER_MAIN.user_name", colNames.get(0));
+		Assert.assertEquals("R_USER_MAIN.zone_name", colNames.get(1));
+		Assert.assertEquals("R_TOKN_MAIN.token_name", colNames.get(2));
 
 	}
 
@@ -216,9 +216,9 @@ public class SpecificQueryAOTest {
 
 		List<String> colNames = SpecificQueryAOImpl
 				.parseColumnNamesFromQuery(query);
-		TestCase.assertFalse("no column names found", colNames.isEmpty());
-		TestCase.assertEquals("R_USER_MAIN.user_name", colNames.get(0));
-		TestCase.assertEquals("R_USER_MAIN.zone_name", colNames.get(1));
+		Assert.assertFalse("no column names found", colNames.isEmpty());
+		Assert.assertEquals("R_USER_MAIN.user_name", colNames.get(0));
+		Assert.assertEquals("R_USER_MAIN.zone_name", colNames.get(1));
 
 	}
 	
@@ -230,9 +230,9 @@ public class SpecificQueryAOTest {
 
 		List<String> colNames = SpecificQueryAOImpl
 				.parseColumnNamesFromQuery(query);
-		TestCase.assertFalse("no column names found", colNames.isEmpty());
-		TestCase.assertEquals("R_USER_MAIN.zone_name", colNames.get(0));
-		TestCase.assertEquals("R_USER_MAIN.user_name", colNames.get(1));
+		Assert.assertFalse("no column names found", colNames.isEmpty());
+		Assert.assertEquals("R_USER_MAIN.zone_name", colNames.get(0));
+		Assert.assertEquals("R_USER_MAIN.user_name", colNames.get(1));
 
 	}
 
@@ -274,7 +274,7 @@ public class SpecificQueryAOTest {
 
 		List<SpecificQueryDefinition> actual = queryAO
 				.listSpecificQueryByAliasLike(collAclQueryAlias);
-		TestCase.assertFalse(
+		Assert.assertFalse(
 				"did not get results from query, the showCollAcl specific query may not be registered, please run jargon-specquery.sh to provision standard jargon specific queries",
 				actual.isEmpty());
 
@@ -283,8 +283,8 @@ public class SpecificQueryAOTest {
 		SpecificQueryResultSet specificQueryResultSet = queryAO
 				.executeSpecificQueryUsingAlias(specificQuery, accessObjectFactory
 						.getJargonProperties().getMaxFilesAndDirsQueryMax());
-		TestCase.assertNotNull("null result set", specificQueryResultSet);
-		TestCase.assertFalse(
+		Assert.assertNotNull("null result set", specificQueryResultSet);
+		Assert.assertFalse(
 				"no results returned, expected at least ls and lsl",
 				specificQueryResultSet.getResults().isEmpty());
 
@@ -321,8 +321,8 @@ public class SpecificQueryAOTest {
 		SpecificQueryResultSet specificQueryResultSet = queryAO
 				.executeSpecificQueryUsingAlias(specificQuery, accessObjectFactory
 						.getJargonProperties().getMaxFilesAndDirsQueryMax());
-		TestCase.assertNotNull("null result set", specificQueryResultSet);
-		TestCase.assertTrue(
+		Assert.assertNotNull("null result set", specificQueryResultSet);
+		Assert.assertTrue(
 				"expected no results",
 				specificQueryResultSet.getResults().isEmpty());
 
@@ -348,10 +348,10 @@ public class SpecificQueryAOTest {
 				.getSpecificQueryAO(irodsAccount);
 		List<SpecificQueryDefinition> actual = queryAO
 				.listSpecificQueryByAliasLike("ShowCollAcls");
-		TestCase.assertFalse("did not get results from query", actual.isEmpty());
+		Assert.assertFalse("did not get results from query", actual.isEmpty());
 		for (SpecificQueryDefinition definition : actual) {
-			TestCase.assertFalse("no alias", definition.getAlias().isEmpty());
-			TestCase.assertFalse("no query", definition.getSql().isEmpty());
+			Assert.assertFalse("no alias", definition.getAlias().isEmpty());
+			Assert.assertFalse("no query", definition.getSql().isEmpty());
 		}
 	}
 
@@ -445,7 +445,7 @@ public class SpecificQueryAOTest {
 				.getSpecificQueryAO(irodsAccount);
 		SpecificQueryDefinition actual = queryAO
 				.findSpecificQueryByAlias("ShowCollAcls");
-		TestCase.assertEquals("did not find correct query", "ShowCollAcls",
+		Assert.assertEquals("did not find correct query", "ShowCollAcls",
 				actual.getAlias());
 
 	}

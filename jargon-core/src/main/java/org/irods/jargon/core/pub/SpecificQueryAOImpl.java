@@ -3,6 +3,7 @@ package org.irods.jargon.core.pub;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.irods.jargon.core.connection.DiscoveredServerPropertiesCache;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.exception.DataNotFoundException;
@@ -451,7 +452,6 @@ public class SpecificQueryAOImpl extends IRODSGenericAO implements
 			hasMoreRecords = true;
 		}
 
-		// FIXME: clean up has more results by pulling into abstract superclass
 		List<IRODSQueryResultRow> resultRows = QueryResultProcessingUtils
 				.translateResponseIntoResultSet(response,
 						specificQueryDefinition.getColumnNames(), continuation,
@@ -518,6 +518,37 @@ public class SpecificQueryAOImpl extends IRODSGenericAO implements
 
 		return new SpecificQueryResultSet(specificQuery, resultRows,
 				columnNames, hasMoreRecords, continuation);
+	}
+	
+	/**
+	 * Check and see if, as a result of previous requests, I know that the jargon specific queries required to support
+	 * specific query via this API are available.  This method will return <code>true</code> only if I know that the support is
+	 * not there.  If I have not checked previously, or I am not using the dynamic properties cache, which is configured via
+	 * {@link JargonProperties}, then a <code>false</code> will be returned.
+	 * @return <code>boolean</code> that will only be <code>true</code> if I know that the jargon specific query
+	 * support is not configured.  This can be used to determine whether it is worth bothering to issue such requests.
+	 * <p/>
+	 * Currently, this still needs to be wired into the specific query support, so consider this experimental
+	 */
+	public boolean isSpecificQueryJargonSupportKnownMissing() {
+		
+		if (this.getIRODSSession().isUsingDynamicServerPropertiesCache()) {
+			return false;
+		}
+		
+		String support = this.getIRODSSession().getDiscoveredServerPropertiesCache()
+				.retrieveValue(this.getIRODSAccount().getHost(), this.getIRODSAccount().getZone(), DiscoveredServerPropertiesCache.JARGON_SPECIFIC_QUERIES_SUPPORTED);
+	
+		if (support == null) {
+			return false;
+		}
+		
+		if (support.equals(DiscoveredServerPropertiesCache.IS_FALSE)) {
+			return true;
+		} else {
+			return false;
+		}
+	
 	}
 
 }

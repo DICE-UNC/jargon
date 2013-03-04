@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.irods.jargon.usertagging;
+package org.irods.jargon.usertagging.tags;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +22,7 @@ import org.irods.jargon.core.query.AVUQueryOperatorEnum;
 import org.irods.jargon.core.query.JargonQueryException;
 import org.irods.jargon.core.query.MetaDataAndDomainData;
 import org.irods.jargon.core.query.MetaDataAndDomainData.MetadataDomain;
+import org.irods.jargon.usertagging.AbstractIRODSTaggingService;
 import org.irods.jargon.usertagging.domain.IRODSTagValue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -121,9 +122,10 @@ public final class IRODSTaggingServiceImpl extends AbstractIRODSTaggingService
 		DataObjectAO dataObjectAO = irodsAccessObjectFactory
 				.getDataObjectAO(irodsAccount);
 		try {
-		dataObjectAO.addAVUMetadata(dataObjectAbsolutePath, avuData);
+			dataObjectAO.addAVUMetadata(dataObjectAbsolutePath, avuData);
 		} catch (FileNotFoundException fnf) {
-			throw new DataNotFoundException("did not find data object in query", fnf);
+			throw new DataNotFoundException(
+					"did not find data object in query", fnf);
 		}
 		log.debug("tag added successfully");
 
@@ -173,15 +175,16 @@ public final class IRODSTaggingServiceImpl extends AbstractIRODSTaggingService
 		/*
 		 * Update metadata
 		 */
-		
+
 		try {
 
-		deleteDescriptionFromDataObject(dataObjectAbsolutePath,
-				currentIrodsDescriptionValue);
-		addDescriptionToDataObject(dataObjectAbsolutePath,
-				irodsDescriptionValue);
+			deleteDescriptionFromDataObject(dataObjectAbsolutePath,
+					currentIrodsDescriptionValue);
+			addDescriptionToDataObject(dataObjectAbsolutePath,
+					irodsDescriptionValue);
 		} catch (FileNotFoundException fnf) {
-			throw new DataNotFoundException("did not find data object in query", fnf);
+			throw new DataNotFoundException(
+					"did not find data object in query", fnf);
 		}
 		log.info("update done");
 
@@ -445,7 +448,8 @@ public final class IRODSTaggingServiceImpl extends AbstractIRODSTaggingService
 	 */
 	@Override
 	public List<IRODSTagValue> getTagsOnDataObject(
-			final String dataObjectAbsolutePath) throws DataNotFoundException, JargonException {
+			final String dataObjectAbsolutePath) throws DataNotFoundException,
+			JargonException {
 
 		if (dataObjectAbsolutePath == null || dataObjectAbsolutePath.isEmpty()) {
 			throw new JargonException("null or empty dataObjectAbsolutepath");
@@ -459,8 +463,8 @@ public final class IRODSTaggingServiceImpl extends AbstractIRODSTaggingService
 					AVUQueryPart.UNITS, AVUQueryOperatorEnum.EQUAL,
 					UserTaggingConstants.TAG_AVU_UNIT));
 			avuQueryElements.add(AVUQueryElement.instanceForValueQuery(
-					AVUQueryPart.VALUE, AVUQueryOperatorEnum.EQUAL, this
-							.getIrodsAccount().getUserName()));
+					AVUQueryPart.VALUE, AVUQueryOperatorEnum.EQUAL,
+					getIrodsAccount().getUserName()));
 		} catch (JargonQueryException e) {
 			log.error("error on metadata query, rethrow as JargonException", e);
 			throw new JargonException(e);
@@ -478,7 +482,8 @@ public final class IRODSTaggingServiceImpl extends AbstractIRODSTaggingService
 							avuQueryElements, dataFile.getParent(),
 							dataFile.getName());
 		} catch (FileNotFoundException fnf) {
-			throw new DataNotFoundException("file not found querying for data", fnf);
+			throw new DataNotFoundException("file not found querying for data",
+					fnf);
 		} catch (JargonQueryException e) {
 			log.error("error on metadata query, rethrow as JargonException", e);
 			throw new JargonException(e);
@@ -520,8 +525,8 @@ public final class IRODSTaggingServiceImpl extends AbstractIRODSTaggingService
 					AVUQueryPart.UNITS, AVUQueryOperatorEnum.EQUAL,
 					UserTaggingConstants.DESCRIPTION_AVU_UNIT));
 			avuQueryElements.add(AVUQueryElement.instanceForValueQuery(
-					AVUQueryPart.VALUE, AVUQueryOperatorEnum.EQUAL, this
-							.getIrodsAccount().getUserName()));
+					AVUQueryPart.VALUE, AVUQueryOperatorEnum.EQUAL,
+					getIrodsAccount().getUserName()));
 		} catch (JargonQueryException e) {
 			log.error("error on metadata query, rethrow as JargonException", e);
 			throw new JargonException(e);
@@ -539,7 +544,8 @@ public final class IRODSTaggingServiceImpl extends AbstractIRODSTaggingService
 							avuQueryElements, dataFile.getParent(),
 							dataFile.getName());
 		} catch (FileNotFoundException fnf) {
-			throw new DataNotFoundException("did not find data object in query", fnf);
+			throw new DataNotFoundException(
+					"did not find data object in query", fnf);
 		} catch (JargonQueryException e) {
 			log.error("error on metadata query, rethrow as JargonException", e);
 			throw new JargonException(e);
@@ -581,8 +587,8 @@ public final class IRODSTaggingServiceImpl extends AbstractIRODSTaggingService
 					AVUQueryPart.UNITS, AVUQueryOperatorEnum.EQUAL,
 					UserTaggingConstants.DESCRIPTION_AVU_UNIT));
 			avuQueryElements.add(AVUQueryElement.instanceForValueQuery(
-					AVUQueryPart.VALUE, AVUQueryOperatorEnum.EQUAL, this
-							.getIrodsAccount().getUserName()));
+					AVUQueryPart.VALUE, AVUQueryOperatorEnum.EQUAL,
+					getIrodsAccount().getUserName()));
 		} catch (JargonQueryException e) {
 			log.error("error on metadata query, rethrow as JargonException", e);
 			throw new JargonException(e);
@@ -598,7 +604,8 @@ public final class IRODSTaggingServiceImpl extends AbstractIRODSTaggingService
 					.findMetadataValuesByMetadataQueryForCollection(
 							avuQueryElements, collectionAbsolutePath);
 		} catch (FileNotFoundException fnf) {
-			throw new DataNotFoundException("did not find data object in query", fnf);
+			throw new DataNotFoundException(
+					"did not find data object in query", fnf);
 		} catch (JargonQueryException e) {
 			log.error("error on metadata query, rethrow as JargonException", e);
 			throw new JargonException(e);
@@ -741,8 +748,8 @@ public final class IRODSTaggingServiceImpl extends AbstractIRODSTaggingService
 					AVUQueryPart.UNITS, AVUQueryOperatorEnum.EQUAL,
 					UserTaggingConstants.TAG_AVU_UNIT));
 			avuQueryElements.add(AVUQueryElement.instanceForValueQuery(
-					AVUQueryPart.VALUE, AVUQueryOperatorEnum.EQUAL, this
-							.getIrodsAccount().getUserName()));
+					AVUQueryPart.VALUE, AVUQueryOperatorEnum.EQUAL,
+					getIrodsAccount().getUserName()));
 		} catch (JargonQueryException e) {
 			log.error("error on metadata query, rethrow as JargonException", e);
 			throw new JargonException(e);
@@ -759,7 +766,7 @@ public final class IRODSTaggingServiceImpl extends AbstractIRODSTaggingService
 							avuQueryElements, irodsAbsolutePath);
 		} catch (FileNotFoundException fnf) {
 			log.error("did not find data object in query, will return empty list");
-			 return new ArrayList<IRODSTagValue>();
+			return new ArrayList<IRODSTagValue>();
 		} catch (JargonQueryException e) {
 			log.error("error on metadata query, rethrow as JargonException", e);
 			throw new JargonException(e);
@@ -953,9 +960,9 @@ public final class IRODSTaggingServiceImpl extends AbstractIRODSTaggingService
 		log.info("tag value:{}", irodsTagValue);
 
 		if (metadataDomain == MetadataDomain.COLLECTION) {
-			this.deleteTagFromCollection(domainUniqueName, irodsTagValue);
+			deleteTagFromCollection(domainUniqueName, irodsTagValue);
 		} else if (metadataDomain == MetadataDomain.DATA) {
-			this.deleteTagFromDataObject(domainUniqueName, irodsTagValue);
+			deleteTagFromDataObject(domainUniqueName, irodsTagValue);
 		} else {
 			throw new JargonException("unsupported metadataDomain");
 		}

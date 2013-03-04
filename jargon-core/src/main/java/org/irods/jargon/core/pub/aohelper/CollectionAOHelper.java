@@ -282,14 +282,14 @@ public class CollectionAOHelper extends AOHelper {
 	 * 
 	 * @param row
 	 *            <code>IRODSQueryResultRow</code> with raw data.
-	 * @param parentPath
-	 *            <code>String</code> with the parent path under which the
-	 *            collection or data object lives
+	 * @param totalRecords
+	 *            <code>int</code> with the optional total records in the database, not always available in the iCAT,
+	 *            this can be set to 0 if not available
 	 * @return {@link org.irods.jargon.core.query.CollectionAndDataObjectListingEntry}
 	 * @throws JargonException
 	 */
 	public static CollectionAndDataObjectListingEntry buildCollectionListEntryFromResultSetRowForCollectionQuery(
-			final IRODSQueryResultRow row) throws JargonException {
+			final IRODSQueryResultRow row, final int totalRecords) throws JargonException {
 		CollectionAndDataObjectListingEntry entry = new CollectionAndDataObjectListingEntry();
 		entry.setParentPath(row.getColumn(0));
 		entry.setObjectType(ObjectType.COLLECTION);
@@ -304,6 +304,7 @@ public class CollectionAOHelper extends AOHelper {
 		entry.setOwnerZone(row.getColumn(6));
 
 		entry.setCount(row.getRecordCount());
+		entry.setTotalRecords(totalRecords);
 		entry.setLastResult(row.isLastResult());
 
 		log.debug("listing entry built {}", entry.toString());
@@ -316,12 +317,15 @@ public class CollectionAOHelper extends AOHelper {
 	 * create a <code>CollectionAndDataObjectListingEntry</code>
 	 * 
 	 * @param row
-	 *            <code>IRODSQueryResultRow</code> with raw data.
+	 *            <code>IRODSQueryResultRow</code> with raw data
+	 * @param totalRecords
+	 *            <code>int</code> with the optional total records in the database, not always available in the iCAT,
+	 *            this can be set to 0 if not available
 	 * @return {@link org.irods.jargon.core.query.CollectionAndDataObjectListingEntry}
 	 * @throws JargonException
 	 */
 	public static CollectionAndDataObjectListingEntry buildCollectionListEntryFromResultSetRowForDataObjectQuery(
-			final IRODSQueryResultRow row) throws JargonException {
+			final IRODSQueryResultRow row,final int totalRecords) throws JargonException {
 		CollectionAndDataObjectListingEntry entry = new CollectionAndDataObjectListingEntry();
 		entry.setParentPath(row.getColumn(0));
 		entry.setObjectType(ObjectType.DATA_OBJECT);
@@ -337,6 +341,7 @@ public class CollectionAOHelper extends AOHelper {
 		entry.setOwnerName(row.getColumn(7));
 		entry.setCount(row.getRecordCount());
 		entry.setLastResult(row.isLastResult());
+		entry.setTotalRecords(totalRecords);
 
 		log.debug("listing entry built {}", entry.toString());
 

@@ -126,7 +126,7 @@ public class IRODSGenQueryExecutorImplBuiilderQueriesTest {
 		AbstractIRODSQueryResultSet resultSet = irodsGenQueryExecutor
 				.executeIRODSQuery(query, 0);
 
-		TestCase.assertTrue("did not get row count", resultSet.getTotalRecords() > 0);
+		Assert.assertTrue("did not get row count", resultSet.getTotalRecords() > 0);
 
 	}
 

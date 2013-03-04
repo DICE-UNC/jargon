@@ -1,8 +1,7 @@
 package org.irods.jargon.usertagging.domain;
 
 
-import junit.framework.TestCase;
-
+import junit.framework.Assert;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.query.MetaDataAndDomainData.MetadataDomain;
 import org.junit.AfterClass;
@@ -29,14 +28,14 @@ public class IRODSTagGroupingTest {
 		
 		IRODSTagGrouping irodsTagGrouping = new IRODSTagGrouping(expectedMetadataDomain, expectedDomainName, expectedTags, expectedUser);
 		
-		TestCase.assertEquals(expectedUser, irodsTagGrouping.getUserName());
-		TestCase.assertEquals(expectedDomainName, irodsTagGrouping.getDomainUniqueName());
-		TestCase.assertEquals(expectedTags, irodsTagGrouping.getSpaceDelimitedTagsForDomain());
-		TestCase.assertEquals(expectedMetadataDomain, irodsTagGrouping.getMetadataDomain());
+		Assert.assertEquals(expectedUser, irodsTagGrouping.getUserName());
+		Assert.assertEquals(expectedDomainName, irodsTagGrouping.getDomainUniqueName());
+		Assert.assertEquals(expectedTags, irodsTagGrouping.getSpaceDelimitedTagsForDomain());
+		Assert.assertEquals(expectedMetadataDomain, irodsTagGrouping.getMetadataDomain());
 		
 	}
 	
-	@Test(expected=JargonException.class)
+	@Test(expected=IllegalArgumentException.class)
 	public void createInstanceBlankUserTest() throws Exception {
 		
 		String expectedUser = "";
@@ -48,7 +47,7 @@ public class IRODSTagGroupingTest {
 		
 	}
 	
-	@Test(expected=JargonException.class)
+	@Test(expected=IllegalArgumentException.class)
 	public void createInstanceNullUserTest() throws Exception {
 		
 		String expectedUser = null;
@@ -60,7 +59,7 @@ public class IRODSTagGroupingTest {
 		
 	}
 	
-	@Test(expected=JargonException.class)
+	@Test(expected=IllegalArgumentException.class)
 	public void createInstanceBlankDomainTest() throws Exception {
 		
 		String expectedUser = "user";
@@ -72,7 +71,7 @@ public class IRODSTagGroupingTest {
 		
 	}
 	
-	@Test(expected=JargonException.class)
+	@Test(expected=IllegalArgumentException.class)
 	public void createInstanceNullDomainTest() throws Exception {
 		
 		String expectedUser = "user";

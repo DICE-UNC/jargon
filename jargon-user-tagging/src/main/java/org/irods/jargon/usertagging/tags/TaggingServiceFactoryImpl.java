@@ -1,4 +1,4 @@
-package org.irods.jargon.usertagging;
+package org.irods.jargon.usertagging.tags;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
@@ -24,8 +24,12 @@ public class TaggingServiceFactoryImpl implements TaggingServiceFactory {
 
 	}
 
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.usertagging.TaggingServiceFactory#instanceFreeTaggingService(org.irods.jargon.core.connection.IRODSAccount)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.usertagging.TaggingServiceFactory#instanceFreeTaggingService
+	 * (org.irods.jargon.core.connection.IRODSAccount)
 	 */
 	@Override
 	public FreeTaggingService instanceFreeTaggingService(
@@ -42,8 +46,12 @@ public class TaggingServiceFactoryImpl implements TaggingServiceFactory {
 
 	}
 
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.usertagging.TaggingServiceFactory#instanceIrodsTaggingService(org.irods.jargon.core.connection.IRODSAccount)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.usertagging.TaggingServiceFactory#
+	 * instanceIrodsTaggingService
+	 * (org.irods.jargon.core.connection.IRODSAccount)
 	 */
 	@Override
 	public IRODSTaggingService instanceIrodsTaggingService(
@@ -60,8 +68,12 @@ public class TaggingServiceFactoryImpl implements TaggingServiceFactory {
 
 	}
 
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.usertagging.TaggingServiceFactory#instanceUserTagCloudService(org.irods.jargon.core.connection.IRODSAccount)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.usertagging.TaggingServiceFactory#
+	 * instanceUserTagCloudService
+	 * (org.irods.jargon.core.connection.IRODSAccount)
 	 */
 	@Override
 	public UserTagCloudService instanceUserTagCloudService(

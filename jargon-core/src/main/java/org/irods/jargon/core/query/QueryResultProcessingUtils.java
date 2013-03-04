@@ -51,8 +51,17 @@ public class QueryResultProcessingUtils {
 			final Tag queryResponse, final List<String> columnNames,
 			final int continuation, final int partialStartIndex)
 			throws JargonException {
+		
+		if (queryResponse == null) {
+			// no response, create an empty result set, and never return null
+			log.info("empty result set from query, returning as an empty result set ( no rows found)");
+			return new ArrayList<IRODSQueryResultRow>();
+		}
 
-		List<IRODSQueryResultRow> resultSet = new ArrayList<IRODSQueryResultRow>();
+		int rows = queryResponse.getTag(GenQueryOut.ROW_CNT).getIntValue();
+		log.info("rows returned from iRODS query: {}", rows);
+
+		List<IRODSQueryResultRow> resultSet = new ArrayList<IRODSQueryResultRow>(rows);
 		List<String> row;
 
 		int recordCount;
@@ -65,15 +74,8 @@ public class QueryResultProcessingUtils {
 		boolean lastRecord = (continuation == 0);
 		log.debug("are there more records? {}", lastRecord);
 
-		if (queryResponse == null) {
-			// no response, create an empty result set, and never return null
-			log.info("empty result set from query, returning as an empty result set ( no rows found)");
-			return resultSet;
-		}
-
-		int rows = queryResponse.getTag(GenQueryOut.ROW_CNT).getIntValue();
-		log.info("rows returned from iRODS query: {}", rows);
-
+		
+		
 		int attributes = queryResponse.getTag(GenQueryOut.ATTRIB_CNT)
 				.getIntValue();
 
