@@ -16,12 +16,10 @@ import org.junit.runners.Suite;
 @RunWith(Suite.class)
 @Suite.SuiteClasses({ IRODSSimpleConnectionTest.class,
 		EnvironmentalInfoAccessorTest.class,
-		IRODSSimpleProtocolManagerTest.class,
- IRODSSessionTest.class,
+		IRODSSimpleProtocolManagerTest.class, IRODSSessionTest.class,
 		IRODSServerPropertiesTest.class,
 		DefaultPropertiesJargonConfigTest.class,
-		ConnectionProgressStatusTest.class,
- PipelineConfigurationTest.class,
+		ConnectionProgressStatusTest.class, PipelineConfigurationTest.class,
 		PAMAuthTest.class, DiscoveredServerPropertiesCacheTest.class })
 public class ConnectionTests {
 

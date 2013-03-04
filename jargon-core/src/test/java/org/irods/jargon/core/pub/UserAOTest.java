@@ -9,10 +9,10 @@ import java.util.Properties;
 import junit.framework.Assert;
 
 import org.irods.jargon.core.connection.IRODSAccount;
+import org.irods.jargon.core.connection.IRODSAccount.AuthScheme;
 import org.irods.jargon.core.connection.IRODSProtocolManager;
 import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.connection.IRODSSimpleProtocolManager;
-import org.irods.jargon.core.connection.IRODSAccount.AuthScheme;
 import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.DuplicateDataException;
 import org.irods.jargon.core.exception.JargonException;
@@ -1022,15 +1022,16 @@ public class UserAOTest {
 				environmentalInfoAO.getIRODSServerProperties());
 
 	}
-	
-	
+
 	/**
 	 * Bug [#1070] [iROD-Chat:9099] iDropLiteApplet AuthenticationException
+	 * 
 	 * @throws Exception
-	 * This looks like an iRODS bug, reported, ignored for now....
+	 *             This looks like an iRODS bug, reported, ignored for now....
 	 */
 	@Ignore
-	public void testGenerateTempPasswordWhenPAMAuthenticatedBug1070() throws Exception {
+	public void testGenerateTempPasswordWhenPAMAuthenticatedBug1070()
+			throws Exception {
 
 		if (!testingPropertiesHelper.isTestPAM(testingProperties)) {
 			return;

@@ -53,26 +53,29 @@ public class UserAOHelper {
 		userQuery.append(RodsGenQueryEnum.COL_USER_MODIFY_TIME.getName());
 		return userQuery.toString();
 	}
-	
+
 	/**
-	 * Build the selects appropriate for a user query by appending them to the provided builder
+	 * Build the selects appropriate for a user query by appending them to the
+	 * provided builder
+	 * 
 	 * @param builder
 	 * @throws GenQueryBuilderException
 	 */
-	public static void addUserSelectsToBuilder(final IRODSGenQueryBuilder builder ) throws  GenQueryBuilderException {
-		
+	public static void addUserSelectsToBuilder(
+			final IRODSGenQueryBuilder builder) throws GenQueryBuilderException {
+
 		if (builder == null) {
 			throw new IllegalArgumentException("null builder");
 		}
-		
+
 		builder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_ZONE)
-		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_NAME)
-		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_ID)
-		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_TYPE)
-		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_INFO)
-		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_COMMENT)
-		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_CREATE_TIME)
-		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_MODIFY_TIME);
+				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_NAME)
+				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_ID)
+				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_TYPE)
+				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_INFO)
+				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_COMMENT)
+				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_CREATE_TIME)
+				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_MODIFY_TIME);
 	}
 
 	/**

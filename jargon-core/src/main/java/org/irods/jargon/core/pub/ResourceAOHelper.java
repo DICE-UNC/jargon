@@ -90,38 +90,45 @@ class ResourceAOHelper extends AOHelper {
 		query.append(RodsGenQueryEnum.COL_R_RESC_STATUS.getName());
 		return query.toString();
 	}
-	
+
 	/**
 	 * Build selects for resource
-	 *  @param builder {@link IRODSGenQueryBuilder}
+	 * 
+	 * @param builder
+	 *            {@link IRODSGenQueryBuilder}
 	 */
-	protected void buildResourceSelects(final IRODSGenQueryBuilder builder) throws JargonException {
-		
+	protected void buildResourceSelects(final IRODSGenQueryBuilder builder)
+			throws JargonException {
+
 		if (builder == null) {
 			throw new IllegalArgumentException("null builder");
 		}
-		
+
 		try {
 			builder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_R_RESC_ID)
-			.addSelectAsGenQueryValue( RodsGenQueryEnum.COL_R_RESC_NAME)
-			.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_R_ZONE_NAME)
-			.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_R_TYPE_NAME)
-			.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_R_CLASS_NAME)
-			.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_R_LOC)
-			.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_R_VAULT_PATH)
-			.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_R_FREE_SPACE)
-			.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_R_FREE_SPACE_TIME)
-			.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_R_RESC_INFO)
-			.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_R_RESC_COMMENT)
-			.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_R_CREATE_TIME)
-			.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_R_MODIFY_TIME)
-			.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_R_RESC_STATUS);
+					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_R_RESC_NAME)
+					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_R_ZONE_NAME)
+					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_R_TYPE_NAME)
+					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_R_CLASS_NAME)
+					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_R_LOC)
+					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_R_VAULT_PATH)
+					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_R_FREE_SPACE)
+					.addSelectAsGenQueryValue(
+							RodsGenQueryEnum.COL_R_FREE_SPACE_TIME)
+					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_R_RESC_INFO)
+					.addSelectAsGenQueryValue(
+							RodsGenQueryEnum.COL_R_RESC_COMMENT)
+					.addSelectAsGenQueryValue(
+							RodsGenQueryEnum.COL_R_CREATE_TIME)
+					.addSelectAsGenQueryValue(
+							RodsGenQueryEnum.COL_R_MODIFY_TIME)
+					.addSelectAsGenQueryValue(
+							RodsGenQueryEnum.COL_R_RESC_STATUS);
 		} catch (GenQueryBuilderException e) {
 			throw new JargonException(e);
 		}
-	
-	}
 
+	}
 
 	/**
 	 * From a query result row, build a <code>Resource</code> domain object

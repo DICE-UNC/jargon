@@ -13,7 +13,8 @@ public class SimpleQueryTest {
 	public void testInstanceOneArgValid() throws Exception {
 		String query = "query";
 		String args = "args";
-		AbstractAliasedQuery sq = SimpleQuery.instanceWithOneArgument(query, args, 0);
+		AbstractAliasedQuery sq = SimpleQuery.instanceWithOneArgument(query,
+				args, 0);
 		Assert.assertEquals("invalid query value", query, sq.getQueryString());
 		Assert.assertEquals("invalid args", 1, sq.getArguments().size());
 	}
@@ -56,8 +57,8 @@ public class SimpleQueryTest {
 		String query = "query";
 		String arg1 = "arg1";
 		String arg2 = "arg2";
-		AbstractAliasedQuery sq = SimpleQuery.instanceWithTwoArguments(query, arg1,
-				arg2, 0);
+		AbstractAliasedQuery sq = SimpleQuery.instanceWithTwoArguments(query,
+				arg1, arg2, 0);
 		Assert.assertEquals("invalid query value", query, sq.getQueryString());
 		Assert.assertEquals("invalid args", 2, sq.getArguments().size());
 		Assert.assertEquals("did not set args correctly", arg1, sq

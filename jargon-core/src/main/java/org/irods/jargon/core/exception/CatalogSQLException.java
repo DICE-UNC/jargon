@@ -7,7 +7,7 @@ package org.irods.jargon.core.exception;
  * -806000 error in iRODS caused by catalog sql exception.
  * 
  * @author Mike Conway - DICE (www.irods.org)
- *
+ * 
  */
 public class CatalogSQLException extends JargonException {
 
@@ -19,7 +19,7 @@ public class CatalogSQLException extends JargonException {
 	/**
 	 * @param message
 	 */
-	public CatalogSQLException(String message) {
+	public CatalogSQLException(final String message) {
 		super(message);
 	}
 
@@ -27,14 +27,14 @@ public class CatalogSQLException extends JargonException {
 	 * @param message
 	 * @param cause
 	 */
-	public CatalogSQLException(String message, Throwable cause) {
+	public CatalogSQLException(final String message, final Throwable cause) {
 		super(message, cause);
 	}
 
 	/**
 	 * @param cause
 	 */
-	public CatalogSQLException(Throwable cause) {
+	public CatalogSQLException(final Throwable cause) {
 		super(cause);
 	}
 
@@ -43,8 +43,8 @@ public class CatalogSQLException extends JargonException {
 	 * @param cause
 	 * @param underlyingIRODSExceptionCode
 	 */
-	public CatalogSQLException(String message, Throwable cause,
-			int underlyingIRODSExceptionCode) {
+	public CatalogSQLException(final String message, final Throwable cause,
+			final int underlyingIRODSExceptionCode) {
 		super(message, cause, underlyingIRODSExceptionCode);
 	}
 
@@ -52,7 +52,8 @@ public class CatalogSQLException extends JargonException {
 	 * @param cause
 	 * @param underlyingIRODSExceptionCode
 	 */
-	public CatalogSQLException(Throwable cause, int underlyingIRODSExceptionCode) {
+	public CatalogSQLException(final Throwable cause,
+			final int underlyingIRODSExceptionCode) {
 		super(cause, underlyingIRODSExceptionCode);
 	}
 
@@ -60,7 +61,8 @@ public class CatalogSQLException extends JargonException {
 	 * @param message
 	 * @param underlyingIRODSExceptionCode
 	 */
-	public CatalogSQLException(String message, int underlyingIRODSExceptionCode) {
+	public CatalogSQLException(final String message,
+			final int underlyingIRODSExceptionCode) {
 		super(message, underlyingIRODSExceptionCode);
 	}
 

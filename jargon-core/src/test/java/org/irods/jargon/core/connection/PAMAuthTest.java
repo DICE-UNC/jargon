@@ -3,7 +3,6 @@ package org.irods.jargon.core.connection;
 import java.util.Properties;
 
 import junit.framework.Assert;
-import junit.framework.TestCase;
 
 import org.irods.jargon.core.connection.IRODSAccount.AuthScheme;
 import org.irods.jargon.core.connection.auth.AuthResponse;
@@ -34,10 +33,12 @@ public class PAMAuthTest {
 
 	@Test
 	public final void testPAMAuthWithAnonUsesStandardAuth() throws Exception {
-		IRODSAccount irodsAccount = testingPropertiesHelper.buildAnonymousIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildAnonymousIRODSAccountFromTestProperties(testingProperties);
 		irodsAccount.setAuthenticationScheme(AuthScheme.PAM);
 		AuthenticationFactory authFactory = new AuthenticationFactoryImpl();
-		AuthMechanism authMechanism = authFactory.instanceAuthMechanism(irodsAccount);
+		AuthMechanism authMechanism = authFactory
+				.instanceAuthMechanism(irodsAccount);
 		boolean isStd = authMechanism instanceof StandardIRODSAuth;
 		Assert.assertTrue("did not revert to standard auth for anonymous",
 				isStd);

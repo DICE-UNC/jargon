@@ -487,8 +487,8 @@ public interface IRODSAccessObjectFactory {
 	 * Handy method to see if we're using the dynamic server properties cache.
 	 * This is set in the jargon properties.
 	 * 
-	 * @return <code>boolean</code> true if jargon methods can store and refer to cached 
-	 * properties of an iRODS server
+	 * @return <code>boolean</code> true if jargon methods can store and refer
+	 *         to cached properties of an iRODS server
 	 */
 	boolean isUsingDynamicServerPropertiesCache();
 

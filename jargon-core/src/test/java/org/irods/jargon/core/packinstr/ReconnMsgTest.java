@@ -21,8 +21,10 @@ public class ReconnMsgTest {
 
 	@Test
 	public final void testReconnMsg() {
-		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
-		StartupResponseData startupResponseData = new StartupResponseData(0, "test", "test", 0, "test", "test");
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		StartupResponseData startupResponseData = new StartupResponseData(0,
+				"test", "test", 0, "test", "test");
 		new ReconnMsg(irodsAccount, startupResponseData);
 		// just looking for no exceptions
 	}

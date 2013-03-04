@@ -7,14 +7,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * This object helps deal with a complication of listing the contents of an iRODS collection, specifically, that the sub-collections and data objects 
- * underneath the given path are derived from two separate queries.  Each of these queries might have different paging statuses.  
+ * This object helps deal with a complication of listing the contents of an
+ * iRODS collection, specifically, that the sub-collections and data objects
+ * underneath the given path are derived from two separate queries. Each of
+ * these queries might have different paging statuses.
  * <p/>
- * This object returns such a mixed listing from the multiple queries, along with properties that can assist in comprehending 
- * the paging status so that subsequent queries can be made.
- *
+ * This object returns such a mixed listing from the multiple queries, along
+ * with properties that can assist in comprehending the paging status so that
+ * subsequent queries can be made.
+ * 
  * @author Mike Conway - DICE (www.irods.org)
- *
+ * 
  */
 public class PagingAwareCollectionListing {
 
@@ -22,56 +25,62 @@ public class PagingAwareCollectionListing {
 	 * Offset into collections represented by the results
 	 */
 	private int collectionsOffset = 0;
-	
+
 	/**
 	 * Offset into data objects represented by the results
 	 */
 	private int dataObjectsOffset = 0;
-	
+
 	/**
 	 * Count of collections in results, will be 0 if no collections
 	 */
 	private int collectionsCount = 0;
-	
+
 	/**
-	 * Total records available in the catalog (may not be available on all databases)
+	 * Total records available in the catalog (may not be available on all
+	 * databases)
 	 */
 	private int collectionsTotalRecords = 0;
-	
+
 	/**
 	 * Count of files in results, will be 0 if no files
 	 */
 	private int dataObjectsCount = 0;
-	
+
 	/**
-	 * Total records available in the catalog (may not be available on all databases)
+	 * Total records available in the catalog (may not be available on all
+	 * databases)
 	 */
 	private int dataObjectsTotalRecords = 0;
-	
+
 	/**
-	 * Indicates whether the set of collections is complete, or whether more results exist.  Will be <code>true</code>
-	 * if complete OR if no collections exist
+	 * Indicates whether the set of collections is complete, or whether more
+	 * results exist. Will be <code>true</code> if complete OR if no collections
+	 * exist
 	 */
 	private boolean collectionsComplete = true;
-	
+
 	/**
-	 * Indicates whether the set of data objects is complete, or whether more results exist.  Will be <code>true</code>
-	 * if complete OR if no data objects exist
+	 * Indicates whether the set of data objects is complete, or whether more
+	 * results exist. Will be <code>true</code> if complete OR if no data
+	 * objects exist
 	 */
 	private boolean dataObjectsComplete = true;
-	
+
 	/**
 	 * Reflects the page size
 	 */
 	private int pageSizeUtilized = 0;
-	
+
 	/**
-	 * List from the query, will contain a set of collections and data objects with a paging status reflected in
-	 * this object.
+	 * List from the query, will contain a set of collections and data objects
+	 * with a paging status reflected in this object.
 	 */
 	private List<CollectionAndDataObjectListingEntry> collectionAndDataObjectListingEntries = new ArrayList<CollectionAndDataObjectListingEntry>();
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
@@ -98,8 +107,7 @@ public class PagingAwareCollectionListing {
 		sb.append(pageSizeUtilized);
 		return sb.toString();
 	}
-	
-	
+
 	/**
 	 * Default (no-values) constructor for simple value object
 	 */
@@ -110,7 +118,7 @@ public class PagingAwareCollectionListing {
 		return collectionsOffset;
 	}
 
-	public void setCollectionsOffset(int collectionsOffset) {
+	public void setCollectionsOffset(final int collectionsOffset) {
 		this.collectionsOffset = collectionsOffset;
 	}
 
@@ -118,7 +126,7 @@ public class PagingAwareCollectionListing {
 		return dataObjectsOffset;
 	}
 
-	public void setDataObjectsOffset(int dataObjectsOffset) {
+	public void setDataObjectsOffset(final int dataObjectsOffset) {
 		this.dataObjectsOffset = dataObjectsOffset;
 	}
 
@@ -126,7 +134,7 @@ public class PagingAwareCollectionListing {
 		return collectionsCount;
 	}
 
-	public void setCollectionsCount(int collectionsCount) {
+	public void setCollectionsCount(final int collectionsCount) {
 		this.collectionsCount = collectionsCount;
 	}
 
@@ -134,7 +142,7 @@ public class PagingAwareCollectionListing {
 		return dataObjectsCount;
 	}
 
-	public void setDataObjectsCount(int dataObjectsCount) {
+	public void setDataObjectsCount(final int dataObjectsCount) {
 		this.dataObjectsCount = dataObjectsCount;
 	}
 
@@ -142,7 +150,7 @@ public class PagingAwareCollectionListing {
 		return collectionsComplete;
 	}
 
-	public void setCollectionsComplete(boolean collectionsComplete) {
+	public void setCollectionsComplete(final boolean collectionsComplete) {
 		this.collectionsComplete = collectionsComplete;
 	}
 
@@ -150,7 +158,7 @@ public class PagingAwareCollectionListing {
 		return dataObjectsComplete;
 	}
 
-	public void setDataObjectsComplete(boolean dataObjectsComplete) {
+	public void setDataObjectsComplete(final boolean dataObjectsComplete) {
 		this.dataObjectsComplete = dataObjectsComplete;
 	}
 
@@ -158,7 +166,7 @@ public class PagingAwareCollectionListing {
 		return pageSizeUtilized;
 	}
 
-	public void setPageSizeUtilized(int pageSizeUtilized) {
+	public void setPageSizeUtilized(final int pageSizeUtilized) {
 		this.pageSizeUtilized = pageSizeUtilized;
 	}
 
@@ -167,7 +175,7 @@ public class PagingAwareCollectionListing {
 	}
 
 	public void setCollectionAndDataObjectListingEntries(
-			List<CollectionAndDataObjectListingEntry> collectionAndDataObjectListingEntries) {
+			final List<CollectionAndDataObjectListingEntry> collectionAndDataObjectListingEntries) {
 		this.collectionAndDataObjectListingEntries = collectionAndDataObjectListingEntries;
 	}
 
@@ -175,7 +183,7 @@ public class PagingAwareCollectionListing {
 		return collectionsTotalRecords;
 	}
 
-	public void setCollectionsTotalRecords(int collectionsTotalRecords) {
+	public void setCollectionsTotalRecords(final int collectionsTotalRecords) {
 		this.collectionsTotalRecords = collectionsTotalRecords;
 	}
 
@@ -183,7 +191,7 @@ public class PagingAwareCollectionListing {
 		return dataObjectsTotalRecords;
 	}
 
-	public void setDataObjectsTotalRecords(int dataObjectsTotalRecords) {
+	public void setDataObjectsTotalRecords(final int dataObjectsTotalRecords) {
 		this.dataObjectsTotalRecords = dataObjectsTotalRecords;
 	}
 

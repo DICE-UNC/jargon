@@ -300,7 +300,7 @@ public class IRODSSession {
 			irodsProtocol = connectAndAddToProtocolsMap(irodsAccount,
 					irodsProtocols);
 		} else if (irodsProtocol.isConnected()) {
-			
+
 			log.debug("session using previously established connection:{}",
 					irodsProtocol);
 		} else {
@@ -436,7 +436,7 @@ public class IRODSSession {
 		if (irodsAccount == null) {
 			throw new IllegalArgumentException("null irodsAccount");
 		}
-		
+
 		log.debug("closing irods session for: {}", irodsAccount.toString());
 		final Map<String, IRODSCommands> irodsProtocols = sessionMap.get();
 		if (irodsProtocols == null) {
@@ -464,9 +464,10 @@ public class IRODSSession {
 		}
 
 	}
-	
+
 	/**
-	 * Signal to the <code>IRODSSession</code> that a connection should be terminated to re-authenticate
+	 * Signal to the <code>IRODSSession</code> that a connection should be
+	 * terminated to re-authenticate
 	 * 
 	 * @param irodsAccount
 	 *            {@link IRODSAccount} that maps the connection
@@ -478,20 +479,21 @@ public class IRODSSession {
 		if (irodsAccount == null) {
 			throw new IllegalArgumentException("null irodsAccount");
 		}
-		
-		log.warn("discardSessionForReauthenticate for: {}", irodsAccount.toString());
+
+		log.warn("discardSessionForReauthenticate for: {}",
+				irodsAccount.toString());
 		final Map<String, IRODSCommands> irodsProtocols = sessionMap.get();
 		if (irodsProtocols == null) {
 			log.warn("discarding session that is already closed, silently ignore");
 			return;
 		}
-		
+
 		IRODSCommands command = irodsProtocols.get(irodsAccount.toString());
 		if (command == null) {
 			log.info("no connection found, ignore");
 			return;
 		}
-		
+
 		log.info("disconnecting:{}", command);
 		command.shutdown();
 		log.info("disconnected...");
@@ -635,10 +637,11 @@ public class IRODSSession {
 	public DiscoveredServerPropertiesCache getDiscoveredServerPropertiesCache() {
 		return discoveredServerPropertiesCache;
 	}
-	
+
 	/**
-	 * Handy method to see if we're using the dynamic server properties cache.  This is set
-	 * in the jargon properties.
+	 * Handy method to see if we're using the dynamic server properties cache.
+	 * This is set in the jargon properties.
+	 * 
 	 * @return
 	 */
 	public boolean isUsingDynamicServerPropertiesCache() {

@@ -1097,7 +1097,6 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 
 	}
 
-	
 	@Override
 	public void setAccessPermission(final String zone,
 			final String absolutePath, final String userName,

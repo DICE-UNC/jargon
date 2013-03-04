@@ -5,8 +5,9 @@ package org.irods.jargon.core.exception;
 
 /**
  * Exception in specific query processing. (-853000)
+ * 
  * @author Mike Conway - DICE (www.irods.org)
- *
+ * 
  */
 public class SpecificQueryException extends JargonException {
 
@@ -15,7 +16,7 @@ public class SpecificQueryException extends JargonException {
 	/**
 	 * @param message
 	 */
-	public SpecificQueryException(String message) {
+	public SpecificQueryException(final String message) {
 		super(message);
 	}
 
@@ -23,14 +24,14 @@ public class SpecificQueryException extends JargonException {
 	 * @param message
 	 * @param cause
 	 */
-	public SpecificQueryException(String message, Throwable cause) {
+	public SpecificQueryException(final String message, final Throwable cause) {
 		super(message, cause);
 	}
 
 	/**
 	 * @param cause
 	 */
-	public SpecificQueryException(Throwable cause) {
+	public SpecificQueryException(final Throwable cause) {
 		super(cause);
 	}
 
@@ -39,8 +40,8 @@ public class SpecificQueryException extends JargonException {
 	 * @param cause
 	 * @param underlyingIRODSExceptionCode
 	 */
-	public SpecificQueryException(String message, Throwable cause,
-			int underlyingIRODSExceptionCode) {
+	public SpecificQueryException(final String message, final Throwable cause,
+			final int underlyingIRODSExceptionCode) {
 		super(message, cause, underlyingIRODSExceptionCode);
 	}
 
@@ -48,8 +49,8 @@ public class SpecificQueryException extends JargonException {
 	 * @param cause
 	 * @param underlyingIRODSExceptionCode
 	 */
-	public SpecificQueryException(Throwable cause,
-			int underlyingIRODSExceptionCode) {
+	public SpecificQueryException(final Throwable cause,
+			final int underlyingIRODSExceptionCode) {
 		super(cause, underlyingIRODSExceptionCode);
 	}
 
@@ -57,8 +58,8 @@ public class SpecificQueryException extends JargonException {
 	 * @param message
 	 * @param underlyingIRODSExceptionCode
 	 */
-	public SpecificQueryException(String message,
-			int underlyingIRODSExceptionCode) {
+	public SpecificQueryException(final String message,
+			final int underlyingIRODSExceptionCode) {
 		super(message, underlyingIRODSExceptionCode);
 	}
 

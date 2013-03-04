@@ -58,8 +58,8 @@ public class IRODSAccessObjectFactoryImplTest {
 		IRODSAccessObjectFactory irodsAccessObjectFactory = new IRODSAccessObjectFactoryImpl();
 		irodsAccessObjectFactory.getUserAO(irodsAccount);
 	}
-	
-	@Test(expected=AuthenticationException.class)
+
+	@Test(expected = AuthenticationException.class)
 	public final void authenticateWithValidThenInvalid() throws Exception {
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
@@ -77,7 +77,6 @@ public class IRODSAccessObjectFactoryImplTest {
 				.authenticateIRODSAccount(irodsAccount);
 		irodsFileSystem.closeAndEatExceptions();
 	}
-
 
 	@Test
 	public final void authenticateWithValid() throws Exception {

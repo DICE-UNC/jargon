@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Properties;
 
 import junit.framework.Assert;
-import junit.framework.TestCase;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.DataNotFoundException;
@@ -19,7 +18,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class SpecificQueryAOTest {
-	
+
 	private static Properties testingProperties = new Properties();
 	private static TestingPropertiesHelper testingPropertiesHelper = new TestingPropertiesHelper();
 	private static IRODSFileSystem irodsFileSystem;
@@ -37,7 +36,7 @@ public class SpecificQueryAOTest {
 	public static void tearDownAfterClass() throws Exception {
 		irodsFileSystem.closeAndEatExceptions();
 	}
-	
+
 	@Test
 	public void testGetSpecficQueryAO() throws Exception {
 
@@ -54,7 +53,7 @@ public class SpecificQueryAOTest {
 				.getSpecificQueryAO(irodsAccount);
 		Assert.assertNotNull("queryAO is null", queryAO);
 	}
-	
+
 	@Test
 	public void testAddSpecificQuery() throws Exception {
 
@@ -66,17 +65,18 @@ public class SpecificQueryAOTest {
 		if (!environmentalInfoAO.isAbleToRunSpecificQuery()) {
 			return;
 		}
-		
-		SpecificQueryDefinition specificQuery = new SpecificQueryDefinition(this.query, this.alias);
-		
+
+		SpecificQueryDefinition specificQuery = new SpecificQueryDefinition(
+				this.query, this.alias);
+
 		SpecificQueryAO queryAO = irodsFileSystem.getIRODSAccessObjectFactory()
 				.getSpecificQueryAO(irodsAccount);
 		queryAO.addSpecificQuery(specificQuery);
-		
+
 		// just make sure we got here for now
 		Assert.assertTrue(true);
 	}
-	
+
 	@Test
 	public void testRemoveSpecificQuery() throws Exception {
 		IRODSAccount irodsAccount = testingPropertiesHelper
@@ -87,12 +87,13 @@ public class SpecificQueryAOTest {
 		if (!environmentalInfoAO.isAbleToRunSpecificQuery()) {
 			return;
 		}
-		SpecificQueryDefinition specificQuery = new SpecificQueryDefinition(this.query, this.alias);
+		SpecificQueryDefinition specificQuery = new SpecificQueryDefinition(
+				this.query, this.alias);
 
 		SpecificQueryAO queryAO = irodsFileSystem.getIRODSAccessObjectFactory()
 				.getSpecificQueryAO(irodsAccount);
 		queryAO.removeSpecificQuery(specificQuery);
-		
+
 		// just make sure we got here for now
 		Assert.assertTrue(true);
 	}
@@ -119,15 +120,15 @@ public class SpecificQueryAOTest {
 				"ls", 0);
 
 		SpecificQueryResultSet specificQueryResultSet = queryAO
-				.executeSpecificQueryUsingAlias(specificQuery, accessObjectFactory
-						.getJargonProperties().getMaxFilesAndDirsQueryMax());
+				.executeSpecificQueryUsingAlias(specificQuery,
+						accessObjectFactory.getJargonProperties()
+								.getMaxFilesAndDirsQueryMax());
 		Assert.assertNotNull("null result set", specificQueryResultSet);
-		Assert.assertFalse(
-				"no results returned, expected at least ls and lsl",
+		Assert.assertFalse("no results returned, expected at least ls and lsl",
 				specificQueryResultSet.getResults().isEmpty());
 
 	}
-	
+
 	@Test
 	public void testListLikeLS() throws Exception {
 
@@ -221,9 +222,10 @@ public class SpecificQueryAOTest {
 		Assert.assertEquals("R_USER_MAIN.zone_name", colNames.get(1));
 
 	}
-	
+
 	@Test
-	public void parseColumnNamesFromQueryWithCountAndDistinct() throws Exception {
+	public void parseColumnNamesFromQueryWithCountAndDistinct()
+			throws Exception {
 		String query = "select count (distinct R_USER_MAIN.zone_name), R_USER_MAIN.user_name from R_USER_MAIN , R_TOKN_MAIN, R_OBJT_ACCESS, R_COLL_MAIN where "
 				+ "R_OBJT_ACCESS.object_id = R_COLL_MAIN.coll_id AND r_COLL_MAIN.coll_name = ? AND "
 				+ "R_TOKN_MAIN.token_namespace = 'access_type' AND R_USER_MAIN.user_id = 'R_OBJT_ACCESS.user_id AND R_OBJT_ACCESS.access_type_id = R_TOKN_MAIN.token_id";
@@ -281,17 +283,18 @@ public class SpecificQueryAOTest {
 		SpecificQuery specificQuery = SpecificQuery.instanceArguments(
 				collAclQueryAlias, arguments, 0);
 		SpecificQueryResultSet specificQueryResultSet = queryAO
-				.executeSpecificQueryUsingAlias(specificQuery, accessObjectFactory
-						.getJargonProperties().getMaxFilesAndDirsQueryMax());
+				.executeSpecificQueryUsingAlias(specificQuery,
+						accessObjectFactory.getJargonProperties()
+								.getMaxFilesAndDirsQueryMax());
 		Assert.assertNotNull("null result set", specificQueryResultSet);
-		Assert.assertFalse(
-				"no results returned, expected at least ls and lsl",
+		Assert.assertFalse("no results returned, expected at least ls and lsl",
 				specificQueryResultSet.getResults().isEmpty());
 
 	}
-	
+
 	/**
 	 * Bug [#1109] specific query no data found results in exception
+	 * 
 	 * @throws Exception
 	 */
 	@Test
@@ -319,12 +322,12 @@ public class SpecificQueryAOTest {
 		SpecificQuery specificQuery = SpecificQuery.instanceArguments(
 				collAclQueryAlias, arguments, 0);
 		SpecificQueryResultSet specificQueryResultSet = queryAO
-				.executeSpecificQueryUsingAlias(specificQuery, accessObjectFactory
-						.getJargonProperties().getMaxFilesAndDirsQueryMax());
+				.executeSpecificQueryUsingAlias(specificQuery,
+						accessObjectFactory.getJargonProperties()
+								.getMaxFilesAndDirsQueryMax());
 		Assert.assertNotNull("null result set", specificQueryResultSet);
-		Assert.assertTrue(
-				"expected no results",
-				specificQueryResultSet.getResults().isEmpty());
+		Assert.assertTrue("expected no results", specificQueryResultSet
+				.getResults().isEmpty());
 
 	}
 
@@ -374,14 +377,12 @@ public class SpecificQueryAOTest {
 
 		SpecificQueryAO queryAO = accessObjectFactory
 				.getSpecificQueryAO(irodsAccount);
-		queryAO
-				.listSpecificQueryByAliasLike("thisaliasshouldntbeinirodsatallblahblahhennngh");
+		queryAO.listSpecificQueryByAliasLike("thisaliasshouldntbeinirodsatallblahblahhennngh");
 
 	}
-	
+
 	@Test(expected = IllegalArgumentException.class)
-	public void testFindSpecificQueryByAliasNullAlias()
-			throws Exception {
+	public void testFindSpecificQueryByAliasNullAlias() throws Exception {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
@@ -398,8 +399,7 @@ public class SpecificQueryAOTest {
 
 		SpecificQueryAO queryAO = accessObjectFactory
 				.getSpecificQueryAO(irodsAccount);
-		queryAO
-				.listSpecificQueryByAliasLike(null);
+		queryAO.listSpecificQueryByAliasLike(null);
 
 	}
 
@@ -470,6 +470,5 @@ public class SpecificQueryAOTest {
 				.getSpecificQueryAO(irodsAccount);
 		queryAO.findSpecificQueryByAlias("ShowCollAclsButThisNameIsNotFoundItsNot");
 	}
-
 
 }

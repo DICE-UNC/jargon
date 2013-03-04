@@ -107,7 +107,8 @@ public class IRODSErrorScanner {
 		case CAT_SQL_ERR:
 			throw new CatalogSQLException("Catalog sql error");
 		case SPECIFIC_QUERY_EXCEPTION:
-			throw new SpecificQueryException("Exception processing specific query", infoValue);
+			throw new SpecificQueryException(
+					"Exception processing specific query", infoValue);
 		default:
 			throw new JargonException("error code recieved from iRODS:"
 					+ infoValue, infoValue);

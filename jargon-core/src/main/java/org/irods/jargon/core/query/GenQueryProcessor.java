@@ -95,7 +95,6 @@ public class GenQueryProcessor {
 					.getSelectFields()) {
 				columnNames.add(selectField.getSelectFieldColumnName());
 			}
-			
 
 			int totalRecords = response.getTag("totalRowCount").getIntValue();
 			log.info("total records:{}", totalRecords);
@@ -150,8 +149,7 @@ public class GenQueryProcessor {
 	 * @param irodsQueryResultSet
 	 * @throws JargonException
 	 */
-	public void closeResults(
-			final IRODSQueryResultSet irodsQueryResultSet)
+	public void closeResults(final IRODSQueryResultSet irodsQueryResultSet)
 			throws JargonException {
 
 		log.info("getting more results for query");

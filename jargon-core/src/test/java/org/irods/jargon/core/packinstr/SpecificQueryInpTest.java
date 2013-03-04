@@ -25,7 +25,7 @@ public class SpecificQueryInpTest {
 		sb.append("</KeyValPair_PI>\n");
 
 		sb.append("</specificQueryInp_PI>\n");
-		
+
 		Assert.assertEquals("did not get expected tag value", sb.toString(),
 				tagVal);
 	}
@@ -123,7 +123,3 @@ public class SpecificQueryInpTest {
 	}
 
 }
-
-
-
-

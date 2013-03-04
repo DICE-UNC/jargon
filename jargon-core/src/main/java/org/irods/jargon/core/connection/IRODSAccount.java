@@ -220,7 +220,6 @@ public class IRODSAccount implements Serializable {
 				return false;
 			}
 
-
 			return true;
 		} catch (ClassCastException e) {
 			return false;

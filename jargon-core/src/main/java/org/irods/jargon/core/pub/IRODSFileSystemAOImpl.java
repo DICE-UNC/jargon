@@ -60,7 +60,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 		IRODSFileSystemAO {
 
 	static Logger log = LoggerFactory.getLogger(IRODSFileSystemAOImpl.class);
-	
+
 	private final IRODSGenQueryExecutor irodsGenQueryExecutor;
 	private final UserAO userAO;
 	private final CollectionAndDataObjectListAndSearchAO collectionAndDataObjectListAndSearchAO;

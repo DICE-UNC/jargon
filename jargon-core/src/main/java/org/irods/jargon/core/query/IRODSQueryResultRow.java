@@ -111,8 +111,7 @@ public class IRODSQueryResultRow {
 	 */
 	private IRODSQueryResultRow(final List<String> queryResultColumns,
 			final List<String> columnNames, final int recordCount,
-			final boolean lastResult)
-			throws JargonException {
+			final boolean lastResult) throws JargonException {
 
 		if (queryResultColumns == null) {
 			throw new JargonException("queryResultColumns is null");

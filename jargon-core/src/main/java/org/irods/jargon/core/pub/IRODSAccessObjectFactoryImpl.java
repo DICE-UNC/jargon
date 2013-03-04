@@ -67,7 +67,7 @@ public final class IRODSAccessObjectFactoryImpl implements
 		if (irodsAccount == null) {
 			throw new IllegalArgumentException("null irodsAccount");
 		}
-		
+
 		irodsSession.discardSessionForReauthenticate(irodsAccount);
 
 		/*
@@ -640,18 +640,22 @@ public final class IRODSAccessObjectFactoryImpl implements
 		return new SpecificQueryAOImpl(irodsSession, irodsAccount);
 	}
 
-	
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.pub.IRODSAccessObjectFactory#getDiscoveredServerPropertiesCache()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.pub.IRODSAccessObjectFactory#
+	 * getDiscoveredServerPropertiesCache()
 	 */
 	@Override
 	public DiscoveredServerPropertiesCache getDiscoveredServerPropertiesCache() {
 		return getIrodsSession().getDiscoveredServerPropertiesCache();
 	}
 
-	
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.pub.IRODSAccessObjectFactory#isUsingDynamicServerPropertiesCache()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.pub.IRODSAccessObjectFactory#
+	 * isUsingDynamicServerPropertiesCache()
 	 */
 	@Override
 	public boolean isUsingDynamicServerPropertiesCache() {

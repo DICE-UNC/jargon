@@ -135,18 +135,21 @@ public class FileOperationSequences {
 		}
 
 	}
-	
+
 	/**
-	 * Share an IRODSRandomAccess file between threads.  Currently ignored, as the originating use case may be suspect.
-	 * Bug [#1066] Auth Exception on seek
+	 * Share an IRODSRandomAccess file between threads. Currently ignored, as
+	 * the originating use case may be suspect. Bug [#1066] Auth Exception on
+	 * seek
+	 * 
 	 * @throws Exception
 	 */
 	@Ignore
-	public void testShareIRODSRandomAccessFileBetweenThreadsBug1066() throws Exception {
+	public void testShareIRODSRandomAccessFileBetweenThreadsBug1066()
+			throws Exception {
 		String testFileName = "testShareIRODSRandomAccessFileBetweenThreadsBug1066.txt";
 
 		int nbrThreads = 4;
-	
+
 		String absPath = scratchFileUtils
 				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
 		String localFileName = FileGenerator
@@ -171,16 +174,19 @@ public class FileOperationSequences {
 						irodsAccount);
 
 		dataTransferOperationsAO.putOperation(localFile, destFile, null, null);
-		
+
 		ExecutorService exec = Executors.newFixedThreadPool(nbrThreads);
 
-		List<Future<Object>> futures = new ArrayList<Future<Object>>(
-				nbrThreads);
-	
-		IRODSRandomAccessFile randomAccessFile = irodsFileSystem.getIRODSFileFactory(irodsAccount).instanceIRODSRandomAccessFile(destFile);
+		List<Future<Object>> futures = new ArrayList<Future<Object>>(nbrThreads);
+
+		IRODSRandomAccessFile randomAccessFile = irodsFileSystem
+				.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSRandomAccessFile(destFile);
 
 		for (int i = 0; i < nbrThreads; i++) {
-			futures.add(exec.submit(new ShareIRODSRandomAccessFileBetweenThreadsBug1066(randomAccessFile, irodsFileSystem)));
+			futures.add(exec
+					.submit(new ShareIRODSRandomAccessFileBetweenThreadsBug1066(
+							randomAccessFile, irodsFileSystem)));
 		}
 
 		for (Future<Object> future : futures) {
@@ -188,24 +194,24 @@ public class FileOperationSequences {
 		}
 
 		exec.shutdown();
-		
 
 	}
 
 }
 
-class ShareIRODSRandomAccessFileBetweenThreadsBug1066 implements Callable<Object> {
+class ShareIRODSRandomAccessFileBetweenThreadsBug1066 implements
+		Callable<Object> {
 
 	IRODSRandomAccessFile randomAccessFile;
 	IRODSFileSystem irodsFileSystem;
-	
-	 ShareIRODSRandomAccessFileBetweenThreadsBug1066(
-			IRODSRandomAccessFile randomAccessFile, IRODSFileSystem irodsFileSystem) {
+
+	ShareIRODSRandomAccessFileBetweenThreadsBug1066(
+			final IRODSRandomAccessFile randomAccessFile,
+			final IRODSFileSystem irodsFileSystem) {
 		super();
 		this.randomAccessFile = randomAccessFile;
 		this.irodsFileSystem = irodsFileSystem;
 	}
-
 
 	@Override
 	public Object call() throws Exception {
@@ -213,7 +219,7 @@ class ShareIRODSRandomAccessFileBetweenThreadsBug1066 implements Callable<Object
 		irodsFileSystem.closeAndEatExceptions();
 		return null;
 	}
-	
+
 }
 
 class MultiThreadSharingOfDataAOBug1065 implements Callable<DataObject> {
@@ -236,11 +242,14 @@ class MultiThreadSharingOfDataAOBug1065 implements Callable<DataObject> {
 	@Override
 	public DataObject call() throws Exception {
 		DataObject obj = dataObjectAO.findByAbsolutePath(sourceAbsolutePath);
-		TransferControlBlock tcb = dataTransferOperations.getIRODSAccessObjectFactory().buildDefaultTransferControlBlockBasedOnJargonProperties();
+		TransferControlBlock tcb = dataTransferOperations
+				.getIRODSAccessObjectFactory()
+				.buildDefaultTransferControlBlockBasedOnJargonProperties();
 		tcb.getTransferOptions().setForceOption(ForceOption.USE_FORCE);
 		dataTransferOperations.getOperation(sourceAbsolutePath,
 				targetAbsolutePath, "", null, tcb);
-		dataTransferOperations.getIRODSAccessObjectFactory().closeSessionAndEatExceptions();
+		dataTransferOperations.getIRODSAccessObjectFactory()
+				.closeSessionAndEatExceptions();
 		return obj;
 	}
 

@@ -23,14 +23,12 @@ public class IRODSDomainObject {
 	 * Is this the last result from the query or set
 	 */
 	private boolean lastResult = false;
-	
+
 	/**
-	 * Total number of records for the given query.  Note that this is not always available, depending
-	 * on the iCAT database
+	 * Total number of records for the given query. Note that this is not always
+	 * available, depending on the iCAT database
 	 */
 	private int totalRecords = 0;
-
-	
 
 	/**
 	 * Indicates whether this is the last result based on the query or listing
@@ -77,25 +75,27 @@ public class IRODSDomainObject {
 	public void setCount(final int count) {
 		this.count = count;
 	}
-	
+
 	/**
-	 * Total number of records for the given query.  Note that this is not always available, depending
-	 * on the iCAT database
+	 * Total number of records for the given query. Note that this is not always
+	 * available, depending on the iCAT database
 	 * 
-	 * @return <code>int</code> with the total number of records that match this query, not always available and otherwise zero
+	 * @return <code>int</code> with the total number of records that match this
+	 *         query, not always available and otherwise zero
 	 */
 	public int getTotalRecords() {
 		return totalRecords;
 	}
 
 	/**
-	 * Total number of records for the given query.  Note that this is not always available, depending
-	 * on the iCAT database
+	 * Total number of records for the given query. Note that this is not always
+	 * available, depending on the iCAT database
 	 * 
 	 * @param totalRecords
-	 *            <code>int</code> with the total number of records that match this query, not always available and otherwise zero
+	 *            <code>int</code> with the total number of records that match
+	 *            this query, not always available and otherwise zero
 	 */
-	public void setTotalRecords(int totalRecords) {
+	public void setTotalRecords(final int totalRecords) {
 		this.totalRecords = totalRecords;
 	}
 

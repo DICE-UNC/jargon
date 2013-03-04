@@ -211,35 +211,38 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		CollectionAndPath collectionAndPath = MiscIRODSUtils
 				.separateCollectionAndPathFromGivenAbsolutePath(absPath);
 		log.info("collection and path for data object:{}", collectionAndPath);
-		
+
 		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, null);
 
 		dataAOHelper.buildSelects(builder);
-	
+
 		if (collectionAndPath.getCollectionParent() == null
 				|| collectionAndPath.getCollectionParent().isEmpty()) {
 			log.info("ignoring collection path in query");
 		} else {
-			builder.addConditionAsGenQueryField(RodsGenQueryEnum.COL_COLL_NAME, QueryConditionOperators.EQUAL, collectionAndPath.getCollectionParent()
-							.trim());
+			builder.addConditionAsGenQueryField(RodsGenQueryEnum.COL_COLL_NAME,
+					QueryConditionOperators.EQUAL, collectionAndPath
+							.getCollectionParent().trim());
 		}
-		
-		builder.addConditionAsGenQueryField(RodsGenQueryEnum.COL_DATA_NAME, QueryConditionOperators.EQUAL, collectionAndPath
-				.getChildName().trim());
+
+		builder.addConditionAsGenQueryField(RodsGenQueryEnum.COL_DATA_NAME,
+				QueryConditionOperators.EQUAL, collectionAndPath.getChildName()
+						.trim());
 
 		IRODSQueryResultSet resultSet = null;
 		try {
 			IRODSGenQueryFromBuilder irodsQuery = builder
-					.exportIRODSQueryFromBuilder(this.getJargonProperties().getMaxFilesAndDirsQueryMax());
+					.exportIRODSQueryFromBuilder(this.getJargonProperties()
+							.getMaxFilesAndDirsQueryMax());
 			resultSet = irodsGenQueryExecutor
 					.executeIRODSQueryAndCloseResultInZone(irodsQuery, 0,
 							objStat.getOwnerZone());
 
 		} catch (JargonQueryException e) {
-			log.error("query exception for query",  e);
+			log.error("query exception for query", e);
 			throw new JargonException("error in query for data object", e);
 		} catch (GenQueryBuilderException e) {
-			log.error("query exception for query",  e);
+			log.error("query exception for query", e);
 			throw new JargonException("error in query for data object", e);
 		}
 
@@ -280,7 +283,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	 * @see org.irods.jargon.core.pub.DataObjectAO#findWhere(java.lang.String,
 	 * int)
 	 */
-	
+
 	/**
 	 * Transfer a file or directory from the local file system to iRODS.
 	 * <p/>
@@ -1448,13 +1451,11 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 					.addConditionAsGenQueryField(
 							RodsGenQueryEnum.COL_COLL_NAME,
 							QueryConditionOperators.EQUAL,
-							dataObjectFile
-											.getParent())
+							dataObjectFile.getParent())
 					.addConditionAsGenQueryField(
 							RodsGenQueryEnum.COL_DATA_NAME,
 							QueryConditionOperators.EQUAL,
-						dataObjectFile
-											.getName());
+							dataObjectFile.getName());
 
 			for (AVUQueryElement queryElement : avuQuery) {
 				DataAOHelper.appendConditionPartToBuilderQuery(queryElement,
@@ -2096,7 +2097,8 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			throw new IllegalArgumentException("null or empty dataObjectName");
 		}
 
-		IRODSFile irodsFile = this.getIRODSFileFactory().instanceIRODSFile(dataObjectPath, dataObjectName);
+		IRODSFile irodsFile = this.getIRODSFileFactory().instanceIRODSFile(
+				dataObjectPath, dataObjectName);
 		return this.listFileResources(irodsFile.getAbsolutePath());
 
 	}
@@ -2369,16 +2371,20 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 						ModAccessControlInp.WRITE_PERMISSION);
 		getIRODSProtocol().irodsFunction(modAccessControlInp);
 	}
-	
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.pub.DataObjectAO#setAccessPermission(java.lang.String, java.lang.String, java.lang.String, org.irods.jargon.core.protovalues.FilePermissionEnum)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.DataObjectAO#setAccessPermission(java.lang.
+	 * String, java.lang.String, java.lang.String,
+	 * org.irods.jargon.core.protovalues.FilePermissionEnum)
 	 */
 	@Override
 	public void setAccessPermission(final String zone,
 			final String absolutePath, final String userName,
-			final FilePermissionEnum filePermission)
-			throws JargonException {
-		
+			final FilePermissionEnum filePermission) throws JargonException {
+
 		log.info("setAccessPermission()");
 
 		if (zone == null) {
@@ -2413,7 +2419,6 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		}
 
 	}
-
 
 	/*
 	 * (non-Javadoc)
@@ -2718,15 +2723,16 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 		List<UserFilePermission> userFilePermissions = new ArrayList<UserFilePermission>();
 		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, null);
-		
-				DataAOHelper.buildACLQueryForCollectionPathAndDataName(absPath,
-						dataName, builder);
+
+		DataAOHelper.buildACLQueryForCollectionPathAndDataName(absPath,
+				dataName, builder);
 
 		IRODSQueryResultSetInterface resultSet;
 
 		try {
 			IRODSGenQueryFromBuilder irodsQuery = builder
-					.exportIRODSQueryFromBuilder(this.getJargonProperties().getMaxFilesAndDirsQueryMax());
+					.exportIRODSQueryFromBuilder(this.getJargonProperties()
+							.getMaxFilesAndDirsQueryMax());
 			resultSet = irodsGenQueryExecutor
 					.executeIRODSQueryAndCloseResultInZone(irodsQuery, 0,
 							objStat.getOwnerZone());
@@ -2892,8 +2898,9 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		log.info("absolute path: {}", dataObjectAbsolutePath);
 
 		final ModAvuMetadataInp modifyAvuMetadataInp = ModAvuMetadataInp
-				.instanceForModifyDataObjectMetadata(dataObjectAbsolutePath.trim(),
-						currentAvuData, newAvuData);
+				.instanceForModifyDataObjectMetadata(
+						dataObjectAbsolutePath.trim(), currentAvuData,
+						newAvuData);
 
 		log.debug("sending avu request");
 
@@ -3005,15 +3012,17 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, null);
 
 		DataAOHelper.buildACLQueryForCollectionPathAndDataName(absPath,
-						dataName,builder);
-		
-		builder.addConditionAsGenQueryField(RodsGenQueryEnum.COL_USER_NAME, QueryConditionOperators.EQUAL, userName);
-		
+				dataName, builder);
+
+		builder.addConditionAsGenQueryField(RodsGenQueryEnum.COL_USER_NAME,
+				QueryConditionOperators.EQUAL, userName);
+
 		IRODSQueryResultSetInterface resultSet;
 
 		try {
 			IRODSGenQueryFromBuilder irodsQuery = builder
-					.exportIRODSQueryFromBuilder(this.getJargonProperties().getMaxFilesAndDirsQueryMax());
+					.exportIRODSQueryFromBuilder(this.getJargonProperties()
+							.getMaxFilesAndDirsQueryMax());
 			resultSet = irodsGenQueryExecutor
 					.executeIRODSQueryAndCloseResultInZone(irodsQuery, 0,
 							objStat.getOwnerZone());
@@ -3068,18 +3077,20 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		String absPath = this.resolveAbsolutePathGivenObjStat(objStat);
 		CollectionAndPath collName = MiscIRODSUtils
 				.separateCollectionAndPathFromGivenAbsolutePath(absPath);
-		
+
 		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, null);
 
 		resourceAOHelper.buildResourceSelects(builder);
-		
+
 		if (irodsFile.exists() && irodsFile.isFile()) {
-			
-			builder.addConditionAsGenQueryField(RodsGenQueryEnum.COL_COLL_NAME, QueryConditionOperators.EQUAL, collName
-					.getCollectionParent())
-					.addConditionAsGenQueryField(RodsGenQueryEnum.COL_DATA_NAME, QueryConditionOperators.EQUAL, irodsFile
-					.getName());
-		
+
+			builder.addConditionAsGenQueryField(RodsGenQueryEnum.COL_COLL_NAME,
+					QueryConditionOperators.EQUAL,
+					collName.getCollectionParent())
+					.addConditionAsGenQueryField(
+							RodsGenQueryEnum.COL_DATA_NAME,
+							QueryConditionOperators.EQUAL, irodsFile.getName());
+
 		} else {
 			log.error(
 					"file for query does not exist, or is not a file at path:{}",
@@ -3090,11 +3101,11 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		IRODSGenQueryExecutorImpl irodsGenQueryExecutorImpl = new IRODSGenQueryExecutorImpl(
 				this.getIRODSSession(), this.getIRODSAccount());
 
-	
 		IRODSQueryResultSetInterface resultSet;
 		try {
 			IRODSGenQueryFromBuilder irodsQuery = builder
-					.exportIRODSQueryFromBuilder(this.getJargonProperties().getMaxFilesAndDirsQueryMax());
+					.exportIRODSQueryFromBuilder(this.getJargonProperties()
+							.getMaxFilesAndDirsQueryMax());
 			resultSet = irodsGenQueryExecutorImpl
 					.executeIRODSQueryAndCloseResultInZone(irodsQuery, 0,
 							objStat.getOwnerZone());

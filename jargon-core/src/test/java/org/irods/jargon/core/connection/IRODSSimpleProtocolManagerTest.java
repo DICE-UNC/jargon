@@ -3,7 +3,6 @@ package org.irods.jargon.core.connection;
 import java.util.Properties;
 
 import junit.framework.Assert;
-import junit.framework.TestCase;
 
 import org.irods.jargon.core.exception.InvalidUserException;
 import org.irods.jargon.core.exception.JargonException;
@@ -271,8 +270,7 @@ public class IRODSSimpleProtocolManagerTest {
 	public void testCreatesDefaultAuthenticationFactoryImpl() throws Exception {
 		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager
 				.instance();
-		Assert.assertNotNull(irodsConnectionManager
-				.getAuthenticationFactory());
+		Assert.assertNotNull(irodsConnectionManager.getAuthenticationFactory());
 	}
 
 }

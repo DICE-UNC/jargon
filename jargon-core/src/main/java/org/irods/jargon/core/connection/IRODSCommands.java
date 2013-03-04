@@ -1627,11 +1627,15 @@ public class IRODSCommands implements IRODSManagedConnection {
 	public synchronized void setInRestartMode(final boolean inRestartMode) {
 		this.inRestartMode = inRestartMode;
 	}
-	
+
 	/**
-	 * Checks used by <code>ReconnectionManager</code> together in one protected block
-	 * @return <code>boolean</code> of <code>true</code> if the <code>ReconnectionManager</code> should call
-	 * <code>reconnect()</code> on this connection.  Further checks will be made in the actual <code>reconnect()</code> method.
+	 * Checks used by <code>ReconnectionManager</code> together in one protected
+	 * block
+	 * 
+	 * @return <code>boolean</code> of <code>true</code> if the
+	 *         <code>ReconnectionManager</code> should call
+	 *         <code>reconnect()</code> on this connection. Further checks will
+	 *         be made in the actual <code>reconnect()</code> method.
 	 */
 	synchronized boolean isReconnectShouldBeCalled() {
 		return isInRestartMode() && isConnected();

@@ -1,7 +1,6 @@
 package org.irods.jargon.core.packinstr;
 
 import junit.framework.Assert;
-import junit.framework.TestCase;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -22,12 +21,12 @@ public class PamAuthRequestInpTest {
 		PamAuthRequestInp request = PamAuthRequestInp.instance("user",
 				"password");
 		String tagVal = request.getParsedTags();
-		
+
 		StringBuilder sb = new StringBuilder();
 		sb.append("<pamAuthRequestInp_PI><pamUser>user</pamUser>\n");
 		sb.append("<pamPassword>password</pamPassword>\n");
 		sb.append("</pamAuthRequestInp_PI>\n");
-		
+
 		Assert.assertEquals("did not get correct tag format", sb.toString(),
 				tagVal);
 	}
@@ -53,4 +52,3 @@ public class PamAuthRequestInpTest {
 	}
 
 }
-

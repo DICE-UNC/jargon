@@ -13,8 +13,8 @@ public class SimpleQueryInpTest {
 
 	@Test
 	public void testGetTagValue() throws Exception {
-		AbstractAliasedQuery sq = SimpleQuery.instanceWithOneArgument("query", "myargs",
-				0);
+		AbstractAliasedQuery sq = SimpleQuery.instanceWithOneArgument("query",
+				"myargs", 0);
 		SimpleQueryInp simpleQueryInp = SimpleQueryInp.instance(sq);
 		String tagVal = simpleQueryInp.getParsedTags();
 		StringBuilder sb = new StringBuilder();
@@ -60,7 +60,8 @@ public class SimpleQueryInpTest {
 
 	@Test
 	public void testInstance() {
-		AbstractAliasedQuery sq = SimpleQuery.instanceWithOneArgument("query", "", 0);
+		AbstractAliasedQuery sq = SimpleQuery.instanceWithOneArgument("query",
+				"", 0);
 		SimpleQueryInp simpleQueryInp = SimpleQueryInp.instance(sq);
 		Assert.assertNotNull("null simpleQueryInp returned", simpleQueryInp);
 		Assert.assertEquals("did not correctly set api number",

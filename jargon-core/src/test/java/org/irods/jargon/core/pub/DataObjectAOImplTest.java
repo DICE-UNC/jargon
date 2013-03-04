@@ -700,9 +700,11 @@ public class DataObjectAOImplTest {
 		Assert.assertNotNull("null data object, was not found", dataObject);
 
 	}
-	
+
 	/**
-	 * Bug [#1139] Spaces at the begin or end of a data object name will cause an exception
+	 * Bug [#1139] Spaces at the begin or end of a data object name will cause
+	 * an exception
+	 * 
 	 * @throws Exception
 	 */
 	@Test
@@ -736,8 +738,10 @@ public class DataObjectAOImplTest {
 
 		String targetIrodsFileQueryName = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH + " / "	+ testFileName + "   ");
-		DataObject dataObject = dataObjectAO.findByAbsolutePath(targetIrodsFileQueryName);
+						testingProperties, IRODS_TEST_SUBDIR_PATH + " / "
+								+ testFileName + "   ");
+		DataObject dataObject = dataObjectAO
+				.findByAbsolutePath(targetIrodsFileQueryName);
 		Assert.assertNotNull("null data object, was not found", dataObject);
 
 	}
@@ -3614,7 +3618,7 @@ public class DataObjectAOImplTest {
 				FilePermissionEnum.READ, filePermissionEnum);
 
 	}
-	
+
 	@Test
 	public final void testSetAccessPermissionRead() throws Exception {
 		String testFileName = "testSetAccessPermissionRead.txt";
@@ -3635,10 +3639,11 @@ public class DataObjectAOImplTest {
 				.instanceIRODSFile(targetIrodsCollection);
 		dataObjectAO.putLocalDataObjectToIRODS(new File(fileNameOrig),
 				irodsFile, true);
-		
+
 		dataObjectAO.setAccessPermission("", targetIrodsCollection + "/"
 				+ testFileName, testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY), FilePermissionEnum.READ);
+				.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY),
+				FilePermissionEnum.READ);
 
 		// log in as the secondary user and test read access
 		IRODSAccount secondaryAccount = testingPropertiesHelper
@@ -3649,7 +3654,7 @@ public class DataObjectAOImplTest {
 		Assert.assertTrue(irodsFileForSecondaryUser.canRead());
 
 	}
-	
+
 	@Test
 	public final void testSetAccessPermissionWrite() throws Exception {
 		String testFileName = "testSetAccessPermissionWrite.txt";
@@ -3670,10 +3675,11 @@ public class DataObjectAOImplTest {
 				.instanceIRODSFile(targetIrodsCollection);
 		dataObjectAO.putLocalDataObjectToIRODS(new File(fileNameOrig),
 				irodsFile, true);
-		
+
 		dataObjectAO.setAccessPermission("", targetIrodsCollection + "/"
 				+ testFileName, testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY), FilePermissionEnum.WRITE);
+				.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY),
+				FilePermissionEnum.WRITE);
 
 		// log in as the secondary user and test read access
 		IRODSAccount secondaryAccount = testingPropertiesHelper
@@ -3684,8 +3690,7 @@ public class DataObjectAOImplTest {
 		Assert.assertTrue(irodsFileForSecondaryUser.canWrite());
 
 	}
-	
-	
+
 	@Test
 	public final void testSetReadThenRemove() throws Exception {
 		// generate a local scratch file

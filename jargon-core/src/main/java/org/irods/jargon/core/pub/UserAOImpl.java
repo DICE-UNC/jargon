@@ -24,6 +24,7 @@ import org.irods.jargon.core.pub.aohelper.UserAOHelper;
 import org.irods.jargon.core.pub.domain.AvuData;
 import org.irods.jargon.core.pub.domain.User;
 import org.irods.jargon.core.query.GenQueryBuilderException;
+import org.irods.jargon.core.query.GenQueryOrderByField.OrderByType;
 import org.irods.jargon.core.query.IRODSGenQuery;
 import org.irods.jargon.core.query.IRODSGenQueryBuilder;
 import org.irods.jargon.core.query.IRODSGenQueryFromBuilder;
@@ -33,7 +34,6 @@ import org.irods.jargon.core.query.IRODSQueryResultSetInterface;
 import org.irods.jargon.core.query.JargonQueryException;
 import org.irods.jargon.core.query.QueryConditionOperators;
 import org.irods.jargon.core.query.RodsGenQueryEnum;
-import org.irods.jargon.core.query.GenQueryOrderByField.OrderByType;
 import org.irods.jargon.core.security.IRODSPasswordUtilities;
 import org.irods.jargon.core.utils.FederationEnabled;
 import org.slf4j.Logger;
@@ -258,18 +258,20 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 		IRODSQueryResultSet resultSet = null;
 		try {
 			UserAOHelper.addUserSelectsToBuilder(builder);
-			builder.addOrderByGenQueryField(RodsGenQueryEnum.COL_USER_NAME, OrderByType.ASC)
-			.addOrderByGenQueryField(RodsGenQueryEnum.COL_USER_ZONE, OrderByType.ASC);
+			builder.addOrderByGenQueryField(RodsGenQueryEnum.COL_USER_NAME,
+					OrderByType.ASC).addOrderByGenQueryField(
+					RodsGenQueryEnum.COL_USER_ZONE, OrderByType.ASC);
 			IRODSGenQueryFromBuilder irodsQuery = builder
-					.exportIRODSQueryFromBuilder(this.getJargonProperties().getMaxFilesAndDirsQueryMax());
-			resultSet = getGenQueryExecutor()
-					.executeIRODSQueryAndCloseResult(irodsQuery, 0);
+					.exportIRODSQueryFromBuilder(this.getJargonProperties()
+							.getMaxFilesAndDirsQueryMax());
+			resultSet = getGenQueryExecutor().executeIRODSQueryAndCloseResult(
+					irodsQuery, 0);
 
 		} catch (JargonQueryException e) {
-			log.error("query exception for query",  e);
+			log.error("query exception for query", e);
 			throw new JargonException("error in query for user", e);
 		} catch (GenQueryBuilderException e) {
-			log.error("query exception for query",  e);
+			log.error("query exception for query", e);
 			throw new JargonException("error in query for user", e);
 		}
 
@@ -503,9 +505,9 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 		}
 
 		log.info("findUserNameLike {}", userName);
-		
+
 		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, null);
-		
+
 		StringBuilder userQuery = new StringBuilder();
 		userQuery.append(userName.trim());
 		userQuery.append("%");
@@ -513,19 +515,24 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 		IRODSQueryResultSet resultSet = null;
 		try {
 			UserAOHelper.addUserSelectsToBuilder(builder);
-			builder.addOrderByGenQueryField(RodsGenQueryEnum.COL_USER_NAME, OrderByType.ASC)
-			.addOrderByGenQueryField(RodsGenQueryEnum.COL_USER_ZONE, OrderByType.ASC)
-			.addConditionAsGenQueryField(RodsGenQueryEnum.COL_USER_NAME, QueryConditionOperators.LIKE, userQuery.toString());
+			builder.addOrderByGenQueryField(RodsGenQueryEnum.COL_USER_NAME,
+					OrderByType.ASC)
+					.addOrderByGenQueryField(RodsGenQueryEnum.COL_USER_ZONE,
+							OrderByType.ASC)
+					.addConditionAsGenQueryField(
+							RodsGenQueryEnum.COL_USER_NAME,
+							QueryConditionOperators.LIKE, userQuery.toString());
 			IRODSGenQueryFromBuilder irodsQuery = builder
-					.exportIRODSQueryFromBuilder(this.getJargonProperties().getMaxFilesAndDirsQueryMax());
-			resultSet = getGenQueryExecutor()
-					.executeIRODSQueryAndCloseResult(irodsQuery, 0);
+					.exportIRODSQueryFromBuilder(this.getJargonProperties()
+							.getMaxFilesAndDirsQueryMax());
+			resultSet = getGenQueryExecutor().executeIRODSQueryAndCloseResult(
+					irodsQuery, 0);
 
 		} catch (JargonQueryException e) {
-			log.error("query exception for query",  e);
+			log.error("query exception for query", e);
 			throw new JargonException("error in query for user", e);
 		} catch (GenQueryBuilderException e) {
-			log.error("query exception for query",  e);
+			log.error("query exception for query", e);
 			throw new JargonException("error in query for user", e);
 		}
 

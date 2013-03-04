@@ -17,12 +17,12 @@ public class UserFilePermission {
 	private String userId = "";
 	private UserTypeEnum userType = UserTypeEnum.RODS_UNKNOWN;
 	private FilePermissionEnum filePermissionEnum;
-	
+
 	/**
 	 * Default (no-values) constructor
 	 */
 	public UserFilePermission() {
-		
+
 	}
 
 	/**

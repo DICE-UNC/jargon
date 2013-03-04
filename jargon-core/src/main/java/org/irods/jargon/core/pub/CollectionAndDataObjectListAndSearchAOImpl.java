@@ -128,8 +128,12 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 
 	}
 
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.pub.CollectionAndDataObjectListAndSearchAO#listDataObjectsAndCollectionsUnderPathProducingPagingAwareCollectionListing(java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.pub.CollectionAndDataObjectListAndSearchAO#
+	 * listDataObjectsAndCollectionsUnderPathProducingPagingAwareCollectionListing
+	 * (java.lang.String)
 	 */
 	@Override
 	public PagingAwareCollectionListing listDataObjectsAndCollectionsUnderPathProducingPagingAwareCollectionListing(
@@ -145,7 +149,8 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		log.info("absolutePath:{}", absolutePathToParent);
 
 		PagingAwareCollectionListing pagingAwareCollectionListing = new PagingAwareCollectionListing();
-		pagingAwareCollectionListing.setPageSizeUtilized(this.getJargonProperties().getMaxFilesAndDirsQueryMax());
+		pagingAwareCollectionListing.setPageSizeUtilized(this
+				.getJargonProperties().getMaxFilesAndDirsQueryMax());
 		List<CollectionAndDataObjectListingEntry> entries = null;
 		ObjStat objStat = null;
 
@@ -154,21 +159,24 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		} catch (FileNotFoundException fnf) {
 			log.info("didnt find an objStat for the path, account for cases where there are strict acls and give Jargon a chance to drill down to a place where the user has permissions");
 			entries = handleNoListingUnderRootOrHomeByLookingForPublicAndHome(absolutePathToParent);
-			pagingAwareCollectionListing.setCollectionAndDataObjectListingEntries(entries);
+			pagingAwareCollectionListing
+					.setCollectionAndDataObjectListingEntries(entries);
 			pagingAwareCollectionListing.setCollectionsComplete(true);
 			pagingAwareCollectionListing.setCollectionsCount(entries.size());
 			return pagingAwareCollectionListing;
 		}
-		
-		// I can actually get the objStat and do a real listing...otherwise would have returned
+
+		// I can actually get the objStat and do a real listing...otherwise
+		// would have returned
 
 		/*
 		 * See if jargon supports the given object type
 		 */
 		MiscIRODSUtils.evaluateSpecCollSupport(objStat);
-		
-		List<CollectionAndDataObjectListingEntry> queriedEntries = listCollectionsUnderPath(objStat, 0);
-		
+
+		List<CollectionAndDataObjectListingEntry> queriedEntries = listCollectionsUnderPath(
+				objStat, 0);
+
 		/*
 		 * characterize the collections listing by looking at the returned data
 		 */
@@ -179,14 +187,20 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 			pagingAwareCollectionListing.setCollectionsOffset(0);
 		} else {
 			log.info("adding child collections");
-			pagingAwareCollectionListing.setCollectionsComplete(queriedEntries.get(queriedEntries.size() -1).isLastResult());
-			pagingAwareCollectionListing.setCollectionsCount(queriedEntries.get(queriedEntries.size() - 1).getCount());
-			pagingAwareCollectionListing.setCollectionsTotalRecords(queriedEntries.get(0).getTotalRecords());
-			pagingAwareCollectionListing.getCollectionAndDataObjectListingEntries().addAll(queriedEntries);
+			pagingAwareCollectionListing.setCollectionsComplete(queriedEntries
+					.get(queriedEntries.size() - 1).isLastResult());
+			pagingAwareCollectionListing.setCollectionsCount(queriedEntries
+					.get(queriedEntries.size() - 1).getCount());
+			pagingAwareCollectionListing
+					.setCollectionsTotalRecords(queriedEntries.get(0)
+							.getTotalRecords());
+			pagingAwareCollectionListing
+					.getCollectionAndDataObjectListingEntries().addAll(
+							queriedEntries);
 		}
-		
+
 		queriedEntries = listDataObjectsUnderPath(objStat, 0);
-		
+
 		/*
 		 * characterize the data objects listing
 		 */
@@ -197,13 +211,20 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 			pagingAwareCollectionListing.setDataObjectsOffset(0);
 		} else {
 			log.info("adding child data objects");
-			pagingAwareCollectionListing.setDataObjectsComplete(queriedEntries.get(queriedEntries.size() -1).isLastResult());
-			pagingAwareCollectionListing.setDataObjectsCount(queriedEntries.get(queriedEntries.size() - 1).getCount());
-			pagingAwareCollectionListing.setDataObjectsTotalRecords(queriedEntries.get(0).getTotalRecords());
-			pagingAwareCollectionListing.getCollectionAndDataObjectListingEntries().addAll(queriedEntries);
+			pagingAwareCollectionListing.setDataObjectsComplete(queriedEntries
+					.get(queriedEntries.size() - 1).isLastResult());
+			pagingAwareCollectionListing.setDataObjectsCount(queriedEntries
+					.get(queriedEntries.size() - 1).getCount());
+			pagingAwareCollectionListing
+					.setDataObjectsTotalRecords(queriedEntries.get(0)
+							.getTotalRecords());
+			pagingAwareCollectionListing
+					.getCollectionAndDataObjectListingEntries().addAll(
+							queriedEntries);
 		}
-		
-		log.info("pagingAwareCollectionListing:{}", pagingAwareCollectionListing);
+
+		log.info("pagingAwareCollectionListing:{}",
+				pagingAwareCollectionListing);
 		return pagingAwareCollectionListing;
 
 	}
