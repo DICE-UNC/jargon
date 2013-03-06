@@ -5,6 +5,7 @@ package org.irods.jargon.core.connection;
 
 import org.irods.jargon.core.exception.AuthenticationException;
 import org.irods.jargon.core.exception.CatNoAccessException;
+import org.irods.jargon.core.exception.CatalogSQLException;
 import org.irods.jargon.core.exception.CollectionNotEmptyException;
 import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.DuplicateDataException;
@@ -18,6 +19,7 @@ import org.irods.jargon.core.exception.NoAPIPrivException;
 import org.irods.jargon.core.exception.NoMoreRulesException;
 import org.irods.jargon.core.exception.NoResourceDefinedException;
 import org.irods.jargon.core.exception.RemoteScriptExecutionException;
+import org.irods.jargon.core.exception.SpecificQueryException;
 import org.irods.jargon.core.protovalues.ErrorEnum;
 
 /**
@@ -67,7 +69,7 @@ public class IRODSErrorScanner {
 			throw new NoAPIPrivException(
 					"User lacks privileges to invoke the given API");
 		case CAT_NO_ROWS_FOUND:
-			throw new DataNotFoundException("no data found");
+			throw new DataNotFoundException("No data found");
 		case CAT_NAME_EXISTS_AS_COLLECTION:
 			throw new JargonFileOrCollAlreadyExistsException(
 					"Collection already exists", infoValue);
@@ -81,27 +83,32 @@ public class IRODSErrorScanner {
 			throw new FileIntegrityException(
 					"File checksum verification mismatch");
 		case CAT_UNKNOWN_FILE:
-			throw new DataNotFoundException("unknown file");
+			throw new DataNotFoundException("Unknown file");
 		case CAT_UNKNOWN_COLLECTION:
-			throw new DataNotFoundException("unknown collection");
+			throw new DataNotFoundException("Unknown collection");
 		case CAT_COLLECTION_NOT_EMPTY:
-			throw new CollectionNotEmptyException("collection not empty",
+			throw new CollectionNotEmptyException("Collection not empty",
 					infoValue);
 		case EXEC_CMD_ERROR:
 			throw new RemoteScriptExecutionException(
-					"remote script execution error" + infoValue);
+					"Remote script execution error" + infoValue);
 		case USER_FILE_DOES_NOT_EXIST:
-			throw new FileNotFoundException("file not found", infoValue);
+			throw new FileNotFoundException("File not found", infoValue);
 		case CAT_INVALID_GROUP:
-			throw new InvalidGroupException("invalid iRODS group", infoValue);
+			throw new InvalidGroupException("Invalid iRODS group", infoValue);
 		case CAT_NO_ACCESS_PERMISSION:
-			throw new CatNoAccessException("no access to item in catalog");
+			throw new CatNoAccessException("No access to item in catalog");
 		case COLLECTION_NOT_EMPTY:
 			throw new CollectionNotEmptyException("The collection is not empty");
 		case USER_NO_RESC_INPUT_ERR:
-			throw new NoResourceDefinedException("no resource defined");
+			throw new NoResourceDefinedException("No resource defined");
 		case NO_MORE_RULES_ERR:
-			throw new NoMoreRulesException("no more rules");
+			throw new NoMoreRulesException("No more rules");
+		case CAT_SQL_ERR:
+			throw new CatalogSQLException("Catalog sql error");
+		case SPECIFIC_QUERY_EXCEPTION:
+			throw new SpecificQueryException(
+					"Exception processing specific query", infoValue);
 		default:
 			throw new JargonException("error code recieved from iRODS:"
 					+ infoValue, infoValue);

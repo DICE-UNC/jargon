@@ -1,5 +1,6 @@
 package org.irods.jargon.core.pub;
 
+import org.irods.jargon.core.connection.DiscoveredServerPropertiesCache;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSServerProperties;
 import org.irods.jargon.core.connection.IRODSSession;
@@ -67,14 +68,16 @@ public final class IRODSAccessObjectFactoryImpl implements
 			throw new IllegalArgumentException("null irodsAccount");
 		}
 
+		irodsSession.discardSessionForReauthenticate(irodsAccount);
+
 		/*
 		 * Note that this works if the account is already authenticated by
 		 * simply returning the cached response. If the account is not
 		 * authenticated, it will cause the authentication process and cache the
 		 * response.
 		 */
-		AuthResponse authResponse = this.irodsSession.currentConnection(
-				irodsAccount).getAuthResponse();
+		AuthResponse authResponse = irodsSession
+				.currentConnection(irodsAccount).getAuthResponse();
 		log.info("authResponse:{}", authResponse);
 		return authResponse;
 
@@ -636,4 +639,27 @@ public final class IRODSAccessObjectFactoryImpl implements
 		checkIrodsSessionSet();
 		return new SpecificQueryAOImpl(irodsSession, irodsAccount);
 	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.pub.IRODSAccessObjectFactory#
+	 * getDiscoveredServerPropertiesCache()
+	 */
+	@Override
+	public DiscoveredServerPropertiesCache getDiscoveredServerPropertiesCache() {
+		return getIrodsSession().getDiscoveredServerPropertiesCache();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.pub.IRODSAccessObjectFactory#
+	 * isUsingDynamicServerPropertiesCache()
+	 */
+	@Override
+	public boolean isUsingDynamicServerPropertiesCache() {
+		return getIrodsSession().isUsingDynamicServerPropertiesCache();
+	}
+
 }

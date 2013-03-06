@@ -1,6 +1,6 @@
 package org.irods.jargon.core.connection;
 
-import junit.framework.TestCase;
+import junit.framework.Assert;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -27,7 +27,7 @@ public class PipelineConfigurationTest {
 		settableJargonProperties.setReconnectTimeInMillis(1);
 		PipelineConfiguration actual = PipelineConfiguration
 				.instance(settableJargonProperties);
-		TestCase.assertEquals(
+		Assert.assertEquals(
 				"did not set reconnect time as reflected in jargon properties",
 				1, actual.getReconnectTimeInMillis());
 	}

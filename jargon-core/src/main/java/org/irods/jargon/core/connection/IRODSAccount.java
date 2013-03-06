@@ -275,9 +275,6 @@ public class IRODSAccount implements Serializable {
 			if (!getUserName().equals(temp.getUserName())) {
 				return false;
 			}
-			if (!getPassword().equals(temp.getPassword())) {
-				return false;
-			}
 
 			return true;
 		} catch (ClassCastException e) {
@@ -287,8 +284,7 @@ public class IRODSAccount implements Serializable {
 
 	@Override
 	public int hashCode() {
-		return host.hashCode() + port + userName.hashCode()
-				+ password.hashCode();
+		return host.hashCode() + port + userName.hashCode();
 	}
 
 	/**

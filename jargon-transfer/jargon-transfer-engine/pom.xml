@@ -21,7 +21,7 @@
       <dependency>
       <groupId>org.irods.jargon.transfer</groupId>
       <artifactId>jargon-transfer-dao-spring</artifactId>
-	 <version>b964-SNAPSHOT</version>
+	 <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>javassist</groupId>

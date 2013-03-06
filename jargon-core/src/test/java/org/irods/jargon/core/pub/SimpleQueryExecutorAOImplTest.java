@@ -69,8 +69,8 @@ public class SimpleQueryExecutorAOImplTest {
 				.getIRODSAccessObjectFactory().getSimpleQueryExecutorAO(
 						irodsAccount);
 
-		AbstractAliasedQuery simpleQuery = SimpleQuery.instanceWithNoArguments(querySQL,
-				0);
+		AbstractAliasedQuery simpleQuery = SimpleQuery.instanceWithNoArguments(
+				querySQL, 0);
 		IRODSQueryResultSetInterface resultSet = simpleQueryExecutorAO
 				.executeSimpleQuery(simpleQuery);
 		Assert.assertNotNull("got a null result et from the query", resultSet);
@@ -100,8 +100,8 @@ public class SimpleQueryExecutorAOImplTest {
 				.getIRODSAccessObjectFactory().getSimpleQueryExecutorAO(
 						irodsAccount);
 
-		AbstractAliasedQuery simpleQuery = SimpleQuery.instanceWithOneArgument(querySQL,
-				resourceGroup, 0);
+		AbstractAliasedQuery simpleQuery = SimpleQuery.instanceWithOneArgument(
+				querySQL, resourceGroup, 0);
 		IRODSQueryResultSetInterface resultSet = simpleQueryExecutorAO
 				.executeSimpleQuery(simpleQuery);
 		Assert.assertNotNull("got a null result et from the query", resultSet);

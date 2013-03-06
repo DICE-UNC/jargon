@@ -701,22 +701,26 @@ public class IRODSFileOutputStreamTest {
 
 	/**
 	 * Write to an output stream that is underneath the root
+	 * 
 	 * @throws Exception
 	 */
 	@Test
-	public final void testWriteToOutputStreamInSubdirUnderRoot() throws Exception {
+	public final void testWriteToOutputStreamInSubdirUnderRoot()
+			throws Exception {
 		String testCollName = "testWriteToOutputStreamInSubdirUnderRoot";
 		String testFileName = "testWriteToOutputStreamInSubdirUnderRoot.csv";
 
-		String targetIrodsCollection =  "/" + testCollName;
-		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAdminAccountFromTestProperties(testingProperties);
+		String targetIrodsCollection = "/" + testCollName;
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAdminAccountFromTestProperties(testingProperties);
 
 		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
 				.getIRODSAccessObjectFactory();
 		IRODSFileFactory irodsFileFactory = accessObjectFactory
 				.getIRODSFileFactory(irodsAccount);
-		
-		IRODSFile targetCollection  = irodsFileSystem.getIRODSFileFactory(irodsAccount).instanceIRODSFile(targetIrodsCollection);
+
+		IRODSFile targetCollection = irodsFileSystem.getIRODSFileFactory(
+				irodsAccount).instanceIRODSFile(targetIrodsCollection);
 		targetCollection.deleteWithForceOption();
 		targetCollection.mkdirs();
 
@@ -744,7 +748,7 @@ public class IRODSFileOutputStreamTest {
 
 		irodsFileSystem.closeAndEatExceptions();
 	}
-	
+
 }
 
 class OutputStreamWriteTestWriter implements Callable<String> {
@@ -814,8 +818,7 @@ class OutputStreamWriteTestWriter implements Callable<String> {
 		}
 		return targetIrodsFileName;
 	}
-	
-	
+
 	/**
 	 * @return the exception
 	 */

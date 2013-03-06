@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Properties;
 
 import junit.framework.Assert;
-import junit.framework.TestCase;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSServerProperties;
@@ -219,16 +218,15 @@ public class CollectionAOImplTest {
 		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
 				.getIRODSAccessObjectFactory();
 
-		
-		
 		IRODSFile irodsFile = accessObjectFactory.getIRODSFileFactory(
 				irodsAccount).instanceIRODSFile(targetIrodsCollection);
 		irodsFile.mkdirs();
 
 		CollectionAO collectionAO = accessObjectFactory
 				.getCollectionAO(irodsAccount);
-		
-		if (!collectionAO.getIRODSServerProperties().isSupportsCaseInsensitiveQueries()) {
+
+		if (!collectionAO.getIRODSServerProperties()
+				.isSupportsCaseInsensitiveQueries()) {
 			return;
 		}
 
@@ -297,8 +295,7 @@ public class CollectionAOImplTest {
 						targetIrodsCollection);
 		Assert.assertFalse("no query result returned", result.isEmpty());
 	}
-	
-	
+
 	@Test
 	public final void testFindMetadataValuesByMetadataQueryForCollectionCaseInsensitive()
 			throws Exception {
@@ -309,7 +306,8 @@ public class CollectionAOImplTest {
 								+ testDirName);
 
 		// initialize the AVU data
-		String expectedAttribName = "testFindMetadataValuesByMetadataQueryForCollectionCaseInsensitive".toUpperCase();
+		String expectedAttribName = "testFindMetadataValuesByMetadataQueryForCollectionCaseInsensitive"
+				.toUpperCase();
 		String expectedAttribValue = "testFindMetadataValuesByMetadataQueryForCollectionCaseInsensitive";
 		String expectedAttribUnits = "testFindMetadataValuesByMetadataQueryForCollectionCaseInsensitive";
 
@@ -324,8 +322,9 @@ public class CollectionAOImplTest {
 
 		CollectionAO collectionAO = accessObjectFactory
 				.getCollectionAO(irodsAccount);
-		
-		if (!collectionAO.getIRODSServerProperties().isSupportsCaseInsensitiveQueries()) {
+
+		if (!collectionAO.getIRODSServerProperties()
+				.isSupportsCaseInsensitiveQueries()) {
 			return;
 		}
 
@@ -346,7 +345,6 @@ public class CollectionAOImplTest {
 						targetIrodsCollection, 0, true);
 		Assert.assertFalse("no query result returned", result.isEmpty());
 	}
-
 
 	@Test
 	public final void testFindMetadataValuesByMetadataQueryTwoConditions()
@@ -1683,6 +1681,209 @@ public class CollectionAOImplTest {
 	}
 
 	@Test
+	public final void testSetOwnGivingPermission() throws Exception {
+
+		String testFileName = "testSetOwnGivingPermission";
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + "/"
+								+ testFileName);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		CollectionAO collectionAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getCollectionAO(irodsAccount);
+		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetIrodsCollection);
+		irodsFile.mkdirs();
+
+		collectionAO
+				.setAccessPermission(
+						"",
+						targetIrodsCollection,
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY),
+						true, FilePermissionEnum.OWN);
+
+		// log in as the secondary user and test write access
+		IRODSAccount secondaryAccount = testingPropertiesHelper
+				.buildIRODSAccountFromSecondaryTestProperties(testingProperties);
+		IRODSFile irodsFileForSecondaryUser = irodsFileSystem
+				.getIRODSFileFactory(secondaryAccount).instanceIRODSFile(
+						targetIrodsCollection);
+		IRODSFileSystemAO irodsFileSystemAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getIRODSFileSystemAO(
+						secondaryAccount);
+		int permissions = irodsFileSystemAO
+				.getDirectoryPermissions(irodsFileForSecondaryUser);
+
+		Assert.assertTrue(permissions >= IRODSFile.OWN_PERMISSIONS);
+
+	}
+
+	@Test
+	public final void testSetReadGivingPermission() throws Exception {
+
+		String testFileName = "testSetReadGivingPermission";
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + "/"
+								+ testFileName);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		CollectionAO collectionAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getCollectionAO(irodsAccount);
+		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetIrodsCollection);
+		irodsFile.mkdirs();
+
+		collectionAO
+				.setAccessPermission(
+						"",
+						targetIrodsCollection,
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY),
+						true, FilePermissionEnum.READ);
+
+		// log in as the secondary user and test write access
+		IRODSAccount secondaryAccount = testingPropertiesHelper
+				.buildIRODSAccountFromSecondaryTestProperties(testingProperties);
+		IRODSFile irodsFileForSecondaryUser = irodsFileSystem
+				.getIRODSFileFactory(secondaryAccount).instanceIRODSFile(
+						targetIrodsCollection);
+		IRODSFileSystemAO irodsFileSystemAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getIRODSFileSystemAO(
+						secondaryAccount);
+		int permissions = irodsFileSystemAO
+				.getDirectoryPermissions(irodsFileForSecondaryUser);
+
+		Assert.assertTrue(permissions >= IRODSFile.READ_PERMISSIONS);
+
+	}
+
+	@Test
+	public final void testSetWriteGivingPermission() throws Exception {
+
+		String testFileName = "testSetWriteGivingPermission";
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + "/"
+								+ testFileName);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		CollectionAO collectionAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getCollectionAO(irodsAccount);
+		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetIrodsCollection);
+		irodsFile.mkdirs();
+
+		collectionAO
+				.setAccessPermission(
+						"",
+						targetIrodsCollection,
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY),
+						true, FilePermissionEnum.WRITE);
+
+		// log in as the secondary user and test write access
+		IRODSAccount secondaryAccount = testingPropertiesHelper
+				.buildIRODSAccountFromSecondaryTestProperties(testingProperties);
+		IRODSFile irodsFileForSecondaryUser = irodsFileSystem
+				.getIRODSFileFactory(secondaryAccount).instanceIRODSFile(
+						targetIrodsCollection);
+		IRODSFileSystemAO irodsFileSystemAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getIRODSFileSystemAO(
+						secondaryAccount);
+		int permissions = irodsFileSystemAO
+				.getDirectoryPermissions(irodsFileForSecondaryUser);
+
+		Assert.assertTrue(permissions >= IRODSFile.WRITE_PERMISSIONS);
+
+	}
+
+	@Test
+	public final void testSetWriteThenNoneGivingPermission() throws Exception {
+
+		String testFileName = "testSetWriteThenNoneGivingPermission";
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + "/"
+								+ testFileName);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		CollectionAO collectionAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getCollectionAO(irodsAccount);
+		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetIrodsCollection);
+		irodsFile.mkdirs();
+
+		collectionAO
+				.setAccessPermission(
+						"",
+						targetIrodsCollection,
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY),
+						true, FilePermissionEnum.WRITE);
+		collectionAO
+				.setAccessPermission(
+						"",
+						targetIrodsCollection,
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY),
+						true, FilePermissionEnum.NONE);
+
+		// log in as the secondary user and test write access
+		IRODSAccount secondaryAccount = testingPropertiesHelper
+				.buildIRODSAccountFromSecondaryTestProperties(testingProperties);
+		IRODSFile irodsFileForSecondaryUser = irodsFileSystem
+				.getIRODSFileFactory(secondaryAccount).instanceIRODSFile(
+						targetIrodsCollection);
+		IRODSFileSystemAO irodsFileSystemAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getIRODSFileSystemAO(
+						secondaryAccount);
+		int permissions = irodsFileSystemAO
+				.getDirectoryPermissions(irodsFileForSecondaryUser);
+
+		Assert.assertFalse(permissions >= IRODSFile.WRITE_PERMISSIONS);
+
+	}
+
+	@Test(expected = JargonException.class)
+	public final void testSetWGivingPermissionUnsupported() throws Exception {
+
+		String testFileName = "testSetWGivingPermissionUnsupported";
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + "/"
+								+ testFileName);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		CollectionAO collectionAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getCollectionAO(irodsAccount);
+		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetIrodsCollection);
+		irodsFile.mkdirs();
+
+		collectionAO
+				.setAccessPermission(
+						"",
+						targetIrodsCollection,
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY),
+						true, FilePermissionEnum.CREATE_TOKEN);
+
+	}
+
+	@Test
 	public final void testSetOwn() throws Exception {
 
 		String testFileName = "testSetOwn";
@@ -2025,7 +2226,7 @@ public class CollectionAOImplTest {
 						targetIrodsCollection,
 						testingProperties
 								.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY));
-		TestCase.assertTrue("did not get expected permission", hasPermission);
+		Assert.assertTrue("did not get expected permission", hasPermission);
 
 	}
 
@@ -2053,7 +2254,7 @@ public class CollectionAOImplTest {
 						targetIrodsCollection,
 						testingProperties
 								.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY));
-		TestCase.assertFalse("should not have permission", hasPermission);
+		Assert.assertFalse("should not have permission", hasPermission);
 
 	}
 
@@ -2101,9 +2302,10 @@ public class CollectionAOImplTest {
 
 		collectionAO.isUserHasAccess("file", "");
 	}
-	
+
 	/**
-	 * Bug  [#1080] metadata edit seems to fail with file with ' in name
+	 * Bug [#1080] metadata edit seems to fail with file with ' in name
+	 * 
 	 * @throws Exception
 	 */
 	@Test
@@ -2116,44 +2318,28 @@ public class CollectionAOImplTest {
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
 								+ testDirName);
-		
+
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
 
 		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
 				.getIRODSAccessObjectFactory();
-		
-		
-		IRODSFile targetIRODSFile = accessObjectFactory.getIRODSFileFactory(irodsAccount).instanceIRODSFile(targetIrodsCollection);
+
+		IRODSFile targetIRODSFile = accessObjectFactory.getIRODSFileFactory(
+				irodsAccount).instanceIRODSFile(targetIrodsCollection);
 		targetIRODSFile.mkdirs();
-		
+
 		CollectionAO collectionAO = accessObjectFactory
 				.getCollectionAO(irodsAccount);
 
 		AvuData dataToAdd = AvuData.instance(expectedAttribName,
 				expectedAttribValue, "");
 		collectionAO.addAVUMetadata(targetIrodsCollection, dataToAdd);
-		
-		List<MetaDataAndDomainData> metadata = collectionAO.findMetadataValuesForCollection(targetIrodsCollection, 0);
-		TestCase.assertFalse("metadata not retrieved", metadata.isEmpty());
 
+		List<MetaDataAndDomainData> metadata = collectionAO
+				.findMetadataValuesForCollection(targetIrodsCollection, 0);
+		Assert.assertFalse("metadata not retrieved", metadata.isEmpty());
 
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
 }

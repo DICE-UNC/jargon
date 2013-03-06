@@ -26,6 +26,8 @@ import org.irods.jargon.core.pub.io.IRODSFileFactory;
 import org.irods.jargon.core.pub.io.IRODSFileInputStream;
 import org.irods.jargon.core.query.AVUQueryElement;
 import org.irods.jargon.core.query.BuilderQueryUtils;
+import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry;
+import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry.ObjectType;
 import org.irods.jargon.core.query.GenQueryBuilderException;
 import org.irods.jargon.core.query.IRODSGenQueryBuilder;
 import org.irods.jargon.core.query.IRODSQueryResultRow;
@@ -83,42 +85,54 @@ public final class DataAOHelper extends AOHelper {
 
 	/**
 	 * Create a set of selects for a data object, used in general query.
-	 * @param builder {@link IRODSGenQueryBuilder} that will be appended with the selects
+	 * 
+	 * @param builder
+	 *            {@link IRODSGenQueryBuilder} that will be appended with the
+	 *            selects
 	 * 
 	 * @return <code>String</code> with select statements for the domain object.
 	 */
-	void buildSelects(IRODSGenQueryBuilder builder) throws JargonException {
-		
+	void buildSelects(final IRODSGenQueryBuilder builder)
+			throws JargonException {
+
 		if (builder == null) {
 			throw new IllegalArgumentException("null builder");
 		}
-		
+
 		try {
 			builder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_DATA_ID)
-			.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_COLL_ID)
-			.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_NAME)
-			.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_NAME)
-			.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_REPL_NUM)
-			.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_VERSION)
-			.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_TYPE_NAME)
-			.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_SIZE)
-			.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_RESC_GROUP_NAME)
-			.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_RESC_NAME)
-			.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_DATA_PATH)
-			.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_OWNER_NAME)
-			.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_OWNER_ZONE)
-			.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_REPL_STATUS)
-			.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_DATA_STATUS)
-			.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_DATA_CHECKSUM)
-			.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_EXPIRY)
-			.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_MAP_ID)
-			.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_COMMENTS)
-			.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_CREATE_TIME)
-			.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_MODIFY_TIME);
+					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_COLL_ID)
+					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_NAME)
+					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_NAME)
+					.addSelectAsGenQueryValue(
+							RodsGenQueryEnum.COL_DATA_REPL_NUM)
+					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_VERSION)
+					.addSelectAsGenQueryValue(
+							RodsGenQueryEnum.COL_DATA_TYPE_NAME)
+					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_SIZE)
+					.addSelectAsGenQueryValue(
+							RodsGenQueryEnum.COL_D_RESC_GROUP_NAME)
+					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_RESC_NAME)
+					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_DATA_PATH)
+					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_OWNER_NAME)
+					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_OWNER_ZONE)
+					.addSelectAsGenQueryValue(
+							RodsGenQueryEnum.COL_D_REPL_STATUS)
+					.addSelectAsGenQueryValue(
+							RodsGenQueryEnum.COL_D_DATA_STATUS)
+					.addSelectAsGenQueryValue(
+							RodsGenQueryEnum.COL_D_DATA_CHECKSUM)
+					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_EXPIRY)
+					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_MAP_ID)
+					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_COMMENTS)
+					.addSelectAsGenQueryValue(
+							RodsGenQueryEnum.COL_D_CREATE_TIME)
+					.addSelectAsGenQueryValue(
+							RodsGenQueryEnum.COL_D_MODIFY_TIME);
 		} catch (GenQueryBuilderException e) {
 			throw new JargonException(e);
 		}
-	
+
 	}
 
 	/**
@@ -132,8 +146,8 @@ public final class DataAOHelper extends AOHelper {
 	 *         the data in the row.
 	 * @throws JargonException
 	 */
-	public static DataObject buildDomainFromResultSetRow(final IRODSQueryResultRow row)
-			throws JargonException {
+	public static DataObject buildDomainFromResultSetRow(
+			final IRODSQueryResultRow row) throws JargonException {
 		DataObject dataObject = new DataObject();
 		dataObject.setId(Integer.parseInt(row.getColumn(0)));
 		dataObject.setCollectionId(Integer.parseInt(row.getColumn(1)));
@@ -656,20 +670,28 @@ public final class DataAOHelper extends AOHelper {
 	/**
 	 * @param irodsCollectionAbsolutePath
 	 * @param dataName
-	 * @param builder 
+	 * @param builder
 	 * @return
 	 */
 	static void buildACLQueryForCollectionPathAndDataName(
-			final String irodsCollectionAbsolutePath, final String dataName, IRODSGenQueryBuilder builder) throws JargonException {
-		
+			final String irodsCollectionAbsolutePath, final String dataName,
+			final IRODSGenQueryBuilder builder) throws JargonException {
+
 		try {
 			builder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_NAME)
-			.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_ACCESS_USER_ID)
-			.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_ACCESS_TYPE)
-			.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_TYPE)
-			.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_ZONE)
-			.addConditionAsGenQueryField(RodsGenQueryEnum.COL_COLL_NAME, QueryConditionOperators.EQUAL, irodsCollectionAbsolutePath)
-			.addConditionAsGenQueryField(RodsGenQueryEnum.COL_DATA_NAME, QueryConditionOperators.EQUAL, dataName);
+					.addSelectAsGenQueryValue(
+							RodsGenQueryEnum.COL_DATA_ACCESS_USER_ID)
+					.addSelectAsGenQueryValue(
+							RodsGenQueryEnum.COL_DATA_ACCESS_TYPE)
+					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_TYPE)
+					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_ZONE)
+					.addConditionAsGenQueryField(
+							RodsGenQueryEnum.COL_COLL_NAME,
+							QueryConditionOperators.EQUAL,
+							irodsCollectionAbsolutePath)
+					.addConditionAsGenQueryField(
+							RodsGenQueryEnum.COL_DATA_NAME,
+							QueryConditionOperators.EQUAL, dataName);
 		} catch (GenQueryBuilderException e) {
 			throw new JargonException(e);
 		}
@@ -839,4 +861,72 @@ public final class DataAOHelper extends AOHelper {
 				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_MODIFY_TIME);
 
 	}
+
+	/**
+	 * Build the necessary GenQuery selects to query data objects for
+	 * information. Used in many common queries for listing data objects, as in
+	 * an ils-like command. This version does not ask for any replication
+	 * information.
+	 * 
+	 * @param builder
+	 *            {@link IRODSGenQueryBuilder} that will be augmented with the
+	 *            necessary selects
+	 * 
+	 */
+	public static void buildDataObjectQuerySelectsNoReplicationInfo(
+			final IRODSGenQueryBuilder builder) throws GenQueryBuilderException {
+
+		if (builder == null) {
+			throw new IllegalArgumentException("null builder");
+		}
+
+		builder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_NAME)
+				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_NAME)
+				// .addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_CREATE_TIME)
+				// .addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_MODIFY_TIME)
+				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_DATA_ID)
+				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_SIZE)
+				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_OWNER_NAME);
+
+	}
+
+	/**
+	 * Given a result set from the
+	 * <code>buildDataObjectQuerySelectsNoReplicationInfo()</code> method,
+	 * return a result set of <code>CollectionAndDataObjectListingEntry</code>
+	 * 
+	 * @param row
+	 *            {@link IRODSQueryResultRow} entry from query
+	 * @param totalRecords
+	 *            <code>int</code> with total records in the result set
+	 * @return <code>List</code> of {@link CollectionAndDataObjectListingEntry}
+	 * @throws JargonException
+	 */
+	public static CollectionAndDataObjectListingEntry buildCollectionListEntryFromResultSetRowForDataObjectQueryNoReplicationInfo(
+			final IRODSQueryResultRow row, final int totalRecords)
+			throws JargonException {
+
+		CollectionAndDataObjectListingEntry entry = new CollectionAndDataObjectListingEntry();
+		entry.setParentPath(row.getColumn(0));
+		entry.setObjectType(ObjectType.DATA_OBJECT);
+		entry.setPathOrName(row.getColumn(1));
+		// entry.setCreatedAt(IRODSDataConversionUtil.getDateFromIRODSValue(row
+		// .getColumn(2)));
+		// entry.setModifiedAt(IRODSDataConversionUtil.getDateFromIRODSValue(row
+		// .getColumn(3)));
+		entry.setId(IRODSDataConversionUtil.getIntOrZeroFromIRODSValue(row
+				.getColumn(2)));
+		entry.setDataSize(IRODSDataConversionUtil
+				.getLongOrZeroFromIRODSValue(row.getColumn(3)));
+		entry.setOwnerName(row.getColumn(4));
+		entry.setCount(row.getRecordCount());
+		entry.setLastResult(row.isLastResult());
+		entry.setTotalRecords(totalRecords);
+
+		log.debug("listing entry built {}", entry.toString());
+
+		return entry;
+
+	}
+
 }

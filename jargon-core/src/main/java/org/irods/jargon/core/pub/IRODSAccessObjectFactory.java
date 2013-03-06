@@ -1,5 +1,6 @@
 package org.irods.jargon.core.pub;
 
+import org.irods.jargon.core.connection.DiscoveredServerPropertiesCache;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSServerProperties;
 import org.irods.jargon.core.connection.IRODSSession;
@@ -481,5 +482,32 @@ public interface IRODSAccessObjectFactory {
 	 */
 	AuthResponse authenticateIRODSAccount(IRODSAccount irodsAccount)
 			throws AuthenticationException, JargonException;
+
+	/**
+	 * Handy method to see if we're using the dynamic server properties cache.
+	 * This is set in the jargon properties.
+	 * 
+	 * @return <code>boolean</code> true if jargon methods can store and refer
+	 *         to cached properties of an iRODS server
+	 */
+	boolean isUsingDynamicServerPropertiesCache();
+
+	/**
+	 * 
+	 * Simple cache (tolerating concurrent access) for name/value props. This
+	 * cache is meant to hold user-definable properties about a connected server
+	 * (by host and zone name). This is meant as an efficient way to record
+	 * properties of a connected iRODS server that are discovered by interacting
+	 * with the server. This is especially useful for operations that may or may
+	 * not be configured, such that repeated failed attempts at an operation are
+	 * not made.
+	 * <p/>
+	 * A good example would be if required specific queries, rules,
+	 * micro-services, or remote command scripts are not available to do an
+	 * operation.
+	 * 
+	 * @return
+	 */
+	DiscoveredServerPropertiesCache getDiscoveredServerPropertiesCache();
 
 }

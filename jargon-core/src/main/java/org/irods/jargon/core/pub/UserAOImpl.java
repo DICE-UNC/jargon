@@ -23,10 +23,16 @@ import org.irods.jargon.core.protovalues.UserTypeEnum;
 import org.irods.jargon.core.pub.aohelper.UserAOHelper;
 import org.irods.jargon.core.pub.domain.AvuData;
 import org.irods.jargon.core.pub.domain.User;
+import org.irods.jargon.core.query.GenQueryBuilderException;
+import org.irods.jargon.core.query.GenQueryOrderByField.OrderByType;
 import org.irods.jargon.core.query.IRODSGenQuery;
+import org.irods.jargon.core.query.IRODSGenQueryBuilder;
+import org.irods.jargon.core.query.IRODSGenQueryFromBuilder;
 import org.irods.jargon.core.query.IRODSQueryResultRow;
+import org.irods.jargon.core.query.IRODSQueryResultSet;
 import org.irods.jargon.core.query.IRODSQueryResultSetInterface;
 import org.irods.jargon.core.query.JargonQueryException;
+import org.irods.jargon.core.query.QueryConditionOperators;
 import org.irods.jargon.core.query.RodsGenQueryEnum;
 import org.irods.jargon.core.security.IRODSPasswordUtilities;
 import org.irods.jargon.core.utils.FederationEnabled;
@@ -247,21 +253,26 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 	@FederationEnabled
 	public List<User> findAll() throws JargonException {
 
-		StringBuilder userQuery = new StringBuilder();
-		userQuery.append(UserAOHelper.buildUserSelects());
+		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, null);
 
-		String userQueryString = userQuery.toString();
-
-		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(userQueryString,
-				DEFAULT_REC_COUNT);
-
-		IRODSQueryResultSetInterface resultSet;
+		IRODSQueryResultSet resultSet = null;
 		try {
+			UserAOHelper.addUserSelectsToBuilder(builder);
+			builder.addOrderByGenQueryField(RodsGenQueryEnum.COL_USER_NAME,
+					OrderByType.ASC).addOrderByGenQueryField(
+					RodsGenQueryEnum.COL_USER_ZONE, OrderByType.ASC);
+			IRODSGenQueryFromBuilder irodsQuery = builder
+					.exportIRODSQueryFromBuilder(this.getJargonProperties()
+							.getMaxFilesAndDirsQueryMax());
 			resultSet = getGenQueryExecutor().executeIRODSQueryAndCloseResult(
 					irodsQuery, 0);
+
 		} catch (JargonQueryException e) {
-			log.error("query exception for user query:" + userQueryString, e);
-			throw new JargonException(ERROR_IN_USER_QUERY);
+			log.error("query exception for query", e);
+			throw new JargonException("error in query for user", e);
+		} catch (GenQueryBuilderException e) {
+			log.error("query exception for query", e);
+			throw new JargonException("error in query for user", e);
 		}
 
 		List<User> users = new ArrayList<User>();
@@ -269,6 +280,7 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 		for (IRODSQueryResultRow row : resultSet.getResults()) {
 			user = UserAOHelper.buildUserFromResultSet(row,
 					getGenQueryExecutor(), false);
+			user.setTotalRecords(resultSet.getTotalRecords());
 			users.add(user);
 		}
 
@@ -320,6 +332,7 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 		for (IRODSQueryResultRow row : resultSet.getResults()) {
 			user = UserAOHelper.buildUserFromResultSet(row,
 					getGenQueryExecutor(), false);
+			user.setTotalRecords(resultSet.getTotalRecords());
 			users.add(user);
 		}
 
@@ -491,35 +504,46 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 			throw new IllegalArgumentException("null userName");
 		}
 
-		log.info("findUserNameLike userName{}", userName);
+		log.info("findUserNameLike {}", userName);
 
-		List<String> results = new ArrayList<String>();
+		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, null);
+
 		StringBuilder userQuery = new StringBuilder();
-		userQuery.append("select ");
-		userQuery.append(RodsGenQueryEnum.COL_USER_NAME.getName());
-		userQuery.append(" WHERE ");
-		userQuery.append(RodsGenQueryEnum.COL_USER_NAME.getName());
-		userQuery.append(" LIKE '");
 		userQuery.append(userName.trim());
-		userQuery.append("%'");
+		userQuery.append("%");
 
-		log.info("user query:{}", userQuery);
-
-		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(userQuery.toString(),
-				DEFAULT_REC_COUNT);
-
-		IRODSQueryResultSetInterface resultSet;
+		IRODSQueryResultSet resultSet = null;
 		try {
+			UserAOHelper.addUserSelectsToBuilder(builder);
+			builder.addOrderByGenQueryField(RodsGenQueryEnum.COL_USER_NAME,
+					OrderByType.ASC)
+					.addOrderByGenQueryField(RodsGenQueryEnum.COL_USER_ZONE,
+							OrderByType.ASC)
+					.addConditionAsGenQueryField(
+							RodsGenQueryEnum.COL_USER_NAME,
+							QueryConditionOperators.LIKE, userQuery.toString());
+			IRODSGenQueryFromBuilder irodsQuery = builder
+					.exportIRODSQueryFromBuilder(this.getJargonProperties()
+							.getMaxFilesAndDirsQueryMax());
 			resultSet = getGenQueryExecutor().executeIRODSQueryAndCloseResult(
 					irodsQuery, 0);
+
 		} catch (JargonQueryException e) {
-			log.error("query exception for user query:{}",
-					userQuery.toString(), e);
-			throw new JargonException(ERROR_IN_USER_QUERY);
+			log.error("query exception for query", e);
+			throw new JargonException("error in query for user", e);
+		} catch (GenQueryBuilderException e) {
+			log.error("query exception for query", e);
+			throw new JargonException("error in query for user", e);
 		}
 
+		List<String> results = new ArrayList<String>();
+		StringBuilder name = new StringBuilder();
 		for (IRODSQueryResultRow row : resultSet.getResults()) {
-			results.add(row.getColumn(0));
+			name = new StringBuilder();
+			name.append(row.getColumn(1));
+			name.append('#');
+			name.append(row.getColumn(0));
+			results.add(name.toString());
 		}
 
 		log.debug("user list:{}", results);

@@ -15,7 +15,8 @@ import org.junit.runners.Suite;
 		IRODSThousandCollectionsTest.class,
 		FileListingAndRecursiveGetReplicateTestingWithBigCollectionTest.class,
 		ParallelTransferOperationsTest.class,
-		IRODSCommandsReconnectionTest.class, IRODSCommandsFunctionalTest.class, IRODSTenThousandCollectionsTest.class})
+		IRODSCommandsReconnectionTest.class, IRODSCommandsFunctionalTest.class,
+		IRODSTenThousandCollectionsTest.class })
 public class AllTestIncludingLongRunningAndFunctionalTests {
 
 }

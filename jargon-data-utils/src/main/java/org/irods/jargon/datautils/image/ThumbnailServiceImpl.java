@@ -12,9 +12,12 @@ import java.util.List;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.pub.CollectionAndDataObjectListAndSearchAO;
 import org.irods.jargon.core.pub.EnvironmentalInfoAO;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 import org.irods.jargon.core.pub.RuleProcessingAO;
+import org.irods.jargon.core.pub.domain.ObjStat;
+import org.irods.jargon.core.pub.domain.ObjStat.SpecColType;
 import org.irods.jargon.core.pub.domain.RemoteCommandInformation;
 import org.irods.jargon.core.rule.IRODSRuleExecResult;
 import org.irods.jargon.core.utils.Base64;
@@ -113,7 +116,17 @@ public class ThumbnailServiceImpl extends AbstractDataUtilsServiceImpl
 			throw new IllegalArgumentException(
 					"nul irodsAbsolutePathToGenerateThumbnailFor");
 		}
-
+		
+		CollectionAndDataObjectListAndSearchAO collectionAndDataObjectListAndSearchAO = this.getIrodsAccessObjectFactory().getCollectionAndDataObjectListAndSearchAO(irodsAccount);
+		ObjStat objStat = collectionAndDataObjectListAndSearchAO.retrieveObjectStatForPath(irodsAbsolutePathToGenerateThumbnailFor);
+		
+		String myPath;
+		if (objStat.getSpecColType() == SpecColType.LINKED_COLL) {
+			myPath = objStat.getObjectPath();
+		} else {
+			myPath = irodsAbsolutePathToGenerateThumbnailFor;
+		}
+		
 		File targetTempFile = createWorkingDirectoryImageFile(workingDirectory,
 				irodsAbsolutePathToGenerateThumbnailFor);
 
@@ -121,7 +134,7 @@ public class ThumbnailServiceImpl extends AbstractDataUtilsServiceImpl
 			targetTempFile.delete();
 		}
 
-		InputStream is = retrieveThumbnailByIRODSAbsolutePathViaRule(irodsAbsolutePathToGenerateThumbnailFor);
+		InputStream is = retrieveThumbnailByIRODSAbsolutePathViaRule(myPath);
 		try {
 			OutputStream fos = new BufferedOutputStream(new FileOutputStream(
 					targetTempFile));
@@ -206,6 +219,21 @@ public class ThumbnailServiceImpl extends AbstractDataUtilsServiceImpl
 
 		log.info("irodsAbsolutePathToGenerateThumbnailFor:{}",
 				irodsAbsolutePathToGenerateThumbnailFor);
+		
+		
+		
+		CollectionAndDataObjectListAndSearchAO collectionAndDataObjectListAndSearchAO = this.getIrodsAccessObjectFactory().getCollectionAndDataObjectListAndSearchAO(irodsAccount);
+		ObjStat objStat = collectionAndDataObjectListAndSearchAO.retrieveObjectStatForPath(irodsAbsolutePathToGenerateThumbnailFor);
+		log.info("objStat for photo:{}", objStat);
+		String myPath;
+		if (objStat.getSpecColType() == SpecColType.LINKED_COLL) {
+			myPath = objStat.getObjectPath();
+		} else {
+			myPath = irodsAbsolutePathToGenerateThumbnailFor;
+		}
+		
+		log.info("using path:{}", myPath);
+		
 
 		// get Base64 Encoded data from a rule invocation, this represents the
 		// generated thumbnail
@@ -226,7 +254,7 @@ public class ThumbnailServiceImpl extends AbstractDataUtilsServiceImpl
 		sb.append("msiGetStdoutInExecCmdOut(*CmdOut, *StdoutStr);\n");
 		sb.append(" writeLine(\"stdout\", *StdoutStr);\n}\n");
 		sb.append("INPUT *objPath=\'");
-		sb.append(irodsAbsolutePathToGenerateThumbnailFor.trim());
+		sb.append(myPath.trim());
 		sb.append("\',*resource=\'");
 		sb.append(irodsAccount.getDefaultStorageResource());
 		sb.append("'\n");

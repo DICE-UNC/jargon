@@ -1,8 +1,7 @@
 package org.irods.jargon.usertagging.domain;
 
 
-import junit.framework.TestCase;
-
+import junit.framework.Assert;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.query.MetaDataAndDomainData.MetadataDomain;
 import org.junit.AfterClass;
@@ -29,10 +28,10 @@ public class IRODSTagGroupingTest {
 		
 		IRODSTagGrouping irodsTagGrouping = new IRODSTagGrouping(expectedMetadataDomain, expectedDomainName, expectedTags, expectedUser);
 		
-		TestCase.assertEquals(expectedUser, irodsTagGrouping.getUserName());
-		TestCase.assertEquals(expectedDomainName, irodsTagGrouping.getDomainUniqueName());
-		TestCase.assertEquals(expectedTags, irodsTagGrouping.getSpaceDelimitedTagsForDomain());
-		TestCase.assertEquals(expectedMetadataDomain, irodsTagGrouping.getMetadataDomain());
+		Assert.assertEquals(expectedUser, irodsTagGrouping.getUserName());
+		Assert.assertEquals(expectedDomainName, irodsTagGrouping.getDomainUniqueName());
+		Assert.assertEquals(expectedTags, irodsTagGrouping.getSpaceDelimitedTagsForDomain());
+		Assert.assertEquals(expectedMetadataDomain, irodsTagGrouping.getMetadataDomain());
 		
 	}
 	

@@ -292,4 +292,17 @@ public interface JargonProperties {
 	 */
 	boolean isDefaultToPublicIfNothingUnderRootWhenListing();
 
+	/**
+	 * Determines if a cache of discovered properties is used, these are aspects
+	 * of iRODS servers (such as, whether specific query support is available),
+	 * that are discovered as a result of calling a function in Jargon. Instead
+	 * of trying and failing to get a certain service from iRODS over and over
+	 * again, a result can be cached here to check.
+	 * 
+	 * @return <code>boolean</code> that is used to determine whether various
+	 *         jargon operations will cache and consult the discovered server
+	 *         properties that are available under {@link IRODSSession}
+	 */
+	boolean isUsingDiscoveredServerPropertiesCache();
+
 }

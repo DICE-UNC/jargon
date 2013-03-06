@@ -26,7 +26,7 @@ public final class IRODSStarredFileOrCollection extends
 	}
 
 	/**
-	 * Depicts A star or favorite a domain objects, Describes the user and
+	 * Constructor describes the user and
 	 * object that is being starred, and providing a description.
 	 * 
 	 * @param metadataDomain

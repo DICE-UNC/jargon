@@ -607,17 +607,16 @@ public class IRODSRegistrationOfFilesAOImplTest {
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH);
 
-		
-		IRODSFile targetIrodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount).instanceIRODSFile(targetIrodsCollection);
+		IRODSFile targetIrodsFile = irodsFileSystem.getIRODSFileFactory(
+				irodsAccount).instanceIRODSFile(targetIrodsCollection);
 		targetIrodsFile.deleteWithForceOption();
-		
+
 		FileGenerator
 				.generateManyFilesAndCollectionsInParentCollectionByAbsolutePath(
 						localCollectionAbsolutePath,
 						"testPutCollectionWithTwoFiles", 4, 7, 1, "testFile",
 						".txt", 2, 2, 1, 2);
 
-		
 		IRODSRegistrationOfFilesAO ao = irodsFileSystem
 				.getIRODSAccessObjectFactory().getIRODSRegistrationOfFilesAO(
 						irodsAccount);
@@ -656,12 +655,13 @@ public class IRODSRegistrationOfFilesAOImplTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		
+
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH);
-		
-		IRODSFile targetIrodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount).instanceIRODSFile(targetIrodsCollection);
+
+		IRODSFile targetIrodsFile = irodsFileSystem.getIRODSFileFactory(
+				irodsAccount).instanceIRODSFile(targetIrodsCollection);
 		targetIrodsFile.deleteWithForceOption();
 
 		FileGenerator
@@ -670,7 +670,6 @@ public class IRODSRegistrationOfFilesAOImplTest {
 						"testPutCollectionWithTwoFiles", 1, 1, 1, "testFile",
 						".txt", 2, 2, 1, 2);
 
-	
 		IRODSRegistrationOfFilesAO ao = irodsFileSystem
 				.getIRODSAccessObjectFactory().getIRODSRegistrationOfFilesAO(
 						irodsAccount);

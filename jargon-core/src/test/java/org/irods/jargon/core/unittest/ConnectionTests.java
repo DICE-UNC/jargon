@@ -2,6 +2,7 @@ package org.irods.jargon.core.unittest;
 
 import org.irods.jargon.core.connection.ConnectionProgressStatusTest;
 import org.irods.jargon.core.connection.DefaultPropertiesJargonConfigTest;
+import org.irods.jargon.core.connection.DiscoveredServerPropertiesCacheTest;
 import org.irods.jargon.core.connection.EnvironmentalInfoAccessorTest;
 import org.irods.jargon.core.connection.IRODSServerPropertiesTest;
 import org.irods.jargon.core.connection.IRODSSessionTest;
@@ -15,13 +16,11 @@ import org.junit.runners.Suite;
 @RunWith(Suite.class)
 @Suite.SuiteClasses({ IRODSSimpleConnectionTest.class,
 		EnvironmentalInfoAccessorTest.class,
-		IRODSSimpleProtocolManagerTest.class,
- IRODSSessionTest.class,
+		IRODSSimpleProtocolManagerTest.class, IRODSSessionTest.class,
 		IRODSServerPropertiesTest.class,
 		DefaultPropertiesJargonConfigTest.class,
-		ConnectionProgressStatusTest.class,
- PipelineConfigurationTest.class,
-		PAMAuthTest.class })
+		ConnectionProgressStatusTest.class, PipelineConfigurationTest.class,
+		PAMAuthTest.class, DiscoveredServerPropertiesCacheTest.class })
 public class ConnectionTests {
 
 }

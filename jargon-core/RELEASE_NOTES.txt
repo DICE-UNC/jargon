@@ -10,6 +10,7 @@ mid-tier applications and services, as well as desktop-clients (such as iDROP). 
 
 Note that this API represents a fundamental shift, and is meant to make development of applications easier and faster.
 
+=======
 Please go to [[https://code.renci.org/gf/project/jargon/]] for the latest news and info.
 
 Jargon-core consists of the following libraries
@@ -22,13 +23,11 @@ Jargon-core consists of the following libraries
 * jargon-ticket - support for ticket processing
 * jargon-httpstream - stream http content into iRODS via Jargon
 
-Other libraries are planned, such as connection pooling, as well as administrative functions.
 
 ==Requirements==
 
 *Jargon depends on Java 1.6+
 *Jargon is built using Apache Maven2, see POM for dependencies
-
 *Jargon supports iRODS 2.5 through iRODS 3.2
 
 ==Libraries==
@@ -38,30 +37,11 @@ Jargon-core uses Maven for dependency management.  See the pom.xml file for refe
 Note that the following bug and feature requests are logged in GForge with related commit information [[https://code.renci.org/gf/project/jargon/tracker/]]
 
 ==Bug Fixes==
-
-* [#1092] add reconnect option to iDrop
-**Add irodsAccount info to IRODSCommands during reconnect
-**Add new constructor and initializer for IRODSCommands that avoids calling the finalizer on a connection when the IRODSCommands was created in 'stand-alone' mode.  This fixes a bug where
-the conection finalizer could be called and the connection closed at an inappropriate time when in connection restart mode
  
- *[#1093] Broken pipe error did not propogate in parallel transfer
- **Small clean-ups in transfer processing and error callbacks
- 
- *[#1109] specific query no data found results in exception
- **Specific query was returning a DataNotFoundException when no results returned, fixed to return an empty result set
  
 ==Features==
 
 *[#964] grid memory and presets
 **refactor of database to include grid memory
 **conveyor framework
-
-*[#984] iDrop web '2.0' redesign effort
-**Added additional fields to the user profile, such as eduPerson attributes
-**Added 'starring' support to the jargon-user-tagging package, managing the starring of files and collections
-**Added UploadsService to jargon-data-utils to help manage an 'uploads' directory convention.  This provides a standard place to receive uploads from various clients.
-
- [#1107] support for large collection paging
- **Added totalRecords to IRODSDomainObject so that returned objects from queries can carry the total number of results
- **CollectionAndDataObjectListAndSearchAO results now include total record counts when available  
 

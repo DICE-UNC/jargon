@@ -8,6 +8,7 @@ import org.irods.jargon.core.pub.domain.DataObject;
 import org.irods.jargon.core.pub.domain.IRODSDomainObject;
 import org.irods.jargon.core.pub.domain.ObjStat;
 import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry;
+import org.irods.jargon.core.query.PagingAwareCollectionListing;
 
 /**
  * This interface describes an access object that assists in the searching and
@@ -155,6 +156,53 @@ public interface CollectionAndDataObjectListAndSearchAO extends
 	 */
 	List<CollectionAndDataObjectListingEntry> listDataObjectsAndCollectionsUnderPath(
 			final String absolutePathToParent) throws FileNotFoundException,
+			JargonException;
+
+	/**
+	 * This method is in support of applications and interfaces that need to
+	 * support listing and paging of collections. This method returns a simple
+	 * value object that contains information about paging for each object, such
+	 * as record count, and whether this is the last record. This method will
+	 * list objects that are direct children underneath the given parent.
+	 * <p/>
+	 * Note that this collection is composed of a collection of objects for
+	 * child collections, and a collection of objects for child data objects
+	 * (subdirectories versus files). There are separate counts and
+	 * 'isLastEntry' values for each type, discriminated by the
+	 * <code>CollectionAndDataObjectListingEntry.objectType</code>. In usage,
+	 * this method would be called for the parent directory under which the
+	 * subdirectories and files should be listed. The response will include the
+	 * sum of both files and subdirectories, and each type may have more
+	 * results. Once this result is returned, the
+	 * <code>listDataObjectsUnderPath</code> and
+	 * <code>listCollectionsUnderPath</code> methods may be called separately
+	 * with a partial start index value as appropriate. It is up to the caller
+	 * to determine which types need paging.
+	 * <p/>
+	 * Soft links are supported with this method. The listing entry returned
+	 * will indicate the request parent collection of a given file or data
+	 * object, and internally will hold the canonical directory that is the
+	 * parent, and reflect that it is a special collection.
+	 * <p/>
+	 * This variant of the files and collections listing entries wraps the
+	 * resulting listing in a <code>PagingAwareCollectionListing</code> that
+	 * contains information about the paging status of the separate collection
+	 * and data object listings.
+	 * 
+	 * @param absolutePathToParent
+	 *            <code>String</code> with the absolute path to the parent. If
+	 *            blank, the root is used. If the path is really a file, the
+	 *            method will list from the parent of the file.
+	 * @return {@link PagingAwareCollectionListing} that contains both
+	 *         collections and data objects in a mixed partial listing, along
+	 *         with hints on the state of the listing. This metadata can be used
+	 *         to compute a paging strategy for subsequent data.
+	 * @throws FileNotFoundException
+	 *             if the given path does not exist
+	 * @throws JargonException
+	 */
+	PagingAwareCollectionListing listDataObjectsAndCollectionsUnderPathProducingPagingAwareCollectionListing(
+			String absolutePathToParent) throws FileNotFoundException,
 			JargonException;
 
 	/**

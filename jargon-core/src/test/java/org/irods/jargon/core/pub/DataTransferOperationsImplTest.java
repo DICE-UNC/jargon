@@ -3357,40 +3357,47 @@ public class DataTransferOperationsImplTest {
 				7, countSuccess);
 
 	}
-	
+
 	/**
-	 * Replication sequence for 
-	 * bug [#1044] Jargon allows the creating of folders that exceed the USER_PATH_EXCEEDS_MAX and cannot delete them
+	 * Replication sequence for bug [#1044] Jargon allows the creating of
+	 * folders that exceed the USER_PATH_EXCEEDS_MAX and cannot delete them
+	 * 
 	 * @throws Exception
 	 */
-	@Test(expected=PathTooLongException.class)
-	public void testLongFileNameAddAndDeleteBugDataObjectNameIsLong1044() throws Exception {
+	@Test(expected = PathTooLongException.class)
+	public void testLongFileNameAddAndDeleteBugDataObjectNameIsLong1044()
+			throws Exception {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		
+
 		String localTestFileName = "testLongFileNameAddAndDeleteBugDataObjectNameIsLong1044.txt";
-		String dataObjecName = FileGenerator.generateRandomString(1068) + ".txt";
-		
+		String dataObjecName = FileGenerator.generateRandomString(1068)
+				+ ".txt";
+
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH);
 
 		String absPath = scratchFileUtils
-				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH );
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
 		File topScratchFile = new File(absPath);
 		topScratchFile.mkdirs();
 		String localFileName = FileGenerator
-				.generateFileOfFixedLengthGivenName(absPath, localTestFileName, 2);
+				.generateFileOfFixedLengthGivenName(absPath, localTestFileName,
+						2);
 
 		File localFile = new File(localFileName);
-	
-		DataTransferOperations dto = irodsFileSystem.getIRODSAccessObjectFactory().getDataTransferOperations(irodsAccount);
 
-		IRODSFile filePutToIrods = irodsFileSystem.getIRODSFileFactory(irodsAccount).instanceIRODSFile(targetIrodsCollection, dataObjecName);
+		DataTransferOperations dto = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataTransferOperations(
+						irodsAccount);
+
+		IRODSFile filePutToIrods = irodsFileSystem.getIRODSFileFactory(
+				irodsAccount).instanceIRODSFile(targetIrodsCollection,
+				dataObjecName);
 		dto.putOperation(localFile, filePutToIrods, null, null);
-	
+
 	}
-	
 
 }

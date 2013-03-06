@@ -34,8 +34,6 @@ public final class IRODSFileFactoryImpl extends IRODSGenericAO implements
 	public static final String PATH_SEPARATOR = "/";
 	static Logger log = LoggerFactory.getLogger(IRODSFileFactoryImpl.class);
 
-	// TODO: switch to instance
-
 	public IRODSFileFactoryImpl(final IRODSSession irodsSession,
 			final IRODSAccount irodsAccount) throws JargonException {
 		super(irodsSession, irodsAccount);
@@ -270,9 +268,6 @@ public final class IRODSFileFactoryImpl extends IRODSGenericAO implements
 		} catch (FileNotFoundException e) {
 			log.error("FileNotFound creating output stream", e);
 			throw new JargonException(e);
-		} catch (IOException ioException) {
-			log.error("IOException creating output stream", ioException);
-			throw new JargonException(ioException);
 		}
 	}
 
