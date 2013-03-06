@@ -31,9 +31,11 @@ public interface GridAccountService {
 
 	/**
 	 * Return the pass phrase used to encrypt/decrypt the password information
-	 * cached in the transfer database
+	 * cached in the transfer database. This is the clear text password rather
+	 * than the hashed value stored in the database key store.
 	 * 
-	 * @return
+	 * @return <code>String</code> with the clear text pass phrase for the grid
+	 *         account cache information
 	 */
 	String getCachedPassPhrase();
 
@@ -55,8 +57,9 @@ public interface GridAccountService {
 	 *             setting a new one.
 	 * @throws ConveyorExecutionException
 	 */
-	KeyStore changePassPhraseWhenAlreadyValidated(String passPhrase) throws ConveyorBusyException,
-			PassPhraseInvalidException, ConveyorExecutionException;
+	KeyStore changePassPhraseWhenAlreadyValidated(String passPhrase)
+			throws ConveyorBusyException, PassPhraseInvalidException,
+			ConveyorExecutionException;
 
 	/**
 	 * Given an <code>IRODSAccount</code>, add a new <code>GridAccount</code>,
@@ -180,5 +183,14 @@ public interface GridAccountService {
 	 */
 	void resetPassPhraseAndAccounts() throws ConveyorBusyException,
 			ConveyorExecutionException;
+
+	/**
+	 * Checks if a pass phrase has been stored.
+	 * 
+	 * @return <code>boolean</code> of <code>true</code> if the pass phrase has
+	 *         been stored
+	 * @throws ConveyorExecutionException
+	 */
+	boolean isPassPhraseStoredAlready() throws ConveyorExecutionException;
 
 }

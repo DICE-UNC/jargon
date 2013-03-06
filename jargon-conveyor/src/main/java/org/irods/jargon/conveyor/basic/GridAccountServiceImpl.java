@@ -641,4 +641,11 @@ public class GridAccountServiceImpl implements GridAccountService {
 		this.cachedPassPhrase = "";
 		this.cacheEncryptor = null;
 	}
+
+	@Override
+	public boolean isPassPhraseStoredAlready()
+			throws ConveyorExecutionException {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }
