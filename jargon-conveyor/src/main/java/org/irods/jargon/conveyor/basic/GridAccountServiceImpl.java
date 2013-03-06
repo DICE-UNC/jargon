@@ -642,10 +642,32 @@ public class GridAccountServiceImpl implements GridAccountService {
 		this.cacheEncryptor = null;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.conveyor.core.GridAccountService#isPassPhraseStoredAlready
+	 * ()
+	 */
 	@Override
 	public boolean isPassPhraseStoredAlready()
 			throws ConveyorExecutionException {
-		// TODO Auto-generated method stub
-		return false;
+		log.info("isPassPhraseStoredAlready");
+
+		KeyStore keyStore;
+		try {
+			keyStore = keyStoreDAO.findById(KeyStore.KEY_STORE_PASS_PHRASE);
+		} catch (TransferDAOException e) {
+			log.error("unable to look up prior key store", e);
+			throw new ConveyorExecutionException(
+					"error looking up prior key store", e);
+		}
+
+		if (keyStore == null) {
+			log.info("no keystore found, will return false");
+		}
+
+		return (keyStore != null);
+
 	}
 }

@@ -340,4 +340,25 @@ public class GridAccountServiceImplTest {
 
 	}
 
+	@Test
+	public final void testIsPassPhraseAlreadyStoredWhenAlreadyStored()
+			throws Exception {
+
+		String passPhrase = "ooogabooga";
+		gridAccountService.validatePassPhrase(passPhrase);
+		boolean actual = gridAccountService.isPassPhraseStoredAlready();
+		Assert.assertTrue("should show pass phrase as already stored", actual);
+
+	}
+
+	@Test
+	public final void testIsPassPhraseAlreadyStoredWhenNotAlreadyStored()
+			throws Exception {
+
+		boolean actual = gridAccountService.isPassPhraseStoredAlready();
+		Assert.assertFalse("should not show pass phrase as already stored",
+				actual);
+
+	}
+
 }

@@ -48,15 +48,32 @@ public class BasicConveyorServiceTest {
 				conveyorService.getGridAccountService().getCachedPassPhrase()
 						.equals(testPassPhrase));
 	}
-	
-	@Test(expected=PassPhraseInvalidException.class)
+
+	@Test
+	public void testIsPassPhraseValidatedWhenNotValidated() throws Exception {
+		conveyorService.resetConveyorService();
+		boolean actual = conveyorService.isPreviousPassPhraseStored();
+		Assert.assertFalse("should not show pass phrase as validated", actual);
+
+	}
+
+	@Test
+	public void testIsPassPhraseValidatedWhenValidated() throws Exception {
+		conveyorService.resetConveyorService();
+		conveyorService.validatePassPhrase(testPassPhrase);
+		boolean actual = conveyorService.isPreviousPassPhraseStored();
+		Assert.assertTrue("should not show pass phrase as validated", actual);
+
+	}
+
+	@Test(expected = PassPhraseInvalidException.class)
 	public void testUseInvalidPassPhrase() throws Exception {
 		conveyorService.resetConveyorService();
 		conveyorService.validatePassPhrase(testPassPhrase);
 		conveyorService.validatePassPhrase("iaminvalidhere");
-		
+
 	}
-	
+
 	@Test
 	public void testResetAndThenCheckNotValid() throws Exception {
 		conveyorService.resetConveyorService();
@@ -65,7 +82,8 @@ public class BasicConveyorServiceTest {
 				conveyorService.getGridAccountService().getCachedPassPhrase()
 						.equals(testPassPhrase));
 		conveyorService.resetConveyorService();
-		Assert.assertTrue("should not be validated", conveyorService.getGridAccountService().getCachedPassPhrase().isEmpty());
+		Assert.assertTrue("should not be validated", conveyorService
+				.getGridAccountService().getCachedPassPhrase().isEmpty());
 	}
 
 }
