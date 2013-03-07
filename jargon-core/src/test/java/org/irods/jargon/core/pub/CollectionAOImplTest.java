@@ -1166,6 +1166,45 @@ public class CollectionAOImplTest {
 
 		Assert.assertFalse("no query result returned", queryResults.isEmpty());
 	}
+	
+	@Test
+	public void testFindById() throws Exception {
+		String testDirName = "testFindById";
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
+								+ testDirName);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+		
+		IRODSFile collFile = accessObjectFactory.getIRODSFileFactory(irodsAccount).instanceIRODSFile(targetIrodsCollection);
+		collFile.mkdirs();
+
+		CollectionAO collectionAO = accessObjectFactory
+				.getCollectionAO(irodsAccount);
+		Collection collection = collectionAO
+				.findByAbsolutePath(targetIrodsCollection);
+		Collection actual = collectionAO.findById(collection.getCollectionId());
+		Assert.assertNotNull("did not find collection", actual);
+	}
+	
+	@Test(expected=DataNotFoundException.class)
+	public void testFindByIdNotFound() throws Exception {
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+		
+		CollectionAO collectionAO = accessObjectFactory
+				.getCollectionAO(irodsAccount);
+	
+		collectionAO.findById(99999999);
+	}
 
 	@Test
 	public void findByAbsolutePath() throws Exception {
@@ -1176,19 +1215,13 @@ public class CollectionAOImplTest {
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
 								+ testDirName);
 
-		// put scratch collection into irods in the right place
-		IrodsInvocationContext invocationContext = testingPropertiesHelper
-				.buildIRODSInvocationContextFromTestProperties(testingProperties);
-		ImkdirCommand imkdirCommand = new ImkdirCommand();
-		imkdirCommand.setCollectionName(targetIrodsCollection);
-
-		IcommandInvoker invoker = new IcommandInvoker(invocationContext);
-		invoker.invokeCommandAndGetResultAsString(imkdirCommand);
-
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
 		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
 				.getIRODSAccessObjectFactory();
+		
+		IRODSFile collFile = accessObjectFactory.getIRODSFileFactory(irodsAccount).instanceIRODSFile(targetIrodsCollection);
+		collFile.mkdirs();
 
 		CollectionAO collectionAO = accessObjectFactory
 				.getCollectionAO(irodsAccount);

@@ -944,4 +944,13 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	void setAccessPermission(String zone, String absolutePath, String userName,
 			FilePermissionEnum filePermission) throws JargonException;
 
+	/**
+	 * Find the data object (file) given it's unique id (the iCAT primary key)
+	 * @param id <code>int</code> with the primary key for the data object in the ICAT
+	 * @return {@link DataObject} corresponding to the given id
+	 * @throws FileNotFoundException if hte id does not exist
+	 * @throws JargonException
+	 */
+	DataObject findById(int id) throws FileNotFoundException, JargonException;
+
 }
