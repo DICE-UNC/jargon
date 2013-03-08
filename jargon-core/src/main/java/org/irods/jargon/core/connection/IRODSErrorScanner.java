@@ -105,12 +105,12 @@ public class IRODSErrorScanner {
 		case NO_MORE_RULES_ERR:
 			throw new NoMoreRulesException("No more rules");
 		case CAT_SQL_ERR:
-			throw new CatalogSQLException("Catalog sql error");
+			throw new CatalogSQLException("Catalog SQL error");
 		case SPECIFIC_QUERY_EXCEPTION:
 			throw new SpecificQueryException(
 					"Exception processing specific query", infoValue);
 		default:
-			throw new JargonException("error code recieved from iRODS:"
+			throw new JargonException("error code received from iRODS:"
 					+ infoValue, infoValue);
 		}
 
