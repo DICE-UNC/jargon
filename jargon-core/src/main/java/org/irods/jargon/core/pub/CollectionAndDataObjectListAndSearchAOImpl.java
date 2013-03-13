@@ -1550,7 +1550,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		MiscIRODSUtils.checkPathSizeForMax(irodsAbsolutePath);
 
 		DataObjInpForObjStat dataObjInp = DataObjInpForObjStat
-				.instance(irodsAbsolutePath.trim());
+				.instance(irodsAbsolutePath);
 		Tag response;
 		try {
 			response = getIRODSProtocol().irodsFunction(dataObjInp);

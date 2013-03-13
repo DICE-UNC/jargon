@@ -700,7 +700,7 @@ public class DataObjectAOImplTest {
 		Assert.assertNotNull("null data object, was not found", dataObject);
 
 	}
-
+	
 	/**
 	 * Bug [#1139] Spaces at the begin or end of a data object name will cause
 	 * an exception
@@ -708,9 +708,9 @@ public class DataObjectAOImplTest {
 	 * @throws Exception
 	 */
 	@Test
-	public void testFindByAbsolutePathSpacesInProvidedPath() throws Exception {
+	public void testFindByAbsolutePathSpacesInProvidedPathSpacesInActualFileNameBug1139Leading() throws Exception {
 		// generate a local scratch file
-		String testFileName = "testFindByAbsolutePathSpacesInProvidedPath.dat";
+		String testFileName = " testFindByAbsolutePathSpacesInProvidedPathSpacesInActualFileNameBug1139Leading.dat";
 		String absPath = scratchFileUtils
 				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
 		String localFileName = FileGenerator
@@ -738,13 +738,14 @@ public class DataObjectAOImplTest {
 
 		String targetIrodsFileQueryName = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH + " / "
-								+ testFileName + "   ");
+						testingProperties, IRODS_TEST_SUBDIR_PATH + "/"
+								+ testFileName);
 		DataObject dataObject = dataObjectAO
 				.findByAbsolutePath(targetIrodsFileQueryName);
 		Assert.assertNotNull("null data object, was not found", dataObject);
 
 	}
+	
 	
 	@Test
 	public void testFindById() throws Exception {

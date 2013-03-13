@@ -286,7 +286,7 @@ public class IRODSGenQueryBuilder {
 
 		StringBuilder sb = new StringBuilder();
 		sb.append("'");
-		sb.append(value.trim());
+		sb.append(value);
 		sb.append("'");
 
 		GenQueryBuilderCondition genQueryBuilderCondition = GenQueryBuilderCondition

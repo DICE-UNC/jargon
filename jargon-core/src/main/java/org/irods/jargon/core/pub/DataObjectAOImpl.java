@@ -138,7 +138,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 		String absPath = MiscIRODSUtils
 				.buildAbsolutePathFromCollectionParentAndFileName(
-						collectionPath.trim(), dataName.trim());
+						collectionPath, dataName);
 		ObjStat objStat = collectionAndDataObjectListAndSearchAO
 				.retrieveObjectStatForPath(absPath);
 
@@ -264,12 +264,11 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		} else {
 			builder.addConditionAsGenQueryField(RodsGenQueryEnum.COL_COLL_NAME,
 					QueryConditionOperators.EQUAL, collectionAndPath
-							.getCollectionParent().trim());
+							.getCollectionParent());
 		}
 
 		builder.addConditionAsGenQueryField(RodsGenQueryEnum.COL_DATA_NAME,
-				QueryConditionOperators.EQUAL, collectionAndPath.getChildName()
-						.trim());
+				QueryConditionOperators.EQUAL, collectionAndPath.getChildName());
 
 		IRODSQueryResultSet resultSet = null;
 		try {
