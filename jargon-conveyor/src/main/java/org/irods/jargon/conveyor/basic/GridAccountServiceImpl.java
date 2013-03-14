@@ -357,6 +357,8 @@ public class GridAccountServiceImpl implements GridAccountService {
 						this.cachedPassPhrase = "";
 						throw new PassPhraseInvalidException(
 								"invalid pass phrase");
+					} else {
+						this.cachedPassPhrase = passPhrase;
 					}
 				}
 
