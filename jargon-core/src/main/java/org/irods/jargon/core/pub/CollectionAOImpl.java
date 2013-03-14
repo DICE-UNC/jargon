@@ -26,7 +26,6 @@ import org.irods.jargon.core.query.AVUQueryElement;
 import org.irods.jargon.core.query.AVUQueryOperatorEnum;
 import org.irods.jargon.core.query.GenQueryBuilderException;
 import org.irods.jargon.core.query.GenQueryField.SelectFieldTypes;
-import org.irods.jargon.core.query.IRODSGenQuery;
 import org.irods.jargon.core.query.IRODSGenQueryBuilder;
 import org.irods.jargon.core.query.IRODSGenQueryFromBuilder;
 import org.irods.jargon.core.query.IRODSQueryResultRow;
@@ -188,97 +187,6 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 		} catch (JargonQueryException jqe) {
 			log.error("error executing query", jqe);
 			throw new JargonException("error executing query", jqe);
-		}
-
-		return CollectionAOHelper.buildListFromResultSet(resultSet);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.irods.jargon.core.pub.CollectionAO#findWhere(java.lang.String,
-	 * int)
-	 */
-	@Override
-	public List<Collection> findWhere(final String whereClause,
-			final int partialStartIndex) throws JargonException {
-
-		if (whereClause == null) {
-			throw new IllegalArgumentException("null where clause");
-		}
-
-		final StringBuilder query = new StringBuilder();
-		query.append(CollectionAOHelper.buildSelects());
-		query.append(" WHERE ");
-		query.append(whereClause);
-		final String queryString = query.toString();
-
-		log.info("coll query:{}", queryString);
-
-		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(queryString,
-				getIRODSSession().getJargonProperties()
-						.getMaxFilesAndDirsQueryMax());
-
-		IRODSQueryResultSetInterface resultSet;
-
-		try {
-			resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResult(
-					irodsQuery, partialStartIndex);
-		} catch (JargonQueryException e) {
-			log.error("query exception for:" + queryString, e);
-			throw new JargonException(ERROR_IN_COLECTION_QUERY);
-		}
-
-		return CollectionAOHelper.buildListFromResultSet(resultSet);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.irods.jargon.core.pub.CollectionAO#findWhereInZone(java.lang.String,
-	 * int, java.lang.String)
-	 */
-	@Override
-	public List<Collection> findWhereInZone(final String whereClause,
-			final int partialStartIndex, final String zone)
-			throws JargonException {
-
-		log.info("findWhereInZone()");
-
-		if (whereClause == null) {
-			throw new IllegalArgumentException("null where clause");
-		}
-
-		if (zone == null) {
-			throw new IllegalArgumentException(
-					"null zone, set to blank if not needed");
-		}
-
-		log.info("whereClause:{}", whereClause);
-		log.info("zone:{}", zone);
-
-		final StringBuilder query = new StringBuilder();
-		query.append(CollectionAOHelper.buildSelects());
-		query.append(" WHERE ");
-		query.append(whereClause);
-		final String queryString = query.toString();
-
-		log.info("coll query:{}", queryString);
-
-		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(queryString,
-				getIRODSSession().getJargonProperties()
-						.getMaxFilesAndDirsQueryMax());
-
-		IRODSQueryResultSetInterface resultSet;
-
-		try {
-			resultSet = irodsGenQueryExecutor
-					.executeIRODSQueryAndCloseResultInZone(irodsQuery,
-							partialStartIndex, zone);
-		} catch (JargonQueryException e) {
-			log.error("query exception for:" + queryString, e);
-			throw new JargonException(ERROR_IN_COLECTION_QUERY);
 		}
 
 		return CollectionAOHelper.buildListFromResultSet(resultSet);
@@ -857,6 +765,37 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 
 		ObjStat objStat = this.retrieveObjStat(irodsCollectionAbsolutePath);
 		return findGivenObjStat(objStat);
+
+	}
+	
+	@Override
+	public Collection findById(
+			final int id)
+			throws DataNotFoundException, JargonException {
+
+		log.info("findById() with id:{}", id);
+		
+		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, null);
+		IRODSQueryResultSetInterface resultSet;
+
+		try {
+			CollectionAOHelper.buildSelectsByAppendingToBuilder(builder);
+			builder.addConditionAsGenQueryField(RodsGenQueryEnum.COL_COLL_ID,
+					QueryConditionOperators.EQUAL, String.valueOf(id));
+			IRODSGenQueryFromBuilder irodsQuery = builder
+					.exportIRODSQueryFromBuilder(1);
+
+			resultSet = irodsGenQueryExecutor
+					.executeIRODSQueryAndCloseResult(irodsQuery, 0);
+		} catch (GenQueryBuilderException e) {
+			log.error("builder exception in query", e);
+			throw new JargonException("error in query", e);
+		} catch (JargonQueryException e) {
+			log.error(" exception in query", e);
+			throw new JargonException("error in query", e);
+		}
+		
+		return CollectionAOHelper.buildCollectionFromResultSetRow(resultSet.getFirstResult());
 
 	}
 
@@ -1694,16 +1633,14 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 					.exportIRODSQueryFromBuilder(getJargonProperties()
 							.getMaxFilesAndDirsQueryMax());
 
-			resultSet = irodsGenQueryExecutor
-					.executeIRODSQueryAndCloseResultInZone(irodsQuery, 0,
-							objStat.getOwnerZone());
+			resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResult(
+					irodsQuery, 0);
 
 			UserFilePermission userFilePermission = null;
 
 			for (IRODSQueryResultRow row : resultSet.getResults()) {
 
-				user = userAO.findByIdInZone(row.getColumn(2),
-						objStat.getOwnerZone());
+				user = userAO.findById(row.getColumn(2));
 				userFilePermission = new UserFilePermission(row.getColumn(0),
 						row.getColumn(2),
 						FilePermissionEnum.valueOf(IRODSDataConversionUtil

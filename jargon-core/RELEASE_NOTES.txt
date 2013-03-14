@@ -1,5 +1,5 @@
 *'''Project''': Jargon-core API
-*'''Date''': 02/27/2013
+*'''Date''': 
 *'''Release Version''': 3.3.1-SNAPSHOT	
 *'''git tag''': 
 
@@ -37,5 +37,14 @@ Note that the following bug and feature requests are logged in GForge with relat
 
 ==Bug Fixes==
  
+ *[#1263] ACL retrieval query and the user lookup queries, the method queries the zone of the user and not the zone containing the collection
+ **Added code to properly query the permissions as they exist on the current zone
+ 
+ *[#1139] Spaces at the begin or end of a data object name will cause an exception
+ **removed trim() statements in query building to handle intended spaces in file names.  Note that there may be a bug for collection names with
+ embedded spaces, this is ignored in the JUNit tests for CollectionAOImpl, and that issue has been routed to iRODS for now.
  
 ==Features==
+
+*[#1264] [iROD-Chat:9666] Referencing Data Objects
+**Added findById() methods to DataObjectAO and CollectionAO

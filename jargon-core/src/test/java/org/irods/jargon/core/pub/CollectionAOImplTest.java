@@ -34,6 +34,7 @@ import org.irods.jargon.testutils.icommandinvoke.icommands.ImetaRemoveCommand;
 import org.irods.jargon.testutils.icommandinvoke.icommands.ImkdirCommand;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class CollectionAOImplTest {
@@ -1166,6 +1167,45 @@ public class CollectionAOImplTest {
 
 		Assert.assertFalse("no query result returned", queryResults.isEmpty());
 	}
+	
+	@Test
+	public void testFindById() throws Exception {
+		String testDirName = "testFindById";
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
+								+ testDirName);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+		
+		IRODSFile collFile = accessObjectFactory.getIRODSFileFactory(irodsAccount).instanceIRODSFile(targetIrodsCollection);
+		collFile.mkdirs();
+
+		CollectionAO collectionAO = accessObjectFactory
+				.getCollectionAO(irodsAccount);
+		Collection collection = collectionAO
+				.findByAbsolutePath(targetIrodsCollection);
+		Collection actual = collectionAO.findById(collection.getCollectionId());
+		Assert.assertNotNull("did not find collection", actual);
+	}
+	
+	@Test(expected=DataNotFoundException.class)
+	public void testFindByIdNotFound() throws Exception {
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+		
+		CollectionAO collectionAO = accessObjectFactory
+				.getCollectionAO(irodsAccount);
+	
+		collectionAO.findById(99999999);
+	}
 
 	@Test
 	public void findByAbsolutePath() throws Exception {
@@ -1176,19 +1216,53 @@ public class CollectionAOImplTest {
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
 								+ testDirName);
 
-		// put scratch collection into irods in the right place
-		IrodsInvocationContext invocationContext = testingPropertiesHelper
-				.buildIRODSInvocationContextFromTestProperties(testingProperties);
-		ImkdirCommand imkdirCommand = new ImkdirCommand();
-		imkdirCommand.setCollectionName(targetIrodsCollection);
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+		
+		IRODSFile collFile = accessObjectFactory.getIRODSFileFactory(irodsAccount).instanceIRODSFile(targetIrodsCollection);
+		collFile.mkdirs();
 
-		IcommandInvoker invoker = new IcommandInvoker(invocationContext);
-		invoker.invokeCommandAndGetResultAsString(imkdirCommand);
+		CollectionAO collectionAO = accessObjectFactory
+				.getCollectionAO(irodsAccount);
+		Collection collection = collectionAO
+				.findByAbsolutePath(targetIrodsCollection);
+
+		Assert.assertNotNull("did not find the collection, was null",
+				collection);
+		Assert.assertEquals("should be normal coll type", SpecColType.NORMAL,
+				collection.getSpecColType());
+		Assert.assertEquals("absPath should be same as requested path",
+				targetIrodsCollection, collection.getCollectionName());
+		Assert.assertEquals("collection Name should be same as requested path",
+				targetIrodsCollection, collection.getCollectionName());
+	}
+	
+	/**
+	 * Bug [#1139] Spaces at the begin or end of a data object name will cause
+	 * an exception
+	 * 
+	 * ignored for now as it apears that getting an objStat from iRODS has an issue, see bug notes
+	 * 
+	 * @throws Exception
+	 */
+	@Ignore
+	public void findByAbsolutePathSpacesInNameBug1139() throws Exception {
+		String testDirName = " findByAbsolutePath ";
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
+								+ testDirName);
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
 		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
 				.getIRODSAccessObjectFactory();
+		
+		IRODSFile collFile = accessObjectFactory.getIRODSFileFactory(irodsAccount).instanceIRODSFile(targetIrodsCollection);
+		collFile.mkdirs();
 
 		CollectionAO collectionAO = accessObjectFactory
 				.getCollectionAO(irodsAccount);

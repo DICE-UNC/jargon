@@ -700,7 +700,7 @@ public class DataObjectAOImplTest {
 		Assert.assertNotNull("null data object, was not found", dataObject);
 
 	}
-
+	
 	/**
 	 * Bug [#1139] Spaces at the begin or end of a data object name will cause
 	 * an exception
@@ -708,9 +708,9 @@ public class DataObjectAOImplTest {
 	 * @throws Exception
 	 */
 	@Test
-	public void testFindByAbsolutePathSpacesInProvidedPath() throws Exception {
+	public void testFindByAbsolutePathSpacesInProvidedPathSpacesInActualFileNameBug1139Leading() throws Exception {
 		// generate a local scratch file
-		String testFileName = "testFindByAbsolutePathSpacesInProvidedPath.dat";
+		String testFileName = " testFindByAbsolutePathSpacesInProvidedPathSpacesInActualFileNameBug1139Leading.dat";
 		String absPath = scratchFileUtils
 				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
 		String localFileName = FileGenerator
@@ -738,11 +738,60 @@ public class DataObjectAOImplTest {
 
 		String targetIrodsFileQueryName = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH + " / "
-								+ testFileName + "   ");
+						testingProperties, IRODS_TEST_SUBDIR_PATH + "/"
+								+ testFileName);
 		DataObject dataObject = dataObjectAO
 				.findByAbsolutePath(targetIrodsFileQueryName);
 		Assert.assertNotNull("null data object, was not found", dataObject);
+
+	}
+	
+	
+	@Test
+	public void testFindById() throws Exception {
+		// generate a local scratch file
+		String testFileName = "testFindById.dat";
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String localFileName = FileGenerator
+				.generateFileOfFixedLengthGivenName(absPath, testFileName, 1);
+
+		String targetIrodsFile = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
+								+ testFileName);
+		// now put the file
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		DataTransferOperations dto = irodsFileSystem.getIRODSAccessObjectFactory().getDataTransferOperations(irodsAccount);
+
+		dto.putOperation(localFileName, targetIrodsFile, "", null, null);
+
+		DataObjectAO dataObjectAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
+
+		DataObject dataObject = dataObjectAO
+				.findByAbsolutePath(targetIrodsFile);
+		
+		DataObject actual = dataObjectAO.findById(dataObject.getId());
+		
+		Assert.assertNotNull("null data object, was not found", actual);
+
+	}
+	
+	@Test(expected=DataNotFoundException.class)
+	public void testFindByIdNotFound() throws Exception {
+		// generate a local scratch file
+	
+		// now put the file
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+	
+		DataObjectAO dataObjectAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
+
+		dataObjectAO
+				.findById(999999999);
 
 	}
 
