@@ -32,6 +32,9 @@ import org.irods.jargon.core.utils.CollectionAndPath;
 import org.irods.jargon.core.utils.FederationEnabled;
 import org.irods.jargon.core.utils.IRODSDataConversionUtil;
 import org.irods.jargon.core.utils.MiscIRODSUtils;
+import org.perf4j.StopWatch;
+import org.perf4j.log4j.Log4JStopWatch;
+import org.perf4j.slf4j.Slf4JStopWatch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -247,6 +250,12 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 					"absolutePathToParent is null or empty");
 		}
 
+		StopWatch stopWatch = null;
+
+		if (this.isInstrumented()) {
+			stopWatch = new Slf4JStopWatch("listDataObjectsAndCollectionsUnderPath");
+		}
+
 		ObjStat objStat;
 
 		try {
@@ -265,6 +274,11 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 
 		entries.addAll(listCollectionsUnderPath(objStat, 0));
 		entries.addAll(listDataObjectsUnderPath(objStat, 0));
+
+		if (this.isInstrumented()) {
+			stopWatch.stop();
+		}
+
 		return entries;
 	}
 
@@ -769,6 +783,12 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 			throw new IllegalArgumentException("objStat is null");
 		}
 
+		StopWatch stopWatch = null;
+
+		if (this.isInstrumented()) {
+			stopWatch = new Slf4JStopWatch("listCollectionsUnderPath");
+		}
+
 		/*
 		 * See if jargon supports the given object type
 		 */
@@ -819,6 +839,10 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 					.equals("/")) {
 				subdirs.add(collectionAndDataObjectListingEntry);
 			}
+		}
+		
+		if (this.isInstrumented()) {
+			stopWatch.stop();
 		}
 
 		return subdirs;
@@ -1547,6 +1571,12 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 					"irodsAbsolutePath is null or empty");
 		}
 
+		StopWatch stopWatch = null;
+
+		if (this.isInstrumented()) {
+			stopWatch = new Log4JStopWatch("retrieveObjectStatForPath");
+		}
+
 		MiscIRODSUtils.checkPathSizeForMax(irodsAbsolutePath);
 
 		DataObjInpForObjStat dataObjInp = DataObjInpForObjStat
@@ -1663,6 +1693,9 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 				.getDateFromIRODSValue(createdDate));
 		objStat.setModifiedAt(IRODSDataConversionUtil
 				.getDateFromIRODSValue(modifiedDate));
+		if (this.isInstrumented()) {
+			stopWatch.stop();
+		}
 		log.info(objStat.toString());
 		return objStat;
 
