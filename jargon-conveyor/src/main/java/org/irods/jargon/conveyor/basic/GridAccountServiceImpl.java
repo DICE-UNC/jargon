@@ -362,6 +362,9 @@ public class GridAccountServiceImpl implements GridAccountService {
 					}
 				}
 
+				log.info("refreshing cacheEncryptor with the new pass phrase...");
+				cacheEncryptor = new CacheEncryptor(this.getCachedPassPhrase());
+
 			} catch (TransferDAOException e) {
 				log.error("error finding pass phrase in key store", e);
 				throw new ConveyorExecutionException(
