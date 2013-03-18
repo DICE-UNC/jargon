@@ -13,7 +13,6 @@
 		<appender-ref ref="fileAppender" />
 	</appender>
 
-
 	<!-- This file appender is used to output aggregated performance statistics 
 		in a format identical to that produced by the LogParser. -->
 	<appender name="fileAppender" class="org.apache.log4j.FileAppender">
@@ -22,7 +21,6 @@
 			<param name="ConversionPattern" value="%m%n" />
 		</layout>
 	</appender>
-
 
 	<!-- Loggers -->
 	<!-- The Perf4J logger. -->
