@@ -138,7 +138,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 		String absPath = MiscIRODSUtils
 				.buildAbsolutePathFromCollectionParentAndFileName(
-						collectionPath.trim(), dataName.trim());
+						collectionPath, dataName);
 		ObjStat objStat = collectionAndDataObjectListAndSearchAO
 				.retrieveObjectStatForPath(absPath);
 
@@ -169,6 +169,48 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		return findByCollectionNameAndDataName(
 				collectionAndPath.getCollectionParent(),
 				collectionAndPath.getChildName());
+
+	}
+
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.core.pub.DataObjectAO#findById(int)
+	 */
+	@Override
+	public DataObject findById(final int id) throws FileNotFoundException,
+			JargonException {
+
+		log.info("findById() with id:{}", id);
+		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, null);
+
+		dataAOHelper.buildSelects(builder);
+
+		builder.addConditionAsGenQueryField(RodsGenQueryEnum.COL_D_DATA_ID,
+				QueryConditionOperators.EQUAL, String.valueOf(id));
+
+		IRODSQueryResultSet resultSet = null;
+		try {
+			IRODSGenQueryFromBuilder irodsQuery = builder
+					.exportIRODSQueryFromBuilder(this.getJargonProperties()
+							.getMaxFilesAndDirsQueryMax());
+			resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResult(
+					irodsQuery, 0);
+
+		} catch (JargonQueryException e) {
+			log.error("query exception for query", e);
+			throw new JargonException("error in query for data object", e);
+		} catch (GenQueryBuilderException e) {
+			log.error("query exception for query", e);
+			throw new JargonException("error in query for data object", e);
+		}
+
+		if (resultSet.getFirstResult() == null) {
+			log.error("no data object data found for id:{}", id);
+			throw new FileNotFoundException(
+					"no data object data found in iCAT for id");
+		}
+
+		return DataAOHelper.buildDomainFromResultSetRow(resultSet
+				.getFirstResult());
 
 	}
 
@@ -2732,9 +2774,8 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			IRODSGenQueryFromBuilder irodsQuery = builder
 					.exportIRODSQueryFromBuilder(this.getJargonProperties()
 							.getMaxFilesAndDirsQueryMax());
-			resultSet = irodsGenQueryExecutor
-					.executeIRODSQueryAndCloseResultInZone(irodsQuery, 0,
-							objStat.getOwnerZone());
+			resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResult(
+					irodsQuery, 0);
 
 			for (IRODSQueryResultRow row : resultSet.getResults()) {
 				userFilePermissions

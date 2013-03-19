@@ -26,7 +26,9 @@ public abstract class IRODSGenericAO implements IRODSAccessObject {
 
 	private final IRODSSession irodsSession;
 	private final IRODSAccount irodsAccount;
+	private final boolean instrumented;
 
+	
 	private static final Logger log = LoggerFactory
 			.getLogger(IRODSGenericAO.class);
 
@@ -56,10 +58,19 @@ public abstract class IRODSGenericAO implements IRODSAccessObject {
 
 		this.irodsSession = irodsSession;
 		this.irodsAccount = irodsAccount;
+		instrumented = this.getIRODSAccessObjectFactory().getJargonProperties().isInstrument();
 
 		log.debug("establishing connection");
 		irodsSession.currentConnection(irodsAccount);
 
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.core.pub.IRODSAccessObject#isInstrumented()
+	 */
+	@Override
+	public boolean isInstrumented() {
+		return instrumented;
 	}
 
 	/*
