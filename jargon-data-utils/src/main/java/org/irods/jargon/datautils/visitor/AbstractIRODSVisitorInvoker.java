@@ -30,16 +30,17 @@ import org.slf4j.LoggerFactory;
  * caution!
  * 
  * @author Mike Conway - DICE (www.irods.org)
+ * @param <R>
  * 
  */
-public abstract class AbstractIRODSVisitorInvoker<E> extends
+public abstract class AbstractIRODSVisitorInvoker<E, R> extends
 		AbstractJargonService {
 
 	public enum VisitorDesiredAction {
 		HALT, CONTINUE
 	}
 
-	private final AbstractIRODSVisitor<E> visitor;
+	private final AbstractIRODSVisitor<E, R> visitor;
 
 	/**
 	 * signal to the framework to cancel the iteration/visiting
@@ -56,7 +57,7 @@ public abstract class AbstractIRODSVisitorInvoker<E> extends
 	public AbstractIRODSVisitorInvoker(
 			final IRODSAccessObjectFactory irodsAccessObjectFactory,
 			final IRODSAccount irodsAccount,
-			final AbstractIRODSVisitor<E> visitor) {
+			final AbstractIRODSVisitor<E, R> visitor) {
 		super(irodsAccessObjectFactory, irodsAccount);
 
 		if (visitor == null) {
@@ -78,13 +79,35 @@ public abstract class AbstractIRODSVisitorInvoker<E> extends
 	 * @throws JargonException
 	 */
 	protected void execute() throws NoMoreItemsException, JargonException {
+		log.info("execute()");
 		initializeInvoker();
+		log.info("invoker initialized....now processing results");
 
-		while (!cancel && hasMore()) {
-			VisitorDesiredAction action = visitor.invoke(next(), this);
-			if (action == VisitorDesiredAction.HALT) {
-				cancel = true;
+		try {
+			while (!cancel && hasMore()) {
+				VisitorDesiredAction action = visitor.invoke(next(), this);
+				if (action == VisitorDesiredAction.HALT) {
+					log.info("halt returned from visitor, cancelling");
+					cancel = true;
+				}
 			}
+			log.info("processing complete, calling complete() on the visitor");
+			visitor.complete(this);
+		} catch (JargonException je) {
+			log.error(
+					"unhandled jargon exception in visitor processing, calling close and terminating",
+					je);
+			throw je;
+		} catch (Exception e) {
+			log.error(
+					"unhandled  exception in visitor processing, calling close and terminating, rethrow as JargonException",
+					e);
+			throw new JargonException(
+					"unhandled exception in visitor processing", e);
+
+		} finally {
+			log.info("close processing");
+			close();
 		}
 
 	}
@@ -120,6 +143,15 @@ public abstract class AbstractIRODSVisitorInvoker<E> extends
 	protected abstract boolean hasMore();
 
 	/**
+	 * Complete the operation, called even if cancel or error occurs.
+	 * <p/>
+	 * Any resource freeing or final evaluation should be implemented here
+	 * 
+	 * @throws JargonException
+	 */
+	public abstract void close() throws JargonException;
+
+	/**
 	 * Checks if cancel has been called on this object, or a <code>HALT</code>
 	 * was returned from the visitor.
 	 * 
@@ -135,6 +167,7 @@ public abstract class AbstractIRODSVisitorInvoker<E> extends
 	 * the visitor implementation.
 	 */
 	public void setCancel(final boolean cancel) {
+		log.warn("attempting to cancel...");
 		this.cancel = cancel;
 	}
 
