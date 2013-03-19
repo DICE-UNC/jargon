@@ -82,7 +82,7 @@ public class IRODSGenQueryExecutorImplBuiilderQueriesTest {
 		builder.addSelectAsAgregateGenQueryValue(RodsGenQueryEnum.COL_COLL_ID,
 				SelectFieldTypes.COUNT).addConditionAsGenQueryField(
 				RodsGenQueryEnum.COL_D_OWNER_ZONE,
-				QueryConditionOperators.EQUAL, irodsAccount.getZone());
+				QueryConditionOperators.EQUAL, irodsAccount.getZone().trim());
 
 		IRODSGenQueryFromBuilder query = builder.exportIRODSQueryFromBuilder(1);
 
@@ -120,7 +120,7 @@ public class IRODSGenQueryExecutorImplBuiilderQueriesTest {
 		builder.addSelectAsAgregateGenQueryValue(RodsGenQueryEnum.COL_COLL_ID,
 				SelectFieldTypes.COUNT).addConditionAsGenQueryField(
 				RodsGenQueryEnum.COL_D_OWNER_ZONE,
-				QueryConditionOperators.EQUAL, irodsAccount.getZone());
+				QueryConditionOperators.EQUAL, irodsAccount.getZone().trim());
 
 		IRODSGenQueryFromBuilder query = builder.exportIRODSQueryFromBuilder(1);
 

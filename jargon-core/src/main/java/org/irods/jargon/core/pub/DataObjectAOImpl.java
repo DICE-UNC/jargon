@@ -222,12 +222,11 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		} else {
 			builder.addConditionAsGenQueryField(RodsGenQueryEnum.COL_COLL_NAME,
 					QueryConditionOperators.EQUAL, collectionAndPath
-							.getCollectionParent().trim());
+							.getCollectionParent());
 		}
 
 		builder.addConditionAsGenQueryField(RodsGenQueryEnum.COL_DATA_NAME,
-				QueryConditionOperators.EQUAL, collectionAndPath.getChildName()
-						.trim());
+				QueryConditionOperators.EQUAL, collectionAndPath.getChildName());
 
 		IRODSQueryResultSet resultSet = null;
 		try {
@@ -3015,7 +3014,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 				dataName, builder);
 
 		builder.addConditionAsGenQueryField(RodsGenQueryEnum.COL_USER_NAME,
-				QueryConditionOperators.EQUAL, userName);
+				QueryConditionOperators.EQUAL, userName.trim());
 
 		IRODSQueryResultSetInterface resultSet;
 

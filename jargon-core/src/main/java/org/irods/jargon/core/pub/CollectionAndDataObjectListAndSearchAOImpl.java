@@ -480,7 +480,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 			CollectionAOHelper
 					.buildSelectsNeededForCollectionsInCollectionsAndDataObjectsListingEntry(builder);
 			builder.addConditionAsGenQueryField(RodsGenQueryEnum.COL_COLL_NAME,
-					QueryConditionOperators.LIKE, "%" + searchTerm.trim());
+					QueryConditionOperators.LIKE, "%" + searchTerm);
 			IRODSGenQueryFromBuilder irodsQuery = builder
 					.exportIRODSQueryFromBuilder(getJargonProperties()
 							.getMaxFilesAndDirsQueryMax());
@@ -1394,8 +1394,8 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_OWNER_NAME)
 					.addConditionAsGenQueryField(
 							RodsGenQueryEnum.COL_DATA_NAME,
-							QueryConditionOperators.LIKE,
-							"%" + searchTerm.trim() + "%");
+							QueryConditionOperators.LIKE, 
+							"%" + searchTerm + "%");
 			IRODSGenQueryFromBuilder irodsQuery = builder
 					.exportIRODSQueryFromBuilder(getJargonProperties()
 							.getMaxFilesAndDirsQueryMax());
@@ -1550,7 +1550,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		MiscIRODSUtils.checkPathSizeForMax(irodsAbsolutePath);
 
 		DataObjInpForObjStat dataObjInp = DataObjInpForObjStat
-				.instance(irodsAbsolutePath.trim());
+				.instance(irodsAbsolutePath);
 		Tag response;
 		try {
 			response = getIRODSProtocol().irodsFunction(dataObjInp);

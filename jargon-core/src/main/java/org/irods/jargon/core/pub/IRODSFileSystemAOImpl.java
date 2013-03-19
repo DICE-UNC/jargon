@@ -399,7 +399,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 							QueryConditionOperators.EQUAL, fileName)
 					.addConditionAsGenQueryField(
 							RodsGenQueryEnum.COL_DATA_ACCESS_USER_ID,
-							QueryConditionOperators.EQUAL, userId);
+							QueryConditionOperators.EQUAL, userId.trim());
 		} catch (GenQueryBuilderException e) {
 			throw new JargonException(e);
 		}
@@ -520,7 +520,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 							QueryConditionOperators.EQUAL, dir)
 					.addConditionAsGenQueryField(
 							RodsGenQueryEnum.COL_COLL_ACCESS_USER_ID,
-							QueryConditionOperators.EQUAL, userId);
+							QueryConditionOperators.EQUAL, userId.trim());
 		} catch (GenQueryBuilderException e) {
 			throw new JargonException("error building permissions query", e);
 		}

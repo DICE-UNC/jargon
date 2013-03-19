@@ -521,7 +521,8 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 							OrderByType.ASC)
 					.addConditionAsGenQueryField(
 							RodsGenQueryEnum.COL_USER_NAME,
-							QueryConditionOperators.LIKE, userQuery.toString());
+							QueryConditionOperators.LIKE, 
+							userQuery.toString().trim());
 			IRODSGenQueryFromBuilder irodsQuery = builder
 					.exportIRODSQueryFromBuilder(this.getJargonProperties()
 							.getMaxFilesAndDirsQueryMax());
