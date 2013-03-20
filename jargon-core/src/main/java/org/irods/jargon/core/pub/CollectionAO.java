@@ -104,6 +104,25 @@ public interface CollectionAO extends FileCatalogObjectAO {
 			JargonException;
 
 	/**
+	 * Get a set of AVU metadata, and the iRODS objects to which the metadata is
+	 * attached, based on a metadata query
+	 * 
+	 * @param avuQuery
+	 *            <code>List</code> of
+	 *            {@link org.irods.jargon.core.query.AVUQueryElements} with the
+	 *            query specification
+	 * @param offset
+	 *            <code>int</code> with a paging offset
+	 * @return <code>List</code> of
+	 *         {@link org.irods.jargon.core.query.MetaDataAndDomainData}
+	 * @throws JargonQueryException
+	 * @throws JargonException
+	 */
+	List<MetaDataAndDomainData> findMetadataValuesByMetadataQuery(
+			List<AVUQueryElement> avuQuery, int offset)
+			throws JargonQueryException, JargonException;
+
+	/**
 	 * Get a summary list of collections and data objects and AVU metadata based
 	 * on a metadata query
 	 * 
@@ -140,6 +159,29 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	 */
 	List<MetaDataAndDomainData> findMetadataValuesByMetadataQuery(
 			List<AVUQueryElement> avuQuery, boolean caseInsensitive)
+			throws JargonQueryException, JargonException;
+
+	/**
+	 * Get a list of collections and associated metadata that match a given AVU
+	 * query. This version allows both an offset and specification of case
+	 * insensitivity
+	 * 
+	 * @param avuQuery
+	 *            <code>List</code> of
+	 *            {@link org.irods.jargon.core.query.AVUQueryElements} with the
+	 *            query specification
+	 * @param offset
+	 *            <code>int</code> with a paging offset
+	 * @param caseInsensitive
+	 *            <code>boolean</code> of <code>true</code> which allows
+	 *            case-insensitive AVU queries
+	 * @return <code>List</code> of
+	 *         {@link org.irods.jargon.core.query.MetaDataAndDomainData}
+	 * @throws JargonQueryException
+	 * @throws JargonException
+	 */
+	List<MetaDataAndDomainData> findMetadataValuesByMetadataQuery(
+			List<AVUQueryElement> avuQuery, int offset, boolean caseInsensitive)
 			throws JargonQueryException, JargonException;
 
 	/**
@@ -821,10 +863,14 @@ public interface CollectionAO extends FileCatalogObjectAO {
 			throws JargonException;
 
 	/**
-	 * Find the iRODS <code>Collection</code> with the given primary key in the ICAT
-	 * @param id <code>int</code> with the iRODS primary key
+	 * Find the iRODS <code>Collection</code> with the given primary key in the
+	 * ICAT
+	 * 
+	 * @param id
+	 *            <code>int</code> with the iRODS primary key
 	 * @return {@link Collection} with the given primary key
-	 * @throws DataNotFoundException if the collection is not found
+	 * @throws DataNotFoundException
+	 *             if the collection is not found
 	 * @throws JargonException
 	 */
 	Collection findById(int id) throws DataNotFoundException, JargonException;

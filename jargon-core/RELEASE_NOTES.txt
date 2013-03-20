@@ -48,3 +48,6 @@ Note that the following bug and feature requests are logged in GForge with relat
 
 *[#1264] [iROD-Chat:9666] Referencing Data Objects
 **Added findById() methods to DataObjectAO and CollectionAO
+
+*[#1172] Jargon enhancements supporting HIVE integration project
+**Added new methods to CollectionAO for paging queries by AVU using offsets

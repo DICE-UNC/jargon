@@ -197,6 +197,37 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 	 * 
 	 * @see
 	 * org.irods.jargon.core.pub.CollectionAO#findMetadataValuesByMetadataQuery
+	 * (java.util.List, int)
+	 */
+	@Override
+	public List<MetaDataAndDomainData> findMetadataValuesByMetadataQuery(
+			final List<AVUQueryElement> avuQuery, final int offset)
+			throws JargonQueryException, JargonException {
+		return findMetadataValuesByMetadataQueryForCollection(avuQuery, "",
+				offset, false);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.CollectionAO#findMetadataValuesByMetadataQuery
+	 * (java.util.List, int, boolean)
+	 */
+	@Override
+	public List<MetaDataAndDomainData> findMetadataValuesByMetadataQuery(
+			final List<AVUQueryElement> avuQuery, final int offset,
+			final boolean caseInsensitive) throws JargonQueryException,
+			JargonException {
+		return findMetadataValuesByMetadataQueryForCollection(avuQuery, "",
+				offset, caseInsensitive);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.CollectionAO#findMetadataValuesByMetadataQuery
 	 * (java.util.List)
 	 */
 	@Override
@@ -206,6 +237,13 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 		return findMetadataValuesByMetadataQueryForCollection(avuQuery, "");
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.CollectionAO#findMetadataValuesByMetadataQuery
+	 * (java.util.List, boolean)
+	 */
 	@Override
 	public List<MetaDataAndDomainData> findMetadataValuesByMetadataQuery(
 			final List<AVUQueryElement> avuQuery, final boolean caseInsensitive)
@@ -767,14 +805,13 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 		return findGivenObjStat(objStat);
 
 	}
-	
+
 	@Override
-	public Collection findById(
-			final int id)
-			throws DataNotFoundException, JargonException {
+	public Collection findById(final int id) throws DataNotFoundException,
+			JargonException {
 
 		log.info("findById() with id:{}", id);
-		
+
 		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, null);
 		IRODSQueryResultSetInterface resultSet;
 
@@ -785,8 +822,8 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 			IRODSGenQueryFromBuilder irodsQuery = builder
 					.exportIRODSQueryFromBuilder(1);
 
-			resultSet = irodsGenQueryExecutor
-					.executeIRODSQueryAndCloseResult(irodsQuery, 0);
+			resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResult(
+					irodsQuery, 0);
 		} catch (GenQueryBuilderException e) {
 			log.error("builder exception in query", e);
 			throw new JargonException("error in query", e);
@@ -794,8 +831,9 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 			log.error(" exception in query", e);
 			throw new JargonException("error in query", e);
 		}
-		
-		return CollectionAOHelper.buildCollectionFromResultSetRow(resultSet.getFirstResult());
+
+		return CollectionAOHelper.buildCollectionFromResultSetRow(resultSet
+				.getFirstResult());
 
 	}
 
