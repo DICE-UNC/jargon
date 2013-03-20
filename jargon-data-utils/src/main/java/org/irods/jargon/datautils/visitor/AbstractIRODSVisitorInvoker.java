@@ -33,14 +33,14 @@ import org.slf4j.LoggerFactory;
  * @param <R>
  * 
  */
-public abstract class AbstractIRODSVisitorInvoker<E, R> extends
+public abstract class AbstractIRODSVisitorInvoker<E> extends
 		AbstractJargonService {
 
 	public enum VisitorDesiredAction {
 		HALT, CONTINUE
 	}
 
-	private final AbstractIRODSVisitor<E, R> visitor;
+	private final AbstractIRODSVisitor<E> visitor;
 
 	/**
 	 * signal to the framework to cancel the iteration/visiting
@@ -57,7 +57,7 @@ public abstract class AbstractIRODSVisitorInvoker<E, R> extends
 	public AbstractIRODSVisitorInvoker(
 			final IRODSAccessObjectFactory irodsAccessObjectFactory,
 			final IRODSAccount irodsAccount,
-			final AbstractIRODSVisitor<E, R> visitor) {
+			final AbstractIRODSVisitor<E> visitor) {
 		super(irodsAccessObjectFactory, irodsAccount);
 
 		if (visitor == null) {
@@ -91,8 +91,6 @@ public abstract class AbstractIRODSVisitorInvoker<E, R> extends
 					cancel = true;
 				}
 			}
-			log.info("processing complete, calling complete() on the visitor");
-			visitor.complete(this);
 		} catch (JargonException je) {
 			log.error(
 					"unhandled jargon exception in visitor processing, calling close and terminating",
@@ -106,7 +104,8 @@ public abstract class AbstractIRODSVisitorInvoker<E, R> extends
 					"unhandled exception in visitor processing", e);
 
 		} finally {
-			log.info("close processing");
+			log.info("processing complete, calling complete() on the visitor");
+			visitor.complete();
 			close();
 		}
 

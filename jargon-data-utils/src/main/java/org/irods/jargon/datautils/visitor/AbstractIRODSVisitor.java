@@ -16,7 +16,7 @@ import org.irods.jargon.datautils.visitor.AbstractIRODSVisitorInvoker.VisitorDes
  * @author Mike Conway - DICE (www.irods.org)
  * 
  */
-public abstract class AbstractIRODSVisitor<E, R> {
+public abstract class AbstractIRODSVisitor<E> {
 
 	public AbstractIRODSVisitor() {
 	}
@@ -41,7 +41,7 @@ public abstract class AbstractIRODSVisitor<E, R> {
 	 * @throws JargonException
 	 */
 	public abstract VisitorDesiredAction invoke(final E visited,
-			final AbstractIRODSVisitorInvoker<E, R> abstractIRODSVisitorInvoker)
+			final AbstractIRODSVisitorInvoker<E> abstractIRODSVisitorInvoker)
 			throws JargonException;
 
 	/**
@@ -49,20 +49,8 @@ public abstract class AbstractIRODSVisitor<E, R> {
 	 * successful (non cancelled) completion of processing for the given
 	 * collection of data
 	 * 
-	 * @param abstractIRODSVisitorInvoker
-	 *            {@link AbstractIRODSVisitorInvoker} implementation that is
-	 *            providing this event. This object has references to the
-	 *            {@link IRODSAccount} and {@link IRODSAccessObjectFactory}
-	 *            objects that may be used to further interact with iRODS. Note
-	 *            that such interaction should be done on a separate thread so
-	 *            as to segregate connections.
-	 * @return <code><R></code> with arbitrary information that can be returned
-	 *         by the visitor/strategy class. This return can also be
-	 *         <code>null</code>
 	 * @throws JargonException
 	 */
-	public abstract R complete(
-			final AbstractIRODSVisitorInvoker<E, R> abstractIRODSVisitorInvoker)
-			throws JargonException;
+	public abstract void complete() throws JargonException;
 
 }
