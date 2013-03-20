@@ -339,8 +339,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 			if (!collectionAbsolutePath.isEmpty()) {
 				builder.addConditionAsGenQueryField(
 						RodsGenQueryEnum.COL_COLL_NAME,
-						QueryConditionOperators.EQUAL,
-						collectionAbsolutePath.trim());
+						QueryConditionOperators.EQUAL, collectionAbsolutePath);
 			}
 
 			for (AVUQueryElement queryElement : avuQuery) {
@@ -893,7 +892,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 					.addConditionAsGenQueryField(
 							RodsGenQueryEnum.COL_COLL_NAME,
 							QueryConditionOperators.LIKE,
-							effectiveAbsolutePath.trim() + "%");
+							effectiveAbsolutePath + "%");
 			IRODSGenQueryFromBuilder irodsQuery = builder
 					.exportIRODSQueryFromBuilder(1);
 
@@ -1553,12 +1552,12 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 		CollectionAOHelper.buildACLQueryForCollectionName(absPath, builder);
 		builder.addConditionAsGenQueryField(
 				RodsGenQueryEnum.COL_COLL_ACCESS_USER_NAME,
-				QueryConditionOperators.EQUAL, theUser);
+				QueryConditionOperators.EQUAL, theUser.trim());
 
 		if (!theZone.isEmpty()) {
 			builder.addConditionAsGenQueryField(
 					RodsGenQueryEnum.COL_COLL_ACCESS_USER_ZONE,
-					QueryConditionOperators.EQUAL, theZone);
+					QueryConditionOperators.EQUAL, theZone.trim());
 		}
 
 		IRODSQueryResultSet resultSet;

@@ -293,7 +293,7 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements
 							RodsGenQueryEnum.COL_USER_GROUP_ID)
 					.addConditionAsGenQueryField(
 							RodsGenQueryEnum.COL_USER_GROUP_NAME,
-							QueryConditionOperators.EQUAL, userGroupName);
+							QueryConditionOperators.EQUAL, userGroupName.trim());
 
 			IRODSGenQueryExecutor irodsGenQueryExecutor = this
 					.getIRODSAccessObjectFactory().getIRODSGenQueryExecutor(
@@ -524,10 +524,10 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements
 					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_NAME)
 					.addConditionAsGenQueryField(
 							RodsGenQueryEnum.COL_USER_GROUP_NAME,
-							QueryConditionOperators.EQUAL, groupName)
+							QueryConditionOperators.EQUAL, groupName.trim())
 					.addConditionAsGenQueryField(
 							RodsGenQueryEnum.COL_USER_NAME,
-							QueryConditionOperators.EQUAL, userName);
+							QueryConditionOperators.EQUAL, userName.trim());
 			IRODSGenQueryExecutor irodsGenQueryExecutor = this
 					.getIRODSAccessObjectFactory().getIRODSGenQueryExecutor(
 							this.getIRODSAccount());

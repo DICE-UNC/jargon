@@ -788,27 +788,27 @@ public final class DataAOHelper extends AOHelper {
 	public static void appendConditionPartToBuilderQuery(
 			final AVUQueryElement queryElement,
 			final IRODSGenQueryBuilder builder) throws JargonQueryException {
-
+	
 		if (queryElement.getAvuQueryPart() == AVUQueryElement.AVUQueryPart.ATTRIBUTE) {
 			builder.addConditionAsGenQueryField(
 					RodsGenQueryEnum.COL_META_DATA_ATTR_NAME,
 					BuilderQueryUtils
 							.translateAVUQueryElementOperatorToBuilderQueryCondition(queryElement),
-					queryElement.getValue());
+					queryElement.getValue().trim());
 
 		} else if (queryElement.getAvuQueryPart() == AVUQueryElement.AVUQueryPart.VALUE) {
 			builder.addConditionAsGenQueryField(
 					RodsGenQueryEnum.COL_META_DATA_ATTR_VALUE,
 					BuilderQueryUtils
 							.translateAVUQueryElementOperatorToBuilderQueryCondition(queryElement),
-					queryElement.getValue());
+					queryElement.getValue().trim());
 
 		} else if (queryElement.getAvuQueryPart() == AVUQueryElement.AVUQueryPart.UNITS) {
 			builder.addConditionAsGenQueryField(
 					RodsGenQueryEnum.COL_META_DATA_ATTR_UNITS,
 					BuilderQueryUtils
 							.translateAVUQueryElementOperatorToBuilderQueryCondition(queryElement),
-					queryElement.getValue());
+					queryElement.getValue().trim());
 		} else {
 			throw new JargonQueryException("unable to resolve AVU Query part");
 		}

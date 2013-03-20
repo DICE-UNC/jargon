@@ -369,11 +369,11 @@ public class IRODSSession {
 
 		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, null);
 		try {
+			final String dn = gsiIRODSAccount.getDistinguishedName().trim();
 			builder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_NAME)
 					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_ZONE)
 					.addConditionAsGenQueryField(RodsGenQueryEnum.COL_USER_DN,
-							QueryConditionOperators.EQUAL,
-							gsiIRODSAccount.getDistinguishedName());
+							QueryConditionOperators.EQUAL, dn);
 			GenQueryProcessor genQueryProcessor = new GenQueryProcessor(
 					irodsCommands);
 
