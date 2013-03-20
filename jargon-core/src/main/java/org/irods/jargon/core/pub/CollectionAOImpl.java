@@ -402,7 +402,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 		MiscIRODSUtils.checkPathSizeForMax(absolutePath);
 
 		final ModAvuMetadataInp modifyAvuMetadataInp = ModAvuMetadataInp
-				.instanceForAddCollectionMetadata(absolutePath.trim(), avuData);
+				.instanceForAddCollectionMetadata(absolutePath, avuData);
 
 		log.debug("sending avu request");
 
@@ -453,8 +453,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 		MiscIRODSUtils.checkPathSizeForMax(absolutePath);
 
 		final ModAvuMetadataInp modifyAvuMetadataInp = ModAvuMetadataInp
-				.instanceForDeleteCollectionMetadata(absolutePath.trim(),
-						avuData);
+				.instanceForDeleteCollectionMetadata(absolutePath, avuData);
 
 		log.debug("sending avu request");
 
@@ -513,7 +512,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 					AVUQueryElement.AVUQueryPart.UNITS,
 					AVUQueryOperatorEnum.EQUAL, avuData.getUnit()));
 			result = this.findMetadataValuesByMetadataQueryForCollection(
-					queryElements, absolutePath.trim());
+					queryElements, absolutePath);
 		} catch (JargonQueryException e) {
 			log.error("error querying data for avu", e);
 			throw new JargonException("error querying data for AVU");
@@ -567,7 +566,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 		MiscIRODSUtils.checkPathSizeForMax(absolutePath);
 
 		final ModAvuMetadataInp modifyAvuMetadataInp = ModAvuMetadataInp
-				.instanceForModifyCollectionMetadata(absolutePath.trim(),
+				.instanceForModifyCollectionMetadata(absolutePath,
 						currentAvuData, newAvuData);
 
 		log.debug("sending avu request");
