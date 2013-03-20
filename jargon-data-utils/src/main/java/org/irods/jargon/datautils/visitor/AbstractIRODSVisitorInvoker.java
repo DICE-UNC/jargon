@@ -78,7 +78,7 @@ public abstract class AbstractIRODSVisitorInvoker<E, R> extends
 	 *             if no more items were found, but were expected
 	 * @throws JargonException
 	 */
-	protected void execute() throws NoMoreItemsException, JargonException {
+	public void execute() throws NoMoreItemsException, JargonException {
 		log.info("execute()");
 		initializeInvoker();
 		log.info("invoker initialized....now processing results");
@@ -139,8 +139,9 @@ public abstract class AbstractIRODSVisitorInvoker<E, R> extends
 	 * 
 	 * @return <code>boolean</code> of <code>true</code> if there is more data
 	 *         to process
+	 * @throws JargonException
 	 */
-	protected abstract boolean hasMore();
+	protected abstract boolean hasMore() throws JargonException;
 
 	/**
 	 * Complete the operation, called even if cancel or error occurs.
