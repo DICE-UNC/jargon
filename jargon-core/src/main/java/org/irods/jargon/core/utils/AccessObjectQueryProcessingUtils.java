@@ -75,10 +75,11 @@ public class AccessObjectQueryProcessingUtils {
 		}
 
 		List<MetaDataAndDomainData> metaDataResults = new ArrayList<MetaDataAndDomainData>();
-
 		for (IRODSQueryResultRow row : irodsQueryResultSet.getResults()) {
-			metaDataResults.add(buildMetaDataAndDomainDataFromResultSetRow(
-					metaDataDomain, row));
+			metaDataResults
+					.add(buildMetaDataAndDomainDataFromResultSetRow(
+							metaDataDomain, row,
+							irodsQueryResultSet.getTotalRecords()));
 		}
 
 		return metaDataResults;
@@ -87,12 +88,14 @@ public class AccessObjectQueryProcessingUtils {
 	/**
 	 * @param metadataDomain
 	 * @param row
+	 * @param totalRecordCount
 	 * @return
 	 * @throws JargonException
 	 */
 	private static MetaDataAndDomainData buildMetaDataAndDomainDataFromResultSetRow(
 			final MetaDataAndDomainData.MetadataDomain metadataDomain,
-			final IRODSQueryResultRow row) throws JargonException {
+			final IRODSQueryResultRow row, final int totalRecordCount)
+			throws JargonException {
 
 		String domainId = row.getColumn(0);
 		String domainUniqueName = row.getColumn(1);
@@ -103,6 +106,9 @@ public class AccessObjectQueryProcessingUtils {
 		MetaDataAndDomainData data = MetaDataAndDomainData.instance(
 				metadataDomain, domainId, domainUniqueName, attributeName,
 				attributeValue, attributeUnits);
+		data.setCount(row.getRecordCount());
+		data.setLastResult(row.isLastResult());
+		data.setTotalRecords(totalRecordCount);
 		log.debug("metadataAndDomainData: {}", data);
 		return data;
 	}

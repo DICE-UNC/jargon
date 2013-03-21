@@ -288,7 +288,8 @@ public final class DataAOHelper extends AOHelper {
 
 		for (IRODSQueryResultRow row : irodsQueryResultSet.getResults()) {
 			metaDataResults
-					.add(buildMetaDataAndDomainDataFromResultSetRowForDataObject(row));
+					.add(buildMetaDataAndDomainDataFromResultSetRowForDataObject(
+							row, irodsQueryResultSet.getTotalRecords()));
 		}
 
 		return metaDataResults;
@@ -297,11 +298,13 @@ public final class DataAOHelper extends AOHelper {
 	/**
 	 * @param metadataDomain
 	 * @param row
+	 * @param totalRecordCount
 	 * @return
 	 * @throws JargonException
 	 */
 	static MetaDataAndDomainData buildMetaDataAndDomainDataFromResultSetRowForDataObject(
-			final IRODSQueryResultRow row) throws JargonException {
+			final IRODSQueryResultRow row, final int totalRecordCount)
+			throws JargonException {
 
 		String domainId = row.getColumn(0);
 		StringBuilder sb = new StringBuilder();
@@ -319,6 +322,7 @@ public final class DataAOHelper extends AOHelper {
 
 		data.setCount(row.getRecordCount());
 		data.setLastResult(row.isLastResult());
+		data.setTotalRecords(totalRecordCount);
 
 		log.debug("metadataAndDomainData: {}", data);
 		return data;
@@ -788,7 +792,7 @@ public final class DataAOHelper extends AOHelper {
 	public static void appendConditionPartToBuilderQuery(
 			final AVUQueryElement queryElement,
 			final IRODSGenQueryBuilder builder) throws JargonQueryException {
-	
+
 		if (queryElement.getAvuQueryPart() == AVUQueryElement.AVUQueryPart.ATTRIBUTE) {
 			builder.addConditionAsGenQueryField(
 					RodsGenQueryEnum.COL_META_DATA_ATTR_NAME,

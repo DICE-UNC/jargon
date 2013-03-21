@@ -51,3 +51,4 @@ Note that the following bug and feature requests are logged in GForge with relat
 
 *[#1172] Jargon enhancements supporting HIVE integration project
 **Added new methods to CollectionAO for paging queries by AVU using offsets
+**Added row counts and other stats to MetaDataAndDomainData lists for find metadata by metadata query methods
