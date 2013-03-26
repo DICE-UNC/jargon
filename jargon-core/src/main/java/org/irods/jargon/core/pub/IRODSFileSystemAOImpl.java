@@ -160,6 +160,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 	private boolean checkIfDataObjectExecutable(final IRODSFile irodsFile)
 			throws JargonException {
 
+		log.info("checkIfDataObjectExecutable");
 		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, null);
 
 		IRODSQueryResultSet resultSet;
@@ -212,6 +213,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 	@Override
 	public boolean isFileWriteable(final IRODSFile irodsFile)
 			throws JargonException {
+		log.info("isFileWriteable()");
 		boolean writeable = false;
 		if (irodsFile == null) {
 			throw new IllegalArgumentException("irods file is null");
@@ -247,6 +249,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 	public int getFilePermissions(final IRODSFile irodsFile)
 			throws JargonException {
 
+		log.info("getFilePermissions()");
 		if (irodsFile == null) {
 			throw new IllegalArgumentException("irods file is null");
 		}
@@ -269,6 +272,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 	public int getFilePermissionsForGivenUser(final IRODSFile irodsFile,
 			final String userName) throws JargonException {
 
+		log.info("getFilePermissionsForGivenUser()");
 		if (irodsFile == null) {
 			throw new IllegalArgumentException("irods file is null");
 		}
@@ -388,6 +392,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 			final String fileName, final String userId,
 			final IRODSGenQueryBuilder builder) throws JargonException {
 
+		log.info("buildPermisionsQueryFile()");
 		try {
 			builder.addSelectAsGenQueryValue(
 					RodsGenQueryEnum.COL_DATA_ACCESS_TYPE)
@@ -431,6 +436,8 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 	public int getDirectoryPermissionsForGivenUser(final IRODSFile irodsFile,
 			final String userName) throws FileNotFoundException,
 			JargonException {
+		
+		log.info("getDirectoryPermissionsForGivenUser()");
 
 		if (irodsFile == null) {
 			throw new IllegalArgumentException("irods file is null");
@@ -500,6 +507,8 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 			final String userId, final IRODSGenQueryBuilder builder)
 			throws JargonException {
 
+		
+		log.info("buildPermissionsQueryDirectory()");
 		if (dir == null || dir.isEmpty()) {
 			throw new IllegalArgumentException("null or empty dir");
 		}
@@ -538,6 +547,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 	public boolean isFileExists(final IRODSFile irodsFile)
 			throws JargonException {
 
+		log.info("isFileExists()");
 		boolean exists = false;
 		if (irodsFile == null) {
 			throw new IllegalArgumentException("irods file is null");
@@ -567,6 +577,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 	public boolean isDirectory(final IRODSFile irodsFile)
 			throws JargonException {
 
+		log.info("isDirectory()");
 		if (irodsFile == null) {
 			throw new IllegalArgumentException("irods file is null");
 		}
@@ -631,6 +642,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 	@Override
 	public ObjStat getObjStat(final String irodsAbsolutePath)
 			throws FileNotFoundException, JargonException {
+		log.info("getObjStat(final String irodsAbsolutePath)");
 		return collectionAndDataObjectListAndSearchAO
 				.retrieveObjectStatForPath(irodsAbsolutePath);
 	}
@@ -646,6 +658,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 	public List<String> getListInDir(final IRODSFile irodsFile)
 			throws FileNotFoundException, JargonException {
 
+		log.info("getListInDir()");
 		if (irodsFile == null) {
 			throw new JargonException("irods file is null");
 		}
@@ -794,6 +807,8 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 	public List<String> getListInDirWithFilter(final IRODSFile irodsFile,
 			final FilenameFilter fileNameFilter) throws JargonException,
 			DataNotFoundException {
+		
+		log.info("getListInDirWithFilter(final IRODSFile irodsFile,final FilenameFilter fileNameFilter) ");
 
 		if (irodsFile == null) {
 			throw new JargonException("irods file is null");
@@ -944,6 +959,8 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 	public List<File> getListInDirWithFileFilter(final IRODSFile irodsFile,
 			final FileFilter fileFilter) throws JargonException,
 			DataNotFoundException {
+		
+		log.info("getListInDirWithFileFilter(final IRODSFile irodsFile,final FileFilter fileFilter)");
 
 		if (irodsFile == null) {
 			throw new JargonException("irods file is null");
@@ -1092,6 +1109,8 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 	@Override
 	public ObjectType getFileDataType(final IRODSFile irodsFile)
 			throws FileNotFoundException, JargonException {
+		
+		log.info("getFileDataType(final IRODSFile irodsFile)");
 
 		if (irodsFile == null) {
 			throw new JargonException("irods file is null");
@@ -1114,6 +1133,8 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 			final DataObjInp.OpenFlags openFlags, final int createMode)
 			throws NoResourceDefinedException,
 			JargonFileOrCollAlreadyExistsException, JargonException {
+		
+		log.info("createFile(final String absolutePath,final DataObjInp.OpenFlags openFlags, final int createMode)");
 
 		// find the correct resource and call the method with the resource
 		// signature
@@ -1158,6 +1179,8 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 	@Override
 	public int openFile(final IRODSFile irodsFile,
 			final DataObjInp.OpenFlags openFlags) throws JargonException {
+		
+		log.info("openFile(final IRODSFile irodsFile,final DataObjInp.OpenFlags openFlags)");
 
 		if (irodsFile == null) {
 			throw new JargonException("irodsFile is null");
@@ -1200,6 +1223,8 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 			final DataObjInp.OpenFlags openFlags, final int createMode,
 			final String resource) throws NoResourceDefinedException,
 			JargonFileOrCollAlreadyExistsException, JargonException {
+		
+		log.info("createFileInResource(final String absolutePath,final DataObjInp.OpenFlags openFlags, final int createMode,final String resource)");
 
 		if (absolutePath == null || absolutePath.length() == 0) {
 			throw new JargonException("absolute path is null or empty");
@@ -1257,6 +1282,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 	public void mkdir(final IRODSFile irodsFile, final boolean recursiveOpr)
 			throws JargonException {
 
+		log.info("mkdir(final IRODSFile irodsFile, final boolean recursiveOpr)");
 		if (irodsFile == null) {
 			throw new JargonException("irodsFile is null");
 		}
@@ -1290,7 +1316,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 	@Override
 	public void fileClose(final int fileDescriptor) throws JargonException {
 
-		log.info("closing file:{}", fileDescriptor);
+		log.info("ileClose(final int fileDescriptor) :{}", fileDescriptor);
 
 		if (fileDescriptor <= 0) {
 			throw new JargonException(
@@ -1324,6 +1350,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 	public void fileDeleteForce(final IRODSFile irodsFile)
 			throws JargonException {
 
+		log.info("ileDeleteForce(final IRODSFile irodsFile)");
 		if (irodsFile == null) {
 			throw new JargonException("irodsFile is null");
 		}
@@ -1360,6 +1387,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 	public void fileDeleteNoForce(final IRODSFile irodsFile)
 			throws JargonException {
 
+		log.info("fileDeleteNoForce(final IRODSFile irodsFile)");
 		if (irodsFile == null) {
 			throw new JargonException("irodsFile is null");
 		}
@@ -1399,6 +1427,8 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 	@Override
 	public void directoryDeleteForce(final IRODSFile irodsFile)
 			throws JargonException {
+		
+		log.info("directoryDeleteForce(final IRODSFile irodsFile)");
 
 		if (irodsFile == null) {
 			throw new JargonException("irodsFile is null");
@@ -1437,6 +1467,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 	public void directoryDeleteNoForce(final IRODSFile irodsFile)
 			throws JargonException {
 
+		log.info("directoryDeleteNoForce(final IRODSFile irodsFile)");
 		if (irodsFile == null) {
 			throw new JargonException("irodsFile is null");
 		}
@@ -1472,6 +1503,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 	protected Resource getFileResource(final IRODSFile irodsFile)
 			throws JargonException, DataNotFoundException {
 
+		log.info("getFileResource(final IRODSFile irodsFile)");
 		log.info("looking up resource");
 
 		if (!irodsFile.isFile()) {
@@ -1568,6 +1600,8 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 	@Override
 	public String getResourceNameForFile(final IRODSFile irodsFile)
 			throws JargonException {
+		
+		log.info("getResourceNameForFile(final IRODSFile irodsFile)");
 
 		if (irodsFile == null) {
 			String msg = "null irodsFile";
@@ -1609,6 +1643,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 	public void physicalMove(final IRODSFile fromFile,
 			final String targetResource) throws JargonException {
 
+		log.info("physicalMove(final IRODSFile fromFile,final String targetResource) ");
 		if (fromFile == null) {
 			throw new JargonException("from file is null");
 		}
@@ -1640,6 +1675,8 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 	@Override
 	public void physicalMove(final String absolutePathToSourceFile,
 			final String targetResource) throws JargonException {
+		
+		log.info("physicalMove(final String absolutePathToSourceFile,final String targetResource)");
 
 		if (absolutePathToSourceFile == null
 				|| absolutePathToSourceFile.isEmpty()) {
