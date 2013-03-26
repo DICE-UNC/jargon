@@ -68,6 +68,8 @@ public final class IRODSAccessObjectFactoryImpl implements
 			throw new IllegalArgumentException("null irodsAccount");
 		}
 
+		irodsSession.discardSessionForReauthenticate(irodsAccount);
+
 		/*
 		 * Note that this works if the account is already authenticated by
 		 * simply returning the cached response. If the account is not
@@ -638,18 +640,22 @@ public final class IRODSAccessObjectFactoryImpl implements
 		return new SpecificQueryAOImpl(irodsSession, irodsAccount);
 	}
 
-	
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.pub.IRODSAccessObjectFactory#getDiscoveredServerPropertiesCache()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.pub.IRODSAccessObjectFactory#
+	 * getDiscoveredServerPropertiesCache()
 	 */
 	@Override
 	public DiscoveredServerPropertiesCache getDiscoveredServerPropertiesCache() {
 		return getIrodsSession().getDiscoveredServerPropertiesCache();
 	}
 
-	
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.pub.IRODSAccessObjectFactory#isUsingDynamicServerPropertiesCache()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.pub.IRODSAccessObjectFactory#
+	 * isUsingDynamicServerPropertiesCache()
 	 */
 	@Override
 	public boolean isUsingDynamicServerPropertiesCache() {

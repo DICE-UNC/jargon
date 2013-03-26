@@ -22,19 +22,23 @@ public class GeneralAdminInpForSQTest {
 		String query = "select count(data_id) from r_data_main";
 		String alias = "get_dataobject_ids";
 
-		SpecificQueryDefinition specificQuery = new SpecificQueryDefinition(query, alias);
-		GeneralAdminInpForSQ pi = GeneralAdminInpForSQ.instanceForAddSpecificQuery(specificQuery);
+		SpecificQueryDefinition specificQuery = new SpecificQueryDefinition(
+				query, alias);
+		GeneralAdminInpForSQ pi = GeneralAdminInpForSQ
+				.instanceForAddSpecificQuery(specificQuery);
 
 		Assert.assertNotNull(pi);
 	}
-	
+
 	@Test
 	public void testAddSpecificQueryCheckXML() throws Exception {
 		String query = "select count(data_id) from r_data_main";
 		String alias = "get_dataobject_ids";
 
-		SpecificQueryDefinition specificQuery = new SpecificQueryDefinition(query, alias);
-		GeneralAdminInpForSQ pi = GeneralAdminInpForSQ.instanceForAddSpecificQuery(specificQuery);
+		SpecificQueryDefinition specificQuery = new SpecificQueryDefinition(
+				query, alias);
+		GeneralAdminInpForSQ pi = GeneralAdminInpForSQ
+				.instanceForAddSpecificQuery(specificQuery);
 		String tagOut = pi.getParsedTags();
 
 		StringBuilder sb = new StringBuilder();
@@ -57,43 +61,49 @@ public class GeneralAdminInpForSQTest {
 		Assert.assertEquals("unexpected XML protocol result", sb.toString(),
 				tagOut);
 	}
-	
+
 	@Test(expected = IllegalArgumentException.class)
 	public void testAddSpecificQueryNullSQ() throws Exception {
 		GeneralAdminInpForSQ.instanceForAddSpecificQuery(null);
 	}
-	
+
 	@Test(expected = IllegalArgumentException.class)
 	public void testAddSpecificQueryNullQuery() throws Exception {
-		SpecificQueryDefinition specificQuery = new SpecificQueryDefinition(null, "neato_query");
+		SpecificQueryDefinition specificQuery = new SpecificQueryDefinition(
+				null, "neato_query");
 		GeneralAdminInpForSQ.instanceForAddSpecificQuery(specificQuery);
 	}
-	
+
 	@Test(expected = IllegalArgumentException.class)
 	public void testAddSpecificQueryNullAlias() throws Exception {
 		String query = "select count(data_id) from r_data_main";
-		SpecificQueryDefinition specificQuery = new SpecificQueryDefinition(query, null);
+		SpecificQueryDefinition specificQuery = new SpecificQueryDefinition(
+				query, null);
 		GeneralAdminInpForSQ.instanceForAddSpecificQuery(specificQuery);
 	}
-	
+
 	@Test
 	public void testRemoveSpecificQuery() throws Exception {
 		String query = "select count(data_id) from r_data_main";
 		String alias = "get_dataobject_ids";
 
-		SpecificQueryDefinition specificQuery = new SpecificQueryDefinition(query, alias);
-		GeneralAdminInpForSQ pi = GeneralAdminInpForSQ.instanceForRemoveSpecificQuery(specificQuery);
+		SpecificQueryDefinition specificQuery = new SpecificQueryDefinition(
+				query, alias);
+		GeneralAdminInpForSQ pi = GeneralAdminInpForSQ
+				.instanceForRemoveSpecificQuery(specificQuery);
 
 		Assert.assertNotNull(pi);
 	}
-	
+
 	@Test
 	public void testRemoveSpecificQueryCheckXML() throws Exception {
 		String query = "select count(data_id) from r_data_main";
 		String alias = "get_dataobject_ids";
 
-		SpecificQueryDefinition specificQuery = new SpecificQueryDefinition(query, alias);
-		GeneralAdminInpForSQ pi = GeneralAdminInpForSQ.instanceForRemoveSpecificQuery(specificQuery);
+		SpecificQueryDefinition specificQuery = new SpecificQueryDefinition(
+				query, alias);
+		GeneralAdminInpForSQ pi = GeneralAdminInpForSQ
+				.instanceForRemoveSpecificQuery(specificQuery);
 		String tagOut = pi.getParsedTags();
 
 		StringBuilder sb = new StringBuilder();
@@ -119,44 +129,49 @@ public class GeneralAdminInpForSQTest {
 	public void testRemoveSpecificQueryNullSQ() throws Exception {
 		GeneralAdminInpForSQ.instanceForRemoveSpecificQuery(null);
 	}
-	
+
 	@Test(expected = IllegalArgumentException.class)
 	public void testRemoveSpecificQueryNullAlias() throws Exception {
 		String query = "select count(data_id) from r_data_main";
 
-		SpecificQueryDefinition specificQuery = new SpecificQueryDefinition(query, null);
+		SpecificQueryDefinition specificQuery = new SpecificQueryDefinition(
+				query, null);
 		GeneralAdminInpForSQ.instanceForRemoveSpecificQuery(specificQuery);
 	}
-	
+
 	@Test
 	public void testRemoveSpecificQueryNullQuery() throws Exception {
 		String alias = "get_dataobject_ids";
 
-		SpecificQueryDefinition specificQuery = new SpecificQueryDefinition(null, alias);
-		GeneralAdminInpForSQ pi = GeneralAdminInpForSQ.instanceForRemoveSpecificQuery(specificQuery);
+		SpecificQueryDefinition specificQuery = new SpecificQueryDefinition(
+				null, alias);
+		GeneralAdminInpForSQ pi = GeneralAdminInpForSQ
+				.instanceForRemoveSpecificQuery(specificQuery);
 
 		Assert.assertNotNull(pi);
 	}
-	
+
 	@Test
 	public void testRemoveSpecificQueryByAlias() throws Exception {
 		String alias = "get_dataobject_ids";
 
-		GeneralAdminInpForSQ pi = GeneralAdminInpForSQ.instanceForRemoveSpecificQueryByAlias(alias);
+		GeneralAdminInpForSQ pi = GeneralAdminInpForSQ
+				.instanceForRemoveSpecificQueryByAlias(alias);
 
 		Assert.assertNotNull(pi);
 	}
-	
+
 	@Test(expected = IllegalArgumentException.class)
 	public void testRemoveSpecificQueryByAliasNullAlias() throws Exception {
 		GeneralAdminInpForSQ.instanceForRemoveSpecificQueryByAlias(null);
 	}
-	
+
 	@Test
 	public void testRemoveSpecificQueryByAliasCheckXML() throws Exception {
 		String alias = "get_dataobject_ids";
 
-		GeneralAdminInpForSQ pi = GeneralAdminInpForSQ.instanceForRemoveSpecificQueryByAlias(alias);
+		GeneralAdminInpForSQ pi = GeneralAdminInpForSQ
+				.instanceForRemoveSpecificQueryByAlias(alias);
 		String tagOut = pi.getParsedTags();
 
 		StringBuilder sb = new StringBuilder();
@@ -177,26 +192,28 @@ public class GeneralAdminInpForSQTest {
 		Assert.assertEquals("unexpected XML protocol result", sb.toString(),
 				tagOut);
 	}
-	
+
 	@Test
 	public void testRemoveAllSpecificQueryBySQL() throws Exception {
 		String query = "select count(data_id) from r_data_main";
 
-		GeneralAdminInpForSQ pi = GeneralAdminInpForSQ.instanceForRemoveSpecificQueryByAlias(query);
+		GeneralAdminInpForSQ pi = GeneralAdminInpForSQ
+				.instanceForRemoveSpecificQueryByAlias(query);
 
 		Assert.assertNotNull(pi);
 	}
-	
+
 	@Test(expected = IllegalArgumentException.class)
 	public void testRemoveAllSpecificQueryBySQLNullSQL() throws Exception {
-	GeneralAdminInpForSQ.instanceForRemoveAllSpecificQueryBySQL(null);
+		GeneralAdminInpForSQ.instanceForRemoveAllSpecificQueryBySQL(null);
 	}
-	
+
 	@Test
 	public void testRemoveAllSpecificQueryBySQLCheckXML() throws Exception {
 		String query = "select count(data_id) from r_data_main";
 
-		GeneralAdminInpForSQ pi = GeneralAdminInpForSQ.instanceForRemoveAllSpecificQueryBySQL(query);
+		GeneralAdminInpForSQ pi = GeneralAdminInpForSQ
+				.instanceForRemoveAllSpecificQueryBySQL(query);
 		String tagOut = pi.getParsedTags();
 
 		StringBuilder sb = new StringBuilder();

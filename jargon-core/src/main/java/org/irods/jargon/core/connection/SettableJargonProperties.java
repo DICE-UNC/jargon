@@ -688,8 +688,11 @@ public class SettableJargonProperties implements JargonProperties {
 		this.reconnectTimeInMillis = reconnectTimeInMillis;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.connection.JargonProperties#isUsingDiscoveredServerPropertiesCache()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.connection.JargonProperties#
+	 * isUsingDiscoveredServerPropertiesCache()
 	 */
 	@Override
 	public boolean isUsingDiscoveredServerPropertiesCache() {

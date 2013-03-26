@@ -5,8 +5,6 @@ import java.util.Collection;
 import java.util.Properties;
 
 import junit.framework.Assert;
-import junit.framework.TestCase;
-
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.pub.DataTransferOperations;
 import org.irods.jargon.core.pub.IRODSFileSystem;
@@ -325,7 +323,7 @@ public class UserTagCloudServiceImplTest {
 				.instance(irodsFileSystem.getIRODSAccessObjectFactory(),
 						irodsAccount);
 		UserTagCloudView searchView = userTagCloudService.searchForTagsForDataObjectsAndCollectionsUsingSearchTermForTheLoggedInUser("SearchTagCloudWithFileTagsAndCollectionTags");
-		TestCase.assertNotNull("searchView is null, no tags returned from search", searchView);
+		Assert.assertNotNull("searchView is null, no tags returned from search", searchView);
 		
 		irodsFileSystem.close();
 

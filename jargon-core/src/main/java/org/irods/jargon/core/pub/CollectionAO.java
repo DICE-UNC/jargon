@@ -104,6 +104,25 @@ public interface CollectionAO extends FileCatalogObjectAO {
 			JargonException;
 
 	/**
+	 * Get a set of AVU metadata, and the iRODS objects to which the metadata is
+	 * attached, based on a metadata query
+	 * 
+	 * @param avuQuery
+	 *            <code>List</code> of
+	 *            {@link org.irods.jargon.core.query.AVUQueryElements} with the
+	 *            query specification
+	 * @param offset
+	 *            <code>int</code> with a paging offset
+	 * @return <code>List</code> of
+	 *         {@link org.irods.jargon.core.query.MetaDataAndDomainData}
+	 * @throws JargonQueryException
+	 * @throws JargonException
+	 */
+	List<MetaDataAndDomainData> findMetadataValuesByMetadataQuery(
+			List<AVUQueryElement> avuQuery, int offset)
+			throws JargonQueryException, JargonException;
+
+	/**
 	 * Get a summary list of collections and data objects and AVU metadata based
 	 * on a metadata query
 	 * 
@@ -140,6 +159,29 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	 */
 	List<MetaDataAndDomainData> findMetadataValuesByMetadataQuery(
 			List<AVUQueryElement> avuQuery, boolean caseInsensitive)
+			throws JargonQueryException, JargonException;
+
+	/**
+	 * Get a list of collections and associated metadata that match a given AVU
+	 * query. This version allows both an offset and specification of case
+	 * insensitivity
+	 * 
+	 * @param avuQuery
+	 *            <code>List</code> of
+	 *            {@link org.irods.jargon.core.query.AVUQueryElements} with the
+	 *            query specification
+	 * @param offset
+	 *            <code>int</code> with a paging offset
+	 * @param caseInsensitive
+	 *            <code>boolean</code> of <code>true</code> which allows
+	 *            case-insensitive AVU queries
+	 * @return <code>List</code> of
+	 *         {@link org.irods.jargon.core.query.MetaDataAndDomainData}
+	 * @throws JargonQueryException
+	 * @throws JargonException
+	 */
+	List<MetaDataAndDomainData> findMetadataValuesByMetadataQuery(
+			List<AVUQueryElement> avuQuery, int offset, boolean caseInsensitive)
 			throws JargonQueryException, JargonException;
 
 	/**
@@ -774,47 +816,6 @@ public interface CollectionAO extends FileCatalogObjectAO {
 			String userName, boolean recursive) throws JargonException;
 
 	/**
-	 * Retrieve a list of <code>Collection</code> domain objects that match the
-	 * given query.
-	 * <p/>
-	 * Note that it is up to the caller to query the correct zone, this method
-	 * will not do this query across zones.
-	 * 
-	 * @param whereClause
-	 *            <code>String</code> with where clause in iquest format,
-	 *            without the WHERE prefix
-	 * @param partialStartIndex
-	 *            <code>int</code> with the starting point to return results. 0
-	 *            indicates no offset.
-	 * @return <code>List<Collection></code> with the query results.
-	 * @throws JargonException
-	 */
-	List<Collection> findWhere(final String whereClause,
-			final int partialStartIndex) throws JargonException;
-
-	/**
-	 * Retrieve a list of <code>Collection</code> domain objects that match the
-	 * given query.
-	 * <p/>
-	 * Note that that this method allows the caller to specify the correct zone,
-	 * this method will not do this query across zones.
-	 * 
-	 * @param whereClause
-	 *            <code>String</code> with where clause in iquest format,
-	 *            without the WHERE prefix
-	 * @param partialStartIndex
-	 *            <code>int</code> with the starting point to return results. 0
-	 *            indicates no offset.
-	 * @param zone
-	 *            <code>String</code> with the optional (blank if not used) zone
-	 *            for which the collections will be queried.
-	 * @return <code>List<Collection></code> with the query results.
-	 * @throws JargonException
-	 */
-	List<Collection> findWhereInZone(String whereClause, int partialStartIndex,
-			String zone) throws JargonException;
-
-	/**
 	 * Given an <code>ObjStat</code> object, return a <code>Collection</code>
 	 * object representing the collection data in the iCAT
 	 * 
@@ -860,5 +861,18 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	void setAccessPermission(String zone, String absolutePath, String userName,
 			boolean recursive, FilePermissionEnum filePermission)
 			throws JargonException;
+
+	/**
+	 * Find the iRODS <code>Collection</code> with the given primary key in the
+	 * ICAT
+	 * 
+	 * @param id
+	 *            <code>int</code> with the iRODS primary key
+	 * @return {@link Collection} with the given primary key
+	 * @throws DataNotFoundException
+	 *             if the collection is not found
+	 * @throws JargonException
+	 */
+	Collection findById(int id) throws DataNotFoundException, JargonException;
 
 }

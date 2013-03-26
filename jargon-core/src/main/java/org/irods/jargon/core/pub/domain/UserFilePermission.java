@@ -19,6 +19,13 @@ public class UserFilePermission {
 	private FilePermissionEnum filePermissionEnum;
 
 	/**
+	 * Default (no-values) constructor
+	 */
+	public UserFilePermission() {
+
+	}
+
+	/**
 	 * Public values constructor.
 	 * 
 	 * @param userName

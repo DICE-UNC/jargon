@@ -85,11 +85,12 @@ public class IRODSServerProperties {
 		}
 		return supports;
 	}
-	
+
 	/**
 	 * Does the server (based on version) support specific (SQL) query
 	 * 
-	 * @return <code>boolean</code> of <code>true</code> if specific query is supported
+	 * @return <code>boolean</code> of <code>true</code> if specific query is
+	 *         supported
 	 */
 	public boolean isSupportsSpecificQuery() {
 		boolean supports = false;

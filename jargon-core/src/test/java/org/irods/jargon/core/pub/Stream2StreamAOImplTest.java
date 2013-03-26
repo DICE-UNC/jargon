@@ -226,26 +226,30 @@ public class Stream2StreamAOImplTest {
 				irodsFile.length(), actual.length);
 
 	}
-	
+
 	/**
 	 * [#1004] irods output stream errors writing to a file not under /zone/home
+	 * 
 	 * @throws Exception
 	 */
 	@Test
-	public void testStreamToIRODSFileUsingStreamIOAsRodsUnderRoot() throws Exception {
+	public void testStreamToIRODSFileUsingStreamIOAsRodsUnderRoot()
+			throws Exception {
 		String dirUnderRoot = "testStreamToIRODSFileUsingStreamIOAsRodsUnderRoot";
 		String testFileName = "testStreamToIRODSFileUsingStreamIO.txt";
 		String targetIrodsCollection = "/" + dirUnderRoot;
-		
-		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAdminAccountFromTestProperties(testingProperties);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAdminAccountFromTestProperties(testingProperties);
 		IRODSAccessObjectFactory irodsAccessObjectFactory = irodsFileSystem
 				.getIRODSAccessObjectFactory();
-		
-		IRODSFile collFile = irodsFileSystem.getIRODSFileFactory(irodsAccount).instanceIRODSFile(targetIrodsCollection);
+
+		IRODSFile collFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetIrodsCollection);
 		collFile.deleteWithForceOption();
 		collFile.reset();
 		collFile.mkdirs();
-		
+
 		String absPath = scratchFileUtils
 				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
 		String localFilePath = FileGenerator
@@ -253,7 +257,7 @@ public class Stream2StreamAOImplTest {
 		File localFile = new File(localFilePath);
 		BufferedInputStream inputStream = new BufferedInputStream(
 				new FileInputStream(localFile));
-		
+
 		IRODSFile targetIrodsFile = irodsAccessObjectFactory
 				.getIRODSFileFactory(irodsAccount).instanceIRODSFile(
 						targetIrodsCollection + "/" + testFileName);
@@ -271,13 +275,4 @@ public class Stream2StreamAOImplTest {
 
 	}
 
-	
-	
-	
-	
-	
-	
-	
-	
-	
 }

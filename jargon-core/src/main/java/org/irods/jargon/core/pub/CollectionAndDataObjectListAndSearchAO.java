@@ -157,7 +157,7 @@ public interface CollectionAndDataObjectListAndSearchAO extends
 	List<CollectionAndDataObjectListingEntry> listDataObjectsAndCollectionsUnderPath(
 			final String absolutePathToParent) throws FileNotFoundException,
 			JargonException;
-	
+
 	/**
 	 * This method is in support of applications and interfaces that need to
 	 * support listing and paging of collections. This method returns a simple
@@ -184,16 +184,19 @@ public interface CollectionAndDataObjectListAndSearchAO extends
 	 * object, and internally will hold the canonical directory that is the
 	 * parent, and reflect that it is a special collection.
 	 * <p/>
-	 * This variant of the files and collections listing entries wraps the resulting listing in a
-	 * <code>PagingAwareCollectionListing</code> that contains information about the paging status of the separate 
-	 * collection and data object listings.
+	 * This variant of the files and collections listing entries wraps the
+	 * resulting listing in a <code>PagingAwareCollectionListing</code> that
+	 * contains information about the paging status of the separate collection
+	 * and data object listings.
 	 * 
 	 * @param absolutePathToParent
 	 *            <code>String</code> with the absolute path to the parent. If
 	 *            blank, the root is used. If the path is really a file, the
 	 *            method will list from the parent of the file.
-	 * @return {@link PagingAwareCollectionListing} that contains both collections and data objects in a mixed partial listing, along
-	 * with hints on the state of the listing.  This metadata can be used to compute a paging strategy for subsequent data.
+	 * @return {@link PagingAwareCollectionListing} that contains both
+	 *         collections and data objects in a mixed partial listing, along
+	 *         with hints on the state of the listing. This metadata can be used
+	 *         to compute a paging strategy for subsequent data.
 	 * @throws FileNotFoundException
 	 *             if the given path does not exist
 	 * @throws JargonException
@@ -201,7 +204,6 @@ public interface CollectionAndDataObjectListAndSearchAO extends
 	PagingAwareCollectionListing listDataObjectsAndCollectionsUnderPathProducingPagingAwareCollectionListing(
 			String absolutePathToParent) throws FileNotFoundException,
 			JargonException;
-
 
 	/**
 	 * This method is in support of applications and interfaces that need to
@@ -544,5 +546,4 @@ public interface CollectionAndDataObjectListAndSearchAO extends
 	ObjStat retrieveObjectStatForPathAndDataObjectName(String parentPath,
 			String fileName) throws FileNotFoundException, JargonException;
 
-	
 }

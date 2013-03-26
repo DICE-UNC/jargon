@@ -1408,8 +1408,7 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 		}
 
 		if (targetResource == null) {
-			throw new IllegalArgumentException(
-					"target resource is null");
+			throw new IllegalArgumentException("target resource is null");
 		}
 
 		MiscIRODSUtils.checkPathSizeForMax(irodsSourceFileAbsolutePath);
@@ -1487,8 +1486,7 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 		}
 
 		if (targetResource == null) {
-			throw new IllegalArgumentException(
-					"target resource is null");
+			throw new IllegalArgumentException("target resource is null");
 		}
 
 		MiscIRODSUtils.checkPathSizeForMax(irodsSourceFileAbsolutePath);

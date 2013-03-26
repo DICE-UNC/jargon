@@ -17,6 +17,9 @@ public class DataObjInpForMcoll extends AbstractIRODSPackingInstruction {
 	public static final int MCOLL_AN = 630;
 	public static final String COLL_TYPE_LINK = "linkPoint";
 	public static final String COLL_TYPE_MSSO = "mssoStructFile";
+	public static final String COLL_TYPE_MOUNT = "mountPoint";
+	public static final String COLL_TYPE_HAAW = "haawStructFile";
+	public static final String COLL_TYPE_TAR = "tarStructFile";
 
 	private final String sourceFileAbsolutePath;
 	private final String targetFileAbsolutePath;

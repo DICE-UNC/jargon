@@ -43,9 +43,10 @@ public class SpecificQueryResultSet extends AbstractIRODSQueryResultSet {
 		}
 		this.specificQuery = specificQuery;
 	}
-	
+
 	/**
 	 * Constructor for an empty result set
+	 * 
 	 * @param specificQuery
 	 *            {@link SpecificQuery} that was used to generate the result set
 	 * @param results
@@ -62,9 +63,6 @@ public class SpecificQueryResultSet extends AbstractIRODSQueryResultSet {
 		}
 		this.specificQuery = specificQuery;
 	}
-	
-	
-	
 
 	/**
 	 * @return the specificQuery

@@ -389,8 +389,11 @@ public class DefaultPropertiesJargonConfig implements JargonProperties {
 		return verifyPropExistsAndGetAsLong("jargon.reconnect.time.in.millis");
 	}
 
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.connection.JargonProperties#isUsingDiscoveredServerPropertiesCache()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.connection.JargonProperties#
+	 * isUsingDiscoveredServerPropertiesCache()
 	 */
 	@Override
 	public boolean isUsingDiscoveredServerPropertiesCache() {

@@ -6,6 +6,7 @@ import java.util.List;
 import org.irods.jargon.core.connection.DiscoveredServerPropertiesCache;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSSession;
+import org.irods.jargon.core.connection.JargonProperties;
 import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.DuplicateDataException;
 import org.irods.jargon.core.exception.JargonException;
@@ -192,21 +193,21 @@ public class SpecificQueryAOImpl extends IRODSGenericAO implements
 		List<String> listToReturn = new ArrayList<String>();
 		for (String name : colList) {
 			// check for aggregates
-			// look for closed paren first because open paren may have been removed
+			// look for closed paren first because open paren may have been
+			// removed
 			// if distinct keyword was previously trimmed
 			int posCloseParen = name.indexOf(")");
 			if (posCloseParen > -1) {
-				// trim off parens 
+				// trim off parens
 				int posOpenParen = colNames.indexOf("(");
 				if (posOpenParen > -1) {
 					name = name.substring(posOpenParen + 1, posCloseParen);
-				}
-				else {
+				} else {
 					name = name.substring(0, posCloseParen);
 				}
-				
+
 			}
-			
+
 			listToReturn.add(name.trim());
 		}
 
@@ -430,17 +431,18 @@ public class SpecificQueryAOImpl extends IRODSGenericAO implements
 		Tag response = null;
 
 		/*
-		 * iRODS will throw an -808000 exception if no results (note the alias has already been looked up in iRODS, so
-		 * I won't co-mingle this with an actual query missing error).  Treat this as an empty result set
+		 * iRODS will throw an -808000 exception if no results (note the alias
+		 * has already been looked up in iRODS, so I won't co-mingle this with
+		 * an actual query missing error). Treat this as an empty result set
 		 */
 		try {
 			response = this.getIRODSProtocol().irodsFunction(specificQueryInp);
 		} catch (DataNotFoundException e) {
 			log.info("no reults from iRODS, return as an empty result set");
-			return new SpecificQueryResultSet(specificQuery, 
+			return new SpecificQueryResultSet(specificQuery,
 					specificQueryDefinition.getColumnNames());
 		}
-		
+
 		// result set is not empty
 
 		int continuation = QueryResultProcessingUtils
@@ -519,36 +521,47 @@ public class SpecificQueryAOImpl extends IRODSGenericAO implements
 		return new SpecificQueryResultSet(specificQuery, resultRows,
 				columnNames, hasMoreRecords, continuation);
 	}
-	
+
 	/**
-	 * Check and see if, as a result of previous requests, I know that the jargon specific queries required to support
-	 * specific query via this API are available.  This method will return <code>true</code> only if I know that the support is
-	 * not there.  If I have not checked previously, or I am not using the dynamic properties cache, which is configured via
+	 * Check and see if, as a result of previous requests, I know that the
+	 * jargon specific queries required to support specific query via this API
+	 * are available. This method will return <code>true</code> only if I know
+	 * that the support is not there. If I have not checked previously, or I am
+	 * not using the dynamic properties cache, which is configured via
 	 * {@link JargonProperties}, then a <code>false</code> will be returned.
-	 * @return <code>boolean</code> that will only be <code>true</code> if I know that the jargon specific query
-	 * support is not configured.  This can be used to determine whether it is worth bothering to issue such requests.
-	 * <p/>
-	 * Currently, this still needs to be wired into the specific query support, so consider this experimental
+	 * 
+	 * @return <code>boolean</code> that will only be <code>true</code> if I
+	 *         know that the jargon specific query support is not configured.
+	 *         This can be used to determine whether it is worth bothering to
+	 *         issue such requests.
+	 *         <p/>
+	 *         Currently, this still needs to be wired into the specific query
+	 *         support, so consider this experimental
 	 */
 	public boolean isSpecificQueryJargonSupportKnownMissing() {
-		
+
 		if (this.getIRODSSession().isUsingDynamicServerPropertiesCache()) {
 			return false;
 		}
-		
-		String support = this.getIRODSSession().getDiscoveredServerPropertiesCache()
-				.retrieveValue(this.getIRODSAccount().getHost(), this.getIRODSAccount().getZone(), DiscoveredServerPropertiesCache.JARGON_SPECIFIC_QUERIES_SUPPORTED);
-	
+
+		String support = this
+				.getIRODSSession()
+				.getDiscoveredServerPropertiesCache()
+				.retrieveValue(
+						this.getIRODSAccount().getHost(),
+						this.getIRODSAccount().getZone(),
+						DiscoveredServerPropertiesCache.JARGON_SPECIFIC_QUERIES_SUPPORTED);
+
 		if (support == null) {
 			return false;
 		}
-		
+
 		if (support.equals(DiscoveredServerPropertiesCache.IS_FALSE)) {
 			return true;
 		} else {
 			return false;
 		}
-	
+
 	}
 
 }

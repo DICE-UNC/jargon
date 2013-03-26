@@ -299,8 +299,9 @@ public interface JargonProperties {
 	 * of trying and failing to get a certain service from iRODS over and over
 	 * again, a result can be cached here to check.
 	 * 
-	 * @return <code>boolean</code> that is used to determine whether various jargon operations
-	 * will cache and consult the discovered server properties that are available under {@link IRODSSession}
+	 * @return <code>boolean</code> that is used to determine whether various
+	 *         jargon operations will cache and consult the discovered server
+	 *         properties that are available under {@link IRODSSession}
 	 */
 	boolean isUsingDiscoveredServerPropertiesCache();
 

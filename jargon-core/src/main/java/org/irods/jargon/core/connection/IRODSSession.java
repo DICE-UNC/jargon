@@ -300,6 +300,7 @@ public class IRODSSession {
 			irodsProtocol = connectAndAddToProtocolsMap(irodsAccount,
 					irodsProtocols);
 		} else if (irodsProtocol.isConnected()) {
+
 			log.debug("session using previously established connection:{}",
 					irodsProtocol);
 		} else {
@@ -368,11 +369,11 @@ public class IRODSSession {
 
 		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, null);
 		try {
+			final String dn = gsiIRODSAccount.getDistinguishedName().trim();
 			builder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_NAME)
 					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_ZONE)
 					.addConditionAsGenQueryField(RodsGenQueryEnum.COL_USER_DN,
-							QueryConditionOperators.EQUAL,
-							gsiIRODSAccount.getDistinguishedName());
+							QueryConditionOperators.EQUAL, dn);
 			GenQueryProcessor genQueryProcessor = new GenQueryProcessor(
 					irodsCommands);
 
@@ -432,6 +433,10 @@ public class IRODSSession {
 	public void closeSession(final IRODSAccount irodsAccount)
 			throws JargonException {
 
+		if (irodsAccount == null) {
+			throw new IllegalArgumentException("null irodsAccount");
+		}
+
 		log.debug("closing irods session for: {}", irodsAccount.toString());
 		final Map<String, IRODSCommands> irodsProtocols = sessionMap.get();
 		if (irodsProtocols == null) {
@@ -453,6 +458,48 @@ public class IRODSSession {
 		irodsProtocol.disconnect();
 
 		irodsProtocols.remove(irodsAccount.toString());
+		if (irodsProtocols.isEmpty()) {
+			log.debug("no more connections, so clear cache from ThreadLocal");
+			sessionMap.set(null);
+		}
+
+	}
+
+	/**
+	 * Signal to the <code>IRODSSession</code> that a connection should be
+	 * terminated to re-authenticate
+	 * 
+	 * @param irodsAccount
+	 *            {@link IRODSAccount} that maps the connection
+	 * @throws JargonException
+	 */
+	public void discardSessionForReauthenticate(final IRODSAccount irodsAccount)
+			throws JargonException {
+
+		if (irodsAccount == null) {
+			throw new IllegalArgumentException("null irodsAccount");
+		}
+
+		log.warn("discardSessionForReauthenticate for: {}",
+				irodsAccount.toString());
+		final Map<String, IRODSCommands> irodsProtocols = sessionMap.get();
+		if (irodsProtocols == null) {
+			log.warn("discarding session that is already closed, silently ignore");
+			return;
+		}
+
+		IRODSCommands command = irodsProtocols.get(irodsAccount.toString());
+		if (command == null) {
+			log.info("no connection found, ignore");
+			return;
+		}
+
+		log.info("disconnecting:{}", command);
+		command.shutdown();
+		log.info("disconnected...");
+
+		irodsProtocols.remove(irodsAccount.toString());
+
 		if (irodsProtocols.isEmpty()) {
 			log.debug("no more connections, so clear cache from ThreadLocal");
 			sessionMap.set(null);
@@ -590,10 +637,11 @@ public class IRODSSession {
 	public DiscoveredServerPropertiesCache getDiscoveredServerPropertiesCache() {
 		return discoveredServerPropertiesCache;
 	}
-	
+
 	/**
-	 * Handy method to see if we're using the dynamic server properties cache.  This is set
-	 * in the jargon properties.
+	 * Handy method to see if we're using the dynamic server properties cache.
+	 * This is set in the jargon properties.
+	 * 
 	 * @return
 	 */
 	public boolean isUsingDynamicServerPropertiesCache() {

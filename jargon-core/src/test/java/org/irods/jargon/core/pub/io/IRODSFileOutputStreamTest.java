@@ -263,7 +263,7 @@ public class IRODSFileOutputStreamTest {
 
 	@Test
 	public final void testCloseFileThenStream() throws Exception {
-		String testFileName = "testCloseStreamTwice.csv";
+		String testFileName = "testCloseFileThenStream.csv";
 
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
@@ -392,7 +392,7 @@ public class IRODSFileOutputStreamTest {
 	@Test
 	public final void testIRODSFileOutputStreamIRODSFileShouldOpen()
 			throws Exception {
-		String testFileName = "testFileShouldOpen.txt";
+		String testFileName = "testIRODSFileOutputStreamIRODSFileShouldOpen.txt";
 		String absPath = scratchFileUtils
 				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
 		String localFilePath = FileGenerator
@@ -552,7 +552,7 @@ public class IRODSFileOutputStreamTest {
 	@Test
 	public final void testIRODSFileOutputStreamIRODSFileClose()
 			throws Exception {
-		String testFileName = "testFileClose.txt";
+		String testFileName = "testIRODSFileOutputStreamIRODSFileClose.txt";
 		String absPath = scratchFileUtils
 				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
 		FileGenerator.generateFileOfFixedLengthGivenName(absPath, testFileName,
@@ -652,7 +652,7 @@ public class IRODSFileOutputStreamTest {
 	@Test
 	public final void testIRODSFileOutputStreamIRODSFileCloseTwice()
 			throws Exception {
-		String testFileName = "testFileClose.txt";
+		String testFileName = "testIRODSFileOutputStreamIRODSFileCloseTwice.txt";
 		String absPath = scratchFileUtils
 				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
 		FileGenerator.generateFileOfFixedLengthGivenName(absPath, testFileName,
@@ -701,22 +701,26 @@ public class IRODSFileOutputStreamTest {
 
 	/**
 	 * Write to an output stream that is underneath the root
+	 * 
 	 * @throws Exception
 	 */
 	@Test
-	public final void testWriteToOutputStreamInSubdirUnderRoot() throws Exception {
+	public final void testWriteToOutputStreamInSubdirUnderRoot()
+			throws Exception {
 		String testCollName = "testWriteToOutputStreamInSubdirUnderRoot";
 		String testFileName = "testWriteToOutputStreamInSubdirUnderRoot.csv";
 
-		String targetIrodsCollection =  "/" + testCollName;
-		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAdminAccountFromTestProperties(testingProperties);
+		String targetIrodsCollection = "/" + testCollName;
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAdminAccountFromTestProperties(testingProperties);
 
 		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
 				.getIRODSAccessObjectFactory();
 		IRODSFileFactory irodsFileFactory = accessObjectFactory
 				.getIRODSFileFactory(irodsAccount);
-		
-		IRODSFile targetCollection  = irodsFileSystem.getIRODSFileFactory(irodsAccount).instanceIRODSFile(targetIrodsCollection);
+
+		IRODSFile targetCollection = irodsFileSystem.getIRODSFileFactory(
+				irodsAccount).instanceIRODSFile(targetIrodsCollection);
 		targetCollection.deleteWithForceOption();
 		targetCollection.mkdirs();
 
@@ -744,7 +748,7 @@ public class IRODSFileOutputStreamTest {
 
 		irodsFileSystem.closeAndEatExceptions();
 	}
-	
+
 }
 
 class OutputStreamWriteTestWriter implements Callable<String> {
@@ -814,8 +818,7 @@ class OutputStreamWriteTestWriter implements Callable<String> {
 		}
 		return targetIrodsFileName;
 	}
-	
-	
+
 	/**
 	 * @return the exception
 	 */

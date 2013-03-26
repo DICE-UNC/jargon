@@ -2,7 +2,7 @@ package org.irods.jargon.core.connection;
 
 import java.util.Properties;
 
-import junit.framework.TestCase;
+import junit.framework.Assert;
 
 import org.irods.jargon.core.connection.IRODSAccount.AuthScheme;
 import org.irods.jargon.core.connection.auth.AuthResponse;
@@ -33,12 +33,14 @@ public class PAMAuthTest {
 
 	@Test
 	public final void testPAMAuthWithAnonUsesStandardAuth() throws Exception {
-		IRODSAccount irodsAccount = testingPropertiesHelper.buildAnonymousIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildAnonymousIRODSAccountFromTestProperties(testingProperties);
 		irodsAccount.setAuthenticationScheme(AuthScheme.PAM);
 		AuthenticationFactory authFactory = new AuthenticationFactoryImpl();
-		AuthMechanism authMechanism = authFactory.instanceAuthMechanism(irodsAccount);
+		AuthMechanism authMechanism = authFactory
+				.instanceAuthMechanism(irodsAccount);
 		boolean isStd = authMechanism instanceof StandardIRODSAuth;
-		TestCase.assertTrue("did not revert to standard auth for anonymous",
+		Assert.assertTrue("did not revert to standard auth for anonymous",
 				isStd);
 	}
 
@@ -65,21 +67,21 @@ public class PAMAuthTest {
 
 		AuthResponse authResponse = environmentalInfoAO.getIRODSProtocol()
 				.getAuthResponse();
-		TestCase.assertNotNull("no authenticating account",
+		Assert.assertNotNull("no authenticating account",
 				authResponse.getAuthenticatingIRODSAccount());
-		TestCase.assertEquals("did not set authenticating account to PAM type",
+		Assert.assertEquals("did not set authenticating account to PAM type",
 				IRODSAccount.AuthScheme.PAM, authResponse
 						.getAuthenticatingIRODSAccount()
 						.getAuthenticationScheme());
-		TestCase.assertNotNull("no authenticated account",
+		Assert.assertNotNull("no authenticated account",
 				authResponse.getAuthenticatedIRODSAccount());
-		TestCase.assertEquals("did not set authenticated account to std type",
+		Assert.assertEquals("did not set authenticated account to std type",
 				IRODSAccount.AuthScheme.STANDARD, authResponse
 						.getAuthenticatedIRODSAccount()
 						.getAuthenticationScheme());
-		TestCase.assertNotNull("did not set auth startup response",
+		Assert.assertNotNull("did not set auth startup response",
 				authResponse.getStartupResponse());
-		TestCase.assertTrue("did not show success", authResponse.isSuccessful());
+		Assert.assertTrue("did not show success", authResponse.isSuccessful());
 
 	}
 

@@ -14,6 +14,11 @@ public class IcommandException extends Exception {
 	/**
 	 * 
 	 */
+	private static final long serialVersionUID = -9212192477095850634L;
+
+	/**
+	 * 
+	 */
 	public IcommandException() {
 		super();
 	}

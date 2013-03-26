@@ -1,19 +1,16 @@
 *'''Project''': Jargon-core API
-<<<<<<< HEAD
+
 *'''Date''': XX/XX/XX
 *'''Release Version''': 1182-workflow
 *'''git tag''': 1182-workflow
 
-
 ==News==
 
-Beta release of Jargon 3.3.0 feature development.  This accompanies a beta of iDrop version 2.0.0
-
-Jargon-core implements the iRODS protocol, and allows development of iRODS-enabled Java applications.  This API is especially useful for developing
-mid-tier applications and services, as well as desktop-clients (such as iDROP).  These libraries also provide a foundation for a new set of interfaces that will come with iRODS.
+release branch of Jargon, representing currently merged changes for the next release
 
 Note that this API represents a fundamental shift, and is meant to make development of applications easier and faster.
 
+=======
 Please go to [[https://code.renci.org/gf/project/jargon/]] for the latest news and info.
 
 Jargon-core consists of the following libraries
@@ -26,13 +23,11 @@ Jargon-core consists of the following libraries
 * jargon-ticket - support for ticket processing
 * jargon-httpstream - stream http content into iRODS via Jargon
 
-Other libraries are planned, such as connection pooling, as well as administrative functions.
 
 ==Requirements==
 
 *Jargon depends on Java 1.6+
 *Jargon is built using Apache Maven2, see POM for dependencies
-
 *Jargon supports iRODS 2.5 through iRODS 3.2
 
 ==Libraries==
@@ -47,4 +42,16 @@ Note that the following bug and feature requests are logged in GForge with relat
 
 *[#1182] add support for workflows
 
+ *[#1263] ACL retrieval query and the user lookup queries, the method queries the zone of the user and not the zone containing the collection
+ **Added code to properly query the permissions as they exist on the current zone
+ 
+ *[#1139] Spaces at the begin or end of a data object name will cause an exception
+ **removed trim() statements in query building to handle intended spaces in file names.  Note that there may be a bug for collection names with
+ embedded spaces, this is ignored in the JUNit tests for CollectionAOImpl, and that issue has been routed to iRODS for now.
+ 
+*[#1264] [iROD-Chat:9666] Referencing Data Objects
+**Added findById() methods to DataObjectAO and CollectionAO
 
+*[#1172] Jargon enhancements supporting HIVE integration project
+**Added new methods to CollectionAO for paging queries by AVU using offsets
+**Added row counts and other stats to MetaDataAndDomainData lists for find metadata by metadata query methods

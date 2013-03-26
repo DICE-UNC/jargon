@@ -237,7 +237,7 @@ public class ParallelTransferOperationsTest {
 		}
 
 		executorService.invokeAll(testers);
-                                        executorService.shutdown();
+		executorService.shutdown();
 		irodsFileSystem.close();
 
 		for (int i = 0; i < numberOfClients; i++) {

@@ -320,8 +320,7 @@ public class MiscIRODSUtilsTest {
 				.computeHomeDirectoryForGivenUserInSameZoneAsIRODSAccount(
 						irodsAccount, userName);
 
-		String expected = "/" + irodsAccount.getZone() + "/home/"
- + userName;
+		String expected = "/" + irodsAccount.getZone() + "/home/" + userName;
 		Assert.assertEquals("did not correctly compute path", expected, path);
 	}
 
@@ -362,18 +361,19 @@ public class MiscIRODSUtilsTest {
 		MiscIRODSUtils.computeHomeDirectoryForIRODSAccount(null);
 
 	}
-	
+
 	@Test
 	public void testPathLengthOK() throws Exception {
 		MiscIRODSUtils.checkPathSizeForMax("hello");
 	}
-	
-	@Test(expected=PathTooLongException.class)
+
+	@Test(expected = PathTooLongException.class)
 	public void testPathLengthTooLong() throws Exception {
-		MiscIRODSUtils.checkPathSizeForMax(FileGenerator.generateRandomString(1050));
+		MiscIRODSUtils.checkPathSizeForMax(FileGenerator
+				.generateRandomString(1050));
 	}
-	
-	@Test(expected=IllegalArgumentException.class)
+
+	@Test(expected = IllegalArgumentException.class)
 	public void testPathLengthNull() throws Exception {
 		MiscIRODSUtils.checkPathSizeForMax(null);
 	}
@@ -382,20 +382,22 @@ public class MiscIRODSUtilsTest {
 	public void testPathLengthParentAndChildOK() throws Exception {
 		MiscIRODSUtils.checkPathSizeForMax("hello", "there");
 	}
-	
-	@Test(expected=PathTooLongException.class)
+
+	@Test(expected = PathTooLongException.class)
 	public void testPathLengthParentAndChildTooLong() throws Exception {
-		MiscIRODSUtils.checkPathSizeForMax(FileGenerator.generateRandomString(1000), FileGenerator.generateRandomString(1000));
+		MiscIRODSUtils.checkPathSizeForMax(
+				FileGenerator.generateRandomString(1000),
+				FileGenerator.generateRandomString(1000));
 	}
-	
-	@Test(expected=IllegalArgumentException.class)
+
+	@Test(expected = IllegalArgumentException.class)
 	public void testPathLengthParentNull() throws Exception {
-		MiscIRODSUtils.checkPathSizeForMax(null,"blah");
+		MiscIRODSUtils.checkPathSizeForMax(null, "blah");
 	}
-	
-	@Test(expected=IllegalArgumentException.class)
+
+	@Test(expected = IllegalArgumentException.class)
 	public void testPathLengthChildNull() throws Exception {
-		MiscIRODSUtils.checkPathSizeForMax("blah",null);
+		MiscIRODSUtils.checkPathSizeForMax("blah", null);
 	}
 
 }

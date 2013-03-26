@@ -368,6 +368,11 @@
 				<version>${spring.webmvc.version}</version>
 				<type>pom</type>
 			</dependency>
+			<dependency>
+				<groupId>org.perf4j</groupId>
+				<artifactId>perf4j</artifactId>
+				<version>0.9.9</version>
+			</dependency>			
 		</dependencies>
 	</dependencyManagement>
 	<dependencies>
@@ -378,6 +383,10 @@
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-log4j12</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.perf4j</groupId>
+			<artifactId>perf4j</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>log4j</groupId>

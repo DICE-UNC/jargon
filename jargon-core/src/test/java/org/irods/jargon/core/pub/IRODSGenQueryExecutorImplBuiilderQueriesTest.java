@@ -7,7 +7,6 @@ import java.io.File;
 import java.util.Properties;
 
 import junit.framework.Assert;
-import junit.framework.TestCase;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.pub.io.IRODSFile;
@@ -83,7 +82,7 @@ public class IRODSGenQueryExecutorImplBuiilderQueriesTest {
 		builder.addSelectAsAgregateGenQueryValue(RodsGenQueryEnum.COL_COLL_ID,
 				SelectFieldTypes.COUNT).addConditionAsGenQueryField(
 				RodsGenQueryEnum.COL_D_OWNER_ZONE,
-				QueryConditionOperators.EQUAL, irodsAccount.getZone());
+				QueryConditionOperators.EQUAL, irodsAccount.getZone().trim());
 
 		IRODSGenQueryFromBuilder query = builder.exportIRODSQueryFromBuilder(1);
 
@@ -97,10 +96,11 @@ public class IRODSGenQueryExecutorImplBuiilderQueriesTest {
 		Assert.assertTrue("count not produced", actualCount > 0);
 
 	}
-	
+
 	/**
-	 * Ask for a row count in the query results
-	 * feature: [#1046] Add total row count to gen query out
+	 * Ask for a row count in the query results feature: [#1046] Add total row
+	 * count to gen query out
+	 * 
 	 * @throws Exception
 	 */
 
@@ -114,24 +114,24 @@ public class IRODSGenQueryExecutorImplBuiilderQueriesTest {
 		IRODSGenQueryExecutor irodsGenQueryExecutor = accessObjectFactory
 				.getIRODSGenQueryExecutor(irodsAccount);
 
-		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, false, true, null);
+		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, false,
+				true, null);
 
 		builder.addSelectAsAgregateGenQueryValue(RodsGenQueryEnum.COL_COLL_ID,
 				SelectFieldTypes.COUNT).addConditionAsGenQueryField(
 				RodsGenQueryEnum.COL_D_OWNER_ZONE,
-				QueryConditionOperators.EQUAL, irodsAccount.getZone());
+				QueryConditionOperators.EQUAL, irodsAccount.getZone().trim());
 
 		IRODSGenQueryFromBuilder query = builder.exportIRODSQueryFromBuilder(1);
 
 		AbstractIRODSQueryResultSet resultSet = irodsGenQueryExecutor
 				.executeIRODSQuery(query, 0);
 
-		TestCase.assertTrue("did not get row count", resultSet.getTotalRecords() > 0);
+		Assert.assertTrue("did not get row count",
+				resultSet.getTotalRecords() > 0);
 
 	}
 
-	
-	
 	/**
 	 * Test a gen query with a numeric value test [#872] numeric gen query with
 	 * datasize gives errors in condition
@@ -270,10 +270,11 @@ public class IRODSGenQueryExecutorImplBuiilderQueriesTest {
 				.size());
 
 	}
-	
+
 	/**
-	 *  Bug:  [#1041] [iROD-Chat:8903] Jargon-core: query builder / SQL operators
-	 *  This is an iRODS bug being fixed in iRODS 3.2+
+	 * Bug: [#1041] [iROD-Chat:8903] Jargon-core: query builder / SQL operators
+	 * This is an iRODS bug being fixed in iRODS 3.2+
+	 * 
 	 * @throws Exception
 	 */
 	@Ignore
@@ -344,7 +345,8 @@ public class IRODSGenQueryExecutorImplBuiilderQueriesTest {
 		dto.putOperation(localFile, targetSubdir, null, null);
 
 		// true for upper case causes bug...iRODS fix being created post 3.2
-		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, true, null);
+		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, true,
+				null);
 
 		builder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_NAME)
 				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_NAME)
@@ -356,7 +358,7 @@ public class IRODSGenQueryExecutorImplBuiilderQueriesTest {
 						RodsGenQueryEnum.COL_DATA_SIZE,
 						QueryConditionOperators.NUMERIC_GREATER_THAN_OR_EQUAL_TO,
 						smallSize);
-		
+
 		IRODSGenQueryFromBuilder query = builder
 				.exportIRODSQueryFromBuilder(50);
 
@@ -366,7 +368,6 @@ public class IRODSGenQueryExecutorImplBuiilderQueriesTest {
 		Assert.assertEquals("should get all 4 files", 4, resultSet.getResults()
 				.size());
 
-		
 	}
-	
+
 }
