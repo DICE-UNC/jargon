@@ -83,13 +83,11 @@ public class IRODSFileOutputStream extends OutputStream {
 			JargonException {
 		int fileDescriptor = -1;
 
-		/* FIXME: need to check if 
 		if (irodsFile.exists()) {
 			log.info("deleting file, as this stream operation is overwriting");
 			irodsFile.delete();
 			irodsFile.reset();
 		}
-		*/
 
 		irodsFile.createNewFileCheckNoResourceFound();
 
