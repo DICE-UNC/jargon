@@ -2,7 +2,7 @@ package org.irods.jargon.transfer.dao;
 
 import java.util.List;
 
-import org.irods.jargon.transfer.dao.domain.LocalIRODSTransfer;
+import org.irods.jargon.transfer.dao.domain.Transfer;
 import org.irods.jargon.transfer.dao.domain.TransferState;
 import org.irods.jargon.transfer.dao.domain.TransferStatus;
 
@@ -11,14 +11,14 @@ import org.irods.jargon.transfer.dao.domain.TransferStatus;
  * @author jdr0887
  * 
  */
-public interface LocalIRODSTransferDAO {
+public interface TransferDAO {
 
 	/**
 	 * 
 	 * @param ea
 	 * @throws DAOException
 	 */
-	public void save(LocalIRODSTransfer ea) throws TransferDAOException;
+	public void save(Transfer ea) throws TransferDAOException;
 
 	/**
 	 * 
@@ -26,7 +26,7 @@ public interface LocalIRODSTransferDAO {
 	 * @return
 	 * @throws DAOException
 	 */
-	public LocalIRODSTransfer findById(Long id) throws TransferDAOException;
+	public Transfer findById(Long id) throws TransferDAOException;
 
 	/**
 	 * 
@@ -34,7 +34,7 @@ public interface LocalIRODSTransferDAO {
 	 * @return
 	 * @throws TransferDAOException
 	 */
-	public LocalIRODSTransfer findInitializedById(Long id)
+	public Transfer findInitializedById(Long id)
 			throws TransferDAOException;
 
 	/**
@@ -43,7 +43,7 @@ public interface LocalIRODSTransferDAO {
 	 * @return
 	 * @throws TransferDAOException
 	 */
-	public List<LocalIRODSTransfer> findByTransferState(
+	public List<Transfer> findByTransferState(
 			TransferState... transferState) throws TransferDAOException;
 
 	/**
@@ -52,7 +52,7 @@ public interface LocalIRODSTransferDAO {
 	 * @return
 	 * @throws TransferDAOException
 	 */
-	public List<LocalIRODSTransfer> findAllSortedDesc(int maxResults)
+	public List<Transfer> findAllSortedDesc(int maxResults)
 			throws TransferDAOException;
 
 	/**
@@ -61,7 +61,7 @@ public interface LocalIRODSTransferDAO {
 	 * @return
 	 * @throws TransferDAOException
 	 */
-	public List<LocalIRODSTransfer> findAll() throws TransferDAOException;
+	public List<Transfer> findAll() throws TransferDAOException;
 
 	/**
 	 * 
@@ -70,7 +70,7 @@ public interface LocalIRODSTransferDAO {
 	 * @return
 	 * @throws TransferDAOException
 	 */
-	public List<LocalIRODSTransfer> findByTransferState(int maxResults,
+	public List<Transfer> findByTransferState(int maxResults,
 			TransferState... transferState) throws TransferDAOException;
 
 	/**
@@ -80,7 +80,7 @@ public interface LocalIRODSTransferDAO {
 	 * @return
 	 * @throws TransferDAOException
 	 */
-	public List<LocalIRODSTransfer> findByTransferStatus(int maxResults,
+	public List<Transfer> findByTransferStatus(int maxResults,
 			TransferStatus... transferStatus) throws TransferDAOException;
 
 	/**
@@ -102,7 +102,7 @@ public interface LocalIRODSTransferDAO {
 	 * @param ea
 	 * @throws TransferDAOException
 	 */
-	public void delete(LocalIRODSTransfer ea) throws TransferDAOException;
+	public void delete(Transfer ea) throws TransferDAOException;
 
 	/**
 	 * Delete the entire contents of the queue, no matter what the status is

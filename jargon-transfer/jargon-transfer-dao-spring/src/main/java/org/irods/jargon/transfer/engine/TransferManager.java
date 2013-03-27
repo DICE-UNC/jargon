@@ -8,8 +8,8 @@ import org.irods.jargon.core.pub.IRODSFileSystem;
 import org.irods.jargon.transfer.TransferEngineException;
 import org.irods.jargon.transfer.TransferServiceFactory;
 import org.irods.jargon.transfer.dao.domain.GridAccount;
-import org.irods.jargon.transfer.dao.domain.LocalIRODSTransfer;
-import org.irods.jargon.transfer.dao.domain.LocalIRODSTransferItem;
+import org.irods.jargon.transfer.dao.domain.Transfer;
+import org.irods.jargon.transfer.dao.domain.TransferItem;
 import org.irods.jargon.transfer.dao.domain.Synchronization;
 import org.irods.jargon.transfer.exception.CannotUpdateTransferInProgressException;
 import org.irods.jargon.transfer.exception.PassPhraseInvalidException;
@@ -147,39 +147,39 @@ public interface TransferManager {
 	/**
 	 * Get a view of the current queue, which includes enqueued, processing
 	 * 
-	 * @return <code>List</code> of {@link LocalIRODSTransfer} that reflects the
+	 * @return <code>List</code> of {@link Transfer} that reflects the
 	 *         current queue
 	 * @throws JargonException
 	 */
-	List<LocalIRODSTransfer> getCurrentQueue() throws JargonException;
+	List<Transfer> getCurrentQueue() throws JargonException;
 
 	/**
 	 * Get a view of the current queue, which includes enqueued, processing, and
 	 * recently completed
 	 * 
-	 * @return <code>List</code> of {@link LocalIRODSTransfer} that reflects the
+	 * @return <code>List</code> of {@link Transfer} that reflects the
 	 *         recent queue
 	 * @throws JargonException
 	 */
-	List<LocalIRODSTransfer> getRecentQueue() throws JargonException;
+	List<Transfer> getRecentQueue() throws JargonException;
 
 	/**
 	 * Get a view of the errors in the queue
 	 * 
-	 * @return <code>List</code> of {@link LocalIRODSTransfer} that reflects the
+	 * @return <code>List</code> of {@link Transfer} that reflects the
 	 *         errors in the queue
 	 * @throws JargonException
 	 */
-	List<LocalIRODSTransfer> getErrorQueue() throws JargonException;
+	List<Transfer> getErrorQueue() throws JargonException;
 
 	/**
 	 * Get a view of the warning transfers in the queue
 	 * 
-	 * @return <code>List</code> of {@link LocalIRODSTransfer} that reflects the
+	 * @return <code>List</code> of {@link Transfer} that reflects the
 	 *         warnings in the queue
 	 * @throws JargonException
 	 */
-	List<LocalIRODSTransfer> getWarningQueue() throws JargonException;
+	List<Transfer> getWarningQueue() throws JargonException;
 
 	/**
 	 * Get a reference to the registered callback listener
@@ -195,7 +195,7 @@ public interface TransferManager {
 	 * @return
 	 * @throws JargonException
 	 */
-	List<LocalIRODSTransferItem> getAllTransferItemsForTransfer(
+	List<TransferItem> getAllTransferItemsForTransfer(
 			final Long localIRODSTransferId) throws JargonException;
 
 	/**
@@ -205,7 +205,7 @@ public interface TransferManager {
 	 * @return
 	 * @throws JargonException
 	 */
-	List<LocalIRODSTransferItem> getErrorTransferItemsForTransfer(
+	List<TransferItem> getErrorTransferItemsForTransfer(
 			final Long localIRODSTransferId) throws JargonException;
 
 	/**
@@ -214,7 +214,7 @@ public interface TransferManager {
 	 * @param localIRODSTransfer
 	 * @throws JargonException
 	 */
-	void restartTransfer(final LocalIRODSTransfer localIRODSTransfer)
+	void restartTransfer(final Transfer localIRODSTransfer)
 			throws JargonException;
 
 	/**
@@ -223,7 +223,7 @@ public interface TransferManager {
 	 * @param localIRODSTransfer
 	 * @throws JargonException
 	 */
-	void resubmitTransfer(final LocalIRODSTransfer localIRODSTransfer)
+	void resubmitTransfer(final Transfer localIRODSTransfer)
 			throws JargonException;
 
 	/**
@@ -232,7 +232,7 @@ public interface TransferManager {
 	 * @param localIRODSTransfer
 	 * @throws JargonException
 	 */
-	void cancelTransfer(final LocalIRODSTransfer localIRODSTransfer)
+	void cancelTransfer(final Transfer localIRODSTransfer)
 			throws JargonException;
 
 	/**

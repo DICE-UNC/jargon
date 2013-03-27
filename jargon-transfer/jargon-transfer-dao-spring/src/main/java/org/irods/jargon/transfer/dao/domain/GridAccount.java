@@ -121,10 +121,10 @@ public class GridAccount implements Serializable {
 	@Column(name = "updated_at", nullable = false)
 	private Date updatedAt;
 
-	@OneToMany(mappedBy = "gridAccount", targetEntity = LocalIRODSTransfer.class, cascade = { CascadeType.ALL }, fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "gridAccount", targetEntity = Transfer.class, cascade = { CascadeType.ALL }, fetch = FetchType.LAZY)
 	@OrderBy("createdAt DESC")
 	@LazyCollection(LazyCollectionOption.TRUE)
-	private Set<LocalIRODSTransfer> localIRODSTransfer = new HashSet<LocalIRODSTransfer>();
+	private Set<Transfer> localIRODSTransfer = new HashSet<Transfer>();
 
 	@OneToMany(mappedBy = "gridAccount", targetEntity = Synchronization.class, cascade = { CascadeType.ALL }, fetch = FetchType.LAZY)
 	@OrderBy("name")

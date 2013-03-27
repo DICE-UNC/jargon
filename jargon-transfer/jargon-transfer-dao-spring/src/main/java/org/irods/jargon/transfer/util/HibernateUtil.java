@@ -7,8 +7,8 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 import org.irods.jargon.core.exception.JargonException;
-import org.irods.jargon.transfer.dao.domain.LocalIRODSTransfer;
-import org.irods.jargon.transfer.dao.domain.LocalIRODSTransferItem;
+import org.irods.jargon.transfer.dao.domain.Transfer;
+import org.irods.jargon.transfer.dao.domain.TransferItem;
 import org.irods.jargon.transfer.util.StringEncryptor.EncryptionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -114,8 +114,8 @@ public class HibernateUtil {
 		log.info("computed url for database:{}", jdbcUrlBuilder.toString());
 
 		Configuration cfg = new Configuration();
-		cfg.addClass(LocalIRODSTransfer.class);
-		cfg.addClass(LocalIRODSTransferItem.class);
+		cfg.addClass(Transfer.class);
+		cfg.addClass(TransferItem.class);
 		cfg.setProperty("hibernate.connection.driver_class",
 				"org.apache.derby.jdbc.EmbeddedDriver");
 		cfg.setProperty("hibernate.connection.password", "transfer");

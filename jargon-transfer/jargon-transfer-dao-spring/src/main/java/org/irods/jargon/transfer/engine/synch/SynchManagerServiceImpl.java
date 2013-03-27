@@ -5,7 +5,7 @@ import java.util.List;
 import org.hibernate.exception.ConstraintViolationException;
 import org.irods.jargon.transfer.dao.SynchronizationDAO;
 import org.irods.jargon.transfer.dao.TransferDAOException;
-import org.irods.jargon.transfer.dao.domain.LocalIRODSTransfer;
+import org.irods.jargon.transfer.dao.domain.Transfer;
 import org.irods.jargon.transfer.dao.domain.Synchronization;
 import org.irods.jargon.transfer.dao.domain.TransferState;
 import org.slf4j.Logger;
@@ -99,7 +99,7 @@ public class SynchManagerServiceImpl implements SynchManagerService {
 			if (latestSynchronization.getLocalIRODSTransfers() != null
 					&& !latestSynchronization.getLocalIRODSTransfers()
 							.isEmpty()) {
-				for (LocalIRODSTransfer localIRODSTransfer : latestSynchronization
+				for (Transfer localIRODSTransfer : latestSynchronization
 						.getLocalIRODSTransfers()) {
 					if (localIRODSTransfer.getTransferState() == TransferState.ENQUEUED
 							|| localIRODSTransfer.getTransferState() == TransferState.PROCESSING) {
@@ -298,7 +298,7 @@ public class SynchManagerServiceImpl implements SynchManagerService {
 		}
 
 		// ensure that no enqueued or processing transfers are in the queue
-		for (LocalIRODSTransfer localIRODSTransfer : synchronization
+		for (Transfer localIRODSTransfer : synchronization
 				.getLocalIRODSTransfers()) {
 			if (localIRODSTransfer.getTransferState() == TransferState.ENQUEUED
 					|| localIRODSTransfer.getTransferState() == TransferState.PROCESSING) {

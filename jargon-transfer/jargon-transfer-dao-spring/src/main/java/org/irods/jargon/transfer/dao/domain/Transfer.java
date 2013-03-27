@@ -32,7 +32,7 @@ import org.hibernate.annotations.LazyCollectionOption;
  */
 @Entity
 @Table(name = "local_irods_transfer")
-public class LocalIRODSTransfer implements Serializable {
+public class Transfer implements Serializable {
 
 	private static final long serialVersionUID = -6714116121965036534L;
 
@@ -73,10 +73,10 @@ public class LocalIRODSTransfer implements Serializable {
 	@Column(name = "irods_absolute_path", length = 32672)
 	private String irodsAbsolutePath = "";
 
-	@OneToMany(mappedBy = "localIRODSTransfer", targetEntity = LocalIRODSTransferItem.class, cascade = { CascadeType.ALL }, fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "localIRODSTransfer", targetEntity = TransferItem.class, cascade = { CascadeType.ALL }, fetch = FetchType.LAZY)
 	@OrderBy("transferredAt")
 	@LazyCollection(LazyCollectionOption.EXTRA)
-	private Set<LocalIRODSTransferItem> localIRODSTransferItems = new HashSet<LocalIRODSTransferItem>();
+	private Set<TransferItem> localIRODSTransferItems = new HashSet<TransferItem>();
 
 	@Column(name = "created_at")
 	private Date createdAt;
@@ -106,7 +106,7 @@ public class LocalIRODSTransfer implements Serializable {
 	@JoinColumn(name = "grid_account_id", nullable = false)
 	private GridAccount gridAccount;
 
-	public LocalIRODSTransfer() {
+	public Transfer() {
 		super();
 	}
 
@@ -190,12 +190,12 @@ public class LocalIRODSTransfer implements Serializable {
 		this.transferStatus = transferStatus;
 	}
 
-	public Set<LocalIRODSTransferItem> getLocalIRODSTransferItems() {
+	public Set<TransferItem> getLocalIRODSTransferItems() {
 		return localIRODSTransferItems;
 	}
 
 	public void setLocalIRODSTransferItems(
-			final Set<LocalIRODSTransferItem> localIRODSTransferItems) {
+			final Set<TransferItem> localIRODSTransferItems) {
 		this.localIRODSTransferItems = localIRODSTransferItems;
 	}
 

@@ -61,13 +61,13 @@ public class Synchronization {
 	@JoinColumn(name = "grid_account_id", nullable = false)
 	private GridAccount gridAccount;
 
-	@OneToMany(mappedBy = "synchronization", targetEntity = LocalIRODSTransfer.class, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "synchronization", targetEntity = Transfer.class, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@org.hibernate.annotations.Cascade({
 			org.hibernate.annotations.CascadeType.SAVE_UPDATE,
 			org.hibernate.annotations.CascadeType.DELETE_ORPHAN })
 	@org.hibernate.annotations.OnDelete(action = org.hibernate.annotations.OnDeleteAction.CASCADE)
 	@OrderBy("createdAt")
-	private Set<LocalIRODSTransfer> localIRODSTransfers = new HashSet<LocalIRODSTransfer>();
+	private Set<Transfer> localIRODSTransfers = new HashSet<Transfer>();
 
 	/**
 	 * Time stamp of the last synchronization attempt
@@ -280,14 +280,14 @@ public class Synchronization {
 	 *            the localIRODSTransfers to set
 	 */
 	public void setLocalIRODSTransfers(
-			final Set<LocalIRODSTransfer> localIRODSTransfers) {
+			final Set<Transfer> localIRODSTransfers) {
 		this.localIRODSTransfers = localIRODSTransfers;
 	}
 
 	/**
 	 * @return the localIRODSTransfers
 	 */
-	public Set<LocalIRODSTransfer> getLocalIRODSTransfers() {
+	public Set<Transfer> getLocalIRODSTransfers() {
 		return localIRODSTransfers;
 	}
 

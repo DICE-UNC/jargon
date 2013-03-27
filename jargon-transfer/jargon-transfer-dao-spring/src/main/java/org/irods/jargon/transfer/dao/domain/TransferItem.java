@@ -16,7 +16,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 /**
- * For a <code>LocalIRODSTransfer</code>, this is an individual operation within
+ * For a <code>Transfer</code>, this is an individual operation within
  * the transfer. This item would be a directory or file that was moved during
  * the transfer.
  * 
@@ -25,7 +25,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "local_irods_transfer_item")
-public class LocalIRODSTransferItem implements Serializable {
+public class TransferItem implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -34,9 +34,9 @@ public class LocalIRODSTransferItem implements Serializable {
 	@Column(name = "id")
 	private Long id;
 
-	@ManyToOne(targetEntity = LocalIRODSTransfer.class, fetch = FetchType.LAZY)
+	@ManyToOne(targetEntity = Transfer.class, fetch = FetchType.LAZY)
 	@JoinColumn(name = "local_irods_transfer_id", nullable = false)
-	private LocalIRODSTransfer localIRODSTransfer;
+	private Transfer localIRODSTransfer;
 
 	@Column(name = "source_file_absolute_path", length = 32672)
 	private String sourceFileAbsolutePath;
@@ -66,7 +66,7 @@ public class LocalIRODSTransferItem implements Serializable {
 	@Column(name = "transferred_at")
 	private Date transferredAt;
 
-	public LocalIRODSTransferItem() {
+	public TransferItem() {
 		super();
 	}
 
@@ -126,12 +126,12 @@ public class LocalIRODSTransferItem implements Serializable {
 		this.transferredAt = transferredAt;
 	}
 
-	public LocalIRODSTransfer getLocalIRODSTransfer() {
+	public Transfer getLocalIRODSTransfer() {
 		return localIRODSTransfer;
 	}
 
 	public void setLocalIRODSTransfer(
-			final LocalIRODSTransfer localIRODSTransfer) {
+			final Transfer localIRODSTransfer) {
 		this.localIRODSTransfer = localIRODSTransfer;
 	}
 

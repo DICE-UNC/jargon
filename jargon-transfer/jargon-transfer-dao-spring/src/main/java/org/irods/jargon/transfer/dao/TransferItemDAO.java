@@ -2,21 +2,21 @@ package org.irods.jargon.transfer.dao;
 
 import java.util.List;
 
-import org.irods.jargon.transfer.dao.domain.LocalIRODSTransferItem;
+import org.irods.jargon.transfer.dao.domain.TransferItem;
 
 /**
  * 
  * @author jdr0887
  * 
  */
-public interface LocalIRODSTransferItemDAO {
+public interface TransferItemDAO {
 
 	/**
 	 * 
 	 * @param ea
 	 * @throws DAOException
 	 */
-	public void save(LocalIRODSTransferItem ea) throws TransferDAOException;
+	public void save(TransferItem ea) throws TransferDAOException;
 
 	/**
 	 * 
@@ -24,7 +24,7 @@ public interface LocalIRODSTransferItemDAO {
 	 * @return
 	 * @throws DAOException
 	 */
-	public LocalIRODSTransferItem findById(Long id) throws TransferDAOException;
+	public TransferItem findById(Long id) throws TransferDAOException;
 
 	/**
 	 * 
@@ -32,7 +32,7 @@ public interface LocalIRODSTransferItemDAO {
 	 * @return
 	 * @throws TransferDAOException
 	 */
-	public List<LocalIRODSTransferItem> findErrorItemsByTransferId(Long id)
+	public List<TransferItem> findErrorItemsByTransferId(Long id)
 			throws TransferDAOException;
 
 	/**
@@ -40,14 +40,14 @@ public interface LocalIRODSTransferItemDAO {
 	 * @param ea
 	 * @throws TransferDAOException
 	 */
-	public void delete(LocalIRODSTransferItem ea) throws TransferDAOException;
+	public void delete(TransferItem ea) throws TransferDAOException;
 
 	/**
 	 * 
 	 * @param localIRODSTransferId
 	 * @return
 	 */
-	public List<LocalIRODSTransferItem> findAllItemsForTransferByTransferId(
+	public List<TransferItem> findAllItemsForTransferByTransferId(
 			Long localIRODSTransferId) throws TransferDAOException;
 
 }

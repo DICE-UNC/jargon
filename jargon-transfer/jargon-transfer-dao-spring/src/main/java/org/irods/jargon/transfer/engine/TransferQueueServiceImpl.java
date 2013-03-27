@@ -7,13 +7,13 @@ import java.util.List;
 import java.util.Set;
 
 import org.irods.jargon.core.exception.JargonException;
-import org.irods.jargon.transfer.dao.LocalIRODSTransferDAO;
-import org.irods.jargon.transfer.dao.LocalIRODSTransferItemDAO;
+import org.irods.jargon.transfer.dao.TransferDAO;
+import org.irods.jargon.transfer.dao.TransferItemDAO;
 import org.irods.jargon.transfer.dao.SynchronizationDAO;
 import org.irods.jargon.transfer.dao.TransferDAOException;
 import org.irods.jargon.transfer.dao.domain.GridAccount;
-import org.irods.jargon.transfer.dao.domain.LocalIRODSTransfer;
-import org.irods.jargon.transfer.dao.domain.LocalIRODSTransferItem;
+import org.irods.jargon.transfer.dao.domain.Transfer;
+import org.irods.jargon.transfer.dao.domain.TransferItem;
 import org.irods.jargon.transfer.dao.domain.Synchronization;
 import org.irods.jargon.transfer.dao.domain.TransferState;
 import org.irods.jargon.transfer.dao.domain.TransferStatus;
@@ -43,9 +43,9 @@ public class TransferQueueServiceImpl implements TransferQueueService {
 		super();
 	}
 
-	private LocalIRODSTransferDAO localIRODSTransferDAO;
+	private TransferDAO localIRODSTransferDAO;
 
-	private LocalIRODSTransferItemDAO localIRODSTransferItemDAO;
+	private TransferItemDAO localIRODSTransferItemDAO;
 
 	private SynchronizationDAO synchronizationDAO;
 
@@ -65,12 +65,12 @@ public class TransferQueueServiceImpl implements TransferQueueService {
 	 * org.irods.jargon.transfer.engine.TransferQueueService#dequeueTransfer()
 	 */
 	@Override
-	public LocalIRODSTransfer dequeueTransfer() throws JargonException {
+	public Transfer dequeueTransfer() throws JargonException {
 		log.debug("entering dequeueTransfer()");
-		LocalIRODSTransfer transfer = null;
+		Transfer transfer = null;
 		try {
 
-			List<LocalIRODSTransfer> localIRODSTransferList = localIRODSTransferDAO
+			List<Transfer> localIRODSTransferList = localIRODSTransferDAO
 					.findByTransferState(TransferState.ENQUEUED,
 							TransferState.PROCESSING, TransferState.PAUSED);
 
@@ -107,7 +107,7 @@ public class TransferQueueServiceImpl implements TransferQueueService {
 	 * org.irods.jargon.core.connection.IRODSAccount)
 	 */
 	@Override
-	public LocalIRODSTransfer enqueuePutTransfer(
+	public Transfer enqueuePutTransfer(
 			final String localSourceAbsolutePath,
 			final String targetIRODSAbsolutePath, final String targetResource,
 			final GridAccount gridAccount) throws JargonException {
@@ -139,7 +139,7 @@ public class TransferQueueServiceImpl implements TransferQueueService {
 		log.info("   target iRODS path: {}", targetIRODSAbsolutePath);
 		log.info("   target resource:{}", targetResource);
 
-		LocalIRODSTransfer enqueuedTransfer = new LocalIRODSTransfer();
+		Transfer enqueuedTransfer = new Transfer();
 		enqueuedTransfer.setCreatedAt(new Date());
 		enqueuedTransfer.setIrodsAbsolutePath(targetIRODSAbsolutePath);
 		enqueuedTransfer.setLocalAbsolutePath(localSourceAbsolutePath);
@@ -159,7 +159,7 @@ public class TransferQueueServiceImpl implements TransferQueueService {
 
 
 	@Override
-	public LocalIRODSTransfer enqueueSynchTransfer(
+	public Transfer enqueueSynchTransfer(
 			final Synchronization synchronization,
  final GridAccount gridAccount)
 			throws JargonException {
@@ -182,7 +182,7 @@ public class TransferQueueServiceImpl implements TransferQueueService {
 					"synchronization is not persisted in database?");
 		}
 
-		LocalIRODSTransfer enqueuedTransfer = new LocalIRODSTransfer();
+		Transfer enqueuedTransfer = new Transfer();
 		enqueuedTransfer.setCreatedAt(new Date());
 		enqueuedTransfer.setIrodsAbsolutePath(synchronization
 				.getIrodsSynchDirectory());
@@ -202,7 +202,7 @@ public class TransferQueueServiceImpl implements TransferQueueService {
 	}
 
 	@Override
-	public LocalIRODSTransfer enqueueGetTransfer(
+	public Transfer enqueueGetTransfer(
 			final String irodsSourceAbsolutePath,
 			final String targetLocalAbsolutePath, final String sourceResource,
 			final GridAccount gridAccount) throws JargonException {
@@ -234,7 +234,7 @@ public class TransferQueueServiceImpl implements TransferQueueService {
 		log.info("   target local path: {}", targetLocalAbsolutePath);
 		log.info("   target resource:{}", sourceResource);
 
-		LocalIRODSTransfer enqueuedTransfer = new LocalIRODSTransfer();
+		Transfer enqueuedTransfer = new Transfer();
 		enqueuedTransfer.setCreatedAt(new Date());
 		enqueuedTransfer.setIrodsAbsolutePath(irodsSourceAbsolutePath);
 		enqueuedTransfer.setLocalAbsolutePath(targetLocalAbsolutePath);
@@ -262,12 +262,12 @@ public class TransferQueueServiceImpl implements TransferQueueService {
 	 * 
 	 * @see org.irods.jargon.transfer.engine.TransferQueueService#
 	 * markTransferAsErrorAndTerminate
-	 * (org.irods.jargon.transfer.dao.domain.LocalIRODSTransfer,
+	 * (org.irods.jargon.transfer.dao.domain.Transfer,
 	 * org.irods.jargon.transfer.engine.TransferManager)
 	 */
 	@Override
 	public void markTransferAsErrorAndTerminate(
-			final LocalIRODSTransfer localIRODSTransfer,
+			final Transfer localIRODSTransfer,
 			final TransferManager transferManager) throws JargonException {
 		markTransferAsErrorAndTerminate(localIRODSTransfer, null,
 				transferManager);
@@ -278,18 +278,18 @@ public class TransferQueueServiceImpl implements TransferQueueService {
 	 * 
 	 * @see org.irods.jargon.transfer.engine.TransferQueueService#
 	 * markTransferAsErrorAndTerminate
-	 * (org.irods.jargon.transfer.dao.domain.LocalIRODSTransfer,
+	 * (org.irods.jargon.transfer.dao.domain.Transfer,
 	 * java.lang.Exception, org.irods.jargon.transfer.engine.TransferManager)
 	 */
 	@Override
 	public void markTransferAsErrorAndTerminate(
-			final LocalIRODSTransfer localIRODSTransfer,
+			final Transfer localIRODSTransfer,
 			final Exception errorException,
 			final TransferManager transferManager) throws JargonException {
 
 		try {
 
-			LocalIRODSTransfer mergedTransfer = localIRODSTransferDAO
+			Transfer mergedTransfer = localIRODSTransferDAO
 					.findById(localIRODSTransfer.getId());
 
 			mergedTransfer.setTransferEnd(new Date());
@@ -318,7 +318,7 @@ public class TransferQueueServiceImpl implements TransferQueueService {
 	 * (int)
 	 */
 	@Override
-	public List<LocalIRODSTransfer> getLastNInQueue(
+	public List<Transfer> getLastNInQueue(
 			final int countOfEntriesToShow) throws JargonException {
 		log.debug("entering getLastNInQueue(int countOfEntriesToShow)");
 		if (countOfEntriesToShow <= 0) {
@@ -327,7 +327,7 @@ public class TransferQueueServiceImpl implements TransferQueueService {
 
 		try {
 
-			List<LocalIRODSTransfer> localIRODSTransferList = localIRODSTransferDAO
+			List<Transfer> localIRODSTransferList = localIRODSTransferDAO
 					.findAllSortedDesc(countOfEntriesToShow);
 			return localIRODSTransferList;
 		} catch (TransferDAOException e) {
@@ -342,10 +342,10 @@ public class TransferQueueServiceImpl implements TransferQueueService {
 	 * org.irods.jargon.transfer.engine.TransferQueueService#getCurrentQueue()
 	 */
 	@Override
-	public List<LocalIRODSTransfer> getCurrentQueue() throws JargonException {
+	public List<Transfer> getCurrentQueue() throws JargonException {
 		log.debug("entering getCurrentQueue()");
 		try {
-			List<LocalIRODSTransfer> localIRODSTransferList = localIRODSTransferDAO
+			List<Transfer> localIRODSTransferList = localIRODSTransferDAO
 					.findByTransferState(80, TransferState.ENQUEUED,
 							TransferState.PROCESSING, TransferState.PAUSED);
 			return localIRODSTransferList;
@@ -361,10 +361,10 @@ public class TransferQueueServiceImpl implements TransferQueueService {
 	 * org.irods.jargon.transfer.engine.TransferQueueService#getErrorQueue()
 	 */
 	@Override
-	public List<LocalIRODSTransfer> getErrorQueue() throws JargonException {
+	public List<Transfer> getErrorQueue() throws JargonException {
 		log.debug("entering getErrorQueue()");
 		try {
-			List<LocalIRODSTransfer> localIRODSTransferList = localIRODSTransferDAO
+			List<Transfer> localIRODSTransferList = localIRODSTransferDAO
 					.findByTransferStatus(80, TransferStatus.ERROR);
 			return localIRODSTransferList;
 		} catch (TransferDAOException e) {
@@ -379,11 +379,11 @@ public class TransferQueueServiceImpl implements TransferQueueService {
 	 * org.irods.jargon.transfer.engine.TransferQueueService#getWarningQueue()
 	 */
 	@Override
-	public List<LocalIRODSTransfer> getWarningQueue() throws JargonException {
+	public List<Transfer> getWarningQueue() throws JargonException {
 		log.debug("entering getWarningQueue()");
 		try {
 
-			List<LocalIRODSTransfer> localIRODSTransferList = localIRODSTransferDAO
+			List<Transfer> localIRODSTransferList = localIRODSTransferDAO
 					.findByTransferStatus(80, TransferStatus.WARNING);
 			return localIRODSTransferList;
 		} catch (TransferDAOException e) {
@@ -399,7 +399,7 @@ public class TransferQueueServiceImpl implements TransferQueueService {
 	 * ()
 	 */
 	@Override
-	public List<LocalIRODSTransfer> showErrorTransfers() throws JargonException {
+	public List<Transfer> showErrorTransfers() throws JargonException {
 		return getErrorQueue();
 	}
 
@@ -411,7 +411,7 @@ public class TransferQueueServiceImpl implements TransferQueueService {
 	 * ()
 	 */
 	@Override
-	public List<LocalIRODSTransfer> showWarningTransfers()
+	public List<Transfer> showWarningTransfers()
 			throws JargonException {
 		return getWarningQueue();
 	}
@@ -424,7 +424,7 @@ public class TransferQueueServiceImpl implements TransferQueueService {
 	 */
 	@Override
 	// @Transactional
-	public List<LocalIRODSTransfer> getRecentQueue() throws JargonException {
+	public List<Transfer> getRecentQueue() throws JargonException {
 		return getLastNInQueue(80);
 	}
 
@@ -485,10 +485,10 @@ public class TransferQueueServiceImpl implements TransferQueueService {
 	 * getAllTransferItemsForTransfer(java.lang.Long)
 	 */
 	@Override
-	public List<LocalIRODSTransferItem> getAllTransferItemsForTransfer(
+	public List<TransferItem> getAllTransferItemsForTransfer(
 			final Long localIRODSTransferId) throws JargonException {
 		log.debug("entering getAllTransferItemsForTransfer(Long localIRODSTransferId)");
-		List<LocalIRODSTransferItem> items = new ArrayList<LocalIRODSTransferItem>();
+		List<TransferItem> items = new ArrayList<TransferItem>();
 		try {
 
 			items = localIRODSTransferItemDAO
@@ -506,10 +506,10 @@ public class TransferQueueServiceImpl implements TransferQueueService {
 	 * getErrorTransferItemsForTransfer(java.lang.Long)
 	 */
 	@Override
-	public List<LocalIRODSTransferItem> getErrorTransferItemsForTransfer(
+	public List<TransferItem> getErrorTransferItemsForTransfer(
 			final Long localIRODSTransferId) throws JargonException {
 		log.debug("entering getAllTransferItemsForTransfer(Long localIRODSTransferId)");
-		List<LocalIRODSTransferItem> items = new ArrayList<LocalIRODSTransferItem>();
+		List<TransferItem> items = new ArrayList<TransferItem>();
 		try {
 
 			items = localIRODSTransferItemDAO
@@ -525,10 +525,10 @@ public class TransferQueueServiceImpl implements TransferQueueService {
 	 * 
 	 * @see
 	 * org.irods.jargon.transfer.engine.TransferQueueService#restartTransfer
-	 * (org.irods.jargon.transfer.dao.domain.LocalIRODSTransfer)
+	 * (org.irods.jargon.transfer.dao.domain.Transfer)
 	 */
 	@Override
-	public void restartTransfer(final LocalIRODSTransfer localIRODSTransfer)
+	public void restartTransfer(final Transfer localIRODSTransfer)
 			throws JargonException {
 		if (localIRODSTransfer == null) {
 			throw new JargonException("localIRODSTransfer");
@@ -536,7 +536,7 @@ public class TransferQueueServiceImpl implements TransferQueueService {
 		log.info("restarting a transfer:{}", localIRODSTransfer);
 		try {
 
-			LocalIRODSTransfer txfrToUpdate = localIRODSTransferDAO
+			Transfer txfrToUpdate = localIRODSTransferDAO
 					.findById(localIRODSTransfer.getId());
 			log.info("beginning tx to store status of this transfer ");
 			log.info(">>>>restart last successful path:{}",
@@ -558,10 +558,10 @@ public class TransferQueueServiceImpl implements TransferQueueService {
 	 * 
 	 * @see
 	 * org.irods.jargon.transfer.engine.TransferQueueService#resubmitTransfer
-	 * (org.irods.jargon.transfer.dao.domain.LocalIRODSTransfer)
+	 * (org.irods.jargon.transfer.dao.domain.Transfer)
 	 */
 	@Override
-	public void resubmitTransfer(final LocalIRODSTransfer localIRODSTransfer)
+	public void resubmitTransfer(final Transfer localIRODSTransfer)
 			throws JargonException {
 
 		if (localIRODSTransfer == null) {
@@ -572,16 +572,16 @@ public class TransferQueueServiceImpl implements TransferQueueService {
 
 		try {
 
-			LocalIRODSTransfer txfrToUpdate = localIRODSTransferDAO
+			Transfer txfrToUpdate = localIRODSTransferDAO
 					.findInitializedById(localIRODSTransfer.getId());
-			Set<LocalIRODSTransferItem> items = txfrToUpdate
+			Set<TransferItem> items = txfrToUpdate
 					.getLocalIRODSTransferItems();
 
-			for (LocalIRODSTransferItem item : items) {
+			for (TransferItem item : items) {
 				localIRODSTransferItemDAO.delete(item);
 			}
 			txfrToUpdate
-					.setLocalIRODSTransferItems(new HashSet<LocalIRODSTransferItem>());
+					.setLocalIRODSTransferItems(new HashSet<TransferItem>());
 			txfrToUpdate.setTransferStatus(TransferStatus.OK);
 			txfrToUpdate.setTransferState(TransferState.ENQUEUED);
 			txfrToUpdate.setLastSuccessfulPath("");
@@ -595,7 +595,7 @@ public class TransferQueueServiceImpl implements TransferQueueService {
 	}
 
 	@Override
-	public LocalIRODSTransfer enqueueReplicateTransfer(
+	public Transfer enqueueReplicateTransfer(
 			final String irodsAbsolutePath, final String targetResource,
 			final GridAccount gridAccount) throws JargonException {
 
@@ -615,7 +615,7 @@ public class TransferQueueServiceImpl implements TransferQueueService {
 		log.info("enqueue replicate transfer from iRODS: {}", irodsAbsolutePath);
 		log.info("   target resource:{}", targetResource);
 
-		LocalIRODSTransfer enqueuedTransfer = new LocalIRODSTransfer();
+		Transfer enqueuedTransfer = new Transfer();
 		enqueuedTransfer.setCreatedAt(new Date());
 		enqueuedTransfer.setIrodsAbsolutePath(irodsAbsolutePath);
 		enqueuedTransfer.setLocalAbsolutePath("");
@@ -638,7 +638,7 @@ public class TransferQueueServiceImpl implements TransferQueueService {
 	}
 
 	@Override
-	public LocalIRODSTransfer enqueueCopyTransfer(
+	public Transfer enqueueCopyTransfer(
 			final String irodsSourceAbsolutePath, final String targetResource,
 			final String irodsTargetAbsolutePath,
  final GridAccount gridAccount)
@@ -670,7 +670,7 @@ public class TransferQueueServiceImpl implements TransferQueueService {
 		log.info("  to target iRODS path: {}", irodsTargetAbsolutePath);
 		log.info("   target resource:{}", targetResource);
 
-		LocalIRODSTransfer enqueuedTransfer = new LocalIRODSTransfer();
+		Transfer enqueuedTransfer = new Transfer();
 		enqueuedTransfer.setCreatedAt(new Date());
 		enqueuedTransfer.setLocalAbsolutePath(irodsSourceAbsolutePath);
 		enqueuedTransfer.setIrodsAbsolutePath(irodsTargetAbsolutePath);
@@ -697,11 +697,11 @@ public class TransferQueueServiceImpl implements TransferQueueService {
 	 * 
 	 * @see
 	 * org.irods.jargon.transfer.engine.TransferQueueService#setTransferAsCancelled
-	 * (org.irods.jargon.transfer.dao.domain.LocalIRODSTransfer)
+	 * (org.irods.jargon.transfer.dao.domain.Transfer)
 	 */
 	@Override
 	public void setTransferAsCancelled(
-			final LocalIRODSTransfer localIRODSTransfer) throws JargonException {
+			final Transfer localIRODSTransfer) throws JargonException {
 
 		if (localIRODSTransfer == null) {
 			throw new JargonException("localIRODSTransfer is null");
@@ -711,7 +711,7 @@ public class TransferQueueServiceImpl implements TransferQueueService {
 
 		try {
 
-			LocalIRODSTransfer txfrToCancel = localIRODSTransferDAO
+			Transfer txfrToCancel = localIRODSTransferDAO
 					.findById(localIRODSTransfer.getId());
 			if (!txfrToCancel.getTransferState().equals(TransferState.COMPLETE)) {
 				txfrToCancel.setTransferStatus(TransferStatus.OK);
@@ -737,14 +737,14 @@ public class TransferQueueServiceImpl implements TransferQueueService {
 	@Override
 	public void processQueueAtStartup() throws JargonException {
 		log.info("in startup...");
-		List<LocalIRODSTransfer> currentQueue = getCurrentQueue();
+		List<Transfer> currentQueue = getCurrentQueue();
 
 		if (currentQueue.isEmpty()) {
 			log.info("queue is empty");
 			return;
 		}
 
-		for (LocalIRODSTransfer localIrodsTransfer : currentQueue) {
+		for (Transfer localIrodsTransfer : currentQueue) {
 			if (localIrodsTransfer.getTransferState().equals(
 					TransferState.PROCESSING)) {
 				log.info("resetting a processing transfer to enqueued:{}",
@@ -760,12 +760,12 @@ public class TransferQueueServiceImpl implements TransferQueueService {
 	 * processed are not treated as such during dequeue.
 	 * 
 	 * @param transferToReset
-	 *            {@link org.irods.jargon.transfer.dao.domain.LocalIRODSTransfer}
+	 *            {@link org.irods.jargon.transfer.dao.domain.Transfer}
 	 *            to be reset
 	 * @throws JargonException
 	 */
 	private void resetTransferToEnqueued(
-			final LocalIRODSTransfer transferToReset) throws JargonException {
+			final Transfer transferToReset) throws JargonException {
 
 		try {
 			transferToReset.setTransferStatus(TransferStatus.OK);
@@ -783,7 +783,7 @@ public class TransferQueueServiceImpl implements TransferQueueService {
 	 *            the localIRODSTransferDAO to set
 	 */
 	public void setLocalIRODSTransferDAO(
-			final LocalIRODSTransferDAO localIRODSTransferDAO) {
+			final TransferDAO localIRODSTransferDAO) {
 		this.localIRODSTransferDAO = localIRODSTransferDAO;
 	}
 
@@ -792,7 +792,7 @@ public class TransferQueueServiceImpl implements TransferQueueService {
 	 *            the localIRODSTransferItemDAO to set
 	 */
 	public void setLocalIRODSTransferItemDAO(
-			final LocalIRODSTransferItemDAO localIRODSTransferItemDAO) {
+			final TransferItemDAO localIRODSTransferItemDAO) {
 		this.localIRODSTransferItemDAO = localIRODSTransferItemDAO;
 	}
 
@@ -801,11 +801,11 @@ public class TransferQueueServiceImpl implements TransferQueueService {
 	 * 
 	 * @see org.irods.jargon.transfer.engine.TransferQueueService#
 	 * updateLocalIRODSTransfer
-	 * (org.irods.jargon.transfer.dao.domain.LocalIRODSTransfer)
+	 * (org.irods.jargon.transfer.dao.domain.Transfer)
 	 */
 	@Override
 	public void updateLocalIRODSTransfer(
-			final LocalIRODSTransfer localIrodsTransfer) throws JargonException {
+			final Transfer localIrodsTransfer) throws JargonException {
 
 		try {
 			localIRODSTransferDAO.save(localIrodsTransfer);
@@ -823,10 +823,10 @@ public class TransferQueueServiceImpl implements TransferQueueService {
 	 * findLocalIRODSTransferById(java.lang.Long)
 	 */
 	@Override
-	public LocalIRODSTransfer findLocalIRODSTransferById(final Long id)
+	public Transfer findLocalIRODSTransferById(final Long id)
 			throws JargonException {
 		try {
-			LocalIRODSTransfer transfer =  localIRODSTransferDAO.findById(id);
+			Transfer transfer =  localIRODSTransferDAO.findById(id);
 			// go ahead and load the synch
 			Synchronization synchronization = transfer.getSynchronization();
 			if (synchronization != null) {
@@ -845,7 +845,7 @@ public class TransferQueueServiceImpl implements TransferQueueService {
 	 * findLocalIRODSTransferByIdInitializeItems(java.lang.Long)
 	 */
 	@Override
-	public LocalIRODSTransfer findLocalIRODSTransferByIdInitializeItems(
+	public Transfer findLocalIRODSTransferByIdInitializeItems(
 			final Long id) throws JargonException {
 		try {
 			return localIRODSTransferDAO.findInitializedById(id);
@@ -859,12 +859,12 @@ public class TransferQueueServiceImpl implements TransferQueueService {
 	 * 
 	 * @see
 	 * org.irods.jargon.transfer.engine.TransferQueueService#addItemToTransfer
-	 * (org.irods.jargon.transfer.dao.domain.LocalIRODSTransfer,
-	 * org.irods.jargon.transfer.dao.domain.LocalIRODSTransferItem)
+	 * (org.irods.jargon.transfer.dao.domain.Transfer,
+	 * org.irods.jargon.transfer.dao.domain.TransferItem)
 	 */
 	@Override
-	public void addItemToTransfer(final LocalIRODSTransfer localIRODSTransfer,
-			final LocalIRODSTransferItem localIRODSTransferItem)
+	public void addItemToTransfer(final Transfer localIRODSTransfer,
+			final TransferItem localIRODSTransferItem)
 			throws JargonException {
 
 		if (localIRODSTransfer == null) {
@@ -876,7 +876,7 @@ public class TransferQueueServiceImpl implements TransferQueueService {
 		}
 
 		try {
-			LocalIRODSTransfer merged = localIRODSTransferDAO
+			Transfer merged = localIRODSTransferDAO
 					.findInitializedById(localIRODSTransfer.getId());
 			merged.getLocalIRODSTransferItems().add(localIRODSTransferItem);
 		} catch (TransferDAOException e) {
@@ -903,7 +903,7 @@ public class TransferQueueServiceImpl implements TransferQueueService {
 	 * 
 	 * 
 	 * List<LocalIRODSTransfer> currentQueue = this.getRecentQueue(); for
-	 * (LocalIRODSTransfer transfer : currentQueue) { if
+	 * (Transfer transfer : currentQueue) { if
 	 * (transfer.getTransferState() == TransferState.ENQUEUED ||
 	 * transfer.getTransferState() == TransferState.PROCESSING) { if
 	 * (transfer.getTransferHost().equals(irodsAccount.getHost()) &&
@@ -916,7 +916,7 @@ public class TransferQueueServiceImpl implements TransferQueueService {
 	 * ); } } }
 	 * 
 	 * 
-	 * for (LocalIRODSTransfer transfer : currentQueue) {
+	 * for (Transfer transfer : currentQueue) {
 	 * 
 	 * if (transfer.getTransferHost().equals(irodsAccount.getHost()) &&
 	 * transfer.getTransferZone() .equals(irodsAccount.getZone()) &&
