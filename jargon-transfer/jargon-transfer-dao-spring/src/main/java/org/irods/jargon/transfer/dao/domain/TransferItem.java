@@ -24,7 +24,7 @@ import javax.persistence.Table;
  * 
  */
 @Entity
-@Table(name = "local_irods_transfer_item")
+@Table(name = "transfer_item")
 public class TransferItem implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -34,9 +34,9 @@ public class TransferItem implements Serializable {
 	@Column(name = "id")
 	private Long id;
 
-	@ManyToOne(targetEntity = Transfer.class, fetch = FetchType.LAZY)
-	@JoinColumn(name = "local_irods_transfer_id", nullable = false)
-	private Transfer localIRODSTransfer;
+	@ManyToOne(targetEntity = TransferAttempt.class, fetch = FetchType.LAZY)
+	@JoinColumn(name = "transfer_id", nullable = false)
+	private TransferAttempt transferAttempt;
 
 	@Column(name = "source_file_absolute_path", length = 32672)
 	private String sourceFileAbsolutePath;
@@ -126,13 +126,13 @@ public class TransferItem implements Serializable {
 		this.transferredAt = transferredAt;
 	}
 
-	public Transfer getLocalIRODSTransfer() {
-		return localIRODSTransfer;
+	public TransferAttempt getTransferAttempt() {
+		return transferAttempt;
 	}
 
-	public void setLocalIRODSTransfer(
-			final Transfer localIRODSTransfer) {
-		this.localIRODSTransfer = localIRODSTransfer;
+	public void setTransferAttempt(
+			final TransferAttempt transferAttempt) {
+		this.transferAttempt = transferAttempt;
 	}
 
 	public long getLengthInBytes() {
@@ -169,7 +169,7 @@ public class TransferItem implements Serializable {
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
-		sb.append("LocalIRODSTransferItem:");
+		sb.append("TransferItem:");
 		sb.append("\n   id:");
 		sb.append(id);
 		sb.append("\n   transferType:");

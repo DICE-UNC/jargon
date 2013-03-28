@@ -44,10 +44,10 @@ public interface TransferItemDAO {
 
 	/**
 	 * 
-	 * @param localIRODSTransferId
+	 * @param transferId
 	 * @return
 	 */
 	public List<TransferItem> findAllItemsForTransferByTransferId(
-			Long localIRODSTransferId) throws TransferDAOException;
+			Long transferId) throws TransferDAOException;
 
 }

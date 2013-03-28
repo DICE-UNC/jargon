@@ -31,7 +31,7 @@ import org.hibernate.annotations.LazyCollectionOption;
  * 
  */
 @Entity
-@Table(name = "local_irods_transfer")
+@Table(name = "transfer")
 public class Transfer implements Serializable {
 
 	private static final long serialVersionUID = -6714116121965036534L;
@@ -73,10 +73,10 @@ public class Transfer implements Serializable {
 	@Column(name = "irods_absolute_path", length = 32672)
 	private String irodsAbsolutePath = "";
 
-	@OneToMany(mappedBy = "localIRODSTransfer", targetEntity = TransferItem.class, cascade = { CascadeType.ALL }, fetch = FetchType.LAZY)
-	@OrderBy("transferredAt")
+	@OneToMany(mappedBy = "transfer", targetEntity = TransferAttempt.class, cascade = { CascadeType.ALL }, fetch = FetchType.LAZY)
+	@OrderBy("attemptStart")
 	@LazyCollection(LazyCollectionOption.EXTRA)
-	private Set<TransferItem> localIRODSTransferItems = new HashSet<TransferItem>();
+	private Set<TransferAttempt> transferAttempts = new HashSet<TransferAttempt>();
 
 	@Column(name = "created_at")
 	private Date createdAt;
@@ -190,13 +190,13 @@ public class Transfer implements Serializable {
 		this.transferStatus = transferStatus;
 	}
 
-	public Set<TransferItem> getLocalIRODSTransferItems() {
-		return localIRODSTransferItems;
+	public Set<TransferAttempt> getTransferAttempts() {
+		return transferAttempts;
 	}
 
-	public void setLocalIRODSTransferItems(
-			final Set<TransferItem> localIRODSTransferItems) {
-		this.localIRODSTransferItems = localIRODSTransferItems;
+	public void setTransferAttempts(
+			final Set<TransferAttempt> transferAttempts) {
+		this.transferAttempts = transferAttempts;
 	}
 
 	public String getGlobalException() {
@@ -252,7 +252,7 @@ public class Transfer implements Serializable {
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
-		sb.append("LocalIRODSTransfer");
+		sb.append("Transfer");
 		sb.append("\n   id:");
 		sb.append(id);
 		sb.append("\n   transferState:");

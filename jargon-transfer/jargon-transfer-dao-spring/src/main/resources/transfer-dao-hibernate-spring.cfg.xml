@@ -4,8 +4,9 @@
     "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
 <hibernate-configuration>
 	<session-factory>
-		<mapping class="org.irods.jargon.transfer.dao.domain.LocalIRODSTransfer" />
-		<mapping class="org.irods.jargon.transfer.dao.domain.LocalIRODSTransferItem" />
+		<mapping class="org.irods.jargon.transfer.dao.domain.Transfer" />
+		<mapping class="org.irods.jargon.transfer.dao.domain.TransferItem" />
+                <mapping class="org.irods.jargon.transfer.dao.domain.TransferAttempt" />
 		<mapping class="org.irods.jargon.transfer.dao.domain.Synchronization" />
 		<mapping class="org.irods.jargon.transfer.dao.domain.ConfigurationProperty" />
 		<mapping class="org.irods.jargon.transfer.dao.domain.GridAccount" />
