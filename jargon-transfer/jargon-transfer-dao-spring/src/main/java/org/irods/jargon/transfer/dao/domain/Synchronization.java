@@ -67,7 +67,7 @@ public class Synchronization {
 			org.hibernate.annotations.CascadeType.DELETE_ORPHAN })
 	@org.hibernate.annotations.OnDelete(action = org.hibernate.annotations.OnDeleteAction.CASCADE)
 	@OrderBy("createdAt")
-	private Set<Transfer> localIRODSTransfers = new HashSet<Transfer>();
+	private Set<Transfer> transfers = new HashSet<Transfer>();
 
 	/**
 	 * Time stamp of the last synchronization attempt
@@ -276,19 +276,19 @@ public class Synchronization {
 	}
 
 	/**
-	 * @param localIRODSTransfers
-	 *            the localIRODSTransfers to set
+	 * @param transfers
+	 *            the transfers to set
 	 */
-	public void setLocalIRODSTransfers(
-			final Set<Transfer> localIRODSTransfers) {
-		this.localIRODSTransfers = localIRODSTransfers;
+	public void setTransfers(
+			final Set<Transfer> transfers) {
+		this.transfers = transfers;
 	}
 
 	/**
-	 * @return the localIRODSTransfers
+	 * @return the transfers
 	 */
-	public Set<Transfer> getLocalIRODSTransfers() {
-		return localIRODSTransfers;
+	public Set<Transfer> getTransfers() {
+		return transfers;
 	}
 
 	@Override

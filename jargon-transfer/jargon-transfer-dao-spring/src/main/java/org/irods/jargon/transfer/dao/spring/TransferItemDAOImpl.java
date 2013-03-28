@@ -30,17 +30,17 @@ public class TransferItemDAOImpl extends HibernateDaoSupport
 	}
 
 	@Override
-	public void save(final TransferItem localIRODSTransferItem)
+	public void save(final TransferItem transferItem)
 			throws TransferDAOException {
 
 		try {
 			this.getSessionFactory().getCurrentSession()
-					.saveOrUpdate(localIRODSTransferItem);
+					.saveOrUpdate(transferItem);
 		} catch (Exception e) {
 
-			log.error("error in save(LocalIRODSTransferItem)", e);
+			log.error("error in save(TransferItem)", e);
 			throw new TransferDAOException(
-					"Failed save(LocalIRODSTransferItem)", e);
+					"Failed save(TransferItem)", e);
 		}
 	}
 
@@ -54,7 +54,7 @@ public class TransferItemDAOImpl extends HibernateDaoSupport
 			Criteria criteria = this.getSessionFactory().getCurrentSession()
 					.createCriteria(TransferItem.class);
 			criteria.add(Restrictions.eq("error", true));
-			criteria.createCriteria("localIRODSTransfer").add(
+			criteria.createCriteria("transfer").add(
 					Restrictions.eq("id", id));
 			criteria.addOrder(Order.asc("transferredAt"));
 			return criteria.list();
@@ -77,7 +77,7 @@ public class TransferItemDAOImpl extends HibernateDaoSupport
 		try {
 			Criteria criteria = this.getSessionFactory().getCurrentSession()
 					.createCriteria(TransferItem.class);
-			criteria.createCriteria("localIRODSTransfer").add(
+			criteria.createCriteria("transfer").add(
 					Restrictions.eq("id", id));
 			criteria.addOrder(Order.asc("transferredAt"));
 			return criteria.list();
@@ -110,20 +110,20 @@ public class TransferItemDAOImpl extends HibernateDaoSupport
 	}
 
 	@Override
-	public void delete(final TransferItem localIrodsTransferItem)
+	public void delete(final TransferItem transferItem)
 			throws TransferDAOException {
-		logger.debug("entering delete(LocalIRODSTransferItem)");
+		logger.debug("entering delete(TransferItem)");
 
 		try {
 
 			this.getSessionFactory().getCurrentSession()
-					.delete(localIrodsTransferItem);
+					.delete(transferItem);
 
 		} catch (Exception e) {
 
-			log.error("error in delete(LocalIRODSTransferItem)", e);
+			log.error("error in delete(TransferItem)", e);
 			throw new TransferDAOException(
-					"Failed delete(LocalIRODSTransferItem)", e);
+					"Failed delete(TransferItem)", e);
 		}
 	}
 

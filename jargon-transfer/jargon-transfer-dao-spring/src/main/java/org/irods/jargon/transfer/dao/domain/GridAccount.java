@@ -124,7 +124,7 @@ public class GridAccount implements Serializable {
 	@OneToMany(mappedBy = "gridAccount", targetEntity = Transfer.class, cascade = { CascadeType.ALL }, fetch = FetchType.LAZY)
 	@OrderBy("createdAt DESC")
 	@LazyCollection(LazyCollectionOption.TRUE)
-	private Set<Transfer> localIRODSTransfer = new HashSet<Transfer>();
+	private Set<Transfer> transfer = new HashSet<Transfer>();
 
 	@OneToMany(mappedBy = "gridAccount", targetEntity = Synchronization.class, cascade = { CascadeType.ALL }, fetch = FetchType.LAZY)
 	@OrderBy("name")

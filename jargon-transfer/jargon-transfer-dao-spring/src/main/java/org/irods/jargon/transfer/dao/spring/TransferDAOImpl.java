@@ -42,11 +42,11 @@ public class TransferDAOImpl extends HibernateDaoSupport implements
 	 * .transfer.dao.domain.Transfer)
 	 */
 	@Override
-	public void save(final Transfer localIRODSTransfer)
+	public void save(final Transfer transfer)
 			throws TransferDAOException {
-		logger.info("entering save(LocalIRODSTransfer)");
+		logger.info("entering save(Transfer)");
 		this.getSessionFactory().getCurrentSession()
-				.saveOrUpdate(localIRODSTransfer);
+				.saveOrUpdate(transfer);
 	}
 
 	/*
@@ -75,11 +75,11 @@ public class TransferDAOImpl extends HibernateDaoSupport implements
 	public Transfer findInitializedById(final Long id)
 			throws TransferDAOException {
 		logger.debug("entering findInitializedById(Long)");
-		Transfer localIrodsTransfer = (Transfer) this
+		Transfer transfer = (Transfer) this
 				.getSessionFactory().getCurrentSession()
 				.get(Transfer.class, id);
-		Hibernate.initialize(localIrodsTransfer);
-		return localIrodsTransfer;
+		Hibernate.initialize(transfer);
+		return transfer;
 	}
 
 	/*
@@ -238,9 +238,9 @@ public class TransferDAOImpl extends HibernateDaoSupport implements
 		try {
 
 			StringBuilder sb = new StringBuilder();
-			sb.append("delete from LocalIRODSTransferItem as item where ");
-			sb.append("item.localIRODSTransfer.id in (");
-			sb.append("select id from LocalIRODSTransfer as transfer where transfer.transferState <> ?)");
+			sb.append("delete from TransferItem as item where ");
+			sb.append("item.transfer.id in (");
+			sb.append("select id from Transfer as transfer where transfer.transferState <> ?)");
 
 			log.debug("delete items sql:{}", sb.toString());
 
@@ -251,7 +251,7 @@ public class TransferDAOImpl extends HibernateDaoSupport implements
 			log.debug("deleted items count of: {}", rows);
 
 			sb = new StringBuilder();
-			sb.append("delete from LocalIRODSTransfer  where transferState <> ?");
+			sb.append("delete from Transfer  where transferState <> ?");
 
 			log.debug("delete items sql:{}", sb.toString());
 
@@ -276,9 +276,9 @@ public class TransferDAOImpl extends HibernateDaoSupport implements
 		try {
 
 			StringBuilder sb = new StringBuilder();
-			sb.append("delete from LocalIRODSTransferItem as item where ");
-			sb.append("item.localIRODSTransfer.id in (");
-			sb.append("select id from LocalIRODSTransfer as transfer)");
+			sb.append("delete from TransferItem as item where ");
+			sb.append("item.transfer.id in (");
+			sb.append("select id from Transfer as transfer)");
 
 			log.debug("delete items sql:{}", sb.toString());
 
@@ -288,7 +288,7 @@ public class TransferDAOImpl extends HibernateDaoSupport implements
 			log.debug("deleted items count of: {}", rows);
 
 			sb = new StringBuilder();
-			sb.append("delete from LocalIRODSTransfer");
+			sb.append("delete from Transfer");
 
 			log.debug("delete items sql:{}", sb.toString());
 
@@ -317,9 +317,9 @@ public class TransferDAOImpl extends HibernateDaoSupport implements
 		try {
 
 			StringBuilder sb = new StringBuilder();
-			sb.append("delete from LocalIRODSTransferItem as item where ");
-			sb.append("item.localIRODSTransfer.id in (");
-			sb.append("select id from LocalIRODSTransfer as transfer where transferState = ? or transferState = ? and transferStatus = ?)");
+			sb.append("delete from TransferItem as item where ");
+			sb.append("item.transfer.id in (");
+			sb.append("select id from Transfer as transfer where transferState = ? or transferState = ? and transferStatus = ?)");
 
 			log.debug("delete transfer items sql:{}", sb.toString());
 
@@ -330,7 +330,7 @@ public class TransferDAOImpl extends HibernateDaoSupport implements
 			log.debug("deleted items count= {}", rows);
 
 			sb = new StringBuilder();
-			sb.append("delete from LocalIRODSTransfer  where transferState = ? or transferState = ? and transferStatus = ?");
+			sb.append("delete from Transfer  where transferState = ? or transferState = ? and transferStatus = ?");
 
 			log.debug("delete transfers sql:{}", sb.toString());
 
@@ -359,21 +359,21 @@ public class TransferDAOImpl extends HibernateDaoSupport implements
 	 * jargon.transfer.dao.domain.Transfer)
 	 */
 	@Override
-	public void delete(final Transfer localIRODSTransfer)
+	public void delete(final Transfer transfer)
 			throws TransferDAOException {
 		logger.debug("entering delete()");
 
 		try {
 			this.getSessionFactory().getCurrentSession()
-					.delete(localIRODSTransfer);
+					.delete(transfer);
 		} catch (HibernateException e) {
 			log.error("HibernateException", e);
 			throw new TransferDAOException(e);
 		} catch (Exception e) {
 
-			log.error("error in delete(LocalIRODSTransfer entity)", e);
+			log.error("error in delete(Transfer entity)", e);
 			throw new TransferDAOException(
-					"Failed delete(LocalIRODSTransfer entity)", e);
+					"Failed delete(Transfer entity)", e);
 		}
 	}
 
