@@ -1,6 +1,9 @@
 package org.irods.jargon.transfer.dao;
 
+import java.util.List;
+import org.irods.jargon.transfer.dao.domain.Transfer;
 import org.irods.jargon.transfer.dao.domain.TransferAttempt;
+import org.irods.jargon.transfer.dao.domain.TransferStatus;
 
 /**
  *
@@ -29,5 +32,15 @@ public interface TransferAttemptDAO {
 	 * @throws TransferDAOException
 	 */
         public void delete(TransferAttempt ea) throws TransferDAOException;
+        
+        /**
+	 * 
+	 * @param maxResults
+	 * @param transferStatus
+	 * @return
+	 * @throws TransferDAOException
+	 */
+	public List<TransferAttempt> findByTransferAttemptStatus(int maxResults,
+			TransferStatus... transferStatus) throws TransferDAOException;
     
 }

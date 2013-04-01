@@ -45,9 +45,9 @@ public class Transfer implements Serializable {
 	@Enumerated(EnumType.STRING)
 	private TransferState transferState;
 
-	@Column(name = "transfer_status")
+	@Column(name = "last_transfer_status")
 	@Enumerated(EnumType.STRING)
-	private TransferStatus transferStatus;
+	private TransferStatus lastTransferStatus;
 
 	@Column(name = "transfer_type")
 	@Enumerated(EnumType.STRING)
@@ -182,12 +182,12 @@ public class Transfer implements Serializable {
 		this.updatedAt = updatedAt;
 	}
 
-	public TransferStatus getTransferStatus() {
-		return transferStatus;
+	public TransferStatus getLastTransferStatus() {
+		return lastTransferStatus;
 	}
 
-	public void setTransferStatus(final TransferStatus transferStatus) {
-		this.transferStatus = transferStatus;
+	public void setLastTransferStatus(final TransferStatus lastTransferStatus) {
+		this.lastTransferStatus = lastTransferStatus;
 	}
 
 	public Set<TransferAttempt> getTransferAttempts() {
