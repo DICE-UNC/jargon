@@ -1,12 +1,14 @@
 package org.irods.jargon.workflow.wso;
 
+import org.irods.jargon.core.exception.FileNotFoundException;
+import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.workflow.mso.exception.WSOException;
 import org.irods.jargon.workflow.mso.exception.WSONotFoundException;
 
 /**
  * Interface for a WSO Service.
  * <p/>
- * One can view the WSO akin to an iROS collection with a hierarchical
+ * One can view the WSO akin to an iRODS collection with a hierarchical
  * structure. At the top level of this structures, one stores all the parameter
  * files needed to run the workflow, as well as any input files and manifest
  * files that are needed for the workflow execution. Beneath this level, is
@@ -20,6 +22,8 @@ import org.irods.jargon.workflow.mso.exception.WSONotFoundException;
  * catalog data that indicates the related .mss.
  * <p/>
  * This service allows for specification, query, and invocation of WSOs.
+ * <p/>
+ * see: https://www.irods.org/index.php/Workflow_Objects_(WSO)
  * 
  * @author Mike Conway - DICE (www.irods.org)
  * 
@@ -43,6 +47,47 @@ public interface WSOService {
 	 */
 	WorkflowStructuredObject findWSOForCollectionPath(
 			String irodsAbsolutePathToWSOMountedCollection)
+			throws WSONotFoundException, WSOException;
+
+	/**
+	 * Given a .mss workflow file, put it into iRODS and mount a workflow
+	 * collection for processing.
+	 * <p/>
+	 * This method takes a local file path to the mso object that will be 'put'
+	 * to iRODS as an mso file. Then the given collection is 'mounted' as a WSSO
+	 * given the provided path to the desired collection, and the .wss file that
+	 * was just.
+	 * 
+	 * @param absolutePathToTheMSSOToBeMounted
+	 *            <code>String</code> with the absolute path to msso structured
+	 *            object to mount
+	 * @param absolutePathToMountedCollection
+	 *            <code>String</code> with the absolute path to the iRODS
+	 *            collection that will be created based on the MSSO service
+	 * @throws FileNotFoundException
+	 * @throws JargonException
+	 */
+	void createNewWorkflow(String absoluteLocalPathToWssFile,
+			String absoluteIRODSTargetPathToTheWssToBeMounted,
+			String absolutePathToMountedCollection)
+			throws FileNotFoundException, JargonException;
+
+	/**
+	 * Convenience method will remove both the workflow mounted collection, as
+	 * well as the .mss file used to mount the workflow collection. Note that
+	 * this delete method will return a <code>WSONotFoundException</code> if it
+	 * cannot find the mounted workflow file.
+	 * 
+	 * @param absolutePathToMountedWorkflowCollection
+	 *            <code>String</code> with the absolute path to msso structured
+	 *            object to mount for the workflow. This is the special
+	 *            collection that holds the workflow data
+	 * @throws WSONotFoundException
+	 *             if the workflow information is not found
+	 * @throws WSOException
+	 */
+	void removeWorkflowFileAndMountedCollection(
+			final String absolutePathToMountedWorkflowCollection)
 			throws WSONotFoundException, WSOException;
 
 }

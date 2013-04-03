@@ -1,15 +1,18 @@
 package org.irods.jargon.workflow.wso;
 
+import java.io.File;
 import java.util.Properties;
 
 import junit.framework.Assert;
+import junit.framework.TestCase;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.pub.IRODSFileSystem;
 import org.irods.jargon.core.pub.MountedCollectionAO;
-import org.irods.jargon.core.pub.Stream2StreamAO;
 import org.irods.jargon.core.pub.io.IRODSFile;
+import org.irods.jargon.core.utils.LocalFileUtils;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
+import org.irods.jargon.workflow.mso.exception.WSONotFoundException;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -18,7 +21,6 @@ public class WSOServiceImplTest {
 
 	private static Properties testingProperties = new Properties();
 	private static org.irods.jargon.testutils.TestingPropertiesHelper testingPropertiesHelper = new TestingPropertiesHelper();
-	private static org.irods.jargon.testutils.filemanip.ScratchFileUtils scratchFileUtils = null;
 	public static final String IRODS_TEST_SUBDIR_PATH = "WSOServiceImplTest";
 	private static org.irods.jargon.testutils.IRODSTestSetupUtilities irodsTestSetupUtilities = null;
 	private static IRODSFileSystem irodsFileSystem = null;
@@ -27,7 +29,7 @@ public class WSOServiceImplTest {
 	public static void setUpBeforeClass() throws Exception {
 		org.irods.jargon.testutils.TestingPropertiesHelper testingPropertiesLoader = new TestingPropertiesHelper();
 		testingProperties = testingPropertiesLoader.getTestProperties();
-		scratchFileUtils = new org.irods.jargon.testutils.filemanip.ScratchFileUtils(
+		new org.irods.jargon.testutils.filemanip.ScratchFileUtils(
 				testingProperties);
 		irodsTestSetupUtilities = new org.irods.jargon.testutils.IRODSTestSetupUtilities();
 		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
@@ -39,6 +41,69 @@ public class WSOServiceImplTest {
 	@AfterClass
 	public static void tearDownAfterClass() throws Exception {
 		irodsFileSystem.closeAndEatExceptions();
+	}
+
+	@Test
+	public void testCreateAndRemoveMountedWSSO() throws Exception {
+		String targetCollectionName = "testFindWSOForCollectionPath";
+		String subMountCollection = "testFindWSOForCollectionPathMounted";
+		String mssoFile = "/msso/eCWkflow.mss";
+		String mssoFileName = "testCreateAndRemoveMountedWSSO.mss";
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
+								+ targetCollectionName);
+
+		String mountedCollectionPath = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
+								+ targetCollectionName + "/"
+								+ subMountCollection);
+
+		IRODSFile parentCollection = irodsFileSystem.getIRODSFileFactory(
+				irodsAccount).instanceIRODSFile(targetIrodsCollection);
+		parentCollection.mkdirs();
+
+		// do an initial unmount
+		MountedCollectionAO mountedCollectionAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getMountedCollectionAO(
+						irodsAccount);
+
+		mountedCollectionAO.unmountACollection(mountedCollectionPath,
+				irodsAccount.getDefaultStorageResource());
+
+		File mssoAsFile = LocalFileUtils.getClasspathResourceAsFile(mssoFile);
+		WSOService wsoService = new WSOServiceImpl(
+				irodsFileSystem.getIRODSAccessObjectFactory(), irodsAccount);
+		wsoService.createNewWorkflow(mssoAsFile.getAbsolutePath(),
+				targetIrodsCollection + "/" + mssoFileName,
+				mountedCollectionPath);
+
+		// now look up workflow
+		WorkflowStructuredObject wso = wsoService
+				.findWSOForCollectionPath(mountedCollectionPath);
+
+		TestCase.assertEquals("wsso does not have correct mss file reference",
+				targetIrodsCollection + "/" + mssoFileName,
+				wso.getMssFileAbsolutePath());
+
+		// now delete
+		wsoService
+				.removeWorkflowFileAndMountedCollection(mountedCollectionPath);
+
+		boolean found = true;
+		try {
+			wsoService.findWSOForCollectionPath(mountedCollectionPath);
+		} catch (WSONotFoundException wsnf) {
+			found = false;
+		}
+
+		Assert.assertFalse("should not have found wsso", found);
+
 	}
 
 	/*
@@ -68,14 +133,6 @@ public class WSOServiceImplTest {
 				irodsAccount).instanceIRODSFile(targetIrodsCollection);
 		parentCollection.mkdirs();
 
-		// put the test msso out there
-		String workflowFileTransferredToIrods = targetIrodsCollection + "/"
-				+ "eCWkflow.mss";
-		Stream2StreamAO stream2Stream = irodsFileSystem
-				.getIRODSAccessObjectFactory().getStream2StreamAO(irodsAccount);
-		stream2Stream.streamClasspathResourceToIRODSFile(mssoFile,
-				workflowFileTransferredToIrods);
-
 		// do an initial unmount
 		MountedCollectionAO mountedCollectionAO = irodsFileSystem
 				.getIRODSAccessObjectFactory().getMountedCollectionAO(
@@ -85,8 +142,11 @@ public class WSOServiceImplTest {
 				irodsAccount.getDefaultStorageResource());
 
 		// create the msso workflow mount
-
-		mountedCollectionAO.createAnMSSOMount(workflowFileTransferredToIrods,
+		File mssoAsFile = LocalFileUtils.getClasspathResourceAsFile(mssoFile);
+		String workflowFileTransferredToIrods = targetIrodsCollection + "/"
+				+ "eCWkflow.mss";
+		mountedCollectionAO.createAnMSSOMountForWorkflow(
+				mssoAsFile.getAbsolutePath(), workflowFileTransferredToIrods,
 				mountedCollectionPath);
 
 		WSOService wsoService = new WSOServiceImpl(

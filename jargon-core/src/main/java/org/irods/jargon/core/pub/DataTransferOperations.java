@@ -147,6 +147,12 @@ public interface DataTransferOperations extends IRODSAccessObject {
 	 * <p/>
 	 * Note that this method will, if the correct jargon properties are set,
 	 * support connection re-routing to appropriate resources for the transfer.
+	 * <p/>
+	 * Note: certain extended transfer options for put (such as target data
+	 * type) are set in the {@link TransferOptions} object, which is specified
+	 * by creating and passing within the {@link TransferControlBlock}. For
+	 * example, setting a data object to be an MSSO object is accomplished by
+	 * setting that type in the {@link TransferOptions} object.
 	 * 
 	 * @param sourceFile
 	 *            <code>File</code> with the source directory or file.

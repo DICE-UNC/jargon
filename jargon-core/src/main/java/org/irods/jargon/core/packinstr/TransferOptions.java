@@ -10,9 +10,6 @@ package org.irods.jargon.core.packinstr;
  * <p/>
  * Note that UDP options are included here, but the UDP option is not yet
  * implemented in jargon, and will have no effect.
- * <p/>
- * <b>Note:</b> this part of the API is new and subject to re-factoring. The
- * transfer options are currently not fully supported within the API.
  * 
  * @author Mike Conway - DICE (www.irods.org)
  * 
@@ -26,6 +23,10 @@ public class TransferOptions {
 		USE_FORCE, NO_FORCE, ASK_CALLBACK_LISTENER
 	}
 
+	public enum PutOptions {
+		NORMAL, MSSO_FILE
+	}
+
 	public static final int DEFAULT_UDP_SEND_RATE = 600000;
 	public static final int DEFAULT_UDP_PACKET_SIZE = 8192;
 	public static final int DEFAULT_MAX_PARALLEL_THREADS = 4;
@@ -37,6 +38,11 @@ public class TransferOptions {
 	private boolean intraFileStatusCallbacks = false;
 	private ForceOption forceOption = ForceOption.ASK_CALLBACK_LISTENER;
 	private boolean useParallelTransfer = true;
+
+	/**
+	 * DataType option for putting certain types of special files
+	 */
+	private PutOptions putOption = PutOptions.NORMAL;
 
 	/**
 	 * Store a checksum of the file after it has been transferred. This will
@@ -74,6 +80,8 @@ public class TransferOptions {
 		sb.append(forceOption);
 		sb.append("\n  useParallelTransfer:");
 		sb.append(useParallelTransfer);
+		sb.append("\n   putOption:");
+		sb.append(putOption);
 		return sb.toString();
 	}
 
@@ -102,6 +110,7 @@ public class TransferOptions {
 				setIntraFileStatusCallbacks(transferOptions.intraFileStatusCallbacks);
 				setForceOption(transferOptions.getForceOption());
 				setUseParallelTransfer(transferOptions.isUseParallelTransfer());
+				setPutOption(transferOptions.getPutOption());
 			}
 		}
 	}
@@ -286,6 +295,21 @@ public class TransferOptions {
 	 */
 	public void setUseParallelTransfer(final boolean useParallelTransfer) {
 		this.useParallelTransfer = useParallelTransfer;
+	}
+
+	/**
+	 * @return the putOption
+	 */
+	public PutOptions getPutOption() {
+		return putOption;
+	}
+
+	/**
+	 * @param putOption
+	 *            the putOption to set
+	 */
+	public void setPutOption(PutOptions putOption) {
+		this.putOption = putOption;
 	}
 
 }

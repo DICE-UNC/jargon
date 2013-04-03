@@ -9,7 +9,7 @@ import org.irods.jargon.core.pub.domain.IRODSDomainObject;
 /**
  * Represents a WSO (Workflow Structured Object) in iRODS.
  * <p/>
- * One can view the WSO akin to an iROS collection with a hierarchical
+ * One can view the WSO akin to an iRODS collection with a hierarchical
  * structure. At the top level of this structures, one stores all the parameter
  * files needed to run the workflow, as well as any input files and manifest
  * files that are needed for the workflow execution. Beneath this level, is

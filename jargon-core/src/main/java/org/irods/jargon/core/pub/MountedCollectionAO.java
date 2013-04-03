@@ -59,7 +59,7 @@ public interface MountedCollectionAO {
 	 *            <code>String</code> with the absolute path to the collection
 	 *            to be unmounted
 	 * @param resourceName
-	 *            <code>String</code> with the optional (blank if not nused)
+	 *            <code>String</code> with the optional (blank if not used)
 	 *            resource name
 	 * @return <code>boolean</code> will return <code>true</code> if unmounted,
 	 *         <code>false</code> if the collection to unmount was not found
@@ -69,16 +69,26 @@ public interface MountedCollectionAO {
 			String resourceName) throws JargonException;
 
 	/**
-	 * Create an MSSO mount using the given MSSO file, mounting the result to the provided collection path
-	 * @param absolutePathToTheMSSOToBeMounted   <code>String</code> with the absolute path to msso structured object to mount
-	 * @param absolutePathToMountedCollection <code>String</code> with the absolute path to the iRODS
+	 * Create an MSSO mount using the given MSSO file, mounting the result to
+	 * the provided collection path.
+	 * <p/>
+	 * This method takes a local file path to the mso object that will be 'put'
+	 * to iRODS as an mso file. Then the given collection is 'mounted' as a WSSO
+	 * given the provided path to the desired collection, and the .wss file that
+	 * was just
+	 * 
+	 * @param absolutePathToTheMSSOToBeMounted
+	 *            <code>String</code> with the absolute path to msso structured
+	 *            object to mount
+	 * @param absolutePathToMountedCollection
+	 *            <code>String</code> with the absolute path to the iRODS
 	 *            collection that will be created based on the MSSO service
 	 * @throws FileNotFoundException
 	 * @throws JargonException
 	 */
-	void createAnMSSOMount(String absolutePathToTheMSSOToBeMounted,
+	void createAnMSSOMountForWorkflow(String absoluteLocalPathToWssFile,
+			String absoluteIRODSTargetPathToTheWssToBeMounted,
 			String absolutePathToMountedCollection)
-			throws FileNotFoundException,
-			JargonException;
+			throws FileNotFoundException, JargonException;
 
 }

@@ -5,12 +5,15 @@ package org.irods.jargon.workflow.wso;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.DataNotFoundException;
+import org.irods.jargon.core.exception.FileNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.CollectionAO;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
+import org.irods.jargon.core.pub.MountedCollectionAO;
 import org.irods.jargon.core.pub.Stream2StreamAO;
 import org.irods.jargon.core.pub.domain.ObjStat.SpecColType;
 import org.irods.jargon.core.pub.io.IRODSFile;
+import org.irods.jargon.core.pub.io.IRODSFileFactory;
 import org.irods.jargon.core.service.AbstractJargonService;
 import org.irods.jargon.workflow.mso.exception.WSOException;
 import org.irods.jargon.workflow.mso.exception.WSONotFoundException;
@@ -20,7 +23,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Service implementation to interact with iRODS WSO (Workflow Service Objects).
  * <p/>
- * One can view the WSO akin to an iROS collection with a hierarchical
+ * One can view the WSO akin to an iRODS collection with a hierarchical
  * structure. At the top level of this structures, one stores all the parameter
  * files needed to run the workflow, as well as any input files and manifest
  * files that are needed for the workflow execution. Beneath this level, is
@@ -34,6 +37,9 @@ import org.slf4j.LoggerFactory;
  * catalog data that indicates the related .mss.
  * <p/>
  * This service allows for specification, query, and invocation of WSOs.
+ * <p/>
+ * see: https://www.irods.org/index.php/Workflow_Objects_(WSO)
+ * 
  * 
  * @author Mike Conway - DICE (www.irods.org)
  * 
@@ -82,6 +88,89 @@ public class WSOServiceImpl extends AbstractJargonService implements WSOService 
 
 		log.info("my wso:{}", wso);
 		return wso;
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.workflow.wso.WSOService#createNewWorkflow(java.lang.
+	 * String, java.lang.String, java.lang.String)
+	 */
+	@Override
+	public void createNewWorkflow(final String absoluteLocalPathToWssFile,
+			final String absoluteIRODSTargetPathToTheWssToBeMounted,
+			final String absolutePathToMountedCollection)
+			throws FileNotFoundException, JargonException {
+
+		log.info("createNewWorkflow(final String absoluteLocalPathToWssFile, final String absoluteIRODSTargetPathToTheWssToBeMounted,final String absolutePathToMountedCollection)");
+		MountedCollectionAO mountedCollectionAO = this
+				.getIrodsAccessObjectFactory().getMountedCollectionAO(
+						getIrodsAccount());
+
+		mountedCollectionAO.createAnMSSOMountForWorkflow(
+				absoluteLocalPathToWssFile,
+				absoluteIRODSTargetPathToTheWssToBeMounted,
+				absolutePathToMountedCollection);
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.workflow.wso.WSOService#
+	 * removeWorkflowFileAndMountedCollection(java.lang.String)
+	 */
+	@Override
+	public void removeWorkflowFileAndMountedCollection(
+			final String absolutePathToMountedWorkflowCollection)
+			throws WSONotFoundException, WSOException {
+
+		log.info("removeWorkflowFileAndMountedCollection(final String absolutePathToMountedWorkflowCollection)");
+
+		if (absolutePathToMountedWorkflowCollection == null
+				|| absolutePathToMountedWorkflowCollection.isEmpty()) {
+			throw new IllegalArgumentException(
+					"null or empty absolutePathToMountedWorkflowCollection");
+		}
+
+		log.info("absolutePathToMountedWorkflowCollection:{}",
+				absolutePathToMountedWorkflowCollection);
+
+		log.info("finding workflow information...");
+
+		WorkflowStructuredObject wso = this
+				.findWSOForCollectionPath(absolutePathToMountedWorkflowCollection);
+
+		log.info("found wso to delete:{}", wso);
+		log.info("unmounting collection...");
+		try {
+			MountedCollectionAO mountedCollectionAO = this
+					.getIrodsAccessObjectFactory().getMountedCollectionAO(
+							getIrodsAccount());
+
+			mountedCollectionAO.unmountACollection(
+					absolutePathToMountedWorkflowCollection, "");
+
+			log.info("collection unmounted, now delete the .mss file:{}",
+					wso.getMssFileAbsolutePath());
+
+			IRODSFileFactory irodsFileFactory = this
+					.getIrodsAccessObjectFactory().getIRODSFileFactory(
+							getIrodsAccount());
+			IRODSFile mssFile = irodsFileFactory.instanceIRODSFile(wso
+					.getMssFileAbsolutePath());
+
+			mssFile.delete();
+			log.info("mss file deleted");
+
+		} catch (JargonException e) {
+			log.error(
+					"jargonException in processing, rethrow as general WSOException",
+					e);
+			throw new WSOException(e);
+		}
 
 	}
 

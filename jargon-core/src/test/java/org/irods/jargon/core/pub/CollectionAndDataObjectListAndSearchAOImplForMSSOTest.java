@@ -1,5 +1,6 @@
 package org.irods.jargon.core.pub;
 
+import java.io.File;
 import java.util.List;
 import java.util.Properties;
 
@@ -18,26 +19,23 @@ import org.junit.Test;
 public class CollectionAndDataObjectListAndSearchAOImplForMSSOTest {
 	private static Properties testingProperties = new Properties();
 	private static org.irods.jargon.testutils.TestingPropertiesHelper testingPropertiesHelper = new TestingPropertiesHelper();
-	private static org.irods.jargon.testutils.filemanip.ScratchFileUtils scratchFileUtils = null;
 	public static final String IRODS_TEST_SUBDIR_PATH = "CollectionAndDataObjectListAndSearchAOImplForMSSOTest";
 	private static org.irods.jargon.testutils.IRODSTestSetupUtilities irodsTestSetupUtilities = null;
 	private static IRODSFileSystem irodsFileSystem = null;
-
-	private static IRODSAccount rajaAccount = null;
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		org.irods.jargon.testutils.TestingPropertiesHelper testingPropertiesLoader = new TestingPropertiesHelper();
 		testingProperties = testingPropertiesLoader.getTestProperties();
-		scratchFileUtils = new org.irods.jargon.testutils.filemanip.ScratchFileUtils(
+		new org.irods.jargon.testutils.filemanip.ScratchFileUtils(
 				testingProperties);
 		irodsTestSetupUtilities = new org.irods.jargon.testutils.IRODSTestSetupUtilities();
 		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
 		irodsTestSetupUtilities
 				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
 		irodsFileSystem = IRODSFileSystem.instance();
-		rajaAccount = IRODSAccount.instance("srbbrick15.ucsd.edu", 9947,
-				"rods", "RODS", "", "raja8", "");
+		IRODSAccount.instance("srbbrick15.ucsd.edu", 9947, "rods", "RODS", "",
+				"raja8", "");
 	}
 
 	@AfterClass
@@ -73,10 +71,6 @@ public class CollectionAndDataObjectListAndSearchAOImplForMSSOTest {
 		// put the test msso out there
 		String workflowFileTransferredToIrods = targetIrodsCollection + "/"
 				+ "eCWkflow.mss";
-		Stream2StreamAO stream2Stream = irodsFileSystem
-				.getIRODSAccessObjectFactory().getStream2StreamAO(irodsAccount);
-		stream2Stream.streamClasspathResourceToIRODSFile(mssoFile,
-				workflowFileTransferredToIrods);
 
 		// do an initial unmount
 		MountedCollectionAO mountedCollectionAO = irodsFileSystem
@@ -87,8 +81,10 @@ public class CollectionAndDataObjectListAndSearchAOImplForMSSOTest {
 				irodsAccount.getDefaultStorageResource());
 
 		// create the msso workflow mount
+		File mssoAsFile = LocalFileUtils.getClasspathResourceAsFile(mssoFile);
 
-		mountedCollectionAO.createAnMSSOMount(workflowFileTransferredToIrods,
+		mountedCollectionAO.createAnMSSOMountForWorkflow(
+				mssoAsFile.getAbsolutePath(), workflowFileTransferredToIrods,
 				mountedCollectionPath);
 
 		CollectionAndDataObjectListAndSearchAO collectionAndDataObjectListAndSearchAO = irodsFileSystem
@@ -132,10 +128,6 @@ public class CollectionAndDataObjectListAndSearchAOImplForMSSOTest {
 		// put the test msso out there
 		String workflowFileTransferredToIrods = targetIrodsCollection + "/"
 				+ "eCWkflow.mss";
-		Stream2StreamAO stream2Stream = irodsFileSystem
-				.getIRODSAccessObjectFactory().getStream2StreamAO(irodsAccount);
-		stream2Stream.streamClasspathResourceToIRODSFile(mssoFile,
-				workflowFileTransferredToIrods);
 
 		// do an initial unmount
 		MountedCollectionAO mountedCollectionAO = irodsFileSystem
@@ -147,7 +139,10 @@ public class CollectionAndDataObjectListAndSearchAOImplForMSSOTest {
 
 		// create the msso workflow mount
 
-		mountedCollectionAO.createAnMSSOMount(workflowFileTransferredToIrods,
+		File mssoAsFile = LocalFileUtils.getClasspathResourceAsFile(mssoFile);
+
+		mountedCollectionAO.createAnMSSOMountForWorkflow(
+				mssoAsFile.getAbsolutePath(), workflowFileTransferredToIrods,
 				mountedCollectionPath);
 
 		CollectionAndDataObjectListAndSearchAO collectionAndDataObjectListAndSearchAO = irodsFileSystem
@@ -236,8 +231,6 @@ public class CollectionAndDataObjectListAndSearchAOImplForMSSOTest {
 				+ "eCWkflow.mss";
 		Stream2StreamAO stream2Stream = irodsFileSystem
 				.getIRODSAccessObjectFactory().getStream2StreamAO(irodsAccount);
-		stream2Stream.streamClasspathResourceToIRODSFile(mssoFile,
-				workflowFileTransferredToIrods);
 
 		// do an initial unmount
 		MountedCollectionAO mountedCollectionAO = irodsFileSystem
@@ -249,9 +242,11 @@ public class CollectionAndDataObjectListAndSearchAOImplForMSSOTest {
 
 		// create the msso workflow mount
 
-		mountedCollectionAO.createAnMSSOMount(workflowFileTransferredToIrods,
-				mountedCollectionPath);
+		File mssoAsFile = LocalFileUtils.getClasspathResourceAsFile(mssoFile);
 
+		mountedCollectionAO.createAnMSSOMountForWorkflow(
+				mssoAsFile.getAbsolutePath(), workflowFileTransferredToIrods,
+				mountedCollectionPath);
 		// create a param file and stage it to the now mounted workflow
 		String workflowParamAsString = LocalFileUtils
 				.getClasspathResourceFileAsString(mssoParamFile);
@@ -331,8 +326,6 @@ public class CollectionAndDataObjectListAndSearchAOImplForMSSOTest {
 				+ "eCWkflow.mss";
 		Stream2StreamAO stream2Stream = irodsFileSystem
 				.getIRODSAccessObjectFactory().getStream2StreamAO(irodsAccount);
-		stream2Stream.streamClasspathResourceToIRODSFile(mssoFile,
-				workflowFileTransferredToIrods);
 
 		// do an initial unmount
 		MountedCollectionAO mountedCollectionAO = irodsFileSystem
@@ -344,9 +337,11 @@ public class CollectionAndDataObjectListAndSearchAOImplForMSSOTest {
 
 		// create the msso workflow mount
 
-		mountedCollectionAO.createAnMSSOMount(workflowFileTransferredToIrods,
-				mountedCollectionPath);
+		File mssoAsFile = LocalFileUtils.getClasspathResourceAsFile(mssoFile);
 
+		mountedCollectionAO.createAnMSSOMountForWorkflow(
+				mssoAsFile.getAbsolutePath(), workflowFileTransferredToIrods,
+				mountedCollectionPath);
 		// create a param file and stage it to the now mounted workflow
 		String workflowParamAsString = LocalFileUtils
 				.getClasspathResourceFileAsString(mssoParamFile);
