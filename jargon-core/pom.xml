@@ -104,6 +104,7 @@
 									test.mac.icommand.path=${jargon.test.mac.icommand.path}
 									test.option.exercise.remoteexecstream=${jargon.test.option.exercise.remoteexecstream}
 									test.option.exercise.audit=${jargon.test.option.exercise.audit}
+									test.option.exercise.workflow=${jargon.test.option.exercise.workflow}
 									test.option.distributed.resources=${test.option.distributed.resources}
 									test.option.registration=${test.option.registration}
 									test.option.strictACL=${test.option.strictACL}

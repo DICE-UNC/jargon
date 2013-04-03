@@ -24,6 +24,7 @@ public class WSOServiceImplTest {
 	public static final String IRODS_TEST_SUBDIR_PATH = "WSOServiceImplTest";
 	private static org.irods.jargon.testutils.IRODSTestSetupUtilities irodsTestSetupUtilities = null;
 	private static IRODSFileSystem irodsFileSystem = null;
+	private static boolean testWorkflow = false;
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -36,6 +37,8 @@ public class WSOServiceImplTest {
 		irodsTestSetupUtilities
 				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
 		irodsFileSystem = IRODSFileSystem.instance();
+		testWorkflow = testingPropertiesHelper
+				.isTestWorkflow(testingProperties);
 	}
 
 	@AfterClass
@@ -45,6 +48,11 @@ public class WSOServiceImplTest {
 
 	@Test
 	public void testCreateAndRemoveMountedWSSO() throws Exception {
+
+		if (!testWorkflow) {
+			return;
+		}
+
 		String targetCollectionName = "testFindWSOForCollectionPath";
 		String subMountCollection = "testFindWSOForCollectionPathMounted";
 		String mssoFile = "/msso/eCWkflow.mss";
@@ -111,6 +119,11 @@ public class WSOServiceImplTest {
 	 */
 	@Test
 	public void testFindWSOForCollectionPath() throws Exception {
+
+		if (!testWorkflow) {
+			return;
+		}
+
 		String targetCollectionName = "testFindWSOForCollectionPath";
 		String subMountCollection = "testFindWSOForCollectionPathMounted";
 		String mssoFile = "/msso/eCWkflow.mss";
