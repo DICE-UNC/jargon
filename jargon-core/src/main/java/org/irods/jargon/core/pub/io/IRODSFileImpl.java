@@ -382,11 +382,12 @@ public final class IRODSFileImpl extends File implements IRODSFile {
 
 			log.debug("file descriptor from new file create: {}",
 					fileDescriptor);
+			// TODO: clean up after tests
 			// in irods the file must be closed, then opened when doing a create
 			// new
-			this.close();
-			this.openKnowingExists();
-			log.debug("file now closed");
+			// this.close();
+			// this.openKnowingExists();
+			// log.debug("file now closed");
 		} catch (JargonFileOrCollAlreadyExistsException e) {
 			return false;
 
@@ -409,11 +410,12 @@ public final class IRODSFileImpl extends File implements IRODSFile {
 
 			log.debug("file descriptor from new file create: {}",
 					fileDescriptor);
+			//TODO: clean up after tests
 			// in irods the file must be closed, then opened when doing a create
 			// new
-			this.close();
-			this.openKnowingExists();
-			log.debug("file now closed");
+			// this.close();
+			// this.openKnowingExists();
+			// log.debug("file now closed");
 		} catch (JargonFileOrCollAlreadyExistsException e) {
 			return false;
 		}
@@ -1306,17 +1308,6 @@ public final class IRODSFileImpl extends File implements IRODSFile {
 	@Override
 	public synchronized int open() throws JargonException {
 		return openWithMode(DataObjInp.OpenFlags.READ_WRITE, true);
-	}
-
-	/**
-	 * Open the file without doing an <code>exists()</code> check, since I know
-	 * it already does. This saves a bit of time
-	 * 
-	 * @return
-	 * @throws JargonException
-	 */
-	private synchronized int openKnowingExists() throws JargonException {
-		return openWithMode(DataObjInp.OpenFlags.READ_WRITE, false);
 	}
 
 	/*

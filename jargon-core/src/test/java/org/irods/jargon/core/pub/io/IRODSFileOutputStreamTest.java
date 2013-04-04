@@ -30,6 +30,7 @@ import org.irods.jargon.testutils.icommandinvoke.IrodsInvocationContext;
 import org.irods.jargon.testutils.icommandinvoke.icommands.IputCommand;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class IRODSFileOutputStreamTest {
@@ -317,6 +318,7 @@ public class IRODSFileOutputStreamTest {
 	public final void testIRODSFileOutputStreamIRODSFileShouldCreate()
 			throws Exception {
 		String testFileName = "testFileShouldCreate.txt";
+		String string1 = "jfaijfjasidjfaisehfuaehfahfhudhfuashfuasfdhaisdfhaisdhfiaf";
 
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
@@ -332,10 +334,22 @@ public class IRODSFileOutputStreamTest {
 		IRODSFile irodsFile = irodsFileFactory
 				.instanceIRODSFile(targetIrodsCollection + '/' + testFileName);
 
-		irodsFile.createNewFile();
-		irodsFileSystem.closeAndEatExceptions();
+		IRODSFileOutputStream irodsFileOutputStream = irodsFileFactory
+				.instanceIRODSFileOutputStream(irodsFile);
+
+		irodsFileOutputStream.write(string1.getBytes());
+		irodsFileOutputStream.close();
 		assertionHelper.assertIrodsFileOrCollectionExists(targetIrodsCollection
 				+ '/' + testFileName);
+		
+
+		IRODSFileInputStream irodsFileInputStream = irodsFileFactory
+				.instanceIRODSFileInputStream(irodsFile);
+		String actual = MiscIRODSUtils
+				.convertStreamToString(irodsFileInputStream);
+		irodsFileInputStream.close();
+		irodsFileSystem.closeAndEatExceptions();
+		Assert.assertEquals("should be first string string", string1, actual);
 
 	}
 
@@ -346,7 +360,7 @@ public class IRODSFileOutputStreamTest {
 	 * 
 	 * @throws Exception
 	 */
-	@Test
+	@Ignore
 	public final void testIRODSFileOutputStreamIRODSFileShouldCreateEvenThoughParentDirDoesNotExist()
 			throws Exception {
 		String testFileName = "testFileShouldCreate.txt";

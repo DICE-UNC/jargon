@@ -18,6 +18,8 @@ import org.irods.jargon.core.pub.IRODSFileSystemAO;
 import org.irods.jargon.core.pub.IRODSFileSystemAOImpl;
 import org.irods.jargon.core.pub.IRODSGenericAO;
 import org.irods.jargon.core.utils.IRODSUriUtils;
+import org.perf4j.StopWatch;
+import org.perf4j.slf4j.Slf4JStopWatch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -158,6 +160,19 @@ public final class IRODSFileFactoryImpl extends IRODSGenericAO implements
 			final IRODSFile file) throws NoResourceDefinedException,
 			JargonException {
 
+		log.info("instanceIRODSFileOutputStream(final IRODSFile file)");
+
+		if (file == null) {
+			throw new IllegalArgumentException("null file");
+		}
+
+		StopWatch stopWatch = null;
+
+		if (this.isInstrumented()) {
+			stopWatch = new Slf4JStopWatch(
+					"instanceIRODSFileOutputStream(final IRODSFile file)");
+		}
+
 		FileIOOperations fileIOOperations = new FileIOOperationsAOImpl(
 				this.getIRODSSession(), this.getIRODSAccount());
 		try {
@@ -165,6 +180,10 @@ public final class IRODSFileFactoryImpl extends IRODSGenericAO implements
 		} catch (FileNotFoundException e) {
 			log.error("FileNotFound creating output stream", e);
 			throw new JargonException(e);
+		} finally {
+			if (this.isInstrumented()) {
+				stopWatch.stop();
+			}
 		}
 	}
 
@@ -179,6 +198,19 @@ public final class IRODSFileFactoryImpl extends IRODSGenericAO implements
 	public IRODSFileOutputStream instanceIRODSFileOutputStreamWithRerouting(
 			final IRODSFile file) throws NoResourceDefinedException,
 			JargonException {
+
+		log.info("instanceIRODSFileOutputStreamWithRerouting(final IRODSFile file) ");
+
+		if (file == null) {
+			throw new IllegalArgumentException("null file");
+		}
+
+		StopWatch stopWatch = null;
+
+		if (this.isInstrumented()) {
+			stopWatch = new Slf4JStopWatch(
+					"instanceIRODSFileOutputStream(final IRODSFile file)");
+		}
 
 		try {
 			if (!file.exists()) {
@@ -230,6 +262,10 @@ public final class IRODSFileFactoryImpl extends IRODSGenericAO implements
 		} catch (FileNotFoundException e) {
 			log.error("FileNotFound creating output stream", e);
 			throw new JargonException(e);
+		} finally {
+			if (this.isInstrumented()) {
+				stopWatch.stop();
+			}
 		}
 	}
 
@@ -246,6 +282,7 @@ public final class IRODSFileFactoryImpl extends IRODSGenericAO implements
 			JargonException {
 
 		log.info("instanceSessionClosingIRODSFileOutputStream");
+
 		if (file == null) {
 			throw new IllegalArgumentException("null irodsFile");
 		}
@@ -282,6 +319,19 @@ public final class IRODSFileFactoryImpl extends IRODSGenericAO implements
 	public IRODSFileOutputStream instanceIRODSFileOutputStream(final String name)
 			throws NoResourceDefinedException, JargonException {
 
+		log.info("instanceIRODSFileOutputStream(final String name)");
+
+		if (name == null || name.isEmpty()) {
+			throw new IllegalArgumentException("null or empty name");
+		}
+
+		StopWatch stopWatch = null;
+
+		if (this.isInstrumented()) {
+			stopWatch = new Slf4JStopWatch(
+					"instanceIRODSFileOutputStream(final IRODSFile file)");
+		}
+
 		FileIOOperations fileIOOperations = new FileIOOperationsAOImpl(
 				this.getIRODSSession(), this.getIRODSAccount());
 		try {
@@ -293,6 +343,10 @@ public final class IRODSFileFactoryImpl extends IRODSGenericAO implements
 		} catch (FileNotFoundException e) {
 			log.error("FileNotFound creating output stream", e);
 			throw new JargonException(e);
+		} finally {
+			if (this.isInstrumented()) {
+				stopWatch.stop();
+			}
 		}
 	}
 
