@@ -50,7 +50,7 @@ Note that the following bug and feature requests are logged in GForge with relat
 
  *[#1211] Re: [iROD-Chat:9536] jargon mangling UTF-8 characters
  **completed wiring codebase into jargon.properties settings
- 
+	 
 ==Features==
 
 *[#1264] [iROD-Chat:9666] Referencing Data Objects
