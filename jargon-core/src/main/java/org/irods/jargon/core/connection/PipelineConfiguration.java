@@ -25,9 +25,7 @@ public class PipelineConfiguration {
 	private final int sendInputStreamBufferSize;
 	private final int localFileInputStreamBufferSize;
 	private final int localFileOutputStreamBufferSize;
-	private final String defaultEncoding = "utf-8"; // FIXME: put into
-													// jargon.properties and
-													// propogate
+	private final String defaultEncoding;
 	private final int inputToOutputCopyBufferByteSize;
 	private final boolean reconnect;
 	private final long reconnectTimeInMillis;
@@ -73,6 +71,7 @@ public class PipelineConfiguration {
 		this.reconnect = jargonProperties.isReconnect();
 		this.reconnectTimeInMillis = jargonProperties
 				.getReconnectTimeInMillis();
+		this.defaultEncoding = jargonProperties.getEncoding();
 	}
 
 	@Override
