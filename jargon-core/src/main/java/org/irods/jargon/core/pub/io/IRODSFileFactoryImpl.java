@@ -18,10 +18,10 @@ import org.irods.jargon.core.pub.IRODSFileSystemAO;
 import org.irods.jargon.core.pub.IRODSFileSystemAOImpl;
 import org.irods.jargon.core.pub.IRODSGenericAO;
 import org.irods.jargon.core.utils.IRODSUriUtils;
-import org.perf4j.StopWatch;
-import org.perf4j.slf4j.Slf4JStopWatch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+//import org.perf4j.StopWatch;
+//import org.perf4j.slf4j.Slf4JStopWatch;
 
 /**
  * Factory to create IRODS File objects, will handle initialization of iRODS
@@ -166,12 +166,12 @@ public final class IRODSFileFactoryImpl extends IRODSGenericAO implements
 			throw new IllegalArgumentException("null file");
 		}
 
-		StopWatch stopWatch = null;
-
-		if (this.isInstrumented()) {
-			stopWatch = new Slf4JStopWatch(
-					"instanceIRODSFileOutputStream(final IRODSFile file)");
-		}
+		/*
+		 * StopWatch stopWatch = null;
+		 * 
+		 * if (this.isInstrumented()) { stopWatch = new Slf4JStopWatch(
+		 * "instanceIRODSFileOutputStream(final IRODSFile file)"); }
+		 */
 
 		FileIOOperations fileIOOperations = new FileIOOperationsAOImpl(
 				this.getIRODSSession(), this.getIRODSAccount());
@@ -181,9 +181,9 @@ public final class IRODSFileFactoryImpl extends IRODSGenericAO implements
 			log.error("FileNotFound creating output stream", e);
 			throw new JargonException(e);
 		} finally {
-			if (this.isInstrumented()) {
-				stopWatch.stop();
-			}
+			/*
+			 * if (this.isInstrumented()) { stopWatch.stop(); }
+			 */
 		}
 	}
 
@@ -205,12 +205,12 @@ public final class IRODSFileFactoryImpl extends IRODSGenericAO implements
 			throw new IllegalArgumentException("null file");
 		}
 
-		StopWatch stopWatch = null;
-
-		if (this.isInstrumented()) {
-			stopWatch = new Slf4JStopWatch(
-					"instanceIRODSFileOutputStream(final IRODSFile file)");
-		}
+		/*
+		 * StopWatch stopWatch = null;
+		 * 
+		 * if (this.isInstrumented()) { stopWatch = new Slf4JStopWatch(
+		 * "instanceIRODSFileOutputStream(final IRODSFile file)"); }
+		 */
 
 		try {
 			if (!file.exists()) {
@@ -263,9 +263,9 @@ public final class IRODSFileFactoryImpl extends IRODSGenericAO implements
 			log.error("FileNotFound creating output stream", e);
 			throw new JargonException(e);
 		} finally {
-			if (this.isInstrumented()) {
-				stopWatch.stop();
-			}
+			/*
+			 * if (this.isInstrumented()) { stopWatch.stop(); }
+			 */
 		}
 	}
 
@@ -325,12 +325,12 @@ public final class IRODSFileFactoryImpl extends IRODSGenericAO implements
 			throw new IllegalArgumentException("null or empty name");
 		}
 
-		StopWatch stopWatch = null;
-
-		if (this.isInstrumented()) {
-			stopWatch = new Slf4JStopWatch(
-					"instanceIRODSFileOutputStream(final IRODSFile file)");
-		}
+		/*
+		 * StopWatch stopWatch = null;
+		 * 
+		 * if (this.isInstrumented()) { stopWatch = new Slf4JStopWatch(
+		 * "instanceIRODSFileOutputStream(final IRODSFile file)"); }
+		 */
 
 		FileIOOperations fileIOOperations = new FileIOOperationsAOImpl(
 				this.getIRODSSession(), this.getIRODSAccount());
@@ -344,9 +344,9 @@ public final class IRODSFileFactoryImpl extends IRODSGenericAO implements
 			log.error("FileNotFound creating output stream", e);
 			throw new JargonException(e);
 		} finally {
-			if (this.isInstrumented()) {
-				stopWatch.stop();
-			}
+			/*
+			 * if (this.isInstrumented()) { stopWatch.stop(); }
+			 */
 		}
 	}
 
