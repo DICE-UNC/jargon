@@ -52,14 +52,18 @@
 
   <!-- ========================= BUSINESS OBJECT DEFINITIONS ========================= -->
 
-  <bean id="localIRODSTransferDAO" class="org.irods.jargon.transfer.dao.spring.LocalIRODSTransferDAOImpl">
+  <bean id="transferDAO" class="org.irods.jargon.transfer.dao.spring.TransferDAOImpl">
     <property name="sessionFactory" ref="sessionFactory" />
   </bean>
 
-  <bean id="localIRODSTransferItemDAO" class="org.irods.jargon.transfer.dao.spring.LocalIRODSTransferItemDAOImpl">
+  <bean id="transferItemDAO" class="org.irods.jargon.transfer.dao.spring.TransferItemDAOImpl">
     <property name="sessionFactory" ref="sessionFactory" />
   </bean>
-  
+
+  <bean id="transferAttemptDAO" class="org.irods.jargon.transfer.dao.spring.TransferAttemptDAOImpl">
+    <property name="sessionFactory" ref="sessionFactory" />
+  </bean>
+
   <bean id="gridAccountDAO" class="org.irods.jargon.transfer.dao.spring.GridAccountDAOImpl">
     <property name="sessionFactory" ref="sessionFactory" />
   </bean>
