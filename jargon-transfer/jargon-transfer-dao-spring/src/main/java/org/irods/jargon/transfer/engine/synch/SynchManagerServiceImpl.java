@@ -91,16 +91,15 @@ public class SynchManagerServiceImpl implements SynchManagerService {
 
 		log.info("synchronization:{}", synchronization);
 		boolean isRunning = false;
-
 		try {
 			Synchronization latestSynchronization = synchronizationDAO
 					.findById(synchronization.getId());
 
-			if (latestSynchronization.getLocalIRODSTransfers() != null
-					&& !latestSynchronization.getLocalIRODSTransfers()
+			if (latestSynchronization.getTransfers() != null
+					&& !latestSynchronization.getTransfers()
 							.isEmpty()) {
 				for (Transfer localIRODSTransfer : latestSynchronization
-						.getLocalIRODSTransfers()) {
+						.getTransfers()) {
 					if (localIRODSTransfer.getTransferState() == TransferState.ENQUEUED
 							|| localIRODSTransfer.getTransferState() == TransferState.PROCESSING) {
 						log.info("synch says it is running:{}",
@@ -299,7 +298,7 @@ public class SynchManagerServiceImpl implements SynchManagerService {
 
 		// ensure that no enqueued or processing transfers are in the queue
 		for (Transfer localIRODSTransfer : synchronization
-				.getLocalIRODSTransfers()) {
+				.getTransfers()) {
 			if (localIRODSTransfer.getTransferState() == TransferState.ENQUEUED
 					|| localIRODSTransfer.getTransferState() == TransferState.PROCESSING) {
 				log.warn(

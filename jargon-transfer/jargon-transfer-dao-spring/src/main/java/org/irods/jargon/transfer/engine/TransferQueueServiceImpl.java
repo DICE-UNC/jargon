@@ -85,7 +85,7 @@ public class TransferQueueServiceImpl implements TransferQueueService {
 				transfer.getGridAccount().getHost();
 				transfer.setTransferStart(new Date());
 				transfer.setTransferState(TransferState.PROCESSING);
-				transfer.setTransferStatus(TransferStatus.OK);
+				transfer.setLastTransferStatus(TransferStatus.OK);
 
 				localIRODSTransferDAO.save(transfer);
 			}
@@ -148,7 +148,7 @@ public class TransferQueueServiceImpl implements TransferQueueService {
 		enqueuedTransfer.setTransferStart(new Date());
 		enqueuedTransfer.setTransferType(TransferType.PUT);
 		enqueuedTransfer.setTransferState(TransferState.ENQUEUED);
-		enqueuedTransfer.setTransferStatus(TransferStatus.OK);
+		enqueuedTransfer.setLastTransferStatus(TransferStatus.OK);
 
 		this.updateLocalIRODSTransfer(enqueuedTransfer);
 
@@ -192,9 +192,9 @@ public class TransferQueueServiceImpl implements TransferQueueService {
 		enqueuedTransfer.setTransferStart(new Date());
 		enqueuedTransfer.setTransferType(TransferType.SYNCH);
 		enqueuedTransfer.setTransferState(TransferState.ENQUEUED);
-		enqueuedTransfer.setTransferStatus(TransferStatus.OK);
+		enqueuedTransfer.setLastTransferStatus(TransferStatus.OK);
 		enqueuedTransfer.setSynchronization(synchronization);
-		synchronization.getLocalIRODSTransfers().add(enqueuedTransfer);
+		synchronization.getTransfers().add(enqueuedTransfer);
 		localIRODSTransferDAO.save(enqueuedTransfer);
 		log.info("transfer saved and associated with synchronization");
 		return enqueuedTransfer;
@@ -242,7 +242,7 @@ public class TransferQueueServiceImpl implements TransferQueueService {
 		enqueuedTransfer.setTransferStart(new Date());
 		enqueuedTransfer.setTransferType(TransferType.GET);
 		enqueuedTransfer.setTransferState(TransferState.ENQUEUED);
-		enqueuedTransfer.setTransferStatus(TransferStatus.OK);
+		enqueuedTransfer.setLastTransferStatus(TransferStatus.OK);
 
 		try {
 			log.info("saving...{}", enqueuedTransfer);
@@ -294,7 +294,7 @@ public class TransferQueueServiceImpl implements TransferQueueService {
 
 			mergedTransfer.setTransferEnd(new Date());
 			mergedTransfer.setTransferState(TransferState.COMPLETE);
-			mergedTransfer.setTransferStatus(TransferStatus.ERROR);
+			mergedTransfer.setLastTransferStatus(TransferStatus.ERROR);
 
 			if (errorException != null) {
 				log.warn("setting global exception to:{}", errorException);
@@ -541,7 +541,7 @@ public class TransferQueueServiceImpl implements TransferQueueService {
 			log.info("beginning tx to store status of this transfer ");
 			log.info(">>>>restart last successful path:{}",
 					txfrToUpdate.getLastSuccessfulPath());
-			txfrToUpdate.setTransferStatus(TransferStatus.OK);
+			txfrToUpdate.setLastTransferStatus(TransferStatus.OK);
 			txfrToUpdate.setTransferState(TransferState.ENQUEUED);
 			txfrToUpdate.setGlobalException("");
 			txfrToUpdate.setGlobalExceptionStackTrace("");
@@ -570,27 +570,27 @@ public class TransferQueueServiceImpl implements TransferQueueService {
 
 		log.info("restarting a transfer:{}", localIRODSTransfer);
 
-		try {
-
-			Transfer txfrToUpdate = localIRODSTransferDAO
-					.findInitializedById(localIRODSTransfer.getId());
-			Set<TransferItem> items = txfrToUpdate
-					.getLocalIRODSTransferItems();
-
-			for (TransferItem item : items) {
-				localIRODSTransferItemDAO.delete(item);
-			}
-			txfrToUpdate
-					.setLocalIRODSTransferItems(new HashSet<TransferItem>());
-			txfrToUpdate.setTransferStatus(TransferStatus.OK);
-			txfrToUpdate.setTransferState(TransferState.ENQUEUED);
-			txfrToUpdate.setLastSuccessfulPath("");
-
-			localIRODSTransferDAO.save(txfrToUpdate);
-		} catch (TransferDAOException e) {
-			log.error("error in transaction", e);
-			throw new JargonException(e);
-		}
+//		try {
+// TODO: Need to add in transfer attempts here
+//			Transfer txfrToUpdate = localIRODSTransferDAO
+//					.findInitializedById(localIRODSTransfer.getId());
+//			Set<TransferItem> items = txfrToUpdate
+//					.getLocalIRODSTransferItems();
+//
+//			for (TransferItem item : items) {
+//				localIRODSTransferItemDAO.delete(item);
+//			}
+//			txfrToUpdate
+//					.setLocalIRODSTransferItems(new HashSet<TransferItem>());
+//			txfrToUpdate.setTransferStatus(TransferStatus.OK);
+//			txfrToUpdate.setTransferState(TransferState.ENQUEUED);
+//			txfrToUpdate.setLastSuccessfulPath("");
+//
+//			localIRODSTransferDAO.save(txfrToUpdate);
+//		} catch (TransferDAOException e) {
+//			log.error("error in transaction", e);
+//			throw new JargonException(e);
+//		}
 
 	}
 
@@ -623,7 +623,7 @@ public class TransferQueueServiceImpl implements TransferQueueService {
 		enqueuedTransfer.setTransferStart(new Date());
 		enqueuedTransfer.setTransferType(TransferType.REPLICATE);
 		enqueuedTransfer.setTransferState(TransferState.ENQUEUED);
-		enqueuedTransfer.setTransferStatus(TransferStatus.OK);
+		enqueuedTransfer.setLastTransferStatus(TransferStatus.OK);
 
 		try {
 			localIRODSTransferDAO.save(enqueuedTransfer);
@@ -678,7 +678,7 @@ public class TransferQueueServiceImpl implements TransferQueueService {
 		enqueuedTransfer.setTransferStart(new Date());
 		enqueuedTransfer.setTransferType(TransferType.COPY);
 		enqueuedTransfer.setTransferState(TransferState.ENQUEUED);
-		enqueuedTransfer.setTransferStatus(TransferStatus.OK);
+		enqueuedTransfer.setLastTransferStatus(TransferStatus.OK);
 
 		try {
 			localIRODSTransferDAO.save(enqueuedTransfer);
@@ -714,7 +714,7 @@ public class TransferQueueServiceImpl implements TransferQueueService {
 			Transfer txfrToCancel = localIRODSTransferDAO
 					.findById(localIRODSTransfer.getId());
 			if (!txfrToCancel.getTransferState().equals(TransferState.COMPLETE)) {
-				txfrToCancel.setTransferStatus(TransferStatus.OK);
+				txfrToCancel.setLastTransferStatus(TransferStatus.OK);
 				txfrToCancel.setTransferState(TransferState.CANCELLED);
 				localIRODSTransferDAO.save(txfrToCancel);
 				log.info("status set to cancelled");
@@ -768,7 +768,7 @@ public class TransferQueueServiceImpl implements TransferQueueService {
 			final Transfer transferToReset) throws JargonException {
 
 		try {
-			transferToReset.setTransferStatus(TransferStatus.OK);
+			transferToReset.setLastTransferStatus(TransferStatus.OK);
 			transferToReset.setTransferState(TransferState.ENQUEUED);
 			localIRODSTransferDAO.save(transferToReset);
 			log.info("status set to enqueued");
@@ -866,22 +866,22 @@ public class TransferQueueServiceImpl implements TransferQueueService {
 	public void addItemToTransfer(final Transfer localIRODSTransfer,
 			final TransferItem localIRODSTransferItem)
 			throws JargonException {
-
-		if (localIRODSTransfer == null) {
-			throw new IllegalArgumentException("null localIRODSTransfer");
-		}
-
-		if (localIRODSTransferItem == null) {
-			throw new IllegalArgumentException("null localIRODSTransferItem");
-		}
-
-		try {
-			Transfer merged = localIRODSTransferDAO
-					.findInitializedById(localIRODSTransfer.getId());
-			merged.getLocalIRODSTransferItems().add(localIRODSTransferItem);
-		} catch (TransferDAOException e) {
-			throw new JargonException(e);
-		}
+// TODO: Need to add in transfer attempt here
+//		if (localIRODSTransfer == null) {
+//			throw new IllegalArgumentException("null localIRODSTransfer");
+//		}
+//
+//		if (localIRODSTransferItem == null) {
+//			throw new IllegalArgumentException("null localIRODSTransferItem");
+//		}
+//
+//		try {
+//			Transfer merged = localIRODSTransferDAO
+//					.findInitializedById(localIRODSTransfer.getId());
+//			merged.getLocalIRODSTransferItems().add(localIRODSTransferItem);
+//		} catch (TransferDAOException e) {
+//			throw new JargonException(e);
+//		}
 	}
 
 	/*

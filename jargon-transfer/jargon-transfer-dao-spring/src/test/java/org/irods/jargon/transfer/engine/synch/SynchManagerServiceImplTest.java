@@ -11,7 +11,7 @@ import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.irods.jargon.transfer.dao.GridAccountDAO;
 import org.irods.jargon.transfer.dao.domain.FrequencyType;
 import org.irods.jargon.transfer.dao.domain.GridAccount;
-import org.irods.jargon.transfer.dao.domain.LocalIRODSTransfer;
+import org.irods.jargon.transfer.dao.domain.Transfer;
 import org.irods.jargon.transfer.dao.domain.Synchronization;
 import org.irods.jargon.transfer.dao.domain.SynchronizationType;
 import org.irods.jargon.transfer.dao.domain.TransferState;
@@ -510,18 +510,18 @@ public class SynchManagerServiceImplTest {
 		transferQueueService.enqueueSynchTransfer(actual, gridAccount);
 		// tweak txfr to complete
 
-		for (LocalIRODSTransfer localIRODSTransfer : actual
-				.getLocalIRODSTransfers()) {
-			localIRODSTransfer.setTransferState(TransferState.COMPLETE);
-			transferQueueService.setTransferAsCancelled(localIRODSTransfer);
+		for (Transfer transfer : actual
+				.getTransfers()) {
+			transfer.setTransferState(TransferState.COMPLETE);
+			transferQueueService.setTransferAsCancelled(transfer);
 		}
 
 		synchManagerService.deleteSynchronization(actual);
 		actual = synchManagerService.findByName(testName);
 		Assert.assertNull("synch should be deleted", actual);
-		List<LocalIRODSTransfer> queue = transferQueueService.getRecentQueue();
+		List<Transfer> queue = transferQueueService.getRecentQueue();
 
-		for (LocalIRODSTransfer transfer : queue) {
+		for (Transfer transfer : queue) {
 			Assert.assertFalse("should be no txfrs related to synch in queue",
 					transfer.getIrodsAbsolutePath().equals(testName));
 		}

@@ -14,6 +14,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
 
 /**
  * For a <code>Transfer</code>, this is an individual operation within
@@ -64,6 +65,7 @@ public class TransferItem implements Serializable {
 	private String errorStackTrace;
 
 	@Column(name = "transferred_at")
+        @Temporal(javax.persistence.TemporalType.DATE)
 	private Date transferredAt;
 
 	public TransferItem() {

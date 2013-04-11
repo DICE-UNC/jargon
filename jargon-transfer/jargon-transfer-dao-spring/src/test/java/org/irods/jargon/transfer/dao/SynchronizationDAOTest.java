@@ -10,7 +10,7 @@ import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.irods.jargon.transfer.dao.domain.FrequencyType;
 import org.irods.jargon.transfer.dao.domain.GridAccount;
-import org.irods.jargon.transfer.dao.domain.LocalIRODSTransfer;
+import org.irods.jargon.transfer.dao.domain.Transfer;
 import org.irods.jargon.transfer.dao.domain.Synchronization;
 import org.irods.jargon.transfer.dao.domain.SynchronizationType;
 import org.irods.jargon.transfer.dao.domain.TransferState;
@@ -42,7 +42,7 @@ public class SynchronizationDAOTest {
 	private SynchronizationDAO synchronizationDAO;
 
 	@Autowired
-	private LocalIRODSTransferDAO localIrodsTransferDAO;
+	private TransferDAO transferDAO;
 
 	@Autowired
 	private GridAccountDAO gridAccountDAO;
@@ -57,13 +57,13 @@ public class SynchronizationDAOTest {
 	public static void tearDownAfterClass() throws Exception {
 	}
 
-	public LocalIRODSTransferDAO getLocalIrodsTransferDAO() {
-		return localIrodsTransferDAO;
+	public TransferDAO getLocalIrodsTransferDAO() {
+		return transferDAO;
 	}
 
 	public void setLocalIrodsTransferDAO(
-			final LocalIRODSTransferDAO localIrodsTransferDAO) {
-		this.localIrodsTransferDAO = localIrodsTransferDAO;
+			final TransferDAO transferDAO) {
+		this.transferDAO = transferDAO;
 	}
 
 	public void setSynchronizationDAO(
@@ -224,16 +224,16 @@ public class SynchronizationDAOTest {
 				.setSynchronizationMode(SynchronizationType.ONE_WAY_LOCAL_TO_IRODS);
 		synchronizationDAO.save(synchronization);
 
-		LocalIRODSTransfer localIRODSTransfer = new LocalIRODSTransfer();
-		localIRODSTransfer.setCreatedAt(new Date());
-		localIRODSTransfer.setIrodsAbsolutePath("/irods/path");
-		localIRODSTransfer.setLocalAbsolutePath("/local/path");
-		localIRODSTransfer.setSynchronization(synchronization);
-		localIRODSTransfer.setGridAccount(gridAccount);
-		localIRODSTransfer.setTransferState(TransferState.ENQUEUED);
-		localIRODSTransfer.setTransferStatus(TransferStatus.OK);
-		localIRODSTransfer.setTransferType(TransferType.SYNCH);
-		synchronization.getLocalIRODSTransfers().add(localIRODSTransfer);
+		Transfer transfer = new Transfer();
+		transfer.setCreatedAt(new Date());
+		transfer.setIrodsAbsolutePath("/irods/path");
+		transfer.setLocalAbsolutePath("/local/path");
+		transfer.setSynchronization(synchronization);
+		transfer.setGridAccount(gridAccount);
+		transfer.setTransferState(TransferState.ENQUEUED);
+		transfer.setLastTransferStatus(TransferStatus.OK);
+		transfer.setTransferType(TransferType.SYNCH);
+		synchronization.getTransfers().add(transfer);
 
 		Assert.assertTrue("did not set id", synchronization.getId() > 0);
 
@@ -241,7 +241,7 @@ public class SynchronizationDAOTest {
 				.getId());
 		Assert.assertNotNull("did not find actual synch", actual);
 		Assert.assertTrue("did not find localIRODSTransfer in synchronization",
-				synchronization.getLocalIRODSTransfers().size() > 0);
+				synchronization.getTransfers().size() > 0);
 
 	}
 
@@ -266,21 +266,21 @@ public class SynchronizationDAOTest {
 				.setSynchronizationMode(SynchronizationType.ONE_WAY_LOCAL_TO_IRODS);
 		synchronizationDAO.save(synchronization);
 
-		LocalIRODSTransfer localIRODSTransfer = new LocalIRODSTransfer();
-		localIRODSTransfer.setCreatedAt(new Date());
-		localIRODSTransfer.setIrodsAbsolutePath(testName);
-		localIRODSTransfer.setLocalAbsolutePath("/local/path");
-		localIRODSTransfer.setSynchronization(synchronization);
-		localIRODSTransfer.setGridAccount(gridAccount);
-		localIRODSTransfer.setTransferState(TransferState.ENQUEUED);
-		localIRODSTransfer.setTransferStatus(TransferStatus.OK);
-		localIRODSTransfer.setTransferType(TransferType.SYNCH);
-		synchronization.getLocalIRODSTransfers().add(localIRODSTransfer);
+		Transfer transfer = new Transfer();
+		transfer.setCreatedAt(new Date());
+		transfer.setIrodsAbsolutePath(testName);
+		transfer.setLocalAbsolutePath("/local/path");
+		transfer.setSynchronization(synchronization);
+		transfer.setGridAccount(gridAccount);
+		transfer.setTransferState(TransferState.ENQUEUED);
+		transfer.setLastTransferStatus(TransferStatus.OK);
+		transfer.setTransferType(TransferType.SYNCH);
+		synchronization.getTransfers().add(transfer);
 
-		List<LocalIRODSTransfer> allTransfers = localIrodsTransferDAO.findAll();
+		List<Transfer> allTransfers = transferDAO.findAll();
 
 		boolean foundTransfer = false;
-		for (LocalIRODSTransfer actualTransfer : allTransfers) {
+		for (Transfer actualTransfer : allTransfers) {
 			if (actualTransfer.getIrodsAbsolutePath().equals(testName)) {
 				foundTransfer = true;
 				Assert.assertNotNull("transfer did not have synch",

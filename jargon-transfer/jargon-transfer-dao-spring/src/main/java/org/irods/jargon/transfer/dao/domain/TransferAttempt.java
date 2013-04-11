@@ -19,6 +19,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
@@ -45,9 +46,11 @@ public class TransferAttempt implements Serializable {
     private Transfer transfer;
     
     @Column(name = "transfer_attempt_start")
+    @Temporal(javax.persistence.TemporalType.DATE)
     private Date attemptStart;
 
     @Column(name = "transfer_attempt_end")
+    @Temporal(javax.persistence.TemporalType.DATE)
     private Date attemptEnd;
     
     @Column(name = "transfer_attempt_status")
@@ -56,8 +59,8 @@ public class TransferAttempt implements Serializable {
 
     @Column(name = "error_message")
     private String errorMessage;
-    
-    @OneToMany(mappedBy = "transfer", targetEntity = TransferItem.class, cascade = { CascadeType.ALL }, fetch = FetchType.LAZY)
+   
+    @OneToMany(mappedBy = "transferAttempt", targetEntity = TransferItem.class, cascade = { CascadeType.ALL }, fetch = FetchType.LAZY)
     @OrderBy("transferredAt")
     @LazyCollection(LazyCollectionOption.EXTRA)
     private Set<TransferItem> transferItems = new HashSet<TransferItem>();

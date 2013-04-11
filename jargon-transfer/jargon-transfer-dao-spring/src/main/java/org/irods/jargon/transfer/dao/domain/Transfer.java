@@ -19,6 +19,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
 
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
@@ -62,9 +63,11 @@ public class Transfer implements Serializable {
 	private Synchronization synchronization;
 
 	@Column(name = "tranfer_start")
+        @Temporal(javax.persistence.TemporalType.DATE)
 	private Date transferStart;
 
 	@Column(name = "tranfer_end")
+        @Temporal(javax.persistence.TemporalType.DATE)
 	private Date transferEnd;
 
 	@Column(name = "local_absolute_path", length = 32672)
@@ -79,9 +82,11 @@ public class Transfer implements Serializable {
 	private Set<TransferAttempt> transferAttempts = new HashSet<TransferAttempt>();
 
 	@Column(name = "created_at")
+        @Temporal(javax.persistence.TemporalType.DATE)
 	private Date createdAt;
 
 	@Column(name = "updated_at")
+        @Temporal(javax.persistence.TemporalType.DATE)
 	private Date updatedAt;
 
 	@Column(name = "global_exception", length = 32672)
@@ -258,7 +263,7 @@ public class Transfer implements Serializable {
 		sb.append("\n   transferState:");
 		sb.append(transferState);
 		sb.append("\n   transferStatus:");
-		sb.append(transferStatus);
+		sb.append(lastTransferStatus);
 		sb.append("\n   transferType:");
 		sb.append(transferType);
 		sb.append("\n   globalException:");

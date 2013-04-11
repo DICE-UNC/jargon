@@ -8,7 +8,7 @@ import java.util.Properties;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.irods.jargon.transfer.dao.domain.GridAccount;
-import org.irods.jargon.transfer.dao.domain.LocalIRODSTransfer;
+import org.irods.jargon.transfer.dao.domain.Transfer;
 import org.irods.jargon.transfer.dao.domain.TransferState;
 import org.irods.jargon.transfer.dao.domain.TransferStatus;
 import org.irods.jargon.transfer.dao.domain.TransferType;
@@ -35,7 +35,7 @@ public class LocalIRODSTransferDAOTest {
 	private static TestingPropertiesHelper testingPropertiesHelper = new TestingPropertiesHelper();
 
 	@Autowired
-	private LocalIRODSTransferDAO localIRODSTransferDAO;
+	private TransferDAO transferDAO;
 
 	@Autowired
 	private GridAccountDAO gridAccountDAO;
@@ -58,7 +58,7 @@ public class LocalIRODSTransferDAOTest {
 		GridAccount gridAccount = DomainUtils
 				.gridAccountFromIRODSAccount(irodsAccount);
 		gridAccountDAO.save(gridAccount);
-		LocalIRODSTransfer enqueuedTransfer = new LocalIRODSTransfer();
+		Transfer enqueuedTransfer = new Transfer();
 		enqueuedTransfer.setCreatedAt(new Date());
 		enqueuedTransfer.setIrodsAbsolutePath("/tmp");
 		enqueuedTransfer.setLocalAbsolutePath("/tmp");
@@ -66,9 +66,9 @@ public class LocalIRODSTransferDAOTest {
 		enqueuedTransfer.setTransferStart(new Date());
 		enqueuedTransfer.setTransferType(TransferType.PUT);
 		enqueuedTransfer.setTransferState(TransferState.PROCESSING);
-		enqueuedTransfer.setTransferStatus(TransferStatus.ERROR);
+		enqueuedTransfer.setLastTransferStatus(TransferStatus.ERROR);
 		assertTrue(enqueuedTransfer.getId() == null);
-		localIRODSTransferDAO.save(enqueuedTransfer);
+		transferDAO.save(enqueuedTransfer);
 		assertTrue(enqueuedTransfer.getId() != null);
 
 	}
@@ -80,7 +80,7 @@ public class LocalIRODSTransferDAOTest {
 		GridAccount gridAccount = DomainUtils
 				.gridAccountFromIRODSAccount(irodsAccount);
 		gridAccountDAO.save(gridAccount);
-		LocalIRODSTransfer enqueuedTransfer = new LocalIRODSTransfer();
+		Transfer enqueuedTransfer = new Transfer();
 		enqueuedTransfer.setCreatedAt(new Date());
 		enqueuedTransfer.setIrodsAbsolutePath("/tmp");
 		enqueuedTransfer.setLocalAbsolutePath("/tmp");
@@ -88,16 +88,16 @@ public class LocalIRODSTransferDAOTest {
 		enqueuedTransfer.setTransferType(TransferType.PUT);
 		enqueuedTransfer.setGridAccount(gridAccount);
 		enqueuedTransfer.setTransferState(TransferState.COMPLETE);
-		enqueuedTransfer.setTransferStatus(TransferStatus.OK);
+		enqueuedTransfer.setLastTransferStatus(TransferStatus.OK);
 
 		assertTrue(enqueuedTransfer.getId() == null);
 
-		localIRODSTransferDAO.save(enqueuedTransfer);
+		transferDAO.save(enqueuedTransfer);
 
 		assertTrue(enqueuedTransfer.getId() != null);
 
-		localIRODSTransferDAO.purgeQueue();
-		assertTrue(localIRODSTransferDAO.findByTransferState(
+		transferDAO.purgeQueue();
+		assertTrue(transferDAO.findByTransferState(
 				TransferState.COMPLETE).size() == 0);
 
 	}
@@ -107,8 +107,8 @@ public class LocalIRODSTransferDAOTest {
 	 *            the localIRODSTransferDAO to set
 	 */
 	public void setLocalIRODSTransferDAO(
-			final LocalIRODSTransferDAO localIRODSTransferDAO) {
-		this.localIRODSTransferDAO = localIRODSTransferDAO;
+			final TransferDAO transferDAO) {
+		this.transferDAO = transferDAO;
 	}
 
 }
