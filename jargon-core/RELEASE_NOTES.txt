@@ -59,3 +59,6 @@ Note that the following bug and feature requests are logged in GForge with relat
 *[#1172] Jargon enhancements supporting HIVE integration project
 **Added new methods to CollectionAO for paging queries by AVU using offsets
 **Added row counts and other stats to MetaDataAndDomainData lists for find metadata by metadata query methods
+
+*[#1346] unit test fixes and tweaks for running on win 7 with VM
+**Unit test tweaks and setup fixes that help testing on different configurations, especially when iRODS is not localhost and when running on Windows platforms

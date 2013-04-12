@@ -1734,7 +1734,12 @@ public class DataObjectAOImplTest {
 				+ getFileName;
 		localFile = new File(getResultLocalPath);
 		localFile.setExecutable(true);
-
+		if (!localFile.canExecute()) {
+			// we're on win or cannot set execute ignore rest of test
+			return;
+		}
+		
+		
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH);
@@ -2858,8 +2863,8 @@ public class DataObjectAOImplTest {
 		List<Resource> resources = dataObjectAO.getResourcesForDataObject(
 				targetIrodsCollection, testFileName);
 
-		Assert.assertEquals("should be 2 resources for this data object", 2,
-				resources.size());
+		Assert.assertTrue("should be multiple resources for this data object", 
+				resources.size() > 2);
 
 	}
 

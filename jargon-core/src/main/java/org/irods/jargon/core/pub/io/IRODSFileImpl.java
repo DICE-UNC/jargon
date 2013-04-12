@@ -628,12 +628,12 @@ public final class IRODSFileImpl extends File implements IRODSFile {
 			path.append(directory.get(0));
 
 			while (i < size) {
-				path.append(separator);
+				path.append('/');
 				path.append(directory.get(i));
 				i++;
 			}
 
-			path.append(separator);
+			path.append('/');
 			path.append(fileName);
 			return path.toString();
 		}
