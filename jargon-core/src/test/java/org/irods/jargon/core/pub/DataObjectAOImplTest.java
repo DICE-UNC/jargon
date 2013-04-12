@@ -2864,7 +2864,7 @@ public class DataObjectAOImplTest {
 				targetIrodsCollection, testFileName);
 
 		Assert.assertTrue("should be multiple resources for this data object", 
-				resources.size() > 2);
+				resources.size() >= 2);
 
 	}
 
