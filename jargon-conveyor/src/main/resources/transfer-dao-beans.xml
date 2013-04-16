@@ -52,11 +52,15 @@
 
   <!-- ========================= BUSINESS OBJECT DEFINITIONS ========================= -->
 
-  <bean id="localIRODSTransferDAO" class="org.irods.jargon.transfer.dao.spring.LocalIRODSTransferDAOImpl">
+  <bean id="TransferDAO" class="org.irods.jargon.transfer.dao.spring.TransferDAOImpl">
     <property name="sessionFactory" ref="sessionFactory" />
   </bean>
 
-  <bean id="localIRODSTransferItemDAO" class="org.irods.jargon.transfer.dao.spring.LocalIRODSTransferItemDAOImpl">
+  <bean id="TransferItemDAO" class="org.irods.jargon.transfer.dao.spring.TransferItemDAOImpl">
+    <property name="sessionFactory" ref="sessionFactory" />
+  </bean>
+  
+  <bean id="TransferAttemptDAO" class="org.irods.jargon.transfer.dao.spring.TransferAttemptDAOImpl">
     <property name="sessionFactory" ref="sessionFactory" />
   </bean>
   
@@ -98,6 +102,12 @@
   
    <bean id="configurationService" class="org.irods.jargon.conveyor.basic.ConfigurationServiceImpl">
     <property name="configurationPropertyDAO" ref="configurationPropertyDAO" />
+  </bean>
+  
+  <bean id="queueManagerService" class="org.irods.jargon.conveyor.basic.QueueManagerServiceImpl">
+  	<property name="conveyorExecutorService" ref="conveyorExecutorService"/>
+  	 <property name="transferDAO" ref="transferDAO" />
+  	 <property name="transferAttemptDAO" ref="transferAttemptDAO" />
   </bean>
   
 	<!--  

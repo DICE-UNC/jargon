@@ -5,9 +5,9 @@ package org.irods.jargon.conveyor.basic;
 
 import java.util.List;
 
+import org.irods.jargon.conveyor.core.AbstractConveyorService;
 import org.irods.jargon.conveyor.core.ConveyorBusyException;
 import org.irods.jargon.conveyor.core.ConveyorExecutionException;
-import org.irods.jargon.conveyor.core.ConveyorExecutorService;
 import org.irods.jargon.conveyor.core.GridAccountService;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.JargonException;
@@ -40,20 +40,13 @@ import org.springframework.transaction.annotation.Transactional;
  * 
  */
 @Transactional
-public class GridAccountServiceImpl extends BasicConveyorService implements
+public class GridAccountServiceImpl extends AbstractConveyorService implements
 		GridAccountService {
 
 	/**
 	 * Injected dependency on {@link KeyStoreDAO}
 	 */
 	private KeyStoreDAO keyStoreDAO;
-
-	/**
-	 * Injected reference to the {@link ConveyorExecutorService} that serves to
-	 * lock the queue for operations that act on data that could be accessed by
-	 * an already running transfer
-	 */
-	private ConveyorExecutorService conveyorExecutorService;
 
 	/**
 	 * Stored pass phrase, this is accessed in a thread-safe manner.
@@ -84,15 +77,6 @@ public class GridAccountServiceImpl extends BasicConveyorService implements
 
 	public void setKeyStoreDAO(final KeyStoreDAO keyStoreDAO) {
 		this.keyStoreDAO = keyStoreDAO;
-	}
-
-	public ConveyorExecutorService getConveyorExecutorService() {
-		return conveyorExecutorService;
-	}
-
-	public void setConveyorExecutorService(
-			final ConveyorExecutorService conveyorExecutorService) {
-		this.conveyorExecutorService = conveyorExecutorService;
 	}
 
 	/**
@@ -126,10 +110,10 @@ public class GridAccountServiceImpl extends BasicConveyorService implements
 			}
 
 			try {
-				this.conveyorExecutorService.setBusyForAnOperation();
+				this.getConveyorExecutorService().setBusyForAnOperation();
 				return replacePassPhrase(passPhrase);
 			} finally {
-				this.conveyorExecutorService.setOperationCompleted();
+				this.getConveyorExecutorService().setOperationCompleted();
 			}
 		}
 
@@ -344,7 +328,7 @@ public class GridAccountServiceImpl extends BasicConveyorService implements
 
 		synchronized (this) {
 			try {
-				this.conveyorExecutorService.setBusyForAnOperation();
+				this.getConveyorExecutorService().setBusyForAnOperation();
 				log.info("looking up existing pass phrase");
 				KeyStore keyStore = keyStoreDAO
 						.findById(KeyStore.KEY_STORE_PASS_PHRASE);
@@ -371,7 +355,7 @@ public class GridAccountServiceImpl extends BasicConveyorService implements
 				throw new ConveyorExecutionException(
 						"unable to find pass phrase in key store");
 			} finally {
-				this.conveyorExecutorService.setOperationCompleted();
+				this.getConveyorExecutorService().setOperationCompleted();
 			}
 		}
 
@@ -512,13 +496,13 @@ public class GridAccountServiceImpl extends BasicConveyorService implements
 		// lock queue so as not to delete an account involved with a running
 		// transfer, deleting the account would delete the transfer data
 		try {
-			this.conveyorExecutorService.setBusyForAnOperation();
+			this.getConveyorExecutorService().setBusyForAnOperation();
 			gridAccountDAO.delete(gridAccount);
 		} catch (TransferDAOException e) {
 			log.error("exception deleting", e);
 			throw new ConveyorExecutionException("error deleting account", e);
 		} finally {
-			this.conveyorExecutorService.setOperationCompleted();
+			this.getConveyorExecutorService().setOperationCompleted();
 		}
 	}
 
@@ -591,13 +575,13 @@ public class GridAccountServiceImpl extends BasicConveyorService implements
 		log.info("deleteAllGridAccounts()");
 
 		try {
-			this.conveyorExecutorService.setBusyForAnOperation();
+			this.getConveyorExecutorService().setBusyForAnOperation();
 			gridAccountDAO.deleteAll();
 		} catch (TransferDAOException e) {
 			log.error("exception deleting", e);
 			throw new ConveyorExecutionException("error decrypting account", e);
 		} finally {
-			this.conveyorExecutorService.setOperationCompleted();
+			this.getConveyorExecutorService().setOperationCompleted();
 		}
 
 	}
@@ -618,13 +602,13 @@ public class GridAccountServiceImpl extends BasicConveyorService implements
 		 * This method alters the cached pass phrase and cache encryptor
 		 */
 		try {
-			this.conveyorExecutorService.setBusyForAnOperation();
+			this.getConveyorExecutorService().setBusyForAnOperation();
 			doDeleteAllWithQueueLocked();
 		} catch (TransferDAOException e) {
 			log.error("exception resetting key store and accounts", e);
 			throw new ConveyorExecutionException("error resetting", e);
 		} finally {
-			this.conveyorExecutorService.setOperationCompleted();
+			this.getConveyorExecutorService().setOperationCompleted();
 		}
 
 	}

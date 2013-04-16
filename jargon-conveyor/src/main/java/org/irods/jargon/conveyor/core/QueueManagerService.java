@@ -34,4 +34,12 @@ public interface QueueManagerService {
 			final String targetFileAbsolutePath, final String targetResource,
 			final IRODSAccount irodsAccount) throws ConveyorExecutionException;
 
+	/**
+	 * Signal that,if the queue is not busy, that the next pending operation
+	 * should be launched
+	 * 
+	 * @throws ConveyerExecutionException
+	 */
+	void dequeueNextOperation() throws ConveyorExecutionException;
+
 }

@@ -3,6 +3,7 @@
  */
 package org.irods.jargon.conveyor.basic;
 
+import org.irods.jargon.conveyor.core.AbstractConveyorService;
 import org.irods.jargon.conveyor.core.ConveyorExecutionException;
 import org.irods.jargon.conveyor.core.QueueManagerService;
 import org.irods.jargon.core.connection.IRODSAccount;
@@ -13,7 +14,7 @@ import org.irods.jargon.core.connection.IRODSAccount;
  * @author Mike Conway - DICE (www.irods.org)
  * 
  */
-public class BasicQueueManagerServiceImpl extends BasicConveyorService
+public class BasicQueueManagerServiceImpl extends AbstractConveyorService
 		implements QueueManagerService {
 
 	public BasicQueueManagerServiceImpl() {
@@ -33,6 +34,17 @@ public class BasicQueueManagerServiceImpl extends BasicConveyorService
 			String targetFileAbsolutePath, String targetResource,
 			IRODSAccount irodsAccount) throws ConveyorExecutionException {
 
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.conveyor.core.QueueManagerService#dequeueNextOperation()
+	 */
+	@Override
+	public void dequeueNextOperation() throws ConveyorExecutionException {
+		// FIXME: implement!
 	}
 
 }

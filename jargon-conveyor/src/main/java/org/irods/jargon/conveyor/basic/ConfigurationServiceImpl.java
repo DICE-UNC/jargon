@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 
+import org.irods.jargon.conveyor.core.AbstractConveyorService;
 import org.irods.jargon.conveyor.core.ConfigurationService;
 import org.irods.jargon.conveyor.core.ConveyorExecutionException;
 import org.irods.jargon.transfer.dao.ConfigurationPropertyDAO;
@@ -23,7 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
  * 
  */
 @Transactional
-public class ConfigurationServiceImpl extends BasicConveyorService implements
+public class ConfigurationServiceImpl extends AbstractConveyorService implements
 		ConfigurationService {
 
 	private ConfigurationPropertyDAO configurationPropertyDAO;
