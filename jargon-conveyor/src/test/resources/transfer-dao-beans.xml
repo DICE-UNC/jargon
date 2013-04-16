@@ -108,6 +108,7 @@
   	<property name="conveyorExecutorService" ref="conveyorExecutorService"/>
   	 <property name="transferDAO" ref="transferDAO" />
   	 <property name="transferAttemptDAO" ref="transferAttemptDAO" />
+  	 <property name="gridAccountService" ref="gridAccountService" />
   </bean>
   
 	<!--  
