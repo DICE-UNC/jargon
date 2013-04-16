@@ -63,11 +63,11 @@ public class Transfer implements Serializable {
 	private Synchronization synchronization;
 
 	@Column(name = "tranfer_start")
-        @Temporal(javax.persistence.TemporalType.DATE)
+	@Temporal(javax.persistence.TemporalType.DATE)
 	private Date transferStart;
 
 	@Column(name = "tranfer_end")
-        @Temporal(javax.persistence.TemporalType.DATE)
+	@Temporal(javax.persistence.TemporalType.DATE)
 	private Date transferEnd;
 
 	@Column(name = "local_absolute_path", length = 32672)
@@ -82,27 +82,12 @@ public class Transfer implements Serializable {
 	private Set<TransferAttempt> transferAttempts = new HashSet<TransferAttempt>();
 
 	@Column(name = "created_at")
-        @Temporal(javax.persistence.TemporalType.DATE)
+	@Temporal(javax.persistence.TemporalType.DATE)
 	private Date createdAt;
 
 	@Column(name = "updated_at")
-        @Temporal(javax.persistence.TemporalType.DATE)
+	@Temporal(javax.persistence.TemporalType.DATE)
 	private Date updatedAt;
-
-	@Column(name = "global_exception", length = 32672)
-	private String globalException = "";
-
-	@Column(name = "global_exception_stack_trace", length = 32672)
-	private String globalExceptionStackTrace = "";
-
-	@Column(name = "last_successful_path", length = 32672)
-	private String lastSuccessfulPath = "";
-
-	@Column(name = "total_files_count")
-	private int totalFilesCount = 0;
-
-	@Column(name = "total_files_transferred_so_far")
-	private int totalFilesTransferredSoFar = 0;
 
 	/**
 	 * Join to table that contain the grid login information
@@ -199,51 +184,8 @@ public class Transfer implements Serializable {
 		return transferAttempts;
 	}
 
-	public void setTransferAttempts(
-			final Set<TransferAttempt> transferAttempts) {
+	public void setTransferAttempts(final Set<TransferAttempt> transferAttempts) {
 		this.transferAttempts = transferAttempts;
-	}
-
-	public String getGlobalException() {
-		return globalException;
-	}
-
-	public void setGlobalException(final String globalException) {
-		this.globalException = globalException;
-	}
-
-	public String getLastSuccessfulPath() {
-		return lastSuccessfulPath;
-	}
-
-	public void setLastSuccessfulPath(final String lastSuccessfulPath) {
-		this.lastSuccessfulPath = lastSuccessfulPath;
-	}
-
-	public int getTotalFilesCount() {
-		return totalFilesCount;
-	}
-
-	public void setTotalFilesCount(final int totalFilesCount) {
-		this.totalFilesCount = totalFilesCount;
-	}
-
-	public int getTotalFilesTransferredSoFar() {
-		return totalFilesTransferredSoFar;
-	}
-
-	public void setTotalFilesTransferredSoFar(
-			final int totalFilesTransferredSoFar) {
-		this.totalFilesTransferredSoFar = totalFilesTransferredSoFar;
-	}
-
-	public String getGlobalExceptionStackTrace() {
-		return globalExceptionStackTrace;
-	}
-
-	public void setGlobalExceptionStackTrace(
-			final String globalExceptionStackTrace) {
-		this.globalExceptionStackTrace = globalExceptionStackTrace;
 	}
 
 	public Synchronization getSynchronization() {
@@ -266,14 +208,6 @@ public class Transfer implements Serializable {
 		sb.append(lastTransferStatus);
 		sb.append("\n   transferType:");
 		sb.append(transferType);
-		sb.append("\n   globalException:");
-		sb.append(globalException);
-		sb.append("\n   lastSuccessfulPath:");
-		sb.append(lastSuccessfulPath);
-		sb.append("\n   totalFilesCount:");
-		sb.append(totalFilesCount);
-		sb.append("\n   totalFilesTransferredSoFar:");
-		sb.append(totalFilesTransferredSoFar);
 		sb.append("\n   transferType:");
 		sb.append(transferType);
 		sb.append("\n   transferStart:");
