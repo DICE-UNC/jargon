@@ -1,5 +1,6 @@
 package org.irods.jargon.conveyor.core;
 
+import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 import org.irods.jargon.transfer.exception.PassPhraseInvalidException;
 
 /**
@@ -41,6 +42,8 @@ public abstract class AbstractConveyorService implements ConveyorService {
 	 * name/value pairs that reflect service configuration
 	 */
 	private ConfigurationService configurationService;
+
+	private IRODSAccessObjectFactory irodsAccessObjectFactory;
 
 	@Override
 	public ConfigurationService getConfigurationService() {
@@ -147,6 +150,23 @@ public abstract class AbstractConveyorService implements ConveyorService {
 	public boolean isPreviousPassPhraseStored()
 			throws ConveyorExecutionException {
 		return gridAccountService.isPassPhraseStoredAlready();
+	}
+
+	/**
+	 * @return the irodsAccessObjectFactory
+	 */
+	public IRODSAccessObjectFactory getIrodsAccessObjectFactory() {
+		return irodsAccessObjectFactory;
+	}
+
+	/**
+	 * @param irodsAccessObjectFactory
+	 *            the irodsAccessObjectFactory to set
+	 */
+	@Override
+	public void setIrodsAccessObjectFactory(
+			IRODSAccessObjectFactory irodsAccessObjectFactory) {
+		this.irodsAccessObjectFactory = irodsAccessObjectFactory;
 	}
 
 }

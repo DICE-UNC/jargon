@@ -1,5 +1,6 @@
 package org.irods.jargon.conveyor.core;
 
+import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 import org.irods.jargon.transfer.exception.PassPhraseInvalidException;
 
 /**
@@ -87,5 +88,8 @@ public interface ConveyorService {
 	 * @param configurationService
 	 */
 	void setConfigurationService(ConfigurationService configurationService);
+
+	void setIrodsAccessObjectFactory(
+			IRODSAccessObjectFactory irodsAccessObjectFactory);
 
 }
