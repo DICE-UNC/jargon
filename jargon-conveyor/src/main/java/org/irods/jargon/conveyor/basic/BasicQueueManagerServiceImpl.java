@@ -3,7 +3,9 @@
  */
 package org.irods.jargon.conveyor.basic;
 
+import org.irods.jargon.conveyor.core.ConveyorExecutionException;
 import org.irods.jargon.conveyor.core.QueueManagerService;
+import org.irods.jargon.core.connection.IRODSAccount;
 
 /**
  * Basic implementation of a queue manager service
@@ -11,10 +13,26 @@ import org.irods.jargon.conveyor.core.QueueManagerService;
  * @author Mike Conway - DICE (www.irods.org)
  * 
  */
-public class BasicQueueManagerServiceImpl implements QueueManagerService {
+public class BasicQueueManagerServiceImpl extends BasicConveyorService
+		implements QueueManagerService {
 
 	public BasicQueueManagerServiceImpl() {
-		// TODO Auto-generated constructor stub
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.conveyor.core.QueueManagerService#enqueuePutOperation
+	 * (java.lang.String, java.lang.String, java.lang.String,
+	 * org.irods.jargon.core.connection.IRODSAccount)
+	 */
+	@Override
+	public void enqueuePutOperation(String sourceFileAbsolutePath,
+			String targetFileAbsolutePath, String targetResource,
+			IRODSAccount irodsAccount) throws ConveyorExecutionException {
+
 	}
 
 }

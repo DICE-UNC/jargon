@@ -23,7 +23,8 @@ import org.springframework.transaction.annotation.Transactional;
  * 
  */
 @Transactional
-public class ConfigurationServiceImpl implements ConfigurationService {
+public class ConfigurationServiceImpl extends BasicConveyorService implements
+		ConfigurationService {
 
 	private ConfigurationPropertyDAO configurationPropertyDAO;
 
@@ -46,8 +47,11 @@ public class ConfigurationServiceImpl implements ConfigurationService {
 		this.configurationPropertyDAO = configurationPropertyDAO;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.conveyor.core.ConfigurationService#listConfigurationProperties()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.conveyor.core.ConfigurationService#
+	 * listConfigurationProperties()
 	 */
 	@Override
 	public List<ConfigurationProperty> listConfigurationProperties()
@@ -61,8 +65,11 @@ public class ConfigurationServiceImpl implements ConfigurationService {
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.conveyor.core.ConfigurationService#findConfigurationServiceByKey(java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.conveyor.core.ConfigurationService#
+	 * findConfigurationServiceByKey(java.lang.String)
 	 */
 	@Override
 	public ConfigurationProperty findConfigurationServiceByKey(
@@ -80,8 +87,12 @@ public class ConfigurationServiceImpl implements ConfigurationService {
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.conveyor.core.ConfigurationService#deleteConfigurationProperty(org.irods.jargon.transfer.dao.domain.ConfigurationProperty)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.conveyor.core.ConfigurationService#
+	 * deleteConfigurationProperty
+	 * (org.irods.jargon.transfer.dao.domain.ConfigurationProperty)
 	 */
 	@Override
 	public void deleteConfigurationProperty(
@@ -106,8 +117,12 @@ public class ConfigurationServiceImpl implements ConfigurationService {
 
 	}
 
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.conveyor.core.ConfigurationService#addConfigurationProperty(org.irods.jargon.transfer.dao.domain.ConfigurationProperty)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.conveyor.core.ConfigurationService#addConfigurationProperty
+	 * (org.irods.jargon.transfer.dao.domain.ConfigurationProperty)
 	 */
 	@Override
 	public ConfigurationProperty addConfigurationProperty(
@@ -133,8 +148,12 @@ public class ConfigurationServiceImpl implements ConfigurationService {
 
 	}
 
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.conveyor.core.ConfigurationService#updateConfigurationProperty(org.irods.jargon.transfer.dao.domain.ConfigurationProperty)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.conveyor.core.ConfigurationService#
+	 * updateConfigurationProperty
+	 * (org.irods.jargon.transfer.dao.domain.ConfigurationProperty)
 	 */
 	@Override
 	public void updateConfigurationProperty(
@@ -159,8 +178,11 @@ public class ConfigurationServiceImpl implements ConfigurationService {
 
 	}
 
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.conveyor.core.ConfigurationService#exportProperties()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.conveyor.core.ConfigurationService#exportProperties()
 	 */
 	@Override
 	public Properties exportProperties() throws ConveyorExecutionException {
@@ -186,8 +208,12 @@ public class ConfigurationServiceImpl implements ConfigurationService {
 
 	}
 
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.conveyor.core.ConfigurationService#importProperties(java.util.Properties)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.conveyor.core.ConfigurationService#importProperties(
+	 * java.util.Properties)
 	 */
 	@Override
 	public void importProperties(final Properties propertiesToImport)

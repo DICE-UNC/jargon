@@ -40,7 +40,8 @@ import org.springframework.transaction.annotation.Transactional;
  * 
  */
 @Transactional
-public class GridAccountServiceImpl implements GridAccountService {
+public class GridAccountServiceImpl extends BasicConveyorService implements
+		GridAccountService {
 
 	/**
 	 * Injected dependency on {@link KeyStoreDAO}

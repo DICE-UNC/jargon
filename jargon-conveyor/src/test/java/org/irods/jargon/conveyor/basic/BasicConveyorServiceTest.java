@@ -1,7 +1,5 @@
 package org.irods.jargon.conveyor.basic;
 
-import java.util.Properties;
-
 import junit.framework.Assert;
 
 import org.irods.jargon.conveyor.core.ConveyorService;
@@ -25,15 +23,13 @@ import org.springframework.transaction.annotation.Transactional;
 public class BasicConveyorServiceTest {
 
 	public static final String testPassPhrase = "BasicConveyorServiceTest";
-	private static Properties testingProperties = new Properties();
-	private static org.irods.jargon.testutils.TestingPropertiesHelper testingPropertiesHelper = new TestingPropertiesHelper();
 	@Autowired
 	private ConveyorService conveyorService;
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		org.irods.jargon.testutils.TestingPropertiesHelper testingPropertiesLoader = new TestingPropertiesHelper();
-		testingProperties = testingPropertiesLoader.getTestProperties();
+		testingPropertiesLoader.getTestProperties();
 	}
 
 	@AfterClass
