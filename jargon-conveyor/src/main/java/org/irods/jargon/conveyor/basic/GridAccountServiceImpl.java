@@ -5,7 +5,7 @@ package org.irods.jargon.conveyor.basic;
 
 import java.util.List;
 
-import org.irods.jargon.conveyor.core.AbstractConveyorService;
+import org.irods.jargon.conveyor.core.AbstractConveyorComponentService;
 import org.irods.jargon.conveyor.core.ConveyorBusyException;
 import org.irods.jargon.conveyor.core.ConveyorExecutionException;
 import org.irods.jargon.conveyor.core.GridAccountService;
@@ -40,8 +40,8 @@ import org.springframework.transaction.annotation.Transactional;
  * 
  */
 @Transactional
-public class GridAccountServiceImpl extends AbstractConveyorService implements
-		GridAccountService {
+public class GridAccountServiceImpl extends AbstractConveyorComponentService
+		implements GridAccountService {
 
 	/**
 	 * Injected dependency on {@link KeyStoreDAO}

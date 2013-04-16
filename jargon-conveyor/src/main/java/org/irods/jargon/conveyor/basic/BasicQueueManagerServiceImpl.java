@@ -3,10 +3,12 @@
  */
 package org.irods.jargon.conveyor.basic;
 
-import org.irods.jargon.conveyor.core.AbstractConveyorService;
+import org.irods.jargon.conveyor.core.AbstractConveyorComponentService;
 import org.irods.jargon.conveyor.core.ConveyorExecutionException;
 import org.irods.jargon.conveyor.core.QueueManagerService;
 import org.irods.jargon.core.connection.IRODSAccount;
+import org.irods.jargon.transfer.dao.TransferAttemptDAO;
+import org.irods.jargon.transfer.dao.TransferDAO;
 
 /**
  * Basic implementation of a queue manager service
@@ -14,12 +16,18 @@ import org.irods.jargon.core.connection.IRODSAccount;
  * @author Mike Conway - DICE (www.irods.org)
  * 
  */
-public class BasicQueueManagerServiceImpl extends AbstractConveyorService
-		implements QueueManagerService {
+public class BasicQueueManagerServiceImpl extends
+		AbstractConveyorComponentService implements QueueManagerService {
 
-	public BasicQueueManagerServiceImpl() {
+	/**
+	 * Injected dependency
+	 */
+	private TransferDAO transferDAO;
 
-	}
+	/**
+	 * Injected dependency
+	 */
+	private TransferAttemptDAO transferAttemptDAO;
 
 	/*
 	 * (non-Javadoc)
@@ -45,6 +53,37 @@ public class BasicQueueManagerServiceImpl extends AbstractConveyorService
 	@Override
 	public void dequeueNextOperation() throws ConveyorExecutionException {
 		// FIXME: implement!
+	}
+
+	/**
+	 * @return the transferDAO
+	 */
+	public synchronized TransferDAO getTransferDAO() {
+		return transferDAO;
+	}
+
+	/**
+	 * @param transferDAO
+	 *            the transferDAO to set
+	 */
+	public synchronized void setTransferDAO(TransferDAO transferDAO) {
+		this.transferDAO = transferDAO;
+	}
+
+	/**
+	 * @return the transferAttemptDAO
+	 */
+	public synchronized TransferAttemptDAO getTransferAttemptDAO() {
+		return transferAttemptDAO;
+	}
+
+	/**
+	 * @param transferAttemptDAO
+	 *            the transferAttemptDAO to set
+	 */
+	public synchronized void setTransferAttemptDAO(
+			TransferAttemptDAO transferAttemptDAO) {
+		this.transferAttemptDAO = transferAttemptDAO;
 	}
 
 }

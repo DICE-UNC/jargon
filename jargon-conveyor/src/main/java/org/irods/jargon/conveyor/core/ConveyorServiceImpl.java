@@ -10,7 +10,7 @@ import org.irods.jargon.transfer.exception.PassPhraseInvalidException;
  * 
  */
 
-public abstract class AbstractConveyorService implements ConveyorService {
+public class ConveyorServiceImpl implements ConveyorService {
 
 	/**
 	 * required dependency

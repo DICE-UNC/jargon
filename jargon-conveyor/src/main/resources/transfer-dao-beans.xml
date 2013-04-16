@@ -52,15 +52,15 @@
 
   <!-- ========================= BUSINESS OBJECT DEFINITIONS ========================= -->
 
-  <bean id="TransferDAO" class="org.irods.jargon.transfer.dao.spring.TransferDAOImpl">
+  <bean id="transferDAO" class="org.irods.jargon.transfer.dao.spring.TransferDAOImpl">
     <property name="sessionFactory" ref="sessionFactory" />
   </bean>
 
-  <bean id="TransferItemDAO" class="org.irods.jargon.transfer.dao.spring.TransferItemDAOImpl">
+  <bean id="transferItemDAO" class="org.irods.jargon.transfer.dao.spring.TransferItemDAOImpl">
     <property name="sessionFactory" ref="sessionFactory" />
   </bean>
   
-  <bean id="TransferAttemptDAO" class="org.irods.jargon.transfer.dao.spring.TransferAttemptDAOImpl">
+  <bean id="transferAttemptDAO" class="org.irods.jargon.transfer.dao.spring.TransferAttemptDAOImpl">
     <property name="sessionFactory" ref="sessionFactory" />
   </bean>
   
@@ -94,7 +94,7 @@
     <property name="conveyorExecutorService" ref="conveyorExecutorService"/>
   </bean>
   
-  <bean id="conveyorService" class="org.irods.jargon.conveyor.basic.BasicConveyorService">
+  <bean id="conveyorService" class="org.irods.jargon.conveyor.core.ConveyorServiceImpl">
   	<property name="conveyorExecutorService" ref="conveyorExecutorService"/>
   	<property name="gridAccountService" ref="gridAccountService"/>
   	<property name="configurationService" ref="configurationService"/>
@@ -104,7 +104,7 @@
     <property name="configurationPropertyDAO" ref="configurationPropertyDAO" />
   </bean>
   
-  <bean id="queueManagerService" class="org.irods.jargon.conveyor.basic.QueueManagerServiceImpl">
+  <bean id="queueManagerService" class="org.irods.jargon.conveyor.basic.BasicQueueManagerServiceImpl">
   	<property name="conveyorExecutorService" ref="conveyorExecutorService"/>
   	 <property name="transferDAO" ref="transferDAO" />
   	 <property name="transferAttemptDAO" ref="transferAttemptDAO" />
