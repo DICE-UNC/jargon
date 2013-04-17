@@ -2,6 +2,7 @@
 */.DS_Store
 **.DS_Store
 **/nb-configuration.xml
+**/.springBeans
 .project
 .metadata
 .DS_Store

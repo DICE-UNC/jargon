@@ -7,6 +7,7 @@ import java.util.Properties;
 import org.irods.jargon.conveyor.core.AbstractConveyorComponentService;
 import org.irods.jargon.conveyor.core.ConfigurationService;
 import org.irods.jargon.conveyor.core.ConveyorExecutionException;
+import org.irods.jargon.core.transfer.TransferControlBlock;
 import org.irods.jargon.transfer.dao.ConfigurationPropertyDAO;
 import org.irods.jargon.transfer.dao.TransferDAOException;
 import org.irods.jargon.transfer.dao.domain.ConfigurationProperty;
@@ -259,5 +260,17 @@ public class ConfigurationServiceImpl extends AbstractConveyorComponentService
 
 		}
 
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.conveyor.core.ConfigurationService#
+	 * buildDefaultTransferControlBlockBasedOnConfiguration()
+	 */
+	@Override
+	public TransferControlBlock buildDefaultTransferControlBlockBasedOnConfiguration() {
+		// FIXME: implement this based on props
+		return null;
 	}
 }

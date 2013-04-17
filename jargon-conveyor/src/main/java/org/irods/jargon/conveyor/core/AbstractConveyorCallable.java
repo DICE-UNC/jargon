@@ -7,7 +7,7 @@ import java.util.concurrent.Callable;
 
 import org.irods.jargon.core.transfer.TransferControlBlock;
 import org.irods.jargon.core.transfer.TransferStatusCallbackListener;
-import org.irods.jargon.transfer.dao.domain.TransferAttempt;
+import org.irods.jargon.transfer.dao.domain.Transfer;
 
 /**
  * Abstract super class for a transfer running process
@@ -16,77 +16,62 @@ import org.irods.jargon.transfer.dao.domain.TransferAttempt;
  * 
  */
 public abstract class AbstractConveyorCallable implements
-		Callable<ConveyorExecutionFuture> {
+		Callable<ConveyorExecutionFuture>, TransferStatusCallbackListener {
 
-	private final TransferStatusCallbackListener transferStatusCallbackListener;
-	private final TransferControlBlock transferControlBlock;
-	private final TransferAttempt transferAttempt;
+	private final Transfer transfer;
 	private final ConveyorService conveyorService;
 
 	/**
+	 * 
 	 * Default constructor takes required hooks for bi-directional communication
 	 * with caller of the transfer processor
 	 * 
-	 * @param transferStatusCallbackListener
-	 *            {@link TransferStatusCallbackListener} that will receive
-	 *            status callbacks as the process runs
-	 * @param transferControlBlock
-	 *            {@link TransferControlBlock} that contains configuration
-	 *            information, and allows caller of this process to send data to
-	 *            the running transfer, including cancellation FIXME: fix
-	 *            comment
+	 * @param transfer
+	 * @param conveyorService
 	 */
 	public AbstractConveyorCallable(
-			final TransferStatusCallbackListener transferStatusCallbackListener,
-			final TransferControlBlock transferControlBlock,
-			final TransferAttempt transferAttempt,
-			final ConveyorService conveyorService) {
-		if (transferStatusCallbackListener == null) {
-			throw new IllegalArgumentException(
-					"null transferStatusCallbackListener");
-		}
 
-		if (transferControlBlock == null) {
-			throw new IllegalArgumentException("null transferControlBlock");
-		}
+	final Transfer transfer, final ConveyorService conveyorService) {
 
-		if (transferAttempt == null) {
-			throw new IllegalArgumentException("null transferAttempt");
+		if (transfer == null) {
+			throw new IllegalArgumentException("null transfer");
 		}
 
 		if (conveyorService == null) {
 			throw new IllegalArgumentException("null conveyorService");
 		}
 
-		this.transferStatusCallbackListener = transferStatusCallbackListener;
-		this.transferControlBlock = transferControlBlock;
-		this.transferAttempt = transferAttempt;
+		this.transfer = transfer;
 		this.conveyorService = conveyorService;
 	}
 
 	@Override
 	public abstract ConveyorExecutionFuture call() throws Exception;
 
-	public TransferStatusCallbackListener getTransferStatusCallbackListener() {
-		return transferStatusCallbackListener;
-	}
-
-	public TransferControlBlock getTransferControlBlock() {
-		return transferControlBlock;
-	}
-
 	/**
-	 * @return the transferAttempt
+	 * @return the transfer
 	 */
-	public synchronized TransferAttempt getTransferAttempt() {
-		return transferAttempt;
+	public Transfer getTransfer() {
+		return transfer;
 	}
 
 	/**
 	 * @return the conveyorService
 	 */
-	public synchronized ConveyorService getConveyorService() {
+	public ConveyorService getConveyorService() {
 		return conveyorService;
+	}
+
+	/**
+	 * Get the <code>TransferControlBlock</code> that will control this
+	 * transfer, based on configuration
+	 * 
+	 * @return {@link TransferControlBlock} TODO: this is null right now, need
+	 *         to implement in configuration service
+	 */
+	public TransferControlBlock buildDefaultTransferControlBlock() {
+		return conveyorService.getConfigurationService()
+				.buildDefaultTransferControlBlockBasedOnConfiguration();
 	}
 
 }

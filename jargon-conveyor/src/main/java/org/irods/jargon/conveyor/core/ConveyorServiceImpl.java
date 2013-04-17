@@ -1,6 +1,7 @@
 package org.irods.jargon.conveyor.core;
 
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
+import org.irods.jargon.core.transfer.TransferStatusCallbackListener;
 import org.irods.jargon.transfer.exception.PassPhraseInvalidException;
 
 /**
@@ -43,7 +44,13 @@ public class ConveyorServiceImpl implements ConveyorService {
 	 */
 	private ConfigurationService configurationService;
 
+	/**
+	 * required dependency on the {@link IRODSAccessObjectFactory} that will
+	 * allow connections to iRODS
+	 */
 	private IRODSAccessObjectFactory irodsAccessObjectFactory;
+
+	private TransferStatusCallbackListener transferStatusCallbackListener = null;
 
 	@Override
 	public ConfigurationService getConfigurationService() {
@@ -167,6 +174,22 @@ public class ConveyorServiceImpl implements ConveyorService {
 	public void setIrodsAccessObjectFactory(
 			IRODSAccessObjectFactory irodsAccessObjectFactory) {
 		this.irodsAccessObjectFactory = irodsAccessObjectFactory;
+	}
+
+	/**
+	 * @return the transferStatusCallbackListener
+	 */
+	public synchronized TransferStatusCallbackListener getTransferStatusCallbackListener() {
+		return transferStatusCallbackListener;
+	}
+
+	/**
+	 * @param transferStatusCallbackListener
+	 *            the transferStatusCallbackListener to set
+	 */
+	public synchronized void setTransferStatusCallbackListener(
+			TransferStatusCallbackListener transferStatusCallbackListener) {
+		this.transferStatusCallbackListener = transferStatusCallbackListener;
 	}
 
 }

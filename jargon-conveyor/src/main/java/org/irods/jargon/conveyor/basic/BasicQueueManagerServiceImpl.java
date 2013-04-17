@@ -5,7 +5,9 @@ package org.irods.jargon.conveyor.basic;
 
 import java.util.Date;
 
+import org.irods.jargon.conveyor.core.AbstractConveyorCallable;
 import org.irods.jargon.conveyor.core.AbstractConveyorComponentService;
+import org.irods.jargon.conveyor.core.ConveyorBusyException;
 import org.irods.jargon.conveyor.core.ConveyorExecutionException;
 import org.irods.jargon.conveyor.core.GridAccountService;
 import org.irods.jargon.conveyor.core.QueueManagerService;
@@ -118,7 +120,32 @@ public class BasicQueueManagerServiceImpl extends
 	 */
 	@Override
 	public void dequeueNextOperation() throws ConveyorExecutionException {
-		// FIXME: implement!
+		log.info("dequeueNextOperation()");
+
+		synchronized (this) {
+			try {
+				this.getConveyorExecutorService().setBusyForAnOperation();
+			} catch (ConveyorBusyException e) {
+				log.info("busy, ignore..");
+				return;
+			}
+		}
+
+		// Transfer = transferDAO.getNextRunnableTransfer(); // or should this
+		// be in queue manager? for right now just query for enqueued and sort
+		// asc datetime
+		Transfer transfer = new Transfer(); // fake code for above
+
+		if (transfer == null) {
+			log.info("nothing to process...");
+			this.getConveyorExecutorService().setOperationCompleted();
+			return;
+		}
+
+		log.info("have transfer to run:{}", transfer);
+
+		AbstractConveyorCallable callable = null;
+
 	}
 
 	/**

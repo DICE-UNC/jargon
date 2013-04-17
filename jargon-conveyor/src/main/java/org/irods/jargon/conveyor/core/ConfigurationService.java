@@ -3,6 +3,7 @@ package org.irods.jargon.conveyor.core;
 import java.util.List;
 import java.util.Properties;
 
+import org.irods.jargon.core.transfer.TransferControlBlock;
 import org.irods.jargon.transfer.TransferEngineException;
 import org.irods.jargon.transfer.dao.domain.ConfigurationProperty;
 
@@ -97,5 +98,14 @@ public interface ConfigurationService {
 	 */
 	ConfigurationProperty findConfigurationServiceByKey(String configurationKey)
 			throws ConveyorExecutionException;
+
+	/**
+	 * Build a jargon structure that controls transfers based on the available
+	 * configuration
+	 * 
+	 * @return {@link TransferControlBlock} structure based on conveyor service
+	 *         configuration
+	 */
+	TransferControlBlock buildDefaultTransferControlBlockBasedOnConfiguration();
 
 }
