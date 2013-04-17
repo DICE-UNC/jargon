@@ -35,7 +35,7 @@ public class PutConveyorCallable extends AbstractConveyorCallable {
 	 * @see org.irods.jargon.conveyor.core.AbstractConveyorCallable#call()
 	 */
 	@Override
-	public ConveyorExecutionFuture call() throws Exception {
+	public ConveyorExecutionFuture call() throws Exception { // FIXME: is this the right kind of exception here?
 
 		TransferControlBlock tcb = this.buildDefaultTransferControlBlock();
 

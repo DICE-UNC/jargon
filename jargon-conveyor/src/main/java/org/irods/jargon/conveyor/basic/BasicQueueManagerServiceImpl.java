@@ -9,9 +9,12 @@ import org.irods.jargon.conveyor.core.AbstractConveyorCallable;
 import org.irods.jargon.conveyor.core.AbstractConveyorComponentService;
 import org.irods.jargon.conveyor.core.ConveyorBusyException;
 import org.irods.jargon.conveyor.core.ConveyorExecutionException;
+import org.irods.jargon.conveyor.core.ConveyorExecutionFuture;
 import org.irods.jargon.conveyor.core.GridAccountService;
 import org.irods.jargon.conveyor.core.QueueManagerService;
+import org.irods.jargon.conveyor.core.callables.ConveyorCallableFactory;
 import org.irods.jargon.core.connection.IRODSAccount;
+import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.transfer.dao.TransferAttemptDAO;
 import org.irods.jargon.transfer.dao.TransferDAO;
 import org.irods.jargon.transfer.dao.domain.GridAccount;
@@ -119,7 +122,7 @@ public class BasicQueueManagerServiceImpl extends
 	 * org.irods.jargon.conveyor.core.QueueManagerService#dequeueNextOperation()
 	 */
 	@Override
-	public void dequeueNextOperation() throws ConveyorExecutionException {
+	public void dequeueNextOperation() throws ConveyorExecutionException, JargonException, Exception {
 		log.info("dequeueNextOperation()");
 
 		synchronized (this) {
@@ -144,7 +147,10 @@ public class BasicQueueManagerServiceImpl extends
 
 		log.info("have transfer to run:{}", transfer);
 
-		AbstractConveyorCallable callable = null;
+		AbstractConveyorCallable callable = new ConveyorCallableFactory()
+                        .instanceCallableForOperation(transfer, null); // FIXME: where do we get conveyorservice?
+                
+                ConveyorExecutionFuture call = callable.call();  // FIXME: throws Exception?
 
 	}
 

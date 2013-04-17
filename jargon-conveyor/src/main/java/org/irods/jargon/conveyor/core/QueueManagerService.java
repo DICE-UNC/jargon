@@ -4,6 +4,7 @@
 package org.irods.jargon.conveyor.core;
 
 import org.irods.jargon.core.connection.IRODSAccount;
+import org.irods.jargon.core.exception.JargonException;
 
 /**
  * Manages the persistent queue of transfer information
@@ -40,6 +41,6 @@ public interface QueueManagerService {
 	 * 
 	 * @throws ConveyerExecutionException
 	 */
-	void dequeueNextOperation() throws ConveyorExecutionException;
+	void dequeueNextOperation() throws ConveyorExecutionException, JargonException, Exception;
 
 }
