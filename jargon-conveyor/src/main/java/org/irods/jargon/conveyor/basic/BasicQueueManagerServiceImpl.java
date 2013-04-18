@@ -4,6 +4,7 @@
 package org.irods.jargon.conveyor.basic;
 
 import java.util.Date;
+import java.util.List;
 
 import org.irods.jargon.conveyor.core.AbstractConveyorCallable;
 import org.irods.jargon.conveyor.core.AbstractConveyorComponentService;
@@ -21,6 +22,7 @@ import org.irods.jargon.transfer.dao.domain.GridAccount;
 import org.irods.jargon.transfer.dao.domain.Transfer;
 import org.irods.jargon.transfer.dao.domain.TransferState;
 import org.irods.jargon.transfer.dao.domain.TransferType;
+import org.irods.jargon.transfer.dao.spring.TransferDAOImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
@@ -137,14 +139,16 @@ public class BasicQueueManagerServiceImpl extends
 		// Transfer = transferDAO.getNextRunnableTransfer(); // or should this
 		// be in queue manager? for right now just query for enqueued and sort
 		// asc datetime
-		Transfer transfer = new Transfer(); // fake code for above
+                TransferDAO transferDAO = new TransferDAOImpl();
+                List<Transfer> transfers = transferDAO.findByTransferState(TransferState.ENQUEUED);
+		//Transfer transfer = new Transfer(); // fake code for above
 
-		if (transfer == null) {
+		if (transfers == null || transfers.isEmpty() || transfers.get(0) == null) {
 			log.info("nothing to process...");
 			this.getConveyorExecutorService().setOperationCompleted();
 			return;
 		}
-
+                Transfer transfer = transfers.get(0);
 		log.info("have transfer to run:{}", transfer);
 
 		AbstractConveyorCallable callable = new ConveyorCallableFactory()

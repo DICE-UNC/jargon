@@ -7,6 +7,7 @@ import org.irods.jargon.conveyor.core.AbstractConveyorCallable;
 import org.irods.jargon.conveyor.core.ConveyorExecutionFuture;
 import org.irods.jargon.conveyor.core.ConveyorService;
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.pub.DataTransferOperations;
 import org.irods.jargon.core.transfer.TransferControlBlock;
 import org.irods.jargon.core.transfer.TransferStatus;
 import org.irods.jargon.transfer.dao.domain.Transfer;
@@ -42,7 +43,9 @@ public class PutConveyorCallable extends AbstractConveyorCallable {
 		// set the transfer attempt up...how? For now use queue manager service
 		// and add methods there...save transfer attempt as instance data?
 
-		// TODO Auto-generated method stub
+//		final DataTransferOperations dataTransferOperations = transferManager
+//                                .getIrodsFileSystem().getIRODSAccessObjectFactory()
+//                                .getDataTransferOperations(irodsAccount);
 		return null;
 	}
 
