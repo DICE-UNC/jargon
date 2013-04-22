@@ -22,28 +22,32 @@ public class TempPasswordCachingProtocolManagerTest {
 
 	private static Properties testingProperties = new Properties();
 	private static TestingPropertiesHelper testingPropertiesHelper = new TestingPropertiesHelper();
+	private static IRODSFileSystem irodsFileSystem;
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		TestingPropertiesHelper testingPropertiesLoader = new TestingPropertiesHelper();
 		testingProperties = testingPropertiesLoader.getTestProperties();
+		irodsFileSystem = IRODSFileSystem.instance();
 	}
 
 	@After
 	public void tearDown() throws Exception {
+		irodsFileSystem.closeAndEatExceptions();
 	}
+
 
 	@Test
 	public void testGetIRODSProtocol() throws Exception {
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
 		TempPasswordCachingProtocolManager manager = new TempPasswordCachingProtocolManager(
-				irodsAccount);
+				irodsAccount, irodsFileSystem.getIrodsSession(), irodsFileSystem.getIrodsProtocolManager());
 		IRODSSession irodsSession = IRODSSession.instance(manager);
 		Assert.assertNotNull("null manager returned", manager);
 		IRODSCommands commands = manager.getIRODSProtocol(irodsAccount,
 				irodsSession
-						.buildPipelineConfigurationBasedOnJargonProperties());
+						.buildPipelineConfigurationBasedOnJargonProperties(), irodsFileSystem.getIrodsSession());
 		Assert.assertTrue("commands not connected", commands.isConnected());
 		manager.returnIRODSConnection(commands);
 		manager.destroy();
@@ -55,7 +59,7 @@ public class TempPasswordCachingProtocolManagerTest {
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
 		TempPasswordCachingProtocolManager manager = new TempPasswordCachingProtocolManager(
-				irodsAccount);
+				irodsAccount, irodsFileSystem.getIrodsSession(), irodsFileSystem.getIrodsProtocolManager());
 		IRODSFileSystem irodsFileSystem = new IRODSFileSystem(manager);
 		EnvironmentalInfoAO eAO = irodsFileSystem.getIRODSAccessObjectFactory()
 				.getEnvironmentalInfoAO(irodsAccount);
@@ -71,7 +75,7 @@ public class TempPasswordCachingProtocolManagerTest {
 		final IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
 		TempPasswordCachingProtocolManager manager = new TempPasswordCachingProtocolManager(
-				irodsAccount);
+				irodsAccount, irodsFileSystem.getIrodsSession(), irodsFileSystem.getIrodsProtocolManager());
 		final IRODSFileSystem irodsFileSystem = new IRODSFileSystem(manager);
 
 		final Random randomGenerator = new Random();

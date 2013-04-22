@@ -39,7 +39,7 @@ public class IRODSSimpleConnectionTest {
 						irodsAccount,
 						irodsFileSystem
 								.getIrodsSession()
-								.buildPipelineConfigurationBasedOnJargonProperties());
+								.buildPipelineConfigurationBasedOnJargonProperties(),null);
 		connection.setIrodsSession(Mockito.mock(IRODSSession.class));
 		connection.disconnect();
 		Assert.assertFalse(connection.isConnected());

@@ -95,6 +95,7 @@ public class IRODSCommands implements IRODSManagedConnection {
 	private Future<Void> reconnectionFuture = null;
 	private boolean inRestartMode = false;
 	private boolean closeConnectionOnFinalizer = true;
+	private IRODSSession irodsSession = null;
 	/**
 	 * authResponse contains
 	 */
@@ -130,7 +131,7 @@ public class IRODSCommands implements IRODSManagedConnection {
 	private IRODSCommands(final IRODSAccount irodsAccount,
 			final IRODSProtocolManager irodsConnectionManager,
 			final PipelineConfiguration pipelineConfiguration,
-			final AuthMechanism authMechanism) throws JargonException {
+			final AuthMechanism authMechanism, final IRODSSession irodsSession) throws JargonException {
 		/*
 		 * create the IRODSConnection object. The connection object encapsulates
 		 * an open socket to the host/port described by the irodsAccount.
@@ -149,6 +150,7 @@ public class IRODSCommands implements IRODSManagedConnection {
 		this.irodsProtocolManager = irodsConnectionManager;
 		this.pipelineConfiguration = pipelineConfiguration;
 		this.authMechanism = authMechanism;
+		this.irodsSession = irodsSession;
 		startupConnection(irodsAccount);
 	}
 
@@ -276,6 +278,7 @@ public class IRODSCommands implements IRODSManagedConnection {
 	 *            for the connection (e.g. buffer sizes)
 	 * @param authMechanism
 	 *            {@link AuthMechanism} that will authenticate with iRODS
+	 *  @param irodsSession {@link IRODSSession} that manages this connection
 	 * @return instance of <code>IRODSCommands</code> connected and
 	 *         authenticated to an iRODS agent
 	 * @throws JargonException
@@ -283,10 +286,11 @@ public class IRODSCommands implements IRODSManagedConnection {
 	static IRODSCommands instance(final IRODSAccount irodsAccount,
 			final IRODSProtocolManager irodsConnectionManager,
 			final PipelineConfiguration pipelineConfiguration,
-			final AuthMechanism authMechanism) throws JargonException {
+			final AuthMechanism authMechanism, final IRODSSession irodsSession) throws JargonException {
 
 		return new IRODSCommands(irodsAccount, irodsConnectionManager,
-				pipelineConfiguration, authMechanism);
+				pipelineConfiguration, authMechanism, irodsSession);
+		
 	}
 
 	/**
@@ -1304,16 +1308,6 @@ public class IRODSCommands implements IRODSManagedConnection {
 	}
 
 	/**
-	 * get the zone associated with this connection. Convenience method
-	 * retrieves this information from the returned server properties.
-	 * 
-	 * @return <code>String</code> with zone name.
-	 */
-	public synchronized String getZone() {
-		return irodsServerProperties.getRodsZone();
-	}
-
-	/**
 	 * Required to close out certain operations, such as parallel transfer
 	 * operations.
 	 * 
@@ -1354,7 +1348,7 @@ public class IRODSCommands implements IRODSManagedConnection {
 	 */
 	@Override
 	public synchronized IRODSSession getIrodsSession() {
-		return irodsConnection.getIrodsSession();
+		return irodsSession;
 	}
 
 	/*
