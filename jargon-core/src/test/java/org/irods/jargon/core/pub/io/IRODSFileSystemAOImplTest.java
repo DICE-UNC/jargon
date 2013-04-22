@@ -1145,7 +1145,7 @@ public class IRODSFileSystemAOImplTest {
 						testingProperties, IRODS_TEST_SUBDIR_PATH);
 
 		// create a file and place on two resources
-		String testFileName = "testFileCreateThenClose.txt";
+		String testFileName = "testCreateFileThatAlreadyExists.txt";
 
 		String absPath = scratchFileUtils
 				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);

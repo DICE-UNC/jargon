@@ -138,7 +138,7 @@ public class FileGenerator {
 
 		long chunkSize = 1023;
 		if (length <= chunkSize) {
-			chunkSize = (int) length;
+			chunkSize = length;
 		}
 
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -192,6 +192,7 @@ public class FileGenerator {
 
 		StringBuilder fullPath = new StringBuilder();
 		fullPath.append(fileDirectory);
+		//fullPath.append("/");
 		fullPath.append(fileName);
 		return fullPath.toString();
 

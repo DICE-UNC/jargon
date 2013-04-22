@@ -35,6 +35,10 @@ import org.irods.jargon.core.utils.MiscIRODSUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/*import org.perf4j.StopWatch;
+ import org.perf4j.log4j.Log4JStopWatch;
+ import org.perf4j.slf4j.Slf4JStopWatch;*/
+
 /**
  * This access object contains methods that can assist in searching across
  * Collections and Data Objects, and in listing across Collections And Data
@@ -247,6 +251,13 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 					"absolutePathToParent is null or empty");
 		}
 
+		/*
+		 * StopWatch stopWatch = null;
+		 * 
+		 * if (this.isInstrumented()) { stopWatch = new Slf4JStopWatch(
+		 * "listDataObjectsAndCollectionsUnderPath"); }
+		 */
+
 		ObjStat objStat;
 
 		try {
@@ -265,6 +276,11 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 
 		entries.addAll(listCollectionsUnderPath(objStat, 0));
 		entries.addAll(listDataObjectsUnderPath(objStat, 0));
+
+		/*
+		 * if (this.isInstrumented()) { stopWatch.stop(); }
+		 */
+
 		return entries;
 	}
 
@@ -480,7 +496,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 			CollectionAOHelper
 					.buildSelectsNeededForCollectionsInCollectionsAndDataObjectsListingEntry(builder);
 			builder.addConditionAsGenQueryField(RodsGenQueryEnum.COL_COLL_NAME,
-					QueryConditionOperators.LIKE, "%" + searchTerm.trim());
+					QueryConditionOperators.LIKE, "%" + searchTerm);
 			IRODSGenQueryFromBuilder irodsQuery = builder
 					.exportIRODSQueryFromBuilder(getJargonProperties()
 							.getMaxFilesAndDirsQueryMax());
@@ -770,6 +786,12 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		}
 
 		/*
+		 * StopWatch stopWatch = null;
+		 * 
+		 * if (this.isInstrumented()) { stopWatch = new
+		 * Slf4JStopWatch("listCollectionsUnderPath"); }
+		 */
+		/*
 		 * See if jargon supports the given object type
 		 */
 		MiscIRODSUtils.evaluateSpecCollSupport(objStat);
@@ -821,6 +843,9 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 			}
 		}
 
+		/*
+		 * if (this.isInstrumented()) { stopWatch.stop(); }
+		 */
 		return subdirs;
 
 	}
@@ -1395,7 +1420,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 					.addConditionAsGenQueryField(
 							RodsGenQueryEnum.COL_DATA_NAME,
 							QueryConditionOperators.LIKE,
-							"%" + searchTerm.trim() + "%");
+							"%" + searchTerm + "%");
 			IRODSGenQueryFromBuilder irodsQuery = builder
 					.exportIRODSQueryFromBuilder(getJargonProperties()
 							.getMaxFilesAndDirsQueryMax());
@@ -1547,10 +1572,17 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 					"irodsAbsolutePath is null or empty");
 		}
 
+		/*
+		 * StopWatch stopWatch = null;
+		 * 
+		 * if (this.isInstrumented()) { stopWatch = new
+		 * Log4JStopWatch("retrieveObjectStatForPath"); }
+		 */
+
 		MiscIRODSUtils.checkPathSizeForMax(irodsAbsolutePath);
 
 		DataObjInpForObjStat dataObjInp = DataObjInpForObjStat
-				.instance(irodsAbsolutePath.trim());
+				.instance(irodsAbsolutePath);
 		Tag response;
 		try {
 			response = getIRODSProtocol().irodsFunction(dataObjInp);
@@ -1663,6 +1695,11 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 				.getDateFromIRODSValue(createdDate));
 		objStat.setModifiedAt(IRODSDataConversionUtil
 				.getDateFromIRODSValue(modifiedDate));
+
+		/*
+		 * if (this.isInstrumented()) { stopWatch.stop(); }
+		 */
+
 		log.info(objStat.toString());
 		return objStat;
 

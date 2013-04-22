@@ -200,6 +200,14 @@ public class IRODSFileImplTest {
 		fileNameAndPath.append(absPath);
 
 		fileNameAndPath.append(testFileName);
+		
+		File localFile = new File(fileNameAndPath.toString());
+		localFile.setExecutable(false);
+		
+		// some os's (win) can have a hard time setting to not execute
+		if (localFile.canExecute()) {
+			return;
+		}
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);

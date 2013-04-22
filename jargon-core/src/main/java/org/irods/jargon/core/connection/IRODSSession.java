@@ -324,14 +324,14 @@ public class IRODSSession {
 			throws JargonException {
 		IRODSCommands irodsProtocol;
 		irodsProtocol = irodsProtocolManager.getIRODSProtocol(irodsAccount,
-				buildPipelineConfigurationBasedOnJargonProperties());
+				buildPipelineConfigurationBasedOnJargonProperties(), this);
 		if (irodsProtocol == null) {
 			log.error("no connection returned from connection manager");
 			throw new JargonException(
 					"null connection returned from connection manager");
 		}
 
-		irodsProtocol.setIrodsSession(this);
+		//irodsProtocol.setIrodsSession(this);
 		irodsProtocols.put(irodsAccount.toString(), irodsProtocol);
 
 		/*
@@ -367,11 +367,11 @@ public class IRODSSession {
 
 		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, null);
 		try {
+			final String dn = gsiIRODSAccount.getDistinguishedName().trim();
 			builder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_NAME)
 					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_ZONE)
 					.addConditionAsGenQueryField(RodsGenQueryEnum.COL_USER_DN,
-							QueryConditionOperators.EQUAL,
-							gsiIRODSAccount.getDistinguishedName());
+							QueryConditionOperators.EQUAL, dn);
 			GenQueryProcessor genQueryProcessor = new GenQueryProcessor(
 					irodsCommands);
 

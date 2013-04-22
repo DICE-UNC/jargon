@@ -1,7 +1,8 @@
 *'''Project''': Jargon-core API
 *'''Date''': xx/xx/xx
 *'''Release Version''': x.x.x transfer engine upgrade
-*'''git tag''': b1096-transfer-engine
+*'''git tag''': 964-grid-memory
+
 
 ==News==
 
@@ -37,11 +38,41 @@ Jargon-core uses Maven for dependency management.  See the pom.xml file for refe
 Note that the following bug and feature requests are logged in GForge with related commit information [[https://code.renci.org/gf/project/jargon/tracker/]]
 
 ==Bug Fixes==
+ *[#1263] ACL retrieval query and the user lookup queries, the method queries the zone of the user and not the zone containing the collection
+ **Added code to properly query the permissions as they exist on the current zone
  
+*[#1139] Spaces at the begin or end of a data object name will cause an exception
+**removed trim() statements in query building to handle intended spaces in file names.  Note that there may be a bug for collection names with embedded spaces, this is ignored in the JUNit tests for CollectionAOImpl, and that issue has been routed to iRODS for now.
+ 
+*[#1211] Re: [iROD-Chat:9536] jargon mangling UTF-8 characters
+**completed wiring codebase into jargon.properties settings
+
+*[#1358] hbm2ddl maven build errors
+**remove htm2ddl maven build step, not really used, caused maven build errors.  We might revisit this later with the new conveyor framework.
  
 ==Features==
 
 *[#964] grid memory and presets
 **refactor of database to include grid memory
 **conveyor framework
+ 
+*[#1243] issues with griffen with jargon 3.2.1.4
+**Remove over-headed create/close/open sequence for IRODSOutputStream creation
+**Reduce calls for objStat, no longer get an objStat on a parent directory, no longer creates parent dir if missing
+
+*[#1346] unit test fixes and tweaks for running on win 7 with VM
+**Unit test tweaks and setup fixes that help testing on different configurations, especially when iRODS is not localhost and when running on Windows platforms
+
+*[#1264] [iROD-Chat:9666] Referencing Data Objects
+**Added findById() methods to DataObjectAO and CollectionAO
+
+*[#1172] Jargon enhancements supporting HIVE integration project
+**Added new methods to CollectionAO for paging queries by AVU using offsets
+**Added row counts and other stats to MetaDataAndDomainData lists for find metadata by metadata query methods
+
+
+*[#1250] jargon/idrop performance testing and optimization for 3.3.2
+**Added cache of server properties in IRODSSession to avoid repreated queries for same host/zone
+
+
 

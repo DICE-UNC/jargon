@@ -33,9 +33,33 @@ public class EnvironmentalInfoAccessor {
 
 	}
 
+	/**
+	 * Class to access underlying <code>IRODSServerProperties</code>. Note that
+	 * this uses a caching optimization.
+	 * 
+	 * @return
+	 * @throws JargonException
+	 */
 	public IRODSServerProperties getIRODSServerProperties()
 			throws JargonException {
 		log.info("getting irods server properties");
+
+		log.debug("checking for cached properites...");
+
+		if (irodsProtocol.getIrodsSession() != null) {
+			IRODSServerProperties cached = irodsProtocol
+					.getIrodsSession()
+					.getDiscoveredServerPropertiesCache()
+					.retrieveIRODSServerProperties(
+							irodsProtocol.getIrodsAccount().getHost(),
+							irodsProtocol.getIrodsAccount().getZone());
+
+			if (cached != null) {
+				log.info("returning cached props:{}", cached);
+				return cached;
+			}
+		}
+
 		Tag response = irodsProtocol.irodsFunction(MiscSvrInfo.PI_TAG, "",
 				MiscSvrInfo.API_NBR);
 		log.info("server response obtained");
@@ -57,8 +81,18 @@ public class EnvironmentalInfoAccessor {
 				.getStringValue();
 		String rodsZone = response.getTag(MiscSvrInfo.RODS_ZONE_TAG)
 				.getStringValue();
-		return IRODSServerProperties.instance(icatEnabled, serverBootTime,
-				relVersion, apiVersion, rodsZone);
+		IRODSServerProperties props = IRODSServerProperties.instance(
+				icatEnabled, serverBootTime, relVersion, apiVersion, rodsZone);
+		if (irodsProtocol.getIrodsSession() != null) {
+			irodsProtocol
+					.getIrodsSession()
+					.getDiscoveredServerPropertiesCache()
+					.cacheIRODSServerProperties(
+							irodsProtocol.getIrodsAccount().getHost(),
+							irodsProtocol.getIrodsAccount().getZone(), props);
+			log.debug("cached the props for host and zone:{}", props);
+		}
+		return props;
 	}
 
 }

@@ -288,7 +288,8 @@ public final class DataAOHelper extends AOHelper {
 
 		for (IRODSQueryResultRow row : irodsQueryResultSet.getResults()) {
 			metaDataResults
-					.add(buildMetaDataAndDomainDataFromResultSetRowForDataObject(row));
+					.add(buildMetaDataAndDomainDataFromResultSetRowForDataObject(
+							row, irodsQueryResultSet.getTotalRecords()));
 		}
 
 		return metaDataResults;
@@ -297,11 +298,13 @@ public final class DataAOHelper extends AOHelper {
 	/**
 	 * @param metadataDomain
 	 * @param row
+	 * @param totalRecordCount
 	 * @return
 	 * @throws JargonException
 	 */
 	static MetaDataAndDomainData buildMetaDataAndDomainDataFromResultSetRowForDataObject(
-			final IRODSQueryResultRow row) throws JargonException {
+			final IRODSQueryResultRow row, final int totalRecordCount)
+			throws JargonException {
 
 		String domainId = row.getColumn(0);
 		StringBuilder sb = new StringBuilder();
@@ -319,6 +322,7 @@ public final class DataAOHelper extends AOHelper {
 
 		data.setCount(row.getRecordCount());
 		data.setLastResult(row.isLastResult());
+		data.setTotalRecords(totalRecordCount);
 
 		log.debug("metadataAndDomainData: {}", data);
 		return data;
@@ -794,21 +798,21 @@ public final class DataAOHelper extends AOHelper {
 					RodsGenQueryEnum.COL_META_DATA_ATTR_NAME,
 					BuilderQueryUtils
 							.translateAVUQueryElementOperatorToBuilderQueryCondition(queryElement),
-					queryElement.getValue());
+					queryElement.getValue().trim());
 
 		} else if (queryElement.getAvuQueryPart() == AVUQueryElement.AVUQueryPart.VALUE) {
 			builder.addConditionAsGenQueryField(
 					RodsGenQueryEnum.COL_META_DATA_ATTR_VALUE,
 					BuilderQueryUtils
 							.translateAVUQueryElementOperatorToBuilderQueryCondition(queryElement),
-					queryElement.getValue());
+					queryElement.getValue().trim());
 
 		} else if (queryElement.getAvuQueryPart() == AVUQueryElement.AVUQueryPart.UNITS) {
 			builder.addConditionAsGenQueryField(
 					RodsGenQueryEnum.COL_META_DATA_ATTR_UNITS,
 					BuilderQueryUtils
 							.translateAVUQueryElementOperatorToBuilderQueryCondition(queryElement),
-					queryElement.getValue());
+					queryElement.getValue().trim());
 		} else {
 			throw new JargonQueryException("unable to resolve AVU Query part");
 		}

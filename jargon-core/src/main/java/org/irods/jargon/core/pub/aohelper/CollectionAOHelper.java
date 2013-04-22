@@ -235,21 +235,21 @@ public class CollectionAOHelper extends AOHelper {
 					RodsGenQueryEnum.COL_META_COLL_ATTR_NAME,
 					BuilderQueryUtils
 							.translateAVUQueryElementOperatorToBuilderQueryCondition(queryElement),
-					queryElement.getValue());
+					queryElement.getValue().trim());
 
 		} else if (queryElement.getAvuQueryPart() == AVUQueryElement.AVUQueryPart.VALUE) {
 			builder.addConditionAsGenQueryField(
 					RodsGenQueryEnum.COL_META_COLL_ATTR_VALUE,
 					BuilderQueryUtils
 							.translateAVUQueryElementOperatorToBuilderQueryCondition(queryElement),
-					queryElement.getValue());
+					queryElement.getValue().trim());
 
 		} else if (queryElement.getAvuQueryPart() == AVUQueryElement.AVUQueryPart.UNITS) {
 			builder.addConditionAsGenQueryField(
 					RodsGenQueryEnum.COL_META_COLL_ATTR_UNITS,
 					BuilderQueryUtils
 							.translateAVUQueryElementOperatorToBuilderQueryCondition(queryElement),
-					queryElement.getValue());
+					queryElement.getValue().trim());
 		} else {
 			throw new JargonQueryException("unable to resolve AVU Query part");
 		}
