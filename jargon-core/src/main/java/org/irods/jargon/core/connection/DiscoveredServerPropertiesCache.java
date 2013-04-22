@@ -22,6 +22,9 @@ import java.util.concurrent.ConcurrentHashMap;
  * would be asking iRODS for something (e.g. trying to run a specific query)
  * more than once, so I'm trying to minimize synchronization. We can allow some
  * 'fuzziness' here. The point is to minimize such redundant calls.
+ * <p/>
+ * This class also includes other cacheable data, such as the <code>IRODSServerProperties</code> that is otherwise repeatedly 
+ * obtained from iRODS on connection
  * 
  * @author Mike Conway - DICE (www.irods.org)
  * 
@@ -29,6 +32,8 @@ import java.util.concurrent.ConcurrentHashMap;
 public class DiscoveredServerPropertiesCache {
 
 	private ConcurrentHashMap<String, ConcurrentHashMap<String, String>> discoveredServerPropertiesCache = new ConcurrentHashMap<String, ConcurrentHashMap<String, String>>(
+			8, 0.9f, 1);
+	private ConcurrentHashMap<String, IRODSServerProperties> cacheOfIRODSServerProperties = new ConcurrentHashMap<String, IRODSServerProperties>(
 			8, 0.9f, 1);
 
 	/*
@@ -40,6 +45,49 @@ public class DiscoveredServerPropertiesCache {
 	public static final String IS_FALSE = "false";
 
 	public DiscoveredServerPropertiesCache() {
+	}
+	
+	/**
+	 * 
+	 * If an <code>IRODSServerProperties</code> was already cached, then just return it, if not cached, this method will return null
+	 * @param host
+	 *            <code>String</code> with the name of the iRODS host this
+	 *            applies to
+	 * @param zoneName
+	 *            <code>String</code> with the name of the iRODS zone this
+	 *            applies to
+	 * @return {@link IRODSServerProperties} or <ocde>null</code> if not cached
+	 */
+	public IRODSServerProperties retrieveIRODSServerProperties(final String host, final String zoneName) {
+		if (host == null || host.isEmpty()) {
+			throw new IllegalArgumentException("null or empty host");
+		}
+
+		if (zoneName == null || zoneName.isEmpty()) {
+			throw new IllegalArgumentException("zoneName is null or empty");
+		}
+		
+		return getIRODSServerPropertiesForHostAndZone(host, zoneName);
+	}
+	
+	/**
+	 * Gets the cached <code>IRODSServerProperties</code> or <code>null</code>
+	 * @param host
+	 * @param zoneName
+	 * @return
+	 */
+	private IRODSServerProperties getIRODSServerPropertiesForHostAndZone(
+			String host, String zoneName) {
+		if (host == null || host.isEmpty()) {
+			throw new IllegalArgumentException("null or empty host");
+		}
+
+		if (zoneName == null || zoneName.isEmpty()) {
+			throw new IllegalArgumentException("zoneName is null or empty");
+		}
+
+		String cacheKey = buildHostPlusZone(host, zoneName);
+		return cacheOfIRODSServerProperties.get(cacheKey);
 	}
 
 	/**
@@ -84,6 +132,30 @@ public class DiscoveredServerPropertiesCache {
 	}
 
 	/**
+	 * Delete the <code>IRODSServerProperties</code> If the zone has no
+	 * cache, silently ignore
+	 * 
+	 * @param host
+	 * @param zoneName
+	 * @param propertyName
+	 */
+	public void deleteCachedIRODSServerProperties(final String host, final String zoneName,
+			final String propertyName) {
+
+		if (host == null || host.isEmpty()) {
+			throw new IllegalArgumentException("null or empty host");
+		}
+
+		if (zoneName == null || zoneName.isEmpty()) {
+			throw new IllegalArgumentException("zoneName is null or empty");
+		}
+		
+		String cacheKey = buildHostPlusZone(host, zoneName);
+		cacheOfIRODSServerProperties.remove(cacheKey);
+		
+	}
+	
+	/**
 	 * Delete the property from the cache if it exists. If the zone has no
 	 * cache, or the property itself is not cached, silently ignore
 	 * 
@@ -112,6 +184,7 @@ public class DiscoveredServerPropertiesCache {
 		}
 	}
 
+
 	/**
 	 * Delete all cached props for the host and zone. If there is no zone cache,
 	 * ignore the request
@@ -132,6 +205,34 @@ public class DiscoveredServerPropertiesCache {
 		String cacheKey = buildHostPlusZone(host, zoneName);
 		discoveredServerPropertiesCache.remove(cacheKey);
 
+	}
+	
+	/**
+	 * Add an <code>IRODSServerProperties</code> to the cache
+	 * @param host
+	 *            <code>String</code> with the name of the iRODS host this
+	 *            applies to
+	 * @param zoneName
+	 *            <code>String</code> with the name of the iRODS zone this
+	 *            applies to
+	 * @param irodsServerProperties {@link IRODSServerProperties} to cache
+	 */
+	public void cacheIRODSServerProperties(final String host, final String zoneName, final IRODSServerProperties irodsServerProperties) {
+		if (host == null || host.isEmpty()) {
+			throw new IllegalArgumentException("null or empty host");
+		}
+
+		if (zoneName == null || zoneName.isEmpty()) {
+			throw new IllegalArgumentException("zoneName is null or empty");
+		}
+
+		if (irodsServerProperties == null) {
+			throw new IllegalArgumentException("null irodsServerProperties");
+		}
+		
+		String cacheKey = buildHostPlusZone(host, zoneName);
+
+		cacheOfIRODSServerProperties.put(cacheKey, irodsServerProperties);
 	}
 
 	/**

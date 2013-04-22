@@ -5,10 +5,7 @@ import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSCommands;
 import org.irods.jargon.core.connection.IRODSProtocolManager;
 import org.irods.jargon.core.connection.IRODSSession;
-import org.irods.jargon.core.connection.IRODSSimpleProtocolManager;
 import org.irods.jargon.core.connection.PipelineConfiguration;
-import org.irods.jargon.core.exception.JargonException;
-import org.irods.jargon.core.exception.JargonRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,6 +27,7 @@ public class ConnectionCreatingPoolableObjectFactory implements
 
 	private final IRODSAccount cachedIRODSAccount;
 	private final IRODSProtocolManager irodsProtocolManager;
+	private final IRODSSession irodsSession;
 	private final PipelineConfiguration pipelineConfiguration;
 
 	private Logger log = LoggerFactory
@@ -44,22 +42,26 @@ public class ConnectionCreatingPoolableObjectFactory implements
 	 *            connection to iRODS
 	 */
 	public ConnectionCreatingPoolableObjectFactory(
-			final IRODSAccount cachedIRODSAccount) {
+			final IRODSAccount cachedIRODSAccount,
+			final IRODSSession irodsSession,
+			final IRODSProtocolManager irodsProtocolManager) {
 		if (cachedIRODSAccount == null) {
 			throw new IllegalArgumentException("null cachedIRODSAccount");
 		}
+		if (irodsSession == null) {
+			throw new IllegalArgumentException("null irodsSession");
+		}
+		if (irodsProtocolManager == null) {
+			throw new IllegalArgumentException("null irodsProtocolManager");
+		}
 		this.cachedIRODSAccount = cachedIRODSAccount;
 		log.info("caching iRODS account:{}", cachedIRODSAccount);
-		irodsProtocolManager = IRODSSimpleProtocolManager.instance();
-		try {
-			IRODSSession irodsSession = IRODSSession
-					.instance(irodsProtocolManager);
-			pipelineConfiguration = irodsSession
-					.buildPipelineConfigurationBasedOnJargonProperties();
-		} catch (JargonException e) {
-			throw new JargonRuntimeException(
-					"unable to create an iRODS session");
-		}
+		this.irodsProtocolManager = irodsProtocolManager;
+		this.irodsSession = irodsSession;
+
+		pipelineConfiguration = irodsSession
+				.buildPipelineConfigurationBasedOnJargonProperties();
+
 	}
 
 	/*
@@ -102,7 +104,7 @@ public class ConnectionCreatingPoolableObjectFactory implements
 	public Object makeObject() throws Exception {
 		log.info("makeObject returns a new iRODS connection");
 		return irodsProtocolManager.getIRODSProtocol(cachedIRODSAccount,
-				pipelineConfiguration);
+				pipelineConfiguration, irodsSession);
 	}
 
 	/*
