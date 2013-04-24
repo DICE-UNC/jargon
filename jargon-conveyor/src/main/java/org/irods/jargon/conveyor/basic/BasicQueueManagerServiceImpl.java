@@ -6,23 +6,21 @@ package org.irods.jargon.conveyor.basic;
 import java.util.Date;
 import java.util.List;
 
-import org.irods.jargon.conveyor.core.AbstractConveyorCallable;
 import org.irods.jargon.conveyor.core.AbstractConveyorComponentService;
 import org.irods.jargon.conveyor.core.ConveyorBusyException;
 import org.irods.jargon.conveyor.core.ConveyorExecutionException;
-import org.irods.jargon.conveyor.core.ConveyorExecutionFuture;
+import org.irods.jargon.conveyor.core.ConveyorService;
 import org.irods.jargon.conveyor.core.GridAccountService;
 import org.irods.jargon.conveyor.core.QueueManagerService;
-import org.irods.jargon.conveyor.core.callables.ConveyorCallableFactory;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.transfer.dao.TransferAttemptDAO;
 import org.irods.jargon.transfer.dao.TransferDAO;
+import org.irods.jargon.transfer.dao.TransferDAOException;
 import org.irods.jargon.transfer.dao.domain.GridAccount;
 import org.irods.jargon.transfer.dao.domain.Transfer;
 import org.irods.jargon.transfer.dao.domain.TransferState;
 import org.irods.jargon.transfer.dao.domain.TransferType;
-import org.irods.jargon.transfer.dao.spring.TransferDAOImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
@@ -50,6 +48,11 @@ public class BasicQueueManagerServiceImpl extends
 	/**
 	 * Injected dependency
 	 */
+	private ConveyorService conveyorService;
+
+	/**
+	 * Injected dependency
+	 */
 	private GridAccountService gridAccountService;
 
 	private static final Logger log = LoggerFactory
@@ -64,9 +67,12 @@ public class BasicQueueManagerServiceImpl extends
 	 * org.irods.jargon.core.connection.IRODSAccount)
 	 */
 	@Override
-	public void enqueuePutOperation(String sourceFileAbsolutePath,
-			String targetFileAbsolutePath, String targetResource,
-			IRODSAccount irodsAccount) throws ConveyorExecutionException {
+	public void enqueuePutOperation(final String sourceFileAbsolutePath,
+			final String targetFileAbsolutePath, final String targetResource,
+			final IRODSAccount irodsAccount) throws ConveyorExecutionException {
+		/*
+		 * TODO: consider refactoring to an enqueue(Transfer) method
+		 */
 
 		log.info("enqueuePutOperation()");
 
@@ -113,6 +119,15 @@ public class BasicQueueManagerServiceImpl extends
 		transfer.setTransferState(TransferState.ENQUEUED);
 		transfer.setTransferType(TransferType.PUT);
 		transfer.setUpdatedAt(new Date());
+
+		try {
+			transferDAO.save(transfer);
+			dequeueNextOperation();
+		} catch (TransferDAOException e) {
+			log.error("error saving transfer", e);
+			throw new ConveyorExecutionException("error saving transfer", e);
+		}
+
 		log.info("transfer added:{}", transfer);
 
 	}
@@ -124,37 +139,46 @@ public class BasicQueueManagerServiceImpl extends
 	 * org.irods.jargon.conveyor.core.QueueManagerService#dequeueNextOperation()
 	 */
 	@Override
-	public void dequeueNextOperation() throws ConveyorExecutionException, JargonException, Exception {
+	public void dequeueNextOperation() throws ConveyorExecutionException {
 		log.info("dequeueNextOperation()");
 
-		synchronized (this) {
-			try {
-				this.getConveyorExecutorService().setBusyForAnOperation();
-			} catch (ConveyorBusyException e) {
-				log.info("busy, ignore..");
-				return;
-			}
-		}
-
-		// Transfer = transferDAO.getNextRunnableTransfer(); // or should this
-		// be in queue manager? for right now just query for enqueued and sort
-		// asc datetime
-                TransferDAO transferDAO = new TransferDAOImpl();
-                List<Transfer> transfers = transferDAO.findByTransferState(TransferState.ENQUEUED);
-		//Transfer transfer = new Transfer(); // fake code for above
-
-		if (transfers == null || transfers.isEmpty() || transfers.get(0) == null) {
-			log.info("nothing to process...");
-			this.getConveyorExecutorService().setOperationCompleted();
+		try {
+			this.getConveyorExecutorService().setBusyForAnOperation();
+		} catch (ConveyorBusyException e) {
+			log.info("busy, ignore..");
 			return;
 		}
-                Transfer transfer = transfers.get(0);
-		log.info("have transfer to run:{}", transfer);
 
-		AbstractConveyorCallable callable = new ConveyorCallableFactory()
-                        .instanceCallableForOperation(transfer, null); // FIXME: where do we get conveyorservice?
-                
-                ConveyorExecutionFuture call = callable.call();  // FIXME: throws Exception?
+		try {
+			// Transfer = transferDAO.getNextRunnableTransfer(); // or should
+			// this
+			// be in queue manager? for right now just query for enqueued and
+			// sort
+			// asc datetime
+			List<Transfer> transfers = transferDAO
+					.findByTransferState(TransferState.ENQUEUED);
+			// Transfer transfer = new Transfer(); // fake code for above
+
+			if (transfers.isEmpty()) {
+				log.info("nothing to process...");
+				this.getConveyorExecutorService().setOperationCompleted();
+				return;
+			}
+
+			Transfer transfer = transfers.get(0);
+			log.info("have transfer to run:{}", transfer);
+			this.getConveyorExecutorService().processTransferAndHandleReturn(
+					transfer, this.conveyorService);
+
+		} catch (JargonException je) {
+			log.error("jargon exception dequeue operation, will unlock queue");
+			this.getConveyorExecutorService().setOperationCompleted();
+			throw new ConveyorExecutionException(je);
+		} catch (Exception e) {
+			log.error("jargon exception dequeue operation, will unlock queue");
+			this.getConveyorExecutorService().setOperationCompleted();
+			throw new ConveyorExecutionException(e);
+		}
 
 	}
 
@@ -169,7 +193,7 @@ public class BasicQueueManagerServiceImpl extends
 	 * @param transferDAO
 	 *            the transferDAO to set
 	 */
-	public void setTransferDAO(TransferDAO transferDAO) {
+	public void setTransferDAO(final TransferDAO transferDAO) {
 		this.transferDAO = transferDAO;
 	}
 
@@ -184,7 +208,8 @@ public class BasicQueueManagerServiceImpl extends
 	 * @param transferAttemptDAO
 	 *            the transferAttemptDAO to set
 	 */
-	public void setTransferAttemptDAO(TransferAttemptDAO transferAttemptDAO) {
+	public void setTransferAttemptDAO(
+			final TransferAttemptDAO transferAttemptDAO) {
 		this.transferAttemptDAO = transferAttemptDAO;
 	}
 
@@ -199,8 +224,24 @@ public class BasicQueueManagerServiceImpl extends
 	 * @param gridAccountService
 	 *            the gridAccountService to set
 	 */
-	public void setGridAccountService(GridAccountService gridAccountService) {
+	public void setGridAccountService(
+			final GridAccountService gridAccountService) {
 		this.gridAccountService = gridAccountService;
+	}
+
+	/**
+	 * @return the conveyorService
+	 */
+	public ConveyorService getConveyorService() {
+		return conveyorService;
+	}
+
+	/**
+	 * @param conveyorService
+	 *            the conveyorService to set
+	 */
+	public void setConveyorService(ConveyorService conveyorService) {
+		this.conveyorService = conveyorService;
 	}
 
 }

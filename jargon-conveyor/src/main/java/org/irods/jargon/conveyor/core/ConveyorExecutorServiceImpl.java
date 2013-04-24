@@ -1,14 +1,14 @@
 package org.irods.jargon.conveyor.core;
 
 import java.util.Properties;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import org.irods.jargon.conveyor.core.callables.TransferExecutionWrappingCallable;
+import org.irods.jargon.transfer.dao.domain.Transfer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-// FIXME: DO I NEED SEMAPHORE?
 /**
  * Implementation of an executor of conveyor processes. The current
  * implementation runs one conveyor process at a time. Future implementations
@@ -34,9 +34,6 @@ public class ConveyorExecutorServiceImpl implements ConveyorExecutorService {
 	 * Thread pool (just 1 for now) that runs service
 	 */
 	private final ExecutorService pool = Executors.newSingleThreadExecutor();
-	private ConveyorExecutionFuture future;
-	// private final Semaphore executorLock = new Semaphore(MAX_AVAILABLE,
-	// true);
 
 	/**
 	 * Injected properties that control functionality of the conveyor
@@ -71,61 +68,35 @@ public class ConveyorExecutorServiceImpl implements ConveyorExecutorService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.irods.jargon.conveyor.core.ConveyorExecutorService#lockQueue()
-	 */
-	/*
-	 * public void lockQueue() throws ConveyorExecutionException { try {
-	 * executorLock.acquire(); } catch (InterruptedException e) {
-	 * log.error("interruptedException", e); throw new
-	 * ConveyorExecutionException(e); } }
-	 */
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.irods.jargon.conveyor.core.ConveyorExecutorService#lockQueueWithTimeout
-	 * ()
-	 */
-	/*
-	 * public void lockQueueWithTimeout() throws ConveyorBusyException,
-	 * ConveyorExecutionException { int timeout = getTimeoutFromProperties();
-	 * try { boolean acquired = executorLock.tryAcquire(timeout,
-	 * TimeUnit.SECONDS); if (!acquired) { throw new
-	 * ConveyorBusyException("timed out getting lock"); } } catch
-	 * (InterruptedException e) { throw new
-	 * ConveyorExecutionException("error in locking queue"); } }
-	 */
-
-	/*
-	 * (non-Javadoc)
-	 * 
 	 * @see org.irods.jargon.conveyor.core.ConveyorExecutorService#unlockQueue()
 	 */
 	/*
 	 * public void unlockQueue() { executorLock.release(); }
 	 */
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.irods.jargon.conveyor.core.ConveyorExecutorService#
-	 * executeConveyorCallable
-	 * (org.irods.jargon.conveyor.core.AbstractConveyorCallable)
-	 */
 	@Override
-	public ConveyorExecutionFuture executeConveyorCallable(
-			final AbstractConveyorCallable conveyorCallable,
-			final boolean withTimeout) throws ConveyorBusyException,
+	public void processTransferAndHandleReturn(final Transfer transfer,
+			ConveyorService conveyorService) throws ConveyorBusyException,
 			ConveyorExecutionException {
 
-		log.info("executeConveyorCallable");
+		log.info("processTransferAndHandleReturn");
 
-		if (conveyorCallable == null) {
-			throw new IllegalArgumentException("null conveyorCallable");
+		if (transfer == null) {
+			throw new IllegalArgumentException("null transfer");
 		}
 
-		log.info("submitting callable:{}", conveyorCallable);
+		if (conveyorService == null) {
+			throw new IllegalArgumentException("null conveyorService");
+		}
+
+		log.info("submitting transfer:{}", transfer);
+
+		synchronized (this) {
+			TransferExecutionWrappingCallable callable = new TransferExecutionWrappingCallable(
+					transfer, conveyorService);
+
+			pool.submit(callable);
+		}
 
 		// here is the lock acquisition, so this isn't called with a lock
 		// acquired, it's in the method comment
@@ -135,22 +106,17 @@ public class ConveyorExecutorServiceImpl implements ConveyorExecutorService {
 		 * log.info("obtain lock without a timeout"); lockQueue(); }
 		 */
 
-		try {
-			future = pool.submit(conveyorCallable).get();
-			return future;
-		} catch (InterruptedException e) {
-			log.error("interruptedException running conveyorCallable", e);
-			throw new ConveyorExecutionException(e);
-		} catch (ExecutionException e) {
-			log.error("ExecutionException running conveyorCallable", e);
-			throw new ConveyorExecutionException(e);
-		} catch (Exception e) {
-			log.error("Unexpected Exception running conveyorCallable", e);
-			throw new ConveyorExecutionException(e);
-		} finally {
-			log.info("unlock the queue");
-			// unlockQueue();
-		}
+		/*
+		 * try { future = pool.submit(conveyorCallable).get(); } catch
+		 * (InterruptedException e) {
+		 * log.error("interruptedException running conveyorCallable", e); throw
+		 * new ConveyorExecutionException(e); } catch (ExecutionException e) {
+		 * log.error("ExecutionException running conveyorCallable", e); throw
+		 * new ConveyorExecutionException(e); } catch (Exception e) {
+		 * log.error("Unexpected Exception running conveyorCallable", e); throw
+		 * new ConveyorExecutionException(e); } finally {
+		 * log.info("unlock the queue"); // unlockQueue(); }
+		 */
 
 	}
 

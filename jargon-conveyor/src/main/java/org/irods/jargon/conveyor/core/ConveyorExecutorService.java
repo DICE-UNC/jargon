@@ -4,6 +4,10 @@
 package org.irods.jargon.conveyor.core;
 
 import java.util.Properties;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+import org.irods.jargon.transfer.dao.domain.Transfer;
 
 /**
  * Interface for the mechanism to process transfer operations. This object
@@ -19,6 +23,8 @@ public interface ConveyorExecutorService {
 	public static final int MAX_AVAILABLE = 1;
 	public static final String TRY_LOCK_TIMEOUT = "try.lock.timeout.seconds";
 
+	ExecutorService executor = Executors.newFixedThreadPool(1);
+
 	public enum ErrorStatus {
 		OK, WARNING, ERROR
 	}
@@ -28,6 +34,8 @@ public interface ConveyorExecutorService {
 	}
 
 	/**
+	 * FIXME: comment is wrong now...
+	 * 
 	 * Execute the given conveyor process and return a processing result. This
 	 * method will block until the process terminates.
 	 * <p/>
@@ -49,18 +57,16 @@ public interface ConveyorExecutorService {
 	 * @param withTimeout
 	 *            <code>boolean</code> with <code>true</code> indicating that
 	 *            the call to obtain a lock should have a time-out
-	 * @return <code>boolean</code> that indicates that a lock was acquired,
-	 *         <code>false</code> means the lock attempt timed out
+	 * 
 	 * @throws ConvyorExecutionTimeoutException
 	 *             if an execute is called with <code>withTimout</code> as
 	 *             <code>true</code>, and the operation times out
 	 * @throws ConveyorExecutionException
 	 *             for any exception in the actual execution
 	 */
-	ConveyorExecutionFuture executeConveyorCallable(
-			final AbstractConveyorCallable conveyorCallable,
-			final boolean withTimeout) throws ConveyorBusyException,
-			ConveyorExecutionException;
+	void processTransferAndHandleReturn(final Transfer transfer,
+			final ConveyorService conveyorService)
+			throws ConveyorBusyException, ConveyorExecutionException;
 
 	/**
 	 * Shut down the underlying pool (will attempt to do so in an orderly

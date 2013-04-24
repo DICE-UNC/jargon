@@ -1,10 +1,13 @@
 /**
  * 
  */
-package org.irods.jargon.conveyor.core;
+package org.irods.jargon.conveyor.core.callables;
 
 import java.util.concurrent.Callable;
 
+import org.irods.jargon.conveyor.core.ConveyorExecutionException;
+import org.irods.jargon.conveyor.core.ConveyorExecutionFuture;
+import org.irods.jargon.conveyor.core.ConveyorService;
 import org.irods.jargon.core.transfer.TransferControlBlock;
 import org.irods.jargon.core.transfer.TransferStatusCallbackListener;
 import org.irods.jargon.transfer.dao.domain.Transfer;
@@ -46,7 +49,8 @@ public abstract class AbstractConveyorCallable implements
 	}
 
 	@Override
-	public abstract ConveyorExecutionFuture call() throws Exception;
+	public abstract ConveyorExecutionFuture call()
+			throws ConveyorExecutionException;
 
 	/**
 	 * @return the transfer

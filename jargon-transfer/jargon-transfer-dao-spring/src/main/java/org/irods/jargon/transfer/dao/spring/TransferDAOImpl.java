@@ -24,8 +24,7 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
  * @author jdr0887
  * 
  */
-public class TransferDAOImpl extends HibernateDaoSupport implements
-		TransferDAO {
+public class TransferDAOImpl extends HibernateDaoSupport implements TransferDAO {
 
 	private static final Logger log = LoggerFactory
 			.getLogger(TransferDAOImpl.class);
@@ -37,47 +36,39 @@ public class TransferDAOImpl extends HibernateDaoSupport implements
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.irods.jargon.transfer.dao.TransferDAO#save(org.irods.jargon
+	 * @see org.irods.jargon.transfer.dao.TransferDAO#save(org.irods.jargon
 	 * .transfer.dao.domain.Transfer)
 	 */
 	@Override
-	public void save(final Transfer transfer)
-			throws TransferDAOException {
+	public void save(final Transfer transfer) throws TransferDAOException {
 		logger.info("entering save(Transfer)");
-		this.getSessionFactory().getCurrentSession()
-				.saveOrUpdate(transfer);
+		this.getSessionFactory().getCurrentSession().saveOrUpdate(transfer);
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.irods.jargon.transfer.dao.TransferDAO#findById(java.lang
-	 * .Long)
+	 * @see org.irods.jargon.transfer.dao.TransferDAO#findById(java.lang .Long)
 	 */
 	@Override
-	public Transfer findById(final Long id)
-			throws TransferDAOException {
+	public Transfer findById(final Long id) throws TransferDAOException {
 		logger.debug("entering findById(Long)");
-		return (Transfer) this.getSessionFactory()
-				.getCurrentSession().get(Transfer.class, id);
+		return (Transfer) this.getSessionFactory().getCurrentSession()
+				.get(Transfer.class, id);
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.irods.jargon.transfer.dao.TransferDAO#findInitializedById
+	 * @see org.irods.jargon.transfer.dao.TransferDAO#findInitializedById
 	 * (java.lang.Long)
 	 */
 	@Override
 	public Transfer findInitializedById(final Long id)
 			throws TransferDAOException {
 		logger.debug("entering findInitializedById(Long)");
-		Transfer transfer = (Transfer) this
-				.getSessionFactory().getCurrentSession()
-				.get(Transfer.class, id);
+		Transfer transfer = (Transfer) this.getSessionFactory()
+				.getCurrentSession().get(Transfer.class, id);
 		Hibernate.initialize(transfer);
 		return transfer;
 	}
@@ -85,8 +76,7 @@ public class TransferDAOImpl extends HibernateDaoSupport implements
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.irods.jargon.transfer.dao.TransferDAO#findByTransferState
+	 * @see org.irods.jargon.transfer.dao.TransferDAO#findByTransferState
 	 * (org.irods.jargon.transfer.dao.domain.TransferState[])
 	 */
 	@SuppressWarnings("unchecked")
@@ -99,7 +89,8 @@ public class TransferDAOImpl extends HibernateDaoSupport implements
 			Criteria criteria = this.getSessionFactory().getCurrentSession()
 					.createCriteria(Transfer.class);
 			criteria.add(Restrictions.in("transferState", transferState));
-			criteria.addOrder(Order.desc("transferStart"));
+			criteria.addOrder(Order.desc("transferStart")); // TODO: use create
+															// date instead?
 			criteria.setFetchMode("synchronization", FetchMode.JOIN);
 			return criteria.list();
 		} catch (HibernateException e) {
@@ -115,9 +106,8 @@ public class TransferDAOImpl extends HibernateDaoSupport implements
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.irods.jargon.transfer.dao.TransferDAO#findByTransferState
-	 * (int, org.irods.jargon.transfer.dao.domain.TransferState[])
+	 * @see org.irods.jargon.transfer.dao.TransferDAO#findByTransferState (int,
+	 * org.irods.jargon.transfer.dao.domain.TransferState[])
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
@@ -146,9 +136,8 @@ public class TransferDAOImpl extends HibernateDaoSupport implements
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.irods.jargon.transfer.dao.TransferDAO#findByTransferStatus
-	 * (int, org.irods.jargon.transfer.dao.domain.TransferStatus[])
+	 * @see org.irods.jargon.transfer.dao.TransferDAO#findByTransferStatus (int,
+	 * org.irods.jargon.transfer.dao.domain.TransferStatus[])
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
@@ -177,9 +166,7 @@ public class TransferDAOImpl extends HibernateDaoSupport implements
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.irods.jargon.transfer.dao.TransferDAO#findAllSortedDesc
-	 * (int)
+	 * @see org.irods.jargon.transfer.dao.TransferDAO#findAllSortedDesc (int)
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
@@ -267,8 +254,7 @@ public class TransferDAOImpl extends HibernateDaoSupport implements
 			throw new TransferDAOException("Failed purgeQueue()", e);
 		}
 	}
-	
-	
+
 	@Override
 	public void purgeEntireQueue() throws TransferDAOException {
 		log.debug("entering purgeQueue()");
@@ -307,8 +293,7 @@ public class TransferDAOImpl extends HibernateDaoSupport implements
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.irods.jargon.transfer.dao.TransferDAO#purgeSuccessful()
+	 * @see org.irods.jargon.transfer.dao.TransferDAO#purgeSuccessful()
 	 */
 	@Override
 	public void purgeSuccessful() throws TransferDAOException {
@@ -354,26 +339,22 @@ public class TransferDAOImpl extends HibernateDaoSupport implements
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.irods.jargon.transfer.dao.TransferDAO#delete(org.irods.
+	 * @see org.irods.jargon.transfer.dao.TransferDAO#delete(org.irods.
 	 * jargon.transfer.dao.domain.Transfer)
 	 */
 	@Override
-	public void delete(final Transfer transfer)
-			throws TransferDAOException {
+	public void delete(final Transfer transfer) throws TransferDAOException {
 		logger.debug("entering delete()");
 
 		try {
-			this.getSessionFactory().getCurrentSession()
-					.delete(transfer);
+			this.getSessionFactory().getCurrentSession().delete(transfer);
 		} catch (HibernateException e) {
 			log.error("HibernateException", e);
 			throw new TransferDAOException(e);
 		} catch (Exception e) {
 
 			log.error("error in delete(Transfer entity)", e);
-			throw new TransferDAOException(
-					"Failed delete(Transfer entity)", e);
+			throw new TransferDAOException("Failed delete(Transfer entity)", e);
 		}
 	}
 
