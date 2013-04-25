@@ -166,7 +166,11 @@ public class BasicQueueManagerServiceImpl extends
 			}
 
 			Transfer transfer = transfers.get(0);
-			log.info("have transfer to run:{}", transfer);
+			log.info("have transfer to run... setting up the new attempt:{}",
+					transfer);
+
+			prepareTransferAttemptForExecution(transfer);
+
 			this.getConveyorExecutorService().processTransferAndHandleReturn(
 					transfer, this.conveyorService);
 
@@ -179,6 +183,11 @@ public class BasicQueueManagerServiceImpl extends
 			this.getConveyorExecutorService().setOperationCompleted();
 			throw new ConveyorExecutionException(e);
 		}
+
+	}
+
+	private void prepareTransferAttemptForExecution(Transfer transfer) {
+		// FIXME: prepare the attempt
 
 	}
 

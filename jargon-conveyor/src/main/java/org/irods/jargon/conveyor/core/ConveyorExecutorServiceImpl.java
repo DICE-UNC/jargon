@@ -1,10 +1,13 @@
 package org.irods.jargon.conveyor.core;
 
 import java.util.Properties;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
-import org.irods.jargon.conveyor.core.callables.TransferExecutionWrappingCallable;
+import org.irods.jargon.conveyor.core.callables.ConveyorCallableFactory;
+import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.transfer.dao.domain.Transfer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,6 +32,8 @@ public class ConveyorExecutorServiceImpl implements ConveyorExecutorService {
 	private ErrorStatus errorStatus = ErrorStatus.OK;
 	private RunningStatus runningStatus = RunningStatus.IDLE;
 	private Object statusSynchronizingObject = new Object();
+	private final ConveyorCallableFactory conveyorCallableFactory = new ConveyorCallableFactory();
+	private Future<ConveyorExecutionFuture> currentTransfer = null;
 
 	/**
 	 * Thread pool (just 1 for now) that runs service
@@ -91,11 +96,18 @@ public class ConveyorExecutorServiceImpl implements ConveyorExecutorService {
 
 		log.info("submitting transfer:{}", transfer);
 
-		synchronized (this) {
-			TransferExecutionWrappingCallable callable = new TransferExecutionWrappingCallable(
-					transfer, conveyorService);
+		try {
+			Callable<ConveyorExecutionFuture> callable = conveyorCallableFactory
+					.instanceCallableForOperation(transfer, conveyorService);
+			this.currentTransfer = pool.submit(callable);
 
-			pool.submit(callable);
+		} catch (JargonException e) {
+			// TODO: should we update the transfer database here with an error
+			log.error(
+					"Jargon Exception creating and submitting callable for transfer",
+					e);
+			throw new ConveyorExecutionException(
+					"exception creating and submitting callable...", e);
 		}
 
 		// here is the lock acquisition, so this isn't called with a lock
