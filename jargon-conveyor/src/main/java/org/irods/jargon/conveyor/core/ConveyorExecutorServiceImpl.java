@@ -7,7 +7,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 import org.irods.jargon.conveyor.core.callables.ConveyorCallableFactory;
-import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.transfer.dao.domain.Transfer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,10 +43,9 @@ public class ConveyorExecutorServiceImpl implements ConveyorExecutorService {
 	 * Injected properties that control functionality of the conveyor
 	 */
 	private Properties executorServiceProperties = null;
-	private final Object executorServicePropertiesSynchronizingObject = new Object();
 
 	public Properties getExecutorServiceProperties() {
-		synchronized (executorServicePropertiesSynchronizingObject) {
+		synchronized (this) {
 			return executorServiceProperties;
 		}
 	}
@@ -65,7 +63,7 @@ public class ConveyorExecutorServiceImpl implements ConveyorExecutorService {
 			throw new IllegalArgumentException("null executorServiceProperties");
 		}
 
-		synchronized (executorServicePropertiesSynchronizingObject) {
+		synchronized (this) {
 			this.executorServiceProperties = executorServiceProperties;
 		}
 	}
@@ -95,41 +93,14 @@ public class ConveyorExecutorServiceImpl implements ConveyorExecutorService {
 		}
 
 		log.info("submitting transfer:{}", transfer);
+		synchronized (this) {
 
-		try {
 			Callable<ConveyorExecutionFuture> callable = conveyorCallableFactory
 					.instanceCallableForOperation(transfer, conveyorService);
+
 			this.currentTransfer = pool.submit(callable);
 
-		} catch (JargonException e) {
-			// TODO: should we update the transfer database here with an error
-			log.error(
-					"Jargon Exception creating and submitting callable for transfer",
-					e);
-			throw new ConveyorExecutionException(
-					"exception creating and submitting callable...", e);
 		}
-
-		// here is the lock acquisition, so this isn't called with a lock
-		// acquired, it's in the method comment
-		/*
-		 * if (withTimeout) { log.info("obtain lock with a timeout");
-		 * lockQueueWithTimeout(); } else {
-		 * log.info("obtain lock without a timeout"); lockQueue(); }
-		 */
-
-		/*
-		 * try { future = pool.submit(conveyorCallable).get(); } catch
-		 * (InterruptedException e) {
-		 * log.error("interruptedException running conveyorCallable", e); throw
-		 * new ConveyorExecutionException(e); } catch (ExecutionException e) {
-		 * log.error("ExecutionException running conveyorCallable", e); throw
-		 * new ConveyorExecutionException(e); } catch (Exception e) {
-		 * log.error("Unexpected Exception running conveyorCallable", e); throw
-		 * new ConveyorExecutionException(e); } finally {
-		 * log.info("unlock the queue"); // unlockQueue(); }
-		 */
-
 	}
 
 	/*
@@ -139,26 +110,10 @@ public class ConveyorExecutorServiceImpl implements ConveyorExecutorService {
 	 */
 	@Override
 	public void shutdown() {
-		pool.shutdownNow();
+		synchronized (this) {
+			pool.shutdownNow();
+		}
 	}
-
-	/**
-	 * Get the timeout value for acquiring a lock to the queue from the
-	 * properties
-	 * 
-	 * @return
-	 * @throws ConveyorExecutionException
-	 */
-	/*
-	 * private int getTimeoutFromProperties() throws ConveyorExecutionException
-	 * { synchronized (executorServicePropertiesSynchronizingObject) { try {
-	 * return PropertyUtils.verifyPropExistsAndGetAsInt(
-	 * executorServiceProperties, ConveyorExecutorService.TRY_LOCK_TIMEOUT); }
-	 * catch (NullPointerException npe) { throw new
-	 * ConveyorExecutionException("no timeout property set"); } }
-	 * 
-	 * }
-	 */
 
 	/**
 	 * @return the errorStatus
@@ -284,6 +239,13 @@ public class ConveyorExecutorServiceImpl implements ConveyorExecutorService {
 			}
 
 		}
+	}
+
+	/**
+	 * @return the currentTransfer
+	 */
+	public Future<ConveyorExecutionFuture> getCurrentTransfer() {
+		return currentTransfer;
 	}
 
 }

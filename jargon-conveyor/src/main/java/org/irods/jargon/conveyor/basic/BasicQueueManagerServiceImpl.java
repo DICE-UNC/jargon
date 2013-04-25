@@ -20,7 +20,6 @@ import org.irods.jargon.transfer.dao.TransferDAOException;
 import org.irods.jargon.transfer.dao.domain.GridAccount;
 import org.irods.jargon.transfer.dao.domain.Transfer;
 import org.irods.jargon.transfer.dao.domain.TransferState;
-import org.irods.jargon.transfer.dao.domain.TransferType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
@@ -62,41 +61,25 @@ public class BasicQueueManagerServiceImpl extends
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * org.irods.jargon.conveyor.core.QueueManagerService#enqueuePutOperation
-	 * (java.lang.String, java.lang.String, java.lang.String,
+	 * org.irods.jargon.conveyor.core.QueueManagerService#enqueueTransferOperation
+	 * (org.irods.jargon.transfer.dao.domain.Transfer,
 	 * org.irods.jargon.core.connection.IRODSAccount)
 	 */
 	@Override
-	public void enqueuePutOperation(final String sourceFileAbsolutePath,
-			final String targetFileAbsolutePath, final String targetResource,
+	public void enqueueTransferOperation(final Transfer transfer,
 			final IRODSAccount irodsAccount) throws ConveyorExecutionException {
-		/*
-		 * TODO: consider refactoring to an enqueue(Transfer) method
-		 */
 
-		log.info("enqueuePutOperation()");
+		log.info("enqueueTransferOperation()");
 
-		if (sourceFileAbsolutePath == null || sourceFileAbsolutePath.isEmpty()) {
-			throw new IllegalArgumentException(
-					"null or empty sourceFileAbsolutePath");
-		}
-
-		if (targetFileAbsolutePath == null || targetFileAbsolutePath.isEmpty()) {
-			throw new IllegalArgumentException(
-					"null or empty targetFileAbsolutePath");
-		}
-
-		if (targetResource == null) {
-			throw new IllegalArgumentException("null targetResource");
+		if (transfer == null) {
+			throw new IllegalArgumentException("null transfer");
 		}
 
 		if (irodsAccount == null) {
 			throw new IllegalArgumentException("null irodsAccount");
 		}
 
-		log.info("sourceFileAbsolutePath:{}", sourceFileAbsolutePath);
-		log.info("targetFileAbsolutePath:{}", targetFileAbsolutePath);
-		log.info("targetResource:{}", targetResource);
+		log.info("transfer:{}", transfer);
 		log.info("irodsAccount:{}", irodsAccount);
 
 		log.info("looking up corresponding GridAccount...");
@@ -111,13 +94,8 @@ public class BasicQueueManagerServiceImpl extends
 
 		log.info("building transfer...");
 
-		Transfer transfer = new Transfer();
-		transfer.setCreatedAt(new Date());
 		transfer.setGridAccount(gridAccount);
-		transfer.setIrodsAbsolutePath(targetFileAbsolutePath);
-		transfer.setLocalAbsolutePath(sourceFileAbsolutePath);
 		transfer.setTransferState(TransferState.ENQUEUED);
-		transfer.setTransferType(TransferType.PUT);
 		transfer.setUpdatedAt(new Date());
 
 		try {

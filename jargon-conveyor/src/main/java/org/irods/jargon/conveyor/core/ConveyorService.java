@@ -70,6 +70,23 @@ public interface ConveyorService {
 	QueueManagerService getQueueMangerService();
 
 	/**
+	 * Get the service that maintains records of status of transfers and
+	 * transfer items
+	 * 
+	 * @return
+	 */
+	TransferAccountingManagementService getTransferAccountingManagementService();
+
+	/**
+	 * Set the service that maintains records of status of transfers and
+	 * transfer items
+	 * 
+	 * @param transferAccountingManagementService
+	 */
+	void setTransferAccountingManagementService(
+			TransferAccountingManagementService transferAccountingManagementService);
+
+	/**
 	 * Clean up and shut down the service
 	 */
 	void shutdown();

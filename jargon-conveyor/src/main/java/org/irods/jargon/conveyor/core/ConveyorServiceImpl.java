@@ -45,6 +45,12 @@ public class ConveyorServiceImpl implements ConveyorService {
 	private ConfigurationService configurationService;
 
 	/**
+	 * required dependency on the {@link TransferAccountingManagementService}
+	 * that manages the transfer actions as they are executed
+	 */
+	private TransferAccountingManagementService transferAccountingManagementService;
+
+	/**
 	 * required dependency on the {@link IRODSAccessObjectFactory} that will
 	 * allow connections to iRODS
 	 */
@@ -190,6 +196,18 @@ public class ConveyorServiceImpl implements ConveyorService {
 	public synchronized void setTransferStatusCallbackListener(
 			TransferStatusCallbackListener transferStatusCallbackListener) {
 		this.transferStatusCallbackListener = transferStatusCallbackListener;
+	}
+
+	@Override
+	public TransferAccountingManagementService getTransferAccountingManagementService() {
+		return transferAccountingManagementService;
+	}
+
+	@Override
+	public void setTransferAccountingManagementService(
+			TransferAccountingManagementService transferAccountingManagementService) {
+		this.transferAccountingManagementService = transferAccountingManagementService;
+
 	}
 
 }

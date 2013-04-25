@@ -76,31 +76,6 @@ public interface ConveyorExecutorService {
 	void shutdown();
 
 	/**
-	 * Release a lock on the queue
-	 */
-	// void unlockQueue();
-
-	/**
-	 * Try an immediate lock on the queue
-	 * 
-	 * @throws ConveyorExecutionException
-	 */
-	// void lockQueue() throws ConveyorExecutionException;
-
-	/**
-	 * Try and obtain a lock on the queue, with a timeout defined in the
-	 * provided properties defined by the key "try.lock.timeout.seconds"
-	 * 
-	 * @throws ConveyorBusyException
-	 *             if a time-out occurs obtaining the lock
-	 * @throws ConveyorExecutionException
-	 */
-	/*
-	 * void lockQueueWithTimeout() throws ConveyorBusyException,
-	 * ConveyorExecutionException;
-	 */
-
-	/**
 	 * Inject <code>Properties</code> that can control aspects of this service
 	 * 
 	 * @param executorServiceProperties

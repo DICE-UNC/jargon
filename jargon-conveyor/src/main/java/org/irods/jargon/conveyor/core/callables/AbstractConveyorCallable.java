@@ -8,7 +8,9 @@ import java.util.concurrent.Callable;
 import org.irods.jargon.conveyor.core.ConveyorExecutionException;
 import org.irods.jargon.conveyor.core.ConveyorExecutionFuture;
 import org.irods.jargon.conveyor.core.ConveyorService;
+import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.transfer.TransferControlBlock;
+import org.irods.jargon.core.transfer.TransferStatus;
 import org.irods.jargon.core.transfer.TransferStatusCallbackListener;
 import org.irods.jargon.transfer.dao.domain.Transfer;
 
@@ -77,5 +79,36 @@ public abstract class AbstractConveyorCallable implements
 		return conveyorService.getConfigurationService()
 				.buildDefaultTransferControlBlockBasedOnConfiguration();
 	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.transfer.TransferStatusCallbackListener#statusCallback
+	 * (org.irods.jargon.core.transfer.TransferStatus)
+	 */
+	@Override
+	public abstract void statusCallback(TransferStatus transferStatus)
+			throws JargonException;
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.transfer.TransferStatusCallbackListener#
+	 * overallStatusCallback(org.irods.jargon.core.transfer.TransferStatus)
+	 */
+	@Override
+	public abstract void overallStatusCallback(TransferStatus transferStatus)
+			throws JargonException;
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.transfer.TransferStatusCallbackListener#
+	 * transferAsksWhetherToForceOperation(java.lang.String, boolean)
+	 */
+	@Override
+	public abstract CallbackResponse transferAsksWhetherToForceOperation(
+			String irodsAbsolutePath, boolean isCollection);
 
 }

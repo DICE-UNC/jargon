@@ -5,6 +5,7 @@ package org.irods.jargon.conveyor.core;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.transfer.dao.domain.Transfer;
 
 /**
  * Manages the persistent queue of transfer information
@@ -18,21 +19,13 @@ public interface QueueManagerService {
 	 * Cause a put operation (transfer to iRODS) to occur. This transfer will be
 	 * based on the given iRODS account information.
 	 * 
-	 * @param sourceFileAbsolutePath
-	 *            <code>String</code> with the absolutePath to the local source
-	 *            file
-	 * @param targetFileAbsolutePath
-	 *            <code>String</code> with the absolutePath to the iRODS target
-	 *            file
-	 * @param targetResource
-	 *            <code>String</code> with optional (blank if not used) storage
-	 *            resource
+	 * @param transfer
+	 *            {@link Transfer} to be executed
 	 * @param irodsAccount
 	 *            {@link IRODSAccount} describing the
 	 * @throws ConveyorExecutionException
 	 */
-	void enqueuePutOperation(final String sourceFileAbsolutePath,
-			final String targetFileAbsolutePath, final String targetResource,
+	void enqueueTransferOperation(final Transfer transfer,
 			final IRODSAccount irodsAccount) throws ConveyorExecutionException;
 
 	/**
@@ -41,6 +34,7 @@ public interface QueueManagerService {
 	 * 
 	 * @throws ConveyerExecutionException
 	 */
-	void dequeueNextOperation() throws ConveyorExecutionException, JargonException, Exception;
+	void dequeueNextOperation() throws ConveyorExecutionException,
+			JargonException, Exception;
 
 }

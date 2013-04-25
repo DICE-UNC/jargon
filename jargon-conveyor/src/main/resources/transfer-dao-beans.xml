@@ -97,7 +97,8 @@
   <bean id="conveyorService" class="org.irods.jargon.conveyor.core.ConveyorServiceImpl">
   	<property name="conveyorExecutorService" ref="conveyorExecutorService"/>
   	<property name="gridAccountService" ref="gridAccountService"/>
-  	<property name="configurationService" ref="configurationService"/>
+  	<property name="configurationService" ref="configurationService"/> 
+  	<property name="transferAccountingManagementService" ref="transferAccountingManagementService"/>
   </bean>
   
    <bean id="configurationService" class="org.irods.jargon.conveyor.basic.ConfigurationServiceImpl">
@@ -110,6 +111,14 @@
   	 <property name="transferAttemptDAO" ref="transferAttemptDAO" />
   	 <property name="gridAccountService" ref="gridAccountService" />
   	 <property name="conveyorService" ref="conveyorService"/>
+  </bean>
+  
+  <bean id="transferAccountingManagementService" class="org.irods.jargon.conveyor.basic.TransferAccountingManagementServiceImpl">
+  	<property name="conveyorExecutorService" ref="conveyorExecutorService"/>
+  	 <property name="transferDAO" ref="transferDAO" />
+  	 <property name="transferAttemptDAO" ref="transferAttemptDAO" />
+  	 <property name="transferItemDAO" ref="transferItemDAO" />
+  	 <property name="gridAccountService" ref="gridAccountService" />
   </bean>
   
 	<!--  
