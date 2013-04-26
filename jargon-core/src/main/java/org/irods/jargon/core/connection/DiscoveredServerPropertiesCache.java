@@ -6,7 +6,6 @@ package org.irods.jargon.core.connection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.irods.jargon.core.pub.SpecificQueryAOImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,8 +26,9 @@ import org.slf4j.LoggerFactory;
  * more than once, so I'm trying to minimize synchronization. We can allow some
  * 'fuzziness' here. The point is to minimize such redundant calls.
  * <p/>
- * This class also includes other cacheable data, such as the <code>IRODSServerProperties</code> that is otherwise repeatedly 
- * obtained from iRODS on connection
+ * This class also includes other cacheable data, such as the
+ * <code>IRODSServerProperties</code> that is otherwise repeatedly obtained from
+ * iRODS on connection
  * 
  * @author Mike Conway - DICE (www.irods.org)
  * 
@@ -39,7 +39,7 @@ public class DiscoveredServerPropertiesCache {
 			8, 0.9f, 1);
 	private ConcurrentHashMap<String, IRODSServerProperties> cacheOfIRODSServerProperties = new ConcurrentHashMap<String, IRODSServerProperties>(
 			8, 0.9f, 1);
-	
+
 	public static final Logger log = LoggerFactory
 			.getLogger(DiscoveredServerPropertiesCache.class);
 
@@ -53,10 +53,12 @@ public class DiscoveredServerPropertiesCache {
 
 	public DiscoveredServerPropertiesCache() {
 	}
-	
+
 	/**
 	 * 
-	 * If an <code>IRODSServerProperties</code> was already cached, then just return it, if not cached, this method will return null
+	 * If an <code>IRODSServerProperties</code> was already cached, then just
+	 * return it, if not cached, this method will return null
+	 * 
 	 * @param host
 	 *            <code>String</code> with the name of the iRODS host this
 	 *            applies to
@@ -65,38 +67,41 @@ public class DiscoveredServerPropertiesCache {
 	 *            applies to
 	 * @return {@link IRODSServerProperties} or <ocde>null</code> if not cached
 	 */
-	public IRODSServerProperties retrieveIRODSServerProperties(final String host, final String zoneName) {
+	public IRODSServerProperties retrieveIRODSServerProperties(
+			final String host, final String zoneName) {
 		if (host == null || host.isEmpty()) {
 			throw new IllegalArgumentException("null or empty host");
 		}
-		
+
 		String myZone = zoneName;
 
 		if (zoneName == null) {
 			myZone = "";
 		}
-		
-		log.info("now retriving server properties from cache with zone:{}", myZone);
-		
+
+		log.info("now retriving server properties from cache with zone:{}",
+				myZone);
+
 		return getIRODSServerPropertiesForHostAndZone(host, myZone);
 	}
-	
+
 	/**
 	 * Gets the cached <code>IRODSServerProperties</code> or <code>null</code>
+	 * 
 	 * @param host
 	 * @param zoneName
 	 * @return
 	 */
 	private IRODSServerProperties getIRODSServerPropertiesForHostAndZone(
-			String host, String zoneName) {
-		
+			final String host, final String zoneName) {
+
 		if (host == null || host.isEmpty()) {
 			throw new IllegalArgumentException("null or empty host");
 		}
 
 		String myZone = zoneName;
 
-		if (zoneName == null ) {
+		if (zoneName == null) {
 			myZone = "";
 		}
 
@@ -129,7 +134,7 @@ public class DiscoveredServerPropertiesCache {
 
 		String myZone = zoneName;
 
-		if (zoneName == null ) {
+		if (zoneName == null) {
 			myZone = "";
 		}
 
@@ -148,15 +153,15 @@ public class DiscoveredServerPropertiesCache {
 	}
 
 	/**
-	 * Delete the <code>IRODSServerProperties</code> If the zone has no
-	 * cache, silently ignore
+	 * Delete the <code>IRODSServerProperties</code> If the zone has no cache,
+	 * silently ignore
 	 * 
 	 * @param host
 	 * @param zoneName
 	 * @param propertyName
 	 */
-	public void deleteCachedIRODSServerProperties(final String host, final String zoneName,
-			final String propertyName) {
+	public void deleteCachedIRODSServerProperties(final String host,
+			final String zoneName, final String propertyName) {
 
 		if (host == null || host.isEmpty()) {
 			throw new IllegalArgumentException("null or empty host");
@@ -167,12 +172,12 @@ public class DiscoveredServerPropertiesCache {
 		if (zoneName == null) {
 			myZone = "";
 		}
-		
+
 		String cacheKey = buildHostPlusZone(host, myZone);
 		cacheOfIRODSServerProperties.remove(cacheKey);
-		
+
 	}
-	
+
 	/**
 	 * Delete the property from the cache if it exists. If the zone has no
 	 * cache, or the property itself is not cached, silently ignore
@@ -204,7 +209,6 @@ public class DiscoveredServerPropertiesCache {
 		}
 	}
 
-
 	/**
 	 * Delete all cached props for the host and zone. If there is no zone cache,
 	 * ignore the request
@@ -223,23 +227,27 @@ public class DiscoveredServerPropertiesCache {
 		if (zoneName == null) {
 			myZone = "";
 		}
-		
+
 		String cacheKey = buildHostPlusZone(host, myZone);
 		discoveredServerPropertiesCache.remove(cacheKey);
 
 	}
-	
+
 	/**
 	 * Add an <code>IRODSServerProperties</code> to the cache
+	 * 
 	 * @param host
 	 *            <code>String</code> with the name of the iRODS host this
 	 *            applies to
 	 * @param zoneName
 	 *            <code>String</code> with the name of the iRODS zone this
 	 *            applies to
-	 * @param irodsServerProperties {@link IRODSServerProperties} to cache
+	 * @param irodsServerProperties
+	 *            {@link IRODSServerProperties} to cache
 	 */
-	public void cacheIRODSServerProperties(final String host, final String zoneName, final IRODSServerProperties irodsServerProperties) {
+	public void cacheIRODSServerProperties(final String host,
+			final String zoneName,
+			final IRODSServerProperties irodsServerProperties) {
 		if (host == null || host.isEmpty()) {
 			throw new IllegalArgumentException("null or empty host");
 		}
@@ -249,11 +257,11 @@ public class DiscoveredServerPropertiesCache {
 		if (zoneName == null) {
 			myZone = "";
 		}
-		
+
 		if (irodsServerProperties == null) {
 			throw new IllegalArgumentException("null irodsServerProperties");
 		}
-		
+
 		String cacheKey = buildHostPlusZone(host, myZone);
 
 		cacheOfIRODSServerProperties.put(cacheKey, irodsServerProperties);
@@ -286,7 +294,7 @@ public class DiscoveredServerPropertiesCache {
 		if (zoneName == null) {
 			myZone = "";
 		}
-		
+
 		if (propertyName == null || propertyName.isEmpty()) {
 			throw new IllegalArgumentException("null or empty property name");
 		}
@@ -295,8 +303,8 @@ public class DiscoveredServerPropertiesCache {
 			throw new IllegalArgumentException("null value");
 		}
 
-		getCacheForHostAndZoneAndAddIfNotThere(host, myZone).put(
-				propertyName, value);
+		getCacheForHostAndZoneAndAddIfNotThere(host, myZone).put(propertyName,
+				value);
 
 	}
 
@@ -320,7 +328,7 @@ public class DiscoveredServerPropertiesCache {
 		if (zoneName == null) {
 			myZone = "";
 		}
-		
+
 		String cacheKey = buildHostPlusZone(host, myZone);
 		discoveredServerPropertiesCache.putIfAbsent(cacheKey,
 				new ConcurrentHashMap<String, String>(8, 0.9f, 1));
@@ -346,7 +354,7 @@ public class DiscoveredServerPropertiesCache {
 		if (zoneName == null) {
 			myZone = "";
 		}
-		
+
 		String cacheKey = buildHostPlusZone(host, myZone);
 		return discoveredServerPropertiesCache.get(cacheKey);
 	}
@@ -369,7 +377,7 @@ public class DiscoveredServerPropertiesCache {
 		if (zoneName == null) {
 			myZone = "";
 		}
-		
+
 		StringBuilder sb = new StringBuilder();
 		sb.append(host.trim());
 		sb.append(myZone);
