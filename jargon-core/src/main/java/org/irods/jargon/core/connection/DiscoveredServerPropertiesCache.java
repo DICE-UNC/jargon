@@ -6,6 +6,10 @@ package org.irods.jargon.core.connection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.irods.jargon.core.pub.SpecificQueryAOImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Somewhat experimental cache of discovered properties, these are aspects of
  * iRODS servers (such as, whether specific query support is available), that
@@ -35,6 +39,9 @@ public class DiscoveredServerPropertiesCache {
 			8, 0.9f, 1);
 	private ConcurrentHashMap<String, IRODSServerProperties> cacheOfIRODSServerProperties = new ConcurrentHashMap<String, IRODSServerProperties>(
 			8, 0.9f, 1);
+	
+	public static final Logger log = LoggerFactory
+			.getLogger(DiscoveredServerPropertiesCache.class);
 
 	/*
 	 * basic properties that can be cached
@@ -65,9 +72,11 @@ public class DiscoveredServerPropertiesCache {
 		
 		String myZone = zoneName;
 
-		if (zoneName == null || zoneName.isEmpty()) {
+		if (zoneName == null) {
 			myZone = "";
 		}
+		
+		log.info("now retriving server properties from cache with zone:{}", myZone);
 		
 		return getIRODSServerPropertiesForHostAndZone(host, myZone);
 	}
@@ -80,13 +89,14 @@ public class DiscoveredServerPropertiesCache {
 	 */
 	private IRODSServerProperties getIRODSServerPropertiesForHostAndZone(
 			String host, String zoneName) {
+		
 		if (host == null || host.isEmpty()) {
 			throw new IllegalArgumentException("null or empty host");
 		}
 
 		String myZone = zoneName;
 
-		if (zoneName == null || zoneName.isEmpty()) {
+		if (zoneName == null ) {
 			myZone = "";
 		}
 
@@ -119,7 +129,7 @@ public class DiscoveredServerPropertiesCache {
 
 		String myZone = zoneName;
 
-		if (zoneName == null || zoneName.isEmpty()) {
+		if (zoneName == null ) {
 			myZone = "";
 		}
 
@@ -154,7 +164,7 @@ public class DiscoveredServerPropertiesCache {
 
 		String myZone = zoneName;
 
-		if (zoneName == null || zoneName.isEmpty()) {
+		if (zoneName == null) {
 			myZone = "";
 		}
 		
@@ -180,7 +190,7 @@ public class DiscoveredServerPropertiesCache {
 
 		String myZone = zoneName;
 
-		if (zoneName == null || zoneName.isEmpty()) {
+		if (zoneName == null) {
 			myZone = "";
 		}
 
@@ -210,7 +220,7 @@ public class DiscoveredServerPropertiesCache {
 
 		String myZone = zoneName;
 
-		if (zoneName == null || zoneName.isEmpty()) {
+		if (zoneName == null) {
 			myZone = "";
 		}
 		
@@ -236,7 +246,7 @@ public class DiscoveredServerPropertiesCache {
 
 		String myZone = zoneName;
 
-		if (zoneName == null || zoneName.isEmpty()) {
+		if (zoneName == null) {
 			myZone = "";
 		}
 		
@@ -273,7 +283,7 @@ public class DiscoveredServerPropertiesCache {
 
 		String myZone = zoneName;
 
-		if (zoneName == null || zoneName.isEmpty()) {
+		if (zoneName == null) {
 			myZone = "";
 		}
 		
@@ -307,7 +317,7 @@ public class DiscoveredServerPropertiesCache {
 
 		String myZone = zoneName;
 
-		if (zoneName == null || zoneName.isEmpty()) {
+		if (zoneName == null) {
 			myZone = "";
 		}
 		
@@ -333,7 +343,7 @@ public class DiscoveredServerPropertiesCache {
 
 		String myZone = zoneName;
 
-		if (zoneName == null || zoneName.isEmpty()) {
+		if (zoneName == null) {
 			myZone = "";
 		}
 		
@@ -356,7 +366,7 @@ public class DiscoveredServerPropertiesCache {
 
 		String myZone = zoneName;
 
-		if (zoneName == null || zoneName.isEmpty()) {
+		if (zoneName == null) {
 			myZone = "";
 		}
 		

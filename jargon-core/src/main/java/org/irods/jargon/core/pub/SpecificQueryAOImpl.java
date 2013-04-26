@@ -406,7 +406,7 @@ public class SpecificQueryAOImpl extends IRODSGenericAO implements
 				.getArgumentCount()) {
 			log.error("number of parameters in query does not match number of parameters provided");
 			throw new JargonQueryException(
-					"mismatch between query parameters and number of argumetns provided");
+					"mismatch between query parameters and number of arguments provided");
 		}
 
 		return queryOnAliasGivenDefinition(specificQuery, maxRows,
@@ -426,7 +426,7 @@ public class SpecificQueryAOImpl extends IRODSGenericAO implements
 			throws JargonException {
 		SpecificQueryInp specificQueryInp = SpecificQueryInp.instance(
 				specificQuery.getArguments(), specificQuery.getQueryString(),
-				maxRows, 0);
+				maxRows, specificQuery.getContinuationValue());
 
 		Tag response = null;
 
@@ -499,7 +499,7 @@ public class SpecificQueryAOImpl extends IRODSGenericAO implements
 
 		SpecificQueryInp specificQueryInp = SpecificQueryInp.instance(
 				specificQuery.getArguments(), specificQuery.getQueryString(),
-				maxRows, 0);
+				maxRows, specificQuery.getContinuationValue());
 
 		Tag response = null;
 
