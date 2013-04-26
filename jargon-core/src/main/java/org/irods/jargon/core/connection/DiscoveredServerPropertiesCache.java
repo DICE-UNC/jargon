@@ -62,12 +62,14 @@ public class DiscoveredServerPropertiesCache {
 		if (host == null || host.isEmpty()) {
 			throw new IllegalArgumentException("null or empty host");
 		}
+		
+		String myZone = zoneName;
 
 		if (zoneName == null || zoneName.isEmpty()) {
-			throw new IllegalArgumentException("zoneName is null or empty");
+			myZone = "";
 		}
 		
-		return getIRODSServerPropertiesForHostAndZone(host, zoneName);
+		return getIRODSServerPropertiesForHostAndZone(host, myZone);
 	}
 	
 	/**
@@ -82,11 +84,13 @@ public class DiscoveredServerPropertiesCache {
 			throw new IllegalArgumentException("null or empty host");
 		}
 
+		String myZone = zoneName;
+
 		if (zoneName == null || zoneName.isEmpty()) {
-			throw new IllegalArgumentException("zoneName is null or empty");
+			myZone = "";
 		}
 
-		String cacheKey = buildHostPlusZone(host, zoneName);
+		String cacheKey = buildHostPlusZone(host, myZone);
 		return cacheOfIRODSServerProperties.get(cacheKey);
 	}
 
@@ -113,15 +117,17 @@ public class DiscoveredServerPropertiesCache {
 			throw new IllegalArgumentException("null or empty host");
 		}
 
+		String myZone = zoneName;
+
 		if (zoneName == null || zoneName.isEmpty()) {
-			throw new IllegalArgumentException("zoneName is null or empty");
+			myZone = "";
 		}
 
 		if (propertyName == null || propertyName.isEmpty()) {
 			throw new IllegalArgumentException("null or empty property name");
 		}
 
-		Map<String, String> zoneCache = getCacheForHostAndZone(host, zoneName);
+		Map<String, String> zoneCache = getCacheForHostAndZone(host, myZone);
 
 		if (zoneCache == null) {
 			return null;
@@ -146,11 +152,13 @@ public class DiscoveredServerPropertiesCache {
 			throw new IllegalArgumentException("null or empty host");
 		}
 
+		String myZone = zoneName;
+
 		if (zoneName == null || zoneName.isEmpty()) {
-			throw new IllegalArgumentException("zoneName is null or empty");
+			myZone = "";
 		}
 		
-		String cacheKey = buildHostPlusZone(host, zoneName);
+		String cacheKey = buildHostPlusZone(host, myZone);
 		cacheOfIRODSServerProperties.remove(cacheKey);
 		
 	}
@@ -170,15 +178,17 @@ public class DiscoveredServerPropertiesCache {
 			throw new IllegalArgumentException("null or empty host");
 		}
 
+		String myZone = zoneName;
+
 		if (zoneName == null || zoneName.isEmpty()) {
-			throw new IllegalArgumentException("zoneName is null or empty");
+			myZone = "";
 		}
 
 		if (propertyName == null || propertyName.isEmpty()) {
 			throw new IllegalArgumentException("null or empty property name");
 		}
 
-		Map<String, String> zoneCache = getCacheForHostAndZone(host, zoneName);
+		Map<String, String> zoneCache = getCacheForHostAndZone(host, myZone);
 		if (zoneCache != null) {
 			zoneCache.remove(propertyName);
 		}
@@ -198,11 +208,13 @@ public class DiscoveredServerPropertiesCache {
 			throw new IllegalArgumentException("null or empty host");
 		}
 
-		if (zoneName == null || zoneName.isEmpty()) {
-			throw new IllegalArgumentException("zoneName is null or empty");
-		}
+		String myZone = zoneName;
 
-		String cacheKey = buildHostPlusZone(host, zoneName);
+		if (zoneName == null || zoneName.isEmpty()) {
+			myZone = "";
+		}
+		
+		String cacheKey = buildHostPlusZone(host, myZone);
 		discoveredServerPropertiesCache.remove(cacheKey);
 
 	}
@@ -222,15 +234,17 @@ public class DiscoveredServerPropertiesCache {
 			throw new IllegalArgumentException("null or empty host");
 		}
 
-		if (zoneName == null || zoneName.isEmpty()) {
-			throw new IllegalArgumentException("zoneName is null or empty");
-		}
+		String myZone = zoneName;
 
+		if (zoneName == null || zoneName.isEmpty()) {
+			myZone = "";
+		}
+		
 		if (irodsServerProperties == null) {
 			throw new IllegalArgumentException("null irodsServerProperties");
 		}
 		
-		String cacheKey = buildHostPlusZone(host, zoneName);
+		String cacheKey = buildHostPlusZone(host, myZone);
 
 		cacheOfIRODSServerProperties.put(cacheKey, irodsServerProperties);
 	}
@@ -257,10 +271,12 @@ public class DiscoveredServerPropertiesCache {
 			throw new IllegalArgumentException("null or empty host");
 		}
 
-		if (zoneName == null || zoneName.isEmpty()) {
-			throw new IllegalArgumentException("zoneName is null or empty");
-		}
+		String myZone = zoneName;
 
+		if (zoneName == null || zoneName.isEmpty()) {
+			myZone = "";
+		}
+		
 		if (propertyName == null || propertyName.isEmpty()) {
 			throw new IllegalArgumentException("null or empty property name");
 		}
@@ -269,7 +285,7 @@ public class DiscoveredServerPropertiesCache {
 			throw new IllegalArgumentException("null value");
 		}
 
-		getCacheForHostAndZoneAndAddIfNotThere(host, zoneName).put(
+		getCacheForHostAndZoneAndAddIfNotThere(host, myZone).put(
 				propertyName, value);
 
 	}
@@ -289,11 +305,13 @@ public class DiscoveredServerPropertiesCache {
 			throw new IllegalArgumentException("null or empty host");
 		}
 
-		if (zoneName == null || zoneName.isEmpty()) {
-			throw new IllegalArgumentException("zoneName is null or empty");
-		}
+		String myZone = zoneName;
 
-		String cacheKey = buildHostPlusZone(host, zoneName);
+		if (zoneName == null || zoneName.isEmpty()) {
+			myZone = "";
+		}
+		
+		String cacheKey = buildHostPlusZone(host, myZone);
 		discoveredServerPropertiesCache.putIfAbsent(cacheKey,
 				new ConcurrentHashMap<String, String>(8, 0.9f, 1));
 		return discoveredServerPropertiesCache.get(cacheKey);
@@ -313,11 +331,13 @@ public class DiscoveredServerPropertiesCache {
 			throw new IllegalArgumentException("null or empty host");
 		}
 
-		if (zoneName == null || zoneName.isEmpty()) {
-			throw new IllegalArgumentException("zoneName is null or empty");
-		}
+		String myZone = zoneName;
 
-		String cacheKey = buildHostPlusZone(host, zoneName);
+		if (zoneName == null || zoneName.isEmpty()) {
+			myZone = "";
+		}
+		
+		String cacheKey = buildHostPlusZone(host, myZone);
 		return discoveredServerPropertiesCache.get(cacheKey);
 	}
 
@@ -334,13 +354,15 @@ public class DiscoveredServerPropertiesCache {
 			throw new IllegalArgumentException("null or empty host");
 		}
 
-		if (zoneName == null || zoneName.isEmpty()) {
-			throw new IllegalArgumentException("zoneName is null or empty");
-		}
+		String myZone = zoneName;
 
+		if (zoneName == null || zoneName.isEmpty()) {
+			myZone = "";
+		}
+		
 		StringBuilder sb = new StringBuilder();
 		sb.append(host.trim());
-		sb.append(zoneName.trim());
+		sb.append(myZone);
 		return sb.toString();
 	}
 
