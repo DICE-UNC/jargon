@@ -3,12 +3,17 @@
  */
 package org.irods.jargon.conveyor.basic;
 
+import java.util.Date;
 import org.irods.jargon.conveyor.core.AbstractConveyorComponentService;
+import org.irods.jargon.conveyor.core.ConveyorExecutionException;
 import org.irods.jargon.conveyor.core.GridAccountService;
 import org.irods.jargon.conveyor.core.TransferAccountingManagementService;
 import org.irods.jargon.transfer.dao.TransferAttemptDAO;
 import org.irods.jargon.transfer.dao.TransferDAO;
+import org.irods.jargon.transfer.dao.TransferDAOException;
 import org.irods.jargon.transfer.dao.TransferItemDAO;
+import org.irods.jargon.transfer.dao.domain.Transfer;
+import org.irods.jargon.transfer.dao.domain.TransferAttempt;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
@@ -112,6 +117,33 @@ public class TransferAccountingManagementServiceImpl extends
 	 */
 	public void setGridAccountService(GridAccountService gridAccountService) {
 		this.gridAccountService = gridAccountService;
+	}
+        
+        
+        /**
+	 * @param Transfer
+	 *            the Transfer to use to prepare the TransferAttempt
+	 */
+        public void prepareTransferAttemptForExecution(Transfer transfer) throws ConveyorExecutionException {
+            
+		log.info("building transfer attempt...");
+
+		TransferAttempt transferAttempt = new TransferAttempt();
+                transferAttempt.setTransfer(transfer);
+		transferAttempt.setAttemptStart(new Date());
+                // FIXME:  transferAttempt.setTotalFilesCount(??);
+		// FIXME: transferAttempt.setTransferItems(??);
+
+
+		try {
+			transferAttemptDAO.save(transferAttempt);
+		} catch (TransferDAOException e) {
+			log.error("error saving transfer", e);
+			throw new ConveyorExecutionException("error saving transfer attempt", e);
+		}
+
+		log.info("transfer attempt added:{}", transferAttempt);
+
 	}
 
 }

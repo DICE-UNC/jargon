@@ -147,7 +147,7 @@ public class BasicQueueManagerServiceImpl extends
 			log.info("have transfer to run... setting up the new attempt:{}",
 					transfer);
 
-			prepareTransferAttemptForExecution(transfer);
+			conveyorService.getTransferAccountingManagementService().prepareTransferAttemptForExecution(transfer);
 
 			this.getConveyorExecutorService().processTransferAndHandleReturn(
 					transfer, this.conveyorService);
