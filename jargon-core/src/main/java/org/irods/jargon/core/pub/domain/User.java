@@ -217,7 +217,7 @@ public final class User extends IRODSDomainObject {
 	 *            {@link Date} user was created
 	 */
 	public void setCreateTime(final Date date) {
-		this.createTime = date;
+		createTime = date;
 	}
 
 	/**

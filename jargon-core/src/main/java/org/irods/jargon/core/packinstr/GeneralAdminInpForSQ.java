@@ -151,8 +151,8 @@ public class GeneralAdminInpForSQ extends AbstractIRODSPackingInstruction {
 			}
 		}
 
-		this.setApiNumber(GeneralAdminInp.GEN_ADMIN_INP_API_NBR);
-		this.sqlQuery = query;
+		setApiNumber(GeneralAdminInp.GEN_ADMIN_INP_API_NBR);
+		sqlQuery = query;
 		this.alias = alias;
 		this.action = action;
 	}
@@ -171,7 +171,7 @@ public class GeneralAdminInpForSQ extends AbstractIRODSPackingInstruction {
 		// if it is a query it will remove all matching queries whether or not a
 		// unique alias
 		// is supplied!
-		if (this.action == SQ_RM) {
+		if (action == SQ_RM) {
 			// check to see if this is remove by alias - if so put alias name in
 			// arg2
 			if (arg2 == BLANK) {

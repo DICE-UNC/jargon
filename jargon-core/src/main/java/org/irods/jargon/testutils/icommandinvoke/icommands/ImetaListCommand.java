@@ -35,7 +35,7 @@ public class ImetaListCommand extends ImetaCommand {
 	 */
 	@Override
 	public List<String> buildCommand() throws IcommandException {
-		if (this.getObjectPath() == null || this.getObjectPath().length() == 0) {
+		if (getObjectPath() == null || getObjectPath().length() == 0) {
 			throw new IllegalArgumentException("must supply an object path");
 		}
 
@@ -48,8 +48,8 @@ public class ImetaListCommand extends ImetaCommand {
 
 		command.add("imeta");
 		command.add("ls");
-		command.add(this.translateMetaObjectTypeToString(getMetaObjectType()));
-		command.add(this.getObjectPath());
+		command.add(translateMetaObjectTypeToString(getMetaObjectType()));
+		command.add(getObjectPath());
 		if (attribName.length() > 0) {
 			command.add(attribName);
 		}

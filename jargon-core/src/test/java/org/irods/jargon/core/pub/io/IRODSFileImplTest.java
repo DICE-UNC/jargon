@@ -184,7 +184,8 @@ public class IRODSFileImplTest {
 
 	}
 
-	@Test
+	@Ignore
+	// doesn't test much esp on windows
 	public final void testCanExecuteWhenNot() throws Exception {
 		String testFileName = "testCanExecuteWhenNot.txt";
 		String absPath = scratchFileUtils
@@ -200,10 +201,10 @@ public class IRODSFileImplTest {
 		fileNameAndPath.append(absPath);
 
 		fileNameAndPath.append(testFileName);
-		
+
 		File localFile = new File(fileNameAndPath.toString());
 		localFile.setExecutable(false);
-		
+
 		// some os's (win) can have a hard time setting to not execute
 		if (localFile.canExecute()) {
 			return;

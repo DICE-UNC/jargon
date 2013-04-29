@@ -99,7 +99,7 @@ public class TestingPropertiesHelper {
 	 */
 	public int getPortAsInt(final Properties testingProperties)
 			throws TestingUtilsException {
-		return this.getPropertyValueAsInt(testingProperties,
+		return getPropertyValueAsInt(testingProperties,
 				TestingPropertiesHelper.IRODS_PORT_KEY);
 	}
 

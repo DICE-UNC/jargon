@@ -47,7 +47,7 @@ public class DataObjRead extends AbstractIRODSPackingInstruction {
 
 		this.fileDescriptor = fileDescriptor;
 		this.length = length;
-		this.setApiNumber(READ_FILE_API_NBR);
+		setApiNumber(READ_FILE_API_NBR);
 
 	}
 

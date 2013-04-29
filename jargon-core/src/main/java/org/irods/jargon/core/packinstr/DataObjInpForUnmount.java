@@ -65,7 +65,7 @@ public class DataObjInpForUnmount extends AbstractIRODSPackingInstruction {
 
 		this.collectionToUnmountAbsolutePath = collectionToUnmountAbsolutePath;
 		this.destResourceName = destResourceName;
-		this.setApiNumber(MCOLL_AN);
+		setApiNumber(MCOLL_AN);
 
 	}
 

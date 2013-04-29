@@ -61,7 +61,10 @@ Note that the following bug and feature requests are logged in GForge with relat
 **Added continuation code to specific query
 
 *[#1373] alias lookup failing on specific query
-**work in progress...added currently @Ignore'd tests in SpecificQueryAOTest for this bug
+**Added additional lookup tests for specific queries that contained special characters (returns and spaces) in the query string
+**Added InvalidParameterException and checks for duplicate aliases
+**Propagate additional message information in ErrorScanner and IRODSCommand processing
+**Clarified alias versus sql in various specific query AO services
  
 *[#1264] [iROD-Chat:9666] Referencing Data Objects
 **Added findById() methods to DataObjectAO and CollectionAO

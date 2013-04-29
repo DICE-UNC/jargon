@@ -332,7 +332,7 @@ public final class ExecCmd extends AbstractIRODSPackingInstruction {
 		this.executionHost = executionHost;
 		this.absolutePathOfIrodsFileThatWillBeUsedToFindHostToExecuteOn = absolutePathOfIrodsFileThatWillBeUsedToFindHostToExecuteOn;
 		this.useBackwardCompatableInstruction = useBackwardCompatableInstruction;
-		this.setApiNumber(apiNumber);
+		setApiNumber(apiNumber);
 		this.pathHandlingMode = pathHandlingMode;
 
 	}

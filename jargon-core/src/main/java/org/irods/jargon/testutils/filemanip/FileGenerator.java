@@ -192,7 +192,7 @@ public class FileGenerator {
 
 		StringBuilder fullPath = new StringBuilder();
 		fullPath.append(fileDirectory);
-		//fullPath.append("/");
+		// fullPath.append("/");
 		fullPath.append(fileName);
 		return fullPath.toString();
 

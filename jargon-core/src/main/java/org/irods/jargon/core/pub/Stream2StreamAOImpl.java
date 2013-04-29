@@ -72,7 +72,7 @@ public class Stream2StreamAOImpl extends IRODSGenericAO implements
 		log.info("streamBytesToIRODSFile(), irodsFile:{}", irodsTargetFile);
 		log.info("bytesToStream length:{}", bytesToStream.length);
 
-		OutputStream ifOs = this.getIRODSFileFactory()
+		OutputStream ifOs = getIRODSFileFactory()
 				.instanceIRODSFileOutputStream(irodsTargetFile);
 		InputStream bis = new ByteArrayInputStream(bytesToStream);
 
@@ -123,20 +123,20 @@ public class Stream2StreamAOImpl extends IRODSGenericAO implements
 
 		try {
 
-			int outputBufferSize = this.getJargonProperties()
+			int outputBufferSize = getJargonProperties()
 					.getLocalFileOutputStreamBufferSize();
 
 			if (targetFile instanceof IRODSFile) {
 				log.info("target file is an iRODS file");
 
-				if (this.getJargonProperties().isAllowPutGetResourceRedirects()) {
+				if (getJargonProperties().isAllowPutGetResourceRedirects()) {
 					log.info("using transfer redirects, so check for stream re-routing");
-					fileOutputStream = this.getIRODSFileFactory()
+					fileOutputStream = getIRODSFileFactory()
 							.instanceIRODSFileOutputStreamWithRerouting(
 									(IRODSFile) targetFile);
 				} else {
 					log.info("not using transfer redirects, so do not do any stream re-routing");
-					fileOutputStream = this.getIRODSFileFactory()
+					fileOutputStream = getIRODSFileFactory()
 							.instanceIRODSFileOutputStream(
 									(IRODSFile) targetFile);
 				}
@@ -165,7 +165,7 @@ public class Stream2StreamAOImpl extends IRODSGenericAO implements
 
 			int myBuffSize = readBuffSize;
 			if (myBuffSize <= 0) {
-				myBuffSize = this.getJargonProperties()
+				myBuffSize = getJargonProperties()
 						.getInputToOutputCopyBufferByteSize();
 			}
 
@@ -282,8 +282,8 @@ public class Stream2StreamAOImpl extends IRODSGenericAO implements
 					"cannot stream, does not exist or is not a file");
 		}
 
-		InputStream is = this.getIRODSFileFactory()
-				.instanceIRODSFileInputStream(irodsFile);
+		InputStream is = getIRODSFileFactory().instanceIRODSFileInputStream(
+				irodsFile);
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 		final ReadableByteChannel inputChannel = Channels.newChannel(is);
 		final WritableByteChannel outputChannel = Channels.newChannel(bos);
@@ -327,7 +327,7 @@ public class Stream2StreamAOImpl extends IRODSGenericAO implements
 					"null or empty irodsFileAbsolutePath");
 		}
 
-		IRODSFile irodsTarget = this.getIRODSFileFactory().instanceIRODSFile(
+		IRODSFile irodsTarget = getIRODSFileFactory().instanceIRODSFile(
 				irodsFileAbsolutePath);
 		irodsTarget.getParentFile().mkdirs();
 		irodsTarget.delete();
@@ -335,9 +335,8 @@ public class Stream2StreamAOImpl extends IRODSGenericAO implements
 		InputStream inputStream = new BufferedInputStream(this.getClass()
 				.getResourceAsStream(resourcePath));
 
-		IRODSFileOutputStream irodsFileOutputStream = this
-				.getIRODSFileFactory().instanceIRODSFileOutputStream(
-						irodsFileAbsolutePath);
+		IRODSFileOutputStream irodsFileOutputStream = getIRODSFileFactory()
+				.instanceIRODSFileOutputStream(irodsFileAbsolutePath);
 
 		byte[] buff = new byte[4096];
 

@@ -71,7 +71,7 @@ public class FileReadInp extends AbstractIRODSPackingInstruction {
 
 		this.fileDescriptor = fileDescriptor;
 		this.length = length;
-		this.setApiNumber(apiNumber);
+		setApiNumber(apiNumber);
 
 	}
 

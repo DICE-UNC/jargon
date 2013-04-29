@@ -341,7 +341,6 @@ public class IRODSFileOutputStreamTest {
 		irodsFileOutputStream.close();
 		assertionHelper.assertIrodsFileOrCollectionExists(targetIrodsCollection
 				+ '/' + testFileName);
-		
 
 		IRODSFileInputStream irodsFileInputStream = irodsFileFactory
 				.instanceIRODSFileInputStream(irodsFile);

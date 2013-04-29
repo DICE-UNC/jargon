@@ -116,7 +116,7 @@ public class DefaultTransferControlBlock implements TransferControlBlock {
 			throw new JargonException(
 					"maximumErrorsBeforeCancelling must be >= -1");
 		}
-		this.maximumErrorsBeforeCanceling = maximumErrorsBeforeCancelling;
+		maximumErrorsBeforeCanceling = maximumErrorsBeforeCancelling;
 		this.restartAbsolutePath = restartAbsolutePath;
 
 	}
@@ -224,7 +224,7 @@ public class DefaultTransferControlBlock implements TransferControlBlock {
 	@Override
 	public int getMaximumErrorsBeforeCanceling() {
 		synchronized (this) {
-			return this.maximumErrorsBeforeCanceling;
+			return maximumErrorsBeforeCanceling;
 		}
 	}
 
@@ -381,7 +381,7 @@ public class DefaultTransferControlBlock implements TransferControlBlock {
 	 */
 	@Override
 	public synchronized long getTotalBytesTransferredSoFar() {
-		return this.totalBytesTransferredSoFar;
+		return totalBytesTransferredSoFar;
 	}
 
 	/*
@@ -405,7 +405,7 @@ public class DefaultTransferControlBlock implements TransferControlBlock {
 	 */
 	@Override
 	public synchronized long getTotalBytesToTransfer() {
-		return this.totalBytesToTransfer;
+		return totalBytesToTransfer;
 	}
 
 	/*

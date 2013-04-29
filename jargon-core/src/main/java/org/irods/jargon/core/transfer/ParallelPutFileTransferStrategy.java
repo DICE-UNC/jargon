@@ -76,11 +76,11 @@ public final class ParallelPutFileTransferStrategy extends
 		StringBuilder sb = new StringBuilder();
 		sb.append("ParallelPutFileTransferStrategy");
 		sb.append("\n   host:");
-		sb.append(this.getHost());
+		sb.append(getHost());
 		sb.append("\n   port:");
-		sb.append(this.getPort());
+		sb.append(getPort());
 		sb.append("\n   numberOfThreads:");
-		sb.append(this.getNumberOfThreads());
+		sb.append(getNumberOfThreads());
 		sb.append("\n   localFile:");
 		sb.append(localFile.getAbsolutePath());
 		sb.append("\n   transferLength:");
@@ -105,7 +105,7 @@ public final class ParallelPutFileTransferStrategy extends
 				.isIntraFileStatusCallbacks()
 				&& transferStatusCallbackListener != null) {
 			log.info("will do intra-file status callbacks from transfer");
-			this.setConnectionProgressStatusListener(DefaultIntraFileProgressCallbackListener
+			setConnectionProgressStatusListener(DefaultIntraFileProgressCallbackListener
 					.instance(TransferStatus.TransferType.PUT, transferLength,
 							transferControlBlock,
 							transferStatusCallbackListener));
@@ -122,7 +122,7 @@ public final class ParallelPutFileTransferStrategy extends
 	 */
 	@Override
 	public void transfer() throws JargonException {
-		log.info("initiating transfer for: {}", this.toString());
+		log.info("initiating transfer for: {}", toString());
 		ExecutorService executor = getIrodsAccessObjectFactory()
 				.getIrodsSession().getParallelTransferThreadPool();
 		if (executor == null) {
@@ -142,8 +142,7 @@ public final class ParallelPutFileTransferStrategy extends
 
 	private void transferWithExecutor(final ExecutorService executor)
 			throws JargonException {
-		log.info("initiating transfer for: {} without executor",
-				this.toString());
+		log.info("initiating transfer for: {} without executor", toString());
 		final List<ParallelPutTransferThread> parallelPutTransferThreads = new ArrayList<ParallelPutTransferThread>();
 		localFile.length();
 		ParallelPutTransferThread parallelTransferThread;

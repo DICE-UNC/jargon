@@ -333,7 +333,7 @@ public class IRODSSession {
 					"null connection returned from connection manager");
 		}
 
-		//irodsProtocol.setIrodsSession(this);
+		// irodsProtocol.setIrodsSession(this);
 		irodsProtocols.put(irodsAccount.toString(), irodsProtocol);
 
 		/*

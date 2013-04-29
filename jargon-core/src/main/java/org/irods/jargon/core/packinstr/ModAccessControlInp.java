@@ -199,7 +199,7 @@ public class ModAccessControlInp extends AbstractIRODSPackingInstruction {
 			}
 		}
 
-		this.setApiNumber(apiNumber);
+		setApiNumber(apiNumber);
 		this.recursive = recursive;
 		this.zone = zone;
 		this.absolutePath = absolutePath;

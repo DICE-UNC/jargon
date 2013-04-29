@@ -114,11 +114,11 @@ public final class ParallelPutTransferThread extends
 			log.error(
 					"An exception occurred during a parallel file put operation",
 					e);
-			this.setExceptionInTransfer(e);
+			setExceptionInTransfer(e);
 			throw new JargonException("error during parallel file put", e);
 		} finally {
 			log.info("closing sockets, this eats any exceptions");
-			this.close();
+			close();
 			log.info("socket conns for parallel transfer closed, now close the file stream");
 			// close file stream
 			try {
@@ -129,7 +129,7 @@ public final class ParallelPutTransferThread extends
 		}
 
 		ParallelTransferResult result = new ParallelTransferResult();
-		result.transferException = this.getExceptionInTransfer();
+		result.transferException = getExceptionInTransfer();
 		return result;
 
 	}
@@ -306,7 +306,7 @@ public final class ParallelPutTransferThread extends
 
 		} catch (Exception e) {
 			log.error("error writing to iRODS parallel transfer socket", e);
-			this.setExceptionInTransfer(e);
+			setExceptionInTransfer(e);
 			throw new JargonException(e);
 		}
 

@@ -62,10 +62,9 @@ final class TransferOperationsHelper {
 			throw new JargonException("null irodsSession or irodsAccount");
 		}
 
-		this.dataObjectAO = new DataObjectAOImpl(irodsSession, irodsAccount);
-		this.collectionAO = new CollectionAOImpl(irodsSession, irodsAccount);
-		this.stream2StreamAO = new Stream2StreamAOImpl(irodsSession,
-				irodsAccount);
+		dataObjectAO = new DataObjectAOImpl(irodsSession, irodsAccount);
+		collectionAO = new CollectionAOImpl(irodsSession, irodsAccount);
+		stream2StreamAO = new Stream2StreamAOImpl(irodsSession, irodsAccount);
 
 	}
 
@@ -165,8 +164,7 @@ final class TransferOperationsHelper {
 						transferControlBlock);
 
 			} else {
-				this.processGetOfSingleFile(
-						(IRODSFileImpl) fileInSourceCollection,
+				processGetOfSingleFile((IRODSFileImpl) fileInSourceCollection,
 						targetLocalFile, transferStatusCallbackListener,
 						transferControlBlock);
 			}
@@ -597,7 +595,7 @@ final class TransferOperationsHelper {
 				}
 
 			} else {
-				this.processReplicationOfSingleFile(
+				processReplicationOfSingleFile(
 						fileInSourceCollection.getAbsolutePath(),
 						targetResource, transferStatusCallbackListener,
 						transferControlBlock);
@@ -949,7 +947,7 @@ final class TransferOperationsHelper {
 				targetCollectionName.append("/");
 				targetCollectionName.append(fileInSourceCollection.getName());
 				String targetCollection = targetCollectionName.toString();
-				childTargetFile = this.collectionAO
+				childTargetFile = collectionAO
 						.instanceIRODSFileForCollectionPath(targetCollection);
 				childTargetFile.mkdirs();
 

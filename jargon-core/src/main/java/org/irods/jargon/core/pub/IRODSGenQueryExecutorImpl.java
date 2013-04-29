@@ -99,7 +99,7 @@ public final class IRODSGenQueryExecutorImpl extends IRODSGenericAO implements
 		log.info("query: {}", irodsQuery);
 
 		GenQueryProcessor genQueryProcessor = new GenQueryProcessor(
-				this.getIRODSProtocol());
+				getIRODSProtocol());
 
 		TranslatedIRODSGenQuery translatedIRODSQuery = genQueryProcessor
 				.translateProvidedQuery(irodsQuery);
@@ -152,7 +152,7 @@ public final class IRODSGenQueryExecutorImpl extends IRODSGenericAO implements
 		log.info("query: {}", irodsQuery);
 
 		GenQueryProcessor genQueryProcessor = new GenQueryProcessor(
-				this.getIRODSProtocol());
+				getIRODSProtocol());
 
 		TranslatedIRODSGenQuery translatedIRODSQuery = genQueryProcessor
 				.translateProvidedQuery(irodsQuery);
@@ -200,7 +200,7 @@ public final class IRODSGenQueryExecutorImpl extends IRODSGenericAO implements
 
 		log.info("query: {}", irodsQuery);
 		GenQueryProcessor genQueryProcessor = new GenQueryProcessor(
-				this.getIRODSProtocol());
+				getIRODSProtocol());
 		TranslatedIRODSGenQuery translatedIRODSQuery = genQueryProcessor
 				.translateProvidedQuery(irodsQuery);
 
@@ -231,7 +231,7 @@ public final class IRODSGenQueryExecutorImpl extends IRODSGenericAO implements
 		}
 
 		GenQueryProcessor genQueryProcessor = new GenQueryProcessor(
-				this.getIRODSProtocol());
+				getIRODSProtocol());
 
 		return genQueryProcessor.executeTranslatedIRODSQuery(
 				irodsQueryResultSet.getTranslatedIRODSQuery(),
@@ -261,7 +261,7 @@ public final class IRODSGenQueryExecutorImpl extends IRODSGenericAO implements
 		}
 
 		GenQueryProcessor genQueryProcessor = new GenQueryProcessor(
-				this.getIRODSProtocol());
+				getIRODSProtocol());
 
 		return genQueryProcessor.executeTranslatedIRODSQuery(
 				irodsQueryResultSet.getTranslatedIRODSQuery(),
@@ -282,7 +282,7 @@ public final class IRODSGenQueryExecutorImpl extends IRODSGenericAO implements
 
 		log.info("closeResults()");
 		GenQueryProcessor genQueryProcessor = new GenQueryProcessor(
-				this.getIRODSProtocol());
+				getIRODSProtocol());
 		genQueryProcessor.closeResults(irodsQueryResultSet);
 	}
 

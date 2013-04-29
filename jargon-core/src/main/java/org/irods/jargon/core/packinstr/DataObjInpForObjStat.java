@@ -47,7 +47,7 @@ public class DataObjInpForObjStat extends AbstractIRODSPackingInstruction {
 		}
 
 		this.fileAbsolutePath = fileAbsolutePath;
-		this.setApiNumber(OBJ_STAT_API_NBR);
+		setApiNumber(OBJ_STAT_API_NBR);
 	}
 
 	@Override

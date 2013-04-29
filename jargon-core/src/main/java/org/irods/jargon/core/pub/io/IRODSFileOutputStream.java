@@ -154,7 +154,7 @@ public class IRODSFileOutputStream extends OutputStream {
 
 		checkIfOpen();
 		try {
-			this.fileIOOperations.write(getFileDescriptor(), b, off, len);
+			fileIOOperations.write(getFileDescriptor(), b, off, len);
 		} catch (JargonException e) {
 			log.error(
 					"rethrowing JargonException as IO exception for write operation",

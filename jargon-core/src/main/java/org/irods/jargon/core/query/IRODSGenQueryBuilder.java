@@ -84,7 +84,7 @@ public class IRODSGenQueryBuilder {
 		this.extensibleMetadataMapping = extensibleMetadataMapping;
 		this.distinct = distinct;
 		this.upperCase = upperCase;
-		this.computeTotalRowCount = false;
+		computeTotalRowCount = false;
 
 	}
 
@@ -134,8 +134,8 @@ public class IRODSGenQueryBuilder {
 			final ExtensibleMetaDataMapping extensibleMetadataMapping) {
 		this.extensibleMetadataMapping = extensibleMetadataMapping;
 		this.distinct = distinct;
-		this.upperCase = false;
-		this.computeTotalRowCount = false;
+		upperCase = false;
+		computeTotalRowCount = false;
 
 	}
 
@@ -417,7 +417,7 @@ public class IRODSGenQueryBuilder {
 		}
 		IRODSGenQueryBuilderQueryData queryData = IRODSGenQueryBuilderQueryData
 				.instance(selectFields, conditions, orderByFields, distinct,
-						upperCase, this.computeTotalRowCount);
+						upperCase, computeTotalRowCount);
 
 		if (!queryData.isQueryValid()) {
 			throw new GenQueryBuilderException(

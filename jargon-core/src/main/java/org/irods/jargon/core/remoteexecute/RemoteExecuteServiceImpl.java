@@ -244,8 +244,7 @@ public class RemoteExecuteServiceImpl implements RemoteExecutionService {
 		log.info("executing a remote command:{}", toString());
 
 		ExecCmd execCmd = null;
-		if (this.getIrodsCommands()
-				.getIRODSServerProperties()
+		if (getIrodsCommands().getIRODSServerProperties()
 				.isTheIrodsServerAtLeastAtTheGivenReleaseVersion(
 						STREAMING_API_CUTOFF)) {
 			execCmd = ExecCmd
@@ -386,7 +385,7 @@ public class RemoteExecuteServiceImpl implements RemoteExecutionService {
 			@SuppressWarnings("resource")
 			// this will be closed by the caller
 			RemoteExecutionBinaryResultInputStream reStream = new RemoteExecutionBinaryResultInputStream(
-					this.getIrodsCommands(), status);
+					getIrodsCommands(), status);
 
 			resultStream = new SequenceInputStream(piData, reStream);
 		} else {
