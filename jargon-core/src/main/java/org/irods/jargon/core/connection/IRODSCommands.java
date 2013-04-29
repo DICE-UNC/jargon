@@ -131,7 +131,8 @@ public class IRODSCommands implements IRODSManagedConnection {
 	private IRODSCommands(final IRODSAccount irodsAccount,
 			final IRODSProtocolManager irodsConnectionManager,
 			final PipelineConfiguration pipelineConfiguration,
-			final AuthMechanism authMechanism, final IRODSSession irodsSession) throws JargonException {
+			final AuthMechanism authMechanism, final IRODSSession irodsSession)
+			throws JargonException {
 		/*
 		 * create the IRODSConnection object. The connection object encapsulates
 		 * an open socket to the host/port described by the irodsAccount.
@@ -278,7 +279,8 @@ public class IRODSCommands implements IRODSManagedConnection {
 	 *            for the connection (e.g. buffer sizes)
 	 * @param authMechanism
 	 *            {@link AuthMechanism} that will authenticate with iRODS
-	 *  @param irodsSession {@link IRODSSession} that manages this connection
+	 * @param irodsSession
+	 *            {@link IRODSSession} that manages this connection
 	 * @return instance of <code>IRODSCommands</code> connected and
 	 *         authenticated to an iRODS agent
 	 * @throws JargonException
@@ -286,11 +288,12 @@ public class IRODSCommands implements IRODSManagedConnection {
 	static IRODSCommands instance(final IRODSAccount irodsAccount,
 			final IRODSProtocolManager irodsConnectionManager,
 			final PipelineConfiguration pipelineConfiguration,
-			final AuthMechanism authMechanism, final IRODSSession irodsSession) throws JargonException {
+			final AuthMechanism authMechanism, final IRODSSession irodsSession)
+			throws JargonException {
 
 		return new IRODSCommands(irodsAccount, irodsConnectionManager,
 				pipelineConfiguration, authMechanism, irodsSession);
-		
+
 	}
 
 	/**
@@ -864,11 +867,18 @@ public class IRODSCommands implements IRODSManagedConnection {
 	private void processMessageInfoLessThanZero(final int messageLength,
 			final int errorLength, final int info) throws JargonException {
 		log.debug("info is < 0");
+		byte[] messageByte = new byte[messageLength];
 		// if nothing else, read the returned bytes and throw them away
 		if (messageLength > 0) {
 			log.debug("throwing away bytes");
 			try {
 				irodsConnection.read(new byte[messageLength], 0, messageLength);
+				Tag.readNextTag(messageByte,
+						pipelineConfiguration.getDefaultEncoding()); // just
+																		// thrown
+																		// away
+																		// for
+																		// now
 			} catch (ClosedChannelException e) {
 				log.error("closed channel", e);
 				throw new JargonException(e);
@@ -881,24 +891,28 @@ public class IRODSCommands implements IRODSManagedConnection {
 			}
 		}
 
-		readAndLogErrorMessage(errorLength, info);
+		String addlMessage = readAndLogErrorMessage(errorLength, info);
 
 		if (info == ErrorEnum.CAT_SUCCESS_BUT_WITH_NO_INFO.getInt()) {
 			// handleSuccessButNoRowsFound(errorLength, info);
 			log.info("success but no info returned from irods");
 		} else {
-			IRODSErrorScanner.inspectAndThrowIfNeeded(info);
+			IRODSErrorScanner.inspectAndThrowIfNeeded(info, addlMessage);
 		}
 
 	}
 
 	/**
+	 * Look at error message and log it, returning any additional message info
+	 * found in the error tag
+	 * 
 	 * @param errorLength
 	 * @param info
 	 * @throws JargonException
 	 */
-	private void readAndLogErrorMessage(final int errorLength, final int info)
+	private String readAndLogErrorMessage(final int errorLength, final int info)
 			throws JargonException {
+		String additionalMessage = "";
 		if (errorLength != 0) {
 			byte[] errorMessage = new byte[errorLength];
 			try {
@@ -913,22 +927,32 @@ public class IRODSCommands implements IRODSManagedConnection {
 				log.error("io exception", e);
 				throw new JargonException(e);
 			}
-			if (log.isDebugEnabled()) {
-				Tag errorTag;
-				try {
-					errorTag = Tag.readNextTag(errorMessage,
-							pipelineConfiguration.getDefaultEncoding());
-				} catch (UnsupportedEncodingException e) {
-					log.error("Unsupported encoding for: {}",
-							pipelineConfiguration.getDefaultEncoding());
-					throw new JargonException("Unsupported encoding for: "
-							+ pipelineConfiguration.getDefaultEncoding());
+
+			Tag errorTag;
+
+			try {
+				errorTag = Tag.readNextTag(errorMessage,
+						pipelineConfiguration.getDefaultEncoding());
+
+				if (errorTag != null) {
+					log.error("IRODS error occured "
+							+ errorTag.getTag(RErrMsg.PI_TAG).getTag(
+									IRodsPI.MESSAGE_TAG) + " : " + info);
+
+					additionalMessage = errorTag.getTag(RErrMsg.PI_TAG)
+							.getTag(IRodsPI.MESSAGE_TAG).getStringValue();
 				}
-				log.error("IRODS error occured "
-						+ errorTag.getTag(RErrMsg.PI_TAG).getTag(
-								IRodsPI.MESSAGE_TAG) + " : " + info);
+
+			} catch (UnsupportedEncodingException e) {
+				log.error("Unsupported encoding for: {}",
+						pipelineConfiguration.getDefaultEncoding());
+				throw new JargonException("Unsupported encoding for: "
+						+ pipelineConfiguration.getDefaultEncoding());
 			}
+
 		}
+		return additionalMessage;
+
 	}
 
 	private void processMessageErrorNotEqualZero(final int errorLength)

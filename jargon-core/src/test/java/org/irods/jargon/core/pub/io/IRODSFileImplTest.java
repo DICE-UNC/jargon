@@ -184,7 +184,8 @@ public class IRODSFileImplTest {
 
 	}
 
-	@Test
+	@Ignore
+	// doesn't test much esp on windows
 	public final void testCanExecuteWhenNot() throws Exception {
 		String testFileName = "testCanExecuteWhenNot.txt";
 		String absPath = scratchFileUtils

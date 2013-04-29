@@ -10,7 +10,6 @@ import junit.framework.Assert;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSServerProperties;
-import org.irods.jargon.core.connection.IRODSSimpleProtocolManager;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.exception.JargonFileOrCollAlreadyExistsException;
 import org.irods.jargon.core.pub.RuleProcessingAO.RuleProcessingType;
@@ -23,10 +22,8 @@ import org.irods.jargon.core.rule.IRODSRuleParameter;
 import org.irods.jargon.core.utils.LocalFileUtils;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.irods.jargon.testutils.filemanip.FileGenerator;
-import org.irods.jargon.testutils.icommandinvoke.IcommandInvoker;
-import org.irods.jargon.testutils.icommandinvoke.IrodsInvocationContext;
-import org.irods.jargon.testutils.icommandinvoke.icommands.IputCommand;
 import org.junit.AfterClass;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -62,9 +59,14 @@ public class RuleProcessingAOImplTest {
 		irodsFileSystem.closeAndEatExceptions();
 	}
 
+	@Before
+	public void before() throws Exception {
+		irodsFileSystem.closeAndEatExceptions();
+
+	}
+
 	@Test
 	public void testExecuteRule() throws Exception {
-		IRODSSimpleProtocolManager.instance();
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
 
@@ -446,11 +448,6 @@ public class RuleProcessingAOImplTest {
 		FileGenerator.generateFileOfFixedLengthGivenName(absPath, testFileName,
 				100);
 
-		// put scratch file into irods in the right place
-		IrodsInvocationContext invocationContext = testingPropertiesHelper
-				.buildIRODSInvocationContextFromTestProperties(testingProperties);
-		IputCommand iputCommand = new IputCommand();
-
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH);
@@ -460,26 +457,25 @@ public class RuleProcessingAOImplTest {
 
 		fileNameAndPath.append(testFileName);
 
-		iputCommand.setLocalFileName(fileNameAndPath.toString());
-		iputCommand.setIrodsFileName(targetIrodsCollection);
-		iputCommand.setForceOverride(true);
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
 
-		IcommandInvoker invoker = new IcommandInvoker(invocationContext);
-		invoker.invokeCommandAndGetResultAsString(iputCommand);
+		DataTransferOperations dto = accessObjectFactory
+				.getDataTransferOperations(irodsAccount);
+
+		dto.putOperation(fileNameAndPath.toString(), targetIrodsCollection,
+				irodsAccount.getDefaultStorageResource(), null, null);
 
 		StringBuilder ruleBuilder = new StringBuilder();
 		ruleBuilder
 				.append("myTestRule||acGetIcatResults(*Action,*Condition,*B)##forEachExec(*B,msiGetValByKey(*B,RESC_LOC,*R)##remoteExec(*R,null,msiDataObjChksum(*B,*Operation,*C),nop)##msiGetValByKey(*B,DATA_NAME,*D)##msiGetValByKey(*B,COLL_NAME,*E)##writeLine(stdout,CheckSum of *E/*D at *R is *C),nop)|nop##nop\n");
 		ruleBuilder.append("*Action=chksumRescLoc%*Condition=COLL_NAME = '");
-		ruleBuilder.append(iputCommand.getIrodsFileName());
+		ruleBuilder.append(targetIrodsCollection);
 		ruleBuilder.append("'%*Operation=ChksumAll\n");
 		ruleBuilder.append("*Action%*Condition%*Operation%*C%ruleExecOut");
 		String ruleString = ruleBuilder.toString();
-
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
 
 		RuleProcessingAO ruleProcessingAO = accessObjectFactory
 				.getRuleProcessingAO(irodsAccount);
@@ -492,8 +488,8 @@ public class RuleProcessingAOImplTest {
 
 		String conditionValue = (String) result.getOutputParameterResults()
 				.get("*Condition").getResultObject();
-		String expectedCondition = "COLL_NAME = '"
-				+ iputCommand.getIrodsFileName() + "'";
+		String expectedCondition = "COLL_NAME = '" + targetIrodsCollection
+				+ "'";
 		Assert.assertEquals("condition not found", expectedCondition,
 				conditionValue);
 
@@ -871,7 +867,6 @@ public class RuleProcessingAOImplTest {
 	@Test
 	public void testExecuteRequestClientActionGetFileParallel()
 			throws Exception {
-		irodsFileSystem.closeAndEatExceptions();
 		String testFileName = "testExecuteRequestClientActionGetFileParallel.txt";
 		String testFileGetName = "testExecuteRequestClientActionGetFileClientParallel.txt";
 		String absPath = scratchFileUtils
@@ -936,7 +931,6 @@ public class RuleProcessingAOImplTest {
 	@Test
 	public void testExecuteRequestClientActionGetFileParallelNoThreadsIndicated()
 			throws Exception {
-		irodsFileSystem.closeAndEatExceptions();
 		String testFileName = "testExecuteRequestClientActionGetFileParallelNoThreadsIndicated.txt";
 		String testFileGetName = "testExecuteRequestClientActionGetFileParallelNoThreadsIndicatedReturned.txt";
 		String absPath = scratchFileUtils
@@ -995,7 +989,6 @@ public class RuleProcessingAOImplTest {
 	@Test
 	public void testExecuteRequestClientActionGetFileOverwrite()
 			throws Exception {
-		irodsFileSystem.closeAndEatExceptions();
 		String testFileName = "testExecuteRequestClientActionGetFileOverwrite.txt";
 		String testFileGetName = "testExecuteRequestClientActionGetFileOverwrite.txt";
 		String absPath = scratchFileUtils
@@ -1231,7 +1224,6 @@ public class RuleProcessingAOImplTest {
 	@Test
 	public void testExecuteRuleWithComplexInputArgBug914() throws Exception {
 
-		irodsFileSystem.close();
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
 		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem

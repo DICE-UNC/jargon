@@ -65,6 +65,11 @@ public class IRODSRegistrationOfFilesAOImplTest {
 	@Test
 	public final void testRegisterPhysicalCollectionRecursivelyToIRODS()
 			throws Exception {
+
+		if (!testingPropertiesHelper.isTestRegistration(testingProperties)) {
+			return;
+		}
+
 		String rootCollection = "testRegisterPhysicalCollectionRecursivelyToIRODS";
 		String localCollectionAbsolutePath = scratchFileUtils
 				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH
@@ -144,7 +149,8 @@ public class IRODSRegistrationOfFilesAOImplTest {
 			throws Exception {
 
 		if (!testingPropertiesHelper.isTestRegistration(testingProperties)) {
-			return;
+			throw new DuplicateDataException(
+					"throw to get expected while skipping");
 		}
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
@@ -184,7 +190,8 @@ public class IRODSRegistrationOfFilesAOImplTest {
 			throws Exception {
 
 		if (!testingPropertiesHelper.isTestRegistration(testingProperties)) {
-			return;
+			throw new JargonException(
+					"throw to get expected exception..skipping");
 		}
 
 		String testFileName = "testRegisterPhysicalDataFileToIRODSWhenCollection.txt";
@@ -213,7 +220,8 @@ public class IRODSRegistrationOfFilesAOImplTest {
 			throws Exception {
 
 		if (!testingPropertiesHelper.isTestRegistration(testingProperties)) {
-			return;
+			throw new IllegalArgumentException(
+					"throw to get expected exception..skipping");
 		}
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
@@ -246,7 +254,8 @@ public class IRODSRegistrationOfFilesAOImplTest {
 			throws Exception {
 
 		if (!testingPropertiesHelper.isTestRegistration(testingProperties)) {
-			return;
+			throw new DataNotFoundException(
+					"throw to get expected exception..skipping");
 		}
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
@@ -281,7 +290,8 @@ public class IRODSRegistrationOfFilesAOImplTest {
 			throws Exception {
 
 		if (!testingPropertiesHelper.isTestRegistration(testingProperties)) {
-			return;
+			throw new DataNotFoundException(
+					"throw to get expected exception..skipping");
 		}
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
@@ -558,7 +568,8 @@ public class IRODSRegistrationOfFilesAOImplTest {
 			throws Exception {
 
 		if (!testingPropertiesHelper.isTestRegistration(testingProperties)) {
-			return;
+			throw new DataNotFoundException(
+					"throw to match expected error when skipping");
 		}
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
@@ -596,6 +607,11 @@ public class IRODSRegistrationOfFilesAOImplTest {
 	@Test
 	public final void testUnregisterPhysicalCollectionRecursively()
 			throws Exception {
+
+		if (!testingPropertiesHelper.isTestRegistration(testingProperties)) {
+			return;
+		}
+
 		String rootCollection = "testUnregisterPhysicalCollectionRecursively";
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
@@ -648,6 +664,11 @@ public class IRODSRegistrationOfFilesAOImplTest {
 	@Test(expected = CollectionNotEmptyException.class)
 	public final void testUnregisterPhysicalCollectionNoRecursive()
 			throws Exception {
+
+		if (!testingPropertiesHelper.isTestRegistration(testingProperties)) {
+			throw new CollectionNotEmptyException("throwing to match expected");
+		}
+
 		String rootCollection = "testUnregisterPhysicalCollectionNoRecursive";
 		String localCollectionAbsolutePath = scratchFileUtils
 				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH

@@ -9,6 +9,7 @@ import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.connection.JargonProperties;
 import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.DuplicateDataException;
+import org.irods.jargon.core.exception.InvalidArgumentException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.packinstr.GeneralAdminInpForSQ;
 import org.irods.jargon.core.packinstr.SpecificQueryInp;
@@ -64,7 +65,7 @@ public class SpecificQueryAOImpl extends IRODSGenericAO implements
 		log.info("alias:{}", specificQueryAlias);
 
 		List<String> arguments = new ArrayList<String>();
-		arguments.add(specificQueryAlias.trim());
+		arguments.add(specificQueryAlias);
 
 		SpecificQuery specificQuery = SpecificQuery.instanceArguments(
 				"listQueryByAliasLike", arguments, 0);
@@ -123,7 +124,7 @@ public class SpecificQueryAOImpl extends IRODSGenericAO implements
 		log.info("alias:{}", specificQueryAlias);
 
 		List<String> arguments = new ArrayList<String>();
-		arguments.add(specificQueryAlias.trim());
+		arguments.add(specificQueryAlias);
 
 		SpecificQuery specificQuery = SpecificQuery.instanceArguments(
 				"findQueryByAlias", arguments, 0);
@@ -254,7 +255,16 @@ public class SpecificQueryAOImpl extends IRODSGenericAO implements
 
 		log.info(EXECUTING_SQUERY_PI);
 
-		getIRODSProtocol().irodsFunction(queryPI);
+		try {
+			getIRODSProtocol().irodsFunction(queryPI);
+		} catch (InvalidArgumentException e) {
+			log.error("invalid argument exception adding a specific query, see if caused by alias not unique");
+			if (e.getMessage().indexOf("Alias is not unique") != -1) {
+				throw new DuplicateDataException(e.getMessage());
+			} else {
+				throw e;
+			}
+		}
 
 		log.info("added specific query");
 	}
@@ -269,6 +279,7 @@ public class SpecificQueryAOImpl extends IRODSGenericAO implements
 	@Override
 	public void removeSpecificQuery(final SpecificQueryDefinition specificQuery)
 			throws JargonException {
+
 		GeneralAdminInpForSQ queryPI;
 
 		if (specificQuery == null) {
@@ -494,7 +505,7 @@ public class SpecificQueryAOImpl extends IRODSGenericAO implements
 		if (specificQuery.getArguments().size() != numberOfParameters) {
 			log.error("number of parameters in query does not match number of parameters provided");
 			throw new JargonQueryException(
-					"mismatch between query parameters and number of argumetns provided");
+					"mismatch between query parameters and number of arguments provided");
 		}
 
 		SpecificQueryInp specificQueryInp = SpecificQueryInp.instance(
