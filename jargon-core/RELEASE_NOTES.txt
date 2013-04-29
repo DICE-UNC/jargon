@@ -52,9 +52,17 @@ Note that the following bug and feature requests are logged in GForge with relat
 *[#1358] hbm2ddl maven build errors
 **remove htm2ddl maven build step, not really used, caused maven build errors.  We might revisit this later with the new conveyor framework.
 
+*[#1371] 3.3.2 error with cache using griffin
+**Handle GSI login in caching when using Griffin so that zone name can be null.  This will instead cache on host name
 
  ==Features==
 
+*[#1372] continuation not propagated for specific query
+**Added continuation code to specific query
+
+*[#1373] alias lookup failing on specific query
+**work in progress...added currently @Ignore'd tests in SpecificQueryAOTest for this bug
+ 
 *[#1264] [iROD-Chat:9666] Referencing Data Objects
 **Added findById() methods to DataObjectAO and CollectionAO
 
