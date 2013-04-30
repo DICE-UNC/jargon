@@ -63,7 +63,6 @@ public class LocalIRODSTransferDAOTest {
 		enqueuedTransfer.setIrodsAbsolutePath("/tmp");
 		enqueuedTransfer.setLocalAbsolutePath("/tmp");
 		enqueuedTransfer.setGridAccount(gridAccount);
-		enqueuedTransfer.setTransferStart(new Date());
 		enqueuedTransfer.setTransferType(TransferType.PUT);
 		enqueuedTransfer.setTransferState(TransferState.PROCESSING);
 		enqueuedTransfer.setLastTransferStatus(TransferStatus.ERROR);
@@ -84,7 +83,6 @@ public class LocalIRODSTransferDAOTest {
 		enqueuedTransfer.setCreatedAt(new Date());
 		enqueuedTransfer.setIrodsAbsolutePath("/tmp");
 		enqueuedTransfer.setLocalAbsolutePath("/tmp");
-		enqueuedTransfer.setTransferStart(new Date());
 		enqueuedTransfer.setTransferType(TransferType.PUT);
 		enqueuedTransfer.setGridAccount(gridAccount);
 		enqueuedTransfer.setTransferState(TransferState.COMPLETE);
@@ -97,8 +95,8 @@ public class LocalIRODSTransferDAOTest {
 		assertTrue(enqueuedTransfer.getId() != null);
 
 		transferDAO.purgeQueue();
-		assertTrue(transferDAO.findByTransferState(
-				TransferState.COMPLETE).size() == 0);
+		assertTrue(transferDAO.findByTransferState(TransferState.COMPLETE)
+				.size() == 0);
 
 	}
 
@@ -106,8 +104,7 @@ public class LocalIRODSTransferDAOTest {
 	 * @param localIRODSTransferDAO
 	 *            the localIRODSTransferDAO to set
 	 */
-	public void setLocalIRODSTransferDAO(
-			final TransferDAO transferDAO) {
+	public void setLocalIRODSTransferDAO(final TransferDAO transferDAO) {
 		this.transferDAO = transferDAO;
 	}
 

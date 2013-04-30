@@ -81,7 +81,6 @@ public class TransferQueueServiceImpl implements TransferQueueService {
 				log.debug("dequeue transfer:{}", transfer);
 				// trigger lazy loading of the grid account
 				transfer.getGridAccount().getHost();
-				transfer.setTransferStart(new Date());
 				transfer.setTransferState(TransferState.PROCESSING);
 				transfer.setLastTransferStatus(TransferStatus.OK);
 
@@ -142,7 +141,6 @@ public class TransferQueueServiceImpl implements TransferQueueService {
 		enqueuedTransfer.setLocalAbsolutePath(localSourceAbsolutePath);
 
 		enqueuedTransfer.setGridAccount(gridAccount);
-		enqueuedTransfer.setTransferStart(new Date());
 		enqueuedTransfer.setTransferType(TransferType.PUT);
 		enqueuedTransfer.setTransferState(TransferState.ENQUEUED);
 		enqueuedTransfer.setLastTransferStatus(TransferStatus.OK);
@@ -183,7 +181,6 @@ public class TransferQueueServiceImpl implements TransferQueueService {
 		enqueuedTransfer.setLocalAbsolutePath(synchronization
 				.getLocalSynchDirectory());
 		enqueuedTransfer.setGridAccount(gridAccount);
-		enqueuedTransfer.setTransferStart(new Date());
 		enqueuedTransfer.setTransferType(TransferType.SYNCH);
 		enqueuedTransfer.setTransferState(TransferState.ENQUEUED);
 		enqueuedTransfer.setLastTransferStatus(TransferStatus.OK);
@@ -232,7 +229,6 @@ public class TransferQueueServiceImpl implements TransferQueueService {
 		enqueuedTransfer.setIrodsAbsolutePath(irodsSourceAbsolutePath);
 		enqueuedTransfer.setLocalAbsolutePath(targetLocalAbsolutePath);
 		enqueuedTransfer.setGridAccount(gridAccount);
-		enqueuedTransfer.setTransferStart(new Date());
 		enqueuedTransfer.setTransferType(TransferType.GET);
 		enqueuedTransfer.setTransferState(TransferState.ENQUEUED);
 		enqueuedTransfer.setLastTransferStatus(TransferStatus.OK);
@@ -284,7 +280,6 @@ public class TransferQueueServiceImpl implements TransferQueueService {
 			Transfer mergedTransfer = localIRODSTransferDAO
 					.findById(localIRODSTransfer.getId());
 
-			mergedTransfer.setTransferEnd(new Date());
 			mergedTransfer.setTransferState(TransferState.COMPLETE);
 			mergedTransfer.setLastTransferStatus(TransferStatus.ERROR);
 
@@ -616,7 +611,6 @@ public class TransferQueueServiceImpl implements TransferQueueService {
 		enqueuedTransfer.setIrodsAbsolutePath(irodsAbsolutePath);
 		enqueuedTransfer.setLocalAbsolutePath("");
 		enqueuedTransfer.setGridAccount(gridAccount);
-		enqueuedTransfer.setTransferStart(new Date());
 		enqueuedTransfer.setTransferType(TransferType.REPLICATE);
 		enqueuedTransfer.setTransferState(TransferState.ENQUEUED);
 		enqueuedTransfer.setLastTransferStatus(TransferStatus.OK);
@@ -669,7 +663,6 @@ public class TransferQueueServiceImpl implements TransferQueueService {
 		enqueuedTransfer.setLocalAbsolutePath(irodsSourceAbsolutePath);
 		enqueuedTransfer.setIrodsAbsolutePath(irodsTargetAbsolutePath);
 		enqueuedTransfer.setGridAccount(gridAccount);
-		enqueuedTransfer.setTransferStart(new Date());
 		enqueuedTransfer.setTransferType(TransferType.COPY);
 		enqueuedTransfer.setTransferState(TransferState.ENQUEUED);
 		enqueuedTransfer.setLastTransferStatus(TransferStatus.OK);

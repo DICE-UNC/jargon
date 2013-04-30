@@ -151,7 +151,6 @@ public class TransferAccountingManagementServiceImpl extends
 			throw new ConveyorExecutionException(
 					"error saving transfer attempt", e);
 		}
-
 	}
 
 }
