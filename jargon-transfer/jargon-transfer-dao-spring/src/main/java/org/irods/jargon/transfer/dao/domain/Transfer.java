@@ -62,14 +62,6 @@ public class Transfer implements Serializable {
 	@JoinColumn(name = "synchronization_id", nullable = true)
 	private Synchronization synchronization;
 
-	@Column(name = "tranfer_start")
-	@Temporal(javax.persistence.TemporalType.DATE)
-	private Date transferStart;
-
-	@Column(name = "tranfer_end")
-	@Temporal(javax.persistence.TemporalType.DATE)
-	private Date transferEnd;
-
 	@Column(name = "local_absolute_path", length = 32672)
 	private String localAbsolutePath = "";
 
@@ -114,22 +106,6 @@ public class Transfer implements Serializable {
 
 	public void setTransferType(final TransferType transferType) {
 		this.transferType = transferType;
-	}
-
-	public Date getTransferStart() {
-		return transferStart;
-	}
-
-	public void setTransferStart(final Date transferStart) {
-		this.transferStart = transferStart;
-	}
-
-	public Date getTransferEnd() {
-		return transferEnd;
-	}
-
-	public void setTransferEnd(final Date transferEnd) {
-		this.transferEnd = transferEnd;
 	}
 
 	public String getLocalAbsolutePath() {

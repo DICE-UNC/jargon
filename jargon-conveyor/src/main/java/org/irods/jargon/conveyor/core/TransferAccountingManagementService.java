@@ -4,6 +4,7 @@
 package org.irods.jargon.conveyor.core;
 
 import org.irods.jargon.transfer.dao.domain.Transfer;
+import org.irods.jargon.transfer.dao.domain.TransferAttempt;
 
 /**
  * Service to manage updates to a <code>Transfer</code> as a result of running
@@ -15,7 +16,8 @@ import org.irods.jargon.transfer.dao.domain.Transfer;
  * 
  */
 public interface TransferAccountingManagementService {
-    
-    public void prepareTransferAttemptForExecution(Transfer transfer) throws ConveyorExecutionException;
+
+	public TransferAttempt prepareTransferForExecution(Transfer transfer)
+			throws ConveyorExecutionException;
 
 }

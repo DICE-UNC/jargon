@@ -12,10 +12,9 @@ import org.irods.jargon.core.transfer.TransferStatus;
 import org.irods.jargon.transfer.dao.domain.Transfer;
 
 /**
- * @author Mike Conway - DICE (www.irods.org)
+ * Callable that will run a put operation and handle callbacks
  * 
- *         NOTES: do we want to move the ts callback methods up to the abstract
- *         level?
+ * @author Mike Conway - DICE (www.irods.org)
  * 
  */
 public class PutConveyorCallable extends AbstractConveyorCallable {

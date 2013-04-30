@@ -9,6 +9,7 @@ import org.irods.jargon.conveyor.core.ConveyorExecutionException;
 import org.irods.jargon.conveyor.core.ConveyorExecutionFuture;
 import org.irods.jargon.conveyor.core.ConveyorService;
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 import org.irods.jargon.core.transfer.TransferControlBlock;
 import org.irods.jargon.core.transfer.TransferStatus;
 import org.irods.jargon.core.transfer.TransferStatusCallbackListener;
@@ -25,6 +26,15 @@ public abstract class AbstractConveyorCallable implements
 
 	private final Transfer transfer;
 	private final ConveyorService conveyorService;
+
+	/**
+	 * Convenience method to get the <code>IRODSAccessObjectFactory</code>
+	 * 
+	 * @return
+	 */
+	IRODSAccessObjectFactory getIrodsAccessObjectFactory() {
+		return conveyorService.getIrodsAccessObjectFactory();
+	}
 
 	/**
 	 * 

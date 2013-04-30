@@ -106,6 +106,8 @@ public interface ConveyorService {
 	 */
 	void setConfigurationService(ConfigurationService configurationService);
 
+	IRODSAccessObjectFactory getIrodsAccessObjectFactory();
+
 	void setIrodsAccessObjectFactory(
 			IRODSAccessObjectFactory irodsAccessObjectFactory);
 
