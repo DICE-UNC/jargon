@@ -186,10 +186,6 @@ public class Transfer implements Serializable {
 		sb.append(transferType);
 		sb.append("\n   transferType:");
 		sb.append(transferType);
-		sb.append("\n   transferStart:");
-		sb.append(transferStart);
-		sb.append("\n   transferEnd:");
-		sb.append(transferEnd);
 		sb.append("\n   localAbsolutePath:");
 		sb.append(localAbsolutePath);
 		sb.append("\n   irodsAbsolutePath:");
