@@ -58,17 +58,39 @@ public class SpecificQueryAOImpl extends IRODSGenericAO implements
 
 		log.info("findSpecificQueryByAliasLike()");
 
+		return listSpecificQueryByAliasLike(specificQueryAlias, "");
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.SpecificQueryAO#listSpecificQueryByAliasLike
+	 * (java.lang.String, java.lang.String)
+	 */
+	@Override
+	public List<SpecificQueryDefinition> listSpecificQueryByAliasLike(
+			final String specificQueryAlias, final String zoneHint)
+			throws DataNotFoundException, JargonException {
+
+		log.info("findSpecificQueryByAliasLike()");
+
 		if (specificQueryAlias == null || specificQueryAlias.isEmpty()) {
 			throw new IllegalArgumentException("null specificQueryAlias");
 		}
 
+		if (zoneHint == null) {
+			throw new IllegalArgumentException("null zoneHint");
+		}
+
 		log.info("alias:{}", specificQueryAlias);
+		log.info("zoneHint:{}", zoneHint);
 
 		List<String> arguments = new ArrayList<String>();
 		arguments.add(specificQueryAlias);
 
 		SpecificQuery specificQuery = SpecificQuery.instanceArguments(
-				"listQueryByAliasLike", arguments, 0);
+				"listQueryByAliasLike", arguments, 0, zoneHint);
 		SpecificQueryResultSet resultSet;
 		try {
 			resultSet = this.executeSpecificQueryUsingAliasWithoutAliasLookup(
@@ -115,19 +137,39 @@ public class SpecificQueryAOImpl extends IRODSGenericAO implements
 			final String specificQueryAlias) throws DataNotFoundException,
 			JargonException {
 
+		return findSpecificQueryByAlias(specificQueryAlias, "");
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.SpecificQueryAO#findSpecificQueryByAlias(java
+	 * .lang.String, java.lang.String)
+	 */
+	@Override
+	public SpecificQueryDefinition findSpecificQueryByAlias(
+			final String specificQueryAlias, final String zoneHint)
+			throws DataNotFoundException, JargonException {
+
 		log.info("findSpecificQueryByAlias()");
 
 		if (specificQueryAlias == null || specificQueryAlias.isEmpty()) {
 			throw new IllegalArgumentException("null specificQueryAlias");
 		}
 
+		if (zoneHint == null) {
+			throw new IllegalArgumentException("null zoneHint");
+		}
+
 		log.info("alias:{}", specificQueryAlias);
+		log.info("zoneHint:{}", zoneHint);
 
 		List<String> arguments = new ArrayList<String>();
 		arguments.add(specificQueryAlias);
 
 		SpecificQuery specificQuery = SpecificQuery.instanceArguments(
-				"findQueryByAlias", arguments, 0);
+				"findQueryByAlias", arguments, 0, zoneHint);
 		SpecificQueryResultSet resultSet;
 		try {
 			resultSet = this.executeSpecificQueryUsingAliasWithoutAliasLookup(
@@ -349,7 +391,8 @@ public class SpecificQueryAOImpl extends IRODSGenericAO implements
 
 	/**
 	 * Used internally when querying on alias to avoid recursively looking up
-	 * those aliases
+	 * those aliases. Note that the <code>specificQuery</code> parameter can
+	 * contain a zone hint, and this is used to properly route the request.
 	 * 
 	 * @param specificQuery
 	 * @param maxRows
@@ -437,7 +480,8 @@ public class SpecificQueryAOImpl extends IRODSGenericAO implements
 			throws JargonException {
 		SpecificQueryInp specificQueryInp = SpecificQueryInp.instance(
 				specificQuery.getArguments(), specificQuery.getQueryString(),
-				maxRows, specificQuery.getContinuationValue());
+				maxRows, specificQuery.getContinuationValue(),
+				specificQuery.getZoneHint());
 
 		Tag response = null;
 
@@ -510,7 +554,8 @@ public class SpecificQueryAOImpl extends IRODSGenericAO implements
 
 		SpecificQueryInp specificQueryInp = SpecificQueryInp.instance(
 				specificQuery.getArguments(), specificQuery.getQueryString(),
-				maxRows, specificQuery.getContinuationValue());
+				maxRows, specificQuery.getContinuationValue(),
+				specificQuery.getZoneHint());
 
 		Tag response = null;
 

@@ -36,10 +36,11 @@ public class SpecificQueryInp extends AbstractIRODSPackingInstruction {
 	public static final String ROW_OFFSET = "rowOffset";
 	public static final String OPTIONS = "options";
 
-	public final List<String> args;
-	public final String queryOrAlias;
-	public final int maxRows;
-	public final int continueIndex;
+	private final List<String> args;
+	private final String queryOrAlias;
+	private final int maxRows;
+	private final int continueIndex;
+	private final String zoneHint;
 
 	/**
 	 * Create an instance of the packing instruction to execute a specific query
@@ -57,22 +58,25 @@ public class SpecificQueryInp extends AbstractIRODSPackingInstruction {
 	 * @param maxRows
 	 *            <code>int</code> with the maximum number of rows to be
 	 *            returned.
-	 * @param continueIndexj
+	 * @param continueIndex
 	 *            <code>int</code> with the index passed back from a preceeding
 	 *            query
+	 * @param zoneHint
+	 *            <code>String</code> (optional, blank if not needed) zone hint
+	 *            for cross-zone invocation
 	 */
 	public static final SpecificQueryInp instance(final List<String> args,
 			final String queryOrAlias, final int maxRows,
-			final int continueIndex) {
+			final int continueIndex, final String zoneHint) {
 		SpecificQueryInp specificQueryInp = new SpecificQueryInp(args,
-				queryOrAlias, maxRows, continueIndex);
+				queryOrAlias, maxRows, continueIndex, zoneHint);
 		specificQueryInp.setApiNumber(SPECIFIC_QUERY_API_NBR);
 		return specificQueryInp;
 	}
 
 	public static final SpecificQueryInp instanceForClose() {
 		SpecificQueryInp specificQueryInp = new SpecificQueryInp(null, "close",
-				0, 0);
+				0, 0, "");
 		specificQueryInp.setApiNumber(SPECIFIC_QUERY_API_NBR);
 		return specificQueryInp;
 	}
@@ -95,10 +99,13 @@ public class SpecificQueryInp extends AbstractIRODSPackingInstruction {
 	 * @param continueIndexj
 	 *            <code>int</code> with the index passed back from a preceeding
 	 *            query
+	 * @param zoneHint
+	 *            <code>String</code> (optional, blank if not needed) zone hint
+	 *            for cross-zone invocation
 	 */
 	private SpecificQueryInp(final List<String> args,
 			final String queryOrAlias, final int maxRows,
-			final int continueIndex) {
+			final int continueIndex, final String zoneHint) {
 
 		if (args == null) {
 			this.args = new ArrayList<String>();
@@ -112,9 +119,14 @@ public class SpecificQueryInp extends AbstractIRODSPackingInstruction {
 			throw new IllegalArgumentException("null or empty queryOrAlias");
 		}
 
+		if (zoneHint == null) {
+			throw new IllegalArgumentException("null zoneHint");
+		}
+
 		this.queryOrAlias = queryOrAlias;
 		this.maxRows = maxRows;
 		this.continueIndex = continueIndex;
+		this.zoneHint = zoneHint;
 	}
 
 	/*
@@ -181,6 +193,14 @@ public class SpecificQueryInp extends AbstractIRODSPackingInstruction {
 		}
 
 		List<KeyValuePair> kvps = new ArrayList<KeyValuePair>();
+
+		/*
+		 * If there is a zone hint, add it to the query
+		 */
+		if (!zoneHint.isEmpty()) {
+			kvps.add(KeyValuePair.instance("zone", zoneHint));
+		}
+
 		Tag message = new Tag(PI_TAG);
 
 		message.addTag(new Tag(SQL, queryOrAlias));

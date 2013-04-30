@@ -130,4 +130,5 @@ public class SpecificQueryDefinition extends IRODSDomainObject {
 	public void setSql(final String sql) {
 		this.sql = sql;
 	}
+
 }

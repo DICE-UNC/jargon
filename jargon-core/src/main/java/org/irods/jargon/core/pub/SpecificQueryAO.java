@@ -137,7 +137,9 @@ public interface SpecificQueryAO extends IRODSAccessObject {
 
 	/**
 	 * Given a portion of a query alias, find matching specific queries as
-	 * stored in iRODS.
+	 * stored in iRODS. Note that wildcards in the 'like' statement are not
+	 * imposed by this method and must be provided by the caller in the provided
+	 * <code>specificQueryAlias</code>.
 	 * 
 	 * @param specificQueryAlias
 	 *            <code>String</code> with a part of a query alias to search
@@ -150,6 +152,30 @@ public interface SpecificQueryAO extends IRODSAccessObject {
 	List<SpecificQueryDefinition> listSpecificQueryByAliasLike(
 			String specificQueryAlias) throws DataNotFoundException,
 			JargonException;
+
+	/**
+	 * Given a portion of a query alias, find matching specific queries as
+	 * stored in iRODS. This variant allows provision of a zohe hint that
+	 * indicates which federated zone to query. Note that wildcards in the
+	 * 'like' statement are not imposed by this method and must be provided by
+	 * the caller in the provided <code>specificQueryAlias</code>.
+	 * 
+	 * @param specificQueryAlias
+	 *            <code>String</code> with a part of a query alias to search
+	 *            for.
+	 * @param zoneHint
+	 *            <code>String</code> with a zone hint used to decide which
+	 *            federated zone to query. Note that this should be set to blank
+	 *            if not used
+	 * 
+	 * @return <code>List</code> of {@link SpecificQueryDefinition}
+	 * @throws DataNotFoundException
+	 *             if no queries found with a matching alias
+	 * @throws JargonException
+	 */
+	List<SpecificQueryDefinition> listSpecificQueryByAliasLike(
+			String specificQueryAlias, String zoneHint)
+			throws DataNotFoundException, JargonException;
 
 	/**
 	 * Given a specific query alias name, return the associated specific query
@@ -165,5 +191,24 @@ public interface SpecificQueryAO extends IRODSAccessObject {
 	 */
 	SpecificQueryDefinition findSpecificQueryByAlias(String specificQueryAlias)
 			throws DataNotFoundException, JargonException;
+
+	/**
+	 * Given a specific query alias name, return the associated specific query
+	 * definition information.
+	 * 
+	 * @param specificQueryAlias
+	 *            <code>String</code> with the given alias for the query
+	 * @param zoneHint
+	 *            <code>String</code> with a zone hint used to decide which
+	 *            federated zone to query. Note that this should be set to blank
+	 *            if not used
+	 * @return {@list SpecificQueryDefinition} with details about the given
+	 *         query
+	 * @throws DataNotFoundException
+	 *             if the query with the given alias cannot be found
+	 * @throws JargonException
+	 */
+	SpecificQueryDefinition findSpecificQueryByAlias(String specificQueryAlias,
+			String zoneHint) throws DataNotFoundException, JargonException;
 
 }

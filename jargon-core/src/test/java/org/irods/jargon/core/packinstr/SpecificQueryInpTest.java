@@ -12,7 +12,7 @@ public class SpecificQueryInpTest {
 	@Test
 	public void testGetTagValue() throws Exception {
 		SpecificQueryInp specificQueryInp = SpecificQueryInp.instance(null,
-				"query", 10, 0);
+				"query", 10, 0, "hint");
 		String tagVal = specificQueryInp.getParsedTags();
 		StringBuilder sb = new StringBuilder();
 		sb.append("<specificQueryInp_PI><sql>query</sql>\n");
@@ -20,10 +20,10 @@ public class SpecificQueryInpTest {
 		sb.append("<continueInx>0</continueInx>\n");
 		sb.append("<rowOffset>0</rowOffset>\n");
 		sb.append("<options>0</options>\n");
-
-		sb.append("<KeyValPair_PI><ssLen>0</ssLen>\n");
+		sb.append("<KeyValPair_PI><ssLen>1</ssLen>\n");
+		sb.append("<keyWord>zone</keyWord>\n");
+		sb.append("<svalue>hint</svalue>\n");
 		sb.append("</KeyValPair_PI>\n");
-
 		sb.append("</specificQueryInp_PI>\n");
 
 		Assert.assertEquals("did not get expected tag value", sb.toString(),
@@ -64,7 +64,7 @@ public class SpecificQueryInpTest {
 		args.add("10");
 
 		SpecificQueryInp specificQueryInp = SpecificQueryInp.instance(args,
-				"query", 10, 0);
+				"query", 10, 0, "");
 		String tagVal = specificQueryInp.getParsedTags();
 		StringBuilder sb = new StringBuilder();
 		sb.append("<specificQueryInp_PI><sql>query</sql>\n");
@@ -92,13 +92,13 @@ public class SpecificQueryInpTest {
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testGetTagValueNullQuery() throws Exception {
-		SpecificQueryInp.instance(null, null, 10, 0);
+		SpecificQueryInp.instance(null, null, 10, 0, "");
 
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testGetTagValueBlankQuery() throws Exception {
-		SpecificQueryInp.instance(null, "", 10, 0);
+		SpecificQueryInp.instance(null, "", 10, 0, "");
 
 	}
 
@@ -118,7 +118,7 @@ public class SpecificQueryInpTest {
 		args.add("10");
 		args.add("11");
 
-		SpecificQueryInp.instance(args, "query", 10, 0);
+		SpecificQueryInp.instance(args, "query", 10, 0, "");
 
 	}
 

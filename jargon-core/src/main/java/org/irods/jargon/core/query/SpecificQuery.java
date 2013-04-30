@@ -12,6 +12,17 @@ import java.util.List;
  */
 public class SpecificQuery extends AbstractAliasedQuery {
 
+	private final String zoneHint;
+
+	/**
+	 * Get the (optional) hint that points to the correct zone to query
+	 * 
+	 * @return
+	 */
+	public String getZoneHint() {
+		return zoneHint;
+	}
+
 	/**
 	 * Create an instance of a specific (SQL) query with no arguments
 	 * 
@@ -20,13 +31,17 @@ public class SpecificQuery extends AbstractAliasedQuery {
 	 *            an admin, or an alias as registered by an admin
 	 * @param continuationValue
 	 *            <code>int</code> with the continuation value from a previous
-	 *            page of results, or the value 0 if this is an initial query
+	 *            page of results, or the value 0 if this is an initial query * @param
+	 *            zoneHint <code>String</code> (optional, blank if not needed)
+	 *            zone hint for cross-zone invocation
 	 * @return <code>SpecificQuery</code> instance that can be run against the
 	 *         iRODS catalog
 	 */
 	public static SpecificQuery instanceWithNoArguments(
-			final String queryString, final int continuationValue) {
-		return new SpecificQuery(queryString, null, continuationValue);
+			final String queryString, final int continuationValue,
+			final String zoneHint) {
+		return new SpecificQuery(queryString, null, continuationValue, zoneHint);
+
 	}
 
 	/**
@@ -42,13 +57,17 @@ public class SpecificQuery extends AbstractAliasedQuery {
 	 *            used
 	 * @param continuationValue
 	 *            <code>int</code> with the continuation value from a previous
-	 *            page of results, or the value 0 if this is an initial query
+	 *            page of results, or the value 0 if this is an initial query * @param
+	 *            zoneHint <code>String</code> (optional, blank if not needed)
+	 *            zone hint for cross-zone invocation
 	 * @return <code>SpecificQuery</code> instance that can be run against the
 	 *         iRODS catalog
 	 */
 	public static SpecificQuery instanceArguments(final String queryString,
-			final List<String> arguments, final int continuationValue) {
-		return new SpecificQuery(queryString, arguments, continuationValue);
+			final List<String> arguments, final int continuationValue,
+			final String zoneHint) {
+		return new SpecificQuery(queryString, arguments, continuationValue,
+				zoneHint);
 	}
 
 	/**
@@ -57,10 +76,18 @@ public class SpecificQuery extends AbstractAliasedQuery {
 	 * @param queryString
 	 * @param arguments
 	 * @param continuationValue
+	 * @param zoneHint
+	 *            <code>String</code> (optional, blank if not needed) zone hint
+	 *            for cross-zone invocation
 	 */
 	private SpecificQuery(final String queryString,
-			final List<String> arguments, final int continuationValue) {
+			final List<String> arguments, final int continuationValue,
+			final String zoneHint) {
 		super(queryString, arguments, continuationValue);
+		if (zoneHint == null) {
+			throw new IllegalArgumentException("null zoneHint");
+		}
+		this.zoneHint = zoneHint;
 	}
 
 }
