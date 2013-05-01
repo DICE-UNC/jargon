@@ -7,6 +7,7 @@ import java.util.Properties;
 import junit.framework.Assert;
 
 import org.irods.jargon.core.connection.IRODSAccount;
+import org.irods.jargon.core.connection.SettableJargonProperties;
 import org.irods.jargon.core.exception.FileNotFoundException;
 import org.irods.jargon.core.pub.domain.Collection;
 import org.irods.jargon.core.pub.domain.DataObject;
@@ -70,6 +71,114 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 				.getCollectionAndDataObjectListAndSearchAO(irodsAccount);
 		// no errors means test passes
 		Assert.assertTrue(true);
+
+	}
+
+	@Test
+	public void testListCollectionsUnderPathWithPermissionsSmallWithSpecificQuery()
+			throws Exception {
+
+		String subdirPrefix = "testListCollectionsUnderPathWithPermissionsSmallWithSpecificQuery";
+		int count = 100;
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		SettableJargonProperties props = new SettableJargonProperties(
+				irodsFileSystem.getJargonProperties());
+		props.setUsingSpecificQueryForCollectionListingWithPermissions(true);
+		irodsFileSystem.getIrodsSession().setJargonProperties(props);
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + "/"
+								+ subdirPrefix);
+		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetIrodsCollection);
+		irodsFile.mkdir();
+		irodsFile.close();
+
+		String myTarget = "";
+
+		for (int i = 0; i < count; i++) {
+			myTarget = targetIrodsCollection + "/c" + (10000 + i)
+					+ subdirPrefix;
+			irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+					.instanceIRODSFile(myTarget);
+			irodsFile.mkdir();
+			irodsFile.close();
+		}
+
+		CollectionAndDataObjectListAndSearchAO actual = irodsFileSystem
+				.getIRODSAccessObjectFactory()
+				.getCollectionAndDataObjectListAndSearchAO(irodsAccount);
+		List<CollectionAndDataObjectListingEntry> entries = actual
+				.listCollectionsUnderPathWithPermissions(targetIrodsCollection,
+						0);
+		Assert.assertNotNull("null result from query", entries);
+		Assert.assertFalse("should not have been and empty result list",
+				entries.isEmpty());
+		CollectionAndDataObjectListingEntry entry = entries
+				.get(entries.size() - 1);
+		Assert.assertEquals(entry.getCount(), entries.size());
+
+		Assert.assertTrue("should be last result", entry.isLastResult());
+		Assert.assertEquals(
+				"last record count should equal number of expected total records",
+				count, entry.getCount());
+	}
+
+	@Test
+	public void testListCollectionsUnderPathWithPermissionsSmallWithoutSpecificQuery()
+			throws Exception {
+
+		String subdirPrefix = "testListCollectionsUnderPathWithPermissionsSmallWithoutSpecificQuery";
+		int count = 100;
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		SettableJargonProperties props = new SettableJargonProperties(
+				irodsFileSystem.getJargonProperties());
+		props.setUsingSpecificQueryForCollectionListingWithPermissions(false);
+		irodsFileSystem.getIrodsSession().setJargonProperties(props);
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + "/"
+								+ subdirPrefix);
+		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetIrodsCollection);
+		irodsFile.mkdir();
+		irodsFile.close();
+
+		String myTarget = "";
+
+		for (int i = 0; i < count; i++) {
+			myTarget = targetIrodsCollection + "/c" + (10000 + i)
+					+ subdirPrefix;
+			irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+					.instanceIRODSFile(myTarget);
+			irodsFile.mkdir();
+			irodsFile.close();
+		}
+
+		CollectionAndDataObjectListAndSearchAO actual = irodsFileSystem
+				.getIRODSAccessObjectFactory()
+				.getCollectionAndDataObjectListAndSearchAO(irodsAccount);
+		List<CollectionAndDataObjectListingEntry> entries = actual
+				.listCollectionsUnderPathWithPermissions(targetIrodsCollection,
+						0);
+		Assert.assertNotNull("null result from query", entries);
+		Assert.assertFalse("should not have been and empty result list",
+				entries.isEmpty());
+		CollectionAndDataObjectListingEntry entry = entries
+				.get(entries.size() - 1);
+		Assert.assertEquals(entry.getCount(), entries.size());
+		Assert.assertTrue("should be last result", entry.isLastResult());
+		Assert.assertEquals(
+				"last record count should equal number of expected total records",
+				count, entry.getCount());
 
 	}
 

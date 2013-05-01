@@ -51,6 +51,11 @@ public interface CollectionAndDataObjectListAndSearchAO extends
 		IRODSAccessObject {
 
 	/**
+	 * Specific query for coll listing with ACLs
+	 */
+	public static final String SHOW_COLL_ACLS = "ilsLACollections";
+
+	/**
 	 * This is a method that can support listing and paging of collections,
 	 * suitable for creating interfaces that need to handle paging of large
 	 * collections. Note that this method returns a simple value object that

@@ -400,4 +400,15 @@ public class DefaultPropertiesJargonConfig implements JargonProperties {
 		return verifyPropExistsAndGetAsBoolean("use.discovered.server.properties.cache");
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.connection.JargonProperties#
+	 * isUsingSpecificQueryForCollectionListingsWithPermissions()
+	 */
+	@Override
+	public boolean isUsingSpecificQueryForCollectionListingsWithPermissions() {
+		return verifyPropExistsAndGetAsBoolean("use.specific.query.for.collection.listings");
+	}
+
 }

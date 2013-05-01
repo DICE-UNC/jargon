@@ -46,6 +46,7 @@ public class SettableJargonProperties implements JargonProperties {
 	private boolean defaultToPublicIfNothingUnderRootWhenListing = true;
 	private long reconnectTimeInMillis = 600000L;
 	private boolean usingDiscoveredServerPropertiesCache = true;
+	private boolean usingSpecificQueryForCollectionListingsWithPermissions = true;
 
 	/**
 	 * Construct a default properties set based on the provided initial set of
@@ -654,7 +655,7 @@ public class SettableJargonProperties implements JargonProperties {
 	 * isDefaultToPublicIfNothingUnderRootWhenListing()
 	 */
 	@Override
-	public boolean isDefaultToPublicIfNothingUnderRootWhenListing() {
+	public synchronized boolean isDefaultToPublicIfNothingUnderRootWhenListing() {
 		return this.defaultToPublicIfNothingUnderRootWhenListing;
 	}
 
@@ -664,7 +665,7 @@ public class SettableJargonProperties implements JargonProperties {
 	 * 
 	 * @param defaultToPublicIfNothingUnderRootWhenListing
 	 */
-	public void setDefaultToPublicIfNothingUnderRootWhenListing(
+	public synchronized void setDefaultToPublicIfNothingUnderRootWhenListing(
 			final boolean defaultToPublicIfNothingUnderRootWhenListing) {
 		this.defaultToPublicIfNothingUnderRootWhenListing = defaultToPublicIfNothingUnderRootWhenListing;
 	}
@@ -695,8 +696,18 @@ public class SettableJargonProperties implements JargonProperties {
 	 * isUsingDiscoveredServerPropertiesCache()
 	 */
 	@Override
-	public boolean isUsingDiscoveredServerPropertiesCache() {
+	public synchronized boolean isUsingDiscoveredServerPropertiesCache() {
 		return usingDiscoveredServerPropertiesCache;
+	}
+
+	@Override
+	public synchronized boolean isUsingSpecificQueryForCollectionListingsWithPermissions() {
+		return usingSpecificQueryForCollectionListingsWithPermissions;
+	}
+
+	public synchronized void setUsingSpecificQueryForCollectionListingWithPermissions(
+			final boolean useSpecificQuery) {
+		this.usingSpecificQueryForCollectionListingsWithPermissions = useSpecificQuery;
 	}
 
 }

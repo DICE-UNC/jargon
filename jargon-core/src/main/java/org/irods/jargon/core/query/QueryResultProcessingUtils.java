@@ -72,6 +72,8 @@ public class QueryResultProcessingUtils {
 			recordCount = partialStartIndex + 1;
 		}
 
+		// FIXME: last record is true when continuation is zero?
+
 		boolean lastRecord = (continuation == 0);
 		log.debug("are there more records? {}", lastRecord);
 
