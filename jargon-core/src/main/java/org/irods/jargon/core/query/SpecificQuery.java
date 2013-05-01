@@ -1,5 +1,6 @@
 package org.irods.jargon.core.query;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -31,9 +32,10 @@ public class SpecificQuery extends AbstractAliasedQuery {
 	 *            an admin, or an alias as registered by an admin
 	 * @param continuationValue
 	 *            <code>int</code> with the continuation value from a previous
-	 *            page of results, or the value 0 if this is an initial query * @param
-	 *            zoneHint <code>String</code> (optional, blank if not needed)
-	 *            zone hint for cross-zone invocation
+	 *            page of results, or the value 0 if this is an initial query
+	 * @param zoneHint
+	 *            <code>String</code> (optional, blank if not needed) zone hint
+	 *            for cross-zone invocation
 	 * @return <code>SpecificQuery</code> instance that can be run against the
 	 *         iRODS catalog
 	 */
@@ -42,6 +44,32 @@ public class SpecificQuery extends AbstractAliasedQuery {
 			final String zoneHint) {
 		return new SpecificQuery(queryString, null, continuationValue, zoneHint);
 
+	}
+
+	/**
+	 * Create an instance of a specific (SQL) query including one argument
+	 * 
+	 * @param queryString
+	 *            <code>String</code> with either the exact SQL as registered by
+	 *            an admin, or an alias as registered by an admin
+	 * @param argument
+	 *            <code>String<String></code> with a single argument
+	 * @param continuationValue
+	 *            <code>int</code> with the continuation value from a previous
+	 *            page of results, or the value 0 if this is an initial query
+	 * @param zoneHint
+	 *            <code>String</code> (optional, blank if not needed) zone hint
+	 *            for cross-zone invocation
+	 * @return <code>SpecificQuery</code> instance that can be run against the
+	 *         iRODS catalog
+	 */
+	public static SpecificQuery instanceWithOneArgument(
+			final String queryString, final String argument,
+			final int continuationValue, final String zoneHint) {
+
+		List<String> args = new ArrayList<String>(1);
+		args.add(argument);
+		return new SpecificQuery(queryString, args, continuationValue, zoneHint);
 	}
 
 	/**
@@ -57,9 +85,10 @@ public class SpecificQuery extends AbstractAliasedQuery {
 	 *            used
 	 * @param continuationValue
 	 *            <code>int</code> with the continuation value from a previous
-	 *            page of results, or the value 0 if this is an initial query * @param
-	 *            zoneHint <code>String</code> (optional, blank if not needed)
-	 *            zone hint for cross-zone invocation
+	 *            page of results, or the value 0 if this is an initial query
+	 * @param zoneHint
+	 *            <code>String</code> (optional, blank if not needed) zone hint
+	 *            for cross-zone invocation
 	 * @return <code>SpecificQuery</code> instance that can be run against the
 	 *         iRODS catalog
 	 */

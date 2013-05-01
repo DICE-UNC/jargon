@@ -6,7 +6,6 @@ import java.util.List;
 import org.irods.jargon.core.connection.DiscoveredServerPropertiesCache;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSSession;
-import org.irods.jargon.core.connection.JargonProperties;
 import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.DuplicateDataException;
 import org.irods.jargon.core.exception.InvalidArgumentException;
@@ -74,6 +73,8 @@ public class SpecificQueryAOImpl extends IRODSGenericAO implements
 			throws DataNotFoundException, JargonException {
 
 		log.info("findSpecificQueryByAliasLike()");
+
+		checkSupportForSpecificQuery();
 
 		if (specificQueryAlias == null || specificQueryAlias.isEmpty()) {
 			throw new IllegalArgumentException("null specificQueryAlias");
@@ -153,6 +154,8 @@ public class SpecificQueryAOImpl extends IRODSGenericAO implements
 			throws DataNotFoundException, JargonException {
 
 		log.info("findSpecificQueryByAlias()");
+
+		checkSupportForSpecificQuery();
 
 		if (specificQueryAlias == null || specificQueryAlias.isEmpty()) {
 			throw new IllegalArgumentException("null specificQueryAlias");
@@ -283,6 +286,9 @@ public class SpecificQueryAOImpl extends IRODSGenericAO implements
 	@Override
 	public void addSpecificQuery(final SpecificQueryDefinition specificQuery)
 			throws JargonException, DuplicateDataException {
+
+		checkSupportForSpecificQuery();
+
 		GeneralAdminInpForSQ queryPI;
 
 		if (specificQuery == null) {
@@ -322,6 +328,8 @@ public class SpecificQueryAOImpl extends IRODSGenericAO implements
 	public void removeSpecificQuery(final SpecificQueryDefinition specificQuery)
 			throws JargonException {
 
+		checkSupportForSpecificQuery();
+
 		GeneralAdminInpForSQ queryPI;
 
 		if (specificQuery == null) {
@@ -348,6 +356,9 @@ public class SpecificQueryAOImpl extends IRODSGenericAO implements
 	@Override
 	public void removeSpecificQueryByAlias(final String alias)
 			throws JargonException, DuplicateDataException {
+
+		checkSupportForSpecificQuery();
+
 		GeneralAdminInpForSQ queryPI;
 
 		if (alias == null) {
@@ -373,6 +384,9 @@ public class SpecificQueryAOImpl extends IRODSGenericAO implements
 	@Override
 	public void removeAllSpecificQueryBySQL(final String sqlQuery)
 			throws JargonException, DuplicateDataException {
+
+		checkSupportForSpecificQuery();
+
 		GeneralAdminInpForSQ queryPI;
 
 		if (sqlQuery == null) {
@@ -405,9 +419,12 @@ public class SpecificQueryAOImpl extends IRODSGenericAO implements
 			final SpecificQuery specificQuery, final int maxRows)
 			throws DataNotFoundException, JargonException, JargonQueryException {
 		log.info("executeSpecificQueryUsingAlias()");
+
 		if (specificQuery == null) {
 			throw new IllegalArgumentException("null specific query");
 		}
+
+		checkSupportForSpecificQuery();
 
 		/*
 		 * look up the alias and get the column names and number of arguments
@@ -445,6 +462,8 @@ public class SpecificQueryAOImpl extends IRODSGenericAO implements
 		if (specificQuery == null) {
 			throw new IllegalArgumentException("null specific query");
 		}
+
+		checkSupportForSpecificQuery();
 
 		/*
 		 * look up the alias and get the column names and number of arguments
@@ -536,6 +555,8 @@ public class SpecificQueryAOImpl extends IRODSGenericAO implements
 			throw new IllegalArgumentException("null specific query");
 		}
 
+		checkSupportForSpecificQuery();
+
 		/*
 		 * I assume the sql is there, and process it for number of parameters
 		 * and column names
@@ -578,23 +599,12 @@ public class SpecificQueryAOImpl extends IRODSGenericAO implements
 				columnNames, hasMoreRecords, continuation);
 	}
 
-	/**
-	 * Check and see if, as a result of previous requests, I know that the
-	 * jargon specific queries required to support specific query via this API
-	 * are available. This method will return <code>true</code> only if I know
-	 * that the support is not there. If I have not checked previously, or I am
-	 * not using the dynamic properties cache, which is configured via
-	 * {@link JargonProperties}, then a <code>false</code> will be returned.
-	 * 
-	 * @return <code>boolean</code> that will only be <code>true</code> if I
-	 *         know that the jargon specific query support is not configured.
-	 *         This can be used to determine whether it is worth bothering to
-	 *         issue such requests.
-	 *         <p/>
-	 *         Currently, this still needs to be wired into the specific query
-	 *         support, so consider this experimental
-	 */
-	public boolean isSpecificQueryJargonSupportKnownMissing() {
+	@Override
+	public boolean isSpecificQueryToBeBypassed() throws JargonException {
+
+		if (!this.getIRODSServerProperties().isSupportsSpecificQuery()) {
+			return true;
+		}
 
 		if (this.getIRODSSession().isUsingDynamicServerPropertiesCache()) {
 			return false;
@@ -620,4 +630,12 @@ public class SpecificQueryAOImpl extends IRODSGenericAO implements
 
 	}
 
+	/**
+	 * @throws JargonException
+	 */
+	private void checkSupportForSpecificQuery() throws JargonException {
+		if (isSpecificQueryToBeBypassed()) {
+			throw new JargonException("no support for specific query");
+		}
+	}
 }

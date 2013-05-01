@@ -10,7 +10,6 @@ import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.protovalues.FilePermissionEnum;
 import org.irods.jargon.core.protovalues.UserTypeEnum;
-import org.irods.jargon.core.pub.UserAO;
 import org.irods.jargon.core.pub.domain.Collection;
 import org.irods.jargon.core.pub.domain.UserFilePermission;
 import org.irods.jargon.core.query.AVUQueryElement;
@@ -416,13 +415,12 @@ public class CollectionAOHelper extends AOHelper {
 	/**
 	 * @param userFilePermissions
 	 * @param row
-	 * @param userAO
 	 * @throws JargonException
 	 */
 	public static void buildUserFilePermissionForCollection(
 			final List<UserFilePermission> userFilePermissions,
-			final IRODSQueryResultRow row, final UserAO userAO,
-			final String irodsAbsolutePath) throws JargonException {
+			final IRODSQueryResultRow row, final String irodsAbsolutePath)
+			throws JargonException {
 
 		/*
 		 * There appears to be a gen query issue with getting user type in the

@@ -2,6 +2,7 @@ package org.irods.jargon.core.pub;
 
 import java.util.List;
 
+import org.irods.jargon.core.connection.JargonProperties;
 import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.DuplicateDataException;
 import org.irods.jargon.core.exception.JargonException;
@@ -210,5 +211,24 @@ public interface SpecificQueryAO extends IRODSAccessObject {
 	 */
 	SpecificQueryDefinition findSpecificQueryByAlias(String specificQueryAlias,
 			String zoneHint) throws DataNotFoundException, JargonException;
+
+	/**
+	 * Check and see if, as a result of previous requests, or based on the
+	 * server version, I know that the jargon specific queries required to
+	 * support specific query via this API are not available. This method will
+	 * return <code>true</code> only if I know that the support is not there. If
+	 * I have not checked previously, or I am not using the dynamic properties
+	 * cache, which is configured via {@link JargonProperties}, then a
+	 * <code>false</code> will be returned.
+	 * 
+	 * @return <code>boolean</code> that will only be <code>true</code> if I
+	 *         know that the jargon specific query support is not configured.
+	 *         This can be used to determine whether it is worth bothering to
+	 *         issue such requests.
+	 *         <p/>
+	 *         Currently, this still needs to be wired into the specific query
+	 *         support, so consider this experimental
+	 */
+	boolean isSpecificQueryToBeBypassed() throws JargonException;
 
 }

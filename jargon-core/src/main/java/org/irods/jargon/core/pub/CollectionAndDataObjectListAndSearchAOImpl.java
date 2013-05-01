@@ -16,6 +16,7 @@ import org.irods.jargon.core.pub.domain.ObjStat.SpecColType;
 import org.irods.jargon.core.pub.domain.UserFilePermission;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.pub.io.IRODSFileSystemAOHelper;
+import org.irods.jargon.core.query.AbstractIRODSQueryResultSet;
 import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry;
 import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry.ObjectType;
 import org.irods.jargon.core.query.GenQueryBuilderException;
@@ -28,6 +29,8 @@ import org.irods.jargon.core.query.JargonQueryException;
 import org.irods.jargon.core.query.PagingAwareCollectionListing;
 import org.irods.jargon.core.query.QueryConditionOperators;
 import org.irods.jargon.core.query.RodsGenQueryEnum;
+import org.irods.jargon.core.query.SpecificQuery;
+import org.irods.jargon.core.query.SpecificQueryResultSet;
 import org.irods.jargon.core.utils.CollectionAndPath;
 import org.irods.jargon.core.utils.FederationEnabled;
 import org.irods.jargon.core.utils.IRODSDataConversionUtil;
@@ -57,6 +60,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		implements CollectionAndDataObjectListAndSearchAO {
 
 	private static final String QUERY_EXCEPTION_FOR_QUERY = "query exception for  query:";
+	private final SpecificQueryAO specificQueryAO;
 	public static final Logger log = LoggerFactory
 			.getLogger(CollectionAndDataObjectListAndSearchAOImpl.class);
 
@@ -71,6 +75,8 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 			final IRODSSession irodsSession, final IRODSAccount irodsAccount)
 			throws JargonException {
 		super(irodsSession, irodsAccount);
+		this.specificQueryAO = this.getIRODSAccessObjectFactory()
+				.getSpecificQueryAO(getIRODSAccount());
 	}
 
 	/*
@@ -784,6 +790,8 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		String effectiveAbsolutePath = MiscIRODSUtils
 				.determineAbsolutePathBasedOnCollTypeInObjectStat(objStat);
 
+		List<CollectionAndDataObjectListingEntry> subdirs;
+
 		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, false,
 				true, null);
 		try {
@@ -797,8 +805,8 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		IRODSQueryResultSet resultSet = queryForPathAndReturnResultSet(
 				objStat.getAbsolutePath(), builder, partialStartIndex, objStat);
 
-		List<CollectionAndDataObjectListingEntry> subdirs = new ArrayList<CollectionAndDataObjectListingEntry>(
-				resultSet.getResults().size());
+		subdirs = new ArrayList<CollectionAndDataObjectListingEntry>(resultSet
+				.getResults().size());
 		CollectionAndDataObjectListingEntry collectionAndDataObjectListingEntry = null;
 
 		for (IRODSQueryResultRow row : resultSet.getResults()) {
@@ -883,8 +891,70 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		 */
 		MiscIRODSUtils.evaluateSpecCollSupport(objStat);
 
+		/*
+		 * NB need to evaluate special colls here before looking at spec query
+		 */
+
+		log.info("checking to see if I can list via specific query");
+
+		if (this.getJargonProperties()
+				.isUsingSpecificQueryForCollectionListingsWithPermissions()) {
+
+			log.info("we are using spec query in jargon.properties...");
+
+			if (this.specificQueryAO.isSpecificQueryToBeBypassed()) {
+				log.info("...we are bypassing spec query...");
+			} else {
+				log.info("attemting to list via specQuery...");
+				try {
+					return listCollectionsUnderPathWithPermissionsViaSpecQuery(
+							objStat, partialStartIndex);
+				} catch (JargonException je) {
+					log.error("error executing spec query will do the genQuery fallback");
+					// TODO: signal to spec query ao to bypass? do this in
+					// specQueryAO?
+
+					// fall thru to genquery
+				} catch (JargonQueryException e) {
+					log.error("query exception error executing spec query will do the genQuery fallback");
+				}
+			}
+
+		}
+
 		return listCollectionsUnderPathWithPermissions(absolutePathToParent,
 				partialStartIndex, objStat);
+
+	}
+
+	private List<CollectionAndDataObjectListingEntry> listCollectionsUnderPathWithPermissionsViaSpecQuery(
+			ObjStat objStat, final int offset) throws JargonException,
+			JargonQueryException {
+
+		log.info("listCollectionsUnderPathWithPermissionsViaSpecQuery()");
+
+		// TODO: check using right objPath
+		List<String> arguments = new ArrayList<String>(3);
+		arguments.add(objStat.getAbsolutePath());
+		arguments.add(String.valueOf(this.getJargonProperties()
+				.getMaxFilesAndDirsQueryMax()));
+		arguments.add(String.valueOf(offset));
+
+		SpecificQuery specificQuery = SpecificQuery.instanceArguments(
+				SHOW_COLL_ACLS, arguments, 0, objStat.getOwnerZone());
+
+		SpecificQueryResultSet specificQueryResultSet = specificQueryAO
+				.executeSpecificQueryUsingAlias(specificQuery,
+						getJargonProperties().getMaxFilesAndDirsQueryMax());
+		log.info("got result set:{}", specificQueryResultSet);
+
+		// [c.parent_coll_name, c.coll_name, c.create_ts, c.modify_ts,
+		// c.coll_id,
+		// c.coll_owner_name, c.coll_owner_zone, c.coll_type, u.user_name,
+		// u.zone_name, a.access_type_id, u.user_id]
+
+		return buildListingWithAccessInfoFromResultSet(specificQueryResultSet,
+				objStat);
 
 	}
 
@@ -922,8 +992,6 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		log.info("determined effectiveAbsolutePathToBe:{}",
 				effectiveAbsolutePath);
 
-		List<CollectionAndDataObjectListingEntry> subdirs = new ArrayList<CollectionAndDataObjectListingEntry>();
-
 		log.info("listCollectionsUnderPathWithPermissionsForUser for: {}",
 				effectiveAbsolutePath);
 
@@ -939,12 +1007,24 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		IRODSQueryResultSet resultSet = queryForPathAndReturnResultSet(
 				effectiveAbsolutePath, builder, partialStartIndex, objStat);
 
+		return buildListingWithAccessInfoFromResultSet(resultSet, objStat);
+
+	}
+
+	private List<CollectionAndDataObjectListingEntry> buildListingWithAccessInfoFromResultSet(
+			final AbstractIRODSQueryResultSet resultSet, final ObjStat objStat)
+			throws JargonException {
+
+		String effectiveAbsolutePath = objStat
+				.determineAbsolutePathBasedOnCollTypeInObjectStat();
+
+		List<CollectionAndDataObjectListingEntry> subdirs = new ArrayList<CollectionAndDataObjectListingEntry>(
+				resultSet.getResults().size());
+
 		CollectionAndDataObjectListingEntry collectionAndDataObjectListingEntry = null;
 		List<UserFilePermission> userFilePermissions = new ArrayList<UserFilePermission>();
 		String lastPath = "";
 		boolean isAtEndOfQueryResults = false;
-		UserAO userAO = getIRODSAccessObjectFactory().getUserAO(
-				getIRODSAccount());
 
 		for (IRODSQueryResultRow row : resultSet.getResults()) {
 
@@ -955,10 +1035,8 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 
 			if (thisPath.equals(lastPath)) {
 				// parse out the file permission and continue,
-				CollectionAOHelper
-						.buildUserFilePermissionForCollection(
-								userFilePermissions, row, userAO,
-								effectiveAbsolutePath);
+				CollectionAOHelper.buildUserFilePermissionForCollection(
+						userFilePermissions, row, effectiveAbsolutePath);
 				continue;
 			} else {
 				// is a break on path, put out the info for the last path if
@@ -981,10 +1059,8 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 								row, resultSet.getTotalRecords());
 				lastPath = collectionAndDataObjectListingEntry.getPathOrName();
 				userFilePermissions = new ArrayList<UserFilePermission>();
-				CollectionAOHelper
-						.buildUserFilePermissionForCollection(
-								userFilePermissions, row, userAO,
-								effectiveAbsolutePath);
+				CollectionAOHelper.buildUserFilePermissionForCollection(
+						userFilePermissions, row, effectiveAbsolutePath);
 			}
 		}
 
