@@ -1,5 +1,9 @@
 package org.irods.jargon.conveyor.basic;
 
+import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.irods.jargon.conveyor.core.ConveyorExecutionException;
 import org.irods.jargon.conveyor.core.TransferAccountingManagementService;
 import org.irods.jargon.transfer.dao.domain.Transfer;
 import org.irods.jargon.transfer.dao.domain.TransferType;
@@ -42,12 +46,15 @@ public class TransferAccountingManagementServiceImplTest {
 	}
 
 	@Test
-	public void testPrepareTransferForExecution() {
-		Transfer transfer = new Transfer();
-		transfer.setCreatedAt(new Date());
-		transfer.setIrodsAbsolutePath("/path");
-		transfer.setLocalAbsolutePath("local");
-		transfer.setTransferType(TransferType.PUT);
+	public void testPrepareTransferForExecution() throws Exception{
+            
+            Transfer transfer = new Transfer();
+            transfer.setCreatedAt(new Date());
+            transfer.setIrodsAbsolutePath("/path");
+            transfer.setLocalAbsolutePath("local");
+            transfer.setTransferType(TransferType.PUT);
+
+            transferAccountingManagementService.prepareTransferForExecution(transfer);
 
 	}
 

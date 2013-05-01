@@ -20,6 +20,7 @@ import org.irods.jargon.transfer.dao.TransferDAOException;
 import org.irods.jargon.transfer.dao.domain.GridAccount;
 import org.irods.jargon.transfer.dao.domain.Transfer;
 import org.irods.jargon.transfer.dao.domain.TransferState;
+import org.irods.jargon.transfer.dao.domain.TransferType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
@@ -163,11 +164,20 @@ public class BasicQueueManagerServiceImpl extends
 		}
 
 	}
-
-	private void prepareTransferAttemptForExecution(Transfer transfer) {
-		// FIXME: prepare the attempt
-
-	}
+        
+        public void processTransfer(String irodsFile,
+                    String localFile,
+                    IRODSAccount irodsAccount,
+                    TransferType type) throws ConveyorExecutionException {
+            
+                Transfer transfer = new Transfer();
+		transfer.setCreatedAt(new Date());
+		transfer.setIrodsAbsolutePath(irodsFile);
+		transfer.setLocalAbsolutePath(localFile);
+		transfer.setTransferType(type);
+                
+                enqueueTransferOperation(transfer, irodsAccount);
+        }
 
 	/**
 	 * @return the transferDAO
