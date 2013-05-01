@@ -165,17 +165,21 @@ public class BasicQueueManagerServiceImpl extends
 
 	}
         
+        @Override
         public void processTransfer(String irodsFile,
                     String localFile,
                     IRODSAccount irodsAccount,
                     TransferType type) throws ConveyorExecutionException {
             
+                log.info("processTransfer()");
+                
                 Transfer transfer = new Transfer();
 		transfer.setCreatedAt(new Date());
 		transfer.setIrodsAbsolutePath(irodsFile);
 		transfer.setLocalAbsolutePath(localFile);
 		transfer.setTransferType(type);
                 
+                log.info("ready to enqueue transfer:{}", transfer);
                 enqueueTransferOperation(transfer, irodsAccount);
         }
 

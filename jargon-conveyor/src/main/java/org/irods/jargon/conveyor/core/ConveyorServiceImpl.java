@@ -16,7 +16,7 @@ public class ConveyorServiceImpl implements ConveyorService {
 	/**
 	 * required dependency
 	 */
-	private QueueManagerService queueMangerService;
+	private QueueManagerService queueManagerService;
 
 	/**
 	 * required dependency
@@ -70,13 +70,13 @@ public class ConveyorServiceImpl implements ConveyorService {
 	}
 
 	@Override
-	public QueueManagerService getQueueMangerService() {
-		return queueMangerService;
+	public QueueManagerService getQueueManagerService() {
+		return queueManagerService;
 	}
 
 	@Override
-	public void setQueueMangerService(QueueManagerService queueMangerService) {
-		this.queueMangerService = queueMangerService;
+	public void setQueueManagerService(QueueManagerService queueMangerService) {
+		this.queueManagerService = queueMangerService;
 	}
 
 	@Override

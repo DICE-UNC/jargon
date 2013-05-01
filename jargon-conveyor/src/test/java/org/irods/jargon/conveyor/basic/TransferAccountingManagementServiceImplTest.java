@@ -76,7 +76,6 @@ public class TransferAccountingManagementServiceImplTest {
             transfer.setGridAccount(gridAccount);
 
             transferAccountingManagementService.prepareTransferForExecution(transfer);
-
 	}
 
 }

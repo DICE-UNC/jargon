@@ -65,9 +65,9 @@ public interface ConveyorService {
 
 	FlowManagerService getFlowManagerService();
 
-	void setQueueMangerService(QueueManagerService queueMangerService);
+	void setQueueManagerService(QueueManagerService queueManagerService);
 
-	QueueManagerService getQueueMangerService();
+	QueueManagerService getQueueManagerService();
 
 	/**
 	 * Get the service that maintains records of status of transfers and
