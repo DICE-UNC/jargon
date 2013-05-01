@@ -15,9 +15,20 @@ import org.irods.jargon.transfer.dao.domain.TransferAttempt;
  * @author Mike Conway - DICE (www.irods.org)
  * 
  */
+
+
 public interface TransferAccountingManagementService {
 
-	public TransferAttempt prepareTransferForExecution(Transfer transfer)
-			throws ConveyorExecutionException;
+    /**
+     * Set up Transfer Attempt for Transfer about the be processed
+     * 
+     * @param transfer
+     *            {@link Transfer} containing populated data
+     * @return {@link TransferAttempt} based on the <code>Transfer</code>
+     * 
+     * @throws ConveyorExecutionException
+     */
+    public TransferAttempt prepareTransferForExecution(Transfer transfer)
+                    throws ConveyorExecutionException;
 
 }
