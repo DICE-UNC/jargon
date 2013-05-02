@@ -178,6 +178,8 @@ public class BasicQueueManagerServiceImpl extends
 		transfer.setIrodsAbsolutePath(irodsFile);
 		transfer.setLocalAbsolutePath(localFile);
 		transfer.setTransferType(type);
+                
+                // FIXME: allready done in enqueue?
                 transfer.setGridAccount(conveyorService.getGridAccountService().findGridAccountByIRODSAccount(irodsAccount));
                 
                 log.info("ready to enqueue transfer:{}", transfer);
