@@ -69,6 +69,29 @@ public class PutConveyorCallable extends AbstractConveyorCallable {
 	public void statusCallback(TransferStatus transferStatus)
 			throws JargonException {
 		log.info("status callback:{}", transferStatus);
+
+		// TransferStatus.TransferState.RESTARTING = skipped seeking restart
+		// point
+
+		/*
+		 * add a property to tell this to log that restart in the attempt,
+		 * otherwise it can be skipped. consider transfer 'levels' and where
+		 * this falls
+		 */
+
+		// TransferStatus.TransferState.FAILURE
+
+		/*
+		 * create failure item get exception from callback and add to item
+		 */
+
+		// TransferStatus.TransferState.CANCELLED or
+		// TransferStatus.TransferState.PAUSED
+
+		/*
+		 *  
+		 */
+
 		super.statusCallback(transferStatus);
 
 	}
