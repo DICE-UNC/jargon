@@ -47,9 +47,10 @@ public class PutConveyorCallable extends AbstractConveyorCallable {
 
 		IRODSAccount irodsAccount = null;
 		try {
-                        irodsAccount = getConveyorService().getGridAccountService().irodsAccountForGridAccount(getTransfer().getGridAccount());
-                        irodsAccount.setDefaultStorageResource("renci-vault1");
- 
+			irodsAccount = getConveyorService().getGridAccountService()
+					.irodsAccountForGridAccount(getTransfer().getGridAccount());
+			irodsAccount.setDefaultStorageResource("renci-vault1");
+
 			DataTransferOperations dataTransferOperationsAO = getIrodsAccessObjectFactory()
 					.getDataTransferOperations(irodsAccount);
 			dataTransferOperationsAO.putOperation(getTransfer()
@@ -81,6 +82,15 @@ public class PutConveyorCallable extends AbstractConveyorCallable {
 	public void overallStatusCallback(TransferStatus transferStatus)
 			throws JargonException {
 		log.info("overall status callback:{}", transferStatus);
+		if (transferStatus.getTransferState() == TransferStatus.TransferState.OVERALL_COMPLETION) {
+			log.info("overall completion...releasing queue");
+			this.getConveyorService().getConveyorExecutorService()
+					.setOperationCompleted();
+		} else if (transferStatus.getTransferState() == TransferStatus.TransferState.FAILURE) {
+			log.error("failure to transfer in status...releasing queue");
+			this.getConveyorService().getConveyorExecutorService()
+					.setOperationCompleted();
+		}
 
 	}
 
