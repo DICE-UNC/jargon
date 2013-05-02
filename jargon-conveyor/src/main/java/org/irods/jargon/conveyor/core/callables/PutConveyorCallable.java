@@ -3,19 +3,17 @@
  */
 package org.irods.jargon.conveyor.core.callables;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.irods.jargon.conveyor.core.ConveyorExecutionException;
 import org.irods.jargon.conveyor.core.ConveyorExecutionFuture;
 import org.irods.jargon.conveyor.core.ConveyorService;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.DataTransferOperations;
-import org.irods.jargon.core.pub.IRODSFileSystem;
 import org.irods.jargon.core.transfer.TransferControlBlock;
 import org.irods.jargon.core.transfer.TransferStatus;
-import org.irods.jargon.transfer.dao.domain.GridAccount;
 import org.irods.jargon.transfer.dao.domain.Transfer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Callable that will run a put operation and handle callbacks
@@ -24,6 +22,9 @@ import org.irods.jargon.transfer.dao.domain.Transfer;
  * 
  */
 public class PutConveyorCallable extends AbstractConveyorCallable {
+
+	private static final Logger log = LoggerFactory
+			.getLogger(PutConveyorCallable.class);
 
 	/**
 	 * @param transfer
@@ -41,38 +42,22 @@ public class PutConveyorCallable extends AbstractConveyorCallable {
 	 */
 	@Override
 	public ConveyorExecutionFuture call() throws ConveyorExecutionException {
-            
-                GridAccount gridAccount = this.transfer.getGridAccount();
-                TransferControlBlock tcb = this.buildDefaultTransferControlBlock();
-                
-                IRODSFileSystem irodsFileSystem = null;
-                IRODSAccount irodsAccount = null;
-                try {
-                    irodsFileSystem = IRODSFileSystem.instance();
-                    
-                    irodsAccount = IRODSAccount.instance(
-                        gridAccount.getHost(),
-                        gridAccount.getPort(),
-                        gridAccount.getUserName(),
-                        gridAccount.getPassword(),
-                        gridAccount.getDefaultPath(),
-                        gridAccount.getZone(),
-                        gridAccount.getDefaultResource());
-                    
-                    DataTransferOperations dataTransferOperationsAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getDataTransferOperations(
-						irodsAccount);
-                    dataTransferOperationsAO.putOperation(
-                                transfer.getLocalAbsolutePath(),
-                                transfer.getIrodsAbsolutePath(),
-                                transfer.getGridAccount().getDefaultResource(),
-                                this,
-                                tcb);
-                } catch (JargonException ex) {
-                    Logger.getLogger(PutConveyorCallable.class.getName()).log(Level.SEVERE, null, ex);
-                    throw new ConveyorExecutionException(ex);
-                }
-                
+
+		TransferControlBlock tcb = this.buildDefaultTransferControlBlock();
+
+		IRODSAccount irodsAccount = null;
+		try {
+
+			DataTransferOperations dataTransferOperationsAO = getIrodsAccessObjectFactory()
+					.getDataTransferOperations(irodsAccount);
+			dataTransferOperationsAO.putOperation(getTransfer()
+					.getLocalAbsolutePath(), getTransfer()
+					.getIrodsAbsolutePath(), getTransfer().getGridAccount()
+					.getDefaultResource(), this, tcb);
+		} catch (JargonException ex) {
+			log.error("error doing transfer", ex);
+			throw new ConveyorExecutionException(ex);
+		}
 
 		// set the transfer attempt up...how? For now use queue manager service
 		// and add methods there...save transfer attempt as instance data?
@@ -80,28 +65,28 @@ public class PutConveyorCallable extends AbstractConveyorCallable {
 		// final DataTransferOperations dataTransferOperations = transferManager
 		// .getIrodsFileSystem().getIRODSAccessObjectFactory()
 		// .getDataTransferOperations(irodsAccount);
-		return null;
+		return new ConveyorExecutionFuture();
 	}
 
 	@Override
 	public void statusCallback(TransferStatus transferStatus)
 			throws JargonException {
-		// TODO Auto-generated method stub
+		log.info("status callback:{}", transferStatus);
 
 	}
 
 	@Override
 	public void overallStatusCallback(TransferStatus transferStatus)
 			throws JargonException {
-		// TODO Auto-generated method stub
+		log.info("overall status callback:{}", transferStatus);
 
 	}
 
 	@Override
 	public CallbackResponse transferAsksWhetherToForceOperation(
 			String irodsAbsolutePath, boolean isCollection) {
-		// TODO Auto-generated method stub
-		return null;
+		log.info("transferAsksWhetherToForceOperation");
+		return CallbackResponse.YES_FOR_ALL;
 	}
 
 }
