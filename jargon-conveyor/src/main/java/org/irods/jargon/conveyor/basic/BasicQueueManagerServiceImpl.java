@@ -178,6 +178,7 @@ public class BasicQueueManagerServiceImpl extends
 		transfer.setIrodsAbsolutePath(irodsFile);
 		transfer.setLocalAbsolutePath(localFile);
 		transfer.setTransferType(type);
+                transfer.setGridAccount(conveyorService.getGridAccountService().findGridAccountByIRODSAccount(irodsAccount));
                 
                 log.info("ready to enqueue transfer:{}", transfer);
                 enqueueTransferOperation(transfer, irodsAccount);

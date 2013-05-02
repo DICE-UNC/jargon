@@ -47,7 +47,9 @@ public class PutConveyorCallable extends AbstractConveyorCallable {
 
 		IRODSAccount irodsAccount = null;
 		try {
-
+                        irodsAccount = getConveyorService().getGridAccountService().irodsAccountForGridAccount(getTransfer().getGridAccount());
+                        irodsAccount.setDefaultStorageResource("renci-vault1");
+ 
 			DataTransferOperations dataTransferOperationsAO = getIrodsAccessObjectFactory()
 					.getDataTransferOperations(irodsAccount);
 			dataTransferOperationsAO.putOperation(getTransfer()
