@@ -1,8 +1,11 @@
 package org.irods.jargon.conveyor.core;
 
+import org.irods.jargon.conveyor.basic.BasicQueueManagerServiceImpl;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 import org.irods.jargon.core.transfer.TransferStatusCallbackListener;
 import org.irods.jargon.transfer.exception.PassPhraseInvalidException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Abstract implementation of the <code>ConveyorService</code> interface.
@@ -57,6 +60,9 @@ public class ConveyorServiceImpl implements ConveyorService {
 	private IRODSAccessObjectFactory irodsAccessObjectFactory;
 
 	private TransferStatusCallbackListener transferStatusCallbackListener = null;
+        
+        private static final Logger log = LoggerFactory
+			.getLogger(BasicQueueManagerServiceImpl.class);
 
 	@Override
 	public ConfigurationService getConfigurationService() {
@@ -71,6 +77,7 @@ public class ConveyorServiceImpl implements ConveyorService {
 
 	@Override
 	public QueueManagerService getQueueManagerService() {
+                log.info("returning queueManagerService: {}", queueManagerService);
 		return queueManagerService;
 	}
 

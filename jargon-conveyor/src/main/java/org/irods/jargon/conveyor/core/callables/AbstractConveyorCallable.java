@@ -24,7 +24,8 @@ import org.irods.jargon.transfer.dao.domain.Transfer;
 public abstract class AbstractConveyorCallable implements
 		Callable<ConveyorExecutionFuture>, TransferStatusCallbackListener {
 
-	private final Transfer transfer;
+	// private final Transfer transfer;
+        final Transfer transfer;
 	private final ConveyorService conveyorService;
 
 	/**

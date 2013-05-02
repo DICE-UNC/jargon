@@ -3,12 +3,18 @@
  */
 package org.irods.jargon.conveyor.core.callables;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.irods.jargon.conveyor.core.ConveyorExecutionException;
 import org.irods.jargon.conveyor.core.ConveyorExecutionFuture;
 import org.irods.jargon.conveyor.core.ConveyorService;
+import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.pub.DataTransferOperations;
+import org.irods.jargon.core.pub.IRODSFileSystem;
 import org.irods.jargon.core.transfer.TransferControlBlock;
 import org.irods.jargon.core.transfer.TransferStatus;
+import org.irods.jargon.transfer.dao.domain.GridAccount;
 import org.irods.jargon.transfer.dao.domain.Transfer;
 
 /**
@@ -20,7 +26,7 @@ import org.irods.jargon.transfer.dao.domain.Transfer;
 public class PutConveyorCallable extends AbstractConveyorCallable {
 
 	/**
-	 * @param transferAttempt
+	 * @param transfer
 	 * @param conveyorService
 	 */
 	public PutConveyorCallable(Transfer transfer,
@@ -35,8 +41,38 @@ public class PutConveyorCallable extends AbstractConveyorCallable {
 	 */
 	@Override
 	public ConveyorExecutionFuture call() throws ConveyorExecutionException {
-
-		TransferControlBlock tcb = this.buildDefaultTransferControlBlock();
+            
+                GridAccount gridAccount = this.transfer.getGridAccount();
+                TransferControlBlock tcb = this.buildDefaultTransferControlBlock();
+                
+                IRODSFileSystem irodsFileSystem = null;
+                IRODSAccount irodsAccount = null;
+                try {
+                    irodsFileSystem = IRODSFileSystem.instance();
+                    
+                    irodsAccount = IRODSAccount.instance(
+                        gridAccount.getHost(),
+                        gridAccount.getPort(),
+                        gridAccount.getUserName(),
+                        gridAccount.getPassword(),
+                        gridAccount.getDefaultPath(),
+                        gridAccount.getZone(),
+                        gridAccount.getDefaultResource());
+                    
+                    DataTransferOperations dataTransferOperationsAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataTransferOperations(
+						irodsAccount);
+                    dataTransferOperationsAO.putOperation(
+                                transfer.getLocalAbsolutePath(),
+                                transfer.getIrodsAbsolutePath(),
+                                transfer.getGridAccount().getDefaultResource(),
+                                this,
+                                tcb);
+                } catch (JargonException ex) {
+                    Logger.getLogger(PutConveyorCallable.class.getName()).log(Level.SEVERE, null, ex);
+                    throw new ConveyorExecutionException(ex);
+                }
+                
 
 		// set the transfer attempt up...how? For now use queue manager service
 		// and add methods there...save transfer attempt as instance data?
