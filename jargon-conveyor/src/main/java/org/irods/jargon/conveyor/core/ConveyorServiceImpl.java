@@ -16,6 +16,8 @@ import org.slf4j.LoggerFactory;
 
 public class ConveyorServiceImpl implements ConveyorService {
 
+	private TransferStatusCallbackListener transferStatusCallbackListener;
+
 	/**
 	 * required dependency
 	 */
@@ -59,9 +61,7 @@ public class ConveyorServiceImpl implements ConveyorService {
 	 */
 	private IRODSAccessObjectFactory irodsAccessObjectFactory;
 
-	private TransferStatusCallbackListener transferStatusCallbackListener = null;
-        
-        private static final Logger log = LoggerFactory
+	private static final Logger log = LoggerFactory
 			.getLogger(BasicQueueManagerServiceImpl.class);
 
 	@Override
@@ -77,7 +77,7 @@ public class ConveyorServiceImpl implements ConveyorService {
 
 	@Override
 	public QueueManagerService getQueueManagerService() {
-                log.info("returning queueManagerService: {}", queueManagerService);
+		log.info("returning queueManagerService: {}", queueManagerService);
 		return queueManagerService;
 	}
 
@@ -192,6 +192,7 @@ public class ConveyorServiceImpl implements ConveyorService {
 	/**
 	 * @return the transferStatusCallbackListener
 	 */
+	@Override
 	public synchronized TransferStatusCallbackListener getTransferStatusCallbackListener() {
 		return transferStatusCallbackListener;
 	}
@@ -200,6 +201,7 @@ public class ConveyorServiceImpl implements ConveyorService {
 	 * @param transferStatusCallbackListener
 	 *            the transferStatusCallbackListener to set
 	 */
+	@Override
 	public synchronized void setTransferStatusCallbackListener(
 			TransferStatusCallbackListener transferStatusCallbackListener) {
 		this.transferStatusCallbackListener = transferStatusCallbackListener;
@@ -215,6 +217,18 @@ public class ConveyorServiceImpl implements ConveyorService {
 			TransferAccountingManagementService transferAccountingManagementService) {
 		this.transferAccountingManagementService = transferAccountingManagementService;
 
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.conveyor.core.ConveyorService#registerCallbackListener
+	 * (org.irods.jargon.core.transfer.TransferStatusCallbackListener)
+	 */
+	@Override
+	public void registerCallbackListener(TransferStatusCallbackListener listener) {
+		this.transferStatusCallbackListener = listener;
 	}
 
 }

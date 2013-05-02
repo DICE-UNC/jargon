@@ -126,8 +126,16 @@ public abstract class AbstractConveyorCallable implements
 	 * (org.irods.jargon.core.transfer.TransferStatus)
 	 */
 	@Override
-	public abstract void statusCallback(TransferStatus transferStatus)
-			throws JargonException;
+	public void statusCallback(TransferStatus transferStatus)
+			throws JargonException {
+
+		if (this.conveyorService.getTransferStatusCallbackListener() == null) {
+			return;
+		}
+
+		this.conveyorService.getTransferStatusCallbackListener()
+				.statusCallback(transferStatus);
+	}
 
 	/*
 	 * (non-Javadoc)
@@ -136,8 +144,16 @@ public abstract class AbstractConveyorCallable implements
 	 * overallStatusCallback(org.irods.jargon.core.transfer.TransferStatus)
 	 */
 	@Override
-	public abstract void overallStatusCallback(TransferStatus transferStatus)
-			throws JargonException;
+	public void overallStatusCallback(TransferStatus transferStatus)
+			throws JargonException {
+
+		if (this.conveyorService.getTransferStatusCallbackListener() == null) {
+			return;
+		}
+
+		this.conveyorService.getTransferStatusCallbackListener()
+				.overallStatusCallback(transferStatus);
+	}
 
 	/*
 	 * (non-Javadoc)

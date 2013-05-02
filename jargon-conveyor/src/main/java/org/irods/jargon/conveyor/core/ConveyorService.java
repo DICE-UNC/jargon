@@ -1,6 +1,7 @@
 package org.irods.jargon.conveyor.core;
 
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
+import org.irods.jargon.core.transfer.TransferStatusCallbackListener;
 import org.irods.jargon.transfer.exception.PassPhraseInvalidException;
 
 /**
@@ -11,6 +12,22 @@ import org.irods.jargon.transfer.exception.PassPhraseInvalidException;
  * 
  */
 public interface ConveyorService {
+
+	/**
+	 * Register a listener who will receive callback messages from running
+	 * transfers
+	 * 
+	 * @param listener
+	 *            {@link TransferStatusCallbackListener}
+	 */
+	void registerCallbackListener(TransferStatusCallbackListener listener);
+
+	/**
+	 * Get the registered callback listener (may be null)
+	 * 
+	 * @return {@link TransferStatusCallbackListener}
+	 */
+	TransferStatusCallbackListener getTransferStatusCallbackListener();
 
 	/**
 	 * Required initialization method that must be called before the
@@ -110,5 +127,8 @@ public interface ConveyorService {
 
 	void setIrodsAccessObjectFactory(
 			IRODSAccessObjectFactory irodsAccessObjectFactory);
+
+	void setTransferStatusCallbackListener(
+			TransferStatusCallbackListener transferStatusCallbackListener);
 
 }

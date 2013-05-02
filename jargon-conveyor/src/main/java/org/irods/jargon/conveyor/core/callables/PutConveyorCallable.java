@@ -62,12 +62,6 @@ public class PutConveyorCallable extends AbstractConveyorCallable {
 			throw new ConveyorExecutionException(ex);
 		}
 
-		// set the transfer attempt up...how? For now use queue manager service
-		// and add methods there...save transfer attempt as instance data?
-
-		// final DataTransferOperations dataTransferOperations = transferManager
-		// .getIrodsFileSystem().getIRODSAccessObjectFactory()
-		// .getDataTransferOperations(irodsAccount);
 		return new ConveyorExecutionFuture();
 	}
 
@@ -75,6 +69,7 @@ public class PutConveyorCallable extends AbstractConveyorCallable {
 	public void statusCallback(TransferStatus transferStatus)
 			throws JargonException {
 		log.info("status callback:{}", transferStatus);
+		super.statusCallback(transferStatus);
 
 	}
 
@@ -91,6 +86,7 @@ public class PutConveyorCallable extends AbstractConveyorCallable {
 			this.getConveyorService().getConveyorExecutorService()
 					.setOperationCompleted();
 		}
+		super.overallStatusCallback(transferStatus);
 
 	}
 
