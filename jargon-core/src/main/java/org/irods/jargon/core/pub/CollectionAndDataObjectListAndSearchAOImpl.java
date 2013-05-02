@@ -310,9 +310,9 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		 */
 		MiscIRODSUtils.evaluateSpecCollSupport(objStat);
 
-		List<CollectionAndDataObjectListingEntry> entries = listCollectionsUnderPathWithPermissions(
+		List<CollectionAndDataObjectListingEntry> entries = listCollectionsUnderPathWithPermissionsCheckingIfSpecQueryUsed(
 				absolutePathToParent, 0, objStat);
-		entries.addAll(listDataObjectsUnderPathWithPermissions(
+		entries.addAll(listDataObjectsUnderPathWithPermissionsCheckingIfSpecQueryUsed(
 				absolutePathToParent, 0, objStat));
 		return entries;
 	}
@@ -891,9 +891,52 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		 */
 		MiscIRODSUtils.evaluateSpecCollSupport(objStat);
 
-		/*
-		 * NB need to evaluate special colls here before looking at spec query
-		 */
+		return listCollectionsUnderPathWithPermissionsCheckingIfSpecQueryUsed(
+				absolutePathToParent, partialStartIndex, objStat);
+
+	}
+
+	private List<CollectionAndDataObjectListingEntry> listCollectionsUnderPathWithPermissionsViaSpecQuery(
+			final ObjStat objStat, final int offset) throws JargonException,
+			JargonQueryException {
+
+		log.info("listCollectionsUnderPathWithPermissionsViaSpecQuery()");
+		String effectiveAbsolutePath = objStat.determineAbsolutePathBasedOnCollTypeInObjectStat();
+
+		// TODO: check using right objPath
+		List<String> arguments = new ArrayList<String>(3);
+		arguments.add(effectiveAbsolutePath);
+		arguments.add(String.valueOf(this.getJargonProperties()
+				.getMaxFilesAndDirsQueryMax()));
+		arguments.add(String.valueOf(offset));
+
+		SpecificQuery specificQuery = SpecificQuery.instanceArguments(
+				SHOW_COLL_ACLS, arguments, 0, objStat.getOwnerZone());
+
+		SpecificQueryResultSet specificQueryResultSet = specificQueryAO
+				.executeSpecificQueryUsingAlias(specificQuery,
+						getJargonProperties().getMaxFilesAndDirsQueryMax());
+		log.info("got result set:{}", specificQueryResultSet);
+
+		return buildCollectionListingWithAccessInfoFromResultSet(
+				specificQueryResultSet, objStat);
+
+	}
+
+	private List<CollectionAndDataObjectListingEntry> listCollectionsUnderPathWithPermissionsCheckingIfSpecQueryUsed(
+			final String absolutePathToParent, final int partialStartIndex,
+			final ObjStat objStat) throws FileNotFoundException,
+			JargonException {
+
+		log.info("listCollectionsUnderPathWithPermissionsCheckingIfSpecQueryUsed()");
+
+		if (absolutePathToParent == null) {
+			throw new IllegalArgumentException("absolutePathToParent is null");
+		}
+
+		if (objStat == null) {
+			throw new IllegalArgumentException("null objStat");
+		}
 
 		log.info("checking to see if I can list via specific query");
 
@@ -922,39 +965,8 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 
 		}
 
-		return listCollectionsUnderPathWithPermissions(absolutePathToParent,
+		return listCollectionsUnderPathWithPermissionsUsingGenQuery(absolutePathToParent,
 				partialStartIndex, objStat);
-
-	}
-
-	private List<CollectionAndDataObjectListingEntry> listCollectionsUnderPathWithPermissionsViaSpecQuery(
-			ObjStat objStat, final int offset) throws JargonException,
-			JargonQueryException {
-
-		log.info("listCollectionsUnderPathWithPermissionsViaSpecQuery()");
-
-		// TODO: check using right objPath
-		List<String> arguments = new ArrayList<String>(3);
-		arguments.add(objStat.getAbsolutePath());
-		arguments.add(String.valueOf(this.getJargonProperties()
-				.getMaxFilesAndDirsQueryMax()));
-		arguments.add(String.valueOf(offset));
-
-		SpecificQuery specificQuery = SpecificQuery.instanceArguments(
-				SHOW_COLL_ACLS, arguments, 0, objStat.getOwnerZone());
-
-		SpecificQueryResultSet specificQueryResultSet = specificQueryAO
-				.executeSpecificQueryUsingAlias(specificQuery,
-						getJargonProperties().getMaxFilesAndDirsQueryMax());
-		log.info("got result set:{}", specificQueryResultSet);
-
-		// [c.parent_coll_name, c.coll_name, c.create_ts, c.modify_ts,
-		// c.coll_id,
-		// c.coll_owner_name, c.coll_owner_zone, c.coll_type, u.user_name,
-		// u.zone_name, a.access_type_id, u.user_id]
-
-		return buildListingWithAccessInfoFromResultSet(specificQueryResultSet,
-				objStat);
 
 	}
 
@@ -970,7 +982,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 	 * @throws FileNotFoundException
 	 * @throws JargonException
 	 */
-	private List<CollectionAndDataObjectListingEntry> listCollectionsUnderPathWithPermissions(
+	private List<CollectionAndDataObjectListingEntry> listCollectionsUnderPathWithPermissionsUsingGenQuery(
 			final String absolutePathToParent, final int partialStartIndex,
 			final ObjStat objStat) throws FileNotFoundException,
 			JargonException {
@@ -1007,11 +1019,120 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		IRODSQueryResultSet resultSet = queryForPathAndReturnResultSet(
 				effectiveAbsolutePath, builder, partialStartIndex, objStat);
 
-		return buildListingWithAccessInfoFromResultSet(resultSet, objStat);
+		return buildCollectionListingWithAccessInfoFromResultSet(resultSet,
+				objStat);
 
 	}
 
-	private List<CollectionAndDataObjectListingEntry> buildListingWithAccessInfoFromResultSet(
+	private List<CollectionAndDataObjectListingEntry> buildDataObjectListingWithAccessInfoFromResultSet(
+			final AbstractIRODSQueryResultSet resultSet, final ObjStat objStat)
+			throws JargonException {
+
+		String effectiveAbsolutePath = objStat
+				.determineAbsolutePathBasedOnCollTypeInObjectStat();
+
+		List<CollectionAndDataObjectListingEntry> files = new ArrayList<CollectionAndDataObjectListingEntry>();
+
+		/*
+		 * the query that gives the necessary data will cause duplication when
+		 * there are replicas, but the data is necessary to get, so discard
+		 * duplicates.
+		 */
+
+		String currentPath = null;
+		String lastPath = "";
+		String currentReplNumber = null;
+		String lastReplNumber = "";
+		CollectionAndDataObjectListingEntry entry = null;
+		int lastCount = 0;
+		boolean lastRecord = false;
+		List<UserFilePermission> userFilePermissions = new ArrayList<UserFilePermission>();
+
+		for (IRODSQueryResultRow row : resultSet.getResults()) {
+
+			StringBuilder sb = new StringBuilder();
+			sb.append(row.getColumn(0));
+			sb.append('/');
+			sb.append(row.getColumn(1));
+			currentPath = sb.toString();
+
+			currentReplNumber = row.getColumn(6);
+			lastCount = row.getRecordCount();
+			lastRecord = row.isLastResult();
+
+			// first look for break in path
+
+			if (currentPath.equals(lastPath)) {
+
+				// look for break in repl number
+
+				if (currentReplNumber.equals(lastReplNumber)) {
+					// accumulate a permissions entry
+					CollectionAOHelper.buildUserFilePermissionForDataObject(
+							userFilePermissions, row, effectiveAbsolutePath,
+							getIRODSAccount().getZone());
+				} else {
+					// ignore, is a replica
+				}
+
+				continue;
+			}
+
+			// a break has occurred on path
+
+			if (entry != null) {
+				// put out previous entry
+				entry.setUserFilePermission(userFilePermissions);
+				// adjust the 'last count' so that it accurately reflects the
+				// actual query result row that caused the break, used in
+				// requery to not reread the same data
+				entry.setCount(lastCount - 1);
+				augmentCollectionEntryForSpecialCollections(objStat,
+						effectiveAbsolutePath, entry);
+				files.add(entry);
+			}
+
+			// clear and reinitialize for new entry set
+			entry = CollectionAOHelper
+					.buildCollectionListEntryFromResultSetRowForDataObjectQuery(
+							row, resultSet.getTotalRecords());
+			lastPath = currentPath;
+			lastReplNumber = currentReplNumber;
+			userFilePermissions = new ArrayList<UserFilePermission>();
+			CollectionAOHelper.buildUserFilePermissionForDataObject(
+					userFilePermissions, row, effectiveAbsolutePath,
+					getIRODSAccount().getZone());
+
+		}
+
+		/*
+		 * process the last entry, if needed. If more data is coming, then skip
+		 * the last entry. This is so the first entry of the next data object
+		 * will include this data.
+		 */
+
+		if (entry != null) {
+			if (lastRecord) {
+				// put out previous entry
+				entry.setUserFilePermission(userFilePermissions);
+				// adjust the 'last count' so that it accurately reflects the
+				// actual query result row that caused the break, used in
+				// requery to not reread the same data
+				entry.setCount(lastCount);
+				entry.setLastResult(lastRecord);
+				augmentCollectionEntryForSpecialCollections(objStat,
+						effectiveAbsolutePath, entry);
+				files.add(entry);
+			} else {
+				log.debug("skipping last entry as it may carry over to the next query page");
+			}
+		}
+
+		return files;
+
+	}
+
+	private List<CollectionAndDataObjectListingEntry> buildCollectionListingWithAccessInfoFromResultSet(
 			final AbstractIRODSQueryResultSet resultSet, final ObjStat objStat)
 			throws JargonException {
 
@@ -1268,7 +1389,60 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 					"unable to find objStat for collection");
 		}
 
-		return listDataObjectsUnderPathWithPermissions(absolutePathToParent,
+		log.info("doing listing using genquery...");
+		return listDataObjectsUnderPathWithPermissionsCheckingIfSpecQueryUsed(
+				absolutePathToParent, partialStartIndex, objStat);
+	}
+
+	private List<CollectionAndDataObjectListingEntry> listDataObjectsUnderPathWithPermissionsCheckingIfSpecQueryUsed(
+			final String absolutePathToParent, final int partialStartIndex,
+			final ObjStat objStat) throws FileNotFoundException,
+			JargonException {
+
+		if (absolutePathToParent == null) {
+			throw new JargonException("absolutePathToParent is null");
+		}
+
+		if (objStat == null) {
+			throw new IllegalArgumentException("null objStat");
+		}
+
+		/**
+		 * This may be a soft link, in which case the canonical path is used for
+		 * the query
+		 */
+		String effectiveAbsolutePath = objStat.determineAbsolutePathBasedOnCollTypeInObjectStat();
+		log.info("determined effectiveAbsolutePathToBe:{}",
+				effectiveAbsolutePath);
+
+		log.info("checking to see if I can list via specific query");
+
+		if (this.getJargonProperties()
+				.isUsingSpecificQueryForCollectionListingsWithPermissions()) {
+
+			log.info("we are using spec query in jargon.properties...");
+
+			if (this.specificQueryAO.isSpecificQueryToBeBypassed()) {
+				log.info("...we are bypassing spec query...");
+			} else {
+				log.info("attemting to list via specQuery...");
+				try {
+					return listDataObjectsUnderPathWithPermissionsViaSpecQuery(
+							objStat, partialStartIndex);
+				} catch (JargonException je) {
+					log.error("error executing spec query will do the genQuery fallback");
+					// TODO: signal to spec query ao to bypass? do this in
+					// specQueryAO?
+
+					// fall thru to genquery
+				} catch (JargonQueryException e) {
+					log.error("query exception error executing spec query will do the genQuery fallback");
+				}
+			}
+		}
+
+		log.info("not using specific query, fall back to genQuery");
+		return listDataObjectsUnderPathWithPermissionsUsingGenQuery(absolutePathToParent,
 				partialStartIndex, objStat);
 	}
 
@@ -1288,29 +1462,18 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 	 * @throws FileNotFoundException
 	 * @throws JargonException
 	 */
-	private List<CollectionAndDataObjectListingEntry> listDataObjectsUnderPathWithPermissions(
+	private List<CollectionAndDataObjectListingEntry> listDataObjectsUnderPathWithPermissionsUsingGenQuery(
 			final String absolutePathToParent, final int partialStartIndex,
 			final ObjStat objStat) throws FileNotFoundException,
 			JargonException {
-
-		if (absolutePathToParent == null) {
-			throw new JargonException("absolutePathToParent is null");
-		}
-
-		if (objStat == null) {
-			throw new IllegalArgumentException("null objStat");
-		}
 
 		/**
 		 * This may be a soft link, in which case the canonical path is used for
 		 * the query
 		 */
-		String effectiveAbsolutePath = MiscIRODSUtils
-				.determineAbsolutePathBasedOnCollTypeInObjectStat(objStat);
+		String effectiveAbsolutePath = objStat.determineAbsolutePathBasedOnCollTypeInObjectStat();
 		log.info("determined effectiveAbsolutePathToBe:{}",
 				effectiveAbsolutePath);
-
-		List<CollectionAndDataObjectListingEntry> files = new ArrayList<CollectionAndDataObjectListingEntry>();
 
 		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, null);
 
@@ -1320,103 +1483,41 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 				effectiveAbsolutePath, builder, partialStartIndex, objStat);
 		log.debug("got result set:{}}, resultSet");
 
-		/*
-		 * the query that gives the necessary data will cause duplication when
-		 * there are replicas, but the data is necessary to get, so discard
-		 * duplicates.
+		return buildDataObjectListingWithAccessInfoFromResultSet(resultSet,
+				objStat);
+
+	}
+
+	private List<CollectionAndDataObjectListingEntry> listDataObjectsUnderPathWithPermissionsViaSpecQuery(
+			final ObjStat objStat, final int offset)
+			throws JargonQueryException, JargonException {
+		
+		log.info("listDataObjectsUnderPathWithPermissionsViaSpecQuery()");
+		
+		/**
+		 * This may be a soft link, in which case the canonical path is used for
+		 * the query
 		 */
+		String effectiveAbsolutePath = objStat.determineAbsolutePathBasedOnCollTypeInObjectStat();
+		log.info("determined effectiveAbsolutePathToBe:{}",
+				effectiveAbsolutePath);
 
-		String currentPath = null;
-		String lastPath = "";
-		String currentReplNumber = null;
-		String lastReplNumber = "";
-		CollectionAndDataObjectListingEntry entry = null;
-		int lastCount = 0;
-		boolean lastRecord = false;
-		List<UserFilePermission> userFilePermissions = new ArrayList<UserFilePermission>();
+		List<String> arguments = new ArrayList<String>(3);
+		arguments.add(effectiveAbsolutePath);
+		arguments.add(String.valueOf(this.getJargonProperties()
+				.getMaxFilesAndDirsQueryMax()));
+		arguments.add(String.valueOf(offset));
 
-		for (IRODSQueryResultRow row : resultSet.getResults()) {
+		SpecificQuery specificQuery = SpecificQuery.instanceArguments(
+				SHOW_DATA_OBJ_ACLS, arguments, 0, objStat.getOwnerZone());
 
-			StringBuilder sb = new StringBuilder();
-			sb.append(row.getColumn(0));
-			sb.append('/');
-			sb.append(row.getColumn(1));
-			currentPath = sb.toString();
+		SpecificQueryResultSet specificQueryResultSet = specificQueryAO
+				.executeSpecificQueryUsingAlias(specificQuery,
+						getJargonProperties().getMaxFilesAndDirsQueryMax());
+		log.info("got result set:{}", specificQueryResultSet);
 
-			currentReplNumber = row.getColumn(6);
-			lastCount = row.getRecordCount();
-			lastRecord = row.isLastResult();
-
-			// first look for break in path
-
-			if (currentPath.equals(lastPath)) {
-
-				// look for break in repl number
-
-				if (currentReplNumber.equals(lastReplNumber)) {
-					// accumulate a permissions entry
-					CollectionAOHelper.buildUserFilePermissionForDataObject(
-							userFilePermissions, row, effectiveAbsolutePath,
-							getIRODSAccount().getZone());
-				} else {
-					// ignore, is a replica
-				}
-
-				continue;
-			}
-
-			// a break has occurred on path
-
-			if (entry != null) {
-				// put out previous entry
-				entry.setUserFilePermission(userFilePermissions);
-				// adjust the 'last count' so that it accurately reflects the
-				// actual query result row that caused the break, used in
-				// requery to not reread the same data
-				entry.setCount(lastCount - 1);
-				augmentCollectionEntryForSpecialCollections(objStat,
-						effectiveAbsolutePath, entry);
-				files.add(entry);
-			}
-
-			// clear and reinitialize for new entry set
-			entry = CollectionAOHelper
-					.buildCollectionListEntryFromResultSetRowForDataObjectQuery(
-							row, resultSet.getTotalRecords());
-			lastPath = currentPath;
-			lastReplNumber = currentReplNumber;
-			userFilePermissions = new ArrayList<UserFilePermission>();
-			CollectionAOHelper.buildUserFilePermissionForDataObject(
-					userFilePermissions, row, effectiveAbsolutePath,
-					getIRODSAccount().getZone());
-
-		}
-
-		/*
-		 * process the last entry, if needed. If more data is coming, then skip
-		 * the last entry. This is so the first entry of the next data object
-		 * will include this data.
-		 */
-
-		if (entry != null) {
-			if (lastRecord) {
-				// put out previous entry
-				entry.setUserFilePermission(userFilePermissions);
-				// adjust the 'last count' so that it accurately reflects the
-				// actual query result row that caused the break, used in
-				// requery to not reread the same data
-				entry.setCount(lastCount);
-				entry.setLastResult(lastRecord);
-				augmentCollectionEntryForSpecialCollections(objStat,
-						effectiveAbsolutePath, entry);
-				files.add(entry);
-			} else {
-				log.debug("skipping last entry as it may carry over to the next query page");
-			}
-		}
-
-		return files;
-
+		return buildDataObjectListingWithAccessInfoFromResultSet(specificQueryResultSet,
+				objStat);
 	}
 
 	/*
@@ -1675,7 +1776,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 			tag = specColl.getTag("cacheDirty");
 
 			if (tag != null) {
-				objStat.setCacheDirty(tag.getStringValue().equals(1));
+				objStat.setCacheDirty(tag.getStringValue().equals("1"));
 			}
 
 			int collClass = specColl.getTag("collClass").getIntValue();

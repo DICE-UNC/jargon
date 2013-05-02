@@ -344,6 +344,7 @@ public class CollectionAOHelper extends AOHelper {
 		entry.setDataSize(IRODSDataConversionUtil
 				.getLongOrZeroFromIRODSValue(row.getColumn(5)));
 		entry.setOwnerName(row.getColumn(7));
+		entry.setOwnerZone(row.getColumn(8));
 		entry.setCount(row.getRecordCount());
 		entry.setLastResult(row.isLastResult());
 		entry.setTotalRecords(totalRecords);
@@ -475,12 +476,12 @@ public class CollectionAOHelper extends AOHelper {
 		 */
 		UserFilePermission userFilePermission;
 
-		userFilePermission = new UserFilePermission(row.getColumn(8),
-				row.getColumn(9),
+		userFilePermission = new UserFilePermission(row.getColumn(9),
+				row.getColumn(10),
 				FilePermissionEnum.valueOf(IRODSDataConversionUtil
-						.getIntOrZeroFromIRODSValue(row.getColumn(10))),
-				UserTypeEnum.findTypeByString(row.getColumn(11)),
-				row.getColumn(12));
+						.getIntOrZeroFromIRODSValue(row.getColumn(11))),
+				UserTypeEnum.findTypeByString(row.getColumn(12)),
+				row.getColumn(13));
 		userFilePermissions.add(userFilePermission);
 	}
 

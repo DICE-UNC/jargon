@@ -244,8 +244,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		MiscIRODSUtils.evaluateSpecCollSupport(objStat);
 
 		// get absolute path to use for querying iCAT (could be a soft link)
-		String absPath = MiscIRODSUtils
-				.determineAbsolutePathBasedOnCollTypeInObjectStat(objStat);
+		String absPath = objStat.determineAbsolutePathBasedOnCollTypeInObjectStat();
 
 		log.info("absPath for querying iCAT:{}", absPath);
 
