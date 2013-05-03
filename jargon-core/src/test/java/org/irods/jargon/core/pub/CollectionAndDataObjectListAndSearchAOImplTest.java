@@ -930,95 +930,11 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		
+
 		SettableJargonProperties props = new SettableJargonProperties(
 				irodsFileSystem.getJargonProperties());
 		props.setUsingSpecificQueryForCollectionListingWithPermissions(false);
 		irodsFileSystem.getIrodsSession().setJargonProperties(props);
-		
-		String targetIrodsCollection = testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH + "/"
-								+ subdirPrefix);
-		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
-				.instanceIRODSFile(targetIrodsCollection);
-		irodsFile.mkdir();
-		irodsFile.close();
-
-		String myTarget = "";
-
-		// add another acl for another user to this file
-
-		CollectionAO collectionAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getCollectionAO(irodsAccount);
-		DataObjectAO dataObjectAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
-
-		for (int i = 0; i < count; i++) {
-			myTarget = targetIrodsCollection + "/c" + (10000 + i)
-					+ subdirPrefix;
-			irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
-					.instanceIRODSFile(myTarget);
-			irodsFile.mkdir();
-			irodsFile.close();
-			collectionAO
-					.setAccessPermissionWrite(
-							irodsAccount.getZone(),
-							irodsFile.getAbsolutePath(),
-							testingProperties
-									.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY),
-							false);
-		}
-
-		for (int i = 0; i < count; i++) {
-			myTarget = targetIrodsCollection + "/c" + (10000 + i) + fileName;
-			irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
-					.instanceIRODSFile(myTarget);
-			irodsFile.createNewFile();
-			irodsFile.close();
-			dataObjectAO
-					.setAccessPermissionWrite(
-							irodsAccount.getZone(),
-							irodsFile.getAbsolutePath(),
-							testingProperties
-									.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY));
-		}
-
-		CollectionAndDataObjectListAndSearchAO actual = irodsFileSystem
-				.getIRODSAccessObjectFactory()
-				.getCollectionAndDataObjectListAndSearchAO(irodsAccount);
-		List<CollectionAndDataObjectListingEntry> entries = actual
-				.listDataObjectsAndCollectionsUnderPathWithPermissions(targetIrodsCollection);
-		Assert.assertNotNull(entries);
-		Assert.assertFalse(entries.isEmpty());
-		Assert.assertEquals(count * 2, entries.size());
-
-		// bounce thru entries, each has two permissions
-
-		for (CollectionAndDataObjectListingEntry entry : entries) {
-			Assert.assertEquals("did not have the two permissions", 2, entry
-					.getUserFilePermission().size());
-		}
-
-	}
-	
-	@Test
-	public void testListFilesAndCollectionsUnderPathWithAccessInfoUsingSpecQuery()
-			throws Exception {
-
-		String subdirPrefix = "testListFilesAndCollectionsUnderPathWithAccessInfo";
-		String fileName = "testListFilesAndCollectionsUnderPathWithAccessInfo.csv";
-
-		int count = 30;
-
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		
-	
-		SettableJargonProperties props = new SettableJargonProperties(
-				irodsFileSystem.getJargonProperties());
-		props.setUsingSpecificQueryForCollectionListingWithPermissions(true);
-		irodsFileSystem.getIrodsSession().setJargonProperties(props);
 
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
@@ -1085,7 +1001,7 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 		}
 
 	}
-	
+
 	@Test
 	public void testListFilesAndCollectionsUnderPathWithAccessInfoViaSpecificQuery()
 			throws Exception {
@@ -1097,7 +1013,7 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		
+
 		SettableJargonProperties props = new SettableJargonProperties(
 				irodsFileSystem.getJargonProperties());
 		props.setUsingSpecificQueryForCollectionListingWithPermissions(true);

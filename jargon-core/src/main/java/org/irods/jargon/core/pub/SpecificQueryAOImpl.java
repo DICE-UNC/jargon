@@ -533,9 +533,15 @@ public class SpecificQueryAOImpl extends IRODSGenericAO implements
 						specificQueryDefinition.getColumnNames(), continuation,
 						0);
 
-		return new SpecificQueryResultSet(specificQuery, resultRows,
+		SpecificQueryResultSet results = new SpecificQueryResultSet(
+				specificQuery, resultRows,
 				specificQueryDefinition.getColumnNames(), hasMoreRecords,
 				continuation);
+
+		log.info("doing a close for this page...");
+		this.closeResultSet(results);
+		return results;
+
 	}
 
 	/*
@@ -595,8 +601,47 @@ public class SpecificQueryAOImpl extends IRODSGenericAO implements
 				.translateResponseIntoResultSet(response, columnNames,
 						continuation, 0);
 
-		return new SpecificQueryResultSet(specificQuery, resultRows,
-				columnNames, hasMoreRecords, continuation);
+		SpecificQueryResultSet results = new SpecificQueryResultSet(
+				specificQuery, resultRows, columnNames, hasMoreRecords,
+				continuation);
+
+		log.info("doing a close for this page...");
+		this.closeResultSet(results);
+		return results;
+
+	}
+
+	/**
+	 * Close the result set associated with the given specific query. This will
+	 * ignore calls if no continuation was in the result set.
+	 * <p/>
+	 * Note that this is currently private, and invoked for each request. This
+	 * is to match the predominant usage pattern in clients where a page is
+	 * viewed for a good deal of user think time, and we want to avoid leaving
+	 * query handles open in iRODS. This might later change if we add
+	 * continuations to the Jargon specific query support.
+	 * 
+	 * @param specificQueryResultSet
+	 * @throws JargonException
+	 */
+	private void closeResultSet(
+			final SpecificQueryResultSet specificQueryResultSet)
+			throws JargonException {
+		log.info("closeResultSet()");
+		if (specificQueryResultSet == null) {
+			throw new IllegalArgumentException("null specificQueryResultSet");
+		}
+
+		if (specificQueryResultSet.getContinuationIndex() == 0) {
+			log.info("continuation is zero, no need to close...silently ignored");
+			return;
+		}
+
+		SpecificQueryInp specificQueryInp = SpecificQueryInp.instanceForClose();
+
+		this.getIRODSProtocol().irodsFunction(specificQueryInp);
+		log.info("specific query closed");
+
 	}
 
 	@Override
