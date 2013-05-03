@@ -16,6 +16,7 @@ import org.irods.jargon.transfer.dao.TransferItemDAO;
 import org.irods.jargon.transfer.dao.domain.Transfer;
 import org.irods.jargon.transfer.dao.domain.TransferAttempt;
 import org.irods.jargon.transfer.dao.domain.TransferState;
+import org.irods.jargon.transfer.dao.domain.TransferStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
@@ -133,10 +134,9 @@ public class TransferAccountingManagementServiceImpl extends
 
 		log.info("building transfer attempt...");
 
-		transfer.setLastTransferStatus(null);
+		transfer.setLastTransferStatus(TransferStatus.OK);
 		transfer.setTransferState(TransferState.PROCESSING);
 		transfer.setUpdatedAt(new Date());
-
 		TransferAttempt transferAttempt = new TransferAttempt();
 		transferAttempt.setTransfer(transfer);
 		transferAttempt.setAttemptStart(new Date());
