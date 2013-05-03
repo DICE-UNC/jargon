@@ -901,7 +901,8 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 			JargonQueryException {
 
 		log.info("listCollectionsUnderPathWithPermissionsViaSpecQuery()");
-		String effectiveAbsolutePath = objStat.determineAbsolutePathBasedOnCollTypeInObjectStat();
+		String effectiveAbsolutePath = objStat
+				.determineAbsolutePathBasedOnCollTypeInObjectStat();
 
 		// TODO: check using right objPath
 		List<String> arguments = new ArrayList<String>(3);
@@ -965,8 +966,8 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 
 		}
 
-		return listCollectionsUnderPathWithPermissionsUsingGenQuery(absolutePathToParent,
-				partialStartIndex, objStat);
+		return listCollectionsUnderPathWithPermissionsUsingGenQuery(
+				absolutePathToParent, partialStartIndex, objStat);
 
 	}
 
@@ -1411,7 +1412,8 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		 * This may be a soft link, in which case the canonical path is used for
 		 * the query
 		 */
-		String effectiveAbsolutePath = objStat.determineAbsolutePathBasedOnCollTypeInObjectStat();
+		String effectiveAbsolutePath = objStat
+				.determineAbsolutePathBasedOnCollTypeInObjectStat();
 		log.info("determined effectiveAbsolutePathToBe:{}",
 				effectiveAbsolutePath);
 
@@ -1442,8 +1444,8 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		}
 
 		log.info("not using specific query, fall back to genQuery");
-		return listDataObjectsUnderPathWithPermissionsUsingGenQuery(absolutePathToParent,
-				partialStartIndex, objStat);
+		return listDataObjectsUnderPathWithPermissionsUsingGenQuery(
+				absolutePathToParent, partialStartIndex, objStat);
 	}
 
 	/**
@@ -1471,7 +1473,8 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		 * This may be a soft link, in which case the canonical path is used for
 		 * the query
 		 */
-		String effectiveAbsolutePath = objStat.determineAbsolutePathBasedOnCollTypeInObjectStat();
+		String effectiveAbsolutePath = objStat
+				.determineAbsolutePathBasedOnCollTypeInObjectStat();
 		log.info("determined effectiveAbsolutePathToBe:{}",
 				effectiveAbsolutePath);
 
@@ -1491,14 +1494,15 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 	private List<CollectionAndDataObjectListingEntry> listDataObjectsUnderPathWithPermissionsViaSpecQuery(
 			final ObjStat objStat, final int offset)
 			throws JargonQueryException, JargonException {
-		
+
 		log.info("listDataObjectsUnderPathWithPermissionsViaSpecQuery()");
-		
+
 		/**
 		 * This may be a soft link, in which case the canonical path is used for
 		 * the query
 		 */
-		String effectiveAbsolutePath = objStat.determineAbsolutePathBasedOnCollTypeInObjectStat();
+		String effectiveAbsolutePath = objStat
+				.determineAbsolutePathBasedOnCollTypeInObjectStat();
 		log.info("determined effectiveAbsolutePathToBe:{}",
 				effectiveAbsolutePath);
 
@@ -1516,8 +1520,8 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 						getJargonProperties().getMaxFilesAndDirsQueryMax());
 		log.info("got result set:{}", specificQueryResultSet);
 
-		return buildDataObjectListingWithAccessInfoFromResultSet(specificQueryResultSet,
-				objStat);
+		return buildDataObjectListingWithAccessInfoFromResultSet(
+				specificQueryResultSet, objStat);
 	}
 
 	/*

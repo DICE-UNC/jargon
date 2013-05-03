@@ -75,8 +75,9 @@ public class SpecificQueryInp extends AbstractIRODSPackingInstruction {
 	}
 
 	public static final SpecificQueryInp instanceForClose() {
+
 		SpecificQueryInp specificQueryInp = new SpecificQueryInp(null, "close",
-				0, 0, "");
+				-1, -1, "");
 		specificQueryInp.setApiNumber(SPECIFIC_QUERY_API_NBR);
 		return specificQueryInp;
 	}
