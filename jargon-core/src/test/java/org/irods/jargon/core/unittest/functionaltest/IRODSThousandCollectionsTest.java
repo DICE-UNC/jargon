@@ -41,6 +41,8 @@ public class IRODSThousandCollectionsTest {
 		TestingPropertiesHelper testingPropertiesLoader = new TestingPropertiesHelper();
 		testingProperties = testingPropertiesLoader.getTestProperties();
 		scratchFileUtils = new ScratchFileUtils(testingProperties);
+		irodsFileSystem = IRODSFileSystem.instance();
+
 		scratchFileUtils
 				.clearAndReinitializeScratchDirectory(IRODS_TEST_SUBDIR_PATH);
 		irodsTestSetupUtilities = new IRODSTestSetupUtilities();
@@ -48,7 +50,6 @@ public class IRODSThousandCollectionsTest {
 		irodsTestSetupUtilities
 				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
 
-		irodsFileSystem = IRODSFileSystem.instance();
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
 
@@ -117,6 +118,7 @@ public class IRODSThousandCollectionsTest {
 		SettableJargonProperties props = new SettableJargonProperties(
 				irodsFileSystem.getJargonProperties());
 		props.setUsingSpecificQueryForCollectionListingWithPermissions(true);
+		// props.setMaxFilesAndDirsQueryMax(200);
 		irodsFileSystem.getIrodsSession().setJargonProperties(props);
 
 		String targetIrodsCollection = testingPropertiesHelper

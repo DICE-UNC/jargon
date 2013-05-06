@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.query.SpecificQueryResultSet;
 
 /**
  * Packing instruction for exectution of a specific (SQL) query.
@@ -74,10 +75,14 @@ public class SpecificQueryInp extends AbstractIRODSPackingInstruction {
 		return specificQueryInp;
 	}
 
-	public static final SpecificQueryInp instanceForClose() {
+	public static final SpecificQueryInp instanceForClose(SpecificQueryResultSet specificQueryResultSet) {
 
+		if (specificQueryResultSet == null) {
+			throw new IllegalArgumentException("null specificQueryResultSet");
+		}
+		
 		SpecificQueryInp specificQueryInp = new SpecificQueryInp(null, "close",
-				-1, -1, "");
+				0, specificQueryResultSet.getContinuationIndex(), "");
 		specificQueryInp.setApiNumber(SPECIFIC_QUERY_API_NBR);
 		return specificQueryInp;
 	}

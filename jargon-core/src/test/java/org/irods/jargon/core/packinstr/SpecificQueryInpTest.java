@@ -5,7 +5,9 @@ import java.util.List;
 
 import junit.framework.Assert;
 
+import org.irods.jargon.core.query.SpecificQueryResultSet;
 import org.junit.Test;
+import org.mockito.Mockito;
 
 public class SpecificQueryInpTest {
 
@@ -32,7 +34,11 @@ public class SpecificQueryInpTest {
 
 	@Test
 	public void testGetTagValueAutoClose() throws Exception {
-		SpecificQueryInp specificQueryInp = SpecificQueryInp.instanceForClose();
+		SpecificQueryResultSet specificQuery = Mockito
+				.mock(SpecificQueryResultSet.class);
+
+		SpecificQueryInp specificQueryInp = SpecificQueryInp
+				.instanceForClose(specificQuery);
 		String tagVal = specificQueryInp.getParsedTags();
 		StringBuilder sb = new StringBuilder();
 		sb.append("<specificQueryInp_PI><sql>close</sql>\n");
