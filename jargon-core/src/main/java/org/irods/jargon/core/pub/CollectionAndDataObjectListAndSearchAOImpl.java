@@ -916,9 +916,9 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 
 		SpecificQueryResultSet specificQueryResultSet = specificQueryAO
 				.executeSpecificQueryUsingAlias(specificQuery,
-						getJargonProperties().getMaxFilesAndDirsQueryMax());
+						getJargonProperties().getMaxFilesAndDirsQueryMax(),offset);
 		log.info("got result set:{}", specificQueryResultSet);
-
+		
 		return buildCollectionListingWithAccessInfoFromResultSet(
 				specificQueryResultSet, objStat);
 
@@ -1517,7 +1517,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 
 		SpecificQueryResultSet specificQueryResultSet = specificQueryAO
 				.executeSpecificQueryUsingAlias(specificQuery,
-						getJargonProperties().getMaxFilesAndDirsQueryMax());
+						getJargonProperties().getMaxFilesAndDirsQueryMax(), offset);
 		log.info("got result set:{}", specificQueryResultSet);
 
 		return buildDataObjectListingWithAccessInfoFromResultSet(

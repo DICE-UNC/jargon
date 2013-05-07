@@ -72,8 +72,6 @@ public class QueryResultProcessingUtils {
 			recordCount = partialStartIndex + 1;
 		}
 
-		// FIXME: last record is true when continuation is zero?
-
 		boolean lastRecord = (continuation == 0);
 		log.debug("is this the last record? {}", lastRecord);
 
@@ -91,7 +89,6 @@ public class QueryResultProcessingUtils {
 
 			resultSet.add(IRODSQueryResultRow.instance(row, columnNames,
 					recordCount++, lastRecord));
-
 		}
 
 		return resultSet;

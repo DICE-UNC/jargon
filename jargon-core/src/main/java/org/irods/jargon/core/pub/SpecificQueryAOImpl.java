@@ -438,7 +438,7 @@ public class SpecificQueryAOImpl extends IRODSGenericAO implements
 		specificQueryDefinition.setColumnNames(columnNames);
 
 		return queryOnAliasGivenDefinition(specificQuery, maxRows,
-				specificQueryDefinition);
+				specificQueryDefinition,0);
 	}
 
 	/*
@@ -453,9 +453,23 @@ public class SpecificQueryAOImpl extends IRODSGenericAO implements
 	 * this.getIRODSProtocol().irodsFunction(specificQueryInp); }
 	 */
 
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.core.pub.SpecificQueryAO#executeSpecificQueryUsingAlias(org.irods.jargon.core.query.SpecificQuery, int)
+	 */
 	@Override
 	public SpecificQueryResultSet executeSpecificQueryUsingAlias(
 			final SpecificQuery specificQuery, final int maxRows)
+			throws DataNotFoundException, JargonException, JargonQueryException {
+
+		return executeSpecificQueryUsingAlias(specificQuery, maxRows, 0);
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.core.pub.SpecificQueryAO#executeSpecificQueryUsingAlias(org.irods.jargon.core.query.SpecificQuery, int, int)
+	 */
+	@Override
+	public SpecificQueryResultSet executeSpecificQueryUsingAlias(
+			final SpecificQuery specificQuery, final int maxRows, final int userDefinedOffset)
 			throws DataNotFoundException, JargonException, JargonQueryException {
 
 		log.info("executeSpecificQueryUsingAlias()");
@@ -483,20 +497,23 @@ public class SpecificQueryAOImpl extends IRODSGenericAO implements
 		}
 
 		return queryOnAliasGivenDefinition(specificQuery, maxRows,
-				specificQueryDefinition);
+				specificQueryDefinition, userDefinedOffset);
 	}
 
 	/**
 	 * @param specificQuery
 	 * @param maxRows
 	 * @param specificQueryDefinition
+	 * @param userDefinedOffset <code>int</code> that represents an offset to use in the returned record counts that is enforced within the sql itself.  This is used because
+	 * users often use LIMIT and OFFSET statements inside the actual SQL to accomplish custom paging.  This allows the result set to reflect any user supplied offsets
 	 * @return
 	 * @throws JargonException
 	 */
 	private SpecificQueryResultSet queryOnAliasGivenDefinition(
 			final SpecificQuery specificQuery, final int maxRows,
-			final SpecificQueryDefinition specificQueryDefinition)
+			final SpecificQueryDefinition specificQueryDefinition, final int userDefinedOffset)
 			throws JargonException {
+		
 		SpecificQueryInp specificQueryInp = SpecificQueryInp.instance(
 				specificQuery.getArguments(), specificQuery.getQueryString(),
 				maxRows, specificQuery.getContinuationValue(),
@@ -531,7 +548,7 @@ public class SpecificQueryAOImpl extends IRODSGenericAO implements
 		List<IRODSQueryResultRow> resultRows = QueryResultProcessingUtils
 				.translateResponseIntoResultSet(response,
 						specificQueryDefinition.getColumnNames(), continuation,
-						0);
+						userDefinedOffset);
 
 		SpecificQueryResultSet results = new SpecificQueryResultSet(
 				specificQuery, resultRows,
@@ -554,6 +571,14 @@ public class SpecificQueryAOImpl extends IRODSGenericAO implements
 	@Override
 	public SpecificQueryResultSet executeSpecificQueryUsingSql(
 			final SpecificQuery specificQuery, final int maxRows)
+			throws DataNotFoundException, JargonException, JargonQueryException {
+
+		return executeSpecificQueryUsingSql(specificQuery, maxRows, 0);
+	}
+	
+	@Override
+	public SpecificQueryResultSet executeSpecificQueryUsingSql(
+			final SpecificQuery specificQuery, final int maxRows, final int userDefinedOffset)
 			throws DataNotFoundException, JargonException, JargonQueryException {
 
 		log.info("executeSpecificQueryUsingSql()");
@@ -599,7 +624,7 @@ public class SpecificQueryAOImpl extends IRODSGenericAO implements
 
 		List<IRODSQueryResultRow> resultRows = QueryResultProcessingUtils
 				.translateResponseIntoResultSet(response, columnNames,
-						continuation, 0);
+						continuation, userDefinedOffset);
 
 		SpecificQueryResultSet results = new SpecificQueryResultSet(
 				specificQuery, resultRows, columnNames, hasMoreRecords,
@@ -637,7 +662,7 @@ public class SpecificQueryAOImpl extends IRODSGenericAO implements
 			return;
 		}
 
-		SpecificQueryInp specificQueryInp = SpecificQueryInp.instanceForClose();
+		SpecificQueryInp specificQueryInp = SpecificQueryInp.instanceForClose(specificQueryResultSet);
 
 		this.getIRODSProtocol().irodsFunction(specificQueryInp);
 		log.info("specific query closed");
