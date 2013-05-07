@@ -573,7 +573,7 @@ public class IRODSSharingServiceImpl extends AbstractIRODSTaggingService
 		arguments.add(userName);
 		arguments.add(userZone);
 		
-		SpecificQuery specificQuery = SpecificQuery.instanceArguments("listSharedCollectionsOwnedByUser", arguments, 0);
+		SpecificQuery specificQuery = SpecificQuery.instanceArguments("listSharedCollectionsOwnedByUser", arguments, 0, "");
 		SpecificQueryResultSet specificQueryResultSet = runSpecificQuery(specificQuery);
 		
 		List<IRODSSharedFileOrCollection> irodsSharedFileOrCollections = new ArrayList<IRODSSharedFileOrCollection>();
@@ -627,7 +627,7 @@ public class IRODSSharingServiceImpl extends AbstractIRODSTaggingService
 		arguments.add(userZone);
 		arguments.add(userName);
 		
-		SpecificQuery specificQuery = SpecificQuery.instanceArguments("listSharedCollectionsSharedWithUser", arguments, 0);
+		SpecificQuery specificQuery = SpecificQuery.instanceArguments("listSharedCollectionsSharedWithUser", arguments, 0, "");
 		SpecificQueryResultSet specificQueryResultSet = runSpecificQuery(specificQuery);
 		
 		List<IRODSSharedFileOrCollection> irodsSharedFileOrCollections = new ArrayList<IRODSSharedFileOrCollection>();

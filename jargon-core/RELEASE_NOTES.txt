@@ -79,5 +79,14 @@ Note that the following bug and feature requests are logged in GForge with relat
 *[#1250] jargon/idrop performance testing and optimization for 3.3.2
 **Added cache of server properties in IRODSSession to avoid repreated queries for same host/zone
 
+*[#902] IP - ils -A performance fix
+**Add zoneHint capability to specific query
+**Implement optional specific query solution for ils which does not expand group membership
+
+*[#1392] remove icommands from remaining unit tests
+**Remove wrapped icommands from remaining unit tests
+
+*[#1392] Resource AVU methods to add and remove metadata from resources
+
 
 

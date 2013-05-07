@@ -3,6 +3,8 @@ package org.irods.jargon.core.pub;
 import java.util.List;
 
 import org.irods.jargon.core.exception.DataNotFoundException;
+import org.irods.jargon.core.exception.DuplicateDataException;
+import org.irods.jargon.core.exception.InvalidResourceException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.domain.AvuData;
 import org.irods.jargon.core.pub.domain.Resource;
@@ -139,4 +141,37 @@ public interface ResourceAO extends IRODSAccessObject {
 	 * @throws JargonException
 	 */
 	List<String> listResourceAndResourceGroupNames() throws JargonException;
+
+	/**
+	 * Add AVU metadata for this resource
+	 * 
+	 * @param resourceName
+	 *            <code>String</code> with the name of the resource
+	 * @param avuData
+	 *            {@link org.irods.jargon.core.pub.domain.AvuData}
+	 * @throws JargonException
+	 * @throws InvalidResourceException
+	 *             when resource is missing
+	 * @throws DuplicateDataException
+	 *             when an AVU already exists. Note that iRODS (at least at 2.5)
+	 *             is inconsistent, where a duplicate will only be detected if
+	 *             units are not blank
+	 */
+	void addAVUMetadata(String resourceName, AvuData avuData)
+			throws InvalidResourceException, DuplicateDataException,
+			JargonException;
+
+	/**
+	 * Remove Resource AVU data, silently ignore if metadata is not found.
+	 * 
+	 * @param resourceName
+	 *            <code>String</code> with the name of the resource
+	 * @param avuData
+	 *            {@link org.irods.jargon.core.pub.domain.AvuData}
+	 * @throws JargonException
+	 * @throws InvalidResourceException
+	 *             when resource is missing
+	 */
+	void deleteAVUMetadata(String resourceName, AvuData avuData)
+			throws InvalidResourceException, JargonException;
 }

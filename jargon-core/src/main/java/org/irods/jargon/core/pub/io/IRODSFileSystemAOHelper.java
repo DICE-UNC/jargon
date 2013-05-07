@@ -153,7 +153,8 @@ public class IRODSFileSystemAOHelper extends AOHelper {
 				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_DATA_ID)
 				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_SIZE)
 				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_REPL_NUM)
-				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_OWNER_NAME);
+				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_OWNER_NAME)
+				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_OWNER_ZONE);
 
 	}
 

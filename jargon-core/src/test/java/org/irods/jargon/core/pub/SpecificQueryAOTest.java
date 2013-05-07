@@ -8,6 +8,7 @@ import junit.framework.Assert;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.DataNotFoundException;
+import org.irods.jargon.core.exception.DuplicateDataException;
 import org.irods.jargon.core.pub.domain.SpecificQueryDefinition;
 import org.irods.jargon.core.query.SpecificQuery;
 import org.irods.jargon.core.query.SpecificQueryResultSet;
@@ -55,6 +56,24 @@ public class SpecificQueryAOTest {
 		Assert.assertNotNull("queryAO is null", queryAO);
 	}
 
+	@Test(expected = IllegalArgumentException.class)
+	public void testAddSpecificQueryNull() throws Exception {
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
+						irodsAccount);
+		if (!environmentalInfoAO.isAbleToRunSpecificQuery()) {
+			return;
+		}
+
+		SpecificQueryAO queryAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getSpecificQueryAO(irodsAccount);
+		queryAO.addSpecificQuery(null);
+
+	}
+
 	@Test
 	public void testAddSpecificQuery() throws Exception {
 
@@ -78,6 +97,47 @@ public class SpecificQueryAOTest {
 		SpecificQueryDefinition actual = queryAO
 				.findSpecificQueryByAlias(alias);
 		Assert.assertNotNull("did not find query I just added", actual);
+
+	}
+
+	@Test(expected = DuplicateDataException.class)
+	public void testAddSpecificQueryDuplicate() throws Exception {
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
+						irodsAccount);
+		if (!environmentalInfoAO.isAbleToRunSpecificQuery()) {
+			return;
+		}
+
+		SpecificQueryDefinition specificQuery = new SpecificQueryDefinition(
+				alias, query);
+
+		SpecificQueryAO queryAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getSpecificQueryAO(irodsAccount);
+		queryAO.removeSpecificQuery(specificQuery);
+		queryAO.addSpecificQuery(specificQuery);
+		queryAO.addSpecificQuery(specificQuery);
+
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void testRemoveSpecificQueryNullQuery() throws Exception {
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
+						irodsAccount);
+		if (!environmentalInfoAO.isAbleToRunSpecificQuery()) {
+			return;
+		}
+
+		SpecificQueryAO queryAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getSpecificQueryAO(irodsAccount);
+		queryAO.removeSpecificQuery(null);
 
 	}
 
@@ -114,6 +174,56 @@ public class SpecificQueryAOTest {
 	}
 
 	@Test
+	public void testRemoveSpecificQueryBySQL() throws Exception {
+		String alias = "testRemoveSpecificQueryBySQL";
+		String query = "testRemoveSpecificQueryBySQL sql statement";
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
+						irodsAccount);
+		if (!environmentalInfoAO.isAbleToRunSpecificQuery()) {
+			return;
+		}
+		SpecificQueryDefinition specificQuery = new SpecificQueryDefinition(
+				alias, query);
+
+		SpecificQueryAO queryAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getSpecificQueryAO(irodsAccount);
+		queryAO.addSpecificQuery(specificQuery);
+		queryAO.removeAllSpecificQueryBySQL(query);
+
+		boolean nowRemoved = false;
+
+		try {
+			queryAO.findSpecificQueryByAlias(alias);
+		} catch (DataNotFoundException dnf) {
+			nowRemoved = true;
+		}
+
+		Assert.assertTrue("did not remove it", nowRemoved);
+
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void testRemoveSpecificQueryBySQLNull() throws Exception {
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
+						irodsAccount);
+		if (!environmentalInfoAO.isAbleToRunSpecificQuery()) {
+			return;
+		}
+
+		SpecificQueryAO queryAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getSpecificQueryAO(irodsAccount);
+
+		queryAO.removeAllSpecificQueryBySQL(null);
+
+	}
+
+	@Test
 	public void testExecuteSpecificQueryLS() throws Exception {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
@@ -132,7 +242,7 @@ public class SpecificQueryAOTest {
 		SpecificQueryAO queryAO = accessObjectFactory
 				.getSpecificQueryAO(irodsAccount);
 		SpecificQuery specificQuery = SpecificQuery.instanceWithNoArguments(
-				"ls", 0);
+				"ls", 0, "");
 
 		SpecificQueryResultSet specificQueryResultSet = queryAO
 				.executeSpecificQueryUsingAlias(specificQuery,
@@ -296,7 +406,7 @@ public class SpecificQueryAOTest {
 				actual.isEmpty());
 
 		SpecificQuery specificQuery = SpecificQuery.instanceArguments(
-				collAclQueryAlias, arguments, 0);
+				collAclQueryAlias, arguments, 0, irodsAccount.getZone());
 		SpecificQueryResultSet specificQueryResultSet = queryAO
 				.executeSpecificQueryUsingAlias(specificQuery,
 						accessObjectFactory.getJargonProperties()
@@ -335,7 +445,7 @@ public class SpecificQueryAOTest {
 		List<String> arguments = new ArrayList<String>();
 		arguments.add(userHome);
 		SpecificQuery specificQuery = SpecificQuery.instanceArguments(
-				collAclQueryAlias, arguments, 0);
+				collAclQueryAlias, arguments, 0, "");
 		SpecificQueryResultSet specificQueryResultSet = queryAO
 				.executeSpecificQueryUsingAlias(specificQuery,
 						accessObjectFactory.getJargonProperties()
@@ -441,6 +551,31 @@ public class SpecificQueryAOTest {
 	}
 
 	@Test
+	public void testFindSpecificQueryByAliasWithZoneHint() throws Exception {
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
+						irodsAccount);
+		if (!environmentalInfoAO.isAbleToRunSpecificQuery()) {
+			return;
+		}
+
+		SpecificQueryAO queryAO = accessObjectFactory
+				.getSpecificQueryAO(irodsAccount);
+		SpecificQueryDefinition actual = queryAO.findSpecificQueryByAlias(
+				"ShowCollAcls", irodsAccount.getZone());
+		Assert.assertEquals("did not find correct query", "ShowCollAcls",
+				actual.getAlias());
+
+	}
+
+	@Test
 	public void testFindSpecificQueryByAlias() throws Exception {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
@@ -462,6 +597,49 @@ public class SpecificQueryAOTest {
 				.findSpecificQueryByAlias("ShowCollAcls");
 		Assert.assertEquals("did not find correct query", "ShowCollAcls",
 				actual.getAlias());
+
+	}
+
+	@Test
+	public void testListSpecificQueryByAliasLike() throws Exception {
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
+						irodsAccount);
+		if (!environmentalInfoAO.isAbleToRunSpecificQuery()) {
+			return;
+		}
+
+		String queryAlias = "testListSpecificQueryByAliasLike";
+		String queryAlias2 = "testListSpecificQueryByAliasLike2";
+		String query = "select * from blah";
+
+		SpecificQueryAO queryAO = accessObjectFactory
+				.getSpecificQueryAO(irodsAccount);
+
+		SpecificQueryDefinition specificQuery = new SpecificQueryDefinition(
+				queryAlias, query);
+
+		queryAO.removeSpecificQuery(specificQuery);
+		queryAO.addSpecificQuery(specificQuery);
+
+		specificQuery = new SpecificQueryDefinition(queryAlias2, query);
+
+		queryAO.removeSpecificQuery(specificQuery);
+		queryAO.addSpecificQuery(specificQuery);
+
+		List<SpecificQueryDefinition> actual = queryAO
+				.listSpecificQueryByAliasLike(queryAlias + "%",
+						irodsAccount.getZone());
+		Assert.assertFalse("empty results", actual.isEmpty());
+		Assert.assertEquals("should have found the two entries", 2,
+				actual.size());
 
 	}
 

@@ -73,7 +73,7 @@ public class QueryResultProcessingUtils {
 		}
 
 		boolean lastRecord = (continuation == 0);
-		log.debug("are there more records? {}", lastRecord);
+		log.debug("is this the last record? {}", lastRecord);
 
 		int attributes = queryResponse.getTag(GenQueryOut.ATTRIB_CNT)
 				.getIntValue();
@@ -89,7 +89,6 @@ public class QueryResultProcessingUtils {
 
 			resultSet.add(IRODSQueryResultRow.instance(row, columnNames,
 					recordCount++, lastRecord));
-
 		}
 
 		return resultSet;
