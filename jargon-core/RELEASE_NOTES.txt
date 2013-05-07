@@ -72,5 +72,10 @@ Note that the following bug and feature requests are logged in GForge with relat
 **Add zoneHint capability to specific query
 **Implement optional specific query solution for ils which does not expand group membership
 
+*[#1392] remove icommands from remaining unit tests
+**Remove wrapped icommands from remaining unit tests
+
+*[#1392] Resource AVU methods to add and remove metadata from resources
+
 
 
