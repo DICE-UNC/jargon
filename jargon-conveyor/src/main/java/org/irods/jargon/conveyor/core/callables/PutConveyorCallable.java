@@ -3,6 +3,8 @@
  */
 package org.irods.jargon.conveyor.core.callables;
 
+import java.util.Date;
+import java.util.logging.Level;
 import org.irods.jargon.conveyor.core.ConveyorExecutionException;
 import org.irods.jargon.conveyor.core.ConveyorExecutionFuture;
 import org.irods.jargon.conveyor.core.ConveyorService;
@@ -12,6 +14,8 @@ import org.irods.jargon.core.pub.DataTransferOperations;
 import org.irods.jargon.core.transfer.TransferControlBlock;
 import org.irods.jargon.core.transfer.TransferStatus;
 import org.irods.jargon.transfer.dao.domain.Transfer;
+import org.irods.jargon.transfer.dao.domain.TransferAttempt;
+import org.irods.jargon.transfer.dao.domain.TransferItem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,8 +35,9 @@ public class PutConveyorCallable extends AbstractConveyorCallable {
 	 * @param conveyorService
 	 */
 	public PutConveyorCallable(Transfer transfer,
+                        TransferAttempt transferAttempt,
 			ConveyorService conveyorService) {
-		super(transfer, conveyorService);
+		super(transfer, transferAttempt, conveyorService);
 	}
 
 	/*
@@ -69,6 +74,16 @@ public class PutConveyorCallable extends AbstractConveyorCallable {
 	public void statusCallback(TransferStatus transferStatus)
 			throws JargonException {
 		log.info("status callback:{}", transferStatus);
+                
+                if (transferStatus.getTransferState() == TransferStatus.TransferState.SUCCESS
+                                || transferStatus.getTransferState() == TransferStatus.TransferState.IN_PROGRESS_COMPLETE_FILE) {
+                        try {
+                            this.getConveyorService().getTransferAccountingManagementService().updateTransferAfterSuccessfulFileTransfer(
+                                    transferStatus, this.getTransferAttempt());
+                        } catch (ConveyorExecutionException ex) {
+                            throw new JargonException(ex.getMessage(), ex.getCause());
+                        }
+                }
 
 		// TransferStatus.TransferState.RESTARTING = skipped seeking restart
 		// point

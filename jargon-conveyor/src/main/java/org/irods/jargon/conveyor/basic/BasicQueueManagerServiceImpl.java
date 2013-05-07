@@ -19,6 +19,7 @@ import org.irods.jargon.transfer.dao.TransferDAO;
 import org.irods.jargon.transfer.dao.TransferDAOException;
 import org.irods.jargon.transfer.dao.domain.GridAccount;
 import org.irods.jargon.transfer.dao.domain.Transfer;
+import org.irods.jargon.transfer.dao.domain.TransferAttempt;
 import org.irods.jargon.transfer.dao.domain.TransferState;
 import org.irods.jargon.transfer.dao.domain.TransferType;
 import org.slf4j.Logger;
@@ -148,7 +149,8 @@ public class BasicQueueManagerServiceImpl extends
 			log.info("have transfer to run... setting up the new attempt:{}",
 					transfer);
 
-			conveyorService.getTransferAccountingManagementService().prepareTransferForExecution(transfer);
+			TransferAttempt transferAttempt =
+                                conveyorService.getTransferAccountingManagementService().prepareTransferForExecution(transfer);
 
 			this.getConveyorExecutorService().processTransferAndHandleReturn(
 					transfer, this.conveyorService);

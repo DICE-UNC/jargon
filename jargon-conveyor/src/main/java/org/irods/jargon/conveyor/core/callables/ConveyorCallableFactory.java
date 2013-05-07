@@ -6,6 +6,7 @@ package org.irods.jargon.conveyor.core.callables;
 import org.irods.jargon.conveyor.core.ConveyorExecutionException;
 import org.irods.jargon.conveyor.core.ConveyorService;
 import org.irods.jargon.transfer.dao.domain.Transfer;
+import org.irods.jargon.transfer.dao.domain.TransferAttempt;
 
 /**
  * @author Mike Conway - DICE (www.irods.org)
@@ -30,7 +31,7 @@ public class ConveyorCallableFactory {
 	 *             if a callable cannot be created or some other error occurs
 	 */
 	public AbstractConveyorCallable instanceCallableForOperation(
-			final Transfer transfer, final ConveyorService conveyorService)
+			final Transfer transfer, TransferAttempt transferAttempt, final ConveyorService conveyorService)
 			throws ConveyorExecutionException {
 
 		if (transfer == null) {
@@ -39,9 +40,9 @@ public class ConveyorCallableFactory {
 
 		switch (transfer.getTransferType()) {
 		case PUT:
-			return new PutConveyorCallable(transfer, conveyorService);
+			return new PutConveyorCallable(transfer, transferAttempt, conveyorService);
 		case GET:
-			return new GetConveyorCallable(transfer, conveyorService);
+			return new GetConveyorCallable(transfer, transferAttempt, conveyorService);
 		case REPLICATE:
 			throw new ConveyorExecutionException(
 					"replicate transfer not implemented");

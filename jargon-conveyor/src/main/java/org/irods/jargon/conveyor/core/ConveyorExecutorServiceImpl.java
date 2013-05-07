@@ -8,6 +8,7 @@ import java.util.concurrent.Future;
 
 import org.irods.jargon.conveyor.core.callables.ConveyorCallableFactory;
 import org.irods.jargon.transfer.dao.domain.Transfer;
+import org.irods.jargon.transfer.dao.domain.TransferAttempt;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -79,6 +80,7 @@ public class ConveyorExecutorServiceImpl implements ConveyorExecutorService {
 
 	@Override
 	public void processTransferAndHandleReturn(final Transfer transfer,
+                        final TransferAttempt transferAttempt,
 			ConveyorService conveyorService) throws ConveyorBusyException,
 			ConveyorExecutionException {
 
@@ -96,7 +98,7 @@ public class ConveyorExecutorServiceImpl implements ConveyorExecutorService {
 		synchronized (this) {
 
 			Callable<ConveyorExecutionFuture> callable = conveyorCallableFactory
-					.instanceCallableForOperation(transfer, conveyorService);
+					.instanceCallableForOperation(transfer, transferAttempt, conveyorService);
 
 			this.currentTransfer = pool.submit(callable);
 

@@ -16,6 +16,7 @@ import org.irods.jargon.core.transfer.TransferStatus;
 import org.irods.jargon.core.transfer.TransferStatusCallbackListener;
 import org.irods.jargon.transfer.dao.domain.GridAccount;
 import org.irods.jargon.transfer.dao.domain.Transfer;
+import org.irods.jargon.transfer.dao.domain.TransferAttempt;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,13 +31,14 @@ public abstract class AbstractConveyorCallable implements
 
 	// private final Transfer transfer;
 	private final Transfer transfer;
+        private final TransferAttempt transferAttempt;
 	private final ConveyorService conveyorService;
 
 	private static final Logger log = LoggerFactory
 			.getLogger(AbstractConveyorCallable.class);
 
 	/**
-	 * Conveniece method to get a <code>IRODSAccount</code> with a decrypted
+	 * Convenience method to get a <code>IRODSAccount</code> with a decrypted
 	 * password
 	 * 
 	 * @param gridAccount
@@ -74,10 +76,14 @@ public abstract class AbstractConveyorCallable implements
 	 */
 	public AbstractConveyorCallable(
 
-	final Transfer transfer, final ConveyorService conveyorService) {
+	final Transfer transfer, final TransferAttempt transferAttempt, final ConveyorService conveyorService) {
 
 		if (transfer == null) {
 			throw new IllegalArgumentException("null transfer");
+		}
+                
+                if (transferAttempt == null) {
+			throw new IllegalArgumentException("null transferAttempt");
 		}
 
 		if (conveyorService == null) {
@@ -85,6 +91,7 @@ public abstract class AbstractConveyorCallable implements
 		}
 
 		this.transfer = transfer;
+                this.transferAttempt = transferAttempt;
 		this.conveyorService = conveyorService;
 	}
 
@@ -97,6 +104,13 @@ public abstract class AbstractConveyorCallable implements
 	 */
 	public Transfer getTransfer() {
 		return transfer;
+	}
+        
+        /**
+	 * @return the transferAttempt
+	 */
+	public TransferAttempt getTransferAttempt() {
+		return transferAttempt;
 	}
 
 	/**

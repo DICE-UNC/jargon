@@ -4,6 +4,7 @@
 package org.irods.jargon.conveyor.basic;
 
 import java.util.Date;
+import java.util.logging.Level;
 
 import org.irods.jargon.conveyor.core.AbstractConveyorComponentService;
 import org.irods.jargon.conveyor.core.ConveyorExecutionException;
@@ -15,6 +16,7 @@ import org.irods.jargon.transfer.dao.TransferDAOException;
 import org.irods.jargon.transfer.dao.TransferItemDAO;
 import org.irods.jargon.transfer.dao.domain.Transfer;
 import org.irods.jargon.transfer.dao.domain.TransferAttempt;
+import org.irods.jargon.transfer.dao.domain.TransferItem;
 import org.irods.jargon.transfer.dao.domain.TransferState;
 import org.irods.jargon.transfer.dao.domain.TransferStatus;
 import org.slf4j.Logger;
@@ -152,5 +154,35 @@ public class TransferAccountingManagementServiceImpl extends
 					"error saving transfer attempt", e);
 		}
 	}
+
+    @Override
+    public TransferItem updateTransferAfterSuccessfulFileTransfer(
+                    org.irods.jargon.core.transfer.TransferStatus transferStatus,
+                    TransferAttempt transferAttempt) 
+                    throws ConveyorExecutionException {
+        
+                log.info("updated last good path to:{}", transferStatus.getSourceFileAbsolutePath());
+                transferAttempt.setLastSuccessfulPath(transferStatus.getSourceFileAbsolutePath());
+
+                // create transfer item
+                TransferItem transferItem = new TransferItem();
+                transferItem.setFile(true);
+                transferItem.setSourceFileAbsolutePath(transferStatus
+                                .getSourceFileAbsolutePath());
+                transferItem.setTargetFileAbsolutePath(transferStatus
+                                .getTargetFileAbsolutePath());
+                transferItem.setTransferredAt(new Date());
+                
+                try {
+                    transferAttempt.getTransferItems().add(transferItem);
+                    transferAttemptDAO.save(transferAttempt);
+                } catch (TransferDAOException ex) {
+                    throw new ConveyorExecutionException(
+					"error saving transfer attempt", ex);
+                }
+                
+                return transferItem;
+    }
+        
 
 }

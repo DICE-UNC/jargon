@@ -8,6 +8,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import org.irods.jargon.transfer.dao.domain.Transfer;
+import org.irods.jargon.transfer.dao.domain.TransferAttempt;
 
 /**
  * Interface for the mechanism to process transfer operations. This object
@@ -65,6 +66,7 @@ public interface ConveyorExecutorService {
 	 *             for any exception in the actual execution
 	 */
 	void processTransferAndHandleReturn(final Transfer transfer,
+                        final TransferAttempt transferAttempt,
 			final ConveyorService conveyorService)
 			throws ConveyorBusyException, ConveyorExecutionException;
 
