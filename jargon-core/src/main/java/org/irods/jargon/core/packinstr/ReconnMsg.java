@@ -31,7 +31,7 @@ public class ReconnMsg extends AbstractIRODSPackingInstruction {
 		}
 		this.irodsAccount = irodsAccount;
 		this.startupResponseData = startupResponseData;
-		this.setApiNumber(0);
+		setApiNumber(0);
 	}
 
 	@Override

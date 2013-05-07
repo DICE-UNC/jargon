@@ -124,10 +124,10 @@ public class GenQueryInp extends AbstractIRODSPackingInstruction implements
 					"continueIndex must be > 0 when sending a close");
 		}
 
-		this.translatedIRODSQuery = translatedIRODSGenQuery;
+		translatedIRODSQuery = translatedIRODSGenQuery;
 		this.continueIndex = continueIndex;
-		this.partialStartIndex = 0;
-		this.maxRowCount = -1;
+		partialStartIndex = 0;
+		maxRowCount = -1;
 	}
 
 	private GenQueryInp(final TranslatedIRODSGenQuery translatedIRODSQuery,
@@ -151,9 +151,9 @@ public class GenQueryInp extends AbstractIRODSPackingInstruction implements
 		this.translatedIRODSQuery = translatedIRODSQuery;
 		this.continueIndex = continueIndex;
 		this.partialStartIndex = partialStartIndex;
-		this.maxRowCount = translatedIRODSQuery.getIrodsQuery()
+		maxRowCount = translatedIRODSQuery.getIrodsQuery()
 				.getNumberOfResultsDesired();
-		this.setApiNumber(API_NBR);
+		setApiNumber(API_NBR);
 		this.zoneName = zoneName;
 	}
 
@@ -197,15 +197,15 @@ public class GenQueryInp extends AbstractIRODSPackingInstruction implements
 
 		int optionVal = 0;
 
-		if (!this.getTranslatedIRODSQuery().isDistinct()) {
+		if (!getTranslatedIRODSQuery().isDistinct()) {
 			optionVal += 1;
 		}
 
-		if (this.getTranslatedIRODSQuery().isUpperCase()) {
+		if (getTranslatedIRODSQuery().isUpperCase()) {
 			optionVal += UPPER_CASE_WHERE;
 		}
 
-		if (this.getTranslatedIRODSQuery().isComputeTotalRowCount()) {
+		if (getTranslatedIRODSQuery().isComputeTotalRowCount()) {
 			optionVal += RETURN_TOTAL_ROW_COUNT;
 		}
 

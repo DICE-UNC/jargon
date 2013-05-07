@@ -522,7 +522,7 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 			throw new JargonException("api type is <= zero");
 		}
 
-		this.setApiNumber(apiNumber);
+		setApiNumber(apiNumber);
 
 		this.arg0 = arg0;
 		this.arg1 = arg1;

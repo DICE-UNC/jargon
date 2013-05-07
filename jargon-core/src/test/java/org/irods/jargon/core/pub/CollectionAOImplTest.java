@@ -156,11 +156,12 @@ public class CollectionAOImplTest {
 				AVUQueryElement.AVUQueryPart.ATTRIBUTE,
 				AVUQueryOperatorEnum.EQUAL, expectedAttribName));
 
-		List<Collection> result = collectionAO
-				.findDomainByMetadataQuery(queryElements);
+		List<Collection> result = collectionAO.findDomainByMetadataQuery(
+				queryElements, 0, true);
 		Assert.assertFalse("no query result returned", result.isEmpty());
-		Assert.assertEquals(targetIrodsCollection, result.get(0)
-				.getCollectionName());
+		Assert.assertEquals(
+				"target collection does not equal result collection name",
+				targetIrodsCollection, result.get(0).getCollectionName());
 	}
 
 	@Test
@@ -1167,7 +1168,7 @@ public class CollectionAOImplTest {
 
 		Assert.assertFalse("no query result returned", queryResults.isEmpty());
 	}
-	
+
 	@Test
 	public void testFindById() throws Exception {
 		String testDirName = "testFindById";
@@ -1181,8 +1182,9 @@ public class CollectionAOImplTest {
 				.buildIRODSAccountFromTestProperties(testingProperties);
 		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
 				.getIRODSAccessObjectFactory();
-		
-		IRODSFile collFile = accessObjectFactory.getIRODSFileFactory(irodsAccount).instanceIRODSFile(targetIrodsCollection);
+
+		IRODSFile collFile = accessObjectFactory.getIRODSFileFactory(
+				irodsAccount).instanceIRODSFile(targetIrodsCollection);
 		collFile.mkdirs();
 
 		CollectionAO collectionAO = accessObjectFactory
@@ -1192,18 +1194,18 @@ public class CollectionAOImplTest {
 		Collection actual = collectionAO.findById(collection.getCollectionId());
 		Assert.assertNotNull("did not find collection", actual);
 	}
-	
-	@Test(expected=DataNotFoundException.class)
+
+	@Test(expected = DataNotFoundException.class)
 	public void testFindByIdNotFound() throws Exception {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
 		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
 				.getIRODSAccessObjectFactory();
-		
+
 		CollectionAO collectionAO = accessObjectFactory
 				.getCollectionAO(irodsAccount);
-	
+
 		collectionAO.findById(99999999);
 	}
 
@@ -1220,8 +1222,9 @@ public class CollectionAOImplTest {
 				.buildIRODSAccountFromTestProperties(testingProperties);
 		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
 				.getIRODSAccessObjectFactory();
-		
-		IRODSFile collFile = accessObjectFactory.getIRODSFileFactory(irodsAccount).instanceIRODSFile(targetIrodsCollection);
+
+		IRODSFile collFile = accessObjectFactory.getIRODSFileFactory(
+				irodsAccount).instanceIRODSFile(targetIrodsCollection);
 		collFile.mkdirs();
 
 		CollectionAO collectionAO = accessObjectFactory
@@ -1238,12 +1241,13 @@ public class CollectionAOImplTest {
 		Assert.assertEquals("collection Name should be same as requested path",
 				targetIrodsCollection, collection.getCollectionName());
 	}
-	
+
 	/**
 	 * Bug [#1139] Spaces at the begin or end of a data object name will cause
 	 * an exception
 	 * 
-	 * ignored for now as it apears that getting an objStat from iRODS has an issue, see bug notes
+	 * ignored for now as it apears that getting an objStat from iRODS has an
+	 * issue, see bug notes
 	 * 
 	 * @throws Exception
 	 */
@@ -1260,8 +1264,9 @@ public class CollectionAOImplTest {
 				.buildIRODSAccountFromTestProperties(testingProperties);
 		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
 				.getIRODSAccessObjectFactory();
-		
-		IRODSFile collFile = accessObjectFactory.getIRODSFileFactory(irodsAccount).instanceIRODSFile(targetIrodsCollection);
+
+		IRODSFile collFile = accessObjectFactory.getIRODSFileFactory(
+				irodsAccount).instanceIRODSFile(targetIrodsCollection);
 		collFile.mkdirs();
 
 		CollectionAO collectionAO = accessObjectFactory

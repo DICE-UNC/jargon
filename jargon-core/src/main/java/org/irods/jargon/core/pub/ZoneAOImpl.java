@@ -46,9 +46,9 @@ public final class ZoneAOImpl extends IRODSGenericAO implements ZoneAO {
 	public List<Zone> listZones() throws JargonException {
 
 		IRODSGenQueryExecutorImpl irodsGenQueryExecutorImpl = new IRODSGenQueryExecutorImpl(
-				this.getIRODSSession(), this.getIRODSAccount());
-		ResourceAO resourceAO = new ResourceAOImpl(this.getIRODSSession(),
-				this.getIRODSAccount());
+				getIRODSSession(), getIRODSAccount());
+		ResourceAO resourceAO = new ResourceAOImpl(getIRODSSession(),
+				getIRODSAccount());
 		StringBuilder zoneQuery = new StringBuilder();
 		char comma = ',';
 
@@ -122,7 +122,7 @@ public final class ZoneAOImpl extends IRODSGenericAO implements ZoneAO {
 		}
 
 		IRODSGenQueryExecutorImpl irodsGenQueryExecutorImpl = new IRODSGenQueryExecutorImpl(
-				this.getIRODSSession(), this.getIRODSAccount());
+				getIRODSSession(), getIRODSAccount());
 		StringBuilder zoneQuery = new StringBuilder();
 		char comma = ',';
 

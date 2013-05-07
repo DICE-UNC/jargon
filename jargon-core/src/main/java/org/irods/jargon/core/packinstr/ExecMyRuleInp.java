@@ -119,7 +119,7 @@ public final class ExecMyRuleInp extends AbstractIRODSPackingInstruction {
 			this.zone = zone;
 		}
 
-		this.setApiNumber(RULE_API_NBR);
+		setApiNumber(RULE_API_NBR);
 
 	}
 

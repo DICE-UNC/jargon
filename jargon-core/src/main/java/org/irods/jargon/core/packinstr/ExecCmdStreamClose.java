@@ -68,7 +68,7 @@ public final class ExecCmdStreamClose extends AbstractIRODSPackingInstruction {
 		}
 
 		this.fileDescriptor = fileDescriptor;
-		this.setApiNumber(apiNumber);
+		setApiNumber(apiNumber);
 
 	}
 

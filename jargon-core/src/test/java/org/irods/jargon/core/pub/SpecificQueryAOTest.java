@@ -11,6 +11,7 @@ import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.pub.domain.SpecificQueryDefinition;
 import org.irods.jargon.core.query.SpecificQuery;
 import org.irods.jargon.core.query.SpecificQueryResultSet;
+import org.irods.jargon.core.utils.LocalFileUtils;
 import org.irods.jargon.core.utils.MiscIRODSUtils;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.junit.AfterClass;
@@ -67,18 +68,23 @@ public class SpecificQueryAOTest {
 		}
 
 		SpecificQueryDefinition specificQuery = new SpecificQueryDefinition(
-				this.query, this.alias);
+				alias, query);
 
 		SpecificQueryAO queryAO = irodsFileSystem.getIRODSAccessObjectFactory()
 				.getSpecificQueryAO(irodsAccount);
+		queryAO.removeSpecificQuery(specificQuery);
 		queryAO.addSpecificQuery(specificQuery);
 
-		// just make sure we got here for now
-		Assert.assertTrue(true);
+		SpecificQueryDefinition actual = queryAO
+				.findSpecificQueryByAlias(alias);
+		Assert.assertNotNull("did not find query I just added", actual);
+
 	}
 
 	@Test
 	public void testRemoveSpecificQuery() throws Exception {
+		String alias = "testRemoveSpecificQuery";
+		String query = "testRemoveSpecificQuery sql statement";
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
 		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
@@ -88,14 +94,23 @@ public class SpecificQueryAOTest {
 			return;
 		}
 		SpecificQueryDefinition specificQuery = new SpecificQueryDefinition(
-				this.query, this.alias);
+				alias, query);
 
 		SpecificQueryAO queryAO = irodsFileSystem.getIRODSAccessObjectFactory()
 				.getSpecificQueryAO(irodsAccount);
+		queryAO.addSpecificQuery(specificQuery);
 		queryAO.removeSpecificQuery(specificQuery);
 
-		// just make sure we got here for now
-		Assert.assertTrue(true);
+		boolean nowRemoved = false;
+
+		try {
+			queryAO.findSpecificQueryByAlias(alias);
+		} catch (DataNotFoundException dnf) {
+			nowRemoved = true;
+		}
+
+		Assert.assertTrue("did not remove it", nowRemoved);
+
 	}
 
 	@Test
@@ -469,6 +484,127 @@ public class SpecificQueryAOTest {
 		SpecificQueryAO queryAO = accessObjectFactory
 				.getSpecificQueryAO(irodsAccount);
 		queryAO.findSpecificQueryByAlias("ShowCollAclsButThisNameIsNotFoundItsNot");
+	}
+
+	/**
+	 * Bug [#1373] alias lookup failing on specific query. This works because no
+	 * special chars in query
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void testFindSpecificQueryByAliasBug1373SmallQueryWithACrVersionWithout()
+			throws Exception {
+
+		String queryAlias = "VersionWithout";
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
+						irodsAccount);
+		if (!environmentalInfoAO.isAbleToRunSpecificQuery()) {
+			return;
+		}
+
+		// stringify the test query
+
+		String testQuery = "select * from btable";
+
+		SpecificQueryDefinition specificQuery = new SpecificQueryDefinition(
+				queryAlias, testQuery);
+
+		SpecificQueryAO queryAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getSpecificQueryAO(irodsAccount);
+		queryAO.removeSpecificQueryByAlias(queryAlias);
+		queryAO.addSpecificQuery(specificQuery);
+
+		SpecificQueryDefinition actual = queryAO
+				.findSpecificQueryByAlias(queryAlias);
+		Assert.assertEquals("did not find correct query", queryAlias,
+				actual.getAlias());
+
+	}
+
+	/**
+	 * Bug [#1373] alias lookup failing on specific query
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void testFindSpecificQueryByAliasBug1373SmallQueryWithACr()
+			throws Exception {
+
+		String queryAlias = "testFindSpecificQueryByAliasBug1373SmallQuery";
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
+						irodsAccount);
+		if (!environmentalInfoAO.isAbleToRunSpecificQuery()) {
+			return;
+		}
+
+		// stringify the test query
+
+		String testQuery = "select * \n from atable";
+
+		SpecificQueryDefinition specificQuery = new SpecificQueryDefinition(
+				queryAlias, testQuery);
+
+		SpecificQueryAO queryAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getSpecificQueryAO(irodsAccount);
+		queryAO.removeSpecificQueryByAlias(queryAlias);
+		queryAO.addSpecificQuery(specificQuery);
+
+		SpecificQueryDefinition actual = queryAO
+				.findSpecificQueryByAlias(queryAlias);
+		Assert.assertEquals("did not find correct query", queryAlias,
+				actual.getAlias());
+
+	}
+
+	/**
+	 * Bug [#1373] alias lookup failing on specific query
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void testFindSpecificQueryByAliasBug1373() throws Exception {
+
+		String queryAlias = "testFindSpecificQueryByAliasBug1373";
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
+						irodsAccount);
+		if (!environmentalInfoAO.isAbleToRunSpecificQuery()) {
+			return;
+		}
+
+		// stringify the test query
+
+		String testQuery = LocalFileUtils
+				.getClasspathResourceFileAsString("/specific-query/define-query-bug-1373.txt");
+
+		SpecificQueryDefinition specificQuery = new SpecificQueryDefinition(
+				queryAlias, testQuery);
+
+		SpecificQueryAO queryAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getSpecificQueryAO(irodsAccount);
+		queryAO.removeSpecificQuery(specificQuery);
+		queryAO.addSpecificQuery(specificQuery);
+
+		SpecificQueryDefinition actual = queryAO
+				.findSpecificQueryByAlias(queryAlias);
+		Assert.assertEquals("did not find correct query", queryAlias,
+				actual.getAlias());
+
 	}
 
 }

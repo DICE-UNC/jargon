@@ -24,8 +24,6 @@ public interface IRODSProtocolManager {
 	void setAuthenticationFactory(
 			final AuthenticationFactory authenticationFactory);
 
-	
-	
 	/**
 	 * This method is called by a client when the connection is no longer
 	 * needed. The connection may be closed, or returned to a pool.
@@ -61,11 +59,13 @@ public interface IRODSProtocolManager {
 	 * This may be created new, cached from previous connection by the same
 	 * user, or from a pool.
 	 * 
-	 * @param irodsAccount {@link IRODSAccount} that defines the connection
+	 * @param irodsAccount
+	 *            {@link IRODSAccount} that defines the connection
 	 * @param pipelineConfiguration
 	 *            {@link PipelineConfiguration} that tunes the i/o pipeline and
 	 *            other connection options
-	 *   @params irodsSession {@link IRODSSession} that will manage this connection and cache information
+	 * @params irodsSession {@link IRODSSession} that will manage this
+	 *         connection and cache information
 	 */
 	IRODSCommands getIRODSProtocol(IRODSAccount irodsAccount,
 			PipelineConfiguration pipelineConfiguration,

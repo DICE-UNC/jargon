@@ -107,8 +107,8 @@ public class CollInp extends AbstractIRODSPackingInstruction {
 		}
 		this.collectionName = collectionName;
 		this.recursiveOperation = recursiveOperation;
-		this.forceOperation = false;
-		this.unregister = false;
+		forceOperation = false;
+		unregister = false;
 	}
 
 	private CollInp(final String collectionName,
@@ -121,7 +121,7 @@ public class CollInp extends AbstractIRODSPackingInstruction {
 		this.collectionName = collectionName;
 		this.recursiveOperation = recursiveOperation;
 		this.forceOperation = forceOperation;
-		this.unregister = false;
+		unregister = false;
 
 	}
 
@@ -165,11 +165,11 @@ public class CollInp extends AbstractIRODSPackingInstruction {
 
 		List<KeyValuePair> kvps = new ArrayList<KeyValuePair>();
 
-		if (this.isForceOperation()) {
+		if (isForceOperation()) {
 			kvps.add(KeyValuePair.instance(FORCE_FLAG, ""));
 		}
 
-		if (this.isRecursiveOperation()) {
+		if (isRecursiveOperation()) {
 			kvps.add(KeyValuePair.instance(RECURSIVE_OPR, ""));
 		}
 

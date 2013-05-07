@@ -32,7 +32,7 @@ public class DiscoveredServerPropertiesCacheTest {
 		target.cacheAProperty(testHost, testZone, testKey, testValue);
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void testCacheAPropertyNullZone() {
 		String testHost = "host";
 		String testZone = null;
@@ -42,7 +42,7 @@ public class DiscoveredServerPropertiesCacheTest {
 		target.cacheAProperty(testHost, testZone, testKey, testValue);
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void testCacheAPropertyBlankZone() {
 		String testHost = "host";
 		String testZone = "";
@@ -134,7 +134,7 @@ public class DiscoveredServerPropertiesCacheTest {
 		target.retrieveValue(testHost, testZone, testKey);
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void testRetrieveValueNullZone() {
 		String testHost = "host1";
 		String testZone = null;
@@ -144,7 +144,7 @@ public class DiscoveredServerPropertiesCacheTest {
 
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void testRetrieveValueBlankZone() {
 		String testHost = "host1";
 		String testZone = "";
@@ -213,7 +213,7 @@ public class DiscoveredServerPropertiesCacheTest {
 		target.deleteCachedProperty(testHost, testZone, testKey);
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void testDeleteCachedPropertyNullZone() {
 		String testHost = "host";
 		String testZone = null;
@@ -222,7 +222,7 @@ public class DiscoveredServerPropertiesCacheTest {
 		target.deleteCachedProperty(testHost, testZone, testKey);
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void testDeleteCachedPropertyBlankZone() {
 		String testHost = "host";
 		String testZone = "";
@@ -248,27 +248,31 @@ public class DiscoveredServerPropertiesCacheTest {
 		DiscoveredServerPropertiesCache target = new DiscoveredServerPropertiesCache();
 		target.deleteCachedProperty(testHost, testZone, testKey);
 	}
-	
+
 	public void testCacheIRODSServerProperties() throws Exception {
 		String host = "host";
 		String zone = "zone";
-		IRODSServerProperties props = IRODSServerProperties.instance(IcatEnabled.ICAT_ENABLED, 111, "x", "x", "x");
+		IRODSServerProperties props = IRODSServerProperties.instance(
+				IcatEnabled.ICAT_ENABLED, 111, "x", "x", "x");
 		DiscoveredServerPropertiesCache cache = new DiscoveredServerPropertiesCache();
 		cache.cacheIRODSServerProperties(host, zone, props);
-		
-		IRODSServerProperties actual = cache.retrieveIRODSServerProperties(host, zone);
+
+		IRODSServerProperties actual = cache.retrieveIRODSServerProperties(
+				host, zone);
 		Assert.assertNotNull(actual);
-		}
-	
+	}
+
 	public void testCacheIRODSServerPropertiesWrongHost() throws Exception {
 		String host = "host";
 		String zone = "zone";
-		IRODSServerProperties props = IRODSServerProperties.instance(IcatEnabled.ICAT_ENABLED, 111, "x", "x", "x");
+		IRODSServerProperties props = IRODSServerProperties.instance(
+				IcatEnabled.ICAT_ENABLED, 111, "x", "x", "x");
 		DiscoveredServerPropertiesCache cache = new DiscoveredServerPropertiesCache();
 		cache.cacheIRODSServerProperties(host, zone, props);
-		
-		IRODSServerProperties actual = cache.retrieveIRODSServerProperties("notthehost", zone);
+
+		IRODSServerProperties actual = cache.retrieveIRODSServerProperties(
+				"notthehost", zone);
 		Assert.assertNull(actual);
-		}
+	}
 
 }

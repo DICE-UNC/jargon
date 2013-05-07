@@ -78,47 +78,45 @@ public class SettableJargonProperties implements JargonProperties {
 			throw new IllegalArgumentException("null jargonProperties");
 		}
 
-		this.useParallelTransfer = jargonProperties.isUseParallelTransfer();
-		this.useNIOForParallelTransfers = jargonProperties
+		useParallelTransfer = jargonProperties.isUseParallelTransfer();
+		useNIOForParallelTransfers = jargonProperties
 				.isUseNIOForParallelTransfers();
-		this.maxFilesAndDirsQueryMax = jargonProperties
-				.getMaxFilesAndDirsQueryMax();
-		this.allowPutGetResourceRedirects = jargonProperties
+		maxFilesAndDirsQueryMax = jargonProperties.getMaxFilesAndDirsQueryMax();
+		allowPutGetResourceRedirects = jargonProperties
 				.isAllowPutGetResourceRedirects();
-		this.computeAndVerifyChecksumAfterTransfer = jargonProperties
+		computeAndVerifyChecksumAfterTransfer = jargonProperties
 				.isComputeAndVerifyChecksumAfterTransfer();
-		this.computeChecksumAfterTransfer = jargonProperties
+		computeChecksumAfterTransfer = jargonProperties
 				.isComputeChecksumAfterTransfer();
-		this.intraFileStatusCallbacks = jargonProperties
+		intraFileStatusCallbacks = jargonProperties
 				.isIntraFileStatusCallbacks();
-		this.irodsParallelSocketTimeout = jargonProperties
+		irodsParallelSocketTimeout = jargonProperties
 				.getIRODSParallelTransferSocketTimeout();
-		this.irodsSocketTimeout = jargonProperties.getIRODSSocketTimeout();
-		this.maxParallelThreads = jargonProperties.getMaxParallelThreads();
-		this.transferThreadPoolTimeoutMillis = jargonProperties
+		irodsSocketTimeout = jargonProperties.getIRODSSocketTimeout();
+		maxParallelThreads = jargonProperties.getMaxParallelThreads();
+		transferThreadPoolTimeoutMillis = jargonProperties
 				.getTransferThreadPoolTimeoutMillis();
-		this.transferThreadPoolMaxSimultaneousTransfers = jargonProperties
+		transferThreadPoolMaxSimultaneousTransfers = jargonProperties
 				.getTransferThreadPoolMaxSimultaneousTransfers();
-		this.internalInputStreamBufferSize = jargonProperties
+		internalInputStreamBufferSize = jargonProperties
 				.getInternalInputStreamBufferSize();
-		this.internalOutputStreamBufferSize = jargonProperties
+		internalOutputStreamBufferSize = jargonProperties
 				.getInternalOutputStreamBufferSize();
-		this.internalCacheBufferSize = jargonProperties
-				.getInternalCacheBufferSize();
-		this.sendInputStreamBufferSize = jargonProperties
+		internalCacheBufferSize = jargonProperties.getInternalCacheBufferSize();
+		sendInputStreamBufferSize = jargonProperties
 				.getSendInputStreamBufferSize();
-		this.localFileOutputStreamBufferSize = jargonProperties
+		localFileOutputStreamBufferSize = jargonProperties
 				.getLocalFileOutputStreamBufferSize();
-		this.localFileInputStreamBufferSize = jargonProperties
+		localFileInputStreamBufferSize = jargonProperties
 				.getLocalFileInputStreamBufferSize();
-		this.putBufferSize = jargonProperties.getPutBufferSize();
-		this.getBufferSize = jargonProperties.getGetBufferSize();
-		this.encoding = jargonProperties.getEncoding();
-		this.inputToOutputCopyBufferByteSize = jargonProperties
+		putBufferSize = jargonProperties.getPutBufferSize();
+		getBufferSize = jargonProperties.getGetBufferSize();
+		encoding = jargonProperties.getEncoding();
+		inputToOutputCopyBufferByteSize = jargonProperties
 				.getInputToOutputCopyBufferByteSize();
-		this.setInstrument(jargonProperties.isInstrument());
-		this.setReconnect(jargonProperties.isReconnect());
-		this.setDefaultToPublicIfNothingUnderRootWhenListing(jargonProperties
+		setInstrument(jargonProperties.isInstrument());
+		setReconnect(jargonProperties.isReconnect());
+		setDefaultToPublicIfNothingUnderRootWhenListing(jargonProperties
 				.isDefaultToPublicIfNothingUnderRootWhenListing());
 	}
 
@@ -274,7 +272,7 @@ public class SettableJargonProperties implements JargonProperties {
 	 */
 	@Override
 	public synchronized boolean isComputeAndVerifyChecksumAfterTransfer() {
-		return this.computeAndVerifyChecksumAfterTransfer;
+		return computeAndVerifyChecksumAfterTransfer;
 	}
 
 	/**
@@ -655,7 +653,7 @@ public class SettableJargonProperties implements JargonProperties {
 	 */
 	@Override
 	public boolean isDefaultToPublicIfNothingUnderRootWhenListing() {
-		return this.defaultToPublicIfNothingUnderRootWhenListing;
+		return defaultToPublicIfNothingUnderRootWhenListing;
 	}
 
 	/**

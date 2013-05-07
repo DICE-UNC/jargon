@@ -91,8 +91,8 @@ public class DataObjInpForMcoll extends AbstractIRODSPackingInstruction {
 		this.sourceFileAbsolutePath = sourceFileAbsolutePath;
 		this.targetFileAbsolutePath = targetFileAbsolutePath;
 		this.collectionType = collectionType;
-		this.destResourceName = destRescName;
-		this.setApiNumber(MCOLL_AN);
+		destResourceName = destRescName;
+		setApiNumber(MCOLL_AN);
 
 	}
 

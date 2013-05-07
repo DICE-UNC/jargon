@@ -22,7 +22,7 @@ public class GetTempPasswordIn extends AbstractIRODSPackingInstruction {
 
 	private GetTempPasswordIn() {
 		super();
-		this.setApiNumber(GET_TEMP_PASSWORD_API_NBR);
+		setApiNumber(GET_TEMP_PASSWORD_API_NBR);
 	}
 
 	/*

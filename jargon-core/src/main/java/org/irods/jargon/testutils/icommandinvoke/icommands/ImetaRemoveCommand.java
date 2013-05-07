@@ -53,7 +53,7 @@ public class ImetaRemoveCommand extends ImetaCommand {
 	 */
 	@Override
 	public List<String> buildCommand() throws IcommandException {
-		if (this.getObjectPath() == null || this.getObjectPath().length() == 0) {
+		if (getObjectPath() == null || getObjectPath().length() == 0) {
 			throw new IllegalArgumentException("must supply an object path");
 		}
 
@@ -72,12 +72,12 @@ public class ImetaRemoveCommand extends ImetaCommand {
 
 		command.add("imeta");
 		command.add("rm");
-		command.add(this.translateMetaObjectTypeToString(getMetaObjectType()));
-		command.add(this.getObjectPath());
-		command.add(this.getAttribName());
-		command.add(this.getAttribValue());
-		if (this.getAttribUnits().length() > 0) {
-			command.add(this.getAttribUnits());
+		command.add(translateMetaObjectTypeToString(getMetaObjectType()));
+		command.add(getObjectPath());
+		command.add(getAttribName());
+		command.add(getAttribValue());
+		if (getAttribUnits().length() > 0) {
+			command.add(getAttribUnits());
 		}
 		return command;
 	}

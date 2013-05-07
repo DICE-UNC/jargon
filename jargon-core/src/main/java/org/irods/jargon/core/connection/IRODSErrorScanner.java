@@ -11,6 +11,7 @@ import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.DuplicateDataException;
 import org.irods.jargon.core.exception.FileIntegrityException;
 import org.irods.jargon.core.exception.FileNotFoundException;
+import org.irods.jargon.core.exception.InvalidArgumentException;
 import org.irods.jargon.core.exception.InvalidGroupException;
 import org.irods.jargon.core.exception.InvalidUserException;
 import org.irods.jargon.core.exception.JargonException;
@@ -37,11 +38,28 @@ import org.irods.jargon.core.protovalues.ErrorEnum;
  */
 public class IRODSErrorScanner {
 
-	public static void inspectAndThrowIfNeeded(final int infoValue)
-			throws JargonException {
+	/**
+	 * Scan the response for errors, and incorporate any message information
+	 * that might expand the error
+	 * 
+	 * @param infoValue
+	 *            <code>int</code> with the iRODS info value from a packing
+	 *            instruction response header
+	 * @param message
+	 *            <code>String</code> with any additional error information
+	 *            coming from the response in the <code>msg</code> field of the
+	 *            header
+	 * @throws JargonException
+	 */
+	public static void inspectAndThrowIfNeeded(final int infoValue,
+			String message) throws JargonException {
 
 		if (infoValue == 0) {
 			return;
+		}
+
+		if (message == null) {
+			message = "";
 		}
 
 		ErrorEnum errorEnum;
@@ -109,11 +127,36 @@ public class IRODSErrorScanner {
 		case SPECIFIC_QUERY_EXCEPTION:
 			throw new SpecificQueryException(
 					"Exception processing specific query", infoValue);
+		case CAT_INVALID_ARGUMENT:
+			throw new InvalidArgumentException(message, infoValue);
 		default:
-			throw new JargonException("error code received from iRODS:"
-					+ infoValue, infoValue);
-		}
+			StringBuilder sb = new StringBuilder();
+			if (message.isEmpty()) {
+				sb.append("error code received from iRODS:");
+				sb.append(infoValue);
 
+				throw new JargonException(sb.toString(), infoValue);
+			} else {
+				sb.append("error code received from iRODS:");
+				sb.append(infoValue);
+				sb.append(" message:");
+				sb.append(message);
+				throw new JargonException(sb.toString(), infoValue);
+			}
+		}
+	}
+
+	/**
+	 * Inspect the <code>info</code> value from an iRODS packing instruction
+	 * response header and throw an exception if an error was detected
+	 * 
+	 * @param infoValue
+	 * @throws JargonException
+	 */
+	public static void inspectAndThrowIfNeeded(final int infoValue)
+			throws JargonException {
+
+		inspectAndThrowIfNeeded(infoValue, "");
 	}
 
 }

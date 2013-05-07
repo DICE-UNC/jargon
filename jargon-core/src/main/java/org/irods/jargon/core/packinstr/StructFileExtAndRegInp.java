@@ -247,9 +247,9 @@ public final class StructFileExtAndRegInp extends
 
 		this.tarFileAbsolutePath = tarFileAbsolutePath;
 		this.tarCollectionAbsolutePath = tarCollectionAbsolutePath;
-		this.setApiNumber(apiNumber);
+		setApiNumber(apiNumber);
 		this.forceOption = forceOption;
-		this.operationType = DEFAULT_OPERATION_TYPE;
+		operationType = DEFAULT_OPERATION_TYPE;
 		this.resourceName = resourceName;
 		this.extractAsBulkOperation = extractAsBulkOperation;
 

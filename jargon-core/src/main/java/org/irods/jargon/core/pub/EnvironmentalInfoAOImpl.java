@@ -71,7 +71,7 @@ public class EnvironmentalInfoAOImpl extends IRODSGenericAO implements
 				"getIRODSServerCurrentTime||msiGetSystemTime(*Time,null)##writeLine(stdout, *Time)|nop\n");
 		sb.append("null\n");
 		sb.append("*Time%ruleExecOut");
-		RuleProcessingAO ruleProcessingAO = this.getIRODSAccessObjectFactory()
+		RuleProcessingAO ruleProcessingAO = getIRODSAccessObjectFactory()
 				.getRuleProcessingAO(getIRODSAccount());
 		IRODSRuleExecResult result = ruleProcessingAO
 				.executeRule(sb.toString());
@@ -111,7 +111,7 @@ public class EnvironmentalInfoAOImpl extends IRODSGenericAO implements
 				"showLoadedRules||msiAdmShowIRB(null)|nop\n");
 		sb.append("null\n");
 		sb.append("ruleExecOut");
-		RuleProcessingAO ruleProcessingAO = this.getIRODSAccessObjectFactory()
+		RuleProcessingAO ruleProcessingAO = getIRODSAccessObjectFactory()
 				.getRuleProcessingAO(getIRODSAccount());
 		IRODSRuleExecResult result = ruleProcessingAO
 				.executeRule(sb.toString());
@@ -145,7 +145,7 @@ public class EnvironmentalInfoAOImpl extends IRODSGenericAO implements
 	 */
 	@Override
 	public boolean isAbleToRunSpecificQuery() throws JargonException {
-		if (this.getIRODSServerProperties()
+		if (getIRODSServerProperties()
 				.isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods3.1")) {
 			return true;
 		} else {
@@ -166,9 +166,8 @@ public class EnvironmentalInfoAOImpl extends IRODSGenericAO implements
 		log.info("listAvailableRemoteCommands()");
 		List<RemoteCommandInformation> remoteCommandInformation = new ArrayList<RemoteCommandInformation>();
 
-		RemoteExecutionOfCommandsAO remoteExecutionAO = this
-				.getIRODSAccessObjectFactory().getRemoteExecutionOfCommandsAO(
-						getIRODSAccount());
+		RemoteExecutionOfCommandsAO remoteExecutionAO = getIRODSAccessObjectFactory()
+				.getRemoteExecutionOfCommandsAO(getIRODSAccount());
 
 		InputStream result = null;
 		StringWriter writer = new StringWriter();
@@ -178,8 +177,7 @@ public class EnvironmentalInfoAOImpl extends IRODSGenericAO implements
 			result = remoteExecutionAO
 					.executeARemoteCommandAndGetStreamGivingCommandNameAndArgs(
 							"listCommands.sh", "");
-			IOUtils.copy(result, writer, this.getJargonProperties()
-					.getEncoding());
+			IOUtils.copy(result, writer, getJargonProperties().getEncoding());
 		} catch (RemoteScriptExecutionException rse) {
 			throw new DataNotFoundException(
 					"no data can be found, listCommands.sh is not installed");
@@ -215,7 +213,7 @@ public class EnvironmentalInfoAOImpl extends IRODSGenericAO implements
 			remoteCommandInformationEntry = new RemoteCommandInformation();
 			remoteCommandInformationEntry.setRawData(token);
 			remoteCommandInformationEntry.setCommand(command);
-			remoteCommandInformationEntry.setHostName(this.getIRODSAccount()
+			remoteCommandInformationEntry.setHostName(getIRODSAccount()
 					.getHost());
 			remoteCommandInformationEntry.setZone(getIRODSAccount().getZone());
 			remoteCommandInformation.add(remoteCommandInformationEntry);
@@ -238,13 +236,13 @@ public class EnvironmentalInfoAOImpl extends IRODSGenericAO implements
 		log.info("listAvailableMicroservices()");
 		List<String> availableMicroservices = new ArrayList<String>();
 
-		if (!this.getIRODSServerProperties()
+		if (!getIRODSServerProperties()
 				.isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods3.0")) {
 			throw new JargonException(
 					"service not available on servers prior to rods3.0");
 		}
 
-		RuleProcessingAO ruleProcessingAO = this.getIRODSAccessObjectFactory()
+		RuleProcessingAO ruleProcessingAO = getIRODSAccessObjectFactory()
 				.getRuleProcessingAO(getIRODSAccount());
 		IRODSRuleExecResult result = ruleProcessingAO.executeRuleFromResource(
 				"/rules/rulemsiListEnabledMS.r", null,

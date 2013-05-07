@@ -152,7 +152,7 @@ public class IRODSConnection implements IRODSManagedConnection {
 				.getName());
 		connectionInternalIdentifierBuilder.append('/');
 		connectionInternalIdentifierBuilder.append(System.currentTimeMillis());
-		this.connectionInternalIdentifier = connectionInternalIdentifierBuilder
+		connectionInternalIdentifier = connectionInternalIdentifierBuilder
 				.toString();
 	}
 
@@ -183,7 +183,7 @@ public class IRODSConnection implements IRODSManagedConnection {
 			throw new IllegalArgumentException("null pipelineConfiguration");
 		}
 
-		this.irodsProtocolManager = irodsConnectionManager;
+		irodsProtocolManager = irodsConnectionManager;
 		this.irodsAccount = irodsAccount;
 		this.pipelineConfiguration = pipelineConfiguration;
 
@@ -239,13 +239,13 @@ public class IRODSConnection implements IRODSManagedConnection {
 			throw new IllegalArgumentException("null providedSocket");
 		}
 
-		this.irodsProtocolManager = irodsConnectionManager;
+		irodsProtocolManager = irodsConnectionManager;
 		this.irodsAccount = irodsAccount;
 		this.pipelineConfiguration = pipelineConfiguration;
 
 		log.info("pipeline configuration:{}", pipelineConfiguration);
-		this.connection = providedSocket;
-		this.connected = true;
+		connection = providedSocket;
+		connected = true;
 		setUpSocketAndStreamsAfterConnection(irodsAccount);
 
 		if (pipelineConfiguration.getInternalCacheBufferSize() > 0) {
@@ -416,7 +416,7 @@ public class IRODSConnection implements IRODSManagedConnection {
 		}
 		log.info("disconnecting...");
 		// disconnect from irods and close
-		this.irodsProtocolManager.returnIRODSConnection(this);
+		irodsProtocolManager.returnIRODSConnection(this);
 
 		log.info("disconnected");
 	}
@@ -432,7 +432,7 @@ public class IRODSConnection implements IRODSManagedConnection {
 
 		log.info("disconnecting...");
 		// disconnect from irods and close
-		this.irodsProtocolManager.returnConnectionWithIoException(this);
+		irodsProtocolManager.returnConnectionWithIoException(this);
 	}
 
 	/*
@@ -461,9 +461,9 @@ public class IRODSConnection implements IRODSManagedConnection {
 	 * 
 	 */
 	private void closeDownSocketAndEatAnyExceptions() {
-		if (this.isConnected()) {
+		if (isConnected()) {
 
-			log.info("is connected for : {}", this.toString());
+			log.info("is connected for : {}", toString());
 			try {
 				connection.close();
 
@@ -500,7 +500,7 @@ public class IRODSConnection implements IRODSManagedConnection {
 
 	@Override
 	public String toString() {
-		return this.connectionInternalIdentifier;
+		return connectionInternalIdentifier;
 	}
 
 	/**
@@ -986,7 +986,7 @@ public class IRODSConnection implements IRODSManagedConnection {
 			log.error("********  connection is:{}, will attempt to disconnect",
 					getConnectionUri());
 			log.error("**************************************************************************************");
-			this.disconnect();
+			disconnect();
 		}
 
 		super.finalize();

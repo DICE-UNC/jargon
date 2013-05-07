@@ -27,7 +27,7 @@ public class SSLStartInp extends AbstractIRODSPackingInstruction {
 	 * Default (no-values) constructor
 	 */
 	private SSLStartInp() {
-		this.setApiNumber(SSL_START_API_NBR);
+		setApiNumber(SSL_START_API_NBR);
 	}
 
 	/*

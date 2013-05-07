@@ -106,8 +106,11 @@ public interface IRODSAccessObject {
 	void operationComplete(int status) throws JargonException;
 
 	/**
-	 * Upon creation, refer to jargon properties and see if this code should be instrumented
-	 * @return <code>boolean</code> of <code>true</code> if performance instrumentation is desired
+	 * Upon creation, refer to jargon properties and see if this code should be
+	 * instrumented
+	 * 
+	 * @return <code>boolean</code> of <code>true</code> if performance
+	 *         instrumentation is desired
 	 */
 	boolean isInstrumented();
 

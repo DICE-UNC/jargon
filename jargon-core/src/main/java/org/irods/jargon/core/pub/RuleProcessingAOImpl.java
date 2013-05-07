@@ -144,7 +144,7 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements
 					"null or empty ruleFileAbsolutePath");
 		}
 
-		IRODSFileReader irodsFileReader = this.getIRODSFileFactory()
+		IRODSFileReader irodsFileReader = getIRODSFileFactory()
 				.instanceIRODSFileReader(ruleFileAbsolutePath);
 
 		StringWriter writer = null;
@@ -194,14 +194,14 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements
 
 		log.info("executing rule: {}", irodsRuleAsString);
 		final IRODSRuleTranslator irodsRuleTranslator = new IRODSRuleTranslator(
-				this.getIRODSServerProperties());
+				getIRODSServerProperties());
 
 		/*
 		 * if iRODS 3.0+, add the @external parameter to the rule body for new
 		 * style rules
 		 */
 
-		if (this.getIRODSServerProperties()
+		if (getIRODSServerProperties()
 				.isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods3.0")
 				&& IRODSRuleTranslator.isUsingNewRuleSyntax(irodsRuleAsString)) {
 
@@ -252,14 +252,14 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements
 
 		log.info("executing rule: {}", irodsRuleAsString);
 		final IRODSRuleTranslator irodsRuleTranslator = new IRODSRuleTranslator(
-				this.getIRODSServerProperties());
+				getIRODSServerProperties());
 
 		/*
 		 * if iRODS 3.0+, add the @external parameter to the rule body for new
 		 * style rules
 		 */
 
-		if (this.getIRODSServerProperties()
+		if (getIRODSServerProperties()
 				.isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods3.0")
 				&& IRODSRuleTranslator.isUsingNewRuleSyntax(irodsRuleAsString)) {
 
@@ -695,15 +695,13 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements
 	private void clientSidePutAction(final String irodsFileAbsolutePath,
 			final File localFile, final String resourceName,
 			final boolean force, final int nbrThreads) throws JargonException {
-		DataObjectAOImpl dataObjectAO = (DataObjectAOImpl) this
-				.getIRODSAccessObjectFactory().getDataObjectAO(
-						this.getIRODSAccount());
+		DataObjectAOImpl dataObjectAO = (DataObjectAOImpl) getIRODSAccessObjectFactory()
+				.getDataObjectAO(getIRODSAccount());
 		IRODSFile irodsFile = dataObjectAO
 				.instanceIRODSFileForPath(irodsFileAbsolutePath);
 		irodsFile.setResource(resourceName);
 		log.debug("performing put of file");
-		TransferControlBlock transferControlBlock = this
-				.buildDefaultTransferControlBlockBasedOnJargonProperties();
+		TransferControlBlock transferControlBlock = buildDefaultTransferControlBlockBasedOnJargonProperties();
 		if (force) {
 			transferControlBlock.getTransferOptions().setForceOption(
 					ForceOption.USE_FORCE);
@@ -732,15 +730,13 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements
 
 		log.info("client-side get action");
 
-		DataObjectAOImpl dataObjectAO = (DataObjectAOImpl) this
-				.getIRODSAccessObjectFactory().getDataObjectAO(
-						getIRODSAccount());
+		DataObjectAOImpl dataObjectAO = (DataObjectAOImpl) getIRODSAccessObjectFactory()
+				.getDataObjectAO(getIRODSAccount());
 		IRODSFile irodsFile = dataObjectAO
 				.instanceIRODSFileForPath(irodsFileAbsolutePath);
 		irodsFile.setResource(resourceName);
 		log.info("performing get of file");
-		TransferOptions transferOptions = this
-				.buildTransferOptionsBasedOnJargonProperties();
+		TransferOptions transferOptions = buildTransferOptionsBasedOnJargonProperties();
 		if (force) {
 			transferOptions.setForceOption(ForceOption.USE_FORCE);
 		} else {
@@ -758,7 +754,7 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements
 				.irodsDataObjectGetOperationForClientSideAction(irodsFile,
 						localFile, transferOptions);
 
-		this.operationComplete(status);
+		operationComplete(status);
 
 		log.debug("client side get action was successful");
 	}

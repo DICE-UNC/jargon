@@ -153,8 +153,8 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		log.info("absolutePath:{}", absolutePathToParent);
 
 		PagingAwareCollectionListing pagingAwareCollectionListing = new PagingAwareCollectionListing();
-		pagingAwareCollectionListing.setPageSizeUtilized(this
-				.getJargonProperties().getMaxFilesAndDirsQueryMax());
+		pagingAwareCollectionListing.setPageSizeUtilized(getJargonProperties()
+				.getMaxFilesAndDirsQueryMax());
 		List<CollectionAndDataObjectListingEntry> entries = null;
 		ObjStat objStat = null;
 

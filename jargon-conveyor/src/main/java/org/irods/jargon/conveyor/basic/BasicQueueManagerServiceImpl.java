@@ -149,11 +149,12 @@ public class BasicQueueManagerServiceImpl extends
 			log.info("have transfer to run... setting up the new attempt:{}",
 					transfer);
 
-			TransferAttempt transferAttempt =
-                                conveyorService.getTransferAccountingManagementService().prepareTransferForExecution(transfer);
+			TransferAttempt transferAttempt = conveyorService
+					.getTransferAccountingManagementService()
+					.prepareTransferForExecution(transfer);
 
 			this.getConveyorExecutorService().processTransferAndHandleReturn(
-					transfer, this.conveyorService);
+					transfer, transferAttempt, this.conveyorService);
 
 		} catch (JargonException je) {
 			log.error("jargon exception dequeue operation, will unlock queue");
@@ -166,27 +167,27 @@ public class BasicQueueManagerServiceImpl extends
 		}
 
 	}
-        
-        @Override
-        public void processTransfer(String irodsFile,
-                    String localFile,
-                    IRODSAccount irodsAccount,
-                    TransferType type) throws ConveyorExecutionException {
-            
-                log.info("processTransfer()");
-                
-                Transfer transfer = new Transfer();
+
+	@Override
+	public void processTransfer(String irodsFile, String localFile,
+			IRODSAccount irodsAccount, TransferType type)
+			throws ConveyorExecutionException {
+
+		log.info("processTransfer()");
+
+		Transfer transfer = new Transfer();
 		transfer.setCreatedAt(new Date());
 		transfer.setIrodsAbsolutePath(irodsFile);
 		transfer.setLocalAbsolutePath(localFile);
 		transfer.setTransferType(type);
-                
-                // FIXME: allready done in enqueue?
-                transfer.setGridAccount(conveyorService.getGridAccountService().findGridAccountByIRODSAccount(irodsAccount));
-                
-                log.info("ready to enqueue transfer:{}", transfer);
-                enqueueTransferOperation(transfer, irodsAccount);
-        }
+
+		// FIXME: allready done in enqueue?
+		transfer.setGridAccount(conveyorService.getGridAccountService()
+				.findGridAccountByIRODSAccount(irodsAccount));
+
+		log.info("ready to enqueue transfer:{}", transfer);
+		enqueueTransferOperation(transfer, irodsAccount);
+	}
 
 	/**
 	 * @return the transferDAO

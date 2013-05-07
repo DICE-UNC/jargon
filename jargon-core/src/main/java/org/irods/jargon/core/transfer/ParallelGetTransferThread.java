@@ -88,7 +88,7 @@ public final class ParallelGetTransferThread extends
 			Host.copyInt(parallelGetFileTransferStrategy.getPassword(),
 					outputBuffer);
 			setIn(new BufferedInputStream(getS().getInputStream()));
-			this.setOut(new BufferedOutputStream(getS().getOutputStream()));
+			setOut(new BufferedOutputStream(getS().getOutputStream()));
 			log.debug("socket established, sending cookie to iRODS listener");
 			getOut().write(outputBuffer);
 			getOut().flush();
@@ -98,19 +98,19 @@ public final class ParallelGetTransferThread extends
 			get();
 			log.info("exiting get and returning the finish object");
 			ParallelTransferResult result = new ParallelTransferResult();
-			result.transferException = this.getExceptionInTransfer();
+			result.transferException = getExceptionInTransfer();
 			return result;
 
 		} catch (UnknownHostException e) {
 			log.error("Unknown host: {}",
 					parallelGetFileTransferStrategy.getHost());
-			this.setExceptionInTransfer(e);
+			setExceptionInTransfer(e);
 			throw new JargonException("unknown host:"
 					+ parallelGetFileTransferStrategy.getHost(), e);
 		} catch (IOException e) {
 			log.error(IO_EXEPTION_IN_PARALLEL_TRANSFER,
 					parallelGetFileTransferStrategy.toString());
-			this.setExceptionInTransfer(e);
+			setExceptionInTransfer(e);
 			throw new JargonException(
 					IO_EXCEPTION_OCCURRED_DURING_PARALLEL_FILE_TRANSFER, e);
 		}
@@ -120,7 +120,7 @@ public final class ParallelGetTransferThread extends
 	public void get() throws JargonException {
 		log.info("parallel transfer get");
 
-		if (this.parallelGetFileTransferStrategy
+		if (parallelGetFileTransferStrategy
 				.getConnectionProgressStatusListener() == null) {
 			log.info("no connection progress status listener configured, no detailed callbacks");
 		} else {

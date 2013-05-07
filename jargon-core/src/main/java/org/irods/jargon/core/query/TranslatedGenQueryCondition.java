@@ -108,8 +108,8 @@ public class TranslatedGenQueryCondition {
 					"columnNumericTranslation is null or blank");
 		}
 
-		this.columnName = fieldName;
-		this.fieldSource = GenQuerySelectField.SelectFieldSource.EXTENSIBLE_METADATA;
+		columnName = fieldName;
+		fieldSource = GenQuerySelectField.SelectFieldSource.EXTENSIBLE_METADATA;
 		this.operator = operator;
 		this.value = value;
 		this.columnNumericTranslation = columnNumericTranslation;
@@ -131,12 +131,11 @@ public class TranslatedGenQueryCondition {
 			throw new JargonQueryException("value in condition is null");
 		}
 
-		this.columnName = fieldName.getName();
-		this.fieldSource = GenQuerySelectField.SelectFieldSource.DEFINED_QUERY_FIELD;
+		columnName = fieldName.getName();
+		fieldSource = GenQuerySelectField.SelectFieldSource.DEFINED_QUERY_FIELD;
 		this.operator = operator;
 		this.value = value;
-		this.columnNumericTranslation = String.valueOf(fieldName
-				.getNumericValue());
+		columnNumericTranslation = String.valueOf(fieldName.getNumericValue());
 
 	}
 
@@ -167,7 +166,7 @@ public class TranslatedGenQueryCondition {
 			throw new JargonQueryException("value in condition is null");
 		}
 
-		this.columnName = fieldName;
+		columnName = fieldName;
 		this.fieldSource = GenQuerySelectField.SelectFieldSource.DEFINED_QUERY_FIELD;
 		this.operator = operator;
 		this.value = value;
