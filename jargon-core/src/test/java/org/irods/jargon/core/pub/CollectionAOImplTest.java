@@ -119,9 +119,9 @@ public class CollectionAOImplTest {
 								+ testDirName);
 
 		// initialize the AVU data
-		String expectedAttribName = "testattrib1";
-		String expectedAttribValue = "testvalue1";
-		String expectedAttribUnits = "test1units";
+		String expectedAttribName = "FindDomainByMetadataQuerytestattrib1";
+		String expectedAttribValue = "FindDomainByMetadataQuerytestvalue1";
+		String expectedAttribUnits = "FindDomainByMetadataQuerytest1units";
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);

@@ -42,7 +42,7 @@ public class IRODSFileReaderTest {
 
 	@Test(expected = JargonException.class)
 	public void testIRODSFileReaderFileDoesNotExist() throws Exception {
-		String testFileName = "testCanRead.txt";
+		String testFileName = "testIRODSFileReaderFileDoesNotExist.txt";
 
 		String targetIrodsFile = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(

@@ -2182,7 +2182,7 @@ public class DataObjectAOImplTest {
 
 	@Test
 	public final void testFindMetadataValuesByMetadataQuery() throws Exception {
-		String testFileName = "testFindMetadataValuesByMetadataQuery.csv";
+		String testFileName = "testFindMetadataValuesByMetadataQueryFile.csv";
 		String absPath = scratchFileUtils
 				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
 		String localFileName = FileGenerator
