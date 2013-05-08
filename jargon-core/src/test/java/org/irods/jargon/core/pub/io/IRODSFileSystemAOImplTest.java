@@ -1044,8 +1044,9 @@ public class IRODSFileSystemAOImplTest {
 
 		fileSystemAO.mkdir(irodsFile, true);
 		irodsSession.closeSession();
-		assertionHelper.assertIrodsFileOrCollectionExists(irodsFile
-				.getAbsolutePath());
+		assertionHelper.assertIrodsFileOrCollectionExists(
+				irodsFile.getAbsolutePath(),
+				irodsFileSystem.getIRODSAccessObjectFactory(), irodsAccount);
 	}
 
 	@Test
@@ -1075,8 +1076,9 @@ public class IRODSFileSystemAOImplTest {
 
 		fileSystemAO.mkdir(irodsFile, false);
 		irodsSession.closeSession();
-		assertionHelper
-				.assertIrodsFileOrCollectionExists(targetIrodsCollection);
+		assertionHelper.assertIrodsFileOrCollectionExists(
+				targetIrodsCollection,
+				irodsFileSystem.getIRODSAccessObjectFactory(), irodsAccount);
 	}
 
 	@Test(expected = JargonException.class)
@@ -1235,8 +1237,9 @@ public class IRODSFileSystemAOImplTest {
 		fileSystemAO.fileDeleteForce(irodsFile);
 
 		// check if file exists
-		assertionHelper.assertIrodsFileOrCollectionDoesNotExist(irodsFile
-				.getAbsolutePath());
+		assertionHelper.assertIrodsFileOrCollectionDoesNotExist(
+				irodsFile.getAbsolutePath(),
+				irodsFileSystem.getIRODSAccessObjectFactory(), irodsAccount);
 	}
 
 	@Test
@@ -1289,8 +1292,9 @@ public class IRODSFileSystemAOImplTest {
 		fileSystemAO.fileDeleteNoForce(irodsFile);
 
 		// check if file exists
-		assertionHelper.assertIrodsFileOrCollectionDoesNotExist(irodsFile
-				.getAbsolutePath());
+		assertionHelper.assertIrodsFileOrCollectionDoesNotExist(
+				irodsFile.getAbsolutePath(),
+				irodsFileSystem.getIRODSAccessObjectFactory(), irodsAccount);
 	}
 
 	@Test
@@ -1329,8 +1333,9 @@ public class IRODSFileSystemAOImplTest {
 		fileSystemAO.directoryDeleteForce(irodsFile);
 
 		// check if dir exists
-		assertionHelper.assertIrodsFileOrCollectionDoesNotExist(irodsFile
-				.getAbsolutePath());
+		assertionHelper.assertIrodsFileOrCollectionDoesNotExist(
+				irodsFile.getAbsolutePath(),
+				irodsFileSystem.getIRODSAccessObjectFactory(), irodsAccount);
 	}
 
 	@Test
@@ -1387,10 +1392,12 @@ public class IRODSFileSystemAOImplTest {
 				.getIRODSFileSystemAO(irodsAccount);
 
 		fileSystemAO.renameFile(irodsFile, irodsRenameFile);
-		assertionHelper.assertIrodsFileOrCollectionDoesNotExist(irodsFile
-				.getAbsolutePath());
-		assertionHelper.assertIrodsFileOrCollectionExists(irodsRenameFile
-				.getAbsolutePath());
+		assertionHelper.assertIrodsFileOrCollectionDoesNotExist(
+				irodsFile.getAbsolutePath(),
+				irodsFileSystem.getIRODSAccessObjectFactory(), irodsAccount);
+		assertionHelper.assertIrodsFileOrCollectionExists(
+				irodsRenameFile.getAbsolutePath(),
+				irodsFileSystem.getIRODSAccessObjectFactory(), irodsAccount);
 	}
 
 	@Test
@@ -1435,10 +1442,12 @@ public class IRODSFileSystemAOImplTest {
 				.getIRODSFileSystemAO(irodsAccount);
 
 		fileSystemAO.renameDirectory(irodsFile, irodsRenameFile);
-		assertionHelper.assertIrodsFileOrCollectionDoesNotExist(irodsFile
-				.getAbsolutePath());
-		assertionHelper.assertIrodsFileOrCollectionExists(irodsRenameFile
-				.getAbsolutePath());
+		assertionHelper.assertIrodsFileOrCollectionDoesNotExist(
+				irodsFile.getAbsolutePath(),
+				irodsFileSystem.getIRODSAccessObjectFactory(), irodsAccount);
+		assertionHelper.assertIrodsFileOrCollectionExists(
+				irodsRenameFile.getAbsolutePath(),
+				irodsFileSystem.getIRODSAccessObjectFactory(), irodsAccount);
 	}
 
 	@Test

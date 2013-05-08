@@ -126,8 +126,8 @@ public class FileIOOperationsAOImplTest {
 		long length = irodsFile.length();
 		irodsFile.close();
 		irodsSession.closeSession();
-		assertionHelper.assertIrodsFileOrCollectionExists(irodsFile
-				.getAbsolutePath());
+		assertionHelper.assertIrodsFileOrCollectionExists(
+				irodsFile.getAbsolutePath(), accessObjectFactory, irodsAccount);
 		Assert.assertEquals("length of file does not match data written",
 				myBytesArray.length, length);
 

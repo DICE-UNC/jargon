@@ -1115,8 +1115,8 @@ public class IRODSFileImplTest {
 
 		Assert.assertTrue("did not get a true result from the file delete",
 				result);
-		assertionHelper.assertIrodsFileOrCollectionDoesNotExist(irodsFile
-				.getAbsolutePath());
+		assertionHelper.assertIrodsFileOrCollectionDoesNotExist(
+				irodsFile.getAbsolutePath(), accessObjectFactory, irodsAccount);
 	}
 
 	@Test
@@ -1181,8 +1181,9 @@ public class IRODSFileImplTest {
 		irodsFileSystem.close();
 		Assert.assertTrue("did not get a true result from the file delete",
 				result);
-		assertionHelper.assertIrodsFileOrCollectionDoesNotExist(irodsFile
-				.getAbsolutePath());
+		assertionHelper.assertIrodsFileOrCollectionDoesNotExist(
+				irodsFile.getAbsolutePath(),
+				irodsFileSystem.getIRODSAccessObjectFactory(), irodsAccount);
 	}
 
 	@Test
@@ -1225,8 +1226,9 @@ public class IRODSFileImplTest {
 		irodsFileSystem.close();
 		Assert.assertTrue("did not get a true result from the file delete",
 				result);
-		assertionHelper.assertIrodsFileOrCollectionDoesNotExist(irodsFile
-				.getAbsolutePath());
+		assertionHelper.assertIrodsFileOrCollectionDoesNotExist(
+				irodsFile.getAbsolutePath(),
+				irodsFileSystem.getIRODSAccessObjectFactory(), irodsAccount);
 	}
 
 	@Test
@@ -1264,8 +1266,9 @@ public class IRODSFileImplTest {
 
 		Assert.assertTrue(
 				"did not get a true result from the collection delete", result);
-		assertionHelper.assertIrodsFileOrCollectionDoesNotExist(irodsFile
-				.getAbsolutePath());
+		assertionHelper.assertIrodsFileOrCollectionDoesNotExist(
+				irodsFile.getAbsolutePath(),
+				irodsFileSystem.getIRODSAccessObjectFactory(), irodsAccount);
 	}
 
 	@Test
@@ -1303,8 +1306,9 @@ public class IRODSFileImplTest {
 
 		Assert.assertTrue(
 				"did not get a true result from the collection delete", result);
-		assertionHelper.assertIrodsFileOrCollectionDoesNotExist(irodsFile
-				.getAbsolutePath());
+		assertionHelper.assertIrodsFileOrCollectionDoesNotExist(
+				irodsFile.getAbsolutePath(),
+				irodsFileSystem.getIRODSAccessObjectFactory(), irodsAccount);
 	}
 
 	@Test
@@ -1431,8 +1435,9 @@ public class IRODSFileImplTest {
 				.instanceIRODSFile(targetIrodsCollection);
 		irodsFile.mkdir();
 		irodsSession.closeSession();
-		assertionHelper
-				.assertIrodsFileOrCollectionExists(targetIrodsCollection);
+		assertionHelper.assertIrodsFileOrCollectionExists(
+				targetIrodsCollection,
+				irodsFileSystem.getIRODSAccessObjectFactory(), irodsAccount);
 	}
 
 	@Test
@@ -1489,8 +1494,9 @@ public class IRODSFileImplTest {
 				.instanceIRODSFile(targetIrodsCollection);
 		irodsFile.mkdirs();
 		irodsSession.closeSession();
-		assertionHelper
-				.assertIrodsFileOrCollectionExists(targetIrodsCollection);
+		assertionHelper.assertIrodsFileOrCollectionExists(
+				targetIrodsCollection,
+				irodsFileSystem.getIRODSAccessObjectFactory(), irodsAccount);
 	}
 
 	/**
@@ -2129,10 +2135,12 @@ public class IRODSFileImplTest {
 
 		irodsFile.renameTo(irodsRenameFile);
 		irodsSession.closeSession();
-		assertionHelper.assertIrodsFileOrCollectionDoesNotExist(irodsFile
-				.getAbsolutePath());
-		assertionHelper.assertIrodsFileOrCollectionExists(irodsRenameFile
-				.getAbsolutePath());
+		assertionHelper.assertIrodsFileOrCollectionDoesNotExist(
+				irodsFile.getAbsolutePath(),
+				irodsFileSystem.getIRODSAccessObjectFactory(), irodsAccount);
+		assertionHelper.assertIrodsFileOrCollectionExists(
+				irodsRenameFile.getAbsolutePath(),
+				irodsFileSystem.getIRODSAccessObjectFactory(), irodsAccount);
 	}
 
 	/**
@@ -2248,10 +2256,12 @@ public class IRODSFileImplTest {
 						+ testRenamedDirectory);
 		irodsFile.renameTo(irodsRenameFile);
 		irodsSession.closeSession();
-		assertionHelper.assertIrodsFileOrCollectionDoesNotExist(irodsFile
-				.getAbsolutePath());
-		assertionHelper.assertIrodsFileOrCollectionExists(irodsRenameFile
-				.getAbsolutePath());
+		assertionHelper.assertIrodsFileOrCollectionDoesNotExist(
+				irodsFile.getAbsolutePath(),
+				irodsFileSystem.getIRODSAccessObjectFactory(), irodsAccount);
+		assertionHelper.assertIrodsFileOrCollectionExists(
+				irodsRenameFile.getAbsolutePath(),
+				irodsFileSystem.getIRODSAccessObjectFactory(), irodsAccount);
 
 	}
 

@@ -348,7 +348,7 @@ public class IRODSGenQueryExecutorImplTest {
 	@Test
 	public final void testExecuteIRODSQueryManyTimes() throws Exception {
 
-		int count = 1000;
+		int count = 200;
 		String queryString = "select "
 				+ RodsGenQueryEnum.COL_R_RESC_NAME.getName()
 				+ " ,"
@@ -535,7 +535,7 @@ public class IRODSGenQueryExecutorImplTest {
 		IRODSFileFactory iff = irodsFileSystem
 				.getIRODSFileFactory(irodsAccount);
 
-		int nbrTimes = 100;
+		int nbrTimes = 20;
 
 		for (int i = 0; i < nbrTimes; i++) {
 			// get connection and file

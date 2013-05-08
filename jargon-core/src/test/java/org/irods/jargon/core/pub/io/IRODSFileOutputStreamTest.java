@@ -310,7 +310,8 @@ public class IRODSFileOutputStreamTest {
 		irodsFileFactory.instanceIRODSFileOutputStream(irodsFile);
 		irodsFileSystem.closeAndEatExceptions();
 		assertionHelper.assertIrodsFileOrCollectionExists(targetIrodsCollection
-				+ '/' + testFileName);
+				+ '/' + testFileName,
+				irodsFileSystem.getIRODSAccessObjectFactory(), irodsAccount);
 	}
 
 	@Test
@@ -335,7 +336,8 @@ public class IRODSFileOutputStreamTest {
 		irodsFile.createNewFile();
 		irodsFileSystem.closeAndEatExceptions();
 		assertionHelper.assertIrodsFileOrCollectionExists(targetIrodsCollection
-				+ '/' + testFileName);
+				+ '/' + testFileName,
+				irodsFileSystem.getIRODSAccessObjectFactory(), irodsAccount);
 
 	}
 
@@ -370,7 +372,8 @@ public class IRODSFileOutputStreamTest {
 		irodsFile.createNewFile();
 		irodsFileSystem.closeAndEatExceptions();
 		assertionHelper.assertIrodsFileOrCollectionExists(targetIrodsCollection
-				+ "/" + testFileName);
+				+ "/" + testFileName,
+				irodsFileSystem.getIRODSAccessObjectFactory(), irodsAccount);
 
 	}
 
@@ -421,7 +424,8 @@ public class IRODSFileOutputStreamTest {
 				.instanceIRODSFileOutputStream(irodsFile);
 		irodsFileSystem.closeAndEatExceptions();
 		assertionHelper.assertIrodsFileOrCollectionExists(targetIrodsCollection
-				+ '/' + testFileName);
+				+ '/' + testFileName,
+				irodsFileSystem.getIRODSAccessObjectFactory(), irodsAccount);
 		Assert.assertTrue("no file descriptor assigned",
 				irodsFileOutputStream.getFileDescriptor() > -1);
 

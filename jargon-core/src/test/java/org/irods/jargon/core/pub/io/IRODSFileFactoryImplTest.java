@@ -671,8 +671,8 @@ public class IRODSFileFactoryImplTest {
 		irodsSession.closeSession();
 		Assert.assertNotNull("should have a random access file",
 				irodsRandomAccessFile);
-		assertionHelper.assertIrodsFileOrCollectionExists(irodsFile
-				.getAbsolutePath());
+		assertionHelper.assertIrodsFileOrCollectionExists(
+				irodsFile.getAbsolutePath(), accessObjectFactory, irodsAccount);
 	}
 
 	@Test

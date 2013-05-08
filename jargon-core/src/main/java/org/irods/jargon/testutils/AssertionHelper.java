@@ -10,11 +10,12 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Properties;
 
+import org.irods.jargon.core.connection.IRODSAccount;
+import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
+import org.irods.jargon.core.pub.io.IRODSFile;
+import org.irods.jargon.core.pub.io.IRODSFileFactory;
 import org.irods.jargon.testutils.filemanip.ScratchFileUtils;
-import org.irods.jargon.testutils.icommandinvoke.IcommandException;
-import org.irods.jargon.testutils.icommandinvoke.IcommandInvoker;
-import org.irods.jargon.testutils.icommandinvoke.IrodsInvocationContext;
-import org.irods.jargon.testutils.icommandinvoke.icommands.IlsCommand;
 
 /**
  * Helpful assertions for unit testing IRODS
@@ -178,32 +179,21 @@ public class AssertionHelper {
 	 * @throws IRODSTestAssertionException
 	 */
 	public void assertIrodsFileOrCollectionExists(
-			final String absoluteIrodsPathUnderScratch)
-			throws IRODSTestAssertionException {
-		IlsCommand ilsCommand = new IlsCommand();
-		ilsCommand.setIlsBasePath(absoluteIrodsPathUnderScratch);
-		IrodsInvocationContext invocationContext = testingPropertiesHelper
-				.buildIRODSInvocationContextFromTestProperties(testingProperties);
-		IcommandInvoker invoker = new IcommandInvoker(invocationContext);
+			final String absoluteIrodsPathUnderScratch,
+			final IRODSAccessObjectFactory irodsAccessObjectFactory,
+			final IRODSAccount irodsAccount) throws IRODSTestAssertionException {
 
 		try {
-			String result = invoker
-					.invokeCommandAndGetResultAsString(ilsCommand);
-			if (result.indexOf(absoluteIrodsPathUnderScratch) == -1) {
-
-				StringBuilder errorMessage = new StringBuilder();
-				errorMessage.append(ASSERTION_ERROR_MESSAGE);
-				errorMessage
-						.append("assert file or collection exists error, expected to find:");
-				errorMessage.append(absoluteIrodsPathUnderScratch);
-				throw new IRODSTestAssertionException(errorMessage.toString());
+			IRODSFileFactory fileFactory = irodsAccessObjectFactory
+					.getIRODSFileFactory(irodsAccount);
+			IRODSFile file = fileFactory
+					.instanceIRODSFile(absoluteIrodsPathUnderScratch);
+			if (!file.exists()) {
+				throw new IRODSTestAssertionException("file does not exist");
 			}
 
-		} catch (IcommandException ice) {
-			StringBuilder message = new StringBuilder();
-			message.append("error ocurred processing assertion on ils path:");
-			message.append(absoluteIrodsPathUnderScratch);
-			throw new IRODSTestAssertionException(message.toString(), ice);
+		} catch (JargonException e) {
+			throw new IRODSTestAssertionException(e.getMessage());
 		}
 
 	}
@@ -212,47 +202,27 @@ public class AssertionHelper {
 	 * Make sure that a file or collection is not in IRODS
 	 * 
 	 * @param relativeIrodsPathUnderScratch
-	 *            <code>String</code> with relative path (no leading '/', or a
-	 *            path and filename to look for
-	 * @throws IRODSTestAssertionException
+	 *            <code>String</code> with absolute path
 	 * 
-	 *             FIXME: does not work for files, need to have a sep method
-	 *             that gets the parent collection and searches within that...
+	 * @throws IRODSTestAssertionException
 	 * 
 	 */
 	public void assertIrodsFileOrCollectionDoesNotExist(
-			final String relativeIrodsPathUnderScratch)
-			throws IRODSTestAssertionException {
-		IlsCommand ilsCommand = new IlsCommand();
-		ilsCommand.setIlsBasePath(relativeIrodsPathUnderScratch);
-		IrodsInvocationContext invocationContext = testingPropertiesHelper
-				.buildIRODSInvocationContextFromTestProperties(testingProperties);
-		IcommandInvoker invoker = new IcommandInvoker(invocationContext);
+			final String absoluteIrodsPathUnderScratch,
+			final IRODSAccessObjectFactory irodsAccessObjectFactory,
+			final IRODSAccount irodsAccount) throws IRODSTestAssertionException {
 
 		try {
-			String result = invoker
-					.invokeCommandAndGetResultAsString(ilsCommand);
-			if (result.indexOf(relativeIrodsPathUnderScratch) != -1) {
-
-				StringBuilder errorMessage = new StringBuilder();
-				errorMessage.append(ASSERTION_ERROR_MESSAGE);
-				errorMessage
-						.append("assert file/collection does not exist in irods, did not expect to find:");
-				errorMessage.append(relativeIrodsPathUnderScratch);
-				throw new IRODSTestAssertionException(errorMessage.toString());
+			IRODSFileFactory fileFactory = irodsAccessObjectFactory
+					.getIRODSFileFactory(irodsAccount);
+			IRODSFile file = fileFactory
+					.instanceIRODSFile(absoluteIrodsPathUnderScratch);
+			if (file.exists()) {
+				throw new IRODSTestAssertionException("file exists");
 			}
 
-		} catch (IcommandException ice) {
-			// an exception due to a not exists is actually ok
-			if (ice.getMessage().indexOf("does not exist") > -1) {
-				// just fine, what I want
-			} else {
-
-				StringBuilder message = new StringBuilder();
-				message.append("error ocurred processing assertion on ils path:");
-				message.append(relativeIrodsPathUnderScratch);
-				throw new IRODSTestAssertionException(message.toString(), ice);
-			}
+		} catch (JargonException e) {
+			throw new IRODSTestAssertionException(e.getMessage());
 		}
 
 	}
