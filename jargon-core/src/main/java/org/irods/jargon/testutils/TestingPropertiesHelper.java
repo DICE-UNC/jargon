@@ -9,7 +9,6 @@ import java.util.Properties;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.JargonException;
-import org.irods.jargon.testutils.icommandinvoke.IrodsInvocationContext;
 
 /**
  * Utilities to load testing properties from a properties file
@@ -41,7 +40,6 @@ public class TestingPropertiesHelper {
 	public static String IRODS_CONFIRM_TESTING_KEY = "test.confirm";
 	public static String IRODS_ADMIN_USER_KEY = "test.irods.admin";
 	public static String IRODS_ADMIN_PASSWORD_KEY = "test.irods.admin.password";
-	public static String MAC_ICOMMANDS_PATH = "test.mac.icommand.path";
 	public static String IRODS_RESOURCE_GROUP_KEY = "test.resource.group";
 	public static String IRODS_USER_GROUP_KEY = "test.user.group";
 	public static String IRODS_TEST_FEDERATED_ZONE_KEY = "test.option.federated.zone";
@@ -639,67 +637,6 @@ public class TestingPropertiesHelper {
 						.getProperty(IRODS_TERTIARY_RESOURCE_KEY));
 
 		return account;
-	}
-
-	/**
-	 * @param testingProperties
-	 *            <code>Properties</code> file with the standard names defined
-	 *            in
-	 *            {@link org.TestingPropertiesHelper.jargon.test.utils.TestingPropertiesLoader}
-	 * @return @link{
-	 *         edu.sdsc.jargon.testutils.icommandinvoker.IrodsInvocationContext}
-	 * @throws URISyntaxException
-	 */
-	public IrodsInvocationContext buildIRODSInvocationContextFromTestProperties(
-			final Properties testingProperties) {
-
-		IrodsInvocationContext context = new IrodsInvocationContext();
-		context.setIrodsHost(testingProperties.getProperty(IRODS_HOST_KEY));
-		context.setIrodsPassword(testingProperties
-				.getProperty(IRODS_PASSWORD_KEY));
-		context.setIrodsPort(Integer.parseInt(testingProperties
-				.getProperty(IRODS_PORT_KEY)));
-		context.setIrodsUser(testingProperties.getProperty(IRODS_USER_KEY));
-		context.setIrodsZone(testingProperties.getProperty(IRODS_ZONE_KEY));
-		context.setLocalWorkingDirectory(testingProperties
-				.getProperty(GENERATED_FILE_DIRECTORY_KEY));
-		context.setIrodsScratchDir(testingProperties
-				.getProperty(IRODS_SCRATCH_DIR_KEY));
-		context.setIrodsResource(testingProperties
-				.getProperty(IRODS_RESOURCE_KEY));
-
-		return context;
-	}
-
-	/**
-	 * @param testingProperties
-	 *            <code>Properties</code> file with the standard names defined
-	 *            in
-	 *            {@link org.TestingPropertiesHelper.jargon.test.utils.TestingPropertiesLoader}
-	 * @return @link{
-	 *         edu.sdsc.jargon.testutils.icommandinvoker.IrodsInvocationContext}
-	 * @throws URISyntaxException
-	 */
-	public IrodsInvocationContext buildIRODSInvocationContextFromSecondaryTestProperties(
-			final Properties testingProperties) {
-
-		IrodsInvocationContext context = new IrodsInvocationContext();
-		context.setIrodsHost(testingProperties.getProperty(IRODS_HOST_KEY));
-		context.setIrodsPassword(testingProperties
-				.getProperty(IRODS_SECONDARY_PASSWORD_KEY));
-		context.setIrodsPort(Integer.parseInt(testingProperties
-				.getProperty(IRODS_PORT_KEY)));
-		context.setIrodsUser(testingProperties
-				.getProperty(IRODS_SECONDARY_USER_KEY));
-		context.setIrodsZone(testingProperties.getProperty(IRODS_ZONE_KEY));
-		context.setLocalWorkingDirectory(testingProperties
-				.getProperty(GENERATED_FILE_DIRECTORY_KEY));
-		context.setIrodsScratchDir(testingProperties
-				.getProperty(IRODS_SCRATCH_DIR_KEY));
-		context.setIrodsResource(testingProperties
-				.getProperty(IRODS_SECONDARY_RESOURCE_KEY));
-
-		return context;
 	}
 
 	/**
