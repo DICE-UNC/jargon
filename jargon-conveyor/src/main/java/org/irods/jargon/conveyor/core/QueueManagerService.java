@@ -6,7 +6,6 @@ package org.irods.jargon.conveyor.core;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.transfer.dao.domain.Transfer;
-import org.irods.jargon.transfer.dao.domain.TransferType;
 
 /**
  * Manages the persistent queue of transfer information
@@ -37,10 +36,5 @@ public interface QueueManagerService {
 	 */
 	void dequeueNextOperation() throws ConveyorExecutionException,
 			JargonException, Exception;
-        
-        void processTransfer(final String irodsFile,
-                    final String localFile,
-                    final IRODSAccount irodsAccount,
-                    final TransferType type) throws ConveyorExecutionException;
 
 }

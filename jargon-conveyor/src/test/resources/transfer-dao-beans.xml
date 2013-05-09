@@ -98,6 +98,7 @@
   	<property name="conveyorExecutorService" ref="conveyorExecutorService"/>
   	<property name="gridAccountService" ref="gridAccountService"/>
   	<property name="configurationService" ref="configurationService"/> 
+  	<property name="queueManagerService" ref="queueManagerService"/> 
   	<property name="transferAccountingManagementService" ref="transferAccountingManagementService"/>
   </bean>
   

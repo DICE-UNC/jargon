@@ -21,7 +21,6 @@ import org.irods.jargon.transfer.dao.domain.GridAccount;
 import org.irods.jargon.transfer.dao.domain.Transfer;
 import org.irods.jargon.transfer.dao.domain.TransferAttempt;
 import org.irods.jargon.transfer.dao.domain.TransferState;
-import org.irods.jargon.transfer.dao.domain.TransferType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
@@ -130,11 +129,7 @@ public class BasicQueueManagerServiceImpl extends
 		}
 
 		try {
-			// Transfer = transferDAO.getNextRunnableTransfer(); // or should
-			// this
-			// be in queue manager? for right now just query for enqueued and
-			// sort
-			// asc datetime
+
 			List<Transfer> transfers = transferDAO
 					.findByTransferState(TransferState.ENQUEUED);
 			// Transfer transfer = new Transfer(); // fake code for above
@@ -166,27 +161,6 @@ public class BasicQueueManagerServiceImpl extends
 			throw new ConveyorExecutionException(e);
 		}
 
-	}
-
-	@Override
-	public void processTransfer(String irodsFile, String localFile,
-			IRODSAccount irodsAccount, TransferType type)
-			throws ConveyorExecutionException {
-
-		log.info("processTransfer()");
-
-		Transfer transfer = new Transfer();
-		transfer.setCreatedAt(new Date());
-		transfer.setIrodsAbsolutePath(irodsFile);
-		transfer.setLocalAbsolutePath(localFile);
-		transfer.setTransferType(type);
-
-		// FIXME: allready done in enqueue?
-		transfer.setGridAccount(conveyorService.getGridAccountService()
-				.findGridAccountByIRODSAccount(irodsAccount));
-
-		log.info("ready to enqueue transfer:{}", transfer);
-		enqueueTransferOperation(transfer, irodsAccount);
 	}
 
 	/**
