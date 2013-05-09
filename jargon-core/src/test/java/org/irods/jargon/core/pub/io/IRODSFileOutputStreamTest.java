@@ -643,7 +643,7 @@ public class IRODSFileOutputStreamTest {
 	@Test
 	public final void testIRODSFileOutputStreamIRODSFileCloseTwice()
 			throws Exception {
-		String testFileName = "testFileClose.txt";
+		String testFileName = "testIRODSFileOutputStreamIRODSFileCloseTwice.txt";
 		String absPath = scratchFileUtils
 				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
 		FileGenerator.generateFileOfFixedLengthGivenName(absPath, testFileName,
