@@ -10,7 +10,6 @@ import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.protovalues.FilePermissionEnum;
 import org.irods.jargon.core.protovalues.UserTypeEnum;
-import org.irods.jargon.core.pub.UserAO;
 import org.irods.jargon.core.pub.domain.Collection;
 import org.irods.jargon.core.pub.domain.UserFilePermission;
 import org.irods.jargon.core.query.AVUQueryElement;
@@ -345,6 +344,7 @@ public class CollectionAOHelper extends AOHelper {
 		entry.setDataSize(IRODSDataConversionUtil
 				.getLongOrZeroFromIRODSValue(row.getColumn(5)));
 		entry.setOwnerName(row.getColumn(7));
+		entry.setOwnerZone(row.getColumn(8));
 		entry.setCount(row.getRecordCount());
 		entry.setLastResult(row.isLastResult());
 		entry.setTotalRecords(totalRecords);
@@ -416,13 +416,12 @@ public class CollectionAOHelper extends AOHelper {
 	/**
 	 * @param userFilePermissions
 	 * @param row
-	 * @param userAO
 	 * @throws JargonException
 	 */
 	public static void buildUserFilePermissionForCollection(
 			final List<UserFilePermission> userFilePermissions,
-			final IRODSQueryResultRow row, final UserAO userAO,
-			final String irodsAbsolutePath) throws JargonException {
+			final IRODSQueryResultRow row, final String irodsAbsolutePath)
+			throws JargonException {
 
 		/*
 		 * There appears to be a gen query issue with getting user type in the
@@ -477,12 +476,12 @@ public class CollectionAOHelper extends AOHelper {
 		 */
 		UserFilePermission userFilePermission;
 
-		userFilePermission = new UserFilePermission(row.getColumn(8),
-				row.getColumn(9),
+		userFilePermission = new UserFilePermission(row.getColumn(9),
+				row.getColumn(10),
 				FilePermissionEnum.valueOf(IRODSDataConversionUtil
-						.getIntOrZeroFromIRODSValue(row.getColumn(10))),
-				UserTypeEnum.findTypeByString(row.getColumn(11)),
-				row.getColumn(12));
+						.getIntOrZeroFromIRODSValue(row.getColumn(11))),
+				UserTypeEnum.findTypeByString(row.getColumn(12)),
+				row.getColumn(13));
 		userFilePermissions.add(userFilePermission);
 	}
 

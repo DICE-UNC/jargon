@@ -6,15 +6,13 @@ import java.util.Properties;
 import junit.framework.Assert;
 
 import org.irods.jargon.core.connection.IRODSAccount;
+import org.irods.jargon.core.pub.DataTransferOperations;
+import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 import org.irods.jargon.core.pub.IRODSFileSystem;
 import org.irods.jargon.testutils.IRODSTestSetupUtilities;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.irods.jargon.testutils.filemanip.FileGenerator;
 import org.irods.jargon.testutils.filemanip.ScratchFileUtils;
-import org.irods.jargon.testutils.icommandinvoke.IcommandInvoker;
-import org.irods.jargon.testutils.icommandinvoke.IrodsInvocationContext;
-import org.irods.jargon.testutils.icommandinvoke.icommands.ImkdirCommand;
-import org.irods.jargon.testutils.icommandinvoke.icommands.IputCommand;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -30,6 +28,7 @@ public class FileListingAndRecursiveGetReplicateTestingWithBigCollectionTest {
 	public static final String COLL_DIR = "coll";
 	private static final int NUMBER_OF_TEST_FILES = 10000;
 	public static final String SUBDIR_NAME = "subDir";
+	private static IRODSFileSystem irodsFileSystem;
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -42,6 +41,7 @@ public class FileListingAndRecursiveGetReplicateTestingWithBigCollectionTest {
 		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
 		irodsTestSetupUtilities
 				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
+		irodsFileSystem = IRODSFileSystem.instance();
 
 		// put in the thousand files
 		String testFilePrefix = "FileListingAndRecursiveGetReplicateTestingWithBigCollectionTest";
@@ -53,31 +53,33 @@ public class FileListingAndRecursiveGetReplicateTestingWithBigCollectionTest {
 				+ '/' + COLL_DIR, testFilePrefix, testFileSuffix,
 				NUMBER_OF_TEST_FILES, 1, 2);
 
-		IrodsInvocationContext invocationContext = testingPropertiesHelper
-				.buildIRODSInvocationContextFromTestProperties(testingProperties);
-		IcommandInvoker invoker = new IcommandInvoker(invocationContext);
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
 
 		// make the put subdir
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH);
-		ImkdirCommand iMkdirCommand = new ImkdirCommand();
-		iMkdirCommand.setCollectionName(targetIrodsCollection);
-		invoker.invokeCommandAndGetResultAsString(iMkdirCommand);
 
-		// put the files by putting the collection
-		IputCommand iputCommand = new IputCommand();
-		iputCommand.setForceOverride(true);
-		iputCommand.setIrodsFileName(targetIrodsCollection);
-		iputCommand.setLocalFileName(absPath + COLL_DIR);
-		iputCommand.setRecursive(true);
-		invoker.invokeCommandAndGetResultAsString(iputCommand);
-
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
 		IRODSFileFactory irodsFileFactory = irodsFileSystem
 				.getIRODSFileFactory(irodsAccount);
+
+		IRODSFile dirFile = irodsFileFactory
+				.instanceIRODSFile(targetIrodsCollection);
+		dirFile.mkdirs();
+
+		DataTransferOperations dto = accessObjectFactory
+				.getDataTransferOperations(irodsAccount);
+		dto.putOperation(
+				absPath + COLL_DIR,
+				targetIrodsCollection,
+				testingProperties
+						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
+				null, null);
+
 		IRODSFile collectionRoot = irodsFileFactory
 				.instanceIRODSFile(targetIrodsCollection + "/" + COLL_DIR);
 
@@ -92,6 +94,7 @@ public class FileListingAndRecursiveGetReplicateTestingWithBigCollectionTest {
 
 	@AfterClass
 	public static void tearDownAfterClass() throws Exception {
+		irodsFileSystem.closeAndEatExceptions();
 	}
 
 	@Before
@@ -111,13 +114,11 @@ public class FileListingAndRecursiveGetReplicateTestingWithBigCollectionTest {
 								+ COLL_DIR);
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
 		IRODSFileFactory irodsFileFactory = irodsFileSystem
 				.getIRODSFileFactory(irodsAccount);
 		IRODSFile collectionRoot = irodsFileFactory
 				.instanceIRODSFile(targetIrodsCollection);
 		String[] names = collectionRoot.list();
-		irodsFileSystem.close();
 		Assert.assertNotNull("no names returned", names);
 		Assert.assertEquals("did not get all files", NUMBER_OF_TEST_FILES * 2,
 				names.length);
@@ -133,13 +134,11 @@ public class FileListingAndRecursiveGetReplicateTestingWithBigCollectionTest {
 								+ COLL_DIR);
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
 		IRODSFileFactory irodsFileFactory = irodsFileSystem
 				.getIRODSFileFactory(irodsAccount);
 		IRODSFile collectionRoot = irodsFileFactory
 				.instanceIRODSFile(targetIrodsCollection);
 		File[] files = collectionRoot.listFiles();
-		irodsFileSystem.close();
 		Assert.assertNotNull("no files returned", files);
 		Assert.assertEquals("did not get all files", NUMBER_OF_TEST_FILES * 2,
 				files.length);
@@ -155,14 +154,12 @@ public class FileListingAndRecursiveGetReplicateTestingWithBigCollectionTest {
 								+ COLL_DIR);
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
 		IRODSFileFactory irodsFileFactory = irodsFileSystem
 				.getIRODSFileFactory(irodsAccount);
 		IRODSFile collectionRoot = irodsFileFactory
 				.instanceIRODSFile(targetIrodsCollection);
 		String[] names = collectionRoot
 				.list(new IRODSAcceptAllFileNameFilter());
-		irodsFileSystem.close();
 		Assert.assertNotNull("no names returned", names);
 		Assert.assertEquals("did not get all files", NUMBER_OF_TEST_FILES * 2,
 				names.length);
@@ -178,13 +175,11 @@ public class FileListingAndRecursiveGetReplicateTestingWithBigCollectionTest {
 								+ COLL_DIR);
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
 		IRODSFileFactory irodsFileFactory = irodsFileSystem
 				.getIRODSFileFactory(irodsAccount);
 		IRODSFile collectionRoot = irodsFileFactory
 				.instanceIRODSFile(targetIrodsCollection);
 		File[] files = collectionRoot.listFiles(new IRODSAcceptAllFileFilter());
-		irodsFileSystem.close();
 		Assert.assertNotNull("no files returned", files);
 		Assert.assertEquals("did not get all files", NUMBER_OF_TEST_FILES * 2,
 				files.length);
@@ -200,14 +195,12 @@ public class FileListingAndRecursiveGetReplicateTestingWithBigCollectionTest {
 								+ COLL_DIR);
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
 		IRODSFileFactory irodsFileFactory = irodsFileSystem
 				.getIRODSFileFactory(irodsAccount);
 		IRODSFile collectionRoot = irodsFileFactory
 				.instanceIRODSFile(targetIrodsCollection);
 		File[] files = collectionRoot
 				.listFiles(new IRODSAcceptAllFileNameFilter());
-		irodsFileSystem.close();
 		Assert.assertNotNull("no files returned", files);
 		Assert.assertEquals("did not get all files", NUMBER_OF_TEST_FILES * 2,
 				files.length);
