@@ -11,14 +11,12 @@ import java.util.Properties;
 import junit.framework.Assert;
 
 import org.irods.jargon.core.connection.IRODSAccount;
-import org.irods.jargon.core.connection.IRODSProtocolManager;
-import org.irods.jargon.core.connection.IRODSSession;
-import org.irods.jargon.core.connection.IRODSSimpleProtocolManager;
+import org.irods.jargon.core.pub.DataTransferOperations;
+import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
+import org.irods.jargon.core.pub.IRODSFileSystem;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.irods.jargon.testutils.filemanip.FileGenerator;
-import org.irods.jargon.testutils.icommandinvoke.IcommandInvoker;
-import org.irods.jargon.testutils.icommandinvoke.IrodsInvocationContext;
-import org.irods.jargon.testutils.icommandinvoke.icommands.IputCommand;
+import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -35,6 +33,7 @@ public class IRODSRandomAccessFileTest {
 	private static org.irods.jargon.testutils.filemanip.ScratchFileUtils scratchFileUtils = null;
 	public static final String IRODS_TEST_SUBDIR_PATH = "IRODSRandomAccessFileTest";
 	private static org.irods.jargon.testutils.IRODSTestSetupUtilities irodsTestSetupUtilities = null;
+	private static IRODSFileSystem irodsFileSystem;
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -46,12 +45,18 @@ public class IRODSRandomAccessFileTest {
 		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
 		irodsTestSetupUtilities
 				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
+		irodsFileSystem = IRODSFileSystem.instance();
+	}
+
+	@AfterClass
+	public static void tearDownAfterClass() throws Exception {
+		irodsFileSystem.closeAndEatExceptions();
 	}
 
 	@Test
 	public final void testRead() throws Exception {
 		// generate a local scratch file
-		String testFileName = "testfileseek.txt";
+		String testFileName = "testRead.txt";
 		int fileLengthInKb = 2;
 		long fileLengthInBytes = fileLengthInKb * 1024;
 
@@ -60,11 +65,6 @@ public class IRODSRandomAccessFileTest {
 		String inputFileName = FileGenerator
 				.generateFileOfFixedLengthGivenName(absPath, testFileName,
 						fileLengthInBytes);
-
-		// put scratch file into irods in the right place
-		IrodsInvocationContext invocationContext = testingPropertiesHelper
-				.buildIRODSInvocationContextFromTestProperties(testingProperties);
-		IputCommand iputCommand = new IputCommand();
 
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
@@ -75,12 +75,20 @@ public class IRODSRandomAccessFileTest {
 
 		fileNameAndPath.append(testFileName);
 
-		iputCommand.setLocalFileName(fileNameAndPath.toString());
-		iputCommand.setIrodsFileName(targetIrodsCollection);
-		iputCommand.setForceOverride(true);
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
 
-		IcommandInvoker invoker = new IcommandInvoker(invocationContext);
-		invoker.invokeCommandAndGetResultAsString(iputCommand);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
+		DataTransferOperations dto = accessObjectFactory
+				.getDataTransferOperations(irodsAccount);
+		dto.putOperation(
+				fileNameAndPath.toString(),
+				targetIrodsCollection,
+				testingProperties
+						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
+				null, null);
 
 		// read back the test file so I can compare
 
@@ -93,16 +101,8 @@ public class IRODSRandomAccessFileTest {
 		fis.close();
 
 		// now try to do the seek
-
-		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager
-				.instance();
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSSession irodsSession = IRODSSession
-				.instance(irodsConnectionManager);
-
-		IRODSFileFactory irodsFileFactory = new IRODSFileFactoryImpl(
-				irodsSession, irodsAccount);
+		IRODSFileFactory irodsFileFactory = accessObjectFactory
+				.getIRODSFileFactory(irodsAccount);
 
 		IRODSRandomAccessFile randomAccessFile = irodsFileFactory
 				.instanceIRODSRandomAccessFile(targetIrodsCollection + '/'
@@ -111,7 +111,6 @@ public class IRODSRandomAccessFileTest {
 		char readData = (char) randomAccessFile.read();
 		char expectedReadData = (char) inputBytes[0];
 
-		irodsSession.closeSession();
 		Assert.assertEquals(
 				"byte I read does not match the first byte I wrote",
 				expectedReadData, readData);
@@ -131,11 +130,6 @@ public class IRODSRandomAccessFileTest {
 				.generateFileOfFixedLengthGivenName(absPath, testFileName,
 						fileLengthInBytes);
 
-		// put scratch file into irods in the right place
-		IrodsInvocationContext invocationContext = testingPropertiesHelper
-				.buildIRODSInvocationContextFromTestProperties(testingProperties);
-		IputCommand iputCommand = new IputCommand();
-
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH);
@@ -145,12 +139,20 @@ public class IRODSRandomAccessFileTest {
 
 		fileNameAndPath.append(testFileName);
 
-		iputCommand.setLocalFileName(fileNameAndPath.toString());
-		iputCommand.setIrodsFileName(targetIrodsCollection);
-		iputCommand.setForceOverride(true);
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
 
-		IcommandInvoker invoker = new IcommandInvoker(invocationContext);
-		invoker.invokeCommandAndGetResultAsString(iputCommand);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
+		DataTransferOperations dto = accessObjectFactory
+				.getDataTransferOperations(irodsAccount);
+		dto.putOperation(
+				fileNameAndPath.toString(),
+				targetIrodsCollection,
+				testingProperties
+						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
+				null, null);
 
 		// here I'm saving the source file as a byte array as my 'expected'
 		// value for my test assertion
@@ -162,16 +164,8 @@ public class IRODSRandomAccessFileTest {
 
 		// now try to do the seek
 
-		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager
-				.instance();
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSSession irodsSession = IRODSSession
-				.instance(irodsConnectionManager);
-
-		IRODSFileFactory irodsFileFactory = new IRODSFileFactoryImpl(
-				irodsSession, irodsAccount);
-
+		IRODSFileFactory irodsFileFactory = accessObjectFactory
+				.getIRODSFileFactory(irodsAccount);
 		IRODSRandomAccessFile randomAccessFile = irodsFileFactory
 				.instanceIRODSRandomAccessFile(targetIrodsCollection + '/'
 						+ testFileName);
@@ -181,7 +175,6 @@ public class IRODSRandomAccessFileTest {
 		randomAccessFile.read(bytesToRead);
 		byte[] expectedBytes = new byte[20];
 		System.arraycopy(inputBytes, 200, expectedBytes, 0, 20);
-		irodsSession.closeSession();
 		Assert.assertTrue(
 				"did not seek and read the same data that I originally wrote",
 				Arrays.equals(expectedBytes, bytesToRead));
@@ -202,11 +195,6 @@ public class IRODSRandomAccessFileTest {
 		FileGenerator.generateFileOfFixedLengthGivenName(absPath, testFileName,
 				1);
 
-		// put scratch file into irods in the right place
-		IrodsInvocationContext invocationContext = testingPropertiesHelper
-				.buildIRODSInvocationContextFromTestProperties(testingProperties);
-		IputCommand iputCommand = new IputCommand();
-
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH);
@@ -216,22 +204,23 @@ public class IRODSRandomAccessFileTest {
 
 		fileNameAndPath.append(testFileName);
 
-		iputCommand.setLocalFileName(fileNameAndPath.toString());
-		iputCommand.setIrodsFileName(targetIrodsCollection);
-		iputCommand.setForceOverride(true);
-
-		IcommandInvoker invoker = new IcommandInvoker(invocationContext);
-		invoker.invokeCommandAndGetResultAsString(iputCommand);
-
-		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager
-				.instance();
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSSession irodsSession = IRODSSession
-				.instance(irodsConnectionManager);
 
-		IRODSFileFactory irodsFileFactory = new IRODSFileFactoryImpl(
-				irodsSession, irodsAccount);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
+		DataTransferOperations dto = accessObjectFactory
+				.getDataTransferOperations(irodsAccount);
+		dto.putOperation(
+				fileNameAndPath.toString(),
+				targetIrodsCollection,
+				testingProperties
+						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
+				null, null);
+
+		IRODSFileFactory irodsFileFactory = accessObjectFactory
+				.getIRODSFileFactory(irodsAccount);
 
 		IRODSRandomAccessFile randomAccessFile = irodsFileFactory
 				.instanceIRODSRandomAccessFile(targetIrodsCollection + '/'

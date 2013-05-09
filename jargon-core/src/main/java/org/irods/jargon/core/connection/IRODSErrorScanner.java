@@ -13,6 +13,7 @@ import org.irods.jargon.core.exception.FileIntegrityException;
 import org.irods.jargon.core.exception.FileNotFoundException;
 import org.irods.jargon.core.exception.InvalidArgumentException;
 import org.irods.jargon.core.exception.InvalidGroupException;
+import org.irods.jargon.core.exception.InvalidResourceException;
 import org.irods.jargon.core.exception.InvalidUserException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.exception.JargonFileOrCollAlreadyExistsException;
@@ -129,6 +130,9 @@ public class IRODSErrorScanner {
 					"Exception processing specific query", infoValue);
 		case CAT_INVALID_ARGUMENT:
 			throw new InvalidArgumentException(message, infoValue);
+
+		case CAT_INVALID_RESOURCE:
+			throw new InvalidResourceException(message, infoValue);
 		default:
 			StringBuilder sb = new StringBuilder();
 			if (message.isEmpty()) {

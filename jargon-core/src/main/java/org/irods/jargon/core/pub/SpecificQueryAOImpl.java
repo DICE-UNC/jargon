@@ -6,7 +6,6 @@ import java.util.List;
 import org.irods.jargon.core.connection.DiscoveredServerPropertiesCache;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSSession;
-import org.irods.jargon.core.connection.JargonProperties;
 import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.DuplicateDataException;
 import org.irods.jargon.core.exception.InvalidArgumentException;
@@ -58,17 +57,41 @@ public class SpecificQueryAOImpl extends IRODSGenericAO implements
 
 		log.info("findSpecificQueryByAliasLike()");
 
+		return listSpecificQueryByAliasLike(specificQueryAlias, "");
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.SpecificQueryAO#listSpecificQueryByAliasLike
+	 * (java.lang.String, java.lang.String)
+	 */
+	@Override
+	public List<SpecificQueryDefinition> listSpecificQueryByAliasLike(
+			final String specificQueryAlias, final String zoneHint)
+			throws DataNotFoundException, JargonException {
+
+		log.info("findSpecificQueryByAliasLike()");
+
+		checkSupportForSpecificQuery();
+
 		if (specificQueryAlias == null || specificQueryAlias.isEmpty()) {
 			throw new IllegalArgumentException("null specificQueryAlias");
 		}
 
+		if (zoneHint == null) {
+			throw new IllegalArgumentException("null zoneHint");
+		}
+
 		log.info("alias:{}", specificQueryAlias);
+		log.info("zoneHint:{}", zoneHint);
 
 		List<String> arguments = new ArrayList<String>();
 		arguments.add(specificQueryAlias);
 
 		SpecificQuery specificQuery = SpecificQuery.instanceArguments(
-				"listQueryByAliasLike", arguments, 0);
+				"listQueryByAliasLike", arguments, 0, zoneHint);
 		SpecificQueryResultSet resultSet;
 		try {
 			resultSet = executeSpecificQueryUsingAliasWithoutAliasLookup(
@@ -115,19 +138,41 @@ public class SpecificQueryAOImpl extends IRODSGenericAO implements
 			final String specificQueryAlias) throws DataNotFoundException,
 			JargonException {
 
+		return findSpecificQueryByAlias(specificQueryAlias, "");
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.SpecificQueryAO#findSpecificQueryByAlias(java
+	 * .lang.String, java.lang.String)
+	 */
+	@Override
+	public SpecificQueryDefinition findSpecificQueryByAlias(
+			final String specificQueryAlias, final String zoneHint)
+			throws DataNotFoundException, JargonException {
+
 		log.info("findSpecificQueryByAlias()");
+
+		checkSupportForSpecificQuery();
 
 		if (specificQueryAlias == null || specificQueryAlias.isEmpty()) {
 			throw new IllegalArgumentException("null specificQueryAlias");
 		}
 
+		if (zoneHint == null) {
+			throw new IllegalArgumentException("null zoneHint");
+		}
+
 		log.info("alias:{}", specificQueryAlias);
+		log.info("zoneHint:{}", zoneHint);
 
 		List<String> arguments = new ArrayList<String>();
 		arguments.add(specificQueryAlias);
 
 		SpecificQuery specificQuery = SpecificQuery.instanceArguments(
-				"findQueryByAlias", arguments, 0);
+				"findQueryByAlias", arguments, 0, zoneHint);
 		SpecificQueryResultSet resultSet;
 		try {
 			resultSet = executeSpecificQueryUsingAliasWithoutAliasLookup(
@@ -241,6 +286,9 @@ public class SpecificQueryAOImpl extends IRODSGenericAO implements
 	@Override
 	public void addSpecificQuery(final SpecificQueryDefinition specificQuery)
 			throws JargonException, DuplicateDataException {
+
+		checkSupportForSpecificQuery();
+
 		GeneralAdminInpForSQ queryPI;
 
 		if (specificQuery == null) {
@@ -280,6 +328,8 @@ public class SpecificQueryAOImpl extends IRODSGenericAO implements
 	public void removeSpecificQuery(final SpecificQueryDefinition specificQuery)
 			throws JargonException {
 
+		checkSupportForSpecificQuery();
+
 		GeneralAdminInpForSQ queryPI;
 
 		if (specificQuery == null) {
@@ -306,6 +356,9 @@ public class SpecificQueryAOImpl extends IRODSGenericAO implements
 	@Override
 	public void removeSpecificQueryByAlias(final String alias)
 			throws JargonException, DuplicateDataException {
+
+		checkSupportForSpecificQuery();
+
 		GeneralAdminInpForSQ queryPI;
 
 		if (alias == null) {
@@ -331,6 +384,9 @@ public class SpecificQueryAOImpl extends IRODSGenericAO implements
 	@Override
 	public void removeAllSpecificQueryBySQL(final String sqlQuery)
 			throws JargonException, DuplicateDataException {
+
+		checkSupportForSpecificQuery();
+
 		GeneralAdminInpForSQ queryPI;
 
 		if (sqlQuery == null) {
@@ -349,7 +405,8 @@ public class SpecificQueryAOImpl extends IRODSGenericAO implements
 
 	/**
 	 * Used internally when querying on alias to avoid recursively looking up
-	 * those aliases
+	 * those aliases. Note that the <code>specificQuery</code> parameter can
+	 * contain a zone hint, and this is used to properly route the request.
 	 * 
 	 * @param specificQuery
 	 * @param maxRows
@@ -362,9 +419,12 @@ public class SpecificQueryAOImpl extends IRODSGenericAO implements
 			final SpecificQuery specificQuery, final int maxRows)
 			throws DataNotFoundException, JargonException, JargonQueryException {
 		log.info("executeSpecificQueryUsingAlias()");
+
 		if (specificQuery == null) {
 			throw new IllegalArgumentException("null specific query");
 		}
+
+		checkSupportForSpecificQuery();
 
 		/*
 		 * look up the alias and get the column names and number of arguments
@@ -378,7 +438,7 @@ public class SpecificQueryAOImpl extends IRODSGenericAO implements
 		specificQueryDefinition.setColumnNames(columnNames);
 
 		return queryOnAliasGivenDefinition(specificQuery, maxRows,
-				specificQueryDefinition);
+				specificQueryDefinition,0);
 	}
 
 	/*
@@ -393,15 +453,31 @@ public class SpecificQueryAOImpl extends IRODSGenericAO implements
 	 * this.getIRODSProtocol().irodsFunction(specificQueryInp); }
 	 */
 
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.core.pub.SpecificQueryAO#executeSpecificQueryUsingAlias(org.irods.jargon.core.query.SpecificQuery, int)
+	 */
 	@Override
 	public SpecificQueryResultSet executeSpecificQueryUsingAlias(
 			final SpecificQuery specificQuery, final int maxRows)
+			throws DataNotFoundException, JargonException, JargonQueryException {
+
+		return executeSpecificQueryUsingAlias(specificQuery, maxRows, 0);
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.core.pub.SpecificQueryAO#executeSpecificQueryUsingAlias(org.irods.jargon.core.query.SpecificQuery, int, int)
+	 */
+	@Override
+	public SpecificQueryResultSet executeSpecificQueryUsingAlias(
+			final SpecificQuery specificQuery, final int maxRows, final int userDefinedOffset)
 			throws DataNotFoundException, JargonException, JargonQueryException {
 
 		log.info("executeSpecificQueryUsingAlias()");
 		if (specificQuery == null) {
 			throw new IllegalArgumentException("null specific query");
 		}
+
+		checkSupportForSpecificQuery();
 
 		/*
 		 * look up the alias and get the column names and number of arguments
@@ -421,23 +497,27 @@ public class SpecificQueryAOImpl extends IRODSGenericAO implements
 		}
 
 		return queryOnAliasGivenDefinition(specificQuery, maxRows,
-				specificQueryDefinition);
+				specificQueryDefinition, userDefinedOffset);
 	}
 
 	/**
 	 * @param specificQuery
 	 * @param maxRows
 	 * @param specificQueryDefinition
+	 * @param userDefinedOffset <code>int</code> that represents an offset to use in the returned record counts that is enforced within the sql itself.  This is used because
+	 * users often use LIMIT and OFFSET statements inside the actual SQL to accomplish custom paging.  This allows the result set to reflect any user supplied offsets
 	 * @return
 	 * @throws JargonException
 	 */
 	private SpecificQueryResultSet queryOnAliasGivenDefinition(
 			final SpecificQuery specificQuery, final int maxRows,
-			final SpecificQueryDefinition specificQueryDefinition)
+			final SpecificQueryDefinition specificQueryDefinition, final int userDefinedOffset)
 			throws JargonException {
+		
 		SpecificQueryInp specificQueryInp = SpecificQueryInp.instance(
 				specificQuery.getArguments(), specificQuery.getQueryString(),
-				maxRows, specificQuery.getContinuationValue());
+				maxRows, specificQuery.getContinuationValue(),
+				specificQuery.getZoneHint());
 
 		Tag response = null;
 
@@ -468,11 +548,17 @@ public class SpecificQueryAOImpl extends IRODSGenericAO implements
 		List<IRODSQueryResultRow> resultRows = QueryResultProcessingUtils
 				.translateResponseIntoResultSet(response,
 						specificQueryDefinition.getColumnNames(), continuation,
-						0);
+						userDefinedOffset);
 
-		return new SpecificQueryResultSet(specificQuery, resultRows,
+		SpecificQueryResultSet results = new SpecificQueryResultSet(
+				specificQuery, resultRows,
 				specificQueryDefinition.getColumnNames(), hasMoreRecords,
 				continuation);
+
+		log.info("doing a close for this page...");
+		this.closeResultSet(results);
+		return results;
+
 	}
 
 	/*
@@ -487,10 +573,20 @@ public class SpecificQueryAOImpl extends IRODSGenericAO implements
 			final SpecificQuery specificQuery, final int maxRows)
 			throws DataNotFoundException, JargonException, JargonQueryException {
 
+		return executeSpecificQueryUsingSql(specificQuery, maxRows, 0);
+	}
+	
+	@Override
+	public SpecificQueryResultSet executeSpecificQueryUsingSql(
+			final SpecificQuery specificQuery, final int maxRows, final int userDefinedOffset)
+			throws DataNotFoundException, JargonException, JargonQueryException {
+
 		log.info("executeSpecificQueryUsingSql()");
 		if (specificQuery == null) {
 			throw new IllegalArgumentException("null specific query");
 		}
+
+		checkSupportForSpecificQuery();
 
 		/*
 		 * I assume the sql is there, and process it for number of parameters
@@ -510,7 +606,8 @@ public class SpecificQueryAOImpl extends IRODSGenericAO implements
 
 		SpecificQueryInp specificQueryInp = SpecificQueryInp.instance(
 				specificQuery.getArguments(), specificQuery.getQueryString(),
-				maxRows, specificQuery.getContinuationValue());
+				maxRows, specificQuery.getContinuationValue(),
+				specificQuery.getZoneHint());
 
 		Tag response = null;
 
@@ -527,29 +624,57 @@ public class SpecificQueryAOImpl extends IRODSGenericAO implements
 
 		List<IRODSQueryResultRow> resultRows = QueryResultProcessingUtils
 				.translateResponseIntoResultSet(response, columnNames,
-						continuation, 0);
+						continuation, userDefinedOffset);
 
-		return new SpecificQueryResultSet(specificQuery, resultRows,
-				columnNames, hasMoreRecords, continuation);
+		SpecificQueryResultSet results = new SpecificQueryResultSet(
+				specificQuery, resultRows, columnNames, hasMoreRecords,
+				continuation);
+
+		log.info("doing a close for this page...");
+		this.closeResultSet(results);
+		return results;
+
 	}
 
 	/**
-	 * Check and see if, as a result of previous requests, I know that the
-	 * jargon specific queries required to support specific query via this API
-	 * are available. This method will return <code>true</code> only if I know
-	 * that the support is not there. If I have not checked previously, or I am
-	 * not using the dynamic properties cache, which is configured via
-	 * {@link JargonProperties}, then a <code>false</code> will be returned.
+	 * Close the result set associated with the given specific query. This will
+	 * ignore calls if no continuation was in the result set.
+	 * <p/>
+	 * Note that this is currently private, and invoked for each request. This
+	 * is to match the predominant usage pattern in clients where a page is
+	 * viewed for a good deal of user think time, and we want to avoid leaving
+	 * query handles open in iRODS. This might later change if we add
+	 * continuations to the Jargon specific query support.
 	 * 
-	 * @return <code>boolean</code> that will only be <code>true</code> if I
-	 *         know that the jargon specific query support is not configured.
-	 *         This can be used to determine whether it is worth bothering to
-	 *         issue such requests.
-	 *         <p/>
-	 *         Currently, this still needs to be wired into the specific query
-	 *         support, so consider this experimental
+	 * @param specificQueryResultSet
+	 * @throws JargonException
 	 */
-	public boolean isSpecificQueryJargonSupportKnownMissing() {
+	private void closeResultSet(
+			final SpecificQueryResultSet specificQueryResultSet)
+			throws JargonException {
+		log.info("closeResultSet()");
+		if (specificQueryResultSet == null) {
+			throw new IllegalArgumentException("null specificQueryResultSet");
+		}
+
+		if (specificQueryResultSet.getContinuationIndex() == 0) {
+			log.info("continuation is zero, no need to close...silently ignored");
+			return;
+		}
+
+		SpecificQueryInp specificQueryInp = SpecificQueryInp.instanceForClose(specificQueryResultSet);
+
+		this.getIRODSProtocol().irodsFunction(specificQueryInp);
+		log.info("specific query closed");
+
+	}
+
+	@Override
+	public boolean isSpecificQueryToBeBypassed() throws JargonException {
+
+		if (!this.getIRODSServerProperties().isSupportsSpecificQuery()) {
+			return true;
+		}
 
 		if (getIRODSSession().isUsingDynamicServerPropertiesCache()) {
 			return false;
@@ -574,4 +699,12 @@ public class SpecificQueryAOImpl extends IRODSGenericAO implements
 
 	}
 
+	/**
+	 * @throws JargonException
+	 */
+	private void checkSupportForSpecificQuery() throws JargonException {
+		if (isSpecificQueryToBeBypassed()) {
+			throw new JargonException("no support for specific query");
+		}
+	}
 }

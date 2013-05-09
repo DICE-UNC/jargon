@@ -305,4 +305,16 @@ public interface JargonProperties {
 	 */
 	boolean isUsingDiscoveredServerPropertiesCache();
 
+	/**
+	 * Indicates that specific query should be used for collection listings with
+	 * permissions. This prevents expansion of groups. Note that Jargon will
+	 * check to see if the server is capable of using specific query and will
+	 * fall back if it cannot.
+	 * 
+	 * @return <code>boolean</code> of <code>true</code> if jargon should
+	 *         attempt to use specific query for permissions listings before
+	 *         falling back to genquery
+	 */
+	boolean isUsingSpecificQueryForCollectionListingsWithPermissions();
+
 }

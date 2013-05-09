@@ -14,7 +14,10 @@ import java.util.List;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.exception.DataNotFoundException;
+import org.irods.jargon.core.exception.DuplicateDataException;
+import org.irods.jargon.core.exception.InvalidResourceException;
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.packinstr.ModAvuMetadataInp;
 import org.irods.jargon.core.pub.domain.AvuData;
 import org.irods.jargon.core.pub.domain.Resource;
 import org.irods.jargon.core.pub.io.IRODSFile;
@@ -603,6 +606,100 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 		}
 
 		return queryCondition;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.ResourceAO#addAVUMetadata(java.lang.String,
+	 * org.irods.jargon.core.pub.domain.AvuData)
+	 */
+	@Override
+	public void addAVUMetadata(final String resourceName, final AvuData avuData)
+			throws InvalidResourceException, DuplicateDataException,
+			JargonException {
+
+		if (resourceName == null || resourceName.isEmpty()) {
+			throw new IllegalArgumentException("null or empty resource name");
+		}
+
+		if (avuData == null) {
+			throw new IllegalArgumentException("null AVU data");
+		}
+
+		log.info("adding avu metadata to resource: {}", resourceName);
+		log.info("avu: {}", avuData);
+
+		final ModAvuMetadataInp modifyAvuMetadataInp = ModAvuMetadataInp
+				.instanceForAddResourceMetadata(resourceName, avuData);
+
+		log.debug("sending avu request");
+
+		try {
+
+			getIRODSProtocol().irodsFunction(modifyAvuMetadataInp);
+
+		} catch (JargonException je) {
+
+			if (je.getMessage().indexOf("-817000") > -1) {
+				throw new DataNotFoundException(
+						"Target resource was not found, could not add AVU");
+			} else if (je.getMessage().indexOf("-809000") > -1) {
+				throw new DuplicateDataException(
+						"Duplicate AVU exists, cannot add");
+			}
+
+			log.error("jargon exception adding AVU metadata", je);
+			throw je;
+		}
+
+		log.debug("metadata added");
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.ResourceAO#deleteAVUMetadata(java.lang.String,
+	 * org.irods.jargon.core.pub.domain.AvuData)
+	 */
+	@Override
+	public void deleteAVUMetadata(final String resourceName,
+			final AvuData avuData) throws InvalidResourceException,
+			JargonException {
+
+		if (resourceName == null || resourceName.isEmpty()) {
+			throw new IllegalArgumentException("null or empty resource name");
+		}
+
+		if (avuData == null) {
+			throw new IllegalArgumentException("null AVU data");
+		}
+
+		log.info("delete avu metadata from resource: {}", resourceName);
+		log.info("avu: {}", avuData);
+
+		final ModAvuMetadataInp modifyAvuMetadataInp = ModAvuMetadataInp
+				.instanceForDeleteResourceMetadata(resourceName, avuData);
+
+		log.debug("sending avu request");
+
+		try {
+			getIRODSProtocol().irodsFunction(modifyAvuMetadataInp);
+		} catch (JargonException je) {
+
+			if (je.getMessage().indexOf("-817000") > -1) {
+				throw new DataNotFoundException(
+						"Target resource was not found, could not remove AVU");
+			}
+
+			log.error("jargon exception removing AVU metadata", je);
+			throw je;
+		}
+
+		log.debug("metadata removed");
 	}
 
 }
