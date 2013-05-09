@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.Properties;
 
 import org.irods.jargon.conveyor.core.ConveyorService;
+import org.irods.jargon.conveyor.unittest.utils.TransferTestRunningUtilities;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.pub.IRODSFileSystem;
 import org.irods.jargon.core.pub.io.IRODSFile;
@@ -34,6 +35,7 @@ public class BasicQueueManagerServiceImplTest {
 	private static org.irods.jargon.testutils.filemanip.ScratchFileUtils scratchFileUtils = null;
 	public static final String IRODS_TEST_SUBDIR_PATH = "BasicQueueManagerServiceImplTest";
 	private static org.irods.jargon.testutils.IRODSTestSetupUtilities irodsTestSetupUtilities = null;
+	@SuppressWarnings("unused")
 	private static org.irods.jargon.testutils.AssertionHelper assertionHelper = null;
 	private static IRODSFileSystem irodsFileSystem = null;
 
@@ -59,6 +61,8 @@ public class BasicQueueManagerServiceImplTest {
 
 	@Before
 	public void setUp() throws Exception {
+		conveyorService.setIrodsAccessObjectFactory(irodsFileSystem
+				.getIRODSAccessObjectFactory());
 	}
 
 	@After
@@ -102,6 +106,9 @@ public class BasicQueueManagerServiceImplTest {
 
 		conveyorService.getQueueManagerService().enqueueTransferOperation(
 				transfer, irodsAccount);
+
+		TransferTestRunningUtilities.waitForTransferToRunOrTimeout(
+				conveyorService, 5);
 
 	}
 }

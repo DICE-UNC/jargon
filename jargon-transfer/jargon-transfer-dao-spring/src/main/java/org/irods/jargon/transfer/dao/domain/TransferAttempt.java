@@ -196,7 +196,6 @@ public class TransferAttempt implements Serializable {
 		sb.append(attemptStatus);
 		sb.append("\n   errorMessage:");
 		sb.append(errorMessage);
-		sb.append("\n   transferredAt:");
 		sb.append("\n   globalException:");
 		sb.append(globalException);
 		sb.append("\n   lastSuccessfulPath:");

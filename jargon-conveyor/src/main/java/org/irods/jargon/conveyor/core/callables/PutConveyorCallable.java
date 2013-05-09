@@ -3,8 +3,6 @@
  */
 package org.irods.jargon.conveyor.core.callables;
 
-import java.util.Date;
-import java.util.logging.Level;
 import org.irods.jargon.conveyor.core.ConveyorExecutionException;
 import org.irods.jargon.conveyor.core.ConveyorExecutionFuture;
 import org.irods.jargon.conveyor.core.ConveyorService;
@@ -15,7 +13,6 @@ import org.irods.jargon.core.transfer.TransferControlBlock;
 import org.irods.jargon.core.transfer.TransferStatus;
 import org.irods.jargon.transfer.dao.domain.Transfer;
 import org.irods.jargon.transfer.dao.domain.TransferAttempt;
-import org.irods.jargon.transfer.dao.domain.TransferItem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,9 +31,9 @@ public class PutConveyorCallable extends AbstractConveyorCallable {
 	 * @param transfer
 	 * @param conveyorService
 	 */
-	public PutConveyorCallable(Transfer transfer,
-                        TransferAttempt transferAttempt,
-			ConveyorService conveyorService) {
+	public PutConveyorCallable(final Transfer transfer,
+			final TransferAttempt transferAttempt,
+			final ConveyorService conveyorService) {
 		super(transfer, transferAttempt, conveyorService);
 	}
 
@@ -48,13 +45,12 @@ public class PutConveyorCallable extends AbstractConveyorCallable {
 	@Override
 	public ConveyorExecutionFuture call() throws ConveyorExecutionException {
 
-		TransferControlBlock tcb = this.buildDefaultTransferControlBlock();
+		TransferControlBlock tcb = buildDefaultTransferControlBlock();
 
 		IRODSAccount irodsAccount = null;
 		try {
 			irodsAccount = getConveyorService().getGridAccountService()
 					.irodsAccountForGridAccount(getTransfer().getGridAccount());
-			irodsAccount.setDefaultStorageResource("renci-vault1");
 
 			DataTransferOperations dataTransferOperationsAO = getIrodsAccessObjectFactory()
 					.getDataTransferOperations(irodsAccount);
@@ -64,26 +60,30 @@ public class PutConveyorCallable extends AbstractConveyorCallable {
 					.getDefaultResource(), this, tcb);
 		} catch (JargonException ex) {
 			log.error("error doing transfer", ex);
-			throw new ConveyorExecutionException(ex);
+			this.reportConveyerExceptionDuringProcessing(ex);
+		} catch (Exception ex) {
+			log.error("unanticipated exception occurred", ex);
+			this.reportConveyerExceptionDuringProcessing(ex);
 		}
 
 		return new ConveyorExecutionFuture();
 	}
 
 	@Override
-	public void statusCallback(TransferStatus transferStatus)
+	public void statusCallback(final TransferStatus transferStatus)
 			throws JargonException {
 		log.info("status callback:{}", transferStatus);
-                
-                if (transferStatus.getTransferState() == TransferStatus.TransferState.SUCCESS
-                                || transferStatus.getTransferState() == TransferStatus.TransferState.IN_PROGRESS_COMPLETE_FILE) {
-                        try {
-                            this.getConveyorService().getTransferAccountingManagementService().updateTransferAfterSuccessfulFileTransfer(
-                                    transferStatus, this.getTransferAttempt());
-                        } catch (ConveyorExecutionException ex) {
-                            throw new JargonException(ex.getMessage(), ex.getCause());
-                        }
-                }
+
+		if (transferStatus.getTransferState() == TransferStatus.TransferState.SUCCESS
+				|| transferStatus.getTransferState() == TransferStatus.TransferState.IN_PROGRESS_COMPLETE_FILE) {
+			try {
+				getConveyorService().getTransferAccountingManagementService()
+						.updateTransferAfterSuccessfulFileTransfer(
+								transferStatus, getTransferAttempt());
+			} catch (ConveyorExecutionException ex) {
+				throw new JargonException(ex.getMessage(), ex.getCause());
+			}
+		}
 
 		// TransferStatus.TransferState.RESTARTING = skipped seeking restart
 		// point
@@ -112,16 +112,16 @@ public class PutConveyorCallable extends AbstractConveyorCallable {
 	}
 
 	@Override
-	public void overallStatusCallback(TransferStatus transferStatus)
+	public void overallStatusCallback(final TransferStatus transferStatus)
 			throws JargonException {
 		log.info("overall status callback:{}", transferStatus);
 		if (transferStatus.getTransferState() == TransferStatus.TransferState.OVERALL_COMPLETION) {
 			log.info("overall completion...releasing queue");
-			this.getConveyorService().getConveyorExecutorService()
+			getConveyorService().getConveyorExecutorService()
 					.setOperationCompleted();
 		} else if (transferStatus.getTransferState() == TransferStatus.TransferState.FAILURE) {
 			log.error("failure to transfer in status...releasing queue");
-			this.getConveyorService().getConveyorExecutorService()
+			getConveyorService().getConveyorExecutorService()
 					.setOperationCompleted();
 		}
 		super.overallStatusCallback(transferStatus);
@@ -130,7 +130,7 @@ public class PutConveyorCallable extends AbstractConveyorCallable {
 
 	@Override
 	public CallbackResponse transferAsksWhetherToForceOperation(
-			String irodsAbsolutePath, boolean isCollection) {
+			final String irodsAbsolutePath, final boolean isCollection) {
 		log.info("transferAsksWhetherToForceOperation");
 		return CallbackResponse.YES_FOR_ALL;
 	}

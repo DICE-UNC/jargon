@@ -7,6 +7,7 @@ import java.util.concurrent.Callable;
 
 import org.irods.jargon.conveyor.core.ConveyorExecutionException;
 import org.irods.jargon.conveyor.core.ConveyorExecutionFuture;
+import org.irods.jargon.conveyor.core.ConveyorRuntimeException;
 import org.irods.jargon.conveyor.core.ConveyorService;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.JargonException;
@@ -31,7 +32,7 @@ public abstract class AbstractConveyorCallable implements
 
 	// private final Transfer transfer;
 	private final Transfer transfer;
-        private final TransferAttempt transferAttempt;
+	private final TransferAttempt transferAttempt;
 	private final ConveyorService conveyorService;
 
 	private static final Logger log = LoggerFactory
@@ -76,13 +77,14 @@ public abstract class AbstractConveyorCallable implements
 	 */
 	public AbstractConveyorCallable(
 
-	final Transfer transfer, final TransferAttempt transferAttempt, final ConveyorService conveyorService) {
+	final Transfer transfer, final TransferAttempt transferAttempt,
+			final ConveyorService conveyorService) {
 
 		if (transfer == null) {
 			throw new IllegalArgumentException("null transfer");
 		}
-                
-                if (transferAttempt == null) {
+
+		if (transferAttempt == null) {
 			throw new IllegalArgumentException("null transferAttempt");
 		}
 
@@ -91,7 +93,7 @@ public abstract class AbstractConveyorCallable implements
 		}
 
 		this.transfer = transfer;
-                this.transferAttempt = transferAttempt;
+		this.transferAttempt = transferAttempt;
 		this.conveyorService = conveyorService;
 	}
 
@@ -105,8 +107,8 @@ public abstract class AbstractConveyorCallable implements
 	public Transfer getTransfer() {
 		return transfer;
 	}
-        
-        /**
+
+	/**
 	 * @return the transferAttempt
 	 */
 	public TransferAttempt getTransferAttempt() {
@@ -178,5 +180,51 @@ public abstract class AbstractConveyorCallable implements
 	@Override
 	public abstract CallbackResponse transferAsksWhetherToForceOperation(
 			String irodsAbsolutePath, boolean isCollection);
+
+	/**
+	 * Called by callable methods when an unexpected exception occurs in
+	 * conveyor processing of the transfer, rather than an error occurring while
+	 * the transfer operation is in progress. In other words, when the callable
+	 * is setting up the transfer, updating the queue manager, trying to launch
+	 * the transfer process, any error that is not signaled by a callback from
+	 * Jargon is treated as a conveyor processing error, and the transfer is
+	 * marked as an error with a global message.
+	 * <p/>
+	 * Note that calling this method will unlock the conveyor execution queue
+	 * 
+	 * @param ex
+	 *            <code>Exception</code> that was caught while trying to process
+	 *            the transfer
+	 */
+	void reportConveyerExceptionDuringProcessing(final Exception ex) {
+		log.warn("reportConveyerExceptionDuringProcessing() is called");
+		Exception myException = null;
+		if (ex == null) {
+			myException = new ConveyorExecutionException(
+					"warning!  An exception was reported but null was provided to the reportConveyerExceptionDuringProcessing() method");
+		} else {
+			log.info("reported exception:", ex);
+		}
+
+		log.info("updating transfer attempt with an exception");
+		try {
+			this.getConveyorService()
+					.getTransferAccountingManagementService()
+					.updateTransferAttemptWithConveyorException(
+							transferAttempt, myException);
+		} catch (ConveyorExecutionException e) {
+			log.error("*************  exception occurred in conveyor framework,unable to update conveyor database");
+			throw new ConveyorRuntimeException(
+					"unprocessable exception in conveyor, not updated in database",
+					e);
+		} finally {
+			// FIXME: do I need to set a callback to overall status listener?
+			// this is not in conveyor service yet
+			log.info("setting operation completed...");
+			this.getConveyorService().getConveyorExecutorService()
+					.setOperationCompleted();
+		}
+
+	}
 
 }

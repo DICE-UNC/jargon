@@ -4,12 +4,12 @@
 package org.irods.jargon.conveyor.basic;
 
 import java.util.Date;
-import java.util.logging.Level;
 
 import org.irods.jargon.conveyor.core.AbstractConveyorComponentService;
 import org.irods.jargon.conveyor.core.ConveyorExecutionException;
 import org.irods.jargon.conveyor.core.GridAccountService;
 import org.irods.jargon.conveyor.core.TransferAccountingManagementService;
+import org.irods.jargon.conveyor.utils.ExceptionUtils;
 import org.irods.jargon.transfer.dao.TransferAttemptDAO;
 import org.irods.jargon.transfer.dao.TransferDAO;
 import org.irods.jargon.transfer.dao.TransferDAOException;
@@ -34,6 +34,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class TransferAccountingManagementServiceImpl extends
 		AbstractConveyorComponentService implements
 		TransferAccountingManagementService {
+
+	public static final String ERROR_ATTEMPTING_TO_RUN = "An error occurred while attempting to create and invoke the transfer process";
 
 	/**
 	 * Injected dependency
@@ -142,6 +144,8 @@ public class TransferAccountingManagementServiceImpl extends
 		TransferAttempt transferAttempt = new TransferAttempt();
 		transferAttempt.setTransfer(transfer);
 		transferAttempt.setAttemptStart(new Date());
+		transferAttempt.setTransfer(transfer);
+		transferAttempt.setAttemptStatus(TransferStatus.OK);
 
 		try {
 			transfer.getTransferAttempts().add(transferAttempt);
@@ -155,34 +159,82 @@ public class TransferAccountingManagementServiceImpl extends
 		}
 	}
 
-    @Override
-    public TransferItem updateTransferAfterSuccessfulFileTransfer(
-                    org.irods.jargon.core.transfer.TransferStatus transferStatus,
-                    TransferAttempt transferAttempt) 
-                    throws ConveyorExecutionException {
-        
-                log.info("updated last good path to:{}", transferStatus.getSourceFileAbsolutePath());
-                transferAttempt.setLastSuccessfulPath(transferStatus.getSourceFileAbsolutePath());
+	@Override
+	public TransferItem updateTransferAfterSuccessfulFileTransfer(
+			final org.irods.jargon.core.transfer.TransferStatus transferStatus,
+			final TransferAttempt transferAttempt)
+			throws ConveyorExecutionException {
 
-                // create transfer item
-                TransferItem transferItem = new TransferItem();
-                transferItem.setFile(true);
-                transferItem.setSourceFileAbsolutePath(transferStatus
-                                .getSourceFileAbsolutePath());
-                transferItem.setTargetFileAbsolutePath(transferStatus
-                                .getTargetFileAbsolutePath());
-                transferItem.setTransferredAt(new Date());
-                
-                try {
-                    transferAttempt.getTransferItems().add(transferItem);
-                    transferAttemptDAO.save(transferAttempt);
-                } catch (TransferDAOException ex) {
-                    throw new ConveyorExecutionException(
+		log.info("updated last good path to:{}",
+				transferStatus.getSourceFileAbsolutePath());
+		transferAttempt.setLastSuccessfulPath(transferStatus
+				.getSourceFileAbsolutePath());
+
+		// create transfer item
+		TransferItem transferItem = new TransferItem();
+		transferItem.setFile(true);
+		transferItem.setSourceFileAbsolutePath(transferStatus
+				.getSourceFileAbsolutePath());
+		transferItem.setTargetFileAbsolutePath(transferStatus
+				.getTargetFileAbsolutePath());
+		transferItem.setTransferredAt(new Date());
+
+		try {
+			transferAttempt.getTransferItems().add(transferItem);
+			transferAttemptDAO.save(transferAttempt);
+		} catch (TransferDAOException ex) {
+			throw new ConveyorExecutionException(
 					"error saving transfer attempt", ex);
-                }
-                
-                return transferItem;
-    }
-        
+		}
 
+		return transferItem;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.conveyor.core.TransferAccountingManagementService#
+	 * updateTransferAttemptWithConveyorException
+	 * (org.irods.jargon.transfer.dao.domain.TransferAttempt,
+	 * java.lang.Exception)
+	 */
+	@Override
+	public void updateTransferAttemptWithConveyorException(
+			final TransferAttempt transferAttempt, final Exception exception)
+			throws ConveyorExecutionException {
+
+		log.info("updateTransferAttemptWithConveyorException()");
+
+		if (transferAttempt == null) {
+			throw new IllegalArgumentException("null transferAttempt");
+		}
+
+		if (exception == null) {
+			throw new IllegalArgumentException("null exception");
+		}
+
+		log.info("transferAttempt:{}", transferAttempt);
+		log.info("exception:{}", exception);
+
+		Transfer transfer = transferAttempt.getTransfer();
+
+		transfer.setLastTransferStatus(TransferStatus.ERROR);
+		transfer.setTransferState(TransferState.COMPLETE);
+		transfer.setUpdatedAt(new Date());
+
+		transferAttempt.setAttemptStatus(TransferStatus.ERROR);
+		transferAttempt.setAttemptEnd(new Date());
+		transferAttempt.setErrorMessage(ERROR_ATTEMPTING_TO_RUN);
+		transferAttempt.setGlobalException(exception.getMessage());
+		transferAttempt.setGlobalExceptionStackTrace(ExceptionUtils
+				.stackTraceToString(exception));
+
+		try {
+			transferAttemptDAO.save(transferAttempt);
+		} catch (TransferDAOException ex) {
+			throw new ConveyorExecutionException(
+					"error saving transfer attempt", ex);
+		}
+
+	}
 }
