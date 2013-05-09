@@ -144,7 +144,8 @@ public class IRODSRegistrationOfFilesAOImplTest {
 				false);
 
 		assertionHelper.assertIrodsFileOrCollectionExists(targetIrodsCollection
-				+ "/" + testFileName);
+				+ "/" + testFileName,
+				irodsFileSystem.getIRODSAccessObjectFactory(), irodsAccount);
 	}
 
 	/**
@@ -376,7 +377,8 @@ public class IRODSRegistrationOfFilesAOImplTest {
 				true);
 
 		assertionHelper.assertIrodsFileOrCollectionExists(targetIrodsCollection
-				+ "/" + testFileName);
+				+ "/" + testFileName,
+				irodsFileSystem.getIRODSAccessObjectFactory(), irodsAccount);
 
 		DataObjectAO dataObjectAO = irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
@@ -432,7 +434,8 @@ public class IRODSRegistrationOfFilesAOImplTest {
 						"");
 
 		assertionHelper.assertIrodsFileOrCollectionExists(targetIrodsCollection
-				+ "/" + testFileName);
+				+ "/" + testFileName,
+				irodsFileSystem.getIRODSAccessObjectFactory(), irodsAccount);
 
 		DataObjectAO dataObjectAO = irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
@@ -474,7 +477,8 @@ public class IRODSRegistrationOfFilesAOImplTest {
 				false);
 
 		assertionHelper.assertIrodsFileOrCollectionExists(targetIrodsCollection
-				+ "/" + testFileName);
+				+ "/" + testFileName,
+				irodsFileSystem.getIRODSAccessObjectFactory(), irodsAccount);
 
 		ao.unregisterDataObject(targetIrodsCollection + "/" + testFileName);
 		File localFile = new File(fileNameOrig);
@@ -566,7 +570,8 @@ public class IRODSRegistrationOfFilesAOImplTest {
 				"", false);
 
 		assertionHelper.assertIrodsFileOrCollectionExists(targetIrodsCollection
-				+ "/" + testFileName);
+				+ "/" + testFileName,
+				irodsFileSystem.getIRODSAccessObjectFactory(), irodsAccount);
 	}
 
 	/**
@@ -608,7 +613,8 @@ public class IRODSRegistrationOfFilesAOImplTest {
 				"", false);
 
 		assertionHelper.assertIrodsFileOrCollectionExists(targetIrodsCollection
-				+ "/" + testFileName);
+				+ "/" + testFileName,
+				irodsFileSystem.getIRODSAccessObjectFactory(), irodsAccount);
 	}
 
 	/**

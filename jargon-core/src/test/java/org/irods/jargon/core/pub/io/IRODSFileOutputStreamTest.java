@@ -14,20 +14,13 @@ import java.util.concurrent.Executors;
 import junit.framework.Assert;
 
 import org.irods.jargon.core.connection.IRODSAccount;
-import org.irods.jargon.core.connection.IRODSProtocolManager;
-import org.irods.jargon.core.connection.IRODSSession;
-import org.irods.jargon.core.connection.IRODSSimpleProtocolManager;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.DataTransferOperations;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
-import org.irods.jargon.core.pub.IRODSAccessObjectFactoryImpl;
 import org.irods.jargon.core.pub.IRODSFileSystem;
 import org.irods.jargon.core.utils.MiscIRODSUtils;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.irods.jargon.testutils.filemanip.FileGenerator;
-import org.irods.jargon.testutils.icommandinvoke.IcommandInvoker;
-import org.irods.jargon.testutils.icommandinvoke.IrodsInvocationContext;
-import org.irods.jargon.testutils.icommandinvoke.icommands.IputCommand;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
@@ -311,7 +304,8 @@ public class IRODSFileOutputStreamTest {
 		irodsFileFactory.instanceIRODSFileOutputStream(irodsFile);
 		irodsFileSystem.closeAndEatExceptions();
 		assertionHelper.assertIrodsFileOrCollectionExists(targetIrodsCollection
-				+ '/' + testFileName);
+				+ '/' + testFileName,
+				irodsFileSystem.getIRODSAccessObjectFactory(), irodsAccount);
 	}
 
 	@Test
@@ -340,7 +334,8 @@ public class IRODSFileOutputStreamTest {
 		irodsFileOutputStream.write(string1.getBytes());
 		irodsFileOutputStream.close();
 		assertionHelper.assertIrodsFileOrCollectionExists(targetIrodsCollection
-				+ '/' + testFileName);
+				+ '/' + testFileName,
+				irodsFileSystem.getIRODSAccessObjectFactory(), irodsAccount);
 
 		IRODSFileInputStream irodsFileInputStream = irodsFileFactory
 				.instanceIRODSFileInputStream(irodsFile);
@@ -383,7 +378,8 @@ public class IRODSFileOutputStreamTest {
 		irodsFile.createNewFile();
 		irodsFileSystem.closeAndEatExceptions();
 		assertionHelper.assertIrodsFileOrCollectionExists(targetIrodsCollection
-				+ "/" + testFileName);
+				+ "/" + testFileName,
+				irodsFileSystem.getIRODSAccessObjectFactory(), irodsAccount);
 
 	}
 
@@ -434,7 +430,8 @@ public class IRODSFileOutputStreamTest {
 				.instanceIRODSFileOutputStream(irodsFile);
 		irodsFileSystem.closeAndEatExceptions();
 		assertionHelper.assertIrodsFileOrCollectionExists(targetIrodsCollection
-				+ '/' + testFileName);
+				+ '/' + testFileName,
+				irodsFileSystem.getIRODSAccessObjectFactory(), irodsAccount);
 		Assert.assertTrue("no file descriptor assigned",
 				irodsFileOutputStream.getFileDescriptor() > -1);
 
@@ -571,11 +568,6 @@ public class IRODSFileOutputStreamTest {
 		FileGenerator.generateFileOfFixedLengthGivenName(absPath, testFileName,
 				1);
 
-		// put scratch file into irods in the right place
-		IrodsInvocationContext invocationContext = testingPropertiesHelper
-				.buildIRODSInvocationContextFromTestProperties(testingProperties);
-		IputCommand iputCommand = new IputCommand();
-
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH);
@@ -585,21 +577,21 @@ public class IRODSFileOutputStreamTest {
 
 		fileNameAndPath.append(testFileName);
 
-		iputCommand.setLocalFileName(fileNameAndPath.toString());
-		iputCommand.setIrodsFileName(targetIrodsCollection);
-		iputCommand.setForceOverride(true);
-
-		IcommandInvoker invoker = new IcommandInvoker(invocationContext);
-		invoker.invokeCommandAndGetResultAsString(iputCommand);
-
-		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager
-				.instance();
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSSession irodsSession = IRODSSession
-				.instance(irodsConnectionManager);
-		IRODSAccessObjectFactory accessObjectFactory = IRODSAccessObjectFactoryImpl
-				.instance(irodsSession);
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
+		DataTransferOperations dto = accessObjectFactory
+				.getDataTransferOperations(irodsAccount);
+		dto.putOperation(
+				fileNameAndPath.toString(),
+				targetIrodsCollection,
+				testingProperties
+						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
+				null, null);
+
 		IRODSFileFactory irodsFileFactory = accessObjectFactory
 				.getIRODSFileFactory(irodsAccount);
 		IRODSFile irodsFile = irodsFileFactory
@@ -608,7 +600,6 @@ public class IRODSFileOutputStreamTest {
 		IRODSFileOutputStream irodsFileOutputStream = irodsFileFactory
 				.instanceIRODSFileOutputStream(irodsFile);
 		irodsFileOutputStream.close();
-		irodsSession.closeSession();
 		// no error is success
 	}
 
@@ -665,16 +656,11 @@ public class IRODSFileOutputStreamTest {
 	@Test
 	public final void testIRODSFileOutputStreamIRODSFileCloseTwice()
 			throws Exception {
-		String testFileName = "testFileClose.txt";
+		String testFileName = "testIRODSFileOutputStreamIRODSFileCloseTwice.txt";
 		String absPath = scratchFileUtils
 				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
 		FileGenerator.generateFileOfFixedLengthGivenName(absPath, testFileName,
 				1);
-
-		// put scratch file into irods in the right place
-		IrodsInvocationContext invocationContext = testingPropertiesHelper
-				.buildIRODSInvocationContextFromTestProperties(testingProperties);
-		IputCommand iputCommand = new IputCommand();
 
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
@@ -685,21 +671,21 @@ public class IRODSFileOutputStreamTest {
 
 		fileNameAndPath.append(testFileName);
 
-		iputCommand.setLocalFileName(fileNameAndPath.toString());
-		iputCommand.setIrodsFileName(targetIrodsCollection);
-		iputCommand.setForceOverride(true);
-
-		IcommandInvoker invoker = new IcommandInvoker(invocationContext);
-		invoker.invokeCommandAndGetResultAsString(iputCommand);
-
-		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager
-				.instance();
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSSession irodsSession = IRODSSession
-				.instance(irodsConnectionManager);
-		IRODSAccessObjectFactory accessObjectFactory = IRODSAccessObjectFactoryImpl
-				.instance(irodsSession);
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
+		DataTransferOperations dto = accessObjectFactory
+				.getDataTransferOperations(irodsAccount);
+		dto.putOperation(
+				fileNameAndPath.toString(),
+				targetIrodsCollection,
+				testingProperties
+						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
+				null, null);
+
 		IRODSFileFactory irodsFileFactory = accessObjectFactory
 				.getIRODSFileFactory(irodsAccount);
 		IRODSFile irodsFile = irodsFileFactory
@@ -709,7 +695,6 @@ public class IRODSFileOutputStreamTest {
 				.instanceIRODSFileOutputStream(irodsFile);
 		irodsFileOutputStream.close();
 		irodsFileOutputStream.close();
-		irodsSession.closeSession();
 	}
 
 	/**

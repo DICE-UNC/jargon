@@ -15,9 +15,6 @@ import org.irods.jargon.testutils.IRODSTestSetupUtilities;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.irods.jargon.testutils.filemanip.FileGenerator;
 import org.irods.jargon.testutils.filemanip.ScratchFileUtils;
-import org.irods.jargon.testutils.icommandinvoke.IcommandInvoker;
-import org.irods.jargon.testutils.icommandinvoke.IrodsInvocationContext;
-import org.irods.jargon.testutils.icommandinvoke.icommands.IputCommand;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -29,6 +26,7 @@ public class RemoteExecutionOfCommandsAOImplTest {
 	private static ScratchFileUtils scratchFileUtils = null;
 	public static final String IRODS_TEST_SUBDIR_PATH = "RemoteExecutionOfCommandsAOImplTest";
 	private static IRODSTestSetupUtilities irodsTestSetupUtilities = null;
+	private static IRODSFileSystem irodsFileSystem;
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -41,10 +39,12 @@ public class RemoteExecutionOfCommandsAOImplTest {
 		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
 		irodsTestSetupUtilities
 				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
+		irodsFileSystem = IRODSFileSystem.instance();
 	}
 
 	@AfterClass
 	public static void tearDownAfterClass() throws Exception {
+		irodsFileSystem.closeAndEatExceptions();
 	}
 
 	@Test
@@ -52,7 +52,6 @@ public class RemoteExecutionOfCommandsAOImplTest {
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
 
-		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
 		RemoteExecutionOfCommandsAO remoteExecutionOfCommandsAO = irodsFileSystem
 				.getIRODSAccessObjectFactory().getRemoteExecutionOfCommandsAO(
 						irodsAccount);
@@ -69,7 +68,6 @@ public class RemoteExecutionOfCommandsAOImplTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
 
 		RemoteExecutionOfCommandsAO remoteExecutionOfCommandsAO = irodsFileSystem
 				.getIRODSAccessObjectFactory().getRemoteExecutionOfCommandsAO(
@@ -90,7 +88,6 @@ public class RemoteExecutionOfCommandsAOImplTest {
 
 		br.close();
 		String result = sb.toString();
-		irodsFileSystem.close();
 
 		Assert.assertEquals("did not successfully execute hello command",
 				"Hello world  from irods".trim(), result.trim());
@@ -105,7 +102,6 @@ public class RemoteExecutionOfCommandsAOImplTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
 
 		RemoteExecutionOfCommandsAO remoteExecutionOfCommandsAO = irodsFileSystem
 				.getIRODSAccessObjectFactory().getRemoteExecutionOfCommandsAO(
@@ -125,7 +121,6 @@ public class RemoteExecutionOfCommandsAOImplTest {
 
 		br.close();
 		String result = sb.toString();
-		irodsFileSystem.close();
 
 		Assert.assertEquals("did not successfully execute hello command",
 				"Hello world  from irods".trim(), result.trim());
@@ -150,23 +145,19 @@ public class RemoteExecutionOfCommandsAOImplTest {
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
 								+ testFileName);
-
-		IrodsInvocationContext invocationContext = testingPropertiesHelper
-				.buildIRODSInvocationContextFromTestProperties(testingProperties);
-		IputCommand iputCommand = new IputCommand();
-
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH);
 
-		iputCommand.setLocalFileName(localFileName);
-		iputCommand.setIrodsFileName(targetIrodsCollection);
-		iputCommand.setForceOverride(true);
-
-		IcommandInvoker invoker = new IcommandInvoker(invocationContext);
-		invoker.invokeCommandAndGetResultAsString(iputCommand);
-
-		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
+		DataTransferOperations dto = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataTransferOperations(
+						irodsAccount);
+		dto.putOperation(
+				localFileName,
+				targetIrodsCollection,
+				testingProperties
+						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
+				null, null);
 
 		RemoteExecutionOfCommandsAO remoteExecutionOfCommandsAO = irodsFileSystem
 				.getIRODSAccessObjectFactory().getRemoteExecutionOfCommandsAO(
@@ -187,7 +178,6 @@ public class RemoteExecutionOfCommandsAOImplTest {
 
 		br.close();
 		String result = sb.toString();
-		irodsFileSystem.close();
 
 		Assert.assertTrue("did not successfully execute hello command",
 				"Hello world  from irods".trim().equals(result.trim()));
@@ -216,22 +206,21 @@ public class RemoteExecutionOfCommandsAOImplTest {
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
 								+ testFileName);
 
-		IrodsInvocationContext invocationContext = testingPropertiesHelper
-				.buildIRODSInvocationContextFromTestProperties(testingProperties);
-		IputCommand iputCommand = new IputCommand();
-
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH);
 
-		iputCommand.setLocalFileName(localFileName);
-		iputCommand.setIrodsFileName(targetIrodsCollection);
-		iputCommand.setForceOverride(true);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
 
-		IcommandInvoker invoker = new IcommandInvoker(invocationContext);
-		invoker.invokeCommandAndGetResultAsString(iputCommand);
-
-		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
+		DataTransferOperations dto = accessObjectFactory
+				.getDataTransferOperations(irodsAccount);
+		dto.putOperation(
+				localFileName,
+				targetIrodsCollection,
+				testingProperties
+						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
+				null, null);
 
 		RemoteExecutionOfCommandsAO remoteExecutionOfCommandsAO = irodsFileSystem
 				.getIRODSAccessObjectFactory().getRemoteExecutionOfCommandsAO(
@@ -252,7 +241,6 @@ public class RemoteExecutionOfCommandsAOImplTest {
 
 		br.close();
 		String result = sb.toString();
-		irodsFileSystem.close();
 
 		Assert.assertFalse("did not successfully execute hello command",
 				"Hello world  from irods".trim().equals(result.trim()));
@@ -275,7 +263,6 @@ public class RemoteExecutionOfCommandsAOImplTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
 
 		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
 				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
@@ -301,7 +288,6 @@ public class RemoteExecutionOfCommandsAOImplTest {
 				(inputStream instanceof SequenceInputStream));
 
 		inputStream.close();
-		irodsFileSystem.close();
 	}
 
 }

@@ -229,7 +229,8 @@ public class ScratchFileUtils {
 			throws TestingUtilsException {
 		String trimmedPath = path.trim();
 		String lastChar = trimmedPath.substring(trimmedPath.length() - 1);
-		if (!lastChar.equals("/")) {
+		if (lastChar.equals("/") || lastChar.equals("\\")) {
+		} else {
 			throw new TestingUtilsException(
 					"please set the test.data.directory property in testing.properties to have a trailing / char ");
 		}

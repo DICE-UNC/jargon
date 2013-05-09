@@ -652,7 +652,8 @@ public class SettableJargonProperties implements JargonProperties {
 	 * @see org.irods.jargon.core.connection.JargonProperties#
 	 * isDefaultToPublicIfNothingUnderRootWhenListing()
 	 */
-	
+
+	@Override
 	public synchronized boolean isDefaultToPublicIfNothingUnderRootWhenListing() {
 		return this.defaultToPublicIfNothingUnderRootWhenListing;
 	}
