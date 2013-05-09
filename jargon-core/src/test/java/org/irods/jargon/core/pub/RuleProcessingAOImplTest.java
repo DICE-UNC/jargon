@@ -947,7 +947,7 @@ public class RuleProcessingAOImplTest {
 		String testFileName = "testExecuteRequestClientActionGetFileParallelNoThreadsIndicated.txt";
 		String testFileGetName = "testExecuteRequestClientActionGetFileParallelNoThreadsIndicatedReturned.txt";
 		String absPath = scratchFileUtils
-				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH).trim();
 		String scratchFileAbsolutePath = FileGenerator
 				.generateFileOfFixedLengthGivenName(absPath, testFileName,
 						32 * 1024 * 1024);

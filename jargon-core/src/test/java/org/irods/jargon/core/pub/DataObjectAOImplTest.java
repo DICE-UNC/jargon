@@ -1820,7 +1820,7 @@ public class DataObjectAOImplTest {
 	@Test
 	public final void testGetParallelWithIntraFileCallbacks() throws Exception {
 
-		int testFileLen = 33 * 1024 * 1024;
+		int testFileLen = 92 * 1024 * 1024;
 		// generate a local scratch file
 		String testFileName = "testGetParallelWithIntraFileCallbacks.doc";
 		String absPath = scratchFileUtils
