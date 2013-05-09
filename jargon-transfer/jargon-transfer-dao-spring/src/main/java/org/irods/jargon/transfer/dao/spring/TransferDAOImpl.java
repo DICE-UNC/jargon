@@ -89,7 +89,7 @@ public class TransferDAOImpl extends HibernateDaoSupport implements TransferDAO 
 			Criteria criteria = this.getSessionFactory().getCurrentSession()
 					.createCriteria(Transfer.class);
 			criteria.add(Restrictions.in("transferState", transferState));
-			criteria.addOrder(Order.desc("transferStart")); // TODO: use create
+			criteria.addOrder(Order.desc("createdAt"));
 															// date instead?
 			criteria.setFetchMode("synchronization", FetchMode.JOIN);
 			return criteria.list();
@@ -119,7 +119,7 @@ public class TransferDAOImpl extends HibernateDaoSupport implements TransferDAO 
 					.createCriteria(Transfer.class);
 			criteria.add(Restrictions.in("transferState", transferState));
 			criteria.setMaxResults(maxResults);
-			criteria.addOrder(Order.desc("transferStart"));
+			criteria.addOrder(Order.desc("createdAt"));
 			criteria.setFetchMode("synchronization", FetchMode.JOIN);
 			return criteria.list();
 
@@ -151,7 +151,7 @@ public class TransferDAOImpl extends HibernateDaoSupport implements TransferDAO 
 			criteria.add(Restrictions.in("transferStatus", transferStatus));
 			criteria.setFetchMode("synchronization", FetchMode.JOIN);
 			criteria.setMaxResults(maxResults);
-			criteria.addOrder(Order.desc("transferStart"));
+			criteria.addOrder(Order.desc("createdAt"));
 			return criteria.list();
 		} catch (HibernateException e) {
 			log.error("HibernateException", e);
@@ -177,7 +177,7 @@ public class TransferDAOImpl extends HibernateDaoSupport implements TransferDAO 
 			Criteria criteria = this.getSessionFactory().getCurrentSession()
 					.createCriteria(Transfer.class);
 			criteria.setMaxResults(maxResults);
-			criteria.addOrder(Order.desc("transferStart"));
+			criteria.addOrder(Order.desc("createdAt"));
 			criteria.setFetchMode("synchronization", FetchMode.JOIN);
 			return criteria.list();
 		} catch (HibernateException e) {
@@ -201,7 +201,7 @@ public class TransferDAOImpl extends HibernateDaoSupport implements TransferDAO 
 		try {
 			Criteria criteria = this.getSessionFactory().getCurrentSession()
 					.createCriteria(Transfer.class);
-			criteria.addOrder(Order.desc("transferStart"));
+			criteria.addOrder(Order.desc("createdAt"));
 			criteria.setFetchMode("synchronization", FetchMode.JOIN);
 			return criteria.list();
 		} catch (HibernateException e) {
