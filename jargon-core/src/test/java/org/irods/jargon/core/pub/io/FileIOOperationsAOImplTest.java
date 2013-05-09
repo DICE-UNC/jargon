@@ -10,16 +10,11 @@ import java.util.Properties;
 import junit.framework.Assert;
 
 import org.irods.jargon.core.connection.IRODSAccount;
-import org.irods.jargon.core.connection.IRODSProtocolManager;
-import org.irods.jargon.core.connection.IRODSSession;
-import org.irods.jargon.core.connection.IRODSSimpleProtocolManager;
+import org.irods.jargon.core.pub.DataTransferOperations;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
-import org.irods.jargon.core.pub.IRODSAccessObjectFactoryImpl;
+import org.irods.jargon.core.pub.IRODSFileSystem;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.irods.jargon.testutils.filemanip.FileGenerator;
-import org.irods.jargon.testutils.icommandinvoke.IcommandInvoker;
-import org.irods.jargon.testutils.icommandinvoke.IrodsInvocationContext;
-import org.irods.jargon.testutils.icommandinvoke.icommands.IputCommand;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -36,6 +31,7 @@ public class FileIOOperationsAOImplTest {
 	public static final String IRODS_TEST_SUBDIR_PATH = "FileIOOperationsAOImplTest";
 	private static org.irods.jargon.testutils.IRODSTestSetupUtilities irodsTestSetupUtilities = null;
 	private static org.irods.jargon.testutils.AssertionHelper assertionHelper = null;
+	private static IRODSFileSystem irodsFileSystem;
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -48,6 +44,7 @@ public class FileIOOperationsAOImplTest {
 		irodsTestSetupUtilities
 				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
 		assertionHelper = new org.irods.jargon.testutils.AssertionHelper();
+		irodsFileSystem = IRODSFileSystem.instance();
 	}
 
 	/**
@@ -55,26 +52,7 @@ public class FileIOOperationsAOImplTest {
 	 */
 	@AfterClass
 	public static void tearDownAfterClass() throws Exception {
-	}
-
-	/**
-	 * Test method for
-	 * {@link org.irods.jargon.core.pub.io.FileIOOperationsAOImpl#FileIOOperationsAOImpl(org.irods.jargon.core.connection.IRODSSession, org.irods.jargon.core.connection.IRODSAccount)}
-	 * .
-	 */
-	@Test
-	public final void testFileIOOperationsAOImpl() throws Exception {
-		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager
-				.instance();
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSSession irodsSession = IRODSSession
-				.instance(irodsConnectionManager);
-		FileIOOperations fileIOOperationsAO = new FileIOOperationsAOImpl(
-				irodsSession, irodsAccount);
-		irodsSession.closeSession();
-		Assert.assertNotNull("unsuccessful creation of access object",
-				fileIOOperationsAO);
+		irodsFileSystem.closeAndEatExceptions();
 	}
 
 	/**
@@ -91,14 +69,12 @@ public class FileIOOperationsAOImplTest {
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH);
 
-		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager
-				.instance();
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSSession irodsSession = IRODSSession
-				.instance(irodsConnectionManager);
-		IRODSAccessObjectFactory accessObjectFactory = IRODSAccessObjectFactoryImpl
-				.instance(irodsSession);
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
 		IRODSFileFactory irodsFileFactory = accessObjectFactory
 
 		.getIRODSFileFactory(irodsAccount);
@@ -111,7 +87,7 @@ public class FileIOOperationsAOImplTest {
 				irodsFile.canWrite());
 
 		FileIOOperations fileIOOperationsAO = new FileIOOperationsAOImpl(
-				irodsSession, irodsAccount);
+				irodsFileSystem.getIrodsSession(), irodsAccount);
 		// get a simple byte array
 		String myBytes = "ajjjjjjjjjjjjjjjjjjjjjjjjfeiiiiiiiiiiiiiii54454545";
 		byte[] myBytesArray = myBytes.getBytes();
@@ -125,7 +101,6 @@ public class FileIOOperationsAOImplTest {
 		irodsFile.open();
 		long length = irodsFile.length();
 		irodsFile.close();
-		irodsSession.closeSession();
 		assertionHelper.assertIrodsFileOrCollectionExists(
 				irodsFile.getAbsolutePath(), accessObjectFactory, irodsAccount);
 		Assert.assertEquals("length of file does not match data written",
@@ -146,10 +121,8 @@ public class FileIOOperationsAOImplTest {
 				.generateFileOfFixedLengthGivenName(absPath, testFileName,
 						fileLengthInBytes);
 
-		// put scratch file into irods in the right place
-		IrodsInvocationContext invocationContext = testingPropertiesHelper
-				.buildIRODSInvocationContextFromTestProperties(testingProperties);
-		IputCommand iputCommand = new IputCommand();
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
 
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
@@ -160,12 +133,16 @@ public class FileIOOperationsAOImplTest {
 
 		fileNameAndPath.append(testFileName);
 
-		iputCommand.setLocalFileName(fileNameAndPath.toString());
-		iputCommand.setIrodsFileName(targetIrodsCollection);
-		iputCommand.setForceOverride(true);
-
-		IcommandInvoker invoker = new IcommandInvoker(invocationContext);
-		invoker.invokeCommandAndGetResultAsString(iputCommand);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+		DataTransferOperations dto = accessObjectFactory
+				.getDataTransferOperations(irodsAccount);
+		dto.putOperation(
+				fileNameAndPath.toString(),
+				targetIrodsCollection,
+				testingProperties
+						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
+				null, null);
 
 		// here I'm saving the source file as a byte array as my 'expected'
 		// value for my test assertion
@@ -177,27 +154,18 @@ public class FileIOOperationsAOImplTest {
 
 		// now try to do the seek
 
-		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager
-				.instance();
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSSession irodsSession = IRODSSession
-				.instance(irodsConnectionManager);
-
-		IRODSFileFactory irodsFileFactory = new IRODSFileFactoryImpl(
-				irodsSession, irodsAccount);
-
+		IRODSFileFactory irodsFileFactory = accessObjectFactory
+				.getIRODSFileFactory(irodsAccount);
 		IRODSFile irodsFile = irodsFileFactory
 				.instanceIRODSFile(targetIrodsCollection + '/' + testFileName);
 		irodsFile.open();
 		FileIOOperations fileIOOperations = new FileIOOperationsAOImpl(
-				irodsSession, irodsAccount);
+				irodsFileSystem.getIrodsSession(), irodsAccount);
 
 		long seekVal = fileIOOperations.seek(irodsFile.getFileDescriptor(),
 				200L, FileIOOperations.SeekWhenceType.SEEK_START);
 		Assert.assertEquals("did not move file pointer", 200L, seekVal);
 		irodsFile.close();
-		irodsSession.closeSession();
 
 	}
 
