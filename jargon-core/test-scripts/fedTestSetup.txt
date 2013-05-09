@@ -1,14 +1,14 @@
 Federation unit/functional tests setup
 
 This documents the setup of extended test facilities for testing cross-zone federation.   For this initial version,
-the test rig is comprised of two zones, which we will call test1 and fedzone2.  These names can be adjusted through 
+the test rig is comprised of two zones, which we will call fedZone1 and fedzone2.  These names can be adjusted through 
 testing.properties configuration.
 
 Each zone has a test1-resc and a test1-resc2 resource, and a test1 user, such that that user is registered in the corresponding
 federated zone.  There are a set of scripts for running on each zone to do the confguration, fedtestsetup_fedzone1.sh, and 
 fedtestsetup_fedzone2.sh.
 
-These setup scripts should be run after running testsetup.sh on BOTH test1 and fedzone2
+These setup scripts should be run after running testsetup.sh on BOTH fedZone1 and fedZone2 as the user test1 (who has rodsadmin)
 
 The setup is based on the documentation at https://www.irods.org/index.php/Federation_Administration
 
@@ -20,7 +20,7 @@ are off by default, but can be turned on by setting test.option.federated.zone t
 
 The following is from the jargon-core pom.xml file properties, these should refer to properties set in the particular settings.xml file on the test 
 machine, and should point to the properties of the second federated zone.  The first federated zone will use the normal test.irods.user, etc, and
-this should typically be the 'test1' zone.
+this should typically be the 'fedZone1' zone.
 
 test.option.federated.zone={$test.option.federated.zone}
 test.federated.irods.admin=${jargon.test.irods.admin}
