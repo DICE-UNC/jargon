@@ -169,13 +169,13 @@ public class BasicQueueManagerServiceImpl extends
                      String localFile,
                      IRODSAccount irodsAccount,
                      TransferType type) throws ConveyorExecutionException {
-                             log.info("processTransfer()");               
+                log.info("processTransfer()");               
                 Transfer transfer = new Transfer();
                 transfer.setCreatedAt(new Date());
                 transfer.setIrodsAbsolutePath(irodsFile);
                 transfer.setLocalAbsolutePath(localFile);
                 transfer.setTransferType(type);
-                                log.info("ready to enqueue transfer:{}", transfer);
+                log.info("ready to enqueue transfer:{}", transfer);
                 enqueueTransferOperation(transfer, irodsAccount);
          }
 
