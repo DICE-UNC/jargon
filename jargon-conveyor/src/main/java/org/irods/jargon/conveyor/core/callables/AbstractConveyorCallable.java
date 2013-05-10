@@ -14,6 +14,7 @@ import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 import org.irods.jargon.core.transfer.TransferControlBlock;
 import org.irods.jargon.core.transfer.TransferStatus;
+import org.irods.jargon.core.transfer.TransferStatus.TransferState;
 import org.irods.jargon.core.transfer.TransferStatusCallbackListener;
 import org.irods.jargon.transfer.dao.domain.GridAccount;
 import org.irods.jargon.transfer.dao.domain.Transfer;
@@ -202,52 +203,83 @@ public abstract class AbstractConveyorCallable implements
 				.buildDefaultTransferControlBlockBasedOnConfiguration();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.irods.jargon.core.transfer.TransferStatusCallbackListener#statusCallback
-	 * (org.irods.jargon.core.transfer.TransferStatus)
-	 */
 	@Override
-	public void statusCallback(TransferStatus transferStatus)
+	public void statusCallback(final TransferStatus transferStatus)
 			throws JargonException {
+		log.info("put status callback:{}", transferStatus);
+		try {
+			if (transferStatus.getTransferState() == TransferState.SUCCESS
+					|| transferStatus.getTransferState() == TransferStatus.TransferState.IN_PROGRESS_COMPLETE_FILE) {
 
-		if (this.conveyorService.getTransferStatusCallbackListener() == null) {
-			return;
+				updateTransferStateOnFileCompletion(transferStatus);
+			} else if (transferStatus.getTransferState() == TransferState.OVERALL_INITIATION) {
+
+			} else if (transferStatus.getTransferState() == TransferState.RESTARTING) {
+				// TransferStatus.TransferState.RESTARTING = skipped seeking
+				// restart
+				// point
+				/*
+				 * add a property to tell this to log that restart in the
+				 * attempt, otherwise it can be skipped. consider transfer
+				 * 'levels' and where this falls
+				 */
+			} else if (transferStatus.getTransferState() == TransferState.FAILURE) {
+				// TransferStatus.TransferState.FAILURE
+				/*
+				 * create failure item get exception from callback and add to
+				 * item
+				 */
+				try {
+					this.getConveyorService()
+							.getTransferAccountingManagementService()
+							.updateTransferAfterFailedFileTransfer(
+									transferStatus, getTransferAttempt());
+				} catch (ConveyorExecutionException ex) {
+					throw new JargonException(ex.getMessage(), ex.getCause());
+				}
+			}
+
+			else if (transferStatus.getTransferState() == TransferState.CANCELLED
+					|| transferStatus.getTransferState() == TransferState.PAUSED) {
+				// TransferStatus.TransferState.CANCELLED or
+				// TransferStatus.TransferState.PAUSED
+				/*
+                         *  
+                         */
+			}
+		} catch (ConveyorExecutionException ex) {
+			throw new JargonException(ex.getMessage(), ex.getCause());
 		}
 
-		this.conveyorService.getTransferStatusCallbackListener()
-				.statusCallback(transferStatus);
+		conveyorService.getTransferStatusCallbackListener().statusCallback(
+				transferStatus);
+
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.irods.jargon.core.transfer.TransferStatusCallbackListener#
-	 * overallStatusCallback(org.irods.jargon.core.transfer.TransferStatus)
-	 */
 	@Override
-	public void overallStatusCallback(TransferStatus transferStatus)
+	public void overallStatusCallback(final TransferStatus transferStatus)
 			throws JargonException {
-
-		if (this.conveyorService.getTransferStatusCallbackListener() == null) {
-			return;
+		log.info("overall status callback:{}", transferStatus);
+		if (transferStatus.getTransferState() == TransferStatus.TransferState.OVERALL_COMPLETION) {
+			log.info("overall completion...releasing queue");
+			getConveyorService().getConveyorExecutorService()
+					.setOperationCompleted();
+		} else if (transferStatus.getTransferState() == TransferStatus.TransferState.FAILURE) {
+			log.error("failure to transfer in status...releasing queue");
+			getConveyorService().getConveyorExecutorService()
+					.setOperationCompleted();
 		}
-
-		this.conveyorService.getTransferStatusCallbackListener()
+		conveyorService.getTransferStatusCallbackListener()
 				.overallStatusCallback(transferStatus);
+
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.irods.jargon.core.transfer.TransferStatusCallbackListener#
-	 * transferAsksWhetherToForceOperation(java.lang.String, boolean)
-	 */
 	@Override
-	public abstract CallbackResponse transferAsksWhetherToForceOperation(
-			String irodsAbsolutePath, boolean isCollection);
+	public CallbackResponse transferAsksWhetherToForceOperation(
+			final String irodsAbsolutePath, final boolean isCollection) {
+		log.info("transferAsksWhetherToForceOperation");
+		return CallbackResponse.YES_FOR_ALL;
+	}
 
 	/**
 	 * Called by callable methods when an unexpected exception occurs in
@@ -293,6 +325,21 @@ public abstract class AbstractConveyorCallable implements
 					.setOperationCompleted();
 		}
 
+	}
+
+	/**
+	 * Given a transfer status, update the transfer state on completion of
+	 * processing a file
+	 * 
+	 * @param transferStatus
+	 * @throws ConveyorExecutionException
+	 */
+	protected void updateTransferStateOnFileCompletion(
+			final TransferStatus transferStatus)
+			throws ConveyorExecutionException {
+		getConveyorService().getTransferAccountingManagementService()
+				.updateTransferAfterSuccessfulFileTransfer(transferStatus,
+						getTransferAttempt());
 	}
 
 }

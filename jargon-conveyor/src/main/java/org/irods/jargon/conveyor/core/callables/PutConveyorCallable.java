@@ -9,7 +9,6 @@ import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.DataTransferOperations;
 import org.irods.jargon.core.transfer.TransferControlBlock;
-import org.irods.jargon.core.transfer.TransferStatus;
 import org.irods.jargon.transfer.dao.domain.Transfer;
 import org.irods.jargon.transfer.dao.domain.TransferAttempt;
 import org.slf4j.Logger;
@@ -35,86 +34,20 @@ public class PutConveyorCallable extends AbstractConveyorCallable {
 			final ConveyorService conveyorService) {
 		super(transfer, transferAttempt, conveyorService);
 	}
-        
 
-	@Override
-	public void statusCallback(final TransferStatus transferStatus)
-			throws JargonException {
-		log.info("put status callback:{}", transferStatus);
-
-		if (transferStatus.getTransferState() == TransferStatus.TransferState.SUCCESS
-				|| transferStatus.getTransferState() == TransferStatus.TransferState.IN_PROGRESS_COMPLETE_FILE) {
-			try {
-				getConveyorService().getTransferAccountingManagementService()
-						.updateTransferAfterSuccessfulFileTransfer(
-								transferStatus, getTransferAttempt());
-			} catch (ConveyorExecutionException ex) {
-				throw new JargonException(ex.getMessage(), ex.getCause());
-			}
-		}
-                else if (transferStatus.getTransferState() == TransferStatus.TransferState.RESTARTING) {
-                        // TransferStatus.TransferState.RESTARTING = skipped seeking restart
-                        // point
-                        /*
-                         * add a property to tell this to log that restart in the attempt,
-                         * otherwise it can be skipped. consider transfer 'levels' and where
-                         * this falls
-                         */
-                }
-                else if (transferStatus.getTransferState() == TransferStatus.TransferState.FAILURE) {
-                        // TransferStatus.TransferState.FAILURE
-                        /*
-                         * create failure item get exception from callback and add to item
-                         */
-                        try {
-                            this.getConveyorService().getTransferAccountingManagementService().updateTransferAfterFailedFileTransfer(
-                                    transferStatus, getTransferAttempt());
-                        } catch (ConveyorExecutionException ex) {
-                            throw new JargonException(ex.getMessage(), ex.getCause());
-                        }
-                }
-
-                else if (transferStatus.getTransferState() == TransferStatus.TransferState.CANCELLED
-                                || transferStatus.getTransferState() == TransferStatus.TransferState.PAUSED) {
-                        // TransferStatus.TransferState.CANCELLED or
-                        // TransferStatus.TransferState.PAUSED
-                        /*
-                         *  
-                         */
-                }
-
-		super.statusCallback(transferStatus);
-
-	}
-
-	@Override
-	public void overallStatusCallback(final TransferStatus transferStatus)
-			throws JargonException {
-		log.info("overall status callback:{}", transferStatus);
-		if (transferStatus.getTransferState() == TransferStatus.TransferState.OVERALL_COMPLETION) {
-			log.info("overall completion...releasing queue");
-			getConveyorService().getConveyorExecutorService()
-					.setOperationCompleted();
-		} else if (transferStatus.getTransferState() == TransferStatus.TransferState.FAILURE) {
-			log.error("failure to transfer in status...releasing queue");
-			getConveyorService().getConveyorExecutorService()
-					.setOperationCompleted();
-		}
-		super.overallStatusCallback(transferStatus);
-
-	}
-
-	@Override
-	public CallbackResponse transferAsksWhetherToForceOperation(
-			final String irodsAbsolutePath, final boolean isCollection) {
-		log.info("transferAsksWhetherToForceOperation");
-		return CallbackResponse.YES_FOR_ALL;
-	}
-
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.conveyor.core.callables.AbstractConveyorCallable#
+	 * processCallForThisTransfer
+	 * (org.irods.jargon.core.transfer.TransferControlBlock,
+	 * org.irods.jargon.core.connection.IRODSAccount)
+	 */
 	@Override
 	void processCallForThisTransfer(TransferControlBlock tcb,
 			IRODSAccount irodsAccount) throws ConveyorExecutionException,
 			JargonException {
+		log.info("processCallForThisTransfer()");
 		DataTransferOperations dataTransferOperationsAO = getIrodsAccessObjectFactory()
 				.getDataTransferOperations(irodsAccount);
 		dataTransferOperationsAO.putOperation(getTransfer()
