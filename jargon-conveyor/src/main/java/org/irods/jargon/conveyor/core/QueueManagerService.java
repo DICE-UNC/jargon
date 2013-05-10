@@ -6,6 +6,7 @@ package org.irods.jargon.conveyor.core;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.transfer.dao.domain.Transfer;
+import org.irods.jargon.transfer.dao.domain.TransferType;
 
 /**
  * Manages the persistent queue of transfer information
@@ -35,6 +36,25 @@ public interface QueueManagerService {
 	 * @throws ConveyerExecutionException
 	 */
 	void dequeueNextOperation() throws ConveyorExecutionException,
-			JargonException, Exception;
+		
+                JargonException, Exception;
+        /**
+	 * Convenience function for iDrop to start a transfer
+	 * based on the given iRODS account information.
+	 * 
+	 * @param irodsFile
+	 *            String full path of iRODS file/folder for get or put
+         * @param localFile
+	 *            String full path of local file/folder for get or put
+	 * @param irodsAccount
+	 *            {@link IRODSAccount} describing the IRODSAccount
+         * @param TransferType
+         *            {@link TransferType} type of transfer - GET, PUT, etc
+	 * @throws ConveyorExecutionException
+	 */
+        void processTransfer(final String irodsFile,
+                    final String localFile,
+                    final IRODSAccount irodsAccount,
+                    final TransferType type) throws ConveyorExecutionException;
 
 }
