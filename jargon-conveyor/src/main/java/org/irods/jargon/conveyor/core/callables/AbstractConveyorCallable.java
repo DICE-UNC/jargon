@@ -17,7 +17,6 @@ import org.irods.jargon.core.transfer.TransferStatus;
 import org.irods.jargon.core.transfer.TransferStatus.TransferState;
 import org.irods.jargon.core.transfer.TransferStatusCallbackListener;
 import org.irods.jargon.transfer.dao.domain.GridAccount;
-import org.irods.jargon.transfer.dao.domain.Transfer;
 import org.irods.jargon.transfer.dao.domain.TransferAttempt;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,7 +31,6 @@ public abstract class AbstractConveyorCallable implements
 		Callable<ConveyorExecutionFuture>, TransferStatusCallbackListener {
 
 	// private final Transfer transfer;
-	private final Transfer transfer;
 	private final TransferAttempt transferAttempt;
 	private final ConveyorService conveyorService;
 
@@ -78,12 +76,7 @@ public abstract class AbstractConveyorCallable implements
 	 */
 	public AbstractConveyorCallable(
 
-	final Transfer transfer, final TransferAttempt transferAttempt,
-			final ConveyorService conveyorService) {
-
-		if (transfer == null) {
-			throw new IllegalArgumentException("null transfer");
-		}
+	final TransferAttempt transferAttempt, final ConveyorService conveyorService) {
 
 		if (transferAttempt == null) {
 			throw new IllegalArgumentException("null transferAttempt");
@@ -93,7 +86,6 @@ public abstract class AbstractConveyorCallable implements
 			throw new IllegalArgumentException("null conveyorService");
 		}
 
-		this.transfer = transfer;
 		this.transferAttempt = transferAttempt;
 		this.conveyorService = conveyorService;
 	}
@@ -156,7 +148,8 @@ public abstract class AbstractConveyorCallable implements
 		IRODSAccount irodsAccount = null;
 		try {
 			irodsAccount = getConveyorService().getGridAccountService()
-					.irodsAccountForGridAccount(getTransfer().getGridAccount());
+					.irodsAccountForGridAccount(
+							transferAttempt.getTransfer().getGridAccount());
 
 			processCallForThisTransfer(tcb, irodsAccount);
 			return new ConveyorExecutionFuture();
@@ -168,13 +161,6 @@ public abstract class AbstractConveyorCallable implements
 			throw new ConveyorExecutionException(
 					"unhandled exception during transfer process", ex);
 		}
-	}
-
-	/**
-	 * @return the transfer
-	 */
-	public Transfer getTransfer() {
-		return transfer;
 	}
 
 	/**
@@ -249,8 +235,10 @@ public abstract class AbstractConveyorCallable implements
 			throw new JargonException(ex.getMessage(), ex.getCause());
 		}
 
-		conveyorService.getTransferStatusCallbackListener().statusCallback(
-				transferStatus);
+		if (conveyorService.getTransferStatusCallbackListener() != null) {
+			conveyorService.getTransferStatusCallbackListener().statusCallback(
+					transferStatus);
+		}
 
 	}
 
@@ -267,7 +255,11 @@ public abstract class AbstractConveyorCallable implements
 		if (transferStatus.getTransferState() == TransferStatus.TransferState.OVERALL_COMPLETION) {
 			log.info("overall completion...updating status of transfer...");
 
-			processOverallCompletionOfTransfer(transferStatus);
+			try {
+				processOverallCompletionOfTransfer(transferStatus);
+			} catch (ConveyorExecutionException ex) {
+				throw new JargonException(ex.getMessage(), ex.getCause());
+			}
 
 			// TODO: this isn't in a finally...what do we do if an error has
 			// occurred???
@@ -279,8 +271,11 @@ public abstract class AbstractConveyorCallable implements
 			getConveyorService().getConveyorExecutorService()
 					.setOperationCompleted();
 		}
-		conveyorService.getTransferStatusCallbackListener()
-				.overallStatusCallback(transferStatus);
+
+		if (conveyorService.getTransferStatusCallbackListener() != null) {
+			conveyorService.getTransferStatusCallbackListener()
+					.overallStatusCallback(transferStatus);
+		}
 
 	}
 
@@ -357,9 +352,10 @@ public abstract class AbstractConveyorCallable implements
 	 * the necessary updates
 	 * 
 	 * @param transferStatus
+	 * @throws ConveyorExecutionException
 	 */
 	private void processOverallCompletionOfTransfer(
-			TransferStatus transferStatus) {
+			TransferStatus transferStatus) throws ConveyorExecutionException {
 		log.info("processOverallCompletionOfTransfer");
 		getConveyorService().getTransferAccountingManagementService()
 				.updateTransferAfterOverallSuccess(transferStatus,

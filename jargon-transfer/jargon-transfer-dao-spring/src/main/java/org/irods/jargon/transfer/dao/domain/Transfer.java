@@ -21,9 +21,6 @@ import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 
-import org.hibernate.annotations.LazyCollection;
-import org.hibernate.annotations.LazyCollectionOption;
-
 /**
  * Domain object that represents a transfer activity between the local host and
  * an iRODS server.
@@ -70,7 +67,6 @@ public class Transfer implements Serializable {
 
 	@OneToMany(mappedBy = "transfer", targetEntity = TransferAttempt.class, cascade = { CascadeType.ALL }, fetch = FetchType.LAZY)
 	@OrderBy("attemptStart")
-	@LazyCollection(LazyCollectionOption.EXTRA)
 	private Set<TransferAttempt> transferAttempts = new HashSet<TransferAttempt>();
 
 	@Column(name = "created_at")

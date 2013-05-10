@@ -155,11 +155,11 @@ public class TransferAccountingManagementServiceImpl extends
 		transferAttempt.setAttemptStatus(TransferStatus.OK);
 
 		try {
-			transferDAO.save(transfer);
-			log.info("transfer added:{}", transferAttempt);
 			transfer.getTransferAttempts().add(transferAttempt);
 			transferAttemptDAO.save(transferAttempt);
 			log.info("transfer attempt added:{}", transferAttempt);
+			// transferDAO.save(transfer);
+			log.info("transfer saved:{}", transfer);
 			return transferAttempt;
 		} catch (TransferDAOException e) {
 			log.error("error saving transfer", e);
@@ -207,6 +207,8 @@ public class TransferAccountingManagementServiceImpl extends
 		// create transfer item
 		TransferItem transferItem = new TransferItem();
 		transferItem.setFile(true);
+		transferItem.setTransferType(transferAttempt.getTransfer()
+				.getTransferType()); // FIXME: why have transfer type here?
 		transferItem.setSourceFileAbsolutePath(transferStatus
 				.getSourceFileAbsolutePath());
 		transferItem.setTargetFileAbsolutePath(transferStatus
@@ -329,11 +331,48 @@ public class TransferAccountingManagementServiceImpl extends
 		this.configurationService = configurationService;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.conveyor.core.TransferAccountingManagementService#
+	 * updateTransferAfterOverallSuccess
+	 * (org.irods.jargon.core.transfer.TransferStatus,
+	 * org.irods.jargon.transfer.dao.domain.TransferAttempt)
+	 */
 	@Override
 	public void updateTransferAfterOverallSuccess(
 			org.irods.jargon.core.transfer.TransferStatus transferStatus,
-			TransferAttempt transferAttempt) {
-		// TODO Auto-generated method stub
+			TransferAttempt transferAttempt) throws ConveyorExecutionException {
+
+		log.info("updateTransferAfterOverallSuccess()");
+
+		if (transferStatus == null) {
+			throw new IllegalArgumentException("null transferStatus");
+		}
+
+		if (transferAttempt == null) {
+			throw new IllegalArgumentException("null transferAttempt");
+		}
+
+		log.info("transferAttempt:{}", transferAttempt);
+		log.info("transferStatus:{}", transferStatus);
+
+		Transfer transfer = transferAttempt.getTransfer();
+		transfer.setLastTransferStatus(TransferStatus.OK); // FIXME...evaluate
+															// transfer for
+															// errors
+		transfer.setTransferState(TransferState.COMPLETE);
+		transfer.setUpdatedAt(new Date());
+		transferAttempt.setAttemptEnd(new Date());
+		transferAttempt.setAttemptStatus(TransferStatus.OK);
+
+		try {
+			transferDAO.save(transfer);
+			transferAttemptDAO.save(transferAttempt);
+		} catch (TransferDAOException ex) {
+			throw new ConveyorExecutionException(
+					"error saving transfer attempt", ex);
+		}
 
 	}
 }

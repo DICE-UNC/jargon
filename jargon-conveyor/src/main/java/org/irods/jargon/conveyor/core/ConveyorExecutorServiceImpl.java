@@ -80,7 +80,7 @@ public class ConveyorExecutorServiceImpl implements ConveyorExecutorService {
 
 	@Override
 	public void processTransferAndHandleReturn(final Transfer transfer,
-                        final TransferAttempt transferAttempt,
+			final TransferAttempt transferAttempt,
 			ConveyorService conveyorService) throws ConveyorBusyException,
 			ConveyorExecutionException {
 
@@ -89,8 +89,8 @@ public class ConveyorExecutorServiceImpl implements ConveyorExecutorService {
 		if (transfer == null) {
 			throw new IllegalArgumentException("null transfer");
 		}
-                
-                if (transferAttempt == null) {
+
+		if (transferAttempt == null) {
 			throw new IllegalArgumentException("null transferAttempt");
 		}
 
@@ -102,7 +102,8 @@ public class ConveyorExecutorServiceImpl implements ConveyorExecutorService {
 		synchronized (this) {
 
 			Callable<ConveyorExecutionFuture> callable = conveyorCallableFactory
-					.instanceCallableForOperation(transfer, transferAttempt, conveyorService);
+					.instanceCallableForOperation(transferAttempt,
+							conveyorService);
 
 			this.currentTransfer = pool.submit(callable);
 
@@ -221,11 +222,12 @@ public class ConveyorExecutorServiceImpl implements ConveyorExecutorService {
 	 */
 	@Override
 	public void setBusyForAnOperation() throws ConveyorBusyException {
-		log.info("setBusyForOperation()... current status:{}", runningStatus);
+		// log.debug("setBusyForOperation()... current status:{}",
+		// runningStatus);
 		synchronized (statusSynchronizingObject) {
 			if (runningStatus == RunningStatus.BUSY
 					|| runningStatus == RunningStatus.PROCESSING) {
-				log.warn("will return busy exception");
+				// log.debug("will return busy exception");
 				throw new ConveyorBusyException(
 						"cannot perform operation, busy");
 			}

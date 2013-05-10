@@ -17,9 +17,9 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 
 /**
- * For a <code>Transfer</code>, this is an individual operation within
- * the transfer. This item would be a directory or file that was moved during
- * the transfer.
+ * For a <code>Transfer</code>, this is an individual operation within the
+ * transfer. This item would be a directory or file that was moved during the
+ * transfer.
  * 
  * @author Mike Conway - DICE (www.irods.org)
  * 
@@ -36,7 +36,7 @@ public class TransferItem implements Serializable {
 	private Long id;
 
 	@ManyToOne(targetEntity = TransferAttempt.class, fetch = FetchType.LAZY)
-	@JoinColumn(name = "transfer_id", nullable = false)
+	@JoinColumn(name = "transfer_attempt_id", nullable = false)
 	private TransferAttempt transferAttempt;
 
 	@Column(name = "source_file_absolute_path", length = 32672)
@@ -65,7 +65,7 @@ public class TransferItem implements Serializable {
 	private String errorStackTrace;
 
 	@Column(name = "transferred_at")
-        @Temporal(javax.persistence.TemporalType.DATE)
+	@Temporal(javax.persistence.TemporalType.DATE)
 	private Date transferredAt;
 
 	public TransferItem() {
@@ -132,8 +132,7 @@ public class TransferItem implements Serializable {
 		return transferAttempt;
 	}
 
-	public void setTransferAttempt(
-			final TransferAttempt transferAttempt) {
+	public void setTransferAttempt(final TransferAttempt transferAttempt) {
 		this.transferAttempt = transferAttempt;
 	}
 

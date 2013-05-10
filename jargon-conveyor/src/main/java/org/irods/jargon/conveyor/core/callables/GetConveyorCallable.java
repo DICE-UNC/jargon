@@ -10,7 +10,6 @@ import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.DataTransferOperations;
 import org.irods.jargon.core.transfer.TransferControlBlock;
-import org.irods.jargon.transfer.dao.domain.Transfer;
 import org.irods.jargon.transfer.dao.domain.TransferAttempt;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,13 +23,9 @@ public class GetConveyorCallable extends AbstractConveyorCallable {
 	private static final Logger log = LoggerFactory
 			.getLogger(PutConveyorCallable.class);
 
-	/**
-	 * @param transfer
-	 * @param conveyorService
-	 */
-	public GetConveyorCallable(Transfer transfer,
-			TransferAttempt transferAttempt, ConveyorService conveyorService) {
-		super(transfer, transferAttempt, conveyorService);
+	public GetConveyorCallable(TransferAttempt transferAttempt,
+			ConveyorService conveyorService) {
+		super(transferAttempt, conveyorService);
 	}
 
 	/*
@@ -49,9 +44,12 @@ public class GetConveyorCallable extends AbstractConveyorCallable {
 
 		DataTransferOperations dataTransferOperationsAO = getIrodsAccessObjectFactory()
 				.getDataTransferOperations(irodsAccount);
-		dataTransferOperationsAO.getOperation(getTransfer()
-				.getIrodsAbsolutePath(), getTransfer().getLocalAbsolutePath(),
-				getTransfer().getGridAccount().getDefaultResource(), this, tcb);
+		dataTransferOperationsAO
+				.getOperation(getTransferAttempt().getTransfer()
+						.getIrodsAbsolutePath(), getTransferAttempt()
+						.getTransfer().getLocalAbsolutePath(),
+						getTransferAttempt().getTransfer().getGridAccount()
+								.getDefaultResource(), this, tcb);
 
 	}
 

@@ -122,7 +122,7 @@ public class BasicQueueManagerServiceImplTest {
 				transfer, irodsAccount);
 
 		TransferTestRunningUtilities.waitForTransferToRunOrTimeout(
-				conveyorService, 10);
+				conveyorService, -1);
 
 		Assert.assertFalse("did not create a transfer attempt", transfer
 				.getTransferAttempts().isEmpty());

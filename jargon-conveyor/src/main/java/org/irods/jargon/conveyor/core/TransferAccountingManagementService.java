@@ -83,8 +83,10 @@ public interface TransferAccountingManagementService {
 	 *            {@link TransferStatus} from the callback
 	 * @param transferAttempt
 	 *            {@link TransferAttempt}
+	 * @throws ConveyorExecutionException
 	 */
-	void updateTransferAfterOverallSuccess(TransferStatus transferStatus,
-			TransferAttempt transferAttempt);
+	void updateTransferAfterOverallSuccess(
+			org.irods.jargon.core.transfer.TransferStatus transferStatus,
+			TransferAttempt transferAttempt) throws ConveyorExecutionException;
 
 }
