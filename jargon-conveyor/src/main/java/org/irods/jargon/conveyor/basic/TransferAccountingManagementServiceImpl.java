@@ -155,8 +155,10 @@ public class TransferAccountingManagementServiceImpl extends
 		transferAttempt.setAttemptStatus(TransferStatus.OK);
 
 		try {
+                        transferDAO.save(transfer);
+                        log.info("transfer added:{}", transferAttempt);
 			transfer.getTransferAttempts().add(transferAttempt);
-			transferDAO.save(transfer);
+			transferAttemptDAO.save(transferAttempt);
 			log.info("transfer attempt added:{}", transferAttempt);
 			return transferAttempt;
 		} catch (TransferDAOException e) {
