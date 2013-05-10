@@ -203,6 +203,13 @@ public abstract class AbstractConveyorCallable implements
 				.buildDefaultTransferControlBlockBasedOnConfiguration();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.transfer.TransferStatusCallbackListener#statusCallback
+	 * (org.irods.jargon.core.transfer.TransferStatus)
+	 */
 	@Override
 	public void statusCallback(final TransferStatus transferStatus)
 			throws JargonException {
@@ -210,21 +217,16 @@ public abstract class AbstractConveyorCallable implements
 		try {
 			if (transferStatus.getTransferState() == TransferState.SUCCESS
 					|| transferStatus.getTransferState() == TransferStatus.TransferState.IN_PROGRESS_COMPLETE_FILE) {
-
 				updateTransferStateOnFileCompletion(transferStatus);
 			} else if (transferStatus.getTransferState() == TransferState.OVERALL_INITIATION) {
-
+				log.info("file initiation, currently no updates to database");
 			} else if (transferStatus.getTransferState() == TransferState.RESTARTING) {
-				// TransferStatus.TransferState.RESTARTING = skipped seeking
-				// restart
-				// point
 				/*
 				 * add a property to tell this to log that restart in the
 				 * attempt, otherwise it can be skipped. consider transfer
 				 * 'levels' and where this falls
 				 */
 			} else if (transferStatus.getTransferState() == TransferState.FAILURE) {
-				// TransferStatus.TransferState.FAILURE
 				/*
 				 * create failure item get exception from callback and add to
 				 * item
@@ -241,11 +243,7 @@ public abstract class AbstractConveyorCallable implements
 
 			else if (transferStatus.getTransferState() == TransferState.CANCELLED
 					|| transferStatus.getTransferState() == TransferState.PAUSED) {
-				// TransferStatus.TransferState.CANCELLED or
-				// TransferStatus.TransferState.PAUSED
-				/*
-                         *  
-                         */
+				// ???
 			}
 		} catch (ConveyorExecutionException ex) {
 			throw new JargonException(ex.getMessage(), ex.getCause());
@@ -256,14 +254,26 @@ public abstract class AbstractConveyorCallable implements
 
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.transfer.TransferStatusCallbackListener#
+	 * overallStatusCallback(org.irods.jargon.core.transfer.TransferStatus)
+	 */
 	@Override
 	public void overallStatusCallback(final TransferStatus transferStatus)
 			throws JargonException {
 		log.info("overall status callback:{}", transferStatus);
 		if (transferStatus.getTransferState() == TransferStatus.TransferState.OVERALL_COMPLETION) {
-			log.info("overall completion...releasing queue");
+			log.info("overall completion...updating status of transfer...");
+
+			processOverallCompletionOfTransfer(transferStatus);
+
+			// TODO: this isn't in a finally...what do we do if an error has
+			// occurred???
 			getConveyorService().getConveyorExecutorService()
 					.setOperationCompleted();
+			log.info("...releasing queue...");
 		} else if (transferStatus.getTransferState() == TransferStatus.TransferState.FAILURE) {
 			log.error("failure to transfer in status...releasing queue");
 			getConveyorService().getConveyorExecutorService()
@@ -334,12 +344,27 @@ public abstract class AbstractConveyorCallable implements
 	 * @param transferStatus
 	 * @throws ConveyorExecutionException
 	 */
-	protected void updateTransferStateOnFileCompletion(
+	private void updateTransferStateOnFileCompletion(
 			final TransferStatus transferStatus)
 			throws ConveyorExecutionException {
 		getConveyorService().getTransferAccountingManagementService()
 				.updateTransferAfterSuccessfulFileTransfer(transferStatus,
 						getTransferAttempt());
+	}
+
+	/**
+	 * A complete with success callback for an entire transfer operation, make
+	 * the necessary updates
+	 * 
+	 * @param transferStatus
+	 */
+	private void processOverallCompletionOfTransfer(
+			TransferStatus transferStatus) {
+		log.info("processOverallCompletionOfTransfer");
+		getConveyorService().getTransferAccountingManagementService()
+				.updateTransferAfterOverallSuccess(transferStatus,
+						getTransferAttempt());
+
 	}
 
 }

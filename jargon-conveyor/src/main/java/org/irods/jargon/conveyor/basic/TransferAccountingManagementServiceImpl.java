@@ -1,6 +1,3 @@
-/**
- * 
- */
 package org.irods.jargon.conveyor.basic;
 
 import java.util.Date;
@@ -178,23 +175,32 @@ public class TransferAccountingManagementServiceImpl extends
 	 * org.irods.jargon.transfer.dao.domain.TransferAttempt)
 	 */
 	@Override
-	public TransferItem updateTransferAfterSuccessfulFileTransfer(
+	public void updateTransferAfterSuccessfulFileTransfer(
 			final org.irods.jargon.core.transfer.TransferStatus transferStatus,
 			final TransferAttempt transferAttempt)
 			throws ConveyorExecutionException {
-
-		if (!this.getConfigurationService()
-				.getCachedConveyorConfigurationProperties()
-				.isLogSuccessfulTransfers()) {
-			log.info("not logging successful transfer");
-		}
 
 		log.info("updated last good path to:{}",
 				transferStatus.getSourceFileAbsolutePath());
 		transferAttempt.setLastSuccessfulPath(transferStatus
 				.getSourceFileAbsolutePath());
-		transferAttempt.setTotalFilesTransferredSoFar(transferAttempt
-				.getTotalFilesTransferredSoFar() + 1);
+		transferAttempt.setTotalFilesTransferredSoFar(transferStatus
+				.getTotalFilesTransferredSoFar());
+		transferAttempt.setTotalFilesCount(transferStatus
+				.getTotalFilesToTransfer());
+
+		if (!this.getConfigurationService()
+				.getCachedConveyorConfigurationProperties()
+				.isLogSuccessfulTransfers()) {
+			log.info("not logging successful transfer...update transfer attempt with counts");
+			try {
+				transferAttemptDAO.save(transferAttempt);
+				return;
+			} catch (TransferDAOException e) {
+				throw new ConveyorExecutionException(
+						"error saving transfer attempt", e);
+			}
+		}
 
 		// create transfer item
 		TransferItem transferItem = new TransferItem();
@@ -214,42 +220,48 @@ public class TransferAccountingManagementServiceImpl extends
 					"error saving transfer attempt", ex);
 		}
 
-		return transferItem;
 	}
-        
-        @Override
-        public TransferItem updateTransferAfterFailedFileTransfer(
-                org.irods.jargon.core.transfer.TransferStatus transferStatus,
-                TransferAttempt transferAttempt)
-                throws ConveyorExecutionException {
-            
-            
-                    // TODO: What is the global error exception and stack trace in transfer attempt?
-            
-                    // TODO: how to handle retries??
-                    transferAttempt.setAttemptStatus(org.irods.jargon.transfer.dao.domain.TransferStatus.ERROR);
-                    
-                    // create transfer item
-                    TransferItem transferItem = new TransferItem();
-                    transferItem.setFile(true);
-                    transferItem.setSourceFileAbsolutePath(transferStatus
-                                    .getSourceFileAbsolutePath());
-                    transferItem.setTargetFileAbsolutePath(transferStatus
-                                    .getTargetFileAbsolutePath());
-                    transferItem.setTransferredAt(new Date());
-                    transferItem.setErrorMessage(transferItem.getErrorMessage());
-                    transferItem.setErrorStackTrace(transferItem.getErrorStackTrace());
 
-                    try {
-                        transferAttempt.getTransferItems().add(transferItem);
-                        transferAttemptDAO.save(transferAttempt);
-                    } catch (TransferDAOException ex) {
-                        throw new ConveyorExecutionException(
-                                            "error saving transfer attempt", ex);
-                    }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.conveyor.core.TransferAccountingManagementService#
+	 * updateTransferAfterFailedFileTransfer
+	 * (org.irods.jargon.core.transfer.TransferStatus,
+	 * org.irods.jargon.transfer.dao.domain.TransferAttempt)
+	 */
+	@Override
+	public void updateTransferAfterFailedFileTransfer(
+			org.irods.jargon.core.transfer.TransferStatus transferStatus,
+			TransferAttempt transferAttempt) throws ConveyorExecutionException {
 
-                    return transferItem;
-        }
+		// TODO: What is the global error exception and stack trace in transfer
+		// attempt?
+
+		// TODO: how to handle retries??
+		transferAttempt
+				.setAttemptStatus(org.irods.jargon.transfer.dao.domain.TransferStatus.ERROR);
+
+		// create transfer item
+		TransferItem transferItem = new TransferItem();
+		transferItem.setFile(true);
+		transferItem.setSourceFileAbsolutePath(transferStatus
+				.getSourceFileAbsolutePath());
+		transferItem.setTargetFileAbsolutePath(transferStatus
+				.getTargetFileAbsolutePath());
+		transferItem.setTransferredAt(new Date());
+		transferItem.setErrorMessage(transferItem.getErrorMessage());
+		transferItem.setErrorStackTrace(transferItem.getErrorStackTrace());
+
+		try {
+			transferAttempt.getTransferItems().add(transferItem);
+			transferAttemptDAO.save(transferAttempt);
+		} catch (TransferDAOException ex) {
+			throw new ConveyorExecutionException(
+					"error saving transfer attempt", ex);
+		}
+
+	}
 
 	/*
 	 * (non-Javadoc)
