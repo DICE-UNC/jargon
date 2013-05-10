@@ -116,6 +116,7 @@
   
   <bean id="transferAccountingManagementService" class="org.irods.jargon.conveyor.basic.TransferAccountingManagementServiceImpl">
   	<property name="conveyorExecutorService" ref="conveyorExecutorService"/>
+  	<property name="configurationService" ref="configurationService"/>
   	 <property name="transferDAO" ref="transferDAO" />
   	 <property name="transferAttemptDAO" ref="transferAttemptDAO" />
   	 <property name="transferItemDAO" ref="transferItemDAO" />

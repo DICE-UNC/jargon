@@ -108,4 +108,16 @@ public interface ConfigurationService {
 	 */
 	TransferControlBlock buildDefaultTransferControlBlockBasedOnConfiguration();
 
+	/**
+	 * Method retrieves a plain object that reflects the cached configuration
+	 * state exposed as easy to use java methods. This service is responsible
+	 * for maintaining the cache, which saves database access and is easy to use
+	 * by other services.
+	 * 
+	 * @return
+	 * @throws ConveyorExecutionException
+	 */
+	CachedConveyorConfigurationProperties getCachedConveyorConfigurationProperties()
+			throws ConveyorExecutionException;
+
 }

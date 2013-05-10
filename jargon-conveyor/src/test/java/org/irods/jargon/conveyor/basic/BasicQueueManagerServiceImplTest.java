@@ -5,6 +5,7 @@ import java.util.Properties;
 
 import junit.framework.Assert;
 
+import org.irods.jargon.conveyor.core.ConfigurationPropertyConstants;
 import org.irods.jargon.conveyor.core.ConveyorService;
 import org.irods.jargon.conveyor.unittest.utils.TransferTestRunningUtilities;
 import org.irods.jargon.core.connection.IRODSAccount;
@@ -13,7 +14,10 @@ import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.pub.io.IRODSFileFactory;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.irods.jargon.testutils.filemanip.FileGenerator;
+import org.irods.jargon.transfer.dao.domain.ConfigurationProperty;
 import org.irods.jargon.transfer.dao.domain.Transfer;
+import org.irods.jargon.transfer.dao.domain.TransferAttempt;
+import org.irods.jargon.transfer.dao.domain.TransferItem;
 import org.irods.jargon.transfer.dao.domain.TransferType;
 import org.junit.After;
 import org.junit.Before;
@@ -80,6 +84,13 @@ public class BasicQueueManagerServiceImplTest {
 				.getProperty(TestingPropertiesHelper.IRODS_PASSWORD_KEY));
 		conveyorService.getGridAccountService()
 				.addOrUpdateGridAccountBasedOnIRODSAccount(irodsAccount);
+		ConfigurationProperty logSuccessful = new ConfigurationProperty();
+		logSuccessful
+				.setPropertyKey(ConfigurationPropertyConstants.LOG_SUCCESSFUL_FILES_KEY);
+		logSuccessful.setPropertyValue("true");
+
+		conveyorService.getConfigurationService().addConfigurationProperty(
+				logSuccessful);
 		String rootCollection = "testEnqueuePutTransferOperationAndWaitUntilDone";
 		String localCollectionAbsolutePath = scratchFileUtils
 				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH
@@ -110,10 +121,21 @@ public class BasicQueueManagerServiceImplTest {
 				transfer, irodsAccount);
 
 		TransferTestRunningUtilities.waitForTransferToRunOrTimeout(
-				conveyorService, 5);
+				conveyorService, -1);
 
 		Assert.assertFalse("did not create a transfer attempt", transfer
 				.getTransferAttempts().isEmpty());
+
+		TransferAttempt attempts[] = new TransferAttempt[transfer
+				.getTransferAttempts().size()];
+		attempts = transfer.getTransferAttempts().toArray(attempts);
+		Assert.assertEquals("should be 1 attempt", 1, attempts.length);
+
+		TransferAttempt attempt = attempts[0];
+		TransferItem items[] = new TransferItem[attempt.getTransferItems()
+				.size()];
+		items = attempt.getTransferItems().toArray(items);
+		Assert.assertEquals("should be 1 item", 1, items.length);
 
 	}
 }

@@ -30,14 +30,22 @@ public class TransferTestRunningUtilities {
 			throws JargonException {
 
 		final long timeout = timeoutInSeconds * 1000;
-		final long sleepTime = timeout / 10;
+		final long sleepTime;
+		if (timeoutInSeconds == -1) {
+			sleepTime = 1000;
+		} else {
+			sleepTime = timeout / 10;
+
+		}
 
 		final long startMillis = System.currentTimeMillis();
 
 		long elapsed;
 		while (true) {
 			elapsed = System.currentTimeMillis() - startMillis;
-			if (elapsed >= timeout) {
+			if (timeoutInSeconds == -1) {
+				// ignore timeout
+			} else if (elapsed >= timeout) {
 				throw new JargonException("timeout!");
 			}
 

@@ -97,6 +97,19 @@ public class ConfigurationProperty implements Serializable {
 	}
 
 	/**
+	 * access the property value as a boolean
+	 * 
+	 * @return <code>boolean</code> that represents the cached property
+	 */
+	public boolean propertyValueAsBoolean() {
+		if (propertyValue == null) {
+			return false;
+		}
+
+		return Boolean.parseBoolean(propertyValue);
+	}
+
+	/**
 	 * @param propertyValue
 	 *            the propertyValue to set
 	 */

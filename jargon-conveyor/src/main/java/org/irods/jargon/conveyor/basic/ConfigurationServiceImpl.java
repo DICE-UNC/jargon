@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Properties;
 
 import org.irods.jargon.conveyor.core.AbstractConveyorComponentService;
+import org.irods.jargon.conveyor.core.CachedConveyorConfigurationProperties;
+import org.irods.jargon.conveyor.core.ConfigurationPropertyConstants;
 import org.irods.jargon.conveyor.core.ConfigurationService;
 import org.irods.jargon.conveyor.core.ConveyorExecutionException;
 import org.irods.jargon.core.transfer.TransferControlBlock;
@@ -29,6 +31,8 @@ public class ConfigurationServiceImpl extends AbstractConveyorComponentService
 		implements ConfigurationService {
 
 	private ConfigurationPropertyDAO configurationPropertyDAO;
+	private CachedConveyorConfigurationProperties cachedConveyorConfigurationProperties = null;
+	private Object propsLockObject = new Object();
 
 	private final Logger log = LoggerFactory
 			.getLogger(ConfigurationServiceImpl.class);
@@ -116,6 +120,7 @@ public class ConfigurationServiceImpl extends AbstractConveyorComponentService
 		}
 
 		log.info("configuration deleted");
+		updateCachedConveyorConfigurationProperties();
 
 	}
 
@@ -139,6 +144,14 @@ public class ConfigurationServiceImpl extends AbstractConveyorComponentService
 				configurationProperty);
 
 		try {
+			Date theDate = new Date();
+
+			if (configurationProperty.getCreatedAt() == null) {
+				configurationProperty.setCreatedAt(theDate);
+			}
+
+			configurationProperty.setUpdatedAt(theDate);
+
 			configurationPropertyDAO.saveOrUpdate(configurationProperty);
 		} catch (TransferDAOException e) {
 			log.error("dao error updating configuration", e);
@@ -146,6 +159,8 @@ public class ConfigurationServiceImpl extends AbstractConveyorComponentService
 		}
 
 		log.info("configuration property added");
+		updateCachedConveyorConfigurationProperties();
+
 		return configurationProperty;
 
 	}
@@ -177,6 +192,7 @@ public class ConfigurationServiceImpl extends AbstractConveyorComponentService
 		}
 
 		log.info("configuration property updated");
+		updateCachedConveyorConfigurationProperties();
 
 	}
 
@@ -257,6 +273,7 @@ public class ConfigurationServiceImpl extends AbstractConveyorComponentService
 			log.debug(
 					"added/updated configuration property from provided properties:{}",
 					configurationProperty);
+			updateCachedConveyorConfigurationProperties();
 
 		}
 
@@ -270,7 +287,58 @@ public class ConfigurationServiceImpl extends AbstractConveyorComponentService
 	 */
 	@Override
 	public TransferControlBlock buildDefaultTransferControlBlockBasedOnConfiguration() {
-		// FIXME: implement this based on props
+		// FIXME: implement
 		return null;
 	}
+
+	/**
+	 * This should be called whenever properties are updated or altered, this
+	 * translates the key/value properties into a POJO and caches it for quick
+	 * access
+	 * 
+	 * @throws ConveyorExecutionException
+	 */
+	private void updateCachedConveyorConfigurationProperties()
+			throws ConveyorExecutionException {
+
+		List<ConfigurationProperty> props = listConfigurationProperties();
+		CachedConveyorConfigurationProperties cachedProps = new CachedConveyorConfigurationProperties();
+
+		for (ConfigurationProperty property : props) {
+			log.info("property:{}", property);
+			if (property.getPropertyKey().equals(
+					ConfigurationPropertyConstants.LOG_SUCCESSFUL_FILES_KEY)) {
+				cachedProps.setLogSuccessfulTransfers(property
+						.propertyValueAsBoolean());
+			}
+		}
+
+		synchronized (propsLockObject) {
+			this.cachedConveyorConfigurationProperties = cachedProps;
+		}
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.conveyor.core.ConfigurationService#
+	 * getCachedConveyorConfigurationProperties()
+	 */
+	@Override
+	public synchronized CachedConveyorConfigurationProperties getCachedConveyorConfigurationProperties()
+			throws ConveyorExecutionException {
+
+		log.info("getCachedConveyorConfigurationProperties");
+		synchronized (propsLockObject) {
+
+			if (this.cachedConveyorConfigurationProperties == null) {
+				log.info("need to initialize configuration properties");
+				updateCachedConveyorConfigurationProperties();
+			}
+			return cachedConveyorConfigurationProperties;
+		}
+
+	}
+
 }

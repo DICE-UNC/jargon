@@ -6,6 +6,7 @@ package org.irods.jargon.conveyor.basic;
 import java.util.Date;
 
 import org.irods.jargon.conveyor.core.AbstractConveyorComponentService;
+import org.irods.jargon.conveyor.core.ConfigurationService;
 import org.irods.jargon.conveyor.core.ConveyorExecutionException;
 import org.irods.jargon.conveyor.core.GridAccountService;
 import org.irods.jargon.conveyor.core.TransferAccountingManagementService;
@@ -56,6 +57,12 @@ public class TransferAccountingManagementServiceImpl extends
 	 * Injected dependency
 	 */
 	private GridAccountService gridAccountService;
+
+	/**
+	 * Injected dependency
+	 */
+
+	private ConfigurationService configurationService;
 
 	private static final Logger log = LoggerFactory
 			.getLogger(TransferAccountingManagementServiceImpl.class);
@@ -128,9 +135,12 @@ public class TransferAccountingManagementServiceImpl extends
 		this.gridAccountService = gridAccountService;
 	}
 
-	/**
-	 * @param Transfer
-	 *            the Transfer to use to prepare the TransferAttempt
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.conveyor.core.TransferAccountingManagementService#
+	 * prepareTransferForExecution
+	 * (org.irods.jargon.transfer.dao.domain.Transfer)
 	 */
 	@Override
 	public TransferAttempt prepareTransferForExecution(final Transfer transfer)
@@ -159,16 +169,32 @@ public class TransferAccountingManagementServiceImpl extends
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.conveyor.core.TransferAccountingManagementService#
+	 * updateTransferAfterSuccessfulFileTransfer
+	 * (org.irods.jargon.core.transfer.TransferStatus,
+	 * org.irods.jargon.transfer.dao.domain.TransferAttempt)
+	 */
 	@Override
 	public TransferItem updateTransferAfterSuccessfulFileTransfer(
 			final org.irods.jargon.core.transfer.TransferStatus transferStatus,
 			final TransferAttempt transferAttempt)
 			throws ConveyorExecutionException {
 
+		if (!this.getConfigurationService()
+				.getCachedConveyorConfigurationProperties()
+				.isLogSuccessfulTransfers()) {
+			log.info("not logging successful transfer");
+		}
+
 		log.info("updated last good path to:{}",
 				transferStatus.getSourceFileAbsolutePath());
 		transferAttempt.setLastSuccessfulPath(transferStatus
 				.getSourceFileAbsolutePath());
+		transferAttempt.setTotalFilesTransferredSoFar(transferAttempt
+				.getTotalFilesTransferredSoFar() + 1);
 
 		// create transfer item
 		TransferItem transferItem = new TransferItem();
@@ -180,8 +206,9 @@ public class TransferAccountingManagementServiceImpl extends
 		transferItem.setTransferredAt(new Date());
 
 		try {
+			transferItem.setTransferAttempt(transferAttempt);
 			transferAttempt.getTransferItems().add(transferItem);
-			transferAttemptDAO.save(transferAttempt);
+			transferItemDAO.save(transferItem);
 		} catch (TransferDAOException ex) {
 			throw new ConveyorExecutionException(
 					"error saving transfer attempt", ex);
@@ -236,5 +263,21 @@ public class TransferAccountingManagementServiceImpl extends
 					"error saving transfer attempt", ex);
 		}
 
+	}
+
+	/**
+	 * @return the configurationService
+	 */
+	public ConfigurationService getConfigurationService() {
+		return configurationService;
+	}
+
+	/**
+	 * @param configurationService
+	 *            the configurationService to set
+	 */
+	public void setConfigurationService(
+			ConfigurationService configurationService) {
+		this.configurationService = configurationService;
 	}
 }
