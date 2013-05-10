@@ -155,8 +155,8 @@ public class TransferAccountingManagementServiceImpl extends
 		transferAttempt.setAttemptStatus(TransferStatus.OK);
 
 		try {
-                        transferDAO.save(transfer);
-                        log.info("transfer added:{}", transferAttempt);
+			transferDAO.save(transfer);
+			log.info("transfer added:{}", transferAttempt);
 			transfer.getTransferAttempts().add(transferAttempt);
 			transferAttemptDAO.save(transferAttempt);
 			log.info("transfer attempt added:{}", transferAttempt);
@@ -327,5 +327,13 @@ public class TransferAccountingManagementServiceImpl extends
 	public void setConfigurationService(
 			ConfigurationService configurationService) {
 		this.configurationService = configurationService;
+	}
+
+	@Override
+	public void updateTransferAfterOverallSuccess(
+			org.irods.jargon.core.transfer.TransferStatus transferStatus,
+			TransferAttempt transferAttempt) {
+		// TODO Auto-generated method stub
+
 	}
 }
