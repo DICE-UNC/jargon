@@ -9,6 +9,7 @@ import org.irods.jargon.transfer.dao.domain.TransferStatus;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 /**
+ * Database operations for the <code>TransferAttempt</code>
  * 
  * @author lisa
  */

@@ -3,6 +3,8 @@ package org.irods.jargon.conveyor.basic;
 import java.io.File;
 import java.util.Properties;
 
+import junit.framework.Assert;
+
 import org.irods.jargon.conveyor.core.ConveyorService;
 import org.irods.jargon.conveyor.unittest.utils.TransferTestRunningUtilities;
 import org.irods.jargon.core.connection.IRODSAccount;
@@ -109,6 +111,9 @@ public class BasicQueueManagerServiceImplTest {
 
 		TransferTestRunningUtilities.waitForTransferToRunOrTimeout(
 				conveyorService, 5);
+
+		Assert.assertFalse("did not create a transfer attempt", transfer
+				.getTransferAttempts().isEmpty());
 
 	}
 }

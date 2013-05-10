@@ -4,7 +4,6 @@
 package org.irods.jargon.conveyor.core.callables;
 
 import org.irods.jargon.conveyor.core.ConveyorExecutionException;
-import org.irods.jargon.conveyor.core.ConveyorExecutionFuture;
 import org.irods.jargon.conveyor.core.ConveyorService;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.JargonException;
@@ -35,38 +34,6 @@ public class PutConveyorCallable extends AbstractConveyorCallable {
 			final TransferAttempt transferAttempt,
 			final ConveyorService conveyorService) {
 		super(transfer, transferAttempt, conveyorService);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.irods.jargon.conveyor.core.AbstractConveyorCallable#call()
-	 */
-	@Override
-	public ConveyorExecutionFuture call() throws ConveyorExecutionException {
-
-		TransferControlBlock tcb = buildDefaultTransferControlBlock();
-
-		IRODSAccount irodsAccount = null;
-		try {
-			irodsAccount = getConveyorService().getGridAccountService()
-					.irodsAccountForGridAccount(getTransfer().getGridAccount());
-
-			DataTransferOperations dataTransferOperationsAO = getIrodsAccessObjectFactory()
-					.getDataTransferOperations(irodsAccount);
-			dataTransferOperationsAO.putOperation(getTransfer()
-					.getLocalAbsolutePath(), getTransfer()
-					.getIrodsAbsolutePath(), getTransfer().getGridAccount()
-					.getDefaultResource(), this, tcb);
-		} catch (JargonException ex) {
-			log.error("error doing transfer", ex);
-			this.reportConveyerExceptionDuringProcessing(ex);
-		} catch (Exception ex) {
-			log.error("unanticipated exception occurred", ex);
-			this.reportConveyerExceptionDuringProcessing(ex);
-		}
-
-		return new ConveyorExecutionFuture();
 	}
 
 	@Override
@@ -133,6 +100,17 @@ public class PutConveyorCallable extends AbstractConveyorCallable {
 			final String irodsAbsolutePath, final boolean isCollection) {
 		log.info("transferAsksWhetherToForceOperation");
 		return CallbackResponse.YES_FOR_ALL;
+	}
+
+	@Override
+	void processCallForThisTransfer(TransferControlBlock tcb,
+			IRODSAccount irodsAccount) throws ConveyorExecutionException,
+			JargonException {
+		DataTransferOperations dataTransferOperationsAO = getIrodsAccessObjectFactory()
+				.getDataTransferOperations(irodsAccount);
+		dataTransferOperationsAO.putOperation(getTransfer()
+				.getLocalAbsolutePath(), getTransfer().getIrodsAbsolutePath(),
+				getTransfer().getGridAccount().getDefaultResource(), this, tcb);
 	}
 
 }

@@ -5,7 +5,6 @@
 package org.irods.jargon.conveyor.core.callables;
 
 import org.irods.jargon.conveyor.core.ConveyorExecutionException;
-import org.irods.jargon.conveyor.core.ConveyorExecutionFuture;
 import org.irods.jargon.conveyor.core.ConveyorService;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.JargonException;
@@ -18,7 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- *
+ * 
  * @author lisa
  */
 public class GetConveyorCallable extends AbstractConveyorCallable {
@@ -31,34 +30,8 @@ public class GetConveyorCallable extends AbstractConveyorCallable {
 	 * @param conveyorService
 	 */
 	public GetConveyorCallable(Transfer transfer,
-                        TransferAttempt transferAttempt,
-			ConveyorService conveyorService) {
+			TransferAttempt transferAttempt, ConveyorService conveyorService) {
 		super(transfer, transferAttempt, conveyorService);
-	}
-
-    @Override
-	public ConveyorExecutionFuture call() throws ConveyorExecutionException {
-
-		TransferControlBlock tcb = this.buildDefaultTransferControlBlock();
-
-		IRODSAccount irodsAccount = null;
-		try {
-			irodsAccount = getConveyorService().getGridAccountService()
-					.irodsAccountForGridAccount(getTransfer().getGridAccount());
-			//irodsAccount.setDefaultStorageResource("renci-vault1");
-
-			DataTransferOperations dataTransferOperationsAO = getIrodsAccessObjectFactory()
-					.getDataTransferOperations(irodsAccount);
-			dataTransferOperationsAO.getOperation(getTransfer()
-					.getIrodsAbsolutePath(), getTransfer()
-					.getLocalAbsolutePath(), getTransfer().getGridAccount()
-					.getDefaultResource(), this, tcb);
-		} catch (JargonException ex) {
-			log.error("error doing transfer", ex);
-			throw new ConveyorExecutionException(ex);
-		}
-
-		return new ConveyorExecutionFuture();
 	}
 
 	@Override
@@ -115,5 +88,17 @@ public class GetConveyorCallable extends AbstractConveyorCallable {
 		log.info("transferAsksWhetherToForceOperation");
 		return CallbackResponse.YES_FOR_ALL;
 	}
-    
+
+	@Override
+	void processCallForThisTransfer(TransferControlBlock tcb,
+			IRODSAccount irodsAccount) throws ConveyorExecutionException,
+			JargonException {
+		DataTransferOperations dataTransferOperationsAO = getIrodsAccessObjectFactory()
+				.getDataTransferOperations(irodsAccount);
+		dataTransferOperationsAO.getOperation(getTransfer()
+				.getIrodsAbsolutePath(), getTransfer().getLocalAbsolutePath(),
+				getTransfer().getGridAccount().getDefaultResource(), this, tcb);
+
+	}
+
 }

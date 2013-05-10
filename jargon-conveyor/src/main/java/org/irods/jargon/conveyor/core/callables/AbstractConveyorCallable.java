@@ -97,9 +97,77 @@ public abstract class AbstractConveyorCallable implements
 		this.conveyorService = conveyorService;
 	}
 
+	/**
+	 * This method is to be implemented by each specific transfer subclass. This
+	 * is wrapped in the <code>call()</code> method of this abstract superclass,
+	 * so that this superclass can wrap the call with appropriate
+	 * setup/teardown, as well as error handling.
+	 * 
+	 * @param tcb
+	 *            {@link TransferControlBlock} that contains transfer options
+	 *            and other information shared with the underlying transfer
+	 * @param irodsAccount
+	 *            {@link IRODSAccount} that has been resolved for this operation
+	 * 
+	 * @throws ConveyorExecutionException
+	 *             for errors in conveyor processing
+	 * @throws JargonException
+	 *             for errors in actual jargon-irods processing
+	 */
+	abstract void processCallForThisTransfer(final TransferControlBlock tcb,
+			final IRODSAccount irodsAccount) throws ConveyorExecutionException,
+			JargonException;
+
+	/**
+	 * Call method will invoke the <code>processCall</code> method to be
+	 * implemented in each subclass. This will contain the specific code for
+	 * each type of operation, and wrap it in error checking and other common
+	 * processing.
+	 * <p/>
+	 * Note that any type of error is trapped in the catch, and conveyor will
+	 * attempt to log these errors as part of the transfer attempt, so that the
+	 * database reflects any issues at all with how the transfers are managed.
+	 * It is possible that conveyor itself will have errors and be unable to
+	 * flag these in the database, in which case it tries to log these and throw
+	 * an exception, but in this case something is really wrong.
+	 * <p/>
+	 * The actual transfers are done in the callable, and if any sort of
+	 * 'normal' iRODS or Jargon errors occur, these are not thrown from Jargon,
+	 * because there is a registered callback listener. If the callback listener
+	 * is present, Jargon will not throw an error from iRODS work, instead it
+	 * puts the error in the callback, and normally, conveyor sees these
+	 * callbacks and logs the errors in the conveyor database.
+	 * 
+	 * @throws <code>ConveyorExecutionException</code> if something really bad
+	 *         happens. Mostly, any errors should be trapped and stuck in the
+	 *         database for the transfer. Errors should only be thrown if
+	 *         something goes wrong with that processing, and in that case
+	 *         something is pretty much messed up anyhow. In other words if you
+	 *         get an exception to throw here, something is broken with the
+	 *         framework itself, and the framework is giving up.
+	 * 
+	 */
 	@Override
-	public abstract ConveyorExecutionFuture call()
-			throws ConveyorExecutionException;
+	public final ConveyorExecutionFuture call()
+			throws ConveyorExecutionException {
+		TransferControlBlock tcb = buildDefaultTransferControlBlock();
+
+		IRODSAccount irodsAccount = null;
+		try {
+			irodsAccount = getConveyorService().getGridAccountService()
+					.irodsAccountForGridAccount(getTransfer().getGridAccount());
+
+			processCallForThisTransfer(tcb, irodsAccount);
+			return new ConveyorExecutionFuture();
+		} catch (Exception ex) {
+			log.error(
+					"*********** unanticipated exception occurred  *************",
+					ex);
+			this.reportConveyerExceptionDuringProcessing(ex);
+			throw new ConveyorExecutionException(
+					"unhandled exception during transfer process", ex);
+		}
+	}
 
 	/**
 	 * @return the transfer
