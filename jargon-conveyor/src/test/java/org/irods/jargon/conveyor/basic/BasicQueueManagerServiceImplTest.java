@@ -18,6 +18,7 @@ import org.irods.jargon.transfer.dao.domain.ConfigurationProperty;
 import org.irods.jargon.transfer.dao.domain.Transfer;
 import org.irods.jargon.transfer.dao.domain.TransferAttempt;
 import org.irods.jargon.transfer.dao.domain.TransferItem;
+import org.irods.jargon.transfer.dao.domain.TransferState;
 import org.irods.jargon.transfer.dao.domain.TransferType;
 import org.junit.After;
 import org.junit.Before;
@@ -126,12 +127,16 @@ public class BasicQueueManagerServiceImplTest {
 		Assert.assertFalse("did not create a transfer attempt", transfer
 				.getTransferAttempts().isEmpty());
 
+		Assert.assertEquals("did not get complete status",
+				TransferState.COMPLETE, transfer.getTransferState());
+
 		TransferAttempt attempts[] = new TransferAttempt[transfer
 				.getTransferAttempts().size()];
 		attempts = transfer.getTransferAttempts().toArray(attempts);
 		Assert.assertEquals("should be 1 attempt", 1, attempts.length);
 
 		TransferAttempt attempt = attempts[0];
+		Assert.assertNotNull("transfer attempt not persisted", attempt.getId());
 		TransferItem items[] = new TransferItem[attempt.getTransferItems()
 				.size()];
 		items = attempt.getTransferItems().toArray(items);
