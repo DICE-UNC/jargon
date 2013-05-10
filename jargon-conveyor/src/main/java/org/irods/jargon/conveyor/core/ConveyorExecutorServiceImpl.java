@@ -89,6 +89,10 @@ public class ConveyorExecutorServiceImpl implements ConveyorExecutorService {
 		if (transfer == null) {
 			throw new IllegalArgumentException("null transfer");
 		}
+                
+                if (transferAttempt == null) {
+			throw new IllegalArgumentException("null transferAttempt");
+		}
 
 		if (conveyorService == null) {
 			throw new IllegalArgumentException("null conveyorService");

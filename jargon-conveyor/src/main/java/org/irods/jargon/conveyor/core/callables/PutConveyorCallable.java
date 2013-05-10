@@ -35,11 +35,12 @@ public class PutConveyorCallable extends AbstractConveyorCallable {
 			final ConveyorService conveyorService) {
 		super(transfer, transferAttempt, conveyorService);
 	}
+        
 
 	@Override
 	public void statusCallback(final TransferStatus transferStatus)
 			throws JargonException {
-		log.info("status callback:{}", transferStatus);
+		log.info("put status callback:{}", transferStatus);
 
 		if (transferStatus.getTransferState() == TransferStatus.TransferState.SUCCESS
 				|| transferStatus.getTransferState() == TransferStatus.TransferState.IN_PROGRESS_COMPLETE_FILE) {
@@ -51,28 +52,36 @@ public class PutConveyorCallable extends AbstractConveyorCallable {
 				throw new JargonException(ex.getMessage(), ex.getCause());
 			}
 		}
+                else if (transferStatus.getTransferState() == TransferStatus.TransferState.RESTARTING) {
+                        // TransferStatus.TransferState.RESTARTING = skipped seeking restart
+                        // point
+                        /*
+                         * add a property to tell this to log that restart in the attempt,
+                         * otherwise it can be skipped. consider transfer 'levels' and where
+                         * this falls
+                         */
+                }
+                else if (transferStatus.getTransferState() == TransferStatus.TransferState.FAILURE) {
+                        // TransferStatus.TransferState.FAILURE
+                        /*
+                         * create failure item get exception from callback and add to item
+                         */
+                        try {
+                            this.getConveyorService().getTransferAccountingManagementService().updateTransferAfterFailedFileTransfer(
+                                    transferStatus, getTransferAttempt());
+                        } catch (ConveyorExecutionException ex) {
+                            throw new JargonException(ex.getMessage(), ex.getCause());
+                        }
+                }
 
-		// TransferStatus.TransferState.RESTARTING = skipped seeking restart
-		// point
-
-		/*
-		 * add a property to tell this to log that restart in the attempt,
-		 * otherwise it can be skipped. consider transfer 'levels' and where
-		 * this falls
-		 */
-
-		// TransferStatus.TransferState.FAILURE
-
-		/*
-		 * create failure item get exception from callback and add to item
-		 */
-
-		// TransferStatus.TransferState.CANCELLED or
-		// TransferStatus.TransferState.PAUSED
-
-		/*
-		 *  
-		 */
+                else if (transferStatus.getTransferState() == TransferStatus.TransferState.CANCELLED
+                                || transferStatus.getTransferState() == TransferStatus.TransferState.PAUSED) {
+                        // TransferStatus.TransferState.CANCELLED or
+                        // TransferStatus.TransferState.PAUSED
+                        /*
+                         *  
+                         */
+                }
 
 		super.statusCallback(transferStatus);
 
