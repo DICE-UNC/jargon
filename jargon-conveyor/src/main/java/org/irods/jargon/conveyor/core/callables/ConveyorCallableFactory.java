@@ -37,6 +37,14 @@ public class ConveyorCallableFactory {
 		if (transfer == null) {
 			throw new IllegalArgumentException("transfer is null");
 		}
+                
+                if (transferAttempt == null) {
+			throw new IllegalArgumentException("transferAttempt is null");
+		}
+                
+                if (conveyorService == null) {
+			throw new IllegalArgumentException("conveyorService is null");
+		}
 
 		switch (transfer.getTransferType()) {
 		case PUT:

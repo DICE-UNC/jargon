@@ -31,11 +31,38 @@ public interface TransferAccountingManagementService {
 	 */
 	TransferAttempt prepareTransferForExecution(Transfer transfer)
 			throws ConveyorExecutionException;
-
+        
+        
+        /**
+	 * Update a transfer attempt (with last successful path) and transfer item
+         * after a successful transfer.
+	 * 
+	 * @param transferStatus
+	 *            {@link TransferStatus} returned from status callback
+	 * @param transferAttempt
+	 *            {@link TransferAttempt} that resulted in successful transfer
+	 * @throws ConveyorExecutionException
+	 */
 	TransferItem updateTransferAfterSuccessfulFileTransfer(
 			TransferStatus transferStatus, TransferAttempt transferAttempt)
 			throws ConveyorExecutionException;
+        
+        
+        /**
+	 * Update a transfer due to an error returned in callback from Jargon.
+	 * 
+         * @param transferStatus
+         *            {@link TransferStatus} returned from status callback
+	 * @param transferAttempt
+	 *            {@link TransferAttempt} that resulted in the transfer error
+	 * @throws ConveyorExecutionException
+	 */
+        TransferItem updateTransferAfterFailedFileTransfer(
+            TransferStatus transferStatus,
+            TransferAttempt transferAttempt)
+            throws ConveyorExecutionException;
 
+        
 	/**
 	 * Update a transfer due to an error trying to set up and run the transfer
 	 * in the conveyor framework. This is distinct from errors that come back to

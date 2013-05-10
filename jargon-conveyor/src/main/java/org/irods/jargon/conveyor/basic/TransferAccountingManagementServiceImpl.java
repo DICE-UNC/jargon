@@ -189,6 +189,40 @@ public class TransferAccountingManagementServiceImpl extends
 
 		return transferItem;
 	}
+        
+        @Override
+        public TransferItem updateTransferAfterFailedFileTransfer(
+                org.irods.jargon.core.transfer.TransferStatus transferStatus,
+                TransferAttempt transferAttempt)
+                throws ConveyorExecutionException {
+            
+            
+                    // TODO: What is the global error exception and stack trace in transfer attempt?
+            
+                    // TODO: how to handle retries??
+                    transferAttempt.setAttemptStatus(org.irods.jargon.transfer.dao.domain.TransferStatus.ERROR);
+                    
+                    // create transfer item
+                    TransferItem transferItem = new TransferItem();
+                    transferItem.setFile(true);
+                    transferItem.setSourceFileAbsolutePath(transferStatus
+                                    .getSourceFileAbsolutePath());
+                    transferItem.setTargetFileAbsolutePath(transferStatus
+                                    .getTargetFileAbsolutePath());
+                    transferItem.setTransferredAt(new Date());
+                    transferItem.setErrorMessage(transferItem.getErrorMessage());
+                    transferItem.setErrorStackTrace(transferItem.getErrorStackTrace());
+
+                    try {
+                        transferAttempt.getTransferItems().add(transferItem);
+                        transferAttemptDAO.save(transferAttempt);
+                    } catch (TransferDAOException ex) {
+                        throw new ConveyorExecutionException(
+                                            "error saving transfer attempt", ex);
+                    }
+
+                    return transferItem;
+        }
 
 	/*
 	 * (non-Javadoc)
