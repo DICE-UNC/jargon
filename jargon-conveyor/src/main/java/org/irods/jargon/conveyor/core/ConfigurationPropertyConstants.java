@@ -11,7 +11,7 @@ package org.irods.jargon.conveyor.core;
  */
 public class ConfigurationPropertyConstants {
 
-	public static final String LOG_SUCCESSFUL_FILES_KEY = "logSuccessfulFiles";
+	public static final String LOG_SUCCESSFUL_FILES_KEY = "transferengine.record.successful.files";
 
 	private ConfigurationPropertyConstants() {
 	}

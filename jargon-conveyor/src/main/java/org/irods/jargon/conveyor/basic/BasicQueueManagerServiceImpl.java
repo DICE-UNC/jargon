@@ -149,8 +149,13 @@ public class BasicQueueManagerServiceImpl extends
 					.getTransferAccountingManagementService()
 					.prepareTransferForExecution(transfer);
 
+			log.info("looking for transfer attempt after update!");
+			TransferAttempt actual = transferAttemptDAO
+					.findById(transferAttempt.getId());
+			log.info("found:{}", actual);
+
 			this.getConveyorExecutorService().processTransferAndHandleReturn(
-					transfer, transferAttempt, this.conveyorService);
+					transfer, actual, this.conveyorService);
 
 		} catch (JargonException je) {
 			log.error("jargon exception dequeue operation, will unlock queue");
