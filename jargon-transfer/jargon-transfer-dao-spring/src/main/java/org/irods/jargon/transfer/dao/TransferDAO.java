@@ -34,8 +34,7 @@ public interface TransferDAO {
 	 * @return
 	 * @throws TransferDAOException
 	 */
-	public Transfer findInitializedById(Long id)
-			throws TransferDAOException;
+	public Transfer findInitializedById(Long id) throws TransferDAOException;
 
 	/**
 	 * 
@@ -43,8 +42,8 @@ public interface TransferDAO {
 	 * @return
 	 * @throws TransferDAOException
 	 */
-	public List<Transfer> findByTransferState(
-			TransferState... transferState) throws TransferDAOException;
+	public List<Transfer> findByTransferState(TransferState... transferState)
+			throws TransferDAOException;
 
 	/**
 	 * 
@@ -106,8 +105,22 @@ public interface TransferDAO {
 
 	/**
 	 * Delete the entire contents of the queue, no matter what the status is
+	 * 
 	 * @throws TransferDAOException
 	 */
 	void purgeEntireQueue() throws TransferDAOException;
+
+	/**
+	 * Initialize lazy-loaded attempts and attempt items. This is a convenience
+	 * method to initialize lazily-loaded child collections, note that some of
+	 * these collections can be very large!
+	 * 
+	 * @param transfer
+	 *            {@link Transfer} that will be re-attached to a session via
+	 *            merge, and then initialized via Hibernate
+	 * @throws TransferDAOException
+	 */
+	Transfer initializeChildrenForTransfer(Transfer transfer)
+			throws TransferDAOException;
 
 }

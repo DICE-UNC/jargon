@@ -1,5 +1,6 @@
 package org.irods.jargon.transfer.dao.spring;
 
+import java.util.Date;
 import java.util.List;
 
 import org.hibernate.Criteria;
@@ -49,8 +50,22 @@ public class ConfigurationPropertyDAOImpl extends HibernateDaoSupport implements
 					"null or empty configuration property key");
 		}
 
-		this.getSessionFactory().getCurrentSession()
-				.saveOrUpdate(configurationProperty);
+		log.info("see if prop already exists...");
+		// see if prop already exists
+		ConfigurationProperty prop = findByPropertyKey(configurationProperty
+				.getPropertyKey());
+
+		if (prop == null) {
+			log.info("prop is new, go ahead and save");
+			prop = configurationProperty;
+			prop.setCreatedAt(new Date());
+		} else {
+			log.info("prop already found, update the value");
+			prop.setPropertyValue(configurationProperty.getPropertyValue());
+			prop.setUpdatedAt(new Date());
+		}
+
+		this.getSessionFactory().getCurrentSession().saveOrUpdate(prop);
 	}
 
 	/*

@@ -1,6 +1,7 @@
 package org.irods.jargon.conveyor.basic;
 
 import java.io.File;
+import java.util.List;
 import java.util.Properties;
 
 import junit.framework.Assert;
@@ -26,17 +27,15 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
-import org.springframework.transaction.annotation.Transactional;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = { "classpath:transfer-dao-beans.xml",
 		"classpath:transfer-dao-hibernate-spring.cfg.xml" })
 @TransactionConfiguration(transactionManager = "transactionManager", defaultRollback = false)
-@Transactional
+// @Transactional
 public class BasicQueueManagerServiceImplTest {
 	private static Properties testingProperties = new Properties();
 	private static org.irods.jargon.testutils.TestingPropertiesHelper testingPropertiesHelper = new TestingPropertiesHelper();
@@ -71,14 +70,18 @@ public class BasicQueueManagerServiceImplTest {
 	public void setUp() throws Exception {
 		conveyorService.setIrodsAccessObjectFactory(irodsFileSystem
 				.getIRODSAccessObjectFactory());
+		conveyorService.getQueueManagerService().purgeAllFromQueue();
+		conveyorService.getGridAccountService().resetPassPhraseAndAccounts();
+
 	}
 
 	@After
 	public void tearDown() throws Exception {
+		conveyorService.getQueueManagerService().purgeAllFromQueue();
 	}
 
 	@Test
-	@Rollback(true)
+	// @Rollback(true)
 	public void testEnqueuePutTransferOperationAndWaitUntilDone()
 			throws Exception {
 		IRODSAccount irodsAccount = testingPropertiesHelper
@@ -94,6 +97,7 @@ public class BasicQueueManagerServiceImplTest {
 
 		conveyorService.getConfigurationService().addConfigurationProperty(
 				logSuccessful);
+
 		String rootCollection = "testEnqueuePutTransferOperationAndWaitUntilDone";
 		String localCollectionAbsolutePath = scratchFileUtils
 				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH
@@ -126,6 +130,16 @@ public class BasicQueueManagerServiceImplTest {
 		TransferTestRunningUtilities.waitForTransferToRunOrTimeout(
 				conveyorService, -1);
 
+		List<Transfer> transfers = conveyorService.getQueueManagerService()
+				.listAllTransfersInQueue();
+		Assert.assertFalse("no transfers in queue", transfers.isEmpty());
+		Assert.assertEquals("should be 1 transfer..maybe test cleanup is bad",
+				1, transfers.size());
+		transfer = transfers.get(0);
+
+		transfer = conveyorService.getQueueManagerService()
+				.initializeGivenTransferByLoadingChildren(transfer);
+
 		Assert.assertFalse("did not create a transfer attempt", transfer
 				.getTransferAttempts().isEmpty());
 
@@ -142,7 +156,7 @@ public class BasicQueueManagerServiceImplTest {
 		TransferItem items[] = new TransferItem[attempt.getTransferItems()
 				.size()];
 		items = attempt.getTransferItems().toArray(items);
-		Assert.assertEquals("should be 1 item", 1, items.length);
+		Assert.assertEquals("should be 2 items", 2, items.length);
 
 	}
 }

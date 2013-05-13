@@ -54,6 +54,7 @@ public class TransferAccountingManagementServiceImplTest {
 
 	@Before
 	public void setUp() throws Exception {
+		gridAccountService.resetPassPhraseAndAccounts();
 	}
 
 	@After
@@ -66,7 +67,7 @@ public class TransferAccountingManagementServiceImplTest {
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountForIRODSUserFromTestPropertiesForGivenUser(
 						testingProperties, testUserName, testUserName);
-		String passPhrase = "ooogabooga";
+		String passPhrase = irodsAccount.getUserName();
 		gridAccountService.validatePassPhrase(passPhrase);
 		GridAccount gridAccount = gridAccountService
 				.addOrUpdateGridAccountBasedOnIRODSAccount(irodsAccount);
@@ -107,7 +108,7 @@ public class TransferAccountingManagementServiceImplTest {
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountForIRODSUserFromTestPropertiesForGivenUser(
 						testingProperties, testUserName, testUserName);
-		String passPhrase = "ooogabooga";
+		String passPhrase = irodsAccount.getUserName();
 		gridAccountService.validatePassPhrase(passPhrase);
 		GridAccount gridAccount = gridAccountService
 				.addOrUpdateGridAccountBasedOnIRODSAccount(irodsAccount);

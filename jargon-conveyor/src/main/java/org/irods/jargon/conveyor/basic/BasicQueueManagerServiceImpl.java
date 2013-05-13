@@ -112,6 +112,20 @@ public class BasicQueueManagerServiceImpl extends
 
 	}
 
+	@Override
+	public List<Transfer> listAllTransfersInQueue()
+			throws ConveyorExecutionException {
+		log.info("listAllTransfersInQueue");
+
+		try {
+			return transferDAO.findAll();
+		} catch (TransferDAOException e) {
+			log.error("error listing all transfers", e);
+			throw new ConveyorExecutionException("error listing transfers", e);
+		}
+
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -181,6 +195,52 @@ public class BasicQueueManagerServiceImpl extends
 		transfer.setTransferType(type);
 		log.info("ready to enqueue transfer:{}", transfer);
 		enqueueTransferOperation(transfer, irodsAccount);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.conveyor.core.QueueManagerService#purgeAllFromQueue()
+	 */
+	@Override
+	public void purgeAllFromQueue() throws ConveyorBusyException,
+			ConveyorExecutionException {
+		log.info("purgeAllFromQueue()");
+
+		log.info("see if conveyor is busy");
+
+		try {
+			this.getConveyorExecutorService().setBusyForAnOperation();
+		} catch (ConveyorBusyException e) {
+			log.info("conveyor is busy, cannot purge");
+			throw e;
+		}
+
+		log.info("purge...");
+
+		try {
+			transferDAO.purgeEntireQueue();
+		} catch (TransferDAOException e) {
+			log.error("jargon exception dequeue operation, will unlock queue");
+			throw new ConveyorExecutionException(e);
+		} finally {
+			this.getConveyorExecutorService().setOperationCompleted();
+
+		}
+
+	}
+
+	@Override
+	public Transfer initializeGivenTransferByLoadingChildren(
+			final Transfer transfer) throws ConveyorExecutionException {
+		log.info("initializeGivenTransferByLoadingChildren");
+		try {
+			return transferDAO.initializeChildrenForTransfer(transfer);
+		} catch (TransferDAOException e) {
+			log.error("jargon exception dequeue operation, will unlock queue");
+			throw new ConveyorExecutionException(e);
+		}
 	}
 
 	/**

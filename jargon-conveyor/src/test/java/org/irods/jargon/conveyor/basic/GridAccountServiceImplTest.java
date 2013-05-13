@@ -17,6 +17,7 @@ import org.irods.jargon.transfer.dao.GridAccountDAO;
 import org.irods.jargon.transfer.dao.domain.GridAccount;
 import org.irods.jargon.transfer.exception.PassPhraseInvalidException;
 import org.junit.AfterClass;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -52,6 +53,11 @@ public class GridAccountServiceImplTest {
 	public static void tearDownAfterClass() throws Exception {
 	}
 
+	@Before
+	public void before() throws Exception {
+		gridAccountService.resetPassPhraseAndAccounts();
+	}
+
 	@Autowired
 	private GridAccountService gridAccountService;
 
@@ -62,7 +68,7 @@ public class GridAccountServiceImplTest {
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountForIRODSUserFromTestPropertiesForGivenUser(
 						testingProperties, testUserName, testUserName);
-		String passPhrase = "ooogabooga";
+		String passPhrase = irodsAccount.getUserName();
 		gridAccountService.validatePassPhrase(passPhrase);
 		GridAccount gridAccount = gridAccountService
 				.addOrUpdateGridAccountBasedOnIRODSAccount(irodsAccount);
@@ -290,7 +296,7 @@ public class GridAccountServiceImplTest {
 		gridAccountServiceTest.changePassPhraseWhenAlreadyValidated(null);
 	}
 
-	@Test
+	@Test(expected = ConveyorExecutionException.class)
 	public final void testFindGridAccountForIRODSAccountNotValidated()
 			throws Exception {
 		GridAccountServiceImpl gridAccountServiceTest = new GridAccountServiceImpl();

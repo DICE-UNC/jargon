@@ -11,6 +11,8 @@ import org.hibernate.criterion.Restrictions;
 import org.irods.jargon.transfer.dao.TransferDAO;
 import org.irods.jargon.transfer.dao.TransferDAOException;
 import org.irods.jargon.transfer.dao.domain.Transfer;
+import org.irods.jargon.transfer.dao.domain.TransferAttempt;
+import org.irods.jargon.transfer.dao.domain.TransferItem;
 import org.irods.jargon.transfer.dao.domain.TransferState;
 import org.irods.jargon.transfer.dao.domain.TransferStatus;
 import org.slf4j.Logger;
@@ -43,6 +45,30 @@ public class TransferDAOImpl extends HibernateDaoSupport implements TransferDAO 
 	public void save(final Transfer transfer) throws TransferDAOException {
 		logger.info("entering save(Transfer)");
 		this.getSessionFactory().getCurrentSession().saveOrUpdate(transfer);
+	}
+
+	@Override
+	public Transfer initializeChildrenForTransfer(final Transfer transfer)
+			throws TransferDAOException {
+		log.info("initializeChildrenForTransfer");
+		if (transfer == null) {
+			throw new IllegalArgumentException("null transfer");
+		}
+
+		log.info("merging transfer");
+		Transfer merged = (Transfer) this.getSessionFactory()
+				.getCurrentSession().merge(transfer);
+
+		for (TransferAttempt attempt : merged.getTransferAttempts()) {
+			attempt.getAttemptStatus();
+
+			for (TransferItem item : attempt.getTransferItems()) {
+				item.getSourceFileAbsolutePath();
+			}
+
+		}
+		return merged;
+
 	}
 
 	/*
@@ -90,7 +116,7 @@ public class TransferDAOImpl extends HibernateDaoSupport implements TransferDAO 
 					.createCriteria(Transfer.class);
 			criteria.add(Restrictions.in("transferState", transferState));
 			criteria.addOrder(Order.desc("createdAt"));
-															// date instead?
+			// date instead?
 			criteria.setFetchMode("synchronization", FetchMode.JOIN);
 			return criteria.list();
 		} catch (HibernateException e) {
@@ -255,28 +281,34 @@ public class TransferDAOImpl extends HibernateDaoSupport implements TransferDAO 
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.transfer.dao.TransferDAO#purgeEntireQueue()
+	 */
 	@Override
 	public void purgeEntireQueue() throws TransferDAOException {
 		log.debug("entering purgeQueue()");
 
 		try {
 
-			StringBuilder sb = new StringBuilder();
-			sb.append("delete from TransferItem as item where ");
-			sb.append("item.transfer.id in (");
-			sb.append("select id from Transfer as transfer)");
-
-			log.debug("delete items sql:{}", sb.toString());
-
 			HibernateTemplate hibernateTemplate = super.getHibernateTemplate();
+			StringBuilder sb = new StringBuilder();
+			sb.append("delete from TransferItem");
+			log.debug("delete items sql:{}", sb.toString());
 
 			int rows = hibernateTemplate.bulkUpdate(sb.toString());
 			log.debug("deleted items count of: {}", rows);
 
 			sb = new StringBuilder();
+			sb.append("delete from TransferAttempt");
+			rows = hibernateTemplate.bulkUpdate(sb.toString());
+			log.debug("deleted attempts count of: {}", rows);
+
+			sb = new StringBuilder();
 			sb.append("delete from Transfer");
 
-			log.debug("delete items sql:{}", sb.toString());
+			log.debug("delete transfers sql:{}", sb.toString());
 
 			rows = super.getHibernateTemplate().bulkUpdate(sb.toString());
 			log.debug("deleted transfers count of: {}", rows);
