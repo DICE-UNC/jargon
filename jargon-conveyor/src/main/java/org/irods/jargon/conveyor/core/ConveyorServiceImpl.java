@@ -2,7 +2,6 @@ package org.irods.jargon.conveyor.core;
 
 import org.irods.jargon.conveyor.basic.BasicQueueManagerServiceImpl;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
-import org.irods.jargon.core.transfer.TransferStatusCallbackListener;
 import org.irods.jargon.transfer.exception.PassPhraseInvalidException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,7 +15,7 @@ import org.slf4j.LoggerFactory;
 
 public class ConveyorServiceImpl implements ConveyorService {
 
-	private TransferStatusCallbackListener transferStatusCallbackListener;
+	private ConveyorCallbackListener conveyorCallbackListener;
 
 	/**
 	 * required dependency
@@ -193,8 +192,8 @@ public class ConveyorServiceImpl implements ConveyorService {
 	 * @return the transferStatusCallbackListener
 	 */
 	@Override
-	public synchronized TransferStatusCallbackListener getTransferStatusCallbackListener() {
-		return transferStatusCallbackListener;
+	public synchronized ConveyorCallbackListener getConveyorCallbackListener() {
+		return conveyorCallbackListener;
 	}
 
 	/**
@@ -202,9 +201,9 @@ public class ConveyorServiceImpl implements ConveyorService {
 	 *            the transferStatusCallbackListener to set
 	 */
 	@Override
-	public synchronized void setTransferStatusCallbackListener(
-			TransferStatusCallbackListener transferStatusCallbackListener) {
-		this.transferStatusCallbackListener = transferStatusCallbackListener;
+	public synchronized void setConveyorCallbackListener(
+			ConveyorCallbackListener conveyorCallbackListener) {
+		this.conveyorCallbackListener = conveyorCallbackListener;
 	}
 
 	@Override
@@ -227,8 +226,8 @@ public class ConveyorServiceImpl implements ConveyorService {
 	 * (org.irods.jargon.core.transfer.TransferStatusCallbackListener)
 	 */
 	@Override
-	public void registerCallbackListener(TransferStatusCallbackListener listener) {
-		this.transferStatusCallbackListener = listener;
+	public void registerCallbackListener(ConveyorCallbackListener listener) {
+		this.conveyorCallbackListener = listener;
 	}
 
 }
