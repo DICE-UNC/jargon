@@ -34,7 +34,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = { "classpath:transfer-dao-beans.xml",
 		"classpath:transfer-dao-hibernate-spring.cfg.xml" })
-@TransactionConfiguration(transactionManager = "transactionManager", defaultRollback = true)
+@TransactionConfiguration(transactionManager = "transactionManager", defaultRollback = false)
 @Transactional
 public class BasicQueueManagerServiceImplTest {
 	private static Properties testingProperties = new Properties();

@@ -39,7 +39,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @author Mike Conway - DICE (www.irods.org)
  * 
  */
-@Transactional
+@Transactional(rollbackFor = { ConveyorExecutionException.class })
 public class GridAccountServiceImpl extends AbstractConveyorComponentService
 		implements GridAccountService {
 

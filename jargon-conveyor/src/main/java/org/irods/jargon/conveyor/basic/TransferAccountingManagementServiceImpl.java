@@ -28,7 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @author Mike Conway - DICE (www.irods.org)
  * 
  */
-@Transactional
+@Transactional(rollbackFor = { ConveyorExecutionException.class })
 public class TransferAccountingManagementServiceImpl extends
 		AbstractConveyorComponentService implements
 		TransferAccountingManagementService {
@@ -184,11 +184,25 @@ public class TransferAccountingManagementServiceImpl extends
 
 		log.info("updated last good path to:{}",
 				transferStatus.getSourceFileAbsolutePath());
-		transferAttempt.setLastSuccessfulPath(transferStatus
+		TransferAttempt localTransferAttempt;
+		try {
+			localTransferAttempt = transferAttemptDAO.findById(transferAttempt
+					.getId());
+			if (localTransferAttempt == null) {
+				log.error("null tranfer attempt found, cannot update the database");
+				throw new ConveyorExecutionException(
+						"error finding transfer attempt");
+
+			}
+		} catch (TransferDAOException e) {
+			throw new ConveyorExecutionException(
+					"error finding transfer attempt", e);
+		}
+		localTransferAttempt.setLastSuccessfulPath(transferStatus
 				.getSourceFileAbsolutePath());
-		transferAttempt.setTotalFilesTransferredSoFar(transferStatus
+		localTransferAttempt.setTotalFilesTransferredSoFar(transferStatus
 				.getTotalFilesTransferredSoFar());
-		transferAttempt.setTotalFilesCount(transferStatus
+		localTransferAttempt.setTotalFilesCount(transferStatus
 				.getTotalFilesToTransfer());
 
 		if (!this.getConfigurationService()
@@ -196,7 +210,7 @@ public class TransferAccountingManagementServiceImpl extends
 				.isLogSuccessfulTransfers()) {
 			log.info("not logging successful transfer...update transfer attempt with counts");
 			try {
-				transferAttemptDAO.save(transferAttempt);
+				transferAttemptDAO.save(localTransferAttempt);
 				return;
 			} catch (TransferDAOException e) {
 				throw new ConveyorExecutionException(
@@ -216,8 +230,8 @@ public class TransferAccountingManagementServiceImpl extends
 		transferItem.setTransferredAt(new Date());
 
 		try {
-			transferItem.setTransferAttempt(transferAttempt);
-			transferAttempt.getTransferItems().add(transferItem);
+			transferItem.setTransferAttempt(localTransferAttempt);
+			localTransferAttempt.getTransferItems().add(transferItem);
 			transferItemDAO.save(transferItem);
 		} catch (TransferDAOException ex) {
 			throw new ConveyorExecutionException(

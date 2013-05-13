@@ -26,7 +26,9 @@ public class TransferAttemptDAOImpl extends HibernateDaoSupport implements
 
 	@Override
 	public TransferAttempt findById(Long id) throws TransferDAOException {
-		throw new UnsupportedOperationException("Not supported yet.");
+		logger.debug("entering findById(Long)");
+		return (TransferAttempt) this.getSessionFactory().getCurrentSession()
+				.get(TransferAttempt.class, id);
 	}
 
 	@Override

@@ -26,7 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @author Mike Conway - DICE (www.irods.org)
  * 
  */
-@Transactional
+@Transactional(rollbackFor = { ConveyorExecutionException.class })
 public class ConfigurationServiceImpl extends AbstractConveyorComponentService
 		implements ConfigurationService {
 
