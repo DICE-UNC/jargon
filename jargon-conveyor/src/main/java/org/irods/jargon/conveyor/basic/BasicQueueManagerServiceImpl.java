@@ -178,6 +178,8 @@ public class BasicQueueManagerServiceImpl extends
 		} catch (Exception e) {
 			log.error("jargon exception dequeue operation, will unlock queue");
 			this.getConveyorExecutorService().setOperationCompleted();
+			this.getConveyorService().getConveyorCallbackListener()
+					.signalUnhandledConveyorException(e);
 			throw new ConveyorExecutionException(e);
 		}
 

@@ -317,8 +317,15 @@ public abstract class AbstractConveyorCallable implements
 					.getTransferAccountingManagementService()
 					.updateTransferAttemptWithConveyorException(
 							transferAttempt, myException);
-		} catch (ConveyorExecutionException e) {
-			log.error("*************  exception occurred in conveyor framework,unable to update conveyor database");
+		} catch (Exception e) {
+			/*
+			 * I've got an exception but cannot update the database with it. As
+			 * a last step, log it, then try to signal the callback listener
+			 * that some error has occurred
+			 */
+			log.error("*************  exception occurred in conveyor framework,unable to update conveyor database*****  will signal the callback listener");
+			this.getConveyorService().getConveyorCallbackListener()
+					.signalUnhandledConveyorException(e);
 			throw new ConveyorRuntimeException(
 					"unprocessable exception in conveyor, not updated in database",
 					e);
