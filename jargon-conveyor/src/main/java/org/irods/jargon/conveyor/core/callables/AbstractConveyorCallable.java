@@ -235,8 +235,8 @@ public abstract class AbstractConveyorCallable implements
 			throw new JargonException(ex.getMessage(), ex.getCause());
 		}
 
-		if (conveyorService.getTransferStatusCallbackListener() != null) {
-			conveyorService.getTransferStatusCallbackListener().statusCallback(
+		if (conveyorService.getConveyorCallbackListener() != null) {
+			conveyorService.getConveyorCallbackListener().statusCallback(
 					transferStatus);
 		}
 
@@ -272,8 +272,8 @@ public abstract class AbstractConveyorCallable implements
 					.setOperationCompleted();
 		}
 
-		if (conveyorService.getTransferStatusCallbackListener() != null) {
-			conveyorService.getTransferStatusCallbackListener()
+		if (conveyorService.getConveyorCallbackListener() != null) {
+			conveyorService.getConveyorCallbackListener()
 					.overallStatusCallback(transferStatus);
 		}
 
