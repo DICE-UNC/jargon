@@ -80,7 +80,7 @@ public class Transfer implements Serializable {
 	/**
 	 * Join to table that contain the grid login information
 	 */
-	@ManyToOne(targetEntity = GridAccount.class, fetch = FetchType.LAZY)
+	@ManyToOne(targetEntity = GridAccount.class, fetch = FetchType.EAGER)
 	@JoinColumn(name = "grid_account_id", nullable = false)
 	private GridAccount gridAccount;
 

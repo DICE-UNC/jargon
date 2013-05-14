@@ -371,6 +371,7 @@ public abstract class AbstractConveyorCallable implements
 					"warning!  An exception was reported but null was provided to the reportConveyerExceptionDuringProcessing() method");
 		} else {
 			log.info("reported exception:", ex);
+			myException = ex;
 		}
 
 		log.info("updating transfer attempt with an exception");
