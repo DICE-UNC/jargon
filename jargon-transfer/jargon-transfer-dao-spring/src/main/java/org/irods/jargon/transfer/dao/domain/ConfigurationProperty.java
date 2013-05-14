@@ -110,6 +110,20 @@ public class ConfigurationProperty implements Serializable {
 	}
 
 	/**
+	 * access the property value as an int
+	 * 
+	 * @return <code>int</code> that represents the cached property. No property
+	 *         resolves to a zero
+	 */
+	public int propertyValueAsInt() {
+		if (propertyValue == null) {
+			return 0;
+		}
+
+		return Integer.parseInt(propertyValue);
+	}
+
+	/**
 	 * @param propertyValue
 	 *            the propertyValue to set
 	 */

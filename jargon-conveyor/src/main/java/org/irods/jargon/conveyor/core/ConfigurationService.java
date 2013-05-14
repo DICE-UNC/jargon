@@ -3,6 +3,7 @@ package org.irods.jargon.conveyor.core;
 import java.util.List;
 import java.util.Properties;
 
+import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 import org.irods.jargon.core.transfer.TransferControlBlock;
 import org.irods.jargon.transfer.TransferEngineException;
 import org.irods.jargon.transfer.dao.domain.ConfigurationProperty;
@@ -101,12 +102,26 @@ public interface ConfigurationService {
 
 	/**
 	 * Build a jargon structure that controls transfers based on the available
-	 * configuration
+	 * configuration.
+	 * <p/>
+	 * This service method is set up so as to be able to access the elements
+	 * that can effect the transfer option settings.
+	 * 
+	 * @param restartPath
+	 *            <code>String</code> that can be blank (not null), indicating
+	 *            the last good path in case of a restart
+	 * @param irodsAccessObjectFactory
+	 *            {@link IRODSAccessObjectFactory} representing the current
+	 *            Jargon connection settings and configuration
 	 * 
 	 * @return {@link TransferControlBlock} structure based on conveyor service
 	 *         configuration
+	 * @throws ConveyorExecutionException
 	 */
-	TransferControlBlock buildDefaultTransferControlBlockBasedOnConfiguration();
+	TransferControlBlock buildDefaultTransferControlBlockBasedOnConfiguration(
+			final String restartPath,
+			final IRODSAccessObjectFactory irodsAccessObjectFactory)
+			throws ConveyorExecutionException;
 
 	/**
 	 * Method retrieves a plain object that reflects the cached configuration

@@ -20,7 +20,7 @@ public class ConveyorExecutorServiceImplTest {
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testExecWhenNull() throws Exception {
-		conveyorExecutorService.processTransferAndHandleReturn(null, null, null);
+		conveyorExecutorService.processTransfer(null, null);
 	}
 
 }

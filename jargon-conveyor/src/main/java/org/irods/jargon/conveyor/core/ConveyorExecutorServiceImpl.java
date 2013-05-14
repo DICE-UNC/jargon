@@ -7,7 +7,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 import org.irods.jargon.conveyor.core.callables.ConveyorCallableFactory;
-import org.irods.jargon.transfer.dao.domain.Transfer;
 import org.irods.jargon.transfer.dao.domain.TransferAttempt;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,6 +44,8 @@ public class ConveyorExecutorServiceImpl implements ConveyorExecutorService {
 	 */
 	private Properties executorServiceProperties = null;
 
+	private ConveyorService conveyorService;
+
 	public Properties getExecutorServiceProperties() {
 		synchronized (this) {
 			return executorServiceProperties;
@@ -79,16 +80,11 @@ public class ConveyorExecutorServiceImpl implements ConveyorExecutorService {
 	 */
 
 	@Override
-	public void processTransferAndHandleReturn(final Transfer transfer,
-			final TransferAttempt transferAttempt,
+	public void processTransfer(final TransferAttempt transferAttempt,
 			ConveyorService conveyorService) throws ConveyorBusyException,
 			ConveyorExecutionException {
 
 		log.info("processTransferAndHandleReturn");
-
-		if (transfer == null) {
-			throw new IllegalArgumentException("null transfer");
-		}
 
 		if (transferAttempt == null) {
 			throw new IllegalArgumentException("null transferAttempt");
@@ -98,7 +94,14 @@ public class ConveyorExecutorServiceImpl implements ConveyorExecutorService {
 			throw new IllegalArgumentException("null conveyorService");
 		}
 
-		log.info("submitting transfer:{}", transfer);
+		/*
+		 * Note that the dequeue operation in the queue manager has already set
+		 * the queue status to busy. The callable below will handle any further
+		 * updates to the queue status based on callbacks from the running
+		 * transfer process.
+		 */
+
+		log.info("submitting transferAttempt:{}", transferAttempt);
 		synchronized (this) {
 
 			Callable<ConveyorExecutionFuture> callable = conveyorCallableFactory
@@ -144,7 +147,8 @@ public class ConveyorExecutorServiceImpl implements ConveyorExecutorService {
 		}
 
 		synchronized (statusSynchronizingObject) {
-			this.errorStatus = errorStatus;
+			setErrorStatus(errorStatus);
+			notifyCallbackListenerOfChangeInStatus();
 		}
 	}
 
@@ -177,6 +181,7 @@ public class ConveyorExecutorServiceImpl implements ConveyorExecutorService {
 
 		synchronized (statusSynchronizingObject) {
 			this.runningStatus = runningStatus;
+			notifyCallbackListenerOfChangeInStatus();
 		}
 	}
 
@@ -193,10 +198,10 @@ public class ConveyorExecutorServiceImpl implements ConveyorExecutorService {
 		synchronized (statusSynchronizingObject) {
 			if (runningStatus == RunningStatus.PAUSED_BUSY) {
 				log.info("setting paused");
-				runningStatus = RunningStatus.PAUSED;
+				setRunningStatus(RunningStatus.PAUSED);
 			} else {
 				log.info("setting idle");
-				runningStatus = RunningStatus.IDLE;
+				setRunningStatus(RunningStatus.IDLE);
 			}
 		}
 	}
@@ -225,8 +230,7 @@ public class ConveyorExecutorServiceImpl implements ConveyorExecutorService {
 		// log.debug("setBusyForOperation()... current status:{}",
 		// runningStatus);
 		synchronized (statusSynchronizingObject) {
-			if (runningStatus == RunningStatus.BUSY
-					|| runningStatus == RunningStatus.PROCESSING) {
+			if (runningStatus == RunningStatus.BUSY) {
 				// log.debug("will return busy exception");
 				throw new ConveyorBusyException(
 						"cannot perform operation, busy");
@@ -240,12 +244,11 @@ public class ConveyorExecutorServiceImpl implements ConveyorExecutorService {
 
 			if (runningStatus == RunningStatus.PAUSED) {
 				log.info("setting to paused busy");
-				runningStatus = RunningStatus.PAUSED_BUSY;
+				this.setRunningStatus(RunningStatus.PAUSED_BUSY);
 			} else {
 				log.info("set busy");
-				runningStatus = RunningStatus.BUSY;
+				this.setRunningStatus(RunningStatus.BUSY);
 			}
-
 		}
 	}
 
@@ -254,6 +257,43 @@ public class ConveyorExecutorServiceImpl implements ConveyorExecutorService {
 	 */
 	public Future<ConveyorExecutionFuture> getCurrentTransfer() {
 		return currentTransfer;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.conveyor.core.ConveyorExecutorService#getQueueStatus()
+	 */
+	@Override
+	public QueueStatus getQueueStatus() {
+		return new QueueStatus(runningStatus, errorStatus);
+	}
+
+	@Override
+	public ConveyorService getConveyorService() {
+		return this.conveyorService;
+	}
+
+	@Override
+	public void setConveyorService(ConveyorService conveyorService) {
+		this.conveyorService = conveyorService;
+	}
+
+	/**
+	 * Be sure to always call the set and get error and running status methods,
+	 * so that those setters will properly notify the callback listener of a
+	 * change in that status! This method will send a notification of a new
+	 * QueueStatus up to the listener (e.g. the iDrop gui).
+	 */
+	private void notifyCallbackListenerOfChangeInStatus() {
+		ConveyorCallbackListener listener = conveyorService
+				.getConveyorCallbackListener();
+		if (listener != null) {
+			synchronized (statusSynchronizingObject) {
+				listener.setQueueStatus(getQueueStatus());
+			}
+		}
 	}
 
 }

@@ -9,6 +9,7 @@ import java.util.List;
 import org.irods.jargon.conveyor.core.AbstractConveyorComponentService;
 import org.irods.jargon.conveyor.core.ConveyorBusyException;
 import org.irods.jargon.conveyor.core.ConveyorExecutionException;
+import org.irods.jargon.conveyor.core.ConveyorExecutorService.ErrorStatus;
 import org.irods.jargon.conveyor.core.ConveyorService;
 import org.irods.jargon.conveyor.core.GridAccountService;
 import org.irods.jargon.conveyor.core.QueueManagerService;
@@ -159,6 +160,9 @@ public class BasicQueueManagerServiceImpl extends
 			log.info("have transfer to run... setting up the new attempt:{}",
 					transfer);
 
+			// upon dequeue clear the error status
+			this.getConveyorExecutorService().setErrorStatus(ErrorStatus.OK);
+
 			TransferAttempt transferAttempt = conveyorService
 					.getTransferAccountingManagementService()
 					.prepareTransferForExecution(transfer);
@@ -168,8 +172,8 @@ public class BasicQueueManagerServiceImpl extends
 					.findById(transferAttempt.getId());
 			log.info("found:{}", actual);
 
-			this.getConveyorExecutorService().processTransferAndHandleReturn(
-					transfer, actual, this.conveyorService);
+			this.getConveyorExecutorService().processTransfer(actual,
+					this.conveyorService);
 
 		} catch (JargonException je) {
 			log.error("jargon exception dequeue operation, will unlock queue");

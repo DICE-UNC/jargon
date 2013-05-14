@@ -7,7 +7,6 @@ import java.util.Properties;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import org.irods.jargon.transfer.dao.domain.Transfer;
 import org.irods.jargon.transfer.dao.domain.TransferAttempt;
 
 /**
@@ -31,33 +30,15 @@ public interface ConveyorExecutorService {
 	}
 
 	public enum RunningStatus {
-		IDLE, PROCESSING, PAUSED, BUSY, PAUSED_BUSY
+		IDLE, PAUSED, BUSY, PAUSED_BUSY
 	}
 
-	/**
-	 * FIXME: comment is wrong now...
-	 * 
-	 * Execute the given conveyor process and return a processing result. This
-	 * method will block until the process terminates.
-	 * <p/>
-	 * Note that the various lock and unlock methods in this class are used to
-	 * coordinate queue operations, and it is the responsibility of the caller
-	 * to obtain and release these locks for any operations that depend on the
-	 * state of the queue (for example, database operations that could alter a
-	 * transfer currently running). <b>This method will implicitly obtain a
-	 * lock, and so a call to lock the queue should not be made before doing
-	 * this operation</b>.
-	 * <p/>
-	 * Note that the <code>withTimeout</code> flag indicates that a timeout
-	 * should be enforced for getting a lock from the queue. If the lock attempt
-	 * is not successful, a <code>ConveyorExecutionException</code> will occur.
-	 * This is useful for interactive interfaces
+	/***
+	 * Given a properly configured transfer attempt, execute the transfer and
+	 * cause all of the various updates to occur
 	 * 
 	 * @param conveyorCallable
 	 *            {@link ConveyorCallable} that will be run
-	 * @param withTimeout
-	 *            <code>boolean</code> with <code>true</code> indicating that
-	 *            the call to obtain a lock should have a time-out
 	 * 
 	 * @throws ConvyorExecutionTimeoutException
 	 *             if an execute is called with <code>withTimout</code> as
@@ -65,8 +46,7 @@ public interface ConveyorExecutorService {
 	 * @throws ConveyorExecutionException
 	 *             for any exception in the actual execution
 	 */
-	void processTransferAndHandleReturn(final Transfer transfer,
-                        final TransferAttempt transferAttempt,
+	void processTransfer(final TransferAttempt transferAttempt,
 			final ConveyorService conveyorService)
 			throws ConveyorBusyException, ConveyorExecutionException;
 
@@ -123,5 +103,17 @@ public interface ConveyorExecutorService {
 	void setErrorStatus(final ErrorStatus errorStatus);
 
 	ErrorStatus getErrorStatus();
+
+	/**
+	 * Return an object that reflects the status of the queue (running and error
+	 * status in a value object)
+	 * 
+	 * @return {@link QueueStatus}
+	 */
+	QueueStatus getQueueStatus();
+
+	ConveyorService getConveyorService();
+
+	void setConveyorService(final ConveyorService conveyorService);
 
 }

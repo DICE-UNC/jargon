@@ -19,6 +19,7 @@ package org.irods.jargon.conveyor.core;
 public class CachedConveyorConfigurationProperties {
 
 	private boolean logSuccessfulTransfers;
+	private int maxErrorsBeforeCancel = 0;
 
 	@Override
 	public String toString() {
@@ -44,6 +45,21 @@ public class CachedConveyorConfigurationProperties {
 	 */
 	public void setLogSuccessfulTransfers(final boolean logSuccessfulTransfers) {
 		this.logSuccessfulTransfers = logSuccessfulTransfers;
+	}
+
+	/**
+	 * @return the maxErrorsBeforeCancel
+	 */
+	public int getMaxErrorsBeforeCancel() {
+		return maxErrorsBeforeCancel;
+	}
+
+	/**
+	 * @param maxErrorsBeforeCancel
+	 *            the maxErrorsBeforeCancel to set
+	 */
+	public void setMaxErrorsBeforeCancel(int maxErrorsBeforeCancel) {
+		this.maxErrorsBeforeCancel = maxErrorsBeforeCancel;
 	}
 
 }

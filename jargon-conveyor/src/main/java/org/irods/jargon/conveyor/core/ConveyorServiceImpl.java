@@ -1,6 +1,7 @@
 package org.irods.jargon.conveyor.core;
 
 import org.irods.jargon.conveyor.basic.BasicQueueManagerServiceImpl;
+import org.irods.jargon.conveyor.unittest.utils.DevNullCallbackListener;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 import org.irods.jargon.transfer.exception.PassPhraseInvalidException;
 import org.slf4j.Logger;
@@ -189,10 +190,19 @@ public class ConveyorServiceImpl implements ConveyorService {
 	}
 
 	/**
+	 * Get a reference to a callback listener. In order to simply code sending
+	 * callbacks, this method will ensure that the callback listener is not
+	 * null, and in that case will create a dummy listener
+	 * 
 	 * @return the transferStatusCallbackListener
 	 */
 	@Override
 	public synchronized ConveyorCallbackListener getConveyorCallbackListener() {
+
+		if (conveyorCallbackListener == null) {
+			conveyorCallbackListener = new DevNullCallbackListener();
+		}
+
 		return conveyorCallbackListener;
 	}
 
@@ -228,6 +238,17 @@ public class ConveyorServiceImpl implements ConveyorService {
 	@Override
 	public void registerCallbackListener(ConveyorCallbackListener listener) {
 		this.conveyorCallbackListener = listener;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.conveyor.core.ConveyorService#getQueueStatus()
+	 */
+	@Override
+	public synchronized QueueStatus getQueueStatus() {
+		return this.getConveyorExecutorService().getQueueStatus();
+
 	}
 
 }

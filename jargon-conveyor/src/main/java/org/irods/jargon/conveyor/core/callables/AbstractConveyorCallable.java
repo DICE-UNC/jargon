@@ -7,6 +7,7 @@ import java.util.concurrent.Callable;
 
 import org.irods.jargon.conveyor.core.ConveyorExecutionException;
 import org.irods.jargon.conveyor.core.ConveyorExecutionFuture;
+import org.irods.jargon.conveyor.core.ConveyorExecutorService.ErrorStatus;
 import org.irods.jargon.conveyor.core.ConveyorRuntimeException;
 import org.irods.jargon.conveyor.core.ConveyorService;
 import org.irods.jargon.core.connection.IRODSAccount;
@@ -22,7 +23,21 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Abstract super class for a transfer running process
+ * Abstract super class for a transfer running process. This class, and its
+ * collaborators, are responsible for:
+ * <ul>
+ * <li>Running the actual transfer process via Jargon</li>
+ * <li>Intercepting any callbacks from the Jargon process, and making the
+ * appropriate updates to the transfer accounting database</li>
+ * <li>Catching any not-trapped errors and making a best effort to log, account
+ * for them in the accounting database, and notifying the client if any
+ * unresolved errors occur</li>
+ * <li>Forwarding any callbacks to the client, such as file and intra-file
+ * updates of transfers</li>
+ * <li>Evaluating a transfer at completion for any errors</li>
+ * <li>Modifying the error and running status of the execution queue when the
+ * transfer completes or has errors</li>
+ * </ul>
  * 
  * @author Mike Conway - DICE (www.irods.org)
  * 
@@ -33,6 +48,7 @@ public abstract class AbstractConveyorCallable implements
 	// private final Transfer transfer;
 	private final TransferAttempt transferAttempt;
 	private final ConveyorService conveyorService;
+	private TransferControlBlock transferControlBlock;
 
 	private static final Logger log = LoggerFactory
 			.getLogger(AbstractConveyorCallable.class);
@@ -143,15 +159,34 @@ public abstract class AbstractConveyorCallable implements
 	@Override
 	public final ConveyorExecutionFuture call()
 			throws ConveyorExecutionException {
-		TransferControlBlock tcb = buildDefaultTransferControlBlock();
 
 		IRODSAccount irodsAccount = null;
 		try {
 			irodsAccount = getConveyorService().getGridAccountService()
 					.irodsAccountForGridAccount(
 							transferAttempt.getTransfer().getGridAccount());
+			this.setTransferControlBlock(this
+					.buildDefaultTransferControlBlock());
 
-			processCallForThisTransfer(tcb, irodsAccount);
+			/*
+			 * Note that end of transfer success/failure processing will be
+			 * triggered by the overall status callback from Jargon. That
+			 * overall status callback will cause the queue to be released and
+			 * final statuses to be updated.
+			 * 
+			 * The exception handling below is meant to trap 'out of band' or
+			 * unanticipated exceptions, and signals that the conveyor service
+			 * itself is fubar. That should be an unlikely occasion, and in that
+			 * case it just shoots a flare and it's up to the client of the
+			 * framework to handle things.
+			 * 
+			 * Exceptions that occur in the transfer process (irods errors,
+			 * security errors, client errors, network errors) should be
+			 * handled, not by thrown exceptions, but by error callbacks from
+			 * the jargon transfer processes, and are not caught below.
+			 */
+
+			processCallForThisTransfer(transferControlBlock, irodsAccount);
 			return new ConveyorExecutionFuture();
 		} catch (Exception ex) {
 			log.error(
@@ -181,12 +216,15 @@ public abstract class AbstractConveyorCallable implements
 	 * Get the <code>TransferControlBlock</code> that will control this
 	 * transfer, based on configuration
 	 * 
-	 * @return {@link TransferControlBlock} TODO: this is null right now, need
-	 *         to implement in configuration service
+	 * @return {@link TransferControlBlock}
+	 * @throws ConveyorExecutionException
 	 */
-	public TransferControlBlock buildDefaultTransferControlBlock() {
+	protected TransferControlBlock buildDefaultTransferControlBlock()
+			throws ConveyorExecutionException {
 		return conveyorService.getConfigurationService()
-				.buildDefaultTransferControlBlockBasedOnConfiguration();
+				.buildDefaultTransferControlBlockBasedOnConfiguration(
+						transferAttempt.getLastSuccessfulPath(),
+						this.getIrodsAccessObjectFactory());
 	}
 
 	/*
@@ -218,6 +256,12 @@ public abstract class AbstractConveyorCallable implements
 				 * item
 				 */
 				try {
+					/*
+					 * Treat as a warning for now, an error will be signaled
+					 * when more than the threshold number of file errors occurs
+					 */
+					this.getConveyorService().getConveyorExecutorService()
+							.setErrorStatus(ErrorStatus.WARNING);
 					this.getConveyorService()
 							.getTransferAccountingManagementService()
 							.updateTransferAfterFailedFileTransfer(
@@ -229,9 +273,13 @@ public abstract class AbstractConveyorCallable implements
 
 			else if (transferStatus.getTransferState() == TransferState.CANCELLED
 					|| transferStatus.getTransferState() == TransferState.PAUSED) {
-				// ???
+
 			}
 		} catch (ConveyorExecutionException ex) {
+			this.getConveyorService().getConveyorExecutorService()
+					.setErrorStatus(ErrorStatus.ERROR);
+			this.getConveyorService().getConveyorCallbackListener()
+					.signalUnhandledConveyorException(ex);
 			throw new JargonException(ex.getMessage(), ex.getCause());
 		}
 
@@ -259,17 +307,24 @@ public abstract class AbstractConveyorCallable implements
 				processOverallCompletionOfTransfer(transferStatus);
 			} catch (ConveyorExecutionException ex) {
 				throw new JargonException(ex.getMessage(), ex.getCause());
+			} finally {
+				doCompletionSequence();
 			}
 
-			// TODO: this isn't in a finally...what do we do if an error has
-			// occurred???
-			getConveyorService().getConveyorExecutorService()
-					.setOperationCompleted();
 			log.info("...releasing queue...");
 		} else if (transferStatus.getTransferState() == TransferStatus.TransferState.FAILURE) {
 			log.error("failure to transfer in status...releasing queue");
-			getConveyorService().getConveyorExecutorService()
-					.setOperationCompleted();
+
+			try {
+				conveyorService.getConveyorExecutorService().setErrorStatus(
+						ErrorStatus.ERROR);
+				processOverallCompletionOfTransferWithFailure(transferStatus);
+
+			} catch (ConveyorExecutionException ex) {
+				throw new JargonException(ex.getMessage(), ex.getCause());
+			} finally {
+				doCompletionSequence();
+			}
 		}
 
 		if (conveyorService.getConveyorCallbackListener() != null) {
@@ -300,10 +355,17 @@ public abstract class AbstractConveyorCallable implements
 	 * @param ex
 	 *            <code>Exception</code> that was caught while trying to process
 	 *            the transfer
+	 * @throws ConveyorExecutionException
 	 */
-	void reportConveyerExceptionDuringProcessing(final Exception ex) {
+	void reportConveyerExceptionDuringProcessing(final Exception ex)
+			throws ConveyorExecutionException {
 		log.warn("reportConveyerExceptionDuringProcessing() is called");
 		Exception myException = null;
+
+		/*
+		 * Overkill check just to narrow the kind of errors that I'm processing
+		 */
+
 		if (ex == null) {
 			myException = new ConveyorExecutionException(
 					"warning!  An exception was reported but null was provided to the reportConveyerExceptionDuringProcessing() method");
@@ -317,6 +379,7 @@ public abstract class AbstractConveyorCallable implements
 					.getTransferAccountingManagementService()
 					.updateTransferAttemptWithConveyorException(
 							transferAttempt, myException);
+
 		} catch (Exception e) {
 			/*
 			 * I've got an exception but cannot update the database with it. As
@@ -326,17 +389,43 @@ public abstract class AbstractConveyorCallable implements
 			log.error("*************  exception occurred in conveyor framework,unable to update conveyor database*****  will signal the callback listener");
 			this.getConveyorService().getConveyorCallbackListener()
 					.signalUnhandledConveyorException(e);
+			this.getConveyorService().getConveyorExecutorService()
+					.setErrorStatus(ErrorStatus.ERROR);
 			throw new ConveyorRuntimeException(
 					"unprocessable exception in conveyor, not updated in database",
 					e);
 		} finally {
-			// FIXME: do I need to set a callback to overall status listener?
-			// this is not in conveyor service yet
-			log.info("setting operation completed...");
-			this.getConveyorService().getConveyorExecutorService()
-					.setOperationCompleted();
+			log.info("aftar all possible error handling and notification, I am releasing the queue");
+			doCompletionSequence();
+
 		}
 
+	}
+
+	/**
+	 * Whether in an error state, or in a successfully completed state, release
+	 * the execution queue and attempt to trigger any subsequent operations.
+	 * <p/>
+	 * Note that any error in dequeueing the next transfer is logged, and the
+	 * callback listener will be notified.
+	 */
+	private void doCompletionSequence() {
+		log.info("setting operation completed...");
+		this.getConveyorService().getConveyorExecutorService()
+				.setOperationCompleted();
+		log.info("signaling completion so queue manager can dequeue next");
+		try {
+			getConveyorService().getQueueManagerService()
+					.dequeueNextOperation();
+		} catch (ConveyorExecutionException e) {
+			log.error(
+					"unable to dequeue, will send an exception back to listener",
+					e);
+			conveyorService.getConveyorCallbackListener()
+					.signalUnhandledConveyorException(e);
+			conveyorService.getConveyorExecutorService().setErrorStatus(
+					ErrorStatus.ERROR);
+		}
 	}
 
 	/**
@@ -367,7 +456,40 @@ public abstract class AbstractConveyorCallable implements
 		getConveyorService().getTransferAccountingManagementService()
 				.updateTransferAfterOverallSuccess(transferStatus,
 						getTransferAttempt());
+	}
 
+	/**
+	 * When a transfer is done, and an overall status callback of failure has
+	 * occurred, update the transfer attempt to reflect this error status
+	 * 
+	 * @param transferStatus
+	 * @throws ConveyorExecutionException
+	 */
+	private void processOverallCompletionOfTransferWithFailure(
+			TransferStatus transferStatus) throws ConveyorExecutionException {
+		log.info("processOverallCompletionOfTransferWithFailure");
+		getConveyorService().getTransferAccountingManagementService()
+				.updateTransferAfterOverallFailure(transferStatus,
+						transferAttempt);
+
+	}
+
+	/**
+	 * @return the transferControlBlock, note that this may be <code>null</code>
+	 *         if it has not been initialized yet. The initialization is done in
+	 *         the <code>call()</code> method.
+	 */
+	public synchronized TransferControlBlock getTransferControlBlock() {
+		return transferControlBlock;
+	}
+
+	/**
+	 * @param transferControlBlock
+	 *            the transferControlBlock to set
+	 */
+	public synchronized void setTransferControlBlock(
+			TransferControlBlock transferControlBlock) {
+		this.transferControlBlock = transferControlBlock;
 	}
 
 }

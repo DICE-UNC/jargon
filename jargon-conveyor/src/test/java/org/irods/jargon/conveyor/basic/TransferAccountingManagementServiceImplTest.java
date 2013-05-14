@@ -9,6 +9,7 @@ import org.irods.jargon.conveyor.core.GridAccountService;
 import org.irods.jargon.conveyor.core.TransferAccountingManagementService;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.transfer.TransferStatus.TransferState;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.irods.jargon.transfer.dao.domain.GridAccount;
 import org.irods.jargon.transfer.dao.domain.Transfer;
@@ -155,6 +156,57 @@ public class TransferAccountingManagementServiceImplTest {
 				transferAttempt.getGlobalExceptionStackTrace());
 		Assert.assertFalse("empty stack trace", transferAttempt
 				.getGlobalExceptionStackTrace().isEmpty());
+
+	}
+
+	@Test
+	public void testUpdateTransferAttemptWithFailure() throws Exception {
+		String testUserName = "user1";
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountForIRODSUserFromTestPropertiesForGivenUser(
+						testingProperties, testUserName, testUserName);
+		String passPhrase = irodsAccount.getUserName();
+		gridAccountService.validatePassPhrase(passPhrase);
+		GridAccount gridAccount = gridAccountService
+				.addOrUpdateGridAccountBasedOnIRODSAccount(irodsAccount);
+
+		Transfer transfer = new Transfer();
+		transfer.setCreatedAt(new Date());
+		transfer.setIrodsAbsolutePath("/path");
+		transfer.setLocalAbsolutePath("local");
+		transfer.setTransferType(TransferType.PUT);
+		transfer.setGridAccount(gridAccount);
+
+		TransferAttempt transferAttempt = transferAccountingManagementService
+				.prepareTransferForExecution(transfer);
+
+		try {
+			throw new JargonException("blah");
+		} catch (JargonException je) {
+		}
+
+		org.irods.jargon.core.transfer.TransferStatus overallStatus = org.irods.jargon.core.transfer.TransferStatus
+				.instance(
+						org.irods.jargon.core.transfer.TransferStatus.TransferType.GET,
+						transfer.getIrodsAbsolutePath(), transfer
+								.getLocalAbsolutePath(), transfer
+								.getGridAccount().getDefaultResource(), 0L, 0L,
+						0, 0, TransferState.FAILURE, transfer.getGridAccount()
+								.getHost(), transfer.getGridAccount().getZone());
+
+		transferAccountingManagementService.updateTransferAfterOverallFailure(
+				overallStatus, transferAttempt);
+
+		Assert.assertNotNull("null transfer attempt", transferAttempt);
+		Assert.assertEquals(TransferStatus.ERROR,
+				transfer.getLastTransferStatus());
+
+		Assert.assertNotNull("should be an end date for attempt",
+				transferAttempt.getAttemptEnd());
+		Assert.assertNotNull("no transfer attempt status set",
+				transferAttempt.getAttemptStatus());
+		Assert.assertEquals("should have an error attempt status",
+				TransferStatus.ERROR, transferAttempt.getAttemptStatus());
 
 	}
 }

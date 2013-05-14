@@ -34,7 +34,7 @@ public class TransferAccountingManagementServiceImpl extends
 		TransferAccountingManagementService {
 
 	public static final String ERROR_ATTEMPTING_TO_RUN = "An error occurred while attempting to create and invoke the transfer process";
-
+	public static final String ERROR_IN_TRANSFER_AT_IRODS_LEVEL = "An error during the transfer process at the client or in iRODS";
 	/**
 	 * Injected dependency
 	 */
@@ -380,6 +380,54 @@ public class TransferAccountingManagementServiceImpl extends
 		transfer.setUpdatedAt(new Date());
 		transferAttempt.setAttemptEnd(new Date());
 		transferAttempt.setAttemptStatus(TransferStatus.OK);
+
+		try {
+			transferDAO.save(transfer);
+			transferAttemptDAO.save(transferAttempt);
+		} catch (TransferDAOException ex) {
+			throw new ConveyorExecutionException(
+					"error saving transfer attempt", ex);
+		}
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.conveyor.core.TransferAccountingManagementService#
+	 * updateTransferAfterOverallFailure
+	 * (org.irods.jargon.core.transfer.TransferStatus,
+	 * org.irods.jargon.transfer.dao.domain.TransferAttempt)
+	 */
+	@Override
+	public void updateTransferAfterOverallFailure(
+			org.irods.jargon.core.transfer.TransferStatus transferStatus,
+			TransferAttempt transferAttempt) throws ConveyorExecutionException {
+		log.info("updateTransferAfterOverallFailure()");
+
+		if (transferStatus == null) {
+			throw new IllegalArgumentException("null transferStatus");
+		}
+
+		if (transferAttempt == null) {
+			throw new IllegalArgumentException("null transferAttempt");
+		}
+
+		log.info("transferAttempt:{}", transferAttempt);
+		log.info("transferStatus:{}", transferStatus);
+
+		Transfer transfer = transferAttempt.getTransfer();
+		transfer.setLastTransferStatus(TransferStatus.ERROR);
+		transfer.setTransferState(TransferState.COMPLETE);
+		transfer.setUpdatedAt(new Date());
+		transferAttempt.setAttemptEnd(new Date());
+		transferAttempt.setAttemptStatus(TransferStatus.ERROR);
+		transferAttempt.setErrorMessage(ERROR_IN_TRANSFER_AT_IRODS_LEVEL);
+		transferAttempt.setGlobalException(ExceptionUtils
+				.messageOrNullFromException(transferStatus
+						.getTransferException()));
+		transferAttempt.setGlobalExceptionStackTrace(ExceptionUtils
+				.stackTraceToString(transferStatus.getTransferException()));
 
 		try {
 			transferDAO.save(transfer);

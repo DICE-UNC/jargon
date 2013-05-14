@@ -89,4 +89,18 @@ public interface TransferAccountingManagementService {
 			org.irods.jargon.core.transfer.TransferStatus transferStatus,
 			TransferAttempt transferAttempt) throws ConveyorExecutionException;
 
+	/**
+	 * Make necessary updates to the given transfer upon overall failure. This
+	 * sets the overall status and status of the attempt.
+	 * 
+	 * @param transferStatus
+	 *            {@link TransferStatus} from the callback
+	 * @param transferAttempt
+	 *            {@link TransferAttempt}
+	 * @throws ConveyorExecutionException
+	 */
+	void updateTransferAfterOverallFailure(
+			org.irods.jargon.core.transfer.TransferStatus transferStatus,
+			TransferAttempt transferAttempt) throws ConveyorExecutionException;
+
 }

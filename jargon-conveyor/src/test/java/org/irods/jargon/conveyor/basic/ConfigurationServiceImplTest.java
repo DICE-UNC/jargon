@@ -7,9 +7,14 @@ import java.util.Properties;
 import junit.framework.Assert;
 
 import org.irods.jargon.conveyor.core.ConfigurationService;
+import org.irods.jargon.conveyor.core.ConveyorService;
+import org.irods.jargon.core.pub.IRODSFileSystem;
+import org.irods.jargon.core.transfer.TransferControlBlock;
+import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.irods.jargon.transfer.dao.domain.ConfigurationProperty;
-import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,12 +33,34 @@ public class ConfigurationServiceImplTest {
 	@Autowired
 	private ConfigurationService configurationService;
 
-	@Before
-	public void setUp() throws Exception {
+	@SuppressWarnings("unused")
+	private static Properties testingProperties = new Properties();
+	@SuppressWarnings("unused")
+	private static org.irods.jargon.testutils.TestingPropertiesHelper testingPropertiesHelper = new TestingPropertiesHelper();
+	private static IRODSFileSystem irodsFileSystem = null;
+
+	@Autowired
+	private ConveyorService conveyorService;
+
+	@BeforeClass
+	public static void setUpBeforeClass() throws Exception {
+		irodsFileSystem = IRODSFileSystem.instance();
+		org.irods.jargon.testutils.TestingPropertiesHelper testingPropertiesLoader = new TestingPropertiesHelper();
+		testingProperties = testingPropertiesLoader.getTestProperties();
 	}
 
-	@After
-	public void tearDown() throws Exception {
+	@AfterClass
+	public static void tearDown() throws Exception {
+		irodsFileSystem.closeAndEatExceptions();
+	}
+
+	@Before
+	public void setUp() throws Exception {
+		conveyorService.setIrodsAccessObjectFactory(irodsFileSystem
+				.getIRODSAccessObjectFactory());
+		conveyorService.getQueueManagerService().purgeAllFromQueue();
+		conveyorService.getGridAccountService().resetPassPhraseAndAccounts();
+
 	}
 
 	@Test
@@ -188,6 +215,42 @@ public class ConfigurationServiceImplTest {
 		Assert.assertNotNull("test property not returned in properties", actual);
 		Assert.assertEquals("property value not set", testValue, actual);
 
+	}
+
+	@Test
+	public void testBuildTransferControlBlockNullPath() throws Exception {
+		TransferControlBlock actual = configurationService
+				.buildDefaultTransferControlBlockBasedOnConfiguration(null,
+						irodsFileSystem.getIRODSAccessObjectFactory());
+		Assert.assertEquals("did not set restart", "",
+				actual.getRestartAbsolutePath());
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void testBuildTransferControlBlockNullAccessObjectFactory()
+			throws Exception {
+		configurationService
+				.buildDefaultTransferControlBlockBasedOnConfiguration("/path",
+						null);
+	}
+
+	@Test
+	public void testBuildTransferControlBlock() throws Exception {
+		TransferControlBlock actual = configurationService
+				.buildDefaultTransferControlBlockBasedOnConfiguration("",
+						irodsFileSystem.getIRODSAccessObjectFactory());
+		Assert.assertEquals("did not set restart", "",
+				actual.getRestartAbsolutePath());
+	}
+
+	@Test
+	public void testBuildTransferControlBlockWithRestart() throws Exception {
+		TransferControlBlock actual = configurationService
+				.buildDefaultTransferControlBlockBasedOnConfiguration(
+						"restart",
+						irodsFileSystem.getIRODSAccessObjectFactory());
+		Assert.assertEquals("did not set restart", "restart",
+				actual.getRestartAbsolutePath());
 	}
 
 	public void setConfigurationService(

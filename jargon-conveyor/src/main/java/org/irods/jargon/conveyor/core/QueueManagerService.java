@@ -6,7 +6,6 @@ package org.irods.jargon.conveyor.core;
 import java.util.List;
 
 import org.irods.jargon.core.connection.IRODSAccount;
-import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.transfer.dao.domain.Transfer;
 import org.irods.jargon.transfer.dao.domain.TransferType;
 
@@ -37,9 +36,7 @@ public interface QueueManagerService {
 	 * 
 	 * @throws ConveyerExecutionException
 	 */
-	void dequeueNextOperation() throws ConveyorExecutionException,
-
-	JargonException, Exception;
+	void dequeueNextOperation() throws ConveyorExecutionException;
 
 	/**
 	 * Convenience function for iDrop to start a transfer based on the given

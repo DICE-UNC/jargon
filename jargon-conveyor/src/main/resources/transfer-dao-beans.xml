@@ -81,6 +81,7 @@
   </bean>
   
   <bean id="conveyorExecutorService" class="org.irods.jargon.conveyor.core.ConveyorExecutorServiceImpl">
+     <property name="conveyorService" ref="conveyorService"/>
   	<property name="executorServiceProperties">
       <props>
         <prop key="try.lock.timeout.seconds">1</prop>

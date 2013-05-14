@@ -9,6 +9,8 @@ import org.irods.jargon.conveyor.core.CachedConveyorConfigurationProperties;
 import org.irods.jargon.conveyor.core.ConfigurationPropertyConstants;
 import org.irods.jargon.conveyor.core.ConfigurationService;
 import org.irods.jargon.conveyor.core.ConveyorExecutionException;
+import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 import org.irods.jargon.core.transfer.TransferControlBlock;
 import org.irods.jargon.transfer.dao.ConfigurationPropertyDAO;
 import org.irods.jargon.transfer.dao.TransferDAOException;
@@ -283,12 +285,45 @@ public class ConfigurationServiceImpl extends AbstractConveyorComponentService
 	 * (non-Javadoc)
 	 * 
 	 * @see org.irods.jargon.conveyor.core.ConfigurationService#
-	 * buildDefaultTransferControlBlockBasedOnConfiguration()
+	 * buildDefaultTransferControlBlockBasedOnConfiguration(java.lang.String,
+	 * org.irods.jargon.core.pub.IRODSAccessObjectFactory)
 	 */
 	@Override
-	public TransferControlBlock buildDefaultTransferControlBlockBasedOnConfiguration() {
-		// FIXME: implement
-		return null;
+	public TransferControlBlock buildDefaultTransferControlBlockBasedOnConfiguration(
+			final String restartPath,
+			final IRODSAccessObjectFactory irodsAccessObjectFactory)
+			throws ConveyorExecutionException {
+
+		log.info("buildDefaultTransferControlBlockBasedOnConfiguration()");
+		String myRestartPath;
+
+		if (restartPath == null) {
+			myRestartPath = "";
+		} else {
+			myRestartPath = restartPath;
+		}
+
+		if (irodsAccessObjectFactory == null) {
+			throw new IllegalArgumentException("null irodsAccessObjectFactory");
+		}
+
+		try {
+			TransferControlBlock tcb;
+
+			tcb = irodsAccessObjectFactory
+					.buildDefaultTransferControlBlockBasedOnJargonProperties();
+			tcb.setRestartAbsolutePath(myRestartPath);
+
+			synchronized (propsLockObject) {
+				tcb.setMaximumErrorsBeforeCanceling(cachedConveyorConfigurationProperties
+						.getMaxErrorsBeforeCancel());
+			}
+			return tcb;
+		} catch (JargonException e) {
+			log.error("error building transfer control block", e);
+			throw new ConveyorExecutionException(
+					"cannot build transfer control block", e);
+		}
 	}
 
 	/**

@@ -13,6 +13,14 @@ import org.irods.jargon.transfer.exception.PassPhraseInvalidException;
 public interface ConveyorService {
 
 	/**
+	 * Retrieve the current error and running status of the conveyor service
+	 * 
+	 * @return {@link QueueStatus} reflecting the current state of the conveyor
+	 *         service
+	 */
+	QueueStatus getQueueStatus();
+
+	/**
 	 * Register a listener who will receive callback messages from running
 	 * transfers
 	 * 
