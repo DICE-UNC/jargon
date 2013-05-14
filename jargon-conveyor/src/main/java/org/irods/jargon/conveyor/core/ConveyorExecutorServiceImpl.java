@@ -147,7 +147,7 @@ public class ConveyorExecutorServiceImpl implements ConveyorExecutorService {
 		}
 
 		synchronized (statusSynchronizingObject) {
-			setErrorStatus(errorStatus);
+			this.errorStatus = errorStatus;
 			notifyCallbackListenerOfChangeInStatus();
 		}
 	}
