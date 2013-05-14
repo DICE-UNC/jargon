@@ -1,10 +1,8 @@
 /**
  * 
  */
-package org.irods.jargon.conveyor.unittest.utils;
+package org.irods.jargon.conveyor.core;
 
-import org.irods.jargon.conveyor.core.ConveyorCallbackListener;
-import org.irods.jargon.conveyor.core.QueueStatus;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.transfer.TransferStatus;
 

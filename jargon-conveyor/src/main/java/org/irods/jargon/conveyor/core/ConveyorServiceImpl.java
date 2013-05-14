@@ -1,7 +1,6 @@
 package org.irods.jargon.conveyor.core;
 
 import org.irods.jargon.conveyor.basic.BasicQueueManagerServiceImpl;
-import org.irods.jargon.conveyor.unittest.utils.DevNullCallbackListener;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 import org.irods.jargon.transfer.exception.PassPhraseInvalidException;
 import org.slf4j.Logger;
