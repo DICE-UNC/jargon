@@ -10,9 +10,9 @@ import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.irods.jargon.transfer.dao.domain.FrequencyType;
 import org.irods.jargon.transfer.dao.domain.GridAccount;
-import org.irods.jargon.transfer.dao.domain.Transfer;
 import org.irods.jargon.transfer.dao.domain.Synchronization;
 import org.irods.jargon.transfer.dao.domain.SynchronizationType;
+import org.irods.jargon.transfer.dao.domain.Transfer;
 import org.irods.jargon.transfer.dao.domain.TransferState;
 import org.irods.jargon.transfer.dao.domain.TransferStatusEnum;
 import org.irods.jargon.transfer.dao.domain.TransferType;
@@ -29,8 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = { "classpath:transfer-dao-beans.xml",
-		"classpath:transfer-dao-hibernate-spring.cfg.xml",
-		"classpath:test-beans.xml" })
+		"classpath:transfer-dao-hibernate-spring.cfg.xml" })
 @TransactionConfiguration(transactionManager = "transactionManager", defaultRollback = true)
 @Transactional
 public class SynchronizationDAOTest {
@@ -61,8 +60,7 @@ public class SynchronizationDAOTest {
 		return transferDAO;
 	}
 
-	public void setLocalIrodsTransferDAO(
-			final TransferDAO transferDAO) {
+	public void setLocalIrodsTransferDAO(final TransferDAO transferDAO) {
 		this.transferDAO = transferDAO;
 	}
 

@@ -7,7 +7,6 @@ import java.util.List;
 
 import junit.framework.Assert;
 
-import org.hibernate.PropertyValueException;
 import org.irods.jargon.transfer.dao.domain.ConfigurationProperty;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -19,8 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = { "classpath:transfer-dao-beans.xml",
-		"classpath:transfer-dao-hibernate-spring.cfg.xml",
-		"classpath:test-beans.xml" })
+		"classpath:transfer-dao-hibernate-spring.cfg.xml" })
 @TransactionConfiguration(transactionManager = "transactionManager", defaultRollback = true)
 @Transactional
 public class ConfigurationPropertyDAOTest {
@@ -70,7 +68,7 @@ public class ConfigurationPropertyDAOTest {
 
 	}
 
-	@Test
+	@Test(expected = IllegalArgumentException.class)
 	public void testSaveBlankKey() throws Exception {
 
 		String testKey = "";
@@ -81,11 +79,10 @@ public class ConfigurationPropertyDAOTest {
 		configProperty.setCreatedAt(new Date());
 
 		configurationPropertyDAO.saveOrUpdate(configProperty);
-		assertTrue(configProperty.getId() != null);
 
 	}
 
-	@Test(expected = PropertyValueException.class)
+	@Test(expected = IllegalArgumentException.class)
 	public void testSaveNullKey() throws Exception {
 
 		String testKey = null;
@@ -143,8 +140,7 @@ public class ConfigurationPropertyDAOTest {
 		configProperty.setCreatedAt(new Date());
 		configurationPropertyDAO.saveOrUpdate(configProperty);
 
-		configProperties = configurationPropertyDAO
-				.findAll();
+		configProperties = configurationPropertyDAO.findAll();
 		Assert.assertNotNull("did not find confg properties, was null",
 				configProperties);
 		Assert.assertFalse("empty config properties returned",

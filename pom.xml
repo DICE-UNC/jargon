@@ -477,13 +477,12 @@
 	</build>
 	<modules>
 		<module>jargon-core</module>
-		<module>jargon-transfer</module>
 		<module>jargon-user-tagging</module>
 		<module>jargon-security</module>
 		<module>jargon-data-utils</module>
 		<module>jargon-ticket</module>
 		<module>jargon-httpstream</module>
 		<module>jargon-user-profile</module>
-    		<module>jargon-conveyor</module>
+    	<module>jargon-conveyor</module>
   </modules>
 </project>

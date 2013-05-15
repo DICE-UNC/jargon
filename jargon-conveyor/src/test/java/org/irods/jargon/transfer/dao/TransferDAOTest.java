@@ -25,11 +25,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = { "classpath:transfer-dao-beans.xml",
-		"classpath:transfer-dao-hibernate-spring.cfg.xml",
-		"classpath:test-beans.xml" })
+		"classpath:transfer-dao-hibernate-spring.cfg.xml" })
 @TransactionConfiguration(transactionManager = "transactionManager", defaultRollback = true)
 @Transactional
-public class LocalIRODSTransferDAOTest {
+public class TransferDAOTest {
 
 	private static Properties testingProperties = new Properties();
 	private static TestingPropertiesHelper testingPropertiesHelper = new TestingPropertiesHelper();
@@ -69,34 +68,6 @@ public class LocalIRODSTransferDAOTest {
 		assertTrue(enqueuedTransfer.getId() == null);
 		transferDAO.save(enqueuedTransfer);
 		assertTrue(enqueuedTransfer.getId() != null);
-
-	}
-
-	@Test
-	public void testPurgeQueue() throws Exception {
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		GridAccount gridAccount = DomainUtils
-				.gridAccountFromIRODSAccount(irodsAccount);
-		gridAccountDAO.save(gridAccount);
-		Transfer enqueuedTransfer = new Transfer();
-		enqueuedTransfer.setCreatedAt(new Date());
-		enqueuedTransfer.setIrodsAbsolutePath("/tmp");
-		enqueuedTransfer.setLocalAbsolutePath("/tmp");
-		enqueuedTransfer.setTransferType(TransferType.PUT);
-		enqueuedTransfer.setGridAccount(gridAccount);
-		enqueuedTransfer.setTransferState(TransferState.COMPLETE);
-		enqueuedTransfer.setLastTransferStatus(TransferStatusEnum.OK);
-
-		assertTrue(enqueuedTransfer.getId() == null);
-
-		transferDAO.save(enqueuedTransfer);
-
-		assertTrue(enqueuedTransfer.getId() != null);
-
-		transferDAO.purgeQueue();
-		assertTrue(transferDAO.findByTransferState(TransferState.COMPLETE)
-				.size() == 0);
 
 	}
 

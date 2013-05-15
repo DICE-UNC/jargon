@@ -17,8 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = { "classpath:transfer-dao-beans.xml",
-		"classpath:transfer-dao-hibernate-spring.cfg.xml",
-		"classpath:test-beans.xml" })
+		"classpath:transfer-dao-hibernate-spring.cfg.xml" })
 @TransactionConfiguration(transactionManager = "transactionManager", defaultRollback = true)
 @Transactional
 public class KeyStoreDAOImplTest {
