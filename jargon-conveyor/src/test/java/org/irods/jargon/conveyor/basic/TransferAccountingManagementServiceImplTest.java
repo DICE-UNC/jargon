@@ -85,11 +85,14 @@ public class TransferAccountingManagementServiceImplTest {
 
 		Assert.assertNotNull("null transfer attempt", transferAttempt);
 		Assert.assertEquals(TransferStatus.OK, transfer.getLastTransferStatus());
+		Assert.assertEquals("should have an enqueued state",
+				org.irods.jargon.transfer.dao.domain.TransferState.ENQUEUED,
+				transfer.getTransferState());
 		Assert.assertFalse("no id set", transferAttempt.getId() == 0);
 		Assert.assertNotNull("no transfer parent in attempt",
 				transferAttempt.getTransfer());
 
-		Assert.assertNotNull("no start set for attempt",
+		Assert.assertNull("should be no start set for attempt",
 				transferAttempt.getAttemptStart());
 		Assert.assertNull("should not be an end date for attempt",
 				transferAttempt.getAttemptEnd());
@@ -122,7 +125,11 @@ public class TransferAccountingManagementServiceImplTest {
 		transfer.setGridAccount(gridAccount);
 
 		TransferAttempt transferAttempt = transferAccountingManagementService
-				.prepareTransferForExecution(transfer);
+				.prepareTransferForProcessing(transfer);
+
+		TransferAttempt transferAttemptExecution = transferAccountingManagementService
+				.prepareTransferForExecution(transferAttempt.getTransfer());
+		transfer = transferAttempt.getTransfer();
 
 		Exception myException;
 
@@ -133,28 +140,30 @@ public class TransferAccountingManagementServiceImplTest {
 		}
 
 		transferAccountingManagementService
-				.updateTransferAttemptWithConveyorException(transferAttempt,
-						myException);
+				.updateTransferAttemptWithConveyorException(
+						transferAttemptExecution, myException);
 
-		Assert.assertNotNull("null transfer attempt", transferAttempt);
+		Assert.assertNotNull("null transfer attempt", transferAttemptExecution);
 		Assert.assertEquals(TransferStatus.ERROR,
 				transfer.getLastTransferStatus());
 
 		Assert.assertNotNull("should be an end date for attempt",
-				transferAttempt.getAttemptEnd());
+				transferAttemptExecution.getAttemptEnd());
 		Assert.assertNotNull("no transfer attempt status set",
-				transferAttempt.getAttemptStatus());
+				transferAttemptExecution.getAttemptStatus());
 		Assert.assertEquals("should have an error attempt status",
-				TransferStatus.ERROR, transferAttempt.getAttemptStatus());
+				TransferStatus.ERROR,
+				transferAttemptExecution.getAttemptStatus());
 		Assert.assertEquals(
 				"should have  error message",
 				TransferAccountingManagementServiceImpl.ERROR_ATTEMPTING_TO_RUN,
-				transferAttempt.getErrorMessage());
+				transferAttemptExecution.getErrorMessage());
 		Assert.assertEquals("should have global exception message",
-				myException.getMessage(), transferAttempt.getGlobalException());
+				myException.getMessage(),
+				transferAttemptExecution.getGlobalException());
 		Assert.assertNotNull("should have stack trace info",
-				transferAttempt.getGlobalExceptionStackTrace());
-		Assert.assertFalse("empty stack trace", transferAttempt
+				transferAttemptExecution.getGlobalExceptionStackTrace());
+		Assert.assertFalse("empty stack trace", transferAttemptExecution
 				.getGlobalExceptionStackTrace().isEmpty());
 
 	}
@@ -178,7 +187,11 @@ public class TransferAccountingManagementServiceImplTest {
 		transfer.setGridAccount(gridAccount);
 
 		TransferAttempt transferAttempt = transferAccountingManagementService
-				.prepareTransferForExecution(transfer);
+				.prepareTransferForProcessing(transfer);
+
+		TransferAttempt transferAttemptExecution = transferAccountingManagementService
+				.prepareTransferForExecution(transferAttempt.getTransfer());
+		transfer = transferAttempt.getTransfer();
 
 		try {
 			throw new JargonException("blah");
@@ -195,18 +208,19 @@ public class TransferAccountingManagementServiceImplTest {
 								.getHost(), transfer.getGridAccount().getZone());
 
 		transferAccountingManagementService.updateTransferAfterOverallFailure(
-				overallStatus, transferAttempt);
+				overallStatus, transferAttemptExecution);
 
-		Assert.assertNotNull("null transfer attempt", transferAttempt);
+		Assert.assertNotNull("null transfer attempt", transferAttemptExecution);
 		Assert.assertEquals(TransferStatus.ERROR,
 				transfer.getLastTransferStatus());
 
 		Assert.assertNotNull("should be an end date for attempt",
-				transferAttempt.getAttemptEnd());
+				transferAttemptExecution.getAttemptEnd());
 		Assert.assertNotNull("no transfer attempt status set",
-				transferAttempt.getAttemptStatus());
+				transferAttemptExecution.getAttemptStatus());
 		Assert.assertEquals("should have an error attempt status",
-				TransferStatus.ERROR, transferAttempt.getAttemptStatus());
+				TransferStatus.ERROR,
+				transferAttemptExecution.getAttemptStatus());
 
 	}
 

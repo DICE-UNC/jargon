@@ -144,6 +144,14 @@ public class TransferAccountingManagementServiceImpl extends
 			throws ConveyorExecutionException {
 
 		log.info("building transfer attempt...");
+		if (transfer == null) {
+			throw new IllegalArgumentException("transfer is null");
+		}
+
+		if (transfer.getId() == null) {
+			throw new ConveyorExecutionException(
+					"transfer does not have an id, it may not be stored in the transfer database");
+		}
 
 		transfer.setLastTransferStatus(TransferStatus.OK);
 		transfer.setTransferState(TransferState.PROCESSING);
