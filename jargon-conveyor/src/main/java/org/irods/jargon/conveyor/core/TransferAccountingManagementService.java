@@ -103,4 +103,31 @@ public interface TransferAccountingManagementService {
 			org.irods.jargon.core.transfer.TransferStatus transferStatus,
 			TransferAttempt transferAttempt) throws ConveyorExecutionException;
 
+	/**
+	 * Make the necessary updates to the given transfer and transfer item based
+	 * on the notification that a file was skipped during a restart process. The
+	 * item may or may not be logged mediated by the 'log successful files' and
+	 * 'log restart files' settings, but at any rate the transfer attempt is
+	 * updated
+	 * 
+	 * @param transferStatus
+	 *            {@link TransferStatus} from the callback
+	 * @param transferAttempt
+	 *            {@link TransferAttempt}
+	 * @throws ConveyorExecutionException
+	 */
+	void updateTransferAfterRestartFileSkipped(TransferStatus transferStatus,
+			TransferAttempt transferAttempt) throws ConveyorExecutionException;
+
+	/**
+	 * Prepare the transfer to be placed into the enqueued state with a transfer
+	 * attempt ready to process
+	 * 
+	 * @param transfer
+	 * @return
+	 * @throws ConveyorExecutionException
+	 */
+	TransferAttempt prepareTransferForProcessing(Transfer transfer)
+			throws ConveyorExecutionException;
+
 }

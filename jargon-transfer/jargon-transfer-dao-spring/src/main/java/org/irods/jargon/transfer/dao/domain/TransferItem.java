@@ -52,6 +52,9 @@ public class TransferItem implements Serializable {
 	@Column(name = "is_file")
 	private boolean file;
 
+	@Column(name = "is_skipped")
+	private boolean skipped = false;
+
 	@Column(name = "is_error")
 	private boolean error;
 
@@ -181,6 +184,8 @@ public class TransferItem implements Serializable {
 		sb.append(targetFileAbsolutePath);
 		sb.append("\n   isFile:");
 		sb.append(file);
+		sb.append("\n   isSkippedFile:");
+		sb.append(skipped);
 		sb.append("\n   lengthInBytes:");
 		sb.append(lengthInBytes);
 		sb.append("\n   isError:");
@@ -190,6 +195,21 @@ public class TransferItem implements Serializable {
 		sb.append("\n   transferredAt:");
 		sb.append(transferredAt);
 		return sb.toString();
+	}
+
+	/**
+	 * @return the skipped
+	 */
+	public boolean isSkipped() {
+		return skipped;
+	}
+
+	/**
+	 * @param skipped
+	 *            the skipped to set
+	 */
+	public void setSkipped(boolean skipped) {
+		this.skipped = skipped;
 	}
 
 }

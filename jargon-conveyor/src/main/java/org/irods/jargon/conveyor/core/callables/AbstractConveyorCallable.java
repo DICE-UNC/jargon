@@ -243,13 +243,15 @@ public abstract class AbstractConveyorCallable implements
 					|| transferStatus.getTransferState() == TransferStatus.TransferState.IN_PROGRESS_COMPLETE_FILE) {
 				updateTransferStateOnFileCompletion(transferStatus);
 			} else if (transferStatus.getTransferState() == TransferState.OVERALL_INITIATION) {
-				log.info("file initiation, currently no updates to database");
+				log.info("file initiation, this is just passed on by conveyor");
 			} else if (transferStatus.getTransferState() == TransferState.RESTARTING) {
 				/*
 				 * add a property to tell this to log that restart in the
 				 * attempt, otherwise it can be skipped. consider transfer
 				 * 'levels' and where this falls
 				 */
+				updateTransferStateOnRestartFile(transferStatus);
+
 			} else if (transferStatus.getTransferState() == TransferState.FAILURE) {
 				/*
 				 * create failure item get exception from callback and add to
@@ -287,6 +289,21 @@ public abstract class AbstractConveyorCallable implements
 			conveyorService.getConveyorCallbackListener().statusCallback(
 					transferStatus);
 		}
+
+	}
+
+	/**
+	 * A restart file has been encountered. Do the proper updates to the
+	 * transfer attempt and optionally log the restart of this file
+	 * 
+	 * @param transferStatus
+	 * @throws ConveyorExecutionException
+	 */
+	private void updateTransferStateOnRestartFile(TransferStatus transferStatus)
+			throws ConveyorExecutionException {
+		getConveyorService().getTransferAccountingManagementService()
+				.updateTransferAfterRestartFileSkipped(transferStatus,
+						getTransferAttempt());
 
 	}
 

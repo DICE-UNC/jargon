@@ -24,11 +24,14 @@ public interface QueueManagerService {
 	 * @param transfer
 	 *            {@link Transfer} to be executed
 	 * @param irodsAccount
-	 *            {@link IRODSAccount} describing the
+	 *            {@link IRODSAccount}
+	 * @throws RejectedTransferException
+	 *             if the transfer was rejected (e.g. for being a duplicate)
 	 * @throws ConveyorExecutionException
 	 */
 	void enqueueTransferOperation(final Transfer transfer,
-			final IRODSAccount irodsAccount) throws ConveyorExecutionException;
+			final IRODSAccount irodsAccount) throws RejectedTransferException,
+			ConveyorExecutionException;
 
 	/**
 	 * Signal that,if the queue is not busy, that the next pending operation

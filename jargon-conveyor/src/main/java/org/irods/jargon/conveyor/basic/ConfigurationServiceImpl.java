@@ -345,6 +345,15 @@ public class ConfigurationServiceImpl extends AbstractConveyorComponentService
 					ConfigurationPropertyConstants.LOG_SUCCESSFUL_FILES_KEY)) {
 				cachedProps.setLogSuccessfulTransfers(property
 						.propertyValueAsBoolean());
+			} else if (property
+					.getPropertyKey()
+					.equals(ConfigurationPropertyConstants.MAX_ERRORS_BEFORE_CANCEL_KEY)) {
+				cachedProps.setMaxErrorsBeforeCancel(property
+						.propertyValueAsInt());
+			} else if (property.getPropertyKey().equals(
+					ConfigurationPropertyConstants.LOG_RESTART_FILES)) {
+				cachedProps.setRecordRestartFiles(property
+						.propertyValueAsBoolean());
 			}
 		}
 

@@ -13,6 +13,7 @@ import org.irods.jargon.conveyor.core.ConveyorExecutorService.ErrorStatus;
 import org.irods.jargon.conveyor.core.ConveyorService;
 import org.irods.jargon.conveyor.core.GridAccountService;
 import org.irods.jargon.conveyor.core.QueueManagerService;
+import org.irods.jargon.conveyor.core.RejectedTransferException;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.transfer.dao.TransferAttemptDAO;
@@ -60,6 +61,54 @@ public class BasicQueueManagerServiceImpl extends
 	private static final Logger log = LoggerFactory
 			.getLogger(BasicQueueManagerServiceImpl.class);
 
+	public void enqueueRestartOfTransferOperation(final long transferId)
+			throws RejectedTransferException, ConveyorExecutionException {
+
+		log.info("enqueueTransferOperation()");
+
+		if (transferId <= 0) {
+			throw new IllegalArgumentException("illegal transferId");
+		}
+
+		log.info("transferId:{}", transferId);
+		log.info("looking up transfer to restart...");
+
+		Transfer transfer;
+		try {
+			transfer = transferDAO.findById(new Long(transferId));
+		} catch (TransferDAOException e) {
+			log.error("error looking up transfer by id", e);
+			throw new ConveyorExecutionException(
+					"unable to lookup transfer by id", e);
+		}
+
+		/*
+		 * Check state of transfer and throw a rejected exception if this
+		 * transfer was rejected for some reason
+		 */
+		evaluateTransferForExecution(transfer);
+
+		TransferAttempt lastTransferAttempt;
+		try {
+			lastTransferAttempt = transferAttemptDAO
+					.findLastTransferAttemptForTransferByTransferId(transferId);
+		} catch (TransferDAOException e) {
+			log.error("error looking up last transfer attempt", e);
+			throw new ConveyorExecutionException(
+					"unable to lookup last transfer attempt", e);
+		}
+
+		if (lastTransferAttempt == null) {
+			throw new RejectedTransferException(
+					"no previous attempt found to base restart on");
+		}
+
+		log.info("building transfer attempt based on previous attempt...");
+		transfer.setTransferState(TransferState.ENQUEUED);
+		transfer.setUpdatedAt(new Date());
+
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -70,7 +119,8 @@ public class BasicQueueManagerServiceImpl extends
 	 */
 	@Override
 	public void enqueueTransferOperation(final Transfer transfer,
-			final IRODSAccount irodsAccount) throws ConveyorExecutionException {
+			final IRODSAccount irodsAccount) throws RejectedTransferException,
+			ConveyorExecutionException {
 
 		log.info("enqueueTransferOperation()");
 
@@ -97,12 +147,25 @@ public class BasicQueueManagerServiceImpl extends
 
 		log.info("building transfer...");
 
+		/*
+		 * Check to see if there is any reason to reject this transfer
+		 * (malformed, duplicate). The evaluate method will throw a rejected
+		 * exception if appropriate
+		 */
+		evaluateTransferForExecution(transfer);
+
 		transfer.setGridAccount(gridAccount);
 		transfer.setTransferState(TransferState.ENQUEUED);
 		transfer.setUpdatedAt(new Date());
 
+		/*
+		 * Enqueue triggers a dequeue
+		 */
+
 		try {
 			transferDAO.save(transfer);
+			conveyorService.getTransferAccountingManagementService()
+					.prepareTransferForProcessing(transfer);
 			dequeueNextOperation();
 		} catch (TransferDAOException e) {
 			log.error("error saving transfer", e);
@@ -110,6 +173,12 @@ public class BasicQueueManagerServiceImpl extends
 		}
 
 		log.info("transfer added:{}", transfer);
+
+	}
+
+	private void evaluateTransferForExecution(Transfer transfer)
+			throws RejectedTransferException, ConveyorExecutionException {
+		// FIXME: implement this!
 
 	}
 
@@ -162,29 +231,37 @@ public class BasicQueueManagerServiceImpl extends
 
 			// upon dequeue clear the error status
 			this.getConveyorExecutorService().setErrorStatus(ErrorStatus.OK);
+			TransferAttempt transferAttempt = transferAttemptDAO
+					.findLastTransferAttemptForTransferByTransferId(transfer
+							.getId());
 
-			TransferAttempt transferAttempt = conveyorService
-					.getTransferAccountingManagementService()
-					.prepareTransferForExecution(transfer);
+			if (transferAttempt == null) {
+				log.warn(
+						"transfer attempt is not available in the transfer:{}",
+						transfer);
+			}
 
-			log.info("looking for transfer attempt after update!");
-			TransferAttempt actual = transferAttemptDAO
-					.findById(transferAttempt.getId());
-			log.info("found:{}", actual);
+			transferAttempt.setAttemptStart(new Date());
+			transfer.setTransferState(TransferState.PROCESSING);
+			transfer.setUpdatedAt(new Date());
+			transferDAO.save(transfer);
 
-			this.getConveyorExecutorService().processTransfer(actual,
+			this.getConveyorExecutorService().processTransfer(transferAttempt,
 					this.conveyorService);
 
 		} catch (JargonException je) {
 			log.error("jargon exception dequeue operation, will unlock queue");
 			this.getConveyorExecutorService().setOperationCompleted();
-			throw new ConveyorExecutionException(je);
+			this.getConveyorService().getConveyorCallbackListener()
+					.signalUnhandledConveyorException(je);
+			this.dequeueNextOperation();
 		} catch (Exception e) {
 			log.error("jargon exception dequeue operation, will unlock queue");
 			this.getConveyorExecutorService().setOperationCompleted();
 			this.getConveyorService().getConveyorCallbackListener()
 					.signalUnhandledConveyorException(e);
-			throw new ConveyorExecutionException(e);
+			this.dequeueNextOperation();
+
 		}
 
 	}

@@ -63,7 +63,7 @@ public class TransferAccountingManagementServiceImplTest {
 	}
 
 	@Test
-	public void testPrepareTransferForExecution() throws Exception {
+	public void testPrepareNewTransferForProcessing() throws Exception {
 		String testUserName = "user1";
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountForIRODSUserFromTestPropertiesForGivenUser(
@@ -81,7 +81,7 @@ public class TransferAccountingManagementServiceImplTest {
 		transfer.setGridAccount(gridAccount);
 
 		TransferAttempt transferAttempt = transferAccountingManagementService
-				.prepareTransferForExecution(transfer);
+				.prepareTransferForProcessing(transfer);
 
 		Assert.assertNotNull("null transfer attempt", transferAttempt);
 		Assert.assertEquals(TransferStatus.OK, transfer.getLastTransferStatus());
@@ -209,4 +209,28 @@ public class TransferAccountingManagementServiceImplTest {
 				TransferStatus.ERROR, transferAttempt.getAttemptStatus());
 
 	}
+
+	@Test
+	public void testUpdateTransferAfterRestartFileSkipped() throws Exception {
+		String testUserName = "user1";
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountForIRODSUserFromTestPropertiesForGivenUser(
+						testingProperties, testUserName, testUserName);
+		String passPhrase = irodsAccount.getUserName();
+		gridAccountService.validatePassPhrase(passPhrase);
+		GridAccount gridAccount = gridAccountService
+				.addOrUpdateGridAccountBasedOnIRODSAccount(irodsAccount);
+
+		Transfer transfer = new Transfer();
+		transfer.setCreatedAt(new Date());
+		transfer.setIrodsAbsolutePath("/path");
+		transfer.setLocalAbsolutePath("local");
+		transfer.setTransferType(TransferType.PUT);
+		transfer.setGridAccount(gridAccount);
+
+		TransferAttempt transferAttempt = transferAccountingManagementService
+				.prepareTransferForExecution(transfer);
+
+	}
+
 }

@@ -18,7 +18,8 @@ package org.irods.jargon.conveyor.core;
  */
 public class CachedConveyorConfigurationProperties {
 
-	private boolean logSuccessfulTransfers;
+	private boolean logSuccessfulTransfers = false;
+	private boolean recordRestartFiles = false;
 	private int maxErrorsBeforeCancel = 0;
 
 	@Override
@@ -28,6 +29,15 @@ public class CachedConveyorConfigurationProperties {
 		sb.append("\n   isLogSuccessfulTransfers:");
 		sb.append(logSuccessfulTransfers);
 		return sb.toString();
+	}
+
+	/**
+	 * Are files skipped in restart recorded during transfer logging
+	 * 
+	 * @return
+	 */
+	public boolean isRecordRestartFiles() {
+		return recordRestartFiles;
 	}
 
 	/**
@@ -60,6 +70,14 @@ public class CachedConveyorConfigurationProperties {
 	 */
 	public void setMaxErrorsBeforeCancel(int maxErrorsBeforeCancel) {
 		this.maxErrorsBeforeCancel = maxErrorsBeforeCancel;
+	}
+
+	/**
+	 * @param recordRestartFiles
+	 *            the recordRestartFiles to set
+	 */
+	public void setRecordRestartFiles(boolean recordRestartFiles) {
+		this.recordRestartFiles = recordRestartFiles;
 	}
 
 }
