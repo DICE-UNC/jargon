@@ -72,25 +72,11 @@ public class TransferAccountingManagementServiceImpl extends
 	}
 
 	/**
-	 * @return the transferDAO
-	 */
-	public TransferDAO getTransferDAO() {
-		return transferDAO;
-	}
-
-	/**
 	 * @param transferDAO
 	 *            the transferDAO to set
 	 */
 	public void setTransferDAO(final TransferDAO transferDAO) {
 		this.transferDAO = transferDAO;
-	}
-
-	/**
-	 * @return the transferAttemptDAO
-	 */
-	public TransferAttemptDAO getTransferAttemptDAO() {
-		return transferAttemptDAO;
 	}
 
 	/**
@@ -103,25 +89,11 @@ public class TransferAccountingManagementServiceImpl extends
 	}
 
 	/**
-	 * @return the transferItemDAO
-	 */
-	public TransferItemDAO getTransferItemDAO() {
-		return transferItemDAO;
-	}
-
-	/**
 	 * @param transferItemDAO
 	 *            the transferItemDAO to set
 	 */
 	public void setTransferItemDAO(final TransferItemDAO transferItemDAO) {
 		this.transferItemDAO = transferItemDAO;
-	}
-
-	/**
-	 * @return the gridAccountService
-	 */
-	public GridAccountService getGridAccountService() {
-		return gridAccountService;
 	}
 
 	/**
@@ -233,6 +205,16 @@ public class TransferAccountingManagementServiceImpl extends
 			final org.irods.jargon.core.transfer.TransferStatus transferStatus,
 			final TransferAttempt transferAttempt)
 			throws ConveyorExecutionException {
+
+		log.info("updateTransferAfterSuccessfulFileTransfer()");
+
+		if (transferStatus == null) {
+			throw new IllegalArgumentException("null transferStatus");
+		}
+
+		if (transferAttempt == null) {
+			throw new IllegalArgumentException("null transferAttempt");
+		}
 
 		TransferAttempt localTransferAttempt;
 		try {
@@ -601,6 +583,14 @@ public class TransferAccountingManagementServiceImpl extends
 		transfer.setTransferState(TransferStateEnum.ENQUEUED);
 		transfer.setUpdatedAt(new Date());
 		transfer.setLastTransferStatus(TransferStatusEnum.OK);
+
+		TransferAttempt newTransferAttempt = new TransferAttempt();
+		newTransferAttempt.setAttemptStatus(TransferStatusEnum.OK);
+		newTransferAttempt.setLastSuccessfulPath(lastTransferAttempt
+				.getLastSuccessfulPath());
+		newTransferAttempt.setTransfer(transfer);
+		transfer.getTransferAttempts().add(newTransferAttempt);
+		log.info("added new transfer attempt:{}", newTransferAttempt);
 
 		try {
 			transferDAO.save(transfer);

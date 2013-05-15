@@ -12,7 +12,7 @@ import org.irods.jargon.core.exception.JargonException;
  * @author Mike Conway - DICE (www.irods.org)
  * 
  */
-public final class TransferStatus {
+public class TransferStatus {
 
 	public enum TransferType {
 		PUT, GET, REPLICATE, COPY, SYNCH
