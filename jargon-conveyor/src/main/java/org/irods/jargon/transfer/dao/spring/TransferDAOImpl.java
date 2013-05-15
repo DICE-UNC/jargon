@@ -13,7 +13,7 @@ import org.irods.jargon.transfer.dao.TransferDAOException;
 import org.irods.jargon.transfer.dao.domain.Transfer;
 import org.irods.jargon.transfer.dao.domain.TransferAttempt;
 import org.irods.jargon.transfer.dao.domain.TransferItem;
-import org.irods.jargon.transfer.dao.domain.TransferState;
+import org.irods.jargon.transfer.dao.domain.TransferStateEnum;
 import org.irods.jargon.transfer.dao.domain.TransferStatusEnum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -108,7 +108,7 @@ public class TransferDAOImpl extends HibernateDaoSupport implements TransferDAO 
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Transfer> findByTransferState(
-			final TransferState... transferState) throws TransferDAOException {
+			final TransferStateEnum... transferState) throws TransferDAOException {
 		log.debug("entering findByTransferState(TransferState...)");
 
 		try {
@@ -138,7 +138,7 @@ public class TransferDAOImpl extends HibernateDaoSupport implements TransferDAO 
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Transfer> findByTransferState(final int maxResults,
-			final TransferState... transferState) throws TransferDAOException {
+			final TransferStateEnum... transferState) throws TransferDAOException {
 		log.debug("entering findByTransferState(int, TransferState...)");
 		try {
 			Criteria criteria = this.getSessionFactory().getCurrentSession()
@@ -260,7 +260,7 @@ public class TransferDAOImpl extends HibernateDaoSupport implements TransferDAO 
 			HibernateTemplate hibernateTemplate = super.getHibernateTemplate();
 
 			int rows = hibernateTemplate.bulkUpdate(sb.toString(),
-					TransferState.PROCESSING);
+					TransferStateEnum.PROCESSING);
 			log.debug("deleted items count of: {}", rows);
 
 			sb = new StringBuilder();
@@ -269,7 +269,7 @@ public class TransferDAOImpl extends HibernateDaoSupport implements TransferDAO 
 			log.debug("delete items sql:{}", sb.toString());
 
 			rows = super.getHibernateTemplate().bulkUpdate(sb.toString(),
-					TransferState.PROCESSING);
+					TransferStateEnum.PROCESSING);
 			log.debug("deleted transfers count of: {}", rows);
 
 		} catch (HibernateException e) {
@@ -342,8 +342,8 @@ public class TransferDAOImpl extends HibernateDaoSupport implements TransferDAO 
 
 			int rows = super.getHibernateTemplate().bulkUpdate(
 					sb.toString(),
-					new Object[] { TransferState.COMPLETE,
-							TransferState.CANCELLED, TransferStatusEnum.OK });
+					new Object[] { TransferStateEnum.COMPLETE,
+							TransferStateEnum.CANCELLED, TransferStatusEnum.OK });
 			log.debug("deleted items count= {}", rows);
 
 			sb = new StringBuilder();
@@ -353,8 +353,8 @@ public class TransferDAOImpl extends HibernateDaoSupport implements TransferDAO 
 
 			rows = super.getHibernateTemplate().bulkUpdate(
 					sb.toString(),
-					new Object[] { TransferState.COMPLETE,
-							TransferState.CANCELLED, TransferStatusEnum.OK });
+					new Object[] { TransferStateEnum.COMPLETE,
+							TransferStateEnum.CANCELLED, TransferStatusEnum.OK });
 
 			log.debug("deleted transfers count= {}", rows);
 

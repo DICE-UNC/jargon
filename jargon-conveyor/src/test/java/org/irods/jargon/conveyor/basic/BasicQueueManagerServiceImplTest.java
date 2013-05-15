@@ -19,7 +19,7 @@ import org.irods.jargon.transfer.dao.domain.ConfigurationProperty;
 import org.irods.jargon.transfer.dao.domain.Transfer;
 import org.irods.jargon.transfer.dao.domain.TransferAttempt;
 import org.irods.jargon.transfer.dao.domain.TransferItem;
-import org.irods.jargon.transfer.dao.domain.TransferState;
+import org.irods.jargon.transfer.dao.domain.TransferStateEnum;
 import org.irods.jargon.transfer.dao.domain.TransferType;
 import org.junit.After;
 import org.junit.Before;
@@ -144,7 +144,7 @@ public class BasicQueueManagerServiceImplTest {
 				.getTransferAttempts().isEmpty());
 
 		Assert.assertEquals("did not get complete status",
-				TransferState.COMPLETE, transfer.getTransferState());
+				TransferStateEnum.COMPLETE, transfer.getTransferState());
 
 		TransferAttempt attempts[] = new TransferAttempt[transfer
 				.getTransferAttempts().size()];

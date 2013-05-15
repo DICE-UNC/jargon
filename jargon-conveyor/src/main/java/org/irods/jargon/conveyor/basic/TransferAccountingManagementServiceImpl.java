@@ -6,6 +6,7 @@ import org.irods.jargon.conveyor.core.AbstractConveyorComponentService;
 import org.irods.jargon.conveyor.core.ConfigurationService;
 import org.irods.jargon.conveyor.core.ConveyorExecutionException;
 import org.irods.jargon.conveyor.core.GridAccountService;
+import org.irods.jargon.conveyor.core.RejectedTransferException;
 import org.irods.jargon.conveyor.core.TransferAccountingManagementService;
 import org.irods.jargon.conveyor.utils.ExceptionUtils;
 import org.irods.jargon.transfer.dao.TransferAttemptDAO;
@@ -15,7 +16,7 @@ import org.irods.jargon.transfer.dao.TransferItemDAO;
 import org.irods.jargon.transfer.dao.domain.Transfer;
 import org.irods.jargon.transfer.dao.domain.TransferAttempt;
 import org.irods.jargon.transfer.dao.domain.TransferItem;
-import org.irods.jargon.transfer.dao.domain.TransferState;
+import org.irods.jargon.transfer.dao.domain.TransferStateEnum;
 import org.irods.jargon.transfer.dao.domain.TransferStatusEnum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -154,7 +155,7 @@ public class TransferAccountingManagementServiceImpl extends
 		}
 
 		transfer.setLastTransferStatus(TransferStatusEnum.OK);
-		transfer.setTransferState(TransferState.PROCESSING);
+		transfer.setTransferState(TransferStateEnum.PROCESSING);
 		transfer.setUpdatedAt(new Date());
 
 		TransferAttempt transferAttempt = null;
@@ -197,7 +198,7 @@ public class TransferAccountingManagementServiceImpl extends
 		log.info("building transfer attempt...");
 
 		transfer.setLastTransferStatus(TransferStatusEnum.OK);
-		transfer.setTransferState(TransferState.ENQUEUED);
+		transfer.setTransferState(TransferStateEnum.ENQUEUED);
 		transfer.setUpdatedAt(new Date());
 		TransferAttempt transferAttempt = new TransferAttempt();
 		transferAttempt.setTransfer(transfer);
@@ -361,7 +362,7 @@ public class TransferAccountingManagementServiceImpl extends
 		Transfer transfer = transferAttempt.getTransfer();
 
 		transfer.setLastTransferStatus(TransferStatusEnum.ERROR);
-		transfer.setTransferState(TransferState.COMPLETE);
+		transfer.setTransferState(TransferStateEnum.COMPLETE);
 		transfer.setUpdatedAt(new Date());
 
 		transferAttempt.setAttemptStatus(TransferStatusEnum.ERROR);
@@ -424,9 +425,9 @@ public class TransferAccountingManagementServiceImpl extends
 
 		Transfer transfer = transferAttempt.getTransfer();
 		transfer.setLastTransferStatus(TransferStatusEnum.OK); // FIXME...evaluate
-															// transfer for
-															// errors
-		transfer.setTransferState(TransferState.COMPLETE);
+																// transfer for
+																// errors
+		transfer.setTransferState(TransferStateEnum.COMPLETE);
 		transfer.setUpdatedAt(new Date());
 		transferAttempt.setAttemptEnd(new Date());
 		transferAttempt.setAttemptStatus(TransferStatusEnum.OK);
@@ -468,7 +469,7 @@ public class TransferAccountingManagementServiceImpl extends
 
 		Transfer transfer = transferAttempt.getTransfer();
 		transfer.setLastTransferStatus(TransferStatusEnum.ERROR);
-		transfer.setTransferState(TransferState.COMPLETE);
+		transfer.setTransferState(TransferStateEnum.COMPLETE);
 		transfer.setUpdatedAt(new Date());
 		transferAttempt.setAttemptEnd(new Date());
 		transferAttempt.setAttemptStatus(TransferStatusEnum.ERROR);
@@ -559,4 +560,57 @@ public class TransferAccountingManagementServiceImpl extends
 		}
 
 	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.conveyor.core.TransferAccountingManagementService#
+	 * prepareTransferForRestart(long)
+	 */
+	@Override
+	public Transfer prepareTransferForRestart(final long transferId)
+			throws ConveyorExecutionException, RejectedTransferException {
+		log.info("transferId:{}", transferId);
+		log.info("looking up transfer to restart...");
+
+		Transfer transfer;
+		try {
+			transfer = transferDAO.findById(new Long(transferId));
+		} catch (TransferDAOException e) {
+			log.error("error looking up transfer by id", e);
+			throw new ConveyorExecutionException(
+					"unable to lookup transfer by id", e);
+		}
+
+		TransferAttempt lastTransferAttempt;
+		try {
+			lastTransferAttempt = transferAttemptDAO
+					.findLastTransferAttemptForTransferByTransferId(transferId);
+		} catch (TransferDAOException e) {
+			log.error("error looking up last transfer attempt", e);
+			throw new ConveyorExecutionException(
+					"unable to lookup last transfer attempt", e);
+		}
+
+		if (lastTransferAttempt == null) {
+			throw new RejectedTransferException(
+					"no previous attempt found to base restart on");
+		}
+
+		log.info("building transfer attempt based on previous attempt...");
+		transfer.setTransferState(TransferStateEnum.ENQUEUED);
+		transfer.setUpdatedAt(new Date());
+		transfer.setLastTransferStatus(TransferStatusEnum.OK);
+
+		try {
+			transferDAO.save(transfer);
+		} catch (TransferDAOException e) {
+			log.error("error updating transfer for restart", e);
+			throw new ConveyorExecutionException(
+					"cannot update transfer for restart", e);
+		}
+
+		return transfer;
+	}
+
 }

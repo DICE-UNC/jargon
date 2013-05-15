@@ -113,4 +113,22 @@ public interface QueueManagerService {
 	Transfer findTransferByTransferId(final long transferId)
 			throws ConveyorExecutionException;
 
+	/**
+	 * Cause a transfer to be resubmitted as a restart. A restart will look at
+	 * the last successful transfer, and skip files before that restart point.
+	 * The actual transfers will resume once the restart point is encountered.
+	 * <p/>
+	 * Note that various configuration settings control how restarts are logged.
+	 * Optionally, the framework can log each skipped file in the restart
+	 * process to provide complete accounting for that transfer attempt.
+	 * 
+	 * @param transferId
+	 *            <code>long</code> with the unique id for the transfer
+	 * @throws RejectedTransferException
+	 *             if the transfer is not suitable for restart
+	 * @throws ConveyorExecutionException
+	 */
+	void enqueueRestartOfTransferOperation(final long transferId)
+			throws RejectedTransferException, ConveyorExecutionException;
+
 }

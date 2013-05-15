@@ -22,7 +22,7 @@ import org.irods.jargon.transfer.dao.TransferDAOException;
 import org.irods.jargon.transfer.dao.domain.GridAccount;
 import org.irods.jargon.transfer.dao.domain.Transfer;
 import org.irods.jargon.transfer.dao.domain.TransferAttempt;
-import org.irods.jargon.transfer.dao.domain.TransferState;
+import org.irods.jargon.transfer.dao.domain.TransferStateEnum;
 import org.irods.jargon.transfer.dao.domain.TransferType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,6 +61,13 @@ public class BasicQueueManagerServiceImpl extends
 	private static final Logger log = LoggerFactory
 			.getLogger(BasicQueueManagerServiceImpl.class);
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.conveyor.core.QueueManagerService#
+	 * enqueueRestartOfTransferOperation(long)
+	 */
+	@Override
 	public void enqueueRestartOfTransferOperation(final long transferId)
 			throws RejectedTransferException, ConveyorExecutionException {
 
@@ -70,42 +77,11 @@ public class BasicQueueManagerServiceImpl extends
 			throw new IllegalArgumentException("illegal transferId");
 		}
 
-		log.info("transferId:{}", transferId);
-		log.info("looking up transfer to restart...");
+		conveyorService.getTransferAccountingManagementService()
+				.prepareTransferForRestart(transferId);
 
-		Transfer transfer;
-		try {
-			transfer = transferDAO.findById(new Long(transferId));
-		} catch (TransferDAOException e) {
-			log.error("error looking up transfer by id", e);
-			throw new ConveyorExecutionException(
-					"unable to lookup transfer by id", e);
-		}
-
-		/*
-		 * Check state of transfer and throw a rejected exception if this
-		 * transfer was rejected for some reason
-		 */
-		evaluateTransferForExecution(transfer);
-
-		TransferAttempt lastTransferAttempt;
-		try {
-			lastTransferAttempt = transferAttemptDAO
-					.findLastTransferAttemptForTransferByTransferId(transferId);
-		} catch (TransferDAOException e) {
-			log.error("error looking up last transfer attempt", e);
-			throw new ConveyorExecutionException(
-					"unable to lookup last transfer attempt", e);
-		}
-
-		if (lastTransferAttempt == null) {
-			throw new RejectedTransferException(
-					"no previous attempt found to base restart on");
-		}
-
-		log.info("building transfer attempt based on previous attempt...");
-		transfer.setTransferState(TransferState.ENQUEUED);
-		transfer.setUpdatedAt(new Date());
+		log.info("restart enqueued, will trigger the queue");
+		dequeueNextOperation();
 
 	}
 
@@ -155,7 +131,7 @@ public class BasicQueueManagerServiceImpl extends
 		evaluateTransferForExecution(transfer);
 
 		transfer.setGridAccount(gridAccount);
-		transfer.setTransferState(TransferState.ENQUEUED);
+		transfer.setTransferState(TransferStateEnum.ENQUEUED);
 		transfer.setUpdatedAt(new Date());
 
 		/*
@@ -216,7 +192,7 @@ public class BasicQueueManagerServiceImpl extends
 		try {
 
 			List<Transfer> transfers = transferDAO
-					.findByTransferState(TransferState.ENQUEUED);
+					.findByTransferState(TransferStateEnum.ENQUEUED);
 			// Transfer transfer = new Transfer(); // fake code for above
 
 			if (transfers.isEmpty()) {
@@ -242,7 +218,7 @@ public class BasicQueueManagerServiceImpl extends
 			}
 
 			transferAttempt.setAttemptStart(new Date());
-			transfer.setTransferState(TransferState.PROCESSING);
+			transfer.setTransferState(TransferStateEnum.PROCESSING);
 			transfer.setUpdatedAt(new Date());
 			transferDAO.save(transfer);
 

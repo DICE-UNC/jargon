@@ -130,4 +130,18 @@ public interface TransferAccountingManagementService {
 	TransferAttempt prepareTransferForProcessing(Transfer transfer)
 			throws ConveyorExecutionException;
 
+	/**
+	 * Prepare the given transfer for a restart. This includes setting up a new
+	 * <code>TransferAttempt</code> with the proper restart path.
+	 * 
+	 * @param transferId
+	 *            <code>long</code> that is the valid id of a transfer in the
+	 *            database
+	 * @return {@link Transfer} with proper setup enqueued for restart
+	 * @throws ConveyorExecutionException
+	 * @throws RejectedTransferException
+	 */
+	Transfer prepareTransferForRestart(final long transferId)
+			throws ConveyorExecutionException, RejectedTransferException;
+
 }

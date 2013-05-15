@@ -9,7 +9,7 @@ import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.irods.jargon.transfer.dao.domain.GridAccount;
 import org.irods.jargon.transfer.dao.domain.Transfer;
-import org.irods.jargon.transfer.dao.domain.TransferState;
+import org.irods.jargon.transfer.dao.domain.TransferStateEnum;
 import org.irods.jargon.transfer.dao.domain.TransferStatusEnum;
 import org.irods.jargon.transfer.dao.domain.TransferType;
 import org.irods.jargon.transfer.util.DomainUtils;
@@ -63,7 +63,7 @@ public class TransferDAOTest {
 		enqueuedTransfer.setLocalAbsolutePath("/tmp");
 		enqueuedTransfer.setGridAccount(gridAccount);
 		enqueuedTransfer.setTransferType(TransferType.PUT);
-		enqueuedTransfer.setTransferState(TransferState.PROCESSING);
+		enqueuedTransfer.setTransferState(TransferStateEnum.PROCESSING);
 		enqueuedTransfer.setLastTransferStatus(TransferStatusEnum.ERROR);
 		assertTrue(enqueuedTransfer.getId() == null);
 		transferDAO.save(enqueuedTransfer);

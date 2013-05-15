@@ -1,6 +1,6 @@
 package org.irods.jargon.transfer.dao.domain;
 
-public enum TransferState {
+public enum TransferStateEnum {
 
 	IDLE,
 

@@ -13,7 +13,7 @@ import org.irods.jargon.transfer.dao.domain.GridAccount;
 import org.irods.jargon.transfer.dao.domain.Synchronization;
 import org.irods.jargon.transfer.dao.domain.SynchronizationType;
 import org.irods.jargon.transfer.dao.domain.Transfer;
-import org.irods.jargon.transfer.dao.domain.TransferState;
+import org.irods.jargon.transfer.dao.domain.TransferStateEnum;
 import org.irods.jargon.transfer.dao.domain.TransferStatusEnum;
 import org.irods.jargon.transfer.dao.domain.TransferType;
 import org.irods.jargon.transfer.util.DomainUtils;
@@ -228,7 +228,7 @@ public class SynchronizationDAOTest {
 		transfer.setLocalAbsolutePath("/local/path");
 		transfer.setSynchronization(synchronization);
 		transfer.setGridAccount(gridAccount);
-		transfer.setTransferState(TransferState.ENQUEUED);
+		transfer.setTransferState(TransferStateEnum.ENQUEUED);
 		transfer.setLastTransferStatus(TransferStatusEnum.OK);
 		transfer.setTransferType(TransferType.SYNCH);
 		synchronization.getTransfers().add(transfer);
@@ -270,7 +270,7 @@ public class SynchronizationDAOTest {
 		transfer.setLocalAbsolutePath("/local/path");
 		transfer.setSynchronization(synchronization);
 		transfer.setGridAccount(gridAccount);
-		transfer.setTransferState(TransferState.ENQUEUED);
+		transfer.setTransferState(TransferStateEnum.ENQUEUED);
 		transfer.setLastTransferStatus(TransferStatusEnum.OK);
 		transfer.setTransferType(TransferType.SYNCH);
 		synchronization.getTransfers().add(transfer);

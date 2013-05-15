@@ -284,11 +284,6 @@
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>org.irods.jargon.transfer</groupId>
-				<artifactId>jargon-transfer</artifactId>
-				<version>${project.version}</version>
-			</dependency>
-			<dependency>
 				<groupId>org.mockito</groupId>
 				<artifactId>mockito-all</artifactId>
 				<version>1.8.1</version>
@@ -331,7 +326,7 @@
 			<dependency>
 				<groupId>org.springframework</groupId>
 				<artifactId>spring-orm</artifactId>
-				<version>3.1.0.RELEASE</version>
+				<version>${spring.core.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.springframework</groupId>

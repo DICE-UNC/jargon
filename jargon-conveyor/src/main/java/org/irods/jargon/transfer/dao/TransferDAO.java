@@ -3,7 +3,7 @@ package org.irods.jargon.transfer.dao;
 import java.util.List;
 
 import org.irods.jargon.transfer.dao.domain.Transfer;
-import org.irods.jargon.transfer.dao.domain.TransferState;
+import org.irods.jargon.transfer.dao.domain.TransferStateEnum;
 import org.irods.jargon.transfer.dao.domain.TransferStatusEnum;
 
 /**
@@ -42,7 +42,7 @@ public interface TransferDAO {
 	 * @return
 	 * @throws TransferDAOException
 	 */
-	public List<Transfer> findByTransferState(TransferState... transferState)
+	public List<Transfer> findByTransferState(TransferStateEnum... transferState)
 			throws TransferDAOException;
 
 	/**
@@ -70,7 +70,7 @@ public interface TransferDAO {
 	 * @throws TransferDAOException
 	 */
 	public List<Transfer> findByTransferState(int maxResults,
-			TransferState... transferState) throws TransferDAOException;
+			TransferStateEnum... transferState) throws TransferDAOException;
 
 	/**
 	 * 

@@ -5,6 +5,8 @@ import java.util.Properties;
 
 import junit.framework.Assert;
 
+import org.irods.jargon.conveyor.core.ConfigurationPropertyConstants;
+import org.irods.jargon.conveyor.core.ConfigurationService;
 import org.irods.jargon.conveyor.core.GridAccountService;
 import org.irods.jargon.conveyor.core.QueueManagerService;
 import org.irods.jargon.conveyor.core.TransferAccountingManagementService;
@@ -13,9 +15,11 @@ import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.transfer.TransferStatus;
 import org.irods.jargon.core.transfer.TransferStatus.TransferState;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
+import org.irods.jargon.transfer.dao.domain.ConfigurationProperty;
 import org.irods.jargon.transfer.dao.domain.GridAccount;
 import org.irods.jargon.transfer.dao.domain.Transfer;
 import org.irods.jargon.transfer.dao.domain.TransferAttempt;
+import org.irods.jargon.transfer.dao.domain.TransferStateEnum;
 import org.irods.jargon.transfer.dao.domain.TransferStatusEnum;
 import org.irods.jargon.transfer.dao.domain.TransferType;
 import org.junit.After;
@@ -47,6 +51,9 @@ public class TransferAccountingManagementServiceImplTest {
 
 	@Autowired
 	private GridAccountService gridAccountService;
+
+	@Autowired
+	private ConfigurationService configurationService;
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -92,8 +99,7 @@ public class TransferAccountingManagementServiceImplTest {
 		Assert.assertEquals(TransferStatusEnum.OK,
 				transfer.getLastTransferStatus());
 		Assert.assertEquals("should have an enqueued state",
-				org.irods.jargon.transfer.dao.domain.TransferState.ENQUEUED,
-				transfer.getTransferState());
+				TransferStateEnum.ENQUEUED, transfer.getTransferState());
 		Assert.assertFalse("no id set", transferAttempt.getId() == 0);
 		Assert.assertNotNull("no transfer parent in attempt",
 				transferAttempt.getTransfer());
@@ -241,6 +247,18 @@ public class TransferAccountingManagementServiceImplTest {
 		GridAccount gridAccount = gridAccountService
 				.addOrUpdateGridAccountBasedOnIRODSAccount(irodsAccount);
 
+		ConfigurationProperty logSuccessful = new ConfigurationProperty();
+		logSuccessful
+				.setPropertyKey(ConfigurationPropertyConstants.LOG_SUCCESSFUL_FILES_KEY);
+		logSuccessful.setPropertyValue("true");
+		configurationService.addConfigurationProperty(logSuccessful);
+
+		ConfigurationProperty logRestart = new ConfigurationProperty();
+		logRestart
+				.setPropertyKey(ConfigurationPropertyConstants.LOG_RESTART_FILES);
+		logRestart.setPropertyValue("true");
+		configurationService.addConfigurationProperty(logRestart);
+
 		Transfer transfer = new Transfer();
 		transfer.setCreatedAt(new Date());
 		transfer.setIrodsAbsolutePath("/path");
@@ -281,7 +299,58 @@ public class TransferAccountingManagementServiceImplTest {
 				attemptWith1Successful.getTotalFilesTransferredSoFar());
 		Assert.assertEquals(2, attemptWith1Successful.getTotalFilesCount());
 
-		// FIXME: finish test here by doing a restart
+		// cause an error now after 1 file
+
+		try {
+			throw new JargonException("blah");
+		} catch (JargonException je) {
+		}
+
+		org.irods.jargon.core.transfer.TransferStatus overallStatus = org.irods.jargon.core.transfer.TransferStatus
+				.instance(
+						org.irods.jargon.core.transfer.TransferStatus.TransferType.GET,
+						transfer.getIrodsAbsolutePath(), transfer
+								.getLocalAbsolutePath(), transfer
+								.getGridAccount().getDefaultResource(), 0L, 0L,
+						0, 0, TransferState.FAILURE, transfer.getGridAccount()
+								.getHost(), transfer.getGridAccount().getZone());
+
+		transferAccountingManagementService.updateTransferAfterOverallFailure(
+				overallStatus, attemptWith1Successful);
+
+		// now schedule a restart...
+
+		transferAccountingManagementService
+				.prepareTransferForRestart(attemptWith1Successful.getTransfer()
+						.getId());
+
+		transfer = queueManagerService.findTransferByTransferId(transfer
+				.getId());
+
+		Assert.assertEquals("with restart, should have status enqueued",
+				TransferStateEnum.ENQUEUED, transfer.getTransferState());
+		Assert.assertEquals("should have reset to transfer status of OK",
+				TransferStatusEnum.OK, transfer.getLastTransferStatus());
+
+		TransferAttempt[] attemptsAfterRestart = new TransferAttempt[transfer
+				.getTransferAttempts().size()];
+		transfer.getTransferAttempts().toArray(attemptsAfterRestart);
+
+		Assert.assertEquals(2, attempts.length);
+		TransferAttempt restartAttempt = attemptsAfterRestart[attempts.length - 1];
+
+		Assert.assertNull("should not be an end date for attempt",
+				restartAttempt.getAttemptEnd());
+		Assert.assertNull("should not be a start date for attempt",
+				restartAttempt.getAttemptStart());
+		Assert.assertNotNull("no transfer attempt status set",
+				restartAttempt.getAttemptStatus());
+		Assert.assertEquals("should have an error attempt status",
+				TransferStatusEnum.OK, restartAttempt.getAttemptStatus());
+		Assert.assertEquals("/local/1.txt",
+				restartAttempt.getLastSuccessfulPath());
+		Assert.assertEquals(1, restartAttempt.getTotalFilesTransferredSoFar());
+		Assert.assertEquals(2, restartAttempt.getTotalFilesCount());
 
 	}
 }

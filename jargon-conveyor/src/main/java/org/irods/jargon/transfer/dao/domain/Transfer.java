@@ -41,7 +41,7 @@ public class Transfer implements Serializable {
 
 	@Column(name = "transfer_state")
 	@Enumerated(EnumType.STRING)
-	private TransferState transferState;
+	private TransferStateEnum transferState;
 
 	@Column(name = "last_transfer_status")
 	@Enumerated(EnumType.STRING)
@@ -88,11 +88,11 @@ public class Transfer implements Serializable {
 		super();
 	}
 
-	public TransferState getTransferState() {
+	public TransferStateEnum getTransferState() {
 		return transferState;
 	}
 
-	public void setTransferState(final TransferState transferState) {
+	public void setTransferState(final TransferStateEnum transferState) {
 		this.transferState = transferState;
 	}
 
