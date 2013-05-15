@@ -15,7 +15,7 @@ import org.irods.jargon.transfer.dao.domain.Transfer;
 import org.irods.jargon.transfer.dao.domain.Synchronization;
 import org.irods.jargon.transfer.dao.domain.SynchronizationType;
 import org.irods.jargon.transfer.dao.domain.TransferState;
-import org.irods.jargon.transfer.dao.domain.TransferStatus;
+import org.irods.jargon.transfer.dao.domain.TransferStatusEnum;
 import org.irods.jargon.transfer.engine.TransferQueueService;
 import org.irods.jargon.transfer.util.DomainUtils;
 import org.junit.AfterClass;
@@ -72,7 +72,7 @@ public class SynchManagerServiceImplTest {
 		synchConfiguration.setIrodsSynchDirectory("/synchdir");
 		synchConfiguration.setFrequencyType(FrequencyType.EVERY_DAY);
 
-		synchConfiguration.setLastSynchronizationStatus(TransferStatus.OK);
+		synchConfiguration.setLastSynchronizationStatus(TransferStatusEnum.OK);
 		synchConfiguration.setLocalSynchDirectory("/localdir");
 		synchConfiguration
 				.setSynchronizationMode(SynchronizationType.ONE_WAY_LOCAL_TO_IRODS);
@@ -93,7 +93,7 @@ public class SynchManagerServiceImplTest {
 		synchConfiguration.setCreatedAt(new Date());
 		synchConfiguration.setGridAccount(gridAccount);
 		synchConfiguration.setIrodsSynchDirectory("/synchdir");
-		synchConfiguration.setLastSynchronizationStatus(TransferStatus.OK);
+		synchConfiguration.setLastSynchronizationStatus(TransferStatusEnum.OK);
 		synchConfiguration.setLocalSynchDirectory("/localdir");
 		synchConfiguration.setFrequencyType(FrequencyType.EVERY_DAY);
 
@@ -105,7 +105,7 @@ public class SynchManagerServiceImplTest {
 		synchConfiguration.setCreatedAt(new Date());
 		synchConfiguration.setGridAccount(gridAccount);
 		synchConfiguration.setIrodsSynchDirectory("/synchdir2");
-		synchConfiguration.setLastSynchronizationStatus(TransferStatus.OK);
+		synchConfiguration.setLastSynchronizationStatus(TransferStatusEnum.OK);
 		synchConfiguration.setFrequencyType(FrequencyType.EVERY_DAY);
 
 		synchConfiguration.setLocalSynchDirectory("/localdir2");
@@ -130,7 +130,7 @@ public class SynchManagerServiceImplTest {
 		synchConfiguration.setGridAccount(gridAccount);
 		synchConfiguration.setIrodsSynchDirectory("/synchdir");
 		;
-		synchConfiguration.setLastSynchronizationStatus(TransferStatus.OK);
+		synchConfiguration.setLastSynchronizationStatus(TransferStatusEnum.OK);
 		synchConfiguration.setLocalSynchDirectory("/localdir");
 		synchConfiguration.setFrequencyType(FrequencyType.EVERY_DAY);
 
@@ -145,7 +145,7 @@ public class SynchManagerServiceImplTest {
 		synchConfiguration.setIrodsSynchDirectory("/synchdir2");
 		synchConfiguration.setFrequencyType(FrequencyType.EVERY_DAY);
 
-		synchConfiguration.setLastSynchronizationStatus(TransferStatus.OK);
+		synchConfiguration.setLastSynchronizationStatus(TransferStatusEnum.OK);
 		synchConfiguration.setLocalSynchDirectory("/localdir");
 		synchConfiguration
 				.setSynchronizationMode(SynchronizationType.ONE_WAY_LOCAL_TO_IRODS);
@@ -168,7 +168,7 @@ public class SynchManagerServiceImplTest {
 		synchConfiguration.setCreatedAt(new Date());
 		synchConfiguration.setGridAccount(gridAccount);
 		synchConfiguration.setIrodsSynchDirectory("/synchdir");
-		synchConfiguration.setLastSynchronizationStatus(TransferStatus.OK);
+		synchConfiguration.setLastSynchronizationStatus(TransferStatusEnum.OK);
 		synchConfiguration.setLocalSynchDirectory("/localdir");
 		synchConfiguration
 				.setSynchronizationMode(SynchronizationType.ONE_WAY_LOCAL_TO_IRODS);
@@ -181,7 +181,7 @@ public class SynchManagerServiceImplTest {
 		synchConfiguration.setCreatedAt(new Date());
 		synchConfiguration.setGridAccount(gridAccount);
 		synchConfiguration.setIrodsSynchDirectory("/synchdir");
-		synchConfiguration.setLastSynchronizationStatus(TransferStatus.OK);
+		synchConfiguration.setLastSynchronizationStatus(TransferStatusEnum.OK);
 		synchConfiguration.setLocalSynchDirectory("/localdir2");
 		synchConfiguration
 				.setSynchronizationMode(SynchronizationType.ONE_WAY_LOCAL_TO_IRODS);
@@ -205,7 +205,7 @@ public class SynchManagerServiceImplTest {
 		synchConfiguration.setCreatedAt(new Date());
 		synchConfiguration.setGridAccount(gridAccount);
 		synchConfiguration.setIrodsSynchDirectory("/synchdir");
-		synchConfiguration.setLastSynchronizationStatus(TransferStatus.OK);
+		synchConfiguration.setLastSynchronizationStatus(TransferStatusEnum.OK);
 		synchConfiguration.setLocalSynchDirectory("/localdir");
 		synchConfiguration
 				.setSynchronizationMode(SynchronizationType.ONE_WAY_LOCAL_TO_IRODS);
@@ -232,7 +232,7 @@ public class SynchManagerServiceImplTest {
 		synchConfiguration.setCreatedAt(new Date());
 		synchConfiguration.setGridAccount(gridAccount);
 		synchConfiguration.setIrodsSynchDirectory("/synchdir");
-		synchConfiguration.setLastSynchronizationStatus(TransferStatus.OK);
+		synchConfiguration.setLastSynchronizationStatus(TransferStatusEnum.OK);
 		synchConfiguration.setLocalSynchDirectory("/localdir");
 
 		synchConfiguration.setFrequencyType(FrequencyType.EVERY_DAY);
@@ -264,7 +264,7 @@ public class SynchManagerServiceImplTest {
 		synchConfiguration.setCreatedAt(new Date());
 		synchConfiguration.setGridAccount(gridAccount);
 		synchConfiguration.setIrodsSynchDirectory("/synchdir");
-		synchConfiguration.setLastSynchronizationStatus(TransferStatus.OK);
+		synchConfiguration.setLastSynchronizationStatus(TransferStatusEnum.OK);
 		synchConfiguration.setLocalSynchDirectory("/localdir");
 		synchConfiguration
 				.setSynchronizationMode(SynchronizationType.ONE_WAY_LOCAL_TO_IRODS);
@@ -293,7 +293,7 @@ public class SynchManagerServiceImplTest {
 		synchConfiguration.setCreatedAt(new Date());
 		synchConfiguration.setGridAccount(gridAccount);
 		synchConfiguration.setIrodsSynchDirectory("/synchdir");
-		synchConfiguration.setLastSynchronizationStatus(TransferStatus.OK);
+		synchConfiguration.setLastSynchronizationStatus(TransferStatusEnum.OK);
 		synchConfiguration.setLocalSynchDirectory("/localdir");
 		synchConfiguration
 				.setSynchronizationMode(SynchronizationType.ONE_WAY_LOCAL_TO_IRODS);
@@ -335,7 +335,7 @@ public class SynchManagerServiceImplTest {
 		synchConfiguration.setCreatedAt(new Date());
 		synchConfiguration.setGridAccount(gridAccount);
 		synchConfiguration.setIrodsSynchDirectory("/synchdir");
-		synchConfiguration.setLastSynchronizationStatus(TransferStatus.OK);
+		synchConfiguration.setLastSynchronizationStatus(TransferStatusEnum.OK);
 		synchConfiguration.setLocalSynchDirectory("/localdir");
 		synchConfiguration
 				.setSynchronizationMode(SynchronizationType.ONE_WAY_LOCAL_TO_IRODS);
@@ -348,7 +348,7 @@ public class SynchManagerServiceImplTest {
 		synchConfiguration2.setCreatedAt(new Date());
 		synchConfiguration2.setGridAccount(gridAccount);
 		synchConfiguration2.setIrodsSynchDirectory("/synchdirx");
-		synchConfiguration2.setLastSynchronizationStatus(TransferStatus.OK);
+		synchConfiguration2.setLastSynchronizationStatus(TransferStatusEnum.OK);
 		synchConfiguration2.setLocalSynchDirectory("/localdir2");
 		synchConfiguration2
 				.setSynchronizationMode(SynchronizationType.ONE_WAY_LOCAL_TO_IRODS);
@@ -379,7 +379,7 @@ public class SynchManagerServiceImplTest {
 		synchConfiguration.setCreatedAt(new Date());
 		synchConfiguration.setGridAccount(gridAccount);
 		synchConfiguration.setIrodsSynchDirectory(testName);
-		synchConfiguration.setLastSynchronizationStatus(TransferStatus.OK);
+		synchConfiguration.setLastSynchronizationStatus(TransferStatusEnum.OK);
 		synchConfiguration.setLocalSynchDirectory("/localdir");
 		synchConfiguration
 				.setSynchronizationMode(SynchronizationType.ONE_WAY_LOCAL_TO_IRODS);
@@ -392,7 +392,7 @@ public class SynchManagerServiceImplTest {
 		synchConfiguration2.setCreatedAt(new Date());
 		synchConfiguration2.setGridAccount(gridAccount);
 		synchConfiguration2.setIrodsSynchDirectory(testName + "second");
-		synchConfiguration2.setLastSynchronizationStatus(TransferStatus.OK);
+		synchConfiguration2.setLastSynchronizationStatus(TransferStatusEnum.OK);
 		synchConfiguration2.setLocalSynchDirectory("/localdir2");
 		synchConfiguration2
 				.setSynchronizationMode(SynchronizationType.ONE_WAY_LOCAL_TO_IRODS);
@@ -424,7 +424,7 @@ public class SynchManagerServiceImplTest {
 		synchConfiguration.setCreatedAt(new Date());
 		synchConfiguration.setGridAccount(gridAccount);
 		synchConfiguration.setIrodsSynchDirectory(testName + "first");
-		synchConfiguration.setLastSynchronizationStatus(TransferStatus.OK);
+		synchConfiguration.setLastSynchronizationStatus(TransferStatusEnum.OK);
 		synchConfiguration.setLocalSynchDirectory(testName);
 		synchConfiguration
 				.setSynchronizationMode(SynchronizationType.ONE_WAY_LOCAL_TO_IRODS);
@@ -437,7 +437,7 @@ public class SynchManagerServiceImplTest {
 		synchConfiguration2.setCreatedAt(new Date());
 		synchConfiguration2.setGridAccount(gridAccount);
 		synchConfiguration2.setIrodsSynchDirectory(testName + "second");
-		synchConfiguration2.setLastSynchronizationStatus(TransferStatus.OK);
+		synchConfiguration2.setLastSynchronizationStatus(TransferStatusEnum.OK);
 		synchConfiguration2.setLocalSynchDirectory(testName);
 		synchConfiguration2
 				.setSynchronizationMode(SynchronizationType.ONE_WAY_LOCAL_TO_IRODS);
@@ -465,7 +465,7 @@ public class SynchManagerServiceImplTest {
 		synchConfiguration.setCreatedAt(new Date());
 		synchConfiguration.setGridAccount(gridAccount);
 		synchConfiguration.setIrodsSynchDirectory("/synchdir");
-		synchConfiguration.setLastSynchronizationStatus(TransferStatus.OK);
+		synchConfiguration.setLastSynchronizationStatus(TransferStatusEnum.OK);
 		synchConfiguration.setLocalSynchDirectory("/localdir");
 		synchConfiguration
 				.setSynchronizationMode(SynchronizationType.ONE_WAY_LOCAL_TO_IRODS);
@@ -497,7 +497,7 @@ public class SynchManagerServiceImplTest {
 		synchConfiguration.setCreatedAt(new Date());
 		synchConfiguration.setGridAccount(gridAccount);
 		synchConfiguration.setIrodsSynchDirectory(testName);
-		synchConfiguration.setLastSynchronizationStatus(TransferStatus.OK);
+		synchConfiguration.setLastSynchronizationStatus(TransferStatusEnum.OK);
 		synchConfiguration.setLocalSynchDirectory("/localdir");
 		synchConfiguration
 				.setSynchronizationMode(SynchronizationType.ONE_WAY_LOCAL_TO_IRODS);
@@ -545,7 +545,7 @@ public class SynchManagerServiceImplTest {
 		synchConfiguration.setCreatedAt(new Date());
 		synchConfiguration.setGridAccount(gridAccount);
 		synchConfiguration.setIrodsSynchDirectory("/synchdir");
-		synchConfiguration.setLastSynchronizationStatus(TransferStatus.OK);
+		synchConfiguration.setLastSynchronizationStatus(TransferStatusEnum.OK);
 		synchConfiguration.setLocalSynchDirectory("/localdir");
 		synchConfiguration
 				.setSynchronizationMode(SynchronizationType.ONE_WAY_LOCAL_TO_IRODS);

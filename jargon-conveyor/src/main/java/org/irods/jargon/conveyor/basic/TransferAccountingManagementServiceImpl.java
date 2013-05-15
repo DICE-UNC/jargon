@@ -16,7 +16,7 @@ import org.irods.jargon.transfer.dao.domain.Transfer;
 import org.irods.jargon.transfer.dao.domain.TransferAttempt;
 import org.irods.jargon.transfer.dao.domain.TransferItem;
 import org.irods.jargon.transfer.dao.domain.TransferState;
-import org.irods.jargon.transfer.dao.domain.TransferStatus;
+import org.irods.jargon.transfer.dao.domain.TransferStatusEnum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
@@ -153,7 +153,7 @@ public class TransferAccountingManagementServiceImpl extends
 					"transfer does not have an id, it may not be stored in the transfer database");
 		}
 
-		transfer.setLastTransferStatus(TransferStatus.OK);
+		transfer.setLastTransferStatus(TransferStatusEnum.OK);
 		transfer.setTransferState(TransferState.PROCESSING);
 		transfer.setUpdatedAt(new Date());
 
@@ -175,7 +175,7 @@ public class TransferAccountingManagementServiceImpl extends
 		}
 
 		transferAttempt.setAttemptStart(new Date());
-		transferAttempt.setAttemptStatus(TransferStatus.OK);
+		transferAttempt.setAttemptStatus(TransferStatusEnum.OK);
 
 		try {
 			transferDAO.save(transfer);
@@ -196,13 +196,13 @@ public class TransferAccountingManagementServiceImpl extends
 
 		log.info("building transfer attempt...");
 
-		transfer.setLastTransferStatus(TransferStatus.OK);
+		transfer.setLastTransferStatus(TransferStatusEnum.OK);
 		transfer.setTransferState(TransferState.ENQUEUED);
 		transfer.setUpdatedAt(new Date());
 		TransferAttempt transferAttempt = new TransferAttempt();
 		transferAttempt.setTransfer(transfer);
 		transferAttempt.setTransfer(transfer);
-		transferAttempt.setAttemptStatus(TransferStatus.OK);
+		transferAttempt.setAttemptStatus(TransferStatusEnum.OK);
 
 		try {
 			transferDAO.save(transfer);
@@ -309,7 +309,7 @@ public class TransferAccountingManagementServiceImpl extends
 
 		// TODO: how to handle retries??
 		transferAttempt
-				.setAttemptStatus(org.irods.jargon.transfer.dao.domain.TransferStatus.ERROR);
+				.setAttemptStatus(org.irods.jargon.transfer.dao.domain.TransferStatusEnum.ERROR);
 
 		// create transfer item
 		TransferItem transferItem = new TransferItem();
@@ -360,11 +360,11 @@ public class TransferAccountingManagementServiceImpl extends
 
 		Transfer transfer = transferAttempt.getTransfer();
 
-		transfer.setLastTransferStatus(TransferStatus.ERROR);
+		transfer.setLastTransferStatus(TransferStatusEnum.ERROR);
 		transfer.setTransferState(TransferState.COMPLETE);
 		transfer.setUpdatedAt(new Date());
 
-		transferAttempt.setAttemptStatus(TransferStatus.ERROR);
+		transferAttempt.setAttemptStatus(TransferStatusEnum.ERROR);
 		transferAttempt.setAttemptEnd(new Date());
 		transferAttempt.setErrorMessage(ERROR_ATTEMPTING_TO_RUN);
 		transferAttempt.setGlobalException(exception.getMessage());
@@ -423,13 +423,13 @@ public class TransferAccountingManagementServiceImpl extends
 		log.info("transferStatus:{}", transferStatus);
 
 		Transfer transfer = transferAttempt.getTransfer();
-		transfer.setLastTransferStatus(TransferStatus.OK); // FIXME...evaluate
+		transfer.setLastTransferStatus(TransferStatusEnum.OK); // FIXME...evaluate
 															// transfer for
 															// errors
 		transfer.setTransferState(TransferState.COMPLETE);
 		transfer.setUpdatedAt(new Date());
 		transferAttempt.setAttemptEnd(new Date());
-		transferAttempt.setAttemptStatus(TransferStatus.OK);
+		transferAttempt.setAttemptStatus(TransferStatusEnum.OK);
 
 		try {
 			transferDAO.save(transfer);
@@ -467,11 +467,11 @@ public class TransferAccountingManagementServiceImpl extends
 		log.info("transferStatus:{}", transferStatus);
 
 		Transfer transfer = transferAttempt.getTransfer();
-		transfer.setLastTransferStatus(TransferStatus.ERROR);
+		transfer.setLastTransferStatus(TransferStatusEnum.ERROR);
 		transfer.setTransferState(TransferState.COMPLETE);
 		transfer.setUpdatedAt(new Date());
 		transferAttempt.setAttemptEnd(new Date());
-		transferAttempt.setAttemptStatus(TransferStatus.ERROR);
+		transferAttempt.setAttemptStatus(TransferStatusEnum.ERROR);
 		transferAttempt.setErrorMessage(ERROR_IN_TRANSFER_AT_IRODS_LEVEL);
 		transferAttempt.setGlobalException(ExceptionUtils
 				.messageOrNullFromException(transferStatus

@@ -55,7 +55,7 @@ public class TransferAttempt implements Serializable {
 
 	@Column(name = "transfer_attempt_status")
 	@Enumerated(EnumType.STRING)
-	private TransferStatus attemptStatus;
+	private TransferStatusEnum attemptStatus;
 
 	@Column(name = "error_message")
 	private String errorMessage;
@@ -116,11 +116,11 @@ public class TransferAttempt implements Serializable {
 		this.attemptEnd = attemptEnd;
 	}
 
-	public TransferStatus getAttemptStatus() {
+	public TransferStatusEnum getAttemptStatus() {
 		return attemptStatus;
 	}
 
-	public void setAttemptStatus(final TransferStatus attemptStatus) {
+	public void setAttemptStatus(final TransferStatusEnum attemptStatus) {
 		this.attemptStatus = attemptStatus;
 	}
 

@@ -14,7 +14,7 @@ import org.irods.jargon.transfer.dao.domain.Synchronization;
 import org.irods.jargon.transfer.dao.domain.Transfer;
 import org.irods.jargon.transfer.dao.domain.TransferItem;
 import org.irods.jargon.transfer.dao.domain.TransferState;
-import org.irods.jargon.transfer.dao.domain.TransferStatus;
+import org.irods.jargon.transfer.dao.domain.TransferStatusEnum;
 import org.irods.jargon.transfer.dao.domain.TransferType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -82,7 +82,7 @@ public class TransferQueueServiceImpl implements TransferQueueService {
 				// trigger lazy loading of the grid account
 				transfer.getGridAccount().getHost();
 				transfer.setTransferState(TransferState.PROCESSING);
-				transfer.setLastTransferStatus(TransferStatus.OK);
+				transfer.setLastTransferStatus(TransferStatusEnum.OK);
 
 				localIRODSTransferDAO.save(transfer);
 			}
@@ -143,7 +143,7 @@ public class TransferQueueServiceImpl implements TransferQueueService {
 		enqueuedTransfer.setGridAccount(gridAccount);
 		enqueuedTransfer.setTransferType(TransferType.PUT);
 		enqueuedTransfer.setTransferState(TransferState.ENQUEUED);
-		enqueuedTransfer.setLastTransferStatus(TransferStatus.OK);
+		enqueuedTransfer.setLastTransferStatus(TransferStatusEnum.OK);
 
 		this.updateLocalIRODSTransfer(enqueuedTransfer);
 
@@ -183,7 +183,7 @@ public class TransferQueueServiceImpl implements TransferQueueService {
 		enqueuedTransfer.setGridAccount(gridAccount);
 		enqueuedTransfer.setTransferType(TransferType.SYNCH);
 		enqueuedTransfer.setTransferState(TransferState.ENQUEUED);
-		enqueuedTransfer.setLastTransferStatus(TransferStatus.OK);
+		enqueuedTransfer.setLastTransferStatus(TransferStatusEnum.OK);
 		enqueuedTransfer.setSynchronization(synchronization);
 		synchronization.getTransfers().add(enqueuedTransfer);
 		localIRODSTransferDAO.save(enqueuedTransfer);
@@ -231,7 +231,7 @@ public class TransferQueueServiceImpl implements TransferQueueService {
 		enqueuedTransfer.setGridAccount(gridAccount);
 		enqueuedTransfer.setTransferType(TransferType.GET);
 		enqueuedTransfer.setTransferState(TransferState.ENQUEUED);
-		enqueuedTransfer.setLastTransferStatus(TransferStatus.OK);
+		enqueuedTransfer.setLastTransferStatus(TransferStatusEnum.OK);
 
 		try {
 			log.info("saving...{}", enqueuedTransfer);
@@ -281,7 +281,7 @@ public class TransferQueueServiceImpl implements TransferQueueService {
 					.findById(localIRODSTransfer.getId());
 
 			mergedTransfer.setTransferState(TransferState.COMPLETE);
-			mergedTransfer.setLastTransferStatus(TransferStatus.ERROR);
+			mergedTransfer.setLastTransferStatus(TransferStatusEnum.ERROR);
 
 			if (errorException != null) {
 				log.warn("setting global exception to:{}", errorException);
@@ -352,7 +352,7 @@ public class TransferQueueServiceImpl implements TransferQueueService {
 		log.debug("entering getErrorQueue()");
 		try {
 			List<Transfer> localIRODSTransferList = localIRODSTransferDAO
-					.findByTransferStatus(80, TransferStatus.ERROR);
+					.findByTransferStatus(80, TransferStatusEnum.ERROR);
 			return localIRODSTransferList;
 		} catch (TransferDAOException e) {
 			throw new JargonException(e);
@@ -371,7 +371,7 @@ public class TransferQueueServiceImpl implements TransferQueueService {
 		try {
 
 			List<Transfer> localIRODSTransferList = localIRODSTransferDAO
-					.findByTransferStatus(80, TransferStatus.WARNING);
+					.findByTransferStatus(80, TransferStatusEnum.WARNING);
 			return localIRODSTransferList;
 		} catch (TransferDAOException e) {
 			throw new JargonException(e);
@@ -613,7 +613,7 @@ public class TransferQueueServiceImpl implements TransferQueueService {
 		enqueuedTransfer.setGridAccount(gridAccount);
 		enqueuedTransfer.setTransferType(TransferType.REPLICATE);
 		enqueuedTransfer.setTransferState(TransferState.ENQUEUED);
-		enqueuedTransfer.setLastTransferStatus(TransferStatus.OK);
+		enqueuedTransfer.setLastTransferStatus(TransferStatusEnum.OK);
 
 		try {
 			localIRODSTransferDAO.save(enqueuedTransfer);
@@ -665,7 +665,7 @@ public class TransferQueueServiceImpl implements TransferQueueService {
 		enqueuedTransfer.setGridAccount(gridAccount);
 		enqueuedTransfer.setTransferType(TransferType.COPY);
 		enqueuedTransfer.setTransferState(TransferState.ENQUEUED);
-		enqueuedTransfer.setLastTransferStatus(TransferStatus.OK);
+		enqueuedTransfer.setLastTransferStatus(TransferStatusEnum.OK);
 
 		try {
 			localIRODSTransferDAO.save(enqueuedTransfer);
@@ -701,7 +701,7 @@ public class TransferQueueServiceImpl implements TransferQueueService {
 			Transfer txfrToCancel = localIRODSTransferDAO
 					.findById(localIRODSTransfer.getId());
 			if (!txfrToCancel.getTransferState().equals(TransferState.COMPLETE)) {
-				txfrToCancel.setLastTransferStatus(TransferStatus.OK);
+				txfrToCancel.setLastTransferStatus(TransferStatusEnum.OK);
 				txfrToCancel.setTransferState(TransferState.CANCELLED);
 				localIRODSTransferDAO.save(txfrToCancel);
 				log.info("status set to cancelled");
@@ -755,7 +755,7 @@ public class TransferQueueServiceImpl implements TransferQueueService {
 			throws JargonException {
 
 		try {
-			transferToReset.setLastTransferStatus(TransferStatus.OK);
+			transferToReset.setLastTransferStatus(TransferStatusEnum.OK);
 			transferToReset.setTransferState(TransferState.ENQUEUED);
 			localIRODSTransferDAO.save(transferToReset);
 			log.info("status set to enqueued");

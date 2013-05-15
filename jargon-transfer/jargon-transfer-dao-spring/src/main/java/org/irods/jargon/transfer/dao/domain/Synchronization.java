@@ -80,7 +80,7 @@ public class Synchronization {
 	 */
 	@Column(name = "last_synchronization_status")
 	@Enumerated(EnumType.STRING)
-	private TransferStatus lastSynchronizationStatus;
+	private TransferStatusEnum lastSynchronizationStatus;
 
 	/**
 	 * Message associated with the last synchronization attempt
@@ -185,7 +185,7 @@ public class Synchronization {
 	/**
 	 * @return the lastSynchronizationStatus
 	 */
-	public TransferStatus getLastSynchronizationStatus() {
+	public TransferStatusEnum getLastSynchronizationStatus() {
 		return lastSynchronizationStatus;
 	}
 
@@ -194,7 +194,7 @@ public class Synchronization {
 	 *            the lastSynchronizationStatus to set
 	 */
 	public void setLastSynchronizationStatus(
-			final TransferStatus lastSynchronizationStatus) {
+			final TransferStatusEnum lastSynchronizationStatus) {
 		this.lastSynchronizationStatus = lastSynchronizationStatus;
 	}
 

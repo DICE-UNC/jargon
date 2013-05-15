@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.irods.jargon.transfer.dao.domain.Transfer;
 import org.irods.jargon.transfer.dao.domain.TransferState;
-import org.irods.jargon.transfer.dao.domain.TransferStatus;
+import org.irods.jargon.transfer.dao.domain.TransferStatusEnum;
 
 /**
  * 
@@ -80,7 +80,7 @@ public interface TransferDAO {
 	 * @throws TransferDAOException
 	 */
 	public List<Transfer> findByTransferStatus(int maxResults,
-			TransferStatus... transferStatus) throws TransferDAOException;
+			TransferStatusEnum... transferStatus) throws TransferDAOException;
 
 	/**
 	 * 

@@ -14,7 +14,7 @@ import org.irods.jargon.transfer.dao.domain.Transfer;
 import org.irods.jargon.transfer.dao.domain.TransferAttempt;
 import org.irods.jargon.transfer.dao.domain.TransferItem;
 import org.irods.jargon.transfer.dao.domain.TransferState;
-import org.irods.jargon.transfer.dao.domain.TransferStatus;
+import org.irods.jargon.transfer.dao.domain.TransferStatusEnum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
@@ -168,7 +168,7 @@ public class TransferDAOImpl extends HibernateDaoSupport implements TransferDAO 
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Transfer> findByTransferStatus(final int maxResults,
-			final TransferStatus... transferStatus) throws TransferDAOException {
+			final TransferStatusEnum... transferStatus) throws TransferDAOException {
 		log.debug("entering findByTransferState(int, TransferStatus...)");
 
 		try {
@@ -343,7 +343,7 @@ public class TransferDAOImpl extends HibernateDaoSupport implements TransferDAO 
 			int rows = super.getHibernateTemplate().bulkUpdate(
 					sb.toString(),
 					new Object[] { TransferState.COMPLETE,
-							TransferState.CANCELLED, TransferStatus.OK });
+							TransferState.CANCELLED, TransferStatusEnum.OK });
 			log.debug("deleted items count= {}", rows);
 
 			sb = new StringBuilder();
@@ -354,7 +354,7 @@ public class TransferDAOImpl extends HibernateDaoSupport implements TransferDAO 
 			rows = super.getHibernateTemplate().bulkUpdate(
 					sb.toString(),
 					new Object[] { TransferState.COMPLETE,
-							TransferState.CANCELLED, TransferStatus.OK });
+							TransferState.CANCELLED, TransferStatusEnum.OK });
 
 			log.debug("deleted transfers count= {}", rows);
 

@@ -14,7 +14,7 @@ import org.irods.jargon.transfer.dao.domain.Transfer;
 import org.irods.jargon.transfer.dao.domain.Synchronization;
 import org.irods.jargon.transfer.dao.domain.SynchronizationType;
 import org.irods.jargon.transfer.dao.domain.TransferState;
-import org.irods.jargon.transfer.dao.domain.TransferStatus;
+import org.irods.jargon.transfer.dao.domain.TransferStatusEnum;
 import org.irods.jargon.transfer.dao.domain.TransferType;
 import org.irods.jargon.transfer.util.DomainUtils;
 import org.junit.AfterClass;
@@ -231,7 +231,7 @@ public class SynchronizationDAOTest {
 		transfer.setSynchronization(synchronization);
 		transfer.setGridAccount(gridAccount);
 		transfer.setTransferState(TransferState.ENQUEUED);
-		transfer.setLastTransferStatus(TransferStatus.OK);
+		transfer.setLastTransferStatus(TransferStatusEnum.OK);
 		transfer.setTransferType(TransferType.SYNCH);
 		synchronization.getTransfers().add(transfer);
 
@@ -273,7 +273,7 @@ public class SynchronizationDAOTest {
 		transfer.setSynchronization(synchronization);
 		transfer.setGridAccount(gridAccount);
 		transfer.setTransferState(TransferState.ENQUEUED);
-		transfer.setLastTransferStatus(TransferStatus.OK);
+		transfer.setLastTransferStatus(TransferStatusEnum.OK);
 		transfer.setTransferType(TransferType.SYNCH);
 		synchronization.getTransfers().add(transfer);
 

@@ -18,8 +18,9 @@ import org.irods.jargon.transfer.dao.domain.TransferType;
 public interface QueueManagerService {
 
 	/**
-	 * Cause a put operation (transfer to iRODS) to occur. This transfer will be
-	 * based on the given iRODS account information.
+	 * Add a transfer operation to the queue. This transfer will be based on the
+	 * given iRODS account information. The transfer will be scheduled for later
+	 * execution.
 	 * 
 	 * @param transfer
 	 *            {@link Transfer} to be executed
@@ -35,7 +36,10 @@ public interface QueueManagerService {
 
 	/**
 	 * Signal that,if the queue is not busy, that the next pending operation
-	 * should be launched
+	 * should be launched. This may be safely called even if the queue is busy
+	 * (the call will be ignored) or if there are no transfers to process. This
+	 * method is suitable for calling by a timer process, for example, that
+	 * checks for any pending work.
 	 * 
 	 * @throws ConveyerExecutionException
 	 */
@@ -43,7 +47,11 @@ public interface QueueManagerService {
 
 	/**
 	 * Convenience function for iDrop to start a transfer based on the given
-	 * iRODS account information.
+	 * iRODS account information. This transfer will be based on the given iRODS
+	 * account information. The transfer will be scheduled for later execution.
+	 * <p/>
+	 * This method creates a <code>Transfer</code> based on the provided path
+	 * and operation details, and places it in the queue.
 	 * 
 	 * @param irodsFile
 	 *            String full path of iRODS file/folder for get or put
@@ -55,9 +63,9 @@ public interface QueueManagerService {
 	 *            {@link TransferType} type of transfer - GET, PUT, etc
 	 * @throws ConveyorExecutionException
 	 */
-	void processTransfer(final String irodsFile, final String localFile,
-			final IRODSAccount irodsAccount, final TransferType type)
-			throws ConveyorExecutionException;
+	void enqueueTransferOperation(final String irodsFile,
+			final String localFile, final IRODSAccount irodsAccount,
+			final TransferType type) throws ConveyorExecutionException;
 
 	/**
 	 * Purge all of contents of queue, no matter what the status
@@ -81,7 +89,7 @@ public interface QueueManagerService {
 	List<Transfer> listAllTransfersInQueue() throws ConveyorExecutionException;
 
 	/**
-	 * Get a filled out (children initialized) depiction of a transfer.
+	 * Get a filled out (children initialized) representation of a transfer.
 	 * 
 	 * @param transfer
 	 *            {@link Transfer} that will be updated in place with
@@ -89,6 +97,20 @@ public interface QueueManagerService {
 	 * @throws ConveyorExecutionException
 	 */
 	Transfer initializeGivenTransferByLoadingChildren(Transfer transfer)
+			throws ConveyorExecutionException;
+
+	/**
+	 * Given an id, look up the transfer information in the database.
+	 * 
+	 * @param transferId
+	 *            <code>long</code> with the transfer id
+	 * @return {@link Transfer}, with all children except transfer items,
+	 *         initialized. This is done for efficiency, as the transfer items
+	 *         can be quite large. Note that <code>null</code> will be returned
+	 *         if the transfer cannot be found.
+	 * @throws ConveyorExecutionException
+	 */
+	Transfer findTransferByTransferId(final long transferId)
 			throws ConveyorExecutionException;
 
 }

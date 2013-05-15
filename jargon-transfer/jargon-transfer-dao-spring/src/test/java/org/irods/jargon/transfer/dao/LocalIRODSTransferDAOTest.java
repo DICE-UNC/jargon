@@ -10,7 +10,7 @@ import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.irods.jargon.transfer.dao.domain.GridAccount;
 import org.irods.jargon.transfer.dao.domain.Transfer;
 import org.irods.jargon.transfer.dao.domain.TransferState;
-import org.irods.jargon.transfer.dao.domain.TransferStatus;
+import org.irods.jargon.transfer.dao.domain.TransferStatusEnum;
 import org.irods.jargon.transfer.dao.domain.TransferType;
 import org.irods.jargon.transfer.util.DomainUtils;
 import org.junit.AfterClass;
@@ -65,7 +65,7 @@ public class LocalIRODSTransferDAOTest {
 		enqueuedTransfer.setGridAccount(gridAccount);
 		enqueuedTransfer.setTransferType(TransferType.PUT);
 		enqueuedTransfer.setTransferState(TransferState.PROCESSING);
-		enqueuedTransfer.setLastTransferStatus(TransferStatus.ERROR);
+		enqueuedTransfer.setLastTransferStatus(TransferStatusEnum.ERROR);
 		assertTrue(enqueuedTransfer.getId() == null);
 		transferDAO.save(enqueuedTransfer);
 		assertTrue(enqueuedTransfer.getId() != null);
@@ -86,7 +86,7 @@ public class LocalIRODSTransferDAOTest {
 		enqueuedTransfer.setTransferType(TransferType.PUT);
 		enqueuedTransfer.setGridAccount(gridAccount);
 		enqueuedTransfer.setTransferState(TransferState.COMPLETE);
-		enqueuedTransfer.setLastTransferStatus(TransferStatus.OK);
+		enqueuedTransfer.setLastTransferStatus(TransferStatusEnum.OK);
 
 		assertTrue(enqueuedTransfer.getId() == null);
 

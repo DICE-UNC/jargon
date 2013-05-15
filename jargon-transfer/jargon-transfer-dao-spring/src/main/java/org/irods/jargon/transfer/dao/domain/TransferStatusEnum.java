@@ -1,6 +1,6 @@
 package org.irods.jargon.transfer.dao.domain;
 
-public enum TransferStatus {
+public enum TransferStatusEnum {
 
 	ERROR,
 

@@ -266,8 +266,17 @@ public class BasicQueueManagerServiceImpl extends
 
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.conveyor.core.QueueManagerService#processTransfer(java
+	 * .lang.String, java.lang.String,
+	 * org.irods.jargon.core.connection.IRODSAccount,
+	 * org.irods.jargon.transfer.dao.domain.TransferType)
+	 */
 	@Override
-	public void processTransfer(String irodsFile, String localFile,
+	public void enqueueTransferOperation(String irodsFile, String localFile,
 			IRODSAccount irodsAccount, TransferType type)
 			throws ConveyorExecutionException {
 		log.info("processTransfer()");
@@ -386,6 +395,25 @@ public class BasicQueueManagerServiceImpl extends
 	 */
 	public void setConveyorService(ConveyorService conveyorService) {
 		this.conveyorService = conveyorService;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.conveyor.core.QueueManagerService#findTransferByTransferId
+	 * (long)
+	 */
+	@Override
+	public Transfer findTransferByTransferId(long transferId)
+			throws ConveyorExecutionException {
+		log.info("initializeGivenTransferByLoadingChildren");
+		try {
+			return transferDAO.findInitializedById(transferId);
+		} catch (TransferDAOException e) {
+			log.error("error in dao finding transfer by id");
+			throw new ConveyorExecutionException(e);
+		}
 	}
 
 }

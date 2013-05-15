@@ -3,7 +3,7 @@ package org.irods.jargon.transfer.dao;
 import java.util.List;
 
 import org.irods.jargon.transfer.dao.domain.TransferAttempt;
-import org.irods.jargon.transfer.dao.domain.TransferStatus;
+import org.irods.jargon.transfer.dao.domain.TransferStatusEnum;
 
 /**
  * 
@@ -41,7 +41,7 @@ public interface TransferAttemptDAO {
 	 * @throws TransferDAOException
 	 */
 	public List<TransferAttempt> findByTransferAttemptStatus(int maxResults,
-			TransferStatus... transferStatus) throws TransferDAOException;
+			TransferStatusEnum... transferStatus) throws TransferDAOException;
 
 	/**
 	 * Find the last <code>TransferAttempt</code> (most recent) if it exists for

@@ -6,7 +6,7 @@ import org.irods.jargon.transfer.dao.TransferAttemptDAO;
 import org.irods.jargon.transfer.dao.TransferDAOException;
 import org.irods.jargon.transfer.dao.domain.Transfer;
 import org.irods.jargon.transfer.dao.domain.TransferAttempt;
-import org.irods.jargon.transfer.dao.domain.TransferStatus;
+import org.irods.jargon.transfer.dao.domain.TransferStatusEnum;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 /**
@@ -66,7 +66,7 @@ public class TransferAttemptDAOImpl extends HibernateDaoSupport implements
 	 */
 	@Override
 	public List<TransferAttempt> findByTransferAttemptStatus(int maxResults,
-			TransferStatus... transferStatus) throws TransferDAOException {
+			TransferStatusEnum... transferStatus) throws TransferDAOException {
 		throw new UnsupportedOperationException("Not supported yet.");
 	}
 
