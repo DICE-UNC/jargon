@@ -5,7 +5,6 @@ import java.util.Properties;
 
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 import org.irods.jargon.core.transfer.TransferControlBlock;
-import org.irods.jargon.transfer.TransferEngineException;
 import org.irods.jargon.transfer.dao.domain.ConfigurationProperty;
 
 /**

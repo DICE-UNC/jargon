@@ -13,7 +13,6 @@ import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.utils.MiscIRODSUtils;
 import org.irods.jargon.datautils.datacache.CacheEncryptor;
-import org.irods.jargon.transfer.TransferEngineException;
 import org.irods.jargon.transfer.dao.GridAccountDAO;
 import org.irods.jargon.transfer.dao.KeyStoreDAO;
 import org.irods.jargon.transfer.dao.TransferDAOException;
@@ -367,7 +366,7 @@ public class GridAccountServiceImpl extends AbstractConveyorComponentService
 	 * 
 	 * @param previousPassPhrase
 	 * @param passPhrase
-	 * @throws TransferEngineException
+	 * @throws ConveyorExecutionException
 	 */
 	private void updateStoredGridAccountsForNewPassPhrase(
 			String previousPassPhrase, String passPhrase)
@@ -378,7 +377,7 @@ public class GridAccountServiceImpl extends AbstractConveyorComponentService
 
 			if (!gridAccounts.isEmpty()) {
 				if (previousPassPhrase == null || previousPassPhrase.isEmpty()) {
-					throw new TransferEngineException(
+					throw new ConveyorExecutionException(
 							"no cached pass phrase, and accounts already exist");
 				}
 			}
