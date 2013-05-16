@@ -1,6 +1,7 @@
 package org.irods.jargon.conveyor.basic;
 
 import java.sql.Timestamp;
+import java.util.List;
 import java.util.Properties;
 
 import junit.framework.Assert;
@@ -644,7 +645,73 @@ public class TransferAccountingManagementServiceImplTest {
 
 	@Test
 	public void testUpdateTransferAfterFailedFileTransfer() throws Exception {
+		String testUserName = "user1";
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountForIRODSUserFromTestPropertiesForGivenUser(
+						testingProperties, testUserName, testUserName);
+		String passPhrase = irodsAccount.getUserName();
+		gridAccountService.validatePassPhrase(passPhrase);
+		GridAccount gridAccount = gridAccountService
+				.addOrUpdateGridAccountBasedOnIRODSAccount(irodsAccount);
+
+		ConfigurationProperty logSuccessful = new ConfigurationProperty();
+		logSuccessful
+				.setPropertyKey(ConfigurationPropertyConstants.LOG_SUCCESSFUL_FILES_KEY);
+		logSuccessful.setPropertyValue("true");
+		configurationService.addConfigurationProperty(logSuccessful);
+
+		ConfigurationProperty logRestart = new ConfigurationProperty();
+		logRestart
+				.setPropertyKey(ConfigurationPropertyConstants.LOG_RESTART_FILES);
+		logRestart.setPropertyValue("true");
+		configurationService.addConfigurationProperty(logRestart);
+
+		Transfer transfer = new Transfer();
+		transfer.setCreatedAt(new Timestamp(System.currentTimeMillis()));
+		transfer.setIrodsAbsolutePath("/path");
+		transfer.setLocalAbsolutePath("/local");
+		transfer.setTransferType(TransferType.PUT);
+		transfer.setGridAccount(gridAccount);
+
+		TransferAttempt transferAttempt = transferAccountingManagementService
+				.prepareTransferForProcessing(transfer);
+		transferAttempt = transferAccountingManagementService
+				.prepareTransferForExecution(transferAttempt.getTransfer());
+
+		// cause an error now after 1 file
+		JargonException myException;
+		try {
+			throw new JargonException("blah");
+		} catch (JargonException je) {
+			myException = je;
+		}
+
+		TransferStatus status = TransferStatus.instanceForException(
+				TransferStatus.TransferType.GET, transfer
+						.getIrodsAbsolutePath(), transfer
+						.getLocalAbsolutePath(), transfer.getGridAccount()
+						.getDefaultResource(), 0L, 0L, 0, 0, myException,
+				irodsAccount.getHost(), irodsAccount.getZone());
+
+		transferAccountingManagementService
+				.updateTransferAfterFailedFileTransfer(status, transferAttempt);
+
+		List<TransferItem> transferItems = transferAttempt.getTransferItems();
+		TransferItem failureItem = transferItems.get(0);
+		Assert.assertFalse("no transfer items", transferItems.isEmpty());
+		Assert.assertEquals("should have transfer type of PUT",
+				TransferType.PUT, failureItem.getTransferType());
+		Assert.assertEquals("wrong source path",
+				status.getSourceFileAbsolutePath(),
+				failureItem.getSourceFileAbsolutePath());
+		Assert.assertEquals("wrong target path",
+				status.getTargetFileAbsolutePath(),
+				failureItem.getTargetFileAbsolutePath());
+		Assert.assertEquals("did not set exception message",
+				myException.getMessage(), failureItem.getErrorMessage());
+		Assert.assertFalse("did not fill in stack trace", failureItem
+				.getErrorStackTrace().isEmpty());
+		Assert.assertTrue("should be marked as an error", failureItem.isError());
 
 	}
-
 }
