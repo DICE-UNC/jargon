@@ -1,6 +1,6 @@
 package org.irods.jargon.conveyor.basic;
 
-import java.util.Date;
+import java.sql.Timestamp;
 import java.util.Properties;
 
 import junit.framework.Assert;
@@ -22,6 +22,7 @@ import org.irods.jargon.transfer.dao.domain.ConfigurationProperty;
 import org.irods.jargon.transfer.dao.domain.GridAccount;
 import org.irods.jargon.transfer.dao.domain.Transfer;
 import org.irods.jargon.transfer.dao.domain.TransferAttempt;
+import org.irods.jargon.transfer.dao.domain.TransferItem;
 import org.irods.jargon.transfer.dao.domain.TransferStateEnum;
 import org.irods.jargon.transfer.dao.domain.TransferStatusEnum;
 import org.irods.jargon.transfer.dao.domain.TransferType;
@@ -93,7 +94,7 @@ public class TransferAccountingManagementServiceImplTest {
 				.addOrUpdateGridAccountBasedOnIRODSAccount(irodsAccount);
 
 		Transfer transfer = new Transfer();
-		transfer.setCreatedAt(new Date());
+		transfer.setCreatedAt(new Timestamp(System.currentTimeMillis()));
 		transfer.setIrodsAbsolutePath("/path");
 		transfer.setLocalAbsolutePath("local");
 		transfer.setTransferType(TransferType.PUT);
@@ -137,7 +138,7 @@ public class TransferAccountingManagementServiceImplTest {
 				.addOrUpdateGridAccountBasedOnIRODSAccount(irodsAccount);
 
 		Transfer transfer = new Transfer();
-		transfer.setCreatedAt(new Date());
+		transfer.setCreatedAt(new Timestamp(System.currentTimeMillis()));
 		transfer.setIrodsAbsolutePath("/path");
 		transfer.setLocalAbsolutePath("local");
 		transfer.setTransferType(TransferType.PUT);
@@ -199,7 +200,7 @@ public class TransferAccountingManagementServiceImplTest {
 				.addOrUpdateGridAccountBasedOnIRODSAccount(irodsAccount);
 
 		Transfer transfer = new Transfer();
-		transfer.setCreatedAt(new Date());
+		transfer.setCreatedAt(new Timestamp(System.currentTimeMillis()));
 		transfer.setIrodsAbsolutePath("/path");
 		transfer.setLocalAbsolutePath("local");
 		transfer.setTransferType(TransferType.PUT);
@@ -267,7 +268,7 @@ public class TransferAccountingManagementServiceImplTest {
 		configurationService.addConfigurationProperty(logRestart);
 
 		Transfer transfer = new Transfer();
-		transfer.setCreatedAt(new Date());
+		transfer.setCreatedAt(new Timestamp(System.currentTimeMillis()));
 		transfer.setIrodsAbsolutePath("/path");
 		transfer.setLocalAbsolutePath("/local");
 		transfer.setTransferType(TransferType.PUT);
@@ -329,9 +330,6 @@ public class TransferAccountingManagementServiceImplTest {
 		transferAccountingManagementService
 				.prepareTransferForRestart(attemptWith1Successful.getTransfer()
 						.getId());
-
-		transfer = queueManagerService.findTransferByTransferId(transfer
-				.getId());
 
 		Assert.assertEquals("with restart, should have status enqueued",
 				TransferStateEnum.ENQUEUED, transfer.getTransferState());
@@ -453,7 +451,7 @@ public class TransferAccountingManagementServiceImplTest {
 		configurationService.addConfigurationProperty(logRestart);
 
 		Transfer transfer = new Transfer();
-		transfer.setCreatedAt(new Date());
+		transfer.setCreatedAt(new Timestamp(System.currentTimeMillis()));
 		transfer.setIrodsAbsolutePath("/path");
 		transfer.setLocalAbsolutePath("/local");
 		transfer.setTransferType(TransferType.PUT);
@@ -501,6 +499,146 @@ public class TransferAccountingManagementServiceImplTest {
 
 	@Test
 	public void testUpdateTransferAfterRestartFileSkipped() throws Exception {
+		String testUserName = "user1";
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountForIRODSUserFromTestPropertiesForGivenUser(
+						testingProperties, testUserName, testUserName);
+		String passPhrase = irodsAccount.getUserName();
+		gridAccountService.validatePassPhrase(passPhrase);
+		GridAccount gridAccount = gridAccountService
+				.addOrUpdateGridAccountBasedOnIRODSAccount(irodsAccount);
+
+		ConfigurationProperty logSuccessful = new ConfigurationProperty();
+		logSuccessful
+				.setPropertyKey(ConfigurationPropertyConstants.LOG_SUCCESSFUL_FILES_KEY);
+		logSuccessful.setPropertyValue("true");
+		configurationService.addConfigurationProperty(logSuccessful);
+
+		ConfigurationProperty logRestart = new ConfigurationProperty();
+		logRestart
+				.setPropertyKey(ConfigurationPropertyConstants.LOG_RESTART_FILES);
+		logRestart.setPropertyValue("true");
+		configurationService.addConfigurationProperty(logRestart);
+
+		Transfer transfer = new Transfer();
+		transfer.setCreatedAt(new Timestamp(System.currentTimeMillis()));
+		transfer.setIrodsAbsolutePath("/path");
+		transfer.setLocalAbsolutePath("/local");
+		transfer.setTransferType(TransferType.PUT);
+		transfer.setGridAccount(gridAccount);
+
+		TransferAttempt transferAttempt = transferAccountingManagementService
+				.prepareTransferForProcessing(transfer);
+		transferAttempt = transferAccountingManagementService
+				.prepareTransferForExecution(transferAttempt.getTransfer());
+		TransferStatus status = TransferStatus.instance(
+				TransferStatus.TransferType.PUT, "/local/1.txt", "/path", "",
+				100L, 100L, 1, 2, TransferState.IN_PROGRESS_COMPLETE_FILE,
+				irodsAccount.getHost(), irodsAccount.getZone());
+
+		transferAccountingManagementService
+				.updateTransferAfterSuccessfulFileTransfer(status,
+						transferAttempt);
+
+		TransferAttempt attempts[] = new TransferAttempt[transfer
+				.getTransferAttempts().size()];
+		attempts = transfer.getTransferAttempts().toArray(attempts);
+
+		Assert.assertEquals(1, attempts.length);
+		TransferAttempt attemptWith1Successful = attempts[attempts.length - 1];
+
+		Assert.assertNull("should not be an end date for attempt",
+				attemptWith1Successful.getAttemptEnd());
+		Assert.assertNotNull("no transfer attempt status set",
+				attemptWith1Successful.getAttemptStatus());
+		Assert.assertEquals("should have an error attempt status",
+				TransferStatusEnum.OK,
+				attemptWith1Successful.getAttemptStatus());
+		Assert.assertEquals("/local/1.txt",
+				attemptWith1Successful.getLastSuccessfulPath());
+		Assert.assertEquals(1,
+				attemptWith1Successful.getTotalFilesTransferredSoFar());
+		Assert.assertEquals(2, attemptWith1Successful.getTotalFilesCount());
+
+		// cause an error now after 1 file
+		JargonException myException;
+		try {
+			throw new JargonException("blah");
+		} catch (JargonException je) {
+			myException = je;
+		}
+
+		TransferStatus overallStatus = TransferStatus.instanceForException(
+				TransferStatus.TransferType.GET, transfer
+						.getIrodsAbsolutePath(), transfer
+						.getLocalAbsolutePath(), transfer.getGridAccount()
+						.getDefaultResource(), 0L, 0L, 0, 0, myException,
+				irodsAccount.getHost(), irodsAccount.getZone());
+
+		transferAccountingManagementService.updateTransferAfterOverallFailure(
+				overallStatus, attemptWith1Successful);
+
+		// now schedule a restart...
+
+		transferAccountingManagementService
+				.prepareTransferForRestart(attemptWith1Successful.getTransfer()
+						.getId());
+
+		Assert.assertEquals("with restart, should have status enqueued",
+				TransferStateEnum.ENQUEUED, transfer.getTransferState());
+		Assert.assertEquals("should have reset to transfer status of OK",
+				TransferStatusEnum.OK, transfer.getLastTransferStatus());
+
+		TransferAttempt[] attemptsAfterRestart = new TransferAttempt[transfer
+				.getTransferAttempts().size()];
+		transfer.getTransferAttempts().toArray(attemptsAfterRestart);
+
+		Assert.assertEquals(2, attemptsAfterRestart.length);
+		TransferAttempt restartAttempt = attemptsAfterRestart[attemptsAfterRestart.length - 1];
+
+		Assert.assertNull("should not be an end date for attempt",
+				restartAttempt.getAttemptEnd());
+		Assert.assertNull("should not be a start date for attempt",
+				restartAttempt.getAttemptStart());
+		Assert.assertNotNull("no transfer attempt status set",
+				restartAttempt.getAttemptStatus());
+		Assert.assertEquals("should have an OK attempt status",
+				TransferStatusEnum.OK, restartAttempt.getAttemptStatus());
+		Assert.assertEquals("/local/1.txt",
+				restartAttempt.getLastSuccessfulPath());
+
+		// now show the transfer as executing
+		transferAccountingManagementService
+				.prepareTransferForExecution(restartAttempt.getTransfer());
+
+		// now show skipping the first file
+		status = TransferStatus.instance(TransferStatus.TransferType.PUT,
+				"/local/1.txt", "/path", "", 100L, 100L, 1, 2,
+				TransferState.RESTARTING, irodsAccount.getHost(),
+				irodsAccount.getZone());
+
+		transferAccountingManagementService
+				.updateTransferAfterRestartFileSkipped(status, restartAttempt);
+
+		// this should show up under the transfer attempt as a successful,
+		// skipped file
+
+		TransferItem[] itemsAfterRestart = new TransferItem[restartAttempt
+				.getTransferItems().size()];
+		restartAttempt.getTransferItems().toArray(itemsAfterRestart);
+
+		Assert.assertEquals(1, itemsAfterRestart.length);
+		TransferItem restartedItem = itemsAfterRestart[itemsAfterRestart.length - 1];
+		Assert.assertNotNull("null transfer item", restartedItem);
+		Assert.assertEquals("did not set source path",
+				status.getSourceFileAbsolutePath(),
+				restartedItem.getSourceFileAbsolutePath());
+		Assert.assertEquals(status.getTargetFileAbsolutePath(),
+				restartedItem.getTargetFileAbsolutePath());
+		Assert.assertEquals("should not be flagged as an error", false,
+				restartedItem.isError());
+		Assert.assertEquals("should  be flagged as a restart", true,
+				restartedItem.isSkipped());
 
 	}
 

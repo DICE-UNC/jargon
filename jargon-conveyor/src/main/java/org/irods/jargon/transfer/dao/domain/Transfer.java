@@ -1,9 +1,9 @@
 package org.irods.jargon.transfer.dao.domain;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -66,15 +66,15 @@ public class Transfer implements Serializable {
 	private String irodsAbsolutePath = "";
 
 	@OneToMany(mappedBy = "transfer", targetEntity = TransferAttempt.class, cascade = { CascadeType.ALL }, fetch = FetchType.LAZY)
-	@OrderBy("attemptStart")
-	private Set<TransferAttempt> transferAttempts = new HashSet<TransferAttempt>();
+	@OrderBy("createdAt")
+	private List<TransferAttempt> transferAttempts = new ArrayList<TransferAttempt>();
 
 	@Column(name = "created_at")
-	@Temporal(javax.persistence.TemporalType.DATE)
+	@Temporal(javax.persistence.TemporalType.TIMESTAMP)
 	private Date createdAt;
 
 	@Column(name = "updated_at")
-	@Temporal(javax.persistence.TemporalType.DATE)
+	@Temporal(javax.persistence.TemporalType.TIMESTAMP)
 	private Date updatedAt;
 
 	/**
@@ -148,15 +148,16 @@ public class Transfer implements Serializable {
 		return lastTransferStatus;
 	}
 
-	public void setLastTransferStatus(final TransferStatusEnum lastTransferStatus) {
+	public void setLastTransferStatus(
+			final TransferStatusEnum lastTransferStatus) {
 		this.lastTransferStatus = lastTransferStatus;
 	}
 
-	public Set<TransferAttempt> getTransferAttempts() {
+	public List<TransferAttempt> getTransferAttempts() {
 		return transferAttempts;
 	}
 
-	public void setTransferAttempts(final Set<TransferAttempt> transferAttempts) {
+	public void setTransferAttempts(final List<TransferAttempt> transferAttempts) {
 		this.transferAttempts = transferAttempts;
 	}
 

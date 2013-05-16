@@ -2,7 +2,7 @@ package org.irods.jargon.transfer.dao;
 
 import static org.junit.Assert.assertTrue;
 
-import java.util.Date;
+import java.sql.Timestamp;
 import java.util.Properties;
 
 import org.irods.jargon.core.connection.IRODSAccount;
@@ -58,7 +58,8 @@ public class TransferDAOTest {
 				.gridAccountFromIRODSAccount(irodsAccount);
 		gridAccountDAO.save(gridAccount);
 		Transfer enqueuedTransfer = new Transfer();
-		enqueuedTransfer.setCreatedAt(new Date());
+		enqueuedTransfer
+				.setCreatedAt(new Timestamp(System.currentTimeMillis()));
 		enqueuedTransfer.setIrodsAbsolutePath("/tmp");
 		enqueuedTransfer.setLocalAbsolutePath("/tmp");
 		enqueuedTransfer.setGridAccount(gridAccount);

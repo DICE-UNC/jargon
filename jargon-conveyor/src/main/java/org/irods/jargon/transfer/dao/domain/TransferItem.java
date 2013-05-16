@@ -68,7 +68,7 @@ public class TransferItem implements Serializable {
 	private String errorStackTrace;
 
 	@Column(name = "transferred_at")
-	@Temporal(javax.persistence.TemporalType.DATE)
+	@Temporal(javax.persistence.TemporalType.TIMESTAMP)
 	private Date transferredAt;
 
 	public TransferItem() {

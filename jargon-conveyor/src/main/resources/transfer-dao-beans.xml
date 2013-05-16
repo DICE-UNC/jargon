@@ -52,31 +52,31 @@
 
   <!-- ========================= BUSINESS OBJECT DEFINITIONS ========================= -->
 
-  <bean id="transferDAO" class="org.irods.jargon.transfer.dao.spring.TransferDAOImpl">
+  <bean id="transferDAO" class="org.irods.jargon.transfer.dao.impl.TransferDAOImpl">
     <property name="sessionFactory" ref="sessionFactory" />
   </bean>
 
-  <bean id="transferItemDAO" class="org.irods.jargon.transfer.dao.spring.TransferItemDAOImpl">
+  <bean id="transferItemDAO" class="org.irods.jargon.transfer.dao.impl.TransferItemDAOImpl">
     <property name="sessionFactory" ref="sessionFactory" />
   </bean>
   
-  <bean id="transferAttemptDAO" class="org.irods.jargon.transfer.dao.spring.TransferAttemptDAOImpl">
+  <bean id="transferAttemptDAO" class="org.irods.jargon.transfer.dao.impl.TransferAttemptDAOImpl">
     <property name="sessionFactory" ref="sessionFactory" />
   </bean>
   
-  <bean id="gridAccountDAO" class="org.irods.jargon.transfer.dao.spring.GridAccountDAOImpl">
+  <bean id="gridAccountDAO" class="org.irods.jargon.transfer.dao.impl.GridAccountDAOImpl">
     <property name="sessionFactory" ref="sessionFactory" />
   </bean>
 
-  <bean id="synchronizationDAO" class="org.irods.jargon.transfer.dao.spring.SynchronizationDAOImpl">
+  <bean id="synchronizationDAO" class="org.irods.jargon.transfer.dao.impl.SynchronizationDAOImpl">
     <property name="sessionFactory" ref="sessionFactory" />
   </bean>
 
-  <bean id="keyStoreDAO" class="org.irods.jargon.transfer.dao.spring.KeyStoreDAOImpl">
+  <bean id="keyStoreDAO" class="org.irods.jargon.transfer.dao.impl.KeyStoreDAOImpl">
     <property name="sessionFactory" ref="sessionFactory" />
   </bean>
   
-  <bean id="configurationPropertyDAO" class="org.irods.jargon.transfer.dao.spring.ConfigurationPropertyDAOImpl">
+  <bean id="configurationPropertyDAO" class="org.irods.jargon.transfer.dao.impl.ConfigurationPropertyDAOImpl">
     <property name="sessionFactory" ref="sessionFactory" />
   </bean>
   

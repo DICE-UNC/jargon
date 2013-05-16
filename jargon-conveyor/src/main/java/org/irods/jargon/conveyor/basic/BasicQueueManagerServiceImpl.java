@@ -3,7 +3,7 @@
  */
 package org.irods.jargon.conveyor.basic;
 
-import java.util.Date;
+import java.sql.Timestamp;
 import java.util.List;
 
 import org.irods.jargon.conveyor.core.AbstractConveyorComponentService;
@@ -132,7 +132,7 @@ public class BasicQueueManagerServiceImpl extends
 
 		transfer.setGridAccount(gridAccount);
 		transfer.setTransferState(TransferStateEnum.ENQUEUED);
-		transfer.setUpdatedAt(new Date());
+		transfer.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
 
 		/*
 		 * Enqueue triggers a dequeue
@@ -217,14 +217,14 @@ public class BasicQueueManagerServiceImpl extends
 						transfer);
 			}
 
-			transferAttempt.setAttemptStart(new Date());
+			transferAttempt.setAttemptStart(new Timestamp(System
+					.currentTimeMillis()));
 			transfer.setTransferState(TransferStateEnum.PROCESSING);
-			transfer.setUpdatedAt(new Date());
+			transfer.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
 			transferDAO.save(transfer);
 
 			this.getConveyorExecutorService().processTransfer(transferAttempt,
 					this.conveyorService);
-
 		} catch (JargonException je) {
 			log.error("jargon exception dequeue operation, will unlock queue");
 			this.getConveyorExecutorService().setOperationCompleted();
@@ -237,9 +237,7 @@ public class BasicQueueManagerServiceImpl extends
 			this.getConveyorService().getConveyorCallbackListener()
 					.signalUnhandledConveyorException(e);
 			this.dequeueNextOperation();
-
 		}
-
 	}
 
 	/*
@@ -257,7 +255,7 @@ public class BasicQueueManagerServiceImpl extends
 			throws ConveyorExecutionException {
 		log.info("processTransfer()");
 		Transfer transfer = new Transfer();
-		transfer.setCreatedAt(new Date());
+		transfer.setCreatedAt(new Timestamp(System.currentTimeMillis()));
 		transfer.setIrodsAbsolutePath(irodsFile);
 		transfer.setLocalAbsolutePath(localFile);
 		transfer.setTransferType(type);

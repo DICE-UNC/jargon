@@ -1,5 +1,5 @@
 
-package org.irods.jargon.transfer.dao.spring;
+package org.irods.jargon.transfer.dao.impl;
 
 import java.util.List;
 

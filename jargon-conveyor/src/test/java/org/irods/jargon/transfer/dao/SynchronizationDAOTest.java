@@ -1,5 +1,6 @@
 package org.irods.jargon.transfer.dao;
 
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
@@ -223,7 +224,7 @@ public class SynchronizationDAOTest {
 		synchronizationDAO.save(synchronization);
 
 		Transfer transfer = new Transfer();
-		transfer.setCreatedAt(new Date());
+		transfer.setCreatedAt(new Timestamp(System.currentTimeMillis()));
 		transfer.setIrodsAbsolutePath("/irods/path");
 		transfer.setLocalAbsolutePath("/local/path");
 		transfer.setSynchronization(synchronization);
@@ -265,7 +266,7 @@ public class SynchronizationDAOTest {
 		synchronizationDAO.save(synchronization);
 
 		Transfer transfer = new Transfer();
-		transfer.setCreatedAt(new Date());
+		transfer.setCreatedAt(new Timestamp(System.currentTimeMillis()));
 		transfer.setIrodsAbsolutePath(testName);
 		transfer.setLocalAbsolutePath("/local/path");
 		transfer.setSynchronization(synchronization);

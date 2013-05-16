@@ -1,9 +1,9 @@
 package org.irods.jargon.transfer.dao.domain;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -46,11 +46,11 @@ public class TransferAttempt implements Serializable {
 	private Transfer transfer;
 
 	@Column(name = "transfer_attempt_start")
-	@Temporal(javax.persistence.TemporalType.DATE)
+	@Temporal(javax.persistence.TemporalType.TIMESTAMP)
 	private Date attemptStart;
 
 	@Column(name = "transfer_attempt_end")
-	@Temporal(javax.persistence.TemporalType.DATE)
+	@Temporal(javax.persistence.TemporalType.TIMESTAMP)
 	private Date attemptEnd;
 
 	@Column(name = "transfer_attempt_status")
@@ -78,7 +78,15 @@ public class TransferAttempt implements Serializable {
 	@OneToMany(mappedBy = "transferAttempt", targetEntity = TransferItem.class, cascade = { CascadeType.ALL }, fetch = FetchType.LAZY)
 	@OrderBy("transferredAt")
 	@LazyCollection(LazyCollectionOption.EXTRA)
-	private Set<TransferItem> transferItems = new HashSet<TransferItem>();
+	private List<TransferItem> transferItems = new ArrayList<TransferItem>();
+
+	@Column(name = "created_at")
+	@Temporal(javax.persistence.TemporalType.TIMESTAMP)
+	private Date createdAt;
+
+	@Column(name = "updated_at")
+	@Temporal(javax.persistence.TemporalType.TIMESTAMP)
+	private Date updatedAt;
 
 	public TransferAttempt() {
 		super();
@@ -132,11 +140,11 @@ public class TransferAttempt implements Serializable {
 		this.errorMessage = errorMessage;
 	}
 
-	public Set<TransferItem> getTransferItems() {
+	public List<TransferItem> getTransferItems() {
 		return transferItems;
 	}
 
-	public void setTransferItems(final Set<TransferItem> transferItems) {
+	public void setTransferItems(final List<TransferItem> transferItems) {
 		this.transferItems = transferItems;
 	}
 
@@ -206,6 +214,36 @@ public class TransferAttempt implements Serializable {
 		sb.append(totalFilesTransferredSoFar);
 
 		return sb.toString();
+	}
+
+	/**
+	 * @return the createdAt
+	 */
+	public Date getCreatedAt() {
+		return createdAt;
+	}
+
+	/**
+	 * @param createdAt
+	 *            the createdAt to set
+	 */
+	public void setCreatedAt(Date createdAt) {
+		this.createdAt = createdAt;
+	}
+
+	/**
+	 * @return the updatedAt
+	 */
+	public Date getUpdatedAt() {
+		return updatedAt;
+	}
+
+	/**
+	 * @param updatedAt
+	 *            the updatedAt to set
+	 */
+	public void setUpdatedAt(Date updatedAt) {
+		this.updatedAt = updatedAt;
 	}
 
 }

@@ -1,4 +1,4 @@
-package org.irods.jargon.transfer.dao.spring;
+package org.irods.jargon.transfer.dao.impl;
 
 import org.hibernate.Criteria;
 import org.hibernate.Session;
