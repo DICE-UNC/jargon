@@ -10,6 +10,7 @@ import org.irods.jargon.conveyor.core.GridAccountService;
 import org.irods.jargon.conveyor.core.RejectedTransferException;
 import org.irods.jargon.conveyor.core.TransferAccountingManagementService;
 import org.irods.jargon.conveyor.utils.ExceptionUtils;
+import org.irods.jargon.core.transfer.TransferStatus;
 import org.irods.jargon.transfer.dao.TransferAttemptDAO;
 import org.irods.jargon.transfer.dao.TransferDAO;
 import org.irods.jargon.transfer.dao.TransferDAOException;
@@ -399,6 +400,42 @@ public class TransferAccountingManagementServiceImpl extends
 	 * (non-Javadoc)
 	 * 
 	 * @see org.irods.jargon.conveyor.core.TransferAccountingManagementService#
+	 * updateTransferAfterOverallWarningByFileErrorThreshold
+	 * (org.irods.jargon.core.transfer.TransferStatus,
+	 * org.irods.jargon.transfer.dao.domain.TransferAttempt)
+	 */
+	@Override
+	public void updateTransferAfterOverallWarningByFileErrorThreshold(
+			TransferStatus transferStatus, TransferAttempt transferAttempt)
+			throws ConveyorExecutionException {
+		log.info("updateTransferStatusAfterOverallWarning()");
+		this.transferUpdateOverall(transferStatus, transferAttempt,
+				TransferStatusEnum.WARNING, WARNING_SOME_FAILED_MESSAGE);
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.conveyor.core.TransferAccountingManagementService#
+	 * updateTransferAfterOverallFailureByFileErrorThreshold
+	 * (org.irods.jargon.core.transfer.TransferStatus,
+	 * org.irods.jargon.transfer.dao.domain.TransferAttempt)
+	 */
+	@Override
+	public void updateTransferAfterOverallFailureByFileErrorThreshold(
+			TransferStatus transferStatus, TransferAttempt transferAttempt)
+			throws ConveyorExecutionException {
+		log.info("updateTransferStatusAfterOverallWarning()");
+		this.transferUpdateOverall(transferStatus, transferAttempt,
+				TransferStatusEnum.ERROR, ERROR_SOME_FAILED_MESSAGE);
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.conveyor.core.TransferAccountingManagementService#
 	 * updateTransferAfterOverallSuccess
 	 * (org.irods.jargon.core.transfer.TransferStatus,
 	 * org.irods.jargon.transfer.dao.domain.TransferAttempt)
@@ -410,6 +447,30 @@ public class TransferAccountingManagementServiceImpl extends
 			throws ConveyorExecutionException {
 
 		log.info("updateTransferAfterOverallSuccess()");
+
+		this.transferUpdateOverall(transferStatus, transferAttempt,
+				TransferStatusEnum.OK, null);
+	}
+
+	/**
+	 * Handle details of updating the transfer status with an OK, Success, or
+	 * Failure status as described by the parameters
+	 * 
+	 * @param transferStatus
+	 *            {@link TransferStatus} for overall completion
+	 * @param transferAttempt
+	 *            {@link TransferAttempt}
+	 * @param transferStatusEnum
+	 * @param errorMessage
+	 * @throws ConveyorExecutionException
+	 */
+	private void transferUpdateOverall(
+			final org.irods.jargon.core.transfer.TransferStatus transferStatus,
+			final TransferAttempt transferAttempt,
+			final TransferStatusEnum transferStatusEnum,
+			final String errorMessage) throws ConveyorExecutionException {
+
+		log.info("transferUpdateOverall()");
 
 		if (transferStatus == null) {
 			throw new IllegalArgumentException("null transferStatus");
@@ -423,15 +484,15 @@ public class TransferAccountingManagementServiceImpl extends
 		log.info("transferStatus:{}", transferStatus);
 
 		Transfer transfer = transferAttempt.getTransfer();
-		transfer.setLastTransferStatus(TransferStatusEnum.OK); // FIXME...evaluate
-																// transfer for
-																// errors
+
+		transfer.setLastTransferStatus(transferStatusEnum);
 		transfer.setTransferState(TransferStateEnum.COMPLETE);
 		transfer.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
 		transferAttempt
 				.setAttemptEnd(new Timestamp(System.currentTimeMillis()));
-		transferAttempt.setAttemptStatus(TransferStatusEnum.OK);
+		transferAttempt.setAttemptStatus(transferStatusEnum);
 		transferAttempt.setUpdatedAt(transferAttempt.getAttemptEnd());
+		transferAttempt.setErrorMessage(errorMessage);
 
 		try {
 			transferDAO.save(transfer);
@@ -567,6 +628,12 @@ public class TransferAccountingManagementServiceImpl extends
 
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.conveyor.core.TransferAccountingManagementService#
+	 * prepareTransferForRestart(long)
+	 */
 	@Override
 	public Transfer prepareTransferForRestart(final long transferId)
 			throws ConveyorExecutionException, RejectedTransferException {

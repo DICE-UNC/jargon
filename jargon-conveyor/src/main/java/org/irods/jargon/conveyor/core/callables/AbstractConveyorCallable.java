@@ -19,6 +19,7 @@ import org.irods.jargon.core.transfer.TransferStatus.TransferState;
 import org.irods.jargon.core.transfer.TransferStatusCallbackListener;
 import org.irods.jargon.transfer.dao.domain.GridAccount;
 import org.irods.jargon.transfer.dao.domain.TransferAttempt;
+import org.irods.jargon.transfer.dao.domain.TransferStatusEnum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -471,9 +472,58 @@ public abstract class AbstractConveyorCallable implements
 	private void processOverallCompletionOfTransfer(
 			TransferStatus transferStatus) throws ConveyorExecutionException {
 		log.info("processOverallCompletionOfTransfer");
-		getConveyorService().getTransferAccountingManagementService()
-				.updateTransferAfterOverallSuccess(transferStatus,
-						getTransferAttempt());
+
+		log.info("evaluating transfer status by inspecting items for any file level errors");
+		TransferStatusEnum evaluatedStatus = evaluateTransferErrorsInItemsToSetOverallStatus(transferAttempt);
+
+		log.info("status was:{}", evaluatedStatus);
+
+		if (evaluatedStatus == TransferStatusEnum.OK) {
+			getConveyorService().getTransferAccountingManagementService()
+					.updateTransferAfterOverallSuccess(transferStatus,
+							getTransferAttempt());
+		} else if (evaluatedStatus == TransferStatusEnum.WARNING) {
+			conveyorService.getConveyorExecutorService().setErrorStatus(
+					ErrorStatus.WARNING);
+			getConveyorService().getTransferAccountingManagementService()
+					.updateTransferAfterOverallWarningByFileErrorThreshold(transferStatus,
+							getTransferAttempt());
+		} else if (evaluatedStatus == TransferStatusEnum.ERROR) {
+			conveyorService.getConveyorExecutorService().setErrorStatus(
+					ErrorStatus.ERROR);
+			getConveyorService().getTransferAccountingManagementService()
+					.updateTransferAfterOverallFailureByFileErrorThreshold(
+							transferStatus, getTransferAttempt());
+
+		}
+	}
+
+	/**
+	 * Look at all of the items in the given transfer, and decide whether it's
+	 * OK, or an ERROR or WARNING based on any file by file errors, and whether
+	 * those errors are above or below the error threshold
+	 * 
+	 * @param transferAttempt
+	 * @return
+	 */
+	private TransferStatusEnum evaluateTransferErrorsInItemsToSetOverallStatus(
+			TransferAttempt transferAttempt) {
+
+		TransferStatusEnum status;
+		if (transferControlBlock.getErrorCount() > 0
+				&& transferControlBlock.getErrorCount() < transferControlBlock
+						.getMaximumErrorsBeforeCanceling()) {
+			log.info("transfer had errors but below max");
+			status = TransferStatusEnum.WARNING;
+		} else if (transferControlBlock.getErrorCount() > 0) {
+			log.info("transfer had errors but below max");
+			status = TransferStatusEnum.ERROR;
+		} else {
+			log.info("transfer had no errors");
+			status = TransferStatusEnum.OK;
+		}
+
+		return status;
 	}
 
 	/**

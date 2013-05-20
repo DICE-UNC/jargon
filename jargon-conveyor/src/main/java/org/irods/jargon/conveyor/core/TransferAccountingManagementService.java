@@ -19,6 +19,9 @@ import org.irods.jargon.transfer.dao.domain.TransferAttempt;
 
 public interface TransferAccountingManagementService {
 
+	public static final String WARNING_SOME_FAILED_MESSAGE = "Success, but some file transfers may have failed, please check the transfer details";
+	public static final String ERROR_SOME_FAILED_MESSAGE = "Failure, too many file transfers have failed, please check the transfer details";
+
 	/**
 	 * Set up Transfer Attempt for Transfer about the be processed
 	 * 
@@ -90,8 +93,44 @@ public interface TransferAccountingManagementService {
 			TransferAttempt transferAttempt) throws ConveyorExecutionException;
 
 	/**
+	 * Make necessary updates to the given transfer upon overall completion with
+	 * a warning status (all files or operations involved are complete, but some
+	 * were in error at a level below the warning threshold). This sets the
+	 * overall status and status of the attempt.
+	 * 
+	 * 
+	 * @param transferStatus
+	 *            {@link TransferStatus} from the callback
+	 * @param transferAttempt
+	 *            {@link TransferAttempt}
+	 * @throws ConveyorExecutionException
+	 */
+	void updateTransferAfterOverallWarningByFileErrorThreshold(
+			TransferStatus transferStatus, TransferAttempt transferAttempt)
+			throws ConveyorExecutionException;
+
+	/**
+	 * Make necessary updates to the given transfer upon overall completion with
+	 * a failure status (all files or operations involved are complete, but some
+	 * were in error at a level above the warning threshold). This sets the
+	 * overall status and status of the attempt.
+	 * 
+	 * 
+	 * 
+	 * @param transferStatus
+	 *            {@link TransferStatus} from the callback
+	 * @param transferAttempt
+	 *            {@link TransferAttempt}
+	 * @throws ConveyorExecutionException
+	 */
+	void updateTransferAfterOverallFailureByFileErrorThreshold(
+			TransferStatus transferStatus, TransferAttempt transferAttempt)
+			throws ConveyorExecutionException;
+
+	/**
 	 * Make necessary updates to the given transfer upon overall failure. This
 	 * sets the overall status and status of the attempt.
+	 * 
 	 * 
 	 * @param transferStatus
 	 *            {@link TransferStatus} from the callback
