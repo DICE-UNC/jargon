@@ -273,7 +273,7 @@ public class TransferAccountingManagementServiceImpl extends
 		try {
 			transferItem.setTransferAttempt(localTransferAttempt);
 			localTransferAttempt.getTransferItems().add(transferItem);
-			transferItemDAO.save(transferItem);
+			transferAttemptDAO.save(localTransferAttempt);
 		} catch (TransferDAOException ex) {
 			throw new ConveyorExecutionException(
 					"error saving transfer attempt", ex);
