@@ -36,8 +36,6 @@ public class TransferAccountingManagementServiceImpl extends
 		AbstractConveyorComponentService implements
 		TransferAccountingManagementService {
 
-	public static final String ERROR_ATTEMPTING_TO_RUN = "An error occurred while attempting to create and invoke the transfer process";
-	public static final String ERROR_IN_TRANSFER_AT_IRODS_LEVEL = "An error during the transfer process at the client or in iRODS";
 	/**
 	 * Injected dependency
 	 */
@@ -410,7 +408,27 @@ public class TransferAccountingManagementServiceImpl extends
 			throws ConveyorExecutionException {
 		log.info("updateTransferStatusAfterOverallWarning()");
 		this.transferUpdateOverall(transferStatus, transferAttempt,
-				TransferStatusEnum.WARNING, WARNING_SOME_FAILED_MESSAGE);
+				TransferStatusEnum.WARNING, TransferStateEnum.COMPLETE,
+				WARNING_SOME_FAILED_MESSAGE);
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.conveyor.core.TransferAccountingManagementService#
+	 * updateTransferAfterOverallWarningNoFilesTransferred
+	 * (org.irods.jargon.core.transfer.TransferStatus,
+	 * org.irods.jargon.transfer.dao.domain.TransferAttempt)
+	 */
+	@Override
+	public void updateTransferAfterOverallWarningNoFilesTransferred(
+			TransferStatus transferStatus, TransferAttempt transferAttempt)
+			throws ConveyorExecutionException {
+		log.info("updateTransferAfterOverallWarningNoFilesTransferred()");
+		this.transferUpdateOverall(transferStatus, transferAttempt,
+				TransferStatusEnum.WARNING, TransferStateEnum.COMPLETE,
+				WARNING_NO_FILES_TRANSFERRED_MESSAGE);
 
 	}
 
@@ -428,7 +446,8 @@ public class TransferAccountingManagementServiceImpl extends
 			throws ConveyorExecutionException {
 		log.info("updateTransferStatusAfterOverallWarning()");
 		this.transferUpdateOverall(transferStatus, transferAttempt,
-				TransferStatusEnum.ERROR, ERROR_SOME_FAILED_MESSAGE);
+				TransferStatusEnum.ERROR, TransferStateEnum.COMPLETE,
+				ERROR_SOME_FAILED_MESSAGE);
 
 	}
 
@@ -449,7 +468,26 @@ public class TransferAccountingManagementServiceImpl extends
 		log.info("updateTransferAfterOverallSuccess()");
 
 		this.transferUpdateOverall(transferStatus, transferAttempt,
-				TransferStatusEnum.OK, null);
+				TransferStatusEnum.OK, TransferStateEnum.COMPLETE, null);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.conveyor.core.TransferAccountingManagementService#
+	 * updateTransferAfterCancellation
+	 * (org.irods.jargon.core.transfer.TransferStatus,
+	 * org.irods.jargon.transfer.dao.domain.TransferAttempt)
+	 */
+	@Override
+	public void updateTransferAfterCancellation(TransferStatus transferStatus,
+			TransferAttempt transferAttempt) throws ConveyorExecutionException {
+		log.info("updateTransferAfterOverallSuccess()");
+
+		this.transferUpdateOverall(transferStatus, transferAttempt,
+				TransferStatusEnum.OK, TransferStateEnum.CANCELLED,
+				WARNING_CANCELLED_MESSAGE);
+
 	}
 
 	/**
@@ -461,6 +499,7 @@ public class TransferAccountingManagementServiceImpl extends
 	 * @param transferAttempt
 	 *            {@link TransferAttempt}
 	 * @param transferStatusEnum
+	 * @param transferStateEnum
 	 * @param errorMessage
 	 * @throws ConveyorExecutionException
 	 */
@@ -468,7 +507,8 @@ public class TransferAccountingManagementServiceImpl extends
 			final org.irods.jargon.core.transfer.TransferStatus transferStatus,
 			final TransferAttempt transferAttempt,
 			final TransferStatusEnum transferStatusEnum,
-			final String errorMessage) throws ConveyorExecutionException {
+			final TransferStateEnum transferState, final String errorMessage)
+			throws ConveyorExecutionException {
 
 		log.info("transferUpdateOverall()");
 
@@ -486,7 +526,7 @@ public class TransferAccountingManagementServiceImpl extends
 		Transfer transfer = transferAttempt.getTransfer();
 
 		transfer.setLastTransferStatus(transferStatusEnum);
-		transfer.setTransferState(TransferStateEnum.COMPLETE);
+		transfer.setTransferState(transferState);
 		transfer.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
 		transferAttempt
 				.setAttemptEnd(new Timestamp(System.currentTimeMillis()));

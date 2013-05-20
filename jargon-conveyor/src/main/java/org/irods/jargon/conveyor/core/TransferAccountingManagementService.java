@@ -20,7 +20,11 @@ import org.irods.jargon.transfer.dao.domain.TransferAttempt;
 public interface TransferAccountingManagementService {
 
 	public static final String WARNING_SOME_FAILED_MESSAGE = "Success, but some file transfers may have failed, please check the transfer details";
+	public static final String WARNING_NO_FILES_TRANSFERRED_MESSAGE = "Success, but no files were found to transfer";
+	public static final String WARNING_CANCELLED_MESSAGE = "Transfer was cancelled";
 	public static final String ERROR_SOME_FAILED_MESSAGE = "Failure, too many file transfers have failed, please check the transfer details";
+	public static final String ERROR_ATTEMPTING_TO_RUN = "An error occurred while attempting to create and invoke the transfer process";
+	public static final String ERROR_IN_TRANSFER_AT_IRODS_LEVEL = "An error during the transfer process at the client or in iRODS";
 
 	/**
 	 * Set up Transfer Attempt for Transfer about the be processed
@@ -93,6 +97,20 @@ public interface TransferAccountingManagementService {
 			TransferAttempt transferAttempt) throws ConveyorExecutionException;
 
 	/**
+	 * Make necessary updates to the given transfer upon cancellation. This sets
+	 * the overall status and status of the attempt.
+	 * 
+	 * @param transferStatus
+	 *            {@link TransferStatus} from the callback
+	 * @param transferAttempt
+	 *            {@link TransferAttempt}
+	 * @throws ConveyorExecutionException
+	 */
+	void updateTransferAfterCancellation(
+			org.irods.jargon.core.transfer.TransferStatus transferStatus,
+			TransferAttempt transferAttempt) throws ConveyorExecutionException;
+
+	/**
 	 * Make necessary updates to the given transfer upon overall completion with
 	 * a warning status (all files or operations involved are complete, but some
 	 * were in error at a level below the warning threshold). This sets the
@@ -106,6 +124,20 @@ public interface TransferAccountingManagementService {
 	 * @throws ConveyorExecutionException
 	 */
 	void updateTransferAfterOverallWarningByFileErrorThreshold(
+			TransferStatus transferStatus, TransferAttempt transferAttempt)
+			throws ConveyorExecutionException;
+
+	/**
+	 * Make necessary updates to the given transfer upon overall completion with
+	 * a warning status due to the fact that no files were found to transfer
+	 * 
+	 * @param transferStatus
+	 *            {@link TransferStatus} from the callback
+	 * @param transferAttempt
+	 *            {@link TransferAttempt}
+	 * @throws ConveyorExecutionException
+	 */
+	void updateTransferAfterOverallWarningNoFilesTransferred(
 			TransferStatus transferStatus, TransferAttempt transferAttempt)
 			throws ConveyorExecutionException;
 

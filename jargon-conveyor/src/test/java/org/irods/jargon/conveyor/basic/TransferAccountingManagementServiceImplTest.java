@@ -575,6 +575,76 @@ public class TransferAccountingManagementServiceImplTest {
 	}
 
 	@Test
+	public void testUpdateTransferAfterOverallWarningNoFilesTransferred()
+			throws Exception {
+		String testUserName = "user1";
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountForIRODSUserFromTestPropertiesForGivenUser(
+						testingProperties, testUserName, testUserName);
+		String passPhrase = irodsAccount.getUserName();
+		gridAccountService.validatePassPhrase(passPhrase);
+		GridAccount gridAccount = gridAccountService
+				.addOrUpdateGridAccountBasedOnIRODSAccount(irodsAccount);
+
+		ConfigurationProperty logSuccessful = new ConfigurationProperty();
+		logSuccessful
+				.setPropertyKey(ConfigurationPropertyConstants.LOG_SUCCESSFUL_FILES_KEY);
+		logSuccessful.setPropertyValue("true");
+		configurationService.addConfigurationProperty(logSuccessful);
+
+		ConfigurationProperty logRestart = new ConfigurationProperty();
+		logRestart
+				.setPropertyKey(ConfigurationPropertyConstants.LOG_RESTART_FILES);
+		logRestart.setPropertyValue("true");
+		configurationService.addConfigurationProperty(logRestart);
+
+		Transfer transfer = new Transfer();
+		transfer.setCreatedAt(new Timestamp(System.currentTimeMillis()));
+		transfer.setIrodsAbsolutePath("/path");
+		transfer.setLocalAbsolutePath("/local");
+		transfer.setTransferType(TransferType.PUT);
+		transfer.setGridAccount(gridAccount);
+
+		TransferAttempt transferAttempt = transferAccountingManagementService
+				.prepareTransferForProcessing(transfer);
+		transferAttempt = transferAccountingManagementService
+				.prepareTransferForExecution(transferAttempt.getTransfer());
+
+		TransferStatus overallSuccess = TransferStatus
+				.instance(TransferStatus.TransferType.PUT, "/", "/", "", 1L,
+						1L, 1, 1,
+						TransferStatus.TransferState.OVERALL_COMPLETION,
+						"host", "zone");
+
+		transferAccountingManagementService
+				.updateTransferAfterOverallWarningNoFilesTransferred(
+						overallSuccess, transferAttempt);
+
+		Assert.assertEquals(TransferStatusEnum.WARNING,
+				transfer.getLastTransferStatus());
+
+		TransferAttempt[] attemptsAfterSuccess = new TransferAttempt[transfer
+				.getTransferAttempts().size()];
+		transfer.getTransferAttempts().toArray(attemptsAfterSuccess);
+
+		Assert.assertEquals(1, attemptsAfterSuccess.length);
+		TransferAttempt successfulAttempt = attemptsAfterSuccess[attemptsAfterSuccess.length - 1];
+
+		Assert.assertNotNull("should be an end date for attempt",
+				successfulAttempt.getAttemptEnd());
+		Assert.assertNotNull("no transfer attempt status set",
+				successfulAttempt.getAttemptStatus());
+		Assert.assertEquals(
+				"shold have error message",
+				TransferAccountingManagementService.WARNING_NO_FILES_TRANSFERRED_MESSAGE,
+				successfulAttempt.getErrorMessage());
+		Assert.assertEquals("should have a warning attempt status",
+				TransferStatusEnum.WARNING,
+				successfulAttempt.getAttemptStatus());
+
+	}
+
+	@Test
 	public void testUpdateTransferAfterOverallFailure() throws Exception {
 		String testUserName = "user1";
 		IRODSAccount irodsAccount = testingPropertiesHelper
@@ -645,6 +715,78 @@ public class TransferAccountingManagementServiceImplTest {
 				successfulAttempt.getErrorMessage());
 		Assert.assertEquals("should have a warning attempt status",
 				TransferStatusEnum.ERROR, successfulAttempt.getAttemptStatus());
+
+	}
+
+	@Test
+	public void testUpdateTransferAfterOverallCancel() throws Exception {
+		String testUserName = "user1";
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountForIRODSUserFromTestPropertiesForGivenUser(
+						testingProperties, testUserName, testUserName);
+		String passPhrase = irodsAccount.getUserName();
+		gridAccountService.validatePassPhrase(passPhrase);
+		GridAccount gridAccount = gridAccountService
+				.addOrUpdateGridAccountBasedOnIRODSAccount(irodsAccount);
+
+		ConfigurationProperty logSuccessful = new ConfigurationProperty();
+		logSuccessful
+				.setPropertyKey(ConfigurationPropertyConstants.LOG_SUCCESSFUL_FILES_KEY);
+		logSuccessful.setPropertyValue("true");
+		configurationService.addConfigurationProperty(logSuccessful);
+
+		ConfigurationProperty logRestart = new ConfigurationProperty();
+		logRestart
+				.setPropertyKey(ConfigurationPropertyConstants.LOG_RESTART_FILES);
+		logRestart.setPropertyValue("true");
+		configurationService.addConfigurationProperty(logRestart);
+
+		Transfer transfer = new Transfer();
+		transfer.setCreatedAt(new Timestamp(System.currentTimeMillis()));
+		transfer.setIrodsAbsolutePath("/path");
+		transfer.setLocalAbsolutePath("/local");
+		transfer.setTransferType(TransferType.PUT);
+		transfer.setGridAccount(gridAccount);
+
+		TransferAttempt transferAttempt = transferAccountingManagementService
+				.prepareTransferForProcessing(transfer);
+		transferAttempt = transferAccountingManagementService
+				.prepareTransferForExecution(transferAttempt.getTransfer());
+		TransferStatus status = TransferStatus.instance(
+				TransferStatus.TransferType.PUT, "/local/1.txt", "/path", "",
+				100L, 100L, 1, 2, TransferState.IN_PROGRESS_COMPLETE_FILE,
+				irodsAccount.getHost(), irodsAccount.getZone());
+
+		transferAccountingManagementService
+				.updateTransferAfterSuccessfulFileTransfer(status,
+						transferAttempt);
+
+		TransferStatus overallSuccess = TransferStatus.instance(
+				TransferStatus.TransferType.PUT, "/", "/", "", 1L, 1L, 1, 1,
+				TransferStatus.TransferState.CANCELLED, "host", "zone");
+
+		transferAccountingManagementService.updateTransferAfterCancellation(
+				overallSuccess, transferAttempt);
+
+		Assert.assertEquals(TransferStatusEnum.OK,
+				transfer.getLastTransferStatus());
+
+		TransferAttempt[] attemptsAfterSuccess = new TransferAttempt[transfer
+				.getTransferAttempts().size()];
+		transfer.getTransferAttempts().toArray(attemptsAfterSuccess);
+
+		Assert.assertEquals(1, attemptsAfterSuccess.length);
+		TransferAttempt successfulAttempt = attemptsAfterSuccess[attemptsAfterSuccess.length - 1];
+
+		Assert.assertNotNull("should be an end date for attempt",
+				successfulAttempt.getAttemptEnd());
+		Assert.assertNotNull("no transfer attempt status set",
+				successfulAttempt.getAttemptStatus());
+		Assert.assertEquals("shold have error message",
+				TransferAccountingManagementService.WARNING_CANCELLED_MESSAGE,
+				successfulAttempt.getErrorMessage());
+		Assert.assertEquals("should have a warning attempt status",
+				TransferStatusEnum.OK, successfulAttempt.getAttemptStatus());
 
 	}
 

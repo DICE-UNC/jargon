@@ -91,9 +91,8 @@ public abstract class AbstractConveyorCallable implements
 	 * @param transfer
 	 * @param conveyorService
 	 */
-	public AbstractConveyorCallable(
-
-	final TransferAttempt transferAttempt, final ConveyorService conveyorService) {
+	public AbstractConveyorCallable(final TransferAttempt transferAttempt,
+			final ConveyorService conveyorService) {
 
 		if (transferAttempt == null) {
 			throw new IllegalArgumentException("null transferAttempt");
@@ -189,6 +188,17 @@ public abstract class AbstractConveyorCallable implements
 
 			processCallForThisTransfer(transferControlBlock, irodsAccount);
 			return new ConveyorExecutionFuture();
+		} catch (JargonException je) {
+			log.info(
+					"jargon exception processing transfer, mark the transfer as an error and release the queue",
+					je);
+
+			markTransferAsAnExceptionWhenProcessingCall(je);
+
+			this.doCompletionSequence();
+			throw new ConveyorExecutionException(
+					"Jargon Exception initiating transfer", je);
+
 		} catch (Exception ex) {
 			log.error(
 					"*********** unanticipated exception occurred  *************",
@@ -197,6 +207,32 @@ public abstract class AbstractConveyorCallable implements
 			throw new ConveyorExecutionException(
 					"unhandled exception during transfer process", ex);
 		}
+	}
+
+	/**
+	 * When an exception occurs setting up the transfer in the call, mark the
+	 * transfer as an exception and set error statuses. If the transfer cannot
+	 * be updated, bubble the exception back up to the callback listener.
+	 * 
+	 * @param je
+	 *            {@link JargonException} that should be handled in the transfer
+	 */
+	private void markTransferAsAnExceptionWhenProcessingCall(JargonException je) {
+		log.info("markTransferAsAnExceptionWhenProcessingCall");
+		try {
+			this.getConveyorService()
+					.getTransferAccountingManagementService()
+					.updateTransferAttemptWithConveyorException(
+							transferAttempt, je);
+		} catch (ConveyorExecutionException e) {
+			log.error(
+					"*********** unanticipated exception occurred  *************",
+					e);
+			this.getConveyorService().getConveyorCallbackListener()
+					.signalUnhandledConveyorException(e);
+
+		}
+
 	}
 
 	/**
@@ -274,10 +310,6 @@ public abstract class AbstractConveyorCallable implements
 				}
 			}
 
-			else if (transferStatus.getTransferState() == TransferState.CANCELLED
-					|| transferStatus.getTransferState() == TransferState.PAUSED) {
-
-			}
 		} catch (ConveyorExecutionException ex) {
 			this.getConveyorService().getConveyorExecutorService()
 					.setErrorStatus(ErrorStatus.ERROR);
@@ -300,7 +332,8 @@ public abstract class AbstractConveyorCallable implements
 	 * @param transferStatus
 	 * @throws ConveyorExecutionException
 	 */
-	private void updateTransferStateOnRestartFile(TransferStatus transferStatus)
+	private void updateTransferStateOnRestartFile(
+			final TransferStatus transferStatus)
 			throws ConveyorExecutionException {
 		getConveyorService().getTransferAccountingManagementService()
 				.updateTransferAfterRestartFileSkipped(transferStatus,
@@ -318,38 +351,44 @@ public abstract class AbstractConveyorCallable implements
 	public void overallStatusCallback(final TransferStatus transferStatus)
 			throws JargonException {
 		log.info("overall status callback:{}", transferStatus);
-		if (transferStatus.getTransferState() == TransferStatus.TransferState.OVERALL_COMPLETION) {
-			log.info("overall completion...updating status of transfer...");
-
-			try {
+		try {
+			if (transferStatus.getTransferState() == TransferStatus.TransferState.OVERALL_COMPLETION) {
+				log.info("overall completion...updating status of transfer...");
 				processOverallCompletionOfTransfer(transferStatus);
-			} catch (ConveyorExecutionException ex) {
-				throw new JargonException(ex.getMessage(), ex.getCause());
-			} finally {
-				doCompletionSequence();
-			}
-
-			log.info("...releasing queue...");
-		} else if (transferStatus.getTransferState() == TransferStatus.TransferState.FAILURE) {
-			log.error("failure to transfer in status...releasing queue");
-
-			try {
-				conveyorService.getConveyorExecutorService().setErrorStatus(
-						ErrorStatus.ERROR);
+			} else if (transferStatus.getTransferState() == TransferStatus.TransferState.FAILURE) {
+				log.error("failure to transfer in status");
 				processOverallCompletionOfTransferWithFailure(transferStatus);
-
-			} catch (ConveyorExecutionException ex) {
-				throw new JargonException(ex.getMessage(), ex.getCause());
-			} finally {
-				doCompletionSequence();
+			} else if (transferStatus.getTransferState() == TransferState.CANCELLED) {
+				log.error("transfer cancelled");
+				processOverallCompletionOfTransferWithCancel(transferStatus);
 			}
+		} catch (ConveyorExecutionException ex) {
+			throw new JargonException(ex.getMessage(), ex.getCause());
+		} finally {
+			if (conveyorService.getConveyorCallbackListener() != null) {
+				conveyorService.getConveyorCallbackListener()
+						.overallStatusCallback(transferStatus);
+			}
+			doCompletionSequence();
 		}
 
-		if (conveyorService.getConveyorCallbackListener() != null) {
-			conveyorService.getConveyorCallbackListener()
-					.overallStatusCallback(transferStatus);
-		}
+	}
 
+	/**
+	 * Handle a cancel from the overall status
+	 * 
+	 * @param transferStatus
+	 * @throws ConveyorExecutionException
+	 */
+	private void processOverallCompletionOfTransferWithCancel(
+			final TransferStatus transferStatus)
+			throws ConveyorExecutionException {
+		log.info("processOverallCompletionOfTransferWithFailure");
+		conveyorService.getConveyorExecutorService().setErrorStatus(
+				ErrorStatus.OK);
+		getConveyorService().getTransferAccountingManagementService()
+				.updateTransferAfterCancellation(transferStatus,
+						transferAttempt);
 	}
 
 	@Override
@@ -470,7 +509,8 @@ public abstract class AbstractConveyorCallable implements
 	 * @throws ConveyorExecutionException
 	 */
 	private void processOverallCompletionOfTransfer(
-			TransferStatus transferStatus) throws ConveyorExecutionException {
+			final TransferStatus transferStatus)
+			throws ConveyorExecutionException {
 		log.info("processOverallCompletionOfTransfer");
 
 		log.info("evaluating transfer status by inspecting items for any file level errors");
@@ -479,15 +519,26 @@ public abstract class AbstractConveyorCallable implements
 		log.info("status was:{}", evaluatedStatus);
 
 		if (evaluatedStatus == TransferStatusEnum.OK) {
-			getConveyorService().getTransferAccountingManagementService()
-					.updateTransferAfterOverallSuccess(transferStatus,
-							getTransferAttempt());
+			if (this.getTransferControlBlock().getTotalFilesTransferredSoFar() == 0) {
+				conveyorService.getConveyorExecutorService().setErrorStatus(
+						ErrorStatus.WARNING);
+				getConveyorService().getTransferAccountingManagementService()
+						.updateTransferAfterOverallWarningNoFilesTransferred(
+								transferStatus, transferAttempt);
+			} else {
+
+				conveyorService.getConveyorExecutorService().setErrorStatus(
+						ErrorStatus.OK);
+				getConveyorService().getTransferAccountingManagementService()
+						.updateTransferAfterOverallSuccess(transferStatus,
+								getTransferAttempt());
+			}
 		} else if (evaluatedStatus == TransferStatusEnum.WARNING) {
 			conveyorService.getConveyorExecutorService().setErrorStatus(
 					ErrorStatus.WARNING);
 			getConveyorService().getTransferAccountingManagementService()
-					.updateTransferAfterOverallWarningByFileErrorThreshold(transferStatus,
-							getTransferAttempt());
+					.updateTransferAfterOverallWarningByFileErrorThreshold(
+							transferStatus, getTransferAttempt());
 		} else if (evaluatedStatus == TransferStatusEnum.ERROR) {
 			conveyorService.getConveyorExecutorService().setErrorStatus(
 					ErrorStatus.ERROR);
@@ -507,7 +558,7 @@ public abstract class AbstractConveyorCallable implements
 	 * @return
 	 */
 	private TransferStatusEnum evaluateTransferErrorsInItemsToSetOverallStatus(
-			TransferAttempt transferAttempt) {
+			final TransferAttempt transferAttempt) {
 
 		TransferStatusEnum status;
 		if (transferControlBlock.getErrorCount() > 0
@@ -534,8 +585,11 @@ public abstract class AbstractConveyorCallable implements
 	 * @throws ConveyorExecutionException
 	 */
 	private void processOverallCompletionOfTransferWithFailure(
-			TransferStatus transferStatus) throws ConveyorExecutionException {
+			final TransferStatus transferStatus)
+			throws ConveyorExecutionException {
 		log.info("processOverallCompletionOfTransferWithFailure");
+		conveyorService.getConveyorExecutorService().setErrorStatus(
+				ErrorStatus.ERROR);
 		getConveyorService().getTransferAccountingManagementService()
 				.updateTransferAfterOverallFailure(transferStatus,
 						transferAttempt);
@@ -556,7 +610,7 @@ public abstract class AbstractConveyorCallable implements
 	 *            the transferControlBlock to set
 	 */
 	public synchronized void setTransferControlBlock(
-			TransferControlBlock transferControlBlock) {
+			final TransferControlBlock transferControlBlock) {
 		this.transferControlBlock = transferControlBlock;
 	}
 
