@@ -8,11 +8,17 @@ import junit.framework.Assert;
 
 import org.irods.jargon.conveyor.core.ConfigurationPropertyConstants;
 import org.irods.jargon.conveyor.core.ConveyorService;
+import org.irods.jargon.conveyor.core.TransferAccountingManagementService;
 import org.irods.jargon.conveyor.unittest.utils.TransferTestRunningUtilities;
 import org.irods.jargon.core.connection.IRODSAccount;
+import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.pub.DataTransferOperations;
+import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 import org.irods.jargon.core.pub.IRODSFileSystem;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.pub.io.IRODSFileFactory;
+import org.irods.jargon.core.transfer.TransferControlBlock;
+import org.irods.jargon.core.transfer.TransferStatusCallbackListener;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.irods.jargon.testutils.filemanip.FileGenerator;
 import org.irods.jargon.transfer.dao.domain.ConfigurationProperty;
@@ -20,12 +26,14 @@ import org.irods.jargon.transfer.dao.domain.Transfer;
 import org.irods.jargon.transfer.dao.domain.TransferAttempt;
 import org.irods.jargon.transfer.dao.domain.TransferItem;
 import org.irods.jargon.transfer.dao.domain.TransferStateEnum;
+import org.irods.jargon.transfer.dao.domain.TransferStatusEnum;
 import org.irods.jargon.transfer.dao.domain.TransferType;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -45,6 +53,7 @@ public class BasicQueueManagerServiceImplTest {
 	@SuppressWarnings("unused")
 	private static org.irods.jargon.testutils.AssertionHelper assertionHelper = null;
 	private static IRODSFileSystem irodsFileSystem = null;
+	private static int TRANSFER_TIMEOUT = -1;
 
 	@Autowired
 	private ConveyorService conveyorService;
@@ -81,7 +90,6 @@ public class BasicQueueManagerServiceImplTest {
 	}
 
 	@Test
-	// @Rollback(true)
 	public void testEnqueuePutTransferOperationAndWaitUntilDone()
 			throws Exception {
 		IRODSAccount irodsAccount = testingPropertiesHelper
@@ -128,7 +136,7 @@ public class BasicQueueManagerServiceImplTest {
 				transfer, irodsAccount);
 
 		TransferTestRunningUtilities.waitForTransferToRunOrTimeout(
-				conveyorService, -1);
+				conveyorService, TRANSFER_TIMEOUT);
 
 		List<Transfer> transfers = conveyorService.getQueueManagerService()
 				.listAllTransfersInQueue();
@@ -157,6 +165,105 @@ public class BasicQueueManagerServiceImplTest {
 				.size()];
 		items = attempt.getTransferItems().toArray(items);
 		Assert.assertEquals("should be 2 items", 2, items.length);
+
+	}
+
+	@Test
+	public void testEnqueuePutTransferOperationThrowExceptionOnDTO()
+			throws Exception {
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		conveyorService.validatePassPhrase(testingProperties
+				.getProperty(TestingPropertiesHelper.IRODS_PASSWORD_KEY));
+		conveyorService.getGridAccountService()
+				.addOrUpdateGridAccountBasedOnIRODSAccount(irodsAccount);
+		ConfigurationProperty logSuccessful = new ConfigurationProperty();
+		logSuccessful
+				.setPropertyKey(ConfigurationPropertyConstants.LOG_SUCCESSFUL_FILES_KEY);
+		logSuccessful.setPropertyValue("true");
+
+		conveyorService.getConfigurationService().addConfigurationProperty(
+				logSuccessful);
+
+		// shim in mock ao factory, this is cleaned up in the @Before method
+
+		String rootCollection = "testEnqueuePutTransferOperationAndWaitUntilDone";
+		String localCollectionAbsolutePath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH
+						+ '/' + rootCollection);
+
+		Transfer transfer = new Transfer();
+		transfer.setIrodsAbsolutePath(rootCollection);
+		transfer.setLocalAbsolutePath(localCollectionAbsolutePath);
+		transfer.setTransferType(TransferType.PUT);
+
+		IRODSAccessObjectFactory irodsAccessObjectFactory = Mockito
+				.mock(IRODSAccessObjectFactory.class);
+		DataTransferOperations dto = Mockito.mock(DataTransferOperations.class);
+
+		TransferControlBlock tcb = irodsFileSystem.getIrodsSession()
+				.buildDefaultTransferControlBlockBasedOnJargonProperties();
+
+		Mockito.when(
+				irodsAccessObjectFactory
+						.getDataTransferOperations(irodsAccount)).thenReturn(
+				dto);
+		Mockito.doThrow(new JargonException("blah"))
+				.when(dto)
+				.putOperation(Mockito.anyString(), Mockito.anyString(),
+						Mockito.anyString(),
+						Mockito.any(TransferStatusCallbackListener.class),
+						Mockito.any(TransferControlBlock.class));
+		Mockito.when(
+				irodsAccessObjectFactory
+						.buildDefaultTransferControlBlockBasedOnJargonProperties())
+				.thenReturn(tcb);
+		conveyorService.setIrodsAccessObjectFactory(irodsAccessObjectFactory);
+
+		conveyorService.getQueueManagerService().enqueueTransferOperation(
+				transfer, irodsAccount);
+
+		TransferTestRunningUtilities.waitForTransferToRunOrTimeout(
+				conveyorService, TRANSFER_TIMEOUT);
+
+		List<Transfer> transfers = conveyorService.getQueueManagerService()
+				.listAllTransfersInQueue();
+		Assert.assertFalse("no transfers in queue", transfers.isEmpty());
+		Assert.assertEquals("should be 1 transfer..maybe test cleanup is bad",
+				1, transfers.size());
+		transfer = transfers.get(0);
+
+		transfer = conveyorService.getQueueManagerService()
+				.initializeGivenTransferByLoadingChildren(transfer);
+
+		Assert.assertFalse("did not create a transfer attempt", transfer
+				.getTransferAttempts().isEmpty());
+
+		Assert.assertEquals("did not get complete status",
+				TransferStateEnum.COMPLETE, transfer.getTransferState());
+
+		TransferAttempt attempts[] = new TransferAttempt[transfer
+				.getTransferAttempts().size()];
+		attempts = transfer.getTransferAttempts().toArray(attempts);
+		Assert.assertEquals("should be 1 attempt", 1, attempts.length);
+
+		TransferAttempt attempt = attempts[0];
+		Assert.assertNotNull("transfer attempt not persisted", attempt.getId());
+		Assert.assertEquals("should have a status of error",
+				TransferStatusEnum.ERROR, attempt.getAttemptStatus());
+		Assert.assertNotNull("null error message", attempt.getErrorMessage());
+		Assert.assertEquals(
+				"missing the attempt creating the transfer process message",
+				TransferAccountingManagementService.ERROR_ATTEMPTING_TO_RUN,
+				attempt.getErrorMessage());
+		Assert.assertNotNull("missing global exception",
+				attempt.getGlobalException());
+		Assert.assertEquals("global exception message incorrect", "blah",
+				attempt.getGlobalException());
+		Assert.assertNotNull("should be a stack trace, was null",
+				attempt.getGlobalExceptionStackTrace());
+		Assert.assertFalse("empty stack trace", attempt
+				.getGlobalExceptionStackTrace().isEmpty());
 
 	}
 }

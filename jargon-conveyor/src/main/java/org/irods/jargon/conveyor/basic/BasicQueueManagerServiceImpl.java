@@ -34,7 +34,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @author Mike Conway - DICE (www.irods.org)
  * 
  */
-@Transactional(rollbackFor = { ConveyorExecutionException.class })
+@Transactional(rollbackFor = { ConveyorExecutionException.class }, noRollbackFor = { JargonException.class })
 public class BasicQueueManagerServiceImpl extends
 		AbstractConveyorComponentService implements QueueManagerService {
 
@@ -133,6 +133,7 @@ public class BasicQueueManagerServiceImpl extends
 		transfer.setGridAccount(gridAccount);
 		transfer.setTransferState(TransferStateEnum.ENQUEUED);
 		transfer.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
+		transfer.setCreatedAt(transfer.getUpdatedAt());
 
 		/*
 		 * Enqueue triggers a dequeue
@@ -222,6 +223,7 @@ public class BasicQueueManagerServiceImpl extends
 			transfer.setTransferState(TransferStateEnum.PROCESSING);
 			transfer.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
 			transferDAO.save(transfer);
+			transferAttemptDAO.save(transferAttempt);
 
 			this.getConveyorExecutorService().processTransfer(transferAttempt,
 					this.conveyorService);

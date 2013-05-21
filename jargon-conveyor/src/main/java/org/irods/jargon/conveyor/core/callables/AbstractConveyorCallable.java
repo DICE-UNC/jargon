@@ -22,6 +22,7 @@ import org.irods.jargon.transfer.dao.domain.TransferAttempt;
 import org.irods.jargon.transfer.dao.domain.TransferStatusEnum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Abstract super class for a transfer running process. This class, and its
@@ -43,6 +44,7 @@ import org.slf4j.LoggerFactory;
  * @author Mike Conway - DICE (www.irods.org)
  * 
  */
+@Transactional(noRollbackFor = { JargonException.class }, rollbackFor = { ConveyorExecutionException.class })
 public abstract class AbstractConveyorCallable implements
 		Callable<ConveyorExecutionFuture>, TransferStatusCallbackListener {
 
@@ -193,11 +195,12 @@ public abstract class AbstractConveyorCallable implements
 					"jargon exception processing transfer, mark the transfer as an error and release the queue",
 					je);
 
+			/*
+			 * The following will call doCompletionSequence() in the finally to
+			 * release the queue
+			 */
 			markTransferAsAnExceptionWhenProcessingCall(je);
-
-			this.doCompletionSequence();
-			throw new ConveyorExecutionException(
-					"Jargon Exception initiating transfer", je);
+			return new ConveyorExecutionFuture();
 
 		} catch (Exception ex) {
 			log.error(
@@ -231,6 +234,15 @@ public abstract class AbstractConveyorCallable implements
 			this.getConveyorService().getConveyorCallbackListener()
 					.signalUnhandledConveyorException(e);
 
+		} catch (Exception e) {
+			log.error(
+					"*********** unanticipated exception occurred  *************",
+					e);
+			this.getConveyorService().getConveyorCallbackListener()
+					.signalUnhandledConveyorException(e);
+
+		} finally {
+			this.doCompletionSequence();
 		}
 
 	}
@@ -464,15 +476,17 @@ public abstract class AbstractConveyorCallable implements
 	 * Whether in an error state, or in a successfully completed state, release
 	 * the execution queue and attempt to trigger any subsequent operations.
 	 * <p/>
-	 * Note that any error in dequeueing the next transfer is logged, and the
+	 * Note that any error in dequeuing the next transfer is logged, and the
 	 * callback listener will be notified.
 	 */
 	private void doCompletionSequence() {
-		log.info("setting operation completed...");
+		log.info("doCompletionSequence()");
 		this.getConveyorService().getConveyorExecutorService()
 				.setOperationCompleted();
 		log.info("signaling completion so queue manager can dequeue next");
+
 		try {
+			log.info("calling dequeue of next");
 			getConveyorService().getQueueManagerService()
 					.dequeueNextOperation();
 		} catch (ConveyorExecutionException e) {
