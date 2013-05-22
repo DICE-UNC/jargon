@@ -79,6 +79,18 @@ public interface QueueManagerService {
 	 */
 	void purgeAllFromQueue() throws ConveyorBusyException,
 			ConveyorExecutionException;
+        
+        /**
+	 * Purge specified transfer from the queue, no matter what the status
+	 * 
+	 * @throws ConveyorBusyException
+	 *             if the transfer is busy, this indicates that the
+	 *             queue should be idle before purging
+	 * @throws ConveyorExecutionException
+	 *             for other errors
+	 */
+	void deleteTransferFromQueue(Transfer transfer) throws ConveyorBusyException,
+			ConveyorExecutionException;
 
 	/**
 	 * Get a list of the entire contents of the transfer queue

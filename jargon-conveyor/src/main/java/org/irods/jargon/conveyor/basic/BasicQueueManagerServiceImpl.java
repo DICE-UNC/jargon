@@ -300,6 +300,34 @@ public class BasicQueueManagerServiceImpl extends
 		}
 
 	}
+                
+        @Override
+	public void deleteTransferFromQueue(Transfer transfer) throws ConveyorBusyException,
+			ConveyorExecutionException {
+		log.info("deleteTransferFromQueue()");
+
+		log.info("see if conveyor is busy");
+
+//		try {
+//			this.getConveyorExecutorService().setBusyForAnOperation();
+//		} catch (ConveyorBusyException e) {
+//			log.info("conveyor is busy, cannot purge");
+//			throw e;
+//		}
+//
+		log.info("delete transfer id:{} ...", transfer.getId());
+
+		try {
+			transferDAO.delete(transfer);
+		} catch (TransferDAOException e) {
+			log.error("jargon exception deleting transfer");
+			throw new ConveyorExecutionException(e);
+		} finally {
+			this.getConveyorExecutorService().setOperationCompleted();
+
+		}
+
+	}
 
 	@Override
 	public Transfer initializeGivenTransferByLoadingChildren(
