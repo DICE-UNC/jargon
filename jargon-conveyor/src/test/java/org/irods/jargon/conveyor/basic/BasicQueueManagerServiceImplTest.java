@@ -22,6 +22,7 @@ import org.irods.jargon.core.transfer.TransferStatusCallbackListener;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.irods.jargon.testutils.filemanip.FileGenerator;
 import org.irods.jargon.transfer.dao.domain.ConfigurationProperty;
+import org.irods.jargon.transfer.dao.domain.GridAccount;
 import org.irods.jargon.transfer.dao.domain.Transfer;
 import org.irods.jargon.transfer.dao.domain.TransferAttempt;
 import org.irods.jargon.transfer.dao.domain.TransferItem;
@@ -161,6 +162,102 @@ public class BasicQueueManagerServiceImplTest {
 
 		TransferAttempt attempt = attempts[0];
 		Assert.assertNotNull("transfer attempt not persisted", attempt.getId());
+		TransferItem items[] = new TransferItem[attempt.getTransferItems()
+				.size()];
+		items = attempt.getTransferItems().toArray(items);
+		Assert.assertEquals("should be 2 items", 2, items.length);
+
+	}
+
+	@Test
+	public void testRestartPutTransferOperationAndWaitUntilDone()
+			throws Exception {
+		int totFiles = 10;
+		int restartAt = 4;
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		conveyorService.validatePassPhrase(testingProperties
+				.getProperty(TestingPropertiesHelper.IRODS_PASSWORD_KEY));
+		conveyorService.getGridAccountService()
+				.addOrUpdateGridAccountBasedOnIRODSAccount(irodsAccount);
+		ConfigurationProperty logSuccessful = new ConfigurationProperty();
+		logSuccessful
+				.setPropertyKey(ConfigurationPropertyConstants.LOG_SUCCESSFUL_FILES_KEY);
+		logSuccessful.setPropertyValue("true");
+
+		conveyorService.getConfigurationService().addConfigurationProperty(
+				logSuccessful);
+
+		String rootCollection = "testEnqueuePutTransferOperationAndWaitUntilDone";
+		String localCollectionAbsolutePath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH
+						+ '/' + rootCollection);
+
+		String irodsCollectionRootAbsolutePath = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		FileGenerator.generateManyFilesInGivenDirectory(IRODS_TEST_SUBDIR_PATH
+				+ '/' + rootCollection, "test", ".txt", totFiles, 1, 1);
+
+		IRODSFileFactory irodsFileFactory = irodsFileSystem
+				.getIRODSFileFactory(irodsAccount);
+		IRODSFile destFile = irodsFileFactory
+				.instanceIRODSFile(irodsCollectionRootAbsolutePath);
+		File localFile = new File(localCollectionAbsolutePath);
+		File[] children = localFile.listFiles();
+
+		GridAccount gridAccount = conveyorService.getGridAccountService()
+				.findGridAccountByIRODSAccount(irodsAccount);
+
+		Transfer transfer = new Transfer();
+		transfer.setIrodsAbsolutePath(destFile.getAbsolutePath());
+		transfer.setLocalAbsolutePath(localFile.getAbsolutePath());
+		transfer.setTransferType(TransferType.PUT);
+		transfer.setTransferState(TransferStateEnum.COMPLETE);
+		transfer.setGridAccount(gridAccount);
+		transfer.setLastTransferStatus(TransferStatusEnum.ERROR);
+
+		conveyorService.getQueueManagerService().saveOrUpdateTransfer(transfer);
+
+		TransferAttempt attemptThatFailed = new TransferAttempt();
+		attemptThatFailed.setAttemptStatus(TransferStatusEnum.ERROR);
+		attemptThatFailed.setLastSuccessfulPath(children[restartAt - 2]
+				.getAbsolutePath());
+		conveyorService.getQueueManagerService().addTransferAttemptToTransfer(
+				transfer.getId(), attemptThatFailed);
+
+		// now restart
+		conveyorService.getQueueManagerService()
+				.enqueueRestartOfTransferOperation(transfer.getId());
+
+		TransferTestRunningUtilities.waitForTransferToRunOrTimeout(
+				conveyorService, TRANSFER_TIMEOUT);
+
+		List<Transfer> transfers = conveyorService.getQueueManagerService()
+				.listAllTransfersInQueue();
+		Assert.assertFalse("no transfers in queue", transfers.isEmpty());
+		Assert.assertEquals("should be 1 transfer..maybe test cleanup is bad",
+				1, transfers.size());
+		transfer = transfers.get(0);
+
+		transfer = conveyorService.getQueueManagerService()
+				.initializeGivenTransferByLoadingChildren(transfer);
+
+		Assert.assertFalse("did not create a transfer attempt", transfer
+				.getTransferAttempts().isEmpty());
+
+		Assert.assertEquals("did not get complete status",
+				TransferStateEnum.COMPLETE, transfer.getTransferState());
+
+		TransferAttempt attempts[] = new TransferAttempt[transfer
+				.getTransferAttempts().size()];
+		attempts = transfer.getTransferAttempts().toArray(attempts);
+		Assert.assertEquals("should be 2 attempts", 2, attempts.length);
+
+		TransferAttempt attempt = attempts[1];
+		Assert.assertNotNull("transfer restart attempt not persisted",
+				attempt.getId());
 		TransferItem items[] = new TransferItem[attempt.getTransferItems()
 				.size()];
 		items = attempt.getTransferItems().toArray(items);

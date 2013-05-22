@@ -65,7 +65,7 @@ public class Transfer implements Serializable {
 	@Column(name = "irods_absolute_path", length = 32672)
 	private String irodsAbsolutePath = "";
 
-	@OneToMany(mappedBy = "transfer", targetEntity = TransferAttempt.class, cascade = { CascadeType.ALL }, fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "transfer", targetEntity = TransferAttempt.class, cascade = { CascadeType.ALL }, fetch = FetchType.EAGER)
 	@OrderBy("createdAt")
 	private List<TransferAttempt> transferAttempts = new ArrayList<TransferAttempt>();
 

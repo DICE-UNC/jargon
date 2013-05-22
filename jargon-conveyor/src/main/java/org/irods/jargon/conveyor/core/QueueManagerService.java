@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.transfer.dao.domain.Transfer;
+import org.irods.jargon.transfer.dao.domain.TransferAttempt;
 import org.irods.jargon.transfer.dao.domain.TransferType;
 
 /**
@@ -130,5 +131,48 @@ public interface QueueManagerService {
 	 */
 	void enqueueRestartOfTransferOperation(final long transferId)
 			throws RejectedTransferException, ConveyorExecutionException;
+
+	/**
+	 * General method allows saving of arbitrary <code>Transfer</code>
+	 * information. This will add or update based on the provided information.
+	 * Note that this method bypasses all of the semantics of transfer
+	 * management, so it should be used carefully.
+	 * <p/>
+	 * Typically, transfers are added by calling the
+	 * <code>enqueueTransferOperation</code> methods.
+	 * 
+	 * @param transfer
+	 *            {@link Transfer} to be saved, as is, in the queue
+	 * @throws ConveyorExecutionException
+	 */
+	void saveOrUpdateTransfer(final Transfer transfer)
+			throws ConveyorExecutionException;
+
+	/**
+	 * General method allows adding of an arbitrary new
+	 * <code>TransferAttempt</code> to a given transfer object. The transfer
+	 * object must exist or an exception will occur. This method adds the
+	 * transfer attempt information as-is, and bypasses all the transfer
+	 * management semantics, so it should be used with care. Generally, the
+	 * <code>TransferAttempt</code> is created by this service when a transfer
+	 * is enqueued for processing using the normal
+	 * <code>enqueueTransferOperation</code> methods.
+	 * <p/>
+	 * 
+	 * Note that this method will add the transfer attempt to the transfer, and
+	 * also set the transfer parent in the transfer attempt object provided.
+	 * This method will also set the create and update dates for that transfer
+	 * attempt to the current time.
+	 * 
+	 * @param transferId
+	 *            <code>long</code> with the id of the transfer
+	 * @param transferAttempt
+	 *            {@link TransferAttempt} to be added to the {@link Transfer}
+	 * @Throws TransferNotFoundException
+	 * @throws ConveyorExecutionException
+	 */
+	void addTransferAttemptToTransfer(long transferId,
+			TransferAttempt transferAttempt) throws TransferNotFoundException,
+			ConveyorExecutionException;
 
 }

@@ -315,7 +315,7 @@ public class ConfigurationServiceImpl extends AbstractConveyorComponentService
 			tcb.setRestartAbsolutePath(myRestartPath);
 
 			synchronized (propsLockObject) {
-				tcb.setMaximumErrorsBeforeCanceling(cachedConveyorConfigurationProperties
+				tcb.setMaximumErrorsBeforeCanceling(getCachedConveyorConfigurationProperties()
 						.getMaxErrorsBeforeCancel());
 			}
 			return tcb;

@@ -4,6 +4,7 @@
 package org.irods.jargon.conveyor.basic;
 
 import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 
 import org.irods.jargon.conveyor.core.AbstractConveyorComponentService;
@@ -14,6 +15,7 @@ import org.irods.jargon.conveyor.core.ConveyorService;
 import org.irods.jargon.conveyor.core.GridAccountService;
 import org.irods.jargon.conveyor.core.QueueManagerService;
 import org.irods.jargon.conveyor.core.RejectedTransferException;
+import org.irods.jargon.conveyor.core.TransferNotFoundException;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.transfer.dao.TransferAttemptDAO;
@@ -312,25 +314,11 @@ public class BasicQueueManagerServiceImpl extends
 	}
 
 	/**
-	 * @return the transferDAO
-	 */
-	public TransferDAO getTransferDAO() {
-		return transferDAO;
-	}
-
-	/**
 	 * @param transferDAO
 	 *            the transferDAO to set
 	 */
 	public void setTransferDAO(final TransferDAO transferDAO) {
 		this.transferDAO = transferDAO;
-	}
-
-	/**
-	 * @return the transferAttemptDAO
-	 */
-	public TransferAttemptDAO getTransferAttemptDAO() {
-		return transferAttemptDAO;
 	}
 
 	/**
@@ -340,13 +328,6 @@ public class BasicQueueManagerServiceImpl extends
 	public void setTransferAttemptDAO(
 			final TransferAttemptDAO transferAttemptDAO) {
 		this.transferAttemptDAO = transferAttemptDAO;
-	}
-
-	/**
-	 * @return the gridAccountService
-	 */
-	public GridAccountService getGridAccountService() {
-		return gridAccountService;
 	}
 
 	/**
@@ -392,4 +373,69 @@ public class BasicQueueManagerServiceImpl extends
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.conveyor.core.QueueManagerService#saveOrUpdateTransfer
+	 * (org.irods.jargon.transfer.dao.domain.Transfer)
+	 */
+	@Override
+	public void saveOrUpdateTransfer(final Transfer transfer)
+			throws TransferNotFoundException, ConveyorExecutionException {
+		log.info("saveOrUpdateTransfer()");
+
+		if (transfer == null) {
+			throw new IllegalArgumentException("null transfer");
+		}
+
+		log.info("saving transfer:{}", transfer);
+
+		try {
+			transferDAO.save(transfer);
+		} catch (TransferDAOException e) {
+			log.error("error saving transfer", e);
+			throw new ConveyorExecutionException("error saving transfer", e);
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.conveyor.core.QueueManagerService#
+	 * addTransferAttemptToTransfer(long,
+	 * org.irods.jargon.transfer.dao.domain.TransferAttempt)
+	 */
+	@Override
+	public void addTransferAttemptToTransfer(final long transferId,
+			final TransferAttempt transferAttempt)
+			throws TransferNotFoundException, ConveyorExecutionException {
+		log.info("addTransferAttemptToTransfer");
+		if (transferAttempt == null) {
+			throw new IllegalArgumentException("null transferAttempt");
+		}
+
+		log.info("looking up transfer by id...");
+
+		Transfer transfer;
+
+		try {
+			transfer = transferDAO.findById(new Long(transferId));
+		} catch (TransferDAOException e) {
+			log.error("exception finding transfer", e);
+			throw new ConveyorExecutionException("error finding transfe", e);
+		}
+
+		if (transfer == null) {
+			log.error("transfer could not be found");
+			throw new TransferNotFoundException("unable to find transfer");
+		}
+
+		transferAttempt.setCreatedAt(new Date());
+		transferAttempt.setUpdatedAt(transferAttempt.getCreatedAt());
+		transferAttempt.setTransfer(transfer);
+		transfer.getTransferAttempts().add(transferAttempt);
+		log.info("attempt added");
+
+	}
 }

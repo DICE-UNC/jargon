@@ -128,14 +128,30 @@ public class TransferAccountingManagementServiceImpl extends
 					"transfer does not have an id, it may not be stored in the transfer database");
 		}
 
-		transfer.setLastTransferStatus(TransferStatusEnum.OK);
-		transfer.setTransferState(TransferStateEnum.PROCESSING);
-		transfer.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
+		Transfer myTransfer;
+		log.info("looking up transfer..");
+		try {
+			myTransfer = transferDAO.findById(transfer.getId());
+		} catch (TransferDAOException e) {
+			log.error("unable to find transfer for execution", e);
+			throw new ConveyorExecutionException(
+					"unable to find transfer for execution", e);
+		}
+
+		if (myTransfer == null) {
+			log.error("unable to find transfer for execution");
+			throw new ConveyorExecutionException(
+					"unable to find transfer for execution");
+		}
+
+		myTransfer.setLastTransferStatus(TransferStatusEnum.OK);
+		myTransfer.setTransferState(TransferStateEnum.PROCESSING);
+		myTransfer.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
 
 		TransferAttempt transferAttempt = null;
 		try {
 			transferAttempt = transferAttemptDAO
-					.findLastTransferAttemptForTransferByTransferId(transfer
+					.findLastTransferAttemptForTransferByTransferId(myTransfer
 							.getId());
 			if (transferAttempt == null) {
 				log.error("couldn't find the transfer attempt in transfer:{}",
@@ -155,8 +171,8 @@ public class TransferAccountingManagementServiceImpl extends
 		transferAttempt.setUpdatedAt(transferAttempt.getAttemptStart());
 
 		try {
-			transferDAO.save(transfer);
-			log.info("transfer saved:{}", transfer);
+			transferDAO.save(myTransfer);
+			log.info("transfer saved:{}", myTransfer);
 			transferAttemptDAO.save(transferAttempt);
 			log.info("transfer attempt added:{}", transferAttempt);
 			return transferAttempt;
@@ -167,9 +183,29 @@ public class TransferAccountingManagementServiceImpl extends
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.conveyor.core.TransferAccountingManagementService#
+	 * prepareTransferForProcessing
+	 * (org.irods.jargon.transfer.dao.domain.Transfer)
+	 */
 	@Override
 	public TransferAttempt prepareTransferForProcessing(final Transfer transfer)
 			throws ConveyorExecutionException {
+
+		log.info("prepareTransferForProcessing()");
+
+		if (transfer == null) {
+			throw new IllegalArgumentException("null transfer");
+		}
+
+		log.info("transfer:{}", transfer);
+
+		/*
+		 * Note that the transfer object being passed in is not expected to be
+		 * already persisted, so this will add a new transfer
+		 */
 
 		log.info("building transfer attempt...");
 
@@ -208,7 +244,7 @@ public class TransferAccountingManagementServiceImpl extends
 	 */
 	@Override
 	public void updateTransferAfterSuccessfulFileTransfer(
-			final org.irods.jargon.core.transfer.TransferStatus transferStatus,
+			final TransferStatus transferStatus,
 			final TransferAttempt transferAttempt)
 			throws ConveyorExecutionException {
 
@@ -319,8 +355,7 @@ public class TransferAccountingManagementServiceImpl extends
 					"error finding transfer attempt", e);
 		}
 
-		localTransferAttempt
-				.setAttemptStatus(org.irods.jargon.transfer.dao.domain.TransferStatusEnum.ERROR);
+		localTransferAttempt.setAttemptStatus(TransferStatusEnum.ERROR);
 		localTransferAttempt.setUpdatedAt(new Timestamp(System
 				.currentTimeMillis()));
 
@@ -547,8 +582,7 @@ public class TransferAccountingManagementServiceImpl extends
 	 * @param errorMessage
 	 * @throws ConveyorExecutionException
 	 */
-	private void transferUpdateOverall(
-			final org.irods.jargon.core.transfer.TransferStatus transferStatus,
+	private void transferUpdateOverall(final TransferStatus transferStatus,
 			final TransferAttempt transferAttempt,
 			final TransferStatusEnum transferStatusEnum,
 			final TransferStateEnum transferState, final String errorMessage)
@@ -590,7 +624,7 @@ public class TransferAccountingManagementServiceImpl extends
 		localTransferAttempt.setAttemptEnd(new Timestamp(System
 				.currentTimeMillis()));
 		localTransferAttempt.setAttemptStatus(transferStatusEnum);
-		localTransferAttempt.setUpdatedAt(transferAttempt.getAttemptEnd());
+		localTransferAttempt.setUpdatedAt(localTransferAttempt.getAttemptEnd());
 		localTransferAttempt.setErrorMessage(errorMessage);
 
 		try {
@@ -613,7 +647,7 @@ public class TransferAccountingManagementServiceImpl extends
 	 */
 	@Override
 	public void updateTransferAfterOverallFailure(
-			final org.irods.jargon.core.transfer.TransferStatus transferStatus,
+			final TransferStatus transferStatus,
 			final TransferAttempt transferAttempt)
 			throws ConveyorExecutionException {
 		log.info("updateTransferAfterOverallFailure()");
@@ -629,18 +663,33 @@ public class TransferAccountingManagementServiceImpl extends
 		log.info("transferAttempt:{}", transferAttempt);
 		log.info("transferStatus:{}", transferStatus);
 
-		Transfer transfer = transferAttempt.getTransfer();
+		TransferAttempt localTransferAttempt;
+		try {
+			localTransferAttempt = transferAttemptDAO.findById(transferAttempt
+					.getId());
+			if (localTransferAttempt == null) {
+				log.error("null transfer attempt found, cannot update the database");
+				throw new ConveyorExecutionException(
+						"error finding transfer attempt");
+
+			}
+		} catch (TransferDAOException e) {
+			throw new ConveyorExecutionException(
+					"error finding transfer attempt", e);
+		}
+
+		Transfer transfer = localTransferAttempt.getTransfer();
 		transfer.setLastTransferStatus(TransferStatusEnum.ERROR);
 		transfer.setTransferState(TransferStateEnum.COMPLETE);
 		transfer.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
-		transferAttempt
-				.setAttemptEnd(new Timestamp(System.currentTimeMillis()));
-		transferAttempt.setAttemptStatus(TransferStatusEnum.ERROR);
-		transferAttempt.setErrorMessage(ERROR_IN_TRANSFER_AT_IRODS_LEVEL);
-		transferAttempt.setGlobalException(ExceptionUtils
+		localTransferAttempt.setAttemptEnd(new Timestamp(System
+				.currentTimeMillis()));
+		localTransferAttempt.setAttemptStatus(TransferStatusEnum.ERROR);
+		localTransferAttempt.setErrorMessage(ERROR_IN_TRANSFER_AT_IRODS_LEVEL);
+		localTransferAttempt.setGlobalException(ExceptionUtils
 				.messageOrNullFromException(transferStatus
 						.getTransferException()));
-		transferAttempt.setGlobalExceptionStackTrace(ExceptionUtils
+		localTransferAttempt.setGlobalExceptionStackTrace(ExceptionUtils
 				.stackTraceToString(transferStatus.getTransferException()));
 
 		try {
@@ -708,7 +757,7 @@ public class TransferAccountingManagementServiceImpl extends
 		TransferItem transferItem = new TransferItem();
 		transferItem.setFile(true);
 		transferItem.setSkipped(true);
-		transferItem.setTransferType(transferAttempt.getTransfer()
+		transferItem.setTransferType(localTransferAttempt.getTransfer()
 				.getTransferType());
 		transferItem.setSourceFileAbsolutePath(transferStatus
 				.getSourceFileAbsolutePath());
