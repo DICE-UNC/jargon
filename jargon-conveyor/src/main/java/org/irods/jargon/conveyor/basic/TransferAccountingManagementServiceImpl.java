@@ -209,14 +209,18 @@ public class TransferAccountingManagementServiceImpl extends
 
 		log.info("building transfer attempt...");
 
+		long currentTime = System.currentTimeMillis();
 		transfer.setLastTransferStatus(TransferStatusEnum.OK);
+		transfer.setSequenceNumber(currentTime);
 		transfer.setTransferState(TransferStateEnum.ENQUEUED);
-		transfer.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
+		transfer.setUpdatedAt(new Date(currentTime));
+
 		TransferAttempt transferAttempt = new TransferAttempt();
+		transferAttempt.setSequenceNumber(currentTime);
 		transferAttempt.setTransfer(transfer);
 		transferAttempt.setTransfer(transfer);
 		transferAttempt.setAttemptStatus(TransferStatusEnum.OK);
-		transferAttempt.setCreatedAt(new Timestamp(System.currentTimeMillis()));
+		transferAttempt.setCreatedAt(new Date(currentTime));
 		transferAttempt.setUpdatedAt(transferAttempt.getCreatedAt());
 
 		try {
@@ -274,14 +278,17 @@ public class TransferAccountingManagementServiceImpl extends
 		}
 		log.info("updated last good path to:{}",
 				transferStatus.getSourceFileAbsolutePath());
+
+		long currentTime = System.currentTimeMillis();
+		Date currentDate = new Date(currentTime);
+
 		localTransferAttempt.setLastSuccessfulPath(transferStatus
 				.getSourceFileAbsolutePath());
 		localTransferAttempt.setTotalFilesTransferredSoFar(transferStatus
 				.getTotalFilesTransferredSoFar());
 		localTransferAttempt.setTotalFilesCount(transferStatus
 				.getTotalFilesToTransfer());
-		localTransferAttempt.setUpdatedAt(new Timestamp(System
-				.currentTimeMillis()));
+		localTransferAttempt.setUpdatedAt(currentDate);
 
 		if (!getConfigurationService()
 				.getCachedConveyorConfigurationProperties()
@@ -298,6 +305,7 @@ public class TransferAccountingManagementServiceImpl extends
 
 		// create transfer item
 		TransferItem transferItem = new TransferItem();
+		transferItem.setSequenceNumber(currentTime);
 		transferItem.setFile(true);
 		transferItem.setTransferType(transferAttempt.getTransfer()
 				.getTransferType());
@@ -305,7 +313,7 @@ public class TransferAccountingManagementServiceImpl extends
 				.getSourceFileAbsolutePath());
 		transferItem.setTargetFileAbsolutePath(transferStatus
 				.getTargetFileAbsolutePath());
-		transferItem.setTransferredAt(new Date());
+		transferItem.setTransferredAt(currentDate);
 
 		try {
 			transferItem.setTransferAttempt(localTransferAttempt);
@@ -355,12 +363,14 @@ public class TransferAccountingManagementServiceImpl extends
 					"error finding transfer attempt", e);
 		}
 
+		long currentTime = System.currentTimeMillis();
+		Date currentDate = new Date(currentTime);
 		localTransferAttempt.setAttemptStatus(TransferStatusEnum.ERROR);
-		localTransferAttempt.setUpdatedAt(new Timestamp(System
-				.currentTimeMillis()));
+		localTransferAttempt.setUpdatedAt(currentDate);
 
 		// create transfer item
 		TransferItem transferItem = new TransferItem();
+		transferItem.setSequenceNumber(currentTime);
 		transferItem.setTransferType(localTransferAttempt.getTransfer()
 				.getTransferType());
 		transferItem.setFile(true);
@@ -369,7 +379,7 @@ public class TransferAccountingManagementServiceImpl extends
 		transferItem.setTargetFileAbsolutePath(transferStatus
 				.getTargetFileAbsolutePath());
 		transferItem.setError(true);
-		transferItem.setTransferredAt(new Date());
+		transferItem.setTransferredAt(currentDate);
 		transferItem.setTransferAttempt(localTransferAttempt);
 
 		if (transferStatus.getTransferException() != null) {
@@ -730,12 +740,13 @@ public class TransferAccountingManagementServiceImpl extends
 					"error finding transfer attempt", e);
 		}
 
+		long currentTime = System.currentTimeMillis();
+		Date currentDate = new Date(currentTime);
 		localTransferAttempt.setTotalFilesTransferredSoFar(transferStatus
 				.getTotalFilesTransferredSoFar());
 		localTransferAttempt.setTotalFilesCount(transferStatus
 				.getTotalFilesToTransfer());
-		localTransferAttempt.setUpdatedAt(new Timestamp(System
-				.currentTimeMillis()));
+		localTransferAttempt.setUpdatedAt(currentDate);
 
 		if (!getConfigurationService()
 				.getCachedConveyorConfigurationProperties()
@@ -755,6 +766,7 @@ public class TransferAccountingManagementServiceImpl extends
 
 		// create transfer item
 		TransferItem transferItem = new TransferItem();
+		transferItem.setSequenceNumber(currentTime);
 		transferItem.setFile(true);
 		transferItem.setSkipped(true);
 		transferItem.setTransferType(localTransferAttempt.getTransfer()
@@ -763,7 +775,7 @@ public class TransferAccountingManagementServiceImpl extends
 				.getSourceFileAbsolutePath());
 		transferItem.setTargetFileAbsolutePath(transferStatus
 				.getTargetFileAbsolutePath());
-		transferItem.setTransferredAt(new Date());
+		transferItem.setTransferredAt(currentDate);
 
 		try {
 			transferItem.setTransferAttempt(localTransferAttempt);
@@ -812,17 +824,21 @@ public class TransferAccountingManagementServiceImpl extends
 					"no previous attempt found to base restart on");
 		}
 
+		long currentTime = System.currentTimeMillis();
+		Date currentDate = new Date(currentTime);
+
 		log.info("building transfer attempt based on previous attempt...");
 		transfer.setTransferState(TransferStateEnum.ENQUEUED);
-		transfer.setUpdatedAt(new Date());
+		transfer.setUpdatedAt(currentDate);
 		transfer.setLastTransferStatus(TransferStatusEnum.OK);
 
 		TransferAttempt newTransferAttempt = new TransferAttempt();
+		newTransferAttempt.setSequenceNumber(currentTime);
 		newTransferAttempt.setAttemptStatus(TransferStatusEnum.OK);
 		newTransferAttempt.setLastSuccessfulPath(lastTransferAttempt
 				.getLastSuccessfulPath());
-		newTransferAttempt.setCreatedAt(new Date());
-		newTransferAttempt.setUpdatedAt(newTransferAttempt.getCreatedAt());
+		newTransferAttempt.setCreatedAt(currentDate);
+		newTransferAttempt.setUpdatedAt(currentDate);
 		newTransferAttempt.setTransfer(transfer);
 		transfer.getTransferAttempts().add(newTransferAttempt);
 		log.info("added new transfer attempt:{}", newTransferAttempt);

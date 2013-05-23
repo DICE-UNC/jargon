@@ -35,6 +35,9 @@ public class TransferItem implements Serializable {
 	@Column(name = "id")
 	private Long id;
 
+	@Column(name = "sequence_number", nullable = false)
+	private long sequenceNumber;
+
 	@ManyToOne(targetEntity = TransferAttempt.class, fetch = FetchType.LAZY)
 	@JoinColumn(name = "transfer_attempt_id", nullable = false)
 	private TransferAttempt transferAttempt;
@@ -210,6 +213,21 @@ public class TransferItem implements Serializable {
 	 */
 	public void setSkipped(boolean skipped) {
 		this.skipped = skipped;
+	}
+
+	/**
+	 * @return the sequenceNumber
+	 */
+	public long getSequenceNumber() {
+		return sequenceNumber;
+	}
+
+	/**
+	 * @param sequenceNumber
+	 *            the sequenceNumber to set
+	 */
+	public void setSequenceNumber(long sequenceNumber) {
+		this.sequenceNumber = sequenceNumber;
 	}
 
 }

@@ -131,11 +131,13 @@ public class BasicQueueManagerServiceImpl extends
 		 * exception if appropriate
 		 */
 		evaluateTransferForExecution(transfer);
+		long currentTime = System.currentTimeMillis();
+		Date currentDate = new Date(currentTime);
 
 		transfer.setGridAccount(gridAccount);
 		transfer.setTransferState(TransferStateEnum.ENQUEUED);
-		transfer.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
-		transfer.setCreatedAt(transfer.getUpdatedAt());
+		transfer.setUpdatedAt(currentDate);
+		transfer.setCreatedAt(currentDate);
 
 		/*
 		 * Enqueue triggers a dequeue
@@ -300,21 +302,21 @@ public class BasicQueueManagerServiceImpl extends
 		}
 
 	}
-                
-        @Override
-	public void deleteTransferFromQueue(Transfer transfer) throws ConveyorBusyException,
-			ConveyorExecutionException {
+
+	@Override
+	public void deleteTransferFromQueue(Transfer transfer)
+			throws ConveyorBusyException, ConveyorExecutionException {
 		log.info("deleteTransferFromQueue()");
 
 		log.info("see if conveyor is busy");
 
-//		try {
-//			this.getConveyorExecutorService().setBusyForAnOperation();
-//		} catch (ConveyorBusyException e) {
-//			log.info("conveyor is busy, cannot purge");
-//			throw e;
-//		}
-//
+		// try {
+		// this.getConveyorExecutorService().setBusyForAnOperation();
+		// } catch (ConveyorBusyException e) {
+		// log.info("conveyor is busy, cannot purge");
+		// throw e;
+		// }
+		//
 		log.info("delete transfer id:{} ...", transfer.getId());
 
 		try {
@@ -459,7 +461,8 @@ public class BasicQueueManagerServiceImpl extends
 			throw new TransferNotFoundException("unable to find transfer");
 		}
 
-		transferAttempt.setCreatedAt(new Date());
+		transferAttempt.setCreatedAt(new Timestamp(System.currentTimeMillis()));
+		transferAttempt.setSequenceNumber(System.currentTimeMillis());
 		transferAttempt.setUpdatedAt(transferAttempt.getCreatedAt());
 		transferAttempt.setTransfer(transfer);
 		transfer.getTransferAttempts().add(transferAttempt);

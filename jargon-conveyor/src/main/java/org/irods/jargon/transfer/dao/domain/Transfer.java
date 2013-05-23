@@ -21,6 +21,9 @@ import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
 /**
  * Domain object that represents a transfer activity between the local host and
  * an iRODS server.
@@ -38,6 +41,9 @@ public class Transfer implements Serializable {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "id")
 	private Long id;
+
+	@Column(name = "sequence_number", nullable = false)
+	private long sequenceNumber;
 
 	@Column(name = "transfer_state")
 	@Enumerated(EnumType.STRING)
@@ -66,7 +72,8 @@ public class Transfer implements Serializable {
 	private String irodsAbsolutePath = "";
 
 	@OneToMany(mappedBy = "transfer", targetEntity = TransferAttempt.class, cascade = { CascadeType.ALL }, fetch = FetchType.EAGER)
-	@OrderBy("createdAt")
+	@OrderBy("sequenceNumber")
+	@Fetch(FetchMode.SELECT)
 	private List<TransferAttempt> transferAttempts = new ArrayList<TransferAttempt>();
 
 	@Column(name = "created_at")
@@ -205,6 +212,21 @@ public class Transfer implements Serializable {
 	 */
 	public void setGridAccount(GridAccount gridAccount) {
 		this.gridAccount = gridAccount;
+	}
+
+	/**
+	 * @return the sequenceNumber
+	 */
+	public long getSequenceNumber() {
+		return sequenceNumber;
+	}
+
+	/**
+	 * @param sequenceNumber
+	 *            the sequenceNumber to set
+	 */
+	public void setSequenceNumber(long sequenceNumber) {
+		this.sequenceNumber = sequenceNumber;
 	}
 
 }

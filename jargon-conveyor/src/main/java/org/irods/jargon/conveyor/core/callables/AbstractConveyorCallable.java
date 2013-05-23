@@ -381,7 +381,9 @@ public abstract class AbstractConveyorCallable implements
 				conveyorService.getConveyorCallbackListener()
 						.overallStatusCallback(transferStatus);
 			}
-			doCompletionSequence();
+			if (transferStatus.getTransferState() == TransferState.OVERALL_COMPLETION) {
+				doCompletionSequence();
+			}
 		}
 
 	}
@@ -540,7 +542,6 @@ public abstract class AbstractConveyorCallable implements
 						.updateTransferAfterOverallWarningNoFilesTransferred(
 								transferStatus, transferAttempt);
 			} else {
-
 				conveyorService.getConveyorExecutorService().setErrorStatus(
 						ErrorStatus.OK);
 				getConveyorService().getTransferAccountingManagementService()

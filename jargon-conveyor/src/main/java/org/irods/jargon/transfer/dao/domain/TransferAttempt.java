@@ -41,6 +41,9 @@ public class TransferAttempt implements Serializable {
 	@Column(name = "id")
 	private Long id;
 
+	@Column(name = "sequence_number", nullable = false)
+	private long sequenceNumber;
+
 	@ManyToOne(targetEntity = Transfer.class, fetch = FetchType.LAZY)
 	@JoinColumn(name = "transfer_id", nullable = false)
 	private Transfer transfer;
@@ -76,7 +79,7 @@ public class TransferAttempt implements Serializable {
 	private int totalFilesTransferredSoFar = 0;
 
 	@OneToMany(mappedBy = "transferAttempt", targetEntity = TransferItem.class, cascade = { CascadeType.ALL }, fetch = FetchType.LAZY)
-	@OrderBy("transferredAt")
+	@OrderBy("sequenceNumber")
 	@LazyCollection(LazyCollectionOption.EXTRA)
 	private List<TransferItem> transferItems = new ArrayList<TransferItem>();
 
@@ -196,6 +199,8 @@ public class TransferAttempt implements Serializable {
 		sb.append("TransferAttempt:");
 		sb.append("\n   id:");
 		sb.append(id);
+		sb.append("\n   seq:");
+		sb.append(this.sequenceNumber);
 		sb.append("\n   attemptStart:");
 		sb.append(attemptStart);
 		sb.append("\n   attemptEnd:");
@@ -244,6 +249,21 @@ public class TransferAttempt implements Serializable {
 	 */
 	public void setUpdatedAt(Date updatedAt) {
 		this.updatedAt = updatedAt;
+	}
+
+	/**
+	 * @return the sequenceNumber
+	 */
+	public long getSequenceNumber() {
+		return sequenceNumber;
+	}
+
+	/**
+	 * @param sequenceNumber
+	 *            the sequenceNumber to set
+	 */
+	public void setSequenceNumber(long attemptSequenceNumber) {
+		this.sequenceNumber = attemptSequenceNumber;
 	}
 
 }

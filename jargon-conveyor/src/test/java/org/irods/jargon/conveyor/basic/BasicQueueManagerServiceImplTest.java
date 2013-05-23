@@ -188,7 +188,15 @@ public class BasicQueueManagerServiceImplTest {
 		conveyorService.getConfigurationService().addConfigurationProperty(
 				logSuccessful);
 
-		String rootCollection = "testEnqueuePutTransferOperationAndWaitUntilDone";
+		ConfigurationProperty logRestart = new ConfigurationProperty();
+		logRestart
+				.setPropertyKey(ConfigurationPropertyConstants.LOG_RESTART_FILES);
+		logRestart.setPropertyValue("true");
+
+		conveyorService.getConfigurationService().addConfigurationProperty(
+				logRestart);
+
+		String rootCollection = "testRestartPutTransferOperationAndWaitUntilDone";
 		String localCollectionAbsolutePath = scratchFileUtils
 				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH
 						+ '/' + rootCollection);
@@ -261,7 +269,27 @@ public class BasicQueueManagerServiceImplTest {
 		TransferItem items[] = new TransferItem[attempt.getTransferItems()
 				.size()];
 		items = attempt.getTransferItems().toArray(items);
-		Assert.assertEquals("should be 2 items", 2, items.length);
+		Assert.assertEquals("should be n items", totFiles, items.length);
+
+		int i = 1;
+		for (TransferItem item : items) {
+			Assert.assertNotNull("null source",
+					item.getSourceFileAbsolutePath());
+			Assert.assertNotNull("null target",
+					item.getTargetFileAbsolutePath());
+			Assert.assertNotNull("null transfer type", item.getTransferType());
+			Assert.assertEquals(TransferType.PUT, item.getTransferType());
+			Assert.assertTrue("should be file", item.isFile());
+			if (i < restartAt) {
+				Assert.assertTrue("file should be marked as skipped",
+						item.isSkipped());
+			} else {
+				Assert.assertFalse("file should not be marked as skipped",
+						item.isSkipped());
+			}
+			i++;
+
+		}
 
 	}
 
