@@ -1,21 +1,21 @@
 #!/bin/sh
 
-exec `iadmin mkzone test1 remote test1:1247`
+iadmin mkzone fedZone1 remote fedZone1:1247
 
-exec `iadmin mkuser rods#test1 rodsuser`
+iadmin mkuser rods#fedZone1 rodsuser
 
-exec `iadmin mkuser test1#test1 rodsuser`
+iadmin mkuser test1#fedZone1 rodsuser
 
-exec `imkdir /fedzone2/home/test1/fedread`
+imkdir /fedZone2/home/test1/fedread
 
-exec `imkdir /fedzone2/home/test1/fedwrite`
+imkdir /fedZone2/home/test1/fedwrite
 
-exec `ichmod -r inherit /fedzone2/home/test1/fedread`
+ichmod -r inherit /fedZone2/home/test1/fedread
 
-exec `ichmod -r inherit /fedzone2/home/test1/fedwrite`
+ichmod -r inherit /fedZone2/home/test1/fedwrite
 
-exec `ichmod  read test1#fedzone1 /fedzone2/home/test1/fedread`
+ichmod  read test1#fedZone1 /fedZone2/home/test1/fedread
 
-exec `ichmod  write test1#fedzone1 /fedzone2/home/test1/fedwrite`	
+ichmod  write test1#fedZone1 /fedZone2/home/test1/fedwrite	
 
 

@@ -779,7 +779,7 @@ final class TransferOperationsHelper {
 
 			} else {
 				log.warn("exception will be re-thrown, as there is no status callback listener");
-				throw je;
+				throw new JargonException(je);
 
 			}
 		}
