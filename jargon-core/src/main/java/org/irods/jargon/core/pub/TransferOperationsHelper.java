@@ -23,9 +23,6 @@ import org.slf4j.LoggerFactory;
  *         Functions to support transfer operations. These are used internally.
  *         See {@link org.irods.jargon.core.pub.DataTransferOperations} for
  *         public methods.
- *         <p/>
- *         This class is especially greedy on trapping exceptions, including io
- *         exceptions, and will pass them back to the callback listener.
  * 
  */
 final class TransferOperationsHelper {
@@ -135,33 +132,42 @@ final class TransferOperationsHelper {
 
 			// may have returned above if cancelled
 
-			if (fileInSourceCollection.isDirectory()) {
+			try {
+				if (fileInSourceCollection.isDirectory()) {
 
-				// make a dir in the target collection
-				StringBuilder sb = new StringBuilder();
-				sb.append(targetLocalFile.getAbsolutePath());
-				sb.append('/');
-				sb.append(fileInSourceCollection.getName());
-				log.info(
-						"recursively creating parent directory in local file system at: {}",
-						sb.toString());
+					// make a dir in the target collection
+					StringBuilder sb = new StringBuilder();
+					sb.append(targetLocalFile.getAbsolutePath());
+					sb.append('/');
+					sb.append(fileInSourceCollection.getName());
+					log.info(
+							"recursively creating parent directory in local file system at: {}",
+							sb.toString());
 
-				File newSubCollection = new File(sb.toString());
-				boolean success = newSubCollection.mkdirs();
+					File newSubCollection = new File(sb.toString());
+					boolean success = newSubCollection.mkdirs();
 
-				if (!success) {
-					log.warn("unable to make directories in local file system, log and proceed");
+					if (!success) {
+						log.warn("unable to make directories in local file system, log and proceed");
+					}
+
+					recursivelyGet((IRODSFileImpl) fileInSourceCollection,
+							newSubCollection, transferStatusCallbackListener,
+							transferControlBlock);
+
+				} else {
+					this.processGetOfSingleFile(
+							(IRODSFileImpl) fileInSourceCollection,
+							targetLocalFile, transferStatusCallbackListener,
+							transferControlBlock);
 				}
-
-				recursivelyGet((IRODSFileImpl) fileInSourceCollection,
-						newSubCollection, transferStatusCallbackListener,
-						transferControlBlock);
-
-			} else {
-				this.processGetOfSingleFile(
-						(IRODSFileImpl) fileInSourceCollection,
-						targetLocalFile, transferStatusCallbackListener,
-						transferControlBlock);
+			} catch (JargonException e) {
+				throw e;
+			} catch (Exception e) {
+				log.info(
+						"unanticipated exception will be transformed into a Jargon exception",
+						e);
+				throw new JargonException(e);
 			}
 		}
 	}
@@ -263,7 +269,7 @@ final class TransferOperationsHelper {
 				transferStatusCallbackListener.statusCallback(status);
 			}
 
-		} catch (Exception je) {
+		} catch (JargonException je) {
 			// may re-throw or send back to the call-back listener
 			log.error("exception in transfer", je);
 
@@ -289,7 +295,7 @@ final class TransferOperationsHelper {
 
 			} else {
 				log.warn("exception will be re-thrown, as there is no status callback listener");
-				throw new JargonException(je);
+				throw je;
 
 			}
 		}
@@ -339,30 +345,38 @@ final class TransferOperationsHelper {
 				targetIrodsCollection.getAbsolutePath());
 		log.info("     to resource:{}", targetIrodsCollection.getResource());
 
-		for (File fileInSourceCollection : sourceFile.listFiles()) {
+		try {
+			for (File fileInSourceCollection : sourceFile.listFiles()) {
 
-			// check for a cancel or pause at the top of the loop
-			if (transferControlBlock != null
-					&& (transferControlBlock.isCancelled() || transferControlBlock
-							.isPaused())) {
-				log.info("will notify pause or cancel for this put");
-				notifyPauseOrCancelCallbackForPut(targetIrodsCollection,
-						transferStatusCallbackListener, transferControlBlock,
-						fileInSourceCollection);
-				break;
+				// check for a cancel or pause at the top of the loop
+				if (transferControlBlock != null
+						&& (transferControlBlock.isCancelled() || transferControlBlock
+								.isPaused())) {
+					log.info("will notify pause or cancel for this put");
+					notifyPauseOrCancelCallbackForPut(targetIrodsCollection,
+							transferStatusCallbackListener,
+							transferControlBlock, fileInSourceCollection);
+					break;
+				}
+
+				if (fileInSourceCollection.isDirectory()) {
+					recursivelyPutACollection(targetIrodsCollection,
+							transferStatusCallbackListener,
+							transferControlBlock, fileInSourceCollection);
+
+				} else {
+
+					processPutOfSingleFile(fileInSourceCollection,
+							targetIrodsCollection,
+							transferStatusCallbackListener,
+							transferControlBlock);
+				}
 			}
-
-			if (fileInSourceCollection.isDirectory()) {
-				recursivelyPutACollection(targetIrodsCollection,
-						transferStatusCallbackListener, transferControlBlock,
-						fileInSourceCollection);
-
-			} else {
-
-				processPutOfSingleFile(fileInSourceCollection,
-						targetIrodsCollection, transferStatusCallbackListener,
-						transferControlBlock);
-			}
+		} catch (Exception e) {
+			log.info(
+					"unanticipated exception will be transformed into a Jargon exception",
+					e);
+			throw new JargonException(e);
 		}
 	}
 
@@ -428,8 +442,8 @@ final class TransferOperationsHelper {
 			final File fileInSourceCollection,
 			final TransferStatusCallbackListener transferStatusCallbackListener,
 			final IRODSFile newIrodsFile,
-			final TransferControlBlock transferControlBlock, final Exception je)
-			throws JargonException {
+			final TransferControlBlock transferControlBlock,
+			final JargonException je) throws JargonException {
 
 		log.error("exception in transfer", je);
 		if (transferStatusCallbackListener != null) {
@@ -458,7 +472,7 @@ final class TransferOperationsHelper {
 
 		} else {
 			log.warn("exception will be re-thrown, as there is no status callback listener");
-			throw new JargonException(je);
+			throw je;
 
 		}
 	}
@@ -493,8 +507,17 @@ final class TransferOperationsHelper {
 			newSubCollection.mkdirs();
 			recursivelyPut(fileInSourceCollection, newSubCollection,
 					transferStatusCallbackListener, transferControlBlock);
-		} catch (Exception je) {
+		} catch (JargonException je) {
 
+			processRecursivePutException(fileInSourceCollection,
+					transferStatusCallbackListener, newSubCollection,
+					transferControlBlock, je);
+
+		} catch (Exception e) {
+			log.error(
+					"unanticipated exception will be transformed into a JargonException and processed",
+					e);
+			JargonException je = new JargonException(e);
 			processRecursivePutException(fileInSourceCollection,
 					transferStatusCallbackListener, newSubCollection,
 					transferControlBlock, je);
@@ -751,7 +774,7 @@ final class TransferOperationsHelper {
 
 				transferStatusCallbackListener.statusCallback(status);
 			}
-		} catch (Exception je) {
+		} catch (JargonException je) {
 			// may rethrow or send back to the callback listener
 			log.error("exception in transfer", je);
 
@@ -780,7 +803,7 @@ final class TransferOperationsHelper {
 
 			} else {
 				log.warn("exception will be re-thrown, as there is no status callback listener");
-				throw new JargonException(je);
+				throw je;
 
 			}
 		}
@@ -855,30 +878,48 @@ final class TransferOperationsHelper {
 				transferStatusCallbackListener.statusCallback(transferStatus);
 			}
 
+		} catch (JargonException e) {
+			handleExceptionInReplicate(irodsFileAbsolutePath, targetResource,
+					transferStatusCallbackListener, transferControlBlock,
+					totalFiles, totalFilesSoFar, e);
 		} catch (Exception e) {
-			// may re-throw or send back to the callback listener
-			log.error("exception in transfer", e);
+			log.error(
+					"unanticipated exception in replicate, will wrap as a JargonException so that callback handlers may have a crack at it...",
+					e);
+			handleExceptionInReplicate(irodsFileAbsolutePath, targetResource,
+					transferStatusCallbackListener, transferControlBlock,
+					totalFiles, totalFilesSoFar, new JargonException(e));
+		}
+	}
 
-			if (transferControlBlock != null) {
-				transferControlBlock.reportErrorInTransfer();
-			}
+	private void handleExceptionInReplicate(
+			final String irodsFileAbsolutePath,
+			final String targetResource,
+			final TransferStatusCallbackListener transferStatusCallbackListener,
+			final TransferControlBlock transferControlBlock, int totalFiles,
+			int totalFilesSoFar, JargonException e) throws JargonException {
+		// may rethrow or send back to the callback listener
+		log.error("exception in transfer", e);
 
-			if (transferStatusCallbackListener != null) {
-				log.warn("exception will be passed back to existing callback listener");
+		if (transferControlBlock != null) {
+			transferControlBlock.reportErrorInTransfer();
+		}
 
-				TransferStatus status = TransferStatus.instanceForException(
-						TransferType.REPLICATE, irodsFileAbsolutePath, "",
-						targetResource, 0L, 0L, totalFilesSoFar, totalFiles, e,
-						dataObjectAO.getIRODSAccount().getHost(), dataObjectAO
-								.getIRODSAccount().getZone());
+		if (transferStatusCallbackListener != null) {
+			log.warn("exception will be passed back to existing callback listener");
 
-				transferStatusCallbackListener.statusCallback(status);
+			TransferStatus status = TransferStatus.instanceForException(
+					TransferType.REPLICATE, irodsFileAbsolutePath, "",
+					targetResource, 0L, 0L, totalFilesSoFar, totalFiles, e,
+					dataObjectAO.getIRODSAccount().getHost(), dataObjectAO
+							.getIRODSAccount().getZone());
 
-			} else {
-				log.warn("exception will be re-thrown, as there is no status callback listener");
-				throw new JargonException(e);
+			transferStatusCallbackListener.statusCallback(status);
 
-			}
+		} else {
+			log.warn("exception will be re-thrown, as there is no status callback listener");
+			throw e;
+
 		}
 	}
 
@@ -1050,7 +1091,7 @@ final class TransferOperationsHelper {
 				transferStatusCallbackListener.statusCallback(transferStatus);
 			}
 
-		} catch (Exception e) {
+		} catch (JargonException e) {
 			// may rethrow or send back to the callback listener
 			log.error("exception in transfer", e);
 
@@ -1072,7 +1113,7 @@ final class TransferOperationsHelper {
 
 			} else {
 				log.warn("exception will be re-thrown, as there is no status callback listener");
-				throw new JargonException(e);
+				throw e;
 			}
 		}
 	}
