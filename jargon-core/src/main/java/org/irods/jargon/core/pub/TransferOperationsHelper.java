@@ -23,6 +23,9 @@ import org.slf4j.LoggerFactory;
  *         Functions to support transfer operations. These are used internally.
  *         See {@link org.irods.jargon.core.pub.DataTransferOperations} for
  *         public methods.
+ *         <p/>
+ *         This class is especially greedy on trapping exceptions, including io
+ *         exceptions, and will pass them back to the callback listener.
  * 
  */
 final class TransferOperationsHelper {
@@ -30,7 +33,6 @@ final class TransferOperationsHelper {
 	static Logger log = LoggerFactory.getLogger(TransferOperationsHelper.class);
 	private final DataObjectAOImpl dataObjectAO;
 	private final CollectionAO collectionAO;
-	private final Stream2StreamAO stream2StreamAO;
 
 	/**
 	 * Initializer creates an instance of this class.
@@ -56,8 +58,7 @@ final class TransferOperationsHelper {
 
 		this.dataObjectAO = new DataObjectAOImpl(irodsSession, irodsAccount);
 		this.collectionAO = new CollectionAOImpl(irodsSession, irodsAccount);
-		this.stream2StreamAO = new Stream2StreamAOImpl(irodsSession,
-				irodsAccount);
+		new Stream2StreamAOImpl(irodsSession, irodsAccount);
 
 	}
 
@@ -427,8 +428,8 @@ final class TransferOperationsHelper {
 			final File fileInSourceCollection,
 			final TransferStatusCallbackListener transferStatusCallbackListener,
 			final IRODSFile newIrodsFile,
-			final TransferControlBlock transferControlBlock,
-			final Exception je) throws JargonException {
+			final TransferControlBlock transferControlBlock, final Exception je)
+			throws JargonException {
 
 		log.error("exception in transfer", je);
 		if (transferStatusCallbackListener != null) {
@@ -854,8 +855,8 @@ final class TransferOperationsHelper {
 				transferStatusCallbackListener.statusCallback(transferStatus);
 			}
 
-		} catch (JargonException e) {
-			// may rethrow or send back to the callback listener
+		} catch (Exception e) {
+			// may re-throw or send back to the callback listener
 			log.error("exception in transfer", e);
 
 			if (transferControlBlock != null) {
@@ -875,7 +876,7 @@ final class TransferOperationsHelper {
 
 			} else {
 				log.warn("exception will be re-thrown, as there is no status callback listener");
-				throw e;
+				throw new JargonException(e);
 
 			}
 		}
