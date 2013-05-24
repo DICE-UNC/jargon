@@ -172,7 +172,9 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.irods.jargon.core.pub.DataObjectAO#findById(int)
 	 */
 	@Override
@@ -244,7 +246,8 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		MiscIRODSUtils.evaluateSpecCollSupport(objStat);
 
 		// get absolute path to use for querying iCAT (could be a soft link)
-		String absPath = objStat.determineAbsolutePathBasedOnCollTypeInObjectStat();
+		String absPath = objStat
+				.determineAbsolutePathBasedOnCollTypeInObjectStat();
 
 		log.info("absPath for querying iCAT:{}", absPath);
 
@@ -262,8 +265,8 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			log.info("ignoring collection path in query");
 		} else {
 			builder.addConditionAsGenQueryField(RodsGenQueryEnum.COL_COLL_NAME,
-					QueryConditionOperators.EQUAL, collectionAndPath
-							.getCollectionParent());
+					QueryConditionOperators.EQUAL,
+					collectionAndPath.getCollectionParent());
 		}
 
 		builder.addConditionAsGenQueryField(RodsGenQueryEnum.COL_DATA_NAME,
@@ -276,7 +279,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 							.getMaxFilesAndDirsQueryMax());
 			resultSet = irodsGenQueryExecutor
 					.executeIRODSQueryAndCloseResultInZone(irodsQuery, 0,
-							objStat.getOwnerZone());
+							MiscIRODSUtils.getZoneInPath(absPath));
 
 		} catch (JargonQueryException e) {
 			log.error("query exception for query", e);
@@ -639,7 +642,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 						localFile.getAbsolutePath());
 				throw new JargonException(
 						"localFile not found to put to irods", e);
-			} 
+			}
 		} else {
 
 			log.info("processing as a parallel transfer, length above max");
@@ -1508,7 +1511,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 			resultSet = irodsGenQueryExecutor
 					.executeIRODSQueryAndCloseResultInZone(irodsQuery, 0,
-							objStat.getOwnerZone());
+							MiscIRODSUtils.getZoneInPath(absPath));
 
 		} catch (GenQueryBuilderException e) {
 			log.error("error building query", e);
@@ -3064,7 +3067,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 							.getMaxFilesAndDirsQueryMax());
 			resultSet = irodsGenQueryExecutor
 					.executeIRODSQueryAndCloseResultInZone(irodsQuery, 0,
-							objStat.getOwnerZone());
+							MiscIRODSUtils.getZoneInPath(absPath));
 			IRODSQueryResultRow row = resultSet.getFirstResult();
 			userFilePermission = buildUserFilePermissionFromResultRow(row);
 			log.debug("loaded filePermission:{}", userFilePermission);
@@ -3147,7 +3150,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 							.getMaxFilesAndDirsQueryMax());
 			resultSet = irodsGenQueryExecutorImpl
 					.executeIRODSQueryAndCloseResultInZone(irodsQuery, 0,
-							objStat.getOwnerZone());
+							MiscIRODSUtils.getZoneInPath(absPath));
 		} catch (JargonQueryException e) {
 			log.error("query exception", e);
 			throw new JargonException("error in query");

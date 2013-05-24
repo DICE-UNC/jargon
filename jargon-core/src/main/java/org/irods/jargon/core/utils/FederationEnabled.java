@@ -8,7 +8,7 @@ import java.lang.annotation.RetentionPolicy;
  * automatically handle operations across federated zones.
  * <p/>
  * This is a new addition, and will be added over time as each relevant method
- * is tested and certified to be cross-zone compatable.
+ * is tested and certified to be cross-zone compatible.
  * 
  * @author Mike Conway - DICE (www.irods.org)
  * 

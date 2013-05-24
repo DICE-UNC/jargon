@@ -178,12 +178,16 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 							getIRODSAccount());
 			ObjStat objStat = listAndSearchAO
 					.retrieveObjectStatForPath(irodsFile.getAbsolutePath());
+
+			String absPath = MiscIRODSUtils
+					.determineAbsolutePathBasedOnCollTypeInObjectStat(objStat);
+
 			IRODSGenQueryFromBuilder irodsQuery = builder
 					.exportIRODSQueryFromBuilder(100);
 			boolean executable = false;
 			resultSet = irodsGenQueryExecutor
 					.executeIRODSQueryAndCloseResultInZone(irodsQuery, 0,
-							objStat.getOwnerZone());
+							MiscIRODSUtils.getZoneInPath(absPath));
 			IRODSQueryResultRow resultRow = resultSet.getFirstResult();
 			if (resultRow.getColumn(0).equals("33261")) {
 				executable = true;
@@ -313,7 +317,8 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 				collectionAndPath.getChildName(), user.getId(), builder);
 
 		int highestPermissionValue = extractHighestPermission(
-				irodsGenQueryExecutor, builder, objStat.getOwnerZone());
+				irodsGenQueryExecutor, builder,
+				MiscIRODSUtils.getZoneInPath(effectiveAbsolutePath));
 
 		log.debug("highest permission value:{}", highestPermissionValue);
 
@@ -480,7 +485,8 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 				builder);
 
 		int highestPermissionValue = extractHighestPermission(
-				irodsGenQueryExecutor, builder, objStat.getOwnerZone());
+				irodsGenQueryExecutor, builder,
+				MiscIRODSUtils.getZoneInPath(effectiveAbsolutePath));
 
 		return highestPermissionValue;
 	}
@@ -691,7 +697,8 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 			 * get more results with an eventual close below
 			 */
 			resultSet = irodsGenQueryExecutor.executeIRODSQueryInZone(
-					irodsQuery, 0, objStat.getOwnerZone());
+					irodsQuery, 0,
+					MiscIRODSUtils.getZoneInPath(effectiveAbsolutePath));
 			for (IRODSQueryResultRow row : resultSet.getResults()) {
 				processListDirsResultRowForCollection(subdirs, row);
 			}
@@ -699,7 +706,8 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 			while (resultSet.isHasMoreRecords()) {
 				log.debug("more results to get for listing collections, requerying");
 				resultSet = irodsGenQueryExecutor.getMoreResultsInZone(
-						resultSet, objStat.getOwnerZone());
+						resultSet,
+						MiscIRODSUtils.getZoneInPath(effectiveAbsolutePath));
 				for (IRODSQueryResultRow row : resultSet.getResults()) {
 					processListDirsResultRowForCollection(subdirs, row);
 				}
@@ -729,7 +737,8 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 							.getMaxFilesAndDirsQueryMax());
 
 			resultSet = irodsGenQueryExecutor.executeIRODSQueryInZone(
-					irodsQuery, 0, objStat.getOwnerZone());
+					irodsQuery, 0,
+					MiscIRODSUtils.getZoneInPath(effectiveAbsolutePath));
 
 			for (IRODSQueryResultRow row : resultSet.getResults()) {
 				subdirs.add(row.getColumn(1));
@@ -738,7 +747,8 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 			while (resultSet.isHasMoreRecords()) {
 				log.debug("more results to get for listing files, requerying");
 				resultSet = irodsGenQueryExecutor.getMoreResultsInZone(
-						resultSet, objStat.getOwnerZone());
+						resultSet,
+						MiscIRODSUtils.getZoneInPath(effectiveAbsolutePath));
 				for (IRODSQueryResultRow row : resultSet.getResults()) {
 					subdirs.add(row.getColumn(1));
 				}
