@@ -639,7 +639,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 						localFile.getAbsolutePath());
 				throw new JargonException(
 						"localFile not found to put to irods", e);
-			}
+			} 
 		} else {
 
 			log.info("processing as a parallel transfer, length above max");
