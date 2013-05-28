@@ -25,6 +25,7 @@ import org.irods.jargon.transfer.dao.domain.GridAccount;
 import org.irods.jargon.transfer.dao.domain.Transfer;
 import org.irods.jargon.transfer.dao.domain.TransferAttempt;
 import org.irods.jargon.transfer.dao.domain.TransferStateEnum;
+import org.irods.jargon.transfer.dao.domain.TransferStatusEnum;
 import org.irods.jargon.transfer.dao.domain.TransferType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -78,6 +79,14 @@ public class BasicQueueManagerServiceImpl extends
 		if (transferId <= 0) {
 			throw new IllegalArgumentException("illegal transferId");
 		}
+                
+                Transfer existingTransfer;
+                try {
+                    existingTransfer = transferDAO.findById(transferId);
+                } catch (TransferDAOException e) {
+                        throw new ConveyorExecutionException();
+                }
+                evaluateTransferForExecution(existingTransfer);
 
 		conveyorService.getTransferAccountingManagementService()
 				.prepareTransferForRestart(transferId);
@@ -160,7 +169,13 @@ public class BasicQueueManagerServiceImpl extends
 	private void evaluateTransferForExecution(Transfer transfer)
 			throws RejectedTransferException, ConveyorExecutionException {
 		// FIXME: implement this!
-
+            
+                // check to see if the transfer has already completed successfully
+                if ((transfer.getTransferState() == TransferStateEnum.COMPLETE) &&
+                    (transfer.getLastTransferStatus() == TransferStatusEnum.OK)) {
+                    log.info("existing transfer found, and it has already completed successfully");
+                            throw new RejectedTransferException();
+                }
 	}
 
 	@Override
