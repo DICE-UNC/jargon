@@ -245,7 +245,6 @@ public class BasicQueueManagerServiceImpl extends
 
 			List<Transfer> transfers = transferDAO
 					.findByTransferState(TransferStateEnum.ENQUEUED);
-			// Transfer transfer = new Transfer(); // fake code for above
 
 			if (transfers.isEmpty()) {
 				log.info("nothing to process...");
@@ -357,13 +356,13 @@ public class BasicQueueManagerServiceImpl extends
 
 		log.info("see if conveyor is busy");
 
-		// try {
-		// this.getConveyorExecutorService().setBusyForAnOperation();
-		// } catch (ConveyorBusyException e) {
-		// log.info("conveyor is busy, cannot purge");
-		// throw e;
-		// }
-		//
+		try {
+                    this.getConveyorExecutorService().setBusyForAnOperation();
+		} catch (ConveyorBusyException e) {
+                    log.info("conveyor is busy, cannot purge");
+                    throw e;
+		}
+
 		log.info("delete transfer id:{} ...", transfer.getId());
 
 		try {
@@ -377,6 +376,13 @@ public class BasicQueueManagerServiceImpl extends
 		}
 
 	}
+        
+        @Override
+        public void cancelTransfer(final long transferId) throws ConveyorExecutionException {
+            // TODO: Implement this
+            // find out whether this transfer is currently enqueued or processing
+            // if not, just mark cancelled?
+        }
 
 	@Override
 	public Transfer initializeGivenTransferByLoadingChildren(
