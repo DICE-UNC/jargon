@@ -214,5 +214,19 @@ public interface TransferAccountingManagementService {
 	 */
 	Transfer prepareTransferForRestart(final long transferId)
 			throws ConveyorExecutionException, RejectedTransferException;
+        
+        /**
+	 * Prepare the given transfer for a resubmit. This includes setting up a new
+	 * <code>TransferAttempt</code>.
+	 * 
+	 * @param transferId
+	 *            <code>long</code> that is the valid id of a transfer in the
+	 *            database
+	 * @return {@link Transfer} with proper setup enqueued for resubmit
+	 * @throws ConveyorExecutionException
+	 * @throws RejectedTransferException
+	 */
+	Transfer prepareTransferForResubmit(final long transferId)
+			throws ConveyorExecutionException, RejectedTransferException;
 
 }

@@ -95,6 +95,38 @@ public class BasicQueueManagerServiceImpl extends
 		dequeueNextOperation();
 
 	}
+        
+        /*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.conveyor.core.QueueManagerService#
+	 * enqueueRestartOfTransferOperation(long)
+	 */
+	@Override
+	public void enqueueResubmitOfTransferOperation(final long transferId)
+			throws RejectedTransferException, ConveyorExecutionException {
+
+		log.info("enqueueTransferOperation()");
+
+		if (transferId <= 0) {
+			throw new IllegalArgumentException("illegal transferId");
+		}
+                
+                Transfer existingTransfer;
+                try {
+                    existingTransfer = transferDAO.findById(transferId);
+                } catch (TransferDAOException e) {
+                        throw new ConveyorExecutionException();
+                }
+                evaluateTransferForExecution(existingTransfer);
+
+		conveyorService.getTransferAccountingManagementService()
+				.prepareTransferForResubmit(transferId);
+
+		log.info("restart enqueued, will trigger the queue");
+		dequeueNextOperation();
+
+	}
 
 	/*
 	 * (non-Javadoc)

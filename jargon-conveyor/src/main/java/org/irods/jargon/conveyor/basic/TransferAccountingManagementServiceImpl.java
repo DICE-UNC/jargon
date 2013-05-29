@@ -853,5 +853,69 @@ public class TransferAccountingManagementServiceImpl extends
 
 		return transfer;
 	}
+        
+        /*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.conveyor.core.TransferAccountingManagementService#
+	 * prepareTransferForRestart(long)
+	 */
+	@Override
+	public Transfer prepareTransferForResubmit(final long transferId)
+			throws ConveyorExecutionException, RejectedTransferException {
+		log.info("transferId:{}", transferId);
+		log.info("looking up transfer to resubmit...");
+
+		Transfer transfer;
+		try {
+			transfer = transferDAO.findById(new Long(transferId));
+		} catch (TransferDAOException e) {
+			log.error("error looking up transfer by id", e);
+			throw new ConveyorExecutionException(
+					"unable to lookup transfer by id", e);
+		}
+
+		TransferAttempt lastTransferAttempt;
+		try {
+			lastTransferAttempt = transferAttemptDAO
+					.findLastTransferAttemptForTransferByTransferId(transferId);
+		} catch (TransferDAOException e) {
+			log.error("error looking up last transfer attempt", e);
+			throw new ConveyorExecutionException(
+					"unable to lookup last transfer attempt", e);
+		}
+
+		if (lastTransferAttempt == null) {
+			throw new RejectedTransferException(
+					"no previous attempt found to base resubmit on");
+		}
+
+		long currentTime = System.currentTimeMillis();
+		Date currentDate = new Date(currentTime);
+
+		log.info("building transfer attempt based on previous attempt...");
+		transfer.setTransferState(TransferStateEnum.ENQUEUED);
+		transfer.setUpdatedAt(currentDate);
+		transfer.setLastTransferStatus(TransferStatusEnum.OK);
+
+		TransferAttempt newTransferAttempt = new TransferAttempt();
+		newTransferAttempt.setSequenceNumber(currentTime);
+		newTransferAttempt.setAttemptStatus(TransferStatusEnum.OK);
+		newTransferAttempt.setCreatedAt(currentDate);
+		newTransferAttempt.setUpdatedAt(currentDate);
+		newTransferAttempt.setTransfer(transfer);
+		transfer.getTransferAttempts().add(newTransferAttempt);
+		log.info("added new transfer attempt:{}", newTransferAttempt);
+
+		try {
+			transferDAO.save(transfer);
+		} catch (TransferDAOException e) {
+			log.error("error updating transfer for restart", e);
+			throw new ConveyorExecutionException(
+					"cannot update transfer for restart", e);
+		}
+
+		return transfer;
+	}
 
 }

@@ -143,6 +143,19 @@ public interface QueueManagerService {
 	 */
 	void enqueueRestartOfTransferOperation(final long transferId)
 			throws RejectedTransferException, ConveyorExecutionException;
+        
+        /**
+	 * Cause a transfer to be resubmitted. A resubmit will start the transfer
+	 * from the beginning.
+	 * 
+	 * @param transferId
+	 *            <code>long</code> with the unique id for the transfer
+	 * @throws RejectedTransferException
+	 *             if the transfer is not suitable for resubmit
+	 * @throws ConveyorExecutionException
+	 */
+	void enqueueResubmitOfTransferOperation(final long transferId)
+			throws RejectedTransferException, ConveyorExecutionException;
 
 	/**
 	 * General method allows saving of arbitrary <code>Transfer</code>
