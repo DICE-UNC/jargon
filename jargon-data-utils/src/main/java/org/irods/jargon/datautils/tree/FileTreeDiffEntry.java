@@ -19,8 +19,25 @@ public class FileTreeDiffEntry {
 	private final DiffType diffType;
 	private final long lengthOppositeFile;
 	private long timestampOppositeFile;
+	/**
+	 * Optional field that can be filled in post tree generation that rolls up diffs in children, usually through a tree post-processing phase
+	 */
+	private int countOfDiffsInChildren = 0; 
 
 	private final CollectionAndDataObjectListingEntry collectionAndDataObjectListingEntry;
+	
+	/**
+	 * Classify this as a diff (an actual difference was noted), or as a non-diff entry that simply describes the tree
+	 * @return <code>true</code> if this is an actual diff
+	 */
+	public boolean isCountAsDiff() {
+		boolean isDiff = true;
+		if (diffType == DiffType.DIRECTORY_NO_DIFF) {
+			isDiff = false;
+		}
+		
+		return isDiff;
+	}
 
 	/**
 	 * Static instance method creates a new immutable entry
@@ -113,6 +130,8 @@ public class FileTreeDiffEntry {
 		sb.append(lengthOppositeFile);
 		sb.append("\n   timestampOppositeFile");
 		sb.append(timestampOppositeFile);
+		sb.append("\n   countDiffsInChildren:");
+		sb.append(countOfDiffsInChildren);
 		return sb.toString();
 	}
 
@@ -130,6 +149,20 @@ public class FileTreeDiffEntry {
 
 	public void setTimestampOppositeFile(final long timestampOppositeFile) {
 		this.timestampOppositeFile = timestampOppositeFile;
+	}
+
+	/**
+	 * @return the countOfDiffsInChildren
+	 */
+	public int getCountOfDiffsInChildren() {
+		return countOfDiffsInChildren;
+	}
+
+	/**
+	 * @param countOfDiffsInChildren the countOfDiffsInChildren to set
+	 */
+	public void setCountOfDiffsInChildren(int countOfDiffsInChildren) {
+		this.countOfDiffsInChildren = countOfDiffsInChildren;
 	}
 
 }
