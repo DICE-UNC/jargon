@@ -358,10 +358,10 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 								partialStartIndex);
 			} else {
 
-				ObjStat objStat = getObjectStatForAbsolutePath(collectionAbsolutePath);
 				resultSet = irodsGenQueryExecutor
 						.executeIRODSQueryAndCloseResultInZone(irodsQuery,
-								partialStartIndex, objStat.getOwnerZone());
+								partialStartIndex, MiscIRODSUtils
+										.getZoneInPath(collectionAbsolutePath));
 			}
 		} catch (GenQueryBuilderException e) {
 			log.error("error building query", e);
@@ -619,19 +619,10 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 
 		String absPath;
 		ObjStat objStat = null;
-		String zone;
-
 		if (collectionAbsolutePath.isEmpty()) {
 			absPath = "";
-			zone = "";
 		} else {
 			objStat = getObjectStatForAbsolutePath(collectionAbsolutePath);
-			zone = objStat.getOwnerZone();
-			// get absolute path to use for querying iCAT (could be a soft link)
-			// absPath =
-			// IRODSDataConversionUtil.escapeSingleQuotes(MiscIRODSUtils
-			// .determineAbsolutePathBasedOnCollTypeInObjectStat(objStat));
-
 			absPath = MiscIRODSUtils
 					.determineAbsolutePathBasedOnCollTypeInObjectStat(objStat);
 		}
@@ -660,7 +651,8 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 
 			resultSet = irodsGenQueryExecutor
 					.executeIRODSQueryAndCloseResultInZone(irodsQuery,
-							partialStartIndex, zone);
+							partialStartIndex,
+							MiscIRODSUtils.getZoneInPath(absPath));
 
 		} catch (GenQueryBuilderException e) {
 			log.error("error building query", e);
@@ -739,7 +731,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 
 			resultSet = irodsGenQueryExecutor
 					.executeIRODSQueryAndCloseResultInZone(irodsQuery, 0,
-							objStat.getOwnerZone());
+							MiscIRODSUtils.getZoneInPath(absPath));
 		} catch (GenQueryBuilderException e) {
 			log.error("builder exception in query", e);
 			throw new JargonException("error in query", e);
@@ -897,7 +889,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 
 			resultSet = irodsGenQueryExecutor
 					.executeIRODSQueryAndCloseResultInZone(irodsQuery, 0,
-							objStat.getOwnerZone());
+							MiscIRODSUtils.getZoneInPath(effectiveAbsolutePath));
 		} catch (JargonQueryException e) {
 			log.error("error in query", e);
 			throw new JargonException("error in exists query", e);
@@ -1401,7 +1393,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 					.exportIRODSQueryFromBuilder(1);
 			resultSet = irodsGenQueryExecutor
 					.executeIRODSQueryAndCloseResultInZone(irodsQuery, 0,
-							objStat.getOwnerZone());
+							MiscIRODSUtils.getZoneInPath(absPath));
 		} catch (JargonQueryException e) {
 			throw new JargonException("error querying for inheritance flag", e);
 		} catch (GenQueryBuilderException e) {
@@ -1570,7 +1562,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 							.getMaxFilesAndDirsQueryMax());
 			resultSet = irodsGenQueryExecutor
 					.executeIRODSQueryAndCloseResultInZone(irodsQuery, 0,
-							objStat.getOwnerZone());
+							MiscIRODSUtils.getZoneInPath(absPath));
 			IRODSQueryResultRow row = resultSet.getFirstResult();
 
 			/**
@@ -1587,7 +1579,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 			userAndZone.append('#');
 			userAndZone.append(row.getColumn(1));
 
-			if (row.getColumn(1).equals(objStat.getOwnerZone())) {
+			if (row.getColumn(1).equals(MiscIRODSUtils.getZoneInPath(absPath))) {
 				displayUserName = row.getColumn(0);
 			} else {
 				displayUserName = userAndZone.toString();

@@ -38,10 +38,6 @@ import org.irods.jargon.core.utils.MiscIRODSUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/*import org.perf4j.StopWatch;
- import org.perf4j.log4j.Log4JStopWatch;
- import org.perf4j.slf4j.Slf4JStopWatch;*/
-
 /**
  * This access object contains methods that can assist in searching across
  * Collections and Data Objects, and in listing across Collections And Data
@@ -130,7 +126,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		entry.setId(objStat.getDataId());
 		entry.setObjectType(objStat.getObjectType());
 		entry.setOwnerName(objStat.getOwnerName());
-		entry.setOwnerZone(objStat.getOwnerZone());
+		entry.setOwnerZone(MiscIRODSUtils.getZoneInPath(absolutePath));
 		entry.setSpecColType(objStat.getSpecColType());
 		entry.setSpecialObjectPath(objStat.getObjectPath());
 		log.info("created entry for path as: {}", entry);
@@ -399,7 +395,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 
 			resultSet = irodsGenQueryExecutor
 					.executeIRODSQueryAndCloseResultInZone(irodsQuery, 0,
-							objStat.getOwnerZone());
+							MiscIRODSUtils.getZoneInPath(effectiveAbsolutePath));
 		} catch (JargonQueryException e) {
 			log.error(QUERY_EXCEPTION_FOR_QUERY, e);
 			throw new JargonException("error in exists query", e);
@@ -433,7 +429,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 					.exportIRODSQueryFromBuilder(1);
 			resultSet = irodsGenQueryExecutor
 					.executeIRODSQueryAndCloseResultInZone(irodsQuery, 0,
-							objStat.getOwnerZone());
+							MiscIRODSUtils.getZoneInPath(effectiveAbsolutePath));
 		} catch (JargonQueryException e) {
 			log.error(QUERY_EXCEPTION_FOR_QUERY, e);
 			throw new JargonException("error in exists query", e);
@@ -876,7 +872,8 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 							.getMaxFilesAndDirsQueryMax());
 			resultSet = irodsGenQueryExecutor
 					.executeIRODSQueryWithPagingInZone(irodsQuery,
-							partialStartIndex, objStat.getOwnerZone());
+							partialStartIndex,
+							MiscIRODSUtils.getZoneInPath(absolutePath));
 		} catch (JargonQueryException e) {
 			log.error(QUERY_EXCEPTION_FOR_QUERY, e);
 			throw new JargonException(e);
@@ -937,13 +934,15 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		arguments.add(String.valueOf(offset));
 
 		SpecificQuery specificQuery = SpecificQuery.instanceArguments(
-				SHOW_COLL_ACLS, arguments, 0, objStat.getOwnerZone());
+				SHOW_COLL_ACLS, arguments, 0,
+				MiscIRODSUtils.getZoneInPath(effectiveAbsolutePath));
 
 		SpecificQueryResultSet specificQueryResultSet = specificQueryAO
 				.executeSpecificQueryUsingAlias(specificQuery,
-						getJargonProperties().getMaxFilesAndDirsQueryMax(),offset);
+						getJargonProperties().getMaxFilesAndDirsQueryMax(),
+						offset);
 		log.info("got result set:{}", specificQueryResultSet);
-		
+
 		return buildCollectionListingWithAccessInfoFromResultSet(
 				specificQueryResultSet, objStat);
 
@@ -1538,11 +1537,13 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		arguments.add(String.valueOf(offset));
 
 		SpecificQuery specificQuery = SpecificQuery.instanceArguments(
-				SHOW_DATA_OBJ_ACLS, arguments, 0, objStat.getOwnerZone());
+				SHOW_DATA_OBJ_ACLS, arguments, 0,
+				MiscIRODSUtils.getZoneInPath(effectiveAbsolutePath));
 
 		SpecificQueryResultSet specificQueryResultSet = specificQueryAO
 				.executeSpecificQueryUsingAlias(specificQuery,
-						getJargonProperties().getMaxFilesAndDirsQueryMax(), offset);
+						getJargonProperties().getMaxFilesAndDirsQueryMax(),
+						offset);
 		log.info("got result set:{}", specificQueryResultSet);
 
 		return buildDataObjectListingWithAccessInfoFromResultSet(
