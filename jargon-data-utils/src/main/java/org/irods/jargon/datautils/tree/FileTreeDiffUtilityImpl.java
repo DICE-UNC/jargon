@@ -449,7 +449,8 @@ public class FileTreeDiffUtilityImpl extends AbstractDataUtilsServiceImpl
 
 			log.debug("unaccounted for rhs file: {}", rhsFile.getAbsolutePath());
 			FileTreeDiffEntry entry = buildFileTreeDiffEntryForFile(rhsFile,
-					DiffType.RIGHT_HAND_PLUS, lhsFile.getAbsolutePath(), 0, 0);
+					DiffType.RIGHT_HAND_PLUS, leftHandSide.getAbsolutePath(),
+					0, 0);
 			currentFileTreeNode.add(new FileTreeNode(entry));
 		}
 
@@ -530,7 +531,7 @@ public class FileTreeDiffUtilityImpl extends AbstractDataUtilsServiceImpl
 			log.debug("unaccounted for rhs collection: {}",
 					rhsFile.getAbsolutePath());
 			FileTreeDiffEntry entry = buildFileTreeDiffEntryForFile(rhsFile,
-					DiffType.RIGHT_HAND_PLUS, lhsFile.getAbsolutePath(), 0, 0);
+					DiffType.RIGHT_HAND_PLUS, leftHandSideRootPath, 0, 0);
 			currentFileTreeNode.add(new FileTreeNode(entry));
 		}
 	}
