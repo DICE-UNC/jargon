@@ -79,26 +79,29 @@ public interface QueueManagerService {
 	 */
 	void purgeAllFromQueue() throws ConveyorBusyException,
 			ConveyorExecutionException;
-        
-        /**
+
+	/**
 	 * Cancel specified transfer, no matter what the status
 	 * 
+	 * @throws TransferNotFoundException
+	 *             if transfer cannot be located
 	 * @throws ConveyorExecutionException
 	 *             for other errors
 	 */
-	void cancelTransfer(final long transferAttemptId) throws ConveyorExecutionException;
-        
-        /**
+	void cancelTransfer(final long transferAttemptId)
+			throws TransferNotFoundException, ConveyorExecutionException;
+
+	/**
 	 * Purge specified transfer from the queue, no matter what the status
 	 * 
 	 * @throws ConveyorBusyException
-	 *             if the transfer is busy, this indicates that the
-	 *             queue should be idle before purging
+	 *             if the transfer is busy, this indicates that the queue should
+	 *             be idle before purging
 	 * @throws ConveyorExecutionException
 	 *             for other errors
 	 */
-	void deleteTransferFromQueue(Transfer transfer) throws ConveyorBusyException,
-			ConveyorExecutionException;
+	void deleteTransferFromQueue(Transfer transfer)
+			throws ConveyorBusyException, ConveyorExecutionException;
 
 	/**
 	 * Get a list of the entire contents of the transfer queue
@@ -145,14 +148,16 @@ public interface QueueManagerService {
 	 * 
 	 * @param transferId
 	 *            <code>long</code> with the unique id for the transfer
+	 * @throws TransferNotFoundException
 	 * @throws RejectedTransferException
 	 *             if the transfer is not suitable for restart
 	 * @throws ConveyorExecutionException
 	 */
 	void enqueueRestartOfTransferOperation(final long transferId)
-			throws RejectedTransferException, ConveyorExecutionException;
-        
-        /**
+			throws TransferNotFoundException, RejectedTransferException,
+			ConveyorExecutionException;
+
+	/**
 	 * Cause a transfer to be resubmitted. A resubmit will start the transfer
 	 * from the beginning.
 	 * 
@@ -160,10 +165,12 @@ public interface QueueManagerService {
 	 *            <code>long</code> with the unique id for the transfer
 	 * @throws RejectedTransferException
 	 *             if the transfer is not suitable for resubmit
+	 * @throws TransferNotFoundException
 	 * @throws ConveyorExecutionException
 	 */
 	void enqueueResubmitOfTransferOperation(final long transferId)
-			throws RejectedTransferException, ConveyorExecutionException;
+			throws TransferNotFoundException, RejectedTransferException,
+			ConveyorExecutionException;
 
 	/**
 	 * General method allows saving of arbitrary <code>Transfer</code>

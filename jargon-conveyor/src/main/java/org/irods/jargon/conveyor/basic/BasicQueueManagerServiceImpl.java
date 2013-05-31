@@ -72,7 +72,8 @@ public class BasicQueueManagerServiceImpl extends
 	 */
 	@Override
 	public void enqueueRestartOfTransferOperation(final long transferId)
-			throws RejectedTransferException, ConveyorExecutionException {
+			throws TransferNotFoundException, RejectedTransferException,
+			ConveyorExecutionException {
 
 		log.info("enqueueTransferOperation()");
 
@@ -83,6 +84,10 @@ public class BasicQueueManagerServiceImpl extends
 		Transfer existingTransfer;
 		try {
 			existingTransfer = transferDAO.findById(transferId);
+			if (existingTransfer == null) {
+				log.error("cannot find tranfser to restart");
+				throw new TransferNotFoundException("unable to find transfer");
+			}
 		} catch (TransferDAOException e) {
 			throw new ConveyorExecutionException();
 		}
@@ -104,7 +109,8 @@ public class BasicQueueManagerServiceImpl extends
 	 */
 	@Override
 	public void enqueueResubmitOfTransferOperation(final long transferId)
-			throws RejectedTransferException, ConveyorExecutionException {
+			throws TransferNotFoundException, RejectedTransferException,
+			ConveyorExecutionException {
 
 		log.info("enqueueTransferOperation()");
 
@@ -115,6 +121,10 @@ public class BasicQueueManagerServiceImpl extends
 		Transfer existingTransfer;
 		try {
 			existingTransfer = transferDAO.findById(transferId);
+			if (existingTransfer == null) {
+				log.error("cannot find tranfser to restart");
+				throw new TransferNotFoundException("unable to find transfer");
+			}
 		} catch (TransferDAOException e) {
 			throw new ConveyorExecutionException();
 		}
@@ -198,7 +208,7 @@ public class BasicQueueManagerServiceImpl extends
 
 	}
 
-	private void evaluateTransferForExecution(Transfer transfer)
+	private void evaluateTransferForExecution(final Transfer transfer)
 			throws RejectedTransferException, ConveyorExecutionException {
 		// FIXME: implement this!
 
@@ -302,9 +312,9 @@ public class BasicQueueManagerServiceImpl extends
 	 * org.irods.jargon.transfer.dao.domain.TransferType)
 	 */
 	@Override
-	public void enqueueTransferOperation(String irodsFile, String localFile,
-			IRODSAccount irodsAccount, TransferType type)
-			throws ConveyorExecutionException {
+	public void enqueueTransferOperation(final String irodsFile,
+			final String localFile, final IRODSAccount irodsAccount,
+			final TransferType type) throws ConveyorExecutionException {
 		log.info("processTransfer()");
 		Transfer transfer = new Transfer();
 		transfer.setCreatedAt(new Timestamp(System.currentTimeMillis()));
@@ -349,8 +359,15 @@ public class BasicQueueManagerServiceImpl extends
 
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.conveyor.core.QueueManagerService#deleteTransferFromQueue
+	 * (org.irods.jargon.transfer.dao.domain.Transfer)
+	 */
 	@Override
-	public void deleteTransferFromQueue(Transfer transfer)
+	public void deleteTransferFromQueue(final Transfer transfer)
 			throws ConveyorBusyException, ConveyorExecutionException {
 		log.info("deleteTransferFromQueue()");
 
@@ -374,31 +391,51 @@ public class BasicQueueManagerServiceImpl extends
 			this.getConveyorExecutorService().setOperationCompleted();
 
 		}
-
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.conveyor.core.QueueManagerService#cancelTransfer(long)
+	 */
 	@Override
-        public void cancelTransfer(final long transferAttemptId) throws ConveyorExecutionException {
-            TransferAttempt transferAttemptToCancel;
-            try {
-			transferAttemptToCancel =  transferAttemptDAO.findById(transferAttemptId);
+	public void cancelTransfer(final long transferAttemptId)
+			throws TransferNotFoundException, ConveyorExecutionException {
+		TransferAttempt transferAttemptToCancel;
+		try {
+			transferAttemptToCancel = transferAttemptDAO
+					.findById(transferAttemptId);
+			if (transferAttemptToCancel == null) {
+				log.error("cannot find tranfser to restart");
+				throw new TransferNotFoundException("unable to find transfer");
+			}
 		} catch (TransferDAOException e) {
 			log.error("error in dao finding transfer attempt by id");
 			throw new ConveyorExecutionException(e);
 		}
-            
-            // check state of transfer attempt
-            if (transferAttemptToCancel.getTransfer().getTransferState() == TransferStateEnum.PROCESSING) {
-                
-                // check to see if this is the currently processing transfer attempt
-                if ( transferAttemptToCancel.getId().longValue() == 
-                        getConveyorService().getConveyorExecutorService().getCurrentTransferAttempt().getId().longValue()) {
-                    log.info("matched currently running transfer attempt - cancelling transfer");
-                    getConveyorService().getConveyorExecutorService().requestCancel(transferAttemptToCancel);
-                }
-            }
-        }
 
+		// check state of transfer attempt
+		if (transferAttemptToCancel.getTransfer().getTransferState() == TransferStateEnum.PROCESSING) {
+
+			// check to see if this is the currently processing transfer attempt
+			if (transferAttemptToCancel.getId().longValue() == getConveyorService()
+					.getConveyorExecutorService().getCurrentTransferAttempt()
+					.getId().longValue()) {
+				log.info("matched currently running transfer attempt - cancelling transfer");
+				getConveyorService().getConveyorExecutorService()
+						.requestCancel(transferAttemptToCancel);
+			}
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.conveyor.core.QueueManagerService#
+	 * initializeGivenTransferByLoadingChildren
+	 * (org.irods.jargon.transfer.dao.domain.Transfer)
+	 */
 	@Override
 	public Transfer initializeGivenTransferByLoadingChildren(
 			final Transfer transfer) throws ConveyorExecutionException {
@@ -448,7 +485,7 @@ public class BasicQueueManagerServiceImpl extends
 	 * @param conveyorService
 	 *            the conveyorService to set
 	 */
-	public void setConveyorService(ConveyorService conveyorService) {
+	public void setConveyorService(final ConveyorService conveyorService) {
 		this.conveyorService = conveyorService;
 	}
 
@@ -460,7 +497,7 @@ public class BasicQueueManagerServiceImpl extends
 	 * (long)
 	 */
 	@Override
-	public Transfer findTransferByTransferId(long transferId)
+	public Transfer findTransferByTransferId(final long transferId)
 			throws ConveyorExecutionException {
 		log.info("initializeGivenTransferByLoadingChildren");
 		try {
