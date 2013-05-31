@@ -323,6 +323,7 @@ public class FileTreeDiffUtilityImpl extends AbstractDataUtilsServiceImpl
 					rightHandSide.lastModified());
 			currentFileTreeNode.add(new FileTreeNode(entry));
 		} else {
+			// FIXME: is this where we create the new parent node?
 			compareTwoEqualDirectories(currentFileTreeNode, leftHandSide,
 					leftHandSideRootPath, rightHandSide, rightHandSideRootPath,
 					leftHandSideAsRelativePath,
@@ -404,7 +405,7 @@ public class FileTreeDiffUtilityImpl extends AbstractDataUtilsServiceImpl
 			}
 
 			if (j >= rhsChildren.length) {
-				lhsChildIsUnmatched(currentFileTreeNode, lhsFile,
+				lhsChildIsUnmatched(parentNode, lhsFile,
 						rightHandSide, timestampForLastSynchLeftHandSide,
 						timestampForLastSynchRightHandSide);
 
@@ -572,7 +573,7 @@ public class FileTreeDiffUtilityImpl extends AbstractDataUtilsServiceImpl
 		log.info("leftHandSide lastModified:{}", leftHandSide.lastModified());
 		
 		StringBuilder sb = new StringBuilder();
-		sb.append(rightHandSide.getParent());
+		sb.append(rightHandSide.getAbsolutePath());
 		sb.append("/");
 		sb.append(leftHandSide.getName());
 
