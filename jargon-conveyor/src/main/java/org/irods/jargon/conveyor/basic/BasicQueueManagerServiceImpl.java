@@ -400,14 +400,14 @@ public class BasicQueueManagerServiceImpl extends
 	 * org.irods.jargon.conveyor.core.QueueManagerService#cancelTransfer(long)
 	 */
 	@Override
-	public void cancelTransfer(final long transferAttemptId)
+	public void cancelTransfer(final long transferId)
 			throws TransferNotFoundException, ConveyorExecutionException {
 		TransferAttempt transferAttemptToCancel;
 		try {
 			transferAttemptToCancel = transferAttemptDAO
-					.findById(transferAttemptId);
+					.findLastTransferAttemptForTransferByTransferId(transferId);
 			if (transferAttemptToCancel == null) {
-				log.error("cannot find tranfser to restart");
+				log.error("cannot find transfer to cancel");
 				throw new TransferNotFoundException("unable to find transfer");
 			}
 		} catch (TransferDAOException e) {
