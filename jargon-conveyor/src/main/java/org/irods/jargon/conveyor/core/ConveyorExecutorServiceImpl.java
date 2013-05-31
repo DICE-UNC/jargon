@@ -32,7 +32,8 @@ public class ConveyorExecutorServiceImpl implements ConveyorExecutorService {
 	private RunningStatus runningStatus = RunningStatus.IDLE;
 	private Object statusSynchronizingObject = new Object();
 	private final ConveyorCallableFactory conveyorCallableFactory = new ConveyorCallableFactory();
-	private Future<ConveyorExecutionFuture> currentTransfer = null;
+	private Future<ConveyorExecutionFuture> currentTransferFuture = null;
+	private TransferAttempt currentTransferAttempt = null;
 
 	/**
 	 * Thread pool (just 1 for now) that runs service
@@ -50,6 +51,39 @@ public class ConveyorExecutorServiceImpl implements ConveyorExecutorService {
 		synchronized (this) {
 			return executorServiceProperties;
 		}
+	}
+
+	public void requestCancel(final TransferAttempt transferAttempt)
+			throws ConveyorExecutionException {
+		if (transferAttempt == null) {
+			throw new IllegalArgumentException("null transferAttempt");
+		}
+
+		log.info("will attempt to cancel transferAttempt:{}", transferAttempt);
+
+		if (transferAttempt.getId() == null) {
+			throw new IllegalArgumentException("transfer attempt has null id");
+		}
+
+		synchronized (this) {
+
+			if (this.currentTransferAttempt == null) {
+				log.info("no current transfer, ignore");
+				return;
+			}
+
+			log.info("blowing away the future");
+
+			// this shouldn't happen
+			if (this.currentTransferFuture == null) {
+				log.warn("no current future found, ignore and pretend it's cancelled");
+				return;
+			}
+
+			currentTransferFuture.cancel(true);
+
+		}
+
 	}
 
 	/*
@@ -104,11 +138,12 @@ public class ConveyorExecutorServiceImpl implements ConveyorExecutorService {
 		log.info("submitting transferAttempt:{}", transferAttempt);
 		synchronized (this) {
 
+			this.currentTransferAttempt = transferAttempt;
 			Callable<ConveyorExecutionFuture> callable = conveyorCallableFactory
 					.instanceCallableForOperation(transferAttempt,
 							conveyorService);
 
-			this.currentTransfer = pool.submit(callable);
+			this.currentTransferFuture = pool.submit(callable);
 
 		}
 	}
@@ -203,6 +238,10 @@ public class ConveyorExecutorServiceImpl implements ConveyorExecutorService {
 				log.info("setting idle");
 				setRunningStatus(RunningStatus.IDLE);
 			}
+
+			log.info("clearing transfer attempt and future if they are there");
+			this.currentTransferAttempt = null;
+			this.currentTransferFuture = null;
 		}
 	}
 
@@ -255,8 +294,8 @@ public class ConveyorExecutorServiceImpl implements ConveyorExecutorService {
 	/**
 	 * @return the currentTransfer
 	 */
-	public Future<ConveyorExecutionFuture> getCurrentTransfer() {
-		return currentTransfer;
+	public synchronized Future<ConveyorExecutionFuture> getCurrentTransferFuture() {
+		return currentTransferFuture;
 	}
 
 	/*
@@ -294,6 +333,13 @@ public class ConveyorExecutorServiceImpl implements ConveyorExecutorService {
 				listener.setQueueStatus(getQueueStatus());
 			}
 		}
+	}
+
+	/**
+	 * @return the currentTransferAttempt
+	 */
+	public synchronized TransferAttempt getCurrentTransferAttempt() {
+		return currentTransferAttempt;
 	}
 
 }
