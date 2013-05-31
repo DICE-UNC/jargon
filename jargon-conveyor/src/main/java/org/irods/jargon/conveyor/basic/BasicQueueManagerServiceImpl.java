@@ -378,10 +378,21 @@ public class BasicQueueManagerServiceImpl extends
 	}
 
 	@Override
-	public void cancelTransfer(final long transferId)
-			throws ConveyorExecutionException {
-
-	}
+        public void cancelTransfer(final long transferAttemptId) throws ConveyorExecutionException {
+            TransferAttempt transferAttemptToCancel;
+            try {
+			transferAttemptToCancel =  transferAttemptDAO.findById(transferAttemptId);
+		} catch (TransferDAOException e) {
+			log.error("error in dao finding transfer attempt by id");
+			throw new ConveyorExecutionException(e);
+		}
+            
+            // check state of transfer attempt
+            if (transferAttemptToCancel.getTransfer().getTransferState() == TransferStateEnum.PROCESSING) {
+                // check to see if this is the currently processing transfer attempt
+                if ( transferAttemptToCancel.getId().longValue() == this.getConveyorExecutorService().getCurrentTransferAttempt().)
+            }
+        }
 
 	@Override
 	public Transfer initializeGivenTransferByLoadingChildren(
