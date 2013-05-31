@@ -389,8 +389,11 @@ public class BasicQueueManagerServiceImpl extends
             
             // check state of transfer attempt
             if (transferAttemptToCancel.getTransfer().getTransferState() == TransferStateEnum.PROCESSING) {
+                
                 // check to see if this is the currently processing transfer attempt
-                if ( transferAttemptToCancel.getId().longValue() == this.getConveyorExecutorService().getCurrentTransferAttempt().)
+                if ( transferAttemptToCancel.getId().longValue() == 
+                        this.getConveyorService().getConveyorExecutorService().getCurrentTransferAttempt().getId().longValue()) {
+                }
             }
         }
 

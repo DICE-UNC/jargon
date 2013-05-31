@@ -25,6 +25,13 @@ public interface ConveyorExecutorService {
 
 	ExecutorService executor = Executors.newFixedThreadPool(1);
 
+    /**
+     * @return the currentTransferAttempt
+     */
+    TransferAttempt getCurrentTransferAttempt();
+
+    void requestCancel(final TransferAttempt transferAttempt) throws ConveyorExecutionException;
+
 	public enum ErrorStatus {
 		OK, WARNING, ERROR
 	}
