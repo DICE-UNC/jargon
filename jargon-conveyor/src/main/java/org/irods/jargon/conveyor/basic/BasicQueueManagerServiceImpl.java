@@ -79,14 +79,14 @@ public class BasicQueueManagerServiceImpl extends
 		if (transferId <= 0) {
 			throw new IllegalArgumentException("illegal transferId");
 		}
-                
-                Transfer existingTransfer;
-                try {
-                    existingTransfer = transferDAO.findById(transferId);
-                } catch (TransferDAOException e) {
-                        throw new ConveyorExecutionException();
-                }
-                evaluateTransferForExecution(existingTransfer);
+
+		Transfer existingTransfer;
+		try {
+			existingTransfer = transferDAO.findById(transferId);
+		} catch (TransferDAOException e) {
+			throw new ConveyorExecutionException();
+		}
+		evaluateTransferForExecution(existingTransfer);
 
 		conveyorService.getTransferAccountingManagementService()
 				.prepareTransferForRestart(transferId);
@@ -95,8 +95,8 @@ public class BasicQueueManagerServiceImpl extends
 		dequeueNextOperation();
 
 	}
-        
-        /*
+
+	/*
 	 * (non-Javadoc)
 	 * 
 	 * @see org.irods.jargon.conveyor.core.QueueManagerService#
@@ -111,14 +111,14 @@ public class BasicQueueManagerServiceImpl extends
 		if (transferId <= 0) {
 			throw new IllegalArgumentException("illegal transferId");
 		}
-                
-                Transfer existingTransfer;
-                try {
-                    existingTransfer = transferDAO.findById(transferId);
-                } catch (TransferDAOException e) {
-                        throw new ConveyorExecutionException();
-                }
-                evaluateTransferForExecution(existingTransfer);
+
+		Transfer existingTransfer;
+		try {
+			existingTransfer = transferDAO.findById(transferId);
+		} catch (TransferDAOException e) {
+			throw new ConveyorExecutionException();
+		}
+		evaluateTransferForExecution(existingTransfer);
 
 		conveyorService.getTransferAccountingManagementService()
 				.prepareTransferForResubmit(transferId);
@@ -201,13 +201,13 @@ public class BasicQueueManagerServiceImpl extends
 	private void evaluateTransferForExecution(Transfer transfer)
 			throws RejectedTransferException, ConveyorExecutionException {
 		// FIXME: implement this!
-            
-                // check to see if the transfer has already completed successfully
-                if ((transfer.getTransferState() == TransferStateEnum.COMPLETE) &&
-                    (transfer.getLastTransferStatus() == TransferStatusEnum.OK)) {
-                    log.info("existing transfer found, and it has already completed successfully");
-                            throw new RejectedTransferException();
-                }
+
+		// check to see if the transfer has already completed successfully
+		if ((transfer.getTransferState() == TransferStateEnum.COMPLETE)
+				&& (transfer.getLastTransferStatus() == TransferStatusEnum.OK)) {
+			log.info("existing transfer found, and it has already completed successfully");
+			throw new RejectedTransferException();
+		}
 	}
 
 	@Override
@@ -357,10 +357,10 @@ public class BasicQueueManagerServiceImpl extends
 		log.info("see if conveyor is busy");
 
 		try {
-                    this.getConveyorExecutorService().setBusyForAnOperation();
+			this.getConveyorExecutorService().setBusyForAnOperation();
 		} catch (ConveyorBusyException e) {
-                    log.info("conveyor is busy, cannot purge");
-                    throw e;
+			log.info("conveyor is busy, cannot purge");
+			throw e;
 		}
 
 		log.info("delete transfer id:{} ...", transfer.getId());
@@ -376,13 +376,12 @@ public class BasicQueueManagerServiceImpl extends
 		}
 
 	}
-        
-        @Override
-        public void cancelTransfer(final long transferId) throws ConveyorExecutionException {
-            // TODO: Implement this
-            // find out whether this transfer is currently enqueued or processing
-            // if not, just mark cancelled?
-        }
+
+	@Override
+	public void cancelTransfer(final long transferId)
+			throws ConveyorExecutionException {
+
+	}
 
 	@Override
 	public Transfer initializeGivenTransferByLoadingChildren(

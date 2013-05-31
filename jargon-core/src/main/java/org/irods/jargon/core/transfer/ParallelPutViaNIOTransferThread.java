@@ -96,6 +96,11 @@ public final class ParallelPutViaNIOTransferThread extends
 			bb.flip();
 
 			while (bb.hasRemaining()) {
+				if (Thread.currentThread().isInterrupted()) {
+					throw new IOException(
+
+					"interrupted, consider connection corrupted and return IOException to clear");
+				}
 				getS().write(bb);
 			}
 
@@ -128,6 +133,12 @@ public final class ParallelPutViaNIOTransferThread extends
 
 		try {
 			while (!done) {
+
+				if (Thread.currentThread().isInterrupted()) {
+					throw new IOException(
+
+					"interrupted, consider connection corrupted and return IOException to clear");
+				}
 
 				log.debug("in main put() loop, reading header data");
 
@@ -189,6 +200,12 @@ public final class ParallelPutViaNIOTransferThread extends
 			long totalBytes = 0;
 
 			while (totalBytes < length) {
+
+				if (Thread.currentThread().isInterrupted()) {
+					throw new IOException(
+
+					"interrupted, consider connection corrupted and return IOException to clear");
+				}
 
 				if (length - totalBytes < copyBuffSize) {
 					copyBuffSize = (int) (length - totalBytes);

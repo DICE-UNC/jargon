@@ -104,6 +104,12 @@ final class TransferOperationsHelper {
 		log.info("    into iRODS file: {}", targetLocalFile.getAbsolutePath());
 
 		for (File fileInSourceCollection : irodsSourceFile.listFiles()) {
+
+			if (Thread.currentThread().isInterrupted()) {
+				log.info("cancellation detected, set cancelled in tcb");
+				transferControlBlock.setCancelled(true);
+			}
+
 			// for each file in the given source collection, put the data file,
 			// or create the new irodsCollection and step into it
 
@@ -346,6 +352,11 @@ final class TransferOperationsHelper {
 
 		for (File fileInSourceCollection : sourceFile.listFiles()) {
 
+			if (Thread.currentThread().isInterrupted()) {
+				log.info("cancellation detected, set cancelled in tcb");
+				transferControlBlock.setCancelled(true);
+			}
+
 			// check for a cancel or pause at the top of the loop
 			if (transferControlBlock != null
 					&& (transferControlBlock.isCancelled() || transferControlBlock
@@ -550,6 +561,11 @@ final class TransferOperationsHelper {
 		log.info("    into resource: {}", targetResource);
 
 		for (File fileInSourceCollection : sourceFile.listFiles()) {
+
+			if (Thread.currentThread().isInterrupted()) {
+				log.info("cancellation detected, set cancelled in tcb");
+				transferControlBlock.setCancelled(true);
+			}
 
 			// check for a cancel or pause at the top of the loop
 			if (transferControlBlock != null
@@ -908,6 +924,11 @@ final class TransferOperationsHelper {
 		IRODSFile childTargetFile = null;
 
 		for (File fileInSourceCollection : irodsSourceFile.listFiles()) {
+
+			if (Thread.currentThread().isInterrupted()) {
+				log.info("cancellation detected, set cancelled in tcb");
+				transferControlBlock.setCancelled(true);
+			}
 
 			// check for a cancel or pause at the top of the loop
 			if (transferControlBlock != null

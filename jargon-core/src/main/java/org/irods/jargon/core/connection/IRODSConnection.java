@@ -686,6 +686,13 @@ public class IRODSConnection implements IRODSManagedConnection {
 			byte[] temp = new byte[(int) lenOfTemp];
 
 			while (length > 0) {
+
+				if (Thread.currentThread().isInterrupted()) {
+					throw new IOException(
+
+					"interrupted, consider connection corrupted and return IOException to clear");
+				}
+
 				if (temp.length > length) {
 					temp = new byte[(int) length];
 				}
@@ -830,6 +837,14 @@ public class IRODSConnection implements IRODSManagedConnection {
 									// jargon.io.get.read.write.buffer.size
 			int n = 0;
 			while (length > 0) {
+
+				if (Thread.currentThread().isInterrupted()) {
+					bos.close();
+					throw new IOException(
+
+					"interrupted, consider connection corrupted and return IOException to clear");
+				}
+
 				n = read(temp, 0, Math.min(
 						pipelineConfiguration.getInternalCacheBufferSize(),
 						(int) length));
@@ -915,6 +930,10 @@ public class IRODSConnection implements IRODSManagedConnection {
 		try {
 			int bytesRead = 0;
 			while (bytesRead < length) {
+				if (Thread.currentThread().isInterrupted()) {
+					throw new IOException(
+							"interrupted, consider connection corrupted and return IOException to clear");
+				}
 				int read = irodsInputStream.read(value, offset + bytesRead,
 						length - bytesRead);
 				if (read == -1) {

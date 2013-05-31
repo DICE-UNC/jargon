@@ -43,6 +43,11 @@ public class AbstractNIOParallelTransferThread {
 
 			read = getS().read(b);
 			while (read != -1) {
+				if (Thread.currentThread().isInterrupted()) {
+					throw new IOException(
+
+					"interrupted, consider connection corrupted and return IOException to clear");
+				}
 				tot += read;
 				if (tot == length) {
 					break;

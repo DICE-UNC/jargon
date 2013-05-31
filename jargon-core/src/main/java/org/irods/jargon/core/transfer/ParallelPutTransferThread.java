@@ -150,6 +150,11 @@ public final class ParallelPutTransferThread extends
 				totalSkipped += skipped;
 
 				while (totalSkipped < offset) {
+					if (Thread.currentThread().isInterrupted()) {
+						throw new IOException(
+
+						"interrupted, consider connection corrupted and return IOException to clear");
+					}
 					log.warn("did not skip entire offset amount, call skip again");
 					toSkip = offset - totalSkipped;
 					skipped = bis.skip(toSkip);
@@ -178,6 +183,12 @@ public final class ParallelPutTransferThread extends
 
 		try {
 			while (!done) {
+
+				if (Thread.currentThread().isInterrupted()) {
+					throw new IOException(
+
+					"interrupted, consider connection corrupted and return IOException to clear");
+				}
 
 				log.debug("in main put() loop, reading header data");
 
@@ -253,6 +264,12 @@ public final class ParallelPutTransferThread extends
 		log.debug("readWriteLoopForCurrentHeaderDirective()");
 		try {
 			while (transferLength > 0) {
+				if (Thread.currentThread().isInterrupted()) {
+					throw new IOException(
+
+					"interrupted, consider connection corrupted and return IOException to clear");
+				}
+
 				log.debug("read/write loop at top");
 
 				read = bis.read(buffer, 0, (int) Math.min(
