@@ -86,7 +86,7 @@ public interface QueueManagerService {
 	 * @throws ConveyorExecutionException
 	 *             for other errors
 	 */
-	void cancelTransfer(final long transferId) throws ConveyorExecutionException;
+	void cancelTransfer(final long transferAttemptId) throws ConveyorExecutionException;
         
         /**
 	 * Purge specified transfer from the queue, no matter what the status
