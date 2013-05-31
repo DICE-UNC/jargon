@@ -1,11 +1,11 @@
 package org.irods.jargon.conveyor.core;
 
 import java.util.Properties;
-import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
+import org.irods.jargon.conveyor.core.callables.AbstractConveyorCallable;
 import org.irods.jargon.conveyor.core.callables.ConveyorCallableFactory;
 import org.irods.jargon.transfer.dao.domain.TransferAttempt;
 import org.slf4j.Logger;
@@ -34,6 +34,7 @@ public class ConveyorExecutorServiceImpl implements ConveyorExecutorService {
 	private final ConveyorCallableFactory conveyorCallableFactory = new ConveyorCallableFactory();
 	private Future<ConveyorExecutionFuture> currentTransferFuture = null;
 	private TransferAttempt currentTransferAttempt = null;
+	private AbstractConveyorCallable currentCallable = null;
 
 	/**
 	 * Thread pool (just 1 for now) that runs service
@@ -59,7 +60,8 @@ public class ConveyorExecutorServiceImpl implements ConveyorExecutorService {
 			throw new IllegalArgumentException("null transferAttempt");
 		}
 
-		log.info("will attempt to cancel transferAttempt:{}", transferAttempt);
+		log.info("requestCancel() will attempt to cancel transferAttempt:{}",
+				transferAttempt);
 
 		if (transferAttempt.getId() == null) {
 			throw new IllegalArgumentException("transfer attempt has null id");
@@ -72,6 +74,11 @@ public class ConveyorExecutorServiceImpl implements ConveyorExecutorService {
 				return;
 			}
 
+			if (this.currentCallable == null) {
+				log.info("no current callable, ignore");
+				return;
+			}
+
 			log.info("blowing away the future");
 
 			// this shouldn't happen
@@ -80,7 +87,16 @@ public class ConveyorExecutorServiceImpl implements ConveyorExecutorService {
 				return;
 			}
 
+			log.info(">>>setting tcb to cancel and then cancelling future...");
+
+			currentCallable.getTransferControlBlock().setCancelled(true);
 			currentTransferFuture.cancel(true);
+
+			// log.info(">>>blocking for return of future");
+
+			log.info(" go ahead and make call to complete");
+			this.setOperationCompleted();
+			log.info(">>>>>> operation completed in queue");
 
 		}
 
@@ -139,11 +155,11 @@ public class ConveyorExecutorServiceImpl implements ConveyorExecutorService {
 		synchronized (this) {
 
 			this.currentTransferAttempt = transferAttempt;
-			Callable<ConveyorExecutionFuture> callable = conveyorCallableFactory
+			currentCallable = conveyorCallableFactory
 					.instanceCallableForOperation(transferAttempt,
 							conveyorService);
 
-			this.currentTransferFuture = pool.submit(callable);
+			this.currentTransferFuture = pool.submit(currentCallable);
 
 		}
 	}
@@ -242,6 +258,7 @@ public class ConveyorExecutorServiceImpl implements ConveyorExecutorService {
 			log.info("clearing transfer attempt and future if they are there");
 			this.currentTransferAttempt = null;
 			this.currentTransferFuture = null;
+			this.currentCallable = null;
 		}
 	}
 

@@ -96,7 +96,7 @@ public final class ParallelPutViaNIOTransferThread extends
 			bb.flip();
 
 			while (bb.hasRemaining()) {
-				if (Thread.currentThread().isInterrupted()) {
+				if (Thread.interrupted()) {
 					throw new IOException(
 
 					"interrupted, consider connection corrupted and return IOException to clear");
@@ -134,7 +134,7 @@ public final class ParallelPutViaNIOTransferThread extends
 		try {
 			while (!done) {
 
-				if (Thread.currentThread().isInterrupted()) {
+				if (Thread.interrupted()) {
 					throw new IOException(
 
 					"interrupted, consider connection corrupted and return IOException to clear");
@@ -201,7 +201,7 @@ public final class ParallelPutViaNIOTransferThread extends
 
 			while (totalBytes < length) {
 
-				if (Thread.currentThread().isInterrupted()) {
+				if (Thread.interrupted()) {
 					throw new IOException(
 
 					"interrupted, consider connection corrupted and return IOException to clear");

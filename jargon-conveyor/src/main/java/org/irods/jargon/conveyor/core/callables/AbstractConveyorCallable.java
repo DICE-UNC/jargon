@@ -203,6 +203,12 @@ public abstract class AbstractConveyorCallable implements
 			return new ConveyorExecutionFuture();
 
 		} catch (Exception ex) {
+
+			if (this.getTransferControlBlock().isCancelled()) {
+				log.info("cancelled, return future and proceed");
+				return new ConveyorExecutionFuture();
+			}
+
 			log.error(
 					"*********** unanticipated exception occurred  *************",
 					ex);

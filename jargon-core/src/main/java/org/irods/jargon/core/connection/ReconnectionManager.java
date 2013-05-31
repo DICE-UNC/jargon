@@ -108,7 +108,7 @@ public class ReconnectionManager implements Callable<Void> {
 		 * break out of the loop. Nevertheless it does not hurt anything and
 		 * looks better then while(true).
 		 */
-		while (!Thread.currentThread().isInterrupted()) {
+		while (!Thread.interrupted()) {
 			long currentMillis = System.currentTimeMillis();
 			// log.debug("current millis now:{}", currentMillis);
 			// log.debug("reconnect time:{}", reconnectMillis);

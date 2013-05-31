@@ -580,7 +580,7 @@ public final class DataAOHelper extends AOHelper {
 
 			while (lengthLeftToSend > 0) {
 
-				if (Thread.currentThread().isInterrupted()) {
+				if (Thread.interrupted()) {
 					log.info("cancellation detected, set cancelled in tcb");
 					transferControlBlock.setCancelled(true);
 				}

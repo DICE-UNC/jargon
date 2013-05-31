@@ -150,7 +150,7 @@ public final class ParallelPutTransferThread extends
 				totalSkipped += skipped;
 
 				while (totalSkipped < offset) {
-					if (Thread.currentThread().isInterrupted()) {
+					if (Thread.interrupted()) {
 						throw new IOException(
 
 						"interrupted, consider connection corrupted and return IOException to clear");
@@ -184,7 +184,7 @@ public final class ParallelPutTransferThread extends
 		try {
 			while (!done) {
 
-				if (Thread.currentThread().isInterrupted()) {
+				if (Thread.interrupted()) {
 					throw new IOException(
 
 					"interrupted, consider connection corrupted and return IOException to clear");
@@ -264,7 +264,7 @@ public final class ParallelPutTransferThread extends
 		log.debug("readWriteLoopForCurrentHeaderDirective()");
 		try {
 			while (transferLength > 0) {
-				if (Thread.currentThread().isInterrupted()) {
+				if (Thread.interrupted()) {
 					throw new IOException(
 
 					"interrupted, consider connection corrupted and return IOException to clear");

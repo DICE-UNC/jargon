@@ -105,7 +105,7 @@ final class TransferOperationsHelper {
 
 		for (File fileInSourceCollection : irodsSourceFile.listFiles()) {
 
-			if (Thread.currentThread().isInterrupted()) {
+			if (Thread.interrupted()) {
 				log.info("cancellation detected, set cancelled in tcb");
 				transferControlBlock.setCancelled(true);
 			}
@@ -352,7 +352,7 @@ final class TransferOperationsHelper {
 
 		for (File fileInSourceCollection : sourceFile.listFiles()) {
 
-			if (Thread.currentThread().isInterrupted()) {
+			if (Thread.interrupted()) {
 				log.info("cancellation detected, set cancelled in tcb");
 				transferControlBlock.setCancelled(true);
 			}
@@ -562,7 +562,7 @@ final class TransferOperationsHelper {
 
 		for (File fileInSourceCollection : sourceFile.listFiles()) {
 
-			if (Thread.currentThread().isInterrupted()) {
+			if (Thread.interrupted()) {
 				log.info("cancellation detected, set cancelled in tcb");
 				transferControlBlock.setCancelled(true);
 			}
@@ -925,7 +925,7 @@ final class TransferOperationsHelper {
 
 		for (File fileInSourceCollection : irodsSourceFile.listFiles()) {
 
-			if (Thread.currentThread().isInterrupted()) {
+			if (Thread.interrupted()) {
 				log.info("cancellation detected, set cancelled in tcb");
 				transferControlBlock.setCancelled(true);
 			}

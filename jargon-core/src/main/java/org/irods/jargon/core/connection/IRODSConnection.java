@@ -687,7 +687,7 @@ public class IRODSConnection implements IRODSManagedConnection {
 
 			while (length > 0) {
 
-				if (Thread.currentThread().isInterrupted()) {
+				if (Thread.interrupted()) {
 					throw new IOException(
 
 					"interrupted, consider connection corrupted and return IOException to clear");
@@ -838,7 +838,7 @@ public class IRODSConnection implements IRODSManagedConnection {
 			int n = 0;
 			while (length > 0) {
 
-				if (Thread.currentThread().isInterrupted()) {
+				if (Thread.interrupted()) {
 					bos.close();
 					throw new IOException(
 
@@ -930,7 +930,7 @@ public class IRODSConnection implements IRODSManagedConnection {
 		try {
 			int bytesRead = 0;
 			while (bytesRead < length) {
-				if (Thread.currentThread().isInterrupted()) {
+				if (Thread.interrupted()) {
 					throw new IOException(
 							"interrupted, consider connection corrupted and return IOException to clear");
 				}
