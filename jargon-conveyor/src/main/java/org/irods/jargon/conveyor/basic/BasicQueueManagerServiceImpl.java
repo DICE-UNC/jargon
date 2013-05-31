@@ -392,7 +392,9 @@ public class BasicQueueManagerServiceImpl extends
                 
                 // check to see if this is the currently processing transfer attempt
                 if ( transferAttemptToCancel.getId().longValue() == 
-                        this.getConveyorService().getConveyorExecutorService().getCurrentTransferAttempt().getId().longValue()) {
+                        getConveyorService().getConveyorExecutorService().getCurrentTransferAttempt().getId().longValue()) {
+                    log.info("matched currently running transfer attempt - cancelling transfer");
+                    getConveyorService().getConveyorExecutorService().requestCancel(transferAttemptToCancel);
                 }
             }
         }
