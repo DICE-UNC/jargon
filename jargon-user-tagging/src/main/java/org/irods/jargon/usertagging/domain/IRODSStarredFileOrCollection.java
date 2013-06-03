@@ -4,13 +4,11 @@ import java.io.Serializable;
 
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.query.MetaDataAndDomainData.MetadataDomain;
+import org.irods.jargon.core.query.UserAnnotatedCatalogItem;
 
 /**
  * Represents a user 'star' of a file or collection. This is like a favorite
  * folder, and includes a free text description of the folder
- * 
- * This object is a bridge between the typical client presentation of a free tag
- * area, and the underlying one-AVU-per-tag structure of the data.
  * 
  * @author Mike Conway - DICE (www.irods.org)
  * 
@@ -26,8 +24,8 @@ public final class IRODSStarredFileOrCollection extends
 	}
 
 	/**
-	 * Constructor describes the user and
-	 * object that is being starred, and providing a description.
+	 * Constructor describes the user and object that is being starred, and
+	 * providing a description.
 	 * 
 	 * @param metadataDomain
 	 *            <code>MetaDataAndDomainData.MetadataDomain</code> enum value

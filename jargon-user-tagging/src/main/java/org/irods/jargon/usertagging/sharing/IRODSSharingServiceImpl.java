@@ -284,9 +284,9 @@ public class IRODSSharingServiceImpl extends AbstractIRODSTaggingService
 	 * java.lang.String, java.lang.String)
 	 */
 	@Override
-	public void createShare(final String irodsAbsolutePath, String shareName)
-			throws ShareAlreadyExistsException, FileNotFoundException,
-			JargonException {
+	public void createShare(final String irodsAbsolutePath,
+			final String shareName) throws ShareAlreadyExistsException,
+			FileNotFoundException, JargonException {
 
 		log.info("createShare()");
 
@@ -716,9 +716,9 @@ public class IRODSSharingServiceImpl extends AbstractIRODSTaggingService
 	 * @throws JargonException
 	 */
 	private void addSharedFileOrCollectionToListFromRow(
-			SpecificQueryResultSet specificQueryResultSet,
-			List<IRODSSharedFileOrCollection> irodsSharedFileOrCollections,
-			IRODSQueryResultRow row) throws JargonException {
+			final SpecificQueryResultSet specificQueryResultSet,
+			final List<IRODSSharedFileOrCollection> irodsSharedFileOrCollections,
+			final IRODSQueryResultRow row) throws JargonException {
 		IRODSSharedFileOrCollection irodsSharedFileOrCollection;
 		irodsSharedFileOrCollection = new IRODSSharedFileOrCollection(
 				MetadataDomain.COLLECTION, row.getColumn(2), row.getColumn(5),
@@ -760,9 +760,9 @@ public class IRODSSharingServiceImpl extends AbstractIRODSTaggingService
 	 * @param row
 	 */
 	private void augmentRowWithCountData(
-			SpecificQueryResultSet specificQueryResultSet,
-			IRODSSharedFileOrCollection irodsSharedFileOrCollection,
-			IRODSQueryResultRow row) {
+			final SpecificQueryResultSet specificQueryResultSet,
+			final IRODSSharedFileOrCollection irodsSharedFileOrCollection,
+			final IRODSQueryResultRow row) {
 		// add count info
 		irodsSharedFileOrCollection.setCount(row.getRecordCount());
 		irodsSharedFileOrCollection.setLastResult(row.isLastResult());
@@ -775,7 +775,8 @@ public class IRODSSharingServiceImpl extends AbstractIRODSTaggingService
 	 * @throws JargonException
 	 * @throws DataNotFoundException
 	 */
-	private SpecificQueryResultSet runSpecificQuery(SpecificQuery specificQuery)
+	private SpecificQueryResultSet runSpecificQuery(
+			final SpecificQuery specificQuery)
 			throws OperationNotSupportedByThisServerException, JargonException {
 
 		checkSpecificQuerySupport();

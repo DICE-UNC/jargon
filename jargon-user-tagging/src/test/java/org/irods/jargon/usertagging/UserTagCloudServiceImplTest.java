@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.Properties;
 
 import junit.framework.Assert;
+
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.pub.DataTransferOperations;
 import org.irods.jargon.core.pub.IRODSFileSystem;
@@ -158,8 +159,8 @@ public class UserTagCloudServiceImplTest {
 			}
 		}
 
-		//Assert.assertTrue("did not find shared tag with correct count",
-			//	foundSharedWithCorrectCount);
+		// Assert.assertTrue("did not find shared tag with correct count",
+		// foundSharedWithCorrectCount);
 
 	}
 
@@ -322,9 +323,11 @@ public class UserTagCloudServiceImplTest {
 		UserTagCloudService userTagCloudService = UserTagCloudServiceImpl
 				.instance(irodsFileSystem.getIRODSAccessObjectFactory(),
 						irodsAccount);
-		UserTagCloudView searchView = userTagCloudService.searchForTagsForDataObjectsAndCollectionsUsingSearchTermForTheLoggedInUser("SearchTagCloudWithFileTagsAndCollectionTags");
-		Assert.assertNotNull("searchView is null, no tags returned from search", searchView);
-		
+		UserTagCloudView searchView = userTagCloudService
+				.searchForTagsForDataObjectsAndCollectionsUsingSearchTermForTheLoggedInUser("SearchTagCloudWithFileTagsAndCollectionTags");
+		Assert.assertNotNull(
+				"searchView is null, no tags returned from search", searchView);
+
 		irodsFileSystem.close();
 
 	}
@@ -438,7 +441,6 @@ public class UserTagCloudServiceImplTest {
 		IRODSTagValue tagValue = new IRODSTagValue(expectedTagName2,
 				irodsAccount.getUserName());
 		Assert.assertNotNull(tagValue);
-		
 
 		irodsFileSystem.close();
 

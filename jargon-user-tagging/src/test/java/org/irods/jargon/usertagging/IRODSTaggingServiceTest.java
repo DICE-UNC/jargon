@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Properties;
 
 import junit.framework.Assert;
+
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
@@ -1320,7 +1321,7 @@ public class IRODSTaggingServiceTest {
 
 	}
 
-	@Test(expected=DataNotFoundException.class)
+	@Test(expected = DataNotFoundException.class)
 	public final void testRemoveDescriptionFromMissingDataObject()
 			throws Exception {
 		String testFileName = "testRemoveDescriptionFromMissingDataObject.txt";
