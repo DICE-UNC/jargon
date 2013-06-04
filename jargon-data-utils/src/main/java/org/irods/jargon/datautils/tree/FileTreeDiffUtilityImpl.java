@@ -252,11 +252,10 @@ public class FileTreeDiffUtilityImpl extends AbstractDataUtilsServiceImpl
 			log.debug("lhs cutoff:{}", timestampforLastSynchLeftHandSide);
 			StringBuilder sb = new StringBuilder();
 			sb.append(rightHandSideRootPath);
-			sb.append("/");
 			sb.append(leftHandSideAsRelativePath);
 			FileTreeDiffEntry entry = buildFileTreeDiffEntryForFile(
 					leftHandSide, DiffType.LEFT_HAND_PLUS,
-					sb.toString(), 0, 0);
+					sb.toString(), 0, 0, "", "");
 			currentFileTreeNode.add(new FileTreeNode(entry));
 			log.info("left hand plus generated:{}", entry);
 			fileMatchIndex = 1;
@@ -264,11 +263,10 @@ public class FileTreeDiffUtilityImpl extends AbstractDataUtilsServiceImpl
 			log.debug("lhs > rhs");
 			StringBuilder sb = new StringBuilder();
 			sb.append(leftHandSideRootPath);
-			sb.append("/");
 			sb.append(rightHandSideAsRelativePath);
 			FileTreeDiffEntry entry = buildFileTreeDiffEntryForFile(
 					rightHandSide, DiffType.RIGHT_HAND_PLUS,
-					sb.toString(), 0, 0);
+					sb.toString(), 0, 0, "", "");
 			log.info("right hand plus generated:{}", entry);
 			currentFileTreeNode.add(new FileTreeNode(entry));
 			fileMatchIndex = -1;
@@ -320,10 +318,9 @@ public class FileTreeDiffUtilityImpl extends AbstractDataUtilsServiceImpl
 			FileTreeDiffEntry entry = buildFileTreeDiffEntryForFile(
 					leftHandSide, DiffType.FILE_NAME_DIR_NAME_COLLISION,
 					rightHandSide.getAbsolutePath(), rightHandSide.length(),
-					rightHandSide.lastModified());
+					rightHandSide.lastModified(), "", "");
 			currentFileTreeNode.add(new FileTreeNode(entry));
 		} else {
-			// FIXME: is this where we create the new parent node?
 			compareTwoEqualDirectories(currentFileTreeNode, leftHandSide,
 					leftHandSideRootPath, rightHandSide, rightHandSideRootPath,
 					leftHandSideAsRelativePath,
@@ -367,7 +364,7 @@ public class FileTreeDiffUtilityImpl extends AbstractDataUtilsServiceImpl
 		} else {
 			FileTreeDiffEntry entry = buildFileTreeDiffEntryForFile(
 					leftHandSide, DiffType.DIRECTORY_NO_DIFF,
-					rightHandSide.getAbsolutePath(), 0, 0);
+					rightHandSide.getAbsolutePath(), 0, 0, "", "");
 			parentNode = new FileTreeNode(entry);
 			currentFileTreeNode.add(parentNode);
 		}
@@ -451,18 +448,18 @@ public class FileTreeDiffUtilityImpl extends AbstractDataUtilsServiceImpl
 				continue;
 			}
 			
+			String rightHandSideAsRelativePath = rhsFile.getAbsolutePath()
+					.substring(rightHandSideRootPath.length());
+			
 			StringBuilder sb = new StringBuilder();
 			sb.append(leftHandSideRootPath);
-			sb.append("/");
-			sb.append(leftHandSideAsRelativePath);
-			sb.append("/");
-			sb.append(rhsFile.getName());
+			sb.append(rightHandSideAsRelativePath);
 
 			log.debug("unaccounted for rhs file: {}", rhsFile.getAbsolutePath());
 			FileTreeDiffEntry entry = buildFileTreeDiffEntryForFile(rhsFile,
 					DiffType.RIGHT_HAND_PLUS, sb.toString(),
-					0, 0);
-			currentFileTreeNode.add(new FileTreeNode(entry));
+					0, 0, "", "");
+			parentNode.add(new FileTreeNode(entry));
 		}
 
 		log.info("processing matches on dirs now");
@@ -542,16 +539,15 @@ public class FileTreeDiffUtilityImpl extends AbstractDataUtilsServiceImpl
 			log.debug("unaccounted for rhs collection: {}",
 					rhsFile.getAbsolutePath());
 			
+			String rightHandSideAsRelativePath = rhsFile.getAbsolutePath()
+					.substring(rightHandSideRootPath.length());
 			
 			StringBuilder sb = new StringBuilder();
 			sb.append(leftHandSideRootPath);
-			sb.append("/");
-			sb.append(leftHandSideAsRelativePath);
-			sb.append("/");
-			sb.append(rhsFile.getName());
+			sb.append(rightHandSideAsRelativePath);
 			
 			FileTreeDiffEntry entry = buildFileTreeDiffEntryForFile(rhsFile,
-					DiffType.RIGHT_HAND_PLUS, sb.toString(), 0, 0);
+					DiffType.RIGHT_HAND_PLUS, sb.toString(), 0, 0, "", "");
 			currentFileTreeNode.add(new FileTreeNode(entry));
 		}
 	}
@@ -574,14 +570,14 @@ public class FileTreeDiffUtilityImpl extends AbstractDataUtilsServiceImpl
 		
 		StringBuilder sb = new StringBuilder();
 		sb.append(rightHandSide.getAbsolutePath());
-		sb.append("/");
+		sb.append('/');
 		sb.append(leftHandSide.getName());
 
 		// lhs file has no match, right now this synchs up to irods
 		log.debug("unaccounted for lhs file: {}",
 				leftHandSide.getAbsolutePath());
 		FileTreeDiffEntry entry = buildFileTreeDiffEntryForFile(leftHandSide,
-				DiffType.LEFT_HAND_PLUS, sb.toString(), 0, 0);
+				DiffType.LEFT_HAND_PLUS, sb.toString(), 0, 0, "", "");
 		currentFileTreeNode.add(new FileTreeNode(entry));
 	}
 
@@ -609,7 +605,7 @@ public class FileTreeDiffUtilityImpl extends AbstractDataUtilsServiceImpl
 			FileTreeDiffEntry entry = buildFileTreeDiffEntryForFile(
 					leftHandSide, DiffType.FILE_OUT_OF_SYNCH,
 					rightHandSide.getAbsolutePath(), rightHandSide.length(),
-					rightHandSide.lastModified());
+					rightHandSide.lastModified(), "", "");
 			log.debug("files differ on length:{}", entry);
 			currentFileTreeNode.add(new FileTreeNode(entry));
 		} else {
@@ -626,7 +622,7 @@ public class FileTreeDiffUtilityImpl extends AbstractDataUtilsServiceImpl
 				FileTreeDiffEntry entry = buildFileTreeDiffEntryForFile(
 						leftHandSide, DiffType.FILE_OUT_OF_SYNCH,
 						rightHandSide.getAbsolutePath(),
-						rightHandSide.length(), rightHandSide.lastModified());
+						rightHandSide.length(), rightHandSide.lastModified(), lhsChecksum, rhsChecksum);
 				log.debug("files differ on checksum:{}", entry);
 
 				currentFileTreeNode.add(new FileTreeNode(entry));
@@ -637,16 +633,20 @@ public class FileTreeDiffUtilityImpl extends AbstractDataUtilsServiceImpl
 	private FileTreeDiffEntry buildFileTreeDiffEntryForFile(
 			final File diffFile, final DiffType diffType,
 			final String absolutePathOppositeFile,
-			final long lengthOppositeSide, final long timestampOppositeSide) {
+			final long lengthOppositeSide, final long timestampOppositeSide, final String checksumThisFile, final String checksumOppositeFile) {
 		CollectionAndDataObjectListingEntry entry = new CollectionAndDataObjectListingEntry();
 		entry.setCreatedAt(new Date(diffFile.lastModified()));
 		entry.setModifiedAt(entry.getCreatedAt());
 		entry.setDataSize(diffFile.length());
+		FileTreeDiffEntry diffEntry;
 
 		if (diffFile.isFile()) {
 			entry.setObjectType(ObjectType.DATA_OBJECT);
 			entry.setParentPath(diffFile.getParent());
 			entry.setPathOrName(diffFile.getName());
+			 diffEntry = FileTreeDiffEntry.instanceForFileDiff(diffType,
+						entry, absolutePathOppositeFile, lengthOppositeSide,
+						timestampOppositeSide, checksumThisFile, checksumOppositeFile);
 		} else {
 			entry.setObjectType(ObjectType.COLLECTION);
 			entry.setParentPath(diffFile.getParent());
@@ -655,10 +655,11 @@ public class FileTreeDiffUtilityImpl extends AbstractDataUtilsServiceImpl
 			sb.append("/");
 			sb.append(diffFile.getName());
 			entry.setPathOrName(sb.toString());
+			 diffEntry = FileTreeDiffEntry.instance(diffType,
+					entry, absolutePathOppositeFile, lengthOppositeSide,
+					timestampOppositeSide);
 		}
-		FileTreeDiffEntry diffEntry = FileTreeDiffEntry.instance(diffType,
-				entry, absolutePathOppositeFile, lengthOppositeSide,
-				timestampOppositeSide);
+		
 		return diffEntry;
 	}
 

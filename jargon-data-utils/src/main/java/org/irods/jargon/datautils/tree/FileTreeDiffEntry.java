@@ -20,6 +20,10 @@ public class FileTreeDiffEntry {
 	private final long lengthOppositeFile;
 	private long timestampOppositeFile;
 	private final String absPathOppositeFile;
+	private final String checksumThisFile;
+	private final String checksumOppositeFile;
+	private  boolean resolved = false;
+	
 	/**
 	 * Optional field that can be filled in post tree generation that rolls up
 	 * diffs in children, usually through a tree post-processing phase
@@ -63,7 +67,7 @@ public class FileTreeDiffEntry {
 			final String absolutePathOppositeFile) {
 		return new FileTreeDiffEntry(diffType,
 				collectionAndDataObjectListingEntry, absolutePathOppositeFile,
-				0L, 0L);
+				0L, 0L, "", "");
 	}
 
 	/**
@@ -93,14 +97,46 @@ public class FileTreeDiffEntry {
 			final long timestampRhsFile) {
 		return new FileTreeDiffEntry(diffType,
 				collectionAndDataObjectListingEntry, absolutePathOppositeFile,
-				lengthRhsFile, timestampRhsFile);
+				lengthRhsFile, timestampRhsFile,"","");
+	}
+	
+	/**
+	 * Static instance method creates a new immutable entry
+	 * 
+	 * @param diffType
+	 *            {@link DiffType} enum value that describes the difference type
+	 * @param collectionAndDataObjectListingEntry
+	 *            {@link CollectionAndDataObjectListingEntry} that describes the
+	 *            file or collection in the diff
+	 * @param absolutePathOppositeFile
+	 *            <code>String</code> with the absolute path to the opposite
+	 *            file, this would, for example, be the parent collection where
+	 *            the file is 'missing' from
+	 * @param lengthRhsFile
+	 *            <code>long</code> with the length of the right hand side file,
+	 *            or 0
+	 *  @param checksumThisFile <code>String</code> with the checksum of the current file
+	 *  @param checksumOppositeFile <code>String</code> with the checksum of the corresponding file
+	 * @param timestampRhsFile
+	 *            <code>long</code> with the timestamp of the right hand side
+	 *            file, or 0
+	 * @return
+	 */
+	public static FileTreeDiffEntry instanceForFileDiff(
+			final DiffType diffType,
+			final CollectionAndDataObjectListingEntry collectionAndDataObjectListingEntry,
+			final String absolutePathOppositeFile, final long lengthRhsFile,
+			final long timestampRhsFile, final String checksumThisFile, final String checksumOppositeFile) {
+		return new FileTreeDiffEntry(diffType,
+				collectionAndDataObjectListingEntry, absolutePathOppositeFile,
+				lengthRhsFile, timestampRhsFile,checksumThisFile,checksumOppositeFile);
 	}
 
 	private FileTreeDiffEntry(
 			final DiffType diffType,
 			final CollectionAndDataObjectListingEntry collectionAndDataObjectListingEntry,
 			final String absolutePathOppositeFile, final long lengthRhsFile,
-			final long timestampRhsFile) {
+			final long timestampRhsFile, final String checksumThisFile, final String checksumOppositeFile) {
 
 		if (diffType == null) {
 			throw new IllegalArgumentException("null diffType");
@@ -120,8 +156,16 @@ public class FileTreeDiffEntry {
 		}
 
 		if (absolutePathOppositeFile == null
-				|| absolutePathOppositeFile.isEmpty()) {
-			throw new IllegalArgumentException("null absolutepathOppositeFile");
+				) {
+			throw new IllegalArgumentException("null  absolutepathOppositeFile");
+		}
+		
+		if (checksumThisFile == null) {
+			throw new IllegalArgumentException("null checksumThisFile");
+		}
+		
+		if (checksumOppositeFile == null) {
+			throw new IllegalArgumentException("null checksumOppositeFile");
 		}
 
 		this.diffType = diffType;
@@ -129,6 +173,8 @@ public class FileTreeDiffEntry {
 		this.lengthOppositeFile = lengthRhsFile;
 		this.timestampOppositeFile = timestampRhsFile;
 		this.absPathOppositeFile = absolutePathOppositeFile;
+		this.checksumThisFile = checksumThisFile;
+		this.checksumOppositeFile = checksumOppositeFile;
 
 	}
 
@@ -148,6 +194,10 @@ public class FileTreeDiffEntry {
 		sb.append(timestampOppositeFile);
 		sb.append("\n   countDiffsInChildren:");
 		sb.append(countOfDiffsInChildren);
+		sb.append("\n   checksumThisFile:");
+		sb.append(checksumThisFile);
+		sb.append("\n   checksumOppositeFile:");
+		sb.append(checksumOppositeFile);
 		return sb.toString();
 	}
 
@@ -184,6 +234,41 @@ public class FileTreeDiffEntry {
 
 	public String getAbsPathOppositeFile() {
 		return absPathOppositeFile;
+	}
+
+	/**
+	 * @return the lengthOppositeFile
+	 */
+	public long getLengthOppositeFile() {
+		return lengthOppositeFile;
+	}
+
+	/**
+	 * @return the checksumThisFile
+	 */
+	public String getChecksumThisFile() {
+		return checksumThisFile;
+	}
+
+	/**
+	 * @return the checksumOppositeFile
+	 */
+	public String getChecksumOppositeFile() {
+		return checksumOppositeFile;
+	}
+
+	/**
+	 * @return the resolved
+	 */
+	public boolean isResolved() {
+		return resolved;
+	}
+
+	/**
+	 * @param resolved the resolved to set
+	 */
+	public void setResolved(boolean resolved) {
+		this.resolved = resolved;
 	}
 
 }

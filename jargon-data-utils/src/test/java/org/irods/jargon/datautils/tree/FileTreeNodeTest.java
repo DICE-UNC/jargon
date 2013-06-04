@@ -14,7 +14,7 @@ public class FileTreeNodeTest {
 		CollectionAndDataObjectListingEntry entry = Mockito
 				.mock(CollectionAndDataObjectListingEntry.class);
 		FileTreeDiffEntry diffEntry = FileTreeDiffEntry.instance(
-				DiffType.LEFT_HAND_PLUS, entry, "");
+				DiffType.LEFT_HAND_PLUS, entry, "xx");
 		FileTreeNode fileTreeNode = new FileTreeNode(diffEntry);
 		Object userObj = fileTreeNode.getUserObject();
 		boolean isFileTreeNode = (userObj instanceof FileTreeDiffEntry);

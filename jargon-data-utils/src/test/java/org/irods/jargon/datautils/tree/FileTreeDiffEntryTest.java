@@ -14,7 +14,7 @@ public class FileTreeDiffEntryTest {
 		CollectionAndDataObjectListingEntry entry = Mockito
 				.mock(CollectionAndDataObjectListingEntry.class);
 		FileTreeDiffEntry diffEntry = FileTreeDiffEntry.instance(
-				DiffType.LEFT_HAND_PLUS, entry, "",0, 0);
+				DiffType.LEFT_HAND_PLUS, entry, "xxx",0, 0);
 		Assert.assertNotNull("null diffEntry", diffEntry);
 	}
 

@@ -8,6 +8,7 @@ import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.FileNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.exception.SpecificQueryException;
 import org.irods.jargon.core.packinstr.DataObjInpForObjStat;
 import org.irods.jargon.core.packinstr.Tag;
 import org.irods.jargon.core.pub.aohelper.CollectionAOHelper;
@@ -60,7 +61,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		implements CollectionAndDataObjectListAndSearchAO {
 
 	private static final String QUERY_EXCEPTION_FOR_QUERY = "query exception for  query:";
-	private final SpecificQueryAO specificQueryAO;
+	private SpecificQueryAO specificQueryAO;
 	public static final Logger log = LoggerFactory
 			.getLogger(CollectionAndDataObjectListAndSearchAOImpl.class);
 
@@ -75,8 +76,13 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 			final IRODSSession irodsSession, final IRODSAccount irodsAccount)
 			throws JargonException {
 		super(irodsSession, irodsAccount);
-		this.specificQueryAO = this.getIRODSAccessObjectFactory()
-				.getSpecificQueryAO(getIRODSAccount());
+		try {
+			this.specificQueryAO = this.getIRODSAccessObjectFactory()
+					.getSpecificQueryAO(getIRODSAccount());
+		} catch (SpecificQueryException sqe) {
+			log.warn("specific query is not supported on this server");
+			this.specificQueryAO = null;
+		}
 	}
 
 	/*
@@ -970,7 +976,9 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 
 			log.info("we are using spec query in jargon.properties...");
 
-			if (this.specificQueryAO.isSpecificQueryToBeBypassed()) {
+			if (this.specificQueryAO == null) {
+				log.info("...we are bypassing spec query...");
+			} else if (this.specificQueryAO.isSpecificQueryToBeBypassed()) {
 				log.info("...we are bypassing spec query...");
 			} else {
 				log.info("attemting to list via specQuery...");
@@ -1448,7 +1456,9 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 
 			log.info("we are using spec query in jargon.properties...");
 
-			if (this.specificQueryAO.isSpecificQueryToBeBypassed()) {
+			if (this.specificQueryAO == null) {
+				log.info("...we are bypassing spec query...");
+			} else if (this.specificQueryAO.isSpecificQueryToBeBypassed()) {
 				log.info("...we are bypassing spec query...");
 			} else {
 				log.info("attemting to list via specQuery...");
