@@ -17,7 +17,7 @@ public class DiffTreePostProcessorTest {
 		rootEntry.setParentPath("/root");
 		rootEntry.setPathOrName("/root/rootChild");
 		FileTreeDiffEntry root = FileTreeDiffEntry.instance(
-				DiffType.DIRECTORY_NO_DIFF, rootEntry, "");
+				DiffType.DIRECTORY_NO_DIFF, rootEntry, "xxx");
 		FileTreeNode rootNode = new FileTreeNode(root);
 
 		FileTreeModel model = new FileTreeModel(rootNode);
@@ -29,7 +29,7 @@ public class DiffTreePostProcessorTest {
 		c1Entry.setParentPath("/root/rootChild");
 		c1Entry.setPathOrName("/root/rootChild/c1");
 		FileTreeDiffEntry c1DiffEntry = FileTreeDiffEntry.instance(
-				DiffType.DIRECTORY_NO_DIFF, c1Entry, "");
+				DiffType.DIRECTORY_NO_DIFF, c1Entry, "xxx");
 		FileTreeNode c1Node = new FileTreeNode(c1DiffEntry);
 		rootNode.add(c1Node);
 
@@ -38,7 +38,7 @@ public class DiffTreePostProcessorTest {
 		c2Entry.setParentPath("/root/rootChild");
 		c2Entry.setPathOrName("/root/rootChild/c2");
 		FileTreeDiffEntry c2DiffEntry = FileTreeDiffEntry.instance(
-				DiffType.DIRECTORY_NO_DIFF, c2Entry, "");
+				DiffType.DIRECTORY_NO_DIFF, c2Entry, "xx");
 		FileTreeNode c2Node = new FileTreeNode(c2DiffEntry);
 		rootNode.add(c2Node);
 

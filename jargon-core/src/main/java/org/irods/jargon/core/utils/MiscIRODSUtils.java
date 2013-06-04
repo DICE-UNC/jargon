@@ -670,5 +670,30 @@ public class MiscIRODSUtils {
 		}
 
 	}
+	
+	/**
+	 * Create a truncated file name suitable for display in interfaces
+	 * @param fileName
+	 * @return
+	 */
+	public static final String abbreviateFileName(final String fileName) {
+
+		if (fileName == null) {
+			throw new IllegalArgumentException("null fileName");
+		}
+
+		StringBuilder sb = new StringBuilder();
+		if (fileName.length() < 100) {
+			sb.append(fileName);
+		} else {
+			// gt 100 bytes, redact
+			sb.append(fileName.substring(0, 50));
+			sb.append(" ... ");
+			sb.append(fileName.substring(fileName.length() - 50));
+		}
+
+		return sb.toString();
+
+	}
 
 }
