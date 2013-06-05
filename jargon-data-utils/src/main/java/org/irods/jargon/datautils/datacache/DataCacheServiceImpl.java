@@ -388,10 +388,10 @@ public class DataCacheServiceImpl extends AbstractDataUtilsServiceImpl
 	@Override
 	public void purgeOldRequests() throws JargonException {
 		log.info("purgeOldRequests()");
-		long minToMillis = (long) this.getCacheServiceConfiguration()
-				.getLifetimeInMinutes() * 60 * 1000;
+		long daysToMillis = (long) this.getCacheServiceConfiguration()
+				.getLifetimeInDays() * 60 * 1000 * 60 * 24;
 		long millisNow = System.currentTimeMillis();
-		long purgeThreshold = millisNow - minToMillis;
+		long purgeThreshold = millisNow - daysToMillis;
 		log.info("purge threshold:{}", purgeThreshold);
 		log.info("millis now:{}", millisNow);
 
