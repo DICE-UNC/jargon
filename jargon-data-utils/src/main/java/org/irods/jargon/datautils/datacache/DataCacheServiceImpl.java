@@ -153,10 +153,6 @@ public class DataCacheServiceImpl extends AbstractDataUtilsServiceImpl
 
 		checkContracts();
 
-		if (getCacheServiceConfiguration().isDoCleanupDuringRequests()) {
-			purgeOldRequests();
-		}
-
 		// build hash of key and look for file
 		int keyHash = key.hashCode();
 		log.info("generated hash for key:{}", keyHash);
@@ -175,6 +171,9 @@ public class DataCacheServiceImpl extends AbstractDataUtilsServiceImpl
 
 		log.info("streamed file into bytes for length of: {}", fileBytes.length);
 		log.info("deserialzing...");
+		if (getCacheServiceConfiguration().isDoCleanupDuringRequests()) {
+			purgeOldRequests();
+		}
 		return new String(fileBytes);
 
 	}
