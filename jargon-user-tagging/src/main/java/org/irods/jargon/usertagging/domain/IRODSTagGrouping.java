@@ -7,6 +7,7 @@ import java.io.Serializable;
 
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.query.MetaDataAndDomainData.MetadataDomain;
+import org.irods.jargon.core.query.UserAnnotatedCatalogItem;
 
 /**
  * Represents a collection of user tags for a domain object. This class

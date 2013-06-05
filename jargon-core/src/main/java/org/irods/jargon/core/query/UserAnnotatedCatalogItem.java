@@ -1,4 +1,4 @@
-package org.irods.jargon.usertagging.domain;
+package org.irods.jargon.core.query;
 
 import org.irods.jargon.core.pub.domain.IRODSDomainObject;
 import org.irods.jargon.core.query.MetaDataAndDomainData.MetadataDomain;

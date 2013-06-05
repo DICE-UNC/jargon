@@ -74,6 +74,9 @@ Note that the following bug and feature requests are logged in GForge with relat
 **Added InvalidParameterException and checks for duplicate aliases
 **Propagate additional message information in ErrorScanner and IRODSCommand processing
 **Clarified alias versus sql in various specific query AO services
+
+*[#1434] unchecked IRODSFile exceptions bubbling through, should be caught and passed to callback
+**TransferOperationsHelper now greedily traps any exception, including runtime and io exception, in its processing, so that they may be passed back to the callback listener.  This helps trap errors that were 'leaking' and not making it to the callback listeners in iDrop.
  
 *[#1264] [iROD-Chat:9666] Referencing Data Objects
 **Added findById() methods to DataObjectAO and CollectionAO

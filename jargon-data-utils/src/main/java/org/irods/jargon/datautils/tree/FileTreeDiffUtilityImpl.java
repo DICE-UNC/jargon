@@ -66,6 +66,9 @@ public class FileTreeDiffUtilityImpl extends AbstractDataUtilsServiceImpl
 		this.irodsAccessObjectFactory = irodsAccessObjectFactory;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.datautils.tree.FileTreeDiffUtility#verifyLocalAndIRODSTreesMatch(java.io.File, java.lang.String, long, long)
+	 */
 	@Override
 	public boolean verifyLocalAndIRODSTreesMatch(final File localFileRoot,
 			final String irodsAbsolutePath,
@@ -183,7 +186,8 @@ public class FileTreeDiffUtilityImpl extends AbstractDataUtilsServiceImpl
 		entry.setParentPath(localFileRoot.getParent());
 		entry.setPathOrName(localFileRoot.getAbsolutePath());
 		FileTreeDiffEntry diffEntry = FileTreeDiffEntry.instance(
-				DiffType.DIRECTORY_NO_DIFF, entry);
+				DiffType.DIRECTORY_NO_DIFF, entry,
+				rootIRODSFile.getAbsolutePath());
 		FileTreeNode fileTreeNode = new FileTreeNode(diffEntry);
 		log.debug("set root node to:{}", fileTreeNode);
 		FileTreeModel fileTreeModel = new FileTreeModel(fileTreeNode);
@@ -246,25 +250,25 @@ public class FileTreeDiffUtilityImpl extends AbstractDataUtilsServiceImpl
 			log.debug("lhs < rhs");
 			log.debug("lhs timestamp:{}", leftHandSide.lastModified());
 			log.debug("lhs cutoff:{}", timestampforLastSynchLeftHandSide);
-			// mode
-			// leftHandSide.lastModified()
-			// >
-			// timestampforLastSynchLeftHandSide)
-			// {
+			StringBuilder sb = new StringBuilder();
+			sb.append(rightHandSideRootPath);
+			sb.append(leftHandSideAsRelativePath);
 			FileTreeDiffEntry entry = buildFileTreeDiffEntryForFile(
-					leftHandSide, DiffType.LEFT_HAND_PLUS, 0, 0);
+					leftHandSide, DiffType.LEFT_HAND_PLUS,
+					sb.toString(), 0, 0, "", "");
 			currentFileTreeNode.add(new FileTreeNode(entry));
 			log.info("left hand plus generated:{}", entry);
 			fileMatchIndex = 1;
 		} else if (compValue > 0) {
 			log.debug("lhs > rhs");
-			// >
-			// timestampForLastSynchRightHandSide)
-			// {
-FileTreeDiffEntry entry = buildFileTreeDiffEntryForFile(
-rightHandSide, DiffType.RIGHT_HAND_PLUS, 0, 0);
-log.info("right hand plus generated:{}", entry);
-currentFileTreeNode.add(new FileTreeNode(entry));
+			StringBuilder sb = new StringBuilder();
+			sb.append(leftHandSideRootPath);
+			sb.append(rightHandSideAsRelativePath);
+			FileTreeDiffEntry entry = buildFileTreeDiffEntryForFile(
+					rightHandSide, DiffType.RIGHT_HAND_PLUS,
+					sb.toString(), 0, 0, "", "");
+			log.info("right hand plus generated:{}", entry);
+			currentFileTreeNode.add(new FileTreeNode(entry));
 			fileMatchIndex = -1;
 		} else {
 			log.debug("file name match");
@@ -313,7 +317,8 @@ currentFileTreeNode.add(new FileTreeNode(entry));
 			log.warn("a file is being compared to a directory of the same name");
 			FileTreeDiffEntry entry = buildFileTreeDiffEntryForFile(
 					leftHandSide, DiffType.FILE_NAME_DIR_NAME_COLLISION,
-					rightHandSide.length(), rightHandSide.lastModified());
+					rightHandSide.getAbsolutePath(), rightHandSide.length(),
+					rightHandSide.lastModified(), "", "");
 			currentFileTreeNode.add(new FileTreeNode(entry));
 		} else {
 			compareTwoEqualDirectories(currentFileTreeNode, leftHandSide,
@@ -358,7 +363,8 @@ currentFileTreeNode.add(new FileTreeNode(entry));
 			parentNode = currentFileTreeNode;
 		} else {
 			FileTreeDiffEntry entry = buildFileTreeDiffEntryForFile(
-					leftHandSide, DiffType.DIRECTORY_NO_DIFF, 0, 0);
+					leftHandSide, DiffType.DIRECTORY_NO_DIFF,
+					rightHandSide.getAbsolutePath(), 0, 0, "", "");
 			parentNode = new FileTreeNode(entry);
 			currentFileTreeNode.add(parentNode);
 		}
@@ -396,8 +402,8 @@ currentFileTreeNode.add(new FileTreeNode(entry));
 			}
 
 			if (j >= rhsChildren.length) {
-				lhsChildIsUnmatched(currentFileTreeNode, lhsFile,
-						timestampForLastSynchLeftHandSide,
+				lhsChildIsUnmatched(parentNode, lhsFile,
+						rightHandSide, timestampForLastSynchLeftHandSide,
 						timestampForLastSynchRightHandSide);
 
 			} else {
@@ -441,11 +447,19 @@ currentFileTreeNode.add(new FileTreeNode(entry));
 			if (!rhsFile.isFile()) {
 				continue;
 			}
+			
+			String rightHandSideAsRelativePath = rhsFile.getAbsolutePath()
+					.substring(rightHandSideRootPath.length());
+			
+			StringBuilder sb = new StringBuilder();
+			sb.append(leftHandSideRootPath);
+			sb.append(rightHandSideAsRelativePath);
 
 			log.debug("unaccounted for rhs file: {}", rhsFile.getAbsolutePath());
 			FileTreeDiffEntry entry = buildFileTreeDiffEntryForFile(rhsFile,
-					DiffType.RIGHT_HAND_PLUS, 0, 0);
-			currentFileTreeNode.add(new FileTreeNode(entry));
+					DiffType.RIGHT_HAND_PLUS, sb.toString(),
+					0, 0, "", "");
+			parentNode.add(new FileTreeNode(entry));
 		}
 
 		log.info("processing matches on dirs now");
@@ -474,7 +488,7 @@ currentFileTreeNode.add(new FileTreeNode(entry));
 				log.debug("left hand side file is unmatched for : {}",
 						element.getAbsolutePath());
 				lhsChildIsUnmatched(currentFileTreeNode, element,
-						timestampForLastSynchLeftHandSide,
+						rightHandSide, timestampForLastSynchLeftHandSide,
 						timestampForLastSynchRightHandSide);
 			} else {
 				while (j < rhsChildren.length) {
@@ -524,8 +538,16 @@ currentFileTreeNode.add(new FileTreeNode(entry));
 
 			log.debug("unaccounted for rhs collection: {}",
 					rhsFile.getAbsolutePath());
+			
+			String rightHandSideAsRelativePath = rhsFile.getAbsolutePath()
+					.substring(rightHandSideRootPath.length());
+			
+			StringBuilder sb = new StringBuilder();
+			sb.append(leftHandSideRootPath);
+			sb.append(rightHandSideAsRelativePath);
+			
 			FileTreeDiffEntry entry = buildFileTreeDiffEntryForFile(rhsFile,
-					DiffType.RIGHT_HAND_PLUS, 0, 0);
+					DiffType.RIGHT_HAND_PLUS, sb.toString(), 0, 0, "", "");
 			currentFileTreeNode.add(new FileTreeNode(entry));
 		}
 	}
@@ -538,19 +560,24 @@ currentFileTreeNode.add(new FileTreeNode(entry));
 	 * @param lhsFile
 	 */
 	private void lhsChildIsUnmatched(final FileTreeNode currentFileTreeNode,
-			final File leftHandSide,
+			final File leftHandSide, final File rightHandSide,
 			final long timestampForLastSynchLeftHandSide,
 			final long timestampForLastSynchRightHandSide) {
 
 		log.info("lhsChildIsUnmatched:{}", leftHandSide.getAbsolutePath());
 		log.info("lhs last synch:{}", timestampForLastSynchLeftHandSide);
 		log.info("leftHandSide lastModified:{}", leftHandSide.lastModified());
+		
+		StringBuilder sb = new StringBuilder();
+		sb.append(rightHandSide.getAbsolutePath());
+		sb.append('/');
+		sb.append(leftHandSide.getName());
 
 		// lhs file has no match, right now this synchs up to irods
 		log.debug("unaccounted for lhs file: {}",
 				leftHandSide.getAbsolutePath());
 		FileTreeDiffEntry entry = buildFileTreeDiffEntryForFile(leftHandSide,
-				DiffType.LEFT_HAND_PLUS, 0, 0);
+				DiffType.LEFT_HAND_PLUS, sb.toString(), 0, 0, "", "");
 		currentFileTreeNode.add(new FileTreeNode(entry));
 	}
 
@@ -577,7 +604,8 @@ currentFileTreeNode.add(new FileTreeNode(entry));
 
 			FileTreeDiffEntry entry = buildFileTreeDiffEntryForFile(
 					leftHandSide, DiffType.FILE_OUT_OF_SYNCH,
-					rightHandSide.length(), rightHandSide.lastModified());
+					rightHandSide.getAbsolutePath(), rightHandSide.length(),
+					rightHandSide.lastModified(), "", "");
 			log.debug("files differ on length:{}", entry);
 			currentFileTreeNode.add(new FileTreeNode(entry));
 		} else {
@@ -593,7 +621,8 @@ currentFileTreeNode.add(new FileTreeNode(entry));
 				log.debug("files differ on checksum");
 				FileTreeDiffEntry entry = buildFileTreeDiffEntryForFile(
 						leftHandSide, DiffType.FILE_OUT_OF_SYNCH,
-						rightHandSide.length(), rightHandSide.lastModified());
+						rightHandSide.getAbsolutePath(),
+						rightHandSide.length(), rightHandSide.lastModified(), lhsChecksum, rhsChecksum);
 				log.debug("files differ on checksum:{}", entry);
 
 				currentFileTreeNode.add(new FileTreeNode(entry));
@@ -601,23 +630,23 @@ currentFileTreeNode.add(new FileTreeNode(entry));
 		}
 	}
 
-	/**
-	 * @param diffFile
-	 * @param diffType
-	 * @return
-	 */
 	private FileTreeDiffEntry buildFileTreeDiffEntryForFile(
 			final File diffFile, final DiffType diffType,
-			final long lengthOppositeSide, final long timestampOppositeSide) {
+			final String absolutePathOppositeFile,
+			final long lengthOppositeSide, final long timestampOppositeSide, final String checksumThisFile, final String checksumOppositeFile) {
 		CollectionAndDataObjectListingEntry entry = new CollectionAndDataObjectListingEntry();
 		entry.setCreatedAt(new Date(diffFile.lastModified()));
 		entry.setModifiedAt(entry.getCreatedAt());
 		entry.setDataSize(diffFile.length());
+		FileTreeDiffEntry diffEntry;
 
 		if (diffFile.isFile()) {
 			entry.setObjectType(ObjectType.DATA_OBJECT);
 			entry.setParentPath(diffFile.getParent());
 			entry.setPathOrName(diffFile.getName());
+			 diffEntry = FileTreeDiffEntry.instanceForFileDiff(diffType,
+						entry, absolutePathOppositeFile, lengthOppositeSide,
+						timestampOppositeSide, checksumThisFile, checksumOppositeFile);
 		} else {
 			entry.setObjectType(ObjectType.COLLECTION);
 			entry.setParentPath(diffFile.getParent());
@@ -626,9 +655,11 @@ currentFileTreeNode.add(new FileTreeNode(entry));
 			sb.append("/");
 			sb.append(diffFile.getName());
 			entry.setPathOrName(sb.toString());
+			 diffEntry = FileTreeDiffEntry.instance(diffType,
+					entry, absolutePathOppositeFile, lengthOppositeSide,
+					timestampOppositeSide);
 		}
-		FileTreeDiffEntry diffEntry = FileTreeDiffEntry.instance(diffType,
-				entry, lengthOppositeSide, timestampOppositeSide);
+		
 		return diffEntry;
 	}
 

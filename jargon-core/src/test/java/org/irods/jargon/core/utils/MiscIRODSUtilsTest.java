@@ -399,5 +399,22 @@ public class MiscIRODSUtilsTest {
 	public void testPathLengthChildNull() throws Exception {
 		MiscIRODSUtils.checkPathSizeForMax("blah", null);
 	}
+	
+	@Test
+	public void testBuildIRODSUserHomeForAccountUsingDefaultScheme() throws Exception {
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		String computedPath = MiscIRODSUtils.buildIRODSUserHomeForAccountUsingDefaultScheme(irodsAccount);
+		String expected = "/" + irodsAccount.getZone() + "/home/" + irodsAccount.getUserName();
+		Assert.assertEquals("did not build expected path", expected, computedPath);
+		
+	}
+	
+	@Test(expected=IllegalArgumentException.class)
+	public void testBuildIRODSUserHomeForAccountUsingDefaultSchemeNullAccount() throws Exception {
+		MiscIRODSUtils.buildIRODSUserHomeForAccountUsingDefaultScheme(null);
+		
+		
+	}
 
 }

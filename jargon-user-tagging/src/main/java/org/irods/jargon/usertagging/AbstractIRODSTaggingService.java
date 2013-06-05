@@ -48,7 +48,7 @@ public abstract class AbstractIRODSTaggingService {
 	protected IRODSAccount getIrodsAccount() {
 		return irodsAccount;
 	}
-	
+
 	/**
 	 * @param irodsAbsolutePath
 	 * @return

@@ -378,6 +378,13 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 			processExceptionDuringGetOperation(irodsSourceFile,
 					targetLocalFile, transferStatusCallbackListener,
 					operativeTransferControlBlock, je);
+		} catch (Exception e) {
+			log.warn(
+					"unexepected exception occurred in transfer, not caught in transfer code, will wrap in a JargonException and process",
+					e);
+			processExceptionDuringGetOperation(irodsSourceFile,
+					targetLocalFile, transferStatusCallbackListener,
+					operativeTransferControlBlock, new JargonException(e));
 		} finally {
 			if (reroutedAccount != null) {
 				log.info("closing re-routed account");
@@ -856,6 +863,13 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 			processExceptionDuringPutOperation(sourceFile, targetIrodsFile,
 					transferStatusCallbackListener,
 					operativeTransferControlBlock, je);
+		} catch (Exception e) {
+			log.warn(
+					"unexepected exception occurred in transfer, not caught in transfer code, will wrap in a JargonException and process",
+					e);
+			processExceptionDuringPutOperation(sourceFile, targetIrodsFile,
+					transferStatusCallbackListener,
+					operativeTransferControlBlock, new JargonException(e));
 		} finally {
 			if (reroutedAccount != null) {
 				log.info("closing re-routed account");
@@ -1301,28 +1315,60 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 				transferStatusCallbackListener.overallStatusCallback(status);
 			}
 
-			transferOperationsHelper.recursivelyReplicate(sourceFile,
-					targetResource, transferStatusCallbackListener,
-					operativeTransferControlBlock);
+			try {
+				transferOperationsHelper.recursivelyReplicate(sourceFile,
+						targetResource, transferStatusCallbackListener,
+						operativeTransferControlBlock);
 
-			// send completion status callback
-			if (transferStatusCallbackListener != null) {
+				// send completion status callback
+				if (transferStatusCallbackListener != null) {
 
-				TransferStatus status = TransferStatus
-						.instance(TransferType.REPLICATE, sourceFile
-								.getAbsolutePath(), "", targetResource,
-								operativeTransferControlBlock
-										.getTotalBytesToTransfer(),
-								operativeTransferControlBlock
-										.getTotalBytesTransferredSoFar(),
-								operativeTransferControlBlock
-										.getTotalFilesTransferredSoFar(),
-								operativeTransferControlBlock
-										.getTotalFilesToTransfer(),
-								TransferState.OVERALL_COMPLETION,
-								getIRODSAccount().getHost(), getIRODSAccount()
-										.getZone());
-				transferStatusCallbackListener.overallStatusCallback(status);
+					TransferStatus status = TransferStatus.instance(
+							TransferType.REPLICATE, sourceFile
+									.getAbsolutePath(), "", targetResource,
+							operativeTransferControlBlock
+									.getTotalBytesToTransfer(),
+							operativeTransferControlBlock
+									.getTotalBytesTransferredSoFar(),
+							operativeTransferControlBlock
+									.getTotalFilesTransferredSoFar(),
+							operativeTransferControlBlock
+									.getTotalFilesToTransfer(),
+							TransferState.OVERALL_COMPLETION, this
+									.getIRODSAccount().getHost(), this
+									.getIRODSAccount().getZone());
+					transferStatusCallbackListener
+							.overallStatusCallback(status);
+				}
+			} catch (Exception e) {
+				log.error("error during processing of a replication", e);
+				// send failure status callback
+				if (transferStatusCallbackListener != null) {
+
+					TransferStatus status = TransferStatus
+							.instanceForException(TransferType.REPLICATE,
+									sourceFile.getAbsolutePath(), "",
+									targetResource,
+									operativeTransferControlBlock
+											.getTotalBytesToTransfer(),
+									operativeTransferControlBlock
+											.getTotalBytesTransferredSoFar(),
+									operativeTransferControlBlock
+											.getTotalFilesTransferredSoFar(),
+									operativeTransferControlBlock
+											.getTotalFilesToTransfer(), e, this
+											.getIRODSAccount().getHost(), this
+											.getIRODSAccount().getZone());
+
+					transferStatusCallbackListener
+							.overallStatusCallback(status);
+
+				} else {
+					log.error("no callback listener, rethrow exception as a jargon exception");
+					throw new JargonException(
+							"exception during replication, rethrown as a JargonException",
+							e);
+				}
 			}
 
 		} else {

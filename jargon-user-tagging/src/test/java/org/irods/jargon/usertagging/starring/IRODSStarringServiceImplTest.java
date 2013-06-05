@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Properties;
 
 import junit.framework.Assert;
+
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.FileNotFoundException;
 import org.irods.jargon.core.pub.CollectionAO;
@@ -580,7 +581,7 @@ public class IRODSStarringServiceImplTest {
 				irodsAccount.getUserName(), UserTaggingConstants.STAR_AVU_UNIT);
 		Mockito.verify(collectionAO).deleteAVUMetadata(absolutePath, avuData);
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@Test
 	public void testListStarredCollections() throws Exception {
@@ -593,7 +594,7 @@ public class IRODSStarringServiceImplTest {
 				.mock(CollectionAndDataObjectListAndSearchAO.class);
 		DataObjectAO dataObjectAO = Mockito.mock(DataObjectAO.class);
 		CollectionAO collectionAO = Mockito.mock(CollectionAO.class);
-		
+
 		MetaDataAndDomainData metadataAndDomainData = MetaDataAndDomainData
 				.instance(MetadataDomain.COLLECTION, "1", absolutePath,
 						description, irodsAccount.getUserName(),
@@ -602,9 +603,8 @@ public class IRODSStarringServiceImplTest {
 		metadataList.add(metadataAndDomainData);
 
 		Mockito.when(
-				collectionAO.findMetadataValuesByMetadataQuery(
-						Matchers.anyList())).thenReturn(
-				metadataList);
+				collectionAO.findMetadataValuesByMetadataQuery(Matchers
+						.anyList())).thenReturn(metadataList);
 
 		Mockito.when(
 				irodsAccessObjectFactory
@@ -616,12 +616,13 @@ public class IRODSStarringServiceImplTest {
 				.thenReturn(dataObjectAO);
 		IRODSStarringService irodsStarringService = new IRODSStarringServiceImpl(
 				irodsAccessObjectFactory, irodsAccount);
-		List<IRODSStarredFileOrCollection> collections = irodsStarringService.listStarredCollections(0);
-		Assert.assertEquals("did not find the one metadata value", 1, collections.size());
-		
-		
+		List<IRODSStarredFileOrCollection> collections = irodsStarringService
+				.listStarredCollections(0);
+		Assert.assertEquals("did not find the one metadata value", 1,
+				collections.size());
+
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@Test
 	public void testListStarredDataObjects() throws Exception {
@@ -634,18 +635,17 @@ public class IRODSStarringServiceImplTest {
 				.mock(CollectionAndDataObjectListAndSearchAO.class);
 		DataObjectAO dataObjectAO = Mockito.mock(DataObjectAO.class);
 		CollectionAO collectionAO = Mockito.mock(CollectionAO.class);
-		
+
 		MetaDataAndDomainData metadataAndDomainData = MetaDataAndDomainData
-				.instance(MetadataDomain.DATA, "1", absolutePath,
-						description, irodsAccount.getUserName(),
+				.instance(MetadataDomain.DATA, "1", absolutePath, description,
+						irodsAccount.getUserName(),
 						UserTaggingConstants.STAR_AVU_UNIT);
 		List<MetaDataAndDomainData> metadataList = new ArrayList<MetaDataAndDomainData>();
 		metadataList.add(metadataAndDomainData);
 
 		Mockito.when(
-				dataObjectAO.findMetadataValuesByMetadataQuery(
-						Matchers.anyList())).thenReturn(
-				metadataList);
+				dataObjectAO.findMetadataValuesByMetadataQuery(Matchers
+						.anyList())).thenReturn(metadataList);
 
 		Mockito.when(
 				irodsAccessObjectFactory
@@ -657,10 +657,11 @@ public class IRODSStarringServiceImplTest {
 				.thenReturn(dataObjectAO);
 		IRODSStarringService irodsStarringService = new IRODSStarringServiceImpl(
 				irodsAccessObjectFactory, irodsAccount);
-		List<IRODSStarredFileOrCollection> collections = irodsStarringService.listStarredDataObjects(0);
-		Assert.assertEquals("did not find the one metadata value", 1, collections.size());
-		
-		
+		List<IRODSStarredFileOrCollection> collections = irodsStarringService
+				.listStarredDataObjects(0);
+		Assert.assertEquals("did not find the one metadata value", 1,
+				collections.size());
+
 	}
 
 }

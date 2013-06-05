@@ -246,7 +246,8 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		MiscIRODSUtils.evaluateSpecCollSupport(objStat);
 
 		// get absolute path to use for querying iCAT (could be a soft link)
-		String absPath = objStat.determineAbsolutePathBasedOnCollTypeInObjectStat();
+		String absPath = objStat
+				.determineAbsolutePathBasedOnCollTypeInObjectStat();
 
 		log.info("absPath for querying iCAT:{}", absPath);
 
@@ -278,7 +279,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 							.getMaxFilesAndDirsQueryMax());
 			resultSet = irodsGenQueryExecutor
 					.executeIRODSQueryAndCloseResultInZone(irodsQuery, 0,
-							objStat.getOwnerZone());
+							MiscIRODSUtils.getZoneInPath(absPath));
 
 		} catch (JargonQueryException e) {
 			log.error("query exception for query", e);
@@ -1504,7 +1505,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 			resultSet = irodsGenQueryExecutor
 					.executeIRODSQueryAndCloseResultInZone(irodsQuery, 0,
-							objStat.getOwnerZone());
+							MiscIRODSUtils.getZoneInPath(absPath));
 
 		} catch (GenQueryBuilderException e) {
 			log.error("error building query", e);
@@ -3055,7 +3056,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 							.getMaxFilesAndDirsQueryMax());
 			resultSet = irodsGenQueryExecutor
 					.executeIRODSQueryAndCloseResultInZone(irodsQuery, 0,
-							objStat.getOwnerZone());
+							MiscIRODSUtils.getZoneInPath(absPath));
 			IRODSQueryResultRow row = resultSet.getFirstResult();
 			userFilePermission = buildUserFilePermissionFromResultRow(row);
 			log.debug("loaded filePermission:{}", userFilePermission);
@@ -3138,7 +3139,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 							.getMaxFilesAndDirsQueryMax());
 			resultSet = irodsGenQueryExecutorImpl
 					.executeIRODSQueryAndCloseResultInZone(irodsQuery, 0,
-							objStat.getOwnerZone());
+							MiscIRODSUtils.getZoneInPath(absPath));
 		} catch (JargonQueryException e) {
 			log.error("query exception", e);
 			throw new JargonException("error in query");
