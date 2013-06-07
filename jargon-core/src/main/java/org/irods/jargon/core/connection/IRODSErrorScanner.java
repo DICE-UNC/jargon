@@ -22,7 +22,10 @@ import org.irods.jargon.core.exception.NoMoreRulesException;
 import org.irods.jargon.core.exception.NoResourceDefinedException;
 import org.irods.jargon.core.exception.RemoteScriptExecutionException;
 import org.irods.jargon.core.exception.SpecificQueryException;
+import org.irods.jargon.core.exception.ZoneUnavailableException;
 import org.irods.jargon.core.protovalues.ErrorEnum;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This object is interposed in the process of interpreting the iRODS responses
@@ -38,6 +41,9 @@ import org.irods.jargon.core.protovalues.ErrorEnum;
  * 
  */
 public class IRODSErrorScanner {
+
+	public static final Logger log = LoggerFactory
+			.getLogger(IRODSErrorScanner.class);
 
 	/**
 	 * Scan the response for errors, and incorporate any message information
@@ -55,6 +61,8 @@ public class IRODSErrorScanner {
 	public static void inspectAndThrowIfNeeded(final int infoValue,
 			String message) throws JargonException {
 
+		log.debug("inspectAndThrowIfNeeded:{}", infoValue);
+
 		if (infoValue == 0) {
 			return;
 		}
@@ -66,8 +74,11 @@ public class IRODSErrorScanner {
 		ErrorEnum errorEnum;
 
 		try {
+			log.debug("scanning for info value...");
 			errorEnum = ErrorEnum.valueOf(infoValue);
+			log.debug("errorEnum val:{}", errorEnum);
 		} catch (IllegalArgumentException ie) {
+			log.error("error getting error enum value", ie);
 			throw new JargonException(
 					"error code received from iRODS, not in ErrorEnum translation table:"
 							+ infoValue, infoValue);
@@ -132,6 +143,9 @@ public class IRODSErrorScanner {
 			throw new InvalidArgumentException(message, infoValue);
 		case CAT_INVALID_RESOURCE:
 			throw new InvalidResourceException(message, infoValue);
+		case FEDERATED_ZONE_NOT_AVAILABLE:
+			throw new ZoneUnavailableException(
+					"the federated zone is not available");
 		default:
 			StringBuilder sb = new StringBuilder();
 			if (message.isEmpty()) {

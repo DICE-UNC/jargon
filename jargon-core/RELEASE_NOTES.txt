@@ -65,6 +65,10 @@ Note that the following bug and feature requests are logged in GForge with relat
  
 *[#1468] unable to load cart in idrop lite from idrop web
 **Data cache feature used by shopping cart in idrop lite defaults to purge old requests, but this can be problematic if there is a lot of clock drift, so instead of a couple of minutes, the cleanup now purges files based on a number of days, making it much less likely that files are deleted at the wrong time.  This clock slop was causing the cart to not be available in some cases because it was purged before access
+
+*[#1410] -92111 errors accessing zone collections when zone is down
+**Added zone unavailable exception
+
 ==Features==
 
 *[#1264] [iROD-Chat:9666] Referencing Data Objects
