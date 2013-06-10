@@ -92,15 +92,92 @@ public class Tag implements Cloneable {
 			this.value = null;
 			return;
 		}
+
 		if (decode) {
-			// decode escaped characters
-			value = value.replaceAll("&amp;", "&");
-			value = value.replaceAll("&lt;", "<");
-			value = value.replaceAll("&gt;", ">");
-			value = value.replaceAll("&quot;", "\"");
-			value = value.replaceAll("&apos;", "`");
+
+			StringBuilder sb = new StringBuilder();
+
+			StringBuilder cache = new StringBuilder();
+
+			char c;
+			for (int i = 0; i < value.length(); i++) {
+				c = value.charAt(i);
+				/*
+				 * if I hit an & then consider this for the cache, and just dump
+				 * what was in the cache into the output buffer
+				 */
+				if (c == '&') {
+					if (cache.length() > 0) {
+						evaluateCache(sb, cache);
+					}
+					cache.append(c);
+				} else if (c == ';') {
+					/*
+					 * a semi-colon will trigger evaluation of the cache if it
+					 * exists, otherwise, just dump it
+					 */
+					if (cache.length() > 0) {
+						cache.append(c);
+						evaluateCache(sb, cache);
+					} else {
+						sb.append(c);
+					}
+				} else {
+					/*
+					 * If I am caching (because I had a &) and this is not a
+					 * closing ; char, then put in the cache for eval later,
+					 * otherwise just dump it to the output buffer
+					 */
+					if (cache.length() > 0) {
+						cache.append(c);
+					} else {
+						sb.append(c);
+					}
+				}
+			}
+
+			/* dump any remaining cache into the output */
+			if (cache.length() > 0) {
+				evaluateCache(sb, cache);
+			}
+
+			this.value = sb.toString();
+			return;
+
 		}
 		this.value = value;
+	}
+
+	private void evaluateCache(StringBuilder sb, StringBuilder cache) {
+
+		if (cache.length() == 0) {
+			// do nothing, shouldn't happen
+		} else if (cache.length() < 4) {
+			// it's not actionable, just dump it
+			sb.append(cache);
+		} else if (cache.length() > 6) {
+			// not actionable, dump it
+			sb.append(cache);
+		} else {
+			String cacheString = cache.toString();
+			if (cacheString.equals(AMP)) {
+				sb.append('&');
+			} else if (cacheString.equals(LT)) {
+				sb.append('<');
+			} else if (cacheString.equals(GT)) {
+				sb.append('>');
+			} else if (cacheString.equals(QUOTE)) {
+				sb.append('"');
+			} else if (cacheString.equals(APOS)) {
+				sb.append('`');
+			} else {
+				/* don't know what it is, just dump it as is */
+				sb.append(cache);
+			}
+		}
+		/* clear cache now */
+		cache.delete(0, cache.length());
+
 	}
 
 	public Object getValue() {
@@ -290,20 +367,22 @@ public class Tag implements Cloneable {
 		}
 
 		StringBuilder sb = new StringBuilder();
+		char c;
 
 		for (int i = 0; i < out.length(); i++) {
-			if (out.charAt(i) == '&') {
+			c = out.charAt(i);
+			if (c == '&') {
 				sb.append(AMP);
-			} else if (out.charAt(i) == '<') {
+			} else if (c == '<') {
 				sb.append(LT);
-			} else if (out.charAt(i) == '>') {
+			} else if (c == '>') {
 				sb.append(GT);
-			} else if (out.charAt(i) == '\'') {
+			} else if (c == '"') {
 				sb.append(QUOTE);
-			} else if (out.charAt(i) == '`') {
+			} else if (c == '`') {
 				sb.append(APOS);
 			} else {
-				sb.append(out.charAt(i));
+				sb.append(c);
 			}
 		}
 

@@ -38,7 +38,7 @@ public class IRODSConnection implements IRODSManagedConnection {
 			.getLogger(IRODSConnection.class);
 	private IRODSProtocolManager irodsProtocolManager;
 	private String connectionInternalIdentifier;
-	private boolean connected = false;
+	private volatile boolean connected = false;
 	private Socket connection;
 	private InputStream irodsInputStream;
 	private OutputStream irodsOutputStream;
