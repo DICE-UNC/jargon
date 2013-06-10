@@ -106,10 +106,9 @@ public final class IRODSFileImpl extends File implements IRODSFile {
 		MiscIRODSUtils.checkPathSizeForMax(parent, child);
 
 		this.irodsFileSystemAO = irodsFileSystemAO;
-		String trimmedParent = parent.trim();
-		setDirectory(trimmedParent);
-		setFileName(child.trim());
-		makePathCanonical(trimmedParent);
+		setDirectory(parent);
+		setFileName(child);
+		makePathCanonical(parent);
 	}
 
 	protected IRODSFileImpl(final File parent, final String child,

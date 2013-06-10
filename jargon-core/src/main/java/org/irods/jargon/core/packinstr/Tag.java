@@ -20,6 +20,12 @@ public class Tag implements Cloneable {
 	public static final String CLOSE_END_TAG_STR = ">";
 	public static final String CLOSE_END_TAG_WITH_CR = CLOSE_END_TAG_STR + '\n';
 
+	public static final String AMP = "&amp;";
+	public static final String LT = "&lt;";
+	public static final String GT = "&gt;";
+	public static final String QUOTE = "&quot;";
+	public static final String APOS = "&apos;";
+
 	/**
 	 * iRODS name of the tag
 	 */
@@ -282,12 +288,26 @@ public class Tag implements Cloneable {
 		if (out == null) {
 			return null;
 		}
-		// return EscapeTagChars.forXML(out);
-		out = out.replaceAll("&", "&amp;");
-		out = out.replaceAll("<", "&lt;");
-		out = out.replaceAll(">", "&gt;");
-		out = out.replaceAll("\"", "&quot;");
-		return out.replaceAll("`", "&apos;");
+
+		StringBuilder sb = new StringBuilder();
+
+		for (int i = 0; i < out.length(); i++) {
+			if (out.charAt(i) == '&') {
+				sb.append(AMP);
+			} else if (out.charAt(i) == '<') {
+				sb.append(LT);
+			} else if (out.charAt(i) == '>') {
+				sb.append(GT);
+			} else if (out.charAt(i) == '\'') {
+				sb.append(QUOTE);
+			} else if (out.charAt(i) == '`') {
+				sb.append(APOS);
+			} else {
+				sb.append(out.charAt(i));
+			}
+		}
+
+		return sb.toString();
 	}
 
 	/**
