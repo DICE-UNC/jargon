@@ -314,7 +314,7 @@ public class IRODSConnection implements IRODSManagedConnection {
 			} catch (IOException ioe) {
 
 				if (i < attemptCount - 1) {
-					log.info("IOExeption, sleep and attempt a reconnect");
+					log.error("IOExeption, sleep and attempt a reconnect", ioe);
 					try {
 						Thread.sleep(3000);
 					} catch (InterruptedException e) {
