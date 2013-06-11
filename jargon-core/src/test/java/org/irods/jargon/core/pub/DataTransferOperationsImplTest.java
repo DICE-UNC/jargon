@@ -44,6 +44,12 @@ public class DataTransferOperationsImplTest {
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		irodsFileSystem = IRODSFileSystem.instance();
+		SettableJargonProperties settableJargonProperties = new SettableJargonProperties(
+				irodsFileSystem.getJargonProperties());
+		settableJargonProperties.setInternalCacheBufferSize(-1);
+		settableJargonProperties.setInternalOutputStreamBufferSize(65535);
+		irodsFileSystem.getIrodsSession().setJargonProperties(
+				settableJargonProperties);
 		org.irods.jargon.testutils.TestingPropertiesHelper testingPropertiesLoader = new TestingPropertiesHelper();
 		testingProperties = testingPropertiesLoader.getTestProperties();
 		scratchFileUtils = new org.irods.jargon.testutils.filemanip.ScratchFileUtils(

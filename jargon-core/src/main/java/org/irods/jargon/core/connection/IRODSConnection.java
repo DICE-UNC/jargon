@@ -526,7 +526,9 @@ public class IRODSConnection implements IRODSManagedConnection {
 				return;
 			}
 
-			if ((value.length + outputOffset) >= pipelineConfiguration
+			if (pipelineConfiguration.getInternalCacheBufferSize() <= 0) {
+				irodsOutputStream.write(value);
+			} else if ((value.length + outputOffset) >= pipelineConfiguration
 					.getInternalCacheBufferSize()) {
 				// in cases where OUTPUT_BUFFER_LENGTH isn't big enough
 				irodsOutputStream.write(outputBuffer, 0, outputOffset);
@@ -735,16 +737,21 @@ public class IRODSConnection implements IRODSManagedConnection {
 		}
 
 		try {
-			irodsOutputStream.write(outputBuffer, 0, outputOffset);
-			irodsOutputStream.flush();
+			if (this.pipelineConfiguration.getInternalCacheBufferSize() > 0) {
+				irodsOutputStream.write(outputBuffer, 0, outputOffset);
+				irodsOutputStream.flush();
+				byte zerByte = (byte) 0;
+				java.util.Arrays.fill(outputBuffer, zerByte);
+				outputOffset = 0;
+			} else {
+				irodsOutputStream.flush();
+			}
+
 		} catch (IOException ioe) {
 			disconnectWithIOException();
 			throw ioe;
 		}
-		byte zerByte = (byte) 0;
-		java.util.Arrays.fill(outputBuffer, zerByte);
 
-		outputOffset = 0;
 	}
 
 	/**
@@ -791,7 +798,7 @@ public class IRODSConnection implements IRODSManagedConnection {
 
 	/**
 	 * Read from the iRODS connection for a given length, and write what is read
-	 * from iRODS to the give <code>OutputStream</code>.
+	 * from iRODS to the given <code>OutputStream</code>.
 	 * 
 	 * @param destination
 	 *            <code>OutputStream</code> to which data will be streamed from
@@ -825,14 +832,13 @@ public class IRODSConnection implements IRODSManagedConnection {
 
 		try {
 			byte[] temp = new byte[Math.min(
-					pipelineConfiguration.getInternalCacheBufferSize(),
-					(int) length)]; // FIXME: parameterize to
-									// jargon.io.get.read.write.buffer.size
+					pipelineConfiguration.getInputToOutputCopyBufferByteSize(),
+					(int) length)];
+
 			int n = 0;
 			while (length > 0) {
-				n = read(temp, 0, Math.min(
-						pipelineConfiguration.getInternalCacheBufferSize(),
-						(int) length));
+				n = read(temp, 0, Math.min(pipelineConfiguration
+						.getInputToOutputCopyBufferByteSize(), (int) length));
 				if (n > 0) {
 					length -= n;
 					bos.write(temp, 0, n);

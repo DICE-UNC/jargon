@@ -638,7 +638,8 @@ public class IRODSSharingServiceImpl extends AbstractIRODSTaggingService
 				"listSharedCollectionsOwnedByUser", arguments, 0, "");
 		SpecificQueryResultSet specificQueryResultSet = runSpecificQuery(specificQuery);
 
-		List<IRODSSharedFileOrCollection> irodsSharedFileOrCollections = new ArrayList<IRODSSharedFileOrCollection>();
+		List<IRODSSharedFileOrCollection> irodsSharedFileOrCollections = new ArrayList<IRODSSharedFileOrCollection>(
+				specificQueryResultSet.getResults().size());
 
 		for (IRODSQueryResultRow row : specificQueryResultSet.getResults()) {
 			addSharedFileOrCollectionToListFromRow(specificQueryResultSet,
