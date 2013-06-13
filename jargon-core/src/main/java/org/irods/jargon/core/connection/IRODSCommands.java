@@ -373,7 +373,7 @@ public class IRODSCommands implements IRODSManagedConnection {
 					messageLength, errorLength, byteStringLength, intInfo));
 
 			// flush is needed between header and message when SSL processing
-			irodsConnection.flush();
+			// irodsConnection.flush();
 
 			irodsConnection.send(message);
 

@@ -11,6 +11,7 @@ import org.irods.jargon.core.pub.DataObjectAOImplTest;
 import org.irods.jargon.core.pub.DataObjectAuditAOImplTest;
 import org.irods.jargon.core.pub.DataTransferOperationsImplForSoftLinksTest;
 import org.irods.jargon.core.pub.DataTransferOperationsImplTest;
+import org.irods.jargon.core.pub.DataTransferOperationsImplTestNoInternalCache;
 import org.irods.jargon.core.pub.EnvironmentalInfoAOTest;
 import org.irods.jargon.core.pub.FederatedCollectionAOImplTest;
 import org.irods.jargon.core.pub.FederatedCollectionAndDataObjectListAndSearchAOImplTest;
@@ -46,6 +47,7 @@ import org.junit.runners.Suite;
 		CollectionAOImplTest.class, DataObjectAOImplTest.class,
 		RuleProcessingAOImplTest.class, IRODSFileSystemTest.class,
 		DataTransferOperationsImplTest.class,
+		DataTransferOperationsImplTestNoInternalCache.class,
 		RemoteExecutionOfCommandsAOImplTest.class,
 		CollectionAndDataObjectListAndSearchAOImplTest.class,
 		IRODSAccessObjectFactoryImplTest.class,
