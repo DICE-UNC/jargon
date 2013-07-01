@@ -309,6 +309,60 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 	}
 
 	/**
+	 * Create the iadmin command that is analogous to the aua command that adds
+	 * a user DN
+	 * 
+	 * @param userName
+	 *            <code>String</code> with the iRODS user name
+	 * @param userDN
+	 *            <code>String</code> with the DN for the user
+	 * @return
+	 * @throws JargonException
+	 */
+	public static GeneralAdminInp instanceForModifyUserDN(String userName,
+			String userDN) throws JargonException {
+
+		if (userName == null || userName.isEmpty()) {
+			throw new JargonException("user name is null or empty");
+		}
+
+		if (userDN == null || userDN.isEmpty()) {
+			throw new JargonException("user dn is null or empty");
+		}
+
+		return new GeneralAdminInp("modify", "user", userName, "addAuth",
+				userDN, BLANK, BLANK, BLANK, BLANK, BLANK,
+				GEN_ADMIN_INP_API_NBR);
+	}
+
+	/**
+	 * Create the iadmin command that is analogous to the rua command that
+	 * removes a user DN
+	 * 
+	 * @param userName
+	 *            <code>String</code> with the iRODS user name
+	 * @param userDN
+	 *            <code>String</code> with the DN for the user
+	 * @return
+	 * @throws JargonException
+	 */
+	public static GeneralAdminInp instanceForRemoveUserDN(String userName,
+			String userDN) throws JargonException {
+
+		if (userName == null || userName.isEmpty()) {
+			throw new JargonException("user name is null or empty");
+		}
+
+		if (userDN == null || userDN.isEmpty()) {
+			throw new JargonException("user dn is null or empty");
+		}
+
+		return new GeneralAdminInp("modify", "user", userName, "rmAuth",
+				userDN, BLANK, BLANK, BLANK, BLANK, BLANK,
+				GEN_ADMIN_INP_API_NBR);
+	}
+
+	/**
 	 * Generate the packing instruction suitable for modifying the password
 	 * associated with the given user.
 	 * 

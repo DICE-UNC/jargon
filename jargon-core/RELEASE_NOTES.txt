@@ -68,6 +68,8 @@ Note that the following bug and feature requests are logged in GForge with relat
 *[#1410] -92111 errors accessing zone collections when zone is down
 **Added zone unavailable exception
 
+
+
 ==Features==
 
 *[#1264] [iROD-Chat:9666] Referencing Data Objects
@@ -84,6 +86,9 @@ Note that the following bug and feature requests are logged in GForge with relat
 **Remove wrapped icommands from remaining unit tests
 
 *[#1392] Resource AVU methods to add and remove metadata from resources
+
+*[#1554] user dn not being updated by userAO
+**Added methods to modify user DN, put into user update code to automatically manage DN
 
 
 
