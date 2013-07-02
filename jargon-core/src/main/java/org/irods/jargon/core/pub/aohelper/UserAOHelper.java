@@ -16,6 +16,8 @@ import org.irods.jargon.core.query.JargonQueryException;
 import org.irods.jargon.core.query.QueryConditionOperators;
 import org.irods.jargon.core.query.RodsGenQueryEnum;
 import org.irods.jargon.core.utils.IRODSDataConversionUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * General helper methods for users and user groups.
@@ -26,6 +28,7 @@ import org.irods.jargon.core.utils.IRODSDataConversionUtil;
 public class UserAOHelper {
 
 	private static final char COMMA = ',';
+	static Logger log = LoggerFactory.getLogger(UserAOHelper.class);
 
 	/**
 	 * Handy method will build the select portion of a gen query that accesses
@@ -123,6 +126,7 @@ public class UserAOHelper {
 			}
 		}
 
+		log.info("user built:{}", user);
 		return user;
 	}
 

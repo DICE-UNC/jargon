@@ -120,7 +120,7 @@ public class GeneralAdminInpTest {
 		sb.append("<arg2>test</arg2>\n");
 		sb.append("<arg3>rodsuser</arg3>\n");
 		sb.append("<arg4></arg4>\n");
-		sb.append("<arg5>dn</arg5>\n");
+		sb.append("<arg5></arg5>\n");
 		sb.append("<arg6></arg6>\n");
 		sb.append("<arg7></arg7>\n");
 		sb.append("<arg8></arg8>\n");
