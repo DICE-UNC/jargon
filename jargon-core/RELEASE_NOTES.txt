@@ -68,6 +68,8 @@ Note that the following bug and feature requests are logged in GForge with relat
 *[#1410] -92111 errors accessing zone collections when zone is down
 **Added zone unavailable exception
 
+*[#1555] truncation of user DN when adding using GenAdminPI add user, works with GenAdmin for aua
+**UserAO (when adding user) uses 'iadmin aua' call instead of add user call to set DN.  This is an overhead for an iRODS bug.
 
 
 ==Features==

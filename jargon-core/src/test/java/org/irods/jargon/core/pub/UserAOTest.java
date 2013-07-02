@@ -326,6 +326,43 @@ public class UserAOTest {
 
 	}
 
+	/**
+	 * Bug [#1555] truncation of user DN when adding using GenAdminPI add user,
+	 * works with GenAdmin for aua
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void testAddUserLongDN() throws Exception {
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		String testUser = "testAddUserLongDN";
+		String testDN = "/CN=xxxxxxxx-64f0-4d49-a0a9-508a8a5328cd/emailAddress=xxxxxxxxxxthismaynotshowup";
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+		UserAO userAO = accessObjectFactory.getUserAO(irodsAccount);
+
+		// setup, delete user if it exists
+
+		try {
+			userAO.deleteUser(testUser);
+		} catch (Exception e) {
+			// ignore exception, user may not exist
+		}
+
+		User addedUser = new User();
+		addedUser.setName(testUser);
+		addedUser.setUserType(UserTypeEnum.RODS_USER);
+		addedUser.setUserDN(testDN);
+		userAO.addUser(addedUser);
+		User actual = userAO.findByName(testUser);
+
+		Assert.assertEquals(testDN, actual.getUserDN());
+
+	}
+
 	@Test
 	public void testAddUserDN() throws Exception {
 		IRODSAccount irodsAccount = testingPropertiesHelper

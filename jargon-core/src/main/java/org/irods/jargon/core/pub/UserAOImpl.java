@@ -231,13 +231,17 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 		log.debug("user added, now process other fields");
 
 		if (!user.getComment().isEmpty()) {
-			log.debug("comment has changed");
+			log.info("comment has changed");
 			updateUserComment(user);
 		}
 
 		if (!user.getInfo().isEmpty()) {
-			log.debug("info has changed");
+			log.info("info has changed");
 			updateUserInfo(user);
+		}
+
+		if (!user.getUserDN().isEmpty()) {
+			this.updateUserDN(user.getName(), user.getUserDN());
 		}
 
 		return findByName(user.getName());
