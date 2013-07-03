@@ -3,13 +3,10 @@
 *'''Release Version''': x.x.x transfer engine upgrade
 *'''git tag''': 964-grid-memory
 
-
 ==News==
 
 Jargon-core implements the iRODS protocol, and allows development of iRODS-enabled Java applications.  This API is especially useful for developing
 mid-tier applications and services, as well as desktop-clients (such as iDROP).  These libraries also provide a foundation for a new set of interfaces that will come with iRODS.
-
-Note that this API represents a fundamental shift, and is meant to make development of applications easier and faster.
 
 =======
 Please go to [[https://code.renci.org/gf/project/jargon/]] for the latest news and info.
@@ -29,7 +26,7 @@ Jargon-core consists of the following libraries
 
 *Jargon depends on Java 1.6+
 *Jargon is built using Apache Maven2, see POM for dependencies
-*Jargon supports iRODS 2.5 through iRODS 3.2
+*Jargon supports iRODS 2.5 through iRODS 3.3
 
 ==Libraries==
 
@@ -38,18 +35,7 @@ Jargon-core uses Maven for dependency management.  See the pom.xml file for refe
 Note that the following bug and feature requests are logged in GForge with related commit information [[https://code.renci.org/gf/project/jargon/tracker/]]
 
 ==Bug Fixes==
- *[#1263] ACL retrieval query and the user lookup queries, the method queries the zone of the user and not the zone containing the collection
- **Added code to properly query the permissions as they exist on the current zone
- 
-*[#1139] Spaces at the begin or end of a data object name will cause an exception
-**removed trim() statements in query building to handle intended spaces in file names.  Note that there may be a bug for collection names with embedded spaces, this is ignored in the JUNit tests for CollectionAOImpl, and that issue has been routed to iRODS for now.
- 
-*[#1211] Re: [iROD-Chat:9536] jargon mangling UTF-8 characters
-**completed wiring codebase into jargon.properties settings
 
-*[#1358] hbm2ddl maven build errors
-**remove htm2ddl maven build step, not really used, caused maven build errors.  We might revisit this later with the new conveyor framework.
- 
 ==Features==
 
 *[#964] grid memory and presets
@@ -62,41 +48,4 @@ Note that the following bug and feature requests are logged in GForge with relat
 
 *[#1371] 3.3.2 error with cache using griffin
 **Handle GSI login in caching when using Griffin so that zone name can be null.  This will instead cache on host name
-
-*[#1346] unit test fixes and tweaks for running on win 7 with VM
-**Unit test tweaks and setup fixes that help testing on different configurations, especially when iRODS is not localhost and when running on Windows platforms
-
-*[#1372] continuation not propagated for specific query
-**Added continuation code to specific query
-
-*[#1373] alias lookup failing on specific query
-**Added additional lookup tests for specific queries that contained special characters (returns and spaces) in the query string
-**Added InvalidParameterException and checks for duplicate aliases
-**Propagate additional message information in ErrorScanner and IRODSCommand processing
-**Clarified alias versus sql in various specific query AO services
-
-*[#1434] unchecked IRODSFile exceptions bubbling through, should be caught and passed to callback
-**TransferOperationsHelper now greedily traps any exception, including runtime and io exception, in its processing, so that they may be passed back to the callback listener.  This helps trap errors that were 'leaking' and not making it to the callback listeners in iDrop.
- 
-*[#1264] [iROD-Chat:9666] Referencing Data Objects
-**Added findById() methods to DataObjectAO and CollectionAO
-
-*[#1172] Jargon enhancements supporting HIVE integration project
-**Added new methods to CollectionAO for paging queries by AVU using offsets
-**Added row counts and other stats to MetaDataAndDomainData lists for find metadata by metadata query methods
-
-
-*[#1250] jargon/idrop performance testing and optimization for 3.3.2
-**Added cache of server properties in IRODSSession to avoid repreated queries for same host/zone
-
-*[#902] IP - ils -A performance fix
-**Add zoneHint capability to specific query
-**Implement optional specific query solution for ils which does not expand group membership
-
-*[#1392] remove icommands from remaining unit tests
-**Remove wrapped icommands from remaining unit tests
-
-*[#1392] Resource AVU methods to add and remove metadata from resources
-
-
 

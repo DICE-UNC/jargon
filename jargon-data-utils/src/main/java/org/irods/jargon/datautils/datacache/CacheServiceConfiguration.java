@@ -22,14 +22,14 @@ public class CacheServiceConfiguration {
 	/**
 	 * Lifetime of cached data for determining purge
 	 */
-	private int lifetimeInMinutes = 10;
+	private int lifetimeInDays = 30;
 
-	public int getLifetimeInMinutes() {
-		return lifetimeInMinutes;
+	public int getLifetimeInDays() {
+		return lifetimeInDays;
 	}
 
-	public void setLifetimeInMinutes(final int lifetimeInMinutes) {
-		this.lifetimeInMinutes = lifetimeInMinutes;
+	public void setLifetimeInDays(final int lifetimeInDays) {
+		this.lifetimeInDays = lifetimeInDays;
 	}
 
 	/**

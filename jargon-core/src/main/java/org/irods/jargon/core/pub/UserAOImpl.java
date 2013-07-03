@@ -231,13 +231,17 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 		log.debug("user added, now process other fields");
 
 		if (!user.getComment().isEmpty()) {
-			log.debug("comment has changed");
+			log.info("comment has changed");
 			updateUserComment(user);
 		}
 
 		if (!user.getInfo().isEmpty()) {
-			log.debug("info has changed");
+			log.info("info has changed");
 			updateUserInfo(user);
+		}
+
+		if (!user.getUserDN().isEmpty()) {
+			this.updateUserDN(user.getName(), user.getUserDN());
 		}
 
 		return findByName(user.getName());
@@ -349,6 +353,19 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 	public User findById(final String userId) throws JargonException,
 			DataNotFoundException {
 		return findByIdInZone(userId, getIRODSAccount().getZone());
+
+	}
+
+	public String findUserDNByUserName(final String userName)
+			throws JargonException {
+
+		log.info("findUserDNByUserName()");
+
+		if (userName == null || userName.isEmpty()) {
+			throw new IllegalArgumentException("null or empty userName");
+		}
+
+		return null;
 
 	}
 
@@ -633,6 +650,27 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 			log.debug("user type has changed");
 			updateUserType(user);
 		}
+
+		if (!user.getUserDN().equals(currentUser.getUserDN())) {
+			if (user.getUserDN().isEmpty()) {
+				log.info("removing DN");
+				this.removeUserDN(currentUser.getNameWithZone(),
+						currentUser.getUserDN());
+			} else {
+				if (currentUser.getUserDN().isEmpty()) {
+					log.info("add new DN");
+					this.updateUserDN(currentUser.getNameWithZone(),
+							user.getUserDN());
+				} else {
+					log.info("remove old");
+					this.removeUserDN(currentUser.getNameWithZone(),
+							currentUser.getUserDN());
+					log.info("add new");
+					this.updateUserDN(currentUser.getNameWithZone(),
+							user.getUserDN());
+				}
+			}
+		}
 	}
 
 	/*
@@ -916,6 +954,56 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 	private void updateUserType(final User user) throws JargonException {
 		GeneralAdminInp adminPI = GeneralAdminInp.instanceForModifyUserType(
 				user.getName(), user.getUserType());
+		getIRODSProtocol().irodsFunction(adminPI);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.pub.UserAO#updateUserDN(java.lang.String,
+	 * java.lang.String)
+	 */
+	@Override
+	public void updateUserDN(final String userName, final String userDN)
+			throws InvalidUserException, JargonException {
+
+		log.info("updateUserDN()");
+
+		if (userName == null || userName.isEmpty()) {
+			throw new IllegalArgumentException("null or empty userName");
+		}
+
+		if (userDN == null || userDN.isEmpty()) {
+			throw new IllegalArgumentException("null or empty userDN");
+		}
+
+		log.info("userName:{}", userName);
+		log.info("userDN:{}", userDN);
+
+		GeneralAdminInp adminPI = GeneralAdminInp.instanceForModifyUserDN(
+				userName, userDN);
+		getIRODSProtocol().irodsFunction(adminPI);
+	}
+
+	@Override
+	public void removeUserDN(final String userName, final String userDN)
+			throws JargonException {
+
+		log.info("removeUserDN()");
+
+		if (userName == null || userName.isEmpty()) {
+			throw new IllegalArgumentException("null or empty userName");
+		}
+
+		if (userDN == null || userDN.isEmpty()) {
+			throw new IllegalArgumentException("null or empty userDN");
+		}
+
+		log.info("userName:{}", userName);
+		log.info("userDN:{}", userDN);
+
+		GeneralAdminInp adminPI = GeneralAdminInp.instanceForRemoveUserDN(
+				userName, userDN);
 		getIRODSProtocol().irodsFunction(adminPI);
 	}
 

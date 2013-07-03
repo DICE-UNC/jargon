@@ -153,10 +153,6 @@ public class DataCacheServiceImpl extends AbstractDataUtilsServiceImpl
 
 		checkContracts();
 
-		if (getCacheServiceConfiguration().isDoCleanupDuringRequests()) {
-			purgeOldRequests();
-		}
-
 		// build hash of key and look for file
 		int keyHash = key.hashCode();
 		log.info("generated hash for key:{}", keyHash);
@@ -175,6 +171,9 @@ public class DataCacheServiceImpl extends AbstractDataUtilsServiceImpl
 
 		log.info("streamed file into bytes for length of: {}", fileBytes.length);
 		log.info("deserialzing...");
+		if (getCacheServiceConfiguration().isDoCleanupDuringRequests()) {
+			purgeOldRequests();
+		}
 		return new String(fileBytes);
 
 	}
@@ -388,10 +387,10 @@ public class DataCacheServiceImpl extends AbstractDataUtilsServiceImpl
 	@Override
 	public void purgeOldRequests() throws JargonException {
 		log.info("purgeOldRequests()");
-		long minToMillis = (long) this.getCacheServiceConfiguration()
-				.getLifetimeInMinutes() * 60 * 1000;
+		long daysToMillis = (long) this.getCacheServiceConfiguration()
+				.getLifetimeInDays() * 60 * 1000 * 60 * 24;
 		long millisNow = System.currentTimeMillis();
-		long purgeThreshold = millisNow - minToMillis;
+		long purgeThreshold = millisNow - daysToMillis;
 		log.info("purge threshold:{}", purgeThreshold);
 		log.info("millis now:{}", millisNow);
 
