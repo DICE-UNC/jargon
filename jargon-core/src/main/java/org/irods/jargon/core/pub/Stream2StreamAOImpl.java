@@ -48,7 +48,7 @@ public class Stream2StreamAOImpl extends IRODSGenericAO implements
 	}
 
 	/*
-	 * TODO: might depracate Potentially deprecated....experimental
+	 * TODO: Potentially deprecated....experimental
 	 */
 	/*
 	 * (non-Javadoc)
@@ -103,7 +103,7 @@ public class Stream2StreamAOImpl extends IRODSGenericAO implements
 	 * (java.io.InputStream, java.io.File, long, int)
 	 */
 	@Override
-	public void transferStreamToFileUsingIOStreams(
+	public TransferStatistics transferStreamToFileUsingIOStreams(
 			final InputStream inputStream, final File targetFile,
 			final long length, final int readBuffSize)
 			throws NoResourceDefinedException, JargonException {
@@ -118,6 +118,18 @@ public class Stream2StreamAOImpl extends IRODSGenericAO implements
 
 		log.info("transferStreamToFile(), inputStream:{}", inputStream);
 		log.info("targetFile:{}", targetFile);
+
+		InputStream myInputStream = null;
+
+		if (inputStream instanceof BufferedInputStream) {
+			log.info("input stream already buffered");
+			myInputStream = inputStream;
+		} else {
+			log.info("adding buffer around input stream");
+			myInputStream = new BufferedInputStream(inputStream);
+		}
+
+		long timeStart = System.currentTimeMillis();
 
 		OutputStream fileOutputStream = null;
 
@@ -181,7 +193,7 @@ public class Stream2StreamAOImpl extends IRODSGenericAO implements
 
 			byte buf[] = new byte[myBuffSize];
 
-			while ((doneCnt = inputStream.read(buf, 0, myBuffSize)) >= 0) {
+			while ((doneCnt = myInputStream.read(buf, 0, myBuffSize)) >= 0) {
 
 				if (doneCnt == 0) {
 					Thread.yield();
@@ -202,7 +214,7 @@ public class Stream2StreamAOImpl extends IRODSGenericAO implements
 		} finally {
 
 			try {
-				inputStream.close();
+				myInputStream.close();
 			} catch (Exception e) {
 			}
 
@@ -213,6 +225,113 @@ public class Stream2StreamAOImpl extends IRODSGenericAO implements
 
 		}
 
+		long timeEnd = System.currentTimeMillis();
+		TransferStatistics transferStatistics = new TransferStatistics();
+		long seconds = (timeEnd - timeStart) / 1000;
+
+		if (seconds == 0) {
+			seconds = 1;
+		}
+
+		transferStatistics.setSeconds((int) seconds);
+		transferStatistics.setTotalBytes(length);
+
+		if (transferStatistics.getSeconds() > 0) {
+			transferStatistics.setKbPerSecond((int) (transferStatistics
+					.getTotalBytes() / seconds));
+		}
+
+		log.info("transfer stats:{}", transferStatistics);
+
+		return transferStatistics;
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.Stream2StreamAO#streamToStreamCopyUsingStandardIO
+	 * (java.io.InputStream, java.io.OutputStream)
+	 */
+	@Override
+	public TransferStatistics streamToStreamCopyUsingStandardIO(
+			final InputStream inputStream, final OutputStream outputStream)
+			throws JargonException {
+
+		log.info("streamToStreamCopyUsingStandardIO()");
+
+		if (inputStream == null) {
+			throw new IllegalArgumentException("null inputStream");
+		}
+
+		if (outputStream == null) {
+			throw new IllegalArgumentException("null outputStream");
+		}
+
+		InputStream myInput = null;
+		OutputStream myOutput = null;
+		long timeStart = System.currentTimeMillis();
+
+		/*
+		 * TODO: add a jargon prop for these buffer sizes?
+		 */
+
+		if (inputStream instanceof BufferedInputStream) {
+			log.info("input already buffered");
+			myInput = inputStream;
+		} else {
+			myInput = new BufferedInputStream(inputStream);
+		}
+
+		if (outputStream instanceof BufferedOutputStream) {
+			log.info("output already buffered");
+			myOutput = outputStream;
+		} else {
+			myOutput = new BufferedOutputStream(outputStream);
+		}
+
+		final byte[] buffer = new byte[getJargonProperties()
+				.getInputToOutputCopyBufferByteSize()];
+		long count = 0;
+		int n = 0;
+		try {
+			while (-1 != (n = myInput.read(buffer))) {
+				myOutput.write(buffer, 0, n);
+				count += n;
+			}
+			myOutput.flush();
+		} catch (IOException e) {
+			log.error("IO Exception copying buffers", e);
+			throw new JargonException("io exception copying buffers", e);
+		} finally {
+			try {
+				myInput.close();
+				myOutput.close();
+			} catch (Exception e) {
+
+			}
+		}
+
+		long timeEnd = System.currentTimeMillis();
+		TransferStatistics transferStatistics = new TransferStatistics();
+		long seconds = (timeEnd - timeStart) / 1000;
+
+		if (seconds == 0) {
+			seconds = 1;
+		}
+
+		transferStatistics.setSeconds((int) seconds);
+		transferStatistics.setTotalBytes(count);
+
+		if (transferStatistics.getSeconds() > 0) {
+			transferStatistics.setKbPerSecond((int) (transferStatistics
+					.getTotalBytes() / seconds));
+		}
+
+		log.info("transfer stats:{}", transferStatistics);
+
+		return transferStatistics;
 	}
 
 	/*

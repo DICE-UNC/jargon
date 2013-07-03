@@ -1,9 +1,12 @@
 package org.irods.jargon.core.pub;
 
 import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.channels.WritableByteChannel;
@@ -153,6 +156,94 @@ public class Stream2StreamAOImplTest {
 				.getStream2StreamAO(irodsAccount);
 		stream2StreamAO.transferStreamToFileUsingIOStreams(inputStream,
 				(File) targetIrodsFile, localFile.length(), 0);
+
+		Assert.assertTrue("file does not exist", targetIrodsFile.exists());
+		Assert.assertTrue("no data in target file",
+				targetIrodsFile.length() > 0);
+
+	}
+
+	@Test
+	public void testStreamToStreamUsingStreamIOProvideBuffered()
+			throws Exception {
+		int length = 1024 * 1024;
+		String testFileName = "testStreamToStreamUsingStreamIOProvideBuffered.txt";
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String localFilePath = FileGenerator
+				.generateFileOfFixedLengthGivenName(absPath, testFileName,
+						length);
+		File localFile = new File(localFilePath);
+		BufferedInputStream inputStream = new BufferedInputStream(
+				new FileInputStream(localFile));
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory irodsAccessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+		IRODSFile targetIrodsFile = irodsAccessObjectFactory
+				.getIRODSFileFactory(irodsAccount).instanceIRODSFile(
+						targetIrodsCollection + "/" + testFileName);
+		targetIrodsFile.delete();
+		targetIrodsFile.reset();
+
+		BufferedOutputStream outputStream = new BufferedOutputStream(
+				irodsFileSystem.getIRODSAccessObjectFactory()
+						.getIRODSFileFactory(irodsAccount)
+						.instanceIRODSFileOutputStream(targetIrodsFile));
+
+		Stream2StreamAO stream2StreamAO = irodsAccessObjectFactory
+				.getStream2StreamAO(irodsAccount);
+
+		TransferStatistics stats = stream2StreamAO
+				.streamToStreamCopyUsingStandardIO(inputStream, outputStream);
+		Assert.assertNotNull("null stats", stats);
+
+		Assert.assertTrue("file does not exist", targetIrodsFile.exists());
+		Assert.assertTrue("no data in target file",
+				targetIrodsFile.length() > 0);
+
+	}
+
+	@Test
+	public void testStreamToStreamUsingStreamIOProvideUnbuffered()
+			throws Exception {
+		int length = 1024 * 1024;
+		String testFileName = "testStreamToStreamUsingStreamIOProvideUnbuffered.txt";
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String localFilePath = FileGenerator
+				.generateFileOfFixedLengthGivenName(absPath, testFileName,
+						length);
+		File localFile = new File(localFilePath);
+		Assert.assertTrue("file does not exist for input", localFile.exists());
+		InputStream inputStream = new FileInputStream(localFile);
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory irodsAccessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+		IRODSFile targetIrodsFile = irodsAccessObjectFactory
+				.getIRODSFileFactory(irodsAccount).instanceIRODSFile(
+						targetIrodsCollection + "/" + testFileName);
+		targetIrodsFile.delete();
+		targetIrodsFile.reset();
+
+		OutputStream outputStream = irodsFileSystem
+				.getIRODSAccessObjectFactory()
+				.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFileOutputStream(targetIrodsFile);
+
+		Stream2StreamAO stream2StreamAO = irodsAccessObjectFactory
+				.getStream2StreamAO(irodsAccount);
+
+		TransferStatistics stats = stream2StreamAO
+				.streamToStreamCopyUsingStandardIO(inputStream, outputStream);
+		Assert.assertNotNull("null stats", stats);
 
 		Assert.assertTrue("file does not exist", targetIrodsFile.exists());
 		Assert.assertTrue("no data in target file",
