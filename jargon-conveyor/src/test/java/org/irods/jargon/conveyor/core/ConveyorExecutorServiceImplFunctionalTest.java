@@ -11,6 +11,7 @@ import junit.framework.Assert;
 
 import org.irods.jargon.conveyor.unittest.utils.TransferTestRunningUtilities;
 import org.irods.jargon.core.connection.IRODSAccount;
+import org.irods.jargon.core.pub.DataTransferOperations;
 import org.irods.jargon.core.pub.IRODSFileSystem;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.pub.io.IRODSFileFactory;
@@ -168,4 +169,182 @@ public class ConveyorExecutorServiceImplFunctionalTest {
 				TransferAccountingManagementService.WARNING_CANCELLED_MESSAGE,
 				attempt.getErrorMessage());
 	}
+
+	/**
+	 * do a get of a nested collection that should be 'normal'
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void testGetNestedCollection() throws Exception {
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		conveyorService.validatePassPhrase(testingProperties
+				.getProperty(TestingPropertiesHelper.IRODS_PASSWORD_KEY));
+		conveyorService.getGridAccountService()
+				.addOrUpdateGridAccountBasedOnIRODSAccount(irodsAccount);
+		ConfigurationProperty logSuccessful = new ConfigurationProperty();
+		logSuccessful
+				.setPropertyKey(ConfigurationPropertyConstants.LOG_SUCCESSFUL_FILES_KEY);
+		logSuccessful.setPropertyValue("true");
+
+		conveyorService.getConfigurationService().addConfigurationProperty(
+				logSuccessful);
+
+		String rootCollection = "testGetWithCancellation";
+		String localCollectionAbsolutePath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH
+						+ '/' + rootCollection);
+
+		String localCollectionReturnAbsolutePath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH
+						+ '/' + rootCollection + "return");
+
+		String irodsCollectionRootAbsolutePath = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		FileGenerator
+				.generateManyFilesAndCollectionsInParentCollectionByAbsolutePath(
+						localCollectionAbsolutePath,
+						"testEnqueuePutTransferOperationAndWaitUntilDone", 2,
+						5, 2, "testFile", ".txt", 10, 5, 100, 2000);
+
+		IRODSFileFactory irodsFileFactory = irodsFileSystem
+				.getIRODSFileFactory(irodsAccount);
+		IRODSFile destFile = irodsFileFactory
+				.instanceIRODSFile(irodsCollectionRootAbsolutePath);
+		File localFile = new File(localCollectionAbsolutePath);
+		File localReturnFile = new File(localCollectionReturnAbsolutePath);
+
+		DataTransferOperations dto = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataTransferOperations(
+						irodsAccount);
+
+		dto.putOperation(localFile, destFile, null, null);
+
+		Transfer transfer = new Transfer();
+		transfer.setIrodsAbsolutePath(destFile.getAbsolutePath());
+		transfer.setLocalAbsolutePath(localReturnFile.getAbsolutePath());
+		transfer.setTransferType(TransferType.GET);
+
+		conveyorService.getQueueManagerService().enqueueTransferOperation(
+				transfer, irodsAccount);
+
+		TransferTestRunningUtilities.waitForTransferToRunOrTimeout(
+				conveyorService, TRANSFER_TIMEOUT);
+
+		List<Transfer> transfers = conveyorService.getQueueManagerService()
+				.listAllTransfersInQueue();
+		Assert.assertFalse("no transfers in queue", transfers.isEmpty());
+		Assert.assertEquals("should be 1 transfer..maybe test cleanup is bad",
+				1, transfers.size());
+		transfer = transfers.get(0);
+
+		transfer = conveyorService.getQueueManagerService()
+				.initializeGivenTransferByLoadingChildren(transfer);
+
+		Assert.assertFalse("did not create a transfer attempt", transfer
+				.getTransferAttempts().isEmpty());
+
+		Assert.assertEquals("did not get complete status",
+				TransferStateEnum.COMPLETE, transfer.getTransferState());
+
+		TransferAttempt attempts[] = new TransferAttempt[transfer
+				.getTransferAttempts().size()];
+		attempts = transfer.getTransferAttempts().toArray(attempts);
+		Assert.assertEquals("should be 1 attempt", 1, attempts.length);
+
+		TransferAttempt attempt = attempts[0];
+		Assert.assertNotNull("transfer attempt not persisted", attempt.getId());
+
+	}
+
+	@Test
+	public void testGetSingleFile() throws Exception {
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		conveyorService.validatePassPhrase(testingProperties
+				.getProperty(TestingPropertiesHelper.IRODS_PASSWORD_KEY));
+		conveyorService.getGridAccountService()
+				.addOrUpdateGridAccountBasedOnIRODSAccount(irodsAccount);
+		ConfigurationProperty logSuccessful = new ConfigurationProperty();
+		logSuccessful
+				.setPropertyKey(ConfigurationPropertyConstants.LOG_SUCCESSFUL_FILES_KEY);
+		logSuccessful.setPropertyValue("true");
+
+		conveyorService.getConfigurationService().addConfigurationProperty(
+				logSuccessful);
+
+		String testFileName = "test.file";
+		String rootCollection = "testGetSingleFile";
+		String localCollectionReturnAbsolutePath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH
+						+ '/' + rootCollection + "return");
+
+		String irodsCollectionRootAbsolutePath = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+
+		FileGenerator.generateFileOfFixedLengthGivenName(absPath, testFileName,
+				3);
+
+		File localFile = new File(absPath, testFileName);
+
+		IRODSFileFactory irodsFileFactory = irodsFileSystem
+				.getIRODSFileFactory(irodsAccount);
+		IRODSFile destFile = irodsFileFactory
+				.instanceIRODSFile(irodsCollectionRootAbsolutePath);
+		File localReturnFile = new File(localCollectionReturnAbsolutePath);
+
+		DataTransferOperations dto = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataTransferOperations(
+						irodsAccount);
+
+		dto.putOperation(localFile, destFile, null, null);
+
+		destFile = irodsFileFactory
+				.instanceIRODSFile(irodsCollectionRootAbsolutePath + "/"
+						+ testFileName);
+
+		Transfer transfer = new Transfer();
+		transfer.setIrodsAbsolutePath(destFile.getAbsolutePath());
+		transfer.setLocalAbsolutePath(localReturnFile.getAbsolutePath());
+		transfer.setTransferType(TransferType.GET);
+
+		conveyorService.getQueueManagerService().enqueueTransferOperation(
+				transfer, irodsAccount);
+
+		TransferTestRunningUtilities.waitForTransferToRunOrTimeout(
+				conveyorService, TRANSFER_TIMEOUT);
+
+		List<Transfer> transfers = conveyorService.getQueueManagerService()
+				.listAllTransfersInQueue();
+		Assert.assertFalse("no transfers in queue", transfers.isEmpty());
+		Assert.assertEquals("should be 1 transfer..maybe test cleanup is bad",
+				1, transfers.size());
+		transfer = transfers.get(0);
+
+		transfer = conveyorService.getQueueManagerService()
+				.initializeGivenTransferByLoadingChildren(transfer);
+
+		Assert.assertFalse("did not create a transfer attempt", transfer
+				.getTransferAttempts().isEmpty());
+
+		Assert.assertEquals("did not get complete status",
+				TransferStateEnum.COMPLETE, transfer.getTransferState());
+
+		TransferAttempt attempts[] = new TransferAttempt[transfer
+				.getTransferAttempts().size()];
+		attempts = transfer.getTransferAttempts().toArray(attempts);
+		Assert.assertEquals("should be 1 attempt", 1, attempts.length);
+
+		TransferAttempt attempt = attempts[0];
+		Assert.assertNotNull("transfer attempt not persisted", attempt.getId());
+
+	}
+
 }
