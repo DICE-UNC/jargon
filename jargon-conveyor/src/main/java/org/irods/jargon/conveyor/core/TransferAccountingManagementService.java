@@ -100,15 +100,12 @@ public interface TransferAccountingManagementService {
 	 * Make necessary updates to the given transfer upon cancellation. This sets
 	 * the overall status and status of the attempt.
 	 * 
-	 * @param transferStatus
-	 *            {@link TransferStatus} from the callback
 	 * @param transferAttempt
 	 *            {@link TransferAttempt}
 	 * @throws ConveyorExecutionException
 	 */
-	void updateTransferAfterCancellation(
-			org.irods.jargon.core.transfer.TransferStatus transferStatus,
-			TransferAttempt transferAttempt) throws ConveyorExecutionException;
+	void updateTransferAfterCancellation(TransferAttempt transferAttempt)
+			throws ConveyorExecutionException;
 
 	/**
 	 * Make necessary updates to the given transfer upon overall completion with
@@ -214,8 +211,8 @@ public interface TransferAccountingManagementService {
 	 */
 	Transfer prepareTransferForRestart(final long transferId)
 			throws ConveyorExecutionException, RejectedTransferException;
-        
-        /**
+
+	/**
 	 * Prepare the given transfer for a resubmit. This includes setting up a new
 	 * <code>TransferAttempt</code>.
 	 * 

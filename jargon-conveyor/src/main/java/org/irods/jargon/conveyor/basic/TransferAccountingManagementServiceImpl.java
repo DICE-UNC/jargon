@@ -564,19 +564,53 @@ public class TransferAccountingManagementServiceImpl extends
 	 * (non-Javadoc)
 	 * 
 	 * @see org.irods.jargon.conveyor.core.TransferAccountingManagementService#
-	 * updateTransferAfterCancellation
-	 * (org.irods.jargon.core.transfer.TransferStatus,
+	 * updateTransferAfterCancellation (
 	 * org.irods.jargon.transfer.dao.domain.TransferAttempt)
 	 */
 	@Override
-	public void updateTransferAfterCancellation(TransferStatus transferStatus,
-			TransferAttempt transferAttempt) throws ConveyorExecutionException {
-		log.info("updateTransferAfterOverallSuccess()");
+	public void updateTransferAfterCancellation(TransferAttempt transferAttempt)
+			throws ConveyorExecutionException {
+		log.info("updateTransferAfterCancellation()");
 
-		this.transferUpdateOverall(transferStatus, transferAttempt,
-				TransferStatusEnum.OK, TransferStateEnum.CANCELLED,
-				WARNING_CANCELLED_MESSAGE);
+		if (transferAttempt == null) {
+			throw new IllegalArgumentException("null transferAttempt");
+		}
 
+		log.info("transferAttempt:{}", transferAttempt);
+
+		TransferAttempt localTransferAttempt;
+		try {
+			localTransferAttempt = transferAttemptDAO.findById(transferAttempt
+					.getId());
+			if (localTransferAttempt == null) {
+				log.error("null transfer attempt found, cannot update the database");
+				throw new ConveyorExecutionException(
+						"error finding transfer attempt");
+
+			}
+		} catch (TransferDAOException e) {
+			throw new ConveyorExecutionException(
+					"error finding transfer attempt", e);
+		}
+
+		Transfer transfer = localTransferAttempt.getTransfer();
+
+		transfer.setLastTransferStatus(TransferStatusEnum.OK);
+		transfer.setTransferState(TransferStateEnum.CANCELLED);
+		transfer.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
+		localTransferAttempt.setAttemptEnd(new Timestamp(System
+				.currentTimeMillis()));
+		localTransferAttempt.setAttemptStatus(TransferStatusEnum.OK);
+		localTransferAttempt.setUpdatedAt(localTransferAttempt.getAttemptEnd());
+		localTransferAttempt.setErrorMessage(WARNING_CANCELLED_MESSAGE);
+
+		try {
+			transferDAO.save(transfer);
+			transferAttemptDAO.save(localTransferAttempt);
+		} catch (TransferDAOException ex) {
+			throw new ConveyorExecutionException(
+					"error saving transfer attempt", ex);
+		}
 	}
 
 	/**
@@ -853,8 +887,8 @@ public class TransferAccountingManagementServiceImpl extends
 
 		return transfer;
 	}
-        
-        /*
+
+	/*
 	 * (non-Javadoc)
 	 * 
 	 * @see org.irods.jargon.conveyor.core.TransferAccountingManagementService#

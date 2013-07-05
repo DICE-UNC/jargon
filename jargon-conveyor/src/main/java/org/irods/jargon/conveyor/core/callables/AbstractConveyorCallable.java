@@ -377,8 +377,8 @@ public abstract class AbstractConveyorCallable implements
 				log.error("failure to transfer in status");
 				processOverallCompletionOfTransferWithFailure(transferStatus);
 			} else if (transferStatus.getTransferState() == TransferState.CANCELLED) {
-				log.error("transfer cancelled");
-				processOverallCompletionOfTransferWithCancel(transferStatus);
+				log.error("transfer cancelled, this will be handled by the conveyor execution service, and the callback here will be ignored");
+				// processOverallCompletionOfTransferWithCancel(transferStatus);
 			}
 		} catch (ConveyorExecutionException ex) {
 			throw new JargonException(ex.getMessage(), ex.getCause());
@@ -407,8 +407,7 @@ public abstract class AbstractConveyorCallable implements
 		conveyorService.getConveyorExecutorService().setErrorStatus(
 				ErrorStatus.OK);
 		getConveyorService().getTransferAccountingManagementService()
-				.updateTransferAfterCancellation(transferStatus,
-						transferAttempt);
+				.updateTransferAfterCancellation(transferAttempt);
 	}
 
 	@Override

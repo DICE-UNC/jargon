@@ -6,6 +6,7 @@ import org.irods.jargon.conveyor.basic.BasicQueueManagerServiceImplTest;
 import org.irods.jargon.conveyor.basic.ConfigurationServiceImplTest;
 import org.irods.jargon.conveyor.basic.GridAccountServiceImplTest;
 import org.irods.jargon.conveyor.basic.TransferAccountingManagementServiceImplTest;
+import org.irods.jargon.conveyor.core.ConveyorExecutorServiceImplFunctionalTest;
 import org.irods.jargon.conveyor.core.ConveyorExecutorServiceImplTest;
 import org.irods.jargon.conveyor.gridaccount.GridAccountConfigurationProcessorTest;
 import org.irods.jargon.transfer.dao.ConfigurationPropertyDAOTest;
@@ -26,7 +27,8 @@ ConfigurationPropertyDAOTest.class, GridAccountDAOImplTest.class,
 		GridAccountConfigurationProcessorTest.class,
 		ConfigurationServiceImplTest.class,
 		TransferAccountingManagementServiceImplTest.class,
-		BasicQueueManagerServiceImplTest.class, })
+		BasicQueueManagerServiceImplTest.class,
+		ConveyorExecutorServiceImplFunctionalTest.class })
 /**
  * Suite to run all tests (except long running and functional), further refined by settings in testing.properites.  Some subtests may be shut
  * off by these properties.

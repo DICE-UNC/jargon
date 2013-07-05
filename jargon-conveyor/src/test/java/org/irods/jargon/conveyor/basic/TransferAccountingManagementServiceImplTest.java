@@ -761,12 +761,8 @@ public class TransferAccountingManagementServiceImplTest {
 				.updateTransferAfterSuccessfulFileTransfer(status,
 						transferAttempt);
 
-		TransferStatus overallSuccess = TransferStatus.instance(
-				TransferStatus.TransferType.PUT, "/", "/", "", 1L, 1L, 1, 1,
-				TransferStatus.TransferState.CANCELLED, "host", "zone");
-
-		transferAccountingManagementService.updateTransferAfterCancellation(
-				overallSuccess, transferAttempt);
+		transferAccountingManagementService
+				.updateTransferAfterCancellation(transferAttempt);
 
 		Assert.assertEquals(TransferStatusEnum.OK,
 				transfer.getLastTransferStatus());

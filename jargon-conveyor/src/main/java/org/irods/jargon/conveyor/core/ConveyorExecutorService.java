@@ -25,12 +25,13 @@ public interface ConveyorExecutorService {
 
 	ExecutorService executor = Executors.newFixedThreadPool(1);
 
-    /**
-     * @return the currentTransferAttempt
-     */
-    TransferAttempt getCurrentTransferAttempt();
+	/**
+	 * @return the currentTransferAttempt
+	 */
+	TransferAttempt getCurrentTransferAttempt();
 
-    void requestCancel(final TransferAttempt transferAttempt) throws ConveyorExecutionException;
+	void requestCancel(final TransferAttempt transferAttempt)
+			throws ConveyorExecutionException;
 
 	public enum ErrorStatus {
 		OK, WARNING, ERROR
@@ -122,5 +123,14 @@ public interface ConveyorExecutorService {
 	ConveyorService getConveyorService();
 
 	void setConveyorService(final ConveyorService conveyorService);
+
+	/**
+	 * Convenience method to peek at the number of files tranferred so far in
+	 * the current transfer
+	 * 
+	 * @return <code>int</code> with number of files transferred so far. Note
+	 *         that this will return 0 if a current transfer is not available
+	 */
+	int getNumberFilesTransferredSoFarInCurrentTransfer();
 
 }

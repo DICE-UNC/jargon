@@ -92,7 +92,12 @@ public class ConveyorExecutorServiceImpl implements ConveyorExecutorService {
 			currentCallable.getTransferControlBlock().setCancelled(true);
 			currentTransferFuture.cancel(true);
 
-			// log.info(">>>blocking for return of future");
+			/*
+			 * no final callback will be sent, as the tcb has cancelled set.
+			 */
+
+			this.conveyorService.getTransferAccountingManagementService()
+					.updateTransferAfterCancellation(transferAttempt);
 
 			log.info(" go ahead and make call to complete");
 			this.setOperationCompleted();
@@ -357,6 +362,17 @@ public class ConveyorExecutorServiceImpl implements ConveyorExecutorService {
 	 */
 	public synchronized TransferAttempt getCurrentTransferAttempt() {
 		return currentTransferAttempt;
+	}
+
+	@Override
+	public synchronized int getNumberFilesTransferredSoFarInCurrentTransfer() {
+		if (currentCallable == null) {
+			return 0;
+		}
+
+		return currentCallable.getTransferControlBlock()
+				.getTotalFilesTransferredSoFar();
+
 	}
 
 }
