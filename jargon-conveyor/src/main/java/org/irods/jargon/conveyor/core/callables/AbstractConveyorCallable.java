@@ -394,22 +394,6 @@ public abstract class AbstractConveyorCallable implements
 
 	}
 
-	/**
-	 * Handle a cancel from the overall status
-	 * 
-	 * @param transferStatus
-	 * @throws ConveyorExecutionException
-	 */
-	private void processOverallCompletionOfTransferWithCancel(
-			final TransferStatus transferStatus)
-			throws ConveyorExecutionException {
-		log.info("processOverallCompletionOfTransferWithFailure");
-		conveyorService.getConveyorExecutorService().setErrorStatus(
-				ErrorStatus.OK);
-		getConveyorService().getTransferAccountingManagementService()
-				.updateTransferAfterCancellation(transferAttempt);
-	}
-
 	@Override
 	public CallbackResponse transferAsksWhetherToForceOperation(
 			final String irodsAbsolutePath, final boolean isCollection) {

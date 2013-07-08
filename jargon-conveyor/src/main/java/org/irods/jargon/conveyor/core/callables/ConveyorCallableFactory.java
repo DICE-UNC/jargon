@@ -48,8 +48,7 @@ public class ConveyorCallableFactory {
 			throw new ConveyorExecutionException(
 					"replicate transfer not implemented");
 		case COPY:
-			throw new ConveyorExecutionException(
-					"copy transfer not implemented");
+			return new CopyConveyorCallable(transferAttempt, conveyorService);
 		case SYNCH:
 			throw new ConveyorExecutionException(
 					"synch transfer not implemented");
