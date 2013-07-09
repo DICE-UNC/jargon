@@ -49,5 +49,5 @@ public interface TransferItemDAO {
 	 */
 	public List<TransferItem> findAllItemsForTransferByTransferId(
 			Long transferId) throws TransferDAOException;
-
+        
 }

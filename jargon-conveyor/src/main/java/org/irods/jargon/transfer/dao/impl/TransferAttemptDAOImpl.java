@@ -1,12 +1,18 @@
 package org.irods.jargon.transfer.dao.impl;
 
 import java.util.List;
+import org.hibernate.Criteria;
+import org.hibernate.HibernateException;
+import org.hibernate.criterion.Restrictions;
 
 import org.irods.jargon.transfer.dao.TransferAttemptDAO;
 import org.irods.jargon.transfer.dao.TransferDAOException;
 import org.irods.jargon.transfer.dao.domain.Transfer;
 import org.irods.jargon.transfer.dao.domain.TransferAttempt;
+import org.irods.jargon.transfer.dao.domain.TransferItem;
 import org.irods.jargon.transfer.dao.domain.TransferStatusEnum;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 /**
@@ -16,6 +22,9 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
  */
 public class TransferAttemptDAOImpl extends HibernateDaoSupport implements
 		TransferAttemptDAO {
+    
+        private static final Logger log = LoggerFactory
+			.getLogger(TransferItemDAOImpl.class);
 
 	/*
 	 * (non-Javadoc)
@@ -99,4 +108,33 @@ public class TransferAttemptDAOImpl extends HibernateDaoSupport implements
 
 	}
 
+        
+        @Override
+	public List<TransferItem> findNextTransferItems(
+			final Long id, final int start, final int length) throws TransferDAOException {
+		log.debug("entering findNextTransferItems(Long, int, int)");
+                
+                Transfer transfer = (Transfer) this.getSessionFactory()
+				.getCurrentSession().get(Transfer.class, id);
+                Long attemptId = transfer.getTransferAttempts().get(0).getId();
+
+		try {
+                        Criteria criteria = this.getSessionFactory().getCurrentSession()
+					.createCriteria(TransferItem.class);
+                        criteria.setFirstResult(start);
+                        criteria.setMaxResults(length);
+			List ls = criteria.createCriteria("transferAttempt").add(
+					Restrictions.eq("id", attemptId)).list();
+			//criteria.addOrder(Order.asc("transferredAt"));
+
+                        return ls;
+		} catch (HibernateException e) {
+			log.error("HibernateException", e);
+			throw new TransferDAOException(e);
+		} catch (Exception e) {
+			log.error("error in findNextTransferItems(Long, int, int)", e);
+			throw new TransferDAOException(
+					"Failed findNextTransferItems(Long, int, int)", e);
+		}
+	}
 }

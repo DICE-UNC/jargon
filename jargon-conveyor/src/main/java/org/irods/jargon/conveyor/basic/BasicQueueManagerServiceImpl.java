@@ -6,6 +6,7 @@ package org.irods.jargon.conveyor.basic;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
 
 import org.irods.jargon.conveyor.core.AbstractConveyorComponentService;
 import org.irods.jargon.conveyor.core.ConveyorBusyException;
@@ -24,6 +25,7 @@ import org.irods.jargon.transfer.dao.TransferDAOException;
 import org.irods.jargon.transfer.dao.domain.GridAccount;
 import org.irods.jargon.transfer.dao.domain.Transfer;
 import org.irods.jargon.transfer.dao.domain.TransferAttempt;
+import org.irods.jargon.transfer.dao.domain.TransferItem;
 import org.irods.jargon.transfer.dao.domain.TransferStateEnum;
 import org.irods.jargon.transfer.dao.domain.TransferStatusEnum;
 import org.irods.jargon.transfer.dao.domain.TransferType;
@@ -596,4 +598,23 @@ public class BasicQueueManagerServiceImpl extends
 		log.info("attempt added");
 
 	}
+        
+        @Override
+	public List<TransferItem> getNextTransferItems(final long transferId, int start, int length)
+			throws ConveyorExecutionException {
+                List<TransferItem> items = null;
+                
+                log.info("getNextTransferItems");
+		if (transferId <= 0) {
+			throw new IllegalArgumentException("invalid transferId");
+		}
+                try {
+                    items = transferAttemptDAO.findNextTransferItems(transferId, start, length);
+                } catch (TransferDAOException e) {
+                    log.error("exception retrieving transfer items", e);
+			throw new ConveyorExecutionException("error finding transfer items", e);
+                }
+                
+                return items;
+        }
 }
