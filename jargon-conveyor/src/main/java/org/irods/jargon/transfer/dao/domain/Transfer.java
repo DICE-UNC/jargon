@@ -58,6 +58,13 @@ public class Transfer implements Serializable {
 	private TransferType transferType;
 
 	/**
+	 * This resource is used to hold a specific (not default) resource for some
+	 * operations, such as replication.
+	 */
+	@Column(name = "resource_name", nullable = true)
+	private String resourceName = "";
+
+	/**
 	 * Overall synchronization configuration that is being processed by this
 	 * transfer
 	 */
@@ -184,6 +191,10 @@ public class Transfer implements Serializable {
 		sb.append(id);
 		sb.append("\n   transferState:");
 		sb.append(transferState);
+		if (resourceName != null) {
+			sb.append("\n\t resorceName:");
+			sb.append(resourceName);
+		}
 		sb.append("\n   transferStatus:");
 		sb.append(lastTransferStatus);
 		sb.append("\n   transferType:");
@@ -227,6 +238,21 @@ public class Transfer implements Serializable {
 	 */
 	public void setSequenceNumber(long sequenceNumber) {
 		this.sequenceNumber = sequenceNumber;
+	}
+
+	/**
+	 * @return the resourceName
+	 */
+	public String getResourceName() {
+		return resourceName;
+	}
+
+	/**
+	 * @param resourceName
+	 *            the resourceName to set
+	 */
+	public void setResourceName(String resourceName) {
+		this.resourceName = resourceName;
 	}
 
 }

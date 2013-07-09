@@ -18,6 +18,7 @@ import org.irods.jargon.core.transfer.TransferStatus;
 import org.irods.jargon.core.transfer.TransferStatus.TransferState;
 import org.irods.jargon.core.transfer.TransferStatusCallbackListener;
 import org.irods.jargon.transfer.dao.domain.GridAccount;
+import org.irods.jargon.transfer.dao.domain.Transfer;
 import org.irods.jargon.transfer.dao.domain.TransferAttempt;
 import org.irods.jargon.transfer.dao.domain.TransferStatusEnum;
 import org.slf4j.Logger;
@@ -616,6 +617,16 @@ public abstract class AbstractConveyorCallable implements
 	public synchronized void setTransferControlBlock(
 			final TransferControlBlock transferControlBlock) {
 		this.transferControlBlock = transferControlBlock;
+	}
+
+	/**
+	 * Conveneience method to get the <code>Transfer</code> associated with this
+	 * callable
+	 * 
+	 * @return {@link Transfer}
+	 */
+	protected Transfer getTransfer() {
+		return this.getTransferAttempt().getTransfer();
 	}
 
 }

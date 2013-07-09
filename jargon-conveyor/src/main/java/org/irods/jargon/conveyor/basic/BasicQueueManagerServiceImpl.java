@@ -251,6 +251,8 @@ public class BasicQueueManagerServiceImpl extends
 			return;
 		}
 
+		TransferAttempt transferAttempt = null;
+
 		try {
 
 			List<Transfer> transfers = transferDAO
@@ -268,7 +270,7 @@ public class BasicQueueManagerServiceImpl extends
 
 			// upon dequeue clear the error status
 			this.getConveyorExecutorService().setErrorStatus(ErrorStatus.OK);
-			TransferAttempt transferAttempt = transferAttemptDAO
+			transferAttempt = transferAttemptDAO
 					.findLastTransferAttemptForTransferByTransferId(transfer
 							.getId());
 
@@ -289,12 +291,32 @@ public class BasicQueueManagerServiceImpl extends
 					this.conveyorService);
 		} catch (JargonException je) {
 			log.error("jargon exception dequeue operation, will unlock queue");
+
+			if (transferAttempt != null) {
+				log.info("updating transfer with exception", je);
+				this.getConveyorService()
+						.getTransferAccountingManagementService()
+						.updateTransferAttemptWithConveyorException(
+								transferAttempt, je);
+
+			}
+
 			this.getConveyorExecutorService().setOperationCompleted();
 			this.getConveyorService().getConveyorCallbackListener()
 					.signalUnhandledConveyorException(je);
 			this.dequeueNextOperation();
 		} catch (Exception e) {
 			log.error("jargon exception dequeue operation, will unlock queue");
+
+			if (transferAttempt != null) {
+				log.info("updating transfer with exception", e);
+				this.getConveyorService()
+						.getTransferAccountingManagementService()
+						.updateTransferAttemptWithConveyorException(
+								transferAttempt, e);
+
+			}
+
 			this.getConveyorExecutorService().setOperationCompleted();
 			this.getConveyorService().getConveyorCallbackListener()
 					.signalUnhandledConveyorException(e);

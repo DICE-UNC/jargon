@@ -45,8 +45,8 @@ public class ConveyorCallableFactory {
 		case GET:
 			return new GetConveyorCallable(transferAttempt, conveyorService);
 		case REPLICATE:
-			throw new ConveyorExecutionException(
-					"replicate transfer not implemented");
+			return new ReplicateConveyorCallable(transferAttempt,
+					conveyorService);
 		case COPY:
 			return new CopyConveyorCallable(transferAttempt, conveyorService);
 		case SYNCH:
