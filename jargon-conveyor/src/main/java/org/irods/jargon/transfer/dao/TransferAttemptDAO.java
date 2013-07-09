@@ -3,6 +3,7 @@ package org.irods.jargon.transfer.dao;
 import java.util.List;
 
 import org.irods.jargon.transfer.dao.domain.TransferAttempt;
+import org.irods.jargon.transfer.dao.domain.TransferItem;
 import org.irods.jargon.transfer.dao.domain.TransferStatusEnum;
 
 /**
@@ -57,5 +58,24 @@ public interface TransferAttemptDAO {
 	 */
 	public TransferAttempt findLastTransferAttemptForTransferByTransferId(
 			final long transferId) throws TransferDAOException;
-
+        
+        /**
+	 * Get list of files associated with the <code>TransferAttempt</code> 
+         * this list is paged with start record, and number of records to be retrieved
+	 * 
+	 * @param transferId
+	 *            <code>long</code> with the id of the <code>Transfer</code>
+	 *            that will be looked up
+         * @param start
+	 *            <code>int</code> with the start index of the list of
+         *            <code>TransferItems</code> to return
+         * @param length
+	 *            <code>int</code> with the max number of
+         *            <code>TransferItems</code> to return
+	 * @return {@link TransferItems} list
+	 * @throws TransferDAOException
+	 */
+	public List<TransferItem> findNextTransferItems(
+			final Long transferId, final int start, final int length) throws TransferDAOException;
+       
 }

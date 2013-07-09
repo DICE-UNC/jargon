@@ -8,6 +8,7 @@ import java.util.List;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.transfer.dao.domain.Transfer;
 import org.irods.jargon.transfer.dao.domain.TransferAttempt;
+import org.irods.jargon.transfer.dao.domain.TransferItem;
 import org.irods.jargon.transfer.dao.domain.TransferType;
 
 /**
@@ -214,5 +215,17 @@ public interface QueueManagerService {
 	void addTransferAttemptToTransfer(long transferId,
 			TransferAttempt transferAttempt) throws TransferNotFoundException,
 			ConveyorExecutionException;
+        
+        /**
+	 * Given an id and a start and max number of results return a list of 
+         * <code>TransferItems</code> for the specified transfer id.
+	 * 
+	 * @param transferId
+	 *            <code>long</code> with the transfer id
+	 * @return {@link TransferItems} list.
+	 * @throws ConveyorExecutionException
+	 */
+	List<TransferItem> getNextTransferItems(final long transferId, int start, int length)
+			throws ConveyorExecutionException;
 
 }
