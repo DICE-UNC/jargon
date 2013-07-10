@@ -138,4 +138,13 @@ public interface ConveyorService {
 	void setConveyorCallbackListener(
 			ConveyorCallbackListener conveyorCallbackListener);
 
+	/**
+	 * Initialize the timer task that asynchronously triggers the queue, and any
+	 * other setup tasks
+	 * <p/>
+	 * This method must be called when bootstrapping the conveyor service,
+	 * through spring configuration or otherwise
+	 */
+	void init();
+
 }

@@ -1,5 +1,7 @@
 package org.irods.jargon.conveyor.core;
 
+import java.util.Timer;
+
 import org.irods.jargon.conveyor.basic.BasicQueueManagerServiceImpl;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 import org.irods.jargon.transfer.exception.PassPhraseInvalidException;
@@ -59,6 +61,8 @@ public class ConveyorServiceImpl implements ConveyorService {
 	 * allow connections to iRODS
 	 */
 	private IRODSAccessObjectFactory irodsAccessObjectFactory;
+
+	private Timer queueTimer = new Timer();
 
 	private static final Logger log = LoggerFactory
 			.getLogger(BasicQueueManagerServiceImpl.class);
@@ -247,6 +251,32 @@ public class ConveyorServiceImpl implements ConveyorService {
 	@Override
 	public synchronized QueueStatus getQueueStatus() {
 		return this.getConveyorExecutorService().getQueueStatus();
+
+	}
+
+	@Override
+	public void init() {
+
+		log.info("init()");
+
+		if (this.getConfigurationService() == null) {
+			throw new ConveyorRuntimeException(
+					"null configurationService, dependency was not set");
+		}
+
+		log.info("creating timer task to trigger queue actions");
+
+		ConveyorQueueTimerTask queueSchedulerTimerTask = new ConveyorQueueTimerTask();
+		queueSchedulerTimerTask.setConveyorService(this);
+		queueSchedulerTimerTask.init();
+
+		// SynchPeriodicScheduler synchPeriodicScheduler = new
+		// SynchPeriodicScheduler(idropCore.getTransferManager(),
+		// idropCore.getIRODSAccessObjectFactory());
+		queueTimer = new Timer();
+		queueTimer.scheduleAtFixedRate(queueSchedulerTimerTask, 10000, 120000);
+		log.info("timer scheduled");
+		// timer.scheduleAtFixedRate(synchPeriodicScheduler, 10000, 30000);
 
 	}
 
