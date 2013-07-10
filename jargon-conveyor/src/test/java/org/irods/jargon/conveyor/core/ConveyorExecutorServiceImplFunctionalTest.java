@@ -541,4 +541,64 @@ public class ConveyorExecutorServiceImplFunctionalTest {
 
 	}
 
+	/**
+	 * do a get of a nested collection that should be 'normal'
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void testTransferWithUnknownType() throws Exception {
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		conveyorService.validatePassPhrase(testingProperties
+				.getProperty(TestingPropertiesHelper.IRODS_PASSWORD_KEY));
+		conveyorService.getGridAccountService()
+				.addOrUpdateGridAccountBasedOnIRODSAccount(irodsAccount);
+		ConfigurationProperty logSuccessful = new ConfigurationProperty();
+		logSuccessful
+				.setPropertyKey(ConfigurationPropertyConstants.LOG_SUCCESSFUL_FILES_KEY);
+		logSuccessful.setPropertyValue("true");
+
+		conveyorService.getConfigurationService().addConfigurationProperty(
+				logSuccessful);
+
+		Transfer transfer = new Transfer();
+		transfer.setIrodsAbsolutePath("blah");
+		transfer.setTransferType(TransferType.UNKNOWN);
+
+		conveyorService.getQueueManagerService().enqueueTransferOperation(
+				transfer, irodsAccount);
+
+		TransferTestRunningUtilities.waitForTransferToRunOrTimeout(
+				conveyorService, TRANSFER_TIMEOUT);
+
+		List<Transfer> transfers = conveyorService.getQueueManagerService()
+				.listAllTransfersInQueue();
+		Assert.assertFalse("no transfers in queue", transfers.isEmpty());
+		Assert.assertEquals("should be 1 transfer..maybe test cleanup is bad",
+				1, transfers.size());
+		transfer = transfers.get(0);
+
+		transfer = conveyorService.getQueueManagerService()
+				.initializeGivenTransferByLoadingChildren(transfer);
+
+		Assert.assertFalse("did not create a transfer attempt", transfer
+				.getTransferAttempts().isEmpty());
+
+		Assert.assertEquals("did not get complete status",
+				TransferStateEnum.COMPLETE, transfer.getTransferState());
+
+		Assert.assertEquals("did not get errir status",
+				TransferStatusEnum.ERROR, transfer.getLastTransferStatus());
+
+		TransferAttempt attempts[] = new TransferAttempt[transfer
+				.getTransferAttempts().size()];
+		attempts = transfer.getTransferAttempts().toArray(attempts);
+		Assert.assertEquals("should be 1 attempt", 1, attempts.length);
+
+		TransferAttempt attempt = attempts[0];
+		Assert.assertNotNull("transfer attempt not persisted", attempt.getId());
+
+	}
+
 }

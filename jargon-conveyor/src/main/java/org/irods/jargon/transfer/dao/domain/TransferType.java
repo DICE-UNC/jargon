@@ -10,6 +10,8 @@ public enum TransferType {
 
 	COPY,
 
-	SYNCH;
+	SYNCH,
+
+	UNKNOWN;
 
 }
