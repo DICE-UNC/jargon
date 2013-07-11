@@ -114,7 +114,7 @@ public final class IRODSFileImpl extends File implements IRODSFile {
 	protected IRODSFileImpl(final File parent, final String child,
 			final IRODSFileSystemAO irodsFileSystemAO) throws JargonException {
 
-		this(parent.getAbsolutePath().trim(), child.trim(), irodsFileSystemAO);
+		this(parent.getAbsolutePath(), child, irodsFileSystemAO);
 	}
 
 	/**
@@ -412,7 +412,6 @@ public final class IRODSFileImpl extends File implements IRODSFile {
 			// new
 			this.close();
 			this.openKnowingExists();
-			log.debug("file now closed");
 		} catch (JargonFileOrCollAlreadyExistsException e) {
 			return false;
 		}

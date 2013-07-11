@@ -183,12 +183,15 @@ public final class IRODSFileFactoryImpl extends IRODSGenericAO implements
 		try {
 			if (!file.exists()) {
 				log.info("file does not exist, a new one will be created");
-			} else if (!file.canWrite()) {
-				log.info("this file is not writeable by the current user {}",
-						file.getAbsolutePath());
-				throw new JargonException("file is not writeable:"
-						+ file.getAbsolutePath());
 			}
+
+			/*
+			 * fix for group permissions and re-add else if (!file.canWrite()) {
+			 * log.info("this file is not writeable by the current user {}",
+			 * file.getAbsolutePath()); throw new
+			 * JargonException("file is not writeable:" +
+			 * file.getAbsolutePath()); }
+			 */
 
 			IRODSAccount useThisAccount = this.getIRODSAccount();
 			boolean reroute = false;
@@ -256,12 +259,15 @@ public final class IRODSFileFactoryImpl extends IRODSGenericAO implements
 			if (!file.exists()) {
 				log.info("file does not exist, creating a new file");
 				file.createNewFileCheckNoResourceFound();
-			} else if (!file.canWrite()) {
-				log.info("this file is not writeable by the current user {}",
-						file.getAbsolutePath());
-				throw new JargonException("file is not writeable:"
-						+ file.getAbsolutePath());
 			}
+
+			/*
+			 * else if (!file.canWrite()) {
+			 * log.info("this file is not writeable by the current user {}",
+			 * file.getAbsolutePath()); throw new
+			 * JargonException("file is not writeable:" +
+			 * file.getAbsolutePath()); }
+			 */
 
 			return new SessionClosingIRODSFileOutputStream(file,
 					fileIOOperations);
@@ -513,9 +519,8 @@ public final class IRODSFileFactoryImpl extends IRODSGenericAO implements
 		FileIOOperations fileIOOperations = new FileIOOperationsAOImpl(
 				this.getIRODSSession(), useThisAccount);
 		try {
-			if (log.isInfoEnabled()) {
-				log.info("opening IRODSFileImpl for:" + irodsAbsolutePath);
-			}
+
+			log.info("opening IRODSFileImpl for:{}", irodsAbsolutePath);
 
 			if (reroute) {
 				IRODSFileFactory rerouteFileFactory = getIRODSAccessObjectFactory()

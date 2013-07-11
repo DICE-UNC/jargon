@@ -75,6 +75,9 @@ Note that the following bug and feature requests are logged in GForge with relat
 **Removed explicit binding on log4j by removing binding library from maven dependencies
 
 
+*[#1575] [iROD-Chat:10314] jargon-core permissions issue 
+**Temporarily removed canRead and canWrite checks from IRODSFileFactory until it can also consider group permissions. This will be re-added in the next release.
+
 ==Features==
 
 *[#1264] [iROD-Chat:9666] Referencing Data Objects
