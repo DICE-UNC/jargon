@@ -12,6 +12,7 @@ import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSAccount.AuthScheme;
 import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.DuplicateDataException;
+import org.irods.jargon.core.exception.InvalidUserException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.exception.NoAPIPrivException;
 import org.irods.jargon.core.protovalues.UserTypeEnum;
@@ -275,6 +276,270 @@ public class UserAOTest {
 
 		Assert.assertEquals("should have updated info", testUser,
 				updatedUser.getInfo());
+	}
+
+	@Test
+	public void testRemoveUserDNBadUser() throws Exception {
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		String testUser = "testRemoveUserDNBadUser";
+		String testDN = "testRemoveUserDNBadUser";
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+		UserAO userAO = accessObjectFactory.getUserAO(irodsAccount);
+
+		// setup, delete user if it exists
+
+		try {
+			userAO.deleteUser(testUser);
+		} catch (Exception e) {
+			// ignore exception, user may not exist
+		}
+
+		userAO.removeUserDN(testUser, testDN);
+
+	}
+
+	@Test(expected = InvalidUserException.class)
+	public void testAddUserDNBadUser() throws Exception {
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		String testUser = "testAddUserDNBadUser";
+		String testDN = "testAddUserDNBadUserValue";
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+		UserAO userAO = accessObjectFactory.getUserAO(irodsAccount);
+
+		// setup, delete user if it exists
+
+		try {
+			userAO.deleteUser(testUser);
+		} catch (Exception e) {
+			// ignore exception, user may not exist
+		}
+
+		userAO.updateUserDN(testUser, testDN);
+
+	}
+
+	/**
+	 * Bug [#1555] truncation of user DN when adding using GenAdminPI add user,
+	 * works with GenAdmin for aua
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void testAddUserLongDN() throws Exception {
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		String testUser = "testAddUserLongDN";
+		String testDN = "/CN=xxxxxxxx-64f0-4d49-a0a9-508a8a5328cd/emailAddress=xxxxxxxxxxthismaynotshowup";
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+		UserAO userAO = accessObjectFactory.getUserAO(irodsAccount);
+
+		// setup, delete user if it exists
+
+		try {
+			userAO.deleteUser(testUser);
+		} catch (Exception e) {
+			// ignore exception, user may not exist
+		}
+
+		User addedUser = new User();
+		addedUser.setName(testUser);
+		addedUser.setUserType(UserTypeEnum.RODS_USER);
+		addedUser.setUserDN(testDN);
+		userAO.addUser(addedUser);
+		User actual = userAO.findByName(testUser);
+
+		Assert.assertEquals(testDN, actual.getUserDN());
+
+	}
+
+	@Test
+	public void testAddUserDN() throws Exception {
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		String testUser = "testAddUserDN";
+		String testDN = "testAddUserDNValue";
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+		UserAO userAO = accessObjectFactory.getUserAO(irodsAccount);
+
+		// setup, delete user if it exists
+
+		try {
+			userAO.deleteUser(testUser);
+		} catch (Exception e) {
+			// ignore exception, user may not exist
+		}
+
+		User addedUser = new User();
+		addedUser.setName(testUser);
+		addedUser.setUserType(UserTypeEnum.RODS_USER);
+		userAO.addUser(addedUser);
+
+		userAO.updateUserDN(testUser, testDN);
+
+		User actual = userAO.findByName(testUser);
+
+		Assert.assertEquals(testDN, actual.getUserDN());
+
+		userAO.removeUserDN(testUser, testDN);
+
+		actual = userAO.findByName(testUser);
+
+		Assert.assertEquals("", actual.getUserDN());
+
+	}
+
+	@Test
+	public void testAddUserDNByAddUser() throws Exception {
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		String testUser = "testAddUserDNByAddUser";
+		String testDN = "testAddUserDNByAddUser";
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+		UserAO userAO = accessObjectFactory.getUserAO(irodsAccount);
+
+		// setup, delete user if it exists
+
+		try {
+			userAO.deleteUser(testUser);
+		} catch (Exception e) {
+			// ignore exception, user may not exist
+		}
+
+		User addedUser = new User();
+		addedUser.setName(testUser);
+		addedUser.setUserType(UserTypeEnum.RODS_USER);
+		addedUser.setUserDN(testDN);
+		userAO.addUser(addedUser);
+
+		User actual = userAO.findByName(testUser);
+
+		Assert.assertEquals(testDN, actual.getUserDN());
+
+	}
+
+	@Test
+	public void testRemoveUserDNByUpdateUser() throws Exception {
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		String testUser = "testRemoveUserDNByUpdateUser";
+		String testDN = "testRemoveUserDNByUpdateUser";
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+		UserAO userAO = accessObjectFactory.getUserAO(irodsAccount);
+
+		// setup, delete user if it exists
+
+		try {
+			userAO.deleteUser(testUser);
+		} catch (Exception e) {
+			// ignore exception, user may not exist
+		}
+
+		User addedUser = new User();
+		addedUser.setName(testUser);
+		addedUser.setUserType(UserTypeEnum.RODS_USER);
+		addedUser.setUserDN(testDN);
+		userAO.addUser(addedUser);
+
+		addedUser = userAO.findByName(testUser);
+		addedUser.setUserDN("");
+		userAO.updateUser(addedUser);
+
+		User actual = userAO.findByName(testUser);
+
+		Assert.assertEquals("", actual.getUserDN());
+
+	}
+
+	@Test
+	public void testUpdateUserDNByUpdateUser() throws Exception {
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		String testUser = "testUpdateUserDNByUpdateUser";
+		String testDN = "testUpdateUserDNByUpdateUser";
+		String testDN2 = "testUpdateUserDNByUpdateUser2";
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+		UserAO userAO = accessObjectFactory.getUserAO(irodsAccount);
+
+		// setup, delete user if it exists
+
+		try {
+			userAO.deleteUser(testUser);
+		} catch (Exception e) {
+			// ignore exception, user may not exist
+		}
+
+		User addedUser = new User();
+		addedUser.setName(testUser);
+		addedUser.setUserType(UserTypeEnum.RODS_USER);
+		addedUser.setUserDN(testDN);
+		userAO.addUser(addedUser);
+
+		addedUser = userAO.findByName(testUser);
+		addedUser.setUserDN(testDN2);
+		userAO.updateUser(addedUser);
+
+		User actual = userAO.findByName(testUser);
+
+		Assert.assertEquals(testDN2, actual.getUserDN());
+
+	}
+
+	@Test
+	public void testAddUserDNByUpdateUser() throws Exception {
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		String testUser = "testAddUserDNByAddUser";
+		String testDN = "testAddUserDNByAddUser";
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+		UserAO userAO = accessObjectFactory.getUserAO(irodsAccount);
+
+		// setup, delete user if it exists
+
+		try {
+			userAO.deleteUser(testUser);
+		} catch (Exception e) {
+			// ignore exception, user may not exist
+		}
+
+		User addedUser = new User();
+		addedUser.setName(testUser);
+		addedUser.setUserType(UserTypeEnum.RODS_USER);
+		userAO.addUser(addedUser);
+
+		addedUser = userAO.findByName(testUser);
+		addedUser.setUserDN(testDN);
+		userAO.updateUser(addedUser);
+
+		User actual = userAO.findByName(testUser);
+
+		Assert.assertEquals(testDN, actual.getUserDN());
+
 	}
 
 	@Test

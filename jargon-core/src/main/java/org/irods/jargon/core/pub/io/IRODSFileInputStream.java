@@ -171,9 +171,7 @@ public class IRODSFileInputStream extends InputStream {
 		// open the file (read-only since its an input stream)
 		fd = irodsFile.openReadOnly();
 
-		if (log.isDebugEnabled()) {
-			log.debug("file descriptor from open operation:{}", fd);
-		}
+		log.info("file descriptor from open operation:{}", fd);
 
 		return fd;
 

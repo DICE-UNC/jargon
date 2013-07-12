@@ -71,6 +71,10 @@ public interface Stream2StreamAO extends IRODSAccessObject {
 	 * This method will close the input and output streams as part of normal
 	 * operations, and will attempt to do connection re-routing for iRODS files
 	 * if so specified in the jargon properties.
+	 * <p/>
+	 * Note that the <code>inputStream</code> will be buffered if it is not
+	 * passed in as a buffered stream, using the characteristics described in
+	 * jargon.properties.
 	 * 
 	 * @param inputStream
 	 *            {@link InputStream} for the transfer, note that this method
@@ -86,11 +90,13 @@ public interface Stream2StreamAO extends IRODSAccessObject {
 	 * @param readBuffSize
 	 *            <code>int</code> with the buffer size used for the transfer.
 	 *            Setting to 0 will cause the default buffer size to be used.
+	 * @return {@link TranseferStatistics} that give information about the
+	 *         transfer size and rate
 	 * @throws JargonException
 	 */
-	void transferStreamToFileUsingIOStreams(InputStream inputStream,
-			File targetFile, long length, int readBuffSize)
-			throws JargonException;
+	TransferStatistics transferStreamToFileUsingIOStreams(
+			InputStream inputStream, File targetFile, long length,
+			int readBuffSize) throws JargonException;
 
 	/**
 	 * Stream a class-path resource to a target iRODS file
@@ -105,5 +111,24 @@ public interface Stream2StreamAO extends IRODSAccessObject {
 	 */
 	void streamClasspathResourceToIRODSFile(String resourcePath,
 			String irodsFileAbsolutePath) throws JargonException;
+
+	/**
+	 * Copy an input stream to an output stream as guided by the
+	 * jargon.properties settings.
+	 * <p/>
+	 * Note that this method will buffer the streams provided in the call if
+	 * they are not buffered, controlled by the jargon.properties.
+	 * 
+	 * @param inputStream
+	 *            {@link InputStream}. If not buffered, it will be buffered
+	 * @param outputStream
+	 *            {@link OutputStream}. If not buffered, it will be buffered
+	 * @return {@link TranseferStatistics} that give information about the
+	 *         transfer size and rate
+	 * @throws JargonException
+	 */
+	TransferStatistics streamToStreamCopyUsingStandardIO(
+			InputStream inputStream, OutputStream outputStream)
+			throws JargonException;
 
 }

@@ -44,8 +44,11 @@ public final class User extends IRODSDomainObject {
 	public String getNameWithZone() {
 		StringBuilder sb = new StringBuilder();
 		sb.append(name);
-		sb.append('#');
-		sb.append(zone);
+
+		if (!zone.isEmpty()) {
+			sb.append('#');
+			sb.append(zone);
+		}
 		return sb.toString();
 	}
 
