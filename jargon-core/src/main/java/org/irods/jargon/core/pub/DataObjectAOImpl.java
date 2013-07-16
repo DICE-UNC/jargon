@@ -44,6 +44,8 @@ import org.irods.jargon.core.query.JargonQueryException;
 import org.irods.jargon.core.query.MetaDataAndDomainData;
 import org.irods.jargon.core.query.QueryConditionOperators;
 import org.irods.jargon.core.query.RodsGenQueryEnum;
+import org.irods.jargon.core.query.SpecificQuery;
+import org.irods.jargon.core.query.SpecificQueryResultSet;
 import org.irods.jargon.core.transfer.DefaultTransferControlBlock;
 import org.irods.jargon.core.transfer.ParallelGetFileTransferStrategy;
 import org.irods.jargon.core.transfer.ParallelPutFileTransferStrategy;
@@ -2738,6 +2740,8 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	 * org.irods.jargon.core.pub.DataObjectAO#listPermissionsForDataObject(java
 	 * .lang.String, java.lang.String)
 	 */
+	// FIXME: add group access
+
 	@Override
 	public List<UserFilePermission> listPermissionsForDataObject(
 			final String irodsCollectionAbsolutePath, final String dataName)
@@ -2825,6 +2829,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	 * org.irods.jargon.core.pub.DataObjectAO#listPermissionsForDataObject(java
 	 * .lang.String)
 	 */
+	// FIXME: add group access
 	@Override
 	public List<UserFilePermission> listPermissionsForDataObject(
 			final String irodsDataObjectAbsolutePath) throws JargonException {
@@ -3068,6 +3073,10 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			resultSet = irodsGenQueryExecutor
 					.executeIRODSQueryAndCloseResultInZone(irodsQuery, 0,
 							MiscIRODSUtils.getZoneInPath(absPath));
+
+			// FIXME: this may be incorrect, should I return the highest? What
+			// if there are multiples? should I sort on highest, add order by
+
 			IRODSQueryResultRow row = resultSet.getFirstResult();
 			userFilePermission = buildUserFilePermissionFromResultRow(row);
 			log.debug("loaded filePermission:{}", userFilePermission);
@@ -3086,8 +3095,70 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 					e);
 		}
 
+		log.info("see if there is a permission based on group membership...");
+		UserFilePermission permissionViaGroup = null;
+
+		if (this.getJargonProperties()
+				.isUsingSpecQueryForDataObjPermissionsForUserInGroup()) {
+			log.info("is set to use specific query for group permissions via isUsingSpecQueryForDataObjPermissionsForUserInGroup()");
+			permissionViaGroup = findPermissionForUserGrantedThroughUserGroup(
+					userName, MiscIRODSUtils.getZoneInPath(absPath), absPath);
+			if (permissionViaGroup == null) {
+				log.info("null permission from group membership");
+			} else {
+				log.info("found group permission:{}", permissionViaGroup);
+			}
+
+		}
+
+		// FIXME: return highest of all found
 		return userFilePermission;
 
+	}
+
+	private UserFilePermission findPermissionForUserGrantedThroughUserGroup(
+			final String userName, final String zone, final String absPath)
+			throws JargonException {
+
+		log.info("findPermissionForUserGrantedThroughUserGroup()");
+
+		IRODSFile collFile = this.getIRODSFileFactory().instanceIRODSFile(
+				absPath);
+
+		if (!this.getIRODSServerProperties().isSupportsSpecificQuery()) {
+			log.info("no specific query support, so just return null");
+			return null;
+		}
+
+		// I support spec query, give it a try
+
+		List<String> arguments = new ArrayList<String>(3);
+		arguments.add(collFile.getParent());
+		arguments.add(collFile.getName());
+		arguments.add(userName);
+		//arguments.add(zone);
+
+		SpecificQuery specificQuery = SpecificQuery.instanceArguments(
+				"listUserACLForDataObjViaGroup", arguments, 0,
+				zone);
+
+		SpecificQueryAO specificQueryAO = this.getIRODSAccessObjectFactory()
+				.getSpecificQueryAO(getIRODSAccount());
+
+		SpecificQueryResultSet specificQueryResultSet;
+		try {
+			specificQueryResultSet = specificQueryAO
+					.executeSpecificQueryUsingAlias(specificQuery,
+							getJargonProperties().getMaxFilesAndDirsQueryMax(),
+							0);
+		} catch (JargonQueryException e) {
+			log.error(
+					"jargon query exception looking up permission via specific query",
+					e);
+			throw new JargonException(e);
+		}
+		log.info("got result set:{}", specificQueryResultSet);
+		return null;
 	}
 
 	/*

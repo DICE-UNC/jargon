@@ -47,6 +47,7 @@ public class SettableJargonProperties implements JargonProperties {
 	private long reconnectTimeInMillis = 600000L;
 	private boolean usingDiscoveredServerPropertiesCache = true;
 	private boolean usingSpecificQueryForCollectionListingsWithPermissions = true;
+	private boolean usingSpecQueryForDataObjPermissionsForUserInGroup = false;
 
 	/**
 	 * Construct a default properties set based on the provided initial set of
@@ -121,6 +122,7 @@ public class SettableJargonProperties implements JargonProperties {
 		this.setReconnect(jargonProperties.isReconnect());
 		this.setDefaultToPublicIfNothingUnderRootWhenListing(jargonProperties
 				.isDefaultToPublicIfNothingUnderRootWhenListing());
+		this.setUsingSpecQueryForDataObjPermissionsForUserInGroup(jargonProperties.isUsingSpecQueryForDataObjPermissionsForUserInGroup());
 	}
 
 	/*
@@ -708,6 +710,22 @@ public class SettableJargonProperties implements JargonProperties {
 	public synchronized void setUsingSpecificQueryForCollectionListingWithPermissions(
 			final boolean useSpecificQuery) {
 		this.usingSpecificQueryForCollectionListingsWithPermissions = useSpecificQuery;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.core.connection.JargonProperties#isUsingSpecQueryForDataObjPermissionsForUserInGroup()
+	 */
+	@Override
+	public synchronized boolean isUsingSpecQueryForDataObjPermissionsForUserInGroup() {
+	return usingSpecQueryForDataObjPermissionsForUserInGroup;
+	}
+
+	/**
+	 * @param usingSpecQueryForDataObjPermissionsForUserInGroup the usingSpecQueryForDataObjPermissionsForUserInGroup to set
+	 */
+	public synchronized void setUsingSpecQueryForDataObjPermissionsForUserInGroup(
+			boolean usingSpecQueryForDataObjPermissionsForUserInGroup) {
+		this.usingSpecQueryForDataObjPermissionsForUserInGroup = usingSpecQueryForDataObjPermissionsForUserInGroup;
 	}
 
 }

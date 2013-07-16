@@ -272,6 +272,8 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 	@Override
 	public int getFilePermissionsForGivenUser(final IRODSFile irodsFile,
 			final String userName) throws JargonException {
+		
+		// FIXME: duplicated in data obj ao?
 
 		if (irodsFile == null) {
 			throw new IllegalArgumentException("irods file is null");
