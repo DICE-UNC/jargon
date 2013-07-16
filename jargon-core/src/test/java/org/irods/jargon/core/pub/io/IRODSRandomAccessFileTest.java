@@ -53,6 +53,38 @@ public class IRODSRandomAccessFileTest {
 		irodsFileSystem.closeAndEatExceptions();
 	}
 
+	/**
+	 * Bug [#1557] Griffin log shows error -1220000 raised from Jargon for ftp
+	 * write
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public final void testCreateAndCloseNoDefResc() throws Exception {
+		// generate a local scratch file
+		String testFileName = "testCreateAndCloseNoDefResc.txt";
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		irodsAccount.setDefaultStorageResource("");
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
+		IRODSFileFactory irodsFileFactory = accessObjectFactory
+				.getIRODSFileFactory(irodsAccount);
+
+		IRODSRandomAccessFile irodsRandomAccessFile = irodsFileFactory
+				.instanceIRODSRandomAccessFile(targetIrodsCollection + "/"
+						+ testFileName);
+		irodsRandomAccessFile.close();
+		irodsFileSystem.closeAndEatExceptions();
+
+	}
+
 	@Test
 	public final void testRead() throws Exception {
 		// generate a local scratch file
@@ -237,254 +269,6 @@ public class IRODSRandomAccessFileTest {
 		}
 		randomAccessFile.close();
 		Assert.assertTrue("did not read back any data", dataRead);
-	}
-
-	/**
-	 * Test method for
-	 * {@link org.irods.jargon.core.pub.io.IRODSRandomAccessFile#readBoolean()}.
-	 */
-	@Test
-	public void testReadBoolean() {
-	}
-
-	/**
-	 * Test method for
-	 * {@link org.irods.jargon.core.pub.io.IRODSRandomAccessFile#readByte()}.
-	 */
-	@Test
-	public void testReadByte() {
-	}
-
-	/**
-	 * Test method for
-	 * {@link org.irods.jargon.core.pub.io.IRODSRandomAccessFile#readChar()}.
-	 */
-	@Test
-	public void testReadChar() {
-	}
-
-	/**
-	 * Test method for
-	 * {@link org.irods.jargon.core.pub.io.IRODSRandomAccessFile#readDouble()}.
-	 */
-	@Test
-	public void testReadDouble() {
-	}
-
-	/**
-	 * Test method for
-	 * {@link org.irods.jargon.core.pub.io.IRODSRandomAccessFile#readFloat()}.
-	 */
-	@Test
-	public void testReadFloat() {
-	}
-
-	/**
-	 * Test method for
-	 * {@link org.irods.jargon.core.pub.io.IRODSRandomAccessFile#readFully(byte[])}
-	 * .
-	 */
-	@Test
-	public void testReadFullyByteArray() {
-	}
-
-	/**
-	 * Test method for
-	 * {@link org.irods.jargon.core.pub.io.IRODSRandomAccessFile#readFully(byte[], int, int)}
-	 * .
-	 */
-	@Test
-	public void testReadFullyByteArrayIntInt() {
-	}
-
-	/**
-	 * Test method for
-	 * {@link org.irods.jargon.core.pub.io.IRODSRandomAccessFile#readInt()}.
-	 */
-	@Test
-	public void testReadInt() {
-	}
-
-	/**
-	 * Test method for
-	 * {@link org.irods.jargon.core.pub.io.IRODSRandomAccessFile#readLine()}.
-	 */
-	@Test
-	public void testReadLine() {
-	}
-
-	/**
-	 * Test method for
-	 * {@link org.irods.jargon.core.pub.io.IRODSRandomAccessFile#readLong()}.
-	 */
-	@Test
-	public void testReadLong() {
-	}
-
-	/**
-	 * Test method for
-	 * {@link org.irods.jargon.core.pub.io.IRODSRandomAccessFile#readShort()}.
-	 */
-	@Test
-	public void testReadShort() {
-	}
-
-	/**
-	 * Test method for
-	 * {@link org.irods.jargon.core.pub.io.IRODSRandomAccessFile#readUTF()}.
-	 */
-	@Test
-	public void testReadUTF() {
-	}
-
-	/**
-	 * Test method for
-	 * {@link org.irods.jargon.core.pub.io.IRODSRandomAccessFile#readUnsignedByte()}
-	 * .
-	 */
-	@Test
-	public void testReadUnsignedByte() {
-	}
-
-	/**
-	 * Test method for
-	 * {@link org.irods.jargon.core.pub.io.IRODSRandomAccessFile#readUnsignedShort()}
-	 * .
-	 */
-	@Test
-	public void testReadUnsignedShort() {
-	}
-
-	/**
-	 * Test method for
-	 * {@link org.irods.jargon.core.pub.io.IRODSRandomAccessFile#skipBytes(int)}
-	 * .
-	 */
-	@Test
-	public void testSkipBytes() {
-	}
-
-	/**
-	 * Test method for
-	 * {@link org.irods.jargon.core.pub.io.IRODSRandomAccessFile#write(int)}.
-	 */
-	@Test
-	public void testWriteInt() {
-	}
-
-	/**
-	 * Test method for
-	 * {@link org.irods.jargon.core.pub.io.IRODSRandomAccessFile#write(byte[])}.
-	 */
-	@Test
-	public void testWriteByteArray() {
-	}
-
-	/**
-	 * Test method for
-	 * {@link org.irods.jargon.core.pub.io.IRODSRandomAccessFile#write(byte[], int, int)}
-	 * .
-	 */
-	@Test
-	public void testWriteByteArrayIntInt() {
-	}
-
-	/**
-	 * Test method for
-	 * {@link org.irods.jargon.core.pub.io.IRODSRandomAccessFile#writeBoolean(boolean)}
-	 * .
-	 */
-	@Test
-	public void testWriteBoolean() {
-	}
-
-	/**
-	 * Test method for
-	 * {@link org.irods.jargon.core.pub.io.IRODSRandomAccessFile#writeByte(int)}
-	 * .
-	 */
-	@Test
-	public void testWriteByte() {
-	}
-
-	/**
-	 * Test method for
-	 * {@link org.irods.jargon.core.pub.io.IRODSRandomAccessFile#writeBytes(java.lang.String)}
-	 * .
-	 */
-	@Test
-	public void testWriteBytes() {
-	}
-
-	/**
-	 * Test method for
-	 * {@link org.irods.jargon.core.pub.io.IRODSRandomAccessFile#writeChar(int)}
-	 * .
-	 */
-	@Test
-	public void testWriteChar() {
-	}
-
-	/**
-	 * Test method for
-	 * {@link org.irods.jargon.core.pub.io.IRODSRandomAccessFile#writeChars(java.lang.String)}
-	 * .
-	 */
-	@Test
-	public void testWriteChars() {
-	}
-
-	/**
-	 * Test method for
-	 * {@link org.irods.jargon.core.pub.io.IRODSRandomAccessFile#writeDouble(double)}
-	 * .
-	 */
-	@Test
-	public void testWriteDouble() {
-	}
-
-	/**
-	 * Test method for
-	 * {@link org.irods.jargon.core.pub.io.IRODSRandomAccessFile#writeFloat(float)}
-	 * .
-	 */
-	@Test
-	public void testWriteFloat() {
-	}
-
-	/**
-	 * Test method for
-	 * {@link org.irods.jargon.core.pub.io.IRODSRandomAccessFile#writeInt(int)}.
-	 */
-	@Test
-	public void testWriteInt1() {
-	}
-
-	/**
-	 * Test method for
-	 * {@link org.irods.jargon.core.pub.io.IRODSRandomAccessFile#writeLong(long)}
-	 * .
-	 */
-	@Test
-	public void testWriteLong() {
-	}
-
-	/**
-	 * Test method for
-	 * {@link org.irods.jargon.core.pub.io.IRODSRandomAccessFile#writeShort(int)}
-	 * .
-	 */
-	@Test
-	public void testWriteShort() {
-	}
-
-	/**
-	 * Test method for
-	 * {@link org.irods.jargon.core.pub.io.IRODSRandomAccessFile#writeUTF(java.lang.String)}
-	 * .
-	 */
-	@Test
-	public void testWriteUTF() {
 	}
 
 }
