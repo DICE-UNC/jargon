@@ -3620,7 +3620,8 @@ public class DataObjectAOImplTest {
 						irodsFile.getAbsolutePath())
 				.addConditionAsGenQueryField(RodsGenQueryEnum.COL_DATA_NAME,
 						QueryConditionOperators.EQUAL, testFileName)
-						.addConditionAsGenQueryField(RodsGenQueryEnum.COL_USER_NAME, QueryConditionOperators.EQUAL, testUser);
+				.addConditionAsGenQueryField(RodsGenQueryEnum.COL_USER_NAME,
+						QueryConditionOperators.EQUAL, testUser);
 
 		List<UserFilePermission> userFilePermissions = new ArrayList<UserFilePermission>();
 
@@ -3873,11 +3874,9 @@ public class DataObjectAOImplTest {
 
 	}
 
-	
 	/**
-	 *  [#1575] jargon-core permissions issue 
-	 * Add a user to a group, add that group to file permissions, and list the
-	 * group
+	 * [#1575] jargon-core permissions issue Add a user to a group, add that
+	 * group to file permissions, and list the group
 	 * 
 	 * @throws Exception
 	 */
@@ -3899,8 +3898,9 @@ public class DataObjectAOImplTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		
-		IRODSAccount secondaryIrodsAccount = testingPropertiesHelper.buildIRODSAccountFromSecondaryTestProperties(testingProperties);
+
+		IRODSAccount secondaryIrodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromSecondaryTestProperties(testingProperties);
 
 		UserGroupAO userGroupAO = irodsFileSystem.getIRODSAccessObjectFactory()
 				.getUserGroupAO(irodsAccount);
@@ -3912,8 +3912,8 @@ public class DataObjectAOImplTest {
 		userGroupAO.removeUserGroup(userGroup);
 		userGroupAO.addUserGroup(userGroup);
 
-		userGroupAO.addUserToGroup(testUserGroup, secondaryIrodsAccount.getUserName(),
-				null);
+		userGroupAO.addUserToGroup(testUserGroup,
+				secondaryIrodsAccount.getUserName(), null);
 
 		DataObjectAOImpl dataObjectAO = (DataObjectAOImpl) irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
@@ -3945,11 +3945,10 @@ public class DataObjectAOImplTest {
 		Assert.assertTrue("did not find user group in permissions", foundIt);
 
 	}
-	
+
 	/**
-	 *  [#1575] jargon-core permissions issue 
-	 * Add a user to a group, add that group to file permissions, and list the
-	 * group
+	 * [#1575] jargon-core permissions issue Add a user to a group, add that
+	 * group to file permissions, and list the group
 	 * 
 	 * @throws Exception
 	 */
@@ -3957,7 +3956,6 @@ public class DataObjectAOImplTest {
 	public final void testGetPermissionsForDataObjectForUserViaGroupPermissions()
 			throws Exception {
 		// generate a local scratch file
-		
 
 		String testFileName = "testGetPermissionsForDataObjectForUserViaGroupPermissions.xls";
 		String testUserGroup = "testGetPermissionsForDataObjectForUserViaGroupPermissions";
@@ -3972,8 +3970,9 @@ public class DataObjectAOImplTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		
-		IRODSAccount secondaryIrodsAccount = testingPropertiesHelper.buildIRODSAccountFromSecondaryTestProperties(testingProperties);
+
+		IRODSAccount secondaryIrodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromSecondaryTestProperties(testingProperties);
 
 		UserGroupAO userGroupAO = irodsFileSystem.getIRODSAccessObjectFactory()
 				.getUserGroupAO(irodsAccount);
@@ -3985,8 +3984,8 @@ public class DataObjectAOImplTest {
 		userGroupAO.removeUserGroup(userGroup);
 		userGroupAO.addUserGroup(userGroup);
 
-		userGroupAO.addUserToGroup(testUserGroup, secondaryIrodsAccount.getUserName(),
-				null);
+		userGroupAO.addUserToGroup(testUserGroup,
+				secondaryIrodsAccount.getUserName(), null);
 
 		DataObjectAOImpl dataObjectAO = (DataObjectAOImpl) irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
@@ -3998,7 +3997,11 @@ public class DataObjectAOImplTest {
 		dataObjectAO.setAccessPermissionRead("", targetIrodsCollection + "/"
 				+ testFileName, testUserGroup);
 
-		dataObjectAO.getPermissionForDataObjectForUserName(targetIrodsCollection +"/" + testFileName, secondaryIrodsAccount.getUserName());
+		UserFilePermission perm = dataObjectAO
+				.getPermissionForDataObjectForUserName(targetIrodsCollection
+						+ "/" + testFileName,
+						secondaryIrodsAccount.getUserName());
+		Assert.assertNotNull("did not get perm for user", perm);
 
 	}
 

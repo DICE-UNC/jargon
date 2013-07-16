@@ -74,10 +74,9 @@ Note that the following bug and feature requests are logged in GForge with relat
 *[#1553] faulty sl4j bindings
 **Removed explicit binding on log4j by removing binding library from maven dependencies
 
-
 *[#1575] [iROD-Chat:10314] jargon-core permissions issue 
-**Temporarily removed canRead and canWrite checks from IRODSFileFactory until it can also consider group permissions. This will be re-added in the next release.
-
+**Removed canRead and canWrite checks from IRODSFileFactory until it can also consider group permissions. This will be re-added in the next release.
+**Added group permission lookup to DataObjectAO.getPermissionForDataObject() methods and IRODSFile canRead and canWrite methods.  We can add this to the list methods as well in a later feature
 ==Features==
 
 *[#1264] [iROD-Chat:9666] Referencing Data Objects

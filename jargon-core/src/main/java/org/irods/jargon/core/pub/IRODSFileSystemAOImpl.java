@@ -25,6 +25,7 @@ import org.irods.jargon.core.packinstr.DataObjCopyInp;
 import org.irods.jargon.core.packinstr.DataObjInp;
 import org.irods.jargon.core.packinstr.MsgHeader;
 import org.irods.jargon.core.packinstr.Tag;
+import org.irods.jargon.core.protovalues.FilePermissionEnum;
 import org.irods.jargon.core.pub.domain.ObjStat;
 import org.irods.jargon.core.pub.domain.Resource;
 import org.irods.jargon.core.pub.domain.User;
@@ -272,59 +273,30 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 	@Override
 	public int getFilePermissionsForGivenUser(final IRODSFile irodsFile,
 			final String userName) throws JargonException {
-		
-		// FIXME: duplicated in data obj ao?
+
+		log.info("getFilePermissionsForGivenUser()");
 
 		if (irodsFile == null) {
-			throw new IllegalArgumentException("irods file is null");
+			throw new IllegalArgumentException("null irodsFile");
 		}
 
 		if (userName == null || userName.isEmpty()) {
-			throw new IllegalArgumentException("userName is null or empty");
+			throw new IllegalArgumentException("null or empty userName");
 		}
 
-		log.info("checking permissions on:{}", irodsFile);
-		log.info("for userName:{}", userName);
+		DataObjectAO dataObjectAO = this.getIRODSAccessObjectFactory()
+				.getDataObjectAO(getIRODSAccount());
 
-		log.debug("getting file permissions on file:{} ",
-				irodsFile.getAbsolutePath());
-
-		/*
-		 * See if this is a soft link
-		 */
-		ObjStat objStat = collectionAndDataObjectListAndSearchAO
-				.retrieveObjectStatForPath(irodsFile.getAbsolutePath());
-
-		if (objStat == null) {
-			log.error("no file found for path:{}", irodsFile.getAbsolutePath());
-			throw new DataNotFoundException("no file found for given path");
+		log.info("delegating to DataObjectAO");
+		FilePermissionEnum permissionEnum = dataObjectAO
+				.getPermissionForDataObject(irodsFile.getAbsolutePath(),
+						userName, this.getIRODSAccount().getZone());
+		if (permissionEnum == null) {
+			return FilePermissionEnum.NONE.getPermissionNumericValue();
+		} else {
+			return permissionEnum.getPermissionNumericValue();
 		}
 
-		/*
-		 * See if jargon supports the given object type
-		 */
-		MiscIRODSUtils.evaluateSpecCollSupport(objStat);
-		String effectiveAbsolutePath = MiscIRODSUtils
-				.determineAbsolutePathBasedOnCollTypeInObjectStat(objStat);
-		CollectionAndPath collectionAndPath = MiscIRODSUtils
-				.separateCollectionAndPathFromGivenAbsolutePath(effectiveAbsolutePath);
-
-		User user = userAO.findByName(userName);
-
-		log.debug("user name translated to id:{}", user.getId());
-
-		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, null);
-
-		buildPermisionsQueryFile(collectionAndPath.getCollectionParent(),
-				collectionAndPath.getChildName(), user.getId(), builder);
-
-		int highestPermissionValue = extractHighestPermission(
-				irodsGenQueryExecutor, builder,
-				MiscIRODSUtils.getZoneInPath(effectiveAbsolutePath));
-
-		log.debug("highest permission value:{}", highestPermissionValue);
-
-		return highestPermissionValue;
 	}
 
 	/**
@@ -381,35 +353,6 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 			}
 		}
 		return highestPermissionValue;
-	}
-
-	/**
-	 * @param zone
-	 * @param parent
-	 * @param fileName
-	 * @param userId
-	 * @param builder
-	 * @return
-	 */
-	private void buildPermisionsQueryFile(final String parent,
-			final String fileName, final String userId,
-			final IRODSGenQueryBuilder builder) throws JargonException {
-
-		try {
-			builder.addSelectAsGenQueryValue(
-					RodsGenQueryEnum.COL_DATA_ACCESS_TYPE)
-					.addConditionAsGenQueryField(
-							RodsGenQueryEnum.COL_COLL_NAME,
-							QueryConditionOperators.EQUAL, parent)
-					.addConditionAsGenQueryField(
-							RodsGenQueryEnum.COL_DATA_NAME,
-							QueryConditionOperators.EQUAL, fileName)
-					.addConditionAsGenQueryField(
-							RodsGenQueryEnum.COL_DATA_ACCESS_USER_ID,
-							QueryConditionOperators.EQUAL, userId);
-		} catch (GenQueryBuilderException e) {
-			throw new JargonException(e);
-		}
 	}
 
 	/*

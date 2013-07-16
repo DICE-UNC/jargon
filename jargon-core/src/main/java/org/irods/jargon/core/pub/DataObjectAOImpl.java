@@ -35,6 +35,7 @@ import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.query.AVUQueryElement;
 import org.irods.jargon.core.query.AVUQueryOperatorEnum;
 import org.irods.jargon.core.query.GenQueryBuilderException;
+import org.irods.jargon.core.query.GenQueryOrderByField.OrderByType;
 import org.irods.jargon.core.query.IRODSGenQueryBuilder;
 import org.irods.jargon.core.query.IRODSGenQueryFromBuilder;
 import org.irods.jargon.core.query.IRODSQueryResultRow;
@@ -2713,23 +2714,14 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			throw new IllegalArgumentException("null zone");
 		}
 
-		MiscIRODSUtils.checkPathSizeForMax(absolutePath);
+		UserFilePermission userFilePermission = this
+				.getPermissionForDataObjectForUserName(absolutePath, userName);
 
-		log.info("getPermissionForDataObject for absPath:{}", absolutePath);
-		log.info("userName:{}", userName);
-
-		CollectionAndPath collName = MiscIRODSUtils
-				.separateCollectionAndPathFromGivenAbsolutePath(absolutePath);
-
-		IRODSFileSystemAO irodsFileSystemAO = getIRODSAccessObjectFactory()
-				.getIRODSFileSystemAO(getIRODSAccount());
-		int permissionVal = irodsFileSystemAO.getFilePermissionsForGivenUser(
-				getIRODSFileFactory()
-						.instanceIRODSFile(collName.getCollectionParent(),
-								collName.getChildName()), userName);
-		FilePermissionEnum filePermissionEnum = FilePermissionEnum
-				.valueOf(permissionVal);
-		return filePermissionEnum;
+		if (userFilePermission == null) {
+			return null;
+		} else {
+			return userFilePermission.getFilePermissionEnum();
+		}
 
 	}
 
@@ -3055,18 +3047,88 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 				.getObjectStatForAbsolutePath(irodsCollectionAbsolutePath);
 		String absPath = this.resolveAbsolutePathGivenObjStat(objStat);
 
+		/*
+		 * User may have permission via a direct user permission, or may have a
+		 * group level permission, check both and get the highest value
+		 */
+
+		UserFilePermission userFilePermission = getPermissionViaGenQuery(
+				dataName, userName, absPath);
+
+		UserFilePermission groupFilePermission = getPermissionViaSpecQueryAsGroupMember(
+				dataName, userName, objStat, absPath);
+
+		int userScore = -1;
+		int groupScore = -1;
+
+		if (userFilePermission != null) {
+			userScore = userFilePermission.getFilePermissionEnum()
+					.getPermissionNumericValue();
+		}
+
+		if (groupFilePermission != null) {
+			groupScore = groupFilePermission.getFilePermissionEnum()
+					.getPermissionNumericValue();
+		}
+
+		if (userScore >= groupScore && userScore > -1) {
+			log.info("user file permission greater, using this:{}",
+					userFilePermission);
+			return userFilePermission;
+		} else if (groupScore > -1) {
+			log.info("returning groupFilePermission:{}", groupFilePermission);
+			return groupFilePermission;
+		} else {
+			return null;
+		}
+	}
+
+	/**
+	 * Get permission value via specific query for qroup based permissions
+	 * 
+	 * @param dataName
+	 * @param userName
+	 * @param objStat
+	 * @param absPath
+	 * @return
+	 * @throws JargonException
+	 */
+	private UserFilePermission getPermissionViaSpecQueryAsGroupMember(
+			final String dataName, final String userName, ObjStat objStat,
+			String absPath) throws JargonException {
+		log.info("see if there is a permission based on group membership...");
+		UserFilePermission permissionViaGroup = null;
+
+		if (this.getJargonProperties()
+				.isUsingSpecQueryForDataObjPermissionsForUserInGroup()) {
+			log.info("is set to use specific query for group permissions via isUsingSpecQueryForDataObjPermissionsForUserInGroup()");
+			permissionViaGroup = findPermissionForUserGrantedThroughUserGroup(
+					userName, MiscIRODSUtils.getZoneInPath(absPath),
+					objStat.determineAbsolutePathBasedOnCollTypeInObjectStat()
+							+ "/" + dataName);
+			return permissionViaGroup;
+		} else {
+			log.info("no group membership data found, not using specific query");
+			return null;
+		}
+	}
+
+	private UserFilePermission getPermissionViaGenQuery(final String dataName,
+			final String userName, String absPath) throws JargonException {
 		UserFilePermission userFilePermission = null;
 		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, null);
 
 		DataAOHelper.buildACLQueryForCollectionPathAndDataName(absPath,
 				dataName, builder);
 
-		builder.addConditionAsGenQueryField(RodsGenQueryEnum.COL_USER_NAME,
-				QueryConditionOperators.EQUAL, userName);
-
 		IRODSQueryResultSetInterface resultSet;
 
 		try {
+			builder.addConditionAsGenQueryField(RodsGenQueryEnum.COL_USER_NAME,
+					QueryConditionOperators.EQUAL, userName)
+					.addOrderByGenQueryField(
+							RodsGenQueryEnum.COL_DATA_ACCESS_TYPE,
+							OrderByType.DESC);
 			IRODSGenQueryFromBuilder irodsQuery = builder
 					.exportIRODSQueryFromBuilder(this.getJargonProperties()
 							.getMaxFilesAndDirsQueryMax());
@@ -3094,26 +3156,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 					"error in query loading user file permissions for data object",
 					e);
 		}
-
-		log.info("see if there is a permission based on group membership...");
-		UserFilePermission permissionViaGroup = null;
-
-		if (this.getJargonProperties()
-				.isUsingSpecQueryForDataObjPermissionsForUserInGroup()) {
-			log.info("is set to use specific query for group permissions via isUsingSpecQueryForDataObjPermissionsForUserInGroup()");
-			permissionViaGroup = findPermissionForUserGrantedThroughUserGroup(
-					userName, MiscIRODSUtils.getZoneInPath(absPath), absPath);
-			if (permissionViaGroup == null) {
-				log.info("null permission from group membership");
-			} else {
-				log.info("found group permission:{}", permissionViaGroup);
-			}
-
-		}
-
-		// FIXME: return highest of all found
 		return userFilePermission;
-
 	}
 
 	private UserFilePermission findPermissionForUserGrantedThroughUserGroup(
@@ -3136,29 +3179,40 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		arguments.add(collFile.getParent());
 		arguments.add(collFile.getName());
 		arguments.add(userName);
-		//arguments.add(zone);
 
 		SpecificQuery specificQuery = SpecificQuery.instanceArguments(
-				"listUserACLForDataObjViaGroup", arguments, 0,
-				zone);
+				"listUserACLForDataObjViaGroup", arguments, 0, zone);
 
 		SpecificQueryAO specificQueryAO = this.getIRODSAccessObjectFactory()
 				.getSpecificQueryAO(getIRODSAccount());
 
 		SpecificQueryResultSet specificQueryResultSet;
+		UserFilePermission userFilePermission = null;
 		try {
 			specificQueryResultSet = specificQueryAO
 					.executeSpecificQueryUsingAlias(specificQuery,
 							getJargonProperties().getMaxFilesAndDirsQueryMax(),
 							0);
+
+			IRODSQueryResultRow row = null;
+
+			try {
+				row = specificQueryResultSet.getFirstResult();
+				userFilePermission = buildUserFilePermissionFromResultRow(row);
+
+			} catch (DataNotFoundException dnf) {
+				log.info("no result, return null");
+				return null;
+			}
+
 		} catch (JargonQueryException e) {
 			log.error(
 					"jargon query exception looking up permission via specific query",
 					e);
 			throw new JargonException(e);
 		}
-		log.info("got result set:{}", specificQueryResultSet);
-		return null;
+
+		return userFilePermission;
 	}
 
 	/*
