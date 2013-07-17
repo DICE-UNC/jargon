@@ -28,7 +28,6 @@ import org.irods.jargon.core.packinstr.Tag;
 import org.irods.jargon.core.protovalues.FilePermissionEnum;
 import org.irods.jargon.core.pub.domain.ObjStat;
 import org.irods.jargon.core.pub.domain.Resource;
-import org.irods.jargon.core.pub.domain.User;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.pub.io.IRODSFileSystemAOHelper;
 import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry.ObjectType;
@@ -63,7 +62,6 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 	static Logger log = LoggerFactory.getLogger(IRODSFileSystemAOImpl.class);
 
 	private final IRODSGenQueryExecutor irodsGenQueryExecutor;
-	private final UserAO userAO;
 	private final CollectionAndDataObjectListAndSearchAO collectionAndDataObjectListAndSearchAO;
 
 	/**
@@ -75,7 +73,6 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 		super(irodsSession, irodsAccount);
 		irodsGenQueryExecutor = this.getIRODSAccessObjectFactory()
 				.getIRODSGenQueryExecutor(this.getIRODSAccount());
-		userAO = this.getIRODSAccessObjectFactory().getUserAO(irodsAccount);
 		collectionAndDataObjectListAndSearchAO = this
 				.getIRODSAccessObjectFactory()
 				.getCollectionAndDataObjectListAndSearchAO(getIRODSAccount());
@@ -299,62 +296,6 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 
 	}
 
-	/**
-	 * @param irodsGenQueryExecutor
-	 * @param builder
-	 * @param zone
-	 * @return
-	 * @throws JargonException
-	 */
-	private int extractHighestPermission(
-			final IRODSGenQueryExecutor irodsGenQueryExecutor,
-			final IRODSGenQueryBuilder builder, final String zone)
-			throws JargonException {
-
-		log.info("extractHighestPermission()");
-
-		if (zone == null) {
-			throw new IllegalArgumentException("null zone");
-		}
-
-		log.info("for zone:{}", zone);
-
-		IRODSGenQueryFromBuilder irodsQuery;
-		try {
-			irodsQuery = builder.exportIRODSQueryFromBuilder(this
-					.getJargonProperties().getMaxFilesAndDirsQueryMax());
-		} catch (GenQueryBuilderException e) {
-			throw new JargonException("query builder error", e);
-		}
-
-		IRODSQueryResultSet resultSet;
-		try {
-			resultSet = irodsGenQueryExecutor
-					.executeIRODSQueryAndCloseResultInZone(irodsQuery, 0, zone);
-		} catch (JargonQueryException e) {
-			log.error("query exception for  query:{}", builder.toString(), e);
-			throw new JargonException("error in file permissions query");
-		}
-
-		int highestPermissionValue = -1;
-		int resultPermissionValue = 0;
-		for (IRODSQueryResultRow result : resultSet.getResults()) {
-			try {
-				resultPermissionValue = Integer.parseInt(result.getColumn(0));
-				if (resultPermissionValue > highestPermissionValue) {
-					highestPermissionValue = resultPermissionValue;
-				}
-			} catch (NumberFormatException nfe) {
-				String msg = "number format exception for result:"
-						+ result.getColumn(0)
-						+ " I expected a numeric value for the access permissions in col 0";
-				log.error(msg);
-				throw new JargonException(msg);
-			}
-		}
-		return highestPermissionValue;
-	}
-
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -382,100 +323,28 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 			final String userName) throws FileNotFoundException,
 			JargonException {
 
+		log.info("getDirectoryPermissionsForGivenUser()");
+
 		if (irodsFile == null) {
-			throw new IllegalArgumentException("irods file is null");
+			throw new IllegalArgumentException("null irodsFile");
 		}
 
 		if (userName == null || userName.isEmpty()) {
-			throw new IllegalArgumentException("userName is null or empty");
+			throw new IllegalArgumentException("null or empty userName");
 		}
 
-		log.info("checking directory permissions on:{}", irodsFile);
-		log.info("for userName:{}", userName);
+		CollectionAO collectionAO = this.getIRODSAccessObjectFactory()
+				.getCollectionAO(getIRODSAccount());
 
-		ObjStat objStat = collectionAndDataObjectListAndSearchAO
-				.retrieveObjectStatForPath(irodsFile.getAbsolutePath());
-
-		if (objStat == null) {
-			log.error("no file found for path:{}", irodsFile.getAbsolutePath());
-			throw new DataNotFoundException("no file found for given path");
+		log.info("delegating to CollectionAO");
+		FilePermissionEnum permissionEnum = collectionAO
+				.getPermissionForCollection(irodsFile.getAbsolutePath(),
+						userName, this.getIRODSAccount().getZone());
+		if (permissionEnum == null) {
+			return FilePermissionEnum.NONE.getPermissionNumericValue();
+		} else {
+			return permissionEnum.getPermissionNumericValue();
 		}
-
-		if (!objStat.isSomeTypeOfCollection()) {
-			log.error(
-					"cannot get directory permissions, this is not a colleciton:{}",
-					objStat);
-			throw new JargonException(
-					"given file is not a collection, cannot get directory permissions");
-		}
-
-		/*
-		 * See if jargon supports the given object type
-		 */
-		MiscIRODSUtils.evaluateSpecCollSupport(objStat);
-		String effectiveAbsolutePath = MiscIRODSUtils
-				.determineAbsolutePathBasedOnCollTypeInObjectStat(objStat);
-
-		String fileName = irodsFile.getName();
-
-		// get the id for the user name, GenQuery can't do this join
-
-		User user = userAO.findByName(userName);
-
-		log.debug("getting directory permissions on:{} ", fileName);
-		log.debug("user name translated to id:{}", user.getId());
-
-		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, null);
-		buildPermissionsQueryDirectory(effectiveAbsolutePath, user.getId(),
-				builder);
-
-		int highestPermissionValue = extractHighestPermission(
-				irodsGenQueryExecutor, builder,
-				MiscIRODSUtils.getZoneInPath(effectiveAbsolutePath));
-
-		return highestPermissionValue;
-	}
-
-	/**
-	 * Build a query to get the permissions for a directory
-	 * 
-	 * @param dir
-	 *            <code>String</code> with absolute path to the iRODS directory
-	 * @param userId
-	 *            <code>String</code> with an iRODS access user ID (not name)
-	 * @param builder
-	 *            {@link IRODSGenQueryBuilder}
-	 * @throws JargonException
-	 */
-	private void buildPermissionsQueryDirectory(final String dir,
-			final String userId, final IRODSGenQueryBuilder builder)
-			throws JargonException {
-
-		if (dir == null || dir.isEmpty()) {
-			throw new IllegalArgumentException("null or empty dir");
-		}
-
-		if (userId == null || userId.isEmpty()) {
-			throw new IllegalArgumentException("null or empty userId");
-		}
-
-		if (builder == null) {
-			throw new IllegalArgumentException("null builder");
-		}
-
-		try {
-			builder.addSelectAsGenQueryValue(
-					RodsGenQueryEnum.COL_COLL_ACCESS_TYPE)
-					.addConditionAsGenQueryField(
-							RodsGenQueryEnum.COL_COLL_NAME,
-							QueryConditionOperators.EQUAL, dir)
-					.addConditionAsGenQueryField(
-							RodsGenQueryEnum.COL_COLL_ACCESS_USER_ID,
-							QueryConditionOperators.EQUAL, userId);
-		} catch (GenQueryBuilderException e) {
-			throw new JargonException("error building permissions query", e);
-		}
-
 	}
 
 	/*

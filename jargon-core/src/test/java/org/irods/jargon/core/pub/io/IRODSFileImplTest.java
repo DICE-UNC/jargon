@@ -162,20 +162,21 @@ public class IRODSFileImplTest {
 
 		Assert.assertTrue(irodsFile.canRead());
 	}
-	
-	
+
 	/**
-	 * Bug [#1575] jargon-core permissions issue 
+	 * Bug [#1575] jargon-core permissions issue
+	 * 
 	 * @throws Exception
 	 */
 	@Test
-	public final void testCanReadCollectionViaGroupMembership() throws Exception {
-		String testColl = "testCanReadCollectionViaGroupMembership";
+	public final void testCanReadCollectionViaGroupMembership()
+			throws Exception {
+		String testColl = "testCanReadCollectionViaGroupMembershipx";
 
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH + "/" + testColl);
-
+						testingProperties, IRODS_TEST_SUBDIR_PATH + "/"
+								+ testColl);
 
 		// now get an irods file and see if it is readable, it should be
 
@@ -184,15 +185,20 @@ public class IRODSFileImplTest {
 
 		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
 				.getIRODSAccessObjectFactory();
-		
+
 		IRODSFileFactory irodsFileFactory = accessObjectFactory
 				.getIRODSFileFactory(irodsAccount);
 		IRODSFile irodsFile = irodsFileFactory
 				.instanceIRODSFile(targetIrodsCollection);
+		irodsFile.deleteWithForceOption();
+		irodsFile.reset();
 		irodsFile.mkdirs();
-		
-		IRODSAccount secondaryAccount = testingPropertiesHelper.buildIRODSAccountFromSecondaryTestProperties(testingProperties);
-		
+		CollectionAO collectionAO = accessObjectFactory
+				.getCollectionAO(irodsAccount);
+
+		IRODSAccount secondaryAccount = testingPropertiesHelper
+				.buildIRODSAccountFromSecondaryTestProperties(testingProperties);
+
 		UserGroupAO userGroupAO = irodsFileSystem.getIRODSAccessObjectFactory()
 				.getUserGroupAO(irodsAccount);
 
@@ -203,16 +209,21 @@ public class IRODSFileImplTest {
 		userGroupAO.removeUserGroup(userGroup);
 		userGroupAO.addUserGroup(userGroup);
 
-		userGroupAO.addUserToGroup(testColl,
-				secondaryAccount.getUserName(), null);
-		
-		CollectionAO collectionAO = accessObjectFactory.getCollectionAO(irodsAccount);
-		collectionAO.setAccessPermissionRead(irodsAccount.getZone(), targetIrodsCollection, testColl, false);
-		
-		IRODSFile actual = accessObjectFactory.getIRODSFileFactory(secondaryAccount).instanceIRODSFile(targetIrodsCollection);
-		Assert.assertTrue("user cannot read file even though he has group permissions", actual.canRead());
-	}
+		userGroupAO.addUserToGroup(testColl, secondaryAccount.getUserName(),
+				null);
 
+		collectionAO.removeAccessPermissionForUser(irodsAccount.getZone(),
+				targetIrodsCollection, testColl, false);
+
+		collectionAO.setAccessPermissionRead(irodsAccount.getZone(),
+				targetIrodsCollection, testColl, false);
+
+		IRODSFile actual = accessObjectFactory.getIRODSFileFactory(
+				secondaryAccount).instanceIRODSFile(targetIrodsCollection);
+		Assert.assertTrue(
+				"user cannot read file even though he has group permissions",
+				actual.canRead());
+	}
 
 	/**
 	 * Test method for

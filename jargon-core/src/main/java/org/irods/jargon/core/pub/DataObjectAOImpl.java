@@ -3058,29 +3058,8 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		UserFilePermission groupFilePermission = getPermissionViaSpecQueryAsGroupMember(
 				dataName, userName, objStat, absPath);
 
-		int userScore = -1;
-		int groupScore = -1;
-
-		if (userFilePermission != null) {
-			userScore = userFilePermission.getFilePermissionEnum()
-					.getPermissionNumericValue();
-		}
-
-		if (groupFilePermission != null) {
-			groupScore = groupFilePermission.getFilePermissionEnum()
-					.getPermissionNumericValue();
-		}
-
-		if (userScore >= groupScore && userScore > -1) {
-			log.info("user file permission greater, using this:{}",
-					userFilePermission);
-			return userFilePermission;
-		} else if (groupScore > -1) {
-			log.info("returning groupFilePermission:{}", groupFilePermission);
-			return groupFilePermission;
-		} else {
-			return null;
-		}
+		return scoreAndReturnHighestPermission(userFilePermission,
+				groupFilePermission);
 	}
 
 	/**
