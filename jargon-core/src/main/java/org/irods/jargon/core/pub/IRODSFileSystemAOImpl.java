@@ -1038,9 +1038,8 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 					"resource is null, set to blank to automatically have the irods system select the default storage resource by rule");
 		}
 
-		String trimmedPath = absolutePath.trim();
 		String thisResource = null;
-		if (!MiscIRODSUtils.isFileInThisZone(trimmedPath, getIRODSAccount())) {
+		if (!MiscIRODSUtils.isFileInThisZone(absolutePath, getIRODSAccount())) {
 			thisResource = "";
 		} else {
 			thisResource = resource;
@@ -1051,7 +1050,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 
 		int responseFileNbr = 0;
 
-		DataObjInp dataObjInp = DataObjInp.instance(trimmedPath, createMode,
+		DataObjInp dataObjInp = DataObjInp.instance(absolutePath, createMode,
 				openFlags, offset, dataSize, thisResource, null);
 		Tag response = getIRODSProtocol().irodsFunction(DataObjInp.PI_TAG,
 				dataObjInp.getParsedTags(), DataObjInp.CREATE_FILE_API_NBR);
