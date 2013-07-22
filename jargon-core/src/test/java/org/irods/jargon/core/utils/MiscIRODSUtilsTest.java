@@ -400,4 +400,16 @@ public class MiscIRODSUtilsTest {
 		MiscIRODSUtils.checkPathSizeForMax("blah", null);
 	}
 
+	/**
+	 * Bug [#1575] jargon-core permissions issue
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void getZoneInPathWhenNoZone() throws Exception {
+		String path = "/";
+		String zone = MiscIRODSUtils.getZoneInPath(path);
+		Assert.assertNotNull("zone was null", zone);
+	}
+
 }

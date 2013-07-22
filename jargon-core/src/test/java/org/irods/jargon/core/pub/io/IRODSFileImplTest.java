@@ -226,6 +226,48 @@ public class IRODSFileImplTest {
 	}
 
 	/**
+	 * Bug [#1575] jargon-core permissions issue
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public final void testCanReadCollectionViaGroupMembershipWhenRoot()
+			throws Exception {
+
+		String targetIrodsCollection = "/";
+		String testGroup = "testCanReadCollectionViaGroupMembershipWhenRoot";
+
+		// now get an irods file and see if it is readable, it should be
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
+		UserGroupAO userGroupAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getUserGroupAO(irodsAccount);
+
+		UserGroup userGroup = new UserGroup();
+		userGroup.setUserGroupName(testGroup);
+		userGroup.setZone(irodsAccount.getZone());
+
+		userGroupAO.removeUserGroup(userGroup);
+		userGroupAO.addUserGroup(userGroup);
+
+		userGroupAO.addUserToGroup(testGroup, irodsAccount.getUserName(), null);
+
+		IRODSFile actual = accessObjectFactory
+				.getIRODSFileFactory(irodsAccount).instanceIRODSFile(
+						targetIrodsCollection);
+
+		// really making sure I don't get an error in the zone lookup (blank)
+		// and query
+		Assert.assertFalse("user should not be able to read file",
+				actual.canRead());
+	}
+
+	/**
 	 * Test method for
 	 * {@link org.irods.jargon.core.pub.io.IRODSFileImpl#canWrite()} .
 	 */

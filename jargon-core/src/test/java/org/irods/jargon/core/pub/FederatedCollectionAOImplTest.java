@@ -363,6 +363,7 @@ public class FederatedCollectionAOImplTest {
 
 		AvuData dataToAdd = AvuData.instance(expectedAttribName,
 				expectedAttribValue, "");
+		collectionAO.deleteAVUMetadata(targetIrodsCollection, dataToAdd);
 		collectionAO.addAVUMetadata(targetIrodsCollection, dataToAdd);
 
 		IRODSAccount zone1Account = testingPropertiesHelper
@@ -423,6 +424,7 @@ public class FederatedCollectionAOImplTest {
 		AvuData avuData = AvuData.instance(expectedAttribName,
 				expectedAttribValue, "");
 
+		collectionAO.deleteAVUMetadata(targetIrodsCollection, avuData);
 		collectionAO.addAVUMetadata(targetIrodsCollection, avuData);
 
 		// now list the metadata

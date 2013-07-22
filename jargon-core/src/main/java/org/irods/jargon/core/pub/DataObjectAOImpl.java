@@ -2938,7 +2938,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 		final ModAvuMetadataInp modifyAvuMetadataInp = ModAvuMetadataInp
 				.instanceForModifyDataObjectMetadata(
-						dataObjectAbsolutePath.trim(), currentAvuData,
+						dataObjectAbsolutePath, currentAvuData,
 						newAvuData);
 
 		log.debug("sending avu request");
@@ -3002,9 +3002,9 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		log.info(" data object name: {}", dataObjectName);
 
 		StringBuilder sb = new StringBuilder();
-		sb.append(irodsCollectionAbsolutePath.trim());
+		sb.append(irodsCollectionAbsolutePath);
 		sb.append("/");
-		sb.append(dataObjectName.trim());
+		sb.append(dataObjectName);
 
 		modifyAVUMetadata(sb.toString(), currentAvuData, newAvuData);
 

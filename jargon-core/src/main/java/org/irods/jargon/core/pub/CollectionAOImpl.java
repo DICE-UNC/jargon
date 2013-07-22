@@ -1548,7 +1548,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 
 		// I support spec query, give it a try
 
-		List<String> arguments = new ArrayList<String>(3);
+		List<String> arguments = new ArrayList<String>(2);
 		arguments.add(collFile.getAbsolutePath());
 		arguments.add(userName);
 
