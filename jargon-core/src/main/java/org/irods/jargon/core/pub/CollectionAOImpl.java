@@ -1710,6 +1710,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 
 		ObjStat objStat = getObjectStatForAbsolutePath(irodsCollectionAbsolutePath);
 		String absPath = resolveAbsolutePathGivenObjStat(objStat);
+		String zoneName = MiscIRODSUtils.getZoneInPath(absPath);
 
 		List<UserFilePermission> userFilePermissions = new ArrayList<UserFilePermission>();
 
@@ -1735,14 +1736,15 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 					.exportIRODSQueryFromBuilder(getJargonProperties()
 							.getMaxFilesAndDirsQueryMax());
 
-			resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResult(
-					irodsQuery, 0);
+			resultSet = irodsGenQueryExecutor
+					.executeIRODSQueryAndCloseResultInZone(irodsQuery, 0,
+							zoneName);
 
 			UserFilePermission userFilePermission = null;
 
 			for (IRODSQueryResultRow row : resultSet.getResults()) {
 
-				user = userAO.findById(row.getColumn(2));
+				user = userAO.findByIdInZone(row.getColumn(2), zoneName);
 				userFilePermission = new UserFilePermission(row.getColumn(0),
 						row.getColumn(2),
 						FilePermissionEnum.valueOf(IRODSDataConversionUtil
