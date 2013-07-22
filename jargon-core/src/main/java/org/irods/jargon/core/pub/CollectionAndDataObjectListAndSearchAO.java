@@ -54,7 +54,7 @@ public interface CollectionAndDataObjectListAndSearchAO extends
 	 * Specific query for coll listing with ACLs
 	 */
 	public static final String SHOW_COLL_ACLS = "ilsLACollections";
-	
+
 	public static final String SHOW_DATA_OBJ_ACLS = "ilsLADataObjects";
 
 	/**
@@ -552,5 +552,35 @@ public interface CollectionAndDataObjectListAndSearchAO extends
 	 */
 	ObjStat retrieveObjectStatForPathAndDataObjectName(String parentPath,
 			String fileName) throws FileNotFoundException, JargonException;
+
+	/**
+	 * Count the number of collections (directories) under the given path. This
+	 * does not account for data objects
+	 * 
+	 * @param absolutePathToParent
+	 *            <code>String</code> with the absolute path to an iRODS
+	 *            collection
+	 * @return <code>int</code> with the count of collections under the given
+	 *         path
+	 * @throws FileNotFoundException
+	 * @throws JargonException
+	 */
+	int countCollectionsUnderPath(String absolutePathToParent)
+			throws FileNotFoundException, JargonException;
+
+	/**
+	 * Count the number of data objects (files) under the given path. This does
+	 * not account for collections
+	 * 
+	 * @param absolutePathToParent
+	 *            <code>String</code> with the absolute path to an iRODS
+	 *            collection
+	 * @return <code>int</code> with the count of data objects under the given
+	 *         path
+	 * @throws FileNotFoundException
+	 * @throws JargonException
+	 */
+	int countDataObjectsUnderPath(String absolutePathToParent)
+			throws FileNotFoundException, JargonException;
 
 }

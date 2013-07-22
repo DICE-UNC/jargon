@@ -13,6 +13,7 @@ import org.irods.jargon.core.packinstr.DataObjInp;
 import org.irods.jargon.core.packinstr.Tag;
 import org.irods.jargon.core.pub.domain.ObjStat;
 import org.irods.jargon.core.pub.domain.Resource;
+import org.irods.jargon.core.pub.domain.UserFilePermission;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.utils.MiscIRODSUtils;
 import org.slf4j.Logger;
@@ -303,5 +304,40 @@ public abstract class FileCatalogObjectAOImpl extends IRODSGenericAO implements
 	@Override
 	public abstract boolean isUserHasAccess(final String irodsAbsolutePath,
 			final String userName) throws JargonException;
+
+	/**
+	 * Given two permissions (one by user, one by group) score and return the
+	 * highest permission, or null if no permissions found
+	 * 
+	 * @param userFilePermission
+	 * @param groupFilePermission
+	 * @return {@link UserFilePermission} that is the highest level, or
+	 *         <code>null</code> if no permissions found
+	 */
+	protected UserFilePermission scoreAndReturnHighestPermission(UserFilePermission userFilePermission, UserFilePermission groupFilePermission) {
+		int userScore = -1;
+		int groupScore = -1;
+	
+		if (userFilePermission != null) {
+			userScore = userFilePermission.getFilePermissionEnum()
+					.getPermissionNumericValue();
+		}
+	
+		if (groupFilePermission != null) {
+			groupScore = groupFilePermission.getFilePermissionEnum()
+					.getPermissionNumericValue();
+		}
+	
+		if (userScore >= groupScore && userScore > -1) {
+			log.info("user file permission greater, using this:{}",
+					userFilePermission);
+			return userFilePermission;
+		} else if (groupScore > -1) {
+			log.info("returning groupFilePermission:{}", groupFilePermission);
+			return groupFilePermission;
+		} else {
+			return null;
+		}
+	}
 
 }

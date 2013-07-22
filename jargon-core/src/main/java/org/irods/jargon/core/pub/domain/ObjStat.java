@@ -329,13 +329,6 @@ public class ObjStat {
 		String effectiveAbsolutePath = null;
 
 		if (this.getSpecColType() == SpecColType.LINKED_COLL) {
-			/*
-			 * StringBuilder sb = new StringBuilder();
-			 * sb.append(objStat.getObjectPath()); sb.append("/");
-			 * sb.append(MiscIRODSUtils
-			 * .getLastPathComponentForGiveAbsolutePath(objStat
-			 * .getAbsolutePath())); effectiveAbsolutePath = sb.toString();
-			 */
 			effectiveAbsolutePath = this.getObjectPath();
 		} else {
 			effectiveAbsolutePath = this.getAbsolutePath();

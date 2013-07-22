@@ -114,7 +114,7 @@ public final class IRODSFileImpl extends File implements IRODSFile {
 	protected IRODSFileImpl(final File parent, final String child,
 			final IRODSFileSystemAO irodsFileSystemAO) throws JargonException {
 
-		this(parent.getAbsolutePath().trim(), child.trim(), irodsFileSystemAO);
+		this(parent.getAbsolutePath(), child, irodsFileSystemAO);
 	}
 
 	/**
@@ -409,12 +409,7 @@ public final class IRODSFileImpl extends File implements IRODSFile {
 
 			log.debug("file descriptor from new file create: {}",
 					fileDescriptor);
-			// TODO: clean up after tests
-			// in irods the file must be closed, then opened when doing a create
-			// new
-			// this.close();
-			// this.openKnowingExists();
-			// log.debug("file now closed");
+			
 		} catch (JargonFileOrCollAlreadyExistsException e) {
 			return false;
 		}
