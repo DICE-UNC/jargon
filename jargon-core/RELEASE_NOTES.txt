@@ -1,11 +1,11 @@
 *'''Project''': Jargon-core API
-*'''Date''': 06/12/2013
-*'''Release Version''': 3.3.1-beta1
-*'''git tag''': 3.3.1-beta1
+*'''Date''': 07/23/2013
+*'''Release Version''': 3.3.1 Release
+*'''git tag''': 3.3.1-RELEASE
 
 ==News==
 
-Beta1 of Jargon, representing the iRODS 3.3 release compatibility
+Release of Jargon, representing the iRODS 3.3 release compatibility
 
 
 =======
@@ -35,6 +35,7 @@ Jargon-core uses Maven for dependency management.  See the pom.xml file for refe
 Note that the following bug and feature requests are logged in GForge with related commit information [[https://code.renci.org/gf/project/jargon/tracker/]]
 
 ==Bug Fixes==
+
  *[#1263] ACL retrieval query and the user lookup queries, the method queries the zone of the user and not the zone containing the collection
  **Added code to properly query the permissions as they exist on the current zone
  
@@ -47,7 +48,7 @@ Note that the following bug and feature requests are logged in GForge with relat
 *[#1358] hbm2ddl maven build errors
 **remove htm2ddl maven build step, not really used, caused maven build errors.  We might revisit this later with the new conveyor framework.
 
-*[#1371] 3.3.2 error with cache using griffin
+*[#1371] error with cache using griffin
 **Handle GSI login in caching when using Griffin so that zone name can be null.  This will instead cache on host name
 
 *[#1372] continuation not propagated for specific query
@@ -83,6 +84,11 @@ Note that the following bug and feature requests are logged in GForge with relat
 
 *[#1317] fix trim statements in irodsfileImpl
 **Remove any trim() statements from iRODS absolute paths to not assume that spaces are never embedded
+
+*[#1460] cross platform test fixes
+**More testing and fixes for cross-zone testing
+
+Plus clean runs of FindBugs and PMD and misc cleanups and formatting
 
 ==Features==
 

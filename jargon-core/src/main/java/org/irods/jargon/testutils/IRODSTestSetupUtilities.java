@@ -53,6 +53,7 @@ public class IRODSTestSetupUtilities {
 					irodsAccount).instanceIRODSFile(targetIrodsCollection);
 
 			testScratchFile.delete();
+			// testScratchFile.deleteWithForceOption();
 		} catch (Exception e) {
 			throw new TestingUtilsException("error clearing irods scratch dir",
 					e);

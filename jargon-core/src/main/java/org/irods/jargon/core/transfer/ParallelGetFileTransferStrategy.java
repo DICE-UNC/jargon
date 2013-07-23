@@ -127,7 +127,8 @@ public final class ParallelGetFileTransferStrategy extends
 				executorService = Executors.newFixedThreadPool(numberOfThreads);
 				transferWithExecutor(executorService);
 			} finally {
-				executorService.shutdown();
+				if (executorService != null)
+					executorService.shutdown();
 			}
 
 		} else {
