@@ -250,6 +250,83 @@ public class FederatedCollectionAOImplTest {
 	}
 
 	/**
+	 * Bug [#1440] federation testing error showing sharing tab, -10033 user not
+	 * found error
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public final void testGetPermissionsForCollectionInOtherZone()
+			throws Exception {
+
+		if (!testingPropertiesHelper.isTestFederatedZone(testingProperties)) {
+			return;
+		}
+
+		String testCollectionName = "testGetPermissionsForCollectionInOtherZone";
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromFederatedZoneReadTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + "/"
+								+ testCollectionName);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountForFederatedZoneFromTestProperties(testingProperties);
+		CollectionAO collectionAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getCollectionAO(irodsAccount);
+		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetIrodsCollection);
+		irodsFile.mkdirs();
+
+		collectionAO
+				.setAccessPermissionRead(
+						"",
+						targetIrodsCollection,
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY),
+						true);
+
+		collectionAO
+				.setAccessPermissionRead(
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_ZONE_KEY),
+						targetIrodsCollection,
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_USER_KEY),
+						true);
+
+		List<UserFilePermission> userFilePermissions = collectionAO
+				.listPermissionsForCollection(targetIrodsCollection);
+		Assert.assertNotNull("got a null userFilePermissions",
+				userFilePermissions);
+		Assert.assertEquals("did not find the three permissions", 3,
+				userFilePermissions.size());
+
+		boolean foundCrossZone = false;
+
+		for (UserFilePermission userFilePermission : userFilePermissions) {
+			if (userFilePermission
+					.getUserZone()
+					.equals(testingProperties
+							.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_ZONE_KEY))
+					&& userFilePermission
+							.getNameWithZone()
+							.equals(testingProperties
+									.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_USER_KEY)
+									+ '#'
+									+ testingProperties
+											.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_ZONE_KEY))) {
+				foundCrossZone = true;
+			}
+
+		}
+
+		Assert.assertTrue("did not find cross zone user with zone info",
+				foundCrossZone);
+
+	}
+
+	/**
 	 * Find the metadata values associated with a given collection where the
 	 * collection is in zone2, and I access it from federated zone 1
 	 * 
@@ -286,6 +363,7 @@ public class FederatedCollectionAOImplTest {
 
 		AvuData dataToAdd = AvuData.instance(expectedAttribName,
 				expectedAttribValue, "");
+		collectionAO.deleteAVUMetadata(targetIrodsCollection, dataToAdd);
 		collectionAO.addAVUMetadata(targetIrodsCollection, dataToAdd);
 
 		IRODSAccount zone1Account = testingPropertiesHelper
@@ -346,6 +424,7 @@ public class FederatedCollectionAOImplTest {
 		AvuData avuData = AvuData.instance(expectedAttribName,
 				expectedAttribValue, "");
 
+		collectionAO.deleteAVUMetadata(targetIrodsCollection, avuData);
 		collectionAO.addAVUMetadata(targetIrodsCollection, avuData);
 
 		// now list the metadata

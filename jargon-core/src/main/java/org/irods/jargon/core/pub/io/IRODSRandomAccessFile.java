@@ -78,6 +78,9 @@ public class IRODSRandomAccessFile implements DataInput, DataOutput {
 	 */
 	protected IRODSRandomAccessFile(final IRODSFile irodsFile,
 			final FileIOOperations fileIOOperations) throws JargonException {
+
+		log.info("constructor IRODSRandomAccessFile");
+
 		if (irodsFile == null) {
 			throw new JargonException("irodsFile is null");
 		}

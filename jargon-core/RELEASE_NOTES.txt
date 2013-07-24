@@ -64,6 +64,15 @@ Note that the following bug and feature requests are logged in GForge with relat
 *[#1553] faulty sl4j bindings
 **Removed explicit binding on log4j by removing binding library from maven dependencies
 
+*[#1575] [iROD-Chat:10314] jargon-core permissions issue 
+**Removed canRead and canWrite checks from IRODSFileFactory until it can also consider group permissions. This will be re-added in the next release.
+**Added group permission lookup to DataObjectAO.getPermissionForDataObject() methods and IRODSFile canRead and canWrite methods.  We can add this to the list methods as well in a later feature
+
+*[#1560] counts of data objects under collections skewed by replicas
+**Added counts of files and counts of collections methods to CollectionAndDataObjectListAndSearchAO.  Made queries able to ignore replicas in the counts.
+
+*[#1317] fix trim statements in irodsfileImpl
+**Remove any trim() statements from iRODS absolute paths to not assume that spaces are never embedded
 
 ==Features==
 

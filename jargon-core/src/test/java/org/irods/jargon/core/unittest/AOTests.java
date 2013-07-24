@@ -17,6 +17,7 @@ import org.irods.jargon.core.pub.FederatedCollectionAOImplTest;
 import org.irods.jargon.core.pub.FederatedCollectionAndDataObjectListAndSearchAOImplTest;
 import org.irods.jargon.core.pub.FederatedDataTransferOperationsImplTest;
 import org.irods.jargon.core.pub.FederatedIRODSGenQueryExecutorImplTest;
+import org.irods.jargon.core.pub.FederatedSpecificQueryAOTest;
 import org.irods.jargon.core.pub.FederatedUserAOTest;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactoryImplTest;
 import org.irods.jargon.core.pub.IRODSFileSystemTest;
@@ -68,7 +69,7 @@ import org.junit.runners.Suite;
 		ResourceGroupAOImplTest.class, CollectionAuditAOImplTest.class,
 		IRODSGenQueryExecutorImplBuiilderQueriesTest.class,
 		CollectionAndDataObjectListAndSearchAOImplForSoftLinksTest.class,
-		SpecificQueryAOTest.class })
+		SpecificQueryAOTest.class, FederatedSpecificQueryAOTest.class })
 /**
  * Suite to run Access Object tests in org.irods.jargon.pub.*
  * <p/>

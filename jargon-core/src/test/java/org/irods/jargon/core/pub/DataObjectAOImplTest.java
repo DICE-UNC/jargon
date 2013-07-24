@@ -23,6 +23,7 @@ import org.irods.jargon.core.protovalues.UserTypeEnum;
 import org.irods.jargon.core.pub.domain.AvuData;
 import org.irods.jargon.core.pub.domain.DataObject;
 import org.irods.jargon.core.pub.domain.Resource;
+import org.irods.jargon.core.pub.domain.User;
 import org.irods.jargon.core.pub.domain.UserFilePermission;
 import org.irods.jargon.core.pub.domain.UserGroup;
 import org.irods.jargon.core.pub.io.IRODSFile;
@@ -30,12 +31,19 @@ import org.irods.jargon.core.pub.io.IRODSFileFactory;
 import org.irods.jargon.core.query.AVUQueryElement;
 import org.irods.jargon.core.query.AVUQueryElement.AVUQueryPart;
 import org.irods.jargon.core.query.AVUQueryOperatorEnum;
+import org.irods.jargon.core.query.IRODSGenQueryBuilder;
+import org.irods.jargon.core.query.IRODSGenQueryFromBuilder;
+import org.irods.jargon.core.query.IRODSQueryResultRow;
+import org.irods.jargon.core.query.IRODSQueryResultSetInterface;
 import org.irods.jargon.core.query.MetaDataAndDomainData;
+import org.irods.jargon.core.query.QueryConditionOperators;
+import org.irods.jargon.core.query.RodsGenQueryEnum;
 import org.irods.jargon.core.remoteexecute.RemoteExecuteServiceImpl;
 import org.irods.jargon.core.transfer.DefaultTransferControlBlock;
 import org.irods.jargon.core.transfer.TransferControlBlock;
 import org.irods.jargon.core.transfer.TransferStatusCallbackListener.CallbackResponse;
 import org.irods.jargon.core.transfer.TransferStatusCallbackListenerTestingImplementation;
+import org.irods.jargon.core.utils.IRODSDataConversionUtil;
 import org.irods.jargon.testutils.AssertionHelper;
 import org.irods.jargon.testutils.IRODSTestSetupUtilities;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
@@ -1821,6 +1829,7 @@ public class DataObjectAOImplTest {
 	public final void testGetParallelWithIntraFileCallbacks() throws Exception {
 
 		int testFileLen = 92 * 1024 * 1024;
+		
 		// generate a local scratch file
 		String testFileName = "testGetParallelWithIntraFileCallbacks.doc";
 		String absPath = scratchFileUtils
@@ -3526,6 +3535,131 @@ public class DataObjectAOImplTest {
 
 	}
 
+	/**
+	 * bug [#1575] [iROD-Chat:10314] jargon-core permissions issue
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public final void testSetPermissionsForUserInGroupToObject()
+			throws Exception {
+		// generate a local scratch file
+
+		String testFileName = "testSetPermissionsForUserInGroupToObject.txt";
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String fileNameOrig = FileGenerator.generateFileOfFixedLengthGivenName(
+				absPath, testFileName, 2);
+
+		String testUser = "testUserInGroup123";
+		String testGroup = "testGroupForTestingUser123";
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		UserAO userAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getUserAO(irodsAccount);
+		UserGroupAO userGroupAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getUserGroupAO(irodsAccount);
+
+		try {
+			userAO.deleteUser(testUser);
+			userGroupAO.removeUserGroup(testGroup);
+		} catch (Exception e) {
+			// ignore
+		}
+
+		User user = new User();
+		user.setUserType(UserTypeEnum.RODS_USER);
+		user.setName(testUser);
+		userAO.addUser(user);
+		userAO.changeAUserPasswordByAnAdmin(testUser, testingProperties
+				.getProperty(TestingPropertiesHelper.IRODS_ADMIN_PASSWORD_KEY));
+
+		UserGroup userGroup = new UserGroup();
+		userGroup.setUserGroupName(testGroup);
+		userGroup.setZone(irodsAccount.getZone());
+		userGroupAO.addUserGroup(userGroup);
+		userGroupAO.addUserToGroup(testGroup, testUser, irodsAccount.getZone());
+
+		DataObjectAOImpl dataObjectAO = (DataObjectAOImpl) irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
+		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetIrodsCollection);
+		dataObjectAO.putLocalDataObjectToIRODS(new File(fileNameOrig),
+				irodsFile, true);
+
+		dataObjectAO.setAccessPermissionRead("", targetIrodsCollection + "/"
+				+ testFileName, testGroup);
+
+		// log in as the group user and test read access
+		IRODSAccount secondaryAccount = testingPropertiesHelper
+				.buildIRODSAccountForIRODSUserFromTestPropertiesForGivenUser(
+						testingProperties, testUser, irodsAccount.getPassword());
+		IRODSFile irodsFileForSecondaryUser = irodsFileSystem
+				.getIRODSFileFactory(secondaryAccount).instanceIRODSFile(
+						targetIrodsCollection + "/" + testFileName);
+
+		/*
+		 * FIXME: factor this out
+		 */
+
+		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, null);
+
+		builder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_NAME)
+				.addSelectAsGenQueryValue(
+						RodsGenQueryEnum.COL_DATA_ACCESS_USER_ID)
+				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_ACCESS_TYPE)
+				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_TYPE)
+				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_ZONE)
+				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_GROUP_NAME)
+				.addConditionAsGenQueryField(RodsGenQueryEnum.COL_COLL_NAME,
+						QueryConditionOperators.EQUAL,
+						irodsFile.getAbsolutePath())
+				.addConditionAsGenQueryField(RodsGenQueryEnum.COL_DATA_NAME,
+						QueryConditionOperators.EQUAL, testFileName)
+				.addConditionAsGenQueryField(RodsGenQueryEnum.COL_USER_NAME,
+						QueryConditionOperators.EQUAL, testUser);
+
+		List<UserFilePermission> userFilePermissions = new ArrayList<UserFilePermission>();
+
+		IRODSQueryResultSetInterface resultSet;
+
+		IRODSGenQueryFromBuilder irodsQuery = builder
+				.exportIRODSQueryFromBuilder(irodsFileSystem
+						.getJargonProperties().getMaxFilesAndDirsQueryMax());
+
+		IRODSGenQueryExecutor irodsGenQueryExecutor = irodsFileSystem
+				.getIRODSAccessObjectFactory().getIRODSGenQueryExecutor(
+						irodsAccount);
+
+		resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResult(
+				irodsQuery, 0);
+
+		for (IRODSQueryResultRow row : resultSet.getResults()) {
+			userFilePermissions.add(new UserFilePermission(row.getColumn(0),
+					row.getColumn(1), FilePermissionEnum
+							.valueOf(IRODSDataConversionUtil
+									.getIntOrZeroFromIRODSValue(row
+											.getColumn(2))), UserTypeEnum
+							.findTypeByString(row.getColumn(3)), row
+							.getColumn(4)));
+		}
+
+		FilePermissionEnum filePermissionEnum = dataObjectAO
+				.getPermissionForDataObject(
+						irodsFileForSecondaryUser.getAbsolutePath(),
+						secondaryAccount.getUserName(), "");
+
+		Assert.assertEquals("should have found read permissions",
+				FilePermissionEnum.READ, filePermissionEnum);
+
+	}
+
 	@Test
 	public final void testGetPermissionsForGivenUserWhoHasRead()
 			throws Exception {
@@ -3743,8 +3877,8 @@ public class DataObjectAOImplTest {
 	}
 
 	/**
-	 * Add a user to a group, add that group to file permissions, and list the
-	 * group
+	 * [#1575] jargon-core permissions issue Add a user to a group, add that
+	 * group to file permissions, and list the group
 	 * 
 	 * @throws Exception
 	 */
@@ -3767,6 +3901,9 @@ public class DataObjectAOImplTest {
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
 
+		IRODSAccount secondaryIrodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromSecondaryTestProperties(testingProperties);
+
 		UserGroupAO userGroupAO = irodsFileSystem.getIRODSAccessObjectFactory()
 				.getUserGroupAO(irodsAccount);
 
@@ -3777,8 +3914,8 @@ public class DataObjectAOImplTest {
 		userGroupAO.removeUserGroup(userGroup);
 		userGroupAO.addUserGroup(userGroup);
 
-		userGroupAO.addUserToGroup(testUserGroup, irodsAccount.getUserName(),
-				null);
+		userGroupAO.addUserToGroup(testUserGroup,
+				secondaryIrodsAccount.getUserName(), null);
 
 		DataObjectAOImpl dataObjectAO = (DataObjectAOImpl) irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
@@ -3808,6 +3945,65 @@ public class DataObjectAOImplTest {
 			}
 		}
 		Assert.assertTrue("did not find user group in permissions", foundIt);
+
+	}
+
+	/**
+	 * [#1575] jargon-core permissions issue Add a user to a group, add that
+	 * group to file permissions, and list the group
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public final void testGetPermissionsForDataObjectForUserViaGroupPermissions()
+			throws Exception {
+		// generate a local scratch file
+
+		String testFileName = "testGetPermissionsForDataObjectForUserViaGroupPermissions.xls";
+		String testUserGroup = "testGetPermissionsForDataObjectForUserViaGroupPermissions";
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String fileNameOrig = FileGenerator.generateFileOfFixedLengthGivenName(
+				absPath, testFileName, 2);
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSAccount secondaryIrodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromSecondaryTestProperties(testingProperties);
+
+		UserGroupAO userGroupAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getUserGroupAO(irodsAccount);
+
+		UserGroup userGroup = new UserGroup();
+		userGroup.setUserGroupName(testUserGroup);
+		userGroup.setZone(irodsAccount.getZone());
+
+		userGroupAO.removeUserGroup(userGroup);
+		userGroupAO.addUserGroup(userGroup);
+
+		userGroupAO.addUserToGroup(testUserGroup,
+				secondaryIrodsAccount.getUserName(), null);
+
+		DataObjectAOImpl dataObjectAO = (DataObjectAOImpl) irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
+		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetIrodsCollection);
+		dataObjectAO.putLocalDataObjectToIRODS(new File(fileNameOrig),
+				irodsFile, true);
+
+		dataObjectAO.setAccessPermissionRead("", targetIrodsCollection + "/"
+				+ testFileName, testUserGroup);
+
+		UserFilePermission perm = dataObjectAO
+				.getPermissionForDataObjectForUserName(targetIrodsCollection
+						+ "/" + testFileName,
+						secondaryIrodsAccount.getUserName());
+		Assert.assertNotNull("did not get perm for user", perm);
 
 	}
 
@@ -4769,7 +4965,7 @@ public class DataObjectAOImplTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		DataObjectAOImpl dataObjectAO = (DataObjectAOImpl) irodsFileSystem
+		FileCatalogObjectAOImpl dataObjectAO = (FileCatalogObjectAOImpl) irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
 
 		dataObjectAO.isUserHasAccess(null, "hello");
@@ -4781,7 +4977,7 @@ public class DataObjectAOImplTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		DataObjectAOImpl dataObjectAO = (DataObjectAOImpl) irodsFileSystem
+		FileCatalogObjectAOImpl dataObjectAO = (FileCatalogObjectAOImpl) irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
 
 		dataObjectAO.isUserHasAccess("", "hello");
@@ -4793,7 +4989,7 @@ public class DataObjectAOImplTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		DataObjectAOImpl dataObjectAO = (DataObjectAOImpl) irodsFileSystem
+		FileCatalogObjectAOImpl dataObjectAO = (FileCatalogObjectAOImpl) irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
 
 		dataObjectAO.isUserHasAccess("file", null);
@@ -4805,7 +5001,7 @@ public class DataObjectAOImplTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		DataObjectAOImpl dataObjectAO = (DataObjectAOImpl) irodsFileSystem
+		FileCatalogObjectAOImpl dataObjectAO = (FileCatalogObjectAOImpl) irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
 
 		dataObjectAO.isUserHasAccess("file", "");
