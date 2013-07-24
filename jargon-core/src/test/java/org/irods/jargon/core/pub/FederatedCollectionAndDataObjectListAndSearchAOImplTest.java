@@ -45,9 +45,6 @@ public class FederatedCollectionAndDataObjectListAndSearchAOImplTest {
 		org.irods.jargon.testutils.TestingPropertiesHelper testingPropertiesLoader = new TestingPropertiesHelper();
 		testingProperties = testingPropertiesLoader.getTestProperties();
 
-		if (!testingPropertiesHelper.isTestFederatedZone(testingProperties)) {
-			return;
-		}
 
 		if (!testingPropertiesHelper.isTestFederatedZone(testingProperties)) {
 			return;

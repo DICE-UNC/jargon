@@ -20,6 +20,10 @@ public class FederatedSpecificQueryAOTest {
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
+
+		if (!testingPropertiesHelper.isTestFederatedZone(testingProperties)) {
+			return;
+		}
 		TestingPropertiesHelper testingPropertiesLoader = new TestingPropertiesHelper();
 		testingProperties = testingPropertiesLoader.getTestProperties();
 		irodsFileSystem = IRODSFileSystem.instance();
@@ -27,6 +31,10 @@ public class FederatedSpecificQueryAOTest {
 
 	@AfterClass
 	public static void tearDownAfterClass() throws Exception {
+
+		if (!testingPropertiesHelper.isTestFederatedZone(testingProperties)) {
+			return;
+		}
 		irodsFileSystem.closeAndEatExceptions();
 	}
 
@@ -37,6 +45,11 @@ public class FederatedSpecificQueryAOTest {
 	 */
 	@Test
 	public void testExecuteSpecificQueryLSCrossZone() throws Exception {
+		
+
+		if (!testingPropertiesHelper.isTestFederatedZone(testingProperties)) {
+			return;
+		}
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountForFederatedZoneFromTestProperties(testingProperties);
